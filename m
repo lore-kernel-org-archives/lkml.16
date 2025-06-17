@@ -1,239 +1,254 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903D528F508
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148815; cv=none; b=iFO5KT3BRG7xgAn60Tts3ilZOkmrkR/ONsUjgrTUjRrV+uloCYpmkIdqwtYx2rggZzGivVvEVovPHAbW+X7Cc/bELaJ5rD+dqdcpVUK+QY+Bjpz7Ovp1gSUkFJF9Sm2d1OscB4n3P/i+NfBDwcNIBFRoAYQ+bKR/IYzwuDOTW94=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148815; c=relaxed/simple;
-	bh=A5GxHr710Py2e24QTu8TcBh/WJDiSncJIFM883A5ZMo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iePvfeaPWmogx/DwoMTGahpcu+DIg3cgbf1CVp04QM2INja4xRRFo/kWJr1K0/qwCzg65mNuzLHn96srY4pTUQXLavpvQa03AoQcN4V6nNhjMT2E+io8/NbRx5vkXczq9m+RhpvDtTGPuV/9TxrLGCKg244ItY6tiBPMZlKXqL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=tT1zeNoo; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C28521B184
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750148834; cv=fail; b=H5sJ5aKssTWTWtMOyj/rFrAjogGuAGGU5NlRw6PQaoevIjGcuP94IhgMzC0X4kPGYruGvQppDt2VtnQZw2jsYfqEH1I/xhKcooiigjEfKhMkPUGxOOC8C+u0pCmLmXJqwz45wxvTXR+CVvs1RYV04HfnnuMzysOLlL6e0dE9SMY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750148834; c=relaxed/simple;
+	bh=0M2E50KzCNqpfQ8IM0yAquPHXCeEA167NVBYrL3Lnl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=gSYHXYxDyCWwWQ7zvTw80dh+zL6pM6ipKMUAFe0Xh2SKY3OmBjvvgIwjFMybGt9tjIuh8UT12+Ak5tNfF3SMx7NU5mwcPoW1/rUogJq/gXa6KcsLMdUpRwYI3Ei9kAn7eADYLKk0gHdJtdvcs2V1IBZPVYQ+0cPErRaG0HpkRpo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=sKmGMI+J; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Nxlpn2gQ; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="tT1zeNoo"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso9449440a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:26:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sKmGMI+J";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Nxlpn2gQ"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H7tXsg002038;
+	Tue, 17 Jun 2025 08:27:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=ggs+syH2hF5NJ50O1B
+	bQdLBqdIJ9ohq77QLa8X9LUdM=; b=sKmGMI+J9RsZleo8otmEo+KO4/GdSz32Qo
+	ICpYJUcUFobq1ocHCw1CG53eQ10CggOLlE7x3nkWfrlNexpjH4Mf8BcjsBEwS67G
+	XpmD1SNTFa4I6e3QrTZzWM03JW0hFe/lmM5K7ewh4hkBKWjgYjJoZCl+B4F1JQwT
+	qPeg3NnFv8TG2MMFwNxCiI80WrGzDFB5QelDEZpVfMqeWI+49s67Hy6n4+YTrn4R
+	1Rm+h8ZoWD4RsNQO0jFki3QZzQl9vqSPFBN7b69W6DfFOOZK1J953QjlTali4/f7
+	ooQsCfsNJiG4vRhjsSHxcZVdKwViDrIlLY29dulez0aXZRqnoImg==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479q8r3vdt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 08:27:01 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55H6rEX5031601;
+	Tue, 17 Jun 2025 08:27:00 GMT
+Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010053.outbound.protection.outlook.com [52.101.193.53])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh8pkhs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 08:27:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=p5UbJuQazK72F7aqt4gYjHA8mVc91upKureAgIj5aG7btWK+UGvwi/JiqBYTZLwTZ0vySMT4ZxasoVJ/Fp5FJZ9oUEVaH6OmNnVjLrud39AhDQTKlwA9nOy4Uc3mHKPr8kBKUcNimPBLz7KJaoCaxEi+ZHFnaqOMa7dTVu2y4FGecEBb0qzCfecsrbHEfxP3np7jGeYYJkc11Eg88LQSIQPv76nNc/z82y8EtLR18tYqmE3H5IaIVNPGxXjgZ85mgmhun1r7b2f7vnsIXwsI54j47ydmI7mRZ+Xp0GUVduLS5GXz9NBPW6JAL73J2obpz77pK+A01X39erNr8nW/mA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ggs+syH2hF5NJ50O1BbQdLBqdIJ9ohq77QLa8X9LUdM=;
+ b=if5IxR9QZpUrNMqdm1pjl/odGuYJIGqAvlazeGnxXENlOTKSVudInRfR6tyHW+0gJD+SR9M4/LG03WilsQsKzs7fHcbQEAtqNXx21tByvqrLPQaWlmU+xWQwCFRELwn89L52QEK51rqU1JDUeCt/BCM0KZQnbjImdHyNvC/BLtWgLF93Ih4//p8aA8amoyeZCmfBG3KTtAURpc7MQ55zHbPKOiK7ySegvieTKAmrXLaNqRTPGbd8Oe3v0pm2+Uh4m7f/s2w6GC4ok9n74A8hfZFMUVrUz5IqBFunfEu1FGGeNJkMZ58Nr2JGtL1WCtrXqIS1eqiJep64SpNIYKC7rw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750148811; x=1750753611; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sX84cZ3SaMTPuPXdeTupdXKRRBNOI+FmBiR+Od8TZ3M=;
-        b=tT1zeNooluyhiuSXy2texMyQDbHUVN3HoZc3QjqkJ9ENb64QxigA3FsYI293hTke5z
-         C3IWW2XK2fYNen14y2j5PUyN3jlNOcVrvjUvtvr99BHrgBg9vbgpBwAgJENhzYmh7A5s
-         V86VL2VQqVE8OdU8sqKCUPgX8esbZE6Wm+V4nl7vskbSLaprkgVKux6uP95wbVOfoCcO
-         41q6Mhv7nSgpVDY3fAG3dKIBl0QTgqUULTFB61NNAfJBDV/0aDH8s9TRG0N3qxbkNQm1
-         02686MV72j+DPfLfIjKBXOaax+QCfZmgMS7SKASUoraNA0BgA8ukvwfU3/n9nS5xSQmf
-         EZgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750148811; x=1750753611;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sX84cZ3SaMTPuPXdeTupdXKRRBNOI+FmBiR+Od8TZ3M=;
-        b=PLxU9QVGih+lnhv197Hv9Z/CddrbVWQm3fyqoLowfbKxBIcCSYtEfZ60ViyNI+rjkJ
-         aGYysSIYcShIcQ1lerQyn5t1WXquRwIbreHj3kAg3ZyhsYXzvvK0glwvH3dGii/BAhJ8
-         d5yWkTmOkzNhXkw1hXLt7iBEbxriadKQAVWMqZQcq/vBx6gWBTp2lOmyCkw6lWPgsq/i
-         MgcJ+W+riJMJrfJ1XkVEm3vOO18+nLPCZjZz90FywUx7F0jIwjtKqz8nuCWIeXm5sHXR
-         2rN/ecY1KfBiW6O4JPWwc+VXB6/4SJyo3zDgKU3M7Oqf4HDyhrJPu2zHI01w1XHVIlMJ
-         buwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV71ZwYOIkkVHFTzqNuIy0EMmdkKtPbQEbg7NHY3R4AoVnIuhm7xvoQ2MYnF2vAgsVzsejdDipc4GBAUck=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+h7dMsiphEXVC99IGlMAmb2SCJIN7pw5I+/JHpVvO5Ydio9CF
-	8+sPh2NXSpI0INTN4MwmYWsqg56Yd5z5T/LSBkAcf+yOcVYAsxv9djLM1lxwLJjDiac=
-X-Gm-Gg: ASbGncumY0C7SvboCJh8wmuxRJhe5jagYVsZ/2TfVWuvsx9bC4vZIBfdyDhNnTU6mHR
-	L+zVXCIXg3gaoDHwZi5bbrxhdmcnGzFpcsT7CZ+Y03u8A1TQDjFwLemu7tPSkPbpWbILQv5+ken
-	aJNUUY35wJHLj0yYgHYpB1xhQcnSujfp2ukiUZpAbs58o9hDXzgulRfsAi3PFj+kaL109jlWMV5
-	6rUCDw2i6z3f9IU75cBvhZ2clZv3rVm3GJrOHwi4Ild4y7ACpTu4GnSzTU9mtKLShnlySTeHT8q
-	XF8+9qHnHGdr4FeZ+2c32e20QskGAM7BnqorXPhIX034Fh4UyOA6BG7/GA0kuYC8VosuJVvYQKK
-	3hwIMVtCMqEu1357ofKoglURyGob6Ao4j
-X-Google-Smtp-Source: AGHT+IE1KdvEzFDJ50Blvw8RRapFgbU1vb3QXm2KGvBTd08g0S8rGE5KDmFA84KI0+LHpMrERmOUIA==
-X-Received: by 2002:a17:907:7fab:b0:ad5:a29c:efed with SMTP id a640c23a62f3a-adfad4181f0mr1236100266b.33.1750148810832;
-        Tue, 17 Jun 2025 01:26:50 -0700 (PDT)
-Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88fd993sm840343166b.94.2025.06.17.01.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 01:26:50 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Tue, 17 Jun 2025 10:26:36 +0200
-Subject: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: Don't
- zero-out registers
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ggs+syH2hF5NJ50O1BbQdLBqdIJ9ohq77QLa8X9LUdM=;
+ b=Nxlpn2gQ0lvUHeiaSPKkhDGHBG3lGzg1mkJJuhpp9my/zQi4y4HkYZNOqTpIZKoP4+amP9OIlVBYI4XnkY6TIsSt99et88lsoRgW/O/IFWyJ76a+iCjmc/yU9dgK2dWfU2xJhFPJ6ThC5R0uFrgtimVrhG9JQx/mLMc1DeJPmX0=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CH0PR10MB7536.namprd10.prod.outlook.com (2603:10b6:610:184::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
+ 2025 08:26:57 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8835.026; Tue, 17 Jun 2025
+ 08:26:57 +0000
+Date: Tue, 17 Jun 2025 09:26:55 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, 21cnbao@gmail.com, david@redhat.com,
+        Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Lance Yang <lance.yang@linux.dev>
+Subject: Re: [PATCH 1/1] mm/madvise: initialize prev pointer in
+ madvise_walk_vmas
+Message-ID: <007fa541-94da-4f89-88fe-9402b7fd5310@lucifer.local>
+References: <20250617020544.57305-1-lance.yang@linux.dev>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617020544.57305-1-lance.yang@linux.dev>
+X-ClientProxiedBy: LO2P123CA0091.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:139::6) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-eusb2-repeater-tuning-v2-2-ed6c484f18ee@fairphone.com>
-References: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
-In-Reply-To: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750148807; l=5504;
- i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=A5GxHr710Py2e24QTu8TcBh/WJDiSncJIFM883A5ZMo=;
- b=NLVDwJceLeVh2CyY4RVOJ2w1bVSH89L0XBbHwU6333cyzpMfLbdJ26mUh4I6AXhR6OfQ7Vfop
- aVUPMGbgwyNBuYqFB64O1xnLl6Jr8WKGgjjPmUXuguwCFENib0h4FH0
-X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
- pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH0PR10MB7536:EE_
+X-MS-Office365-Filtering-Correlation-Id: 57ede819-19ef-4e89-7e32-08ddad78b99a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KT9I+KGraGXF/qvAhjOgYyXpfNJW4w2SE+avXVDlsenQXdjok5F7HaXbnTD5?=
+ =?us-ascii?Q?Coi/Dq4GuCAgrWbXd+pwxAvupvpTKaatCc/5mBi1jBO9ol1vUl012W2tWz5d?=
+ =?us-ascii?Q?r+HCoIbuqzN3u/cvmH3mtdW/KOfkErGR2ks0iS+N9SNXmMKpOlXJRikXV6oR?=
+ =?us-ascii?Q?8ZvDXCS6Oot13eIm+tRx6QOnnSf2oInJ/5XhmPq2J1rkYrV3fokkdm0UzLwq?=
+ =?us-ascii?Q?qQbVrZ1cuK/pCw5iB1GaBUbpJpUzEy1UdOxrgP2a9owVoEaDBVfVU5Gk7kck?=
+ =?us-ascii?Q?sxXGcjF+8N4M0sC3SXmIKWUE57GnQm98uvNfHZg35xrGXSayldmpnbzhqV9p?=
+ =?us-ascii?Q?2LuyrCY3QkzJppybz7ifD6za5OfrpYVSNDVqRXoVVr3IV2FGFPDCgPI//deH?=
+ =?us-ascii?Q?h3AlN1C7GbNybKQoKdtX/q0FirlYBP9PfH86LQp1ZAs8mGMl38468PUAsCK0?=
+ =?us-ascii?Q?jzph6Ebp6CMh45lpxYdtW5n75PEP+46zLxcAFrVK2BElmUtXTF7yRV9vcupz?=
+ =?us-ascii?Q?jWS8tyuUmDNeFHk8gOPwAK3we2mFp3PK/DWLyp70cH817aPxhp/JViPRLQx+?=
+ =?us-ascii?Q?7xZCh1WC/yE2STfRn3LbnwFk9AisS+b07b/znW0zsY7Rf4CQv3DLlsKB+f0U?=
+ =?us-ascii?Q?WJve9NgFtKqevk2lfp4S7ecKhp95oEPYqtV8/visltQ6hYiby5/UNKPP8JcA?=
+ =?us-ascii?Q?fm+oU69hxCVG6vR9a+zsnC7lO3avFG/Sp2VcFlkQJq8/KcrS1IQ1/Ge1naDU?=
+ =?us-ascii?Q?h0yM/Ex3/2Ec9tM7nnO1/KU8h7jBLoFoM8wvDqY/gbvJH6JbOEETvhAVhqcu?=
+ =?us-ascii?Q?rN4laBc1Ke0pybJ+htjPSfsIfX8x7fF/FTr2OdHFJThjJCvmBE0tjLo3842H?=
+ =?us-ascii?Q?5bPFDfjS5BvRSIupck0net7/71A5xdc9idF309dpO5A4/uvl8HNsnr15kor2?=
+ =?us-ascii?Q?ZiIULkCo2Nv6sefHxsMAa7C4eC2ZaueUhpEhlt+FAoKHokSQLZf92FOVwzJK?=
+ =?us-ascii?Q?mn41B2Ripnqdnat6zlDLRpxbytX8XMSSs6AKAjQBnIqr8so5S+tB39Sn48Ws?=
+ =?us-ascii?Q?zdG3vyU2WiIrF27y4DuFoTrvZDq4+0cL2ONc2LOW4VtL7sVJtBVJpaoLIVwn?=
+ =?us-ascii?Q?PHJM5EqVVBqz6yIsAsqqOBDjuJ/nyXCOe+MPHrDngPtb0albzTFSwx1vpdV5?=
+ =?us-ascii?Q?zB0070Tc3ElaNX9nC6b+Wl8bw110SuSOZ5PCuhSzMf8n9LrA8RTcFBXd47VB?=
+ =?us-ascii?Q?vwzWnv25ATrtc+tXi1FFeXThmoIxEXD9JrI5qeDXanwp0k+W5HL/7cmUPZ0G?=
+ =?us-ascii?Q?F69E1G1zOJBOcV11K2YDhnxBomq2/WRen0pHEq3gowpebDS7wz/InU1zyHvr?=
+ =?us-ascii?Q?y68Mp9dWy8Uio6VhcSpBzywy+zM6DnlJZzR338PFPRdLMHR0mE1cLAY6lddb?=
+ =?us-ascii?Q?8nLPeX4a2uQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?/zqx9t9Pu2Pegwujr0nNM4oL9RsNjIIL+o9m/GfEAzNKpiZ42b4phTg0CJo2?=
+ =?us-ascii?Q?GWjshJ5W5bt5Jd4TPwC1PijuS9ufHzPlH8phN+OwVhgQHlFdlDJe36RHA2WL?=
+ =?us-ascii?Q?xlRO06TbNSEFvz2ATe+JcM3a56VpaIMYBnwwL58P9ZkXP/v3N4TSCDg7CMFB?=
+ =?us-ascii?Q?Gbl9JuFj54SIJE88XsYt4Z3tNuy3sXV8XS5Qbe+RZKBbvdUuZ1U75ODBkd+I?=
+ =?us-ascii?Q?u03QzIEZdufta50r/+SCjq70sVqLm4olWnGGb2UZr3gmVfW1daTdeH0ZvLEw?=
+ =?us-ascii?Q?petefhnz5NPGy9gejsUKkyeW5wSOWsLRLr9fbVQd+7k/I42PF2ds1aALoUH0?=
+ =?us-ascii?Q?dd5csa5NcgmeTtnvkCbfrO2U5K/T41ub+lGtVH3wMUfvamhHoLzFOYiscGvZ?=
+ =?us-ascii?Q?5Pztx4TVDWDysMpvZWsnFSLK2xhl+msPO47156KqjbKyy8IdAjmkItK7VKNk?=
+ =?us-ascii?Q?7rOeauxYi5e+ZsvcOeHsrVUna6AKa6z6D3D9EeEIlgpnmEY8bwFc4aeFK1gL?=
+ =?us-ascii?Q?IVB+uVfS49PniGQtFfIA6tOYcBCVMn8Rl3tVIrz1D/Q5vZsLSZccvoXprOHw?=
+ =?us-ascii?Q?o0zXn+mMk3GdtT5TxE0n/Y2Fw8NDUVjdOvXAT2qezWSi/dO42P8UFMCI3+qW?=
+ =?us-ascii?Q?bcDzQTqcX7ruQ0qDYW/RvHxEjtO4m9zeXg+ea4Dga8QGNmkKZVcQ1eQaguRh?=
+ =?us-ascii?Q?hnpT0eMNPe2D3tX/JEMArDZsp5oewO5zl+SxMFmdTY5KlVcgbSfycEW7ehP2?=
+ =?us-ascii?Q?iQg26j4EfGRjjL9Hhc7lb3fLvvIhvO/RGcN++cJXlhhJtw/VjO+UBzjTzwaW?=
+ =?us-ascii?Q?OwcY901WqPUAKF3anuqn6jQGmdVZ9ulfqWNgATa5lFcppZTMOMS6MTFIyHJs?=
+ =?us-ascii?Q?jFt2XecP9/OhjYNCrydOxYmYFHMtybbgK4ONuKOejnNNcIGXaqT2aZzBop3e?=
+ =?us-ascii?Q?pzRs9qj87AkNDgvv+PEcrf+Oh+7u9gsZHlkQxIx/qQ4L7KEpHaNb8YGIu8j/?=
+ =?us-ascii?Q?mtFqy7a4ZCbB5+Og0RTgc7W/nizvI8Pu8P6e3wZdbgCH6kS3q21710CrU/hs?=
+ =?us-ascii?Q?glcpFeGUS2Xk6qsqSMIxEIF+e+nZi18VSuXWPfBi2K0egQX+s1Os92cJa/mF?=
+ =?us-ascii?Q?7jNDgc23qC9Ga8oAjuk/BJreRt0kMolnlzHLqtkdtqmm0ZmheJGJl9gYv2IR?=
+ =?us-ascii?Q?f774zTbALVAau7aS4/W9Q4x/8HE8cCNA5Rk9mJjSHNSrwJWi50TIlPFFrYtO?=
+ =?us-ascii?Q?9vCeVTHXhdtur+0m4eYV2NgpZSOd55g6AfmJB3/K+Y0ZZIfgeczPHUR7uZ3/?=
+ =?us-ascii?Q?KqRe7OcgSfpsZqcLXovS1ZhQAfuxI8Mfxy9aXH2sC2J8ZZzs/zuWpJGQQNdW?=
+ =?us-ascii?Q?eyThYbVds/Rcu+xt/+r4sePqcgF1EVx4osgWkgjqbCsBt2NzMOVz1fbsffrd?=
+ =?us-ascii?Q?HLgGP4Z9FaCGnFizIsFIOaWlbzDlV5N9BmQZX/hoq05E4yHR2WMllqjMAMMw?=
+ =?us-ascii?Q?drcGvWF2eW1Sihly/Z4BmO3uKyBpJm2EgUs90jJ1O4OHu71u64OrXAxII2rt?=
+ =?us-ascii?Q?wkqM/MivOeEmwMVMZyIEo7lPfVn/AzSPVDTPY+hCHtbv7monZUAgpmnYuL7B?=
+ =?us-ascii?Q?4Q=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	Qx/tHBZm/kyELC1VN0yTrR+2felz+z5gzbk63rnHiI3wDmYHLn3qQ144myeh+rHqYVRA4Y1pTBTvvFY59SMvnuisSjnN72QD900i04rONDNG6fnmZWHQIK8Zc75IqVwqSsjJxYHl9hfEwuqAQ58GmbEJHF9Dl+9UxghU+nc9v2xVo77UFf1gY6qArdZ7KkHHZxn38AlRNX2HOdWY8YCEkHm54jcKwLFKMODtJ3I/t6Jc3mUZNDR0VMuTxtcrt1PcyLWoWysXstHs8TpBAPqTsWy2wa2ZDZTVXpQzRHQ7knc6q6odYQvNeP2yZMRBa6A+BotjElcXjcdqWOO/nbe3reTt+PXeuLBnfJpg1ZUsliDUctnt6QKzmlXdsrJO5QFV0A5Q4JlMmKUTTQQFzVcujHKTYNSPFW8OYuWxcjZjBcseG43F0Vu+TuT4n49MtqtejSW30U0QjvEF0PNV6v0pRHj6OhYeQ0E8dHrGx3dcQLdgdZ6ut8Yw/8sELgFqhXjdo9Gqn9M+aeWBpTdd/G5Kqw1qPVQ7WYFc5DEnRe6M257+2dR+1qIqXRuwetrGEIT0Vr5S/BKsnm3ffMiz6lXrwjbi2nFwfBuccOR+E4gAqz8=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57ede819-19ef-4e89-7e32-08ddad78b99a
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 08:26:57.8722
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mM4R3oEXQ0h6eQ5pzHMch7Pm1vG9PMbXnQj3S/9rIsXNft5z/J8IeBVAhZxWjT2yreHRprFnNr+PsJVatbpKYqldHAlVOdFyF8/Eth5/8XE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB7536
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_03,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=979 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506170067
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDA2NyBTYWx0ZWRfX4FYY9qDN8vYq /Taw9q8B2CAG90I+ghe9XiCA1UBLFX2AsSe6+I3TQuWDmkOCXkLbPrduQYAban0AQi6JUq+gtUD FRNXUY0JH+I9HOB8UM9TbbVhKEpmsNMd4c67vOgQ4v+xR9rM64RvF9F8z6CASBFthRLOP6xoIaI
+ coGUDhbA3lLZbKgTtGwLPs6yWzIpDFABELX4v3nUiLZyfPYuFtPBe5Z8Fdu4DTUhfMqxunp+7Pa em7EOiaIJwqYHVVXIIv0YntPJFEVPMs3xFcqUNiWHHmLs+m7bkN3A8zPFjatw3hSxp6xdEZrdNv Sex+4RebXrtKXEgMXKCIe/cNEs5xl15vWi+XjnttdtH3j/MJHFPqV6DP7q3dapddjg7cTGqFRF1
+ Et7Trnw8FttpLPzhRZEGaYlZwGreGBKbjwB/zj250eipq+ATT8EggvvlzRfAc4AmcBlKQdYu
+X-Proofpoint-GUID: kz5mvvSskehs8za4cnj_UnnBbR61dF9-
+X-Proofpoint-ORIG-GUID: kz5mvvSskehs8za4cnj_UnnBbR61dF9-
+X-Authority-Analysis: v=2.4 cv=dvLbC0g4 c=1 sm=1 tr=0 ts=685126d5 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=fFkDC0MTDGs3Ij0jIZsA:9 a=CjuIK1q_8ugA:10
 
-Zeroing out registers does not happen in the downstream kernel, and will
-"tune" the repeater in surely unexpected ways since most registers don't
-have a reset value of 0x0.
+On Tue, Jun 17, 2025 at 10:05:43AM +0800, Lance Yang wrote:
+> From: Lance Yang <lance.yang@linux.dev>
+>
+> The prev pointer was uninitialized, which could lead to undefined behavior
+> where its address is taken and passed to the visit() callback without being
+> assigned a value.
+>
+> Initializing it to NULL makes the code safer and prevents potential bugs
+> if a future callback function attempts to read from it.
 
-Stop doing that and instead just set the registers that are in the init
-sequence (though long term I don't think there's actually PMIC-specific
-init sequences, there's board specific tuning, but that's a story for
-another day).
+Well, no it doesn't, it prevents only one (easily caught by kasan setc.)
+class of bug - that is accessing uninitialised data.
 
-Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 83 ++++++++++----------------
- 1 file changed, 30 insertions(+), 53 deletions(-)
+But is prev always NULL? It definitely isn't. So we're now basically
+introducing a new kind of bug, one that won't get picked up anywhere near
+as easily.
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-index 6bd1b3c75c779d2db2744703262e132cc439f76e..d7493c2294ef23e37e484019a49ddf7b3d6a6a46 100644
---- a/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-+++ b/drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c
-@@ -37,32 +37,13 @@
- #define EUSB2_TUNE_EUSB_EQU		0x5A
- #define EUSB2_TUNE_EUSB_HS_COMP_CUR	0x5B
- 
--enum eusb2_reg_layout {
--	TUNE_EUSB_HS_COMP_CUR,
--	TUNE_EUSB_EQU,
--	TUNE_EUSB_SLEW,
--	TUNE_USB2_HS_COMP_CUR,
--	TUNE_USB2_PREEM,
--	TUNE_USB2_EQU,
--	TUNE_USB2_SLEW,
--	TUNE_SQUELCH_U,
--	TUNE_HSDISC,
--	TUNE_RES_FSDIF,
--	TUNE_IUSB2,
--	TUNE_USB2_CROSSOVER,
--	NUM_TUNE_FIELDS,
--
--	FORCE_VAL_5 = NUM_TUNE_FIELDS,
--	FORCE_EN_5,
--
--	EN_CTL1,
--
--	RPTR_STATUS,
--	LAYOUT_SIZE,
-+struct eusb2_repeater_init_tbl_reg {
-+	unsigned int reg;
-+	unsigned int value;
- };
- 
- struct eusb2_repeater_cfg {
--	const u32 *init_tbl;
-+	const struct eusb2_repeater_init_tbl_reg *init_tbl;
- 	int init_tbl_num;
- 	const char * const *vreg_list;
- 	int num_vregs;
-@@ -82,16 +63,16 @@ static const char * const pm8550b_vreg_l[] = {
- 	"vdd18", "vdd3",
- };
- 
--static const u32 pm8550b_init_tbl[NUM_TUNE_FIELDS] = {
--	[TUNE_IUSB2] = 0x8,
--	[TUNE_SQUELCH_U] = 0x3,
--	[TUNE_USB2_PREEM] = 0x5,
-+static const struct eusb2_repeater_init_tbl_reg pm8550b_init_tbl[] = {
-+	{ EUSB2_TUNE_IUSB2, 0x8 },
-+	{ EUSB2_TUNE_SQUELCH_U, 0x3 },
-+	{ EUSB2_TUNE_USB2_PREEM, 0x5 },
- };
- 
--static const u32 smb2360_init_tbl[NUM_TUNE_FIELDS] = {
--	[TUNE_IUSB2] = 0x5,
--	[TUNE_SQUELCH_U] = 0x3,
--	[TUNE_USB2_PREEM] = 0x2,
-+static const struct eusb2_repeater_init_tbl_reg smb2360_init_tbl[] = {
-+	{ EUSB2_TUNE_IUSB2, 0x5 },
-+	{ EUSB2_TUNE_SQUELCH_U, 0x3 },
-+	{ EUSB2_TUNE_USB2_PREEM, 0x2 },
- };
- 
- static const struct eusb2_repeater_cfg pm8550b_eusb2_cfg = {
-@@ -129,17 +110,10 @@ static int eusb2_repeater_init(struct phy *phy)
- 	struct eusb2_repeater *rptr = phy_get_drvdata(phy);
- 	struct device_node *np = rptr->dev->of_node;
- 	struct regmap *regmap = rptr->regmap;
--	const u32 *init_tbl = rptr->cfg->init_tbl;
--	u8 tune_usb2_preem = init_tbl[TUNE_USB2_PREEM];
--	u8 tune_hsdisc = init_tbl[TUNE_HSDISC];
--	u8 tune_iusb2 = init_tbl[TUNE_IUSB2];
- 	u32 base = rptr->base;
--	u32 val;
-+	u32 poll_val;
- 	int ret;
--
--	of_property_read_u8(np, "qcom,tune-usb2-amplitude", &tune_iusb2);
--	of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &tune_hsdisc);
--	of_property_read_u8(np, "qcom,tune-usb2-preem", &tune_usb2_preem);
-+	u8 val;
- 
- 	ret = regulator_bulk_enable(rptr->cfg->num_vregs, rptr->vregs);
- 	if (ret)
-@@ -147,21 +121,24 @@ static int eusb2_repeater_init(struct phy *phy)
- 
- 	regmap_write(regmap, base + EUSB2_EN_CTL1, EUSB2_RPTR_EN);
- 
--	regmap_write(regmap, base + EUSB2_TUNE_EUSB_HS_COMP_CUR, init_tbl[TUNE_EUSB_HS_COMP_CUR]);
--	regmap_write(regmap, base + EUSB2_TUNE_EUSB_EQU, init_tbl[TUNE_EUSB_EQU]);
--	regmap_write(regmap, base + EUSB2_TUNE_EUSB_SLEW, init_tbl[TUNE_EUSB_SLEW]);
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_HS_COMP_CUR, init_tbl[TUNE_USB2_HS_COMP_CUR]);
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_EQU, init_tbl[TUNE_USB2_EQU]);
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_SLEW, init_tbl[TUNE_USB2_SLEW]);
--	regmap_write(regmap, base + EUSB2_TUNE_SQUELCH_U, init_tbl[TUNE_SQUELCH_U]);
--	regmap_write(regmap, base + EUSB2_TUNE_RES_FSDIF, init_tbl[TUNE_RES_FSDIF]);
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_CROSSOVER, init_tbl[TUNE_USB2_CROSSOVER]);
-+	/* Write registers from init table */
-+	for (int i = 0; i < rptr->cfg->init_tbl_num; i++)
-+		regmap_write(regmap, base + rptr->cfg->init_tbl[i].reg,
-+			     rptr->cfg->init_tbl[i].value);
- 
--	regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, tune_usb2_preem);
--	regmap_write(regmap, base + EUSB2_TUNE_HSDISC, tune_hsdisc);
--	regmap_write(regmap, base + EUSB2_TUNE_IUSB2, tune_iusb2);
-+	/* Override registers from devicetree values */
-+	if (!of_property_read_u8(np, "qcom,tune-usb2-amplitude", &val))
-+		regmap_write(regmap, base + EUSB2_TUNE_USB2_PREEM, val);
- 
--	ret = regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, val, val & RPTR_OK, 10, 5);
-+	if (!of_property_read_u8(np, "qcom,tune-usb2-disc-thres", &val))
-+		regmap_write(regmap, base + EUSB2_TUNE_HSDISC, val);
-+
-+	if (!of_property_read_u8(np, "qcom,tune-usb2-preem", &val))
-+		regmap_write(regmap, base + EUSB2_TUNE_IUSB2, val);
-+
-+	/* Wait for status OK */
-+	ret = regmap_read_poll_timeout(regmap, base + EUSB2_RPTR_STATUS, poll_val,
-+				       poll_val & RPTR_OK, 10, 5);
- 	if (ret)
- 		dev_err(rptr->dev, "initialization timed-out\n");
- 
+And yes this whole thing sucks.
 
--- 
-2.49.0
+We can't be arbitrarily walking the maple tree to get the actual prev
+either as it's inefficient.
 
+>
+> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+> ---
+>  mm/madvise.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 267d8e4adf31..c87325000303 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1536,10 +1536,10 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+>  				   struct vm_area_struct **prev, unsigned long start,
+>  				   unsigned long end, void *arg))
+
+Is this patch broken? This seems to be chopping bits off, or maybe it's
+because the @@ line shows the start of the decl?
+
+Makes it look like prev is being shadowed...
+
+Actual decl:
+
+static
+int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
+		      unsigned long end, struct madvise_behavior *madv_behavior,
+		      void *arg,
+		      int (*visit)(struct vm_area_struct *vma,
+				   struct vm_area_struct **prev, unsigned long start,
+				   unsigned long end, void *arg))
+
+>  {
+> +	struct vm_area_struct *prev = NULL;
+>  	struct vm_area_struct *vma;
+> -	struct vm_area_struct *prev;
+
+As far as I know there's not a case where this matters.
+
+But it does suck to be passing around a pointer to uninitialised state.
+
+> -	unsigned long tmp;
+>  	int unmapped_error = 0;
+> +	unsigned long tmp;
+
+Not sure why you're fiddling with this?
+
+>  	int error;
+>
+>  	/*
+> --
+> 2.49.0
+>
