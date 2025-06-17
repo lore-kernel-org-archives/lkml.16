@@ -1,173 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79252EA175;
-	Tue, 17 Jun 2025 16:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED902FA62D;
+	Tue, 17 Jun 2025 16:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178177; cv=none; b=hwDWV5jhVoUNHCm2H7rpH3UAeYNRFfCWvK24xyXyplMHOxwpt/p6wyoiNSLX0FjazPq6tbO3gDQgr0heNSHztZWY4aJ5ywqV1cNl2hVs8OuCUSfOKPZtfBNazsU9hJdyaoRPl7nDRoGUVEHhfJLrn/AKrl5EbHBaML5U5abxnm4=
+	t=1750178488; cv=none; b=jd13RzbDVJena9Sjqa6RMkYuELX+KT7quK/3s9N10JONTxeAAG1xVEav79Zcnkp7sZ6+GSzE5xzGo+hzFTsmhc9VXQSYvj/rvSueweOT8Q2aIAkz1bub6ESVT3bLJQ8ysBMLCAq2jkxpY1Lwl6pZpT4rPdgn5wAi4kTqd4Um7Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178177; c=relaxed/simple;
-	bh=bq8mzeX0QkCOdRY4fhxPAU9SH5SZwaXWZhjNFAv43gs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CJHa10ar41jGHr5ygeACaglOVIPfPQLGijtOviHqHUnKnOJSEWaxODaCVcQNfTSSajS2/n1x/BjF39ShR4HzoOvDI4ec+Jd/jjHposZvEoZ+eSpBVIXAAj1+UNsVV8nQC4cEtcDR85rQoEJod6jpHMYeRZ4G3xJ9aJVyBf6seMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zp8cBVGB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750178488; c=relaxed/simple;
+	bh=rdxjPTpTsVt/SnRY7PKjl1A9WOWE6Jp00hg/fNkh9po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KHsaKIIObXnXtGiYyUlso/QKn9WsDxPeCohsJFToM3mOcvByIsN726TrSpinY4LI/SUx/5rPrs+SpSdk3CFrw9Ul1gm0C1IxYHiskUeZPscEnvO05vyokSUIEmGQl+1uBhRSVs7X0gM6ONmfARnegWHbKms1C/13lFleLP0EZiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R25Xp4nc; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zp8cBVGB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF174C4CEE3;
-	Tue, 17 Jun 2025 16:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750178177;
-	bh=bq8mzeX0QkCOdRY4fhxPAU9SH5SZwaXWZhjNFAv43gs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zp8cBVGBL3B7+cVLlo2sXCfehRHKX6KHdfgcdm52sZWDHm3d2bqwLjHjaDxfEaNXm
-	 l7jhkEsQVj8Q3KbPueqKqAr6t6RLD5OJsbqJ/3nprw/okGoLjvk0sHm235aySHiYsm
-	 aWNWSx+G0UhiZQka+dGBUoZX0ov4lmojIL8eB0VAvxupjPqRM/4tCliFQPDTvsv9GA
-	 776WBqzY8WjltACyLYjmf+uqjy0lxPqaQC0t6h+7HxFp+S4jfKzSsOsX8ck1Ic34iS
-	 gz/PZIPYTB76w8IKanxrF07tctZIgmI9lE4KqMUFp8POu+vlzmRPTjE2vRYclJ6t9I
-	 sJywAxqR/iwyA==
-Date: Tue, 17 Jun 2025 22:06:05 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-	neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, conor+dt@kernel.org, 
-	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v5 3/4] arm64: dts: qcom: qcs615: enable pcie
-Message-ID: <axcfeisgtkhnpoayj4zpn4sy237xz6udk2qzm62qk4nfxcica3@behrkpyuarb2>
-References: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
- <20250527072036.3599076-4-quic_ziyuzhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R25Xp4nc"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so10573055e9.1;
+        Tue, 17 Jun 2025 09:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750178485; x=1750783285; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=21G7K3oa7nNa6fSkku+S/f2TFwa2VN9LqV0I5kPoxQ0=;
+        b=R25Xp4nc0eJKwbv6cmE+W2UZUiAukiMzseD8g1FgBE/WcdUZniks8Twbp8IuPKsvDb
+         on6xcUvCwOSfRz8bZJYFYGpXF3i6/kcBZKSaOXjbDFaRQ8mZG9FAoREsIjFDFVrNrkph
+         PaVhqr3Ip6UJAbYMy4UL7eQ03lKDWNa1lfh1YcjnNTgi4esl+6Dg2L8v/cHCFJRa4xqr
+         V/J9mDkmT1z5IP+IhrqTCgxC2CtPWFZaoP0d3Paaz4lL5A+yo8/aYe8RQUJtKmPctMqJ
+         JkmZVI0G7qWuDPk8B7imTwBQZF25y5nFnKP4lopvGEW1tXfm0L1sE6eygRpcO6ZKYmrU
+         NgcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750178485; x=1750783285;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=21G7K3oa7nNa6fSkku+S/f2TFwa2VN9LqV0I5kPoxQ0=;
+        b=OVccAgdn5ZGRBPij7tjjACG/+DTfj7g0waaIjWvWqGVIdUiWssXpQYql7WBxyI8iUN
+         sqEL6Rd7F/jF9xm3o5T+vqWF40PljE0dRKT4/p2zHRBGnH2QKUdty+eVFOUMJkp7w8sU
+         q+fLU41aAK41tBo9uIJfm1U8Jcra6MeBxdyXEayIFAjI0VfD2SmBi/tVdk/huaL6ytMN
+         bd9+7Ss+HOew0+fBzvVEj9/UWkbnLbikAUyY6Tgt6Cs74ghSYXxdJNVcaWd7o/6gvJxe
+         Jn60TD5Xyr7JXFdDNMEvZGbPA1QP8nhgGnPVaLNt4XhujKXkIsnMJldxQ8KTUVNMXl+o
+         YLww==
+X-Forwarded-Encrypted: i=1; AJvYcCVVlS3nUbA9tKNRfQ299GptYLw5eY0FN4dvinAZCFSSeCFmfKHctBFI+x5MGrxhiehElrbStsEG/rR2UGMesYs=@vger.kernel.org, AJvYcCWF/s+AAJmmK327BUj1vchVuZXTz3lywfPp2xxD5k3ktrKrYpj6xQMKFmMpZ7fb6hdZnyVgy3INqfia28Gg@vger.kernel.org, AJvYcCXUr+1mkJQGzRgkr6Wbh1BpeFYlpH05DI8+nBWZp4lcnfjpnRzRKgZc4wpjKMuQRJrkh5pX4P5V2ylp@vger.kernel.org
+X-Gm-Message-State: AOJu0YxEeV/xzHwmjMQ5s18CzTniW3B1iXl/bQE4KVATH4W6fE+/DvTF
+	cNm7Krtsjuv3oO7xgq1IQUn/Q6GX11elqILxnpRrHGjMyLT5aa7bzaBu
+X-Gm-Gg: ASbGncucLcL9Z04X7J+syVnrkqCLPAaIAuWy7BSeIDoZUTJkDvkbviHyVxm6YSluAQQ
+	6222mzim6ksHTeFnLFIfXY7bVrOd2NipRfLnxcP8t9nFyMCdJTdKpu9bHFP2zH/g3G4KsMZ+Pcm
+	7ENoeVtTawJw0AJGsohDPA/9gAP93bg0D6dldg24pWvwqiV1XgW7xkGNJLNxdEkQcd2VpxHvK07
+	IJ6DRSyo7VIbw5aDyUnq+t6eXMZx+HTsggDS6tkjIcUhM59KWa3x0i75E1RRCnFSZiLnrhJA4Gs
+	SZLYJ4YHRQDM6CzJN1FvyVEweARHsJjc3Y7ZzHYxxIYxhUbH09UVOzeOtfratUjEjffV
+X-Google-Smtp-Source: AGHT+IFmZhow4l5H2yFI4b5oAR++LPmg9+bxohsFEM/5hvW+POf0Ml4orx9ZxlbbJYmos+qnKOd3xw==
+X-Received: by 2002:a05:600c:828d:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-4533c971330mr140024935e9.15.1750178484289;
+        Tue, 17 Jun 2025 09:41:24 -0700 (PDT)
+Received: from [10.38.1.85] ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e195768sm182014045e9.0.2025.06.17.09.41.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 09:41:23 -0700 (PDT)
+Message-ID: <f29b4eba-bd79-4f74-940c-8cff65495ae0@gmail.com>
+Date: Tue, 17 Jun 2025 17:39:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 6/6] samples: rust: add ACPI match table example to
+ platform driver
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
+ gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
+ boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
+ tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
+ viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
+References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
+ <20250613135407.1233005-1-igor.korotin.linux@gmail.com>
+ <aFB2FZEFcXUsW8lN@pollux>
+Content-Language: en-US
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+In-Reply-To: <aFB2FZEFcXUsW8lN@pollux>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250527072036.3599076-4-quic_ziyuzhan@quicinc.com>
 
-On Tue, May 27, 2025 at 03:20:35PM +0800, Ziyue Zhang wrote:
-> From: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> 
-> Add configurations in devicetree for PCIe0, including registers, clocks,
-> interrupts and phy setting sequence.
-> 
-> Add PCIe lane equalization preset properties for 8 GT/s.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> ---
->  arch/arm64/boot/dts/qcom/qcs615.dtsi | 146 +++++++++++++++++++++++++++
->  1 file changed, 146 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> index bb8b6c3ebd03..0af757c45eb2 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-> @@ -1012,6 +1012,152 @@ mmss_noc: interconnect@1740000 {
->  			qcom,bcm-voters = <&apps_bcm_voter>;
->  		};
->  
-> +		pcie: pcie@1c08000 {
-> +			device_type = "pci";
-> +			compatible = "qcom,pcie-qcs615", "qcom,pcie-sm8150";
-> +			reg = <0x0 0x01c08000 0x0 0x3000>,
-> +			      <0x0 0x40000000 0x0 0xf1d>,
-> +			      <0x0 0x40000f20 0x0 0xa8>,
-> +			      <0x0 0x40001000 0x0 0x1000>,
-> +			      <0x0 0x40100000 0x0 0x100000>,
-> +			      <0x0 0x01c0b000 0x0 0x1000>;
-> +			reg-names = "parf",
-> +				    "dbi",
-> +				    "elbi",
-> +				    "atu",
-> +				    "config",
-> +				    "mhi";
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +			ranges = <0x01000000 0x0 0x00000000 0x0 0x40200000 0x0 0x100000>,
-> +				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
-> +			bus-range = <0x00 0xff>;
-> +
-> +			dma-coherent;
-> +
-> +			linux,pci-domain = <0>;
-> +			num-lanes = <1>;
-> +
-> +			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "msi0",
-> +					  "msi1",
-> +					  "msi2",
-> +					  "msi3",
-> +					  "msi4",
-> +					  "msi5",
-> +					  "msi6",
-> +					  "msi7",
-> +					  "global";
-> +
-> +			#interrupt-cells = <1>;
-> +			interrupt-map-mask = <0 0 0 0x7>;
-> +			interrupt-map = <0 0 0 1 &intc GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 2 &intc GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 3 &intc GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 0 0 4 &intc GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
-> +				 <&gcc GCC_PCIE_0_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>;
-> +			clock-names = "pipe",
-> +				      "aux",
-> +				      "cfg",
-> +				      "bus_master",
-> +				      "bus_slave",
-> +				      "slave_q2a";
-> +			assigned-clocks = <&gcc GCC_PCIE_0_AUX_CLK>;
-> +			assigned-clock-rates = <19200000>;
-> +
-> +			interconnects = <&aggre1_noc MASTER_PCIE QCOM_ICC_TAG_ALWAYS
-> +					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
-> +					<&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-> +					 &config_noc SLAVE_PCIE_0 QCOM_ICC_TAG_ACTIVE_ONLY>;
-> +			interconnect-names = "pcie-mem", "cpu-pcie";
-> +
-> +			iommu-map = <0x0 &apps_smmu 0x400 0x1>,
-> +				    <0x100 &apps_smmu 0x401 0x1>;
-> +
-> +			resets = <&gcc GCC_PCIE_0_BCR>;
-> +			reset-names = "pci";
-> +
-> +			power-domains = <&gcc PCIE_0_GDSC>;
-> +
-> +			phys = <&pcie_phy>;
-> +			phy-names = "pciephy";
-> +
-> +			eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555
-> +						     0x5555 0x5555 0x5555 0x5555>;
-> +
-> +			operating-points-v2 = <&pcie_opp_table>;
-> +
-> +			status = "disabled";
-> +
 
-Please define the PCIe bridge node also.
 
-- Mani
+On 6/16/25 20:52, Danilo Krummrich wrote:
+>> +kernel::acpi_device_table!(
+>> +    ACPI_TABLE,
+>> +    MODULE_ACPI_TABLE,
+>> +    <SampleDriver as platform::Driver>::IdInfo,
+>> +    [(acpi::DeviceId::new(c_str!("TEST4321")), Info(0))]
+> 
+> Let's use something like "SAMPLE_DRV0" instead.
 
--- 
-மணிவண்ணன் சதாசிவம்
+Nope, that's prohibited by ACPI HID naming rules. A brief description
+can be found here:
+https://uefi.org/specs/ACPI/6.5/06_Device_Configuration.html.
+According to section 6.1.5, ACPI IDs must be 7 or 8 characters long and
+follow the format "AAA####" or "AAAA####", where A is an uppercase
+letter [A–Z] and # is an uppercase letter or digit [A–Z, 0–9]. No
+underscores or special characters are allowed.
+
+The `iasl` utility throws an error if an invalid HID string is used in a
+dsl file.
+
+I could suggest on of the following:
+DRV0001
+DRVR0001
+PDRV0001
+TEST0001
+TST0001
+
+Let me know which one you'd prefer for the code and documentation.
+
+Best Regards
+Igor
