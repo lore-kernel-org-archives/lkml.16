@@ -1,41 +1,51 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558612E7166;
-	Tue, 17 Jun 2025 13:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7CF2E7166;
+	Tue, 17 Jun 2025 13:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166073; cv=none; b=XXp1iJJ5mq20N/E9mo/gxfQ3EKp6w7yxCYfqOIX7wt0ItkTZ+AyVUD8rnxNy2t7dz21asohaSnrQg/r5tJiRK/nQnEo2bgr8tCKXtfkY1PfDUVVqmhbvgjyzRMI5RZh1FhRYdjv5WFGeS+WLt21VcU8HOuSJDraQNzHvTyLkgiw=
+	t=1750166096; cv=none; b=A0CFZi+NkIovxPNEjyZvJQGCJJGeDIZCG6UnejjBuEJpsub6hFBleA9OpCNNLmcazcr1HL434V3Pz0IEBkjzMw6nDhPVXUXE6lHlW7hdyJLHCb3xlcLuZgQ8DZMare1EI1t1BUgBE4WVtHMcoCMR++z77ipfEOXVD8JqJG0lvAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166073; c=relaxed/simple;
-	bh=0LVGSzjpwovh30wyVpbwCgepNApCu+zccovSdlBTF/E=;
+	s=arc-20240116; t=1750166096; c=relaxed/simple;
+	bh=jWHsSqNV6uTusVU5NnYNCN38+Xz/eWr0z5GEMNQdJ0I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XWd7F5llHdR1lP3KDt6+PrMLAEraEz6hL/Hw/A782/ycHbd7pigalVK0l2uYS7vS6X3OBZ7j9wy72pGpI2aEHPLcObMQ6I7OuuWNruQMlm07O+yhEesjabm2VobJ8Dx5Bco6mOiJHOPpITvOWRiGb5IJWxdAZYad/Ad3NGh+MTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+40mfOC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0i+1PT5iTQoKt2Gkh6iEVcWp+jO0czH5oy/KQYltoGzi0psLRZ5GKEso3VtMGCFPx1U0C1pLR2l7XW2k4uP9MiYvSxka/fXDvWc8GJ0mjGbSz139rPAeBOhQwVYnFrngnJ4czmiHpss4VgvnwqvspGtESQ6UrGiCAhhaQBWx18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iNa0xfO4; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+40mfOC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C3B4C4CEE3;
-	Tue, 17 Jun 2025 13:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750166072;
-	bh=0LVGSzjpwovh30wyVpbwCgepNApCu+zccovSdlBTF/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a+40mfOCghiaCI3d0KSVALtjmhxZJ/ZB5G9TvM4lNwVuY0IDj1D1HZG1LGKa7sggb
-	 Uty+f9DuDun9IRNAf/j2FKI1/eg8uBBNuHG35MChBFR7jXMnIhHf/wRi3ZHFV27biY
-	 vte+ELk4Va+wVUBT0/Lm+y+PJ8Cxg2a8HcLNM277B9DXbH/snpVojgAVbJbp92ObH3
-	 xxoHOGpD4HyCXMh8QAbqsoAr5OMyET/HvPVYIviyWkeCYdy0wMNbYtQXiWpKmUdkNV
-	 n5WwyE1SyEUGCUvrmFwT2qBxU24QPRQmgw7PATB8NL/VutywV+JeQek9mGQXGNlT3i
-	 VlJCyUoPmLSBQ==
-Date: Tue, 17 Jun 2025 08:14:29 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: Re: [PATCH v5] remoteproc: Add device awake calls in rproc boot and
- shutdown path
-Message-ID: <2vzz6gtepjp4zmeei3jbxaagpluxs5owjctahn5qczmwa74tc6@2yzzvb26cjvk>
-References: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iNa0xfO4"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=uFLVJFpH5AQoGq4DYrwcdK29TEFz0/SXGmStaKvh9BQ=; b=iNa0xfO4f+V3dWu6OtwziiklHV
+	0IJbfpT5pYTvjelAZi7SLIUz1B2jI+jxV2Bl7wn7Kyx2lP3m7taNuoWdw3sawN3A6NuNcMxIJiWOC
+	OWPE8t/U79D6l66Bf8vpY0PEv64H7lkmHTDjIyxDBRcb4PKKarmyZljW4ZZuy1SBNwYI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uRW90-00GAVk-BT; Tue, 17 Jun 2025 15:14:30 +0200
+Date: Tue, 17 Jun 2025 15:14:30 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [net-next PATCH v2 2/2] net: mdio: Add MDIO bus controller for
+ Airoha AN7583
+Message-ID: <065e26cf-1bfb-462c-8cbc-9b4b29f1262d@lunn.ch>
+References: <20250617091655.10832-1-ansuelsmth@gmail.com>
+ <20250617091655.10832-2-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,81 +54,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
+In-Reply-To: <20250617091655.10832-2-ansuelsmth@gmail.com>
 
-On Tue, Apr 08, 2025 at 04:13:17PM +0530, Souradeep Chowdhury wrote:
-> Add device awake calls in case of rproc boot and rproc shutdown path.
-> Currently, device awake call is only present in the recovery path
-> of remoteproc. If an user stops and starts rproc by using the sysfs
-> interface, then on pm suspension the firmware fails to load as the
-> request_firmware call under adsp_load relies on usermodehelper 
-> process which gets freezed on pm suspension. Add device awake calls 
-> to fix this.
+On Tue, Jun 17, 2025 at 11:16:53AM +0200, Christian Marangi wrote:
+> Airoha AN7583 SoC have 2 dedicated MDIO bus controller in the SCU
+> register map. To driver register an MDIO controller based on the DT
+> reg property and access the register by accessing the parent syscon.
 > 
+> The MDIO bus logic is similar to the MT7530 internal MDIO bus but
+> deviates of some setting and some HW bug.
+> 
+> On Airoha AN7583 the MDIO clock is set to 25MHz by default and needs to
+> be correctly setup to 2.5MHz to correctly work (by setting the divisor
+> to 10x).
+> 
+> There seems to be Hardware bug where AN7583_MII_RWDATA
+> is not wiped in the context of unconnected PHY and the
+> previous read value is returned.
+> 
+> Example: (only one PHY on the BUS at 0x1f)
+>  - read at 0x1f report at 0x2 0x7500
+>  - read at 0x0 report 0x7500 on every address
+> 
+> To workaround this, we reset the Mdio BUS at every read
+> to have consistent values on read operation.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 
-This is much better, but it still leaves me guessing what the actual
-problem is. Does the firmware call time out? Does firmware loading
-explicitly fail upon a freeze?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Also, please rephrase the commit message to follow the order defined in
-https://docs.kernel.org/process/submitting-patches.html#describe-your-changes 
-i.e. start with the description of the problem, not the word "Add".
-
-Regards,
-Bjorn
-
-> Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-> Reviewed-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-> ---
-> Changes in v5
-> 
-> *Added more details to commit description
-> 
-> Changes in v4
-> 
-> *Remove stability from mailing list
-> *Remove the extra tab in v3
-> *Change the commit description
-> 
->  drivers/remoteproc/remoteproc_core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index c2cf0d277729..5d6c4e694b4c 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1917,6 +1917,7 @@ int rproc_boot(struct rproc *rproc)
->  		return -EINVAL;
->  	}
->  
-> +	pm_stay_awake(rproc->dev.parent);
->  	dev = &rproc->dev;
->  
->  	ret = mutex_lock_interruptible(&rproc->lock);
-> @@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
->  		atomic_dec(&rproc->power);
->  unlock_mutex:
->  	mutex_unlock(&rproc->lock);
-> +	pm_relax(rproc->dev.parent);
->  	return ret;
->  }
->  EXPORT_SYMBOL(rproc_boot);
-> @@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
->  	struct device *dev = &rproc->dev;
->  	int ret = 0;
->  
-> +	pm_stay_awake(rproc->dev.parent);
->  	ret = mutex_lock_interruptible(&rproc->lock);
->  	if (ret) {
->  		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
-> @@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
->  	rproc->table_ptr = NULL;
->  out:
->  	mutex_unlock(&rproc->lock);
-> +	pm_relax(rproc->dev.parent);
->  	return ret;
->  }
->  EXPORT_SYMBOL(rproc_shutdown);
-> -- 
-> 2.34.1
-> 
+    Andrew
