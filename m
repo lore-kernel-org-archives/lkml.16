@@ -1,110 +1,167 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140BD15C140
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB66115C140;
+	Tue, 17 Jun 2025 21:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194312; cv=none; b=hA2bQ+Hf1WQ3n6x6WQ1UZEK+oCSYOxr3guq2fbdhOH+RQRCKvc4WvrL1gCIci3jXJsmEdQo1K4UrTm3C0JWgMevT0FUKQ6mcJZmq9LrcJYm3WbdZYAW65xfofPI8apXnk98GvjKMrtFwKxbK+DhkA20T6pWo6to2WA6qZmzdaWA=
+	t=1750194343; cv=none; b=Z5V2avpdASkpg6QCDiovbSjomiT4Gtrrwag3i74+MSrK+qoCckC8OtnUwIR7Ot1LVGqLQOnFhcrNON31InjQ+zKtOKTe8ap8QIFgVjyh+p2fMl3XgGQlgdLV2DqGgHS4yIW+Bnx19gShzpLvZpNlRCN+wVZpj1eQSes21gD6mEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194312; c=relaxed/simple;
-	bh=z6As7b7u4dNJN+RFdc4kRkY6FNbad6JDPqBp4UFHYF4=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=NoCqXR1zWCYEW2QMC2cP3CxD/msNzhNGMVqSvoOznPKtwvanu5kx/Rsfau+yrsdcGaH4xa1Y6vLzCDHRQalF9+4zyB5V/RFXLa9T3Sad8846Voq2FQm2gNV6hSz8OMTW/YUpdRDxpPQ0Y392GD4P8uBAvxzMKgQuGIcp3UiDw1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--frankramirez.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1vyk0DZV; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--frankramirez.bounces.google.com
+	s=arc-20240116; t=1750194343; c=relaxed/simple;
+	bh=K/e54EAvNiLlkzbiKQYq+G8jP/1PnG8jLy6urW7N7iQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=NC/lXiInhF5Y2wI1rKrMbi/mNJpDZ7CjLceni92PgSYXG9OfT6zoz2aZbpga/38oH0IGbBwTGNvQ2koH3r5ddILC0mvBF/au3SjqRelxK9m6jD6pKWyFhgXyrpKELjYk2Vm50IgaTKP0HU//tdqiaWlyI++CvKm8chW6tu3xdOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UsLbzwUp; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1vyk0DZV"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-23632fd6248so56094045ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:05:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UsLbzwUp"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-23649faf69fso61609515ad.0;
+        Tue, 17 Jun 2025 14:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750194310; x=1750799110; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RT/4G+d3RfQXn0+3N/5uepvdPWq1t3QwRhcHYgh4JDs=;
-        b=1vyk0DZVZtYfEGAs8yVJnexsyZS0l1zZW5tvzQcX1gR5iQQOauoTamOQ5MyxyrID9x
-         LXZyZ0neQ6ZNW+J/ROcyywdNaP8aCHL8MlB17V1fI4hXtP1K1yRrEheYgTkQZb6JcAZh
-         TUuRrvZlfdPxpBUZ6pEioA3VEQK+OS91PED94VQBZ2sVa+3qKXIjTWs3deYpilMH2CKo
-         WjSgb1wfGPQbueDa9kha7Qax6mZV1sUT1pChHQmjoCFS+qrSho3wYvYpOUVEBdSrNVFu
-         xzAzhmQkayMqA3Bc4m92irGB2/5HlFBWeG31LMhs82ecZNixPESETz4Rk+OJs64UgHBl
-         yQ1Q==
+        d=gmail.com; s=20230601; t=1750194339; x=1750799139; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=MWZI32CNOnN9IhM9ZQkkMorkMQBTP2lW8bYrpv0gJAY=;
+        b=UsLbzwUpDfCDepfRerocs8xr/fJfiIRxEHVw4ZPyj92XN5JoAAZNKdcco5TVaIbZTQ
+         Az3Y8zJ0hb9MGGUz3P6xe3pa1/QgpCoIsLa56iMeTH5+fX+4jNaXEyBtz/lQhpxbzVhE
+         Dmi9tRD4pljCsYnCJ8srF6RGIJ08k94o4tAyRgyefJvLvsautuv8A++MU9lIqPP+Wtbr
+         auuI44IX7emMBjDT4Xx7fLRWh8B7tjwtJKFAy+w7GnEkuGSnf2p1nazENfhmVS4qO0Ax
+         mlPJl9+FZ/DqtWXc//rDpq0ORfb5gjaayupL3i5R/zenldTgd0t5NzTkC+MLp+LPm4nW
+         rLCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750194310; x=1750799110;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RT/4G+d3RfQXn0+3N/5uepvdPWq1t3QwRhcHYgh4JDs=;
-        b=C88odMJvfCny+39p2S3A5FpF6lSJefOfg//aAkwHmBz2eduUTdIFssH6uJht1Il3FO
-         slU7vaUsX7UxJ/niygC7PO0oqkgCLAdwpTdZGkh6mi3tRY/z5sPyREhZmKRlHREPEqPo
-         Wk8JKNO01ZCkpEZ7fY51ZXyo65/P859gy91rL5Q/JNqE98nuki9kSjjm9zcRZGwqB/9R
-         lZH4gzsDfxyRNxctkDVXRLZsdTKqJMpfTuOj8odX/MDy7NSjndbNoJsqQBzjMRsxHPPj
-         PClZLhK8Fzolq2FnEv0cZ+fnSb5tVQMl5gvJ+5qtJaSknuqfHsrEaXCwpVjWXlXPVluJ
-         yMaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXu+QxWPxdavICUY25t6LI6GrQulT13A7ybVdpjs8bSdWrUCXcXimVSzhX3ZMQXokr1kkqyfJe9eAe2FfM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX9xb6OE62CGByhPY8ylO2fPxHmGU+6t6LzqAMEsoJwePazkQ5
-	iVS9cSorzEIp+4hKbFpXpbI9y8IXuOc3q4fYm0r6tDfdMkByeW+oWEb7wJkysYxuP5RavF6VaiR
-	i+lWiysYLwhYhQYxtOV59bVms+e6K1w==
-X-Google-Smtp-Source: AGHT+IHwTb+uzPjoYirGoN97S9QWNgf/j0GBXFgirky6u+kL8qRWr7c7rA1quvr+NJg+QHNBw4iPGY34zNToFLzov2M=
-X-Received: from pgcv23.prod.google.com ([2002:a05:6a02:5317:b0:b2d:aac5:e874])
- (user=frankramirez job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:903:f8d:b0:235:225d:3083 with SMTP id d9443c01a7336-2366b32e499mr174900755ad.6.1750194310417;
- Tue, 17 Jun 2025 14:05:10 -0700 (PDT)
-Date: Tue, 17 Jun 2025 21:04:43 +0000
+        d=1e100.net; s=20230601; t=1750194339; x=1750799139;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MWZI32CNOnN9IhM9ZQkkMorkMQBTP2lW8bYrpv0gJAY=;
+        b=kox4Qaem0bTBi/0WJKW2v8ibTjAVySb58+2BuB+fAoOdm7Dbn4xGy9KJV91qnwzD+M
+         0PNcbTtpDAFMhWxrkSelzVqCcdJ2smpUlwPHcp15L0MYX2TiJUGplTSbKyZTwZ25eFX0
+         K6glW76zaAnVBz7XqJoGFMaIMcYZXaCNIzjg6mesIIiX+7zYucjWw0QuXbj4eZhvW1/k
+         LgJHfhYooOU4fLLnWjsNPsVM826HwMiHvnAh3LLwsdl5MIqOELHipQfo606Be9rjUnhw
+         2d0coPwmCKz/GRv1aLnEx1LWX6rfc7qNf7cPxxRPn/zw4UeOwInQ19ZBJbhsD3AkkXrl
+         ziTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWCk6+M8lk7UBW1mw3LlOAhGbxP7oaTMLKGIpqUWnIhm9HgLEXgWOU8ZfE/o/YWJQhyHFdMPUs+hu5tz+Fk@vger.kernel.org, AJvYcCWuZCZZWQD4gTPntha/5zo52Hx/WLK1zX/3W/+U68+0zhvBv+opaz/FYDLV4bcT6bPcSM2YsM7J@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7FLtW+eckrpcWm1diqO4XVZvtjOZN4HEQuHNfLMvSvFxAMIlS
+	MgQ6r1SCCHwMuI7DNfyLHTGgqCkpT2IdPOwQTz9SM568YnmTaz7Le0H8
+X-Gm-Gg: ASbGnctbdljFYhZLCHK7ahZ/VjKsm2Qez84RKdilchO9NompxykOIXvUssQOxZ4IGPg
+	avs3gY03P7zdZkc9wyWMKuB4B1wkxNHhoIX1ft79cBxSrF0V4EfgTmYKNCpuRV5ArYKl3WXwwEE
+	ZvFoqkbU7xkYzEIiknTo/lFmMIxnxF1l8SNlomHjaEM/qd7j1eO3X7pzDCEbOsM2ATQ76LAg/MA
+	0/8qUPcfvCc4ig0NgAjir39jO9OknnxAg9vx/5Ozi24DLl6DuAOBDFE3O9Z6S9K9vmIrK3MGJO/
+	MtjDWVlVNjkwXRKBsnviIlqt9I5TbH3wIux5TB/Mr1esWt0bZsuVKUlsKtdHIaU8fZUspGrG2aU
+	+p2NnCsdCyIWM2BXMbPCGFCldshhXzD4PITc=
+X-Google-Smtp-Source: AGHT+IHJ8Zz+Wa41Mi58v0WVUmeQPuLbyqXhrbVushVSr8N5IOiRmInDATrimOPjEYn0atMSm4xAKg==
+X-Received: by 2002:a17:902:f652:b0:234:cb4a:bc1b with SMTP id d9443c01a7336-2366b17c593mr237597885ad.49.1750194339137;
+        Tue, 17 Jun 2025 14:05:39 -0700 (PDT)
+Received: from ?IPV6:2601:648:8100:3b5:c6ef:bbff:fec0:9e95? ([2601:648:8100:3b5:c6ef:bbff:fec0:9e95])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365decb5f9sm85041815ad.194.2025.06.17.14.05.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 14:05:38 -0700 (PDT)
+Message-ID: <5f055416-9c49-42c0-9ba0-e45f6aaeac04@gmail.com>
+Date: Tue, 17 Jun 2025 14:05:37 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250617210443.989058-1-frankramirez@google.com>
-Subject: [PATCH] scsi: pm80xx: Free allocated tags after failure
-From: Francisco Gutierrez <frankramirez@google.com>
-To: Jack Wang <jinpu.wang@cloud.ionos.com>, 
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Francisco Gutierrez <frankramirez@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cgroup/rstat: change cgroup_base_stat to atomic
+To: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>, tj@kernel.org,
+ hannes@cmpxchg.org, mkoutny@suse.com, cgroups@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
+Content-Language: en-US
+From: JP Kobryn <inwardvessel@gmail.com>
+In-Reply-To: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This change frees resources after an error is detected.
+On 6/17/25 3:26 AM, Bertrand Wlodarczyk wrote:
+> The kernel currently faces scalability issues when multiple userspace
+> programs attempt to read cgroup statistics concurrently.
+> 
+> The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush,
+> which prevents access and updates to the statistics
+> of the css from multiple CPUs in parallel.
+> 
+> Given that rstat operates on a per-CPU basis and only aggregates
+> statistics in the parent cgroup, there is no compelling reason
+> why these statistics cannot be atomic.
 
-Signed-off-by: Francisco Gutierrez <frankramirez@google.com>
----
- drivers/scsi/pm8001/pm80xx_hwi.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Have you considered the "tearing" that will occur when writes and reads
+are happening in parallel?
+The existing state is more of a snapshot approach. Changing the fields
+involved to atomic and lockless reading/writing can result in
+inconsistent values, i.e. fieldA might be more current than fieldB.
 
-diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80xx_hwi.c
-index 5b373c53c0369..c4074f062d931 100644
---- a/drivers/scsi/pm8001/pm80xx_hwi.c
-+++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-@@ -4677,8 +4677,12 @@ pm80xx_chip_phy_start_req(struct pm8001_hba_info *pm8001_ha, u8 phy_id)
- 		&pm8001_ha->phy[phy_id].dev_sas_addr, SAS_ADDR_SIZE);
- 	payload.sas_identify.phy_id = phy_id;
- 
--	return pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
-+	ret = pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
- 				    sizeof(payload), 0);
-+	if (ret < 0)
-+		pm8001_tag_free(pm8001_ha, tag);
-+
-+	return ret;
- }
- 
- /**
-@@ -4704,8 +4708,12 @@ static int pm80xx_chip_phy_stop_req(struct pm8001_hba_info *pm8001_ha,
- 	payload.tag = cpu_to_le32(tag);
- 	payload.phy_id = cpu_to_le32(phy_id);
- 
--	return pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
-+	ret = pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
- 				    sizeof(payload), 0);
-+	if (ret < 0)
-+		pm8001_tag_free(pm8001_ha, tag);
-+
-+	return ret;
- }
- 
- /*
--- 
-2.50.0.rc2.696.g1fc2a0284f-goog
+> By eliminating the lock, each CPU can traverse its rstat hierarchy
+> independently, without blocking. Synchronization is achieved during
+> parent propagation through atomic operations.
 
+Even if the tearing scenario mentioned above is acceptable, removing
+the lock will break synchronization of flushing non-base stat
+subsystems.
+
+> 
+> This change significantly enhances performance in scenarios
+> where multiple CPUs access CPU rstat within a single cgroup hierarchy,
+> yielding a performance improvement of around 50 times compared
+> to the mainline version.
+> Notably, performance for memory and I/O rstats remains unchanged,
+> as these are managed in separate submodules.
+> 
+> Additionally, this patch addresses a race condition detectable
+> in the current mainline by KCSAN in __cgroup_account_cputime,
+> which occurs when attempting to read a single hierarchy
+> from multiple CPUs.
+> 
+> Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+> ---
+> Benchmark code: https://gist.github.com/bwlodarcz/c955b36b5667f0167dffcff23953d1da
+> 
+> Tested on Intel(R) Xeon(R) Platinum 8468V, 2s 48c 2tpc, 377GiB RAM, Fedora 41:
+> +--------+-------+
+> |Mainline|Patched|
+> +--------+-------+
+> |369.95s |6.52s  |
+> +--------+-------+
+> 
+[..]
+> @@ -820,7 +813,6 @@ struct cgroup_subsys {
+>   	 */
+>   	unsigned int depends_on;
+>   
+> -	spinlock_t rstat_ss_lock;
+
+This lock is not used with base stats. The base stats are not a formal
+subsystem.
+
+[..]
+> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+> index cbeaa499a96a..36af2b883440 100644
+> --- a/kernel/cgroup/rstat.c
+> +++ b/kernel/cgroup/rstat.c
+> @@ -9,7 +9,6 @@
+>   
+>   #include <trace/events/cgroup.h>
+>   
+> -static DEFINE_SPINLOCK(rstat_base_lock);
+>   static DEFINE_PER_CPU(raw_spinlock_t, rstat_base_cpu_lock);
+>   
+>   static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu);
+> @@ -37,14 +36,6 @@ static struct cgroup_rstat_base_cpu *cgroup_rstat_base_cpu(
+>   	return per_cpu_ptr(cgrp->rstat_base_cpu, cpu);
+>   }
+>   
+> -static spinlock_t *ss_rstat_lock(struct cgroup_subsys *ss)
+> -{
+> -	if (ss)
+> -		return &ss->rstat_ss_lock;
+
+This was needed for non-base stat subsystems like memory and io.
+
+> -
+> -	return &rstat_base_lock;
+> -}
