@@ -1,290 +1,224 @@
-Received: from mx0a-0014ca01.pphosted.com (mx0a-0014ca01.pphosted.com [208.84.65.235])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B82143C61;
-	Tue, 17 Jun 2025 07:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=208.84.65.235
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147085; cv=fail; b=G2gnW0JWlysu5nc1i5F3ji21kimu1jQXHUEk41YYECSgu00xdviPRbLN5f5S7c8jWj5WeEjhwnXtrin9+MuLignYYmot0o+uxPZ5/pW6k6UBo6p1A402XLJiY9pO3kI9nL9d5kJevnWz5GouHjuBTk611+r/2oDrbv9L/jHemsU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147085; c=relaxed/simple;
-	bh=R0YuGup7oNGzSd39b6WcIr2pkcISejiOTbY0RoJfigY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BJ0djN3+FZ1m4j7nIqSEnpobakElJB2QTYDClL2mfrI436XwTZKlxv93TZwkc3cYNW3mlUFRj9AotST3YoQ4ExUwiS0WoSyrRqwAC5JUn409dkx1/KCsxz1Ov5znTO45v/bPpFuBm9VRn8Gf3pPBDKq3jMT/CQAQPISuyuCNczo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com; spf=pass smtp.mailfrom=cadence.com; dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b=Gnk2raix; dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b=Itm/U33Y; arc=fail smtp.client-ip=208.84.65.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cadence.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cadence.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E2028CF65
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750147150; cv=none; b=b0gzlqK6X123mZd5ofZtGH3fRTiDM0DOgySxIzfsHkW1Oe4ZR34LTQ6REQtO9IlDcZYvpK7Rb67Bd85QKkAPBygIgeyHLpsICIxahpNjUM7Dcr9UZ53PBiUcdm3rGBejmpac527rXsnkc34lSV734ELP7tjgKZMBMolpMUrNKvI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750147150; c=relaxed/simple;
+	bh=zjk3Lu99iWLnSGoEQnV13yzZ0ZggfgFJolxyWKbVVQI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bu37sBcfM7MegdYiQneLGTw8NtiVr9bJglmWY2/NWpazXqKItAozQefI2q/mgo6IdkWv+6CBuj091gpWYkUeYvXH5MUt4e0bAp6xF1DQUzPVnVd9nC5zdBoeneLTkXiJXAXa8t2ooduz0ei62t7qZjo1/sJGoGv5EFw5BAqiKHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AkQX+5ry; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="Gnk2raix";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="Itm/U33Y"
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-	by mx0a-0014ca01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H6LYgG020916;
-	Tue, 17 Jun 2025 00:15:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=proofpoint;
-	 bh=jFmmUDW27CXpldBtFauuofXOSzY4NSUta310KaxpEC0=; b=Gnk2raix5wzJ
-	W/Xi6Josv/FpuEH+QgzMs23aQRRmTd5OeyjqJ+bt7lW0vW9Hi6W1pMXl3IjoQHAg
-	pgMTssyEIvzArTfUP0VSImTyiPwM2fOH2Fkk+XrYBmN8VD/bK/olaFoi0cqZ9iVo
-	Ld5eADe9alHRTQnXfSP/teMd04SuHHh9876gWPFwU62YohRpsldiDCI/clcl0P/2
-	txAFPP+XOMlLfZsh39rBTa+H6bbvlmBFladXxXDa1CfkGjpf6398RVftWH/2ZGqC
-	KkwdcT730SgWDrO5kp6rFBaj6FtRP/FIt1S/u+9bchZTD4q/ykIZ+qApoFsJXncs
-	vkpYL9wd9g==
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2085.outbound.protection.outlook.com [40.107.243.85])
-	by mx0a-0014ca01.pphosted.com (PPS) with ESMTPS id 4795mxjtwp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 00:15:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WnGQiXOcXjJkZpaXaEdZN5r40EaL/qBCL7zGN1Ry6seMS1H9CtqCkV+VAcrM/5PcJSXOeP69roAGxs7yXADIbjk0HqcG0/Pgj+Yek0arVZOuCRIcopZQyJRIE8aMYDPpCVhasRqtl9KjuoAr0X6YBAA56m/FsO2z8SnWaxEAbdqXkGO5ZDrxHUOoMd1Bvr0XYQWhnmJ5yK/Uv0eQPy1QqSI+yghF4Vs/z9vT84URgrVoBSoH1m5gAWiX+G9Ldk8GKFTtfHWLSC/Osn3snR/V48QBb1GGDmnFhTmRESOQiI36brJ7l+JWpPLRdBVojmUr/IBfBLGjry78oi+vAe8tqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jFmmUDW27CXpldBtFauuofXOSzY4NSUta310KaxpEC0=;
- b=A/pVcNkBf4uN/rAOFh03kppsp+19c6cS0C9RcF2mJHsUQHQfYUexrnPAmEkkw4D3YpIZ4CLd6wi/LQOFkdpRQbAG91KYmu3Q41VwcHZ94OdTlg1gBarxA1S0MbYmq4DWbw9jET+jEmZYQbAAAO48yGC0PNQw93bN/yw66JjVp2mDSzIriOr+uMBH7g/2sqh/9fq+lXfCE+/JJpGVNIn3kILP5dCwA4Dw6lXbYW099OUMT/tY27gNnRgH6GfO3iaHTzl3I+sI3nrVmkBN4w6UAUpzLQOxID5TpCDADznbCk0Le/thBAGRF2AzG/oOnGucrrtwbuDBnAckV9E1o39NrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
- dkim=pass header.d=cadence.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jFmmUDW27CXpldBtFauuofXOSzY4NSUta310KaxpEC0=;
- b=Itm/U33Yn0Jqqq7aX3nN+W6nlwRX5yZ3Fl+UtIB4RTVhZXk+vK4EYLqTALVayOD9TIjo+h3/TtChh2G/UHKbntOXMwF6/3Rf0f4wMlCpBZgEYNx7E2IcyA1zC9DpbEj58KmF8sPJMD+LbQ1pu60I9C+NsYhMAuc99i+JWmRjDcM=
-Received: from PH7PR07MB9538.namprd07.prod.outlook.com (2603:10b6:510:203::19)
- by DS0PR07MB10330.namprd07.prod.outlook.com (2603:10b6:8:1d5::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 07:15:06 +0000
-Received: from PH7PR07MB9538.namprd07.prod.outlook.com
- ([fe80::5dbd:49e3:4dc:ccc7]) by PH7PR07MB9538.namprd07.prod.outlook.com
- ([fe80::5dbd:49e3:4dc:ccc7%5]) with mapi id 15.20.8792.040; Tue, 17 Jun 2025
- 07:15:06 +0000
-From: Pawel Laszczak <pawell@cadence.com>
-To: "peter.chen@kernel.org" <peter.chen@kernel.org>
-CC: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Pawel Laszczak
-	<pawell@cadence.com>
-Subject: [PATCH] usb: cdnsp: Fix issue with CV Bad Descriptor test
-Thread-Topic: [PATCH] usb: cdnsp: Fix issue with CV Bad Descriptor test
-Thread-Index: AQHb31cLdpu3CalZOEyDMFRKSy2Xv7QG76hQ
-Date: Tue, 17 Jun 2025 07:15:06 +0000
-Message-ID:
- <PH7PR07MB95388A30AE3E50D42E0592CADD73A@PH7PR07MB9538.namprd07.prod.outlook.com>
-References: <20250617071045.128040-1-pawell@cadence.com>
-In-Reply-To: <20250617071045.128040-1-pawell@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR07MB9538:EE_|DS0PR07MB10330:EE_
-x-ms-office365-filtering-correlation-id: 4f73c955-add7-44b0-caad-08ddad6eb014
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?9l7IWV5PjyX+Gn3UssbFvAcK5dspHF/nehDL4OrIz7JU9PeDf/iPLwi8LGcJ?=
- =?us-ascii?Q?1fdxW9E8lQXsMx1xU15lpL1wpXyHXgrmLxDZycCym7KqNRuxYX4l8yceOd3D?=
- =?us-ascii?Q?zAhp8DDE/PNlT+HdF+x2ZcYwcI2B/kvUiIHFi+/HqSKX3geWAIWa+aTipgeH?=
- =?us-ascii?Q?w/jN9oO2wjC8VNWUCFVBbKUKfkb3bPflKFZwqrqEhgJz/8XtxTXC1DpoDS3F?=
- =?us-ascii?Q?kra26kMxYZuor9jRkhIHpG+IJ6/8Vdh4g7ykdvfvXHNKALTN+DUY1YZ/nswl?=
- =?us-ascii?Q?inJNfrfSkQYJ+41xyNu/DRni/IJmduSv9xci9+Kxj5Yl75IYq/autJ6P+s5w?=
- =?us-ascii?Q?SHVoEAulWvYNLqjWLp8flyTdOBF+/PO97Z/0eEt0Zl9P5tZInlcfmtIf3HT5?=
- =?us-ascii?Q?fzI0c4JQxX1EzQTdvQstC5hEorF7wuAUxRUeix3V0f/ucup6p1MY3e+vHOiq?=
- =?us-ascii?Q?sffgRQqdztyeUxZshb9sm+wzv0yCYJnuBF3ytyJyHdAzYEKGRLNyNrmygyyX?=
- =?us-ascii?Q?rIaC4h7HWT+H4ii4Yc7Gyjf4vxj1AgNJuX2y8sgWci/Okgllw+h0bqad9r99?=
- =?us-ascii?Q?abHbdKadOFYBhnV7TSH8L1xq5Sluc7nV0IxjIhzpH2IzYlLQ6NntX/c16l8C?=
- =?us-ascii?Q?e+PTKx90hGo2NwM0qxY/8BR1Ti6L2XGW6mKAQl7FpBL9716BWOIBSSUuig30?=
- =?us-ascii?Q?8v5pN6iICZxo01T38YW+X2lA5KGMbBz04DAp/9xUxW78qfci1sVA3MgH0e7+?=
- =?us-ascii?Q?/UCtCqyRx77d8h2rWfnCuQsFQFdox02L6MmuM2zBvncTygvUrhKRUaCppfEq?=
- =?us-ascii?Q?bUjDnqaAoXmpnGrGzDkdyEcOnRt8gn8EVCSjFP4QfCOlaQjbmCkrQUOTKWA7?=
- =?us-ascii?Q?C+n3qjmBCq6HgptcGrpQs7HnSqeRjoYS3uq3NcaU9BvG69UR9fCXGX6tP95V?=
- =?us-ascii?Q?iJN4lOGgd/afMUdPtzbxoEU1qJ1pgGJoRIegpY9EsdneaaEbkYNZ8lmC61YS?=
- =?us-ascii?Q?Hc4KhYNy5uVeVWyldhaXFZcaQGd1gYBUjyCjNvJV0vt7eZoBBeNJ3UlDpuEb?=
- =?us-ascii?Q?Xf7BepfEf7ezLm8pXMDFKIknjxMiBVVAXeRxcFGImZwjhlikq5BdSaTMS98v?=
- =?us-ascii?Q?nCfu1Y4kOJx+2UjYIR4wciqI7gVaV/XcNmtlknKqFNWdm5HAA6ldHsMejh8Z?=
- =?us-ascii?Q?QzKfra9x6HevXX++2oTHMncBzNKu6ffQhRsJeADggcFG2QVFw36utn8BGhe7?=
- =?us-ascii?Q?GlhTFmphscWPGiCHgpkB681v9CQclglwbrn1jHiPqa8CcHe7rdYPWlH5pX2c?=
- =?us-ascii?Q?/oqS5LjkZZiGOzCDSJHlwMbEMoBTj+vd0gL1nENgS4PQDhjMLPCAno04OI98?=
- =?us-ascii?Q?ehwpZkSJVG/O0zubTe3PHfqjAvc6/RZ272xIjxfnDrjUbEFDvCbztdoatmY2?=
- =?us-ascii?Q?Xqq5AFnhV/uW7dbu8UBptdcPjq/Y0darxQmas4TM/2h0RUP+xSxgfw=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR07MB9538.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?jUyWI4hfFBmMqqMUkE0pFwPe92bvmZLFGpkDx0tZucosDr2bFcQmI8kkDMF1?=
- =?us-ascii?Q?/59OyvVTlLrFHaL4i8zvDyquOfSePPmE4nqA4yr1Z3f9IHM8A1+kg21MnMwa?=
- =?us-ascii?Q?+GfjrLLFQszFlR45RpwSQarrVP1a8N1IZO3d8u8V/oyMuK0dPQirDHAKT6xL?=
- =?us-ascii?Q?Z/MyTnYAB5d4gj76HheDNAKuYghIVDXcjYe/kEZW1TuZL6KEd8BSLC5golkN?=
- =?us-ascii?Q?m4aa1JXhDBHUHP99fnlok5YA5a60fPRYHxwMxF6aQKs5CYbyqypmjM2Uz/6E?=
- =?us-ascii?Q?rPkR2ZJIXcW0d4cLB5MvFGyGxXX16lQgaAPYFjZ6nqCfdiUsJQghmsYL3SBH?=
- =?us-ascii?Q?tkgx5pcohoCP6MRcQp5bT0AZTxD5hPiwkdsfhROtQfpHz9P+hZ5/c+uxR8A7?=
- =?us-ascii?Q?BeAbHd2mbjz7vPgN6+awKzNwezTiCdk8nomDpzY6D2Ffeh3x4L8X8wrfTtIt?=
- =?us-ascii?Q?ct8SxuSPBiK/pAh4DIwhqfI1QjrBXKugSua+CHnwneXzhA/LXPEZR9ChNQuN?=
- =?us-ascii?Q?HzFePqnRhzSogHDGpN4De7QSi9NxmA4lUu1vxHWQxUGUf7jaHNS6Ig/s4nHJ?=
- =?us-ascii?Q?rwg5cUfEncgtoZKMqE+qmmyLun2+rQiN/SEgdrt6ZT6LIdA33V61z+kpox/1?=
- =?us-ascii?Q?jY9iDU48IeoQaXrlA6iB0bo7vdMvDnIY5zO3AOQkd5Ix/42Y3aQ4JOgHg5zh?=
- =?us-ascii?Q?gaGta7jK/wsGqJZKFhhap6xDhXeUjgVo3ykbfiEROWtdvAm1aen6fTqgksrb?=
- =?us-ascii?Q?658EskE3KkcAuNHzJKXJgZhg8Q1RiLlubgyjPPbGjlIXS4vtvpCL5XgTQvX6?=
- =?us-ascii?Q?r8deMhRJDtvXIGtqiFgLNFLJSP4z6HcOfYNcgQEEpJG2IqpGsQDmk8jlfRWK?=
- =?us-ascii?Q?7htgUbhX6lapAPtBtoWEi18lkK3uA055RcjN7yCUTPwgaIifoPEEneuTmvXT?=
- =?us-ascii?Q?P6kHei/oKVTIql6GUI0VLeWrQw1Fm4t69ZfXklmOzcY8Q94/hrJ0dwiakXNN?=
- =?us-ascii?Q?z3xdEM37eQuDyINSjP1LSkb0dNQtEIJSNBEHM/4ihWLdAki7LUgE/pcs8ZfS?=
- =?us-ascii?Q?Ju28E4WW/12Nv8wuKhDHaOPpG98A5XLJxRFu32fyjT57snoa9whjls+t0REy?=
- =?us-ascii?Q?34oqxdCarH2YEw9Uq0AQrqhaAENvoL0ZFlh0a0L/YnFgyhTRh/Aq2OSyekaX?=
- =?us-ascii?Q?UVaP9OofKuX0d3iQW5Kco7QWBi7cyoaAOIDSIPz4yVXTS1IaVhaUV/LDhSHB?=
- =?us-ascii?Q?JN2VuzUBBn/P4wxx21701xMaW0sswfEB1EZqndqd/q61Qztc3qwHk6u0jGzl?=
- =?us-ascii?Q?nR2H3KSydz++7Jv95rzRlOLdJ+FM+93dcq7TtL68e6OuAVc6r4DsY2feFUsC?=
- =?us-ascii?Q?fR6dd2qJcoW8Y2cS+8k4QDhQS5RJ6sCSXK7AnFUSLtLWx07SOIUOuUMnof4U?=
- =?us-ascii?Q?PTYPCTeTgUD4WO1+xJ/4d7m0XFYnPaPyBU94KJAu1BmfMXa2H0kOY98I5T0P?=
- =?us-ascii?Q?HlMBd7sRrKOFcJpy/WtybrlekM8oyR9nVi2yIdLiCpEFHREpQiIFBn6FUxdN?=
- =?us-ascii?Q?dnjhdsfGvAT9imBrDvadYsNNjFjXgGkU0lmCVYcW?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkQX+5ry"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750147146;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Iuh3uJ5HTbfwgFoHlIeRrGD2skEzJ92Kdquc4NMIC1A=;
+	b=AkQX+5ryPfF9boZS9a2s9E3Fg4JclceHVA5R8QwOvAvuzyFYMESl9QRM6NpRHG6DLXIlpA
+	qL41EWiOnLq8ztIKBlEQE/Bcoz0JUn6lnnpIGHqaMRuAhAKftHni92zk+FJP70i1o3jqal
+	aO8+rjKHlXPaFLIltaiUbEaDBQqMjMo=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-644-fFs5qevgN3qAVqETi5adRg-1; Tue, 17 Jun 2025 03:59:05 -0400
+X-MC-Unique: fFs5qevgN3qAVqETi5adRg-1
+X-Mimecast-MFC-AGG-ID: fFs5qevgN3qAVqETi5adRg_1750147144
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so26478115e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:59:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750147144; x=1750751944;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Iuh3uJ5HTbfwgFoHlIeRrGD2skEzJ92Kdquc4NMIC1A=;
+        b=HuQlz6Crl2JKbkciaHDQpRLUKTg0x4oXQMFM5HyJO2F33nPQr+ucIvjHL+o+p8s1DY
+         CEsLUpnqptdGTtRG7GSKgamvCpJsDxa2wMzbriLHRD/l0jr04ezFFJwQX1XWFcZwUHGz
+         oB1j5lDd+y11mh/+fqeyRtk9wXteYnUg8PEXpJdIKDm7hwhwqBGsmwia8nHdszgXwV6N
+         DInArpja80iCMnQqxc/hff71a2sPeJdoB3jeBnjyuJzDKBTqHyFLuDcQnPkQCrUuWLH2
+         BiQvnYt0j0LK1gLLH3aZ7nmTOs4a9jKFOi6T8tfC0+jFoMEp7OeLgccSKdFmhrq8B7/K
+         ERRg==
+X-Forwarded-Encrypted: i=1; AJvYcCUD7Bw3tocilLagLH5OmLsz1FqWIlv5UOjWTfqnwQbAY3vZSLxZYdFwU+TzIr44P1lsY+W6C4NfgcoHXu0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzrCUkyxVWASfJrOs/p2FRlzaf7quj6jf4PrcIwVVm+UO5wrHv
+	tmZFnSttrts2GNvzZ1a5jcY5lqxr+shSflKb7rq85Aw4elL+uZKD7GAKKQ/i7H4BOJ+SUQ01h+2
+	9DqTveB9P0zdgIJGO4wlA0TwAOwwugQmsXhyTJhMnCsouE5QRZByoNaDkVBiV5AZdjw==
+X-Gm-Gg: ASbGncskvRWaFwLkxWbZu8zct7IIBOk9bYJonFCL9N2is1hYbe2qV+SCUP3Kvv25+PH
+	m7WorzKjct25flnyjjJ5Y2jvy1IFeMqPGfhQm0uJ8nmTEdCUeAmnci4MRNjks7jJHhmT0VRHhIE
+	1p8CAp+7V1yckg85smF5N8FxirHiWaumHwx7QRFRNVvnY+6bGrqU+CrLMMVwpkfmo1yD1Fqhy+K
+	Xqt+Euh7eR1/cs4geGEsa2GYtkFrug0Yi15QDfaCWFC+5GLerizJK1tWm/7L01f+4Atwdi6Jo8M
+	OM5aGAdg4tYBsnhuV2ouusQrQFwp6YKDv9uvWdrkUdukEDzOj4OBjpotr2b6rrLYSllcdW5E8jL
+	qpLiV0WLbqFrBONIG40RuVr0A90/md30lzkT99atl59tmuGc=
+X-Received: by 2002:a05:600c:1d9e:b0:453:7bd:2e30 with SMTP id 5b1f17b1804b1-4533cac455fmr114431715e9.29.1750147143916;
+        Tue, 17 Jun 2025 00:59:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IETHzi79K36v23NPAMCQa2de/RDdUyXF0ggT/lPYXw1DZwj4wovdsEUGNLpA2OIEK65+pL5MA==
+X-Received: by 2002:a05:600c:1d9e:b0:453:7bd:2e30 with SMTP id 5b1f17b1804b1-4533cac455fmr114431445e9.29.1750147143478;
+        Tue, 17 Jun 2025 00:59:03 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a73a7bsm13392978f8f.36.2025.06.17.00.59.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 00:59:03 -0700 (PDT)
+Message-ID: <4b0036ae-5b92-49b5-8396-412c7026b105@redhat.com>
+Date: Tue, 17 Jun 2025 09:59:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR07MB9538.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f73c955-add7-44b0-caad-08ddad6eb014
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 07:15:06.8125
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6AYOGAnorfg/+nfJkRaf5+PRGnh08VF5HJV5Xh7OrggKnLnNf8NxANrtSbi5tUwbhmmsSVQMXea7u8paR+i3Ad7OTWNzmK9lhvSaTdzBGsU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR07MB10330
-X-Proofpoint-ORIG-GUID: fvPA_GV1itjNfAiLV011Yh7kMeZwP7Hf
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDA1NyBTYWx0ZWRfX+wD8JbcsftoT fYwk/6EsNIu2xuP1FU1GbmowSgGgSaXfNppmpx29pl8zs3Zf43qLuIPNNuKRbys6hA/iKnK2NDn wGL5GsmsTqHuKJft/shvG4CXv2byHa+O9mVc0V9TIF7FhyRA9xBgHitdCPhyoLzGapQy2gJxAjw
- dCtxRzJjyA10J8k/Z6o5l6YWxq5AWzIxccFv0HczcE3bmErfGj3VAnvVJ+3BbnXR/AxP71qXKz9 4ZxGtAp9WtfjOixVFEFn0ziDBP9B6SlGTsNtK8zxqXfAIq/5B/Iy4919HOjRgYHK3Za3jJ5HP2K /WcBP8stmumr0gn96c/d6i4r7Ql51/2TYEyUe7gQOQSy/bNfPhXqW1OnG3ib6mYSUbHlY0CY9dE
- CsBJV5NOURqALVEozRQ8uK2za+71p/p2843a19PbdWUlG5vgp429sAdNXk93uC9kVkKN/ZRo
-X-Authority-Analysis: v=2.4 cv=Ks5N2XWN c=1 sm=1 tr=0 ts=685115fe cx=c_pps a=AGqRr5+gp+4rguc5uJDcHA==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=Zpq2whiEiuAA:10 a=VwQbUJbxAAAA:8 a=Br2UW1UjAAAA:8 a=MGusajUyK0823r2cBs4A:9 a=CjuIK1q_8ugA:10 a=WmXOPjafLNExVIMTj843:22
-X-Proofpoint-GUID: fvPA_GV1itjNfAiLV011Yh7kMeZwP7Hf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_03,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 phishscore=0
- adultscore=0 mlxlogscore=500 malwarescore=0 clxscore=1015 spamscore=0
- suspectscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 impostorscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506170057
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] MAINTAINERS: add further core files to mm core
+ section
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250616203844.566056-1-lorenzo.stoakes@oracle.com>
+ <727b5e89-89d7-4abf-a93c-8d6f2cb2c438@redhat.com>
+ <aFDm0YrbSAvXc5Wp@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aFDm0YrbSAvXc5Wp@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The SSP2 controller has extra endpoint state preserve bit (ESP) which
-setting causes that endpoint state will be preserved during
-Halt Endpoint command. It is used only for EP0.
-Without this bit the Command Verifier "TD 9.10 Bad Descriptor Test"
-failed.
-Setting this bit doesn't have any impact for SSP controller.
+On 17.06.25 05:53, Mike Rapoport wrote:
+> On Mon, Jun 16, 2025 at 11:10:41PM +0200, David Hildenbrand wrote:
+>> On 16.06.25 22:38, Lorenzo Stoakes wrote:
+>>> There are a number of files which don't quite belong anywhere else, so
+>>> place them in the core section. If we determine in future they belong
+>>> elsewhere we can update incrementally but it is preferable that we assign
+>>> each file to a section as best we can.
+>>>
+>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>> ---
+>>> REVIEWERS - let me know if these seem appropriate, I'm eyeballing
+>>> this. even if they are not quite best placed a 'best effort' is still
+>>> worthwhile so we establish a place to put all mm files, we can always
+>>> incrementally update these later.
+>>>
+>>>    MAINTAINERS | 28 ++++++++++++++++++++++++----
+>>>    1 file changed, 24 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index 4523a6409186..a61d56bd7aa4 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -15740,10 +15740,6 @@ F:	include/linux/memory_hotplug.h
+>>>    F:	include/linux/memory-tiers.h
+>>>    F:	include/linux/mempolicy.h
+>>>    F:	include/linux/mempool.h
+>>> -F:	include/linux/memremap.h
+>>> -F:	include/linux/mmzone.h
+>>> -F:	include/linux/mmu_notifier.h
+>>> -F:	include/linux/pagewalk.h
+>>>    F:	include/trace/events/ksm.h
+>>>    F:	mm/
+>>>    F:	tools/mm/
+>>
+>> Probably better to have some section than none ... was just briefly
+>> wondering if "CORE" is the right section for some of that. Some of that
+>> might be better of in a "MM MISC" section, maybe.
+> 
+> Maybe rather than add files to MM CORE we should move mm/ there and add the
+> MM MISC section for files we explicitly want to exclude from MM CORE?
 
-Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD=
- Driver")
-cc: stable@vger.kernel.org
-Signed-off-by: Pawel Laszczak <pawell@cadence.com>
----
- drivers/usb/cdns3/cdnsp-debug.h  |  5 +++--
- drivers/usb/cdns3/cdnsp-ep0.c    | 17 ++++++++++++++---
- drivers/usb/cdns3/cdnsp-gadget.h |  3 +++
- drivers/usb/cdns3/cdnsp-ring.c   |  3 ++-
- 4 files changed, 22 insertions(+), 6 deletions(-)
+Also an option, yes,
 
-diff --git a/drivers/usb/cdns3/cdnsp-debug.h b/drivers/usb/cdns3/cdnsp-debu=
-g.h
-index cd138acdcce1..86860686d836 100644
---- a/drivers/usb/cdns3/cdnsp-debug.h
-+++ b/drivers/usb/cdns3/cdnsp-debug.h
-@@ -327,12 +327,13 @@ static inline const char *cdnsp_decode_trb(char *str,=
- size_t size, u32 field0,
- 	case TRB_RESET_EP:
- 	case TRB_HALT_ENDPOINT:
- 		ret =3D scnprintf(str, size,
--				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c",
-+				"%s: ep%d%s(%d) ctx %08x%08x slot %ld flags %c %c",
- 				cdnsp_trb_type_string(type),
- 				ep_num, ep_id % 2 ? "out" : "in",
- 				TRB_TO_EP_INDEX(field3), field1, field0,
- 				TRB_TO_SLOT_ID(field3),
--				field3 & TRB_CYCLE ? 'C' : 'c');
-+				field3 & TRB_CYCLE ? 'C' : 'c',
-+				field3 & TRB_ESP ? 'P' : 'p');
- 		break;
- 	case TRB_STOP_RING:
- 		ret =3D scnprintf(str, size,
-diff --git a/drivers/usb/cdns3/cdnsp-ep0.c b/drivers/usb/cdns3/cdnsp-ep0.c
-index f317d3c84781..567ccfdecded 100644
---- a/drivers/usb/cdns3/cdnsp-ep0.c
-+++ b/drivers/usb/cdns3/cdnsp-ep0.c
-@@ -414,6 +414,7 @@ static int cdnsp_ep0_std_request(struct cdnsp_device *p=
-dev,
- void cdnsp_setup_analyze(struct cdnsp_device *pdev)
- {
- 	struct usb_ctrlrequest *ctrl =3D &pdev->setup;
-+	struct cdnsp_ep *pep;
- 	int ret =3D -EINVAL;
- 	u16 len;
-=20
-@@ -428,9 +429,19 @@ void cdnsp_setup_analyze(struct cdnsp_device *pdev)
- 	}
-=20
- 	/* Restore the ep0 to Stopped/Running state. */
--	if (pdev->eps[0].ep_state & EP_HALTED) {
--		trace_cdnsp_ep0_halted("Restore to normal state");
--		cdnsp_halt_endpoint(pdev, &pdev->eps[0], 0);
-+	if (pep->ep_state & EP_HALTED) {
-+		/*
-+		 * Halt Endpoint Command for SSP2 for ep0 preserve current
-+		 * endpoint state and driver has to synchronise the
-+		 * software endpointp state with endpoint output context
-+		 * state.
-+		 */
-+		if (GET_EP_CTX_STATE(pep->out_ctx) =3D=3D EP_STATE_HALTED) {
-+			cdnsp_halt_endpoint(pdev, pep, 0);
-+		} else {
-+			pep->ep_state &=3D ~EP_HALTED;
-+			pep->ep_state |=3D EP_STOPPED;
-+		}
- 	}
-=20
- 	/*
-diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gad=
-get.h
-index 2afa3e558f85..c26abef6e1c9 100644
---- a/drivers/usb/cdns3/cdnsp-gadget.h
-+++ b/drivers/usb/cdns3/cdnsp-gadget.h
-@@ -987,6 +987,9 @@ enum cdnsp_setup_dev {
- #define STREAM_ID_FOR_TRB(p)		((((p)) << 16) & GENMASK(31, 16))
- #define SCT_FOR_TRB(p)			(((p) << 1) & 0x7)
-=20
-+/* Halt Endpoint Command TRB field. */
-+#define TRB_ESP				BIT(9)
-+
- /* Link TRB specific fields. */
- #define TRB_TC				BIT(1)
-=20
-diff --git a/drivers/usb/cdns3/cdnsp-ring.c b/drivers/usb/cdns3/cdnsp-ring.=
-c
-index fd06cb85c4ea..d397d28efc6e 100644
---- a/drivers/usb/cdns3/cdnsp-ring.c
-+++ b/drivers/usb/cdns3/cdnsp-ring.c
-@@ -2483,7 +2483,8 @@ void cdnsp_queue_halt_endpoint(struct cdnsp_device *p=
-dev, unsigned int ep_index)
- {
- 	cdnsp_queue_command(pdev, 0, 0, 0, TRB_TYPE(TRB_HALT_ENDPOINT) |
- 			    SLOT_ID_FOR_TRB(pdev->slot_id) |
--			    EP_ID_FOR_TRB(ep_index));
-+			    EP_ID_FOR_TRB(ep_index) |
-+			    (!ep_index ? TRB_ESP : 0));
- }
-=20
- void cdnsp_force_header_wakeup(struct cdnsp_device *pdev, int intf_num)
---=20
-2.43.0
+>   
+>>> @@ -15764,16 +15760,40 @@ S:	Maintained
+>>>    W:	http://www.linux-mm.org
+>>>    T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>>>    F:	include/linux/memory.h
+>>> +F:	include/linux/memremap.h
+>>>    F:	include/linux/mm.h
+>>>    F:	include/linux/mm_*.h
+>>>    F:	include/linux/mmdebug.h
+>>> +F:	include/linux/mmu_notifier.h
+>>> +F:	include/linux/mmzone.h
+>>>    F:	include/linux/pagewalk.h
+>>>    F:	kernel/fork.c
+>>>    F:	mm/Kconfig
+>>>    F:	mm/debug.c
+>>> +F:	mm/debug_page_ref.c
+>>> +F:	mm/debug_vm_pgtable.c
+>>
+>> Wondering if there should be a MM DEBUG section. But then, no idea who in
+>> their right mind would be willing to maintain that ;)
+> 
+> The same people that maintain MM CORE? ;-)
+
+Heh :P
+
+>   
+>>> +F:	mm/folio-compat.c
+>>> +F:	mm/highmem.c
+>>>    F:	mm/init-mm.c
+>>> +F:	mm/internal.h
+>>> +F:	mm/interval_tree.c
+> 
+> Looks like VMA to me.
+
+It's more about anon_vma I guess, so rmap ... maybe.
+
+-- 
+Cheers,
+
+David / dhildenb
 
