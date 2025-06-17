@@ -1,108 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966DD1DD9AC;
-	Tue, 17 Jun 2025 12:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5448E2264A0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161771; cv=none; b=kW8Nid1TnSb9aTHDgSlHnbVd3/++ja7z90ob+WqjSP6PB41eQaCp1iUvb9dhg9txlsOWHlepsbUOlbLtcMLF6sq5FhzFhaIyCvo5pWyp3UWysszOLpcGoeKLIv8Ra3yduoSxtcR7VL/3ntlmLRjCQvvfbsLcmKOCqM0F0T59MDo=
+	t=1750161851; cv=none; b=UUYnlkQDpyoEeBiQRXgjUJnQUoSu3Rq7ZS2Yo+lUrUjte/Mx3gXEfQEwDUBm+9vdAik79BEcPMLG8tqHN8NX72dzfuI5gaMIE1R46g5FNSAlkIGHVS/7tMt3C6fT6ttoYEqrDFssERwiGLSf1zEIzpBr0uLcodBaE+6cE99XISc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161771; c=relaxed/simple;
-	bh=lgdy5E+oqIYHdNt3F+D0lEuWC74tIxjQzu2g7Rp7xgk=;
+	s=arc-20240116; t=1750161851; c=relaxed/simple;
+	bh=LObtPLq3qmAZteYbpRYF/JkgO8RgDVYq8EdABv43EQM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hYjEDLt93Sg0YE/qCSRj+dydc4/vFkIip7BXuIBSRwcvvHzukLBcuxJw/kBaLzWvnfwi1RQ+XuqeRqytfL/yJi6/fuExX4bJbruBZlyCXO/9SGFxT/6HyO8IrFjhHGI57H+ZxScAv+8lD9YtnNs0+4OtQVYf7HyAKsRQ1yB+BpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F7HpeC0h; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qbpvghIOb19W7NwWdoV2IyixVfZnRcHa5ugULWHNlPmwm78if7sMY9deVQdZYEjebdIq+xaXzAdo3dZNMYWfyQTFvGc/PVEQCD22HLjALhT0oHuW0L4NTV/+wFFjzOCuenI5hmDybDwVab3tLN/U+30EyxtuA+JSgepOBr+dSaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=NGeIaIFs; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=yhtUiiUi; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=2DXxXOrd; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ZoSgydNW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7HpeC0h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABE5C4CEF0;
-	Tue, 17 Jun 2025 12:02:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750161771;
-	bh=lgdy5E+oqIYHdNt3F+D0lEuWC74tIxjQzu2g7Rp7xgk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F7HpeC0hn3voqySR3/DsHDStZnG3K169YWkik+JIbOoqASUbKfGs8lYiG3sEpDas8
-	 TGETqFWUhwcQJSWunkk44byEwJgCPMHjpzHCGtTtJT9cAcxu1SwEdiVJOdHKLnN0md
-	 nVzDvLV+vatm3B5CwXO7U2TAisRNI/YsJeH16Qv3VkCTT9M6KF6dpcQrFM1fdl7P7k
-	 PYdP6E88zDw3nz62jHW4M7UYlLFs2N4cF/roTPYOz9xtEkSW6omRYgbNl2bi5QVnap
-	 PPXKJdq3gq10fJrtFD30fBi8vgA3cp1xKaKauht5OCCyfwVEvMz6xCB5EnhsC32hYU
-	 wn1L+cLqo8pfQ==
-Date: Tue, 17 Jun 2025 13:02:46 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Klara Modin <klarasmodin@gmail.com>
-Cc: Valentina Fernandez <valentina.fernandezalanis@microchip.com>,
-	paul.walmsley@sifive.com, palmer@dabbelt.com,
-	conor.dooley@microchip.com, conor+dt@kernel.org,
-	jassisinghbrar@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 0/4] Add Microchip IPC mailbox
-Message-ID: <20250617-confess-reimburse-876101e099cb@spud>
-References: <20241217113134.3508333-1-valentina.fernandezalanis@microchip.com>
- <gcn3ot6angrjpmk5nu7gwcuqqrdecuxgisysmgkp4mof3egzot@dvruxuw6w5kp>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="NGeIaIFs";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="yhtUiiUi";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="2DXxXOrd";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ZoSgydNW"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 39D73211BA;
+	Tue, 17 Jun 2025 12:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750161847; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GHVj2aCMKBwLwEdjT9VXDVvKbMF+W3VDNjRvxdHhruE=;
+	b=NGeIaIFs3gMA9WtE/kVniU+X0zxJH7fVgPGL8MxyuNU5N5mCODB83QGUE2UQ8sMRwuPckO
+	/T9O80RwpjXAKuJFYZVYy0H0YpZEbMwoRm+w+JOCh2qrpChcbyzeyG5B+u97oj8+gS+EIU
+	laJqY5fbh5L00tFl8YWWz8aJcbxnlZs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750161847;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GHVj2aCMKBwLwEdjT9VXDVvKbMF+W3VDNjRvxdHhruE=;
+	b=yhtUiiUir+tMvfO+u8T+Es1Xpy7mTGbk58DiMTF4XdksR0gn/bARV5Zl+nRFEp1msIvD24
+	Fhv2pJLlb8nnTmAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750161846; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GHVj2aCMKBwLwEdjT9VXDVvKbMF+W3VDNjRvxdHhruE=;
+	b=2DXxXOrdON9qf7FCS5xVLXBcBapFrFa/ZGwIWdla3lJTt8Otvkar8IN1o/YzCJ/8hsdFl0
+	n5ay0/BzJEPq+upp7M7j9/ucI5J/edz4WyYbh0j+gceJWPNtwYvP1AIbQ/XkH6B4mWZ3aX
+	1RdUAxNfqjsRxeHD5E2J5seGo6zYNJw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750161846;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GHVj2aCMKBwLwEdjT9VXDVvKbMF+W3VDNjRvxdHhruE=;
+	b=ZoSgydNWoDK7VEsLRKEgoGq/Mm7jrtBE7EfcRRKYlvUrLftTYMY3sQqJJDV+sg84keQQ1q
+	+nfPJ0k30SgW/rBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AEF1A13A69;
+	Tue, 17 Jun 2025 12:04:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id VHvNJ7VZUWh+OwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Tue, 17 Jun 2025 12:04:05 +0000
+Date: Tue, 17 Jun 2025 14:04:04 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	James Houghton <jthoughton@google.com>,
+	Peter Xu <peterx@redhat.com>, Gavin Guo <gavinguo@igalia.com>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] mm,hugetlb: Document the reason to lock the folio in
+ the faulting path
+Message-ID: <aFFZtD4zN_qINo9P@localhost.localdomain>
+References: <44f0f1cc-307a-46e3-9e73-8b2061e4e938@redhat.com>
+ <aEw0dxfc5n8v1-Mp@localhost.localdomain>
+ <ffeeb3d2-0e45-43d1-b2e1-a55f09b160f5@redhat.com>
+ <aEychl8ZkJDG1-5K@localhost.localdomain>
+ <aE075ld-fOyMipcJ@localhost.localdomain>
+ <a5e098d1-ee5a-447f-9e05-0187b22500e1@redhat.com>
+ <aFAlupvoJ_w7jCIU@localhost.localdomain>
+ <1297fdd5-3de2-45bc-b146-e14061643fee@redhat.com>
+ <aFE9YTNcCHAGBtKi@localhost.localdomain>
+ <11a1d0f7-ef4e-4836-9bde-d7651eebcd03@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="JxZyEEACyPxmQ/io"
-Content-Disposition: inline
-In-Reply-To: <gcn3ot6angrjpmk5nu7gwcuqqrdecuxgisysmgkp4mof3egzot@dvruxuw6w5kp>
-
-
---JxZyEEACyPxmQ/io
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <11a1d0f7-ef4e-4836-9bde-d7651eebcd03@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Mon, Jun 16, 2025 at 08:44:01PM +0200, Klara Modin wrote:
-> On 2024-12-17 11:31:30 +0000, Valentina Fernandez wrote:
-> >=20
-> > Valentina Fernandez (4):
-> >   riscv: sbi: vendorid_list: Add Microchip Technology to the vendor list
-> >   riscv: export __cpuid_to_hartid_map
-> >   dt-bindings: mailbox: add binding for Microchip IPC mailbox controller
-> >   mailbox: add Microchip IPC support
-> >=20
-> >  .../bindings/mailbox/microchip,sbi-ipc.yaml   | 123 +++++
-> >  arch/riscv/include/asm/vendorid_list.h        |   1 +
-> >  arch/riscv/kernel/smp.c                       |   1 +
-> >  drivers/mailbox/Kconfig                       |  13 +
-> >  drivers/mailbox/Makefile                      |   2 +
-> >  drivers/mailbox/mailbox-mchp-ipc-sbi.c        | 504 ++++++++++++++++++
-> >  include/linux/mailbox/mchp-ipc.h              |  33 ++
-> >  7 files changed, 677 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mailbox/microchip=
-,sbi-ipc.yaml
-> >  create mode 100644 drivers/mailbox/mailbox-mchp-ipc-sbi.c
-> >  create mode 100644 include/linux/mailbox/mchp-ipc.h
-> >=20
-> > --=20
-> > 2.34.1
-> >=20
->=20
-> Building this driver as a module with SMP=3Dn fails becuase the non-SMP
-> cpuid_to_hartid_map() depends on the non-exported boot_cpu_hartid
-> (discovered via randconfig).
->=20
-> >From the description of the driver it doesn't seem to be very useful
-> with SMP=3Dn, would it make sense to have it depend on SMP rather than
-> exporting boot_cpu_hartid?
+On Tue, Jun 17, 2025 at 01:27:18PM +0200, David Hildenbrand wrote:
+> >   @@ -6198,6 +6198,8 @@ static vm_fault_t hugetlb_wp(struct vm_fault *vmf)
+> >    	 * in scenarios that used to work. As a side effect, there can still
+> >    	 * be leaks between processes, for example, with FOLL_GET users.
+> >    	 */
+> >   +	if (folio_test_anon(old_folio))
+> >   +		folio_lock(old_folio);
+> 
+> If holding the PTL, this would not work. You'd have to unlock PTL, lock
+> folio, retake PTL, check pte_same.
 
-No, I think boot_cpu_hartid needs to get exported, the driver is
-intended for use in AMP situations so the kernel config may have SMP
-disabled.
+Why so?
 
---JxZyEEACyPxmQ/io
-Content-Type: application/pgp-signature; name="signature.asc"
+hugetlb_no_page() has already checked pte_same under PTL, then mapped the page
+and called hugetlb_wp().
 
------BEGIN PGP SIGNATURE-----
+ hugetlb_no_page
+  vmf->ptl = huge_pte_lock()
+  pte_same
+  set_huge_pte_at
+  hugetlb_wp
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFFZYQAKCRB4tDGHoIJi
-0vmKAP9tlz5kkwRKNkY0SNcbvhAt36eMbcF3/NxGX/qAO/prpwD/bdiwwZmMTZ2K
-6MTrYk2DgPZmqbn0hnrRUxYmdUXNQwQ=
-=Lxrl
------END PGP SIGNATURE-----
+and in hugetlb_wp() we're still holding the PTL.
+Why do we have to release PTL in order to lock the folio?
+This folio can't have been unmapped because we're holding PTL, right?
+And it can't have been truncaed for the same reason.
 
---JxZyEEACyPxmQ/io--
+It's because some lock-order issue? 
+
+
+-- 
+Oscar Salvador
+SUSE Labs
