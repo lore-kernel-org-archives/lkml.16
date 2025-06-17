@@ -1,74 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA01F2FA624;
-	Tue, 17 Jun 2025 16:59:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965182FA62C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:03:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750179595; cv=none; b=lTqTAs+YM8XvlhLoRLQQ0mYqJU/xrbBv6DzwFuVa3wJ+YjImDhf9CjbSArdQE8otikj4LLm6vVxnyetxy9ZtgL71KuQsjiubI1C6oY0+egwcHqntCLNh940Hv2HNTVdf9DE2z7N5AFGlpkrQrZK0juvtBARRVCVZd2fvJTmGucM=
+	t=1750179812; cv=none; b=i+em/e6MkwJ3OJ+Vl0GY+5YMu9OYBybCYkKuOziW++KyU7PdyutHtRNWgveA8hfs5bUN2ulgDH0h3HJvCYRh27UqlZ9fCHlygscRsdDNxTNzZ6uf8ebr4gWGeRkJB1Ym8iPSCo5/nXRpj8BMRMej4roZ8Zi/wfYyV4i4nAdmLXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750179595; c=relaxed/simple;
-	bh=uEOMgL0enjAcnngHzRz3sXuDxKITAnkXRV1o9HPvaIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m6i7NtmBSPqv7B7I3hDbF7otmGujDTmQXSKYyXkjq5RMNAY11ptyoKzNqbW5s/ablKQCs1pyDF9Y1jBnaz+gyFYLZPsZg7F4x8hJfKwxDz1jNiWc20n/eFREiWkEJTGz4kWM/UVOfyzSvKNV05Mu85arxPDB5xEDma01CHHA+6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Fo0EChMa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750179812; c=relaxed/simple;
+	bh=CLoPaA6/HQfEqXaM6ZJwnEHxVfvfjI29P7UP4aefeAg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QwfGb6A+9VodHQ1lOIBnXcMsU+m4BLmX55pdXFJL4cT4SNMaclVxwINgceIprCrAKGELXOcvz8IWCYtInMWd+8ms57KmJOwukCDtZZBlRPqgn88HFua2G2p7YOSD5pJT94c9zkabZC2/lfhusBMDxTj+BBsSuQ0I+G6q7NBLD1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e+nfcrKU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Fo0EChMa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D13C4CEF0;
-	Tue, 17 Jun 2025 16:59:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750179595;
-	bh=uEOMgL0enjAcnngHzRz3sXuDxKITAnkXRV1o9HPvaIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fo0EChMa7s6vQniwm+xb0uKPr5MvPVjqgu2ivI/SpK3Rvof5c0D/40E9AGjA8WDmy
-	 9jE2igMgBxD3NJCCiUDZlGAdmpIcz8ZkXLEtJEuXzdivjH/vBnhOWZ0l9YHyv8+ojp
-	 3/McfGdtgmSajg4anTY9MfdwOhN5ysAxheAxoPKs=
-Date: Tue, 17 Jun 2025 17:56:03 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Aidan Stewart <astewart@tektelic.com>
-Cc: "jirislaby@kernel.org" <jirislaby@kernel.org>,
-	"tony@atomide.com" <tony@atomide.com>,
-	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] serial: core: restore of_node information in sysfs
-Message-ID: <2025061740-sustained-linked-a845@gregkh>
-References: <20250616162154.9057-1-astewart@tektelic.com>
- <2025061746-raking-gusto-d1f3@gregkh>
- <915d0631ac123bbbb5d3fac1248b97d9de3295c6.camel@tektelic.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e+nfcrKU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB47C4CEE3;
+	Tue, 17 Jun 2025 17:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750179811;
+	bh=CLoPaA6/HQfEqXaM6ZJwnEHxVfvfjI29P7UP4aefeAg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=e+nfcrKUq16T04ccjymWVdIivF1CFPxFBhmlN8Ue8G/zN2ltEVtkMDon24Z5YcnBm
+	 c65S3rqtiID52/clFW5YfuKQIEcR3Cumn/G82wj7jirfa20UCBdBIIIibcoCb8Ol0K
+	 P07Mm6+C+Yg9gOyK3bb9tod7IMgtdkyg8LqoTxstnVpzqMncHeVFmygEhMOAPJg+P+
+	 1jEdo+nqjIxhM0NaxO26Nwg6KaFl7pF5UFEho/LaV/mYkyUWAOX4n9fYWS5gKkJLUw
+	 CpB8pkPqpZS6z4yO2bgQrhN5B1/GKPlnfqDmrxnRIDoTi4Wf/oiDmODmL3sfqE8t6x
+	 nADu35N7zGFig==
+From: SeongJae Park <sj@kernel.org>
+To: Michal Hocko <mhocko@kernel.org>
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Rientjes <rientjes@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	linux-mm@kvack.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Michal Hocko <mhocko@suse.com>
+Subject: Re: [PATCH] mm: add OOM killer maintainer structure
+Date: Tue, 17 Jun 2025 10:03:28 -0700
+Message-Id: <20250617170328.57089-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250617085819.355838-1-mhocko@kernel.org>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <915d0631ac123bbbb5d3fac1248b97d9de3295c6.camel@tektelic.com>
 
-On Tue, Jun 17, 2025 at 03:46:37PM +0000, Aidan Stewart wrote:
-> On Tue, 2025-06-17 at 06:44 +0200, Greg KH wrote:
-> > 
-> > On Mon, Jun 16, 2025 at 10:21:54AM -0600, Aidan Stewart wrote:
-> > > 
-> > > 
-> > > +     if (IS_ENABLED(CONFIG_OF)) {
-> > > +             device_set_of_node_from_dev(dev, parent_dev);
-> > > +     }
-> > 
-> > Did this pass checkpatch.pl?
-> I ran checkpatch.pl with the --strict option and I didn't get any warnings
-> or errors. Is there a style issue you would like me to fix?
+Hi Michal,
 
-You should not need {} for a one line if statement.
+On Tue, 17 Jun 2025 10:58:19 +0200 Michal Hocko <mhocko@kernel.org> wrote:
 
-> > And why is the if statement needed?
-> I guess it's not really needed. I was trying to avoid the call for non-DT
-> systems, but it should still be safe to do. I will remove it in v2.
+> From: Michal Hocko <mhocko@suse.com>
+> 
+> Acked-by: David Rientjes <rientjes@google.com>
+> Signed-off-by: Michal Hocko <mhocko@suse.com>
 
-Please do!
+Acked-by: SeongJae Park <sj@kernel.org>
 
-thanks,
+> ---
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0c1d245bf7b8..5e339c1457ff 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15841,6 +15841,14 @@ F:	mm/numa.c
+>  F:	mm/numa_emulation.c
+>  F:	mm/numa_memblks.c
+>  
+> +MEMORY MANAGEMENT - OOM KILLER
+> +M:	Michal Hocko <mhocko@suse.com
 
-greg k-h
+Nit.  The closing '>' is missed.
+
+> +R:	David Rientjes <rientjes@google.com>
+> +R:	Shakeel Butt <shakeel.butt@linux.dev>
+> +L:	linux-mm@kvack.org
+> +S:	Maintained
+> +F:	mm/oom_kill.c
+> +
+>  MEMORY MANAGEMENT - PAGE ALLOCATOR
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	Vlastimil Babka <vbabka@suse.cz>
+> -- 
+> 2.49.0
+
+
+Thanks,
+SJ
