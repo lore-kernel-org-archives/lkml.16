@@ -1,366 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B93F235071;
-	Tue, 17 Jun 2025 16:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADCC2DFF02
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177268; cv=none; b=j8Geie0CWZTy+bURK/Q9BZLAnRUUVdKCfv1yvkYg7+n3f3wcLA/Kk/I/+6x3495CODjlb5kosSmnswBFGbJw2VQzvO0CV4ZBDUfrd81qFAu8FuJv6r1DGc3oSP5863L+7ov+pKcp+H1l5/J4EYn9cRocPyNrCCAlQyJzEFwTuD4=
+	t=1750177299; cv=none; b=MfVHUbEz7D2c6eM2sOpxPBNnJ5yMfz9FjlnuF//OYj3lwSpi3ABKwugfvBVJDduPczwFRgPiqm2YRphoD8linz5f+OkM3b5M22cf4LQ/8j02darfmKXM0EX6p7LG9JPhJAg7aGzRfSFpNauzmtYLcovtpZf9pf5NsKOQPFImLIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177268; c=relaxed/simple;
-	bh=s6hvmo/MHvveAowtmfmbS+yemRNjBrS/ci8HUdPHP2g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Oifvsrt68NdJYpogbo0thHP3uUZzBnhb7UHfTvNFbDuxYjIDJZluhj2cmpFn6mKThQV2nkEe1fMxewYjjZ/BJYOQ9DbEmRQ6XDU0OtuJw9oEGcAqU65KBVohky0YRco8/muielYOEV7N+5HR/TqH1NsHc7Rsb5qNJHSeWLRg4Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RXONdyWX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RXONdyWX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA6E7C4CEE3;
-	Tue, 17 Jun 2025 16:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750177268;
-	bh=s6hvmo/MHvveAowtmfmbS+yemRNjBrS/ci8HUdPHP2g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RXONdyWXt5qNjdz8OIUEYM76VQFOKEvfjF0OOjoELkxsO6gFQbfVWwZ87I9qdSIpE
-	 F0DvaZlZCjTmQ6ikBjoybRgJzkF3fbZa+rcJOuxmCB++yvq6YU9k72vLzllIQn6jEa
-	 FggHfdaaWOjFeehRZrGAjknPNIQGXSgc7uAC7iio=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Ian Rogers <irogers@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Gary Guo <gary@garyguo.net>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Howard Chu <howardchu95@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.12 297/512] perf symbol: Fix use-after-free in filename__read_build_id
-Date: Tue, 17 Jun 2025 17:24:23 +0200
-Message-ID: <20250617152431.630745004@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617152419.512865572@linuxfoundation.org>
-References: <20250617152419.512865572@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	s=arc-20240116; t=1750177299; c=relaxed/simple;
+	bh=jo2vquKKceSel2RP+1YQD3H1nFoRTttsM34gR8sNwvU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tNjkA2tK507kfAl5K5PAG/m2DDOCT6zwKftgJOlpJOMDt04GPB3UUAMZB2DnFTk9xKNZ3uBVGg0TpaK3rTID6b+pqOO227+KUpV96n367hk5ZazSnNbOAw4AZ4cc9x+Hg9BEsnDZ9yd8yzzymT8FDv2IXng/HzKCzavl+sPdde8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMBs74qxvz6L5Sh;
+	Wed, 18 Jun 2025 00:19:23 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 31098140119;
+	Wed, 18 Jun 2025 00:21:34 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
+ 2025 18:21:33 +0200
+Date: Tue, 17 Jun 2025 17:21:32 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: James Morse <james.morse@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Ben Horgan <ben.horgan@arm.com>
+Subject: Re: [PATCH 4/5] cacheinfo: Expose the code to generate a cache-id
+ from a device_node
+Message-ID: <20250617172132.00002844@huawei.com>
+In-Reply-To: <20250613130356.8080-5-james.morse@arm.com>
+References: <20250613130356.8080-1-james.morse@arm.com>
+	<20250613130356.8080-5-james.morse@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-6.12-stable review patch.  If anyone has any objections, please let me know.
+On Fri, 13 Jun 2025 13:03:55 +0000
+James Morse <james.morse@arm.com> wrote:
 
-------------------
+> The MPAM driver identifies caches by id for use with resctrl. It
+> needs to know the cache-id when probe-ing, but the value isn't set
+> in cacheinfo until the corresponding CPU comes online.
+> 
+> Expose the code that generates the cache-id. This allows the MPAM
+> driver to determine the properties of the caches without waiting
+> for all CPUs to come online.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+Feels to me like this needs to come with the user.
+The earlier patches at least expose it via existing infrastructure
+this isn't used at all yet...
 
-From: Ian Rogers <irogers@google.com>
+> ---
+>  drivers/base/cacheinfo.c  | 15 +++++++++++----
+>  include/linux/cacheinfo.h |  1 +
+>  2 files changed, 12 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+> index d8e5b4c7156c..6316d80abab8 100644
+> --- a/drivers/base/cacheinfo.c
+> +++ b/drivers/base/cacheinfo.c
+> @@ -188,7 +188,7 @@ static bool cache_node_is_unified(struct cacheinfo *this_leaf,
+>  #define arch_compact_of_hwid(_x)	(_x)
+>  #endif
+>  
+> -static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
+> +unsigned long cache_of_get_id(struct device_node *np)
+Bit confusing to have cache_of_set_id() call cache_of_get_id() like this because
+they are in no way mirrors of each other.   Rename?
+(and naturally I'm providing no suggestions :)
 
-[ Upstream commit fef8f648bb47726d96a5701fe31ed606268da73d ]
-
-The same buf is used for the program headers and reading notes. As the
-notes memory may be reallocated then this corrupts the memory pointed
-to by the phdr. Using the same buffer is in any case a logic
-error. Rather than deal with the duplicated code, introduce an elf32
-boolean and a union for either the elf32 or elf64 headers that are in
-use. Let the program headers have their own memory and grow the buffer
-for notes as necessary.
-
-Before `perf list -j` compiled with asan would crash with:
-```
-==4176189==ERROR: AddressSanitizer: heap-use-after-free on address 0x5160000070b8 at pc 0x555d3b15075b bp 0x7ffebb5a8090 sp 0x7ffebb5a8088
-READ of size 8 at 0x5160000070b8 thread T0
-    #0 0x555d3b15075a in filename__read_build_id tools/perf/util/symbol-minimal.c:212:25
-    #1 0x555d3ae43aff in filename__sprintf_build_id tools/perf/util/build-id.c:110:8
-...
-
-0x5160000070b8 is located 312 bytes inside of 560-byte region [0x516000006f80,0x5160000071b0)
-freed by thread T0 here:
-    #0 0x555d3ab21840 in realloc (perf+0x264840) (BuildId: 12dff2f6629f738e5012abdf0e90055518e70b5e)
-    #1 0x555d3b1506e7 in filename__read_build_id tools/perf/util/symbol-minimal.c:206:11
-...
-
-previously allocated by thread T0 here:
-    #0 0x555d3ab21423 in malloc (perf+0x264423) (BuildId: 12dff2f6629f738e5012abdf0e90055518e70b5e)
-    #1 0x555d3b1503a2 in filename__read_build_id tools/perf/util/symbol-minimal.c:182:9
-...
-```
-
-Note: this bug is long standing and not introduced by the other asan
-fix in commit fa9c4977fbfb ("perf symbol-minimal: Fix double free in
-filename__read_build_id").
-
-Fixes: b691f64360ecec49 ("perf symbols: Implement poor man's ELF parser")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Link: https://lore.kernel.org/r/20250528032637.198960-2-irogers@google.com
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Gary Guo <gary@garyguo.net>
-Cc: Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Weilin Wang <weilin.wang@intel.com>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: Benno Lossin <benno.lossin@proton.me>
-Cc: Björn Roy Baron <bjorn3_gh@protonmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Trevor Gross <tmgross@umich.edu>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/perf/util/symbol-minimal.c | 168 +++++++++++++------------------
- 1 file changed, 70 insertions(+), 98 deletions(-)
-
-diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-index d8da3da01fe6b..36c1d3090689f 100644
---- a/tools/perf/util/symbol-minimal.c
-+++ b/tools/perf/util/symbol-minimal.c
-@@ -90,11 +90,23 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- {
- 	FILE *fp;
- 	int ret = -1;
--	bool need_swap = false;
-+	bool need_swap = false, elf32;
- 	u8 e_ident[EI_NIDENT];
--	size_t buf_size;
--	void *buf;
- 	int i;
-+	union {
-+		struct {
-+			Elf32_Ehdr ehdr32;
-+			Elf32_Phdr *phdr32;
-+		};
-+		struct {
-+			Elf64_Ehdr ehdr64;
-+			Elf64_Phdr *phdr64;
-+		};
-+	} hdrs;
-+	void *phdr;
-+	size_t phdr_size;
-+	void *buf = NULL;
-+	size_t buf_size = 0;
- 
- 	fp = fopen(filename, "r");
- 	if (fp == NULL)
-@@ -108,119 +120,79 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
- 		goto out;
- 
- 	need_swap = check_need_swap(e_ident[EI_DATA]);
-+	elf32 = e_ident[EI_CLASS] == ELFCLASS32;
- 
--	/* for simplicity */
--	fseek(fp, 0, SEEK_SET);
--
--	if (e_ident[EI_CLASS] == ELFCLASS32) {
--		Elf32_Ehdr ehdr;
--		Elf32_Phdr *phdr;
--
--		if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1)
--			goto out;
-+	if (fread(elf32 ? (void *)&hdrs.ehdr32 : (void *)&hdrs.ehdr64,
-+		  elf32 ? sizeof(hdrs.ehdr32) : sizeof(hdrs.ehdr64),
-+		  1, fp) != 1)
-+		goto out;
- 
--		if (need_swap) {
--			ehdr.e_phoff = bswap_32(ehdr.e_phoff);
--			ehdr.e_phentsize = bswap_16(ehdr.e_phentsize);
--			ehdr.e_phnum = bswap_16(ehdr.e_phnum);
-+	if (need_swap) {
-+		if (elf32) {
-+			hdrs.ehdr32.e_phoff = bswap_32(hdrs.ehdr32.e_phoff);
-+			hdrs.ehdr32.e_phentsize = bswap_16(hdrs.ehdr32.e_phentsize);
-+			hdrs.ehdr32.e_phnum = bswap_16(hdrs.ehdr32.e_phnum);
-+		} else {
-+			hdrs.ehdr64.e_phoff = bswap_64(hdrs.ehdr64.e_phoff);
-+			hdrs.ehdr64.e_phentsize = bswap_16(hdrs.ehdr64.e_phentsize);
-+			hdrs.ehdr64.e_phnum = bswap_16(hdrs.ehdr64.e_phnum);
- 		}
-+	}
-+	phdr_size = elf32 ? hdrs.ehdr32.e_phentsize * hdrs.ehdr32.e_phnum
-+			  : hdrs.ehdr64.e_phentsize * hdrs.ehdr64.e_phnum;
-+	phdr = malloc(phdr_size);
-+	if (phdr == NULL)
-+		goto out;
- 
--		buf_size = ehdr.e_phentsize * ehdr.e_phnum;
--		buf = malloc(buf_size);
--		if (buf == NULL)
--			goto out;
--
--		fseek(fp, ehdr.e_phoff, SEEK_SET);
--		if (fread(buf, buf_size, 1, fp) != 1)
--			goto out_free;
--
--		for (i = 0, phdr = buf; i < ehdr.e_phnum; i++, phdr++) {
--			void *tmp;
--			long offset;
--
--			if (need_swap) {
--				phdr->p_type = bswap_32(phdr->p_type);
--				phdr->p_offset = bswap_32(phdr->p_offset);
--				phdr->p_filesz = bswap_32(phdr->p_filesz);
--			}
--
--			if (phdr->p_type != PT_NOTE)
--				continue;
--
--			offset = phdr->p_offset;
--			if (phdr->p_filesz > buf_size) {
--				buf_size = phdr->p_filesz;
--				tmp = realloc(buf, buf_size);
--				if (tmp == NULL)
--					goto out_free;
--				buf = tmp;
--			}
--			fseek(fp, offset, SEEK_SET);
--			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
--				goto out_free;
-+	fseek(fp, elf32 ? hdrs.ehdr32.e_phoff : hdrs.ehdr64.e_phoff, SEEK_SET);
-+	if (fread(phdr, phdr_size, 1, fp) != 1)
-+		goto out_free;
- 
--			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
--			if (ret == 0) {
--				ret = bid->size;
--				break;
--			}
--		}
--	} else {
--		Elf64_Ehdr ehdr;
--		Elf64_Phdr *phdr;
-+	if (elf32)
-+		hdrs.phdr32 = phdr;
-+	else
-+		hdrs.phdr64 = phdr;
- 
--		if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1)
--			goto out;
-+	for (i = 0; i < elf32 ? hdrs.ehdr32.e_phnum : hdrs.ehdr64.e_phnum; i++) {
-+		size_t p_filesz;
- 
- 		if (need_swap) {
--			ehdr.e_phoff = bswap_64(ehdr.e_phoff);
--			ehdr.e_phentsize = bswap_16(ehdr.e_phentsize);
--			ehdr.e_phnum = bswap_16(ehdr.e_phnum);
-+			if (elf32) {
-+				hdrs.phdr32[i].p_type = bswap_32(hdrs.phdr32[i].p_type);
-+				hdrs.phdr32[i].p_offset = bswap_32(hdrs.phdr32[i].p_offset);
-+				hdrs.phdr32[i].p_filesz = bswap_32(hdrs.phdr32[i].p_offset);
-+			} else {
-+				hdrs.phdr64[i].p_type = bswap_32(hdrs.phdr64[i].p_type);
-+				hdrs.phdr64[i].p_offset = bswap_64(hdrs.phdr64[i].p_offset);
-+				hdrs.phdr64[i].p_filesz = bswap_64(hdrs.phdr64[i].p_filesz);
-+			}
- 		}
-+		if ((elf32 ? hdrs.phdr32[i].p_type : hdrs.phdr64[i].p_type) != PT_NOTE)
-+			continue;
- 
--		buf_size = ehdr.e_phentsize * ehdr.e_phnum;
--		buf = malloc(buf_size);
--		if (buf == NULL)
--			goto out;
--
--		fseek(fp, ehdr.e_phoff, SEEK_SET);
--		if (fread(buf, buf_size, 1, fp) != 1)
--			goto out_free;
--
--		for (i = 0, phdr = buf; i < ehdr.e_phnum; i++, phdr++) {
-+		p_filesz = elf32 ? hdrs.phdr32[i].p_filesz : hdrs.phdr64[i].p_filesz;
-+		if (p_filesz > buf_size) {
- 			void *tmp;
--			long offset;
--
--			if (need_swap) {
--				phdr->p_type = bswap_32(phdr->p_type);
--				phdr->p_offset = bswap_64(phdr->p_offset);
--				phdr->p_filesz = bswap_64(phdr->p_filesz);
--			}
--
--			if (phdr->p_type != PT_NOTE)
--				continue;
- 
--			offset = phdr->p_offset;
--			if (phdr->p_filesz > buf_size) {
--				buf_size = phdr->p_filesz;
--				tmp = realloc(buf, buf_size);
--				if (tmp == NULL)
--					goto out_free;
--				buf = tmp;
--			}
--			fseek(fp, offset, SEEK_SET);
--			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
-+			buf_size = p_filesz;
-+			tmp = realloc(buf, buf_size);
-+			if (tmp == NULL)
- 				goto out_free;
-+			buf = tmp;
-+		}
-+		fseek(fp, elf32 ? hdrs.phdr32[i].p_offset : hdrs.phdr64[i].p_offset, SEEK_SET);
-+		if (fread(buf, p_filesz, 1, fp) != 1)
-+			goto out_free;
- 
--			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
--			if (ret == 0) {
--				ret = bid->size;
--				break;
--			}
-+		ret = read_build_id(buf, p_filesz, bid, need_swap);
-+		if (ret == 0) {
-+			ret = bid->size;
-+			break;
- 		}
- 	}
- out_free:
- 	free(buf);
-+	free(phdr);
- out:
- 	fclose(fp);
- 	return ret;
--- 
-2.39.5
-
-
+>  {
+>  	struct device_node *cpu;
+>  	u32 min_id = ~0;
+> @@ -200,7 +200,7 @@ static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
+>  		id = arch_compact_of_hwid(id);
+>  		if (FIELD_GET(GENMASK_ULL(63, 32), id)) {
+>  			of_node_put(cpu);
+> -			return;
+> +			return ~0UL;
+>  		}
+>  		while (1) {
+>  			if (!cache_node)
+> @@ -214,8 +214,15 @@ static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
+>  		}
+>  	}
+>  
+> -	if (min_id != ~0) {
+> -		this_leaf->id = min_id;
+> +	return min_id;
+> +}
+> +
+> +static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
+> +{
+> +	unsigned long id = cache_of_get_id(np);
+> +
+> +	if (id != ~0UL) {
+> +		this_leaf->id = id;
+>  		this_leaf->attributes |= CACHE_ID;
+>  	}
+>  }
+> diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
+> index c8f4f0a0b874..9c959caf8af8 100644
+> --- a/include/linux/cacheinfo.h
+> +++ b/include/linux/cacheinfo.h
+> @@ -112,6 +112,7 @@ int acpi_get_cache_info(unsigned int cpu,
+>  #endif
+>  
+>  const struct attribute_group *cache_get_priv_group(struct cacheinfo *this_leaf);
+> +unsigned long cache_of_get_id(struct device_node *np);
+>  
+>  /*
+>   * Get the cacheinfo structure for the cache associated with @cpu at
 
