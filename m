@@ -1,128 +1,82 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B72F5310
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803C4296150;
+	Tue, 17 Jun 2025 23:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750201166; cv=none; b=F6vXWllk9GdrtaedHKRG9KxjIFvgPanqCtduioAdqwVYJN2Np1d02Qak79fXixKlULB9+rA5h9fjfpoeK2iJ0oMcivGemrQ+RYZuf855wvy8Y6eFiZujd70gMSQLMPj9/CLNohYpkTyK/t6WawDXsASrutjsQrk+7B6N62USzLw=
+	t=1750201203; cv=none; b=D/vw/dYQGgXFsqRxWJ8YvH7hO+QJ0oGwGHD73Y2hpkOA0jLC7PTSVOQkATlukGDumaaJqhgNNW5IQ3F2V0Sohnx6gSWXcAFuA8dyDZhsOjSadAtO4r6r3OvafvQXH8mU/p/p1ZkBRv2/9+2Gu8qy7IeG5M7HNnGM/dHedcHQDjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750201166; c=relaxed/simple;
-	bh=FSs5Nqbe7V63xl6r8gkMha33mF8T/HNIQuJCNwFu9wM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AJjtmiL2RVvQo5Zfbx1vBP9FIs0rzbjYrgbIA4Dyz8RiY2KNnvE3iQIL+HHFlxRjqGbAGxqV9fNfd4QcPfjjkhTHUkokzLPket6JdTfVTJpYmFV2vi47KnT/bbEFpBkUF5MqDiVAwdPyPaAQCMkh6wu0VkA5vJ8WzrxSQDQQgr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nc9Qu8/B; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750201203; c=relaxed/simple;
+	bh=eBnpcYHTpCSmU93N+2v6XceuO10N+zsU0JFmZnOplrI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=JdJlNazToSlwWIOC3CgokmWWDQXaDSECyhr96kIKXs3/xZTcS/9Gtp4Sjo6DGwoyZ+af4rBCvQrjljtNkYkrL/cGyAXJ6GP1fvatVEVSySSoxt5O4juECtt3kDZMnMs9mJh7+c8mk1KjLG1+eW7lHDGwlNEVZB3guOrSJAEvo/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMal2/kG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nc9Qu8/B"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3141f9ce4d1so2112204a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:59:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750201165; x=1750805965; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQty6NL3er2ndIuuACaFUG5ZLAPGl4wPPK5wFC8l+DU=;
-        b=nc9Qu8/BRNsW2PGvkpS7CsPlHio/HJ0wplO8vLR8GG6AfE5+PfxqjZfJWUkVB1fCbl
-         kbZ8Kw0Qvv+5SuXWyP/Ex3Jr7cLm5+afn3YhoDzgU8FW2600l4zydiQUwZvLpH+AqmjY
-         1U1WWx0v3y0BZZWX2rXGa/86rB+6uSWbiXL6tpAja2ZSXK3wC06aChLGh7sHeBggHQ8V
-         6RJos7osTHehmC7STQZBGCsjXfFAuVTmu8crlmdmF/tZAZU/pq4/+BEtPrEht8JWwJXA
-         /sCCCoZ5g0PFNa86nOh6EY+6LKoFU2KQdmnJ4ooKCl489T+rnqCNVbZR8Akz7GPurB3q
-         qt+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750201165; x=1750805965;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VQty6NL3er2ndIuuACaFUG5ZLAPGl4wPPK5wFC8l+DU=;
-        b=Hb9uvugaSJj6dRuZ0K/ERfd6IoltUzsowEPkr2L45NbYD4I2iY19gF99cXWtmoXciJ
-         gkMacxujeRHOjveyszviPoiOzjIM2nFH/pvPvwUyTYcfbpeg09y1HjDOexiy5rSNQuYt
-         KNTiPm5F+HLccZUZeX/3z5Wob+PnQzASQk3kWd37dGF98xomlbGgBWia0JUeWRjIr2oZ
-         a4dWBfnqgfmXIbGHp9hR7kM+6+PqyJwMZ4VrSK0/23CZk54EejYIzIkbbweLOlWr0zgD
-         fAF/wiBTsjvXj6zdVfpXh1ECk0tEM3E7Gwv9ZouO/C5WSfrfySbgWilQbK3euLWSft1D
-         aENA==
-X-Gm-Message-State: AOJu0YzlNmyiqsXDuEb1MH7H3/Ckpv3LwS4U2mgyUEt7hc0826AKZrae
-	XaT+rV9UE2svAq0+RVzq2N+hqemGsuaALVqRzw/m1sT260urKK4M9Wjj
-X-Gm-Gg: ASbGnctYo2OYnebxm/FYFV6EhY5++srBnJarng5FHuJjl6pRc4/AHKK3tBHPlT4SKgp
-	AjunBP5z5wlXO0e1EYlhS5ciFjk19THwxSJzhwPlhHBC2zE74qIVI+1Um1S3gGn874e0u/0ivML
-	+oVRmsJZQ8zG+8LXf1+Oj50fWKQGEHiMeab9J4z4HSoJAodSNLK7UMeT1yICzqZAI5jEKu/TFe6
-	3dGJp2K54uwVc2Gv4XDO9EiUndw/ST2suzIeutV5FO2MsXB8N0CQyEBfqQdqs3MnsxdfZLHQthR
-	P4yv13j/G3W4jtg5V+NVjnk6ELRPKw9RzmtR2T2Bgb75txDJr6rHBEvMuYIqOQ==
-X-Google-Smtp-Source: AGHT+IGYJS7SmX8fQzqig83PgLKeexDR5dy2AsKJ+ghjlprsvI8RMRUKcV9KRprhX7fSez4Mhva7aA==
-X-Received: by 2002:a17:90a:dfcd:b0:311:c1ec:7d12 with SMTP id 98e67ed59e1d1-313f1df631amr19427336a91.23.1750201164759;
-        Tue, 17 Jun 2025 15:59:24 -0700 (PDT)
-Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19d2ccdsm11283246a91.19.2025.06.17.15.59.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 15:59:24 -0700 (PDT)
-Date: Tue, 17 Jun 2025 18:59:22 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/3] bitmap: generalize node_random()
-Message-ID: <aFHzSvlj1pqeSy6E@yury>
-References: <20250617200854.60753-1-yury.norov@gmail.com>
- <20250617200854.60753-2-yury.norov@gmail.com>
- <20250617155056.5c1d292d8831e7c7a27c8e5f@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMal2/kG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED55C4CEE3;
+	Tue, 17 Jun 2025 23:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750201203;
+	bh=eBnpcYHTpCSmU93N+2v6XceuO10N+zsU0JFmZnOplrI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BMal2/kG7p9adfLOYPsFlwx7QJcfAOR/JkzMnAEsvOTCyLuJg0BbFZ3Yhs+uc8bVZ
+	 3qULv+TiUD5kWSaPW4zxoSkuuoSuUe25++naDUWIV54nGQjrvWsospg2xts38Q5pyF
+	 Ot0ZnMOdXMIS8RIMJ5H6MtAIxgRFGdKpL0CeR18zpQX+ZlUBOtfNJ/cQgQTpRJ0P0B
+	 36SKX0suGdi3objtJmAW2A5pcJ7LPLvVP8y+9bs5sGuGy2TjpcK7bxVhIzNxxZpDfX
+	 DMTAbbFJVtifnOYfSyUIspcKUqLmr8PJ7KkKwqcULBhbFMqQOYwMzNuRBE7sl2uePG
+	 DKDNQbYhAZq1w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADED838111DD;
+	Tue, 17 Jun 2025 23:00:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617155056.5c1d292d8831e7c7a27c8e5f@linux-foundation.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2] net: ti: icssg-prueth: Fix packet handling for
+ XDP_TX
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175020123150.3727356.10882505957565617518.git-patchwork-notify@kernel.org>
+Date: Tue, 17 Jun 2025 23:00:31 +0000
+References: <20250616063319.3347541-1-m-malladi@ti.com>
+In-Reply-To: <20250616063319.3347541-1-m-malladi@ti.com>
+To: Meghana Malladi <m-malladi@ti.com>
+Cc: namcao@linutronix.de, john.fastabend@gmail.com, hawk@kernel.org,
+ daniel@iogearbox.net, ast@kernel.org, pabeni@redhat.com, kuba@kernel.org,
+ edumazet@google.com, davem@davemloft.net, andrew+netdev@lunn.ch,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com,
+ rogerq@kernel.org, danishanwar@ti.com
 
-On Tue, Jun 17, 2025 at 03:50:56PM -0700, Andrew Morton wrote:
-> On Tue, 17 Jun 2025 16:08:51 -0400 Yury Norov <yury.norov@gmail.com> wrote:
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 16 Jun 2025 12:03:19 +0530 you wrote:
+> While transmitting XDP frames for XDP_TX, page_pool is
+> used to get the DMA buffers (already mapped to the pages)
+> and need to be freed/reycled once the transmission is complete.
+> This need not be explicitly done by the driver as this is handled
+> more gracefully by the xdp driver while returning the xdp frame.
+> __xdp_return() frees the XDP memory based on its memory type,
+> under which page_pool memory is also handled. This change fixes
+> the transmit queue timeout while running XDP_TX.
 > 
-> > From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-> > 
-> > Generalize node_random() and make it available to general bitmaps and
-> > cpumasks users.
-> > 
-> > Notice, find_first_bit() is generally faster than find_nth_bit(), and we
-> > employ it when there's a single set bit in the bitmap.
-> > 
-> > See commit 3e061d924fe9c7b4 ("lib/nodemask: optimize node_random for
-> > nodemask with single NUMA node").
-> > 
-> > ...
-> >
-> > --- a/include/linux/nodemask.h
-> > +++ b/include/linux/nodemask.h
-> > @@ -492,21 +492,7 @@ static __always_inline int num_node_state(enum node_states state)
-> >  static __always_inline int node_random(const nodemask_t *maskp)
-> >  {
-> >  #if defined(CONFIG_NUMA) && (MAX_NUMNODES > 1)
-> > -	int w, bit;
-> > -
-> > -	w = nodes_weight(*maskp);
-> > -	switch (w) {
-> > -	case 0:
-> > -		bit = NUMA_NO_NODE;
-> 
-> If the mask has no bits set, return -1.
+> [...]
 
-...
+Here is the summary with links:
+  - [net,v2] net: ti: icssg-prueth: Fix packet handling for XDP_TX
+    https://git.kernel.org/netdev/net/c/60524f1d2bdf
 
-> If the mask has no bits set, return the mask's size.
-> 
-> > +	case 1:
-> > +		/* Performance trick for single-bit bitmaps */
-> > +		return find_first_bit(addr, size);
-> > +	default:
-> > +		return find_nth_bit(addr, size, get_random_u32_below(w));
-> > +	}
-> > +}
-> 
-> I'm not seeing how this is correct?
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Ahh... Indeed you're right.
 
-Thanks, Andrew, I'll send v4
