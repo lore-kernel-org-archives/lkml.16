@@ -1,78 +1,90 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2045.outbound.protection.outlook.com [40.107.236.45])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6E516B3B7;
-	Tue, 17 Jun 2025 20:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0F92EFD89;
+	Tue, 17 Jun 2025 20:35:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750192437; cv=fail; b=D6y8Zi7Nlk+WhK4mkmb+gi4aWSB7SxxiM5hYFnfZNFR/ZY/rHcV6vJyGeKqC60UeG2tnIg0fhVnNmv0E1owKeuoxd1MJvB39UGbmCRi7m5hpUW9S5sZYCM0lDaWPDLHp/KxszdbIkDzPk520KnCa9VNIt21qlPTg0M+9uup3Vi0=
+	t=1750192524; cv=fail; b=Q9JixXQoegftuRAtZdRqDOU0un7x31yz+oA+J/gKL8Mhf0on829Z/pTNaiS7ulpaqz0NCt4e+h1OkCQ1Hdo9Okd2ui0aaHvhioX6e9+2ryrtRWly24pHtxMPzLoAub1s6JSDWeNcoxxXqhlX6Cp9VR5aIAmYAITxArMnGEMCwFk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750192437; c=relaxed/simple;
-	bh=FvrJ+134IejqgcLCTaC9DdlWegDf4TBORXNSn6jltZQ=;
+	s=arc-20240116; t=1750192524; c=relaxed/simple;
+	bh=0v7BQWkr1nnN9DbKZxxIAuwPsdZRcmaAoMWExFYDvvY=;
 	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=reNgc8ABtaY0Ea1xeyGPG1pWmkH+6x5CkTnxMgaJmjEZ2O3yw6HtlRfalyU6gUliQIsrqqPTcJEF2kGYzlfec4TCnnQF7iOUwqz34jZlFMb7plBWaSB8znyOMfHx5COAzhWSHki3+R+BQVlRklZYt/u1lZLyVW9/h8Ok3DvadIk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZfgSohAD; arc=fail smtp.client-ip=40.107.236.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	 Content-Type:MIME-Version; b=X3m0JMRrcPOLnAOzAKQdNzMUWcK/uUJCjOwI9uHwjfKSG9lyAadh0pl4QsclVh8uQV0BHb+2nc5FKlatQvBITcK4HaKgMkt2PgG5WmM3WFoSwCGfNejXxdECJ0VvmtmwktERlBT/1MeZ4e7lRuUDBZtjf1KpmSNb9/ABtt5D8wY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BIN2C6wT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WWLBDtqv; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZfgSohAD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BIN2C6wT";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WWLBDtqv"
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HHtYea014849;
+	Tue, 17 Jun 2025 20:35:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=lB9NI/6sNS0gr66DZoKWVee2ym6eXNzqV10N71WR4uM=; b=
+	BIN2C6wTiv/+XpC2nVuuPKk8KHFpIvHbsNjdCgysTHyjYmj/ZqQDoEmo7kehFQOM
+	y2TKP285yYFWGdDinCKR+lUzAxBZ4S1Vw94yIYcHGb+SkJIIVWiBPOrWH7zxP92d
+	+4kNOkCfRW86fedhE++LgQwSoHtrARna6/I24oxIE+weznQr02/nAA1BTBsxRRVd
+	vh0E5Picg7DgDLyl0DXSFX/oO1yHpe/UcMrjejKbmdlv0a9oZGmuQ9AQNV375DYb
+	ZHTwXMAPwbvp8Kdt9se/7uGrMZgWnahQIFBwbK5g+Z7K2ytnW2k01/PDE4Ti5Hvu
+	+kgr4coYWRdApkwdtsNhgw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479hvn5s18-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 20:35:10 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55HKSBJ0034437;
+	Tue, 17 Jun 2025 20:35:09 GMT
+Received: from ch1pr05cu001.outbound.protection.outlook.com (mail-northcentralusazon11010015.outbound.protection.outlook.com [52.101.193.15])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh9h4ek-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 20:35:09 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uJ/LKDGYz/+oHxMw6LVYe0v9Vvg9yp58fSlUIkFkxfeUjrCLiTDJDl6bA+pwgEWi5Fhn1hBpOOzIptSta9ed8axZu3JW35L/KoizeNs+AZcPZ01Pwb3qL2fFmKzUDo9bpVOS9kKDYPZqsTS0nJRt/uTAwgIJFvavPgS92Ci3r4JUmhau51/8kC3gUTAOnNVC5E8BGQ5gEqVXKuwkiWBdgYvpjg7WInEMKxmF5by45fs5lv1htvzJnkKRkNRU0vcSboeP/WuWoVAUQ4S/x9uxWf4+YObWUTnW1mclFP1f75BQ+IVlL7KdLs/QUoamfwus7WiF9jxzdbdss4uxV96nIg==
+ b=NS+l4U+BNS1QQQW6+kz855azuHCrbDuaJ5CgOHkpKbaHpBgMDKmPEk5s5j321y2dabRPJB2w5Uy4L1KwapoxpOFscw1+kQyXfvRXMf16RR74Pc8mqqCHBZOa7/WOy0cMkpGbZJx8niracjyeNO+PhH0yhv6PbWnbTqloUWcSLEZAYHEpgWhx6qt4pk8n9R3RdiS1eWSw6KrGv6sOhOPlPwZqNdemJ89P/B6MBkFIwGElRQY/wFKPHq65v1qTDvX1Ei1XnDvtUvIj7lKK7zRb55rZ1OCbGw0YGNvDLwV8QD8yNfoiyCRGK9gp2WlW2b/fxZai432T8qVojV93ptf5Ig==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Uuwyxg/E9xvP2TQdnvK4AtydGtQtIPRti/84cPuG7y0=;
- b=Plq36I8AkrcEVzjmp71AqejsvFazaM8FUWP/YA89HG3UQMyrL+rwdX+urC67lJYkVUSyKG7scAClwbBsWEnj4++kGGncuyIY1SISySXyhIOBREGUTshm7FcopCCYCPdiPk071OIEubMd0efTZ7ulfD19SDnqHtqcf+ijTDsIVJgddxU2T8DPQLAzgrZ4IXin9TNpdmLdDTPFpEeeUnk78lPGr5l+31ENAobE1AYF0c2pyHIqVKZY5R+ROXXaQUanDaNM6CdyXwPmB0goZNh7vjR602LELNsgEhtrWklqZj9EewF03vr14hi3lhNCnTm0+FhIbhZS9blt7r8uHBMC4Q==
+ bh=lB9NI/6sNS0gr66DZoKWVee2ym6eXNzqV10N71WR4uM=;
+ b=pnDIytPxAnEi9ANSCLjYecKJXFd2iiElr3c43jVWxnKYJIpNqEG4RvkqFp0NSxI9SSGZvnaCyPpOUAPwsWRCyfB+drsjF8BstFUGWR2trLUB74wk8ZIRZ2Gy4+3C+uR8lI04wqB1f29Pvu2KknJ92xGQgFD4iOC5RrHVLXP1nWtOKGOi7k6NSchGpoNuBJgn9NgBTERZwTlkRicAjX2bPn/euXRFzsRjV3lClM9viBJKj6bCYM1OWnRmULAOLbAKlfBOmoAHxOFW0DXxb7jsEkNtq5AomDsKuZt7uyl3wIUubM4piHtPXz4Bo1yXT7EAEgltQIlCIF75wT9vJ5u5qA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Uuwyxg/E9xvP2TQdnvK4AtydGtQtIPRti/84cPuG7y0=;
- b=ZfgSohADTIWbBpuVvAaQ6NWvDb56aeKXN4UQWawAqbFhoQOIkdugYto3Z9ZJsKeelRTyR94lVFm/nQnYpJARasYI+kmvWV40fSMQFEJf+zmTNpikSt4abJcP0eZeHsWMaLnFZPb3k/00JTsw/jFI638ebNO4StSGE+ItNcQ1g42iM5Wp9JRVhpNXBTmul2Zvjh39nu2htFbIM2dtFCSOvf/zRALDgevg2oKZrmDiXAv44/BCbkUteTSsPbpHTl7tIAX040hHBQ/bYJ7Zd2enXkuJQ9K3LvX0OYEEbZTu7Dzn6mT3k6jdXX4Q5Ynx4uP1AYt0pJzVB273o5VJLwop0Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com (2603:10b6:408:14f::7)
- by CH3PR12MB7620.namprd12.prod.outlook.com (2603:10b6:610:150::5) with
+ bh=lB9NI/6sNS0gr66DZoKWVee2ym6eXNzqV10N71WR4uM=;
+ b=WWLBDtqv/XnyS+OTGMuHD/aJgPCHNx8xuzYncI45x8fmnvvFTBU+nYQVydfBu3rUZO7XcMVk2rzXECWRKjawDBnzJJEAcDwV5PM+1Hbpls7Hev/ngEdWeb2iC7SYuyadNrYGoRgjOSidj9WgC5+K7yxeByig2ROyFJmwa2/ZqRQ=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by IA1PR10MB7311.namprd10.prod.outlook.com (2603:10b6:208:3fa::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 20:33:52 +0000
-Received: from LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4]) by LV2PR12MB5968.namprd12.prod.outlook.com
- ([fe80::e6dd:1206:6677:f9c4%4]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 20:33:51 +0000
-Message-ID: <2f0f12b6-fcff-492f-8b22-7b36ff8065ed@nvidia.com>
-Date: Tue, 17 Jun 2025 13:33:47 -0700
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Tue, 17 Jun
+ 2025 20:35:05 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::743a:3154:40da:cf90%5]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 20:35:05 +0000
+Message-ID: <d29f03f4-c06c-42ef-952d-6a7da196d03b@oracle.com>
+Date: Tue, 17 Jun 2025 16:35:03 -0400
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com,
- aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com,
- fujita.tomonori@gmail.com, mingo@kernel.org
-References: <20250616153604.49418-1-boqun.feng@gmail.com>
- <20250616153604.49418-2-boqun.feng@gmail.com>
- <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com>
- <aFFwumsjuAEIJVUF@Mac.home>
- <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
- <aFGenbg8S36G1aeP@tardis.local>
- <CANiq72neJ-1e9Cef5RJMdJGEqWVEW7F72_J0GcDpJuEd_APrxA@mail.gmail.com>
- <aFGv7-0PzewfS5kr@tardis.local>
- <CANiq72mtkhZ5uhCfQ9WhLHWdC96iHCXTra4OXChGb+qnpRKNTg@mail.gmail.com>
+Subject: Re: [PATCH v3] nfsd: Implement large extent array support in pNFS
+To: Sergey Bashirov <sergeybashirov@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jeff Layton <jlayton@kernel.org>, NeilBrown <neil@brown.name>,
+        Olga Kornievskaia <okorniev@redhat.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+        Tom Talpey <tom@talpey.com>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konstantin Evtushenko <koevtushenko@yandex.com>
+References: <20250614155950.116302-1-sergeybashirov@gmail.com>
 Content-Language: en-US
-From: John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <CANiq72mtkhZ5uhCfQ9WhLHWdC96iHCXTra4OXChGb+qnpRKNTg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0362.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::7) To LV2PR12MB5968.namprd12.prod.outlook.com
- (2603:10b6:408:14f::7)
+From: Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20250614155950.116302-1-sergeybashirov@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH0PR03CA0315.namprd03.prod.outlook.com
+ (2603:10b6:610:118::15) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,125 +92,506 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5968:EE_|CH3PR12MB7620:EE_
-X-MS-Office365-Filtering-Correlation-Id: fd779632-fb6c-43f1-fef4-08ddadde4582
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|IA1PR10MB7311:EE_
+X-MS-Office365-Filtering-Correlation-Id: 96236d66-16cf-4198-2258-08ddadde7179
+X-LD-Processed: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WmNSc01TR0IyNGMyNEdtMUc3NTA0N1RZMnFKTmFBbm42SFYwaXJhMFpDK2c3?=
- =?utf-8?B?c3U4TlBzdXhOME9rdUZlVnRFRThZaHU3eTRLS3FFMENsQnNTaXo3Yk1pU1pT?=
- =?utf-8?B?M2poZm81UHNxUFJnY1p5ZDUyK05oKzRLRWVSclRsMWZ5bk1QM2lMcVcyUksz?=
- =?utf-8?B?SDBqeUplSm1qRkZocjk2Y0lqVUQycjRXaGdxN3hSWW1RTDE2aXJSeXFYcDRT?=
- =?utf-8?B?bWZnTzBXU1ZZY0N3c1pZWFdaOEx6cEgzUXY2MmFIRW53ZDZpR2NzMktEcXBM?=
- =?utf-8?B?NlZnTndKdUZLYUR2Mzc3Q0d6V0k0SE1xbU51YnBhS3hnOWVwK0UyWHQwZkZS?=
- =?utf-8?B?VFlBVklieno3cnIzK0tNa0kxQVE0WGtXbzZxMVI0QjNyRmNub2FFc1FNUUIz?=
- =?utf-8?B?YjZ6TTcvNURJK1NOZ3ordnpVckdjMHZ6c3pvRUZNMzEwWVI5MlZHQkxDblNm?=
- =?utf-8?B?anRpTk9kT1RTbGJCSVluRGlXYkJtWGNJTTNoRFF5NmF4ZHdadjRoVzJGREJz?=
- =?utf-8?B?d1RLL1FGc2dSRktaMTR5amU4U2hxYVQ0RTkyd0YzZVQxekR1TjdCRWxXaXU5?=
- =?utf-8?B?WnhWTjdvVVhzdnladlhtdlRCcEw2UzUwSWpiRWpyOUErbVN4M2NwMlAyNmxG?=
- =?utf-8?B?WlpKTkppZ2xGSEUrWDFsQ1J4VWtQdEliMkMyQWt1Y05McFU5SlRkNm4xc3Jv?=
- =?utf-8?B?ZmZjeDgybHZSOXd6aStDeHdPM2Q0Z25ad200cFpjUFVBZlVEeHk0cWJqVzBw?=
- =?utf-8?B?SW03bDZNZGd5b3BsVGh3aE5ERjI4eUIyVVZzaHlGaGs2REVmeGQxeDRNQUlU?=
- =?utf-8?B?TTZVNmtMUXk5a3NySVlBNVNHd3dheDZsNE0wODQyWXJHNnM1T28yN3ZBaFJy?=
- =?utf-8?B?N3RoaU1abWFzRFhxWGZPMllBSkdVTjE1bmtNczJaa3ZCOTRkTkFpYkRkbkk1?=
- =?utf-8?B?OE1sSHN6TjMvYk9TSFZ1MmxCUm8xTnk3ckQ3TStkS0RJb3JuR2dqZDVMV2Fp?=
- =?utf-8?B?MTRtdStuZmdGaTFzeCtIcFE5dzJkcDByTERqTmdYVWsyRFpRK1lHTzd5Snow?=
- =?utf-8?B?azBJK2c4M2VvVlhhVi91SHhwSlNFNzEvQjZHMjNzVloyUU5ycHFweC84Q3Zl?=
- =?utf-8?B?L0JmeG14UG9Gd1JtQWtvUTdYU2U1RVhLOCtXbk5nS254aE1aY2c2VVBQY0x0?=
- =?utf-8?B?ZlZkSHRXUWN6a0JtWWNCdWJUSUZPV1pxdFRQZjcrMjlqdmdXeG1hNVBMcHpm?=
- =?utf-8?B?UTh5aEh2RXVoRjIrVjNBY00xNFV5bWo2Y0Rld0JYeVl3UnE1T3F3blQrdHpz?=
- =?utf-8?B?RVY5V29NcGJEcURqeW5BYzdkMklSQVY5NGVnM0UwdHF0cFg0VXdlbXd0UmRw?=
- =?utf-8?B?YUx0cGNkZFlDaUhSR2FIL1V6M0R3Q3ErTFZhWVhyT2pGN1RKc3lzM0RQOGxs?=
- =?utf-8?B?enhzQWdKSHF6ZFFtR0sxKzhvZU9UeWc4RVRGWXpkSXhvNUMwMzFOWU5yeGpC?=
- =?utf-8?B?MUt6RUYvUnI3WFlKSUFVSXFCdnJjRURrV0wrQlFEQ1MweFFzVTBCOWFacTdo?=
- =?utf-8?B?OVhkQWlSNElWWWlhRHMyMzBZYXZrR3RKZXFtczVJek92ZzM2WXEwWkxiSlVK?=
- =?utf-8?B?MWNlekE4QlhieXdONG1LaHdxcWhYNkJUREsvdWRqdGh2UUYwU2luaHBhYllx?=
- =?utf-8?B?Y00xajE4UjdPcDU4cmhnWWFTWDJiaEhrSkJEc1pLSmIzM3NuN0xob1BpNWxk?=
- =?utf-8?B?ZlJjOUtHeDg0bHVPQ3Zrb1FVNE9GY0VyMkttaUxmWjk1QzkwSlRyaG9ZTXNx?=
- =?utf-8?B?ZytFWnRkNWhOSDdHYnh3WUNiVHFWSUcxK3NqREpNNDF5VENUNklSb09vRVE3?=
- =?utf-8?B?aE05ZlBsWlQ0MXZjSjRwMmdlV1RTY1FCS2VEN1lOZmZIU3c9PQ==?=
+ =?utf-8?B?WVNCNVVxUWZ0VU5zMU9HanJucHJlejU5a2lVTzErQVpRcFp1T1pFZFNJcEt0?=
+ =?utf-8?B?SnpVY3BLYkExc2g0VXhTckcxK1c4T3NJNnc0bGg5TmlXdDV3Wk9samFieW9Z?=
+ =?utf-8?B?aVpaSWpEWXFRZlIwdGlJbnhPZGxsY2dseGxuMVlUM3gvZjdzSG1JczlNZ0J2?=
+ =?utf-8?B?SGNTemQ3Wmx4SEVhUkIycklRMXFMZy9jbitiQjlFcVN4ZHZhSVJINEFLZm8z?=
+ =?utf-8?B?My81Wm05akxGYjdxMllaemJ1Z1NON1F4RzNwNE9kTXpkSy9KdUJiUHhqUy96?=
+ =?utf-8?B?YXp4VnBTRWdqK09DSk9hNUF6aGlEZVVJU0pBVm4rK0x0bVRJU1l4bm8xbFVT?=
+ =?utf-8?B?cFdJeFRtdGJQZUFob0NGc3pUbVVkMC8wcDBMSjNIcnVWa1E1VHNFWHNCdWcy?=
+ =?utf-8?B?am9jekUxcllmV3NhdzcrNWY1SUkvaEFGbU02STNYckxLYXhFR0RXRDh2Z2gw?=
+ =?utf-8?B?V25FZFhsOWU5eE9leEx6bm5mL1lUWlllWWh1OTEzUE0vcnZNUXUzeGw4SmZa?=
+ =?utf-8?B?ZVphWlNvSHZNbHA5NTJ0OUNDT0Fib3JFVFVHSkpHZTZsMHNlMEhxL1kwOXNn?=
+ =?utf-8?B?Q0Ixbkp4UmN1MjhTcTJjV1FvcXhrRXRycGswcWRTTmwrbWtZQ25LLzExYk90?=
+ =?utf-8?B?L29VeGh6Yk5hVnNvSktWV3U2Nnh2OXNaT2RwRzJyUWtFT0h5TVhQNERoa2JO?=
+ =?utf-8?B?QWVwWEpDZVl5UFRWNTB3ZHg2aWp2VFBZdXQ5U2duR0xiSXNoUHp3eXpOR0tF?=
+ =?utf-8?B?ZVAxRU5ZVEQycytudWVCeGNHRUtxTjZuZ3ExbVpmV3FJaWt5Z3dXMXIvN0Jw?=
+ =?utf-8?B?bWhMMDU5TVJvMGtSZ1UzWDc2Z2dQUzJaTFhnbCsrYkZqOFFodnZoWUVzZHdh?=
+ =?utf-8?B?V0Rad3Q1NHg3YzVUUnpYRm85c0VESS9DYkFzQlVhQjRxNmI3SFVLeEp6YkRv?=
+ =?utf-8?B?V0VlaTFteTRDU0dqT3ZyWXVJSFVXa0xnbGNIY1RaQWxhcGFsZHV1Qmt4bW1l?=
+ =?utf-8?B?YzVZWXdDSWU1M3lvTTJjSmcvdHlpS212UGNxdldMNlMzOVB5N1dkc2dmckJL?=
+ =?utf-8?B?U2RtU0IvbXNNb1dSMGJmMzVTVmZDdmd4SnRCT0pjRjlod21ydXNTTWpnS2FR?=
+ =?utf-8?B?WTYrdHhOT0JDNDdZNzB0cTl0Zm9OSmkza09HSnRLZk1adXZtVGlVckVmZkxI?=
+ =?utf-8?B?RDk3K2syL3prTUlFcDJGWk9BQWZVdHhQQldrUytrZEE3WXIwQ2wrMUJjUnpi?=
+ =?utf-8?B?TklJQ0JFNnkrYzhkckM5VmRvcitMbkJIMXZkbmY4WFZqb0hKdzB1TFgrWVRi?=
+ =?utf-8?B?TTQ5dFJXemZjSXY4WXN1TlBFaHM3eW1RMUdWYUJhS2F1dGh5QU0rRDRDL1d4?=
+ =?utf-8?B?WkJ0a1F3WGVIcGJOZmJyZ0FWZS9LbWxGTHVma0VpNjNxRGcyMVFnUkFKQnZQ?=
+ =?utf-8?B?VzBFT1Fab0EyMzJscVRwSzNVL1gxSjgvQjNuRmhCK2VqY2p1TDJubldyaXV5?=
+ =?utf-8?B?clFvZDB6S01wNWI3NkUyY1VvRndnSXdXaXlOeUtwcjZVSTV2Y0kyT0hVQUJl?=
+ =?utf-8?B?TVdUc2lqQTFLMHIrNG5jS3MxK2Q1UlJDcUQ5MGVhM2FYbnRKYjZoUlZUS1pl?=
+ =?utf-8?B?WWE5bEpkc3RnVHhqKzlvQURCTnRzOUM4b01qVHZFTTZLR1JUekhzWisvaVFy?=
+ =?utf-8?B?Wi8yTXlNRm5uSVJZWmNBZ3pHclBsb0J3OExCOGNBNHNwK0FHS3ZaNk5oYWhj?=
+ =?utf-8?B?T3I1bkxSUk1JVG40dk9pdmF2RGEyLzNFV0VKLzV5K1k0YWw3WFRDSHA0OUZ4?=
+ =?utf-8?B?OHMzbm5iQlBIdnN1bElrb0ZqczRMV1FFQml4T2Y3eU5ydkxLYmdiVXlRRkQ1?=
+ =?utf-8?B?c2hvajJaYXpoQWV6dVRTRy9HeG1Rbzh5S0czMGhCbkFwZXNnQmxEc1RFZGZw?=
+ =?utf-8?Q?GSibsXggAUE=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5968.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?OC95NG9Ya2hCQjl2amdJWUljenI1Um1zS1U0OTlhdW1vSjBPelRmUHN5MTlh?=
- =?utf-8?B?bGZYWDhJcjN6QUxmMjNJVjI1Vi9pSnRKRVVkQktIRDhLRUtyNTVtUDRvVU9C?=
- =?utf-8?B?RE4zdzJKYnU5NVpydWdOZTNJR29hS2FYRzY3aHRlYVVyenpTellqYkFCQzg1?=
- =?utf-8?B?YmtPVlNqWnhUM1lleXdhQlVHeUxKSUhtaWlaWllkYXVvVnhNc3VRTUc5Vjlu?=
- =?utf-8?B?T3NqdWlrOW5rS1hpV2ZUQjhraGFyelkyWEZmUDVLZXB3UUprdWtpUlpLSk0w?=
- =?utf-8?B?NjNtMnhuNFNKNGwwd1Zpci9IUGx4SGZFb05iTFZ5MXN2VDA1ODlrZFY4dGNF?=
- =?utf-8?B?NWFoSXpBbW1hdnRScGF2UnE1Z3VqQkJIVGdGME1rU0V6dENRa2paUnYxa0VQ?=
- =?utf-8?B?QU1pTGt4NFFrQXgvZ3ZEQUpjN0c1bVVsZmp4VDBLOGRPdm9CejcxcHVDWlRt?=
- =?utf-8?B?VU1mcFFwQjQwUGU4MWQzMkNkZU1XcGdjT01MRlpLNFR6TFlZdnVjaE1MemN6?=
- =?utf-8?B?R1BlMEN2dkVCcEdUMHJ5bFA0Vkd0TS9aU2t3L1ZLSjdaM2FZSHhZM0w2WFZV?=
- =?utf-8?B?ZlQxRy9mQWdFb2FwZ3kxYktKOHNJRUFXdjRPSFpDTDR3V0FqMmsyQUNRRTJx?=
- =?utf-8?B?R3VFRTRwc2lFVzJzSUhtZ05LU3I0STR2TkxyZ0lseTA3b1ZhZVJZTmFnTkNm?=
- =?utf-8?B?UGdCcFRzcTF1bGhqZExZeVhtalNGWGxOVXE0Z3JyanZsOTZJMmZPaktlUkhR?=
- =?utf-8?B?eWhBOWVJR1ltak5tdzFsbTlNWDlKdVp5bjRGMGVyeUJlczc5SGdVQ09URG1Z?=
- =?utf-8?B?dnl3MDRsb01EU1I1ZU0xOHNLTlVCMlNtbUJzYXFQcjBRUStpdFlVNXRKejln?=
- =?utf-8?B?ZHppUGlNR2hxMkhCaWVvYWpvZGovTi9sSWUzeVRLN2phL0Nqam03VXNUVisy?=
- =?utf-8?B?V3JGVXU1aml6RytXandsYkFKZC9BMXBWckdtQ2xRVmxUaWxSSHhhTVUyTVpv?=
- =?utf-8?B?RkxNUERZZDBXbEVFb2NpWXFJMDN0M0xUclcwaGF1ZG1iYUtsMkdtRzI0cVFx?=
- =?utf-8?B?YTdNSGNYSEhGM1Y5c0ZTcHhUV0t3SWtYQXpTUjE1RVNnMUJ0eWJWZ0lCSWdB?=
- =?utf-8?B?aitKYTM3bmNqY0pzN0VIL3UzUFJia2NLYzNYQ1g2N244N2JIZGRPNFV5Wm5m?=
- =?utf-8?B?M0J4UW8rY2s2Rm9ZTXFBSkdBN2tBam1lcTlobGd1akJaQ29uSUxRSThUSTly?=
- =?utf-8?B?QUVOb0h0bXl4R1dXZS9USzZBemFzU05lSFRpZXExVTFMU3VzK3J2TmQ2dmJk?=
- =?utf-8?B?N0IrWG5hR3dDTHVZblpzR1luWmFaZkdISWZrend3Ti9idjhNTXNtajRMUE8r?=
- =?utf-8?B?c3ZFNW5SdDRjUW1ERzVlRzkzWXAxYS8rR3NObEdoNG9rNGdCSkFvRGhLOE1S?=
- =?utf-8?B?QXN2QnBHNnZCT2p3ZVdFZDdIRWlBTUxoQmRiTkE1SkpCL2Nxb2VQVzQrTHNs?=
- =?utf-8?B?YnlhNWtpVXZIdGRHQXN5UkpmblRjeGFOUDQ1aGE5STNBR01IVjhYeXh1ZnMz?=
- =?utf-8?B?amEwbjZNT0J5SEhOUlVYZ3dFMVhHK0lyTnc5REpzWEtCUzl1NUxJSm1EdERC?=
- =?utf-8?B?YWwrREJJdnptVjJBVjAyVCs4NVgrWTlWZXlTbHZoaS9NZk1lZVVsdkUzMndC?=
- =?utf-8?B?WkQyLzNudnQ0UFRPR05xQVh4NURSMXY3OEQydmljeURPMWJWRXg3TjhHWjgr?=
- =?utf-8?B?VTVpWWZvQWlwVm92akNCM1YvQ3oyVkc2VUpJVDFSN1BzekhaTTlneFA0YWdo?=
- =?utf-8?B?b2I2RFhZQ29DT0FuSVhMZndWa3JwelNLWDFYMEJjbXArZ25yQjg5N2d6REdM?=
- =?utf-8?B?dmt0ZlprRmZmL1hPbitUMWlYM0FwaUN1eXEzRk92UVJJbFdhN05YbENNT25Q?=
- =?utf-8?B?NVBvQkwzSGdieG9INzFLY1BPNGNpZ2NIZWk3TXhqVlBJbUxoZlJXek5Kb3ZY?=
- =?utf-8?B?cjJVKy96ZERycG9qZWZDZSthb2VIWmh4Uk84QndpaWYzREtIOGhwUUxHUHZ0?=
- =?utf-8?B?cUl3RWNoLzhVeDVFay80dzVlZ2pqR2hDbStNOVF6cGo0Y1JPS2VYd2VMOXlF?=
- =?utf-8?Q?wCYdqbmgBBlgj0+y42VDBcS1H?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd779632-fb6c-43f1-fef4-08ddadde4582
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5968.namprd12.prod.outlook.com
+ =?utf-8?B?bFdEZ3F0YlkvQjRFWEUzUnhORnE1T3RDc1YzOEdTZkMyUVNkeXk3bzFwbFQx?=
+ =?utf-8?B?Znd1VHBYTUE4S1NoaHpwWVdhbDBOQ0ttMXFQV2p0S3N0Z3hQMDgxVDJXVGRh?=
+ =?utf-8?B?cWpWZEc1QUh0aHVwN3ozeUNJekhlWkhoZ3AzN3E4cXJBV3lzdndqMk1yUTk3?=
+ =?utf-8?B?VGFoWHR2NmxYNTVqbFV1YUF4aVROUFlJT0VlSGZIVklyV3NFbFBLSWtXeEdo?=
+ =?utf-8?B?L2JCeXcxa3ZTZVNZZTY3Q012aEdSdTN4andxVjd0NHF3eXFaWGo4eXd3ZnZD?=
+ =?utf-8?B?S3Z6S1hNT3ROdE1BSkJ5R3JRT2s2M3JPQjZnV09nQXlaa1laY0tyRlpsdGFz?=
+ =?utf-8?B?alQxSHh5UWZFSklsUUJGaHEwa1k5VjI3U1VqM1F6ZE41OFF4Yno1bjZIZ0Ny?=
+ =?utf-8?B?YVBnNU1FL3NINGI0a095L01GNHJmbGV0THAvc1d5VHBTRXVjOUpTQkN3MGpa?=
+ =?utf-8?B?MmJzUzh0TmlMREFiZUk0V3crR3pxMlFrODlzd3JLWTdVb0VxQVJkRnJlKy9C?=
+ =?utf-8?B?UzBKTXlsOVJaditzL3JicThjRmEzU0l0eU05aUZTR3FMbkhpTmVydWtOckVN?=
+ =?utf-8?B?Q1ZHM1hPUmJVSVpVQ2JReklibWIvNXpRUDFoY2FvN0lrNDFsTE0zMFJDc2ZU?=
+ =?utf-8?B?aDBqaDZjTmI0ZFJ3RHZtdG5RbCt0eDl5MUVhdVhOSzdOUm1HdWU0MlhUdVlH?=
+ =?utf-8?B?eXZjbjRGYzd1aWRsR2ZySVNwNFhuYTg5a1BVb3JjWVJjVzJMNEVJZHZyb2lL?=
+ =?utf-8?B?RWtDdmJpZEhJbTA3Kzk3RDZpL0Z4bWg3NXpUK0NsUVBQblBKZGZPdmNUK3d3?=
+ =?utf-8?B?WS9oYkpnMGZKeW9SNjE2YkN5MURIdDM3ZXFLem9NUUJIdGNsU2hVQS9OSC8v?=
+ =?utf-8?B?ODZqcHI1UEpqV3owTkVRMGs4bUVuaVBpdy9hRkJ3dDBhbEI5Mk9yWEh2NVFo?=
+ =?utf-8?B?SnVLNkw5b0kwOXRGcm1RVm1NWUI4N0tXTDIyRzJmRXMzVU1May9POFlNMFlT?=
+ =?utf-8?B?SjFKYlI4aFhyQ1FxcE1Dc1hIdk1FZkVOd1hRNVNRNFh5YmxEa3M1SVJKYTF5?=
+ =?utf-8?B?UjNLdWc4TFhZZFI0ZklaaGloRVhUS1lsQmhhSHJZaEV4dGloUVRGQWRZdUM0?=
+ =?utf-8?B?VEtzc1ZZQlF0NXRuUVY3eXowVndIYjhWSVkycjJnS2lmKy9GdEdOaE1OYm0x?=
+ =?utf-8?B?S2FMZUdxK3AxUWlLVlFSSUprYWREV3NxUHBvR3ZBVkYxVWtPbGtFWTFuVm9x?=
+ =?utf-8?B?QTZVYnowYzNIWVlBTUE3SG90bDc0VDhOd05udUNCL1RURmo2SlBaNFBWQjBD?=
+ =?utf-8?B?bkJYQlE3RDNOeWNWc0VKOHdFYmNNQzNqc2FKcnp1U0JQUS8raVJDR1RUVDFu?=
+ =?utf-8?B?ZlNRNGszUE5kd2FwU216alFJQkdESitLQXpJNjZkT0w0REhZUXEvVktFMlRw?=
+ =?utf-8?B?N1Z2amJWMi9ZV2NWVDNyRXVaK3hoVmhnVGtwb2hSRE5JVGpucHNSdTFXWURJ?=
+ =?utf-8?B?RGVPcmFNRVlYU1RBanl6cFphTTJ2a2JVN1FLY3RqOE1DVXlPeVM5bW92S2l0?=
+ =?utf-8?B?MnFEUnh4RmVNNGFBL2tscHNud2VJZXhmSmcxRjRyQ0dyc1dMUE9HbFVsRVJU?=
+ =?utf-8?B?cFZFbVUzSm94M3dtTmZKSS9tMHlmWStZajJmckM0aWxtWmxjS094T0JhRzVU?=
+ =?utf-8?B?OTBONVZMMVlSMldmZWVRWUlvMFM2OUZnaUpFVDIyMzhjWGJSYnJkd3dBdnQ1?=
+ =?utf-8?B?OHFoUGZmenZwVmhubWNPVFMxaDQzQW5tSjRtMDFCMmpXS1dBUGUyLy82QWhL?=
+ =?utf-8?B?MGZzaVdNM3FHVUJRYkM1YXNNUStvWXhSTXpDb0RjZFRXMllacFZjTGt4ZEVw?=
+ =?utf-8?B?Nnk2c2REdGJFbXIrbDRIS0JpZDNIWHROZHFLbWpuNGc1VDAvbkc4MFJGLzJ6?=
+ =?utf-8?B?cWtkb1JTTFk1cTNFZ3RhVDJWSm5pNWFVdGVlODBlZmJ4RUtDNWxTdjFPZWE0?=
+ =?utf-8?B?Qnd2VkM3cUxIbWNFWnpheHdBcnRXZkZBcVRHRERRM1ljK0ZkMEgxZ3l6TTZx?=
+ =?utf-8?B?T0I0amxDVFNqZHRwV09JSE5ZSUVDMVJlN01oQjZWWUZvakpKYmxlay92MkVo?=
+ =?utf-8?B?eVk0SHplTkE5MUV5bkdRZDNSeUwvaittRHFPdnNVV3BZdEVvMURiUmV1cjdC?=
+ =?utf-8?B?S1E9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	fQeyffDHr7ftFLyBj5tRw/QNp8jIGpAaeX1t+LOQZwf0655toKJvnBlVLreEMDf1qZyu0uSqAOU/g2932opxiG9mJ4Na1zzjM/iHxxQPhCILcGI/ptSK3yJCLftdwOe9oD8KpqLQvuv7xsNII0P6j+fjMytAXB34U6VS2r42vQ8/9Vn5Q5q3+9fR418kAEWLwF7ldgRwTdzv5eWO7NRQZww3iS+rqE/4h5PNMFrUa9IGd+EP17xPYggOKkK4K3bE5T0fg9IBfwkAYuqh0+ulbCe/SD11d/MKDdTxoF2XicTdAShe7IStVz/GfEpc+8r3DY/vZS3AHG0Qc6zunJ9c5Yf27zlVc+J7tcUtwDnqN+nj4fEURC/pRz+i0dxkuR9STKgHFWEecjraAwOkoQh7FLEfQOtuqbAD19KgJn1GL2r4Qf3XMARJVTLsNAObBPMzY+cI5ZpNoC4qApXXKV1EsnKnoyRgJ2YfQkUFn87ezRm78RXDCKRISPxKsdKZ2ZcuA58EOF/0BDaYkMmnIQhXs9bhkg32opPUNm8+gAMGNktU4uDg9319dOGW2y2ptn6/xZdwJ0LtQ9PWvbbZ5Y+wJeVZyCM9akMXDSPohrCEDyo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96236d66-16cf-4198-2258-08ddadde7179
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 20:33:51.8658
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 20:35:05.6531
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rhR2FbhdzBxFPmyH1ywilZuPtbXLl2zxSyDXWQ058uLm0HApRUuozHPsA2EByLiwSA9jMzkYD+bTkW/ATQjzTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7620
+X-MS-Exchange-CrossTenant-UserPrincipalName: SOza3JwzC6bOUs/pUC3+IdTgEvS4us0GAWyvIIVe6uY+oD/WeEIAi/64kZgsbYElsDVsirQUb6MeqdqnhIrjHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB7311
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_09,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ malwarescore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506170164
+X-Authority-Analysis: v=2.4 cv=XeSJzJ55 c=1 sm=1 tr=0 ts=6851d17e cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=BMxJXzqDAAAA:8 a=pGLkceISAAAA:8 a=6mSsaw3qlAX22I-ypvYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: nmoTnPhWl_6OtPozauTkjySrgKWGhHRf
+X-Proofpoint-GUID: nmoTnPhWl_6OtPozauTkjySrgKWGhHRf
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE2NCBTYWx0ZWRfXxg8D0Hv+9+BV d0pEF8PyTAVV9eyCTY+51WKpc+4BeYPoy2UgW+fVj0Au7wODXiAWKCa2o6C1ta7BQ+IBQwAyP6u Sifoin6LKyF++Ic5cu4l0Q3kTiTq06d+WYbQYpMCxy8R3Ezdem8RsL/hTmqQfg2cmM/XFKOzccK
+ hhqDybnOvnTBm1OTOYUyboVbeqe08ShCZS3WdeMJjkp+rZGuCA3Wp8RG5goY9288P95cYXnwlQz B4OSl1I3bQ3QiV7j7l0bFT8cBeWfIsQOsQG74VJaHvjhjYejoEmQJpIsFxaX6dPThbsyVfIiLSE Tl5pIYD6zsK0wZeKiRC0Dz2z62JI7mMKlrfW39u4KdOA2zWw7Op3drItlYB1sT/DI2gn3Vy3Fd/
+ Lb+AuNu71UOeAcSwT9NXZdjNPwwo+tQ3bZ25Uk3alaH4fhQj0i2fV61gh9HNv2Ui5yhkchZK
 
-On 6/17/25 11:22 AM, Miguel Ojeda wrote:
-> On Tue, Jun 17, 2025 at 8:12 PM Boqun Feng <boqun.feng@gmail.com> wrote:
->>
->> How aobut something below? (I use "" instead of `` on purpose because
->> the output variable there is a string)
+On 6/14/25 11:59 AM, Sergey Bashirov wrote:
+> When pNFS client in the block or scsi layout mode sends layoutcommit
+> to MDS, a variable length array of modified extents is supplied within
+> the request. This patch allows the server to accept such extent arrays
+> if they do not fit within single memory page.
 > 
-> Looks much better, thanks!
+> The issue can be reproduced when writing to a 1GB file using FIO with
+> O_DIRECT, 4K block and large I/O depth without preallocation of the
+> file. In this case, the server returns NFSERR_BADXDR to the client.
 > 
->> You mean it should be "with an NUL terminated"? Or it should be "with
->> a `NUL` byte terminated"?
+> Co-developed-by: Konstantin Evtushenko <koevtushenko@yandex.com>
+> Signed-off-by: Konstantin Evtushenko <koevtushenko@yandex.com>
+> Signed-off-by: Sergey Bashirov <sergeybashirov@gmail.com>
+> ---
+> Changes in v3:
+>  - Prerequisite: [v3] nfsd: Use correct error code when decoding extents
+>  - Drop dprintk()
+>  - Use svcxdr_init_decode() to init subbuf
+>  - Tested manually the block layout driver using FIO
 > 
-> Ah, I meant that "terminated" sounded strange to me, i.e. it sounds as
-> if the NUL is what is terminated. But I am not a native speaker.
+>  fs/nfsd/blocklayout.c    |  20 ++++---
+>  fs/nfsd/blocklayoutxdr.c | 118 ++++++++++++++++++++-------------------
+>  fs/nfsd/blocklayoutxdr.h |   4 +-
+>  fs/nfsd/nfs4proc.c       |   2 +-
+>  fs/nfsd/nfs4xdr.c        |  11 ++--
+>  fs/nfsd/pnfs.h           |   1 +
+>  fs/nfsd/xdr4.h           |   3 +-
+>  7 files changed, 83 insertions(+), 76 deletions(-)
 > 
-> I would have expected e.g. "a NUL terminated string" or variations
-> like "a string terminated with a NUL" or"a string with a NUL
-> termination byte", if that makes sense.
+> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
+> index 19078a043e85..54fbe157f84a 100644
+> --- a/fs/nfsd/blocklayout.c
+> +++ b/fs/nfsd/blocklayout.c
+> @@ -173,16 +173,18 @@ nfsd4_block_proc_getdeviceinfo(struct super_block *sb,
+>  }
+>  
+>  static __be32
+> -nfsd4_block_proc_layoutcommit(struct inode *inode,
+> +nfsd4_block_proc_layoutcommit(struct inode *inode, struct svc_rqst *rqstp,
+>  		struct nfsd4_layoutcommit *lcp)
+>  {
+>  	struct iomap *iomaps;
+>  	int nr_iomaps;
+>  	__be32 nfserr;
+>  
+> -	nfserr = nfsd4_block_decode_layoutupdate(lcp->lc_up_layout,
+> -			lcp->lc_up_len, &iomaps, &nr_iomaps,
+> -			i_blocksize(inode));
+> +	memcpy(&rqstp->rq_arg, &lcp->lc_up_layout, sizeof(struct xdr_buf));
+> +	svcxdr_init_decode(rqstp);
+> +
+> +	nfserr = nfsd4_block_decode_layoutupdate(&rqstp->rq_arg_stream,
+> +			&iomaps, &nr_iomaps, i_blocksize(inode));
+>  	if (nfserr != nfs_ok)
+>  		return nfserr;
+>  
+> @@ -313,16 +315,18 @@ nfsd4_scsi_proc_getdeviceinfo(struct super_block *sb,
+>  	return nfserrno(nfsd4_block_get_device_info_scsi(sb, clp, gdp));
+>  }
+>  static __be32
+> -nfsd4_scsi_proc_layoutcommit(struct inode *inode,
+> +nfsd4_scsi_proc_layoutcommit(struct inode *inode, struct svc_rqst *rqstp,
+>  		struct nfsd4_layoutcommit *lcp)
+>  {
+>  	struct iomap *iomaps;
+>  	int nr_iomaps;
+>  	__be32 nfserr;
+>  
+> -	nfserr = nfsd4_scsi_decode_layoutupdate(lcp->lc_up_layout,
+> -			lcp->lc_up_len, &iomaps, &nr_iomaps,
+> -			i_blocksize(inode));
+> +	memcpy(&rqstp->rq_arg, &lcp->lc_up_layout, sizeof(struct xdr_buf));
+> +	svcxdr_init_decode(rqstp);
+> +
+> +	nfserr = nfsd4_scsi_decode_layoutupdate(&rqstp->rq_arg_stream,
+> +			&iomaps, &nr_iomaps, i_blocksize(inode));
+>  	if (nfserr != nfs_ok)
+>  		return nfserr;
+>  
+> diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+> index 669ff8e6e966..266b2737882e 100644
+> --- a/fs/nfsd/blocklayoutxdr.c
+> +++ b/fs/nfsd/blocklayoutxdr.c
+> @@ -114,8 +114,7 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+>  
+>  /**
+>   * nfsd4_block_decode_layoutupdate - decode the block layout extent array
+> - * @p: pointer to the xdr data
+> - * @len: number of bytes to decode
+> + * @xdr: subbuf set to the encoded array
+>   * @iomapp: pointer to store the decoded extent array
+>   * @nr_iomapsp: pointer to store the number of extents
+>   * @block_size: alignment of extent offset and length
+> @@ -128,68 +127,74 @@ nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+>   *
+>   * Return values:
+>   *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
+> - *   %nfserr_bad_xdr: The encoded array in @p is invalid
+> + *   %nfserr_bad_xdr: The encoded array in @xdr is invalid
+>   *   %nfserr_inval: An unaligned extent found
+>   *   %nfserr_delay: Failed to allocate memory for @iomapp
+>   */
+>  __be32
+> -nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+> +nfsd4_block_decode_layoutupdate(struct xdr_stream *xdr, struct iomap **iomapp,
+>  		int *nr_iomapsp, u32 block_size)
+>  {
+>  	struct iomap *iomaps;
+> -	u32 nr_iomaps, i;
+> +	u32 nr_iomaps, expected, len, i;
+> +	__be32 nfserr;
+>  
+> -	if (len < sizeof(u32)) {
+> -		dprintk("%s: extent array too small: %u\n", __func__, len);
+> +	if (xdr_stream_decode_u32(xdr, &nr_iomaps))
+>  		return nfserr_bad_xdr;
+> -	}
+> -	len -= sizeof(u32);
+> -	if (len % PNFS_BLOCK_EXTENT_SIZE) {
+> -		dprintk("%s: extent array invalid: %u\n", __func__, len);
+> -		return nfserr_bad_xdr;
+> -	}
+>  
+> -	nr_iomaps = be32_to_cpup(p++);
+> -	if (nr_iomaps != len / PNFS_BLOCK_EXTENT_SIZE) {
+> -		dprintk("%s: extent array size mismatch: %u/%u\n",
+> -			__func__, len, nr_iomaps);
+> +	len = sizeof(__be32) + xdr_stream_remaining(xdr);
+> +	expected = sizeof(__be32) + nr_iomaps * PNFS_BLOCK_EXTENT_SIZE;
+> +	if (len != expected)
+>  		return nfserr_bad_xdr;
+> -	}
+>  
+>  	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+> -	if (!iomaps) {
+> -		dprintk("%s: failed to allocate extent array\n", __func__);
+> +	if (!iomaps)
+>  		return nfserr_delay;
+> -	}
+>  
+>  	for (i = 0; i < nr_iomaps; i++) {
+>  		struct pnfs_block_extent bex;
+> +		ssize_t ret;
+>  
+> -		memcpy(&bex.vol_id, p, sizeof(struct nfsd4_deviceid));
+> -		p += XDR_QUADLEN(sizeof(struct nfsd4_deviceid));
+> +		ret = xdr_stream_decode_opaque_fixed(xdr,
+> +				&bex.vol_id, sizeof(bex.vol_id));
+> +		if (ret < sizeof(bex.vol_id)) {
+> +			nfserr = nfserr_bad_xdr;
+> +			goto fail;
+> +		}
+>  
+> -		p = xdr_decode_hyper(p, &bex.foff);
+> +		if (xdr_stream_decode_u64(xdr, &bex.foff)) {
+> +			nfserr = nfserr_bad_xdr;
+> +			goto fail;
+> +		}
+>  		if (bex.foff & (block_size - 1)) {
+> -			dprintk("%s: unaligned offset 0x%llx\n",
+> -				__func__, bex.foff);
+> +			nfserr = nfserr_inval;
+> +			goto fail;
+> +		}
+> +
+> +		if (xdr_stream_decode_u64(xdr, &bex.len)) {
+> +			nfserr = nfserr_bad_xdr;
+>  			goto fail;
+>  		}
+> -		p = xdr_decode_hyper(p, &bex.len);
+>  		if (bex.len & (block_size - 1)) {
+> -			dprintk("%s: unaligned length 0x%llx\n",
+> -				__func__, bex.foff);
+> +			nfserr = nfserr_inval;
+> +			goto fail;
+> +		}
+> +
+> +		if (xdr_stream_decode_u64(xdr, &bex.soff)) {
+> +			nfserr = nfserr_bad_xdr;
+>  			goto fail;
+>  		}
+> -		p = xdr_decode_hyper(p, &bex.soff);
+>  		if (bex.soff & (block_size - 1)) {
+> -			dprintk("%s: unaligned disk offset 0x%llx\n",
+> -				__func__, bex.soff);
+> +			nfserr = nfserr_inval;
+> +			goto fail;
+> +		}
+> +
+> +		if (xdr_stream_decode_u32(xdr, &bex.es)) {
+> +			nfserr = nfserr_bad_xdr;
+>  			goto fail;
+>  		}
+> -		bex.es = be32_to_cpup(p++);
+>  		if (bex.es != PNFS_BLOCK_READWRITE_DATA) {
+> -			dprintk("%s: incorrect extent state %d\n",
+> -				__func__, bex.es);
+> +			nfserr = nfserr_inval;
+>  			goto fail;
+>  		}
+>  
+> @@ -202,13 +207,12 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+>  	return nfs_ok;
+>  fail:
+>  	kfree(iomaps);
+> -	return nfserr_inval;
+> +	return nfserr;
+>  }
+>  
+>  /**
+>   * nfsd4_scsi_decode_layoutupdate - decode the scsi layout extent array
+> - * @p: pointer to the xdr data
+> - * @len: number of bytes to decode
+> + * @xdr: subbuf set to the encoded array
+>   * @iomapp: pointer to store the decoded extent array
+>   * @nr_iomapsp: pointer to store the number of extents
+>   * @block_size: alignment of extent offset and length
+> @@ -220,49 +224,49 @@ nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+>   *
+>   * Return values:
+>   *   %nfs_ok: Successful decoding, @iomapp and @nr_iomapsp are valid
+> - *   %nfserr_bad_xdr: The encoded array in @p is invalid
+> + *   %nfserr_bad_xdr: The encoded array in @xdr is invalid
+>   *   %nfserr_inval: An unaligned extent found
+>   *   %nfserr_delay: Failed to allocate memory for @iomapp
+>   */
+>  __be32
+> -nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+> +nfsd4_scsi_decode_layoutupdate(struct xdr_stream *xdr, struct iomap **iomapp,
+>  		int *nr_iomapsp, u32 block_size)
+>  {
+>  	struct iomap *iomaps;
+> -	u32 nr_iomaps, expected, i;
+> +	u32 nr_iomaps, expected, len, i;
+> +	__be32 nfserr;
+>  
+> -	if (len < sizeof(u32)) {
+> -		dprintk("%s: extent array too small: %u\n", __func__, len);
+> +	if (xdr_stream_decode_u32(xdr, &nr_iomaps))
+>  		return nfserr_bad_xdr;
+> -	}
+>  
+> -	nr_iomaps = be32_to_cpup(p++);
+> +	len = sizeof(__be32) + xdr_stream_remaining(xdr);
+>  	expected = sizeof(__be32) + nr_iomaps * PNFS_SCSI_RANGE_SIZE;
+> -	if (len != expected) {
+> -		dprintk("%s: extent array size mismatch: %u/%u\n",
+> -			__func__, len, expected);
+> +	if (len != expected)
+>  		return nfserr_bad_xdr;
+> -	}
+>  
+>  	iomaps = kcalloc(nr_iomaps, sizeof(*iomaps), GFP_KERNEL);
+> -	if (!iomaps) {
+> -		dprintk("%s: failed to allocate extent array\n", __func__);
+> +	if (!iomaps)
+>  		return nfserr_delay;
+> -	}
+>  
+>  	for (i = 0; i < nr_iomaps; i++) {
+>  		u64 val;
+>  
+> -		p = xdr_decode_hyper(p, &val);
+> +		if (xdr_stream_decode_u64(xdr, &val)) {
+> +			nfserr = nfserr_bad_xdr;
+> +			goto fail;
+> +		}
+>  		if (val & (block_size - 1)) {
+> -			dprintk("%s: unaligned offset 0x%llx\n", __func__, val);
+> +			nfserr = nfserr_inval;
+>  			goto fail;
+>  		}
+>  		iomaps[i].offset = val;
+>  
+> -		p = xdr_decode_hyper(p, &val);
+> +		if (xdr_stream_decode_u64(xdr, &val)) {
+> +			nfserr = nfserr_bad_xdr;
+> +			goto fail;
+> +		}
+>  		if (val & (block_size - 1)) {
+> -			dprintk("%s: unaligned length 0x%llx\n", __func__, val);
+> +			nfserr = nfserr_inval;
+>  			goto fail;
+>  		}
+>  		iomaps[i].length = val;
+> @@ -273,5 +277,5 @@ nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+>  	return nfs_ok;
+>  fail:
+>  	kfree(iomaps);
+> -	return nfserr_inval;
+> +	return nfserr;
+>  }
+> diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+> index 15b3569f3d9a..7d25ef689671 100644
+> --- a/fs/nfsd/blocklayoutxdr.h
+> +++ b/fs/nfsd/blocklayoutxdr.h
+> @@ -54,9 +54,9 @@ __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+>  		const struct nfsd4_getdeviceinfo *gdp);
+>  __be32 nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
+>  		const struct nfsd4_layoutget *lgp);
+> -__be32 nfsd4_block_decode_layoutupdate(__be32 *p, u32 len,
+> +__be32 nfsd4_block_decode_layoutupdate(struct xdr_stream *xdr,
+>  		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
+> -__be32 nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len,
+> +__be32 nfsd4_scsi_decode_layoutupdate(struct xdr_stream *xdr,
+>  		struct iomap **iomapp, int *nr_iomapsp, u32 block_size);
+>  
+>  #endif /* _NFSD_BLOCKLAYOUTXDR_H */
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index f13abbb13b38..873cd667477c 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -2533,7 +2533,7 @@ nfsd4_layoutcommit(struct svc_rqst *rqstp,
+>  		lcp->lc_size_chg = false;
+>  	}
+>  
+> -	nfserr = ops->proc_layoutcommit(inode, lcp);
+> +	nfserr = ops->proc_layoutcommit(inode, rqstp, lcp);
+>  	nfs4_put_stid(&ls->ls_stid);
+>  out:
+>  	return nfserr;
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 3afcdbed6e14..659e60b85d5f 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -604,6 +604,8 @@ static __be32
+>  nfsd4_decode_layoutupdate4(struct nfsd4_compoundargs *argp,
+>  			   struct nfsd4_layoutcommit *lcp)
+>  {
+> +	u32 len;
+> +
+>  	if (xdr_stream_decode_u32(argp->xdr, &lcp->lc_layout_type) < 0)
+>  		return nfserr_bad_xdr;
+>  	if (lcp->lc_layout_type < LAYOUT_NFSV4_1_FILES)
+> @@ -611,13 +613,10 @@ nfsd4_decode_layoutupdate4(struct nfsd4_compoundargs *argp,
+>  	if (lcp->lc_layout_type >= LAYOUT_TYPE_MAX)
+>  		return nfserr_bad_xdr;
+>  
+> -	if (xdr_stream_decode_u32(argp->xdr, &lcp->lc_up_len) < 0)
+> +	if (xdr_stream_decode_u32(argp->xdr, &len) < 0)
+> +		return nfserr_bad_xdr;
+> +	if (!xdr_stream_subsegment(argp->xdr, &lcp->lc_up_layout, len))
+>  		return nfserr_bad_xdr;
+> -	if (lcp->lc_up_len > 0) {
+> -		lcp->lc_up_layout = xdr_inline_decode(argp->xdr, lcp->lc_up_len);
+> -		if (!lcp->lc_up_layout)
+> -			return nfserr_bad_xdr;
+> -	}
+>  
+>  	return nfs_ok;
+>  }
+> diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
+> index 925817f66917..dfd411d1f363 100644
+> --- a/fs/nfsd/pnfs.h
+> +++ b/fs/nfsd/pnfs.h
+> @@ -35,6 +35,7 @@ struct nfsd4_layout_ops {
+>  			const struct nfsd4_layoutget *lgp);
+>  
+>  	__be32 (*proc_layoutcommit)(struct inode *inode,
+> +			struct svc_rqst *rqstp,
+>  			struct nfsd4_layoutcommit *lcp);
+>  
+>  	void (*fence_client)(struct nfs4_layout_stateid *ls,
+> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> index aa2a356da784..02887029a81c 100644
+> --- a/fs/nfsd/xdr4.h
+> +++ b/fs/nfsd/xdr4.h
+> @@ -630,8 +630,7 @@ struct nfsd4_layoutcommit {
+>  	u64			lc_last_wr;	/* request */
+>  	struct timespec64	lc_mtime;	/* request */
+>  	u32			lc_layout_type;	/* request */
+> -	u32			lc_up_len;	/* layout length */
+> -	void			*lc_up_layout;	/* decoded by callback */
+> +	struct xdr_buf		lc_up_layout;	/* decoded by callback */
+>  	bool			lc_size_chg;	/* response */
+>  	u64			lc_newsize;	/* response */
+>  };
+
+Hi Sergey -
+
+Typically we separate the clean-ups from the substantive changes. So
+removing the dprintk call sites would be done in a pre-requisite patch.
+I'm asking you to do it because if I split this patch up, I'm likely to
+get something wrong, and you have a convenient test case.
+
+Also, reposting means your tested version of the series is what gets
+archived on lore.
+
+Would you mind splitting this one up and posting a v4 ?
 
 
-Yes, instead of this:
-
-    "guarantees to return a string with a NUL terminated."
-
-...you will want this:
-
-     "guarantees to return a NUL-terminated string."
-
-And depending on whether you prefer to speak Kernel, or R4L here,
-note that the kernel normally spells this as NULL (two L's).
-
-thanks,
-John Hubbard
+-- 
+Chuck Lever
