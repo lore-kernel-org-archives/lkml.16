@@ -1,150 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4EE2DE1F8
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09D82DE1F7;
+	Tue, 17 Jun 2025 12:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163603; cv=none; b=TLDcqQSDKHkDmjohrkS8OxEIOCc7bQnbE204XvoKGTpXIaMRl6+CtTkGRO4h66SxeSsWwtx4iCFZYw8UcSgGBaZhedQiJaAGh4m4sbHExl374ppG6ZvIcgBpgcKd2dS1Qy5OhFH/CnyAKTX/Nv+4Iw5q4aravw+BuTv9m2rV7qQ=
+	t=1750163749; cv=none; b=ZNQVVHtT0XM598FBiyscUMSbgHN9OqBWwcDclfrQGfa3oCiekZ8tfjupfR1JDf+wfagrmhhUiHOhEtRfa2IXwr8H9pRBFQjW95cZY6HnnMfEQ/a/ppqF8xngqvh7uyjETEn1bV/ozqyE7X2w0oFSn57W5zhLvZde8GZ8WWFvB2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163603; c=relaxed/simple;
-	bh=sPFBmhG+FilWNWMvERcuZElkUxKozXjvySYc5Fmw31I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JupFkd0yyoD0wTWVGbPvagQm91eo9nmOJgFyccPGAaIsNmDKLAYL03Vv1Q2wu3bHwMED9nD80f4cyr02hiIxImOi2bni4HL/jJKYlqQmr5y/y/Df7jkwvBplPLdHNERmO10ghZf1xUExASVdQV+9QX08LT+D/88ZX9vabj4RoJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=To6cH+5z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750163749; c=relaxed/simple;
+	bh=nWRYgfaKlsF505nHtld/MVEDNx9upmVyjOrnhDtYlE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AXdTY3QsCPUaMVPetNbiddEsTyeodDbFsjTce2xux8NLDnz2H7qUpZfqlyMhGd9zIF8CYjtXP5OyHfqzBUD8D1DTirJW58E3m7MVZapOzvDDlOlIaJBhyjyJi+BiTAKWOcUhF+cTkxasBpI3g/RjA+qOm9VfdPi8iuxGmUZMB4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xcf/IrDm; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="To6cH+5z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750163600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Jo+IXIxSNIYAuiTCVjY+MjOblSENU+5Bkagj0uUgN34=;
-	b=To6cH+5zCpk6LHe/gVtGZRxrjs28yhL5+JxAI0VsHzKmMhry4nRwe8ZlUGoY/y2kJ17G3s
-	vi2V6YAOz6EE8EH4v8YX1ZsC9IHbGTwNdkNQ/9JcIWuVLb8w5mbgS2TzVFsd+HUqP+amgd
-	vdkEEYOxPEQSzAg6KeJgVWyn3AKWtFg=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-489-v3aBvzc-M22WyaSN5YuaHg-1; Tue, 17 Jun 2025 08:33:19 -0400
-X-MC-Unique: v3aBvzc-M22WyaSN5YuaHg-1
-X-Mimecast-MFC-AGG-ID: v3aBvzc-M22WyaSN5YuaHg_1750163599
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-45311704d22so37308595e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:33:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xcf/IrDm"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-747c2cc3419so4362136b3a.2;
+        Tue, 17 Jun 2025 05:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750163747; x=1750768547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rPdLItsX7RHmXg4yVyLzvYJu8Fzx16jAp/CJmZOuNrc=;
+        b=Xcf/IrDm9RjCAtKsQG1mcWNuVK9HzNvqf83Ap1lNFdpoHQqw1GdT5RUIe0DXBpdYDG
+         RIr6WmHfL6m4Ur10biYZIHJCKXYTj94BDCpbbOcFj0U4Y+Kni5Qokvnq+AN3Uj+9Xol5
+         4ZhDFNcE+lhY8tXrVXs9whW+4vSjRfzutCXSFVhZ7qply7Io3XNkBW1zPGTf/eMISuBO
+         L8VdxbntwmRB5QcVqyowQPVUGHbl1YxjdmtjSQa8OsEOassrdyJt69fbGFtP7MZbL6Ab
+         YusTJ0zV+phi04NkJ5S5n/iyjfKVUFpVQtWdy1Gkkjh5I/1+FZtPUinWsqVKqPVHtsty
+         /iXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750163598; x=1750768398;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jo+IXIxSNIYAuiTCVjY+MjOblSENU+5Bkagj0uUgN34=;
-        b=eH0ET4I8akTyHQ39TINhaAAtA67zhCio4A58add0VI8A1CCzxNu3Q78OKnMUdzJpto
-         5RRHtCDKRucaNDpgcAp5zfb9oA1DfN3lddtJmE6cGF6CwbC+1iwwRicoEtKAz9HhrbSx
-         xRVeLr25eLqhNg7PabMP+0ynLW+XP7QGZ/7os08G13iDY2KE2QIKoEtJnrmj1wBEZ4YE
-         S5BwtGPVvbnJe4AvlRq8Wkdt6VtZ45AztjI9u83mrr4471PonzCSztMuq6T7r4+ZigUK
-         41q1591adMpO/WuWguXSjkHCAJPlKfSGeBJzB7hNwB0oeJS8+vIjYUk6865P3znsgB2d
-         VUeg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+y1jvQoJVSjYolVKZSBII4tPgR0xn3MXXY0ML6jorVI99aNaQ1zO2WcYfN1VsC0I7Zk+fk6c5hpr9UEA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF8/bvCtDMPDT7wDnkdn2UzZlnUZVfndRvKZ4z80tYG/cJm1Qx
-	K85a6dzmIK0ZA3YZd1KxoeWB2sP07QjitMrUo2oSwfLhbTriWMOdmO8dj74JSIcmOLibZHFrLth
-	auSR09kUxNIG6SE55tmAR6vFYz2OXBUW3+ZyeWXi1flpsOf8p86FQiMkptQXpHHkBxw==
-X-Gm-Gg: ASbGncsJla22NwKwmclDSUev1Q2gQuiCI4dsT2V8hJddyuzqEVOMd6H5fZ9BqTkGahs
-	/a2sv63ZnRHOOxbDDarWItIamI86Lf73fopVgcyFn1kYUIdQqPguInE5XaqYHyNE9V9Mky+84JP
-	o2Zf+wMbvBPZOlpKExXdRpOf57BmBlPCnkaAncka62RFKVigJy/ADtVfhMl3QA7IZ/wuzkyjAcK
-	7QqaGzwDtCxQadXozHlc1bMLMri4TsHH33Cc0QMM+uA89D8/1ZF3umk90tyfjE5Pfx7U2r52nD7
-	RomklPY+AjNu29B6NzxmCguw0cZ+rPnUHpRP3BamRG0vX1+bdx3CmQ==
-X-Received: by 2002:a05:600c:3587:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-4533cb48951mr120533895e9.16.1750163598489;
-        Tue, 17 Jun 2025 05:33:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEk1xWsef/FxGyotWPmKQtLjGTobu8UAwOJhzqxxuFF2cZ9pfD3uHBQHPFjkme52CF+GzKbfg==
-X-Received: by 2002:a05:600c:3587:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-4533cb48951mr120533385e9.16.1750163598021;
-        Tue, 17 Jun 2025 05:33:18 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.151.199])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea1cc5sm179772325e9.16.2025.06.17.05.33.17
+        d=1e100.net; s=20230601; t=1750163747; x=1750768547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rPdLItsX7RHmXg4yVyLzvYJu8Fzx16jAp/CJmZOuNrc=;
+        b=pRSfPBkku+x7Cz43Ee64Sff0jM4HjArDeuq+BA8W/yv2ANAquU3NdEMoiU2jzrPuZs
+         XbYVHW6oysxShaLI1L7P3h0/R9QAYNsIfY2qF1R5BXXxVz+ml1yl+C5Vt0sRrsh1nhom
+         EeKuZNaUGxkK/zDwRX2sFDh1FPWASJN98PWaWlE7Dt90T4FECQlYdiDO7jPFksLVJooU
+         8LJZ3D8E/IsRj/qMepxwX4FT4oA1ZpzusiwiwH2RVSQeJm8HODt6nqLX+Tk6IO37LZCZ
+         BNROIbU8VWFLo30vYOx4pAAg9Ekv75YOK2DwN7xEPF75og/y7LtLQQTtAoJD1LD5wOSb
+         e+Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqyTvXdxSeHJ3j5WJyQaYPvRGIH2jjsiyRzwUvtv6fRLHEMyV4T7lQWjgAsoYnnL+JWeSxO1oA@vger.kernel.org, AJvYcCX13+IL84dZEee4Uplu2hifLQV20OOtPrrvsnvLBfU19DJ6jxWAFZrm1BM/DDsXkjMeWaO+Laww8POG3qo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFXjjPxwHNztjRluRgvObPHqu8cg4yNu+0iTBcaRyM2WBdWQsz
+	BSr1oP1+RprVCz30D05576aIKznN11h6RfyH7P7rRX9vQMu+t5j9PgJZ
+X-Gm-Gg: ASbGncvU4RtcrNkhFqC9aulfCrReYncEnNYAoSq5ExYQ/5IsEA2OBXZYTG+Sdsw4VkJ
+	fOYvW4/Gt4jxY8z3C1CjSfTFel8gAldeYg0aP1rH49cUPwUa4ZoM9wH9OvQj+LlLzcwPwyDEhJq
+	s8hec1qJ36m30GcyLi5j0RcDeBMtl+inX8es30KI0Hvdy7tBX7R7xcsZE0HPxppWJezI9jhbRif
+	uXrqgLsR5rWWb18hjVmkxd0UwhOzupJduJXn8Wp/+HZqdL14i48LfDEYcqkB5wgGu7dG8zWX7eu
+	KoREoOIKBJPVcS/w9khwGGtYk3AvaaU26npmegIwpKq6THlogzYk0LBeaLt6sMhHE1gVcB34dWO
+	wvdUSX/U=
+X-Google-Smtp-Source: AGHT+IFYdZkwNqRYC3dNff02C5ous/zkB5D1vK+ftcPom4E7DbGsbzTemLZYAS6JOCz8DlVgk7S7fg==
+X-Received: by 2002:a05:6a00:1994:b0:725:96f2:9e63 with SMTP id d2e1a72fcca58-7489d050f48mr20902995b3a.24.1750163746791;
+        Tue, 17 Jun 2025 05:35:46 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c68:884c:5800:7324:c411:408d])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b2c1asm8944267b3a.143.2025.06.17.05.35.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:33:17 -0700 (PDT)
-Date: Tue, 17 Jun 2025 14:33:15 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Kuyo Chang <kuyo.chang@mediatek.com>, Ingo Molnar <mingo@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	jstultz <jstultz@google.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation
- formula
-Message-ID: <aFFgi_9yxLN-auBE@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250614020524.631521-1-kuyo.chang@mediatek.com>
- <20250617085558.GN1613376@noisy.programming.kicks-ass.net>
+        Tue, 17 Jun 2025 05:35:46 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: jhs@mojatatu.com,
+	xiyou.wangcong@gmail.com,
+	jiri@resnulli.us
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH net-next] net/sched: replace strncpy with strscpy
+Date: Tue, 17 Jun 2025 18:05:31 +0530
+Message-ID: <20250617123531.23523-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617085558.GN1613376@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On 17/06/25 10:55, Peter Zijlstra wrote:
-> On Sat, Jun 14, 2025 at 10:04:55AM +0800, Kuyo Chang wrote:
-> > From: kuyo chang <kuyo.chang@mediatek.com>
-> > 
-> > [Symptom]
-> > The calculation formula for fair_server runtime is based on
-> > Frequency/CPU scale-invariance.
-> > This will cause excessive RT latency (expect absolute time).
-> > 
-> > [Analysis]
-> > Consider the following case under a Big.LITTLE architecture:
-> > 
-> > Assume the runtime is : 50,000,000 ns, and FIE/CIE as below
-> > FIE: 100
-> > CIE:50
-> > First by FIE, the runtime is scaled to 50,000,000 * 100 >> 10 = 4,882,812
-> > Then by CIE, it is further scaled to 4,882,812 * 50 >> 10 = 238,418.
-> 
-> What's this FIE/CIE stuff? Is that some ARM lingo?
-> 
-> 
-> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> > index ad45a8fea245..8bfa846cf0dc 100644
-> > --- a/kernel/sched/deadline.c
-> > +++ b/kernel/sched/deadline.c
-> > @@ -1504,7 +1504,10 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
-> >  	if (dl_entity_is_special(dl_se))
-> >  		return;
-> >  
-> > -	scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
-> > +	if (dl_se == &rq->fair_server)
-> > +		scaled_delta_exec = delta_exec;
-> > +	else
-> > +		scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
-> 
-> Juri, the point it a bit moot atm, but is this something specific to the
-> fair_server in particular, or all servers?
+Replace the deprecated strncpy() with strscpy() as the destination
+buffer should be NUL-terminated and does not require any trailing
+NUL-padding. Also, since NUL-termination is guaranteed,
+use sizeof(conf.algo) in place of sizeof(conf.algo) - 1
+as the size parameter.
 
-I believe for other servers (i.e., rt-server work from Yuri and Luca) it
-might be useful to have it configurable somehow. I actually had a recent
-discussion about this concerning single task entities (traditional
-deadline servers) for which as well there might be cases where one might
-want not to scale considering frequency and capacity.
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ net/sched/em_text.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Because if this is something all servers require then the above is
-> ofcourse wrong.
-
-To me it looks like we want this (no scaling) for fair_server (and
-possibly scx_server?) as for them we are only looking into a 'fixed
-time' type of isolation. Full fledged servers (hierarchical scheduling)
-maybe have it configurable, or enabled by default as a start (as we have
-it today).
-
-Best,
-Juri
+diff --git a/net/sched/em_text.c b/net/sched/em_text.c
+index 420c66203b17..1d0debfd62e5 100644
+--- a/net/sched/em_text.c
++++ b/net/sched/em_text.c
+@@ -108,7 +108,7 @@ static int em_text_dump(struct sk_buff *skb, struct tcf_ematch *m)
+ 	struct text_match *tm = EM_TEXT_PRIV(m);
+ 	struct tcf_em_text conf;
+ 
+-	strncpy(conf.algo, tm->config->ops->name, sizeof(conf.algo) - 1);
++	strscpy(conf.algo, tm->config->ops->name, sizeof(conf.algo));
+ 	conf.from_offset = tm->from_offset;
+ 	conf.to_offset = tm->to_offset;
+ 	conf.from_layer = tm->from_layer;
+-- 
+2.49.0
 
