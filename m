@@ -1,104 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2D82F5302;
-	Tue, 17 Jun 2025 21:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B655291C38;
+	Tue, 17 Jun 2025 21:49:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750196958; cv=none; b=JscFfYxo3ccKg+7iQD+EsDnfyq01e8CyGYx3pQqL5nVnpqspdGZz55gwKbuDX5ySahccF1jb208asxF6H0XAEpbr5PU1afwvu5kUga6K0M/RJNhxAzcUUXKBK1sZkxtO14Dcagv/M5HcXfpOvEnotFGGWe1XUvvWgp217jc+mDg=
+	t=1750196965; cv=none; b=T3/boQnCNbPdMb4dTK4o2xa+uUtLoreyQjmHVDjdFsXqHy8j1Al9hAVr0zKeaRhmo/HJVmcaX3ve3HGivix2HinI/rSEcOQk6hAVuEUlwoRmfKwvt5QoPiVAM79mlIwtMAPwp38gtvOFAMwpl+50+8eCzlVJ3a3aEaeuhgMGlp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750196958; c=relaxed/simple;
-	bh=7XpKNyduYd7HZ4lR7XtY36sozGh6y07qukvqZEHKC1k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ok6Ue94nhCZ/8f+OkaKEX6ACd6saHgMGfZFsBS1gPfDR/eCUmp9rxa5fHB5R2en1QKiJ2eupoJpv2JBDBZRGzkcAicG1KG5M+QRrjHComdjOWE+OBxZq3G3nr2rv1siiqaBTT7WaGVMCTdTWakGmAgMvkZmG9/3JcANVgNqY3jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhavmyD+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750196965; c=relaxed/simple;
+	bh=2Qz3hiDElsLkmKIhWpLhf+0BgJ49gXk7h5L5iIMCk0Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AY58GgWgKuhcOjUGpPjsuDzevilAJyzXYxrEYpb1KET/WKs2iFPPxRpZ+9ST3Js3MEpd2EqUNTaD35HQYVVBKOFG2vmHocTafFWgvPPG70TGC8xnpKrqBR74Zlo2FueR35E/OttyttSNwdtIDhvk7G/e874PbBK65E95CSfp0EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VBjmWEz7; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhavmyD+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B548C4CEE3;
-	Tue, 17 Jun 2025 21:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750196955;
-	bh=7XpKNyduYd7HZ4lR7XtY36sozGh6y07qukvqZEHKC1k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uhavmyD+hHibOpPUmDwZrtIx1P4Nolb+XiaK7K5mZRgmWLRTYkW/KRBxHkUZriGy6
-	 hP6HFq6dhvEuXEZqEiPG0LUsDJzPFbDGek9dr+9ohjCiJfhTclR5ye8mnV4Js2Ip+6
-	 kZAiyr1aHvR1d7V7CrZMK0PWB6Magkh9zMpk30Fh68aSPpIgMRcgvtSDMhmQXrWNvy
-	 hFTx+m3AFsPyoDuiLlMz5OHPIuLfFLX2wsL2v8ae3ziOvQFHLVpnnEBK6N0VizqWB0
-	 78j2IE2o4oyGzQQZNqTfQwVTCwMwtqnrX9Fi7lTRxecLXIE0GErR1p74Kxkqi7w3mN
-	 2CgSuGrryxrDA==
-Date: Tue, 17 Jun 2025 18:49:12 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Howard Chu <howardchu95@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Michael Petlan <mpetlan@redhat.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Tiezhu Yang <yangtiezhu@loongson.cn>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events
- and thread
-Message-ID: <aFHi2FUDZy_cEA5A@x1>
-References: <20250614004108.1650988-1-irogers@google.com>
- <20250614004108.1650988-3-irogers@google.com>
- <CAH0uvojjfOcoZmxPL+bG5NEid8xcAVth7UxOUc=aYjgF5nqs2A@mail.gmail.com>
- <aFBF1ejZQBBvX7F4@x1>
- <aFHeY_-hVNKtXPAD@x1>
- <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VBjmWEz7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1750196957;
+	bh=c/x1G+6xuLNw77GaMNHQLPdvNnM0jDMf7f4v/4uh3Js=;
+	h=Date:From:To:Cc:Subject:From;
+	b=VBjmWEz7Tk8+7UrSZQOC9DtWpQPySi9oaVxskmIYmZXkDllQToId7vourBI1em01M
+	 8ETDHhVi3ujv+nNXfsg2fjL7IzHpGgvZncOzx0dARW15PR/r6XzjbGxXc5ufJjy+j0
+	 C2r64urkDkU0ZlqjUTy2+uHe1eKZSpEgem6rHKB5pEACNjLa3t8ByXiwsNfc6a6eb5
+	 XnxNFD+tI+MnORAv0qka/VgdCuVDbJyziJALQeq3DJh0HYXfs7ERjLungZVMf/KYJ3
+	 pnNuaTNDDejfVWWmf6c/FM5yUDePulSoiYqCezu2UcrxrM/VRXmrm2+4Z721m3vXuu
+	 jDqbrgzTV7Axg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bML9n2Kgjz4wbb;
+	Wed, 18 Jun 2025 07:49:17 +1000 (AEST)
+Date: Wed, 18 Jun 2025 07:49:16 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patch in the v4l-dvb tree
+Message-ID: <20250618074916.7026e8ae@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/74NPFSy4IVB+y_Ne6r56JB+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Jun 17, 2025 at 02:32:37PM -0700, Ian Rogers wrote:
-> On Tue, Jun 17, 2025 at 2:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Mon, Jun 16, 2025 at 01:27:04PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Fri, Jun 13, 2025 at 5:41 PM Ian Rogers <irogers@google.com> wrote:
-> > > > > Caught by leak sanitizer running "perf trace BTF general tests".
+--Sig_/74NPFSy4IVB+y_Ne6r56JB+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+Hi all,
 
-> > > > Acked-by: Howard Chu <howardchu95@gmail.com>
+The following commit is also in Linus Torvalds' tree as a different commit
+(but the same patch):
 
-> > > Small enough, applied to perf-tools.
+  a4950419459a ("MAINTAINERS: .mailmap: Update Hans de Goede's email addres=
+s")
 
-> > root@number:~# perf trace -e *sleep ls
-> > anaconda-ks.cfg  bin  bla  commands  dtel  firefly  logind.conf  perf-install.txt  python
-> > perf: Segmentation fault
-> > Obtained 11 stack frames.
-> > perf() [0x5c595e]
-> > perf() [0x5c59f9]
-> > /lib64/libc.so.6(+0x19c30) [0x7fd43ce27c30]
-> > perf() [0x5dc497]
-> > perf() [0x492d54]
-> > perf() [0x49860e]
-> > perf() [0x49890e]
-> > perf() [0x413413]
-> > /lib64/libc.so.6(+0x35f5) [0x7fd43ce115f5]
-> > /lib64/libc.so.6(__libc_start_main+0x88) [0x7fd43ce116a8]
-> > perf() [0x413a45]
-> > Segmentation fault (core dumped)
-> > root@number:~#
- 
-> Thanks, I'll take a look to see if I can spot what's broken. Seeing
-> this stack trace makes me remember we haven't landed:
-> https://lore.kernel.org/lkml/20250611221521.722045-1-irogers@google.com/
+This is commit
 
-Yeah, I just pushed perf-tools to soak in linux-next/pending-fixes for a
-few days and will switch to processing patches for perf-tools-next, will
-try and pick that one, I also noticed that the backtrace wasn't
-symbolized, thus your patch wasn't there :-\
+  3fbf25ecf8b7 ("MAINTAINERS: .mailmap: Update Hans de Goede's email addres=
+s")
 
-- Arnaldo
+in Linus' tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/74NPFSy4IVB+y_Ne6r56JB+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhR4twACgkQAVBC80lX
+0GzfCwf7BXFcxTsinKuc+w0mkEY+ltV2G/TxDu06N4ISDyVkQEjjtZfG0Wiy7+2I
+Bd+2uhilSe+YvsGkvYtiS+/U748kU7WGN3vu4SKkCLZklulVrhvWJ4dDaW5jRvf0
+J3q0n5BUY4WYnX3YGuMIjV2BdYriYrjGgiGcPOI5SA3eOBmHLOj0ODAlE0ApoGjf
+8T5Mkes80Cn6fjamjU9BK9uFAElBD7F1qwQg3hIKHyySmWZT+relQpQvxQYkwpTW
+0NenJxl7KrBrVGWS8xCEXcFEoGeWHMpoL64/zZJFMA3/1oGlkW5jENtB7iAr92r4
+QiWyL/RSJkGqulP/rmzRsb2U2pe28Q==
+=U/zo
+-----END PGP SIGNATURE-----
+
+--Sig_/74NPFSy4IVB+y_Ne6r56JB+--
