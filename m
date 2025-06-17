@@ -1,83 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B460335C7;
-	Tue, 17 Jun 2025 06:33:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45622116E9;
+	Tue, 17 Jun 2025 06:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141987; cv=none; b=pIjmtxx+KQd9n3UUox46L0Dfd3c5sOJfKXwCJx+x+qEFdRrjXXpKewAVlA+WUkU1m3yioLh3OxBI8PMwm0U5JEOuwdrluY2+soYM2kwKN2QqnbFC2kRLaJNwO4Nd9Tp73rlvpU8MzYGNJmZT9hfOIpb6b4Z0ERng4hlI65e0+NE=
+	t=1750142016; cv=none; b=mclrOpGc+UUtim9qYRUYLTEL/WbEJ++pOEyjXUN5Q7dUyKpGrwIqnvKNkZK9qxYlyPAM7r3iBoLq4irv5w2FdYX56P/woIph7KRZNXlZBA5MxnRHvTnyJMwcKcrAUJxZj0LRbAqfk4mqccE5z01CJZh2vVVwVsku0N8BYTxmUfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141987; c=relaxed/simple;
-	bh=o089/DcX6hGCVVYWkkX0LR4/6akPcznW+rKNIEoT1Dc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQeiQFCqM4kUWEyv7f1pwgluzRYBQn7saXPu1EWt9ICwJDTyJrGEz5UlOyH2m1aXBVlBDaCy1VRlHKTFmubKbKo7fjCpYibMcEwbWRtdJuqt0mbyn/1fVAZi1CwrPR8RX37QZZVjfgQo47v9yZLWyfr7HQ/wMfv0/h02x3a1Pak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5VyircR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750142016; c=relaxed/simple;
+	bh=keXtiVN31fKx64oUF/7iPO90TbGTcSFJ55j+G9vybIY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U/pzqVFuDbyt6VbeNW7WexmsJw/T0dR6eTvzRDMdPUUuYJmEljj3n+WzdSVB8Vgc+28sFgJMw2hk1k5bdL8nvowvwOrwroY/i4XyyNT+M+GlJRY+Ds1P6hiBPLTRm5z8c9sBCFJ7DNdJVzEKr8C2lBjLW92X3exlylMGFMLeQjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4CM7Uxl; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5VyircR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57BEC4CEE7;
-	Tue, 17 Jun 2025 06:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750141987;
-	bh=o089/DcX6hGCVVYWkkX0LR4/6akPcznW+rKNIEoT1Dc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L5VyircRh3PmSdJEQJp0EHvniyntC+VMtVjTvvrS7ApVDlYLaM/7yiehxLI9EfYCO
-	 rsxyZmo+24q3GcwztkesNUFUB8KY2f8UJ7ZzGhZ7gQ8X21A74GzPaG6PM4fHKFBvYC
-	 o2VL3l0KHdWZnmZASzsdt+BKCcj0uzJOqMxlEwMzI60+kZlCxZGHynJVI5jdCDZ58V
-	 WzFfjO49ysR5ZgeVAqHf4M75n/wqqwh7mmhI5PPRMzIG4iI5izxsEKiFdRxbVDoLgJ
-	 GitL7fFkDgsd5bdq0ZHQ/iGQ2sp9MD+HIKuuE7rRJlEeBHxAUjvBdrYdCXfh+1wWdb
-	 /FFOaK0Ym+lAQ==
-Date: Mon, 16 Jun 2025 23:32:36 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Ian Rogers <irogers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
- to memcpy
-Message-ID: <20250617063236.GI8289@sol>
-References: <20250617005800.1410112-1-irogers@google.com>
- <20250617005800.1410112-2-irogers@google.com>
- <c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4CM7Uxl"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade326e366dso977231966b.3;
+        Mon, 16 Jun 2025 23:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750142013; x=1750746813; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NA0TLB9oKte+OwEm1gowNLenoPqaplJehC52uwcC+A8=;
+        b=B4CM7UxlP3GE188GSYm4ntjeFvvmfM8WyENFmMVTLimXbiK2Pdfe56cAGFrhmX2VtV
+         YAdh55pvvrSiAQ5rCk6DR0jGR1oWG82FiIXHhnzM7ttWsRvbDZPZ7D+CVcKGgoQMoNHF
+         2X5Fa06Qp0Y5oRewjAq/x9OgOQBfJqMONR1ro/BcOZCaDsblPCLX8B3Rubm2llzdhErm
+         41ChbDYsLzk/v/cabcHySoEu/lgO+4bht8dAnI6+Ag72zfwS/xkOEXAUzYIXjUmJMjom
+         eGXjPgwBN5hlctn4rt1ecYTruoEk8fnraRneaM4iFVqDSTdoujTCBXGQnWXzN4KOdKwp
+         jKvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750142013; x=1750746813;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NA0TLB9oKte+OwEm1gowNLenoPqaplJehC52uwcC+A8=;
+        b=C/cEvK7YrcSno457yXrg1GCfqucnwsCyITY1wFQ9wZ5zx7tbyY7MtcM9ekbFmfdXAW
+         qeEayGrv7x790n3B32ehtwPMk4zcqP5hwGscUnyYLhiZ/7E62qsbHsV8rYEnDcWLFeBa
+         cGce8wYj4GvvV1LrZdBDiQewo6lKjeqLcCejJijr8/EfUsL7YZoSStZ92eeezZkF2/cz
+         13AQyneqKVrbZgwvrcogTE1Qq4E2YkXWfFxGWliDuq1TUQmhN03Um4AlZHMbsJitXjoR
+         2aiDBB9VQtroaFrZgGGNN6SYlizVqhBod+4nnPaotYjXdZXEBev/JRUQp8Ne9Lg+JoiJ
+         /OsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdqVeZAe+3hdY+Dz65EyMImN7ep4jdHFjtcj3SmHnQEX+ST9wNdVda/CFxBeDxzzHcffGenF/KTEA=@vger.kernel.org, AJvYcCWvSuEkYsFB6u3yXUCfK6NYQ+FrWvkebb3IWI5jgPd+oCnBPJ11V8WyZQGrkTQlp0drdDWPszXQYEfMXztq@vger.kernel.org
+X-Gm-Message-State: AOJu0YygGhJ3OPuqm49Le2xEspqcr7QsWTw5ei7c1qWuSUKEvmENvuZi
+	SlFV6CIYGckyA3QCNvMVAj6cRVeJ7I0JhyEaI3mQmU+PUN34flYWyk1q/RzaDGygVg/IfhtWy5H
+	IHdh9Oz1SxP8AHcvvpWpoXnbmzM5rN5U=
+X-Gm-Gg: ASbGnctr8Puv0uYpCSlhD82rVKSTVL7la6gSxKpHAS218qXpx0fz1BiOgEPkeFfpOJ9
+	8Xam9sfcAVzlxbelcDEWHd+wj+Y6TEUMhim2oCNSYGKH1b1MP1BCzijh3rOQ/psnLenRyYWX/A4
+	vnj5m0uUlYCDzeTatNCgvCdDtsJA3n21kB+IlegSLcq5Dk/Q==
+X-Google-Smtp-Source: AGHT+IEPibyVVx6ANOKw4K146U1HPHC7bbE3rmky9TQQiRKsFBaiNe2CFrP1DN4lcLRKeGTdSO8sI6qrP8ASCwjEySc=
+X-Received: by 2002:a17:907:7e92:b0:ad8:97d8:a52e with SMTP id
+ a640c23a62f3a-adfad4f40f1mr1188544366b.55.1750142013006; Mon, 16 Jun 2025
+ 23:33:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu>
+References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com> <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
+In-Reply-To: <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 17 Jun 2025 09:32:56 +0300
+X-Gm-Features: AX0GCFujvum22WkIySIVbQeVbVZg254I-tYPkhT9vPcG30nWAYbTMKR0MrYZHaE
+Message-ID: <CAHp75Ve+6BjG0vFy0ohMsODkybH3L+4EM6RODJYDRw+W6Gdtmg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] iio: imu: bmi270: add support for motion events
+To: Gustavo Silva <gustavograzs@gmail.com>
+Cc: Alex Lanzano <lanzano.alex@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lothar Rubusch <l.rubusch@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 07:22:57AM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 17/06/2025 à 02:57, Ian Rogers a écrit :
-> > Type punning is necessary for get/put unaligned but the use of a
-> > packed struct violates strict aliasing rules, requiring
-> > -fno-strict-aliasing to be passed to the C compiler. Switch to using
-> > memcpy so that -fno-strict-aliasing isn't necessary.
-> 
-> VDSO build fails with this patch:
-> 
->   VDSO32L arch/powerpc/kernel/vdso/vdso32.so.dbg
-> arch/powerpc/kernel/vdso/vdso32.so.dbg: dynamic relocations are not
-> supported
-> make[2]: *** [arch/powerpc/kernel/vdso/Makefile:79:
-> arch/powerpc/kernel/vdso/vdso32.so.dbg] Error 1
-> 
-> Behind the relocation issue, calling memcpy() for a single 4-bytes word
-> kills performance.
+On Tue, Jun 17, 2025 at 2:53=E2=80=AFAM Gustavo Silva <gustavograzs@gmail.c=
+om> wrote:
+>
+> Any-motion event can be enabled on a per-axis basis and triggers a
+> combined event when motion is detected on any axis.
+>
+> No-motion event is triggered if the rate of change on all axes falls
+> below a specified threshold for a configurable duration. A fake channel
+> is used to report this event.
+>
+> Threshold and duration can be configured from userspace.
 
-memcpy() does normally do the right thing for unaligned accesses of 1, 2, 4, or
-8-byte values.  The snag here seems to be that the VDSO is built with
--fno-builtin (and -ffreestanding which implies -fno-builtin).  That causes the
-compiler to no longer optimize out the calls to memcpy().  If __builtin_memcpy()
-is used instead of memcpy(), it does work and generates the same code as before.
+...
 
-- Eric
+> +#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) ((val) * (scale) + \
+> +                                                 ((val2) * (scale)) / ME=
+GA)
+
+Much easier to read and maintain when it's split logically, i.e.
+
+#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) \
+        ((val) * (scale) + ((val2) * (scale)) / MEGA)
+
+...
+
+> +#define BMI270_RAW_TO_MICRO(raw, scale) ((((raw) % (scale)) * MEGA) / sc=
+ale)
+
+Ditto for the sake of consistency with the above.
+
+...
+
+> +       case IIO_ACCEL:
+> +               switch (type) {
+> +               case IIO_EV_TYPE_ROC:
+> +                       return FIELD_GET(BMI270_INT_MAP_FEAT_NOMOTION_MSK=
+,
+> +                                        regval) ? 1 : 0;
+
+I would do it with logical split despite being longer (than 80) line
+
+                       return
+FIELD_GET(BMI270_INT_MAP_FEAT_NOMOTION_MSK, regval) ?
+                                        1 : 0;
+
+Or even
+                       return
+!!FIELD_GET(BMI270_INT_MAP_FEAT_NOMOTION_MSK, regval);
+
+if 1 is important here, or w/o !! if not.
+
+> +               case IIO_EV_TYPE_MAG_ADAPTIVE:
+> +                       ret =3D bmi270_read_feature_reg(data, BMI270_ANYM=
+O1_REG,
+> +                                                     &motion_reg);
+> +                       if (ret)
+> +                               return ret;
+> +
+> +                       feat_en =3D FIELD_GET(BMI270_INT_MAP_FEAT_ANYMOTI=
+ON_MSK,
+> +                                           regval);
+> +                       switch (chan->channel2) {
+> +                       case IIO_MOD_X:
+> +                               axis_en =3D FIELD_GET(BMI270_FEAT_MOTION_=
+X_EN_MSK,
+> +                                                   motion_reg);
+> +                               break;
+> +                       case IIO_MOD_Y:
+> +                               axis_en =3D FIELD_GET(BMI270_FEAT_MOTION_=
+Y_EN_MSK,
+> +                                                   motion_reg);
+> +                               break;
+> +                       case IIO_MOD_Z:
+> +                               axis_en =3D FIELD_GET(BMI270_FEAT_MOTION_=
+Z_EN_MSK,
+> +                                                   motion_reg);
+> +                               break;
+> +                       default:
+> +                               return -EINVAL;
+> +                       }
+> +                       return (axis_en && feat_en) ? 1 : 0;
+
+Do you expect boolean to be not 1 when it's true? IIRC this is part of
+the C standard.
+
+> +               default:
+> +                       return -EINVAL;
+> +               }
+
+...
+
+> +       int ret, reg;
+>         u16 regval;
+> -       int ret;
+
+Why? And why is reg signed? Also check other cases with reg and
+semantically similar variables.
+
+--=20
+With Best Regards,
+Andy Shevchenko
