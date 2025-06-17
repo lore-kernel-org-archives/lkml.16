@@ -1,141 +1,110 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE082DF3C1
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0BE2DF3F3
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161367; cv=none; b=PmR9rBN/JY7DelNSO7UikcANpVKGKmlIJwb7OhHKT3kKtN5gXRLzxyzHqK8EgUZ8+de/h7p8ontPbPEAh7DkZmWlThc9qZ5lHPEeWQQ76aF+CdCVmM3MWDWuI0V43zBGeIgAEqMIYtzKn20Zko3UJGNx9J+LqcrNeBtAOJ42kp8=
+	t=1750161380; cv=none; b=WM7NQHGtVl9MKLNdDNMH6qZutVrHknDrre02cOsLjOsWwcHAfrmJNZ3ap3Xz8Jx+f2TMyICDKovOH5r/MTgmuHyOj102GB8nDlcLBEBs8XjkDfds1udGXTeQQdbuTyQyfaYtp4KUcAr3bVkQYZNHsYrI7HkIzh8s4lUI8COrCXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161367; c=relaxed/simple;
-	bh=spf/OGWq9rNYwhtnFTQUzUHQXPQ8m2LBqxJ8x0nCh68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=ljQUajdlfmlVCNQuvj2lyjfBSWJaxC9ejmdN+Xkon/Tx9mNnqfRqpWyiJiq5BMICLd3rCLXX2vOAJSlKO3Qp3Dsvo5L5HK14KqvsJec7QH//ww4V+rSnoiQmwnwb3fIbpc5A71puDfLWKvvNhOku6a0LdcyBc1iNjH96pybB0iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hk3/aRhf; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750161380; c=relaxed/simple;
+	bh=hUrh0JsoieyUUpS5QdFU0961KMMCdTuTI4vVH6J5pgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UTc2x+HQRP+GP7q9kPme0eM1zCcZ1Lgbo66WtjCj6XXUL3+GwewvSy9PCjsPZb8uO1jMB9Zo6nGMHpUQwkgJI1wcCAeo5fVNKc2RLfM+52FHbcd/pmTNhf/qGUgv5vuX0fxdzNhND04zbseUQ2WeNjyDbS9S7RJLozcSGl1q6ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UiQBjNrW; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hk3/aRhf"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250617115558euoutp024f60429397fad853adfee7aea679b854~J0nuE7DPO0895508955euoutp02f
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:55:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250617115558euoutp024f60429397fad853adfee7aea679b854~J0nuE7DPO0895508955euoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750161358;
-	bh=oofikVxRsBxHxPSDdlnvLJyVhdL+RF7rzHi6wUMuvQs=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=hk3/aRhfplI0MimyM+0Ny2W5f3hpPbZ//3yhhymz2n67YIKDfT3D3KCZ2wiRiOJ7x
-	 iR2hztlhHdIbLNoFSk5f7oeOHipEVMXkbWJ04oYrtS/1qML0eCIb9xeIW1IVjbbN22
-	 ENbXparJC5pyBqD0Dfc75BwwVviBUUsgvb8Bcm1s=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617115557eucas1p1fe0dc838ed601d75fe7deba27d312aa7~J0ntgrNum2233822338eucas1p1l;
-	Tue, 17 Jun 2025 11:55:57 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617115556eusmtip1a9ce151263637f622a84b2312a20b25d~J0nsOwoz40555305553eusmtip1i;
-	Tue, 17 Jun 2025 11:55:56 +0000 (GMT)
-Message-ID: <b1c7c305-fad9-4161-b627-b5c1db9cb0ee@samsung.com>
-Date: Tue, 17 Jun 2025 13:55:55 +0200
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UiQBjNrW"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4519dd6523dso6347775e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:56:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750161377; x=1750766177; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZib2EAxYXc6vAmfwD8FP6fgSUgLC3pCF4+8SwyEQno=;
+        b=UiQBjNrWPIkE5t/uGZxytEBmAZ+U6oALS88kbK2M8mBpQB8QR2TqhN99Apc9Tyr+w9
+         61aBuhuI5W+L2GBbA9qBjxBiKe5/Oiw71n8JtWkIiYy0AApiC8OwIVUXT0IYexeSHlP9
+         t4XJHyPwtY6Xrzm556dgR7riQySaRikL4940vpqJMqYoXN3Q0LqQp0jqu4WASLt4b90z
+         l2Zh5fsWTNDB67+xro+9VtkO7j2RPOERAbHiI0pK6Sk7yzq7LBeEBqEXtiFk6hP3Vx6Q
+         EEErj6OC3iR7FqajVK3WhrhxCx66KE7ppyNb61cOTz3tQRbTqiU8RwTjOrKkmTtJM1Jk
+         qH+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750161377; x=1750766177;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AZib2EAxYXc6vAmfwD8FP6fgSUgLC3pCF4+8SwyEQno=;
+        b=qjy3UjTFNaSL/iwU+1OQMORKTq2AGjZ1ZiJI0MlGjlh5T7lg0ry0xWcgMoYS0eb9BZ
+         eUMpL0GViBj7XDiBUJGtZchCBJ5/EteZk3n+IegGHggrSBju7sUhpgRbJJvnicvkNaac
+         sVA0P9sn2HuPI4DmmFDjQEoRqiqztneZ7aNLt1ybeePeA8ExGWugXjV3xFS7NJdfkwA6
+         cpvZ07xVU1FuKETvZgOQcaltMTgWgTK7f9s58FHHCCYFKx29TSXqSTAZwnqJ2nOf3zR/
+         CTdxx9ndTw4CkBkfOFN4lAuizOOnQ+cn1NdR/t+wYodWrR1xkDbz02gMlbmu+JpQQH2B
+         x4+w==
+X-Forwarded-Encrypted: i=1; AJvYcCU09cpHNlMdCbcSQCNeOwZvHqpVFtm7FJHIkqgD1Qn1hKFiGnhKfVdEGq21A1Tt3BzezgTHNzZEZi/GcHo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7rBhyB0lA8jZx6qSoATxz6fs0ExaZs37H/F/2/UeIVnSMgaKL
+	pGVcZQSp5/sYWE52fQG7osQ22SEdbGNippZvvJxPGMTO95n8ypAwSSZdxxh0jU+oBvs=
+X-Gm-Gg: ASbGncuXkRGwO5D5jXiisCJIAgjLFhtzNBe2IW4OFtjgyyv7nGRZKDNHWec7HYfBv6i
+	GuDFvgx7V7AVPKsR/ak6S/xUV4dtz0pk2K2475+F2P7blUrpZKVyqpABVzzbra7kbMleBujDVx+
+	LMzscfG8L1lgt0O47GEbrgdP/6V4txGf8MlM6m2g7nPnnDHbRiAwpeWSnnl7B21W4ki8LXywN5Q
+	5T+QQMXSkFJ9zez5C+v2xHAVxJp88UXiYFVNd2IQjY1UMOM4A/UR9jQ7ETgBENfSKjh05Y3BDEG
+	wUGyz3IeuwMqMEYQbhPPyOb34NyJ04AK+K/o8C72KPvcYIR+GdBbLN+oT9ImMd7zQOq72g7/zWf
+	UjKGU7mGrmervOS5uK32lEChvK0MzjyEZDIVPNPSo7Y+Yil5DN4oPM5AEvujrIUXoPMU=
+X-Google-Smtp-Source: AGHT+IGAOuw0cWNP/dm6FxfczRCqze8gyHxlT9VqrXK6Km1ShSiz79wkJohNkjxqZiCQ0Et/w4COzQ==
+X-Received: by 2002:a05:600c:4f48:b0:439:9c0e:36e6 with SMTP id 5b1f17b1804b1-4533ca60745mr46258825e9.3.1750161376622;
+        Tue, 17 Jun 2025 04:56:16 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087f8sm14021612f8f.53.2025.06.17.04.56.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 04:56:16 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:56:12 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, "open list:NETWORKING [TCP]"
+ <netdev@vger.kernel.org>, David Ahern <dsahern@kernel.org>, Jakub Kicinski
+ <kuba@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 2/2] tcp_metrics: use ssthresh value from dst if
+ there is no metrics
+Message-ID: <20250617135612.26aed53d@mordecai.tesarici.cz>
+In-Reply-To: <54d712a2-31a7-4801-aa65-53746edda117@redhat.com>
+References: <20250613102012.724405-1-ptesarik@suse.com>
+	<20250613102012.724405-3-ptesarik@suse.com>
+	<54d712a2-31a7-4801-aa65-53746edda117@redhat.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] pwm: Add Rust driver for T-HEAD TH1520 SoC
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini
-	<drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob
-	Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
-	Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
-	Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <5aam5ff3m24yzsqdh7w2zplccuwmmr2no7jhgmdnxggmhpo4hl@r6iawlw7f42m>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250617115557eucas1p1fe0dc838ed601d75fe7deba27d312aa7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
-X-EPHeader: CA
-X-CMS-RootMailID: 20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d
-References: <20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com>
-	<CGME20250610125333eucas1p16126b64a0f447a5e9a5ad553d9d7d79d@eucas1p1.samsung.com>
-	<20250610-rust-next-pwm-working-fan-for-sending-v2-2-753e2955f110@samsung.com>
-	<jbm3qvowi5vskhnjyqlp3xek36gzzqjt35m66eayxi6lmi525t@iefevopxjl53>
-	<d1523586-82ca-4863-964f-331718bb1f0e@samsung.com>
-	<5aam5ff3m24yzsqdh7w2zplccuwmmr2no7jhgmdnxggmhpo4hl@r6iawlw7f42m>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Tue, 17 Jun 2025 12:48:30 +0200
+Paolo Abeni <pabeni@redhat.com> wrote:
+
+> On 6/13/25 12:20 PM, Petr Tesarik wrote:
+> > @@ -537,6 +537,9 @@ void tcp_init_metrics(struct sock *sk)
+> >  
+> >  		inet_csk(sk)->icsk_rto = TCP_TIMEOUT_FALLBACK;
+> >  	}
+> > +
+> > +	if (tp->snd_ssthresh > tp->snd_cwnd_clamp)
+> > +		tp->snd_ssthresh = tp->snd_cwnd_clamp;  
+> 
+> I don't think we can do this unconditionally, as other parts of the TCP
+> stack check explicitly for TCP_INFINITE_SSTHRESH.
 
 
+Good catch! I noticed that the condition can never be true unless the
+congestion window is explicitly clamped, but you're right that it is a
+valid combination to lock the maximum cwnd but keep the initial TCP Slow
+Start.
 
-On 6/12/25 22:36, Uwe Kleine-König wrote:
-> Hello Michael,
-> 
-> On Thu, Jun 12, 2025 at 10:14:13AM +0200, Michal Wilczynski wrote:
->> On 6/11/25 08:58, Uwe Kleine-König wrote:
->>> Huh, if you do the newstyle stuff, .get_state() is wrong. It's either
->>> .round_waveform_tohw() + .round_waveform_fromhw() + .read_waveform() +
->>> .write_waveform() or .apply() + .get_state(), but don't mix these.
->>
->> In the process of implementing the full "newstyle" waveform API as you
->> suggested, I discovered a hardware limitation. After writing new values
->> to the period and duty cycle registers, reading them back does not
->> return the programmed values, which makes it impossible to reliably
->> report the current hardware state.
->>
->> This appears to be a known quirk of the hardware, as the reference C
->> driver from T-HEAD [1] also omits the .get_state callback, likely for
->> the same reason.
-> 
-> Do you read complete non-sense or e.g. the old configuration until
-> the current period ends?
-> 
-> I guess would be that .get_state wasn't implemented because this is an
-> oldoldstyle driver and it works also without that function.
+I'll fix that in v2.
 
-Hi Uwe,
-
-My apologies for the confusion. After further testing, it appears I was
-mistaken, and the hardware reads are working correctly. I must have made
-an error when testing via sysfs.
-
-I'll be submitting a v3 that implements the full round_waveform_tohw(),
-round_waveform_fromhw(), read_waveform(), and write_waveform()
-combination as you initially suggested.
-
-> 
->> Given this, would it be acceptable to provide a write-only driver? My
->> proposed solution would be to omit the .read_waveform() and
->> .round_waveform_fromhw() implementations from my PwmOps trait. This
-> 
-> Please don't skip .round_waveform_fromhw(), that one is needed for
-> pwm_round_waveform_might_sleep().
-> 
-> I don't like it, but given that the hardware doesn't play along there is
-> no alternative.
-> 
->> would mean the driver can correctly set the PWM state, but attempting to
->> read it back via sysfs would fail (e.g., with -EOPNOTSUPP), reflecting
->> the hardware's capability.
-> 
-> I think there might be another patch opportunity then to make PWM_DEBUG
-> work with that.
-> 
-> Best regards
-> Uwe
-
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+Thank you,
+Petr T
