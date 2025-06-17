@@ -1,180 +1,191 @@
-Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3DE02BEFF5
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DC12482FF
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750133802; cv=none; b=kgzznUkRRD/aOD9hrjD622i1jv91rpUaPk5O7TH9Tw4wlwmT2SoDBgqia7AHE4lppTcUeCt8FSc+jfa8mitkkhKENkd+bx53fSSGJUzqAsOM2CJ+6QtdsNe+6ezJQOUJ9zMU2F0I1yKicAp0SLuHq9WpkqWpdprMQaLXplRW1oc=
+	t=1750133925; cv=none; b=sVgCSefLbSGZLsA4lPC73eIjt3tb2cUD2HANp34/XNSGIoU+7Pv+yOD+NOi61f5/u/1gzJXcPjzDat8RkygsoNEV10MATqvLwpIIxufbr8jCWyRvUclWKrZieoN3/bh13DDDJN992DOG42mQKWPJsC3Uk/ldv29LoJiFeuVETD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750133802; c=relaxed/simple;
-	bh=3Bxo/ZOK6P7faSH0Ua9FrPZ29JOSuGuFEp7adOmSKTM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Fg6YV0Sf0x39Vgz+FnDElF6hsY6tXKJaLlqZkIAxLChY28j2ukg+G++kUJf1p+KBrr1cctL9rqYZP4bjC+dcmnOxOyN+GGSIIlwvOj34sJBybCa+zslBc1bhkiDlgJJFskgUVhtHkDyvmFDMQLlXYn+S4UFD6tFwQRNYvMNuAgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=hDGU2p2a; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=QHADQ8zl; arc=none smtp.client-ip=103.168.172.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1750133925; c=relaxed/simple;
+	bh=UByxiJPFvwodGWaejg9FPqJnqrV99H6qPa2IES5O7Gw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FOkIEY4N3EDV6/nPjctydOKTNh6AHqol0EMT/1UxeQnxJ+xPAtu0oQgd8+gevbcKu5GBHn9AyuG31ldXH8i/YzP+zoUBeLzpv/zdLqeaWPgd9zguLWolPoxsHMY54HJP0s4Rty9Ou26oayDMtFShaADsHcz/Dve+MJHrz8C0kqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=KB4DIKoX; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="hDGU2p2a";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QHADQ8zl"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.phl.internal (Postfix) with ESMTP id 9A9D61380353;
-	Tue, 17 Jun 2025 00:16:36 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Tue, 17 Jun 2025 00:16:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1750133796; x=1750220196; bh=6I5AYAtRKF
-	OkqMX0ItME47j8WykjZdCKb8n6OgoJLL4=; b=hDGU2p2am3DThrTsJwBMBqg2dw
-	1Hmp/ajRw4fZQczpuaRAs7DHbcgl4LGbR6qUtum4wrqpj8ZoumlZBeH4uf+YExjO
-	tpgRUy7T4GQKjogtN5KDT+j6/VjTbivMRrVL3qjMckJ/m/ssEFrobHJ9wBh+YBi+
-	aUCvnHnfLzAnyzR06OutHjODVFuWTZcloyxyCYkL3dREkgw1UOkbcS83Qu7Kn3cV
-	LbMd5rSGjOrbFBnQYdO5lSCYEvyz/NRz7scSvPggadeTHFBsbESlMmbxGYxMnQKy
-	RH9cYyuk65vltpX//MddCqDowWTq3W9ZrCIEoUOtONs+D9emy1BpB0ikrVbw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750133796; x=1750220196; bh=6I5AYAtRKFOkqMX0ItME47j8WykjZdCKb8n
-	6OgoJLL4=; b=QHADQ8zlYw8RrAyZVMeJeBr3pf5ltgFjziYjfSbDAfnKd9p1WP+
-	8jgJmAgU+b+8/mCYagC3LGWEWk/RxdgJM9YLmFXFass39hzPsQ2ifXHbMPzoLHMn
-	8Wd13l74PAN+XZFVw3WFT8vbTIxGcLA05ldu6F71fkqoQCjIQf/h/G6XIHxnN7Bw
-	H9Xph8iJLJDFElWccUNSjrQ7rvd/p12fBiRw1Wqby1B/s+oLq2cSX/6xJwrlBVei
-	9jjJS0+pN/ZNOVoobCh/BAz9zkB9v/vucB5Y+egNjNqt78eXY90scAPHTh/74rDX
-	N+pDSrkcPMNttv4/4cSgAi+vI2PegtZurWA==
-X-ME-Sender: <xms:I-xQaEimXpBLVevfd2mKF7B7i63W_aYTK87Nx2E-IDX1ndqN4TeQ4Q>
-    <xme:I-xQaNCYB4TBvbTCicebPm-YSfGnQzNiiRqj9MS_OyZxYYWIRuKLbUGHcZOqUuri_
-    ScixXnk87xVkmbIb28>
-X-ME-Received: <xmr:I-xQaMFIp0G8J0f6OD3MWnQYJyZmVKA786Wfma_224Qui5hZf2QSRqvJX7XTpwsYV8qg_DoNdvf1qWGUYwmzxx4VBD_eePVoxn6QB7AXOT5sCfadSw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvkeegjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpeffhffvvefujgfkfhggtgesthdtredttddtvden
-    ucfhrhhomheppfhitgholhgrshcurfhithhrvgcuoehnihgtohesfhhluhignhhitgdrnh
-    gvtheqnecuggftrfgrthhtvghrnhepgfevvdfhfeeujeeggffgfefhleffieeiuddvheff
-    udehudffkeekhfegfffhfeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepnhhitghosehflhhugihnihgtrdhnvghtpdhnsggprhgtphhtthho
-    peejpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehurdhklhgvihhnvgdqkhhovg
-    hnihhgsegsrgihlhhisghrvgdrtghomhdprhgtphhtthhopegsihhjuhdruggrshdrjhii
-    segsphdrrhgvnhgvshgrshdrtghomhdprhgtphhtthhopegurghvihgurdhlrghighhhth
-    drlhhinhhugiesghhmrghilhdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhr
-    rgguvggrugdrohhrghdprhgtphhtthhopegrkhhpmheslhhinhhugidqfhhouhhnuggrth
-    hiohhnrdhorhhgpdhrtghpthhtohepohhlvghgsehrvgguhhgrthdrtghomhdprhgtphht
-    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:I-xQaFTMZvRAawLidsDjNbXgfrgZIpJs93T1waM2vKEDadjtLb5RPg>
-    <xmx:I-xQaBw8DN0JcbwI-Bmeef8_DPU1-Tdq_5fp2Um_FvxKNxlh2Smgng>
-    <xmx:I-xQaD5c7U5DufRyfrhu63fEt8nqeJkXm30VUYPyxGNhUbe7lZ69IA>
-    <xmx:I-xQaOyLtRu3paDFJBhKF0GGK9kIZS2ybeBLYzJf_TDQGVN6BoxDqQ>
-    <xmx:JOxQaMBiNQ-0F2EynC9EPj0GD5vC4I4z_zBzGOevx7TRRg0m0Vb3dU1F>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Jun 2025 00:16:35 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id CC4AA11F8434;
-	Tue, 17 Jun 2025 00:16:34 -0400 (EDT)
-Date: Tue, 17 Jun 2025 00:16:34 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 next 09/10] lib: mul_u64_u64_div_u64() Optimise the
- divide code
-In-Reply-To: <20250614095346.69130-10-david.laight.linux@gmail.com>
-Message-ID: <os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg>
-References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-10-david.laight.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="KB4DIKoX"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-234d366e5f2so68126695ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750133922; x=1750738722; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=igAZEPeaIEDiheZvfxf+oF+fwfb6UvykItlBM60MOcA=;
+        b=KB4DIKoXXVJFeb+6fp8rkp5KuJq66sMUQOHTtMaAHNhhOJfJ4Mvf7n96eKtrn9aw3w
+         LGXJcYT1vzci6AjlvwakFnLNkn5fMOPw6xaRkdz9ugOyqpm8lbMmE3k+kfMDGMjOB4+h
+         ksHGiIyVVLVdYHs+L6NO5uoNn8+Q4VWhHnNzLKBdDpZUcKnE7BX8HOH+4dO/Fnixpe6r
+         88bSo2qLAHv1e5Q9ZIc1m4ngvPUNqR52NkKMaAIuvISga1xgEmsrwn65B+M7Iq8SqDBW
+         hQ0f9x9yI5wZJ8PLIRihSkPy1PP5Qbjg1MwHkzr53EYghwPcL7wTt/LhMSpuJTTqbh95
+         nbdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750133922; x=1750738722;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=igAZEPeaIEDiheZvfxf+oF+fwfb6UvykItlBM60MOcA=;
+        b=sxHOpYGN2pIpaVsczE6i/A60wdv8d+0tNP3Vh6mzclR8v3OruokYixbLOC6BCxzu2v
+         H1KnWKyrjFXhooKFAgDz9lqPu4RmYNyyxr69sQ1o0CNkPA9MpfDuIjPXAJwcj/60eeut
+         H4BC38qJ+n4CwkiTZbA8iUHm2jrzvZDoKlMTt6YmDEHi5nq2zhKy460YVbp4zKkSoFmd
+         cxCQXP3u2G4XzioJPAfWJYw0tNtfdjUh9s/5WJcRap8b0v1J057osvNoxHG/Fo67evnJ
+         ojo1OgUlkFsqLg0tcNyZEoYxqIYNt2JIO7ADa+gCCOgpTVLy2XB77b7miEMfykxlUMfV
+         RSqA==
+X-Forwarded-Encrypted: i=1; AJvYcCXUkbR6pBVDRJL8OHAJ6kWGlRzRPV7Np6xq+2H4cep7+g7WlCchxhrloJItVg/UynhncXsIku9/miZtN3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOQi4KzxxbZal7rH1auZNtUN1eKwQGR10iz4bUrCHg8VW2MvZf
+	jeKXWMUj1CDy3V/IkNpCenAoVF9iNEO5Pr2z+Xm5x2h6DfsBiopqjokeZTGhGu5ypuE=
+X-Gm-Gg: ASbGnctHkxjPw3RuJEMY0eF7NZaHABr4f5QNUe8jfDMdLy7xd7nmps2IyAfMybMh6gc
+	K5PUddqYGr8xoARMzgqf6GXZuLud/i/7Y2XpFAUVjbclVUoSHmB4c2euxjujiln8ZqxnVTr+bV6
+	JE35YMePXG4styc4VQZ0EGlHXzFewgRPCcMXKXb3nIgQpbL+nlV9UpedN5tWSH57tQcYZHmWIqA
+	ciUfSqTeR7s8dcUHe1QhI0yW+nBFyx0ylC9MvESmRqI7NvbwaOcJFH6fJBMXDrebuoDNG4LHmVM
+	nvhtidnZHTRM0v9kM+gRY+0eUfDTb82f/1KoH51ZKIWhRDvNNKh9lMSwekK+AQczBX/jpjRrdmJ
+	2iZhvU5IoGaFkAg==
+X-Google-Smtp-Source: AGHT+IFsY8746XIZ16bXJPVrgLyl93cy8mP7x1VEWMaLf/+bipVG7ov5clC26qJPWsPEVOqwRUn6mg==
+X-Received: by 2002:a17:902:d4c9:b0:235:f4f7:a633 with SMTP id d9443c01a7336-2366b3ac074mr204669445ad.28.1750133922275;
+        Mon, 16 Jun 2025 21:18:42 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.10])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88c029sm69798345ad.26.2025.06.16.21.18.38
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 16 Jun 2025 21:18:41 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: alex.williamson@redhat.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	peterx@redhat.com
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com
+Subject: [PATCH v4 0/3] optimize vfio_unpin_pages_remote() for large folio
+Date: Tue, 17 Jun 2025 12:18:18 +0800
+Message-ID: <20250617041821.85555-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Sat, 14 Jun 2025, David Laight wrote:
+From: Li Zhe <lizhe.67@bytedance.com>
 
-> Replace the bit by bit algorithm with one that generates 16 bits
-> per iteration on 32bit architectures and 32 bits on 64bit ones.
-> 
-> On my zen 5 this reduces the time for the tests (using the generic
-> code) from ~3350ns to ~1000ns.
-> 
-> Running the 32bit algorithm on 64bit x86 takes ~1500ns.
-> It'll be slightly slower on a real 32bit system, mostly due
-> to register pressure.
-> 
-> The savings for 32bit x86 are much higher (tested in userspace).
-> The worst case (lots of bits in the quotient) drops from ~900 clocks
-> to ~130 (pretty much independant of the arguments).
-> Other 32bit architectures may see better savings.
-> 
-> It is possibly to optimise for divisors that span less than
-> __LONG_WIDTH__/2 bits. However I suspect they don't happen that often
-> and it doesn't remove any slow cpu divide instructions which dominate
-> the result.
-> 
-> Signed-off-by: David Laight <david.laight.linux@gmail.com>
+This patchset is based on patch 'vfio/type1: optimize
+vfio_pin_pages_remote() for large folios'[1].
 
-Nice work. I had to be fully awake to review this one.
-Some suggestions below.
+When vfio_unpin_pages_remote() is called with a range of addresses
+that includes large folios, the function currently performs individual
+put_pfn() operations for each page. This can lead to significant
+performance overheads, especially when dealing with large ranges of
+pages. We can optimize this process by batching the put_pfn()
+operations.
 
-> +	reps = 64 / BITS_PER_ITER;
-> +	/* Optimise loop count for small dividends */
-> +	if (!(u32)(n_hi >> 32)) {
-> +		reps -= 32 / BITS_PER_ITER;
-> +		n_hi = n_hi << 32 | n_lo >> 32;
-> +		n_lo <<= 32;
-> +	}
-> +#if BITS_PER_ITER == 16
-> +	if (!(u32)(n_hi >> 48)) {
-> +		reps--;
-> +		n_hi = add_u64_u32(n_hi << 16, n_lo >> 48);
-> +		n_lo <<= 16;
-> +	}
-> +#endif
+The first patch batches the vfio_find_vpfn() calls in function
+vfio_unpin_pages_remote(). However, performance testing indicates that
+this patch does not seem to have a significant impact. The primary
+reason is that the vpfn rb tree is generally empty. Nevertheless, we
+believe it can still offer performance benefits in certain scenarios
+and also lays the groundwork for the third patch. The second patch
+introduces a new interface, unpin_user_folio_dirty_locked(), to
+conditionally mark a folio as dirty and unpin it. This interface will
+be used by the third patch. The third patch, using the method described
+earlier, optimizes the performance of vfio_unpin_pages_remote() for
+large folio scenarios.
 
-I think it would be more beneficial to integrate this within the loop 
-itself instead. It is often the case that the dividend is initially big, 
-and becomes zero or too small for the division in the middle of the 
-loop.
+The performance test results, based on v6.15, for completing the 16G VFIO
+IOMMU DMA unmapping, obtained through unit test[2] with slight
+modifications[3], are as follows.
 
-Something like:
+Base(v6.15):
+./vfio-pci-mem-dma-map 0000:03:00.0 16
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.047 s (338.6 GB/s)
+VFIO UNMAP DMA in 0.138 s (116.2 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.280 s (57.2 GB/s)
+VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.052 s (308.3 GB/s)
+VFIO UNMAP DMA in 0.139 s (115.1 GB/s)
 
-	unsigned long n;
-	...
+Map[1] + First patch:
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.027 s (596.1 GB/s)
+VFIO UNMAP DMA in 0.138 s (115.8 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.292 s (54.8 GB/s)
+VFIO UNMAP DMA in 0.310 s (51.6 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.032 s (506.5 GB/s)
+VFIO UNMAP DMA in 0.140 s (114.1 GB/s)
 
-	reps = 64 / BITS_PER_ITER;
-	while (reps--) {
-		quotient <<= BITS_PER_ITER;
-		n = ~n_hi >> (64 - 2 * BITS_PER_ITER);
-		if (n < d_msig) {
-			n_hi = (n_hi << BITS_PER_ITER | (n_lo >> (64 - BITS_PER_ITER)));
-			n_lo <<= BITS_PER_ITER;
-			continue;
-		}
-		q_digit = n / d_msig;
-		...
+Map[1] + This patchset:
+------- AVERAGE (MADV_HUGEPAGE) --------
+VFIO MAP DMA in 0.028 s (563.9 GB/s)
+VFIO UNMAP DMA in 0.049 s (325.1 GB/s)
+------- AVERAGE (MAP_POPULATE) --------
+VFIO MAP DMA in 0.294 s (54.4 GB/s)
+VFIO UNMAP DMA in 0.296 s (54.1 GB/s)
+------- AVERAGE (HUGETLBFS) --------
+VFIO MAP DMA in 0.033 s (485.1 GB/s)
+VFIO UNMAP DMA in 0.049 s (324.4 GB/s)
 
-This way small dividends are optimized as well as dividends with holes 
-in them. And this allows for the number of loops to become constant 
-which opens some unrolling optimization possibilities.
+The first patch appears to have negligible impact on the performance
+of VFIO UNMAP DMA.
 
-> +	/*
-> +	 * Get the most significant BITS_PER_ITER bits of the divisor.
-> +	 * This is used to get a low 'guestimate' of the quotient digit.
-> +	 */
-> +	d_msig = (d >> (64 - BITS_PER_ITER)) + 1;
+With the second and the third patch, we achieve an approximate 64%
+performance improvement in the VFIO UNMAP DMA item for large folios.
+For small folios, the performance test results appear to show no
+significant changes.
 
-Here the unconditional +1 is pessimizing d_msig too much. You should do 
-this instead:
+[1]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
+[2]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
+[3]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
 
-	d_msig = (d >> (64 - BITS_PER_ITER)) + !!(d << BITS_PER_ITER);
+Changelogs:
 
-In other words, you want to round up the value, not an unconditional +1 
-causing several unnecessary overflow fixup loops.
+v3->v4:
+- Introduce a new interface unpin_user_folio_dirty_locked(). Its
+  purpose is to conditionally mark a folio as dirty and unpin it.
+  This interface will be called in the VFIO DMA unmap process.
+- Revert the related changes to put_pfn().
+- Update the performance test results.
 
+v2->v3:
+- Split the original patch into two separate patches.
+- Add several comments specific to large folio scenarios.
+- Rename two variables.
+- The update to iova has been removed within the loop in
+  vfio_unpin_pages_remote().
+- Update the performance test results.
 
-Nicolas
+v1->v2:
+- Refactor the implementation of the optimized code
+
+v3: https://lore.kernel.org/all/20250616075251.89067-1-lizhe.67@bytedance.com/
+v2: https://lore.kernel.org/all/20250610045753.6405-1-lizhe.67@bytedance.com/
+v1: https://lore.kernel.org/all/20250605124923.21896-1-lizhe.67@bytedance.com/
+
+Li Zhe (3):
+  vfio/type1: batch vfio_find_vpfn() in function
+    vfio_unpin_pages_remote()
+  gup: introduce unpin_user_folio_dirty_locked()
+  vfio/type1: optimize vfio_unpin_pages_remote() for large folio
+
+ drivers/vfio/vfio_iommu_type1.c | 37 ++++++++++++++++++++++++++-------
+ include/linux/mm.h              |  2 ++
+ mm/gup.c                        | 27 ++++++++++++++++++------
+ 3 files changed, 53 insertions(+), 13 deletions(-)
+
+-- 
+2.20.1
+
