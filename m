@@ -1,147 +1,168 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028182ED14B
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E542ECEA1
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:41:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750182080; cv=none; b=BrSz227lmdGa1E7Yw3aDGKv8h6aNseKuvn3KxPpaLKE6BWgzgC2Odlj/Wsf8GAdWQNcfp0esj0JGiIj905xLpCihcZbofuD6aCIgPDNdopwZ9tMlByxIoe7TpkWCTdwEW0rIPycVPxFeSSks+sUmAGKJBDO/BiRZ3ljOTT3WhrU=
+	t=1750182089; cv=none; b=sJoFEWtU4L2nYJ9FVdxPH9cRe/XhSpV+fZF/Ya6SADzGZ2G+tnH64zhIgtzch+xWH/MUbnMqjZbRvfyMY4tdsa5Zlmu2h3OmfEgmFVcPmTPxxVqyc1g91fDqnwwPUabMXieknTpVtXo9A754tfGF6gx+SMZo8TTRUiuUYR5Ppa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750182080; c=relaxed/simple;
-	bh=kJNOz7TooDBzp/PLOeTk4CdDG2jJXihBazSW4X49KPE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uoP7mduq1zrVKtC7EQL+vVJQoKIFrnDlDi06yCvMVAOw66oajA+ixznFnLSune0dxDAqxN5vZAmP6ou2BzZRqUeX7+XQlPnedB2IGD4LeWS/kXju656J7XtHGuwZW4tpugKXr151YkgEWBOF4Ac46EDVNAQVoLno7GA+ompg5uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nbmr5A2s; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750182089; c=relaxed/simple;
+	bh=0nKA79uo7OfVEgwUs0N4jvvIGuSz7zE/vtykEecVcwQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rtdun3KJ8LYSQ0V6DLRshVekWKESsoTJExjO9TYnyCZpFomtGc9Q3Su+/W7dmLOUXDTyWFn/gTvqzq3znplIV24YLpkyHkHCyzMiM1xn8vNDrLG7BuZfsJvfqKWNGjhjWsF43Vi/L9pZBwW9M4mQqTtKzRMJkD1nBgn9TQWgmB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HhNzf8Ct; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nbmr5A2s"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7426c44e014so5052270b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750182077; x=1750786877; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mgrGkqOxDNObLjLq6D7C6MTexdeVGeUMjxtSLbN+W2o=;
-        b=Nbmr5A2spdQp9TaxmKc2vIlTXiaSNeiNXosM8sPQFgIi6bwENIObLKGDDhezX8iLTd
-         dtGtr2fxY+kvp7h8eVDZXVVGWWEWdCtowflIOUgUQksdmVVUumGNw2hmiQyvghMQ3rKJ
-         TYH1KzFuBS650wlhIfhdU35Ko15PiIiUlBQawgTpSMU7H1sOujN72mzhT8EVnrqc/btK
-         2GRLWyQxEQOzAysxUfgnZL3OhRe0bxvW2R1W+XRv0PJXSBNM+fY7Cfs82FjBF2etYI3t
-         Q8aCezftCVr4pNNXhYnp2QqVYobMBSn4ITE6C93kxZ1rABNyM/3fasrjsrRTWtfCcSiz
-         sc1Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HhNzf8Ct"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750182086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fv1qQfmXFoIHduZdlR+zVT7hLHkOsNLBBLotBjXv1yc=;
+	b=HhNzf8CtLVi+A2Se3lHG0C6zN5VyyhycENwvvbzBy+t3RCk5Z8gvYMZghVhX8PbNZBK9mu
+	HZzA8YqI5Y6DaAN5dMwuEcf7vrxxXPZUB3GRnKqe8ZCEs7WigRCbhpbT4TZL7dNLrxLbkP
+	2vFtk6po0Cd4Ti396AXnzaPO76PVMPY=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-120-QO1CD7KYNputaZV4NFuIrQ-1; Tue, 17 Jun 2025 13:41:24 -0400
+X-MC-Unique: QO1CD7KYNputaZV4NFuIrQ-1
+X-Mimecast-MFC-AGG-ID: QO1CD7KYNputaZV4NFuIrQ_1750182084
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f3796779so4122402f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:41:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750182077; x=1750786877;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mgrGkqOxDNObLjLq6D7C6MTexdeVGeUMjxtSLbN+W2o=;
-        b=uncEPo3/ZLutetj8qbwjFqXKTR9NhD4z7wGfsLa2dA5T29rsfHY8emiQTJW6Ng1fSK
-         8Eb7SQaYAbc8TP0ixfPnUcfV8GyYuTMxSyUU1Qhsp4T/8aXBlgiowvhQjuw0Y9jUPhWR
-         gM/yEedpQT5wMOuM8VvUtnzPYodmzhbxV57WBmWSWlxrluEtflhTno37oRTUKy3yb/49
-         kr6j36+YKLELP4dDTIw8sBlk6gJR4xhjRBPJ8Jj8Abp/1s75k+pgVDM0nclAkP/th//I
-         Q8lx14m/aABRsvR4KM9C6iTY2WViDLNLf/Cs+Dg7R3oGBc6wYm45r1zu35y7I1kUyz6w
-         3VCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVqGRHLGT1DwqIhsd2IfV2GdUEX6KGMg2IqHGTZiqbrpmIGThRFOJ6UdXsr1h/RcfHROQaoL4YmzeHkFZk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhicnG3XkWzitbRtoGSBI7V5UuurRe1OEymwtC3H1O5zz+Q2p7
-	T8+NdQ0ZDoJwnCGNmJ5j4qAk3hZGHk8lvx0t+P7Q6P35Q4ygb0CO3wCT
-X-Gm-Gg: ASbGncvOlwCnBF8Mqnqr/Fc5phspE494zChC9H481oA4ynZACllo+zxZXQA9wzafE3k
-	jnZ0U2Ca+MJxH4/fyzpRdo4Vn/eg7gD/7x0XsqlJwp5TrzQbX6uxJAX/48hWkqV4LI6fzusQpGS
-	4XHXhUTyNGxMVGMCqvEeZdQ+2fqhwQDQxAvMSbuTkCBK4FENxx5/s1VBIFYkf8T7AdJCdCEut72
-	G32k+wjA2IHVu7oDfXnLS7BJV8swQoYIUu7e7ppfZg0AsryVIAF9yZNzLb05dp/lR3/B2hoDGqd
-	knTFe8v8h5gH1PWuSzU1E16q0Uxh+/b1DxLMvByMdl+EXEN6jato8BJag5y/bHCValShjFQrLRh
-	06crxKg==
-X-Google-Smtp-Source: AGHT+IG8uYkJ0nlmr7+LvuiKbnGE6RpbM0HNHS45nKFtm9jDCdWQmNQSRmkk3m6DxI7dLLyvTk/vmw==
-X-Received: by 2002:a05:6a00:230d:b0:742:a7e3:7c84 with SMTP id d2e1a72fcca58-7489cf97bf8mr18115909b3a.13.1750182077189;
-        Tue, 17 Jun 2025 10:41:17 -0700 (PDT)
-Received: from deb-101020-bm01.dtc.local ([149.97.161.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d29a2sm9417592b3a.175.2025.06.17.10.41.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 10:41:16 -0700 (PDT)
-From: Swarna Prabhu <sw.prabhu6@gmail.com>
-X-Google-Original-From: Swarna Prabhu <s.prabhu@samsung.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: mcgrof@kernel.org,
-	Swarna Prabhu <s.prabhu@samsung.com>
-Subject: [PATCH] f2fs: Fix the typos in comments
-Date: Tue, 17 Jun 2025 17:40:47 +0000
-Message-ID: <20250617174047.1511951-1-s.prabhu@samsung.com>
-X-Mailer: git-send-email 2.47.2
+        d=1e100.net; s=20230601; t=1750182083; x=1750786883;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fv1qQfmXFoIHduZdlR+zVT7hLHkOsNLBBLotBjXv1yc=;
+        b=d321phcWUn9AcYVyHGEmySpNkD6f4PO94BC8nDsSF9lRT61+WerSsboFIoTOCnSUOW
+         eOE0br+zMhV224QyZ63/U5Vb3RCeQPujTnFJfx9w88CcJdA77w+PLiune2w5PW9AJi7V
+         LTem5U0t7fwkzqg6Hka0oRoQ4aUXnvQ+oG1kUq71amuDbTxUDUDXK92MrK6Ya8co/JSe
+         3LK9toX4Dk/1DPVYDDkfW3ZyprogT62t289dQREnwzOS9wykk7n0ejn9mGMZgOfKvgmk
+         FBKWQdAW7YYJwkh2vKO0kKWtBTV/u+v8pJoNjQjbGd9N0X0vbdeTWYP/O2CL4THH8M0/
+         fc+A==
+X-Forwarded-Encrypted: i=1; AJvYcCVGQz/8znOj3rzlD1qQYp0VcmLwRcNy34oVF0CXOeUFbclU/xuCc7fHLutFA6J6zoozNorY3txtSLK2rbo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIDnouzhOYvD0M/B0GLPM+hGmIoVjsiUjRWd9jA/NqVsgNwUT2
+	Qhu8iAAT2brVh2i5vD5HB5+EA2xQ1kKTOKIN3iE1X4yM1Lh2lAhc1KpHRgnm41be0FPTMjw2ekR
+	/7tjN1yC3yDuizL7CIXYc+FHQTbP/pgeDowi40olYAmFpJrFVpx+nBUsoO1OU+t7LVQ==
+X-Gm-Gg: ASbGncsWv2NHGRUoEu4FPpFk/JiXDxELtPzyvYqe5GvZUUaeRT56PP87Fw8Kb1NGuxw
+	yW8N01sI2LyoAawrUlyYVrx6uxiKWZ6Joy3i9KGXjs+DU4lpn2HOIHYuCzllhgOuuktrwwfIXtl
+	JADlG4jxzv2FYZ5ZpGsZ9lkRg6NWw4qx5b3OvBXVPOltbGe3O5sONTJrl8awljT4777Z4jxieJl
+	oKFWSzjHLkAEt1fwafsngQHiT7/wpAeDQ6moJCb0AnOtYljB7BIYhQzZkbDU4llVS7eU6k5OcRD
+	YGgqza0V9DRwsZbA0ivxyX1v+IBH9sizDleSZFrVDJS6wFcWcj7oVg==
+X-Received: by 2002:a05:6000:40dd:b0:3a4:f430:2547 with SMTP id ffacd0b85a97d-3a572398da4mr11547539f8f.6.1750182083610;
+        Tue, 17 Jun 2025 10:41:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEAhkKtRMqkapaaqZvGdipAWU6I+TBGQ+IbnzPmRWN7DyxbPCMjP0mPfslm8IYPyCNLZwdV+A==
+X-Received: by 2002:a05:6000:40dd:b0:3a4:f430:2547 with SMTP id ffacd0b85a97d-3a572398da4mr11547519f8f.6.1750182083261;
+        Tue, 17 Jun 2025 10:41:23 -0700 (PDT)
+Received: from [192.168.3.141] (p57a1a266.dip0.t-ipconnect.de. [87.161.162.102])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea1c27sm181330855e9.15.2025.06.17.10.41.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 10:41:22 -0700 (PDT)
+Message-ID: <3ee441ed-7f24-4038-8b5f-96ac9b49daae@redhat.com>
+Date: Tue, 17 Jun 2025 19:41:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add stray rmap file to mm rmap section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Rik van Riel <riel@surriel.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Harry Yoo <harry.yoo@oracle.com>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250617165142.173716-1-lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250617165142.173716-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch fixes minor typos in comments in f2fs.
+On 17.06.25 18:51, Lorenzo Stoakes wrote:
+> page_vma_mapped_walk() is used to traverse page tables from a VMA, used by
+> rmap logic once the reverse mapping has been traversed to the VMA level.
+> 
+> It is also used by other users (migration, damon, etc.) but is primarily
+> used by the reverse mapping and is a key part of its logic, so it seems
+> appropriate to place it here.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> ---
+>   MAINTAINERS | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 08045f9efadd..5010e91e8e75 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15888,6 +15888,7 @@ R:	Harry Yoo <harry.yoo@oracle.com>
+>   L:	linux-mm@kvack.org
+>   S:	Maintained
+>   F:	include/linux/rmap.h
+> +F:	mm/page_vma_mapped.c
+>   F:	mm/rmap.c
+>   
+>   MEMORY MANAGEMENT - SECRETMEM
 
-Signed-off-by: Swarna Prabhu <s.prabhu@samsung.com>
----
- fs/f2fs/f2fs.h  | 6 +++---
- fs/f2fs/node.h  | 2 +-
- fs/f2fs/super.c | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+Acked-by: David Hildenbrand <david@redhat.com>
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9333a22b9a01..fdf69330582b 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -386,7 +386,7 @@ struct discard_cmd {
- 	struct rb_node rb_node;		/* rb node located in rb-tree */
- 	struct discard_info di;		/* discard info */
- 	struct list_head list;		/* command list */
--	struct completion wait;		/* compleation */
-+	struct completion wait;		/* completion */
- 	struct block_device *bdev;	/* bdev */
- 	unsigned short ref;		/* reference count */
- 	unsigned char state;		/* state */
-@@ -1427,7 +1427,7 @@ enum {
- 
- enum {
- 	MEMORY_MODE_NORMAL,	/* memory mode for normal devices */
--	MEMORY_MODE_LOW,	/* memory mode for low memry devices */
-+	MEMORY_MODE_LOW,	/* memory mode for low memory devices */
- };
- 
- enum errors_option {
-@@ -1491,7 +1491,7 @@ enum compress_flag {
- #define COMPRESS_DATA_RESERVED_SIZE		4
- struct compress_data {
- 	__le32 clen;			/* compressed data size */
--	__le32 chksum;			/* compressed data chksum */
-+	__le32 chksum;			/* compressed data checksum */
- 	__le32 reserved[COMPRESS_DATA_RESERVED_SIZE];	/* reserved */
- 	u8 cdata[];			/* compressed data */
- };
-diff --git a/fs/f2fs/node.h b/fs/f2fs/node.h
-index 1446c433b3ec..b5218d642545 100644
---- a/fs/f2fs/node.h
-+++ b/fs/f2fs/node.h
-@@ -31,7 +31,7 @@
- /* control total # of nats */
- #define DEF_NAT_CACHE_THRESHOLD			100000
- 
--/* control total # of node writes used for roll-fowrad recovery */
-+/* control total # of node writes used for roll-forward recovery */
- #define DEF_RF_NODE_BLOCKS			0
- 
- /* vector size for gang look-up from nat cache that consists of radix tree */
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index bbf1dad6843f..b4f2b5a85d58 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2569,7 +2569,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 			!test_opt(sbi, MERGE_CHECKPOINT)) {
- 		f2fs_stop_ckpt_thread(sbi);
- 	} else {
--		/* Flush if the prevous checkpoint, if exists. */
-+		/* Flush if the previous checkpoint, if exists. */
- 		f2fs_flush_ckpt_thread(sbi);
- 
- 		err = f2fs_start_ckpt_thread(sbi);
 -- 
-2.47.2
+Cheers,
+
+David / dhildenb
 
