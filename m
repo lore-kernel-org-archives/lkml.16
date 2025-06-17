@@ -1,60 +1,51 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834F202C5D;
-	Tue, 17 Jun 2025 11:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F141E202C5D;
+	Tue, 17 Jun 2025 11:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750160538; cv=none; b=LPJJDpa8WprX0tylK2i5T48SkmpJZiGLqs7HGuHDwXbk4EoarZXwdS15dal1p4J8b4ddTA9OtD/qFJIm6XZUdbQAOcQBQN4YXP8fgKtSDcEBaAmrJWpK872cDV1YfjkyS3lU1tA+YOobsiv5DbywkNeWVLBTHm7FsgvsAQPjRlk=
+	t=1750160576; cv=none; b=sMU42Ty/szdJHPH10ZrPY6fbpiamjYKPOVdLo3EYZnq462BAW/YMshI3NWM2yFNIae5QOIz4LmL223cn+Qp0Qmh7o0wdIzE/wFkZ+nVDE3sFj85RapKscD9eH0i5wHshOnqA8UTxYpKxcAiR6mQ0NgI7h92+yMF3+5Dh5WV6cPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750160538; c=relaxed/simple;
-	bh=AWO0cfDxyxQeEmfhVRR0/sqIwN1RCxLHQCyTYId52lQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=urkqZHTAk01S7IdPqhR8ti+nQQn3oIXanlzABKjmHy+Gx6UnSAlOSjrV1q1Z2VnDMqxTjNzT9VwMJ83vduSWjEx1bYKn4F74VujR9nxyMuWVnVXGvnQ3eggS5F1D7c5HirtccE5YsAVdpbPPh9q6V50I5yiNGcClVzgxLMc/aIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eIam4LQi; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1750160576; c=relaxed/simple;
+	bh=ZvdSEdU5JBmsYcVsM6sokn+S/zufsOKiewcUzKJvMsA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=S41LxCaUNYhjPlqLpFhdjOdwZy/L41MKFytQ1T2ZaDHQdgTjG5P50U4MQLy40CpTZjKcqaGOozK+r6rJ2rnLufITPBhhY8kxLhr54/WXq3zu+pELt2VY4PNWq+TJAc/7VP2N/EK9itFvmxlwd3WXqcT9AhZzi/eNq1PDhb+2w+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DR+EApLN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eIam4LQi"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5619840E01C9;
-	Tue, 17 Jun 2025 11:42:12 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id m9d8qPZqJ9qM; Tue, 17 Jun 2025 11:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750160526; bh=F63t60WKXtW1zy7ca5a4g7IffJqR3dwiyR4zZcJO3oY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eIam4LQi3OXUtzSgl5Boe5qko7FTIUS1Km1uevfO7QsO//r5qJz3+ky8ZD+VqmIg1
-	 XSyhxxuN5kWJY3js/vEItp7R5toV/nlW7ecxmEJ5fvkg88Z0a4HX3mrai/JC0KwmbS
-	 iouD61sQCbK0aVkLAMTEEWQTrDqB7la02KIjpaTNGbagLtT29p0sI8dg6eLj+fbf7F
-	 0rks5VEzjN5dCzwY6Sz1JRh9Bri4YQmWoJlJ1WJ/unq/pn1cpuzWDJOWFlDNdu0IMG
-	 UeNbuFmmtrjQwuwT0ftjkn0MUawMF5pL/yKtUsA40mpHU2NnRK3AzEHaUkVd19xqaP
-	 9nAe2j4YHBLIm/EWjcnhUMCkeM+CAmZ5opWfx/gdllNXjOl1WK1krcCD8JGSVr3yzN
-	 QnKfuRryEJOdyLfBDZeBz0FPK5Li2kI7yLusH0SYCfuxn5HGBeHUF9UBHVy2Two7xt
-	 jRsm4zOK/h2xkP8yFQKYUS5BBOzXs+yg5Rfw9pKxF19CNSp5Y4hTdHj9OJlRJClNcW
-	 nPimIpnqsMxI9K9oDdVtn065oNjGWM+RXBEwqfeukexzn8ymbBUpMRCZj6D+gOGqC3
-	 KJxQD11zrf16XQpWo9ofmZTj8CR++GWu41SZ3kxDY6ga0ZDKXfBxGGtXKfAm3tZ8NP
-	 vEwhcuLqumnE24NKtiUE5jRk=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 99BC340E01B3;
-	Tue, 17 Jun 2025 11:42:00 +0000 (UTC)
-Date: Tue, 17 Jun 2025 13:41:54 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Avadhut Naik <avadhut.naik@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	yazen.ghannam@amd.com, mario.limonciello@amd.com,
-	reox <mailinglist@reox.at>
-Subject: Re: [PATCH] EDAC/amd64: Correct number of UMCs for Family 19h Models
- 70h-7fh
-Message-ID: <20250617114154.GAaFFUgo6SVroOaP02@fat_crate.local>
-References: <20250613005233.2330627-1-avadhut.naik@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DR+EApLN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3033BC4CEE3;
+	Tue, 17 Jun 2025 11:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750160575;
+	bh=ZvdSEdU5JBmsYcVsM6sokn+S/zufsOKiewcUzKJvMsA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DR+EApLNj6iIvg5dNSpfFJM6L6zzGCAh19XLGo1BkrbM+G7UcF5kqpyWLDtUl4IAe
+	 hLOmcWZv6yjvIA3BIZ3mhhiOplHpIJOEl9+3cuqKaPc2EJAAntbOk1CHS3VlP7q0Sj
+	 DVmRvRioXhTADtcPNwObbUbBqv8TnX8LFJG0i1c4DA0XSuCxcBiT9+UBTf6DUXCQuY
+	 GlwDYkU4tc9QnFvfVaSgQzaWEZwQoy4DaC8xmaaIwWj43BZ/SOqq1VMuCktNmp5Y0V
+	 1G/RyLUXnDKifC/+cPZ+SRlYR8+S/exfpBLZHVroFpzdcaNU1EHYJDlh4v3WYTIyai
+	 BPr+qwWHW39Mg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Asahi Lina" <lina@asahilina.net>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+In-Reply-To: <aFADYBIYqQjMx118@mango> (Oliver Mangold's message of "Mon, 16
+	Jun 2025 11:43:34 +0000")
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
+	<d6hUddIgwZqRCgQQQV7L2VG4idnic0hOdWqt67Itt_xixs1RI25dMrPZRMyoIe2W_FS4eL6X66J_iclD2aUA0Q==@protonmail.internalid>
+	<20250502-unique-ref-v10-1-25de64c0307f@pm.me> <87zffvz65x.fsf@kernel.org>
+	<uQThW1b1Vsk26nMFCbW4JE3fdvnK2zfmwC8aKJJWA12u4sT2-0ZTJk63QiSyH6K31wFvYTTcJ6NTzPn7JtfwEQ==@protonmail.internalid>
+	<aFADYBIYqQjMx118@mango>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 17 Jun 2025 13:42:47 +0200
+Message-ID: <87zfe68uh4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,46 +53,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250613005233.2330627-1-avadhut.naik@amd.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 12:51:35AM +0000, Avadhut Naik wrote:
-> AMD's Family 19h-based Models 70h-7fh support 4 UMCs per processor die.
-> 
-> The amd64_edac module, however, assumes only 2 UMCs are supported since
-> max_mcs variable for the models has not been explicitly set to 4. The
-> same results in incomplete or incorrect memory information being logged
-> to dmesg by the module during initialization in some instances.
-> 
-> Fixes: 6c79e42169fe ("EDAC/amd64: Add support for ECC on family 19h model 60h-7Fh")
-> Reported-by: reox <mailinglist@reox.at>
-> Closes: https://lore.kernel.org/all/27dc093f-ce27-4c71-9e81-786150a040b6@reox.at/
-> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
-> Cc: stable@kernel.org
-> ---
->  drivers/edac/amd64_edac.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-> index 90f0eb7cc5b9..390f5756b66e 100644
-> --- a/drivers/edac/amd64_edac.c
-> +++ b/drivers/edac/amd64_edac.c
-> @@ -3879,6 +3879,7 @@ static int per_family_init(struct amd64_pvt *pvt)
->  			break;
->  		case 0x70 ... 0x7f:
->  			pvt->ctl_name			= "F19h_M70h";
-> +			pvt->max_mcs			= 4;
->  			pvt->flags.zn_regs_v2		= 1;
->  			break;
->  		case 0x90 ... 0x9f:
-> 
-> base-commit: 855b5de2e562c07d6cda4deb08d09dc2e0e2b18d
-> -- 
+"Oliver Mangold" <oliver.mangold@pm.me> writes:
 
-Applied, thanks.
+> On 250502 1157, Andreas Hindborg wrote:
+>> > +
+>> > +impl<T: Ownable> Owned<T> {
+>> > +    /// Creates a new instance of [`Owned`].
+>> > +    ///
+>> > +    /// It takes over ownership of the underlying object.
+>> > +    ///
+>> > +    /// # Safety
+>> > +    ///
+>> > +    /// Callers must ensure that the underlying object is acquired an=
+d can be considered owned by
+>> > +    /// Rust.
+>>
+>>
+>> This part "the underlying object is acquired" is unclear to me. How abou=
+t:
+>>
+>>   Callers must ensure that *ownership of* the underlying object has been
+>>   acquired. That is, the object can be considered owned by the caller.
+>>
+>>
+>
+> Yes, made me think about the phrasing, too. But the main point is, that t=
+he
+> object must be considered to be owned by the `Owned<T>` after the function
+> call, no?
+>
+> So maybe:
+>
+>    Callers must ensure that ownership of the underlying object can be
+>    transfered to the `Owned<T>` and must consider it to be transfered
+>    after the function call. This usually implies that the object
+>    most not be accessed through `ptr` anymore.
 
--- 
-Regards/Gruss,
-    Boris.
+Sounds good to me =F0=9F=91=8D
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+Best regards,
+Andreas Hindborg
+
+
