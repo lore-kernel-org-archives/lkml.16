@@ -1,498 +1,181 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013063.outbound.protection.outlook.com [40.107.159.63])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2075.outbound.protection.outlook.com [40.107.96.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D7F1DE3DB
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.63
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750132823; cv=fail; b=RCv6NNl0OhK5IPidkyCFh7OGgBPm6VIH6zf3NKHMMDV6IZ2XZ0OKOQnpCWVba5LP6RG9IkdrWUUI0BNgfYcxbICjqJn3ISGvymUX+xsHt6Las1dL+ZptEMncpaHu1noSVrCheEqmjxqPLHCEggcaHpIwDnUWM4MxizI7N88iva4=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750132823; c=relaxed/simple;
-	bh=Him5d73fvUHjWKlrqyCo1cAvoVX/NX+vb3ZZUa4DNiU=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q9AQd/FP90RilD7MvKio8xBZqRBuGfcmFfJZwrg8zZm2BVtuMp2ovWMCzQdP4SnrErRdLcctfQffpPpQJbgdE/JLtLfKRHqVAw0gVSmyhYy470WkRLeHjkWgyzPY53SnL5cceYOIFDyyxY8UcjYgT+RfJ3732hbLHwkSNDoLjcg=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=aTHx1krQ; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=aTHx1krQ; arc=fail smtp.client-ip=40.107.159.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4B115D1
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750133226; cv=fail; b=XKXF7eA4jjDPub+0l9Qjo9GdLPqo1iwO8Xm2qLiyH0quyQcbfpJXi9NiQ1tTgwJFzAR886vHDVwW7PqfTJ7WLeH9ok9fMEp7Req1GR6JyZWMrqUKKroGHqxKl05sZihXXNhxdQGObaTJbUiOPmGfqOGx8NMGgBhIjppc314eps4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750133226; c=relaxed/simple;
+	bh=lQmu7IXxAwe2sCbbynkuwNpcBbuC69srv0VHPjhWvM0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DDguAA/W3kCVR6cbkb64vHTYSgNee/Hcj47aTNRo55japCu/z4ae4Id0jw1H3NVw18p/LuRpQkAIQXN6LBi66Lwsdh7venYAeuENLZ42oJRbzMuKhGoLKUnI3FqT6Dvg8ZEYa8TbXvKhh3t1J5kaEd9yWLSiDh0gUbV9z4EHHdQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=KvkxnoQX; arc=fail smtp.client-ip=40.107.96.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="aTHx1krQ";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="aTHx1krQ"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=e/AWbJ8L4S1bWsjawQ5uYhD9vI4kAtd1C1Olk3fi8tl32etJU8JijhfTZU4WdEsh14KY2z/eE4aYwiXAaWMBdFENq/jrnDzfG04vCcua1+O2keQG2j/2UolPVNgH/8ZtkE3Hg/V09X5NpktCxyZWPbdqCFX+790LQwx5jeWKaHu7xhj4meIEZ0dvx0K66uE1pmuN+hZSdJFGmeYWe67ROrkatis8D0tmZAiuMH/kQOe3Rh+lQS4qJUBOytU0BquWxpPZnhqPwUssAOqxhJC31hbAn/lT/2+0HYL2JUzh+KCOPQlCHZD7T3NLL/30CPCZKg0duq0B7ykdP82pB4sxUQ==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BIdCQK35RJHgVN1yf3LFfh9EjuJ+1YfPwnyXH9810JY=;
- b=vQ5wc9G3AQQNUQumwO+IkyiHABtf1vJklRrVPlVC/Bf4VCMSp2RupSChqxkz19+pQhxbAYXZNe33iU0b5sv2KbVthxtr0HhQTDzv5E/0b2UzK8WXaQcC21owpnAP58Je2pRDWJ4o+MhzGeK2WDRM2tF6FjPuyqP4KZnuOZkcS/XIN0PJeH5F0RQgAz9T/+NTPPwPlusBS+y90NE7qG7z07R4Plv9U0W5ASy79tv62uzjmgMHqZMpAsBkHCb+xPmE2OKv3Segk9Va6uMc7DgeCqGcoEVKyBpNs0vmnsT79k40Uyoa1xm6n5U0U4IZn5KkSrQl+UZNe1TuxoRSvJ1XQA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BIdCQK35RJHgVN1yf3LFfh9EjuJ+1YfPwnyXH9810JY=;
- b=aTHx1krQz/3d5NZWNVZAY765U5lnpSwFtwpAYnGHhgkTRdlGdP2GrmHpdiRaHTUSdFcLolLyPNQExsGwqNrFdJ3gQ2PHATop/V/c6sJkj7mAmij4mejhQzVZ0mifBJnSGQfY1u5UZ2LrRLnle+TNWpQCiVXLz2A/66IvjmaSeos=
-Received: from DUZPR01CA0076.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:46a::7) by GV1PR08MB8744.eurprd08.prod.outlook.com
- (2603:10a6:150:3d::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Tue, 17 Jun
- 2025 04:00:12 +0000
-Received: from DB1PEPF00039230.eurprd03.prod.outlook.com
- (2603:10a6:10:46a:cafe::c8) by DUZPR01CA0076.outlook.office365.com
- (2603:10a6:10:46a::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.26 via Frontend Transport; Tue,
- 17 Jun 2025 04:00:12 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB1PEPF00039230.mail.protection.outlook.com (10.167.8.103) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.15
- via Frontend Transport; Tue, 17 Jun 2025 04:00:11 +0000
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="KvkxnoQX"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=kMKHIdv37QKi++YU9Kc5dnS/1HDjt6aHg+vgpKj6UHYJnxL2NqQV0lFIr5YjRZ1g2LpXYCMK9NyAAOH3IOUh5HIFqUKyAVkjRIzpFnpZG7xssRGxo2zOhO6oDEICFAA6YWo4zmH20fXqsyzIXUKcjddVasnPpVl7aNDO+e0pe6xEbZkRBDsVIehvoJBQ1KmAdtdLWEyDyq7+1kts6jEYl2QDepKtuPV7wk7g079gEEq8PjxWJWrxDSfGWacuErelLXjUhTbOgowHKwrvNb+ySH4p0qb2Uhnu9relEqSijDbYMi/NAjOg7Ka2Tf1gu2WTxM2D1qPFDxk5QHNBnuAPqg==
+ b=F7F5Y4JHOTFEVvOi2O4aolsfZDS05Jh0w9QAGZqPG+Mw9KXEnyfl4wDsNyAH57/s0KUbxlLKp0qiOJHuceL/KW3BuXC88blylQ1UfYwjNI1anELFmLlO+2TM5p/rUXAFbHmIbonUnP9QYMB+4faF20BN6lAGrs6pekmo/0JfQLufItiNJqkUFvxmtMEAo0PK/Ei9bYF4RKXcS9c3+TNLt2mb2RDGdLAeheTShwfC/g4KPJJvKxiASvyvTNUcKjA45rGR8jVIa/HjiLQEmB6p/8YvhK7WS4YyLXMBlNUfiuIJ/05BgLaqFtPcTZixGN9SibsuJMdG849bP2P0uMuqeQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BIdCQK35RJHgVN1yf3LFfh9EjuJ+1YfPwnyXH9810JY=;
- b=cyBXhZluCUNl3aLL6nzGh0gd0Kkoon2uCJCg8ylZOjkisAwYXYHyxHRAUQ/2AAYlixV3SRi+cWw8Lcqd9hwBltBCmu5l9HW6ktCIjJluFrDzaTAPCuRq30Ohq27pgFLCITPoHS8WG3nQc7xkP+cP1hDTDqRPEYjfNMQIxQefc5msqsPHUxa75vNFpqIqfrjYskBOiXUMKanrCBCP8ecQ44uRISq6hF4HHkqNfGTEkquL5+9/UxbAqU5pLxdUsJ762v6jQV6x+zPS90T8EgudvCm5hSFUH6wCXFsf/5t5EacpgJSxpz2cz7y3zOl9yDKAiwRzUuN6vMMD1bfyTo+VZw==
+ bh=TIYU6asWA1FGu0fe5r+8HMlqnIQVZRBUFRsNU4ucAm4=;
+ b=lB5fhg49Z+E2IDHKVywQnW+/FzU/17wf/JZWwDZLzVWCojageK91eD8Drha15P1fBmbc58q8pl6OwRgrReM7nZXGZgsI4VGv7AwWvUVeUzzoywf1YUmdGunYJlTHwLa/CZfRbvURgO6uXBrKx9Fmi5NadIr176SWucQdC0m3efFmnKPgugxYc/otUorKdwhQM7xtb/nBFTzy+aYXKnI7NYH5uj1Hse8KdaZEC/4ua7wtDdqq2BPbVBPFfS8fhcVO+iOv47klxDnANAteyvRy79ndIaRiEPiOj7rjGChxTw7DzKspE7W7yJMrDsbZe306bBFYvxZ/nZHBuZHGR/NPfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BIdCQK35RJHgVN1yf3LFfh9EjuJ+1YfPwnyXH9810JY=;
- b=aTHx1krQz/3d5NZWNVZAY765U5lnpSwFtwpAYnGHhgkTRdlGdP2GrmHpdiRaHTUSdFcLolLyPNQExsGwqNrFdJ3gQ2PHATop/V/c6sJkj7mAmij4mejhQzVZ0mifBJnSGQfY1u5UZ2LrRLnle+TNWpQCiVXLz2A/66IvjmaSeos=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
- by DB3PR08MB9010.eurprd08.prod.outlook.com (2603:10a6:10:42b::8) with
+ bh=TIYU6asWA1FGu0fe5r+8HMlqnIQVZRBUFRsNU4ucAm4=;
+ b=KvkxnoQXHfhKhd+drgr8W77IuStVLJEtIdoH6UgETVjE5AcwJ17gAlv2Y0Howd8x3KoqZ4R+Xsie/PEeDjZm8k4om6bvnVQJtfNxv2peRoab/wA9s5Q0hl0KlFL8wpX0zoR04LH0bqMYvh5CI0k9PeQjS0aVJPU66/0nYIhZWbI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
+ by PH8PR12MB7326.namprd12.prod.outlook.com (2603:10b6:510:216::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Tue, 17 Jun
- 2025 03:59:39 +0000
-Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
- ([fe80::2933:29aa:2693:d12e%4]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 03:59:39 +0000
-Message-ID: <ec8a398c-727c-420a-9110-5362ce35f786@arm.com>
-Date: Tue, 17 Jun 2025 09:29:33 +0530
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
+ 2025 04:07:00 +0000
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42%4]) with mapi id 15.20.8835.025; Tue, 17 Jun 2025
+ 04:07:00 +0000
+Message-ID: <5e3770f8-3386-4204-9877-bcbec353207e@amd.com>
+Date: Tue, 17 Jun 2025 09:36:52 +0530
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: Enable vmalloc-huge with ptdump
-From: Dev Jain <dev.jain@arm.com>
-To: Ryan Roberts <ryan.roberts@arm.com>, catalin.marinas@arm.com,
- will@kernel.org
-Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
- kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- david@redhat.com
-References: <20250616103310.17625-1-dev.jain@arm.com>
- <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
- <5f7b0a4d-fb3f-43bc-9f2a-3951222cfff2@arm.com>
+Subject: Re: [PATCH] sched/fair: allow imbalance between LLCs under NUMA
+To: Jianyong Wu <jianyong.wu@outlook.com>, Jianyong Wu <wujianyong@hygon.cn>,
+ mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org
+Cc: dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+ mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
+References: <20250528070949.723754-1-wujianyong@hygon.cn>
+ <e2b79e4e-f964-4fb6-8d23-6b9d9aeb6980@amd.com>
+ <SI2PR04MB49310190973DC859BBE05DE2E366A@SI2PR04MB4931.apcprd04.prod.outlook.com>
+ <db88ce98-cc24-4697-a744-01c478b7f5c8@amd.com>
+ <SI2PR04MB4931A23ABF08616FD8A133D6E370A@SI2PR04MB4931.apcprd04.prod.outlook.com>
 Content-Language: en-US
-In-Reply-To: <5f7b0a4d-fb3f-43bc-9f2a-3951222cfff2@arm.com>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <SI2PR04MB4931A23ABF08616FD8A133D6E370A@SI2PR04MB4931.apcprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0022.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::7) To AM9PR08MB7120.eurprd08.prod.outlook.com
- (2603:10a6:20b:3dc::22)
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0114.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::23) To CH3PR12MB8658.namprd12.prod.outlook.com
+ (2603:10b6:610:175::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM9PR08MB7120:EE_|DB3PR08MB9010:EE_|DB1PEPF00039230:EE_|GV1PR08MB8744:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3462a143-5f3f-440f-c9d9-08ddad537551
-x-checkrecipientrouted: true
-NoDisclaimer: true
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|PH8PR12MB7326:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7a8f1e44-4d56-4ff9-92e1-08ddad546834
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?R3ZsU2kwMnNUVHN6Q2lLaVdYNHl3WkU3MlZ4SzJaUTc4QU1kRmF6OEpFL2kv?=
- =?utf-8?B?VUF1TytUU3o4am5DckFjRjMvbTNsTjNkbU81S0dwMUhQTFU4TmZ5Uyt2WVZ5?=
- =?utf-8?B?dlppNTExQVA1QnFBQzNrZlcvNTc4ZTM3a25NdzJnTmFYWUlPYXF0V3FkK2Ns?=
- =?utf-8?B?RU54UEFOTkxUSjJTM0E2NFN2ZEJDOXE5RUYxb2t1Um0yeUZQbWhXOG85Tm9Y?=
- =?utf-8?B?ZlR5VUFJNjN2bDlKWGlyZFF0SmlqWk5YT0hZMUpVUVZlQ0RYNUlLUmVxdmxZ?=
- =?utf-8?B?Y2sxU25KUlhTY2ZRSkJrd2w1VmNmMWR1Wk4zeklVRzlxN2UrN3BPS09VZnA4?=
- =?utf-8?B?RjBRalJLOXVhS09tci8xYUF3TFZvK1VKMVhCRW5jSGkySFBuSTRCanZtenFy?=
- =?utf-8?B?aHZLOFo3aXF3SVpYYzJVUExFWmxaMTlxaWprVkJ2a3AyRlpTb1JpTGxJRWdt?=
- =?utf-8?B?aUJEdjFiZFBGNnRuWituek16VytLSXM1ZDZURDY0Vkthdi80RWRoWmhyQkFh?=
- =?utf-8?B?YTBqZGk3Ulo0RVl4ZlZrQmJGZnMxL2hOMVZXUndJWk4wQlMveXRSNC95VXM2?=
- =?utf-8?B?WlpmVGJxK0hhQlhuVWxmQmQ2cGx3Qk8wUHhjNTRiMURPcnFvTnhWK1hRUDZy?=
- =?utf-8?B?dmhuSjFiL2ZGZlNWY0I0MFhET20wU2c3VXJ5MVU3Sm1MN0lpb2dqY1hXMXdo?=
- =?utf-8?B?SlBVdlVGWXF6bWJLK1ovRk9ka2FhdW5NYnBzZDVzbjNQQXZpM1hjTmN0WTU5?=
- =?utf-8?B?S2xaMnQzeStFL25rVE81bVpMdUFpR3UwcDc2Ylgvek1GQ3M4WEE4Z1M5ZlZW?=
- =?utf-8?B?alo5WS9TbDVhVjJpMUQvdlhXcGxRa2JrNGJTc2pKOHdoRWVac2VnSWlQd01q?=
- =?utf-8?B?TzZwR05YUUpRdUNLd3ZTQlBEMGJvTUlPdVJuUEh4Umw1blVVUm1uQ09LajVt?=
- =?utf-8?B?SER0bHJqMERoaDdDcmxVdnExeVVpT3AxcDJlamJLMGlwMStXVDlvR2QvOE40?=
- =?utf-8?B?Nnh3WHpjemRHWWdvZVVLckF5ejRPU2NmN2lDQkc3eHJqaTJUU0QrZ3BxcSs1?=
- =?utf-8?B?Ym13NjRjUTM5bnNkZG1RVmhhT21CRThYYUdMdFNlZGR6aDlYTkNzVVM5R2Fa?=
- =?utf-8?B?NUxabzNhMHROdVVvUXJxYkRGNHVmdUwzTE9URThER0JRZWthNjBudktubDNi?=
- =?utf-8?B?dlFZenlEazVydWFqeXN6b0FTcVV1U1E4RklsMHdLaWkxRG5STnZuTEdZSDRZ?=
- =?utf-8?B?VUEzdjhWcm5Ba1JhcG1SSGRudkFFWHFRdmFWVWtXdG1uYSs2QktDdWZXZC9Y?=
- =?utf-8?B?dW1CYUdlUk5XRmgydmNwdzhWVll4anBVOUkzVSttbEJXWjZZSjgzNVVMbWJR?=
- =?utf-8?B?SFc1Q3NSNHI1RnZXc0k5aGlWZzJWMjYrOXJ4RzFURlZ2OC9yUzFTYmp6Y0tC?=
- =?utf-8?B?c3dGTmVYNTJUeGgwdDIrc25MSTZVcGdwOW9Yc20vVmFreERjbFd2VU5hVTR6?=
- =?utf-8?B?VzN4L0dRcmM1ZXVtZmpYbkQrTHBtdDJVdGJuTmFoRGZWc01YRWNXckx2OURH?=
- =?utf-8?B?K29NM28vWHFYbkhUSmhnT1NSNWZpelpKUlg4aVNnOUxEWEFIbTFUL3p5TjRt?=
- =?utf-8?B?dStGK1NXcDZ3TUFuSVR0REtld2h1NEpxcHdGbTU5ZEwxWHUvUzVGVUxuaHFM?=
- =?utf-8?B?RENjUmZRcFdKUTI1RWt5Z1BUUHFHb3lPRGZNNHlVQkRVUWk5Ly9CRC8yeW1L?=
- =?utf-8?B?QjhDemZhWGluREh0Z3RhKzkvZit3c3ZCSnMxbTNlMVBGK04zVkp4d202Vllt?=
- =?utf-8?B?aElkcWhFTFVBSzI3L1RGQUIzbFFmb1hMWjVlczFqNFVoM21zODJvbGcxNWJj?=
- =?utf-8?B?bHZFYk40N3g4d2xnN252Tmw5UG9xVThtaFN4a2lVK050RzBrdW5tRHNhV1FW?=
- =?utf-8?Q?HVfk9DsGAlU=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR08MB9010
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF00039230.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	661ea080-0f25-4390-24db-08ddad53619f
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|35042699022|36860700013|1800799024|82310400026|376014|14060799003;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QlpxenNkNGRiQTQraVZaZEZEOUI2SVRZNndCb1pRMlNXTTdjaUVIVFdBK0Y3?=
- =?utf-8?B?SWlnUjRtZ3hrWUhoTzdGdDg4eVh4Tlp4bUFGSGNvcUc4T0lYdVR5YW1Vc2N4?=
- =?utf-8?B?UXlDYjdud00wZmh3RWp6WGw1UXlrQmhJTEhJNjNRc2lFb3IzU21tVFdrZVox?=
- =?utf-8?B?a08xclZxd08xMWZNYmxsQ0RJTTZYZzRJMTBQQnJvc05oZjY1bm1LeXg0M2tv?=
- =?utf-8?B?UUYxS0FzdlpBOUp4alpMZGpoeFJ0U0xrWlQ0OWNLSmNuQVpIdURkSDJsOUww?=
- =?utf-8?B?TS82MjRWV3ZOc0NFMEFQTkpCa0pvaTU0bXJhOW5RTzQ1T00vOXZlNDh0NjNI?=
- =?utf-8?B?S1lJT1V5b3FBZ1NCdzA4YTU5OGRJUTJteThmNkhWRGMzeGJYOVZPNzR6VmRu?=
- =?utf-8?B?VnRBcEFMbEdsVDdOZU92UnpBWlZIcE9YWENYZzdNRUQ0TDB5YkhJUUUwZ3k5?=
- =?utf-8?B?WWc3RCtvS3M3RHlOTk1ldG9sN0xLOTk1bVZ0SUs4U0RIMmduSjR0bWFmc2l2?=
- =?utf-8?B?R0tkOThZVnJLVlhLYkNBdmxMbkVvdFFLQnhVSHdHZzByMlhsdlZTc3JCekpH?=
- =?utf-8?B?R2dpT2laNkcxM3cvOWhUOGpMVUd4dlNWOHNJc290emFOa3puaUhhYWkwdEE0?=
- =?utf-8?B?aUR6QTAwRUhpTmYzVkVuUjVjV3NReTBuMThBeFN5K21mWTVzWkJVTjc1ejkz?=
- =?utf-8?B?bnBzSGVES3hyK3NnRzRRWjJoM0F1Ujc3ajg3VTV4ZWNzZWp3NnNEUm9BaW9K?=
- =?utf-8?B?ajZ3OGNNbURHb29UMG8wSlplRnlmS3VjS1JIUkZjdUlrQ01seGhzQmQ4SlFB?=
- =?utf-8?B?MDlQa2hSdlNmT0gvdnkzcVB3YnRFYlkrYm5ZUmpDTkxRM051dmwrTEpML2lK?=
- =?utf-8?B?R01mRVJwVG9YNHZveWNlb2o0TDJzaVM3SzdWc0c0RWtOS0lObFpHbFVXQmtQ?=
- =?utf-8?B?a0ZpbVlaWXBnYUNLQnc1ZUVsdXJUbnZlM3hJUVdVSGJrM3ozOExtK1BMZ2hK?=
- =?utf-8?B?R2VSRk8xbEM4VXF5dk1BVlIwbVRZZkVBd2JWNDNHSGR2cU1PMzl1b3BWT1pI?=
- =?utf-8?B?RXRNM09QNnZlN29uUjZvRXFjdGFnUWkzbWwxUllNeGhaSXV1eWxpR05nK1JJ?=
- =?utf-8?B?WHBxaU01MVRyUnFkWUJqazB1T2t6cE5ZTXo0MkFWd3g2Z1RtTnIzcWJua1pU?=
- =?utf-8?B?RURGV3hHZWtEY01VMFdTQStxNEpsTmNhOFk4ZXFKUEJDQUhZMlFRT1puU2dR?=
- =?utf-8?B?clpoaDZKZkVqd3NaVXRrdWVZeDBsYzBUZnN0eTJkQy9Cc0h2eGcwdHM0ejhw?=
- =?utf-8?B?ZXg1MWViYk9ZQTFJNWMxUkFRUFFnZHhOY3k0SUZKZThYS2V5aXlLSGlZcTN5?=
- =?utf-8?B?VXdrYlJyZ2FQcTBTN25WVkFUQmh2OTNlTXp2SitNYXB4Y2ZrV0ljaCtsVGpQ?=
- =?utf-8?B?NWgrdHpRVkdKdU9yWldXOXFLbGF4VVpBenREM3l4c2xtcjR6dUZaZzh4Yy8v?=
- =?utf-8?B?L3JxcVlYbXhoMzJleVNOdFBYejlicWY1R0Q3QkdPY1FCMk52TWJYOHI5emZw?=
- =?utf-8?B?SHdQZnQ0emhtb1l6RHlGRE9YTVN4dGQxaEZKbytHSDBrSE11QWJzRzhUeEpz?=
- =?utf-8?B?cXpyK0QwcE81ZnNpWjlFRUJheHo2UmxSTklPb0laVTlBZityYm5kMk0vdkN1?=
- =?utf-8?B?TkxkRVJrTklyaStNZ2VmYmYzbHU1Nm85RHM1c3I2TEZQY0orQ2kxQTVHdlRI?=
- =?utf-8?B?SnFTTmQxbmJwb1VKWHE1QVM1bUZzbStvMGhyY3YzMEVjcFZwQTJUQ0puTlov?=
- =?utf-8?B?MEVxWXMyKzJrdVFFektjS1VWZVUzcmJSWFlOY1RnNFJ2S3pSdndDb2p1WTdM?=
- =?utf-8?B?ajd6ckF1Qm9ONGZaK0FZN0hya1Eyby90SVhsTE5rbUV2L2s2Y0YwS21ZQnZQ?=
- =?utf-8?B?WmhaYkt2ZWhXNUxNVFdySnhVZkVHRjg4V3hObzhYSEFjMmdnNmFiQkZvZm1V?=
- =?utf-8?B?R0ZMdC80dlVZUXV3dW9UL01yVCt0RXJnSkpIdWhBeXM5ci9ncGs5QXAyNmhZ?=
- =?utf-8?Q?F4ELUm?=
+	=?utf-8?B?TmxqbGNsVzdrZU9GMG0xcEFKL1pJZ3JPRkdCbEpLeklLNE84MjEvKzA3cTFC?=
+ =?utf-8?B?OFBsQ1FkYTVyWURmMnVoSXhXV256Rm95Sk1Ga2NQeFhNUCtUMjNCN1ppSC9j?=
+ =?utf-8?B?aTA5aHVCUE5TVGZNYyttVTl6MXFtclNyd3VjcFl4K2xwT2JCQmc3VXBNOU5B?=
+ =?utf-8?B?ZXBPNm5TeFJJbDdiRWZubVFaSVZKeDB1b3U1ZWxkRDhWSUhkcEFhclRxSVpw?=
+ =?utf-8?B?d0FDVEQ4STJMMjZsT2V3M1ZOdVMwZTVGc1BnNnI5ekF0NFh5SGZoZllIdGpi?=
+ =?utf-8?B?WXlyZ2MyTTY5TmJ1dm1kLzkvSTdqaFZjLzFlczZjUlU3YStra2E4MmRVTEx2?=
+ =?utf-8?B?cENhSlNlbEo4TnA2TUE4Rm1WOHBVaU1vY1g2RGsxZnlqUWwvRkM2OHR1amhj?=
+ =?utf-8?B?Sm95Unh3Y0xKUnU3WWU1QVUzUEdSanlsRllnRmFzUWZLY0FreFA4d09DalVE?=
+ =?utf-8?B?Wi9SQVMrS0hoc3Q1RnJiWTU2eU5hN2hRWnQ3cmN0V0k2a3A5Y1FzUGlXQnE5?=
+ =?utf-8?B?VU0rYTMrcDRNV0Exb2R4RjdOc0dhS3Y4LzNyNE95OTdUNjM2ekpWU0Q0UDZi?=
+ =?utf-8?B?amFLeHV0cXhMVWZFSmxFMlcybjVxNXNlazJnL2JCN3A1eGRTaHYvNUJ3TXRk?=
+ =?utf-8?B?cEVKQjE0ODBOZnZEbm1iQVhtRlNocm14Zy96VWlpV1A0UE90aDBJWjQwbXhM?=
+ =?utf-8?B?ZVU3Q0h5YzZQRTRNM0hReHE5bzl2aExQdDdCeWN4UWRIQ2t3dHpndUMwdVFM?=
+ =?utf-8?B?dXJ5UEt1QlV3Wm1ZM3dPbXhPRlBuTzZxamQ3QlJ5RndJNFpvSE1sS0V4b3lk?=
+ =?utf-8?B?R0VXd1d6YzVzMHBKOUF4eWJhM0RHU2xlcFhJSmdQei84V3N4RWJlbjBFcmlZ?=
+ =?utf-8?B?eENGQU5BZm1VRURwRTB6MU9WRGNLYkFaMFcyTG1NcTJQNXRkWUtlQ2N4d05l?=
+ =?utf-8?B?T3RlTzRHQVVWSksvNHpEak9Fc3hnM0lmQXpGaGY5TkF2ZkJvS2pZbExEa1dr?=
+ =?utf-8?B?dWJqWkhqNmNrQnVSSHlMa3NpRnF4MEtZMEZOQnFSL1d1YTRLQUhDSkdaK2lR?=
+ =?utf-8?B?OC9UMy9uSUtwYWlYZXIrcmcxczZUMFFhaUVJWDdRNkdQL1p0eGJPOXlHVkZM?=
+ =?utf-8?B?dkQrOHBiVGc2MTNTTVJOTlkyeXJEL3R5MVdNL2t2OVZ6ekVxSi9qRVNUTmEv?=
+ =?utf-8?B?R01Ma2l4RCthTk5aMUJ6eFArSUhnNk5NVEtrZjBJd1pZd1pmeUtkd0VwV1hF?=
+ =?utf-8?B?bTRUaUE0MVp3V1puZHd2bVBmSHNINjNOaHRzRnhCVE1ZaUQ5aFplR3pFTmhq?=
+ =?utf-8?B?ZncyVm1NQzZPVjdIM3N5RFVOMkcyRkQzV0xsaG5mcjZPaVlnUXdUanRINC9N?=
+ =?utf-8?B?ZkZ2bXZCSHVmemFjSjUyOHlyVHQ5RXJLNHp2SHBmWXFFVXhua2JyQnlIQy9q?=
+ =?utf-8?B?LzhTVUV5ZVFSUjh0Zzl0YnBXalgxZS9lN2VkY0JCMXRBby9nY2RTY0hrUzl3?=
+ =?utf-8?B?L2tCcmhNT3dmaTBhbHdGVUIvOWtleFN5WmovNzR3Mk1yaytXTlh6bzRFZTR6?=
+ =?utf-8?B?NTlIaDJLWnc1dG4xK05LeFgvaUdzdkNqalNXR2ladG83SkhwRm92RHhkQVU3?=
+ =?utf-8?B?TXF5MjZNbnNqek12azlzd2hZei9DM2h6ejdtSWdoWlAxQm4vMlVhQlViUTZp?=
+ =?utf-8?B?NnBBeHhTU2RJcGdlWG1lL2Y4eGNrQlJOTXNVSzl0cFo4bDJJVlJUUjhTTERl?=
+ =?utf-8?B?b0ZNQmppZGdDR2RzaGtDRVFYOGpNL3ZJTjNTREcwOXJIS3J1bFFIR0QzMmhO?=
+ =?utf-8?B?WEE1dkFFWWFBVnUzdjQ3ZkdROUR3bm90cGNsL3I3U1RPWEZCRzk4WjZHMnNy?=
+ =?utf-8?B?cWZBaWh0dEpWRXRhVU1OY1hibUF0bWNMT2ZwNTk2Wkt4R0E9PQ==?=
 X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(35042699022)(36860700013)(1800799024)(82310400026)(376014)(14060799003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 04:00:11.7591
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cFh1N1BJbjZFNVJZcnpBNUxtWnFlTmFpMUNBSWRBSVJpYmhmVVRYLzQ4RzVr?=
+ =?utf-8?B?cmZicjhYWTYyb3dpZmU3ZjFmNVFKd2cyYVRGMGtuRXNNaDBsK08vV2tQWk4x?=
+ =?utf-8?B?VElmYmRkd01nZnh5dSs5dDJ3bHZEL0JtK1hCUFhIT0FQYW93a2JYK3lSMXdE?=
+ =?utf-8?B?LzdGSkp5bnlCRXAzbWZZQTJIMC85dGJlKzRTQXhKZ0RtWmpqVjJNUFpMRmdT?=
+ =?utf-8?B?MFZIY3VXaXV2ZCtvTzF5SDkxbFY1OUFzWTZaLzVuZStEcTZLTXY3bStoWUFw?=
+ =?utf-8?B?OS9wZVY0NWZWcXRvNkNHTEF3MGt4YXcvR3VzRjJZNVpPYmtJNEJQTjlKRHgy?=
+ =?utf-8?B?UTJHVWN4SEdEUzIrY2t6ZkN5T3B5TFpSLzhoUXJyTmxTdlJ0U2tzblhFeDlP?=
+ =?utf-8?B?Sy9xdzhOb09RS3VlQnhmUWwzcU9sM0JoRTNvem1hYXNPT2F0akgxMGxyNUN6?=
+ =?utf-8?B?aWZ6S3p0dWpoYXlkZ2pQS1pYVUVFekU2TFduVG1YNGFlUm96bFFVUWtHY2Nv?=
+ =?utf-8?B?SjlGMmg2TjdGdmlzbEZlUWhqSXhlMWtycktSNDBBOWRLbncwclU0aFJsaGFq?=
+ =?utf-8?B?V2lZU2tqeHc0d256aHZHb1FFVEcrTDV3NFhjVlZaM21YUkxDMW83OHB2Mys0?=
+ =?utf-8?B?Y3hrU2Jmb0xpdFpPNlBsR2F6V2x6dlJzTGhSVkVsNitDa3VlSWQrUmNwRUZL?=
+ =?utf-8?B?Y2dSbTFBb29qc2JqV2pOa0Vtc3JleXVUai9KZzFxc1p3dXA5eTQ4NW5kSm04?=
+ =?utf-8?B?MlF3azE2U1IxM3RJRzFnOFh5QWl3aGtuYmVJNWdkMXhVTVE0aUVkWGVKZDRX?=
+ =?utf-8?B?MXQvWDhCam9HM2loL21WMGJGSzZ5WE5FS05xZzFSelpGdFFGMC9QRjBmSXRp?=
+ =?utf-8?B?SXZUMjdDeGdRYnp5YTJSSG5oWjYrTHlaRHN6UGh3RXdBbzQraWY4TzBBWDVL?=
+ =?utf-8?B?dkJPS1hCSzd5Uldrb0Fzc0pqUlRqeFFLczNoT2hzbEd3YU5CL29RRytOMlUz?=
+ =?utf-8?B?RWt2Ti9lbjU1SDNwU05oOGtjakp6YUJqd1lRalVQTmE4b3FsY0hXMXp6NkJS?=
+ =?utf-8?B?L2lFdktZNXIzdk5pUXZCbXFlMFR1OVVrVTlBclZ4WmdKYkltZHovbGZzVENB?=
+ =?utf-8?B?UkZQUm4vbHJ0SWlzdk96d0tpVDNPSDkyUkEvUExCRm9PWEU2djJLV2NJRFY1?=
+ =?utf-8?B?T2lkRGRWRXAxYXFlcWJVb3RsaStGVlhYT2YyLzhQMWRqVTZoNEhjUUlOaHYz?=
+ =?utf-8?B?WnBvMWFSYzlFUWlqbUJBNUNwZ1gxUERCb01xdmUvclQ1WmxEdXRoL0hlZ1lz?=
+ =?utf-8?B?am1BdkdTOU96K29xR0xIVyt3eUxLOEIwRG9tNlloWDZkTWV5RG4xNklRTUhS?=
+ =?utf-8?B?aDJtRHZzOFRYS0FreDUxYVlBc1owalBkSFpVT2RvK1hzNW5XYkc0WmptU3Q5?=
+ =?utf-8?B?eXVyN2RERHBwQlMraTNFc2FxT0hjSmpvMEE3ZDFvNHJkV3FEME9RckpyK2Jk?=
+ =?utf-8?B?RENQb2RuY3JQQnVTODduT3UwTDN2QW11SkxUWVBFTVlSbXdwRUp0K1gyQnBQ?=
+ =?utf-8?B?TWt6NjQ4TjQ0VVZORFRwQis3OWc5ZFI4YTcyVmNLanBleDlaMytDNU5pcXBh?=
+ =?utf-8?B?RXpYQkU3UjBZOVJ6eHFSelJsZkE0ZThLdXAvNXNKOUNpUnN6elgxOHYyc3Z1?=
+ =?utf-8?B?SzZYZHE4Q0w0VEQ0VFNjbG8xM0tlcnpNTmRFQ2JmQ2U4VWhsekxNaGs0T29o?=
+ =?utf-8?B?R3NhcEJ3TWJTTGdrMlh1VjNlemRiOG1nRWJSWTNhS2hFS0lUMnFYRHQ3bkZp?=
+ =?utf-8?B?OEtoUTcxSzBwMTErSUd1WWcxWitackFGa0pBK3BCMWVHU3l6Uld5aGRRSnFx?=
+ =?utf-8?B?Z1FaSTBGUTJzemZFK1FNR0grdVZNSmt1Z2lBMGgyRy80bDNTTlE1ZWt2Z0RT?=
+ =?utf-8?B?NGtuZy9raWJqcXVnNURTbHk1ZjUyanpnVkF6clpTSWVIazY0N1NzVkx4ck1i?=
+ =?utf-8?B?NkpiLzNneWVKWE9oQXlDWVFQWmNRblUyYS9HTWE0dk5Vb0lJczhGVFBqQkh4?=
+ =?utf-8?B?cGVicDQ2b05Qck85Nld5Q3gvdm1oMVZ3a0U5Qk14R0RzMmFwMUorKzllQ21p?=
+ =?utf-8?Q?F8XP6w+TI05MmLS1pJWRKYxSm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a8f1e44-4d56-4ff9-92e1-08ddad546834
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 04:07:00.3421
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3462a143-5f3f-440f-c9d9-08ddad537551
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF00039230.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB8744
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0KCNwp2GUqoLDs0sev0NzP74VQnW32XmPz7IgRQl1P/vOI8Y9RpTbgnNssMpnoGh1i0UfE/A9GX9j7SJlV9DSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7326
 
+Hello Jianyong,
 
-On 17/06/25 8:24 am, Dev Jain wrote:
->
-> On 16/06/25 11:37 pm, Ryan Roberts wrote:
->> On 16/06/2025 11:33, Dev Jain wrote:
->>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
->>> because an intermediate table may be removed, potentially causing the
->>> ptdump code to dereference an invalid address. We want to be able to
->>> analyze block vs page mappings for kernel mappings with ptdump, so to
->>> enable vmalloc-huge with ptdump, synchronize between page table 
->>> removal in
->>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable 
->>> walking. We
->>> use mmap_read_lock and not write lock because we don't need to 
->>> synchronize
->>> between two different vm_structs; two vmalloc objects running this same
->>> code path will point to different page tables, hence there is no race.
->>>
->>> For pud_free_pmd_page(), we isolate the PMD table to avoid taking 
->>> the lock
->>> 512 times again via pmd_free_pte_page().
->>>
->>> We implement the locking mechanism using static keys, since the chance
->>> of a race is very small. Observe that the synchronization is needed
->>> to avoid the following race:
->>>
->>> CPU1                            CPU2
->>>                         take reference of PMD table
->>> pud_clear()
->>> pte_free_kernel()
->>>                         walk freed PMD table
->>>
->>> and similar race between pmd_free_pte_page and ptdump_walk_pgd.
->>>
->>> Therefore, there are two cases: if ptdump sees the cleared PUD, then
->>> we are safe. If not, then the patched-in read and write locks help us
->>> avoid the race.
->>>
->>> To implement the mechanism, we need the static key access from mmu.c 
->>> and
->>> ptdump.c. Note that in case !CONFIG_PTDUMP_DEBUGFS, ptdump.o won't be a
->>> target in the Makefile, therefore we cannot initialize the key 
->>> there, as
->>> is being done, for example, in the static key implementation of
->>> hugetlb-vmemmap. Therefore, include asm/cpufeature.h, which includes
->>> the jump_label mechanism. Declare the key there and define the key 
->>> to false
->>> in mmu.c.
->>>
->>> No issues were observed with mm-selftests. No issues were observed 
->>> while
->>> parallelly running test_vmalloc.sh and dumping the kernel pagetable 
->>> through
->>> sysfs in a loop.
->>>
->>> v2->v3:
->>>   - Use static key mechanism
->>>
->>> v1->v2:
->>>   - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
->>>   - In case of pud_free_pmd_page(), isolate the PMD table to avoid 
->>> taking
->>>     the lock 512 times again via pmd_free_pte_page()
->>>
->>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>> ---
->>>   arch/arm64/include/asm/cpufeature.h |  1 +
->>>   arch/arm64/mm/mmu.c                 | 51 
->>> ++++++++++++++++++++++++++---
->>>   arch/arm64/mm/ptdump.c              |  5 +++
->>>   3 files changed, 53 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/arm64/include/asm/cpufeature.h 
->>> b/arch/arm64/include/asm/cpufeature.h
->>> index c4326f1cb917..3e386563b587 100644
->>> --- a/arch/arm64/include/asm/cpufeature.h
->>> +++ b/arch/arm64/include/asm/cpufeature.h
->>> @@ -26,6 +26,7 @@
->>>   #include <linux/kernel.h>
->>>   #include <linux/cpumask.h>
->>>   +DECLARE_STATIC_KEY_FALSE(ptdump_lock_key);
->>>   /*
->>>    * CPU feature register tracking
->>>    *
->>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->>> index 8fcf59ba39db..e242ba428820 100644
->>> --- a/arch/arm64/mm/mmu.c
->>> +++ b/arch/arm64/mm/mmu.c
->>> @@ -41,11 +41,14 @@
->>>   #include <asm/tlbflush.h>
->>>   #include <asm/pgalloc.h>
->>>   #include <asm/kfence.h>
->>> +#include <asm/cpufeature.h>
->>>     #define NO_BLOCK_MAPPINGS    BIT(0)
->>>   #define NO_CONT_MAPPINGS    BIT(1)
->>>   #define NO_EXEC_MAPPINGS    BIT(2)    /* assumes FEAT_HPDS is not 
->>> used */
->>>   +DEFINE_STATIC_KEY_FALSE(ptdump_lock_key);
->>> +
->>>   enum pgtable_type {
->>>       TABLE_PTE,
->>>       TABLE_PMD,
->>> @@ -1267,8 +1270,9 @@ int pmd_clear_huge(pmd_t *pmdp)
->>>       return 1;
->>>   }
->>>   -int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
->>> +static int __pmd_free_pte_page(pmd_t *pmdp, unsigned long addr, 
->>> bool lock)
->>>   {
->>> +    bool lock_taken = false;
->>>       pte_t *table;
->>>       pmd_t pmd;
->>>   @@ -1279,15 +1283,29 @@ int pmd_free_pte_page(pmd_t *pmdp, 
->>> unsigned long addr)
->>>           return 1;
->>>       }
->>>   +    /* See comment in pud_free_pmd_page for static key logic */
->>>       table = pte_offset_kernel(pmdp, addr);
->>>       pmd_clear(pmdp);
->>>       __flush_tlb_kernel_pgtable(addr);
->>> +    if (static_branch_unlikely(&ptdump_lock_key) && lock) {
->>> +        mmap_read_lock(&init_mm);
->>> +        lock_taken = true;
->>> +    }
->>> +    if (unlikely(lock_taken))
->>> +        mmap_read_unlock(&init_mm);
->>> +
->>>       pte_free_kernel(NULL, table);
->>>       return 1;
->>>   }
->>>   +int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
->>> +{
->>> +    return __pmd_free_pte_page(pmdp, addr, true);
->>> +}
->>> +
->>>   int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->>>   {
->>> +    bool lock_taken = false;
->>>       pmd_t *table;
->>>       pmd_t *pmdp;
->>>       pud_t pud;
->>> @@ -1301,15 +1319,40 @@ int pud_free_pmd_page(pud_t *pudp, unsigned 
->>> long addr)
->>>       }
->>>         table = pmd_offset(pudp, addr);
->>> +    /*
->>> +     * Isolate the PMD table; in case of race with ptdump, this helps
->>> +     * us to avoid taking the lock in __pmd_free_pte_page().
->>> +     *
->>> +     * Static key logic:
->>> +     *
->>> +     * Case 1: If ptdump does static_branch_enable(), and after 
->>> that we
->>> +     * execute the if block, then this patches in the read lock, 
->>> ptdump has
->>> +     * the write lock patched in, therefore ptdump will never read 
->>> from
->>> +     * a potentially freed PMD table.
->>> +     *
->>> +     * Case 2: If the if block starts executing before ptdump's
->>> +     * static_branch_enable(), then no locking synchronization
->>> +     * will be done. However, pud_clear() + the dsb() in
->>> +     * __flush_tlb_kernel_pgtable will ensure that ptdump observes an
->>> +     * empty PUD. Thus, it will never walk over a potentially freed
->>> +     * PMD table.
->>> +     */
->>> +    pud_clear(pudp);
->> How can this possibly be correct; you're clearing the pud without any
->> synchronisation. So you could have this situation:
->>
->> CPU1 (vmalloc)            CPU2 (ptdump)
->>
->>                 static_branch_enable()
->>                   mmap_write_lock()
->>                     pud = pudp_get()
->
-> When you do pudp_get(), you won't be dereferencing a NULL pointer.
-> pud_clear() will nullify the pud entry. So pudp_get() will boil
-> down to retrieving a NULL entry. Or, pudp_get() will retrieve an
-> entry pointing to the now isolated PMD table. Correct me if I am
-> wrong.
->
->> pud_free_pmd_page()
->>    pud_clear()
->>                     access the table pointed to by pud
->>                     BANG!
+On 6/16/2025 7:52 AM, Jianyong Wu wrote:
+>> I'll also give this series a spin on my end to see if it helps.
+> 
+> Would you mind letting me know if you've had a chance to try it out, or if there's any update on the progress?
 
-I am also confused thoroughly now : ) This should not go bang as the
+I queued this up last night but didn't realize tip:sched/core had moved
+since my last run so my baseline numbers might inaccurate for
+comparison. Please give me one more day and I'll get back to you by
+tomorrow after rerunning the baseline.
 
-table pointed to by pud is still there, and our sequence guarantees that
+P.S. I saw a crash towards the end of my test run (might be unrelated)
+I'll check on this too and get back to you.
 
-if the ptdump walk is using the pmd table, then pud_free_pmd_page won't
+-- 
+Thanks and Regards,
+Prateek
 
-free the PMD table yet.
-
-
->>
->> Surely the logic needs to be:
->>
->>     if (static_branch_unlikely(&ptdump_lock_key)) {
->>         mmap_read_lock(&init_mm);
->>         lock_taken = true;
->>     }
->>     pud_clear(pudp);
->>     if (unlikely(lock_taken))
->>         mmap_read_unlock(&init_mm);
->>
->> That fixes your first case, I think? But doesn't fix your second 
->> case. You could
->> still have:
->>
->> CPU1 (vmalloc)            CPU2 (ptdump)
->>
->> pud_free_pmd_page()
->>    <ptdump_lock_key=FALSE>
->>                 static_branch_enable()
->>                   mmap_write_lock()
->>                     pud = pudp_get()
->>    pud_clear()
->>                     access the table pointed to by pud
->>                     BANG!
->>
->> I think what you need is some sort of RCU read-size critical section 
->> in the
->> vmalloc side that you can then synchonize on in the ptdump side. But 
->> you would
->> need to be in the read side critical section when you sample the 
->> static key, but
->> you can't sleep waiting for the mmap lock while in the critical 
->> section. This
->> feels solvable, and there is almost certainly a well-used pattern, 
->> but I'm not
->> quite sure what the answer is. Perhaps others can help...
->>
->> Thanks,
->> Ryan
->>
->>
->>> +    __flush_tlb_kernel_pgtable(addr);
->>> +    if (static_branch_unlikely(&ptdump_lock_key)) {
->>> +        mmap_read_lock(&init_mm);
->>> +        lock_taken = true;
->>> +    }
->>> +    if (unlikely(lock_taken))
->>> +        mmap_read_unlock(&init_mm);
->>> +
->>>       pmdp = table;
->>>       next = addr;
->>>       end = addr + PUD_SIZE;
->>>       do {
->>> -        pmd_free_pte_page(pmdp, next);
->>> +        __pmd_free_pte_page(pmdp, next, false);
->>>       } while (pmdp++, next += PMD_SIZE, next != end);
->>>   -    pud_clear(pudp);
->>> -    __flush_tlb_kernel_pgtable(addr);
->>>       pmd_free(NULL, table);
->>>       return 1;
->>>   }
->>> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
->>> index 421a5de806c6..f75e12a1d068 100644
->>> --- a/arch/arm64/mm/ptdump.c
->>> +++ b/arch/arm64/mm/ptdump.c
->>> @@ -25,6 +25,7 @@
->>>   #include <asm/pgtable-hwdef.h>
->>>   #include <asm/ptdump.h>
->>>   +#include <asm/cpufeature.h>
->>>     #define pt_dump_seq_printf(m, fmt, args...)    \
->>>   ({                        \
->>> @@ -311,7 +312,9 @@ void ptdump_walk(struct seq_file *s, struct 
->>> ptdump_info *info)
->>>           }
->>>       };
->>>   +    static_branch_enable(&ptdump_lock_key);
->>>       ptdump_walk_pgd(&st.ptdump, info->mm, NULL);
->>> +    static_branch_disable(&ptdump_lock_key);
->>>   }
->>>     static void __init ptdump_initialize(void)
->>> @@ -353,7 +356,9 @@ bool ptdump_check_wx(void)
->>>           }
->>>       };
->>>   +    static_branch_enable(&ptdump_lock_key);
->>>       ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
->>> +    static_branch_disable(&ptdump_lock_key);
->>>         if (st.wx_pages || st.uxn_pages) {
->>>           pr_warn("Checked W+X mappings: FAILED, %lu W+X pages 
->>> found, %lu non-UXN pages found\n",
->
