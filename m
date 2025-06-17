@@ -1,335 +1,101 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37ED2949F5
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:15:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD41F4E2;
+	Tue, 17 Jun 2025 22:18:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198525; cv=none; b=oKF/DACNtKp28b8UzOuqAvLbSETlWMhzuNIBHt63dY9lC1jTghcIcfgAOyFSzKSG0FM4rfTeKoZ2uiIXDMUNww2vxu1ri1XE2UBW/0RuyOabBltspOs70mw0ciovgHxS2SD3A0TWne1OxfW05ubwfmFCIZtq5Qhm4sHAgnpsmdY=
+	t=1750198703; cv=none; b=UqYwgJYQ6pCEBHCxJpWDlk6wXOv88yMaa3Lk7cxKUKqUrNPUszDHIYYYHKiwphv3TA+XxVA97s10dySRud1ZIuBwh0I5Kdz6jJuCXRaxZcxEvZ9X/1h9zzHXKsVXJJJYQiFKYYMEr7WjG9c0rxu9Uw5ToA/6noWlon4HjqHT8gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198525; c=relaxed/simple;
-	bh=FFWNTKvzri1cH3Wbyv4g1IAG9PgKcFE9SJcaiySPcKw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=r8F4ybzjR9nS0POv921IEJL1GjFcKXkLvbO0pCpuLlWJnC+EYVxZlY7sKIL4nfvxCV/zd3NaVOmjsXRPsYl+R9sWpbZpWS9mIFdcmFOpVYfECzBipNN3QQu6j3xsMr8WwAMFI1IzYJ9wrDU+bjw3JIIu1tz3jqTYlNcaZydfiIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--paullawrence.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QyX9T05P; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--paullawrence.bounces.google.com
+	s=arc-20240116; t=1750198703; c=relaxed/simple;
+	bh=JSQ8c3bRabnCayUlehYiu+uvSPqvMtoPuZgRoDGUHoI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eeZTTT2+MJwtp1FoU7VZ5vt3laE3vEKTB7Pr4BwMtv7k73dr402CeGOkaVU5Dq8TJZggXngpmKsrdaTcSxT8UkEEcDZABEzujiIzj2e5JUvnh+XI7FTFalJHSqQiuNAkNgnefaZcbmkhf8j2Pb1VX/cb8MiuGpeX2MJRMvUnMEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FQW9damG; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QyX9T05P"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3141a9a6888so2365554a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:15:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FQW9damG"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23636167b30so56233715ad.1;
+        Tue, 17 Jun 2025 15:18:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750198523; x=1750803323; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YiiJDii3e/1E9h1xyTOh07ocmo2tEpRDvB1I6e8ccIw=;
-        b=QyX9T05P1ize9qZoDTkRVv3vbnlh4wRw7NHXLJ64WzJGrzjp/Q3w/bPQsmlY+AU73u
-         Smb4Xcos3/m5UALbJS2I/KZ7clizP5EGQXzuzBcMciMoIwFuJsW2JO4t+DvHFFtBAqOf
-         3/LB/IrSonZGUQlfH52L+rtSnxU5Vb/qC4XXuoVExYlCDevn4r4PxsrdJzSiNKUxgdvo
-         5IQcbTSunvJZRPDOZp9RR4LFcxHIaq2Mtbpx3cKJ3QJVB4ygxEDY7vr4XrW4VmU6rJPw
-         TnZHszF3S4rVhKFnoRzl+aCnlkCNwetHC/TEBv/9CjaZIbZUc8G9rNiBfsociQpKcD/0
-         SjVA==
+        d=gmail.com; s=20230601; t=1750198702; x=1750803502; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9NIdWve1K1b8QzOBntihNhgvZs/2vkEK7FdH81C/3/I=;
+        b=FQW9damGnI2Vz0ySaAs+PuR3IfwI3q35jupxpPJyKuqijKE1Ew54LfSgMbTzY49gai
+         ZR1nFYebYHe/OVRPXpGKWMhD9M4cBik1WHlHGpo1+EbiGNnuMnedOZbG5eLI8OqiTxxX
+         V1hiA5s2lPqxjC5R5g38CH+AF7+nEIisBmIaLsUWM/GK238aZWzhOMUmKGzy1tO/LZg6
+         Qi7s0/w6OoeX0O6p9g5HZZqNgMI/B32GSM6KhpdgVy3EOpkVjG++jWjBwusaiq21Wr+M
+         nHE1zqHjI7EEGCqYVnICpOpdALXgf0+UkX3LYoNMhAtaa49OiW16x64rT/p4E8gREQ8E
+         LJvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750198523; x=1750803323;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YiiJDii3e/1E9h1xyTOh07ocmo2tEpRDvB1I6e8ccIw=;
-        b=J2QNu9L3Tw8rSlr2GF+JD76KGBmxZairnUw8Cddh/deqTvh+0DXyGWQi2dVlBchHJI
-         EIuBHJwSlrCU+2+GgO7SJasvi4uvurchWzoMLxvdls0vlEprpdDqrHSxk6tPKrRJFpqY
-         0OGmA2WHSOgtKaP8NU8G5zrTx5FKwED0HMPsX6+vWcqjMHwMf8qL7Jm/lxM1Z5/oyjw9
-         YZzip50P16tlDVFZvJGI5PIRkZ6mu21NLPS8uz9t+TRKhwVshiGFe9KYXUtMlYjqhmup
-         RzR/23L/SYkv/WNxkTWxG1l6bR6HwyQD080JAx0cgfyxepol9oBELvOIfK9JxSZAF2aP
-         4WJA==
-X-Gm-Message-State: AOJu0Yy6iS5+/EEoT4mdALdYP3oXLQH8pbhZXnqtIVZq2po9TnQCKV5X
-	gdX/kmLPYpTwhPgA41oC3jQ2Q3mQNgDPIX1QiUzvGUg/AyEipEUFob4Iwuhmk3FyCDQQyH2bAcO
-	ZXhQgqGm1xp+qSMAI1e14opFUu5JwpA==
-X-Google-Smtp-Source: AGHT+IEixQwwCtMPZRMitwflJn+MCNzNcpkE0nQ6bs8Ogs5i3eXyrNXuFEV7NYlLJ90/9v4833OID4nJ/hWxw3RrBEI=
-X-Received: from pjxx16.prod.google.com ([2002:a17:90b:58d0:b0:312:2b3:7143])
- (user=paullawrence job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:1805:b0:311:c5d9:2c7c with SMTP id 98e67ed59e1d1-313f1daa6b2mr21592430a91.23.1750198523160;
- Tue, 17 Jun 2025 15:15:23 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:14:54 -0700
-In-Reply-To: <20250617221456.888231-1-paullawrence@google.com>
+        d=1e100.net; s=20230601; t=1750198702; x=1750803502;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9NIdWve1K1b8QzOBntihNhgvZs/2vkEK7FdH81C/3/I=;
+        b=tufzYPVmAi968F6+7PBbisNPpkGRjBNghgITlvC7O2MmIRnyX53NraV5fFz1sYTJjB
+         fF+a+w8IQeWRLkibHrSYF81Y+FChgmBiD2dDnI+TJUsDXWaLt70XEFt4Mrq1Nrxet9iq
+         8f7DQwuPaLD0Y3D/rpyILWUxJh9Mk14EGuuYtfl9ZX/iQTEx7IM9fZMCxF9sgBj++Cft
+         pmOashm/h4BpWYGWV7+tAznDjRwRNEoX43uLQntwp4+o24VWliZTNA3Tcoe6M70+i0uV
+         5gD+BrIG2bkdiEmiLnwCTJvtmYuCQGpDKKfskKlXCzsg0SgQ1r5VL1NZX30MQjSsvpZZ
+         np+w==
+X-Forwarded-Encrypted: i=1; AJvYcCUV/2tGa0ovbqneTE6fD8IdUfIbRE6FhCHCUrGzcr+lDMk4PgE3zaK1Cvckfb5f6qbNfRcejMW+gSJYPu2E@vger.kernel.org, AJvYcCVP9cV7FJVvd4Fff5GXaSzmAr5oZCJ1D3d5026HrzUO7ZPBs4udcVqEfYZabp7MZQBZiD1GGZ+Vuhg=@vger.kernel.org, AJvYcCW16Nhrg4v7pEKn1vhR1khZ+zPR7E0n+ftoxRL3cZnqYdLXfWVrBcKku9mcbJCDTJ3fzEOQjQTyBpic@vger.kernel.org, AJvYcCW9aANfYQNbk9RQTHYptWWKbDwxlBtepBwnetchERXRFzlfSbXFW4kvhQNQ3ARe7If1E2/Ji0wAsENhZKQ=@vger.kernel.org, AJvYcCWRMsGxCCWxYQ3GMtDxVovNnUd+6kRayugO/r6vyZ/fy5Zw2U/DcQLF9ehZYQHSsWQWs3MRhXkuwIY=@vger.kernel.org, AJvYcCXAw2IDBUDrek0IRZAj3nVvIvRa3a9n01ttxwoh+z71vqNgIoWk806mIliDZPLeVpKmfxBx6oY2hma9@vger.kernel.org, AJvYcCXItILcjo3MNfHsvpqFgUf6DLt3f9nV36WSar8YgHPT5MMQr1VUkTB4KepXX/rIJxl1GOkUcduZRnldpfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmkZWW1yfMyCY04RvBbXWfJixG6LknI1GWhv9G/utp/OINRw7R
+	TtJ9qORcD1PEgFF8P57wglLhrVNH5lj5uoNt9qD/6EQq0s00IQqO8J1k
+X-Gm-Gg: ASbGncuUv/dIxGkTsZ0gSmB9uun2xlYKJX1HlyDdWUJcQHpXmbA/E4KH1VTvmu5sCFf
+	OpiFZ2Of1Gg8Q4OgCw4AFLcvHTKLfyVwjKW+xwmaYclnSKBEY9r0/mOj88ggJjXZfxaaPciNxkW
+	Fl0ibgeKSHPGZZzp0eg0h97oqsqMbje4LXN1FFMEICBFTJtReGJ+0yiByx2FqsNnQ9MIqrPJe2S
+	dGpUgNbPblyrWOFGs5u/GuyJ2TFZCAZyuCx+ZTlywuesehUpPuJB+8OOL8vdDlNzvd6B4aBhVjb
+	M0L4/BFzyIAUXGL/4SM8dPe1f+WWVnRwOE+EGza001wQiwg7rOiY0Md2RwlPYME=
+X-Google-Smtp-Source: AGHT+IF91BQZXlbd6uuMahbLtTEtN2tg3W8Od60D+rCGiIPm2Y3r9UQq92CpdM0V1gssQmyVDCfWGA==
+X-Received: by 2002:a17:902:8bc8:b0:234:a139:120d with SMTP id d9443c01a7336-2366b32e4ebmr135159835ad.7.1750198701630;
+        Tue, 17 Jun 2025 15:18:21 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:4cd9:8b8e:24cd:5a36])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca40fsm86178655ad.208.2025.06.17.15.18.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 15:18:20 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:18:17 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Sven Peter <sven@kernel.org>
+Cc: Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Neal Gompa <neal@gompa.dev>, Ulf Hansson <ulf.hansson@linaro.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Srinivas Kandagatla <srini@kernel.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Vinod Koul <vkoul@kernel.org>, 
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Arnd Bergmann <arnd@arndb.de>, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, iommu@lists.linux.dev, linux-input@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 08/11] Input: apple_z2: Drop default ARCH_APPLE in Kconfig
+Message-ID: <oinzomct3qvhmlvulhsubckhtarrz2eedk4ymgnvfeebmiljtt@3wtkh3un7cdb>
+References: <20250612-apple-kconfig-defconfig-v1-0-0e6f9cb512c1@kernel.org>
+ <20250612-apple-kconfig-defconfig-v1-8-0e6f9cb512c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250617221456.888231-1-paullawrence@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250617221456.888231-3-paullawrence@google.com>
-Subject: [PATCH v1 2/2] fuse: open/close backing file
-From: Paul Lawrence <paullawrence@google.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Paul Lawrence <paullawrence@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-apple-kconfig-defconfig-v1-8-0e6f9cb512c1@kernel.org>
 
-Add support for opening and closing the backing file on a passthrough
-directory.
+On Thu, Jun 12, 2025 at 09:11:32PM +0000, Sven Peter wrote:
+> When the first driver for Apple Silicon was upstreamed we accidentally
+> included `default ARCH_APPLE` in its Kconfig which then spread to almost
+> every subsequent driver. As soon as ARCH_APPLE is set to y this will
+> pull in many drivers as built-ins which is not what we want.
+> Thus, drop `default ARCH_APPLE` from Kconfig.
+> 
+> Signed-off-by: Sven Peter <sven@kernel.org>
 
-* Add backing file to fuse file
-* Add fuse_inode_has_backing - this is how we will detect whether to use
-  traditional fuse operations or the added backing file operations
-* Add backing operations to open, flush and close
+Applied, thank you.
 
-Signed-off-by: Paul Lawrence <paullawrence@google.com>
----
- fs/fuse/backing.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++
- fs/fuse/dir.c     | 16 -----------
- fs/fuse/file.c    | 34 ++++++++++++++++--------
- fs/fuse/fuse_i.h  | 39 +++++++++++++++++++++++++++
- 4 files changed, 130 insertions(+), 27 deletions(-)
-
-diff --git a/fs/fuse/backing.c b/fs/fuse/backing.c
-index 1dcc617bf660..04265bd06695 100644
---- a/fs/fuse/backing.c
-+++ b/fs/fuse/backing.c
-@@ -6,6 +6,64 @@
- 
- #include "fuse_i.h"
- 
-+#include <linux/backing-file.h>
-+
-+int fuse_open_backing(struct inode *inode, struct file *file, bool isdir)
-+{
-+	struct fuse_mount *fm = get_fuse_mount(inode);
-+	struct fuse_file *ff;
-+	int retval;
-+	int mask;
-+	union fuse_dentry *fd = get_fuse_dentry(file->f_path.dentry);
-+	struct file *backing_file;
-+	uint32_t flags = file->f_flags & ~(O_CREAT | O_EXCL | O_NOCTTY);
-+
-+	ff = fuse_file_alloc(fm, true);
-+	if (!ff)
-+		return -ENOMEM;
-+
-+	switch (flags & O_ACCMODE) {
-+	case O_RDONLY:
-+		mask = MAY_READ;
-+		break;
-+
-+	case O_WRONLY:
-+		mask = MAY_WRITE;
-+		break;
-+
-+	case O_RDWR:
-+		mask = MAY_READ | MAY_WRITE;
-+		break;
-+
-+	default:
-+		retval = -EINVAL;
-+		goto outerr;
-+	}
-+
-+	retval = inode_permission(&nop_mnt_idmap,
-+				  get_fuse_inode(inode)->backing_inode, mask);
-+	if (retval)
-+		goto outerr;
-+
-+	backing_file = backing_file_open(&file->f_path, file->f_flags,
-+		&fd->backing_path, current_cred());
-+
-+	if (IS_ERR(backing_file)) {
-+		retval = PTR_ERR(backing_file);
-+		goto outerr;
-+	}
-+
-+	ff->backing_file = backing_file;
-+	ff->nodeid = get_fuse_inode(inode)->nodeid;
-+	file->private_data = ff;
-+	return 0;
-+
-+outerr:
-+	if (retval)
-+		fuse_file_free(ff);
-+	return retval;
-+}
-+
- int fuse_handle_backing(struct fuse_entry_backing *feb,
- 	struct inode **backing_inode, struct path *backing_path)
- {
-@@ -27,3 +85,13 @@ int fuse_handle_backing(struct fuse_entry_backing *feb,
- 
- 	return 0;
- }
-+
-+int fuse_flush_backing(struct file *file, fl_owner_t id)
-+{
-+	struct fuse_file *fuse_file = file->private_data;
-+	struct file *backing_file = fuse_file->backing_file;
-+
-+	if (backing_file->f_op->flush)
-+		return backing_file->f_op->flush(backing_file, id);
-+	return 0;
-+}
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 909463fae94d..658898f324b5 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -44,18 +44,7 @@ static inline u64 fuse_dentry_time(const struct dentry *entry)
- {
- 	return (u64)entry->d_fsdata;
- }
--
- #else
--union fuse_dentry {
--	struct {
--		u64 time;
--#ifdef CONFIG_FUSE_PASSTHROUGH_DIR
--		struct path backing_path;
--#endif
--	};
--	struct rcu_head rcu;
--};
--
- static inline void __fuse_dentry_settime(struct dentry *dentry, u64 time)
- {
- 	((union fuse_dentry *) dentry->d_fsdata)->time = time;
-@@ -65,11 +54,6 @@ static inline u64 fuse_dentry_time(const struct dentry *entry)
- {
- 	return ((union fuse_dentry *) entry->d_fsdata)->time;
- }
--
--static inline union fuse_dentry *get_fuse_dentry(const struct dentry *entry)
--{
--	return entry->d_fsdata;
--}
- #endif
- 
- static void fuse_dentry_settime(struct dentry *dentry, u64 time)
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 754378dd9f71..0cd0a94073c7 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -21,6 +21,7 @@
- #include <linux/filelock.h>
- #include <linux/splice.h>
- #include <linux/task_io_accounting_ops.h>
-+#include <linux/file.h>
- 
- static int fuse_send_open(struct fuse_mount *fm, u64 nodeid,
- 			  unsigned int open_flags, int opcode,
-@@ -105,19 +106,24 @@ static void fuse_file_put(struct fuse_file *ff, bool sync)
- 		struct fuse_release_args *ra = &ff->args->release_args;
- 		struct fuse_args *args = (ra ? &ra->args : NULL);
- 
--		if (ra && ra->inode)
--			fuse_file_io_release(ff, ra->inode);
--
--		if (!args) {
--			/* Do nothing when server does not implement 'open' */
--		} else if (sync) {
--			fuse_simple_request(ff->fm, args);
-+		if (ff->backing_file) {
- 			fuse_release_end(ff->fm, args, 0);
-+			fput(ff->backing_file);
- 		} else {
--			args->end = fuse_release_end;
--			if (fuse_simple_background(ff->fm, args,
--						   GFP_KERNEL | __GFP_NOFAIL))
--				fuse_release_end(ff->fm, args, -ENOTCONN);
-+			if (ra && ra->inode)
-+				fuse_file_io_release(ff, ra->inode);
-+
-+			if (!args) {
-+				/* Do nothing when server does not implement 'open' */
-+			} else if (sync) {
-+				fuse_simple_request(ff->fm, args);
-+				fuse_release_end(ff->fm, args, 0);
-+			} else {
-+				args->end = fuse_release_end;
-+				if (fuse_simple_background(ff->fm, args,
-+							GFP_KERNEL | __GFP_NOFAIL))
-+					fuse_release_end(ff->fm, args, -ENOTCONN);
-+			}
- 		}
- 		kfree(ff);
- 	}
-@@ -248,6 +254,9 @@ static int fuse_open(struct inode *inode, struct file *file)
- 	if (err)
- 		return err;
- 
-+	if (fuse_inode_has_backing(inode))
-+		return fuse_open_backing(inode, file, false);
-+
- 	if (is_wb_truncate || dax_truncate)
- 		inode_lock(inode);
- 
-@@ -522,6 +531,9 @@ static int fuse_flush(struct file *file, fl_owner_t id)
- 	FUSE_ARGS(args);
- 	int err;
- 
-+	if (fuse_inode_has_backing(file->f_inode))
-+		return fuse_flush_backing(file, id);
-+
- 	if (fuse_is_bad(inode))
- 		return -EIO;
- 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 1dc04bc6ac49..a27c05810bab 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -96,6 +96,25 @@ struct fuse_submount_lookup {
- 	struct fuse_forget_link *forget;
- };
- 
-+
-+/** FUSE specific dentry data */
-+#if BITS_PER_LONG < 64 || defined(CONFIG_FUSE_PASSTHROUGH_DIR)
-+union fuse_dentry {
-+	struct {
-+		u64 time;
-+#ifdef CONFIG_FUSE_PASSTHROUGH_DIR
-+		struct path backing_path;
-+#endif
-+	};
-+	struct rcu_head rcu;
-+};
-+
-+static inline union fuse_dentry *get_fuse_dentry(const struct dentry *entry)
-+{
-+	return entry->d_fsdata;
-+}
-+#endif
-+
- /** Container for data related to mapping to backing file */
- struct fuse_backing {
- 	struct file *file;
-@@ -287,6 +306,14 @@ struct fuse_file {
- 
- 	} readdir;
- 
-+#ifdef CONFIG_FUSE_PASSTHROUGH_DIR
-+	/**
-+	 * TODO: Reconcile with passthrough file
-+	 * backing file when in bpf mode
-+	 */
-+	struct file *backing_file;
-+#endif
-+
- 	/** RB node to be linked on fuse_conn->polled_files */
- 	struct rb_node polled_node;
- 
-@@ -1597,4 +1624,16 @@ extern void fuse_sysctl_unregister(void);
- /* backing.c */
- int fuse_handle_backing(struct fuse_entry_backing *feb,
- 	struct inode **backing_inode, struct path *backing_path);
-+
-+
-+static inline bool fuse_inode_has_backing(struct inode *inode)
-+{
-+	struct fuse_inode *fuse_inode = get_fuse_inode(inode);
-+
-+	return fuse_inode && fuse_inode->backing_inode;
-+}
-+
-+int fuse_open_backing(struct inode *inode, struct file *file, bool isdir);
-+int fuse_flush_backing(struct file *file, fl_owner_t id);
-+
- #endif /* _FS_FUSE_I_H */
 -- 
-2.49.0.1112.g889b7c5bd8-goog
-
+Dmitry
