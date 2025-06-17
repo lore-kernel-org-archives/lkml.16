@@ -1,82 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A081EB2F;
-	Tue, 17 Jun 2025 03:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D1818BEC;
+	Tue, 17 Jun 2025 03:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750130334; cv=none; b=A5CGsOKAxXrUqxU6YiXD1NoJL/iEHOPmYUXIee6P7Bp2b/B+q+GXGppuB5TUWMXDRNs5UNXUe5UJOl6qGmKD5OPkjFDeLogH+SrS56z2TFxE3fDysj4C51Df5uteg4UPBLR1pIeNEOUfO4BtGLhdbV5OACDCSlbKMJDXFxxAwDA=
+	t=1750130650; cv=none; b=uBhbBNfm8wrP1pA80XL02vSRaYGf/vSt2/vSYoQJE8Q6Q/HnzTPkJnv4pNP8puZ1/Du0myscTp04LFME2voS6/b5rM6MGy0FclsUAwKfiOD4wSR+TJDUlYSIKtlMwN0rKkYeRU+gpT/mpt7x3jf+wGf+zaDKa2ZKt5BxjPhF8Y8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750130334; c=relaxed/simple;
-	bh=ALZwaXmYqhLFDRldlSM9ss8w9shR+ct4nGkojL7p978=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dleX7ENC4IowRoVDMahSnVWytn7OeGdr5XxSSZkowbgQT84zbx5uS046C4w5k78+gBzkr5XnCIPUVYdYaxZxCFBdwLgw6PZSGU4YgapnvoptTl8jebfy0LiQQZHEyKdv2DFWCiHBEVzdhoYLj87iEtvrbp8I4furDiD7cuXMTC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xa9T2VGj; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xa9T2VGj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C693CC4CEEA;
-	Tue, 17 Jun 2025 03:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750130333;
-	bh=ALZwaXmYqhLFDRldlSM9ss8w9shR+ct4nGkojL7p978=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xa9T2VGjCYhthpBzI7FsyWMdxukjipcAs0MohIO4GzpxQx6JGqc2fjH75/IBC6KkD
-	 vAxwMaJa8WGj+V1O0r1O8LiG7/+Gql7S0LUNbFhSA9HxsdyMKUQ7gUvx10osmpzJ9e
-	 /vZEHpM5qNUQM9TtCn8GCjAlLGlCdNhlzp4+2iIp+sIoeoWx5dYf0ef0oR8JHO406R
-	 GikxjsaVt5tyfpwZBPTQ8TPFzJd3mKG9uXSput5vxz2QkTSB2focPh8LIsMJ18YH0p
-	 a3ZVRv8XoB/0w8xGUSpH2qg9ibrwAii3cdAjgWvUL/Ztg5vqYPXi5AbONFUf5upBih
-	 I8vpf+1gf5HlA==
-Date: Mon, 16 Jun 2025 22:18:50 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: add debug UART pins to reserved GPIO
- ranges on RB2
-Message-ID: <vyr6s4wzw5jc5gt7mywu4s4xob6aeca5aclbe5tdr4v3yng2tn@yb7rn2b2btb7>
-References: <20250616143341.51944-1-brgl@bgdev.pl>
- <713cd518-935f-4501-9753-d33c9ea6aef7@oss.qualcomm.com>
- <CAMRc=MceV-HgyFFvqytXAiuY+y10PQbdPBxuvd57NCeSLVLXCg@mail.gmail.com>
+	s=arc-20240116; t=1750130650; c=relaxed/simple;
+	bh=fbgflbP71TGZLWdFRM/j1rCbvkeR66kA5FCEtT6NQtE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QNoQzjr8jswFme79GhrsUeJgtUyv+HDn0HPyUYAVpMOkxhRfzC3zBOQKYLqxsulNduk8oHD5mTvzOL0XgsP3Ao1gIzC1D7AHa7uUCEzXZ0xJ94muVMA16yjKbVfXV2UBq3muzIWxwodqnF2cbSB+zS44wfPpqGmHuqef+0v6BXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowACH2FDD31Boih8RBw--.25716S2;
+	Tue, 17 Jun 2025 11:23:47 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	thierry.reding@gmail.com,
+	jonathanh@nvidia.com,
+	sheetal@nvidia.com,
+	u.kleine-koenig@baylibre.com,
+	mkumard@nvidia.com,
+	rituc@nvidia.com,
+	ruc_gongyuanjun@163.com
+Cc: linux-sound@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] ASoC: tegra: AHUB: Remove unneeded semicolon
+Date: Tue, 17 Jun 2025 11:21:03 +0800
+Message-Id: <20250617032103.1725040-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MceV-HgyFFvqytXAiuY+y10PQbdPBxuvd57NCeSLVLXCg@mail.gmail.com>
+X-CM-TRANSID:rQCowACH2FDD31Boih8RBw--.25716S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXFy7tFyUuF18Grg_yoWxCrg_Aw
+	40gw4xX3y5GFWakFn8Jr4Iyw1jv39xGa1xKryjvFsrW34UuF4rZry8Wr47urWUZw4kAFyx
+	Wa4jqrs8Jr4YgjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbf8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
+	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r48MxAIw28IcxkI7VAKI4
+	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
+	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
+	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
+	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
+	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjm9aPUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Mon, Jun 16, 2025 at 06:43:16PM +0200, Bartosz Golaszewski wrote:
-> On Mon, Jun 16, 2025 at 6:20 PM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
-> >
-> > On 6/16/25 4:33 PM, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > GPIO12 and GPIO13 are used for the debug UART and must not be available
-> > > to drivers or user-space. Add them to the gpio-reserved-ranges.
-> > >
-> > > Fixes: 8d58a8c0d930c ("arm64: dts: qcom: Add base qrb4210-rb2 board dts")
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > ---
-> >
-> > That also makes them unavailable to the kernel though, no?
-> >
-> 
-> Yes. They could only be used by QUP - I2C or SPI #4 - on sm6115 but
-> none of these are used on RB2. I just noticed that my console froze
-> when I accidentally requested GPIO12 and figured that it makes sense
-> to make them unavailable. Let me know if this should be dropped.
-> 
+Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
-I'm guessing that this would be a problem for any pin that is used for
-some other function. Should we instead prevent userspace from being able
-to request pins that are not in "gpio" pinmux state?
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ sound/soc/tegra/tegra210_ahub.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Bjorn
+diff --git a/sound/soc/tegra/tegra210_ahub.c b/sound/soc/tegra/tegra210_ahub.c
+index 2376cc76e684..21aeaeba0b10 100644
+--- a/sound/soc/tegra/tegra210_ahub.c
++++ b/sound/soc/tegra/tegra210_ahub.c
+@@ -2066,7 +2066,7 @@ static bool tegra264_ahub_wr_reg(struct device *dev, unsigned int reg)
+ 			return true;
+ 		default:
+ 			break;
+-		};
++		}
+ 	}
+ 
+ 	return false;
+-- 
+2.25.1
+
