@@ -1,86 +1,174 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8422B2E92BA;
-	Tue, 17 Jun 2025 09:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2592C2C08D3
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153865; cv=none; b=Xnj/XV9Upn9ET/78gm5DtlP/1ILP3syqkQ7z5KL50PKHxMNXYK+owSLKfOthsH6m5R1m0H8+LzMvhYN4mjIK1u/1kEuYqdlwqFIj2awTidotWsEOHy+meXd+nIXpMwBrxTEZEK0DMumZx/pHY8sRHSWHaS+R8b4t4XnrK3I14gc=
+	t=1750153880; cv=none; b=litqR4CUFQbaBh3X0JuphQY0SoPCfYJCdHHIZz0cc7p2S941NYOhmlsSIfL6q/aKd5xKjDn92hwknuXTLXMQ4dR++XZAAqjw97ddv6gX74rOmYcyMF7dvoHHLDbUEAw+dQtoRfVTOzRvJO5pHC0HDyleNwE0ZO3HoFX0LBseNVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153865; c=relaxed/simple;
-	bh=3Az7+WRoRgQxE44r1MX8buhcWV382HDxqmNp/BUNf0M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XQ7RUorQVAc6DXa/eJeErjI8/FzY4+TyIZGuWOlP4AfMvbM2VVLEzHqzkW7cRfvCTd1roKtNo7Up3zWLbBKizQ2xCAzJ0PxenZCFj6m6hTMbpNVU/aleWMCZxo/nbAE4Xn1AyDnK3lzWhjjHVS/xVE1wgD9KLsJ3pXGc26CI5Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-addda47ebeaso1109181066b.1;
-        Tue, 17 Jun 2025 02:51:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153862; x=1750758662;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P4ScTAQg3qsgStvKKi5EXq7XLcp8WRSVfKIRIlUrPdQ=;
-        b=BRa2xVe1xZnMwFQLA8TTVsMTa8uoghI1oErIUhR7GOg7RsLZV15ukGFF1xNJ/jJ6iL
-         0qy/lJ5L4TzaPlVbYZKt7SPNy3LrHpozYgEqjGXDk/GSkWmXW2ybxZvoRfDcJSU3KtUf
-         xbSgJXmLCS/LQGM/CgXuS8OUxvAgWZ8sJuR68LxIKuCS7WJ6MCsq10LglRGq+VlpS7Lf
-         l8yLsiM6eJ5ICqDGHVt1H418hf0UCUsj/nF4+UO+MJRvfmZRUP2qqORuXz9w2oXyNc72
-         Dnr9CzUBwTZ2c+ZyZA+B08ok+oIgUb3RGJHFhgm6eKap72jcgcsT7CyZ0Ay24NXYFAD7
-         GxBA==
-X-Forwarded-Encrypted: i=1; AJvYcCWFTiGRSN2InThFjpM81C/amURGhWTwzhKXKXfiBjqBc61RAlwvEXJF8NAKkrABYevIqUvcEdXC9de/CVE=@vger.kernel.org, AJvYcCXwFqBlS0bfewAkefzJcgeN6HJiXbqIeWzrOuQa47Z6o8+2+qb7OQa+/8yGpUWgKbSkvO9C9f0/@vger.kernel.org
-X-Gm-Message-State: AOJu0YxE6ORF6Czv12EGh42WAQSPfP136PDQhGZjmc5kBU5DgBbxsIDN
-	Q3/k107E04MA3IQtXlAsQ1157JbZdvhyS6X75s0B7KOscrTTK+35Mycl
-X-Gm-Gg: ASbGncuZFTbD27TDqoZplMtvfTt+kz/VdjJsRB9fAh+z+05P8HnKf5Jp7QvvP14A9gA
-	K9uOwKWA0tZ41iDso6FQm7Jcs9AKkH7obYdU2zJz4KNPEBBsOJzmDiO9aEmLgCKPRMYP5cDWzGX
-	HraJc0Ed8zIa3Xjs4yeEBFFyFDhVTT9VUwUxy3vyzkmtL3p3dVGM8BAAlZoH3nd649w9FeEazXG
-	RcgWtdolnXpKsCmP7YmTQHEW0gocbYvC/7VhvEsE2WUjd1XspzS6XVydnWXV8qHGct/m/cWM+3s
-	C7LGrQpFvsDSZoKIE4o/hif5Twr1qlaCbIdrCHcMNp4Bz9Lw+6xC
-X-Google-Smtp-Source: AGHT+IGDmj7MBHIcc9gl9KEt2qeSTfQRtaqJPc6RvWT2tm0MOH6JhNGUifr4uadxP3Qq2QRgezaOpg==
-X-Received: by 2002:a17:907:7f89:b0:ad8:9c97:c2dc with SMTP id a640c23a62f3a-adfad357b6bmr1243524266b.15.1750153861600;
-        Tue, 17 Jun 2025 02:51:01 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:8::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88fe57dsm831256066b.73.2025.06.17.02.51.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:51:01 -0700 (PDT)
-Date: Tue, 17 Jun 2025 02:50:58 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 15/15] MAINTAINERS: add netlink_yml_parser.py to
- linux-doc
-Message-ID: <aFE6gn6h2g4P81/P@gmail.com>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
- <0db3a4962bfba8eca4a7e0404331ce1398701f5d.1750146719.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1750153880; c=relaxed/simple;
+	bh=19BWeT1l3twLQbgUh0QlC1Bw0/SsCaY+KVVp2+1hOP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hSvimTzhQWX1nfHbas2Ew8qmtRM8zDD172pxUSq0sp6Q+IQUX7WdPbd8nj6HhvjoFq1zV57DM25XSyeQVo6r8viACJ4+xZtEkdMlNylsimKUE9fANP0iQ78lkhvGUIdKHxIC9QqmEOhwa8MO4Vv+XQ5rnep/oo6RXFPcfPeX92M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2795D1596;
+	Tue, 17 Jun 2025 02:50:56 -0700 (PDT)
+Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB5683F58B;
+	Tue, 17 Jun 2025 02:51:13 -0700 (PDT)
+From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
+To: ryan.roberts@arm.com,
+	yang@os.amperecomputing.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	jean-philippe@linaro.org,
+	robin.murphy@arm.com,
+	joro@8bytes.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	james.morse@arm.com,
+	broonie@kernel.org,
+	ardb@kernel.org,
+	baohua@kernel.org,
+	suzuki.poulose@arm.com,
+	david@redhat.com,
+	jgg@ziepe.ca,
+	nicolinc@nvidia.com,
+	jsnitsel@redhat.com,
+	mshavit@google.com,
+	kevin.tian@intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
+Subject: [PATCH v7 0/4] Initial BBML2 support for contpte_convert()
+Date: Tue, 17 Jun 2025 09:51:00 +0000
+Message-ID: <20250617095104.6772-1-miko.lenczewski@arm.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0db3a4962bfba8eca4a7e0404331ce1398701f5d.1750146719.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 10:02:12AM +0200, Mauro Carvalho Chehab wrote:
-> The documentation build depends on the parsing code
-> at ynl_gen_rst.py. Ensure that changes to it will be c/c
-> to linux-doc ML and maintainers by adding an entry for
-> it. This way, if a change there would affect the build,
-> or the minimal version required for Python, doc developers
-> may know in advance.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
->
-Reviewed-by: Breno Leitao <leitao@debian.org>
+Hi All,
+
+This patch series extends the cpufeature framework to add support for
+easily matching against all early cpus, and builds on this to add initial
+support for eliding Break-Before-Make requirements on systems that support
+BBML2 and additionally guarantee to never raise a conflict abort.
+
+This support reorders and elides both a TLB invalidation and a DSB in
+contpte_convert(), when BBML2 is supported. This leads to a 12%
+improvement when executing a microbenchmark designed to force the
+pathological path where contpte_convert() gets called. This represents
+an 80% reduction in the cost of calling contpte_convert().
+
+We clarify both the correctness and performance benefits of this elision
+with respect to the relevant Arm ARM passages, via substantial comments
+in the contpte_convert() source.
+
+This series is based on v6.16-rc2 (e04c78d86a96).
+
+Notes
+======
+
+Patch 1 extends the cpufeature framework machinery as discussed in [1],
+to allows checking for the presence of a feature on all early boot cpus
+(and on all late cpus when they are brought online).
+
+Patch 2 implements an allow-list of cpus that support BBML2, but with
+the additional constraint of never causing TLB conflict aborts. We
+settled on this constraint because we will use the feature for kernel
+mappings in the future, for which we cannot handle conflict aborts
+safely.
+
+Patch 2 implements a MIDR check but does not implement a AA64_ID_MMFR2
+check, as the BBML2_NOABORT MIDR check is a strict superset of the feature
+register check (all platforms that pass the MIDR check will also pass the
+feature register check).
+
+Yang Shi has a series at [2] that aims to use BBML2 to enable splitting
+the linear map at runtime. This series partially overlaps with it to add
+the cpu feature. We believe this series is fully compatible with Yang's
+requirements and could go first.
+
+[1]:
+  https://lore.kernel.org/all/aCSHESk1DzShD4vt@arm.com/
+
+[2]:
+  https://lore.kernel.org/linux-arm-kernel/20250304222018.615808-1-yang@os.amperecomputing.com/
+
+Changelog
+=========
+
+v7:
+  - fix up some minor spelling and formatting nits
+  - integrate cpufeature framework patch to each bbml2 detection
+  - avoid making feature register check, rely on MIDR check
+  - rebase onto v6.16-rc2
+
+v6:
+  - https://lore.kernel.org/all/20250428153514.55772-2-miko.lenczewski@arm.com/
+  - clarify correctness and performance of elision of __tlb_flush_range()
+  - rebase onto v6.15-rc3
+
+v5:
+  - https://lore.kernel.org/all/20250325093625.55184-1-miko.lenczewski@arm.com/
+  - fixup coding style nits
+  - document motivation for kernel commandline parameter
+
+v4:
+  - https://lore.kernel.org/all/20250319150533.37440-2-miko.lenczewski@arm.com/
+  - rebase onto v6.14-rc5
+  - switch from arm64 sw feature override to hw feature override
+  - reintroduce has_cpuid_feature() check in addition to MIDR check
+
+v3:
+  - https://lore.kernel.org/all/20250313104111.24196-2-miko.lenczewski@arm.com/
+  - rebase onto v6.14-rc4
+  - add arm64.nobbml2 commandline override
+  - squash "delay tlbi" and "elide tlbi" patches
+
+v2:
+  - https://lore.kernel.org/all/20250228182403.6269-2-miko.lenczewski@arm.com/
+  - fix buggy MIDR check to properly account for all boot+late cpus
+  - add smmu bbml2 feature check
+
+v1:
+  - https://lore.kernel.org/all/20250219143837.44277-3-miko.lenczewski@arm.com/
+  - rebase onto v6.14-rc3
+  - remove kvm bugfix patches from series
+  - strip out conflict abort handler code
+  - switch from blocklist to allowlist of bmml2+noabort implementations
+  - remove has_cpuid_feature() in favour of MIDR check
+
+rfc-v1:
+  - https://lore.kernel.org/all/20241211154611.40395-1-miko.lenczewski@arm.com/
+  - https://lore.kernel.org/all/20241211160218.41404-1-miko.lenczewski@arm.com/
+
+Catalin Marinas (1):
+  arm64: cpufeature: Introduce MATCH_ALL_EARLY_CPUS capability type
+
+Mikołaj Lenczewski (3):
+  arm64: Add BBM Level 2 cpu feature
+  iommu/arm: Add BBM Level 2 smmu feature
+  arm64/mm: Elide tlbi in contpte_convert() under BBML2
+
+ arch/arm64/include/asm/cpufeature.h           |  28 ++++
+ arch/arm64/kernel/cpufeature.c                | 100 +++++++++++--
+ arch/arm64/mm/contpte.c                       | 139 +++++++++++++++++-
+ arch/arm64/tools/cpucaps                      |   1 +
+ .../iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c   |   3 +
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c   |   3 +
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |   2 +
+ 7 files changed, 264 insertions(+), 12 deletions(-)
+
+-- 
+2.49.0
+
