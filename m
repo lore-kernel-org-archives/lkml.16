@@ -1,63 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70412DE1F9;
-	Tue, 17 Jun 2025 14:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C70A2EB5BF
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:14:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169679; cv=none; b=EJKGie7PaIeuhUH6FMP3sK8AA6ttBD2hdDLmfqfICUPaBWnjflHvIQUWe7KDIMEyX3UHGipKANPmHhorYEArphZgaSHGFwXoQEQZBnUV5MgODAwPJ41Di9zJiANCR+rIq7cPXAmwavogHyc65NLMSyHVbisnTtzd1OnRkOzdZFc=
+	t=1750169690; cv=none; b=SL/sa0hGNPP4sUKyPlloi1aAhxzHUOLwaEOUXcvB/QPJcLdgUyxT+JoteOdIvTs/TOjyocKpPemSX/KSGkoJrSMPscZefVAi+XNJ8VRfAx0hDSNo5bvvY9OIUlQwxAKKCU+2P+KjOBnH5gJ17It6+CUr0pE9/ickVFkqECqooEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169679; c=relaxed/simple;
-	bh=pNelIk0pW9OO+Z6yvti9NhYvMQpkCMlkT9Y/4jcTlFY=;
+	s=arc-20240116; t=1750169690; c=relaxed/simple;
+	bh=E34gYDo/+Cv1g8Ji683ccYFpCaR61dzNTOuViZtKEcM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozpPY22oAR3P5AH4OThQhG5MkXK/Zb4+Z0HaRukMET8VvCHgTyPvtCX7sw0Fa+817iA1cVkZflNz4vvBGTIfjcSG7gGe9eh/ifHNMsDwfYTq+0P4iIk2zYWYAxTg4OUzAipyqCibAInj1piz7F0QGv49iSTWAFWE9y5/68dzu9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=drWdpzRp; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X5W+KwE/HuVmi1B687EklkEdNw9ZHuHyMHlbLgosxzkuLowaoLT1Bfkpz2RVqgAJZ5I/Xn9a2FaOch30UL5/6NYohb2F36HO/hfuwIKzoPLb+YUZ+QJ63ZtOT+C40nBm7HviCTHchY2Vpaqto3qRFXBsSAS2uLmQWQtrQgm9ePk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C9+uYutB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="drWdpzRp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750169678; x=1781705678;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pNelIk0pW9OO+Z6yvti9NhYvMQpkCMlkT9Y/4jcTlFY=;
-  b=drWdpzRpce3j/CwB4nALs7wn2l8yhI9fa0ul//NZJR5ci1fORKDtElbh
-   PnwiTVCMi9Qr7VuInoCR8z00Ea+ONmjtLRv051nN+t64ZUkwOoAt1pAsr
-   ZW4Obzy6jKei21mGGRZMxhDP8X4ho2oQwqH/gkSwvQNS73XAh/2dn+JLQ
-   GlQdSmAVlhwxFnj2H0k5DSvU8L9wC6pAIS786tDcl7wDim9HEGXUmYM6+
-   srjKLix9RZwjB4X4rbWUARleA/OvV4SUrCrdyvkTBQGlh0rsSOmjfh7ci
-   SxsTnVm+ngDG1MVjXM9R8O+x7YjekT2ZGAYhLbsrSwWLYU5TQkNwOuywV
-   g==;
-X-CSE-ConnectionGUID: hKvsdmyzRE20UTwXe/v/hw==
-X-CSE-MsgGUID: poCgf+ifRQmsx7Q8A9OcAg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="77751066"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="77751066"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:14:37 -0700
-X-CSE-ConnectionGUID: r4qahXrTQuW+V0XPog4gPA==
-X-CSE-MsgGUID: JqKykOEgRcGfaGCDTBzSPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="149687143"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:14:33 -0700
-Date: Tue, 17 Jun 2025 16:12:30 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Jijie Shao <shaojijie@huawei.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
-	shenjian15@huawei.com, wangpeiyang1@huawei.com,
-	liuyonglong@huawei.com, chenhao418@huawei.com,
-	jonathan.cameron@huawei.com, shameerali.kolothum.thodi@huawei.com,
-	salil.mehta@huawei.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michal.swiatkowski@linux.intel.com
-Subject: Re: [PATCH V2 net-next 3/8] net: hns3: use hns3_get_ops() helper to
- reduce the unnecessary middle layer conversion
-Message-ID: <aFF3zi+6tL1hr4UR@mev-dev.igk.intel.com>
-References: <20250617010255.1183069-1-shaojijie@huawei.com>
- <20250617010255.1183069-4-shaojijie@huawei.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C9+uYutB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=yJP0GPyMKswwkaA1sdEsRQYeektr28qBzPz6H5BQJ98=; b=C9+uYutBKalrTGmUZijIbg8NAD
+	QRCJan8vuyS1Kc3esAYZg7nZX9wEFsM7QoAZSimDwuR2aX3v5uYMLOSeJUslAXF4I9vSi5nCGThnu
+	xGVI4davWmEdbId93nms4ZYLxRBCswq5kOWfJediW7CvBJiIz5kjyWuDbrPPItoVHuVpqz5ei4Ry9
+	HSlMYHS5S0x34KLMqbCcwQzaJA2+AGhhdGDjv1X3LZEe969pdkGDDT/wkFeGdULFQnbyM5rWoW6em
+	R6mneQPxqV6rEBe53xNfwNI57Jws7ru1dutsziGhwKuMjkmn00l1MWZ4yppIvUXrQOxc80ZlK//wK
+	yoFSuUzw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRX5C-0000000HF1b-2N99;
+	Tue, 17 Jun 2025 14:14:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5FA7630BDAD; Tue, 17 Jun 2025 16:14:37 +0200 (CEST)
+Date: Tue, 17 Jun 2025 16:14:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Juri Lelli <juri.lelli@redhat.com>
+Cc: Kuyo Chang <kuyo.chang@mediatek.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	jstultz <jstultz@google.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/1] sched/deadline: Fix fair_server runtime calculation
+ formula
+Message-ID: <20250617141437.GW1613376@noisy.programming.kicks-ass.net>
+References: <20250614020524.631521-1-kuyo.chang@mediatek.com>
+ <20250617085558.GN1613376@noisy.programming.kicks-ass.net>
+ <aFFgi_9yxLN-auBE@jlelli-thinkpadt14gen4.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,34 +60,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617010255.1183069-4-shaojijie@huawei.com>
+In-Reply-To: <aFFgi_9yxLN-auBE@jlelli-thinkpadt14gen4.remote.csb>
 
-On Tue, Jun 17, 2025 at 09:02:50AM +0800, Jijie Shao wrote:
-> There are too many indirection layers in the HNS3 driver code,
-> This issue was previously discussed with the maintainer,
-> who suggested adding a helper function to fix the issue.
-> In fact, the hns3_get_ops() helper is already defined
-> and can fix this issue.
+On Tue, Jun 17, 2025 at 02:33:15PM +0200, Juri Lelli wrote:
+> On 17/06/25 10:55, Peter Zijlstra wrote:
+> > On Sat, Jun 14, 2025 at 10:04:55AM +0800, Kuyo Chang wrote:
+> > > From: kuyo chang <kuyo.chang@mediatek.com>
+> > > 
+> > > [Symptom]
+> > > The calculation formula for fair_server runtime is based on
+> > > Frequency/CPU scale-invariance.
+> > > This will cause excessive RT latency (expect absolute time).
+> > > 
+> > > [Analysis]
+> > > Consider the following case under a Big.LITTLE architecture:
+> > > 
+> > > Assume the runtime is : 50,000,000 ns, and FIE/CIE as below
+> > > FIE: 100
+> > > CIE:50
+> > > First by FIE, the runtime is scaled to 50,000,000 * 100 >> 10 = 4,882,812
+> > > Then by CIE, it is further scaled to 4,882,812 * 50 >> 10 = 238,418.
+> > 
+> > What's this FIE/CIE stuff? Is that some ARM lingo?
+> > 
+> > 
+> > > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> > > index ad45a8fea245..8bfa846cf0dc 100644
+> > > --- a/kernel/sched/deadline.c
+> > > +++ b/kernel/sched/deadline.c
+> > > @@ -1504,7 +1504,10 @@ static void update_curr_dl_se(struct rq *rq, struct sched_dl_entity *dl_se, s64
+> > >  	if (dl_entity_is_special(dl_se))
+> > >  		return;
+> > >  
+> > > -	scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
+> > > +	if (dl_se == &rq->fair_server)
+> > > +		scaled_delta_exec = delta_exec;
+> > > +	else
+> > > +		scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
+> > 
+> > Juri, the point it a bit moot atm, but is this something specific to the
+> > fair_server in particular, or all servers?
 > 
-> This patch uses hns3_get_ops() helper to reduce the unnecessary
-> middle layer conversion. Apply it to the whole HNS3 driver.
-> The former discusstion can be checked from the link.
-
-Thanks for rewording the commit message.
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
+> I believe for other servers (i.e., rt-server work from Yuri and Luca) it
+> might be useful to have it configurable somehow. I actually had a recent
+> discussion about this concerning single task entities (traditional
+> deadline servers) for which as well there might be cases where one might
+> want not to scale considering frequency and capacity.
 > 
-> Link: https://patchwork.kernel.org/project/netdevbpf/patch/20230310081404.947-1-lanhao@huawei.com/
+> > Because if this is something all servers require then the above is
+> > ofcourse wrong.
+> 
+> To me it looks like we want this (no scaling) for fair_server (and
+> possibly scx_server?) as for them we are only looking into a 'fixed
+> time' type of isolation. Full fledged servers (hierarchical scheduling)
+> maybe have it configurable, or enabled by default as a start (as we have
+> it today).
 
-I hope you will add getting hns3 device from netdev too in the future
-(as this is main point in the link).
+Right. Then we should write the above like:
 
-> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-> ---
-> ChangeLog:
-> v1 -> v2:
->   - Change commit message and title, suggested by Michal Swiatkowski.
->   v1: https://lore.kernel.org/all/20250612021317.1487943-1-shaojijie@huawei.com/
-> ---
+	scaled_delta_exec = delta_exec;
+	if (!dl_se->dl_server)
+		scaled_delta_exec = dl_scaled_delta_exec(rq, dl_se, delta_exec);
 
-[...]
+and let any later server users add bits on if they want more options.
