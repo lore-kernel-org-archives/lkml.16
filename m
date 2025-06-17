@@ -1,143 +1,156 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F97B237186
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:57:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48316282EE
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750136263; cv=none; b=MpMwihWN719D1H7gJg4thMTbdrjML90CHm7Qzzss151b9NUNZR7dQls90Wevaa+fT4cGw5aiYa/m7fMGMINrIu8Vj47o2nGEOhsFSez6oJPWaQSdWxl+AVoC3KBWxc5iIjD4PcwtyLQ8WkkRA4ZKFlojBIH4wq8IiGADc1RdeWI=
+	t=1750136342; cv=none; b=a3iTvvzzc5nggNK5xePK5z+qmI1EeoLUtbC5iwIPxzVo57O/Vfs4QBwkVdmHCxsZOov/W007gjHk+8J3An7+MrG3zOHF222plwm0x8SMlYNPEfGVOFtS3z8sVRyM9S6PPA2uHgwC48fKIQCYVSTNIEQqlidVyU+XGNjsFtoRAb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750136263; c=relaxed/simple;
-	bh=BZYBtu3U7DmGbJSr/+Gu0BBaUmqGnffbGRgchTXcodI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gn0Y2Xv8crl2GVcL6Ee+aDqH8fV1s6+OIAI0HYSuW22MMp+23X4wjne9DJkY/Plwjs5gZPo5qexoZEsGFT0RT6ZDnlsim5ij5kjuOKtE7sGZz2J0QbqoqyIbvgS4ITL07ofndUE/jDFBPAZrL5vZWkqinh9YGjg+7CF17YiXrm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Nnj3aTky; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750136342; c=relaxed/simple;
+	bh=oC0N+8iJdsFa6t85idz8kAO5kH1GbcyGScpKZjQ9qts=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GlRw3a+1g5kxjiCVay2dmO/4DMxg/PQyzcLzkowptCicI2A34CvSuYYMFAqLScxzqov7O3Cgka0snXMoLhubhZVXF/ah+FYmzLfFxyuFlG++oL3ATpBhe2FIV1ip6OtaExji+hjr/bpStd+lrRB7P5As6tfQ5lTPI3KG7Jq/lcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lsKfXB5K; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Nnj3aTky"
-Message-ID: <6fe09fdd-ff38-42cc-b101-520204213f82@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750136259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Hil9x3SFzq0mA+kmRpahAqJWFan5rxRExJSxI+VuBQQ=;
-	b=Nnj3aTkyKFWn5UoeLEZXeEpKoUqzrDCgq+nvpHkVZfecwktvJRTRjwxzH2dL7SKT60cOMj
-	OWHl1w7S+HvNNnEzayFg1BdLF5iuDIJv8VdTZTl+utRc6X9uguWdOu7QabZ9JQmSvzzT1a
-	sjUn9TFaYj4zYj+sjWoUoirA4BNenAY=
-Date: Tue, 17 Jun 2025 12:57:29 +0800
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lsKfXB5K"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b544e7b4so3907573e87.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:59:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1750136338; x=1750741138; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TabJOmc9YbjjVWqBpFHGZqmoipuAKz7Dqc3oFlaWkHM=;
+        b=lsKfXB5KK6bN7fKrVDgcmmEZXIz3o0vvm6lnUOBMaV4wtMpczawzJEhQWQNw3pKs6A
+         iVhiaJrbj/hUqmMeNkkBMlh5+XHkNg0YyFdd44R2hlPr+BIcglHniIIncAc2Tt11cATT
+         I4XkRq/ayTQqgq5HdXZSYmCaFGEipFCq7lpVlf4UC7W25p9CkhAzCaipxlJryBg6jM1W
+         at1yph0HkcebBR6tMPVgk70IwKEYhVNZUXNTykLGS0ygJ7XUYnsBcQg0Y/H0UC3WHHTF
+         uwMmFfnpaWbxf8iJZs+e4woYHk3K1KulIiYX+KTCJERGV9ZxizY7DIawMIkfVYoOhrP3
+         Qe4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750136338; x=1750741138;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TabJOmc9YbjjVWqBpFHGZqmoipuAKz7Dqc3oFlaWkHM=;
+        b=ZY5W6hFpHJRyfcPzO4Ie53jIm/WRpKqNjMdv6lKlOf7M/UujMp/hPdklBRPr/OVozD
+         +dpoVovawfnzCvPtPVPuzpCrb3zU0gagnmfqPTN13hMw3vXzIJFv83ZyREPMM6v+pteF
+         YVjV/0hQl5WRCct+efCOBRtkcGLQs/lMR8sI2t9Eeaeq3o4S3mjfqX3SF49J3EuhWMxj
+         5OoVyRrT1uKWsOKL5QBfFohm8LxGq3FB5aEvYaaj4yjBeB1YuOPBSA2Z6x5Kd6QVrlkF
+         X5grnb8h1EuAPezs0vxH/oXoZSSYcOl/4NNv6lL4Yx0HbXgGB44FEp9VNDnA24Bjj70e
+         60rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzf5eIeEvcbSIs9RfcvY1P5GHhDn58GCYf881YoGp6Igp5imDo8Ngv0VnYmJHgg+kUUcJZ3M1u3xuA7Fo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKKE8LNaScn2Zij0/txxxg65olnEbsclYaYfayyX9GbxrO5Xbu
+	zZ1H/7iyG32gtFJwxj6QZz3Li9rAnVr5ZAc9Yg3oMh4S8JkmIMvSixcXO1BFUjohZCjNbspd9+Q
+	Ty/ozkMvUI6hglTvL6ixE9Dosi+oi2ybpvrLX5H+urA==
+X-Gm-Gg: ASbGncvZLKTqpKvbf/VUZj6b7uKMcQYUcRYooknzRPyQCqB11ZZ6Vufwt0TGoLnbDZl
+	tPgInZvhCV5yio93gQDRfrTDBmmutbV1usi3OmC7+HGPMWG/FitSdojvgXXmHrabUaQ/8kFhJK8
+	QDV4QSkrzHgYlO9QiKTHdVGhreDKyz+yUYTYh3OwTaA/7U
+X-Google-Smtp-Source: AGHT+IFH8UXFsAgXaqMjPDngF+lr7LJYJmQ6Doqaj2U7P69oabZRjWW7AlVBQ0Razbz6dxJNJnlmZobYZZyydWbrHDc=
+X-Received: by 2002:a05:6512:110d:b0:553:2450:5895 with SMTP id
+ 2adb3069b0e04-553b6e71411mr3168533e87.4.1750136338338; Mon, 16 Jun 2025
+ 21:58:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/1] mm/madvise: initialize prev pointer in
- madvise_walk_vmas
-Content-Language: en-US
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, Liam.Howlett@oracle.com,
- vbabka@suse.cz, jannh@google.com, lorenzo.stoakes@oracle.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Lance Yang <ioworker0@gmail.com>
-References: <20250617020544.57305-1-lance.yang@linux.dev>
- <CAGsJ_4ySwMuKGYxywY+RH_FkNvjsThhvFQr+d1++KykOqjxarg@mail.gmail.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <CAGsJ_4ySwMuKGYxywY+RH_FkNvjsThhvFQr+d1++KykOqjxarg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250613065743.737102-1-apatel@ventanamicro.com>
+ <20250613065743.737102-7-apatel@ventanamicro.com> <422c5677-48d1-41be-b128-595829c27167@linux.dev>
+In-Reply-To: <422c5677-48d1-41be-b128-595829c27167@linux.dev>
+From: Anup Patel <apatel@ventanamicro.com>
+Date: Tue, 17 Jun 2025 10:28:45 +0530
+X-Gm-Features: AX0GCFvh2GOQL0PlDDoaK4dE-NJWM8cyM_PZVHGF4_9faoB70s17Wy1wHH6F0Fs
+Message-ID: <CAK9=C2UQAKk3kVswTzKRG43Ds3T3etfK-45Y+Uv2g3wn+Qg1fg@mail.gmail.com>
+Subject: Re: [PATCH v2 06/12] RISC-V: KVM: Implement kvm_arch_flush_remote_tlbs_range()
+To: Atish Patra <atish.patra@linux.dev>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
+	Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sat, Jun 14, 2025 at 6:14=E2=80=AFAM Atish Patra <atish.patra@linux.dev>=
+ wrote:
+>
+>
+> On 6/12/25 11:57 PM, Anup Patel wrote:
+> > The kvm_arch_flush_remote_tlbs_range() expected by KVM core can be
+> > easily implemented for RISC-V using kvm_riscv_hfence_gvma_vmid_gpa()
+> > hence provide it.
+> >
+> > Also with kvm_arch_flush_remote_tlbs_range() available for RISC-V, the
+> > mmu_wp_memory_region() can happily use kvm_flush_remote_tlbs_memslot()
+> > instead of kvm_flush_remote_tlbs().
+> >
+> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> > ---
+> >   arch/riscv/include/asm/kvm_host.h | 2 ++
+> >   arch/riscv/kvm/mmu.c              | 2 +-
+> >   arch/riscv/kvm/tlb.c              | 8 ++++++++
+> >   3 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm=
+/kvm_host.h
+> > index ff1f76d6f177..6162575e2177 100644
+> > --- a/arch/riscv/include/asm/kvm_host.h
+> > +++ b/arch/riscv/include/asm/kvm_host.h
+> > @@ -43,6 +43,8 @@
+> >       KVM_ARCH_REQ_FLAGS(5, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+> >   #define KVM_REQ_STEAL_UPDATE                KVM_ARCH_REQ(6)
+> >
+> > +#define __KVM_HAVE_ARCH_FLUSH_REMOTE_TLBS_RANGE
+> > +
+> >   #define KVM_HEDELEG_DEFAULT         (BIT(EXC_INST_MISALIGNED) | \
+> >                                        BIT(EXC_BREAKPOINT)      | \
+> >                                        BIT(EXC_SYSCALL)         | \
+> > diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+> > index 29f1bd853a66..a5387927a1c1 100644
+> > --- a/arch/riscv/kvm/mmu.c
+> > +++ b/arch/riscv/kvm/mmu.c
+> > @@ -344,7 +344,7 @@ static void gstage_wp_memory_region(struct kvm *kvm=
+, int slot)
+> >       spin_lock(&kvm->mmu_lock);
+> >       gstage_wp_range(kvm, start, end);
+> >       spin_unlock(&kvm->mmu_lock);
+> > -     kvm_flush_remote_tlbs(kvm);
+> > +     kvm_flush_remote_tlbs_memslot(kvm, memslot);
+> >   }
+> >
+> >   int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
+> > diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+> > index da98ca801d31..f46a27658c2e 100644
+> > --- a/arch/riscv/kvm/tlb.c
+> > +++ b/arch/riscv/kvm/tlb.c
+> > @@ -403,3 +403,11 @@ void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
+> >       make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE_VVMA_ALL,
+> >                           KVM_REQ_HFENCE_VVMA_ALL, NULL);
+> >   }
+> > +
+> > +int kvm_arch_flush_remote_tlbs_range(struct kvm *kvm, gfn_t gfn, u64 n=
+r_pages)
+> > +{
+> > +     kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0,
+> > +                                    gfn << PAGE_SHIFT, nr_pages << PAG=
+E_SHIFT,
+> > +                                    PAGE_SHIFT);
+> > +     return 0;
+> > +}
+>
+> LGTM. However, I noticed that kvm_flush_remote_tlbs_range doesn't
+> increment remote_tlb_flush_requests/remote_tlb_flush stat counter.
+>
+> So we would be losing those stats here. Do you know if there is a
+> specific reason behind not supporting the stat counters in the *tlbs_rang=
+e
+> function ?
 
+Looks like this was missed out in generic kvm_flush_remote_tlbs_range().
 
-On 2025/6/17 10:24, Barry Song wrote:
-> On Tue, Jun 17, 2025 at 2:05 PM Lance Yang <ioworker0@gmail.com> wrote:
->>
->> From: Lance Yang <lance.yang@linux.dev>
->>
->> The prev pointer was uninitialized, which could lead to undefined behavior
->> where its address is taken and passed to the visit() callback without being
->> assigned a value.
->>
->> Initializing it to NULL makes the code safer and prevents potential bugs
->> if a future callback function attempts to read from it.
-> 
-> Is there any read-before-write case here? I haven't found one.
-
-
-It appears that the following is a call chain showing the read-before-write
-of prev:
-
--> madvise_vma_anon_name(..., struct vm_area_struct **prev, ...)
-         Receives the address of madvise_walk_vmas's prev.
-         Passes this pointer directly to madvise_update_vma.
-         Note that prev is not updated before visit() is called
-         if !(start > vma->vm_start) in the slow path.
-
-         -> madvise_update_vma(..., struct vm_area_struct **prev, ...)
-                 It calls the next function with *prev.
-
-                 -> vma_modify_flags_name(..., *prev, ...)
-                         Stores the value of madvise_walk_vmas's prev in 
-vmg.prev
-                         using the VMG_VMA_STATE macro.
-
-                         -> vma_modify(struct vma_merge_struct *vmg)
-                                 Receives the vmg struct.
-                                 Passes vmg to vma_merge_existing_range.
-
-                                 -> vma_merge_existing_range(struct 
-vma_merge_struct *vmg)
-                                         Retrieves the value: struct 
-vm_area_struct *prev = vmg->prev;
-                                         The value is now used in a 
-conditional check:
-                                         VM_WARN_ON_VMG(prev && start <= 
-prev->vm_start, vmg)
-                                         If prev was uninitialized, this 
-would cause a crash.
-
-Thanks,
-Lance
-
-> 
-> It also looks like we're assuming that *prev == NULL implies
-> a specific condition:
-> 
-> *prev = NULL;   /* tell sys_madvise we drop mmap_lock */
-> 
-> *prev = NULL; /* mmap_lock has been dropped, prev is stale */
-> 
->>
->> Signed-off-by: Lance Yang <lance.yang@linux.dev>
->> ---
->>   mm/madvise.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/mm/madvise.c b/mm/madvise.c
->> index 267d8e4adf31..c87325000303 100644
->> --- a/mm/madvise.c
->> +++ b/mm/madvise.c
->> @@ -1536,10 +1536,10 @@ int madvise_walk_vmas(struct mm_struct *mm, unsigned long start,
->>                                     struct vm_area_struct **prev, unsigned long start,
->>                                     unsigned long end, void *arg))
->>   {
->> +       struct vm_area_struct *prev = NULL;
->>          struct vm_area_struct *vma;
->> -       struct vm_area_struct *prev;
->> -       unsigned long tmp;
->>          int unmapped_error = 0;
->> +       unsigned long tmp;
->>          int error;
->>
->>          /*
->> --
->> 2.49.0
->>
-> 
-> Thanks
-> Barry
-
+Regards,
+Anup
