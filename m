@@ -1,68 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 985462C08CD;
-	Tue, 17 Jun 2025 09:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8422B2E92BA;
+	Tue, 17 Jun 2025 09:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153854; cv=none; b=qV6ZPk5/lPuIJv56TkmzKXocOVkUOEFMOAm+H46gnFJtmwDqqkbtL5EYxSBuLwJB6LJrGUVMIr+vfdcZgQsA8rso4/BvLCkZ7L9dUODIx8H8Q+B70c1Prd3JYH04MH65RvMX7mWoaT1Zxl4PsOAuo5yXhEJ1HcKpmvLSaST2RKQ=
+	t=1750153865; cv=none; b=Xnj/XV9Upn9ET/78gm5DtlP/1ILP3syqkQ7z5KL50PKHxMNXYK+owSLKfOthsH6m5R1m0H8+LzMvhYN4mjIK1u/1kEuYqdlwqFIj2awTidotWsEOHy+meXd+nIXpMwBrxTEZEK0DMumZx/pHY8sRHSWHaS+R8b4t4XnrK3I14gc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153854; c=relaxed/simple;
-	bh=q1yjPxJXKLdryIt38GRRT/giXd0/MkzlEEaOqBtmCAg=;
+	s=arc-20240116; t=1750153865; c=relaxed/simple;
+	bh=3Az7+WRoRgQxE44r1MX8buhcWV382HDxqmNp/BUNf0M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GuZqa+ZbH20TR8DXfQxe0PwiLHzakCSj62P9971wqO4OFpg+XYHD1oPy+r89WA4xPx71mTOhUnX1x/gxx1Fp3+mrh/qcWa8/rFpi0vLcgoTZBRecs4tEsSz27Y2aAa6Z5s7s1LMfjGYswqN3xn/qGGS7LksvwqYLWggVCxfSasA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SeHok1Cz; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SeHok1Cz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750153852; x=1781689852;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q1yjPxJXKLdryIt38GRRT/giXd0/MkzlEEaOqBtmCAg=;
-  b=SeHok1CzuYQlK6THjPpPyuMKP0QJwguQszNdazc4l3+t1F5MvXRpXUMC
-   ND5pLzv6GHntDiuekigsphJ0By0pr1SPy2xzaDbcI0IXEIV0laj73pQpN
-   yXfEpOhTBRSRTLgUxjBagp4kncpKGCwQqmc0QXsbSHQXnmbVB/jUhFU/h
-   JirJ+wxcCohucfhrA35it5yTYJCDa4f9ti+q8bvospp7+8WZTCin9gilz
-   MBM/P09ZEkffvbWefc0ZFZyfsrhZO3DJocziLFfxz2ZilTUm68f+PdsbS
-   zqSJP1Rx+xuG/f3Pq0FMuyw3lpMsrfjY4ZNbezouiIIMxq7VAhB9g6Loi
-   g==;
-X-CSE-ConnectionGUID: j73jUkNwS/GH5+ORKq6Cfg==
-X-CSE-MsgGUID: YUHB0l3YTveHyuZ4nf3qYA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52302917"
-X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="52302917"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 02:50:51 -0700
-X-CSE-ConnectionGUID: dF+nS/xTT0KJDY+DwP/xxA==
-X-CSE-MsgGUID: ZvDK7tNjShe+8GtAL1GJVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="153923847"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa004.fm.intel.com with SMTP; 17 Jun 2025 02:50:46 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 17 Jun 2025 12:50:46 +0300
-Date: Tue, 17 Jun 2025 12:50:46 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Andrei Kuchynski <akuchynski@chromium.org>
-Cc: Dmitry Baryshkov <lumag@kernel.org>,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Pooja Katiyar <pooja.katiyar@intel.com>,
-	Badhri Jagan Sridharan <badhri@google.com>,
-	RD Babiera <rdbabiera@google.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
-Subject: Re: [PATCH 04/10] usb: typec: Expose alternate mode priorities via
- sysfs
-Message-ID: <aFE6dnxet4_sm8b1@kuha.fi.intel.com>
-References: <20250616133147.1835939-1-akuchynski@chromium.org>
- <20250616133147.1835939-5-akuchynski@chromium.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=XQ7RUorQVAc6DXa/eJeErjI8/FzY4+TyIZGuWOlP4AfMvbM2VVLEzHqzkW7cRfvCTd1roKtNo7Up3zWLbBKizQ2xCAzJ0PxenZCFj6m6hTMbpNVU/aleWMCZxo/nbAE4Xn1AyDnK3lzWhjjHVS/xVE1wgD9KLsJ3pXGc26CI5Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-addda47ebeaso1109181066b.1;
+        Tue, 17 Jun 2025 02:51:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750153862; x=1750758662;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P4ScTAQg3qsgStvKKi5EXq7XLcp8WRSVfKIRIlUrPdQ=;
+        b=BRa2xVe1xZnMwFQLA8TTVsMTa8uoghI1oErIUhR7GOg7RsLZV15ukGFF1xNJ/jJ6iL
+         0qy/lJ5L4TzaPlVbYZKt7SPNy3LrHpozYgEqjGXDk/GSkWmXW2ybxZvoRfDcJSU3KtUf
+         xbSgJXmLCS/LQGM/CgXuS8OUxvAgWZ8sJuR68LxIKuCS7WJ6MCsq10LglRGq+VlpS7Lf
+         l8yLsiM6eJ5ICqDGHVt1H418hf0UCUsj/nF4+UO+MJRvfmZRUP2qqORuXz9w2oXyNc72
+         Dnr9CzUBwTZ2c+ZyZA+B08ok+oIgUb3RGJHFhgm6eKap72jcgcsT7CyZ0Ay24NXYFAD7
+         GxBA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFTiGRSN2InThFjpM81C/amURGhWTwzhKXKXfiBjqBc61RAlwvEXJF8NAKkrABYevIqUvcEdXC9de/CVE=@vger.kernel.org, AJvYcCXwFqBlS0bfewAkefzJcgeN6HJiXbqIeWzrOuQa47Z6o8+2+qb7OQa+/8yGpUWgKbSkvO9C9f0/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE6ORF6Czv12EGh42WAQSPfP136PDQhGZjmc5kBU5DgBbxsIDN
+	Q3/k107E04MA3IQtXlAsQ1157JbZdvhyS6X75s0B7KOscrTTK+35Mycl
+X-Gm-Gg: ASbGncuZFTbD27TDqoZplMtvfTt+kz/VdjJsRB9fAh+z+05P8HnKf5Jp7QvvP14A9gA
+	K9uOwKWA0tZ41iDso6FQm7Jcs9AKkH7obYdU2zJz4KNPEBBsOJzmDiO9aEmLgCKPRMYP5cDWzGX
+	HraJc0Ed8zIa3Xjs4yeEBFFyFDhVTT9VUwUxy3vyzkmtL3p3dVGM8BAAlZoH3nd649w9FeEazXG
+	RcgWtdolnXpKsCmP7YmTQHEW0gocbYvC/7VhvEsE2WUjd1XspzS6XVydnWXV8qHGct/m/cWM+3s
+	C7LGrQpFvsDSZoKIE4o/hif5Twr1qlaCbIdrCHcMNp4Bz9Lw+6xC
+X-Google-Smtp-Source: AGHT+IGDmj7MBHIcc9gl9KEt2qeSTfQRtaqJPc6RvWT2tm0MOH6JhNGUifr4uadxP3Qq2QRgezaOpg==
+X-Received: by 2002:a17:907:7f89:b0:ad8:9c97:c2dc with SMTP id a640c23a62f3a-adfad357b6bmr1243524266b.15.1750153861600;
+        Tue, 17 Jun 2025 02:51:01 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:8::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88fe57dsm831256066b.73.2025.06.17.02.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 02:51:01 -0700 (PDT)
+Date: Tue, 17 Jun 2025 02:50:58 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Ignacio Encinas Rubio <ignacio@iencinas.com>,
+	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
+	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
+	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: Re: [PATCH v5 15/15] MAINTAINERS: add netlink_yml_parser.py to
+ linux-doc
+Message-ID: <aFE6gn6h2g4P81/P@gmail.com>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+ <0db3a4962bfba8eca4a7e0404331ce1398701f5d.1750146719.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,68 +71,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250616133147.1835939-5-akuchynski@chromium.org>
+In-Reply-To: <0db3a4962bfba8eca4a7e0404331ce1398701f5d.1750146719.git.mchehab+huawei@kernel.org>
 
-On Mon, Jun 16, 2025 at 01:31:41PM +0000, Andrei Kuchynski wrote:
-> This sysfs attribute specifies the preferred order for enabling
-> DisplayPort alt-mode, Thunderbolt alt-mode, and USB4 mode.
+On Tue, Jun 17, 2025 at 10:02:12AM +0200, Mauro Carvalho Chehab wrote:
+> The documentation build depends on the parsing code
+> at ynl_gen_rst.py. Ensure that changes to it will be c/c
+> to linux-doc ML and maintainers by adding an entry for
+> it. This way, if a change there would affect the build,
+> or the minimal version required for Python, doc developers
+> may know in advance.
 > 
-> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
-> ---
->  Documentation/ABI/testing/sysfs-class-typec | 17 ++++
->  drivers/usb/typec/Makefile                  |  2 +-
->  drivers/usb/typec/class.c                   | 26 ++++++
->  drivers/usb/typec/class.h                   |  2 +
->  drivers/usb/typec/mode_selection.c          | 93 +++++++++++++++++++++
->  drivers/usb/typec/mode_selection.h          |  5 ++
->  include/linux/usb/typec_altmode.h           |  7 ++
->  7 files changed, 151 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/usb/typec/mode_selection.c
->  create mode 100644 drivers/usb/typec/mode_selection.h
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Documentation/ABI/testing/sysfs-class-typec
-> index 38e101c17a00..46eee82042ab 100644
-> --- a/Documentation/ABI/testing/sysfs-class-typec
-> +++ b/Documentation/ABI/testing/sysfs-class-typec
-> @@ -162,6 +162,23 @@ Description:	Lists the supported USB Modes. The default USB mode that is used
->  		- usb3 (USB 3.2)
->  		- usb4 (USB4)
->  
-> +What:		/sys/class/typec/<port>/altmode_priorities
-> +Date:		June 2025
-> +Contact:	Andrei Kuchynski <akuchynski@chromium.org>
-> +Description:	Lists the alternate modes supported by the port and their
-> +		priorities. The priority setting determines the order in which
-> +		Displayport alt-mode, Thunderbolt alt-mode and USB4 mode will be
-> +		activated, indicating the preferred selection sequence. A value of -1
-> +		disables automatic entry into a specific mode, while lower numbers
-> +		indicate higher priority. The default priorities can be modified by
-> +		assigning new values. Modes without explicitly set values default to -1,
-> +		effectively disabling them.
-> +
-> +		Example values:
-> +		- "USB4=0 TBT=1 DP=2"
-> +		- "USB4=-1 TBT=0"
-> +		- "DP=-1 USB4=-1 TBT=-1"
-
-No. If you want to disable entry to a mode by default, then you
-deactivate that mode, so -1 is not needed. USB4 is also not an alt
-mode, so this at the very least should be named differently.
-
-But I'm not sure this is the correct way to handle the modes in
-general. Can you please explain what exactly is the use case you are
-thinking?
-
-If you just need to prevent for example USB4 entry by default, then
-you write usb3 (or usb2) to the usb_capability. The alt modes you can
-deactivate by default, no?
-
-I can appreciate the convenience that you get from a single file like
-that, but it does not really give much room to move if for example the
-user space needs to behave differently in case of failures to enter a
-specific mode compared to successful entries.
-
-Br,
-
--- 
-heikki
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+>
+Reviewed-by: Breno Leitao <leitao@debian.org>
