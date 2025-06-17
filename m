@@ -1,159 +1,164 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F2F42E7161
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:22:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E472E7177;
+	Tue, 17 Jun 2025 13:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166548; cv=none; b=JfKynfb3HvMACSjbsREPDB0OMtkuLCfeW1G/Mn3STrww6S02rGAja6ZWl/jrWzlsHqxCJTPIQV5IzrfB2Fm34Q/2xSQpPMIVC7NASHnElZlGQGDEYTQmfp/Br2pEJhIKe70p7LR3gQn9k48TgNDjNI/Ynu8X+6U487CrpjivlOM=
+	t=1750166557; cv=none; b=ul3yc5Oqv23I+seFj+ib/BbXnvvRKLlDGP/h312lELdMXRFfe6J8ApTnqKcJfikC2Zxyb4aBXzfUcOuc/5uz7kTvRA1magmKydNN0mXkeMlUxWsJl684+1ozrgCugEu4/0dPfkTW5b8HcX9c6oFdc1fWkdlh6Ls+WvcdSY90mJ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166548; c=relaxed/simple;
-	bh=Fhx8QhTabRuUUWFQRH+WJIzph/BMxmYMg7nJNx1FXZM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iQqHhmXMaGJ34uSbUychaR477KtDvf2gLG5T80IgRa8sZCUW0Po27CTnPR86fLDBGE+M6B0Y1zw/6Js0GdzZK2TAgRVtPg+Qgtu7WVgC+q1jrxqOjAcFcWi9IFjuo+evseVyZrxK8n8sQlq9CelRo0ADtrgL7S1PZq+uK70OAJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=HPYIc/z0; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1750166557; c=relaxed/simple;
+	bh=iOPD9cZ13iOgVBjbX8yhidl9KIoVbx+QGRtLA2hgsws=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A8gFPvSvE8qkrmm8uZ6DBP+Gbpc3gzS5o5jJdWnCNHtTk7EFYhSmC74YwylNPrKnYHTBsKIKEJv52gTmVTMqPjgH+Pr1fVJZVSKsJuVK3n1ls45rkbGdN3p1RtejPKwDr+F649UDkFZH794bcCYHBSp/HDQTjSMFaHLnyTEKoWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UObvRUkW; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="HPYIc/z0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=L22KdzWdcCGWDxLpvivnPPHE6oi/1Lj0cZZMedRZ4Ok=; b=HPYIc/z0LD1RIpHARxa33P3SZ+
-	r4ke309UOb2j2A/QwsyYpEel8qO7Hw/FtkP1dtFEC8b1beToN0M/lHzijieDRs8aeXNd8LCrGw9bQ
-	MfntLdWC5Zm2qXQy5Wvyj9M0r0omrbd1m/GqwhM4YdQd1xmdrQwM8QO/WW1HvPviuvvUiJhLdXam4
-	ikMpCwfZPXBi9WfZ7yRLoM0Fw9/duVyAy8/4WSAumuayJjiQVqf6eejwGX+2/OZz7hT1tDTp4aj1u
-	vCkh/FcKPWYF6wcZD0AxZWuhN96Vo8qjV/52OvmTf/UYJ9vQ8Wa7+V2PmUo6piFvp6TvdWBfZ4Gnx
-	KIWVxI5Q==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uRWGQ-004bal-Ux; Tue, 17 Jun 2025 15:22:11 +0200
-Message-ID: <63b4fb79-8132-4c05-bcac-3238366899d9@igalia.com>
-Date: Tue, 17 Jun 2025 10:22:04 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UObvRUkW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750166556; x=1781702556;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=iOPD9cZ13iOgVBjbX8yhidl9KIoVbx+QGRtLA2hgsws=;
+  b=UObvRUkWtFpB7HKChFQuo5Kmda3Hl3/xjdOkUZXJut3TEDCY6ub65DVz
+   9H5PSNFqPv5I6/Kt/VqUBLHWyNKvIggOo23/niARUyX89J/d0OE8ZzaV3
+   M0ixmyh9FHl+mgoAKX8zXy1QHhuEYAa1Gug//EF4nkbAtHs1lRdi2Z/1v
+   CAxFhS7jl4DbqCp++6CFd7DTIiPIz2jcBApSSUpXaVUIa6KOrgHoxK7Ur
+   PBXfgRUZvWKTvnpSQ1a5Z+swyUxbFh8EIiC2+9GIi37dbTo6z46QIR3+e
+   zRi1Cjc/yc8kaHVZsJvsnHSB+vxP1tT75L4hA8oTr9whbVmqh64vkY0+q
+   w==;
+X-CSE-ConnectionGUID: +1jeerDOSqSaTZB6D7BRDw==
+X-CSE-MsgGUID: 8Un4tvBvShSBIXyzbQou2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52258069"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52258069"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 06:22:35 -0700
+X-CSE-ConnectionGUID: iojkX/jNRQS7IU1Sla552Q==
+X-CSE-MsgGUID: zPQwlA+0SdOUc3vBWhem9w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="149671819"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 17 Jun 2025 06:22:32 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRWGk-000G0l-1V;
+	Tue, 17 Jun 2025 13:22:30 +0000
+Date: Tue, 17 Jun 2025 21:21:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sean Anderson <sean.anderson@linux.dev>,
+	Mark Brown <broonie@kernel.org>, Michal Simek <monstr@monstr.eu>,
+	linux-spi@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Jinjie Ruan <ruanjinjie@huawei.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	David Lechner <dlechner@baylibre.com>,
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+	Sean Anderson <sean.anderson@linux.dev>
+Subject: Re: [PATCH v2 5/9] spi: zynqmp-gqspi: Support multiple buses
+Message-ID: <202506172150.MoosHW24-lkp@intel.com>
+References: <20250616220054.3968946-6-sean.anderson@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/6] drm/amdgpu: Make use of drm_wedge_task_info
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>, siqueira@igalia.com,
- airlied@gmail.com, simona@ffwll.ch, Raag Jadav <raag.jadav@intel.com>,
- rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
- Xaver Hugl <xaver.hugl@gmail.com>,
- Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-References: <20250617124949.2151549-1-andrealmeid@igalia.com>
- <20250617124949.2151549-7-andrealmeid@igalia.com>
- <5db1dda6-0cd7-4fc7-9a22-8ed57b12ada1@amd.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <5db1dda6-0cd7-4fc7-9a22-8ed57b12ada1@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616220054.3968946-6-sean.anderson@linux.dev>
 
-Em 17/06/2025 10:07, Christian König escreveu:
-> On 6/17/25 14:49, André Almeida wrote:
->> To notify userspace about which task (if any) made the device get in a
->> wedge state, make use of drm_wedge_task_info parameter, filling it with
->> the task PID and name.
->>
->> Signed-off-by: André Almeida <andrealmeid@igalia.com>
-> 
-> Reviewed-by: Christian König <christian.koenig@amd.com>
-> 
-> Do you have commit right for drm-misc-next?
-> 
+Hi Sean,
 
-Thanks for the reviews!
+kernel test robot noticed the following build errors:
 
-I do have access, but if you don't mind, can you push this one?
+[auto build test ERROR on broonie-spi/for-next]
+[also build test ERROR on linus/master v6.16-rc2 next-20250617]
+[cannot apply to xilinx-xlnx/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> Regards,
-> Christian.
-> 
->> ---
->> v8:
->>   - Drop check before calling amdgpu_vm_put_task_info()
->>   - Drop local variable `info`
->> v7:
->>   - Remove struct cast, now we can use `info = &ti->task`
->>   - Fix struct lifetime, move amdgpu_vm_put_task_info() after
->>     drm_dev_wedged_event() call
->> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 13 +++++++++++--
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  7 +++++--
->>   2 files changed, 16 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> index 8a0f36f33f13..a59f194e3360 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
->> @@ -6363,8 +6363,17 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
->>   
->>   	atomic_set(&adev->reset_domain->reset_res, r);
->>   
->> -	if (!r)
->> -		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->> +	if (!r) {
->> +		struct amdgpu_task_info *ti = NULL;
->> +
->> +		if (job)
->> +			ti = amdgpu_vm_get_task_info_pasid(adev, job->pasid);
->> +
->> +		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE,
->> +				     ti ? &ti->task : NULL);
->> +
->> +		amdgpu_vm_put_task_info(ti);
->> +	}
->>   
->>   	return r;
->>   }
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
->> index 0c1381b527fe..1e24590ae144 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
->> @@ -89,6 +89,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
->>   {
->>   	struct amdgpu_ring *ring = to_amdgpu_ring(s_job->sched);
->>   	struct amdgpu_job *job = to_amdgpu_job(s_job);
->> +	struct drm_wedge_task_info *info = NULL;
->>   	struct amdgpu_task_info *ti;
->>   	struct amdgpu_device *adev = ring->adev;
->>   	int idx;
->> @@ -125,7 +126,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
->>   	ti = amdgpu_vm_get_task_info_pasid(ring->adev, job->pasid);
->>   	if (ti) {
->>   		amdgpu_vm_print_task_info(adev, ti);
->> -		amdgpu_vm_put_task_info(ti);
->> +		info = &ti->task;
->>   	}
->>   
->>   	/* attempt a per ring reset */
->> @@ -164,13 +165,15 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
->>   			if (amdgpu_ring_sched_ready(ring))
->>   				drm_sched_start(&ring->sched, 0);
->>   			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
->> -			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
->> +			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, info);
->>   			goto exit;
->>   		}
->>   		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
->>   	}
->>   	dma_fence_set_error(&s_job->s_fence->finished, -ETIME);
->>   
->> +	amdgpu_vm_put_task_info(ti);
->> +
->>   	if (amdgpu_device_should_recover_gpu(ring->adev)) {
->>   		struct amdgpu_reset_context reset_context;
->>   		memset(&reset_context, 0, sizeof(reset_context));
-> 
+url:    https://github.com/intel-lab-lkp/linux/commits/Sean-Anderson/dt-bindings-spi-Add-spi-buses-property/20250617-060356
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+patch link:    https://lore.kernel.org/r/20250616220054.3968946-6-sean.anderson%40linux.dev
+patch subject: [PATCH v2 5/9] spi: zynqmp-gqspi: Support multiple buses
+config: sparc-randconfig-001-20250617 (https://download.01.org/0day-ci/archive/20250617/202506172150.MoosHW24-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 12.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250617/202506172150.MoosHW24-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506172150.MoosHW24-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/spi/spi-zynqmp-gqspi.c: In function 'zynqmp_qspi_chipselect':
+>> drivers/spi/spi-zynqmp-gqspi.c:469:25: error: implicit declaration of function 'FIELD_PREP' [-Werror=implicit-function-declaration]
+     469 |                         FIELD_PREP(GQSPI_GENFIFO_BUS_MASK, qspi->buses);
+         |                         ^~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/FIELD_PREP +469 drivers/spi/spi-zynqmp-gqspi.c
+
+   453	
+   454	/**
+   455	 * zynqmp_qspi_chipselect - Select or deselect the chip select line
+   456	 * @qspi:	Pointer to the spi_device structure
+   457	 * @is_high:	Select(0) or deselect (1) the chip select line
+   458	 */
+   459	static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
+   460	{
+   461		struct zynqmp_qspi *xqspi = spi_controller_get_devdata(qspi->controller);
+   462		ulong timeout;
+   463		u32 genfifoentry = 0, statusreg;
+   464	
+   465		genfifoentry |= GQSPI_GENFIFO_MODE_SPI;
+   466	
+   467		if (!is_high) {
+   468			xqspi->genfifobus =
+ > 469				FIELD_PREP(GQSPI_GENFIFO_BUS_MASK, qspi->buses);
+   470			if (!spi_get_chipselect(qspi, 0))
+   471				xqspi->genfifocs = GQSPI_GENFIFO_CS_LOWER;
+   472			else
+   473				xqspi->genfifocs = GQSPI_GENFIFO_CS_UPPER;
+   474	
+   475			genfifoentry |= xqspi->genfifobus;
+   476			genfifoentry |= xqspi->genfifocs;
+   477			genfifoentry |= GQSPI_GENFIFO_CS_SETUP;
+   478		} else {
+   479			genfifoentry |= GQSPI_GENFIFO_CS_HOLD;
+   480		}
+   481	
+   482		zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
+   483	
+   484		/* Manually start the generic FIFO command */
+   485		zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+   486				   zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+   487				   GQSPI_CFG_START_GEN_FIFO_MASK);
+   488	
+   489		timeout = jiffies + msecs_to_jiffies(1000);
+   490	
+   491		/* Wait until the generic FIFO command is empty */
+   492		do {
+   493			statusreg = zynqmp_gqspi_read(xqspi, GQSPI_ISR_OFST);
+   494	
+   495			if ((statusreg & GQSPI_ISR_GENFIFOEMPTY_MASK) &&
+   496			    (statusreg & GQSPI_ISR_TXEMPTY_MASK))
+   497				break;
+   498			cpu_relax();
+   499		} while (!time_after_eq(jiffies, timeout));
+   500	
+   501		if (time_after_eq(jiffies, timeout))
+   502			dev_err(xqspi->dev, "Chip select timed out\n");
+   503	}
+   504	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
