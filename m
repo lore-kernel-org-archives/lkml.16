@@ -1,167 +1,138 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978902E3AE5;
-	Tue, 17 Jun 2025 13:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175432DBF41;
+	Tue, 17 Jun 2025 13:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168258; cv=none; b=HO58TZItBNyeMg2nf2D+hdCwF3YadfDFBgrgGllWRpWMldbf6dP8PbSEyQkBGm0tVKaMs5uutMHm5LGBrgQHRdB699vPOCQS6t+AgqRN6HxTW3yYSYXrLSNCgMEvg/019yPwcmuaJfun2FZ6HjYSZKGz4Kh0xFJ9iBQ4fYM/e4c=
+	t=1750168265; cv=none; b=RvKvP+c7MSf8jsR8G+nGfjWUUQqUQRg2jAeUd0nztu+kNZV1x7iDjvY8yZ8fx7XvIT3VDZpDhYf0W5JEU9kyrHr23Mvu7/E5+/0MuXN46vvXVu5XHFSN2tZ6nulI+hT3g63LmjnbQ0Co2/5dAXo2skVOvpmpMx14cfHgA4g15ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168258; c=relaxed/simple;
-	bh=U0Jjt1r36fUgdjcebPQwAxxXWivmsipZeBUEx96MtI4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=s9keyYlpPm34fIl4vqX7Nc0eglBgX6Y44hjNpuWXM05ar4nwHSZM/tTG2GFBGfPgzIlELKdhiJIGe9Vz+JyqSJsGiJvwr1okVXQTSi83mIrzHt8hq2ncvmnUAYS3Q8Iq/6IZPr8jWbzOpDlR/Hv5LqqtbpxvbMMdu7JbFrEc+Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 995FC150C;
-	Tue, 17 Jun 2025 06:50:34 -0700 (PDT)
-Received: from pluto.guest.local (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A3E443F673;
-	Tue, 17 Jun 2025 06:50:54 -0700 (PDT)
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: peng.fan@oss.nxp.com
-Cc: arm-scmi@vger.kernel.org,
-	cristian.marussi@arm.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	peng.fan@nxp.com,
-	sudeep.holla@arm.com
-Subject: [PATCH] [NOT_FOR_MERGE] firmware: arm_scmi: Optimize notifiers registration
-Date: Tue, 17 Jun 2025 14:50:38 +0100
-Message-ID: <20250617135038.2439818-1-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250613095059.GA10033@nxa18884-linux>
-References: <20250613095059.GA10033@nxa18884-linux>
+	s=arc-20240116; t=1750168265; c=relaxed/simple;
+	bh=IGltngzbELGQw+XQq/WWyCGYqZ4fB47Qdv4Z+NL+foY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QOBgFonNhcVUm/C6cZ8g7ENuovaRCK9Rd49u2Za7OGUIFnvgsVyPrntZyGqRpBYk22ZsoaWYlgaSkVADqH+yTqztt90Xn92gTccbJVI51W5H2stM4HhxG0Ut7l8Fc7kdYN6wgzVcVR0IAY5Lcb6mSrIIzN2rNJIlWcPcURWgIL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fg+ZSxN0; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fg+ZSxN0"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so73345435e9.1;
+        Tue, 17 Jun 2025 06:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750168261; x=1750773061; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wNl8wyegafLnqZVF/hrUk0udF1cnoaAfeahNhjIdcWc=;
+        b=Fg+ZSxN043FFB2xU8Cq4o4ihPy9Vd9IP8agvSgzdxjzpjdB3JZ033w9wGYf6891Nxz
+         HIcecEYQ8yBSj6QKNnbbxPUSApH0fxCgfEfQe1YmhwSvps1r19eua9LTeJZYn1/WgZED
+         33A5LnLaW5VT0wFn8+5bkabD3F2rG4daircHoJXNMQTaXmQhIJk550k8qJqXVm2Of0u0
+         JSiFZJuJp0//3hiEWUuyIWwFzlfRYbQnJpHYlkqwzjm7qpwH3yQudYYnIH+SRFHrr1sM
+         Ryb03v+/xp2y1Eh3XVE2ZpoZWHroJWLGaV0LO9S7MaRYspnDDIRq5OV+VauizIzt5fL3
+         QHgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750168261; x=1750773061;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wNl8wyegafLnqZVF/hrUk0udF1cnoaAfeahNhjIdcWc=;
+        b=NTOg8p2mpzws4WIqVLrgZsKqJLKsNOMQWmgYT9kchjKmFliC8v5R0CgbjJ7hHaUr3n
+         3ivrSIpsOkUGM4Opbl61vave+i3NyePpw9yYqKFi9Bf9f78h1Ns5pTorbNF6pkZCztEz
+         4i8GsiAzfHonHbYGPUjb0SdjeS4cqjXwQ11T6xWWLzkeTJ7NSIOLr1Ez66Xd7jvP4+oM
+         i1YYCvJHg5mXwr9JKty8fCWTFGjxkCMfAjGC8Y3+4b8kaN9KeAH77FEWNBM6/wdbDIl1
+         dFHmo6p8p5DfaPPl5ah4Suf0FrY/DifbFEedpnvkiyVxOESAm/c0Tt1HQaMdh3QQ5X/i
+         raWg==
+X-Forwarded-Encrypted: i=1; AJvYcCU8kNv8pe9vlWWjgOPC39jkeQqT/E0mz6fq0qBssGB3piBRU6+ynbIyKhzcskJXNTL+RgrUYWVrWob3+14e@vger.kernel.org, AJvYcCVbZaA1eKMAMYXZSfTq11d2p5tYdFV2hVGsSDQ6Fqy8C2v3I/Gyw/nd2eg+FonPlvc0IiAtFhH8/tpL@vger.kernel.org, AJvYcCX05g4sc1wmLjQaUr6l0mId6NIEDoEhqkwVDnqUnbg7AcheDjqlk12kLNik04IDtqaPW9LydfRGmHWu3SuW6MTkv9s=@vger.kernel.org, AJvYcCXYn3n0ywQ+ligzA4FIQcg2KG3oLnsPFwQJjF2Kj1c7Jqe8w3Xgnz1jo2h7sjHSRTjbjVlJ5JNR8GQn@vger.kernel.org
+X-Gm-Message-State: AOJu0YygwN7I69QLmoKgRg5EKzdqKeTuPlaksN+kwnrYnbVJnnHfAwue
+	oe9tmmgRkfADizgbGB31wUnnUNEVrs2Yj9xLtZj8sxV+/c5oimqYNp5CzLXn6vnBxuN6Cqf8S/U
+	5/+QpE1d+RsqJRc+ca4zpL2nzvBGQzNU=
+X-Gm-Gg: ASbGnctUJHauluxYtjfeKLYdp1BpFz8vSncqCq3vxHTGrSzuQyRQit0fkfEZElNbtBX
+	X4TwJDN/tlzTh/NBO/uVgTPTuxAcaPKhIZ+RsjXY1zKVmjBUD2SUvI4wwdxGji4uvYof9jUd3dt
+	Jj3b6IDmX1OuKe0zI3M7E6l8hFWtBbq4ovkPZQbsLhTA==
+X-Google-Smtp-Source: AGHT+IHD06M89+R92xiEL8UI2HjrT/wU9KTtjXOhKqwmV3gg6qcks/pYMku3d5ryWfwdV85um2KzP4iV4g7S75iGXDw=
+X-Received: by 2002:a05:600c:3f09:b0:43c:f895:cb4e with SMTP id
+ 5b1f17b1804b1-4535020de49mr53384425e9.17.1750168260361; Tue, 17 Jun 2025
+ 06:51:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250613113839.102994-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250613113839.102994-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250617-enthusiastic-anaconda-of-tenacity-2f79e2@kuoka> <2fbc985b-113a-4409-9825-49bdd029e95b@kernel.org>
+In-Reply-To: <2fbc985b-113a-4409-9825-49bdd029e95b@kernel.org>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 17 Jun 2025 14:50:34 +0100
+X-Gm-Features: AX0GCFtvSoLqf-Eyyght_AYKGMsUbMYxK_o7uZIaKRsvzxVD-EmSBsZMTRj_ndU
+Message-ID: <CA+V-a8vvjHf+mz=A9AiD+ud6P-oGHhMt7KdOGsXW8cAjAJVoNA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: i2c: renesas,riic: Document RZ/N2H support
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Andi Shyti <andi.shyti@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andy@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Some platforms could be configured not to support notification events from
-specific sources and such a case is already handled properly by avoiding
-even to attempt to send a notification enable request since it would be
-doomed to fail anyway.
+Hi Krzysztof,
 
-In an extreme scenario, though, a platform could support not even one
-single source on a specific event: in such a case would be meaningless to
-even allow to register a notifier and we can bail-out immediately, saving
-a lot of needless computation.
+Thank you for the review.
 
-Flag such condition, when detected at protocol initialization time, and
-reject upfront any attempt to register a notifier for such completely
-unsupported events with -ENOTSUPP.
+On Tue, Jun 17, 2025 at 8:15=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
+g> wrote:
+>
+> On 17/06/2025 09:13, Krzysztof Kozlowski wrote:
+> > On Fri, Jun 13, 2025 at 12:38:36PM GMT, Prabhakar wrote:
+> >> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >>
+> >> Document support for the I2C Bus Interface (RIIC) found on the Renesas
+> >> RZ/N2H (R9A09G087) SoC. The RIIC IP on this SoC is identical to that o=
+n
+> >> the RZ/T2H SoC so `renesas,riic-r9a09g077` will be used as a fallback
+> >> compatible.
+> >>
+> >> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> >> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> >> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> ---
+> >>  Documentation/devicetree/bindings/i2c/renesas,riic.yaml | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml b=
+/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> >> index 86d79e167547..6876eade431b 100644
+> >> --- a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> >> +++ b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+> >> @@ -33,6 +33,10 @@ properties:
+> >>            - renesas,riic-r9a09g057   # RZ/V2H(P)
+> >>            - renesas,riic-r9a09g077   # RZ/T2H
+> >>
+> >> +      - items:
+> >> +          - const: renesas,riic-r9a09g087  # RZ/N2H
+> >> +          - const: renesas,riic-r9a09g077  # RZ/T2H
+> >
+> > Where is an entry renesas,riic-r9a09g077 alone? Please add complete
+> > bindings, not half-patch and then next time second half.
+>
+>
+> Ah, sorry, I saw it in patch #2 (the tooling I use jumped straight to
+> patch #3 so that's the reason).
+>
+> Anyway, this should be squashed with #2, because it is trivial and
+> entire 4 lines of commit msg plus 3 reviews is really too much for
+> something like that. Don't inflate work for us.
+>
+Sure, I'll make a note of it and send a new version with this patch squashe=
+d.
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
----
-NOT FOR MERGE until tested properly even with late loaded protocols.
-DOES NOT address the issues with verobosity of messages and lack of
-details about failures (which protos ? which resources ?)
----
- drivers/firmware/arm_scmi/notify.c | 39 +++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-index e160ecb22948..dee9f238f6fd 100644
---- a/drivers/firmware/arm_scmi/notify.c
-+++ b/drivers/firmware/arm_scmi/notify.c
-@@ -318,6 +318,9 @@ struct scmi_registered_events_desc {
-  *	    customized event report
-  * @num_sources: The number of possible sources for this event as stated at
-  *		 events' registration time
-+ * @not_supported_by_platform: A flag to indicate that not even one source was
-+ *			       found to be supported by the platform for this
-+ *			       event
-  * @sources: A reference to a dynamically allocated array used to refcount the
-  *	     events' enable requests for all the existing sources
-  * @sources_mtx: A mutex to serialize the access to @sources
-@@ -334,6 +337,7 @@ struct scmi_registered_event {
- 	const struct scmi_event	*evt;
- 	void		*report;
- 	u32		num_sources;
-+	bool		not_supported_by_platform;
- 	refcount_t	*sources;
- 	/* locking to serialize the access to sources */
- 	struct mutex	sources_mtx;
-@@ -811,10 +815,19 @@ int scmi_register_protocol_events(const struct scmi_handle *handle, u8 proto_id,
- 		if (!r_evt->report)
- 			return -ENOMEM;
- 
--		for (id = 0; id < r_evt->num_sources; id++)
--			if (ee->ops->is_notify_supported &&
--			    !ee->ops->is_notify_supported(ph, r_evt->evt->id, id))
--				refcount_set(&r_evt->sources[id], NOTIF_UNSUPP);
-+		if (ee->ops->is_notify_supported) {
-+			int supported = 0;
-+
-+			for (id = 0; id < r_evt->num_sources; id++) {
-+				if (!ee->ops->is_notify_supported(ph, r_evt->evt->id, id))
-+					refcount_set(&r_evt->sources[id], NOTIF_UNSUPP);
-+				else
-+					supported++;
-+			}
-+
-+			/* Not even one source has been found to be supported */
-+			r_evt->not_supported_by_platform = !supported;
-+		}
- 
- 		pd->registered_events[i] = r_evt;
- 		/* Ensure events are updated */
-@@ -936,6 +949,11 @@ static inline int scmi_bind_event_handler(struct scmi_notify_instance *ni,
- 	 * of protocol instance.
- 	 */
- 	hash_del(&hndl->hash);
-+
-+	/* Bailout if event is not supported at all */
-+	if (r_evt->not_supported_by_platform)
-+		return -EOPNOTSUPP;
-+
- 	/*
- 	 * Acquire protocols only for NON pending handlers, so as NOT to trigger
- 	 * protocol initialization when a notifier is registered against a still
-@@ -1060,6 +1078,9 @@ __scmi_event_handler_get_ops(struct scmi_notify_instance *ni,
- 	r_evt = SCMI_GET_REVT(ni, KEY_XTRACT_PROTO_ID(evt_key),
- 			      KEY_XTRACT_EVT_ID(evt_key));
- 
-+	if (r_evt && r_evt->not_supported_by_platform)
-+		return ERR_PTR(-EOPNOTSUPP);
-+
- 	mutex_lock(&ni->pending_mtx);
- 	/* Search registered events at first ... if possible at all */
- 	if (r_evt) {
-@@ -1087,7 +1108,7 @@ __scmi_event_handler_get_ops(struct scmi_notify_instance *ni,
- 				hndl->key);
- 			/* this hndl can be only a pending one */
- 			scmi_put_handler_unlocked(ni, hndl);
--			hndl = NULL;
-+			hndl = ERR_PTR(-EINVAL);
- 		}
- 	}
- 	mutex_unlock(&ni->pending_mtx);
-@@ -1370,8 +1391,8 @@ static int scmi_notifier_register(const struct scmi_handle *handle,
- 	evt_key = MAKE_HASH_KEY(proto_id, evt_id,
- 				src_id ? *src_id : SRC_ID_MASK);
- 	hndl = scmi_get_or_create_handler(ni, evt_key);
--	if (!hndl)
--		return -EINVAL;
-+	if (IS_ERR(hndl))
-+		return PTR_ERR(hndl);
- 
- 	blocking_notifier_chain_register(&hndl->chain, nb);
- 
-@@ -1416,8 +1437,8 @@ static int scmi_notifier_unregister(const struct scmi_handle *handle,
- 	evt_key = MAKE_HASH_KEY(proto_id, evt_id,
- 				src_id ? *src_id : SRC_ID_MASK);
- 	hndl = scmi_get_handler(ni, evt_key);
--	if (!hndl)
--		return -EINVAL;
-+	if (IS_ERR(hndl))
-+		return PTR_ERR(hndl);
- 
- 	/*
- 	 * Note that this chain unregistration call is safe on its own
--- 
-2.47.0
-
+Cheers,
+Prabhakar
