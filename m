@@ -1,222 +1,253 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4EBC23B60F;
-	Tue, 17 Jun 2025 05:32:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD52E27EFE9
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750138353; cv=none; b=oogrYCmtg2zaOSZ6XTTsPFc4vh/7q0W1fa7u86fpESo0HBodQuPXCVG5rp9D5fwZVodCDKi2DUbiFLp73ovdZnSd8WFh26eNH8E2Nb9MdMIFjq0/knmBu92+TGqMyu7/qareiMUkTBQ+qan3P+5EPAU07bW6aq2OOk1gUYFX8sA=
+	t=1750138497; cv=none; b=bQysE77Q5sWzN0UeSLwMbfaYHoDYQGsAUG1+E/vpyEjPtzQ9C7htJLVSq5q8wk8jnNXRdu1tvTe106wfn5CcREMe8vTHV35Vvf547NzuL/7QfBX22SfDWCb5145kGqJx2V51MR2QnM6y+j/kjOrSDsfcXUYd3DNap6Vk5k2kfjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750138353; c=relaxed/simple;
-	bh=+v6NTcQEXQvTmxxIxIy7uPpe6uWyWE4617+gZrSwolQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=n37rnm5q5tnyQjKHzUydOjhucaxmvsPueJ7CZKHTDbRFjF/TF3W4L9f0d/LRaQ4r3gXOzbn1w+9od+MxpRXGecnw6ZciWSeYCWjx8qPI822qyaXL2RDi6Rz/f1OkKy3KV7KX4OPyhNSkYewxCDOg2ZDXGcCbUnnIJqZreXiRm3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aqQSZW/B; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750138497; c=relaxed/simple;
+	bh=WXbODmxYBLDsrJ8ij6d6g5WMOC+8yP9kUK8vDV6KiwA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=U3PB1Rsbys3GOCpCB+XGHOvZCNaiWgVJmgAtqyyHdJkfqPDHnvqADYBQPvjxE9mTVBiysILTqNlLTetxJhA7+ppTXPN0F9hea5nGT7ToC0IBADQdDXBvGQct2yPYWlFBLJVK29f+g/R4ai8ZOecOrL2b+JJzdQjE5HkiSvr4Nk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F9CaC5Ry; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqQSZW/B"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so49689835e9.3;
-        Mon, 16 Jun 2025 22:32:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750138350; x=1750743150; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+v6NTcQEXQvTmxxIxIy7uPpe6uWyWE4617+gZrSwolQ=;
-        b=aqQSZW/BHpSTnr+Q1VbtJ8jYpLDEFy+lcByk+qt71LeWK9ilQbTjkwkUQuGWYH5gb+
-         CmEQlkSVN74rbIl6Pbozy3XGATwRw93A2UQGHJ007Z9WbljOtCq+yWKSp2R2Xhrc0kI8
-         Q9LKeLmzoK8DNLMn0CH4VInw3irQeZ+HKGdmXtcAYfiEi9BrAk2nO+o/o02NDY2jBpdd
-         EWxlupyRZrFn2yYTg8thWSCgn5ZXAUcIzkuvLx1vTf0qHUBO8SDqheBpb4l2PapzQJFq
-         jea7V6ooW2FmJdy5VusdQ9o+qy2DMz9Bw7tFcanm/7UG6eeVwahSe5Zgic/+nUk4v7gE
-         goMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750138350; x=1750743150;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+v6NTcQEXQvTmxxIxIy7uPpe6uWyWE4617+gZrSwolQ=;
-        b=Pwe0/B0V4YA0rGRtdEqIbZdnLVmx+haTeZ12KNjed6qHXzhDEgFiyJZQJS/vwu8GZD
-         /voiQMVdYKcXE5U/z8QAqCtG7zJJ9IWryaWTWPtjp7yG5u6nqaTHnRSCSsb+bLh/Q9VR
-         S0dfoofza/b9J17CXWYI6cMkpaASFz4eywAjwzFIYSCzHlAbXYw6ODUyT3z1KjUjDlhN
-         pmpnOnQfH+S5O1bSqKnUNnN3jyTSOOTwDqzbohnqMo6uqstomrzWFHXmb/HUZqGd83Tc
-         VktogsSfpU00zjNDL2IsmWZLX0bkQVCGi7XI8cC0yrw3TtWrVh2JdT4jUowvC78SvlKs
-         C4hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUE4vQQJouDspsJ89kwTcufwXB2B1hZK21Pk771tzQ8ZLd/gICuDMixIVTScezY/XohvW24FehjucmPQPAB@vger.kernel.org, AJvYcCXSbRLAqfEZZQx8hupnp1qt0SPYA8Fhp2tsoq+D+FmCIQtKATeHtd+X1Awsk+Cv5S9ahm1FgqAeahDybxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO6e3t1AnSaqV4rJIue/JgqvGsqWzjkERPm2/AaQe5yMwD0tL3
-	ahyM3izkTeF0jNjzVgk9vA7+puVVn2EZfY/oCSjoSZ2eU1T4VoiykKei
-X-Gm-Gg: ASbGncuZ0gJJPbRbUrhoRv/kiCI3V2Sw50HoXETNAck/0Bm7MOJwrUUudlhEex8liUK
-	mDkj8CUmZUYhNk+inXdBh4kLIYAPLV+9iz/VqGzETLhL2nh6iNeoY9f+GE0D4lV8dVHgZkexycs
-	GyHbtPq+prukO36h0/FAyLCEIIwmkgkZIxXRZNTHz1a1EWFh9KK+MyyJ3Oir9pVeuV7HCa4Atwx
-	g8+nrJ3k//NrG4UuORwqmi5cfIFSgK6MqFquMty1A6ngCr+l3WsbHPUCl108vdKhcodJwsj9x1g
-	6l6LoYl48L4uFrPJX3artXcxFeI+fxCdac0i7rJyXpnHi8QauyEsCY3d8GWl3/Owomv8fWy5uCz
-	roIGI7qsz/sIQYgvh/6F5o2NQdt7O+w==
-X-Google-Smtp-Source: AGHT+IF0IovXg7KmG+G2aWoh497FIBuFY2FOA89tPupD+jeDQAh59ghf7dD9nWsvJLOdcMc8H6pKYA==
-X-Received: by 2002:a05:600c:6207:b0:43c:fe15:41cb with SMTP id 5b1f17b1804b1-4533ca76ff8mr121904325e9.15.1750138349741;
-        Mon, 16 Jun 2025 22:32:29 -0700 (PDT)
-Received: from ?IPv6:2a02:168:6806:0:94f8:9e82:5d34:314? ([2a02:168:6806:0:94f8:9e82:5d34:314])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e24b0c8sm161980485e9.24.2025.06.16.22.32.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 22:32:29 -0700 (PDT)
-Message-ID: <043472e83b086681ff3a6d0130bfa01ceeff5fa8.camel@gmail.com>
-Subject: Re: [PATCH] crypto: marvell/cesa - Avoid empty transfer descriptor
-From: Klaus Kudielka <klaus.kudielka@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, regressions@lists.linux.dev,
- 	linux-kernel@vger.kernel.org, Linux Crypto Mailing List	
- <linux-crypto@vger.kernel.org>, Boris Brezillon <bbrezillon@kernel.org>, 
- EBALARD Arnaud <Arnaud.Ebalard@ssi.gouv.fr>, Romain Perier
- <romain.perier@gmail.com>
-Date: Tue, 17 Jun 2025 07:32:28 +0200
-In-Reply-To: <c01e9b258e024e745ef8711bb94e0d5f6d7d4f96.camel@gmail.com>
-References: <aB8W4iuvjvAZSJoc@gondor.apana.org.au>
-		 <41680c5d41ed568e8c65451843e3ff212fd340c4.camel@gmail.com>
-		 <aB8t1ZTVBexqGlcm@gondor.apana.org.au>
-		 <dcb0b04e479d6f3cfed87795d100ea09e4fbcf53.camel@gmail.com>
-		 <aCAX8rj2ie4QMnTo@gondor.apana.org.au>
-		 <28184fb96e2de8a0af32816f5ff1b3d776b57217.camel@gmail.com>
-		 <aCMOyWVte4tw85_F@gondor.apana.org.au>
-		 <8e9b45bdafe6ac3f12bcbb5fce5bc9949566344f.camel@gmail.com>
-		 <aCQm0aHYnI6ciyPz@gondor.apana.org.au>
-		 <20dde00750d803a9a364ded99dab1e3e22daec77.camel@gmail.com>
-		 <aCa7J3I8DyRs7pP_@gondor.apana.org.au>
-	 <c01e9b258e024e745ef8711bb94e0d5f6d7d4f96.camel@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.56.1-1 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F9CaC5Ry"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750138492;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJt/3ijg40UkdgbEHu+hWjam/tCkpyc+k8aOeFbuq0c=;
+	b=F9CaC5RywkcgHZxgL6xOzQEeC2ZsS70+jV/xRcPSh8ETXX/5G+9DmlIET6OeICHdcAg4Uo
+	HHyvGxaCSTmyj8DVLdt4MQ4YUamhC0C6uJ+FzwBoLWa7tLmtLxxsW1TiHt8zKCwDEosiAp
+	P5IGytNTdLuEyZpugyOqhzq6Q5Urog8=
+From: Hao Ge <hao.ge@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Hao Ge <hao.ge@linux.dev>,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH v4 1/1] mm/percpu: Conditionally define _shared_alloc_tag via CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
+Date: Tue, 17 Jun 2025 13:33:57 +0800
+Message-Id: <d2d20818e740f5e68418940b7b16f76ac2f61564.1750138121.git.gehao@kylinos.cn>
+In-Reply-To: <cover.1750138121.git.gehao@kylinos.cn>
+References: <cover.1750138121.git.gehao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-SGVsbG8sCgpQbGFpbiB2Ni4xNi1yYzEgd2l0aCBtYXJ2ZWxsLWNlc2EgYXMgbW9kdWxlIGFuZCBD
-UllQVE9fU0VMRlRFU1RTIGVuYWJsZWQuCklkZW50aWNhbCBiZWhhdmlvdXIgYXMgcmVwb3J0ZWQg
-cHJldmlvdXNseSB3aXRoIHRoZSBjcnlwdG9kZXYgdHJlZSAoc2VlIGJlbG93KS4KCkFjY29yZGlu
-ZyB0byAvcHJvYy9jcnlwdG8sIGFsbCBtYXJ2ZWxsLWNlc2Egc2VsZnRlc3RzIChpbmNsdWRpbmcg
-YWhhc2gpIGFwcGVhciB0byBwYXNzIHJlbGlhYmx5IGFnYWluLgoKSWYgd2UgY2FuIHRydXN0IHRo
-ZSBpbmZvcm1hdGlvbiBpbiAvcHJvYy9jcnlwdG8sIEkgd291bGQgc3VnZ2VzdCB0byByZXZlcnQg
-Y29tbWl0CmU4NDVkMjM5OWEwMGY4NjZmMjg3ZTBjZWZiZDRmYzdkOGVmMGQyZjcgKCJjcnlwdG86
-IG1hcnZlbGwvY2VzYSAtIERpc2FibGUgaGFzaCBhbGdvcml0aG1zIikKCkJlc3QgcmVnYXJkcywg
-S2xhdXMKCgpPbiBGcmksIDIwMjUtMDUtMTYgYXQgMTk6MzYgKzAyMDAsIEtsYXVzIEt1ZGllbGth
-IHdyb3RlOgo+IE9uIEZyaSwgMjAyNS0wNS0xNiBhdCAxMjoxMiArMDgwMCwgSGVyYmVydCBYdSB3
-cm90ZToKPiA+IAo+ID4gU29tZXRoaW5nIGRvZXNuJ3QgbG9vayByaWdodC7CoCBUaGVyZSBhcmUg
-emVybyBhaGFzaCBsaW5lcyBpbiB5b3VyCj4gPiBkbWVzZy7CoCBJT1cgYWxsIHRoZSBvdXRwdXQg
-d2FzIGZyb20gc2tjaXBoZXIgdGVzdHMgYWxvbmUuCj4gPiAKPiA+IFRoYXQgY291bGQgZXhwbGFp
-biB3aHkgYWhhc2ggYXBwZWFycyB0byBiZSB3b3JraW5nLgo+ID4gCj4gPiBXaGF0IGRvZXMgL3By
-b2MvY3J5cHRvIHNob3cgYWZ0ZXIgYm9vdC11cD8gRG8gdGhlIGNlc2EgYWhhc2gKPiA+IGFsZ29y
-aXRobXMgc2hvdyB1cCBhcyB0ZXN0ZWQgaW4gdGhlcmU/Cj4gPiAKPiA+IENoZWVycywKPiAKPiBQ
-bGFpbiBjcnlwdG9kZXYgdHJlZSwgbWFydmVsbC1jZXNhIGFzIG1vZHVsZS4KPiBEaXJlY3RseSBh
-ZnRlciBib290LCBvbmx5IHRoZSBidWlsdGluIGNyYzMyYy1nZW5lcmljIHNob3dzIHVwLgo+IEFm
-dGVyIGxvYWRpbmcgdGhlIG1vZHVsZSwgdGhlIG1hcnZlbGwtY2VzYSBhaGFzaCBzaG93IHVwIHdp
-dGggInNlbGZ0ZXN0IDogcGFzc2VkIi4KPiBCdXQgd2hldGhlciB0aGV5IFJFQUxMWSB3ZXJlIHRl
-c3RlZCwgSSBjYW4ndCBzYXkuCj4gCj4gIyBjYXQgL3Byb2MvY3J5cHRvIAo+IG5hbWXCoMKgwqDC
-oMKgwqDCoMKgIDogY3JjMzJjCj4gZHJpdmVywqDCoMKgwqDCoMKgIDogY3JjMzJjLWdlbmVyaWMK
-PiBtb2R1bGXCoMKgwqDCoMKgwqAgOiBrZXJuZWwKPiBwcmlvcml0ecKgwqDCoMKgIDogMTAwCj4g
-cmVmY250wqDCoMKgwqDCoMKgIDogMQo+IHNlbGZ0ZXN0wqDCoMKgwqAgOiBwYXNzZWQKPiBpbnRl
-cm5hbMKgwqDCoMKgIDogbm8KPiB0eXBlwqDCoMKgwqDCoMKgwqDCoCA6IHNoYXNoCj4gYmxvY2tz
-aXplwqDCoMKgIDogMQo+IGRpZ2VzdHNpemXCoMKgIDogNAo+IAo+ICMgbW9kcHJvYmUgbWFydmVs
-bC1jZXNhCj4gIyBjYXQgL3Byb2MvY3J5cHRvIAo+IG5hbWXCoMKgwqDCoMKgwqDCoMKgIDogaG1h
-YyhzaGEyNTYpCj4gZHJpdmVywqDCoMKgwqDCoMKgIDogbXYtaG1hYy1zaGEyNTYKPiBtb2R1bGXC
-oMKgwqDCoMKgwqAgOiBtYXJ2ZWxsX2Nlc2EKPiBwcmlvcml0ecKgwqDCoMKgIDogMAo+IHJlZmNu
-dMKgwqDCoMKgwqDCoCA6IDEKPiBzZWxmdGVzdMKgwqDCoMKgIDogcGFzc2VkCj4gaW50ZXJuYWzC
-oMKgwqDCoCA6IG5vCj4gdHlwZcKgwqDCoMKgwqDCoMKgwqAgOiBhaGFzaAo+IGFzeW5jwqDCoMKg
-wqDCoMKgwqAgOiB5ZXMKPiBibG9ja3NpemXCoMKgwqAgOiA2NAo+IGRpZ2VzdHNpemXCoMKgIDog
-MzIKPiAKPiBuYW1lwqDCoMKgwqDCoMKgwqDCoCA6IGhtYWMoc2hhMSkKPiBkcml2ZXLCoMKgwqDC
-oMKgwqAgOiBtdi1obWFjLXNoYTEKPiBtb2R1bGXCoMKgwqDCoMKgwqAgOiBtYXJ2ZWxsX2Nlc2EK
-PiBwcmlvcml0ecKgwqDCoMKgIDogMAo+IHJlZmNudMKgwqDCoMKgwqDCoCA6IDEKPiBzZWxmdGVz
-dMKgwqDCoMKgIDogcGFzc2VkCj4gaW50ZXJuYWzCoMKgwqDCoCA6IG5vCj4gdHlwZcKgwqDCoMKg
-wqDCoMKgwqAgOiBhaGFzaAo+IGFzeW5jwqDCoMKgwqDCoMKgwqAgOiB5ZXMKPiBibG9ja3NpemXC
-oMKgwqAgOiA2NAo+IGRpZ2VzdHNpemXCoMKgIDogMjAKPiAKPiBuYW1lwqDCoMKgwqDCoMKgwqDC
-oCA6IGhtYWMobWQ1KQo+IGRyaXZlcsKgwqDCoMKgwqDCoCA6IG12LWhtYWMtbWQ1Cj4gbW9kdWxl
-wqDCoMKgwqDCoMKgIDogbWFydmVsbF9jZXNhCj4gcHJpb3JpdHnCoMKgwqDCoCA6IDAKPiByZWZj
-bnTCoMKgwqDCoMKgwqAgOiAxCj4gc2VsZnRlc3TCoMKgwqDCoCA6IHBhc3NlZAo+IGludGVybmFs
-wqDCoMKgwqAgOiBubwo+IHR5cGXCoMKgwqDCoMKgwqDCoMKgIDogYWhhc2gKPiBhc3luY8KgwqDC
-oMKgwqDCoMKgIDogeWVzCj4gYmxvY2tzaXplwqDCoMKgIDogNjQKPiBkaWdlc3RzaXplwqDCoCA6
-IDE2Cj4gCj4gbmFtZcKgwqDCoMKgwqDCoMKgwqAgOiBzaGEyNTYKPiBkcml2ZXLCoMKgwqDCoMKg
-wqAgOiBtdi1zaGEyNTYKPiBtb2R1bGXCoMKgwqDCoMKgwqAgOiBtYXJ2ZWxsX2Nlc2EKPiBwcmlv
-cml0ecKgwqDCoMKgIDogMAo+IHJlZmNudMKgwqDCoMKgwqDCoCA6IDEKPiBzZWxmdGVzdMKgwqDC
-oMKgIDogcGFzc2VkCj4gaW50ZXJuYWzCoMKgwqDCoCA6IG5vCj4gdHlwZcKgwqDCoMKgwqDCoMKg
-wqAgOiBhaGFzaAo+IGFzeW5jwqDCoMKgwqDCoMKgwqAgOiB5ZXMKPiBibG9ja3NpemXCoMKgwqAg
-OiA2NAo+IGRpZ2VzdHNpemXCoMKgIDogMzIKPiAKPiBuYW1lwqDCoMKgwqDCoMKgwqDCoCA6IHNo
-YTEKPiBkcml2ZXLCoMKgwqDCoMKgwqAgOiBtdi1zaGExCj4gbW9kdWxlwqDCoMKgwqDCoMKgIDog
-bWFydmVsbF9jZXNhCj4gcHJpb3JpdHnCoMKgwqDCoCA6IDAKPiByZWZjbnTCoMKgwqDCoMKgwqAg
-OiAxCj4gc2VsZnRlc3TCoMKgwqDCoCA6IHBhc3NlZAo+IGludGVybmFswqDCoMKgwqAgOiBubwo+
-IHR5cGXCoMKgwqDCoMKgwqDCoMKgIDogYWhhc2gKPiBhc3luY8KgwqDCoMKgwqDCoMKgIDogeWVz
-Cj4gYmxvY2tzaXplwqDCoMKgIDogNjQKPiBkaWdlc3RzaXplwqDCoCA6IDIwCj4gCj4gbmFtZcKg
-wqDCoMKgwqDCoMKgwqAgOiBtZDUKPiBkcml2ZXLCoMKgwqDCoMKgwqAgOiBtdi1tZDUKPiBtb2R1
-bGXCoMKgwqDCoMKgwqAgOiBtYXJ2ZWxsX2Nlc2EKPiBwcmlvcml0ecKgwqDCoMKgIDogMAo+IHJl
-ZmNudMKgwqDCoMKgwqDCoCA6IDEKPiBzZWxmdGVzdMKgwqDCoMKgIDogcGFzc2VkCj4gaW50ZXJu
-YWzCoMKgwqDCoCA6IG5vCj4gdHlwZcKgwqDCoMKgwqDCoMKgwqAgOiBhaGFzaAo+IGFzeW5jwqDC
-oMKgwqDCoMKgwqAgOiB5ZXMKPiBibG9ja3NpemXCoMKgwqAgOiA2NAo+IGRpZ2VzdHNpemXCoMKg
-IDogMTYKPiAKPiBuYW1lwqDCoMKgwqDCoMKgwqDCoCA6IGNiYyhhZXMpCj4gZHJpdmVywqDCoMKg
-wqDCoMKgIDogbXYtY2JjLWFlcwo+IG1vZHVsZcKgwqDCoMKgwqDCoCA6IG1hcnZlbGxfY2VzYQo+
-IHByaW9yaXR5wqDCoMKgwqAgOiAzMDAKPiByZWZjbnTCoMKgwqDCoMKgwqAgOiAxCj4gc2VsZnRl
-c3TCoMKgwqDCoCA6IHBhc3NlZAo+IGludGVybmFswqDCoMKgwqAgOiBubwo+IHR5cGXCoMKgwqDC
-oMKgwqDCoMKgIDogc2tjaXBoZXIKPiBhc3luY8KgwqDCoMKgwqDCoMKgIDogeWVzCj4gYmxvY2tz
-aXplwqDCoMKgIDogMTYKPiBtaW4ga2V5c2l6ZcKgIDogMTYKPiBtYXgga2V5c2l6ZcKgIDogMzIK
-PiBpdnNpemXCoMKgwqDCoMKgwqAgOiAxNgo+IGNodW5rc2l6ZcKgwqDCoCA6IDE2Cj4gd2Fsa3Np
-emXCoMKgwqDCoCA6IDE2Cj4gc3RhdGVzaXplwqDCoMKgIDogMAo+IAo+IG5hbWXCoMKgwqDCoMKg
-wqDCoMKgIDogZWNiKGFlcykKPiBkcml2ZXLCoMKgwqDCoMKgwqAgOiBtdi1lY2ItYWVzCj4gbW9k
-dWxlwqDCoMKgwqDCoMKgIDogbWFydmVsbF9jZXNhCj4gcHJpb3JpdHnCoMKgwqDCoCA6IDMwMAo+
-IHJlZmNudMKgwqDCoMKgwqDCoCA6IDEKPiBzZWxmdGVzdMKgwqDCoMKgIDogcGFzc2VkCj4gaW50
-ZXJuYWzCoMKgwqDCoCA6IG5vCj4gdHlwZcKgwqDCoMKgwqDCoMKgwqAgOiBza2NpcGhlcgo+IGFz
-eW5jwqDCoMKgwqDCoMKgwqAgOiB5ZXMKPiBibG9ja3NpemXCoMKgwqAgOiAxNgo+IG1pbiBrZXlz
-aXplwqAgOiAxNgo+IG1heCBrZXlzaXplwqAgOiAzMgo+IGl2c2l6ZcKgwqDCoMKgwqDCoCA6IDAK
-PiBjaHVua3NpemXCoMKgwqAgOiAxNgo+IHdhbGtzaXplwqDCoMKgwqAgOiAxNgo+IHN0YXRlc2l6
-ZcKgwqDCoCA6IDAKPiAKPiBuYW1lwqDCoMKgwqDCoMKgwqDCoCA6IGNiYyhkZXMzX2VkZSkKPiBk
-cml2ZXLCoMKgwqDCoMKgwqAgOiBtdi1jYmMtZGVzMy1lZGUKPiBtb2R1bGXCoMKgwqDCoMKgwqAg
-OiBtYXJ2ZWxsX2Nlc2EKPiBwcmlvcml0ecKgwqDCoMKgIDogMzAwCj4gcmVmY250wqDCoMKgwqDC
-oMKgIDogMQo+IHNlbGZ0ZXN0wqDCoMKgwqAgOiBwYXNzZWQKPiBpbnRlcm5hbMKgwqDCoMKgIDog
-bm8KPiB0eXBlwqDCoMKgwqDCoMKgwqDCoCA6IHNrY2lwaGVyCj4gYXN5bmPCoMKgwqDCoMKgwqDC
-oCA6IHllcwo+IGJsb2Nrc2l6ZcKgwqDCoCA6IDgKPiBtaW4ga2V5c2l6ZcKgIDogMjQKPiBtYXgg
-a2V5c2l6ZcKgIDogMjQKPiBpdnNpemXCoMKgwqDCoMKgwqAgOiA4Cj4gY2h1bmtzaXplwqDCoMKg
-IDogOAo+IHdhbGtzaXplwqDCoMKgwqAgOiA4Cj4gc3RhdGVzaXplwqDCoMKgIDogMAo+IAo+IG5h
-bWXCoMKgwqDCoMKgwqDCoMKgIDogZWNiKGRlczNfZWRlKQo+IGRyaXZlcsKgwqDCoMKgwqDCoCA6
-IG12LWVjYi1kZXMzLWVkZQo+IG1vZHVsZcKgwqDCoMKgwqDCoCA6IG1hcnZlbGxfY2VzYQo+IHBy
-aW9yaXR5wqDCoMKgwqAgOiAzMDAKPiByZWZjbnTCoMKgwqDCoMKgwqAgOiAxCj4gc2VsZnRlc3TC
-oMKgwqDCoCA6IHBhc3NlZAo+IGludGVybmFswqDCoMKgwqAgOiBubwo+IHR5cGXCoMKgwqDCoMKg
-wqDCoMKgIDogc2tjaXBoZXIKPiBhc3luY8KgwqDCoMKgwqDCoMKgIDogeWVzCj4gYmxvY2tzaXpl
-wqDCoMKgIDogOAo+IG1pbiBrZXlzaXplwqAgOiAyNAo+IG1heCBrZXlzaXplwqAgOiAyNAo+IGl2
-c2l6ZcKgwqDCoMKgwqDCoCA6IDAKPiBjaHVua3NpemXCoMKgwqAgOiA4Cj4gd2Fsa3NpemXCoMKg
-wqDCoCA6IDgKPiBzdGF0ZXNpemXCoMKgwqAgOiAwCj4gCj4gbmFtZcKgwqDCoMKgwqDCoMKgwqAg
-OiBjYmMoZGVzKQo+IGRyaXZlcsKgwqDCoMKgwqDCoCA6IG12LWNiYy1kZXMKPiBtb2R1bGXCoMKg
-wqDCoMKgwqAgOiBtYXJ2ZWxsX2Nlc2EKPiBwcmlvcml0ecKgwqDCoMKgIDogMzAwCj4gcmVmY250
-wqDCoMKgwqDCoMKgIDogMQo+IHNlbGZ0ZXN0wqDCoMKgwqAgOiBwYXNzZWQKPiBpbnRlcm5hbMKg
-wqDCoMKgIDogbm8KPiB0eXBlwqDCoMKgwqDCoMKgwqDCoCA6IHNrY2lwaGVyCj4gYXN5bmPCoMKg
-wqDCoMKgwqDCoCA6IHllcwo+IGJsb2Nrc2l6ZcKgwqDCoCA6IDgKPiBtaW4ga2V5c2l6ZcKgIDog
-OAo+IG1heCBrZXlzaXplwqAgOiA4Cj4gaXZzaXplwqDCoMKgwqDCoMKgIDogOAo+IGNodW5rc2l6
-ZcKgwqDCoCA6IDgKPiB3YWxrc2l6ZcKgwqDCoMKgIDogOAo+IHN0YXRlc2l6ZcKgwqDCoCA6IDAK
-PiAKPiBuYW1lwqDCoMKgwqDCoMKgwqDCoCA6IGVjYihkZXMpCj4gZHJpdmVywqDCoMKgwqDCoMKg
-IDogbXYtZWNiLWRlcwo+IG1vZHVsZcKgwqDCoMKgwqDCoCA6IG1hcnZlbGxfY2VzYQo+IHByaW9y
-aXR5wqDCoMKgwqAgOiAzMDAKPiByZWZjbnTCoMKgwqDCoMKgwqAgOiAxCj4gc2VsZnRlc3TCoMKg
-wqDCoCA6IHBhc3NlZAo+IGludGVybmFswqDCoMKgwqAgOiBubwo+IHR5cGXCoMKgwqDCoMKgwqDC
-oMKgIDogc2tjaXBoZXIKPiBhc3luY8KgwqDCoMKgwqDCoMKgIDogeWVzCj4gYmxvY2tzaXplwqDC
-oMKgIDogOAo+IG1pbiBrZXlzaXplwqAgOiA4Cj4gbWF4IGtleXNpemXCoCA6IDgKPiBpdnNpemXC
-oMKgwqDCoMKgwqAgOiAwCj4gY2h1bmtzaXplwqDCoMKgIDogOAo+IHdhbGtzaXplwqDCoMKgwqAg
-OiA4Cj4gc3RhdGVzaXplwqDCoMKgIDogMAo+IAo+IG5hbWXCoMKgwqDCoMKgwqDCoMKgIDogY3Jj
-MzJjCj4gZHJpdmVywqDCoMKgwqDCoMKgIDogY3JjMzJjLWdlbmVyaWMKPiBtb2R1bGXCoMKgwqDC
-oMKgwqAgOiBrZXJuZWwKPiBwcmlvcml0ecKgwqDCoMKgIDogMTAwCj4gcmVmY250wqDCoMKgwqDC
-oMKgIDogMQo+IHNlbGZ0ZXN0wqDCoMKgwqAgOiBwYXNzZWQKPiBpbnRlcm5hbMKgwqDCoMKgIDog
-bm8KPiB0eXBlwqDCoMKgwqDCoMKgwqDCoCA6IHNoYXNoCj4gYmxvY2tzaXplwqDCoMKgIDogMQo+
-IGRpZ2VzdHNpemXCoMKgIDogNAo+IAo+ICMgZG1lc2cgfCB0YWlsCj4gW8KgwqDCoCA0Ljg4MzM2
-Nl0gbXY4OGU2MDg1IGYxMDcyMDA0Lm1kaW8tbWlpOjEwIGxhbjI6IGNvbmZpZ3VyaW5nIGZvciBw
-aHkvZ21paSBsaW5rIG1vZGUKPiBbwqDCoMKgIDQuODg0NTE3XSBicjA6IHBvcnQgMyhsYW40KSBl
-bnRlcmVkIGJsb2NraW5nIHN0YXRlCj4gW8KgwqDCoCA0Ljg4NDUyN10gYnIwOiBwb3J0IDMobGFu
-NCkgZW50ZXJlZCBmb3J3YXJkaW5nIHN0YXRlCj4gW8KgwqAgODguODY3NzQ2XSBtYXJ2ZWxsLWNl
-c2EgZjEwOTAwMDAuY3J5cHRvOiBDRVNBIGRldmljZSBzdWNjZXNzZnVsbHkgcmVnaXN0ZXJlZAo+
-IFvCoMKgIDg5LjAzNDI5Ml0gYWxnOiBza2NpcGhlcjogc2tpcHBpbmcgY29tcGFyaXNvbiB0ZXN0
-cyBmb3IgbXYtY2JjLWRlcyBiZWNhdXNlIGNiYyhkZXMtZ2VuZXJpYykgaXMgdW5hdmFpbGFibGUK
-PiBbwqDCoCA4OS4wNDUyNjVdIGFsZzogc2tjaXBoZXI6IHNraXBwaW5nIGNvbXBhcmlzb24gdGVz
-dHMgZm9yIG12LWNiYy1kZXMzLWVkZSBiZWNhdXNlIGNiYyhkZXMzX2VkZS1nZW5lcmljKSBpcyB1
-bmF2YWlsYWJsZQo+IFvCoMKgIDg5LjA1MjQ1Nl0gYWxnOiBza2NpcGhlcjogc2tpcHBpbmcgY29t
-cGFyaXNvbiB0ZXN0cyBmb3IgbXYtY2JjLWFlcyBiZWNhdXNlIGNiYyhhZXMtZ2VuZXJpYykgaXMg
-dW5hdmFpbGFibGUKPiBbwqDCoCA4OS4wOTk3NjNdIGFsZzogc2tjaXBoZXI6IHNraXBwaW5nIGNv
-bXBhcmlzb24gdGVzdHMgZm9yIG12LWVjYi1hZXMgYmVjYXVzZSBlY2IoYWVzLWdlbmVyaWMpIGlz
-IHVuYXZhaWxhYmxlCj4gW8KgwqAgODkuMDk5ODE5XSBhbGc6IHNrY2lwaGVyOiBza2lwcGluZyBj
-b21wYXJpc29uIHRlc3RzIGZvciBtdi1lY2ItZGVzMy1lZGUgYmVjYXVzZSBlY2IoZGVzM19lZGUt
-Z2VuZXJpYykgaXMgdW5hdmFpbGFibGUKPiBbwqDCoCA4OS4wOTk5MDhdIGFsZzogc2tjaXBoZXI6
-IHNraXBwaW5nIGNvbXBhcmlzb24gdGVzdHMgZm9yIG12LWVjYi1kZXMgYmVjYXVzZSBlY2IoZGVz
-LWdlbmVyaWMpIGlzIHVuYXZhaWxhYmxlCg==
+From: Hao Ge <gehao@kylinos.cn>
+
+Recently discovered this entry while checking kallsyms on ARM64:
+ffff800083e509c0 D _shared_alloc_tag
+
+If ARCH_NEEDS_WEAK_PER_CPU is not defined(it is only defined for
+s390 and alpha architectures), there's no need to statically define
+the percpu variable _shared_alloc_tag.
+
+Therefore, we need to implement isolation for this purpose.
+
+When building the core kernel code for s390 or alpha architectures,
+ARCH_NEEDS_WEAK_PER_CPU remains undefined (as it is gated
+by #if defined(MODULE)). However, when building modules for these
+architectures, the macro is explicitly defined.
+
+Therefore, we remove all instances of ARCH_NEEDS_WEAK_PER_CPU from
+the code and introduced CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU to
+replace the relevant logic. We can now conditionally define the perpcu
+variable _shared_alloc_tag based on CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU.
+This allows architectures (such as s390/alpha) that require weak
+definitions for percpu variables in modules to include the definition,
+while others can omit it via compile-time exclusion.
+
+Suggested-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
+---
+ arch/alpha/Kconfig              | 1 +
+ arch/alpha/include/asm/percpu.h | 5 ++---
+ arch/s390/Kconfig               | 1 +
+ arch/s390/include/asm/percpu.h  | 5 ++---
+ include/linux/alloc_tag.h       | 6 +++---
+ include/linux/percpu-defs.h     | 7 ++++---
+ lib/alloc_tag.c                 | 2 ++
+ mm/Kconfig                      | 7 +++++++
+ 8 files changed, 22 insertions(+), 12 deletions(-)
+
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index 109a4cddcd13..80367f2cf821 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -7,6 +7,7 @@ config ALPHA
+ 	select ARCH_HAS_DMA_OPS if PCI
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
++	select ARCH_MODULE_NEEDS_WEAK_PER_CPU if SMP
+ 	select ARCH_NO_PREEMPT
+ 	select ARCH_NO_SG_CHAIN
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+diff --git a/arch/alpha/include/asm/percpu.h b/arch/alpha/include/asm/percpu.h
+index 6923249f2d49..4383d66341dc 100644
+--- a/arch/alpha/include/asm/percpu.h
++++ b/arch/alpha/include/asm/percpu.h
+@@ -9,10 +9,9 @@
+  * way above 4G.
+  *
+  * Always use weak definitions for percpu variables in modules.
++ * Therefore, we have enabled CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
++ * in the Kconfig.
+  */
+-#if defined(MODULE) && defined(CONFIG_SMP)
+-#define ARCH_NEEDS_WEAK_PER_CPU
+-#endif
+ 
+ #include <asm-generic/percpu.h>
+ 
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 0c16dc443e2f..b652cb952f31 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -132,6 +132,7 @@ config S390
+ 	select ARCH_INLINE_WRITE_UNLOCK_IRQ
+ 	select ARCH_INLINE_WRITE_UNLOCK_IRQRESTORE
+ 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE
++	select ARCH_MODULE_NEEDS_WEAK_PER_CPU
+ 	select ARCH_STACKWALK
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC
+diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
+index 84f6b8357b45..96af7d964014 100644
+--- a/arch/s390/include/asm/percpu.h
++++ b/arch/s390/include/asm/percpu.h
+@@ -16,10 +16,9 @@
+  * For 64 bit module code, the module may be more than 4G above the
+  * per cpu area, use weak definitions to force the compiler to
+  * generate external references.
++ * Therefore, we have enabled CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
++ * in the Kconfig.
+  */
+-#if defined(MODULE)
+-#define ARCH_NEEDS_WEAK_PER_CPU
+-#endif
+ 
+ /*
+  * We use a compare-and-swap loop since that uses less cpu cycles than
+diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+index 8f7931eb7d16..4e91bf6791cf 100644
+--- a/include/linux/alloc_tag.h
++++ b/include/linux/alloc_tag.h
+@@ -88,7 +88,7 @@ static inline struct alloc_tag *ct_to_alloc_tag(struct codetag *ct)
+ 	return container_of(ct, struct alloc_tag, ct);
+ }
+ 
+-#ifdef ARCH_NEEDS_WEAK_PER_CPU
++#ifdef CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
+ /*
+  * When percpu variables are required to be defined as weak, static percpu
+  * variables can't be used inside a function (see comments for DECLARE_PER_CPU_SECTION).
+@@ -102,7 +102,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ 		.ct = CODE_TAG_INIT,						\
+ 		.counters = &_shared_alloc_tag };
+ 
+-#else /* ARCH_NEEDS_WEAK_PER_CPU */
++#else /* CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU */
+ 
+ #ifdef MODULE
+ 
+@@ -123,7 +123,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ 
+ #endif /* MODULE */
+ 
+-#endif /* ARCH_NEEDS_WEAK_PER_CPU */
++#endif /* CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU */
+ 
+ DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+ 			mem_alloc_profiling_key);
+diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
+index 0aeb0e276a3e..5931fcad9a91 100644
+--- a/include/linux/percpu-defs.h
++++ b/include/linux/percpu-defs.h
+@@ -63,14 +63,15 @@
+  * 1. The symbol must be globally unique, even the static ones.
+  * 2. Static percpu variables cannot be defined inside a function.
+  *
+- * Archs which need weak percpu definitions should define
+- * ARCH_NEEDS_WEAK_PER_CPU in asm/percpu.h when necessary.
++ * Archs which need weak percpu definitions should set
++ * CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU when necessary.
+  *
+  * To ensure that the generic code observes the above two
+  * restrictions, if CONFIG_DEBUG_FORCE_WEAK_PER_CPU is set weak
+  * definition is used for all cases.
+  */
+-#if defined(ARCH_NEEDS_WEAK_PER_CPU) || defined(CONFIG_DEBUG_FORCE_WEAK_PER_CPU)
++#if defined(CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU) && defined(MODULE) || \
++	defined(CONFIG_DEBUG_FORCE_WEAK_PER_CPU)
+ /*
+  * __pcpu_scope_* dummy variable is used to enforce scope.  It
+  * receives the static modifier when it's used in front of
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index c7f602fa7b23..ab0936ebf38e 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -24,8 +24,10 @@ static bool mem_profiling_support;
+ 
+ static struct codetag_type *alloc_tag_cttype;
+ 
++#ifdef CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
+ DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ EXPORT_SYMBOL(_shared_alloc_tag);
++#endif
+ 
+ DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+ 			mem_alloc_profiling_key);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b493..00514df3eae4 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -929,6 +929,13 @@ config ARCH_SUPPORTS_PUD_PFNMAP
+ 	def_bool y
+ 	depends on ARCH_SUPPORTS_HUGE_PFNMAP && HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+ 
++#
++# Architectures that always use weak definitions for percpu
++# variables in modules should set this.
++#
++config ARCH_MODULE_NEEDS_WEAK_PER_CPU
++       bool
++
+ #
+ # UP and nommu archs use km based percpu allocator
+ #
+-- 
+2.25.1
 
