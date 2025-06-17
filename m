@@ -1,60 +1,60 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4FB7291C15
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2864B2949E5
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:20:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148416; cv=none; b=OHxjIJ3MOe5ErQFkZvUwapIn7NFeRK3oIhuvkOxyvUlGVYvpNWU+6q7tZTd9GPn+xR8W+ILr9eU0qqXW3oHK+LKC6HR17JPj6yMSx1nmTHSf7a1mzMpFvX4ldaggSubQAufY9mrCj9AEO/b50Y4Ji27kzY0NPMDIYl0VWQxHecU=
+	t=1750148418; cv=none; b=WkV9i8HGgHAxXmOHL5qKVJ27m/6XGSfKGEXmLM0DH+gRcoECkOqXq6lVuB72OxQrwpH0NsBuiboK+gQKxNeRadmwXqfOwPXHBOjGb/YWsRMjjWmgSp8Hg/Xwzwb0zt3BocNdmkHnTXq3OEZ14UwglBagexfDDnt8yeoXFkHhGpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148416; c=relaxed/simple;
-	bh=sZ4za1Id7G7nTtjakVPvrhklzZJfNGfC4w42qoWdWUg=;
+	s=arc-20240116; t=1750148418; c=relaxed/simple;
+	bh=UxAuiy3peyOlwLJBGOPsPiR8T6DVdxWS7Est9l1Frw4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XUgQWPT9tWmCXokVtqn824xDDIiITRZmVhePWep+yvHEWZGZAcc9qJ7QnGiyYrs0RC6sc9OBcZRZXOjrTfi9v9+cqVfp4+yY/kF1wx3zhDxnjeqP4+eU2m4yiZwQiTaTfIcPhujHhpO/WLKjmYrrg2iq4/ujtr4D1WY3BhCdTh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=FszV23VG; arc=none smtp.client-ip=209.85.214.172
+	 MIME-Version; b=YBcrtnt1PYyjjfkNSqQN7WUwRGPjFyvOE/oPh1OswbQ9NTJsmcj6WlJ84hQxkb/FoQQtgnt3FnAWf1T/2+W7nwi3MiiaLwrXy8HwbMyOJjx1GJwfxU6gfWG8WY11sNL+wbc5McZnWxxwbltsJmhhHGO3mhV2sxPlWQJAs0fOkf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dycxxRg1; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FszV23VG"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2363e973db1so50572345ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:20:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dycxxRg1"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-234fcadde3eso68739625ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:20:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750148414; x=1750753214; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1750148416; x=1750753216; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hJpSSWKODubMWDu6LS8hKhfIs2zxRW9+kSXB6f03nq8=;
-        b=FszV23VGo5soy7GqxhDa8qKGOPpx4ZJMjjJTg/0uTpRAaGcmgNhwDNF7oZyfeVxQTS
-         T2NZs4rOdGbY4Ft9XdzsAVa4noz+gFOpJqzBKL26PJznvBmf5hbjUAvVHpwKoqiXIzaB
-         PlsEXYnHvIoPcZrZ664znfwMIM+9Rkq7cV1T8=
+        bh=/boR19WWVB+LDycLFRcC7qjbHGCqTpzpia0XTcyCZes=;
+        b=dycxxRg1MQFA+QY5WXQUEmRBQCKew+3Qv1hNIdOhEyqmjsiabzW5aiSMJXy9CJ3HHr
+         DwyltDia5ZJl6M0jbflsrENZUlilBPKvV2aP9vMoVcuT2FtD1kUSG/JgRevQGoPo9qxb
+         09Sd0g/xpTLPtRyz/H6C7Xw/ElgKmPnDkEzVA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750148414; x=1750753214;
+        d=1e100.net; s=20230601; t=1750148416; x=1750753216;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hJpSSWKODubMWDu6LS8hKhfIs2zxRW9+kSXB6f03nq8=;
-        b=SWdfK39KEBNVHf7m+6+1fg408zGuPWxyVPMLruzgPNMD4TmpbIrXLcVbNx0pt9Qmy/
-         McXeVJKWPAqqv00z11Q5EfyTW58M6B9Z4Jpnqngtq+cqCi8kSbvbuZw+169iyX6PDT0T
-         JIyXsHy+C7GHJ0yie7gNkAuoNHmwycxSOsNLwVrAk5vum8cj/xCqsklRDuTtgizXglRu
-         G7whz4FgejlTX1OzGcCVsNCCKmjgKLWQdwkv9lBmm7JmWZj2UjTUgMg6ajFtMgdkfKYH
-         FhDt6jtnM95tJiXsmkpnMjbs3jm4RbKCkioOY7jlFpjAOeVjMUoxmOjofxP9fZItgBXH
-         I+eQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5rJNbwwatZ3k6PEg94FnykgkeByr25yu1OaDMS0gLpZ/KH8l/EqoNR1BoIhjvzVzId6LaKmuX3frsSww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCp0zwk6YNzBn5JV1FLDtIpL3i4MSV1CuEwveMmPKYbspEprK
-	7NqU5D6AG0LoYgN+7W4yr9OWK2R15UBp1I9dRStRImf6iwBN++KTo2lKW2uaLewhbA==
-X-Gm-Gg: ASbGncsqHwIHb2LpOXVq0rly1mlrXyTkmu+koAAQtZK6SJjPYSBaPyWsbwU1KFtwWEd
-	+fM4BuUTWbikBCHJIynhIb978lmdbsO+SobjpdJQCl7UeQTNqQtCSn9koYhc5BVsHlvDiSbS3B4
-	JtWifc593IDqodQ10vr/VA32/i4i/Vn/H89Yewb4NY1+iUfUTtR77RSDWvONdqpDDnLvA9FYpSC
-	I1wyBFRC/LNPjTJWlPx/VBk2hXYDOrKvaWqxnb28uObl2CwuGezLNJp390YXwOg6a4uRvNgc3rg
-	pZL9zVStKc9JsOs7aNyHx5NzsmN+xcvbs8npkTL7ydK1ohxwdRlwaCCQ0AYktKiyBziw0qtd0wZ
-	NisMSiOoj8uovlbE=
-X-Google-Smtp-Source: AGHT+IFfpg2r7E+A3hwnVaD8XvFL8a9eXnDD2HrKdh1NTx8ZQ0KD0SKLHARkzMHejSWGfoyIg/Kiig==
-X-Received: by 2002:a17:903:4b07:b0:234:b3fb:8ed with SMTP id d9443c01a7336-23691bedec5mr30450435ad.1.1750148414061;
-        Tue, 17 Jun 2025 01:20:14 -0700 (PDT)
+        bh=/boR19WWVB+LDycLFRcC7qjbHGCqTpzpia0XTcyCZes=;
+        b=vUEIr9S0BWtER3eS5GVO5wOCFA5SJ+zp4oZT2jZNc2f9eDdegHyJ+KvUxrtL2oovVN
+         JbflcBtFJgBCl4O6hSlzItaglQWjBTr9RB2mh6nC7ImecXtcfSCqxbUX1nX1tdLlkfpW
+         ImFhcCCTSYMhhm0duA0K/CAkuojqUvvrxTFg1DvBE/I2Hc6BfmWzBg1sPT4ZRzEMbrnc
+         RAVfZ4bs19jzO5mhLUjov9UQX3zRKRA+wfKChPeDOGoVkOqmaAJBrs/4l3RlSEEpO4a4
+         C/2IBl/TaK96Qn7V+98e6p66M38n+MRXzXe5NkoSPbTWB6qpV3rKVh5T61BgXNCylylo
+         IYBg==
+X-Forwarded-Encrypted: i=1; AJvYcCWabpwGejRGLZ1h34me5tc4ddqRh8Q1a1yYQGh/7Bzdb3mm5cKz3NEgsBcg7dJSe9FTCrCKbMBzdeU4OxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZ9Ol/yQvS3/uX6Pr/6Lh2QAw/UncQ1gZW8m/A2R1YVbgsd/+i
+	D99Kn82FzXXp3r46UFXHMO3n4Mu5mkziov27+ZzrONwyUV1CPJMw/O2KRvpNbVHTgQ==
+X-Gm-Gg: ASbGncsNfQacG/z4bPxyv5JOgJFC9oiKDuhRLj0v7z7aqRgqacuT5d5HPkWXdIL8Jn0
+	YelXE+5HtiaCbtpGa9WH+Hzo5esQmGVV/eX1s+IXT0G977DX4B/ATgkKI4HYbbMhaox56K80ApT
+	XvFsXdqkGbdgDtPLdd/RQhtr2fxcY2mJBbPqWh7MtpM5aepkn0cG/D/14OKcrI911U8SbHl8fXJ
+	d+y0yWnRY3GHMGCG5CfqdAZq6SMJWe7sdVdhY2kNf7jkuT4i/t/Cp4QThTAN9tE68oXx+qPbBNt
+	0GgdAiAnKE13xLsrvgCFuRtzhn6ca7K1nHWbsRLPHtj9No5USgaZkY4PE0YGxcILmEH9r99wndN
+	wDXFA
+X-Google-Smtp-Source: AGHT+IEDu/d0gvLMPkfg382ZhcCdbDKZbFxmgqE3AqPSqBv9agEnIVcL4Kq6GKfMPiLzVnBd6My2XA==
+X-Received: by 2002:a17:903:24f:b0:235:ea29:28e9 with SMTP id d9443c01a7336-2366b3c35b0mr200531685ad.38.1750148416513;
+        Tue, 17 Jun 2025 01:20:16 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:24a1:2596:1651:13d8])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781f7sm74598885ad.110.2025.06.17.01.20.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781f7sm74598885ad.110.2025.06.17.01.20.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 01:20:13 -0700 (PDT)
+        Tue, 17 Jun 2025 01:20:16 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Matthias Brugger <matthias.bgg@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
@@ -67,9 +67,9 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-input@vger.kernel.org,
 	"Rob Herring (Arm)" <robh@kernel.org>,
 	Benson Leung <bleung@chromium.org>
-Subject: [PATCH v3 2/6] dt-bindings: arm: mediatek: Merge MT8186 Voltorb entries
-Date: Tue, 17 Jun 2025 16:19:59 +0800
-Message-ID: <20250617082004.1653492-3-wenst@chromium.org>
+Subject: [PATCH v3 3/6] dt-bindings: arm: mediatek: Add MT8186 Squirtle Chromebooks
+Date: Tue, 17 Jun 2025 16:20:00 +0800
+Message-ID: <20250617082004.1653492-4-wenst@chromium.org>
 X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
 In-Reply-To: <20250617082004.1653492-1-wenst@chromium.org>
 References: <20250617082004.1653492-1-wenst@chromium.org>
@@ -81,13 +81,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are only two different SKUs of Voltorb, and the only difference
-between them is whether a touchscreen is present or not. This can be
-detected by a simple I2C transfer to the address, instead of having
-separate compatible strings and device trees.
-
-Drop the SKU-specific compatible strings and just keep the generic
-"google,voltorb" one.
+Add an entry for the MT8186 based Squirtle Chromebooks, also known as the
+Acer Chromebook Spin 311 (R724T). The device is a 2-in-1 convertible.
 
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Benson Leung <bleung@chromium.org>
@@ -97,23 +92,24 @@ Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 Changes since v1:
 - Added Rob's ack
 ---
- Documentation/devicetree/bindings/arm/mediatek.yaml | 3 ---
- 1 file changed, 3 deletions(-)
+ Documentation/devicetree/bindings/arm/mediatek.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
-index a7e0a72f6e4c..2032b0b64ba7 100644
+index 2032b0b64ba7..a4d9c72d10c4 100644
 --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
 +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
-@@ -350,9 +350,6 @@ properties:
+@@ -302,6 +302,10 @@ properties:
+           - const: google,steelix-sku196608
+           - const: google,steelix
            - const: mediatek,mt8186
-       - description: Google Voltorb (Acer Chromebook 311 C723/C732T)
++      - description: Google Squirtle (Acer Chromebook Spin 311 (R724T)
++        items:
++          - const: google,squirtle
++          - const: mediatek,mt8186
+       - description: Google Starmie (ASUS Chromebook Enterprise CM30 (CM3001))
          items:
--          - enum:
--              - google,voltorb-sku589824
--              - google,voltorb-sku589825
-           - const: google,voltorb
-           - const: mediatek,mt8186
-       - items:
+           - const: google,starmie-sku0
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
