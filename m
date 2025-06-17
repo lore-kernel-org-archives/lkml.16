@@ -1,47 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E092E716B;
-	Tue, 17 Jun 2025 13:09:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD782E7162
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165769; cv=none; b=tvR6iXo8LpVuKRi53L0X4QYGCu6S7oejWetlDRefZ/Z1CfJy1Q007S+HwLy5a5+TPqrACE20pOBYdE0g6XJGNzJC2TfzH5TlBaBrcUjMXVWcBiV94vQUZ8L1WIop2d1WxZeJoI/hwxSrKWpe73y+i4KNnwU6YjTJ1kRyIfFTWow=
+	t=1750165824; cv=none; b=ciay41sa89fKG0YGyBmZmmQ2WenNiy7ZDGd7OWEo2KWNnYTSz7TBJNqG5+eDVHST87N7izF5fjjQ7kN/d3IHoOAQijDlZTiaYUQz2Z2j+calSFbTjDpWciABe+BORUTWmWcFqvKM9H8JSdTmQbxjyLLWofTHPKuJVOZS/Rk0sK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165769; c=relaxed/simple;
-	bh=HvGY6oce5rUZfv/fTGrMAeDcKLN52b/tg7Nr1pAVykk=;
+	s=arc-20240116; t=1750165824; c=relaxed/simple;
+	bh=/+Qev5ZixSm+PeJ3Y22CDie9pW5HM+UR+Aim1JqHFpY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iocI1XSEOHyBaUkIc2Q0To75FvM7mwhmSznAPCoAsUbYHFaVcpEr6MP0w9SjQGhB6pd8+764De3lLVFY4Pie6cpJC0lQjtgJdHF3aiznWp4H0vVmmYqzCnYtqqCHhylxdLuQ+pGVU0sv1RtXrQfwmi4EKMA+WjcPDlzASPIsZc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcXSTeBH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GyPumiC28MZXWqXtdbeRhFbGVtwfU4E04raoeI6UkPx0gMu+IiprR/4e+NfmE3KdhLQ4Q5qAfUeoz0W31H9tPTn0078eATcoqz4tCpZhZMXvxA7ADJCaC2/7DesNY+UgALhGKTo4WtJObg/dK6GvYjik6htEsKXEHyf9rZgBKR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OFGGWI9J; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcXSTeBH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D046C4CEE3;
-	Tue, 17 Jun 2025 13:09:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750165769;
-	bh=HvGY6oce5rUZfv/fTGrMAeDcKLN52b/tg7Nr1pAVykk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gcXSTeBHsqWdmxhqwnrQnxGYBo33tJMLPLnh4ac3nUmRVLuZoj3aOHF9p/NbUw8ly
-	 F1Zj31U3KrWkLHatgLRu2bNuoRsWY/HpwV3gJ3zVsnOoZ3B1fPcVWuk3Vwt1yseCyJ
-	 GjIwN0z6BBSnRSzVYV/FL0jE3iQuHyiGkH8B3LQ715vd+vHSjMoIPPvf1k4nrLGOzh
-	 Ipz3prrnlSsQN6vcQMCPoZ0IoYTnm78XxepwPH/yy1sWdr+QfVN5FuZ8670VQfDjmM
-	 9VMVFQDcVkYEr5j7FYhuTUTSsolMIzoS2W5IfMQLVpFkr78zeKm01m2CPlle3DompZ
-	 g64GzwOAQ6i2w==
-Date: Tue, 17 Jun 2025 08:09:24 -0500
-From: Rob Herring <robh@kernel.org>
-To: Inochi Amaoto <inochiama@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>, sophgo@lists.linux.dev,
-	Jingbao Qiu <qiujingbao.dlmu@gmail.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Move sophgo,cv1800b-rtc to rtc directory
-Message-ID: <20250617130924.GA1678432-robh@kernel.org>
-References: <20250608224252.3902421-1-robh@kernel.org>
- <ywln42bb3i5hyzlsmfbx3xt2kjbefqmcxytcqxdcgah77gcesi@2cdw3cgxbg4c>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OFGGWI9J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750165821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bfbx2bhvNqJG4cR2xnKGL2cg6Kwa3zcjDRyQFAhyr84=;
+	b=OFGGWI9J7EQig0utmI1N4IGwk/uMgCELnchc/tWNNAHVUrIbxOeATA1v/wQ1D/jHEXaA9k
+	I5vqO/xVmnwsQ6B7f8qHaNd4alAJhH1MrgT6gW7GHavl8PSE2Zso0R/s4xvLpXvKF7uE10
+	1WKM673Bvc99xznejwttaTGEkb6MfS4=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-424-GKrD5du4MCCu8jI_DwTSNA-1; Tue,
+ 17 Jun 2025 09:10:17 -0400
+X-MC-Unique: GKrD5du4MCCu8jI_DwTSNA-1
+X-Mimecast-MFC-AGG-ID: GKrD5du4MCCu8jI_DwTSNA_1750165815
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0ABCD1956095;
+	Tue, 17 Jun 2025 13:10:09 +0000 (UTC)
+Received: from localhost (unknown [10.22.89.94])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 99E8D30001B1;
+	Tue, 17 Jun 2025 13:10:06 +0000 (UTC)
+Date: Tue, 17 Jun 2025 10:10:05 -0300
+From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>,
+	David Vernet <dvernet@meta.com>, Barret Rhoden <brho@google.com>,
+	Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>,
+	DietmarEggemann@uudg.org, dietmar.eggemann@arm.com,
+	Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Wander Lairson Costa <wander@redhat.com>
+Subject: Re: [RESEND PATCH v4] sched: do not call __put_task_struct() on rt
+ if pi_blocked_on is set
+Message-ID: <aFFpLWyrxZ5CRbBG@uudg.org>
+References: <aEw-KjUjjP2gYH6z@uudg.org>
+ <20250617092609.GR1613376@noisy.programming.kicks-ass.net>
+ <20250617093627.ykSeZMqk@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,46 +71,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ywln42bb3i5hyzlsmfbx3xt2kjbefqmcxytcqxdcgah77gcesi@2cdw3cgxbg4c>
+In-Reply-To: <20250617093627.ykSeZMqk@linutronix.de>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-On Mon, Jun 09, 2025 at 06:49:38AM +0800, Inochi Amaoto wrote:
-> On Sun, Jun 08, 2025 at 05:42:51PM -0500, Rob Herring (Arm) wrote:
-> > The $id path for the sophgo,cv1800b-rtc binding was missing part of the
-> > path 'soc'. However, the correct place for RTC bindings (even if it's
-> > also a "syscon") is the rtc directory, so move the binding there while
-> > fixing the $id value.
+On Tue, Jun 17, 2025 at 11:36:27AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-06-17 11:26:09 [+0200], Peter Zijlstra wrote:
+> > On Fri, Jun 13, 2025 at 12:05:14PM -0300, Luis Claudio R. Goncalves wrote:
+> > > With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
+> > > from rt_mutex_adjust_prio_chain() could happen in preemptible context and
+> > > with a mutex enqueued. That could lead to this sequence:
+> > > 
+> > >         rt_mutex_adjust_prio_chain()
+> > >           put_task_struct()
+> > >             __put_task_struct()
+> > >               sched_ext_free()
+> > >                 spin_lock_irqsave()
+> > >                   rtlock_lock() --->  TRIGGERS
+> > >                                       lockdep_assert(!current->pi_blocked_on);
+> > > 
+> > > Fix that by unconditionally resorting to the deferred call to
+> > > __put_task_struct() if PREEMPT_RT is enabled.
+> > > 
 > > 
-> > Fixes: 76517429dbfd ("dt-bindings: soc: sophgo: add RTC support for Sophgo CV1800 series")
-> > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > ---
-> >  .../bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml        | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >  rename Documentation/devicetree/bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml (96%)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> > similarity index 96%
-> > rename from Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
-> > rename to Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> > index 5cf186c396c9..c695d2ff9fcc 100644
-> > --- a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
-> > +++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> > @@ -1,7 +1,7 @@
-> >  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >  %YAML 1.2
-> >  ---
-> > -$id: http://devicetree.org/schemas/sophgo/sophgo,cv1800b-rtc.yaml#
-> > +$id: http://devicetree.org/schemas/rtc/sophgo,cv1800b-rtc.yaml#
-> >  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> >  
-> >  title: Real Time Clock of the Sophgo CV1800 SoC
-> > -- 
-> > 2.47.2
-> > 
+> > Should this have a Fixes: tag and go into /urgent?
 > 
-> As the rtc syscon has a sub function for remoteproc, is it proper to
-> move this binding into rtc subsystem?
+> I would say so. I'm not sure what caused it. I think Luis said at some
+> point that it is caused by a sched_ext case or I mixed it up with
+> something. Luis?
 
-Does that affect the binding (is there more to add)? Looks like an RTC 
-from the binding.
+You are correct, all the initial cases we observed were triggered at
+sched_ext_free(). Later, Crystal Wood was able to pinpoint the real
+problem, __put_task_struct() being called by an RT task with a mutex
+enqueued. With that in mind we were able to identify other cases with
+a similar cause.
+ 
+> The other question I have, do we need to distinguish between PREEMPT_RT
+> and not or can we do this unconditionally?
 
-Rob
+After you mentioned that idea in the v2 thread, I ran stress tests (LTP,
+stress-ng, perf bench all in a tight loop, ...) and a few benchmarks, o
+kernels with and without PREEMPT_RT enabled, with and without lockdep.
+Everything worked fine, but due to the lack of a specific benchmark to
+run, to ensure no penalty was added by the patch, I was not confident
+enough to suggest the change.
+
+Luis
+
+> Sebastian
+> 
+---end quoted text---
+
