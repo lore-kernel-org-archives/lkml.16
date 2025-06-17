@@ -1,100 +1,149 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9865143C61
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC6A26AEC
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:31:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750131000; cv=none; b=p/Yo9nyPdFSELJYhVr256y0V25kSKJfWS6fGy4MBE933BKX5tpmBbJtvKjZR39rIlMZrpoUWP6HLUNBO09eu/xmUz5mr+PAaBF294H09Vnfanl+YSjgW3/lFoW1zmQuYJdkzpXfHex/uQiWISHqP7WUsBzGZxEEpufR1ycFquYA=
+	t=1750131108; cv=none; b=na8/jdQuuAmZfCgLRXal4se6ptUMNYPIynUS9KDeuWYBXUknECBLqpDlEBRz89wkpSieaB+pr0Q41pY0eNqkfzNvb05g9LQmGNDu1ublldQP8Rim0mt/5CuiqZIDVY1A5nkyJijvrXKLFGOMs5tV/7xo93nkElCgfnOhmyU1E/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750131000; c=relaxed/simple;
-	bh=yUjLj5dHFAp5s2XajRxukKnvBAY8lCZU277Bt4Hn2B8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pTXAdtudNwN/Ota9YAX/oqXzefpyAqEp6UFy7844Id5se1BMgdi967h2tSXnPtRVyXc4oRXBrR6/iOeEkPoOjZ9uXVpSp3CEi3uDSQ6BX6ZDDOosDKC6nfeZEI01nrbES6m4dRj2m1reYoSsTuNHJUFQg63QBn0CseZM8tEjNFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ci8kuokl; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1750131108; c=relaxed/simple;
+	bh=ieph6lxJ3Hbp+Rp377DeV7BoLQycTf5gx8twwmnu68g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hHTBdvKdL7aS/YldEee91LvXx+US8yWOPM/tsacBIfPZEMWDkfFluoJBFTu1rz3ESD8OcxH3pIsYyDRDFbjeJGzJlfd12p4KjA28+AEcIj95i7G3XgU5o4nm83Q6kw4WLxrnvimJ1HkT4a8ysodfO2lwLmCnl/s2RXv3QQumjYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dVsMuar8; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ci8kuokl"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235ca5eba8cso94785ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:29:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dVsMuar8"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553a5f2d321so4852e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 20:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750130998; x=1750735798; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CUqINV3rw8vfD2veAggpTZ6kVQqewNkg6mMiquBfyXs=;
-        b=ci8kuoklzcVwQ2utLbPg8S9e5aVuLfX/HqVa3YhrTppp5HHi2ZWF3MF4KbEP8CJTAh
-         xMwp8I9l8YmrCs2dUDdAU5K7J2Dq1mlykQZyeJdiSn5bVkxI2415o40b//bqprgph4IQ
-         ZXpF4JKExwfuiv+rk4docBecS33/KRG4WpXa4ji396tuuJy6iL4O7N+L1gipnfiscmha
-         IOXW38lqxuG3YBEd+oAkt0SULBeaoLPlDTph0xpmDZO6+9eEtkUSofaNL1O3caqCj5rn
-         g8PcxcZMUtY3OrTZdADv6rej8n3oFUEMMB4QW4cheyvv8BifhT8f4pkcZ6rRYcGmqrPm
-         NAjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750130998; x=1750735798;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1750131104; x=1750735904; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CUqINV3rw8vfD2veAggpTZ6kVQqewNkg6mMiquBfyXs=;
-        b=pGUY2HbPtFnnW5HQ9aq11MW78okKnyNWnzvlT12Y9u075ag6dpg/LS0Ell3tVXReYm
-         z9K7A7vAijL4VD8ZHzJXOxItbJIo4V4rX8VrtvBz92sKQPV7TZQcgMfiMihueLan5dsZ
-         DESMEsm2cCemtvf4TfZc9+nBW74IeJzehDboelr0zyXxkCg0B8lhHRYxAzF0sSCopdBx
-         BKQJzCRuFE7mzVvFUcZvvbT4iulfZAXdGHbngKSoYNpYPoXZFIDAVN53qzH6XUiQ6xBJ
-         7RiDcskTeIGQKg5w4eCG1LF4h98Bw7B9VdLw38V3uPfqyWorbJTM4GxqNcPEHkA2c/60
-         +4jw==
-X-Gm-Message-State: AOJu0Yxh0mZ3gB4GVBvo/dop6h1WNKpme48YXTWDsu64r/DUAR3bjgAk
-	4gpGqYkqvaQh5x0/jukfZYJYrnzU7v3sFPvohnzUr61WZmM+br24yKRQHkzoLYr0pw==
-X-Gm-Gg: ASbGncuqAlcYwlq3ZGGP+8Y2EZfezyTtYB/2OxaSyHTkk0boOlZZ9srL4OObFvGT+X6
-	D/6Tc7nv9L3dT6Cbxtc5vH8W5TGmz8p8bRJD6yIPXkQ3WEXhRKcBNl6QDyucWMF2OHZfxK8x/VQ
-	OTwBId17iii30egWl7KLaDWXFdBn2s/7Cs+VplXs4g7iPZ8DJzGRX1MT2pgAbru7iWCQIGEOI+b
-	gTvxUTUxtH3ODUeWerlAt1wRpnDvMhgWE0T+Z1Gh06ueazUXvPLVNzE4dOWlGHFv82ikMKarJ7e
-	nI4Jza4lvorSYALEFAc3qIHvNHEypjayeV7R+iP+zTuTiIdpVrWj96ccCC3lOobOZcKerncMuok
-	4qPX6W+3qfXv41YYP0DFbxeJVcNrTpPiACRUSvA==
-X-Google-Smtp-Source: AGHT+IHiDCwavgLhAVfK+Sm64NCnqWHuip3kUbYnXShrwNbzo/IsVxNbWKDXEl3n55X7VrEHzCOV/A==
-X-Received: by 2002:a17:902:cacc:b0:236:9402:a610 with SMTP id d9443c01a7336-2369402aadfmr323735ad.22.1750130997870;
-        Mon, 16 Jun 2025 20:29:57 -0700 (PDT)
-Received: from google.com (137.184.125.34.bc.googleusercontent.com. [34.125.184.137])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b2b545sm9464790a91.0.2025.06.16.20.29.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 20:29:57 -0700 (PDT)
-Date: Tue, 17 Jun 2025 03:29:52 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH] binder: Remove unused binder lock events
-Message-ID: <aFDhMCoPsf7O1oHc@google.com>
-References: <20250612093408.3b7320fa@batman.local.home>
+        bh=mwhOByNmuLKBhb5Mlg+5pTuchaKObMpIf2JB0S1ADBY=;
+        b=dVsMuar8yrm/G2igr5QLyMut8oumHNdvZ+caLjegkbHueNVglAbTmx5qO6NH/MjyPL
+         l2Egjfts32ZxPXFcETD1Cq3swij9aywwkQmjoE0Ji8c49tovTcApwBMYxFKuFcEsKP5R
+         ObOcnqpDNRkD6iY48hVioCOb34EEr/E6t8zJK9WZkQ2VezXkisLyZZRVRJfuEgBpANQc
+         PRZ8JAsuqLzztuXPBhmx/WCP8sxXHx/9GESGEsNSBTNlXIIyhO0ByJ+rRwXly9/NV0ji
+         F/M8JKkEV0XMeEypiy6rqZhvfDXokKaGKDql7rK0DTX9iAx5U7+XhA4yrkts9FGXymA9
+         WNKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750131104; x=1750735904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mwhOByNmuLKBhb5Mlg+5pTuchaKObMpIf2JB0S1ADBY=;
+        b=D7volUtIOKA5o3/5EiVY0obbko3XKDC+y2lVuynG7fqOpYHyuuQKfszYgQI8mSUZKm
+         cG0CCFEYzDnPbJxzJ4I/8XSHsnPrpPil1A4vekrX9mR3bUC2PP7virOJiFHOeSREqwg5
+         WxdhXG5GK1R1OUdLossB5eZEK6XoELHYoLFJz8jB5E92U9Xe1RYB7Hkh7yfdboUPXEj0
+         jolozp0Gi5FkDjH5L2zEm+18AUGN1h6zjO9L2dPYx4Tx+eXGptJFTW0WnPlzaOl0J7q0
+         DogYoy1xQPVNIt6jNUUMdNOup27OJTI5q2cd3ZFQDBhUH/J+kTaw5VoDu+ndFQucGDxu
+         69CQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxgJkwBLNeI2/ZbXURKsoO81xbJenoKFNlmUKEkMMAwRP3tKfVJ/SiDWQwc9YPyyzGwKceTi/SJ3CaRTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTADpgEhjxACn7ajJjksBrMjklQ+s5j7QIAYXjIkWOJ5W1xubj
+	GAMmuBrHOR1iXUrvfPrvyDcu6w7wpmlKLBBL5RipU/R6/UuwgJwY7CUfjs1J0iDhwvgk2Rk+Lw1
+	NIBAabkQW6LG9WpLvxaukMwDQtEc5EGiNrTASzII7
+X-Gm-Gg: ASbGncuXlUF8rDJ88XRoKTfzxCsMR01vpPYBpgCnINLwdMc6L7WAlUs6VAD1ToMp0Gb
+	mUklQh7PbbqP9larVaszE+7NfoLpupwGcUdwYMPyQGp5wYlpT1YP20sylFF14c8aMFil3HlLnr/
+	bGslru2gXKh12JQx7s5/xzrs6/oOYx0DUyRQgm9G4zX00sj8ynJdbfZdjhElFtIXfDmZI+e5Q=
+X-Google-Smtp-Source: AGHT+IGyuaznBGQp3QUnLGhxV3KnZapR1/Gtg7nZI85N47EBN9ZMHFJ3qlouR/mC0M+rb+Bp7XeJeYNp9yNbpRoZJj4=
+X-Received: by 2002:ac2:5deb:0:b0:553:50d2:5c20 with SMTP id
+ 2adb3069b0e04-553b80b051cmr508080e87.6.1750131103855; Mon, 16 Jun 2025
+ 20:31:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612093408.3b7320fa@batman.local.home>
+References: <20250616132152.1544096-1-khtsai@google.com> <20250616132152.1544096-2-khtsai@google.com>
+ <2025061634-heavily-outrage-603a@gregkh>
+In-Reply-To: <2025061634-heavily-outrage-603a@gregkh>
+From: Kuen-Han Tsai <khtsai@google.com>
+Date: Tue, 17 Jun 2025 11:31:17 +0800
+X-Gm-Features: AX0GCFsjBA1PsPOxoPnvm17MTnEeKtIwkTEYPQhKjxWr5yq-Sg5ZoYFB0zEugGg
+Message-ID: <CAKzKK0oB83B3EwX75NTFd55E0qQ=QwNpKv3hUf9Oe3ZF3AAzrQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] usb: gadget: u_serial: Fix race condition in TTY wakeup
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: prashanth.k@oss.qualcomm.com, hulianqin@vivo.com, 
+	krzysztof.kozlowski@linaro.org, mwalle@kernel.org, jirislaby@kernel.org, 
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 09:34:08AM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Trace events can take up to 5K each when they are defined, regardless if
-> they are used or not. The binder lock events: binder_lock, binder_locked
-> and binder_unlock are no longer used.
-> 
-> Remove them.
-> 
-> Fixes: a60b890f607d ("binder: remove global binder lock")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
+On Mon, Jun 16, 2025 at 10:17=E2=80=AFPM Greg KH <gregkh@linuxfoundation.or=
+g> wrote:
+>
+> On Mon, Jun 16, 2025 at 09:21:47PM +0800, Kuen-Han Tsai wrote:
+> > A race condition occurs when gs_start_io() calls either gs_start_rx() o=
+r
+> > gs_start_tx(), as those functions briefly drop the port_lock for
+> > usb_ep_queue(). This allows gs_close() and gserial_disconnect() to clea=
+r
+> > port.tty and port_usb, respectively.
+> >
+> > Use the null-safe TTY Port helper function to wake up TTY.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 35f95fd7f234 ("TTY: usb/u_serial, use tty from tty_port")
+> > Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
+> > ---
+> > Explanation:
+> >     CPU1:                            CPU2:
+> >     gserial_connect() // lock
+> >                                      gs_close() // await lock
+> >     gs_start_rx()     // unlock
+> >     usb_ep_queue()
+> >                                      gs_close() // lock, reset port_tty=
+ and unlock
+> >     gs_start_rx()     // lock
+> >     tty_wakeup()      // dereference
+>
+> Why isn't this up in the changelog?
 
-Thanks Steven!
+Thanks for the suggestion. I'll move this part up in the changelog.
 
-Acked-by: Carlos Llamas <cmllamas@google.com>
+>
+> >
+> > Stack traces:
+> > [   51.494375][  T278] ttyGS1: shutdown
+> > [   51.494817][  T269] android_work: sent uevent USB_STATE=3DDISCONNECT=
+ED
+> > [   52.115792][ T1508] usb: [dm_bind] generic ttyGS1: super speed IN/ep=
+1in OUT/ep1out
+> > [   52.516288][ T1026] android_work: sent uevent USB_STATE=3DCONNECTED
+> > [   52.551667][ T1533] gserial_connect: start ttyGS1
+> > [   52.565634][ T1533] [khtsai] enter gs_start_io, ttyGS1, port->port.t=
+ty=3D0000000046bd4060
+> > [   52.565671][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
+> > [   52.591552][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
+> > [   52.619901][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
+> > [   52.638659][ T1325] [khtsai] gs_close, lock port ttyGS1
+> > [   52.656842][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be975=
+0a5) ...
+> > [   52.683005][ T1325] [khtsai] gs_close, clear ttyGS1
+> > [   52.683007][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be975=
+0a5) done!
+> > [   52.708643][ T1325] [khtsai] gs_close, unlock port ttyGS1
+> > [   52.747592][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
+> > [   52.747616][ T1533] [khtsai] gs_start_io, ttyGS1, going to call tty_=
+wakeup(), port->port.tty=3D0000000000000000
+> > [   52.747629][ T1533] Unable to handle kernel NULL pointer dereference=
+ at virtual address 00000000000001f8
+>
+> What is [khtsai] from?
+>
+> thanks,
+>
+> greg k-h
+
+I added the "[khtsai]" logs for debugging and left them in the traces
+because they clearly reveal the sequence of events that led to the
+problem.
+
+Regards,
+Kuen-Han
