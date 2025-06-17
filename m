@@ -1,154 +1,145 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC3923C8B3;
-	Tue, 17 Jun 2025 19:00:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D82A23C8B3
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:01:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750186855; cv=none; b=o2XXWcpdAsJSlTbrOVwP4QPHYuacX7RbhehboVs4bt7iBcfXR+7JlaTO8AT753EDeOkUXyYNoXLz06yaxMhgxYvXIDt7nFlkZRzeT8ElM+K8AiniuZbp1D7u+SVnKzMCnyiTxz40R6G/w8IfSz2AVonxPYeLpcwv18cS7q96Ws4=
+	t=1750186862; cv=none; b=ci/VmEM1QRGU28LsN7q3+c4duae2dkfmkLrWKAcS3jHmLA1IZCOvCpr8+lj7RwCAbLEbMJlPB7rxAMzcgids9GWVRIZAidMYIMS+f+P1vyVEPGdu5kIoaSM1ANDDbSbIBwX2KrfEVFI3m7QLzkteLdssD6axkWNsOe2jTex9n4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750186855; c=relaxed/simple;
-	bh=WUqBtBN4algVDh0/7LhKoZcj1pnT1CAk4lKolOpeYck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gsX+dK+zUOrnJ16bLktWSKLeJ9Spux9p5Bh4erKTnd9TNX9tQp9njxd9jVt8EB7n5c9oS6U0jvQzFhTLIXHcqrd7qOreM5QBc6n9AtKCdtJD4jFKsSlnPV58s55mDrJISWwW7N1pkQL6qjk8U0MJLYioTh3OfgcSiKlueCOtmMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bMGPy2SYNzsS0S;
-	Wed, 18 Jun 2025 02:59:34 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id 52C451403D5;
-	Wed, 18 Jun 2025 03:00:45 +0800 (CST)
-Received: from [10.48.210.222] (unknown [10.48.210.222])
-	by APP2 (Coremail) with SMTP id GxC2BwCnEONQu1FouD7hCQ--.7597S2;
-	Tue, 17 Jun 2025 20:00:44 +0100 (CET)
-Message-ID: <218abf15-b4ed-4d13-9541-aab975bd3835@huaweicloud.com>
-Date: Tue, 17 Jun 2025 21:00:30 +0200
+	s=arc-20240116; t=1750186862; c=relaxed/simple;
+	bh=H++uYy6CxgY3YumTF3321sCEcruCPrIqlCcoVy81izY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=guxhUkZBIY3AUxA9L+lmP6QiX9TqgQHpG1+bEO6cpseTs+QLwEHBBOzz7kOOS5ZqSdYGr2hlCr48QcPfRsG+u4rC05KsEN7J8qdEnBs/a2vWu1dmAbYg4g9bP3Vxn8MEinfd0dB2bGOonybNBtFzyrIDK+oPbNhCUm/N62OW+X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOeTbKGG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOeTbKGG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF03AC4CEF0;
+	Tue, 17 Jun 2025 19:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750186861;
+	bh=H++uYy6CxgY3YumTF3321sCEcruCPrIqlCcoVy81izY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fOeTbKGGmFt9OYjoGDHyjdRzdXd/DqoYtvjB6e2ncfn4Cxx4K2iB3m4w/tTdWdrAV
+	 lVf5PutFFyw3fvTZXtL+9cXAmh2hLPihCfdGw9g0EBt8Fe8ne2xL+MiBRG1Oq3br8L
+	 9ikZi0H+kzbWx1yNmWFPbAjnrXfxq+b2p3HuU3A9qd+eIzxMe0C6/eODYJbwjzBm7m
+	 1B3H/WW/Vu/7aovVQgzmPS8JJsoTRN26hjgpkO42XjPrwM7yV95e/2NPhZAc7io8Of
+	 7txNATOWhXh7GNcTQE+9D5pAM0zKSSb3pIUqP0xa+t5NmyZIF3wMjXN9wwCR3+a+rr
+	 K86K0RxfZHrjg==
+Date: Tue, 17 Jun 2025 20:00:56 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+	kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
+	namhyung@kernel.org, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, zide.chen@intel.com
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+Message-ID: <38c3dd09-3a2f-435b-911f-7ed3cd717253@sirena.org.uk>
+References: <20250613134943.3186517-7-kan.liang@linux.intel.com>
+ <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
+ <8fbf7fc5-2e38-4882-8835-49869b6dd47f@linux.intel.com>
+ <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
+ <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+ <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
+ <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-To: Thomas Haas <t.haas@tu-bs.de>, Will Deacon <will@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Alan Stern <stern@rowland.harvard.edu>, Andrea Parri
- <parri.andrea@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Nicholas Piggin <npiggin@gmail.com>, David Howells <dhowells@redhat.com>,
- Jade Alglave <j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>,
- "Paul E. McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>,
- Daniel Lustig <dlustig@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
- linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- lkmm@lists.linux.dev, jonas.oberhauser@huaweicloud.com,
- "r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
- <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
- <20250616142347.GA17781@willie-the-truck>
- <d66d0351-b523-40da-ae47-8b06f37bf3b6@tu-bs.de>
- <2b11f09d-b938-4a8e-8c3a-c39b6fea2b21@huaweicloud.com>
- <20250617141704.GB19021@willie-the-truck>
- <7a20b873-3c26-4a52-b118-c816ede7298d@tu-bs.de>
-Content-Language: en-US
-From: Hernan Ponce de Leon <hernan.poncedeleon@huaweicloud.com>
-In-Reply-To: <7a20b873-3c26-4a52-b118-c816ede7298d@tu-bs.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwCnEONQu1FouD7hCQ--.7597S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZw47KFy3Aw18ArWrZFWkWFg_yoW5Cr1DpF
-	WrKan8KF4DJF1rGr17tw48XFy5tF1rtFs0qrn8Jr1xAwn09F1Ivr4avF4j9FyUZrs2g34j
-	vryjqa43uFyqya7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUIa
-	0PDUUUU
-X-CM-SenderInfo: xkhu0tnqos00pfhgvzhhrqqx5xdzvxpfor3voofrz/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="jzzn0dpw32mQKQ7r"
+Content-Disposition: inline
+In-Reply-To: <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+X-Cookie: It is your destiny.
 
-On 6/17/2025 4:23 PM, Thomas Haas wrote:
-> 
-> 
-> On 17.06.25 16:17, Will Deacon wrote:
->> On Tue, Jun 17, 2025 at 10:42:04AM +0200, Hernan Ponce de Leon wrote:
->>> On 6/17/2025 8:19 AM, Thomas Haas wrote:
->>>> On 16.06.25 16:23, Will Deacon wrote:
->>>>> I'm half inclined to think that the Arm memory model should be 
->>>>> tightened
->>>>> here; I can raise that with Arm and see what they say.
->>>>>
->>>>> Although the cited paper does give examples of store-forwarding from a
->>>>> narrow store to a wider load, the case in qspinlock is further
->>>>> constrained by having the store come from an atomic rmw and the load
->>>>> having acquire semantics. Setting aside the MSA part, that specific 
->>>>> case
->>>>> _is_ ordered in the Arm memory model (and C++ release sequences 
->>>>> rely on
->>>>> it iirc), so it's fair to say that Arm CPUs don't permit forwarding 
->>>>> from
->>>>> an atomic rmw to an acquire load.
->>>>>
->>>>> Given that, I don't see how this is going to occur in practice.
->>>>
->>>> You are probably right. The ARM model's atomic-ordered-before relation
->>>>
->>>>        let aob = rmw | [range(rmw)]; lrs; [A | Q]
->>>>
->>>> clearly orders the rmw-store with subsequent acquire loads (lrs = 
->>>> local-
->>>> read-successor, A = acquire).
->>>> If we treat this relation (at least the second part) as a "global
->>>> ordering" and extend it by "si" (same-instruction), then the 
->>>> problematic
->>>> reordering under MSA should be gone.
->>>> I quickly ran Dartagnan on the MSA litmus tests with this change to the
->>>> ARM model and all the tests still pass.
->>>
->>> Even with this change I still get violations (both safety and 
->>> termination)
->>> for qspinlock with dartagnan.
->>
->> Please can you be more specific about the problems you see?
-> 
-> I talked to Hernán personally and it turned out that he used the generic 
-> implementation of smp_cond_acquire (not sure if the name is correct) 
-> which uses a relaxed load followed by a barrier. In that case, replacing 
-> aob by aob;si does not change anything.
-> Indeed, even in the reported problem we used the generic implementation 
-> (I was unaware of this), though it is easy to check that changing the 
-> relaxed load to acquire does not give sufficient orderings.
 
-Yes, my bad. I was using the generic header rather than the aarch64 
-specific one and then the changes to the model were having not effect 
-(as they should).
+--jzzn0dpw32mQKQ7r
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Now I am using the aarch64 specific ones and I can confirm dartagnan 
-still reports the violations with the current model and making the 
-change proposed by Thomas (adding ;si just to the second part seems to 
-be enough) indeed removes all violations.
+On Tue, Jun 17, 2025 at 03:55:00PM +0100, Mark Rutland wrote:
+> On Tue, Jun 17, 2025 at 04:44:16PM +0200, Peter Zijlstra wrote:
+> > On Tue, Jun 17, 2025 at 03:24:01PM +0100, Mark Rutland wrote:
 
-Hernan
+> > Anyway, your conditional length thing is 'fun' and has two solutions:
 
-> 
->>
->>> I think the problem is actually with the Internal visibility axiom, 
->>> because
->>> only making that one stronger seems to remove the violations.
->>
->> That sounds surprising to me, as there's nothing particularly weird about
->> Arm's coherence requirements when compared to other architectures, as far
->> as I'm aware.
->>
-> 
-> I agree. The internal visibility axiom is not the issue I think.
-> 
+> >   - the arch can refuse to create per-cpu counters with SIMD samples, or
 
+> >   - 0 pad all 'unobtainable state'.
+
+We currently do a *bit* of the 0 for unobtainable state thing for FFR
+when in !FA64 streaming mode, that's for a whole register though.
+Probably also worth pointing out that we've got 16 predicate registers
+plus FFR which is sized like a predicate register, I don't think it
+makes much difference for this discussion but just in case.
+
+> > Same when asking for wider vectors than the hardware supports; eg.
+> > asking for 512 wide registers on Intel clients will likely end up in a
+> > lot of 0s for the high bits -- seeing how AVX512 is mostly a server
+> > thing on Intel.
+
+> Yep, those options may work for us, but we'd need to think harder about
+> it. Our approach for ptrace and signals has been to have a header and
+> pack at the active vector length, so padding to a max width would be
+> different, but maybe it's fine.
+
+> Having another representation feels like a recipe waiting to happen.
+
+Given that we have a different header format for everywhere we expose
+the register state it's *probably* fine if the "header" is that
+userspace selected the VL to record with, but like you say it is
+different and therefore concerning.  We have something similar with KVM
+where we expose these registers with the maximum VL we configured for
+the guest regardless of what vector length the guest has configured for
+itself.  It's certainly going to be more fiddly to read and write a
+non-native format if you're not running in a higher EL like KVM though.
+
+Another thought is that KVM exposes the vector lengths as virtual
+registers, we could perhaps use a similar approach and write the active
+VL out as part of the sample which does start to look like a header and
+is perhaps not too horrifying for the perf abstractions (this being very
+much a pick your poison situation)?  Even if the VL used to format the
+data that's written out is fixed I'd expect we'll want to be able to
+include enough state to figure out the actual VL along with it.
+
+If we do padding I worry a bit about the overhead whenever we have to do
+it.  AIUI with x86 the register sizes are constant on a given system so
+userspace can simply not select a register size larger than the hardware
+if they're concerned about the cost.  On arm64 when a system has both
+SVE and SME we are expecting they will frequently implement different
+vector lengths for each so needing to pad would be a much more common
+case, it is expected that programs will only be in streaming mode for
+the minimum amount of time required to do the SME operations they need.
+Given that SME will tend to have the larger VL but be less frequently
+used we'd probably pad more often than not by default which doesn't seem
+ideal.  But having said that I have a feeling the overhead of just
+recording things may be sufficiently high that the additional cost of
+doing padding will be basically noise.
+
+Like you say it needs thought.
+
+--jzzn0dpw32mQKQ7r
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhRu2cACgkQJNaLcl1U
+h9C2vAf/XONAoMNGZmxEGVAdw1hY6QwxhPWlNrZuzeqeWPE4vDESJqYsdkVaS6jm
+DQeT7yI/coC+v7O/qcH4QmlUQTFCkPhDb6XKaYosRPAAHLVL4O9oNPsRUXpLVHuy
+013H3GFQSrOrWzy6CIvy2OzzgEt4AP8refBmaQ6VPc/yGTPjvjayriMAGMzBcL/R
+3HiRC0lGkuvZ2jVHTj/OQYJg5YJ0Gfgdb9zJ0WYtoE35AqY3sBQWvvjOn7ZneoQ4
+bD4Yn30AcClxCHIxOzzQwWq7HtiF4ea2e9mp0hXnk7TW2oWsLmRpx+VKaMLgBdjV
+mBqzYK+PBXEMkq9pvbxNq0SWWDAhug==
+=8TAi
+-----END PGP SIGNATURE-----
+
+--jzzn0dpw32mQKQ7r--
