@@ -1,111 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D1629347C;
-	Tue, 17 Jun 2025 22:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8B72F5310
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750201138; cv=none; b=BRc0EjaBvrAE+OAf2mimKGeuzvBktIdLMjN2kPx/6oWHXdIfPSQBkN0AaJZMLrWFdLEYIz6X59x3djeQTIH/gl7ICU6mjk3F8xXzfebCq9iQbZkNyHnpZ6ZHhyXppZCRajGlisUUXEKQv3/qOlmGt0RIOo+da/vRdSPwT/biDjA=
+	t=1750201166; cv=none; b=F6vXWllk9GdrtaedHKRG9KxjIFvgPanqCtduioAdqwVYJN2Np1d02Qak79fXixKlULB9+rA5h9fjfpoeK2iJ0oMcivGemrQ+RYZuf855wvy8Y6eFiZujd70gMSQLMPj9/CLNohYpkTyK/t6WawDXsASrutjsQrk+7B6N62USzLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750201138; c=relaxed/simple;
-	bh=Om8rU9t5dO6lsVh6MDdI4iXYo/zn/c0NhqCeM4oAPP4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=AsXrjqdjKC3VbQlvFZQGOhLW2fYdp0qhyMmBS8jDAKT2TUc13dqvwuw53VaUWzX5yLmvDU4gs7zJoWenTHHhv/XFHrW6Oa5Lu6z6A51KRz7R7/zdnG7lNOydU686cBNqE9840hYjK92s9jNNnLuWpxoIxOoytSBFVA4f4oGRd2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=IxN6J0bq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750201166; c=relaxed/simple;
+	bh=FSs5Nqbe7V63xl6r8gkMha33mF8T/HNIQuJCNwFu9wM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJjtmiL2RVvQo5Zfbx1vBP9FIs0rzbjYrgbIA4Dyz8RiY2KNnvE3iQIL+HHFlxRjqGbAGxqV9fNfd4QcPfjjkhTHUkokzLPket6JdTfVTJpYmFV2vi47KnT/bbEFpBkUF5MqDiVAwdPyPaAQCMkh6wu0VkA5vJ8WzrxSQDQQgr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nc9Qu8/B; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="IxN6J0bq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0424C4CEE3;
-	Tue, 17 Jun 2025 22:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750201138;
-	bh=Om8rU9t5dO6lsVh6MDdI4iXYo/zn/c0NhqCeM4oAPP4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IxN6J0bqVg7BJzBziBGOF397Zd96J+vvx3GuCJn5LqjbbZjt3Gj2osEU4aL/xU2ei
-	 8WlruCNvsN48JduOcNc6N7qH95OxfU10NC7WoOBRDqRkiYur+BXwSveUNNy21vlbrt
-	 mOhtYMjMTuQOLLZ7So9QyrYFMsqHLQtY4vPT50aE=
-Date: Tue, 17 Jun 2025 15:58:57 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Kairui Song <kasong@tencent.com>
-Cc: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org, Hugh Dickins
- <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, Matthew
- Wilcox <willy@infradead.org>, Kemeng Shi <shikemeng@huaweicloud.com>, Chris
- Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>, Baoquan He
- <bhe@redhat.com>, Barry Song <baohua@kernel.org>,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/4] mm/shmem, swap: improve cached mTHP handling and
- fix potential hung
-Message-Id: <20250617155857.589c3e700b06af7dff085166@linux-foundation.org>
-In-Reply-To: <20250617183503.10527-2-ryncsn@gmail.com>
-References: <20250617183503.10527-1-ryncsn@gmail.com>
-	<20250617183503.10527-2-ryncsn@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nc9Qu8/B"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-3141f9ce4d1so2112204a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:59:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750201165; x=1750805965; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VQty6NL3er2ndIuuACaFUG5ZLAPGl4wPPK5wFC8l+DU=;
+        b=nc9Qu8/BRNsW2PGvkpS7CsPlHio/HJ0wplO8vLR8GG6AfE5+PfxqjZfJWUkVB1fCbl
+         kbZ8Kw0Qvv+5SuXWyP/Ex3Jr7cLm5+afn3YhoDzgU8FW2600l4zydiQUwZvLpH+AqmjY
+         1U1WWx0v3y0BZZWX2rXGa/86rB+6uSWbiXL6tpAja2ZSXK3wC06aChLGh7sHeBggHQ8V
+         6RJos7osTHehmC7STQZBGCsjXfFAuVTmu8crlmdmF/tZAZU/pq4/+BEtPrEht8JWwJXA
+         /sCCCoZ5g0PFNa86nOh6EY+6LKoFU2KQdmnJ4ooKCl489T+rnqCNVbZR8Akz7GPurB3q
+         qt+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750201165; x=1750805965;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VQty6NL3er2ndIuuACaFUG5ZLAPGl4wPPK5wFC8l+DU=;
+        b=Hb9uvugaSJj6dRuZ0K/ERfd6IoltUzsowEPkr2L45NbYD4I2iY19gF99cXWtmoXciJ
+         gkMacxujeRHOjveyszviPoiOzjIM2nFH/pvPvwUyTYcfbpeg09y1HjDOexiy5rSNQuYt
+         KNTiPm5F+HLccZUZeX/3z5Wob+PnQzASQk3kWd37dGF98xomlbGgBWia0JUeWRjIr2oZ
+         a4dWBfnqgfmXIbGHp9hR7kM+6+PqyJwMZ4VrSK0/23CZk54EejYIzIkbbweLOlWr0zgD
+         fAF/wiBTsjvXj6zdVfpXh1ECk0tEM3E7Gwv9ZouO/C5WSfrfySbgWilQbK3euLWSft1D
+         aENA==
+X-Gm-Message-State: AOJu0YzlNmyiqsXDuEb1MH7H3/Ckpv3LwS4U2mgyUEt7hc0826AKZrae
+	XaT+rV9UE2svAq0+RVzq2N+hqemGsuaALVqRzw/m1sT260urKK4M9Wjj
+X-Gm-Gg: ASbGnctYo2OYnebxm/FYFV6EhY5++srBnJarng5FHuJjl6pRc4/AHKK3tBHPlT4SKgp
+	AjunBP5z5wlXO0e1EYlhS5ciFjk19THwxSJzhwPlhHBC2zE74qIVI+1Um1S3gGn874e0u/0ivML
+	+oVRmsJZQ8zG+8LXf1+Oj50fWKQGEHiMeab9J4z4HSoJAodSNLK7UMeT1yICzqZAI5jEKu/TFe6
+	3dGJp2K54uwVc2Gv4XDO9EiUndw/ST2suzIeutV5FO2MsXB8N0CQyEBfqQdqs3MnsxdfZLHQthR
+	P4yv13j/G3W4jtg5V+NVjnk6ELRPKw9RzmtR2T2Bgb75txDJr6rHBEvMuYIqOQ==
+X-Google-Smtp-Source: AGHT+IGYJS7SmX8fQzqig83PgLKeexDR5dy2AsKJ+ghjlprsvI8RMRUKcV9KRprhX7fSez4Mhva7aA==
+X-Received: by 2002:a17:90a:dfcd:b0:311:c1ec:7d12 with SMTP id 98e67ed59e1d1-313f1df631amr19427336a91.23.1750201164759;
+        Tue, 17 Jun 2025 15:59:24 -0700 (PDT)
+Received: from localhost ([216.228.127.128])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19d2ccdsm11283246a91.19.2025.06.17.15.59.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 15:59:24 -0700 (PDT)
+Date: Tue, 17 Jun 2025 18:59:22 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 1/3] bitmap: generalize node_random()
+Message-ID: <aFHzSvlj1pqeSy6E@yury>
+References: <20250617200854.60753-1-yury.norov@gmail.com>
+ <20250617200854.60753-2-yury.norov@gmail.com>
+ <20250617155056.5c1d292d8831e7c7a27c8e5f@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617155056.5c1d292d8831e7c7a27c8e5f@linux-foundation.org>
 
-On Wed, 18 Jun 2025 02:35:00 +0800 Kairui Song <ryncsn@gmail.com> wrote:
+On Tue, Jun 17, 2025 at 03:50:56PM -0700, Andrew Morton wrote:
+> On Tue, 17 Jun 2025 16:08:51 -0400 Yury Norov <yury.norov@gmail.com> wrote:
+> 
+> > From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
+> > 
+> > Generalize node_random() and make it available to general bitmaps and
+> > cpumasks users.
+> > 
+> > Notice, find_first_bit() is generally faster than find_nth_bit(), and we
+> > employ it when there's a single set bit in the bitmap.
+> > 
+> > See commit 3e061d924fe9c7b4 ("lib/nodemask: optimize node_random for
+> > nodemask with single NUMA node").
+> > 
+> > ...
+> >
+> > --- a/include/linux/nodemask.h
+> > +++ b/include/linux/nodemask.h
+> > @@ -492,21 +492,7 @@ static __always_inline int num_node_state(enum node_states state)
+> >  static __always_inline int node_random(const nodemask_t *maskp)
+> >  {
+> >  #if defined(CONFIG_NUMA) && (MAX_NUMNODES > 1)
+> > -	int w, bit;
+> > -
+> > -	w = nodes_weight(*maskp);
+> > -	switch (w) {
+> > -	case 0:
+> > -		bit = NUMA_NO_NODE;
+> 
+> If the mask has no bits set, return -1.
 
-> From: Kairui Song <kasong@tencent.com>
-> 
-> The current swap-in code assumes that, when a swap entry in shmem
-> mapping is order 0, its cached folios (if present) must be order 0
-> too, which turns out not always correct.
-> 
-> The problem is shmem_split_large_entry is called before verifying the
-> folio will eventually be swapped in, one possible race is:
-> 
->     CPU1                          CPU2
-> shmem_swapin_folio
-> /* swap in of order > 0 swap entry S1 */
->   folio = swap_cache_get_folio
->   /* folio = NULL */
->   order = xa_get_order
->   /* order > 0 */
->   folio = shmem_swap_alloc_folio
->   /* mTHP alloc failure, folio = NULL */
->   <... Interrupted ...>
->                                  shmem_swapin_folio
->                                  /* S1 is swapped in */
->                                  shmem_writeout
->                                  /* S1 is swapped out, folio cached */
->   shmem_split_large_entry(..., S1)
->   /* S1 is split, but the folio covering it has order > 0 now */
-> 
-> Now any following swapin of S1 will hang: `xa_get_order` returns 0,
-> and folio lookup will return a folio with order > 0. The
-> `xa_get_order(&mapping->i_pages, index) != folio_order(folio)` will
-> always return false causing swap-in to return -EEXIST.
-> 
-> And this looks fragile. So fix this up by allowing seeing a larger folio
-> in swap cache, and check the whole shmem mapping range covered by the
-> swapin have the right swap value upon inserting the folio. And drop
-> the redundant tree walks before the insertion.
-> 
-> This will actually improve the performance, as it avoided two redundant
-> Xarray tree walks in the hot path, and the only side effect is that in
-> the failure path, shmem may redundantly reallocate a few folios
-> causing temporary slight memory pressure.
-> 
-> And worth noting, it may seems the order and value check before
-> inserting might help reducing the lock contention, which is not true.
-> The swap cache layer ensures raced swapin will either see a swap cache
-> folio or failed to do a swapin (we have SWAP_HAS_CACHE bit even if
-> swap cache is bypassed), so holding the folio lock and checking the
-> folio flag is already good enough for avoiding the lock contention.
-> The chance that a folio passes the swap entry value check but the
-> shmem mapping slot has changed should be very low.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 058313515d5a ("mm: shmem: fix potential data corruption during shmem swapin")
-> Fixes: 809bc86517cc ("mm: shmem: support large folio swap out")
+...
 
-The Fixes: tells -stable maintainers (and others) which kernel versions
-need the fix.  So having two Fixes: against different kernel versions is
-very confusing!  Are we recommending that kernels which contain
-809bc86517cc but not 058313515d5a be patched?
+> If the mask has no bits set, return the mask's size.
+> 
+> > +	case 1:
+> > +		/* Performance trick for single-bit bitmaps */
+> > +		return find_first_bit(addr, size);
+> > +	default:
+> > +		return find_nth_bit(addr, size, get_random_u32_below(w));
+> > +	}
+> > +}
+> 
+> I'm not seeing how this is correct?
 
+Ahh... Indeed you're right.
+
+Thanks, Andrew, I'll send v4
