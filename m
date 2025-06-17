@@ -1,162 +1,172 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC5E2EF640;
-	Tue, 17 Jun 2025 14:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE222EF651
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170330; cv=none; b=ahepcRLTaHJPj2Zo7+GK8wA8hF4t+yxfoXQL1rhShzlQ64o2ruVDiSSY+Ptx8eoz/OoEc+Mld1H97YjJjl6L4Gawb2MC5x397IsGrPLGGbrCcj8P8sYY4Dpwh7xHqKR28DuXmVVayBJO2SGRyXBtMgX4rnnfadK91y5L3MjE0Vc=
+	t=1750170389; cv=none; b=iO32Ds0YHqs8JPU1i0F+3HLuQGgu4SXaCjK/Z31jbK8OlWarpsYURRA4yKjAzn851RGeLxs7XJljcQDLrM8TjjxSYaEfbhm1CafjvRML30DuoqwD+ibjhfpDA+0UDk27beXueH0R5VQWETMR5yZDpU3yAdxxb6Luha1KmSdpabE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170330; c=relaxed/simple;
-	bh=YrCobhfWEwxTugp1Z6t2tNOsm9fDJIp6XvQzv0nATBI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ATYcuhgEvJbQYMHU4+p1rmJouGAmFKMSk1GQbNwGpBVGDKQY3vap8cFzNUm9QatGWUnses6yc5O2PpGt7FKoSaGMRI9puJepRzjF947sc9k0iDWp7HGkdn5wLdWLUeqOH+LGNBIi/5+Th98KtkPKdajr62rcQSVyEo9KMFh+Gs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mqxMQNpz; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750170389; c=relaxed/simple;
+	bh=wMbM76puJf3UDfEqOtCoByazKLQLkepWM70O2hu1zPc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Geps2gUnc+8h8TaUYQn7wlkLCeVIXpO1K5Pn2Dc9Sqnhpy51oW+70P/jHfMdCNIjv7T6WY2iNFjw+Er4YOj7kWYnXmij/ksjT6EkwtqqKxaK36MES8xPoUjn0YAxILs/3UlLr3iWRBfyaKP0KGV/8FiV2CynojJVmoZSlw1/L/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=Xr10iyQL; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mqxMQNpz"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f0ad744811so33838966d6.1;
-        Tue, 17 Jun 2025 07:25:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="Xr10iyQL"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-53115af5fa8so219724e0c.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750170328; x=1750775128; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TIK1/Jho4VU8r+GZS11/BGVJDtUIz97uC3Jdi3VyPLM=;
-        b=mqxMQNpzEbwaccazNF5jDpQ8FK8OvUBvDeMqaNp2KTBqgWS9ZNIG814nPF5Nqtlmna
-         6EI0W8s2UAMVvGByuNikEwgoeQA/fEO/FlYvTLgNnqP1M7oQOkAuYvC1qjUg0w594M5R
-         oAueFiZXoJ1prZibQGTXXfDy/o5nma7x+9iQIGj8qq9KxQzT8PWTjFsw5Xh9lozJ1o2K
-         6DSwO+dlEROzrHCEyZ4LooIojHRa554dMFJtqHzT9YzKYVLm/1cDol76Tl1U3qB4AkWA
-         4794k6BWHYfcJS7Jgnzz88vpelXxqSoJ5XRehKIFs7Wbm8gJ6jkl0rFqNwhqZ6mo0XHQ
-         CVpg==
+        d=raspberrypi.com; s=google; t=1750170386; x=1750775186; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YpOAwhaaQKzA9a+hLMz4Fdbv7o6Lk/Fl/Twzh3KUUnM=;
+        b=Xr10iyQLc5SYfw8qsI+S5Q4TRW+DRlSFnwIbjP6XtU/Do+t7a5e4c2jmayYdQb/25r
+         qBZiX2ik+rCwelSHW0Zey1b3yPdpA1tMdoecFzcmCSRS08mwJ1jiPysehg+cA5g8L/CO
+         lgg8tllWtL5e3kPkuxZnj0g9v+hOZDTGQhZfDAk7ewWqZUPkpsjj+X8Qv+WlsBIYO1UE
+         GjLK/M5+WjgZ8huEcureKP3XZmBBQxsjpzWw9LrONFFpfTBYysBX30GLGFg13IIQ4Yeu
+         dT2y1U9NPI56a9lpf23CWdffconpMtZ9zaakqJiKMKDRMi1yi9dyHZ4JPYW54qX+l41y
+         xp3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750170328; x=1750775128;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TIK1/Jho4VU8r+GZS11/BGVJDtUIz97uC3Jdi3VyPLM=;
-        b=bHKnD0Y+5NO7CoNz+q1xtaJRu2aYbKFez1lHgtqDKjP04zkGgjv3a9CDvJjlCYwCm/
-         LNUIG4Ymq0sbgUD61VBh9w2T8+v4haPKJ0rfW5jKLdA/5LhtQozwsJsj7JFsekLBYEH/
-         ZujLlS7a2tEAECGaVeSPVl1qUDRiwbkuNCB4i6mLDgAtystkOloi+Uatead06iWvpnAa
-         K5IzJGMgvXKBZsaGl+E/TQgTIB2/Yv2uVoghKV8VpSc0apGU9ay9yUnJuSPkNexaJbJI
-         Fa3O89yBTOrwBmMKk2KF6msiuNQp+F0GqZu5/rKe7DmE/yovdM6piaWVKEZi9vprqxtg
-         AfIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWsmED1Uo1vxJdf6S6pTKnWyDjVStkexC61irt01JPlb9wod7c6V8IX/SYwLPu00sfSDDqgQ81mie6WSUI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw90Ql6sTpz161auJVTl942t1o0wqj4SnCcG8o5Yo1JWu0PkrVi
-	lLUmj+UGq2fYUD9z082nbIG8xy2QdEeV0uptV+WsS/r9XwNsFe7EOu/A
-X-Gm-Gg: ASbGncvOYLobhP3AvDyr0mjC6LT+IoWfKLHYcE2zZSMupxcq3WCRMyLpflzvgQANY6R
-	iHQneU70zVsQKOi5h6Z98oQo+cUCKCxlikiJaQBcuM8r06DgRvr+wuRvjNrJf1EYB9jEiMfaR91
-	ZR7C8U0JNwBsKV/nAH/lBmigfjKF0ghCs7Rh+EcNJgTLvU+LQzI5Pr0J16ACuYuE85BMXXdNDxC
-	oKJNMEXFiTTGQtLtAWbRRQNb2wuSnwMFfvxMjcbDMLfdvkIUZpe1OoEQFy6Iw1oc8rWNbsx12cl
-	PvSDwoU1mtKLsHMQT48f7wkGtdnKSkoXtwZuKjSJT4e3bmM7mDzBfNj9hp+UDSdhiaQa4PIR5gu
-	a92M/57fQ2l3AB/+laoZdi4rLuTk+pjCs9JxuTtSw54vHJBH4Z+bI
-X-Google-Smtp-Source: AGHT+IGoJ1lNoJ3sa61aaSTN455dngBqSaRb+mH8XrBxFigzHZGtkcKexxZ4vkBp+AfMNyRKycGB5Q==
-X-Received: by 2002:a05:6214:2023:b0:6fa:c81a:6204 with SMTP id 6a1803df08f44-6fb47631614mr200121796d6.10.1750170328144;
-        Tue, 17 Jun 2025 07:25:28 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb366eb588sm61278086d6.58.2025.06.17.07.25.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:25:27 -0700 (PDT)
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1698F1200068;
-	Tue, 17 Jun 2025 10:25:27 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-02.internal (MEProxy); Tue, 17 Jun 2025 10:25:27 -0400
-X-ME-Sender: <xms:1npRaKGUZj62FsnSx-AR80KDm7O76xlpRf6MlAHGSRTJQAqaGVZ34g>
-    <xme:1npRaLUKmKXc9jBApKjLEz5kdYnsKsdET-2xrg_JDUYlzA7N7q34QUHw11bgoDNcp
-    ycM-UrmgLxv3QzWEg>
-X-ME-Received: <xmr:1npRaEKFl-fd--GPo1arOVzlnxKUgBDAL8RyHcJfmBCE_a7CMnjGyd7yaQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecu
-    hfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtg
-    homheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieev
-    tdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihht
-    hidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrg
-    hilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeeffedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtoheplhihuhguvgesrhgvughhrghtrdgtohhmpdhrtg
-    hpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtoheplh
-    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    uggrnhhivghlrdgrlhhmvghiuggrsegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtoh
-    epmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhf
-    rhgruggvrggurdhorhhgpdhrtghpthhtohepjhhurhhirdhlvghllhhisehrvgguhhgrth
-    drtghomhdprhgtphhtthhopehvihhntggvnhhtrdhguhhithhtohhtsehlihhnrghrohdr
-    ohhrgh
-X-ME-Proxy: <xmx:13pRaEF1-BasTguYKW9j5j_cP1v6yY6DDHxlmGjpdbFyHECHDQc5Gg>
-    <xmx:13pRaAUXUrNKn_nQ9IKTTBcta4OqXFEcpRy8dn_JK_9y-TcJi22BpQ>
-    <xmx:13pRaHPnJCqYVd5XuuH0pyQk6lKWj9HF44yQUmrbgsDv8zP43kgO_A>
-    <xmx:13pRaH1vSaTBRUyfWxmgOS2ryLw6T9joGpZs7yeU_0Cc4nyby-T5WQ>
-    <xmx:13pRaBWTWyMULMAnc3o1jg67DSr06vdOH6wpujZ7sF_cfaf5GReDps5y>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Jun 2025 10:25:26 -0400 (EDT)
-Date: Tue, 17 Jun 2025 07:25:25 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	linux-kernel@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Ingo Molnar <mingo@redhat.com>,	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,	Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>,	Valentin Schneider <vschneid@redhat.com>,
-	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
-	Miguel Ojeda <ojeda@kernel.org>,	Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,	David Woodhouse <dwmw@amazon.co.uk>,
- Jens Axboe <axboe@kernel.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	NeilBrown <neilb@suse.de>,	Caleb Sander Mateos <csander@purestorage.com>,
-	Ryo Takakura <ryotkkr98@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [RFC RESEND v10 03/14] irq & spin_lock: Add counted interrupt
- disabling/enabling
-Message-ID: <aFF61eXT-UyjRQYV@Mac.home>
-References: <20250527222254.565881-1-lyude@redhat.com>
- <20250527222254.565881-4-lyude@redhat.com>
+        d=1e100.net; s=20230601; t=1750170386; x=1750775186;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YpOAwhaaQKzA9a+hLMz4Fdbv7o6Lk/Fl/Twzh3KUUnM=;
+        b=Dy0ijlZsVYYsvqjCNw8F7AFeeyiGquER/UiFURRLkwalRJVT6PsfMtHkn40u+ysAgl
+         AcBPh7IvWrgH34MYRJcpR7fOLbwsI6QCQG/iwXSnmi8Layxs4swCAu5QNDQlADU9mJH0
+         owI5r/eUchOMIcG9ddjhXJp32mC8wKTueih+z6NxPTzr1lgDnxCpaZKZthZUQwuZSVoW
+         wP7nPinxpltHW0lgsgC0l8+ibPF2SV4U+IH+ZnEZK6HOaKez5mLAuZs2OP/T3swoXUmu
+         vkeduOWIfcdoRu0pk6lYeFmy5C8B2yvb7YpWXyWvYmEhjivzBDlv1wnfo/2PCT5mPFKQ
+         foMg==
+X-Forwarded-Encrypted: i=1; AJvYcCX9o+wMEfL11qgzcGd++a98Cv1REFHiF9oONbfOkeNdfwb73WAfACqj4XZdZq5ZLE7GyXRB5FVei9dmbks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwfhMaOUrkPz7y0vnvpn3SpOVETZqPIa5eNNxTpmGTP+vgikF/
+	es+24975PeTUIIl0jF5dfzUZl+5uC66EP3IeXyCLJgSYsSMvWB63DDtCbJQNRk2wt2M8HWerA3T
+	j/aXUCcYO9Ek8LLPGmy25Vls0wEcyCk7qLSqE2YEONw==
+X-Gm-Gg: ASbGnctDfzNkZrU8NhAOW8qkK0LPKbcEE20L9ouA9yuk5VJR28p9HxkIWIjiXobISRg
+	+Dd2sS+NxllAl2b3NizoyHHzQ9lYi+aiYFRVjIuTKQ6K4JMTgedk/orlXEHmclY1JcLHVPRR+fr
+	VWnWZTYf8/slD6s+ubJrDwc4s6x+oxXlcGUa/aDmyS
+X-Google-Smtp-Source: AGHT+IEvy629BwKiuNFR6pwMejlGO2WAZGwWZVOcmHQsFf0NqpfbXWmZwN4PhhADQC4Yr8/b+9IDSb34HzZ3UTA0+E8=
+X-Received: by 2002:a05:6122:4881:b0:530:2422:68a8 with SMTP id
+ 71dfb90a1353d-53172c40e8cmr906039e0c.1.1750170386532; Tue, 17 Jun 2025
+ 07:26:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527222254.565881-4-lyude@redhat.com>
+References: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-0-e58ae199c17d@ideasonboard.com>
+ <20250617-pispbe-mainline-split-jobs-handling-v6-v8-4-e58ae199c17d@ideasonboard.com>
+In-Reply-To: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-4-e58ae199c17d@ideasonboard.com>
+From: Naushir Patuck <naush@raspberrypi.com>
+Date: Tue, 17 Jun 2025 15:25:52 +0100
+X-Gm-Features: Ac12FXxY2MjozgnKj7SQp4qGI8gl5dx5KqJMAcZDD_ubJWJD9OKIvfSseMEz2Tk
+Message-ID: <CAEmqJPoxHSgXBp+EH+MWQVHVwYL2N5CnOwC-7W+AFWt1k7Zv+Q@mail.gmail.com>
+Subject: Re: [PATCH v8 4/4] media: pisp_be: Fix pm_runtime underrun in probe
+To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Cc: Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>, 
+	David Plowman <david.plowman@raspberrypi.com>, 
+	Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 27, 2025 at 06:21:44PM -0400, Lyude Paul wrote:
-[...]
-> +/* No rwlock_t variants for now, so just build this function by hand */
-> +static void __lockfunc __raw_spin_lock_irq_disable(raw_spinlock_t *lock)
-> +{
-> +	for (;;) {
-> +		preempt_disable();
+Hi Jacopo,
 
-Lyude, You can remove the preempt_disable() and the following
-preempt_enable(), since local_interrupt_disable() participates the
-preempt count game as well.
+Thank you for this fix.
 
-Regards,
-Boqun
+On Tue, 17 Jun 2025 at 14:54, Jacopo Mondi
+<jacopo.mondi@ideasonboard.com> wrote:
+>
+> During the probe() routine, the PiSP BE driver needs to power up the
+> interface in order to identify and initialize the hardware.
+>
+> The driver resumes the interface by calling the
+> pispbe_runtime_resume() function directly, without going
+> through the pm_runtime helpers, but later suspends it by calling
+> pm_runtime_put_autosuspend().
+>
+> This causes a PM usage count imbalance at probe time, notified by the
+> runtime_pm framework with the below message in the system log:
+>
+>  pispbe 1000880000.pisp_be: Runtime PM usage count underflow!
+>
+> Fix this by resuming the interface using the pm runtime helpers instead
+> of calling the resume function directly and use the pm_runtime framework
+> in the probe() error path. While at it, remove manual suspend of the
+> interface in the remove() function. The driver cannot be unloaded if in
+> use, so simply disable runtime pm.
+>
+> To simplify the implementation, make the driver depend on PM as the
+> RPI5 platform where the ISP is integrated in uses the PM framework by
+> default.
+>
+> Fixes: 12187bd5d4f8 ("media: raspberrypi: Add support for PiSP BE")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 
-> +		local_interrupt_disable();
-> +		if (likely(do_raw_spin_trylock(lock)))
-> +			break;
-> +		local_interrupt_enable();
-> +		preempt_enable();
-> +
-> +		arch_spin_relax(&lock->raw_lock);
-> +	}
-> +}
-> +
-[...]
+Tested-by: Naushir Patuck <naush@raspberrypi.com>
+Reviewed-by: Naushir Patuck <naush@raspberrypi.com>
+
+
+> ---
+>  drivers/media/platform/raspberrypi/pisp_be/Kconfig   | 1 +
+>  drivers/media/platform/raspberrypi/pisp_be/pisp_be.c | 5 ++---
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/platform/raspberrypi/pisp_be/Kconfig b/drivers/media/platform/raspberrypi/pisp_be/Kconfig
+> index 46765a2e4c4d1573757ff842f208834216e582cb..a9e51fd94aadc6add70f883bfcea0c9fa91f0c4b 100644
+> --- a/drivers/media/platform/raspberrypi/pisp_be/Kconfig
+> +++ b/drivers/media/platform/raspberrypi/pisp_be/Kconfig
+> @@ -3,6 +3,7 @@ config VIDEO_RASPBERRYPI_PISP_BE
+>         depends on V4L_PLATFORM_DRIVERS
+>         depends on VIDEO_DEV
+>         depends on ARCH_BCM2835 || COMPILE_TEST
+> +       depends on PM
+>         select VIDEO_V4L2_SUBDEV_API
+>         select MEDIA_CONTROLLER
+>         select VIDEOBUF2_DMA_CONTIG
+> diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> index ccc6cb99868b842ac0d295f9ec28470303e60788..be794a12362020f42b3cf5bd291b4a1625543b5f 100644
+> --- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> +++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+> @@ -1725,7 +1725,7 @@ static int pispbe_probe(struct platform_device *pdev)
+>         pm_runtime_use_autosuspend(pispbe->dev);
+>         pm_runtime_enable(pispbe->dev);
+>
+> -       ret = pispbe_runtime_resume(pispbe->dev);
+> +       ret = pm_runtime_resume_and_get(pispbe->dev);
+>         if (ret)
+>                 goto pm_runtime_disable_err;
+>
+> @@ -1747,7 +1747,7 @@ static int pispbe_probe(struct platform_device *pdev)
+>  disable_devs_err:
+>         pispbe_destroy_devices(pispbe);
+>  pm_runtime_suspend_err:
+> -       pispbe_runtime_suspend(pispbe->dev);
+> +       pm_runtime_put(pispbe->dev);
+>  pm_runtime_disable_err:
+>         pm_runtime_dont_use_autosuspend(pispbe->dev);
+>         pm_runtime_disable(pispbe->dev);
+> @@ -1761,7 +1761,6 @@ static void pispbe_remove(struct platform_device *pdev)
+>
+>         pispbe_destroy_devices(pispbe);
+>
+> -       pispbe_runtime_suspend(pispbe->dev);
+>         pm_runtime_dont_use_autosuspend(pispbe->dev);
+>         pm_runtime_disable(pispbe->dev);
+>  }
+>
+> --
+> 2.49.0
+>
