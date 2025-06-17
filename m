@@ -1,147 +1,208 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63713BBF2
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA24D22ACF3
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:52:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750182725; cv=none; b=YfoGSk+QF4cQJW97Lge274LMyuLWHYAQCqNa8DCxtTw/k1iL0upoCcdQI0D3MV7Ah2U95mojFuISOvvhEY3NV5pmBskZV+F+mOFJ5igIq2EktG+DyzG6hETkpRw0g/KCpaacC/F8/orfaTWZKoZZeCw2C5MY/VbMapD2qliksoo=
+	t=1750182779; cv=none; b=pWbR4H6tbe3L1HE/97NL+WWMputF2L3+fqF8vnTwIp3T7kEOh7jqlgPmZWUXoiPfKJW2RY3ZV5SyIen5h1HQ7/myE2xpQHLAfseT/KJ0FWeq0m23o6oymo50IefMxEWaslionLSnImIQfIaQRdT0D6kGg0HsSDV5DG6YZ+zuVBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750182725; c=relaxed/simple;
-	bh=VlMA8Y97UBbaoyXvJx0h0GaAzHx6awCw+YqOGf/prjw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F7FytwrFFtAu2f0JWf8ZHxtRTNUDFe6MwFxwDW9BwqzC/5ltS8t29e4PM+Cjvunx6aHyEL4JGaGdGASMmWGP4/cdcY72KRo86hZ0FJhW7zrAveXeeO1+XK8+FZsIhoc4pT/PuGjWIf9rLElNQXsYhk4kroUAiK29AsqAuZu+ROg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JaadzyNh; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750182779; c=relaxed/simple;
+	bh=t+06naoVmVF2AOSXqBSYrJu3yXVIfw+vx5pfjOIVMmY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k5qlDGLMz+DHPT+Qu6hpMgm/04KseMPSeDlHFWTlIJNcyMk8LMJc1N5KsgFQ0gwHIB10KInUqh03JdicTubQF80oNPic447OP1S1KrUYEjJMln2evqCm+E9DncEAzMKI2ephyAFX69l9UHyisrB1chtgNMovUXHnRA3jamAUdvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VWY51kPc; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JaadzyNh"
-Date: Tue, 17 Jun 2025 10:51:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750182720;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VWY51kPc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750182775;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9H/iaRf40PeLw7FvouwIQ5qs9ZEfzW9xC+JE7Z9klJ8=;
-	b=JaadzyNhevveq+vZ8dIcdKKaPKuCecNr0d21VLID7tFlRNIz64VPIzWilCmDsaOsZS71DG
-	1wer4h9Yc7RXamq/su+Jb4DBgzcAsUg30BK6pQHRS2KNWJ+Ec9rT9eWJylV/z3nUk4AbTJ
-	XloVox0tXwOQJilPwqMg882PpK30gCI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] MAINTAINERS: add further core files to mm core
- section
-Message-ID: <bfnbgxtvo4avlktnk6dmusns4iq4ksjvjmcuw6kqekpsrh324x@xulw3cq3uxih>
-References: <20250616203844.566056-1-lorenzo.stoakes@oracle.com>
- <727b5e89-89d7-4abf-a93c-8d6f2cb2c438@redhat.com>
- <35kubwcjkvyu34k7ejp2ykydtrbcl2gptcurs7rhqzi3cy3l5h@gcxndb7dfdgq>
- <c8d6c655-282c-41a7-9cae-a18e0cc5e15d@lucifer.local>
+	bh=VHVlghtOwl1iYTRYeyXrEKqXKy+rGsdhH54hG2oPsxQ=;
+	b=VWY51kPcMLewrs0lCjf8YUK7r8bvORhnPRsKcyMqDt8BRhcvzFnEDUxeyx+DqLs+6h6ngM
+	y1KmdD0GNUnwsFN+bVUVxsOt+6i6NtyxRL4QbKgzPhEi42znYMdogu8IP7KB/v3v5TX/4l
+	7PlAPc8EW/Pl+TiRgclw++mzlXcNpjc=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-593-7SPpdv4fOzWfUfehUx-4rw-1; Tue, 17 Jun 2025 13:52:54 -0400
+X-MC-Unique: 7SPpdv4fOzWfUfehUx-4rw-1
+X-Mimecast-MFC-AGG-ID: 7SPpdv4fOzWfUfehUx-4rw_1750182774
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e43123ec6so74188747b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:52:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750182774; x=1750787574;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VHVlghtOwl1iYTRYeyXrEKqXKy+rGsdhH54hG2oPsxQ=;
+        b=UVFsJxGYnS56ApvNxzDjsLJIZfGAgcF81nQDQOxJQA/ExUCv7q9jS/l6HIP5QtxWbl
+         MbW54urSjv6RA1sd1cdPpMgBxGbaTnHtDhcQmIyiXNZUiPhge1UuLBbdpUEQYgGD4ho5
+         2MslUVdNeCEIYIXI3zQpijAYtIr/La0dhbLDplm8Q4DTPUogcFGa4N5dABscqK1zXkSD
+         wASAGp/Vmc9PfV/tUfInqa2CUB7cRWI9caBzSbIp2jwBRHx7d0/9H+b3ubqFp/Q5Jz+u
+         J3emsyFxBpydKAFxWzTdUEhVQjzpQVlhigqqLZl8roD6z61YpNOnZjVs9DwE9JLtQNPw
+         q6Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOo6Ty4kQx+wa+WzEueFvHYfvEGN/59Rmwkm6VD6gjQiJ/hoMFjCshcjxny0K3eiD6mqExjbyTFr+AHi4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXb4doiMoojubhFYnHgVAwSwv1aZWLtkDpp3PmtP4dUIvP/OD/
+	qK+sUW2dBeWMxv5g1pz1nlcOZ/U9S548qj4ZKRf/uzAhdFyGu2p5xQYo7H3mCno+OI7BkcUrOQ2
+	gbDgD0ECZNEhkLeP6V9dSYfaB3XxTXORDEk2EydeY+PWl+CGS15H+F6u66P7d0fx85L96Cjbo6Q
+	mF5jivMjNoVvS5UA4ciwToRT1YYD8U05dPgUkS6DYz
+X-Gm-Gg: ASbGncsfqOAvyc3gjSKhy66mgAY6whQ96mDuO5bwqk1nmoLqQHg1oU7+k7E4qH32VF4
+	+H+ZTqi8hByimeCcEAZc9tRzOUv/lOVgly/NnbbZ38A3pDJjm42DtzSgFsGilzq2dlVETQ6AI9w
+	vuUY/KJg==
+X-Received: by 2002:a05:690c:9a07:b0:703:b3b8:1ca1 with SMTP id 00721157ae682-7117536e5f3mr174054077b3.5.1750182773969;
+        Tue, 17 Jun 2025 10:52:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHsuDUpqbT4Zm+fDNYLZyRvnIomvlXs1lgyYMEYTlPSDFNwpQpbOwB39H6AdaylUKoeEGHtBp3S/5ilov+jo+Q=
+X-Received: by 2002:a05:690c:9a07:b0:703:b3b8:1ca1 with SMTP id
+ 00721157ae682-7117536e5f3mr174053697b3.5.1750182773635; Tue, 17 Jun 2025
+ 10:52:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8d6c655-282c-41a7-9cae-a18e0cc5e15d@lucifer.local>
-X-Migadu-Flow: FLOW_OUT
+References: <20250515033857.132535-1-npache@redhat.com> <20250515033857.132535-2-npache@redhat.com>
+ <fcd3phzewpgzghrzse3stxi7jz7b6l5uwnhqtswcfnqvuvktip@apqh2achkutn>
+In-Reply-To: <fcd3phzewpgzghrzse3stxi7jz7b6l5uwnhqtswcfnqvuvktip@apqh2achkutn>
+From: Nico Pache <npache@redhat.com>
+Date: Tue, 17 Jun 2025 11:52:26 -0600
+X-Gm-Features: AX0GCFswQblbC-fUl4LgnBDpA9J_EkZ2hl0iyVshZHwGMIbdVVRH-b1apF1auqA
+Message-ID: <CAA1CXcDgu3bT-aUEXoFrVVYaTy_rAbdNmwMhzrkwb0+VxQM47w@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] mm: defer THP insertion to khugepaged
+To: Klara Modin <klarasmodin@gmail.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	rientjes@google.com, hannes@cmpxchg.org, lorenzo.stoakes@oracle.com, 
+	rdunlap@infradead.org, mhocko@suse.com, Liam.Howlett@oracle.com, 
+	zokeefe@google.com, surenb@google.com, jglisse@google.com, cl@gentwo.org, 
+	jack@suse.cz, dave.hansen@linux.intel.com, will@kernel.org, tiwai@suse.de, 
+	catalin.marinas@arm.com, anshuman.khandual@arm.com, dev.jain@arm.com, 
+	raquini@redhat.com, aarcange@redhat.com, kirill.shutemov@linux.intel.com, 
+	yang@os.amperecomputing.com, thomas.hellstrom@linux.intel.com, 
+	vishal.moola@gmail.com, sunnanyong@huawei.com, usamaarif642@gmail.com, 
+	wangkefeng.wang@huawei.com, ziy@nvidia.com, shuah@kernel.org, 
+	peterx@redhat.com, willy@infradead.org, ryan.roberts@arm.com, 
+	baolin.wang@linux.alibaba.com, baohua@kernel.org, david@redhat.com, 
+	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
+	corbet@lwn.net, akpm@linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 04:22:33PM +0100, Lorenzo Stoakes wrote:
-> On Mon, Jun 16, 2025 at 03:56:02PM -0700, Shakeel Butt wrote:
-> > On Mon, Jun 16, 2025 at 11:10:41PM +0200, David Hildenbrand wrote:
-> > > On 16.06.25 22:38, Lorenzo Stoakes wrote:
-> > > > There are a number of files which don't quite belong anywhere else, so
-> > > > place them in the core section. If we determine in future they belong
-> > > > elsewhere we can update incrementally but it is preferable that we assign
-> > > > each file to a section as best we can.
-> > > >
-> > > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > > ---
-> > > > REVIEWERS - let me know if these seem appropriate, I'm eyeballing
-> > > > this. even if they are not quite best placed a 'best effort' is still
-> > > > worthwhile so we establish a place to put all mm files, we can always
-> > > > incrementally update these later.
-> > > >
-> > > >   MAINTAINERS | 28 ++++++++++++++++++++++++----
-> > > >   1 file changed, 24 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > > index 4523a6409186..a61d56bd7aa4 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -15740,10 +15740,6 @@ F:	include/linux/memory_hotplug.h
-> > > >   F:	include/linux/memory-tiers.h
-> > > >   F:	include/linux/mempolicy.h
-> > > >   F:	include/linux/mempool.h
-> > > > -F:	include/linux/memremap.h
-> > > > -F:	include/linux/mmzone.h
-> > > > -F:	include/linux/mmu_notifier.h
-> > > > -F:	include/linux/pagewalk.h
-> > > >   F:	include/trace/events/ksm.h
-> > > >   F:	mm/
-> > > >   F:	tools/mm/
-> > >
-> > > Probably better to have some section than none ... was just briefly
-> > > wondering if "CORE" is the right section for some of that. Some of that
-> > > might be better of in a "MM MISC" section, maybe.
-> > >
-> > > > @@ -15764,16 +15760,40 @@ S:	Maintained
-> > > >   W:	http://www.linux-mm.org
-> > > >   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> > > >   F:	include/linux/memory.h
-> > > > +F:	include/linux/memremap.h
-> > > >   F:	include/linux/mm.h
-> > > >   F:	include/linux/mm_*.h
-> > > >   F:	include/linux/mmdebug.h
-> > > > +F:	include/linux/mmu_notifier.h
-> > > > +F:	include/linux/mmzone.h
-> > > >   F:	include/linux/pagewalk.h
-> > > >   F:	kernel/fork.c
-> > > >   F:	mm/Kconfig
-> > > >   F:	mm/debug.c
-> > > > +F:	mm/debug_page_ref.c
-> > > > +F:	mm/debug_vm_pgtable.c
-> > >
-> > > Wondering if there should be a MM DEBUG section. But then, no idea who in
-> > > their right mind would be willing to maintain that ;)
-> > >
-> > > > +F:	mm/folio-compat.c
-> > > > +F:	mm/highmem.c
-> > > >   F:	mm/init-mm.c
-> > > > +F:	mm/internal.h
-> > > > +F:	mm/interval_tree.c
-> > > > +F:	mm/io-mapping.c> +F:	mm/ioremap.c
-> > > > +F:	mm/list_lru.c
-> > >
-> > > Smells like reclaim/memcg.
+On Sat, Jun 14, 2025 at 5:25=E2=80=AFAM Klara Modin <klarasmodin@gmail.com>=
+ wrote:
+>
+> Hi,
+>
+> On 2025-05-14 21:38:54 -0600, Nico Pache wrote:
+> > setting /transparent_hugepages/enabled=3Dalways allows applications
+> > to benefit from THPs without having to madvise. However, the page fault
+> > handler takes very few considerations to decide weather or not to actua=
+lly
+> > use a THP. This can lead to a lot of wasted memory. khugepaged only
+> > operates on memory that was either allocated with enabled=3Dalways or
+> > MADV_HUGEPAGE.
 > >
-> > Shrinker might be more appropriate (along with the list_lru.h)
-> 
-> Yeah I struggled with this one. It's a weird one, it's like a generic LRU
-> algorithm:
-> 
-> zswap_lru_add()
-> binder_lru_freelist_add()
-> -> list_lru_add()
-> 
-> Also called internally by list_lru_add_obj() which is used for dentry LRUs by a
-> number of filesystems
-> 
-> But also by the working set code in workingset_update_node() :)
-> 
-> So it's a bit all over the place.
-> 
-> I wonder whether best for mm misc as a result?
+> > Introduce the ability to set enabled=3Ddefer, which will prevent THPs f=
+rom
+> > being allocated by the page fault handler unless madvise is set,
+> > leaving it up to khugepaged to decide which allocations will collapse t=
+o a
+> > THP. This should allow applications to benefits from THPs, while curbin=
+g
+> > some of the memory waste.
+> >
+> > Acked-by: Zi Yan <ziy@nvidia.com>
+> > Co-developed-by: Rafael Aquini <raquini@redhat.com>
+> > Signed-off-by: Rafael Aquini <raquini@redhat.com>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+>
+> ...
+>
+> > @@ -315,13 +318,20 @@ static ssize_t enabled_store(struct kobject *kobj=
+,
+> >
+> >       if (sysfs_streq(buf, "always")) {
+> >               clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparen=
+t_hugepage_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG, &transparen=
+t_hugepage_flags);
+> >               set_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_=
+flags);
+> > +     } else if (sysfs_streq(buf, "defer")) {
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepag=
+e_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparen=
+t_hugepage_flags);
+> > +             set_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG, &transparent_=
+hugepage_flags);
+> >       } else if (sysfs_streq(buf, "madvise")) {
+> >               clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepag=
+e_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG, &transparen=
+t_hugepage_flags);
+> >               set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_=
+hugepage_flags);
+> >       } else if (sysfs_streq(buf, "never")) {
+> >               clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepag=
+e_flags);
+> >               clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparen=
+t_hugepage_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG, &transparen=
+t_hugepage_flags);
+> >       } else
+> >               ret =3D -EINVAL;
+> >
+> > @@ -954,18 +964,31 @@ static int __init setup_transparent_hugepage(char=
+ *str)
+> >                       &transparent_hugepage_flags);
+> >               clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> >                         &transparent_hugepage_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG,
+> > +                       &transparent_hugepage_flags);
+> >               ret =3D 1;
+> > +     } else if (!strcmp(str, "defer")) {
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_FLAG,
+> > +                       &transparent_hugepage_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> > +                       &transparent_hugepage_flags);
+> > +             set_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG,
+> > +                       &transparent_hugepage_flags);
+>
+> There should probably be a corresponding
+>                 ret =3D 1;
+> here. Otherwise the cannot parse message will displayed even if defer
+> was set.
+Thanks Klara-- I will make sure to add it on the next version!
+>
+> >       } else if (!strcmp(str, "madvise")) {
+> >               clear_bit(TRANSPARENT_HUGEPAGE_FLAG,
+> >                         &transparent_hugepage_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG,
+> > +                       &transparent_hugepage_flags);
+> >               set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> > -                     &transparent_hugepage_flags);
+> > +                       &transparent_hugepage_flags);
+> >               ret =3D 1;
+> >       } else if (!strcmp(str, "never")) {
+> >               clear_bit(TRANSPARENT_HUGEPAGE_FLAG,
+> >                         &transparent_hugepage_flags);
+> >               clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> >                         &transparent_hugepage_flags);
+> > +             clear_bit(TRANSPARENT_HUGEPAGE_DEFER_PF_FLAG,
+> > +                       &transparent_hugepage_flags);
+> >               ret =3D 1;
+> >       }
+> >  out:
+> > --
+> > 2.49.0
+> >
+>
+> Regards,
+> Klara Modin
+>
 
-list_lru is the data structure / abstraction to interact with the
-shrinker. Kernel components which can consume large amount of kernel
-memory and has a way to drop some on memory pressure (e.g. some form of
-cache) register themselves with the shrinker and list_lru is used to
-store/link their internal objects which the shrinker can drop/reclaim
-during memory reclaim.
