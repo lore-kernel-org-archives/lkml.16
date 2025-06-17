@@ -1,189 +1,180 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010026.outbound.protection.outlook.com [52.101.69.26])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AF62BF017;
-	Tue, 17 Jun 2025 07:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750144283; cv=fail; b=kh2daBKtDU04KTHWrmH0vn/GfV5Pi7XzrmSpC1jdPBDtKJ2f6nM7xo8vOD5USijttTxnucasb7jdoAltyJsuvuoXy8W5zQrLBCzlSerRUvVvsxrwY6oVWsCRzBioqLxTVJUJ22JWW7Xtq+/rIfln3raYzkv7eZOTAIQAVM/yn7I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750144283; c=relaxed/simple;
-	bh=bgHO7+MoUuQGPB9SwffZNir+EMhJxe/Wd3BLJKao3K4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IfgCGzi941GdaaNWa6EJIdT/GERsaKOidwOkig9s9ZXj88erJ1hwoulfSu9zgMOLzFyVj6LhefHL+kgWk4Y72IX1EtYU/rUxT7YpKBz/TfEZu84EZLOv8l+6tyRgrYK76x+Whxphh9h/uBySNMglnqhGtPLGOamfuv0lucoON7g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=BrTNm6MC; arc=fail smtp.client-ip=52.101.69.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="BrTNm6MC"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nCvWbAh1FCCkOjpRHlIIsrP6gwz/ZDnbEYv2wTBgx+ElWptUllzGNJjcn7lnJG15kWehPWfotbluM58IRKqAtcEbqjsUPzq8s/26zucmFcf/z4ZpmnxzOldt5zrhAplBXAfSTKWwKpwikA2Pmmycdz5vBXlKuubsMyJri8XOldDGUt3NRqH3fHx3KY3AE27yx0kCZIWYndO5PGZj3I0aC9AZwPkdDmmXEDAUT3i4BqLOZqWbJcR8TJ1eY9EGt+TawTkmJ1wK7mQlylPgUIw8q4iZ7DVd1XMuP+ZqipHBR0TeFMGltHKfiYReYL73wY2jbzAJxniw8+jPPv3ODvexlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BUHE7ZUqgb9wyTiXP7suOSz1xQnHPf7kR4TsQmCvW3k=;
- b=VXP6MZrTcTDJ9NsENTu/P3fCurF79A0CZIGN1AQNs5pTXcm+JY4Zb3SH3e8W2q67na7mQ7FCmxT1t3xYg/vK0Ekkm+gkKxrq3HgkH0b5wnfVOKxQdxCZeIyHt8uTjrkqo9WcVOYuEuWBPoFidz1doAI7Ep1QAlz3mKSwSHp847DoD7761cqQn9dquRPd9yVOu8Sk88gUz5r3w7d0QDKukiCwxpVVJRj5IJ5ls3NvCrVGCFjNLvwO9gzPW22wh/n6+/QwgbXMQSXrjFFYDASN6xqFIbNIZT6xqpH7KM0c3kG33hYiqMred0zIn1REbyeYhl8DBb0izond7n12N+TKPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BUHE7ZUqgb9wyTiXP7suOSz1xQnHPf7kR4TsQmCvW3k=;
- b=BrTNm6MCQfZk5rsZSzAuIXx5ieSgYrs3sKSVk4kEGejDoqfpyfePoUnOLfQjKPxLHuiJ6aifr4PS0Etec0LZVHe4vYJ1Zt2e3KWZVkM74RfNuDtS7LBYHEGAWe8pnvqNPYwj2ETflWJ/4Sk2JrjPFrn138JQixwgEPz7Ap/FWTu3yBO2z/lylcoyC/Tr4OuKImspBJcejL2U+Cfh98XbIf9cKXYCGJkaFAA5u6wEKsGekgUh/mnsCNE5xLDrY50CyBTM4U9rbxiHgn+vQl0L5HdErvM4vy1GtZ7Epmvr3BiMT9yJzYkX2xGOps8dANSMA4fQ6oBglc9zpnC8vnwn9g==
-Received: from AS4P251CA0025.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:5d3::12)
- by AS4PR10MB5799.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:506::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
- 2025 07:11:13 +0000
-Received: from AMS1EPF0000004C.eurprd04.prod.outlook.com
- (2603:10a6:20b:5d3:cafe::37) by AS4P251CA0025.outlook.office365.com
- (2603:10a6:20b:5d3::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.29 via Frontend Transport; Tue,
- 17 Jun 2025 07:11:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.206) by
- AMS1EPF0000004C.mail.protection.outlook.com (10.167.16.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.15 via Frontend Transport; Tue, 17 Jun 2025 07:11:13 +0000
-Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
- (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Tue, 17 Jun
- 2025 09:10:58 +0200
-Received: from RNGMBX3002.de.bosch.com (10.124.11.207) by
- FE-EXCAS2001.de.bosch.com (10.139.217.200) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.57; Tue, 17 Jun 2025 09:10:57 +0200
-Received: from [10.34.219.93] (10.34.219.93) by smtp.app.bosch.com
- (10.124.11.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Tue, 17 Jun
- 2025 09:10:45 +0200
-Message-ID: <d59f8392-c4ca-4f39-a57f-83c669e3efb2@de.bosch.com>
-Date: Tue, 17 Jun 2025 09:10:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD632BF017;
+	Tue, 17 Jun 2025 07:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750144293; cv=none; b=hZPcLc6exIhmXepNRFNHhL/r4sbnxH9Rfckq129Ozo/JpUQiv3bU38DMgWYzGbDEsaaBu2LlUkJhWNt7ALb9oL7+N4BGXjQbS7qG/Ng/v3Cnd6gIqTBEOTFVcpvMVgXKPU6FIbblPqxCQbNe6C6N4GMcYDNSV3h4XDyielQaBSA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750144293; c=relaxed/simple;
+	bh=yTAt50N3neyeCnLnBEeHFhoVNDZmnsqQwamaiAfI0pU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jCSSsQpPEqb2oTzXX8l9KU+QIG6N7oX+IJh9jdiI5PXr9Q6We/UFI1vrkk5JpfLI8u7kXsytYw1RUANcoaYkiIFXpAlxqmh66d+Hhm827ujAotYBgcCDWrOUIy1/TIrbwFp6ZL6xMXJ66NRzSGiEopHi680HXg7aHcMRIFsj6WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7e5b6207bso1186648137.2;
+        Tue, 17 Jun 2025 00:11:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750144290; x=1750749090;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G/v5q2fXiwY4TAB8aPNUe4fxk10SyY4tqtEOV0DB9XA=;
+        b=gCLMtW52oaTxJbOaU6zw783OZU5+5TyIsyf/lxq/tEOx44m/eV4PXyo724a0qIIW7R
+         lriYoL05T65YdcjJnG8uHvvPPfjq9ZT/84KUAKIVYGNcdiz2traqdYliq35XmFN6Zv7v
+         gilPvKWCmF8xC+MxAD7Zhmb1X7g5VTU4Uj871yRQ5+67qT56ffiV9ruyVdo7dtruQsZb
+         rgrits1CvTpy4hiKibVzRyrYchlQDYIGFAiPcj62Of9PEMUlHlCdmD2/1q0T0lar7GFC
+         TxdWnMGUDhzFfgJlnBF3sqo66rKxYTV2gXpnvDq+KCXg1ntaxGWKmlZS1rDR/KjLom6K
+         Ez+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWcUgu5bEw3/XeBENdus2eeQqtDTHBzKj0Cqk2pg8wnLAZwUqs0R+4+tk+zHakyP9gTDrQ0lYEYyGgp@vger.kernel.org, AJvYcCWp/EoWbwm8NULvWiMBItD1geQHwR25mlIH0CD7/sbFkmL5gnSyGUAmAncfHqVcR4gnoq2ryNFCUasO@vger.kernel.org, AJvYcCX900WhzXt3YBhtijGSuFeXNHZu3efBDY0mGg4yPso6YiO4ZInUTrLoKdGmiaXh4P2TrEPM4QuIG9uGFLEP@vger.kernel.org, AJvYcCXSbuwnUffHRvIepvdsSVH7BBhM+OhHKcMDQX5K2WgCNKzaStVq8EKmLdBjnJ23ComXq+Fkcfm3eZzwAYcWg97oEnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRFvzy0oKtw387x0Vu6SDtHAFI90z15tIQLLumVzEV8igSvtVF
+	LOg0kvsFp1ESKHS3mEaIJIUu1b2RGUxy+g3dKT5BRJeBknptsxGQwU9cszUeKL3E
+X-Gm-Gg: ASbGncsawNid3DBNOaIqOpGfxcfZUit4raO9Rdrxjc8oqihY9SC1aQd1/kYLCyD+efo
+	f7AA5g3rsGKWWO6ndSFHVzSoJZyqkoiAC7XzT/wILLOkXoLGlkUTeobeRXwFsZdXQyDUFJLF5N0
+	2pVOVlBqBd4FVoGjksVaN47IMLUqMvlGzzMTTqda0ja8fN5DKYopxuCWtoT8Q6O4K6MUszB8X4o
+	hWBtYcbrq1Si3J+nRJeP2244/wWmrnVKQdqdWL2cVkWi/D1V7XpKpT3KJu1+B3VMWcAb0gfo3Cm
+	nig+TwfyYbgTbVQCljq0ECMX8UC5PLa3SQ9bDOB4hsXzbK6pu4f7PXuy/+1PdQ2TbUHwf2+3Nk3
+	aYeeKmV1nTdgirIFXPX74+hn8
+X-Google-Smtp-Source: AGHT+IEECrac0ePQll+eB3DODknl5jNTsxyu1DoYNhYANkO/8t/uStlXCqMJKfPSo4qKb9rPcI6z7Q==
+X-Received: by 2002:a05:6102:5092:b0:4e5:9380:9c25 with SMTP id ada2fe7eead31-4e7f60edf6bmr8208837137.3.1750144289731;
+        Tue, 17 Jun 2025 00:11:29 -0700 (PDT)
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7e708bd92sm1536011137.19.2025.06.17.00.11.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 00:11:29 -0700 (PDT)
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1207487241.2;
+        Tue, 17 Jun 2025 00:11:29 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWRVnoWjeC1TlAwFUl541kuuGMXY/l2A0bjpC9XBTjKZhmDb20uH2mC3bGg0iE4u2f5UJn2LyddLgDY6n4A@vger.kernel.org, AJvYcCWpNgJRON4Cwt74vIBTHvobodD1Qs+UmZDNzjNVVt7N0F2OpfeCksQ1QqxENVuSeA0DPVcxPhUH8U6G@vger.kernel.org, AJvYcCXjo2aYqWW+npQ+IPJARYi2CfHS5uKSWiIUc/Dx0VEU3WEMWL7f1PuDlYgzyHf9YzZ62a7Dci1V0VnQ1c82B3oGUgQ=@vger.kernel.org, AJvYcCXwnnPJKSZGnBe+NIolocc5UfxYLbN+fkXBRtpp/iSHjfE4CExhpcfzvBtcnutFumDfTymOcc2EzodN@vger.kernel.org
+X-Received: by 2002:a05:6102:4492:b0:4e7:bf31:2f68 with SMTP id
+ ada2fe7eead31-4e7f621e0bdmr7699219137.25.1750144289064; Tue, 17 Jun 2025
+ 00:11:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] samples: rust: platform: don't call as_ref()
- repeatedly
-To: Danilo Krummrich <dakr@kernel.org>, <igor.korotin.linux@gmail.com>,
-	<gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
-	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
-	<bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
-	<a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>
-CC: <rust-for-linux@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20250613135407.1233005-1-igor.korotin.linux@gmail.com>
- <20250616194439.68775-1-dakr@kernel.org>
- <20250616194439.68775-2-dakr@kernel.org>
-Content-Language: en-GB
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20250616194439.68775-2-dakr@kernel.org>
+References: <20250609232253.514220-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CAMuHMdWoWqrMKgNSYN_NDOtROD-SAq7ProhREPJTEBTOPCeH=A@mail.gmail.com>
+ <CA+V-a8sBhF-FwV0BXCxpHkuhdAg5YcwDsWPFRPSV_BdmNpLWYA@mail.gmail.com> <CA+V-a8t6WNQS-1AkFUeSioxNyF9vSbaxUDkQsYDk-=m1tysu+w@mail.gmail.com>
+In-Reply-To: <CA+V-a8t6WNQS-1AkFUeSioxNyF9vSbaxUDkQsYDk-=m1tysu+w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Jun 2025 09:11:17 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU9506cHe5xyMSfu_AX_i7k+GupuaaAKDNH6LA9hEXNPA@mail.gmail.com>
+X-Gm-Features: AX0GCFvsCJkfmKnYT1sdg_yrTI_i8ZrlUEHMC3xjoflEVfDCTNfz9EG-bVRYQ14
+Message-ID: <CAMuHMdU9506cHe5xyMSfu_AX_i7k+GupuaaAKDNH6LA9hEXNPA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: renesas,sdhi: Document RZ/T2H and
+ RZ/N2H support
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS1EPF0000004C:EE_|AS4PR10MB5799:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05bd1d6c-5fef-42cf-6d63-08ddad6e24e3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SHFjVVpEdG5wZGdiem16Q1BKYVFNK0luM1NvMkphUURVektqaFc1RkVRVDdz?=
- =?utf-8?B?NHFMQmpHY1BWY0dacFBLTGVCT2R2Rm92OFhxNm9vZG1YbVNsSm0zbXp4aTVF?=
- =?utf-8?B?QmdtU2VaamhrKzdXQm1vRnpBTE5HK04zRURTLzBUaXZYN2djWHNXYjBGZkVs?=
- =?utf-8?B?c0dldXlSRTJ1N0lLaXlzeDEvZ1RzMmgxbjV5STdVSmgrSlJ3ejlOSGVGM0t1?=
- =?utf-8?B?VGJuZE1UbUFOMmU0RitPckkwa1l1RGZ6Q2dLby9oS2dmYm8xZ1ZxZFRicThu?=
- =?utf-8?B?VFl6aktubVNVSGE2U1hVNUJKeHNQakdvM3VPdWlMZGxSWnZURFNhemFacHdP?=
- =?utf-8?B?K0V4dkpHK3JKQ2MvTVh4UlZjak10V09iYnIrU0UvTXFRWUozeFhOYm9sMG8r?=
- =?utf-8?B?K1YwYzN1U3N3Vzg5NktIVGNTYnhMSmpnWk1wM2JLeTZDTk9lbzRxTm5lcXBl?=
- =?utf-8?B?aW9xL2FZVVpobG5DdzVDTEJBNTVkeUxRTDAzeFZxQTRpcGFMc1NBdmp2b0E4?=
- =?utf-8?B?SExkRGtERHYvZU9DMjJrQS9kSXJZN2dvVHQybG81amNxTUFWOTZ1ZWU2R0FN?=
- =?utf-8?B?M2tyUTJ0dDJYdWkxU2NjWm1weWJja2ViYTBaOHJqUDZPUXQ5aTUzdDhkN0JI?=
- =?utf-8?B?aGorcWVPRVkxOFNUeG9hK0V3QTZPOTV0alNKbDNad3BZcERTZDRuZ3NVNVlx?=
- =?utf-8?B?enJwNFZFak50eWgwdHV1RFNmVEtMMnhqWkR1S1ZwRDc4TXBKcU9wS0pyV2tu?=
- =?utf-8?B?VlcwWEVLeDlrT3FhLzFXZHhlbzREd2o5MVlrblZyTGpkczd5ejl0cmthbi9w?=
- =?utf-8?B?eDhkb3BFU2NtdmxtcjFkSWI1cWcwZ1BrSjlCTEtIMmhpODdqT1plMkJKaWw3?=
- =?utf-8?B?ZjFhTE1UemtDZm4rWG5FOVNzdFd1NklCWnJMWmZ1MWRKeFk5SUx3aUFHaDV6?=
- =?utf-8?B?SjhkZTdOTGJaQXhwRVhDcExMSUdEVVFLeDNjcHZhMFZaMGMyMHU4akhDUGtF?=
- =?utf-8?B?NU9iQUszM0s2L2t2WGpacFNPZzYyQUNra0t1Q2RFNzdrNmNpN1R1RmM3cmMr?=
- =?utf-8?B?VGoySDNXSG53WnlEdXRiOXU0R1VITHpwVGJHSnVDaUVQUGVBK2VMRVl6ekcz?=
- =?utf-8?B?ZGtIOU5XYkM2Nit0LzNsYWJnWm95M0Z1RlZzTnRzcVRhOEpPcnhjYVJuZ3VO?=
- =?utf-8?B?WFRieHVhUnpBWHJ2MFNyU0pzUjJFWFZNdEMxZ3lKdDVBd203NTk3SHhKSDc3?=
- =?utf-8?B?TllwT1IxeEJiRWw1dE1pNFJyU2V4bTduMWVpZGhDNUpvM2pCbDJjVU9ZUFNU?=
- =?utf-8?B?SFUvcm9jVHlsZkNreXRGY1czQjA4Ym5qYUR2YytJaVZoN2JnTUJEcTlVSi9h?=
- =?utf-8?B?WGh0NmFzc1N0ZjBZZXVOQzg4K2dQeHdaV3BMTVhvTVJVeEFoMFlpMzhuczAv?=
- =?utf-8?B?bzlXTW9ST2l5bGJMNjg5V1k0V25nNFUyMVdiWnZpdWNyM0JkbUhnT0dSRGlX?=
- =?utf-8?B?NmJuSjYxMlpBY21XVHFhSW9zUDdqeStzVTNmT3h0WWYvbWpYTVdYRDdXRHhG?=
- =?utf-8?B?WEpkdlBoY1hCL3U4eVAxRUFVZWY5cFVyTlZVeDF0OVV3T0xIT29UZ25RaFMz?=
- =?utf-8?B?UHlvOTFtcjhvYXJzR3VxWFFXQTh2bm04YXZuNWRYcm1NTXFNRnFNQXBXMEdH?=
- =?utf-8?B?ZkFTeTFLa3J5TXlPOUd0aEsydWxONXVYbHora3pnRlZJK1pKVzZiakZPVlBD?=
- =?utf-8?B?OExNbGZGM2Z3Q0NQc0UrdDNGN3NNOWNvSjNBT3ZIK0hhdWp3MmZUR2I2Y3lU?=
- =?utf-8?B?T2lBYnpDSHBXMXl5aXVoK3VYQjRDOTVnOVQvYlVNNVh4VmFhejBzNElmcTJL?=
- =?utf-8?B?Q284Z2ZtQXNoN3JkVVpvd3FCTlVPZGtPQzVIVTZCOGhqY1lwbjlsSlRjdi9I?=
- =?utf-8?B?VlUwUkpRSFEzbXVZT2VtVDhqelZGaUQ1aGdtODZURjNaT0FlUnp2U21HVW1y?=
- =?utf-8?B?QXMyV1VHWnRTdXFPdmFScDdRcmhkRVVhN2t4NUJUSU9Na1hRN2JCNWhnRlh0?=
- =?utf-8?B?Z3JLMjlTNEZMNEs4ZS9pTVhTeStTcysxQ2ZIUT09?=
-X-Forefront-Antispam-Report:
-	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 07:11:13.2717
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05bd1d6c-5fef-42cf-6d63-08ddad6e24e3
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS1EPF0000004C.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR10MB5799
+Content-Transfer-Encoding: quoted-printable
 
-On 16/06/2025 21:40, Danilo Krummrich wrote:
-> In SampleDriver::probe() don't call pdev.as_ref() repeatedly, instead
-> introduce a dedicated &Device.
-> 
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  samples/rust/rust_driver_platform.rs | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-> index c0abf78d0683..000bb915af60 100644
-> --- a/samples/rust/rust_driver_platform.rs
-> +++ b/samples/rust/rust_driver_platform.rs
-> @@ -32,13 +32,15 @@ fn probe(
->          pdev: &platform::Device<Core>,
->          info: Option<&Self::IdInfo>,
->      ) -> Result<Pin<KBox<Self>>> {
-> -        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
-> +        let dev = pdev.as_ref();
-> +
-> +        dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
->  
->          if let Some(info) = info {
-> -            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
-> +            dev_info!(dev, "Probed with info: '{}'.\n", info.0);
->          }
->  
-> -        Self::properties_parse(pdev.as_ref())?;
-> +        Self::properties_parse(dev)?;
->  
->          let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
+Hi Prabhakar,
 
-Yes!
+On Fri, 13 Jun 2025 at 20:59, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
+rote:
+> On Fri, Jun 13, 2025 at 4:37=E2=80=AFPM Lad, Prabhakar <prabhakar.csengg@=
+gmail.com> wrote:
+> > On Thu, Jun 12, 2025 at 4:47=E2=80=AFPM Geert Uytterhoeven <geert@linux=
+-m68k.org> wrote:
+> > > On Tue, 10 Jun 2025 at 01:23, Prabhakar <prabhakar.csengg@gmail.com> =
+wrote:
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Add SDHI bindings for the Renesas RZ/T2H (a.k.a R9A09G077) and RZ/N=
+2H
+> > > > (a.k.a R9A09G087) SoCs. Use `renesas,sdhi-r9a09g057` as a fallback =
+since
+> > > > the SD/MMC block on these SoCs is identical to the one on RZ/V2H(P)=
+,
+> > > > allowing reuse of the existing driver without modifications.
+> > > >
+> > > > Update the binding schema to reflect differences: unlike RZ/V2H(P),
+> > > > RZ/T2H and RZ/N2H do not require the `resets` property and use only=
+ a
+> > > > single clock instead of four.
+> > > >
+> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
+om>
+> > >
+> > > Thanks for your patch!
+> > >
+> > > > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > > > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
+> > > > @@ -129,59 +131,75 @@ allOf:
+> > > >          compatible:
+> > > >            contains:
+> > > >              enum:
+> > > > -              - renesas,sdhi-r9a09g057
+> > > > -              - renesas,rzg2l-sdhi
+> > > > +              - renesas,sdhi-r9a09g077
+> > > > +              - renesas,sdhi-r9a09g087
+> > > >      then:
+> > > >        properties:
+> > > > +        resets: false
+> > > >          clocks:
+> > > > -          items:
+> > > > -            - description: IMCLK, SDHI channel main clock1.
+> > > > -            - description: CLK_HS, SDHI channel High speed clock w=
+hich operates
+> > > > -                           4 times that of SDHI channel main clock=
+1.
+> > > > -            - description: IMCLK2, SDHI channel main clock2. When =
+this clock is
+> > > > -                           turned off, external SD card detection =
+cannot be
+> > > > -                           detected.
+> > > > -            - description: ACLK, SDHI channel bus clock.
+> > > > +          description: ACLK, SDHI channel bus clock.
+> > >
+> > > According to the documentation, this is the SDHI high speed clock...
+> > >
+> Actually re-reading the doc there are two clocks (I had missed the
+> second clock earlier),
 
-Reviewed-by: Dirk Behme <dirk.behme@de.bosch.com>
+And I had missed the first, as it is not shown in Figure 7.1
+("Block diagram of clock generation circuit" ;-)
 
-Thanks,
+> 1] ACLK, IMCLK from the PCLKAM which is 200MHz
+> 2] SDHI_clkhs from PLL2 which is 800MHz
+> Note, on RZ/V2H too the ACLK/IMCLK is 200MHz and clk_hs is 800MHz
+>
+> So, I'll represent them as below:
+>         clocks:
+>           items:
+>             - description: ACLK, IMCLK, SDHI channel bus and main clocks.
+>             - description: CLK_HS, SDHI channel High speed clock.
+>         clock-names:
+>           items:
+>             - const: aclk
+>             - const: clkh
+>
+> And for the ACLK, IMCLK which comes from peripheral module clock
+> (PCLKAM) this will be a module clock and CLK_HS will have to be
+> modelled as a CORE clock.
 
-Dirk
+OK.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
