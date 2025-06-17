@@ -1,85 +1,114 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD242F3636;
-	Tue, 17 Jun 2025 16:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192FE1A2632
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177630; cv=none; b=mtrwpkbHCgfi2QxEV1M6dlU2cSjkJsD2wbFa0oWBtdR8l71T41DoWJFK+pPXYgnk0bG1slsn0G80FLk99ohf/wYZ2u+vqHAakKKRuu4n1ceVyYkejoUvq5POKCHfat2wgpkwX9Po1WxdDncXONoy5KtzLhdFh8BIj8JcnqlGqf4=
+	t=1750177695; cv=none; b=fz0OBzlk/joLB2T1uo4DI/U5JX/zxht8EKEMsyoNRANfZSvopnnbHCXqeDx1Q3u+rMgmYv68d8wyKcruOHTe4Nwk9MonQb8KAlH2xul0PuTAmKoDujS0GHd/9/RMGUm+4g0k36ZxrSElDwnjAuwxfRqsF3kGAfurOX0ZM8u1/e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177630; c=relaxed/simple;
-	bh=4FbE9OETQQ7uPyNyavMW6wHUX4plr2tkY6TssAU8IkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LBwazuLJRDEVBa6uUeqgtZ8iPg3p8DzwIoq9d8hXSACuVUy6emWLbSJ+BW5F2fEvWuhUk44W2cPq9rtCFFrvkqHIeNBjAoh1Ak3bol7Uc6javI2/l1LC2H1asCgUSgIY4try/Ghz4/q0X73sK0/VH0/M7rJrsnCRNZ0N9Wht1wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=loktY2pS; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="loktY2pS"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 73C0E25BB1;
-	Tue, 17 Jun 2025 18:27:07 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Y51BXOyX5mqV; Tue, 17 Jun 2025 18:27:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750177626; bh=4FbE9OETQQ7uPyNyavMW6wHUX4plr2tkY6TssAU8IkM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=loktY2pSx23cVg60wH7Lt/zp54BwkUZc+4xFveZpVeM+QYnDSUaWreCFaGXc/dczr
-	 cSd9LClTTATrIikHoi+eGQvd6dfq5xNWqxDsVWzOPOUVi5fJBQCT6A35smiL17Tw2H
-	 IiyOG+s2ZqduHA65EwNl7mUVgHGLp9xf/Cwob1LOxKawImNMjmewDkIVjePoiEL6QH
-	 73KkvN65mRooIzNez7n4YPZOerbvfZ3K6Po9/hMFm5HQcIZUbVEQia+R2O0rTbavLs
-	 R+7v136jrw0d9WGSfqb06xZbg8GpC9Lncb3d67CW+nHbjLT6P53OLZMDOBwmjkiMW+
-	 HmKwlab6oiSEw==
-From: Yao Zi <ziyao@disroot.org>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 8/8] LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
-Date: Tue, 17 Jun 2025 16:24:26 +0000
-Message-ID: <20250617162426.12629-9-ziyao@disroot.org>
-In-Reply-To: <20250617162426.12629-1-ziyao@disroot.org>
-References: <20250617162426.12629-1-ziyao@disroot.org>
+	s=arc-20240116; t=1750177695; c=relaxed/simple;
+	bh=Y3mY6JxTrLq7oCWQ27VxeUjNdJNLBZQ2maBG9kQMvyM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oZn0MNqO3zhJDhfae5qoyKKQsu1i7RcHxYbDEf7kh4xLKJSjOQZAfQeTa/v7boILaNeFadRRXset+6tm4+u84Kk3QoaPgCwW9cVYqLu2xNXxEx/jxObtAvepdJY6FotgNWxf0zJJc7pLl1URWZlvSCUvvhbWXVhhVVKFFP+KgL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMC2c52jwz6M4HK;
+	Wed, 18 Jun 2025 00:27:36 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8A246140136;
+	Wed, 18 Jun 2025 00:28:10 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
+ 2025 18:28:09 +0200
+Date: Tue, 17 Jun 2025 17:28:08 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: James Morse <james.morse@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Ben Horgan <ben.horgan@arm.com>
+Subject: Re: [PATCH 5/5] cacheinfo: Add helper to find the cache size from
+ cpu+level
+Message-ID: <20250617172808.00005c14@huawei.com>
+In-Reply-To: <20250613130356.8080-6-james.morse@arm.com>
+References: <20250613130356.8080-1-james.morse@arm.com>
+	<20250613130356.8080-6-james.morse@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-The property isn't required anymore as the supply clock of UART0 has
-been described.
+On Fri, 13 Jun 2025 13:03:56 +0000
+James Morse <james.morse@arm.com> wrote:
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts | 1 -
- 1 file changed, 1 deletion(-)
+> The MPAM driver needs to know the size of a cache associated with a
+> particular CPU. The DT/ACPI agnostic way of doing this is to ask cacheinfo.
+> 
+> Add a helper to do this.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
 
-diff --git a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-index a033c086461f..1bdfff7fae92 100644
---- a/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-+++ b/arch/loongarch/boot/dts/loongson-2k0300-ctcisz-forever-pi.dts
-@@ -40,6 +40,5 @@ linux,cma {
- };
- 
- &uart0 {
--	clock-frequency = <100000000>;
- 	status = "okay";
- };
--- 
-2.49.0
+
+
+> ---
+>  include/linux/cacheinfo.h | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
+> index 9c959caf8af8..3f1b6b2e25b5 100644
+> --- a/include/linux/cacheinfo.h
+> +++ b/include/linux/cacheinfo.h
+> @@ -148,6 +148,26 @@ static inline int get_cpu_cacheinfo_id(int cpu, int level)
+>  	return ci ? ci->id : -1;
+>  }
+>  
+> +/*
+> + * Get the size of the cache associated with @cpu at level @level.
+> + * cpuhp lock must be held.
+To me kernel-doc would be appropriate.  Particularly the return 0 thing.
+However there isn't any for existing cacheinfo interfaces so maybe
+fair enough to 'follow local style' on that.
+
+> + */
+> +static inline unsigned int get_cpu_cacheinfo_size(int cpu, int level)
+> +{
+> +	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
+> +	int i;
+> +
+> +	if (!ci->info_list)
+> +		return 0;
+> +
+> +	for (i = 0; i < ci->num_leaves; i++) {
+> +		if (ci->info_list[i].level == level)
+> +			return ci->info_list[i].size;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+Why not
+
+static inline unsigned int get_cpu_cacheinfo_size(int cpu, int level)
+{
+	struct cpu_cachinfo *ci = get_cpu_cacheinfo_level(cpu, lev);
+
+	return ci ? ci->size; 0;
+}
+
+Like existing get_cpu_cacheinfo_id()?
+
+>  #if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
+>  #define use_arch_cache_info()	(true)
+>  #else
 
