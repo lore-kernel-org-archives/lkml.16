@@ -1,155 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504C0136A;
-	Tue, 17 Jun 2025 19:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E563E29344F;
+	Tue, 17 Jun 2025 19:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750189629; cv=none; b=MSEYebBorZuC+VHG+Aw7xhH6Iqf1+yyfNXPYBtBmssP7YohKt5lfNguKH/wrjsn6KY3wMwKpIAsIAo2ubpzaIcKjvEgOAQVV9JsWF72nh1ZRox8zFi7Aolu8+34ufB4NGLlWk9jQjlFUNokV4KXhTtNvAM6qcZEWChxbVbqL5/0=
+	t=1750190094; cv=none; b=jDdbMono2xDaq83iOmojXPpltdZ/qy2iqPlydJswLDVJVjBYN7N+t7kxAfKEXlg0bugRZgi9+WUJKKLt48XhUAkip2wo1voPVJh3AszZPRVcO0/7DfPhfYbZfohdZelFrF0+vqKczUbVHsqywAS7CGP4Tp6ARR67CPg3r6sg6Ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750189629; c=relaxed/simple;
-	bh=6isCiZoF+g7lLxHT5Sbj99Y+eoDDrTIFdT8d+wyJydc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AilmPoq7F3APxdzXSRiA5HuB6E7YCeSOXN1E6HfZCYPbr6BfP9GhH8/Jf1dlEyaA4u9zV+mi12gMuTzJLb5KN5elrV83b5jQk/CzoLl0kZxV3075X085/HyTMcUWxSUwVUZulxauTPKFBMuRffBEt9sIZ2zvC43GMjIeA+U/8F0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DWZlU6pq; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750190094; c=relaxed/simple;
+	bh=Q6LN0h5d3N6f3RZyDg9qhMGAr0lG/K582gkDWgFgagM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SmIMJzpygXepKtl4yjhdfSbq3cWwZk0xJBgirfIO8fKWirKhtDy1Atd/byqxfUIbVr6DiuSw4Qyu9JsSnf4LIlX+5tS9jn+R6uq/m8INkJgkRNmGcqZw8daYJJbkOlSbMCSdpAVMIc/myqj4YY4zH9HD3nVlLpjaUwKNdGFEH6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nwha58p2; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWZlU6pq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750189627; x=1781725627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6isCiZoF+g7lLxHT5Sbj99Y+eoDDrTIFdT8d+wyJydc=;
-  b=DWZlU6pqJOCn+WdBKl8LldTJxIumaWEUQo/weevnY4miNNEy9m7b6XyP
-   GKgl7JfRacR2hD5rBmmWu7zBGu6MahMoPN6Eu8W6t9oMCuSfibB5HTT4z
-   YNTUKjx4H4EFZd320cy+x4/E/y77BiFZZOdDFWm0ZKxMt4lJJrnqaJ/NQ
-   Y0isaWIozJJV3sKE3z5aMKPSXraGd9jJyQKWVZpxHqVdJNLyDsz4ercZS
-   BRYVdjHaJGkZ1kFn8dbXx4NBHKPFRZFGnqgI10YAxDMx50B+hcAvvzaMF
-   3Ba7OLL59OZhnbIBqYWpGFfsn8UlL544emi3JX/jzrMX5FlaxMqtUJJwL
-   A==;
-X-CSE-ConnectionGUID: OR+gRxrmRbu6ZwIh2rS5lg==
-X-CSE-MsgGUID: D5I1tYekRyKtW55wmM2phg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63421116"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="63421116"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 12:47:06 -0700
-X-CSE-ConnectionGUID: mGOyGjynQ4y19Ly0PQNJqQ==
-X-CSE-MsgGUID: cxo73W0QQiqcTvXkmGkTng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="172161665"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 12:47:05 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7360120B5736;
-	Tue, 17 Jun 2025 12:47:04 -0700 (PDT)
-Message-ID: <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com>
-Date: Tue, 17 Jun 2025 15:47:03 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nwha58p2"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6084dfb4cd5so75708a12.0;
+        Tue, 17 Jun 2025 12:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750190091; x=1750794891; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z8X5Ja/e/pqiuPJdST6phpTFMTSJg44mlfySHdQTIHE=;
+        b=Nwha58p245jD+N6kaS5tXI3Y7Am1D/pxdt7rYh1U3Gs7ZVvL/8JUAadXAcRFcD+2Ku
+         jhSnWfQtbELwXV3MdtXTdiTMqWvO1732jOgopQCqwdW+V6y90mra5WvYGFm8gZHgjrlC
+         0Et16f46ow5gRmzASMVHm/jQ/tH0wdi/VnIbheaJL791cSASMNZAPG2ycyKAe6EDAhr/
+         ociFJmuN70/+s6pEo3w6aoku9nTP2muVclhyQofcqZSzIsNrPj2qkf060qFBbqSMfXai
+         gALpU/EsHnN9c1jo+otFF2ovdQHyD4OYrAGffqTYMlqlcN+aTUaajiHLTcMyqWsPorFW
+         4Mww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750190091; x=1750794891;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z8X5Ja/e/pqiuPJdST6phpTFMTSJg44mlfySHdQTIHE=;
+        b=EcYFSPjTkVQPL2SVCD64VewMe1BIKbcKQFYRDuM63tX4JhBPKN1YAqgLjqIyf1G4fy
+         dsQ2A+pu+qeO7qWvgUXVDUuFlHM3t8Noy4Nz59P/xhQuk6jARDzGP0IIW9pnDcGXRjOp
+         Zh3F07cI8VGWV/IIRoWLfh7wcXlB7WNjC0GD8a3KlGePuBbhW1Xu39dDAmQq6zb4Cl2M
+         ++N7XoGhEnQjLY01D3flS0Qa7iOa1gT6mYhJeGIPA7/Xw7njai6j5eureQRaOp7Q1Slk
+         8aJAKZk/5cEvKRX0Pa/ORHorSu2W4HQVPIw/42eECxbSA6fXOyQ/hkKKoepYFySBPzwW
+         0WAA==
+X-Forwarded-Encrypted: i=1; AJvYcCVLd4Gn9O5fpXxDC4WlDHnsba64U0u4Au3XvI1+OosPTd0XNUHdKuSlCKkNK5S9ecXzYdOsVf4sQOTNKFte@vger.kernel.org, AJvYcCWuT5Un0wz+RRhFPkwjf4xHkA6OxJ5c8i/FC9n9MbtqVl8mRcxuI1vkVIFxVhncVE2/L9Rl9FzsA9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxsDy02KV9IX8UZVAFYkdYCPoykv8BK6kMwrcl7VTVITdVGExsu
+	MqvfEpTwmSzvY0oS3TvKFOyR3tjtvJ+cFyaopSdZe5rN4h35yqpQGg7GW4gIRioPAApzPJZiwiM
+	UPEPhm6LCjQ2YJ65RD6vM/yzD50WYQN0=
+X-Gm-Gg: ASbGncvaf+r4fc2Ftz+jrlhozfYI2FUxBdoxYOLPf/k7NSIh7jSVAyps8uaxcPQnmXd
+	Hnz2FYcJhVpRncwgX8BMGnF7fkMvM8lyeVKkn294P5cnUEqk21ifzPbraZcyEvh1ERJBfEtVFhg
+	mD9okKTiKjG0YwJR7NynnTlu39LDmMYl10p8P3CCjgKITqYVC3w6m1D63igVgFZSjyYeNy1fsQ+
+	zPTeQ==
+X-Google-Smtp-Source: AGHT+IE8e79lXnYS2MEWhgyzWvzB+JeRzaYD17D8Gyd7qKRDrq3kqUlcKtRYC/AYY3nnyTbqfzHmUGafLodcxJ+tGmA=
+X-Received: by 2002:a17:907:97ca:b0:add:f68c:5200 with SMTP id
+ a640c23a62f3a-adf9bfdc8fcmr1493396266b.6.1750190090999; Tue, 17 Jun 2025
+ 12:54:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
-To: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAMvvPS4aiyA7nXTN=QkMz4ikvf77ZaZ05ys-4N09AFLrgeS_Pw@mail.gmail.com>
+ <20250617185834.58000-1-sj@kernel.org>
+In-Reply-To: <20250617185834.58000-1-sj@kernel.org>
+From: Bijan Tabatabai <bijan311@gmail.com>
+Date: Tue, 17 Jun 2025 14:54:39 -0500
+X-Gm-Features: AX0GCFsNgriV0sYFpbxGGJwvblVxYmQtu1tLr-OLt3N9F1vqCPvhgnz7IQ30TGI
+Message-ID: <CAMvvPS7yQPoXxAecSi6B74a1Bgm1H06i+MqNDgdsZODEZSYFuw@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/4] mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
+To: SeongJae Park <sj@kernel.org>
+Cc: Gregory Price <gourry@gourry.net>, David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, ziy@nvidia.com, 
+	matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, 
+	byungchul@sk.com, ying.huang@linux.alibaba.com, apopple@nvidia.com, 
+	bijantabatab@micron.com, venkataravis@micron.com, emirakhur@micron.com, 
+	ajayjoshi@micron.com, vtavarespetr@micron.com, damon@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 17, 2025 at 1:58=E2=80=AFPM SeongJae Park <sj@kernel.org> wrote=
+:
+>
+> On Mon, 16 Jun 2025 17:16:16 -0500 Bijan Tabatabai <bijan311@gmail.com> w=
+rote:
+>
+> > Hi Gregory,
+> >
+> > On Mon, Jun 16, 2025 at 12:43=E2=80=AFPM Gregory Price <gourry@gourry.n=
+et> wrote:
+> > >
+> > > On Mon, Jun 16, 2025 at 09:16:55AM -0500, Bijan Tabatabai wrote:
+> [...]
+> > > I will just say that mempolicy is *extremely* current-task centric - =
+and
+> > > very much allocation-time centric (i.e. the internal workings don't
+> > > really want to consider migration all that much).  You'll probably fi=
+nd
+> > > that this project requires rethinking mempolicy's external interfaces=
+ in
+> > > general (which is sorely needed anyway).
+> > >
+> > > I think this path to modifying mempolicy to support DAMON is a bit
+> > > ambitious for where mempolicy is at the moment. You may be better off
+> > > duplicating the interleave-weight logic and making some helper functi=
+ons
+> > > to get the weight data, and then coming back around to generalize it
+> > > later.
+>
+> Thank you for the nice clarification and opinion, Gregory.
+>
+> >
+> > This may be true, but I think I will be able to avoid a lot of this
+> > nastiness with what I need. I am going to try with the mempolicy
+> > approach for the next revision, but if I get too much resistance, I
+> > will probably switch to this approach.
+>
+> I have no strong opinion about use of mempolicy for now, as long as mempo=
+licy
+> folks are fine.
+>
+> Nonetheless, I just wanted to mention Gregory's suggestion also sounds fa=
+irly
+> good to me.  It would avoid unnecessary coupling of the concepts of
+> allocation-time interleaving and after-allocation migration.  Also it fee=
+ls
+> even more aligned with a potential future extension of this project that =
+we
+> discussed[1]: letting users set multiple target nodes for
+> DAMOS_MIGRATE_{HOT,COLD} with arbitrary weights.
+>
+> [1] https://lore.kernel.org/20250613171237.44776-1-sj@kernel.org
 
+Given this discussion, as well as Joshua's comments earlier [1], it
+sounds like while people aren't exactly opposed to using mempolicy for
+this, the building consensus is that it would be best not to. I will
+move the interleave logic to DAMON for the next revision. However, I
+still think it makes sense to use the global weights (probably via
+get_il_weight) for now to avoid allocating pages a certain way and
+then migrating them soon after.
 
-On 2025-06-17 11:39 a.m., Vince Weaver wrote:
-> Hello
-> 
-> When running the perf_fuzzzer on a raptor-lake machine I get a
-> 	unchecked MSR access error: WRMSR to 0x3f1
-> error (see below).
-> 
-> A similar message happened before back in 2021 and was fixed in
-> commit 2dc0572f2cef87425147658698dce2600b799bd3 so not sure if this is the 
-> same problem or something new.
+I'll try to send the next version of the patch set by the end of the week.
 
-The commit 2dc0572f2cef was triggered by the fake event VLBR_EVENT.
-But this error should be triggered by the Topdown perf metrics event,
-INTEL_TD_METRIC_RETIRING, which uses the idx 48 internally.
+Thanks everyone for their feedback,
+Bijan
 
-We never support perf metrics events in sampling mode. The PEBS cannot
-be enabled in counting mode. So it's weird the cpuc->pebs_enabled has
-the idx 48 set.
-
-The recent change I did for the PEBS is commit e02e9b0374c3
-"perf/x86/intel: Support PEBS counters snapshotting". But it should not
-impact the above.
-
-Could you please help on the below questions?
-- It only happens on the p-core, right?
-- Which kernel base do you use? Is it 6.16-rc2?
-- Can this be easily reproduced?
-  Is it possible to bisect the error commit? (Maybe start from the
-commit e02e9b0374c3?)
-
-Thanks,
-Kan>
-> Vince Weaver
-> vincent.weaver@maine.edu
-> 
-> [12646.001692] unchecked MSR access error: WRMSR to 0x3f1 (tried to write 0x0001000000000001) at rIP: 0xffffffffa98932af (native_write_msr+0xf/0x20)
-> [12646.001698] Call Trace:
-> [12646.001700]  <TASK>
-> [12646.001700]  intel_pmu_pebs_enable_all+0x2c/0x40
-> [12646.001703]  intel_pmu_enable_all+0xe/0x20
-> [12646.001705]  ctx_resched+0x227/0x280
-> [12646.001708]  event_function+0x8f/0xd0
-> [12646.001710]  ? __pfx___perf_event_enable+0x10/0x10
-> [12646.001711]  remote_function+0x42/0x50
-> [12646.001713]  ? __pfx_remote_function+0x10/0x10
-> [12646.001714]  generic_exec_single+0x6d/0x130
-> [12646.001715]  smp_call_function_single+0xee/0x140
-> [12646.001716]  ? __pfx_remote_function+0x10/0x10
-> [12646.001717]  event_function_call+0x9f/0x1c0
-> [12646.001718]  ? __pfx___perf_event_enable+0x10/0x10
-> [12646.001720]  ? __pfx_event_function+0x10/0x10
-> [12646.001721]  perf_event_task_enable+0x7b/0x100
-> [12646.001723]  __do_sys_prctl+0x56f/0xca0
-> [12646.001725]  do_syscall_64+0x84/0x2f0
-> [12646.001727]  ? exit_to_user_mode_loop+0xcd/0x120
-> [12646.001729]  ? do_syscall_64+0x1ef/0x2f0
-> [12646.001730]  ? try_to_wake_up+0x7e/0x640
-> [12646.001732]  ? complete_signal+0x2e8/0x350
-> [12646.001734]  ? __send_signal_locked+0x2e3/0x450
-> [12646.001735]  ? send_signal_locked+0xb6/0x120
-> [12646.001736]  ? do_send_sig_info+0x6e/0xc0
-> [12646.001737]  ? kill_pid_info_type+0xa6/0xc0
-> [12646.001738]  ? kill_something_info+0x167/0x1a0
-> [12646.001739]  ? syscall_exit_work+0x132/0x140
-> [12646.001740]  ? do_syscall_64+0xbc/0x2f0
-> [12646.001741]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [12646.001743] RIP: 0033:0x7efe86afd40d
-> [12646.001744] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 18 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 9d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 1b 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
-> [12646.001745] RSP: 002b:00007ffcd6444cf0 EFLAGS: 00000246 ORIG_RAX: 000000000000009d
-> [12646.001746] RAX: ffffffffffffffda RBX: 000000000000000e RCX: 00007efe86afd40d
-> [12646.001747] RDX: 0000000000000001 RSI: 00007ffcd6444d24 RDI: 0000000000000020
-> [12646.001747] RBP: 00007ffcd6444d60 R08: 00007efe86bc625c R09: 00007efe86bc6260
-> [12646.001748] R10: 00007efe86bc6250 R11: 0000000000000246 R12: 0000000000000000
-> [12646.001748] R13: 00007ffcd64471b8 R14: 0000559eb2a2edd8 R15: 00007efe86c30020
-> [12646.001749]  </TASK>
-> 
-
+[1] https://lore.kernel.org/linux-mm/20250613152517.225529-1-joshua.hahnjy@=
+gmail.com/
+[...]
