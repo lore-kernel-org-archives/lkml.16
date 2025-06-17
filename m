@@ -1,256 +1,154 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11A328F527
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD43236A99
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147761; cv=none; b=m6ZzZQCeGvUQXv1871sSh/pGpNb289G2Fjt8x0J4bfU5JO7qZxlPMAjm8XJTKLDrmVxknN59ChAvpuX2qyjtgAxM9RPDhI/HoTXSdsFhmZ8DgKrG4yF9tYV8nOMbovSWUmpPhGlQ9WLDnB9Ljjk8jVfsGrltC+l+IHMJWQohelU=
+	t=1750147894; cv=none; b=HBuCuVJ7Qtfk12K3HNIan41LY+9gOtvamM8Br402FI2B7Vzoin0cdT+dtKtL0yKFqEeN9/jJcZFD3oh96kD1hJRn0wIfMYQJVfeIyk+RnbI/OfMz/JJi6b4xAGMMAeOldJM25oi6Ur5fQj8JVHxkB9+OXYOF/sZZYEBZdxH8SBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147761; c=relaxed/simple;
-	bh=KkafitbfxZnQ+TXNYKX6tIA3qwe4BQ/wugJU4xzZKr8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a958qrXjIF/OMgvWC4tuznzT6UjS1eTDRWcu4hCV5boeJ6h1ifQusVV7KrQ29F3Ve0+AgtPxvIH0byx90wKRxEOrrN8zn+fY9mYLCSW8nXkGewkrbSOSJsVmrEH8kPO9Lkkprg1d/i/ZjWtvhva+tKTCpjNhmAArEli43XdUWMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mg3+k2aX; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mg3+k2aX"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235e389599fso149385ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750147758; x=1750752558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K96lYH3E6ATNSom1EVn/oY1Xxk02NfoLGQNJ23f8GYs=;
-        b=mg3+k2aXRxk0GLAORZACFyVxycSRjIfQEKZn4Gk6lKReOQmUvYngNH3yt+qFsrOmYN
-         H+CfB1LgdRXL09Sni85PGy1ewgasJ5J7TKmmxe7nqLCK37GpLT0CtGjX0+qGmN89nuRX
-         9HC8mNBQhGUDjyTfw6FBPa3emhieC0vScPt6ExTp6y1UDuLAxLhR+SuV4p7MOmk2x65v
-         5V4IPtUmAjv1uhmu6Pqg8k8BEtQl5hWkHVS7VTPbNWpcKBaqaVcFC3+NCMgNKeT/j5HZ
-         SeaO+9GUulWnwFvZeMjW8xh0Y89EXpsfOHdyrpPkjJS1dFzR7nOTMP4PxEiHsq2AJppR
-         1EvQ==
+	s=arc-20240116; t=1750147894; c=relaxed/simple;
+	bh=LLh1T9NCrSyBBb9YCM0UyUGK1vNCwixsxbrE7G4i7BM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=C0nTTrebH3yfn3diSy4KzpLwZiOMHr2xcS9srbVF+ml0bH5pRh37VTHCCxPCxRGyjiC8lzTsdGkODb9jHSM4DI+caDJ7uSsXoZCnQPCtGdkhpfuuoENpV1L6+2zuvWowj/hlPrAiM3js9UsifldJoXzhG71cgl6dK7a3CL1fa7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3de0dc57859so25464425ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:11:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750147758; x=1750752558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K96lYH3E6ATNSom1EVn/oY1Xxk02NfoLGQNJ23f8GYs=;
-        b=eX/ztVqIOeP4aWGRyQ6KBkzsm6TX++//MYWoKaMIfzNtAnS/88OstioBOCZ0hddqDl
-         /njZNMnbuUaZeKMejoTydx/rtRFEWi07+pVkYagkX3lRmE0xEMq8HC+NsFKweYStnDSz
-         kghLRVhRn9U41IY9QVOsG+Yml+qXYiMXxOmB4EF92CCoEme5Y8SuFDc8OSHo2SavQ7gS
-         WtCa3NmRbMXirOz3BO2CgvAuVu+QZxQeEh+pwPQKtz4JfmUdvldHclSZv5xoDIRDvP1Q
-         tRlKVylzla9T9oYQ1T2zV223dBWX/pPHH3aTRS91lBWfovXTURG0YjDdukEGgowNYGLd
-         lwwA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEyTumyBQ4y5iofqAZuls08H4XhjchKOENGQZCaiMxteiP/MezZ8J1xRhypu9OAopE1AzS6ZlSYoUheLA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzRbRk3FijTS41uNKrQcDie5gfP5prmGQT4Eth9lMwlpsq5+UR
-	DOMuS9acxBxxWRQEWCWSMaNoYuMOuGxMFStF2kPj8Ez2k02VIWm8eooxnWBm6UlMs52oUSr82sg
-	HnO+dKio4occILUvzSHSfEeOc35ELA1VIZGUP7h4O
-X-Gm-Gg: ASbGnctWo/p+V3UADqD+GQcgXFkro/wIbODE5mfkEn3Ir4IbdbE0GJBeDN07XiW8t2U
-	uXAZmLLgmfAHSRzSVciJLT0E6mGNKGYAXtS5g6KVtgDy1M07VgJVA5TqI/Bbak8CLJ9ApXr29v+
-	4F8DbdcZDQlmpmlWrIBmVhBka9bRJcxNsNW/gGu7Ap/A==
-X-Google-Smtp-Source: AGHT+IG2betNC8At51eO9yYFOh+F0z+U752f1twVtVeRmC9ioMHP8IMN3Sy1z3kpv2PbBCdhAcaOkuaV4iikO4uTDA0=
-X-Received: by 2002:a17:902:ef08:b0:215:65f3:27ef with SMTP id
- d9443c01a7336-2366c5a25dfmr7701555ad.12.1750147757705; Tue, 17 Jun 2025
- 01:09:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750147891; x=1750752691;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mGIF4L/u6ab23S78GFpA99wi1ae62gL4pOEWHGKGUG0=;
+        b=nStndnMR0k9OkzzXnZn+za5GORkuKtD9iD3MsIWgQqtOkYekmLp3ajb3nw7y300BIZ
+         DbsCPPUBIohptX4G55g+WNLPW3tJu0AU7YqBQ7E0xX5Bg5prrL90vdjbQ+vyCJtHtpl1
+         y5sD1MAER3jRDlOZPa+YDOzHmVjvKoYHZUWVYUFY61j8oq6wlvb7oUm/DbJrrzBYEjmt
+         4Ne4xKLZ/gxjlF4PUsrxiNsDwB/BeTo/jxu+L87gH8/jdbKj2KqOvzcZgkY8sEF4Nkcq
+         bxuehKSx/dht98pOSrK92Nxqw3WEJuD3iTCJ110JL/WfY4ENXBpJhc38Z8aUu7aYa2Nq
+         lO0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUhsXa9aqamQjIi3evdzJ8OWyxe/CzByyKxXCkpO1vxDUp07D0X6wXTXeSace1/hJKOl6OOq+17x7WlXIQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyerPn1xT+mQj1W0No2S8g2gqTN/Ppy0Lfg0d4r5SP8l976xE0k
+	gjErwhX5wgChdZ99/Es+1l8C03L4XU0gQEkGWxVyJRucy8WJsiVx0WjOxAG+UICuLKBGm0XX3C7
+	soJ67SRUTh6AhUIa4R0jZh3MZKCeQOrG0Ihcc2LbL9qOYKX+oAkufNsdSHRY=
+X-Google-Smtp-Source: AGHT+IEdfDmdUHQIErVm6JKr9GB/nDGLvVxg6E6Nw3Gf96h/xUOvYLpAOEZBUELykawYgmliN9xX4zNskxICz9uph63xoY3bOKDT
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aCVZIuBHx51o7Pbl@yzhao56-desk.sh.intel.com> <diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com>
- <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com> <CAGtprH_Vj=KS0BmiX=P6nUTdYeAZhNEyjrRFXVK0sG=k4gbBMg@mail.gmail.com>
- <aE/q9VKkmaCcuwpU@yzhao56-desk.sh.intel.com> <CAGtprH_SKJ4hbQ4aSxxybcsD=eSQraP7a4AkQ3SKuMm2=Oyp+A@mail.gmail.com>
- <aFEQy4g4Y2Rod5GV@yzhao56-desk.sh.intel.com>
-In-Reply-To: <aFEQy4g4Y2Rod5GV@yzhao56-desk.sh.intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Tue, 17 Jun 2025 01:09:05 -0700
-X-Gm-Features: AX0GCFu5BeL5DrkBrqooR4aSvAssJM7-8t1ESGKGa90paS289VLNrATDVGTKJhc
-Message-ID: <CAGtprH_ypohFy9TOJ8Emm_roT4XbQUtLKZNFcM6Fr+fhTFkE0Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: Ackerley Tng <ackerleytng@google.com>, pbonzini@redhat.com, seanjc@google.com, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, x86@kernel.org, 
-	rick.p.edgecombe@intel.com, dave.hansen@intel.com, kirill.shutemov@intel.com, 
-	tabba@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, 
-	david@redhat.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
-	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, 
-	jun.miao@intel.com, ira.weiny@intel.com, isaku.yamahata@intel.com, 
-	xiaoyao.li@intel.com, binbin.wu@linux.intel.com, chao.p.peng@intel.com
+X-Received: by 2002:a05:6e02:12c7:b0:3dd:b655:2d6a with SMTP id
+ e9e14a558f8ab-3de07cff8camr132537355ab.7.1750147891698; Tue, 17 Jun 2025
+ 01:11:31 -0700 (PDT)
+Date: Tue, 17 Jun 2025 01:11:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68512333.a70a0220.395abc.0207.GAE@google.com>
+Subject: [syzbot] [v9fs?] WARNING: mm/page_alloc.c:LINE at __alloc_frozen_pages_noprof,
+ CPU: syz.NUM.NUM/NUM
+From: syzbot <syzbot+c44c80c9d28ec68d1c06@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
+	linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com, 
+	v9fs@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 11:55=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wr=
-ote:
->
-> On Mon, Jun 16, 2025 at 08:51:41PM -0700, Vishal Annapurve wrote:
-> > On Mon, Jun 16, 2025 at 3:02=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com>=
- wrote:
-> > >
-> > > On Wed, Jun 11, 2025 at 07:30:10AM -0700, Vishal Annapurve wrote:
-> > > > On Wed, Jun 4, 2025 at 7:45=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.c=
-om> wrote:
-> > > > >
-> > > > > We need to restore to the previous status (which includes the hos=
-t page table)
-> > > > > if conversion can't be done.
-> > > > > That said, in my view, a better flow would be:
-> > > > >
-> > > > > 1. guest_memfd sends a pre-invalidation request to users (users h=
-ere means the
-> > > > >    consumers in kernel of memory allocated from guest_memfd).
-> > > > >
-> > > > > 2. Users (A, B, ..., X) perform pre-checks to determine if invali=
-dation can
-> > > > >    proceed. For example, in the case of TDX, this might involve m=
-emory
-> > > > >    allocation and page splitting.
-> > > > >
-> > > > > 3. Based on the pre-check results, guest_memfd either aborts the =
-invalidation or
-> > > > >    proceeds by sending the actual invalidation request.
-> > > > >
-> > > > > 4. Users (A-X) perform the actual unmap operation, ensuring it ca=
-nnot fail. For
-> > > > >    TDX, the unmap must succeed unless there are bugs in the KVM o=
-r TDX module.
-> > > > >    In such cases, TDX can callback guest_memfd to inform the pois=
-on-status of
-> > > > >    the page or elevate the page reference count.
-> > > >
-> > > > Few questions here:
-> > > > 1) It sounds like the failure to remove entries from SEPT could onl=
-y
-> > > > be due to bugs in the KVM/TDX module,
-> > > Yes.
-> > >
-> > > > how reliable would it be to
-> > > > continue executing TDX VMs on the host once such bugs are hit?
-> > > The TDX VMs will be killed. However, the private pages are still mapp=
-ed in the
-> > > SEPT (after the unmapping failure).
-> > > The teardown flow for TDX VM is:
-> > >
-> > > do_exit
-> > >   |->exit_files
-> > >      |->kvm_gmem_release =3D=3D> (1) Unmap guest pages
-> > >      |->release kvmfd
-> > >         |->kvm_destroy_vm  (2) Reclaiming resources
-> > >            |->kvm_arch_pre_destroy_vm  =3D=3D> Release hkid
-> > >            |->kvm_arch_destroy_vm  =3D=3D> Reclaim SEPT page table pa=
-ges
-> > >
-> > > Without holding page reference after (1) fails, the guest pages may h=
-ave been
-> > > re-assigned by the host OS while they are still still tracked in the =
-TDX module.
-> >
-> > What happens to the pagetable memory holding the SEPT entry? Is that
-> > also supposed to be leaked?
-> It depends on if the reclaiming of the page table pages holding the SEPT =
-entry
-> fails. If it is, it will be also leaked.
-> But the page to hold TDR is for sure to be leaked as the reclaiming of TD=
-R page
-> will fail after (1) fails.
->
+Hello,
 
-Ok. Few questions that I would like to touch base briefly on:
-i) If (1) fails and then VM is marked as bugged, will the TDX module
-actually access that page in context of the same VM again?
-ii) What all resources should remain unreclaimed if (1) fails?
-     * page backing SEPT entry
-     * page backing PAMT entry
-     * TDMR
-    If TDMR is the only one that fails to reclaim, will the TDX module
-actually access the physical memory ever after the VM is cleaned up?
-Otherwise, should all of these be made unreclaimable?
-iii) Will it be safe for the host to use that memory by proper
-WBINVD/memory clearing sequence if TDX module/TD is not going to use
-that memory?
+syzbot found the following issue on:
 
->
->
-> > > > 2) Is it reliable to continue executing the host kernel and other
-> > > > normal VMs once such bugs are hit?
-> > > If with TDX holding the page ref count, the impact of unmapping failu=
-re of guest
-> > > pages is just to leak those pages.
-> > >
-> > > > 3) Can the memory be reclaimed reliably if the VM is marked as dead
-> > > > and cleaned up right away?
-> > > As in the above flow, TDX needs to hold the page reference on unmappi=
-ng failure
-> > > until after reclaiming is successful. Well, reclaiming itself is poss=
-ible to
-> > > fail either.
-> > >
-> > > So, below is my proposal. Showed in the simple POC code based on
-> > > https://github.com/googleprodkernel/linux-cc/commits/wip-tdx-gmem-con=
-versions-hugetlb-2mept-v2.
-> > >
-> > > Patch 1: TDX increases page ref count on unmap failure.
-> >
-> > This will not work as Ackerley pointed out earlier [1], it will be
-> > impossible to differentiate between transient refcounts on private
-> > pages and extra refcounts of private memory due to TDX unmap failure.
-> Hmm. why are there transient refcounts on private pages?
-> And why should we differentiate the two?
+HEAD commit:    050f8ad7b58d Add linux-next specific files for 20250616
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17949e82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2efc7740224b93a
+dashboard link: https://syzkaller.appspot.com/bug?extid=c44c80c9d28ec68d1c06
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fd95d4580000
 
-Sorry I quoted Ackerley's response wrongly. Here is the correct reference [=
-1].
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/49faa18d2f53/disk-050f8ad7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7c6f9cd7fe5d/vmlinux-050f8ad7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/84a08d6403ee/bzImage-050f8ad7.xz
 
-Speculative/transient refcounts came up a few times In the context of
-guest_memfd discussions, some examples include: pagetable walkers,
-page migration, speculative pagecache lookups, GUP-fast etc. David H
-can provide more context here as needed.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c44c80c9d28ec68d1c06@syzkaller.appspotmail.com
 
-Effectively some core-mm features that are present today or might land
-in the future can cause folio refcounts to be grabbed for short
-durations without actual access to underlying physical memory. These
-scenarios are unlikely to happen for private memory but can't be
-discounted completely.
+------------[ cut here ]------------
+WARNING: mm/page_alloc.c:4935 at __alloc_frozen_pages_noprof+0x2c8/0x370 mm/page_alloc.c:4935, CPU#1: syz.0.16/6030
+Modules linked in:
+CPU: 1 UID: 0 PID: 6030 Comm: syz.0.16 Not tainted 6.16.0-rc2-next-20250616-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:__alloc_frozen_pages_noprof+0x2c8/0x370 mm/page_alloc.c:4935
+Code: 74 10 4c 89 e7 89 54 24 0c e8 d4 12 0d 00 8b 54 24 0c 49 83 3c 24 00 0f 85 a5 fe ff ff e9 a6 fe ff ff c6 05 f3 c0 73 0d 01 90 <0f> 0b 90 e9 18 ff ff ff a9 00 00 08 00 48 8b 4c 24 10 4c 8d 44 24
+RSP: 0018:ffffc90003cdf9c0 EFLAGS: 00010246
+RAX: ffffc90003cdfa00 RBX: 000000000000002a RCX: 0000000000000000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003cdfa28
+RBP: ffffc90003cdfaa8 R08: ffffc90003cdfa27 R09: 0000000000000000
+R10: ffffc90003cdfa00 R11: fffff5200079bf45 R12: 0000000000000000
+R13: 1ffff9200079bf3c R14: 0000000000040d40 R15: dffffc0000000000
+FS:  000055557e5fb500(0000) GS:ffff888125d40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fff1db25138 CR3: 00000000762fa000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __alloc_pages_noprof+0xa/0x30 mm/page_alloc.c:4993
+ __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
+ ___kmalloc_large_node+0x85/0x210 mm/slub.c:4272
+ __kmalloc_large_node_noprof+0x18/0x90 mm/slub.c:4300
+ __do_kmalloc_node mm/slub.c:4316 [inline]
+ __kmalloc_noprof+0x36f/0x4f0 mm/slub.c:4340
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ v9fs_fid_get_acl+0x4f/0x100 fs/9p/acl.c:32
+ __v9fs_get_acl fs/9p/acl.c:66 [inline]
+ v9fs_get_acl+0x9a/0x360 fs/9p/acl.c:92
+ v9fs_qid_iget_dotl fs/9p/vfs_inode_dotl.c:131 [inline]
+ v9fs_inode_from_fid_dotl+0x221/0x2b0 fs/9p/vfs_inode_dotl.c:154
+ v9fs_get_new_inode_from_fid fs/9p/v9fs.h:251 [inline]
+ v9fs_mount+0x6eb/0xa50 fs/9p/vfs_super.c:144
+ legacy_get_tree+0xfa/0x1a0 fs/fs_context.c:666
+ vfs_get_tree+0x92/0x2b0 fs/super.c:1802
+ do_new_mount+0x24a/0xa40 fs/namespace.c:3885
+ do_mount fs/namespace.c:4222 [inline]
+ __do_sys_mount fs/namespace.c:4433 [inline]
+ __se_sys_mount+0x317/0x410 fs/namespace.c:4410
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f87d618e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffe32d1a898 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007f87d63b5fa0 RCX: 00007f87d618e929
+RDX: 0000200000000b80 RSI: 00002000000003c0 RDI: 0000000000000000
+RBP: 00007f87d6210b39 R08: 0000200000000580 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f87d63b5fa0 R14: 00007f87d63b5fa0 R15: 0000000000000005
+ </TASK>
 
-Another reason to avoid relying on refcounts is to not block usage of
-raw physical memory unmanaged by kernel (without page structs) to back
-guest private memory as we had discussed previously. This will help
-simplify merge/split operations during conversions and help usecases
-like guest memory persistence [2] and non-confidential VMs.
 
-[1] https://lore.kernel.org/lkml/diqz7c2lr6wg.fsf@ackerleytng-ctop.c.google=
-rs.com/
-[2] https://lore.kernel.org/lkml/20240805093245.889357-1-jgowans@amazon.com=
-/
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
->
->
-> > [1] https://lore.kernel.org/lkml/diqzfrgfp95d.fsf@ackerleytng-ctop.c.go=
-oglers.com/
-> >
-> > > Patch 2: Bail out private-to-shared conversion if splitting fails.
-> > > Patch 3: Make kvm_gmem_zap() return void.
-> > >
-> > > ...
-> > >         /*
-> > >
-> > >
-> > > If the above changes are agreeable, we could consider a more ambitiou=
-s approach:
-> > > introducing an interface like:
-> > >
-> > > int guest_memfd_add_page_ref_count(gfn_t gfn, int nr);
-> > > int guest_memfd_dec_page_ref_count(gfn_t gfn, int nr);
-> >
-> > I don't see any reason to introduce full tracking of gfn mapping
-> > status in SEPTs just to handle very rare scenarios which KVM/TDX are
-> > taking utmost care to avoid.
-> >
-> > That being said, I see value in letting guest_memfd know exact ranges
-> > still being under use by the TDX module due to unmapping failures.
-> > guest_memfd can take the right action instead of relying on refcounts.
-> >
-> > Does KVM continue unmapping the full range even after TDX SEPT
-> > management fails to unmap a subrange?
-> Yes, if there's no bug in KVM, it will continue unmapping the full ranges=
-.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
