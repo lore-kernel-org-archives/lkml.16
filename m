@@ -1,208 +1,137 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442AD2EF653;
-	Tue, 17 Jun 2025 14:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C3425B69B;
+	Tue, 17 Jun 2025 14:50:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171850; cv=none; b=rkzPOjHlb8RfK4IEgOudmcHHIQM+xfmiMUVfmrxLbTULUHS8+oLDgaUaGbhjQiLWrpm7a37EM6Jl/Cu+zKjgzN37mLc4qnpqW89vymvjuugPxWX2Vx091Li5uIHhgUeU+cj8kCfh60IDtGtYZJJQGY6GI4OwTz8a4hhBSMKnUQM=
+	t=1750171853; cv=none; b=WdUHf7qawQQwACDGYOGEOsLX9neUVVKxxeFjkHN0wPsc8/4fqEzVDqNeFDPfYFf+6ql9W1EcBp4MxAlXyN1nEC8W3jBY096YHWbZ2Y523oGIJD88i9U56TWpEXL01c7n8euXOO7A+qvvSJMOyjZToqUpqA5IWh1MyQMc8O2sxts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171850; c=relaxed/simple;
-	bh=gEP6B7AZOOyR3lWw7vaikvzZpFJmNDZgWuZSYWcJorw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=szU503YaksW36cs/278YE7gDdpQCcm9uiIpukUZNRA+x2d19akojnAOBbRUBQzItuGfGItUhrNzJGn4WmClHNyJfP/IID1aFeIouWxAjz2Hi4le9QPn6GtOX/Ahhzzk5hXa29J+cqjyb2sE7p5EoNo4NzACTzqDadOjrRUjlasg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JpA7ae4A; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750171853; c=relaxed/simple;
+	bh=IihBz1FuXqYR5rPry8PeB099ePDxYFeOzUimwqiYYsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KtX+ak6ewFG2nRbcX/9sBlWwMAFvChYpFpTqB36PFvn0S+eiePpv1V3cFfvPIjIrQReE2iSNIEYnt//PT5RHEjjDes3DytEaVc69t2m1FtwEUSZSOy9Ja+A85YCgQHIylDzZI7DCfG+Zf+kjPeZqI7cv1KtMR06uN79aBbtUnro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AI0Dlj13; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpA7ae4A"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450cfb790f7so46693205e9.0;
-        Tue, 17 Jun 2025 07:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750171846; x=1750776646; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6sIQYIOw+Li4heaQIClyl0MJmZhztR0A6h9Y965AmpE=;
-        b=JpA7ae4As5YAqKd/fANEuzQtm2c4NZjFRKT2/JeYGbDHiQvmYDHnqIsCFJ4QFlNNxu
-         83+nWqo5TPw2oDUnKX7I0j8CRxXvdz7edhK2V8Hf+OckzqFJedKbx0ednL//yAqauDpp
-         B8Wvz31DkNwV/dsR/hCDR7E5Qh1hPWHuqtvVYic+cayrQbDXfZX/0fiqr02djSbutojk
-         i96g4H+YXyqe87F+enPMtEkdSZh+7JIXCagvk5F6ChbwVhO03C5xsHzAS7yPamMa7c6u
-         +zzxxBbHQKKAf+PCCErdcZTQEzPMQ9CdYSLwsx72lViDrU2t+tak8WOD5WXiVD+psp2l
-         VX4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750171846; x=1750776646;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6sIQYIOw+Li4heaQIClyl0MJmZhztR0A6h9Y965AmpE=;
-        b=HitTBnykvCHR5bvmrt+5ax+Ln2apzgS28mACoERfcrwd8I2GhUBkMerwiLM4wDsqSC
-         YW21YnWWyLb6zHIfwTMpjokJZdfI5V3064mdJ/9DQKF83HVtx453ibob+FSP43AGsLDT
-         GkHpbkFpNNtGhyMjJmN3R71kqjhiDK+OzcsRTJkRcTFIpY/7pN7Tk/Et90PAMswUzK6N
-         ZaNyG9wl6gLdz9qn1PkE36KKrWqRojjkYa9kEw4oBlQNxSML36KZj6SYQkWJTbSkSYkS
-         drCqgdqtNpj0jdZDZHg2lz+D3OGN66SXSzaOvUgCKtrDp8yZp1KMoWzsJMx780YfTi3X
-         2ePw==
-X-Forwarded-Encrypted: i=1; AJvYcCUjluDznv5wegqzgst6wkQGTzi0Nfn8aOY38i5ZzrgxZu6yYlFG0S1EAc2OS62k/FVmjCRF9NItkvIP@vger.kernel.org, AJvYcCXdzQLCqAjatcogNi7zOilvEmmW9KnKHhExdLl/dORm9S6wKcgVHniuUxIICcE6jsOYzzDBWiTJx1D4kmaI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSDY4y3Xq+B55OYn5Jd6nJDl4UfFnTqf6PGhRqOsVoK5wurQUB
-	DDOpCck97KGu+/uGt1byiy0oKGgS4vTXwPDNvLX0wSGUAloM94pyEV56
-X-Gm-Gg: ASbGnctUmdnle1zopm0g4/Ro/36uBcVw++5wG8ygjT4sasN7GTytToo0TSpo3suuHwk
-	8jTOkWNE3z0x1dTUJEqYfHFBwQJzdHRbNTGj3AMuOyuniy0doWHkoApHF7aZOhXxTeN2z7u0odk
-	UsMtbV321Ze/vMLWggJhH2ftahtV5ZrrUfZDW8ajhMxZRjVZ9WN0Z2gPdmfpB/VUH88d1kzaJtZ
-	Q0mWtqvPYOcYYDyKZXRNlNmgf8QFoNDXdyBIqLqlSYkGrXHaXP+EsTm1EOEcphZBQl7Gc01/BhI
-	GsuRGwaoOCS64fMJ58djvUCA94CGPPUgdIf+NA3hSfrN2FDaxHfgxc5fssLsXGKBFUfEEB1cyEX
-	LQzixnjg=
-X-Google-Smtp-Source: AGHT+IGenP4A7u1sQEyb0CDTNFDAGJg0rzMGlGqsI3G9roPlmRR2B1MNfF6O0TOKovnr/fKEBSSKyQ==
-X-Received: by 2002:a5d:584d:0:b0:3a5:243c:6042 with SMTP id ffacd0b85a97d-3a572398e5cmr12098068f8f.2.1750171846268;
-        Tue, 17 Jun 2025 07:50:46 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a589092d1asm2026683f8f.24.2025.06.17.07.50.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:50:45 -0700 (PDT)
-Date: Tue, 17 Jun 2025 16:50:43 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: Conor Dooley <conor@kernel.org>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: i3c: Add adi-i3c-master
-Message-ID: <ildi2pup2zkyv4stuknkrjysex3yzsbrrsrwbgcc4xgvdhwrdd@7qh4y6mutgy2>
-References: <20250606-adi-i3c-master-v2-0-e68b9aad2630@analog.com>
- <20250606-adi-i3c-master-v2-1-e68b9aad2630@analog.com>
- <20250606-sliver-freeing-d01268258c25@spud>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AI0Dlj13"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26412C4CEE3;
+	Tue, 17 Jun 2025 14:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750171852;
+	bh=IihBz1FuXqYR5rPry8PeB099ePDxYFeOzUimwqiYYsY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AI0Dlj13to7Lvf7jsNYxN11vJmGaPQticTiPmfqB0FWesPinp64qmQKpAVkpJ6zwt
+	 Px04YA2WgXJ27SXtbR7WBPTdZsXhty+H3u4jfPy8Pu1QSzDRCl0zzzj+sewYWmdWC4
+	 LCNFZ9Cr2zKs5TS58PpaLOOqEg5MB88QCsz0rLrW2bpqjJLe918eeaeTfsSHOnkqV5
+	 itQzwr8e5yhXbzcd1l26y7uqVjOAbx1Od1lpqnSWRAFBS6RtkwTXJVhXEAOulCLcxB
+	 WBfmyr6qUpt6pH9PuexFPG2gFvCwJl2pULFvuAmXxzDeyo16YnBAQowPqzUcnL3YG5
+	 JRANgFx1duOjg==
+Message-ID: <8281dbfc-6294-43de-ac0c-1e97b5cb4871@kernel.org>
+Date: Tue, 17 Jun 2025 16:50:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250606-sliver-freeing-d01268258c25@spud>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] clk: qcom: Add NSS clock controller driver for
+ IPQ5424
+To: Luo Jie <quic_luoj@quicinc.com>, Georgi Djakov <djakov@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Anusha Rao <quic_anusha@quicinc.com>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, quic_kkumarcs@quicinc.com,
+ quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+ quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+References: <20250617-qcom_ipq5424_nsscc-v1-0-4dc2d6b3cdfc@quicinc.com>
+ <20250617-qcom_ipq5424_nsscc-v1-6-4dc2d6b3cdfc@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250617-qcom_ipq5424_nsscc-v1-6-4dc2d6b3cdfc@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025 at 05:08:45PM +0100, Conor Dooley wrote:
-> On Fri, Jun 06, 2025 at 03:21:02PM +0200, Jorge Marques wrote:
-> > Add bindings doc for ADI I3C Controller IP core, a FPGA synthesizable IP
-> > core that implements the MIPI I3C Basic controller specification.
-> > 
-> > Signed-off-by: Jorge Marques <jorge.marques@analog.com>
-> > ---
-> >  .../devicetree/bindings/i3c/adi,i3c-master.yaml    | 63 ++++++++++++++++++++++
-> >  MAINTAINERS                                        |  5 ++
-> >  2 files changed, 68 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..e7fae394ad8fd4143eb1fffb9591a30a2d6cc6ac
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
-> > @@ -0,0 +1,63 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/i3c/adi,i3c-master.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices I3C Controller
-> > +
-> > +description: |
-> > +  The ADI I3C controller implements a subset of the I3C-basic specification to
-> > +  interface I3C and I2C peripherals [1].
-> > +
-> > +  [1] https://analogdevicesinc.github.io/hdl/library/i3c_controller
-> > +
-> > +maintainers:
-> > +  - Jorge Marques <jorge.marques@analog.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    const: adi,i3c-master
+On 17/06/2025 14:06, Luo Jie wrote:
+> NSS (Network Subsystem) clock controller provides the clocks and
+> resets to the networking hardware blocks of the IPQ5424 SoC.
 > 
-Hi Conor,
-> Seeing this with no versioning info is pretty suspect.
-> The adi spi, pwm, axi-dmac etc all have versioning info, please try to
-> emulate that.
+> The icc-clk framework is used to enable NoC related clocks to
+> create paths so that the networking blocks can connect to these
+> NoCs.
 > 
-> Otherwise, I think this is okay.
+> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> ---
+>  drivers/clk/qcom/Kconfig         |   11 +
+>  drivers/clk/qcom/Makefile        |    1 +
+>  drivers/clk/qcom/nsscc-ipq5424.c | 1340 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1352 insertions(+)
 > 
-> Cheers,
-> Conor.
-> 
-The driver checks the IP version via register access, for the other adi
-ips, the -x.00.a suffix was never updated. For example, the axi-dmac
-current IP version is v4.5.64 while the compatible still is 1.00.a and
-there is a mention of v4.3.a in the binding. It is unclear whether
-suffixing it with "-1.00.a" would be useful, or if the time comes call
-the new "adi,i3c-master-2".
+> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+> index 7d5dac26b244..fc4755f18b84 100644
+> --- a/drivers/clk/qcom/Kconfig
+> +++ b/drivers/clk/qcom/Kconfig
+> @@ -281,6 +281,17 @@ config IPQ_GCC_9574
+>  	  i2c, USB, SD/eMMC, etc. Select this for the root clock
+>  	  of ipq9574.
+>  
+> +config IPQ_NSSCC_5424
+> +	tristate "IPQ5424 NSS Clock Controller"
+> +        depends on ARM64 || COMPILE_TEST
+> +        depends on IPQ_GCC_5424
 
-Do you still think it is necessary?
+Messed up indentation.
 
 Best regards,
-Jorge
-
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: The AXI interconnect clock.
-> > +      - description: The I3C controller clock.
-> > +
-> > +  clock-names:
-> > +    items:
-> > +      - const: axi
-> > +      - const: i3c
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - clocks
-> > +  - clock-names
-> > +  - interrupts
-> > +
-> > +allOf:
-> > +  - $ref: i3c.yaml#
-> > +
-> > +unevaluatedProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    i3c@44a00000 {
-> > +        compatible = "adi,i3c-master";
-> > +        reg = <0x44a00000 0x1000>;
-> > +        interrupts = <0 56 4>;
-> > +        clocks = <&clkc 15>, <&clkc 15>;
-> > +        clock-names = "axi", "i3c";
-> > +        #address-cells = <3>;
-> > +        #size-cells = <0>;
-> > +
-> > +        /* I3C and I2C devices */
-> > +    };
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 96b82704950184bd71623ff41fc4df31e4c7fe87..6f56e17dcecf902c6812827c1ec3e067c65e9894 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -11243,6 +11243,11 @@ S:	Maintained
-> >  F:	Documentation/devicetree/bindings/i3c/aspeed,ast2600-i3c.yaml
-> >  F:	drivers/i3c/master/ast2600-i3c-master.c
-> >  
-> > +I3C DRIVER FOR ANALOG DEVICES I3C CONTROLLER IP
-> > +M:	Jorge Marques <jorge.marques@analog.com>
-> > +S:	Maintained
-> > +F:	Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
-> > +
-> >  I3C DRIVER FOR CADENCE I3C MASTER IP
-> >  M:	Przemysław Gaj <pgaj@cadence.com>
-> >  S:	Maintained
-> > 
-> > -- 
-> > 2.43.0
-> > 
-
-
+Krzysztof
