@@ -1,118 +1,130 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3581A1EB1AF
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:45:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416BA1EB1AF;
+	Tue, 17 Jun 2025 14:46:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171548; cv=none; b=Vw/mr+T/xolUUHaqk/hIaBSHAJNHn+6JtE5ZUUkRYY7T8OyqOPGTGO7/4fNARw05keHijLT1t+qnFNQjB3XShk87YHDDzbox+GZg/+LLrQqRrt2fKr18K/hgzelhPr5jVaUijpVhWxKjEf4CLP4mVK72P2/cJ8923urrNpxzEgY=
+	t=1750171616; cv=none; b=OWgd+Hfy5gC/B+TfhYJ/Hq9s0YEr3WUbXecAKtjRHypliGL5OF6LR3Gtll3+w12+lamORzLQc9TCT8Ve2tY5eRwKj2/wtzCxCrQWrxJMQOfkv4mmcRUDYiNNFI86zByR0p6gt0WeGCTqetGlXG9fvcLSkulhjP5bvfkrnvzvssQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171548; c=relaxed/simple;
-	bh=ULFNwYQca9wWdUwi5WouClDI7RzoaTU1rxQ8ju3xMX4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bl8E1oM7DzzYzjBQH/mSP/GmUONx1mH6HLVm/tkvehq7FtlwqfAFKJ8UDwTrzc5NNtZot7uY64bdyBj0u1L7dTZjFNjMl9DoABgahp3WkRPnkXZuB1LrZVWTLR/EfbxtSEEwkJyMWjvvd68YgIPxCPJFYxZLSB0vdDejZmO51pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PQD8erj0; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750171616; c=relaxed/simple;
+	bh=hWbaoenAqCzEM8b4nAI/Su+XmTfwZ/XFIdmcb0kYnF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RpORbmRVKEd0AumIWbiSoeLUwfAMDvRsxDMKUZVJvjrvv325+++spa3PvcJkIRVr+wB7Bmr/9xhhBGb8bZr7Cir/F6FZ9uqt+CSBXgAhDbDkgrzSSIGvTh/f0C1iztZbROH2BDA7J523oblJbqQfENHcnZJCc8m3Gs//BKSFYUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pMoD5RBj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PQD8erj0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750171544;
-	bh=ULFNwYQca9wWdUwi5WouClDI7RzoaTU1rxQ8ju3xMX4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PQD8erj0C7Hy+ryhmlFfeBMXd63QxZtIVk28bKTsFyrdpP0vqNI2BWU1C3FVzkMzw
-	 TBIdDrGu70jJM1n36OG9XgxQ1na2IXCgdmOshBU41BQs7mnfLYW6wh6Hb6KPi5ynO9
-	 2fW0hfxwsfJLu4cVvzmcYk0uj6sLFPxvCR03+3NTSqneClVFxSubbvrMqMCl0+7qx8
-	 OSZxtc/+lAAhP8xQMIf9ADsfJsqaEj6Nt5tn59QsFjfzvEYGb8jJNPOXiWgdSZRcDI
-	 42s2FZ8c5LbMJ8PCvD8UabhPc4ei38SYwuyslHDgo1XE/UdPUkUys+BQekNY8v3pN/
-	 MssXb3HnHbAoA==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9512717E06BF;
-	Tue, 17 Jun 2025 16:45:43 +0200 (CEST)
-Date: Tue, 17 Jun 2025 16:45:40 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Ashley Smith <ashley.smith@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org (open list:ARM MALI PANTHOR DRM DRIVER),
- linux-kernel@vger.kernel.org (open list)
-Subject: Re: [PATCH v5 1/2] drm/panthor: Reset queue slots if termination
- fails
-Message-ID: <20250617164540.4fb196d4@collabora.com>
-In-Reply-To: <20250603094952.4188093-2-ashley.smith@collabora.com>
-References: <20250603094952.4188093-1-ashley.smith@collabora.com>
-	<20250603094952.4188093-2-ashley.smith@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pMoD5RBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BFAEC4CEE3;
+	Tue, 17 Jun 2025 14:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750171615;
+	bh=hWbaoenAqCzEM8b4nAI/Su+XmTfwZ/XFIdmcb0kYnF4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=pMoD5RBjg2hrWdX5GLO+dzDVRy82xhJby1ktI+4SZVGY3goUcbE1IP2pVhv2BfvYK
+	 WDQSxARTsr7uRdwIu2BMt/biJmS+HH6a4JQm5J/1WoqxZl9Ag+vmcK+PvpZKti9oGW
+	 LeHzcmsumGPqvV3kMkcnJ9xQ3jMBV+QeF7pC/pwuF8BGSKthP6lzerpbCK+b9ouWhV
+	 0DrQSNgXdUkFwUNi1mm0jyHVaNvY6GNV3YGYxBZZWYNF51dP9grnWnluUAbAXcqSV2
+	 79SjDNydKWs8PZVHWBiDMexYMWLr7rS1cFqI+pPPbBb5R72CeS/1sbRDXHz1/FtmGw
+	 +igdSheqcnlVw==
+Date: Tue, 17 Jun 2025 09:46:54 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
+Cc: Manivannan Sadhasivam <mani@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>,
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Simek, Michal" <michal.simek@amd.com>,
+	"Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
+	"Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
+ PERST# signal
+Message-ID: <20250617144654.GA1135267@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DM4PR12MB615826495B1A4F7DBADCEEF2CD73A@DM4PR12MB6158.namprd12.prod.outlook.com>
 
-On Tue,  3 Jun 2025 10:49:31 +0100
-Ashley Smith <ashley.smith@collabora.com> wrote:
-
-> This fixes a bug where if we timeout after a suspend and the termination
-> fails, due to waiting on a fence that will never be signalled for
-> example, we do not resume the group correctly. The fix forces a reset
-> for groups that are not terminated correctly.
+On Tue, Jun 17, 2025 at 04:14:37AM +0000, Musham, Sai Krishna wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
 > 
-> Signed-off-by: Ashley Smith <ashley.smith@collabora.com>
-> Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
-> ---
->  drivers/gpu/drm/panthor/panthor_sched.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> Hi Manivannan,
 > 
-> diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/panthor/panthor_sched.c
-> index 43ee57728de5..65d8ae3dcac1 100644
-> --- a/drivers/gpu/drm/panthor/panthor_sched.c
-> +++ b/drivers/gpu/drm/panthor/panthor_sched.c
-> @@ -2727,8 +2727,17 @@ void panthor_sched_suspend(struct panthor_device *ptdev)
->  			 * automatically terminate all active groups, so let's
->  			 * force the state to halted here.
->  			 */
-> -			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED)
-> +			if (csg_slot->group->state != PANTHOR_CS_GROUP_TERMINATED) {
->  				csg_slot->group->state = PANTHOR_CS_GROUP_TERMINATED;
-> +
-> +				/* Reset the queue slots manually if the termination
-> +				 * request failed.
-> +				 */
-> +				for (i = 0; i < group->queue_count; i++) {
+> > -----Original Message-----
+> > From: Manivannan Sadhasivam <mani@kernel.org>
+> > Sent: Thursday, June 12, 2025 10:49 PM
+> > To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
+> > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+> > manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+> > conor+dt@kernel.org; cassel@kernel.org; linux-pci@vger.kernel.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Michal
+> > <michal.simek@amd.com>; Gogada, Bharat Kumar
+> > <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+> > <thippeswamy.havalige@amd.com>
+> > Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
+> > PERST# signal
+> >
+> > Caution: This message originated from an External Source. Use proper caution
+> > when opening attachments, clicking links, or responding.
+> >
+> >
+> > On Mon, Apr 14, 2025 at 08:53:04AM +0530, Sai Krishna Musham wrote:
+> > > Add support for handling the PCIe Root Port (RP) PERST# signal using
+> > > the GPIO framework, along with the PCIe IP reset. This reset is
+> > > managed by the driver and occurs after the Initial Power Up sequence
+> > > (PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's probe
+> > > function is called.
 
-group is used uninitialized which leads to a random (most likely NULL)
-pointer deref. Either we go:
+> > > +     if (do_reset) {
+> > > +             /* Assert the PCIe IP reset */
+> > > +             writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
+> > > +
+> > > +             /*
+> > > +              * "PERST# active time", as per Table 2-10: Power Sequencing
+> > > +              * and Reset Signal Timings of the PCIe Electromechanical
+> > > +              * Specification, Revision 6.0, symbol "T_PERST".
+> > > +              */
+> > > +             udelay(100);
+> >
+> > Are you sure that you need T_PERST here and not T_PVPERL? T_PERST
+> > is only valid while resuming from D3Cold i.e., after power up,
+> > while T_PVPERL is valid during the power up, which is usually the
+> > case when a controller driver probes. Is your driver relying on
+> > power being enabled by the bootloader and the driver just toggling
+> > PERST# to perform conventional reset of the endpoint?
+> 
+> Thanks for pointing that out. Yes, the power-up sequence is handled
+> by the hardware, and the driver relies on power being enabled by it.
+> We're only toggling the PERST# signal in the driver to perform a
+> conventional reset of the endpoint. So, I'm confident that T_PERST
+> is the appropriate timing reference here, not T_PVPERL.
+> 
+> Additionally, this delay was recommended by our hardware team, who
+> confirmed that the power-up sequence is managed in hardware logic,
+> and that T_PERST is the appropriate timing to apply in this context.
+> 
+> I also checked pci.h but couldn't find a predefined macro for
+> T_PERST, so I used 100.  Please let me know if there's a preferred
+> macro I should be using instead.
 
-				for (i = 0; i < csg_slot->group->queue_count; i++) {
+If we need a new macro, please add it.  Include a citation to the
+relevant section of the spec ("PCIe CEM r6.0, sec 2.11.2"; table
+numbers don't appear in the table of contents so they're hard to
+find), and include the units ("_US", I guess) in the macro name.
 
-and we move the group variable to the last for loop, so we're not
-tempted to use it again in places where it's not initialized, or
-we use the group variable consistently accross this function by having
+Given a comment at the macro definition, you don't need to repeat it
+at all the uses.
 
-		group = csg_slot->group;
-
-assignments where csg_slot->group is currently used.
-
-We might also want to consider splitting this huge function in
-sub-functions, but probably not in a patch that's flagged for
-backporting.
-
-
-> +					if (group->queues[i])
-> +						cs_slot_reset_locked(ptdev, csg_id, i);
-> +				}
-> +			}
->  			slot_mask &= ~BIT(csg_id);
->  		}
->  	}
-
+Bjorn
