@@ -1,102 +1,259 @@
-Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764C9232367
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D01F9C1;
+	Tue, 17 Jun 2025 12:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163486; cv=none; b=A+/NUokkpdAUNHVcF3XLGGlV9hBahvB/lCmEbbCPUw0YqQYF0jR4Swz4vxnf/wTPCRHj+GTavZFkfLV5EWEx8+j2Oct1si/tYLO+axbkSFsyK1USpx3/xPN+Ckvc85IFE1yt2LGPLBZ3IjZwACku6kxiTik0HF639t9fH0DK1S8=
+	t=1750163530; cv=none; b=DIkRTWvBm9g2E2gze7twH9F7DjqczgvB6FfwYqJ2l1GyqhNaoVnQczrJ1yrIJDp6iqJPbCnXwdHU0tVjB76Ai7iNlbtD1VbWwMUJD9RohrI/eTFE3uJ/BDgEQ6L7Ak8yMs2r3lEhyzF/4HwE4sFg/gUBUjH9dHGxW111pFFBSjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163486; c=relaxed/simple;
-	bh=tl/ysKg2pbO//5LSppPI63SpF2EJBQ1pVNHDmYkhqIY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Zx8sPQLS8v+Fd3qj9loDvuue3AGjj80MB87nukNSzgKdTD5sQD4kBdeT5lf9neCQccfcGlvUqu8U15o9bia/SCosHaWi2ZNQ8zNQmw9nJGXXlkGiM91RaP96e0CrBEw1LyZagaAptdhhGPb6yeEogymSrqvxYpIq1uheAPkriQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=CEhSBwKd; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+	s=arc-20240116; t=1750163530; c=relaxed/simple;
+	bh=LuiDLCiBmzOtrkWiGYzaos/vIBFgUoxHOmHYolNd7Lk=;
+	h=From:To:Cc:Date:Subject:Message-ID:MIME-Version:Content-Type; b=UmWSOsh+2GayQKVKVOca5Ohq8GZjaiSxd63+j72QlotteImvJTfZiOVO2igYgIan+mpLk9h0Y/aACAI3SZGPhV0iWM4J4DtIQBB1BKgw332bfnoN8DnD4q7tMN5eG6N5Qg0WpWKWFnhrMt4/RJCIUm8HZDTl6oELujcMbEhTskg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QpEX4HTj; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="CEhSBwKd"
-dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=To:From;
-	bh=SMmNydMKSiSw46VMKIaOtP7+f4hbp6bXLZuquRVgerg=;
-	b=CEhSBwKdKWdizo7AgBCpnqTUcPR9Z57Ndle2N8IRXfVTal5i7efACYOJ/1vYrl9UWbRoruN2T
-	mCjvoHNW/ZlK0K8xDOxVd2NucJVYbmaC3Xx1IN43IuLiv2da+E7/HI7FQZUy1tIGlOo/Y4t5p29
-	V981V/b3gW7HQ3Q9r7R6OIo=
-Received: from w011.hihonor.com (unknown [10.68.20.122])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bM5lf6PgYzYlBDt;
-	Tue, 17 Jun 2025 20:29:18 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w011.hihonor.com
- (10.68.20.122) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Jun
- 2025 20:31:20 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Jun
- 2025 20:31:19 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<bintian.wang@honor.com>, <feng.han@honor.com>, <niuzhiguo84@gmail.com>,
-	wangzijie <wangzijie1@honor.com>
-Subject: [f2fs-dev] [PATCH v2 1/2] f2fs: don't allow unaligned truncation to smaller size on pinned file
-Date: Tue, 17 Jun 2025 20:31:15 +0800
-Message-ID: <20250617123116.2385828-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QpEX4HTj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750163529; x=1781699529;
+  h=from:to:cc:date:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=LuiDLCiBmzOtrkWiGYzaos/vIBFgUoxHOmHYolNd7Lk=;
+  b=QpEX4HTjGb+kOamxXGo8exyPO0M/+hM8+233XUrO6zScTd2dkEpF5AMX
+   xHcaPTVpel4QivDfaHKSabBukmop+fjq14OfDj78iWm4b0fCuPLNoSElm
+   /VQUev73vKTiVKPxndUapQa2dEGfvFwvScNaWEdHWh70ETyfkGxytf9Gi
+   mKPHcDO+1H6YY8AovSb1GvEoWVxEv36L0gkra0HT2RZF+sTsg2RJ3a/wc
+   S9pzEvQaEpCBGceHZw4Ljfuby3jv8ThnrRt9bai/hTYZSeX2Haj0UkTjL
+   KNPSCpwf/zHUFjSFCIz9ZzTrfi+7i6NqutGjgjli0/gZhF/ugHPp5OPO1
+   w==;
+X-CSE-ConnectionGUID: JLKRNoqkQC2waMXm/O7BwA==
+X-CSE-MsgGUID: ntB2BaFeSRCQY+zUE42TXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52252406"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52252406"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:30:46 -0700
+X-CSE-ConnectionGUID: 8RLb4unqRnShhIEZfTrZnQ==
+X-CSE-MsgGUID: pNrz+SDnSDiOy62onCbY6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="153656018"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.164])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 05:30:43 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, PDx86 <platform-driver-x86@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Date: Tue, 17 Jun 2025 15:28:16 +0300
+Subject: [GIT PULL] platform-drivers-x86 for v6.16-2
+Message-ID: <pdx86-pr-20250617152816-1278911842@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w001.hihonor.com (10.68.25.235) To a011.hihonor.com
- (10.68.31.243)
 
-To prevent scattered pin block generation, don't allow non-section aligned truncation
-to smaller size on pinned file. But for truncation to larger size, after
-commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
-we only support overwrite IO to pinned file, so we don't need to consider
-attr->ia_size > i_size case.
+Hi Linus,
 
-Signed-off-by: wangzijie <wangzijie1@honor.com>
----
-v2:
-- add comments and change a proper subject
----
- fs/f2fs/file.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Here is a platform-drivers-x86 fixes PR for v6.16.
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 6bd3de64f..09be6e849 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	int err;
- 
- 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
-@@ -1047,6 +1048,17 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			!IS_ALIGNED(attr->ia_size,
- 			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
- 			return -EINVAL;
-+		/*
-+		 * To prevent scattered pin block generation, we don't
-+		 * allow smaller size unaligned truncation for pinned file.
-+		 * We only support overwrite IO to pinned file, so don't
-+		 * care about larger size truncation.
-+		 */
-+		if (f2fs_is_pinned_file(inode) &&
-+			attr->ia_size < i_size_read(inode) &&
-+			!IS_ALIGNED(attr->ia_size,
-+			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
-+			return -EINVAL;
- 	}
- 
- 	err = setattr_prepare(idmap, dentry, attr);
--- 
-2.25.1
+Fixes and New HW Support
 
+- amd/hsmp: Timeout handling fixes
+
+- amd/pmc:
+
+  - Clear metrics table at start of cycle
+
+  - Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+- amd/pmf: Fix error handling corner cases (nth attempt)
+
+- alienware-wmi-wmax: Revert G-Mode support as it lowers performance
+
+- dell_rbu:
+
+  - Fix sparse lock context warning
+
+  - Fix list head usage
+
+  - Don't overwrite data buffer past the size of the last packet
+
+- ideapad-laptop: Ensure EC is not polled too frequently
+
+- intel-uncore-freq:
+
+  - Fail module load when plat_info is NULL
+
+  - Avoid a non-literal format string as it triggers a compiler warning
+
+- intel/pmc: Add Lunar Lake and Panther Lake support to SSRAM Telemetry
+
+- intel/power-domains: Fix error code in tpmi_init()
+
+- samsung-galaxybook: Add support for Notebook 9 Pro and others (SAM0426)
+
+Regards, i.
+
+
+The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
+
+  Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git tags/platform-drivers-x86-v6.16-2
+
+for you to fetch changes up to e2468dc700743683e1d1793bbd855e2536fd3de2:
+
+  Revert "platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1" (2025-06-13 15:09:02 +0300)
+
+----------------------------------------------------------------
+platform-drivers-x86 for v6.16-2
+
+Fixes and New HW Support
+
+- amd/hsmp: Timeout handling fixes
+
+- amd/pmc:
+
+  - Clear metrics table at start of cycle
+
+  - Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+- amd/pmf: Fix error handling corner cases (nth attempt)
+
+- alienware-wmi-wmax: Revert G-Mode support as it lowers performance
+
+- dell_rbu:
+
+  - Fix sparse lock context warning
+
+  - Fix list head usage
+
+  - Don't overwrite data buffer past the size of the last packet
+
+- ideapad-laptop: Ensure EC is not polled too frequently
+
+- intel-uncore-freq:
+
+  - Fail module load when plat_info is NULL
+
+  - Avoid a non-literal format string as it triggers a compiler warning
+
+- intel/pmc: Add Lunar Lake and Panther Lake support to SSRAM Telemetry
+
+- intel/power-domains: Fix error code in tpmi_init()
+
+- samsung-galaxybook: Add support for Notebook 9 Pro and others (SAM0426)
+
+The following is an automated shortlog grouped by driver:
+
+amd/pmc:
+ -  Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+amd: pmc:
+ -  Clear metrics table at start of cycle
+
+amd: pmf:
+ -  Prevent amd_pmf_tee_deinit() from running twice
+ -  Simplify error flow in amd_pmf_init_smart_pc()
+ -  Use device managed allocations
+
+dell_rbu:
+ -  Bump version
+ -  Fix list usage
+ -  Fix lock context warning
+ -  Stop overwriting data buffer
+
+ideapad-laptop:
+ -  use usleep_range() for EC polling
+
+intel/pmc:
+ -  Add Lunar Lake support to Intel PMC SSRAM Telemetry
+ -  Add Panther Lake support to Intel PMC SSRAM Telemetry
+
+intel: power-domains:
+ -  Fix error code in tpmi_init()
+
+intel-uncore-freq:
+ -  avoid non-literal format string
+ -  Fail module load when plat_info is NULL
+
+MAINTAINERS: .mailmap:
+ -  Update Hans de Goede's email address
+
+platform/x86: alienware-wmi-wmax:
+ - Revert: Add G-Mode support to Alienware m16 R1
+
+samsung-galaxybook:
+ -  Add SAM0426
+
+x86/platform/amd:
+ -  move final timeout check to after final sleep
+ -  replace down_timeout() with down_interruptible()
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      platform/x86/intel-uncore-freq: avoid non-literal format string
+
+Dan Carpenter (1):
+      platform/x86/intel: power-domains: Fix error code in tpmi_init()
+
+Hans de Goede (1):
+      MAINTAINERS: .mailmap: Update Hans de Goede's email address
+
+Jake Hillion (2):
+      x86/platform/amd: move final timeout check to after final sleep
+      x86/platform/amd: replace down_timeout() with down_interruptible()
+
+Joshua Grisham (1):
+      platform/x86: samsung-galaxybook: Add SAM0426
+
+Kurt Borja (1):
+      Revert "platform/x86: alienware-wmi-wmax: Add G-Mode support to Alienware m16 R1"
+
+Mario Limonciello (5):
+      platform/x86/amd: pmc: Clear metrics table at start of cycle
+      platform/x86/amd: pmf: Use device managed allocations
+      platform/x86/amd: pmf: Prevent amd_pmf_tee_deinit() from running twice
+      platform/x86/amd: pmf: Simplify error flow in amd_pmf_init_smart_pc()
+      platform/x86/amd/pmc: Add PCSpecialist Lafite Pro V 14M to 8042 quirks list
+
+Rong Zhang (1):
+      platform/x86: ideapad-laptop: use usleep_range() for EC polling
+
+Srinivas Pandruvada (1):
+      platform/x86/intel-uncore-freq: Fail module load when plat_info is NULL
+
+Stuart Hayes (4):
+      platform/x86: dell_rbu: Fix lock context warning
+      platform/x86: dell_rbu: Fix list usage
+      platform/x86: dell_rbu: Stop overwriting data buffer
+      platform/x86: dell_rbu: Bump version
+
+Xi Pardee (2):
+      platform/x86/intel/pmc: Add Lunar Lake support to Intel PMC SSRAM Telemetry
+      platform/x86/intel/pmc: Add Panther Lake support to Intel PMC SSRAM Telemetry
+
+ .mailmap                                           |   1 +
+ MAINTAINERS                                        |  72 +++++++-------
+ drivers/platform/x86/amd/hsmp/hsmp.c               |  14 ++-
+ drivers/platform/x86/amd/pmc/pmc-quirks.c          |   9 ++
+ drivers/platform/x86/amd/pmc/pmc.c                 |   2 +
+ drivers/platform/x86/amd/pmf/core.c                |   3 +-
+ drivers/platform/x86/amd/pmf/tee-if.c              | 108 ++++++++-------------
+ drivers/platform/x86/dell/alienware-wmi-wmax.c     |   2 +-
+ drivers/platform/x86/dell/dell_rbu.c               |  10 +-
+ drivers/platform/x86/ideapad-laptop.c              |  19 +++-
+ drivers/platform/x86/intel/pmc/core.h              |   7 ++
+ drivers/platform/x86/intel/pmc/ssram_telemetry.c   |   3 +
+ drivers/platform/x86/intel/tpmi_power_domains.c    |   4 +-
+ .../uncore-frequency/uncore-frequency-common.c     |   2 +-
+ .../intel/uncore-frequency/uncore-frequency-tpmi.c |   9 +-
+ drivers/platform/x86/samsung-galaxybook.c          |   1 +
+ 16 files changed, 137 insertions(+), 129 deletions(-)
