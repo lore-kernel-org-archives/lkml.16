@@ -1,273 +1,165 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2070.outbound.protection.outlook.com [40.107.220.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A043528E8;
-	Tue, 17 Jun 2025 15:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175388; cv=fail; b=DJcj0GDvF9OYO/mXi4y2nfg4aLCQzsdFm97ymuigVSHzCkI6iT59o98KXZ79uQLJu8DgE1PaWVks2IwzvtsFV28Rp21arCaEQPBVNaDNtKavgi1jqzxNqqGeD5/nhYQoxaWk9hLx6wKqqVfp0/LzPyhjmqpHeyi8NsrvsqKaomM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175388; c=relaxed/simple;
-	bh=HA3Oiy703/vxDtTrMUq20YvYE6JtQfSiQ78abrhZbN0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OXza9i1/JyPpAkOUEEQam3wf3L+Tds7hcOnGHgLzxonQ7+9kcGU7JZlk8KQHDf6j+u9oOo8mgip6Cln3yrm5L8gc0n89J6BHtk7DkD/aOnWP6JuvHWNXOC2LpsaIGAKrMHPUjepkWhFIWgnGrd0+vzg2bkVYYcBJ1/3zYeSqbwU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J50HglKG; arc=fail smtp.client-ip=40.107.220.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ECE2ECE99;
+	Tue, 17 Jun 2025 15:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750175416; cv=none; b=g1/id2z/YhpDTCUT4NeDdWpNJqred1eTvn8lw0P1XSo1jW4l0BCBtdwbE+3z6o84IGPo1tMCsFAZhq6j2nZLIZxd4JcqBpZKONpBC2Kf/0OgR2+cv7Jk9yXcTmF081gDfYIa77g7RjBH57Pqv5YHkTCh1Vq8rlmvEELmCy/2YlQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750175416; c=relaxed/simple;
+	bh=sQUR3wj1GLJjyLrPyEj1zSMJgcPH/Jb28IWEOYVQa0E=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=SRIaWdCg0rjpODkFVyHL4fKlUmCjA62nTvOpuGLlznvwcwTLweSIdBJ7Ad3ShCD0+1imQyeLAhjAhKX+HsfPYmm0ChAho98VhulfaJRBfuRs2qqHSXcXrDUO2L62KsbtIurlmDuvAeWMuRj9Id8F17xHyhqm4jDkAjVMYz9AMl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JTx+fPgq; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J50HglKG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Zu4znCuKkKMRQ6/RlJ4s+ZuNg5Io/ID2EYlLrmiiiZGqWBmCWLvigkHr48cnl1Er8AtsRxKLGMK+DQSx2KHdus8lUV1NDhLT0QHEisJEQuVUEfYGqcOasJDGFj9aZ6sHrufo1y9W+gWKoI6lGeB1cXg4Kt1BrZRMWtwon5/5E4lNBygf3I7ywHfWGJN/jj/l7h9c2LvQ4rP4jMZbnS40wrqLhHcivCnGkr8WfvaOZQTqaTWtfZ753LHrcZZ/4dTz9NspGZUOTC078soxRcdvvan2PmZvFoINXE9To+iys+Tual+zE4AFJYA+6uCtvNhG1R8jj0qbgrfQnedZL7tQYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0g9o/w8RFnGwfEva01l0q/HX4y0DPbIID9AfYYZnRjk=;
- b=OH4DzP+drwJ7MYrVxwcG8xW7xHmAEOgHgVO3spgbtU3anS80rlMhf7oH5iIclFWjsoe8oFYCHKrRbIjtpWuvgN3ljQwwTLyzQl4XLtN8VMTMAeZYQHaukPOkbXhxsYLX55gBsJCc118OD8oF2i/vu7RGtt06/mECZAaem2Ldjadtqo/GiNGpr7ro0p4HKAVPuicnLo6jaQXVf8DGwyLCMqE8BeTD3jUCFr6cSK49+S0qIivYAQxNoGKmnQ59GCDVu1kvywMN40Yb018T9guswiDJVLXS6hdT8YgdlEBLAnAc9vo2S/A1UG/RLpf1viYspzx24v2nloXeq47mFA5gDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0g9o/w8RFnGwfEva01l0q/HX4y0DPbIID9AfYYZnRjk=;
- b=J50HglKGaiPtJkFK2SQt0kZeL4OQAob4dxsEmWPAGobYSiq1DQSRRLDgW2jS1KHaZxzoz5RNSmuvh4YBRDEn7OPjzngm4mkj2wKb29JGYniiigRRFgS2WlKsMWkTrT+ImV9z7mQf4D08Sc1WBbs00HbiAG9sFEi1vnO+LAM6X+A=
-Received: from DM4PR12MB6158.namprd12.prod.outlook.com (2603:10b6:8:a9::20) by
- SA3PR12MB7923.namprd12.prod.outlook.com (2603:10b6:806:317::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.19; Tue, 17 Jun 2025 15:49:41 +0000
-Received: from DM4PR12MB6158.namprd12.prod.outlook.com
- ([fe80::b639:7db5:e0cc:be5e]) by DM4PR12MB6158.namprd12.prod.outlook.com
- ([fe80::b639:7db5:e0cc:be5e%3]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 15:49:41 +0000
-From: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-CC: Manivannan Sadhasivam <mani@kernel.org>, "bhelgaas@google.com"
-	<bhelgaas@google.com>, "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
-	<conor+dt@kernel.org>, "cassel@kernel.org" <cassel@kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Simek,
- Michal" <michal.simek@amd.com>, "Gogada, Bharat Kumar"
-	<bharat.kumar.gogada@amd.com>, "Havalige, Thippeswamy"
-	<thippeswamy.havalige@amd.com>
-Subject: RE: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
- PERST# signal
-Thread-Topic: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe RP
- PERST# signal
-Thread-Index: AQHbrOylgtMytwVisU+l4ovrQWRiO7QAInCAgAb67JCAALYgAIAAED7w
-Date: Tue, 17 Jun 2025 15:49:41 +0000
-Message-ID:
- <DM4PR12MB6158A154D1186EFDBFD92BC1CD73A@DM4PR12MB6158.namprd12.prod.outlook.com>
-References:
- <DM4PR12MB615826495B1A4F7DBADCEEF2CD73A@DM4PR12MB6158.namprd12.prod.outlook.com>
- <20250617144654.GA1135267@bhelgaas>
-In-Reply-To: <20250617144654.GA1135267@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=True;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-06-17T15:45:01.0000000Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
- Internal Distribution
- Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=3;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR12MB6158:EE_|SA3PR12MB7923:EE_
-x-ms-office365-filtering-correlation-id: ff21e03a-c2e7-4819-15f3-08ddadb692f3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|7416014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?xoxaCBQq9Qm13FN2SG76yowWgdqE5oN0IYbShy2OOH3tFCZlbKwBAyRFaRNg?=
- =?us-ascii?Q?zlZcpRb1HGyZcjIrPIoG/bjfeknyE9HZX0EysWDdVN6diRYAqluuh/LCa/4W?=
- =?us-ascii?Q?xIvySlm1MjPwztDdOFBvMVggPzjhIfZA3QOfYC8U9q38Bhv2/y53wqeqgMmr?=
- =?us-ascii?Q?faVjx3c8EnR3H1XenSASMPfRuJybCsQ6CkvDQaJpmN60EuTBqLur+5SmvoGu?=
- =?us-ascii?Q?+TGuKS4w20qp/i0+woc6W6f6oBLKqCaKvgHjCxVH6wKIPfTO95gbD8Q4nVmz?=
- =?us-ascii?Q?k0iaBaI2wKhIP4d29hq9q/2nP0Q4ShKMZnL+FOK7T6J2/OhGdhgVvKjtHAZa?=
- =?us-ascii?Q?hdaWbKG17Bq1K2cHibjYXV/ORd/2bYwWXAVTGBdxEBS1bJJZbKEWzrMPsCke?=
- =?us-ascii?Q?eyUJdCVNo6ttiBeM14sGwJO0hnGCP101doTZy79aAOiB/vJvr9My45HG2VHC?=
- =?us-ascii?Q?fHkMCV4gF+zALT36pUOeacZqLVIJNSpAqn+RXpHRfg0wWvbhd93srT00zHET?=
- =?us-ascii?Q?vovbnlpkhh3PtGU9XpC+OQwW8x3vbeni2TPZTzCysKwsSpnHHgPrP076LJ5g?=
- =?us-ascii?Q?MgNkRS4zWVJXjLExPsC1tQoGm5IcmrrejxltPtnw3CL91mjgS1+sWi2OIHel?=
- =?us-ascii?Q?NAQay4IJxHKFHMLuCLO8gw7A2fLd+T1jozw97tMdpyvWGPaELli7LYLbubqa?=
- =?us-ascii?Q?Gv41trBwJ0V42fa3x4D9Q5Ehp6Tvrk8iShfiuvFTMwoAadiOApBiNNq4Tz34?=
- =?us-ascii?Q?l2FTVFt8zIN+WRWRQxUQxxuhGPI3bi/OpcFIF8Zvjlm+ExpRxwaM5iwM7fNn?=
- =?us-ascii?Q?SxJ28PIBg6CDgkvp0n/Rz2K+9JF1PjJ7ueU6/HCn10+ZBVK8b1ClNy8Nj9gq?=
- =?us-ascii?Q?uyHN30PNuc1/9mFLYLqQzlFQ662PKprpqnK8VqD7JvF/FNqFpQlrpvTVZMmK?=
- =?us-ascii?Q?LFpZvcgEA3/LHoCi46OUXqJIZeaTfLk2XSQ8BEhIH6RZ3xDH39Cx+nQPzJ/K?=
- =?us-ascii?Q?poQd0CzdoK4iRqVAgjq4csLahlX9hNqsQtRl3+T1emRWMFHnkXoJhgK9fuiy?=
- =?us-ascii?Q?L+XRTYrKJwJ5qYVEXv3jTIV/W+nGBNf3G6PXb2XKw850uKfFjaycncjqs75r?=
- =?us-ascii?Q?+q+eNQTfFY5N/IyhBGLVUd5tN2UyplqetLKSAwINsi5FghyY0kBzXKxMvRVG?=
- =?us-ascii?Q?eIUV+kIOsae+VCYm//lsMTm7QQtUX1NUfuhnOcAxW8a7kSCZ89I4c4pomo1i?=
- =?us-ascii?Q?6U5Emwb7r7TwP1oE1eDohEQ6nh1M6sknDYAmVqT8gsBAioBudHfAStElRszv?=
- =?us-ascii?Q?J7HkYf/Lb6v8TfXsltngXShUfcubT8VV528UXn2rrXvwJvWskzD3vZFqFPCD?=
- =?us-ascii?Q?g1GxBzydm/SX8EWi5LQaIMrHO7HFGMrrGQlrdpD/yf14ETPMKmC47xTUaXON?=
- =?us-ascii?Q?EHFQtAR4Np1dCKt42F8xvwYlPFLQ3J6um7XmR5f1vckElM/AxuVt3g=3D=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB6158.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?UBWEGUfBy/g9BllKM9JMHfOxfVvO4WUXhapwjuieXyH/aVr02xnk6C2M6/oh?=
- =?us-ascii?Q?vFI671tX7nZfVn9Q94qQbMMyS0fRNX6XJRz8SI7ILhnFEKkkTJDdcnpw3vWR?=
- =?us-ascii?Q?2FVd6utHXeJPilB268Mi+8PAhI3eSvqTxRjFObHqsFufQgv68I4ETE1xuXbf?=
- =?us-ascii?Q?XOq8Rlzvnh6Bc/MQtgfZeY8K/YRdwCa/SXmYggZ/chgZp8NsLJgJfeCyh/NH?=
- =?us-ascii?Q?OjHfcSM3JkfTAwXCh0ct7R1ZXKFCkV9Yz3N4rWEZxfSSDQ70thN6Dl/72YaO?=
- =?us-ascii?Q?iegiqDtgpbvc8eGTPIO5nmagOyKR9tSOPrKzhm52kOo/34qGCjggWwbah7gw?=
- =?us-ascii?Q?7AQq/JqxbNZOUkaalHAnT11GDULTuQ+m+BrchmX8i1zPVklOStoT9pTh4Zcf?=
- =?us-ascii?Q?/WoXoWFwO/S6h0KTTcHQsdTX99luppl4BWD7CkInjZM2AbK6H64XKizdcPN8?=
- =?us-ascii?Q?GNq7NIO0hzu7liZlehMsp3+YN+Ed3xAHkvIQnRBa2K7rkW86RDz3IWiuqHav?=
- =?us-ascii?Q?URT6iyXVxgThgFKBZlC9CAf63fU0utuVzqgtGfTSuE+gDBo0KmluA9DkLgpQ?=
- =?us-ascii?Q?d0aQVP/4rIL/sXkbZZn6Sd3IUohLquL0G31yyDCkfe2P/Y3G+OVvRGh/s6ZO?=
- =?us-ascii?Q?uXfQyUdWHeA03MUZB9Y8GiE/4RM4hPdE6TFXZRVIsr5WzJXmuh5bJRrd6ELx?=
- =?us-ascii?Q?k3X35CxY5qApL4cigG7MOpGcufgeTu/Ie+2zDig3rit80Rhz5NwOIy9fv91f?=
- =?us-ascii?Q?wDNpKNbhohWpg6TIXXagKvazEJM1bFzqTJUeBzn1l3cB2afdpBW1/HnHNzWB?=
- =?us-ascii?Q?SGnQ1dge2Zvl4nxEgvj0NVSzOp+X2iHE6MOp2ogKZ/ER1uCOGJdBve9c3mMR?=
- =?us-ascii?Q?sLYmVgUvo5nJG2YqHZSSXWexMw3P4zOiQJ6DY3R+K/LAkfW0wKy/sIYZ7zXb?=
- =?us-ascii?Q?xfyWw/j8NsGlnj0ygqr5BTAfGgYbsv1i5YNY+WfHW2qMGyoeNmBrE9XkQoa+?=
- =?us-ascii?Q?C62DYeHqBs096BjBSnORbrZjmd7wrih2kzpEP1FwLrRPws8EhiLy4k9GKxgR?=
- =?us-ascii?Q?Da5evmVIy8DCOrO7bZM8wM4IQJRoFUX1ZREEdiId++WLkZJFxLY3he2XNGAQ?=
- =?us-ascii?Q?nP8TesddQEZWyEgwbxCdOYwnw9sFZ3LXy6bCSfQCHVtjaCf8OayUC7t2KKWK?=
- =?us-ascii?Q?yR+5t5HVLp3jGD2kzXNcQUvWmb56VOVfOxxYtRcYapNHQ2EdONsN0/hB1GeE?=
- =?us-ascii?Q?RdheabgZdVCRiLJGQo5wpdOBCsoE7bqdmzI0Nf4pV5R+qqneZSme5neUgtte?=
- =?us-ascii?Q?V87oyTOHoUyBsgbxeKHYg+G8CmuU7w1syQDWkJYgjcgH27c/Ncih6nnQ5RlS?=
- =?us-ascii?Q?gtASD/9C6P6Sbhon7roMNc5S9YxD8N2XVD4nYoaYWoi6YP5iL4EDTyHbroEB?=
- =?us-ascii?Q?YHOdImyu0ZBu3PYQJkzDAw6eKsH4IjpTawRmGT/pvzuNeRj4k8u68arSib2w?=
- =?us-ascii?Q?IZNVGHs3qQ/gAJLatMzVfiquvWtyTz03R56wtaoXsuVNtNR741t762+cwW8y?=
- =?us-ascii?Q?sDloD28cHDki4Ftsans=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JTx+fPgq"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-311ef4fb43dso4680136a91.3;
+        Tue, 17 Jun 2025 08:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750175414; x=1750780214; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/8BjRQTbTLXO4efQmkPOb9g/rZijb4u6NSdRQHT66tg=;
+        b=JTx+fPgqFt6W04485Ax63S/KxDofvC5qvNDdpQxH61yTxy5zQ7zVEk8ytkK62n1ulx
+         ashqW2B92q4mxsPtYjxVLfJuS1kL2vR874+26SwI3+C7oLVI7WRQ/L1sWZwDRZBGthJf
+         3dNJGy9Th6il87bv+IB11CQ/K5Ww8zgBiWYz8kuXps/0VnTsWAkqZHxiN/+FGNI59pkj
+         B6sKB3YtoQiu0vfOCBA+FbC4k1vb+0p2NAkcJJ5Xh84ySAK+3rabCBNwPYDNYn8UJzwU
+         XE0mzugVqMIUoR8CIK2nLSyhI5GtvVmBZ8T5NwT3zH553tRVTuXvFE5i1iqm6rjIv3br
+         fPpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750175414; x=1750780214;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/8BjRQTbTLXO4efQmkPOb9g/rZijb4u6NSdRQHT66tg=;
+        b=OvsYw/rCsIE1vseDGeyDmd8IOhD+XuljVCPDoqDWq/ZhyONTazofP8Vcx7yATgYaMS
+         zZLSiGr8al9MVQGP5+P2idsdRPb7lg2MnQajdr48xS7K6+s+hjcmsMiwpImx6oDpt6E2
+         TpAcc3MLisKKe2I0UZt7cxz0OAyAFqEFlat4FLdApJ0q0762Suk08Pvb3sRbMijRGgsJ
+         /xalhE+dGOwVRiwAGCUqkPVGqpwh5RS5IjmVMBRUjHtrZ0bIalV4gmzeBQZFXNyNnSFs
+         Fmz4UYJxC7TjXlQeoalvK0jE60CJjlX8J57ePmma74gRhwJLn4LUXTpqp7T9sYTwQ4Am
+         iQ3A==
+X-Forwarded-Encrypted: i=1; AJvYcCWo02ZOLft5mhH1UnfPoAVfJT81d6yghIueS7C+mEBYYW/AantJX8QpBDeYV4oRTpJOq899eLQDQLP9IRpCYj7/@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvcB0eqo27tW1/wlcbmajTMLy5uloAa9v5qkxo7xrORtSSvvol
+	ieaci/ht+Ofp7lilWKjvqWOJ5oEyFgjmEJxHtuPeOgNmjvU0VRklDrI1AUr9UQ==
+X-Gm-Gg: ASbGncs8leb7uf+Qz8RwzAMRUYve2Wi1ps1RqAlmt5GIpmGUMoBtfK1UQME75lriMSM
+	APTskcPY3HAL3s4sqa9lRHRJE5fGyctz7vO1jGan3AxED5ihjQZzq15vZKtkMTMBzAPtHrjrny0
+	V2Jq4+gklnuwD7Vm2I4AIHsveq3qlG8i3JBqJdYJ1JHuknnPkQ65dNX2I4CZjTdz0UVtVi+/C4T
+	BIUSaGb2Z0URXKecjtbuQVufdDrOE0iiaM3+4wTALez0lJJmNRYR7LLbcTVjn4ecPF+C7llwjSA
+	BMvWkF16RO4Pe9e0BnAse5ULhoUO4FbLNcILYR72faN8fSWHghfUj798/hNuxnMKbtx07vo=
+X-Google-Smtp-Source: AGHT+IE2SUZCziltGWP41uV/6AVJMUmfB9j3FNze1Bjcvn4EHiwNf3s+mbjnZ9Zj06V5bmarXFHdVg==
+X-Received: by 2002:a17:90b:1f8d:b0:312:db8:dbdd with SMTP id 98e67ed59e1d1-313f1ce3cbbmr20240405a91.28.1750175414272;
+        Tue, 17 Jun 2025 08:50:14 -0700 (PDT)
+Received: from ?IPv6:::1? ([2405:201:900e:b1b1:7db9:b6b5:b232:fcae])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5fef6sm12168541a91.40.2025.06.17.08.50.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 08:50:14 -0700 (PDT)
+Date: Tue, 17 Jun 2025 21:20:09 +0530
+From: Abhigyan ghosh <zscript.team.zs@gmail.com>
+To: Vince Weaver <vincent.weaver@maine.edu>
+CC: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
+User-Agent: K-9 Mail for Android
+In-Reply-To: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
+References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
+Message-ID: <328B9E3D-E0B0-44C6-8574-27302F33A638@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB6158.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff21e03a-c2e7-4819-15f3-08ddadb692f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 15:49:41.7091
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XcVSaB/6SYBkx+p7oc2bY7ZeltIs6QnMrAtGj9uMnqUkj15HOrg4CZZBQ84mgQCop768ZobMhyy9J/EYhcYDpg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7923
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-[AMD Official Use Only - AMD Internal Distribution Only]
+Hi Vince,
 
-Hi Bjorn,
+Thanks for sharing the report=2E
 
-> -----Original Message-----
-> From: Bjorn Helgaas <helgaas@kernel.org>
-> Sent: Tuesday, June 17, 2025 8:17 PM
-> To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
-> Cc: Manivannan Sadhasivam <mani@kernel.org>; bhelgaas@google.com;
-> lpieralisi@kernel.org; kw@linux.com; manivannan.sadhasivam@linaro.org;
-> robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org; cassel@kernel.o=
-rg;
-> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Gogada, Bha=
-rat
-> Kumar <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
-> <thippeswamy.havalige@amd.com>
-> Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for PCIe =
-RP
-> PERST# signal
+The WRMSR to 0x3f1 stood out =E2=80=94 seems similar to the one handled in=
+ commit 2dc0572f2cef back in 2021=2E Curious if 0x3f1 has popped up before =
+or if this could be a new MSR usage pattern tied to recent PEBS changes?
+
+Also, do you think a quirk-based mask or trap filter around this could be =
+a cleaner way to handle this in the fuzzer context, especially for newer In=
+tel platforms?
+
+Let me know your thoughts=2E
+
+Best, =20
+Abhigyan Ghosh
+
+On 17 June 2025 9:09:36=E2=80=AFpm IST, Vince Weaver <vincent=2Eweaver@mai=
+ne=2Eedu> wrote:
+>Hello
 >
-> Caution: This message originated from an External Source. Use proper caut=
-ion
-> when opening attachments, clicking links, or responding.
+>When running the perf_fuzzzer on a raptor-lake machine I get a
+>	unchecked MSR access error: WRMSR to 0x3f1
+>error (see below)=2E
 >
+>A similar message happened before back in 2021 and was fixed in
+>commit 2dc0572f2cef87425147658698dce2600b799bd3 so not sure if this is th=
+e=20
+>same problem or something new=2E
 >
-> On Tue, Jun 17, 2025 at 04:14:37AM +0000, Musham, Sai Krishna wrote:
-> > [AMD Official Use Only - AMD Internal Distribution Only]
-> >
-> > Hi Manivannan,
-> >
-> > > -----Original Message-----
-> > > From: Manivannan Sadhasivam <mani@kernel.org>
-> > > Sent: Thursday, June 12, 2025 10:49 PM
-> > > To: Musham, Sai Krishna <sai.krishna.musham@amd.com>
-> > > Cc: bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
-> > > manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org=
-;
-> > > conor+dt@kernel.org; cassel@kernel.org; linux-pci@vger.kernel.org;
-> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Simek, Mich=
-al
-> > > <michal.simek@amd.com>; Gogada, Bharat Kumar
-> > > <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
-> > > <thippeswamy.havalige@amd.com>
-> > > Subject: Re: [RESEND PATCH v7 2/2] PCI: xilinx-cpm: Add support for P=
-CIe RP
-> > > PERST# signal
-> > >
-> > > Caution: This message originated from an External Source. Use proper =
-caution
-> > > when opening attachments, clicking links, or responding.
-> > >
-> > >
-> > > On Mon, Apr 14, 2025 at 08:53:04AM +0530, Sai Krishna Musham wrote:
-> > > > Add support for handling the PCIe Root Port (RP) PERST# signal usin=
-g
-> > > > the GPIO framework, along with the PCIe IP reset. This reset is
-> > > > managed by the driver and occurs after the Initial Power Up sequenc=
-e
-> > > > (PCIe CEM r6.0, 2.2.1) is handled in hardware before the driver's p=
-robe
-> > > > function is called.
+>Vince Weaver
+>vincent=2Eweaver@maine=2Eedu
 >
-> > > > +     if (do_reset) {
-> > > > +             /* Assert the PCIe IP reset */
-> > > > +             writel_relaxed(0x1, port->crx_base + variant->cpm_pci=
-e_rst);
-> > > > +
-> > > > +             /*
-> > > > +              * "PERST# active time", as per Table 2-10: Power Seq=
-uencing
-> > > > +              * and Reset Signal Timings of the PCIe Electromechan=
-ical
-> > > > +              * Specification, Revision 6.0, symbol "T_PERST".
-> > > > +              */
-> > > > +             udelay(100);
-> > >
-> > > Are you sure that you need T_PERST here and not T_PVPERL? T_PERST
-> > > is only valid while resuming from D3Cold i.e., after power up,
-> > > while T_PVPERL is valid during the power up, which is usually the
-> > > case when a controller driver probes. Is your driver relying on
-> > > power being enabled by the bootloader and the driver just toggling
-> > > PERST# to perform conventional reset of the endpoint?
-> >
-> > Thanks for pointing that out. Yes, the power-up sequence is handled
-> > by the hardware, and the driver relies on power being enabled by it.
-> > We're only toggling the PERST# signal in the driver to perform a
-> > conventional reset of the endpoint. So, I'm confident that T_PERST
-> > is the appropriate timing reference here, not T_PVPERL.
-> >
-> > Additionally, this delay was recommended by our hardware team, who
-> > confirmed that the power-up sequence is managed in hardware logic,
-> > and that T_PERST is the appropriate timing to apply in this context.
-> >
-> > I also checked pci.h but couldn't find a predefined macro for
-> > T_PERST, so I used 100.  Please let me know if there's a preferred
-> > macro I should be using instead.
+>[12646=2E001692] unchecked MSR access error: WRMSR to 0x3f1 (tried to wri=
+te 0x0001000000000001) at rIP: 0xffffffffa98932af (native_write_msr+0xf/0x2=
+0)
+>[12646=2E001698] Call Trace:
+>[12646=2E001700]  <TASK>
+>[12646=2E001700]  intel_pmu_pebs_enable_all+0x2c/0x40
+>[12646=2E001703]  intel_pmu_enable_all+0xe/0x20
+>[12646=2E001705]  ctx_resched+0x227/0x280
+>[12646=2E001708]  event_function+0x8f/0xd0
+>[12646=2E001710]  ? __pfx___perf_event_enable+0x10/0x10
+>[12646=2E001711]  remote_function+0x42/0x50
+>[12646=2E001713]  ? __pfx_remote_function+0x10/0x10
+>[12646=2E001714]  generic_exec_single+0x6d/0x130
+>[12646=2E001715]  smp_call_function_single+0xee/0x140
+>[12646=2E001716]  ? __pfx_remote_function+0x10/0x10
+>[12646=2E001717]  event_function_call+0x9f/0x1c0
+>[12646=2E001718]  ? __pfx___perf_event_enable+0x10/0x10
+>[12646=2E001720]  ? __pfx_event_function+0x10/0x10
+>[12646=2E001721]  perf_event_task_enable+0x7b/0x100
+>[12646=2E001723]  __do_sys_prctl+0x56f/0xca0
+>[12646=2E001725]  do_syscall_64+0x84/0x2f0
+>[12646=2E001727]  ? exit_to_user_mode_loop+0xcd/0x120
+>[12646=2E001729]  ? do_syscall_64+0x1ef/0x2f0
+>[12646=2E001730]  ? try_to_wake_up+0x7e/0x640
+>[12646=2E001732]  ? complete_signal+0x2e8/0x350
+>[12646=2E001734]  ? __send_signal_locked+0x2e3/0x450
+>[12646=2E001735]  ? send_signal_locked+0xb6/0x120
+>[12646=2E001736]  ? do_send_sig_info+0x6e/0xc0
+>[12646=2E001737]  ? kill_pid_info_type+0xa6/0xc0
+>[12646=2E001738]  ? kill_something_info+0x167/0x1a0
+>[12646=2E001739]  ? syscall_exit_work+0x132/0x140
+>[12646=2E001740]  ? do_syscall_64+0xbc/0x2f0
+>[12646=2E001741]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>[12646=2E001743] RIP: 0033:0x7efe86afd40d
+>[12646=2E001744] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 18=
+ 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 9d 00 00 00 0f 05=
+ <48> 3d 00 f0 ff ff 77 1b 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
+>[12646=2E001745] RSP: 002b:00007ffcd6444cf0 EFLAGS: 00000246 ORIG_RAX: 00=
+0000000000009d
+>[12646=2E001746] RAX: ffffffffffffffda RBX: 000000000000000e RCX: 00007ef=
+e86afd40d
+>[12646=2E001747] RDX: 0000000000000001 RSI: 00007ffcd6444d24 RDI: 0000000=
+000000020
+>[12646=2E001747] RBP: 00007ffcd6444d60 R08: 00007efe86bc625c R09: 00007ef=
+e86bc6260
+>[12646=2E001748] R10: 00007efe86bc6250 R11: 0000000000000246 R12: 0000000=
+000000000
+>[12646=2E001748] R13: 00007ffcd64471b8 R14: 0000559eb2a2edd8 R15: 00007ef=
+e86c30020
+>[12646=2E001749]  </TASK>
 >
-> If we need a new macro, please add it.  Include a citation to the
-> relevant section of the spec ("PCIe CEM r6.0, sec 2.11.2"; table
-> numbers don't appear in the table of contents so they're hard to
-> find), and include the units ("_US", I guess) in the macro name.
->
-> Given a comment at the macro definition, you don't need to repeat it
-> at all the uses.
 >
 
-Thanks for the review, sure I will add new macro and include a citation
-to the relevant section of the PCIe spec.
-
-> Bjorn
-
-Thanks,
-Sai Krishna
+aghosh
