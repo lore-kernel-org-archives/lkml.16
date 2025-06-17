@@ -1,121 +1,118 @@
-Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD86717BA1;
-	Tue, 17 Jun 2025 02:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D24717BA1
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:53:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750128778; cv=none; b=HwWtFSpSYpvS0aqQREdkWhlSr3WMJg2fb8gLWLgwhBM4mywJV1Oo5M8ppgvVzRPaiK0nODBhMXK7MtG17ViCMG4lIM9aOy6bojHDfBUraGj+qlsqz5oZ2+MgBPER//ZWeqir3rajb/gamolJUQAM8F+u3/uQ7oIsoXWnufXjipI=
+	t=1750128785; cv=none; b=bNE34PyrS8qCUgvR2BVmd6KpIsbiTU7lE67CFaeGsfP8wt/d6fN1aXPMXi8tjceTgm2sbzd9Uy9BDh2/h7ObnuUWfJuxlFOv/8QM2GmtGIB2Jp4L8zkuk21jSPjZiicSa5pKtzZApblrDxxmvAzD0l7FfwXnipIIn7D3tCBu9iU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750128778; c=relaxed/simple;
-	bh=W9fJKLe2wR84h2VrmjzQtkDbhuruEgU5j31sPL0XNY0=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=GE1hThiS53txlPc0+HuDFfBrxJxmjv2tqxp9qUijHSCKPRit07gQd3d3kSdvkgU7Rfdph9P9l2AX/ZThFLvuSWi2CTO9KVXmX0b5/VvjAv6f0FhjLLCW/qf+NDird3dkvgXNt6nG7Kwv0XiFjWKpMk4WqXmbLSeV4fPeR+sc9Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=KUgFjIlt; arc=none smtp.client-ip=203.205.221.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="KUgFjIlt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750128464; bh=9bdvI/j47gzxAn9bte7+qP0EGwt9RgXTXOAGmzGFRqM=;
-	h=From:To:Cc:Subject:Date;
-	b=KUgFjIlt+OlOO9wN0U5gkaCoovINlP+Vrk+jZeJMWL4WF3o2VLqotHP1Yk4Hoapqa
-	 vI+P7IoRSJS2kuL6Lb1NxloRnQyM+6Paen3xHCgYGcSrY0DvuEZbnALmznw4O63KdD
-	 tq6oZfOtgVbDku1lLM/bFa2YPHkgeB3QwnGHILu4=
-Received: from localhost.localdomain ([218.76.6.102])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id A661E461; Tue, 17 Jun 2025 10:41:38 +0800
-X-QQ-mid: xmsmtpt1750128098t35fbsk4g
-Message-ID: <tencent_C3FBDADE7060045B2952DE00576F922C5E06@qq.com>
-X-QQ-XMAILINFO: NnYhxYSyuBnLlQ35giN5wSf1QGuEgWPqCw7D1PT/zvkubzW6hww6YIEj4H5NgZ
-	 4H/+lUOldjdQNn7LF1ZhgEuvBGA5vCwmDe9See45GnP6REFgAGHaHCIbcUMulh9MnqNF0kfaC1JV
-	 CRJ1h0Eou/WFHtcORu43yV2DE83fWHtk6kS6TZkXwDa77EpJTSdwi5T8W1gKktuQzISn5UiJxiHE
-	 /yM5WCN0dQc65n4xO26WPfizHDOEvhY/vhVNtPSc+3ZkbNktlHDNNMxk16RSs6KH7R0fIwIrOJxb
-	 Rx3oat6OyglKIxK7A6F502L/eBC9nbFk5mHf7ULFYa9iG0phxnthIfKpfdZpKesx/EPS3qoIU2FW
-	 /0qbxsbMIKyRDrlE1u5/OHwOScuA2XrYbPIn3n5WIq/PuBTpEBAZUfP8HWqU3h2GjyQ6g7XTQLOG
-	 CAlyIFxdGok5/rtAN0n3hLcOGbSjY/QBvPQnCKl2t1ZIHEJfY1msKVygMLIt/ersVGmAFyRaWggx
-	 z6wObA5Vj9O3ZbLobR3fD34FmnoScttn2MqQIWsX6mpmKUmoT1lsJHI5shBEdxAmi/Q0hnodGMyf
-	 pYC7cTtWS6Yy6wcMRLyKZLF4PJgs8btcks2uHOOgrBRZqfQZnxpMNLgqEp+9N4zGuyM+lchdy3+L
-	 d+abnmKKZ+Hiw+dvPzFoSxaiJ7cYRaWjoZ7X/CydpnXOp/vwkOUqWVZuKqHRV1GM4Vhy2Art/pW3
-	 LfGukMHNSXjk1tNWA6v1SF0ns4dFM+cyZAr+Yvytss71QGVVuT2g5xePH2p9QDVKf2QMF+EDH4lA
-	 rkr6hmPywJz9yDR+VzVWzRMYpSSNDh6VOLxEVC8jh7zVXzFyw/j02BWLJxDxrtV/7zQplbBbb7dr
-	 KFrp/EDfBpck1nGDd/tLcfshn1Rbet53RLnPnuTw8ENrvwTVKMeAEOCLoF9VSjgcQcjDPGl6OS8w
-	 S8g/Ipk4FAtrvjjCzJhcYoijKZopLeWxDWOJKCSenOPBdYml7tkS0kee5+dx6i0/sUCmQF2OhMRk
-	 A+GRnoMytl6/jxtiEClqYAKN2BT3QXJyXiWh5EMLY3vT1/ml0F
-X-QQ-XMRINFO: NI4Ajvh11aEj8Xl/2s1/T8w=
-From: Haofeng Li <920484857@qq.com>
-To: Tony Lindgren <tony@atomide.com>,
-	Kevin Hilman <khilman@baylibre.com>
-Cc: Roger Quadros <rogerq@kernel.org>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	linux-omap@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haofeng Li <lihaofeng@kylinos.cn>
-Subject: [PATCH v1] mfd: twl4030-irq: Fix unused variable warning when CONFIG_OF disabled
-Date: Tue, 17 Jun 2025 10:41:30 +0800
-X-OQ-MSGID: <20250617024130.1689363-1-920484857@qq.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750128785; c=relaxed/simple;
+	bh=Ma1fNI91lcbO8HB+OuMK7VwNpwntZn/e8tc2AZPU5Sc=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=o1WXCa2dXTx0KYmMGh1Nd1CXDiA/WoCMnhDpcgRp3vbFRoPcC5X2jytFr3xDf03sWS3uMMoebD4evHWDfPs6VLwtUJ7Ep/Ph5Oiy6PZsVi6Eugmsread078ij0TMqTVAGKt3EC2SaLdH23HWvMddkWhprpjzHyQJ8QxCCtMkprM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-86cc7cdb86fso557309039f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:53:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750128783; x=1750733583;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pIQQQ55YxrBtpjRv5Zzi7mN2PHh2kBOFO2YwLCSOasE=;
+        b=LM/gjGGtt9n5nSX8cMIHci/mj3Nz6xrXkJwyKz0XTBPLVfOxpO+g08hmBr8+Ycluu/
+         wzuiSKANB/mXayWw1JBIfYYNy77NgCgkwkmJxdTWOLF/p2htbOZTuxDnCV+6rpfGtqP6
+         2n4KxGmisUKz3UFPZOouVc7IMoALib/5NgbN5k2DPgsoadSV7tFvTfT4rym/t7o794qu
+         p356Z3BxaubyX58BeiVfJbK/dFXP/dHGj17fAP9qyFLeHkHRTclqW66CljFhZUdO/GJf
+         Ewzrbb/DF6YKmIKXoShk/LSSZfMjqxdHXSDNrLHv9aqr63/4IC8cThjo6kfmlQRfxdt1
+         Jskg==
+X-Forwarded-Encrypted: i=1; AJvYcCVV7bOjzojiLMO5w5InbPqT+2268svMXW5ghM966OnPxOb8LODMUw9CmKlTTQo2aHeEi438sE7tK1e217E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwatOXWUjCBmgfrkDDFDBN2VtTtKpCETvulr3H2D4QzctGwtiCy
+	8jEu5t5vRlafibooG7DfT04qOi79NMgnSPLOT3iev4s/ph/ifLIG2ZwufF1kA/m+zX3tfisac+0
+	ElWXgvgydJhgwsAXOCwwRKnfSBANIYJiuK1FsI6vY5lkMqWreQo2C6x9E0NI=
+X-Google-Smtp-Source: AGHT+IFpu7dIfxfQ3/2p5h0KzioY4HV41vMr1bykEVJtPp92THLg/yDZ908t661LI3GXSgcdFz/WJ8T1VRLz/YdOS5n4qbe0TjnA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a44:b0:3dc:7df8:c830 with SMTP id
+ e9e14a558f8ab-3de07c55a19mr127001305ab.7.1750128783340; Mon, 16 Jun 2025
+ 19:53:03 -0700 (PDT)
+Date: Mon, 16 Jun 2025 19:53:03 -0700
+In-Reply-To: <tencent_B943771D66763DE13764960E36124B6C7509@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6850d88f.a70a0220.395abc.01fc.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
+From: syzbot <syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Haofeng Li <lihaofeng@kylinos.cn>
+Hello,
 
-With compile testing on non-OF platforms, compiler reports:
-../drivers/mfd/twl4030-irq.c:679:46: error: unused variable 'node' [-Werror=unused-variable]
-  679 |         struct                  device_node *node = dev->of_node;
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
 
-This occurs because:
-1. of_fwnode_handle() is unavailable without CONFIG_OF
-2. The 'node' variable becomes unused
-3. -Werror flags the unused variable as an error
+wlan1: Creating new IBSS network, BSSID 50:50:50:50:50:50
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in net/mac80211/mlme.c:7224:41
+index 3 is out of range for type 'u8[0]' (aka 'unsigned char[0]')
+CPU: 0 UID: 0 PID: 13 Comm: kworker/u4:1 Not tainted 6.16.0-rc2-syzkaller-g9afe652958c3-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:233
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:455
+ ieee80211_rx_mgmt_beacon+0x21ff/0x2c10 net/mac80211/mlme.c:7224
+ ieee80211_iface_process_skb net/mac80211/iface.c:1630 [inline]
+ ieee80211_iface_work+0x49c/0xfe0 net/mac80211/iface.c:1722
+ cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+---[ end trace ]---
+Kernel panic - not syncing: UBSAN: panic_on_warn set ...
+CPU: 0 UID: 0 PID: 13 Comm: kworker/u4:1 Not tainted 6.16.0-rc2-syzkaller-g9afe652958c3-dirty #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Workqueue: events_unbound cfg80211_wiphy_work
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
+ panic+0x2db/0x790 kernel/panic.c:382
+ check_panic_on_warn+0x89/0xb0 kernel/panic.c:273
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:455
+ ieee80211_rx_mgmt_beacon+0x21ff/0x2c10 net/mac80211/mlme.c:7224
+ ieee80211_iface_process_skb net/mac80211/iface.c:1630 [inline]
+ ieee80211_iface_work+0x49c/0xfe0 net/mac80211/iface.c:1722
+ cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
+ worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
+ kthread+0x70e/0x8a0 kernel/kthread.c:464
+ ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Fix by:
-1. Replace device_node pointer with fwnode_handle pointer,
-   initialized to NULL
-2. Only setting fwnode when CONFIG_OF is enabled
-3. Passing fwnode to irq_domain_create_legacy()
 
-Passing NULL fwnode is safe:
-- irq_domain_create_legacy() accepts NULL fwnode_handle
-- The function has appropriate NULL checks in its implementation
-- Equivalent to original behavior when CONFIG_OF is disabled
+Tested on:
 
-Signed-off-by: Haofeng Li <lihaofeng@kylinos.cn>
----
- drivers/mfd/twl4030-irq.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mfd/twl4030-irq.c b/drivers/mfd/twl4030-irq.c
-index 232c2bfe8c18..8297966bd957 100644
---- a/drivers/mfd/twl4030-irq.c
-+++ b/drivers/mfd/twl4030-irq.c
-@@ -676,7 +676,7 @@ int twl4030_init_irq(struct device *dev, int irq_num)
- 	static struct irq_chip	twl4030_irq_chip;
- 	int			status, i;
- 	int			irq_base, irq_end, nr_irqs;
--	struct			device_node *node = dev->of_node;
-+	struct fwnode_handle    *fwnode = NULL;
- 
- 	/*
- 	 * TWL core and pwr interrupts must be contiguous because
-@@ -690,8 +690,10 @@ int twl4030_init_irq(struct device *dev, int irq_num)
- 		dev_err(dev, "Fail to allocate IRQ descs\n");
- 		return irq_base;
- 	}
--
--	irq_domain_create_legacy(of_fwnode_handle(node), nr_irqs, irq_base, 0,
-+#ifdef CONFIG_OF
-+	fwnode = of_fwnode_handle(dev->of_node);
-+#endif
-+	irq_domain_create_legacy(fwnode, nr_irqs, irq_base, 0,
- 				 &irq_domain_simple_ops, NULL);
- 
- 	irq_end = irq_base + TWL4030_CORE_NR_IRQS;
--- 
-2.25.1
+commit:         9afe6529 Merge tag 'x86_urgent_for_6.16-rc3' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15fdc90c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+dashboard link: https://syzkaller.appspot.com/bug?extid=6554b492c7008bcd3385
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11e195d4580000
 
