@@ -1,148 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55950277814;
-	Tue, 17 Jun 2025 17:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEE727EFF3;
+	Tue, 17 Jun 2025 18:00:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750183173; cv=none; b=FIq61bvh28UEoV5GzExsCTnsANKCAwby0Zj+gNUFfrp0kCHcBM/3XsNf5rXBklIH6fKt5UiGX0UKJAlF79bYrZR5lsEcX3Sa5O5i+Q5ztNwfCSLMPpBEvWh34Hn8gyfp7gsePxwK9ImxfSwFlkC0SrBPoW3LL5B0+/gadtF2ccY=
+	t=1750183240; cv=none; b=c6goqjvQWJiDO8yL/YIsuZzCg4ZK6I8/XCDXxXC2GRLcFzo1z9NFnDKiLYPfdEwgaoG21h+cT2vHsizdEjn38oT6fLEmuLMqwpcjNlBYT9yO8o1qnh3kkbr4kQfY1RqLneDblSYgIwP4bJx7dz5uHuCOGeI1DTEpya+Wen1YUIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750183173; c=relaxed/simple;
-	bh=7syN+VGWAq1nVYbtNhebxuTb7b5k+6al9zHWrp5oKB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A2qEQLs67l0gTnl6VQcycgvERPSiSHy+mt3Rs5Zdm6hflGkAWEZY/etLma67pTvW9hYAwAU5jH7d1CpeuGK64vhhB7CaDK9UwNUy8+P7T+gCDqSLSKMB+kJDx3ETZ0AMlhkzXDmjJ+bmLl7Fvx9tHE0lAKWLP5mOoLJfD1PTAJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UwHew9lW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750183240; c=relaxed/simple;
+	bh=pkZOwsH82D8u896EvU2FuOaGI/j15LZGRQ78QCy5HA0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pv5ppnPJ1k4BWexsTiLHR06n6jMQHbsnaI3lQV3NwnNVanYKx/aDgXM6S1pW1ascdkVwFvjPMxiWwqxxVTynbtIJpFCIywdYAkEZor0uKbreBDfO9qC0PwtssBRyblBFwWaeVQd7TJdXjut7cWr6lGVVZTL2hbkUMUyT7hGhj9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UEvTXiAV; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UwHew9lW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC524C4CEF1;
-	Tue, 17 Jun 2025 17:59:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750183172;
-	bh=7syN+VGWAq1nVYbtNhebxuTb7b5k+6al9zHWrp5oKB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UwHew9lWylxUDH4E7K0yq7jCjZRraVLumM+ZA1jiaOqySEHkDs1UdMIeO94w9HzIg
-	 YvlFjXEIEHIO0sd4309vR5tVaHCTHkFBZ/K21VTSeiJbWNdry+vBV/w7sKPNTIvVwh
-	 bzWVUTSxSLzn3d7Q+jTaz8W2Ix72tD3Xf/HVEVNRKp/rle8kjqxgl2DiLjhPMn4oMD
-	 EFg0gO9Bz3PP1DKCN8QE5rc5Uh7rTJiVtfeKRvfjV3d1LoDX34xLFuwRZ9CHZ4qZLR
-	 C3cAn1ZSTBaXOrGxe9ijkLM6omGEZWPwpJoWXkMTXLhroNpqq2bCMWFOvHsVxiuSe6
-	 K1OUptgkmKoOA==
-From: Mario Limonciello <superm1@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list),
-	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
-	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-	kvm@vger.kernel.org (open list:VFIO DRIVER),
-	linux-sound@vger.kernel.org (open list:SOUND),
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2 6/6] vgaarb: Look at all PCI display devices in VGA arbiter
-Date: Tue, 17 Jun 2025 12:59:10 -0500
-Message-ID: <20250617175910.1640546-7-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250617175910.1640546-1-superm1@kernel.org>
-References: <20250617175910.1640546-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UEvTXiAV"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PpPXOSCDFfvOCX6jYgFEFRb0EH0bOjsYTT1mkenvM2Q=; b=UEvTXiAVnGCcwP9U0zCSYtNoOg
+	C+YuH8rtvDDU3mFEvey5JQWriciZ2BASvA3Da8QpGZD/MxtLmFLxqItoIRVSFiHhurWiFunWaU+Sc
+	WOOXg6EntegwyBMTSCvq5AEi9FhUS+Z/HhS7faukd8vq0W/iJHVp4kEL8zrycTmxT3ESWt73wCNh0
+	98NMLJ3s50xcjIjBAwTG+crkwcZureCyvzcdqF9XfHg7HgQyb3wcw9KvoXi3fVyIT9n0BTLSjjX9J
+	RQKaNDI7POcRFDnZP7ZLbRojcOvPB7JyRoP0lcZTvOW72eZfrhTfMa4Odcal4FGxgc9yTr5Vq4e2a
+	n4syALuA==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRabh-00000003sCo-2zkw;
+	Tue, 17 Jun 2025 18:00:26 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C710330BDAD; Tue, 17 Jun 2025 20:00:23 +0200 (CEST)
+Date: Tue, 17 Jun 2025 20:00:23 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	"linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Frederic Weisbecker <fweisbec@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
+References: <20250617133614.24e2ba7f@gandalf.local.home>
+ <20250617174107.GB1613376@noisy.programming.kicks-ass.net>
+ <3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Tue, Jun 17, 2025 at 01:54:46PM -0400, Steven Rostedt wrote:
+> 
+> 
+> On June 17, 2025 1:41:07 PM EDT, Peter Zijlstra <peterz@infradead.org> wrote:
+> >On Tue, Jun 17, 2025 at 01:36:14PM -0400, Steven Rostedt wrote:
+> >> From: Steven Rostedt <rostedt@goodmis.org>
+> >> 
+> >> In January 2015, tracefs was created to allow access to the tracing
+> >> infrastructure without needing to compile in debugfs. When tracefs is
+> >> configured, the directory /sys/kernel/tracing will exist and tooling is
+> >> expected to use that path to access the tracing infrastructure.
+> >> 
+> >> To allow backward compatibility, when debugfs is mounted, it would
+> >> automount tracefs in its "tracing" directory so that tooling that had hard
+> >> coded /sys/kernel/debug/tracing would still work.
+> >> 
+> >> It has been over 10 years since the new interface was introduced, and all
+> >> tooling should now be using it. Start the process of deprecating the old
+> >> path so that it doesn't need to be maintained anymore.
+> >
+> >I've always used /debug/tracing/ (because /debug is the right place to
+> >mount debugfs). You're saying this is going away and will break all my
+> >scripts?!
+> 
+> You could mount tracefs in /tracing too:
+> 
+>   # mount -t tracefs nodev /tracing 
+> 
+> And update you scripts with a simple sed script.
 
-On a mobile system with an AMD integrated GPU + NVIDIA discrete GPU the
-AMD GPU is not being selected by some desktop environments for any
-rendering tasks. This is because neither GPU is being treated as
-"boot_vga" but that is what some environments use to select a GPU [1].
+If I have to edit the mount table, I'll just keep it at /debug/tracing/.
+Tracing is very much debug stuff anyway. While I knew there was tracefs,
+I never knew there was another mount point.
 
-The VGA arbiter driver only looks at devices that report as PCI display
-VGA class devices. Neither GPU on the system is a PCI display VGA class
-device:
-
-c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
-c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
-
-If the GPUs were looked at the vga_is_firmware_default() function actually
-does do a good job at recognizing the case from the device used for the
-firmware framebuffer.
-
-Modify the VGA arbiter code and matching sysfs file entries to examine all
-PCI display class devices. The existing logic stays the same.
-
-This will cause all GPUs to gain a `boot_vga` file, but the correct device
-(AMD GPU in this case) will now show `1` and the incorrect device shows `0`.
-Userspace then picks the right device as well.
-
-Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
-Suggested-by: Daniel Dadap <ddadap@nvidia.com>
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/pci/pci-sysfs.c | 2 +-
- drivers/pci/vgaarb.c    | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 268c69daa4d57..c314ee1b3f9ac 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
- 	struct device *dev = kobj_to_dev(kobj);
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 
--	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
-+	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
- 		return a->mode;
- 
- 	return 0;
-diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-index 78748e8d2dbae..63216e5787d73 100644
---- a/drivers/pci/vgaarb.c
-+++ b/drivers/pci/vgaarb.c
-@@ -1499,8 +1499,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
- 
- 	vgaarb_dbg(dev, "%s\n", __func__);
- 
--	/* Only deal with VGA class devices */
--	if (!pci_is_vga(pdev))
-+	/* Only deal with PCI display class devices */
-+	if (!pci_is_display(pdev))
- 		return 0;
- 
- 	/*
-@@ -1546,12 +1546,12 @@ static int __init vga_arb_device_init(void)
- 
- 	bus_register_notifier(&pci_bus_type, &pci_notifier);
- 
--	/* Add all VGA class PCI devices by default */
-+	/* Add all PCI display class devices by default */
- 	pdev = NULL;
- 	while ((pdev =
- 		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
- 			       PCI_ANY_ID, pdev)) != NULL) {
--		if (pci_is_vga(pdev))
-+		if (pci_is_display(pdev))
- 			vga_arbiter_add_pci_device(pdev);
- 	}
- 
--- 
-2.43.0
-
+Just annoying I now have to add two entries to every new machine.. Oh
+well.
