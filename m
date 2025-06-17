@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F3E202C48;
-	Tue, 17 Jun 2025 06:08:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DB041E521D;
+	Tue, 17 Jun 2025 06:10:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750140517; cv=none; b=CBnMiOXlO+z9/EMYpQjV0P4j7HubHrZcJxNUf54K37M5CdfBfUi2Jhs3MM3/1mH8S3LYk4mRqZ0iMwwjylwL4oLWzQRS9Iu2Sf1Mq+bO1Y0GDVELinO/oirQRGPpvjx3TCYesfDzo9spKFv0BaLN3jYycZIp/uIqOe+TpHt40Po=
+	t=1750140629; cv=none; b=L+hub7YO7+ixx5bPPCmOoHWwP0tQvKWWns5yhSjA5oJhJZkUIUnNc5RkyNFzJUI9S24yW2Oekv8hnhJ5n3hFhMih8v2V20om/G8tpLqhe2wxuNwqvomSnQpzaPTz4b/JYGNOzA/2KYHrxuWoogFtmsji/d0ahg4UoSLN4uUEpYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750140517; c=relaxed/simple;
-	bh=VFgG5c3adCcLcFwMHG3HHPoRX1wEDrUuiPjHGzWQRFQ=;
+	s=arc-20240116; t=1750140629; c=relaxed/simple;
+	bh=KnKkXsJC/7mfY8Fo8YsFlw3wExf/p36P8O8KJk0JwII=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M3lGSJMhLA3AQNiXW8j0zq2q1hF5bFL8ePi8MSc4KrlXKQvmDLEyYXzAV2O/QsbcENJDk71PxKPfPUqftCohOnqHVixfKE3/XSVyUMtkfWmZRgKJ+oYPU1Ile+9X/uEk6Sy/1LwYgQPEN5g60yXcYrI8bnFYIHHff4HyOyjnQ6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbLVaY/V; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kX93rrwb7PLSb6TNIS8y8DHFGyf3OWKQja6MMof9FGr44LJ2wm8F0Nx08tyVeS/0IfF+sSvLiN6fbesIeJ5MiQvRZT6YT56LBq1lYehXXDcuee0908X372ImGvvD1lDL9YFPT7WhAULGRdtje5JDGW6YDr+78xyemQErS1Lsm2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQmEQ2wY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbLVaY/V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036CDC4CEE3;
-	Tue, 17 Jun 2025 06:08:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQmEQ2wY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D39E7C4CEE3;
+	Tue, 17 Jun 2025 06:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750140517;
-	bh=VFgG5c3adCcLcFwMHG3HHPoRX1wEDrUuiPjHGzWQRFQ=;
+	s=k20201202; t=1750140629;
+	bh=KnKkXsJC/7mfY8Fo8YsFlw3wExf/p36P8O8KJk0JwII=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MbLVaY/VkG7/yqaRdZJ4ciDzFzYcKYR7O3yeNw5GNfJmykreKe+c7Pss06elNsxKS
-	 nOj3pEYNbM9B/NWO3+Cqa8Oz9djVOgI5vWIpwafcrV/qL6tIajVghtvwHokGpUdd8N
-	 pwtSabaozykpShj2T6IgN/h2GGofjTLDEUSJ2DUiD/O7PU4Lub+nlvgi3XjNXVIicN
-	 gu/pKzgE2avenkO22T3GzPB2lNGiPHRFPYRlcZrMm9iOe2hYLQN3tujmVnCr+9eST1
-	 w8insVfLhED/TmE/hKPztnG3tfK8pWUI0bX14kSQtOrfGTFZZIeTrQaXYSpjvbq448
-	 ETF48L9aPJfEw==
-Message-ID: <d99c2be9-1052-4c09-9707-ac8b82bc6fee@kernel.org>
-Date: Tue, 17 Jun 2025 08:08:32 +0200
+	b=PQmEQ2wYUJBMDWY/OKhR9N39TGG7nSnmXcb/iPvtWWgHitD4gZHwYI9r2MSib3MaS
+	 MKsSic7IhHt9nWeN7754wYfZf3kbPzfr0PLclLHxbCXbWgQHVqAWB2jRhCvcJoC50K
+	 4Moy6UirvCXMjrjAb56cV5GG3UM8JrNZT6qU+a5X9UY2HgAPN22ujSaje95QgEhy6Y
+	 0bEgCJCKxydtVKLpcr4ERvwStaj79jSkjATmZCdrYj4VS4krgmm6rL3q/vrTZk+ENZ
+	 9vrMguJwldW+7wAjfnG9i17a0sksWwSiC0pf7dV3x/zoPbgtEKyfA9DFxSXq1ip7l1
+	 2fyC2o53o2pDA==
+Message-ID: <471c85c8-b49d-4fc4-991e-933cedf47a93@kernel.org>
+Date: Tue, 17 Jun 2025 08:10:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,23 +35,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] dt-bindings: arm: axiado: add AX3000 EVK
- compatible strings
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "soc@lists.linux.dev" <soc@lists.linux.dev>
-References: <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-0-341502d38618@axiado.com>
- <20250615-axiado-ax3000-soc-and-evaluation-board-support-v2-2-341502d38618@axiado.com>
- <f4430b9a-3275-405e-becf-ff62ae16f23c@kernel.org>
- <IA0PPFBEC4B1F8E5727945AD33204C3AB18D570A@IA0PPFBEC4B1F8E.namprd18.prod.outlook.com>
+Subject: Re: [PATCH] dmaengine: dw: dmamux: Add NULL check in
+ rzn1_dmamux_route_allocate()
+To: Charles Han <hanchunchao@inspur.com>, vireshk@kernel.org,
+ andriy.shevchenko@linux.intel.com, vkoul@kernel.org,
+ miquel.raynal@bootlin.com, ilpo.jarvinen@linux.intel.com
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250616104810.2222-1-hanchunchao@inspur.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -97,42 +87,25 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <IA0PPFBEC4B1F8E5727945AD33204C3AB18D570A@IA0PPFBEC4B1F8E.namprd18.prod.outlook.com>
+In-Reply-To: <20250616104810.2222-1-hanchunchao@inspur.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 23:13, Harshit Shah wrote:
+On 16/06/2025 12:48, Charles Han wrote:
+> The function of_find_device_by_node() may return NULL if the device
+> node cannot be found or CONFIG_OF is not defined, dereferencing
+> it without NULL check may lead to NULL dereference.
+> Add a check to verify whether the return value is NULL.
 > 
-> ________________________________________
-> From: Krzysztof Kozlowski <krzk@kernel.org>
-> Sent: 15 June 2025 23:05
-> To: Harshit Shah <hshah@axiado.com>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski <brgl@bgdev.pl>; Arnd Bergmann <arnd@arndb.de>; Catalin Marinas <catalin.marinas@arm.com>; Will Deacon <will@kernel.org>
-> Cc: devicetree@vger.kernel.org <devicetree@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; linux-arm-kernel@lists.infradead.org <linux-arm-kernel@lists.infradead.org>; linux-gpio@vger.kernel.org <linux-gpio@vger.kernel.org>; soc@lists.linux.dev <soc@lists.linux.dev>
-> Subject: Re: [PATCH v2 2/6] dt-bindings: arm: axiado: add AX3000 EVK compatible strings
->  
-> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you recognize the sender and know the content is safe.
+> Fixes: 134d9c52fca2 ("dmaengine: dw: dmamux: Introduce RZN1 DMA router support")
+> Signed-off-by: Charles Han <hanchunchao@inspur.com>
+> ---
+>  drivers/dma/dw/rzn1-dmamux.c | 10 ++++++++--
 
-Drop all this. Not needed, not useful and not even correctly wrapped.
 
-> 
-> 
-> On 16/06/2025 06:31, Harshit Shah wrote:
->> Add device tree binding schema for Axiado platforms, specifically the
->> AX3000 SoC and its associated evaluation board. This binding will be
->> used for the board-level DTS files that support the AX3000 platforms.
->>
->> Signed-off-by: Harshit Shah <hshah@axiado.com>
->> ---
->>   .../devicetree/bindings/arm/axiado/axiado.yaml     | 23 ++++++++++++++++++++++
-> 
-> Just arm/axiado.yaml
-
-use proper quoting. Who wrote that?
-
-> 
-> Noted. I will update the same in v3.
-
-And that?
+Don't send patches for a subsystem patch by patch, but organize your
+work correctly into patchset so we can reply in one thread (instead of
+10) that you are fixing non-existing problems.
 
 Best regards,
 Krzysztof
