@@ -1,186 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832812F5313;
-	Tue, 17 Jun 2025 23:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC902F532C;
+	Tue, 17 Jun 2025 23:09:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750201559; cv=none; b=luOJiSUlv573Yg2xb0hVXP8jf8AgCXegFIChPzNeJc83/vdsl29qXxi6xtjpT9vQ8YBzNgCjwL/NOefXBoRdLjjIs3YimvCBCGNYXK4ZcHyrqSdatvEipsiNZ5FHNzG+lHMhv14x9KFOUpmYLW+lkm9duBmulNo/Wk4rZAVAYBM=
+	t=1750201766; cv=none; b=cdbSi5j1eF6SxdgCKDSO0iEAKCG9kaJfdOxzqqNJLJmzZdvWW+ZH3m8l4R/i73L3qt1xG94Zcd0Q+Y7KXua4h4b7aQKILfwKutBKbMhBWNSCafSGHg2ObOUeXDDlcrd3pZ0eiYSdutR3VTmLFgJXwIXEJpWbbFWUEqc1zetJzK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750201559; c=relaxed/simple;
-	bh=CTUqo8B5P8vHW8gKRTJ1qoHe3VAt104j1b9pgI+DQFk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=TUie1Rd8w8e9bB7N/+6KR19PlPpo3haBFqUgWaNJX58BztRlw8AttrCdKqQapPPSutjnyc/LhitHYW1I6KYKGVOl74Fb8aKE27yHi0hsvQ24FIq/KV00ZpEVBqoaacIkXqH9uAN5B4ck7oWRotYr0LAquFXhmeZXmeIjm90GfK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I8TbTeYQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750201766; c=relaxed/simple;
+	bh=/lPytD/D3cajYO2gj+Ujkh1JW+PnI0w/YfVrlYEE3xs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bTL41IcYOOW8TTjmNBjaQrmt14xBKLT2K2iRRIWf9G80atdB0tHquCn0zas4oOZ4csCO/f+pLsx7yteyTU3nManRXjOTvXS/fX8p19C91Q9ICuZPxyuW4m7VnC9L5E4G7j9AIx/gwhbPM5lRgPs1LScsA/jMheXjB0K5xsIife8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=T+qboT5M; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I8TbTeYQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1A74C4CEE3;
-	Tue, 17 Jun 2025 23:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750201559;
-	bh=CTUqo8B5P8vHW8gKRTJ1qoHe3VAt104j1b9pgI+DQFk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I8TbTeYQIjV1txjAV+Or3eHRJiTmriECCeTZmvw8nTy3yLyvTni4Z1vTPrCLyUeDc
-	 tzDaukyyPerb1jiZroSLIPfkZQjHbG2tKQqs4Bv3U1t2Oc/6sk3PTScyR3ql0vz0cQ
-	 23bjQPNag31tzMQgsUut9eP8vjmWEN+oWzRAHT54Wr0JkUXZ5OSt+h+UUHk4uBfZf4
-	 vspc1G2ZfGGup0y/QQcw11Jlt6GioC8ZvQanSpYj8IQM5xg1X65IlanD0E/kTE+gab
-	 JNDM2W4gkcE38PaSnm/5MUzY/Wmk0mpfT3sdRfedAwH8rL9dqzGcIldp3mCO9AUfDW
-	 TinduI8qhmr7A==
-Date: Wed, 18 Jun 2025 08:05:54 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-Id: <20250618080554.15415cc4ff7535554850c689@kernel.org>
-In-Reply-To: <CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
-	<20250610105337.68df01f4@gandalf.local.home>
-	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
-	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
-	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
-	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
-	<CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="T+qboT5M"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55HN8qJe1308572
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 17 Jun 2025 16:08:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55HN8qJe1308572
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750201734;
+	bh=YFyQUnHfC6MCqPgzwbmXxqWCFr4/Lqi2i8XL/zaI6KI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=T+qboT5Mm9+r4r6CX9urHDGSfRrgCyY13NjxBRW8AloQZXbgK94N8a8j0KvDZeuoR
+	 +byWoUgBwm4krVeFyV8A1OY7L1LkobNd8HhkpoRH8A/bJZC9myLgnTdJQ9YpfwaCkm
+	 rQBjLAqszcaqoxo3tpg8SAUMZ4cCcaZR+hw+e5wGyXYHbOm7t8THHNZPxm9i+SkJw4
+	 CIJf3EaZnD9QQMAKFXucDszCx2HzeV+NRSBd+Z4+/uSHcExdmOC25sygICCJeTlUsb
+	 uKsS98X3xMOJHqXQm7F4bIO+rWuFDPl4a/GAtjCRbeOIig1S7MA3ee9NgCJcD0AF0K
+	 DEsErzH8hkJBg==
+Message-ID: <9720c605-c542-4969-b7f0-b4477bc2ab1e@zytor.com>
+Date: Tue, 17 Jun 2025 16:08:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] x86/traps: Initialize DR7 by writing its
+ architectural reset value
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
+        peterz@infradead.org, sohil.mehta@intel.com, brgerst@gmail.com,
+        tony.luck@intel.com, fenghuay@nvidia.com
+References: <20250617073234.1020644-1-xin@zytor.com>
+ <20250617073234.1020644-3-xin@zytor.com> <aFFvECpO3lBCjo1l@google.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aFFvECpO3lBCjo1l@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 17 Jun 2025 22:15:20 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-
-> On Tue, 17 Jun 2025 at 16:12, Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Mon, 16 Jun 2025 16:36:59 +0900
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> >
-> > > > So the fundamental issue is that smp_text_poke_batch missed
-> > > > handling INT3.
-> > > >
-> > > > I guess some text_poke user do not get text_mutex?
-> > >
-> > > Hmm, I've checked the smp_text_poke_* users, but it seems no problem.
-> > > Basically, those smp_text_poke* user locks text_mutex, and another
-> > > suspicious ftrace_start_up is also set under ftrace_lock.
-> > > ftrace_arch_code_modify_post_process() is also paired with
-> > > ftrace_arch_code_modify_prepare() and under ftrace_lock.
-> >
-> > Eventually, I found a bug in text_poke, and jump_label
-> > (tracepoint) hit the bug.
-> >
-> > The jump_label uses 2 different APIs (single and batch)
-> > which independently takes text_mutex lock.
-> >
-> > smp_text_poke_single()
-> >   __jump_label_transform()
-> >     jump_label_transform() --> lock text_mutex
-> >
-> > smp_text_poke_batch_add()
-> >   arch_jump_label_transform_queue() -> lock text_mutex
-> >
-> > smp_text_poke_batch_finish()
-> >   arch_jump_label_transform_apply() -> lock text_mutex
-> >
-> > This is allowed by commit 8a6a1b4e0ef1 ("x86/alternatives:
-> > Remove the mixed-patching restriction on smp_text_poke_single()"),
-> > but smp_text_poke_single() still expects that the batched
-> > APIs are run in the same text_mutex lock region.
-> > Thus if user calls those APIs in the below order;
-> >
-> > arch_jump_label_transform_queue(addr1)
-> > jump_label_transform(addr2)
-> > arch_jump_label_transform_apply()
-> >
-> > And if the addr1 > addr2, the bsearch on the array
-> > does not work, and failed to handle int3!
-> >
-> > This can explain the disappeared int3 case. If it happens
-> > right before int3 is overwritten, that int3 will be
-> > overwritten when the int3 handler dumps the code, but
-> > text_poke_array_refs is still 1.
-> >
-> > It seems that commit c8976ade0c1b ("x86/alternatives:
-> > Simplify smp_text_poke_single() by using tp_vec and existing APIs")
-> > introduced this problem, because it shares the global array in
-> > the text_poke_batch and text_poke_single. Before that commit,
-> > text_poke_single (text_poke_bp) uses its local variable.
-> >
-> > To fix this issue, Use smp_text_poke_batch_add() in
-> > smp_text_poke_single(), which checks whether the array
-> > sorted and the array index does not overflow.
-> >
-> > Please test below;
-> >
-> >
-> > From e2a49c7cefb4148ea3142c752396d39f103c9f4d Mon Sep 17 00:00:00 2001
-> > From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-> > Date: Tue, 17 Jun 2025 19:18:37 +0900
-> > Subject: [PATCH] x86: alternative: Fix int3 handling failure from broken
-> >  text_poke array
-> >
-> > Since smp_text_poke_single() does not expect there is another
-> > text_poke request is queued, it can make text_poke_array not
-> > sorted or cause a buffer overflow on the text_poke_array.vec[].
-> > This will cause an Oops in int3, or kernel page fault if it causes
-> > a buffer overflow.
-> >
-> > Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
-> > so that it correctly flush the queue if needed.
-> >
+On 6/17/2025 6:35 AM, Sean Christopherson wrote:
+> On Tue, Jun 17, 2025, Xin Li (Intel) wrote:
+>> Initialize DR7 by writing its architectural reset value to ensure
+>> compliance with the specification.
 > 
-> I’ve applied the patch on top of Linux next-20250617 and ran
-> the LTP tracing tests. I'm happy to report that the previously
-> observed kernel panic has been resolved.
+> I wouldn't describe this as a "compliance with the specificiation" issue.  To me,
+> that implies that clearing bit 10 would somehow be in violation of the SDM, and
+> that's simply not true.  MOV DR7 won't #GP, the CPU (hopefully) won't catch fire,
+> etc.
 > 
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> The real motiviation is similar to the DR6 fix: if the architecture changes and
+> the bit is no longer reserved, at which point clearing it could actually have
+> meaning.  Something like this?
+> 
+>    Always set bit 10, which is reserved to '1', when "clearing" DR7 so as not
+>    to trigger unanticipated behavior if said bit is ever unreserved, e.g. as
+>    a feature enabling flag with inverted polarity.
 
-Thank you for testing!
-This is a good chance for me to setup LTP environment locally :)
+I will use your description.
+
+I hope the bit will be kept reserved to 1 *forever*, because inverted
+polarity seems causing confusing and complicated code only.
+
+> 
+> With a tweaked changelog,
+> 
+> Acked-by: Sean Christopherson <seanjc@google.com>
 
 Thanks!
-
-> 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
-> > Fixes: 8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  arch/x86/kernel/alternative.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-> > index ecfe7b497cad..8038951650c6 100644
-> > --- a/arch/x86/kernel/alternative.c
-> > +++ b/arch/x86/kernel/alternative.c
-> > @@ -3107,6 +3107,6 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
-> >   */
-> >  void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
-> >  {
-> > -       __smp_text_poke_batch_add(addr, opcode, len, emulate);
-> > +       smp_text_poke_batch_add(addr, opcode, len, emulate);
-> >         smp_text_poke_batch_finish();
-> >  }
-> > --
-> > 2.50.0.rc2.692.g299adb8693-goog
-> >
-> >
-> >
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+     Xin
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
