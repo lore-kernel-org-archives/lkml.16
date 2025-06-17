@@ -1,21 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D10C29550C;
-	Tue, 17 Jun 2025 09:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 936BC293C44
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152467; cv=none; b=ZOZ44nNGl4H4SD1Vn2mmIc1R2Oizns32XRUUWdJ3wL1Y/iclBow/jAev9YYf7H5TWYAIKC5Rn380cqlb8jbWoemSEEb51rDBXDbticgtGV9zt0Eemqt4i4pG2EGvVTax6uKWEi2b0Z56Xoh1IoYpp5xchEt8YZJ3xyTkfkF5fFs=
+	t=1750152477; cv=none; b=dcR29oHXbTYIXACseMGy/JfdZE4eoopfYyrmEpfoD457prLWHiA4LHFCiO/1J9g08Wtmg5WkJzk6QmdH9yK+oPql9ETbri+khJTnn0XyGm+echU9APGCArnUK4qaXQG1pZmvS0eERTYvmgKsh+FY+fStTmQme9RUyWVrkhf1pDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152467; c=relaxed/simple;
-	bh=xE+gHJNGo05Zy/RUAP7+DAYexNU22w0emubGn6vJUZ4=;
+	s=arc-20240116; t=1750152477; c=relaxed/simple;
+	bh=tSOCRe1qXuZiP+HcsTx6Mu0WjCDYKnyV2T5KA0n/8H4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=awQsFrBfwNGw+O1SQRGRDRKoNhshqE7aqVnP0ueVFxHGeXoXZc1VlZNVUbNTu7eHIFkczTPBgDstTxRh7YHlXQOCSeTh872oyc4ugZGJosdR0B6PUVaEsLgfdQg0WX1IxrZpt1Xk5PXltM0mkiIXd6JNYZ+gP/UOw+dnWQ32PaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D903BC4CEEE;
-	Tue, 17 Jun 2025 09:27:45 +0000 (UTC)
-Message-ID: <04e10cfa-f1b1-4327-b0ca-c66f8450d42f@xs4all.nl>
-Date: Tue, 17 Jun 2025 11:27:44 +0200
+	 In-Reply-To:Content-Type; b=mJhnRssLakDnC8zE8pz+fVwe5aaIYqd52JB7VG8555ZH3aX3W9CGYatf9WUrvI88gJw+9ENVnJ8Ogllimz08kPqSWGHM3fTTsiu7auA3l3+6C3/fSIXDoie9FnsRi5EdK6tVWm7qiDZbzhhUq7zXMSAzXp+SQo0j75PcbyqLj7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cC7Ew+p5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cC7Ew+p5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750152474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=4dqrXFsdEZJmhlepEMWXpnIER3w37/a4Vct0FTgsbGo=;
+	b=cC7Ew+p5DNED9yflwjmjUihN6vJiHC6SH0X9ZvCy4pdLSl8QaAj/bZf9qP2SAo5yDGb1xN
+	gwzUS9m4J7pPMRGu+yoFfHXXP/lGGZt6/ed95ZDCO7Jj2CXnYtY8+Fo61Gvf8rjKF3NWe8
+	jodiN84Tt/3hG6lHXvboVViJLxYZ4Js=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-381-nQFieocVNpe2Cm5bKlvagA-1; Tue, 17 Jun 2025 05:27:53 -0400
+X-MC-Unique: nQFieocVNpe2Cm5bKlvagA-1
+X-Mimecast-MFC-AGG-ID: nQFieocVNpe2Cm5bKlvagA_1750152472
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45334219311so20555545e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:27:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750152472; x=1750757272;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4dqrXFsdEZJmhlepEMWXpnIER3w37/a4Vct0FTgsbGo=;
+        b=uG/sh2M8cbrqaVc0Mz/b50OVlY/B70XL5wekJoLNCSS/lmlqubPaxlWiSX7QDH/bzP
+         AFC3u3mU7zHlXovLWsLOtAqtnaQSRqdlTyVj+M96byTs+meR5fi8ySa7Li2N38pw47+a
+         BFyPAS7mXtO8hvOb7mDDIfLAtkIUrIuOzrHgZn6j3iE9gbEBG+DoOgneAg8kxawHR9E8
+         0mVkFA8CBEdu32J+ysckfRcOtJp54lEiVZMnZxjS9nhcItXll+HAJrF4VipNfT0qJaDj
+         8eQHjfVExJHtzRd58x1chJIo4/Hwe3oxXhh/N7aktXPUTxMp399g5BMEgT6j5dIrRydu
+         2TuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJHFsM0QM60g5aBbQp4dqyopBQgU4FDWjsT6m5ZhdR+qRadJLJfULOo/j4QuBI7B5GP+3tCpamqA7jJKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQLxIKc6PYnKPS6WBD1UcjthPYiajGmit6jRQNRI43/PdvZ4/T
+	r8cubmYmK/qQO77epRGRaBjXLk8DydJG2X47BLQaaADjGZtO58Bxatmy4wl+VhmMYZkag7qn5tp
+	UNWTdEpr4gFrduz1mEtLzOMm6LedUr9pHI/duCd2hj85L9/y1xTLINxYvmgPOmLZDYw==
+X-Gm-Gg: ASbGncsGa/N7UgFWjV3ZUfX4V/X07GDxjHWppVlgRL36+dCnuJXopBkwKv053gvF0sE
+	GMG6S0ibNbqVMl6W/lL7WH356wv3lLcLqspK5l3dXLZFHDM8yQJePiijRIArUJoU6sYXl2e77W7
+	3PsMykA3/wmkq//NO1DnT1KoEYIKL4N/ulniZclj02UIs/6/Bo3tnNIjyIUwA8s/83QoRhotTdN
+	ou6yWeuldLCE7RM0wJra3DDeU44fokrD3XjIGNU9kTAgr8zbUlXFZwQgQ8C3ash3jThXc22n0GW
+	QBDiNPCP2bw6G8UjgGNLgTBpzAi/agjohQOwrWNiZoRVm19Amq+Bs0Fsyu598TPovAFaLe2Q1Zu
+	fY15w8EnoRlHmqjB0vhdHX5dhY1sOtWZ3qY2xx6aTdlTCOHo=
+X-Received: by 2002:a05:600c:350c:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-4533cabe314mr91306185e9.28.1750152471918;
+        Tue, 17 Jun 2025 02:27:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IERF6PDjTpiYLNyZ293klVXrcUmv1H35b5KCmj2zdZoET1urMttbqluXFus7g8qKYz3SajZaw==
+X-Received: by 2002:a05:600c:350c:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-4533cabe314mr91305955e9.28.1750152471468;
+        Tue, 17 Jun 2025 02:27:51 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2324c6sm167302745e9.12.2025.06.17.02.27.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:27:51 -0700 (PDT)
+Message-ID: <e0c741a0-450a-4512-8796-bd83a5618409@redhat.com>
+Date: Tue, 17 Jun 2025 11:27:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,157 +75,222 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/5] media: uvcvideo: Split uvc_stop_streaming()
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>
-References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
- <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20250616-uvc-fop-v4-3-250286570ee7@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
+To: lizhe.67@bytedance.com
+Cc: akpm@linux-foundation.org, alex.williamson@redhat.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ peterx@redhat.com
+References: <34560ae6-c598-4474-a094-a657c973156b@redhat.com>
+ <20250617092117.10772-1-lizhe.67@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250617092117.10772-1-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 17:24, Ricardo Ribalda wrote:
-> uvc_stop_streaming() is used for meta and video nodes. Split the function
-> in two to avoid confusion.
+On 17.06.25 11:21, lizhe.67@bytedance.com wrote:
+> On Tue, 17 Jun 2025 09:43:56 +0200, david@redhat.com wrote:
+>   
+>> On 17.06.25 06:18, lizhe.67@bytedance.com wrote:
+>>> From: Li Zhe <lizhe.67@bytedance.com>
+>>>
+>>> When vfio_unpin_pages_remote() is called with a range of addresses that
+>>> includes large folios, the function currently performs individual
+>>> put_pfn() operations for each page. This can lead to significant
+>>> performance overheads, especially when dealing with large ranges of pages.
+>>>
+>>> This patch optimize this process by batching the put_pfn() operations.
+>>>
+>>> The performance test results, based on v6.15, for completing the 16G VFIO
+>>> IOMMU DMA unmapping, obtained through unit test[1] with slight
+>>> modifications[2], are as follows.
+>>>
+>>> Base(v6.15):
+>>> ./vfio-pci-mem-dma-map 0000:03:00.0 16
+>>> ------- AVERAGE (MADV_HUGEPAGE) --------
+>>> VFIO MAP DMA in 0.047 s (338.6 GB/s)
+>>> VFIO UNMAP DMA in 0.138 s (116.2 GB/s)
+>>> ------- AVERAGE (MAP_POPULATE) --------
+>>> VFIO MAP DMA in 0.280 s (57.2 GB/s)
+>>> VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
+>>> ------- AVERAGE (HUGETLBFS) --------
+>>> VFIO MAP DMA in 0.052 s (308.3 GB/s)
+>>> VFIO UNMAP DMA in 0.139 s (115.1 GB/s)
+>>>
+>>> Map[3] + This patchset:
+>>> ------- AVERAGE (MADV_HUGEPAGE) --------
+>>> VFIO MAP DMA in 0.028 s (563.9 GB/s)
+>>> VFIO UNMAP DMA in 0.049 s (325.1 GB/s)
+>>> ------- AVERAGE (MAP_POPULATE) --------
+>>> VFIO MAP DMA in 0.294 s (54.4 GB/s)
+>>> VFIO UNMAP DMA in 0.296 s (54.1 GB/s)
+>>> ------- AVERAGE (HUGETLBFS) --------
+>>> VFIO MAP DMA in 0.033 s (485.1 GB/s)
+>>> VFIO UNMAP DMA in 0.049 s (324.4 GB/s)
+>>>
+>>> For large folio, we achieve an approximate 64% performance improvement
+>>> in the VFIO UNMAP DMA item. For small folios, the performance test
+>>> results appear to show no significant changes.
+>>>
+>>> [1]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
+>>> [2]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
+>>> [3]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
+>>>
+>>> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+>>> ---
+>>>    drivers/vfio/vfio_iommu_type1.c | 35 +++++++++++++++++++++++++++++----
+>>>    1 file changed, 31 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>>> index e952bf8bdfab..159ba80082a8 100644
+>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>> @@ -806,11 +806,38 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
+>>>    				    bool do_accounting)
+>>>    {
+>>>    	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
+>>> -	long i;
+>>>    
+>>> -	for (i = 0; i < npage; i++)
+>>> -		if (put_pfn(pfn++, dma->prot))
+>>> -			unlocked++;
+>>> +	while (npage) {
+>>> +		long nr_pages = 1;
+>>> +
+>>> +		if (!is_invalid_reserved_pfn(pfn)) {
+>>> +			struct page *page = pfn_to_page(pfn);
+>>> +			struct folio *folio = page_folio(page);
+>>> +			long folio_pages_num = folio_nr_pages(folio);
+>>> +
+>>> +			/*
+>>> +			 * For a folio, it represents a physically
+>>> +			 * contiguous set of bytes, and all of its pages
+>>> +			 * share the same invalid/reserved state.
+>>> +			 *
+>>> +			 * Here, our PFNs are contiguous. Therefore, if we
+>>> +			 * detect that the current PFN belongs to a large
+>>> +			 * folio, we can batch the operations for the next
+>>> +			 * nr_pages PFNs.
+>>> +			 */
+>>> +			if (folio_pages_num > 1)
+>>> +				nr_pages = min_t(long, npage,
+>>> +					folio_pages_num -
+>>> +					folio_page_idx(folio, page));
+>>> +
+>>
+>> (I know I can be a pain :) )
 > 
-> Use this opportunity to rename uvc_start_streaming() to
-> uvc_start_streaming_video(), as it is only called by the video nodes.
+> No, not at all! I really appreciate you taking the time to review my
+> patch.
 > 
-> Reviewed-by: Hans de Goede <hansg@kernel.org>
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/usb/uvc/uvc_queue.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
+>> But the long comment indicates that this is confusing.
+>>
+>>
+>> That is essentially the logic in gup_folio_range_next().
+>>
+>> What about factoring that out into a helper like
+>>
+>> /*
+>>    * TODO, returned number includes the provided current page.
+>>    */
+>> unsigned long folio_remaining_pages(struct folio *folio,
+>> 	struct pages *pages, unsigned long max_pages)
+>> {
+>> 	if (!folio_test_large(folio))
+>> 		return 1;
+>> 	return min_t(unsigned long, max_pages,
+>> 		     folio_nr_pages(folio) - folio_page_idx(folio, page));
+>> }
+>>
+>>
+>> Then here you would do
+>>
+>> if (!is_invalid_reserved_pfn(pfn)) {
+>> 	struct page *page = pfn_to_page(pfn);
+>> 	struct folio *folio = page_folio(page);
+>>
+>> 	/* We can batch-process pages belonging to the same folio. */
+>> 	nr_pages = folio_remaining_pages(folio, page, npage);
+>>
+>> 	unpin_user_folio_dirty_locked(folio, nr_pages,
+>> 				      dma->prot & IOMMU_WRITE);
+>> 	unlocked += nr_pages;
+>> }
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index 8f9737ac729546683ca48f5e71ce3dfacbae2926..3f357c2d48cfd258c26f0342007d1d12f1e01007 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -167,7 +167,7 @@ static void uvc_buffer_finish(struct vb2_buffer *vb)
->  		uvc_video_clock_update(stream, vbuf, buf);
->  }
->  
-> -static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
-> +static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
->  {
->  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
->  	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
-> @@ -186,14 +186,22 @@ static int uvc_start_streaming(struct vb2_queue *vq, unsigned int count)
->  	return ret;
->  }
->  
-> -static void uvc_stop_streaming(struct vb2_queue *vq)
-> +static void uvc_stop_streaming_video(struct vb2_queue *vq)
->  {
->  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
->  
->  	lockdep_assert_irqs_enabled();
->  
-> -	if (vq->type != V4L2_BUF_TYPE_META_CAPTURE)
-> -		uvc_video_stop_streaming(uvc_queue_to_stream(queue));
-> +	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
-> +
-> +	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
-> +}
-> +
-> +static void uvc_stop_streaming_meta(struct vb2_queue *vq)
+> Yes, this indeed makes the code much more comprehensible. Do you think
+> the implementation of the patch as follows look viable to you? I have
+> added some brief comments on top of your work to explain why we can
+> batch-process pages belonging to the same folio. This was suggested by
+> Alex[1].
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index e952bf8bdfab..d7653f4c10d5 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -801,16 +801,43 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>          return pinned;
+>   }
+>   
+> +/* Returned number includes the provided current page. */
+> +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> +               struct page *page, unsigned long max_pages)
 > +{
-> +	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> +
-> +	lockdep_assert_irqs_enabled();
->  
->  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
->  }
-> @@ -203,15 +211,15 @@ static const struct vb2_ops uvc_queue_qops = {
->  	.buf_prepare = uvc_buffer_prepare,
->  	.buf_queue = uvc_buffer_queue,
->  	.buf_finish = uvc_buffer_finish,
-> -	.start_streaming = uvc_start_streaming,
-> -	.stop_streaming = uvc_stop_streaming,
-> +	.start_streaming = uvc_start_streaming_video,
-> +	.stop_streaming = uvc_stop_streaming_video,
->  };
->  
->  static const struct vb2_ops uvc_meta_queue_qops = {
->  	.queue_setup = uvc_queue_setup,
->  	.buf_prepare = uvc_buffer_prepare,
->  	.buf_queue = uvc_buffer_queue,
-> -	.stop_streaming = uvc_stop_streaming,
-> +	.stop_streaming = uvc_stop_streaming_meta,
->  };
+> +       if (!folio_test_large(folio))
+> +               return 1;
+> +       return min_t(unsigned long, max_pages,
+> +                    folio_nr_pages(folio) - folio_page_idx(folio, page));
+> +}
 
-I think there should be a comment stating that the metadata stream
-expects that video is streaming, it does not start streaming by itself.
+Note that I think that should go somewhere into mm.h, and also get used 
+by GUP. So factoring it out from GUP and then using it here.
 
-Something like:
+-- 
+Cheers,
 
-	/*
-	 * .start_streaming is not provided here. Metadata relies on
-	 * video streaming being active. If video isn't streaming, then
-	 * no metadata will arrive either.
-	 */
-
-It's unexpected that there is no start_streaming for metadata, so a
-comment wouldn't hurt.
-
-Otherwise this looks fine, so:
-
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
-
-Regards,
-
-	Hans
-
->  
->  int uvc_queue_init(struct uvc_video_queue *queue, enum v4l2_buf_type type)
-> 
+David / dhildenb
 
