@@ -1,156 +1,170 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5446D285050;
-	Tue, 17 Jun 2025 16:28:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E2E18E025
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177697; cv=none; b=L2j15LHPGwEHN2UvSyiDldYQWrSzJxS06W0BCKe3cp7tuTjAwtXmYVUpw5YmRDPuc/FsnuK5wm53EUw0dVQn9Zi9L08Q96mvWOgY0ZwGTNLff++xgMP1JsvS0OK7ht8V5E/h5LOwznvIokwacSMl37amaASn0lKWS6vwn6ZJcAw=
+	t=1750177746; cv=none; b=n/pWuq45srBjlH3mSocNW/4XNG+5LqWjRu+DXBdAugH7S3tQtUbDznUS7G1527Xn/ZsdBD5Bw445Y4HTJNeBb+LbCYPLs6X7r6jPD0XVOHSF8x5XUUA5Sjj/zyIX2vdeSCE3l4ZpVwBkt562zY4L+dRD/a/JYuIdIAoEl5bPRdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177697; c=relaxed/simple;
-	bh=LTKyUcCHTIdIsHi0OO6FExbF96htp5QWO9ctXaSdVng=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z5eqrhbRrRSLRzek06XgGC9jRC9fZCwh5Xr3iSrsT6DuqjN8kEU9qlmLF/z8zRmNHOrbGfF9BTOWYuZOX7h82sw8KBUWA61nG2yg0hBHP98FzXe30sKZWasRJ8zpLBXERtYP7HBWia1AcRXHEOqlyk3pcvNpH9rkRYtR8PpuuiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CfQKj+3l; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750177746; c=relaxed/simple;
+	bh=NEFMnlX92eZmddj6ISOAz5HWpkBrZdvzNs6PETlF6C4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aV9Ez11cLSLZTt++CLLkCfIkDviq2IkLL5xv50ahbZxl66kc8ffgPghfPkjAA2wzXNUVLavK1m+iBEVnPEx0iIft5rpQ+9wBD/qBGusQZbTK6P6xl7gKybmkOUTb1WwE3M62UeHJFUbCvO30gkl/qBY/rAfMj1UCDxWQM2DzlFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oHQSsCdV; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CfQKj+3l"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d6ade159so49936905e9.1;
-        Tue, 17 Jun 2025 09:28:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oHQSsCdV"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3ddd1a3e659so154535ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:29:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750177693; x=1750782493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1750177743; x=1750782543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1udRvN4jSuClAnZgC4T0k9Z2seJqL2UUQk3g/+ah2U4=;
-        b=CfQKj+3l4CIziBefud9sCdz0ZpLJSUYDrDIFfpoDiPqzfytV0PAIKuTqRwYD0tU43W
-         yF8yifTc/tTqmdacl7XQ/xUtwQIfHBamPfF8G29JiqxuW33e9AF3r4qTCM3qX6vC6Qt0
-         l+myUZl1OM1NQEmkaw1t2bg6gcdCnyEpdXsR59LxdN9O4OV9SEDShRq1qbg3zpfU8r8Y
-         w2FPPUrrBEeZhzhznUvOVFC017ysFkPbJKl1r2a9IGm/UTQLudT5Tv9kHiTHb5KicFPs
-         KuZ4mlXkQU+JGp7tNbPqcPWzC7JLdTlHjX9gaPwCAx36oXjQyy5gqCQXvZXSioledCn5
-         pB9Q==
+        bh=NEFMnlX92eZmddj6ISOAz5HWpkBrZdvzNs6PETlF6C4=;
+        b=oHQSsCdVrDsCgnEaK34y1l0NVt61M5AGEAKtN0R+JN41S146apBaHkEuoaKByrHQHQ
+         OSv/+K8oaQeL5sJaYCQ3LmBJ68s6ScFg5/Te8XZBf6nHKbxNZg7nCWWBQoBpSI5TdhQa
+         qpZLOz9OovkD3OIaah2EvGHSA71SBJEZZIhW6gnn94yzwAYPJ1S6QU0IhS6HzYj6Lt3B
+         eZ2MCDo6QI2TSaFbTDh8+xATpC6MkGrpn6NA6YUV+1ZUfCI3S7toXUxKTTgPDta0scMw
+         o/jpuvXc+vJh2R/e/fA4hcl2KRBrq2pFwFOLLwyCavfaEWK62KpbQeE+HBxIrHFz8AC1
+         S5Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750177693; x=1750782493;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750177743; x=1750782543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1udRvN4jSuClAnZgC4T0k9Z2seJqL2UUQk3g/+ah2U4=;
-        b=jaaE4PXoKqk+92nECM4shGk9K+wqyINRkx+Zh+6W1x0iVGvAJ0G4O8uKKcv3QGlCLd
-         QwsyWRDWoU7PhvtPwVuW8URfpcQBP5FIfoZvfUDdxetr77ZqPTJB1S01h+fL2XWj9H7j
-         Y95RM9KE70JHorCFK0s3/AEiDgqIiLgVNwfFoUFegtDEuj2DRU+QWm5MLUBk/z3hwByx
-         IFgJHjFjaHBugNF3oqY43CYSR4ADu+/ZYySMh/YQ20b+jRKZHsOyZaE9teGQIlx5LDCo
-         LhmQ6fYYrT39KoqmKt2rs5VT8B6QBaSo3Uk1vq+LXBJp+gc2ZeMvxw/xtm9tY8eKIkFy
-         ltlw==
-X-Forwarded-Encrypted: i=1; AJvYcCXgNHXeAEbO5Nri0aBx72/QBLHoU4uGIRPUuC6s9i/O3QQGCUC3CAijkIsU56yNJ3/MBSRI1S0GZAsYDiw=@vger.kernel.org, AJvYcCXxBgl0Bwp3n0npI5GLrAAauZSdvc1V6DcCg0i55kUq2vhevRdw8W93MfpQR9LBJpNxoiH/gW1wJOPgSWeOZhZyd/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxynym262gXYUfjPdV5ixDkGI6R0gWkTBN0R86j5/OFlHPq+cMo
-	cb61zNWrz5UKaW/k9C34jDvRcok7FdkidJexmxXGDif5pLsBAopqMXUY
-X-Gm-Gg: ASbGncveYlmNmtjWF4smhnQSC4SGCYJvB3SNMAKA6p46BZ61iPF/99IKOeD/y4+AhVF
-	lmiE6SbuazVIjrTZhqma6OcrFH2Co+gkpmNwicJ2PJOzSEDyZoB1u0MxbBwPmJVUP00scfpgTO1
-	6lwRWWhNRBuzmhio1VZRDBwQyPnIx1GyAwiFmf7OqY6uiIC3+LKwqsB4dq28Az5Dvq5EMu6pGcO
-	enhpkddG0qs2lyf0fzfcWMsfRVmcUYwvWcX5aEYa4qcKBAH1CT7935zTn6rAsCcg27uHtpXRXU2
-	5pHV7FMUdjXMFWp5jztnGF6CbBBkjM/AuBD8Swqz8tkLXDnnKH92h9soF9VxlDuZkHJD9U0iMqS
-	/saHMIpeDPfk=
-X-Google-Smtp-Source: AGHT+IGG9PfBxBMt5sKRK6/SYmVhgpYziB+87n6Q80KnZiw6jQK46uFHpN3B2OOrD7Qfwmxh3ZvlJw==
-X-Received: by 2002:a05:600c:a302:b0:442:e03b:589d with SMTP id 5b1f17b1804b1-4533cce5542mr95955105e9.24.1750177693521;
-        Tue, 17 Jun 2025 09:28:13 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a68b0esm14220831f8f.29.2025.06.17.09.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:28:13 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-renesas-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v11 2/2] arm64: dts: renesas: Add initial support for renesas RZ/T2H eval board
-Date: Tue, 17 Jun 2025 17:28:10 +0100
-Message-ID: <20250617162810.154332-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        bh=NEFMnlX92eZmddj6ISOAz5HWpkBrZdvzNs6PETlF6C4=;
+        b=oU6+12rD39pmJXPhxSnCf1Jhq7t5RS6dlumQcgaj0uE7ehZvJLBdrbQZG+y/w6RFqh
+         C5HV2GD4SbxWNYMG0fodA4xJlIsadJWzTB05QPaPAXxz8TuouUfwJWzZDjmfXf2ebJVG
+         ERASd4w+tGBtEzLA2EdgpM5WGKHrAb1Rgjf0uI5GTF/w3UZ6Q2Rl1eYYkopDePVfqqV4
+         ckp+HGtkIX+5PufuAY+306a2XAl55cemO4h77gi0NIP1cA9R+aVlhdjs6bebFrVJD9Pk
+         CmWkCLa3ujVw6NA/1THbBAH3RrfTigMNAXLAFlxLfUkGV8H8CiPAgT2M5bF4ms1G3/YP
+         gWSg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEB3DsReNd3Z8MuhgJcJMdLeAbVsYHyv5d++s5+qruzkIlhSLordXNPBwnVv5uRopmz6aTSVD4BnmViGM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0uCb8SoalEso0gsKlxojFYnnVxE+6spbyq6vqafY11TWeUVmR
+	jwmra/wPqjj+fEfqBP3byVq5pgjgWxB4Gv6MoE8ReNjhs+CSXEVqArFlf2nz29GqYb3zFWkl/d/
+	eG1zMALfecG9F0IwDD7gyHdNxz4BG6+K8K8afNLa0
+X-Gm-Gg: ASbGncscjpkfzssoaq5Yoxla4lCv2rNJMRtnfPe6lGbkYmQR+NOCWuDF9g/ILMegjDC
+	pp2nOoVuxb9H/25IhGfICtm618uFzMVnQyNdd31p3gF+RrVgfXjjHwxDemdL3ieFnYgvBzDHnB0
+	+WkUYxxjGeWepJpqhtvC1kSEeSp52+vmEvvESIF1xqgyhl+21/wMlu1zNgRuMd4kyLIcNLpHko
+X-Google-Smtp-Source: AGHT+IGuaQHH5RnvKvS2kE5LJtsJIfjqrig7FhB3Xp0nL8VkPKaJwzzxDGo5xtnO5/xq+BKzkzCl2ghHE6EtLjDojGk=
+X-Received: by 2002:a05:6e02:1aa5:b0:3da:7c33:5099 with SMTP id
+ e9e14a558f8ab-3de09fa7317mr8962435ab.13.1750177743269; Tue, 17 Jun 2025
+ 09:29:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
+ <CAP-5=fXSwgxMc+uh=PBAFh4Zm96tL5RDyKPOJ8Q40O4s=EaArA@mail.gmail.com>
+ <20250616102945.GA17431@willie-the-truck> <CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
+ <20250617141649.GA19021@willie-the-truck>
+In-Reply-To: <20250617141649.GA19021@willie-the-truck>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 17 Jun 2025 09:28:51 -0700
+X-Gm-Features: AX0GCFtUDjpPo9TijhacurqPBZmSpa7o8vMtplPwxsLKffdst7807Hbk9NO-1jU
+Message-ID: <CAP-5=fXn_mr4k=fTYEuK7cCty4n8sofQaz1jNsrTn8U2icm_pg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple A7-A11,
+ T2 SoC support
+To: Will Deacon <will@kernel.org>
+Cc: Nick Chan <towinchenmi@gmail.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Janne Grunau <j@jannau.net>, 
+	Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, Sven Peter <sven@kernel.org>, 
+	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, 
+	asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+On Tue, Jun 17, 2025 at 7:16=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
+:
+>
+> On Mon, Jun 16, 2025 at 03:44:49AM -0700, Ian Rogers wrote:
+> > On Mon, Jun 16, 2025 at 3:29=E2=80=AFAM Will Deacon <will@kernel.org> w=
+rote:
+> > >
+> > > On Mon, Jun 16, 2025 at 02:36:18AM -0700, Ian Rogers wrote:
+> > > > On Sun, Jun 15, 2025 at 6:32=E2=80=AFPM Nick Chan <towinchenmi@gmai=
+l.com> wrote:
+> > > > >
+> > > > > This series adds support for the CPU PMU in the older Apple A7-A1=
+1, T2
+> > > > > SoCs. These PMUs may have a different event layout, less counters=
+, or
+> > > > > deliver their interrupts via IRQ instead of a FIQ. Since some of =
+those
+> > > > > older SoCs support 32-bit EL0, counting for 32-bit EL0 also need =
+to
+> > > > > be enabled by the driver where applicable.
+> > > > >
+> > > > > Patch 1 adds the DT bindings.
+> > > > > Patch 2-7 prepares the driver to allow adding support for those
+> > > > > older SoCs.
+> > > > > Patch 8-12 adds support for the older SoCs.
+> > > > > Patch 13-21 are the DT changes.
+> > > > >
+> > > > > Signed-off-by: Nick Chan <towinchenmi@gmail.com>
+> > > >
+> > > > Hi Nick,
+> > > >
+> > > > This is substantial work and it looks good to me. Do you know why
+> > > > there's been little progress on landing these patches? Buggy Apple =
+ARM
+> > > > PMU support in the kernel has led to reworking the perf tool. It se=
+ems
+> > > > best that we can have the best drivers possible.
+> > >
+> > > You reworked the perf tool to support these things? Why? These change=
+s
+> > > are targetting chips in old iPhones afaict (as opposed to "Apple Sili=
+con").
+> > > I think that (a) most people don't particularly care about them and (=
+b)
+> > > they're not fully supported _anyway_ because of crazy stuff like [1].
+> >
+> > I was meaning that we reworked the perf tool to work around the Apple
+> > ARM PMU driver expecting to work as if it were an uncore rather than a
+> > core PMU driver. More context here:
+> > "[REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5"
+> > https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marca=
+n.st/
+> > But in general it would be nice Apple ARM PMU support were well loved.
+> > I think we went 2 or 3 minor releases with the perf tool not working,
+> > threats of substantial reverts to avoid the PMU driver bug being
+> > exposed, etc.
+>
+> It's unfortunate that you've had a torrid time with the Apple PMU driver,
+> but I think it's important to realise that it's both unmaintained (it
+> ends up with me via the catch-all for drivers/perf/) and was written
+> based off whatever reverse-engineering people could be bothered to do in
+> their spare time. It's frankly remarkable that it works as well as it
+> does.
+>
+> Despite all of that, I still don't think that your concerns apply to the
+> patches in _this_ series, which is about adding support for older Apple
+> chips.
+>
+> > As for which Apple ARM devices should have perf support, it seems the
+> > more the merrier.
+>
+> Easy to say when you don't have to maintain the driver!
 
-Add the initial device tree for the RZ/T2H evaluation board.
+Well I do send patches ([1] is based on a patch I sent and James
+reworked), but yeah. It is a bit strange in this case that we have
+something that is both unmaintained but not taking a patch series due
+to the cost of maintenance :-) Hopefully it can land.
 
-Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v10 -> v11:
-- Updated model string in the RZ/T2H eval board.
----
- arch/arm64/boot/dts/renesas/Makefile          |  2 ++
- .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    | 31 +++++++++++++++++++
- 2 files changed, 33 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
+Thanks,
+Ian
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 677ba3aa8931..52d0488cfee3 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -165,5 +165,7 @@ dtb-$(CONFIG_ARCH_R9A09G056) += r9a09g056n48-rzv2n-evk.dtb
- dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h44-rzv2h-evk.dtb
- dtb-$(CONFIG_ARCH_R9A09G057) += r9a09g057h48-kakip.dtb
- 
-+dtb-$(CONFIG_ARCH_R9A09G077) += r9a09g077m44-rzt2h-evk.dtb
-+
- dtb-$(CONFIG_ARCH_RCAR_GEN3) += draak-ebisu-panel-aa104xd12.dtbo
- dtb-$(CONFIG_ARCH_RCAR_GEN3) += salvator-panel-aa104xd12.dtbo
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
-new file mode 100644
-index 000000000000..752d4c9f2cae
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Device Tree Source for the RZ/T2H EVK board
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+
-+#include "r9a09g077m44.dtsi"
-+
-+/ {
-+	model = "Renesas RZ/T2H EVK Board based on r9a09g077m44";
-+	compatible = "renesas,rzt2h-evk", "renesas,r9a09g077m44", "renesas,r9a09g077";
-+
-+	aliases {
-+		serial0 = &sci0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&extal_clk {
-+	clock-frequency = <25000000>;
-+};
-+
-+&sci0 {
-+	status = "okay";
-+};
--- 
-2.49.0
+[1] https://lore.kernel.org/lkml/20230710122138.1450930-2-james.clark@arm.c=
+om/
 
+>
+> Will
