@@ -1,176 +1,131 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6AD293B53;
-	Tue, 17 Jun 2025 09:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F2631C7017;
+	Tue, 17 Jun 2025 09:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152508; cv=none; b=Mrk6WbQjIJe4CIA2ousmkWUIedXcIME+XH8SkK9Jd+NQXPrOLZrRwFHWelL1thelZQeC0tVFFHBt7ramRjJMGRfidH7PPhsOflOz62sZ33Hcx9pCtDqcFGukOiPTLwpXLM+ZOHMIxrqyq2EqmtBcW6WCkLNPDx6sfSTxkNz/lWQ=
+	t=1750152527; cv=none; b=Z0vSjeebFzSdPSTEmBpstJu68YEju373i7YqVc11fXY2AM9r3kgsA5EscOv5/qn5dKYWgDA/gHn9eEtKEGA7ra3j1anEU51Q+uKF8z25WPq0Z+N5WFJ/9AkmvwHGdagmuCsOkZ7n0jKx5ueTSbHeTMgruy3af0iYdWCTQicBPhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152508; c=relaxed/simple;
-	bh=Q5fd04hqWSCGDEzHOkzetwrrFZNmS/QF+IyVMo8AaK4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SRk8lC2NIe42nZDoQzLTUE2MqcaSIUJMyVwt6huefJ5qFy5dCqQ9K5TrJ/0lWcWK76aAWUSlbbOQhd8CIfINIufbjyRK9Y0NcdgRirKn316O72HlnjlBbAOh4fqoxBWIFzaWLq2yYGEUnqUTMDqN7gBKIw1IqMAOyLAa/TwMVds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7KJbSIC; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750152527; c=relaxed/simple;
+	bh=WTVP0Rab5ilAEjYf4Q5ZrDQrhbyk3NNPzpYO7kOetJg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rHhBRuge5quRv+QZUO4FIkZFAyKmmQmtMijPrY9D+LP8u24VJF4OichsqMt11HMKv4Xcn1hCOIggS6CMcyFrvQsQn8vfrGK/LnAmY7nL4n1ihf6TuQg9TZidcrEvWrvJN48bD6QOykQkPav2GxVUtd2BZsK7Bg/teIeziMpnQ0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8NsJx4Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7KJbSIC"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e81881bdd55so718800276.0;
-        Tue, 17 Jun 2025 02:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750152506; x=1750757306; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gALTqNQrj90wQMFVEUTnuyFeDr4GZi/SD5mn5GfukAs=;
-        b=P7KJbSICWReIJutj8Q447Uisi/eY9mDBt/rX35mXu/U+mx5uFsQrb2V5w4Zwb4ghJu
-         SIR5aUdPWKBHdBGcUsyWTLHJ/VqpTjLa4Z2THi9OHMX34d1EPXg5FhI2mAejE6Z62WDW
-         l7u6v/24E7xrQW0w58biKRD8wyiL+JYjg8R7/kTLmRaWogXiAGcKIoaR8rHWPSL2uKLv
-         Qc0bIHxGG+bgm7HspunnCIsa0yjfGRBSt0Asuzj/WUQ8xtKXnrSoYbh5BzmPKHCfvFqt
-         aZZpdYyVkUU7oGwMKqDPfLkQmmr6bVtSx1P73nwbT0gBDLjjPzB5Jfrq829F2/mBN9Q/
-         sg6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152506; x=1750757306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gALTqNQrj90wQMFVEUTnuyFeDr4GZi/SD5mn5GfukAs=;
-        b=vPXHS3RU6Ee/oerLz7MIEJ+SmOE4Q9ESE1xQ7Suqz0xs7AwPZrZtBotoJA4d7lSpiz
-         ERJHTHq/QS1Cv36Lgl+xjKEPSWLZL4CNo5rxyJ0L9WrhB+/LXAZJsQ/ggkGKTgCCe5i1
-         bk1LG/KjBGL6Z8lrm+ZhPHWhHcvrs4/fbp8jolguO/j5qn249Z1m71clTdWmR9BMx0ie
-         /qWcniGstK9YxblQFJ0TBql1tnij1VFzXfhjJkA2kq8UxrI2BygCivmv/8Vf/PbKTnL+
-         ISq7+A7JZELER91n8ksoxq5+mCEzsYrcXwobALwwE2xew3+AtjhzsO7MWxbCYqzw4wlE
-         WVaA==
-X-Forwarded-Encrypted: i=1; AJvYcCUJAMMcqN+FCK8Q/6qRPU1Q0+BvnHlliUK2GHd1IIs0L8f9eGxjJiEgFp6bBPMtYOLHkfCFqALlc6Ai@vger.kernel.org, AJvYcCVtmQPfvGkHP9u2/B8V11bLVt8A5A0FPyM3duGGn9MysDgF4lyYz+ESQPDQEWN7940akgz3to5PEMA7SJ4d@vger.kernel.org, AJvYcCVwo+E8703cFveWx5fLnwohqzaeR4y1GDapDpv4gKOFEJFNHzcjcs59Q4tvXojbk2OppAuDXOeLFZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf8rV3OwUuH55VPuhlXe5Bsg384EQSMoKicwFsk2T9x3VUmjVh
-	d2wIHjX2q6DeqK1s75iwaqwRZI1f+NA22BcfCwGZpUHI/O9Ryg+tUYk9Jr/OP1qJwTTqHI1lC5m
-	zSP5EG2ljr/vcM6ELdClIcslLwjStSRs=
-X-Gm-Gg: ASbGncuhRfiMDWq3zvvUHKbNQGLgRXd0qc4+csSPhtIiV+U7fat6PUCsRrxOUXywMGx
-	hNmLCJpylRK22tBsg6PLEv2Rgf5ILykVn6wBJ5aC78XSA0sXswrBFTjUsDThG4D5ZL/d9vwKf2z
-	OQ46CeiTivMQ70ah+sXjvVDZN3lIYFXZDPqnr+Eq81HhQ=
-X-Google-Smtp-Source: AGHT+IGfEO9KKif1fDX3wWrW5gIl4x+KT/D8NnLSgBbamSDflf/3JpdAOEJzp96RWvwMj+B2D/u2WRFgO85wbi8Vcd8=
-X-Received: by 2002:a05:690c:1d:b0:710:ee89:d34e with SMTP id
- 00721157ae682-7117551588cmr74852627b3.8.1750152506329; Tue, 17 Jun 2025
- 02:28:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8NsJx4Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF0D2C4CEF0;
+	Tue, 17 Jun 2025 09:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750152526;
+	bh=WTVP0Rab5ilAEjYf4Q5ZrDQrhbyk3NNPzpYO7kOetJg=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=O8NsJx4QwoWNmqgUsDtVjMxjf7l6mEgmRKNme7Ecggcq2QUgkHoQSrKrli9zoAaIY
+	 hSDG7yAd+TykXow34mGBM6pu9yVG72XDoaxoWV0fW1ZS2w1cKvuWS+hIcBn6M3MKlQ
+	 ezGluD8khR/C235e++Xr3z9oWxxyFkKmSq5JTBddHtlPB1oPWuIyeaCSb2v2wK8VfN
+	 BvNGG8Bgztu04qvO056EUw2+on5+ymb6Tfv5dX5uIFztCoz0SYqRjIP0VWfwKv+jL/
+	 1GUfo2LNfnag22tdWCb9ZhaSzpDtrYFJcKj//9+9jaonbPVZJDQRDgd9R5QaR1Zd2Z
+	 8Kwx5lwKbotvg==
+Message-ID: <492f86ed-d5f1-4ddb-b820-d3e8f162fb8b@kernel.org>
+Date: Tue, 17 Jun 2025 11:28:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615222258.117771-1-l.rubusch@gmail.com> <20250615222258.117771-4-l.rubusch@gmail.com>
- <CAHp75Vf6sLfVrN30divVqPBnJBQsU5b+SY24yC2PJuuTmRQ1LA@mail.gmail.com>
-In-Reply-To: <CAHp75Vf6sLfVrN30divVqPBnJBQsU5b+SY24yC2PJuuTmRQ1LA@mail.gmail.com>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Tue, 17 Jun 2025 11:27:50 +0200
-X-Gm-Features: AX0GCFtdtyrQdB3K0tsd9fV7juD1I_SYR0hG_EI8QiCnyXtYFHZ8_2mUhT98E2Y
-Message-ID: <CAFXKEHan_NnmMUfuy9cyjgBsdFK+C6V7eVxq_V3--afzQYGDDQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/8] iio: accel: adxl313: add buffered FIFO watermark
- with interrupt handling
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] interconnect: qcom: Add EPSS L3 support on QCS8300
+ SoC
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>,
+ Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: Mike Tiption <mdtipton@quicinc.com>, Sibi Sankar
+ <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
+ linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250617090651.55-1-raviteja.laggyshetty@oss.qualcomm.com>
+ <20250617090651.55-3-raviteja.laggyshetty@oss.qualcomm.com>
+ <43ebe623-8822-4437-92cc-9d24e97295d7@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
+ QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
+ +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
+ ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
+ 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
+ hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
+ tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
+ 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
+ naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
+ hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
+ whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
+ qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
+ RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
+ Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
+ H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
+ dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
+ AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
+ jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
+ zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
+ XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
+In-Reply-To: <43ebe623-8822-4437-92cc-9d24e97295d7@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Andy,
+On 17/06/2025 11:26, Krzysztof Kozlowski wrote:
+> On 17/06/2025 11:06, Raviteja Laggyshetty wrote:
+>> Add Epoch Subsystem (EPSS) L3 interconnect provider support on
+>> QCS8300 SoC.
+>>
+>> Signed-off-by: Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>
+>> ---
+>>  drivers/interconnect/qcom/osm-l3.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/interconnect/qcom/osm-l3.c b/drivers/interconnect/qcom/osm-l3.c
+>> index baecbf2533f7..d8f1e0a4617b 100644
+>> --- a/drivers/interconnect/qcom/osm-l3.c
+>> +++ b/drivers/interconnect/qcom/osm-l3.c
+>> @@ -270,6 +270,7 @@ static const struct of_device_id osm_l3_of_match[] = {
+>>  	{ .compatible = "qcom,sm8150-osm-l3", .data = &osm_l3 },
+>>  	{ .compatible = "qcom,sc8180x-osm-l3", .data = &osm_l3 },
+>>  	{ .compatible = "qcom,sm8250-epss-l3", .data = &epss_l3_perf_state },
+>> +	{ .compatible = "qcom,qcs8300-epss-l3", .data = &epss_l3_perf_state },
+> Heh, the same as some time ago. We discussed this.
+> 
+> No, stop adding more redundant entries. For explanation look at previous
+> discussions.
+> 
+You already received exactly the same comments.
 
-On Mon, Jun 16, 2025 at 11:33=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Jun 16, 2025 at 1:23=E2=80=AFAM Lothar Rubusch <l.rubusch@gmail.c=
-om> wrote:
-> >
-> > Cover the following tasks:
-> > =E2=80=93 Add scan_mask and scan_index to the IIO channel configuration=
-. The
-> > scan_index sets up buffer usage. According to the datasheet, the ADXL31=
-3
-> > uses a 13-bit wide data field in full-resolution mode. Set the
-> > signedness, number of storage bits, and endianness accordingly.
-> >
-> > =E2=80=93 Parse the devicetree for an optional interrupt line and confi=
-gure the
-> > interrupt mapping based on its presence. If no interrupt line is
-> > specified, keep the FIFO in bypass mode as currently implemented.
-> >
-> > =E2=80=93 Set up the interrupt handler. Add register access to detect a=
-nd
-> > evaluate interrupts. Implement functions to clear status registers and
-> > reset the FIFO.
-> >
-> > =E2=80=93 Implement FIFO watermark configuration and handling. Allow th=
-e
-> > watermark level to be set, evaluate the corresponding interrupt, read
-> > the FIFO contents, and push the data to the IIO channel.
->
-> ...
->
-> > +       int_line =3D ADXL313_INT1;
-> > +       irq =3D fwnode_irq_get_byname(dev_fwnode(dev), "INT1");
-> > +       if (irq < 0) {
-> > +               int_line =3D ADXL313_INT2;
-> > +               irq =3D fwnode_irq_get_byname(dev_fwnode(dev), "INT2");
-> > +               if (irq < 0)
-> > +                       int_line =3D ADXL313_INT_NONE;
-> > +       }
-> > +
-> > +       if (int_line !=3D ADXL313_INT_NONE) {
->
-> > +       } else {
->
-> > +       }
->
-> What I meant is something like this:
->
->
->        int_line =3D ADXL313_INT_NONE;
->        irq =3D fwnode_irq_get_byname(dev_fwnode(dev), "INT1");
->        if (irq > 0) {
->               int_line =3D ADXL313_INT1;
->        } else {
->                irq =3D fwnode_irq_get_byname(dev_fwnode(dev), "INT2");
->                if (irq > 0)
->                       int_line =3D ADXL313_INT2;
->        }
->
->        if (int_line =3D=3D ADXL313_INT_NONE) {
->    ...
->        } else {
->    ...
->        }
->
-
-I probably got this wrong. I interpreted Jonathans review [PATCH v3
-06/12] in the above way. Anyway, I did not read his second phrase. I
-agree, flipping if / else case and going by '=3D=3D' instead of '!=3D'
-simplifies it.
-   ...
-    > +
-    > + if (int_line =3D=3D ADXL313_INT1 || int_line =3D=3D ADXL313_INT2) {
-
-    Why not int_line !=3D ADXL313_INT_NONE ?
-    Or flip the logic so that you do that case first.
-    ...
-https://marc.info/?l=3Dlinux-iio&m=3D174817641830144&w=3D2
+https://lore.kernel.org/all/51653aac-76e0-4da2-aea8-16d62b570155@kernel.org/
 
 
-> Obviously with a helper you can unnest the if-else-if above.
->
-> static unsigned int _get_int_type(...)
-> {
->     if (irq > 0)
->         return ...
->     return _NONE;
-> }
->
-
-Well, indeed. That's definitely the obvious simplification needed
-here. Thanks for pointing out.
-
-> --
-> With Best Regards,
-> Andy Shevchenko
+Best regards,
+Krzysztof
