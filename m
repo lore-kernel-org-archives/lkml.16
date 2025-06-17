@@ -1,117 +1,131 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372792EA15F;
-	Tue, 17 Jun 2025 15:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06C92E92C8
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175717; cv=none; b=uFGOvYJw5VlkGuDWEYELZJS1UgrgYTA6MSYUmv/wOYqnUSehpLWzjsnJjeuydHkaQ4OPGfsqq1QQX/caKUDpl87ixlJVommI0K30Bo8z1Hbj6ghFRSbs+lybTRquCA0Psh2GVQlJzeTjEdeMi5aaDmVyWKKZZX+oraHOr1uBStk=
+	t=1750175718; cv=none; b=Z08E9lYSkk6PHHHuj1iWLr4Fz+3gi4YB6q2bUEiopSnnuBa34TpTdxXUBNJB/KT+5umJmrYUBhS8FncNEFDI5CuwwRa8RMCzK7RQSxBGKcpU4vf3rmeHNepE2b6gGBJnlP3YT1D9AoEr+2u6r6JsHM7VpVv+/Wdu0uwLO0n6wTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175717; c=relaxed/simple;
-	bh=xT9LTxXRsAvFMMm/rUTVAJh+ZpJa8uGFFOblzL9irwo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L8hS2QYBU36PDAUnENayQhEjFYDiz1rmdVzDtxTYTrno5nI+stJMkMGmFobbAsOdSVGavDb+j92KfkdDeUf1aeAPuSaqqWN5PzgQX9LuL6b7kxLVPHB6hRjHb2rDtIJuIiuOYOO2pZyWxPQyIia06ZqEIgl/A6GG9l5gtg30e2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zk9PjmnJ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750175718; c=relaxed/simple;
+	bh=55IiHynz00pYy+b7hGuuDjrL2Y//CLig++XAkelZNU4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XEeX0Nqx1rJ6CBXULcHOaljArerOTI4zAOEuxWimldmttKXx9KcG3SS9ynG1iFvvO2ShbcSgLOJkRO2UkrjLTmuVuwq+Me6LGM47dzSEPYC51FRPC7BPC4Og4/a3pFsLQLpJybHPWPIbsAPbA0uYqPTD9nZA8jpz12JbkACLsKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=HIqVRqdc; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zk9PjmnJ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-451d7b50815so50331175e9.2;
-        Tue, 17 Jun 2025 08:55:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="HIqVRqdc"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d094d1fd7cso844465885a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:55:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750175713; x=1750780513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xT9LTxXRsAvFMMm/rUTVAJh+ZpJa8uGFFOblzL9irwo=;
-        b=Zk9PjmnJUuZwUjAUQ+lXSOf+cvvzFkT2WW3OcXG9J9VBI1E3ma4OYyv9RnV82csl/7
-         SN1HvPbSUO2ggKGqTxRzdRZ7WBXSwzJ0+8jMchQg019gfb8fUWwlJ97ZZWtCXgZAIyaa
-         JriQykskH47fpofL7uEwwpL02isvFdJZuLVTatXA8bk2v0H4iJyyD1e9i8sb+9KASSV5
-         S5rh7gzwlju+4S2weXWO/T/n76PeHhDhaKXQXls+ki57Zr4j0fj5hQ1QDJqwcZl//VSf
-         DwCelb+mzQLc0J0oULZBjcl0qUHsf8KIyRaDvKktkCqzZb69qMe1mhJkrmfo1ue1U498
-         iTJQ==
+        d=ziepe.ca; s=google; t=1750175715; x=1750780515; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=wx304DZ0NE2g+OOJjBg61lF2TCxnm7rjurAO1hRurAk=;
+        b=HIqVRqdcOM4dDB8xrn1Py7RCcYdMa06j2fwy4Yz1zBiYGgAfO59m9m3uatw1ynKgkY
+         HEF2qsGl3Ek9fyOlCEPddvdrZEMUJeZYunfJqUDC8+M1wb7Kcn1kbcgMwp8ivgAIPvhI
+         w7vOd5IDMbcrC2NZf1zsK9RYMV8sA2L0CHdwLS9YDvze56bH3fKVGkJqNASxCWU20Jim
+         c/89OCT2QHklTFpDlRLcDMuLvDfv2E5V3/5z4Ctb4RWB7jQLT4MTZtOHEf3nBpATz+W2
+         Qi/xch2rzD46weHvEw/s8aSyXwc4qbjVTZI/8WRXWqEa6FxVbRON4IAffCFDWeNNNqiO
+         JGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750175713; x=1750780513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xT9LTxXRsAvFMMm/rUTVAJh+ZpJa8uGFFOblzL9irwo=;
-        b=xOKnjYDe+xQ+VQdFA5KjVvuUQrP9vSAhxvFM40hFIkmmywY3HMkK+UatK12WYaY3b4
-         OkUPn6iXaebGwDEZ8Q/tx5dfi3C8QUMWDZNigEoEhdJtJlAhUTfuHJycfX94ht7cW158
-         qAF/Vd1vZe2QMSGsWgBVjVB1/NBKHfiivGP9/03WCnRbfekV4Bq8Kk/u8QiwpFnkIbT6
-         67/GqIPffTM3HeSZPp0ObqmnTPqv9tTfcRJrOZgNEY9gYMTc1i3eieL0gd1N0T6LFlOF
-         QZrDI4n0u3S9J775JJOtpG0PCv//E11k+uaoyyvlxkROWw4eEG9dsZMpZYwNGwFejXzC
-         AFjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzTnP/r/PEpnl3xsrj/U37pYX7o0xwShHomAKTCRgqoOIyIUcLZHIRff9npg6dl/bfBts=@vger.kernel.org, AJvYcCXn9rvKPcfy/tOQtas0+a0EE2ETYmSGFRLPKQSpFtl7wfEurHvHqJJrx9K9K8LWJygdsxNZwTaExr/bEoQI@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAZJi+9oqUVBQmO5JjgH+NvoRNOYosAq8KADmcrEm9zyg41CVy
-	Wec1vuGczHA7F3Io4Zp4qOcknlwDlG5eyoRnahsztcm/hBB0jIj/PJ5YUdSTfvSigQN+5VneyJZ
-	i1+13CEevTP7A5P7wp8on81p+209ABHc=
-X-Gm-Gg: ASbGnctHERm1y59nrAdYvgKbszxceI1saOPSPHcsvbJFbx+Rl3RR2mpCDCEUUft8Uig
-	rBPGlPklOeZDiQmLszxFTU5uFIbFMOSopCv+s9n6kiEbd7yO7qJ2dJqUIcX56d3usXMiQJcVEGq
-	tutL+6HvkT2QYH1uAZ7iqzzjf/1w3frFtKgOw7ja3b+ekUFfRK0fa+a0NLpTvghO/8sgdHFg==
-X-Google-Smtp-Source: AGHT+IF6loupEqjpkVoCPngFmIidvYe1fOTHJr4ZZlPwfgyxgdy4K9J73YY9qX/1LHgXt7eEFFKPM9xetfTxt+TpbGk=
-X-Received: by 2002:a05:600c:3f0c:b0:450:d07e:ee14 with SMTP id
- 5b1f17b1804b1-4533cb3be4bmr141812455e9.17.1750175713255; Tue, 17 Jun 2025
- 08:55:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750175715; x=1750780515;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wx304DZ0NE2g+OOJjBg61lF2TCxnm7rjurAO1hRurAk=;
+        b=eVOqYRqYf904q9KalM4VA7ltE0qJiDAhq5aWyGCF1vM9u89i3EMpcBe9cNoCZkHL0R
+         HnJfQOhWAsZpux6E+UMPdW7hXcOXz0Kq8EZbtyOU/9PaRLtlEdtgumYyq0sifvuI09bW
+         4zQfmfpZL0HQB6L957YS++8oRUfGvnvejsPuwYz4eS3+8GvA/mrAGSAK0o/5W2GO4uks
+         oIoUT8Ufe+ftW3emZi4IHwIUvKlp31kWVbU1OFL9FajOr0KapYTv1Ut95TZpFEq9EbMS
+         Z+28NjWJ0oEfrOiclmdPmn1iE2VArd0V0ZvRM+RKtyUE0f8PO6PDAt2nlXw4ckJAy/91
+         R3qg==
+X-Forwarded-Encrypted: i=1; AJvYcCX00wuOzyrk7jMxzU/U/ABXohKXksVoaeKBBvlshTTl/wR71LunpkDm65Qsf1eqtrtjKi8VlrBA6fE4Zis=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxr+9EESemw/jG7iAyIfuYlrsS0OJSGmSTwXEpgRckMFMDOhQt5
+	Gp/z9C1+wdGZ95JWHwmmOZWYm7bSViHy9tNBjs1wTZNDkhoQht4Wu0TBKMOJVEXQYWg=
+X-Gm-Gg: ASbGncsTdw2QG+c+e8Cm+0/friSAt4o+EnwmF4EoYHKAVYmVoq9JiP+lpzaRggc42Uj
+	802RQo3azqO9t8Fakth7G4ucc1NEYPUqeojWvgv7M4f/4cBaGisXbkGmWP+p7y4PIF8lyANwNvV
+	R2WK3qIe0uLnruLdUFRG0Uz5hkmHRBLBCcDKQqlt2iwXlnnhsAfr8wAYgXkgPoA5OdZobD8y6Na
+	gNtQBC8J11Vr1u5MwKBw9YLMCgUL6juTxJij0mwZkvJVEeZcsTvqjfwTyUx7rCYGqLfkc9Pmkbp
+	/A9nHGS9P0wJ+ojj34hIOEAun4+bxGuGYYSQsNOvi2v8oWXqNNF3IWW+tnKhShxsZ5aUkR208hi
+	pPkK6gh0qQkDNQfHsCBS1yGd4XKh2cWTgNCiN9Q==
+X-Google-Smtp-Source: AGHT+IFXnZTcKPgzMT86nxmrlf7kz4ru5nOzoSNqyGX+eUmWwxWkQ7vtqqAzKrLwaYYroH6Qyc+UTQ==
+X-Received: by 2002:a05:6214:2682:b0:6fa:c634:dc01 with SMTP id 6a1803df08f44-6fb47786d90mr220187206d6.16.1750175715483;
+        Tue, 17 Jun 2025 08:55:15 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35b20abasm63746496d6.1.2025.06.17.08.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 08:55:14 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uRYeY-00000006WS6-1OTF;
+	Tue, 17 Jun 2025 12:55:14 -0300
+Date: Tue, 17 Jun 2025 12:55:14 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Christoph Hellwig <hch@lst.de>, James Clark <james.clark@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	Vladimir Oltean <olteanv@gmail.com>, oe-kbuild-all@lists.linux.dev,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Frank Li <Frank.li@nxp.com>, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kernel test robot <lkp@intel.com>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev
+Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
+Message-ID: <20250617155514.GC1376515@ziepe.ca>
+References: <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org>
+ <20250616131346.GB29838@lst.de>
+ <83855c1a-c128-4762-9d6b-e17f2c4c8820@linaro.org>
+ <d16bdc40-20d6-49db-bf41-18bb9b8e01fd@linaro.org>
+ <20250616131944.GA30260@lst.de>
+ <f723d490-c228-42d5-9f9f-158df54a092d@linaro.org>
+ <9788991a-ac37-4fde-81db-c55035d00f27@app.fastmail.com>
+ <20250617044833.GE1824@lst.de>
+ <5de445aa-048b-4f60-9045-df5d45341436@app.fastmail.com>
+ <76a8c896-d7ea-4471-99a2-34b3a7ac9804@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
- <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
-In-Reply-To: <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 17 Jun 2025 08:55:02 -0700
-X-Gm-Features: AX0GCFuGWDZ5CEkf-fL4zF2NILLUkNtwwrauBu-BssEi-zQPHDI4c5GBqJQAG7s
-Message-ID: <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
-To: Matt Fleming <matt@readmodwrite.com>
-Cc: Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
-	Matt Fleming <mfleming@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <76a8c896-d7ea-4471-99a2-34b3a7ac9804@app.fastmail.com>
 
-On Tue, Jun 17, 2025 at 2:43=E2=80=AFAM Matt Fleming <matt@readmodwrite.com=
-> wrote:
->
-> On Mon, Jun 16, 2025 at 4:51=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> >
-> > On Mon, Jun 16, 2025 at 2:55=E2=80=AFAM Matt Fleming <matt@readmodwrite=
-.com> wrote:
-> > >
-> > > From: Matt Fleming <mfleming@cloudflare.com>
-> > >
-> > > Calls to kfree() in trie_free() can be expensive for KASAN-enabled
-> > > kernels. This can cause soft lockup warnings when traversing large ma=
-ps,
-> >
-> > I think this could also happen to KASAN-disabled kernels, so the commit=
- log
-> > is a bit misleading.
->
-> This issue can definitely affect KASAN-disabled kernels.
->
-> I mentioned KASAN to give context and explain why I saw this and
-> nobody else seems to have reported it. I'm happy to reword this part
-> of the commit message if needed but I still think it should mention
-> KASAN somewhere because that's the reason I discovered it.
+On Tue, Jun 17, 2025 at 10:26:51AM +0200, Arnd Bergmann wrote:
+> On Tue, Jun 17, 2025, at 09:53, Arnd Bergmann wrote:
+> 
+> > Between SH72xx/SH76xx, SUN3 and M68328, I believe the
+> > supported machines are all limited to between 1MB and 32MB in
+> > the maximum configuration, which is obviously extremely
+> > tight.
+> 
+> I checked the exact numbers we're talking about here: enabling
+> CONFIG_HAS_DMA on rsk7269_defconfig adds 10KB of extra vmlinux
+> size, which doesn't seem too bad:
+> 
+>    text	   data	    bss	    dec	    hex	filename
+> 3295084	1111396	 112264	4518744	 44f358	vmlinux-before
+> 3302836	1113652	 112264	4528752	 451a70	vmlinux-after
 
-kfree is so slow that it triggers softlock up ?
+Long ago I ran some numbers for an ancient PPC system:
 
-> soft lockup - CPU#41 stuck for 76s
+https://lore.kernel.org/all/20121119214922.GA5636@obsidianresearch.com/
 
-How many elements are in the trie that it takes 76 seconds??
+The base smallest kernel was growing .text and a stripped down initrd
+at a rate of 1MB evey 6 years.
 
-I feel the issue is different.
-It seems the trie_free() algorithm doesn't scale.
-Pls share a full reproducer.
+Somehow I doubt that system (with 16MB ram I think it was) would even
+fit a v6.x kernel. v3.6 was already challenging.
 
-pw-bot: cr
+Even back then Greg was incredulous that an embedded system would run
+a 6 year newer kernel. Here we are contemplating a 20 year newer
+kernel?
+
+I think you have the right direction, we just removed !SMP support,
+removing !DMA also seems logical to me.
+
+Jason
