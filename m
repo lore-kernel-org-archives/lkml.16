@@ -1,84 +1,95 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805DE2F5328;
-	Tue, 17 Jun 2025 22:32:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1462F5316
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:34:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199534; cv=none; b=DM4fJg0BgqwpbYkV8fLjRqONwodC493OJfRuJhXsS3tnQ9NzCE0Cco0mI0z1HHNUtNKBN17jz24J1dcKb1YoEzA+ZzZyOJJuy/atv6buXGZ6+cgj/c6/KhWCR1a2+YQ2ffRneUy/fiSvL2qL6P7B23RKmpQ8lk/BO5o1SGtXzfU=
+	t=1750199656; cv=none; b=CSNoBlmrqhqekOmD3FT1aTFtbVCns8nJVxp35rTHg0ImSf0GSEn0+V1vRybeXE4OCHsvJywRv6VJxTVZSGtxWdxvbN1dS2fljlcvTGOPH1/JTDnVs7GpJ54lryHrGrjTGQ/tlSCWVYWJrwJKGdVFXbOh68tyN7a9Ei2DDDa3weM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199534; c=relaxed/simple;
-	bh=dCX1n65xBRoezMqGO2CbhPRyi4/zYkLQkgcntqwDZio=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PfaY5kHAhVQ1Djrg3YAXgTs2mQddfT8y0niG5lg9+2uz0Xg9zL9AtPrYpY0QgteJK4sEMj/kcs2v6eDqBHGNqrAgK6/W08xGnpc2rGQfTyybkwEp9jVIqjuVwaatXPLJ+vqWkkq2lnh99nbtRGsW6t2G4j+QmwH4i3Zxnz06+YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=f7YEoRxa; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750199656; c=relaxed/simple;
+	bh=iPhLrwxUZHv2wX6yaulHFVcQvRgI68U4Jl3CtCmOLTk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=JfA24QM/4e7ib/rDiXn8Dv2LTvduoiQ3vivBa4PLr9MhD4GmPFcO/o5QdM9qjhfXz/Inh4MJicMJakFRP2RkzZ0VWpZfu/YlQ+q3XI8tQ95iFzwgssStE2JeugtINxR3FlVSWdRY3fHLkm8ekna2Fi8K50tYYPHd/UNbTb075Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=25poyvlc; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="f7YEoRxa"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A21D64316C;
-	Tue, 17 Jun 2025 22:32:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750199525;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=esmmfpi3kvEuTnF8NNPy+ASdlcPdHl8nczq2Wpky2kI=;
-	b=f7YEoRxabbDiuDE81Y4N7liiuep0PepQZBg4OcbRpIFGIKa4Bn/euoAyzd5uw/Dqwk32+3
-	3ZfiIWRiAz+G/U/aPg4jtSknpoUL3rw0jZIl42c21UD0ai3BnXJnWL8dO8ziKmBz53G5LP
-	ua9CNK/CX6XDyNfKjkN5B/Sfl8It4K5mbJzTAs34AikOaMRL7SldUojIGlSAG9DsCrjBly
-	B8l1OmSOyUrd/gfBQuCx8RzgXbxKj7mr2FPpzKU5PVqUsCo1GmxTS1+7fyq+Fpsf6f3qhp
-	bFxZfOaciK6wQ+0N6uXDXw4hLHh9bpeJuihmnY5qOwZH324wEJ32gLSYAWDHMw==
-From: Olivier Benjamin <olivier.benjamin@bootlin.com>
-Date: Wed, 18 Jun 2025 00:32:02 +0200
-Subject: [PATCH 3/3] arm64: dts: rockchip: Remove unused property in
- PinePhone Pro MIPI panel
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="25poyvlc"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2358de17665so51946125ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750199654; x=1750804454; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=M8ZbK17Dj2geGvK5GO30EzDPP51WioqEngR1yRrimxo=;
+        b=25poyvlceR9oed0K2aF9CtzLxWYxwdcDUnsm8BGfB0hz/gYIPFss5sUPUGlxKczsYs
+         071OePMFAlTKdSvuxNg6R+PcaPzAMGQL98mpiW9KxwgUwdUFovQ+QOvzzeEZ2WStYjQ1
+         gWvJ4ELXrtUKSekYPbYIj0DJg7rebpVs+F0gHSCt3okfZQRszT423X9wwO+Z1wFAMFCJ
+         QdT3ejiaZA4OxjFX58JNXKA9wElVonKvEsbCgaZAje08eL2aze86AeSUDOh6cdYPxWn2
+         v6my9CU9nXqRfV9uDF72bCcR10cL7w95TvXIzxPqoytcjdGCyP5Lrk5JmTcrI6R4CLnx
+         mQMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750199654; x=1750804454;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M8ZbK17Dj2geGvK5GO30EzDPP51WioqEngR1yRrimxo=;
+        b=Yji1Qft67jAUpVl1DwxiXB+2BRYTRpcpGpcnySZ+v1OZKeSh5+/wK6q7ILgzQ5NiKG
+         JgyD4L3Zospeg0Nsn8gGW6Az6A+g5mijpCxccfAePJIY4efrRdXxUUlO0NRI2+6B7UGk
+         Ia7/8qbmTqmjagxr7Pci9gIjTDArkZpVJN6avt0JSvCZLbrBzJutQxar2hegrC2I43Ut
+         K4fwhmT+orHV+elRoAFMnB3tjs5doaCnOtyCUHeGfaLnOVwval9fbcD3oycf9XwJ62xi
+         bj2RrME2CpHG9TqdO9+nQ7f3OWO5x2qy9jM0RuOiCggCViyjlaZkn3Hjk9AsJusOl6is
+         Yh0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVNlp9s+k6ifAgjtAABRIuaBDvZpHrztvyGLBolOGqdjOYMJfTxrBCQiUGV+5NkuiclTo8e4RiMnpT9fsA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2s5qlFON8vWtV1fQQrIDURguyHN1/TFqHv1ZJ8fojHs3GSSHO
+	3YkaXphyrXnn+FbXjvAuat4CfeaO0j5KbMdwSrfq1FNvAmU2K1jUnXfQ22s054gX5gnYa1Zl3E0
+	j3SUAuJ/icw==
+X-Google-Smtp-Source: AGHT+IHn5vHmNdo/1OE/54rCEFOwlR9N/3j9Z7E5HOyKK03PBDryeertL6DY4l2/hbLegD+O1+eWlsl+i8Wp
+X-Received: from plkj9.prod.google.com ([2002:a17:902:6909:b0:234:908f:4e22])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:186:b0:234:f182:a759
+ with SMTP id d9443c01a7336-2366b13c87bmr258940175ad.28.1750199654477; Tue, 17
+ Jun 2025 15:34:14 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:33:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-dtb_fixes-v1-3-e54797ad2eba@bootlin.com>
-References: <20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com>
-In-Reply-To: <20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Olivier Benjamin <olivier.benjamin@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddufeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepqfhlihhvihgvrhcuuegvnhhjrghmihhnuceoohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegueegiedvvdevveevvddufeejvefftdeugfffkeeileehheefieehgfelfeeileenucfkphepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeipdhhvghloheplgduledvrdduieekrddurddvtdgnpdhmrghilhhfrhhomhepohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmpdhrt
- ghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhotghktghhihhpsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: olivier.benjamin@bootlin.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250617223356.2752099-1-irogers@google.com>
+Subject: [PATCH v2 1/4] perf test: Directory file descriptor leak
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Andi Kleen <ak@linux.intel.com>, 
+	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The MIPI panel definition in the PinePhone Pro DTS includes a
-"pinctrl-names" property, which is unused in the absence of pinctrl-0.
+Add missed close when iterating over the script directories.
 
-Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+Fixes: f3295f5b067d ("perf tests: Use scandirat for shell script finding")
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 1 -
- 1 file changed, 1 deletion(-)
+ tools/perf/tests/tests-scripts.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-index 5a7341fb6bcb0613af6f3ac31d99355a0f890e89..405140700208365c8631de86a2d7b6e577b7aa7f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-@@ -485,7 +485,6 @@ panel@0 {
- 		reset-gpios = <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
- 		vcc-supply = <&vcc2v8_lcd>;
- 		iovcc-supply = <&vcc1v8_lcd>;
--		pinctrl-names = "default";
- 
- 		port {
- 			mipi_in_panel: endpoint {
-
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index 1d5759d08141..3a2a8438f9af 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -260,6 +260,7 @@ static void append_scripts_in_dir(int dir_fd,
+ 			continue; /* Skip scripts that have a separate driver. */
+ 		fd = openat(dir_fd, ent->d_name, O_PATH);
+ 		append_scripts_in_dir(fd, result, result_sz);
++		close(fd);
+ 	}
+ 	for (i = 0; i < n_dirs; i++) /* Clean up */
+ 		zfree(&entlist[i]);
 -- 
-2.49.0
+2.50.0.rc2.761.g2dc52ea45b-goog
 
