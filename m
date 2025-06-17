@@ -1,61 +1,70 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75AA3BBF2;
-	Tue, 17 Jun 2025 02:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7281F8AF8
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.64
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750126305; cv=fail; b=ShQjLFT9My/O19oKebTQZLZb9sG/ZGGQRDqZZ8oJ4YkTRXhHCgx4Od8P8edw6ZCjLhCTjDw8wDK7P+7ckTq4H3MwnY/pjFdH2KoXh9R7HoNLbGgA8UaP36dAHmnOXiTQ4y6pPTrfS+aDKB5VUPS9h3QCwCRoJ54tkYXCdqLMO4c=
+	t=1750126344; cv=fail; b=cNUDkGOL5A2Yi3ZOz6bCBNwqmX3bwtJ9JFpClJMkNHHfXotx1fjK9lmtO7W7zXshwQQLB6MeJLLcEyJz0tHZX7c7Nu95sxV5ercjr+Mv3NgQfwHGgoqdPrOuNf4J3rbbdjI1C8KXpk0DCABZIinKw+MpnAxpWX1bB3m0v37/t8k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750126305; c=relaxed/simple;
-	bh=y0x8pSK61lKfI5iO03VdL5pO219c737mRCrlcKn+K7g=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tQyyW/g92EXA+mwAWOm32982208Y8QBUnlHmnio6goO4WJFgaoL5sPrvUAzO72OmVGR6PsdqA0LpaMX6RImADKDHiclnTLX9NJxIDxrDipr5yRR3bDjFyRHSi6SLYUb12UDZb7SlZBWqJ8pMg6mR3jVKXrGEMLYRYgKKR9TNe1M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GKZdam000961;
-	Mon, 16 Jun 2025 19:11:24 -0700
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11on2051.outbound.protection.outlook.com [40.107.236.51])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 4794c3td9h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 16 Jun 2025 19:11:24 -0700 (PDT)
+	s=arc-20240116; t=1750126344; c=relaxed/simple;
+	bh=S4e+9XzKlIrvOyINOii8CzkVw85HJlNYfb1g8CE3TNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=pGha40Xk8ikaseVB3tJeLhiKzRbzRSw6skMz1nv6nwDtvra/kfv+Yu9wu7rLCv/G+Xbyq+48lU7mmabokMD1JLk787iI/1S/YfdoMB9kHFgEm5toTdXDSKlVeG6tTmY0cRNXXNmVnsegzgV8MTVLgg3jouHvjCJZQ7XKNMNxBys=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PdK+Ye/c; arc=fail smtp.client-ip=40.107.243.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PdK+Ye/c"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vCL0xgfNi9mxWVbcYeLSxF1cDD+8RP6dLHLs092Dm//iyPTKiPqfCBjW2R0+096fC2DD/IYPAaXtIgpIRLMMYWRVXW4j54oCfs9XJHsqpZpkYpQldf05D+hbwMmsW7IbHHx7agxhca+QnRAvAwdKA5mq4Gg/FS0WzRckXobaN0HwMvUJA6XhpYCgf7HQ63rhUa9H6w2PrQkWS3ra/5NOk6z7dE/Jxs+q4+4IAqH6QFJ9XeAQ2SkjHtkz8Aau7wQTma0wkQjJolfcYVGfbmLy2ysX/eA93Aht4rJop6WFYQoE7XNAgFIzpqfjkW1lO5jaHFkoXXUdWZK6NAU/gz0Kvw==
+ b=E/Cail8Hw6g5RZ6dPXfVMCkJ7UGSUmt8JlzqIs/p37hXaP/HijZ0YqArwQjI/FJ8meJIKFRJntFTLn28ufXvsdIg4lKZBNRAKolWTXDVOdFJrRezGvtDW1Oas4Mru2blcT/O7Htp2IuaG5BTRUiZaypqoZQ5/Mb6wHJtXAwGbnPKALMthfPwNUaTR2M3X0OMJ2Po4XWcvMHlv/xfNNWJ1devMaAPUmPZV2K/z+TgpLK5LpOj6AF5aqFQh81sFyJ0TW1R1R79VC4tWaPz21KBF03XFj/KBliOce73aqRnf4FuHWYHlCDbqYuCk94N4Wf4MCWnw2/iyC0lkunwAxX96Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FaB0g54WbdWksxHWjQH5IDIfIsVQfQ3Lg7BOuDPcB4E=;
- b=Jt5ESF1dzCXm6H8NlQ4ondzOkwPMupsSQCwCG0wvdutMIjTkNcYUMeWf9w9VQGymK6SFH5MH3r5briTVyfXUMf4lurhB6PPegosXsukJQK2bd0g00DwcHnzKhvJAC0fSBeEY5mSXhehnN6ckEwjBCYNEMn3qLmXELIIcyP1Cb299VPjy9VhyLI090YCwnDrvoctqyRptkLUqO/QpafhfspfDmX6Bp5Nam7NyZnv+ZHC1mM3NynBtGOU9N26gf/EO0tqFwpuWdUHJseZZGlTRkk7YripTRo5ew/+OpS3K6E51zyy7BEyJlAaJgCjFyCDNRZXVZkQvsNJlLT0L4dokgg==
+ bh=M+0JL0aR9rRnZRzTMB3+7v30NXsFAPoqHbiJEOTBb5c=;
+ b=Vag5IMNJ9caD5rka1dAMlOOdfmraLUKgHUDi9nD+AvwTVhqPYPprCmBvszrRBmRJpTvUHIg1iSJFYrad73FVtK+XyNHJuw09X2ytj8LXbwaaISL+F/HXKUcxo9XZ+x8RTH6D5C9raMWZ/qfKa4d3LBaPmvoDTEajwfEAXvG4bRglGAZAjB50QyCgBEeh/ERf4ErifEbJwBgRXOuxao7/ALyxE2qL/UruP7VKt8wWA5Wm2BP9hd8wHG2ONohdbQmlI74UpmqhO9snt/VNZB/fPK79Yx7m6ls5fH9NsN0rUJetgytm2BRuArvmLsKzSOyQmc9nWU7h8tdKgzSdaxBsOA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::81d) by PH7PR11MB5861.namprd11.prod.outlook.com
- (2603:10b6:510:133::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.27; Tue, 17 Jun
- 2025 02:11:21 +0000
-Received: from SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
- ([fe80::71b1:1b01:cf93:1447]) by SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
- ([fe80::71b1:1b01:cf93:1447%5]) with mapi id 15.20.8835.019; Tue, 17 Jun 2025
- 02:11:21 +0000
-Message-ID: <dc9e8093-6439-49e8-affd-44accd234a1a@windriver.com>
-Date: Tue, 17 Jun 2025 10:11:16 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: fix slab-use-after-free when
- clk_core_populate_parent_map failed
-To: mturquette@baylibre.com, sboyd@kernel.org, dianders@chromium.org
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250425052358.684022-1-yun.zhou@windriver.com>
-Content-Language: en-US
-From: Yun Zhou <yun.zhou@windriver.com>
-In-Reply-To: <20250425052358.684022-1-yun.zhou@windriver.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TYCP286CA0236.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3c7::12) To SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
- (2603:10b6:a0f:fc02::81d)
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M+0JL0aR9rRnZRzTMB3+7v30NXsFAPoqHbiJEOTBb5c=;
+ b=PdK+Ye/cUK8uQa1WKNiVGhpBnuBTKMU5j1L5ZCpDIQ2CrBMdjjp0ldHK5mKQJN8KyS+KGfsmA8Ym5R5CQcT8KfJ98kblbnpT8YQsQUFMnluyhbt625Ed5QeSNeAZBdmGHMv7z2oILePYsD81J4xcfA0GgQnZ6O7csUVW0udI/ovEXfwpjqcThv+Af+6QQNWSJCHmLcy2YRGo+OMLsbvW/XOcOXYJiQPm3ihgdo9AM7XVQwz4LwjWTQePczMhA/ClZ7x9fzUFTaWXaB3b7gOC2yPW+p003bBzl5Oq2Pzwl7guwKSi1yi8uQXh5Ey0xl4ZL5e2QhxRfLwiVZa3UlviRw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ BL1PR12MB5921.namprd12.prod.outlook.com (2603:10b6:208:398::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.29; Tue, 17 Jun 2025 02:12:18 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 02:12:18 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org
+Cc: David Hildenbrand <david@redhat.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Oscar Salvador <osalvador@suse.de>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Brendan Jackman <jackmanb@google.com>,
+	Richard Chang <richardycc@google.com>,
+	linux-kernel@vger.kernel.org,
+	Zi Yan <ziy@nvidia.com>
+Subject: [PATCH v10 0/6] Make MIGRATE_ISOLATE a standalone bit
+Date: Mon, 16 Jun 2025 22:11:08 -0400
+Message-ID: <20250617021115.2331563-1-ziy@nvidia.com>
+X-Mailer: git-send-email 2.47.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0699.namprd03.prod.outlook.com
+ (2603:10b6:408:ef::14) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,269 +72,245 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PPF2F7FC4EE6:EE_|PH7PR11MB5861:EE_
-X-MS-Office365-Filtering-Correlation-Id: a9247de1-11c6-4464-066f-08ddad4440ba
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|BL1PR12MB5921:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64ac10c4-fb95-4017-d8cf-08ddad4462b4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c2pVeldRM3NyMlVKT1dWNVdYQ2pLQjNzMUdSaGFVVWFNamhBRmJOMTY2cDMr?=
- =?utf-8?B?RmM0K0dZRjVtbmJadE80MFlZNTI5blMxMkpuMisvZXBYbjlxV0RuM2NhNGVr?=
- =?utf-8?B?S3MxbUdyOTB1RFppRndRZ2ZQZEQ3SjhycDhqT3BDNUN0UDNWTXJiNEgzR2ht?=
- =?utf-8?B?K3I5eG1uMG1wTEcxMmtqMXdhTkUzYVhvWFB6bFY3NThRY2RQblRsazh2TWJl?=
- =?utf-8?B?aXpZZS95Qys5SUloU01SR3ZQc1E5cHNmeXFSOGNNam51RnM1UmlVd0NwUDg1?=
- =?utf-8?B?R3BXeUtrS1U2ci9mUGNLVW1aUUN5bkYrcjZLandHMm9Id2lqQWdidXZlV05J?=
- =?utf-8?B?SHIxREZJK1I2eFJqd2RGQmR2OFhWWHBIOGt3b1lzYkt2UGE3QlJ2OElqMFVz?=
- =?utf-8?B?S1RCVUZyeFJ2UVVCczgvWUVOa2RwelV5ZXhNUFUwUVNXTXg0NzJVaVpQZ3dn?=
- =?utf-8?B?Ym80ZzE5VzU2R3hyK3JndnNpY3lTUHJJUnBXVGl4MVdIdlJ0WDdJbGYxUERo?=
- =?utf-8?B?U003dlM2VmxFSXZ0M2xQNmhaVzJRUmZlb2trQ084dXp2Yit0SHpWUEVGR3ls?=
- =?utf-8?B?UlJJSDdlblB1VUpCekFsV085SXF4UGhIY3VJbmV0SG1OL2ZKM2ZHanRXQ2tO?=
- =?utf-8?B?YzdKR01vSWxRMjE0Y2tmQWt6clA1cGQ3TmtZelQrZmFvYnNUYXZsbUR1QUNY?=
- =?utf-8?B?UVVpS2RXZEFDa2YzeVFqaHRiaUwra0VudlhEc1FIcjFaT0Riaks3eWtyMitn?=
- =?utf-8?B?YUE1cEJpT0JqOEpOZ1RJM09ZclBST09ZeUxESlFFVVNZZGE3bTFEdkhva2Qx?=
- =?utf-8?B?TzFQaHF2TlVDeGJIQXlLc1QyRUxOWEJCM2xXVlpicWpJU3NHNFpMbXVUejV5?=
- =?utf-8?B?L2tMcGdHUjREbE9TREtxVDZudmwySUh3TitGS3NVR3dVemluNWVRSUdxV1l1?=
- =?utf-8?B?dTdNVStrS1FhUURNY28zb0FKUHhzSkhhUzNKMGtacEFjdkRZUFh2OXF6d1RD?=
- =?utf-8?B?dTZleEs4eUhSaXdBVXh6Y2hqRWFKZEFQVHl3dkloajV4ZHlTR2dvNk9FUU55?=
- =?utf-8?B?OTNTcTY2WkJNMU5VbGp2K0l6Q044K002bGFEcVZYdVEwKzE3NDJlYmVTSm5L?=
- =?utf-8?B?T1k4QTdtQWExQjhtSDJneEpjZHFBdFBVL21jeTNsUm01UHpkWjZNZGkxQjRG?=
- =?utf-8?B?ZFVkc052eStDdWExS0NaYmQ3bFEwZnJFQi8rVTJnWHhScU4yZ0VjR2hJbjFJ?=
- =?utf-8?B?bUdrRVVja3UrWHZkbi9YOWtXNjFiWHFQVEtITHhvc0M2cDZlZUphd0NPZ0lQ?=
- =?utf-8?B?dmducmdaOTQvYk9GMFB6Ty80dUZxbHZucllmd2VSbkZPbUJSWFdIaitWY3ln?=
- =?utf-8?B?MjVXVVpWL25tMTh3ZGpUN1JoRXpiS1Y4VndOWVJrQlFXcDkzdUM3YkE5RnQ4?=
- =?utf-8?B?MU1Jc2JWbzZ6SlVud05qRnZLUXBuUFI5S0E3Z3d1YXRoQzUzVEtHYzVzak5w?=
- =?utf-8?B?RXI3UnQ1MUhRWHBaRk4xZmM3L1RZb2RDdS9FOGNXcTVwZVFnYXlTNEx4M25V?=
- =?utf-8?B?cnd1R1pQSXNkaU5aV0pOdW1PenlRNDB2bi9zckhOU1FMcEZFWTJGNFVBdjJY?=
- =?utf-8?B?eEVOUU5IeEVXelZFUzJIR3JEcVUzWHJEcDl0ZVVZK0IyN3ZnQXZpQitUb29U?=
- =?utf-8?B?c05qUC83YWtaT2htNGpkSWZndGhhWGJvTkxmVGZNY0hXVjRkcFJhT1BUQUNt?=
- =?utf-8?B?RDNBcVhJZjVUWGV5cVROQkptMDh3ODFBNlprSk92VEVuQWNFVVBrNUFQdThh?=
- =?utf-8?B?WjBhQmhhMzRiWVNzL0t0SytzbTJ1dHFKejJFRm0xTlpXV3FrZHY5UXVzQ1dK?=
- =?utf-8?B?Y2pXTHBtdldFSzR4NDhkd2NpQlBTVlRUZElOUXFiSlNaWVc4MzF1bEpCdVBM?=
- =?utf-8?Q?Mo6zakN+cfg=3D?=
+	=?us-ascii?Q?bL5jOnQ/40vVIEye+LuyJ06TuHat/Lvqcc6NaHwgeV9ZwPpdlSOIhOQOeT3c?=
+ =?us-ascii?Q?Ij7uNNaKRaNdrobe0njd5/uQpx5qL6YOg8qBrYxVyipSo1LYIX2v+TgQG00O?=
+ =?us-ascii?Q?SC0z5EjciGtb1k/1UmMUvk4FoeSwzTTYtsZ9yJE1vJPFZONQgZHza36RjfeJ?=
+ =?us-ascii?Q?pX0IZrnqFCiHibzKeNUqJCysCDQ0elCMuk39zQA9VhEyGntdvFTVtzyiNOHD?=
+ =?us-ascii?Q?+DJrMta4QiIMA5PYApGkhbcMBu/n4n+oTsdRjUoMDFAs1oLvXgLOszKdq5Sr?=
+ =?us-ascii?Q?/B/F5cB0sKIyVI84/AdFm9uEiVLnbdZDu0ZqQGdWNotcpzqiKr+D04QugqV6?=
+ =?us-ascii?Q?AmxwzHhcB6KJgZRnJpMno+0I8ahmj0tE9Sdb0EQNyEshzevZv/ZWbUFa2LvO?=
+ =?us-ascii?Q?sSZr1hLEiGxgoAkNUTCHcbfg/pZigaHYgXhVuEshbzD4Vq9k63wDTTpGFgEO?=
+ =?us-ascii?Q?M76cTrN3MSWv/Lpp9W9Hyy/nVWzMXow6m8ug6J3S/pCA4uQf7R+Ge+NdpAAK?=
+ =?us-ascii?Q?9LiI92KMzBnbMoJVULUgNH3QdCbuGcenWt/RdAgFQErvRzGVA73Nk5kx5s8j?=
+ =?us-ascii?Q?eskMBrrl7Wit3HuoYRPAChhOtI/1GkUIxnelvm+1XfwV2vOxDh2Mxvs/8nE6?=
+ =?us-ascii?Q?0vA6TINqS4VsClamLtD4Klbv6p0cj4Mu6sZieMQRxzMZOkO6esHd8hyuAjdn?=
+ =?us-ascii?Q?MtYusshW4wyJUJ5TVPSWbpdxHeCD9wBAddmJ8oq73NFvHOTINq6D0cIgJGdz?=
+ =?us-ascii?Q?2FWwW8CvzRi38mc7ysveHxFgm5cA9/Yohbz5/6rcs99fzlEgoRgx/7JI47I0?=
+ =?us-ascii?Q?6EHJCnqvDfSdwPEe2/Yj2gt4OvgEmwZBFojBapbWG0AjFILsAvUWEGcXJg8y?=
+ =?us-ascii?Q?qPT7Bameqslp6auCzh1M+ccvTDLMtvAP3NMmyiL94tT0i4jdaA9tB8JA+CJ5?=
+ =?us-ascii?Q?EIU8aHm5GW7GIGsRXLHoKYotavTaKIuUQXnQdXRAaN6U9r8y83/kASC3Dwua?=
+ =?us-ascii?Q?0+sSAzjPuYE0Ibb5ff/GIkVV9XLcCHuYofjRC6Vox5PWujQPaLf6lflIezbn?=
+ =?us-ascii?Q?dIrtPm5pXdbtgJtsezCBEU9HZsizkdFNM3wK7nHB/R1gOPuaFVB+KGqXONVw?=
+ =?us-ascii?Q?HQMsYDqgy3StJAr2yRHehmDbk1ZlDwj4PMgGtr5jvnGubSYDnu3CWNE07y/e?=
+ =?us-ascii?Q?RTZxmMB8WdvfgctwCs6gJJ/A+LD1bwKzlXoH+hM/cQ2JEvdDsR0WU1WhA5ap?=
+ =?us-ascii?Q?a+cdax0Y8Ro6AHvxRLOncenDSwoZe421HNnGyp5tf+yktGp6sNrd2Dx/gtFQ?=
+ =?us-ascii?Q?VaHD/X83BF+Osc+X+nPXqJLO91N7rRxBieYjPGjVZDMHXn+8tSGVhXi66+Hk?=
+ =?us-ascii?Q?yRNYTVnjMXCK1iWgd75SWFZmgrzuZdwWhYRWnbfRW8ZfChoklUyar3ZVBh8L?=
+ =?us-ascii?Q?YEWOCL+gqFg=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K0lCejFtVm5nMng4QldvbWpnakRpbnlXWXJIVUJiaDhVQjNST05YcllCSkhM?=
- =?utf-8?B?dndNL0xmeHRDdXJudlY3S1dhZHk0aXZkTmxBUFAyT2IySnE4WEFkUFI5dnM5?=
- =?utf-8?B?T0R3R2FzdXIxdjlyTkZENm5CQnVxVEdMRmhYdCsyKzBYRWluUnU5eGIvcHFh?=
- =?utf-8?B?YnhZa1NsYlpwanI2ZDdsbVVSNFNWajROc1JoSytCaEpEV2xEWGJWd2tRK09j?=
- =?utf-8?B?SUl5RjVrQ1VwbHcxWlZVSlVFTU5aUnN3bUo4ZHVzc2UzUk1GdWNHMUFuWXha?=
- =?utf-8?B?NzJML0E5RjFrSEIwZVZ3UTZpSDJuWlRETXVPVzhLbVdwMzJ0dlNkeUxoUlJW?=
- =?utf-8?B?UzZXSS9JU3lYRDhYUCtwdHVPSzVHei9ZWjRpV2VuSnFkTG93azVZYjV2TUZ5?=
- =?utf-8?B?WnJ4RHZFem9aN3UxUGg4L3RGMTdraTNsUkFJVzh4eEx3NFp0RkxNVFZ1d3VC?=
- =?utf-8?B?azZkdm9YcEpQV3pnRzcza1E1b3ZoQ0ZqUW9xWGQ4K1pZQ0VPdmlEQXJjUHBT?=
- =?utf-8?B?ekhjQmk0aXBNMWNvUm1xN2RKbERzcVFxZktXZFBVdUE1dUtKaldSaEluNnZr?=
- =?utf-8?B?clQyVGw0U3ljbEwvYkIzSUwzRTZtbWl0eW01b1MrTWVyQWdKZmxMNGdyNDhS?=
- =?utf-8?B?R3Z3MlR2WFdoT0xiTmZJeEwwekNDZU5McENqOTJjYzlicnNsNnFOVWZCNnUr?=
- =?utf-8?B?MzZON2tGUHgzbytYV2FDR212RXpGcmdoeTZ3SnFCUmlpUVFBUmY4Z1B4ZzVD?=
- =?utf-8?B?RUkrd3g3MTRna1JjSTUyNjJWdmNkWnRoN0xUVFpCZTZIYURQajJOaWxhcHBN?=
- =?utf-8?B?VWRrTEx2cmFPcFNwbS9XRWZXdkdmZi9Ca3BGTmI4S3RKS1pTQTh0M0lDV1Bn?=
- =?utf-8?B?ZmVmemk4T3JKb3dCTko4eC9iMHkySzR2Sm9tcmpaUVlQNmtjTWpMWExCdnps?=
- =?utf-8?B?VllHOTJ1czRoUERPMDBaUk9RRjRlVkdTL042d3pTbGdzVlZ3ZDZ4T3BUMEMw?=
- =?utf-8?B?SGtZNmljVG1WZXN1L1oxL0drWU5XRmdwbVNiaDBwU3VKeDBYeVRjckgwTnh5?=
- =?utf-8?B?S2lac3pXV2NZSG40Z2xBME9CcTNLU212dmQyVGNjSStkQXNaRExpaVJjNjdy?=
- =?utf-8?B?ajdpb2tGRVpVOXBYNHVodlduZWN3M1dibkVoeFU0VFBsMVU3RVcvbVgyWVg5?=
- =?utf-8?B?UmdqK1NDa0JKaGtNOXJMUGVjQkZEMCtndVFGRWxySkFSeUluUVM1SnpOZU1S?=
- =?utf-8?B?VDM5SDMybVBiOVIxRy9vVW1ScHNzZklrVTRYTERzMGdaN3YyTC9meHBOalUw?=
- =?utf-8?B?dTFYUjd0UWppWEZLR0FhbDArTCs5LzEyZW1TUEtWUlgvWnBhR3Z6Q3A2Qkxx?=
- =?utf-8?B?azd2YzZnVE52elpSejhpZ00xbytBL2REQkc0Q1pLSWhZUzluMk5ET1pWbjVn?=
- =?utf-8?B?c3JYdnhLU1hFZDJhUk1XZ2twbzB0VzQvZEpvWW84YlpGSEZVdUdyR1JjOUFr?=
- =?utf-8?B?b01FR2VGdEgyU1F1RnFPK1M1TjdwME5ueEthWlA1eWdGNG1YNTZYb0YxbjRz?=
- =?utf-8?B?eWd3NW9xeDRCdGZvSFNhSFdPMVJwelVabmhrYW5CVklxNTJUV3cyc2Y4Y25D?=
- =?utf-8?B?bU10OHV5ckRYSEVNazRodXdjTjd3cnBKVDBPd0VCM3dwOE14bmV0bXRvQUtH?=
- =?utf-8?B?OERaZVBQK1dWY3BQVlIwa0JYMWNSTktXRUQwNnVPMituZGZtMXRjNFUxdEY3?=
- =?utf-8?B?TysxSGxHYlVVdDFwQ2J2dzJSeDg4Qm5pQWZSczRRbXpOc3pQemhUK3NqVmJF?=
- =?utf-8?B?ZnY2K2U5MGlwNTBHUm9TVE4wRUJpY1JKWUUzdXd3K09zcUJzSzZkdzhJRWtm?=
- =?utf-8?B?NEs4L1BIY0hvNUtJVVNLaGN3OEtlNCtyQ2pVMDl2SHl1ajdGYWhKMXpwd3Fo?=
- =?utf-8?B?clpTdGpTY3JaNzIyRGVlQXpBTS9mZnl1WXVOQUluTGpCRER6NXo4MFlyU2J5?=
- =?utf-8?B?YTVGaXVLcTBwS0hiWkt0VG94VEhUZGEzOCtqQjBlWTFmeExHZkxFc1dSbEZF?=
- =?utf-8?B?MTF6aXRWNVg1UGtJNS94TGYvZlpxZjFmWkRzTDZXM1phejhmSGhxTExvNllC?=
- =?utf-8?Q?UJ+8FsYCtAjzZk8o/BkmGVZ1v?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9247de1-11c6-4464-066f-08ddad4440ba
-X-MS-Exchange-CrossTenant-AuthSource: SJ5PPF2F7FC4EE6.namprd11.prod.outlook.com
+	=?us-ascii?Q?2j7HzXNQEsjS1Y2P+w+i1t8VNw/Bmr7BhpwUq8Yt+TL6T6CjMjYOfkNsMfY7?=
+ =?us-ascii?Q?/cXwyW02YXmKgQp2xxJGY1ChAxFlfWgJV0d7nCe2EKpVt8wwU2TrAdZz4BXZ?=
+ =?us-ascii?Q?EiQtotNt48unUTo3gnFsvdIBHcbY1XLOS8BGeyfnv1lGRLvqy3MNC2aK4VLV?=
+ =?us-ascii?Q?0pbHxmoahrn0MA630rC/Xs+dAU1hzSDOpI1Pcmd7ic6hHw2EKJNlgNLeFZIp?=
+ =?us-ascii?Q?V70YeE9Hx8vssZol0f7gYG1E0WXKDVpUsZceYBaXUZEWGSDZ+EvSNCVSRK5u?=
+ =?us-ascii?Q?ytR5FvX/IYw77aZnEjpm+rOxQepzfWlpobczKLzK1eSRKWOvu189MsWMAqv7?=
+ =?us-ascii?Q?lFSfYMRa6Tppz7c1LmaCMqDCIdnVluqXi6URsYJKo2m533LquShX+kCqeDXb?=
+ =?us-ascii?Q?gfFGwmFSP5nyNz3y6JVnM8OSzCJ5t2jts12stPnrG77xRK7YkA8t3iVpglVD?=
+ =?us-ascii?Q?KIZR/Tm9f5j5u8toEZ83gy0mV9bTbqAiHVsdRqVqJ12/RXebW2t5KxD/tf3L?=
+ =?us-ascii?Q?rUQQor0Fhu/cKN+MSj246mfyjYyfvBsptC5pnJV5yFighpQdWpcq0+3lbCT0?=
+ =?us-ascii?Q?zdA6OFwoON/iOps4XkwrM9FDFBWuDp5y/CSS5Y/yO2Mg0aSciGMnCjF/qpA4?=
+ =?us-ascii?Q?/kuoM89MZmpiRkZDo3jdW1emvs9qAwFI5aJer/se71kimllpUZ3oYhp6cTNW?=
+ =?us-ascii?Q?J2B0jcJv/2DZSrj2mYv+oX2CKIOen7MY65AvdMKJ4lY3pjz4N1tqbFyb9qsF?=
+ =?us-ascii?Q?86tBaushTxzsunAARaFfzXKBWUFk8EJPY2iI7aro1juaTTR9uS7TPvoKFTu9?=
+ =?us-ascii?Q?KwBUpjDaT+Q8G3o51N5QxTO0QjdhHIMtn4Jnk8DLSf+KPFIzufyPIpqKIrRT?=
+ =?us-ascii?Q?rDrehV7jL6bp8Pwq+24RX2cUcCwUVrRvaxf7W3TjelAsWGOpeFiemcmGDBHa?=
+ =?us-ascii?Q?mQBn/AutnE0wBiSsiyqb5VMjjDX6jIvCwmXgAJhLIm0WZqZM3RrjoMGKROxe?=
+ =?us-ascii?Q?jugF7+wPvKavw0gahvEXtctSPIOQ+RlrILig6G583yX/c32gDXPnS3Ge6HdU?=
+ =?us-ascii?Q?rrxskh1r9UCZ8IoVjeVGWEYtJzl+vNGOi16/C60PYJuPr1LBq+6YEV1QumYy?=
+ =?us-ascii?Q?o2sQxxFWHHpjTXM72rlDR/z09ftzdOLYT9ZpcSdARaO+i6demsjAJzSDeMSs?=
+ =?us-ascii?Q?6KjVic3ix9NW5oHxp6j/tMS83q/6ZznUvbqLMJbw+PB5uE9Js8uKwcrsaQJU?=
+ =?us-ascii?Q?y9mCk4CVp1AXX/AUFgBL2SPl4Cum3gyGxJw4OUE/KNcbQf3gsKPXITl4zHui?=
+ =?us-ascii?Q?of3lFtlz0uXnsnMkphFJbVrxYfOjs6woMJEyf9v6G/qunYD5udI6qI67bOKo?=
+ =?us-ascii?Q?8VaqdIqbM8/RZtXyzp0RR2Q2WqQQ+qE+SOFvDVJBPg0jf+8VC7Ps8ZucnbQL?=
+ =?us-ascii?Q?RYxsYQbM9zBkcn2Zcvd7vnc80vliCt8WwXYCAZTy9u6LOiCSyOaigeWJs1S3?=
+ =?us-ascii?Q?3BJmvwvkdsR05f5VYOu3P5EJRIwCu0kEhz1HPDJEzlnmNSqoQulEI7IJG50a?=
+ =?us-ascii?Q?VFouImqeiPRHZsw11cejV+iLdSwnwSz97umKpIe6?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64ac10c4-fb95-4017-d8cf-08ddad4462b4
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 02:11:21.4610
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 02:12:18.5053
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bER9G60z5KNpwJgc+b3A/YnEfgV58orvSKylxZJZdysKF3spsYpmeca7i3kNEStC64+TinvdxBdLIxdqgf194Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5861
-X-Proofpoint-ORIG-GUID: y_QuplDsM7QQRCWOzQJeJ0t5IAXIsx1a
-X-Authority-Analysis: v=2.4 cv=b9Gy4sGx c=1 sm=1 tr=0 ts=6850cecc cx=c_pps a=0de+TxTBwdPc9w0nPmKirg==:117 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
- a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=t7CeM3EgAAAA:8 a=2vv1v26NUIOuIaJv1hcA:9 a=QEXdDO2ut3YA:10 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: y_QuplDsM7QQRCWOzQJeJ0t5IAXIsx1a
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDAxNyBTYWx0ZWRfX3DdLm+L8UP5R DM/PW7QSSLo9pdMA6chIDDfXATAwYIyaDuNmdzCq9BBqGzYDWSPw5kWiLkIjbOTLcoHQ9RX3D+L 8z4yiO203OnbbRbQN/01Xsf5Mo0ctlYT0//quhw2CmJqVQTmN5mNAPw3JnMwE1+Wil3DqWNyCE8
- 0lLU6Pcwgfay3AWLO+ctqUlVP2hSFAzI7o/lRwGibZVMpY/bzUgT67klUWz9vuNPFKdGjx9VXgK yCkUJ3s7z3nCQf84IWuCJ7mQZArSj9iXMcrduc3Aqy5+sPNkSSDZP14Cl+Mk819VYqXpSRX7Vp2 Y//pbNlAEZ7XhmFJ0/BnNvaBNHahQ5gnNKdHXP0ue7JSxRPMB70RaUQQf3H91K5BG99eAj5hAWL
- rtyYkF5gNdmv+qOLUI0XJ55fz4dEcdEFhZE06g3MpB5uMKWbFbpYHrf0hsYMrJPWXHu7XeEZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_01,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- spamscore=0 clxscore=1011 impostorscore=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.21.0-2505280000 definitions=main-2506170017
+X-MS-Exchange-CrossTenant-UserPrincipalName: B1cEXznd4VINuRj/xVBDJQMG72AODFH4X5p1T/DW/RDVEraWEJBAAOb4zId67GWh
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5921
 
-Hi Michael & Stephen,
+Hi all,
 
-Can you please talk about your opinion on this patch?
+This patchset moves MIGRATE_ISOLATE to a standalone bit to avoid
+being overwritten during pageblock isolation process. Currently,
+MIGRATE_ISOLATE is part of enum migratetype (in include/linux/mmzone.h),
+thus, setting a pageblock to MIGRATE_ISOLATE overwrites its original
+migratetype. This causes pageblock migratetype loss during
+alloc_contig_range() and memory offline, especially when the process
+fails due to a failed pageblock isolation and the code tries to undo the
+finished pageblock isolations.
 
-Thanks,
-Yun
+It is on top of mm-new.
 
-On 4/25/25 13:23, Yun Zhou wrote:
-> If clk_core_populate_parent_map() fails, core->parents will be immediately
-> released within clk_core_populate_parent_map(). Therefore it is can't be
-> released in __clk_release() again.
-> 
-> This fixes the following KASAN reported issue:
-> 
-> ==================================================================
-> BUG: KASAN: slab-use-after-free in __clk_release+0x80/0x160
-> Read of size 8 at addr ffffff8043fd0980 by task kworker/u6:0/27
-> 
-> CPU: 1 PID: 27 Comm: kworker/u6:0 Tainted: G        W          6.6.69-yocto-standard+ #7
-> Hardware name: Raspberry Pi 4 Model B (DT)
-> Workqueue: events_unbound deferred_probe_work_func
-> Call trace:
->   dump_backtrace+0x98/0xf8
->   show_stack+0x20/0x38
->   dump_stack_lvl+0x48/0x60
->   print_report+0xf8/0x5d8
->   kasan_report+0xb4/0x100
->   __asan_load8+0x9c/0xc0
->   __clk_release+0x80/0x160
->   __clk_register+0x6dc/0xfb8
->   devm_clk_hw_register+0x70/0x108
->   bcm2835_register_clock+0x284/0x358
->   bcm2835_clk_probe+0x2c4/0x438
->   platform_probe+0x98/0x110
->   really_probe+0x1e4/0x3e8
->   __driver_probe_device+0xc0/0x1a0
->   driver_probe_device+0x110/0x1e8
->   __device_attach_driver+0xf0/0x1a8
->   bus_for_each_drv+0xf8/0x178
->   __device_attach+0x120/0x240
->   device_initial_probe+0x1c/0x30
->   bus_probe_device+0xdc/0xe8
->   deferred_probe_work_func+0xe8/0x130
->   process_one_work+0x2a4/0x698
->   worker_thread+0x53c/0x708
->   kthread+0x1b4/0x1c8
->   ret_from_fork+0x10/0x20
-> 
-> Allocated by task 27:
->   kasan_save_stack+0x3c/0x68
->   kasan_set_track+0x2c/0x40
->   kasan_save_alloc_info+0x24/0x38
->   __kasan_kmalloc+0xd4/0xd8
->   __kmalloc+0x74/0x238
->   __clk_register+0x718/0xfb8
->   devm_clk_hw_register+0x70/0x108
->   bcm2835_register_clock+0x284/0x358
->   bcm2835_clk_probe+0x2c4/0x438
->   platform_probe+0x98/0x110
->   really_probe+0x1e4/0x3e8
->   __driver_probe_device+0xc0/0x1a0
->   driver_probe_device+0x110/0x1e8
->   __device_attach_driver+0xf0/0x1a8
->   bus_for_each_drv+0xf8/0x178
->   __device_attach+0x120/0x240
->   device_initial_probe+0x1c/0x30
->   bus_probe_device+0xdc/0xe8
->   deferred_probe_work_func+0xe8/0x130
->   process_one_work+0x2a4/0x698
->   worker_thread+0x53c/0x708
->   kthread+0x1b4/0x1c8
->   ret_from_fork+0x10/0x20
-> 
-> Freed by task 27:
->   kasan_save_stack+0x3c/0x68
->   kasan_set_track+0x2c/0x40
->   kasan_save_free_info+0x38/0x60
->   __kasan_slab_free+0x100/0x170
->   slab_free_freelist_hook+0xcc/0x218
->   __kmem_cache_free+0x158/0x210
->   kfree+0x88/0x140
->   __clk_register+0x9d0/0xfb8
->   devm_clk_hw_register+0x70/0x108
->   bcm2835_register_clock+0x284/0x358
->   bcm2835_clk_probe+0x2c4/0x438
->   platform_probe+0x98/0x110
->   really_probe+0x1e4/0x3e8
->   __driver_probe_device+0xc0/0x1a0
->   driver_probe_device+0x110/0x1e8
->   __device_attach_driver+0xf0/0x1a8
->   bus_for_each_drv+0xf8/0x178
->   __device_attach+0x120/0x240
->   device_initial_probe+0x1c/0x30
->   bus_probe_device+0xdc/0xe8
->   deferred_probe_work_func+0xe8/0x130
->   process_one_work+0x2a4/0x698
->   worker_thread+0x53c/0x708
->   kthread+0x1b4/0x1c8
->   ret_from_fork+0x10/0x20
-> 
-> The buggy address belongs to the object at ffffff8043fd0800
->   which belongs to the cache kmalloc-512 of size 512
-> The buggy address is located 384 bytes inside of
->   freed 512-byte region [ffffff8043fd0800, ffffff8043fd0a00)
-> 
-> The buggy address belongs to the physical page:
-> page:fffffffe010ff400 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffffff8043fd0e00 pfn:0x43fd0
-> head:fffffffe010ff400 order:3 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-> flags: 0x4000000000000840(slab|head|zone=1)
-> page_type: 0xffffffff()
-> raw: 4000000000000840 ffffff8040002f40 ffffff8040000a50 ffffff8040000a50
-> raw: ffffff8043fd0e00 0000000000150002 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
-> 
-> Memory state around the buggy address:
->   ffffff8043fd0880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->   ffffff8043fd0900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->> ffffff8043fd0980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                     ^
->   ffffff8043fd0a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->   ffffff8043fd0a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-> ==================================================================
-> 
-> Fixes: 9d05ae531c2c ("clk: Initialize struct clk_core kref earlier")
-> Signed-off-by: Yun Zhou <yun.zhou@windriver.com>
-> ---
->   drivers/clk/clk.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-> index 0565c87656cf..3f89ed51d4a4 100644
-> --- a/drivers/clk/clk.c
-> +++ b/drivers/clk/clk.c
-> @@ -4242,7 +4242,6 @@ static int clk_core_populate_parent_map(struct clk_core *core,
->   	 * having a cache of names/clk_hw pointers to clk_core pointers.
->   	 */
->   	parents = kcalloc(num_parents, sizeof(*parents), GFP_KERNEL);
-> -	core->parents = parents;
->   	if (!parents)
->   		return -ENOMEM;
->   
-> @@ -4283,6 +4282,8 @@ static int clk_core_populate_parent_map(struct clk_core *core,
->   		}
->   	}
->   
-> +	core->parents = parents;
-> +
->   	return 0;
->   }
->   
-> @@ -4290,7 +4291,7 @@ static void clk_core_free_parent_map(struct clk_core *core)
->   {
->   	int i = core->num_parents;
->   
-> -	if (!core->num_parents)
-> +	if (!core->parents)
->   		return;
->   
->   	while (--i >= 0) {
+In terms of performance for changing pageblock types, no performance
+change is observed:
+
+1. I used perf to collect stats of offlining and onlining all memory of a
+40GB VM 10 times and see that get_pfnblock_flags_mask() and
+set_pfnblock_flags_mask() take about 0.12% and 0.02% of the whole process
+respectively with and without this patchset across 3 runs.
+
+2. I used perf to collect stats of dd from /dev/random to a 40GB tmpfs file
+and find get_pfnblock_flags_mask() takes about 0.05% of the process with and
+without this patchset across 3 runs.
+
+
+Changelog
+===
+From V9[8]:
+1. changed acr_flags_t item prefix from ACR_ to ACR_FLAGS_ to avoid
+   conflicting with drm/msm hdmi_acr_cts enum.
+2. converted kexec_handover to use init_pageblock_migratetype() too.
+
+From V8[7]:
+1. made init_pageblock_migratetype() set right migratetype, when
+   page_group_by_mobility_disabled is 1.
+
+From V7[6]:
+1. restored acr_flags_t and renamed ACR_OTHER to ACR_NONE
+
+From V6[5]:
+1. used MIGRATETYPE_AND_ISO_MASK in init_pageblock_migratetype() too.
+2. fixed an indentation issue in Patch 3.
+3. removed acr_flags_t and used enum pb_isolate_mode instead in
+   alloc_contig_range().
+4. collected review tags.
+
+From V5[4]:
+1. used atomic version bitops for pageblock standalone bit operations.
+2. added a helper function for standalone bit check.
+3. renamed PB_migrate_skip to PB_compact_skip.
+4. used #define MIGRATETYPE_AND_ISO_MASK MIGRATETYPE_MASK to simplify
+   !CONFIG_MEMORY_ISOLATION code.
+5. added __MIGRATE_TYPE_END to make sure migratetypes can be stored in
+   PB_migratetype_bits.
+6. used set and clear to implement toggle_pageblock_isolate() and added
+   VM_WARN_ONCE in __move_freepages_block_isolate() to warn isolating a
+   isolated pageblock and unisolating a not isolated pageblock.
+7. dropped toggle_pfnblock_bit().
+8. made acr_flags_t an enum and added ACR_OTHER for non CMA allocation.
+9. renamed pb_isolate_mode items to have PB_ISOLATE_MODE prefix.
+10. collected reviewed-by.
+
+From v4[3]:
+1. cleaned up existing pageblock flag functions:
+   a. added {get,set}_{pfnblock,pageblock}_migratetype() to change
+      pageblock migratetype
+   b. added {get,set,clear}_pfnblock_bit() to change pageblock
+      standalone bit, i.e., PB_migrate_skip and PB_migrate_isolate (added
+      in this series).
+   c. removed {get,set}_pfnblock_flags_mask().
+2. added __NR_PAGEBLOCK_BITS to present the number of pageblock flag bits and
+   used roundup_pow_of_two(__NR_PAGEBLOCK_BITS) as NR_PAGEBLOCK_BITS.
+3. moved {get,set,clear}_pageblock_isolate() to linux/page-isolation.h.
+4. added init_pageblock_migratetype() to initialize a pageblock with a
+   migratetype and isolated. It is used by memmap_init_range(), which is
+   called by move_pfn_range_to_zone() in online_pages() from
+   mm/memory_hotplug.c. Other set_pageblock_migratetype() users are
+   changed too except the ones in mm/page_alloc.c.
+5. toggle_pageblock_isolate() is reimplemented using __change_bit().
+6. set_pageblock_migratetype() gives a warning if a pageblock is changed
+   from MIGRATE_ISOLATE to other migratetype.
+7. added pb_isolate_mode: MEMORY_OFFLINE, CMA_ALLOCATION, ISOLATE_MODE_OTHERS
+   to replace isolate flags.
+8. REPORT_FAILURE is removed, since it is only used by MEMORY_OFFLINE.
+
+From v3[2]:
+1. kept the original is_migrate_isolate_page()
+2. moved {get,set,clear}_pageblock_isolate() to mm/page_isolation.c
+3. used a single version for get_pageblock_migratetype() and
+   get_pfnblock_migratetype().
+4. replace get_pageblock_isolate() with
+   get_pageblock_migratetype() == MIGRATE_ISOLATE, a
+   get_pageblock_isolate() becomes private in mm/page_isolation.c
+5. made set_pageblock_migratetype() not accept MIGRATE_ISOLATE, so that
+   people need to use the dedicate {get,set,clear}_pageblock_isolate() APIs.
+6. changed online_page() from mm/memory_hotplug.c to first set pageblock
+   migratetype to MIGRATE_MOVABLE, then isolate pageblocks.
+7. added __maybe_unused to get_pageblock_isolate(), since it is only
+   used in VM_BUG_ON(), which could be not present when MM debug is off.
+   It is reported by kernel test robot.
+7. fixed test_pages_isolated() type issues reported by kernel test
+   robot.
+
+From v2[1]:
+1. Moved MIGRATETYPE_NO_ISO_MASK to Patch 2, where it is used.
+2. Removed spurious changes in Patch 1.
+3. Refactored code so that migratetype mask is passed properly for all
+callers to {get,set}_pfnblock_flags_mask().
+4. Added toggle_pageblock_isolate() for setting and clearing
+MIGRATE_ISOLATE.
+5. Changed get_pageblock_migratetype() when CONFIG_MEMORY_ISOLATION to
+handle MIGRATE_ISOLATE case. It acts like a parsing layer for
+get_pfnblock_flags_mask().
+
+
+Design
+===
+
+Pageblock flags are read in words to achieve good performance and existing
+pageblock flags take 4 bits per pageblock. To avoid a substantial change
+to the pageblock flag code, 8 pageblock flag bits are used.
+
+It might look like the pageblock flags have doubled the overhead, but in
+reality, the overhead is only 1 byte per 2MB/4MB (based on pageblock config),
+or 0.0000476 %.
+
+Any comment and/or suggestion is welcome. Thanks.
+
+[1] https://lore.kernel.org/linux-mm/20250214154215.717537-1-ziy@nvidia.com/
+[2] https://lore.kernel.org/linux-mm/20250507211059.2211628-2-ziy@nvidia.com/
+[3] https://lore.kernel.org/linux-mm/20250509200111.3372279-1-ziy@nvidia.com/
+[4] https://lore.kernel.org/linux-mm/20250523191258.339826-1-ziy@nvidia.com/
+[5] https://lore.kernel.org/linux-mm/20250530162227.715551-1-ziy@nvidia.com/
+[6] https://lore.kernel.org/linux-mm/20250602151807.987731-1-ziy@nvidia.com/
+[7] https://lore.kernel.org/linux-mm/20250602235247.1219983-1-ziy@nvidia.com/
+
+Zi Yan (6):
+  mm/page_alloc: pageblock flags functions clean up.
+  mm/page_isolation: make page isolation a standalone bit.
+  mm/page_alloc: add support for initializing pageblock as isolated.
+  mm/page_isolation: remove migratetype from
+    move_freepages_block_isolate()
+  mm/page_isolation: remove migratetype from undo_isolate_page_range()
+  mm/page_isolation: remove migratetype parameter from more functions.
+
+ Documentation/mm/physical_memory.rst |   2 +-
+ drivers/virtio/virtio_mem.c          |   2 +-
+ include/linux/gfp.h                  |   7 +-
+ include/linux/memory_hotplug.h       |   3 +-
+ include/linux/mmzone.h               |  21 +-
+ include/linux/page-isolation.h       |  47 +++-
+ include/linux/pageblock-flags.h      |  48 ++--
+ include/trace/events/kmem.h          |  14 +-
+ kernel/kexec_handover.c              |   4 +-
+ mm/cma.c                             |   2 +-
+ mm/hugetlb.c                         |   4 +-
+ mm/internal.h                        |   3 +-
+ mm/memory_hotplug.c                  |  24 +-
+ mm/memremap.c                        |   2 +-
+ mm/mm_init.c                         |  24 +-
+ mm/page_alloc.c                      | 321 +++++++++++++++++++++------
+ mm/page_isolation.c                  | 100 ++++-----
+ 17 files changed, 435 insertions(+), 193 deletions(-)
+
+-- 
+2.47.2
+
