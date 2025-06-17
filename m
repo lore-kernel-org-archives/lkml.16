@@ -1,195 +1,89 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3326342A99;
-	Tue, 17 Jun 2025 05:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE1A6C2D1
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:22:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750137729; cv=none; b=OwtRpqC3bS8sfHaZJAxb7N6MdFaDrR2ZeQuJZ1Jk3ZWLoM4ZeGGj1ApjMF470dFt9EjD/AvOXh0OHDL++spjoiznHpgtpk6hraRMWKrspUCd1OhPfIF9oqw9Igrd/FZyy5u0CFd0wVJWys62A56xBUnCD4WBuvYvsfxelD4CDI8=
+	t=1750137779; cv=none; b=d+KnGtu3vtpa97Dq/xqxxtcNwflX87dQqDn2PDqetj1JZKOY72TTUsM8jnw0V8Mb6IkYJFNRkVjJfcq86X9lcJKVrs0f+qUtJPrmuGMU/GqQjj73I81gmN3GW3mgQr+To0I/5tCyRZcFe7rwUW0ynynrrKNPaWDI4f9AAYEHn68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750137729; c=relaxed/simple;
-	bh=cRnTftsQUjF6W+K/7/X6ySP9QjlBwNHRD1tSe1u4PtA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rxlR2Kn5BNL8SfBJYmn8x2x5XWAuM1LARU/W9xhKWBVs+QHBTetwvBTimA90SW5hEWofCl+Q1FHBvs4e5o4Sjzy5b45HQLytrTQUX+k4pokA4zrCxe7dkXHJMoj9q47CJw76CJrG1XJDIgcEdpiFyOjl1vHYsffxHSeXmE0ySWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [127.0.0.2] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowAAXjNpn+1Bo4TccBw--.27922S2;
-	Tue, 17 Jun 2025 13:21:44 +0800 (CST)
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-Date: Tue, 17 Jun 2025 13:21:02 +0800
-Subject: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for K1
+	s=arc-20240116; t=1750137779; c=relaxed/simple;
+	bh=tFRSsMCPVFwL8Dbfsu98Pw3xF+UngvzyuxWLkGDBlVQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=VIyAdbzOVauxgaUd1yXmEHSdog+un9nV9ihLTvyy0v+9DU14Ds/ysp5tRbG0cKwLgwr/XZ6vR+Wb/0jSXQDq9RQL+o1OTZ7Y/wrSeWlP9XWmwJbZekP2UMVnb04W8v9z4GksK3y5UEesaPcKWkAo9yT5IthMTeNXIi6yh3EaqB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcCl3JUF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcCl3JUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9AFBC4CEE3;
+	Tue, 17 Jun 2025 05:22:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750137778;
+	bh=tFRSsMCPVFwL8Dbfsu98Pw3xF+UngvzyuxWLkGDBlVQ=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=VcCl3JUFDqh3Wv2Jv9k36Ydx18j59hpGR2r9C36Kr/XszRMP8iFC64mv2SkbK7TEz
+	 oocpefpn9KkpQcoWbl9F0MuiQd8bxi0nUnyB1Oc82guB7FqlM5bfcm+sb1zrlnKKTY
+	 Fa0FiLBrlMF9E+d1iPdyvfhU7d5xkeSp7HujsjMPsenkSBQngzgEEzoSQppt8uzqV/
+	 PMYfTr511qeTSu9edTStthARWVHe3eT6JBTnzv5nA+EYx64LkVMO2/OKL/WDoOXyeu
+	 7l0DSPSc8Ij/7k9OEVTidFjiAz9PdUxrG24VcxWVllJhirndbKN02uhJuwjQS/6ioI
+	 RdMfU39jN8auQ==
+Message-ID: <6ccfdae1-13f7-421d-b7d3-76883c2e7b8b@kernel.org>
+Date: Tue, 17 Jun 2025 13:22:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-kernel@vger.kernel.org, bintian.wang@honor.com, feng.han@honor.com,
+ niuzhiguo84@gmail.com
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: avoid non-section-aligned size
+ pinned file generation
+To: wangzijie <wangzijie1@honor.com>, jaegeuk@kernel.org
+References: <20250617035711.2342823-1-wangzijie1@honor.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250617035711.2342823-1-wangzijie1@honor.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
-X-B4-Tracking: v=1; b=H4sIAD37UGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0Mz3WxD3ZTcRN2k0uLUYt2itGTd8swCXeOkVPNEA8M0E/NkCyWg1oK
- i1LTMCrCx0UpBbs5KsbW1APFqdbdrAAAA
-X-Change-ID: 20250616-k1-dma-buses-rfc-wip-3be7a01f47c8
-To: Yixun Lan <dlan@gentoo.org>, Guodong Xu <guodong@riscstar.com>, 
- Ze Huang <huangze@whut.edu.cn>, spacemit@lists.linux.dev
-Cc: Vivian Wang <uwu@dram.page>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org, 
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Vivian Wang <wangruikang@iscas.ac.cn>
-X-Mailer: b4 0.14.2
-X-CM-TRANSID:qwCowAAXjNpn+1Bo4TccBw--.27922S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFy3AFy3Xr4ktFyfKFyDJrb_yoWrCrWrpr
-	WDAFs5KrWkJr17AwsxZrW2q3W8Ja1vkFWkGr1DGry5ArnYqF4Utr4Ut343WFyUJr1xXwnI
-	qFsrAr1kKF1DA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GrWl42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYku4DUUUU
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-The SpacemiT K1 has various static translations of DMA accesses. Add
-these as simple-bus nodes. Devices actually using these translation will
-be added in later patches.
+On 6/17/25 11:57, wangzijie wrote:
+> To prevent non-section-aligned size pinned file generated from truncation,
+> add check condition in setattr.
+> 
+> Signed-off-by: wangzijie <wangzijie1@honor.com>
+> ---
+>  fs/f2fs/file.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 6bd3de64f..72f7d1b4a 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  {
+>  	struct inode *inode = d_inode(dentry);
+>  	struct f2fs_inode_info *fi = F2FS_I(inode);
+> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>  	int err;
+>  
+>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+> @@ -1047,6 +1048,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>  			!IS_ALIGNED(attr->ia_size,
+>  			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+>  			return -EINVAL;
+> +		if (f2fs_is_pinned_file(inode) &&
+> +			attr->ia_size < i_size_read(inode) &&
 
-The bus names are assigned according to consensus with SpacemiT [1].
+Do we need to consider attr->ia_size > i_size case?
 
-[1] https://lore.kernel.org/all/CAH1PCMaC+imcMZCFYtRdmH6ge=dPgnANn_GqVfsGRS=+YhyJCw@mail.gmail.com/
+Thanks,
 
-Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
----
-This is my concrete proposal for representing DMA translations for
-SpacemiT K1.
-
-For context, memory on the SpacemiT K1 is split into two chunks:
-
-- 0x0000_0000 to 0x8000_0000: First 2 GiB of memory
-- 0x1_0000_0000 above: Rest of memory
-
-DMA-capable devices on the K1 all have access to the lower 2G of memory
-through an identity mapping. However, for the upper region of memory,
-each device falls under one of six different mappings. The mappings are
-provided in this patch as simple-bus nodes that device nodes should be
-added to.
-
-This patch is an RFC because it is not meant to be applied, or at least,
-not certainly meant to be applied. Instead, this is an attempt to come
-to a consensus on how these bus nodes should look like.
-
-More specifically, I propose that the process proceeds as follows:
-
-- Firstly, relevant parties agree on these bus nodes given here.
-- After that, each time the first user of a bus appears, the series
-  should include a patch to add the bus required for that driver.
-- If a driver being submitted uses the same bus as another one that has
-  been submitted but hasn't yet landed, it can depend on the bus patch
-  from that previous series.
-
-For conventions regarding coding style, I propose that:
-
-- #address-cells and #size-cells are 2 for consistency
-- These bus nodes are put at the end of /soc, inside /soc
-- These bus nodes are sorted alphabetically, not in vendor's order
-- Devices are added into *-bus nodes directly, not appended towards the
-  end with a label reference
- 
-The K1 DMA translations are *not* interconnects, since they do not
-provide any configuration capabilities.
-
-These bus nodes names and properties are provided compliant with
-"simple-bus" bindings, and should pass "make dtbs_check".
-
-Remaining questions:
-
-- Should storage-bus exist? Or should drivers under it simply specify
-  32-bit DMA?
----
- arch/riscv/boot/dts/spacemit/k1.dtsi | 53 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-index c0f8c5fca975d73b6ea6886da13fcf55289cb16c..efefed21b9fa1ab9c6ac3d24cd0cca8958b85184 100644
---- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-+++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-@@ -562,5 +562,58 @@ sec_uart1: serial@f0612000 {
- 			reg-io-width = <4>;
- 			status = "reserved"; /* for TEE usage */
- 		};
-+
-+		camera-bus {
-+			compatible = "simple-bus";
-+			ranges;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-+				     <0x0 0x80000000 0x1 0x00000000 0x1 0x80000000>;
-+		};
-+
-+		dma-bus {
-+			compatible = "simple-bus";
-+			ranges;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-+				     <0x1 0x00000000 0x1 0x80000000 0x3 0x00000000>;
-+		};
-+
-+		multimedia-bus {
-+			compatible = "simple-bus";
-+			ranges;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-+				     <0x0 0x80000000 0x1 0x00000000 0x3 0x80000000>;
-+		};
-+
-+		network-bus {
-+			compatible = "simple-bus";
-+			ranges;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-+				     <0x0 0x80000000 0x1 0x00000000 0x0 0x80000000>;
-+		};
-+
-+		pcie-bus {
-+			compatible = "simple-bus";
-+			ranges;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>,
-+				     <0x0 0xb8000000 0x1 0x38000000 0x3 0x48000000>;
-+		};
-+
-+		storage-bus {
-+			compatible = "simple-bus";
-+			ranges;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+			dma-ranges = <0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+		};
- 	};
- };
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250616-k1-dma-buses-rfc-wip-3be7a01f47c8
-
-Best regards,
--- 
-Vivian "dramforever" Wang
+> +			!IS_ALIGNED(attr->ia_size,
+> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
+> +			return -EINVAL;
+>  	}
+>  
+>  	err = setattr_prepare(idmap, dentry, attr);
 
