@@ -1,72 +1,132 @@
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421552E718C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4185B23535C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165575; cv=none; b=Jid7TR1ORY9p3dcxd5YlO9HxX09TBwPrPw34e1JoN1tf0Fqy3be2uJKYraExZ/kMN6kRAzSiWa3o0IsRj88HlDrXihQh0cpYDWw2uC1oceOaFMqptH22S5uxKyeBUeXQ9W86GgENXxKmi4yVy0DAKJc5IU/gX6UcQbgA68acI/4=
+	t=1750165647; cv=none; b=q+VGuuqhLmGxeXntnRoGcbuT27pDH15i9XtW+sxLZs9yB8I0mgIICE1jVaxwnEoyRWD4UYSU+EPU5I8nUqVsfhOvLfKg94W7kJ6R0XhRYxhJKOdOGIT4GWuW+iHvjkttWVgPrbrDid0IBxN23XRQJ2uGPXqjKAQ3vbw5Va3Cb7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165575; c=relaxed/simple;
-	bh=W51mU7qZLodURk2i5xa8G6m3EieBsoHBQDnhnGOYS4I=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=bqYn25g5V/UB+G2wjm9MWwHRXPyqdMLxrcX0ixTo0mnhXXIvC8gP5SIjzwSTs2dH0U1O/fLLqF9ySm1ivu7EC8pmOzkfpKTzNY87IrgSRCdntnQgV35r+ut+KjIXchfhntET1cDyNyzHP3i120MUWXYs9O1ZuAFf1LttkInqlOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.161.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-60f48d86076so4329384eaf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:06:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750165573; x=1750770373;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Vs/ukJhTRWhCFXvyAhwm/6YRQW9BrrKpMErIgv7ibU=;
-        b=qw1OeBk1E98sBv/fqDN22h2PWjrhiEym9BP6vtXM9lGXvHkQMXKIGy2e8bKB2xkpie
-         HjO1XMus/B+fd7BEp6NS2FTwJ/LtsKq0qqUP768ehkvw8mZ9clv3OK5fpAaxec6RDt97
-         r7LOf91Vxk/K16zi1DKw4iJJqE3IRvSYTGGqxdnud8o2E5j+/xjLty+RzMNM3P/t00i6
-         Vi+b5YV2VR54itdyzIRFn0ibHBML/PO8VOhjD3QuMbaVmukbV3ocwz4EutBHcwPLQj4E
-         anmfZenP2qEQRk4RD2ga8A5/E8c1D93m/yQA1tTGu7qOESh4XerEGAt/NqDqxFpkpnVq
-         +QHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWJA4A1d0idhNOgkD2hrY1vHx/RFdUFmnZdn6U5E6z9bLxb+oQW5xa6I9crVeowGHXDaSsHW92R5pczTI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCgJBjsn30WFOTuubc/pskjwFJFtn0W9B6PeMZZfzvly6QYFb5
-	MCEV35hN8HtseRsBRDNIksza9r6ese6JMzrxSf08mQgMucp/heUz/TuAbHYSJ6/yiFML9xbgv8+
-	TZnNjg4GCswTVOFzH9uRAJiluEAWAVFUA1zgJiYnGEkrVr6LPuKWcWIwwg9c=
-X-Google-Smtp-Source: AGHT+IFj7r4b3ezOHm5uSZPtYPrSf3hNmwPZVWzh99U5SDKlROXmXAFNqNFTxggq1yGcXHwUS/AJNvAJP3tl8V8ge9S6Ue8lj8lo
+	s=arc-20240116; t=1750165647; c=relaxed/simple;
+	bh=j36Zta3izKvKxPSQvXAlWrAFcq3pvsGWqUpxUn+IHaA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=Xn4eNAUuyfC1tPt5fGdnsMhAjSlkLKGfj+V+PK2QN75czd3AsbM4HsK4tZrjf8KXytB8Djo5FZnBf3khOBPC1mK2w8c7tLrYxad7BUAXSb60roFl9ybVyjWPy+mg1/DEDBolFQ51jZIOBZrKTKoF+5w9HAOkfVJ79t8Of4c5ufg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QCxAKO3r; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QCxAKO3r"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250617130006epoutp02fccdc3c7e0e67e7bb19500718e742602~J1fuIczt12463524635epoutp02L
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:00:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250617130006epoutp02fccdc3c7e0e67e7bb19500718e742602~J1fuIczt12463524635epoutp02L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750165206;
+	bh=p/dqSkNurVPjaHecprDGz3Q7UCZTQntvnPImFH09uak=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QCxAKO3rqCs6zXqbnXeRbqOr/kswRZw7Je1feadMowKqEQCakrclqiNF1C1KWztJb
+	 M5JOd0ZmGi1sn053MrJZGxe1G1QbvJXYbvE8GhlLglSJTHAztwF/v+EquRsvJcYZJF
+	 nnlViZtVLCx9UzTMYvMlo2zU43vhObpuePjaOfmI=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
+	20250617130005epcas5p1eb3c1872102cbf29b2677c75d352e79d~J1fthDYmL2452824528epcas5p1r;
+	Tue, 17 Jun 2025 13:00:05 +0000 (GMT)
+Received: from epcpadp1new (unknown [182.195.40.141]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bM6R95pvkz3hhT7; Tue, 17 Jun
+	2025 13:00:05 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617124037epcas5p2efa5e8ac19df70cdeb7330404eed385f~J1OtftcNc0930409304epcas5p2u;
+	Tue, 17 Jun 2025 12:40:37 +0000 (GMT)
+Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
+	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617124034epsmtip26c7fab31e6dc2ec8ac78c94bee6a01dd~J1Oq-xB2b2558225582epsmtip2C;
+	Tue, 17 Jun 2025 12:40:34 +0000 (GMT)
+From: Neeraj Kumar <s.neeraj@samsung.com>
+To: dan.j.williams@intel.com, dave@stgolabs.net,
+	jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
+Cc: a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
+	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
+	alok.rathore@samsung.com, s.neeraj@samsung.com, neeraj.kernel@gmail.com,
+	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
+	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
+Subject: [RFC PATCH 11/20] nvdimm/region_label: Export routine to fetch
+ region information
+Date: Tue, 17 Jun 2025 18:09:35 +0530
+Message-Id: <1353170030.261750165205802.JavaMail.epsvc@epcpadp1new>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250617123944.78345-1-s.neeraj@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:174e:b0:3dd:920f:d28e with SMTP id
- e9e14a558f8ab-3de07cb6664mr136490605ab.13.1750165561815; Tue, 17 Jun 2025
- 06:06:01 -0700 (PDT)
-Date: Tue, 17 Jun 2025 06:06:01 -0700
-In-Reply-To: <c655293b-b2da-497b-98a6-05399fd120f8@kernel.dk>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68516839.a70a0220.395abc.021b.GAE@google.com>
-Subject: Re: [syzbot] [io-uring?] WARNING: ODEBUG bug in io_sq_offload_create
-From: syzbot <syzbot+763e12bbf004fb1062e4@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	superman.xpt@gmail.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250617124037epcas5p2efa5e8ac19df70cdeb7330404eed385f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20250617124037epcas5p2efa5e8ac19df70cdeb7330404eed385f
+References: <20250617123944.78345-1-s.neeraj@samsung.com>
+	<CGME20250617124037epcas5p2efa5e8ac19df70cdeb7330404eed385f@epcas5p2.samsung.com>
 
-Hello,
+cxl region information preserved from LSA need to be exported so as to
+use by cxl driver for cxl region re-creation
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
+---
+ drivers/nvdimm/dimm_devs.c | 18 ++++++++++++++++++
+ include/linux/libnvdimm.h  |  2 ++
+ 2 files changed, 20 insertions(+)
 
-Reported-by: syzbot+763e12bbf004fb1062e4@syzkaller.appspotmail.com
-Tested-by: syzbot+763e12bbf004fb1062e4@syzkaller.appspotmail.com
+diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
+index e8f545f889fd..0edcb6b558e5 100644
+--- a/drivers/nvdimm/dimm_devs.c
++++ b/drivers/nvdimm/dimm_devs.c
+@@ -283,6 +283,24 @@ void *nvdimm_provider_data(struct nvdimm *nvdimm)
+ }
+ EXPORT_SYMBOL_GPL(nvdimm_provider_data);
+ 
++bool nvdimm_has_cxl_region(struct nvdimm *nvdimm)
++{
++	if (nvdimm)
++		return nvdimm->is_region_label;
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(nvdimm_has_cxl_region);
++
++void *nvdimm_get_cxl_region_param(struct nvdimm *nvdimm)
++{
++	if (nvdimm)
++		return &nvdimm->cxl_region_params;
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(nvdimm_get_cxl_region_param);
++
+ static ssize_t commands_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
+diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
+index cdabb43a8a7f..9a5d17c4b89b 100644
+--- a/include/linux/libnvdimm.h
++++ b/include/linux/libnvdimm.h
+@@ -325,6 +325,8 @@ int nvdimm_in_overwrite(struct nvdimm *nvdimm);
+ bool is_nvdimm_sync(struct nd_region *nd_region);
+ int nd_region_label_update(struct nd_region *nd_region);
+ int nd_region_label_delete(struct nd_region *nd_region);
++bool nvdimm_has_cxl_region(struct nvdimm *nvdimm);
++void *nvdimm_get_cxl_region_param(struct nvdimm *nvdimm);
+ 
+ static inline int nvdimm_ctl(struct nvdimm *nvdimm, unsigned int cmd, void *buf,
+ 		unsigned int buf_len, int *cmd_rc)
+-- 
+2.34.1
 
-Tested on:
 
-commit:         100934ee Merge branch 'io_uring-6.16' into syztest
-git tree:       git://git.kernel.dk/linux.git syztest
-console output: https://syzkaller.appspot.com/x/log.txt?x=1284c370580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4130f4d8a06c3e71
-dashboard link: https://syzkaller.appspot.com/bug?extid=763e12bbf004fb1062e4
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
