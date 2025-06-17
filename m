@@ -1,104 +1,144 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-lj1-f201.google.com (mail-lj1-f201.google.com [209.85.208.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F055123E35B;
-	Tue, 17 Jun 2025 05:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4AFF23B624
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750136932; cv=none; b=e5b6aDMC+AKLYudLjXHon0NIXP3LGVQYRC5Glpx+KkA76dnXoQ04ec6zZDu2rYWpOEhwIOPMTQz6/fDFJJ/ohNRXV2ehCw1PUVa1ywy+RV+Af23ftzFlJiBorZXqOI9l52BbE/AhoAakY0QmJJxSYb/Pn31wWqlEIJ+xnqGNnAE=
+	t=1750136937; cv=none; b=mcQCuWhY5ATLpKjzbd6mTV7HQQ9GtrbscGoIcfmWl0JHGXZDCdumD5cSw8DYCrb3jSfzpJK1ZowjYwL0ecO8zIpDDH+/I08FVMULt1opiPXRFpk2/wOAsDuo5i3fDozIsdikVGFmoKl4IpNnxpDDyy1SaCgk7Js/MAsFE9P+jqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750136932; c=relaxed/simple;
-	bh=jn+AZcoS+gknzUx30CvE3/KJcpJXhjiNQQiH43qHxgI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h7ZpdGgk1hxIMYGAmpSzv0gKnDuswlp8MS7gjaxslxxsBrzu3m3LAkcIuf8DCExOd6qRjLaiMKOc5Vw+LNESlAoLmGbKfxJ6wP0q9ip6YNe64vGL1zvIo1byzeylwH0nai2iopVKiiD7Ne2+//cUUL9junKOf8PtikBkkeBEZeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FyX1Kb6H; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750136937; c=relaxed/simple;
+	bh=YoOKZWDe3bgJ0VNg0eea3oWFhS1QY5GJUZB2g124DaM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=SbVDvDDdtGagp4NVUFJvqJtUvzXsoIcZ3gJtWobJlbRfz2vvYyoSJLg1OCj+1CBkC7DxgtdFDJsCqdJg24hHL0B83LgXkoKYQQ+7divwaCg1+gFudjf/0GLGq1SarOWPdr59R7m/SKFms+LW+kRtcQIv7vnqMUi0p4mGvEBp2dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--khtsai.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z2Nd4Hg5; arc=none smtp.client-ip=209.85.208.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--khtsai.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyX1Kb6H"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b2c4e46a89fso4139233a12.2;
-        Mon, 16 Jun 2025 22:08:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z2Nd4Hg5"
+Received: by mail-lj1-f201.google.com with SMTP id 38308e7fff4ca-32b5226e697so2093801fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:08:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750136930; x=1750741730; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ORQSZScH5iwOR20pfQirho3FdyqdaURMxGfN/YBE6uA=;
-        b=FyX1Kb6HkJkuRHbB38tyB5PgIrCJqM/PNGfcr9ShPhesgrxZY3AD1yomxIYTuL2Xlw
-         Y3JqA7Rdtjcxtq9xTOYkqUlJUCiHoBe4u+3dvwBNhLEiM7IuGjDBYW3XLOzk8YeRnPF1
-         8Iw3ppX6eDvf+b29rJepGNuAkrdESCIM5Y2CENtvAHfsN0P55LASwI7iksRAd7LC8KNU
-         196t5O6cRnqN8hYURmoGNui9of5NmG2u4cw4ejzLM8E1OzknX23f0h5K4p+bXZ0u1jEJ
-         BkvA5bMKTnZbJiFvsy2xlxZ+3ay0NAbWeSiwRTard9RF3QZpAvLNGHq8zIi6prKj6Opb
-         bmyg==
+        d=google.com; s=20230601; t=1750136934; x=1750741734; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1f3cBdI8xhkfW1PldN25AHnH1CARokeiI9s7jI03ZKc=;
+        b=z2Nd4Hg5HqvusKgpB32GJ1XMbAfQqFY5ncKCgWb3l7CqCyVvlXnKZX8Lp+1Z8M7FtO
+         0fqXzxfT9iZ/0j+b+kSe8CVleph3y4kUTClpT2BleMkDc5Cey9Fn2rLRjyG4yMJMAlBP
+         Vi/Ymt/1q8z/7WdBke5bioCNP2Po5/zpaCKY6Z/WnLrtu7pwF7enTGE2tf8ZsVXXdupc
+         /T2ruzjPW1FGIQfemPWzr35xaqvoyd/Np4z8DFmlaOlEWGIdbP14hGMAwOgs5dQT+/Fx
+         j/l8cmhBXtByPbrcoOf3kDE8nRmPrO9K9v0HBXNMIuprIbofklnu1QrY520dCUcXZKFM
+         cmnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750136930; x=1750741730;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ORQSZScH5iwOR20pfQirho3FdyqdaURMxGfN/YBE6uA=;
-        b=OvBAm+0omD19sk5oQpXBgHtgdsZkFw8Dxo03cE8En21MJ7qZH6H/WI3/skWhHQUiDn
-         KpNHbEv67OmjSiyyWQE/w7Em/5uPsHwEhVIgYKt6Op6rLI6ltf/T8fGoG9JpvcGKSCvj
-         eU1GoLssKhL8nQFwWDjkyE5yciv4lbBSMOhESSV0Xy/lXltMJbUi7tu9zfqP6WKaemXC
-         WZrUcDIGFXLVCxp39D61h4RnKNQ4pQgxT0Mp+MJAZgfjyIezGquokAtA4yqWtKg/Zv3J
-         Q4+onoVERN4PiSzJ+SpALsgi/ZDIMKDTs4vv0wxEZPuOVUc3382hqb/KzOSXT65CArHK
-         cwuw==
-X-Forwarded-Encrypted: i=1; AJvYcCXURPp3y7EwLGZx+Z2clcXAqc6TZDvMSi5dzzZsc+Qcuk+ki2XjnQzGZDwuG5bWcVNwGLKi53FaNlx9jgE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzS8bRzMpb8stEIdg/hUWNw6M+Xoix7ssbTy7/diVUUMYpil4AT
-	ki8pBGxBFOECKSk9O4FIM1QuGYvPQTu4pWOV2dsZK6mR9H1lVpobuIlr
-X-Gm-Gg: ASbGncupAJ65qnS+pAqr80f6+lLq3K6Vuro+loMrvaO9rwqBP8rPEJ/lR+QVWf7Lqy4
-	Ua10XwlUhbo6Dgn5NO9RKmk0XdovT9fuwlfLa3gMVgn1Zr2S2PYbSZ313S3j/jjv8HHJeStS3ee
-	0/yDLi38LGnrJTQ1Q1YLgDntFXxUrvQzNpjAATDVUaLvNuhEm/C1i3/U7BMtW//kZkULaMHrXd2
-	Tc7eL2WdxRijhj/xVJBWWaznEdMGR6ONuBvLoI82UHZpaN5kHeXnns0jKJfKvUnwn+ZHaTGxYhv
-	zhWloY1hid/l0WTma9s6jHT7ZuWbG3b/oA4dlitkSOEU14BpBpDYZ6+eJ+1Nnw==
-X-Google-Smtp-Source: AGHT+IEqDf/C089XDze8DuijQXHRfftyr4C1u9LoRguwB27oUwZ29eFwHxr18ltua7GFqGz7HGzG5Q==
-X-Received: by 2002:a17:90a:e7c2:b0:312:639:a062 with SMTP id 98e67ed59e1d1-313f1daa971mr21369290a91.16.1750136930150;
-        Mon, 16 Jun 2025 22:08:50 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-313c19d1eafsm9712177a91.18.2025.06.16.22.08.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 22:08:49 -0700 (PDT)
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen Wang <unicorn_wang@outlook.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Inochi Amaoto <inochiama@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	sophgo@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Yixun Lan <dlan@gentoo.org>,
-	Longbin Li <looong.bin@gmail.com>
-Subject: Re: [PATCH] riscv: dts: sophgo: sg2044: Add missing riscv,cbop-block-size property
-Date: Tue, 17 Jun 2025 13:07:22 +0800
-Message-ID: <175013680588.1018298.10559632401541865399.b4-ty@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250613074513.1683624-1-inochiama@gmail.com>
-References: <20250613074513.1683624-1-inochiama@gmail.com>
+        d=1e100.net; s=20230601; t=1750136934; x=1750741734;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1f3cBdI8xhkfW1PldN25AHnH1CARokeiI9s7jI03ZKc=;
+        b=veXSTimIeb0Qm05+QYIYwFWuuhADiy7NGtky+s/P4GlhzmYRdXJcpjCm3s/ltKavXa
+         9xTep3PEXnX39SS/ENDV8ENtBgD8wsoxiaNFHZDmarIvaOCSW2mlHQREG24RpCZQxpZE
+         QsIGWSgz2igHNUGTX4UeG2JIZNlEACmtl7SQJ4y/YuslSckyfcyyOL18Lw6sh7vn4xWa
+         4G5KslTno7EmKtZEWmcey/8F+J97gYWEAh9m8H66j9c/LIZNehHwGgFb5g8/BLVRMH09
+         EzqA+aFJ/kkFkjRmMMZc6FgaOcrwRItfcL4YioY5Cd/iSlhAS/jyYtFSvMxNoAawy8xs
+         O6hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUH/6zsygssObVCqpLWSd77yI51a5iwRkBrQR+KwpcT6vT9xhoU6yRrT+sWObvoar2TvvycOsz/CxSMDFg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgQBLY0W+Pm2waW6P162RVWnMiqpvRwF8gHxGHChb81ngTJcpB
+	GEat+qt9QLwVJI+U7gpWgV8htIsUdnlPsps/t7guP6wB8aCnELyLNm1XtL3DFH2kMunUGKTZND1
+	m1BguIg==
+X-Google-Smtp-Source: AGHT+IFYSpjBdNE9GBi8neTP2Ze6oQSxzs3XDaNIiK3QW1FHbqEsFzdEHcQZ/oyym4KEV3rZRaUJ4kszYmQ=
+X-Received: from ljqj16.prod.google.com ([2002:a2e:a910:0:b0:32a:807c:a3a7])
+ (user=khtsai job=prod-delivery.src-stubby-dispatcher) by 2002:a05:651c:154b:b0:32b:4932:d5ad
+ with SMTP id 38308e7fff4ca-32b49508ae0mr28534501fa.10.1750136933782; Mon, 16
+ Jun 2025 22:08:53 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:07:12 +0800
+In-Reply-To: <20250617050844.1848232-1-khtsai@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250617050844.1848232-1-khtsai@google.com>
+X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
+Message-ID: <20250617050844.1848232-2-khtsai@google.com>
+Subject: [PATCH v2 2/2] usb: gadget: u_serial: Fix race condition in TTY wakeup
+From: Kuen-Han Tsai <khtsai@google.com>
+To: gregkh@linuxfoundation.org, prashanth.k@oss.qualcomm.com, 
+	khtsai@google.com, hulianqin@vivo.com, krzysztof.kozlowski@linaro.org, 
+	mwalle@kernel.org, jirislaby@kernel.org
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 13 Jun 2025 15:45:12 +0800, Inochi Amaoto wrote:
-> The kernel complains no "riscv,cbop-block-size" and disables the Zicbop
-> extension. Add the missing property to keep it functional.
-> 
-> 
+A race condition occurs when gs_start_io() calls either gs_start_rx() or
+gs_start_tx(), as those functions briefly drop the port_lock for
+usb_ep_queue(). This allows gs_close() and gserial_disconnect() to clear
+port.tty and port_usb, respectively.
 
-Applied to for-next, thanks!
+Use the null-safe TTY Port helper function to wake up TTY.
 
-[1/1] riscv: dts: sophgo: sg2044: Add missing riscv,cbop-block-size property
-      https://github.com/sophgo/linux/commit/b8518378ffd3469b5ba871ee0210b3c16de45d66
+Example
+  CPU1:			      CPU2:
+  gserial_connect() // lock
+  			      gs_close() // await lock
+  gs_start_rx()     // unlock
+  usb_ep_queue()
+  			      gs_close() // lock, reset port.tty and unlock
+  gs_start_rx()     // lock
+  tty_wakeup()      // NPE
 
-Thanks,
-Inochi
+Fixes: 35f95fd7f234 ("TTY: usb/u_serial, use tty from tty_port")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
+---
+v2:
+- Move the example up to the changelog
+
+Traces:
+[   51.494375][  T278] ttyGS1: shutdown
+[   51.494817][  T269] android_work: sent uevent USB_STATE=DISCONNECTED
+[   52.115792][ T1508] usb: [dm_bind] generic ttyGS1: super speed IN/ep1in OUT/ep1out
+[   52.516288][ T1026] android_work: sent uevent USB_STATE=CONNECTED
+[   52.551667][ T1533] gserial_connect: start ttyGS1
+[   52.565634][ T1533] [khtsai] enter gs_start_io, ttyGS1, port->port.tty=0000000046bd4060
+[   52.565671][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
+[   52.591552][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
+[   52.619901][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
+[   52.638659][ T1325] [khtsai] gs_close, lock port ttyGS1
+[   52.656842][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be9750a5) ...
+[   52.683005][ T1325] [khtsai] gs_close, clear ttyGS1
+[   52.683007][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be9750a5) done!
+[   52.708643][ T1325] [khtsai] gs_close, unlock port ttyGS1
+[   52.747592][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
+[   52.747616][ T1533] [khtsai] gs_start_io, ttyGS1, going to call tty_wakeup(), port->port.tty=0000000000000000
+[   52.747629][ T1533] Unable to handle kernel NULL pointer dereference at virtual address 00000000000001f8
+---
+ drivers/usb/gadget/function/u_serial.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index c043bdc30d8a..540dc5ab96fc 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -295,8 +295,8 @@ __acquires(&port->port_lock)
+ 			break;
+ 	}
+
+-	if (do_tty_wake && port->port.tty)
+-		tty_wakeup(port->port.tty);
++	if (do_tty_wake)
++		tty_port_tty_wakeup(&port->port);
+ 	return status;
+ }
+
+@@ -574,7 +574,7 @@ static int gs_start_io(struct gs_port *port)
+ 		gs_start_tx(port);
+ 		/* Unblock any pending writes into our circular buffer, in case
+ 		 * we didn't in gs_start_tx() */
+-		tty_wakeup(port->port.tty);
++		tty_port_tty_wakeup(&port->port);
+ 	} else {
+ 		/* Free reqs only if we are still connected */
+ 		if (port->port_usb) {
+--
+2.50.0.rc2.692.g299adb8693-goog
 
