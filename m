@@ -1,230 +1,197 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012010.outbound.protection.outlook.com [52.101.66.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D5B28D85F;
-	Tue, 17 Jun 2025 07:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750144995; cv=none; b=RcRUtfMKTHdsMr3OemgLI0lcYTV4h1EHVD43TjQ+B4CN2qwGlegyEdP9AFCJSTt98GsZ7f8H7S6Pd4M/Xh7S8hPXutrttaR9fQJdCn387LLKbPd4PIEkXrUXcsPb+k259vYxN5GNpXC+2vPuJYspW3RCgeHzd2dbPimNqEwbMy8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750144995; c=relaxed/simple;
-	bh=f11hWl4NtA1ewNVG2EX9gYBJpVleqyEr0TOtEB8ZeF8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cum7rpjodru2YRUYpMaMeEGIgbAb7hSEhafXjL33ONEk12P94ZIO+9j1DLK4g9nKzLqHgPDQqn9WlLLnkmgPLgcO0BH1Y756tBHoPCnTO0At1xvnKdiWm+fNk7Z8GePLyx9rUsIL3uPN93OqKOPu7wCVHCG8eZJ3sMZEZzC8buI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MFmHI/y+; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0586C28B3F7;
+	Tue, 17 Jun 2025 07:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750145033; cv=fail; b=T6qENAw+LxJZ1E4W9H42DNNq9nDCRInngatTLuxixtc7kBYwH+gwohOqZ296pqHva5IFPAJQefzm5HFCSb6Zb2u4Q3mnNCASY0Q89xBWuy5vfEyU97dp6YkyUg/UBN2AV2DS/s4a1uZRHO3bqoRlM+hHR5amNN2Qu/moU/P6hnQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750145033; c=relaxed/simple;
+	bh=FgP2sCAu4sS71Fig5Qg9GLoWZhkfbpujpD4/oULdKDs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gD7Ze/3eT+3TQaUVdgwbKEegpf3ES5WHw3COs/IjhRhJ0ri6vrnppmTcfky8tgJZaegTEgOHmT9KDueOGqczKTAN9Z5k1vfpgzFbDuJE0dlOX6Jv6UhcwmCVSidLktw1j3sf1odzEReR3fqMnEUjPohz28ofBlFHNmBRWFWWLQg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=T8kzh5dK; arc=fail smtp.client-ip=52.101.66.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MFmHI/y+"
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id 924EF58267E;
-	Tue, 17 Jun 2025 07:00:39 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DF5FC44459;
-	Tue, 17 Jun 2025 07:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750143631;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c54X4q8yozguoRQqbVkcnFg4rictDWQ/ozHe3OqAcDo=;
-	b=MFmHI/y+p5sJ80eQ4s84rkWG8dTBnsg53y+lIdVMySqFH3kXrdFd96UoQAMwYWdyYhc4mN
-	sIkTqVsjSholwOLcgSFfDnEx/Vcbv7ypWPZJ/zewYOLBXN0gZRoBiGLwb5Bio64J0oJNQH
-	AeTDy7iFaOY7sJTWE7+MNTSny1Zhi0PZESIbbF2Nj/udROiyTPy1M8zAAZ0c/yFM3M0dCP
-	6J4A2sbuaokCGhdOfA9hG2SUyZ4bzwf72NNoCgi6N8XA30zPeLfglUyrI4JLVye3aYhnH+
-	vTjIUiEidjQRcb0QxA7mIgcV2E0foqZxbu4cPQ/ehKmBhAW2Q67QXYF4dKXTcg==
-Date: Tue, 17 Jun 2025 09:00:29 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>, Saravana Kannan <saravanak@google.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Lizhi Hou <lizhi.hou@amd.com>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-pci@vger.kernel.org, Allan Nielsen <allan.nielsen@microchip.com>,
- Horatiu Vultur <horatiu.vultur@microchip.com>, Steen Hegelund
- <steen.hegelund@microchip.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v8 5/5] PCI: of: Create device-tree PCI host bridge node
-Message-ID: <20250617090029.03283ea6@bootlin.com>
-In-Reply-To: <3258d453-f262-4f1c-822b-5310a8346a2d@tuxon.dev>
-References: <20250224141356.36325-1-herve.codina@bootlin.com>
-	<20250224141356.36325-6-herve.codina@bootlin.com>
-	<594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
-	<20250611165617.641c7c09@bootlin.com>
-	<3258d453-f262-4f1c-822b-5310a8346a2d@tuxon.dev>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="T8kzh5dK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=tQCrqmAJo2SM80QYj8RNtVzbx7eLSmCi1crqzAQPBcApjPZ795esD3tZFYjherKj+PcYuONkRsIfxHYwMCSEpFqYz9hyZCjXnMzjfyk5rqfAQ2A1UbqJ369oxU3mddAdUxi5uB93L/QP96DHiJfDokA7AgFmdRNL/gKgGoy95yD/5+JqBo979PuRHQYRPLWx2lD6zs//c/f8u1tJASk26Kn7ak7gJuf/ETigNAANSSlwSuUtBzXJZjqEWv5/qhQfXH4+yCZccVQMu5VbkGQbjP/c7szWW3wMSRDDq2SpCR0cweP32SOsCqrx3LhS01hvShJcgxjKGSS61rrSOx6msQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kgrTl9JX0uY5kshoBGQ1vzmeDJIYPMEAtqc1CzsKXMY=;
+ b=xfLodDIANXq2KNkKGImYpDvt5txQzpgaOaIw+YxHqP+FzZL1XIfUBGCiFfqgJmbs76miRmwc9y/Z0dEEOhpVgBtaJSRTXupBc3tRiydbT5IULdIeBO8Er7qqkB6nc6v7qHK9kYY+x4G9f/wk9hkF4XuV0Tfgr3JmiBM5T1JjGhlJ34QvhfmWSZeo9xkGr0BJDSWTfF2yW4bbgLybff6guyTR9b0Y0mCXGuhkpMV2WPTtqIpj3ZrSooUKG8RACf1cwPyRzURloDkwHJKVzGKoPdo53L4kNKzmFUsOIGAaN3Qm+X56D2dNKjH7NhHVFrhq4Alm4ThLkh0VumqmbCPIKw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axis.com; dmarc=pass action=none header.from=axis.com;
+ dkim=pass header.d=axis.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kgrTl9JX0uY5kshoBGQ1vzmeDJIYPMEAtqc1CzsKXMY=;
+ b=T8kzh5dKtWmdidnROPsFFj789wL71Uri44V1n6icPGD9fOCKzOzcTVhCVhqfAd/K8TMfz7yJHiu873lcDHBCJiOx1xKqP8Ed2lVLYNZT1R2eOKvaUMC1OETGnmOnr//S5Qgq08ScO66mGaR6PzQiBN5NSooT+foOzN7t3bnUSKU=
+Received: from PAWPR02MB9281.eurprd02.prod.outlook.com (2603:10a6:102:330::10)
+ by PAXPR02MB7328.eurprd02.prod.outlook.com (2603:10a6:102:1c6::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
+ 2025 07:23:49 +0000
+Received: from PAWPR02MB9281.eurprd02.prod.outlook.com
+ ([fe80::87f6:1bcb:22bd:b050]) by PAWPR02MB9281.eurprd02.prod.outlook.com
+ ([fe80::87f6:1bcb:22bd:b050%4]) with mapi id 15.20.8835.025; Tue, 17 Jun 2025
+ 07:23:49 +0000
+From: Johan Adolfsson <Johan.Adolfsson@axis.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Lee Jones <lee@kernel.org>,
+	Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andrew
+ Davis <afd@ti.com>
+CC: "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kernel
+	<Kernel@axis.com>, Johan Adolfsson <Johan.Adolfsson@axis.com>
+Subject: Re: [PATCH v6 1/2] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+Thread-Topic: [PATCH v6 1/2] leds: leds-lp50xx: Handle reg to get correct
+ multi_index
+Thread-Index: AQHb3rFidkI/UDwrFEiIPPe9koP59bQGTjQAgACelfc=
+Date: Tue, 17 Jun 2025 07:23:48 +0000
+Message-ID:
+ <PAWPR02MB92819222B0EFBDE604D6798A9B73A@PAWPR02MB9281.eurprd02.prod.outlook.com>
+References: <20250616-led-fix-v6-0-b9df5b63505d@axis.com>
+ <20250616-led-fix-v6-1-b9df5b63505d@axis.com>
+ <eb8c858d-fde8-4916-b36c-f386242b10c4@gmail.com>
+In-Reply-To: <eb8c858d-fde8-4916-b36c-f386242b10c4@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axis.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAWPR02MB9281:EE_|PAXPR02MB7328:EE_
+x-ms-office365-filtering-correlation-id: 58bfb2e3-04b2-47b6-c679-08ddad6fe752
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?F23SqX5noBDMGF83DwxxTRxr3NJAWUcYt0AoePo96xmGBbKdytUZi0wFj7?=
+ =?iso-8859-1?Q?XBOa+eaqOap/mtVxgh17BO2nQd4bITLibMc3QNr3GKcN8/KEKw3uYaUJae?=
+ =?iso-8859-1?Q?eAAENP3ume1+mQCOthSzsg9y+iPOHuTLR+2QPmBn7nCcuk47uysCm5H/NI?=
+ =?iso-8859-1?Q?l/DU1sP6I6m57UPjPeUKiLE9O1TKVQ71VBw2CLjVmEFPSJkjZ73IMH5HoA?=
+ =?iso-8859-1?Q?WLSAuOs4TilouW8Q3ZU5YUQ0xiqenz5pODHyLFvn1h/4gC/87nD/KqFwhH?=
+ =?iso-8859-1?Q?pjoioQc0PUMbL240RkA5ElOaA4t7ANe0DGZrb+t6eU3w3f1PcQcdC0C+7+?=
+ =?iso-8859-1?Q?PtLk2Nzw9pzNfcGhc1tulgCw6r+sVjw/l+MCpkt8ww/ogKRdnwTx/6mlUv?=
+ =?iso-8859-1?Q?oWMEQaJStF5MbOxypogjGKQ4OQOOmyv2qPIEdtvQUxDtYwJlJYP6aPe2fS?=
+ =?iso-8859-1?Q?nj53XC7nQFGv54ceu0c7XYQhVO26tAGMyyRv9Oc62iyUKCphGePQkCUxxc?=
+ =?iso-8859-1?Q?bMIfTfhVqaTu+mvguXc84CKcFLmmtDLjQ2RRBE2tL1M36acXimBCaej6Ee?=
+ =?iso-8859-1?Q?D4wWMquH0cOtduATSIRQf1iyY7EDrdmLLsOZ/tZHeA7r5PcTZjlfTXXhzL?=
+ =?iso-8859-1?Q?FYKXe2fQbxuAdmBPyhxEwOUTzTReeJiCwNWU1yfnb/vjYpKYEABYgkNBr+?=
+ =?iso-8859-1?Q?Isb+gfspuyE6ij5ZEaQkktkZIBx/u+btw2A5QL04bHI5cGDgAQEwiWDCzg?=
+ =?iso-8859-1?Q?J0YE4G6Avlb2DsFBKDGn03Sufqtmo4+PbBQ32sSrmXEUXSOi0PNyZQSKwa?=
+ =?iso-8859-1?Q?28EMHEpqTX6QZ7wAzR7ihuh0R6Og8mAIcLn8O3qeDn+mlhmbPaTEMDgeZ0?=
+ =?iso-8859-1?Q?RbYj7UksUSFWf1/s7Elok3hI48QJryNcFcm/Ap1eItxF/Rua+QAbgvKnpY?=
+ =?iso-8859-1?Q?nOe1qM1xfxR9yuqPqQQb53DMLwANMZnXfpo7lZSFfyTR7psrSU0c7hi2iX?=
+ =?iso-8859-1?Q?INRTadttkdhRbrRJVPhQKQkpGgCoZWM6B5VWVvPLwGaPnsw7zoyxAqGuik?=
+ =?iso-8859-1?Q?K+nulSezy+FzTMyfD6/d0M25TUBP7cgB6257cjfkCRD+6IDQKeK/8ie2Np?=
+ =?iso-8859-1?Q?Hur8aqNtZpeT4EjE6CyNg9yfPRvNbLR2FCCTXuU/wO3IH2xx95p84gMv7Q?=
+ =?iso-8859-1?Q?Y5wf6ZPcUOXX0nfkflp5mBKXYruzAtQlPLbQO/50+SfZD0OkDNy8SQaEdW?=
+ =?iso-8859-1?Q?RuVGGvvymBSffxtPAbB1aiQXkg9jUqZMfg3F04x7zp7sljuKLDdGKTwAIu?=
+ =?iso-8859-1?Q?gHaQTvRaAsz3VFmS+cUrPA9ti0oFv9fMCQN0LlbQJ4kEqmX3u7DvuyNlzu?=
+ =?iso-8859-1?Q?OqlimxVqcFzuPTRnU1uCj61AUopPbEiOOlSizDTnSCqc3O84FEgaWfJJMG?=
+ =?iso-8859-1?Q?5HNXZlWRE3vGeJLB79UjSRxvg9gZDEkPkSA7RmNfd7EDgqBjFvIgvGVRVb?=
+ =?iso-8859-1?Q?vvl/8Qo/E/K55GspvIfzL9NJortnSW9soWhVZBj4wFLQ=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAWPR02MB9281.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?zZkN1rroGP12VSeBxZM8xLHkDbK08SofUHg6YGOHxR/NGVf5jkKttHfLCU?=
+ =?iso-8859-1?Q?4MUsdbL93EIc9S4Aff8A6XHv5A+woMfHkKazilOoP7XOw5GJJYs/2IxEHG?=
+ =?iso-8859-1?Q?wY06nFwJTbPuY9mHcOeLz6qjeVZZQq7jbTEwji1V+Siqm4AsgFlmnMV0Cq?=
+ =?iso-8859-1?Q?GBYNixLGd6/TFWSIHrWMgEwJngtGFoTSRzy962pRCxv2GxNj8p/E7NIZ52?=
+ =?iso-8859-1?Q?vBP8JIx5RRdLyyhzVW1Tr/f1brHoRqhKSOyMSLV9A+ctYb7+baybYGiV8z?=
+ =?iso-8859-1?Q?APaPgtE5QU4jakVQzeZFTaNb+T7V5NSuvjJ7jri3t7ZwjeNFcnKh5lXkIo?=
+ =?iso-8859-1?Q?giQTPJz9nCJrkvgu5dcVL7RQJTL3dxw1iYlNCAQRJjzbBqO3uE5y29zq+k?=
+ =?iso-8859-1?Q?kpggxLrWYzBt6q9zzroNcW0KJUncPyB11MI0EwEEZYq1K/QUNlXjo0DLcN?=
+ =?iso-8859-1?Q?WAYOGI23K+KC0a3d6eb9/3Iwmj/XcjblsQCvPQQ01xTTbIgaxYRbvcbEa0?=
+ =?iso-8859-1?Q?e43e+lhkHlD1qviIEZ/yt4WElyIeiQNtE/zghU1L7nHsjkt6M2joFd8lET?=
+ =?iso-8859-1?Q?nbYbA+CRNs4BTk5nsuIaekuSNNiNQWvVNWEEkD8+qMBPXQyh4Fm8jpOMdU?=
+ =?iso-8859-1?Q?cOa3Y4Efr3apALqZgxBx117rvLVAEBrZxszzfmiWC8uWWGdra6sCEmHuLl?=
+ =?iso-8859-1?Q?siunJnLQ8HTRxLTiZG0w0yP7r1TkeYS6O6Zv9QPC8nY8Db6u/mm2tOtfji?=
+ =?iso-8859-1?Q?cbKjAm0TphQwVAM4MgyjhCm+tZuojM7J6n3jXr6C6iQ9D+oJvrjbBqWxft?=
+ =?iso-8859-1?Q?y+m1sEnFPN9PsubZfSlK9Un7kyKAwSb/Tkcautx81F7xiTiaAHekXkYT2g?=
+ =?iso-8859-1?Q?9wCEIuzDew9p7/ipSHVQioILCwjp+8Il2kv/S2E978t56DK4A2cQ6jadLI?=
+ =?iso-8859-1?Q?Xtv5c1Hd1RQeBpPZu+Oyw2TMAeVEVIiqYLx4pPA7E+t9xMDhWOR0B66jTK?=
+ =?iso-8859-1?Q?4U4FGdojOACcqU8Sw5Xd4SEpcW4EjS8yTunfW4K6VfwkwBp4pCX7J0IZdy?=
+ =?iso-8859-1?Q?SHmVhRmK5sM7LCprYe7fT8bgxMhi2R3geAnPwLEocUtn7kZECGXtCtEuMr?=
+ =?iso-8859-1?Q?CEKn0IIiGAbzbx6RSAYrLiK8iSCkezIlXIJtK8RRkd5zaviX/4ijjxGwZl?=
+ =?iso-8859-1?Q?gLSXrRdSt6D1h+1MfhjsU+0TUfC4utDHzl+0Cd/I0U6qJggZpjAPpbKuuT?=
+ =?iso-8859-1?Q?Ff0YGcIv68QXx1GGO4w+NTPAlPrbVrq+/p9GM4MDZv3cXl+lXzYjH/dvC6?=
+ =?iso-8859-1?Q?YXlaw5QCx8weYo8q0JSPOeOvbDJ3sZh+VnXU33HKEtKmp0RlUa7euGSWzf?=
+ =?iso-8859-1?Q?AFv7IbArXRdKTbiPA9khhkYK7VUXgaW/awjS1NptPE/CMokfjOBwPvTjcs?=
+ =?iso-8859-1?Q?/3rLd9IqSH3hnNvCWZmyhZgknlh9ABBAPBqtPm4ecIWe0SmezFoVM4faBk?=
+ =?iso-8859-1?Q?vCgzdJAc7EmO9/7azWhK+csRbL4eBXdnfMtjaksU3haf3ynVuCq2ZRWPXY?=
+ =?iso-8859-1?Q?ZhwKRhQjWBnQVA7krdgfTKLStBPsC6g6os2at9bHqeRq00PP7dexX3o886?=
+ =?iso-8859-1?Q?/l+7QhuAy5yGk=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvkeejkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthekredtredtjeenucfhrhhomhepjfgvrhhvvgcuvehoughinhgruceohhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetheejgeetudehiedvuedvteehhfegudevvdeftdduhfejleegheevteetvdeihfenucffohhmrghinhepsghoohhtlhhinhdrtghomhdpkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtudemvgdtrgemvdekheemsgelkedtmegvgedttgemiegtgeefmegshegssgemrgegvdeknecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvkeehmegsleektdemvgegtdgtmeeitgegfeemsgehsggsmegrgedvkedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduhedprhgtphhtthhopegtlhgruhguihhurdgsvgiinhgvrgesthhugihonhdruggvvhdprhgtphhtthhopehrohgshhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehgrhgvghhkhhesl
- hhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsrghrrghvrghnrghksehgohhoghhlvgdrtghomhdprhgtphhtthhopegshhgvlhhgrggrshesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhiiihhihdrhhhouhesrghmugdrtghomh
-X-GND-Sasl: herve.codina@bootlin.com
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAWPR02MB9281.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58bfb2e3-04b2-47b6-c679-08ddad6fe752
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 07:23:49.0108
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: QR59oJULro+PNetMl2O9KGQMOyghgbANTYZTZGGVT3SkdrSdXQHfxDpBQeH2VaAj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR02MB7328
 
-Hi Claudiu,
-
-On Fri, 13 Jun 2025 16:36:16 +0300
-Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
-
-...
-
-> I pointed to the wrong function. It's not of_pci_make_host_bridge_node()
-> [1] but of_pci_make_dev_node() which creates a node with a similar naming
-> and makes things not working on my side.
-> 
-> [1] https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L694
-
-Ok, so your issue is not related patches applied from the "PCI: of: Create
-device-tree PCI host bridge node" series.
-  https://lore.kernel.org/all/20250224141356.36325-6-herve.codina@bootlin.com/
-
-Indeed, this series add the node creation for the host bridge with
-of_pci_make_host_bridge_node() but you pointed now of_pci_make_dev_node()
-which is the creation for PCI device node and this function was not modify by the
-series.
-
-of_pci_make_host_bridge_node() should not create anything. Can you confirm on your
-side that it doesn't create any nodes.
-
-If so, maybe the problem comes from of_irq_parse_raw() or similar.
-
-...
-
-> 
-> > 
-> > On this system, I didn't observed any issues but of course, the PCIe drivers are
-> > different.
-> > Also, on my system, no node were created by of_pci_make_host_bridge_node().  
-> 
-> Sorry for the confusion, it is of_pci_make_dev_node() on my side which
-> creates the node.
-> 
-> > 
-> > To be honest, I didn't re-test recently to see if something has been broken.
-> > I can do that on my side with my system.
-
-I have re-tested and I confirm that I have no issue on my system.
-
-> > 
-> > On your side, maybe you can have look at the Armada PCIe driver and see if
-> > something could explain your behavior. I am not sure that you need to add the
-> > pci@0,0 node in your DT.  
-> 
-> I can't find a driver that uses the approach I'm trying in my patches. This
-> approach was suggested in the review process [2] by Rob who mentioned that
-> now we should be able drop legacy interrupt controller nodes. There are
-> some Apple device trees that points the interrupt-map to the port node (the
-> way I tried in my workaround) [3], but I can't find more than that.
-> 
-> The topology in my case is:
-> 
-> root@smarc-rzg3s:~# lspci -t
-> -[0000:00]---00.0-[01]----00.0
-> 
-> root@smarc-rzg3s:~# lspci
-> 00:00.0 PCI bridge: Renesas Technology Corp. Device 0033
-> 01:00.0 Non-Volatile memory controller: Micron Technology Inc 2550 NVMe SSD
-> (DRAM-less) (rev 01)
-> 
-> When not working pci@0,0 is exported as follows in rootfs:
-> 
-> root@smarc-rzg3s:~# ls /sys/firmware/devicetree/base/soc/pcie@11e40000 -l
-> -r--r--r--    1 root     root             4 Jan 12 10:28 #address-cells
-> -r--r--r--    1 root     root             4 Jan 12 10:28 #interrupt-cells
-> -r--r--r--    1 root     root             4 Jan 12 10:28 #size-cells
-> -r--r--r--    1 root     root             8 Jan 12 10:28 bus-range
-> -r--r--r--    1 root     root            13 Jan 12 10:28 clock-names
-> -r--r--r--    1 root     root            24 Jan 12 10:28 clocks
-> -r--r--r--    1 root     root            26 Jan 12 10:28 compatible
-> -r--r--r--    1 root     root             4 Jan 12 10:28 device-id
-> -r--r--r--    1 root     root             4 Jan 12 10:28 device_type
-> -r--r--r--    1 root     root            28 Jan 12 10:28 dma-ranges
-> -r--r--r--    1 root     root             0 Jan 12 10:28 interrupt-controller
-> -r--r--r--    1 root     root           144 Jan 12 10:28 interrupt-map
-> -r--r--r--    1 root     root            16 Jan 12 10:28 interrupt-map-mask
-> -r--r--r--    1 root     root           164 Jan 12 10:28 interrupt-names
-> -r--r--r--    1 root     root             4 Jan 12 10:28 interrupt-parrent
-
-Why parrent instead of parent in interrupt-parrent ?
-
-> -r--r--r--    1 root     root           192 Jan 12 10:28 interrupts
-> -r--r--r--    1 root     root             5 Jan 12 10:28 name
-> -r--r--r--    1 root     root             4 Jan 12 10:28 num-lanes
-> drwxr-xr-x    2 root     root             0 Jan 12 10:17 pci@0,0
-> -r--r--r--    1 root     root             4 Jan 12 10:28 phandle
-> -r--r--r--    1 root     root             4 Jan 12 10:28 pinctrl-0
-> -r--r--r--    1 root     root             8 Jan 12 10:28 pinctrl-names
-> -r--r--r--    1 root     root             4 Jan 12 10:28 power-domains
-> -r--r--r--    1 root     root            28 Jan 12 10:28 ranges
-> -r--r--r--    1 root     root            16 Jan 12 10:28 reg
-> -r--r--r--    1 root     root             4 Jan 12 10:28 renesas,sysc
-> -r--r--r--    1 root     root            63 Jan 12 10:28 reset-names
-> -r--r--r--    1 root     root            56 Jan 12 10:28 resets
-> -r--r--r--    1 root     root             5 Jan 12 10:28 status
-> -r--r--r--    1 root     root             4 Jan 12 10:28 vendor-id
-> root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~# ls
-> /sys/firmware/devicetree/base/soc/pcie@11e40000/pci@0,0 -l
-> -r--r--r--    1 root     root             4 Jan 12 10:17 #address-cells
-> -r--r--r--    1 root     root             4 Jan 12 10:17 #interrupt-cells
-> -r--r--r--    1 root     root             4 Jan 12 10:17 #size-cells
-> -r--r--r--    1 root     root             8 Jan 12 10:17 bus-range
-> -r--r--r--    1 root     root            41 Jan 12 10:17 compatible
-> -r--r--r--    1 root     root             4 Jan 12 10:17 device_type
-> -r--r--r--    1 root     root           144 Jan 12 10:17 interrupt-map
-> -r--r--r--    1 root     root            16 Jan 12 10:17 interrupt-map-mask
-> -r--r--r--    1 root     root            32 Jan 12 10:17 ranges
-> -r--r--r--    1 root     root            20 Jan 12 10:17 reg
-> root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~# cat
-> /sys/firmware/devicetree/base/soc/pcie@11e40000/pci@0,0/compatible
-> pci1912,33pciclass,060400pciclass,0604root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~#
-> root@smarc-rzg3s:~#
-> 
-> In case I describe a port in device tree, it works because the pci@0,0 is
-> not created anymore when device is enumerated and thus the interrupt
-> parsing is working.
-> 
-> Herve: do you have some hints?
-
-First interrupt-parrent in your /sys/firmware/devicetree/base/soc/pcie@11e40000
-files.
-
-If it is just a typo in this email, maybe the interrupt parsing itself.
-
-Can you provide an extract for the DT with nodes created at runtime.
-I mean can you run 'dtc -I dtb -O dts /proc/device-tree' and provide the output
-related to PCI nodes including the PCIe controller ?
-
-> 
-> Rob: do you know some device trees where the interrupt-map points to the
-> node itself as suggested in [2] so that I can check is something is missing
-> on my side?
-> 
-> Thank you,
-> Claudiu
-> 
-> [2] https://lore.kernel.org/all/20250509210800.GB4080349-robh@kernel.org/
-> [3]
-> https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/apple/t8112.dtsi#L951
-> 
-
-Best regards,
-Hervé
-
--- 
-Hervé Codina, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Hi Jacek.=0A=
+=0A=
+>From: Jacek Anaszewski <jacek.anaszewski@gmail.com>=0A=
+>Sent: Monday, June 16, 2025 23:29=0A=
+>To: Johan Adolfsson; Lee Jones; Pavel Machek; Rob Herring; Krzysztof Kozlo=
+wski; Conor Dooley; Andrew Davis=0A=
+>Cc: linux-leds@vger.kernel.org; linux-kernel@vger.kernel.org; devicetree@v=
+ger.kernel.org; Kernel=0A=
+>Subject: Re: [PATCH v6 1/2] leds: leds-lp50xx: Handle reg to get correct m=
+ulti_index=0A=
+>=0A=
+>Hi Johan,=0A=
+>=0A=
+>On 6/16/25 13:25, Johan Adolfsson wrote:=0A=
+..=0A=
+>>   drivers/leds/leds-lp50xx.c | 11 ++++++++++-=0A=
+>>   1 file changed, 10 insertions(+), 1 deletion(-)=0A=
+>>=0A=
+>> diff --git a/drivers/leds/leds-lp50xx.c b/drivers/leds/leds-lp50xx.c=0A=
+>> index 02cb1565a9fb..344791b6c575 100644=0A=
+>> --- a/drivers/leds/leds-lp50xx.c=0A=
+>> +++ b/drivers/leds/leds-lp50xx.c=0A=
+>> @@ -476,6 +476,7 @@ static int lp50xx_probe_dt(struct lp50xx *priv)=0A=
+>>                       return -ENOMEM;=0A=
+>>=0A=
+>>               fwnode_for_each_child_node(child, led_node) {=0A=
+>> +                     int multi_index =3D num_colors;=0A=
+=0A=
+>Any specific reason for initializing this to num_colors?=0A=
+=0A=
+Sorry - leftover from initial patch where I kept the original behavior if r=
+eg was not set.=0A=
+Another patch version coming up soon (assuming failing on reg not set is th=
+e agreed upon solution).=0A=
+=0A=
+>>=0A=
+>--=0A=
+>Best regards,=0A=
+>Jacek Anaszewski=0A=
+=0A=
+Best regards=0A=
+/Johan=0A=
