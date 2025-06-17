@@ -1,85 +1,66 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DEA2E3AE3
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94482DE1E4;
+	Tue, 17 Jun 2025 13:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168050; cv=none; b=kgehOwmCg5h6UeVQaE8IjKyVTHS3arwuZPw0LQRQbvRd0YE8Lfl/Hve4IRV6nwZCJupZQlx0lTL8zacFM6HGxcEMFMKn3pBax9hDBT9YCWUiIa3frwEDvLMlCUvx9w5Ro1FFl5ME1jhOk/loUiy37ovcw7szcKR0FdAVNyITXUg=
+	t=1750168093; cv=none; b=PR9ynY09Kjoo4yTw2UfZNonmWlxPIdA6Fqz8YbYqaL8b71UU4ncfwTjEra3S/vEQm53Bh6i9P4JngGS7gbPt/oTJUloCtECpALB4FfIHhcy2sfDcdJ9zKNkNctR6hIhkiCMgmnQgcWKrp3fzF884sMSuvMaOsBiE5jqW3j/eGyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168050; c=relaxed/simple;
-	bh=4zvU9610CYijgLdPektC93nm4XYH0yBwzdKFQ6s9AMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dN8M7zfbYRLjMFknNvow32VqrB7uLCUqNOxXvtSVgW9C68QmUOVMUCz9QgtTIwo6sf3ZSrpO7TkDFnsHDVtue7rgUptMwtcaWUCRIBl/7iFoXzVqiSWEfypGtka9SMF3pjp4k8/Um/NWU5rLCWS5RC7ry3oGcvjROULapItuVjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aKXfCF5a; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750168093; c=relaxed/simple;
+	bh=fd4y+lDswDvbSpTkQLBi/lqOL1Y42ddHNclJLmZUuQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kbBY0Gi3yujMwYPMFHOXI8whftI2g53F4abHNIOPuGe9zgdkUcNZky7YoqlPGFJhbLTQqEURiWouo9EhRlMRrZ0zxLhaiIsCvKw/Cjk8+MSnBRtT8zGjyP14PgSw41egAbHOjHdN2x7qorp6Ok8miIux3E5jUYbwQUwyPFO80oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLk18/tS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aKXfCF5a"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=lcPJP3hUDIFtPx56TulVw4D3uKiGLoVqKD7H4NXpVQA=; b=aKXfCF5aYa5NhdK+Fz0QNYVFGD
-	oYDkUtaBYrVAP/Z64R5DhPmIyTEVtyfDTeW0sMRDyPr/M9N7Qhub6kclAOpa/gHa/M5if8aHsRRNF
-	Ky3kuZEa8D2BhUm12cMySm4gs12suXCww+PtwDewVllUJFbrcjVgumHSdx83Xg6q46rmrnMpSQehu
-	KeHknMGdhsTig3oyNok7FggQB6eWARdVoEyQBL/EnLnhOUNA/QK+lnnzajjXmeDMnuSvWMD9Zinb4
-	68ShOY81fiSMrMPrOGvKR2tFJyvQ8uITRW6zaiPw86DtgxlAWmmxzGlnoO0Vu+XKzV5SjnjNviwDf
-	ogg+Abyg==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRWep-0000000HD4X-28Z9;
-	Tue, 17 Jun 2025 13:47:23 +0000
-Date: Tue, 17 Jun 2025 14:47:23 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Dev Jain <dev.jain@arm.com>
-Cc: david@redhat.com, ziy@nvidia.com, dhowells@redhat.com, hughd@google.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	ryan.roberts@arm.com, aneesh.kumar@kernel.org
-Subject: Re: [QUESTION] xas_reload() in iter_xarray_populate_pages()
-Message-ID: <aFFx64M_iFgeIh5j@casper.infradead.org>
-References: <20250526063524.22597-1-dev.jain@arm.com>
- <918d552a-085a-4529-8f20-a060b1f0c9f1@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLk18/tS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2437C4CEE3;
+	Tue, 17 Jun 2025 13:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750168093;
+	bh=fd4y+lDswDvbSpTkQLBi/lqOL1Y42ddHNclJLmZUuQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TLk18/tSDBzkkIUumdoXHrKsGoitzuViBjlMEY2DkRatD9c6rWnhabdhB5/EyeJL8
+	 1TGuhdbvASYBkuTUuIXU0WXsnezRSj/hu0h1WNw3ONtHdbdfRZ+deN5LvhUNJ7n+2s
+	 CO2qzWZX9cFejbaCuIVxdWY9G/p+tTFgVJNIGSzGUR1s8JZRo2db7sn1EHWLf67Ssu
+	 jOPqXAaiVqOCJmFz/oTn7Hc/PRr52FycywqDLUugd+I1nxBIAUTAuAuJoMDHfU7KU4
+	 mLRB2YcXvu18E/TnmIN0LWTit5D6Bbyjsv1hqXYnwVgemgcREbJZZVq0D19A8AJFCV
+	 1UR+RmD/sKCGw==
+Date: Tue, 17 Jun 2025 06:48:11 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, Shuah Khan
+ <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, gustavold@gmail.com
+Subject: Re: [PATCH net-next v3 4/4] netdevsim: account dropped packet
+ length in stats on queue free
+Message-ID: <20250617064811.0d4e1490@kernel.org>
+In-Reply-To: <aFFsh6kFOkhGOO7Q@gmail.com>
+References: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
+	<20250617-netdevsim_stat-v3-4-afe4bdcbf237@debian.org>
+	<20250617055934.3fd9d322@kernel.org>
+	<aFFsh6kFOkhGOO7Q@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <918d552a-085a-4529-8f20-a060b1f0c9f1@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025 at 10:40:51AM +0530, Dev Jain wrote:
+On Tue, 17 Jun 2025 06:24:23 -0700 Breno Leitao wrote:
+> > here we are in process context and debug checks complain about the use
+> > of this_cpu_ptr(). Let's wrap this in local_bh_disable() / enable() ?  
 > 
-> On 26/05/25 12:05 pm, Dev Jain wrote:
-> > Hello all,
-> > 
-> > After doing an xas_load() and xas_retry(), we take neither a reference nor a lock
-> > on the folio, and we do an xas_reload(). Is this just to reduce the time window
-> > for a race?
-> > 
-> > If the above is true, then, there is a negligible window between xas_load() and
-> > xas_reload(), because only xas_retry() exists between them, so why to even reload()?
-> > 
-> > Thanks,
-> > Dev
-> 
-> I do not completely remember our discussion in THP Cabal; I recall David Howells maybe
-> saying that the folios are already locked, so it is safe to do xas_load and then do
-> a folio_get()? Even if we remove the redundant xas_reload(), I still don't understand
-> why we won't need xas_reload() at least after folio_get()?
+> Thanks. I was able to reproduce it. Your suggestion avoids the complain.
+> I suppose we should just wrap dev_dstats_rx_dropped_add(), right?
 
-Because you need xas_reload() in order to solve this race:
-
-A: load folio
-B: remove folio
-B: free folio
-C: alloc folio
-A: tryget folio
-A: reload folio
-
-If A already has a refcount on folio, folio cannot be freed, and so A
-cannot get a refcount to C's folio.
-
-The other mutexes are irrelevant here; this is purely a folio refcount
-problem/solution.
+I think so. I hope that makes the preempt checker happy.
+The reason for bh_disable rather than preempt_disable() is that we 
+should only update the stats from one context, the NAPI poll context.
+So we also need to prevent races with another NAPI running on the same
+core while we free an old queue.
