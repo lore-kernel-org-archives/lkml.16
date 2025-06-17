@@ -1,115 +1,167 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5F528C00E
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F44261584;
+	Tue, 17 Jun 2025 21:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750197152; cv=none; b=HU+fZv67Am2G5e941EKEB2ohCu88xfWgSIUuQTVo3MgvxrKEdUY+lXgWApSNLMeUQDvhX075X0FPbXgnyHxVG0lJjh345fVqzt082FyJ/AMdqqHd2l8Vmh/Bz+E0IyDxYw9bQA3H0JGrf+jYO4BcLTumwdArmY24NVMS2J4OyEk=
+	t=1750197165; cv=none; b=lDY67IYqZwnbiUss/80NV98/7EtXYW8JGBWjiTyxRshC/0abVpVs2MMbmr8ME2XUQ54LV4OTiDNqDlhe30tb+W/Ep1K4hrKWWvI9blRpvBi9/8RiL4N6B2o5Ahlj0DkA8k27cc4umVuDCQuh63ie0D588xcODfMsuqPJ49MSkIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750197152; c=relaxed/simple;
-	bh=G6aq9UULzQSeWStHfJCFlTRXAe06thPa3pLZymjNKfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L+EnK3ZY4H25Olkb/eaTdj4A1kJukJJxBr/9UUt7WgC0WY509meDTsG1pgDA5PUf/AFYXCRnkIjMoNqJV4fcBn2UNRqitGXgFqMcnHxMC/2knpND68KMNCDOGBL5YynsglE0tDWS+2OV8i+k1eKUVvsj+rMIWYr61amP7ORzegk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zJsXlUhe; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750197165; c=relaxed/simple;
+	bh=+yF5th3hKHr3Fc/YnZeaTAX61q87mTP3B6ZUns7YCy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oOOs/TkyaaRd2176y4PmDgGz86FOnPytVljYsdq4yr2WNzVMIR1jN9PYDZtNlnrZeM04Lp3QrCToHl9b/9ovO1cIZUv7m22v5Wn3uR1jIDiXzEKM53PDcguhZdUQtzqlMLq1JuYqcOKcpG3za3mNj0mTp3PclqQzHcc75xqGSgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=LybIrmmE; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zJsXlUhe"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235e389599fso62925ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:52:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750197150; x=1750801950; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tk9GnGftZvypb/fve6Tub1/yPh7i0cO/ST2epnsknjQ=;
-        b=zJsXlUheUCW2JIG/15+IHtVHkX/mQF9dlkr4jyeK+BLPjAAOHU0m2nmqrga7HVGzC9
-         7unkZHSVF8xWoPA+H391ji4FGmtIcWqkgTumss1HQYXdqA8l0mJEhZUkp+R+z7jXGsuk
-         iWp462bbNrPjHik0Y9rYmgkSWDgVTo8IyqC6YdJyEYn3lEyTVMb5Un8wRfITR9+9O+AZ
-         /A1nKHjlxsxIpEZsqpLaXQWkyN9YO7uY5Ksm+2aBZEWG2JKbv/erbbK7ab+0wVkNAlht
-         I1InBMejwQsrOXiIIhJu/L3euzIiI9YnCS8rwt8cBRPY9I7+S1WZHbY758kmCoCtojUr
-         S94g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750197150; x=1750801950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tk9GnGftZvypb/fve6Tub1/yPh7i0cO/ST2epnsknjQ=;
-        b=XX6RAmDAGBManMleLuLLNZ0+Rd8uc72pM5PV5fj4fDfhWqHf+2xZ2jtnbEO2hUouNu
-         BxeMRusZqQNjo3KV2ptf8LRJUJTaDcEBXYrUuSh7nIOKzAZsxdhriCeGY4orJ0hoOb1S
-         ffyJFau0zImgeQnxb/YYT9206nsLcuKrq2E6wUycVZe1k3/+j7CeoOkgIEZrbruqPnKM
-         tDVLjgKq/302t/sdqS89WZJkMtMwRRKxfhWdrSayj8+mV+YSZkhnjowlpM558KxXW5kB
-         rttq7ZrLWLeJ/i1hOMZG4K7xJKobw4ZpsdLrnh+rBHLzsyuFf9KT6c73a4e7SlPA0S5+
-         qjTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUdYoBnym4/jy7v5PArZUXrNY02z4VxN4hWhd7mXrPbQzm6AXJWquHLqZXhw/1sgLF/DR1LMyNPWbwaEMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQSLIJ6oFKTEoD+8rxZysSQHWCMaEBQ37x8c+S0VmNQ9R3fPxr
-	0LS5sThdY5yT8R83f72bkcrpOFl4NLO7UxXahYdoa2lbWN7JzkF36b+VA7gufo9Oiv+aYCbCs0b
-	8+dqa0R+1MfwPgs72JP3i5iHGclcfWUmxopyMYaG3
-X-Gm-Gg: ASbGncvJZxp42ImWR7iiNnauM1BekL6qg7/ZAxPobJ99PC5xRKPdnVt7NUPVogNF/X4
-	sqjmtUUsJijXT6JKo0UOU3zwNGM24ABqhc0HtLWAOK05TZJpi1q/RdBx7eyJ0dmdkgaoH+GB66t
-	UHyF0DiVuGak2CobjlB3qUka+LHhkSOh8LgNE5HfeDMmiWEaIK9lENWs6aJfFyvyyCIO2MjbHWn
-	A==
-X-Google-Smtp-Source: AGHT+IEjic+DQ+x5I1iXBb3/VZNJM4D7edP1sy7P3+y0WzbFzyD+lgXbWJrCNXbJ7hLkiIre4KJPn7EyvpHv7CZV3kw=
-X-Received: by 2002:a17:902:f78e:b0:235:e1d6:5339 with SMTP id
- d9443c01a7336-2366c8140dfmr9959955ad.26.1750197150134; Tue, 17 Jun 2025
- 14:52:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="LybIrmmE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1750197153; x=1750801953; i=w_armin@gmx.de;
+	bh=+yF5th3hKHr3Fc/YnZeaTAX61q87mTP3B6ZUns7YCy4=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=LybIrmmEmoRxy8FR7f5OFdJqEZrwUBBdfRDHOxu/f5EEfOozwh5HUWp19g47VRks
+	 0PAlJ+p+ne/FT8pZE2s/wI9gQVkwb7cqO9FLoiLjRTO1+bNo+9rNCw+uoV6Gw0FID
+	 jxeEcjCUqloYb/tMsabSLltBk5ypV4HVgRpI1zhZE1Ag4wQB1zxSeg+0HYyb5jvaX
+	 W6TQVInqHbqNq5cMVbrMjBw6tAH9KeV1huSbDxp1PL+c1J+cG+6lEdEDAj1zQIhiN
+	 d2nBigrh7gZDg7mDpqwRlU/QSL626BzAuku61PdJAphoANx7PmU/ydt9GOkeHEdhD
+	 dPMBnP3+Jsv3sjB3rQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N33Il-1uuqFw0P6L-011PTK; Tue, 17
+ Jun 2025 23:52:33 +0200
+Message-ID: <d645ba09-1820-4473-96bb-8550ed0b0a26@gmx.de>
+Date: Tue, 17 Jun 2025 23:52:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617210950.1338107-1-almasrymina@google.com>
- <CAHS8izMWiiHbfnHY=r5uCjHmDSDbWgsOOrctyuxJF3Q3+XLxWw@mail.gmail.com> <aFHeYuMf_LCv6Yng@mini-arch>
-In-Reply-To: <aFHeYuMf_LCv6Yng@mini-arch>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 17 Jun 2025 14:52:17 -0700
-X-Gm-Features: AX0GCFvx4bn0aOYkN3CSqdpJSpRaKHHjptdW4cwpAa8d5lG6VPslMmhVC6iQfF0
-Message-ID: <CAHS8izOMfmj6R8OReNqvoasb_b0M=gsnrCOv3budBRXrYjO67g@mail.gmail.com>
-Subject: Re: [PATCH net v1] netmem: fix skb_frag_address_safe with unreadable skbs
-To: Stanislav Fomichev <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	ap420073@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
+To: Werner Sembach <wse@tuxedocomputers.com>, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
+ ggo@tuxedocomputers.com
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org
+References: <20250615175957.9781-1-W_Armin@gmx.de>
+ <20250615175957.9781-3-W_Armin@gmx.de>
+ <41de4cd4-2a27-4b14-a1c0-e336a3cec317@tuxedocomputers.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <41de4cd4-2a27-4b14-a1c0-e336a3cec317@tuxedocomputers.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:r5Pls7PPPYvKle+1oHFSbtm8ITwah/+8bvFkI9ozlK/HDrapaoV
+ HMTyp4/P78WiCfpUOTuz/ybmV2byHd3qWogSto3lq7njgaXCylU5/ABQ+k+VG0E9cq2YEPN
+ il9N3LtIskbAMLFdNhVrcOiQOElL7Dc6qV3JD9ddcdtthurPLkORkVrKRTklwYTDLVaoqzk
+ QzYG85tTXpMAGVvLdPxlA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:7uBwR7FlPu0=;Hm6L/P5fL8aCFaS584GH0+e/18R
+ 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
+ Pjl81otPvhGbqrJz
 
-On Tue, Jun 17, 2025 at 2:30=E2=80=AFPM Stanislav Fomichev <stfomichev@gmai=
-l.com> wrote:
->
-> On 06/17, Mina Almasry wrote:
-> > On Tue, Jun 17, 2025 at 2:09=E2=80=AFPM Mina Almasry <almasrymina@googl=
-e.com> wrote:
-> > >
-> > > skb_frag_address_safe() needs a check that the
-> > > skb_frag_page exists check similar to skb_frag_address().
-> > >
-> > > Cc: ap420073@gmail.com
-> > >
-> >
-> > Sorry, I realized right after hitting send, I'm missing:
-> >
-> > Fixes: 9f6b619edf2e ("net: support non paged skb frags")
-> >
-> > I can respin after the 24hr cooldown.
->
-> The function is used in five drivers, none of which support devmem tx,
-> does not look like there is a reason to route it via net.
->
-> The change it self looks good, but not really sure it's needed.
-> skb_frag_address_safe is used in some pass-data-via-descriptor-ring mode,
-> I don't see 'modern' drivers (besides bnxt which added this support in 20=
-15)
-> use it.
+Am 16.06.25 um 14:46 schrieb Werner Sembach:
 
-Meh, a judgement call could be made here.  I've generally tried to
-make sure skb helpers are (unreadable) netmem compatible without a
-thorough analysis of all the callers to make sure they do or will one
-day use (unreadable) netmem. Seems better to me to fix this before
-some code path that plumbs unreadable memory to the helper is actually
-merged and that code starts crashing.
+> Hi, small additon
+>
+> Am 15.06.25 um 19:59 schrieb Armin Wolf:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 functionality.
+>> +
+>> +What:=20
+>> /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/rainbow_a=
+nimation
+>> +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Juni 2025
+>> +KernelVersion:=C2=A0=C2=A0=C2=A0 6.17
+>> +Contact:=C2=A0=C2=A0=C2=A0 Armin Wolf <W_Armin@gmx.de>
+>> +Description:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Forces the integrated light=
+bar to display a rainbow=20
+>> animation when the machine
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 is not suspended. Writing "=
+enable"/"disable" into this file=20
+>> enables/disables
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 this functionality.
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Reading this file returns t=
+he current status of the rainbow=20
+>> animation functionality.
+>> +
+>> +What:=20
+>> /sys/bus/wmi/devices/ABBC0F6F-8EA1-11D1-00A0-C90629100000[-X]/breathing=
+_in_suspend
+>> +Date:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Juni 2025
+>> +KernelVersion:=C2=A0=C2=A0=C2=A0 6.17
+>> +Contact:=C2=A0=C2=A0=C2=A0 Armin Wolf <W_Armin@gmx.de>
+>> +Description:
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Causes the integrated light=
+bar to display a breathing=20
+>> animation when the machine
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 has been suspended and is r=
+unning on AC power. Writing=20
+>> "enable"/"disable" into
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 this file enables/disables =
+this functionality.
+>> +
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 Reading this file returns t=
+he current status of the=20
+>> breathing animation
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 functionality.
+>
+> maybe this would be better under the /sys/class/leds/*/ tree if possible
 
-Similarly I put this in net because it's a fix and not a feature. I
-can send to net-next if preferred.
+I CCed the LED mailing list so that they can give us advice on which locat=
+ion is the preferred one for new drivers.
+
+Thanks,
+Armin Wolf
+
