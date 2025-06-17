@@ -1,318 +1,128 @@
-Received: from PA5P264CU001.outbound.protection.outlook.com (mail-francecentralazon11020116.outbound.protection.outlook.com [52.101.167.116])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48548528E;
-	Tue, 17 Jun 2025 06:34:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.167.116
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750142047; cv=fail; b=jLJw668V0HUhfXrccGRuYYIGEvnhjQeYPRUCYhYtqDdVEg8VYnaKplSdqpolMjcemFHAQKhp7FTMDTFX6iBF4cOBIi3QG4a5JFkotPV/gLhGuygB5+IBwEUiAY6rP/V6HxNt8vWC3QqI3Xgtj3DuSjecgCFuTZk/FwjB5Y8hg4I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750142047; c=relaxed/simple;
-	bh=SturZozky9b3HrXCboYpDCOQJUhQFzaQsFPosHfJuaE=;
-	h=Date:From:To:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=GWTojRTJ153E2w0UWnnxhPdpK76/GSSaJ0M45SWmGbjWewucNpbOkozXDJj+2hMhWkIHnTNAkEsPTeMhv6yPxQCYxUTyD6AZ2hkuokZlRRoAKkpP1IwHXmaEtt9Jb8BWqBOs2d+DnKQHSak8/mCsFRv9gtoO71RZLOrd96rNb1w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com; spf=pass smtp.mailfrom=allegrodvt.com; dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b=GrgjftYH; arc=fail smtp.client-ip=52.101.167.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=allegrodvt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=allegrodvt.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147C016B3B7;
+	Tue, 17 Jun 2025 06:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750142066; cv=none; b=CQj2bWj46NiVM1JnRaVrePEAMCUzKn+D0niu3voH2A8wBhJRtGhEfiUhSj+92fnT1qGg1UIjhzhNFGsQ+WLITDC86TpvPjAd0sjS9EdLg2VsLjFQBX8t/rQhGkOXrxOJ4AsJdBxffI+pBFICh/QUjenjYTsHIzlOMyMqmawCLxk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750142066; c=relaxed/simple;
+	bh=waS7//7mESOoJ0KPrUPjr8RYE0ggAPYjN8HDSpBN9fU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SBFDUZX6U0jriUd3ipBBGmr6tYnfd1RwXoWGGM8OWwK6ik6zghaj9bOEyzg8rssyYFl8/k/Z/6qA4y5rTibzR6vPapKkoxNeChU5UEKD20gBPiGWSNjlviOH/5UMgDsp6pbBq8PyakeWPKiLrqi5w2A5xfqLdYM+KBIwkW+yvK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=eKF33h08; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=allegrodvt.com header.i=@allegrodvt.com header.b="GrgjftYH"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zRvHyUfb7v/+nmgK7BYx4FuYth6K8KY67ebdnloQ30nwPdcR0o836MTRr8N++vX44HuLna1J/X3j73hkdqeiwD51voHsUD9cYEhYweXaLqKQXtW9sioNIJCdTlfsTP1uSRvNujFoM8KO/R+Ej2RlHZIwtQGfzz366mE2aDJ8yhu/CS57cJdXpC4w5f5UjtAF12TnHcZXf0jwqvHFL120rV3iLVsvOGP3q4AdOFV/d4xhfuQsktZXjyU/UjmT+z+D7Ww8aVEwa7fu5zcTKWtNTFcJSMcNYS+N2cpNP+6J/JeBGgQ9Xdpd3YmMngFOOd+6O/60SdrTN0eE3sTa83ck8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FazVkiIDsbOfxjOK2dzuJTd5HGATSOBrRRytB+4yllo=;
- b=aS5Xnwd+Awl5zn3CwIjKyOn56ZYDHQqyWa3Tl7EnBuY2JGyup8LOt/gdBUj23oqCMiogRTdNq/h1hgCR89BGM/iw0ygBEKI9ppZlpqk0sUQBFSzHIIB9l7S2FCYEVa1mDd1w1xg3fIY9glN/mAy5OVNKe/lPS5L7XChAwCPQ9dtulfF2WYy+FhdG21y6BTlwRe09p1s18YC/ND9/Y+/wc70QH/QXT7wR5INUzw3JYfHjH/1CAiyMaFZ2x91qrdJxuWhmyGOJ84/2CXv2tJn0MKg7YkJ37tk4+SX9niicaHKQ9vp7EZOsrZV9pWnY/FvsO0nTbbNcRLfFX29pcsO6ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=allegrodvt.com; dmarc=pass action=none
- header.from=allegrodvt.com; dkim=pass header.d=allegrodvt.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=allegrodvt.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FazVkiIDsbOfxjOK2dzuJTd5HGATSOBrRRytB+4yllo=;
- b=GrgjftYHTTWLu/NnA3+BonxTA6FQU4/vfRpP9U6DSWZZ5yCF3+gbOeiFeeGJ0TqjMgp+4CPo6LLofb3IJ4bJCRoXf0NysRHvV1uftuWP6LX7w12tCfjUtjrc6x8wDQAbFJjv6QpbScxOuIDcWeLE/9HtnRCXhYjUgkFxSoeEJbS/4jyVb6aMuvTCCxz8IN0MmsTNXqjg6RuGB8j9z4ivdiZ8nWBAVejOXOveKNNjyXb5jAGoL+8vgIPAsdKZNecuz/o26lNOimbtFBtarzDQkpPGSfanrYMgvr78eNaa5/A+xUWEEnhtxHp9/FyBikY6eKeBr+kfdnixQnFymaczhw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=allegrodvt.com;
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:3d::18)
- by PAZP264MB2573.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:1e4::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 06:33:59 +0000
-Received: from MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5]) by MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- ([fe80::4281:c926:ecc4:8ba5%2]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 06:33:58 +0000
-Date: Tue, 17 Jun 2025 06:33:49 +0000
-From: Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
-To: Michael Tretter <m.tretter@pengutronix.de>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Nicolas Dufresne <nicolas@ndufresne.ca>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: media: allegro-dvt: add decoder
- dt-bindings for Gen3 IP
-Message-ID: <uld753xxm3ryp2iav6zgb47m6parp6vqz7mpflmdiftpgg6iim@7menlew7pycg>
-References: <20250605-allegro_dvt_al300_dec_driver-v2-0-1ef4839f5f06@allegrodvt.com>
- <20250605-allegro_dvt_al300_dec_driver-v2-2-1ef4839f5f06@allegrodvt.com>
- <aErLIriSYa1meukJ@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <aErLIriSYa1meukJ@pengutronix.de>
-X-ClientProxiedBy: MR2P264CA0078.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:500:32::18) To MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:501:3d::18)
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="eKF33h08"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55GNXmk7031454;
+	Mon, 16 Jun 2025 23:34:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=AV2HzGw9EyINSKLyYtsSssn
+	pW4NDyvKSwe7LrSIKmic=; b=eKF33h08JZlWHXP+4zMpn36crA1zadCAX9EkV8e
+	URn2OPMFax00VtM8bKrCWyPrJAH2hncKpjLI4gVoalYK12J0Hb/GUc6YN7fQM44A
+	wVSU9atmIxSlsBq3+3fIAk0APszvxSpCN1lhYCMJbBsFicWPHh9C+DcpNgpE5urB
+	04zK4AeLFoeeAlxjozte0L2SbQ6sq53wguNzGkeSe99B/1EiOPIywxtmFLn6n1B5
+	VGlTe0fqv81xhEOW3hIuI87/JlXHgSdrKZiIPEkt3TFbVMGNLETj9Tgh7fbt8pPR
+	xRM0pcx+ZCJFDj53caVjXwi/z88OJzgCmjyCCNtAry+7rOA==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 47aw21rpta-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 16 Jun 2025 23:34:12 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Mon, 16 Jun 2025 23:34:11 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Mon, 16 Jun 2025 23:34:11 -0700
+Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with ESMTP id 9F6E562676B;
+	Mon, 16 Jun 2025 23:34:07 -0700 (PDT)
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Hariprasad Kelam <hkelam@marvell.com>,
+        Sunil Goutham
+	<sgoutham@marvell.com>,
+        Geetha sowjanya <gakula@marvell.com>,
+        "Subbaraya
+ Sundeep" <sbhatta@marvell.com>,
+        Bharat Bhushan <bbhushan2@marvell.com>,
+        "Andrew Lunn" <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        "Eric Dumazet" <edumazet@google.com>,
+        Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: [net] Octeontx2-pf: Fix Backpresure configuration
+Date: Tue, 17 Jun 2025 12:04:02 +0530
+Message-ID: <20250617063403.3582210-1-hkelam@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MR1P264MB3140:EE_|PAZP264MB2573:EE_
-X-MS-Office365-Filtering-Correlation-Id: 764fcade-01a8-4243-2e1b-08ddad68f0c4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cXh3cWxXV2xTQm0wQlhrVURaVkdxam1RTnI1eTI5MExqY3VVQm50ZzJiSVlK?=
- =?utf-8?B?THR1UFRRZFFEUXkvZk41UHNaTWs0K0JZU2lIYUhmVFB3d1o4QUNWNHR3clBS?=
- =?utf-8?B?NlFFSE1ZNGg3SFg1VUw3aTliYWZ0elBNYkZNeXNYZWQyRy8zcmdqckR2STl3?=
- =?utf-8?B?TWN1RjJHaWxFUmhaaTM3Um9KZVUwYzZaR0tsSkNZSkJvKzVJMHE0SE8rUngr?=
- =?utf-8?B?cXg0ZlE4NHF5cUhtd3VnaHhJQmp4dkdJdjI1dldBNVJ2cDVBZXlpQUlLOFZs?=
- =?utf-8?B?SXZ3dnpydGdQVTFVTTFaL29jZkE5cVVPOFFsV1dTejVFc0ZGUldDVkJ1VHQv?=
- =?utf-8?B?YUNQMG00MUNKcHc0SEtEYVh3T2NsVkx5aWRsYXVKYk4waEZZNjY4UDkrZEFi?=
- =?utf-8?B?dXBlMTJyYy9tN3A0VWl2NDNWYW44U1RyK2JGVTMvVGdIMHdoemh5QTg4WFdU?=
- =?utf-8?B?KzFoeHZJMi8xbEdFN0FqTlkzVStyV1lkdDZ0OFdBTXN1R0JsUEFnZDAxczgz?=
- =?utf-8?B?bjQ2UzF5VUpNN0Q3Rk83WjBqcS9lekpwbjM4VXlnemd1dUFFS3FmWXFPMFZq?=
- =?utf-8?B?ZHhUdlJaZkcvdGFrMEp0U3BFc1lqcTQ2c1hjWm1JbXJ0RUtDcGRMVURkSjlU?=
- =?utf-8?B?dXcyQVZMNGg3allVRnlTWUhhR1U5LzF5czNZbHBuWnMrK3dCS09mWjNFQ0tI?=
- =?utf-8?B?bHlybExPaGxIazFwMWErS0VjM1NhWStCRm5YNzdmQXNuQlNyOGVIbVI1eW5h?=
- =?utf-8?B?bHJLQ09LUVRoTGs2U0lVMllhZmoxS09DUEsra1ZuNGcrZzk1Y3RrT1MyNHJX?=
- =?utf-8?B?WTBTUGw0NlNqeGpoSUd6cWpqSVJwcVc2WnQ4UVVaOU1tQmhReHFXKzFyd1ZM?=
- =?utf-8?B?UXQ0SFZQc0w4VFFPWEFlRTRhd2Qra3JsaXYzaUJESTRwVDAxWlVhblNkWDZz?=
- =?utf-8?B?dWo5ZFlmQ1FhRzZBS3pobEROWEpNUGZpMVAzeXliUnRxWGVNaGRGRTcwMGZI?=
- =?utf-8?B?cTVycnp5TXpiaDFGc1hBN216aUVLN2IzZWtZU0NOd2FhYkQySUhZRVlRZEM0?=
- =?utf-8?B?Y3p0SUptTjBDUFB6UjVtL2o0eFdzZlcyd0FwUEJmamtrSG1aVzI5QjRYMEo3?=
- =?utf-8?B?cnE5aTZkQmozYlQ3QkkxNk4ycjlvSTd0QmpIdWp6ek9idGR5NTlrTEJBbkY2?=
- =?utf-8?B?V3R0OEtrMGVpckJYSHYrN1FEZXBKK2RsMkRDVnNUOXJEeDArN1ZCYTRWZFhT?=
- =?utf-8?B?aWQ4a3hWNU5iTlYwV1dQL3V5bS83SnlvRzRUMTBjYjRZQllxUXNzV3YxZDRj?=
- =?utf-8?B?c3hQNDY5VjJpUk5YeG82SldYQ3ZwQWdqS1FkZnNpWmFHejF3QXFIOFRxM1hC?=
- =?utf-8?B?c3NrS08zN1JTWXF0SUZ2eDFhckt2WTE5ZUpob2RhOVNoUWZicnR5V3d2Vkx4?=
- =?utf-8?B?TjJpUWlaTEZ4TGQ1cFNkYnJVV1dFUUxlMUJqa05aZlBZeFU3MksvVFhqQ0hE?=
- =?utf-8?B?bVo2YTMwMFVhZFQ2WGtDelRCbDBEUWVadGE3WEZVOXZkd05PdWJxN3lBMHFW?=
- =?utf-8?B?NS9LL0NXUnlIWlBkLzNMME9aZFhUSGxEdk1IV3Z4ZFEzWE5aZHFxVlA2ejFW?=
- =?utf-8?B?YXJZOE5tYmtXbUVUeVFkYnpqT05vbHIrcDE3VUJXYk1aQTVMa2RFaVN0Y1JD?=
- =?utf-8?B?VElJOHlqRVlvTHJ4bkJKdlRaYzJ0eHFjaTJyVGFXdUhGYm9CTFk2aVRWcWxo?=
- =?utf-8?B?UzFpQ3lHYkwyM2VVU0RFTjltNUNTS0VMblVrNHo2bFpnNytzN2RUdS8rSnh0?=
- =?utf-8?B?eEZ5cTVEWlNUVTU3MjdoYmQyWU1MeGtVaU5KZGh2RjgzaE1nQmphSGlmZUk5?=
- =?utf-8?B?WjhRZWhEVW9tTzA5SGU4ZGFEY2RUUlJOMExUTmxJQzJrNnc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Y21tVGlMd0tJWFVvbjBXU29vL2VHM3FFQkI1bXpGT0FCS2UzY1ZSU0o5MFlo?=
- =?utf-8?B?VmZqY01GR2MwTWRLaVM5NWxXaGI3V0o1Qng0RmpIenVuUk5IZVhVYnFZUXYy?=
- =?utf-8?B?aWFhYWEyQnFheXlkalpHYkZqd3htOTRycDNDZzA0enRSbERxdDNZL3F2bkJF?=
- =?utf-8?B?bXFLeDY4MFZjS3Q3ei83b2ZyemUwSC9KeC9wSXNPUTYxeWdKMXkxVDNONzRa?=
- =?utf-8?B?eFIzUUJ3YUNyNERORm5JN2M2UVRNNG5ZcXM5NXZVTDRrVk5VQzVmL01xaDV6?=
- =?utf-8?B?ZUo2Mjgwd3A4QUtkVXAwazdmb04xTmYzY1Q5aWlKUXJ5WmxNWXNyQ1YyUmxz?=
- =?utf-8?B?ZXNGUm5jMWZUR1o3UUpqWVl2bEpYMW5GWXZ3SlZXZnNld1BQeWZIQkFGTis0?=
- =?utf-8?B?ai9wamRtNTFRUlNDYXNEbTc0cCtBUnhKSzl3TFJQRForQ0NOay91NDFlbzFO?=
- =?utf-8?B?d2laMHFXTFpqeHN1c0NGTERrZ1hDclNhTkdTVDF6NDhEaFlROVJPbjYrUklu?=
- =?utf-8?B?MlJOTjllMUxwR1JBNnNkWVlZRGpIdGdEQmxZUVAvcnZ6UVkxd1FOQUxHM0dh?=
- =?utf-8?B?WHU4UlVaaW5FOUhkcFJvMGtuQXZSQVVtdE45bDI2MUp0aGdPeXltNGVTMkt2?=
- =?utf-8?B?SXFMcmgwTGdmeTc0bzV1VFNtQVVLRnNUNlk2Wkc4WGRRUnBmS0E2MFF0WkR5?=
- =?utf-8?B?NGlhTnNUNWhoZGdYRUJyazhoRjQyd3Z0L3JXdjViZ0hqMVRzY2MxTDREdmdP?=
- =?utf-8?B?RkJQcDB6RUhjdWNlL3JSY3BFYmpQQzhHZjRhYW4rQ2NoWW94Um1RY2FEYm1X?=
- =?utf-8?B?aW16UUp3cTZRZzVIajF5akZSdEVkMGN6SGtuV3lqWlZsQVdobWV2NXBjdE9z?=
- =?utf-8?B?R1M5SEhOSjN5NTYzT3NKWGNuYm5ScndDOFJLK0FDVGhlN1NZckk0Z2t2eFFa?=
- =?utf-8?B?a2lBcHhURVVhUHVuc3VFZVdvUnNaNTFDTXBVaER6NGtvK2xnODFqS25LbjVL?=
- =?utf-8?B?YW41cm85NDlYczd3RWViaTdXZW9OZC9qZ045THlEUjVSWm9INVhJMmEvVElH?=
- =?utf-8?B?aFlMbkVzL3U2MmlFM2FLR3JNdjYvRU9QVWw4d1FHbitrcWNuT0RKN290WGNk?=
- =?utf-8?B?T2xzTnd4QlJkSSs1dFdkUXAzMzNQRGZqZGJvSCtNMUx4L2t6YlBKVmxWSVh3?=
- =?utf-8?B?ZjB2MWI0V09TUHZHTG0yUEJKdGpnNFNrTG9CMkV4VUZuOEIzY1c0WWZ3YWFl?=
- =?utf-8?B?NHFKNHU0amRWajBXODd0SVpiRUdyRVhaWlpvc2diVktOTTZQNXA4YVpOaEMw?=
- =?utf-8?B?S0tNYm9ndW8xWnFmNTZpUEdOODltZG00UGszUGQzaGp1ZUF2bmFlL3pxTWV2?=
- =?utf-8?B?OGY4S1dmdzZtZ3dDY2o4SHRnNFZXSEI1azlnUmh2SHJVYW14YmtjR1VZaGJq?=
- =?utf-8?B?aFZWU1ByRThuRFZYdlRuWmtXUkUwRTFEbEpqN3VnVkVzYUN6M1I3U1BndmJ3?=
- =?utf-8?B?QlFRbmVwS0tXb0RCTjJvRzlGekxZa0RibFBPYlRYZmhZY0hXaTFiaDB4M3dM?=
- =?utf-8?B?Q25rRmpSbWN2SzVxU0swUXh1b2pDajBvSFNndEx1b0ZNdHFkcWJmZlhDZTBp?=
- =?utf-8?B?TWhXUmhvS3NsMm9Fb3FqQ2J5SFkrOFZDUmZwdkZYUFV4NmpjYTh4RUJkeHNV?=
- =?utf-8?B?Um1IMlRXMnhCNW9ONGQ5MVBBMFVraER4WExoOElybEJFKy9wZzFRQlhzMVdk?=
- =?utf-8?B?RWtQWDd2TDJzM3laTE9rWElkU3M0VzBzQTFQZ3p1SkEvcERHZXdOMU5oSTFT?=
- =?utf-8?B?eE5YcHRCeG01Q3NQUU9qbWZBNERyR0k1Q0ptMXU5VTE2b1pEL1kzVDVTZnhN?=
- =?utf-8?B?V09na3JnbmoxcWhuUlUrME9LSERvZXIwY1BGdE5iZ0I2YUNSbFE0U0YzY3Fn?=
- =?utf-8?B?QzhxbWJGd0tZTWpYclpMSTdid3hHY2huNElvZEt1TG90cG1rUklKcSs1N3RI?=
- =?utf-8?B?cmg5cFl6a29FdWtzdnJIMmRyeW1VQ3FmTXdhbXJrSS9YUjdoZG1VeGUwSW5L?=
- =?utf-8?B?eDc3T0srWjNlaUlqb25jaDY1T2ZnVFBMYkFmTzU1WHhMN3VxTGNnT3V5SGhT?=
- =?utf-8?B?QkZWK3IzeDlnSTltdldkZmsrTk1HVmQ2Vy9IaGtScHlmV09mc3d1MEpUUXlk?=
- =?utf-8?B?YUE9PQ==?=
-X-OriginatorOrg: allegrodvt.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 764fcade-01a8-4243-2e1b-08ddad68f0c4
-X-MS-Exchange-CrossTenant-AuthSource: MR1P264MB3140.FRAP264.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 06:33:58.8131
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6c7a5ec0-2d92-465a-a3e1-9e3f1e9fd917
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: m8aB2S4nYhhx9H9BbhK/tquX4Ty2Yha5B0pmCpVgJrVadgHw584NPkJb34OjN4RROMlL0Nh6xUJMOISA3DwJEVdiKKrCkmZtbTZf3uqMmuo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAZP264MB2573
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: hJvi0UwyBlPuEQToEF_8xjL_R591C_iW
+X-Proofpoint-ORIG-GUID: hJvi0UwyBlPuEQToEF_8xjL_R591C_iW
+X-Authority-Analysis: v=2.4 cv=DfMXqutW c=1 sm=1 tr=0 ts=68510c64 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=6IFa9wvqVegA:10 a=M5GUcnROAAAA:8 a=cIFZUDyxDlkkEMaN0r4A:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDA1MiBTYWx0ZWRfX43+QRQoJQsNI t9vpXvjvDE46T1s4+fiqNA/GDkVe7t4Nwv0QNQKm3Ocrko8sgBd52nAnQYTz00Qbf07Jq36b/3R SxV5GFrn8qwLekr1gPxVMXgBrIdMFUZOf1KdJ8zpz92zKNnsWZ/Xu0RLX7EtR6fvik7XE/AOFjg
+ BlVHXN4qrIhZsb8+PEsLbBPPtgqlmQQCx2Jp/l/1KF2vvbh5aHlT8hdC7cPF14VWXC9rq0Gi6Bx XAKOmOnXWSUWTQ5jN3/bLP50Qo86AgJNYhB8q2eyw5HBk4Q+swiFFWwz60eZnzRxhY+1QzFBHpv fASbeS/brH1Q3iGcrG3N5A6EhlKbd0XaHS8PWYH+k5MKpWL9fHgnLyO3FUuZP2Lru4LtbsaKmGt
+ ZoejZ5GoUcb/4hG9z4fYT3MzPukFPIFaSrpaZxmu5tGpbbaWEzIcFoSv9rDVHcE99vRK/STg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_02,2025-06-13_01,2025-03-28_01
 
-On 12.06.2025 14:42, Michael Tretter wrote:
->On Thu, 05 Jun 2025 12:26:57 +0000, Yassine Ouaissa via B4 Relay wrote:
->> From: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
->>
->> Add compatible for video decoder on allegrodvt Gen 3 IP.
->>
->> v2:
->> - Change the YAML file name, use the existing vendor-prefix.
->> - Improuve the dt-bindings description.
->> - Change the device compatible identifier, from "allegrodvt, al300-vdec",
->>   to "allegro, al300-vdec"
->> - Simplify the register property specification,
->>   by using the simple min/max items constraint (Krzysztof Kozlowski)
->> - Remove the clock-names property. And remove it from the required
->>   properties list (Krzysztof Kozlowski) (Conor Dooley)
->> - Use the simple maxItems constraint for the memory-region property.
->>   Also for the firmware-name (Krzysztof Kozlowski)
->> - Example changes:
->>   - Use header provides definitions for the interrupts (Conor Dooley)
->>   - Improuve Interrupt specification using GIC constants (Conor Dooley)
->>   - Use generic node name "video-decoder" (Krzysztof Kozlowski) (Conor Dooley)
->>   - Remove unused label (Krzysztof Kozlowski)
->>   - Change clock reference from <&mcu_clock_dec> to <&mcu_core_clk>
->>   - Use hex format for reg property (Krzysztof Kozlowski) (Conor Dooley)
->>   - Reduce memory region size (Krzysztof Kozlowski) (Conor Dooley)
->>
->>   - Link v1: https://patchwork.linuxtv.org/project/linux-media/patch/20250511144752.504162-4-yassine.ouaissa@allegrodvt.com/
->>
->> Signed-off-by: Yassine Ouaissa <yassine.ouaissa@allegrodvt.com>
->> ---
->>  .../bindings/media/allegro,al300-vdec.yaml         | 75 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  2 +
->>  2 files changed, 77 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml b/Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..26f9ac39682431b1d4828aed5d1ed43ef099e204
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml
->> @@ -0,0 +1,75 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/media/allegro,al300-vdec.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Allegro DVT Video IP Decoder Gen 3
->> +
->> +maintainers:
->> +  - Yassine OUAISSA <yassine.ouaissa@allegrodvt.com>
->> +
->> +description: The al300-vdec represents the gen 3 of Allegro DVT IP video
->> +  decoding technology, offering significant advancements over its
->> +  predecessors. This new decoder features enhanced processing capabilities
->> +  with improved throughput and reduced latency.
->> +
->> +  Communication between the host driver software and the MCU is implemented
->> +  through a specialized mailbox interface mechanism. This mailbox system
->> +  provides a structured channel for exchanging commands, parameters, and
->> +  status information between the host CPU and the MCU controlling the codec
->> +  engines.
->> +
->> +properties:
->> +  compatible:
->> +    const: allegro,al300-vdec
->> +
->> +  reg:
->> +    maxItems: 2
->> +    minItems: 2
->> +
->> +  reg-names:
->> +    items:
->> +      - const: regs
->> +      - const: apb
->
->If I understand correctly, "regs" are the registers to control the MCU
->and "apb" are the registers of the actual codec engines, which is
->controlled by the MCU. The driver never accesses the apb registers, but
->uses the apb address only to configure the firmware and tell it, where
->the registers of the codec engines are found.
->
->Maybe a separate node for the actual codec that is referred via a
->phandle could be a better description of the hardware?
->
-the regs is actually is used to configure the decoder and also the mcu.
-the APB address is used to map the mcu peripheral, which includes the
-codec engine.
+NIX block can receive packets from multiple links such as
+MAC (RPM), LBK and CPT.
 
-I think it's sampler to let it as reg.
+       -----------------
+ RPM --|     NIX       |
+       -----------------
+             |
+             |
+            LBK
 
-the naming has changed in the v3.
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +
->> +  clocks:
->> +    items:
->> +      - description: MCU core clock
->> +
->> +  memory-region:
->> +    maxItems: 1
->> +
->> +  firmware-name:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - reg-names
->> +  - interrupts
->> +  - clocks
->> +
->> +additionalProperties: False
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->> +
->> +    axi {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        video-decoder@a0120000 {
->> +            compatible = "allegro,al300-vdec";
->> +            reg = <0x00 0xa0120000 0x00 0x10000>,
->> +                  <0x01 0x80000000 0x00 0x8000>;
->> +            reg-names = "regs", "apb";
->> +            interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
->> +            clocks = <&mcu_core_clk>;
->> +            firmware-name = "al300_vdec.fw";
->> +        };
->> +    };
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index abc6ba61048771303bc219102f2db602266b7c30..1ff78b9a76cb8cdf32263fcd9b4579b4a2bb6b2a 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -816,7 +816,9 @@ M:	Michael Tretter <m.tretter@pengutronix.de>
->>  R:	Pengutronix Kernel Team <kernel@pengutronix.de>
->>  L:	linux-media@vger.kernel.org
->>  S:	Maintained
->> +F:	Documentation/devicetree/bindings/media/allegro,al300-vdec.yaml
->>  F:	Documentation/devicetree/bindings/media/allegro,al5e.yaml
->> +F:	drivers/media/platform/allegro-dvt/al300
->>  F:	drivers/media/platform/allegro-dvt/zynqmp
->>
->>  ALLIED VISION ALVIUM CAMERA DRIVER
->>
->> --
->> 2.30.2
->>
->>
->>
+Each link supports multiple channels for example RPM link supports
+16 channels. In case of link oversubsribe, NIX will assert backpressure
+on receive channels.
 
-Best regards,
-Yassine OUAISSA
+The previous patch considered a single channel per link, resulting in
+backpressure not being enabled on the remaining channels
+
+Fixes: a7ef63dbd588 ("octeontx2-af: Disable backpressure between CPT and NIX")
+Signed-off-by: Hariprasad Kelam <hkelam@marvell.com>
+---
+ drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+index 6f572589f1e5..6b5c9536d26d 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_common.c
+@@ -1822,7 +1822,7 @@ int otx2_nix_config_bp(struct otx2_nic *pfvf, bool enable)
+ 		req->chan_cnt = IEEE_8021QAZ_MAX_TCS;
+ 		req->bpid_per_chan = 1;
+ 	} else {
+-		req->chan_cnt = 1;
++		req->chan_cnt = pfvf->hw.rx_chan_cnt;
+ 		req->bpid_per_chan = 0;
+ 	}
+ 
+@@ -1847,7 +1847,7 @@ int otx2_nix_cpt_config_bp(struct otx2_nic *pfvf, bool enable)
+ 		req->chan_cnt = IEEE_8021QAZ_MAX_TCS;
+ 		req->bpid_per_chan = 1;
+ 	} else {
+-		req->chan_cnt = 1;
++		req->chan_cnt = pfvf->hw.rx_chan_cnt;
+ 		req->bpid_per_chan = 0;
+ 	}
+ 
+-- 
+2.34.1
+
