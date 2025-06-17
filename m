@@ -1,162 +1,263 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1337D289824
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656BB28D8EF
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750146226; cv=none; b=EvtP8CHBvNYXww5XBJ8KNUOMpjL0Bqo7KTVrhZia6XP1qsGoTRMDe11YLRwZTXUJ07oElkf//RU8y3PSB9iss87yGAT7xZ4bF4F39NFt8mrRULppffAIv/65wrnACLmxJUMOraOfEusd/1xbDxqPRH0z8MW7vgtqs7gx5YNIcvg=
+	t=1750146244; cv=none; b=Bfo2hP2ZxanhejniqKX9aXFPYpdiJYDOLGqId6s3kYY539TfSW4ZsA4Ofh0nOcDhRKtGlCjbM4HNjc7S6ctllXfuy3uKoWBoKFU6pihgfMrSamZY7+2M6oSfaZoOvAusU718551DXOC+kGZnUNEfPMdWTudtiVX0Gwt1jj91JVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750146226; c=relaxed/simple;
-	bh=Wanilknuq/oxgKqar3VDDdKU9mWKxoMxEl1gryaM9SA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OUJbwuMhpTuiRxjIo3setya2WQL1nbov7bVNULv4aSnt4DNCiXrmnRnxbiWHiSBxo7J6Gne0Myv4IVgca0LZMvusNe7PC0GVsQG6VGPEPs9EUdaWZO+1EnUsKLbkC9kAaIefbDL4Op+aCCJJdUQ2rNrxjsE0+rnCXegFSwEWqL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2QTY16Pa; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750146244; c=relaxed/simple;
+	bh=Y/gnwY3Z4+W+KboEp4V1AS07foP089p9Cu+udu+/pP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WQpTEN8UZy7LQINUXCw5AZPeJxzP+o0LA/m4CPwMXAvAlo6kCldBm8t4IkO+mBxYlxyHt8Nmhu9/lRROgWz0E5N6w4X/TI3siNEp6pMJelJc9PoiitDeayjYoM79lGzahm+rbkwqgjVaNN5EVjuIYQGJIwUIJEGdhiu3DKCY2bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NBPD1NqV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2QTY16Pa"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4f71831abso4836304f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750146221; x=1750751021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yr/0G9QcVKTsH2nCRZsPlndI4/213HWXG/qnBI+qj0g=;
-        b=2QTY16PaPiD0pPXyYQUkBdgV+Y4+1psm6/V2qfmB4Lq68p9Lm72KQg+CPoYBs3OLGi
-         ooFfLnEetDdmDWAKCC1Vn3lS3uXachGRa/Ld74pHGnKq09F7KPxVUlJjWO2nzK+C/mHb
-         oRdkNYYvpQGegdZZsk3O6SkDA5tt37ecZD9pciazCUtNpcfSUeVLqwLKrSjwp7+84F2p
-         9p3rmpZ39PKJhiHvGIZAOpCLCEk9F/EFapU7co6qmyN5Y6kKVbIoRXH5YCEKKD/s95oT
-         I6FWP9bD1K6PfQzaeQ18JkCtuDp9KaurmXlFZKNl6MHHYv8y8zmXp/BaJWwIRFxIKjT1
-         sgPQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NBPD1NqV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750146241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=fQE5kmoAVVBp5PE3yEpqJAK0vmDk7/V02D4PYM6CncQ=;
+	b=NBPD1NqVEg56T4UpA5znqGngIl7/h6OjDidl8CgcVOMRXt+pjE7tlX+2JPTmVUILtkw5hW
+	YfgSYZrMzWxV1iV6M+vVyTI1R8ZMqM+VU4e2vybLbgCwbIARdHo1wCTMpuyOp3Ka0vnA3Q
+	5+VgwgN+KeLGXj32RhgVTRdfhKiUSzA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-148-JRB-Yv4gOEaYLVxijAqgEw-1; Tue, 17 Jun 2025 03:43:59 -0400
+X-MC-Unique: JRB-Yv4gOEaYLVxijAqgEw-1
+X-Mimecast-MFC-AGG-ID: JRB-Yv4gOEaYLVxijAqgEw_1750146239
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-45311704d22so35267065e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:43:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750146221; x=1750751021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yr/0G9QcVKTsH2nCRZsPlndI4/213HWXG/qnBI+qj0g=;
-        b=YoVK16jGhNHb92PwyOIbYR2V6tCiTsYd71dKU1l41V24ln3M/Ncqcen8v+LWT2NkaW
-         ObqReyGOb8RmbApQZgxwMV48BeGbUosPtXFoRkv48fxjZTR7hbYGMOmbMv7dg6srq/9q
-         L3vo8yrHL+TIzCw4uW8B1QOOEPVRDkyATwq0QBwIFSjdZUfReTU6/rIQoQfhdHQdUGhG
-         WXNbDrlI4wsnMk3cDCtyNb6zP2/xgaJyTZPIoyRNxs0VZNDQ2Ng20RE/SFV48Nxv/iST
-         jANJXiznMPc2VAzFZdmb9+J3wgGXpWVRT/gVOrNRzPlfsVpzEsxD+kZDDcRdyjzufkSf
-         LlSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXr4ecH0aMpPZKPO8+smPbwkwhO0XwloFuX6OedpTVUf5kGjdMKR2ImfABNEZeV5KGsIUYMV9rcUV8ulww=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo2y4BkAxyqIkvwClxdOvpToo8QdNnEeKR2ncaxlnhckbXS8Vu
-	7S+sNcU8Cv1bOqEer2Ad06t/y9hEz1PAe6hQlbxhdceuaWZtdVBPiVCGSId13zefhXk=
-X-Gm-Gg: ASbGnctxcgzfO4mNxP2S8QOExpT71GJkqqXOinhkdvYztPShLHLIoq04VkJcKu4v3s5
-	t/8FwD5rMm2EgxTlqFiaRtXlAJOjSmI+lU9lrTp1FcPksBE9SwRkvROw4MYMU7tn6G3iF1JFVNl
-	UQoS5exSKuohJU7b7uT44bhGAB9M61xGZtsFQ6uGeLAJsgc4ixMLnU/Nb5DS8tdrGs7f/5P4b4R
-	0foGSAP7IaGf4RKJDgdPFLe0lWJpqCkOiBz4Y1fxC8LuKPrlNUNNEqjcla2lwFtwFbvxus0E2L9
-	IhXFEbr07sBD1iq7uKkXYcPsl2Qc2KA6ofmi4yHkHzzBgFjk15Gmfm1gNaqMuz5gMixC0/FzkVk
-	/Bjv+KAnF6OZTFZle4oGmBm+KQ8Jb
-X-Google-Smtp-Source: AGHT+IHjO2Se+CNiFhQkijyy0zThy6btDct+3FCrSMJqJK2Ek1zZ0kq2x91GfZpIV9vpmdDOKsNMTg==
-X-Received: by 2002:a05:6000:2302:b0:3a5:2cf3:d6ab with SMTP id ffacd0b85a97d-3a5723aeae3mr10062193f8f.39.1750146221186;
-        Tue, 17 Jun 2025 00:43:41 -0700 (PDT)
-Received: from localhost (p200300f65f13c80400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f13:c804::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568b18f96sm13293332f8f.66.2025.06.17.00.43.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 00:43:40 -0700 (PDT)
-Date: Tue, 17 Jun 2025 09:43:39 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Vinod Koul <vkoul@kernel.org>
-Cc: Abin Joseph <abin.joseph@amd.com>, michal.simek@amd.com, 
-	yanzhen@vivo.com, radhey.shyam.pandey@amd.com, palmer@rivosinc.com, git@amd.com, 
-	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: zynqmp_dma: Add shutdown operation support
-Message-ID: <rgjc7ujikyznrri27u6v3zst2m44423g46rlfnkfncr24jwx6z@mfwwvhe3upby>
-References: <20250612162144.3294953-1-abin.joseph@amd.com>
- <aFENfW0v0gmtY2Gu@vaman>
+        d=1e100.net; s=20230601; t=1750146238; x=1750751038;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=fQE5kmoAVVBp5PE3yEpqJAK0vmDk7/V02D4PYM6CncQ=;
+        b=lKG+T01vB4JDBqFjnz6beSh3VHcwUIo/sUnlzxNlWi12QA4jGmSLEbTL4scFGn72xe
+         7lXTrGsbDRgVFcOK6Wzp557d2yUw1JD3zK9O7pET3OfxzsHKf1g3B3qNt6c/vQSOKiyJ
+         o5hPsAe3PbyZVyFc1ny0e/qeXCK2GedJICivbREX2gqRmS8Ejm161GVpgZUj4EelEqs4
+         1B3VDxzkBrKEHML3xanPOm6WRd6m4XYvjp4d+n/rEEv5dv9F8698ijJ2woSdFDAE/xJg
+         vB+zykFm6yYqEhvOFzDFJFQqraDPMNGlZdE1xYK2icHobks3jyPrzsMOKd4meOJn8mD7
+         Q83w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5JAKEvEx6Ztjo1PwvsWHWtmpBVUsVMvWkiriNu/JWWgbjog4GMhqjyEr/E9V2lil751y/Geo5WIHMEfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLpahGaSEyu9WMxqax7NFu558oqe7+2JztAcmFX9VhYJdgSe2v
+	jh78GUs0BRGzOOzWkPTqaGn3kxlojgcNXTIYWKMHWwOB4EQEfWRcFJB+FshEwLFBgUDXd+6JeKJ
+	jkncf2p1+w6Sb4jdkfQCze5LlWVBFNZiLQhOuG3643+8dv8hDlbgpk184teRGaA34UA==
+X-Gm-Gg: ASbGnctNN9zN5IOflVVhXmmD3Kfa1RMHABvph7SVC7OOjOI2JB5rQ/93ErrR69DQ6Th
+	lWVi5qOKltQWKYdZ4Ho31YWuGGbdMr9ABTbXaBxmc+Cfm0YyYb8L1hy/M8nvbsTXzVu8AN0eYLP
+	Zj8OVUO6FzjjXn+eusfSNiG59zu8F+hGBCDe+RnuyoZ8WgIE4WGHaSimYHhVeM0rd4nDhSRQTxl
+	Uod4sp7qsthP5HqqB8o8ibn/mYTi4GRd870f8LXY2AjA71sg7Vo2ryDeRN5/cDb3rf/j7vjgQ/B
+	OGJfrr5CgzCMbEpsNA1JvU4unMsITn0sKZTnbSmlRNl7Rgt5TGdyyOz0Bx2/IG4r5uGwXk6kzB2
+	8TyFCdwcsFr6tE2zFKlgTzD5EaLqY+LYMG2SRo4jEWaoN+yg=
+X-Received: by 2002:a05:600c:82c3:b0:442:f4a3:8c5c with SMTP id 5b1f17b1804b1-4533caf5922mr132749195e9.10.1750146238572;
+        Tue, 17 Jun 2025 00:43:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGVJqsb5x8WIO+53bIeG1hU7iYijv8uZm//ZPYLkKqsSMIyHju2/xGa5dLTk4XbYbpJwr4Lyw==
+X-Received: by 2002:a05:600c:82c3:b0:442:f4a3:8c5c with SMTP id 5b1f17b1804b1-4533caf5922mr132748845e9.10.1750146238101;
+        Tue, 17 Jun 2025 00:43:58 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4534394c90fsm89474035e9.3.2025.06.17.00.43.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 00:43:57 -0700 (PDT)
+Message-ID: <34560ae6-c598-4474-a094-a657c973156b@redhat.com>
+Date: Tue, 17 Jun 2025 09:43:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="pas4lfeknrusfsyc"
-Content-Disposition: inline
-In-Reply-To: <aFENfW0v0gmtY2Gu@vaman>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for
+ large folio
+To: lizhe.67@bytedance.com, alex.williamson@redhat.com,
+ akpm@linux-foundation.org, peterx@redhat.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250617041821.85555-1-lizhe.67@bytedance.com>
+ <20250617041821.85555-4-lizhe.67@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250617041821.85555-4-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 17.06.25 06:18, lizhe.67@bytedance.com wrote:
+> From: Li Zhe <lizhe.67@bytedance.com>
+> 
+> When vfio_unpin_pages_remote() is called with a range of addresses that
+> includes large folios, the function currently performs individual
+> put_pfn() operations for each page. This can lead to significant
+> performance overheads, especially when dealing with large ranges of pages.
+> 
+> This patch optimize this process by batching the put_pfn() operations.
+> 
+> The performance test results, based on v6.15, for completing the 16G VFIO
+> IOMMU DMA unmapping, obtained through unit test[1] with slight
+> modifications[2], are as follows.
+> 
+> Base(v6.15):
+> ./vfio-pci-mem-dma-map 0000:03:00.0 16
+> ------- AVERAGE (MADV_HUGEPAGE) --------
+> VFIO MAP DMA in 0.047 s (338.6 GB/s)
+> VFIO UNMAP DMA in 0.138 s (116.2 GB/s)
+> ------- AVERAGE (MAP_POPULATE) --------
+> VFIO MAP DMA in 0.280 s (57.2 GB/s)
+> VFIO UNMAP DMA in 0.312 s (51.3 GB/s)
+> ------- AVERAGE (HUGETLBFS) --------
+> VFIO MAP DMA in 0.052 s (308.3 GB/s)
+> VFIO UNMAP DMA in 0.139 s (115.1 GB/s)
+> 
+> Map[3] + This patchset:
+> ------- AVERAGE (MADV_HUGEPAGE) --------
+> VFIO MAP DMA in 0.028 s (563.9 GB/s)
+> VFIO UNMAP DMA in 0.049 s (325.1 GB/s)
+> ------- AVERAGE (MAP_POPULATE) --------
+> VFIO MAP DMA in 0.294 s (54.4 GB/s)
+> VFIO UNMAP DMA in 0.296 s (54.1 GB/s)
+> ------- AVERAGE (HUGETLBFS) --------
+> VFIO MAP DMA in 0.033 s (485.1 GB/s)
+> VFIO UNMAP DMA in 0.049 s (324.4 GB/s)
+> 
+> For large folio, we achieve an approximate 64% performance improvement
+> in the VFIO UNMAP DMA item. For small folios, the performance test
+> results appear to show no significant changes.
+> 
+> [1]: https://github.com/awilliam/tests/blob/vfio-pci-mem-dma-map/vfio-pci-mem-dma-map.c
+> [2]: https://lore.kernel.org/all/20250610031013.98556-1-lizhe.67@bytedance.com/
+> [3]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
+> 
+> Signed-off-by: Li Zhe <lizhe.67@bytedance.com>
+> ---
+>   drivers/vfio/vfio_iommu_type1.c | 35 +++++++++++++++++++++++++++++----
+>   1 file changed, 31 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index e952bf8bdfab..159ba80082a8 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -806,11 +806,38 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
+>   				    bool do_accounting)
+>   {
+>   	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
+> -	long i;
+>   
+> -	for (i = 0; i < npage; i++)
+> -		if (put_pfn(pfn++, dma->prot))
+> -			unlocked++;
+> +	while (npage) {
+> +		long nr_pages = 1;
+> +
+> +		if (!is_invalid_reserved_pfn(pfn)) {
+> +			struct page *page = pfn_to_page(pfn);
+> +			struct folio *folio = page_folio(page);
+> +			long folio_pages_num = folio_nr_pages(folio);
+> +
+> +			/*
+> +			 * For a folio, it represents a physically
+> +			 * contiguous set of bytes, and all of its pages
+> +			 * share the same invalid/reserved state.
+> +			 *
+> +			 * Here, our PFNs are contiguous. Therefore, if we
+> +			 * detect that the current PFN belongs to a large
+> +			 * folio, we can batch the operations for the next
+> +			 * nr_pages PFNs.
+> +			 */
+> +			if (folio_pages_num > 1)
+> +				nr_pages = min_t(long, npage,
+> +					folio_pages_num -
+> +					folio_page_idx(folio, page));
+> +
+
+(I know I can be a pain :) )
+
+But the long comment indicates that this is confusing.
 
 
---pas4lfeknrusfsyc
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dmaengine: zynqmp_dma: Add shutdown operation support
-MIME-Version: 1.0
+That is essentially the logic in gup_folio_range_next().
 
-Hello Vinod,
+What about factoring that out into a helper like
 
-On Tue, Jun 17, 2025 at 12:08:53PM +0530, Vinod Koul wrote:
-> On 12-06-25, 21:51, Abin Joseph wrote:
-> > Implement shutdown hook to ensure dmaengine could be stopped inorder for
-> > kexec to restart the new kernel.
-> >=20
-> > Signed-off-by: Abin Joseph <abin.joseph@amd.com>
-> > ---
-> >  drivers/dma/xilinx/zynqmp_dma.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >=20
-> > diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqm=
-p_dma.c
-> > index d05fc5fcc77d..8f9f1ef4f0bf 100644
-> > --- a/drivers/dma/xilinx/zynqmp_dma.c
-> > +++ b/drivers/dma/xilinx/zynqmp_dma.c
-> > @@ -1178,6 +1178,18 @@ static void zynqmp_dma_remove(struct platform_de=
-vice *pdev)
-> >  		zynqmp_dma_runtime_suspend(zdev->dev);
-> >  }
-> > =20
-> > +/**
-> > + * zynqmp_dma_shutdown - Driver shutdown function
-> > + * @pdev: Pointer to the platform_device structure
-> > + */
-> > +static void zynqmp_dma_shutdown(struct platform_device *pdev)
-> > +{
-> > +	struct zynqmp_dma_device *zdev =3D platform_get_drvdata(pdev);
-> > +
-> > +	zynqmp_dma_chan_remove(zdev->chan);
-> > +	pm_runtime_disable(zdev->dev);
-> > +}
-> > +
-> >  static const struct of_device_id zynqmp_dma_of_match[] =3D {
-> >  	{ .compatible =3D "amd,versal2-dma-1.0", .data =3D &versal2_dma_confi=
-g },
-> >  	{ .compatible =3D "xlnx,zynqmp-dma-1.0", },
-> > @@ -1193,6 +1205,7 @@ static struct platform_driver zynqmp_dma_driver =
-=3D {
-> >  	},
-> >  	.probe =3D zynqmp_dma_probe,
-> >  	.remove =3D zynqmp_dma_remove,
-> > +	.shutdown =3D zynqmp_dma_shutdown,
->=20
-> Why not do all operations performed in remove..?
+/*
+  * TODO, returned number includes the provided current page.
+  */
+unsigned long folio_remaining_pages(struct folio *folio,
+	struct pages *pages, unsigned long max_pages)
+{
+	if (!folio_test_large(folio))
+		return 1;
+	return min_t(unsigned long, max_pages,
+		     folio_nr_pages(folio) - folio_page_idx(folio, page));
+}
 
-=2Eremove() isn't called on shutdown.
 
-Having said that, most other drivers also don't handle .shutdown(). IMHO
-this is special enough that this warrants a comment. Or is kexec a
-reason to silence *all* DMA and most drivers should have a .shutdown
-callback?
+Then here you would do
 
-Best regards
-Uwe
+if (!is_invalid_reserved_pfn(pfn)) {
+	struct page *page = pfn_to_page(pfn);
+	struct folio *folio = page_folio(page);
 
---pas4lfeknrusfsyc
-Content-Type: application/pgp-signature; name="signature.asc"
+	/* We can batch-process pages belonging to the same folio. */
+	nr_pages = folio_remaining_pages(folio, page, npage);
 
------BEGIN PGP SIGNATURE-----
+	unpin_user_folio_dirty_locked(folio, nr_pages,
+				      dma->prot & IOMMU_WRITE);
+	unlocked += nr_pages;
+}
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhRHJ4ACgkQj4D7WH0S
-/k6fcwf/ZARJglob++15lJ5FJZx+lpM9MqpTeUGMKnMzw6B014DEmMpCveShyVjN
-pyGyLhkwI9RHVm9w0L3Gw5tRsEk6gD228K8xE/8hLk+HYNPYqsXlE/B+2AM+Y50/
-Taac6eUG7W9ZGdz6nQxSvROz5tqT5r4WpYvN+TC6hyb7H4KVB963oWjZtwONnBJH
-/bsc2E3kw4J+wctryB6wce6W3ajZEkpaMyyMdzAWTcJ+DFQICD+vb5lJM8Ob8iyH
-RSdhNesjl2KzAFDd75PCPRrUuD08Ndu1Wq35d1+du85WP4vLoiBR7mrW4YSjW5iI
-cu529KsUImojosD6g6IMeCKHknJMqw==
-=Lai6
------END PGP SIGNATURE-----
+-- 
+Cheers,
 
---pas4lfeknrusfsyc--
+David / dhildenb
+
