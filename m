@@ -1,21 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F0928D8EE;
-	Tue, 17 Jun 2025 09:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69062949F4
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152554; cv=none; b=OytmgpkjVY+vokURJUdB1aJZanLxUed6RrNdg13kzV6lNgg71Byt9RTEkBQrF1DFmNF9UebSv2oostIs9eOq4SwBiB+6Bn062KWNgGJJp2CSyQSKtS5qiU/wQlYtLJVesKEjr5rN7ndqJfKnOUscP2zk3f7bkSTdE2LSnNz9sbQ=
+	t=1750152620; cv=none; b=j7EIXIsiZtac3EGqRazq+NLwWToCy0IDM10Gc2jm1+LnAK70o7xxSAal9XBqfEHqX5daswhVQaVIBsjRLw7BN42BWozSwM851tXfSBCX8xMun0lObe752+Ehm+F2TloGP4GZuAfEAJlukT6y0HpxXRiFsDZgv4FcjEt173ArxhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152554; c=relaxed/simple;
-	bh=BLhgt8NKy11ftNW7oRUuMgEb819Xx+li28g2q+IrRSE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pk64RbDWvL5BphlfXVjokO/ZdlIgdiL26K23w4MAVi+u4urmrA+NY1BPbxIS5c+vvJ7LqayogeuDJogC8mKzJSYCzok5Q4nNJg+sxAwkeu4m0VBoEekgoKLk2onxu5sIYl7b4iM1XrQlInrtUnqcHSvycE5D1POKXRzXF/XvpdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 224D8C4CEED;
-	Tue, 17 Jun 2025 09:29:12 +0000 (UTC)
-Message-ID: <ff13e1a9-f1c8-4d2e-a535-122c512ffc03@xs4all.nl>
-Date: Tue, 17 Jun 2025 11:29:11 +0200
+	s=arc-20240116; t=1750152620; c=relaxed/simple;
+	bh=zaZ2O9bOumy6WLgWO1r6sqT4gqzW11xkJSkkFy5zOvc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=rBghSkraYsvqiO4dNdSMJC66FZjSWxm3IQzMvlwNVBWnuE4OWx7hbkio/Aj2XJcuKSI/ja1YpUhfq3Rbbb8tmDAeXTFJvqyx0qOS6guh+PmDR/j4lwN90kLMpNpVdWKqdAQg/NX6z60vvbhhZvCAkFLZI+HdaY5TEnrIDuDPspE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zybM47Jk; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zybM47Jk"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d3f72391so62284285e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:30:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750152617; x=1750757417; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xl41cDxLf5qSZURNGABwnShoulmiUtSz5ST04bw9Wkg=;
+        b=zybM47JkwvYMsbbGVEAyPzZoz6r/+bQOtozXo0sx4YGHQWcvS/qdjB88jHLlLoEk6x
+         DV/45Y/RN8tNuMW5Boij2Mw47l+Y/AGdCpYfCdjfs1q7YUGmcSAMWEFyfef42q+PKe2R
+         1uHlYeFfgNtlLSXyjMRb3bJBdpivmRJALHN9OMbdA8MiQExaxjNtt1VIQpuWMw7DTHu5
+         hHd/qbKhyxRqp+XUeFmvWfz0Q6wQQtcUf6aXO8QwLsMqT84d8nfH7dBGSEkkqS/jgv3c
+         AHuS3vrI5dZTlSNRTd2FM4EC0ppaSZkzrdWfuEH1uRtVDTHYAc2eMI1OrVcr8f7G9PX4
+         k7pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750152617; x=1750757417;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xl41cDxLf5qSZURNGABwnShoulmiUtSz5ST04bw9Wkg=;
+        b=rFI2m6iGN6C4bv3/2kxyHYeDE8PSdpQ5FlqF79/ZTS9iBjCeV+KQ1MN2jRINqpO258
+         6HD+EJ3u1FIXyUGL7uyuhoupNlo+RBXdgtAKucBmr+ZIUcxj42PHii+HLhaW1NLBzf5V
+         LONTxEw9qGCkCaIUaRSxJzkt4qmpojDnl8PF1/Ond6t0xTUi/j9KILLegXUgwnOXl1aK
+         43ZV07gVXepIG5Q3BxdvRb8p+FjS9GNcAHQofBaWZ+wVczEhkEkNA/q7971Xgy61pNnb
+         lsYsvzYSQLR744eEXZnxYpxGVJKIlaYsmyKvzHwBb7+Ym1mGDCHggIKCMon9sL5ugKCc
+         cHMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUK2+yGcqszm2Y62cyU8qObfBvU2P866fhMy4ZfGwrjs1f+sCIW7H7V7T+Bh+NQIgIQhKKX9H2fxz7TBsE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoDT4J33JbxIdPW+MT9IpBcMfEd2lRBms1GyKqWAsnBUiYMpHB
+	/J5yGGSEfyDQzYWvjmO8jewfYjQ/btoxBqhQLtaTJk0S+vlmI59kD/gBNe4+sfWA5wg=
+X-Gm-Gg: ASbGncsXN0QyeU8M8buMLqxXfjtwzpAdTCKOgRrQ0Nox0K4/Hw6mnQSGFRUVF/uVMGJ
+	9/+zVHtA7Iaja6hz4KjsypnyK+YjVKqJMbr+xqdjAX/NZFO73cXNbjSm4hYFsIJIcEJ9nlmJBqa
+	5vhtr457vboaYLHUXaPr/4VefN/rUgWReMsczhdkbC0xT/DDVAY+bTCrLdkSlKOKbHRy4eJ5Lf3
+	NHEMgWwfx+Y8u9w3tRPVi11CJKK/x6A4QjjtkiVEj00yt+MVGSCXUwM4udswdLVKg40vboGa2jm
+	VWN8ER1DhBRy1AAhOlJ5vPolcU+meSUFjpkW1NeYp2QaSNc4i8v1u+Of+YmMNPQCIhSQ9nWBpxP
+	q3GnI/3Lq96SYowEhQCeHwbGqs8gf+1WzX0Zhqaw=
+X-Google-Smtp-Source: AGHT+IH90fM/Hl2qQnPaSI6dqHDTANiZZutrp7G9byHerpIanfYAuG3VuGrXV1ZLniUQsldJImLpAQ==
+X-Received: by 2002:a05:600c:8b01:b0:441:d437:e3b8 with SMTP id 5b1f17b1804b1-4533cac9179mr105111595e9.23.1750152616870;
+        Tue, 17 Jun 2025 02:30:16 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:3819:3250:4f73:db31? ([2a01:e0a:3d9:2080:3819:3250:4f73:db31])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54aeasm13662038f8f.14.2025.06.17.02.30.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:30:11 -0700 (PDT)
+Message-ID: <9c512a8d-a39e-4b3a-b617-80b2dc7d14b3@linaro.org>
+Date: Tue, 17 Jun 2025 11:30:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -23,212 +69,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/5] media: uvcvideo: Remove stream->is_streaming field
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Hans de Goede <hdegoede@redhat.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- Hans de Goede <hansg@kernel.org>
-References: <20250616-uvc-fop-v4-0-250286570ee7@chromium.org>
- <20250616-uvc-fop-v4-4-250286570ee7@chromium.org>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <20250616-uvc-fop-v4-4-250286570ee7@chromium.org>
-Content-Type: text/plain; charset=UTF-8
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH 3/5] phy: rockchip: phy-rockchip-inno-csidphy: allow
+ writes to grf register 0
+To: michael.riesch@collabora.com, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Jagan Teki <jagan@amarulasolutions.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Collabora Kernel Team <kernel@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-phy@lists.infradead.org
+References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
+ <20250616-rk3588-csi-dphy-v1-3-84eb3b2a736c@collabora.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250616-rk3588-csi-dphy-v1-3-84eb3b2a736c@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 16/06/2025 17:24, Ricardo Ribalda wrote:
-> The is_streaming field is used by modular PM to know if the device is
-> currently streaming or not.
+On 17/06/2025 10:54, Michael Riesch via B4 Relay wrote:
+> From: Michael Riesch <michael.riesch@collabora.com>
 > 
-> With the transition to vb2 and fop helpers, we can use vb2 functions for
-> the same functionality. The great benefit is that vb2 already tracks the
-> streaming state for us.
+> The driver for the Rockchip MIPI CSI-2 DPHY uses GRF register offset
+> value 0 to sort out undefined registers. However, the RK3588 CSIDPHY GRF
+> this offset is perfectly fine (in fact, register 0 is the only one in
+> this register y
+> file).
+> Introduce a boolean variable to indicate valid registers and allow writes
+> to register 0.
 > 
-> Reviewed-by: Hans de Goede <hansg@kernel.org>
-
-Reviewed-by: Hans Verkuil <hverkuil@xs4all.nl>
-
-Regards,
-
-	Hans
-
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
 > ---
->  drivers/media/usb/uvc/uvc_queue.c |  9 +++++++
->  drivers/media/usb/uvc/uvc_v4l2.c  | 51 ++-------------------------------------
->  drivers/media/usb/uvc/uvcvideo.h  |  1 -
->  3 files changed, 11 insertions(+), 50 deletions(-)
+>   drivers/phy/rockchip/phy-rockchip-inno-csidphy.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/media/usb/uvc/uvc_queue.c b/drivers/media/usb/uvc/uvc_queue.c
-> index 3f357c2d48cfd258c26f0342007d1d12f1e01007..6e845705b3286348a60650eb262e620dc6039d60 100644
-> --- a/drivers/media/usb/uvc/uvc_queue.c
-> +++ b/drivers/media/usb/uvc/uvc_queue.c
-> @@ -175,12 +175,18 @@ static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
->  
->  	lockdep_assert_irqs_enabled();
->  
-> +	ret = uvc_pm_get(stream->dev);
-> +	if (ret)
-> +		return ret;
-> +
->  	queue->buf_used = 0;
->  
->  	ret = uvc_video_start_streaming(stream);
->  	if (ret == 0)
->  		return 0;
->  
-> +	uvc_pm_put(stream->dev);
-> +
->  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_QUEUED);
->  
->  	return ret;
-> @@ -189,11 +195,14 @@ static int uvc_start_streaming_video(struct vb2_queue *vq, unsigned int count)
->  static void uvc_stop_streaming_video(struct vb2_queue *vq)
->  {
->  	struct uvc_video_queue *queue = vb2_get_drv_priv(vq);
-> +	struct uvc_streaming *stream = uvc_queue_to_stream(queue);
->  
->  	lockdep_assert_irqs_enabled();
->  
->  	uvc_video_stop_streaming(uvc_queue_to_stream(queue));
->  
-> +	uvc_pm_put(stream->dev);
-> +
->  	uvc_queue_return_buffers(queue, UVC_BUF_STATE_ERROR);
->  }
->  
-> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
-> index d06ecf3418a988152c6c413568ce32e60040fd87..7ab1bdcfb493fe9f47dbdc86da23cba98d7d10ff 100644
-> --- a/drivers/media/usb/uvc/uvc_v4l2.c
-> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
-> @@ -617,9 +617,6 @@ static int uvc_v4l2_release(struct file *file)
->  
->  	uvc_ctrl_cleanup_fh(handle);
->  
-> -	if (handle->is_streaming)
-> -		uvc_pm_put(stream->dev);
-> -
->  	/* Release the file handle. */
->  	vb2_fop_release(file);
->  
-> @@ -676,50 +673,6 @@ static int uvc_ioctl_try_fmt(struct file *file, void *fh,
->  	return uvc_v4l2_try_format(stream, fmt, &probe, NULL, NULL);
->  }
->  
-> -static int uvc_ioctl_streamon(struct file *file, void *fh,
-> -			      enum v4l2_buf_type type)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -	int ret;
-> -
-> -	if (handle->is_streaming)
-> -		return 0;
-> -
-> -	ret = uvc_pm_get(stream->dev);
-> -	if (ret)
-> -		return ret;
-> -
-> -	ret = vb2_ioctl_streamon(file, fh, type);
-> -	if (ret) {
-> -		uvc_pm_put(stream->dev);
-> -		return ret;
-> -	}
-> -
-> -	handle->is_streaming = true;
-> -
-> -	return 0;
-> -}
-> -
-> -static int uvc_ioctl_streamoff(struct file *file, void *fh,
-> -			       enum v4l2_buf_type type)
-> -{
-> -	struct uvc_fh *handle = fh;
-> -	struct uvc_streaming *stream = handle->stream;
-> -	int ret;
-> -
-> -	ret = vb2_ioctl_streamoff(file, fh, type);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (handle->is_streaming) {
-> -		handle->is_streaming = false;
-> -		uvc_pm_put(stream->dev);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static int uvc_ioctl_enum_input(struct file *file, void *fh,
->  				struct v4l2_input *input)
->  {
-> @@ -1320,8 +1273,8 @@ const struct v4l2_ioctl_ops uvc_ioctl_ops = {
->  	.vidioc_expbuf = vb2_ioctl_expbuf,
->  	.vidioc_dqbuf = vb2_ioctl_dqbuf,
->  	.vidioc_create_bufs = vb2_ioctl_create_bufs,
-> -	.vidioc_streamon = uvc_ioctl_streamon,
-> -	.vidioc_streamoff = uvc_ioctl_streamoff,
-> +	.vidioc_streamon = vb2_ioctl_streamon,
-> +	.vidioc_streamoff = vb2_ioctl_streamoff,
->  	.vidioc_enum_input = uvc_ioctl_enum_input,
->  	.vidioc_g_input = uvc_ioctl_g_input,
->  	.vidioc_s_input = uvc_ioctl_s_input,
-> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
-> index b300487e6ec9163ac8236803b9e819814233f419..3e6d2d912f3a1cfcf63b2bc8edd3f86f3da305db 100644
-> --- a/drivers/media/usb/uvc/uvcvideo.h
-> +++ b/drivers/media/usb/uvc/uvcvideo.h
-> @@ -629,7 +629,6 @@ struct uvc_fh {
->  	struct uvc_video_chain *chain;
->  	struct uvc_streaming *stream;
->  	unsigned int pending_async_ctrls;
-> -	bool is_streaming;
->  };
->  
->  /* ------------------------------------------------------------------------
+> diff --git a/drivers/phy/rockchip/phy-rockchip-inno-csidphy.c b/drivers/phy/rockchip/phy-rockchip-inno-csidphy.c
+> index 2ab99e1d47eb..75533d071025 100644
+> --- a/drivers/phy/rockchip/phy-rockchip-inno-csidphy.c
+> +++ b/drivers/phy/rockchip/phy-rockchip-inno-csidphy.c
+> @@ -87,10 +87,11 @@ struct dphy_reg {
+>   	u32 offset;
+>   	u32 mask;
+>   	u32 shift;
+> +	u8 valid;
+>   };
+>   
+>   #define PHY_REG(_offset, _width, _shift) \
+> -	{ .offset = _offset, .mask = BIT(_width) - 1, .shift = _shift, }
+> +	{ .offset = _offset, .mask = BIT(_width) - 1, .shift = _shift, .valid = 1, }
+>   
+>   static const struct dphy_reg rk1808_grf_dphy_regs[] = {
+>   	[GRF_DPHY_CSIPHY_FORCERXMODE] = PHY_REG(RK1808_GRF_PD_VI_CON_OFFSET, 4, 0),
+> @@ -145,7 +146,7 @@ static inline void write_grf_reg(struct rockchip_inno_csidphy *priv,
+>   	const struct dphy_drv_data *drv_data = priv->drv_data;
+>   	const struct dphy_reg *reg = &drv_data->grf_regs[index];
+>   
+> -	if (reg->offset)
+> +	if (reg->valid)
+>   		regmap_write(priv->grf, reg->offset,
+>   			     HIWORD_UPDATE(value, reg->mask, reg->shift));
+>   }
 > 
 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
