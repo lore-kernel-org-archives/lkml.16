@@ -1,106 +1,116 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95FE296166
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:34:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CA82F530A;
+	Tue, 17 Jun 2025 22:48:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199662; cv=none; b=Bxv7n3etxNeeKAFmoYY4GtrnHdZmjpVs9lieRk6FD9GjgbEFwf+vPk2CAkFcqfL4kReHMIwvkMNdamYZp7F7T3acFAjfArUHMAa58IT0GGXDXEoKWNUmjrjq4GZnUKiTe4SwNzJUF4fHlMqO8mPserQ50IfjxMeq5lELhSNVUyQ=
+	t=1750200528; cv=none; b=KkRqnV/GxV2E6QUHPtlrnNg1lE4xQo6mUbUxMqZOmljOmE/QBfD+mDgD6RzL9I2dWCls+39NIitFEXsAj2Ko7R3hTLF7ju/jMBCxozf/HkmaxhjYv8BeCIh4X9SXiG3o3Gi8BnmmFn6/OQLOEQyCIJuiYlHHVpY3Ruhr12Z6jZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199662; c=relaxed/simple;
-	bh=DKWqAmVnI3GhwlYZzhOitEiQvCeNAsT71ZBhSUmrLho=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=ss5Axxh4BSSjqLkbE4025dsVIf7F/cq5HOBtVK4FVVo2VVFy8D6eVXcwt/eJNsvsvhI44913rFS9sHe5uzaJR8MA7Ep6IOxlNX5d5Ain9el86ExZSGfLErqcQn3jysrjO+Wahrh/LfVET8WtsOeKaC2tEz6or/+3gDFPeHCjeOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gscKJxkT; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1750200528; c=relaxed/simple;
+	bh=WLGLQTVIgqKfMvH7cZE22O60ZqhkZeSYQX+e6y8Vul0=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=d7YCGHoM/UE7Xf9iVkjarI6aXXUuNhAzQ/CTy78HC8lP+CToo/q0LHZcbM7EKul2wm8wiyNjCDf4oA6VrouNL23waKtStG97ujo7hAxOqea4BHTS/M0nvbwIfaDBvZqoMNKI+pwy3MNmYqK+lRfGr8qou9lVE2OfsjTwD3OkjRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0jwcHq4L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=erEhegrm; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gscKJxkT"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-235842baba4so51324105ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:34:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750199660; x=1750804460; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7NVdRomOVcTP2K2Aa3QZ6be5ElrMwK+HxvBHDmuw/Uo=;
-        b=gscKJxkTOqo+J9APwZV2yDVLnYOlJoZgGIXVAKFRdrZkKittyA+KS7Kav+iSTPYDoy
-         WNYCekVW9nFNvkN5fmAWnSSy3YBgSw1cA0FbYAjr5Ol2t1akeTaaDuHL/m4g1N8SyIF+
-         qkkVUTS60LlEixihFvwNDMyAn1gALMC47lDrfVvA6V3cTq1OvrAu6ZSyiThysqBiaHv1
-         Gg41RChBX4A38k4ll18HbaYMsuZK1yfJlcTkBpbPAiCCrXnLNSh74spiGP4yVj/vP5EZ
-         0gpxW+IBAsv/8Ja0wZyw4fyFn3F7tzOlh/V5EMpXTT50/HumzoQ9wAJtjMUxTFokTgzD
-         W0FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750199660; x=1750804460;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7NVdRomOVcTP2K2Aa3QZ6be5ElrMwK+HxvBHDmuw/Uo=;
-        b=D7oKcOnc04Ixa0fGXNnIzwpiMRli/a24r7ZwUPPrlhK7vO6IdgN8+cbJ7r+hvIUDzI
-         bNcKCCYOmUfUw7emODiBGyAJ8wTCQkEV03JLCGTNxKBxfB+OFE0Kd0CBuzlLQ0/PC+1f
-         0/SdVJnSJl9tX+y3brA85xkfs10oohK5/fpubg2kUncU1BO7hNCTPwzHsGnwN8RSxNsi
-         Iykarh5uL19ni4WuUh0jIElzv9Qlrc6z9SYNLfd2VPYbhWN8/iT+OExfiP+JkZVqFFyU
-         otUeF/jSKbcvZjX1Q65SmoaIVmpkUNMuAYxrm2rJwOGlTgs3Hxb+HUo0T/1i0g+Tlbj+
-         CGOw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTKDEOXThRo/wwIlcbkQzePAs5Cd3PADsJHFiWqh6BNn7xrcMsibcDDAAdM/eqgMAWYSDGQjthPIp2idg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKOLiOb0FEnLFFOxvqALupEvwgYyp1u8Bew2LJ36Tby77JtMgP
-	3YeWv4ENVlhj8ME0jqc/lxKKmckn4qgzaaTB/yLbuw1n0WQj0pG15H1bqygLwUKJe1gwpFa6bZs
-	AyWcs8rcuqA==
-X-Google-Smtp-Source: AGHT+IE8zs/nB6Hv+1AZHqCM7YWmAHfa0nQQJL++2TtoGouKHvd/x1WiGB2F9Nz1dWP5IiUzlZNkHFCgj5im
-X-Received: from plxd13.prod.google.com ([2002:a17:902:ef0d:b0:234:b2bd:b68f])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ebc1:b0:235:f45f:ed49
- with SMTP id d9443c01a7336-2366b12216fmr215565525ad.33.1750199660075; Tue, 17
- Jun 2025 15:34:20 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:33:56 -0700
-In-Reply-To: <20250617223356.2752099-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0jwcHq4L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="erEhegrm"
+Date: Tue, 17 Jun 2025 22:48:38 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750200519;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=8Jt4d++J7WmkVtX5Jd5uM8C/YcS02a+aJ7x6o3FCPk8=;
+	b=0jwcHq4LvXVcQP82Elvm32OFBTr1NPFQTu2z5/SvsrGQPj6IsfdpBESc2VZo9PRm//FBbg
+	aT+d7yk6bLHOi4SDs59JJcIAuaH+Fr7Jdj1IGs2nlvIT/0v9dV/xQYzKWhQ2mSGjy44t+F
+	eSqEAWmkJORJ8vFcmJz2wW3U4vGXk7fcXJ+duzTRz1x9nY1pVNqkkY2031svLQ1EVzWVJf
+	8POvlr9UkAHyzNQySvEOF6weantuJM1l0Ni+TVsXSSEnPwQeQ1Viw+AEb6RAgHLby0rEuq
+	7zn4u1aE9eV505BjaYrnFyDxvE0HWrAwjZIUKrC2R2oqe+p+2TfHCfJAnf4xiw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750200519;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=8Jt4d++J7WmkVtX5Jd5uM8C/YcS02a+aJ7x6o3FCPk8=;
+	b=erEhegrm3LDd59mrq2W1J9JuWZIXJY6JZhiAHPjQg4x6qvokSz35wHKDGq7TRVmxHjiSFS
+	NMH3VErB6whCnbDQ==
+From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/mm: Disable INVLPGB when PTI is enabled
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Rik van Riel <riel@surriel.com>,
+ stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250617223356.2752099-1-irogers@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250617223356.2752099-4-irogers@google.com>
-Subject: [PATCH v2 4/4] libperf evsel: In exit add missed puts and assert
- close, etc. were called
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Michael Petlan <mpetlan@redhat.com>, 
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, Andi Kleen <ak@linux.intel.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Message-ID: <175020051852.406.9118520090678116143.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-A missed evsel__close before evsel__delete was the source of leaking
-perf events due to a hybrid test. Add asserts in debug builds so that
-this shouldn't happen in the future. Add puts missing on the cpu map
-and thread maps.
+The following commit has been merged into the x86/urgent branch of tip:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Commit-ID:     94a17f2dc90bc7eae36c0f478515d4bd1c23e877
+Gitweb:        https://git.kernel.org/tip/94a17f2dc90bc7eae36c0f478515d4bd1c23e877
+Author:        Dave Hansen <dave.hansen@linux.intel.com>
+AuthorDate:    Tue, 10 Jun 2025 15:24:20 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 17 Jun 2025 15:36:57 -07:00
+
+x86/mm: Disable INVLPGB when PTI is enabled
+
+PTI uses separate ASIDs (aka. PCIDs) for kernel and user address
+spaces. When the kernel needs to flush the user address space, it
+just sets a bit in a bitmap and then flushes the entire PCID on
+the next switch to userspace.
+
+This bitmap is a single 'unsigned long' which is plenty for all 6
+dynamic ASIDs. But, unfortunately, the INVLPGB support brings along a
+bunch more user ASIDs, as many as ~2k more. The bitmap can't address
+that many.
+
+Fortunately, the bitmap is only needed for PTI and all the CPUs
+with INVLPGB are AMD CPUs that aren't vulnerable to Meltdown and
+don't need PTI. The only way someone can run into an issue in
+practice is by booting with pti=on on a newer AMD CPU.
+
+Disable INVLPGB if PTI is enabled. Avoid overrunning the small
+bitmap.
+
+Note: this will be fixed up properly by making the bitmap bigger.
+For now, just avoid the mostly theoretical bug.
+
+Fixes: 4afeb0ed1753 ("x86/mm: Enable broadcast TLB invalidation for multi-threaded processes")
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Acked-by: Rik van Riel <riel@surriel.com>
+Cc:stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20250610222420.E8CBF472%40davehans-spike.ostc.intel.com
 ---
- tools/lib/perf/evsel.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/mm/pti.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c475319e2e41..2a85e0bfee1e 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -42,6 +42,12 @@ struct perf_evsel *perf_evsel__new(struct perf_event_attr *attr)
+diff --git a/arch/x86/mm/pti.c b/arch/x86/mm/pti.c
+index 1902998..c0c40b6 100644
+--- a/arch/x86/mm/pti.c
++++ b/arch/x86/mm/pti.c
+@@ -98,6 +98,11 @@ void __init pti_check_boottime_disable(void)
+ 		return;
  
- void perf_evsel__delete(struct perf_evsel *evsel)
- {
-+	assert(evsel->fd == NULL);  /* If not fds were not closed. */
-+	assert(evsel->mmap == NULL); /* If not munmap wasn't called. */
-+	assert(evsel->sample_id == NULL); /* If not free_id wasn't called. */
-+	perf_cpu_map__put(evsel->cpus);
-+	perf_cpu_map__put(evsel->own_cpus);
-+	perf_thread_map__put(evsel->threads);
- 	free(evsel);
+ 	setup_force_cpu_cap(X86_FEATURE_PTI);
++
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
++		pr_debug("PTI enabled, disabling INVLPGB\n");
++		setup_clear_cpu_cap(X86_FEATURE_INVLPGB);
++	}
  }
  
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
-
+ static int __init pti_parse_cmdline(char *arg)
