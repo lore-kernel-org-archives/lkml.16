@@ -1,66 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB953143C61;
-	Tue, 17 Jun 2025 03:27:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4421E1DFC
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750130861; cv=none; b=JVeLdbwIB/pVKrw1tNESfGWnA9+H0xOI6l8y0zHpbnGtDgjSL8+kaFVFo6WsnleIL2W4CNVkNUqiArMMrgoXwuflLXGMRWN5Dl6yF6CbVKuRLG3J3DVNOoUQ+LR2cnBF141VTajDC2FQC69EQkcapfrmbGGxS3Yi7d7FvZeeGX0=
+	t=1750130863; cv=none; b=BBykRoeHtadDr4EsFtwcc2ELOHKIefWtCb8B46hg46nQukoDm0Qr2EXAyv9mmqCyQAD3n55vEcYOY5IqxG8OmwwCaQvyUCkf31Mt0fkaEMXeBHGTPGpVAz5o24Ob6cT/fFvteZ5+cNBeOwBH6LlR2F1SbMfgBKDYvDugej9i2P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750130861; c=relaxed/simple;
-	bh=p9lozJqVasI7Hf5gbpRsyMuAP/AKnTQ2rTPVzTMp/Wg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O9mOzNEPlpm8+7yrB6Io6nSxAVUjuicA1fY23zFyFbgmlxF6WR38y2Faea63BgNlc7kt81/MJZKpGMyrW6mRtTMPlCivGRCTB3VjpcSu0lMaKQsw4lL80OZsQoh4lXJWGBcsotsp5eybTILUrZBxEE+0XyCAwEQSNF/SFw9/p2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlEn4EuU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750130863; c=relaxed/simple;
+	bh=jgjxO/7clUSYOJ3hEGHAiq1dZeIebExF4Lno9l04xXw=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=UWWNomyeKkXgQAsFj4TNIsfsH3eDKxrPj6p/3RtpGRfiJG19gi8yqH/uijZzWaLEtGS1jYIvzrv9z+g3UyIyyCyE0Iffr8vyGVWa+G+9kIp/rGgFuME/yquZ27252X8k8BfmhYdi6NsKkkyuoXssxv9lbfmeGXU2SYqx6FyYeCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=mYUSlCsT; arc=none smtp.client-ip=203.205.221.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlEn4EuU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384BDC4CEEA;
-	Tue, 17 Jun 2025 03:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750130860;
-	bh=p9lozJqVasI7Hf5gbpRsyMuAP/AKnTQ2rTPVzTMp/Wg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KlEn4EuUiyvHT5r3KGOwbBww88XMxnyjpq9GCpOOIlxG137b+TAuYCeYh2kHdGYN9
-	 7uLWsn69wJB/AMGKoyonVChKSIZFZ6mjpja6CKyRHJINMrEksBvGV5puzpzvUb7cFv
-	 Gd8h6+xSpLvgBzkEn2ZPLULx5Px8pGie+p7hPsLpvSp2zojz3gfpHX7TBliU8d2tPx
-	 tqfvy44EgJp3N7Vv3wlFRcFnbhcpCHRvVAySaSycWrph8u1QtOiJx38cziRy92Obxu
-	 yrhtkwlwhVtD2mlQBhPG7aaZDTExTebi7N778WM/qFNKdaNyex5MSzQh+zVpMVLbvO
-	 ap8wHmAdftDKg==
-Date: Mon, 16 Jun 2025 20:27:10 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>
-Subject: Re: [PATCH] lib/crypto/poly1305: Fix arm64's poly1305_blocks_arch()
-Message-ID: <20250617032710.GD8289@sol>
-References: <20250616010654.367302-1-ebiggers@kernel.org>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="mYUSlCsT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750130855; bh=EHB/nKe3H6oNehWCjTnKytYQyFXIqU682RBCgDLU448=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=mYUSlCsTAaS1RucXKO36k6N8FGmWG9fZygVEd8Jo7XmH2QnVXf9/Iae1yArfgPj+o
+	 NM8n8vBDYifCVDI5wL650Bk5hkMn0OfL1HKpfdvUyqXIgLHet5ClEricpxCicUW4JH
+	 JUxuyAOukr0r2gzX6Mr0bWv937G0gpkyt1q1qob8=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
+	id 4F88BC3D; Tue, 17 Jun 2025 11:19:56 +0800
+X-QQ-mid: xmsmtpt1750130396tbcgx4cp5
+Message-ID: <tencent_279220DDBEDD93995BCF998D8B25B18D8B07@qq.com>
+X-QQ-XMAILINFO: MhK4DKsBP06if8MPSwrVCdWpm74FUszJnySk2ZCmHvLprutXp1AvspMspqJx8Q
+	 BFqtuQAseR3kHWNXp91IQKn/r1PDaLoX0Cpd1ui16Prh7LspeaUTMdiKxu4YRSvQ7ra4SMtMmxvT
+	 RHGdO7jqB8dRplXxB/POb8aCMz9u871bMovBZT763J6P2yNciuxkzDs3S8dong3wZj0xGvEiRCUJ
+	 tg6P9E5tv04cWvAJtv7gYQ9UFqxOpxQZJyVP6XeCCVqzEi7BN7op0Mo4SLfdHHZhmW8yM9wVTDJG
+	 4Cg4BLzVIHBJyo0r8zM7d8gq/SEn+Ja1lBSPoFndn7xs8brtIDgfa4Ni6dgRTrHSSqEoxiDKNgpS
+	 SkwoOiBeXxga6QyzSlwZI1Aic6RZXJE2KCEX2aLV4FxsP09cZZqowp4wUUNFcQdxQVUY1Gk1EH/7
+	 KP/YBaV/OpqyYajBNIMSZN593WOG1ZjD2Ql2zp2aK8Rfc5H6is60ZiWqmegLm6sT56DAGW8BLwus
+	 2zHduwdTD7rHb+Iif2iWXsyhKq3coGVosCpzXSBOTqA+l/YmtussyoTBc+TUNiCOg2ZuUyuevxlr
+	 ZPZpj+zHFjA7dmPiL6ncdQfwHbXALAtD7nMJSI8Ci2b+aRsia5PV16EirCPrO6Pxby5ve+LA73m4
+	 C8HFfG7yek+GYAvqz7noHVWKhUeRJXrSFGrSTwt2DCMvC0PXZzzSjPvdOlK2Haj9WinUI6vD5uuO
+	 pdoflCtc9UZIJ/SyR/2c/BySUnp0XhW4Nq4SrtKH4RBxBo2mZly6m/NzURjDBQRUDQ5eSmxDWMXC
+	 YVTMh051mctFpzGY6A1JnGUXz2UQDtpxINkZMQBI++QFoJFwz0jpvArlUfK4D6MnNu614oqrVicZ
+	 gxLa/OV2Npon3ynDOKZqhO3vqSpsg9sav8xyYO3XXmenckNjpY889UTrCQInol28Ar1lahXVfaUA
+	 ssQyD12wSoYbAzTVsu2HkIpOJxxH5mhHZQGz9mfOZ5LR/Ra5GTuyMngQXCI0lmmS5JivO9OZE=
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
+Cc: jfs-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] jfs: Issue a warning when leafidx is too large
+Date: Tue, 17 Jun 2025 11:19:57 +0800
+X-OQ-MSGID: <20250617031956.334239-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <6850d37f.a70a0220.395abc.01f9.GAE@google.com>
+References: <6850d37f.a70a0220.395abc.01f9.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616010654.367302-1-ebiggers@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 15, 2025 at 06:06:54PM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> For some reason arm64's Poly1305 code got changed to ignore the padbit
-> argument.  As a result, the output is incorrect when the message length
-> is not a multiple of 16 (which is not reached with the standard
-> ChaCha20Poly1305, but bcachefs could reach this).  Fix this.
-> 
-> Fixes: a59e5468a921 ("crypto: arm64/poly1305 - Add block-only interface")
-> Reported-by: Kent Overstreet <kent.overstreet@linux.dev>
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
-> ---
->  arch/arm64/lib/crypto/poly1305-glue.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+When it is clear that leafidx is too large, a warn is triggered to
+distinguish it from other sizes.
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-fixes
+Reported-by: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=077d9ebda84f426a6a1e
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/jfs/jfs_dmap.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-- Eric
+diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
+index 35e063c9f3a4..7e3c5f6826d8 100644
+--- a/fs/jfs/jfs_dmap.c
++++ b/fs/jfs/jfs_dmap.c
+@@ -2856,9 +2856,13 @@ static int dbJoin(dmtree_t *tp, int leafno, int newval, bool is_ctl)
+ static void dbAdjTree(dmtree_t *tp, int leafno, int newval, bool is_ctl)
+ {
+ 	int lp, pp, k;
+-	int max, size;
++	int max, size, max_idx;
+ 
+ 	size = is_ctl ? CTLTREESIZE : TREESIZE;
++	max_idx = is_ctl ? LPERCTL : LPERDMAP;
++
++	if (WARN_ON_ONCE(le32_to_cpu(tp->dmt_leafidx) >= max_idx))
++		return;
+ 
+ 	/* pick up the index of the leaf for this leafno.
+ 	 */
+-- 
+2.43.0
+
