@@ -1,213 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8572E3AF7;
-	Tue, 17 Jun 2025 14:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169474; cv=none; b=kc2ycmisoqJZ6d5IfubVblIuJFCEB0OaRJFD4KpeoPnXYsxCQ6yW67uIK2KFIZIUDmYlXo8WNxp4gLXjOHjv3HDTbFvaSDDlWjRT95JSYjpzaxpnClUOhSpk7stNztUdQZadegzjhtlPqEpZVrAyyTCckWLb3gomMgvj3HUyv3U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169474; c=relaxed/simple;
-	bh=9WlmfZQ67G1lNxxsfGnJ+OQDIWmTzBZZJbPLdnS48As=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQdCTLZlkDhonV3DCRmjb0OcuZdFKRe8gOSS2xoKCI7x1matzW2SllNtXF3OVvH04dlf4NIeq6NiG0E/gUDPKbMe0vzRZiPuaJMyFtzKphvRgJzDpUsE9ja7jUJfOSfpzLYjuj8gEQ020zi2M2LUWbk1dq1v3btQ+8bnHhYnMr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q7efYNGP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2182ECD3C;
+	Tue, 17 Jun 2025 14:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.17
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750169478; cv=fail; b=mbBca7OUOzLbqbTg/kj5/H+7DHO+CAORxBqrYc3ZEpdf/jtH4aiybvMySohn7Mg7+CxaCV6bHUqRomtdXYqKjUobWQdpEm9MAnEzCrq+sJSKoSzuI2RpfWfa18c+5GQrSLJJMKGmI9VuRti/81EBOtVa8qZ1b+muUhtFe7f8HOA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750169478; c=relaxed/simple;
+	bh=Ey++JrB8lvGPr4EnANGrDcZobPYezWXGRDdWyTZLqXI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=AfwnGES4XG8mfAGaOK/AockHrkxDezlL9eR6y62BacLe39Z3SM/5JLVSnxtr8uIFLy7pVYD1HmnkacEH4ogUqZ1ctNu22xO6kCmIZ/wfOImzJNE0wDCvXpGpYt5AHLUh8DVDpUIfnj8sWzoveCcuetztWwgOBoyNPIZcalovpwE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kUhCCj/S; arc=fail smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q7efYNGP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F27BC4CEE3;
-	Tue, 17 Jun 2025 14:11:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750169473;
-	bh=9WlmfZQ67G1lNxxsfGnJ+OQDIWmTzBZZJbPLdnS48As=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q7efYNGPtpmIAYzfZU+BTn6ATN9Xa+7W4sseA7c+4857g9AGPqvGZaLTI0RRoQO2G
-	 geTOS7cctwmIl4NJtKDEVpY7EvBUaXzrKayUPJcaUm6XbjtPjljrW/jkTw4H9ZnETc
-	 JS7RCB9IL/tNH36/CQBpNf1pA96EAa99EzzQKqHoF0/N0R+hjBAxKMEAHFHRZC49id
-	 FdSoBwGl66PXTUmzOC3mFHHgHwAU6ehxMo0lh4bn85bRTiojGlOySqOk5Q7KTF+lhV
-	 ZnsWuR1NNytfNNhwlHjYbRfcmgqqnUE9ci1aS5WpUyCippczEzM5MHkeAJkSKj4+9A
-	 Op/fSSo/68ogw==
-Date: Tue, 17 Jun 2025 09:11:12 -0500
-From: Rob Herring <robh@kernel.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Frank Li <Frank.li@nxp.com>, Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v4 04/13] media: nxp: imx8-isi: Use
- devm_clk_bulk_get_all() to fetch clocks
-Message-ID: <20250617141112.GA2051217-robh@kernel.org>
-References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
- <20250408-8qxp_camera-v4-4-ef695f1b47c4@nxp.com>
- <20250421211438.GN17813@pendragon.ideasonboard.com>
- <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
- <20250502155747.GB20093@pendragon.ideasonboard.com>
- <aBylKcZyFInlKQAR@lizhi-Precision-Tower-5810>
- <20250611141449.GA24607@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kUhCCj/S"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750169477; x=1781705477;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Ey++JrB8lvGPr4EnANGrDcZobPYezWXGRDdWyTZLqXI=;
+  b=kUhCCj/SWcLjGeF56p1DSOeNeKvaUIlMu7mc9/uEPj7M0COqk9N8mYY3
+   TiFWSpt0romKivGttZKX89nLFYv2awy4iQ/ikQRqWpRBWXb3o7Yx+xJKq
+   0DUKUdefXDGONAAOt7wGrm3fOmLKup6Y+Qo64Witea210AqTnFXcxzamV
+   481EX5IM+bS5VqH1ZwxZt/MHdf11FvbNh8MC+kx11tDs48T4RdmZ4YjuQ
+   yOsTzBiFvSyuzjqxGL5HRPBuXRulmJFSz914sbwstU1oFmG3vDhxH+9UF
+   kZOeNeUXZ9xlZJCCegazI+FL3Lu4zkDnH+xC95ozTkgbvzOqem0sq9N++
+   A==;
+X-CSE-ConnectionGUID: 8qoQzWouRECN4HtYelDw7A==
+X-CSE-MsgGUID: 5lx3+XwRSb2Q3LlegryJqQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52329722"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52329722"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:11:16 -0700
+X-CSE-ConnectionGUID: fXRQEEegRNm8mYEYUoAccw==
+X-CSE-MsgGUID: demrbaxwSC+QDyK/tFRr3A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="149336805"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:11:16 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 17 Jun 2025 07:11:15 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 17 Jun 2025 07:11:15 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.65)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 17 Jun 2025 07:11:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iJnIHVhWIAlhflOA7VbfVJJSeeKI2445dcSAIqSZWmHtuRlbjNFcHKeUjn7uQuGehaEN3YemzJPjZp3T3WLPaHe+ZqokgNg9KElNY7q6Wt43Pt08fiGmvxX+qMWgJoLmtpIVSmC7IOHrcptJd6vt3FlA5utETLKPOjbxg4gE0HU+B/Zj3XNho/jcst7GsGevnZnUH8dgF9SCe8qECraO36ZnIFLqlobLP/bh+SHEPvaL1YAZAjB1MqQFR04HRSHR3TSEf6s9KeARSSY9YzgsmOvZikeJfIxnxDXTW0fj2C5COpGSB+LJ10qkydPB6wdSmvWSTPyebI2OZ2stvE/c1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ey++JrB8lvGPr4EnANGrDcZobPYezWXGRDdWyTZLqXI=;
+ b=AaSrVhyKD0CJ3glXc6lg+nMFaugW7eMUkP3/lcoU3OCiU8Bb60dZ6X7k6farHED6H9wyb3D4mqbT/MZdtOnhqk/uVb8uEAB5NvTJq1Ep3srFL15G2WdxOZ2+NtYslUzZWMqG0vOVGyXimj4ITyfzKTXjI+d+bJ0+N1hMNiTQcBSyrQlgFh1I6TNxVlZ8g6UQsP9omwd74MJLtsWX82cUvw4htZmkQ90PSmRpsd0uwqT0fVO8LQM6p8zEA0AiUOhWqcWGyzNn4cMWJkhs1NSHhR1bfZhT4SCc3DYrdlNdv/U1Usjb0xmjudwESqwdDts5hrl1iMFtbeLF9FmDdV73FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CY8PR11MB7134.namprd11.prod.outlook.com (2603:10b6:930:62::17)
+ by SA1PR11MB8491.namprd11.prod.outlook.com (2603:10b6:806:3ac::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Tue, 17 Jun
+ 2025 14:10:59 +0000
+Received: from CY8PR11MB7134.namprd11.prod.outlook.com
+ ([fe80::cd87:9086:122c:be3d]) by CY8PR11MB7134.namprd11.prod.outlook.com
+ ([fe80::cd87:9086:122c:be3d%7]) with mapi id 15.20.8835.018; Tue, 17 Jun 2025
+ 14:10:59 +0000
+From: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+To: "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, "Jason
+ Baron" <jbaron@akamai.com>
+CC: James Morse <james.morse@arm.com>, Mauro Carvalho Chehab
+	<mchehab@kernel.org>, Robert Richter <rric@kernel.org>, "Lai, Yi1"
+	<yi1.lai@intel.com>, "linux-edac@vger.kernel.org"
+	<linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/1] ie31200/EDAC: Add Intel Bartlett Lake-S SoCs support
+Thread-Topic: [PATCH 1/1] ie31200/EDAC: Add Intel Bartlett Lake-S SoCs support
+Thread-Index: AQHbuwMURdkl4/rK3EGOxc9BtmhWgbQGPSSAgAFv4lA=
+Date: Tue, 17 Jun 2025 14:10:59 +0000
+Message-ID: <CY8PR11MB7134D19D81AA17E9B5FE3B068973A@CY8PR11MB7134.namprd11.prod.outlook.com>
+References: <20250502013900.343430-1-qiuxu.zhuo@intel.com>
+ <SJ1PR11MB6083BFB95E228F6CF3BFE666FC70A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+In-Reply-To: <SJ1PR11MB6083BFB95E228F6CF3BFE666FC70A@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY8PR11MB7134:EE_|SA1PR11MB8491:EE_
+x-ms-office365-filtering-correlation-id: 6a897a84-d067-4e8c-7c23-08ddada8c919
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?VKOisSdgEtnARsZBg2i6k8usSTv7G1pNxVBiaY3O9swabA+pC0dAwiP8G8Nl?=
+ =?us-ascii?Q?nfkrb1jn6IEn+UKJ/C4iVXQDhdNnWYLub5r0t4cc2F/9Nk3j9TliJvzdNneV?=
+ =?us-ascii?Q?VP0ihgEW8zKc98i3AZ4NKDPpzB9fSUaJX7De2CReAzCkllrALf+g9BHtbjGj?=
+ =?us-ascii?Q?8vIiK23YR9ojwljtF51iGf21aqlnU8vAZzrBZMRmAjQSSs5Y28qu8vYZinWd?=
+ =?us-ascii?Q?Dlnz1VS1/ZjObSz6EpNJ/q1WKHKApHt670JDjK8sghvNEfI/mncf+t8WkAL/?=
+ =?us-ascii?Q?qJDrjWGtFA7bDt1yt4igVp3M/Ykv/Oz+cDfQNIE+/tGdT/UH2ZOKwZvM5KMk?=
+ =?us-ascii?Q?z4ZDfsrYJT6dYJjxuM8OCc7rMh0YvnU5VPxlEoRjL/sz3IRHSCW0Lc2cr8jN?=
+ =?us-ascii?Q?9LSiTfmyp8tWLuFm04D8TCRIOoIiuhf5VgYc013KSCnMibsms8k03D0ZI0Hn?=
+ =?us-ascii?Q?OpTrn2ueAdcXUw6beVBbBRtw3+wHuovch9zoAAFQUVAnLqZHIX73UqBZs5AM?=
+ =?us-ascii?Q?deFu3deAp1G6Mi/3Im1rFfmP/A29wOhc0f7wvQ+7wmoV3aOxpz1E8rR2+hMM?=
+ =?us-ascii?Q?Zy/72XYP/P7tIgwISF712/0Q8hPdZxpvRCa+YjW+yLysmr48Tk8ImtaVSSrw?=
+ =?us-ascii?Q?5sC+V8e4t44/lbJmWLUpxQjmPjT8YMrgzLo/39OLKr+MpHGeYecOdOLDS/Ms?=
+ =?us-ascii?Q?KjfiQ9XMSy4WMw9DLgtVuA/zR+eNyPs+gWSpjgNcElCsh02zz5pGM/k19yoE?=
+ =?us-ascii?Q?BgMy1iTShjFZnuYMDqa4+cDrhLarVb5SCak7/JX+CAOFkk58hejCLTOUxz4o?=
+ =?us-ascii?Q?gvJk4nMkMak1tRQFgFF4D40VCUi3oEnxGGMyrI+h9qGY6dqnY7oCiAVDMZwa?=
+ =?us-ascii?Q?GrLdlDv0NNL2w4gdLXoxsrGUd+CV2hJPl9P6REdudaVy0noqPbAzid73c7ck?=
+ =?us-ascii?Q?eF0vxLjeLSuK3U+K9Q0+lBBbAxDPY+Nzz6eFqDIpfq9uvzKwtd8+YDw5cMy7?=
+ =?us-ascii?Q?ayQ6RP+f9Sy++LvSd/Zts2rwYuhMMbR+Y6UrzY6NUmJy8F2zGpWuIBrBMus+?=
+ =?us-ascii?Q?qtg60I9RrIK9IIBkncPTYUqb01YQjzfADzYuOoY+CGy/Xb05TStFDy1M5/os?=
+ =?us-ascii?Q?lgLlMVfQqKeRY4bjTJuOO7qZKsqbmvfqDUlY+xv1VSC40mxZkJSVAVN3gUgF?=
+ =?us-ascii?Q?bivTWAG2b7jK5RrLXJ7RlL5nx10I3nYbqjQMWqp2D1nB6sn1/aLEgurI2Nwk?=
+ =?us-ascii?Q?rfh7y6kBVktGHgEuX7NYVPuIx+BfeWygh+PSM8k+nIh9HPmKt2BaqqsKZL1V?=
+ =?us-ascii?Q?A4IKuJqkO7sarszTCfykWCQEXGFo5g1i3Qwxi4mnOUBIvfSsL5yfQxKDoKxW?=
+ =?us-ascii?Q?QgvqmgHroWfrOWN7m/lwbK3jP4XED2+cKi0zT4xMxvRxs+bf/ZwijiUcbGGS?=
+ =?us-ascii?Q?g7Oo6tB6AuEDlm+L7Q9mX+flEmLYtPVQDakbWroVxoVy9cWpx9BwLQ=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR11MB7134.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ao3denUo8YikzUKn2zQLiNK2v1aijWZGlUxA6LgXeIxZH8fq98S6vCYM5TEo?=
+ =?us-ascii?Q?5BmEV2F8lblmhoTHuN4XFwLTDJ+BL7Hqx6YRGmLJL1CcZThVGOT8AYY+R55S?=
+ =?us-ascii?Q?j8CwmycdpwLpVfL/o2oVeiLFfRC4rs0PsOO5eUsYflNy+HiZksZThCnpxifC?=
+ =?us-ascii?Q?oAn5ABmVo0HYFURrsq4eeZGAzD9LPOnXuRrLnAr/aM0pfNUWvz/Hbw2ki932?=
+ =?us-ascii?Q?sGcuIn2NURi0OSkhqg6muGn389i+qEgxOkMSqriXbRAEnq9oM5rZsoDWHwjZ?=
+ =?us-ascii?Q?Yb8hjfsPRzH+qZ4OrSvccdyiRZF4R0lxguuvhip4RcPvxJROOVHEGs7Omhag?=
+ =?us-ascii?Q?ftIdhKULr1gKuXMY8HsDCtAeev/9QnkHe5Xiqd9NLMjDAaH0h1TU7HuxzRwe?=
+ =?us-ascii?Q?Knd50EYWPXZ2pZEEmKrnGjBMnBuJ7J/Wy6pj8vL/TM4v5Xh7HqdVLcoZKaeE?=
+ =?us-ascii?Q?kreEYNiFlMLru3VBSVqMbtuBns4FhRWrGYerw8eznygfx9oJBt8cfkc4z7+6?=
+ =?us-ascii?Q?92i0ktRFW14fsHP2D0/wlFfHNK3LcnVhTr2hDELrElJE+lHcFcDcR3IA2Wgf?=
+ =?us-ascii?Q?TVYziYS4UKZ4A3lBdZFbpHN0mbNwhpjBvdDh+ZGtZT0DRZ1D70wpIsrq2NDK?=
+ =?us-ascii?Q?fi3L+ADyHHlZAKWM4/LUVK7rRefXU7wO5jIfpDu4POgAh8xPUfT4Cz59gevV?=
+ =?us-ascii?Q?WSLzz8qyI74PQYUb/8VQarEkcc0WPKkN5BuXmdheeKUTn9BoWphVYP8JF6z5?=
+ =?us-ascii?Q?mW1QXrqMV/UOjQBgYySunpHx7zflaBVp3stbbq8BoZFCEFfiV6TJdxHHsiwh?=
+ =?us-ascii?Q?eTKSGW/B8r/gRgbRbdEPL/mq/Y8TnvWUEnJjkOPFfcyJJGz7SeTgeQMINwrp?=
+ =?us-ascii?Q?neq8VjTpLYAMZEL+xBYI23L39rJxELXHNSt7O6B7K7Dn2npPnh18pq1EQuGa?=
+ =?us-ascii?Q?BrU+7p+7Uu2cUiH8z/uUcbgqSnlgy/HImWTEk5i3hf2RjoFEBURS8QA1pbH0?=
+ =?us-ascii?Q?Cmqy/Kzpw+1H6oAqhVkNwqfauUpBCyNFHSS0YyhWhtl3OI/bfGp9bYBieB+L?=
+ =?us-ascii?Q?2wpHGKWlzHaFRdPs6Yc7M4y685Xerp/rb3zXECrwb/ph6F7DQGZPzvm70/iK?=
+ =?us-ascii?Q?lI+YanTFexwvWGm6xnpBo72WJVrhSfstAPTGlSNrR3RKufzWXRLG+NuXnC14?=
+ =?us-ascii?Q?TR9+Jb3/IB2YlHkxoCr/5o2P8Gufnuo/vnSLx2OzoMhVk1f0CE3QAYmiOF6k?=
+ =?us-ascii?Q?v2fEW7vXMfit6fZ9W90AINT6rCt/XSXwQvQPYKDzpF/dqoRliZA85+NZ3vAp?=
+ =?us-ascii?Q?Hg8eealtvly1gXxv4r5lnSWbz2x2jyJ38zOOSghQ74rxB+S4j27yYpt9Fer0?=
+ =?us-ascii?Q?IxCyWjhm2e8eVwGrjbQhCXT1r5aJUuknDFSHOrzxFNzs3WtOMP478BkmX0jD?=
+ =?us-ascii?Q?+7eMfxFV01xAscU0SwKLrR7fAczy+P7IccYgFPeOPVCk922E2wzp8+4LhWMv?=
+ =?us-ascii?Q?vIUT7UqQE96Lk0QhXiyo0AEZd8IoYnG8BhQs7oPC4NYSmInaXwy16f/+hAcc?=
+ =?us-ascii?Q?s5ck9U9sEXUPAfZE41DbT+58e70V6MdrjDu1XF6i?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611141449.GA24607@pendragon.ideasonboard.com>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR11MB7134.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a897a84-d067-4e8c-7c23-08ddada8c919
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 14:10:59.5898
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vSZBarjlQ7QRwlOyXsxVHPmuCG5r6AbjcDwlXWWqSPzdt6unNqoewjnj7yTNcaPyU79fzB1BTcNCLUEjW1La6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8491
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 11, 2025 at 05:14:49PM +0300, Laurent Pinchart wrote:
-> Hi Rob,
-> 
-> On Thu, May 08, 2025 at 08:35:53AM -0400, Frank Li wrote:
-> > On Fri, May 02, 2025 at 06:57:47PM +0300, Laurent Pinchart wrote:
-> > > On Thu, May 01, 2025 at 09:02:04PM -0400, Frank Li wrote:
-> > > > On Tue, Apr 22, 2025 at 12:14:38AM +0300, Laurent Pinchart wrote:
-> > > > > On Tue, Apr 08, 2025 at 05:53:02PM -0400, Frank Li wrote:
-> > > > > > Use devm_clk_bulk_get_all() helper to simplify clock handle code.
-> > > > > >
-> > > > > > No functional changes intended.
-> > > > > >
-> > > > > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > > > > > ---
-> > > > > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
-> > > > > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
-> > > > > >  2 files changed, 6 insertions(+), 43 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > > > index ecfc95882f903..015350c6f2784 100644
-> > > > > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> > > > > > @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
-> > > > > >  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
-> > > > > >  };
-> > > > > >
-> > > > > > -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
-> > > > > > -	{ .id = "axi" },
-> > > > > > -	{ .id = "apb" },
-> > > > > > -};
-> > > > > > -
-> > > > > >  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
-> > > > > >  	.model			= MXC_ISI_IMX8MN,
-> > > > > >  	.num_ports		= 1,
-> > > > > > @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
-> > > > > >  	.reg_offset		= 0,
-> > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v1,
-> > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > >  	.buf_active_reverse	= false,
-> > > > > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
-> > > > > >  	.has_36bit_dma		= false,
-> > > > > > @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
-> > > > > >  	.reg_offset		= 0x2000,
-> > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > >  	.buf_active_reverse	= true,
-> > > > > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
-> > > > > >  	.has_36bit_dma		= true,
-> > > > > > @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
-> > > > > >  	.reg_offset		= 0x0,
-> > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > >  	.buf_active_reverse	= true,
-> > > > > >  	.has_36bit_dma		= false,
-> > > > > >  };
-> > > > > > @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
-> > > > > >  	.reg_offset		= 0,
-> > > > > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
-> > > > > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> > > > > > -	.clks			= mxc_imx8mn_clks,
-> > > > > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
-> > > > > >  	.buf_active_reverse	= true,
-> > > > > >  	.gasket_ops		= &mxc_imx93_gasket_ops,
-> > > > > >  	.has_36bit_dma		= false,
-> > > > > > @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
-> > > > > >  {
-> > > > > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
-> > > > > >
-> > > > > > -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
-> > > > > > +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
-> > > > > >
-> > > > > >  	return 0;
-> > > > > >  }
-> > > > > > @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
-> > > > > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
-> > > > > >  	int ret;
-> > > > > >
-> > > > > > -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
-> > > > > > +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
-> > > > > >  	if (ret) {
-> > > > > >  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
-> > > > > >  		return ret;
-> > > > > > @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
-> > > > > >   * Probe, remove & driver
-> > > > > >   */
-> > > > > >
-> > > > > > -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
-> > > > > > -{
-> > > > > > -	unsigned int size = isi->pdata->num_clks
-> > > > > > -			  * sizeof(*isi->clks);
-> > > > > > -	int ret;
-> > > > > > -
-> > > > > > -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
-> > > > > > -	if (!isi->clks)
-> > > > > > -		return -ENOMEM;
-> > > > > > -
-> > > > > > -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
-> > > > > > -				isi->clks);
-> > > > > > -	if (ret < 0) {
-> > > > > > -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
-> > > > > > -			ret);
-> > > > > > -		return ret;
-> > > > > > -	}
-> > > > > > -
-> > > > > > -	return 0;
-> > > > > > -}
-> > > > > > -
-> > > > > >  static int mxc_isi_probe(struct platform_device *pdev)
-> > > > > >  {
-> > > > > >  	struct device *dev = &pdev->dev;
-> > > > > > @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
-> > > > > >  	if (!isi->pipes)
-> > > > > >  		return -ENOMEM;
-> > > > > >
-> > > > > > -	ret = mxc_isi_clk_get(isi);
-> > > > > > -	if (ret < 0) {
-> > > > > > -		dev_err(dev, "Failed to get clocks\n");
-> > > > > > -		return ret;
-> > > > > > -	}
-> > > > > > +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
-> > > > >
-> > > > > This prevents validating that the DT contains the expected clocks, which
-> > > > > could cause hard to debug issues. Isn't it a problem ?
-> > > >
-> > > > It is checked by dt-binding. Now no warning by DTB_CHECK under arm64 freecale.
-> > > > CHECK_DTB should be enough to find expected clocks.
-> > >
-> > > Yes, the DTB check will catch issues at build time, but the driver will
-> > > not enforce that. I'm not sure if there's a clear policy here, and if
-> > > ensuring at runtime in drivers that the expected clocks are present is
-> > > considered as a good practice by the DT maintainers. Rob, Krzysztof,
-> > > Conor, do you have an opinion ?
-> > 
-> > Rob:
-> > 	can you comment this?
-> 
-> Rob, any comment on this ?
+> From: Luck, Tony <tony.luck@intel.com>
+> [...]
+> > Bartlett Lake-S is a derivative of Raptor Lake-S and is optimized for
+> > IoT/Edge applications. It shares the same memory controller registers
+> > as Raptor Lake-S. Add compute die IDs of Bartlett Lake-S and reuse the
+> > configuration data of Raptor Lake-S for Bartlett Lake-S EDAC support.
+>=20
+> Qiuxu,
+>=20
+> Merged to eadac-drivers branch of RAS tree.
 
-My preference is to not do validation of the DT in the kernel. Unless 
-you need greater control of the clocks, I would use 
-devm_clk_bulk_get_all(). 
-
-Rob
+Thanks Tony.
