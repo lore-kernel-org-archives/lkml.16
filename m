@@ -1,269 +1,139 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A85E28D85F
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42B42E264B;
+	Tue, 17 Jun 2025 13:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165216; cv=none; b=TgA6oAD0E5gGuXzYsEPh5wvrZ+e4LggYop1Wp99QaxXKKJhTRZgthvr0Ay87lRJqm34AFqRg/9N4ByQ3AqBXpZIT96pGClh5zCgaFuQ9FRC/8+sksaGV5/7VLd3Brrke3nOr6MqbBN/jrrOOjbUv4ZbIcpG6Ax00k6fDtKLUIi0=
+	t=1750165221; cv=none; b=drTUv/NenOz4Kt6ml49rh9XoxLr09Zd3GTUBIjgVUSW9Y8KW0w/HhueRU9fyhmRA41zrr4ltYNy8DqgIvgfbzxq5QaOHu4wFjjaIlyzKkFsBuSaYCKbwU05MFtodtYGUEOke0TwLpfBSdxDAikEtMhs85q6bL1t3ipsWHnZj+SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165216; c=relaxed/simple;
-	bh=gPcip00Ae9V1ypW8c5qjbHBMdcj6s1GbFJnfwCwA9Kw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=i+4FEkKan322ltlIi6ej6NXnucbJSsf7qZakns8/4W2RJAPkQ04NHCNjnrvIvpmSNy3EbyaxJ4asR/b9n6Xr5VbqsLW9s3fkCffIa5g61E793TCTxS1GrjQukZkNs4SCmYZCdeubMsUhwltIiTdFm/8ULtSbRfSE5THyMlXup3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=QuHjcdaQ; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750165221; c=relaxed/simple;
+	bh=x5Wrb85DRWbVNOvnfzFdGgHoRKBrMPTvOnwfQ5uCOG4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=bu7SxGmSXY5jOh78ZTzc3UFkmWr4mS5vKPWDQv2ApwSsGkpEnfyDPiTXYiJ3u8KQnMp4yao39EZWhnmEd2rh84qgL67Ejqo91F0HH7HWFZ6sPFkI2RknfigEdHqrGBfY5SFXErutwKWWzeC2L3J7cSZX7y59+thM7D2UeMGRrnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4bE92Kx; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QuHjcdaQ"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250617130006epoutp01c221c5ad976c12cc07dcae7c54226138~J1fuTScMc0859008590epoutp01G
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:00:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250617130006epoutp01c221c5ad976c12cc07dcae7c54226138~J1fuTScMc0859008590epoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750165206;
-	bh=A/Cy3T56QlQXjfksu3OwaCf4ASliC35sKPe6O/G+gfI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QuHjcdaQVH6ojD1vR8rQKmkBs7qUTPgTWmS/V019cSO3KlqJfbMb1b15BTw+lJcNN
-	 laC3j/or/XirME4EPiR7+96sfbFpvZaqP0X7sgv/PqKcpUOYqPa+ybFHZhEVhLiBzp
-	 Q4FZu8ODdXj0M1Ls3wDDyDKcJttVQC1FqqNvUBzM=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250617130006epcas5p1030a231b30efa5e63a1fe92830fe9d6c~J1ftrEfe52452824528epcas5p1t;
-	Tue, 17 Jun 2025 13:00:06 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bM6R970gnz6B9m7; Tue, 17 Jun
-	2025 13:00:05 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed~J1Oy-3VE70929809298epcas5p2u;
-	Tue, 17 Jun 2025 12:40:43 +0000 (GMT)
-Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
-	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124040epsmtip2828309c22b13ef864a4e8c99c0fd132f~J1Owe5a7q2543925439epsmtip2o;
-	Tue, 17 Jun 2025 12:40:40 +0000 (GMT)
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
-Cc: a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, s.neeraj@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: [RFC PATCH 13/20] cxl/mem: Refactor cxl pmem region auto-assembling
-Date: Tue, 17 Jun 2025 18:09:37 +0530
-Message-Id: <1213349904.281750165205974.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250617123944.78345-1-s.neeraj@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4bE92Kx"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4530921461aso49077485e9.0;
+        Tue, 17 Jun 2025 06:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750165217; x=1750770017; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UCBsAUdKLlXHFAS2dv9cOixZKTFpwiXbiHVQbvH0Ze8=;
+        b=h4bE92KxAdOXyBEKrY5gB5XgkzGk8Eph8KqhITj9Tb1e3oTkaqlP7PQuYUydP8OW9/
+         wG6ayXjrPYsrJYIzEKzOiQjVFbEheHQa2Zik3eQBX0Rr4o76DjwLNzs1Rq+zVsuGqkBB
+         xyOBAY+kWKOhr2b86R9CVgypu4GbiB+11+NISwEUS6I/bt9x2zeCQclgDtX1evpNpyFJ
+         7vt5bJ7MoEHA2MCPihfqT2V0gseKKrqSXHF4xYyh3gvVOb/AEsad65wfvCaURmioR4Zo
+         W58b8DYIbstHz+YLReFr+zNWAveFs2WOGS+f3xiNQOyxOYN2kDAleimI4r1jLqCKn8/s
+         SP7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750165217; x=1750770017;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UCBsAUdKLlXHFAS2dv9cOixZKTFpwiXbiHVQbvH0Ze8=;
+        b=i9F9tRiZxfpujeIwLoyOrhYlcE2ftGNmPt6fZ31e+7nQdUqWs7UPkJu59PF/LUjamZ
+         hAnDY84+W7Hxt74/RsRx8Jt47I3EvSXZDYZT4rBBjkGpcJAitDdHVCSfjrV4wwuyGIHO
+         W4tV3VDyt/Kx7hHTiwjHLOiMTf1RThCRpts9MvMi+YZFkvg43p+4Tu6GtvEF4guUZ9n8
+         axhOKywGJ33mfyk4Mm1/rSsNOfqzlql5FxeICMX5IISevbn5nbpPHgR2nRJ/xT/3FIOJ
+         dABRXyiYp1GlQw0pzRpZUmQYo0tSmg/ZMnNSONLTH6M5f5nepLVpzoxo5gn6+EGhsOPh
+         NLIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUOKl8+VquoLbDuOIFovN07USfDVJJp65K/VfqsXh2Y8Djc8D3k3Wh8fPTNEdNtVoreu+Zy4wch@vger.kernel.org, AJvYcCVfzDA9Imm+pWL1btdSUq67lJaRVmLJKDviWFknwLdv6bGnK26sVpLCrGOMfoqNRcZqIMrkBSnIKXU3zFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLG5Ogrru2TT2bN0iO29Q+U54N8s5J2YixpyVDa+glSHwOzYsR
+	PgwsGB9MLyG6k4GwJLkWlVkHL9Q+1l2VI2RSi3S36bHETg6fSfvKzdeOYOz0Moa+
+X-Gm-Gg: ASbGncvqLLgGGx/adrjoUMSA0lIfQDAiBidWuMsiWalVYJGN/BC02N/WKqAanjcH6yA
+	FyHEcyWeo3tUx4X6gpg4ZHEhzXnxa2e55ULJt6HqUjCBO0J7J2VE4PDcWtxvt9jzRxDUltz8WOw
+	1wTXbzKu0C5Z9E6AITrulgWGbm8spulgox5ffc6GAi539GumkuTshxtjsJOW+jS+VMU/s1fXbR7
+	c/iy+3ZYqYDKup+zO9sLIS8+lFpxxUHAGXI4pgQqfukHh8GuFsgOPFTCihnrwQWFfEvXTFpd1Kf
+	9LU5XcP0MUh8fvc2y0zq6VtLS17POpy+JlZra6drnxHBSr90okMCVnohsx+uEpJ4jFrqiGLevQM
+	=
+X-Google-Smtp-Source: AGHT+IE47uR89T5Uem9MM2qCkm1YZX6jwmHcz73YYxvO/Jmwjj1PBFbbbUyCJLNhhaUZOFeMr0rGbg==
+X-Received: by 2002:a05:600c:37c3:b0:43c:fe90:1279 with SMTP id 5b1f17b1804b1-453561ce33bmr8920735e9.21.1750165217074;
+        Tue, 17 Jun 2025 06:00:17 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:8931:baa3:a9ed:4f01])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e1838fasm173538455e9.38.2025.06.17.06.00.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 06:00:16 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  linux-kernel@vger.kernel.org,  Akira Yokosawa
+ <akiyks@gmail.com>,  "David S. Miller" <davem@davemloft.net>,  Ignacio
+ Encinas Rubio <ignacio@iencinas.com>,  Marco Elver <elver@google.com>,
+  Shuah Khan <skhan@linuxfoundation.org>,  Eric Dumazet
+ <edumazet@google.com>,  Jan Stancek <jstancek@redhat.com>,  Paolo Abeni
+ <pabeni@redhat.com>,  Ruben Wauters <rubenru09@aol.com>,
+  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
+  lkmm@lists.linux.dev,  netdev@vger.kernel.org,  peterz@infradead.org,
+  stern@rowland.harvard.edu,  Breno Leitao <leitao@debian.org>
+Subject: Re: [PATCH v5 00/15] Don't generate netlink .rst files inside
+ $(srctree)
+In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
+Date: Tue, 17 Jun 2025 13:58:11 +0100
+Message-ID: <m2msa6ikyk.fsf@gmail.com>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124043epcas5p21e5b77aa3a6acfa7e01847ffd58350ed@epcas5p2.samsung.com>
+Content-Type: text/plain
 
-In 84ec985944ef3, For cxl pmem region auto-assembly after endpoint port
-probing, cxl_nvd presence was required. And for cxl region persistency,
-region creation happens during nvdimm_probe which need the completion
-of endpoint probe.
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-It is therefore refactored cxl pmem region auto-assembly after endpoint
-probing to cxl mem probing
+> As discussed at:
+>    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
+>
+> changeset f061c9f7d058 ("Documentation: Document each netlink family")
+> added a logic which generates *.rst files inside $(srctree). This is bad
+> when O=<BUILDDIR> is used.
+>
+> A recent change renamed the yaml files used by Netlink, revealing a bad
+> side effect: as "make cleandocs" don't clean the produced files and symbols
+> appear duplicated for people that don't build the kernel from scratch.
+>
+> This series adds an yaml parser extension and uses an index file with glob for
+> *. We opted to write such extension in a way that no actual yaml conversion
+> code is inside it. This makes it flexible enough to handle other types of yaml
+> files in the future. The actual yaml conversion logic were placed at 
+> netlink_yml_parser.py. 
+>
+> As requested by YNL maintainers, this version has netlink_yml_parser.py
+> inside tools/net/ynl/pyynl/ directory. I don't like mixing libraries with
+> binaries, nor to have Python libraries spread all over the Kernel. IMO,
+> the best is to put all of them on a common place (scripts/lib, python/lib,
+> lib/python, ...) but, as this can be solved later, for now let's keep it this
+> way.
+>
+> ---
 
-Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
----
- drivers/cxl/core/port.c | 38 ++++++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |  1 +
- drivers/cxl/mem.c       | 27 ++++++++++++++++++---------
- drivers/cxl/port.c      | 38 --------------------------------------
- 4 files changed, 57 insertions(+), 47 deletions(-)
+Note that the series leaves the YNL build broken.
 
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index 78a5c2c25982..bca668193c49 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -1038,6 +1038,44 @@ void put_cxl_root(struct cxl_root *cxl_root)
- }
- EXPORT_SYMBOL_NS_GPL(put_cxl_root, "CXL");
- 
-+static int discover_region(struct device *dev, void *root)
-+{
-+	struct cxl_endpoint_decoder *cxled;
-+	int rc;
-+
-+	if (!is_endpoint_decoder(dev))
-+		return 0;
-+
-+	cxled = to_cxl_endpoint_decoder(dev);
-+	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
-+		return 0;
-+
-+	if (cxled->state != CXL_DECODER_STATE_AUTO)
-+		return 0;
-+
-+	/*
-+	 * Region enumeration is opportunistic, if this add-event fails,
-+	 * continue to the next endpoint decoder.
-+	 */
-+	rc = cxl_add_to_region(root, cxled);
-+	if (rc)
-+		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
-+			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
-+
-+	return 0;
-+}
-+
-+void cxl_region_discovery(struct cxl_port *port)
-+{
-+	struct cxl_port *root;
-+	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
-+
-+	root = &cxl_root->port;
-+
-+	device_for_each_child(&port->dev, root, discover_region);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_region_discovery, "CXL");
-+
- static struct cxl_dport *find_dport(struct cxl_port *port, int id)
- {
- 	struct cxl_dport *dport;
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index dcf2a127efc7..9423ea3509ad 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -869,6 +869,7 @@ bool is_cxl_nvdimm(struct device *dev);
- bool is_cxl_nvdimm_bridge(struct device *dev);
- int devm_cxl_add_nvdimm(struct cxl_port *parent_port, struct cxl_memdev *cxlmd);
- struct cxl_nvdimm_bridge *cxl_find_nvdimm_bridge(struct cxl_port *port);
-+void cxl_region_discovery(struct cxl_port *port);
- 
- #ifdef CONFIG_CXL_REGION
- bool is_cxl_pmem_region(struct device *dev);
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index 2f03a4d5606e..aaea4eb178ef 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -152,15 +152,6 @@ static int cxl_mem_probe(struct device *dev)
- 		return -ENXIO;
- 	}
- 
--	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
--		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
--		if (rc) {
--			if (rc == -ENODEV)
--				dev_info(dev, "PMEM disabled by platform\n");
--			return rc;
--		}
--	}
--
- 	if (dport->rch)
- 		endpoint_parent = parent_port->uport_dev;
- 	else
-@@ -180,6 +171,24 @@ static int cxl_mem_probe(struct device *dev)
- 			return rc;
- 	}
- 
-+	if (resource_size(&cxlds->pmem_res) && IS_ENABLED(CONFIG_CXL_PMEM)) {
-+		rc = devm_cxl_add_nvdimm(parent_port, cxlmd);
-+		if (rc) {
-+			if (rc == -ENODEV)
-+				dev_info(dev, "PMEM disabled by platform\n");
-+			return rc;
-+		}
-+	}
-+
-+	/*
-+	 * Now that all endpoint decoders are successfully enumerated, try to
-+	 * assemble region autodiscovery from committed decoders.
-+	 * Earlier it was part of cxl_endpoint_port_probe, So moved it here
-+	 * as cxl_nvd of the memdev needs to be available during the pmem
-+	 * region auto-assembling
-+	 */
-+	cxl_region_discovery(cxlmd->endpoint);
-+
- 	/*
- 	 * The kernel may be operating out of CXL memory on this device,
- 	 * there is no spec defined way to determine whether this device
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index d2bfd1ff5492..361544760a4c 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -30,33 +30,6 @@ static void schedule_detach(void *cxlmd)
- 	schedule_cxl_memdev_detach(cxlmd);
- }
- 
--static int discover_region(struct device *dev, void *root)
--{
--	struct cxl_endpoint_decoder *cxled;
--	int rc;
--
--	if (!is_endpoint_decoder(dev))
--		return 0;
--
--	cxled = to_cxl_endpoint_decoder(dev);
--	if ((cxled->cxld.flags & CXL_DECODER_F_ENABLE) == 0)
--		return 0;
--
--	if (cxled->state != CXL_DECODER_STATE_AUTO)
--		return 0;
--
--	/*
--	 * Region enumeration is opportunistic, if this add-event fails,
--	 * continue to the next endpoint decoder.
--	 */
--	rc = cxl_add_to_region(root, cxled);
--	if (rc)
--		dev_dbg(dev, "failed to add to region: %#llx-%#llx\n",
--			cxled->cxld.hpa_range.start, cxled->cxld.hpa_range.end);
--
--	return 0;
--}
--
- static int cxl_switch_port_probe(struct cxl_port *port)
- {
- 	struct cxl_hdm *cxlhdm;
-@@ -95,7 +68,6 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 	struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport_dev);
- 	struct cxl_dev_state *cxlds = cxlmd->cxlds;
- 	struct cxl_hdm *cxlhdm;
--	struct cxl_port *root;
- 	int rc;
- 
- 	rc = cxl_dvsec_rr_decode(cxlds, &info);
-@@ -125,20 +97,10 @@ static int cxl_endpoint_port_probe(struct cxl_port *port)
- 	rc = devm_cxl_enumerate_decoders(cxlhdm, &info);
- 	if (rc)
- 		return rc;
--
- 	/*
- 	 * This can't fail in practice as CXL root exit unregisters all
- 	 * descendant ports and that in turn synchronizes with cxl_port_probe()
- 	 */
--	struct cxl_root *cxl_root __free(put_cxl_root) = find_cxl_root(port);
--
--	root = &cxl_root->port;
--
--	/*
--	 * Now that all endpoint decoders are successfully enumerated, try to
--	 * assemble regions from committed decoders
--	 */
--	device_for_each_child(&port->dev, root, discover_region);
- 
- 	return 0;
- }
--- 
-2.34.1
-
-
+make -C tools/net/ynl/
+make: Entering directory '/home/donaldh/net-next/tools/net/ynl'
+make[1]: Entering directory '/home/donaldh/net-next/tools/net/ynl/lib'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/donaldh/net-next/tools/net/ynl/lib'
+make[1]: Entering directory '/home/donaldh/net-next/tools/net/ynl/generated'
+	GEN_RST conntrack.rst
+Traceback (most recent call last):
+  File "/home/donaldh/net-next/tools/net/ynl/generated/../pyynl/ynl_gen_rst.py", line 90, in <module>
+    main()
+    ~~~~^^
+  File "/home/donaldh/net-next/tools/net/ynl/generated/../pyynl/ynl_gen_rst.py", line 86, in main
+    write_to_rstfile(content, args.output)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/donaldh/net-next/tools/net/ynl/generated/../pyynl/ynl_gen_rst.py", line 64, in write_to_rstfile
+    os.makedirs(directory, exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 227, in makedirs
+FileNotFoundError: [Errno 2] No such file or directory: ''
+make[1]: *** [Makefile:56: conntrack.rst] Error 1
+make[1]: Leaving directory '/home/donaldh/net-next/tools/net/ynl/generated'
+make: *** [Makefile:25: generated] Error 2
+make: Leaving directory '/home/donaldh/net-next/tools/net/ynl'
