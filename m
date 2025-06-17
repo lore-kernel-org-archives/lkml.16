@@ -1,106 +1,149 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756AA2EFD8C;
-	Tue, 17 Jun 2025 20:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84B02EFD8C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750192251; cv=none; b=RnV/CXnqmZoV+NVMrxMn3U4OR5dcXrCpxt3lWrGu03ox+lqIRtMeRKzOm/nAH6q+aevHwe/gLnkDLD7Y5JX0nyBnFXlmwhY72ih2K1kqUVL3cyAnVPccYYGmjmPiS9pXM2aGN6unuyTW0x5kgxRs7HuYCF2hWgd1qqYeesRWsL8=
+	t=1750192351; cv=none; b=DJDPDPABjW4G81EzFNUNf3qrTBLYSDDtIilZ/QB0ozj2MmkDYoLxZ++Rh8GoKcQsbuk1Uvq01eUyBZ3aTdWWlwJ7VRs2ePLMHNEL7gIJZ7oTRsEktoan06r7Wpx7o8T/zm7Q/bSxtalhphPtAqOgsasmxVgVb5+LeLsgKZa5YSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750192251; c=relaxed/simple;
-	bh=XuvEZ225XWL+w6sEVTdpw8gxml1hypJ9vxYUkSWza54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hl0oVBhv5M6Woq/S9A1wIZOGPgJhwQAMWc+LCT1Yz3ZWcWYV3hD87syRauEV5pl8rGQC5IaPf8hNqcYk0kHRV6RDwou7x2r3AkFjFm1XqxvcE/7K6f8vEhg6iLiwXSKjcHUxlmSdyuQ7usQ/TeGtVVp6/HHW9aTTOVg29K7MVUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q4KBDUrO; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750192351; c=relaxed/simple;
+	bh=t15GzUBTFymOWyDKXqbcy1Md6W8mYGu1qrdMqwhs0cI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KhrVn+K01Ii/MxrnH4NIPN0mA8vNhiaypn0O2pti2IJ6nmx97io+qAK2Cwwcr0xuDE96yso2vzQ49p2ZG1nH5l/8FAs8M/VC18oYhLoahZK0t0K6AzKQmzr6+IUux63Xv3wtiqMbQ+b3/i4SYJF0fJ+lCMSjuSRYk6odtei3nfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d7TDstPY; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q4KBDUrO"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2349f096605so82613315ad.3;
-        Tue, 17 Jun 2025 13:30:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750192250; x=1750797050; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ytge0DvQREpsX3FPr8UiIpU+73HOBfPpUENAsXp5RGw=;
-        b=Q4KBDUrO+eqGRpBY5hwdniy7dL7IPJKr2T5AQRlVSMqYiZ7v6PX2CwP70A/wuNxJyB
-         sHRTomVy12uBNffwLx/cZXndZZwl17t6HARO2ODAknDGfTctpeRjbwWBlLIIOzPT4J8A
-         kKlxr4S2TsP4PERrWf4RpiMqkiMruGtYeXgAsoe8ql4TUj7KL5nqsv5FyMlI9iimNIG/
-         z75Mpp1nHjYimDHreVFqY9iLArTvj5Qu1IHXjmAzt75FPpSS+q2pKo+JfUGCPR66Y02g
-         FFQgoP/hkCV+XOwIGcFV7oOL/qDPVOjg+V+Hfz6dMHxswObCWSpA/UsqccXq1MOYH9WF
-         Ca9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750192250; x=1750797050;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ytge0DvQREpsX3FPr8UiIpU+73HOBfPpUENAsXp5RGw=;
-        b=u7bX7Qb79h2cy4JIridoDPDfWfze+Ca3pJwaHYwvu3J4pWlfvA/ismufMFoLgTlzCC
-         tY1Oxeg342jkXOqpBln8vfEp4yQq84W2GSrybMR88Dt+XlCVR07sYmecM5QT7tErEjqv
-         ea3Py4W2PDd6lG+lrS//SRwu79k+XjDw22qgsjFHcZVd0ogxdLn3smHq+OV6ZEr4qYlS
-         VIWzuZZwHXr2AkotHelBgnqbJ5mBqpZNDu+i6VPvT6Fas2q9aPNUvyP+CYDhATlo9/Xz
-         6U2Apf2IBnzDTgG6Xmhi4kHK30B8aQqbbBSgKdRMNrLzYvbRQy/xI5FDMXFBMB0IsAn8
-         zjhg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCy3uj1HbnK4iO4Sdi47jV+0PwZVTmFYbvQH7YO5Deh4UehEyFVXnkbrXTSIKHVmu6SR2+Ozme6Mohrqc=@vger.kernel.org, AJvYcCWkY/sTe3Dou9mvM90LgGCVbcGuE8fho3LFqkDg9U4vBtLSq1Vdnj54YUIB0EM5RY1dUBBdqT5BbwJz@vger.kernel.org, AJvYcCX/eVySz0skjkui8M+lxY8Py7IwmpzEGSufHcsZ8FG7gZfTuEHC5mNhathwglBNEhgZzayh5iQOrM2SjFG8@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx97YBz66QhqOrnHbuzGATSeCeiwX9YoALkpsksm6PlLX5EWcHr
-	QOlVFp0a9/y0r3udJ6Z010Jk7LnU1PzFmT/63iD14WEhCypkTF2hc7gH
-X-Gm-Gg: ASbGncu05f9nNxcI/F9VHZbaLJ0XsAJMCQ2WSbOTbcPfEd/tG5uYzeRtwM/sJKEpkSO
-	7mzCuUzHsZlLqfDYGeEFqJkwLaKyIqDFsrnWasL+4IRH4PnB3OngPkvqKFsStMpMYgkic4/o3U4
-	TUg7AWmEsBBl5yWVdSOSa8yG0K5S0kroJOB5M6H7UNSI9zywz8mjiIPGoyOx2y6fuLrXZUblT9H
-	b1oak0cvyiC2PnBGvdeIMubLyYKXomO1ZAyWnjwCls399h3LBkMoczvmSN4g5sfnRCx10cdBIbr
-	iByXqmzaRq7scjtmGmWxdiNwvDPX1tj7edE0JNrzzWHcZPq8Rldqugfq9dKr6N0=
-X-Google-Smtp-Source: AGHT+IEl1LF76euKDmEK2b2BXIXslDp9/iHoV2XPh1E20bcvG0JJxY9n8fjrWmH0V9E0TDySKBwOcA==
-X-Received: by 2002:a17:903:b88:b0:234:9094:3fb1 with SMTP id d9443c01a7336-2366b3c2d82mr257503495ad.35.1750192249605;
-        Tue, 17 Jun 2025 13:30:49 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:8d7d:9cdc:2836:83cb])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1642e0asm9364972a12.17.2025.06.17.13.30.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 13:30:49 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:30:45 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org, 
-	Douglas Anderson <dianders@chromium.org>, "Rob Herring (Arm)" <robh@kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: HID: i2c-hid: elan: Introduce Elan
- eKTH8D18
-Message-ID: <zcdks6nwmnahlgp6vvbxmmlbfbafzluuxgb52byiisuoy7ewzu@kao7yhx2u3qt>
-References: <20250617082004.1653492-1-wenst@chromium.org>
- <20250617082004.1653492-2-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d7TDstPY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750192349; x=1781728349;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=t15GzUBTFymOWyDKXqbcy1Md6W8mYGu1qrdMqwhs0cI=;
+  b=d7TDstPYOTVReuwp65ZTtyZ+PW326gWM4L5LlIRvLZb5Xkp3eQOMYrF6
+   qWRNqBZSVlEIG7+1N4wNkIZr1n5XqKa07EdCV1VYBWO5Ba1+EX9edVc78
+   cIkBlIh+vLisf1A35CC5iMdczu3AQCJMuz0e4mDntDc8AzH6AGoMe/Pw/
+   /6myBMzfQaVxtb75dGkpyZMJwalRYwlEbGgtRPrbYhY/hNX6nVlmOoMiN
+   7yy9vs/kueq0PUhfLh3XpOp619F7L1Cck6mE1w+q6YTlkH12S206heByK
+   sMfEia3BqreRkcxPsKiRRsZsjpFQd8Xgq2KOggKS8f9AVYqSWud0SVBc/
+   w==;
+X-CSE-ConnectionGUID: ZkcZ64HWSUCyp7g2oMCUaA==
+X-CSE-MsgGUID: GINnZNIXRVKCQLSq9wAY9g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56191508"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="56191508"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:32:28 -0700
+X-CSE-ConnectionGUID: Bo19y/xBTpy9ToCWtAO74g==
+X-CSE-MsgGUID: BY1X6FaJR3+A2bZrgGB70A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="148808082"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:32:28 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 39CA720B5736;
+	Tue, 17 Jun 2025 13:32:26 -0700 (PDT)
+Message-ID: <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
+Date: Tue, 17 Jun 2025 16:32:24 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617082004.1653492-2-wenst@chromium.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
+ jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+ linux-kernel@vger.kernel.org, ak@linux.intel.com, zide.chen@intel.com,
+ broonie@kernel.org
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250613134943.3186517-7-kan.liang@linux.intel.com>
+ <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
+ <8fbf7fc5-2e38-4882-8835-49869b6dd47f@linux.intel.com>
+ <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
+ <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+ <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
+ <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025 at 04:19:58PM +0800, Chen-Yu Tsai wrote:
-> The Elan eKTH8D18 touchscreen controller is an I2C HID device with a
-> longer boot-up time. Power sequence timing wise it is compatible with
-> the eKTH6A12NAY, with a power-on delay of at least 5ms, 20ms
-> out-of-reset for I2C ack response, and 150ms out-of-reset for I2C HID
-> enumeration, both shorter than what the eKTH6A12NAY requires.
-> Enumeration and subsequent operation follows the I2C HID standard.
-> 
-> Add a compatible string for it with the ekth6a12nay one as a fallback.
-> No enum was used as it is rare to actually add new entries. These
-> chips are commonly completely backward compatible, and unless the
-> power sequencing delays change, there is no real effort being made to
-> keep track of new parts, which come out constantly.
-> 
-> Also drop the constraints on the I2C address since it's not really
-> part of the binding.
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
-Applied, thank you.
 
--- 
-Dmitry
+On 2025-06-17 10:55 a.m., Mark Rutland wrote:
+> On Tue, Jun 17, 2025 at 04:44:16PM +0200, Peter Zijlstra wrote:
+>> On Tue, Jun 17, 2025 at 03:24:01PM +0100, Mark Rutland wrote:
+>>
+>>> TBH, I don't think we can handle extended state in a generic way unless
+>>> we treat this like a ptrace regset, and delegate the format of each
+>>> specific register set to the architecture code.
+>>>
+>>> On arm64, the behaviour is modal (with two different vector lengths for
+>>> streaming/non-streaming SVE when SME is implemented), per-task
+>>> configurable (with different vector lengths), can differ between
+>>> host/guest for KVM, and some of the registers only exist in some
+>>> configurations (e.g. the FFR only exists for SME if FA64 is
+>>> implemented).
+>>
+>> Well, much of this is per necessity architecture specific. But the
+>> general form of vector registers is similar enough.
+>>
+>> The main point is to not try and cram the vector registers into multiple
+>> GP regs (sadly that is exactly what x86 started doing).
+> 
+> I see, sorry for the noise. I completely agree that we shouldn't cram
+> this stuff into GP regs.
+> 
+>> Anyway, your conditional length thing is 'fun' and has two solutions:
+>>
+>>   - the arch can refuse to create per-cpu counters with SIMD samples, or
+>>
+>>   - 0 pad all 'unobtainable state'.
+>>
+>> Same when asking for wider vectors than the hardware supports; eg.
+>> asking for 512 wide registers on Intel clients will likely end up in a
+>> lot of 0s for the high bits -- seeing how AVX512 is mostly a server
+>> thing on Intel.
+> 
+> Yep, those options may work for us, but we'd need to think harder about
+> it. Our approach for ptrace and signals has been to have a header and
+> pack at the active vector length, so padding to a max width would be
+> different, but maybe it's fine.
+> 
+> Having another representation feels like a recipe waiting to happen.
+> 
+
+I'd like to make sure I understand correctly.
+If we'd like an explicit predicate register word, the below change in
+struct perf_event_attr is OK for ARM as well, right?
+
+	__u16 sample_simd_pred_reg_words;
+	__u16 sample_simd_pred_reg_intr;
+	__u16 sample_simd_pred_reg_user;
+	__u16 sample_simd_reg_words;
+	__u64 sample_simd_reg_intr;
+	__u64 sample_simd_reg_user;
+
+BTW: would that be easier for ARM if changing the _words to _type?
+You may define some types like, stream_sve, n_stream_sve, etc.
+The output will depend on the types, rather than the max length of
+registers.
+
+Thanks,
+Kan
+
