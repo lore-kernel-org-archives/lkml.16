@@ -1,104 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AB528DF07;
-	Tue, 17 Jun 2025 10:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25C7293C64;
+	Tue, 17 Jun 2025 10:26:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750155989; cv=none; b=V5MpaEedMtSjKf4vNjTfSocwqs14VMe5E9isypawW2GpeLIAGU/Z7XIR4DFreZy1PHaesslZRS7LwG+FMFQdYI3VfkpAqnB9qXn8mf9Qhntn7IB6nn62PgYYcetGk9EaClFcMdQEUqcWgFMdXpcasOuD+TFf466Is2Ktlp1VEIk=
+	t=1750156014; cv=none; b=Q4rV1ZCcOUsrz+cI1E5RuzT4B54E9qKq2OLN18f2CKU9FBM8lhRaJHKTC1FGE5rNYHzkl5X6/X2fCU+h3nz3wotpPe2HMTaXqvGbVu0jGCaiagnxJVJlUYQPmoPDig5R+9m9YhY2WSXkDdWQGwAWcUqP2z0OWNt1HBN2mGG4d5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750155989; c=relaxed/simple;
-	bh=7I8alF2ILUvUHx+QjI3iVi8WpDwqkJW3CHPDKoHRIV0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LdlrW9jLTsm715DrJ8EqoG6W9gVf4WVATWRn+a5zFgmaIdsjjt1lr6DYtCwotLEv7O3nQzxaL50jKoPJ+16ozZ7k+v1YHVkYijuB/qqcMzARygPdaaLpkYEfyUlujWKMpOiOovQH42bz3HpWMYnns0n2Non6Sx/9eKdkjys119Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j15v7lxK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750156014; c=relaxed/simple;
+	bh=c7SJ8S5i0EZ71+KLteXSUyF3nQXE2e502C4Rl9OAeiY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YwXVCrI9wCiUg9s3ArKXyByr8m+gIKKPnUXf4fwLmBqXdBNzU+ZXn0LTQuq1ouspEzdV4ouLGxd68zl9LJxoU18zYKtIXxDbn/Co7LAZf1MOWOPrcfE1Jd2n3EzbRV9jKrC5ip1NevEuouORz3mXuUicAxJJPIDvYtZ6r8zQ0xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4Tu15w9; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j15v7lxK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F16ABC4CEE3;
-	Tue, 17 Jun 2025 10:26:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750155989;
-	bh=7I8alF2ILUvUHx+QjI3iVi8WpDwqkJW3CHPDKoHRIV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j15v7lxKclzCiL2kWBBMhwCLbNxZHB9h1DwKXVFYW2bf20nEnJj23/Nxu9Nrarp+X
-	 Vt503sC1Q0RU3twD2EnRj+FIiuyS/L1rC3HT7We7ZdmkEH++lhjBEWhKNKkfm8Sdb+
-	 ptdvNaUStMXEAbofOxa5W5nN56HUNsq4oajsWy9sv9IoLhZE8cCZz2RbxxhSMK10on
-	 sI/9SRINHVq9V4dFBCoZ8/DyuHrJaJsSIVIIh5jHqXrEZsNtFJ9jxFq/FLRPYIWrPl
-	 N+s0w79Om5DGl+f8PnjsX79EqSdK/DpEZayo3NfKIfGC6lSGCf7D22nm9uTc7KMaIt
-	 rOHmdRyQWeTGg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRTWM-000000005Wb-3JzH;
-	Tue, 17 Jun 2025 12:26:26 +0200
-Date: Tue, 17 Jun 2025 12:26:26 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Wenbin Yao <quic_wenbyao@quicinc.com>, catalin.marinas@arm.com,
-	will@kernel.org, linux-arm-kernel@lists.infradead.org,
-	andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, vkoul@kernel.org, kishon@kernel.org,
-	sfr@canb.auug.org.au, linux-phy@lists.infradead.org,
-	krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com, quic_cang@quicinc.com,
-	qiang.yu@oss.qualcomm.com, Johan Hovold <johan+linaro@kernel.org>,
-	Abel Vesa <abel.vesa@linaro.org>
-Subject: Re: [PATCH v4 5/5] phy: qcom: qmp-pcie: add x1e80100 qref supplies
-Message-ID: <aFFC0pngCDIYkDvD@hovoldconsulting.com>
-References: <20250604080237.494014-1-quic_wenbyao@quicinc.com>
- <20250604080237.494014-6-quic_wenbyao@quicinc.com>
- <aEBh2xHu3QDtUrxe@hovoldconsulting.com>
- <296a9ab8-04e3-4623-8246-c8fd3fca8d98@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4Tu15w9"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3137c20213cso6608848a91.3;
+        Tue, 17 Jun 2025 03:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750156012; x=1750760812; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HZz6MHsNO6dIlJ6aj/tvnzfPrgOsbHqDiUlqtB5Es+k=;
+        b=d4Tu15w9mPe4I9AiESzvjNTZjHcABRB9mYznpgNwxg5Q7X50dgIh1rtJbz6FlJYpjr
+         NhPKvR6/fdai0yvtB9+akEOR31ya4rwvykY9xyhaKMRnhv9RAJX9GS4tLTeThRQoVXA2
+         9+uQLUT5AGBB+jYqopFx2BcA1b6hB/njt1+5yCph9vW8p+wsJbfUq0Asb3/EUKyv66rw
+         kiWn9Dzr0SFZtrCacWckNAGGx+rXlOWQT7bGp9NvPGkZLhhU9Vxxy6xoc/QeONois+fN
+         48skoBSTBDXb3CXkCTi8h+JLPijXL2+OM0XH0df8D3LQMs0FCaP/+LqV0Sqw8qbqqtbd
+         JfXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750156012; x=1750760812;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HZz6MHsNO6dIlJ6aj/tvnzfPrgOsbHqDiUlqtB5Es+k=;
+        b=qUPnxNVHp7OHLBDgvTSu6bCEsaKiH9qpX8s+X29ZOVxVX7yWyot0rcM7y1UjVnkB5o
+         MqMSxXy8FO6FR2oNXZhFEDcEvJrFcEOj97ZrTsU/5wEFEGkGG3ATyLrcX6V/RdHa385J
+         PgyuXUETEbo/63PXYzO4+eQ7t+Z06rc42O/4ubjDhPPB2yoVr4IEhVb9BC0N46slsC/m
+         Yz7EAPgP+SG4BGWGfqj/pkzYydK0Sun3S0gsPHUjTq0bR125m09F6FWOknMy/UNSMXzI
+         FPDyn/psUdwyswRSgkPyxp8QjO4H9fkd5IHmhF94vuR/IciAT4k8iyYhhhWU4sXFt1MI
+         PRkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeiUGY4iIjjDG0QRm+aeUZN2yNmouG5BMlIbGMEOdjMAx1qKgt6UlmJx7XbfLaXt1phgtpn5A9ZEG9GlQIOsVCr/F69w==@vger.kernel.org, AJvYcCUosPFmW9rQTgd2vfQFZRvjzHoS+J3hKolfPzmog+ro7l3TnlY4xHEoXK/KRHYrapvTlk1zXfz6+5RMmdw=@vger.kernel.org, AJvYcCVTmodj5cCTX4HV2RSiiMW2C/WVfVK4M99XfG5pBDFlohSFqeWWzVy2qZBCKxseoaHCfraDGGff@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY2/sU+QuvvM/90LTrjiX9MjPpSRdojfeJXKy+j9EQmG7cXEHb
+	aH0mAHmi95lJK7mvxkkA6XqGFQ6xYxb7il+B3xtVtZ6GfkJtpAOZKZ0f
+X-Gm-Gg: ASbGncvC+/HZMXPOrrrps2X072qdEK2as66Y+g0WmYjMmmnMHEzhZvCuc/J42ul/ErV
+	wiq/bOnFajcnhkFkk/icQ4RRkHuxvDANReH+FskDqeUtrBDpCiYeJ0VRMMXXuNZEmzvFx0XpuO4
+	u0Y6RGOhLrcED+3XANcrurSBVRQensBWxMAjcCsGaFHvUGK8viLCh5RoBrtF2NbwM/sZ8PJZFib
+	l6/A8ARPKxKTS9iMFWJ8E74pKmjYAqEe8JkzXdE1rwI/3QRdxNUo3sgEJMfSUBgDHAVUFCKhJJP
+	nnSM1EeJCJqCd+0fnEQHVk1GnOoPcZCTSy+XputnuRW5EkOWEtS9ASy68dwyzzjlfYBCtrjCJY/
+	riIXb
+X-Google-Smtp-Source: AGHT+IEvpo0maN0m+gyRmMErklVTxeyTK+JnMtREA8aMyFe7PwoLhFvswRDMfRFhsxdH7wrvpIfxhw==
+X-Received: by 2002:a17:90b:274d:b0:312:959:dc4d with SMTP id 98e67ed59e1d1-313f1beafdcmr21027180a91.7.1750156011965;
+        Tue, 17 Jun 2025 03:26:51 -0700 (PDT)
+Received: from localhost.localdomain ([104.28.254.76])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88bf0esm76165935ad.31.2025.06.17.03.26.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 03:26:51 -0700 (PDT)
+From: Hai Tran <hoanghaivn0406@gmail.com>
+To: i@rong.moe
+Cc: hdegoede@redhat.com,
+	i@hack3r.moe,
+	ikepanhc@gmail.com,
+	ilpo.jarvinen@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	stable@vger.kernel.org,
+	Hai Tran <hoanghaivn0406@gmail.com>
+Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC polling
+Date: Tue, 17 Jun 2025 17:25:22 +0700
+Message-ID: <20250617102522.2524-1-hoanghaivn0406@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250525201833.37939-1-i@rong.moe>
+References: <20250525201833.37939-1-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <296a9ab8-04e3-4623-8246-c8fd3fca8d98@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 14, 2025 at 09:59:13PM +0200, Konrad Dybcio wrote:
-> On 6/4/25 5:10 PM, Johan Hovold wrote:
-> > On Wed, Jun 04, 2025 at 04:02:37PM +0800, Wenbin Yao wrote:
-> >> From: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> >>
-> >> All PCIe PHYs on the X1E80100 SOC require the vdda-qref, which feeds QREF
-> >> clocks provided by the TCSR device.
-> > 
-> > As I just mentioned in the thread where this is still being discussed:
-> > 
-> > 	https://lore.kernel.org/all/aEBfV2M-ZqDF7aRz@hovoldconsulting.com
-> > 
-> > you need to provide a lot more detail on why you think modelling these
-> > supplies as PHY supplies (which they are not) is the right thing to do.
-> > 
-> > Also please answer the question I've asked three times now on how the
-> > QREF supplies map to PHY supplies on X1E as no one will be able to use
-> > this binding unless this is documented somewhere (and similar for other
-> > SoCs).
-> > 
-> > The fact that you so far have not been able to provide an answer
-> > seems to suggest that these supplies need to be managed by the TCSR
-> > clock driver which can handle the mapping.
-> 
-> To emphasize, we apparently can't do it, because there exist IPs
-> where the QREF *ref clock* is not expressed through a bit in TCSR
-> (which we interpret as TCSR_CC), but the *supply* for that clock must
-> still be described somehow, as it obviously needs power.
+Tested on my ThinkBook 16 G6+ AHP and everything is working fine now with:
+- Fn+F5/F6 inputs to change brightness are not shutdown unexpectedly anymore.
+- Sleep is working after closing the lid or via power button.
 
-Are you saying that the refclock cannot be gated? Doesn't that mean that
-the corresponding supply needs to be kept always on as well?
-
-> To add to the mess, it may be that there is more than one supply
-> per reference clock required (which is not necessarily an issue
-> when the driver takes care of it, but something to keep in mind).
-
-For PCIe on X1E it seems there are two or three qref supplies, and since
-these additional supplies correspond to the supplies currently managed
-by the PHY driver it happens to work, but I'm not sure if that's
-guaranteed to always be the case.
-
-Johan
+Tested-by: Hai Tran <hoanghaivn0406@gmail.com> 
