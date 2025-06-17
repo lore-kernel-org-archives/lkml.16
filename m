@@ -1,59 +1,57 @@
-Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
+Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4421E1DFC
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81EE620C024
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 03:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750130863; cv=none; b=BBykRoeHtadDr4EsFtwcc2ELOHKIefWtCb8B46hg46nQukoDm0Qr2EXAyv9mmqCyQAD3n55vEcYOY5IqxG8OmwwCaQvyUCkf31Mt0fkaEMXeBHGTPGpVAz5o24Ob6cT/fFvteZ5+cNBeOwBH6LlR2F1SbMfgBKDYvDugej9i2P0=
+	t=1750130899; cv=none; b=fqDNHvfLJND7TdiJDulS/lJgZxLYtStoRr+MVoRqwPBJUMR10rUZbRWi44EWGTMO9QhdBbpAcV5Ph1v9BixnvF8YtS0mWWrv3pHT2DmulrOGoTHokahO6ISEezcSC02ZTyiRwNaaYg/GVhS/RMg5WRDe2lyv9951iDsrHo2kA7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750130863; c=relaxed/simple;
-	bh=jgjxO/7clUSYOJ3hEGHAiq1dZeIebExF4Lno9l04xXw=;
+	s=arc-20240116; t=1750130899; c=relaxed/simple;
+	bh=CfpuETCjUJG0sKL/tA/qVFOawEfU0VcBmDy2+jm3CTU=;
 	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=UWWNomyeKkXgQAsFj4TNIsfsH3eDKxrPj6p/3RtpGRfiJG19gi8yqH/uijZzWaLEtGS1jYIvzrv9z+g3UyIyyCyE0Iffr8vyGVWa+G+9kIp/rGgFuME/yquZ27252X8k8BfmhYdi6NsKkkyuoXssxv9lbfmeGXU2SYqx6FyYeCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=mYUSlCsT; arc=none smtp.client-ip=203.205.221.240
+	 MIME-Version; b=Bk8pMghqjm5S/joubguaAsG+3ujcquZyEgOmnHMkLnIt8sAnuXKg4RlgME5r289lw4R3gVHedHFoLSkYGl6HiklR1Mk/oCFit/RtQEjF666zqwcoQ41rT31Cmah9oP/yilSGqfC+O2gQ9x9pgt3ZWnADivQzz5M8NAK4MTpmXOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Q2Q8ioeR; arc=none smtp.client-ip=162.62.57.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="mYUSlCsT"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Q2Q8ioeR"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750130855; bh=EHB/nKe3H6oNehWCjTnKytYQyFXIqU682RBCgDLU448=;
+	t=1750130591; bh=mWAWivyg9mVWY6ZmZ89vSbIp2BeHqPou1PVX+MZxcS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mYUSlCsTAaS1RucXKO36k6N8FGmWG9fZygVEd8Jo7XmH2QnVXf9/Iae1yArfgPj+o
-	 NM8n8vBDYifCVDI5wL650Bk5hkMn0OfL1HKpfdvUyqXIgLHet5ClEricpxCicUW4JH
-	 JUxuyAOukr0r2gzX6Mr0bWv937G0gpkyt1q1qob8=
+	b=Q2Q8ioeRhX5ixVThFcnS+kUFacbBsdxNoxGPEQhH7P6Z3VxU+8nfik5T6jbe2+Bgf
+	 /LwJZRk8x1fPNcB6nw1c/PrOgoXCf683LfiYEkgawb/ZPG+eNndsYCY/dRNc3vcavH
+	 RdBm+2KQoVyYn+gz87aKTJApaCEvU3QX4Snj+RY8=
 Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 4F88BC3D; Tue, 17 Jun 2025 11:19:56 +0800
-X-QQ-mid: xmsmtpt1750130396tbcgx4cp5
-Message-ID: <tencent_279220DDBEDD93995BCF998D8B25B18D8B07@qq.com>
-X-QQ-XMAILINFO: MhK4DKsBP06if8MPSwrVCdWpm74FUszJnySk2ZCmHvLprutXp1AvspMspqJx8Q
-	 BFqtuQAseR3kHWNXp91IQKn/r1PDaLoX0Cpd1ui16Prh7LspeaUTMdiKxu4YRSvQ7ra4SMtMmxvT
-	 RHGdO7jqB8dRplXxB/POb8aCMz9u871bMovBZT763J6P2yNciuxkzDs3S8dong3wZj0xGvEiRCUJ
-	 tg6P9E5tv04cWvAJtv7gYQ9UFqxOpxQZJyVP6XeCCVqzEi7BN7op0Mo4SLfdHHZhmW8yM9wVTDJG
-	 4Cg4BLzVIHBJyo0r8zM7d8gq/SEn+Ja1lBSPoFndn7xs8brtIDgfa4Ni6dgRTrHSSqEoxiDKNgpS
-	 SkwoOiBeXxga6QyzSlwZI1Aic6RZXJE2KCEX2aLV4FxsP09cZZqowp4wUUNFcQdxQVUY1Gk1EH/7
-	 KP/YBaV/OpqyYajBNIMSZN593WOG1ZjD2Ql2zp2aK8Rfc5H6is60ZiWqmegLm6sT56DAGW8BLwus
-	 2zHduwdTD7rHb+Iif2iWXsyhKq3coGVosCpzXSBOTqA+l/YmtussyoTBc+TUNiCOg2ZuUyuevxlr
-	 ZPZpj+zHFjA7dmPiL6ncdQfwHbXALAtD7nMJSI8Ci2b+aRsia5PV16EirCPrO6Pxby5ve+LA73m4
-	 C8HFfG7yek+GYAvqz7noHVWKhUeRJXrSFGrSTwt2DCMvC0PXZzzSjPvdOlK2Haj9WinUI6vD5uuO
-	 pdoflCtc9UZIJ/SyR/2c/BySUnp0XhW4Nq4SrtKH4RBxBo2mZly6m/NzURjDBQRUDQ5eSmxDWMXC
-	 YVTMh051mctFpzGY6A1JnGUXz2UQDtpxINkZMQBI++QFoJFwz0jpvArlUfK4D6MnNu614oqrVicZ
-	 gxLa/OV2Npon3ynDOKZqhO3vqSpsg9sav8xyYO3XXmenckNjpY889UTrCQInol28Ar1lahXVfaUA
-	 ssQyD12wSoYbAzTVsu2HkIpOJxxH5mhHZQGz9mfOZ5LR/Ra5GTuyMngQXCI0lmmS5JivO9OZE=
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 5C989E4D; Tue, 17 Jun 2025 11:23:09 +0800
+X-QQ-mid: xmsmtpt1750130589t5fe72f4q
+Message-ID: <tencent_E870745776CD66CE3C1D36EE977437AA4A09@qq.com>
+X-QQ-XMAILINFO: MdW5rY+5JCKZ53x5vXEK5Ubnzhdh7QqMx9Lwl96i7zhtarIpToclxqYq6w+T/w
+	 PVio/V1XvR98TpB/94SUQRhp5hTBOQGEHFJ6ibtcSL91QDoUETtt+v5eaMfSTx+xPmEUtsJMSqtV
+	 1NtGE0K0tLkZTdyLbXKyb8CXViWnCKcFzvFv5MIFibXQGJZ/eMZYSl2G4krgB+gGz1RfaNkKXM8J
+	 FSNNu2v+0LsI2BbauszcAk673KlwUqQhq21zKjHjEr8V4HCB5Q5cebUrqGKGf+a2vShqhheNfT3e
+	 TMTs5wo8EneXBB4VIiOttKvAlMgVmoCHP6Kmw888DzgntZjWiCg2mjQPs1b3X9Y1Xv0o2lv6dPIC
+	 RwRzt3VPar9HOE8pCu1RIYb3fGeNnNPkDlGHRErfHabqSf2kWgO79zshPw4q8H2FZy1kgI0yArnX
+	 BXVYuho/0RviRhnsE1R2CbqXUfZU9XFmUZelcA1rt0/fadR5R7VzDuk1MgxpcrGUyMCd5a0G2zxK
+	 4WQG7uN0pJ41zvVwS+/0Ev9MakuhN1ZBKEmVjGnIH3FCtkXdeeIVuVaDCLbZt5Wj6GTaMyqj4jBh
+	 lkUKITcXYAzNmej4Mc2fBVnyNsEax8QEfxDwNUgTaU8O8cMCxerTUsDvj966g93iK+pScOcwch1Q
+	 TKVDvJoS2oQJqnvzE4ePixdqM9By3HSuEEos1FtosXIrjFtcHpFcLDLiFv5jwqe+w78domfAjwDM
+	 JUyoxpFkv6XdyyPo+N076PqsbcVDS0//j+stBw5muYUAYuD3JJ0QEP151M+B4sjONEEb3hyJtpNI
+	 hDR0mtmlU3druy1jJ6xuxrOhII+lu7GGb8nL3r2cPZTLDNlY17Cx5fa1XmAeOCP/Fo5U9dX7uLtM
+	 ngusw5jfi6PHb0i+usFpmy7bJWuSFsCv9cIPiPzI5IQ6YKzBnfu1yealL9Y+8+SPxgokeIoIidhY
+	 VUJFyHvK/+PMi+4tgwiU4NMqFsrItaTR7ZccuRXqABOF0NtaWjzp75XiZGl6mOnJPWrch3P0E=
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
 From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
-Cc: jfs-discussion@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	shaggy@kernel.org,
+To: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
 	syzkaller-bugs@googlegroups.com
-Subject: [PATCH] jfs: Issue a warning when leafidx is too large
-Date: Tue, 17 Jun 2025 11:19:57 +0800
-X-OQ-MSGID: <20250617031956.334239-2-eadavis@qq.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
+Date: Tue, 17 Jun 2025 11:23:10 +0800
+X-OQ-MSGID: <20250617032309.336824-2-eadavis@qq.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <6850d37f.a70a0220.395abc.01f9.GAE@google.com>
-References: <6850d37f.a70a0220.395abc.01f9.GAE@google.com>
+In-Reply-To: <68504add.a70a0220.395abc.01e7.GAE@google.com>
+References: <68504add.a70a0220.395abc.01e7.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,35 +60,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When it is clear that leafidx is too large, a warn is triggered to
-distinguish it from other sizes.
+#syz test
 
-Reported-by: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=077d9ebda84f426a6a1e
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/jfs/jfs_dmap.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index 35e063c9f3a4..7e3c5f6826d8 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -2856,9 +2856,13 @@ static int dbJoin(dmtree_t *tp, int leafno, int newval, bool is_ctl)
- static void dbAdjTree(dmtree_t *tp, int leafno, int newval, bool is_ctl)
- {
- 	int lp, pp, k;
--	int max, size;
-+	int max, size, max_idx;
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 2d46d4af60d7..c370352b7d7d 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -7222,7 +7222,7 @@ static void ieee80211_rx_mgmt_beacon(struct ieee80211_link_data *link,
+ 	if (ieee80211_is_s1g_beacon(mgmt->frame_control)) {
+ 		struct ieee80211_ext *ext = (void *) mgmt;
+ 		variable = ext->u.s1g_beacon.variable +
+-			   ieee80211_s1g_optional_len(ext->frame_control);
++			   (ieee80211_s1g_optional_len(ext->frame_control) - 1);
+ 	}
  
- 	size = is_ctl ? CTLTREESIZE : TREESIZE;
-+	max_idx = is_ctl ? LPERCTL : LPERDMAP;
-+
-+	if (WARN_ON_ONCE(le32_to_cpu(tp->dmt_leafidx) >= max_idx))
-+		return;
- 
- 	/* pick up the index of the leaf for this leafno.
- 	 */
--- 
-2.43.0
+ 	baselen = (u8 *) variable - (u8 *) mgmt;
+diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+index ce377f7fb912..556ce95e0b0f 100644
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -1278,7 +1278,7 @@ struct ieee80211_ext {
+ 			u8 sa[ETH_ALEN];
+ 			__le32 timestamp;
+ 			u8 change_seq;
+-			u8 variable[0];
++			u8 variable[4];
+ 		} __packed s1g_beacon;
+ 	} u;
+ } __packed __aligned(2);
 
