@@ -1,82 +1,109 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAA62C0331;
-	Tue, 17 Jun 2025 09:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10897217F36;
+	Tue, 17 Jun 2025 09:54:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750154021; cv=none; b=QLValmmQmfS4bScNe8faSCvqDak442sOWDS5OuYqvmjv+tS/uMo0tTWxi5YsSF7/QyRD464CDz3NotkrcyB3f+P+2USiQeRroZcDI+O+3+S1Fvul9J8RoshH88e1JgqbosEyy96elCUtzEiV90UMH96XKI4l1CdzP70ycNquJss=
+	t=1750154087; cv=none; b=he/WjdwLh+KlsiGtQC25WOQEnojiVDH97NLAmFLdC9TWbmXDLZv5KEpJZS2TdCNceOlz1b/IbhxeQ4eCPA/xzMnvxHecQpUMKz8H3G1QhjLXqoLL+8BmwNkdD0ELnZtM3DqF3HaCHJKsubTMkp8q9n3ZGNnNmW6tTa1GwrajoHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750154021; c=relaxed/simple;
-	bh=WL6I7/r6sNbE9eFLNAU4GntpNQQRjynO7bqQU6HoHyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lYa51/ZEoHPTSyuuk4PHYm0kOUPVjWNmWiCOtA/IyoARo1oaOW/jgfFs6+2pGvNi/mACp3FzYRlP/WUedJR7hKNWj4V+KNJ+Lu4AFyYdPgMlYFMvtO2f2MFFjDRO//1dGFvOApsONyltc6UcvLPtfi16tSWfRIQhBc4g1i8Au9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso9983858a12.0;
-        Tue, 17 Jun 2025 02:53:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750154018; x=1750758818;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j+K8ncmCqlfnbPRcbjEYAOBr5Th8ous3tA4EXtfwmck=;
-        b=LewtgoiQfs4PUi6swzxC3YY4b7VUn6xL8LKKETPwJhCvlkaEm2ti0QqhZi6GcE0/Qs
-         d2wLpoDOLkLxnP1znvWDJ96SxFecE1e9xJ14ccPhPHeceUaWiNLExZBGUX3N7gw+hRD2
-         t9+muj5MuborToxwhFrK9WTwOPLNNknC3Jb4iWndpKRivGlDvUi+UkTOWbBBpMiQaQHX
-         +SprpHBm6y88QkvXB1tj4Il4tk5sd3bGWnVTRB+/00FC0zBvgdQQOlJOYyaIIXkf5bkO
-         kCDCpbZd9E2FXXRJhbfEHvnxfPufC6SPDMXx7N8JBCnb1HKlBZvRvLxn5byHQpo7scY1
-         qktA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4KbeJbNWoOJafRMVEYC1JfjjPpJ5QCYSaEq4UPfH4F2QFP31Ks7nowrsocFC7Cfv4ePRg4LcF@vger.kernel.org, AJvYcCWXenPtZtc3+ZlYfXhYswKN4SeeqO2bEqjJuY6+73xp6P7hWV/tvs7toI+tYGRsvrHnCQRSoc5Ofeva9QY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7z51PEm/LsJLn5F1nN2GLm1NOV5J8/ztncFmyJfAHTAOak1iT
-	9LkdqQ5ZllBSXQQqqZofY6Nvjf9YyA5TGCScSG6BLPQucMqyfiNxWxZC
-X-Gm-Gg: ASbGncthUx4ETw4jpESMvqov2yueUXIUULUSsYlcelSVT6a9wYsOgsRonWYm2x9X0aC
-	1J3PddHnjyr1MIfj1tusto72BwXHqdidVssg9S0u5H+Xdo72pKTRapO2av7a8/aeLQTxAgIYlij
-	oAMxQNnkECDu/KqFVa+LqsXs4P95j2Fp3bk4Q8ZFI3+Ep+1LAj4logJIA0DjI1VI2W8tGaU1NN9
-	KG05esdRKFsnlCuCQxoRohHLGUOG04KheXTDLmK/sYMO7XrQJLF58H7HislazjwlnrSpbS5tImw
-	8xo7HSl5UfJ9d25WTjk8tFG5S+gwnTKh1FWaazR06u9tdit48pIYxg==
-X-Google-Smtp-Source: AGHT+IHs1DZGdF2vTkLpE9hLEA1NqgxZRhxpTQtWLuCQj90mpyRn/L82SIn9CCi2NK5rH/zn1p5jYw==
-X-Received: by 2002:a17:906:4fca:b0:ad8:9909:20ac with SMTP id a640c23a62f3a-adfad596675mr1145289666b.50.1750154017358;
-        Tue, 17 Jun 2025 02:53:37 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:73::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adf7cd4651esm713459166b.6.2025.06.17.02.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:53:37 -0700 (PDT)
-Date: Tue, 17 Jun 2025 02:53:34 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 02/15] docs: Makefile: disable check rules on make
- cleandocs
-Message-ID: <aFE7Hj7+3zq1/CqT@gmail.com>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
- <e19b84bb513ab2e8ed0b465d9cf047a7daea2313.1750146719.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1750154087; c=relaxed/simple;
+	bh=0pYRtcQ2OP53TQTX5Yrhd/Gw6Y+wOtAA4iwokvmliE0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=ka89GmJrPnSE7UdvBDfmj/wkl496jl/9es9y7B/Cn5cgUK7CQ7G/1kRR7IvRU4v36ZtyVKvpd9gNUaYqBJKp8s98EIt90SSm4Q9WYer42iapUMzLqBd7/is7s5tkaO3TjAdpyvEwQgTfUC88AzXob0qFviYP2VHUW8FQIwEI6bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 55H9rxR3099920;
+	Tue, 17 Jun 2025 17:53:59 +0800 (+08)
+	(envelope-from Zhengxu.Zhang@unisoc.com)
+Received: from SHDLP.spreadtrum.com (bjmbx01.spreadtrum.com [10.0.64.7])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4bM2Dc1Tt1z2PB1Ft;
+	Tue, 17 Jun 2025 17:50:40 +0800 (CST)
+Received: from BJMBX01.spreadtrum.com (10.0.64.7) by BJMBX01.spreadtrum.com
+ (10.0.64.7) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 17 Jun
+ 2025 17:53:57 +0800
+Received: from BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7]) by
+ BJMBX01.spreadtrum.com ([fe80::54e:9a:129d:fac7%16]) with mapi id
+ 15.00.1497.048; Tue, 17 Jun 2025 17:53:57 +0800
+From: =?utf-8?B?5byg5pS/5petIChaaGVuZ3h1IFpoYW5nKQ==?=
+	<Zhengxu.Zhang@unisoc.com>
+To: "Yuezhang.Mo@sony.com" <Yuezhang.Mo@sony.com>,
+        Cixi Geng
+	<cixi.geng@linux.dev>,
+        "linkinjeon@kernel.org" <linkinjeon@kernel.org>,
+        "sj1557.seo@samsung.com" <sj1557.seo@samsung.com>
+CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?546L55qTIChIYW9faGFvIFdhbmcp?= <Hao_hao.Wang@unisoc.com>,
+        =?utf-8?B?54mb5b+X5Zu9IChaaGlndW8gTml1KQ==?= <Zhiguo.Niu@unisoc.com>
+Subject: =?utf-8?B?562U5aSNOiBbUEFUQ0hdIGV4ZmF0OiBmZGF0YXN5bmMgZmxhZyBzaG91bGQg?=
+ =?utf-8?B?YmUgc2FtZSBsaWtlIGdlbmVyaWNfd3JpdGVfc3luYygp?=
+Thread-Topic: [PATCH] exfat: fdatasync flag should be same like
+ generic_write_sync()
+Thread-Index: AQHb3CvF3g+Nw35RCU+Et+rOGeRoJrQA2ySngASsErCAAKsRAIAA7MsA
+Date: Tue, 17 Jun 2025 09:53:57 +0000
+Message-ID: <52218ac9664b406d897ca3c0bd0bef5e@BJMBX01.spreadtrum.com>
+References: <20250613062339.27763-1-cixi.geng@linux.dev>
+ <PUZPR04MB6316E8048064CB15DACDDE1B8177A@PUZPR04MB6316.apcprd04.prod.outlook.com>
+ <ebba6e12af06486cafa5e16a284b7d7e@BJMBX01.spreadtrum.com>
+ <PUZPR04MB6316B91DB1F5E14578C65C0A8173A@PUZPR04MB6316.apcprd04.prod.outlook.com>
+In-Reply-To: <PUZPR04MB6316B91DB1F5E14578C65C0A8173A@PUZPR04MB6316.apcprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e19b84bb513ab2e8ed0b465d9cf047a7daea2313.1750146719.git.mchehab+huawei@kernel.org>
+X-MAIL:SHSQR01.spreadtrum.com 55H9rxR3099920
 
-On Tue, Jun 17, 2025 at 10:01:59AM +0200, Mauro Carvalho Chehab wrote:
-> It doesn't make sense to check for missing ABI and documents
-> when cleaning the tree.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-Reviewed-by: Breno Leitao <leitao@debian.org>
+DQoNCj4gLS0tLS3pgq7ku7bljp/ku7YtLS0tLQ0KPiDlj5Hku7bkuro6IFl1ZXpoYW5nLk1vQHNv
+bnkuY29tIDxZdWV6aGFuZy5Nb0Bzb255LmNvbT4NCj4g5Y+R6YCB5pe26Ze0OiAyMDI15bm0Nuac
+iDE35pelIDExOjMyDQo+IOaUtuS7tuS6ujog5byg5pS/5petIChaaGVuZ3h1IFpoYW5nKSA8Wmhl
+bmd4dS5aaGFuZ0B1bmlzb2MuY29tPjsgQ2l4aSBHZW5nDQo+IDxjaXhpLmdlbmdAbGludXguZGV2
+PjsgbGlua2luamVvbkBrZXJuZWwub3JnOyBzajE1NTcuc2VvQHNhbXN1bmcuY29tDQo+IOaKhOmA
+gTogbGludXgtZnNkZXZlbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmc7IOeOi+eakyAoSGFvX2hhbw0KPiBXYW5nKSA8SGFvX2hhby5XYW5nQHVuaXNvYy5jb20+
+DQo+IOS4u+mimDogUmU6IFtQQVRDSF0gZXhmYXQ6IGZkYXRhc3luYyBmbGFnIHNob3VsZCBiZSBz
+YW1lIGxpa2UgZ2VuZXJpY193cml0ZV9zeW5jKCkNCj4gDQo+IA0KPiANCj4gPiA+ID4gLS0tIGEv
+ZnMvZXhmYXQvZmlsZS5jDQo+ID4gPiA+ICsrKyBiL2ZzL2V4ZmF0L2ZpbGUuYw0KPiA+ID4gPiBA
+QCAtNjI1LDcgKzYyNSw3IEBAIHN0YXRpYyBzc2l6ZV90IGV4ZmF0X2ZpbGVfd3JpdGVfaXRlcihz
+dHJ1Y3Qga2lvY2IgKmlvY2IsDQo+ID4gPiA+IHN0cnVjdCBpb3ZfaXRlciAqaXRlcikNCj4gPiA+
+ID4NCj4gPiA+ID4gICAgICAgIGlmIChpb2NiX2lzX2RzeW5jKGlvY2IpICYmIGlvY2ItPmtpX3Bv
+cyA+IHBvcykgew0KPiA+ID4gPiAgICAgICAgICAgICAgICAgc3NpemVfdCBlcnIgPSB2ZnNfZnN5
+bmNfcmFuZ2UoZmlsZSwgcG9zLCBpb2NiLT5raV9wb3MgLSAxLA0KPiA+ID4gPiAtICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGlvY2ItPmtpX2ZsYWdzICYgSU9DQl9TWU5DKTsNCj4gPiA+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoaW9jYi0+a2lfZmxhZ3MgJiBJT0NC
+X1NZTkMpID8gMCA6IDEpOw0KPiA+ID4NCj4gPiA+IEhvdyBhYm91dCBjYWxsaW5nIGdlbmVyaWNf
+d3JpdGVfc3luYygpIGluc3RlYWQgb2YgdmZzX2ZzeW5jX3JhbmdlKCksIGxpa2UgaW4NCj4gPiA+
+IGdlbmVyaWNfZmlsZV93cml0ZV9pdGVyKCk/DQo+ID4gVGhlIHNlY29uZCBhcmcgb2YgdmZzX2Zz
+eW5jX3JhbmdlICJwb3MiIG1heWJlIGNoYW5nZWQgYnkgdmFsaWRfc2l6ZSAoaWYgcG9zID4NCj4g
+dmFsaWRfc2l6ZSkuDQo+ID4gSXQgY2FuIG5vdCByZXBsYWNlIGJ5IGlvY2ItPmtpX3BvcyAtIHJl
+dCAocmV0IGJ5IF9fZ2VuZXJpY19maWxlX3dyaXRlX2l0ZXIpLg0KPiA+IFNvIGN1cnJlbnQgd2F5
+IG1heWJlIGJldHRlci4NCj4gDQo+IEhlcmUgd2Ugc3luY2hyb25pemUgdGhlIGFyZWFzIHdyaXR0
+ZW4gYnkgZXhmYXRfZXh0ZW5kX3ZhbGlkX3NpemUoKSBhbmQNCj4gX19nZW5lcmljX2ZpbGVfd3Jp
+dGVfaXRlcigpIGlmIHZhbGlkX3NpemUgPCBwb3MuDQo+IA0KPiBUaGUgbGVuZ3RocyBvZiB0aGVz
+ZSB0d28gd3JpdGUgYXJlYXMgYXJlICdwb3MtdmFsaWRfc2l6ZScgYW5kICdyZXQnLg0KPiBXZSBj
+YW4gdXNlIGdlbmVyaWNfd3JpdGVfc3luYygpIGFuZCBwYXNzIGl0IHRoZSBzdW0gb2YgdGhlc2Ug
+dHdvIGxlbmd0aHMuDQo+IO+7vw0KPiBPZiBjb3Vyc2UsIHJlZ2FyZGxlc3Mgb2Ygd2hldGhlciB2
+YWxpZF9zaXplIDwgcG9zLCBleGZhdF9maWxlX3dyaXRlX2l0ZXIoKSBvbmx5DQo+IG5lZWRzIHRv
+IHJldHVybiB0aGUgbGVuZ3RoIHdyaXR0ZW4gYnkgX19nZW5lcmljX2ZpbGVfd3JpdGVfaXRlcigp
+Lg0KDQpJIHRyeSB0aGUgc3VtIG9mICdwb3MtdmFsaWRfc2l6ZScgYW5kICdyZXQnLGxpa2UgdGhp
+czoNCiAgICAgICAgaWYgKGlvY2ItPmtpX3BvcyA+IHBvcykgew0KICAgICAgICAgICAgICAgIHNz
+aXplX3QgZXJyID0gZ2VuZXJpY193cml0ZV9zeW5jKGlvY2IsIHBvcyArIHJldCAtIHZhbGlkX3Np
+emUpOw0KICAgICAgICAgICAgICAgIGlmIChlcnIgPCAwKQ0KICAgICAgICAgICAgICAgICAgICAg
+ICAgcmV0dXJuIGVycjsNCiAgICAgICAgfQ0KVGhlIHRlc3QgY3Jhc2hlZCwgdGhhdCBtYXliZSBp
+byBlcnJvci4gDQpTbyBJIHRyeSBhIHNpbXBsZSB3YXkgdGhhdCB1c2UgaW9jYi0+a2lfcG9zIC0g
+cG9zLiBsaWtlIHRoaXM6DQogICAgICAgIGlmIChpb2NiLT5raV9wb3MgPiBwb3MpIHsNCiAgICAg
+ICAgICAgICAgICBzc2l6ZV90IGVyciA9IGdlbmVyaWNfd3JpdGVfc3luYyhpb2NiLCBpb2NiLT5r
+aV9wb3MgLSBwb3MpOw0KICAgICAgICAgICAgICAgIGlmIChlcnIgPCAwKQ0KICAgICAgICAgICAg
+ICAgICAgICAgICAgcmV0dXJuIGVycjsNCiAgICAgICAgfQ0KVGhlIHRlc3QgcGFzcy4gcGxzIGNo
+ZWNrIGFnYWluLg0K
