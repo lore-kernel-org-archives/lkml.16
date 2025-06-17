@@ -1,182 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B382DFF1B;
-	Tue, 17 Jun 2025 16:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643AC2DFF3C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178001; cv=none; b=nZHnaFczDx+eFc/j3FGefDxWjti48ALEOQp+xl4xMyUffMhG5qSo61tYYKvwYHCLZ1auUM/ZHVi5oHPsuapwqtI8MULlYtm8e+iZC/WYpUF/QQ80fw7tVdWg1ew5ll0vKcldAWBebBcUD3cfuXVV/wBGq6F1Jb73wulcfOk1maU=
+	t=1750178004; cv=none; b=VIt9STIOUHo/8/+m8TxFbTjff+hS/y7BWSC7jfs3xQWzEzOUeEF2An7fFPqx80ve6tf0fzgIqopno1t9GHN5IutgyGQwXEdMnzhoruAzITh3IKWXiSGNrWau+rkTyVji6ZJraDkr7DRf36EEuSIgyVd7E+sWs2P4G9GqaDUzzIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178001; c=relaxed/simple;
-	bh=D4zqKCNVSdpYD1YROivJ0iKR8RbuS0zFHwcD2L/OpL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=boNCLcwkK9+rnRqj0jADF+4+JFaO9woIEJYHHo4tT9chUWfqvVu8g/89Zs6qrRsyHh2YRFZO6Hfjjnxf2a2MPTHbf8E0izqqvBAIP3+0tM/PZR8eYSd4zhu5nY2ejqrnAMCwqUJYghrygOY/g38uHVV8pGGxngRDe+gu/MbbK+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIz1PzBz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750178004; c=relaxed/simple;
+	bh=wPJ3yKHy2XMTQqfdv8k8EDEfQPdSKTp026T+PxCf4Bw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ofolc7aWvLwmSEpgEHQ24xMlUuC1H/lv+Qv1I+6UW4oUczx8vuKIw1WdZyYT/2eKlq/7rjgQifwyHiUJBsQq33PXad2143Ts2PiNfj6JF5f6Oo4ppqeovGA2xD1gC4K2gY6BH+g2syhnMNazVykFAJkUFbI4lFMqoOd6ACHcotw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HOo11/uW; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIz1PzBz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83A29C4CEF1;
-	Tue, 17 Jun 2025 16:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750178001;
-	bh=D4zqKCNVSdpYD1YROivJ0iKR8RbuS0zFHwcD2L/OpL8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LIz1PzBzebeAd+/tDjDgnCiSkeGDg6nio65KqXEjJABtem5BBu8bfq0AvAOS2l0DN
-	 fR/rsmoZ/ISn4BjDo+mcPMHMHZGbyocq8EN55SX3iSr7s423IG11i4ZNxxRIrEaiAH
-	 8MMtVraOED3V6dWoyeX4V8EqlpsUSZ37dRAIg+KZgTZqCMjPtXQ8N0uNjJKT48MVo7
-	 xW+x3ej9sPA0uf3ophgULjaQcAf0fXoozVvbzxjawegrmJQrmwx8b3gPNkJmn0s/3A
-	 h5KySjhvIOh0nSUboQjAacLT/uHjrlMkVdmMmCaB2vA+KAiEJ1LM8EERhK4yEII7X4
-	 oPeT2BXLdI1jQ==
-Date: Tue, 17 Jun 2025 18:33:13 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Benno Lossin <lossin@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	Lyude Paul <lyude@redhat.com>
-Subject: Re: [PATCH v5 15/23] gpu: nova-core: add falcon register definitions
- and base code
-Message-ID: <aFGYyXS21tZFdldX@pollux>
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-15-14ba7eaf166b@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HOo11/uW"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747d143117eso4861624b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750178002; x=1750782802; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m5Zyre//7L5S9K+V+4OPyWpG1CcHuDNKjA2A/jB3Ga8=;
+        b=HOo11/uWgZjEE6JcdK/GttSvh946vauvGVef8DW4Ts5O1wRFXcfMKgUBgUmnbe4Qqy
+         dyvfvxbydB7LkOE36C/nNcMJ8nYJGL5/60agwymuf4+1oT+NE3rGLj5OMZMIs9b8WkjD
+         RjwKhslw/qW6GraBt6stHJNEf6CROIhOFhYH8d9jCo7C1LV8Amgnsk4wWD4S5SJLDkMQ
+         Wti+JfIUyKaVkIZpwfmPmKZDmtIzXaGy4/bhJBM60zAYx6Ytqla2rwagMOD4W6lA2BE4
+         Jc/OfWWtBK4GB46QrEyqsvQshKafzZHVPibHf9dB64H099JRz4ciVJvW9jwXgCHDwzvv
+         oV1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750178002; x=1750782802;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m5Zyre//7L5S9K+V+4OPyWpG1CcHuDNKjA2A/jB3Ga8=;
+        b=Jd3TzmDpjVa8T02aWl6SaI0NE4mofyHvbpQUJeH8aQIraQQdzV60NbrqNVpLtP1gam
+         vJvjU1y8kaIZT1VOYWpEQ31+Qexkt2LLSTLMzm/naTaB0onNZXeI9NnKy5qU8hcvZNUz
+         g8KyZIsF4NwVrf7K/1SO2NXNfm3ACjeyDHJzGmk7AtqB3vKfz/U9hj+C07parJWbXiKb
+         mecBRRsHwb/v7DcN0cwsd2dUh0cJBgp0QBm0ABEG+l3nlEWmYizsQsXPL3AWrbLktkNd
+         AujfnKbGa9nsiK4P5W1aKbC2W7Fxy4qFrbGzgsc4I+sgfN8aPy/sN1Nqw4mArkT7iv2c
+         ABwA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDwfmg1qJStDspunk0U+8KmygdaB8kuegyXKuxfFNsJzUbFAk6KsvgfbN3R9Zr9rOiRShyUSuZKWBZyNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRJuJGaYgC74FsYjKipRVifyykc8RsliRDmeFCVjaKiuQFqo6q
+	RQ5EY+5zIReF0zl5+vS0rE1Y7D6YGiUEoeQpWohwfBRWnfhmT+hPfx5H8c3fejJZidkQI4BRiRu
+	h8jBW0Q==
+X-Google-Smtp-Source: AGHT+IGznCbVopLyCbJY+8Q1ZM+hTyrpfcDqYdoxZ7oVyP5z618lCsgFgNDzhTDn4xHf3X8k9i95X2JuvoQ=
+X-Received: from pgbdh21.prod.google.com ([2002:a05:6a02:b95:b0:b2e:b370:6975])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3298:b0:1f5:5a0b:4768
+ with SMTP id adf61e73a8af0-21fbd558b04mr20200215637.21.1750178001731; Tue, 17
+ Jun 2025 09:33:21 -0700 (PDT)
+Date: Tue, 17 Jun 2025 09:33:20 -0700
+In-Reply-To: <qusmkqqsvc7hyuemddv66mooach7mdq66mxbk7qbr6if6spguj@k57k5lqmvt5u>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-nova-frts-v5-15-14ba7eaf166b@nvidia.com>
+Mime-Version: 1.0
+References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-15-seanjc@google.com>
+ <qusmkqqsvc7hyuemddv66mooach7mdq66mxbk7qbr6if6spguj@k57k5lqmvt5u>
+Message-ID: <aFGY0KVUksf1a6xB@google.com>
+Subject: Re: [PATCH v3 13/62] KVM: SVM: Drop redundant check in AVIC code on
+ ID during vCPU creation
+From: Sean Christopherson <seanjc@google.com>
+To: Naveen N Rao <naveen@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
+	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
+	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
+	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
+	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 12, 2025 at 11:01:43PM +0900, Alexandre Courbot wrote:
-> +    /// Perform a DMA write according to `load_offsets` from `dma_handle` into the falcon's
-> +    /// `target_mem`.
-> +    ///
-> +    /// `sec` is set if the loaded firmware is expected to run in secure mode.
-> +    fn dma_wr(
-> +        &self,
-> +        bar: &Bar0,
-> +        dma_handle: bindings::dma_addr_t,
+On Tue, Jun 17, 2025, Naveen N Rao wrote:
+> On Wed, Jun 11, 2025 at 03:45:16PM -0700, Sean Christopherson wrote:
+> >  static int avic_init_backing_page(struct kvm_vcpu *vcpu)
+> >  {
+> > -	u64 *entry, new_entry;
+> > -	int id =3D vcpu->vcpu_id;
+> > +	struct kvm_svm *kvm_svm =3D to_kvm_svm(vcpu->kvm);
+> >  	struct vcpu_svm *svm =3D to_svm(vcpu);
+> > +	u32 id =3D vcpu->vcpu_id;
+> > +	u64 *table, new_entry;
+> > =20
+> >  	/*
+> >  	 * Inhibit AVIC if the vCPU ID is bigger than what is supported by AV=
+IC
+> > @@ -291,6 +277,9 @@ static int avic_init_backing_page(struct kvm_vcpu *=
+vcpu)
+> >  		return 0;
+> >  	}
+> > =20
+> > +	BUILD_BUG_ON((AVIC_MAX_PHYSICAL_ID + 1) * sizeof(*table) > PAGE_SIZE =
+||
+> > +		     (X2AVIC_MAX_PHYSICAL_ID + 1) * sizeof(*table) > PAGE_SIZE);
+> 						    ^^^^^^^^^^^^^^
+> Renaming new_entry to just 'entry' and using sizeof(entry) makes this=20
+> more readable for me.
 
-I think we should pass &F from dma_load() rather than the raw handle.
+Good call, though I think it makes sense to do that on top so as to minimiz=
+e the
+churn in this patch.  I'll post a patch, unless you want the honors?
 
-<snip>
+> Otherwise, for this patch:
+> Reviewed-by: Naveen N Rao (AMD) <naveen@kernel.org>
+>=20
+> As an aside, there are a few static asserts to validate some of the=20
+> related macros. Can this also be a static_assert(), or is there is=20
+> reason to prefer BUILD_BUG_ON()?
 
-> +fn select_core_ga102<E: FalconEngine>(bar: &Bar0) -> Result {
-> +    let bcr_ctrl = regs::NV_PRISCV_RISCV_BCR_CTRL::read(bar, E::BASE);
-> +    if bcr_ctrl.core_select() != PeregrineCoreSelect::Falcon {
-> +        regs::NV_PRISCV_RISCV_BCR_CTRL::default()
-> +            .set_core_select(PeregrineCoreSelect::Falcon)
-> +            .write(bar, E::BASE);
-> +
-> +        util::wait_on(Duration::from_millis(10), || {
+For this particular assertion, static_assert() would be fine.  That said,
+BUILD_BUG_ON() is slightly preferred in this context.
 
-As agreed, can you please add a brief comment to justify the timeout?
+The advantage of BUILD_BUG_ON() is that it works so long as the condition i=
+s
+compile-time constant, whereas static_assert() requires the condition to an
+integer constant expression.  E.g. BUILD_BUG_ON() can be used so long as th=
+e
+condition is eventually resolved to a constant, whereas static_assert() has
+stricter requirements.
 
-> +            let r = regs::NV_PRISCV_RISCV_BCR_CTRL::read(bar, E::BASE);
-> +            if r.valid() {
-> +                Some(())
-> +            } else {
-> +                None
-> +            }
-> +        })?;
-> +    }
-> +
-> +    Ok(())
-> +}
-> +
-> +fn signature_reg_fuse_version_ga102(
-> +    dev: &device::Device,
-> +    bar: &Bar0,
-> +    engine_id_mask: u16,
-> +    ucode_id: u8,
-> +) -> Result<u32> {
-> +    // The ucode fuse versions are contained in the FUSE_OPT_FPF_<ENGINE>_UCODE<X>_VERSION
-> +    // registers, which are an array. Our register definition macros do not allow us to manage them
-> +    // properly, so we need to hardcode their addresses for now.
+E.g. the fls64() assert below is fully resolved at compile time, but isn't =
+a
+purely constant expression, i.e. that one *needs* to be BUILD_BUG_ON().
 
-Sounds like a TODO?
+--
+arch/x86/kvm/svm/avic.c: In function =E2=80=98avic_init_backing_page=E2=80=
+=99:
+arch/x86/kvm/svm/avic.c:293:45: error: expression in static assertion is no=
+t constant
+  293 |         static_assert(__PHYSICAL_MASK_SHIFT <=3D
+include/linux/build_bug.h:78:56: note: in definition of macro =E2=80=98__st=
+atic_assert=E2=80=99
+   78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+      |                                                        ^~~~
+arch/x86/kvm/svm/avic.c:293:9: note: in expansion of macro =E2=80=98static_=
+assert=E2=80=99
+  293 |         static_assert(__PHYSICAL_MASK_SHIFT <=3D
+      |         ^~~~~~~~~~~~~
+make[5]: *** [scripts/Makefile.build:203: arch/x86/kvm/svm/avic.o] Error 1
+--
 
-> +
-> +    // Each engine has 16 ucode version registers numbered from 1 to 16.
-> +    if ucode_id == 0 || ucode_id > 16 {
-> +        dev_err!(dev, "invalid ucode id {:#x}", ucode_id);
-> +        return Err(EINVAL);
-> +    }
-> +
-> +    // Base address of the FUSE registers array corresponding to the engine.
-> +    let reg_fuse_base = if engine_id_mask & 0x0001 != 0 {
-> +        regs::NV_FUSE_OPT_FPF_SEC2_UCODE1_VERSION::OFFSET
-> +    } else if engine_id_mask & 0x0004 != 0 {
-> +        regs::NV_FUSE_OPT_FPF_NVDEC_UCODE1_VERSION::OFFSET
-> +    } else if engine_id_mask & 0x0400 != 0 {
-> +        regs::NV_FUSE_OPT_FPF_GSP_UCODE1_VERSION::OFFSET
-> +    } else {
-> +        dev_err!(dev, "unexpected engine_id_mask {:#x}", engine_id_mask);
-> +        return Err(EINVAL);
-> +    };
-> +
-> +    // Read `reg_fuse_base[ucode_id - 1]`.
-> +    let reg_fuse_version =
-> +        bar.read32(reg_fuse_base + ((ucode_id - 1) as usize * core::mem::size_of::<u32>()));
-> +
-> +    Ok(fls_u32(reg_fuse_version))
-> +}
-> +
-> +fn program_brom_ga102<E: FalconEngine>(bar: &Bar0, params: &FalconBromParams) -> Result {
-> +    regs::NV_PFALCON2_FALCON_BROM_PARAADDR::default()
-> +        .set_value(params.pkc_data_offset)
-> +        .write(bar, E::BASE);
-> +    regs::NV_PFALCON2_FALCON_BROM_ENGIDMASK::default()
-> +        .set_value(params.engine_id_mask as u32)
-> +        .write(bar, E::BASE);
-> +    regs::NV_PFALCON2_FALCON_BROM_CURR_UCODE_ID::default()
-> +        .set_ucode_id(params.ucode_id)
-> +        .write(bar, E::BASE);
-> +    regs::NV_PFALCON2_FALCON_MOD_SEL::default()
-> +        .set_algo(FalconModSelAlgo::Rsa3k)
-> +        .write(bar, E::BASE);
-> +
-> +    Ok(())
-> +}
-> +
-> +pub(super) struct Ga102<E: FalconEngine>(PhantomData<E>);
-> +
-> +impl<E: FalconEngine> Ga102<E> {
-> +    pub(super) fn new() -> Self {
-> +        Self(PhantomData)
-> +    }
-> +}
-> +
-> +impl<E: FalconEngine> FalconHal<E> for Ga102<E> {
-> +    fn select_core(&self, _falcon: &Falcon<E>, bar: &Bar0) -> Result {
-> +        select_core_ga102::<E>(bar)
-> +    }
-> +
-> +    fn signature_reg_fuse_version(
-> +        &self,
-> +        falcon: &Falcon<E>,
-> +        bar: &Bar0,
-> +        engine_id_mask: u16,
-> +        ucode_id: u8,
-> +    ) -> Result<u32> {
-> +        signature_reg_fuse_version_ga102(&falcon.dev, bar, engine_id_mask, ucode_id)
-> +    }
-> +
-> +    fn program_brom(&self, _falcon: &Falcon<E>, bar: &Bar0, params: &FalconBromParams) -> Result {
-> +        program_brom_ga102::<E>(bar, params)
-> +    }
+The downside of BUILD_BUG_ON() is that it can't be used at global scope, i.=
+e.
+needs to be called from a function.
 
-Why are those two separate functions?
+As a result, when adding an assertion in a function, using BUILD_BUG_ON() i=
+s
+slightly preferred, because it's less likely to break in the future.  E.g. =
+if
+X2AVIC_MAX_PHYSICAL_ID were changed to something that is a compile-time con=
+stant,
+but for whatever reason isn't a pure integer constant.
