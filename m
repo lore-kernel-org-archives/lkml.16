@@ -1,196 +1,323 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D122E9738
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375FA2EACE4
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:13:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169588; cv=none; b=vGWB6ctorYH/0DM07oAFLtabW56t2WCiuZbWetphxQAGhSfUjjEteLA8SrO3Jy5mmirUkbYIBeQuA3JaQY99eAEg/nafST4ELixFtgZVjg8iKjqYzm689NxZKgH9PEvYZ3ACaHc4lAo6vAdnKdmR0NsMeO8jS5+ZZouZsbDUAzI=
+	t=1750169620; cv=none; b=pWDhimcaue9YR0KZr9qNJ+o2x2avT/Pu61ey2a6+TvLDN71HdskLuXVdm5rRwZDepSKd6qSPp/0bN0fOGV4R/I64dIBvxJ94jQfqKH8VyrpBEbmNswKTFqTLJSEb22JjjgUoOfvRP3g8+CMTv/bRj+zYWmrFOiG5mftncXGsYB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169588; c=relaxed/simple;
-	bh=iJFhAXlGhFKK7yOPAVqYWm3BfhXV1LaGI4OcwABbD/g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lWNI2By+c+d895z3GMzDxJ8T9cQ5GW89ZdLDbfwDxIKelS8DKLJRbWOK21/Awjd2kOVMnGtaS350ZxknQO/wfYlBdhbAAzgYy1eixO9QUKbgn3yRrFvEoQahVqKpfxa5C6sRsVMURHivOt9KTgheoS5DaUL6HN6aeJZs2Ymnq/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4cZrNyoF; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750169620; c=relaxed/simple;
+	bh=hVwsYYZn36xXiF5W8xIP83MlOYW1QisiRJWsNZw5rJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NzSs+Ss+Y6CG9EzEuMiOAqIfNF31clpKSpSuFfKgRMGgbv8uV7PE3zJp187nOSo/UuEOJVavTzcQfamxQoQ60qGG6fObFxBjyQNQJdj7poo8zu6Qh2BF3JaNNkHyJSdhXQ72nZYbg7jy5cJzcSJeryQDASYgDVrhN8MQJC+Xp0U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YgsNViCD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4cZrNyoF"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b16b35ea570so5791379a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750169586; x=1750774386; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OX3ux6zQ+VEvAEBxzgvhUtbA0mLIAHUIclsODIjZeM8=;
-        b=4cZrNyoFJrcgenkOk6D8wZq3eyzhkvcGXKZe1f6kt/3iDrY6TAIN6fBPSXuRqG5kd4
-         6Ue/RNCfqlRNy7J4IxWfF+NGZINvlXOwEicLHL2mjjoH951SBPdV2NzuAX3vW1eyp1wC
-         B1+rFZHK2aJWoXb34Kwr3mo2aDxrEK3Xz6jIdPX2WQvhsLBJao6Lo26jAPMX66gPec5T
-         zo6iAVD2o8i8EuDiSJ6kh/kCY3tMmeOUG0aiDrhm/IDBenpQPOQVT6uayk7GN+3sStEr
-         68rswZ5GbHC1CByd0k/c6uB9n9yukPQDHAY9N+sLgsuWJn0mcRhn/sXCkwWcvR2/Nyto
-         6j2g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YgsNViCD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750169617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jTK+V3/5AEIMjD1XgMrGA0E/N7Cn3he/i5NWgha0jd4=;
+	b=YgsNViCDZ0HCsmmfCFYz34aZRNfKbz2AD5bFIdGx6RlohYu8AkiMKeGDNZid+o7KpdNT6R
+	lW/HKqNjEn4DhC5kGtDITesP77n4mUeAL78mp/wPrA517AnbOYSTaslmsjZd76LrenWmFI
+	DrLNCt1tPXnpytbY6H338Wb3ytes+Xo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-428-FuCYXCMxMnulR8eRWeRzAQ-1; Tue, 17 Jun 2025 10:13:35 -0400
+X-MC-Unique: FuCYXCMxMnulR8eRWeRzAQ-1
+X-Mimecast-MFC-AGG-ID: FuCYXCMxMnulR8eRWeRzAQ_1750169614
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450d64026baso39933355e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:13:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750169586; x=1750774386;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=OX3ux6zQ+VEvAEBxzgvhUtbA0mLIAHUIclsODIjZeM8=;
-        b=nstlPf7fqVY+owR6NWZdsDybmkNUF2rh64u3pL7IqLhjlBuzkhx8npBBFI+gFBqAOf
-         y3gvtRHvsdJdEtadDdsBCf5JetknWG9xz2ZkK1r/2Q6jfLhyMqtavF6TmsEHrzzu/PvX
-         YgWFtjyR4NTEW3AfD3mqD/VZKBsPzOzPqC9AxwtIM7wWWePyzSn2tYWTCYrxC6I0GHXi
-         9VBrqg7CX48OQYL+/JXZZ4oEFSi/Z4E7E/byi9zaSOzrHNaRo9guHS+TGNFE7bg0jw1W
-         9D/gie89V8MjinTpfu1awX5+qQHyEavMgaRSzeNclA9Qdeg9bCSRXJzcbDo7RG1YKOqc
-         J9fQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgx6mw9sQKg5ko6O1zNFk6LfAObkuCIzGQVzpndMfGyblPH3grYRrbuIFsBKk0Kk/++AI9iK6FnyNoaME=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyosHP6d5Pfm62rjH0gObYdxqlbQhrelh9bNCvnlH7qT+fE9sG6
-	yI9Qm8xLprEfqn4ZkBBAjW5rcDlnMGZEGAcacykA3EcRLBc9BjWvcmlUz9gsjKpvaNkU6SgCkLi
-	pSTXE9Q==
-X-Google-Smtp-Source: AGHT+IEh9icMUepp4I5ggIdPQbPGEKAuVdOhfGme7kn3ozONic/swJyFNawEJ+MkTpo/UKNsX0OJfzVNnzg=
-X-Received: from pgbfy9.prod.google.com ([2002:a05:6a02:2a89:b0:b2c:374b:9e48])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2d06:b0:1f5:7eee:bb10
- with SMTP id adf61e73a8af0-21fbd54a618mr21353159637.8.1750169586115; Tue, 17
- Jun 2025 07:13:06 -0700 (PDT)
-Date: Tue, 17 Jun 2025 07:13:04 -0700
-In-Reply-To: <7704c861ba54c246dc8e5f26113c6f84306a099e.camel@amd.com>
+        d=1e100.net; s=20230601; t=1750169614; x=1750774414;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jTK+V3/5AEIMjD1XgMrGA0E/N7Cn3he/i5NWgha0jd4=;
+        b=J0+ek2JAvSyc2mNUrb7Cj8k7lMP8JWXxWyJJx+KtHwFOKiUUR4dSyGBQYlgMEwGzfc
+         gQCORl0/gSl6vGvL2G5//cLIhqPzpXO7dw43rX0T4RmJfVx7A+uz2ER10kWuznSuJiXr
+         urM/fG094TXVzneeZKwcW6Kej7mTx4pk+MVo079kmStREWMwXDLhP1MqT0VZuF39RzP+
+         YK3RP9yiy2AS5ZHKwPg1pcHffuKx5iQyrWmLVD/0PQl2RnQCKQ9LP2Fy+DN310fZI3nB
+         NwwP9JFCXpkgH6tcOC0ptPzx8JD9JNzkc/fyQ2GDmhnamLW+/JBJUBEhPtpqUlhnTdXH
+         SCEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxqIyuEiog/LJYqgIAbmApeUtayivK+SzYzEcAy1oGI9+2B7fTBww67JS0/5X98lzYagpm3sfWpH3OpSo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz70pxLZkGkdNOgdQGK6sfNfhJcFEsnJLMI9dckiEDTnazvCguW
+	LUHNwYWVYX0OToq+jRDGFdTYx85PKWvUH2tEA7t63nzUrYSS1HZ+cPApI9m7Hnz0CX0dPvw3RyU
+	C87IWiuWUsKUnx7LlKXyhNoEJWoxhsyIwALSv44/oSfDTiFac8SwXOLLDZ6baYA7qxg==
+X-Gm-Gg: ASbGncvwK2UIvSokj/fXCSLlypCS82FLWzPEcnxZcId6EbfQf03vG2iXWDjNA2LENy0
+	Et33UkhKl9bpCjW+hrB6CRgphoZjCPQUtRewL5IPicWxxLc7R0J4mKzqkKoua5syMolaZUbTDmm
+	AG1KYmBrHgIlSKAkWc9I10PYZAl9XCBANm4qcyZ2crtGDXGn4TWrMTeJUSYCW8/jKhCU/GgHnYd
+	i2oCMNj5XrRrVsxrRkeewgL9h+nutOUD5YBRmX/wVT5d4jTTV2Gm7dI1s285A5Tuuvelz/6fmYh
+	wId+/n05JTKRP+Euw5ctshd/1sKJ
+X-Received: by 2002:a05:600c:3e0f:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-4533ca6e93fmr146086625e9.15.1750169614473;
+        Tue, 17 Jun 2025 07:13:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFPlcYkMqJhY85N5kdJ0NVPIrUeWzKVBvVBAW5XUvo4CXxFBhQJGAXlkXspSZkF+qZOv0I1Kw==
+X-Received: by 2002:a05:600c:3e0f:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-4533ca6e93fmr146086135e9.15.1750169613883;
+        Tue, 17 Jun 2025 07:13:33 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.200.233])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea15b0sm179940885e9.11.2025.06.17.07.13.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 07:13:32 -0700 (PDT)
+Date: Tue, 17 Jun 2025 16:13:28 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 3/3] vsock/test: Cover more CIDs in
+ transport_uaf test
+Message-ID: <ktw4ong6tsucyx2j2okeow6do7x6whakjg75hyoc7cwzxnt2mu@qzkve4sdpu4o>
+References: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
+ <20250611-vsock-test-inc-cov-v3-3-5834060d9c20@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250313203702.575156-1-jon@nutanix.com> <20250313203702.575156-7-jon@nutanix.com>
- <aCI8pGJbn3l99kq8@google.com> <49556BAF-9244-4FE5-9BA9-846F2959ABD1@nutanix.com>
- <aCNI72KuMLfWb9F2@google.com> <6dd4eee79fec75a47493251b87c74595826f97bc.camel@amd.com>
- <aCSSptnxW7EBEzSQ@google.com> <7704c861ba54c246dc8e5f26113c6f84306a099e.camel@amd.com>
-Message-ID: <aFF38Pq71JdLBlqO@google.com>
-Subject: Re: [RFC PATCH 06/18] KVM: VMX: Wire up Intel MBEC enable/disable logic
-From: Sean Christopherson <seanjc@google.com>
-To: Amit Shah <Amit.Shah@amd.com>
-Cc: "x86@kernel.org" <x86@kernel.org>, 
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "hpa@zytor.com" <hpa@zytor.com>, 
-	"mingo@redhat.com" <mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"jon@nutanix.com" <jon@nutanix.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250611-vsock-test-inc-cov-v3-3-5834060d9c20@rbox.co>
 
-On Mon, Jun 16, 2025, Amit Shah wrote:
-> On Wed, 2025-05-14 at 05:55 -0700, Sean Christopherson wrote:
-> > On Wed, May 14, 2025, Amit Shah wrote:
-> > > (btw KVM MMU API question -- from the #NPF, I have the GPA of the L2
-> > > guest.=C2=A0 How to go from that guest GPA to look up the NX bit for =
-that
-> > > page?=C2=A0 I skimmed and there doesn't seem to be an existing API fo=
-r it - so
-> > > is walking the tables the only solution?)
-> >=20
-> > As above, KVM doesn't manually look up individual bits while handling
-> > faults.  The walk of the guest page tables (L1's NPT/EPT for this scena=
-rio)
-> > performed by FNAME(walk_addr_generic) will gather the effective permiss=
-ions
-> > in walker->pte_access, and check for a permission_fault() after the wal=
-k is
-> > completed.
->=20
-> Hm, despite the discussions in the PUCK calls since this email, I have
-> this doubt, which may be fairly basic.  To determine whether the exit
-> was due to GMET, we have to check the effective U/S and NX bit for the
-> address that faulted.  That means we have to walk the L2's page tables
-> to get those bits from the L2's PTEs, and then from the error code in
-> exitinfo1, confirm why the #NPF happened.  (And even with Paolo's neat
-> SMEP hack, the exit reason due to GMET can only be confirmed by looking
-> at the guest's U/S and NX bits.)
->=20
-> And from what I see, currently page table walks only happen on L1's
-> page tables, and not on L2's page tables, is that right?
+On Wed, Jun 11, 2025 at 09:56:52PM +0200, Michal Luczaj wrote:
+>Increase the coverage of test for UAF due to socket unbinding, and losing
+>transport in general. It's a follow up to commit 301a62dfb0d0 ("vsock/test:
+>Add test for UAF due to socket unbinding") and discussion in [1].
+>
+>The idea remains the same: take an unconnected stream socket with a
+>transport assigned and then attempt to switch the transport by trying (and
+>failing) to connect to some other CID. Now do this iterating over all the
+>well known CIDs (plus one).
+>
+>While at it, drop the redundant synchronization between client and server.
+>
+>Some single-transport setups can't be tested effectively; a warning is
+>issued. Depending on transports available, a variety of splats are possible
+>on unpatched machines. After reverting commit 78dafe1cf3af ("vsock: Orphan
+>socket after transport release") and commit fcdd2242c023 ("vsock: Keep the
+>binding until socket destruction"):
+>
+>BUG: KASAN: slab-use-after-free in __vsock_bind+0x61f/0x720
+>Read of size 4 at addr ffff88811ff46b54 by task vsock_test/1475
+>Call Trace:
+> dump_stack_lvl+0x68/0x90
+> print_report+0x170/0x53d
+> kasan_report+0xc2/0x180
+> __vsock_bind+0x61f/0x720
+> vsock_connect+0x727/0xc40
+> __sys_connect+0xe8/0x100
+> __x64_sys_connect+0x6e/0xc0
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>
+>WARNING: CPU: 0 PID: 1475 at net/vmw_vsock/virtio_transport_common.c:37 virtio_transport_send_pkt_info+0xb2b/0x1160
+>Call Trace:
+> virtio_transport_connect+0x90/0xb0
+> vsock_connect+0x782/0xc40
+> __sys_connect+0xe8/0x100
+> __x64_sys_connect+0x6e/0xc0
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>
+>KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+>RIP: 0010:sock_has_perm+0xa7/0x2a0
+>Call Trace:
+> selinux_socket_connect_helper.isra.0+0xbc/0x450
+> selinux_socket_connect+0x3b/0x70
+> security_socket_connect+0x31/0xd0
+> __sys_connect_file+0x79/0x1f0
+> __sys_connect+0xe8/0x100
+> __x64_sys_connect+0x6e/0xc0
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>
+>refcount_t: addition on 0; use-after-free.
+>WARNING: CPU: 7 PID: 1518 at lib/refcount.c:25 refcount_warn_saturate+0xdd/0x140
+>RIP: 0010:refcount_warn_saturate+0xdd/0x140
+>Call Trace:
+> __vsock_bind+0x65e/0x720
+> vsock_connect+0x727/0xc40
+> __sys_connect+0xe8/0x100
+> __x64_sys_connect+0x6e/0xc0
+> do_syscall_64+0x92/0x1c0
+> entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>
+>refcount_t: underflow; use-after-free.
+>WARNING: CPU: 0 PID: 1475 at lib/refcount.c:28 refcount_warn_saturate+0x12b/0x140
+>RIP: 0010:refcount_warn_saturate+0x12b/0x140
+>Call Trace:
+> vsock_remove_bound+0x18f/0x280
+> __vsock_release+0x371/0x480
+> vsock_release+0x88/0x120
+> __sock_release+0xaa/0x260
+> sock_close+0x14/0x20
+> __fput+0x35a/0xaa0
+> task_work_run+0xff/0x1c0
+> do_exit+0x849/0x24c0
+> make_task_dead+0xf3/0x110
+> rewind_stack_and_make_dead+0x16/0x20
+>
+>[1]: https://lore.kernel.org/netdev/CAGxU2F5zhfWymY8u0hrKksW8PumXAYz-9_qRmW==92oAx1BX3g@mail.gmail.com/
+>
+>Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>---
+> tools/testing/vsock/vsock_test.c | 93 ++++++++++++++++++++++++++++++++--------
+> 1 file changed, 74 insertions(+), 19 deletions(-)
 
-Nit, they aren't _L2's_ page tables, in that (barring crazy paravirt behavi=
-or)
-L2 does not control the page tables.  In most conversations, that distincti=
-on
-wouldn't matter, but when talking about which pages KVM walks when running =
-an L2
-while L1 is using NPT (or EPT), it's worth being very precise, because KVM =
-may
-also need to walk L2's non-nested page tables, i.e. the page table that map=
- L2
-GVAs to L2 GPA.
+Thanks again for this!
 
-The least awful terminology we've come up with when referring to nested TDP=
- is
-to follow KVM's VMCS/VMCB terminology when doing nested virtualization:
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
 
-  npt12: The NPT page tables controlled by L1 to manage L2 GPAs.  These are
-         never referenced by hardware.
-  npt02: KVM controlled page tables that shadow npt12, and are consumed by =
-hardware.
+>
+>diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
+>index f669baaa0dca3bebc678d00eafa80857d1f0fdd6..eb6f54378667ac7ed324f4823e988ec9846e41a3 100644
+>--- a/tools/testing/vsock/vsock_test.c
+>+++ b/tools/testing/vsock/vsock_test.c
+>@@ -1718,16 +1718,27 @@ static void test_stream_msgzcopy_leak_zcskb_server(const struct test_opts *opts)
+>
+> #define MAX_PORT_RETRIES	24	/* net/vmw_vsock/af_vsock.c */
+>
+>-/* Test attempts to trigger a transport release for an unbound socket. This can
+>- * lead to a reference count mishandling.
+>- */
+>-static void test_stream_transport_uaf_client(const struct test_opts *opts)
+>+static bool test_stream_transport_uaf(int cid)
+> {
+> 	int sockets[MAX_PORT_RETRIES];
+> 	struct sockaddr_vm addr;
+>-	int fd, i, alen;
+>+	socklen_t alen;
+>+	int fd, i, c;
+>+	bool ret;
+>+
+>+	/* Probe for a transport by attempting a local CID bind. Unavailable
+>+	 * transport (or more specifically: an unsupported transport/CID
+>+	 * combination) results in EADDRNOTAVAIL, other errnos are fatal.
+>+	 */
+>+	fd = vsock_bind_try(cid, VMADDR_PORT_ANY, SOCK_STREAM);
+>+	if (fd < 0) {
+>+		if (errno != EADDRNOTAVAIL) {
+>+			perror("Unexpected bind() errno");
+>+			exit(EXIT_FAILURE);
+>+		}
+>
+>-	fd = vsock_bind(VMADDR_CID_ANY, VMADDR_PORT_ANY, SOCK_STREAM);
+>+		return false;
+>+	}
+>
+> 	alen = sizeof(addr);
+> 	if (getsockname(fd, (struct sockaddr *)&addr, &alen)) {
+>@@ -1735,38 +1746,83 @@ static void test_stream_transport_uaf_client(const struct test_opts *opts)
+> 		exit(EXIT_FAILURE);
+> 	}
+>
+>+	/* Drain the autobind pool; see __vsock_bind_connectible(). */
+> 	for (i = 0; i < MAX_PORT_RETRIES; ++i)
+>-		sockets[i] = vsock_bind(VMADDR_CID_ANY, ++addr.svm_port,
+>-					SOCK_STREAM);
+>+		sockets[i] = vsock_bind(cid, ++addr.svm_port, SOCK_STREAM);
+>
+> 	close(fd);
+>-	fd = socket(AF_VSOCK, SOCK_STREAM, 0);
+>+
+>+	/* Setting SOCK_NONBLOCK makes connect() return soon after
+>+	 * (re-)assigning the transport. We are not connecting to anything
+>+	 * anyway, so there is no point entering the main loop in
+>+	 * vsock_connect(); waiting for timeout, checking for signals, etc.
+>+	 */
+>+	fd = socket(AF_VSOCK, SOCK_STREAM | SOCK_NONBLOCK, 0);
+> 	if (fd < 0) {
+> 		perror("socket");
+> 		exit(EXIT_FAILURE);
+> 	}
+>
+>-	if (!vsock_connect_fd(fd, addr.svm_cid, addr.svm_port)) {
+>-		perror("Unexpected connect() #1 success");
+>+	/* Assign transport, while failing to autobind. Autobind pool was
+>+	 * drained, so EADDRNOTAVAIL coming from __vsock_bind_connectible() is
+>+	 * expected.
+>+	 *
+>+	 * One exception is ENODEV which is thrown by vsock_assign_transport(),
+>+	 * i.e. before vsock_auto_bind(), when the only transport loaded is
+>+	 * vhost.
+>+	 */
+>+	if (!connect(fd, (struct sockaddr *)&addr, alen)) {
+>+		fprintf(stderr, "Unexpected connect() success\n");
+> 		exit(EXIT_FAILURE);
+> 	}
+>-
+>-	/* Vulnerable system may crash now. */
+>-	if (!vsock_connect_fd(fd, VMADDR_CID_HOST, VMADDR_PORT_ANY)) {
+>-		perror("Unexpected connect() #2 success");
+>+	if (errno == ENODEV && cid == VMADDR_CID_HOST) {
+>+		ret = false;
+>+		goto cleanup;
+>+	}
+>+	if (errno != EADDRNOTAVAIL) {
+>+		perror("Unexpected connect() errno");
+> 		exit(EXIT_FAILURE);
+> 	}
+>
+>+	/* Reassign transport, triggering old transport release and
+>+	 * (potentially) unbinding of an unbound socket.
+>+	 *
+>+	 * Vulnerable system may crash now.
+>+	 */
+>+	for (c = VMADDR_CID_HYPERVISOR; c <= VMADDR_CID_HOST + 1; ++c) {
+>+		if (c != cid) {
+>+			addr.svm_cid = c;
+>+			(void)connect(fd, (struct sockaddr *)&addr, alen);
+>+		}
+>+	}
+>+
+>+	ret = true;
+>+cleanup:
+> 	close(fd);
+> 	while (i--)
+> 		close(sockets[i]);
+>
+>-	control_writeln("DONE");
+>+	return ret;
+> }
+>
+>-static void test_stream_transport_uaf_server(const struct test_opts *opts)
+>+/* Test attempts to trigger a transport release for an unbound socket. This can
+>+ * lead to a reference count mishandling.
+>+ */
+>+static void test_stream_transport_uaf_client(const struct test_opts *opts)
+> {
+>-	control_expectln("DONE");
+>+	bool tested = false;
+>+	int cid, tr;
+>+
+>+	for (cid = VMADDR_CID_HYPERVISOR; cid <= VMADDR_CID_HOST + 1; ++cid)
+>+		tested |= test_stream_transport_uaf(cid);
+>+
+>+	tr = get_transports();
+>+	if (!tr)
+>+		fprintf(stderr, "No transports detected\n");
+>+	else if (tr == TRANSPORT_VIRTIO)
+>+		fprintf(stderr, "Setup unsupported: sole virtio transport\n");
+>+	else if (!tested)
+>+		fprintf(stderr, "No transports tested\n");
+> }
+>
+> static void test_stream_connect_retry_client(const struct test_opts *opts)
+>@@ -2034,7 +2090,6 @@ static struct test_case test_cases[] = {
+> 	{
+> 		.name = "SOCK_STREAM transport release use-after-free",
+> 		.run_client = test_stream_transport_uaf_client,
+>-		.run_server = test_stream_transport_uaf_server,
+> 	},
+> 	{
+> 		.name = "SOCK_STREAM retry failed connect()",
+>
+>-- 
+>2.49.0
+>
 
-> I'm sure I'm missing something here, though..
-
-Heh, yep.  Part of that's my fault for using ambiguous terminology.  When I=
- said
-"L1's NPT/EPT" above, what I really meant was npt12.  I.e. this code
-
-  static int FNAME(page_fault)(struct kvm_vcpu *vcpu, struct kvm_page_fault=
- *fault)
-  {
-	struct guest_walker walker;
-	int r;
-
-	WARN_ON_ONCE(fault->is_tdp);
-
-	/*
-	 * Look up the guest pte for the faulting address.
-	 * If PFEC.RSVD is set, this is a shadow page fault.
-	 * The bit needs to be cleared before walking guest page tables.
-	 */
-	r =3D FNAME(walk_addr)(&walker, vcpu, fault->addr,
-			     fault->error_code & ~PFERR_RSVD_MASK);
-
-	/*
-	 * The page is not mapped by the guest.  Let the guest handle it.
-	 */
-	if (!r) {
-		if (!fault->prefetch)
-			kvm_inject_emulated_page_fault(vcpu, &walker.fault);  <=3D=3D=3D=3D=3D G=
-MET #NPF
-
-		return RET_PF_RETRY;
-	}
-
-which leads to the aformentioned FNAME(walk_addr_generic) and walker->pte_a=
-ccess
-behavior, is walking npt12.  Because the #NPF will have occurred while runn=
-ing
-L2, and by virtue of it being an #NPF (as opposed to a "legacy" #PF), KVM k=
-nows
-the fault is in the context of npt02.
-
-Before doing anything with respect to npt12, KVM needs to do walk_addr() on=
- _npt12_
-to determine whether the access is allowed by np12.  E.g. the simplest scen=
-ario
-to grok is if L2 accesses a (L2) GPA that isn't mapped by npt12, in case KV=
-M needs
-to inject a #NPF into L1.
-
-Same thing here.  On a PRESENT+FETCH+USER fault, if the effective protectio=
-ns
-in npt12 have U/S=3D1 and GMET is enabled, then KVM needs to inject a #NPF =
-into
-L1. =20
-
-Side topic, someone should check with the AMD architects as to whether or n=
-ot
-GMET depends on EFER.NXE=3D1.  The APM says that all NPT mappings are execu=
-table
-if EFER.NXE=3D0 in the host (where the "host" is L1 when dealing with neste=
-d NPT).
-To me, that implies GMET is effectively ignored if EFER.NXE=3D0.
-
-  Similarly, if the EFER.NXE bit is cleared for the host, all nested page t=
-able
-  mappings are executable at the underlying nested level.
