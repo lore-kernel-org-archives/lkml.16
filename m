@@ -1,53 +1,76 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A7285260;
-	Tue, 17 Jun 2025 08:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7571E3DCF
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750150033; cv=none; b=KUVbL0Ho2Cq/i+bNiTqq1NY/rFSUtNski48pNyqfJxunP2DS06I828djgRp3t8ZkqI6cG8feVWIKJl4GcThjYxIbxcHdLUhDlupCkY7nTifsPztc78XDeLWJIYV85jA1gGFn62iya/D8zhJm8Kwk/p4siMcPSVJj+XM75ws9nKk=
+	t=1750150079; cv=none; b=WGSFCgxh1h/20FjFAdKtM99kXxlPwmAopN3NaYPFp8FBm1vrT9XoonAdft3TZNR7jkZi7w0iNlUrr9y46/NYZeXFw8zvlp2imw5DQsyEgBLOSFHyooZG1zVk01WN9Vc4zzaj8o30lX9w4KGn3UzYnMK/WdUcFX+3sVHg/hX/iKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750150033; c=relaxed/simple;
-	bh=LfBfzJOI9hyof9Q7j7bpwacs6cutsXJf8ZFmcOMRXnA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jOldw4tqb8FmJMlp2y0V6GK3z+437uU1FUPHTQpcFiq1zc56IkVijqnX7POK4g3yT6Sh6KOmkm0pMzuS9EmDj1pBtc8KnIG1xsMU4ef1yue3HLcMehyqF/0s5wVpOC8gKc6iuhhSsCR3hTgYFkjFtsCzf+d/eLochwbc7X88nR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o71sq5U6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750150079; c=relaxed/simple;
+	bh=VlWmSPgV1PjiqoBSuasdLioOpExD34OKldbn7qDwYB4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J1UvJPQqsqeJLBRzBVPau3nbVqlxwAZqqR8X5ZUptu1qNqiN9amD9Y+pG9i1lulISNfJZgZOYK5RfuLO6paI3H50cjCTPQB0j3hSfArbA28CN9yGUBxmFF/pOgCFJDCG3ns7osqgJV+Yk9B56B7GoZiOds5HUChsRmkwa+R/a1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RYZNu/IY; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o71sq5U6"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H5gW7j027045;
-	Tue, 17 Jun 2025 08:47:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=V0az5VXjqwYak6U75gaKDM
-	VsBD+fhMtuhxxxgPjDMGM=; b=o71sq5U6vpw4d4KnnO/tcaojBjbtE2hhV1f4qj
-	+oy3ymo/u5pz6dBR5QHUTt+EFUqxcKrcuiBDWVn4VRzTSshnIH0qMd/aSIbhBO6o
-	N6W/kxquwFfxgjn4oQyE3c0TcYIPmUAN5ZJ/SuZ9WckiiWu4GyP7c7vbGtVOR0Do
-	NW2imdIftUv/ZfJb+q/WsH3d3iM09q4gkgT+7uyEb5JPFEW/vSdily1OyLHOKj6j
-	4K6LiICcHNnXbqZ/Ud3zwLbslSvQSFJWIlwUN4ssinzxWJCx+Md9+Fg/N/9Tb4n2
-	ilUadY6prfpdbXFhOU2+2uFMCRy2/k2lunRO8DuxRzLaeTZQ==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hffq1y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 08:47:07 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55H8l6w0019108
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 08:47:07 GMT
-Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 17 Jun 2025 01:47:04 -0700
-From: Zhongqiu Han <quic_zhonhan@quicinc.com>
-To: <rafael@kernel.org>, <len.brown@intel.com>, <pavel@kernel.org>,
-        <gregkh@linuxfoundation.org>, <dakr@kernel.org>
-CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_zhonhan@quicinc.com>
-Subject: [PATCH] PM: sleep: Drop superfluous might_sleep() calls
-Date: Tue, 17 Jun 2025 16:46:50 +0800
-Message-ID: <20250617084650.341262-1-quic_zhonhan@quicinc.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RYZNu/IY"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-453066fad06so40461775e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750150076; x=1750754876; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N+SpZuLBwukzwEpp0LTElP9gCCu2gWXx1DVuRQoCZ8U=;
+        b=RYZNu/IY6pM9yFa+041uNQuU6EDk0S6EjZJFTjuTxDR/nFXBCw68nngSXJd+TtxdBi
+         XLlDZo73SBLeVMFAe3xIhxTuVjvQlts3zAW5D0xiHVulUUTUO5efaDCPXU8EClbXjGl2
+         vtNIMmq8xyw8TrGHDnqpbg1TEZOrQbgrbHVbbdTpP6Ht88AWSlDxKNyq09m1MssF1fln
+         jOfeQfn3IelOZOexo1YaYgikUwNv2/nE8Iei8DVhMG7JKoSmWKQNvSYh3fRHfWmUjeVD
+         XX6ZttWGz20oxNEvqmGtwJIZuG+M8umkhe9dHnWh28kyB/8y8Ok0fxtyVpjZ8UZXJM4x
+         vk6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750150076; x=1750754876;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N+SpZuLBwukzwEpp0LTElP9gCCu2gWXx1DVuRQoCZ8U=;
+        b=Ui72yqBUAoRTjcR2okxpV/sT8JbdaaXuO0dfHp2Hta7Fz07/A7x8bQMUpiCR2SP8UR
+         bGOtbu2C6xnEW6DO/jVYelVUvXSsY0XFDvh0mYqMeIQf6msD15bnwyl/0IXDBlV+tYdt
+         +ZoEqMOC0W8klT+Kw+Zd1RsEKmJTK/kqSW0c0S7KX2VWUU4m+4u4WwpbbTGHaU3hfmql
+         T4COcAfnEh3luVAU4NervjWXpAOLX64TYDNDdjNzAhS1EUQRnJ5It1+LT5mINa5FeHTK
+         jWLcGdh2+QbyvGzUsKTzj+sFAl/KiLZ48d72hXbFMObOcYotsHkAp7vbp9+9FbW86EIS
+         67uQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWldwsYLRHL0GKZl/ybDKs24UAEhUOhNA3rJqzOaPpR5jf6QqS01Z8B/xHo4ZQN7AwHNbokiforDvcH7u4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWHhB0bVO5uDvqdOiJyo2Y0JK8oaGrlaDn3s9DM3NOsgGUAZQO
+	ASQ63GEKr69fH8sMTpUMOuxshffBNeEggjDeLx+JD0nfEyT3U9bbSVZB
+X-Gm-Gg: ASbGnctS+/J5ghpx7HUKylAavwF5eAi48M+twyMYIww22OzpBtotc32fs/mkHLW8DYH
+	aMRZyAB1zZeib57LfyVk+OQmbDFfU3a9ad537H3EqMRYVJ/XvGPavLrQOSeuDF0sIYt1J1itNs2
+	jZ8KnVQXNLSaJYGizX2nV1EEbXjVUOWkSw0D4f8PQPqafk+0SRimHwugRIiC2bmZYdKrehrrXMO
+	PfyR3KEARhjn0h8prLHE6KQJ4rDtYQjvXAqqMNEwLXcZ5MCcYnRmBhAvdSHF6BY+DfmXMyYrc/l
+	joAf7koACGJQ8dVWTuTTWjx3xDLLEYeeogT2kQVxkEil8ekWnStUUVWB/y6eDFhVCKJM+Zv0gvg
+	PcA==
+X-Google-Smtp-Source: AGHT+IGhSo4sTIxAKrr6iSdP/GPSFBv+fxRz/DzEUGmsb43kwWPBRI88SHOYqyq6LTAYoclrnvEfbQ==
+X-Received: by 2002:a05:600c:1ca1:b0:453:84a:8cf1 with SMTP id 5b1f17b1804b1-4533cac6479mr97494635e9.33.1750150076053;
+        Tue, 17 Jun 2025 01:47:56 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e172b03sm167887695e9.36.2025.06.17.01.47.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 01:47:55 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	ardb@kernel.org
+Cc: hpa@zytor.com,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH v3] x86/boot: Don't return encryption mask from __startup_64()
+Date: Tue, 17 Jun 2025 08:46:46 +0000
+Message-ID: <20250617084705.619-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,78 +78,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDA3MCBTYWx0ZWRfXxUxF55PT81qD
- m0BR7hu26yW/zYrUDbFPGtHPJGJe3ZX1aLvHQki6DtTKYSNrQrI7MCVRWMWIXaktEeKn7JH4ehI
- BrLRT+Az9JuwJwHwoAckiUHbaCNoBvhJbCa/6hC/OD2WUgAipx36KRQeDYP+g/mde5/C6Y3ULtq
- aNaYy3VLDfsdovGKZtEc9oP3eTw75rDr2Nq+8oYI4bu4zu4A9lxoLlOSrF2stMKj20vNlilRPLY
- waqax3aU9KCrRaG8ZVXyEjo2UKCrFHyNElJZbuukpG0oBnlDZ0Hyq2l3zN0fc1kaqvhr2spIQvo
- yMjNa7gPcKHZKEGOBQLJeKl2+Irb3bz4pHNgmm8LLsgS8ktmbBe8qYRR58hP/viLigY2tGnT6s6
- ip9f09HrpAwdD4AIEhje2yKC/rNqgBCXLr6V9f+V5gmT6zsWNWMgdrtUNYnkE5mRwbO+0qkV
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68512b8b cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=Ct5OFoWzB3YGJjc9bSsA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: VkNDCt0wgTQKyumgFyg4F16KeqF0D_Co
-X-Proofpoint-ORIG-GUID: VkNDCt0wgTQKyumgFyg4F16KeqF0D_Co
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_03,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1011 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506170070
 
-Drop superfluous might_sleep() calls from dpm_resume(), dpm_complete(),
-and dpm_prepare(). These functions already invoke primitives that
-implicitly check for sleep in atomic context:
+Avoid returning the SME encryption mask from __startup_64(), and instead
+let the function handle encryption directly as needed. The encryption
+mask is already available to callers and can be accessed via
+sme_get_me_mask() in C code, or directly through the sme_me_mask symbol
+in assembly, if CONFIG_AMD_MEM_ENCRYPT is enabled.
 
-- dpm_resume() and dpm_complete() invoke mutex_lock(), which internally
-  triggers might_sleep()
-- dpm_prepare() calls wait_for_device_probe(), which internally uses
-  flush_work(), and thus might_sleep()
+This change aligns with how secondary_startup_64_no_verify handles SME
+and keeps the behavior consistent. For Intel CPUs, SME is not relevant,
+so there is no need to retrieve the mask unless CONFIG_AMD_MEM_ENCRYPT
+is enabled.
 
-These annotations are unnecessary and can be dropped to reduce clutter.
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
 
-Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
 ---
- drivers/base/power/main.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/x86/boot/startup/map_kernel.c | 11 +++--------
+ arch/x86/include/asm/setup.h       |  2 +-
+ arch/x86/kernel/head_64.S          | 10 ++++------
+ 3 files changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index eebe699fdf4f..0f40c00c1401 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1095,7 +1095,6 @@ void dpm_resume(pm_message_t state)
- 	ktime_t starttime = ktime_get();
+diff --git a/arch/x86/boot/startup/map_kernel.c b/arch/x86/boot/startup/map_kernel.c
+index 332dbe6688c4..6fdb340e9147 100644
+--- a/arch/x86/boot/startup/map_kernel.c
++++ b/arch/x86/boot/startup/map_kernel.c
+@@ -30,7 +30,7 @@ static inline bool check_la57_support(void)
+ 	return true;
+ }
  
- 	trace_suspend_resume(TPS("dpm_resume"), state.event, true);
--	might_sleep();
+-static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
++static void __head sme_postprocess_startup(struct boot_params *bp,
+ 						    pmdval_t *pmd,
+ 						    unsigned long p2v_offset)
+ {
+@@ -68,11 +68,6 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
+ 		}
+ 	}
  
- 	pm_transition = state;
- 	async_error = 0;
-@@ -1198,7 +1197,6 @@ void dpm_complete(pm_message_t state)
- 	struct list_head list;
+-	/*
+-	 * Return the SME encryption mask (if SME is active) to be used as a
+-	 * modifier for the initial pgdir entry programmed into CR3.
+-	 */
+-	return sme_get_me_mask();
+ }
  
- 	trace_suspend_resume(TPS("dpm_complete"), state.event, true);
--	might_sleep();
+ /*
+@@ -84,7 +79,7 @@ static unsigned long __head sme_postprocess_startup(struct boot_params *bp,
+  * the 1:1 mapping of memory. Kernel virtual addresses can be determined by
+  * subtracting p2v_offset from the RIP-relative address.
+  */
+-unsigned long __head __startup_64(unsigned long p2v_offset,
++void __head __startup_64(unsigned long p2v_offset,
+ 				  struct boot_params *bp)
+ {
+ 	pmd_t (*early_pgts)[PTRS_PER_PMD] = rip_rel_ptr(early_dynamic_pgts);
+@@ -213,5 +208,5 @@ unsigned long __head __startup_64(unsigned long p2v_offset,
+ 	for (; i < PTRS_PER_PMD; i++)
+ 		pmd[i] &= ~_PAGE_PRESENT;
  
- 	INIT_LIST_HEAD(&list);
- 	mutex_lock(&dpm_list_mtx);
-@@ -2109,7 +2107,6 @@ int dpm_prepare(pm_message_t state)
- 	int error = 0;
+-	return sme_postprocess_startup(bp, pmd, p2v_offset);
++	 sme_postprocess_startup(bp, pmd, p2v_offset);
+ }
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index 692af46603a1..29ea24bb85ff 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -50,7 +50,7 @@ extern unsigned long acpi_realmode_flags;
  
- 	trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
--	might_sleep();
+ extern void reserve_standard_io_resources(void);
+ extern void i386_reserve_resources(void);
+-extern unsigned long __startup_64(unsigned long p2v_offset, struct boot_params *bp);
++extern void __startup_64(unsigned long p2v_offset, struct boot_params *bp);
+ extern void startup_64_setup_gdt_idt(void);
+ extern void startup_64_load_idt(void *vc_handler);
+ extern void early_setup_idt(void);
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 3e9b3a3bd039..4390a28f7dad 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -106,18 +106,16 @@ SYM_CODE_START_NOALIGN(startup_64)
  
  	/*
- 	 * Give a chance for the known devices to complete their probes, before
+ 	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
+-	 * the kernel and retrieve the modifier (SME encryption mask if SME
+-	 * is active) to be added to the initial pgdir entry that will be
+-	 * programmed into CR3.
++	 * the kernel.
+ 	 */
+ 	movq	%r15, %rsi
+ 	call	__startup_64
+ 
+ 	/* Form the CR3 value being sure to include the CR3 modifier */
+-	leaq	early_top_pgt(%rip), %rcx
+-	addq	%rcx, %rax
+-
++	leaq	early_top_pgt(%rip), %rax
++	
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
++	addq	sme_me_mask(%rip), %rax
+ 	mov	%rax, %rdi
+ 
+ 	/*
 -- 
-2.43.0
+2.49.0
 
