@@ -1,126 +1,136 @@
-Received: from mx-rz-2.rrze.uni-erlangen.de (mx-rz-2.rrze.uni-erlangen.de [131.188.11.21])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB1442A99;
-	Tue, 17 Jun 2025 19:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A56342A99
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750189575; cv=none; b=pnRousf0yLy2r09NVqGzhmKdp1r5fOZBTlBKkRNhbFfQjjTjpLAeWUP/Hb07YNrLXEFLlWnqRsQ7+Dc0gh81gbkJPzo+QpxGF+SONBwJ32gPLe4WjObpFIFoxmow2RA+3LYFEyhSmo6VDUoNM5cIxAhfpftZL8jm7d2rUMj1uUw=
+	t=1750189582; cv=none; b=CJlhFz58y3sAUe+iPlJc4Qeh4xv89m2xHLsK+gUizLN2Y8DJP9wbNWnUTzoCa2fTTR/iq5nd64Jh31h+n9qojd5GqWF+TF4Vbe0SGIPpxPvenL9CTAJp5vA/natoli7D0PkOK6B/yC5LCe16fqCVTUnAP9qjQQ1WZIFPzV7nZK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750189575; c=relaxed/simple;
-	bh=i9VT9MU1eV1jZusVXBnUaKR1q6jUkGire7MftlUt0tM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=dTPSyQ73FhUvTdZi9HyEfrsrC1v/k9ZJs8xz1SziVIMrWh6o9hM6w4mLqxJTRtBEUREK5GCgnduiD5pY/Fo5lr3xEwwcMGDz5YlVvveI9kQ58QGpgJbxtddUibS8STLYBCHqseKagL/VzNpZYCbyVzMWfQAuMliFZJhSHJH89+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=gc7sbHgy; arc=none smtp.client-ip=131.188.11.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1750189582; c=relaxed/simple;
+	bh=6SdbPPe9pmSE8+0ZJM1umJlBQZ1wA58S28tOdEyrjyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pFgxlOOlghvWxIUZ9YmqpEGHVHN71bdCxC/W9yjtHFXt2IHvrot3Is5InemvHYImUJCwvNsL/+LLV6k6SGFKFMpZOzuMzeEocaS+jwORf+Cw7yWvn1D644FPyil89OrCkXa/5EsB15XzrgBFzUsqlFBrXXsiHRe9BeEGHPoCzSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BpUYHN0V; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="gc7sbHgy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1750189564; bh=bmjUaNu902W4Vnz0nSIWioF+mc9zxOtXqhelb4K0/uk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From:To:CC:
-	 Subject;
-	b=gc7sbHgyLiegGVmE2Zn1Wn3DldzVxvLMeWsT9J0xbJnddnJfYwDFAEO1oEXPi8xi3
-	 suCiaT6WGnv/iS2HDxdUa1O6PPWTrb52RnuRvCd+PK1R1LwOXQQWi7LRPpkQ6b9Fd4
-	 04+OjFnUpM144evsVpDnbpaTghp6drwKoniJ3H19jhdnzi1o9JQR4ywRrLZAN0aDzH
-	 evzUuExysaIbiJLhkTpT4Ja1pLI1CUEtaPaA6OLdpRM35WG8nKErEzeyolQNO4fpYI
-	 3P9/fJ/Z3miC6Yt0+XQrpTIiAvAEdXD6LiWqvMeN1TOtwuO/hd2TiIGXl3geF+8zYk
-	 qobG9U6X24MsA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-2.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4bMHRc3qMgzPk6c;
-	Tue, 17 Jun 2025 21:46:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck5.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3605:d600:62fb:a084:d4d8:4e7e
-Received: from localhost (unknown [IPv6:2001:9e8:3605:d600:62fb:a084:d4d8:4e7e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1+C3RkGdAmEaAKGq86i/+jmt+HKq4VH57I=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4bMHRY3SzPzPjjf;
-	Tue, 17 Jun 2025 21:46:01 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Alexei Starovoitov <ast@kernel.org>,  Daniel Borkmann
- <daniel@iogearbox.net>,  Andrii Nakryiko <andrii@kernel.org>,  Hengqi Chen
- <hengqi.chen@gmail.com>,  bpf@vger.kernel.org,  loongarch@lists.linux.dev,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
-In-Reply-To: <20250617063206.24733-1-yangtiezhu@loongson.cn> (Tiezhu Yang's
-	message of "Tue, 17 Jun 2025 14:32:06 +0800")
-References: <20250617063206.24733-1-yangtiezhu@loongson.cn>
-User-Agent: mu4e 1.12.8; emacs 30.1
-Date: Tue, 17 Jun 2025 21:46:00 +0200
-Message-ID: <87a5665eyv.fsf@fau.de>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BpUYHN0V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750189579;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=icFJhskVkKQqZu2iPajxPrgD6zNA+fOLsrBnVy7h8EQ=;
+	b=BpUYHN0VDcvJs44dUruAbxmNqFYw/KcM/fTq5uN1sy92onDORvNq69P2y1h2ltnY/OkMO6
+	LsT1IWmPGHRNGbiFHQYPIp9sNjW53cz1iQjamQHPsWj66mjLifw94o132qRD/5YHXzRuBi
+	wBECYWv9fIWWdPitQAmzu/uZYfl+XYI=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-493-dfPM669tP9a1cV0Dmn_AUg-1; Tue, 17 Jun 2025 15:46:17 -0400
+X-MC-Unique: dfPM669tP9a1cV0Dmn_AUg-1
+X-Mimecast-MFC-AGG-ID: dfPM669tP9a1cV0Dmn_AUg_1750189576
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f7ebfd00so2792942f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:46:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750189576; x=1750794376;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=icFJhskVkKQqZu2iPajxPrgD6zNA+fOLsrBnVy7h8EQ=;
+        b=uF74iqkYRFPF3hz/tClfA3DUO0VRHrbP9tEfsvJUodFK5v/hbzzDCS+KczdF0jgc6+
+         oAdlSEaIBbZ1V2IRVqErlmg5ak8NbfMC6u3kbE+3zC1ohi9vjqoYOeAFbEbLhsscpdnw
+         fv1mnO2P+QnPQcM8FIR4rFiyugOMu6PToxLOTJTLZHGz1wuvVinHZQYf1Elw+K4Q4+9N
+         ZetmZUulbvl1qUF8J9yqF79uzLos8vEDNr8T5Y/lC7MxIhRrjWgP3woZq1mEcQa92WV5
+         faokvi61ZjEsJ6emEa0g53aHmi/K07c8fgr+jyfb7EKHFmCQRRZvL91CdakSn/TNVz/l
+         iYDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUAWXSHyhAxM1BCrOJs0M5sF0c1J7e2Fy+G0rQTaXU3r9FG2XPTWAJdKliNvtDla+L9Bw7rUAwg2iKn4/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKuqfzmtzChegioqvbZ1OgtIbOZQWfZ3mWbIZkJJeht9z1IxWL
+	Oi1Icx5RypzPxsp8/kaWhHPypQL8gCMjs9G/Dj0ohg1mZ7ic6een8sJljyoVzs0FR2rgqxuBldI
+	3uHXO3l5qFtDRWVAkYVnsumU9a21E71AdlOFSZglDkGA9vw61K7NjjXDliWy7Wuum/Q==
+X-Gm-Gg: ASbGncsheNmQrTsfd1fOFR+NkEiWWfTCaqTm6y0FVepJ71fORqp6gptyxDpYVIx1L9t
+	M/vlLvJhocvg/vNm71UmR1+HmaP6hpYU2wNOHxe7p1k00H6IumzXfmfz99ZK76aFdhoyu1iCGZd
+	TFGgWK9OUkuHNi8ib/qro2lI2z4EQbA/ps4wlnOH9624ePNd3jGTg21pxAgZtjh4XVh8kPjlbQM
+	5QPNjJmPz8qxhIrBhOkam8WrbDzJCbQcy1+YEyt5BA2sFmfAwS50R88wWnU1UV4/z9Shlb4FWJP
+	kVqkBkH4a5sqzDD7
+X-Received: by 2002:a05:6000:2007:b0:3a5:25e0:1851 with SMTP id ffacd0b85a97d-3a5723660b5mr12195277f8f.7.1750189576213;
+        Tue, 17 Jun 2025 12:46:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFO9JZf66g6UmsF+FsTytz4QymacwGU4iFb1DNv63Dd/5GxeH4PDvqwykdFRQ9tUf5lrXqgjg==
+X-Received: by 2002:a05:6000:2007:b0:3a5:25e0:1851 with SMTP id ffacd0b85a97d-3a5723660b5mr12195258f8f.7.1750189575837;
+        Tue, 17 Jun 2025 12:46:15 -0700 (PDT)
+Received: from redhat.com ([2a06:c701:73ea:4300:f7cc:3f8:48e8:2142])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a543d9sm14603319f8f.5.2025.06.17.12.46.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 12:46:15 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:46:12 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Demi Marie Obenour <demiobenour@gmail.com>
+Cc: Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alyssa Ross <hi@alyssa.is>, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	iommu@lists.linux.dev, x86@kernel.org,
+	Spectrum OS Development <devel@spectrum-os.org>
+Subject: Re: Virtio-IOMMU interrupt remapping design
+Message-ID: <20250617154524-mutt-send-email-mst@kernel.org>
+References: <>
+ <a65d955c-192b-4e79-ab11-8e2af78b62af@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a65d955c-192b-4e79-ab11-8e2af78b62af@gmail.com>
 
-Tiezhu Yang <yangtiezhu@loongson.cn> writes:
+On Sun, Jun 15, 2025 at 02:47:15PM -0400, Demi Marie Obenour wrote:
+> Virtio-IOMMU interrupt remapping turned out to be much harder than I
+> realized.  The main problem is that interrupt remapping is set up
+> very early in boot.  In fact, Linux calls the interrupt remapping probe
+> function from the APIC initialization code: x86_64_probe_apic ->
+> enable_IR_x2apic -> irq_remapping_prepare().  This is almost certainly
+> much before PCI has been initialized.  Also, the order in which devices
+> will be initialized is not something Linux guarantees at all, which is a
+> problem because interrupt remapping must be initialized before drivers
+> start setting up interrupts.  Otherwise, the interrupt remapping table
+> won't include entries for already-existing interrupts, and things will
+> either break badly, not get the benefit of interrupt remapping
+> security-wise, or both.
+> 
+> The reason I expect this doesn't cause problems for address translation
+> is that the IOMMU probably starts in bypass mode by default, meaning
+> that all DMA is permitted.  If the IOMMU is only used by VFIO or
+> IOMMUFD, it will not be needed until userspace starts up, which is after
+> the IOMMU has been initialized.  This isn't ideal, though, as it means
+> that kernel drivers operate without DMA protection.
+> 
+> Is a paravirtualized IOMMU with interrupt remapping something that makes
+> sense?  Absolutely!  However, the IOMMU should be considered a platform
+> device that must be initialized very early in boot.  Using virtio-IOMMU
+> with MMIO transport as the interface might be a reasonable option, but
+> the IOMMU needs to be enumerated via ACPI, device tree, or kernel
+> command line argument.  This allows it to be brought up before anything
+> capable of DMA is initialized.
+> 
+> Is this the right path to go down?  What do others think about this?
+> -- 
+> Sincerely,
+> Demi Marie Obenour (she/her/hers)
 
-> JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
-> to skip analysis/patching for the respective vulnerability, it is
-> safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
-> speculation barrier instruction for LoongArch.
 
-Thank you for addressing this.
 
-Do you think it would be possible to give a more detailed reason for why
-Spectre v1/v4 do not affect LoongArch?
+The project for this discussion is also virtio-comment,
+this ML is for driver work.
 
-Which exploits were tried (and failed) in [3]?
 
-At least from [1] it appears as if there is branch prediction (Figure 5.
-LA464 structure, Page 52) and thus also the potential for Spectre v1 (if
-there is no hardware countermeasure). For Spectre v4, [1] states
-"Supports access optimization techniques such as Non-blocking access and
-Load-Speculation" (Chapter 8. LA464 Processor Core). Based on that I
-would assume v4 mitigation might also be required.
 
-If there is no countermeasure (and no dedicated speculation barrier), it
-would probably be best to lower BPF_NOSPEC to ibar+dbar (leaving
-bpf_jit_bypass_spec_v1/v4=false) which might be good enough to make
-exploits much harder/impossible.
-
-[1] https://loongson.github.io/LoongArch-Documentation/Loongson-3A5000-usermanual-EN.pdf
-
-> Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
-
-Just to clarify, I only suggested it assuming that LoongArch CPUs are
-not vulnerable (which I only assumed because of [2]).
-
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a6f6a95f2580
-
-> diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-> index fa1500d4aa3e..5de8f4c44700 100644
-> --- a/arch/loongarch/net/bpf_jit.c
-> +++ b/arch/loongarch/net/bpf_jit.c
-> @@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
->  {
->  	return true;
->  }
-> +
-> +bool bpf_jit_bypass_spec_v1(void)
-> +{
-> +	return true;
-> +}
-> +
-> +bool bpf_jit_bypass_spec_v4(void)
-> +{
-> +	return true;
-> +}
-
-Looks as expected besides the unclarity regarding the countermeasure. In
-any case having these set to false (default) does not help if BPF_NOSPEC
-is not implemented, thus this is an improvement.
-
-Except for the stated reason:
-
-Acked-by: Luis Gerhorst <luis.gerhorst@fau.de>
