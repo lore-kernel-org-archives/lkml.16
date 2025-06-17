@@ -1,146 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pmxout1.rz.tu-bs.de (pmxout1.rz.tu-bs.de [134.169.4.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26842EF664;
-	Tue, 17 Jun 2025 14:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263CC13B59B;
+	Tue, 17 Jun 2025 14:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.169.4.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170618; cv=none; b=CQY6n1YPYARtAGB2q9QQ2BLFMZldH3n9YjLDKtHTQgosdZMInxBpF2KO7SxKGyP0P2sfKK3VG/AyX1O5Nxm23FnljWyG4g2SJKAyd6MAdQvxyI7bQSDofwHc93nRHjhEiP2dcxP82Y4j2H86kz6MWwlJW6H/MBOfXKqxhP5JolY=
+	t=1750170668; cv=none; b=eMYMUTqFOUHsc95244a6qF6Cd94IqYHQCe5zVUF2BPea90O0QErfivWv7BJqJkVbzLV1RE9rBxFqj2I/+cjAKKfOOHpC9v2PZZ6/F5QT5MXDZtP/28bAfGYgNpcbe5ELPFxhVzDpmjxiAEpjyHN4aA83umtgwZAeXXFQ3vPrTFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170618; c=relaxed/simple;
-	bh=fr2XMAsOts3e2z91VRBihiSkUtLYOX60usFN8g0EWAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S2+RdkCtpMA6XlGtruNHEVsWhzfbYMtTVstXkLHtbIFNmfL1q+QuHynAz3JviQw7yMz4gWkJqhavOB/vfQ6Re92STD3+o/i9iyOTRnFtXj70aJy+6ggPjizYnbGTA9LgD8vqPUSOsWTSIbph/y14LEZajEyvpn9qDHNEOMtJAVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDe3FgWK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750170668; c=relaxed/simple;
+	bh=juqQSj/laUBX8o+BD7Z+D+hetaYyMMlkdg3OwrDPg/Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=B5GV1lmsLIjZjXXkHyCvcxMi+Bkzxv6ZBto4oRkLDmUcfoO2G+2cxsMkxv1gK1oSy/cwUYAP/siq5mj2DpWGDW+5zJGqnfvcWiF/WgMiK5cVua+CpDSa1nK3DWBWbBFmLRGzgJ2fdmaPJys9MLPl4B0xk3wpiQyQpHDQk6d/NR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de; spf=pass smtp.mailfrom=tu-braunschweig.de; dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b=vAlBf45Q; arc=none smtp.client-ip=134.169.4.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-braunschweig.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDe3FgWK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9838C4CEE7;
-	Tue, 17 Jun 2025 14:30:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750170618;
-	bh=fr2XMAsOts3e2z91VRBihiSkUtLYOX60usFN8g0EWAQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QDe3FgWKdRYt+BIzMKBQF3t5wcdsgovRo8kcvLAZPRvtxyXl1IvJ1uNlEJh8U4szk
-	 WfnBWWcVDZzqXI61sDtZK990vZVY38xyHXdM8ZsdmGlYrWlwx9hSAd5jzQh+JAMcXz
-	 4UEuHs04KEVpn53uSj9FF9SyIfJ2TnYQ0oGXkwZw7S2c7eR/8u3FrqK1UJ/EVyn7J2
-	 FFrE/9UrKWA1xYiEFfIF+1CF254i3hvfP53fi2s9JlXyyKs/yG9t+uET8HDMiY7EM9
-	 lWYelt+tdc7MIPGZhMbltC42Afg6OnmSi0RmZVMPObkuYfe1NmfQf1XhBBxdk4SbUw
-	 0Rrk2MzTfwCJA==
-Date: Tue, 17 Jun 2025 19:55:01 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 12/62] KVM: SVM: Inhibit AVIC if ID is too big instead
- of rejecting vCPU creation
-Message-ID: <bmx43lru6mwdyun3ktcmoeezqw6baih7vgtykolsrmu5q2x7vu@xp5jrbbqwzej>
-References: <20250611224604.313496-2-seanjc@google.com>
- <20250611224604.313496-14-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b="vAlBf45Q"
+Received: from Hermes02.ad.tu-bs.de (hermes02.rz.tu-bs.de [134.169.4.130])
+	by pmxout1.rz.tu-bs.de (Postfix) with ESMTPS id 913744E045C;
+	Tue, 17 Jun 2025 16:23:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-bs.de;
+	s=exchange_neu; t=1750170191;
+	bh=juqQSj/laUBX8o+BD7Z+D+hetaYyMMlkdg3OwrDPg/Y=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To:From;
+	b=vAlBf45QqpajDkfZR12GetzpNNBG4nKWZVr36RayL04UKqxYZ+oB45SitL6Q5CPgB
+	 18U6SYmcvn8lzwo6tcq2DuQvprkDJw+Kq4+mygpRO+Djz8miax+70pj6wRPpLcaJxL
+	 latX0ejwoxhjh2/N9d+W/2iTT3O5e8JzI9iTGWHd/O2CvQGmPP8Sqliu7o6xTxpyKP
+	 yL5zOHRhUM8AxlwHWv2OxSWyaFveTT9FEkap8mkgEHkf/hW/nkWh3fp3AeYzs71jyM
+	 ASwWVpj+yN1c4bprSXXqFE1v5bQy14h1AAjI+NZup3uOwk8W96eMkT2yJQMqh/CG+G
+	 5Ehowj0hhgo+A==
+Received: from [134.169.39.43] (134.169.9.110) by Hermes02.ad.tu-bs.de
+ (134.169.4.130) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 17 Jun
+ 2025 16:23:11 +0200
+Message-ID: <7a20b873-3c26-4a52-b118-c816ede7298d@tu-bs.de>
+Date: Tue, 17 Jun 2025 16:23:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611224604.313496-14-seanjc@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
+To: Will Deacon <will@kernel.org>, Hernan Ponce de Leon
+	<hernan.poncedeleon@huaweicloud.com>
+CC: Peter Zijlstra <peterz@infradead.org>, Alan Stern
+	<stern@rowland.harvard.edu>, Andrea Parri <parri.andrea@gmail.com>, Boqun
+ Feng <boqun.feng@gmail.com>, Nicholas Piggin <npiggin@gmail.com>, David
+ Howells <dhowells@redhat.com>, Jade Alglave <j.alglave@ucl.ac.uk>, Luc
+ Maranget <luc.maranget@inria.fr>, "Paul E. McKenney" <paulmck@kernel.org>,
+	Akira Yokosawa <akiyks@gmail.com>, Daniel Lustig <dlustig@nvidia.com>, Joel
+ Fernandes <joelagnelf@nvidia.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arch@vger.kernel.org>, <lkmm@lists.linux.dev>,
+	<jonas.oberhauser@huaweicloud.com>, "r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
+References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+ <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
+ <20250616142347.GA17781@willie-the-truck>
+ <d66d0351-b523-40da-ae47-8b06f37bf3b6@tu-bs.de>
+ <2b11f09d-b938-4a8e-8c3a-c39b6fea2b21@huaweicloud.com>
+ <20250617141704.GB19021@willie-the-truck>
+Content-Language: en-US
+From: Thomas Haas <t.haas@tu-bs.de>
+In-Reply-To: <20250617141704.GB19021@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: Hermes06.ad.tu-bs.de (134.169.4.134) To
+ Hermes02.ad.tu-bs.de (134.169.4.130)
 
-On Wed, Jun 11, 2025 at 03:45:15PM -0700, Sean Christopherson wrote:
-> Inhibit AVIC with a new "ID too big" flag if userspace creates a vCPU with
-> an ID that is too big, but otherwise allow vCPU creation to succeed.
-> Rejecting KVM_CREATE_VCPU with EINVAL violates KVM's ABI as KVM advertises
-> that the max vCPU ID is 4095, but disallows creating vCPUs with IDs bigger
-> than 254 (AVIC) or 511 (x2AVIC).
+
+
+On 17.06.25 16:17, Will Deacon wrote:
+> On Tue, Jun 17, 2025 at 10:42:04AM +0200, Hernan Ponce de Leon wrote:
+>> On 6/17/2025 8:19 AM, Thomas Haas wrote:
+>>> On 16.06.25 16:23, Will Deacon wrote:
+>>>> I'm half inclined to think that the Arm memory model should be tightened
+>>>> here; I can raise that with Arm and see what they say.
+>>>>
+>>>> Although the cited paper does give examples of store-forwarding from a
+>>>> narrow store to a wider load, the case in qspinlock is further
+>>>> constrained by having the store come from an atomic rmw and the load
+>>>> having acquire semantics. Setting aside the MSA part, that specific case
+>>>> _is_ ordered in the Arm memory model (and C++ release sequences rely on
+>>>> it iirc), so it's fair to say that Arm CPUs don't permit forwarding from
+>>>> an atomic rmw to an acquire load.
+>>>>
+>>>> Given that, I don't see how this is going to occur in practice.
+>>>
+>>> You are probably right. The ARM model's atomic-ordered-before relation
+>>>
+>>>        let aob = rmw | [range(rmw)]; lrs; [A | Q]
+>>>
+>>> clearly orders the rmw-store with subsequent acquire loads (lrs = local-
+>>> read-successor, A = acquire).
+>>> If we treat this relation (at least the second part) as a "global
+>>> ordering" and extend it by "si" (same-instruction), then the problematic
+>>> reordering under MSA should be gone.
+>>> I quickly ran Dartagnan on the MSA litmus tests with this change to the
+>>> ARM model and all the tests still pass.
+>>
+>> Even with this change I still get violations (both safety and termination)
+>> for qspinlock with dartagnan.
 > 
-> Alternatively, KVM could advertise an accurate value depending on which
-> AVIC mode is in use, but that wouldn't really solve the underlying problem,
-> e.g. would be a breaking change if KVM were to ever try and enable AVIC or
-> x2AVIC by default.
+> Please can you be more specific about the problems you see?
+
+I talked to Hernán personally and it turned out that he used the generic 
+implementation of smp_cond_acquire (not sure if the name is correct) 
+which uses a relaxed load followed by a barrier. In that case, replacing 
+aob by aob;si does not change anything.
+Indeed, even in the reported problem we used the generic implementation 
+(I was unaware of this), though it is easy to check that changing the 
+relaxed load to acquire does not give sufficient orderings.
+
 > 
-> Cc: Maxim Levitsky <mlevitsk@redhat.com>
-> Tested-by: Sairaj Kodilkar <sarunkod@amd.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  9 ++++++++-
->  arch/x86/kvm/svm/avic.c         | 14 ++++++++++++--
->  arch/x86/kvm/svm/svm.h          |  3 ++-
->  3 files changed, 22 insertions(+), 4 deletions(-)
+>> I think the problem is actually with the Internal visibility axiom, because
+>> only making that one stronger seems to remove the violations.
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 2a6ef1398da7..a9b709db7c59 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1314,6 +1314,12 @@ enum kvm_apicv_inhibit {
->  	 */
->  	APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED,
->  
-> +	/*
-> +	 * AVIC is disabled because the vCPU's APIC ID is beyond the max
-> +	 * supported by AVIC/x2AVIC, i.e. the vCPU is unaddressable.
-> +	 */
-> +	APICV_INHIBIT_REASON_PHYSICAL_ID_TOO_BIG,
-> +
->  	NR_APICV_INHIBIT_REASONS,
->  };
->  
-> @@ -1332,7 +1338,8 @@ enum kvm_apicv_inhibit {
->  	__APICV_INHIBIT_REASON(IRQWIN),			\
->  	__APICV_INHIBIT_REASON(PIT_REINJ),		\
->  	__APICV_INHIBIT_REASON(SEV),			\
-> -	__APICV_INHIBIT_REASON(LOGICAL_ID_ALIASED)
-> +	__APICV_INHIBIT_REASON(LOGICAL_ID_ALIASED),	\
-> +	__APICV_INHIBIT_REASON(PHYSICAL_ID_TOO_BIG)
->  
->  struct kvm_arch {
->  	unsigned long n_used_mmu_pages;
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index ab228872a19b..f0a74b102c57 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -277,9 +277,19 @@ static int avic_init_backing_page(struct kvm_vcpu *vcpu)
->  	int id = vcpu->vcpu_id;
->  	struct vcpu_svm *svm = to_svm(vcpu);
->  
-> +	/*
-> +	 * Inhibit AVIC if the vCPU ID is bigger than what is supported by AVIC
-> +	 * hardware.  Immediately clear apicv_active, i.e. don't wait until the
-> +	 * KVM_REQ_APICV_UPDATE request is processed on the first KVM_RUN, as
-> +	 * avic_vcpu_load() expects to be called if and only if the vCPU has
-> +	 * fully initialized AVIC.
-> +	 */
->  	if ((!x2avic_enabled && id > AVIC_MAX_PHYSICAL_ID) ||
-> -	    (id > X2AVIC_MAX_PHYSICAL_ID))
-> -		return -EINVAL;
-> +	    (id > X2AVIC_MAX_PHYSICAL_ID)) {
-> +		kvm_set_apicv_inhibit(vcpu->kvm, APICV_INHIBIT_REASON_PHYSICAL_ID_TOO_BIG);
-> +		vcpu->arch.apic->apicv_active = false;
+> That sounds surprising to me, as there's nothing particularly weird about
+> Arm's coherence requirements when compared to other architectures, as far
+> as I'm aware.
+> 
 
-This bothers me a bit. kvm_create_lapic() does this:
-          if (enable_apicv) {
-                  apic->apicv_active = true;
-                  kvm_make_request(KVM_REQ_APICV_UPDATE, vcpu);
-	  }
+I agree. The internal visibility axiom is not the issue I think.
 
-But, setting apic->apicv_active to false here means KVM_REQ_APICV_UPDATE 
-is going to be a no-op.
+-- 
+=====================================
 
-This does not look to be a big deal given that kvm_create_lapic() itself 
-is called just a bit before svm_vcpu_create() (which calls the above 
-function through avic_init_vcpu()) in kvm_arch_vcpu_create(), so there 
-isn't that much done before apicv_active is toggled.
+Thomas Haas
 
-But, this made me wonder if introducing a kvm_x86_op to check and 
-enable/disable apic->apicv_active in kvm_create_lapic() might be cleaner 
-overall. Maybe even have it be the initialization point for APICv: 
-apicv_init(), so we can invoke avic_init_vcpu() right away?
+Technische Universität Braunschweig
+Institut für Theoretische Informatik
+Mühlenpfordtstr. 23, Raum IZ 343
+38106 Braunschweig | Germany
 
-
-- Naveen
+t.haas@tu-braunschweig.de
+https://www.tu-braunschweig.de/tcs/team/thomas-haas
 
