@@ -1,146 +1,97 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EB8204F8B;
-	Tue, 17 Jun 2025 01:10:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF2915B0EC;
+	Tue, 17 Jun 2025 01:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750122607; cv=none; b=Jf3MOfAl+he00CvMlGjZZsXahcH26Xx69Jcyf4/yLx1zVQ4T+cClhty49tpDXPuRHwSLcqYTpxQnDSKEHv6wpPnwHb8WBYQVWgTcUtSxzUNvQx6F5ceOSXMyWX7gIj2ziOCMZgmVyHOFoKqm3Yqr7Q/LP9X9kwx7qezxlNxqul8=
+	t=1750122711; cv=none; b=olD5bYR8I39YumzmsWiLq22w2xvtabhEU83yPfJKnecBl34r7+SWso9zR5Rwr45IXOYw3TYb0cbrkYXVtjwxFboAqvi40jiLSrWrQVOOh5nHD8flZdsL9E2Ip4n2HbxIHySxevaemo/uFZ8JcwnmOLSD2RfQh+AcuWprX5vGGGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750122607; c=relaxed/simple;
-	bh=yw1SwsDEDdg6ajXD1eO2HDKrUh/trmJ0jiWLVtXBMPk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ror9GFE5snz5PV5IepNQD9NofpciWrTp7szOSaFoK0oCY492mAI1nZ0SLneTZfaAMu+ItwmUMVI7sOHILOfoh+WrVScmhNYDySazwlX65Umcg6bLZd2C8kuIhqzhHOwd4zAgHsEmEMc9RK1ALXnYsgh4WNiFNpL6h6YAUi/eO4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bLpdH1fc8z13MKJ;
-	Tue, 17 Jun 2025 09:07:47 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1049B1401F0;
-	Tue, 17 Jun 2025 09:09:57 +0800 (CST)
-Received: from localhost.localdomain (10.90.31.46) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 17 Jun 2025 09:09:56 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.swiatkowski@linux.intel.com>,
-	<shaojijie@huawei.com>
-Subject: [PATCH V2 net-next 5/8] net: hns3: set the freed pointers to NULL when lifetime is not end
-Date: Tue, 17 Jun 2025 09:02:52 +0800
-Message-ID: <20250617010255.1183069-6-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250617010255.1183069-1-shaojijie@huawei.com>
-References: <20250617010255.1183069-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1750122711; c=relaxed/simple;
+	bh=iVaWv2RzWaaVpLuDLobgnSNSuWym8RHkG55Fpi0YUmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I2pMR5cN/Urpmch8nFkkn8IyH2BYgW2Tx9VQLt6H6WsVozODryMzL1Zgbv4L2S+3cY6GiMTT1qWmFEyUygFpULIrykT0iy+jvVJCRUN/gLdw2e4Ie3l33gnHVpgmc2G8ZLPJnH2aln2eU1NkPiXjC+uN9s4Y/XLlghtX1Zs1KNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDUz+tgm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDUz+tgm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE66C4CEEA;
+	Tue, 17 Jun 2025 01:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750122710;
+	bh=iVaWv2RzWaaVpLuDLobgnSNSuWym8RHkG55Fpi0YUmI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZDUz+tgmmat53i4A+5QK7mFlGbgaBHM2POFECs9Tkk4AWrIz7JOaEfJskAUaum+oW
+	 4O6FJx5D5oAtBuWaPZPUFPlmKOrip8yd8026FEsnB+qyo5o0VeOPWy+xSZA64ZEZGw
+	 PmzX/vZJHfYY5T31ZpqfrXWu3f/PRzAq/dkpQo3K6GAXHJYvqkzFDRW6W7S/ALevJM
+	 mT89C+Tv37QjS0UF4x58lvSnig0A47YWCnkC8GnMkaa3+MhANIRZndmi56+aKqnoI/
+	 zeG4OQKyWFF3Li1Cct2omWAFieEmrVJbgeNQV8LNma7YzgOPTGRgyTs926/PnDfZUA
+	 wou35Gs6DxCug==
+Date: Mon, 16 Jun 2025 18:11:48 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>, Yury Norov
+ <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>, Jonathan Cameron
+ <Jonathan.Cameron@huwei.com>, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>, Kevin Tian <kevin.tian@intel.com>, Long Li
+ <longli@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Bjorn Helgaas
+ <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Krzysztof Wilczy???~Dski
+ <kw@linux.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Haiyang Zhang
+ <haiyangz@microsoft.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Konstantin
+ Taranov <kotaranov@microsoft.com>, Simon Horman <horms@kernel.org>, Leon
+ Romanovsky <leon@kernel.org>, Maxim Levitsky <mlevitsk@redhat.com>, Erni
+ Sri Satya Vennela <ernis@linux.microsoft.com>, Peter Zijlstra
+ <peterz@infradead.org>, netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ Paul Rosswurm <paulros@microsoft.com>, Shradha Gupta
+ <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250616181148.2aed5dfe@kernel.org>
+In-Reply-To: <20250612061055.GA20126@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+	<20250611085416.2e09b8cd@kernel.org>
+	<20250612061055.GA20126@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Jian Shen <shenjian15@huawei.com>
+On Wed, 11 Jun 2025 23:10:55 -0700 Shradha Gupta wrote:
+> On Wed, Jun 11, 2025 at 08:54:16AM -0700, Jakub Kicinski wrote:
+> > On Wed, 11 Jun 2025 07:09:44 -0700 Shradha Gupta wrote:  
+> > > Changes in v6
+> > >  * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion  
+> > 
+> > I meant a branch, basically apply the patches on the v6.16-rc1 tag
+> > and push it out to GitHub, kernel.org or somewhere else public.
+> > Then we can pull it in and maintain the stable commit IDs.
+> > No need to repost the patches, FWIW, just share the branch here
+> > once you pushed it out..  
+> 
+> Oh, understood. Thanks for the clarity. Here is a github repo branch
+> with the changes on v6.16-rc1 tag
+> https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc1
 
-There are several pointers are freed but not set to NULL,
-and their lifetime is not end immediately. To avoid misusing
-there wild pointers, set them to NULL.
+The tag was good, but when I pulled it my check scripts complained:
 
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c        | 1 +
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 4 ++++
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 4 ++++
- 3 files changed, 9 insertions(+)
+Commit a19036b86845 ("net: mana: Allocate MSI-X vectors dynamically")
+	committer Signed-off-by missing
+	author email:    shradhagupta@linux.microsoft.com
+	committer email: shradhagupta@microsoft.com
+	Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 6a244ba5e051..0d6db46db5ed 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -276,6 +276,7 @@ static int hns3_lp_run_test(struct net_device *ndev, enum hnae3_loop mode)
- 			good_cnt++;
- 		} else {
- 			kfree_skb(skb);
-+			skb = NULL;
- 			netdev_err(ndev, "hns3_lb_run_test xmit failed: %d\n",
- 				   tx_ret);
- 		}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index e0a2ca21ee46..9d7c9523c9e1 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -5208,6 +5208,7 @@ static void hclge_fd_free_node(struct hclge_dev *hdev,
- {
- 	hlist_del(&rule->rule_node);
- 	kfree(rule);
-+	rule = NULL;
- 	hclge_sync_fd_state(hdev);
- }
- 
-@@ -5232,6 +5233,7 @@ static void hclge_update_fd_rule_node(struct hclge_dev *hdev,
- 		new_rule->rule_node.pprev = old_rule->rule_node.pprev;
- 		memcpy(old_rule, new_rule, sizeof(*old_rule));
- 		kfree(new_rule);
-+		new_rule = NULL;
- 		break;
- 	case HCLGE_FD_DELETED:
- 		hclge_fd_dec_rule_cnt(hdev, old_rule->location);
-@@ -8521,6 +8523,7 @@ static void hclge_update_mac_node(struct hclge_mac_node *mac_node,
- 		if (mac_node->state == HCLGE_MAC_TO_ADD) {
- 			list_del(&mac_node->node);
- 			kfree(mac_node);
-+			mac_node = NULL;
- 		} else {
- 			mac_node->state = HCLGE_MAC_TO_DEL;
- 		}
-@@ -9151,6 +9154,7 @@ static void hclge_uninit_vport_mac_list(struct hclge_vport *vport,
- 		case HCLGE_MAC_TO_ADD:
- 			list_del(&mac_node->node);
- 			kfree(mac_node);
-+			mac_node = NULL;
- 			break;
- 		}
- 	}
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index e3f86638540b..3ffd47b30ad3 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -933,6 +933,7 @@ static void hclgevf_update_mac_node(struct hclgevf_mac_addr_node *mac_node,
- 		if (mac_node->state == HCLGEVF_MAC_TO_ADD) {
- 			list_del(&mac_node->node);
- 			kfree(mac_node);
-+			mac_node = NULL;
- 		} else {
- 			mac_node->state = HCLGEVF_MAC_TO_DEL;
- 		}
-@@ -2395,6 +2396,7 @@ static int hclgevf_init_msi(struct hclgevf_dev *hdev)
- 					sizeof(int), GFP_KERNEL);
- 	if (!hdev->vector_irq) {
- 		devm_kfree(&pdev->dev, hdev->vector_status);
-+		hdev->vector_status = NULL;
- 		pci_free_irq_vectors(pdev);
- 		return -ENOMEM;
- 	}
-@@ -2408,6 +2410,8 @@ static void hclgevf_uninit_msi(struct hclgevf_dev *hdev)
- 
- 	devm_kfree(&pdev->dev, hdev->vector_status);
- 	devm_kfree(&pdev->dev, hdev->vector_irq);
-+	hdev->vector_status = NULL;
-+	hdev->vector_irq = NULL;
- 	pci_free_irq_vectors(pdev);
- }
- 
--- 
-2.33.0
+etc. You seem to have committed the patches with a slightly different
+email address. Not a huge deal but better to fix it if we can.
 
+So please base the tag. The code can stay the same just adjust the
+committer or author/signoff email addrs. We can use this as an
+opportunity to add Bjorn's email.
+
+No need to repost the code just ping here once you updated the tag.
