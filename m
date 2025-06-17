@@ -1,93 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C1C2EFD89;
-	Tue, 17 Jun 2025 20:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C66F2EFD89
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750191680; cv=none; b=Vk7oJzab9AzZn2juyB7ZF2xCfyAOcaA6yQmY8E8VViC0grHJtUT0KZJdJh+287nNa+BjF9dbos0AsbVSnh/oTa9w/1gJZguP7iis43p9QpNYdVOicKs/mSADnEyjkrYA0a1aFdA7SbPj+IMYRw9sbe6VALzw89akBsdjBsUN31E=
+	t=1750191686; cv=none; b=cMWiQTKKeqes9eiqvCoz3CTUy1hXnniBosmXtok2SG9wdiDE1nN7Ul5xFtuiMGfc0y0X1Ezu3XtoftXagT472k8jNTDROUXxAx7X+su/f8+QTyb2ueCoVRAorFLTneS6nikZMRBZBiOaEdIhfK9uowE2RIHfJU1Xu4ln/bQqFSc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750191680; c=relaxed/simple;
-	bh=RrtllbK3ZIMpv++bqo+M6j4DPtmstNepiDX3C1BJqdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j308jOBRc55l5hU9JhAgTRtQpu0IS5h1K8sfY5GOeA/M84JEqydTH0NosHkEF8EAZbkuKOnRVRrpPB8PD3AunqmS46r1n43nXQgfU1C235ClUHAl2Vrwbc2xq7mC4M8n7LaoCzTFxdJnGe6br4q+H+sBukcPyQ/0MynHRwdixCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bt/plGbZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750191686; c=relaxed/simple;
+	bh=qLmymffMhm8FjC1apL2mvbhyrBdmq840PkeU5geePB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GKBq4dpQCkQV59vUmfa3rPk0hD1T5+gtjZy6h1ZFyJiSAE1C5h4R1uIkIner6AAa3+CtqXNekl0LJ7v0+GU6LUAJfSB5UL+1Busd+QgGdLg824VZ2+Shx5nE+glsFKpTwui4+RbF896z/BJfVwEOwc+dFeXXCM1ysDElYpWtOSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TE+HdKKt; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bt/plGbZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 125E8C4CEE3;
-	Tue, 17 Jun 2025 20:21:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750191680;
-	bh=RrtllbK3ZIMpv++bqo+M6j4DPtmstNepiDX3C1BJqdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bt/plGbZ+zWReJSuhppf0OBOsFXIRKpNTdMOk4Fvkm5aqCQiL1DKcm8Axmi9Tmp/w
-	 aSHXBNksJg4onS/aTeed/ZqCYIT/mCAZuyh8R5mPCrHIy84YyE9+bTMmxYsCnuNX9l
-	 W5gnNhZxp33GSHtQUSncqvHSQcVjqFdETtTkCaLYdAb20NalPSrT5/6p8Vks+/CmRs
-	 SO/Fo4rvXnGSQzcc0Ovq0Lzd74smhJgY5Tu5ICPVT0Xk7uGxBwPOWOjx15Mor5+TJp
-	 4wtR6EPAIpyixfbiglA7JbOcAKDTcVfM7MAFWuxTdbjMvj0y0f+xHcn9qb0ax3Ao0g
-	 8VK3HQIscFtpQ==
-Date: Tue, 17 Jun 2025 13:20:50 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: David Sterba <dsterba@suse.cz>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, linux-btrfs@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 2/2] crypto/crc32[c]: register only "-lib" drivers
-Message-ID: <20250617202050.GB1288@sol>
-References: <20250613183753.31864-1-ebiggers@kernel.org>
- <20250613183753.31864-3-ebiggers@kernel.org>
- <20250617201748.GE4037@suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TE+HdKKt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750191685; x=1781727685;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qLmymffMhm8FjC1apL2mvbhyrBdmq840PkeU5geePB8=;
+  b=TE+HdKKt+ZCPLCI/nXHf2ztEk6gWJL785L/PLlo/WnsNJL9/jIkoinnY
+   HqBDSMwh2BNPMe+SCn1l0UyC26zRREkYae5Bd9vyGyefAO1TIL0X87oKK
+   RRhfnc7WOc0WONjRjpmYwH3h8xTcvhfGlyHp/QtlaVyKtS4UnuV93+yLI
+   adV1CYwtC8v++CC1MHgsAuh5iRtbx5o82wU2R4oSgBgJYYdzMX9o9y7zB
+   DSmTgLcSqlaRBpf3ipHoxnyPlpxNBHnq18rIeH4IBYPYO6BRirJiOHVdp
+   LC/GvF/bdsJsc2/7gOoMAA/JOavr1qUnxv0sY/aDPk1MxFeg3z/tqWHb+
+   Q==;
+X-CSE-ConnectionGUID: 3SMwrAWHSxqD7r/a2qZY5Q==
+X-CSE-MsgGUID: 44LTDwyWTmqg5Ai4un4ChQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52529064"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="52529064"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:21:24 -0700
+X-CSE-ConnectionGUID: LYWGQrbIRdOW8Ldq406c+Q==
+X-CSE-MsgGUID: B+jCyXPKSea28Oo20zmI6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="149831019"
+Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.47]) ([10.125.108.47])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:21:23 -0700
+Message-ID: <cfb12298-5214-4fc1-859c-2218c7da4ce3@intel.com>
+Date: Tue, 17 Jun 2025 13:21:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617201748.GE4037@suse.cz>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] x86/rdrand: disable RDSEED on AMD Cyan Skillfish
+To: Borislav Petkov <bp@alien8.de>, Mikhail Paulyshka <me@mixaill.net>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250524145319.209075-1-me@mixaill.net>
+ <20250617200551.GIaFHKnyPV_XsSjlMP@fat_crate.local>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250617200551.GIaFHKnyPV_XsSjlMP@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025 at 10:17:48PM +0200, David Sterba wrote:
-> On Fri, Jun 13, 2025 at 11:37:53AM -0700, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > For the "crc32" and "crc32c" shash algorithms, instead of registering
-> > "*-generic" drivers as well as conditionally registering "*-$(ARCH)"
-> > drivers, instead just register "*-lib" drivers.  These just use the
-> > regular library functions crc32_le() and crc32c(), so they just do the
-> > right thing and are fully accelerated when supported by the CPU.
-> > 
-> > This eliminates the need for the CRC library to export crc32_le_base()
-> > and crc32c_base().  Separate patches make those static functions.
-> > 
-> > Since this patch removes the "crc32-generic" and "crc32c-generic" driver
-> > names which crypto/testmgr.c expects to exist, update crypto/testmgr.c
-> > accordingly.  This does mean that crypto/testmgr.c will no longer
-> > fuzz-test the "generic" implementation against the "arch" implementation
-> > for crc32 and crc32c, but this was redundant with crc_kunit anyway.
-> > 
-> > Besides the above, and btrfs_init_csum_hash() which the previous patch
-> > fixed, no code appears to have been relying on the "crc32-generic" or
-> > "crc32c-generic" driver names specifically.
-> > 
-> > btrfs does export the checksum driver name in
-> > /sys/fs/btrfs/$uuid/checksum.  This patch makes that file contain
-> > "crc32c-lib" instead of "crc32c-generic" or "crc32c-$(ARCH)".  This
-> > should be fine, since in practice the purpose of this file seems to have
-> > been just to allow users to manually check whether they needed to enable
-> > the optimized CRC32C code.  This was needed only because of the bug in
-> > old kernels where the optimized CRC32C code defaulted to off and even
-> > needed to be explicitly added to the ramdisk to be used.  Now that it
-> > just works in Linux 6.14 and later, there's no need for users to take
-> > any action and this file is basically obsolete.
-> 
-> Well, not the whole file, because it says which checksumming algo is
-> used for the filesystem, but the implementation part is.
+On 6/17/25 13:05, Borislav Petkov wrote:
+> +	/* Disable RDSEED on AMD Cyan Skillfish because of an error. */
+> +	if (c->x86_model == 0x47 && c->x86_stepping == 0x0) {
+> +		clear_cpu_cap(c, X86_FEATURE_RDSEED);
+> +		msr_clear_bit(MSR_AMD64_CPUID_FN_7, 18);
+> +		pr_emerg("RDSEED is not reliable on this platform; disabling.\n");
+> +	}
 
-Oh, right.  It's one of those sysfs files that don't follow the normal sysfs
-convention and contain multiple values.  I'll update the paragraph above to
-clarify that it's referring to the driver name part of the file.
-
-- Eric
+Heh, maybe if x86_init_rdrand() did RDSEED too, this wouldn't have
+slipped through QA.
