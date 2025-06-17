@@ -1,118 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7212EFD8C;
-	Tue, 17 Jun 2025 20:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698373207;
+	Tue, 17 Jun 2025 20:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750193048; cv=none; b=ezkt3OncxtGCC8CpqB0WW/mK3oU5VtjkMADf3NgBP3MUVTAXYb+7rZfUj0YpUF/jdwjz0PT7hczPtWGSTooI+CaSaMDPacjdBpOPVRapLOshnpXZvefBIEfLyw/0x4jFXksD+mjfZucIGCmLqkTHRzlr/2zE1UUkpp7jOd1T/Mc=
+	t=1750193062; cv=none; b=jSNyqVVDeAonuSXOjDRgJHMVDqQAY25bUjxSGIXlpKLtE1r25gTgD+T6g7r3VkET/hNZTeF6UVkJm2LaUWlT/N+6s9+TxoMUvsAov7MdI1iHP46vSP2gwZ5K/09fTilNNgysmsDhWe+eucxU0TYO4aLhJP+rTv8ITy1GQF+ieeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750193048; c=relaxed/simple;
-	bh=jFnXARC9BJC9TFd8zA3OkHO9qYcWjJfhhh7sAhe7/oE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=J2OaM5RohvVKWZUpKY5DLiMYIp/Qyv6PLR7mqELL4PaINROpaOAEaXr98AfaVYCfBQrdSa0kvNtXSIuZQbnzLEShI2DURgyGDliiI6jQmxnaT8B6UHNCdMYydVnU9IKib0VUhJUxpzqHKlTTf+Fspaq4OKHmFTITOds2VRocPmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juijGfqS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750193062; c=relaxed/simple;
+	bh=eud8+9hBr/h+CvlE4nkoKsZa4yq/N7FYS1PjHN6b6JI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tRTZdypLKuR2PutaSYnT2NlzTh9rndEKFSM7sfl9Z0rFj9EP9wHz/XK0NSbnhyOWEOtVHI/aXHHFC25Miv0I5SgtAXP+PfsfYyovQ5hG3HW5f2tWxFozBY0h99TPmH++H8G73JeKSgDPiS7T28GvR5iHZ99gWNZpKho2pKYtfDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S7zK/KYH; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juijGfqS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C41B6C4CEE3;
-	Tue, 17 Jun 2025 20:44:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750193048;
-	bh=jFnXARC9BJC9TFd8zA3OkHO9qYcWjJfhhh7sAhe7/oE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=juijGfqSThiZkVyVg0Y1zzpbjeFASpdI1Jfglif68aWizzSiJcb+WwC2oHOyxpAPX
-	 QaDW0Eg5VaLvkZbm0+4A9d/7jyne58Jcdov45SyUfds5dq/1b3ddHx+PZb58jVXBMq
-	 PciqjKtLn4dCvFUtYxuMhl/HV6Vr1VPmcnuh6OKzqD/I9oGYPd0fy5XzDxK11Glf8j
-	 nduWjH/drTuzoWT5XxUCX/NZOeAp1fFgZBdAczMyf7y9dfb07XSpwJ6jkcUTts3O9B
-	 iKMRqr1vfsBGakcJpDdf+xISo7E5dz7js9W5YvVEMOqU0U/PjrBYSCFb5mwwuS2NxH
-	 fTADFWiFpF4nA==
-Date: Tue, 17 Jun 2025 15:44:06 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lukas Wunner <lukas@wunner.de>,
-	kernel test robot <lkp@intel.com>, bhelgaas@google.com,
-	oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-Message-ID: <20250617204406.GA1151053@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7zK/KYH"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ad572ba1347so991603266b.1;
+        Tue, 17 Jun 2025 13:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750193056; x=1750797856; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mZ2wdMA30iMLFQIHflx4kCA4CDn4/hP2CnpEzLseuO0=;
+        b=S7zK/KYH0fFds83SmHqAdkqzlk5cjusn9RnlQTGgqOcNN37gKUtF1oC5h/5YrJxvxZ
+         Zw2e5YcEVKgt56XiO3X+dXG4Z7Z/llDUdE2LD56sowSdYq2uplO2g2IeGhFq4xLUI3FE
+         ZRgb8582v1TQsayb1OCe+BJ4JiQL5x0tvpL6oriQVhsZITKLnrQNo5X2OU3VZT8lg0X7
+         5A/2apusl8cxM8XrubqUtVOBVe0k9QhuSTafcgYi63XER9Q44XHxapNe3HjXjBA61sKB
+         vSssGBKhHa+ulX2xFRZ7wv/yA3QhFRJlCwh0VhoHmBRoUi/1i2YhMdFwb726TSPy8itD
+         pOkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750193056; x=1750797856;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mZ2wdMA30iMLFQIHflx4kCA4CDn4/hP2CnpEzLseuO0=;
+        b=KWA5l43l4d16kbSBZSTaQttXJvuGKCuW69nP6/Df9Bym8JNQW+Kdqbehn+XU/ozzzV
+         J5fAoIGagGEYysfuHypSDhf//GsDNzeGbkdJ6d7WE7rKSILtRcJLCCxs7pEOkyysozLQ
+         C3/b71xesihNsvYyEdIoA7If0jg9CUxghduOu56HHbByBrOgZ/SLyCyMz6FJYsDHO8Fn
+         QnYWKfcVjYLmbEK6BYB1HTfDFCbCLufur8gUvby5rSHKt0q5e3jOJwOO+rgYiaRvnRXq
+         SPwnUfe3XJpDsJtbr0JAtzPcYfgIlLK5qmF83wuOWkNsnQH2Ob7Ab9wpqyz26Stdb0XO
+         tnVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUyEfhw0sM6wLMYoREENsHuE8/fxFvXUd53jHAfchC3jDj+ATH/da2UmEq4TmHSu2PXGWG9j/Rn2dm2bZFB@vger.kernel.org, AJvYcCXTmERPmeVm//z/0psO+/ZsVSCFIKJh8YoWYYE1rCKRfuuk6WNro2j+3CHc4V2MAYCZBbsBC8XFR2mW@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPZummAmcH0uPCu9GZSZVM2C7nTJT4QSBmx4yFO1Wt929Neka3
+	y0B6PHbkpJpdp5x4vIALIHuigS4oOSlcqOg5Fj99sOR3UEXs61y+ZsoNRWyQo8be
+X-Gm-Gg: ASbGncti+tlPQm9BgldwIYGepXeln4hbxwDF9FGGZesrcPYcsg6OqejiKOQlGMT8cgQ
+	3i7cuoWkEbTuzbkKrZD9do/4APtgYkVKBzwsKAxfio1FwPwvTMHin01fe/hCXtpAYZRqJZqAssS
+	cCweFcJynkVm+7om+oct+Itfeplh10BTfLcytd/j5tkFZvfTEoTOphdu/TG9182J8uDszrAVI68
+	/qqd3UjiBYWJDEG72qFeJMYSxVqUQTt0An/6Ro6cbwXPOLo8s2zBvRr9H2UEuruuRoZK7YwW/Tf
+	1MxsHGUbN6Ga9Im8AASrdmNzBuXnmKsbk2M0mB10Wo8dMrPLgSg74gg+NzLWcFg3dXv4Vppzj9q
+	dhlRTzRj5qr+NxxKuutaGXg8H6Biz
+X-Google-Smtp-Source: AGHT+IFfQM1cqbFD6eGFnqg1mn5mmuRAH3iBv3+M8HBluw5mINqhhx+vaOZni2Dka3msD7vASmKwgg==
+X-Received: by 2002:a17:907:c1f:b0:ad5:6969:2086 with SMTP id a640c23a62f3a-adfad437e91mr1285998166b.37.1750193056252;
+        Tue, 17 Jun 2025 13:44:16 -0700 (PDT)
+Received: from maria-HP-Pavilion-Laptop.home ([178.226.54.132])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec7b8fe73sm911857866b.0.2025.06.17.13.44.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 13:44:15 -0700 (PDT)
+From: Maria Garcia <mariagarcia7293@gmail.com>
+To: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Maria Garcia <mariagarcia7293@gmail.com>,
+	Maria Garcia <mgarcia@qblox.com>
+Subject: [PATCH 0/2] *** Add support for TI TCA6418 GPIO chip ***
+Date: Tue, 17 Jun 2025 22:44:00 +0200
+Message-ID: <20250617204402.33656-1-mariagarcia7293@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <pwb4g7worzsnryimt3ymdfsxu7bxvhlr74rqodmiof5auolhrc@vpi7wzrp7osh>
 
-On Mon, Jun 16, 2025 at 07:14:50PM +0530, Manivannan Sadhasivam wrote:
-> On Mon, Jun 16, 2025 at 03:30:27PM +0200, Bartosz Golaszewski wrote:
-> > On Mon, Jun 16, 2025 at 3:16 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > >
-> > > On Mon, Jun 16, 2025 at 06:07:48PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Mon, Jun 16, 2025 at 08:21:20PM +0800, kernel test robot wrote:
-> > > > >    ld: drivers/pci/probe.o: in function `pci_scan_single_device':
-> > > > > >> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create_device'
-> > > >
-> > > > Hmm, so we cannot have a built-in driver depend on a module...
-> > > >
-> > > > Bartosz, should we make CONFIG_PCI_PWRCTRL bool then? We can
-> > > > still allow the individual pwrctrl drivers be tristate.
+This series introduces support for the Texas Instruments TCA6418 
+GPIO expander chip to the gpio-pca953x driver. It also includes the 
+necessary device tree binding definition.
 
-I think I'm OK with making CONFIG_PCI_PWRCTRL bool.  What is the
-argument for making it a module?
+Signed-off-by: Maria Garcia <mariagarcia7293@gmail.com>
+---
+Maria Garcia (2):
+  dt-bindings: gpio: pca95xx: add TI TCA6418
+  gpio: pca953x: Add support for TI TCA6418
 
-When pwrctrl is a module, it seems like we have no way to even
-indicate to the user that "there might be PCI devices here that could
-be powered on and enumerated."  That feels like information users
-ought to be able to get.
+ .../bindings/gpio/gpio-pca95xx.yaml           |   1 +
+ drivers/gpio/gpio-pca953x.c                   | 110 ++++++++++++++++--
+ 2 files changed, 99 insertions(+), 12 deletions(-)
 
-I do wonder if we're building a structure parallel to ACPI
-functionality and whether there could/should be some approach that
-unifies both.  But that's a tangent to this current issue.
+-- 
+2.43.0
 
-> > > I guess the alternative is to just leave it in probe.c.  The
-> > > function is optimized away in the CONFIG_OF=n case because
-> > > of_pci_find_child_device() returns NULL.  It's unpleasant that
-> > > it lives outside of pwrctrl/core.c, but it doesn't occupy any
-> > > space in the compiled kernel at least on non-OF (e.g. ACPI)
-> > > platforms.
-
-I don't like having pci_pwrctrl_create_device() in drivers/pci/probe.c
-and relying on the compiler to optimize it out when
-of_pci_find_child_device() returns NULL.  This is in the fundamental
-device enumeration path, and I think it's unnecessary confusion for
-every non-OF reader.
-
-> > And there's a third option of having this function live in a
-> > separate .c file under drivers/pci/pwrctl/ that would be always
-> > built-in even if PWRCTL itself is a module. The best/worst of two
-> > worlds? :)
-> 
-> I would try to avoid the third option at any cost ;) Because the
-> pwrctrl/core.c would no longer be the 'core' and the code structure
-> would look distorted.
-
-I don't really see adding problem with a file in drivers/pci/pwrctrl/.
-
-Whether it should be "core.c" or not, I dunno.  I think "core.c" could
-make sense for things that must be present always, e.g.,
-pci_pwrctrl_create_device(), and the driver itself could be
-"pwrctrl.c"
-
-If pwrctrl is built as a module, what is the module name?  I assume it
-must be "pwrctrl", though Kconfig doesn't mention it and I don't grok
-enough Makefile to figure it out.  "core" would be useless in the
-print_modules() output.
-
-> Let's see what Bjorn thinks about option 1 and 2. I did not account
-> for the built-in vs modular dependency when Bjorn asked me if the
-> move was possible. And I now vaguely remember that I kept it in
-> probe.c initially because of this dependency.
->  
-> - Mani
-> 
-> -- மணிவண்ணன் சதாசிவம்
