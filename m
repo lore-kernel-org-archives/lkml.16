@@ -1,123 +1,100 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFA62E7160;
-	Tue, 17 Jun 2025 13:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60EAA2E7179;
+	Tue, 17 Jun 2025 13:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166619; cv=none; b=QwEIq2fiRVQUixobG+G5Ng7DjUA0rYMa/rOSGnqSW0J02XlMFtweaGS9J0yFMYI1Yr4J7Cce5HQqIBTalYesrRDm61s+/1CFvmnYBn34fdqg+gXJ5Sy1YM9CGfrjpCwLIpIRR+If/KlH4t1Mh4xctTdWHDYPuQwXlVDl+dWqtZs=
+	t=1750166670; cv=none; b=nQqacByYDLMdZ+jG8VpqlUQUSOOBdjyER6SDhyTR10EyvpwMUXRVT/+GCLc7UWntZ2W88JIlmX0pxdRsuM22/mBb7BWhleYK9PZG+woeu1RKc6EGG0QL3sgXJvL97UghQwDsxu9Br/T+uM4uFHf9mFgriI0xX4ETyggmYoawsps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166619; c=relaxed/simple;
-	bh=aq+jLmLEZueUREtaCloPI8dNoT19sceodfbAKjhjFCY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UIdSW7XlExN9Sl1X9V4CWRMq2ivcf8mtwdiDNwMhi4fbbvHtdeKCLdXiB736iPupOjDyHcN4OuUBteuLKWUU96gzKO2yY5Dxq/MrP0Q+tt05b+WmLifYEwyltAgwyw/h559jOWZbSyC/ZAbu9dgELE++ZpZNznMNyQqPQPamv7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/LLvZmM; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1750166670; c=relaxed/simple;
+	bh=rMdH19Ha3Xz24HHYBArjf+McyOLpaD9H7J/RsDJcwb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fD/KnzLOHSb5vNqCcVP0tGYsVipP4YVDNRtub6k0jEqrpFeJ5MwhIDbv72yHQ15YJ92ODqdVO1rKq9ZDuFiRD+dsempAFChCt8Pv5Aia2RG2mjrZLZK1Jm7iwz2PQZaoric63eTq337HnaC8ZhCGKFGOI/AFaPblfk4xtcad93s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/LLvZmM"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso10331975a12.2;
-        Tue, 17 Jun 2025 06:23:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750166616; x=1750771416; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Da7GngsMQn+NCqkD4TvMnzofO+IHiaf6PmzIm2w+GkQ=;
-        b=S/LLvZmMYIc390LjFnsM/8hEit306FUYPx9j40KQLIqDjpAhto8LQqmfWmHBKycYnM
-         /koZfjoaJDiL+PyImkhJPS9rZJbZJxXAp1YTqDMJVdE6mp3jh7SbJDb1pjXoiCN3Ljz3
-         KXnwyMAQ4ag30VgrWcPii7NqtEh9XZgomFrqHZVnbI3BI1cEVDAfm4G5vLCpSdivg9FR
-         KKyidejDobs6jJqaaass3zkkAOBj9CXVP9Hi7Fs43dixN3lVw8yfsHWpj3jNFQ69FDrn
-         CUxmmJfIHrGS6E6eSI3UdBu2a7JqOBfSzLZVPgnmO4Z4MY9twGoXmL/ajf7IPWOT6vHz
-         9Otg==
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so1054475966b.3;
+        Tue, 17 Jun 2025 06:24:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750166616; x=1750771416;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Da7GngsMQn+NCqkD4TvMnzofO+IHiaf6PmzIm2w+GkQ=;
-        b=TOO7rY5D/FC0/dqqZiEtLeIhiSzDEHW1TEWKJzDGNEskQIBCeuJ0stjgZsGmweoDs/
-         /csOv+4LqSoKQ4NBU8q436/ml6zenZ3dt2ON9qx82VcjNe+jyIsUG5yPOmhml7SXSN7l
-         Ab/aXObs8Q2Xz4h0bDl6OurAE2osPHijKliiZK0LU0zCeio6EBe49M25dEoxLXmpOOWP
-         WkCKaBGSc9s8u1k0hrgfPQwCFY46u1GDlEThwyXrXb0ZrQi0Vlqs98MtfzFxK+DmYlwz
-         Ce7gvp9uGmhGs0S87ATF/5m9VFMBATRyopSacBh1/MiIIM80OUb07QAcLOd3/2p5T2BY
-         Dmfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUXXuazmmx581XZ76XssK+4R2b8h/HdBVbjHMegLO1jSem5ZAUEoyOLYqSjfH1rAaqeUuhlRx6qbPMR@vger.kernel.org, AJvYcCVTd/URaHSgAesFxAXbX50JDw9Qo0aU+2mGOA0RGjKDqKsidYxlQYlapIJ1dMNNwVENBdoB+v2WAxfUlw0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcUUcKxprCWQA5q94TH9VoE3FWywg3EVmzkCIba1x0Whd3+wJ6
-	ilCz9QRAvS/P51NgmQukZ7kYeQQEW/ruiV/JC3POkIr1Jf/KL5pDKgb6WiFELXCgLn0Ut4ra5Ld
-	HK591qqGl3xZtGyluBH+JZ1DSOh7pV6mzjN+Wnf4=
-X-Gm-Gg: ASbGnctMhqH9QeG32FimNHQV4M2d21A8F81DhTXpfYsH6gb0FmZfw7cw0oPa7LkKjqP
-	I3Cdhi76W6YKr+6iGbXd7CD6HCZkGUhL1d+m0fUEX9pEriY9xVuwHh+CpLY4VQgKTg3OIhySSAG
-	TxW7NFGjGF5cL5Cgmoce286ZjtTp4AfVkP86GSisehmwEZ6i7Y5MOkBuvw3XkMUhxovrwX4qhdB
-	uSc4lD9uTDsQcFc
-X-Google-Smtp-Source: AGHT+IF35zRDouRKgsl23iu8Ip8Af2QD0L6RBLQ4Z6LxvD9CFO2X76jNFfDTlSdWniAE8FphyNnG7TzaPsay7oaHoT4=
-X-Received: by 2002:a05:6402:510c:b0:602:3e3:dada with SMTP id
- 4fb4d7f45d1cf-608d0977a42mr11931446a12.25.1750166615605; Tue, 17 Jun 2025
- 06:23:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750166667; x=1750771467;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yZICFVnnnVkMN743/FIJcvBC1yVrX98jV652ZYbnCU4=;
+        b=iW9e0F3tdtMOpLJ/74zfLV8/2MYjDzYYkObQGPu0OqwiodwtPbL/5MgfzHVVx7qq8j
+         I2TbNpD2rKXnjhbTlWfTjkmgcwMy6ALXnOsJRnxPsTDlLY6qltR3UsWINha1R1vXSK+k
+         +fKA+LHgqlbm2GzugBxaONQ43Rs/IbZTk+cSAhCXC0VX42eLIy5u/dbBdwGgt/iJKBNX
+         +alqB4RMtZDVcirf9ZZg/RO9bq/zGJLoVX9LJ+0N7iNl9QgU7REtbS1kc9wrVQiN6W5z
+         wVHWV7sO0xagaLDhGou4Gj95h/+Zx1DPKL7Uc9iwUBba6uYIsA3ARP4hDbJdtWf6kcbV
+         kPMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFBNv1+1mU0iLQ2W8ptLoZBmTK6QUizb1HzqtChlYiZ+4ntYuzl6YTlrhqdOAF80hB9gkpPHg9uPubHGg=@vger.kernel.org, AJvYcCUp4V4XB+hbUDvvgfieilfkOieK/pdRpNdupndOfOUZ1f11hL4OZe5UGR5of8caT0lASS40M3hO0FFdxDd8E5H4@vger.kernel.org, AJvYcCUyguMTzq10E6aGTw7Kv6Q7oYZh1PM5iTt8OswYlgtuiaFQoxjwnA+0sARI4mbQ3OD1l0iTRGEs@vger.kernel.org
+X-Gm-Message-State: AOJu0YwjTnulWUpA+0BN+u0sOGojFnMq8R0Vyu830XJ+4WqBxDptqE2p
+	gedeYVxKJhRmRxkgUTNhODrrFqiSxjHLNOz0gZhk+NRaxctyrABF3MeS
+X-Gm-Gg: ASbGnctc5Jkbhi0XU/LG786kPUUrEghnZT3lBRkgfG8Z28hQ/Di3uGP7UdI07oz44aD
+	t/zWeDM4jhdTlalOkRe3nDba7lK1Yzu6Lt723wkJwwNdLagT7Gbo06URic4e5Ek1m8d12tq+blE
+	+7ye5ilroEP3unnN3XSZgD4W8940ay2UkyZfMjNY72ZU3x270Z0kvQo0k6R2VLfqFW8JM66KlWC
+	7GjRphQW8fiOsqDjEZ0dWXNrga+Wid5ZiCG/ilkYYlLZ7D0KxUSUhE6p6jANodf+Pv1FEEsBZaZ
+	ZZErDh0MkzlZi2jemqJw5g2py/fbWJk2JTbGfIAxm4mqMJ5XTn9Abg==
+X-Google-Smtp-Source: AGHT+IGb/qV6q15Q5myFKayi4K5nSnZqUdVvCniIl3Tz87O9hLcBmM/EKSqLdBxQCLQnRtXfxzrDhw==
+X-Received: by 2002:a17:906:6a18:b0:add:deb1:d84d with SMTP id a640c23a62f3a-adfad29d0b3mr1296023866b.1.1750166666357;
+        Tue, 17 Jun 2025 06:24:26 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:71::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0138c533dsm11930466b.7.2025.06.17.06.24.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 06:24:25 -0700 (PDT)
+Date: Tue, 17 Jun 2025 06:24:23 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	David Wei <dw@davidwei.uk>, Shuah Khan <shuah@kernel.org>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	gustavold@gmail.com
+Subject: Re: [PATCH net-next v3 4/4] netdevsim: account dropped packet length
+ in stats on queue free
+Message-ID: <aFFsh6kFOkhGOO7Q@gmail.com>
+References: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
+ <20250617-netdevsim_stat-v3-4-afe4bdcbf237@debian.org>
+ <20250617055934.3fd9d322@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616110313.372314-1-pranav.tyagi03@gmail.com> <2025061610-basics-attendee-cd02@gregkh>
-In-Reply-To: <2025061610-basics-attendee-cd02@gregkh>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Tue, 17 Jun 2025 18:53:23 +0530
-X-Gm-Features: AX0GCFvpbJIGp1gRUpPgvLsO-IJEhIBlsBKcgaCSHrIHCpbktmH_xOFexTbviFw
-Message-ID: <CAH4c4jLn78OYPqqEESh6vRhxfD8s=J8a-cX0WzVE1bEPKVAHEg@mail.gmail.com>
-Subject: Re: [PATCH] fs/xfs: use scnprintf() in show functions
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: cem@kernel.org, skhan@linuxfoundation.org, linux-xfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617055934.3fd9d322@kernel.org>
 
-On Mon, Jun 16, 2025 at 7:50=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Mon, Jun 16, 2025 at 04:33:13PM +0530, Pranav Tyagi wrote:
-> > Replace all snprintf() instances with scnprintf(). snprintf() returns
-> > the number of bytes that would have been written had there been enough
-> > space. For sysfs attributes, snprintf() should not be used for the
-> > show() method. Instead use scnprintf() which returns the number of byte=
-s
-> > actually written.
->
-> No, please use sysfs_emit() if you really want to change this.
->
-> >
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > ---
-> >  fs/xfs/xfs_sysfs.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
-> > index 7a5c5ef2db92..f7206e3edea2 100644
-> > --- a/fs/xfs/xfs_sysfs.c
-> > +++ b/fs/xfs/xfs_sysfs.c
-> > @@ -257,7 +257,7 @@ larp_show(
-> >       struct kobject  *kobject,
-> >       char            *buf)
+On Tue, Jun 17, 2025 at 05:59:34AM -0700, Jakub Kicinski wrote:
+> On Tue, 17 Jun 2025 01:19:00 -0700 Breno Leitao wrote:
+> > -static void nsim_queue_free(struct nsim_rq *rq)
+> > +static void nsim_queue_free(struct net_device *dev, struct nsim_rq *rq)
 > >  {
-> > -     return snprintf(buf, PAGE_SIZE, "%d\n", xfs_globals.larp);
->
-> There is nothing wrong with the original code here, you could use
-> sprintf() and it too is ok.  So this type of change is not needed.  But
-> again, if you really want to, use sysfs_emit() instead.
->
-> Same for all the other show() callback changes you just made.
->
-> thanks,
->
-> greg k-h
+> >  	hrtimer_cancel(&rq->napi_timer);
+> > +	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
+> 
+> here we are in process context and debug checks complain about the use
+> of this_cpu_ptr(). Let's wrap this in local_bh_disable() / enable() ?
 
-Hi,
+Thanks. I was able to reproduce it. Your suggestion avoids the complain.
+I suppose we should just wrap dev_dstats_rx_dropped_add(), right?
 
-Thanks for the feedback. I understand the original code is
-perfectly fine. All these show callback changes were intended as
-cleanups. I'll drop these patches. And will use sysfs_emit() if
-I ever have to.
+	diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
+	index 5d0b801e81129..07171cf8b07ee 100644
+	--- a/drivers/net/netdevsim/netdev.c
+	+++ b/drivers/net/netdevsim/netdev.c
+	@@ -635,7 +635,9 @@ static struct nsim_rq *nsim_queue_alloc(void)
+	static void nsim_queue_free(struct net_device *dev, struct nsim_rq *rq)
+	{
+		hrtimer_cancel(&rq->napi_timer);
+	+	local_bh_disable();
+		dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
+	+	local_bh_enable();
+		skb_queue_purge_reason(&rq->skb_queue, SKB_DROP_REASON_QUEUE_PURGE);
+		kfree(rq);
+	}
 
-Regards
-Pranav Tyagi
