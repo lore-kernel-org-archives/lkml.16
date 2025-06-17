@@ -1,59 +1,35 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144012957AD;
-	Tue, 17 Jun 2025 23:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6322D1F5847;
+	Tue, 17 Jun 2025 23:20:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750202393; cv=none; b=qRgzuCkqDEVuPvIN3rclUMwgSuVwCAZsANblmZPH4Dwl/cdOE/PJSxmZiqIklmBAmeVO5thrbCpAQ3nV6zs3oTj4bP7M04+zwHJD6V5LhkGNYBNMjKEFPIIgLzyaDzCAroyGvAANxZF24iV2Rig/Bs7FF314P7tMBWH7d6aYT+s=
+	t=1750202402; cv=none; b=cBYJa8qlqKsvvnGKL+nkuaKku3RbcXHM4reLIXt3vY/8bv+zzOb97UMGqLZ4QoKBZZD3JeWqS4/eE2zwZSpau7WVDD3oU7U/7qUR8Iohb1XfTTy+xGIQwWof+wGcl7Rs+OdAyJ0AE1Fali7cFrv/9pMgjejeRg94QiwNHJ4MP9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750202393; c=relaxed/simple;
-	bh=w4a/xlZzvzSTeyCYtqL9aFLjbsWcjKMfPUooqnwUlXU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Or85ZStXCWGnacc0kxJlhjAIB24JtNYcYRXEwnMA0DJ1N91PI1a+mFObh/lCe7PYpK7KVG0EjP12UzzV4+XRHuehmPTYZz54cEJ9Aeti5C8cvLvhDdLVyvQdLOzV6xvJ9PInkcIs/4LP//W29N/IceGXp7kbTaK5RCgaVp556PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFEJsdLe; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750202402; c=relaxed/simple;
+	bh=tUMfbZaV2KdqnBHZfGQhAgjQy/l7+5wMfermKy1C0Xs=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RYlC9SNkSiBWU2CFSnn2Kz5joj8Gl1BCAae7vVqSCrA8dJ8n/1aaM0yltheumOO7LQdsTm4P6F8RYUdTc+1ua7Mp7eqS1zseT2Xaa5MkaMKoG/UTLiYPZIkTdvVv7G4RYtC0nW2dgNAnA24qELJdejeZ0nbp0TEQpjXo1xyrAbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNCj+k3q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFEJsdLe"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750202392; x=1781738392;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=w4a/xlZzvzSTeyCYtqL9aFLjbsWcjKMfPUooqnwUlXU=;
-  b=ZFEJsdLevJg05UmzxzZrRZUFnj7bp73Hh1Or+eHWmOWgrwQpI0aZy3hj
-   9SB/kak7iYn1m/6YW3I4u/X0HZuXAaDBGUfg+YNWadB74USzXf6Yjlv3e
-   P4gfsdSwWtpDU3z9jjk0WOMIvIappRjfXaroUYJnnEYV7P9LahW2ONrfo
-   0IzDfVB3sfprGWcXXTVJcl9UYwaQ2OU9uVtPQRbkB0H1CWI7JWPB9D2cR
-   z2fxAPSJvuAOVQh5TNyhjAA2zp6SE3ceKvJG7gWmGYWj9h4G5TW22yG1Q
-   RUrlMiSOMmFzISpw8AWmvJhVZZ12hvlDwGkS9B0gFpNEX0Vmyrnxet4Yw
-   g==;
-X-CSE-ConnectionGUID: RTnOJGrYQGyANF+t/b1TeQ==
-X-CSE-MsgGUID: Nxjpg6YiQ6evvdPe1TOqiA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63439716"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="63439716"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 16:19:52 -0700
-X-CSE-ConnectionGUID: JaLInWayQWiJjpRNfSwbfg==
-X-CSE-MsgGUID: pQ6mF+dRQWuhjiqMsiw52w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="152921944"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
-  by fmviesa003.fm.intel.com with ESMTP; 17 Jun 2025 16:19:51 -0700
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To: rui.zhang@intel.com,
-	daniel.lezcano@linaro.org,
-	rafael@kernel.org,
-	lukasz.luba@arm.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] thermal: int340x: processor_thermal: Add Wildcat Lake PCI ID
-Date: Tue, 17 Jun 2025 16:19:40 -0700
-Message-ID: <20250617231940.3314546-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNCj+k3q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9ACC4CEE3;
+	Tue, 17 Jun 2025 23:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750202402;
+	bh=tUMfbZaV2KdqnBHZfGQhAgjQy/l7+5wMfermKy1C0Xs=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=BNCj+k3q0uLbx1jAxYLpfFz/Pa4F3J3n9K2AiR1YNH4Y92v9MlWecdNPYoG4S/ujb
+	 PHlnbVao3Hj0xmvBC8pzYhZdOHENJYHFsLSv+Wp626xp8blbGgx9C1a3p1zVon0wod
+	 EoR9lBNnSyL5iRORJmTShxwVwkTDHt4dzABYPnlJwMMV5m4U9GCg8s1t2QV+w8ZNtz
+	 OYEIz6p8VW7gCiGykaNabC/1aFkS9G8F0UdpaB0eiN064XWyriZdLyguxGqJpSpt8Y
+	 Kia9TZh87uRe6ZQyE0mkaedm0SLSFOqbEwDEMC50WOLWr8as5Up9wo1JldgdGteEC3
+	 rcnI3VkihdF5Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD3538111DD;
+	Tue, 17 Jun 2025 23:20:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,55 +37,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] bnxt_en: Improve comment wording and error return code
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175020243050.3732875.7654821234752870349.git-patchwork-notify@kernel.org>
+Date: Tue, 17 Jun 2025 23:20:30 +0000
+References: <20250615154051.1365631-1-alok.a.tiwari@oracle.com>
+In-Reply-To: <20250615154051.1365631-1-alok.a.tiwari@oracle.com>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ darren.kenny@oracle.com, linux-kernel@vger.kernel.org
 
-Add Wildcat Lake PCI ID for processor thermal device.
+Hello:
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../thermal/intel/int340x_thermal/processor_thermal_device.h  | 1 +
- .../intel/int340x_thermal/processor_thermal_device_pci.c      | 4 ++++
- .../thermal/intel/int340x_thermal/processor_thermal_rfim.c    | 1 +
- 3 files changed, 6 insertions(+)
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h
-index 9a6ca43b6fa2..49398794124a 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h
-@@ -31,6 +31,7 @@
- #define PCI_DEVICE_ID_INTEL_SKL_THERMAL	0x1903
- #define PCI_DEVICE_ID_INTEL_TGL_THERMAL	0x9A03
- #define PCI_DEVICE_ID_INTEL_PTL_THERMAL	0xB01D
-+#define PCI_DEVICE_ID_INTEL_WCL_THERMAL	0xFD1D
- 
- struct power_config {
- 	u32	index;
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-index 00160936070a..d4d7e8e147d2 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
-@@ -499,6 +499,10 @@ static const struct pci_device_id proc_thermal_pci_ids[] = {
- 	  PROC_THERMAL_FEATURE_DLVR | PROC_THERMAL_FEATURE_DVFS |
- 	  PROC_THERMAL_FEATURE_MSI_SUPPORT | PROC_THERMAL_FEATURE_WT_HINT |
- 	  PROC_THERMAL_FEATURE_POWER_FLOOR | PROC_THERMAL_FEATURE_PTC) },
-+	{ PCI_DEVICE_DATA(INTEL, WCL_THERMAL, PROC_THERMAL_FEATURE_MSI_SUPPORT |
-+	  PROC_THERMAL_FEATURE_RAPL | PROC_THERMAL_FEATURE_DLVR |
-+	  PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_WT_HINT |
-+	  PROC_THERMAL_FEATURE_POWER_FLOOR | PROC_THERMAL_FEATURE_PTC) },
- 	{ },
- };
- 
-diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-index 3a028b78d9af..1f3d22b659db 100644
---- a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-+++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
-@@ -442,6 +442,7 @@ int proc_thermal_rfim_add(struct pci_dev *pdev, struct proc_thermal_device *proc
- 		switch (pdev->device) {
- 		case PCI_DEVICE_ID_INTEL_LNLM_THERMAL:
- 		case PCI_DEVICE_ID_INTEL_PTL_THERMAL:
-+		case PCI_DEVICE_ID_INTEL_WCL_THERMAL:
- 			dlvr_mmio_regs_table = lnl_dlvr_mmio_regs;
- 			dlvr_mapping = lnl_dlvr_mapping;
- 			break;
+On Sun, 15 Jun 2025 08:40:40 -0700 you wrote:
+> Improved wording and grammar in several comments for clarity.
+>   "the must belongs" -> "it must belong"
+>   "mininum" -> "minimum"
+>   "fileds" -> "fields"
+> 
+> Replaced return -1 with -EINVAL in hwrm_ring_alloc_send_msg()
+> to return a proper error code.
+> 
+> [...]
+
+Here is the summary with links:
+  - bnxt_en: Improve comment wording and error return code
+    https://git.kernel.org/netdev/net-next/c/10f3829a1309
+
+You are awesome, thank you!
 -- 
-2.49.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
