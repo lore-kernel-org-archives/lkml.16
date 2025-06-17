@@ -1,250 +1,185 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE0882E7191
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6A92E7191
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168299; cv=none; b=XkviZE1IXWkuitH/J7a/vbs1e5M6+WiCgIjI8Oy7wa0ADRGt+xc3Ze/N1WbYF6kPm1cKuFeEPRW3wA4W9R9BQbZw6eBfUt/Be74D7v8vQNmwo5LWMb8tjzv2QLOZNjwIkrsdImwEkh664OvnlKHC5/DjnFMBLiLfj5rBsg16QW0=
+	t=1750168339; cv=none; b=a6KG6SAOv3FDF4N/V+LJdqCP2nDAxv14ihWqUc2q2zUIRjDN92xgbrngIUmj+b4iX8eYd0ocl+odOAXRwPUEmTKE0TxoZQ6jXMwFM1jXWyBRC7ZrgdoZcYP2wrajm2tKY/zHw3MTufZJ6aaKw3+1sILgW13WVp5pS3h+hBtf60Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168299; c=relaxed/simple;
-	bh=7rKV/WXwa23e0RUgVXUTyam5owaMQuGe0Fg2RUFaTpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kfjxrr2W14Sj3t82zJlKZfFvIiZBvfgmuRrW4oo7npnvM4P5yVaonu2i6kTh+79tT2XxzoSS1Fo2AAeQpEjoJFZb327nm+FFQyb4yqpT8HVIk9EHetLgaZq6MM3vF8EvfUaGSXdJEJ/8HxT46iqcF7yUj6HTP1cfPqpdnIA8PdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=kih8OAyn; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1750168339; c=relaxed/simple;
+	bh=wS3Way8dfKpc3WnEiOR/twvvaJyIadif8idx8FeygdY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=svPHivsRm9TqvCuWHYaPH3R+My520kLrhNE0yUQsyS+AhzxmFX4E4JPyA8Ie7OVjFLZfWR9POunB6G8CnO5hTyNavtl8YeazG4HFv62J0bBrqRt4TAAa/k9BEBYmOil/HEe6JQTZVR/0HKf/TyJCICMi7p6mGiXxORZCLhD/7TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M0jhyHqt; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="kih8OAyn"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a52874d593so5564271f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:51:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1750168296; x=1750773096; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zLXhTtOfStKj2eC1LsdyW0wCGCB6laJXoX9t5eau+jI=;
-        b=kih8OAynwMXzIajDahlSK9RV1YLkQ2dAe2sdFJP0QbrYLh8vUq64WP9JQcySThbK2Y
-         ZXSYXpih3Bav2qKm8e9Tbvj482qoEvUE3csG3IfLNMnaVrmyQGofM1PL1ZpNmh9GGu+a
-         VvNhcOgkC4+9tx39RK7B2wYdS0z1t73srSuac=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750168296; x=1750773096;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zLXhTtOfStKj2eC1LsdyW0wCGCB6laJXoX9t5eau+jI=;
-        b=AdQuJCX8rS1NcmdM1ZCbgx5TtN8yvyE0RKQ2EbAu8hBuXzMTjeLwKedhid6X+5i69Q
-         0b+hCd6f8/emaTQyl9npQtO8ZHPGzFOaY24ux6CuKjI++e6UHb4eIOdXHoumZOTuejuD
-         nqRZZtWve3uxy5ViQIipJ0eQFv6IsRH4HoIRQH9LUbL//tehMcR0AAfCJk7CmbCBd3wo
-         bQymqHz8jvNHDc8XQP71obkzWUvwd5eyzNHwzogZIRCfrdBbPK1QkWMlOHHx02QwKpqX
-         5kyt8JZIxCQ+9RIxhOi5cwqEUIhSogcmHFX5o1fWEPp2etlH6mHLKGagkQLgyb0dNkUB
-         i19Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWcQQH563B62jbc76GWrlfuBzrTcbUp8SdnpaPJE0vGiPqnd0j061st4fkeIiNmdIyIQfZtejDdnEL99yc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNfrd8UPu1vpA5bWjIhBsRS4nV5jpS2UUOkN3kwTQLOFVXa8I8
-	ylOsxxYrJyLEb/9KJeGedNy998RMKC9bpD0W/UZe983vQxc40WH1wZl9lZhGZdOTMtI=
-X-Gm-Gg: ASbGncskMSWF2lYUnRIksnATZyCrgTz505CdpW5P9YXII2gG636pRRVlNl0DLlx5DPm
-	vP7EuXZ6eXXPPi5miCzgYan+1D6+JAmbaSO+PYboM1SEf/eSoC9qIzr15N8WpV5wyhBz83BYvcc
-	eBa8LfU9dco/BDgzCkBfmPkVIjtOUE3uNn7nukkPFcn472fmViNDdsvD2E5bIs7NEzP6mTTmBOn
-	E6bwWxjI/We2jB/437Up1y0BSmqtKuafK69voRZUAz39lEFTLh64lsGWDdmFQ0JixMBkzP+HoW5
-	6SHld/ugrtBithICoElwXt/8DkElJU61QIbVnQJItGW3wugCTPTvNhknN1UNd/+9Z6CVAQWtyKA
-	8AOOpisTM
-X-Google-Smtp-Source: AGHT+IEDx6P5Ycl1fIaLGR9RgPbJefLoQic5m5rNUrSSRipnf+hsWSeOMCWcv3wmed2lXFj2gNwIRg==
-X-Received: by 2002:a05:6000:2382:b0:3a5:2ef8:34f0 with SMTP id ffacd0b85a97d-3a57237dba4mr10699489f8f.22.1750168295960;
-        Tue, 17 Jun 2025 06:51:35 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54e71sm13873326f8f.1.2025.06.17.06.51.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 06:51:35 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:51:33 +0200
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Matthew Brost <matthew.brost@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
-Message-ID: <aFFy5aG1eOeMU44S@phenom.ffwll.local>
-Mail-Followup-To: Philipp Stanner <phasta@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-References: <20250612144953.111829-2-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M0jhyHqt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750168338; x=1781704338;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wS3Way8dfKpc3WnEiOR/twvvaJyIadif8idx8FeygdY=;
+  b=M0jhyHqtDVsu3Ik7GxP0upKy8awcV+HjDET18eKXWwBQ/SJRNL39uCQU
+   8nvcMChzF9B/vD7wGaC1UNnN3UxcktpdhJ/oS4PcBL/ogKb5Nswh1BJBD
+   /30PSIVo4DFIhZHyMPYmuodRzO//33ovpXzDwB2ZeXXBuY1M/qDZcVCEY
+   miXVfVWLzej0ww7cR+SMW5ormXYi5FEL2L24FPOYOryEGbp7Q+CAuvQty
+   vsqsS9IzgvoCMJWAK7j9mAwAMFYEXSAT1FtHFoy6mtZIldhM9Y12uSNXy
+   EjvQuBjsfEuAxVs4m3VYPFCeL03JqEbFq1ipYyiSXn4Nanw/2Sj4kGTNg
+   w==;
+X-CSE-ConnectionGUID: cPl1k4SxQVCcgsvTPZsVYQ==
+X-CSE-MsgGUID: OAnd5RP2Qg6RZSeM0BJwmA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52429400"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52429400"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 06:52:17 -0700
+X-CSE-ConnectionGUID: 0zJGT28ZRP+wbZntFT0yqw==
+X-CSE-MsgGUID: +veJ0aeDTreKItFE7tHGag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="172029479"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 06:52:16 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id AB45F20B58A2;
+	Tue, 17 Jun 2025 06:52:13 -0700 (PDT)
+Message-ID: <60c18595-c6a8-4c39-98fe-0822755fbdb7@linux.intel.com>
+Date: Tue, 17 Jun 2025 09:52:12 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612144953.111829-2-phasta@kernel.org>
-X-Operating-System: Linux phenom 6.12.30-amd64 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/12] Support vector and more extended registers in
+ perf
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
+ adrian.hunter@intel.com, jolsa@kernel.org,
+ alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+ dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250617082423.GK1613376@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250617082423.GK1613376@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 04:49:54PM +0200, Philipp Stanner wrote:
-> struct drm_sched_init_args provides the possibility of letting the
-> scheduler use user-controlled workqueues, instead of the scheduler
-> creating its own workqueues. It's currently not documented who would
-> want to use that.
+
+
+On 2025-06-17 4:24 a.m., Peter Zijlstra wrote:
+> On Fri, Jun 13, 2025 at 06:49:31AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> Starting from the Intel Ice Lake, the XMM registers can be collected in
+>> a PEBS record. More registers, e.g., YMM, ZMM, OPMASK, SPP and APX, will
+>> be added in the upcoming Architecture PEBS as well. But it requires the
+>> hardware support.
+>>
+>> The patch set provides a software solution to mitigate the hardware
+>> requirement. It utilizes the XSAVES command to retrieve the requested
+>> registers in the overflow handler. The feature isn't limited to the PEBS
+>> event or specific platforms anymore.
+>> The hardware solution (if available) is still preferred, since it has
+>> low overhead (especially with the large PEBS) and is more accurate.
+>>
+>> In theory, the solution should work for all X86 platforms. But I only
+>> have newer Inter platforms to test. The patch set only enable the
+>> feature for Intel Ice Lake and later platforms.
+>>
+>> Open:
+>> The new registers include YMM, ZMM, OPMASK, SSP, and APX.
+>> The sample_regs_user/intr has run out. A new field in the
+>> struct perf_event_attr is required for the registers.
+>> There could be several options as below for the new field.
+>>
+>> - Follow a similar format to XSAVES. Introduce the below fields to store
+>>   the bitmap of the registers.
+>>   struct perf_event_attr {
+>>         ...
+>>         __u64   sample_ext_regs_intr[2];
+>>         __u64   sample_ext_regs_user[2];
+>>         ...
+>>   }
+>>   Includes YMMH (16 bits), APX (16 bits), OPMASK (8 bits),
+>>            ZMMH0-15 (16 bits), H16ZMM (16 bits), SSP
+>>   For example, if a user wants YMM8, the perf tool needs to set the
+>>   corresponding bits of XMM8 and YMMH8, and reconstruct the result.
+>>   The method is similar to the existing method for
+>>   sample_regs_user/intr, and match the XSAVES format.
+>>   The kernel doesn't need to do extra configuration and reconstruction.
+>>   It's implemented in the patch set.
+>>
+>> - Similar to the above method. But the fields are the bitmap of the
+>>   complete registers, E.g., YMM (16 bits), APX (16 bits),
+>>   OPMASK (8 bits), ZMM (32 bits), SSP.
+>>   The kernel needs to do extra configuration and reconstruction,
+>>   which may brings extra overhead.
+>>
+>> - Combine the XMM, YMM, and ZMM. So all the registers can be put into
+>>   one u64 field.
+>>         ...
+>>         union {
+>>                 __u64 sample_ext_regs_intr;   //sample_ext_regs_user is simiar
+>>                 struct {
+>>                         __u32 vector_bitmap;
+>>                         __u32 vector_type   : 3, //0b001 XMM 0b010 YMM 0b100 ZMM
+>>                               apx_bitmap    : 16,
+>>                               opmask_bitmap : 8,
+>>                               ssp_bitmap    : 1,
+>>                               reserved      : 4,
+>>
+>>                 };
+>>         ...
+>>   For example, if the YMM8-15 is required,
+>>   vector_bitmap: 0x0000ff00
+>>   vector_type: 0x2
+>>   This method can save two __u64 in the struct perf_event_attr.
+>>   But it's not straightforward since it mixes the type and bitmap.
+>>   The kernel also needs to do extra configuration and reconstruction.
+>>
+>> Please let me know if there are more ideas.
 > 
-> Not sharing the submit_wq between driver and scheduler has the advantage
-> of no negative intereference between them being able to occur (e.g.,
-> MMU notifier callbacks waiting for fences to get signaled).
-> 
-> Add a new docu section for concurrency in drm/sched.
-> 
-> Discourage the usage of own workqueues in the documentation. Document
-> when using them can make sense. Warn about pitfalls.
-> 
-> Co-authored-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
-> ---
-> Changes in v2:
->   - Add new docu section for concurrency in the scheduler. (Sima)
->   - Document what an ordered workqueue passed to the scheduler can be
->     useful for. (Christian, Sima)
->   - Warn more detailed about potential deadlocks. (Danilo)
-> ---
->  include/drm/gpu_scheduler.h | 54 ++++++++++++++++++++++++++++++++++---
->  1 file changed, 51 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
-> index 81dcbfc8c223..00c528e62485 100644
-> --- a/include/drm/gpu_scheduler.h
-> +++ b/include/drm/gpu_scheduler.h
-> @@ -21,6 +21,49 @@
->   *
->   */
->  
-> +/**
-> + * DOC: Concurrency in drm/sched
+> https://lkml.kernel.org/r/20250416155327.GD17910@noisy.programming.kicks-ass.net
+>
 
-You need to explicitly pull this into the .rst files somewhere suitable,
-otherwise it wont show up in the docs. With that please also check that
-the hyperlinks all work.
+It's similar to the third method, but using the words to replace the
+type. Also there are more space left in case we add more SIMDs in future.
+I will implement it in the V2.
+> comes to mind. Combine that with a rule that reclaims the XMM register
+> space from perf_event_x86_regs when sample_simd_reg_words != 0, and then
+> we can put APX and SPP there.
 
-> + *
-> + * The DRM GPU Scheduler interacts with drivers through the callbacks defined in
-> + * &struct drm_sched_backend_ops. These callbacks can be invoked by the scheduler
-> + * at any point in time if not stated otherwise explicitly in the callback
-> + * documentation.
-> + *
-> + * For most use cases, passing the recommended default parameters in &struct
-> + * drm_sched_init_args is sufficient. There are some special circumstances,
-> + * though:
-> + *
-> + * For timeout handling, it makes a lot of sense for drivers with HARDWARE
-> + * scheduling to have the timeouts (e.g., for different hardware rings) occur
-> + * sequentially, for example to allow for detecting which job timedout first
-> + * and, therefore, caused the hang. Thereby, it is determined which &struct
-> + * drm_sched_entity has to be killed and which entities' jobs must be
-> + * resubmitted after a GPU reset.
-> + *
-> + * This can be achieved by passing an ordered workqueue in &struct
-> + * drm_sched_init_args.timeout_wq. Also take a look at the documentation of
-> + * &struct drm_sched_backend_ops.timedout_job.
+OK. So the sample_simd_reg_words actually has another meaning now. It's
+used as a flag to tell whether utilizing the old format.
 
-So the main use-case for this is when the reset domain is bigger than a
-single engine, and you don't want to deal with the mess of inventing your
-own synchronization primitives.
+If so, I think it may be better to have a dedicate sample_simd_reg_flag
+field.
 
-I'm not exactly clear what hardware scheduling scenario you're thinking of
-here that needs an ordered timeout queue that's shared across instances.
+For example,
 
-Note that an ordered timeout queue for a single scheduler is fairly
-pointless, because we only ever have one pending timeout handler (at least
-I thought that's how it works).
+#define SAMPLE_SIMD_FLAGS_FORMAT_LEGACY		0x0
+#define SAMPLE_SIMD_FLAGS_FORMAT_WORDS		0x1
 
-> + * Furthermore, for drivers with hardware that supports FIRMWARE scheduling,
+	__u8 sample_simd_reg_flags;
+	__u8 sample_simd_reg_words;
+	__u64 sample_simd_reg_intr;
+	__u64 sample_simd_reg_user;
 
-I'm not sure you need a firmware scheduler to make this useful, just that
-firmware scheduler submit rings tend to be one case where this is a good
-locking design. I'd put this at the end as a concrete example instead and
-explain why (you already have a single submit ringbuffer, parallelism in
-the kernel doesn't serve a point aside from making locking more complex).
+If (sample_simd_reg_flags != 0) reclaims the XMM space for APX and SPP.
 
-> + * the driver design can be simplified a bit by providing one ordered workqueue
-> + * for both &struct drm_sched_init_args.timeout_wq and
-> + * &struct drm_sched_init_args.submit_wq. Reason being that firmware schedulers
-> + * should always have one scheduler instance per firmware runqueue and one
-> + * entity per scheduler instance. If that scheduler instance then shares one
-> + * ordered workqueue with the driver, locking can be very lightweight or
-> + * dropped alltogether.
-> + *
-> + * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
-> + * theoretically can deadlock. It must be guaranteed that submit_wq never has
-> + * more than max_active - 1 active tasks, or if max_active tasks are reached at
-> + * least one of them does not execute operations that may block on dma_fences
-> + * that potentially make progress through this scheduler instance. Otherwise,
-> + * it is possible that all max_active tasks end up waiting on a dma_fence (that
-> + * can only make progress through this schduler instance), while the
-> + * scheduler's queued work waits for at least one of the max_active tasks to
-> + * finish. Thus, this can result in a deadlock.
+Does it make sense?
 
-Uh if you have an ordered wq you deadlock with just one misuse. I'd just
-explain that the wq must provide sufficient forward-progress guarantees
-for the scheduler, specifically that it's on the dma_fence signalling
-critical path and leave the concrete examples for people to figure out
-when the design a specific locking scheme.
+Thanks,
+Kan
 
-> + */
-> +
->  #ifndef _DRM_GPU_SCHEDULER_H_
->  #define _DRM_GPU_SCHEDULER_H_
->  
-> @@ -499,7 +542,7 @@ struct drm_sched_backend_ops {
->  	 * timeout handlers of different schedulers. One way to achieve this
->  	 * synchronization is to create an ordered workqueue (using
->  	 * alloc_ordered_workqueue()) at the driver level, and pass this queue
-> -	 * as drm_sched_init()'s @timeout_wq parameter. This will guarantee
-> +	 * in &struct drm_sched_init_args.timeout_wq. This will guarantee
->  	 * that timeout handlers are executed sequentially.
->  	 *
->  	 * Return: The scheduler's status, defined by &enum drm_gpu_sched_stat
-> @@ -590,14 +633,19 @@ struct drm_gpu_scheduler {
->   *
->   * @ops: backend operations provided by the driver
->   * @submit_wq: workqueue to use for submission. If NULL, an ordered wq is
-> - *	       allocated and used.
-> + *	       allocated and used. It is recommended to pass NULL unless there
-> + *	       is a good reason not to. For details, see &DOC: Concurrency in
-> + *	       drm/sched.
 
-Does this really link?
-
->   * @num_rqs: Number of run-queues. This may be at most DRM_SCHED_PRIORITY_COUNT,
->   *	     as there's usually one run-queue per priority, but may be less.
->   * @credit_limit: the number of credits this scheduler can hold from all jobs
->   * @hang_limit: number of times to allow a job to hang before dropping it.
->   *		This mechanism is DEPRECATED. Set it to 0.
->   * @timeout: timeout value in jiffies for submitted jobs.
-> - * @timeout_wq: workqueue to use for timeout work. If NULL, the system_wq is used.
-> + * @timeout_wq: workqueue to use for timeout work. If NULL, the system_wq is
-> + *		used. An ordered workqueue could be passed to achieve timeout
-> + *		synchronization. See &DOC: Concurreny in drm/sched and &struct
-
-Same question about linking ...
-
-Might just put a note in the text section below about concurrency design
-questions instead of trying to squeeze these in here.
-
-Cheers, Sima
-
-> + *		drm_sched_backend_ops.timedout_job.
->   * @score: score atomic shared with other schedulers. May be NULL.
->   * @name: name (typically the driver's name). Used for debugging
->   * @dev: associated device. Used for debugging
-> -- 
-> 2.49.0
-> 
-
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
