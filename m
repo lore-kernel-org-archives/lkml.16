@@ -1,166 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44B42EFDB8;
-	Tue, 17 Jun 2025 20:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10408169AE6
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750193152; cv=none; b=MgEAofEYdRXlOBVLTI4/2XjudriQgxEgzZmEHjBwIWhWWznuzud0fy3wjqooJBebQqakOArRFuJhJXvXDwpIxpJu00b+ymBxsOp5XY4Lh3HeWLF5RSXwltitHQKD3j73tfIm2zcjBDvMUVWUVj04jjtxJOBQqkXhlGbuCiR+Wh8=
+	t=1750193258; cv=none; b=f/njL+gmGyDdlD64483TOLXpzFXkRdloc3E9NFjAnM9zzwJwsh94c5RALFnFMN+IWgUtvZtdtEZByYiTKgYeSyBPafqOL/BiuN94T6P6uzCP6VaHv5hdsukvJdwi5D8EY+1bfPebWqsmx6VfB62Y884oaZP6KZIgYN2HWh1pPKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750193152; c=relaxed/simple;
-	bh=Tx8+d2nD4wLUvww1aSh8rXSe19KajEylICAhrQR2kpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ae1yCijF/RQeOx9C1ip4W3k8TWB81gvemJNo7zfoGklKUicZwSLnx2hSu1WKmdjmB6KzN2+tIIs+VIq8aCMMRkKJKjNCdwkZyC4bWuaWdZCEXpPGO/Ya3iPO8nsxNVPcGsWcwbrWA10xrJE//Mz0eXGnzzjZKI9ZC01//h9wMTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7TPalyN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750193258; c=relaxed/simple;
+	bh=3/vgO2MAgi61sccA47cBBHfs3OLzoq8V5yMiIVJ4/Gg=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FfUDHGoHIGnZ10PXNGJuvhQfbt/dH+DuWTRRYsU4Zz1B+WNA8r+lLM2P0W+VDxe5TR+9WeuDDTf+qNli/CzI3E3YWGa63URutbvPUSO3z0DEEj7q8xCzbmnLxfUjGEvnEp5GyT51FlJLRXrvSa5ZRzKq+VCEiXKWMoRBNkzBmEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aozH+P0n; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7TPalyN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC74AC4CEE3;
-	Tue, 17 Jun 2025 20:45:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750193152;
-	bh=Tx8+d2nD4wLUvww1aSh8rXSe19KajEylICAhrQR2kpI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I7TPalyNaweNsA7yHTQHpg3+Lba52Ul2KBIUw8QFnISPSlkn21pcWoGlJTM44m0wX
-	 7vgh53i0mA7KwApa78gy0U7DTLlgxw8nkPPq+kQ8+iOnKm0MnDeXoje0yvE6tANqCF
-	 gMdHzMD5UO9QXaKFgPP5W06oy01V+P4Kp+0jg53Z1GtAP3JkkumuYwzgSbJu0WRnNg
-	 NXlYoqjsZX61VNgNPe0kBWrbdfow4GP/rKrIwKnWHgFJext7qAVi1OQMqdSrgKsT9u
-	 F7igQi6yqvltWa+JLsvdXvbCu7yFuroPEKCLEgKTm4O9o09tVS4IMRX6NwyMvH6mHu
-	 t3FP74ai9hG/Q==
-Date: Tue, 17 Jun 2025 15:45:49 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, cros-qcom-dts-watchers@chromium.org, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, kernel@oss.qualcomm.com, 
-	Mohammad Rafi Shaik <quic_mohs@quicinc.com>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH v4 1/8] arm64: dts: qcom: qcs6490-audioreach: Add gpr node
-Message-ID: <q6rbvbvejugioon6l23nmmzeue7l4bgtlaf44o3a4krj3lytjp@p3y6opl7vs25>
-References: <20250527111227.2318021-1-quic_pkumpatl@quicinc.com>
- <20250527111227.2318021-2-quic_pkumpatl@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aozH+P0n"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b16b35ea570so6173946a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750193256; x=1750798056; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FnyrMYQY3dnwrg2Tl4Z0xb3GVnj67wqrvUNa97aPsfM=;
+        b=aozH+P0nCatKkzarYW8mZ3o97ddUQmF2i7+vFo+SrbGQhG3FqX+5dIOU1iJMNg+kHZ
+         a8szhT0WKU2AiZ0y8hwNceYnUG+Ha4G51+/ZTwKbT4dwAef5Oi2TPLRJSf0LPshC3wp2
+         pV5vHJMd1uK15ZES8ldjP6nwAuoNhNUuzZ9xXvqTysmJMxopyzOTmgO8/k8pHKmcXhXR
+         AQ4mRML4WPasHscuP4rggIHPt3CWmKNHqDfr8I3Sq4hFEls+B55q7AdeoJLuigVC/Gra
+         gY3xvJUiSnw3BeiizCdw0hVfb4QHzoCbT5g4wcRwPLWRL/P3qt0TM3uT8TCDEntVE4z1
+         raXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750193256; x=1750798056;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FnyrMYQY3dnwrg2Tl4Z0xb3GVnj67wqrvUNa97aPsfM=;
+        b=FcVfEu5SdyP7sRwO7xrQyErXvEFVO9hx17w7c3LcgchpIzztyXZ9jiIMP6RNJmnHeJ
+         wFNENiOtPiQLTNcjy1HoRha80VAjhxplFjQiEMIo96jlUMCEbDMpltuUQLiGpQWIn2SW
+         51ONyY1v0nxCuzjpiQckUbiHxGoItsg6WhzhZqRNSBybKTrEANXukzAvG0zeFNkPg3Xb
+         iMGDi2Sx5bzipFSFGxkVchVDXsR2rMo962P5YmbvRWa8g+fUnUy/2v1iISdJBE+Pr42v
+         NeaMuxYYs/Tf4zBlLQuFRg9w2yGAlXZpzno+QuRd8gA1OhEDmRAFllEZZfHyE/ZUdiuh
+         akjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeIQ4NV6/Y3R14zI0ViicVltom6GirKjaLDhiGNmMqqkTYCevJ1QyRkvpfLls0IrDxJvyGKUO0dpuOgs8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6IpNFSNJ5TP/RQI5Z597A5n3qUCnbsF/gueszDhqm9lwoTatG
+	s5saV4F5NWQprOoxPJosvG/zky18ipuUL8T3FMTjK4Tf27UkRDVhUr1FSdKaIsQ/nGrabVT87I4
+	FFljTZA==
+X-Google-Smtp-Source: AGHT+IG3bCBsOcrBYJmDX9OVwj2KQ4phrXgCiORMgy9ics3yw/XvqHxvG2UzR55s0Mz/gkrg7oUsOfqWfp0=
+X-Received: from pgbbf10.prod.google.com ([2002:a65:6d0a:0:b0:b2e:bad0:b462])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7313:b0:21a:ef2f:100b
+ with SMTP id adf61e73a8af0-21fbd666e45mr24322046637.24.1750193256240; Tue, 17
+ Jun 2025 13:47:36 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:47:34 -0700
+In-Reply-To: <fa32b6e9-b087-495a-acf1-a28cfed7e28a@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250527111227.2318021-2-quic_pkumpatl@quicinc.com>
+Mime-Version: 1.0
+References: <20250617073234.1020644-1-xin@zytor.com> <20250617073234.1020644-2-xin@zytor.com>
+ <fa32b6e9-b087-495a-acf1-a28cfed7e28a@intel.com>
+Message-ID: <aFHUZh6koJyVi3p-@google.com>
+Subject: Re: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its
+ architectural reset value
+From: Sean Christopherson <seanjc@google.com>
+To: Sohil Mehta <sohil.mehta@intel.com>
+Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	pbonzini@redhat.com, peterz@infradead.org, brgerst@gmail.com, 
+	tony.luck@intel.com, fenghuay@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, May 27, 2025 at 04:42:20PM +0530, Prasad Kumpatla wrote:
-> From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+On Tue, Jun 17, 2025, Sohil Mehta wrote:
+> On 6/17/2025 12:32 AM, Xin Li (Intel) wrote:
+> > diff --git a/arch/x86/include/uapi/asm/debugreg.h b/arch/x86/include/uapi/asm/debugreg.h
+> > index 0007ba077c0c..8f335b9fa892 100644
+> > --- a/arch/x86/include/uapi/asm/debugreg.h
+> > +++ b/arch/x86/include/uapi/asm/debugreg.h
+> > @@ -15,7 +15,12 @@
+> >     which debugging register was responsible for the trap.  The other bits
+> >     are either reserved or not of interest to us. */
+> >  
+> > -/* Define reserved bits in DR6 which are always set to 1 */
+> > +/*
+> > + * Define reserved bits in DR6 which are set to 1 by default.
+> > + *
+> > + * This is also the DR6 architectural value following Power-up, Reset or INIT.
+> > + * Some of these reserved bits can be set to 0 by hardware or software.
+> > + */
+> >  #define DR6_RESERVED	(0xFFFF0FF0)
+> >  
 > 
-> Add GPR(Generic Pack router) node along with
-> APM(Audio Process Manager) and PRM(Proxy resource
-> Manager) audio services.
+> Calling this "RESERVED" and saying some bits can be modified seems
+> inconsistent. These bits may have been reserved in the past, but they
+> are no longer so.
 > 
-
-This should talk about the choice of adding a new "-audioreach.dtsi"
-file, and should cover why it wouldn't make more sense to add the
-opposite of this change in sc7180-trogdor.dtsi.
-
-> Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
-> Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  .../boot/dts/qcom/qcs6490-audioreach.dtsi     | 53 +++++++++++++++++++
->  arch/arm64/boot/dts/qcom/sc7280.dtsi          |  2 +-
->  2 files changed, 54 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
+> Should this be renamed to DR6_INIT or DR6_RESET? Your commit log also
+> says so in the beginning:
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> new file mode 100644
-> index 000000000000..29d4a6a2db26
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/qcs6490-audioreach.dtsi
-> @@ -0,0 +1,53 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-
-We can be more permissive than that, please use BSD-3-Clause.
-
-> +/*
-> + * qcs6490 device tree source for Audioreach Solution.
-> + * This file will handle the common audio device tree nodes.
-
-"Common audio device tree nodes", but not those audio device tree nodes
-that are already specified in sc7180.dtsi...
-
-> + *
-> + * Copyright (c) 2025 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/clock/qcom,lpass-sc7280.h>
-> +#include <dt-bindings/soc/qcom,gpr.h>
-> +#include <dt-bindings/sound/qcom,q6afe.h>
-> +#include <dt-bindings/sound/qcom,q6dsp-lpass-ports.h>
-> +
-> +&remoteproc_adsp_glink {
-> +	/delete-node/ apr;
-> +
-> +	gpr {
-
-Glink only consider available (status = "okay") nodes, so if there's a
-even spread across AudioReach and not, we could even move this to
-sc7180.dtsi and mark both status = "disabled", and have the appropriate
-one enabled for each board.
-
-Regards,
-Bjorn
-
-> +		compatible = "qcom,gpr";
-> +		qcom,glink-channels = "adsp_apps";
-> +		qcom,domain = <GPR_DOMAIN_ID_ADSP>;
-> +		qcom,intents = <512 20>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		q6apm: service@1 {
-> +			compatible = "qcom,q6apm";
-> +			reg = <GPR_APM_MODULE_IID>;
-> +			#sound-dai-cells = <0>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +
-> +			q6apmdai: dais {
-> +				compatible = "qcom,q6apm-dais";
-> +				iommus = <&apps_smmu 0x1801 0x0>;
-> +			};
-> +
-> +			q6apmbedai: bedais {
-> +				compatible = "qcom,q6apm-lpass-dais";
-> +				#sound-dai-cells = <1>;
-> +			};
-> +		};
-> +
-> +		q6prm: service@2 {
-> +			compatible = "qcom,q6prm";
-> +			reg = <GPR_PRM_MODULE_IID>;
-> +			qcom,protection-domain = "avs/audio", "msm/adsp/audio_pd";
-> +
-> +			q6prmcc: clock-controller {
-> +				compatible = "qcom,q6prm-lpass-clocks";
-> +				#clock-cells = <2>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> index b1cc3bc1aec8..708df3f08984 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
-> @@ -3814,7 +3814,7 @@ remoteproc_adsp: remoteproc@3700000 {
->  
->  			status = "disabled";
->  
-> -			glink-edge {
-> +			remoteproc_adsp_glink: glink-edge {
->  				interrupts-extended = <&ipcc IPCC_CLIENT_LPASS
->  							     IPCC_MPROC_SIGNAL_GLINK_QMP
->  							     IRQ_TYPE_EDGE_RISING>;
-> -- 
-> 2.34.1
+>    "Initialize DR6 by writing its architectural reset value to ensure
+>     compliance with the specification."
 > 
+> That way, it would also match the usage in code at
+> initialize_debug_regs() and debug_read_reset_dr6().
+> 
+> I can understand if you want to minimize changes and do this in a
+> separate patch, since this would need to be backported.
+
+Yeah, the name is weird, but IMO DR6_INIT or DR6_RESET aren't great either.  I'm
+admittedly very biased, but I think KVM's DR6_ACTIVE_LOW better captures the
+behavior of the bits.  E.g. even if bits that are currently reserved become defined
+in the future, they'll still need to be active low so as to be backwards compatible
+with existing software.
+
+Note, DR6_VOLATILE and DR6_FIXED_1 aren't necessarily aligned with the current
+architectural definitions (I haven't actually checked), rather they are KVM's
+view of the world, i.e. what KVM supports from a virtualization perspective.
+
+Ah, and now I see that DR6_RESERVED is an existing #define in a uAPI header (Xin
+said there were a few, but I somehow missed them earlier).  Maybe just leave that
+thing alone, but update the comment to state that it's a historical wart?  And
+then put DR6_ACTIVE_LOW and other macros in arch/x86/include/asm/debugreg.h?
+
+/*
+ * DR6_ACTIVE_LOW combines fixed-1 and active-low bits.
+ * We can regard all the bits in DR6_FIXED_1 as active_low bits;
+ * they will never be 0 for now, but when they are defined
+ * in the future it will require no code change.
+ *
+ * DR6_ACTIVE_LOW is also used as the init/reset value for DR6.
+ */
+#define DR6_ACTIVE_LOW	0xffff0ff0
+#define DR6_VOLATILE	0x0001e80f
+#define DR6_FIXED_1	(DR6_ACTIVE_LOW & ~DR6_VOLATILE)
