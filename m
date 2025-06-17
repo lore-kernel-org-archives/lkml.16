@@ -1,282 +1,204 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E622EF2AB
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4292ECE9E
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175065; cv=none; b=DfJmEBZ/31l1W/jTOCaCGQniFQjxYbHNghO5IxH1YvttdDMPLfGMq/2z32EeG2k5lgoN3aOijpbzLAzNt8RuFZ6j0UDEUuc6uSleWeNzK1ZqOIiHvuCInAL5JdutBxjAdfrU86SpcR+P/0MvMNJSSqelAWxyIx/ceodRiOdY2Uw=
+	t=1750175170; cv=none; b=fmJE9QS9uap4/LRhrFeH0qlZQyNY23ylpFfoIb/DnzaAVom4zB9IWGspc5iLGODGwabWL4n/22dGbfR+kDPBNsrF1Zdpvn58r8v2T5Ews9On+rcc7qtesAX6Aple8z1icOge+4V2DKaJX5iM1Q8S/laFQ/8fd5UjWgcNcTCuL18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175065; c=relaxed/simple;
-	bh=JoPCIxNFhISa/uoEZhmjVFXMY/aHB9zZc630LouBJb0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fyjAYGuhBnZ40R8AHAldKMcitJaanC588tYt0l/H+v7Znbi3YRqr03AF9KKOKlFFV6w5n1gDFUuV/Ajhfodc8XPEGhSJoeo96EUNghORLzcDXobJRITiDWyy15G6qZBwMcc3iuQK9EDHE3EzUqrduZC3V0xv/4S+bgHKZioNZuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=awr/9N48; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1750175170; c=relaxed/simple;
+	bh=0QLZtSVwdKy3CpBGwVwWyd5qjT08tFLeKExDFbmtJq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WpYOMZ7g26DLCzVUTUwXmwgyyU+s/BJetfXbRJ4T2JQqjj6K1wDMk5NRVEgL9S0EbkLmgVKnCl5/zx7Z0CjKpLuqwTGCt1hafe/44eU4EYWN46VMRmfDiEU0ODHyy4mVUdycfTeEvxnWdFq73fPAazV8nn9GQzYTKQFL69GPkPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GSJHh78k; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="awr/9N48"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GSJHh78k"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750175062;
+	s=mimecast20190719; t=1750175167;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YLVJGNARtVFI5B2J8se/8/6UXe4Uo6I4yV7PyVAOlF8=;
-	b=awr/9N48N1K0HXhB5k6H7unYbZeJnF6338pk0FA99D2G5jnW4Td4mpghU0VfVEseMf+dyK
-	XxGJbPFVukkkQQ9bb+4z69zNUlbG5+wWKVX2zcSHJqlUnjKhAMUCpGWnlQAvdi89UlWW1N
-	iaBl6+j5CIuyiVnB7p34X8UxbtxXOos=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gHUgFH4Vy26JeTkH9Ptm67SlY3McbDtlxFtO8eVqs4g=;
+	b=GSJHh78kzzLgJF2HerqztZ2FUyoAMbWZ6gELrlrFEpgyMCHC7JdHa2A2OW4n2Nh29i7SDI
+	Yy3q+WBGwypevLHZL+5D1nARCVfMUJRJWr5RbQVD4TNzz9VABF8+SjlfT7+rwY157gSAvG
+	IeLJsMWJhmOpVncSgEImVnDQF8zpT5o=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-269-3cOI401oPlmvkrC-6-CeUw-1; Tue, 17 Jun 2025 11:44:21 -0400
-X-MC-Unique: 3cOI401oPlmvkrC-6-CeUw-1
-X-Mimecast-MFC-AGG-ID: 3cOI401oPlmvkrC-6-CeUw_1750175060
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a503f28b09so527105f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:44:21 -0700 (PDT)
+ us-mta-588-XirgmI0OOBmv2DVHYqk5ew-1; Tue, 17 Jun 2025 11:46:06 -0400
+X-MC-Unique: XirgmI0OOBmv2DVHYqk5ew-1
+X-Mimecast-MFC-AGG-ID: XirgmI0OOBmv2DVHYqk5ew_1750175165
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45311704cdbso30592895e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:46:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750175060; x=1750779860;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YLVJGNARtVFI5B2J8se/8/6UXe4Uo6I4yV7PyVAOlF8=;
-        b=eoLVjaZS0256OAWxRkSmZXTBaio/AYBcS2WOWBx8rKDdLNC0nShOtkGkUylKbdcDpV
-         V54HQD0VS4xPy6BIZhD5YoHzUB3xJ9M6UdpSXyix/HGA9gTmrdZPG6iJIWwj3r7iN2hn
-         +3uSzPmUtTLJpjA9xt4Y1HVFMDomIyXILX5lD7m5KY4030zdfDmAyIIVHTioJ6PNjaR8
-         04JDMPx5wmqaHgC/tRligZ9v5btjzwT1z0IKDVrxBGYOLiO5ovjxxkeUWlAkJo5Am0qA
-         1XJ7Ygm3MDZscydyka5PleNk/asN3bFjPP6UpgozAsbm6eln1TP3o3q+QV5R0280ttzX
-         adjA==
-X-Gm-Message-State: AOJu0Yxe2Ou7nSliBpPnnLhlhMBIA0UmpRhdIMbRi35Bmdq1VkRXJmYZ
-	Cizh9ovlUBLzRYh1PseIo/sf6t/yC+1Y/wGS3V1BT4Mvbm9CUkD+Qmngn8e2N4l3Nj4Ic86BOCe
-	tf4IzRe3L5/gRWX6NFzX1ZGTTFm0o/3pu+nFOvWnn9bJPOIhiBKvGVVZHRdr/IJTE6efLWZ448n
-	sVk7fOYuyKeQsJJGgLd+ZGR3+MddyijNaHkI+4nq35j91JJ3lB
-X-Gm-Gg: ASbGncut3JEDwkiImOtQKR7m60+WCdpFj/YNXWlt2VNVKbunZUWS1/JJ3g0J0Wh1hJ7
-	0KE8OseRfrDQeSuiYG7t/0NGzSzXP+BRWpOC1e/dkvN7FIUCdvNusjb3TuaySdZj7F2ee99BJGO
-	v4+0FJ27klNImIWcovI3/2zbFl/k5HEPsScqoatKBsiEhFLqT0/Z//gq20XFrmB6u405yKcqrIc
-	ZETY88FHED+rCiELf2TxescAJqwXhmHh84Un25ZaKxnN7zS/1MC//HBnpgu8EiT0eKM7AXua/e3
-	KHxXusfDvgIpoKaPtrFjs7XVOtCFjZZk2s5gJaxNWopAF2VH54la8oBM4Sam2xy+NWBrVRgPD+b
-	vZEcU1g==
-X-Received: by 2002:a05:6000:40d9:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a56d827f55mr10918547f8f.18.1750175059960;
-        Tue, 17 Jun 2025 08:44:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQg7GY1Gsteo7GdT4ckbEy0SNxYC91KxvGox3B/Jtg2LOmOg//Pt1oxMAZKf077YGN9lBupw==
-X-Received: by 2002:a05:6000:40d9:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a56d827f55mr10918494f8f.18.1750175059294;
-        Tue, 17 Jun 2025 08:44:19 -0700 (PDT)
-Received: from localhost (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568b4c969sm14100737f8f.85.2025.06.17.08.44.17
+        d=1e100.net; s=20230601; t=1750175165; x=1750779965;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=gHUgFH4Vy26JeTkH9Ptm67SlY3McbDtlxFtO8eVqs4g=;
+        b=rvTWBowvGLj7yLDp1MsPBHKXa4NbgNdl7nVYpgogGKz7OdllMxjDiMS7IsF7xTgahv
+         +GCJj2aDYdtdT5yf1z9au91BexCx0AX1hiWYs6dnMjpQYB9H79AvKwSUJcXfzSOC2kX+
+         AyvRmDUnHLIgQNE65lQcKhlp2WkP0kPF+HLG9gQBCncUDnhMZISEfhQC47TchnbUqFr0
+         A1no40cT1GLXIv7WIiyot03XDdwozfcPII16GHG9KCXqAtwV8k/4q18cVQMG7XpDj4PN
+         C+uhKb+pk4mO0ny/cQ/6gEjvf7C7O7j4Q6+zEWBaY7UCvAkvxUptNLVWEpoNjAiCz8Xv
+         4Yag==
+X-Forwarded-Encrypted: i=1; AJvYcCXPq5+le3oG66FulrMhexCrTCMwokAOh22GCH7e5Onwq/W5xDqMuXI2NpzWqYGsgTFKy/isXBdzlZrY/nI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTFm8xrEvLupke6EKsyjIHUZJcQyuLyjR98GMJrPAvBAxkLj6E
+	DbaPIdwHU/MMZzXmnP051vyHX6YUh4KE7Om3rA20Dmt1J0H9G2yXKPlwRkoXUmTFQAqB4n+IxHN
+	069kpv2ZJlDWfd3OHXHeWVEgY2y1opRNueVbocAreWtx6+mPVR2ilDDS0TXTsdpXmOw==
+X-Gm-Gg: ASbGncv7H7/rU7UJagRrsZb4rr82XNhBXYTKgPHB84dW2liVsnjF0GUIkPXrlzUOqFL
+	+KVjYqPsX60PpaQhGHGqCdOvScdgxGV/kKaHi3QiSkhmlUsjMJ43x+6FqSOanovfirlTGxZ9A8g
+	hwFwoGDvVxiV9blqVXes08hnhs8ufadV37cJdarVlQBFX7bjhDXmlsHrlbVNBZhn0I1SwclX2dP
+	VWp52Iatrv7NPJCC5PX5kDact8gAk/ira8l2PupM38jBokwb1K31Hm1h4Y6UO60ZESe2WUxJBkQ
+	BGt3bqXAGlbEwi4BnOTkFdO9G2bnw/2z2FdvoyK7S6PjklWV+4ADpx2Fujj0PPwcaVOzf9nHM7y
+	Bb+UK4pxwjC8T/OmWT16q/YeUPC5VbougOpXLGewH4TN/+hQ=
+X-Received: by 2002:a05:600c:1c08:b0:442:f97b:87e with SMTP id 5b1f17b1804b1-4533ca4e4b7mr128553075e9.6.1750175164703;
+        Tue, 17 Jun 2025 08:46:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHiFlMK/+U/csst4PKIw9qd2THHsZbHuL/6FDu5Zo+6wEWdPw9aJkAzKN+IEt6KNQdOVid5AA==
+X-Received: by 2002:a05:600c:1c08:b0:442:f97b:87e with SMTP id 5b1f17b1804b1-4533ca4e4b7mr128552755e9.6.1750175164245;
+        Tue, 17 Jun 2025 08:46:04 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54d7fsm14537761f8f.18.2025.06.17.08.46.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 08:44:18 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	nvdimm@lists.linux.dev,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Vrabel <david.vrabel@citrix.com>
-Subject: [PATCH RFC 14/14] mm: rename vm_ops->find_special_page() to vm_ops->find_normal_page()
-Date: Tue, 17 Jun 2025 17:43:45 +0200
-Message-ID: <20250617154345.2494405-15-david@redhat.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617154345.2494405-1-david@redhat.com>
-References: <20250617154345.2494405-1-david@redhat.com>
+        Tue, 17 Jun 2025 08:46:03 -0700 (PDT)
+Message-ID: <5255e8ae-b9c5-40e5-8bf1-29cffa8a0137@redhat.com>
+Date: Tue, 17 Jun 2025 17:46:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] MAINTAINERS: add further core files to mm core
+ section
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250616203844.566056-1-lorenzo.stoakes@oracle.com>
+ <727b5e89-89d7-4abf-a93c-8d6f2cb2c438@redhat.com>
+ <aFDm0YrbSAvXc5Wp@kernel.org>
+ <4b0036ae-5b92-49b5-8396-412c7026b105@redhat.com>
+ <bb03abf2-e3d9-4dd3-85b1-707bf9aa5a25@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <bb03abf2-e3d9-4dd3-85b1-707bf9aa5a25@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-... and hide it behind a kconfig option. There is really no need for
-any !xen code to perform this check.
+On 17.06.25 17:04, Lorenzo Stoakes wrote:
+> On Tue, Jun 17, 2025 at 09:59:01AM +0200, David Hildenbrand wrote:
+>> On 17.06.25 05:53, Mike Rapoport wrote:
+>>> On Mon, Jun 16, 2025 at 11:10:41PM +0200, David Hildenbrand wrote:
+>>>> On 16.06.25 22:38, Lorenzo Stoakes wrote:
+>>>>> There are a number of files which don't quite belong anywhere else, so
+>>>>> place them in the core section. If we determine in future they belong
+>>>>> elsewhere we can update incrementally but it is preferable that we assign
+>>>>> each file to a section as best we can.
+>>>>>
+>>>>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>>>>> ---
+>>>>> REVIEWERS - let me know if these seem appropriate, I'm eyeballing
+>>>>> this. even if they are not quite best placed a 'best effort' is still
+>>>>> worthwhile so we establish a place to put all mm files, we can always
+>>>>> incrementally update these later.
+>>>>>
+>>>>>     MAINTAINERS | 28 ++++++++++++++++++++++++----
+>>>>>     1 file changed, 24 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>>>> index 4523a6409186..a61d56bd7aa4 100644
+>>>>> --- a/MAINTAINERS
+>>>>> +++ b/MAINTAINERS
+>>>>> @@ -15740,10 +15740,6 @@ F:	include/linux/memory_hotplug.h
+>>>>>     F:	include/linux/memory-tiers.h
+>>>>>     F:	include/linux/mempolicy.h
+>>>>>     F:	include/linux/mempool.h
+>>>>> -F:	include/linux/memremap.h
+>>>>> -F:	include/linux/mmzone.h
+>>>>> -F:	include/linux/mmu_notifier.h
+>>>>> -F:	include/linux/pagewalk.h
+>>>>>     F:	include/trace/events/ksm.h
+>>>>>     F:	mm/
+>>>>>     F:	tools/mm/
+>>>>
+>>>> Probably better to have some section than none ... was just briefly
+>>>> wondering if "CORE" is the right section for some of that. Some of that
+>>>> might be better of in a "MM MISC" section, maybe.
+>>>
+>>> Maybe rather than add files to MM CORE we should move mm/ there and add the
+>>> MM MISC section for files we explicitly want to exclude from MM CORE?
+>>
+>> Also an option, yes,
+> 
+> These suggestions seem to be roughly the same no? :)
+> 
+> Maybe the MM section itself should just contain mm/ and we move everything else
+> + stragglers to misc?
+> 
+> Now who, whose's first name begins with 'D' and surname begins with 'H' should
+> we put as M there... :P well...
 
-The naming is a bit off: we want to find the "normal" page when a PTE
-was marked "special". So it's really not "finding a special" page.
+Most of these files are fairly small with little activity, so I don't 
+particularly care.
 
-Improve the documentation, and add a comment in the code where XEN ends
-up performing the pte_mkspecial() through a hypercall. More details can
-be found in commit 923b2919e2c3 ("xen/gntdev: mark userspace PTEs as
-special on x86 PV guests").
+Happy once the real big things in there (e.g., OOM) have a dedicate section.
 
-Cc: David Vrabel <david.vrabel@citrix.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/xen/Kconfig              |  1 +
- drivers/xen/gntdev.c             |  5 +++--
- include/linux/mm.h               | 18 +++++++++++++-----
- mm/Kconfig                       |  2 ++
- mm/memory.c                      | 10 ++++++++--
- tools/testing/vma/vma_internal.h | 18 +++++++++++++-----
- 6 files changed, 40 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-index 24f485827e039..f9a35ed266ecf 100644
---- a/drivers/xen/Kconfig
-+++ b/drivers/xen/Kconfig
-@@ -138,6 +138,7 @@ config XEN_GNTDEV
- 	depends on XEN
- 	default m
- 	select MMU_NOTIFIER
-+	select FIND_NORMAL_PAGE
- 	help
- 	  Allows userspace processes to use grants.
- 
-diff --git a/drivers/xen/gntdev.c b/drivers/xen/gntdev.c
-index 61faea1f06630..d1bc0dae2cdf9 100644
---- a/drivers/xen/gntdev.c
-+++ b/drivers/xen/gntdev.c
-@@ -309,6 +309,7 @@ static int find_grant_ptes(pte_t *pte, unsigned long addr, void *data)
- 	BUG_ON(pgnr >= map->count);
- 	pte_maddr = arbitrary_virt_to_machine(pte).maddr;
- 
-+	/* Note: this will perform a pte_mkspecial() through the hypercall. */
- 	gnttab_set_map_op(&map->map_ops[pgnr], pte_maddr, flags,
- 			  map->grants[pgnr].ref,
- 			  map->grants[pgnr].domid);
-@@ -516,7 +517,7 @@ static void gntdev_vma_close(struct vm_area_struct *vma)
- 	gntdev_put_map(priv, map);
- }
- 
--static struct page *gntdev_vma_find_special_page(struct vm_area_struct *vma,
-+static struct page *gntdev_vma_find_normal_page(struct vm_area_struct *vma,
- 						 unsigned long addr)
- {
- 	struct gntdev_grant_map *map = vma->vm_private_data;
-@@ -527,7 +528,7 @@ static struct page *gntdev_vma_find_special_page(struct vm_area_struct *vma,
- static const struct vm_operations_struct gntdev_vmops = {
- 	.open = gntdev_vma_open,
- 	.close = gntdev_vma_close,
--	.find_special_page = gntdev_vma_find_special_page,
-+	.find_normal_page = gntdev_vma_find_normal_page,
- };
- 
- /* ------------------------------------------------------------------ */
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 022e8ef2c78ef..b01475f3dca99 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -646,13 +646,21 @@ struct vm_operations_struct {
- 	struct mempolicy *(*get_policy)(struct vm_area_struct *vma,
- 					unsigned long addr, pgoff_t *ilx);
- #endif
-+#ifdef CONFIG_FIND_NORMAL_PAGE
- 	/*
--	 * Called by vm_normal_page() for special PTEs to find the
--	 * page for @addr.  This is useful if the default behavior
--	 * (using pte_page()) would not find the correct page.
-+	 * Called by vm_normal_page() for special PTEs in @vma at @addr. This
-+	 * allows for returning a "normal" page from vm_normal_page() even
-+	 * though the PTE indicates that the "struct page" either does not exist
-+	 * or should not be touched: "special".
-+	 *
-+	 * Do not add new users: this really only works when a "normal" page
-+	 * was mapped, but then the PTE got changed to something weird (+
-+	 * marked special) that would not make pte_pfn() identify the originally
-+	 * inserted page.
- 	 */
--	struct page *(*find_special_page)(struct vm_area_struct *vma,
--					  unsigned long addr);
-+	struct page *(*find_normal_page)(struct vm_area_struct *vma,
-+					 unsigned long addr);
-+#endif /* CONFIG_FIND_NORMAL_PAGE */
- };
- 
- #ifdef CONFIG_NUMA_BALANCING
-diff --git a/mm/Kconfig b/mm/Kconfig
-index c6194d1f9d170..607a3f9672bdb 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -1390,6 +1390,8 @@ config PT_RECLAIM
- 
- 	  Note: now only empty user PTE page table pages will be reclaimed.
- 
-+config FIND_NORMAL_PAGE
-+	def_bool n
- 
- source "mm/damon/Kconfig"
- 
-diff --git a/mm/memory.c b/mm/memory.c
-index 6c65f51248250..1eba95fcde096 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -619,6 +619,10 @@ static inline struct page *vm_normal_page_pfn(struct vm_area_struct *vma,
-  * If an architecture does not support pte_special(), this function is less
-  * trivial and more expensive in some cases.
-  *
-+ * With CONFIG_FIND_NORMAL_PAGE, we might have pte_special() set on PTEs that
-+ * actually map "normal" pages: however, that page cannot be looked up through
-+ * pte_pfn(), but instead will be looked up through vm_ops->find_normal_page().
-+ *
-  * A raw VM_PFNMAP mapping (ie. one that is not COWed) is always considered a
-  * special mapping (even if there are underlying and valid "struct pages").
-  * COWed pages of a VM_PFNMAP are always normal.
-@@ -639,8 +643,10 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
- 	unsigned long pfn = pte_pfn(pte);
- 
- 	if (unlikely(pte_special(pte))) {
--		if (vma->vm_ops && vma->vm_ops->find_special_page)
--			return vma->vm_ops->find_special_page(vma, addr);
-+#ifdef CONFIG_FIND_NORMAL_PAGE
-+		if (vma->vm_ops && vma->vm_ops->find_normal_page)
-+			return vma->vm_ops->find_normal_page(vma, addr);
-+#endif /* CONFIG_FIND_NORMAL_PAGE */
- 		if (vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP))
- 			return NULL;
- 		if (is_zero_pfn(pfn))
-diff --git a/tools/testing/vma/vma_internal.h b/tools/testing/vma/vma_internal.h
-index 51dd122b8d501..c5bf041036dd7 100644
---- a/tools/testing/vma/vma_internal.h
-+++ b/tools/testing/vma/vma_internal.h
-@@ -470,13 +470,21 @@ struct vm_operations_struct {
- 	struct mempolicy *(*get_policy)(struct vm_area_struct *vma,
- 					unsigned long addr, pgoff_t *ilx);
- #endif
-+#ifdef CONFIG_FIND_NORMAL_PAGE
- 	/*
--	 * Called by vm_normal_page() for special PTEs to find the
--	 * page for @addr.  This is useful if the default behavior
--	 * (using pte_page()) would not find the correct page.
-+	 * Called by vm_normal_page() for special PTEs in @vma at @addr. This
-+	 * allows for returning a "normal" page from vm_normal_page() even
-+	 * though the PTE indicates that the "struct page" either does not exist
-+	 * or should not be touched: "special".
-+	 *
-+	 * Do not add new users: this really only works when a "normal" page
-+	 * was mapped, but then the PTE got changed to something weird (+
-+	 * marked special) that would not make pte_pfn() identify the originally
-+	 * inserted page.
- 	 */
--	struct page *(*find_special_page)(struct vm_area_struct *vma,
--					  unsigned long addr);
-+	struct page *(*find_normal_page)(struct vm_area_struct *vma,
-+					 unsigned long addr);
-+#endif /* CONFIG_FIND_NORMAL_PAGE */
- };
- 
- struct vm_unmapped_area_info {
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
