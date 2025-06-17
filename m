@@ -1,83 +1,39 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DF2277008
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04AC2EAB60
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185346; cv=none; b=LlSHJ0HbQYk6c8V1R62qhXqvGIm4Fn911GGeYB6XGJiQrdPnZApDLr659k4jGUFTFW6B5ZrVnJurscgfgM4NwQpDwBjJlHvDNSHhROFLoV4JPTwHD1xNhZJ2u8lX28SIoztIObcaoQ6edSDMAZXUZOM+zCalolYnzguXVmC2BrA=
+	t=1750185401; cv=none; b=hCbgUmynF5wGpC2of0YAoNN+AiipyTINr6QXxIIv7pQQMkrAzL/UMq7zaEoh5g3PT+ktuwQnDRSXJe42uSZVqdldNmr3w423EXEKoxlfY2cWtpFyrpRXgejsHOxXs3jkT+zTVImTGAV/uG6+PRv8ivSRDHDIndr12rShR4b8MTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185346; c=relaxed/simple;
-	bh=OHD/ehd26V8PT/8jsOVnuBdDkf4MMCpUPuPkhl2nfHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gwBAE6BtAKZ7z4wM3bsOjR+4H15b39tV8Mgtl6qv/Khvl20131FMRtFGs0tkLh59qzMT0q4I5fmQsL5L26nlr3xKDLa4dGMqojtnNevwL48UurAqVwGwOnwTpBWnVfK4vP/DiTEHvLDOHIFVPhba9hIsrCi78r4oqk0OzqHvN1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NwtZ4dmM; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwtZ4dmM"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-313a001d781so5439272a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750185344; x=1750790144; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LgTulNr4jx8hCL9cMcrSknGVCL7uEZpC1WW1KTxxd18=;
-        b=NwtZ4dmMtnpCetv3mJR+inDdRKCGpcAiVKrybRQuPzx1/IFYdvLMfTmWYXR7oRzxXI
-         olwZ/Q2cGfMx8WfGrlRWUvgGwQDbkMO0c7I/fhNtSiuUC+fY5aAQ2ApbWwIiTKBphXhJ
-         4QukJa2QfV6PdzL+89eEujrfLxCgyl1FyVBc1cp7kD5RH8v++feh/WKiTwRWB8IJTLP0
-         +Zwr1YohTwwmdNtVkW4b32IdhbijRXaivAOi4VsjAvROFniVn0B+Ald9l4xRhm1QVuG0
-         Xp3IAIIOxck+AwOmRsW6l6aFPPW4NGp50IpIz2iXvqBku5tfe6b/THgEUsEcmGLUbjRA
-         /smw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750185344; x=1750790144;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LgTulNr4jx8hCL9cMcrSknGVCL7uEZpC1WW1KTxxd18=;
-        b=LOqJYNJSI37Le9dzDIKUMzcM203iJuMT3wVxNP1xs3l+RV1MdkPmUkoRmJG9co5B21
-         Qvfu+4FySqoLRNku1MNKZR+gvniaFK9Sn8d+cj5H1FVpDQJ40AxGCSuYDJPRTZiHz037
-         0oLvEKKKo3mmn5HWgCLvPIGiF1eoTuP0pxpRTYflsXdDnN+XSOa06Ac5625nlPLPtpWw
-         oWkcuG5awk9bMkAB5rxRbpB7/6Mtseng8dven/SbQU/eIOEoxW2p20IlutqlIDSZsQWl
-         WFQomb0nqp4Z/COoC4QHtLK/LYNgjjeavnJYVQIP/tVzPpwmjhMjc4NCG0xZXRS9DlfB
-         wj+w==
-X-Forwarded-Encrypted: i=1; AJvYcCV7O3lJ8UtJTTnhTqfTN1VamlEkvORBP34h1FbLTIVFkOK+pqEOjwgogDhqvZRd6BadSr7t/ktAdYiYWxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRn+wJAxst1RXjfDKY1p5H0nRcwW7y0Y29MFi1meLcTMdFh81v
-	h8Sogqx3hVm4rafUUKVUQLVWhvCy564k9AndpjNnxtyPoH1H7p+Bq2iB
-X-Gm-Gg: ASbGnctcw1fvAGV5Np/oEsvsayz5FPL5Q57oomeCZ2KWs2cw7RKozgYtMWqRs85dX9o
-	IGwU8JrgXu8JFiZcBRhWPcxJj/djXZvMa0Oe0iaguM3UsieZQli+OH5ZvKgP4v9LC6k1vC+Ml+m
-	9K2kNMTTkOZhCB/iCEDguXg10d5AK5aeKZELJMwFM/lnugRPEZm9FLk4zyJG1HOxZsvogab3WS9
-	YGdghg0fbkPSQoSU+0t7LuaKwG01+oy+NgxnGKDZIyVlz0Huciu3gVKFBFHP1fZSwkR2XJdUjvi
-	abFA2JwNs0hrJijj+PqRIxgqiEjCga8gSe5m33uZdy/7YtL9EEcThKkPUN+OL3rnI4jEL1jzETZ
-	QSWMTiMU=
-X-Google-Smtp-Source: AGHT+IFpvL4LkuVFY2mtE2Qq5xqwAAinBHrY520uObdv06QZLbd46hL0BA94TNP5rdY3aaT6byR1Ww==
-X-Received: by 2002:a17:90b:2688:b0:313:2e69:8002 with SMTP id 98e67ed59e1d1-313f1daa7a9mr22767858a91.20.1750185343766;
-        Tue, 17 Jun 2025 11:35:43 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([106.37.123.168])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781c7sm83753715ad.128.2025.06.17.11.35.38
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 17 Jun 2025 11:35:43 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Hugh Dickins <hughd@google.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Chris Li <chrisl@kernel.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Baoquan He <bhe@redhat.com>,
-	Barry Song <baohua@kernel.org>,
+	s=arc-20240116; t=1750185401; c=relaxed/simple;
+	bh=P02igNrWAXNn+v6l2SxcHfVfqYE9NaQjG3fSrzFE+JE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gMHrhJDBe2LncxMaiPptHj8hnb28k1zC/Fi6hvk+dOG2Z2SAtkgfq0FUotJnG+UR9B4Qx4jVK15xM+nyZn8jWzvsGwPXSREsQPcf4vWsessazMP+j2AuHvaDfDshzLv85sdMBR93xpIy3UF4AeRWsvfX5tdAtSktlk84PbwT3E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 021E61595;
+	Tue, 17 Jun 2025 11:36:18 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 167DA3F58B;
+	Tue, 17 Jun 2025 11:36:36 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	oliver.upton@linux.dev,
+	ardb@kernel.org,
+	frederic@kernel.org,
+	james.morse@arm.com,
+	joey.gouly@arm.com,
+	scott@os.amperecomputing.com
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH 4/4] mm/shmem, swap: avoid false positive swap cache lookup
-Date: Wed, 18 Jun 2025 02:35:03 +0800
-Message-ID: <20250617183503.10527-5-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250617183503.10527-1-ryncsn@gmail.com>
-References: <20250617183503.10527-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v3 0/7] support FEAT_LSUI and apply it on futex atomic ops
+Date: Tue, 17 Jun 2025 19:36:28 +0100
+Message-Id: <20250617183635.1266015-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,186 +42,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kairui Song <kasong@tencent.com>
+Since Armv9.6, FEAT_LSUI supplies the load/store instructions for
+previleged level to access to access user memory without clearing
+PSTATE.PAN bit.
 
-If the shmem read request's index points to the middle of a large swap
-entry, shmem swap in does the swap cache lookup use the large swap
-entry's starting value (the first sub swap entry of this large entry).
-This will lead to false positive lookup result if only the first few
-swap entries are cached, but the requested swap entry pointed by index
-is uncached.
+This patchset support FEAT_LUSI and applies in futex atomic operation
+where can replace from ldxr/stlxr pair implmentation with clearing
+PSTATE.PAN bit to correspondant load/store unprevileged atomic operation
+without clearing PSTATE.PAN bit.
 
-Currently shmem will do a large entry split then retry the swapin from
-beginning, which is a waste of CPU and fragile. Handle this correctly.
+Patch Sequences
+================
 
-Also add some sanity checks to help understand the code and ensure
-things won't go wrong.
+Patch #1 adds cpufeature for FEAT_LUSI
 
-Signed-off-by: Kairui Song <kasong@tencent.com>
----
- mm/shmem.c | 61 ++++++++++++++++++++++++++----------------------------
- 1 file changed, 29 insertions(+), 32 deletions(-)
+Patch #2 expose FEAT_LUSI to guest
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 46dea2fa1b43..0bc30dafad90 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -1977,12 +1977,12 @@ static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
- 
- static struct folio *shmem_swapin_direct(struct inode *inode,
- 		struct vm_area_struct *vma, pgoff_t index,
--		swp_entry_t entry, int *order, gfp_t gfp)
-+		swp_entry_t swap_entry, swp_entry_t swap,
-+		int *order, gfp_t gfp)
- {
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	int nr_pages = 1 << *order;
- 	struct folio *new;
--	pgoff_t offset;
- 	void *shadow;
- 
- 	/*
-@@ -2003,13 +2003,11 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
- 		 */
- 		if ((vma && userfaultfd_armed(vma)) ||
- 		    !zswap_never_enabled() ||
--		    non_swapcache_batch(entry, nr_pages) != nr_pages) {
--			offset = index - round_down(index, nr_pages);
--			entry = swp_entry(swp_type(entry),
--					  swp_offset(entry) + offset);
-+		    non_swapcache_batch(swap_entry, nr_pages) != nr_pages) {
- 			*order = 0;
- 			nr_pages = 1;
- 		} else {
-+			swap.val = swap_entry.val;
- 			gfp_t huge_gfp = vma_thp_gfp_mask(vma);
- 
- 			gfp = limit_gfp_mask(huge_gfp, gfp);
-@@ -2021,7 +2019,7 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
- 		return ERR_PTR(-ENOMEM);
- 
- 	if (mem_cgroup_swapin_charge_folio(new, vma ? vma->vm_mm : NULL,
--					   gfp, entry)) {
-+					   gfp, swap)) {
- 		folio_put(new);
- 		return ERR_PTR(-ENOMEM);
- 	}
-@@ -2036,17 +2034,17 @@ static struct folio *shmem_swapin_direct(struct inode *inode,
- 	 * In this case, shmem_add_to_page_cache() will help identify the
- 	 * concurrent swapin and return -EEXIST.
- 	 */
--	if (swapcache_prepare(entry, nr_pages)) {
-+	if (swapcache_prepare(swap, nr_pages)) {
- 		folio_put(new);
- 		return ERR_PTR(-EEXIST);
- 	}
- 
- 	__folio_set_locked(new);
- 	__folio_set_swapbacked(new);
--	new->swap = entry;
-+	new->swap = swap;
- 
--	memcg1_swapin(entry, nr_pages);
--	shadow = get_shadow_from_swap_cache(entry);
-+	memcg1_swapin(swap, nr_pages);
-+	shadow = get_shadow_from_swap_cache(swap);
- 	if (shadow)
- 		workingset_refault(new, shadow);
- 	folio_add_lru(new);
-@@ -2278,20 +2276,21 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
- 	struct mm_struct *fault_mm = vma ? vma->vm_mm : NULL;
- 	struct shmem_inode_info *info = SHMEM_I(inode);
- 	int error, nr_pages, order, swap_order;
-+	swp_entry_t swap, swap_entry;
- 	struct swap_info_struct *si;
- 	struct folio *folio = NULL;
- 	bool skip_swapcache = false;
--	swp_entry_t swap;
-+	pgoff_t offset;
- 
- 	VM_BUG_ON(!*foliop || !xa_is_value(*foliop));
--	swap = radix_to_swp_entry(*foliop);
-+	swap_entry = radix_to_swp_entry(*foliop);
- 	*foliop = NULL;
- 
--	if (is_poisoned_swp_entry(swap))
-+	if (is_poisoned_swp_entry(swap_entry))
- 		return -EIO;
- 
--	si = get_swap_device(swap);
--	order = shmem_swap_check_entry(mapping, index, swap);
-+	si = get_swap_device(swap_entry);
-+	order = shmem_swap_check_entry(mapping, index, swap_entry);
- 	if (unlikely(!si)) {
- 		if (order < 0)
- 			return -EEXIST;
-@@ -2303,7 +2302,9 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
- 		return -EEXIST;
- 	}
- 
--	/* Look it up and read it in.. */
-+	/* @index may points to the middle of a large entry, get the real swap value first */
-+	offset = index - round_down(index, 1 << order);
-+	swap.val = swap_entry.val + offset;
- 	folio = swap_cache_get_folio(swap, NULL, 0);
- 	if (!folio) {
- 		/* Or update major stats only when swapin succeeds?? */
-@@ -2315,7 +2316,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
- 		/* Try direct mTHP swapin bypassing swap cache and readahead */
- 		if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
- 			swap_order = order;
--			folio = shmem_swapin_direct(inode, vma, index,
-+			folio = shmem_swapin_direct(inode, vma, index, swap_entry,
- 						    swap, &swap_order, gfp);
- 			if (!IS_ERR(folio)) {
- 				skip_swapcache = true;
-@@ -2338,28 +2339,25 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
- 		}
- 	}
- alloced:
-+	swap_order = folio_order(folio);
-+	nr_pages = folio_nr_pages(folio);
-+
-+	/* The swap-in should cover both @swap and @index */
-+	swap.val = round_down(swap.val, nr_pages);
-+	VM_WARN_ON_ONCE(swap.val > swap_entry.val + offset);
-+	VM_WARN_ON_ONCE(swap.val + nr_pages <= swap_entry.val + offset);
-+
- 	/*
- 	 * We need to split an existing large entry if swapin brought in a
- 	 * smaller folio due to various of reasons.
--	 *
--	 * And worth noting there is a special case: if there is a smaller
--	 * cached folio that covers @swap, but not @index (it only covers
--	 * first few sub entries of the large entry, but @index points to
--	 * later parts), the swap cache lookup will still see this folio,
--	 * And we need to split the large entry here. Later checks will fail,
--	 * as it can't satisfy the swap requirement, and we will retry
--	 * the swapin from beginning.
- 	 */
--	swap_order = folio_order(folio);
-+	index = round_down(index, nr_pages);
- 	if (order > swap_order) {
--		error = shmem_split_swap_entry(inode, index, swap, gfp);
-+		error = shmem_split_swap_entry(inode, index, swap_entry, gfp);
- 		if (error)
- 			goto failed_nolock;
- 	}
- 
--	index = round_down(index, 1 << swap_order);
--	swap.val = round_down(swap.val, 1 << swap_order);
--
- 	/* We have to do this with folio locked to prevent races */
- 	folio_lock(folio);
- 	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
-@@ -2372,7 +2370,6 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
- 		goto failed;
- 	}
- 	folio_wait_writeback(folio);
--	nr_pages = folio_nr_pages(folio);
- 
- 	/*
- 	 * Some architectures may have to restore extra metadata to the
--- 
-2.50.0
+Patch #3 adds Kconfig for FEAT_LUSI
+
+Patch #4 separtes former futex atomic-op implmentation from futex.h
+to futex_ll_sc_u.h
+
+Patch #5 implments futex atomic operation using lsui instruction.
+
+Patch #6 introduces lsui.h to apply runtime patch to use former
+implmentation when FEAT_LUSI doesn't support.
+
+Patch #7 applies lsui.h into arch_futext_atomic_op().
+
+Patch History
+==============
+from v2 to v3:
+  - expose FEAT_LUSI to guest
+  - add help section for LUSI Kconfig
+  - https://lore.kernel.org/all/20250611151154.46362-1-yeoreum.yun@arm.com/
+
+from v1 to v2:
+  - remove empty v9.6 menu entry
+  - locate HAS_LUSI in cpucaps in order
+  - https://lore.kernel.org/all/20250611104916.10636-1-yeoreum.yun@arm.com/
+
+Yeoreum Yun (7):
+  arm64: cpufeature: add FEAT_LSUI
+  arm64/kvm: expose FEAT_LSUI to guest
+  arm64/Kconfig: add LSUI Kconfig
+  arm64/futex: move futex atomic logic with clearing PAN bit
+  arm64/futex: add futex atomic operation with FEAT_LSUI
+  arm64/asm: introduce lsui.h
+  arm64/futex: support futex with FEAT_LSUI
+
+ arch/arm64/Kconfig                     |   9 ++
+ arch/arm64/include/asm/futex.h         |  99 ++++++-------------
+ arch/arm64/include/asm/futex_ll_sc_u.h | 115 +++++++++++++++++++++
+ arch/arm64/include/asm/futex_lsui.h    | 132 +++++++++++++++++++++++++
+ arch/arm64/include/asm/lsui.h          |  37 +++++++
+ arch/arm64/kernel/cpufeature.c         |   8 ++
+ arch/arm64/kvm/sys_regs.c              |   5 +-
+ arch/arm64/tools/cpucaps               |   1 +
+ 8 files changed, 336 insertions(+), 70 deletions(-)
+ create mode 100644 arch/arm64/include/asm/futex_ll_sc_u.h
+ create mode 100644 arch/arm64/include/asm/futex_lsui.h
+ create mode 100644 arch/arm64/include/asm/lsui.h
+
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
