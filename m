@@ -1,117 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13524238151;
-	Tue, 17 Jun 2025 17:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D5EEACD
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750180930; cv=none; b=YN6GqTUaUksgc8nrJi8dJrvFXGps30w8CHur7UV1JQR4a8oOQDUS9OJoab8rmrjYEDNzL9ujNqQvKem/DiP+OUj+NUa7wcGWc/3mqd2RIFviIfhsGgnpKBLaXQPuCtWN1TwXky/q2N/+dU7lr/W1LzJarBW0yPCe3ooD0EG1gP8=
+	t=1750180962; cv=none; b=EmUFPIcd9+cMUD0nQ5jPa6bZSou4zV6YPwnZl+uQdnm1GJKPGXdaWypd+z4OGdhHIvN2UE/HcDMaBgzQrRzTNdYiRQUCeCHoKTtjlLJE88Rp9swdwqNh1oO0ydjHntTQrbw4AozUuV3lB3V1i2J4iX/ftT/SfIr/QJB+KIj//os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750180930; c=relaxed/simple;
-	bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
+	s=arc-20240116; t=1750180962; c=relaxed/simple;
+	bh=fkSOfdAa8FY7s1fiIR9x8hwRIn5eu9HjdWI0CIobf48=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ow2afREmkFGG936P1BwAchzFE1NEInLLwtS0fyyNa7nhUcrwiA6h7FnjplKxU/JEAPaIZHJK1eKN1O+Nzw/ZOt8h9RlNNIhhVYH6Au5W7kk0beZxL4HO3rYDvnyCCJchnWWCxMRhI80Jyqmt5PVmIW7h9nbRxzfv/dblnYCjhAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NnnzJ31n; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYCCB4Gsgq41wqo7qH3oSDdhzlGL8BvUX+9plUcvhdk/o3hKuubbR9/0dMtXuHs/5D+Hz0CpVERogel0nfhahQk0jFKWWCTScaBkxYWBf0pbOm7uGEK1u7b2iUPK8coXoATlhFlBqHFG/QkMPMgrcc4BcF4dNuyG/qwGeoGd9dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h3OG3ntj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NnnzJ31n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750180929; x=1781716929;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
-  b=NnnzJ31nAnUx3xZ/pAtNnSj5McRix6llfA7cudsgHml8J/MwKARuBNBl
-   KI+eIQ9jIOFNO9HoBeLfkP7LWapISvs4OF6Tp6svS/FweLjgrnh2JPLN8
-   3IM+eWkK39cpcD39q0WOvnVOKOGsK7ldxsV/tyDahhEDKAVlcf66T5iiE
-   2L8/i1xH25dKfgG0xIwWAp4ICN3whV7HFwy8ACRsyCl99kuykc1OpQ2PM
-   YWSzjaEmYycHLwwdGhJAfOyFWI1Yxo+c6PcbqBOgVHfgojY2YB+hsy4Bq
-   5fJv9jVhqHwcX2ias/lCRpoIye8Q2A8eY5vyq24+Skct4VeFmAdp/ngBS
-   Q==;
-X-CSE-ConnectionGUID: UQqZij3VS4WEKhSYyvboRA==
-X-CSE-MsgGUID: 0UHJ5ySySj2Ueq4eyQlX5A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52465815"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="52465815"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 10:22:09 -0700
-X-CSE-ConnectionGUID: wcOuWQMEQViVlxOgO6aEkQ==
-X-CSE-MsgGUID: yEpwHbqtQ8aabCl6DtGpBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="153750923"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 10:22:06 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRa0Z-000Hws-2R;
-	Tue, 17 Jun 2025 17:22:03 +0000
-Date: Wed, 18 Jun 2025 01:21:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
-	Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Jason A. Donenfeld" <Jason@zx2c4.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
- to memcpy
-Message-ID: <202506180158.O3zMMHjh-lkp@intel.com>
-References: <20250617005800.1410112-2-irogers@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h3OG3ntj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750180959;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=34DKIigEpcgfa4tv94Inm/gSRCZZNbs35BdPm5ILfHc=;
+	b=h3OG3ntjL0Min7R6XomFqByaPlb76RuMxrt7RreqVQQQL6Pu9YOmibUfNk7I0ggb9yYv82
+	wsYgVPR22y0/si14hHNL742aOUi7AYj3fcUmFfgyWe+AMLf3vwuY9H0jvR/gbYtRT0YNSz
+	V+bPOFZLbExy3VOt2ll6ZLv1d+CMwCQ=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-OF-yaW4bMe2mrSFoROJWxA-1; Tue, 17 Jun 2025 13:22:38 -0400
+X-MC-Unique: OF-yaW4bMe2mrSFoROJWxA-1
+X-Mimecast-MFC-AGG-ID: OF-yaW4bMe2mrSFoROJWxA_1750180957
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7425efba1a3so4911545b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:22:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750180957; x=1750785757;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=34DKIigEpcgfa4tv94Inm/gSRCZZNbs35BdPm5ILfHc=;
+        b=Lj3KgkZCQdZeUyIrwehC1fnHXjKNNjj3wO5RAVZStkr7N4nEDnumdRThfl2/9a7R8T
+         bMHvpP7GIGIiO0McO+Da41IZW5Z7fiZjMJjAcUkVO5QDcLMCWMoqopbJeUlKbY0Q9dq1
+         lY4PBAXpNQ2SkOgUtjzuFXX4fQiCtVnFSXonkNXVAtzbnYZkxeIICQFGMDdr0jtLN+m0
+         iNvMd47SgBtC5wqBTvtRjzKs9sX4O7Ktp09+k6bBVqJWgBcTDLeVD3lylOU95VbHFtqJ
+         1VA+OX5A/h9kYsBbQfYuv32gD7Htc373+ubb4Wp4Mcdi6jUiXLbFhZootkb61hphylTw
+         7RYg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcIiWLUbjhtHQhv9QXjSPZjOUbigfbmKUUOCn9anuWHYTRr5fbRzeEJWdJTGLz8sJRrQTVqUtxxJkM/iU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy70vZ3fFb35d4PTbsUxX3UlaSm3TYB4cfbj5Mdc62TRLXOR0HD
+	IhaW+0T6MKiXf5v0PySL6qObJm8P19cSpr+6HxAaoiYtU2582i2zXSaccjm5Akl2W4C4fH6YKWZ
+	ikffKF5g61Eejrhnx+4+x6bB4x0MyTehvJT90RXFEBhkM3rU/aMYnPHC1j9OJ96qlBK93rbffFQ
+	==
+X-Gm-Gg: ASbGncsARTSpoQVwaSDk41NPLqtPzaRxx4YUvB4T3ycZYfu52/x2dlKA585e/Tjg1Fr
+	NEqpfAPCpAFgBAxfPZXyVBDsl3NP8bqAQ4TQx27BCogoGU4krMZ13LxGUC7sG4e/I9Bxf6CXKHh
+	YuqvyZm+jAGfVyiglojCTvqIL/TdSO75rdBbxiisZA6Xn6W+sSWNN1X/ntsTvKQRj5XmquO19+4
+	qHsCeXZ/ZwQeC4614t6mkQ6F8OHuEigzqYG6evZbRIU/JrNl6uGZAw0qoyQmJdJVBVySoUlTCaO
+	C1ZHZCja30n3fw==
+X-Received: by 2002:a05:6a00:b8b:b0:748:6a12:1b47 with SMTP id d2e1a72fcca58-7489c47e470mr18490191b3a.10.1750180956725;
+        Tue, 17 Jun 2025 10:22:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFM6/AhfqpvtyHQaLreUDoYWYWZc8npPOOqClxjD7RFi7IF9gRDq4KeeMPXcwtHEi9K0833AA==
+X-Received: by 2002:a05:6a00:b8b:b0:748:6a12:1b47 with SMTP id d2e1a72fcca58-7489c47e470mr18490157b3a.10.1750180956304;
+        Tue, 17 Jun 2025 10:22:36 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890083bb2sm9450419b3a.94.2025.06.17.10.22.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 10:22:35 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:22:30 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ujwal Kundur <ujwal.kundur@gmail.com>, shuah@kernel.org,
+	jackmanb@google.com, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v5 1/1] selftests/mm/uffd: Refactor non-composite global
+ vars into struct
+Message-ID: <aFGkVh-rs2ZqcL6g@x1.local>
+References: <20250501163827.2598-1-ujwal.kundur@gmail.com>
+ <20250616100406.2853-1-ujwal.kundur@gmail.com>
+ <20250616172618.0609127a8b1e406d4c228d24@linux-foundation.org>
+ <aFGPVPDKGLOIEucg@x1.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250617005800.1410112-2-irogers@google.com>
+In-Reply-To: <aFGPVPDKGLOIEucg@x1.local>
 
-Hi Ian,
+On Tue, Jun 17, 2025 at 11:52:52AM -0400, Peter Xu wrote:
+> On Mon, Jun 16, 2025 at 05:26:18PM -0700, Andrew Morton wrote:
+> > On Mon, 16 Jun 2025 15:34:06 +0530 Ujwal Kundur <ujwal.kundur@gmail.com> wrote:
+> > 
+> > > Refactor macros and non-composite global variable definitions into a
+> > > struct that is defined at the start of a test and is passed around
+> > > instead of relying on global vars.
+> > 
+> > Well I guess that's nicer.
+> > 
+> > >  5 files changed, 616 insertions(+), 542 deletions(-)
+> > 
+> > It needs to be!
+> > 
+> > Thanks, I'll queue it for testing while Peter thinks about it :)
+> 
+> I didn't pay much attention on this one as I saw Brandan was actively
+> reviewing it, which was great.
+> 
+> This is definitely an improvement to the test.  Thanks both!
 
-kernel test robot noticed the following build warnings:
+I did give it a quick run today, but I found I hit this:
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc2 next-20250617]
-[cannot apply to tip/timers/vdso acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+$ ./uffd-unit-tests
+Testing UFFDIO_API (with syscall)... done
+Testing UFFDIO_API (with /dev/userfaultfd)... done
+Testing register-ioctls on anon... done
+ERROR: munmap (errno=22, @uffd-common.c:277)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/vdso-Switch-get-put-unaligned-from-packed-struct-to-memcpy/20250617-085916
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250617005800.1410112-2-irogers%40google.com
-patch subject: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
-config: arm64-randconfig-r133-20250617 (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce: (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/reproduce)
+IIUC it's because after moving most globals to stack, they are not properly
+zero-initialized anymore. In this case it failed at MEM_ANON of
+register-ioctls test, trying to munmap() some address that will start to be
+random garbage since it's on the stack.  So maybe we at least need
+something like this?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506180158.O3zMMHjh-lkp@intel.com/
+diff --git a/tools/testing/selftests/mm/uffd-unit-tests.c b/tools/testing/selftests/mm/uffd-unit-tests.c
+index bed96f41c578..0b66ca3e7b82 100644
+--- a/tools/testing/selftests/mm/uffd-unit-tests.c
++++ b/tools/testing/selftests/mm/uffd-unit-tests.c
+@@ -1744,7 +1744,7 @@ int main(int argc, char *argv[])
+                        mem_type = &mem_types[j];
+ 
+                        /* Initialize global test options */
+-                       uffd_global_test_opts_t gopts;
++                       uffd_global_test_opts_t gopts = { 0 };
+ 
+                        gopts.map_shared = mem_type->shared;
+                        uffd_test_ops = mem_type->mem_ops;
 
-All warnings (new ones prefixed by >>):
+Even with that, it fails somewhere later.
 
->> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': invalid PT_DYNAMIC size (0x118)
->> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': PT_DYNAMIC dynamic table is invalid: SHT_DYNAMIC will be used
-   arch/arm64/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
-   make[3]: *** [arch/arm64/kernel/vdso/Makefile:64: arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
-   make[3]: Target 'include/generated/vdso-offsets.h' not remade because of errors.
-   make[3]: Target 'arch/arm64/kernel/vdso/vdso.so' not remade because of errors.
-   make[2]: *** [arch/arm64/Makefile:207: vdso_prepare] Error 2
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
+Ujwal, can you reproduce these issues and have a look?
+
+Thanks,
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Peter Xu
+
