@@ -1,123 +1,174 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CBC42DE201;
-	Tue, 17 Jun 2025 12:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955AE27FB26
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:42:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750164137; cv=none; b=uwbPHyN9nXf2shega5J61sBjtSKTBOXGjW+YUkkfEaVKGlUzVYx6yzOZhwJdDKnhwSLufcOPlp17ZMuSlncgMkMdJePpy93N/6M6Pf2wHWX/5dgZC6+LGNhIlSN5dSosfWh8igPvo7dORNiQiT3bLQCmN5xeH4LBhlombUu3Uyc=
+	t=1750164148; cv=none; b=Q6vP/NxCHAeVFmasn0NKdeRdbZDCqe4sTykQkM08RYkz2Y8OCcV3FPFMnXgZNIBKOKTvswetavJpIoSjEI2lFe5jSqMS1iSeZBoz07vQ5TmFbagIUSvpIGCO4Yy5M8DN/m4veW8eqceJxaqZ39kU2CkiB0eriK2/Ov7gD+pmCCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750164137; c=relaxed/simple;
-	bh=wp8zThC6N9cw43TcQ+r9RrsBd53rRBbiCjDiUQaJpo0=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=QNWQzdv2JK+gJHk1nVPMHLgfYe4EiDRXQ4xhPVjyfeXrtvyBDN898TAIy/hbWoOqp3VMhfQAMWNuc2As/aEAAHd7ynihBUosbynF08wtTW772S7EMIAocJ0X9djYMx7hZfTfoWvTUGo8cJr7RC+RjLQmaJY4jxZZMltwzJ1XtwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eU4PqvnW; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750164148; c=relaxed/simple;
+	bh=YnlMW/OQD8jOXpFvErN0yfsvPxpU/dbDLl8ZtnIoM8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fMjX88drVSWA7z49fltpEeradEANn0epJ7TS7KebjMmU6UfqdDJ0TZ6hsdShnwzcgJMWCpMH6lx24OvnKE9xunWE/X1QZKlPDLSBEbWIQLlmvDVhfrhZ9WzNVwHfEZ0am4cakd2x2jHGpridEEZEJ9EYbn7ciOZ4ET0VLD6VDxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=eZ5Cunnu; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eU4PqvnW"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7fd581c2bf4so4571772a12.3;
-        Tue, 17 Jun 2025 05:42:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="eZ5Cunnu"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-235d6de331fso68641875ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:42:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750164135; x=1750768935; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wp8zThC6N9cw43TcQ+r9RrsBd53rRBbiCjDiUQaJpo0=;
-        b=eU4PqvnWcfWgxe47DNPQfmKGcFEWehy+F2LUXEIDW50kROSPREqiVdmNSNhwhMcbY9
-         NK0rnOKpPNdZrOyFzzRiqOenCydXNGci+3qq3VOcsV0mOqXZnjPAD1wIduHRr3TUBNBB
-         TfN+vPMUiAcLkjtiirs7pxKwQ6i+LNTvSNRrRJHZC2vHi1UkOpSj64J+vKabpH/BJ+fn
-         Xg2SfGwbGA8q05+40qBug2CI8Mxj45SJ49cL2deDsmRsCgo/KfipC4zyxuY4RlD89tAK
-         ZDTUapfxRAu2AwtJemgTf7of4iKeTtpo1f0V7NrW/1yZocKAzL7Iido/dVdwtGyDGJ82
-         GVDQ==
+        d=bytedance.com; s=google; t=1750164146; x=1750768946; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xhCeJRKJX5gly7PeRbiNYGYM1xfBGGYyk6W70uoBE2Y=;
+        b=eZ5CunnuLLx6rmyo799/SVcUwM1uUjNtBjzancEdBdbLoUn0U5lUzmvloNl1JiBOLq
+         4h8mrP1/2UwnvANTwyTzOLVBGUv06vsvNla1iu3OUKMFJJTa1GK0v0BdrVpw6EZGAKkV
+         Lom4Xkvg5dqJUVCBvEGngIrCMr9pIx98r3XtgnNSyD7i4va/QK/0Ag12RjrR3Vl4lIYW
+         DIx2K0aqUHsLtNCcUgPPbTwuEpn/c8GXwzIal9Jl47V9xVlrxxcULs9mX+gbpOuejVTq
+         TgJfh5BVLpCq79na5UB8fgVoKOEH4SZMb11dygXjw0BVvIglgopP2hcsgci9kRivk09a
+         LUPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750164135; x=1750768935;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wp8zThC6N9cw43TcQ+r9RrsBd53rRBbiCjDiUQaJpo0=;
-        b=MybXMdZkpIEP/ssPTjW8aKKVujP9vELoLYa3yc7F58WVzuOgfUkLfTH0vfp9ntKQuF
-         DYly8V0pk++NeXZGr+8+pNVMVMWxqKtQP+0A6A68uQBAr2Dk79HL7GtniC24hjDMU5R2
-         pI5Ytk/JsrZeENHOwHCDNibSdBlB215nOJsNB4ne8hS9bAhYbJplqrtJn1NCBKoTumIa
-         rnk1Ig72etasNfOTaxNMcsTswo8XtjWCmsKTXsPPPosAmqnQeIBuhOK6zVdlil6yhXTV
-         d0Hgl34ENAd9Oj75504e1/O4EZD3zP2tUa8QpV1VYFy2an4RPIbURfQ/jFHflzURLJaZ
-         SPpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWD12Qx97h7drZtIksMODEeJ33SHEt0U9j3gQeP9Ysf6wrEjVViETkEAvKThIE7kjL5xmS9BHtIOZRRyGFi1gM=@vger.kernel.org, AJvYcCXitTqYYtyQOVor9+sEbDWE9HVJ/Cf6HhvB8wH5xfBbnGIX2gITzLXJG/SEUb6YbL6lXVDwQB7kXaQlH+s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6bE7ENoRypJCCT41+1WBYNbYMv5v7mKHR2ZVS60MTiBifz+8h
-	7XmZX1a0Sh65qH3YznLY9kqkJqSDQQIrDmbDJCT3PitHEQO5q2aJ5GAe6Bwjivu8
-X-Gm-Gg: ASbGnctgbR8mTZfKEupC+2g/HD8PWgvpuMnLgaMHUrQix9fu6uMrHucSEleB+4Stfk2
-	RdG+75p/ZmXEu9KpBlSequYaT83pDJ3Ym3g7qs225TcHvKG9zZXhTFqXpN4h92tc34jR3A/eHps
-	fpS8w1q1sLzayLMjg24ESVkaN6ZiQdTPm8CAuED8G/gdB5beuXcwejn7tdjNUrlWakp5o9akqPV
-	9wGseQSpMAIyKhXmVy4cJkzm5doXxFW36JLUAkt2TBcwSMc6dyELXx/qHQDAxRpwzfXHtSz1e3S
-	JcHtD4ppZZPAQM49oEvuugSKuhzxWnytmsGi9fMCsHeJ8wAJ4ButyXiNLgmm61qetQk0gGWxob6
-	1xz3qx5a9UPdqN7XRAUIXMyzolR/HUBZLoeaCWryP
-X-Google-Smtp-Source: AGHT+IGBYiDSH+XW/7WiEAN4Iu3Ysp2ENeOE4J3gC0oSaPzWxHuRYw0Gng+rL/KaJtLA2HzaAc1tkQ==
-X-Received: by 2002:a17:90b:5150:b0:312:1143:cf8c with SMTP id 98e67ed59e1d1-313f1cafae6mr21539935a91.16.1750164134653;
-        Tue, 17 Jun 2025 05:42:14 -0700 (PDT)
-Received: from localhost (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-31429aae8eesm1265192a91.40.2025.06.17.05.42.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:42:14 -0700 (PDT)
-Date: Tue, 17 Jun 2025 21:42:07 +0900 (JST)
-Message-Id: <20250617.214207.1883960660906763456.fujita.tomonori@gmail.com>
-To: miguel.ojeda.sandonis@gmail.com, boqun.feng@gmail.com
-Cc: fujita.tomonori@gmail.com, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu,
- dakr@kernel.org, mingo@redhat.com, peterz@infradead.org,
- juri.lelli@redhat.com, vincent.guittot@linaro.org,
- dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
- mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com, mingo@kernel.org
-Subject: Re: [PATCH v3 2/2] rust: task: Add Rust version of might_sleep()
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <CANiq72kB4hxsyi9D-PV0YDc9KEgfC9iYCTJVEOosZv3fg1+mYA@mail.gmail.com>
-References: <CANiq72mES+dPBuhsdh0-hJcV69AO74j6W5vhCeo+yV5S-Zp+yg@mail.gmail.com>
-	<20250617.120453.1403624234989149033.fujita.tomonori@gmail.com>
-	<CANiq72kB4hxsyi9D-PV0YDc9KEgfC9iYCTJVEOosZv3fg1+mYA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1750164146; x=1750768946;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xhCeJRKJX5gly7PeRbiNYGYM1xfBGGYyk6W70uoBE2Y=;
+        b=JBw3XAXEeoUMkirczTbSfHKZm4Vod1W/HqtzNQV9NRXtwvkGiLQIEGxORhIpzEpHz8
+         lLiLPN+kXl62SR10Tn1rFsbhfYRFGtxmP0XAb/wHKxl/m6MXkKTcvIbYsdCudRbJe530
+         MxXl+ZHEsfVJSJR4bbsfD/T2/n19xmhjVghtnFyKyjfuNAGmZnprZFeqHiIfBXz6GEbp
+         XTA1QOCWTP13U9uAKxJsfmRdoL52T4mEdyQ445H9QcIOnoTESPpH8iKZVsBsPQMLkrjC
+         8GUeivTzpAepxzL8jL0a8ws0zr1AlOfqTMOGm7Le4LgnzJ/f2vAh2gO5ByZh9pLKdsYX
+         2DFg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQCoz4zA0iiOFuVEPPg8XcLmjJy5rijLgjQVSvx2P1JON+9QVNJj+MejCp9NmBfLRS6cSik9NtJ9Wa2O4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyce+nB3jvcxrXEyG6iZOx2hrgzDCtfC5FtbpBpZ4ncWxbSkAzo
+	XerpXVuJlr5iiTWpcId6uN/DVAleLWwQQj6aE34W0bcVfqOyDmATe6tQHILH/kL3p04=
+X-Gm-Gg: ASbGncuFDkl08twzgUAsJ6nrnvfo+r0polcuR4pr24rBYHcRg8ewygo7FEtCJ2saKGJ
+	n3AHMA66tGjDB5OXERQJmR2U6XobP9yTA+sFsFRjPmHc76T1i4DEk1MdrHSbckYUQChmX19EAU6
+	xI/jDY0KbsSDeBtw6ySNtWqqb0pc8eCgpYnMXB8ZqmIiad96Xqntu982YsrYeed/Y3InQ9frihA
+	doxYCjXcKTOYNFQ49KwkyKpTl2Yc0sqIgFnci//1SdQYFRRkPMSFoYVsY7nDn5jFWIRHLL3kh3K
+	fqz97glkSMcs2LB0lCNsfcCJIv5ZzDQ1QcDuUAUMo9VBKYlgpy/38WWZSAR3sGDe445x7tBe3OX
+	cVC6iv1KtmA5pxzSOnAvwNj14
+X-Google-Smtp-Source: AGHT+IEGXsCzeZJho++nxi7+sS5jom3cV2sBi3BqOhTWGBd9h13d/VIShrhQIh5avHoPxHMumouGRg==
+X-Received: by 2002:a17:903:1ac4:b0:234:9fea:ec5f with SMTP id d9443c01a7336-2366afd3a91mr205459905ad.1.1750164145833;
+        Tue, 17 Jun 2025 05:42:25 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.11])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313fcae18e1sm1818708a91.0.2025.06.17.05.42.22
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 17 Jun 2025 05:42:25 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
+Date: Tue, 17 Jun 2025 20:42:18 +0800
+Message-ID: <20250617124218.25727-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <b88d58d2-59f8-4007-a6c5-d32ba4972bea@redhat.com>
+References: <b88d58d2-59f8-4007-a6c5-d32ba4972bea@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-T24gVHVlLCAxNyBKdW4gMjAyNSAxMDowMjoyMiArMDIwMA0KTWlndWVsIE9qZWRhIDxtaWd1ZWwu
-b2plZGEuc2FuZG9uaXNAZ21haWwuY29tPiB3cm90ZToNCg0KPiBPbiBUdWUsIEp1biAxNywgMjAy
-NSBhdCA1OjA14oCvQU0gRlVKSVRBIFRvbW9ub3JpDQo+IDxmdWppdGEudG9tb25vcmlAZ21haWwu
-Y29tPiB3cm90ZToNCj4+DQo+PiBIb3cgYWJvdXQgYWRkaW5nIGEgbGluayB0byB0aGUgaGVhZGVy
-IGZpbGUgd2hlcmUgdGhlIG1pZ2h0X3NsZWVwIG1hY3JvDQo+PiBpcyBkZWZpbmVkLCBsaWtlIHRo
-aXM/DQo+IA0KPiBTb3VuZHMgZ29vZCB0byBtZS4gVGhvdWdoLCBmb3IgQVBJcyB0aGF0IGhhdmUg
-cmVuZGVyZWQgZG9jcywgd2UNCj4gdHlwaWNhbGx5IHBvaW50IHRvIHRob3NlIGluc3RlYWQ6DQo+
-IA0KPiAgICAgaHR0cHM6Ly9kb2NzLmtlcm5lbC5vcmcvZHJpdmVyLWFwaS9iYXNpY3MuaHRtbCNj
-Lm1pZ2h0X3NsZWVwDQoNCkFoLCBzb21laG93LCBJIG92ZXJsb29rZWQgdGhhdC4gVGhhbmtzIQ0K
-DQpCb3F1biwgaGVyZSBpcyB0aGUgcmV2aXNlZCB2ZXJzaW9uLg0KDQpkaWZmIC0tZ2l0IGEvcnVz
-dC9oZWxwZXJzL3Rhc2suYyBiL3J1c3QvaGVscGVycy90YXNrLmMNCmluZGV4IDMxYzMzZWEyZGNl
-Ni4uMmM4NWJiYzI3MjdlIDEwMDY0NA0KLS0tIGEvcnVzdC9oZWxwZXJzL3Rhc2suYw0KKysrIGIv
-cnVzdC9oZWxwZXJzL3Rhc2suYw0KQEAgLTEsNyArMSwxMyBAQA0KIC8vIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiBHUEwtMi4wDQogDQorI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KICNpbmNs
-dWRlIDxsaW51eC9zY2hlZC90YXNrLmg+DQogDQordm9pZCBydXN0X2hlbHBlcl9taWdodF9yZXNj
-aGVkKHZvaWQpDQorew0KKwltaWdodF9yZXNjaGVkKCk7DQorfQ0KKw0KIHN0cnVjdCB0YXNrX3N0
-cnVjdCAqcnVzdF9oZWxwZXJfZ2V0X2N1cnJlbnQodm9pZCkNCiB7DQogCXJldHVybiBjdXJyZW50
-Ow0KZGlmZiAtLWdpdCBhL3J1c3Qva2VybmVsL3Rhc2sucnMgYi9ydXN0L2tlcm5lbC90YXNrLnJz
-DQppbmRleCA4MzQzNjgzMTMwODguLmI3OWQxOWRlYjAyZSAxMDA2NDQNCi0tLSBhL3J1c3Qva2Vy
-bmVsL3Rhc2sucnMNCisrKyBiL3J1c3Qva2VybmVsL3Rhc2sucnMNCkBAIC00MDAsMyArNDAwLDI3
-IEBAIGZuIGVxKCZzZWxmLCBvdGhlcjogJkt1aWQpIC0+IGJvb2wgew0KIH0NCiANCiBpbXBsIEVx
-IGZvciBLdWlkIHt9DQorDQorLy8vIEFubm90YXRpb24gZm9yIGZ1bmN0aW9ucyB0aGF0IGNhbiBz
-bGVlcC4NCisvLy8NCisvLy8gRXF1aXZhbGVudCB0byB0aGUgQyBzaWRlIFtgbWlnaHRfc2xlZXBg
-XSBtYWNybywgdGhpcyBmdW5jdGlvbiBzZXJ2ZXMgYXMNCisvLy8gYSBkZWJ1Z2dpbmcgYWlkIGFu
-ZCBhIHBvdGVudGlhbCBzY2hlZHVsaW5nIHBvaW50Lg0KKy8vLw0KKy8vLyBUaGlzIGZ1bmN0aW9u
-IGNhbiBvbmx5IGJlIHVzZWQgaW4gYSBub25hdG9taWMgY29udGV4dC4NCisvLy8NCisvLy8gW2Bt
-aWdodF9zbGVlcGBdOiBodHRwczovL2RvY3Mua2VybmVsLm9yZy9kcml2ZXItYXBpL2Jhc2ljcy5o
-dG1sI2MubWlnaHRfc2xlZXANCisjW3RyYWNrX2NhbGxlcl0NCisjW2lubGluZV0NCitwdWIgZm4g
-bWlnaHRfc2xlZXAoKSB7DQorICAgICNbY2ZnKENPTkZJR19ERUJVR19BVE9NSUNfU0xFRVApXQ0K
-KyAgICB7DQorICAgICAgICBsZXQgbG9jID0gY29yZTo6cGFuaWM6OkxvY2F0aW9uOjpjYWxsZXIo
-KTsNCisgICAgICAgIGxldCBmaWxlID0ga2VybmVsOjpmaWxlX2Zyb21fbG9jYXRpb24obG9jKTsN
-CisNCisgICAgICAgIC8vIFNBRkVUWTogYGZpbGUuYXNfcHRyKClgIGlzIHZhbGlkIGZvciByZWFk
-aW5nIGFuZCBndWFyYW50ZWVkIHRvIGJlIG51bC10ZXJtaW5hdGVkLg0KKyAgICAgICAgdW5zYWZl
-IHsgY3JhdGU6OmJpbmRpbmdzOjpfX21pZ2h0X3NsZWVwKGZpbGUuYXNfcHRyKCkuY2FzdCgpLCBs
-b2MubGluZSgpIGFzIGkzMikgfQ0KKyAgICB9DQorDQorICAgIC8vIFNBRkVUWTogQWx3YXlzIHNh
-ZmUgdG8gY2FsbC4NCisgICAgdW5zYWZlIHsgY3JhdGU6OmJpbmRpbmdzOjptaWdodF9yZXNjaGVk
-KCkgfQ0KK30NCg==
+On Tue, 17 Jun 2025 11:49:43 +0200, david@redhat.com wrote:
+ 
+> On 17.06.25 11:47, lizhe.67@bytedance.com wrote:
+> > On Tue, 17 Jun 2025 09:43:56 +0200, david@redhat.com wrote:
+> >   
+> >>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> >>> index e952bf8bdfab..d7653f4c10d5 100644
+> >>> --- a/drivers/vfio/vfio_iommu_type1.c
+> >>> +++ b/drivers/vfio/vfio_iommu_type1.c
+> >>> @@ -801,16 +801,43 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+> >>>           return pinned;
+> >>>    }
+> >>>    
+> >>> +/* Returned number includes the provided current page. */
+> >>> +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> >>> +               struct page *page, unsigned long max_pages)
+> >>> +{
+> >>> +       if (!folio_test_large(folio))
+> >>> +               return 1;
+> >>> +       return min_t(unsigned long, max_pages,
+> >>> +                    folio_nr_pages(folio) - folio_page_idx(folio, page));
+> >>> +}
+> >>
+> >> Note that I think that should go somewhere into mm.h, and also get used
+> >> by GUP. So factoring it out from GUP and then using it here.
+> > 
+> > I think I need to separate this out into a distinct patch within the
+> > patchset. Is that correct?
+> 
+> Yes, that's what I would do.
+
+How do you think of this implementation?
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 242b05671502..eb91f99ea973 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2165,6 +2165,23 @@ static inline long folio_nr_pages(const struct folio *folio)
+        return folio_large_nr_pages(folio);
+ }
+ 
++/*
++ * folio_remaining_pages - Counts the number of pages from a given
++ * start page to the end of the folio.
++ *
++ * @folio: Pointer to folio
++ * @start_page: The starting page from which to begin counting.
++ *
++ * Returned number includes the provided start page.
++ *
++ * The caller must ensure that @start_page belongs to @folio.
++ */
++static inline unsigned long folio_remaining_pages(struct folio *folio,
++               struct page *start_page)
++{
++       return folio_nr_pages(folio) - folio_page_idx(folio, start_page);
++}
++
+ /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
+ #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+ #define MAX_FOLIO_NR_PAGES     (1UL << PUD_ORDER)
+diff --git a/mm/gup.c b/mm/gup.c
+index 15debead5f5b..14ae2e3088b4 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -242,7 +242,7 @@ static inline struct folio *gup_folio_range_next(struct page *start,
+ 
+        if (folio_test_large(folio))
+                nr = min_t(unsigned int, npages - i,
+-                          folio_nr_pages(folio) - folio_page_idx(folio, next));
++                          folio_remaining_pages(folio, next));
+ 
+        *ntails = nr;
+        return folio;
+diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+index b2fc5266e3d2..34e85258060c 100644
+--- a/mm/page_isolation.c
++++ b/mm/page_isolation.c
+@@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+                                return page;
+                        }
+ 
+-                       skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
++                       skip_pages = folio_remaining_pages(folio, page);
+                        pfn += skip_pages - 1;
+                        continue;
+                }
+---
+
+Thanks,
+Zhe
