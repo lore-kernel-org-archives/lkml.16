@@ -1,103 +1,147 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D85155C88;
-	Tue, 17 Jun 2025 17:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63713BBF2
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750182392; cv=none; b=PryxpVmIrUrchyDL0VA1cVYKsG+SVMGjC0ZDkHanav7nvnTMIygTg9ou8XygkDNlbilR985OHQ+cGkFwt6fYcS99aTdve2dAwKQWVSdx+KqlE0ROT1ueN3+uDkPaXz/REkT1RJIjGj06jX2j/ykhSn7hYctzLI2hFxGijIYsNag=
+	t=1750182725; cv=none; b=YfoGSk+QF4cQJW97Lge274LMyuLWHYAQCqNa8DCxtTw/k1iL0upoCcdQI0D3MV7Ah2U95mojFuISOvvhEY3NV5pmBskZV+F+mOFJ5igIq2EktG+DyzG6hETkpRw0g/KCpaacC/F8/orfaTWZKoZZeCw2C5MY/VbMapD2qliksoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750182392; c=relaxed/simple;
-	bh=Uv0NCTJ00gk9YV7iyXByPsM1Wt4R014FnhORTMDPaiQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Yit6LLB66WXaTOQetVt1yf9ZA3cmvfAjsdSiFj8sZfP7wLyjpHgCtXTqyZoGb8iHdCXgclI7BMWglECZfQfnhOvMMcURnhmHfPfGKVI5okWKXYicjB/3ICmetp3wRDFjtT4jK+0juKPcGsgDanXEANDbMCw69NzyWDyOJRUuv60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UzoIKQgt; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750182725; c=relaxed/simple;
+	bh=VlMA8Y97UBbaoyXvJx0h0GaAzHx6awCw+YqOGf/prjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F7FytwrFFtAu2f0JWf8ZHxtRTNUDFe6MwFxwDW9BwqzC/5ltS8t29e4PM+Cjvunx6aHyEL4JGaGdGASMmWGP4/cdcY72KRo86hZ0FJhW7zrAveXeeO1+XK8+FZsIhoc4pT/PuGjWIf9rLElNQXsYhk4kroUAiK29AsqAuZu+ROg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JaadzyNh; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UzoIKQgt"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-73c17c770a7so6814077b3a.2;
-        Tue, 17 Jun 2025 10:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750182390; x=1750787190; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PhXt6IXHoXRnuldAMrELoIVsG76q2w//unnbq8lMXlY=;
-        b=UzoIKQgtcHOt/kqL8VgjiuJBAlAEuiwcu/e+mU5l2w6mQMdh/REA9Wx0VV6tIvWv3s
-         i5+9zsHazouBCQpgPhwyQi3wxNmI8K10MrX68Kxovf0LBQNs31Rt3wp4/bzaRxtytWb5
-         N47LG5mghGici5vDril82BGeFXyraE4qu/Cc+NvgoarUkEF4mN6vioRz040P1qPrP8in
-         FcX90emZkQd48i7iVxzgm+wdzuc0yyk8FUSkDn3LdcekMh1blD+wUeYtUJkuy9wjM8FJ
-         cp5S0fVTaL1hPFO8w5T6JJ7KPOMuWTmwaaKOQ9kZ6+vw+xI4l0OjlccQ9llI3hMSCI6x
-         sqbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750182390; x=1750787190;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PhXt6IXHoXRnuldAMrELoIVsG76q2w//unnbq8lMXlY=;
-        b=g2M1t3Tlhd1qvQgcUlGqzMD+hudOytYp9dN/GPJULJdBkiCH81ejsQRmRN1u6RMe17
-         1tvozVch1nJ/bhYVRzn+h0mQwVWURi0jb2Po74QU0sgIaUw8+XiSGRUNS3qA6qu2TmGg
-         1kPimcPj8f3nInwINxMc4U2ZGWi7wce/pWgPqDNJuQ/t3n3iAcWU2y3WaWS1hzkkrVxc
-         zSqH9Ttuf/YkqVzr14qQm/uxmRxXyfTYBgXai2XjjcZ5TXKKoMg2D9RWCKYPDMOsAX46
-         hBwLltC9o951OabDFbAhdPMZdcsOOyn98YyLKAxM08d70mUv6vTfhQ/ubV/zZjJHVSpW
-         LK4w==
-X-Forwarded-Encrypted: i=1; AJvYcCUudF88Imx1HR7BOwDSqUKqcZwISYmpJxPRNpBo38h1fdfdm8awKkSsnLtCyXp2v4uH1RrOB1Ofufd2D0mt@vger.kernel.org, AJvYcCVUFuqt8/RGJBrP14rzVb5NxhAbc2hzJKWrJHa/RVnlo7yO/Lu6tntB9y6NnC4KOcWuKZ2NOuYB2JxJ@vger.kernel.org, AJvYcCWGjqk89cHk38iVfEf0ijqMP8WJNQrIQkN7ahIb4WS7Gry2wWunWr23wsEEm9kGMVg8UQna4/xZX6ajoQ==@vger.kernel.org, AJvYcCX0D0HCfGABfZ/vNdoYaBJMNknpjHXM14m1/QVdv107zELbjC1nOsSJ5fHfdAYc/NpS4aT72tlxuf+v@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOaGLW7lXVHDch6aWwLEjZotDg9DirQB41VkDIPYgUu4pLsevD
-	cRZt/oOudvHJ3ektWAI0Xgcm4x8VMza1jRFnDIMVSHfL19Cb6AsQpqOa
-X-Gm-Gg: ASbGncvIgHor9iI8FKwBEmw7IlcllZPn0Hi5JrvxJf7jl6RO917WWaFOto1bcu2BBq3
-	5F/SiwqVW3cfCrWEOE4qXjLid2kmo/B4pk+LlfaW+LUvTvlaaIM3/ujbtPO8qZ8ww+Hak6S6j2Y
-	SgaBr+ICa+Le8yQG+Ej7tRGv0eWdbIL2P9TTsRMrnzcJ/v6y5+bwkK2OtInuX8MhbQ42zKKbw3S
-	6HC3mmgefIWgPRpxB0fe6zLdWNTjd+rU81xVoMmDluj28VdyZle3h/xlWXFYTZImo99iF1K9hzt
-	IFlkQE30Gi36acUoeoQpo95hkCTuA8v3ZyjPAVX5fDNNUP2BDOB07mpvFqzfqIDcAbyRCFI5
-X-Google-Smtp-Source: AGHT+IGXdP5LGQE7FQKixxHjndNV1PZ/lpzXikzhO/Gij6a0m6KK+esq1r1YMi/c5xyY+4+oT/DgqA==
-X-Received: by 2002:a05:6a00:1797:b0:737:678d:fb66 with SMTP id d2e1a72fcca58-7489cdfcb9bmr17988522b3a.5.1750182390121;
-        Tue, 17 Jun 2025 10:46:30 -0700 (PDT)
-Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7489008229fsm9470135b3a.106.2025.06.17.10.46.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 10:46:29 -0700 (PDT)
-From: Nam Tran <trannamatk@gmail.com>
-To: lee@kernel.org
-Cc: pavel@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5] test
-Date: Wed, 18 Jun 2025 00:46:25 +0700
-Message-Id: <20250617174625.32084-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250612100325.GA381401@google.com>
-References: <20250612100325.GA381401@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JaadzyNh"
+Date: Tue, 17 Jun 2025 10:51:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750182720;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9H/iaRf40PeLw7FvouwIQ5qs9ZEfzW9xC+JE7Z9klJ8=;
+	b=JaadzyNhevveq+vZ8dIcdKKaPKuCecNr0d21VLID7tFlRNIz64VPIzWilCmDsaOsZS71DG
+	1wer4h9Yc7RXamq/su+Jb4DBgzcAsUg30BK6pQHRS2KNWJ+Ec9rT9eWJylV/z3nUk4AbTJ
+	XloVox0tXwOQJilPwqMg882PpK30gCI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] MAINTAINERS: add further core files to mm core
+ section
+Message-ID: <bfnbgxtvo4avlktnk6dmusns4iq4ksjvjmcuw6kqekpsrh324x@xulw3cq3uxih>
+References: <20250616203844.566056-1-lorenzo.stoakes@oracle.com>
+ <727b5e89-89d7-4abf-a93c-8d6f2cb2c438@redhat.com>
+ <35kubwcjkvyu34k7ejp2ykydtrbcl2gptcurs7rhqzi3cy3l5h@gcxndb7dfdgq>
+ <c8d6c655-282c-41a7-9cae-a18e0cc5e15d@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8d6c655-282c-41a7-9cae-a18e0cc5e15d@lucifer.local>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 12 Jun 2025, Lee Jones wrote:
-
-> On Wed, 11 Jun 2025, Nam Tran wrote:
+On Tue, Jun 17, 2025 at 04:22:33PM +0100, Lorenzo Stoakes wrote:
+> On Mon, Jun 16, 2025 at 03:56:02PM -0700, Shakeel Butt wrote:
+> > On Mon, Jun 16, 2025 at 11:10:41PM +0200, David Hildenbrand wrote:
+> > > On 16.06.25 22:38, Lorenzo Stoakes wrote:
+> > > > There are a number of files which don't quite belong anywhere else, so
+> > > > place them in the core section. If we determine in future they belong
+> > > > elsewhere we can update incrementally but it is preferable that we assign
+> > > > each file to a section as best we can.
+> > > >
+> > > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+> > > > ---
+> > > > REVIEWERS - let me know if these seem appropriate, I'm eyeballing
+> > > > this. even if they are not quite best placed a 'best effort' is still
+> > > > worthwhile so we establish a place to put all mm files, we can always
+> > > > incrementally update these later.
+> > > >
+> > > >   MAINTAINERS | 28 ++++++++++++++++++++++++----
+> > > >   1 file changed, 24 insertions(+), 4 deletions(-)
+> > > >
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > index 4523a6409186..a61d56bd7aa4 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -15740,10 +15740,6 @@ F:	include/linux/memory_hotplug.h
+> > > >   F:	include/linux/memory-tiers.h
+> > > >   F:	include/linux/mempolicy.h
+> > > >   F:	include/linux/mempool.h
+> > > > -F:	include/linux/memremap.h
+> > > > -F:	include/linux/mmzone.h
+> > > > -F:	include/linux/mmu_notifier.h
+> > > > -F:	include/linux/pagewalk.h
+> > > >   F:	include/trace/events/ksm.h
+> > > >   F:	mm/
+> > > >   F:	tools/mm/
+> > >
+> > > Probably better to have some section than none ... was just briefly
+> > > wondering if "CORE" is the right section for some of that. Some of that
+> > > might be better of in a "MM MISC" section, maybe.
+> > >
+> > > > @@ -15764,16 +15760,40 @@ S:	Maintained
+> > > >   W:	http://www.linux-mm.org
+> > > >   T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> > > >   F:	include/linux/memory.h
+> > > > +F:	include/linux/memremap.h
+> > > >   F:	include/linux/mm.h
+> > > >   F:	include/linux/mm_*.h
+> > > >   F:	include/linux/mmdebug.h
+> > > > +F:	include/linux/mmu_notifier.h
+> > > > +F:	include/linux/mmzone.h
+> > > >   F:	include/linux/pagewalk.h
+> > > >   F:	kernel/fork.c
+> > > >   F:	mm/Kconfig
+> > > >   F:	mm/debug.c
+> > > > +F:	mm/debug_page_ref.c
+> > > > +F:	mm/debug_vm_pgtable.c
+> > >
+> > > Wondering if there should be a MM DEBUG section. But then, no idea who in
+> > > their right mind would be willing to maintain that ;)
+> > >
+> > > > +F:	mm/folio-compat.c
+> > > > +F:	mm/highmem.c
+> > > >   F:	mm/init-mm.c
+> > > > +F:	mm/internal.h
+> > > > +F:	mm/interval_tree.c
+> > > > +F:	mm/io-mapping.c> +F:	mm/ioremap.c
+> > > > +F:	mm/list_lru.c
+> > >
+> > > Smells like reclaim/memcg.
+> >
+> > Shrinker might be more appropriate (along with the list_lru.h)
 > 
-> > ---
-> >  drivers/leds/rgb/leds-lp5812.c | 1934 ++++++++++++++++++++++++++++++++
-> >  drivers/leds/rgb/leds-lp5812.h |  230 ++++
-> >  2 files changed, 2164 insertions(+)
-> >  create mode 100644 drivers/leds/rgb/leds-lp5812.c
-> >  create mode 100644 drivers/leds/rgb/leds-lp5812.h
+> Yeah I struggled with this one. It's a weird one, it's like a generic LRU
+> algorithm:
 > 
-> Doh!
+> zswap_lru_add()
+> binder_lru_freelist_add()
+> -> list_lru_add()
+> 
+> Also called internally by list_lru_add_obj() which is used for dentry LRUs by a
+> number of filesystems
+> 
+> But also by the working set code in workingset_update_node() :)
+> 
+> So it's a bit all over the place.
+> 
+> I wonder whether best for mm misc as a result?
 
-Apologies - that patch was sent by mistake and is not part of the series. Please disregard it.
-I'll make sure this doesn't happen in the next submission.
-Thanks for your understanding.
-
-Best regards,
-Nam Tran
+list_lru is the data structure / abstraction to interact with the
+shrinker. Kernel components which can consume large amount of kernel
+memory and has a way to drop some on memory pressure (e.g. some form of
+cache) register themselves with the shrinker and list_lru is used to
+store/link their internal objects which the shrinker can drop/reclaim
+during memory reclaim.
