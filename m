@@ -1,247 +1,141 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE322E54A0;
-	Tue, 17 Jun 2025 14:17:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CFD2EF647;
+	Tue, 17 Jun 2025 14:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169835; cv=none; b=XF99OnVm2AmikSp1zDhbgNNadE4d+Mn1VfZJT1aONOmbNkC7ZjP9C6yCkj5lUMFT+PUAwH0VttLpQK+JwBym0YL7Ri5b+T3WMm9AsE1bnn+FwiDUttMese0LGtd5nMojVcp2z+WVocRi0sd9h9WlTMz2z51W2hxy5rXrG2G6fmU=
+	t=1750169853; cv=none; b=mR4L+PySjQf1AMIlKjFcLHoOQqiAfc+j5ywffipXBxfrxLbWUdBBbnewwVl/onwV6aL1TDqrkit+3vjFcJP7Cws+49exCqGsoRy3+DaX0lUmONJT4HJ59s1Yood0GZDAbsPqgVWexWRPAeMe3p53WZvt4UQ5OqUZtGb82hOXmgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169835; c=relaxed/simple;
-	bh=nKf4kiz3gkj96eDUS/E9GKO+Cp6HTAu2vUqpViPbqA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VUzmEn28DKFQl70oaOhlii0ich33iEi+tmrIdhWNzJ42e98dNJ/OecoMKsOlrinb4MUusfWEibE4H3u2wEcf8JuYqIi5+Ve1yXrtuDZunnG77DMkkV2QLofPmH1Cz04LfAjsQHFch+16IOOYBe2ca4vLVEkTr8zJRrrEiqs44KE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Dv4rnZ4M; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750169853; c=relaxed/simple;
+	bh=O1SMjbdLTEYQH6SxZhVBwpj87vYNYm71xhJpBNm0H3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QxPNTb+ZUVyLXTkOS0sd91p3dx9KLvo23K5ANo0xqtuotmrA+8Cl9vwJBa2m35TqPiedc3+VvhZzPzDqU5qSWhHiCievZVqb35C3uMtoZQ0rS8WIvUol9OfMJWSG68cjyB5N8Wks22P4GtsTwfdFdE9jM9Mdz2d1QjpnBOYWWQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWzhRLLy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Dv4rnZ4M"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HDTBOa010361;
-	Tue, 17 Jun 2025 14:17:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	kvylzx5njgdJJXERfy/aqJInKEarqf+wNdWiuUSUJV4=; b=Dv4rnZ4Mo2h487yE
-	15PhvsU8ZbrVdCuRvKvDBz260aAcY6t4xgK1qsmCa6JAnh0p+m5ams7v7zlOWAnZ
-	KtjPYooBHQJip7I7Bdu3DRwaY5pd8bFdeezbLudOPxAS5XAfClRfmQ7c1uuL9Cxt
-	YRVhvyReSHTqG5ly/NLH4mUABIRT42acLfeTB0SVChSfpm0e7WdTI5wt1f6omEnP
-	6npGKpXrd8E4aqPNsT9D0mMpgVq0l73LjPlyO42f/RAqN6VHMSljmkC2SeothKA9
-	6klAeznGbHa8KzWtiqHkpTFFJ6oQl2aV6Zd7zy67wMhMaN3dYHfTfNYtyPiwM1wr
-	lgUUBg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792ca0pd2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 14:17:06 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55HEH5eC011275
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 14:17:05 GMT
-Received: from [10.217.219.62] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 17 Jun
- 2025 07:17:00 -0700
-Message-ID: <f04b5912-8e1c-47fe-8d0e-3bef72ae393d@quicinc.com>
-Date: Tue, 17 Jun 2025 19:46:58 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWzhRLLy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E489AC4CEF1;
+	Tue, 17 Jun 2025 14:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750169852;
+	bh=O1SMjbdLTEYQH6SxZhVBwpj87vYNYm71xhJpBNm0H3M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TWzhRLLyHIqF77Jcd6LJ0N1aAlIaTGB78EmjM9GCqiXwCkZPxA1cks3jddIRLCT/S
+	 0eaXzO+WNEndYjfCnfPCCWVuzqjCEfTHfD1Xa0PvRXinmGU8dy5yMfaMzMcrjZJPTd
+	 Nrr0MkdBn8tEoLXP8JsCi6m+CgFOZZxelMcEc/cn3Hu2dod1g96zyWCNXJ1UdkiCOf
+	 Eh7VfdEb9x5rKa4/uYzWsysZ3rgW+LnLY17Cq1T4o5jZoM1C53NDMHqL7wXbO7sAWZ
+	 9vuBnfHFMKm3NCxjj/gQ1bbGD+QaU6ZSvmjyYl1XOxp2JwcofIlS6PklglPwVY1dpO
+	 HhHLb4p1C9eSw==
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60867565fb5so10302369a12.3;
+        Tue, 17 Jun 2025 07:17:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV/gBbVGOMyoe/Soykryunr+tlxI+UWXZQS0DxyMNu8cp3XSOZHWQxtVKkjjXB7Z3IGIMxdilcUk+iM@vger.kernel.org, AJvYcCWpqcASZWcLMDRRem4+nbGM00vn6LYRuUqV4EdNBdnSAC+7OI98Mv5Va0HFAIr4nt6ehplmp8QmCYXvssw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2Wo0xGN48dyV1wCUJoE1d47jInIrDOvdHSX0lTVX7Ub2FHdVx
+	swBS2yh2coFNALT6X/pIIb38bcTlyR7yXOzzBAdk+gT8033pvF35bN+cBqLOwz11Cm9SYpVP0/m
+	YHeKvkD0QD+HpHXNKBgBJEUoEcVonNH8=
+X-Google-Smtp-Source: AGHT+IHgM6DSYSnociWdKPh7LbnjGpoM5pNWIFFL0GpBYG0bk6mU02eUU4uvhYpAG9J3aL+U/TCSMNPS4WId/+qkO7c=
+X-Received: by 2002:a05:6402:5114:b0:607:1053:504e with SMTP id
+ 4fb4d7f45d1cf-608d088ef85mr11567270a12.2.1750169851297; Tue, 17 Jun 2025
+ 07:17:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] dmaengine: qcom: gpi: Add GPI Block event
- interrupt support
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Vinod Koul <vkoul@kernel.org>,
-        Mukesh Kumar Savaliya
-	<quic_msavaliy@quicinc.com>,
-        Viken Dadhaniya <quic_vdadhani@quicinc.com>,
-        Andi Shyti <andi.shyti@kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linaro-mm-sig@lists.linaro.org>, <quic_vtanuku@quicinc.com>
-References: <20250506111844.1726-1-quic_jseerapu@quicinc.com>
- <20250506111844.1726-2-quic_jseerapu@quicinc.com>
- <ze5y6llgo2qx4nvilaqcmkam5ywqa76d6uetn34iblz4nefpeu@ozbgzwbyd54u>
- <4456d0e2-3451-4749-acda-3b75ae99e89b@quicinc.com>
- <de00809a-2775-4417-b987-5f557962ec31@quicinc.com>
- <CAO9ioeUW9-7N2Ptu_p=XKzeb02RsXx8V3CzarPOD4EWy4QrnsA@mail.gmail.com>
-Content-Language: en-US
-From: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
-In-Reply-To: <CAO9ioeUW9-7N2Ptu_p=XKzeb02RsXx8V3CzarPOD4EWy4QrnsA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 7849VFfCynm0RwCxyFVVopjy9CDouI6e
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDExMSBTYWx0ZWRfXxXam36pE1f5g
- BAlpojhrYEiEvg8zLz3I4dmrvGSuTCwNOxzPBzi5hu6ZmadroSfGk9yAJGCQdeLNXF+x4ip2HYh
- U13zlXddjb5QZFjyVR26/pAfBM74cN2oiqZUHk0kU2/ZIGwDqwYMCUor96qNSjRi+d+OQ8eLhVa
- f4ZmMz1UUGssyEsjpbBFtnFPZc5KBts1NsJDIcJ31ZG+HH2Nw8s7iqhmOMAsyJJ5U0kOcCeuoOU
- YPpuVAJWIWLaVNsnILm01n+9urJ4mPsmIiI3rD1IPFQnYSbZDkDq4CdpwywTVdmYUlLGSXAQJ7k
- a7rhVgTUa6bJds2j7pMqDHYsqWH+WRYwPlTqh+8xz2iLbIAkd8+W37QezyARzFKwVLjthRRcQw+
- ddHOYqndbx0UBWwfEW4g1EgvFDFpoTCnFI8sR/cFskhDEuQ5pMRz0RSODaxS7klpUC/gfqKY
-X-Proofpoint-ORIG-GUID: 7849VFfCynm0RwCxyFVVopjy9CDouI6e
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=685178e2 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=Q71dxAOmp9mF6df1qtUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_06,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506170111
+References: <20250613061747.4117470-1-wangming01@loongson.cn>
+In-Reply-To: <20250613061747.4117470-1-wangming01@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 17 Jun 2025 22:17:25 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5Kq0Dnyt_w7iN_cB6ai8f_8V5Sot7m7zTC+UxeF15pxg@mail.gmail.com>
+X-Gm-Features: AX0GCFtWwpzNtlQqsGU-3pN2PsXxwgLGy48FwPv2XlxAdHwKAb9Id_Skxxtkfm0
+Message-ID: <CAAhV-H5Kq0Dnyt_w7iN_cB6ai8f_8V5Sot7m7zTC+UxeF15pxg@mail.gmail.com>
+Subject: Re: [PATCH v2] rtc: efi: Defer driver initialization to prioritize
+ more capable RTCs
+To: Ming Wang <wangming01@loongson.cn>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lixuefeng@loongson.cn, chenhuacai@loongson.cn, 
+	gaojuxin@loongson.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jun 13, 2025 at 2:18=E2=80=AFPM Ming Wang <wangming01@loongson.cn> =
+wrote:
+>
+> The EFI GetWakeupTime call, used by efi_read_alarm() to fetch RTC
+> wakeup alarm information, is specified to return EFI_UNSUPPORTED on
+> EFI firmware v1.10 and later. This effectively means that on most
+> modern systems, the efi-rtc driver cannot provide working RTC alarm
+> functionality.
+>
+> If efi-rtc registers early during boot, it might become the primary
+> RTC device (e.g., /dev/rtc0). This can lead to a situation where the
+> system appears to have an RTC, but userspace utilities cannot set or
+> get RTC alarms, even if other RTC hardware (like rtc-cmos, which
+> typically supports alarms) is present but registers later.
+>
+> To address this, change the efi-rtc driver initialization from
+> module_init() to late_initcall(). By deferring its initialization,
+> we give other, potentially more capable RTC drivers (such as rtc-cmos)
+> a better chance to register first and become the primary RTC.
+>
+> This change increases the likelihood that systems with multiple RTC
+> sources will use the one with the most complete feature set (including
+> alarms) as the primary RTC. The efi-rtc driver can still serve as a
+> time source or a fallback RTC if no other RTC is available or preferred.
+This makes sense because platform-specific RTCs usually have richer
+features (so preferable) than EFI-RTC, and some test programs (such as
+LTP) only operate on /dev/rtc0.
 
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-On 5/30/2025 9:23 PM, Dmitry Baryshkov wrote:
-> On Fri, 30 May 2025 at 17:05, Jyothi Kumar Seerapu
-> <quic_jseerapu@quicinc.com> wrote:
->>
->>
->>
->> On 5/9/2025 11:48 AM, Jyothi Kumar Seerapu wrote:
->>>
->>>
->>> On 5/6/2025 5:02 PM, Dmitry Baryshkov wrote:
->>>> On Tue, May 06, 2025 at 04:48:43PM +0530, Jyothi Kumar Seerapu wrote:
->>>>> GSI hardware generates an interrupt for each transfer completion.
->>>>> For multiple messages within a single transfer, this results in
->>>>> N interrupts for N messages, leading to significant software
->>>>> interrupt latency.
->>>>>
->>>>> To mitigate this latency, utilize Block Event Interrupt (BEI) mechanism.
->>>>> Enabling BEI instructs the GSI hardware to prevent interrupt generation
->>>>> and BEI is disabled when an interrupt is necessary.
->>>>>
->>>>> When using BEI, consider splitting a single multi-message transfer into
->>>>> chunks of 8 messages internally and so interrupts are not expected for
->>>>> the first 7 message completions, only the last message triggers
->>>>> an interrupt, indicating the completion of 8 messages.
->>>>>
->>>>> This BEI mechanism enhances overall transfer efficiency.
->>>>>
->>>>> Signed-off-by: Jyothi Kumar Seerapu <quic_jseerapu@quicinc.com>
->>>>> ---
->>>>> v5 ->v6:
->>>>>     - For updating the block event interrupt bit, instead of relying on
->>>>>       bei_flag, decision check is moved with DMA_PREP_INTERRUPT flag.
->>>>> v4 -> v5:
->>>>>     - BEI flag naming changed from flags to bei_flag.
->>>>>     - QCOM_GPI_BLOCK_EVENT_IRQ macro is removed from qcom-gpi-dma.h
->>>>>       file, and Block event interrupt support is checked with bei_flag.
->>>>>
->>>>> v3 -> v4:
->>>>>     - API's added for Block event interrupt with multi descriptor
->>>>> support for
->>>>>       I2C is moved from qcom-gpi-dma.h file to I2C geni qcom driver file.
->>>>>     - gpi_multi_xfer_timeout_handler function is moved from GPI driver to
->>>>>       I2C driver.
->>>>>
->>>>> v2-> v3:
->>>>>      - Renamed gpi_multi_desc_process to gpi_multi_xfer_timeout_handler
->>>>>      - MIN_NUM_OF_MSGS_MULTI_DESC changed from 4 to 2
->>>>>      - Added documentation for newly added changes in "qcom-gpi-dma.h"
->>>>> file
->>>>>      - Updated commit description.
->>>>>
->>>>> v1 -> v2:
->>>>>      - Changed dma_addr type from array of pointers to array.
->>>>>      - To support BEI functionality with the TRE size of 64 defined in
->>>>> GPI driver,
->>>>>        updated QCOM_GPI_MAX_NUM_MSGS to 16 and NUM_MSGS_PER_IRQ to 4.
->>>>>
->>>>>    drivers/dma/qcom/gpi.c           | 3 +++
->>>>>    include/linux/dma/qcom-gpi-dma.h | 2 ++
->>>>>    2 files changed, 5 insertions(+)
->>>>>
->>>>> diff --git a/drivers/dma/qcom/gpi.c b/drivers/dma/qcom/gpi.c
->>>>> index b1f0001cc99c..7e511f54166a 100644
->>>>> --- a/drivers/dma/qcom/gpi.c
->>>>> +++ b/drivers/dma/qcom/gpi.c
->>>>> @@ -1695,6 +1695,9 @@ static int gpi_create_i2c_tre(struct gchan
->>>>> *chan, struct gpi_desc *desc,
->>>>>            tre->dword[3] = u32_encode_bits(TRE_TYPE_DMA, TRE_FLAGS_TYPE);
->>>>>            tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_IEOT);
->>>>> +
->>>>> +        if (!(i2c->dma_flags & DMA_PREP_INTERRUPT))
->>>>> +            tre->dword[3] |= u32_encode_bits(1, TRE_FLAGS_BEI);
->>>>>        }
->>>>>        for (i = 0; i < tre_idx; i++)
->>>>> diff --git a/include/linux/dma/qcom-gpi-dma.h b/include/linux/dma/
->>>>> qcom-gpi-dma.h
->>>>> index 6680dd1a43c6..ebac0d3edff2 100644
->>>>> --- a/include/linux/dma/qcom-gpi-dma.h
->>>>> +++ b/include/linux/dma/qcom-gpi-dma.h
->>>>> @@ -65,6 +65,7 @@ enum i2c_op {
->>>>>     * @rx_len: receive length for buffer
->>>>>     * @op: i2c cmd
->>>>>     * @muli-msg: is part of multi i2c r-w msgs
->>>>> + * @dma_flags: Flags indicating DMA capabilities
->>>>>     */
->>>>>    struct gpi_i2c_config {
->>>>>        u8 set_config;
->>>>> @@ -78,6 +79,7 @@ struct gpi_i2c_config {
->>>>>        u32 rx_len;
->>>>>        enum i2c_op op;
->>>>>        bool multi_msg;
->>>>> +    unsigned int dma_flags;
->>>>
->>>> Why do you need extra field instead of using
->>>> dma_async_tx_descriptor.flags?
->>>
->>> In the original I2C QCOM GENI driver, using the local variable (unsigned
->>> in flags) and updating the "DMA_PREP_INTERRUPT" flag.
->>>
->>> Sure, i will review if "dma_async_tx_descriptor.flags" can be retrieved
->>> in GPI driver for DMA_PREP_INTERRUPT flag status.
->>
->> Hi Dmitry,
->>
->> In the I2C Geni driver, the dma flags are primarily used in the
->> dmaengine_prep_slave_single() function, which expects the argument type
->> to be unsigned int. Therefore, the flags should be defined either as
->> enum dma_ctrl_flags, or unsigned int.
->>
->> In the GPI driver, specifically within the gpi_prep_slave_sg() function,
->> the flags are correctly received from the I2C driver. However, these
->> flags are not currently passed to the gpi_create_i2c_tre() function.
->>
->> If we pass the existing flags variable to the gpi_create_i2c_tre()
->> function, we can retrieve the DMA flags information without introducing
->> any additional or external variables.
->>
->> Please confirm if this approach—reusing the existing flags argument in
->> the GPI driver—is acceptable and good to proceed with.
-> 
-> Could you please check how other drivers use the DMA_PREP_INTERRUPT
-> flag? That will answer your question.
-Sure, thanks.
-
-
-> 
->>
->>>>
->>>>>    };
->>>>>    #endif /* QCOM_GPI_DMA_H */
->>>>> --
->>>>> 2.17.1
->>>>>
->>>>
->>>
->>>
->>
-> 
-> 
-
+>
+> Signed-off-by: Ming Wang <wangming01@loongson.cn>
+> ---
+> Changes in v2:
+> - Fixed a section mismatch warning reported by the kernel test robot.
+>   The efi_rtc_probe function was previously marked __init, which
+>   caused a conflict when efi_rtc_driver (in .data) directly
+>   referenced it after its initialization was deferred. Removed the
+>   __init attribute from efi_rtc_probe to resolve this.
+> ---
+>  drivers/rtc/rtc-efi.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/rtc/rtc-efi.c b/drivers/rtc/rtc-efi.c
+> index fa8bf82df948..c941f52ea3fe 100644
+> --- a/drivers/rtc/rtc-efi.c
+> +++ b/drivers/rtc/rtc-efi.c
+> @@ -254,7 +254,7 @@ static const struct rtc_class_ops efi_rtc_ops =3D {
+>         .proc           =3D efi_procfs,
+>  };
+>
+> -static int __init efi_rtc_probe(struct platform_device *dev)
+> +static int efi_rtc_probe(struct platform_device *dev)
+>  {
+>         struct rtc_device *rtc;
+>         efi_time_t eft;
+> @@ -286,9 +286,20 @@ static struct platform_driver efi_rtc_driver =3D {
+>         .driver =3D {
+>                 .name =3D "rtc-efi",
+>         },
+> +       .probe =3D efi_rtc_probe,
+>  };
+>
+> -module_platform_driver_probe(efi_rtc_driver, efi_rtc_probe);
+> +static int __init efi_rtc_driver_init(void)
+> +{
+> +       return platform_driver_register(&efi_rtc_driver);
+> +}
+> +late_initcall(efi_rtc_driver_init);
+> +
+> +static void __exit efi_rtc_driver_exit(void)
+> +{
+> +       platform_driver_unregister(&efi_rtc_driver);
+> +}
+> +module_exit(efi_rtc_driver_exit);
+>
+>  MODULE_AUTHOR("dann frazier <dannf@dannf.org>");
+>  MODULE_LICENSE("GPL");
+> --
+> 2.43.0
+>
