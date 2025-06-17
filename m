@@ -1,96 +1,81 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC4734A3E;
-	Tue, 17 Jun 2025 13:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09EF199E9D
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166505; cv=none; b=ZRIkdG8zqfVSp2zl7iaXt+L433/mB+gmIuSS0sXpIYkBSM5/PFQ7hCxJrm14T53nMuXFHn88jLtZN/VbT6IQYa09QEPT7Xiz1NmZOGM4jCvP7GwrcqxcbmF3vJ1q1ky9hCjYVHS0cQZo0g4zxeFWfGviNrvyOR7pMDfIpwIjZ6s=
+	t=1750166512; cv=none; b=rwqebLAZZdFBLudhLh6JjVUvMcm49M/QXBhlnXgZQoPikYIo/41qhUemLV+sOUcrTJYCVMxlnjWNv6X0Mo9RAkwvITJEAnFJgBjBQ+2Pw7nF48i9VCnNrwO7HIVkmHKzkybK8SLk2AyXQfVzVyhVMahJ1KYhZe5E5BvDsuWie3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166505; c=relaxed/simple;
-	bh=gqSvXtD/LeDvjmtzmU0yBYcCrTeP+69NZfXtKjQMzwQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=BstC/oomfU2Hl4rp58iS6SpS3OM8e6TJcVu4NNSCulj6GKRielg30urRHiCG7phoInM6nEQL8F8opt4YdYMVtLKRVPkWmn8ZNM3Ul1ve4z/s0O3CCZ5lYT1MV9MiBZG8ic2HSaemSNb4KZ+auRQgUWEmeW/fneeND0mXbevw9so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id 5CEE092009C; Tue, 17 Jun 2025 15:21:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id 56B6892009B;
-	Tue, 17 Jun 2025 14:21:40 +0100 (BST)
-Date: Tue, 17 Jun 2025 14:21:40 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, 
-    =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
-    linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 29/33] serial: 8250: drop DEBUG_AUTOCONF() macro
-In-Reply-To: <2025061733-pushy-croon-08da@gregkh>
-Message-ID: <alpine.DEB.2.21.2506171341570.37405@angie.orcam.me.uk>
-References: <20250611100319.186924-1-jirislaby@kernel.org> <20250611100319.186924-30-jirislaby@kernel.org> <alpine.DEB.2.21.2506171216090.37405@angie.orcam.me.uk> <2025061733-pushy-croon-08da@gregkh>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1750166512; c=relaxed/simple;
+	bh=sgl0GKMwAeIqs5yYaPUt4LUfXQa5X03avynVE0AwmiQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=TPO9wVNV19hza5blaIFoT5cH/B2Wmx+Fb0439XjJ5nCIv4c2YHDmXt1vxCJyFpiR0ao8xVhlumGY+AutkwDto3fSFo/PNtRRtpo91DgzLur+ZeFTTId5nXOyItxzZSOr/O1ZgrIc7bCTDWysNNg8r6x27VmV++g0kqZG/92Ru/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7mT+vHb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7mT+vHb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCB5C4CEE3;
+	Tue, 17 Jun 2025 13:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750166511;
+	bh=sgl0GKMwAeIqs5yYaPUt4LUfXQa5X03avynVE0AwmiQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=S7mT+vHbm4YIHwgHaSgK6Lha9QEynDdrKn46XfPesxwRAsNcPgkHHGezKHRC3yzVy
+	 2mBvOmNY0i/F55/1y9lPGTEzjZvtbdPekkAV7hup5EBacmuW8Z5/4JK/MM/ti4Jefn
+	 715KPZ9wOM8n0RzdF/+ETehL00F9SHLBphmT86qNkvEP2gugxoZZzIPTEBsIwp8III
+	 p+FmFNtHyHyZiYAq8AID/dkHPitsWl7PnoKbFwLvARIh2R+OrxfrPlsEnbWLVzkop5
+	 JyHYPggyQYArdu9iUVq/f1u6Lp9QIpg6hSFSXPuhUMb40JBDOxs4psqr9I9O2O6YH8
+	 GlS4xEBhZyTxA==
+From: Mark Brown <broonie@kernel.org>
+To: linux-arm-kernel@lists.infradead.org, 
+ Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20250616154018.430004-1-marek.vasut+renesas@mailbox.org>
+References: <20250616154018.430004-1-marek.vasut+renesas@mailbox.org>
+Subject: Re: [PATCH] regulator: rpi-panel-v2: Add shutdown hook
+Message-Id: <175016651017.38761.10081771279531049568.b4-ty@kernel.org>
+Date: Tue, 17 Jun 2025 14:21:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-08c49
 
-On Tue, 17 Jun 2025, Greg Kroah-Hartman wrote:
-
-> > > DEBUG_AUTOCONF() is always disabled (by "#if 0"), so one would need to
-> > > recompile the kernel to use it. And even if they did, they would find
-> > > out it is broken anyway:
-> > >   error: variable 'scratch' is used uninitialized whenever 'if' condition is false
-> > 
-> >  This is removing useful debugging aids.
+On Mon, 16 Jun 2025 17:40:07 +0200, Marek Vasut wrote:
+> Add shutdown hook so that the panel gets powered off with the system.
 > 
-> How can it be "useful" if it's broken and no one has ever reported that?
-
- It's broken in a trivial way and would be fixed by a competent developer 
-in no time.  If no one has reported the breakage, it means no one has used 
-this code in a way that would trigger it, e.g. -Wno-error in effect would 
-mask the compilation issue.  I'm fairly sure I used this code while making 
-changes to the OxSemi Tornado backend a couple of years ago.
-
-> >  The issue with compilation is related to commit 3398cc4f2b15 ("serial: 
-> > 8250: Add IIR FIFOs enabled field properly"), which removed the assignment 
-> > of IIR to `scratch' (although a path did exist before it that bypassed the 
-> > assignment anyway), and can be trivially fixed by bringing the assignment 
-> > back and moving the debug statement next to it.
 > 
-> So it's been broken for over 2 years and no one has asked for it to be
-> fixed?
 
- Well, what can I say beyond the obvious?  That debugging a mature driver 
-doesn't happen all the time?  This would typically happen when adding a 
-new chip-specific backend, and I don't think new variants of 8250-style 
-serial ports appear that often nowadays.
+Applied to
 
- You can argue one can insert these debug statements back if they need it, 
-but someone already made this effort years ago, so why waste it?  To save 
-a handful of source lines?  It doesn't seem a good justification to me.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-> >  I agree that "#if 0" isn't very useful as it requires patching the source 
-> > to activate; changing it to "#ifdef DEBUG" would make more sense nowadays.
-> 
-> No, dynamic debugging is the proper solution, not build-time stuff.  If
-> you really need/want this, add it back in that way, not this old-style
-> "let's rebuild the whole kernel" type of thing.  This isn't the 1990's
-> anymore :)
+Thanks!
 
- There's no need to rebuild everything, handing CFLAGS_8250_port.o=-DDEBUG 
-to `make' only causes the named object to be recompiled.  I use it all the 
-time, also to pass other compilation flags if needed (call me outdated if 
-you prefer).
+[1/1] regulator: rpi-panel-v2: Add shutdown hook
+      commit: 3e1c01d06e1f52f78fe00ef26a9cf80dbb0a3115
 
- Any kind of run-time selectable debugging would bloat the kernel binary 
-unnecessarily for everyone, for the corner case of driver development or 
-debugging.  Unless made optional at configuration or build time, but then 
-we're back to the "1990's solution" with little to no gain over the local 
-CFLAGS override.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
- And if working on a piece of code, then rebuilding it sooner or later 
-seems inevitable anyway, so what's the deal?
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  Maciej
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
