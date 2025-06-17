@@ -1,196 +1,168 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDF123B63A;
-	Tue, 17 Jun 2025 09:44:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153466; cv=fail; b=jEu22Et7O8aEHbMhhJBHRXxQEDl/I07GfexFLOs4ULkK/6YJRjlKcCpqzCcAYBaDqPfHmsRZyyFACpWNA3H9K30hOnCVVg9Y2pxNXtIr5GNuwrZhRV4SaIQwt+JghD0R/reIYpJgTWbnUQJP8Fh7lkqAOkcRN5xCJlf5iLA/vuo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153466; c=relaxed/simple;
-	bh=Nbn06lIygKAMUtIDcw5T0d8EhNVb6Ok87tQBgPhSDSE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qASp6QkoxSI1lgtSsX5CsS08pJ6jB9vX4mT87XkLJU6A25urAlOu1Ltf6+Lim4r6O6b4BSaNGaJtgBnZ0UnCaXawLox6ImsMsVylHd85NRD9wqwW+X/LVlCtjavIbcYx+yKFw0CylrF+fantx41IpVhFbO27J2lTva3bRsIVznM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iHoKQP9Y; arc=fail smtp.client-ip=40.107.102.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92762980AF
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750153478; cv=none; b=mG4pXz6ht76ufWXpTh7vbrxib/MCeZloa7nYc28Y5ujdoan3TkzTZRGijxvPlzF+JtrP499+rYOJTDxVjQw2zJFFXVEa7q2QhQiTTWB0YL9/H+dU7xUE+qF0of0OLNW2TleSJ8vwSBDGMccfxsUzC3DSB8I5HpnmJJA5lwa3/rQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750153478; c=relaxed/simple;
+	bh=SEIeerzS0thI+z5d6kA6cGgH8szp0nPEZ+WNtrQjWT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dcg2ddK1ptLwfmoUgYwcYpRtnAV6Lxu4CwT+56I7C9j7d9xoH1KRQZnKC2SHB5f1Sxfz1ZyM0QDu3+z6Mn/7IXEFyxMQkk60AViBzk8pW1z/0Jc22apgsOVQ8AbBVHCrITG/PIHUHmVK+bjhtbTatU2SholEgHUF+z0t7p8cO8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HzkAvfQ5; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iHoKQP9Y"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xr6Kaltip2+JRhP08eofebCwQqg4SU8UKUByUdo5H70plFTPJr7RMLQlD4rxk7vTtpr0lPHhzhWBovl8AoRXckbYEvmBa2uD2/Hixfm5JC3kAoIuRdOBn7Q3ohToD2obv6xrMk1DCROfYaq/500gRSrMaVkm8vSTYP1uki1sgPP6SRyItdfWK9L71nuQEWvfUJa8ki+ghQ3hXWqCRqyavXfqxywY2l3SRMbOCxaVHYoRN8hPNgsiXTBqQ1ea2CTqokN1YDJ54K5IKAbc4KfwJdIqkhiovZrZuM8lQDW2xZcXEKLbckosj9nv0+na3SMIzQCB6TQ+EoV4z/uybZurzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BdW6DWMiCuNONuiXEsfrR/l1nLXvzhVvNT9iNVF2GAY=;
- b=ngZK8Iz9W/v9BwFWuKCos7BgBSSH2i+t8m0KINyPgLNzbfESeRXii2fz+uLxerkP3Yl+I7tXTwtUiMpqTdouS9VhxXuEDvoCNb4KaFwCArqgthxtCmOURiE2j6DAYDASFNkNT6eatMU6n6MQC4RnToY8JRgsmIf/ixfAZt/nyABddogMuHvDRWSKzNgpaFjjS74YylEza9RfPJujmu/koIDe9+q+fSvJp85vGQ9icHN85vDHCmaeN0bGbzsVntB+h8gf6ogh0/ambwOlOdyqdmczYpbMmDixEoy+jW/KjU5ek3MhQALNjLzT6APZt+JuZDdzU2kMrHd8Pu78/mJrLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BdW6DWMiCuNONuiXEsfrR/l1nLXvzhVvNT9iNVF2GAY=;
- b=iHoKQP9Y3GnZJKT5FVY6hAXD3OgjEp4vllIprNLjeNbe0VWQU3FdeVDaRewihV3Eok2EyxhHf6rJNhPvFNC5zsvjiR1XOQMl5gFJi/GhUIwOE2mrGHPawUSUpS8lk3/qeUDvbU027M6Lxxytn1S/XK0wnObyDVl9XwmmKcr8hug=
-Received: from BL1PR13CA0243.namprd13.prod.outlook.com (2603:10b6:208:2ba::8)
- by BY5PR12MB4291.namprd12.prod.outlook.com (2603:10b6:a03:20c::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Tue, 17 Jun
- 2025 09:44:20 +0000
-Received: from BN2PEPF00004FBC.namprd04.prod.outlook.com
- (2603:10b6:208:2ba:cafe::89) by BL1PR13CA0243.outlook.office365.com
- (2603:10b6:208:2ba::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Tue,
- 17 Jun 2025 09:44:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF00004FBC.mail.protection.outlook.com (10.167.243.182) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8835.15 via Frontend Transport; Tue, 17 Jun 2025 09:44:20 +0000
-Received: from aiemdee.l.aik.id.au (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 17 Jun
- 2025 04:44:17 -0500
-From: Alexey Kardashevskiy <aik@amd.com>
-To: <linux-crypto@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Ashish Kalra <ashish.kalra@amd.com>, "Tom
- Lendacky" <thomas.lendacky@amd.com>, John Allen <john.allen@amd.com>,
-	"Herbert Xu" <herbert@gondor.apana.org.au>, "Borislav Petkov (AMD)"
-	<bp@alien8.de>, Michael Roth <michael.roth@amd.com>, Alexey Kardashevskiy
-	<aik@amd.com>
-Subject: [PATCH] crypto/ccp: Fix locking on alloc failure handling
-Date: Tue, 17 Jun 2025 19:43:54 +1000
-Message-ID: <20250617094354.1357771-1-aik@amd.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzkAvfQ5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750153475;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=sdEh9cEys/eVA2SD9wfMRib1+LZeWMxS5mffwDFqNgM=;
+	b=HzkAvfQ5MxcdicUALf8x+HJQ6rSnG6en5uVXFbpN5p7IIQg8wsyrYNKbvGRIfahqmatl66
+	bdDS32JdHJKsv+TlHV1MoFmk8t6EJwDoD1XHnrdkQ5k7lovxogAD7ftAczwnfDO7+nAEcm
+	F5e1O3jlh6AtTAu8gH/HK6fOh8tf/5o=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-345-UgJ223H4PV6JXv16bYAaDg-1; Tue, 17 Jun 2025 05:44:34 -0400
+X-MC-Unique: UgJ223H4PV6JXv16bYAaDg-1
+X-Mimecast-MFC-AGG-ID: UgJ223H4PV6JXv16bYAaDg_1750153473
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45311704d1fso31175675e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:44:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750153473; x=1750758273;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sdEh9cEys/eVA2SD9wfMRib1+LZeWMxS5mffwDFqNgM=;
+        b=E3wv1BNwvHJjCZkoZW27YdkH97bHGG1sx1ru3oWq7vVqqz3r77SIMU+5LvzjpW2NKV
+         lHjakK315UDyTK+/+zxq7liUR6BBAalqXn0uOSSiQ0VJ/HPvu0V+RJK5chrfvVsDiB6g
+         nUEVe/IOrV925t1GXkNxEDWJTsQC8hxT9IGb8aGwDfpNdE4KBSq5g6Uc84JgAFdBlgh+
+         GDNZjH4nxropN/gwLJxaT3IJnIRWIbi1QYoU5DJenjRq8P7Ngr6bsj+qpuf7LqY3Zf4V
+         O5KAgmI/Eg9nHWPdveOBOU2pQYIL1zXXJ2AfA4gu7HTMYx/gU/a3icv7fYvEeUYaV+K7
+         oyHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVdUO/JfcDCMAatRz5a869wcD3gyah6pXNToVKdZ3V7yE0IC5KLTFl1acDCsHQcMc/fRH22aTHQvtDrZzU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHe4B+ndF7hOjuPL+Nd7PTobIdyVeKpGe4ZXWtOgC+RYk8Z+3z
+	EcMgCDLwc75o0oUnHuyn5dvID3bfmqPewNeYQAUmcH1F3nKzndEJtpUp9oDXj1haBXuVKBWR7PQ
+	Mxm243KFS7d3yMuQ+bOS4DqHmaHC3bkHYDNZTqXPMHjQNriXH0M53CoNMD2dJJyMzDw==
+X-Gm-Gg: ASbGncvSPTZjtXCaYHZPFanH/xaa+BlEWBOKXsHhilYy+jOtBO52XUl8j0vpmaaNoXn
+	O2vfbtQRuR0ojdwfDhg0rg1v+Pvm5pvPAX0B6rYZB9GEllumaChFN3TeOQV6RVYQR7nLRP9KJQ8
+	X0B/sN9CgdWcNmGntp5VJH9ZCOctWd0LBL6TV5uH7fyGnvPeI0BxQZ8y7ckWTT9+FKpxywhJO7n
+	3Y3cPUZAFkSVjCvvqOT1UyRy8j1kniH+jo5Y59ZF1v1FSgyWb/ydIefOGijkfGA5gxaQpO2BMld
+	jT2uDJmrjEQNowg9jaN4JHBNWi1ZiwSh3sl3o1Jp8PryvGRoI2e7JXG4UsZDn3NPEJidEYSSl8S
+	GecFcxo4Epe5y25bJMDSzMx7o97Bdii0hEHLLwC4yeu0TkXw=
+X-Received: by 2002:a05:6000:65a:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a588e9a99bmr1291325f8f.1.1750153473102;
+        Tue, 17 Jun 2025 02:44:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHQpVd3mwZ+TEDjCXC20DL1F3MMRYh4Y/yZHPnb93a/Bf/b7RyUJmn1/nXnnPCK9NELoBd4w==
+X-Received: by 2002:a05:6000:65a:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a588e9a99bmr1291288f8f.1.1750153472667;
+        Tue, 17 Jun 2025 02:44:32 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4b67bsm13257644f8f.83.2025.06.17.02.44.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:44:31 -0700 (PDT)
+Message-ID: <31bdbfcf-bbfa-46b7-a427-806d42d88cec@redhat.com>
+Date: Tue, 17 Jun 2025 11:44:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBC:EE_|BY5PR12MB4291:EE_
-X-MS-Office365-Filtering-Correlation-Id: 69a50ba5-9f70-47f0-4201-08ddad8388c7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?cxUxYcmrb7TZnt+8IWpYppRfIn3bGdd4fZ6Wy1VFMsQw4Spyhv50lNVg5dNu?=
- =?us-ascii?Q?wzoqSk4/2HJJEsTU566Q+i7iZDzJp8tXz7GzPbdk/Qr1UuSJxkL8sxLP5hqw?=
- =?us-ascii?Q?l272s3o6v+SiH5sFpF0jV2bs11FNF6xgLCN9DeZQUTG8xuiYokgvcq5h7NN9?=
- =?us-ascii?Q?GawwJ1I05NSP1dkVH2Fkt5OJEgFLxbr/MOYAba8kn4L+d4uZzXua6qQMpv6G?=
- =?us-ascii?Q?ssOV41ivkjO9WQRt8AmNWDBXGnGIWxAFTELFBDKqtLs7s4z7qLUcA9QmeyBX?=
- =?us-ascii?Q?nFULMuoYQwQG1o53QAHKATgqxHOW7D77e366KUvpKnmy8LnjpKbCgwU4jiny?=
- =?us-ascii?Q?BGKiOqVksRka+UNZULe2xz9qdoe2D6/kKvTJgsMYtPgv0X8vkPMUdP/QmCPR?=
- =?us-ascii?Q?/Of9i+NsGBBNOk2sJtHurND0xecyU9CkkJncPiVZp8YqTbTQSHVMCAK6SivL?=
- =?us-ascii?Q?Lhd7NQoSmiOqACEJXIWP9YNPR1arI24iQ2dXg59yYsZLkVbw3J2bE4Chf+0T?=
- =?us-ascii?Q?t+E8tCiA4FfR5dXeW9YZ4q+fvEGgr4E82QUL3cseGolmiDl98CJ63azRY9Ci?=
- =?us-ascii?Q?AxFSbw1jNoqv8XHthBv43YFM5vXpVxsER2jVVGQBxfsuaYZFi9XMFIUzzo0f?=
- =?us-ascii?Q?+BS4dSuPjL+8pFaFxQImXOv+jctruiS6EbXSN5jbLpEhWNeFL4y8j0IOGL4D?=
- =?us-ascii?Q?8v5CPBbQ1PgFpi8jhARWQubxrVCawrOIi7Fqia3LtHNaGoOic9GVFNaWzQRw?=
- =?us-ascii?Q?ofgl67pOKmBs5wNPsR6mjnUyywMGHrSyZVqvqeVvuEXAJq2Dsp9KrAI8b6YY?=
- =?us-ascii?Q?0MJpB7Z6TTYNV7JwFrT04BKN6Nc3wbZ9pHyEIqEAb6QzZC4LNs42eWBj2sDn?=
- =?us-ascii?Q?+Eqw0NuXYGR296P6jQhBqQWPnLhTuu+0vXNoPfE3HVt5MqEYs2R0trqmcmkl?=
- =?us-ascii?Q?Y1+0eDM73k4tPt9DcEH0dNuB37rgLHvdV5mq4SLYPftZhm/a076A7YDlYQBX?=
- =?us-ascii?Q?gQyzmsifgDNMzkns7JveQRxd2vh+1Dg2/gwRpeaaoJew4tbH/kQ6woK5M4f1?=
- =?us-ascii?Q?ZiXRHZAEqLHz/9rgm9nylsNn/Ch3YK/nX3Q6+1TTVWTjYqs7737r8u3UdIs/?=
- =?us-ascii?Q?N+GlG/Kcn6y/heZxVPS5MyP7YA1dfxDxnOBiujzeMDCPN0cKMzXFguSvWcuy?=
- =?us-ascii?Q?dEM59m3BWm79uGIbDvIu5Rhuhin2AUr4EgNxEjTPeF3Lx2h2s3XdARmq4K2Z?=
- =?us-ascii?Q?SX4PWaVWcTF3LAIdRcfh+u2SDz0sTwGnVWT0nHAb0qF0zKRdEvjVqbvvYpKX?=
- =?us-ascii?Q?I+k5s2SHuUXyxzZlwhbi3tC5oHrs9oiGZaWL7374Ag/oZW1M1R6aDuPOociS?=
- =?us-ascii?Q?zf+NJ6+jCJQSJLLzZHzEYaRcD7BDi2F1omGhOXd6hp/P7D+RfmKGQCsUQRMA?=
- =?us-ascii?Q?CoeBwNiASdQbRVI6cf6th1BQhwM9zv2kE+s9nqdsqqEG/pA3HWYMs/pO6MN6?=
- =?us-ascii?Q?exGE7qdCAXt1+0UYeKQKF3RtdTkuXoQjJ0Ct?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 09:44:20.3147
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69a50ba5-9f70-47f0-4201-08ddad8388c7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBC.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4291
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 08/14] mm/khugepaged: Remove redundant pmd_devmap()
+ check
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <d4aa84277015fe21978232ed4ac91bd7270e9ee0.1750075065.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <d4aa84277015fe21978232ed4ac91bd7270e9ee0.1750075065.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The __snp_alloc_firmware_pages() helper allocates pages in the firmware
-state (alloc + rmpupdate). In case of failed rmpupdate, it tries
-reclaiming pages with already changed state. This requires calling
-the PSP firmware and since there is sev_cmd_mutex to guard such calls,
-the helper takes a "locked" parameter so specify if the lock needs to
-be held.
+On 16.06.25 13:58, Alistair Popple wrote:
+> The only users of pmd_devmap were device dax and fs dax. The check for
+> pmd_devmap() in check_pmd_state() is therefore redundant as callers
+> explicitly check for is_zone_device_page(), so this check can be dropped.
+> 
 
-Most calls happen from snp_alloc_firmware_page() which executes without
-the lock. However
+Looking again, is this true?
 
-commit 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation when SNP is enabled")
+If we return "SCAN_SUCCEED", we assume there is a page table there that 
+we can map and walk.
 
-switched sev_fw_alloc() from alloc_pages() (which does not call the PSP) to
-__snp_alloc_firmware_pages() (which does) but did not account for the fact
-that sev_fw_alloc() is called from __sev_platform_init_locked()
-(via __sev_platform_init_handle_tmr()) and executes with the lock held.
+But I assume we can drop that check because nobody will ever set 
+pmd_devmap() anymore?
 
-Add a "locked" parameter to __snp_alloc_firmware_pages().
-Make sev_fw_alloc() use the new parameter to prevent potential deadlock in
-rmp_mark_pages_firmware() if rmpupdate() failed.
+So likely just the description+sibject of this patch should be adjusted.
 
-Fixes: 24512afa4336 ("crypto: ccp: Handle the legacy TMR allocation when SNP is enabled")
-Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
----
- drivers/crypto/ccp/sev-dev.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+FWIW, I think check_pmd_state() should be changed to work on pmd_leaf() 
+etc, but that's something for another day.
 
-diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
-index 3451bada884e..16a11d5efe46 100644
---- a/drivers/crypto/ccp/sev-dev.c
-+++ b/drivers/crypto/ccp/sev-dev.c
-@@ -434,7 +434,7 @@ static int rmp_mark_pages_firmware(unsigned long paddr, unsigned int npages, boo
- 	return rc;
- }
- 
--static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
-+static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order, bool locked)
- {
- 	unsigned long npages = 1ul << order, paddr;
- 	struct sev_device *sev;
-@@ -453,7 +453,7 @@ static struct page *__snp_alloc_firmware_pages(gfp_t gfp_mask, int order)
- 		return page;
- 
- 	paddr = __pa((unsigned long)page_address(page));
--	if (rmp_mark_pages_firmware(paddr, npages, false))
-+	if (rmp_mark_pages_firmware(paddr, npages, locked))
- 		return NULL;
- 
- 	return page;
-@@ -463,7 +463,7 @@ void *snp_alloc_firmware_page(gfp_t gfp_mask)
- {
- 	struct page *page;
- 
--	page = __snp_alloc_firmware_pages(gfp_mask, 0);
-+	page = __snp_alloc_firmware_pages(gfp_mask, 0, false);
- 
- 	return page ? page_address(page) : NULL;
- }
-@@ -498,7 +498,7 @@ static void *sev_fw_alloc(unsigned long len)
- {
- 	struct page *page;
- 
--	page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len));
-+	page = __snp_alloc_firmware_pages(GFP_KERNEL, get_order(len), true);
- 	if (!page)
- 		return NULL;
- 
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
