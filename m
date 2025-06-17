@@ -1,166 +1,157 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5372155C88
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07F3290092;
+	Tue, 17 Jun 2025 21:57:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750197420; cv=none; b=dXICcufOs2nui179eixP2acFB1TYEBm4dWB2BDusd/DdFzeTYYE16iOijyeZPxloAafK+S/sNDJftF6GjzTvYXms+4q7/jeH5jmhoHCzFNw7qSWWOQmdx+kKtBxJ5kaO/mdYaNIve+uPiE1f4OaztpMgdolvxAEL46MW+sjR/V8=
+	t=1750197432; cv=none; b=W/+263znf+Zb7Csu3VnHVPuH+1yDmatBDTb4MawEb0zmmfGSOWCJ4t+CUJr7BJ0BTMieZsjH/QwJ+QmBFUDLEr46NkeFRW3JyzwfRUrUfcqGmDvXGesvGgjyEKvbzlJ8E6jGgWCPkupF6vxc7YGrBrnnghRK3ms3zC6H1QdSvu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750197420; c=relaxed/simple;
-	bh=Kp9DI+2v2LShpJweRToRLsuNXfdRv2B57tjdewX2aF4=;
+	s=arc-20240116; t=1750197432; c=relaxed/simple;
+	bh=b1eCJI+VK7BMdEHZOiz0k2L5nEhbLp72mIGlXLhdJ1o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rBuAIL1HX8A2NOOWfrbap/PrxzP77KZw+hz6eix/GbYJwDxzkuPzF/g9F/V5UU90cI+fC2GIHMlpFKDQvgsj6WO2oJ+YgAegWnNMmd+WRwjynromM34hrIF5WlVxaYhozOtD7CmlfFj3ym4lfbKkJktHFkA1roxQOFchJX9MwJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ic+AaCtl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAmS0UUn7DfBhaVRvnX6aHskTKlRCLpy1Rsr9Ov8+mHfP+jN5GLkRX9fFBEj501LKAx4NJupXUgMeKPoLFzaqdc3QqOw7dsY1dchJR5XsL6+Fj916gGcOg3YC4hvL0FJJ8vp7niCloGZFgzSc5MJySgDzMPpx0KvuDzofXliRH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZqlE/fqT; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ic+AaCtl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750197417;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8MAberZB82Z3SmBMhm5B8kfRhyx/yzqVg3f57rHIguU=;
-	b=ic+AaCtlLf3EuHrXyZv23CMjW/89gw2c2D1jmT9rYGejrQNgHx34v/BxL2tkOXkuY2Qebd
-	C7kaXxbLYPTkmLaRlBj0KJf97oFLRkGlh/ueZfrfhOtTg6CvVZ0vEoMJbn90cFZBjRsJyq
-	IfCYDpMzEECyS0oXhE+onZQu2Rwhrs4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-425-oKYcMawtPN6do2GINOGwiw-1; Tue, 17 Jun 2025 17:56:56 -0400
-X-MC-Unique: oKYcMawtPN6do2GINOGwiw-1
-X-Mimecast-MFC-AGG-ID: oKYcMawtPN6do2GINOGwiw_1750197415
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4eeed54c2so3941865f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:56:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZqlE/fqT"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a58f79d6e9so76714101cf.2;
+        Tue, 17 Jun 2025 14:57:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750197429; x=1750802229; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=9qk4ALqXXz9k4shJawkcQqEjRsEec0PZkXEuLO+aG5A=;
+        b=ZqlE/fqTp1XLWOM2A4IjWz0cPpg2WVyhhTjod6dzJE9AVN4TvgZqw9s6wyMA8ta+8M
+         wPP/QYsYRNfyAbiARNn3ensWumI+mHjl1pz1UvTLb1Zkb7EsWBCqKOpG0CnP65kxBEWj
+         Kp88kV/8tf4PeWVTwyNtTL3uj1tf+L2yK6hWBNm4kN1plmjcg/wfsrqVTGmWIYfbHrTd
+         DhJhXF9PWDmOB1husdTj7b316Ia6VBa2sSATjCE4fOT0bFRLlO8bZVRUiJZZX/TbL02M
+         9N927eH2pr9usZzTw235h8WUjG+sKTM0WqNqqqKWIj7rG8onGZga7bBpAvoHCurIiJzF
+         cwZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750197415; x=1750802215;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8MAberZB82Z3SmBMhm5B8kfRhyx/yzqVg3f57rHIguU=;
-        b=ivIWb3fNA38BOMTS7YX1Y7OPzoNijDXLzeMVID/eZ+96HpVWwanl0evyDXqYOZdlVd
-         WVX7pg5RUePCSIEl4cCAxAX7kyHi4nETJW4+IKqaylxyNiGwxjCiazHS3ovb+tgYS8LU
-         oEFexpkoM0Ho8SwBPtWFXLIwVhU6HfVO4/WuiMxzyOPQRkOJWtdn9tm+vmt6UxejgQFC
-         csG/JPaYJFhLDOK+a08s9zjgwLMip33suoRbRDJY9UR/ctZDDGyvelvkHvNSs7d8gU2N
-         a/tkCjoNPVeShNDJ7InstyPrN//unl1WWtKTSYfRmVUZ/mFrAbjE8W00v06OdBZcRWaM
-         o63Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXvpDjEUNesZCaqtV9YLBFnmYEeCE/ImDxGKcynBIURL0lAzLGVJu7xll9Dso+FayJwb7tg6802eXC/erQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8uLEITRklpxNxNOD0V9KvnUeapTzPliTik1OKSHg6iO1n9Ed3
-	PQCeCTiqsf3d865omn6kz5lNSVil9bOCqhUG0lZzwtO6DNN8n+m9ZutdSaL36nX5B/mv1d9xQ4l
-	rSkrafrNMnPzYzq1lE9l/kgIxwwp3kWQWGn/YtwHIa++2kWrUJpKliOiGfAZhTB0jvw==
-X-Gm-Gg: ASbGncvNwl0FI/l6rRUHJWJsEAOD760+GD9y/qH8lkrnLEGyQHQEqhIFDFcr8zxZzJu
-	iGUf0wFLqsLdWGMQe9wO5YWJi3qWLK0EozpzfRZWPn+BbC8IEImEKbr7zLf0dDkzoJp/9ZPkjRM
-	RIq3+/NITlgQaImbILsWwSAmw2N0F/tTMpM5es9dMiqLDBkBhCdhmGtPs14VU7k0c4iFgTDV1l8
-	KTy777Q+FS5H2LXy+Y9JB021wbrrhuUyIY71qi2YFU9S+RFq//8xofIwW3bmm5s5rFVaKCu5wxw
-	wLsCJBJEdY2zoEwMrlMtlYGza8eYtCpIN7Yyi3WSRDdZosspvuqoPWNzl31VL3BBfotJcA==
-X-Received: by 2002:a05:6000:25e9:b0:3a4:d994:be4b with SMTP id ffacd0b85a97d-3a572367d55mr11055142f8f.1.1750197414926;
-        Tue, 17 Jun 2025 14:56:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHiebOmEYk+uqov68RgYSGzETTCjeLdec14dBe0riZts1tKLupIn7pTXi12Ct4usn7f1R5b6g==
-X-Received: by 2002:a05:6000:25e9:b0:3a4:d994:be4b with SMTP id ffacd0b85a97d-3a572367d55mr11055124f8f.1.1750197414493;
-        Tue, 17 Jun 2025 14:56:54 -0700 (PDT)
-Received: from localhost (net-130-25-105-15.cust.vodafonedsl.it. [130.25.105.15])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c4e8sm184972735e9.3.2025.06.17.14.56.53
+        d=1e100.net; s=20230601; t=1750197429; x=1750802229;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9qk4ALqXXz9k4shJawkcQqEjRsEec0PZkXEuLO+aG5A=;
+        b=iCe+8FQDjyIfN1kU8rpil1j0Y2orzveewKf3aGh2XTAa7It3mEYzNUzshXVoTat8wT
+         MTVVezGa/0z+HCU3Dl+EZ00Sm/aI33Vm2hrDOKIdEHj30fUQ2W6V70tutFz3IVxF3GU9
+         VELJPav1R9XM8OMOFzkYZMI1AJS4GgGEdEpIxqrj2pevYwAyAep0uyML/Y8zmv0R7R9r
+         pr3zJ56L/pJ2SMFWw6IBRwKzVFKLyUQRBGyBySQBFF4ryazWinGFsU+vcPZ8kAk12f01
+         O2k0knkIBzGUk2ss7wgiCxDxHofv+EuoQlMq2iERuNYiOyB+tSAN6rRdnQMu9CyjXZ4i
+         Njyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVYAzpb7qJZbvePoxSUhL1UIhHnhaKjVX+LhqM0VODRb4N5lNI1bkGxge/0mkd93VcrnxpYllGmlpdM7DQgQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTErrivVPpxkIF0v05xnNRPCgti1GlUE7w/ZBPCs+vLzXRha8m
+	m5/cJZMBpELeBAHGIBtWzqzy2SpnRvZOUDwInYqEW580p1uqcYnXRz/H
+X-Gm-Gg: ASbGnct5qNc1aXDTcPAp9x4BdE4RCsM3SQHeVonJMx3qen7YAeaTHHeDAjMLw7AcXfr
+	Hjk0m1IIm3aqAvvVlxcHjPLUk9ko9tofGW0LiLM7fTMM/NoJWv+hMGgsKk8O4L/Q39nLH/Wq2xQ
+	rASpo37vIVa/S+vzoDv1OAAb/QXoW4/ydySRkccox+BiNC2livFv29WdqGJ9Mco6BaSpAkoY9Ky
+	wtaAhL8ouDoKnB+8Mjgd+p1sEr18lfq17rYl/djCwAxMp3xf3erOdw2bHXvhpvbxGDW5Zl9cwx5
+	sU7GfoZhZDK6vW38iBo3Dy6BJVoi0suiIPvELhaAm6B3oLE9LmTWIGeVpZ24OTP2qc2OjmbIrmM
+	sp+BTbEU4oTSNbMux7wHMKft8YGeD7xd+zKlZdlAN+MjgSLSmZlMn1rl/wcTOkVE=
+X-Google-Smtp-Source: AGHT+IHPiAneCHgWnRNbdxb9S/zFegrpb3/8UHI1y2S7rMrKSfw1KQNZSzltEb5XRtbTQUvVaV6b5g==
+X-Received: by 2002:ac8:7f4f:0:b0:494:adff:7fe2 with SMTP id d75a77b69052e-4a73c617180mr238343281cf.43.1750197429399;
+        Tue, 17 Jun 2025 14:57:09 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4b16c4sm67154721cf.44.2025.06.17.14.57.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 14:56:53 -0700 (PDT)
-Date: Tue, 17 Jun 2025 23:56:53 +0200
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linyunsheng@huawei.com
-Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
-Message-ID: <aFHkpVXoAP5JtCzQ@lore-desk>
-References: <20250616080530.GA279797@maili.marvell.com>
+        Tue, 17 Jun 2025 14:57:08 -0700 (PDT)
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 2FE631200068;
+	Tue, 17 Jun 2025 17:57:08 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Tue, 17 Jun 2025 17:57:08 -0400
+X-ME-Sender: <xms:tORRaMEhJF4B2Z0-WAS-orKZYkLIRCPqArXN2q4To-n9tJy48kIQJQ>
+    <xme:tORRaFXhl09A-6CFC5lbWh1FMhOa8J9VhYQ68Osz8_uZJRL5zcMWOvj1daKC3008n
+    5D1QLB_K-SKVFtk0g>
+X-ME-Received: <xmr:tORRaGKn2b9vbFetrkk6jx3Z8QiCe-qqcE2nf7qGO7F3LOTF5nNFv_Ul8gI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddufedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvve
+    fukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhunhcuhfgvnhhguceo
+    sghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtthgvrhhnpeevgf
+    fhueevkedutefgveduuedujeefledthffgheegkeekiefgudekhffggeelfeenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvg
+    hsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheeh
+    hedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvg
+    dpnhgspghrtghpthhtohepvdehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehm
+    ihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpdhrtghpth
+    htoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgig
+    rdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihgh
+    huohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdr
+    tghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprh
+    gtphhtthhopegrrdhhihhnuggsohhrghesshgrmhhsuhhnghdrtghomh
+X-ME-Proxy: <xmx:tORRaOG8ScvxQlru3VVowIBF-PKnQhyyxfQ9Etqg80ogvanovWwPuA>
+    <xmx:tORRaCVWx0er69GAGyG9CKR7t5VSAbTyIq_BjrECpiHtNLBho2d9Zg>
+    <xmx:tORRaBOIR6i4YKiDF3fGQqQDx1j8mo31YRTtkwgZHhUM6jLDGYgkmw>
+    <xmx:tORRaJ2T10i4DXj6nnF0W8ejJPZqTiqYWtu9mLxivCSfjUE8jjRmMw>
+    <xmx:tORRaLW01fVMgy_c8sX-0SvQlc3_1QG9K1qAM5ePmJ7pREABo5LcYgmT>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 17 Jun 2025 17:57:07 -0400 (EDT)
+Date: Tue, 17 Jun 2025 14:57:06 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com,
+	fujita.tomonori@gmail.com, mingo@kernel.org
+Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
+Message-ID: <aFHksv4oZIxuT_NK@tardis.local>
+References: <20250616153604.49418-1-boqun.feng@gmail.com>
+ <20250616153604.49418-2-boqun.feng@gmail.com>
+ <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com>
+ <aFFwumsjuAEIJVUF@Mac.home>
+ <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
+ <aFGenbg8S36G1aeP@tardis.local>
+ <CANiq72neJ-1e9Cef5RJMdJGEqWVEW7F72_J0GcDpJuEd_APrxA@mail.gmail.com>
+ <aFGv7-0PzewfS5kr@tardis.local>
+ <CANiq72mtkhZ5uhCfQ9WhLHWdC96iHCXTra4OXChGb+qnpRKNTg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="oKdl6g1Fns34EoZE"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250616080530.GA279797@maili.marvell.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72mtkhZ5uhCfQ9WhLHWdC96iHCXTra4OXChGb+qnpRKNTg@mail.gmail.com>
 
+On Tue, Jun 17, 2025 at 08:22:19PM +0200, Miguel Ojeda wrote:
+> On Tue, Jun 17, 2025 at 8:12 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > How aobut something below? (I use "" instead of `` on purpose because
+> > the output variable there is a string)
+> 
+> Looks much better, thanks!
+> 
+> > You mean it should be "with an NUL terminated"? Or it should be "with
+> > a `NUL` byte terminated"?
+> 
+> Ah, I meant that "terminated" sounded strange to me, i.e. it sounds as
+> if the NUL is what is terminated. But I am not a native speaker.
+> 
+> I would have expected e.g. "a NUL terminated string" or variations
+> like "a string terminated with a NUL" or"a string with a NUL
+> termination byte", if that makes sense.
+> 
 
---oKdl6g1Fns34EoZE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-> Hi,
->=20
-> Recently customer faced a page pool leak issue And keeps on gettting foll=
-owing message in
-> console.
-> "page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
->=20
-> Customer runs "ping" process in background and then does a interface down=
-/up thru "ip" command.
->=20
-> Marvell octeotx2 driver does destroy all resources (including page pool a=
-llocated for each queue of
-> net device) during interface down event. This page pool destruction will =
-wait for all page pool buffers
-> allocated by that instance to return to the pool, hence the above message=
- (if some buffers
-> are stuck).
->=20
-> In the customer scenario, ping App opens both RAW and RAW6 sockets. Even =
-though Customer ping
-> only ipv4 address, this RAW6 socket receives some IPV6 Router Advertiseme=
-nt messages which gets generated
-> in their network.
->=20
-> [   41.643448]  raw6_local_deliver+0xc0/0x1d8
-> [   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
-> [   41.652149]  ip6_input_finish+0x48/0x70
-> [   41.655976]  ip6_input+0x44/0xcc
-> [   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
-> [   41.663546]  ip6_sublist_rcv+0x16c/0x22c
-> [   41.667460]  ipv6_list_rcv+0xf4/0x12c
->=20
-> Those packets will never gets processed. And if customer does a interface=
- down/up, page pool
-> warnings will be shown in the console.
->=20
-> Customer was asking us for a mechanism to drain these sockets, as they do=
-nt want to kill their Apps.
-> The proposal is to have debugfs which shows "pid  last_processed_skb_time=
-  number_of_packets  socket_fd/inode_number"
-> for each raw6/raw4 sockets created in the system. and
-> any write to the debugfs (any specific command) will drain the socket.
->=20
-> 1. Could you please comment on the proposal ?
-> 2. Could you suggest a better way ?
->=20
-> -Ratheesh
-
-Hi,
-
-this problem recall me an issue I had in the past with page_pool
-and TCP traffic destroying the pool (not sure if it is still valid):
-
-https://lore.kernel.org/netdev/ZD2HjZZSOjtsnQaf@lore-desk/
-
-Do you have ongoing TCP flows?
+I made it "a NUL-terminated string" to align with other parts of our
+documentation in kernel::str.
 
 Regards,
-Lorenzo
+Boqun
 
->=20
-
---oKdl6g1Fns34EoZE
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCaFHkpAAKCRA6cBh0uS2t
-rJciAP4kr3mXRHurFuZcWturaTMGISYAguYrukCV8U9yWHjsAgD+MxhlvONcverh
-W/NGSNtKhX38Yr5Ys0hqEb1xMzSGjgI=
-=Y9Ae
------END PGP SIGNATURE-----
-
---oKdl6g1Fns34EoZE--
-
+> Cheers,
+> Miguel
