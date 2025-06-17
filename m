@@ -1,180 +1,253 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD632BF017;
-	Tue, 17 Jun 2025 07:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A629228C5AD
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:12:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750144293; cv=none; b=hZPcLc6exIhmXepNRFNHhL/r4sbnxH9Rfckq129Ozo/JpUQiv3bU38DMgWYzGbDEsaaBu2LlUkJhWNt7ALb9oL7+N4BGXjQbS7qG/Ng/v3Cnd6gIqTBEOTFVcpvMVgXKPU6FIbblPqxCQbNe6C6N4GMcYDNSV3h4XDyielQaBSA=
+	t=1750144327; cv=none; b=nsGsya6ilT24xhZaU0wKjN47JD8aMyGfgsEz5Y15sOaMbn6XUHvMsilV4eno9hLRc+msAa5WQVpuCXUdPYWT2qB1O90mHAMUord4NzjQY2BMbxalfMWRY9hmDkkTywfUaHELEr6j+tq2o+CsH2K/03FLrofspxg5ioKvFsYI6es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750144293; c=relaxed/simple;
-	bh=yTAt50N3neyeCnLnBEeHFhoVNDZmnsqQwamaiAfI0pU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jCSSsQpPEqb2oTzXX8l9KU+QIG6N7oX+IJh9jdiI5PXr9Q6We/UFI1vrkk5JpfLI8u7kXsytYw1RUANcoaYkiIFXpAlxqmh66d+Hhm827ujAotYBgcCDWrOUIy1/TIrbwFp6ZL6xMXJ66NRzSGiEopHi680HXg7aHcMRIFsj6WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7e5b6207bso1186648137.2;
-        Tue, 17 Jun 2025 00:11:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750144290; x=1750749090;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G/v5q2fXiwY4TAB8aPNUe4fxk10SyY4tqtEOV0DB9XA=;
-        b=gCLMtW52oaTxJbOaU6zw783OZU5+5TyIsyf/lxq/tEOx44m/eV4PXyo724a0qIIW7R
-         lriYoL05T65YdcjJnG8uHvvPPfjq9ZT/84KUAKIVYGNcdiz2traqdYliq35XmFN6Zv7v
-         gilPvKWCmF8xC+MxAD7Zhmb1X7g5VTU4Uj871yRQ5+67qT56ffiV9ruyVdo7dtruQsZb
-         rgrits1CvTpy4hiKibVzRyrYchlQDYIGFAiPcj62Of9PEMUlHlCdmD2/1q0T0lar7GFC
-         TxdWnMGUDhzFfgJlnBF3sqo66rKxYTV2gXpnvDq+KCXg1ntaxGWKmlZS1rDR/KjLom6K
-         Ez+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWcUgu5bEw3/XeBENdus2eeQqtDTHBzKj0Cqk2pg8wnLAZwUqs0R+4+tk+zHakyP9gTDrQ0lYEYyGgp@vger.kernel.org, AJvYcCWp/EoWbwm8NULvWiMBItD1geQHwR25mlIH0CD7/sbFkmL5gnSyGUAmAncfHqVcR4gnoq2ryNFCUasO@vger.kernel.org, AJvYcCX900WhzXt3YBhtijGSuFeXNHZu3efBDY0mGg4yPso6YiO4ZInUTrLoKdGmiaXh4P2TrEPM4QuIG9uGFLEP@vger.kernel.org, AJvYcCXSbuwnUffHRvIepvdsSVH7BBhM+OhHKcMDQX5K2WgCNKzaStVq8EKmLdBjnJ23ComXq+Fkcfm3eZzwAYcWg97oEnw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRFvzy0oKtw387x0Vu6SDtHAFI90z15tIQLLumVzEV8igSvtVF
-	LOg0kvsFp1ESKHS3mEaIJIUu1b2RGUxy+g3dKT5BRJeBknptsxGQwU9cszUeKL3E
-X-Gm-Gg: ASbGncsawNid3DBNOaIqOpGfxcfZUit4raO9Rdrxjc8oqihY9SC1aQd1/kYLCyD+efo
-	f7AA5g3rsGKWWO6ndSFHVzSoJZyqkoiAC7XzT/wILLOkXoLGlkUTeobeRXwFsZdXQyDUFJLF5N0
-	2pVOVlBqBd4FVoGjksVaN47IMLUqMvlGzzMTTqda0ja8fN5DKYopxuCWtoT8Q6O4K6MUszB8X4o
-	hWBtYcbrq1Si3J+nRJeP2244/wWmrnVKQdqdWL2cVkWi/D1V7XpKpT3KJu1+B3VMWcAb0gfo3Cm
-	nig+TwfyYbgTbVQCljq0ECMX8UC5PLa3SQ9bDOB4hsXzbK6pu4f7PXuy/+1PdQ2TbUHwf2+3Nk3
-	aYeeKmV1nTdgirIFXPX74+hn8
-X-Google-Smtp-Source: AGHT+IEECrac0ePQll+eB3DODknl5jNTsxyu1DoYNhYANkO/8t/uStlXCqMJKfPSo4qKb9rPcI6z7Q==
-X-Received: by 2002:a05:6102:5092:b0:4e5:9380:9c25 with SMTP id ada2fe7eead31-4e7f60edf6bmr8208837137.3.1750144289731;
-        Tue, 17 Jun 2025 00:11:29 -0700 (PDT)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e7e708bd92sm1536011137.19.2025.06.17.00.11.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 00:11:29 -0700 (PDT)
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so1207487241.2;
-        Tue, 17 Jun 2025 00:11:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWRVnoWjeC1TlAwFUl541kuuGMXY/l2A0bjpC9XBTjKZhmDb20uH2mC3bGg0iE4u2f5UJn2LyddLgDY6n4A@vger.kernel.org, AJvYcCWpNgJRON4Cwt74vIBTHvobodD1Qs+UmZDNzjNVVt7N0F2OpfeCksQ1QqxENVuSeA0DPVcxPhUH8U6G@vger.kernel.org, AJvYcCXjo2aYqWW+npQ+IPJARYi2CfHS5uKSWiIUc/Dx0VEU3WEMWL7f1PuDlYgzyHf9YzZ62a7Dci1V0VnQ1c82B3oGUgQ=@vger.kernel.org, AJvYcCXwnnPJKSZGnBe+NIolocc5UfxYLbN+fkXBRtpp/iSHjfE4CExhpcfzvBtcnutFumDfTymOcc2EzodN@vger.kernel.org
-X-Received: by 2002:a05:6102:4492:b0:4e7:bf31:2f68 with SMTP id
- ada2fe7eead31-4e7f621e0bdmr7699219137.25.1750144289064; Tue, 17 Jun 2025
- 00:11:29 -0700 (PDT)
+	s=arc-20240116; t=1750144327; c=relaxed/simple;
+	bh=YWnBxnuc1USSWpP7g8iTovW2z5lSLAgum3XnacGTcRQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=V5AdlKrkgYWGNFC2t4/kl2SxDpiBrTVCqCKTtIVrEQrH3VPER0dhX7sVwOjzXCDDlTchC8EgKG/anEDWDVOQ2b5kbB/3EXpkj8y0Bbzm4iLwSrbQJqyNr4XQ/zjKTui0ohK7KewJq9V35Z7oAp/Ey8kxcXcN0wupozQlKHkxLRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wo9EzbQL; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wo9EzbQL"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750144321;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iWkqbsRsMPadMowH6GNW9aiYIyRsuY18VyS9juVdeNA=;
+	b=wo9EzbQLBhFL4CX4cZvMKamgUfd/1J2xlDdmC/ZrSs/1GhqKR91N4H0M9O5Xw1rHpgknOE
+	Nibg0+KaxJVEF94R2vJgnrF+ow7XnhK2gV19gvdp9zIE6CKVcryGeFmQ+EMZYuxw+gGrYp
+	x+NE6RM8AqhVHJip7978shEGWj4HyVQ=
+From: Hao Ge <hao.ge@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Matt Turner <mattst88@gmail.com>,
+	Dennis Zhou <dennis@kernel.org>,
+	Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-alpha@vger.kernel.org,
+	linux-s390@vger.kernel.org,
+	Hao Ge <hao.ge@linux.dev>,
+	Hao Ge <gehao@kylinos.cn>
+Subject: [PATCH v5 1/1] mm/percpu: Conditionally define _shared_alloc_tag via CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
+Date: Tue, 17 Jun 2025 15:10:52 +0800
+Message-Id: <7b912b54cdc12a3437edbd50dbadfc45545641b7.1750143986.git.gehao@kylinos.cn>
+In-Reply-To: <cover.1750143986.git.gehao@kylinos.cn>
+References: <cover.1750143986.git.gehao@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250609232253.514220-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdWoWqrMKgNSYN_NDOtROD-SAq7ProhREPJTEBTOPCeH=A@mail.gmail.com>
- <CA+V-a8sBhF-FwV0BXCxpHkuhdAg5YcwDsWPFRPSV_BdmNpLWYA@mail.gmail.com> <CA+V-a8t6WNQS-1AkFUeSioxNyF9vSbaxUDkQsYDk-=m1tysu+w@mail.gmail.com>
-In-Reply-To: <CA+V-a8t6WNQS-1AkFUeSioxNyF9vSbaxUDkQsYDk-=m1tysu+w@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 17 Jun 2025 09:11:17 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU9506cHe5xyMSfu_AX_i7k+GupuaaAKDNH6LA9hEXNPA@mail.gmail.com>
-X-Gm-Features: AX0GCFvsCJkfmKnYT1sdg_yrTI_i8ZrlUEHMC3xjoflEVfDCTNfz9EG-bVRYQ14
-Message-ID: <CAMuHMdU9506cHe5xyMSfu_AX_i7k+GupuaaAKDNH6LA9hEXNPA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: mmc: renesas,sdhi: Document RZ/T2H and
- RZ/N2H support
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Prabhakar,
+From: Hao Ge <gehao@kylinos.cn>
 
-On Fri, 13 Jun 2025 at 20:59, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
-rote:
-> On Fri, Jun 13, 2025 at 4:37=E2=80=AFPM Lad, Prabhakar <prabhakar.csengg@=
-gmail.com> wrote:
-> > On Thu, Jun 12, 2025 at 4:47=E2=80=AFPM Geert Uytterhoeven <geert@linux=
--m68k.org> wrote:
-> > > On Tue, 10 Jun 2025 at 01:23, Prabhakar <prabhakar.csengg@gmail.com> =
-wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > >
-> > > > Add SDHI bindings for the Renesas RZ/T2H (a.k.a R9A09G077) and RZ/N=
-2H
-> > > > (a.k.a R9A09G087) SoCs. Use `renesas,sdhi-r9a09g057` as a fallback =
-since
-> > > > the SD/MMC block on these SoCs is identical to the one on RZ/V2H(P)=
-,
-> > > > allowing reuse of the existing driver without modifications.
-> > > >
-> > > > Update the binding schema to reflect differences: unlike RZ/V2H(P),
-> > > > RZ/T2H and RZ/N2H do not require the `resets` property and use only=
- a
-> > > > single clock instead of four.
-> > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
-> > >
-> > > Thanks for your patch!
-> > >
-> > > > --- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > +++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-> > > > @@ -129,59 +131,75 @@ allOf:
-> > > >          compatible:
-> > > >            contains:
-> > > >              enum:
-> > > > -              - renesas,sdhi-r9a09g057
-> > > > -              - renesas,rzg2l-sdhi
-> > > > +              - renesas,sdhi-r9a09g077
-> > > > +              - renesas,sdhi-r9a09g087
-> > > >      then:
-> > > >        properties:
-> > > > +        resets: false
-> > > >          clocks:
-> > > > -          items:
-> > > > -            - description: IMCLK, SDHI channel main clock1.
-> > > > -            - description: CLK_HS, SDHI channel High speed clock w=
-hich operates
-> > > > -                           4 times that of SDHI channel main clock=
-1.
-> > > > -            - description: IMCLK2, SDHI channel main clock2. When =
-this clock is
-> > > > -                           turned off, external SD card detection =
-cannot be
-> > > > -                           detected.
-> > > > -            - description: ACLK, SDHI channel bus clock.
-> > > > +          description: ACLK, SDHI channel bus clock.
-> > >
-> > > According to the documentation, this is the SDHI high speed clock...
-> > >
-> Actually re-reading the doc there are two clocks (I had missed the
-> second clock earlier),
+Recently discovered this entry while checking kallsyms on ARM64:
+ffff800083e509c0 D _shared_alloc_tag
 
-And I had missed the first, as it is not shown in Figure 7.1
-("Block diagram of clock generation circuit" ;-)
+If ARCH_NEEDS_WEAK_PER_CPU is not defined(it is only defined for
+s390 and alpha architectures), there's no need to statically define
+the percpu variable _shared_alloc_tag.
 
-> 1] ACLK, IMCLK from the PCLKAM which is 200MHz
-> 2] SDHI_clkhs from PLL2 which is 800MHz
-> Note, on RZ/V2H too the ACLK/IMCLK is 200MHz and clk_hs is 800MHz
->
-> So, I'll represent them as below:
->         clocks:
->           items:
->             - description: ACLK, IMCLK, SDHI channel bus and main clocks.
->             - description: CLK_HS, SDHI channel High speed clock.
->         clock-names:
->           items:
->             - const: aclk
->             - const: clkh
->
-> And for the ACLK, IMCLK which comes from peripheral module clock
-> (PCLKAM) this will be a module clock and CLK_HS will have to be
-> modelled as a CORE clock.
+Therefore, we need to implement isolation for this purpose.
 
-OK.
+When building the core kernel code for s390 or alpha architectures,
+ARCH_NEEDS_WEAK_PER_CPU remains undefined (as it is gated
+by #if defined(MODULE)). However, when building modules for these
+architectures, the macro is explicitly defined.
 
-Gr{oetje,eeting}s,
+Therefore, we remove all instances of ARCH_NEEDS_WEAK_PER_CPU from
+the code and introduced CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU to
+replace the relevant logic. We can now conditionally define the perpcu
+variable _shared_alloc_tag based on CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU.
+This allows architectures (such as s390/alpha) that require weak
+definitions for percpu variables in modules to include the definition,
+while others can omit it via compile-time exclusion.
 
-                        Geert
+Suggested-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Hao Ge <gehao@kylinos.cn>
+---
+ arch/alpha/Kconfig              | 1 +
+ arch/alpha/include/asm/percpu.h | 5 ++---
+ arch/s390/Kconfig               | 1 +
+ arch/s390/include/asm/percpu.h  | 5 ++---
+ include/linux/alloc_tag.h       | 6 +++---
+ include/linux/percpu-defs.h     | 7 ++++---
+ lib/alloc_tag.c                 | 2 ++
+ mm/Kconfig                      | 7 +++++++
+ 8 files changed, 22 insertions(+), 12 deletions(-)
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+diff --git a/arch/alpha/Kconfig b/arch/alpha/Kconfig
+index 109a4cddcd13..80367f2cf821 100644
+--- a/arch/alpha/Kconfig
++++ b/arch/alpha/Kconfig
+@@ -7,6 +7,7 @@ config ALPHA
+ 	select ARCH_HAS_DMA_OPS if PCI
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+ 	select ARCH_MIGHT_HAVE_PC_SERIO
++	select ARCH_MODULE_NEEDS_WEAK_PER_CPU if SMP
+ 	select ARCH_NO_PREEMPT
+ 	select ARCH_NO_SG_CHAIN
+ 	select ARCH_USE_CMPXCHG_LOCKREF
+diff --git a/arch/alpha/include/asm/percpu.h b/arch/alpha/include/asm/percpu.h
+index 6923249f2d49..4383d66341dc 100644
+--- a/arch/alpha/include/asm/percpu.h
++++ b/arch/alpha/include/asm/percpu.h
+@@ -9,10 +9,9 @@
+  * way above 4G.
+  *
+  * Always use weak definitions for percpu variables in modules.
++ * Therefore, we have enabled CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
++ * in the Kconfig.
+  */
+-#if defined(MODULE) && defined(CONFIG_SMP)
+-#define ARCH_NEEDS_WEAK_PER_CPU
+-#endif
+ 
+ #include <asm-generic/percpu.h>
+ 
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 0c16dc443e2f..b652cb952f31 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -132,6 +132,7 @@ config S390
+ 	select ARCH_INLINE_WRITE_UNLOCK_IRQ
+ 	select ARCH_INLINE_WRITE_UNLOCK_IRQRESTORE
+ 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE
++	select ARCH_MODULE_NEEDS_WEAK_PER_CPU
+ 	select ARCH_STACKWALK
+ 	select ARCH_SUPPORTS_ATOMIC_RMW
+ 	select ARCH_SUPPORTS_DEBUG_PAGEALLOC
+diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
+index 84f6b8357b45..96af7d964014 100644
+--- a/arch/s390/include/asm/percpu.h
++++ b/arch/s390/include/asm/percpu.h
+@@ -16,10 +16,9 @@
+  * For 64 bit module code, the module may be more than 4G above the
+  * per cpu area, use weak definitions to force the compiler to
+  * generate external references.
++ * Therefore, we have enabled CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
++ * in the Kconfig.
+  */
+-#if defined(MODULE)
+-#define ARCH_NEEDS_WEAK_PER_CPU
+-#endif
+ 
+ /*
+  * We use a compare-and-swap loop since that uses less cpu cycles than
+diff --git a/include/linux/alloc_tag.h b/include/linux/alloc_tag.h
+index 8f7931eb7d16..9ef2633e2c08 100644
+--- a/include/linux/alloc_tag.h
++++ b/include/linux/alloc_tag.h
+@@ -88,7 +88,7 @@ static inline struct alloc_tag *ct_to_alloc_tag(struct codetag *ct)
+ 	return container_of(ct, struct alloc_tag, ct);
+ }
+ 
+-#ifdef ARCH_NEEDS_WEAK_PER_CPU
++#if defined(CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU) && defined(MODULE)
+ /*
+  * When percpu variables are required to be defined as weak, static percpu
+  * variables can't be used inside a function (see comments for DECLARE_PER_CPU_SECTION).
+@@ -102,7 +102,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ 		.ct = CODE_TAG_INIT,						\
+ 		.counters = &_shared_alloc_tag };
+ 
+-#else /* ARCH_NEEDS_WEAK_PER_CPU */
++#else /* CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU && MODULE */
+ 
+ #ifdef MODULE
+ 
+@@ -123,7 +123,7 @@ DECLARE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ 
+ #endif /* MODULE */
+ 
+-#endif /* ARCH_NEEDS_WEAK_PER_CPU */
++#endif /* CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU && MODULE */
+ 
+ DECLARE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+ 			mem_alloc_profiling_key);
+diff --git a/include/linux/percpu-defs.h b/include/linux/percpu-defs.h
+index 0aeb0e276a3e..5931fcad9a91 100644
+--- a/include/linux/percpu-defs.h
++++ b/include/linux/percpu-defs.h
+@@ -63,14 +63,15 @@
+  * 1. The symbol must be globally unique, even the static ones.
+  * 2. Static percpu variables cannot be defined inside a function.
+  *
+- * Archs which need weak percpu definitions should define
+- * ARCH_NEEDS_WEAK_PER_CPU in asm/percpu.h when necessary.
++ * Archs which need weak percpu definitions should set
++ * CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU when necessary.
+  *
+  * To ensure that the generic code observes the above two
+  * restrictions, if CONFIG_DEBUG_FORCE_WEAK_PER_CPU is set weak
+  * definition is used for all cases.
+  */
+-#if defined(ARCH_NEEDS_WEAK_PER_CPU) || defined(CONFIG_DEBUG_FORCE_WEAK_PER_CPU)
++#if defined(CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU) && defined(MODULE) || \
++	defined(CONFIG_DEBUG_FORCE_WEAK_PER_CPU)
+ /*
+  * __pcpu_scope_* dummy variable is used to enforce scope.  It
+  * receives the static modifier when it's used in front of
+diff --git a/lib/alloc_tag.c b/lib/alloc_tag.c
+index c7f602fa7b23..ab0936ebf38e 100644
+--- a/lib/alloc_tag.c
++++ b/lib/alloc_tag.c
+@@ -24,8 +24,10 @@ static bool mem_profiling_support;
+ 
+ static struct codetag_type *alloc_tag_cttype;
+ 
++#ifdef CONFIG_ARCH_MODULE_NEEDS_WEAK_PER_CPU
+ DEFINE_PER_CPU(struct alloc_tag_counters, _shared_alloc_tag);
+ EXPORT_SYMBOL(_shared_alloc_tag);
++#endif
+ 
+ DEFINE_STATIC_KEY_MAYBE(CONFIG_MEM_ALLOC_PROFILING_ENABLED_BY_DEFAULT,
+ 			mem_alloc_profiling_key);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index e113f713b493..00514df3eae4 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -929,6 +929,13 @@ config ARCH_SUPPORTS_PUD_PFNMAP
+ 	def_bool y
+ 	depends on ARCH_SUPPORTS_HUGE_PFNMAP && HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+ 
++#
++# Architectures that always use weak definitions for percpu
++# variables in modules should set this.
++#
++config ARCH_MODULE_NEEDS_WEAK_PER_CPU
++       bool
++
+ #
+ # UP and nommu archs use km based percpu allocator
+ #
+-- 
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
