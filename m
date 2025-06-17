@@ -1,107 +1,124 @@
-Received: from mta22.hihonor.com (mta22.honor.com [81.70.192.198])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5961D219EB
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53B4318B495
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750209483; cv=none; b=fpPsOtlyFLrzSPDeY0L6/RMFkvBsVeOfoqkQtTCQErQhUulo/ss4qgdn4pqb0+M0BL8KNpOojcI2huFR98kSkyMEw2KTbFhVww8OS0bXK2cTHkrYQQ8vGLK7kVUI5CB+m4AXffOyyztBjATZjwZjkHHygjbrRNFsvOl8tm3DpL0=
+	t=1750209486; cv=none; b=hsW7eih3AmPOshaU586B4olBkYKUCV0rL21dPtNiQ560TMx760JLx/RxeLpQ2T595FIMISiPR0BxiL7XFlVlunLr0qP+omlVMvJC8/K+yz8sWmbqEnTCPBzhbN7cSnbdqfEQowgaxec+CMHkZ6lAW/FHHPndIOUM8eTpepy/qIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750209483; c=relaxed/simple;
-	bh=30ovmPkyUIO+VWTX8LV95YQyDUnszGZNsf0GYOJ6OJQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IDD5r6Mf6RPqiTmQ7xhz9Pq/wpfcaRpe+aR8MNFanaOzoLLACCnwWAxJzkzCWMtx7ldp3+IKahWzRzM6oyPjb04+ex7xrchw49auAEgY3Ju64EbTOrJSBUYZwxiTMfdGFzFa4Z8+FdAu8gCSuf0EqZjuZRjEgaWO0BEyoYDJX3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=j7atDkaG; arc=none smtp.client-ip=81.70.192.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+	s=arc-20240116; t=1750209486; c=relaxed/simple;
+	bh=EmsfwNYhyePl3Y+oXJg7mIEX8RVDMxWYIqiG0U2UDsI=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=Ps6ei1Rnxop8yE2W+7PhEnuEKNwzH7GtKmIecnjiTL43FENDPgQveoqzUcsuGSs/9gQmVr0n67wM2TKbRfP+uah1b4tmBX5sIFrNE4vVgELmWT9b7lojpCVL5Kn0Kthb6l7SCYt9nzlPDkfMxvk2eo8XZXwBaIqqPzL5g1h5vNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OEgcXu8i; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="j7atDkaG"
-dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=To:From;
-	bh=oivfvuFpSof7V2JHY5dYM3FHV+vS0yRXVZLn+vhja3w=;
-	b=j7atDkaGg3njDntrYxgZlLvtcnXyfIH1PS4qqLkBNj2Vx1dD0A0IainY9ujrFg/suAZOgQ/2n
-	kJByG3Wxm5OUg+x2D0zEKVUCqwgzLRpcTXyZcarG6u/RYApbsT8xdr/5RQfoPvc05mrMHmH4Dvb
-	lIzD+V/PkIXR5ZsnkIBqfpQ=
-Received: from w012.hihonor.com (unknown [10.68.27.189])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bMQmC55bDzYl8Ws;
-	Wed, 18 Jun 2025 09:15:55 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w012.hihonor.com
- (10.68.27.189) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 09:17:57 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 09:17:56 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <wangzijie1@honor.com>
-CC: <chao@kernel.org>, <feng.han@honor.com>, <jaegeuk@kernel.org>,
-	<linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>
-Subject: [f2fs-dev] [PATCH v2 1/2] f2fs: don't allow unaligned truncation to smaller size on pinned file
-Date: Wed, 18 Jun 2025 09:17:56 +0800
-Message-ID: <20250618011756.2451449-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250617123116.2385828-1-wangzijie1@honor.com>
-References: <20250617123116.2385828-1-wangzijie1@honor.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OEgcXu8i"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250618011803epoutp01458ff36762ed703eb189a24009b7fb66~J-kCdeyUc0211102111epoutp01g
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:18:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250618011803epoutp01458ff36762ed703eb189a24009b7fb66~J-kCdeyUc0211102111epoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750209483;
+	bh=MpZ1RB5ujoYUFLrWZd+Soph740N6pKm7nhRUWlK+mb8=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=OEgcXu8iKlUgh+2/ccQahqZq8huHXyVrj+jZ0O/0Ad7KgkJcAegvkgfrfr2k9giI8
+	 rjh+KlIk52IPFzo81pDE2ZeB25af8tRRfSgq4DPwxSqiEz8FjjhJ+wBEMOTKpDF20M
+	 hrl7OfBdEBlzg3/npYFk3L/JF/CU5bfFt7xqz5sg=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
+	20250618011803epcas5p307f50f49075ed92a804b49867a2dd288~J-kB2HGZw3159931599epcas5p3O;
+	Wed, 18 Jun 2025 01:18:03 +0000 (GMT)
+Received: from epcas5p3.samsung.com (unknown [182.195.38.179]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bMQpc5ctcz3hhTS; Wed, 18 Jun
+	2025 01:18:00 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617175241epcas5p23c7284be872b6e74e3888b70ce19b01b~J5fLGRFG11003410034epcas5p24;
+	Tue, 17 Jun 2025 17:52:41 +0000 (GMT)
+Received: from INBRO001840 (unknown [107.122.3.105]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250617175237epsmtip23b9b569665566d9ebe26adcffe3fbcde~J5fIOTcPr1594015940epsmtip2i;
+	Tue, 17 Jun 2025 17:52:37 +0000 (GMT)
+From: "Pritam Manohar Sutar" <pritam.sutar@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>
+Cc: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
+	<andre.draszik@linaro.org>, <peter.griffin@linaro.org>,
+	<kauschluss@disroot.org>, <ivo.ivanov.ivanov1@gmail.com>,
+	<m.szyprowski@samsung.com>, <s.nawrocki@samsung.com>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <rosa.pila@samsung.com>,
+	<dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
+	<muhammed.ali@samsung.com>, <selvarasu.g@samsung.com>
+In-Reply-To: <20250616-resolute-ocelot-of-shopping-1c9c4a@kuoka>
+Subject: RE: [PATCH v3 1/9] dt-bindings: phy: samsung,usb3-drd-phy: add
+ ExynosAutov920 HS phy compatible
+Date: Tue, 17 Jun 2025 23:22:36 +0530
+Message-ID: <000401dbdfb0$9ec4b010$dc4e1030$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a011.hihonor.com
- (10.68.31.243)
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNTkACKxnsdZBPuyPiYuNftoBZF1gLpYoryAm9xWLwB5QJ1g7DeUbpQ
+Content-Language: en-in
+X-CMS-MailID: 20250617175241epcas5p23c7284be872b6e74e3888b70ce19b01b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250613055040epcas5p35219ddeddd9fe5f4632ca837db91847a
+References: <20250613055613.866909-1-pritam.sutar@samsung.com>
+	<CGME20250613055040epcas5p35219ddeddd9fe5f4632ca837db91847a@epcas5p3.samsung.com>
+	<20250613055613.866909-2-pritam.sutar@samsung.com>
+	<20250616-resolute-ocelot-of-shopping-1c9c4a@kuoka>
 
-> To prevent scattered pin block generation, don't allow non-section aligned truncation
-> to smaller size on pinned file. But for truncation to larger size, after
-> commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
-> we only support overwrite IO to pinned file, so we don't need to consider
-> attr->ia_size > i_size case.
+Hi Krzysztof, 
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk@kernel.org>
+> Sent: 16 June 2025 01:45 PM
+> To: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+> Cc: vkoul@kernel.org; kishon@kernel.org; robh@kernel.org;
+> krzk+dt@kernel.org; conor+dt@kernel.org; alim.akhtar@samsung.com;
+> andre.draszik@linaro.org; peter.griffin@linaro.org; kauschluss@disroot.org;
+> ivo.ivanov.ivanov1@gmail.com; m.szyprowski@samsung.com;
+> s.nawrocki@samsung.com; linux-phy@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org;
+> rosa.pila@samsung.com; dev.tailor@samsung.com;
+> faraz.ata@samsung.com; muhammed.ali@samsung.com;
+> selvarasu.g@samsung.com
+> Subject: Re: [PATCH v3 1/9] dt-bindings: phy: samsung,usb3-drd-phy: add
+> ExynosAutov920 HS phy compatible
 > 
-> Signed-off-by: wangzijie <wangzijie1@honor.com>
-> ---
-> v2:
-> - add comments and change a proper subject
-> ---
->  fs/f2fs/file.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> On Fri, Jun 13, 2025 at 11:26:05AM GMT, Pritam Manohar Sutar wrote:
+> > Add a dedicated compatible string for USB HS phy found in this SoC.
 > 
-> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-> index 6bd3de64f..09be6e849 100644
-> --- a/fs/f2fs/file.c
-> +++ b/fs/f2fs/file.c
-> @@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->  {
->  	struct inode *inode = d_inode(dentry);
->  	struct f2fs_inode_info *fi = F2FS_I(inode);
-> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->  	int err;
->  
->  	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
-> @@ -1047,6 +1048,17 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->  			!IS_ALIGNED(attr->ia_size,
->  			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
->  			return -EINVAL;
-> +		/*
-> +		 * To prevent scattered pin block generation, we don't
-> +		 * allow smaller size unaligned truncation for pinned file.
-> +		 * We only support overwrite IO to pinned file, so don't
-> +		 * care about larger size truncation.
-> +		 */
-> +		if (f2fs_is_pinned_file(inode) &&
-> +			attr->ia_size < i_size_read(inode) &&
-> +			!IS_ALIGNED(attr->ia_size,
-> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
-> +			return -EINVAL;
->  	}
->  
->  	err = setattr_prepare(idmap, dentry, attr);
-> -- 
-> 2.25.1
+> You add HS phy in other commit/patch. This is just confusing.
+> 
+> > The devicetree node requires two clocks, named "phy" and "ref"
+> 
+> No. Explain the hardware, not the DTS. How many clocks, supplies etc
+> hardware has.
+> 
 
-I missed attr->ia_size == i_size case...I will cover that in next version.
+ok will change commit message accordingly in next version of the patch-set. 
 
+> Best regards,
+> Krzysztof
+
+
+Thank you.
+
+Regards,
+Pritam
 
