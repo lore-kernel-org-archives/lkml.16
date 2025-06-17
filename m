@@ -1,217 +1,169 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012011.outbound.protection.outlook.com [52.101.71.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8EA1E521D;
-	Tue, 17 Jun 2025 06:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750140764; cv=fail; b=FfGqDKran+ci3N0FFVUGY3ctgvF/r81bkpY6emX2tlfpb2dIXUcuhHt1hm+ENHWr0ya77DtU/SCqyMi2IDT3u9vY1+XxeZvcfPxqi/XeJ57Pxi/z0v4Eo/V+RoEGqcv6pOVmwXYqLdcheP2jjvMcMOBCHzZ6866fZMHWi6KByMM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750140764; c=relaxed/simple;
-	bh=f61K/muUHlZLmazaR9gFKPtxqkCTGePOvmJe3vT1Jzc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZYgDf4JntyNCqPw+sm7MLQ000yU4gXctJWCC7HCCpmqazUUH9H2u/VqVEMkHG8pyFIoTYjTc42QtXQzvPd/+CGi9gnvs/xeTd1osa3n36pXhx1iPLYZWOhsNTfhp+uqy3Q+tf2l4cZniH/tlB7Pt+4HvtRoh8HktSaH3F05ZbsQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech; spf=pass smtp.mailfrom=est.tech; dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b=lf8Wbs9s; arc=fail smtp.client-ip=52.101.71.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=est.tech
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=est.tech
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31BE4430;
+	Tue, 17 Jun 2025 06:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750140868; cv=none; b=Fj/BR7hf8g/OBlY/kFM1b94klmD7a5oYyWXllCWKgF6fjE7caA1BRcbc2UM2q8T39k/eqTMzbLP/IqmtpZqXvagUQeQ3ZcFxL5zNieQo/0/VYqcbqOYfTDac85xGIGaxbHXnPnn8WDPDlS/2XaDsBxxhGamjhhh9yyfTzMQL1kU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750140868; c=relaxed/simple;
+	bh=atcA+m1RP63WSr7kzFhVShoS22kZRQhKEPWYi3FCQsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CDQ1GVFBDZ+6rNUkyfVje+Sc8w0A83tvQdVuqi4MjQNbSg7Y6u3a5P6M1VtXaFIWSDDRSDVlqKhwvZuQUahTH6JvfCNnMkGchSkVALkINfrSyKYgdn3fPXWvY8I5CAtPIwIEBT34353PibnmD6qWizjiQExA8LgYrVOr2fMg7ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9yxKEh1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=est.tech header.i=@est.tech header.b="lf8Wbs9s"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UAML/ApmCW/M/TNhjodp17HRydvPqLy1dsXcbgJz8FCh+HqFpS8lYRdJi+thMum5Dbrd/cJPCxDX9rxJeo5l7mTfsoeFRnA3P8yxP521RTkdS1jcFWd+1p7jsTCUZwWfPxcbooQy8GgEGqm2Lq2lpvOBraqGXC/7yif53+KU1tPnmrh7Cj30Zs2qF6hTFqgVz0qPexxKGmpEx8g/LPaIJFcfA7lTMY1332ZVUgHubrnijugHVIktDpOA1EOOH/gEgIcEoypLOAUinPSxfV+ITo+6Vw2DCwbsOyJFZsa48HFhvbYiAWVqpqLTVveMHCbSK7TEf431PCMlmnYKrBL69g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BN0/AS2lY8UlVB3WRtBh8BvhnyvQ4PF+g8nWNxP9Yws=;
- b=YJqqINL4+ExsPd0FnYLCaTEqaMCZ37eJ9MQ0MDXWX9IbrI3vW1XQyldToQncWERI5yppcn1Rh9x99oWxszHxWbWYN8xOeXbrBU9Fql4J6kgzZefjF+ZLmgCjllmzqcEysO3GcafttWIjjC1vFHeAjduacisQGzmd67NK1xtPdIrAzrnKjiiq3in8HyZ7WtkIsuGd+MLGRng7VrRzk+x6QquKUbnd6fZCMoHfBskJlb1GonB9Pr6gdVlI3RoKIMYocmZ9VbFM58UBwd71wMgT+eF8FnypHL3/Tt6gl59kyKNdnfDjdo2hdotgYQNvGwO2Bom3TA/qpuOC+2tXfh6pbw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=est.tech; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BN0/AS2lY8UlVB3WRtBh8BvhnyvQ4PF+g8nWNxP9Yws=;
- b=lf8Wbs9s1d0YYhqOivh/TjkvtaPad7xfnA4HTG2JWwjPpTiPk7n7mXouhEpvjbI5kuqrznP/1ZeelMrLt7enH3LIJjSLy3B4TwGzTCJln4IFumQ2rk/jY1tPJ8aRZuzFzntnlnxDQdDi1i4Y4I4mcIeKZYs3GldsXb+1JnJWUABDQlGFLV2DCpoMp0efsOmjG7l6FaphDx6TVttOKmXVYKbUIeIHVkVYdylrjTPGUgJHwryvG/RJ0OJAIfZALYXgs3BITcV2KSwK0GSy8SpFeNenUSKOcw8JBQsc6GNGrw2+f5iuz9J2oRznRiP82VqCIRG6Nbftr6ch9OjJZb6dIw==
-Received: from GV1P189MB1988.EURP189.PROD.OUTLOOK.COM (2603:10a6:150:63::5) by
- GV1P189MB2648.EURP189.PROD.OUTLOOK.COM (2603:10a6:150:17b::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.29; Tue, 17 Jun 2025 06:12:37 +0000
-Received: from GV1P189MB1988.EURP189.PROD.OUTLOOK.COM
- ([fe80::43a0:f7df:aa6d:8dc7]) by GV1P189MB1988.EURP189.PROD.OUTLOOK.COM
- ([fe80::43a0:f7df:aa6d:8dc7%4]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 06:12:36 +0000
-From: Tung Quang Nguyen <tung.quang.nguyen@est.tech>
-To: Haixia Qu <hxqu@hillstonenet.com>, Jon Maloy <jmaloy@redhat.com>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"tipc-discussion@lists.sourceforge.net"
-	<tipc-discussion@lists.sourceforge.net>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 net] tipc: fix null-ptr-deref when acquiring remote ip
- of ethernet bearer
-Thread-Topic: [PATCH v4 net] tipc: fix null-ptr-deref when acquiring remote ip
- of ethernet bearer
-Thread-Index: AQHb30zDpaG4ac1yNUmZHqMFo4aV7rQG3piA
-Date: Tue, 17 Jun 2025 06:12:36 +0000
-Message-ID:
- <GV1P189MB19882E69E2C71A79B6A7EB58C673A@GV1P189MB1988.EURP189.PROD.OUTLOOK.COM>
-References: <20250617055624.2680-1-hxqu@hillstonenet.com>
-In-Reply-To: <20250617055624.2680-1-hxqu@hillstonenet.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: GV1P189MB1988:EE_|GV1P189MB2648:EE_
-x-ms-office365-filtering-correlation-id: 58faf9a7-aba1-4b3d-7705-08ddad65f4bd
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|366016|1800799024|7416014|38070700018|7053199007;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?sj5ffn3iyv4K7f+GdY6AD2oyj/7U54y7V3M5vsyyxCSVJArmeJRVH62poExL?=
- =?us-ascii?Q?Hl48eCkPTz2D8/N7//KRQfQUBWEagdhd1YSBUJ+CZ9thCreAvbBmsu53166Z?=
- =?us-ascii?Q?KbYf2dnRXC1w+FkIF+vC9GowOf3Kfc2zRg7xsL1il253tGnJHAABJ1gxuOx5?=
- =?us-ascii?Q?+yzW512275XiDvGjNtUllsfqW+/nLCjYUAMw7Ndb/h+O7TloDOrL8evNp6up?=
- =?us-ascii?Q?sNms9Crc7eY2qYqCY6hX/ulG/WE9DhOCsLmz5xyKLRaMNRjt+xgFyJ+4U857?=
- =?us-ascii?Q?LS8UXeUIpVkedAHN4fQrLMUSxZnv2BnJl/UNxrzHLYeUjH5ykVGQ3Jz3gGQP?=
- =?us-ascii?Q?tquKMwmFiM0c9GmbvbmUBvBW+kICNqYzovrJTF/3TgrWqsu/FJFAsF52onca?=
- =?us-ascii?Q?cNC6dBg8yhsP4fYcba8drtTI6IygtUVU1NQn27dp9mj9nceHqd7NjECN9/GQ?=
- =?us-ascii?Q?GcEEy2vpGVAm9cDJdllZcayiWdjmM+Fp6/64h+lOoUxWvkS6xV0DbuM2Xdku?=
- =?us-ascii?Q?0WR/GsK+sNJmIg5OTy58i0qsaAtt13/aZOupHJfel3n7wPhMLLLmjvJSlBta?=
- =?us-ascii?Q?lfHlEsFDXi3dvsvVZbFyIVgGump2BgLwLx6YNmvXHfvR0sOt16IRJgvH0DTM?=
- =?us-ascii?Q?zyU+XxUZj4yC3+yCGvqfig1XFV8JlttuHEarTbrKtZz5nUF80Co0h6FQ5k1y?=
- =?us-ascii?Q?ZU70pe7OKwXWJ0dLKAYTnFSKpn4ZHlOtJcwCuJyHjE5kIrS3eJaw+hHPBZPy?=
- =?us-ascii?Q?CEaucNOj5jYtABIsTO6uw5/Isf/R+NqFEfAKNJLjOiArQ+/tq4xB1wbM6ucf?=
- =?us-ascii?Q?2j5RHISsrzYRQL3XnagCOhswsXLLewhRv6ozVS5AmPwcEVsO4AR7D1N4Bx7Q?=
- =?us-ascii?Q?FmmrEJWKOj2pdBnkPzaK8XQsdhDTX78Q5UuefdiT6vsq9wHRojqQ6Hydw0hg?=
- =?us-ascii?Q?iKw4BGd3hse2YgCfGzYVAPGmdEJerB9z85sjlFwIN2IyhF8TM/pZtUvdayug?=
- =?us-ascii?Q?JJ7WDI5scLjvOBif4daMLnR9zPxQFeIWizNVcTih86/q4Bks6u5GS+RTccnL?=
- =?us-ascii?Q?4io2cOQpHPQm2QMbXQpkXsMw7StOuymt0q0OxWb57Pu6GvU1q7nNZZLyFph/?=
- =?us-ascii?Q?6x+SSuvNx1RXLtdb9zRI4vmk/FQ0Az1pOI6KY7EYCdLLqvjxU3T1yMS56ODl?=
- =?us-ascii?Q?udyjvr0L/PXtpFuMPrUR6QAi9Y7TCWes2JTzwysHmyzsVgsdF4putuM38LB/?=
- =?us-ascii?Q?fCK01bGeQzoSjfOfrXJkpV3v1bkb+sAFkMeQKHHCThxNzGNMtZlauTUV6ZUu?=
- =?us-ascii?Q?EzMmyHYrBw1W/ePiiODKm72Igqhm7wKzFJDjkAV5YhVz+wxfLuHxdSgdvePO?=
- =?us-ascii?Q?H/mftSPDW05tRkkoDtMMsR59ih+bNoaNUttsCtGNnlibRfatU4+fm44T3cxY?=
- =?us-ascii?Q?aExZXeZNCu4=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:GV1P189MB1988.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014)(38070700018)(7053199007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Jx77HQI/8j5TR8+vMyOlQpjfXfkCKijCMN/xk8u6kOrYuWT669whQ8DYz164?=
- =?us-ascii?Q?GOn5TgYVvVxR7epJt8kMv2ZenzjPrhCAGTnMdwFh08yC3C9houfyp6Dy3kX+?=
- =?us-ascii?Q?7xARhH6LxOcwplYppw2ACA0UAO6n48LgfijdPL+d2vrH5d3HShzV5BumSshk?=
- =?us-ascii?Q?U0cEvrqJSm/xA8JL5gmGAC7GeD1ctQv3le/N0lujyGAXCheljwi/D9VXAhha?=
- =?us-ascii?Q?0gBugcTW3+BZE4vkPPxu17E6cGEbWfAgmXHUL0zC6ETmO2imZx7C+vM471B6?=
- =?us-ascii?Q?KtWuShneEsJmbLSAZJdgfQQI7SlPiFeRgDQBL7ZoDvQuqGSB3eVV1hnf6EI6?=
- =?us-ascii?Q?wfnrp8+sV0d30TtFuDBtrjf2houN2p0d9fcOn5ORK5m1DLmRU7+1f54NMvxU?=
- =?us-ascii?Q?DvhGCybtoaQTWTNNNq38h0vEFMLkLK+eLeFM0MtF8M/CjU+27vJ1xWuG3Y98?=
- =?us-ascii?Q?ljDE1jLW7QZcdC8qgAn6xx8tlpg+BoCeKxlxItyhyUydqDLZqAlOCkSemYLT?=
- =?us-ascii?Q?QShNjLdoUiHyvq+h+0tidRlfgmCs+IIODT6+DUbnBlIHLLlLrMhGpiLWffV2?=
- =?us-ascii?Q?Gsum7qHpzXceJiDdVQHKP79GjR8EpHZGmJ0xYgoDUudNu0ZBMuSSsO0rPhiy?=
- =?us-ascii?Q?rxb8qcGAi68YDOw0nrGG+si3CyOT6FmnovrKMSakqiaOBDB/3wVSXKfXBX/M?=
- =?us-ascii?Q?Lzr8/R6AGtJ+GnQ2SYv0jIF1WZyouuqeEDKoXZ04kS+JB13kVgZriWVG63r2?=
- =?us-ascii?Q?V9Qhwv59VlvyHKrLvFT5bSlSrHNmEq13yofA5FKqclnOpb8Ujp9B8AbqFOtj?=
- =?us-ascii?Q?HyNei/YtcZY1UI9MVrFFTHRycAiqub0x/IFloG2SMjOkreRO5/F1Q3k6gDgl?=
- =?us-ascii?Q?LXweMG5F/4JctczV9Tnp+kgFus+efdjdKbPmY2mA40xQaBvD5U6aYS+PXghZ?=
- =?us-ascii?Q?eiYPB8bbupUXqpVDeltpZxOSTxqeYvnD6KvOQS81wep//sWiLqK3BW/6Rbsn?=
- =?us-ascii?Q?eeCg4FH0dqgNnLdyVr7TzOoK6mbijABVpKuFUfQM0LdQkHXPVCTMzpYPYzsb?=
- =?us-ascii?Q?Rrhv3p946qNIp+imIiZECOanTnTrobjsdAaMmwyUH0pPGCGL26RVDYjXPHxa?=
- =?us-ascii?Q?kW3ErnOhq15ruWLFNHsiH3ZQTMrd+KF+fiALmnQJbCi9cnPDl9oi6xQMGJyA?=
- =?us-ascii?Q?lcD98+FdrzigCd7kA1U79izB4KBGkTbkSvOgGtRcCwEjMt1Ayg49FFlfeK1d?=
- =?us-ascii?Q?LBd3UYCS7VJt8GB1D+bXHRRLkvU1xO9bnjk9HuRBBNdFdKIUrKGe/xFP5XpA?=
- =?us-ascii?Q?KUOj5dfQmpatcSHlWMp2NBseItr/yHhNPyFOJUReDpMqsHtqSACwWLa5UDYh?=
- =?us-ascii?Q?j1cpzQ/vIFtYxyXCRJqKKCTU3W5MjY2Yeh2LvYRXPOdHdBcuVTFo1dlYky2A?=
- =?us-ascii?Q?8I5XT6EuVw1B/h49+qeMgva93E1r0cisOEOlRRQdIfaFsFvd9TzisNvJtPjM?=
- =?us-ascii?Q?6kf4pEyA/xOS1QMk/EW8PhYmUpSHU13dzkQA729U/AtFwiVrBj5Z+8TNGa20?=
- =?us-ascii?Q?nPfTmM7Vc31VNsfreQtI5djtpGlepq6D4wJ+gPA5?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9yxKEh1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F9CC4CEE3;
+	Tue, 17 Jun 2025 06:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750140868;
+	bh=atcA+m1RP63WSr7kzFhVShoS22kZRQhKEPWYi3FCQsU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N9yxKEh1Kjf62bOHmpOn1cYdpdRn1gofl+mZtpTpBPwQZ5vvawpJBCsM9W17N15FQ
+	 9VN9Gavv5SrMW9KFbY0jiP9jjpNvgFxtGtE/z3HswJiawSpfuGys4Zo4zekCvLi+/b
+	 kHETdWjx85ognmiLMpXTv86ZUfgur00+k1na1l/1Xc7nLwSl/hnuEVP5K+ClMwvgWR
+	 2YRux22WQv+jwy+DpMTp4kvHQobCS4bfk3Ijx3z6AF8ruzH/P8RooaJi0SfcAvWETX
+	 CHG++iPmEW5Sl3nv06WN8TuWcILgS8cILbXnAnVkr7Bl9spDuRZO8Crfo9iY0dIYd0
+	 L/9AfKJukd63Q==
+Message-ID: <c7aef6cd-e07d-4422-a34a-ce04c37ad2e8@kernel.org>
+Date: Tue, 17 Jun 2025 08:14:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: GV1P189MB1988.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58faf9a7-aba1-4b3d-7705-08ddad65f4bd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2025 06:12:36.5537
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zYMGOwjeQoZmA8+DqWd90SBe5raOX1QqnSFc19uE4S7oTUoOFwyjIfGJK1y8GQqegxzk+CMo+htMsj7gQfIEszYSKw2CzE1pcl/uzqkmncM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1P189MB2648
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: media: venus: Add qcm2290 dt schema
+To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
+Cc: quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
+ bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, stanimir.varbanov@linaro.org,
+ linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250613140402.3619465-1-jorge.ramirez@oss.qualcomm.com>
+ <20250613140402.3619465-2-jorge.ramirez@oss.qualcomm.com>
+ <6f4e715f-1c73-450e-b7eb-92781b7fa050@kernel.org> <aFATp3zoSgkrj3YX@trex>
+ <a76789cf-afe1-4d91-afdf-65c3af5ad11f@kernel.org> <aFBDzWLkKC9MWGoC@trex>
+ <48e6cc62-ffb0-4ca7-80c8-9e510db505db@kernel.org> <aFBNVjl4n7I+OkO5@trex>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aFBNVjl4n7I+OkO5@trex>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
->Subject: [PATCH v4 net] tipc: fix null-ptr-deref when acquiring remote ip =
-of
->ethernet bearer
->
->The reproduction steps:
->1. create a tun interface
->2. enable l2 bearer
->3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
->
->tipc: Started in network mode
->tipc: Node identity 8af312d38a21, cluster identity 4711
->tipc: Enabled bearer <eth:syz_tun>, priority 1
->Oops: general protection fault
->KASAN: null-ptr-deref in range
->CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
->Hardware name: QEMU Ubuntu 24.04 PC
->RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
->
->the ub was in fact a struct dev.
->
->when bid !=3D 0 && skip_cnt !=3D 0, bearer_list[bid] may be NULL or other =
-media
->when other thread changes it.
->
->fix this by checking media_id.
->
->Fixes: 832629ca5c313 ("tipc: add UDP remoteip dump to netlink API")
->Signed-off-by: Haixia Qu <hxqu@hillstonenet.com>
->---
->v4:
->  - make commit message more descriptive
->v3:
->https://patchwork.kernel.org/project/netdevbpf/patch/20250616042901.12978
->-1-hxqu@hillstonenet.com/
->  - add Fixes tag in commit message
->  - add target tree net
->---
-> net/tipc/udp_media.c | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
->
->diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c index
->108a4cc2e001..258d6aa4f21a 100644
->--- a/net/tipc/udp_media.c
->+++ b/net/tipc/udp_media.c
->@@ -489,7 +489,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb,
->struct netlink_callback *cb)
->
-> 		rtnl_lock();
-> 		b =3D tipc_bearer_find(net, bname);
->-		if (!b) {
->+		if (!b || b->bcast_addr.media_id !=3D TIPC_MEDIA_TYPE_UDP) {
-> 			rtnl_unlock();
-> 			return -EINVAL;
-> 		}
->@@ -500,7 +500,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb,
->struct netlink_callback *cb)
->
-> 		rtnl_lock();
-> 		b =3D rtnl_dereference(tn->bearer_list[bid]);
->-		if (!b) {
->+		if (!b || b->bcast_addr.media_id !=3D TIPC_MEDIA_TYPE_UDP) {
-> 			rtnl_unlock();
-> 			return -EINVAL;
-> 		}
->--
->2.43.0
->
-Reviewed-by: Tung Nguyen <tung.quang.nguyen@est.tech>
+On 16/06/2025 18:59, Jorge Ramirez wrote:
+> On 16/06/25 18:23:18, Krzysztof Kozlowski wrote:
+>> On 16/06/2025 18:18, Jorge Ramirez wrote:
+>>> On 16/06/25 16:41:44, Krzysztof Kozlowski wrote:
+>>>> On 16/06/2025 14:52, Jorge Ramirez wrote:
+>>>>>>
+>>>>>>> +  The Venus AR50_LITE IP is a video encode and decode accelerator present
+>>>>>>> +  on Qualcomm platforms
+>>>>>>> +
+>>>>>>> +allOf:
+>>>>>>> +  - $ref: qcom,venus-common.yaml#
+>>>>>>> +
+>>>>>>> +properties:
+>>>>>>> +  compatible:
+>>>>>>> +    const: qcom,qcm2290-venus
+>>>>>>> +
+>>>>>>> +  power-domains:
+>>>>>>> +    minItems: 2
+>>>>>>> +    maxItems: 3
+>>>>>>> +
+>>>>>>> +  power-domain-names:
+>>>>>>> +    minItems: 2
+>>>>>>
+>>>>>> Why is this flexible? Either you have two or three. Not mixed.
+>>>>>
+>>>>> please check 5b380f242f360256c96e96adabeb7ce9ec784306
+>>>>
+>>>> This does not explain why this is optional HERE. You cannot use for a
+>>>> new platform an argument that some existing platform was changed in
+>>>> ABI-preserving way.
+>>>
+>>> thanks for quick the follow up.
+>>>
+>>> but bear with me please because I dont follow - why can the same logic
+>>> be used - it being applicable - and therefore result in a definition
+>>> similar to those other platforms?
+>>
+>> Because this platform either has 2 or 3, not both. Unless that's not
+>> true, but then please share some arguments.
+> 
+> as with every other venus schema with more than 1 power domain, the
+> argument is the same one that I have shared with you a couple of
+> messages back (DVFS).
+> 
+> verbatim:
+>     Venus needs to vote for the performance state of a power domain (cx)
+>     to be able to support DVFS. This 'cx' power domain is controlled by
+>     rpm and is a common power domain (scalable) not specific to
+>     venus alone. This is optional in the sense that, leaving this power
+>     domain out does not really impact the functionality but just makes
+>     the platform a little less power efficient.
+
+That's not definition of optional. The domain is needed for this device,
+the device is one way or another having its rails routed to that domain.
+It is not optional.
+
+> 
+> Seeing all these venus schemas follow the same pattern, it seems to me
+> that this is the correct way of implementing the above.
+
+No for the reason I mentioned earlier.
+
+> 
+> You seem to disagree. please could you explain?
+
+I already explained. You add new device, so argument to preserve ABI,
+which was accepted THAT TIME, is not valid. You do not have ABI.
+
+
+Best regards,
+Krzysztof
