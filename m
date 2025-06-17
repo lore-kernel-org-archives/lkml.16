@@ -1,133 +1,267 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1034F2E3B14
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169896; cv=none; b=mFGCk0c/v3nmwa5+ft49hKqjUsiHTzuEn6gM38RdQxt/5KF7SvKhUyayi0NgnpgflMm6d0vLzJBNhZLX3Rm5VLFp5B4m7Qy07gnsq53/FaY7uXH32aObNCesIthaLHzNaCJDOCvaSstg24YOjog/rQxiTnEmhq0Il234/B+czBw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169896; c=relaxed/simple;
-	bh=asQ1iN27xLLjtCDv3Ppwn/ikbkJu6bhkI9I+TfYNBgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pvN2olvxWUz31/H+FjLhfFyaw4hcj218FJskufQ5EQwYUI0qCsrvW702dn1giJsE/IvGeP4hKm3E8lBCHoLgWaD83ShsTPNpfJl3yh9DUdX18XOZdE/DkVcMJxkVHgFV626Pck+5zzUhJ9jED3USZz8qv01dod5l73r5em6gcJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20F3A150C;
-	Tue, 17 Jun 2025 07:17:52 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B5BF73F58B;
-	Tue, 17 Jun 2025 07:18:12 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:18:10 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Yicong Yang <yangyicong@huawei.com>,
-	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	yangyicong@hisilicon.com, James Clark <james.clark@linaro.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
-	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	yangjinqian <yangjinqian1@huawei.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
-Message-ID: <20250617141810.GB794930@e132581.arm.com>
-References: <aEyGg98z-MkcClXY@x1>
- <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
- <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
- <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
- <20250616130736.GA788469@e132581.arm.com>
- <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
- <20250616160811.GA794930@e132581.arm.com>
- <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910522DE1F1;
+	Tue, 17 Jun 2025 14:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750169932; cv=fail; b=dvbFz5PCMXiFnWu8xhwh2l0A/8du7FcEKr8xbRbMfwHcN2gzSDg4yRXxK7KbtURo+gNb5pWmNr/qaiDmaotzb9z25PvVmKALwZ/6322G1iAxwI1rlTcJ/8svFmiEvWve23LJTtkHaywfPyGpO2JRJ3Tijs9FAuU6he5W3rKvjQ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750169932; c=relaxed/simple;
+	bh=0KKCAZEUFhbQCsca+avSGS1Y+uYtGTT1Abh5klWQq2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BApw0JbMBbVRjpt3lYzZITYHQfq9vwZIBiIgkYjvuG653ERi6UvR24Ce890KWkoecqxuiGyYMa0U04sl8Z6wSEVIXUleB9JnqT8Tyx3hcGMveiKcksitR3uISNVHkvAylxa6UkLjtQLhMSoLwoH6BXjsVRymYJG7FxZ+pvmn+ho=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SxAv+SEt; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WcWMH4q5; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SxAv+SEt";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WcWMH4q5"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H8tag9025365;
+	Tue, 17 Jun 2025 14:17:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=0KKCAZEUFhbQCsca+a
+	vSGS1Y+uYtGTT1Abh5klWQq2A=; b=SxAv+SEtqUOU0h701EBu4d9UWPJvyrkQYQ
+	FQ8d+crsMTyDaO0YeEHtzMjfy/VQyrHjPNp7DpaNB1YZIqJBnkohtA8WIeYRt568
+	653QGs/i/lNFyJNPfMwhtpdTDIhcUeOPPVO0Q45GIwa/T+05MM/lZ2lkOZiX8XIK
+	Efs2uqOxYN6zTawaR7uEvafQfUO/C+Wj8DW/c7SEmqxCjbvrwIVkKqtgKfqX8leF
+	VjX2n/r/OyCCgT5Ry+kb4VLirx0JiWwKqrcYQKKFt5qkUEuxJ8fO0+vJhwPYgxTp
+	zCZNwEobqxSmHh645YXMNwxHwMJJGdWwul0hlV+ZaXSie0vXTzxQ==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479q8r4fkh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 14:17:29 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55HCfvce031679;
+	Tue, 17 Jun 2025 14:17:28 GMT
+Received: from byapr05cu005.outbound.protection.outlook.com (mail-westusazon11010004.outbound.protection.outlook.com [52.101.85.4])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh9205h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 17 Jun 2025 14:17:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=OANMc17JzxDskYEip3VAZr31cYXNnaFRcdViaMzntv6YdG70v32ah3YOjbV2vn47MaNkJKHF1i6Q9+WCtx2to0eIoB2MZqpnvkBrJIyZPt7cAxsNoitRpJoQZQ7XWqxPSr/NNQF9BlNyumpmSLygqPjTZgWypsQMgBy2WklM3+JNTbbBWDBSsHVB5WRwQd+DElCRPgqKxLO0Z5co9BlhmY0ptZHZJTrO/cwW1q/73STutKTSYQnv9UNowKDsmT4NPMYopQnTpPHCYSshJiGWEYJHDZlqDzNieuhUacIGHzlXkZY1nI6lb1/1aiSUKpEReOiuK+05yYs0UKGe1p8Wog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0KKCAZEUFhbQCsca+avSGS1Y+uYtGTT1Abh5klWQq2A=;
+ b=FluvaqAPeB2OsDxtC2023QeG7diBBOk11IQFzdmfBz0EbkV5FTNWEinZtHa+g+zvUalAzE9+ClEhAo5kqFfznTOkbar04ldiGmTluntjLsdYU+M3f3MPmQauOHzxGObVuZaHHB++d1KC7B6TxTHsxJXbRP+hzfmDGgP11IyahYlLgcQdWFoNNFzGzis57hY1y9KPJnqd/d6e6dbmpITZY8Ea9T5mpB6/uA2IQRxHSppEqm1aDZFBYlCUHgb1YzuQd17N3PkkSxlQXxqw1afRJvjv01uGTONdViEa/6JT4Gn/QtJs2xDsuJYKWfIHDMgW/izF6Ye1hwuC+SXpoJM5JQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0KKCAZEUFhbQCsca+avSGS1Y+uYtGTT1Abh5klWQq2A=;
+ b=WcWMH4q5SW1p4rbO3adGeCYWG3DQFJpHpcZsl20aUf5yehkCNMaDk9rXHPbvCMLqiOFiTIJly+Qi6jWtYbNipOUFBR41vRI2AWZRdjGIr+gteJ3ov9QTWB2V8dHjVfyeYESA78jejhuMC7+qcEKm6P3CZC1vFaopWSag8Dy9Tn4=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by SJ0PR10MB4574.namprd10.prod.outlook.com (2603:10b6:a03:2dd::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
+ 2025 14:17:23 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8835.026; Tue, 17 Jun 2025
+ 14:17:23 +0000
+Date: Tue, 17 Jun 2025 15:17:20 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Sterba <dsterba@suse.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi <miklos@szeredi.hu>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        "Tigran A . Aivazian" <aivazian.tigran@gmail.com>,
+        Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>, Jan Harkes <jaharkes@cs.cmu.edu>,
+        coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Hongbo Li <lihongbo22@huawei.com>, Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Viacheslav Dubeyko <slava@dubeyko.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Bob Copeland <me@bobcopeland.com>, Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+        Bharath SM <bharathsm@microsoft.com>,
+        Zhihao Cheng <chengzhihao1@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>, Carlos Maiolino <cem@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
+        Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-aio@kvack.org,
+        linux-unionfs@vger.kernel.org, linux-bcachefs@vger.kernel.org,
+        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        ocfs2-devel@lists.linux.dev, linux-karma-devel@lists.sourceforge.net,
+        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-xfs@vger.kernel.org,
+        nvdimm@lists.linux.dev
+Subject: Re: [PATCH 00/10] convert the majority of file systems to
+ mmap_prepare
+Message-ID: <45cf6357-2614-4aef-8674-f7bc77be2dcf@lucifer.local>
+References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
+ <644216.1750169159@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <644216.1750169159@warthog.procyon.org.uk>
+X-ClientProxiedBy: LO4P123CA0424.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:18b::15) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|SJ0PR10MB4574:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb8921db-b5af-45ec-8b3a-08ddada9adbd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?AaN3sI5uxeiW90s/+6kc8DyyTfZjyoHTiFtYoeOiuatlWRZmQNpkSwgmuU6i?=
+ =?us-ascii?Q?9pRVe99iWFoecHLVwU+wsyybt7xDiWKAh6giH9R86WOG1I02Apc0BgT3HMGO?=
+ =?us-ascii?Q?P8KTAftNsSPsxdwkieWzPOannzuNwsrEQIMCU4Jd/cKWg3UonDtfMDLl9yaA?=
+ =?us-ascii?Q?nEcv0111gfjKdCnTFlij2dWHiRx68z4U0sSoG5tfVGPNuFKzjON1/SVsaBgl?=
+ =?us-ascii?Q?EXIjL8RmiXZVLnfWZ7QwQbbWGpgXGxYyBveMohtxjOh9T1iuo2cUUzFQx1Og?=
+ =?us-ascii?Q?jb9d56RswZb4YWiMKlFAhNlfKaUXsdSvY7XQlnz3GVpiqki7bbEyjLJSnNj8?=
+ =?us-ascii?Q?9wH4NhgCPH9Xxph3e5vEvRxyXPFwazKOGGqeg6ylo+hSxNIw9tmMSEhfCQCj?=
+ =?us-ascii?Q?uibSQfEemw93/69CU7C4fhSB/TigMqt0IdxIVOm/B0LHQMsHuWkhHWutpV9U?=
+ =?us-ascii?Q?+nLwW28tPyXVnb+wZKyCXLRtRAtcUTkPCUzC4zsXL143xqcoel/du/Isq/nC?=
+ =?us-ascii?Q?rIyNOaIJRFe2Y260zwUQ/nMyve6HJF5bbiYzjengUco9R4dTLeGRCV/2m34l?=
+ =?us-ascii?Q?QQXbBMNwJYkSg90g6xXCmb1x6+so1wyrQ43J1km22UtM+GwgQyYViaT/Tgei?=
+ =?us-ascii?Q?hwq+ZC7H9j132iZaXBSkGSvXmWz6VPBL01/L653ePmpMlfYnKAWHsqJuC97M?=
+ =?us-ascii?Q?XKtzxfGSdW68h+bsjFa9+T6wi4N9yM83aUdO8kgxMyIdxNdAkjokQcxrBn8v?=
+ =?us-ascii?Q?ctnhC2sg2pBUqic1B6ALGiQTB7RHKq0qUiISU1KGlQS6u3S2ccYuDGUHq1MF?=
+ =?us-ascii?Q?eQCOk31xsFT8CoxZOHT5eaERC9BsN5vIE3Wm3oHjO4Omi4N6TAgePFRWAB3k?=
+ =?us-ascii?Q?u+CUGUJvbKHjfjnknsTGeI3vFENB918Vp7QvONylH054BlQ/0r2H65ylZF4u?=
+ =?us-ascii?Q?wqROFm0zU0WZhMpLhCEieK+iSYgfvAAo4bVwmWs9Cd7toIqelMWvqOJYpMYZ?=
+ =?us-ascii?Q?JMV3G7Ct02jzmRGtAGCOC5QoiQ3x7EG22UNcw7/MFn9R8XTlPoPzdzoGwq16?=
+ =?us-ascii?Q?NhQ8UzXSd3Bsz3xhDoVT5WCSF7HlqCKrWhgPm4oQAtO9PSQC+G1RDvkQnwXv?=
+ =?us-ascii?Q?1MQyBSrD7TuyYoCJIL+60cWgwPmECLjf1UD5eITFsN6S455vy3aRjlNo+X5o?=
+ =?us-ascii?Q?gZ6hpg27KTQXuAad20TAh/LrhDBoi+5NExH2JukLLgBgkFLH67eCO4Hv0hJy?=
+ =?us-ascii?Q?UZ0N4VdeGw0TPvbpLG7/rRhtTUam+42H6BZBNJJYiqxtm5Ab8SyOg8uZGsBE?=
+ =?us-ascii?Q?pyRB0qoI6Yo75lZ7J7yuzWu3LI+hOKksOx4lgA46ijG3NEBAl1ELDsMHsNQT?=
+ =?us-ascii?Q?kHDBQvtibnV83Qzoro1p1e13sab4Yee6irPWIsP04dZaK2RXZJcFjQX8XcZc?=
+ =?us-ascii?Q?E+mtFlnCSxY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YpUIN0eiEHR1IqDPdI0DKV6HVg1NpfHhaBLy/kZtIXMLcCRXv15nBWdu+Gwp?=
+ =?us-ascii?Q?cRtSh7k/iCS9I9SdjFeSVKFEURHatRR0VKn3ZVXpyDjcBIh/EXc8KMbHAlb0?=
+ =?us-ascii?Q?V0sS3D4Ueum9YZNRNGRj2/Io2OfyPJ7r4aSDIfo4nPG7HvKYaXCd3vw6VQyk?=
+ =?us-ascii?Q?6pCvioe63lOYcS3PxIOyfiTkmwxVYk5sK6kbGQS5V2OPPUjYgH6cDl7bvJ7y?=
+ =?us-ascii?Q?JkRv6L/o9+h3PP813iyKofG21CBAaYExjg9LDzsPitSJSuyXlhmuIL3XwVly?=
+ =?us-ascii?Q?3ctEdXxAYqzLOPzUWsHxwhd/QV/QE9tf2VTRRflvRs21yQK99H19szrDlaxa?=
+ =?us-ascii?Q?I76GgOvcCuce3wW2A9sJ3Ot10anl0+ND6o4f+ljakNJjsg3Uy/HTjF+U7x2y?=
+ =?us-ascii?Q?IkWLfFh+qjiym4qauv8kGiXMfQtsWpngz134Ih1ZiYoWFG03Aq4R+rSVVXUK?=
+ =?us-ascii?Q?FgnTOkmdsbFBmNscDXHuzRC1CXmN2D7wJetxnhV0IoyNpJaG4k0V3GG4dB2W?=
+ =?us-ascii?Q?UGzsI+ZuUsBhlbxBrVWN4cNpAFz7JUUpIKaKxuRr1USmKYMb4YudDOAImoxe?=
+ =?us-ascii?Q?VigBhobbGzxlj3hG20rSYWWQ/LtbJndGVPOI3OadobC4OZXSU2Zdq02ZmABl?=
+ =?us-ascii?Q?zplUw81HCgN4rHEYjc+dNAVpaMWR0knmoTlD0Dwv/iH/3sFGlAa2jG4Yvy1S?=
+ =?us-ascii?Q?//Pxijkp5cj35mxOIJf+JqvClrJVtea50Ake55fGeae8ZFdFRFoBqEWtK4X8?=
+ =?us-ascii?Q?zApE39VdhCb7aMJgWukN1RtDiBxG35WUWpS1KR57MgPhvDtvjciGej/kVeCo?=
+ =?us-ascii?Q?ZSzFtLvBNH8aw/Eavc3BrsRb+1nzrHamDSA44ELYAn4UCkgeOchEV8PkIMaA?=
+ =?us-ascii?Q?U+/8y2Yybhma5yRUiEGTI5855TJNq4WwdBr5Xmntq7gQ6/VEt4tcAu8bqZhb?=
+ =?us-ascii?Q?6SDOIm++wvP9jDLtv/39TsiYKSFMw8AjMLlkshGGorign+ThnUS4ASa6SXJ3?=
+ =?us-ascii?Q?8weTWlo+AK7uW6YNYKyUeP97QPZRqEMD2bdw8EN8sRsoG7YIz/PTHTVWMLkK?=
+ =?us-ascii?Q?hjs3EcvUPPrj1buzqRvLXAQsyDkLL8lm+6KXNfPfrrtBe0CuzoFSVlPBb6mt?=
+ =?us-ascii?Q?+xEfP3IhHmtVonhrrB/s62DrjWMEhg33Y996Kb5997Za5ZC4gYyCgMkb7nRm?=
+ =?us-ascii?Q?L2lIubJ2YHw0xSRlI/6G+rr/RuDvh1PExk00sOLOjQEh2JEvP7QYy9WoLnlJ?=
+ =?us-ascii?Q?XoY4DgfJlgPXqiQDQ2lJp6dAs7b4OstEtyAlxGuPQYWZh/oG9LwY38FGA+MQ?=
+ =?us-ascii?Q?19c+XsZ7/H1UH1mJM44PAAFjQvrymNMJ6BQwUH5ikrw3PBwOwMWcrpDWFFB6?=
+ =?us-ascii?Q?NtgxcsZun6fOqfI04a5CvyKWSs4jTrnC6+P9PdIOtn8W9SRStqv1+g1sqYHa?=
+ =?us-ascii?Q?DgLRYsuP24D2nCVEAFEEfCt5EI8HVMQQWp+9yhAiQJ+FD6vd7yEuDSOhCKD7?=
+ =?us-ascii?Q?+eF+Y50ljARaIFx0np7JPZBBZgt59BQmlf1BeXe8Pn/UHMqhod3ALmVSy/tI?=
+ =?us-ascii?Q?cCsfA/aSUf25iqwT+EhuRTLXWb9vI2ws0jGUWGf+YZNjMHSCdnslJaqS+5JV?=
+ =?us-ascii?Q?Ag=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	QBDRQjWETd6/m3CejgBVpyVWCnusB/UWF9U+oqpTK0a6F4KCFxkoct90AXRodhXohG8bOQj/+jyKphhEC2VZCnEfH3oK4kIAxzkn6Bm594gW+lz1QZZLec2STuNplAHrM1TUINHIO7ytmyJXPSIEt+AyCp9sH0E6aUuOfSU6H76MP4yxqqVaGJI7ehw/WIkkedq2rHwwCYWSJmY+a6iaaDQqP+Op9Dg1jQ7/cgx4DbVStmtWQuvxi+9vqeM50OBoU1k/jRIdV41snwJjmJy7NrXsiMwvGnqkVCoYYEs1W34c6QZQzDOqPLEW9Twi03TpmC3oE1DuzYJCnaLQ+PyF06fIa190pwDf0uKq2W29Sg1OYZWb91Rx7ihtJHL7Gllt0Hlx26DA/KIzrTudyGtP0bNFs+CcB2jqy5IZw/prKssX7+c9rxD0+lJShbpjUXBZq0UItW5tSbynBdmrLDiUqhDALt/DdgW7XBxd1+eUMlopyLgV5/IXayvJgMstq1vJXd/zEHXfKhBK6goy9UsIFDprmbmnuV2iY6HJGUQGVlsAtdDfyY875GjU+ChgQayNDmkN7LQBzV8Cqhpk2iiaRw7A32VGpq47GoL97BMC1bs=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb8921db-b5af-45ec-8b3a-08ddada9adbd
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 14:17:23.3401
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4ghwvxifeqDis2+M9YYGHbNIbWg1bDN1rNvEWD28HL19Otdrs1AkUIn56FThJtEcwstA4sMaqLPy1dbTWtiaCPBMKXivB6TKwcp+87esXSM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4574
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_06,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 mlxscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506170111
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDExMSBTYWx0ZWRfX5ZzlpAp0kbN6 98Calk+SvXfzIYj5Ke75yBlRHYwdQ+AIjUAYtTZ4R0kezDKadidgziqPF2wXnUsPPYjHySd565R C+buSQ+AKYXwt8ohDlxe8/4ELFryq0AksrRFSdpfHPpYI3rP4I+US8H3a4U1tJTOAA2a68Meap3
+ f5w+3w3iC3z2DbrGe9XvoLz7GgD0tGOmTyQJGJgsrxJXSCQAc+j07zFTUbVjCdR+vIPrpO2IdML n9eIGpEWnP+Zq0l5U1M8V4li6hAD9IGyGOWHXeo0ZspTqY5YdgLzduad18MSs3GTtBS5BFhyr+O 3/gEwft2yHIXR4CG9Xeid0pwRtjPfK5cskbCvONL9gCUWxxt7NDgouK6wkVil+GbKTCNIrtAJ2k
+ w8oZdeyX3tPa6x89VpzaXq7HForJOGQacvFabDSV0U6J4Ahi8AJlkxu/wDzun0rEsI6cfGh4
+X-Proofpoint-GUID: RxntZxdAm8nWHdzoxwobwSyZjUt3_-je
+X-Proofpoint-ORIG-GUID: RxntZxdAm8nWHdzoxwobwSyZjUt3_-je
+X-Authority-Analysis: v=2.4 cv=dvLbC0g4 c=1 sm=1 tr=0 ts=685178f9 cx=c_pps a=XiAAW1AwiKB2Y8Wsi+sD2Q==:117 a=XiAAW1AwiKB2Y8Wsi+sD2Q==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=MA-42675piwLz8QlgOoA:9 a=CjuIK1q_8ugA:10 a=Qzt0FRFQUfIA:10
 
-On Mon, Jun 16, 2025 at 06:47:25PM +0100, Mark Rutland wrote:
+On Tue, Jun 17, 2025 at 03:05:59PM +0100, David Howells wrote:
+> Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+>
+> > This is preferred to the existing f_op->mmap() hook as it does require a
+> > VMA to be established yet,
+>
+> Did you mean ".. doesn't require a VMA to be established yet, ..."
+>
+> David
+>
 
-[...]
-
-> > > ok this sounds just like as before except rename the midr check function and modify the
-> > > users in perf. will do in below steps:
-> > > - move cpu_errata_set_target_impl()/is_midr_in_range_list() out of cputype.h
-> > >   since they're only used in the kernel with errata information
-> > > - introduce is_target_midr_in_range_list() in cputype.h to test certain MIDR
-> > >   is within the ranges. (is_perf_midr_in_range_list() only make sense in
-> > >   userspace and is a bit strange to me in a kernel header). maybe reimplement
-> > >   is_midr_in_range_list() with is_target_midr_in_range_list() otherwise there's
-> > >   no users in kernel
-> > > - copy cputype.h to userspace and make users use new is_target_midr_in_range_list()
-> > > 
-> > > this will avoid touching the kernel too much and userspace don't need to implement
-> > > a separate function.
-> > 
-> > My understanding is we don't need to touch anything in kernel side, we
-> > simply add a wrapper in perf tool to call midr_is_cpu_model_range().
-> > 
-> > When introduce is_target_midr_in_range_list() in kernel's cputype.h,
-> > if no consumers in kernel use it and only useful for perf tool, then
-> > it is unlikely to be accepted.
-> 
-> I think all of this is just working around the problem that
-> asm/cputype.h was never intended to be used in userspace. Likewise with
-> the other headers that we copy into tools/.
-> 
-> If there are bits that we *want* to share with tools/, let's factor that
-> out. The actual MIDR values are a good candidate for that -- we can
-> follow the same approach as with sysreg-defs.h.
-
-Thanks for suggestion, Mark.
-
-It makes sense to me for extracting MIDR and sharing between kernel and
-tools/. I have created a task for following up the refactoring.
-
-> Other than that, I think that userspace should just maintain its own
-> infrastructure, and only pull in things from kernel sources when there's
-> a specific reason to. Otherwise we're just creating busywork.
-
-I agree with the methodology.
-
-Since Arnaldo is facing build failure when sync headers between kernel
-and perf tool, to avoid long latency, let us split the refactoriing
-into separate steps.
-
-As a first step, I think my previous suggestion is valid, we can create a
-header tools/perf/arch/arm64/include/cputype.h with below code:
-
-  #include "../../../../arch/arm64/include/asm/cputype.h"
-
-  static bool is_perf_midr_in_range_list(u32 midr,
-                                         struct midr_range const *ranges)
-  {
-          while (ranges->model) {
-                  if (midr_is_cpu_model_range(midr, ranges->model,
-                                  ranges->rv_min, ranges->rv_max))
-                          return true;
-                  ranges++;
-          }
-
-          return false;
-  }
-
-Then, once we can generate a dynamic MIDR header file, we can use that
-header and define the midr_range structure specifically in the perf.
-In the end, perf can avoid to include kernel's cputype.h.
-
-If no objection, Yicong, do you mind preparing the patch mentioned
-above? Thanks!
-
-Leo
+Yeah apologies, indeed I did :)
