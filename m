@@ -1,119 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC422FA65D;
-	Tue, 17 Jun 2025 16:49:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B9E2264DD;
+	Tue, 17 Jun 2025 16:49:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178974; cv=none; b=LqO+xcpOpw881jn40oM8PaZ5mn3D/02NY6PxJfssU/V0U5gRwbIVMShOGbPI5eaYCPdkq/8EeOY7FZICytgGKkl2ne6maDTa1BKapMSLOp31kS8H8IFb6AYOn1ZUsMK/2rAjWhVLDDZ2zJOwVEtb8XYS5BdRo3+26p1AdzsT/sA=
+	t=1750178997; cv=none; b=onpR4uRkrItCbp/GfekwNkZbK6JgzVSTfMrsEQoOtWAHPGCel5DfIN5yfrlvPNFI5HfuU3f6okn6fl+bAS0lVpIex1XFZKvO0pjbQBhedvPGteyawB1XEVBEnOkKoBZbn1aJ7ubUAZ6F57VCaJOdw8hXEX8tCvYYddMmTGgoMHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178974; c=relaxed/simple;
-	bh=jEpQjHvEgxjUr21tptc9aTVBtZFn15TNyZmIdalww0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HB5yQMlWK9Qgl7mr+UyffdpYtI62/nrmmLqJPj485nj5V8ElFnUT3rikzcJ2XoQsBT0ZWlFyRvTFfy6r5ErPmTeJ7Qea+FaVoj97aItDWj1sWWo44aBnOVvyu+aUzUQ030j05EIMNy11P4UlTz9MFt0HqbCbtL2E/lUfZWprd9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaFF0MHs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750178997; c=relaxed/simple;
+	bh=PoMp27oskVu/SCAt5yUxemcUEZfpX08olGOoATzlNQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YLdSK0c446hGclUSHB3n5PzwnyYLdVfUpQEiiEome/b6fjrpn1lIeTwedTysDHj+eK2cwHR97UTWi1dZG00Jj5I0B8oXrwn2/usUfygXwV2aFFJMRRu+WAGwL+w/OGZNwcdLQmXV2v8Mq23LyHh9HrKOMeTxXpQUVDcAh2S4auQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L6B3kJ2U; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaFF0MHs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FEC7C4CEE3;
-	Tue, 17 Jun 2025 16:49:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750178973;
-	bh=jEpQjHvEgxjUr21tptc9aTVBtZFn15TNyZmIdalww0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gaFF0MHsIlQAMMGGdeGyfqazHmIaiExIxbYl9dG/yuKZuPzP4vz8JZTPn+P5UfyJE
-	 gsaH1Icp7eGIGSOhrf5ez6dgr72NtugZZuVd73SXPuvGL7HUTucSraLfLKtjwmwFeo
-	 QSrbtRCFp0J6uQE1RVRPRk/NjYSVaggophWc3NabXIztzOP5HDZqHDxaBOdLNNqA+R
-	 jugmHjWGEVwisejQDpgyFQ2KJtdxVtbqL9pjCEUZbTqqjDST/wd/b67Ul7mfz+u1tM
-	 z2QvFqgTegUfBx0VXEJwRfgAsT2JsEdzEMJxuW99urb12avw44vArKm8UWqm+DGJhq
-	 btAkgz/2uSQYQ==
-Date: Tue, 17 Jun 2025 22:19:26 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org, 
-	robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] Relax max-link-speed check to support PCIe
- Gen5/Gen6
-Message-ID: <d26lnkthpe66s5jg5wufew3p4n6suoldijhcgnihiir5kkjtck@ik5io2tcmx2q>
-References: <20250529021026.475861-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L6B3kJ2U"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-23694cec0feso8616895ad.2;
+        Tue, 17 Jun 2025 09:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750178995; x=1750783795; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=7wUXb4VopLhdBixP2euU7i6YD3GTNqJ4plwFX4HKrkQ=;
+        b=L6B3kJ2U2AVZGO4byN0f1C5T9rMqV9UVxWkO4ig9V6x0/qtSTmE+edjdOfPa8xbv0c
+         aK1OaxMOaQPKKlYyhgd9vQj5ypBTxAIOZIwwa2kBihV9gF+oOtA89vzxwTPEjbRPXNjG
+         ksbaf+nFEtBUp0fnXg5eHMy3eymxoKDGu8FeRUi/CPykS6EM6kSQSCbUu9Q5viYbLgX5
+         ieCx6XmWkUVNexSJGftB8wDnyGoJQUgrdTmBPHnZdPxdolOD8bDa4nh2NULF9O/94wRa
+         qFOgmv78UZffG1CXY+TsGKaCPKXoe955fcif9B9tavgNpKUw+wz/FxIktVgLOKgTzkNh
+         RWRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750178995; x=1750783795;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7wUXb4VopLhdBixP2euU7i6YD3GTNqJ4plwFX4HKrkQ=;
+        b=lfC/tqy9lD77OMgr+pU2ByDBCB+Kl0GEh171dbl14BEJLM+GTF3p0x6GecogYBaS0i
+         tKmhE8Sl8ePN2xn4JJNSgawUrGlh/R9vF4tbVed0qVEFKv1Ncnp8YnQUw+ESOUtrZaXR
+         pxlgFwu92jz0GJyiookC0BAG/c5Nn/inJSca/bftedjN0DtSgb7GdWOfjv0yjv4ifYlb
+         tnBZ22fiJgd1ManK3AItzcxZ9cmOJju101iQ+7sdbJnJvu5FGzVK195aSV//SH7OjqG0
+         QikIGpaOpWg8lulUnGP1LPZRPxbgxFC/anFxv9O2dYS/z380idyFf2d+vRhmxHBI31B1
+         sOIA==
+X-Forwarded-Encrypted: i=1; AJvYcCVAK2BVDd5Hrpwm+RMw4hRY82iq7FBUvSCQqKISnYvOFRv2jH37WNlMIgMvNwjw/HDBvjrMqFDam7OFWt4=@vger.kernel.org, AJvYcCWabJPC1c4zYICMDhmGZxUBVCKFLmvbHJgZb9scSLTgPTvhqh+NhcTj3Diop34hS8gs7/C9grL1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5wwCUc6h4yAJMC38LehgG0JV0c4gDjjfRp5mSg7FSniNHUvE7
+	N3pd99BY1CDNSakRltfy22Y7YYyjen5AxTzbxkWxv4gJOhsNt4zv1x9wTPHaNa6V
+X-Gm-Gg: ASbGncsj11WRO0T+93DGOu0ybMGfblYJQPH1udhz24sc1u4yUHNNy3oFFECtRQ6Qd9T
+	uDich3LV4vuYujAZGqbQ8HPRGrYX0yRYA3b+EoTTcyCE3AKGci30ONIcubcf77J7qCu70FsH+55
+	2s/HjfceMhljSGkcHI8TlKG+2JnTW9y3ty3Lg6OUY6nJwDLggdKzVGpWg/waiQdhSJQiN45cHad
+	Nt9PdJcAP1lN0nwHuY6TeYvCYP5GeF4cDNrFy87n7MZq4unyHIbwHdLCE2HAWg3fFjyS6CJGLtG
+	LaqQB7KD55MbpPtldMlT3QwMWbLafGXzE7r4cwaG3E4c9kmfjXFuSIKRsvlWi0BjclxscJschrn
+	LLU/U0AelagJoCg==
+X-Google-Smtp-Source: AGHT+IG2AKukAwLRDN3u53uYznYRhhH7+IMkI9gvcbwGrrPaEyNf3Y7ktarcPLqFpvBLBGlv0xNO5Q==
+X-Received: by 2002:a17:902:c94e:b0:235:779:ede5 with SMTP id d9443c01a7336-2366b139bb6mr224634075ad.40.1750178994625;
+        Tue, 17 Jun 2025 09:49:54 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365e0d1444sm82137965ad.256.2025.06.17.09.49.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 09:49:53 -0700 (PDT)
+Message-ID: <d5eab853-dbad-4336-975b-45b3947ed793@gmail.com>
+Date: Tue, 17 Jun 2025 09:49:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250529021026.475861-1-18255117159@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+ conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250617152451.485330293@linuxfoundation.org>
+Content-Language: en-US
+From: Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; keydata=
+ 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
+ WlfRzlpjIPmdjgoicA==
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 29, 2025 at 10:10:23AM +0800, Hans Zhang wrote:
-> This patch series extends PCIe Gen5/Gen6 support for the max-link-speed
-> property across device tree bindings and kernel validation logic.
+On 6/17/25 08:15, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.3 release.
+> There are 780 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> With PCIe 6.0 now supported in the Linux kernel and industry IP providers
-> like Synopsys/Cadence offering PCIe 6.0-compatible IPs, existing device
-> tree bindings and checks for max-link-speed (limited to Gen1~Gen4) no
-> longer align with hardware capabilities.
+> Responses should be made by Thu, 19 Jun 2025 15:22:30 +0000.
+> Anything received after that time might be too late.
 > 
-> Documentation updates:
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> and the diffstat can be found below.
 > 
-> Patch 1/3 extends the PCI host controller binding (pci-bus-common.yaml) to
-> explicitly include Gen5/Gen6.
+> thanks,
 > 
-> Patch 2/3 updates the PCI endpoint binding (pci-ep.yaml) with the same
-> extension.
-> 
-> Kernel validation fix:
-> 
-> Patch 3/3 relaxes the max-link-speed check in of_pci_get_max_link_speed()
-> to accept values up to 6, ensuring compatibility with newer generations.
-> 
-> These changes ensure that device tree configurations for modern PCIe
-> controllers (e.g., Synopsys/Cadence IP-based designs) can fully utilize
-> Gen5/Gen6 speeds without DT validation errors.
-> 
-> ---
-> In my impression, they have already obtained the relevant certifications.
-> 
-> e.g.:
-> Synopsys:
-> https://www.synopsys.com/dw/ipdir.php?ds=dwc_pcie6_controller
-> 
-> Cadence:
-> https://www.cadence.com/en_US/home/tools/silicon-solutions/protocol-ip/pcie-and-compute-express-link/controller-for-pcie-and-cxl/controller-for-pcie.html
-> ---
-> 
-> ---
-> Changes for v2:
-> - The following files have been deleted:
->   Documentation/devicetree/bindings/pci/pci.txt
-> 
->   Update to this file again:
->   dtschema/schemas/pci/pci-bus-common.yaml
-> ---
-> 
-> Hans Zhang (3):
->   dt-bindings: PCI: Extend max-link-speed to support PCIe Gen5/Gen6
->   dt-bindings: PCI: pci-ep: Extend max-link-speed to PCIe Gen5/Gen6
+> greg k-h
 
-Applied patch 2 to pci/dt-bindings, thanks!
+On ARCH_BRCMTB using 32-bit and 64-bit kernels, build on BMIPS_GENERIC:
 
-- Mani
-
->   PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
-> 
->  dtschema/schemas/pci/pci-bus-common.yaml          | 2 +-
->  Documentation/devicetree/bindings/pci/pci.txt     | 5 +++--
->  drivers/pci/of.c                                  | 2 +-
->  3 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> 
-> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
-> -- 
-> 2.25.1
-> 
-
+Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
 -- 
-மணிவண்ணன் சதாசிவம்
+Florian
