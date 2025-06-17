@@ -1,119 +1,117 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04277235067;
-	Tue, 17 Jun 2025 17:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13524238151;
+	Tue, 17 Jun 2025 17:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750180880; cv=none; b=E0a2dRTfCYkFHXgSoGLXHgmfSm68J5fGotQbGEq//A0enxmrj+P848smdK4ERyuAMRYetCtNBJo78R/RSbD+qfnqn1dIveP+oXY0vNCa9ed3U2jEQ9T7AIuLhY5Om4SEISpk6Lk3qs1pF/W2wFv2lHUtEruYTx8DPAvyMWET1xs=
+	t=1750180930; cv=none; b=YN6GqTUaUksgc8nrJi8dJrvFXGps30w8CHur7UV1JQR4a8oOQDUS9OJoab8rmrjYEDNzL9ujNqQvKem/DiP+OUj+NUa7wcGWc/3mqd2RIFviIfhsGgnpKBLaXQPuCtWN1TwXky/q2N/+dU7lr/W1LzJarBW0yPCe3ooD0EG1gP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750180880; c=relaxed/simple;
-	bh=Fwbsd1ajmQ9yoWRgDFMGo3wZxhBj2BiAE74tziItfN0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qgwnL3uG0VzyAFafQhqL5abjZk6CobRdGayimoZKH3AX1R85gok1WLiw+2mefzRfIzwtfcqHU3qmUVeF2lmNdvX40s2arCYnA8Fok8PhbdpuEec5jUUUWXKSEfqwKH35QAry8ecffu9wkHidjOG3oHKGd9Jl0DwZBq88yIbGFFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PrDx4k2P; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750180930; c=relaxed/simple;
+	bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ow2afREmkFGG936P1BwAchzFE1NEInLLwtS0fyyNa7nhUcrwiA6h7FnjplKxU/JEAPaIZHJK1eKN1O+Nzw/ZOt8h9RlNNIhhVYH6Au5W7kk0beZxL4HO3rYDvnyCCJchnWWCxMRhI80Jyqmt5PVmIW7h9nbRxzfv/dblnYCjhAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NnnzJ31n; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PrDx4k2P"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2352b04c7c1so6749035ad.3;
-        Tue, 17 Jun 2025 10:21:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750180878; x=1750785678; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5ipj+aTnblz2LP5Q2kLN6FjfahQfHdmFixmJPRU0FmA=;
-        b=PrDx4k2PUtFvMkcw3Mk00oXldLlGtfSommllxPG12CH1xMtXTRAhUX/DGAx6nZ6jF9
-         1K/TrAisETjUBYLVNUQnxJNIwcBtqI+UqpbAF3dV115wYUdeTHSuKIGQQS6hf77XKp6d
-         W6jtjgJFkT8wTvkylBjUoO4bvHSV22wOxTOpbdnxGDbd/ugqCE8wKQpqelDsXnH4yxIX
-         wHQNfW0FVOPWDNu3CEt+OG2IMzgvjna/tjpst6sb3LjxwZZPA2XEB1Zy3DJj3ZaroE0/
-         OWjRYvaSgpKH9ghKw8CPZhBTsI59RWAk9vJzMyz2acRb9rs1bMs7hwAUQuNnr41Yku0w
-         pgDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750180878; x=1750785678;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5ipj+aTnblz2LP5Q2kLN6FjfahQfHdmFixmJPRU0FmA=;
-        b=WSgTE4O1rhy7mhiXlcHPG3YUbaAR2jkDWr0PAsbkQCLIf673YJsC2qceW/InFp4xWD
-         sQrVD1sZsYpMIA/kgqA4lITAh0Sm77thxCZYTLtO228uSvbH7ViCVL0MA+11w+KgOmMb
-         52k7IV8HJmjNwg6AuaxrdcRyGQ3/jiygTbpEXDLbsCqPd9q11XwjFKx/5zXtBAh1DU4j
-         dAzVAib9HZ+WGZeL9N2tYq+pvqEupE0/e1bWqYvnn3nJcaaXYUskyjLpitwPY56GpkYI
-         z5euBLuV6vZi8TwbGEeEXT5VVSdn7KJ5ys7GaAJaMD3P8UcU3mLeTgyB10cbzAhjJeWz
-         qg3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXa6cjcZpHc+06PeW+MLq86BaKR2gfh8RZ3UEhISMFDn7eoRrGJspzwUf91DYn85M1b9iKkQfFpVwM/2PkRzg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxLtBq+2ku510M1KSeHgTaMtdLF1V2npn94ls2BDZfcSBffZUF
-	NKjINaFXwIdgts5T9swEEuYI57+Krg5dEt0gncHgJ8YXSJNypSdpLRq0E4gOQVP+H9fG0vTOAll
-	mfXsFlDox867o5TQ5pdn/lmkudqlWpHw=
-X-Gm-Gg: ASbGncsfh0tEO5bqQb/azUEnH6uJ++tHxm+uhLc8IH2pOU8xu11lj7jQnaUWfJRVZvD
-	e6EPIMXHI3LEBITplO6+DQIKlJoNUl6QKMIiPiFAMP/etLoJVgDW6mB0etnrPZzyRfk1/UQac2w
-	auP3RcvvhveEUwDBCMg0QGi1xp5BOTdObZ/QyAbe99p/vXt+SkkFjytA==
-X-Google-Smtp-Source: AGHT+IEM26uY1d388hFZfwghfd6CTp1WOfXwXNCsaqVBcEUR2ypaLMguHrdCwqsYOYXwWcxd7sX7a8xYYQgqW+6csgc=
-X-Received: by 2002:a17:903:b45:b0:236:7050:7464 with SMTP id
- d9443c01a7336-23670507835mr74063215ad.11.1750180878215; Tue, 17 Jun 2025
- 10:21:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NnnzJ31n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750180929; x=1781716929;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dAVSNu+Tde4EIZyn6qHO1/TlPW7vBbQgxZF7UMNRFnM=;
+  b=NnnzJ31nAnUx3xZ/pAtNnSj5McRix6llfA7cudsgHml8J/MwKARuBNBl
+   KI+eIQ9jIOFNO9HoBeLfkP7LWapISvs4OF6Tp6svS/FweLjgrnh2JPLN8
+   3IM+eWkK39cpcD39q0WOvnVOKOGsK7ldxsV/tyDahhEDKAVlcf66T5iiE
+   2L8/i1xH25dKfgG0xIwWAp4ICN3whV7HFwy8ACRsyCl99kuykc1OpQ2PM
+   YWSzjaEmYycHLwwdGhJAfOyFWI1Yxo+c6PcbqBOgVHfgojY2YB+hsy4Bq
+   5fJv9jVhqHwcX2ias/lCRpoIye8Q2A8eY5vyq24+Skct4VeFmAdp/ngBS
+   Q==;
+X-CSE-ConnectionGUID: UQqZij3VS4WEKhSYyvboRA==
+X-CSE-MsgGUID: 0UHJ5ySySj2Ueq4eyQlX5A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52465815"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52465815"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 10:22:09 -0700
+X-CSE-ConnectionGUID: wcOuWQMEQViVlxOgO6aEkQ==
+X-CSE-MsgGUID: yEpwHbqtQ8aabCl6DtGpBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="153750923"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 10:22:06 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRa0Z-000Hws-2R;
+	Tue, 17 Jun 2025 17:22:03 +0000
+Date: Wed, 18 Jun 2025 01:21:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
+	Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
+ to memcpy
+Message-ID: <202506180158.O3zMMHjh-lkp@intel.com>
+References: <20250617005800.1410112-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616153604.49418-1-boqun.feng@gmail.com> <20250616153604.49418-2-boqun.feng@gmail.com>
- <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com>
- <aFFwumsjuAEIJVUF@Mac.home> <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
- <aFGenbg8S36G1aeP@tardis.local>
-In-Reply-To: <aFGenbg8S36G1aeP@tardis.local>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 17 Jun 2025 19:21:06 +0200
-X-Gm-Features: Ac12FXwAAgg07NHM6edGCHC0TnH7Ghe5ZYl3YNZDoPqcv1aJ-y5bu9zWd0SM83w
-Message-ID: <CANiq72neJ-1e9Cef5RJMdJGEqWVEW7F72_J0GcDpJuEd_APrxA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net, 
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me, a.hindborg@samsung.com, 
-	aliceryhl@google.com, tmgross@umich.edu, dakr@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com, 
-	fujita.tomonori@gmail.com, mingo@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617005800.1410112-2-irogers@google.com>
 
-On Tue, Jun 17, 2025 at 6:58=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> This actually helped me find a bug in the current implementation: I
-> should use core::ffi::CStr::to_bytes_with_nul() instead of to_bytes().
-> Please see below for the update "Examples" section:
+Hi Ian,
 
-Yeah, writing examples can force us to find issues :)
+kernel test robot noticed the following build warnings:
 
-I guess we could conditionally (`cfg`) assert in the "otherwise" case,
-since we already had one case, but I didn't suggest it earlier because
-it is a bit heavy, and the interesting case is the other one anyway so
-it wouldn't have caught the issue. I guess we could assert it ends
-with `.rs` for the interesting one.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc2 next-20250617]
+[cannot apply to tip/timers/vdso acme/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-By the way, I would avoid the actual filename, i.e. I would give a
-more "normal" example instead of the `doctests_kernel_generated` one
-of the example itself. Something like:
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/vdso-Switch-get-put-unaligned-from-packed-struct-to-memcpy/20250617-085916
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250617005800.1410112-2-irogers%40google.com
+patch subject: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct to memcpy
+config: arm64-randconfig-r133-20250617 (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce: (https://download.01.org/0day-ci/archive/20250618/202506180158.O3zMMHjh-lkp@intel.com/reproduce)
 
-    // Output:
-    // - A path like `rust/kernel/example.rs` if `file_with_nul()` is avail=
-able.
-    // - `<Location::file_with_nul() not supported>` otherwise.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506180158.O3zMMHjh-lkp@intel.com/
 
-It could make sense to have an intermediate variable (especially if
-you end up asserting anything), then you could put the comment on top
-of that instead. Then the `pr_*` call could then perhaps show a
-"realistic" example, and could inline the variable name, e.g.
-something like `{caller_file}: my message\n`.
+All warnings (new ones prefixed by >>):
 
-Anyway, no big deal either way, what you had is also OK.
+>> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': invalid PT_DYNAMIC size (0x118)
+>> llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': PT_DYNAMIC dynamic table is invalid: SHT_DYNAMIC will be used
+   arch/arm64/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
+   make[3]: *** [arch/arm64/kernel/vdso/Makefile:64: arch/arm64/kernel/vdso/vdso.so.dbg] Error 1
+   make[3]: Target 'include/generated/vdso-offsets.h' not remade because of errors.
+   make[3]: Target 'arch/arm64/kernel/vdso/vdso.so' not remade because of errors.
+   make[2]: *** [arch/arm64/Makefile:207: vdso_prepare] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:248: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:248: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
-By the way, I noticed a typo in "with a NUL terminated." above.
-
-Cheers,
-Miguel
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
