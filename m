@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C47295528;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BAD296142;
 	Tue, 17 Jun 2025 09:07:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151247; cv=none; b=fG0yOHLRy0B/K5xdJ48AGlBNxnVnFf0EadZyZGpbVzbZfNIdooDMFAufGSCxYc4hJeFF7+PWvW993uNBsjYPtXcSSlFk/mSFnTX5tdGJCYD1DlfliKLoO7pa0jgchM5JMzm28/lqE2+FenYQEFuuna6agH/NgtxnjPdA0xbZNkU=
+	t=1750151248; cv=none; b=gvZkelp+OgRL/T3mA/oDculXnv/s0zq2nih6I2RnAoPB04sHcUojLa0KyBgl+PpPfKGpjId0r1oa385fXyH9G7h/NSDkbdTEo+htgvUssQHQgO665Ek7IcMyKTJq+WmbmfFiIpS7RDZ9IjoXvVc+PUap/pmUuoUamzMr3qpS7ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151247; c=relaxed/simple;
-	bh=LVht+9sV1xKC2IxkJr8nOMxbiinkz8Wotsr17dJSVnY=;
+	s=arc-20240116; t=1750151248; c=relaxed/simple;
+	bh=SseOVKGpd8b5VDsqaBskNVXohkDASV2r56JlAC/rmKA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YcDFmtmxF/Nyozv3VRKaJlHZkqA2A5pp22pBpGZyaTAANS92Xc9PmHC5gw1jIbFAhdbyd4ihdvx5VRj0BzmOBceKL/imjOFpbWb0Xzd0vkLpEh/zdtFzaJkfHFrLBrvEzDqNzR6wZitFHU6e+BI2rZ1AM+rjzJGmF4cEAzBvBEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZiJ643pW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Yt8h+xZT+YHW07oUHU9kboAQFPMyhygmvOxnAK6ZtzassWjsEk1QomU1q+7qBtyGBWAwwLpZVgZ0A2ZzND/+PkoCx2F71t6AkhcXxWd9UqeP975RTrmr5vYL44mzeLOlgr9zwAmAME1qdeJ6ydRJQh9E/kMuNJrY2ySgU3PB/Ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUSla1Oi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZiJ643pW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6A278C4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUSla1Oi"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EA76C16AAE;
 	Tue, 17 Jun 2025 09:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750151247;
-	bh=LVht+9sV1xKC2IxkJr8nOMxbiinkz8Wotsr17dJSVnY=;
+	bh=SseOVKGpd8b5VDsqaBskNVXohkDASV2r56JlAC/rmKA=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=ZiJ643pWiECMkR4MlVHS3tyl/tyLl4SqhSFwISTvAVoEu3JdQ1oYlBlC9hyRkuE0D
-	 0XjTVwjdHLHic4zB2ZniOX6tnkjI9dWw+WERPDzFmjBScn96AiSqY1kdxa/IXMy5GI
-	 tR/IQWFxuvNgPE/cK75DD1/UErcS2zH5n5h7xe6Z1lRfPQ06TGlfMNyMkU+5uQJsU4
-	 WBOx/s6HdEJ3DNP7Pdm+R4oF48hUmJ275RSvACpD/UQ5LEUm9eKqCEFd/RCbxNja1f
-	 9IgR0Oo8t4/kF07HafW640oIG7OtFcSwOjpqquDyyihonS3vzniMwB6qBa0mhG0Bwi
-	 GpUMTkoLkmnHw==
+	b=nUSla1OinD9g1WMOSlNR3qY5wrV3mRJx1Vq1Pgy60sDgy0TEa4XNyI1dR0xwM1jH/
+	 DhMzme7LX+4g4CbuzFHXx9qJ84MEiDvI1asszYfAXvY9dv67q98d8KeZq1AH2Xe/kh
+	 3QbuduN/PxW1WJvBGV4W709RsC9YPzTAXwg3ah0YYTndGSMtodKV6w75/3t4XDRkax
+	 olWNHSpKbkLYPNTzJQL+3aBLNDOI80zjWts5RNQC5uo0F4QrloxNmSIPZe4iOR1jFd
+	 I/a1oDX53yFlHabVbTQTutCR4xiaTWxZ9ZgJrYnTfRNcajyR//YvoahZditFvxSnLa
+	 ++J4ctkkr8xRw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A05BC7115A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9400DC71136;
 	Tue, 17 Jun 2025 09:07:27 +0000 (UTC)
 From: Michael Riesch via B4 Relay <devnull+michael.riesch.collabora.com@kernel.org>
-Date: Tue, 17 Jun 2025 10:54:43 +0200
-Subject: [PATCH 2/5] dt-bindings: phy: rockchip-inno-csi-dphy: add rk3588
- variant
+Date: Tue, 17 Jun 2025 10:54:46 +0200
+Subject: [PATCH 5/5] arm64: dts: rockchip: add mipi csi-2 dphy nodes to
+ rk3588
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-rk3588-csi-dphy-v1-2-84eb3b2a736c@collabora.com>
+Message-Id: <20250616-rk3588-csi-dphy-v1-5-84eb3b2a736c@collabora.com>
 References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
 In-Reply-To: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -56,11 +56,11 @@ Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
  linux-phy@lists.infradead.org, 
  Michael Riesch <michael.riesch@collabora.com>
 X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750150493; l=2895;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750150493; l=1867;
  i=michael.riesch@collabora.com; s=20250410; h=from:subject:message-id;
- bh=fLuP6l4pge2OTjFyNlRHCdovdOVbah0f1mpcQE7Vn4A=;
- b=iM0cTXpH/DwAzcZlyAonVYAbPzQZPRRtV6DKJjpdidZlu4LHinT+I+CdhJ85/XpAL9xC1JBDF
- /7tnNDJymhMAFmqdlEvoCE6njPm3L1Br/wa3FmtQfRJOviM+mrtKQlx
+ bh=qrX7R9Yf+higl2wbSf3x1h05wV3AtHIap5SggDm1ypA=;
+ b=c84nks+JEIFvKM2PQXYe5Sigfe8rKm+GsUo6dxEijt2RPl2ZO4XAEDjgHV/Lapw/2TX710uRl
+ gb9OUZeBuxgCbK95HJRW0PI8pg2A3oRvDAL8d5h81ksM11iGvCrd4Gi
 X-Developer-Key: i=michael.riesch@collabora.com; a=ed25519;
  pk=+MWX1fffLFZtTPG/I6XdYm/+OSvpRE8D9evQaWbiN04=
 X-Endpoint-Received: by B4 Relay for michael.riesch@collabora.com/20250410
@@ -70,111 +70,63 @@ Reply-To: michael.riesch@collabora.com
 
 From: Michael Riesch <michael.riesch@collabora.com>
 
-The Rockchip RK3588 variant of the CSI-2 DPHY features two reset lines.
-Add the variant and allow for the additional reset.
+The Rockchip RK3588 features two MIPI CSI-2 DPHYs. Add the device
+tree nodes for them.
 
 Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
 ---
- .../bindings/phy/rockchip-inno-csi-dphy.yaml       | 60 ++++++++++++++++++++--
- 1 file changed, 55 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 31 +++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
-index 5ac994b3c0aa..6755738b13ee 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
-+++ b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
-@@ -21,6 +21,7 @@ properties:
-       - rockchip,rk3326-csi-dphy
-       - rockchip,rk3368-csi-dphy
-       - rockchip,rk3568-csi-dphy
-+      - rockchip,rk3588-csi-dphy
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+index 70f03e68ba55..6a4ee0247fcf 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
+@@ -621,6 +621,16 @@ php_grf: syscon@fd5b0000 {
+ 		reg = <0x0 0xfd5b0000 0x0 0x1000>;
+ 	};
  
-   reg:
-     maxItems: 1
-@@ -39,18 +40,49 @@ properties:
-     maxItems: 1
++	csidphy0_grf: syscon@fd5b4000 {
++		compatible = "rockchip,rk3588-csidphy-grf", "syscon";
++		reg = <0x0 0xfd5b4000 0x0 0x1000>;
++	};
++
++	csidphy1_grf: syscon@fd5b5000 {
++		compatible = "rockchip,rk3588-csidphy-grf", "syscon";
++		reg = <0x0 0xfd5b5000 0x0 0x1000>;
++	};
++
+ 	pipe_phy0_grf: syscon@fd5bc000 {
+ 		compatible = "rockchip,rk3588-pipe-phy-grf", "syscon";
+ 		reg = <0x0 0xfd5bc000 0x0 0x100>;
+@@ -3052,6 +3062,27 @@ mipidcphy1: phy@fedb0000 {
+ 			 <&cru SRST_S_MIPI_DCPHY1>;
+ 		reset-names = "m_phy", "apb", "grf", "s_phy";
+ 		#phy-cells = <1>;
++	};
++
++	csi_dphy0: phy@fedc0000 {
++		compatible = "rockchip,rk3588-csi-dphy";
++		reg = <0x0 0xfedc0000 0x0 0x8000>;
++		clocks = <&cru PCLK_CSIPHY0>;
++		clock-names = "pclk";
++		#phy-cells = <0>;
++		resets = <&cru SRST_CSIPHY0>, <&cru SRST_P_CSIPHY0>;
++		rockchip,grf = <&csidphy0_grf>;
++		status = "disabled";
++	};
++
++	csi_dphy1: phy@fedc8000 {
++		compatible = "rockchip,rk3588-csi-dphy";
++		reg = <0x0 0xfedc8000 0x0 0x8000>;
++		clocks = <&cru PCLK_CSIPHY1>;
++		clock-names = "pclk";
++		#phy-cells = <0>;
++		resets = <&cru SRST_CSIPHY1>, <&cru SRST_P_CSIPHY1>;
++		rockchip,grf = <&csidphy1_grf>;
+ 		status = "disabled";
+ 	};
  
-   resets:
--    items:
--      - description: exclusive PHY reset line
-+    minItems: 1
-+    maxItems: 2
- 
-   reset-names:
--    items:
--      - const: apb
-+    minItems: 1
-+    maxItems: 2
- 
-   rockchip,grf:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description:
-       Some additional phy settings are access through GRF regs.
- 
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - rockchip,px30-csi-dphy
-+              - rockchip,rk1808-csi-dphy
-+              - rockchip,rk3326-csi-dphy
-+              - rockchip,rk3368-csi-dphy
-+              - rockchip,rk3568-csi-dphy
-+    then:
-+      properties:
-+        resets:
-+          items:
-+            - description: exclusive PHY reset line
-+
-+        reset-names:
-+          items:
-+            - const: apb
-+
-+      required:
-+        - reset-names
-+    else:
-+      properties:
-+        resets:
-+          minItems: 2
-+
-+        reset-names:
-+          minItems: 2
-+
- required:
-   - compatible
-   - reg
-@@ -59,7 +91,6 @@ required:
-   - '#phy-cells'
-   - power-domains
-   - resets
--  - reset-names
-   - rockchip,grf
- 
- additionalProperties: false
-@@ -78,3 +109,22 @@ examples:
-         reset-names = "apb";
-         rockchip,grf = <&grf>;
-     };
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-+    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-+
-+    soc {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        csi_dphy0: phy@fedc0000 {
-+            compatible = "rockchip,rk3588-csi-dphy";
-+            reg = <0x0 0xfedc0000 0x0 0x8000>;
-+            clocks = <&cru PCLK_CSIPHY0>;
-+            clock-names = "pclk";
-+            #phy-cells = <0>;
-+            resets = <&cru SRST_CSIPHY0>, <&cru SRST_P_CSIPHY0>;
-+            rockchip,grf = <&csidphy0_grf>;
-+            status = "disabled";
-+        };
-+    };
 
 -- 
 2.39.5
