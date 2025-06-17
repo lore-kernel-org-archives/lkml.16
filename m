@@ -1,73 +1,108 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31502BF014
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7646B2E7626
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:03:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172565; cv=none; b=KiHntxzKfF1LvPUzHa7LzvK1QKuNw9AVuffB+gRumNAPoj9OpOpDe7vjcxM/k0jx7BuAkkMXfHHncw5X4vV8WJzGnLMWXdVXhP/zyxoYBrv7LgSL61TYqOOie4zzNSfFyqQLNBIeKXM7plhoI5AX/bgtXyNIyEWpxUGugm9tqIw=
+	t=1750172597; cv=none; b=WSkm13Igit5gPMUfCVxw8IIKI5r2aJuphE+K5/rSKs/2qSxtGsyIdl9QoTPv7vSTa3wNSVMnyXoKPHLqc8pHUd0rcuIiRdFuCG7XqwpkwJSOXpeaTpx6zL54oLmnhqfHpeBPJ2IdfivW1zaeOVARwRuyB0NUBktm3Fq0GfdsBmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172565; c=relaxed/simple;
-	bh=7LXvtIqDXRXmjSb8cSXUxKuzL9sqQ0ECWGiDhhfXp4E=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GcklM5FIGlEmy4lR9hzslF8oI5gFcZXyRKJAcFFVfyUMPefFcVIS9/c5WnxWqI+eG3nK+qox7nziI0/zHlRXnf+DPVrz/LYLGWkn/OdLfCUcGcwp+X3We9+7kGfxZ+ncfY3R+LqOXACD0VzmxAWP9VE5KPVF/RlXVuusktbc2nk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 883E61A046C;
-	Tue, 17 Jun 2025 15:02:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id 65FF920036;
-	Tue, 17 Jun 2025 15:02:40 +0000 (UTC)
-Date: Tue, 17 Jun 2025 11:02:45 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Artem Sadovnikov <a.sadovnikov@ispras.ru>
-Cc: linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
- lvc-project@linuxtesting.org
-Subject: Re: [PATCH] function_graph: Fix off-by-one error in buffer size
-Message-ID: <20250617110245.5b68ab97@gandalf.local.home>
-In-Reply-To: <20250617110017.2883cba3@gandalf.local.home>
-References: <20250617111907.1579-1-a.sadovnikov@ispras.ru>
-	<20250617110017.2883cba3@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750172597; c=relaxed/simple;
+	bh=cBM0bl1EYdw9m/LmJstocm95QTHjddRw6azuJUPFwDU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qE9GfHFoictIX63v/x4m3fURuLzDgvGr6zaxPZtZs2ggTDJIthGc6QUCKKep5jROuJqXh0MtKuFd6YjPCDlz+d9TvzCuH9RxWf/y8iHeJPO4UVxAhW9GE/E7NJCxdDnWmdMt+q6B/B7mUUB/hUClhgN/COqxZx771Y9/Vza/Cdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EkwSVAMl; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EkwSVAMl"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-551fc6d4a76so5690121e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:03:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750172593; x=1750777393; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8kro4RJTLnz5wiZbHdQt1ebP7niZRblh94LfQW2yVq0=;
+        b=EkwSVAMlRBSjPuoOcaegUSjDri7TcwkfKlGbxzHLxsNqdFQYhf65Gysr5/tcshqAck
+         w632tqJ34b+XmkddFD8zusqZvw48kyyA+1+DIJnOvY0+iq7G7j74P882Br7/n1hgC89M
+         dhxL7Qoo0F+qdb/mbXIB8GGgIU2VfxnfyFXykn2I0UtfvTWJtk8tCfcCXxp6Wkc0dxRs
+         ZZlduppDxt09Azdbtgf9bYaU2LKHtZOLDOaQ5DZYfyUCRqNZ4K1YeTZKfhU4IzoOLzUk
+         9rjwiVG9/efaGh35N8pSs7uLhER4tVbKN2hzKQKUg1x5ADTHHmU1FzkvyzRXPn2owuk1
+         8WyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750172593; x=1750777393;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8kro4RJTLnz5wiZbHdQt1ebP7niZRblh94LfQW2yVq0=;
+        b=dCv7XxOoEH0+aip4uAq/RNH8lHIE6+31+7A48w2pVIuPSBWw4onaLFhHkBE5T33/Rl
+         xFBfheMru6Xjc8X3mQV0/7AHQEAFnOQBXC5vyfFo+rPprqrKd0wcf7LKbBEYEtABkecL
+         LwaMYl6woz8otsQxLXHSB3HOigUUEeVN4gKir/pfzYT3PZVtjKgFFr1cjDRXR80iY/pq
+         3EgXkVpcbTB5nNtHc5V0Cx+M3hH+gvbRkQy0cJuGbvuaYMbujNdwlgV5ZBS67Qbyz9pY
+         Oss8PR2Ud5lVmDVcvGTvXu8XzeFFy28d/tZSbgQLlD0/y+9YPQHfle4k8wBrAJkueJM4
+         2tvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW515I8yuLgsD2FZVkMbI812JsWgWbNS/5ZPHBzM/VkilpiwUx7nSLiSNXDH2EYiCwZN1K+jorRsgHp6qc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZFK2yyMWG6PFecnArBT+xiJ7LRdAwTA6TE2Gn7dwHfmTdZiC4
+	du3vnrJwbE40xPoClO/NCaCf0YAr0uCHMKagT11vfC444yr5qsczjfSDudy7XHqWn2E=
+X-Gm-Gg: ASbGncsdcWR0zErlnx6H+ACpakbH/vBgIDdXf5DzWZH9Md4/82m25WU9Zof4qxW/9+h
+	ZEvyD3+FDwJWsWBteMnZ7AhjYMMUzMBvJ4hunSee1O7GQSRdB8Dq6HvVwGEO10xZ0K9xu7WmjpW
+	SLbVMyNGOPwl3GBa4ArQdort8eFGW+tCdtHsyOHNKESlKL+0YPmmVyzp14C06JCQia3kN27kVDj
+	XP1KLHrIIbqPsTbDabEgti+BORYZPM+qet7eDJly85guT6oizwFqKn+XbWyNRluRnzL3EmFa6X8
+	H4oEOk41SMwBK/NG8f8c6ErzcvD8KOLVgbdc6r4iNk57a0q3cYM0vQqIH3ONha2J
+X-Google-Smtp-Source: AGHT+IHT9POn8wjfJ3yL9wa7ePb4/upFX9M1uvkh2r1EA9oSU/oPblXzyWWBgyX0wBY3kJqvG2nMIA==
+X-Received: by 2002:a05:6512:104e:b0:553:510d:f464 with SMTP id 2adb3069b0e04-553b6ee29d9mr3569632e87.25.1750172593026;
+        Tue, 17 Jun 2025 08:03:13 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb4e27sm81250535ad.176.2025.06.17.08.03.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 08:03:12 -0700 (PDT)
+Date: Tue, 17 Jun 2025 17:02:59 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	John Ogness <jogness@linutronix.de>,
+	David Gow <davidgow@google.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3] printk: ringbuffer: Add KUnit test
+Message-ID: <aFGDhxefzuWCwOOV@pathway.suse.cz>
+References: <20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 65FF920036
-X-Rspamd-Server: rspamout08
-X-Stat-Signature: uio35j54zfumog13exindtcbwukxa4br
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+m9/ZKSipZ+8ukW5dwMEX9xYWenxMNlCc=
-X-HE-Tag: 1750172560-856859
-X-HE-Meta: U2FsdGVkX1+3EXfC3PMF5WGbyot8EZgwBXCA1kWcX2CmbKtyOU5doYdCIHkkQBIGtidLLX72C9KmqpJEevNZs7lng7PjxQWMV0OY7i+E8hbbr0ErGZolSu7aK8UIoRynwKFVdZJgoVDf6FIKte0KhZSMg0b9FuZv7V38Ux7A1miUilpmmH2WVQo4d83vGiFVJby9NxqtHkYUhOMsf3fEUfaTmN02OLm0A4A/mDZZDbBxsxCbpANu5uypm164VDbxF6x7c5xsvfJN87cTOcR9kmTJafp8F3Q+1u3PnYdJdu+yn48v5x8aw4SMDufxXAJsyuzF5OH/HY7yECSzXpyCueo9tCQLCgVX1o6GkFDD9RnRsSyQSYjoqTYTc0vdNeTrT4IBYORbO9HE4IBk6xvrevrIHoF72jErGtbTn/IOJtK4KIfud6qWHDUr5BlKQJ6uxPAlJI2HneuIb1fPULS0HOfAHo10hXEZKu4y712UW2I=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250612-printk-ringbuffer-test-v3-1-550c088ee368@linutronix.de>
 
-On Tue, 17 Jun 2025 11:00:17 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Tue, 17 Jun 2025 11:19:06 +0000
-> Artem Sadovnikov <a.sadovnikov@ispras.ru> wrote:
+On Thu 2025-06-12 08:29:07, Thomas Weiﬂschuh wrote:
+> The KUnit test validates the correct operation of the ringbuffer.
+> A separate dedicated ringbuffer is used so that the global printk
+> ringbuffer is not touched.
 > 
-> > The comment above buffer mentions sign, 10 bytes width for number and null
-> > terminator, but buffer itself isn't large enough to hold that much data.
-> > 
-> > This is a cosmetic change, since PID cannot be negative, other than -1.  
-> 
-> Right, where I'll change the subject as that makes it look like this is a
-> real bug.
+> Co-developed-by: John Ogness <john.ogness@linutronix.de>
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
 
-Can your resend and Cc linux-trace-kernel@vger.kernel.org otherwise it will
-not get into the patchwork queue.
+Looks good to me:
 
-Rename the Subject to:
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 
- fgraph: Make pid_str size match the comment
+Best Regards,
+Petr
 
-Thanks!
+PS: I have got an idea to count the number of failed prb_reserve()
+    calls. And it really failed from time to time.
 
--- Steve
-
+    I played with it and came up with two more patches. I am going
+    to send them tomorrow. I think that we should solve it separately
+    to avoid too many respins. The current patch is very good as
+    it is now.
