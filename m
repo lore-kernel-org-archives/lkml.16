@@ -1,99 +1,83 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8CBC27461;
-	Tue, 17 Jun 2025 06:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B460335C7;
+	Tue, 17 Jun 2025 06:33:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141951; cv=none; b=qz2+61QcTYeVmJFUVcNwz9X84qfZNGDFN9FvexQJoMP40oNNuHbS6mHxrIyrjdBFnA6IRxAi3n6wNLfQ4BHjuQip+fE4SSjnCT0W6kA5ZDFLcNS3g0zd7DCCReFek8cjIP7OuOEcxvzChmIgU3g6YuBZcyxuK7C2mJVC+DBGHQ8=
+	t=1750141987; cv=none; b=pIjmtxx+KQd9n3UUox46L0Dfd3c5sOJfKXwCJx+x+qEFdRrjXXpKewAVlA+WUkU1m3yioLh3OxBI8PMwm0U5JEOuwdrluY2+soYM2kwKN2QqnbFC2kRLaJNwO4Nd9Tp73rlvpU8MzYGNJmZT9hfOIpb6b4Z0ERng4hlI65e0+NE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141951; c=relaxed/simple;
-	bh=MQwvrsyatOU2v9XdcxbXbe/0dPzrutKdVRXMXMclAwA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IVCfmvLiYbBTYSbqzOrvmCma39xKfshj2CYK+zOrYSeHR+3pDOXKvoBvja4zdGTSynkp7tibyj32PjD0bB9i+TqZLi2N6qCPy48qxOUZSW4inP+yLyf2dCMo8BBoTIGIHpCk8cTfBLHjNbJn6Nm9JUvmHEub0QqplUlIp0Dctcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Axz3PyC1FoljUYAQ--.55626S3;
-	Tue, 17 Jun 2025 14:32:18 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDx_MTnC1FoNwIeAQ--.23222S2;
-	Tue, 17 Jun 2025 14:32:10 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: Hengqi Chen <hengqi.chen@gmail.com>,
-	bpf@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next] LoongArch, bpf: Set bpf_jit_bypass_spec_v1/v4()
-Date: Tue, 17 Jun 2025 14:32:06 +0800
-Message-ID: <20250617063206.24733-1-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1750141987; c=relaxed/simple;
+	bh=o089/DcX6hGCVVYWkkX0LR4/6akPcznW+rKNIEoT1Dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CQeiQFCqM4kUWEyv7f1pwgluzRYBQn7saXPu1EWt9ICwJDTyJrGEz5UlOyH2m1aXBVlBDaCy1VRlHKTFmubKbKo7fjCpYibMcEwbWRtdJuqt0mbyn/1fVAZi1CwrPR8RX37QZZVjfgQo47v9yZLWyfr7HQ/wMfv0/h02x3a1Pak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L5VyircR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L5VyircR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57BEC4CEE7;
+	Tue, 17 Jun 2025 06:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750141987;
+	bh=o089/DcX6hGCVVYWkkX0LR4/6akPcznW+rKNIEoT1Dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L5VyircRh3PmSdJEQJp0EHvniyntC+VMtVjTvvrS7ApVDlYLaM/7yiehxLI9EfYCO
+	 rsxyZmo+24q3GcwztkesNUFUB8KY2f8UJ7ZzGhZ7gQ8X21A74GzPaG6PM4fHKFBvYC
+	 o2VL3l0KHdWZnmZASzsdt+BKCcj0uzJOqMxlEwMzI60+kZlCxZGHynJVI5jdCDZ58V
+	 WzFfjO49ysR5ZgeVAqHf4M75n/wqqwh7mmhI5PPRMzIG4iI5izxsEKiFdRxbVDoLgJ
+	 GitL7fFkDgsd5bdq0ZHQ/iGQ2sp9MD+HIKuuE7rRJlEeBHxAUjvBdrYdCXfh+1wWdb
+	 /FFOaK0Ym+lAQ==
+Date: Mon, 16 Jun 2025 23:32:36 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Ian Rogers <irogers@google.com>, Yuzhuo Jing <yuzhuo@google.com>,
+	Andy Lutomirski <luto@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] vdso: Switch get/put unaligned from packed struct
+ to memcpy
+Message-ID: <20250617063236.GI8289@sol>
+References: <20250617005800.1410112-1-irogers@google.com>
+ <20250617005800.1410112-2-irogers@google.com>
+ <c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDx_MTnC1FoNwIeAQ--.23222S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWrKF4kCrW8ury7AF1DtFWkGrX_yoW8JF17pr
-	W2kFnxArs8Xwn7JF43tayrZFW5JF1kGFy7WF129a4Fk3ZxX3WxXr1xK3s8GF4Yyr15XFy8
-	Wr95C34a9FykAagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-	02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-	wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7V
-	AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-	r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6x
-	IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAI
-	w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x
-	0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7_MaUUUUU
+In-Reply-To: <c57de5bf-d55c-48c5-9dfa-e2fb844dafe9@csgroup.eu>
 
-JITs can set bpf_jit_bypass_spec_v1/v4() if they want the verifier
-to skip analysis/patching for the respective vulnerability, it is
-safe to set both bpf_jit_bypass_spec_v1/v4(), because there is no
-speculation barrier instruction for LoongArch.
+On Tue, Jun 17, 2025 at 07:22:57AM +0200, Christophe Leroy wrote:
+> 
+> 
+> Le 17/06/2025 à 02:57, Ian Rogers a écrit :
+> > Type punning is necessary for get/put unaligned but the use of a
+> > packed struct violates strict aliasing rules, requiring
+> > -fno-strict-aliasing to be passed to the C compiler. Switch to using
+> > memcpy so that -fno-strict-aliasing isn't necessary.
+> 
+> VDSO build fails with this patch:
+> 
+>   VDSO32L arch/powerpc/kernel/vdso/vdso32.so.dbg
+> arch/powerpc/kernel/vdso/vdso32.so.dbg: dynamic relocations are not
+> supported
+> make[2]: *** [arch/powerpc/kernel/vdso/Makefile:79:
+> arch/powerpc/kernel/vdso/vdso32.so.dbg] Error 1
+> 
+> Behind the relocation issue, calling memcpy() for a single 4-bytes word
+> kills performance.
 
-Suggested-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+memcpy() does normally do the right thing for unaligned accesses of 1, 2, 4, or
+8-byte values.  The snag here seems to be that the VDSO is built with
+-fno-builtin (and -ffreestanding which implies -fno-builtin).  That causes the
+compiler to no longer optimize out the calls to memcpy().  If __builtin_memcpy()
+is used instead of memcpy(), it does work and generates the same code as before.
 
-This is based on the latest bpf-next tree which contains the
-prototype and caller for bpf_jit_bypass_spec_v1/v4().
-
-By the way, it needs to update bpf-next tree before building
-on LoongArch:
-
-[Build Error Report] Implicit Function declaration for bpf-next tree
-https://lore.kernel.org/bpf/d602ae87-8bed-1633-d5b6-41c5bd8bbcdc@loongson.cn/
-
- arch/loongarch/net/bpf_jit.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/loongarch/net/bpf_jit.c b/arch/loongarch/net/bpf_jit.c
-index fa1500d4aa3e..5de8f4c44700 100644
---- a/arch/loongarch/net/bpf_jit.c
-+++ b/arch/loongarch/net/bpf_jit.c
-@@ -1359,3 +1359,13 @@ bool bpf_jit_supports_subprog_tailcalls(void)
- {
- 	return true;
- }
-+
-+bool bpf_jit_bypass_spec_v1(void)
-+{
-+	return true;
-+}
-+
-+bool bpf_jit_bypass_spec_v4(void)
-+{
-+	return true;
-+}
--- 
-2.42.0
-
+- Eric
