@@ -1,129 +1,120 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B632ECD33
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689C82DF3C9;
+	Tue, 17 Jun 2025 15:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750174781; cv=none; b=sDTyDwAt6CBWoFLglh5GYbEvc3LdkHT3SASpPRzbjDh3a3noK3ZmzO0ueEEIL+QDvNcI+X/2+lrogb8PvkeDSLpGOYS2zbNaPLngq3WCrlbYD/49VeLTv+5bUWvjT2PWtX5TIXNAcnndwmI+6I3QIDeNPC/tUp2GACpbeAYeTbs=
+	t=1750174827; cv=none; b=qBW9bYdn7DgiREdeUbO8L7pG7wlWCAalaKyF7M8C8W4+CQQryNH+hfFQYU4TsuFurw1Wg5hiY5dDauK3ECriQEC5quRu7k/fBFrs3Gct+09sLtJ0w1Npgj/WKC8jPSd4NuZpehI849a7eidoWFswpG+CU4ypi5q71I3jRaH8m/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750174781; c=relaxed/simple;
-	bh=SoBgdJWVL/YyJ5lRVZiX0pURqAgt+HDpb32YuRNySoY=;
-	h=From:Date:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=pCUBpo6vGaClADRhGVl2mySLy88Wx9ToR4d6AMM1uFG+IH4vfVDhJgMO2d3FIWWdnMSeTSD9Y4QFJ+n3ovAz0Vq4we7gz5sZv0Eps0FxL6B6BYhkwGAoDlBfegTVoGpYi+OClpQGxBD+9xp9FYkVek/OQHSivcSIwZ2I2hoVXuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=PHnOJzmk; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1750174827; c=relaxed/simple;
+	bh=tC6/NDoju0ZefrxpCxrMvxxYc+0O2W6DOLxIX/mdWoE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uuDnE6/FqWXqIEsGOBtmrVWhEdUzpcH/uDud4xJc7a7INziAnbMKUsIMueynCLznrNh+6/wTGEkpyVV/nbqqFZcMajTmoEKFZqCcH2uDYungaJknC45UhRjDwyDSywbvPCDRXSCaoZGtEYKr1DtIH8lIV7fb9gt/UZL44WedYZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nMenEqtd; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="PHnOJzmk"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6fad3400ea3so57844686d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:39:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nMenEqtd"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-748cd3c8829so826247b3a.2;
+        Tue, 17 Jun 2025 08:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750174778; x=1750779578; darn=vger.kernel.org;
-        h=mime-version:message-id:subject:cc:to:date:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=EsUdiJ0kNwQ30z0MOSU7iRuma44RnvYqkTl7miNkErI=;
-        b=PHnOJzmkP0pxrOn6QIcVgcJ4PyZroyvyMhm1Quw8VzyuwAm0lpnUKPatuoZCEobOS+
-         uVh36k7fC8uJb8cimq+bLPSv9/RUABOE3nla3OYfQqD7FqUSf7/lkdD5j8JHYthlsgw4
-         6xOFGfQwl0ftkg0RwpeWApgpmidrx6fuHa/tU=
+        d=gmail.com; s=20230601; t=1750174826; x=1750779626; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5k96Kr7lemrnHxQ+iFUrhM42H3DOD+3Iasxmqb+VqdI=;
+        b=nMenEqtdCAVpAVzZu64s7/U31NJVFcatRzFj8FsEO+b21/ToOZskMs4svUrt3rj/r/
+         Pvr6KfZAxtRCpt8wfNrqetsc1Blh8tWgxPTjBqloipPulphwPWZg3r9jblxJ+V0q2cA1
+         6MF737N9FRXTRoDUMFBwAFt2NejmW+mqpOSXZJI/CHPMIkCTqKo3PgM3aNR6b+cg90lR
+         PavdD2v8mIAsOpFdgZcrLeS14tfio3g4EvDyECs8RlbzWsZFH5a+OUZQJARuH+7by/Ou
+         JRm9e7E8+wy8Y6EGxrBsBGBrQZuyNCsWuejhkzN4L8N+ASWvzhrar5Zd6ZMcAufqJqCy
+         oRUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750174778; x=1750779578;
-        h=mime-version:message-id:subject:cc:to:date:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EsUdiJ0kNwQ30z0MOSU7iRuma44RnvYqkTl7miNkErI=;
-        b=XWgTXGqr1kVY55cz2Czgeexzn5cgdIt3mtNiY/IlXpiX13ENv+vzQos4+7qs3ICrNj
-         AurXP3zOqXhQmHPutI3HWe1F5qgh3RGRCRYcmx8f8rJCNsm+ShBTZMApNW7vZCHb9yGq
-         k9GggYhGM1ZqMLU1p7Uy21PGxo2cVUCoQChIKW+JVvcWLRifRX/hn/SOsS/o4hje8UDX
-         kbKkNqRJlL52z9lkYFuSAYZy8+yGyy8yLIpehJ0V28M5ZmsD2rEHlOp+JBj/ir1Ii4WT
-         JU3oYtpl4E3ZzFPR2VVsJDfQqHez/7T5oH1giHIpE8kvNrlnG5AAyDo2YcH0tXx4JITm
-         6JTw==
-X-Gm-Message-State: AOJu0YwelJrPMU8tcWkuU6qNifrY2+VTRU892GpVuRpJ3hveTTnYwH6Y
-	1xBzP052hnCPlfMZB7YPDP3OQewJk7ExXYastraAvoq8KJizDz9l+9r9iZgu9sOz7SQcC94F51P
-	W6po=
-X-Gm-Gg: ASbGncub/fv8OWEb137S7e82G4pTGZdSmsgHQ4RlEK9EulLWF8dFcQ/Z4Gy289iuLoc
-	UEZvJwbIvcFsAylW3jE8DlWj7UXA62kXehrmJ7puNK78SZXj8wjU/BNfMANtmyPVQV3ms1bDPOt
-	Caa3cN16xZS9QQQoFzAF7z+O2XdlJUWMqKkC+RlfKRyTVMT3z7YJva97GCwgiTArsMt95gng/wW
-	1O9/FmAsRGPorX7SnoW8G1o9OawXKDu0Wi+SrsJkQNEXWZCZwJN8e46wziRiFjDqTd0cWNExu/y
-	ldaa0ZJKwmXPvGSFj44YcJh1vxO01OVzpf0/Rg9KQ8cIT6NFlnooaEd8kqmmNFnqkWRJP6ezWpj
-	sGkE7rDrx7ajKtUau
-X-Google-Smtp-Source: AGHT+IFUfgfh7b7mzwn4MlIL7r49B9k+Sq/a0mEQZaAVRJo8RoiyLZUGSTkHebiAVaqEymT5wZtBFw==
-X-Received: by 2002:a05:6214:cc4:b0:6e4:2dd7:5c88 with SMTP id 6a1803df08f44-6fb4779f7a5mr183743736d6.38.1750174777973;
-        Tue, 17 Jun 2025 08:39:37 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb4d210c19sm35252496d6.32.2025.06.17.08.39.37
+        d=1e100.net; s=20230601; t=1750174826; x=1750779626;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5k96Kr7lemrnHxQ+iFUrhM42H3DOD+3Iasxmqb+VqdI=;
+        b=RSNp02AqmCCtwSKTTevHf3fAGeQm7ejEW73bLHRHmWAjApMgd81oMq2HZzOIlMXMEd
+         trqXcdZ9HKaz9PiGbIa5VFpZYr6fy109VaG54igs3lRQiR/V1B7GiUUsyB2GPRBrVF3U
+         TXqA9x0w8LCLXvfx/huADL8Y7Z7y2bGrdXY+ueaNbbPBlmJzpTdl3FzZFyfKhO/QyGwO
+         fIzE8YhJp96hUJ+5fJMuPh+BdgzJOlv2W9AanT6Mul2kPIP8NyumpwU/M8+6uafaEWjw
+         Pl09dLYiixCWskT+JU2oaaVkYRJvfIcOd1J8XsDsd8yurp/Wfc/mbu4m9EEaoDQdDRsj
+         4zyg==
+X-Forwarded-Encrypted: i=1; AJvYcCVpLrhPfvTA3skw0krayiYLksrPJS7jxJStZiikEZn0DbMxn0gTo392yawtZ2G/QKanwPlIr7WeSSAH@vger.kernel.org, AJvYcCWE9r+DSMgVxDWZnyT8uPk+cH+2K+D/3w1IjAWiEX9KAa0tBxffAr6KWeY4Fl9CbbcFlQgizes0/Fq2riVr@vger.kernel.org, AJvYcCX4wUKMMqL05hZKyiACTwFsHKuer1RZWWiHJ4Is9S0dx6aTdhNcCx6WRjPJ/8R4dqcfiAFQD38Hfcl+7Q==@vger.kernel.org, AJvYcCXHJjrvks0rhqORPnRbB3XI1gooPzk1uYiEHdFaRY57aC1KgMDf8HzimWXXNKRBtdmjlZsBsWX9JoIH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxENBirT0ZIOLsL03c9rEqWzXX+MYd/nP1aiwuRkwyBPc7dCMpj
+	iCJJSjFwl8qyqnrHg0n0kK26sYQuh0gINXBcdGNky6VeQAqkQq9U9QJGpQS0Gw==
+X-Gm-Gg: ASbGncsrbkdKTbYRXBuOesX8nbvMJJOYRMcsms8tbZXhEySObDysaT2XGRKHgX9vvoj
+	wMXQrXAUxB1FGWa0PVAHKt5pNEa42v3ZwmLJqHIJM2NkdWYqOHJIEofYOmCQmP7VmO88KpA7jST
+	79QAOOa84jeeahG28zsuguJFnaRjPcgusXMxkb+5ybJHH/Gn3AXVr5sGpVU0v2EhgcbhBYe32n+
+	bxxJEekyun01BFXO96u32i0r1nCi47ImdkskdSzKrggRMQOFpnwy65TGbogaTQU+JmeKaqaUkU1
+	GY5Vf+uMF2ah514MtsywGEpiOXBVecSbuEVtWyNsNeo0BAo0SMY5OxzTtK4NTR2N+jRHdX7j
+X-Google-Smtp-Source: AGHT+IGliwIj5Gizb7rONr5DP/wCV5syb2AP+bWojANJJJURJP5LW4iLHaV1dnuIjeSmsckBuXTlZA==
+X-Received: by 2002:a05:6a00:a8e:b0:748:2e7b:3308 with SMTP id d2e1a72fcca58-7489ce07d29mr18312704b3a.6.1750174825566;
+        Tue, 17 Jun 2025 08:40:25 -0700 (PDT)
+Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890006294sm8993731b3a.47.2025.06.17.08.40.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 08:39:37 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Tue, 17 Jun 2025 11:39:36 -0400 (EDT)
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-cc: "Liang, Kan" <kan.liang@linux.intel.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-    Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: [perf] unchecked MSR access error: WRMSR to 0x3f1
-Message-ID: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
+        Tue, 17 Jun 2025 08:40:25 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: krzk+dt@kernel.org
+Cc: lee@kernel.org,
+	pavel@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	corbet@lwn.net,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v9 0/4] leds: add new LED driver for TI LP5812
+Date: Tue, 17 Jun 2025 22:40:20 +0700
+Message-Id: <20250617154020.7785-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <e26093a7-2305-4d55-b836-d3bc7c503b9b@kernel.org>
+References: <e26093a7-2305-4d55-b836-d3bc7c503b9b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello
+On Wed, 11 Jun 2025, Krzysztof Kozlowski wrote:
 
-When running the perf_fuzzzer on a raptor-lake machine I get a
-	unchecked MSR access error: WRMSR to 0x3f1
-error (see below).
+> On 10/06/2025 19:43, Nam Tran wrote:
+> > This patch series adds support for the TI/National Semiconductor LP5812
+> > 4x3 matrix RGB LED driver. The driver supports features such as autonomous
+> > animation and time-cross-multiplexing (TCM) for dynamic LED effects.
+> > 
+> > Following feedback from both the LED and auxdisplay subsystem maintainers,
+> > the driver has been moved back to the LED subsystem, under drivers/leds/rgb/.
+> > This version integrates with the existing multicolor LED APIs, avoiding custom
+> > sysfs where standard LED interfaces are sufficient.
+> > 
+> > Signed-off-by: Nam Tran <trannamatk@gmail.com>
+> > ---
+> > Changes in v9:
+> > - Move driver back to drivers/leds/rgb/
+> > - Integrate with LED multicolor framework
+> > - Refactor and simplify custom sysfs handling
+> > - Extend Device Tree binding to support multi-led@ nodes using leds-class-multicolor.yaml
+> 
+> You need to provide reason why you dropped reviews.
 
-A similar message happened before back in 2021 and was fixed in
-commit 2dc0572f2cef87425147658698dce2600b799bd3 so not sure if this is the 
-same problem or something new.
+In v9, the Device Tree binding was restructured to integrate with the standard
+leds-class-multicolor.yaml schema and support multi-led@ nodes with nested led@
+subnodes. This change introduced a new patternProperties hierarchy and removed
+the previous flat led@ layout used in the earlier versions.
 
-Vince Weaver
-vincent.weaver@maine.edu
+Due to this substantial structural change — even though the intent and top-level
+properties remained similar — I decided to drop the Reviewed-by tag to avoid
+misrepresenting prior review coverage.
 
-[12646.001692] unchecked MSR access error: WRMSR to 0x3f1 (tried to write 0x0001000000000001) at rIP: 0xffffffffa98932af (native_write_msr+0xf/0x20)
-[12646.001698] Call Trace:
-[12646.001700]  <TASK>
-[12646.001700]  intel_pmu_pebs_enable_all+0x2c/0x40
-[12646.001703]  intel_pmu_enable_all+0xe/0x20
-[12646.001705]  ctx_resched+0x227/0x280
-[12646.001708]  event_function+0x8f/0xd0
-[12646.001710]  ? __pfx___perf_event_enable+0x10/0x10
-[12646.001711]  remote_function+0x42/0x50
-[12646.001713]  ? __pfx_remote_function+0x10/0x10
-[12646.001714]  generic_exec_single+0x6d/0x130
-[12646.001715]  smp_call_function_single+0xee/0x140
-[12646.001716]  ? __pfx_remote_function+0x10/0x10
-[12646.001717]  event_function_call+0x9f/0x1c0
-[12646.001718]  ? __pfx___perf_event_enable+0x10/0x10
-[12646.001720]  ? __pfx_event_function+0x10/0x10
-[12646.001721]  perf_event_task_enable+0x7b/0x100
-[12646.001723]  __do_sys_prctl+0x56f/0xca0
-[12646.001725]  do_syscall_64+0x84/0x2f0
-[12646.001727]  ? exit_to_user_mode_loop+0xcd/0x120
-[12646.001729]  ? do_syscall_64+0x1ef/0x2f0
-[12646.001730]  ? try_to_wake_up+0x7e/0x640
-[12646.001732]  ? complete_signal+0x2e8/0x350
-[12646.001734]  ? __send_signal_locked+0x2e3/0x450
-[12646.001735]  ? send_signal_locked+0xb6/0x120
-[12646.001736]  ? do_send_sig_info+0x6e/0xc0
-[12646.001737]  ? kill_pid_info_type+0xa6/0xc0
-[12646.001738]  ? kill_something_info+0x167/0x1a0
-[12646.001739]  ? syscall_exit_work+0x132/0x140
-[12646.001740]  ? do_syscall_64+0xbc/0x2f0
-[12646.001741]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-[12646.001743] RIP: 0033:0x7efe86afd40d
-[12646.001744] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 18 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 9d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 1b 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
-[12646.001745] RSP: 002b:00007ffcd6444cf0 EFLAGS: 00000246 ORIG_RAX: 000000000000009d
-[12646.001746] RAX: ffffffffffffffda RBX: 000000000000000e RCX: 00007efe86afd40d
-[12646.001747] RDX: 0000000000000001 RSI: 00007ffcd6444d24 RDI: 0000000000000020
-[12646.001747] RBP: 00007ffcd6444d60 R08: 00007efe86bc625c R09: 00007efe86bc6260
-[12646.001748] R10: 00007efe86bc6250 R11: 0000000000000246 R12: 0000000000000000
-[12646.001748] R13: 00007ffcd64471b8 R14: 0000559eb2a2edd8 R15: 00007efe86c30020
-[12646.001749]  </TASK>
+I will include this explanation in the changelog of the next version (v10).
 
+Best regards,
+Nam Tran
