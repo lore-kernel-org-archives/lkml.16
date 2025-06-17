@@ -1,126 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D402900BF;
-	Tue, 17 Jun 2025 08:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9878728FABE;
+	Tue, 17 Jun 2025 08:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750150185; cv=none; b=OQt00i2UiAfTMrYbQfegi+Toz2k5l8C9SQFJihxYIhtCcY8igNAUCti+utIPVD7qVPAX5/QzL2bBArVLO9gH7hfFL8Urbc+VQkSbCmNdiZgCbi2crPrwUhcm/DsVvS1cWuI6THseBW+bwh2xpMe4eUcE/WPvy1XTvzFG4z3VwF4=
+	t=1750150234; cv=none; b=ftDHsfdpME3uzv9CtWknaIBdCWkaFFz+/+OjHjAvJbQ8OXXEUf1oLeolSYR2Pgy5bAggqore+lTNEcOnwRCCFN41qStCtIP2t2xflwiLm5gLCHhaYKCwsrTQYFoo3r27OBh94bRNHKOj4VR+Ym+6L0zJLmGjDic/vmKFHOYczuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750150185; c=relaxed/simple;
-	bh=ME58dcb/DUx0DY2uIYh1f14eByaY7b2odEcs65D1CHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DZ+4UL0EBh8sIYgmqKKSccbcrMp4FUjkrYtOR+neyvrnYT6de2odykhi+rkt7E3oSLs7xMSHmMhu4UnSV4gnS72+pkDQiJ3dZ6Vrhlp7bp3PDOklTI6Wfxb2MkqFs02e/QGGVkXqZKPuoYg3CL1r/XZr6FEf14ZciKnmrDp236A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6ZgUUAJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750150234; c=relaxed/simple;
+	bh=zXDoeyDAdE2WUIqbdzQe8rsxVp43jDDXe1eMfCh0QgA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JDKfdy0Ym+s/P4FAGVXoU53DRkqyGju55mDtHXvNVuQjWKEbqRO9iEH+nHmGbHIE9WkNs4r7x4Bnh1dDbF0FZDkGSud6ZPYUT3zxB58VRHk3GczyJJGhL4RUG5fLpg4lcZjAGVmxBgcIFq3gfKivHYODvM0ETE4Vo5gBlSdgAIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZDjzZf9V; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6ZgUUAJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 616ADC4CEEE;
-	Tue, 17 Jun 2025 08:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750150184;
-	bh=ME58dcb/DUx0DY2uIYh1f14eByaY7b2odEcs65D1CHI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=u6ZgUUAJK96S0DA07ufkJXXk3DEA0UWPzvHIqi+j9h7NSe3bhYmNCCJEv9q/ABNvt
-	 uHHrT9V9ZpX83CBdgZhcSx1/aYvAuBBOGbm5HdjG63/MVtxQiI1YojTa+AEwMVfi8z
-	 SEMiYa1tQ9uR/Dxory2GzqX/kdILNoJhcAX81zO6QOxJiiOx87A+mtH3nF5YDcAFFK
-	 hib/bAszxVMhcoSv5WrtPFFDTA2035SIcopsWZAQF/6Q6IwzUP2NU6wCXC0pYPo/Fr
-	 1VGh4MNykUkqcwPtohppnJFvGVmkityzFUKyicEey7OAawIYDmHNuJV9qsDBKbEt88
-	 VGblK5Vf2KRfA==
-Date: Tue, 17 Jun 2025 10:49:38 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Albert Esteve <aesteve@redhat.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, gurchetansingh@google.com,
- daniel.almeida@collabora.com, adelva@google.com, changyeon@google.com,
- nicolas.dufresne@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Message-ID: <20250617104938.09d21b7c@foz.lan>
-In-Reply-To: <CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-	<20250526141316.7e907032@foz.lan>
-	<DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-	<20250527111311.105246f2@sal.lan>
-	<CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
-	<20250527153547.6603eaf4@sal.lan>
-	<CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZDjzZf9V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=eg7igDB5AItT34OGvj2hl3G+l8FTS6o11OyHnXLlxf0=; b=ZDjzZf9V8VBGb10ZONh8VtbAx5
+	Fe7+DtTMg975datHJ+Yu/KZW/gkhi7petKipvJLOvj+Fv93uJ7dnTipr5gjWSGl+i/Pu35zPul/C+
+	rhj7zqFIhUWvEcmSM1+9sBuMp1Gko/3lrPIUD5Get3UET51PQbeAWmGhd8F+q0zwojcAYN8dl2abA
+	w6vN9WuhqympQH48Pnwn6eiidVspUKoLQa9ZSxxsJXhd0iul7Wq8rwlgp5lBLAtC4DBSPwKUuLrZk
+	DhPexfNsGb/CLWiaY6z1UWyrZwVL78jmdYEoUfXiJPrD+3PCchSNv40DsP+ON3j1nHUtUGtCPgVvD
+	i4QKA0EQ==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRS1V-0000000Guld-26Hs;
+	Tue, 17 Jun 2025 08:50:29 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0A1E3308523; Tue, 17 Jun 2025 10:50:28 +0200 (CEST)
+Date: Tue, 17 Jun 2025 10:50:27 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, linux-kernel@vger.kernel.org,
+	sched-ext@lists.linux.dev, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH sched_ext/for-6.17 1/2] sched_ext, sched/core: Factor out
+ struct scx_task_group
+Message-ID: <20250617085027.GM1613376@noisy.programming.kicks-ass.net>
+References: <aEzRVj5ha38RAEr5@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEzRVj5ha38RAEr5@slm.duckdns.org>
 
-Hi Alex,
-
-Em Tue, 27 May 2025 23:03:39 +0900
-Alexandre Courbot <gnurou@gmail.com> escreveu:
-
-> > > > Btw, I was looking at:
-> > > >
-> > > >         https://github.com/chromeos/virtio-media
-> > > >
-> > > > (I'm assuming that this is the QEMU counterpart, right?)  
-> > >
-> > > crosvm actually, but QEMU support is also being worked on.  
-> >
-> > Do you have already QEMU patches? The best is to have the Kernel driver
-> > submitted altogether with QEMU, as Kernel developers need it to do the
-> > tests. In my case, I never use crosvm, and I don't have any Chromebook
-> > anymore.  
+On Fri, Jun 13, 2025 at 03:33:10PM -1000, Tejun Heo wrote:
+> From 55aa129e6add97a98340326451bdadd4c5dd3242 Mon Sep 17 00:00:00 2001
+> From: Tejun Heo <tj@kernel.org>
+> Date: Fri, 13 Jun 2025 15:06:47 -1000
 > 
-> IIRC Albert Esteve was working on this, maybe he can share the current status.
-
-Any news regards to it?
-
-> Note that crosvm does not require a Chromebook, you can build and run
-> it pretty easily on a regular PC. I have put together a document to
-> help with that:
+> More sched_ext fields will be added to struct task_group. In preparation,
+> factor out sched_ext fields into struct scx_task_group to reduce clutter in
+> the common header. No functional changes.
 > 
-> https://github.com/chromeos/virtio-media/blob/main/TRY_IT_OUT.md
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> ---
+> These two patches are on top of:
+> 
+>  + Two fix pathces pending on sched_ext/for-6.16-fixes
+>      http://lkml.kernel.org/r/aEyy27BecPPHDWHc@slm.duckdns.org
+>      http://lkml.kernel.org/r/aEyzhBAl5zkP6Ku-@slm.duckdns.org
+>  + tip/sched/core patchset to reorganize bandwidth control interface handling
+>      http://lkml.kernel.org/r/20250614012346.2358261-1-tj@kernel.org
+> 
+> See the following git branch for the merged result:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git scx-bandwidth-control
+> 
+> Peter, while this touches sched.h, the change is contained to scx part and
+> shouldn't cause noticeable problems for other scheduler changes. I'll carry
+> this through sched_ext/for-6.17. Please let me know if there are any
+> concerns.
 
-I started looking on it today. Already installed crossvm (I had to
-install libcap-devel to build it). Still, I'm not familiar with
-crossvm, which is a little be painful. In particular, how can I
-enable network on it and speedup it? With suggested parameters,
-it picked only one CPU, and very few memory on it:
-
-	# cat /proc/cpuinfo|grep processor
-	processor       : 0
-
-	# free
-               total        used        free      shared  buff/cache   available
-	Mem:          221876       34780      139712         272       56096      187096
-	Swap:              0           0           0
-
-I'd like to be able to compile things on it and use ssh/scp. So,
-the VM needs more CPUs, more memory, more network and GPU.
-
-Btw, on a quick test with v4l2-compliance, something looks weird:
-I started a camera application at the host. Still, v4l2-compliance
-said successfully excecuted mmap:
-
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-        test blocking wait: OK
-        test MMAP (no poll): OK                           
-        test MMAP (select): OK                            
-        Vide[2025-06-17T08:44:49.177972817+00:00 ERROR virtio_media::ioctl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
-[2025-06-17T08:44:49.178164554+00:00 ERROR virtio_media::ioctl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
-o Capturtest MMAP (epoll): OK                             
-        test USERPTR (no poll): OK (Not Supported)
-        test USERPTR (select): OK (Not Supported)
-        test DMABUF (no poll): OK (Not Supported)
-        test DMABUF (select): OK (Not Supported)
-
-Which doesn't make any sense, as the host OS should not allow access
-to mmap while streaming.
-
-Thanks,
-Mauro
+How do you want to do this dependency on the bandwidth rework? Should I
+take those patches into tip/sched/core and then you base your tree on
+top of that?
