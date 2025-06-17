@@ -1,856 +1,205 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B5D28FAAE;
-	Tue, 17 Jun 2025 08:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E322E06E8
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147352; cv=none; b=nuSNC3oT+q2FjMe1uo19hoCZDL4+9uXWf6tYKY0AyX27Bsrbnh3kbeTeEAIG7SEOrK6F0yl8/88zm/kM60QPftkvDTuoXPDKt4+z/rnE84hArZXtVz1PHacUhJNH7ZjfV9cGmfJZDNK9rDk+mCf84RUBQKHEXjV22aP0DAZqy/4=
+	t=1750147375; cv=none; b=h1IA0JkIGDnISnu8TA4TvjHWfTF/pqvvSNlxVXY5gkJ93emPtk3HsyIaqMA2E0YQtW6bGvcdQ5T8XkhNOoNL5hv9X20w5eh0QlpJUJuDgmXiZDtX4aNMbOULNGsopU+E2H/GXWOkcUn/EgUcGmagMSkuNpFX42llONNNZbeEHd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147352; c=relaxed/simple;
-	bh=Lbcs43EE24F7v4kZMOpwcJb2G8H6tfac/MUY4SMl3ag=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ehbe8r1MyESZRiWKpkf3JinyiX0jEBxK2Arl8d2rrJH3xX16nZFW+VzOENk/CFT+LZAr5MpEquKZjy1UKsIXnE02PY8sc1lcNfirSzRrAdxUUQIZedZQj7fwYEC+w4LxB+TSIQicHypSsDHgSRPRVIZ+OqglhzyBBkhWpV1W3SM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cC4/kTxi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750147375; c=relaxed/simple;
+	bh=1+KbtzG6qtWkPsYFErIXAlygfvsb6b5YnjkXBfBUtRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=THd/d2s8N8bJQbzxlK8A3wBwyxa6YB5pknwGFVr28sst146IjFfAH8xsVrp8Q2ori7BeKBGCVU5YqbP0AA9vaKm8+kXIkdyov89KJL/NrJHPEWE52zZpkaWQBBBApx4uxwiD/yswOa3Cq25ZBSlQzAT0jMlii2zyUvpYs7fvhKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N36uEQOU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cC4/kTxi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9785C4CEF2;
-	Tue, 17 Jun 2025 08:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750147352;
-	bh=Lbcs43EE24F7v4kZMOpwcJb2G8H6tfac/MUY4SMl3ag=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cC4/kTxicqF/bIYDWxuiDZdshvwge+dnG7BsB+sX66tCaSnrIgWSpqVqMj8R4SPCQ
-	 7R0UgxYkEjRKUkkICRHMXf9Mi+RQXbyS2NExCkQFkuelD2laCgtjYuRedEHo9w5G27
-	 qdg+86LCpWXrGIuieFeRQLzfmgrWSlw3ef6H/YqYDzdLRBH72Uh3XDaQKmT3Lk0UBI
-	 Y/WfGUokWfc42Xr80EvgEzaYf7yf7kTxfj74TDT2TpWvrwHUFJVKvLrgZIHG5iqxua
-	 sQcUTqm1/K41akXwpHLFQd0AtlBcDBvxsc9b8lyMu6T8lGWG0MCE3j61GcAsxbxpXm
-	 JVRK2lfxHFvhA==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uRRH4-00000001vdF-0Hkw;
-	Tue, 17 Jun 2025 10:02:30 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Breno Leitao" <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Donald Hunter" <donald.hunter@gmail.com>,
-	"Eric Dumazet" <edumazet@google.com>,
-	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
-	"Jan Stancek" <jstancek@redhat.com>,
-	"Marco Elver" <elver@google.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Paolo Abeni" <pabeni@redhat.com>,
-	"Ruben Wauters" <rubenru09@aol.com>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Simon Horman <mchehab+huawei@kernel.org>,
-	joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev,
-	netdev@vger.kernel.org,
-	peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: [PATCH v5 07/15] scripts: lib: netlink_yml_parser.py: use classes
-Date: Tue, 17 Jun 2025 10:02:04 +0200
-Message-ID: <ff06bc0ef513b81178978adc536bdb214942adfd.1750146719.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N36uEQOU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750147372;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=AOf6xzSA4kUe5am2Ot1h5AlYg72L6/69lnueB5vJdTI=;
+	b=N36uEQOU+vJiK4+EUYQfvHSxB1BoyISjuqJfYqjjPQ6SgIlY37JmKzuvco/2bLvtQJg7nH
+	Ac5D0snyeLUSvlVNm8eZbzZasXPGZGkOMDrptMQdhs79T8k4rBKYERNAXorUBEUNiKMKht
+	+KNZmEOkfExdWz8waEsjWTGDhAcWSUA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-66-5tVfFpUvNOiSjze9rf7R4g-1; Tue, 17 Jun 2025 04:02:48 -0400
+X-MC-Unique: 5tVfFpUvNOiSjze9rf7R4g-1
+X-Mimecast-MFC-AGG-ID: 5tVfFpUvNOiSjze9rf7R4g_1750147367
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450787c8626so39984805e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:02:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750147367; x=1750752167;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AOf6xzSA4kUe5am2Ot1h5AlYg72L6/69lnueB5vJdTI=;
+        b=WShRfbh/HMIFMcN7tAkpVB58XeJ5P6jrmyKSCiXPGr3QyUQ2nfv4OJdaaW20Fd4qtf
+         sbEQ8Czc9WeJI2LOtwT/gqs8v16u9IANVUpC/E9/JNNJDLJpNcCHRbdx3+DJMcbWXd/y
+         2rQBYEhh4pr7P2PN3jK1WeJyCQUyFwFRdnmWB4NBjRBKBp+XFIfF2SEwyqqhtsL1dd6s
+         gPCHXWLA+Ibtt5g6FM44AXjNn1uV1AFRhBSlekK/kO2yn3q1BueUo8uLBhpUYrE6CEQ3
+         pbKkm8unCmeAlxFDMAfcYhA/XH5fkIFvbrgNZNwD93VNRyuPmKniQuJDiH1iUR5A8FkF
+         MMlw==
+X-Forwarded-Encrypted: i=1; AJvYcCV9FTgdpoDJXl8lf/zoQ6PHf28Wkgk5ccmEPw8aiBdve21oVyCP99NdE7t0Na8SvV4qZ9lT0vhosqXZp8k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxC6m6TloifpLakU52GvB58y4nO/hwHjmt+6sshbtTbD+Gi2Kqc
+	+JYqU/Q3Jwia9sfuYsQV3xtNTeP2nyDE9azMuoSh4OVjnH/r5oUBYzgbcptR4keLG1SQ56FihzU
+	fBDBMvZgfuIPmkhiEaXz0aLdBhS/LcgyhRw5nc/IDA8nmuksNc1OpD5lDj9ItWXIDzg==
+X-Gm-Gg: ASbGncuIQb0OOFPpytl8uqPGRx6dkRVOC5tLlkFSsNPKNv+bkJmwPAH7IWM1ORX8Dkm
+	tShEDTeuBYv+4M5gC4DojS/ZDesu5wtaeoQsQTqtQ/lcpNjTiwI85555L4XD750nCpDjV4JZnHE
+	wt932JTsy5KjxBcP7RzVtQZXeccE8Bzgj11P8PcuDmkqZXhvGNsHfkaxRbCXVyWf4fys+t7MlD8
+	2uLT5ToIES10ZLnp8tuxxm/5lzl5oXGWNgWyAvzz5Xe0Q1+O+R56ytCXwgDQ/ZXM2QGeRgCv0dH
+	frgrGZIEgov1tua0Laz7wG9ttkfxkvdKP0pBCOfBJEaOqMPyzd2ZRGUp/ZuPGyA2NjIRhnkJKcp
+	vk5Tz50vA611epSmEqp8z87kPqb7+pppsIrrPBHiYTxKTzSI=
+X-Received: by 2002:a05:600c:3585:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-453449eb6c3mr80479595e9.6.1750147367362;
+        Tue, 17 Jun 2025 01:02:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEZkUcDjppFvF6UekM3sVM0geBU8FX5I52LeqJH4OJZr9H+BAb4ebBGrUeMeZxWhMacxLbsFQ==
+X-Received: by 2002:a05:600c:3585:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-453449eb6c3mr80478975e9.6.1750147366828;
+        Tue, 17 Jun 2025 01:02:46 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a547d2sm13495403f8f.19.2025.06.17.01.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 01:02:46 -0700 (PDT)
+Message-ID: <044b01ff-2801-4f5b-ac3d-bc9fbd910aa0@redhat.com>
+Date: Tue, 17 Jun 2025 10:02:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] mm: Optimize mremap() by PTE batching
+To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
+Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, vbabka@suse.cz,
+ jannh@google.com, pfalcato@suse.de, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, peterx@redhat.com, ryan.roberts@arm.com,
+ mingo@kernel.org, libang.li@antgroup.com, maobibo@loongson.cn,
+ zhengqi.arch@bytedance.com, baohua@kernel.org, anshuman.khandual@arm.com,
+ willy@infradead.org, ioworker0@gmail.com, yang@os.amperecomputing.com,
+ baolin.wang@linux.alibaba.com, ziy@nvidia.com, hughd@google.com
+References: <20250610035043.75448-1-dev.jain@arm.com>
+ <20250610035043.75448-3-dev.jain@arm.com>
+ <43d9cb6e-1b8f-47b9-8c19-58fc7c74a71e@redhat.com>
+ <fe823cc1-e4d4-450f-889f-57339a4dd967@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <fe823cc1-e4d4-450f-889f-57339a4dd967@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-As we'll be importing netlink parser into a Sphinx extension,
-move all functions and global variables inside two classes:
 
-- RstFormatters, containing ReST formatter logic, which are
-  YAML independent;
-- YnlDocGenerator: contains the actual parser classes. That's
-  the only class that needs to be imported by the script or by
-  a Sphinx extension.
+>> -               pte = get_and_clear_full_ptes(mm, old_addr, old_ptep,
+>> nr_ptes, 0);
+>> -               pte = move_pte(pte, old_addr, new_addr);
+>> -               pte = move_soft_dirty_pte(pte);
+>> -
+>> -               if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
+>> -                       pte_clear(mm, new_addr, new_ptep);
+>> -               else {
+>> -                       if (need_clear_uffd_wp) {
+>> -                               if (pte_present(pte))
+>> -                                       pte = pte_clear_uffd_wp(pte);
+>> -                               else if (is_swap_pte(pte))
+>> +
+>> +                       pte = get_and_clear_full_ptes(mm, old_addr,
+>> old_ptep,
+>> +                                                     nr_ptes, 0);
+>> +                       /*
+>> +                        * Moving present PTEs requires special care
+>> on some
+>> +                        * archs.
+>> +                        */
+>> +                       pte = move_pte(pte, old_addr, new_addr);
+>> +                       /* make userspace aware that this pte moved. */
+>> +                       pte = pte_mksoft_dirty(pte);
+>> +                       if (need_clear_uffd_wp)
+>> +                               pte = pte_clear_uffd_wp(pte);
+>> +                       set_ptes(mm, new_addr, new_ptep, pte, nr_ptes);
+>> +               } else if (need_clear_uffd_wp &&
+>> pte_marker_uffd_wp(pte)) {
+>> +                       pte_clear(mm, old_addr, old_ptep);
+>> +               } else {
+>> +                       pte_clear(mm, old_addr, old_ptep);
+> 
+> Should pte_clear be included here? It is currently being done only for
+> the case
+> 
+> need_clear_uffd_wp && pte_marker_uffd_wp().
 
-With that, we won't pollute Sphinx namespace, avoiding any
-potential clashes.
+We always cleared the old pte (using get_and_clear_*, which is not 
+required if we already know that it is !present).
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- tools/net/ynl/pyynl/netlink_yml_parser.py | 594 +++++++++++-----------
- tools/net/ynl/pyynl/ynl_gen_rst.py        |  19 +-
- 2 files changed, 314 insertions(+), 299 deletions(-)
+The case you mean was what I describe here:
 
-diff --git a/tools/net/ynl/pyynl/netlink_yml_parser.py b/tools/net/ynl/pyynl/netlink_yml_parser.py
-index 3c15b578f947..839e78b39de3 100755
---- a/tools/net/ynl/pyynl/netlink_yml_parser.py
-+++ b/tools/net/ynl/pyynl/netlink_yml_parser.py
-@@ -3,389 +3,407 @@
- # -*- coding: utf-8; mode: python -*-
- 
- """
--    Script to auto generate the documentation for Netlink specifications.
-+    Class to auto generate the documentation for Netlink specifications.
- 
-     :copyright:  Copyright (C) 2023  Breno Leitao <leitao@debian.org>
-     :license:    GPL Version 2, June 1991 see linux/COPYING for details.
- 
--    This script performs extensive parsing to the Linux kernel's netlink YAML
-+    This class performs extensive parsing to the Linux kernel's netlink YAML
-     spec files, in an effort to avoid needing to heavily mark up the original
-     YAML file.
- 
--    This code is split in three big parts:
-+    This code is split in two classes:
-         1) RST formatters: Use to convert a string to a RST output
--        2) Parser helpers: Functions to parse the YAML data structure
--        3) Main function and small helpers
-+        2) YAML Netlink (YNL) doc generator: Generate docs from YAML data
- """
- 
- from typing import Any, Dict, List
- import os.path
-+import sys
-+import argparse
- import logging
- import yaml
- 
- 
--SPACE_PER_LEVEL = 4
--
--
-+# ==============
- # RST Formatters
- # ==============
--def headroom(level: int) -> str:
--    """Return space to format"""
--    return " " * (level * SPACE_PER_LEVEL)
-+class RstFormatters:
-+    SPACE_PER_LEVEL = 4
- 
-+    @staticmethod
-+    def headroom(level: int) -> str:
-+        """Return space to format"""
-+        return " " * (level * RstFormatters.SPACE_PER_LEVEL)
- 
--def bold(text: str) -> str:
--    """Format bold text"""
--    return f"**{text}**"
- 
-+    @staticmethod
-+    def bold(text: str) -> str:
-+        """Format bold text"""
-+        return f"**{text}**"
- 
--def inline(text: str) -> str:
--    """Format inline text"""
--    return f"``{text}``"
- 
-+    @staticmethod
-+    def inline(text: str) -> str:
-+        """Format inline text"""
-+        return f"``{text}``"
- 
--def sanitize(text: str) -> str:
--    """Remove newlines and multiple spaces"""
--    # This is useful for some fields that are spread across multiple lines
--    return str(text).replace("\n", " ").strip()
- 
-+    @staticmethod
-+    def sanitize(text: str) -> str:
-+        """Remove newlines and multiple spaces"""
-+        # This is useful for some fields that are spread across multiple lines
-+        return str(text).replace("\n", " ").strip()
- 
--def rst_fields(key: str, value: str, level: int = 0) -> str:
--    """Return a RST formatted field"""
--    return headroom(level) + f":{key}: {value}"
- 
-+    def rst_fields(self, key: str, value: str, level: int = 0) -> str:
-+        """Return a RST formatted field"""
-+        return self.headroom(level) + f":{key}: {value}"
- 
--def rst_definition(key: str, value: Any, level: int = 0) -> str:
--    """Format a single rst definition"""
--    return headroom(level) + key + "\n" + headroom(level + 1) + str(value)
- 
-+    def rst_definition(self, key: str, value: Any, level: int = 0) -> str:
-+        """Format a single rst definition"""
-+        return self.headroom(level) + key + "\n" + self.headroom(level + 1) + str(value)
- 
--def rst_paragraph(paragraph: str, level: int = 0) -> str:
--    """Return a formatted paragraph"""
--    return headroom(level) + paragraph
- 
-+    def rst_paragraph(self, paragraph: str, level: int = 0) -> str:
-+        """Return a formatted paragraph"""
-+        return self.headroom(level) + paragraph
- 
--def rst_bullet(item: str, level: int = 0) -> str:
--    """Return a formatted a bullet"""
--    return headroom(level) + f"- {item}"
- 
-+    def rst_bullet(self, item: str, level: int = 0) -> str:
-+        """Return a formatted a bullet"""
-+        return self.headroom(level) + f"- {item}"
- 
--def rst_subsection(title: str) -> str:
--    """Add a sub-section to the document"""
--    return f"{title}\n" + "-" * len(title)
- 
-+    @staticmethod
-+    def rst_subsection(title: str) -> str:
-+        """Add a sub-section to the document"""
-+        return f"{title}\n" + "-" * len(title)
- 
--def rst_subsubsection(title: str) -> str:
--    """Add a sub-sub-section to the document"""
--    return f"{title}\n" + "~" * len(title)
- 
-+    @staticmethod
-+    def rst_subsubsection(title: str) -> str:
-+        """Add a sub-sub-section to the document"""
-+        return f"{title}\n" + "~" * len(title)
- 
--def rst_section(namespace: str, prefix: str, title: str) -> str:
--    """Add a section to the document"""
--    return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
- 
-+    @staticmethod
-+    def rst_section(namespace: str, prefix: str, title: str) -> str:
-+        """Add a section to the document"""
-+        return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
- 
--def rst_subtitle(title: str) -> str:
--    """Add a subtitle to the document"""
--    return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
- 
-+    @staticmethod
-+    def rst_subtitle(title: str) -> str:
-+        """Add a subtitle to the document"""
-+        return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
- 
--def rst_title(title: str) -> str:
--    """Add a title to the document"""
--    return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
- 
-+    @staticmethod
-+    def rst_title(title: str) -> str:
-+        """Add a title to the document"""
-+        return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
- 
--def rst_list_inline(list_: List[str], level: int = 0) -> str:
--    """Format a list using inlines"""
--    return headroom(level) + "[" + ", ".join(inline(i) for i in list_) + "]"
- 
-+    def rst_list_inline(self, list_: List[str], level: int = 0) -> str:
-+        """Format a list using inlines"""
-+        return self.headroom(level) + "[" + ", ".join(self.inline(i) for i in list_) + "]"
- 
--def rst_ref(namespace: str, prefix: str, name: str) -> str:
--    """Add a hyperlink to the document"""
--    mappings = {'enum': 'definition',
--                'fixed-header': 'definition',
--                'nested-attributes': 'attribute-set',
--                'struct': 'definition'}
--    if prefix in mappings:
--        prefix = mappings[prefix]
--    return f":ref:`{namespace}-{prefix}-{name}`"
- 
-+    @staticmethod
-+    def rst_ref(namespace: str, prefix: str, name: str) -> str:
-+        """Add a hyperlink to the document"""
-+        mappings = {'enum': 'definition',
-+                    'fixed-header': 'definition',
-+                    'nested-attributes': 'attribute-set',
-+                    'struct': 'definition'}
-+        if prefix in mappings:
-+            prefix = mappings[prefix]
-+        return f":ref:`{namespace}-{prefix}-{name}`"
- 
--def rst_header() -> str:
--    """The headers for all the auto generated RST files"""
--    lines = []
- 
--    lines.append(rst_paragraph(".. SPDX-License-Identifier: GPL-2.0"))
--    lines.append(rst_paragraph(".. NOTE: This document was auto-generated.\n\n"))
-+    def rst_header(self) -> str:
-+        """The headers for all the auto generated RST files"""
-+        lines = []
- 
--    return "\n".join(lines)
-+        lines.append(self.rst_paragraph(".. SPDX-License-Identifier: GPL-2.0"))
-+        lines.append(self.rst_paragraph(".. NOTE: This document was auto-generated.\n\n"))
- 
-+        return "\n".join(lines)
- 
--def rst_toctree(maxdepth: int = 2) -> str:
--    """Generate a toctree RST primitive"""
--    lines = []
- 
--    lines.append(".. toctree::")
--    lines.append(f"   :maxdepth: {maxdepth}\n\n")
-+    @staticmethod
-+    def rst_toctree(maxdepth: int = 2) -> str:
-+        """Generate a toctree RST primitive"""
-+        lines = []
- 
--    return "\n".join(lines)
-+        lines.append(".. toctree::")
-+        lines.append(f"   :maxdepth: {maxdepth}\n\n")
- 
-+        return "\n".join(lines)
- 
--def rst_label(title: str) -> str:
--    """Return a formatted label"""
--    return f".. _{title}:\n\n"
- 
-+    @staticmethod
-+    def rst_label(title: str) -> str:
-+        """Return a formatted label"""
-+        return f".. _{title}:\n\n"
- 
-+# =======
- # Parsers
- # =======
-+class YnlDocGenerator:
-+
-+    fmt = RstFormatters()
-+
-+    def parse_mcast_group(self, mcast_group: List[Dict[str, Any]]) -> str:
-+        """Parse 'multicast' group list and return a formatted string"""
-+        lines = []
-+        for group in mcast_group:
-+            lines.append(self.fmt.rst_bullet(group["name"]))
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_do(self, do_dict: Dict[str, Any], level: int = 0) -> str:
-+        """Parse 'do' section and return a formatted string"""
-+        lines = []
-+        for key in do_dict.keys():
-+            lines.append(self.fmt.rst_paragraph(self.fmt.bold(key), level + 1))
-+            if key in ['request', 'reply']:
-+                lines.append(self.parse_do_attributes(do_dict[key], level + 1) + "\n")
-+            else:
-+                lines.append(self.fmt.headroom(level + 2) + do_dict[key] + "\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_do_attributes(self, attrs: Dict[str, Any], level: int = 0) -> str:
-+        """Parse 'attributes' section"""
-+        if "attributes" not in attrs:
-+            return ""
-+        lines = [self.fmt.rst_fields("attributes", self.fmt.rst_list_inline(attrs["attributes"]), level + 1)]
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_operations(self, operations: List[Dict[str, Any]], namespace: str) -> str:
-+        """Parse operations block"""
-+        preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
-+        linkable = ["fixed-header", "attribute-set"]
-+        lines = []
-+
-+        for operation in operations:
-+            lines.append(self.fmt.rst_section(namespace, 'operation', operation["name"]))
-+            lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
-+
-+            for key in operation.keys():
-+                if key in preprocessed:
-+                    # Skip the special fields
-+                    continue
-+                value = operation[key]
-+                if key in linkable:
-+                    value = self.fmt.rst_ref(namespace, key, value)
-+                lines.append(self.fmt.rst_fields(key, value, 0))
-+            if 'flags' in operation:
-+                lines.append(self.fmt.rst_fields('flags', self.fmt.rst_list_inline(operation['flags'])))
-+
-+            if "do" in operation:
-+                lines.append(self.fmt.rst_paragraph(":do:", 0))
-+                lines.append(self.parse_do(operation["do"], 0))
-+            if "dump" in operation:
-+                lines.append(self.fmt.rst_paragraph(":dump:", 0))
-+                lines.append(self.parse_do(operation["dump"], 0))
-+
-+            # New line after fields
-+            lines.append("\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_entries(self, entries: List[Dict[str, Any]], level: int) -> str:
-+        """Parse a list of entries"""
-+        ignored = ["pad"]
-+        lines = []
-+        for entry in entries:
-+            if isinstance(entry, dict):
-+                # entries could be a list or a dictionary
-+                field_name = entry.get("name", "")
-+                if field_name in ignored:
-+                    continue
-+                type_ = entry.get("type")
-+                if type_:
-+                    field_name += f" ({self.fmt.inline(type_)})"
-+                lines.append(
-+                    self.fmt.rst_fields(field_name, self.fmt.sanitize(entry.get("doc", "")), level)
-+                )
-+            elif isinstance(entry, list):
-+                lines.append(self.fmt.rst_list_inline(entry, level))
-+            else:
-+                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)), level))
- 
-+        lines.append("\n")
-+        return "\n".join(lines)
- 
--def parse_mcast_group(mcast_group: List[Dict[str, Any]]) -> str:
--    """Parse 'multicast' group list and return a formatted string"""
--    lines = []
--    for group in mcast_group:
--        lines.append(rst_bullet(group["name"]))
--
--    return "\n".join(lines)
--
--
--def parse_do(do_dict: Dict[str, Any], level: int = 0) -> str:
--    """Parse 'do' section and return a formatted string"""
--    lines = []
--    for key in do_dict.keys():
--        lines.append(rst_paragraph(bold(key), level + 1))
--        if key in ['request', 'reply']:
--            lines.append(parse_do_attributes(do_dict[key], level + 1) + "\n")
--        else:
--            lines.append(headroom(level + 2) + do_dict[key] + "\n")
--
--    return "\n".join(lines)
--
--
--def parse_do_attributes(attrs: Dict[str, Any], level: int = 0) -> str:
--    """Parse 'attributes' section"""
--    if "attributes" not in attrs:
--        return ""
--    lines = [rst_fields("attributes", rst_list_inline(attrs["attributes"]), level + 1)]
--
--    return "\n".join(lines)
--
--
--def parse_operations(operations: List[Dict[str, Any]], namespace: str) -> str:
--    """Parse operations block"""
--    preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
--    linkable = ["fixed-header", "attribute-set"]
--    lines = []
--
--    for operation in operations:
--        lines.append(rst_section(namespace, 'operation', operation["name"]))
--        lines.append(rst_paragraph(operation["doc"]) + "\n")
--
--        for key in operation.keys():
--            if key in preprocessed:
--                # Skip the special fields
--                continue
--            value = operation[key]
--            if key in linkable:
--                value = rst_ref(namespace, key, value)
--            lines.append(rst_fields(key, value, 0))
--        if 'flags' in operation:
--            lines.append(rst_fields('flags', rst_list_inline(operation['flags'])))
--
--        if "do" in operation:
--            lines.append(rst_paragraph(":do:", 0))
--            lines.append(parse_do(operation["do"], 0))
--        if "dump" in operation:
--            lines.append(rst_paragraph(":dump:", 0))
--            lines.append(parse_do(operation["dump"], 0))
- 
--        # New line after fields
--        lines.append("\n")
-+    def parse_definitions(self, defs: Dict[str, Any], namespace: str) -> str:
-+        """Parse definitions section"""
-+        preprocessed = ["name", "entries", "members"]
-+        ignored = ["render-max"]  # This is not printed
-+        lines = []
- 
--    return "\n".join(lines)
--
--
--def parse_entries(entries: List[Dict[str, Any]], level: int) -> str:
--    """Parse a list of entries"""
--    ignored = ["pad"]
--    lines = []
--    for entry in entries:
--        if isinstance(entry, dict):
--            # entries could be a list or a dictionary
--            field_name = entry.get("name", "")
--            if field_name in ignored:
--                continue
--            type_ = entry.get("type")
--            if type_:
--                field_name += f" ({inline(type_)})"
--            lines.append(
--                rst_fields(field_name, sanitize(entry.get("doc", "")), level)
--            )
--        elif isinstance(entry, list):
--            lines.append(rst_list_inline(entry, level))
--        else:
--            lines.append(rst_bullet(inline(sanitize(entry)), level))
--
--    lines.append("\n")
--    return "\n".join(lines)
--
--
--def parse_definitions(defs: Dict[str, Any], namespace: str) -> str:
--    """Parse definitions section"""
--    preprocessed = ["name", "entries", "members"]
--    ignored = ["render-max"]  # This is not printed
--    lines = []
--
--    for definition in defs:
--        lines.append(rst_section(namespace, 'definition', definition["name"]))
--        for k in definition.keys():
--            if k in preprocessed + ignored:
--                continue
--            lines.append(rst_fields(k, sanitize(definition[k]), 0))
--
--        # Field list needs to finish with a new line
--        lines.append("\n")
--        if "entries" in definition:
--            lines.append(rst_paragraph(":entries:", 0))
--            lines.append(parse_entries(definition["entries"], 1))
--        if "members" in definition:
--            lines.append(rst_paragraph(":members:", 0))
--            lines.append(parse_entries(definition["members"], 1))
--
--    return "\n".join(lines)
--
--
--def parse_attr_sets(entries: List[Dict[str, Any]], namespace: str) -> str:
--    """Parse attribute from attribute-set"""
--    preprocessed = ["name", "type"]
--    linkable = ["enum", "nested-attributes", "struct", "sub-message"]
--    ignored = ["checks"]
--    lines = []
--
--    for entry in entries:
--        lines.append(rst_section(namespace, 'attribute-set', entry["name"]))
--        for attr in entry["attributes"]:
--            type_ = attr.get("type")
--            attr_line = attr["name"]
--            if type_:
--                # Add the attribute type in the same line
--                attr_line += f" ({inline(type_)})"
--
--            lines.append(rst_subsubsection(attr_line))
--
--            for k in attr.keys():
-+        for definition in defs:
-+            lines.append(self.fmt.rst_section(namespace, 'definition', definition["name"]))
-+            for k in definition.keys():
-                 if k in preprocessed + ignored:
-                     continue
--                if k in linkable:
--                    value = rst_ref(namespace, k, attr[k])
--                else:
--                    value = sanitize(attr[k])
--                lines.append(rst_fields(k, value, 0))
-+                lines.append(self.fmt.rst_fields(k, self.fmt.sanitize(definition[k]), 0))
-+
-+            # Field list needs to finish with a new line
-             lines.append("\n")
-+            if "entries" in definition:
-+                lines.append(self.fmt.rst_paragraph(":entries:", 0))
-+                lines.append(self.parse_entries(definition["entries"], 1))
-+            if "members" in definition:
-+                lines.append(self.fmt.rst_paragraph(":members:", 0))
-+                lines.append(self.parse_entries(definition["members"], 1))
- 
--    return "\n".join(lines)
-+        return "\n".join(lines)
- 
- 
--def parse_sub_messages(entries: List[Dict[str, Any]], namespace: str) -> str:
--    """Parse sub-message definitions"""
--    lines = []
-+    def parse_attr_sets(self, entries: List[Dict[str, Any]], namespace: str) -> str:
-+        """Parse attribute from attribute-set"""
-+        preprocessed = ["name", "type"]
-+        linkable = ["enum", "nested-attributes", "struct", "sub-message"]
-+        ignored = ["checks"]
-+        lines = []
- 
--    for entry in entries:
--        lines.append(rst_section(namespace, 'sub-message', entry["name"]))
--        for fmt in entry["formats"]:
--            value = fmt["value"]
-+        for entry in entries:
-+            lines.append(self.fmt.rst_section(namespace, 'attribute-set', entry["name"]))
-+            for attr in entry["attributes"]:
-+                type_ = attr.get("type")
-+                attr_line = attr["name"]
-+                if type_:
-+                    # Add the attribute type in the same line
-+                    attr_line += f" ({self.fmt.inline(type_)})"
- 
--            lines.append(rst_bullet(bold(value)))
--            for attr in ['fixed-header', 'attribute-set']:
--                if attr in fmt:
--                    lines.append(rst_fields(attr,
--                                            rst_ref(namespace, attr, fmt[attr]),
--                                            1))
--            lines.append("\n")
-+                lines.append(self.fmt.rst_subsubsection(attr_line))
-+
-+                for k in attr.keys():
-+                    if k in preprocessed + ignored:
-+                        continue
-+                    if k in linkable:
-+                        value = self.fmt.rst_ref(namespace, k, attr[k])
-+                    else:
-+                        value = self.fmt.sanitize(attr[k])
-+                    lines.append(self.fmt.rst_fields(k, value, 0))
-+                lines.append("\n")
-+
-+        return "\n".join(lines)
-+
-+
-+    def parse_sub_messages(self, entries: List[Dict[str, Any]], namespace: str) -> str:
-+        """Parse sub-message definitions"""
-+        lines = []
-+
-+        for entry in entries:
-+            lines.append(self.fmt.rst_section(namespace, 'sub-message', entry["name"]))
-+            for fmt in entry["formats"]:
-+                value = fmt["value"]
-+
-+                lines.append(self.fmt.rst_bullet(self.fmt.bold(value)))
-+                for attr in ['fixed-header', 'attribute-set']:
-+                    if attr in fmt:
-+                        lines.append(self.fmt.rst_fields(attr,
-+                                                self.fmt.rst_ref(namespace, attr, fmt[attr]),
-+                                                1))
-+                lines.append("\n")
-+
-+        return "\n".join(lines)
- 
--    return "\n".join(lines)
- 
-+    def parse_yaml(self, obj: Dict[str, Any]) -> str:
-+        """Format the whole YAML into a RST string"""
-+        lines = []
- 
--def parse_yaml(obj: Dict[str, Any]) -> str:
--    """Format the whole YAML into a RST string"""
--    lines = []
-+        # Main header
- 
--    # Main header
-+        family = obj['name']
- 
--    family = obj['name']
-+        lines.append(self.fmt.rst_header())
-+        lines.append(self.fmt.rst_label("netlink-" + family))
- 
--    lines.append(rst_header())
--    lines.append(rst_label("netlink-" + family))
-+        title = f"Family ``{family}`` netlink specification"
-+        lines.append(self.fmt.rst_title(title))
-+        lines.append(self.fmt.rst_paragraph(".. contents:: :depth: 3\n"))
- 
--    title = f"Family ``{family}`` netlink specification"
--    lines.append(rst_title(title))
--    lines.append(rst_paragraph(".. contents:: :depth: 3\n"))
-+        if "doc" in obj:
-+            lines.append(self.fmt.rst_subtitle("Summary"))
-+            lines.append(self.fmt.rst_paragraph(obj["doc"], 0))
- 
--    if "doc" in obj:
--        lines.append(rst_subtitle("Summary"))
--        lines.append(rst_paragraph(obj["doc"], 0))
-+        # Operations
-+        if "operations" in obj:
-+            lines.append(self.fmt.rst_subtitle("Operations"))
-+            lines.append(self.parse_operations(obj["operations"]["list"], family))
- 
--    # Operations
--    if "operations" in obj:
--        lines.append(rst_subtitle("Operations"))
--        lines.append(parse_operations(obj["operations"]["list"], family))
-+        # Multicast groups
-+        if "mcast-groups" in obj:
-+            lines.append(self.fmt.rst_subtitle("Multicast groups"))
-+            lines.append(self.parse_mcast_group(obj["mcast-groups"]["list"]))
- 
--    # Multicast groups
--    if "mcast-groups" in obj:
--        lines.append(rst_subtitle("Multicast groups"))
--        lines.append(parse_mcast_group(obj["mcast-groups"]["list"]))
-+        # Definitions
-+        if "definitions" in obj:
-+            lines.append(self.fmt.rst_subtitle("Definitions"))
-+            lines.append(self.parse_definitions(obj["definitions"], family))
- 
--    # Definitions
--    if "definitions" in obj:
--        lines.append(rst_subtitle("Definitions"))
--        lines.append(parse_definitions(obj["definitions"], family))
-+        # Attributes set
-+        if "attribute-sets" in obj:
-+            lines.append(self.fmt.rst_subtitle("Attribute sets"))
-+            lines.append(self.parse_attr_sets(obj["attribute-sets"], family))
- 
--    # Attributes set
--    if "attribute-sets" in obj:
--        lines.append(rst_subtitle("Attribute sets"))
--        lines.append(parse_attr_sets(obj["attribute-sets"], family))
-+        # Sub-messages
-+        if "sub-messages" in obj:
-+            lines.append(self.fmt.rst_subtitle("Sub-messages"))
-+            lines.append(self.parse_sub_messages(obj["sub-messages"], family))
- 
--    # Sub-messages
--    if "sub-messages" in obj:
--        lines.append(rst_subtitle("Sub-messages"))
--        lines.append(parse_sub_messages(obj["sub-messages"], family))
-+        return "\n".join(lines)
- 
--    return "\n".join(lines)
- 
-+    # Main functions
-+    # ==============
- 
--# Main functions
--# ==============
- 
-+    def parse_yaml_file(self, filename: str) -> str:
-+        """Transform the YAML specified by filename into an RST-formatted string"""
-+        with open(filename, "r", encoding="utf-8") as spec_file:
-+            yaml_data = yaml.safe_load(spec_file)
-+            content = self.parse_yaml(yaml_data)
- 
--def parse_yaml_file(filename: str) -> str:
--    """Transform the YAML specified by filename into an RST-formatted string"""
--    with open(filename, "r", encoding="utf-8") as spec_file:
--        yaml_data = yaml.safe_load(spec_file)
--        content = parse_yaml(yaml_data)
-+        return content
- 
--    return content
- 
-+    def generate_main_index_rst(self, output: str, index_dir: str) -> None:
-+        """Generate the `networking_spec/index` content and write to the file"""
-+        lines = []
- 
--def generate_main_index_rst(output: str, index_dir: str) -> str:
--    """Generate the `networking_spec/index` content and write to the file"""
--    lines = []
-+        lines.append(self.fmt.rst_header())
-+        lines.append(self.fmt.rst_label("specs"))
-+        lines.append(self.fmt.rst_title("Netlink Family Specifications"))
-+        lines.append(self.fmt.rst_toctree(1))
- 
--    lines.append(rst_header())
--    lines.append(rst_label("specs"))
--    lines.append(rst_title("Netlink Family Specifications"))
--    lines.append(rst_toctree(1))
-+        index_fname = os.path.basename(output)
-+        base, ext = os.path.splitext(index_fname)
- 
--    index_fname = os.path.basename(output)
--    base, ext = os.path.splitext(index_fname)
-+        if not index_dir:
-+            index_dir = os.path.dirname(output)
- 
--    if not index_dir:
--        index_dir = os.path.dirname(output)
-+        logging.debug(f"Looking for {ext} files in %s", index_dir)
-+        for filename in sorted(os.listdir(index_dir)):
-+            if not filename.endswith(ext) or filename == index_fname:
-+                continue
-+            base, ext = os.path.splitext(filename)
-+            lines.append(f"   {base}\n")
- 
--    logging.debug(f"Looking for {ext} files in %s", index_dir)
--    for filename in sorted(os.listdir(index_dir)):
--        if not filename.endswith(ext) or filename == index_fname:
--            continue
--        base, ext = os.path.splitext(filename)
--        lines.append(f"   {base}\n")
-+        logging.debug("Writing an index file at %s", output)
- 
--    return "".join(lines), output
-+        return "".join(lines)
-diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-index 38dafe3d9179..624b0960476e 100755
---- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-+++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-@@ -10,12 +10,7 @@
- 
-     This script performs extensive parsing to the Linux kernel's netlink YAML
-     spec files, in an effort to avoid needing to heavily mark up the original
--    YAML file.
--
--    This code is split in three big parts:
--        1) RST formatters: Use to convert a string to a RST output
--        2) Parser helpers: Functions to parse the YAML data structure
--        3) Main function and small helpers
-+    YAML file. It uses the library code from scripts/lib.
- """
- 
- import os.path
-@@ -28,7 +23,7 @@ SRC_DIR = os.path.dirname(os.path.realpath(__file__))
- 
- sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
- 
--from netlink_yml_parser import parse_yaml_file, generate_main_index_rst
-+from netlink_yml_parser import YnlDocGenerator
- 
- 
- def parse_arguments() -> argparse.Namespace:
-@@ -76,10 +71,10 @@ def write_to_rstfile(content: str, filename: str) -> None:
-         rst_file.write(content)
- 
- 
--def write_index_rst(output: str, index_dir: str) -> None:
-+def write_index_rst(parser: YnlDocGenerator, output: str, index_dir: str) -> None:
-     """Generate the `networking_spec/index` content and write to the file"""
- 
--    msg = generate_main_index_rst(output, index_dir)
-+    msg = parser.generate_main_index_rst(output, index_dir)
- 
-     logging.debug("Writing an index file at %s", output)
-     write_to_rstfile(msg, output)
-@@ -90,10 +85,12 @@ def main() -> None:
- 
-     args = parse_arguments()
- 
-+    parser = YnlDocGenerator()
-+
-     if args.input:
-         logging.debug("Parsing %s", args.input)
-         try:
--            content = parse_yaml_file(os.path.join(args.input))
-+            content = parser.parse_yaml_file(os.path.join(args.input))
-         except Exception as exception:
-             logging.warning("Failed to parse %s.", args.input)
-             logging.warning(exception)
-@@ -103,7 +100,7 @@ def main() -> None:
- 
-     if args.index:
-         # Generate the index RST file
--        write_index_rst(args.output, args.input_dir)
-+        write_index_rst(parser, args.output, args.input_dir)
- 
- 
- if __name__ == "__main__":
+>>
+>>
+>>
+>> Note that I don't know why we had the existing
+>>
+>> -               if (need_clear_uffd_wp && pte_marker_uffd_wp(pte))
+>> -                       pte_clear(mm, new_addr, new_ptep);
+>>
+>>
+>> I thought we would always expect that the destination pte is already
+>> pte_none() ?
+
+So clearing the destination PTE can be dropped if we didn't move in the 
+first place.
+
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
