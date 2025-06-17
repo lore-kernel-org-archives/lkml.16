@@ -1,66 +1,108 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A119B2CA9;
-	Tue, 17 Jun 2025 04:46:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36502CA9;
+	Tue, 17 Jun 2025 04:46:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750135592; cv=none; b=P/wBs10F8x1r+UoxQcIdC87har1MFFzKAOPa9E+rd52m9ea1FU9b9z90w4pv+2lnK9+c2aYJgTpGNj8RB7TQbrbS5XwNAZuUeolRGblOdQZHGc75TEr37FdPSFI1sfHa5k+ke/UEcepSJWggVUsx0PabsMvbPavv+ZZtFrlOtiY=
+	t=1750135606; cv=none; b=aW82af2e3VwnNqNCcd3+k5tmdHvGVHWhzF8Vwomss/zCkSYQPlRBpZnkFVqVxI3p7QNxvoWkXZ/Lu944MCe06vh9bwC4xiTUiIdZ6yMJAlckZ5gCnWCAt067YvcUh9cpRSnvZ5nEtFLvWBGpUnIxAX3NchFqkYnhVIAmNW6ad6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750135592; c=relaxed/simple;
-	bh=uaIQ0uIzsqVYLwBrVtD7gETmN2xXO6XDLiJQ0hFgb8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fBq1DsDFYpAxJpi+47im/x2zCUcOo+oAc1H30uBf7k+SRKnerXuo/QNLaXDasW64prVEd1pbyhbzYeymlMmMEc8Bc6v9cHUPRFB8/q7OEU64t7X4ofoMUy5TdGfElpXjKQGiCdmI9DHMfZw0V2EjXxO8NOEL5ZzkbQ9e0/cuH5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 063D768D0E; Tue, 17 Jun 2025 06:46:26 +0200 (CEST)
-Date: Tue, 17 Jun 2025 06:46:25 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Carlos Maiolino <cem@kernel.org>,
-	"Darrick J. Wong" <djwong@kernel.org>
-Subject: Re: [PATCH 07/14] xfs: ifdef out unused xfs_attr events
-Message-ID: <20250617044625.GD1824@lst.de>
-References: <20250612212405.877692069@goodmis.org> <20250612212635.748779142@goodmis.org> <20250616052810.GB1148@lst.de> <20250616105214.797509de@batman.local.home>
+	s=arc-20240116; t=1750135606; c=relaxed/simple;
+	bh=T1FS5bOw12EMeQrXS4zYruYJW1j/vmZ5iYm5L4YXz0U=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=ZU/9olDIa1IkLM+Y4a0/jI4BXqptY5/Xo/H6VW1zC3i5VQFmSjbwFlSoNhlh2sYsCSw38D9oi7d8ZrzvrupZF2bIbQt5+cew2NukmAxsOaDZtTXJt+wsUV5ZyHlL8KytN819S8KbggTfAAW8a7woRxhceksPC2cQeEsQqJlUzXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=UM6LQH/z; arc=none smtp.client-ip=162.62.57.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="UM6LQH/z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750135295; bh=h6NaYKLpNKZfedR+1l0CbMwHGilSw7Fyy67VZ3T6rO4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UM6LQH/zrFgEnXgxH0oW4lHq1lP6ezo2+WTsgXcMxoei0ZuHQRXKRShXuI8NysgJZ
+	 zolLsSOcqHhzabjpaO56/lrxYRreToorvC40m16DxGu+zhVfxZnUEpSXOTakIwIrZU
+	 dCk270X3WZNK81Rq5zzhK7Rfu7BEPJRFEpbGloAs=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id A6100AFD; Tue, 17 Jun 2025 12:41:33 +0800
+X-QQ-mid: xmsmtpt1750135293tb58raf7j
+Message-ID: <tencent_8DCFF079526DB42E796E5095C0E8E2EE1E0A@qq.com>
+X-QQ-XMAILINFO: MmPNY57tR1XncdsREuesUUT9jLDeIPY6j+Ui4GFkCoT2SKGK35ah+McYra3Si5
+	 aq7fOqoG50h8Y6kzkzeK4cm0qUQ3EEtEWHtCYvHPVv6BafqNf+ZI1egQA74x9mHKn7bqax0NH7MY
+	 SnlVECdkWL/LexD4ATPZl/+t8KCfimyXq0XZDGL9/Qb+wrl/HD7wCYteoAHhah3mPh5CZoFMPK+2
+	 4Wgh4sGrhzPBEELxk90Us+1Gmdu8n5CfATV5XtVFWO5FMdmf0ba0B8xfYw8K8iTFVT5Jtet2bcH1
+	 v1AqSxtwyADnkBc1MRDR4MoZEGKDulvmOTIviKlCSqnzDg3rknaZt+ovIDCvgvotzd5e/+alTgTl
+	 ltK6lvMZsWuYhE7Y7BYiBu345GaR6p32AggZA1PVmGJ6nUXlYYVHaSsoReoozR2AysAN9EaNrhpI
+	 DXw+MlVaEfhAAv4wYHGgfkNnxInJI5iswtPoiilAo7KaZCiiUNTrpoBX/12baaWRFaDzvXEZtH+t
+	 zZtMv4fJ4Ba26m5jppWgWiwgu9QCorxJCyjIqmsIuld3Qn47T6BmQXokTmSWTiN/vbS5PKDRAqGh
+	 TWNvsxc5E3YjgJkg7ZF7YcuvhUYTSRU2AIfpAQ4NmxMYUeW7yC+7P4jv3YZXJ4Qs7JB6gAjHkQqc
+	 Zzp6Yoz9XtnND8/fb/1YfOFePZ/c/c+X+18SpYNb74sm/CdyAB0GD2I4i86J49pRZQeVv4Ovd6VX
+	 IMTedDFcQfaUD+ui9Bh/luRrYV+FSJzqqDw5O9wZ+j4+XA2LwQKTVCi4h0eoeQDaM75bW5Ee5i5h
+	 wS6F0/t5NhAI/TkIqZ8rSVLCB6anfoPrbfW9fnmc8fTrgqeXiJWdfCZUl7o64X7/EQVOxaRCuzsS
+	 Q2cYW6nQxDAF038Jmyy93uNug9wbPAOKu+j+jpuXeYjvjttHD1LPRfjdIO3+NInMuWAGyd+7M8Nc
+	 +xmg77AzMa4cfrB7AU4bBny3S0CSqv
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+Cc: johannes@sipsolutions.net,
+	linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] wifi: mac80211: fix oob in ieee80211_rx_mgmt_beacon
+Date: Tue, 17 Jun 2025 12:41:33 +0800
+X-OQ-MSGID: <20250617044133.408443-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <68504add.a70a0220.395abc.01e7.GAE@google.com>
+References: <68504add.a70a0220.395abc.01e7.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616105214.797509de@batman.local.home>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 10:52:14AM -0400, Steven Rostedt wrote:
-> On Mon, 16 Jun 2025 07:28:10 +0200
-> Christoph Hellwig <hch@lst.de> wrote:
-> 
-> > On Thu, Jun 12, 2025 at 05:24:12PM -0400, Steven Rostedt wrote:
-> > > From: Steven Rostedt <rostedt@goodmis.org>
-> > > 
-> > > Trace events can take up to 5K in memory for text and meta data per event
-> > > regardless if they are used or not, so they should not be defined when not
-> > > used. The events xfs_attr_fillstate and xfs_attr_refillstate are only
-> > > called in code that is #ifdef out and exists only for future reference.
-> > > 
-> > > Ifdef out the events that go with that code and add a comment mentioning
-> > > the other code.  
-> > 
-> > Just drop them entirely, which is what the code using them should
-> > have done as well.  We can always triviall bring back code from
-> > git history.
-> 
-> OK. But I'll only send a patch to delete the trace events. I'll let
-> someone else remove the actual code.
+According to ieee80211_s1g_optional_len(), it can be clearly seen that the
+maximum size of variable is 4 and it is an array. Based on the above, the
+parsing of the frame control field and optional field is optimized.
 
-Yeah, no need for you to fix up the other code.
+Fixes: 1e1f706fc2ce ("wifi: cfg80211/mac80211: correctly parse S1G beacon optional elements")
+Reported-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=6554b492c7008bcd3385
+Tested-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ include/linux/ieee80211.h | 2 +-
+ net/mac80211/mlme.c       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+index ce377f7fb912..556ce95e0b0f 100644
+--- a/include/linux/ieee80211.h
++++ b/include/linux/ieee80211.h
+@@ -1278,7 +1278,7 @@ struct ieee80211_ext {
+ 			u8 sa[ETH_ALEN];
+ 			__le32 timestamp;
+ 			u8 change_seq;
+-			u8 variable[0];
++			u8 variable[4];
+ 		} __packed s1g_beacon;
+ 	} u;
+ } __packed __aligned(2);
+diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
+index 2d46d4af60d7..fb7bf95ee87b 100644
+--- a/net/mac80211/mlme.c
++++ b/net/mac80211/mlme.c
+@@ -7222,7 +7222,7 @@ static void ieee80211_rx_mgmt_beacon(struct ieee80211_link_data *link,
+ 	if (ieee80211_is_s1g_beacon(mgmt->frame_control)) {
+ 		struct ieee80211_ext *ext = (void *) mgmt;
+ 		variable = ext->u.s1g_beacon.variable +
+-			   ieee80211_s1g_optional_len(ext->frame_control);
++			   (ieee80211_s1g_optional_len(ext->frame_control) - 1);
+ 	}
+ 
+ 	baselen = (u8 *) variable - (u8 *) mgmt;
+-- 
+2.43.0
 
