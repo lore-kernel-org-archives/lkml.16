@@ -1,173 +1,78 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219662E424C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD1C2BEC3F;
+	Tue, 17 Jun 2025 09:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153813; cv=none; b=fy7yXBeSQBCG8jOBPD3C02HDazeXovca6Sy12TPEyTTm/d8EWBZPf1j+kDHWcWW+qu5NHuBN6tBfvlp84BfXTiaVFmND+N+fnSc1/LSgh6iRfpNd068PyVW7qRUnR68v2LNSNaYq5ErRX/5sjsDJPVcfjDX7vWJV/2I7FhMd3k8=
+	t=1750153818; cv=none; b=odDmQfOVhTYHbryTC5FfVvnB3LtXfTbavi13TLPQVxkAbdI5cyEn9aUvpFt7dnSaFzt9/B+gwMxTo/XSNM0LLrSiuxMtmV3a/JW+TOZt5ggkCs5SA77Uw0XelJxo5j2j1Q/rZIWS2aj1X3qC5ivaSRtSrIlbUKbf2KQiDnRtfFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153813; c=relaxed/simple;
-	bh=aF1Z+V8cSTppxaNsZeCgq5XdFu67jukK5nsS21oN+5M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=eKNp6E0rQR/krC/Rpddt+QjY8o/uVrLZhIFyMe4+Kt5YCOtje1efMoWDLky2LVvGyvi1OS2jFNgHE1jMqUVPfIiP1qPISVIinTjAbir1I/AE5Gie+E7fkKgBzPrd7GQFcRCwn9EpwItKvzrC8vFb4PZyOKgnnWW9wyMqUHLQKa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uRSwt-0005es-0H; Tue, 17 Jun 2025 11:49:47 +0200
-Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uRSws-003x4s-0N;
-	Tue, 17 Jun 2025 11:49:46 +0200
-Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uRSws-00FBer-02;
-	Tue, 17 Jun 2025 11:49:46 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Sebastian Reichel <sre@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org,
-	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
-	Guenter Roeck <groeck@chromium.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	chrome-platform@lists.linux.dev
-Subject: [PATCH v10 0/7] Introduction of PSCR Framework and Related Components
-Date: Tue, 17 Jun 2025 11:49:38 +0200
-Message-Id: <20250617094945.3619360-1-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750153818; c=relaxed/simple;
+	bh=YH8snW+HQzPkJeXMoGvcgRiLRIoHK3vIXAy0/dbKPZI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JhASUgrFWdJQhFQVsoakRELqk6gfu5bytzxQjCaFxL267vgv/Yeqm6swIOpyMbsyn3Bdzzji4zAiJxVRQyE/3dAuxUZbMxK1iChu+aMFXm2nUeih+l9BKhU0lqrThrjcEyNkTMu99ubJJaaxrCBOH6uPSwAKFFR1pXtRYVGjQVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so1015268066b.3;
+        Tue, 17 Jun 2025 02:50:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750153815; x=1750758615;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YH8snW+HQzPkJeXMoGvcgRiLRIoHK3vIXAy0/dbKPZI=;
+        b=SYKA5iefyaticxCC7Ksl3setSKZGVbFczoPXGTzkrTsVbheIKXohuPllm/k5RY32f2
+         /G6nL6icjDn2q9geRxib3uvazVLiJiN5BTPfWMz6y1kTZ/6+BOhSOfiPxarK6n4eKdPC
+         pC6tPfrKYr7GtLOpp8DKJwmsWZvZo8pv4jmB3WfO8rbuvmX8REqFSgot280abXnXXlz9
+         MOMlnst0l56WTgEBWsNZ7Xnh2G3uVMxAVWD3JOlapmJXZJ9eHADhQ0WIm9VzJQGSJe87
+         pEUXfysyW97nfpVFeViL1HjQjXAJDTnRPgapTb8ldrZg0mDGQbc7vhU5caaRQ1cFG0+J
+         1Ypw==
+X-Forwarded-Encrypted: i=1; AJvYcCUIpdNptlk/SDPzDhIp2B0ku/ENEWYhAbbmh9sJ48Lc6Q+Ja0IwI1dw/XBQrBNXAuxcGh1NVJ52@vger.kernel.org, AJvYcCWIp1xZ0GOhnlJC0DZjuei3dX0Einftj6ceGNfZjErfDbwwUbuVZWaceJ60GUpk8V8oGkhjcz/iT2jiJtg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjldqOsu17jzw3rwsPpXmV2DnEvdN1CreVhciYgJmPtXjysz+N
+	lGJEvfkIqR5bIN9fITCk9oPnpFeSlRw9xe4N/2FXfsruB1X0tI/wDH/D
+X-Gm-Gg: ASbGncs17nIUUFY4IBOuwQdHysdGjT7vCAb49zt9mM+JXztSM3/JjI+ABOwGRBYNII0
+	XdShNOrED1X/2nI6q6uXTXegtbV4AfbXoUWZ1OVtuBvLXd5EbHevaje3HhZOn2UtW3V5ISfbk7m
+	THgjB7xWT9vTxRuPnLyJm6HdUFX78rhbHPFwLGFRxMPZ3aTZhpSvwULE96BPVOtYSyTeoOAW7DG
+	HCtaD7jxzHwAxP/I/i7niJzsMoGFzL9NzPkcb1k3BABuo6Rgi/YrLdcp5HizGv56cASs6+9XOSY
+	4z8ugEdz1NIfIkG6JdqfCRyjhHgwhVjVidGgSyQLVbmKE9w/82EF5Q==
+X-Google-Smtp-Source: AGHT+IHn2FJqs9RO9flMz3wqH58LiFdg5OFFDyapqZw3NxqVXI1mx4LABvm24mwAZpwVpNqg2v/fsQ==
+X-Received: by 2002:a17:907:1ca0:b0:adb:2bee:53c9 with SMTP id a640c23a62f3a-adfad29d046mr1234466066b.3.1750153814797;
+        Tue, 17 Jun 2025 02:50:14 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:74::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8977545sm844022366b.147.2025.06.17.02.50.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 02:50:14 -0700 (PDT)
+Date: Tue, 17 Jun 2025 02:50:11 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Ignacio Encinas Rubio <ignacio@iencinas.com>,
+	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
+	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
+	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: Re: [PATCH v5 09/15] tools: ynl_gen_rst.py: clanup coding style
+Message-ID: <aFE6U9e1Y3Qu+v62@gmail.com>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+ <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
 
-chnages v10:
-- add some add Reviewed-by tags
-- regulator_handle_critical: set pscr = PSCR_UNKNOWN for default case
-- make g_pscrr static
+On Tue, Jun 17, 2025 at 10:02:06AM +0200, Mauro Carvalho Chehab wrote:
+> Cleanup some coding style issues pointed by pylint and flake8.
 
-changes v9:
-- Remove redundant pr_crit() messages before hw_protection_trigger()
-- Replace psc_reason_to_str() switch with static const string array
-- Mark psc_last_reason as static
-
-changes v8:
-- Use DEFINE_GUARD() and guard(g_pscrr) for scoped locking of the global
-  pscrr_core struct
-- Replace manual mutex_lock/unlock with automatic cleanup-based guard()
-  usage
-- Centralize backend and locking state in struct pscrr_core
-- Prepare for future multi-backend support with clean encapsulation
-- Improve sysfs documentation:
-  * Added full enum psc_reason value table
-  * Simplified example comments, removed redundant "may differ" phrasing
-  * Added note that not all values are supported on all systems
-  * Linked value definitions to include/linux/reboot.h
-  * Added clear read/write usage examples for sysfs entries
-
-changes v7:
-- document expected values in sysfs documentation
-- make write support optional
-
-changes v6:
-- add sysfs documentation
-- rebase against latest hw_protection_reboot changes:
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=mm-nonmm-unstable&id=212dd3f6e57f6af8ed3caa23b93adc29334f9652
-- push core part of the reset reason the kernel/reboot.c
-
-changes v5:
-- fix compile with NVMEM=n and potential issues with NVMEM=m
-
-changes v4:
-- fix compile with CONFIG_PSCRR=n
-
-changes v3
-- rework to remove devicetree dependencies
-- extend NVMEM to search devices and cells by names.
-
-changes v2:
-- rename the framework from PSCR to PSCRR (last R is for Recorder)
-- extend power on reason header and use it to show detected reason on
-  system start and in sysfs.
-- remove "unknow" reason
-- rebase on top of v6.8-rc1
-- yaml fixes
-- zero reason state on boot
-
-Hello all,
-
-This patch series introduces the Power State Change Reasons Recording
-(PSCRR) framework and its related components into the kernel. The PSCR
-framework is designed for systems where traditional methods of storing
-power state change reasons, like PMICs or watchdogs, are inadequate. It
-provides a structured way to store reasons for system shutdowns and
-reboots, such as under-voltage or software-triggered events, in
-non-volatile hardware storage.
-
-These changes are critical for systems requiring detailed postmortem
-analysis and where immediate power-down scenarios limit traditional
-storage options. The framework also assists bootloaders and early-stage
-system components in making informed recovery decisions.
-
-Oleksij Rempel (7):
-  power: Extend power_on_reason.h for upcoming PSCRR framework
-  reboot: hw_protection_trigger: use standardized numeric
-    shutdown/reboot reasons instead of strings
-  power: reset: Introduce PSCR Recording Framework for Non-Volatile
-    Storage
-  nvmem: provide consumer access to cell size metrics
-  nvmem: add support for device and sysfs-based cell lookups
-  power: reset: add PSCR NVMEM Driver for Recording Power State Change
-    Reasons
-  Documentation: Add sysfs documentation for PSCRR reboot reason
-    tracking
-
- .../ABI/testing/sysfs-kernel-reboot-pscrr     |  74 ++++
- drivers/nvmem/core.c                          | 134 ++++++
- drivers/platform/chrome/cros_ec_lpc.c         |   2 +-
- drivers/power/reset/Kconfig                   |  47 ++
- drivers/power/reset/Makefile                  |   2 +
- drivers/power/reset/pscrr-nvmem.c             | 254 +++++++++++
- drivers/power/reset/pscrr.c                   | 405 ++++++++++++++++++
- drivers/regulator/core.c                      |  15 +-
- drivers/regulator/irq_helpers.c               |   9 +-
- drivers/thermal/thermal_core.c                |   3 +-
- include/linux/nvmem-consumer.h                |  25 ++
- include/linux/power/power_on_reason.h         |   4 +
- include/linux/pscrr.h                         |  58 +++
- include/linux/reboot.h                        |  77 +++-
- kernel/reboot.c                               |  85 +++-
- 15 files changed, 1172 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
- create mode 100644 drivers/power/reset/pscrr-nvmem.c
- create mode 100644 drivers/power/reset/pscrr.c
- create mode 100644 include/linux/pscrr.h
-
---
-2.39.5
-
+Sorry, forgot to mention that there is a typo in the commit title.
