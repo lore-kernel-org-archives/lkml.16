@@ -1,30 +1,31 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77E501E834F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0954B5383;
 	Tue, 17 Jun 2025 22:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750200679; cv=none; b=sD2a2kcAz9+jGY0h058Re2mtzRGAVcM6LUQ4MgaZ/ztkUTKwm4AgavqYY9+912zQR2HI7TduFdKtXtzRskXPM8iXcar3pxo8ZyQs/mp5vBv3jFzGOhdkaZXXzCoskIpC/1DlgNYsCXaja2fxY9ua02De6C4HTQjBYnUWrIm0L4Q=
+	t=1750200679; cv=none; b=hNAPQaQcBSCxDO3Xj79i0HUuWF3nVXwyXoZeD/gg9gTno2+AnHMLnd06Ut3Fah3S7bE6CTrawwYtuBiPkmSkxRJvbr4Ssxbqt8VonWqZdimQ+XBb5ybMiOnyxFMARsQbePvBR0e9st3ZZPQxVZld1XRQ61CV4cHkz5KFOgX4BlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750200679; c=relaxed/simple;
-	bh=SjN/rIiMPkLfbU6LPwVgV6/uhSYa2otNoJovf1WdRG4=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=AbuAgtxj/nMcpfgaAFIxJ7pB5Dj5i5gfunCcocFz2y7g0JJkGU4aPEiLtaEH3iNCHaxGVwMROxrkpZdjHieEzwfkHaf/gxi4EXVdr+hIhmrF12s/irgum3qUrTSrb2SNOcOXC0IeibFB26urip2S4n0SNYdpi4F/jS+v18YzlW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	bh=Kp6RYb5t+RCZ7jokiwYGJB2GAw8QmJKJAuA8NhLPUp4=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=bG8NfJH/mP9c6fmbY5R/nhWFMAmddz1pN6mS9W7NJtofyshtGMakGBSzHhiDdc1VLYNyoYm+BddrUH6vrhK47PfvIjt9lHorBVmEaFh2gNt2Lx3FmKaiIYYzmg3b8hTJBDAVW+Pt2GRqMGBRFEsilXMcpnKUKlhLuaq7U9OiZeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id 7567A810A6;
-	Tue, 17 Jun 2025 22:51:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 7ED502002B;
-	Tue, 17 Jun 2025 22:51:10 +0000 (UTC)
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 4C8415F01C;
+	Tue, 17 Jun 2025 22:51:15 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 46A6860011;
+	Tue, 17 Jun 2025 22:51:12 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uRf9B-00000002L2x-0cvj;
-	Tue, 17 Jun 2025 18:51:17 -0400
-Message-ID: <20250617225009.233007152@goodmis.org>
+	id 1uRf9D-00000002L8o-0mIa;
+	Tue, 17 Jun 2025 18:51:19 -0400
+Message-ID: <20250617225119.037842151@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 17 Jun 2025 18:50:09 -0400
+Date: Tue, 17 Jun 2025 18:50:21 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -45,112 +46,165 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Jens Remus <jremus@linux.ibm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v6 00/12] unwind_deferred: Implement sframe handling
-X-Stat-Signature: j1pb3b6xcsrwsq3xz535mg64uo91nmzw
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 7ED502002B
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/W7Fxv7wI9MpYqbUWObtM/M1U7x9QTPDs=
-X-HE-Tag: 1750200670-647277
-X-HE-Meta: U2FsdGVkX19es+oLwhvoqLEn0NYvhC6onBJqfLm93XomIUPkMbFt6qGpX4zFUb7W3tF53swAax/9jdpvk37MTho7MOHjpPUgLsC48Rxc7Y3fgPA4l0Ju0QTmwL1nPRosFA4WunsNcb6UGlAPMd5VINuBqeqq4CZUNNyIRTXpY7zm7zrMVBWcF0vPGcky50Xc3gJw7I05gWgvk+l0y0TTdFtcic9DQQ6dxUb3FE0LlMnP6QOaMYDfPAE3zj5kK74fM2lJEN5RLkzJt4FW9oNVHOdZeMBgdC8UkMh2LVOA8OpaTypqGeXGXhaf1TK/uo5AG0Fpr0hksqE16lJzd5UPzX7WQzADWZUzZhclO0YjDN1lG7cZnNr6b7Zxgh2bYIncrx/xUJWJFJp/0aYE1rL944ZuFWzCgA+gZRv+FnncdbCSOZDpXMq89p6yehdUwWYykixYOv4rcbE3PHALg2p0sQ==
+Subject: [PATCH v6 12/12] unwind_user/sframe: Add .sframe validation option
+References: <20250617225009.233007152@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Rspamd-Queue-Id: 46A6860011
+X-Stat-Signature: jaxhukph5skj4tuhj9qr6q1kq4y4pfmx
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19hQztm/p4BjEUc0SSv37svTRxwDa6q3zM=
+X-HE-Tag: 1750200672-592088
+X-HE-Meta: U2FsdGVkX1/GKRvTwuSUpbwBsWNMWFFyAqxCR4+tyAokYduk8y7ss0FeSNow6H2kcxwMSw9bq9kOubc5r0YUuKQvcATGWF3tT330Uabkhvf6GjL4f/ckhoCfjgByAeVGSLXTO/DYf8Fx+EsYqxbVZDg+aSF9uey5fPxLzaw9H0kV3cUzBfvhJTglyOHSw0n1iy0WG/wUIfPexDLXLFZ8y0snHAGEZ3ECaAA4yFggcsaHq6ozTj6l3h7yqLxy1Mb9WloXhnyg6tmnoQth+dfJhZMqPjyMoS5Vf+RpZUPnwccr9UmSMTIRWzAool5ucyv1BfJ4Mi2sO6EW9WDYhJVDJtRfabRY+cY4oWb1YtdtuF6vV2jtyIKiYw6psRTrkHDIXbo5Tco/J9KNeRDda9XBrUsOcdJOQhTWuA+FUzHjOzk=
 
-This code is based on top of:
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-  https://patchwork.kernel.org/project/linux-trace-kernel/cover/20250611005421.144238328@goodmis.org/
+Add a debug feature to validate all .sframe sections when first loading
+the file rather than on demand.
 
-This is the implementation of parsing the SFrame section in an ELF file.
-It's a continuation of Josh's last work that can be found here:
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/Kconfig           | 19 ++++++++++
+ kernel/unwind/sframe.c | 81 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 100 insertions(+)
 
-   https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 0c6056ef13de..86eec85cb898 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -450,6 +450,25 @@ config HAVE_UNWIND_USER_SFRAME
+ 	bool
+ 	select UNWIND_USER
+ 
++config SFRAME_VALIDATION
++	bool "Enable .sframe section debugging"
++	depends on HAVE_UNWIND_USER_SFRAME
++	depends on DYNAMIC_DEBUG
++	help
++	  When adding an .sframe section for a task, validate the entire
++	  section immediately rather than on demand.
++
++	  This is a debug feature which is helpful for rooting out .sframe
++	  section issues.  If the .sframe section is corrupt, it will fail to
++	  load immediately, with more information provided in dynamic printks.
++
++	  This has a significant page cache footprint due to its reading of the
++	  entire .sframe section for every loaded executable and shared
++	  library.  Also, it's done for all processes, even those which don't
++	  get stack traced by the kernel.  Not recommended for general use.
++
++	  If unsure, say N.
++
+ config HAVE_PERF_REGS
+ 	bool
+ 	help
+diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
+index 3972bce40fc7..6159f072bdb6 100644
+--- a/kernel/unwind/sframe.c
++++ b/kernel/unwind/sframe.c
+@@ -353,6 +353,83 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_SFRAME_VALIDATION
++
++static __always_inline int __sframe_validate_section(struct sframe_section *sec)
++{
++	unsigned long prev_ip = 0;
++	unsigned int i;
++
++	for (i = 0; i < sec->num_fdes; i++) {
++		struct sframe_fre *fre, *prev_fre = NULL;
++		unsigned long ip, fre_addr;
++		struct sframe_fde fde;
++		struct sframe_fre fres[2];
++		bool which = false;
++		unsigned int j;
++		int ret;
++
++		ret = __read_fde(sec, i, &fde);
++		if (ret)
++			return ret;
++
++		ip = sec->sframe_start + fde.start_addr;
++		if (ip <= prev_ip) {
++			dbg_sec_uaccess("fde %u not sorted\n", i);
++			return -EFAULT;
++		}
++		prev_ip = ip;
++
++		fre_addr = sec->fres_start + fde.fres_off;
++		for (j = 0; j < fde.fres_num; j++) {
++			int ret;
++
++			fre = which ? fres : fres + 1;
++			which = !which;
++
++			ret = __read_fre(sec, &fde, fre_addr, fre);
++			if (ret) {
++				dbg_sec_uaccess("fde %u: __read_fre(%u) failed\n", i, j);
++				dbg_print_fde_uaccess(sec, &fde);
++				return ret;
++			}
++
++			fre_addr += fre->size;
++
++			if (prev_fre && fre->ip_off <= prev_fre->ip_off) {
++				dbg_sec_uaccess("fde %u: fre %u not sorted\n", i, j);
++				return -EFAULT;
++			}
++
++			prev_fre = fre;
++		}
++	}
++
++	return 0;
++}
++
++static int sframe_validate_section(struct sframe_section *sec)
++{
++	int ret;
++
++	if (!user_read_access_begin((void __user *)sec->sframe_start,
++				    sec->sframe_end - sec->sframe_start)) {
++		dbg_sec("section usercopy failed\n");
++		return -EFAULT;
++	}
++
++	ret = __sframe_validate_section(sec);
++	user_read_access_end();
++	return ret;
++}
++
++#else /*  !CONFIG_SFRAME_VALIDATION */
++
++static int sframe_validate_section(struct sframe_section *sec) { return 0; }
++
++#endif /* !CONFIG_SFRAME_VALIDATION */
++
++
+ static void free_section(struct sframe_section *sec)
+ {
+ 	dbg_free(sec);
+@@ -461,6 +538,10 @@ int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
+ 		goto err_free;
+ 	}
+ 
++	ret = sframe_validate_section(sec);
++	if (ret)
++		goto err_free;
++
+ 	ret = mtree_insert_range(sframe_mt, sec->text_start, sec->text_end, sec, GFP_KERNEL);
+ 	if (ret) {
+ 		dbg_sec("mtree_insert_range failed: text=%lx-%lx\n",
+-- 
+2.47.2
 
-Currently the only way to get a user space stack trace from a stack
-walk (and not just copying large amount of user stack into the kernel
-ring buffer) is to use frame pointers. This has a few issues. The biggest
-one is that compiling frame pointers into every application and library
-has been shown to cause performance overhead.
 
-Another issue is that the format of the frames may not always be consistent
-between different compilers and some architectures (s390) has no defined
-format to do a reliable stack walk. The only way to perform user space
-profiling on these architectures is to copy the user stack into the kernel
-buffer.
-
-SFrames[1] is now supported in gcc binutils and soon will also be supported
-by LLVM. SFrames acts more like ORC, and lives in the ELF executable
-file as its own section. Like ORC it has two tables where the first table
-is sorted by instruction pointers (IP) and using the current IP and finding
-it's entry in the first table, it will take you to the second table which
-will tell you where the return address of the current function is located
-and then you can use that address to look it up in the first table to find
-the return address of that function, and so on. This performs a user
-space stack walk.
-
-Now because the SFrame section lives in the ELF file it needs to be faulted
-into memory when it is used. This means that walking the user space stack
-requires being in a faultable context. As profilers like perf request a stack
-trace in interrupt or NMI context, it cannot do the walking when it is
-requested. Instead it must be deferred until it is safe to fault in user
-space. One place this is known to be safe is when the task is about to return
-back to user space.
-
-This series makes the deferred unwind code implement SFrames.
-
--- Steve
-
-[1] https://sourceware.org/binutils/wiki/sframe
-
-Changes since v5: https://patchwork.kernel.org/project/linux-trace-kernel/cover/20250424201511.921245242@goodmis.org/
-
-- Added updates from Jens Remus <jremus@linux.ibm.com>
-  https://lore.kernel.org/all/20250528102655.1455423-1-jremus@linux.ibm.com/
-
-- Have sframe use initialize the frame = &_frame
-
-  The unwind code had the on stack _frame storage removed since it wasn't
-  being used. The sframe code needs it. Add it back but only assign it
-  when sframe is used.
-
-Josh Poimboeuf (12):
-      unwind_user/sframe: Add support for reading .sframe headers
-      unwind_user/sframe: Store sframe section data in per-mm maple tree
-      x86/uaccess: Add unsafe_copy_from_user() implementation
-      unwind_user/sframe: Add support for reading .sframe contents
-      unwind_user/sframe: Detect .sframe sections in executables
-      unwind_user/sframe: Add prctl() interface for registering .sframe sections
-      unwind_user/sframe: Wire up unwind_user to sframe
-      unwind_user/sframe/x86: Enable sframe unwinding on x86
-      unwind_user/sframe: Remove .sframe section on detected corruption
-      unwind_user/sframe: Show file name in debug output
-      unwind_user/sframe: Enable debugging in uaccess regions
-      unwind_user/sframe: Add .sframe validation option
-
-----
- MAINTAINERS                       |   1 +
- arch/Kconfig                      |  23 ++
- arch/x86/Kconfig                  |   1 +
- arch/x86/include/asm/mmu.h        |   2 +-
- arch/x86/include/asm/uaccess.h    |  39 ++-
- fs/binfmt_elf.c                   |  49 ++-
- include/linux/mm_types.h          |   3 +
- include/linux/sframe.h            |  60 ++++
- include/linux/unwind_user_types.h |   1 +
- include/uapi/linux/elf.h          |   1 +
- include/uapi/linux/prctl.h        |   6 +-
- kernel/fork.c                     |  10 +
- kernel/sys.c                      |   9 +
- kernel/unwind/Makefile            |   1 +
- kernel/unwind/sframe.c            | 612 ++++++++++++++++++++++++++++++++++++++
- kernel/unwind/sframe.h            |  71 +++++
- kernel/unwind/sframe_debug.h      |  99 ++++++
- kernel/unwind/user.c              |  25 +-
- mm/init-mm.c                      |   2 +
- 19 files changed, 997 insertions(+), 18 deletions(-)
- create mode 100644 include/linux/sframe.h
- create mode 100644 kernel/unwind/sframe.c
- create mode 100644 kernel/unwind/sframe.h
- create mode 100644 kernel/unwind/sframe_debug.h
