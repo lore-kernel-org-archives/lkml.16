@@ -1,154 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6272DF3E4;
-	Tue, 17 Jun 2025 11:57:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30572D12F7;
+	Tue, 17 Jun 2025 11:58:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161463; cv=none; b=Ir1yBMXJ+OXef6SozmAF3xz12hID8N0kAKIEcsEflVCSiL6Mpj2A+uYI/d2De+WCv374oOOh0+O1gdiV0N/R3uNhBJdavL1fGF/rEWMOzBcz2Zp+sb//7EQ0IcPFdAyi1enlsiQY+ml9F6q/+6klcIjAMup8tj3nW3C8Toqeytw=
+	t=1750161493; cv=none; b=ZhTyuhk0FN3Qia0TwM1FK9uXAeUPeib9IYHSiW6vF/++TevMgLJ9qcIw2xixHLh7UpFjV0pYXdXcDSNpv/2cj+sgQ2wwyt7xgu9Lz/4+S8f0YZbHQ2aIAmTT/8KpuaK3xhKFbn40i8+GXALmjV7qiiedq+FVqPeYW10PVUMiUrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161463; c=relaxed/simple;
-	bh=T+hj+yayJhfzqGA9kWHW1UQw8dsCOqK3Vx6p1g+lWhs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AiJLYkF4PZohMHy4NBQW9JVO0SJ9twAuiN+ti1p4uzIuGXPPgS3NKOmbXtsSfWQzmXkhXaEEG72SoNWLTO3r5NEBH4COojxpFZBvfyxkWRVh+jwAzQbVRZE/uloq+60SJricMiJKZCrQ3NiGqTKP2yOQd6ywSDjCNVeWE2cFCtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANNRMLSM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750161493; c=relaxed/simple;
+	bh=9OLdh2NGryQfmDtM2Fz5KGiePLaw/bXfVfqGVqpThNo=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UbF/dugPi/W7qOULeyUyiUi2ORZz0rAhRn/lE67z/t7nuzPwZn9vpCVbZKhxJSD0ehSsxtPon3uIC70HhObb6ZzVInm7V6Tc5qoCW/9V3zwJPGKoSoli8lrumwFnXhlFSEJFRLLYg6JQSp9u3Mt0WgN0KwNKlQMaAfMw5gAmvQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TrqVcL8Y; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANNRMLSM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC2DC4CEE3;
-	Tue, 17 Jun 2025 11:57:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750161462;
-	bh=T+hj+yayJhfzqGA9kWHW1UQw8dsCOqK3Vx6p1g+lWhs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ANNRMLSMbFJxF0/0JcpxGnRgNC2cM3iQk05j0kIN5dUOf6a+6FhzXEhCV9tljSO6h
-	 v2e3uV6HAxpTWa31kRKsnVAXQkLyFD1xYm1QZjMvIFL3ouF6AXeudY39YUcGZrolsh
-	 RyM2TZ/EQMyqQ6Y6s4GUWKP0gK9gINzD7L4jwsfBCJ1suak/ya3jB5me4TnYO/YFrF
-	 BrbHmvsabgMYM9Mbit9yWCy+NDOo9GjZfXkkWr9NdZCIoi7MIoTDvDFU7neHyJvL+Q
-	 sCBOLJVwQyL5L44PlP9UgERzG7VA2X0BjHsxmPcW0plFtm6qxZnaOBFYXof6KFwTQp
-	 Bv2/tmMRJtG5w==
-Date: Tue, 17 Jun 2025 13:57:17 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jens Axboe <axboe@kernel.dk>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Benjamin LaHaise <bcrl@kvack.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Tigran A . Aivazian" <aivazian.tigran@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, 
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Dave Kleikamp <shaggy@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Carlos Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
-	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-mm@kvack.org, linux-btrfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
-	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 10/10] fs: replace mmap hook with .mmap_prepare for
- simple mappings
-Message-ID: <20250617-karibus-abgrenzen-e534b9acd4c7@brauner>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <f528ac4f35b9378931bd800920fee53fc0c5c74d.1750099179.git.lorenzo.stoakes@oracle.com>
- <6nktgdc7ygt6hncfnl33d2jlwvlydspiiklwf6oxiqxxcjhzs2@j6f36ktyv774>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TrqVcL8Y"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ade5b8aab41so1199254766b.0;
+        Tue, 17 Jun 2025 04:58:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750161490; x=1750766290; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AAyN+ToNafItED7vOGd5xwZjLyU6vZgREgdnOsl2nNs=;
+        b=TrqVcL8YaeM4ndcbzqbmdSYdOQHLh59HYTLNAV25+vpDnifLs13HlpYOU7VuWTF59P
+         fm15nbyfeRwHxcB6UNDP5KKnnXSI35hhLHiTxSbp5lJZ4Y0VuKUT99t+x2XHaI0QwPY8
+         o6+XDXUy/1fc0P++fzleblDBxij3vcIxbkC0DiF4Bchq921nGQ/SyJWYDgxjFvS6UW17
+         z6dVs59QtI1CVuj2zcwW3D+ZvYIDIp8GGtwFKYLH11BjaKiIUSSXjqNtS4yHbY/oy3ac
+         nsDvbG29yfLQdWnd7usCNC16bNqYwoYtYGKJEDyedgvw63H4qDaPpQcZ3b1SB9G+EKhc
+         Nr7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750161490; x=1750766290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AAyN+ToNafItED7vOGd5xwZjLyU6vZgREgdnOsl2nNs=;
+        b=q66NBl4rFbi1ZITukFCRgiEQHbVbpYPRnoAoCf1AYeE6sS/SI5PqRUCsDynTB1p5bu
+         CWUyShWPeZ5cJ4HFs3qHopOrMX+Hf1rXpBPixdmgH8NGmJAdTYLPuNvJXRJcfMx9mYtH
+         h/C/zHbU9DUqZ61lcGOCB3ckY9nXcyxHIRVDwmCNMadis8tZDN4eb10v4BaD6pjkhWiG
+         ePIosAZWum0YznZhr88zox8id65dFUKYnG1wiqqh8O81tLVq4sS/qEFhMnm7XpZR1qdH
+         MK6ly389WzpAqt/Vn7is41q9casa8aow3xmDT/5qf4SJWbhYp44/A6XXJryR2SeAl68Z
+         0A3g==
+X-Forwarded-Encrypted: i=1; AJvYcCUkaIHFmTzbL5YOBa/YlFpaHGg0+kTtNZBcs487FxSK5IGV283jTQCSgti9PINhoxV28r6TL9uOOykZv1pd2okmfMxj@vger.kernel.org, AJvYcCXRG2CFtNNaxRl2osPCC6G9IBwpmNLCUe7/QcOYzocigu7vHqNRmD9as/QSU6X4yMsQS8+Ri65c9gZG3V8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxzrFdUtW1uuFSni8kXSlIl0y15mhjnTDfEu3nYMg60QSKn4i/
+	bnV2DQJaSK+PuhDGX5J+N6UoJB1mxb6Gl7j4GWoUudqhqryy8c3WcuDe
+X-Gm-Gg: ASbGncvNQv2FCGDj+8F/apR21WpWPOWcxVIVKZgxNYvkgz+vqFPE5MNUmrcU5sNJWff
+	mJ3bgdV86iOzmjx9QFKCex/3lvNc5JqiXFQYqBTcYzXcqJ6NZGJjN7A3tSJtHibPY6JJer8Sh1a
+	54J/PIEBT3kOfuiiQyRUhiDGvF4TRzelAjrWsaT+Ynif7Fbpg9bnOVO8auA0WIj137oPzohdCPD
+	PWyPGGecBlaHy59UGp5TbtSyVKAt2GHvMxGgOxtS6IEs7fUE+Eg/xp6QBQXREO53likivoON+aO
+	JYpzfXIe6DiWVYZjlG9OYkixbWAjwvtRtFlkgDuRSDc4i5Tw
+X-Google-Smtp-Source: AGHT+IGXnMPgXlA31Bvtqkmp3Vbasv6EcrISFOMjHiVmpzR0wieOBOhr8LT/ICTlXm+PF1m7z7hFmA==
+X-Received: by 2002:a17:907:3f1f:b0:ad2:4fa0:88cd with SMTP id a640c23a62f3a-adfad287bbcmr1067904566b.9.1750161489658;
+        Tue, 17 Jun 2025 04:58:09 -0700 (PDT)
+Received: from krava ([173.38.220.50])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8159e24sm853034966b.34.2025.06.17.04.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 04:58:09 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 17 Jun 2025 13:58:06 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 mm-stable] uprobes: Revert ref_ctr_offset in
+ uprobe_unregister error path
+Message-ID: <aFFYTi4FcKE7rmlI@krava>
+References: <20250514101809.2010193-1-jolsa@kernel.org>
+ <aECseBOkQynCpnfK@krava>
+ <aElE4r21ZYhLWTZz@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6nktgdc7ygt6hncfnl33d2jlwvlydspiiklwf6oxiqxxcjhzs2@j6f36ktyv774>
+In-Reply-To: <aElE4r21ZYhLWTZz@krava>
 
-On Tue, Jun 17, 2025 at 12:28:17PM +0200, Jan Kara wrote:
-> On Mon 16-06-25 20:33:29, Lorenzo Stoakes wrote:
-> > Since commit c84bf6dd2b83 ("mm: introduce new .mmap_prepare() file
-> > callback"), the f_op->mmap() hook has been deprecated in favour of
-> > f_op->mmap_prepare().
-> > 
-> > This callback is invoked in the mmap() logic far earlier, so error handling
-> > can be performed more safely without complicated and bug-prone state
-> > unwinding required should an error arise.
-> > 
-> > This hook also avoids passing a pointer to a not-yet-correctly-established
-> > VMA avoiding any issues with referencing this data structure.
-> > 
-> > It rather provides a pointer to the new struct vm_area_desc descriptor type
-> > which contains all required state and allows easy setting of required
-> > parameters without any consideration needing to be paid to locking or
-> > reference counts.
-> > 
-> > Note that nested filesystems like overlayfs are compatible with an
-> > .mmap_prepare() callback since commit bb666b7c2707 ("mm: add mmap_prepare()
-> > compatibility layer for nested file systems").
-> > 
-> > In this patch we apply this change to file systems with relatively simple
-> > mmap() hook logic - exfat, ceph, f2fs, bcachefs, zonefs, btrfs, ocfs2,
-> > orangefs, nilfs2, romfs, ramfs and aio.
-> > 
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> Two small nits below. Otherwise feel free to add:
-> 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> 
-> > diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-> > index 60a621b00c65..37522137c380 100644
-> > --- a/fs/ceph/addr.c
-> > +++ b/fs/ceph/addr.c
-> > @@ -2330,13 +2330,14 @@ static const struct vm_operations_struct ceph_vmops = {
-> >  	.page_mkwrite	= ceph_page_mkwrite,
-> >  };
-> >  
-> > -int ceph_mmap(struct file *file, struct vm_area_struct *vma)
-> > +int ceph_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
-> >  	struct address_space *mapping = file->f_mapping;
-> 
-> Pointless local variable here...
+ping
 
-Agreed, fixed in-tree.
-
-> > -static int exfat_file_mmap(struct file *file, struct vm_area_struct *vma)
-> > +static int exfat_file_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
+On Wed, Jun 11, 2025 at 10:57:08AM +0200, Jiri Olsa wrote:
+> hi, ping ;-)
 > 
-> Missing empty line here.
-
-Fixed in-tree.
+> On Wed, Jun 04, 2025 at 10:28:42PM +0200, Jiri Olsa wrote:
+> > On Wed, May 14, 2025 at 12:18:09PM +0200, Jiri Olsa wrote:
+> > > From: Jiri Olsa <olsajiri@gmail.com>
+> > > 
+> > > There's error path that could lead to inactive uprobe:
+> > > 
+> > >   1) uprobe_register succeeds - updates instruction to int3 and
+> > >      changes ref_ctr from 0 to 1
+> > >   2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
+> > >      is changed to 0 (it's not restored to 1 in the fail path)
+> > >      uprobe is leaked
+> > >   3) another uprobe_register comes and re-uses the leaked uprobe
+> > >      and succeds - but int3 is already in place, so ref_ctr update
+> > >      is skipped and it stays 0 - uprobe CAN NOT be triggered now
+> > >   4) uprobe_unregister fails because ref_ctr value is unexpected
+> > > 
+> > > Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
+> > > which is the case when uprobe_unregister fails (int3 stays in place),
+> > > but we have already updated refctr.
+> > > 
+> > > The new scenario will go as follows:
+> > > 
+> > >   1) uprobe_register succeeds - updates instruction to int3 and
+> > >      changes ref_ctr from 0 to 1
+> > >   2) uprobe_unregister fails  - int3 stays in place and ref_ctr
+> > >      is reverted to 1..  uprobe is leaked
+> > >   3) another uprobe_register comes and re-uses the leaked uprobe
+> > >      and succeds - but int3 is already in place, so ref_ctr update
+> > >      is skipped and it stays 1 - uprobe CAN be triggered now
+> > >   4) uprobe_unregister succeeds
+> > > 
+> > > Fixes: 1cc33161a83d ("uprobes: Support SDT markers having reference count (semaphore)")
+> > > Acked-by: David Hildenbrand <david@redhat.com>
+> > > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > > Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > 
+> > hi,
+> > I can't find this in any related tree, was this pulled in?
+> > 
+> > thanks,
+> > jirka
+> > 
+> > 
+> > > ---
+> > > v2 changes:
+> > > - adding proper Fixes tag and acks
+> > > 
+> > >  kernel/events/uprobes.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > > index 4c965ba77f9f..84ee7b590861 100644
+> > > --- a/kernel/events/uprobes.c
+> > > +++ b/kernel/events/uprobes.c
+> > > @@ -581,8 +581,8 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> > >  
+> > >  out:
+> > >  	/* Revert back reference counter if instruction update failed. */
+> > > -	if (ret < 0 && is_register && ref_ctr_updated)
+> > > -		update_ref_ctr(uprobe, mm, -1);
+> > > +	if (ret < 0 && ref_ctr_updated)
+> > > +		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+> > >  
+> > >  	/* try collapse pmd for compound page */
+> > >  	if (ret > 0)
+> > > -- 
+> > > 2.49.0
+> > > 
