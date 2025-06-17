@@ -1,117 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7559C2FA624;
-	Tue, 17 Jun 2025 16:59:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA01F2FA624;
+	Tue, 17 Jun 2025 16:59:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750179592; cv=none; b=hblZbkPZPY2ptjPvhsv4LjVbIOu4cu0tmBFG8dtkTKpalSrcL7F+PHSeGLD86MSB89MsTMvrq3kWZ3vNWxuKjPWS3MJm4khwLBfrnFGxKPuuTwEK8Z6iMP8ccS1/eNrXP1ITT4w+2k4zQhQZYvhPIWf7m1GP/EIhPHxUcvMvIzU=
+	t=1750179595; cv=none; b=lTqTAs+YM8XvlhLoRLQQ0mYqJU/xrbBv6DzwFuVa3wJ+YjImDhf9CjbSArdQE8otikj4LLm6vVxnyetxy9ZtgL71KuQsjiubI1C6oY0+egwcHqntCLNh940Hv2HNTVdf9DE2z7N5AFGlpkrQrZK0juvtBARRVCVZd2fvJTmGucM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750179592; c=relaxed/simple;
-	bh=cpdFqG8VE3oUn40geLA2DBr+wtB8mZ02xKcGoI5IPQY=;
+	s=arc-20240116; t=1750179595; c=relaxed/simple;
+	bh=uEOMgL0enjAcnngHzRz3sXuDxKITAnkXRV1o9HPvaIE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xqbcjmhn6xdbITEY55U0v2jzFIHKHF9s/YyI3GoaVuKNYWHPGLAlu/f9hQ7EJ7f8+Xwf3RiW9t2aUvNGc1qZj403Boumfsoyi0spTqYmxT1b6/6+kkB9rBmmslr6zXbzcX+8afa2QpB07QcOkZhQTpM6H9UgEEkX0swOVOzbt7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=U05IuaD1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m6i7NtmBSPqv7B7I3hDbF7otmGujDTmQXSKYyXkjq5RMNAY11ptyoKzNqbW5s/ablKQCs1pyDF9Y1jBnaz+gyFYLZPsZg7F4x8hJfKwxDz1jNiWc20n/eFREiWkEJTGz4kWM/UVOfyzSvKNV05Mu85arxPDB5xEDma01CHHA+6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Fo0EChMa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="U05IuaD1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AB8C4CEE3;
-	Tue, 17 Jun 2025 16:59:51 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Fo0EChMa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D13C4CEF0;
+	Tue, 17 Jun 2025 16:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750179592;
-	bh=cpdFqG8VE3oUn40geLA2DBr+wtB8mZ02xKcGoI5IPQY=;
+	s=korg; t=1750179595;
+	bh=uEOMgL0enjAcnngHzRz3sXuDxKITAnkXRV1o9HPvaIE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U05IuaD1bJIohe7AWSw6RJtjOsWhQJenPkMDttC2JsPV3u/WK0613Q2jx++HkMUqe
-	 OY+GtUyehrqkNdtyVyTeOfN9yIeaQMOHKzrIA0dMNtJEYb5uzaIRYyK9qF2ua345cz
-	 91yICdBzyCvdLXb/bho0HFh42Zr572zghzcqmOeQ=
-Date: Tue, 17 Jun 2025 17:49:49 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Sean Anderson <sean.anderson@linux.dev>
-Cc: Saravana Kannan <saravanak@google.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] driver core: Prevent deferred probe loops
-Message-ID: <2025061740-banter-acclaim-2006@gregkh>
-References: <cb354fd2-bece-42ef-9213-de7512e80912@linux.dev>
- <20250610183459.3395328-1-sean.anderson@linux.dev>
- <CAGETcx-koKBvSXTHChYYF-qSU-r1cBUbLghJZcqtJOGQZjn3BA@mail.gmail.com>
- <a52c513c-ff93-4767-a370-3f7c562df7bd@linux.dev>
- <2025061147-squishier-oversleep-80cd@gregkh>
- <7d6d8789-e10b-4b06-aa99-5c1a1bdd3b4c@linux.dev>
- <CAGETcx9E5DB4UtdjjAO2=XfTNXdXocj7uk0JkVZ8hf9YadwNcA@mail.gmail.com>
- <70958a2e-abc8-4894-b99a-f2981db9981f@linux.dev>
- <2025061700-unmapped-labrador-a8c9@gregkh>
- <0ee2f641-c3f3-4a3a-87b4-e1279a862d68@linux.dev>
+	b=Fo0EChMa7s6vQniwm+xb0uKPr5MvPVjqgu2ivI/SpK3Rvof5c0D/40E9AGjA8WDmy
+	 9jE2igMgBxD3NJCCiUDZlGAdmpIcz8ZkXLEtJEuXzdivjH/vBnhOWZ0l9YHyv8+ojp
+	 3/McfGdtgmSajg4anTY9MfdwOhN5ysAxheAxoPKs=
+Date: Tue, 17 Jun 2025 17:56:03 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Aidan Stewart <astewart@tektelic.com>
+Cc: "jirislaby@kernel.org" <jirislaby@kernel.org>,
+	"tony@atomide.com" <tony@atomide.com>,
+	"linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] serial: core: restore of_node information in sysfs
+Message-ID: <2025061740-sustained-linked-a845@gregkh>
+References: <20250616162154.9057-1-astewart@tektelic.com>
+ <2025061746-raking-gusto-d1f3@gregkh>
+ <915d0631ac123bbbb5d3fac1248b97d9de3295c6.camel@tektelic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0ee2f641-c3f3-4a3a-87b4-e1279a862d68@linux.dev>
+In-Reply-To: <915d0631ac123bbbb5d3fac1248b97d9de3295c6.camel@tektelic.com>
 
-On Tue, Jun 17, 2025 at 11:35:04AM -0400, Sean Anderson wrote:
-> On 6/17/25 04:50, Greg Kroah-Hartman wrote:
-> > On Thu, Jun 12, 2025 at 04:40:48PM -0400, Sean Anderson wrote:
-> >> On 6/12/25 13:56, Saravana Kannan wrote:
-> >> > On Thu, Jun 12, 2025 at 8:53â€¯AM Sean Anderson <sean.anderson@linux.dev> wrote:
-> >> >>
-> >> >> On 6/11/25 08:23, Greg Kroah-Hartman wrote:
-> >> >> > On Tue, Jun 10, 2025 at 07:44:27PM -0400, Sean Anderson wrote:
-> >> >> >> On 6/10/25 19:32, Saravana Kannan wrote:
-> >> >> >> > On Tue, Jun 10, 2025 at 11:35â€¯AM Sean Anderson <sean.anderson@linux.dev> wrote:
-> >> >> >> >>
-> >> >> >> >> A deferred probe loop can occur when a device returns EPROBE_DEFER after
-> >> >> >> >> registering a bus with children:
-> >> >> >> >
-> >> >> >> > This is a broken driver. A parent device shouldn't register child
-> >> >> >> > devices unless it is fully read itself. It's not logical to say the
-> >> >> >> > child devices are available, if the parent itself isn't fully ready.
-> >> >> >> > So, adding child devices/the bus should be the last thing done in the
-> >> >> >> > parent's probe function.
-> >> >> >> >
-> >> >> >> > I know there are odd exceptions where the parent depends on the child,
-> >> >> >> > so they might add the child a bit earlier in the probe
-> >> >> >>
-> >> >> >> This is exactly the case here. So the bus probing cannot happen any
-> >> >> >> later than it already does.
-> >> >> >
-> >> >> > Please fix the driver not to do this.
-> >> >>
-> >> >> How? The driver needs the PCS to work. And the PCS can live on the MDIO
-> >> >> bus.
-> >> > 
-> >> > Obviously I don't know the full details, but you could implement it as
-> >> > MFD. So the bus part would not get removed even if the PCS fails to
-> >> > probe. Then the PCS can probe when whatever it needs ends up probing.
-> >> 
-> >> I was thinking about making the MDIO bus a separate device. But I think
-> >> it will be tricky to get suspend/resume working correctly. And this
-> >> makes conversions more difficult because you cannot just add some
-> >> pcs_get/pcs_put calls, you have to split out the MDIO bus too (which is
-> >> invariably created as a child of the MAC).
-> >> 
-> >> And what happens if a developer doesn't realize they have to split off
-> >> the MDIO bus before converting? Everything works fine, except if there
-> >> is some problem loading the PCS driver, which they may not test. Is this
-> >> prohibition against failing after creating a bus documented anywhere? I
-> >> don't recall seeing it...
+On Tue, Jun 17, 2025 at 03:46:37PM +0000, Aidan Stewart wrote:
+> On Tue, 2025-06-17 at 06:44 +0200, Greg KH wrote:
 > > 
-> > What do you mean "failing after creating a bus"?  If a bus is failed to
-> > be created, you fail like normal, no difference here.
-> 
-> Creating the bus is successful, but there's an EPROBE_DEFER failure after
-> that. Which induces the probe loop as described in my initial email.
+> > On Mon, Jun 16, 2025 at 10:21:54AM -0600, Aidan Stewart wrote:
+> > > 
+> > > 
+> > > +     if (IS_ENABLED(CONFIG_OF)) {
+> > > +             device_set_of_node_from_dev(dev, parent_dev);
+> > > +     }
+> > 
+> > Did this pass checkpatch.pl?
+> I ran checkpatch.pl with the --strict option and I didn't get any warnings
+> or errors. Is there a style issue you would like me to fix?
 
-Then don't allow a defer to happen :)
+You should not need {} for a one line if statement.
 
-Or better yet, just succeed and spin up a new thread for the new bus to
-attach it's devices to.  That's what many other busses do today.
+> > And why is the if statement needed?
+> I guess it's not really needed. I was trying to avoid the call for non-DT
+> systems, but it should still be safe to do. I will remove it in v2.
+
+Please do!
 
 thanks,
 
