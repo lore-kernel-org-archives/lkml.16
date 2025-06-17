@@ -1,98 +1,220 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00364e01.pphosted.com (mx0b-00364e01.pphosted.com [148.163.139.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA1CD1A5B85;
-	Tue, 17 Jun 2025 20:50:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072A7283FE6
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.139.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750193426; cv=none; b=uXrwRVzKJ6fAD+0wXM7IlTs8T1fzqJn8Rg3GkHCVnp3p5X4Hp8n9LDXNPWzPWgQnJD9x+FmRJ/14Igx3ZMW+2bMtqQynHWwoBIyoPK9v6+tJT0YJy41jj09JtoCNOXdneenR11w+uTzNYuFTUY05z5824idJyITrfa0qTXEEbCo=
+	t=1750193440; cv=none; b=nkCUgKJajrptoWY6b8+CkWLaxzDWAh6HTFlylQTvBGVxfx4fDZtJoghmyJBZX2JVtlTMjAd47KYgm1Y8N1NlfG+39Qxo1jWw1cNJB28HcEaIaiW1PA5Pp20mJywKJXWDxGo6+W/jsp2mAMz/BBq0ztxAKmQQFlXm+CwINMuoLkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750193426; c=relaxed/simple;
-	bh=g/GbFLr0t0FFhIa9lCaetd6TAcEePslVG0jAd/7FErs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h4M3/gLSrVnoMq02QqTWhYabsMXYpjcJOsgSJrKm7gnMmjxCevCRMkWx4JQgGWAo0yVQOSjAhKzKFsXiuktZVsfNBtt0YbrnVs3wfUUh+xIteTAjhb6ASl4BT5l7qXv2QMHShfHYenEny/e9Fux6ucvVk22zmhhcv/SdAbMKKrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dsKW3MLK; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750193440; c=relaxed/simple;
+	bh=4bcCwaN5jKAqSH6DvVVNHKdZM3oQfNLDpnd/khiCLHY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jcicR38lk0trjH5kIoYy92lNW7r/hRLTDyW2UhMD8t3vosnud6V7b+KLqBFiijIbbH5D8ZSUQEgYWbIwemoFMZS53o1MTOfIm+U2kZrpxnqAGkKsk9LlJmjLnHR4CuJavT6OeAnQ5x5UIb2EV5xjIgbcEjm6kPG0wSbxbvpd/rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=r2Drjo8u; arc=none smtp.client-ip=148.163.139.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsKW3MLK"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2366e5e4dbaso744645ad.1;
-        Tue, 17 Jun 2025 13:50:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750193424; x=1750798224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdC0jnMM0Wp1N4Pp8HnVWBb6JU8nK5caKJXp0Tz/SM4=;
-        b=dsKW3MLKwVxVdlvsjJv7Bvp0PE8BafAcEVcukeoEZvOVsXum7p+HtXrPVoAT6YWog5
-         lBgzJMx7pNxzsSL+sG/kNYmyrE25LqA+wloE1K54evIgthanbiJ3Hcyp98TGIf2Q2xL5
-         /uJoL16EQfdXE8LN2whHhczs83/+6B/zf4inqOHhJ2fnU26PwDPbO3YF8G1vr1q3xitB
-         pTcMemZ3d38PovbQqNxkhrUsJUJ2WOAwvkf/u0nPMMHsj6RP8jEikLJmhIhBB6r8PEig
-         hCeMnFTmf7pdQCSt4w9v9TYEayi9+JqQTWhXTjYL6n5aE/3GVCpNnY/fSbW2NnlYErx6
-         uhmg==
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="r2Drjo8u"
+Received: from pps.filterd (m0167074.ppops.net [127.0.0.1])
+	by mx0b-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HKFdg7027109
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:50:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pps01;
+ bh=kHRW9Nu+63/GeEfAZ+I+V+utb3fXU8IH15wFHQNM6f0=;
+ b=r2Drjo8uUKd73xclv/tSGiKeaCM7vYKjKI+7iApuS8jqigfIFZCpuinH4uB3tdRDHC57
+ GjjLWhbucWERq+YBbNnimo9857Um/sB/5XhvIaFznS8ZrvzqJIozCTt6rz3oGlG6f/TV
+ cJBiEMZB2+OkPrf8SQPuCVSIy4QbFD9W/9BM40mMbRvqpB74vbwIbTX59LkvlQ0qlNaW
+ K+auqpCP9ZLLa0eE4Amfxn2SI6gROwf16PYnPGO/YEYp6MM4y85qZVoh6saIjPKnNFTp
+ wKf0PlnR0LBLq0EsKMhNsFAcPXHlBPa+qFgQJUdwbeCPwI8YFGK+zBh9cN3Mt8UTvE1A yQ== 
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com [209.85.128.199])
+	by mx0b-00364e01.pphosted.com (PPS) with ESMTPS id 47924h3e0h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:50:34 -0400
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-70e73d3c474so90735507b3.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:50:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750193424; x=1750798224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DdC0jnMM0Wp1N4Pp8HnVWBb6JU8nK5caKJXp0Tz/SM4=;
-        b=tQQJJIZQRSPoB4rzw8ghg7TrJkGyowVE3DYxCcP/uZDPPNQSre2jXddOxXCv4nRf5y
-         OoeNlBxUS/XI+daCwQDCypRcO/joOlzlpaHscK3EK9jMD4qpQEXbQSl+3G4JG7vJOyXV
-         D6/3VrxVYS2idW978g3G+chjiASNmdGgZuxQqaBeZRVesvyCcppPK/shnIlN3Lsc/SP0
-         uI9k8rvM/j5bFSfZDLNRLuumfVIxNTaRc2HHz6N3tmNK2WhUh4qW+KHgp+G9QIwavd8a
-         tRe4TQ2L/n0eRIPILaTCYq2kiHYz8fv+TxF3Xkof1Ko9Z0MDn30DbeNzFtxqzrTyj8Cd
-         pfdg==
-X-Forwarded-Encrypted: i=1; AJvYcCWxs4rUrDpVFgtb8ktZg3exshlXaR2ej4uV8vszMRZ3+wOc3tM4VYIvs9Ce+ATJ8inSd8MwIOdPtdkXYuE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQW2nAEyHoD9ecitEIqhg8DUZfuV4qER3D3SXlLMHlYbneRxbV
-	FmS2oCd1iBnC9Jsti21nzSdQL//ScvQulJn3FauUGrg4NrSo3nq8XsXU
-X-Gm-Gg: ASbGncvctTdgs1cAVy6hAcgVbMn4WyW3BoR+ZFLDTDGVB0DLF6K/vYPV+ZNnc9DbwK+
-	1xtqnebTsRhDT85Dh1nHI8rHzD7v77qJrHe68y5FoPEn/gKCFRGyWbzXJZ1+Qm5N9Rrs1KePtK3
-	KaAPQ0O473cdf2yzchmqOu4icsIuycmegLcpZfkeavC9dc7z4WiIwBMPS+MKOhERiQDfMJVNabr
-	3YeTyxBDeF/yJ6FIgJ0FzO9RFoEkEjaGN7xKDoeF0FeiMWYGmD79SSnL1n+Ek60Ih9BlGZWcDe6
-	tj2tZDlrFz0+y02ldrNrNJmomZnZ1Pwajley2vYlMnBAUouqHN/H3zkfW/a15HM=
-X-Google-Smtp-Source: AGHT+IEdOfXJMnWFu+/Ukhgq++wQx4ReIGb7Y4+lEWZJg1AMq1L0mJklB6P5+OMRQTWTHJVcRpbpBg==
-X-Received: by 2002:a17:903:1251:b0:232:609:86c9 with SMTP id d9443c01a7336-237c204e73cmr431545ad.9.1750193423987;
-        Tue, 17 Jun 2025 13:50:23 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:8d7d:9cdc:2836:83cb])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88c061sm85269355ad.1.2025.06.17.13.50.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 13:50:23 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:50:21 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Matthew Schwartz <matthew.schwartz@linux.dev>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Add nokbdwakeup quirk and enable it for MSI Claw
-Message-ID: <5isz34mtyxezwrhmvtedygszhhnstsqa4dmcttb33p5dgw47st@3n6wswp2p6di>
-References: <20250617051930.3376981-1-matthew.schwartz@linux.dev>
+        d=1e100.net; s=20230601; t=1750193434; x=1750798234;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kHRW9Nu+63/GeEfAZ+I+V+utb3fXU8IH15wFHQNM6f0=;
+        b=IkzYgTUCdpAtF1Ulw0ZkqWaNqxx1umXaQRUFL+weHewActEiH6SslGMHNb7gNMaPNq
+         y6U56CuWyzhITyBJZPD598Yt/ho03MCYYTS/nMWewEEL5BslGxfOQrZB/Djwpd026Ybj
+         3X9DTaAvY5l4XKtjwyc/xUSr2y+aNEbxXe6p4l/yFfvW4b21G2ULpm/XkkxSOo7/po0V
+         vAwoAjMsq65dkhvdaUhHrKmLjOPFTJdTPjbQmHwgVqvFJwqm+CzYEz+eS6UMPg+eFX6o
+         nWd1m8+rHSyepIRh1b8NWVdnZ2cgHc4rLgwTR0tBpTMCu3lDWr351m7xTN0oBZ46LrXt
+         mPRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhAtuZN8VV49BUxsBfRAa7M7NaY0GIW4Qs7fhxc31qHXKk/SLv/NwpM4Pb4mX7/OYMEldqfZIFWRyBv/w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJE7/i3xTcr8mv1QbY/WBbpyO2U1+b0wm2GCAwBkP6KOau+mLr
+	Jh5yA4aJO27wIiOLFEDYlNV4l+q+BgCgcotfyxVBkTP0wF+l5+35wXOCSFibHtEFF5HjiJv4hw1
+	sewQnDG5kJ19p4sA0W0Ak84GVfcU6YJrAt5jjPBx3/hrY6lh01eWkC9q8SNL9vNpE9Kn62m2dH7
+	l/+RO4sMsG/KEM3arHeK1idDp1Yf75LvDwC3eR
+X-Gm-Gg: ASbGncsrqzd6kOUtNZJnOpa6Q6VB4AWvYiqX6056xJULtaZ6XXO2lmlhj3di/o/OlTH
+	zYBJ99ermFuN4EWNVg+sq8AaU5E054a62ZFBtZSHQhvTVSuvLEGRNhrBcbCxTBAWLKiGaq6x98V
+	EJPsoZ
+X-Received: by 2002:a05:690c:7085:b0:711:33d3:92ed with SMTP id 00721157ae682-7117547e398mr196388497b3.38.1750193433823;
+        Tue, 17 Jun 2025 13:50:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHFkuwT+fLR4WKKPymtx1/7iwNyL7yTTLzuBi63mVvFMY8cCKDK7Li4VnZQgIqQeFSw0PwBNF7+bj2If0h+Nvk=
+X-Received: by 2002:a05:690c:7085:b0:711:33d3:92ed with SMTP id
+ 00721157ae682-7117547e398mr196387977b3.38.1750193433443; Tue, 17 Jun 2025
+ 13:50:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617051930.3376981-1-matthew.schwartz@linux.dev>
+References: <20250607-uffd-fixes-v2-0-339dafe9a2fe@columbia.edu>
+ <20250607-uffd-fixes-v2-3-339dafe9a2fe@columbia.edu> <cb6f4acf-1eca-4d61-aa70-5edaf89d9763@redhat.com>
+In-Reply-To: <cb6f4acf-1eca-4d61-aa70-5edaf89d9763@redhat.com>
+From: Tal Zussman <tz2294@columbia.edu>
+Date: Tue, 17 Jun 2025 16:50:22 -0400
+X-Gm-Features: AX0GCFuppgQNaMC-wQr2Mt5OwUGedRzgBMvE-W4xD5WFZ25ag1VCaucfpSNRTtk
+Message-ID: <CAKha_soChL=TmSAK_yBQYnyjdNRpjp121N5F8XRA=4O9Q+_wvw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] userfaultfd: prevent unregistering VMAs through a
+ different userfaultfd
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Xu <peterx@redhat.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-ORIG-GUID: YF-zA8-ZJROkODX0SMDbbKun6RHw6yzH
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE2NiBTYWx0ZWRfX4rVvaoa6x4qW TkcMxAcqKRw7Iz+7wL3Wy8grZqJ70mCIJZJ8aml9uDYOBakTiWXfTkHyGOUsXzqsm00LS27Ius5 Fr+OQkqw5iqIDjmc/VkskcPqs5TGnE6w+bDd858uVD1GFVO4QsZE7BW6ysJvAMjDVCnxPw7w+0v
+ A1witoi0S5t/O+Jw+Tq1iLjvs9iVEUv9LXr8s/ifSOIZuF4LZIpserURItIZqYPmD9Mi7BctDl9 1k5HOPFj2BN0xsiiw3Hct4ZDLDtABQN8Tp2GzDeQskijo7C9AIMedqvB+2yRUAHqTYircazYJqa 61qojYQ+F6l6UjSF1jONAQEj1kj2EtUFd2PjaXh4msZZjluKCJ7d6U2CHydE64EpAP87gQQPyuT okstoQuW
+X-Proofpoint-GUID: YF-zA8-ZJROkODX0SMDbbKun6RHw6yzH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_09,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ spamscore=0 lowpriorityscore=10 bulkscore=10 clxscore=1015 adultscore=0
+ phishscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
+ definitions=main-2506170166
 
-Hi Matthew,
+On Tue, Jun 10, 2025 at 3:31=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 07.06.25 08:40, Tal Zussman wrote:
+> > Currently, a VMA registered with a uffd can be unregistered through a
+> > different uffd associated with the same mm_struct.
+> >
+> > The existing behavior is slightly broken and may incorrectly reject
+> > unregistering some VMAs due to the following check:
+> >
+> > if (!vma_can_userfault(cur, cur->vm_flags, wp_async))
+> > goto out_unlock;
+> >
+> > where wp_async is derived from ctx, not from cur. For example, a file-b=
+acked
+> > VMA registered with wp_async enabled and UFFD_WP mode cannot be unregis=
+tered
+> > through a uffd that does not have wp_async enabled.
+> >
+> > Rather than fix this and maintain this odd behavior, make unregistratio=
+n
+> > stricter by requiring VMAs to be unregistered through the same uffd the=
+y
+> > were registered with. Additionally, reorder the WARN() checks to avoid
+> > the aforementioned wp_async issue in the WARN()s.
+> >
+> > This change slightly modifies the ABI. It should not be backported to
+> > -stable.
+>
+> Probably add that the expectation is that nobody really depends on this
+> behavior, and that no such cases are known.
+>
+> >
+> > While at it, correct the comment for the no userfaultfd case. This seem=
+s to
+> > be a copy-paste artifact from the analogous userfaultfd_register() chec=
+k.
+> >
+> > Fixes: 86039bd3b4e6 ("userfaultfd: add new syscall to provide memory ex=
+ternalization")
+>
+> Fixes should come before anything else in a series (Andrew even prefers
+> a separate series for fixes vs. follow-up cleanups).
+>
+> > Signed-off-by: Tal Zussman <tz2294@columbia.edu>
+> > ---
+> >   fs/userfaultfd.c | 17 +++++++++++++----
+> >   1 file changed, 13 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> > index 80c95c712266..10e8037f5216 100644
+> > --- a/fs/userfaultfd.c
+> > +++ b/fs/userfaultfd.c
+> > @@ -1466,6 +1466,16 @@ static int userfaultfd_unregister(struct userfau=
+ltfd_ctx *ctx,
+> >   VM_WARN_ON_ONCE(!!cur->vm_userfaultfd_ctx.ctx ^
+> >   !!(cur->vm_flags & __VM_UFFD_FLAGS));
+> >
+> > + /*
+> > + * Check that this VMA isn't already owned by a different
+> > + * userfaultfd. This provides for more strict behavior by
+> > + * preventing a VMA registered with a userfaultfd from being
+> > + * unregistered through a different userfaultfd.
+> > + */
+>
+> Probably we can shorted to:
+>
+> /*
+>   * Prevent unregistering through another userfaultfd than used for
+>   * registering.
+>   */
+>
+> ?
+>
+> > + if (cur->vm_userfaultfd_ctx.ctx &&
+> > +    cur->vm_userfaultfd_ctx.ctx !=3D ctx)
+> > + goto out_unlock;
+> > +
+> >   /*
+> >   * Check not compatible vmas, not strictly required
+> >   * here as not compatible vmas cannot have an
+> > @@ -1489,15 +1499,14 @@ static int userfaultfd_unregister(struct userfa=
+ultfd_ctx *ctx,
+> >   for_each_vma_range(vmi, vma, end) {
+> >   cond_resched();
+> >
+> > - VM_WARN_ON_ONCE(!vma_can_userfault(vma, vma->vm_flags, wp_async));
+> > -
+> >   /*
+> > - * Nothing to do: this vma is already registered into this
+> > - * userfaultfd and with the right tracking mode too.
+> > + * Nothing to do: this vma is not registered with userfaultfd.
+> >   */
+>
+> Maybe
+>
+> /* VMA not registered with userfaultfd. */
+>
+> The "skip" below is rather clear. :)
+>
+> >   if (!vma->vm_userfaultfd_ctx.ctx)
+> >   goto skip;
+> >
+> > + VM_WARN_ON_ONCE(vma->vm_userfaultfd_ctx.ctx !=3D ctx);
+> > + VM_WARN_ON_ONCE(!vma_can_userfault(vma, vma->vm_flags, wp_async));
+> >   WARN_ON(!(vma->vm_flags & VM_MAYWRITE));
+> >
+> >   if (vma->vm_start > start)
+> >
+>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-On Mon, Jun 16, 2025 at 10:19:28PM -0700, Matthew Schwartz wrote:
-> This patch series aims to solve an issue on the MSI Claw, a series of
-> handheld gaming PCs, where their volume buttons will wake the system out
-> of s2idle because they are registered via an i8042 keyboard device. This
-> is not expected behavior on a handheld device that lacks an actual
-> keyboard, as it is very easy to press the volume buttons while handling
-> the device in its suspended state. 
-> 
-> To solve this, introduce a new quirk based on DMI match that will disable
-> the wakeup property of an i8042 keyboard device and enable it for current
-> MSI Claw models.
+Thanks! Will update with the suggested comment + commit message changes and=
+ move
+this patch before the VM_WARN changes.
 
-Why does this need to be done in kernel instead of having a udev rule
-to toggle this through sysfs:
-
-/sys/devices/platform/i8042/serio0/power/wakeup
-
-Thanks.
-
--- 
-Dmitry
+> --
+> Cheers,
+>
+> David / dhildenb
+>
