@@ -1,127 +1,197 @@
-Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C53942ED844
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B698E2ED843
 	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:43:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175035; cv=none; b=brINIxHVY/2mn7Pt0ey7CHPFc76Xq4FIjQR+778RfcANp1cBdzA3t2mw+VzR3JTiNfPWhCGA4IoGItcRzbZRQIKE5rzXz/NiGIEdqT61ZE21l9awvE3VXGlU4jOYQxBLQkuw80BjdX12Qr/mwjWX3HXm6HRHvvtGVqqrq2u6IDI=
+	t=1750175035; cv=none; b=dZK0OVMbV9HTrzdaVrHoSuYLXVYvAPwZ6jgZjjkS5QHXnm8LsN4P1ZOc1Sz0dJuLf6vbwySjPze+ukBa9l7pU1Ss32m5gZGl/UoBfhWjJWn7FribukVqB2lXHKZsLf3zbi/nsB3wfRkIgExilvES67YHELP7KgkBacSZ7+PQNNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750175035; c=relaxed/simple;
-	bh=P5CLajP6UCO8cSIeq7vAlm70pO24MmcBN9J83+v7YjA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ER8e2RFe1pbmMN5LvzWA5aaeBNTaLM/Dyciw3OpNR3KYGJIetqZ/XVU1IG/OpIpHcwZK+x1WGbn9eiQlAZHHFVeOR8pba1VdxwebaZRebZVFYxhdZCes3ozqzq63b+6WadrWNScX42eJk1tx6p19m8YieJNAfvsDKgYJnqNBp9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay05.hostedemail.com (Postfix) with ESMTP id DECB3599EF;
-	Tue, 17 Jun 2025 15:43:46 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 8D0BB18;
-	Tue, 17 Jun 2025 15:43:45 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uRYTX-000000029Ho-3X9a;
-	Tue, 17 Jun 2025 11:43:51 -0400
-Message-ID: <20250617154351.696892698@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 17 Jun 2025 11:43:05 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
+	bh=gfOK1w8At4LCO+SEz2YxE1sL/b3knNVAuIBGQzCExJ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I3mQyGGQVoszh1BDZucy+txuNzsLaMKKkGJYfONXjg1v0KSVyc+Bo3mQJZOJmlA5HBOlSYjT9WZLW7/F0TiERV2/sd2RKe7SSb/io/gd3/DLnaBLlzYD8Lvt5nKtcrLHRsujFkupZIWeBV07cqotbeDqxBOGup/R4x+kijQ45r4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LWRBb6bZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LWRBb6bZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750175032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t4hXdfl2BxaEs0JquHL/H5jXrrSdl8LRqFfGRUF6aUs=;
+	b=LWRBb6bZ2Z5q5H37/6a19Fy8rnQnzW6tO4tCL9e2vYVTJtAK3pfUIPqpIPWiN5DUod0t5c
+	Q6GhzxzS8cH4Wo9uTxOqDCH71hQWgQVh0eecxXuCgAykEotKypxhAWDovfwGPFoWlrOb9o
+	ruWOGk+yJh5IhdpydUZO4RH4cpt1Tbw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-320-hRgb-HucOey_TeIhho_60A-1; Tue, 17 Jun 2025 11:43:51 -0400
+X-MC-Unique: hRgb-HucOey_TeIhho_60A-1
+X-Mimecast-MFC-AGG-ID: hRgb-HucOey_TeIhho_60A_1750175030
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a5780e8137so1596753f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:43:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750175030; x=1750779830;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t4hXdfl2BxaEs0JquHL/H5jXrrSdl8LRqFfGRUF6aUs=;
+        b=aAcZbliPIr16hCPE/PFyZYrF8aPDK/TG04UCnNRbv01peWxcqjEEYrdvVtpk0t2wky
+         V08hgA+VBtdOTcCndZ8eNxpWNe5THCzTvSABRWvcQ1aleWVFo4unFuFmdX/xZRk6hZMB
+         R5RjK5zJUh1zTGlZVJVfAs87ay2gkiabYAaCZ3l+0pjooU+8yNXpgNY11+N4h5aGmF0i
+         N5QFsBfNHvnWR1lVBMwvkQcryzOsuRC7tWtNj9R6Erxc0pOJiDCAFyrwGqNPjPyYmpFc
+         ZjiZljYfXXHKx59L3GEmwcKjplj6+rzhHagAPh+vG7gwUr90mL/rA2TziHyZGTVL8eMW
+         mu8g==
+X-Gm-Message-State: AOJu0Yw79GUlp2fUvpiHGGoVem6l0aqtbAWPh7TIvCjWmtjz1W8/pGL5
+	7+ZMLVETDgCp8AoNQgSTo976S2Nm/hx8Iv8x9CI8F+NGjUQipmx7ILMmUIuGNGyG2U7N8LZLWOE
+	D5iYNPSCod9FvxmgNLBYjeAknrJubzQmG420+1qAMOWnrQvDDqkSVmJS6w5IWrmRnt16hWSJLZx
+	ayPWvQRrcv2l7kC15Skn5+0lNsi+jryzDXVde3xgwEZKmmBsIC
+X-Gm-Gg: ASbGncumaoByK+CmLR6KSQ0DuuJMhp/tfXERsPI0BvJyZRbm0+qXfzZvv/rc39Y2gON
+	VuzICtNfG3jKulo3bEaZ9H8AJ8Z2790A01iWSKy610iLGhD4tsPIloli+3624B/pH7gFxcBgTP8
+	mIPVz0N+CtyjSm81IFg0Y4pSqC1wGaF66yVOCR6orjyE8ae7voT5cWlqt+SYor9VQYUD1HQIjE5
+	+V3Khqw2fGIkt9LmegsDMPQtvtmlXF2I0967DzPI5T9ARpLXbIVHewIg/DQkr+xjsU30jTYp8cv
+	tgAIp9Z/tU31HmPrrX1CbyXd0Dt/l+wEuwIlLdySU1+94/dum4ZJ1YAYGvQr8T2nhmi2d/0KKjN
+	qNN5ByA==
+X-Received: by 2002:a05:6000:1884:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a56d821e4dmr12961334f8f.16.1750175030047;
+        Tue, 17 Jun 2025 08:43:50 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFcoD8JqLOB4EjbN+k5qD0zJS7SAB63dB1ZbzMQjH6b78ztWbJgN3nPYj9/mZ7cyKIKJjAtyA==
+X-Received: by 2002:a05:6000:1884:b0:3a4:eb7a:2ccb with SMTP id ffacd0b85a97d-3a56d821e4dmr12961278f8f.16.1750175029492;
+        Tue, 17 Jun 2025 08:43:49 -0700 (PDT)
+Received: from localhost (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568a54a36sm14542075f8f.15.2025.06.17.08.43.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 08:43:49 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
-Cc: "John Warthog9 Hawley" <warthog9@kernel.org>,
- dhaval@gianis.ca
-Subject: [PATCH 2/4] ktest.pl: Allow command option -D to override temp variables
-References: <20250617154303.952651744@goodmis.org>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	nvdimm@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity check in vm_normal_page()
+Date: Tue, 17 Jun 2025 17:43:32 +0200
+Message-ID: <20250617154345.2494405-2-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250617154345.2494405-1-david@redhat.com>
+References: <20250617154345.2494405-1-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: 8D0BB18
-X-Stat-Signature: itxyiwcabtem8chhgy93pjbsm4ec48o6
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ggp3Z0EzBnulcQktgLG4KWJkNocTxjJg=
-X-HE-Tag: 1750175025-954248
-X-HE-Meta: U2FsdGVkX18Bpq4Txw2dUewEILTVnyZibBIUlgj/NpauFWmaOLdJLape1bm53FmGJSVeVev+/5XHWO9FsmiZw8xBfoTDeyAtxMosXDFqvDd3kAt07V51arQQkaS6OuLEhW9mE2Qwyd+iO0ko7sID3V5S1vG2RTg0Fg2EE0Ke/p1EG0EEUgapjZbeFQ/Lfz84Ir/sUHcH9m/yjgIoNy1nuG58/vuSRBXWZQiyjvjAJjYuBcnzuuu3dkxi/O+l2NhHCt79niKP2vJ4ZKTflPtXDt6obkT2J786U9nxRE10n4tOE9skDT8SfJZ5ow/E0DPvoRv0bwXDml66LXFIM1scdaZojVaEfv36ntkfID0g2PV9CqCZ95GE0c+UQqoWFjm656+0E1IiRm7v8i6c2siu2w==
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+In 2009, we converted a VM_BUG_ON(!pfn_valid(pfn)) to the current
+highest_memmap_pfn sanity check in commit 22b31eec63e5 ("badpage:
+vm_normal_page use print_bad_pte"), because highest_memmap_pfn was
+readily available.
 
-Currently -D only updates the persistent variables that are defined with
-"=". Allow it to also override all temp variables that are defined with
-":=".
+Nowadays, this is the last remaining highest_memmap_pfn user, and this
+sanity check is not really triggering ... frequently.
 
- ktest.pl -D 'USE_TEMP_DIR:=1' -D 'TEST_TYPE[2]=build' config
+Let's convert it to VM_WARN_ON_ONCE(!pfn_valid(pfn)), so we can
+simplify and get rid of highest_memmap_pfn. Checking for
+pfn_to_online_page() might be even better, but it would not handle
+ZONE_DEVICE properly.
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+Do the same in vm_normal_page_pmd(), where we don't even report a
+problem at all ...
+
+What might be better in the future is having a runtime option like
+page-table-check to enable such checks dynamically on-demand. Something
+for the future.
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- tools/testing/ktest/ktest.pl | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ mm/memory.c | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 8fcc09893986..c441934f1def 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -22,6 +22,7 @@ my %repeat_tests;
- my %repeats;
- my %evals;
- my @command_vars;
-+my %command_tmp_vars;
+diff --git a/mm/memory.c b/mm/memory.c
+index 0163d127cece9..188b84ebf479a 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -590,7 +590,7 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
  
- #default opts
- my %default = (
-@@ -901,14 +902,22 @@ sub set_eval {
+ 	if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
+ 		if (likely(!pte_special(pte)))
+-			goto check_pfn;
++			goto out;
+ 		if (vma->vm_ops && vma->vm_ops->find_special_page)
+ 			return vma->vm_ops->find_special_page(vma, addr);
+ 		if (vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP))
+@@ -608,9 +608,6 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+ 		if (vma->vm_flags & VM_MIXEDMAP) {
+ 			if (!pfn_valid(pfn))
+ 				return NULL;
+-			if (is_zero_pfn(pfn))
+-				return NULL;
+-			goto out;
+ 		} else {
+ 			unsigned long off;
+ 			off = (addr - vma->vm_start) >> PAGE_SHIFT;
+@@ -624,17 +621,12 @@ struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+ 	if (is_zero_pfn(pfn))
+ 		return NULL;
+ 
+-check_pfn:
+-	if (unlikely(pfn > highest_memmap_pfn)) {
+-		print_bad_pte(vma, addr, pte, NULL);
+-		return NULL;
+-	}
+-
+ 	/*
+ 	 * NOTE! We still have PageReserved() pages in the page tables.
+ 	 * eg. VDSO mappings can cause them to exist.
+ 	 */
+ out:
++	VM_WARN_ON_ONCE(!pfn_valid(pfn));
+ 	VM_WARN_ON_ONCE(is_zero_pfn(pfn));
+ 	return pfn_to_page(pfn);
+ }
+@@ -676,14 +668,13 @@ struct page *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
+ 
+ 	if (is_huge_zero_pmd(pmd))
+ 		return NULL;
+-	if (unlikely(pfn > highest_memmap_pfn))
+-		return NULL;
+ 
+ 	/*
+ 	 * NOTE! We still have PageReserved() pages in the page tables.
+ 	 * eg. VDSO mappings can cause them to exist.
+ 	 */
+ out:
++	VM_WARN_ON_ONCE(!pfn_valid(pfn));
+ 	return pfn_to_page(pfn);
  }
  
- sub set_variable {
--    my ($lvalue, $rvalue) = @_;
-+    my ($lvalue, $rvalue, $command) = @_;
- 
-+    # Command line variables override all others
-+    if (defined($command_tmp_vars{$lvalue})) {
-+	return;
-+    }
-     if ($rvalue =~ /^\s*$/) {
- 	delete $variable{$lvalue};
-     } else {
- 	$rvalue = process_variables($rvalue);
- 	$variable{$lvalue} = $rvalue;
-     }
-+
-+    if (defined($command)) {
-+	$command_tmp_vars{$lvalue} = 1;
-+    }
- }
- 
- sub process_compare {
-@@ -4267,6 +4276,11 @@ ktest.pl version: $VERSION
-                 -D TEST_TYPE[2]=build
-                     Sets TEST_TYPE of test 2 to "build"
- 
-+	        It can also override all temp variables.
-+                 -D USE_TEMP_DIR:=1
-+                    Will override all variables that use
-+                    "USE_TEMP_DIR="
-+
- EOF
- ;
- }
-@@ -4277,7 +4291,11 @@ while ( $#ARGV >= 0 ) {
- 	die_usage if ($#ARGV < 1);
- 	my $val = shift;
- 
--	$command_vars[$#command_vars + 1] = $val;
-+	if ($val =~ m/(.*?):=(.*)$/) {
-+	    set_variable($1, $2, 1);
-+	} else {
-+	    $command_vars[$#command_vars + 1] = $val;
-+	}
- 
-     } elsif ( $ARGV[0] eq "-h" ) {
- 	die_usage;
 -- 
-2.47.2
-
+2.49.0
 
