@@ -1,63 +1,63 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22D52ED87D;
-	Tue, 17 Jun 2025 15:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6912E92BC;
+	Tue, 17 Jun 2025 15:58:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175883; cv=none; b=hJbc7CdgMXUkcmFaEScswWe6RS72EnQRKnzN63mBbjEppNbxyktRJ53lUy0MtcQy5kcihAPI2LCyj85JpER+A/uyk4GBzEq6Jk5vC7I+V1GzogkOS2Ol55AiPsv8Yrp9pmZ8fQcfpwczyvrjqhh+tciN7x2rOUGhv3PpFHv7LL0=
+	t=1750175884; cv=none; b=Sl/i6lf3ryZFG5tpxvur9xLGwjGS4u/lcsZ1QxMifLhErDQ4lvdXgsBm8F4Zuf6ktDn8xkTYeX1Bb944p4xQy3yCEDalhft6tVnjuLewBptEEsaaz0+p26lAcM9AkCMycLYfFIZ1MXGbY7M2ofwTWxCdt36qLHfFZG47/BoYKB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175883; c=relaxed/simple;
-	bh=k2IZUGGSjNh7YmwST6Jj/uXIReJvEhYDnealB+gedeo=;
+	s=arc-20240116; t=1750175884; c=relaxed/simple;
+	bh=DOuguTgGDuEu8UsveQgxyh0O60xitWB9yN1pocuhPgU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c31maCjkMS+POq6mgQRgOA1inL7tqbYu5A7VXZNd/SfSXNHG/X37ZyO8nwFs6hp+PKot+J9zFys98ZL0LCo5TJgPaJAWCWGc+mnNvrxaH8i2thhBhpT7DaEB3ZCQXTiHwEQ9gGdfna4Pb0Yf6CZSheyt+8+Nbc+AFWTCBTFjVNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j43ECud9; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=aGOZhE81EmHwIsZDVNuUCcG/+OHfKiK0pnfHa6dr1oWFyrSlgAmVs1zRMGi0UCmlTrura4EQDqSVWSYifXveKFFS2NAzFyXksGrqvfYpAAwZKvZLZTrpIAGlIpx+h35hah/0IFfo+CYLoHaH8XtTRIPAS07Q6A7NfYqu3fSAR6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gqd9+B7U; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j43ECud9"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so50989015e9.1;
-        Tue, 17 Jun 2025 08:58:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gqd9+B7U"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451dbe494d6so75454145e9.1;
+        Tue, 17 Jun 2025 08:58:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750175880; x=1750780680; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750175881; x=1750780681; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NsZfxeqM9LP6dvIsvkURMf+pGGLMSvH+G4Gi/Jfw6oo=;
-        b=j43ECud9tiq0oBhConQdzHp4XexmQgY19VWod8lffbM/DSbfZz8naZ5LUGUN8kwhC1
-         30tjY1c5xiAQFjrjwaIjkOOKSuyAcTxzWQGNdYGu3xNCzVbAHjHeVkV0clyZhHuhwzuS
-         b5/1M3cEioMoyCl97obEh1ruM6H1zYTOX5YgS97rzEWJvCm1CZi2nNSrYTCS0MLSdqTa
-         sUVZCeZnHF6LvQJ7G4gNVaeCAzIxUfqq7+SjryYZscwIpoS6VGC8KRN4eCSMh41pEBG2
-         cJPvWqLmNYgb0uYcs1RFfM7Eaep6vEfhO9EH9mEAxgd+UNpI4ZUu9P53WZ62UIsLQnZT
-         cO3Q==
+        bh=717t4uXqqHJ/xWQnNBMF1mtn6twDlKScAhRL5+wnqGU=;
+        b=gqd9+B7UU4LdFT2rvwR7B3WIT0ZeKLCLAcl95d4ta+uMmtppfvIxUkXlSPNrtUq070
+         xXLZt4BqauKCqoIZNEZy2W7MY0Od+yMnhpBT7rehqwL+xccJuyA+orZyd9BDvA7ANES8
+         LrQS6SAd+s2yE6ozqbv6eRnfbc4LN/Mv13/eJOYqwCDoMrU05Awi1FXGjI/ohU8GGMCI
+         34dXhhT+RYUuSzuqokkrOqJ9i816hiOqtcjkGqc32qJLEGVE5/0jCSjq/1cY6LTxpQlm
+         Ak5f3J5X9hpm0/6vql7ljvBwRe3Zadn77AttWBxahoqWRuJauoJOhQzZn2gddsPPj9Vx
+         NzZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750175880; x=1750780680;
+        d=1e100.net; s=20230601; t=1750175881; x=1750780681;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NsZfxeqM9LP6dvIsvkURMf+pGGLMSvH+G4Gi/Jfw6oo=;
-        b=sqCr7W+6immfmfu5FV4lzWdY/BdguUwJIHTGpjz37xG4fuO56JEndyzaGHxx5R0pJK
-         GsOqp1TAsm8Of77d4Cxu4f05LoeAOuwoMxXvDWYxJvz8X3KLqHunjuTHiLgn3WkT6OCe
-         hptLb8gTGlZlUqePhJvYG0u/BS8ctcxi58HG2j7GnGk7Zy/H4wAHiDhKhW0FP0Sgd9ei
-         33vPAGpgRY35h4RY+DcKUpSmuD+Ub4N0cgP9YHA84Wj1cY2ZPZzOB1Yq5qYGhIgDDWPP
-         8HCxKkMAAzZSa6/kRwjac2ukIFKxHcLwADe87SvvxpyUhXl9SLLZjpz/M0YnYaZ6t4TM
-         zIZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdAVt/sIhwPvALru+B+lghzQaGxfVbM3npCn+JcawoRrr4Ic9ACSDwo+auMOklJ4x95/lEdMgObT0y2TYh@vger.kernel.org, AJvYcCXWsCiPqgkzeZx/F8HNw8B26bWxHYJg2v7ujcDr2E+5aqoaO+AdympyreG2MaFIrOrfVFW7YD7Ge1jA@vger.kernel.org, AJvYcCXfr9EkGxSO/uhvs2u7eNdCV+YuJzhSN4QAmKHHtoP2TI3PHqT551ET/yA7K/6393bvCAGBCxfEPANM@vger.kernel.org
-X-Gm-Message-State: AOJu0YyijesahS1IgnMBm3XKSfvdPqzgzxerDC/IFz+AmwGuocU6u5sv
-	jvD5y/YURYKSLMDzp9/xuzeIpN2C6kEa//4gJoRNfyyO01Q3RKJ4UOc1
-X-Gm-Gg: ASbGncsrD74o93A3gv9En3YxlJl/Y4kJmeNHhHYPZhqa6qNg+7/YQTKStJH9M23R/HD
-	VhoyXpBCphFRoTT7cz0n61bGvwbJren68UlyPr3jv97WfLKXi5oTjPNO23q43RzcBSd/OAKWBc0
-	CvHiPnAlKD3sgQIWQmYeDAQjSfRf4aJyh96H2cj0TpMYOGSOtlSVFsBH3MBwRNxfT8p0wuA/rys
-	CKlUfHGSI+v3Xe/Nw+33JWbOvCQS99dMgV6nEzPz85fnCJ3CBq3lXU+pp3BynSjUd/4NcNZXS/c
-	SgJAuFCg0yfcs1yJb13qHGiXBwDLQuR9KE+nAEvMlKqeDG7J0zf1ZoQuDkh2QFFur4iOelNp+rx
-	xe3AotUWrNfQ=
-X-Google-Smtp-Source: AGHT+IGnD2jDwQ6p30B87/o1bgbnTO4JgOm2ZpuDQ4yqKdnflI0Cuey9Cpb1eNwwMaJdryWKn1XHsA==
-X-Received: by 2002:a5d:5f48:0:b0:3a4:d8b6:ca3f with SMTP id ffacd0b85a97d-3a5723a291dmr10158013f8f.30.1750175879992;
-        Tue, 17 Jun 2025 08:57:59 -0700 (PDT)
+        bh=717t4uXqqHJ/xWQnNBMF1mtn6twDlKScAhRL5+wnqGU=;
+        b=dJ2sD5COErftpKFYcSKAY9hxCxJnzKQIiFRqinAyk2Zf8TR+LzEdKERTJydMXYfOUJ
+         4KHYlY3UnPyKm9s1KdrI0Bztce/1ECeukyrxmtQRB2rjNVY3QH7JcbzkVpxzhSFJtNxS
+         Ds5XO0Qenx8a7T1nVq0dwzq+2oUMeOLoE8OOpCq1G8meBzKZ3HQIxMu6CGgtjPHq2IMo
+         mN/eYm6qwvSW4bQZ7tEgamfMoPmbcOFZ8Fp9WuEzL4qIF6Fag+TUcMSzi31/fMHKYD4q
+         F1wA9pkKcTmeHUiTlLlxRSVDUg34o4c/FzGD5Xe9khdhTTzbAFwF/MqyR6+otiWCpoX5
+         oBxg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+d4SARG7eZeAueWoqHD8KMmUkNfQbbIPZlEvrSz9XL/vhdtJM74lS2S7epRhRnlJdsO45gnnQui6FEN0m@vger.kernel.org, AJvYcCWUpGAgohOqu0zguE92nzznaJx/ifF59jVh95NWmRzT/BoQ2cQgEn+/6yZhHEWVrmLCopOz45Ec/GRj@vger.kernel.org, AJvYcCWXRl+kWd1XWJZy435uK5ItPemnlbiUVLN2+A7J/SGn3M70wScU4EU8JGzHjHns3dtRHUAoWoBHY6tm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6/GM4sb/w2r5/QgR5Freq/pM50b5Y82IA53k2g/X9L0GzWPsx
+	5lJItQ5sLkIkzAr5i3RZyRoOvDOO1gWqB0TAMxhBfAXJyPGn5xYpJfgo
+X-Gm-Gg: ASbGncsO3TXq567Ium+QMZjNc0rSWYM8qinfNmlPcen2hjv5om8BbYFbsCuLIoj2YS0
+	KZpb3sxySBxpHZrqdfj2bJqFQYALG19XFCeJsmnTi09tMt2rb7sqS1e9JvFa9gGal/kW38u/MYa
+	Y8+UOr0k+wsHJB9qzY1EPwqg9t1uvTQHsoZvHq9k/t+KkErUHCg5AqkaFV6gPo62pYlKHMhZZX2
+	Fr/9XrG5Rf+bJ2rCoBo8Igoqe4d1eVUdNbO+Lg6dnzeJdIoW02YkMmHrxH/QgT3jDrE37bc/4qQ
+	5h+ASWOnCfnesblGci/uJQBlucy2yvczJkaHkanuDf7W9bL9Ms0iNMzTozmm7urv4Y83MLF+B+i
+	YELjMEcowXzY=
+X-Google-Smtp-Source: AGHT+IHT0NSgTGA+L2Uhm398gD9x6InOeTcEZRd7M+KQfwhB55CNyH43et4InW0k+lIF/KzmN1NZdA==
+X-Received: by 2002:a05:600c:8288:b0:440:6a1a:d89f with SMTP id 5b1f17b1804b1-4533ca946e2mr148778555e9.4.1750175881111;
+        Tue, 17 Jun 2025 08:58:01 -0700 (PDT)
 Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a53f79sm14189115f8f.4.2025.06.17.08.57.59
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a53f79sm14189115f8f.4.2025.06.17.08.58.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 08:57:59 -0700 (PDT)
+        Tue, 17 Jun 2025 08:58:00 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -74,11 +74,10 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Biju Das <biju.das.jz@bp.renesas.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v2 1/4] dt-bindings: clock: renesas,cpg-mssr: Document RZ/N2H support
-Date: Tue, 17 Jun 2025 16:57:54 +0100
-Message-ID: <20250617155757.149597-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 2/4] dt-bindings: clock: renesas,r9a09g077: Add PCLKL core clock ID
+Date: Tue, 17 Jun 2025 16:57:55 +0100
+Message-ID: <20250617155757.149597-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250617155757.149597-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250617155757.149597-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -92,79 +91,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Document support for the Clock Generator, Module Standby and Software
-Reset found on the Renesas RZ/N2H (R9A09G087) SoC. This hardware block
-is similar to the one found on the RZ/T2H SoC.
+Add the Peripheral Module Clock L (PCLKL) core clock ID for the RZ/T2H
+(R9A09G077) SoC. This clock is used by peripherals such as IIC, WDT,
+and others.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
 v1->v2:
-- Updated commit message
-- Added Acked-by tag
+- New patch to add PCLKL core clock ID.
 ---
- .../bindings/clock/renesas,cpg-mssr.yaml      |  5 +++-
- .../clock/renesas,r9a09g087-cpg-mssr.h        | 28 +++++++++++++++++++
- 2 files changed, 32 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/clock/renesas,r9a09g087-cpg-mssr.h
+ include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-index 708ab6bd7d44..bc2fd3761328 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.yaml
-@@ -53,6 +53,7 @@ properties:
-       - renesas,r8a779g0-cpg-mssr # R-Car V4H
-       - renesas,r8a779h0-cpg-mssr # R-Car V4M
-       - renesas,r9a09g077-cpg-mssr # RZ/T2H
-+      - renesas,r9a09g087-cpg-mssr # RZ/N2H
+diff --git a/include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h b/include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h
+index 1b22fe88dec7..f6e5f62b07c4 100644
+--- a/include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h
++++ b/include/dt-bindings/clock/renesas,r9a09g077-cpg-mssr.h
+@@ -23,5 +23,6 @@
+ #define R9A09G077_CLK_PCLKGPTL		11
+ #define R9A09G077_CLK_PCLKH		12
+ #define R9A09G077_CLK_PCLKM		13
++#define R9A09G077_CLK_PCLKL		14
  
-   reg:
-     minItems: 1
-@@ -112,7 +113,9 @@ allOf:
-       properties:
-         compatible:
-           contains:
--            const: renesas,r9a09g077-cpg-mssr
-+            enum:
-+              - renesas,r9a09g077-cpg-mssr
-+              - renesas,r9a09g087-cpg-mssr
-     then:
-       properties:
-         reg:
-diff --git a/include/dt-bindings/clock/renesas,r9a09g087-cpg-mssr.h b/include/dt-bindings/clock/renesas,r9a09g087-cpg-mssr.h
-new file mode 100644
-index 000000000000..f28166d6015f
---- /dev/null
-+++ b/include/dt-bindings/clock/renesas,r9a09g087-cpg-mssr.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+ *
-+ * Copyright (C) 2025 Renesas Electronics Corp.
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_RENESAS_R9A09G087_CPG_H__
-+#define __DT_BINDINGS_CLOCK_RENESAS_R9A09G087_CPG_H__
-+
-+#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+
-+/* R9A09G087 CPG Core Clocks */
-+#define R9A09G087_CLK_CA55C0		0
-+#define R9A09G087_CLK_CA55C1		1
-+#define R9A09G087_CLK_CA55C2		2
-+#define R9A09G087_CLK_CA55C3		3
-+#define R9A09G087_CLK_CA55S		4
-+#define R9A09G087_CLK_CR52_CPU0		5
-+#define R9A09G087_CLK_CR52_CPU1		6
-+#define R9A09G087_CLK_CKIO		7
-+#define R9A09G087_CLK_PCLKAH		8
-+#define R9A09G087_CLK_PCLKAM		9
-+#define R9A09G087_CLK_PCLKAL		10
-+#define R9A09G087_CLK_PCLKGPTL		11
-+#define R9A09G087_CLK_PCLKH		12
-+#define R9A09G087_CLK_PCLKM		13
-+#define R9A09G087_CLK_PCLKL		14
-+
-+#endif /* __DT_BINDINGS_CLOCK_RENESAS_R9A09G087_CPG_H__ */
+ #endif /* __DT_BINDINGS_CLOCK_RENESAS_R9A09G077_CPG_H__ */
 -- 
 2.49.0
 
