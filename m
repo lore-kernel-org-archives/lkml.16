@@ -1,116 +1,62 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5030F28C873;
-	Tue, 17 Jun 2025 09:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FAE156CA;
+	Tue, 17 Jun 2025 09:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151022; cv=none; b=t79OIS9ihkbnPG5zgDYc2ylj6VdHb9is+DphDHBKWP8F5pRGOnmeJvQDQGguaMmU5ZP/Y3qPDhTAJbsZBk1YWd2motS7x7kDR/WiuTOe6hJE4dcCwpaqFO2AHRCgGNNDQIm8uoIFQdI2gbYM04AbYwVaWKQiSAUq6maHqno6Rrw=
+	t=1750151081; cv=none; b=dFZXuU+MXpiguEedJE6Ww2oWVmcOK0QGo6odYb4USJfRi1ojHOvOCgu5bjHhL0AJIJ+Qgp2OgA+5Y+vQgFPFF+dNu0dvWoRjvusR4sfhOQ5xiG5Rid8xDkuOgCuVhfHNvwYxTaiz/l8b8BqNehh5SFKsW8ss3tsrHGEyRPRnrek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151022; c=relaxed/simple;
-	bh=0jXIXmWCiLrPFyDn+WH7Az5AxH7uOGz0L78bXYR4JJI=;
+	s=arc-20240116; t=1750151081; c=relaxed/simple;
+	bh=i77lUk5WMIXOEP9D3wHvwa2rpTFSesgsgccYKoyA4OY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OzYijdMvAGeRuDrtUmBrFv4r3gU1JvE8ELxa18W+v6pch1hdodhY6D/M0b/QUU04A+l04WJVQigHUXtuOZk86vQDlhbk8nEsh/rbZSw/51u+S+sVvDzwltKf9GXYwnDBRYdF8VMf9Uj4/FcFw+i5S3R80wRlgcgwWFfG2K+cK/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FokIEwN1; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfWusGbVlV/oEZN9tCEJ30W8v+lYfTIs6UD5Z+mL7/+4WQUOGiOS490DLvxp3SRsdlWnO3jyczgCIFnfP9ZAk8VKtzidLS2lLw2ttJX5wuRt/96e03E8SYlZlmWwT1c25NGFVGJtQq8Og0Hk/yhJ9TIdqnT9jjaXxCWj5aa7pbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CHplQo/B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FokIEwN1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=O1aQjgQO8XR30rV5R8gCxQHfePvnGGG/SprTQSTa2jQ=; b=FokIEwN1p2FvqL66tn8K60SPz5
-	UxyId9D5qadVtujZCBWpP+KG+S8Maktqmk6GE1Z4HyidDnL0PwQgUMbpjFVyLIkVaWErihzIuDYWU
-	eNJ1PM3tJH7vrCzr3Q4XEuZXRITaqd1HIX5QS1O24phxhJe30qGcEJIQmdhQ3pAZwzn/uhkHROKtH
-	GD3lD2oxvkwfVPbFwPlq6fLPDL1ONmSATfrEKCdlL+3o094P/igJY1JnYm6Jdh8R6S5hiaOvnyQyq
-	6l+ImSPR79wi0VB7IGHHcMNl5dO0yfrXexEWQNJqeeVU/5pV2WmIcBmYyNSEustE4pKn215vVQRhS
-	ihWPZ+pg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRSE6-0000000GvSG-1dCk;
-	Tue, 17 Jun 2025 09:03:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 83070308523; Tue, 17 Jun 2025 11:03:29 +0200 (CEST)
-Date: Tue, 17 Jun 2025 11:03:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, seanjc@google.com,
-	pbonzini@redhat.com, sohil.mehta@intel.com, brgerst@gmail.com,
-	tony.luck@intel.com, fenghuay@nvidia.com
-Subject: Re: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its
- architectural reset value
-Message-ID: <20250617090329.GO1613376@noisy.programming.kicks-ass.net>
-References: <20250617073234.1020644-1-xin@zytor.com>
- <20250617073234.1020644-2-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CHplQo/B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D77C4CEEE;
+	Tue, 17 Jun 2025 09:04:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750151080;
+	bh=i77lUk5WMIXOEP9D3wHvwa2rpTFSesgsgccYKoyA4OY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CHplQo/BMzDA9ERz8UlEj3VdXQo270fn8VnOFcLmmlcogqD3hEhL0n7JHfCqhyw5B
+	 zdNRBPHvP1ie4+ok9O+G+BoFH9FFPRsveyxwdLCliSlKaZAKINk0ERzGyTie1JX92o
+	 G3MWeRU+5kWfQ8VFLtgTfxaCSHEd94FbAmGPJnFdXMp9vr6DrCVmT4cwOaxF0xdYn5
+	 0q+K3ujyowdEx2zK/2s6Xq+r4oN5hkT9nYKRMFbBxEVh2be8M1xuCRdnoeHgHGMdyY
+	 gGvJ9g7C7tX1JN8yd7DcitlkF+0Srt37UUEuP40uqLvaFiYCnyjmeVn4f11HJQKD9B
+	 GQ7giRJyJ6OLA==
+Date: Tue, 17 Jun 2025 11:04:38 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Waqar Hameed <waqar.hameed@axis.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, kernel@axis.com, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add Nicera
+Message-ID: <20250617-sage-meerkat-from-ganymede-846c9c@kuoka>
+References: <cover.1749938844.git.waqar.hameed@axis.com>
+ <6d6705440a3c28ed4c6746dd570c7a7d8b6d3641.1749938844.git.waqar.hameed@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250617073234.1020644-2-xin@zytor.com>
+In-Reply-To: <6d6705440a3c28ed4c6746dd570c7a7d8b6d3641.1749938844.git.waqar.hameed@axis.com>
 
-On Tue, Jun 17, 2025 at 12:32:33AM -0700, Xin Li (Intel) wrote:
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 8feb8fd2957a..3bd7c9ac7576 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -2243,20 +2243,17 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
->  #endif
->  #endif
->  
-> -/*
-> - * Clear all 6 debug registers:
-> - */
-> -static void clear_all_debug_regs(void)
-> +static void initialize_debug_regs(void)
->  {
->  	int i;
->  
-> -	for (i = 0; i < 8; i++) {
-> -		/* Ignore db4, db5 */
-> -		if ((i == 4) || (i == 5))
-> -			continue;
-> +	/* Control register first */
-> +	set_debugreg(0, 7);
-> +	set_debugreg(DR6_RESERVED, 6);
->  
-> +	/* Ignore db4, db5 */
-> +	for (i = 0; i < 4; i++)
->  		set_debugreg(0, i);
-> -	}
->  }
->  
->  #ifdef CONFIG_KGDB
+On Sun, Jun 15, 2025 at 12:13:58AM GMT, Waqar Hameed wrote:
+> Nicera (Nippon Ceramic Co.) is a manufacturer of a wide range of
+> sensors. For example infrared, ultrasonic, gas sensors and much more.
+> 
+> Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Maybe like so?
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -2206,15 +2206,14 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard)
- 
- static void initialize_debug_regs(void)
- {
--	int i;
--
--	/* Control register first */
-+	/* Control register first -- to make sure everything is disabled. */
- 	set_debugreg(0, 7);
- 	set_debugreg(DR6_RESERVED, 6);
--
--	/* Ignore db4, db5 */
--	for (i = 0; i < 4; i++)
--		set_debugreg(0, i);
-+	/* dr5 and dr4 don't exist */
-+	set_debugreg(0, 3);
-+	set_debugreg(0, 2);
-+	set_debugreg(0, 1);
-+	set_debugreg(0, 0);
- }
- 
- #ifdef CONFIG_KGDB
+Best regards,
+Krzysztof
+
