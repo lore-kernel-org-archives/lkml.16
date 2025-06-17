@@ -1,245 +1,180 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03C492EAB80;
-	Tue, 17 Jun 2025 18:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C62B27C873
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185333; cv=none; b=PtkN+6Yxrq1ikeOaniwXtzjUXoDVBdT51qojFXeVb9MM0AR51ZfdWr7ByJZ5G1iYHBLXAjy78aOZ9uTjki8cQ92uP18pOueM5trMJhaRpD3evF+o2IEnJZB2FeSwFJFEg/ulMx7sxrw63LTsaIv4uFi5RriG1DVibcVKC5h90oM=
+	t=1750185335; cv=none; b=nYYp+ymHGmfrzQQuqlo7K7PA1uVsaS2DVS18i4OpXLI+bgq7GXxMNBO1vT+VJjjeja89HWHSIhwOqiqp0gxfCO6YSFc3owQ46J+66jEmH2s9xDdBmQYWe2NXNWCcmbPQh+YbAi5tQ5U0lOOJDidj5sFDIlzxPtecujjlEh9vGAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185333; c=relaxed/simple;
-	bh=eE2PyitkntoNMoKoFD0RAgwDFQxOKSGVNOA1GV/xd28=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VNTvg1aFUoGKRs0iPtORexDgb/nC1A0N90vKDbZ6l7v6kqNwUwh5L3X2l+jD58n9oTXvwriwVrrD6/0hpAGDE0owNVTTULC5EihS8qu4INsr/KHIBoU/mdKC7Hv0WM2vdw5+WFbHrZrDblMZEnYOv/I4wQ4J6bQo6AVXwmy+EJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=nGajPdbm; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1750185335; c=relaxed/simple;
+	bh=Bo25oI0Qz2JUnbyDkKjXxJzy4KM8ejzXvgXTGt7TOSI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IltEhXXIZHb71zDQn7MdT13B4WMDb/BNMHxgYtego2dsbavQoQaoAw1oswuYBnPVNY7maJzdNfKajlvV4204gT1ct50l/sndxNWbNeDuqCNszVUtOMOgWL/n0V3w4bQIy+2PL7Rhu6iHMYC4z4B70e3ukdjmE0ODk6CKWym26bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dJu9sgXu; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="nGajPdbm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
-	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-	:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=l/grAn1V/PWLVqAuWAXwa7AZ2lhCZoBiGV75dOFYz/c=; b=nGajPdbm/o9UG8gkwPaJXL0ceP
-	mgeCaBTnOtzCuiyULoun5LdH8KE8v3r3NrgnINYa57dbydR2NWU7GTktg02q/RQhNn6Jl9pY4YQC2
-	p1662CYyJOIae3l5Tgok/AGKakCcAwlSXqJymaucmTlx7t/aK+QM3JD7PLhlm/tOLVG5n3Ws2kX9g
-	Z3RF/h3qoP9qDtwYHskJ6GqpUXfIT1FYsbWKoSDv6OWEienELIvbOaWcPBqX02TcFx6pB5LibtocH
-	Ay84ewCgYbFh50+VbdXFIecL/2ILBLxRRCLPhBYNkzCq9bKJxNwUMWEbTN0y3tx0SRwWk/brz2Ntk
-	5/3pv3nw==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uRb9P-004j89-SC; Tue, 17 Jun 2025 20:35:16 +0200
-From: =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Date: Tue, 17 Jun 2025 15:34:22 -0300
-Subject: [PATCH RESEND v4 5/7] futex: Wire up set_robust_list2 syscall
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJu9sgXu"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2353a2bc210so54031685ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750185333; x=1750790133; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1y6Vpeow9ypGvWf8u47quO+HQeuFr+2+BZOOkcyGh+o=;
+        b=dJu9sgXuz5vlOq22mBbupApRT5aIS6LytR7EnzOscLuBCkYWMFUjUj+cipKZDESVOS
+         9Rb++3TMQabmEuyDR2oR7RxGNUrTcIFOIvptd9KPawclgIVKcuZTXXnIySVVuNtD7zv1
+         5g7nJ19V5cQB5G/oWCUgfnllfjfdsEoiN73akKcH6x2WZLLhQAzbC6bbNnn/+I/E+701
+         hTeCnn9VGphITHt2mhPiVxt1W++t8hzKiPRISIuTrFlftNgw9oLV8nTiqhzu5B6oc7gM
+         UnaMoJhlSBtsGZzGL3llEuwwHF1n2JaEaCk9BKTwIU3FR5ls2KJOidhRnbbCuNj/yUFq
+         AITw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750185333; x=1750790133;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1y6Vpeow9ypGvWf8u47quO+HQeuFr+2+BZOOkcyGh+o=;
+        b=euvmKyVnJYkgXWevk1zKJy1b6kQkGGPC5i9o/WZm4SBIC8Qq8uEt0VWPvHaOtP/++m
+         UlTkXRzV802fIYNHNxMuEFIR2Okgj7uD69aQz7dU/GqOOhB1RQBzmYmH9sKM4upt7zO7
+         6RsWqrJpwzR2DAKyvkUFoQsyLm5+pbObFPVqW6CME41ZtW8yLHnxqiIe4sBYNisFAg6T
+         YXQU82BlfFd6Apql8j0lZ12AZ21gwyouukcvpK+0n9SOFMcRFwT5C7BbJ5HNDLX+/S51
+         1Zu0WdOx8Msmy7QPvyc25JxBgwR8ztc/u9/2UthQlVQsfokH3SUKP6QMmpIzHahHazKG
+         kr7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVJAQciGkU4a0JaOjE6+lQp6nnFI5FyojGK+MQYxKxmYoDEjrsqi1xRtLgIJ8wERdmziGgpk1grsyARivg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrcutt99mDxS22wzU+46oWZTU5cNI5a4AR4OKEsM6bNt119orP
+	bv+i87npw4Yn210P42m+YAzJa/y2dT2CAN5KS0AF4S5MBQbb+BD8jvxq
+X-Gm-Gg: ASbGncsmGogSvfEJF0ZTrxzXnXQl9Y8CGl8dcj96Y1LRYzCHyX0sB9Fpr9T6W5hbmLQ
+	8Z/Cph2H8NEY7JigkL9S6uZbnSSQmNFmzlkF9YjvPyWaweNUTQf7SnhZkc1aivMWDcPnZhYNe0U
+	C4fZGnHMLYo2I8n5wH3zSvjiQ+FK6P0LzKeWX/R9KjI5Y1oxXLol2k4Bwr6xL61dow18XAYIv6y
+	wApMWbhfZ5JQRYXSLDBx+W/9hPPMoZIW5FqUCSZzhLY3xxczEoz4m6Dp+H4gzP/OlhpZqeu3/vS
+	MzoUpPsxwNxJOfpW3CFGq2OgjTevxYT6H2C7GGLLQy3Qw97DQoo8MyljIu/lqRyUxa3hSKeWS8Q
+	4GYianvzCmJWvluC7rQ==
+X-Google-Smtp-Source: AGHT+IEhcH1Eh2sxuz2dhf/9qQbdYl9KrMk1DSJaqjlnZ4S/lSOuKNutG0tXdGufHO/DVYbnkNGULg==
+X-Received: by 2002:a17:902:e949:b0:235:1962:1c13 with SMTP id d9443c01a7336-2366b34426cmr230449935ad.14.1750185332656;
+        Tue, 17 Jun 2025 11:35:32 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([106.37.123.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781c7sm83753715ad.128.2025.06.17.11.35.27
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 17 Jun 2025 11:35:32 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Chris Li <chrisl@kernel.org>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Barry Song <baohua@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH 2/4] mm/shmem, swap: avoid redundant Xarray lookup during swapin
+Date: Wed, 18 Jun 2025 02:35:01 +0800
+Message-ID: <20250617183503.10527-3-ryncsn@gmail.com>
+X-Mailer: git-send-email 2.50.0
+In-Reply-To: <20250617183503.10527-1-ryncsn@gmail.com>
+References: <20250617183503.10527-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250617-tonyk-robust_futex-v4-5-6586f5fb9d33@igalia.com>
-References: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
-In-Reply-To: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
- Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Waiman Long <longman@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-api@vger.kernel.org, kernel-dev@igalia.com, 
- =?utf-8?q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-X-Mailer: b4 0.14.2
 
-Wire up the new set_robust_list2 syscall in all available architectures.
+From: Kairui Song <kasong@tencent.com>
 
-Signed-off-by: André Almeida <andrealmeid@igalia.com>
+Currently shmem calls xa_get_order to get the swap radix entry order,
+requiring a full tree walk. This can be easily combined with the swap
+entry value checking (shmem_confirm_swap) to avoid the duplicated
+lookup, which should improve the performance.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
 ---
- arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
- arch/arm/tools/syscall.tbl                  | 1 +
- arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
- arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
- arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
- arch/s390/kernel/syscalls/syscall.tbl       | 1 +
- arch/sh/kernel/syscalls/syscall.tbl         | 1 +
- arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
- kernel/sys_ni.c                             | 1 +
- scripts/syscall.tbl                         | 1 +
- 17 files changed, 17 insertions(+)
+ mm/shmem.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 2dd6340de6b4efddc406f0c235701c15cf02f650..aecc167ac7706d25da73db8099f0813e268b820c 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -507,3 +507,4 @@
- 575	common	listxattrat			sys_listxattrat
- 576	common	removexattrat			sys_removexattrat
- 577	common	open_tree_attr			sys_open_tree_attr
-+578	common	set_robust_list2		sys_robust_list2
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 27c1d5ebcd91c8c296dc6676307f66bfdf4ab78d..2e47ae5dc9a426d8e5e9dacf29caa54223cf2f5a 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -482,3 +482,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 9fe47112c586f152662af38a9a7f90957cb96cf8..7bcc8cc628c80a44fea2b53d5c69ab5e5f10a1d2 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -467,3 +467,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common  set_robust_list2		sys_set_robust_list2
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 7b6e97828e552d4da90046ddfcd4a55723e522bb..cd23608afe7e7dadfbf8e21df0486b85bfcb99ce 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -473,3 +473,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index aa70e371bb54ab5d9c8dd8923b6ecf9693ee914d..0a31452ef6ed8fee8f1e2ead5d44acfbbe275fe9 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -406,3 +406,4 @@
- 465	n32	listxattrat			sys_listxattrat
- 466	n32	removexattrat			sys_removexattrat
- 467	n32	open_tree_attr			sys_open_tree_attr
-+468	n32	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 1e8c44c7b61492eabf00c777831e457a7a6e579c..4cb5a72256338f6fb407f940f1883d523113d609 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -382,3 +382,4 @@
- 465	n64	listxattrat			sys_listxattrat
- 466	n64	removexattrat			sys_removexattrat
- 467	n64	open_tree_attr			sys_open_tree_attr
-+468	n64	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 114a5a1a62302e32dd74d1679ff423a2d57c3c6b..c46238e9edd00d2861edcfa87c5ce7a62bfdc3d4 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -455,3 +455,4 @@
- 465	o32	listxattrat			sys_listxattrat
- 466	o32	removexattrat			sys_removexattrat
- 467	o32	open_tree_attr			sys_open_tree_attr
-+468	o32	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 94df3cb957e9d547d192e8732c0cf23ef2b5ce5d..71071489a18375013bbfbe26578a634283c1e07b 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -466,3 +466,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 9a084bdb892694bc562f514b55212d167cbac12f..edc4d0bef3f1c7ab826ea8180e7f5ceba4774c07 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -558,3 +558,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index a4569b96ef06c54ce7aa795d039541c90a38284f..ff8c594073ec8c3486cc61544d14a338d3f3a906 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -470,3 +470,4 @@
- 465  common	listxattrat		sys_listxattrat			sys_listxattrat
- 466  common	removexattrat		sys_removexattrat		sys_removexattrat
- 467  common	open_tree_attr		sys_open_tree_attr		sys_open_tree_attr
-+468  common	set_robust_list2	sys_set_robust_list2		sys_set_robust_list2
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index 52a7652fcff6394b96ace1f3b0ed72250ee5e669..507789194570a9e7b492b210be30bb41021be289 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -471,3 +471,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 83e45eb6c095a36baaf749927628e6052fe900e6..8d1122c2235b8d5082a11392e68787efe55f58be 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -513,3 +513,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index ac007ea00979dc28b0ef7c002a0615ce86dd3101..cbc0c469e66ecf7b8a61e82c38b07ecc63f6fe23 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -473,3 +473,4 @@
- 465	i386	listxattrat		sys_listxattrat
- 466	i386	removexattrat		sys_removexattrat
- 467	i386	open_tree_attr		sys_open_tree_attr
-+468	i386	set_robust_list2	sys_set_robust_list2
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index cfb5ca41e30de1a4e073750096f5b51a2ec137d2..b420217c72fc50ad90f291812972019606c5ff69 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -391,6 +391,7 @@
- 465	common	listxattrat		sys_listxattrat
- 466	common	removexattrat		sys_removexattrat
- 467	common	open_tree_attr		sys_open_tree_attr
-+468	common	set_robust_list2	sys_set_robust_list2
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 4e7ef343a29b..0ad49e57f736 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -505,15 +505,27 @@ static int shmem_replace_entry(struct address_space *mapping,
  
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index f657a77314f8667fa019a01e10c84ea270024adc..6b852ee8a1621c7dd24f6cd37fd990f5ff8d8527 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -438,3 +438,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index c00a86931f8c6cb30d35a9d56cbcc5994add90e1..71fbac6176c8886f4fa8dd437b0aedd5f14e9f74 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -195,6 +195,7 @@ COND_SYSCALL(move_pages);
- COND_SYSCALL(set_mempolicy_home_node);
- COND_SYSCALL(cachestat);
- COND_SYSCALL(mseal);
-+COND_SYSCALL(set_robust_list2);
+ /*
+  * Sometimes, before we decide whether to proceed or to fail, we must check
+- * that an entry was not already brought back from swap by a racing thread.
++ * that an entry was not already brought back or split by a racing thread.
+  *
+  * Checking folio is not enough: by the time a swapcache folio is locked, it
+  * might be reused, and again be swapcache, using the same swap as before.
++ * Returns the swap entry's order if it still presents, else returns -1.
+  */
+-static bool shmem_confirm_swap(struct address_space *mapping,
+-			       pgoff_t index, swp_entry_t swap)
++static int shmem_swap_check_entry(struct address_space *mapping, pgoff_t index,
++				  swp_entry_t swap)
+ {
+-	return xa_load(&mapping->i_pages, index) == swp_to_radix_entry(swap);
++	XA_STATE(xas, &mapping->i_pages, index);
++	int ret = -1;
++	void *entry;
++
++	rcu_read_lock();
++	do {
++		entry = xas_load(&xas);
++		if (entry == swp_to_radix_entry(swap))
++			ret = xas_get_order(&xas);
++	} while (xas_retry(&xas, entry));
++	rcu_read_unlock();
++	return ret;
+ }
  
- COND_SYSCALL(perf_event_open);
- COND_SYSCALL(accept4);
-diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
-index 580b4e246aecd5f07d542943ba68fc4ed5961660..07d7e776d0329659e70a9a55ffff7ac18eb3ff87 100644
---- a/scripts/syscall.tbl
-+++ b/scripts/syscall.tbl
-@@ -408,3 +408,4 @@
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
- 467	common	open_tree_attr			sys_open_tree_attr
-+468	common	set_robust_list2		sys_set_robust_list2
-
+ /*
+@@ -2256,16 +2268,20 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		return -EIO;
+ 
+ 	si = get_swap_device(swap);
+-	if (!si) {
+-		if (!shmem_confirm_swap(mapping, index, swap))
++	order = shmem_swap_check_entry(mapping, index, swap);
++	if (unlikely(!si)) {
++		if (order < 0)
+ 			return -EEXIST;
+ 		else
+ 			return -EINVAL;
+ 	}
++	if (unlikely(order < 0)) {
++		put_swap_device(si);
++		return -EEXIST;
++	}
+ 
+ 	/* Look it up and read it in.. */
+ 	folio = swap_cache_get_folio(swap, NULL, 0);
+-	order = xa_get_order(&mapping->i_pages, index);
+ 	if (!folio) {
+ 		int nr_pages = 1 << order;
+ 		bool fallback_order0 = false;
+@@ -2415,7 +2431,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 	*foliop = folio;
+ 	return 0;
+ failed:
+-	if (!shmem_confirm_swap(mapping, index, swap))
++	if (shmem_swap_check_entry(mapping, index, swap) < 0)
+ 		error = -EEXIST;
+ 	if (error == -EIO)
+ 		shmem_set_folio_swapin_error(inode, index, folio, swap,
+@@ -2428,7 +2444,6 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+ 		folio_put(folio);
+ 	}
+ 	put_swap_device(si);
+-
+ 	return error;
+ }
+ 
 -- 
-2.49.0
+2.50.0
 
