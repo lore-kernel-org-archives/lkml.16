@@ -1,230 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3450293B5C;
-	Tue, 17 Jun 2025 08:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC0128CF58
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147632; cv=none; b=ntrxmS7XxrLlHLGNb4blFq1EaNnclbG6kBLPKQtsfcatURVxzpbrEPw93BJWpuGxrIkgPuwBRTMLHkFmQ0XQoGEgexwf6hsgaiJzvXzEFdUWl8LcRGBHorOPxsRBn4Secij55uOeQXyZ+2xgLnEgMgw3LxD42RqX1R2RLsgYxKg=
+	t=1750147677; cv=none; b=nbw6QkmAix59pOAHVgubt1QvZIzVj6Qeu6LpwN1+f3h2DPxCMbBfq8eQ+LhMWcsNI7loDBNWUZG8cTCZYR1cCT4Bc/TSvVkSqLQPtp/w7Gx2TUXg500aENpYJQJNkh+cj0jsnBSZrLcSO+31Qy0lDGkXUfobtXBGDi4yjDifUsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147632; c=relaxed/simple;
-	bh=KYLiaVSweH1OEcMlxROlRhvYiENPdZ9jdUsrp6aJ5ZM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NVzHQmNiqX1Dj8IcnHRsuuNFRq82oUxr3RxuaqRsr0ELi7v9xHv2vjYuGNGWSPWsVUfDm2rZxKHfAzymrt+5mpMUW/o1qdM9+4M4ZmNfzqsNmflhyzbxJNYiVTCsWIFTkvA5clmLzJP4VOyExO72okT6166kBHT1ewSFAVSkEwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQxcYs/y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750147677; c=relaxed/simple;
+	bh=qC9LP02eFjdCcwHhwELwXffDQ37VNRcHuFmDlE6+KJA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fd1S8GdrtX0NRI8jAjcORL13US6pAPKf+MNsa4lQ3oi9eiU3st7YzV3V8Fzk7rLjgHWjRMyeN3NNrB3livTnxMr26udVH8Ek0/ax2RJnwIImMiilofDkolhtawISw1BfWqM9JEuONfULuMwF+eRu4A1HCFgmT4DBMrliJfd13kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yArNxGBk; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQxcYs/y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8B9AC4CEE3;
-	Tue, 17 Jun 2025 08:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750147631;
-	bh=KYLiaVSweH1OEcMlxROlRhvYiENPdZ9jdUsrp6aJ5ZM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=iQxcYs/ycwoPSCMYhNUtVOozwBZ4/rLkC6haME/bsSeEF7GG2fHvqQB8Spl0B6Urd
-	 8sg8MhNRAph2GhlSXng43BuUQtxYNmBrqVliI7i6LCa+iO5vSu6nGeqT5vdY0BNuNa
-	 0qlLaoQoZj5emLRVka0MvW9S5/wy2eiaOqqaYudJStPdF13rlVY06RzUQaw7PNUhD7
-	 TLdUZ6+chHnuz1kToubEKrA/rhNIPIwAQMdhz81rOA4jHTbbwTg5wLJJjj3EoVsDrO
-	 U0s2jqKdwVtIziOxKcdbVY/Igb1y/pDjPFtM03dkdLQywpVQeHL+o/GEa01AOQJuiH
-	 G6Gvh5mXJhZyQ==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>, "Tian, Kevin" <kevin.tian@intel.com>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [RFC PATCH] iommufd: Destroy vdevice on device unbind
-In-Reply-To: <20250616164941.GA1373692@ziepe.ca>
-References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
- <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250612172645.GA1011960@ziepe.ca>
- <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250613124202.GD1130869@ziepe.ca> <yq5abjqotim7.fsf@kernel.org>
- <BN9PR11MB527633CA2F698E83E12BFBD68C70A@BN9PR11MB5276.namprd11.prod.outlook.com>
- <20250616164941.GA1373692@ziepe.ca>
-Date: Tue, 17 Jun 2025 13:37:04 +0530
-Message-ID: <yq5azfe6ssev.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yArNxGBk"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3138b2f0249so4905368a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750147675; x=1750752475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LmeLrUwwnwwo3sgPhPcUqQRjTMnBauDJO3rcb03/yNc=;
+        b=yArNxGBkZt7X0s2bFqC6xIMdlLwGTohinLEGM6BY/b63RvL4riikSbFhD/JRjCHeRv
+         7MBcUykOqnyg2P9F9LirAFC9f/zI3/cYaSWiZx63TeC5eZQ9+C03knl74CWPUkaKLOuY
+         GtFM29axZIoSHWwbCwdGpIUQrIb48JXmBbKEE7hX+cllGAY9TVZrSUSN3pORZJzVkR/H
+         S/6vGXR09AbP4VXoIM6m6TpGasWUpJvMHgFvteRXG8bE1BdhO5xfX5gzUWbK9Rp/e3bs
+         CGp7EMZ9Mgb/4kl0Jhe+q4gCxk2oXM8EcqmvM8RH2pASxM2VtP+9j9WtqiYqpd/LWlh4
+         pkyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750147675; x=1750752475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LmeLrUwwnwwo3sgPhPcUqQRjTMnBauDJO3rcb03/yNc=;
+        b=R7dL93q1+0av8X7P7W353forJJVlCOCstcZjUhnabcyu2n81Iyl4z+gsPb2uEJjgwn
+         MMvzeo3xzurPeuf416AAfHdvFPThB3p4mcFEAJ4XJ4nOOJoZS+WRzLHsmg5tMC9mDK3L
+         vWSaXROTKTULkdjiP5si6RpLFjTiqfV8fp5CZ1TrCf7Zs8nV1db3PKfAw5ExaDwakQJu
+         JBPTNiZgAZwq9dTbAybTsau4JqhZXWgQEffJQKEy3X8FjzwbK/sOtAij2+xGE/PIsGc+
+         JXavbpwdI0ToD8bOYYQ8QZCAsG6eKcZ6B9FCb9TJP+R7YtGB8AgAwCZIaBTSbFltLbpE
+         OeCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrJmw26IplJP61soG5ATB9ue5OCG1TCyLpGQIip3HzoQ/RXz1J4AZmQx1xbpqFPAtwXM1qStG0crLjyU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkPcdRVstUp3Z9JGBDPiyxVqkKhxlVsvI/2KHDC9IReQAznFsc
+	a0f5tegA32EWTGiRETleseTl5PwiyN3kOsNLvCj0D+IviBocSu4l69GvqbO6WCnHcs2P+qDkL+T
+	CTxq4ScRdTUJlS2kQONLH/41SnLpgp2Udh0mWls1T
+X-Gm-Gg: ASbGncvFJPq+Qj4B71XN8TomURQ8P1IcB7Uel3iqsBTs4KZRgqKXxVvzBlp04QbDY7w
+	S2bjJLBuIQ89GQGO4UbR9PEsJl8d03yzeYuXZtil8PrWkcXUFDNohhGhAXbM3N1UeIbv4Rsis/3
+	25/LUm6s/i18s9AEQ2NvoF8Ti/2rw6EJVcvx1iv7C7UwvvBMIvOEGIaI3VqBJVs/AybSFFSgSqA
+	A==
+X-Google-Smtp-Source: AGHT+IG/K3xiNRrowKWZCZRWAgbDclQsYxQ5yXc4KTy2ffgH6OYptWVbiypTQUO1d6cHGt3hf4eQTqf2wTREe9I6gdQ=
+X-Received: by 2002:a17:90b:57e8:b0:30e:5c7f:5d26 with SMTP id
+ 98e67ed59e1d1-313f1dab662mr20309855a91.24.1750147675309; Tue, 17 Jun 2025
+ 01:07:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <tencent_6BBB12330F9EEB1B9A4B791B262506BA6708@qq.com> <68511db3.050a0220.2608ac.000f.GAE@google.com>
+In-Reply-To: <68511db3.050a0220.2608ac.000f.GAE@google.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Tue, 17 Jun 2025 10:07:43 +0200
+X-Gm-Features: AX0GCFvQV5Ez8VWi8f1ixwaVxMJTI5PM7Y6T8IF5Pn1p6d3zBDgkx76_UgXc0-g
+Message-ID: <CANp29Y5Pnbn2AkF_a_iR0_=-oQNtmzx8QkZUHfHfU0QVfYRf=g@mail.gmail.com>
+Subject: Re: [syzbot] [jfs?] WARNING: fs/jfs/jfs_dmap.c:LINE at dbAdjTree,
+ CPU: jfsCommit/NUM
+To: syzbot <syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com>
+Cc: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Jason Gunthorpe <jgg@ziepe.ca> writes:
+#syz dup: WARNING in dbAdjTree
 
-> On Mon, Jun 16, 2025 at 05:37:58AM +0000, Tian, Kevin wrote:
+On Tue, Jun 17, 2025 at 9:48=E2=80=AFAM syzbot
+<syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com> wrote:
 >
->> the expected destruction flow from userspace is to IOMMU_DESTROY
->> the vdevice object before closing the vfio cdev fd which unbinds the
->> idevice.
->> 
->> now we are discussing how to handle a malfunction userspace which
->> violates that flow: let it be or add a tomestone state, after extending
->> unbind to destroy the vdevice...
+> Hello,
 >
-> Right, to be clear the concern is
+> syzbot has tested the proposed patch and the reproducer did not trigger a=
+ny issue:
 >
-> close(vfio_cdev)
-> ioctl(DESTROY, vdevice_id);
-> close(iommufd)
+> Reported-by: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
+> Tested-by: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
 >
-> Which is a possibile sequence for userspace/syzkaller to trigger.
+> Tested on:
 >
-> My position has historically been that DESTROY should not destroy some
-> random unrelated object eg because a parallel thread did an allocation
-> and re-used the kernel deleted ID. ID's that belong to userspace have
-> to be retained right up until DESTROY.
+> commit:         4325743c Add linux-next specific files for 20250617
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1479437058000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D70c73b370b132=
+354
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D077d9ebda84f426=
+a6a1e
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e0775=
+7-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D10a09e8258=
+0000
 >
-> Thus we've historically avoided creating scenarios where IDs owned by
-> userspace are destroyed by the kernel.
+> Note: testing is done by a robot and is best-effort only.
 >
-> Given we can say the above is illegal use of the API we could leave
-> behind a tombstone in the xarray. The goal would be to prevent lookup
-> of the object (since it is destroyed) and prevent reallocation of the
-> ID.
->
-> For instance a simple thing would be to drop in XA_ZERO_ENTRY, this
-> will reserve the ID and fail all future operations. The userspace will
-> get a failure on DESTROY so they know they did something wrong. The fd
-> close will clean up the reserved ID.
->
-
-How do we reclaim that object id for further reuse? 
-
-is it that if there is a request for a iommufd_object_remove() with object
-refcount > 1, we insert a XA_ZERO_ENTRY and convert that to NULL entry
-on IOMMU_DESTROY?
-
-Something like below
-
-The below sequence will work with the changes as
- close(vfio_cdev) -> vdev destroy
- ioctl(DESTROY, vdevice_id); -> vdev object id reclaim
- close(iommufd)
-
- ioctl(DESTROY, vdevice_id); -> EBUSY
- close(vfio_cdev) -> vdev destroy
- close(iommufd)
-
-
-diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
-index 7b3f82afd295..1f8e4fd0e240 100644
---- a/drivers/iommu/iommufd/device.c
-+++ b/drivers/iommu/iommufd/device.c
-@@ -289,7 +289,7 @@ void iommufd_device_unbind(struct iommufd_device *idev)
- 
- 	if (idev->vdev)
- 		/* extra refcount taken during vdevice alloc */
--		iommufd_object_destroy_user(idev->ictx, &idev->vdev->obj);
-+		__iommufd_object_destroy_user(idev->ictx, &idev->vdev->obj, REMOVE_OBJ_FORCE);
- 	iommufd_object_destroy_user(idev->ictx, &idev->obj);
- }
- EXPORT_SYMBOL_NS_GPL(iommufd_device_unbind, "IOMMUFD");
-diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-index 9c4472df80c6..8c5fc0fe92ce 100644
---- a/drivers/iommu/iommufd/iommufd_private.h
-+++ b/drivers/iommu/iommufd/iommufd_private.h
-@@ -186,9 +186,9 @@ void iommufd_object_abort_and_destroy(struct iommufd_ctx *ictx,
- void iommufd_object_finalize(struct iommufd_ctx *ictx,
- 			     struct iommufd_object *obj);
- 
--enum {
--	REMOVE_WAIT_SHORTTERM = 1,
--};
-+#define	REMOVE_WAIT_SHORTTERM	BIT(0)
-+#define	REMOVE_OBJ_FORCE	BIT(1)
-+
- int iommufd_object_remove(struct iommufd_ctx *ictx,
- 			  struct iommufd_object *to_destroy, u32 id,
- 			  unsigned int flags);
-@@ -198,12 +198,13 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
-  * point the caller has no shortterm_users reference and at least the xarray
-  * will be holding one.
-  */
--static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
--					       struct iommufd_object *obj)
-+static inline void __iommufd_object_destroy_user(struct iommufd_ctx *ictx,
-+						 struct iommufd_object *obj,
-+						 unsigned int flags)
- {
- 	int ret;
- 
--	ret = iommufd_object_remove(ictx, obj, obj->id, REMOVE_WAIT_SHORTTERM);
-+	ret = iommufd_object_remove(ictx, obj, obj->id, flags | REMOVE_WAIT_SHORTTERM);
- 
- 	/*
- 	 * If there is a bug and we couldn't destroy the object then we did put
-@@ -213,6 +214,12 @@ static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
- 	WARN_ON(ret);
- }
- 
-+static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
-+						 struct iommufd_object *obj)
-+{
-+	return __iommufd_object_destroy_user(ictx, obj, 0);
-+}
-+
- /*
-  * The HWPT allocated by autodomains is used in possibly many devices and
-  * is automatically destroyed when its refcount reaches zero.
-diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
-index b7aa725e6b37..d27b61787a53 100644
---- a/drivers/iommu/iommufd/main.c
-+++ b/drivers/iommu/iommufd/main.c
-@@ -88,7 +88,8 @@ struct iommufd_object *iommufd_get_object(struct iommufd_ctx *ictx, u32 id,
- 
- 	xa_lock(&ictx->objects);
- 	obj = xa_load(&ictx->objects, id);
--	if (!obj || (type != IOMMUFD_OBJ_ANY && obj->type != type) ||
-+	if (!obj || xa_is_zero(obj) ||
-+	    (type != IOMMUFD_OBJ_ANY && obj->type != type) ||
- 	    !iommufd_lock_obj(obj))
- 		obj = ERR_PTR(-ENOENT);
- 	xa_unlock(&ictx->objects);
-@@ -157,17 +158,27 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
- 			ret = -ENOENT;
- 			goto err_xa;
- 		}
--	} else if (xa_is_zero(obj) || !obj) {
-+	} else if (xa_is_zero(obj)) {
-+		/* We can reclaim the id now. */
-+		xas_store(&xas, NULL);
-+		ret = 0;
-+		goto err_xa;
-+	} else if (!obj) {
- 		ret = -ENOENT;
- 		goto err_xa;
- 	}
- 
- 	if (!refcount_dec_if_one(&obj->users)) {
--		ret = -EBUSY;
--		goto err_xa;
-+		if (flags & REMOVE_OBJ_FORCE) {
-+			xas_store(&xas, XA_ZERO_ENTRY);
-+		} else {
-+			ret = -EBUSY;
-+			goto err_xa;
-+		}
-+	} else {
-+		xas_store(&xas, NULL);
- 	}
- 
--	xas_store(&xas, NULL);
- 	if (ictx->vfio_ioas == container_of(obj, struct iommufd_ioas, obj))
- 		ictx->vfio_ioas = NULL;
- 	xa_unlock(&ictx->objects);
-diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-index d9749d9d2ffb..4fc74ada0e62 100644
---- a/drivers/iommu/iommufd/viommu.c
-+++ b/drivers/iommu/iommufd/viommu.c
-@@ -213,6 +213,8 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
- 	/* vdev lifecycle now managed by idev */
- 	idev->vdev = vdev;
- 	refcount_inc(&vdev->obj.users);
-+	/* Increment refcount since userspace can hold the obj id */
-+	refcount_inc(&vdev->obj.users);
- 	goto out_put_idev_unlock;
- 
- out_abort:
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion visit https://groups.google.com/d/msgid/syzkaller=
+-bugs/68511db3.050a0220.2608ac.000f.GAE%40google.com.
