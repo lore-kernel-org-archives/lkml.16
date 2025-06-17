@@ -1,261 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B5E1DE4E5;
-	Tue, 17 Jun 2025 13:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D922E3B00;
+	Tue, 17 Jun 2025 13:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750167841; cv=none; b=M30CvqPktIIByXK+vrqn6w8F0WX0M7wwdNH6gG/TVkcpfdaKRS+Qxk1bI6air/rAlzNpXGohdiStZ+aI0F+xU0Jx8YvlB5f45KSc4/00ph9w0y5LesKkG8iaIRx4MYwgN+EV+e74QoREFUTi9YiTRXtMR0L4bENBNCYCANsqmhc=
+	t=1750167909; cv=none; b=KvJdZy7YbrktKzddqISCQfGnVj/6gPKNb8jhWxjXJx4iz+zO5qTWglLapDmuWOHu1z3pe99Y4+7oLkBBycb+jdiZ7oFsi7+fCP/3diLU50DDOEa08f4+U7uva10PJ3Z4NWk11hgekJGYu0I2J3+7pn0SdKLtzQeh25vFmqGi7Cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750167841; c=relaxed/simple;
-	bh=sEgaAS8/P8uAA+q4Tevugwx8QH0Jyz9OE26t4H0UCyU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cyfl8pVxgawfdOuMzXGekUQMxp8JVnttKMpRA5Z6lM9Cq36zF+mYrsh4glJQ23LczS2u/veOaQCdNMCC6eTrD4tVICGbu+H9KDwummlnppNsJ+lG9DQMZnuMikthVgcDvTLIuj6wXuNHO+36gsUzwRxmcqqaIYsNEDjoD8h1K7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VomeLmSo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750167909; c=relaxed/simple;
+	bh=dvm8xNI85YR7mYpQnwoNestsK4G78rjB+tALdRxWgmQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tl9FOa7nqgicxXNmJ3mXY/MmLAkTtnKp/r6ZJv85ggsNrjc5Mm1jeLtkEzGst0HBRqlPlO5OrjAi6T7U6d0XsFkiwgQ4UFmMyudBNCXyuD2uxwFs1dNY/ugaLbEteI+2s+QJH0Mv3Fxn2Bik9w4atxaNPFqQMszPwi7A26VwVBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JHqsDQM7; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VomeLmSo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D7AC4CEE3;
-	Tue, 17 Jun 2025 13:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750167840;
-	bh=sEgaAS8/P8uAA+q4Tevugwx8QH0Jyz9OE26t4H0UCyU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VomeLmSolsLQ3Xe0vJ5cxJzwu6goEfTFlc1mzihy+DRFo/8jfT94SqSZf5mhWXHkb
-	 SSBYR749aY9a2vVBgtmzgmZLO9+6dj1bq8Dz5qQo8QWhiike0rvkA9EfMm8B6/ZvJL
-	 q+FlEGTd7XEH9o3ab0T3kM5m6zw+7kYG9o8xs/bdHB81aBV4L6wGksPcgyObCDqbHq
-	 D1pijcCjKB5SUcmaHu7hepJWPhNbFdvcJjKnTH27+JPkPJGCfDiQASJ3u5YRlIkzCf
-	 /remcfwstu8879VqY6pAmAZS9n8+Inp03w5lgIQ+zI/E6R2b/lM9wliLFaSlpgmYQ+
-	 h6HtWgcdte/9Q==
-Date: Tue, 17 Jun 2025 08:43:59 -0500
-From: Rob Herring <robh@kernel.org>
-To: Joy Zou <joy.zou@nxp.com>
-Cc: lgirdwood@gmail.com, broonie@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev, frank.li@nxp.com,
-	ye.li@nxp.com, ping.bai@nxp.com, aisheng.dong@nxp.com
-Subject: Re: [PATCH v1 1/2] dt-bindings: regulator: add PF0900 regulator yaml
-Message-ID: <20250617134359.GA1895818-robh@kernel.org>
-References: <20250617102025.3455544-1-joy.zou@nxp.com>
- <20250617102025.3455544-2-joy.zou@nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JHqsDQM7"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so45728425e9.0;
+        Tue, 17 Jun 2025 06:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750167906; x=1750772706; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pnlmn8Lzqxdh9sPxgTMxZddcdk8Ng+ng6Sm09cUpkbc=;
+        b=JHqsDQM74CnuCEzYLGdhTDOcX17OgzU0lUEBh3nIheMc1Gxo0VbC4wCFFla+ogs3Yt
+         VcEPACw+LfP8WB7XgWATZahjmTLA8mDgStpVCvxRqK5Tanw+FdYroWsUG9zeLBYfIf/y
+         mI9hMWrT34oDiKJZMF5RfapouECj/z6myPUrNT18qDpUuIcwc9eM6byYiM83gQcU5JWe
+         oft+DX798bkwwUlE0O1Y8g24FbqIM1FDLe7S5A4J9BYbRzVGfaf3cdyhv3yX3Obaj3Cw
+         QznxHtvoj1j1NPFsNumwn21Sz1K2fOCp+ZOfTIXKpysIImJPPKzt2H8A9cTI+DvZ2BUA
+         OXtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750167906; x=1750772706;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pnlmn8Lzqxdh9sPxgTMxZddcdk8Ng+ng6Sm09cUpkbc=;
+        b=QQexw/A1rnNVd0CGpRuKq62jsHg39HsEiCDnUvNkccTmlp8395nHgLHusM88vbh7Le
+         7lu3EGXxWSQGZd73fd8kPd5yLsKDAEkbomI/8BG5HmqC4x+LglsE6+A189RokFeXqQiK
+         RSE9sR/aLsZpDF5Ziy4XxSkpEbS8On5FFWvDsHWN/CM3NB+7H7zc0Axi1Iwh9aodZvwr
+         GnoMthcXDB8LHZ6RegzuXF9Dh3tJdza1zBTq8X0DCqsKpNNw8m3H2YnELqZ8iZNNJytJ
+         LWhnRt4CxndexxlG24a82kSDCRUQ2EYwx2LuFnc50Xj1TV0S6C/HPKVkO/uvG9Jype23
+         8qqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoW0H/e1YW1JIZaHY7yUCAmQUFKitkHRiF5FIIMVzUJu5t/enl93oVC6hlklh9gB7CX3rXDF+5ggoEKJJD@vger.kernel.org, AJvYcCWGQOd6rrQXvgOGDUy8/IiuswvEfRg3hPr9rmMhSZi3voQaKt7k+bSy0ndAFtU/Z/oPwCJUN8oODLeR6oAH@vger.kernel.org, AJvYcCXBMui2K7odf12KYeHmLOA32TiImwoohrlED3ANfjwXBCI6VcOcYIV7mrgIK1zZTRnGJN6vZdkvECK/@vger.kernel.org, AJvYcCXtZVWfkLUcB1EGhLlNeNsdF1DTSE6C8W1ZMEEQgq/MP5YgmoPRkyCdhW5XDUBZ9bSkcM3pVYBGWSDEpEztlC1eQZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySIHhWLmhwuCB5ZN4wvNF1mh6WyaekCzHk4PKUzRBQReW4Krhf
+	02Z913zYsuWxZA2rby7922QKRWxtLOSTq1sBfZlcIKBaxgW28tnxza38
+X-Gm-Gg: ASbGncvRsVQZAyMSbXKHpB1hzOKa4VEmkRddj/GUlR4JG6cKvPVtektYGOpN1pKUsM3
+	JV2wJkyGvegJEqcgf9mUqgm9aWAIeHHXOFpUlTKtATf95DdXOtqJ/FH1JcZE4p09/zXx3HuDh2w
+	pP9duDF1dVnJnM4xYsQ27DUEyUjF9dXtmH0hTH7qw3d5VfAugCQkmKEprpM1sARYxsFypD0nJc8
+	MAvpXVtyz3GW/Abgk9pCBpIRb5SXNtPSE6zMbFFr3EhUwBrWNXWuADJXOv8tyv6uf8Qywzsgwks
+	OMMxKgzcP7v2I78T9ovLA5jV6sjpjStbN70aeT/3olhsC1irWWKdIc7m0Bt/5nPkdsF0Wd9R/y+
+	iqlSoBkJaPnw=
+X-Google-Smtp-Source: AGHT+IHCtEFS8GzQ9Jzl6qP9zWaGOsHpYn8vtBkAqczxW1urVL0oMFvqxpp+QY6AejM1vZ2do47qRg==
+X-Received: by 2002:a05:600c:a01:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-4533c8ce774mr133642045e9.5.1750167905615;
+        Tue, 17 Jun 2025 06:45:05 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm14239728f8f.16.2025.06.17.06.45.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 06:45:05 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v12 0/7] Add support for RSCI driver
+Date: Tue, 17 Jun 2025 14:44:57 +0100
+Message-ID: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617102025.3455544-2-joy.zou@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 06:20:24PM +0800, Joy Zou wrote:
-> Add device binding doc for PF0900 PMIC driver.
-> 
-> Signed-off-by: Joy Zou <joy.zou@nxp.com>
-> ---
->  .../regulator/nxp,pf0900-regulator.yaml       | 179 ++++++++++++++++++
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Filename matching compatible. So drop '-regulator'.
+Hi All,
 
->  1 file changed, 179 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml b/Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml
-> new file mode 100644
-> index 000000000000..32e2ded92e2c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml
-> @@ -0,0 +1,179 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/nxp,pf0900-regulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP PF0900 Power Management Integrated Circuit regulators
-> +
-> +maintainers:
-> +  - Joy Zou <joy.zou@nxp.com>
-> +
-> +description:
-> +  The PF0900 is a power management integrated circuit (PMIC) optimized
-> +  for high performance i.MX9x based applications. It features five high
-> +  efficiency buck converters, three linear and one vaon regulators. It
-> +  provides low quiescent current in Standby and low power off Modes.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nxp,pf0900
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  regulators:
-> +    type: object
-> +
-> +    properties:
-> +      "VAON":
+This patch series adds support for Renesas RSCI driver for RZ/N2H and
+RZ/T2H SoCs.
 
-Don't need quotes.
+Note
+- This patch series is split up from the series [1] to make it
+  easier to review and test.
+- patch 03/12 was sent out individually [2] and is now merged
+  into the series for convenience.
+[1] https://lore.kernel.org/all/20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com/
+[2] https://lore.kernel.org/all/20250609192344.293317-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-> +       type: object
-> +       $ref: regulator.yaml#
-> +
+v11->v12:
+- Rebased on latest linux-next.
+- Added defconfig patch to enable RSCI driver.
+- Added RZ/N2H support to the dt-bindings
+- Used port ops callbacks in sci_shutdown() to allow RSCI driver
+  to reuse the core shutdown logic.
+- Added reviewed-by tags.
 
-Drop blank line.
+v10->v11:
+- Rebased on latest linux-next.
+- Added a new patch to update the dt-bindings maintainer entry.
+- Added a new patch to use port ops callbacks.
+- Implemented shutdown_complete callback
+- Added reviewed-by tags.
 
-> +       unevaluatedProperties: false
-> +
-> +    patternProperties:
-> +      "^LDO[1-3]$":
-> +        type: object
-> +        $ref: regulator.yaml#
-> +        description:
-> +          Properties for single LDO regulator.
-> +
-> +        unevaluatedProperties: false
+Cheers,
+Prabhakar
 
-Move this after the $ref.
+Lad Prabhakar (3):
+  dt-bindings: serial: rsci: Update maintainer entry
+  dt-bindings: serial: renesas,rsci: Document RZ/N2H support
+  serial: sh-sci: Replace direct stop_rx/stop_tx calls with port ops in
+    sci_shutdown()
 
-> +
-> +      "^SW[1-5]$":
-> +        type: object
-> +        $ref: regulator.yaml#
-> +        description:
-> +          Properties for single SW regulator.
-> +
-> +        properties:
-> +          nxp,dvs-run-microvolt:
-> +            minimum: 300000
-> +            maximum: 1350000
-> +            description:
-> +              PMIC default "RUN" state voltage in uV. SW1~5 have such
-> +              dvs(dynamic voltage scaling) property.
-> +
-> +          nxp,dvs-standby-microvolt:
-> +            minimum: 300000
-> +            maximum: 1350000
-> +            description:
-> +              PMIC default "STANDBY" state voltage in uV. SW1~5 have such
-> +              dvs(dynamic voltage scaling) property.
-> +
-> +        unevaluatedProperties: false
-> +
-> +    additionalProperties: false
+Thierry Bultel (4):
+  dt-bindings: serial: Added secondary clock for RZ/T2H RSCI
+  serial: sh-sci: Use private port ID
+  serial: sh-sci: Add support for RZ/T2H SCI
+  arm64: defconfig: Enable Renesas RZ/T2H serial SCI
 
-Same with these.
+ .../bindings/serial/renesas,rsci.yaml         |  27 +-
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/tty/serial/Kconfig                    |   7 +
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/rsci.c                     | 477 ++++++++++++++++++
+ drivers/tty/serial/rsci.h                     |  10 +
+ drivers/tty/serial/sh-sci-common.h            |   8 +
+ drivers/tty/serial/sh-sci.c                   | 210 +++++---
+ 8 files changed, 652 insertions(+), 89 deletions(-)
+ create mode 100644 drivers/tty/serial/rsci.c
+ create mode 100644 drivers/tty/serial/rsci.h
 
-> +
-> +  nxp,i2c-crc-enable:
-> +    type: boolean
-> +    description: If the PMIC OTP_I2C_CRC_EN is enable, you need to add this property.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - regulators
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    i2c {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic@8 {
-> +            compatible = "nxp,pf0900";
-> +            reg = <0x08>;
-> +            interrupt-parent = <&pcal6524>;
-> +            interrupts = <89 IRQ_TYPE_LEVEL_LOW>;
-> +            nxp,i2c-crc-enable;
-> +
-> +            regulators {
-> +                VAON {
-> +                    regulator-name = "VAON";
-> +                    regulator-min-microvolt = <1800000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                };
-> +
-> +                SW1 {
-> +                    regulator-name = "SW1";
-> +                    regulator-min-microvolt = <500000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                    regulator-ramp-delay = <1950>;
-> +                };
-> +
-> +                SW2 {
-> +                    regulator-name = "SW2";
-> +                    regulator-min-microvolt = <300000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                    regulator-ramp-delay = <1950>;
-> +                };
-> +
-> +                SW3 {
-> +                    regulator-name = "SW3";
-> +                    regulator-min-microvolt = <300000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                    regulator-ramp-delay = <1950>;
-> +                };
-> +
-> +                SW4 {
-> +                    regulator-name = "SW4";
-> +                    regulator-min-microvolt = <300000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                    regulator-ramp-delay = <1950>;
-> +                };
-> +
-> +                SW5 {
-> +                    regulator-name = "SW5";
-> +                    regulator-min-microvolt = <300000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                    regulator-ramp-delay = <1950>;
-> +                };
-> +
-> +                LDO1 {
-> +                    regulator-name = "LDO1";
-> +                    regulator-min-microvolt = <750000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                };
-> +
-> +                LDO2 {
-> +                    regulator-name = "LDO2";
-> +                    regulator-min-microvolt = <650000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                };
-> +
-> +                LDO3 {
-> +                    regulator-name = "LDO3";
-> +                    regulator-min-microvolt = <650000>;
-> +                    regulator-max-microvolt = <3300000>;
-> +                    regulator-boot-on;
-> +                    regulator-always-on;
-> +                };
-> +            };
-> +        };
-> +     };
-> -- 
-> 2.37.1
-> 
+-- 
+2.49.0
+
