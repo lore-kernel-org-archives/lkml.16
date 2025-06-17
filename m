@@ -1,125 +1,245 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101502C18A
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:00:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3758514A09C;
+	Tue, 17 Jun 2025 05:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750136428; cv=none; b=ntWEYJEo2R7jqYRaBGDkymXzlLqnb3zAYaopTi3zclxQcIsrmsOaf7/sO3mN8nufrp5YcxGxw1AIS4omftWl0FvzfclWYAM9hS1bfdyb+2VArCa2kWQnU0DKSFkdUJ4vgMxVBA+xMVzX6U46EDQKJfg9NmA7Qf2623w2mLaZDYI=
+	t=1750136921; cv=none; b=CwIzAyCVsxV1Ne2uDWbFBi2JCYyiejaLzkvwWH1NUnu7+nY+1/7CneVKzhTHRjCaUcJUzuqIhnBIQwC2tNFOvvSZVxf5Eb6uLvZzhS1uXbAoftCPahwtOzKxjLvdMfeINPPzK5cj+gzDgW6N/xTeZqLOVEcE+/Cj9ohJc/vTfts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750136428; c=relaxed/simple;
-	bh=V+Z9viGW2mQHUgAQAM4wmU9u5Q1wfMoJw+aGoGLrovI=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=kwyIGzeqZX4RK5O1a5SNyAuidS8CUOlJr7Xl/blySnoxojhwleJKKMavCoHtF4rhm2ORdFCLmlvMtM8IjniDh9498C+X6fZl2FfD514NMtEj7xemdSFpcXk1UV/saEha40TNDOD1R1y4tWjjmDrpilMwkZTmnBuxpEhlkbdk3aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cARlHsoc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750136921; c=relaxed/simple;
+	bh=bl+wQOG/YTu+p7IqZ4udIhLI7a6kbV+hlxc2ZJpROso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zdb/pI9qLUJV0B3LmcZdvo05EQh6UqHdlc/UWvKV1q2M0OXlLennrAnKlXcH2FJT0USBTTmwemd0h6yqPnSioLotrZ5B/kjaaX6WJFPQBIZRVfa+ADTjwBSnNEBNQnZpIwJfgDZvETUlbkwYtIZHpxnJYuw51LUnY3Xw3IifRmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekbZIMJc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cARlHsoc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750136424;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1NyyrjVp7x7bd0ZYGuL5yez7PypbZT8ag8gXavULDWU=;
-	b=cARlHsocE57LT+oNcw7ny5KYFCEMXjk2/Q12JMHyPcngN29KFs08YpnwlywlMfMbA246nG
-	xa4St/lsGsxUQVaLGw2wE+wgKDrV0cW9e5txSVcoP3PgZADG/hW0yGb1ANEj2iAq8PzW6A
-	2yqUkcqaarVcoulsd5pP9BNw1U9BRvo=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-674-T_tOuXE5MQunv9WluzSEjQ-1; Tue, 17 Jun 2025 01:00:22 -0400
-X-MC-Unique: T_tOuXE5MQunv9WluzSEjQ-1
-X-Mimecast-MFC-AGG-ID: T_tOuXE5MQunv9WluzSEjQ_1750136422
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d099c1779dso910300685a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:00:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750136422; x=1750741222;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NyyrjVp7x7bd0ZYGuL5yez7PypbZT8ag8gXavULDWU=;
-        b=fj6JMlrOn65ymksQy8CKU/+yw9DeZBJ5s11nDE0bXl/5IJCA6+biXmY9uh9RXNIlxT
-         jGCW5QebvLsxyCLANJXGJDxHr9ZEi0i6Hp9Tim7Xwdwd5kNs43dakK0CFX2Wyxf5yufi
-         jecWKWL8uFkhZSkolpXlHeSZbCE9nEvDvidZ4p+fChO92B0Bt2HmaPp52pNHbTcOV0Nn
-         Rg1BwwEFBVrQWW1Xq6X9diSCnVJMxAhx6Wv5hl5i/LkWuJByvVqkYoxQjBoaPP4av6pP
-         E+JW1KBGBVyTZHAYO/5JOOJUxeDq105GEHBTFIOFnnKwBcquUxQ2jTWsyJYpYzg853dD
-         qK/A==
-X-Gm-Message-State: AOJu0YwwMNr4t5gqGe0Nxd6KBHm6VbgNyGs5AvnUWyFu6yCVB8Yj1Gcb
-	ojf+VwOrc06Ahz2fvF7z298YOhszJTQLsnulNGbSGEBDjeV55z8g3AFiDqU6IAABbnLOVWngoKH
-	gqj9n983eaAKGdl6WBrTInEX0RWogDMrKABy2CfXb/yTj4iEEg1wmVqR4NkvPRCIrXQ==
-X-Gm-Gg: ASbGncvNb5OJpq2Woa6QxJM6R5O3TZUi5skBYM/zWpRz1hMhWwCxoZ+eLIaF9LNcJys
-	E1qKLeb2fr7wCee4D3pLgTz1aEG57R4TrOEXGSCGnG5DhbGJUnDb1FpATb/9w0lgFvI8hIJ3myn
-	Rf7TDeMlTCspIU8rgEK5YDGOFFdVhIeMsVbI+th+oxeWfYxLQDtEGyN7fxpPP+wCS46JqOsicu5
-	V8rL604JxM7tjNI8j92Vn6HW0/edThCicTA/bDD8QTmgKht9n8KUkPgGOhcdqykFGv8DqGLHJO1
-	51cqj0DJSI4lRhJZXQ==
-X-Received: by 2002:a05:620a:1b90:b0:7c5:49e3:3347 with SMTP id af79cd13be357-7d3c6cdfc36mr1906793585a.35.1750136421892;
-        Mon, 16 Jun 2025 22:00:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWt3mL2iPG6Mtb+S9nFMv063s+W6wfyZG0t6TruzJS9fy8nsWTcjT0oQazpLajvLMysHRzBQ==
-X-Received: by 2002:a05:620a:1b90:b0:7c5:49e3:3347 with SMTP id af79cd13be357-7d3c6cdfc36mr1906788585a.35.1750136421520;
-        Mon, 16 Jun 2025 22:00:21 -0700 (PDT)
-Received: from [192.168.21.4] ([4.8.26.34])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dce5d3sm609299885a.16.2025.06.16.22.00.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jun 2025 22:00:20 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <407f7b2b-cb60-4cd6-be4f-8ad335ad2e38@redhat.com>
-Date: Tue, 17 Jun 2025 01:00:19 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekbZIMJc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB445C4CEF3;
+	Tue, 17 Jun 2025 05:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750136920;
+	bh=bl+wQOG/YTu+p7IqZ4udIhLI7a6kbV+hlxc2ZJpROso=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ekbZIMJcRVe+dojIqmAuqdH1BMQYae73Fck5FJqWZACFn8R9LXAWSpT7ON04yYGh0
+	 feEKJhlGRBrRf7H+2fDFKAG+DbB3pCEqO1SlT8MmwK+KZ1LSE+ZNOz/xkri/i5lwHY
+	 ciFw3LHR6Hb0sWLsm9uK4NoyQ7YDoyeXX/RB6LgcnMFc2jw1R3tOraTX+TUKHsEOA4
+	 EeXq6hpoD1oF3G3bhcYK83PzLTauxy/knB5kIuq/NeMnV5+xFviDV1AaVVOG/p4/Ri
+	 mgHFlKFb4+67LEv3OBFZ0W9hab8dar4W04Ntng0M8J4LnVDE6x4kQ+8+CR2u9eXYXM
+	 eWWu6VAF11q4g==
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a43afb04a7so39704281cf.0;
+        Mon, 16 Jun 2025 22:08:40 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV+A6H7YsQP7k9c7ztaFQTI25GuJMyUQSCXjblR0UOZWT0Rd1KJzGeoiiK1bZCLcd7AEpw37KznmGCzojHIiGUjJGlFAgdx@vger.kernel.org, AJvYcCVnCKJVe1jAsk8oMGJckvSt4Aq7iHxrcTMtbm+IY85MbYFia+AJ+j+s+it8nbG9WowpmoTO3Qx4NpYVMzVn@vger.kernel.org, AJvYcCWGRUeN/G5MfiGKW2aj9T6n366qN6f0ohPFD4NbCOZQ99t8oV1d4nUngaA1pA3hn9ocRpxCQoDvk0/G9VlF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyoRjVbO/6+OFIaQtXfUgLU2kaLOqvPeolWDf95tVUwrleb4kS
+	2svQYDMC1eTpiUJ8+qseGais9Zsly3eSNytnxMSpPh7wa4h/hg5uzKKnzIawKkCe0ilJ6WTmE+7
+	LslJ+/tzCHmB9Izd2ZlkHfxsjIq7e1Ts=
+X-Google-Smtp-Source: AGHT+IGV2ZQU5FEHR/is6f/JD89L4SCHZd4XCDGZ/qKtzhWxHrZxgM66En+qs2O2CLJ5ZITT0gAb1nHZP6JsA1Z/d4s=
+X-Received: by 2002:a05:622a:1486:b0:494:7ca0:2ff with SMTP id
+ d75a77b69052e-4a73c4beca6mr160152421cf.15.1750136919637; Mon, 16 Jun 2025
+ 22:08:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] workqueue: Initialize wq_isolated_cpumask in
- workqueue_init_early()
-To: Chuyi Zhou <zhouchuyi@bytedance.com>, tj@kernel.org,
- jiangshanlai@gmail.com
-Cc: linux-kernel@vger.kernel.org
-References: <20250617044216.1401878-1-zhouchuyi@bytedance.com>
-Content-Language: en-US
-In-Reply-To: <20250617044216.1401878-1-zhouchuyi@bytedance.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250611220220.3681382-1-song@kernel.org> <20250611220220.3681382-2-song@kernel.org>
+ <75ea3f6b-cf5b-4e97-9214-cbd3f299008c@maowtm.org>
+In-Reply-To: <75ea3f6b-cf5b-4e97-9214-cbd3f299008c@maowtm.org>
+From: Song Liu <song@kernel.org>
+Date: Mon, 16 Jun 2025 22:08:27 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4a9kUyNhw1kZuyrFLsWF4-FseT0Cb2PK1TpZ6VZmT1AQ@mail.gmail.com>
+X-Gm-Features: AX0GCFs1Hp3je6LWKk-M4nBzwlFIO9mQlPC-AG9o6-qRVlulmxfFOuTV6afNyKQ
+Message-ID: <CAPhsuW4a9kUyNhw1kZuyrFLsWF4-FseT0Cb2PK1TpZ6VZmT1AQ@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 1/5] namei: Introduce new helper function path_walk_parent()
+To: Tingmao Wang <m@maowtm.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
+	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
+	brauner@kernel.org, jack@suse.cz, kpsingh@kernel.org, 
+	mattbobrowski@google.com, amir73il@gmail.com, repnop@google.com, 
+	jlayton@kernel.org, josef@toxicpanda.com, mic@digikod.net, gnoack@google.com, 
+	neil@brown.name
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 6/17/25 12:42 AM, Chuyi Zhou wrote:
-> Now when isolcpus is enabled via the cmdline, wq_isolated_cpumask does
-> not include these isolated CPUs, even wq_unbound_cpumask has already
-> excluded them. It is only when we successfully configure an isolate cpuset
-> partition that wq_isolated_cpumask gets overwritten by
-> workqueue_unbound_exclude_cpumask(), including both the cmdline-specified
-> isolated CPUs and the isolated CPUs within the cpuset partitions.
+On Sat, Jun 14, 2025 at 11:36=E2=80=AFAM Tingmao Wang <m@maowtm.org> wrote:
 >
-> Fix this issue by initializing wq_isolated_cpumask properly in
-> workqueue_init_early().
+> On 6/11/25 23:02, Song Liu wrote:
+> > This helper walks an input path to its parent. Logic are added to handl=
+e
+> > walking across mount tree.
+> >
+> > This will be used by landlock, and BPF LSM.
+> >
+> > Suggested-by: Neil Brown <neil@brown.name>
+> > Signed-off-by: Song Liu <song@kernel.org>
+> > ---
+> >  fs/namei.c            | 99 +++++++++++++++++++++++++++++++++++++------
+> >  include/linux/namei.h |  2 +
+> >  2 files changed, 87 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 4bb889fc980b..bc65361c5d13 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -2048,36 +2048,107 @@ static struct dentry *follow_dotdot_rcu(struct=
+ nameidata *nd)
+> >       return nd->path.dentry;
+> >  }
+> >
+> > -static struct dentry *follow_dotdot(struct nameidata *nd)
+> > +/**
+> > + * __path_walk_parent - Find the parent of the given struct path
+> > + * @path  - The struct path to start from
+> > + * @root  - A struct path which serves as a boundary not to be crosses=
+.
+> > + *        - If @root is zero'ed, walk all the way to global root.
+> > + * @flags - Some LOOKUP_ flags.
+> > + *
+> > + * Find and return the dentry for the parent of the given path
+> > + * (mount/dentry). If the given path is the root of a mounted tree, it
+> > + * is first updated to the mount point on which that tree is mounted.
+> > + *
+> > + * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a =
+new
+> > + * mount, the error EXDEV is returned.
+> > + *
+> > + * If no parent can be found, either because the tree is not mounted o=
+r
+> > + * because the @path matches the @root, then @path->dentry is returned
+> > + * unless @flags contains %LOOKUP_BENEATH, in which case -EXDEV is ret=
+urned.
+> > + *
+> > + * Returns: either an ERR_PTR() or the chosen parent which will have h=
+ad
+> > + * the refcount incremented.
+> > + */
+> > +static struct dentry *__path_walk_parent(struct path *path, const stru=
+ct path *root, int flags)
+> >  {
+> >       struct dentry *parent;
+> >
+> > -     if (path_equal(&nd->path, &nd->root))
+> > +     if (path_equal(path, root))
+> >               goto in_root;
+> > -     if (unlikely(nd->path.dentry =3D=3D nd->path.mnt->mnt_root)) {
+> > -             struct path path;
+> > +     if (unlikely(path->dentry =3D=3D path->mnt->mnt_root)) {
+> > +             struct path new_path;
+> >
+> > -             if (!choose_mountpoint(real_mount(nd->path.mnt),
+> > -                                    &nd->root, &path))
+> > +             if (!choose_mountpoint(real_mount(path->mnt),
+> > +                                    root, &new_path))
+> >                       goto in_root;
+> > -             path_put(&nd->path);
+> > -             nd->path =3D path;
+> > -             nd->inode =3D path.dentry->d_inode;
+> > -             if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+> > +             path_put(path);
+> > +             *path =3D new_path;
+> > +             if (unlikely(flags & LOOKUP_NO_XDEV))
+> >                       return ERR_PTR(-EXDEV);
+> >       }
+> >       /* rare case of legitimate dget_parent()... */
+> > -     parent =3D dget_parent(nd->path.dentry);
+> > -     if (unlikely(!path_connected(nd->path.mnt, parent))) {
+> > +     parent =3D dget_parent(path->dentry);
+> > +     if (unlikely(!path_connected(path->mnt, parent))) {
 >
-> Fixes: fe28f631fa94 ("workqueue: Add workqueue_unbound_exclude_cpumask() to exclude CPUs from wq_unbound_cpumask")
-> Signed-off-by: Chuyi Zhou <zhouchuyi@bytedance.com>
-> ---
->   kernel/workqueue.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+> This is checking path_connected here but also in follow_dotdot,
+> path_connected is checked again. Is this check meant to be here?  It will
+> also change the landlock behaviour right?
+
+Good catch! Removed the check in v5.
+
 >
-> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-> index 97f37b5bae669..9f91480758288 100644
-> --- a/kernel/workqueue.c
-> +++ b/kernel/workqueue.c
-> @@ -7767,7 +7767,8 @@ void __init workqueue_init_early(void)
->   		restrict_unbound_cpumask("workqueue.unbound_cpus", &wq_cmdline_cpumask);
->   
->   	cpumask_copy(wq_requested_unbound_cpumask, wq_unbound_cpumask);
-> -
-> +	cpumask_andnot(wq_isolated_cpumask, cpu_possible_mask,
-> +						housekeeping_cpumask(HK_TYPE_DOMAIN));
->   	pwq_cache = KMEM_CACHE(pool_workqueue, SLAB_PANIC);
->   
->   	unbound_wq_update_pwq_attrs_buf = alloc_workqueue_attrs();
-
-Right, the wq_isolated_cpumask isn't initialized properly. Thank for 
-fixing that.
-
-Reviewed-by: Waiman Long <longman@redhat.com>
-
+> (For some reason patch 2 rejects when I tried to apply it on v6.16-rc1, s=
+o
+> I haven't actually tested this patch to see if this is really an issue)
+>
+> >               dput(parent);
+> >               return ERR_PTR(-ENOENT);
+> >       }
+> >       return parent;
+> >
+> >  in_root:
+> > -     if (unlikely(nd->flags & LOOKUP_BENEATH))
+> > +     if (unlikely(flags & LOOKUP_BENEATH))
+> >               return ERR_PTR(-EXDEV);
+> > -     return dget(nd->path.dentry);
+> > +     return dget(path->dentry);
+> > +}
+> > +
+> > +/**
+> > + * path_walk_parent - Walk to the parent of path
+> > + * @path: input and output path.
+> > + * @root: root of the path walk, do not go beyond this root. If @root =
+is
+> > + *        zero'ed, walk all the way to real root.
+> > + *
+> > + * Given a path, find the parent path. Replace @path with the parent p=
+ath.
+> > + * If we were already at the real root or a disconnected root, @path i=
+s
+> > + * released and zero'ed.
+> > + *
+> > + * Returns:
+> > + *  true  - if @path is updated to its parent.
+> > + *  false - if @path is already the root (real root or @root).
+> > + */
+> > +bool path_walk_parent(struct path *path, const struct path *root)
+> > +{
+> > +     struct dentry *parent;
+> > +
+> > +     parent =3D __path_walk_parent(path, root, LOOKUP_BENEATH);
+> > +
+> > +     if (IS_ERR(parent))
+> > +             goto false_out;
+> > +
+> > +     if (parent =3D=3D path->dentry) {
+> > +             dput(parent);
+> > +             goto false_out;
+> > +     }
+> > +     dput(path->dentry);
+> > +     path->dentry =3D parent;
+> > +     return true;
+> > +
+> > +false_out:
+> > +     path_put(path);
+> > +     memset(path, 0, sizeof(*path));
+> > +     return false;
+> > +}
+> > +
+> > +static struct dentry *follow_dotdot(struct nameidata *nd)
+> > +{
+> > +     struct dentry *parent =3D __path_walk_parent(&nd->path, &nd->root=
+, nd->flags);
+> > +
+> > +     if (IS_ERR(parent))
+> > +             return parent;
+> > +     if (unlikely(!path_connected(nd->path.mnt, parent))) {
+> > +             dput(parent);
+> > +             return ERR_PTR(-ENOENT);
+> > +     }
+> > +     nd->inode =3D nd->path.dentry->d_inode;
+> > +     return parent;
+> >  }
+> >
+> >  static const char *handle_dots(struct nameidata *nd, int type)
+> > diff --git a/include/linux/namei.h b/include/linux/namei.h
+> > index 5d085428e471..cba5373ecf86 100644
+> > --- a/include/linux/namei.h
+> > +++ b/include/linux/namei.h
+> > @@ -85,6 +85,8 @@ extern int follow_down_one(struct path *);
+> >  extern int follow_down(struct path *path, unsigned int flags);
+> >  extern int follow_up(struct path *);
+> >
+> > +bool path_walk_parent(struct path *path, const struct path *root);
+> > +
+> >  extern struct dentry *lock_rename(struct dentry *, struct dentry *);
+> >  extern struct dentry *lock_rename_child(struct dentry *, struct dentry=
+ *);
+> >  extern void unlock_rename(struct dentry *, struct dentry *);
+>
