@@ -1,195 +1,348 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2055.outbound.protection.outlook.com [40.107.96.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC3C2ECE8F;
-	Tue, 17 Jun 2025 16:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177794; cv=none; b=ddglvLKDnuMS9NjPGrDoJjwovZrZYxjVkGxN2JhY4eNSaTxLUUNG8a68CxknYokho505EYGxxt8psX0dSRPYdHUCf2qSQUIyaMoBt8olSQmfaHbjaD0a/l7BPBG2sBtuPBic68AGZcW0hjTfyGfbXkaIa7rO68jUHLy2+DWS2AA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177794; c=relaxed/simple;
-	bh=BIZcQX5YRy6ssm0zujrXB+jqtT/oMGZrC0HZbgZIkG0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=g2TM3sDUmuOTwTjpuZ+HkhhN/1rgSfjuVvv9GynvstN6R0wzQNhbHaI5KMc9GoIlD3cl71swz9MQSGVlkNPq1b78+rk2kQEAS9TQpoYp1xDjZKBnGqd3OyGvOBD/axZij7+Zu85pn2ZylPbBfIXyP83J2ObBzYvnLsLctNe0vUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gyWLjUQP; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B312F1993;
+	Tue, 17 Jun 2025 16:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750177815; cv=fail; b=lqdEjvjbfs7oywdPwVokzaaaj3vHbnJV6242ETTc8ABcKYNHPGbyr/5qrjT+UyxlnVlQ314tSE9W00YJFrYDtsgtI34KB8hwTPq9BBflsMuunjjI/5w/TS+PXOltHLL7TAfcXLadQtLBNB1AiCgA1SZpZEJ8RVK+QljLtrTjo0c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750177815; c=relaxed/simple;
+	bh=1D4sc1Ea64F2Gy4iw5NdYpHvt0S7iTrm9aLLHaM/8/8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Y8Za/S5SAwaUIZA0sP0F5KMj28pQPT/sidF6COdA0ENkSbLR5bYJdFlr73QhS3GvO/NXyw2RUaPyChZroO3AQSMpRIoKipgWNiNm1vQmiLdvPEwurhUj6H+rvRQ3vedoK7qkhjCZv6z0QYWwReTBURu30P/FRM7F+Elo9XB8N1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xJlB3of5; arc=fail smtp.client-ip=40.107.96.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gyWLjUQP"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2360ff7ac1bso41928995ad.3;
-        Tue, 17 Jun 2025 09:29:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750177792; x=1750782592; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U+E2gtTaXhJT0UsOBNtcPlSHb/04hccrQEaoXRrSURg=;
-        b=gyWLjUQPSnpKYAlgKhkpZ3pvuHPjfSMivqgOetNGT87jMZpAPJiW0Yp2UnN6olvTbw
-         +4CYfyuR8DfxR9BooEF6eB9QtNuZapxFnRqyoG4HyfkXzC7h1qfz4f+bk6jxoPN94Vvz
-         zgTcpP8WnnTKGQDGJVdmxDDIfj3JhYQb9JP9vG/WQxFy3pGUoGoSH87fbckmR6X0WNUy
-         4yV6MI9lES2ghRAwIubzfZDGxMS3U3Tfpj2KbqaCsy9tReiaHLl8eGiloh4QUIrGjztt
-         eN0QvcGCT3YUoM12G2XLEDJdN6K4LEaQefXyntIol/XXtLrSYfg9pszYx+Q5b72/YBBU
-         hJNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750177792; x=1750782592;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U+E2gtTaXhJT0UsOBNtcPlSHb/04hccrQEaoXRrSURg=;
-        b=nB77NKcmgvhXCB3QqCPZpwkSTYXIJ93bNNpCnLHpmnWad9eaWn12nJ5a6qjtoC4xkW
-         8Zcin/F7X5yRw9czQzdv/eboAErisMlxD9DcP+cU6asTGeFGxTqrUn+YskQjWw4cFPiW
-         pLL6TYeG1GU/JwuneG69B7y8UlllFgKWzi8NG38jwS2v0EiynEF51cK2Dh70ozMgvRrN
-         Eekof1DRZdvSvY+ltKxhSLsOUTP+xD8RKb6mWfDKiMkQoJA12Geg1FS8tbmL/FVK6n6q
-         CjoEGC2HzbbZYQNUv2WNbq8DLSreChwRGfxvh0TlnpBCcrZYn9+NrS1i7RxiDg+ueP60
-         vy7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUoKHcRlANx2hWPWaiazWsAV7BNTsE1GJjk2TcwzR8RdX1cUfWtYxyuHpy25A1yqTECFJfZreMTMpFO@vger.kernel.org, AJvYcCUzOH8QJ0HyvUpV88l2+pgNYw6SOyu2GMonZPrj0LYg0I3EkW2yew6GREd9ky8Q4kSiQaCqDONcb/ni@vger.kernel.org, AJvYcCVNM4bL2CJtNWDK2nHtGnuhw6enIoWobP14uAiGSkFpL713Uc/qkSVPe5zb09I6yYaITZdBmPfIy2N7hT3x@vger.kernel.org, AJvYcCWWVYcu9kN/QWJQRqjEmugR8uQaR5/A+D8dIkmGUr34gWDqkRdkV5oFjor7/TwAS/Us4eCJXxFaGQw/3A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEBBONcnWdX/MbkTC46tUkLr86QXN0B1nKHR61ncAgpygLbyZr
-	OAa4IfSl13zDyisZP4PAfUmB3QBBPtAwBMm6aic4XEvj+zCZXa3/UrzGY58v2g==
-X-Gm-Gg: ASbGncsmbmxpZ+BzE7Gy6LYm9azpwTDUwJ5j+v1cdNrD4GuX2MqWCFBO4VLDJdyqu1c
-	rZYdqPNUCzki0Ic4xoO16B/3vTvyHUA6DU03IjEW/D9jphBLnoriCjxx0uFijDjoZORHG7Q6its
-	C6VNbBeKBr7jZ/Jhc1v0+EaFAV5+BQAhskL/WQXIYBZBxTk+VUy6uK5bHXRNBeoa4pfsxiCPicq
-	6wu00WpcwGe6r25EzdLA5jAPc095Opw0rnvy9UeUVQHBNEE4RMyDUEQyUb/YQr8lIKHDXFuVB0X
-	rCR1RVOngQU46rMk8rz+FgG36Nf/reRQHDJ9TpN+AgC0n1bGVfrOR5BJqesM0pBqh3mF4wuC
-X-Google-Smtp-Source: AGHT+IFdOM7O7ou6xz9Xrae18AbOgPrQOugiO//m9L8wPjj8dcDLjoaFQt2yYXP5Ysc+kkcQe7SSmA==
-X-Received: by 2002:a17:903:943:b0:234:cc7c:d2e2 with SMTP id d9443c01a7336-2366afc485bmr209412625ad.1.1750177792108;
-        Tue, 17 Jun 2025 09:29:52 -0700 (PDT)
-Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de782e2sm81706485ad.103.2025.06.17.09.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:29:51 -0700 (PDT)
-From: Nam Tran <trannamatk@gmail.com>
-To: krzk+dt@kernel.org
-Cc: lee@kernel.org,
-	pavel@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 1/4] dt-bindings: leds: add TI/National Semiconductor LP5812 LED Driver
-Date: Tue, 17 Jun 2025 23:29:47 +0700
-Message-Id: <20250617162947.16955-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250611-nimble-archetypal-raptor-eadcb6@kuoka>
-References: <20250611-nimble-archetypal-raptor-eadcb6@kuoka>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xJlB3of5"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ej1RHQxwNt+f9tT7iBDJMg/0gK78VXiz3nx04TM5NJpeDRPOwViXP42m6w1FLM7a5JALDEukUzIb1phBKkrljs0mgrDDPVfymZNmqjESFzN0s0QjZ4V9knj52+1upoKtML2pa6Nfdx8Sjv06/bqdyrB0waGGeGBbMaUcT+X8/sEFD38M24oiAaWSyDPbcExBo2Dsdv3QNwS9mSSz5ZlkJMSCYNN+DChiHETVY3mpKf2NtsXqh3eque1C+tai+WWaFjbf0Ml93ez33pQHsLGjc97o3t7l2WeW0KLUeXoHz3LRMws1YXmGLDtZ2Y513uRSrzVLMb28hvoVZrcbmvQHBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+4PHnHZhpJcjFtaxskOAwcpnf5rT+QIi4TJDvKk5P1g=;
+ b=VqCVZoDKSdkyQqchl1qil7vhOj4jK+v7430EDm8XP0y6nBmNLIsgvOEgZtHUcU+HBHL2gJ642wgUY6PRaLLyxwch80GPRHO8H0pRS7wY5wmSPVP8rryTbXRH+7P7F7Ta1jeKrJSkYEq60UOB3fuFPHVzbqzT45KE07gxcUGYVH6FeP/fM8ft71BQdLJGDIi+/CKHN80Zf+Rtv8OMrPah+YzSXL5iv60IepZKZibNLw+jvXrl2zIgDfOsYTLYci+f8SMqJWwafMIefxwfaLNrJ0oNX9HGKb4aS+D4aBOxhSHwYGzX2haAT+eGUVivAg1tW6MVnHMgGv66sZSYf6Q3Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+4PHnHZhpJcjFtaxskOAwcpnf5rT+QIi4TJDvKk5P1g=;
+ b=xJlB3of5f5xBlpfQzBYFajdpufzbg+NJWDnoXBnViw53M/a1owX+7jNOHKU5k0CaZtKH8HnAkm2QZacLPN3oOxxN0/5OfyNEWbny8JOxJ2R8Nfzt5VcBui/uZhQ9jHrcnlt1qZoWHUKBvp/57RzrVlsEv+eOl7DyWx9qhb1ayjk=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH0PR12MB5388.namprd12.prod.outlook.com (2603:10b6:610:d7::15)
+ by CH3PR12MB8458.namprd12.prod.outlook.com (2603:10b6:610:155::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Tue, 17 Jun
+ 2025 16:30:11 +0000
+Received: from CH0PR12MB5388.namprd12.prod.outlook.com
+ ([fe80::a363:f18a:cdd1:9607]) by CH0PR12MB5388.namprd12.prod.outlook.com
+ ([fe80::a363:f18a:cdd1:9607%7]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 16:30:11 +0000
+Message-ID: <04dbfe32-c747-4f5a-abe5-dfe3e1f0fa22@amd.com>
+Date: Tue, 17 Jun 2025 11:30:07 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] EDAC/amd64: Fix size calculation for Non-Power-of-Two
+ DIMMs
+To: linux-edac@vger.kernel.org
+Cc: bp@alien8.de, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?=C5=BDilvinas_=C5=BDaltiena?= <zilvinas@natrix.lt>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, Avadhut Naik <avadhut.naik@amd.com>
+References: <20250529205013.403450-1-avadhut.naik@amd.com>
+Content-Language: en-US
+From: "Naik, Avadhut" <avadnaik@amd.com>
+In-Reply-To: <20250529205013.403450-1-avadhut.naik@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BY3PR04CA0018.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::23) To CH0PR12MB5388.namprd12.prod.outlook.com
+ (2603:10b6:610:d7::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5388:EE_|CH3PR12MB8458:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1f145e0-4d98-4f8f-b119-08ddadbc3a0a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?V2pFU3V6aElmZ2RrWjc3WWVocU1qcVBkczQ1ekxiL0dkK0t6YWc1Qm1SeGRI?=
+ =?utf-8?B?Qm9aTUpjUWdZYndmVjJITktzYndORnp3UE5SdkZUcldzelFNcE0xekdxdXVs?=
+ =?utf-8?B?SHh6bUJDNFZ3MGQ4cGQvWEwyU0VmVG0rL0dHZWpLUThLY0RYbC9RMEtVUElZ?=
+ =?utf-8?B?NGFHZXRPVDNIT1hpYXUySEIyTU16NDJFc1dlcFpTTHZZaVoxSThINHZjVUJt?=
+ =?utf-8?B?RXRRSTd6ZG1EREdXSUNrblBIZERlVWNmWk9rMWZHbjZmOXFKckhwSUxhcXFa?=
+ =?utf-8?B?M0p5YTZNcFY2OHk2cENNZU9RNWJlV1FtTWE1ZDZZOVMzeFdoZ1pIM3l0RUUv?=
+ =?utf-8?B?KysvaW92WWpZdFJPZ2NmZUdZbnNKeDZadlQrRi9WcCt6SUZJYWw4TEJUM1NS?=
+ =?utf-8?B?UjlsbmN0blU3eXhONW9Uc013SFZoWkRNbnN6UE5UUytRYlVhVnZ3VHFWcnZr?=
+ =?utf-8?B?ekVKcldvbFdkRGwxKzlHSXNVU3NkVUdZWkRWbmI2Qm9lQVk5dkNkZjdDYjly?=
+ =?utf-8?B?WmtTZUtSdVRRUko2VmpEQlRGMnBKV3kwL1BtQzcyVDRWU0lkSjg0YUU2YkRR?=
+ =?utf-8?B?VmVFMzcycEF1TWs5ZnZLUjc2bERjOFNoUnk2ZFdyUXpDVzJYbEJFQWJqYXoy?=
+ =?utf-8?B?MzhjWjQwTHdHK0tVekwzMURRK0kwMWdib2JYYW1Rc1dna1FPWndOSCtpSS8x?=
+ =?utf-8?B?eXh5WjZ1blJaSTBnMHJwUnVTWlVoR2ZTMU9TWjVDd2xoTTBHZlRJSGx1OGpy?=
+ =?utf-8?B?MWQ4N1ZIZlVRZ25adEg0cWVNSjNMdEFmYUJqZVorUmZyMjVBZWZEZFVWc3l5?=
+ =?utf-8?B?VHhiVGZ5NmlGbUluWEY4VVNQVklvTFI1cWNFdnlVeEcrYlhrWmRCZ2ZOamZY?=
+ =?utf-8?B?K3U5dHIrQ3RwUkJwWnlYd1RsVUhMNlJvbEh3Sk0xbGdDVkpQUFowNlBxdWk2?=
+ =?utf-8?B?MUVtQ1J4TUtrQ3daWGVIcnd0MGZiVk5KUVBIRVFjUG5ycE8vVU1uenhJOWtN?=
+ =?utf-8?B?aHlXK1krUkx0ZjBLeUcrQ01LWFJwbGN6OCtwNVNLcHl4Q1U2Q2N2UGNQL0Z5?=
+ =?utf-8?B?MytFVDNhQmZlQjgrSmN0SkVnWWJEY1YvcVRBcWJGN2R5dGZxS3loSkRuWTI1?=
+ =?utf-8?B?ckJmT0M3SkNCT21HUXpwSjV1L256QnFTMXV6UTFHNm9rNnVaTDRMNnFoUWl4?=
+ =?utf-8?B?QVMyeFRVeVZ1Q3ZQSWhjYmx4RUNzNGNod1A2bEoxWnJhUGRQUEl2cVh0Yll3?=
+ =?utf-8?B?bkxRQ1RQMXNPeGJ6eExCVWZUdFp1elVkZjVPVEJsaHR1aFFsdzBmcmRmQ21P?=
+ =?utf-8?B?Z3hlcUxxaCtLay9kWUJXUHpWNmpUeVlOZml3NEV0VFdzVzVaYzFGeUVrejBv?=
+ =?utf-8?B?WHBwbHM2aTZUNnBHQ0dCTnYzRkRYZCs2RG5RZGlBcHlyQWZpWU1RVm9WYVdL?=
+ =?utf-8?B?RC8wVWtLZ3JaeFBOUzlCN3F5S09GKzJRVi85N2t5WjdEOXVLR0lYV2lrQVIx?=
+ =?utf-8?B?cDkvZEtnMk1vYktGbWRNUFRETGVWc3VZSitPbWNjQXh5WnE2TTNGbVMzZTNo?=
+ =?utf-8?B?UTlaTENHU09OZ3NDQ3RSQU9OdnJOL3drV3lCQ0VYT0RvZURuRDJqaHJxRDBr?=
+ =?utf-8?B?U3hEcDFUNmN5ZjZrYmxYOC8zOHA1V09FdFdNQ01MQk1TdWN2RXVVRDZTYzNz?=
+ =?utf-8?B?dTVkdk9MSVVBdFFoQ09EQm1IRnRrSmF4RkNrbUFpM040VzBWZW9pR2l6N1ht?=
+ =?utf-8?B?SjFBL3hycnJteldiUEN0eko5UXBUaklrclpHdE4vT1ArZWU0RERPcUxLOWs1?=
+ =?utf-8?B?dWorU0hmcE1keE0veUx1eFkxZDVGYWZMNU5PVG5sUzdZOVlRNHFQZ3NvWU1j?=
+ =?utf-8?B?UFF1THdsMm5COG5RaWtnUDlWa2lYSUFydG5hb1ZISHlkQnd3TTcxNDFnWkIw?=
+ =?utf-8?Q?OifFjuqQyM4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR12MB5388.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eDE1TzlLQzlPb2FMV2xjeU4zL3lnMzIyWHZac0xxK2plTThXZ1ZacnVXZVhx?=
+ =?utf-8?B?OXEzNzZ4NWs5VWtjREcvN09UNDA4RnN5ZUdwd05oVkNWSWJlQVZxMG9sazJl?=
+ =?utf-8?B?MnVRMVNETXNTSlpmU1NBNExlVkpyRkx2cjg2amQ1b0IyMTB0ZVVGMi9VbzUv?=
+ =?utf-8?B?bTQ2bTJlQTc3QUFsWkQxNDF6QXpOR1JDNVNyODI0alc1NVkvdjQzTk16WUNU?=
+ =?utf-8?B?TFNUMkszRjRRRWV6SWtDbDR0TFBDK3ZtaStSV1IwSjdvQTN4eHJtQkVGcS9Z?=
+ =?utf-8?B?Y2xUdHhHc3pMU3duQ29lOXB5SklrSjZ5VExxR1pqa2Y5R24xNDFnWGoxbjNm?=
+ =?utf-8?B?dVEvanhZKzdybDNSNG42cmVhd2RuYlVUcTRKdlV1NU5wSVFDejRMR3RwYWhE?=
+ =?utf-8?B?bXR0RE05UDRRSFFRV2NGZVVONW5kdjd1bUgySldubWh4elQ2aDBJUmtMMHJJ?=
+ =?utf-8?B?bkk1Yk5rY3pDSVJjTHBjZkx6djVYN25MT0RnSTlhb0pFUThucjEzK2t5YnFy?=
+ =?utf-8?B?UUkvQnNIa3hiMkxYNXNQL09TUDk3Zk9RclhCWTI3aThzWGduZ3d3N0VSdGsr?=
+ =?utf-8?B?SXhmUEFzQzlZR3UzeXJuSEpyeTJ2WStTSUwrdnZGOWJteWQyVzI2OW9yTkti?=
+ =?utf-8?B?dnFmQXdZQlhsRFBLOUMyNC9Pa1NjYlMyN1hCcjd6RUduaEJWc3REWXRyVkVE?=
+ =?utf-8?B?TURaNlhOZXh0STNxOURVV21hNEtralpvWmlFZnFwcUVHNUJmZmxJbDd1Wkxo?=
+ =?utf-8?B?d05GSjB2MXlVNmxMYyszZTU5V05uNmVyS1dISUVOc0FYZnA0WnRWT0dGSlpl?=
+ =?utf-8?B?Znkxam4yYlNRN3VPR3ZGamxpMjdxNzluZWh4ZGI5L3Nnb1ltbkhtYnI1aTZJ?=
+ =?utf-8?B?T0pEU1BpdkZaNWFLT0NTK01QSFJXQ3RrQThYZzJqckFzKzNvYUFjR2NJZi9m?=
+ =?utf-8?B?Tm85SVFyb3pXQ0lFamF3KzgzUmpBeHhHd1B4dlpFekJ5VjVDbnBWVmRKQ1dU?=
+ =?utf-8?B?YUo5S0JEZU5ZSzhyNGxXT0NSV3FTRXlhUkVkYmV2eFJCbWlwMXpyRG1FbWd0?=
+ =?utf-8?B?UUdBZFluNWZSR3ZxV08xWHBiamlBa1ZzYU56RVpUOEpGT1dMaDcrL0VGSWk2?=
+ =?utf-8?B?bG9NNVRtSlBBMTFRQ0pqTGd1ZXNMOTNkWmNFUktESVFicU9aVFBTRGRocGdU?=
+ =?utf-8?B?L0gxWDA3ZXM4bVV2Y2VJcHEyQ0VLYmN5QkxOQkFHTGZNNFB0cXpZUHVOMmFP?=
+ =?utf-8?B?OTlPTFBqOUdVTW5yYTBnSnBTSDRYV2huVWlQYldCM0h5Q1hnSjFGbUNnbWda?=
+ =?utf-8?B?ZjJVVzRqNlF6SnV1TTF5UEpqSVgwenlXR041SXQ3KzA4ajZqRWNWTUVBQ1R0?=
+ =?utf-8?B?N09qTjNUdWwxWVBxRmpXdW96RXVpU3l4Z01SWVh5VktkNk1qaWllZDVabUht?=
+ =?utf-8?B?djZIbkhXUFd6ZWFzNlBpcE1KYXhKcUdZanZ3Zk92WUVsWVFmWmJsRlg1ZjNT?=
+ =?utf-8?B?OGc1NXFIQ293amdiVCtBSXpWRzVISkpYWEpmU0pqdGZVdXhzeGFRZk5SZk9N?=
+ =?utf-8?B?NnYyY3dpQ1cyRUhzY09rOXFNSE5wbDl0bEdidTRjamFWaTZEc1E5RVN3a1A0?=
+ =?utf-8?B?K3lNOU5rb2UweEh5anhzRjVQT2wrOUI1VG5CeFF6OGNDc0pqR1h0Wnl5UWFO?=
+ =?utf-8?B?RjdCRTZRRmE4d3REM21ESFVUQ0lHZFJuQ2k2ckNzeXhZUXEzUVE1TXBtenQv?=
+ =?utf-8?B?bVhoMTl4MzBTVHcrRUJIOXd5NllWeFh0SzgvaURjMHFDcVBJSWJKWkx6enpB?=
+ =?utf-8?B?WHpjcDRpS2hrakR0STlEKy9BL0N2Wnl3SnNUTEZHUnRoTHF4TGRVWS9WSG9L?=
+ =?utf-8?B?a0tCOFhJdktrZTh0RDl1NmQ5VnhDQy80azYrWVYvY3JPcnQyVHoyUUJCNTFQ?=
+ =?utf-8?B?S1VOY3BUT0ovU0trLzYyUFVJRkpQUk5Pdnh4dG9VbXFPbm10WmI5VldRKzd4?=
+ =?utf-8?B?WHR0OEZIUG5zOU1lZnpaRjFXTzFXeTdhYUdyUnkySU9OQXgrb24rWUc0TlBa?=
+ =?utf-8?B?ZHlJcHkrNncxTmxxeXdnaks3a0ZXK2NJSytpd0V0L0oraXI3VzEvWHRncnUv?=
+ =?utf-8?Q?/WlZAKnVcsjqOMiVnr/lYQD5e?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1f145e0-4d98-4f8f-b119-08ddadbc3a0a
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR12MB5388.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 16:30:11.0418
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: n7YhTkEx4A3uxxxJDGjYPLS4YkTRhdn/uDShgCA8/v7etQKo3wy32U+BIIUyTEA40zOQ6EIkW4stsOHvqI/F8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8458
 
-On Wed, 11 Jun 2025, Krzysztof Kozlowski wrote:
+Hi,
 
-> > +patternProperties:
-> > +  "^led@[0-3]$":
-> > +    type: object
-> > +    $ref: common.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> > +    properties:
-> > +      led-cur:
-> > +        $ref: /schemas/types.yaml#/definitions/uint8
-> > +        description: |
-> > +          LED current in 0.1 mA steps (e.g., 150 = 15.0 mA; 0 if not connected)
-> > +        minimum: 0
-> > +        maximum: 255
-> > +
-> > +      max-cur:
-> > +        $ref: /schemas/types.yaml#/definitions/uint8
-> > +        description: Maximum allowed current in 0.1 mA steps
-> > +
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 3
+On 5/29/2025 15:50, Avadhut Naik wrote:
+> Each Chip-Select (CS) of a Unified Memory Controller (UMC) on AMD's
+> modern Zen-based SOCs has an Address Mask and a Secondary Address Mask
+> register associated with it. The amd64_edac module logs DIMM sizes on a
+> per-UMC per-CS granularity during init using these two registers.
 > 
-> Place properties according to DTS coding style.
-
-Got it! I'll update the property order accordingly.
-
-> > +  '^multi-led@[4-7]$':
-> > +    type: object
-> > +    $ref: leds-class-multicolor.yaml#
-> > +    unevaluatedProperties: false
-> > +
-> > +    properties:
-> > +      reg:
-> > +        minimum: 4
-> > +        maximum: 7
-> > +
-> > +      '#address-cells':
+> Currently, the module primarily considers only the Address Mask register
+> for computing DIMM sizes. The Secondary Address Mask register is only
+> considered for odd CS. Additionally, if it has been considered, the
+> Address Mask register is ignored altogether for that CS. For
+> power-of-two DIMMs i.e. DIMMs whose total capacity is a power of two
+> (32GB, 64GB, etc.), this is not an issue since only the Address Mask
+> register is used.
 > 
-> Don't mix quotes. Either ' or "
-
-I'll use consistent ".
-
-> > +        const: 1
-> > +
-> > +      '#size-cells':
-> > +        const: 0
-> > +
-> > +    patternProperties:
-> > +      "^led@[4-9a-f]$":
-> > +        type: object
-> > +        $ref: common.yaml#
-> > +        unevaluatedProperties: false
-> > +
-> > +        properties:
-> > +          led-cur:
-> > +            $ref: /schemas/types.yaml#/definitions/uint8
+> For non-power-of-two DIMMs i.e, DIMMs whose total capacity is not a power
+> of two (48GB, 96GB, etc.), however, the Secondary Address Mask register
+> is used in conjunction with the Address Mask register. However, since the
+> module only considers either of the two registers for a CS, the size
+> computed by the module is incorrect. The Secondary Address Mask register
+> is not considered for even CS, and the Address Mask register is not
+> considered for odd CS.
 > 
-> No, use existing led common properties. Also observe the units - this is
-> not uint8 but a defined type for microamp, see property-units in
-> dtschema.
+> Introduce a new helper function so that both Address Mask and Secondary
+> Address Mask registers are considered, when valid, for computing DIMM
+> sizes. Furthermore, also rename some variables for greater clarity.
 > 
-> > +            description: |
-> > +              LED current in 0.1 mA steps (e.g., 150 = 15.0 mA; 0 if not connected)
-> > +            minimum: 0
-> > +            maximum: 255
-> > +
-> > +          max-cur:
-> > +            $ref: /schemas/types.yaml#/definitions/uint8
+> Fixes: 81f5090db843 ("EDAC/amd64: Support asymmetric dual-rank DIMMs")
+> Reported-by: Žilvinas Žaltiena <zilvinas@natrix.lt>
+> Closes: https://lore.kernel.org/dbec22b6-00f2-498b-b70d-ab6f8a5ec87e@natrix.lt
+> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+> Tested-by: Žilvinas Žaltiena <zilvinas@natrix.lt>
+> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
+> Cc: stable@vger.kernel.org
+> ---
+> Changes in v2:
+> 1. Avoid unnecessary variable initialization.
+> 2. Modify commit message to accurately reflect the changes.
+> 3. Move check for non-zero Address Mask register into the new helper.
 > 
-> No, use existing led common properties. Same everywhere.
-
-I'll replace max-cur with the standard led-max-microamp.
-I'll remove led-cur as there's no equivalent LED common property to represent it.
-The LED current can be configured runtime via the led_current sysfs.
-
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/leds/common.h>
-> > +
-> > +    i2c {
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        led-controller@1b {
-> > +            #address-cells = <1>;
-> > +            #size-cells = <0>;
-> > +            compatible = "ti,lp5812";
-> > +            reg = <0x1b>;
-> > +            vcc-supply = <&vdd_3v3_reg>;
-> > +
-> > +            led@0 {
-> > +              reg = <0x0>;
+> Changes in v3:
+> 1. Add the missing Closes tag and rearrange tags per tip tree handbook.
+> 3. Slightly modify commit message to properly reflect the SOCs that may
+> encounter this issue.
+> 4. Rebase on top of edac-for-next.
 > 
+> Changes in v4:
+> 1. Rebase on top of edac-for-next.
 > 
-> Messed/mixed indentation.
+> Changes in v5:
+> 1. Change ordering of variable declarations to reverse fir tree.
+> 2. Explicitly state what power-of-two and non-power-of-two DIMMs are in
+> the commit message and ensure that the changelog is ignored by patch
+> handling tools.
+> 3. Rebase on top of edac-for-next.
+> 
+> Links:
+> v1: https://lore.kernel.org/all/20250327210718.1640762-1-avadhut.naik@amd.com/
+> v2: https://lore.kernel.org/all/20250415213150.755255-1-avadhut.naik@amd.com/
+> v3: https://lore.kernel.org/all/20250416222552.1686475-1-avadhut.naik@amd.com/
+> v4: https://lore.kernel.org/all/20250513192221.784445-1-avadhut.naik@amd.com/
+> ---
+>  drivers/edac/amd64_edac.c | 57 ++++++++++++++++++++++++---------------
+>  1 file changed, 36 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+> index 90f0eb7cc5b9..35e59abef598 100644
+> --- a/drivers/edac/amd64_edac.c
+> +++ b/drivers/edac/amd64_edac.c
+> @@ -1209,7 +1209,9 @@ static int umc_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
+>  	if (csrow_enabled(2 * dimm + 1, ctrl, pvt))
+>  		cs_mode |= CS_ODD_PRIMARY;
+>  
+> -	/* Asymmetric dual-rank DIMM support. */
+> +	if (csrow_sec_enabled(2 * dimm, ctrl, pvt))
+> +		cs_mode |= CS_EVEN_SECONDARY;
+> +
+>  	if (csrow_sec_enabled(2 * dimm + 1, ctrl, pvt))
+>  		cs_mode |= CS_ODD_SECONDARY;
+>  
+> @@ -1230,12 +1232,13 @@ static int umc_get_cs_mode(int dimm, u8 ctrl, struct amd64_pvt *pvt)
+>  	return cs_mode;
+>  }
+>  
+> -static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+> -				  int csrow_nr, int dimm)
+> +static int calculate_cs_size(u32 mask, unsigned int cs_mode)
+>  {
+> -	u32 msb, weight, num_zero_bits;
+> -	u32 addr_mask_deinterleaved;
+> -	int size = 0;
+> +	int msb, weight, num_zero_bits;
+> +	u32 deinterleaved_mask;
+> +
+> +	if (!mask)
+> +		return 0;
+>  
+>  	/*
+>  	 * The number of zero bits in the mask is equal to the number of bits
+> @@ -1248,19 +1251,30 @@ static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+>  	 * without swapping with the most significant bit. This can be handled
+>  	 * by keeping the MSB where it is and ignoring the single zero bit.
+>  	 */
+> -	msb = fls(addr_mask_orig) - 1;
+> -	weight = hweight_long(addr_mask_orig);
+> +	msb = fls(mask) - 1;
+> +	weight = hweight_long(mask);
+>  	num_zero_bits = msb - weight - !!(cs_mode & CS_3R_INTERLEAVE);
+>  
+>  	/* Take the number of zero bits off from the top of the mask. */
+> -	addr_mask_deinterleaved = GENMASK_ULL(msb - num_zero_bits, 1);
+> +	deinterleaved_mask = GENMASK(msb - num_zero_bits, 1);
+> +	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", deinterleaved_mask);
+> +
+> +	return (deinterleaved_mask >> 2) + 1;
+> +}
+> +
+> +static int __addr_mask_to_cs_size(u32 addr_mask, u32 addr_mask_sec,
+> +				  unsigned int cs_mode, int csrow_nr, int dimm)
+> +{
+> +	int size;
+>  
+>  	edac_dbg(1, "CS%d DIMM%d AddrMasks:\n", csrow_nr, dimm);
+> -	edac_dbg(1, "  Original AddrMask: 0x%x\n", addr_mask_orig);
+> -	edac_dbg(1, "  Deinterleaved AddrMask: 0x%x\n", addr_mask_deinterleaved);
+> +	edac_dbg(1, "  Primary AddrMask: 0x%x\n", addr_mask);
+>  
+>  	/* Register [31:1] = Address [39:9]. Size is in kBs here. */
+> -	size = (addr_mask_deinterleaved >> 2) + 1;
+> +	size = calculate_cs_size(addr_mask, cs_mode);
+> +
+> +	edac_dbg(1, "  Secondary AddrMask: 0x%x\n", addr_mask_sec);
+> +	size += calculate_cs_size(addr_mask_sec, cs_mode);
+>  
+>  	/* Return size in MBs. */
+>  	return size >> 10;
+> @@ -1269,8 +1283,8 @@ static int __addr_mask_to_cs_size(u32 addr_mask_orig, unsigned int cs_mode,
+>  static int umc_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+>  				    unsigned int cs_mode, int csrow_nr)
+>  {
+> +	u32 addr_mask = 0, addr_mask_sec = 0;
+>  	int cs_mask_nr = csrow_nr;
+> -	u32 addr_mask_orig;
+>  	int dimm, size = 0;
+>  
+>  	/* No Chip Selects are enabled. */
+> @@ -1308,13 +1322,13 @@ static int umc_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+>  	if (!pvt->flags.zn_regs_v2)
+>  		cs_mask_nr >>= 1;
+>  
+> -	/* Asymmetric dual-rank DIMM support. */
+> -	if ((csrow_nr & 1) && (cs_mode & CS_ODD_SECONDARY))
+> -		addr_mask_orig = pvt->csels[umc].csmasks_sec[cs_mask_nr];
+> -	else
+> -		addr_mask_orig = pvt->csels[umc].csmasks[cs_mask_nr];
+> +	if (cs_mode & (CS_EVEN_PRIMARY | CS_ODD_PRIMARY))
+> +		addr_mask = pvt->csels[umc].csmasks[cs_mask_nr];
+> +
+> +	if (cs_mode & (CS_EVEN_SECONDARY | CS_ODD_SECONDARY))
+> +		addr_mask_sec = pvt->csels[umc].csmasks_sec[cs_mask_nr];
+>  
+> -	return __addr_mask_to_cs_size(addr_mask_orig, cs_mode, csrow_nr, dimm);
+> +	return __addr_mask_to_cs_size(addr_mask, addr_mask_sec, cs_mode, csrow_nr, dimm);
+>  }
+>  
+>  static void umc_debug_display_dimm_sizes(struct amd64_pvt *pvt, u8 ctrl)
+> @@ -3512,9 +3526,10 @@ static void gpu_get_err_info(struct mce *m, struct err_info *err)
+>  static int gpu_addr_mask_to_cs_size(struct amd64_pvt *pvt, u8 umc,
+>  				    unsigned int cs_mode, int csrow_nr)
+>  {
+> -	u32 addr_mask_orig = pvt->csels[umc].csmasks[csrow_nr];
+> +	u32 addr_mask		= pvt->csels[umc].csmasks[csrow_nr];
+> +	u32 addr_mask_sec	= pvt->csels[umc].csmasks_sec[csrow_nr];
+>  
+> -	return __addr_mask_to_cs_size(addr_mask_orig, cs_mode, csrow_nr, csrow_nr >> 1);
+> +	return __addr_mask_to_cs_size(addr_mask, addr_mask_sec, cs_mode, csrow_nr, csrow_nr >> 1);
+>  }
+>  
+>  static void gpu_debug_display_dimm_sizes(struct amd64_pvt *pvt, u8 ctrl)
+> 
+> base-commit: 855b5de2e562c07d6cda4deb08d09dc2e0e2b18d
 
-I'll fix it.
+Any further feedback on this?
 
-> BTW, such significant binding change at v9, invalidting reviews and
-> rewriting the binding completely, is surprising.
+-- 
+Thanks,
+Avadhut Naik
 
-Understood. I restructured the binding in v9 to align with leds-class-multicolor.yaml
-and better represent the LP5812 hierarchy.
-I'll make sure to highlight such major changes more clearly in future revisions.
-
-Appreciate your time and feedback.
-
-Best regards,
-Nam Tran
