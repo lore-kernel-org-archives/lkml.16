@@ -1,138 +1,130 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FC12EF9D4;
-	Tue, 17 Jun 2025 18:52:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2B02E7654
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750186341; cv=none; b=NUG9YtyZu30XAvUmunTrSzjlJ6UO0pmr38zJEF5nPN+fmOQccurxosCS5McXy8AitHUvvpOZvm0tM2A5ploVJw+/hbhFXGcPY0iKSpHb3VVDKo4LFeOYLhPlyaHtC0H7i+Q4ozdyl5PxAfNiUBuzpRq/gkUw8hv/hp0OIpp1V2A=
+	t=1750186367; cv=none; b=XC47W8Dq9i+RmKrfLeOd78OPgL1+4I5BS+YYJSw1IwVFDiwHKCm/X11QCVxn6z/1IrNsM0+BeqG5FikeTEHY49iyViVKnBeCl3bVFD3TKZe8eZJtiLJpGK995WtzM6SpLJQkAjwDCkVU97UssuPToc5dYfWtuepmmB8mCCns5Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750186341; c=relaxed/simple;
-	bh=qlusW2sr4sVU2uXJRPIMCSXV7SxcfJyTdbN5C74eRL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cx9jIPMZpNPfG5ux5QiJe7sHd/y2xfAITBeBcYtOX6BM1Jgob5ms3zaHENkwC6K+ML+Am0X5kHYQSDB9M5rfYWaZKiG60Zhuq7ZjKAJigTvrMhEYPlI9DqFBqebQkUKWZ7CB3RenJYtOWCmWSafLwnKiEaYeWCOAVnoI08wcs/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CS7CaFXV; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750186367; c=relaxed/simple;
+	bh=+toRoMC/6o3ABSZSoj6kwUB+0AHRoQQb9StmVaDTJuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cthL9NTac1wjE8/GBYmXAmvS/68EadjgOIc3yI3Mp9W/mmM6uec2QPqNcEo3HakNNAdyBqkYNR0O7upX3nw/fKCk7Y4hFi4I4so896vJUhVhyYMCZiRRbL9cFvinsT02aNR33JeEkm71fvMiDI9m8BRjsmKk7lNRMc61X1NYprw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e2B/byCM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CS7CaFXV"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23649faf69fso60441425ad.0;
-        Tue, 17 Jun 2025 11:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750186339; x=1750791139; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rrjM2YpDGiy0ALMLMuxjn2ko9PVZeOACLyeqPzUnd5A=;
-        b=CS7CaFXVpPoowWtJiHDw3RuJ3q+zsPORiTN3ZUcMmRv7wDCg7rUyaoO5K7Abv1KCJS
-         lmz08A8uQk4hjGSKG3SedYF6+QUEjB60+htWfHJvHWMpDuM/v23Qvn8rvSoo7ieEleoN
-         vubjKw/YPqG/siV7M8FvbX229O4XIclvRZ4pH2+iGPAvcRJruwFnQshYxX19q2xDlirY
-         mDN5sFX/m5gW6p4nxvsFVhHyBoosu/EvIdOXkzjq+wHvPzamtNqNcPJFDeKC/Bo1MO8O
-         VDs9xrfxjrHlLoueLGGs+fNjNPFFUW6gzPrc7sGugJzV898YMxAXU2dI23hB8xUsKibc
-         IjRg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e2B/byCM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750186364;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j7GR8b6oq+VKsS7zEblPcoLobXIu9Z0EZdf91JZ1evE=;
+	b=e2B/byCMD7aBifT1H+OrbHywDacGT8tbvYL+K2YVbRI9iF1nNG+885k8XtXs0gjfbfEv5N
+	QnDIwqxC/E/3C1PXKhOQCuahmiP3A/7ZpwMpIQAsky4QJnPt1/BYscboippZg1zqCiNDUY
+	4qnVILC2IIjP9kDYMdHEBoCfqO3Xm7E=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-672-FVv_HUy0Olic-WW3855SRA-1; Tue, 17 Jun 2025 14:52:43 -0400
+X-MC-Unique: FVv_HUy0Olic-WW3855SRA-1
+X-Mimecast-MFC-AGG-ID: FVv_HUy0Olic-WW3855SRA_1750186363
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-875fff8c797so2020139f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:52:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750186339; x=1750791139;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rrjM2YpDGiy0ALMLMuxjn2ko9PVZeOACLyeqPzUnd5A=;
-        b=HrEQTRsvR2fgZIJ7KIdfkYpas2l628XcFBxsetlVC2RaqQ5SiaTdXMdYY6dRpsWUBb
-         J9QLr2eX9Vn2jmAtN93CZ6RP2+n21X3KfaDBTBeh9fFxFojPWvOMni+SNV1eG741vWAg
-         tcGOayiGPJSzjlaT3zhQwcCw6g/yE3RIxK5o2IlNd9KEDPaEOKmzIW0urOKm3SgKjuM7
-         MZrREhEFS/LP6AsgI4+I7BTtG6TQsioOooz2gOIAs8hXwDIjRuSsFg9iugMVSPOW5Mv9
-         RfxZn2Rn6/frKBJHmNLlj7q07gdqv9aDWhsyr1RuwlLORRf3iJ7Bq8HFd+iwWHw+CFrT
-         Fh2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUbsSMIWpZ5/Xn02UWVRQB2dJqglAMj5taBiD3uXA03tSsU/6Ey/1joSbjWdQLcji+4io1bOplTjjWJWQ==@vger.kernel.org, AJvYcCV6QQ9Ca5dBLsbP64kV7bu7rMQw/JQo03KLdyIaozNqylwJpa5aAJv19hWR0KO0Nagbzw8dliSZlGMX@vger.kernel.org, AJvYcCVOBJ0bmT25E0wZhSkVfPrq76UCPD6xKmY4JrspRNPYhj6qg1ShANoiH0Kg2rV3Mz3pjX2ytKAH+os9OIQn@vger.kernel.org, AJvYcCXml1NQ+hXKvJP33XkebY144cKHWYBMCkJk9+a8tnijOg17+rquIfCcBsyusQheMIeUsdr2kFqt8n19@vger.kernel.org
-X-Gm-Message-State: AOJu0YxocRwehglKhzCHG90riSR5LQLEikGUiBhnUB+Lk4kIyh3qpend
-	2PlpNF4Dy00KUmGxn3abfOj+MyZpg0HCyNZYexezmBz/BsVEMYbyEmSK
-X-Gm-Gg: ASbGncsgr9RJIN7hbbyNT1kT/Q18om1Ush4b9s9/TQm6tw1FuFqZRGNaSgKvYbv51VC
-	UNw9GkGKVzdGRb1zTd6ty0SCsBvpmFLuCde2IBxqAk1Em9aAE1taCcCRNOcUEWIETMTWCRX9n9e
-	DNWuisvm1Z/P327DuMQqOzpw3cqJ99e2naZ8a5ip4LG+Fp6acRIQB+3PjIbpelGKbRIFLgrl59I
-	5bQZfXUOerBiT4Dp1/QAepUEPnfEo7hPJ5LoHtmb/KR5SsE/2mue6vKXxWqdtSqRKXRurGhIBbt
-	Abxr3zd1OjwckLwgPOcK+zXRl5EXRYSFg/HQ7C0j4uoFbk2NPoH5Um4RqgQYGm2mQj7LmCR/8q4
-	f/NhOZg==
-X-Google-Smtp-Source: AGHT+IEbxeRsrV9v0cFZpm/JNC9Jn+xijTCUioEIcN6OlyBZRQCnX9DQlgMFOHdhLztTsnPvJxpk4Q==
-X-Received: by 2002:a17:902:d552:b0:234:d7b2:2ab9 with SMTP id d9443c01a7336-2366b005cd2mr247602865ad.12.1750186339109;
-        Tue, 17 Jun 2025 11:52:19 -0700 (PDT)
-Received: from localhost ([2804:30c:4000:5900:b4c4:6073:1a92:4077])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365e0d0ab2sm84238655ad.246.2025.06.17.11.52.17
+        d=1e100.net; s=20230601; t=1750186362; x=1750791162;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j7GR8b6oq+VKsS7zEblPcoLobXIu9Z0EZdf91JZ1evE=;
+        b=GLd7LhPx2SY9HfPPyhw3SkKxSDF9YoeUwJfIvmf0fGLTYQ6DAljMyJ4LeotkKk6qw/
+         v7ZN5Jhoe6k/QA2+KkGYUVP9mJTm743tyx9iEqEUA3oqBT6evpGwlB5iN+AF5jYOYSMF
+         AcnzxQkCNsmhKEzt/vxzMqeyjzkvdU64MRlYCFjXfZoqTF2bZJ1MB9bnjZOf/ZDuDyP7
+         Vv6vTua9yumQ3XNUIZm7ssKMhrLsyIP2QJyZnxqO8VixvdsPtNF3zFY9k543dy13si+O
+         TUrl8q9NMIS30oCpHATMuoXt/8TkR/KQBd1cDJgBgYA0nV13SICw4yJQUJPXkRjfqWPJ
+         3oKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVyFKFknEum72JhNnA5tMeChboOpqWoO79MRMpkSpRQxRbwMU/+OcD+arg6zDFCrcA1i+5D3insh0mKSLc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVXvXx33T/6DvuQh576ciUiYaG/N3xeYFSdkCq3/qOT867WSND
+	pDhXdP8ZH1hTuTZJWfvrx8xvd4IQtiRH2ilVPsdSE3iY/6bOT7DZ4LrkPK77psqC0vEVVFegtlo
+	185PYXp1XFWApgmX7QSkscKE9Vr5oQoFI64RZ0umDLv4ur+6RdMW7YFNUhNVWbWtLYQ==
+X-Gm-Gg: ASbGncvKuKYF3H9i2xOP8655ze6IaHgjAWtJvBivS3jENPiZ+KNNwQ8wNG6rVapeVl5
+	l/r+pH6dVQOwPaEL8DEqbTsRSv9EXFnLJLzAkpTekRHWGrqUnHBmDvCyOhX3MNFj7WoUgtl4UkK
+	fQOyNaakq+DlcMEirtPUmVcbjaBIEooeupYNqxvy8tLz2UOkVSbz1+Eu9D9YY6c8emMNpza+El4
+	v/Ivkn+POoTTuwqfoeXIbxCpf3DJyTU3xs/dgbY6KVtPjF1+HDhGs7NkqyxnufOUcudxwhc//dC
+	Qay7LVjSF40p+a4IjMwcULL9Ng==
+X-Received: by 2002:a05:6602:3414:b0:86a:24c0:8829 with SMTP id ca18e2360f4ac-87601391479mr183502339f.0.1750186362591;
+        Tue, 17 Jun 2025 11:52:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKthDmryWBtQYhqN8X3vXXpFX6gedZAuw/STdWF8X1NR60JiUUJho0FZmRHCrhQiS9JYovUQ==
+X-Received: by 2002:a05:6602:3414:b0:86a:24c0:8829 with SMTP id ca18e2360f4ac-87601391479mr183500639f.0.1750186362211;
+        Tue, 17 Jun 2025 11:52:42 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875d5842a19sm225353839f.44.2025.06.17.11.52.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 11:52:17 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:54:06 -0300
-From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
-	lars@metafoo.de, Michael.Hennerich@analog.com, nuno.sa@analog.com,
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
-Message-ID: <aFG5zufl_znUw3xL@debian-BULLSEYE-live-builder-AMD64>
-References: <cover.1749582679.git.marcelo.schmitt@analog.com>
- <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
- <c29feb5b-2699-411a-87dc-249f5b9ff6c0@baylibre.com>
+        Tue, 17 Jun 2025 11:52:40 -0700 (PDT)
+Date: Tue, 17 Jun 2025 12:52:35 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Woodhouse
+ <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+ <tiwai@suse.com>, dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+ linux-kernel@vger.kernel.org (open list), iommu@lists.linux.dev (open
+ list:INTEL IOMMU (VT-d)), linux-pci@vger.kernel.org (open list:PCI
+ SUBSYSTEM), kvm@vger.kernel.org (open list:VFIO DRIVER),
+ linux-sound@vger.kernel.org (open list:SOUND), Daniel Dadap
+ <ddadap@nvidia.com>, Mario Limonciello <mario.limonciello@amd.com>, Bjorn
+ Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 2/6] vfio/pci: Use pci_is_display()
+Message-ID: <20250617125235.13017540.alex.williamson@redhat.com>
+In-Reply-To: <20250617175910.1640546-3-superm1@kernel.org>
+References: <20250617175910.1640546-1-superm1@kernel.org>
+	<20250617175910.1640546-3-superm1@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c29feb5b-2699-411a-87dc-249f5b9ff6c0@baylibre.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 06/16, David Lechner wrote:
-> On 6/10/25 3:31 PM, Marcelo Schmitt wrote:
-> > From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
-> > 
-> > The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
-> > analog to digital converter. The AD4170 design offers a flexible data
-> > acquisition solution with crosspoint multiplexed analog inputs,
-> > configurable ADC voltage reference inputs, ultra-low noise integrated PGA,
-> > digital filtering, wide range of configurable output data rates, internal
-> > oscillator and temperature sensor, four GPIOs, and integrated features for
-> > interfacing with load cell weigh scales, RTD, and thermocouple sensors.
-> > 
-> > Add basic support for the AD4170 ADC with the following features:
-> > - Single-shot read.
-> > - Analog front end PGA configuration.
-> > - Differential and pseudo-differential input configuration.
-> > 
-> 
-> ...
-> 
-> > +static int ad4170_fill_scale_tbl(struct iio_dev *indio_dev,
-> > +				 struct iio_chan_spec const *chan)
-> > +{
-> > +	struct ad4170_state *st = iio_priv(indio_dev);
-> > +	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
-> > +	struct device *dev = &st->spi->dev;
-> > +	int bipolar = chan->scan_type.sign == 's' ? 1 : 0;
-> > +	int precision_bits = chan->scan_type.realbits;
-> > +	int pga, ainm_voltage, ret;
-> > +	unsigned long long offset;
-> > +
-> > +	ainm_voltage = 0;
-> > +	ret = ad4170_get_ain_voltage_uv(st, chan->channel2, &ainm_voltage);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(dev, ret, "Failed to fill scale table\n");
-> > +
-> > +	for (pga = 0; pga < AD4170_NUM_PGA_OPTIONS; pga++) {
-> 
-> From what I read in the datasheet, it sounds like if adi,reference-buffer is
-> precharge, then the PGA is bypassed, so there would only be 1 option in that
-> case (gain = 1).
-> 
-Although not explicit in the datasheet, looks like there are two precharge
-buffers. One precharge buffer is used with the voltage reference inputs and is
-associated with the adi,positive/negative-reference-buffer dt properties. The
-configuration of that buffer is set through the REF_BUF_P/M fields of AFE
-registers. The datasheet doesn't mention the PGA on the section dedicated to
-describing reference and reference buffering features.
+On Tue, 17 Jun 2025 12:59:06 -0500
+Mario Limonciello <superm1@kernel.org> wrote:
 
-The other places a precharge buffer is mentioned refer to it as 'gain = 1 precharge'.
-My understanding is that the PGA bypass precharge buffer is a different buffer
-that is only used when PGA option 9 is set in the PGA_GAIN filed of AFE reg.
-The PGA bypass precharge buffer would be used in the analog input path while
-the reference buffers would be used in the reference input path.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> The inline pci_is_display() helper does the same thing.  Use it.
+> 
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/vfio/pci/vfio_pci_igd.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/vfio/pci/vfio_pci_igd.c b/drivers/vfio/pci/vfio_pci_igd.c
+> index ef490a4545f48..988b6919c2c31 100644
+> --- a/drivers/vfio/pci/vfio_pci_igd.c
+> +++ b/drivers/vfio/pci/vfio_pci_igd.c
+> @@ -437,8 +437,7 @@ static int vfio_pci_igd_cfg_init(struct vfio_pci_core_device *vdev)
+>  
+>  bool vfio_pci_is_intel_display(struct pci_dev *pdev)
+>  {
+> -	return (pdev->vendor == PCI_VENDOR_ID_INTEL) &&
+> -	       ((pdev->class >> 16) == PCI_BASE_CLASS_DISPLAY);
+> +	return (pdev->vendor == PCI_VENDOR_ID_INTEL) && pci_is_display(pdev);
+>  }
+>  
+>  int vfio_pci_igd_init(struct vfio_pci_core_device *vdev)
+
+Acked-by: Alex Williamson <alex.williamson@redhat.com>
+
