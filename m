@@ -1,110 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19821DD9AC;
-	Tue, 17 Jun 2025 10:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F6F139D0A;
+	Tue, 17 Jun 2025 10:15:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750155295; cv=none; b=fSzkeZFz2yyHXneFMRzaPxm3+KaXKBKop2KZr447BW7UWlqKt7GecVaKqRLxd+BJga+677RvV2KUGcVuq5M5bvV6tce3NDhVE41+V8g+dQaDEVP+V1FqHw8K5IhoqrxW3tQJwfTMstP8zIsvVI/hg3WQ7O1D3uV6OCNMt3wejLc=
+	t=1750155312; cv=none; b=uWdyb0f3V1RDt8kAFw9CTSVu+vPPuBV4HgUG7GG6mdRF9p9Sstt1wo8qV9FAHigMfxbdwyansjoALATi+GreRBmp9obte/r9vy74F+ijWFK12sTMcAygAzJzxAFJ5ZYoHyTlMAUyOY2cjGOwdMHNfe+/edgdgXjeDnUTgeBCFtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750155295; c=relaxed/simple;
-	bh=TGiJ78OP12uHdMJQ3lJsjwAsNWLdhU7ATUP+OpaDnTM=;
+	s=arc-20240116; t=1750155312; c=relaxed/simple;
+	bh=o020+KD1pNUZfL2iwH/vfr7KMOXQU9Zgca+ajYb8GwI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NjdzFYypV/dQnOG9U8muxe5WRnRBU/JnXHCOw2Ym9UYXzSOF7WcEF6DlK78bCPgMvi3Pd39vOQY9oxgxeXo9wOnYddoTd6eDq8kjqgGyVEjKBKvwtZGxtD8Mkvqovc37brVYjAZUXwxQ2OJv7GhTwFJx7A1Auz6ztdiRfChwe4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o/1uzIR6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=L6oACa9xLW1rZHn/d3e1OOcJgsLfYrlr4KfAX6CzElz4KDNXQdaKCWPtMzpEv5M9RTbUlf6JhvukLGdNHa4IlUMZ90CDKzPTxShxCJk4lxmoDqgrR/l/Q8vnYV2UB5UwVPeiAgdd9uEeQVkSUbB9/1YTP9mZ1GBQCN1p2COoNm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ypCw5P0B; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bLGGR7UC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o/1uzIR6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E694C4CEEE;
-	Tue, 17 Jun 2025 10:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750155295;
-	bh=TGiJ78OP12uHdMJQ3lJsjwAsNWLdhU7ATUP+OpaDnTM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o/1uzIR6BMhnlc2FAlYqUdmXvvuDtF8wPGOeNwLChQTgBUbfOFenjr3VK/V41Gvh9
-	 Jg5EIm+eukoiDcygWJPerWvg8K/Cl8DES8H+DLZCh0cCI7gGKklAVtLqfdl2wTGkPe
-	 DALKiNyxhk5j/1mBAnw+60bPHI/gS/amHDBeMwgEh3kU63Zi9JvteyDGx13Swwp8pv
-	 dWAEOIjVr/6vLeeB6RjIH5XrAdrKk0O6vO1ChEwwxpVZYCsjcCLM5uyROvgvzsjKRd
-	 5yd+RoYXU7iK8SpnT+BoBNJFGDv1K8JHAH/Z1+bq8ENUyHEYRPNs0FAY1N7KkAX6wL
-	 tV3Y6e4JkfMDQ==
-Date: Tue, 17 Jun 2025 15:44:45 +0530
-From: Sumit Garg <sumit.garg@kernel.org>
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	op-tee@lists.trustedfirmware.org,
-	linux-arm-kernel@lists.infradead.org,
-	Olivier Masse <olivier.masse@nxp.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Yong Wu <yong.wu@mediatek.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T . J . Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
-	Daniel Stone <daniel@fooishbar.org>,
-	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
-	robin.murphy@arm.com
-Subject: Re: [PATCH v10 2/9] dma-buf: dma-heap: export declared functions
-Message-ID: <aFFAFcSNtMM7d38w@sumit-X1>
-References: <20250610131600.2972232-1-jens.wiklander@linaro.org>
- <20250610131600.2972232-3-jens.wiklander@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypCw5P0B";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bLGGR7UC"
+Date: Tue, 17 Jun 2025 12:15:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750155308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o020+KD1pNUZfL2iwH/vfr7KMOXQU9Zgca+ajYb8GwI=;
+	b=ypCw5P0B6pY8H9XqSSk2lvrgfbKnP9dHS6QDw1QHVYUIugEEvTwbuqouq3q+ra0H+AnU7E
+	hcxGHmUfXDgPmmWeSjFS9HuhrlfGW6NzbprU7V76y3hfUiRRFK3L7fqOf9aagPran3idWg
+	+uuN7pPe62gCK8DAEGhTfn7S9KN3F7+ZX414J1Y1Vj0R0m2beGWdUf32eYPoOe1UxBsppJ
+	nGuckIbJGWlEy01rDTqs8rVi3OrYpAWFz+U8cOwAF4iGZf892qYYrmIPjvuDaa/jsYENc1
+	hHxilJGDl6LYYtwzEqiw+cOa+4KrsLU388loTdicYQcEQFrxHUQXQ994xuPLEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750155308;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=o020+KD1pNUZfL2iwH/vfr7KMOXQU9Zgca+ajYb8GwI=;
+	b=bLGGR7UCKMMyzM7uSLL/+9pbVN8bK7kqSgLoJ9C1OpwO56U/3l1ofG0jxQKLQIgC960Wyx
+	JY4k0hob+LJWpeDw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Marc =?utf-8?Q?Str=C3=A4mke?= <marc.straemke@eltropuls.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel?
+ IGB
+Message-ID: <20250617101507.jU00mupE@linutronix.de>
+References: <20250613145434.T2x2ML8_@linutronix.de>
+ <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
+ <20250613195838.0-gZ6bqS@linutronix.de>
+ <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
+ <20250617092814.vqKdu23w@linutronix.de>
+ <bb74b5b6-bc23-4aa4-83df-449dc7c9006b@eltropuls.de>
+ <20250617100013.1o5lsPLq@linutronix.de>
+ <b7179ac8-c64b-44dd-b25a-62b34eb49c24@eltropuls.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250610131600.2972232-3-jens.wiklander@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <b7179ac8-c64b-44dd-b25a-62b34eb49c24@eltropuls.de>
 
-On Tue, Jun 10, 2025 at 03:13:46PM +0200, Jens Wiklander wrote:
-> Export the dma-buf heap functions to allow them to be used by the OP-TEE
-> driver. The OP-TEE driver wants to register and manage specific secure
-> DMA heaps with it.
-> 
-> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> ---
->  drivers/dma-buf/dma-heap.c | 3 +++
->  1 file changed, 3 insertions(+)
+On 2025-06-17 12:03:31 [+0200], Marc Str=C3=A4mke wrote:
+> Hi Sebastian,
+Hi,
 
-Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+> On 17.06.25 12:00, Sebastian Andrzej Siewior wrote:
+> > Even if CPU1 would handle CPU0's timers then it would wake cyclictest on
+> > CPU0 but that thread would have to wake until CPU0 is done with the PCI
+> > bus. CPU1 knows nothing about it.
+>=20
+> Okay then the latency I see on the other CPU must be from a PCI access do=
+ne
+> by the second CPU which stall on the same shared bus.
 
--Sumit
+Okay.
+>=20
+> Anyway: Thanks for your help Sebastian! I can probably live well with the=
+se
+> spikes in latency. I was more concerned that there is a deeper issue with=
+ my
+> config and the response time could be unbounded.
 
-> 
-> diff --git a/drivers/dma-buf/dma-heap.c b/drivers/dma-buf/dma-heap.c
-> index 3cbe87d4a464..cdddf0e24dce 100644
-> --- a/drivers/dma-buf/dma-heap.c
-> +++ b/drivers/dma-buf/dma-heap.c
-> @@ -202,6 +202,7 @@ void *dma_heap_get_drvdata(struct dma_heap *heap)
->  {
->  	return heap->priv;
->  }
-> +EXPORT_SYMBOL(dma_heap_get_drvdata);
->  
->  /**
->   * dma_heap_get_name - get heap name
-> @@ -214,6 +215,7 @@ const char *dma_heap_get_name(struct dma_heap *heap)
->  {
->  	return heap->name;
->  }
-> +EXPORT_SYMBOL(dma_heap_get_name);
->  
->  /**
->   * dma_heap_add - adds a heap to dmabuf heaps
-> @@ -303,6 +305,7 @@ struct dma_heap *dma_heap_add(const struct dma_heap_export_info *exp_info)
->  	kfree(heap);
->  	return err_ret;
->  }
-> +EXPORT_SYMBOL(dma_heap_add);
->  
->  static char *dma_heap_devnode(const struct device *dev, umode_t *mode)
->  {
-> -- 
-> 2.43.0
-> 
+You don't have to live with it. You could add a read after the writes in
+the loop (wrfl()). This should help.
+Some Intel CPUs have a MSR bit to disable this kind of caching on the
+PCI bus. Maybe the AMD CPU has this, too. Or there might be a switch in
+the BIOS.
+
+> Marc
+
+Sebastian
