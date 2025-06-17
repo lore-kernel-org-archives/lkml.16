@@ -1,194 +1,218 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27571F4CAE;
-	Tue, 17 Jun 2025 14:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3851F4CAE;
+	Tue, 17 Jun 2025 14:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170855; cv=none; b=THenKxwq4cEOfRuUlTLQzMRUfG+tcpt/69xL8PCJJ0OGb4JAHDdsJEtcZnz0xOJA7rELivr5l5r98JknjmB1dBFn6yMh2+oVTOPfs9zLCZmLwyqQbrS5yHDz9CUSAMzAb+oGYyoBhyXMR3tCCg1SPizLzQTmx9bsaqH1DmDVT+k=
+	t=1750170875; cv=none; b=NaeUjS/3609QUp7K88huK3nszLQhytam+5OYhC1xT/oCIZKtHIE2AHaISPxKAyW5f5G1SiMd4+exH/hGj1KVzy1HPdGPJo6nIVs7orafspk422vwiQ6NZ6D5I509B5QWJuGgqro/YhWfUL6BtJaxD0u3s1g18jp9vBTPWJ4Wquc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170855; c=relaxed/simple;
-	bh=vkyVZ89rEugsgiK7V1jYcH+faW7cMWHmpzby7nKLUrc=;
+	s=arc-20240116; t=1750170875; c=relaxed/simple;
+	bh=7eVSwYhRrsGw308e1gWXBm5X3J3BsCedcVcfc7DyDMo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XcXrZS5Ot76VE1IRwvXM4Y/VP+mfP7n+bHhfKDRlp2+hdGu0rZy2D7YEjWM4T3kIFXPU0vVo2T+DdGRVdFJQo4QvbNp2JPNWRmgBQt06EXrRja7am2TYlwOfC2lrqS5ZLYKxHJYmlr9nWmcNyMfOyy+w8qabgtlNZt4SoSYpzxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=abKF208p; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VJcm2I2oXdB/bjRHadD7/eHuxVNDBNUxyjgj71bHyLBFjxomnKNJ+YUaXE3pPTqdA3maM9W/HrJjnqQopjpRcoAbIzZJGesLReXiHb/SYbxIE3un+pTV6/Iy7afSlHBjeSlNyek+GTPujyCUa05QH9uVoAtz0J4oKkQcAQ8+VJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eRFjA2m2; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abKF208p"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fac1c60e19so70879506d6.1;
-        Tue, 17 Jun 2025 07:34:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750170853; x=1750775653; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qtu+Y/oXIqQeAyDIwMqtulQfjbzEg3VKimiWJlihB/M=;
-        b=abKF208pppdMxHRG+7FU+MaoRpjjZ0G0BjKbWE537t2Bmze9F9jpZDdGwdqvsMSqh4
-         zsctmYSo/bxfDggO6MthlopqeORZXjzcGM5gJrWRkRRB/HORRz/nnIPWS/d6QazwZkrY
-         4UV4nTPmhXKQuBGrNxSqYThCLMj7syokS2gG/omjLypyTosMU1qw66O/Kq9PkSjVwDGr
-         aDLVNlX9S438X7/pcozHb/fzKRTOJHZq8w2s//ZihIl/eJmTSRiZ1Hlnd52l9dj3Rqlz
-         Xi/S0+CxRkEN+Mb6mL/2IgG8LDoGp1PsocK4iiZvTVRMyfUR6mq0q/K12H5AdTLGYsCk
-         BhYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750170853; x=1750775653;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qtu+Y/oXIqQeAyDIwMqtulQfjbzEg3VKimiWJlihB/M=;
-        b=ghadpEixAgRw2XfvEXfIsQYSN1+Y40bjzUzNCtaUgdXTH712AC9XrwvEGeulQ15Hsj
-         BU2N2TWRSWafCA0/SY7AHaBzKyBUZpSJbhQURA/SJ+HHJsY9VtE7tFFR8PDH10eYTDar
-         H4qVPZbnRM6Rd71arygjQk/XOyluvp02Mxja8U6xFbssI7P+yLeEg8doRp6roZCSjTSz
-         OC0Qz0ovBysaT1xIon38hYdTYzizE74u0JvAHRB1ErK8CDwG0TtitJ4lBqPS+JZowA3n
-         sBhTap5zkAw3vtxPe5gobtrmOYEHeHDsYFwoz+E4IqWqSDl1+FUrGPbRsKB3ADDWnNgD
-         agCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVe3ai2ZahB20S5oDlp1JbvKwWjB1Y/NTZdGbFgeyJr2lnQhtkXIkWxFLhE6EIRf8DaA5MO5+rhfwrTMv8FaVc=@vger.kernel.org, AJvYcCVwOvzWzLegyYP7IrhZI77/zNmk+YQNhJWKpxcX+S/LSX4JLNXLyJDIfoyxEMSdWj+VCVJTkCIkU4b1iPE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytNNtB1Cz407kIy1w9Li5LoKc2AYRDGhxxDZkS6MD3AuNzLr2P
-	IqeGyRFjrpS44uJ4aXWde6lF/bATEpSV+c0XmYR5vTeT/e4DtkoG8xdC
-X-Gm-Gg: ASbGncuBTMf1SVyhPqLULdjZXiPmU/kp14LrTfq+bslxBrSqK09YhNX542oyTRN7o0h
-	D5W+Wk/OT0OIbxHSlrUIJE9d2k83ArvwKDuE5jRjKVVE1BTEHNLEr+aelmbViotzcnoilTE+hKa
-	3rEJP6PPhmqMoZGnmqj13J1vxAsAdmNro1Ln2nGnD9yb2HvOizTaRr0iVz432ux964GEJFj3OaW
-	tXTRiJQ40OXZIHTHqNmUFBEegmWIgBjU8t2VLWAJ297dpLj+il2hgbF+v2gTf7TTWt0S+Xrb6j9
-	LL7hnQ94P9rReSeq9kN1dMO0aqXQC3Rsk+jlZ4yXi2RuEIboLbUKFEUJPqHETlps/coAw/xuDaM
-	CMmzYlqq41Vq7CnRXpBg+UexZ2I0k05QwoU8NpGGN2Nd9Jw4xyIwG
-X-Google-Smtp-Source: AGHT+IH1zyNMnttx1Bi0Q+pP4QqmSyitxELiw9qLRz7y2keLnFHL0zn6RxkzodMMHqSrKS5aXYWEAg==
-X-Received: by 2002:a05:6214:5504:b0:6f5:1192:ccdf with SMTP id 6a1803df08f44-6fb46d61b3emr195981916d6.6.1750170852700;
-        Tue, 17 Jun 2025 07:34:12 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb35b20eefsm63198126d6.4.2025.06.17.07.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:34:12 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 83D201200068;
-	Tue, 17 Jun 2025 10:34:11 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-03.internal (MEProxy); Tue, 17 Jun 2025 10:34:11 -0400
-X-ME-Sender: <xms:43xRaL2JHcN5_oivyoB-pxbMitx5ACVpQwJxEc3GYm2560DNze-Paw>
-    <xme:43xRaKGPhcV8cEsFdrFKUeSpnFUObWWule7wHtxxSCOAAgMzNSMOZsAwnZnZ8u9EC
-    WtFGhuHyePt4uc5_A>
-X-ME-Received: <xmr:43xRaL4ltRbwuilpXsU1frFBqL2rMRhRsVKok-_fLBC477qD1qQQ-PiWbA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdegfecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnth
-    hsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecu
-    hfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtg
-    homheqnecuggftrfgrthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieev
-    tdeguefhgeeuveeiudffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihht
-    hidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrg
-    hilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeeffedpmhhouggv
-    pehsmhhtphhouhhtpdhrtghpthhtoheprhhoshhtvgguthesghhoohgumhhishdrohhrgh
-    dprhgtphhtthhopehlhihuuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehruhhs
-    thdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    htghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehlihhnuhigqdhkvghr
-    nhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrrg
-    hlmhgvihgurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopehmihhnghhosehr
-    vgguhhgrthdrtghomhdprhgtphhtthhopehpvghtvghriiesihhnfhhrrgguvggrugdroh
-    hrghdprhgtphhtthhopehjuhhrihdrlhgvlhhlihesrhgvughhrghtrdgtohhm
-X-ME-Proxy: <xmx:43xRaA0yFT_7sm1CQYMP4L3UdFGEEGV2vpKgBdbYwa-R9cdPcy2lQA>
-    <xmx:43xRaOHBPY0BUou9PuOpOEy7KlnF-3PkYHlKLUyzYTJINSvD8myiVQ>
-    <xmx:43xRaB9Pzvmx3hXM-WHvAfzQIjm1YRy-RAmg1wPFWCL8VZYcaf0igg>
-    <xmx:43xRaLkbH_13RJSmVWA8OfZ8KnSeYh4KiVJnztUk2pkhnOhkL_ePPQ>
-    <xmx:43xRaKHQY74Y8NYolLJFyUeOU1-_eegapcHJkpJJEzRjmhTJW5RN-FH8>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Jun 2025 10:34:10 -0400 (EDT)
-Date: Tue, 17 Jun 2025 07:34:10 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Ingo Molnar <mingo@redhat.com>,	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,	Will Deacon <will@kernel.org>,
- Waiman Long <longman@redhat.com>,	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,	David Woodhouse <dwmw@amazon.co.uk>,
- Jens Axboe <axboe@kernel.dk>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	NeilBrown <neilb@suse.de>,	Caleb Sander Mateos <csander@purestorage.com>,
-	Ryo Takakura <ryotkkr98@gmail.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [RFC RESEND v10 03/14] irq & spin_lock: Add counted interrupt
- disabling/enabling
-Message-ID: <aFF84rW5fNXrnwC8@Mac.home>
-References: <20250527222254.565881-1-lyude@redhat.com>
- <20250527222254.565881-4-lyude@redhat.com>
- <20250617101120.7c946656@gandalf.local.home>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eRFjA2m2"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2EEB57E1;
+	Tue, 17 Jun 2025 16:34:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750170859;
+	bh=7eVSwYhRrsGw308e1gWXBm5X3J3BsCedcVcfc7DyDMo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eRFjA2m2TzJPaNadVlp/g6nZhQtjBw8DzZMp2uaxV4XCS8ILolO/l48V2PRSJkYG7
+	 615Ja/S+EC/SeBscdF5aji3VzhpJUeZz9rvH316vYgyFJ7rrCXG3BHCzHm8kDFKSkv
+	 bpv0l1rrXPZER84ZeLYfbQ/1c6YQqdHsDId+UYeg=
+Date: Tue, 17 Jun 2025 17:34:16 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v5 04/13] media: nxp: imx8-isi: Use
+ devm_clk_bulk_get_all() to fetch clocks
+Message-ID: <20250617143416.GA21052@pendragon.ideasonboard.com>
+References: <20250522-8qxp_camera-v5-0-d4be869fdb7e@nxp.com>
+ <20250522-8qxp_camera-v5-4-d4be869fdb7e@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250617101120.7c946656@gandalf.local.home>
+In-Reply-To: <20250522-8qxp_camera-v5-4-d4be869fdb7e@nxp.com>
 
-On Tue, Jun 17, 2025 at 10:11:20AM -0400, Steven Rostedt wrote:
-> On Tue, 27 May 2025 18:21:44 -0400
-> Lyude Paul <lyude@redhat.com> wrote:
+Hi Frank,
+
+On Thu, May 22, 2025 at 01:56:42PM -0400, Frank Li wrote:
+> Use devm_clk_bulk_get_all() helper to simplify clock handle code.
 > 
-> > +static inline void local_interrupt_enable(void)
-> > +{
-> > +	int new_count;
-> > +
-> > +	new_count = hardirq_disable_exit();
-> > +
-> > +	if ((new_count & HARDIRQ_DISABLE_MASK) == 0) {
-> > +		unsigned long flags;
-> > +
-> > +		flags = raw_cpu_read(local_interrupt_disable_state.flags);
-> > +		local_irq_restore(flags);
-> > +		/*
-> > +		 * TODO: re-read preempt count can be avoided, but it needs
-> > +		 * should_resched() taking another parameter as the current
-> > +		 * preempt count
-> > +		 */
-> > +#ifdef PREEMPTION
-> > +		if (should_resched(0))
-> > +			__preempt_schedule();
-> > +#endif
-> > +	}
-> > +}
+> No functional changes intended.
 > 
-> I'm confused to why the should_resched() is needed? We are handling
-> interrupts right? The hardirq_disable_exit() will set preempt_count to zero
-> before we enable interrupts. When the local_irq_restore() enables interrupts
-> again, if there's an interrupt pending it will trigger then. If the
-> interrupt sets NEED_RESCHED, when it returns from the interrupt handler, it
-> will see preempt_count as zero, right?
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> ---
+> change in v5
+> - none
+> ---
+>  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
+>  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
+>  2 files changed, 6 insertions(+), 43 deletions(-)
 > 
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> index ecfc95882f903..015350c6f2784 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
+>  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
+>  };
+>  
+> -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
+> -	{ .id = "axi" },
+> -	{ .id = "apb" },
+> -};
+> -
+>  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
+>  	.model			= MXC_ISI_IMX8MN,
+>  	.num_ports		= 1,
+> @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
+>  	.reg_offset		= 0,
+>  	.ier_reg		= &mxc_imx8_isi_ier_v1,
+>  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> -	.clks			= mxc_imx8mn_clks,
+> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+>  	.buf_active_reverse	= false,
+>  	.gasket_ops		= &mxc_imx8_gasket_ops,
+>  	.has_36bit_dma		= false,
+> @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
+>  	.reg_offset		= 0x2000,
+>  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+>  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> -	.clks			= mxc_imx8mn_clks,
+> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+>  	.buf_active_reverse	= true,
+>  	.gasket_ops		= &mxc_imx8_gasket_ops,
+>  	.has_36bit_dma		= true,
+> @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
+>  	.reg_offset		= 0x0,
+>  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+>  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> -	.clks			= mxc_imx8mn_clks,
+> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+>  	.buf_active_reverse	= true,
+>  	.has_36bit_dma		= false,
+>  };
+> @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
+>  	.reg_offset		= 0,
+>  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+>  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> -	.clks			= mxc_imx8mn_clks,
+> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+>  	.buf_active_reverse	= true,
+>  	.gasket_ops		= &mxc_imx93_gasket_ops,
+>  	.has_36bit_dma		= false,
+> @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
+>  {
+>  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
+>  
+> -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
+> +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
+>  
+>  	return 0;
+>  }
+> @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
+>  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
+>  	int ret;
+>  
+> -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
+> +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
+>  		return ret;
+> @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
+>   * Probe, remove & driver
+>   */
+>  
+> -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
+> -{
+> -	unsigned int size = isi->pdata->num_clks
+> -			  * sizeof(*isi->clks);
+> -	int ret;
+> -
+> -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
+> -	if (!isi->clks)
+> -		return -ENOMEM;
+> -
+> -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
+> -				isi->clks);
+> -	if (ret < 0) {
+> -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
+> -			ret);
+> -		return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>  static int mxc_isi_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
+>  	if (!isi->pipes)
+>  		return -ENOMEM;
+>  
+> -	ret = mxc_isi_clk_get(isi);
+> -	if (ret < 0) {
+> -		dev_err(dev, "Failed to get clocks\n");
+> -		return ret;
+> -	}
+> +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
+> +	if (isi->num_clks < 0)
+> +		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
+>  
+>  	isi->regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(isi->regs)) {
+> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> index e7534a80af7b4..bd3cfe5fbe063 100644
+> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> @@ -169,8 +169,6 @@ struct mxc_isi_plat_data {
+>  	const struct mxc_isi_ier_reg  *ier_reg;
+>  	const struct mxc_isi_set_thd *set_thd;
+>  	const struct mxc_gasket_ops *gasket_ops;
+> -	const struct clk_bulk_data *clks;
+> -	unsigned int num_clks;
+>  	bool buf_active_reverse;
+>  	bool has_36bit_dma;
+>  };
+> @@ -282,6 +280,7 @@ struct mxc_isi_dev {
+>  
+>  	void __iomem			*regs;
+>  	struct clk_bulk_data		*clks;
+> +	int				num_clks;
+>  	struct regmap			*gasket;
+>  
+>  	struct mxc_isi_crossbar		crossbar;
 
-Because the new local_interrupt_{disable, enable}() participate the
-preempt count game as well, for example, __raw_spin_lock_irq_disable()
-doesn't call an additional preempt_disable() and
-__raw_spin_unlock_irq_enable() doesn't call preempt_enable(). And the
-following can happen:
-
-	spin_lock(a);
-	// preemption is disabled.
-	<interrupted and set need_resched>
-
-	spin_lock_irq_disable(b);
-
-	spin_unlock(a);
-	spin_unlock_irq_enable(b):
-	  local_interrupt_enable():
-	  // need to check should_resched, otherwise preemption won't
-	  // happen.
-
+-- 
 Regards,
-Boqun
 
-> If it does, then it will call schedule before it gets back to this code.
-> 
-> -- Steve
+Laurent Pinchart
