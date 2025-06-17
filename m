@@ -1,279 +1,272 @@
-Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DEA2E6D2F;
-	Tue, 17 Jun 2025 11:59:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161586; cv=none; b=d/QRP5GYY2e+h8LS009U8uAZuOWKwMi072I5UuIOUWhYBa/mMitebH97zHBJwZp8rqbz2/fxLltxcZhkPKE3YMiDxKbXo9chS3+JJTx/aa6v+DUMTv1ohu5JNQ9W/tKo8IdkQoTL19ZrQhPWrHLMpsC6mLYAkV7IGiaCPPxc0Zw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161586; c=relaxed/simple;
-	bh=e5DzjX2h41sFPUMqt8gt2IxSbS4Z2rn1GzvBcCkg7hg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LsVcRp7wouiefstCFEOor3H3C0vkW9ytOaOkVdGpiStEJSp8XD6He6fYhfq2AOCVinuMDtTMyOoaqh/+z6ZeSJPzCN+gmi3nZNIzkMQ3cfoW5hZh3WEBcaJrFebH+H7BdGJdZ8LF6KsTreKxY+eJWJztk3oitXT7VUHfpiCYtuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i+w00KQi; arc=none smtp.client-ip=217.70.178.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DDF2E06C8;
+	Tue, 17 Jun 2025 11:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750161594; cv=fail; b=JCRuOy1AkOflQNLhZPzWCp6g30k+8bdBHH1bBxQ0a2DmDMdSgyMZ6IAsJgcWIHCVB7D/CwPRSLriOUaKwl0WCIrPbhEQD5e0baI4SQjyOS8t9NO1fs9WuVo2F3xlWgBd7t1KO7mhBuYTFC1UGVa/Voyl/4QTcZy0dCPk2SnLsE0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750161594; c=relaxed/simple;
+	bh=H3kSNJ8022yx/ltMSwm82qCjeXksWQwu+cAsnC8SfFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sKLl0cdQsybQIPa1ILc6WIWsGSghF7hfMeZ+dkEwQ26PPbJNNXaNRAER/909qM6YW69tXMGIrqJ20VQj+GV/um2p3iA0GhhlKCxdfLkhgeMdFryZnxxRXYvBX04Lh0ijniBoF5ypBwJTjqBu1CMQy1lUS/zrb2JXQRz/Ep/cCHU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NZu+bvPO; arc=fail smtp.client-ip=40.107.243.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i+w00KQi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3AF694496D;
-	Tue, 17 Jun 2025 11:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750161577;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GNd2WV761Zd8zrHYy1iWTPeRZwqTpGa7CL3xiglNnJE=;
-	b=i+w00KQiD4hIicY4bnW+VzB5ZBBn+0rcZEd+eb4U8JX8L4of+t9003BlhWX2KZYf5LMZgq
-	y8YNed0kvDzhZEmzHfdutGzR6jgIL8F1lokrINYkV8iXOg2rKtsr5DB867et+1p/r2O9tP
-	eGuaR77Qr36K7J4zcJG1J4bo9wEXmuuU+aZopJdq5EXGIAUOgfp1GUxiMrUAbc2S6iYISL
-	08YgH6+fw/5lWU3klT8PHFbGCLYcj4JR1vf/zkkUS4/Vfki1L59Mkgwa0fjlRNgTCBOtUE
-	x1ppgE6Bm+L/uzn5uft8mq4cx9gdSYkRyUe+u1kiDby6kVgiAQkvirPlBro8eA==
-From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 17 Jun 2025 13:59:28 +0200
-Subject: [PATCH v4 5/7] arm: dts: omap: Add support for BeagleBone Green
- Eco board
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NZu+bvPO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oZF/DhnVh9cKvLeF6qdqc0iE4cS5O37kt2fdOzO6coQeiwRWsSqhfoHwmTgkkIQ3pTQl63LDFP6ETPeBrBAy6ztHlfJXDm1rpZ1T2jRd6SlLhvb9q9zzLsg2kNz/E67FW1HZiY/awnuZkgD6Vkln3zwJklETxJ3r26VLgNLW+ZyQnKl/SGqvL7cxnARb9Q6Vk3tmbuBqGd8/De5y2XkGN99kEtRzu00BeaSeZWg2xeLYmGrf3nGNZ+V8xrFge5kmxLXGJm55THoHiNIKDOFGAa/KzJnascQI//PoP7ZTelHb4ZH8vm1vDj50dn3Nj8x3xLuoiNcJwQ6hzxdjbJFqtg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dX+e8fBz6wNU4+sZu7h41JuiAF0gpFoLGe12JqE769g=;
+ b=jaJQTdsJ3GwtJmFNZ3txMU5ZZNWj3n4myWa6vzijccz7wU1H2w9TpTokFYEOnEbsoO0ZYbbVYh4z7D+krKUF1Xr7YgbIaxLAYnAZRRmg9zMp3rj8MdnyKbrLPBeT7FK28hcs0VUD3yVo3dUgnQ5a2LTbjEziwrMDuC8Yn4vdvMAIJe+gIIWX+94clDsu+/dyg2NicMSvMDVX+CTDZwST+Xq3D08jmW3LkPWVmqnn516pID86J63KaeX/ruArKHY74H8RLMRCEqa7RuY3DZ2vJ3eiHov+XFrpjXLrRQX7P7CMMvz903nkhK2NgqmORfs6wytksUPqziLrp5vJpYjkQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dX+e8fBz6wNU4+sZu7h41JuiAF0gpFoLGe12JqE769g=;
+ b=NZu+bvPOuHFSXnd9uTeBWMbi7pTlNHCw/Rg0Udc3pGV1WZRkKi0Ein8STUbnyhOL4oDH2ZorfCkX3wYJ93ee84uJ2ci4KaFcMxPzhWRgrCiAhD5sTEUdXbqkmSXZZIQhw2Q4K3Zj3VM7B0OxVrb77fN7VZhbZYo5qJwoHDOAHMnYF9ZUHa7hr5sK5dkRhgi84JnVlJ92hTUkvdufEy++6YyUdvZbAo/361//qlPMlxBnQFRtQoVyljCbmQcAj7y2ih9ZmwrzvxJICzRomNd1XNWctdmifyb6CdCVUqeQtTuFNrbW1xP8GSRU8XrApbLklbCQDrf56vgqQrrzibz2yg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by DS0PR12MB7583.namprd12.prod.outlook.com (2603:10b6:8:13f::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
+ 2025 11:59:50 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Tue, 17 Jun 2025
+ 11:59:50 +0000
+Date: Tue, 17 Jun 2025 08:59:48 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: kevin.tian@intel.com, shuah@kernel.org, joao.m.martins@oracle.com,
+	steven.sistare@oracle.com, iommu@lists.linux.dev,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.weissschuh@linutronix.de
+Subject: Re: [PATCH rc 1/4] iommufd/selftest: Fix iommufd_dirty_tracking with
+ large hugepage sizes
+Message-ID: <20250617115948.GV1174925@nvidia.com>
+References: <cover.1750049883.git.nicolinc@nvidia.com>
+ <9515eb5cb58bc8dfec083df51550bd9ae6d60da9.1750049883.git.nicolinc@nvidia.com>
+ <20250616162501.GN1174925@nvidia.com>
+ <aFDMoMX8eL7azoUL@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFDMoMX8eL7azoUL@nvidia.com>
+X-ClientProxiedBy: YT4PR01CA0410.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:10b::16) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-bbg-v4-5-827cbd606db6@bootlin.com>
-References: <20250617-bbg-v4-0-827cbd606db6@bootlin.com>
-In-Reply-To: <20250617-bbg-v4-0-827cbd606db6@bootlin.com>
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Andreas Kemnade <andreas@kemnade.info>, Kevin Hilman <khilman@baylibre.com>, 
- Roger Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Paul Barker <paul.barker@sancloud.com>, 
- Marc Murphy <marc.murphy@sancloud.com>
-Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, 
- Bajjuri Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- Kory Maincent <kory.maincent@bootlin.com>
-X-Mailer: b4 0.15-dev-8cb71
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtoheprghnughrvggrsheskhgvmhhnrgguvgdrihhnfhhopdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqohhmrghpsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtp
- hhtthhopehjkhhrihgunhgvrhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhnhiesrghtohhmihguvgdrtghomhdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhm
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB7583:EE_
+X-MS-Office365-Filtering-Correlation-Id: b900efcc-3dc8-4150-fe73-08ddad967641
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bC9BWFlEMUw3OENnb1NybXRjWXFHWTZqMFR2Sk42dlNLL0YzaU1RRms2a254?=
+ =?utf-8?B?UGdTMEk2eUVEb1dsaXVnempNMTVXRCtFaWhNVXE2L0c1NEFMQUlsczFDK3Bn?=
+ =?utf-8?B?WGtlOXJubGZNQzd2Z3pMMERkbnFhdHNOZVpHMUh5cFV0SHh3TS9CVUZ0SWNI?=
+ =?utf-8?B?bVRUUVYyNUo1eVdYVDdBeHppdkpHeHZ0RzNBSXhVdWFETTd0bGlOSTJla2Ro?=
+ =?utf-8?B?aFAwV1llK3g1QkZhTXFQdS91cnJrbHZtWVk0UXFhTmo5N3NaSGtrczhCc0FF?=
+ =?utf-8?B?R3M5N1JYaXh3UDByK25nS2FnZTZLMHpEQlg2SzNuemZ6MFB6NG5xaFg3elpX?=
+ =?utf-8?B?dUFEQkRzQTdqTy9rWmhMSjV3RUpzYVAxLzkyRkt0UXljS2tDTDNhYjRGTDVQ?=
+ =?utf-8?B?ZjFMQUxhVHJUaGhJOUVHUWVld25yV3NFK081OU5KYVdwREZOSmxTaHN0TWc1?=
+ =?utf-8?B?ZWRicVQxdHlBaEkxcFpWZnVhVEV3RjNTOFZ4RWU4aFU5UkVEQzBSamxRNE9y?=
+ =?utf-8?B?VzdEOGk5SUZhZ1hwUzhNYnpxVVh4N29OK1pYVlg4QkxUbHdJaGxOQ05aKzBD?=
+ =?utf-8?B?QlViQndvMlI1N3Z5eWN3YzMzMmVSRkprR1NKOXMyeDFtSXgySW10Q1ppRnN2?=
+ =?utf-8?B?cnFNTlBPRWRNaG41MXM2S0FIYnY3TTJMSU1TK3dFQVhLOHcvV3JXRFN6SWhl?=
+ =?utf-8?B?UlhPUnRJelE5ZVpMaVZVS0IwUkZGbXFDeEpqSGVQTFVMUWNBbWtyaFVteUNO?=
+ =?utf-8?B?d3IzcXJMUVlROURsMTBFK291RjMycktJaWtXVm13eDBINDFCQWk2cHU5OFR6?=
+ =?utf-8?B?THBpclNQU1VkNnVqaEttNG9oekpFTGo4OG9ZOXJPZ3JTSUNLa3l0TXA3dVhU?=
+ =?utf-8?B?TU9NMHZGYXpuWittby9ESVZUM3pvakRUWUMrdlRCbW9JWXh1aUJ6cnhYbEpj?=
+ =?utf-8?B?STVPUzRraEFvdkVkZmorUWtBOEVVSWU0WmwyRU15T2tWM2JXbHkzb1pGV2Nx?=
+ =?utf-8?B?aEJDcWRUbVZuaXlnQlNKN0VVS3pUeGxRM0Rxb0NUaFpUSStidTJReE14VVh2?=
+ =?utf-8?B?YXNPUUt4bVdmcmlDNGpVTXRzRXRIUHdMQ2taVDV6UkpoL1VzRlFXc2d0NEF2?=
+ =?utf-8?B?UWRpc1ZXQ0xOSFJFNE92UFpsLzJQR3ptNG5zdHB0SUVZWTJEQ3B2N1NRY3dh?=
+ =?utf-8?B?U2ZEODZLZXFHRGR1cnErZG1oMXV6Ky9KUnF5VWhwSmNFYkU4akowZDNaT0d1?=
+ =?utf-8?B?a3ZpNCtUSGo1R2tuaHJjc1RiSGQyQnJqZUNaMkVBOWtuaXRQbE9zV3lXNHhG?=
+ =?utf-8?B?MlpPNEhrZ3AzQTBhblBDSkIvN3FtYVZlSjliZkF5NStmRTZlQ2xKTXIvRHM3?=
+ =?utf-8?B?WXBBK0hHMTgrZ0dyN3JreHIvZDg4SlVCODdBdnhQOUhYNityL0Q4bmxuVWpS?=
+ =?utf-8?B?Sk1xeElaU05SMW5Kb3lPdFpmRndXcUtXc2FWNk5GUlVpOWpud3o2UDI5Zk9L?=
+ =?utf-8?B?cG9uc0Vubk1pZjJvTWhRd2ZZaVpkWVc4a0cyTVR4VGsyaEJQUGZiL041bS8w?=
+ =?utf-8?B?Mnl6bjA1T0ZEaXlzbUp3eGhWSmkvbmtDak5aZVJPS1JxRnhQQjZqeU0zUHNu?=
+ =?utf-8?B?UWxoenpJTVpKRTZTWHpEdzhtUjZYRFRVQjBvbTVXNzRtWk0yb09DUytPcGtq?=
+ =?utf-8?B?SmtPbGdwVGlvZ2szQld6amtjbkxqK05acTVQeGFpTklJSGpsYzcxbmt2c21n?=
+ =?utf-8?B?VUdJNmE0NzdvTlhJY0dTTUJRSWJ1M1V0SFBhUUNLY29oWlVBSXBkaGxxQzNU?=
+ =?utf-8?B?RDBodWsxaUZhdzFOc0VCaFVORGN2VG9BR1B4akhkb0FJVWlRUXQrMFRwRXlt?=
+ =?utf-8?B?V09SUUpiR2dPaVZ4WmgrOGswNUV2eU1Dakhwem5oR1JpRHc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RDhIRVc5SDlmeHhNLzBhZkR6Z1ZVYWxob2ZyUVVoSFR3Ull4WWdvUGxMbDRM?=
+ =?utf-8?B?YmwwV1BraFFXVzFnajhCQ0tiQ0F1U3R1dURweWtLUFpwbmg2YSthUHlPd2h2?=
+ =?utf-8?B?VXpOd1lMb1o5blM4bi9RaUloT1NsMjlaT0FJMmt5S0lrVS9xNW5nWUtKVEdE?=
+ =?utf-8?B?MTRYeHdmOHJ0MUZ5aWZDaEhuQkphbnlmSDhvMVhZSHV6TFNLR1hoazU3aTRh?=
+ =?utf-8?B?aWdHbktNWEVuWnJLTXZTSG9SMFRUNGtmSnB0ZWE1Rk1wT0N6US8xQkRmZzNM?=
+ =?utf-8?B?emswL29VZGNzSWloOGJzRDJiWWZjb0xoSVNtRDNPUGRBWFkxUlZKWnBkUzR2?=
+ =?utf-8?B?dnU5SHBBNm1XV3NXRHpiK0liNjBhYUk0bmpVUXNTbGlnWGozb011QllDWHk1?=
+ =?utf-8?B?ckVub2d3Q09NQy90RFdVUUpRQmxRNW9ZOENBWDE4R01FSHgzWjJGTzJBYkN4?=
+ =?utf-8?B?UHhITS82K1FlNkh1dkdaR25wLzFlQktpc0hYZ2hvb3R2dnBQT2RlWUNLeDBN?=
+ =?utf-8?B?S2dsUVZBTzIwVjFRNFR1MFdPVDdoOUxnak1vcTZYZE92RnZFa2grZCtleTNS?=
+ =?utf-8?B?ZE92bUg2Zkhma3J6eGxDLzlKWlE4OXJvVmhwcG1SOHhoVkVSU3B6c1FFOFVG?=
+ =?utf-8?B?ZTIrdGQ3NDZ1K3VEM3FrM2NmaFB6V2Y5NVFkazVIaklVZ3UwK0RlK3BUNTFi?=
+ =?utf-8?B?UEFxWnhNUFNhc283MjNRWE5SSmNwSlhQeDFrK3IzZ1BianFOckdiNnJYd3Nj?=
+ =?utf-8?B?dHQ0dXdIbFZ5VDBhVzJEaml5Vi9qNC9ISkw3NUJ3SmFDWkF0SW91TzBocmlz?=
+ =?utf-8?B?QzhzVkVXdDNWUGYzNEtrY2gyL1RoWG9kaFRYVWZoOEJpb1NMTFFSNTRWcXRO?=
+ =?utf-8?B?Ym9LRzR3ZnNIRkZGUWY5ekI3b0ljWE8yYStpb1M0NG9VWFM2TjFvNmJ3bll5?=
+ =?utf-8?B?SmI3dGM1a0cvb2VrcmdUcG1wdUcyem1TbHcyUEhXa0J2UVVYQW1yMWJncWwy?=
+ =?utf-8?B?UlZPbXdhbFNxQS80U3BpVDVicDN2eEE3dklYdlNEZVhCUm9adWRqQi9iZmM3?=
+ =?utf-8?B?QzVsOTZhSitQQ05vdUdkbitaQWc5RzZvRnJvT0s3L04vTDFUa3FOV0pOQnNs?=
+ =?utf-8?B?YlZBbGFlV2p5REhQWEVKTGIyd1NQaEg3KzQremJONE52SCt2Y3hSUTZTMFlz?=
+ =?utf-8?B?bWtGa3JKZ3E4Q2FJUjc5em9KbHJiYUpzbzgzSlUvVGpFQkRBa1V1MmMvSzYw?=
+ =?utf-8?B?czY2bTYwa0s4bVpkVmx1amFmQ0NKY25zdmplMTRBOEI2aFlYaWpVclNHVW94?=
+ =?utf-8?B?T2VWREhjQVNCNDVkYXpBMzVuWjd3YXVDdUkxSGNJWjJZcFNKeWUyVUIzS1Q2?=
+ =?utf-8?B?dkVCaC96cXQ5RERyWHp3d2pudlhKTkRXaldYZWUvek1ndnBmS2R0RFMrMkZ2?=
+ =?utf-8?B?U2kzemhHNjdmUnkvT1hMVUd4dlVBaXVMNHVPWUJXbGpKblFDUDVpbXBieVlQ?=
+ =?utf-8?B?Z1ZLKzRzdWJlQURlSHBldi92bDhLenl1VlR2ZDBVVXJKVW03SjFUdnlTdFNU?=
+ =?utf-8?B?cVh0alNZeUU3dDEzWHpiMWZrNnVkMi9VSmFrbEVWU1IrTzJ0ZWVhVnc1aUp6?=
+ =?utf-8?B?RUhNVmc4amtWSERlUnE3TEpWem1yVDlIdDdqdWZDMjlFRlJKSG5YTXVlWGxF?=
+ =?utf-8?B?amRGdUt4QjBuc2VWbTZNZHpabkZMckQzRGxVSmRhazlhSnlneDNRRmVIMUVQ?=
+ =?utf-8?B?ZDBOUWV0VjVuaHRkTlhEMzU2RjNSandSUWt4Y0JURTlmeWpkRk9xbHk5K1VX?=
+ =?utf-8?B?TElMRTIvNHZuanVvdmVVdjdrYUNUOGxranpxdDRaS0gxT0F1S0ZLRm41Q1Jq?=
+ =?utf-8?B?RndxTHNMWnVxbDZmN2hzbTJSQ3pUQ0drZkI1VmRMRWxQSzZxR04rREJFTkp5?=
+ =?utf-8?B?YU1Qa3VEN0NIRXNZa21TZ29oSUV2UHlzdGx4eWpXemFtQVhNbVluL1BOVHp3?=
+ =?utf-8?B?aG84OHBtbm91OHZEbG1WWFRRUCtrMXNpM2V6TnBtZ09uUnJpbEdtWCtJR2xQ?=
+ =?utf-8?B?aGxTT3V5cUg2QVVEYmxsaFBaTFdiN1BJU3h3bDVVVEdNSXJIeUl6SzBiaCtC?=
+ =?utf-8?Q?oyTbykD2lo9XgWamPffMwkJOu?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b900efcc-3dc8-4150-fe73-08ddad967641
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 11:59:50.0385
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KNj6mOzIxC3TA64vMHHjZqtECEFZLtycwoTdeN13mnNOuDNqYso3Xyqgt5FZBpmq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7583
 
-SeeedStudio BeagleBone Green Eco (BBGE) is a clone of the BeagleBone Green
-(BBG). It has minor differences from the BBG, such as a different PMIC,
-a different Ethernet PHY, and a larger eMMC.
+On Mon, Jun 16, 2025 at 07:02:08PM -0700, Nicolin Chen wrote:
+> On Mon, Jun 16, 2025 at 01:25:01PM -0300, Jason Gunthorpe wrote:
+> > On Sun, Jun 15, 2025 at 10:02:03PM -0700, Nicolin Chen wrote:
+> > >  FIXTURE_TEARDOWN(iommufd_dirty_tracking)
+> > >  {
+> > > -	munmap(self->buffer, variant->buffer_size);
+> > > -	munmap(self->bitmap, DIV_ROUND_UP(self->bitmap_size, BITS_PER_BYTE));
+> > > +	unsigned long size = variant->buffer_size;
+> > > +
+> > > +	if (variant->hugepages)
+> > > +		size = __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE);
+> > > +	munmap(self->buffer, size);
+> > > +	free(self->buffer);
+> > > +	free(self->bitmap);
+> > >  	teardown_iommufd(self->fd, _metadata);
+> > 
+> > munmap followed by free isn't right..
+> 
+> You are right. I re-checked with Copilot. It says the same thing.
+> I think the whole posix_memalign() + mmap() confuses me..
+> 
+> Yet, should the bitmap pair with free() since it's allocated by a
+> posix_memalign() call?
+> 
+> > This code is using the glibc allocator to get a bunch of pages mmap'd
+> > to an aligned location then replacing the pages with MAP_SHARED and
+> > maybe HAP_HUGETLB versions.
+> 
+> And I studied some use cases from Copilot. It says that, to use
+> the combination of posix_memalign+mmap, we should do:
+> 	aligned_ptr = posix_memalign(pagesize, pagesize);
+> 	unmap(aligned_ptr, pagesize);
+> 	mapped = mmap(aligned_ptr, pagesize, PROT_READ | PROT_WRITE,
+> 		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+> 	munmap(mapped, pagesize);
+> 	// No free() after munmap().
 
-Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
----
-Changes in v4:
-- Forgot to change the model description to "Seeed Studio" instead of "ti".
+> ---breakdown---
+> Before `posix_memalign()`:
+>   [ heap memory unused ]
+> 
+> After `posix_memalign()`:
+>   [ posix_memalign() memory ]  ← managed by malloc/free
+>   ↑ aligned_ptr
+> 
+> After `munmap(aligned_ptr)`:
+>   [ unmapped memory ]          ← allocator no longer owns it
 
-Changes in v3:
-- Move the omap.yaml binding change in another patch.
+Incorrect. The allocator has no idea about the munmap and munmap
+doesn't disturb any of the allocator tracking structures.
 
-Changes in v2:
-- Used generic pmic node name.
-- Add regulator prefix to fixed regulator node name.
-- Add the compatible to omap.yaml binding
----
- arch/arm/boot/dts/ti/omap/Makefile                 |   1 +
- arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts | 169 +++++++++++++++++++++
- 2 files changed, 170 insertions(+)
+> After `mmap(aligned_ptr, ..., MAP_FIXED)`:
+>   [ anonymous mmap region ]    ← fully remapped, under your control
+>   ↑ mapped
+> ---end---
 
-diff --git a/arch/arm/boot/dts/ti/omap/Makefile b/arch/arm/boot/dts/ti/omap/Makefile
-index 95c68135dd0c..1aef60eef671 100644
---- a/arch/arm/boot/dts/ti/omap/Makefile
-+++ b/arch/arm/boot/dts/ti/omap/Makefile
-@@ -93,6 +93,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
- 	am335x-boneblue.dtb \
- 	am335x-bonegreen.dtb \
- 	am335x-bonegreen-wireless.dtb \
-+	am335x-bonegreen-eco.dtb \
- 	am335x-chiliboard.dtb \
- 	am335x-cm-t335.dtb \
- 	am335x-evm.dtb \
-diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts
-new file mode 100644
-index 000000000000..f00abfdd2cbd
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-eco.dts
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025 Bootlin
-+ */
-+/dts-v1/;
-+
-+#include "am33xx.dtsi"
-+#include "am335x-bone-common.dtsi"
-+#include "am335x-bonegreen-common.dtsi"
-+#include <dt-bindings/net/ti-dp83867.h>
-+
-+/ {
-+	model = "Seeed Studio BeagleBone Green Eco";
-+	compatible = "seeed,am335x-bone-green-eco", "ti,am33xx";
-+
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&buck1>;
-+		};
-+	};
-+
-+	sys_5v: regulator-sys-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "sys_5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	v3v3: regulator-v3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v3v3";
-+		regulator-always-on;
-+	};
-+};
-+
-+&usb0 {
-+	interrupts-extended = <&intc 18>;
-+	interrupt-names = "mc";
-+};
-+
-+&baseboard_eeprom {
-+	vcc-supply = <&v3v3>;
-+};
-+
-+&i2c0 {
-+	/delete-node/ pmic@24;
-+
-+	tps65214: pmic@30 {
-+		compatible = "ti,tps65214";
-+		reg = <0x30>;
-+		buck1-supply = <&sys_5v>;
-+		buck2-supply = <&sys_5v>;
-+		buck3-supply = <&sys_5v>;
-+		ldo1-supply = <&sys_5v>;
-+		ldo2-supply = <&sys_5v>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <7>;
-+		pinctrl-0 = <&pmic_irq_pins_default>;
-+
-+		regulators {
-+			buck1: buck1 {
-+				regulator-name = "vdd_mpu";
-+				regulator-min-microvolt = <925000>;
-+				regulator-max-microvolt = <1351500>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck2: buck2 {
-+				regulator-name = "vdd_core";
-+				regulator-min-microvolt = <925000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck3: buck3 {
-+				regulator-name = "vdds_ddr";
-+				regulator-min-microvolt = <1350000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo1_reg: ldo1 {
-+				regulator-name = "vdd_1v8_1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2_reg: ldo2 {
-+				regulator-name = "vdd_1v8_2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&cpsw_port1 {
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&dp83867_0>;
-+	ti,dual-emac-pvid = <1>;
-+};
-+
-+&mac_sw {
-+	pinctrl-0 = <&cpsw_b_default>;
-+	pinctrl-1 = <&cpsw_b_sleep>;
-+};
-+
-+&davinci_mdio_sw {
-+	/delete-node/ ethernet-phy@0;
-+
-+	dp83867_0: ethernet-phy@0 {
-+		reg = <0>;
-+		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
-+		ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_50_NS>;
-+		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
-+		ti,min-output-impedance;
-+		ti,dp83867-rxctrl-strap-quirk;
-+	};
-+};
-+
-+&am33xx_pinmux {
-+	cpsw_b_default: cpsw-b-default-pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, PIN_OUTPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_DV, PIN_INPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_CLK, PIN_OUTPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_CLK, PIN_INPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, PIN_OUTPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, PIN_OUTPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD2, PIN_OUTPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD3, PIN_OUTPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_INPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, PIN_INPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD2, PIN_INPUT_PULLDOWN, MUX_MODE2)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD3, PIN_INPUT_PULLDOWN, MUX_MODE2)
-+		>;
-+	};
-+
-+	cpsw_b_sleep: cpsw-b-sleep-pins {
-+		pinctrl-single,pins = <
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_EN, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_DV, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TX_CLK, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RX_CLK, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD0, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD1, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD2, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_TXD3, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD0, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD1, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD2, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+			AM33XX_PADCONF(AM335X_PIN_MII1_RXD3, PIN_INPUT_PULLDOWN, MUX_MODE7)
-+		>;
-+	};
-+
-+	pmic_irq_pins_default: pmic-irq-default-pins {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(AM335X_PIN_NNMI, PIN_INPUT_PULLUP | MUX_MODE0)
-+		>;
-+	};
-+};
+No, this is wrong.
 
--- 
-2.43.0
+> It points out that the heap bookkeeping will be silently clobbered
+> without the munmap() in-between (like we are doing):
 
+Nope, doesn't work like that.
+
+> ---breakdown---
+> After `posix_memalign()`:
+>   [ posix_memalign() memory ]  ← malloc thinks it owns this
+> 
+> Then `mmap(aligned_ptr, ..., MAP_FIXED)`:
+>   [ anonymous mmap region ]    ← malloc still thinks it owns this (!)
+>   ↑ mapped
+> ---end---
+
+Yes, this is correct and what we are doing here. The allocator always
+owns it and we are just replacing the memory with a different mmap.
+
+> It also gives a simpler solution for a memory that is not huge
+> page backed but huge page aligned (our !variant->hugepage case):
+> ---code---
+> void *ptr;
+> size_t alignment = 2 * 1024 * 1024; // or whatever HUGEPAGE_SIZE was
+> size_t size = variant->buffer_size;
+> 
+> // Step 1: Use posix_memalign to get an aligned pointer
+> if (posix_memalign(&ptr, alignment, size) != 0) {
+>     perror("posix_memalign");
+>     return -1;
+> }
+
+Also no, the main point of this is to inject MAP_SHARED which
+posix_memalign cannot not do.
+
+> Also, for a huge page case, there is no need of posix_memalign():
+> "Hugepages are not part of the standard heap, so allocator functions
+>  like posix_memalign() or malloc() don't help and can even get in the
+>  way."
+
+> Instead, it suggests a cleaner version without posix_memalign():
+> ---code---
+> void *addr = mmap(NULL, variant->buffer_size, PROT_READ | PROT_WRITE,
+>                   MAP_SHARED | MAP_ANONYMOUS | MAP_HUGETLB | MAP_POPULATE,
+> 		  -1, 0);
+> if (addr == MAP_FAILED) { perror("mmap"); return -1; }
+> ---end---
+
+Yes, we could do this only for MAP_HUGETLB, but it doesn't help the
+normal case with MAP_SHARED.
+
+So I would leave it alone, use the version I showed.
+
+Jason
