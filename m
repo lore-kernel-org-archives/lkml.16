@@ -1,44 +1,44 @@
 Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95652EA466
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BF92E92B6
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169328; cv=none; b=Gq0MK0NJKLGgXKwm8CnouNgCmFG0mRs4BcWDEt72g09VWeoK/YRv5cN8x83lr7TJhC/C1nLfpmjgBScObGvXGDQLI49S21VT1lVECtDWPHC5yn1/y64f6daHWgIZoJ/nJMCI2twxSoRgrLRWZvmOHSm7e30WPvMKBpiIa0zVXT0=
+	t=1750169328; cv=none; b=jejw3RYaWT9kBT+a4Gq6tFaBoiMe8LDxKQ+/L/yJDu8bgsWnUGVO8nKITQPm3NI/uTxihMh0upfYePp4251UvlFflUTZxtRwWvb3LPoGj9EineKHOM5hyzNo2nFnrK0Dl6SxxikqZO9LsDEbFIGhCZS0SUEDnhum2GpmEe01nhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750169328; c=relaxed/simple;
-	bh=j0ilmlWvuGDdPVedpFQAMvM2nuPCAwx7uovcp5sfOBM=;
+	bh=8QeexMQ+Ddp0T0hHsTz6gc6NzghXhdaWoVKahR3viso=;
 	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
-	 Content-Type:References; b=GmrmbYK5LYgsb6OL0PWhB/7NR1B9mh1svwwUFKoy7CW3Fe2jl3D43Y5Ffej3gASBZPyRpmyjEd9cSbAWX+jFBUnMaL/SNeyd1UKzRI1iZzevjId9N5pLuAv0vOzpcercYWgwufoOQq+POBql9qvlVLbwRLXao9JS0jC8gda8Kcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=jqbg0K/Z; arc=none smtp.client-ip=210.118.77.12
+	 Content-Type:References; b=sz8lLXKTZO3Mc0sYFQF1mjugHKwMwvyqANlb1ifr8F3wuGcV+Y5q9L7fZ5r9c9fl7Epb+qh5Ov9vFys4I4X27SqKPFFdWFQFc31zNwGXi04F2+okMWMIUqvUTC84m1HTi6QBEfWVHtj1lf6bO04otmxdoLS8B+OJ8ACTzN3BELQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=h93Q01bQ; arc=none smtp.client-ip=210.118.77.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jqbg0K/Z"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250617140843euoutp02d5ea17fee8203a5f2fddda98a3898e09~J2boKiKYW0211802118euoutp02H
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:08:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250617140843euoutp02d5ea17fee8203a5f2fddda98a3898e09~J2boKiKYW0211802118euoutp02H
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="h93Q01bQ"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250617140841euoutp0277bb8cdce56d146815fd5b7dc4ae07bf~J2bmitXgT0208502085euoutp02B
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:08:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250617140841euoutp0277bb8cdce56d146815fd5b7dc4ae07bf~J2bmitXgT0208502085euoutp02B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750169323;
-	bh=fxnoWq4OQxd1ZCOVWNMF+siSVgYpXr1G0SglMgA6Kss=;
+	s=mail20170921; t=1750169321;
+	bh=Xe91emMRSSYzgLVJyetcqSNKJQUn2nWDQDykjLFdeWE=;
 	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
-	b=jqbg0K/ZQgslWuBeBWCR/VYQEK+++Ml5utZGEgM3/BhZW45n9qiQE85Nod8AQB0Bl
-	 oaJw6mDyarlqjTtOX7pXpVjA0V4KujzRD0YDaJBkB+cyseio57n4xQrc5OU56/iBIR
-	 1b/d1MmSoVEAK8YGs1Y+Qi4EvDA90+ZSzvt4f9ME=
+	b=h93Q01bQEEc+DY3q/0N4t1f8NQG+RuSu3lHP0XFktZm5TgNsC4Ejo37sn4fhegsMI
+	 TWkjuhIYVxvt/xTp4vfHNlRGTl5RFHY79OTcEl5xSk/MVdbr+3762y932/b5AloHm8
+	 8Ex7eOothlZp6lki0ADswmmUEd5YAZgvm/EHkg7Y=
 Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617140842eucas1p22777d6dfc4881099161ecf9404d909b2~J2bnYZ7001709617096eucas1p2n;
-	Tue, 17 Jun 2025 14:08:42 +0000 (GMT)
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250617140840eucas1p1a55fd5f902aac84c16299a0a19852e0d~J2bl_j4FS1046610466eucas1p1d;
+	Tue, 17 Jun 2025 14:08:40 +0000 (GMT)
 Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
 	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617140840eusmtip108f1c6553ca05a2d32cba322f7a4b807~J2bmCsuDM2238622386eusmtip1E;
-	Tue, 17 Jun 2025 14:08:40 +0000 (GMT)
+	20250617140839eusmtip1a356f4868163ab79d3d8b399d3665470~J2bk0MDit2857428574eusmtip14;
+	Tue, 17 Jun 2025 14:08:39 +0000 (GMT)
 From: Michal Wilczynski <m.wilczynski@samsung.com>
-Date: Tue, 17 Jun 2025 16:07:29 +0200
-Subject: [PATCH v3 6/9] dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM
- controller
+Date: Tue, 17 Jun 2025 16:07:28 +0200
+Subject: [PATCH v3 5/9] clk: thead: Mark essential bus clocks as
+ CLK_IGNORE_UNUSED
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +46,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-rust-next-pwm-working-fan-for-sending-v3-6-1cca847c6f9f@samsung.com>
+Message-Id: <20250617-rust-next-pwm-working-fan-for-sending-v3-5-1cca847c6f9f@samsung.com>
 In-Reply-To: <20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
 	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
@@ -64,94 +64,66 @@ To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
 	Stephen Boyd <sboyd@kernel.org>, Benno Lossin <lossin@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,  Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 X-Mailer: b4 0.15-dev
-X-CMS-MailID: 20250617140842eucas1p22777d6dfc4881099161ecf9404d909b2
+X-CMS-MailID: 20250617140840eucas1p1a55fd5f902aac84c16299a0a19852e0d
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250617140842eucas1p22777d6dfc4881099161ecf9404d909b2
+X-RootMTR: 20250617140840eucas1p1a55fd5f902aac84c16299a0a19852e0d
 X-EPHeader: CA
-X-CMS-RootMailID: 20250617140842eucas1p22777d6dfc4881099161ecf9404d909b2
+X-CMS-RootMailID: 20250617140840eucas1p1a55fd5f902aac84c16299a0a19852e0d
 References: <20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com>
-	<CGME20250617140842eucas1p22777d6dfc4881099161ecf9404d909b2@eucas1p2.samsung.com>
+	<CGME20250617140840eucas1p1a55fd5f902aac84c16299a0a19852e0d@eucas1p1.samsung.com>
 
-Add the Device Tree binding documentation for the T-HEAD
-TH1520 SoC PWM controller.
+Probing peripherals in the AON and PERI domains, such as the PVT thermal
+sensor and the PWM controller, can lead to boot hangs or unresponsive
+devices on the LPi4A board. The root cause is that their parent bus
+clocks ('CLK_CPU2AON_X2H' and the 'CLK_PERISYS_APB' clocks) are
+automatically gated by the kernel's power-saving mechanisms when the bus
+is perceived as idle.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Alternative solutions were investigated, including modeling the parent
+bus in the Device Tree with 'simple-pm-bus' or refactoring the clock
+driver's parentage. The 'simple-pm-bus' approach is not viable due to
+the lack of defined bus address ranges in the hardware manual and its
+creation of improper dependencies on the 'pm_runtime' API for consumer
+drivers.
+
+Therefore, applying the'`CLK_IGNORE_UNUSED' flag directly to the
+essential bus clocks is the most direct and targeted fix. This prevents
+the kernel from auto-gating these buses and ensures peripherals remain
+accessible.
+
+This change fixes the boot hang associated with the PVT sensor and
+resolves the functional issues with the PWM controller.
+
+Link: https://lore.kernel.org/all/9e8a12db-236d-474c-b110-b3be96edf057@samsung.com/ [1]
+
+Reviewed-by: Drew Fustini <drew@pdp7.com>
 Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 ---
- .../devicetree/bindings/pwm/thead,th1520-pwm.yaml  | 48 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 49 insertions(+)
+ drivers/clk/thead/clk-th1520-ap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..855aec59ac53c430adc849271235686e87b10e6c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/thead,th1520-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: T-HEAD TH1520 PWM controller
-+
-+maintainers:
-+  - Michal Wilczynski <m.wilczynski@samsung.com>
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    const: thead,th1520-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: SoC PWM clock
-+
-+  "#pwm-cells":
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/thead,th1520-clk-ap.h>
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+      pwm@ffec01c000 {
-+          compatible = "thead,th1520-pwm";
-+          reg = <0xff 0xec01c000 0x0 0x4000>;
-+          clocks = <&clk CLK_PWM>;
-+          #pwm-cells = <3>;
-+      };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 879870471e86dcec4a0e8f5c45d2cc3409411fdd..8a55e8d88394a269aa152e80a03c439a36e6062e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21394,6 +21394,7 @@ F:	Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
- F:	Documentation/devicetree/bindings/mailbox/thead,th1520-mbox.yaml
- F:	Documentation/devicetree/bindings/net/thead,th1520-gmac.yaml
- F:	Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-+F:	Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
- F:	Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
- F:	arch/riscv/boot/dts/thead/
- F:	drivers/clk/thead/clk-th1520-ap.c
+diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+index ebfb1d59401d05443716eb0029403b01775e8f73..cf7f6bd428a0faa4611b3fc61edbbc6690e565d9 100644
+--- a/drivers/clk/thead/clk-th1520-ap.c
++++ b/drivers/clk/thead/clk-th1520-ap.c
+@@ -792,11 +792,12 @@ static CCU_GATE(CLK_AON2CPU_A2X, aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_ac
+ 		0x134, BIT(8), 0);
+ static CCU_GATE(CLK_X2X_CPUSYS, x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_pd,
+ 		0x134, BIT(7), 0);
+-static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd, 0x138, BIT(8), 0);
++static CCU_GATE(CLK_CPU2AON_X2H, cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_pd,
++		0x138, BIT(8), CLK_IGNORE_UNUSED);
+ static CCU_GATE(CLK_CPU2PERI_X2H, cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_pd,
+ 		0x140, BIT(9), CLK_IGNORE_UNUSED);
+ static CCU_GATE(CLK_PERISYS_APB1_HCLK, perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_pd,
+-		0x150, BIT(9), 0);
++		0x150, BIT(9), CLK_IGNORE_UNUSED);
+ static CCU_GATE(CLK_PERISYS_APB2_HCLK, perisys_apb2_hclk, "perisys-apb2-hclk", perisys_ahb_hclk_pd,
+ 		0x150, BIT(10), CLK_IGNORE_UNUSED);
+ static CCU_GATE(CLK_PERISYS_APB3_HCLK, perisys_apb3_hclk, "perisys-apb3-hclk", perisys_ahb_hclk_pd,
 
 -- 
 2.34.1
