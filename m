@@ -1,78 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15E5202C5D;
-	Tue, 17 Jun 2025 11:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834F202C5D;
+	Tue, 17 Jun 2025 11:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750160527; cv=none; b=dEnlp2G0xzXRHaIIQGmnC0zY+94QNpCZuZTrQ/c7LG8IlgGLCDjwcrcN2Rb+nwXg60JHK5OGYQo0WHR8J1gcMICPiHmPOEb2WgkkovfQOEc7r/K6BjP4EWiS/fQlg/jNY8ABoeNnTYcKi0morpG9eSOC7q9OaUN/t1UhvsNM8mg=
+	t=1750160538; cv=none; b=LPJJDpa8WprX0tylK2i5T48SkmpJZiGLqs7HGuHDwXbk4EoarZXwdS15dal1p4J8b4ddTA9OtD/qFJIm6XZUdbQAOcQBQN4YXP8fgKtSDcEBaAmrJWpK872cDV1YfjkyS3lU1tA+YOobsiv5DbywkNeWVLBTHm7FsgvsAQPjRlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750160527; c=relaxed/simple;
-	bh=lOwm9sI0KP7rL93Un/JNFyYB8Kf8ajV3HnbE+/qfiBE=;
+	s=arc-20240116; t=1750160538; c=relaxed/simple;
+	bh=AWO0cfDxyxQeEmfhVRR0/sqIwN1RCxLHQCyTYId52lQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I3VvFfeojGvNYPQfR27RMdCfJbo8khrOqrFdWUsy3Lso3WquiuMyKpLOOGcyOdlPi0IXZAXAa6jmNQtmr7odpYxa7z2w9m3VCIu/NX02jsCXVvQyVD7NjXOZ73RXYwlUpEiDEmNdi0b/d2g3dig/dIQhiJaoXTtDtZ+n9PNjA9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=v68wUDbK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=urkqZHTAk01S7IdPqhR8ti+nQQn3oIXanlzABKjmHy+Gx6UnSAlOSjrV1q1Z2VnDMqxTjNzT9VwMJ83vduSWjEx1bYKn4F74VujR9nxyMuWVnVXGvnQ3eggS5F1D7c5HirtccE5YsAVdpbPPh9q6V50I5yiNGcClVzgxLMc/aIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=eIam4LQi; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="v68wUDbK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F436C4CEE3;
-	Tue, 17 Jun 2025 11:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750160526;
-	bh=lOwm9sI0KP7rL93Un/JNFyYB8Kf8ajV3HnbE+/qfiBE=;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="eIam4LQi"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5619840E01C9;
+	Tue, 17 Jun 2025 11:42:12 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id m9d8qPZqJ9qM; Tue, 17 Jun 2025 11:42:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750160526; bh=F63t60WKXtW1zy7ca5a4g7IffJqR3dwiyR4zZcJO3oY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=v68wUDbK/b7Wqos24oKH/hgR/Q5WDrEmQ4KRbOHAfqO7y9ASMzzVY6e9415zEmuL3
-	 GD+Sx7+9vsPaGTDoVxlQ60j67veVmpRY6PO2KEJWXSfMMn4Ck5bERJDdC806VchCi+
-	 uPiqFqnQ+31VCqlPvFsvVdU/n7vQ0FVSdrDfLy6o=
-Date: Tue, 17 Jun 2025 13:42:02 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 29/33] serial: 8250: drop DEBUG_AUTOCONF() macro
-Message-ID: <2025061733-pushy-croon-08da@gregkh>
-References: <20250611100319.186924-1-jirislaby@kernel.org>
- <20250611100319.186924-30-jirislaby@kernel.org>
- <alpine.DEB.2.21.2506171216090.37405@angie.orcam.me.uk>
+	b=eIam4LQi3OXUtzSgl5Boe5qko7FTIUS1Km1uevfO7QsO//r5qJz3+ky8ZD+VqmIg1
+	 XSyhxxuN5kWJY3js/vEItp7R5toV/nlW7ecxmEJ5fvkg88Z0a4HX3mrai/JC0KwmbS
+	 iouD61sQCbK0aVkLAMTEEWQTrDqB7la02KIjpaTNGbagLtT29p0sI8dg6eLj+fbf7F
+	 0rks5VEzjN5dCzwY6Sz1JRh9Bri4YQmWoJlJ1WJ/unq/pn1cpuzWDJOWFlDNdu0IMG
+	 UeNbuFmmtrjQwuwT0ftjkn0MUawMF5pL/yKtUsA40mpHU2NnRK3AzEHaUkVd19xqaP
+	 9nAe2j4YHBLIm/EWjcnhUMCkeM+CAmZ5opWfx/gdllNXjOl1WK1krcCD8JGSVr3yzN
+	 QnKfuRryEJOdyLfBDZeBz0FPK5Li2kI7yLusH0SYCfuxn5HGBeHUF9UBHVy2Two7xt
+	 jRsm4zOK/h2xkP8yFQKYUS5BBOzXs+yg5Rfw9pKxF19CNSp5Y4hTdHj9OJlRJClNcW
+	 nPimIpnqsMxI9K9oDdVtn065oNjGWM+RXBEwqfeukexzn8ymbBUpMRCZj6D+gOGqC3
+	 KJxQD11zrf16XQpWo9ofmZTj8CR++GWu41SZ3kxDY6ga0ZDKXfBxGGtXKfAm3tZ8NP
+	 vEwhcuLqumnE24NKtiUE5jRk=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 99BC340E01B3;
+	Tue, 17 Jun 2025 11:42:00 +0000 (UTC)
+Date: Tue, 17 Jun 2025 13:41:54 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Avadhut Naik <avadhut.naik@amd.com>
+Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+	yazen.ghannam@amd.com, mario.limonciello@amd.com,
+	reox <mailinglist@reox.at>
+Subject: Re: [PATCH] EDAC/amd64: Correct number of UMCs for Family 19h Models
+ 70h-7fh
+Message-ID: <20250617114154.GAaFFUgo6SVroOaP02@fat_crate.local>
+References: <20250613005233.2330627-1-avadhut.naik@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2506171216090.37405@angie.orcam.me.uk>
+In-Reply-To: <20250613005233.2330627-1-avadhut.naik@amd.com>
 
-On Tue, Jun 17, 2025 at 12:32:48PM +0100, Maciej W. Rozycki wrote:
-> On Wed, 11 Jun 2025, Jiri Slaby (SUSE) wrote:
+On Fri, Jun 13, 2025 at 12:51:35AM +0000, Avadhut Naik wrote:
+> AMD's Family 19h-based Models 70h-7fh support 4 UMCs per processor die.
 > 
-> > DEBUG_AUTOCONF() is always disabled (by "#if 0"), so one would need to
-> > recompile the kernel to use it. And even if they did, they would find
-> > out it is broken anyway:
-> >   error: variable 'scratch' is used uninitialized whenever 'if' condition is false
+> The amd64_edac module, however, assumes only 2 UMCs are supported since
+> max_mcs variable for the models has not been explicitly set to 4. The
+> same results in incomplete or incorrect memory information being logged
+> to dmesg by the module during initialization in some instances.
 > 
->  This is removing useful debugging aids.
+> Fixes: 6c79e42169fe ("EDAC/amd64: Add support for ECC on family 19h model 60h-7Fh")
+> Reported-by: reox <mailinglist@reox.at>
+> Closes: https://lore.kernel.org/all/27dc093f-ce27-4c71-9e81-786150a040b6@reox.at/
+> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+> Cc: stable@kernel.org
+> ---
+>  drivers/edac/amd64_edac.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+> index 90f0eb7cc5b9..390f5756b66e 100644
+> --- a/drivers/edac/amd64_edac.c
+> +++ b/drivers/edac/amd64_edac.c
+> @@ -3879,6 +3879,7 @@ static int per_family_init(struct amd64_pvt *pvt)
+>  			break;
+>  		case 0x70 ... 0x7f:
+>  			pvt->ctl_name			= "F19h_M70h";
+> +			pvt->max_mcs			= 4;
+>  			pvt->flags.zn_regs_v2		= 1;
+>  			break;
+>  		case 0x90 ... 0x9f:
+> 
+> base-commit: 855b5de2e562c07d6cda4deb08d09dc2e0e2b18d
+> -- 
 
-How can it be "useful" if it's broken and no one has ever reported that?
+Applied, thanks.
 
->  The issue with compilation is related to commit 3398cc4f2b15 ("serial: 
-> 8250: Add IIR FIFOs enabled field properly"), which removed the assignment 
-> of IIR to `scratch' (although a path did exist before it that bypassed the 
-> assignment anyway), and can be trivially fixed by bringing the assignment 
-> back and moving the debug statement next to it.
+-- 
+Regards/Gruss,
+    Boris.
 
-So it's been broken for over 2 years and no one has asked for it to be
-fixed?
-
->  I agree that "#if 0" isn't very useful as it requires patching the source 
-> to activate; changing it to "#ifdef DEBUG" would make more sense nowadays.
-
-No, dynamic debugging is the proper solution, not build-time stuff.  If
-you really need/want this, add it back in that way, not this old-style
-"let's rebuild the whole kernel" type of thing.  This isn't the 1990's
-anymore :)
-
-thanks,
-
-greg k-h
+https://people.kernel.org/tglx/notes-about-netiquette
