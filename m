@@ -1,180 +1,365 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2053.outbound.protection.outlook.com [40.107.236.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251EF2E763F
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:00:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165209; cv=none; b=eq9q7GDJqH0J6xl6N3OXgYpaaY2B2+R+he+jtpVecd955mxYocCTvpKKeIXlFYPqyvsyskzXaB63CXyPLBfd5veWDM15kUmXiKMCqhwhplADNXZFa7rFKk9i2cTnjLwDcu/KjjbZk114mOSKg6YIXwwmP6HeIjXCBA/luNBYo/c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165209; c=relaxed/simple;
-	bh=DF0F8s9i8zF6gkQUvgfqL8KFLpU80+hqS+HztAFwXjw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=eCLska9yFKgBKky4Lf2Dwp2ejlsuQPlwzUgLk1LYNaKX7xx4xRZ9062H6dI2HxFw0KpTgljLAMygtAMIkcXvkWIVMzjYMyKmoO2Rh3JrKz+R7X+iY4JVpdarjFQhgOsS4IGAjEHhtW1ttR8m9P+Gw2WviNivU3L6Gk59RxggU1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SJwA/4fX; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A89A2E92B3
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750165206; cv=fail; b=SrS/MlXt97+Y+MFWN88dSK2WIHTKZSnJSgaXqM3qdNSHFuvmHySUOlpzx/zxA8QOsRopAVrfw//dzsmDNLUu+dZ/DwdgGR0IRkucpzEIQOvA6V0rZbWhOAfGNZp2KrYN3Ph+yGsaVLVqkj1Hm5NXsWUhOBcutdTPgcFtKT9ooak=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750165206; c=relaxed/simple;
+	bh=cgTrGfGr3uTiqy6Q3L7281UX+dSU6Z23KIIQeWCDu/c=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=uhfJFfpC/HKT9T+b2Wd519EItsbu+uU8l4hBKpu4ZE/ov0GbW2wSQAfHJwid5rdS1vwmvJD/sIVhfzYP0yZbbcnV2YogX56uzstDUivoL5SB1c6rq6nFwnrl1LlSGqCWcZB7uTmqg0CFUzWrY3ofxif/erTMag2JesszlwietZo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FMIMivTv; arc=fail smtp.client-ip=40.107.236.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SJwA/4fX"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250617130004epoutp0427fe99529a5bfaea398484ca337ca4dc~J1fsGL44h2140121401epoutp04U
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:00:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250617130004epoutp0427fe99529a5bfaea398484ca337ca4dc~J1fsGL44h2140121401epoutp04U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750165204;
-	bh=pUkI5fAVHOssGM0XEx7hINUt5DO6uow+53f3e1oNt8k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SJwA/4fXj/DzPk8ZWJzequgzw9IUV3M32Tl7I1wvg2Aji9RlNheTwcg26h2T38scu
-	 +r2RUzI/VVxXTH/sIjmbi/9CBLZJlMHUIsHqTuUSR2SVjQfnq7KCWjH5495vCV2zqo
-	 6UpJuLfrjrplSIxpkZee0Djfq3T8bZoFM6+vEdGQ=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p1.samsung.com (KnoxPortal) with ESMTPS id
-	20250617130003epcas5p1842c90f8d24f2f7cfd8e3bbacbba9864~J1frfhijX0551805518epcas5p1z;
-	Tue, 17 Jun 2025 13:00:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bM6R74ZkSz6B9mD; Tue, 17 Jun
-	2025 13:00:03 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e~J1OR_eMh20675106751epcas5p2E;
-	Tue, 17 Jun 2025 12:40:08 +0000 (GMT)
-Received: from test-PowerEdge-R740xd.samsungds.net (unknown [107.99.41.79])
-	by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250617124005epsmtip2c4b92fa3b085bd73326887d2c1352f93~J1OPei42b2543925439epsmtip2X;
-	Tue, 17 Jun 2025 12:40:05 +0000 (GMT)
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: dan.j.williams@intel.com, dave@stgolabs.net,
-	jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com
-Cc: a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, s.neeraj@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: [RFC PATCH 01/20] nvdimm/label: Introduce NDD_CXL_LABEL flag to set
- cxl label format
-Date: Tue, 17 Jun 2025 18:09:25 +0530
-Message-Id: <158453976.61750165203630.JavaMail.epsvc@epcpadp1new>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250617123944.78345-1-s.neeraj@samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FMIMivTv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BzBUUcikR68p/sofHO9Ra6drdWst5BGUr+yVmQ7HdvzGACCa7YMnldHvVCyX0P4An6uTONwF8xr/iI8kqIZoMUKMLDZyA48gvjqE/W2n/K4nG5mgFBWnOM5tqpJeS2AohoTPcHRQjsuBwdFekEL0Nm6Px1oFVk6OAWlKYbR69vzfiqzvSXkhuoAFLukWPwsStxY5pwewENohxx4SXybe3ZlzMPDlcID68RuyAFHbcsX4GWpNkLZjJz5xF9LfOBpKNhT+tQBvp4eS47qIo0uIYy67Z826XIa+Gpesuu8QfZeoedQiuKZW+2Jdfu50U5+lzbqOxzzf/NtBNqxab+5VNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=efBml/0dFcf7nUBqkKfM1wECJjNM32QC+5SKFpDKAug=;
+ b=YXyZzd8HZFcd5tJUYUWqhQLk/+xHgKz66x0AzpKAy0uUkWm8F502xYdN3bQ3huEjxsFZCLb9alguhYdmVo7pjJwLFTwykltc1EF9pM2TB7nrWf/4RNjJff2OMu1RjXGIaDYLNa3TrjNfUmV+l7xTxAn+AvjwSsLqt6y1wqwH3rm4YVwij63giaKXAfzqr+Qneoe5WZtzsO73o7tRIETlGIO7ts9KU69if8cnBSY67NLB0/U4pIHmxx64GpAosbBbDJ9HAO8RXaLkMrD5VjyZoRTu54S22J/wtOcF9AVCAo1cVegRM6DappeRlrqqakCJFTA+xzicTQtKJnoKgg5+ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=efBml/0dFcf7nUBqkKfM1wECJjNM32QC+5SKFpDKAug=;
+ b=FMIMivTvokdE5oMRXldNE3uViUdM6B0B//4GcV1ph8/g3Sq4HbFbONoqZPAoSekFLXJOn3oTdwZlc6U5R1VmwM4mg1y01K1FbQA3WlbSIHCSDdHhJk2A3u62p1zObIbj81y0zgPNUjvUZlNoQsWVng1ab9EAK8wzuLkE+7kY7Ws=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CY3PR12MB9655.namprd12.prod.outlook.com (2603:10b6:930:100::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
+ 2025 13:00:01 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Tue, 17 Jun 2025
+ 13:00:01 +0000
+Message-ID: <c467ec0f-21fc-4079-bc2d-64dbeba2f876@amd.com>
+Date: Tue, 17 Jun 2025 14:59:54 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 3/6] drm: Create a task info option for wedge events
+To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
+ Alex Deucher <alexander.deucher@amd.com>, siqueira@igalia.com,
+ airlied@gmail.com, simona@ffwll.ch, Raag Jadav <raag.jadav@intel.com>,
+ rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
+ Xaver Hugl <xaver.hugl@gmail.com>,
+ Krzysztof Karas <krzysztof.karas@intel.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
+ intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
+References: <20250617124949.2151549-1-andrealmeid@igalia.com>
+ <20250617124949.2151549-4-andrealmeid@igalia.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250617124949.2151549-4-andrealmeid@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0251.namprd13.prod.outlook.com
+ (2603:10b6:208:2ba::16) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e
-References: <20250617123944.78345-1-s.neeraj@samsung.com>
-	<CGME20250617124008epcas5p2e702f786645d44ceb1cdd980a914ce8e@epcas5p2.samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY3PR12MB9655:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6b5b2a74-cc9d-49fe-644a-08ddad9edebe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N1doazdsS0w5T25YdG9MYnB4UGZsNkFPZG1FTjc3dHVVU1pzWElzd0cyL3lF?=
+ =?utf-8?B?cjJwVWdqbC9yb2p3TVcxS0FCUTMrOGlqL3VIQVlKY2xQcGdDZkNMOWF0b0Jr?=
+ =?utf-8?B?ZTR6RTUwR0RsVUprYjZGbCthY3AvVnNDSnUrL2F1THgvZk1rQnF2ZWhmcG1J?=
+ =?utf-8?B?WVRmdG45cHR1alZsWE9DQ0YzenhNR0JtYmZTR01wdXRMbGI4V285YzdhZDhI?=
+ =?utf-8?B?UXdFQnZIdkp5b1d4K3pGM1gvWG5RdWY1MEE1K0VRQmpEUGJSRkx2Sm9ua0ZR?=
+ =?utf-8?B?ekgyWWl3eFNTN0M3S1BVUXBmN2YzZ0ZTV1FLNlozYytScEE3YXFzeXhuUUpQ?=
+ =?utf-8?B?WXllSisrc0pDdmxEdVhzUHJ4dEdWU3FPNGN1QWppcEw1elpsV3JTOFdWbGZR?=
+ =?utf-8?B?UlUzZXlVYjQyTWFxVzU5ck81YkdzMzVjUm9BT1l0d1pJTHNOdjRvSFNxdGNi?=
+ =?utf-8?B?WCtOSUNScFRKU2ZzWkN6V3JDM2szNVhqYXlxeFYza1ZWY1FiakhWVjdqMU9S?=
+ =?utf-8?B?UVlHMjVhMlYyNnRKdmYyV0NCSTBFdVBVeU5sRDE4WHUzS3BmTVBRd1grTU1T?=
+ =?utf-8?B?RWdpK2JkcWNPQjNHS0swVUlCY0hEVEc3TkRBcWJja1NXdWNwQTJhcG1DOEM5?=
+ =?utf-8?B?Y25yeHY3bTR0RTFqNUdsWFBrVmZDZkROVCtJenhhcjMwL3FMMFVlWjZpNjd3?=
+ =?utf-8?B?bWx0cmVpeldNWW51aUNPZ2c1U1RqTXZyZFFaaDJBMW5DZFltYTBBeUtkNVZi?=
+ =?utf-8?B?WVRYQnYzV1FPazRYcGpyYldObjNuK1J4czZWd21GL0hGdnN6ZjBCWi9YQzVH?=
+ =?utf-8?B?bW9mZkJxb3VwVHFCblNtS2FuNjlDenFmMkYzSHZQUWQrbXE2bmFjUjJtR21v?=
+ =?utf-8?B?OG1aR3ZwRThkWTE1TDFtekdzazQ0Z0JadnhVWVdtbWxNcXA4T0xZZUNrekI3?=
+ =?utf-8?B?TkxNSGF3NkRQa1hBUnJnYjJyRGxRbjY4cU5rcC9jSG5MOCtBN0V3U29JTjlu?=
+ =?utf-8?B?dHVYSjVNdUVwNTU0OFc2QnBWbWZYMWhGZkpKT0dONkx3WjJ0bWhEbW9RcFE2?=
+ =?utf-8?B?UXpMbGRhTzZVdzlwbkNjSVNCZVVhTEk3Z1V0NzlLeGY4SWtqQWNQRTVLTUM4?=
+ =?utf-8?B?a0hXUnJhd2RUNE5INnNNT0dCd1hjMGhxNFNNcXpLOFNHL0Vvb3hkbWZtb1g0?=
+ =?utf-8?B?aGxmYk1VZ29oM2l4YmVjMXhKWVpkRUN0amZSSWxTN1M4Sk82c2RGTlYrSm9t?=
+ =?utf-8?B?Rkg2SlZDUGR0UUFRcWw5WDFsR1ZYMk1BeFFGTENIdTlLYTdvdUNRRThUVnI3?=
+ =?utf-8?B?SUwwYjZwMXMvejZ5OE1NWVpUVkdpN1NobHp2NStrOHVjdUM3S2FNaks4TmpX?=
+ =?utf-8?B?bWRPVURKN0hSUW5MVDZuelpNSGtTdVFGZTBEK3FhL2JYbXRyY29BNkpRQ3NU?=
+ =?utf-8?B?Z0lTSzNRQlp3MnZTOVVkcGVSVFlQR2V4b2NUUisvQkRja2drYVl0Z00yN0xL?=
+ =?utf-8?B?Q0FmR3hXbVFBNHNYZFFpbXVlUHZiTTVXblU4WFZHcXdFYWFwUVNDUzdiQzFK?=
+ =?utf-8?B?eFdZY09TbXZzazNBNHQ1NndheXJEUDJXd21acWNuTnU0aXFKQ0lXNVFvQzd1?=
+ =?utf-8?B?MUZJTUNzbHA0b09jb1ZxcXdlS0N2TFRSdW5pSHlNVkZBK0RDWGsrT3Z2aFFY?=
+ =?utf-8?B?VDM4TUFpZkdDMnVuWUpTcWR1Q0VhOFl3VGtjdDhYbm8zNTl6aW9wTXZzdHhs?=
+ =?utf-8?B?RVNNYnF0ZlRZTDRvd2xLT3BGcHVaODR5UlVWaWNpeU56UGxkaTNhdkZvcjV2?=
+ =?utf-8?B?bm9TME0xVU54dnY5aVd4anFzMWlNUmVJaW9HcTA4K01pYjczYm8wMElqeVpr?=
+ =?utf-8?B?R2J6L0hWbmRzUlREdVZYSk9uNXpSRW5WQmg1R1pTUk5EcFpMYzVRcnJCNmht?=
+ =?utf-8?B?Q1NwTzBYNnNBd2luaWxScUNXR0F0Y0RDM2h4MWlha3dpc084d3ZleFhvcVhi?=
+ =?utf-8?B?L0lmNmxSaWZBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?enIrd21yWXB1RmlBZThscm8zeWtpa3ZzN3YyLytYQjdxcUFQQU9lRWF3WXYv?=
+ =?utf-8?B?MkJiby9MWmY5Zk50TUJBYm0xeDZOMGhYTUhkd1BrRW45WXNkUTlnQ1NIY2sw?=
+ =?utf-8?B?bnBqS2RWaEZtZUtKODJmcERVMSt3QnRVeGcxdjFTMjBpQWpsQlpRL3YwYytT?=
+ =?utf-8?B?UG9TaWtRMGtDTGw5ZmNMZm9zZWFXL0FjODRTbDdrRFhBQXBBcUI1MzhITFZa?=
+ =?utf-8?B?MW16VGpnMkljZVVHRHNoNTJ2S0xkTWp6bVUwR2kyeXpXUFk1RUhCQ0Jlalpz?=
+ =?utf-8?B?WUdCalNRRHNtTW9sdmo3VWJvOFgrZ0NtVTgvNkNUNWtaUnFaeFE5aCtQMkZm?=
+ =?utf-8?B?Q21PNnpRRUt0UHRVUThDVVVBZC9uU203ejJnRGhiWTdUWFRzcnJSRXlrZzFJ?=
+ =?utf-8?B?TGJ5VnBuNFRQT2JIZW1GdTBuRHNUR0lla0orVy8zTmNQd09wS1pkNDBGVS9R?=
+ =?utf-8?B?Y3ZOcWgxQXVDTHlQNlY5VllNcWs0cVMrTERoVGlBZEVVK2xNOHZhSkNGMVR3?=
+ =?utf-8?B?bjBrSGl2K1VOR2ZCZnZLMlpONWI3R0M5MldPOU1SSU5SOUEwcEIrMlhoR1Jo?=
+ =?utf-8?B?cG90NUV6QnZkS2VwZkxUeWROUTQrNk9adE1PZEpZZU5FRHR3M1pUcStqbmsv?=
+ =?utf-8?B?SnFmSTFYaW9qQytJK3AxY0lkWVZPTWwwZmNZMC81Wmxjd0l2THFjTEhGSGZ6?=
+ =?utf-8?B?Sm4rSHlsUE4rVGVRWXFrQnJKVUVsK0Z1RU9CMjdrVXczbmQvWm1zMWxMdThM?=
+ =?utf-8?B?K2xKRW9acXdYN3NwTFczWnh3QmlyMEhSYUhpK2ZhUmx3UWUwV3JQYzk4WTkv?=
+ =?utf-8?B?THI3ZjEyM1JvT3V6MlFZWVh0dHVJZy9jTGNJYlBKNmtwc2QvVFZiZ1VwV0d1?=
+ =?utf-8?B?bE51Rkg3ZmJHblhSUzZYWGk0anNOTElhbzdydUFxUXlaYzl1MFVWdkhGUkRi?=
+ =?utf-8?B?RXF2QWw3QXYyZDVXNVNXVUdpTXVHYko3cEh0bjc2Y3I2aU1LU0hMWmRCTGlB?=
+ =?utf-8?B?L00wQ0FSVnFqOXdrNDVrWlJmYzRISTBZV05RTDVUUkhwNmkxbjc5S2pWTk5K?=
+ =?utf-8?B?d0xlbXJCU3dnUFVERGVmSEw0bnEreUVxVEZZUm1BUmUvNlZVVUpxcXphamtZ?=
+ =?utf-8?B?ZjJNem9iR216eVpqT0J0QUprbUhGWDBMN0xQU3BIMlFVTytkQ05QM2I1SGVy?=
+ =?utf-8?B?S3Izc2FEWHRPbStpNGJ3SjdXS0dXYnRBMU1WNGtNajNaSUdHdmthSzZ3Yit5?=
+ =?utf-8?B?d0ZmWEc2YU1EY1JwU0FjQVg0RW0vZ1Jvb2NaVkVoTGZ3UCtmY05HNkJBQllk?=
+ =?utf-8?B?NlNlWU9IS0lPR2NGcGQvUkhMOUNQa2ZLb0R0K2t0RG5ndXVqUHpHeE1lSVFt?=
+ =?utf-8?B?YUIxZHc5dktqL1hDMFRyaFExWmtLVVoxTlNqZjc4ZDNaa09PekgrWXpwcmJU?=
+ =?utf-8?B?dnE5R1ZxOXV4VkQrQno3VFVQUTVld1hqRlpWYXBZNzVBMW8zRXA4eWZTakxI?=
+ =?utf-8?B?VnQyTU5ldk8zT3MyREdMNHVuUThKMW9NdEE2VTNZSjYxSmpIOCtrdXh0R1ly?=
+ =?utf-8?B?NS8vbXJQSldkMlo1VzhabFN2YUFHMFphTno3RnREZGxncUFoeVhMM1pYMlRH?=
+ =?utf-8?B?RzJOZVRpay9FNG52Q1pLRHRzQWxXam5JbEwxc0R2ZFRiMkN3ODBXRDdJaWpV?=
+ =?utf-8?B?bFdScU1DTlMzaXlFVXh0dlc4Rk96T0lVMEdrSG5kTVI0WG9SQ21ycXBnaU5M?=
+ =?utf-8?B?M0NnZ0NqUUQrRzA1QjFBRWcvRG1sWkdnRU1xdUdzTWFDbXpwYm13dDVLd1E5?=
+ =?utf-8?B?M3RNNmZJMDQ3bGlKWU1BOWVyQ3hoSnBQZ251S2pPZ2lVaHlZZkVodUxBTzAx?=
+ =?utf-8?B?Z3JFdE4wV3YwcjdjR3hUdThQdFZYdllBM2pQM0tnUU5QY3dyd045OFBpWHVV?=
+ =?utf-8?B?dHlhTmJTd2RpUHg2TSthSTdQWWpMTjR5K1hNakprVXhOZXl1L05CN2FKd3o5?=
+ =?utf-8?B?UzlkS1ZmVTNWK3p1aDJXeWdXVHN1ZTBFelhYSVRGYWNaWnJKamZYSVVWb3pC?=
+ =?utf-8?B?Zk1QaEY4Uk5vRU1BYjNBV0VPMzB6WkZBSU9xcER5MWlRQ09COGVBTGdjQVQv?=
+ =?utf-8?Q?VG/nn1bDPd5WP770ADMXqf9DF?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b5b2a74-cc9d-49fe-644a-08ddad9edebe
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 13:00:01.1223
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: dukBZizNmDpjw9mvaa0Sc9MKdccwqfQqSzgnFsY+LGWSVs6/v9ZZBIcymDKWQaGE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9655
 
-NDD_CXL_LABEL is introduced to set cxl LSA 2.1 label format
-Accordingly updated label index version
+On 6/17/25 14:49, André Almeida wrote:
+> When a device get wedged, it might be caused by a guilty application.
+> For userspace, knowing which task was involved can be useful for some
+> situations, like for implementing a policy, logs or for giving a chance
+> for the compositor to let the user know what task was involved in the
+> problem.  This is an optional argument, when the task info is not
+> available, the PID and TASK string won't appear in the event string.
+> 
+> Sometimes just the PID isn't enough giving that the task might be already
+> dead by the time userspace will try to check what was this PID's name,
+> so to make the life easier also notify what's the task's name in the user
+> event.
+> 
+> Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com> (for i915 and xe)
+> Reviewed-by: Krzysztof Karas <krzysztof.karas@intel.com>
+> Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+> Signed-off-by: André Almeida <andrealmeid@igalia.com>
 
-Signed-off-by: Neeraj Kumar <s.neeraj@samsung.com>
----
- drivers/nvdimm/dimm.c      |  1 +
- drivers/nvdimm/dimm_devs.c | 10 ++++++++++
- drivers/nvdimm/label.c     | 16 ++++++++++++----
- drivers/nvdimm/nd.h        |  1 +
- include/linux/libnvdimm.h  |  3 +++
- 5 files changed, 27 insertions(+), 4 deletions(-)
+Acked-by: Christian König <christian.koenig@amd.com>
 
-diff --git a/drivers/nvdimm/dimm.c b/drivers/nvdimm/dimm.c
-index 91d9163ee303..8753b5cd91cc 100644
---- a/drivers/nvdimm/dimm.c
-+++ b/drivers/nvdimm/dimm.c
-@@ -62,6 +62,7 @@ static int nvdimm_probe(struct device *dev)
- 	if (rc < 0)
- 		dev_dbg(dev, "failed to unlock dimm: %d\n", rc);
- 
-+	ndd->cxl = nvdimm_check_cxl_label_format(ndd->dev);
- 
- 	/*
- 	 * EACCES failures reading the namespace label-area-properties
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index 21498d461fde..e8f545f889fd 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -18,6 +18,16 @@
- 
- static DEFINE_IDA(dimm_ida);
- 
-+bool nvdimm_check_cxl_label_format(struct device *dev)
-+{
-+	struct nvdimm *nvdimm = to_nvdimm(dev);
-+
-+	if (test_bit(NDD_CXL_LABEL, &nvdimm->flags))
-+		return true;
-+
-+	return false;
-+}
-+
- /*
-  * Retrieve bus and dimm handle and return if this bus supports
-  * get_config_data commands
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 082253a3a956..48b5ba90216d 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -687,11 +687,19 @@ static int nd_label_write_index(struct nvdimm_drvdata *ndd, int index, u32 seq,
- 		- (unsigned long) to_namespace_index(ndd, 0);
- 	nsindex->labeloff = __cpu_to_le64(offset);
- 	nsindex->nslot = __cpu_to_le32(nslot);
--	nsindex->major = __cpu_to_le16(1);
--	if (sizeof_namespace_label(ndd) < 256)
-+
-+	/* Support CXL LSA 2.1 label format */
-+	if (ndd->cxl) {
-+		nsindex->major = __cpu_to_le16(2);
- 		nsindex->minor = __cpu_to_le16(1);
--	else
--		nsindex->minor = __cpu_to_le16(2);
-+	} else {
-+		nsindex->major = __cpu_to_le16(1);
-+		if (sizeof_namespace_label(ndd) < 256)
-+			nsindex->minor = __cpu_to_le16(1);
-+		else
-+			nsindex->minor = __cpu_to_le16(2);
-+	}
-+
- 	nsindex->checksum = __cpu_to_le64(0);
- 	if (flags & ND_NSINDEX_INIT) {
- 		unsigned long *free = (unsigned long *) nsindex->free;
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index 5ca06e9a2d29..304f0e9904f1 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -522,6 +522,7 @@ void nvdimm_set_labeling(struct device *dev);
- void nvdimm_set_locked(struct device *dev);
- void nvdimm_clear_locked(struct device *dev);
- int nvdimm_security_setup_events(struct device *dev);
-+bool nvdimm_check_cxl_label_format(struct device *dev);
- #if IS_ENABLED(CONFIG_NVDIMM_KEYS)
- int nvdimm_security_unlock(struct device *dev);
- #else
-diff --git a/include/linux/libnvdimm.h b/include/linux/libnvdimm.h
-index e772aae71843..0a55900842c8 100644
---- a/include/linux/libnvdimm.h
-+++ b/include/linux/libnvdimm.h
-@@ -44,6 +44,9 @@ enum {
- 	/* dimm provider wants synchronous registration by __nvdimm_create() */
- 	NDD_REGISTER_SYNC = 8,
- 
-+	/* dimm supports region labels (LSA Format 2.1) */
-+	NDD_CXL_LABEL = 9,
-+
- 	/* need to set a limit somewhere, but yes, this is likely overkill */
- 	ND_IOCTL_MAX_BUFLEN = SZ_4M,
- 	ND_CMD_MAX_ELEM = 5,
--- 
-2.34.1
-
+> ---
+> v8: Code style changes (Raag)
+> v7:
+>  - Change `char *comm` to `char comm[TASK_COMM_LEN]`
+> v6:
+>  - s/cause/involved
+>  - drop string initialization
+> v5:
+>  - s/app/task for struct and commit message as well
+>  - move defines to drm_drv.c
+>  - validates if comm is not NULL and it's not empty
+> v4: s/APP/TASK
+> v3: Make comm_string and pid_string empty when there's no app info
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_device.c |  2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_job.c    |  2 +-
+>  drivers/gpu/drm/drm_drv.c                  | 21 +++++++++++++++++----
+>  drivers/gpu/drm/i915/gt/intel_reset.c      |  3 ++-
+>  drivers/gpu/drm/xe/xe_device.c             |  3 ++-
+>  include/drm/drm_device.h                   |  9 +++++++++
+>  include/drm/drm_drv.h                      |  3 ++-
+>  7 files changed, 34 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> index e1bab6a96cb6..8a0f36f33f13 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+> @@ -6364,7 +6364,7 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
+>  	atomic_set(&adev->reset_domain->reset_res, r);
+>  
+>  	if (!r)
+> -		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
+> +		drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
+>  
+>  	return r;
+>  }
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+> index 3d887428ca2b..0c1381b527fe 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_job.c
+> @@ -164,7 +164,7 @@ static enum drm_gpu_sched_stat amdgpu_job_timedout(struct drm_sched_job *s_job)
+>  			if (amdgpu_ring_sched_ready(ring))
+>  				drm_sched_start(&ring->sched, 0);
+>  			dev_err(adev->dev, "Ring %s reset succeeded\n", ring->sched.name);
+> -			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE);
+> +			drm_dev_wedged_event(adev_to_drm(adev), DRM_WEDGE_RECOVERY_NONE, NULL);
+>  			goto exit;
+>  		}
+>  		dev_err(adev->dev, "Ring %s reset failure\n", ring->sched.name);
+> diff --git a/drivers/gpu/drm/drm_drv.c b/drivers/gpu/drm/drm_drv.c
+> index 56dd61f8e05a..a994da9d9233 100644
+> --- a/drivers/gpu/drm/drm_drv.c
+> +++ b/drivers/gpu/drm/drm_drv.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/moduleparam.h>
+>  #include <linux/mount.h>
+>  #include <linux/pseudo_fs.h>
+> +#include <linux/sched.h>
+>  #include <linux/slab.h>
+>  #include <linux/sprintf.h>
+>  #include <linux/srcu.h>
+> @@ -538,10 +539,15 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
+>  	}
+>  }
+>  
+> +#define WEDGE_STR_LEN	32
+> +#define PID_STR_LEN	15
+> +#define COMM_STR_LEN	(TASK_COMM_LEN + 5)
+> +
+>  /**
+>   * drm_dev_wedged_event - generate a device wedged uevent
+>   * @dev: DRM device
+>   * @method: method(s) to be used for recovery
+> + * @info: optional information about the guilty task
+>   *
+>   * This generates a device wedged uevent for the DRM device specified by @dev.
+>   * Recovery @method\(s) of choice will be sent in the uevent environment as
+> @@ -554,13 +560,13 @@ static const char *drm_get_wedge_recovery(unsigned int opt)
+>   *
+>   * Returns: 0 on success, negative error code otherwise.
+>   */
+> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
+> +			 struct drm_wedge_task_info *info)
+>  {
+> +	char event_string[WEDGE_STR_LEN], pid_string[PID_STR_LEN], comm_string[COMM_STR_LEN];
+> +	char *envp[] = { event_string, NULL, NULL, NULL };
+>  	const char *recovery = NULL;
+>  	unsigned int len, opt;
+> -	/* Event string length up to 28+ characters with available methods */
+> -	char event_string[32];
+> -	char *envp[] = { event_string, NULL };
+>  
+>  	len = scnprintf(event_string, sizeof(event_string), "%s", "WEDGED=");
+>  
+> @@ -582,6 +588,13 @@ int drm_dev_wedged_event(struct drm_device *dev, unsigned long method)
+>  	drm_info(dev, "device wedged, %s\n", method == DRM_WEDGE_RECOVERY_NONE ?
+>  		 "but recovered through reset" : "needs recovery");
+>  
+> +	if (info && (info->comm[0] != '\0') && (info->pid >= 0)) {
+> +		snprintf(pid_string, sizeof(pid_string), "PID=%u", info->pid);
+> +		snprintf(comm_string, sizeof(comm_string), "TASK=%s", info->comm);
+> +		envp[1] = pid_string;
+> +		envp[2] = comm_string;
+> +	}
+> +
+>  	return kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE, envp);
+>  }
+>  EXPORT_SYMBOL(drm_dev_wedged_event);
+> diff --git a/drivers/gpu/drm/i915/gt/intel_reset.c b/drivers/gpu/drm/i915/gt/intel_reset.c
+> index dbdcfe130ad4..ba1d8fdc3c7b 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_reset.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_reset.c
+> @@ -1448,7 +1448,8 @@ static void intel_gt_reset_global(struct intel_gt *gt,
+>  		kobject_uevent_env(kobj, KOBJ_CHANGE, reset_done_event);
+>  	else
+>  		drm_dev_wedged_event(&gt->i915->drm,
+> -				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET);
+> +				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET,
+> +				     NULL);
+>  }
+>  
+>  /**
+> diff --git a/drivers/gpu/drm/xe/xe_device.c b/drivers/gpu/drm/xe/xe_device.c
+> index c02c4c4e9412..f329613e061f 100644
+> --- a/drivers/gpu/drm/xe/xe_device.c
+> +++ b/drivers/gpu/drm/xe/xe_device.c
+> @@ -1168,7 +1168,8 @@ void xe_device_declare_wedged(struct xe_device *xe)
+>  
+>  		/* Notify userspace of wedged device */
+>  		drm_dev_wedged_event(&xe->drm,
+> -				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET);
+> +				     DRM_WEDGE_RECOVERY_REBIND | DRM_WEDGE_RECOVERY_BUS_RESET,
+> +				     NULL);
+>  	}
+>  
+>  	for_each_gt(gt, xe, id)
+> diff --git a/include/drm/drm_device.h b/include/drm/drm_device.h
+> index e2f894f1b90a..08b3b2467c4c 100644
+> --- a/include/drm/drm_device.h
+> +++ b/include/drm/drm_device.h
+> @@ -5,6 +5,7 @@
+>  #include <linux/kref.h>
+>  #include <linux/mutex.h>
+>  #include <linux/idr.h>
+> +#include <linux/sched.h>
+>  
+>  #include <drm/drm_mode_config.h>
+>  
+> @@ -30,6 +31,14 @@ struct pci_controller;
+>  #define DRM_WEDGE_RECOVERY_REBIND	BIT(1)	/* unbind + bind driver */
+>  #define DRM_WEDGE_RECOVERY_BUS_RESET	BIT(2)	/* unbind + reset bus device + bind */
+>  
+> +/**
+> + * struct drm_wedge_task_info - information about the guilty task of a wedge dev
+> + */
+> +struct drm_wedge_task_info {
+> +	pid_t pid;
+> +	char comm[TASK_COMM_LEN];
+> +};
+> +
+>  /**
+>   * enum switch_power_state - power state of drm device
+>   */
+> diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
+> index 63b51942d606..3f76a32d6b84 100644
+> --- a/include/drm/drm_drv.h
+> +++ b/include/drm/drm_drv.h
+> @@ -487,7 +487,8 @@ void drm_put_dev(struct drm_device *dev);
+>  bool drm_dev_enter(struct drm_device *dev, int *idx);
+>  void drm_dev_exit(int idx);
+>  void drm_dev_unplug(struct drm_device *dev);
+> -int drm_dev_wedged_event(struct drm_device *dev, unsigned long method);
+> +int drm_dev_wedged_event(struct drm_device *dev, unsigned long method,
+> +			 struct drm_wedge_task_info *info);
+>  
+>  /**
+>   * drm_dev_is_unplugged - is a DRM device unplugged
 
