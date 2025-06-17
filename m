@@ -1,90 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20C115539A;
-	Tue, 17 Jun 2025 04:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 303711ACEDC;
+	Tue, 17 Jun 2025 04:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750134506; cv=none; b=pggJzdX9N0dGp2sPBTmU9L2c3zUgB8vZrlaIFtcWk4bzbSnbW5lWbtogkDK8ydzk8gxH8zZwpdFMm5OAwRIv5POXywbJx/fJgD2QklpsLia83tFink5UsnlYb4SLpoFWN1aOOamPUBQD8HjK4sRIyA4nWJTe6NtErfJR16QRcKU=
+	t=1750134612; cv=none; b=pBj86aqlO00CcVsxi19VoKI4ZUyDqg+62XPsLaBnmjhHxPR3VhnUcD3DwCriLUOULq1MzXpzJ21y7EmfXrUmTNaSOt5WRJ3Stf40ywuilKZoXq4spCqPJU0/fv9bglVFWknh5IXkh6krVBk0ZMx9t7BHNeVtYtqI0Wf3BBIxncM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750134506; c=relaxed/simple;
-	bh=PnJko5vxDtAYo4xtfL54bpZLAmxUI5zpeQ7QYnXzKvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=djyoCCWWTExKIbv80M1rtpjo3DodiWsSKRKkGnilE8dJX0rxBNbP5GunH26wTKtafbsj/ZDE/sGVn2LrqyxNwquOaqp4UVK0MKeQhDU+j1MYw8PupkoSqEJUthSRwqDsXPJU+yJFDTpSc5tgI1pbszqJSTicjJhX9HOIqYxJtPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JT0Zap80; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750134612; c=relaxed/simple;
+	bh=coN5M7UgkY2OpbkDobN63+woVFkfmnwHWQ9uWlTZHgM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hp1TotFYhd0vAN+89c4gSnZnPqtx+xPFBiC0FRRVrOx01Bm2VgmalbcLINuNryLiittDivdtmF7f9UFmYBQmDmg4RvMEKH9EsUjGSdZ3wpg68LpbtJ016trtCzOygvrBrUbS++xNm97dUIUghAoAi0zhGbwJJZJMxzpM/QZEW/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMn8fxJL; arc=none smtp.client-ip=209.85.221.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JT0Zap80"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A85E2C4CEE3;
-	Tue, 17 Jun 2025 04:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750134506;
-	bh=PnJko5vxDtAYo4xtfL54bpZLAmxUI5zpeQ7QYnXzKvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JT0Zap801QYfqX2dK6+3BKLTq1OF46HXM2SK+yQrcSWC8I0+zNUAnAAgk3oW5qz/j
-	 bViQ4PWHNR7sp/btqryPHfVoaJaLBgME5dXhIHLrA94VDiVckwTcRtJbO06HZZt725
-	 dH11OlQhV9Gkmc+f21JopULDKqTzdurT1MHX3Ovf0jI/T0VAFNegSarfjXrg+fOzga
-	 7QmwpodhbrLN8MkjoeEVEpft84z0LxroJd+JdiXE7PUl8teApAvmMPmHyMAC6mxsh9
-	 m4HJsdClJkT8S4S/Pr/gigmN6cn6niFTyWi9dvmj2s3bw717Dms2/jXMNlK4IMUalG
-	 hZVoqhPXnyhpg==
-Date: Mon, 16 Jun 2025 21:27:55 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: T Pratham <t-pratham@ti.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-crypto@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Kamlesh Gurudasani <kamlesh@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Praneeth Bajjuri <praneeth@ti.com>,
-	Manorit Chawdhry <m-chawdhry@ti.com>
-Subject: Re: [PATCH v5 0/2] Add support for Texas Instruments DTHE V2 crypto
- accelerator
-Message-ID: <20250617042755.GG8289@sol>
-References: <20250603124217.957116-1-t-pratham@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMn8fxJL"
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-52413efd0d3so1630617e0c.2;
+        Mon, 16 Jun 2025 21:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750134610; x=1750739410; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NdKsiLMagRvcTcqea0FT3P7to9kBSQlL+YJdIZTByqg=;
+        b=LMn8fxJLorM1rfO/Y6HXn0nip8GMkEGOo7/8JzKmDI4/cwdzFLnMM79Poc/EUnJQWJ
+         FL72tQKDUtOXHfz1AIg/AVuZzf3FiAg4yeSemOfBG4VtirfMAJrH2+yImFKTLZTZaUSt
+         witQ/p/l367pSwJ9ygpxjKowEek80Gw9zwom0u+rgusHF3GqjUbb/+gFWFDq3MTXGUFg
+         jIzrkzyF8k26FfSiZQFQZHQZHI7MYKn1yulBlaX+VLDJ+ogYLaDeIUa8KqHmjsHN3SRs
+         98Ogr8rWx/FktQZrWYOqcdgmVtXZfk97RJLjoXvXOS8rcljLPVuXVMBswW2YLrDF1kR/
+         nRpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750134610; x=1750739410;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NdKsiLMagRvcTcqea0FT3P7to9kBSQlL+YJdIZTByqg=;
+        b=vZ3yfqwYrR5WUFwB+4fFaNJrs/3xss4rCIO90kQ6TwwfI9LEgPkRdb6BcsmaA/ryoa
+         ftd8gVTHStNfe5QtlujIWZUbDd9pOy8x3qB9/wT696FBC05KFGa0DBV3FPVOi/vUVHJr
+         lifS1Eb5O9JdjLQQP7LZB73LdZq4F+XcAZEis1AgqlSxXeGB6Fe2SnbFele6xBkDef9z
+         wUtGsj5GOEt2RwToWe8y+15m/hcW7Pp8Wytw/otzHsnYzUjSxsZvkKk2kvC7nbo1ziGZ
+         IQi60wn4QOP+hlNJ6trBjCKRS6Y7Xxws9OmJ5n5tvbYywq4CpHEAvNdrpNKrRX1fsQrS
+         AdhA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2gOIR2Juk84EgA6FjAvD5D7Vl2i2i4Er97WmE0i27YhxXKhiT4pLdnqlJShZR/RYpoBi4pi8sRt9KV7Y=@vger.kernel.org, AJvYcCWrWoFyjfk7GtI7noRBMEoKS2pO2ZOb24pwOKRhsCpgBzXhMyJzOpmOGBKsYOYT7gtMqng6XWWA@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqBj1PgITZjUjFEiuiQhKJIqAdkt1A3QRv55YgzhJmqRk+N6G6
+	4xB17NewB8T8uXaHtkYaDw7JASaD1wfkdO/kAY0V8/vq3mzqII5X4sA29Xwylp/27cE6aJShbMw
+	rcHxbH267Hng4SC0KvAFWQv14i84G4Pk=
+X-Gm-Gg: ASbGncv+LTLH7dRZHmWv0iWxnLM+irl2DZ5hItGYBUIEWymHEFojt+4DrQoMvG0nh2Q
+	rhifxolQNc+4RQI0OzxHo+8ruZFtBlQZeVkoGTMRdvp6+lwMviWWa+XKDQwZNVBcyaTsoSBlXJo
+	rLJtBlnIsa3fB6aLcgz+pa9PdmVRY155B7uioTqBzm1VA=
+X-Google-Smtp-Source: AGHT+IHTmBxbg43YFIE3hUpcQPBuc9uhECGzAwz81EpCiNKZAp9dAkImEX4ozSqVERNQsnuQ2oWLSFxJZYEP55GTnqU=
+X-Received: by 2002:a05:6122:547:b0:531:236f:1295 with SMTP id
+ 71dfb90a1353d-53149b13c25mr7399510e0c.5.1750134609942; Mon, 16 Jun 2025
+ 21:30:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250603124217.957116-1-t-pratham@ti.com>
+References: <20250616132539.63434-1-danisjiang@gmail.com> <aFCh-JXnifNXTgSt@codewreck.org>
+ <CAHYQsXR43MGM826eHtEkmH4X2bM-amM29A38XUj+hMbNF2vDJQ@mail.gmail.com> <aFDrBwql20jYrvp1@codewreck.org>
+In-Reply-To: <aFDrBwql20jYrvp1@codewreck.org>
+From: Danis Jiang <danisjiang@gmail.com>
+Date: Tue, 17 Jun 2025 12:29:58 +0800
+X-Gm-Features: AX0GCFvdy8vwc6GGsH1z6dEO-kWs183kySUYlgW7khdw1zEVOhnXzoycfuBIxxU
+Message-ID: <CAHYQsXRhFMEhgPvY_6PVjD=oiWf3DWgLCr78xy-fWvxZwAMT3w@mail.gmail.com>
+Subject: Re: [PATCH] net/9p: Fix buffer overflow in USB transport layer
+To: asmadeus@codewreck.org
+Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com, 
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, security@kernel.org, 
+	stable@vger.kernel.org, Mirsad Todorovac <mtodorovac69@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 03, 2025 at 06:07:27PM +0530, T Pratham wrote:
-> This series adds support for TI DTHE V2 crypto accelerator. DTHE V2 is a
-> new crypto accelerator which contains multiple crypto IPs [1].
-> This series implements support for ECB and CBC modes of AES for the AES
-> Engine of the DTHE, using skcipher APIs of the kernel.
-> 
-> Tested with:
-> CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
-> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
-> 
-> and tcrypt,
-> sudo modprobe tcrypt mode=500 sec=1
-> 
-> Signed-off-by: T Pratham <t-pratham@ti.com>
-> ---
-> [1]: Section 14.6.3 (DMA Control Registers -> DMASS_DTHE)
-> Link: https://www.ti.com/lit/ug/sprujb4/sprujb4.pdf
+On Tue, Jun 17, 2025 at 12:12=E2=80=AFPM <asmadeus@codewreck.org> wrote:
+>
+> Danis Jiang wrote on Tue, Jun 17, 2025 at 11:01:40AM +0800:
+> >>> Add validation in usb9pfs_rx_complete() to ensure req->actual does no=
+t
+> >>> exceed the buffer capacity before copying data.
+> >>
+> >> Thanks for this check!
+> >>
+> >> Did you reproduce this or was this static analysis found?
+> >> (to knowi if you tested wrt question below)
+> >
+> > I found this by static analysis.
+>
+> Ok.
+>
+> >> I still haven't gotten around to setting up something to test this, an=
+d
+> >> even less the error case, but I'm not sure a single put is enough --
+> >> p9_client_cb does another put.
+> >> Conceptually I think it's better to mark the error and move on
+> >> e.g. (not even compile tested)
+> >> ```
+> >>         int status =3D REQ_STATUS_RCVD;
+> >>
+> >>         [...]
+> >>
+> >>         if (req->actual > p9_rx_req->rc.capacity) {
+> >>                 dev_err(...)
+> >>                 req->actual =3D 0;
+> >>                 status =3D REQ_STATUS_ERROR;
+> >>         }
+> >>
+> >>         memcpy(..)
+> >>
+> >>         p9_rx_req->rc.size =3D req->actual;
+> >>
+> >>         p9_client_cb(usb9pfs->client, p9_rx_req, status);
+> >>         p9_req_put(usb9pfs->client, p9_rx_req);
+> >>
+> >>         complete(&usb9pfs->received);
+> >> ```
+> >> (I'm not sure overriding req->actual is allowed, might be safer to use
+> >> an intermediate variable like status instead)
+> >>
+> >> What do you think?
+> >
+> > Yes, I think your patch is better, my initial patch forgot p9_client_cb=
+.
+>
+> Ok, let's go with that then.
+>
+> Would you like to resend "my" version, or should I do it (and
+> refer to your patch as Reported-by)?
+>
+> Also if you resend let's add Mirsad Todorovac <mtodorovac69@gmail.com> to=
+o Ccs,
+> I've added him now.
+> (Mirsad, please check lore for full context if quote wasn't enough:
+>  https://lkml.kernel.org/r/20250616132539.63434-1-danisjiang@gmail.com
+> )
+>
+>
+> Thanks,
+> --
+> Dominique Martinet | Asmadeus
 
-Numbers, please.  What is the specific, real use case in Linux where this
-patchset actually improves performance?  Going off the CPU and back again just
-to en/decrypt some data is hugely expensive.
-
-Note that the manual you linked to above explicitly states that the CPU supports
-the ARMv8 Cryptography Extensions.  That definitively makes any off-CPU offload
-obsolete.  But even without that, these sorts of off-CPU offloads have always
-been highly questionable.
-
-I think it's implausible that this patchset could actually be beneficial.
-
-In fact, it might actually be really harmful.  You set your algorithms to
-priority 30000, which makes them be prioritized over ARMv8 CE.  I've seen
-exactly that bug with other "accelerators", which actually regressed performance
-by over 50x compared to simply staying on the CPU.
-
-- Eric
+Sure, you can do it and add me as Reported-by, thanks!
