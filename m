@@ -1,203 +1,155 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2064.outbound.protection.outlook.com [40.107.244.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F7652E7167;
-	Tue, 17 Jun 2025 19:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750189590; cv=fail; b=TAAz9/xu1GsNCgidLlTWIW3dZys0W4vvcs3DNkyZa2xjZTV/FgEAVLoLSlW1EBqM6DlKu/PprcLpa9EsSC+IJuiW67GMGbarKvfN6mQrrhxTg+JqNT9ChxL6gUmFh960iRZgY273AMvZ47NzCRFm5sYUEBTSNAI+jhBvQt0WbQk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750189590; c=relaxed/simple;
-	bh=AGMXgtvzaJh+/cfNSo5ZreHrf+g1mzCADgGYxmgQnbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VYcJzu+1jkbqROUbMA41StlhhYruRGXIKpVVGbsmUDy0a+LFgIK2rSD0A4I710wuyIXvtuGrlhDb1SjSVfNynKiItUnwGuAc1HnvXL+8Eq/O8Bzbf+coOUFHDwB+8y56138srPu7Uw2NC246k1mP8JdffyE26ykENuCSxIrgeqU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=kNsNfLxW; arc=fail smtp.client-ip=40.107.244.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504C0136A;
+	Tue, 17 Jun 2025 19:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750189629; cv=none; b=MSEYebBorZuC+VHG+Aw7xhH6Iqf1+yyfNXPYBtBmssP7YohKt5lfNguKH/wrjsn6KY3wMwKpIAsIAo2ubpzaIcKjvEgOAQVV9JsWF72nh1ZRox8zFi7Aolu8+34ufB4NGLlWk9jQjlFUNokV4KXhTtNvAM6qcZEWChxbVbqL5/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750189629; c=relaxed/simple;
+	bh=6isCiZoF+g7lLxHT5Sbj99Y+eoDDrTIFdT8d+wyJydc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AilmPoq7F3APxdzXSRiA5HuB6E7YCeSOXN1E6HfZCYPbr6BfP9GhH8/Jf1dlEyaA4u9zV+mi12gMuTzJLb5KN5elrV83b5jQk/CzoLl0kZxV3075X085/HyTMcUWxSUwVUZulxauTPKFBMuRffBEt9sIZ2zvC43GMjIeA+U/8F0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DWZlU6pq; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="kNsNfLxW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qq3oJSEgG1lv1a66RDONCQ5xIAUyDjWyRilaMfvwAO9fDkYFSpBgWs8mzNYfxy4FlutJYg44X7x3q5a9uaaGZgkzZv2FUO+tBiFA19o0Fw9JUxPHg4VzNGvvzK4CfAOTfYYVCSegu1Cu0OLO+YuTPtbU3Ti4e3bLLUYXpuugLRKTt8qvGroRYZ11v+RAkIyzpeUmvi1oCcBMwUDZNLQ7Lsj+WR2pDfOkJitD8I3OkvIozcDtlr2pwn5rY+s7pQdhJVnRv99CantM/x+UXc0Dvn4yxX2bjcWISyPVio0N6SCaIlNe3p9b+Etv4QWY/0wZyHrNRBb+ma+qmooPZKIOLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=adlTw0BALeWFW/5VtFYDUbT9WcsWjfcLz89yoghOEhA=;
- b=rCSHUnFVBSpE63oJeka2+sq4yyfLZag8TKkch6jdLVlhiMGVhk34o2zB+rR0B/Kiol5nSApyIwScdRDjMW3U6xxt2PneYeMcr9uGpYpgixgH+er2UFeYgqca7Net0PDf/BEbncEb+9Ob7hJ50YfhcnMHSM5I5iNN3RjYm8xy1+LMATh27ZZHLkVQcwnxx+C9NaYLNI+ke/9fRp4Cy7eHg6y946FX60aR9kiMJFEl+IHn1tT25fS24rWbJZWKIDAQ9f76xDI2lSLkSFEX8W6kbcYDqj5HsoclSj8ajTEJJ6EfE7+PPo0MwkZ0ylH3JLAz/9VHCjAauDkH1lG+yKjs3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=adlTw0BALeWFW/5VtFYDUbT9WcsWjfcLz89yoghOEhA=;
- b=kNsNfLxWer1C8EPTqwYaKTgQw5r7MR1vJdldbOU1MliW3i4YfCCRXUONx8cv5hGBH9aMVVHfRWGZ+2H77Qqb9vCaFfg1zcZaqSH+T28yIYdUj/H13tJeUAQvR7kmIfOzbctCtbbDn6kqJdQA8/huGv/mMXlYtHQwhyA0DMhUmB5KM0dmeO85iwfD/muiiqDFRXfHNnOmZFTICgxvJiysfXxBxwmbbQTkduWKjRwMCdCYRCJARSIi6dcmMtZl9kZr9pK3fYdVAURjkzzqEWHSE3Y4ifqba7P5lT/ALY40SlqSUgdi4ZWpWWp03gw6ZUGbHcL/rX+kHolRbROhFqJ/fw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by CY5PR12MB6430.namprd12.prod.outlook.com (2603:10b6:930:3a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Tue, 17 Jun
- 2025 19:46:23 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Tue, 17 Jun 2025
- 19:46:22 +0000
-Date: Tue, 17 Jun 2025 16:46:21 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kvm@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 4/5] vfio: Introduce vfio_device_ops.get_unmapped_area
- hook
-Message-ID: <20250617194621.GA1575786@nvidia.com>
-References: <20250613134111.469884-5-peterx@redhat.com>
- <202506142215.koMEU2rT-lkp@intel.com>
- <aFGMG3763eSv9l8b@x1.local>
- <20250617154157.GY1174925@nvidia.com>
- <aFGcJ-mjhZ1yT7Je@x1.local>
- <aFHEZw1ag6o0BkrS@x1.local>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFHEZw1ag6o0BkrS@x1.local>
-X-ClientProxiedBy: YT4PR01CA0440.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10d::16) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DWZlU6pq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750189627; x=1781725627;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6isCiZoF+g7lLxHT5Sbj99Y+eoDDrTIFdT8d+wyJydc=;
+  b=DWZlU6pqJOCn+WdBKl8LldTJxIumaWEUQo/weevnY4miNNEy9m7b6XyP
+   GKgl7JfRacR2hD5rBmmWu7zBGu6MahMoPN6Eu8W6t9oMCuSfibB5HTT4z
+   YNTUKjx4H4EFZd320cy+x4/E/y77BiFZZOdDFWm0ZKxMt4lJJrnqaJ/NQ
+   Y0isaWIozJJV3sKE3z5aMKPSXraGd9jJyQKWVZpxHqVdJNLyDsz4ercZS
+   BRYVdjHaJGkZ1kFn8dbXx4NBHKPFRZFGnqgI10YAxDMx50B+hcAvvzaMF
+   3Ba7OLL59OZhnbIBqYWpGFfsn8UlL544emi3JX/jzrMX5FlaxMqtUJJwL
+   A==;
+X-CSE-ConnectionGUID: OR+gRxrmRbu6ZwIh2rS5lg==
+X-CSE-MsgGUID: D5I1tYekRyKtW55wmM2phg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63421116"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="63421116"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 12:47:06 -0700
+X-CSE-ConnectionGUID: mGOyGjynQ4y19Ly0PQNJqQ==
+X-CSE-MsgGUID: cxo73W0QQiqcTvXkmGkTng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="172161665"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 12:47:05 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7360120B5736;
+	Tue, 17 Jun 2025 12:47:04 -0700 (PDT)
+Message-ID: <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com>
+Date: Tue, 17 Jun 2025 15:47:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|CY5PR12MB6430:EE_
-X-MS-Office365-Filtering-Correlation-Id: 52ed5b9e-29d1-4739-f4dd-08ddadd7a330
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?bheg/ZyMqmMFdpt6TXJQMRt+wdap9olDLOX4qDexUOVC3iiXqOCCqYyYG3TE?=
- =?us-ascii?Q?Af8g6ttBPRN/Y2u1EI5p8/2OOkyQ3FZj/9sT0qpDg/1KKT1WLEhTbnazL6sT?=
- =?us-ascii?Q?g/Ajx5BcJrJEhght82KyA27BGci5a3O7R77EKDzJqnyVkooHUC60G4BYHIHU?=
- =?us-ascii?Q?XueWW7uJqOHbgncJKj8TMBGFEZFv7ZMV9bLRs6GR/dOw4fvweOr/m2dv3HvJ?=
- =?us-ascii?Q?Y00cJrFq64vWWxEapza3o7WM1V0Z/QxKXdxqN8MBi9CDmduv8R2oUAM9hB1v?=
- =?us-ascii?Q?fKJ+XfBAUEAy+BbeARTGfYf3iseXOKDWC5TCymythGwh/AjLVXiP9xsGS/u2?=
- =?us-ascii?Q?2taT3mjKM9FedE3J4qnafNQSxgEppsx5vsiYrJbFWV+P4vdZEhnyORICymdU?=
- =?us-ascii?Q?DSlUvPBntf6T44VkRpvjA51IKjCm5lUiJi/m6XEuy5vLALfEsEjboN+hn0G7?=
- =?us-ascii?Q?yT7wndI/TlqCBGQKwOXCWjjOHRZhJqa0HVCw4Qwxy9/mXJ/MNKZzIb1tLn9Z?=
- =?us-ascii?Q?9NlQ8r3EOnCX1zuqw5SVA18F22ikhD8QUJejWVzft7aV+c2mZkP8Xg5taCKX?=
- =?us-ascii?Q?ArX3/495WvZVs8aAH9Qr7rkRfFarFfuBd/yvGjy8IDZvwRHlu3EdUoTFIyh9?=
- =?us-ascii?Q?scPcH7hVmAmAP5MG3KLEYIkn8PY/TSJ1VGGaMCx0wj6yFzz9zgy3/jfo02jt?=
- =?us-ascii?Q?EMc2JpZC4OozmVX04vfv4285QiPD9H1lFdjNJ1cPASJr5s2ku/LzEEEbb4jz?=
- =?us-ascii?Q?lQJ1HaXvkVoGdTe+dBEVl9p8aWZSmx4r1+vvrZx+SPzn0292nzickRDuiNts?=
- =?us-ascii?Q?4XfI3m+goNDcGeS93xNyc0O3qNH7yFLTc2mycuYtRjCCWW+HZdFik0UslJGP?=
- =?us-ascii?Q?KdQWbm6uKmF+TGkIVecDwOcCZNXbDcbJQ3JQl0ZDZzmglK7IUQr7V0W+VeiO?=
- =?us-ascii?Q?D42n5YHBhfS9ZMCeSgdjfEYS8Tp0FGzeIgwnsjYZnmfrmtYph1qOPvTtHsmy?=
- =?us-ascii?Q?l0cFO1bb/+jKdM8iHXBq2xKl8pE8aemL14fvWns+XsM3izMDLL7nr+zJS+Xf?=
- =?us-ascii?Q?gC6b1Ny4YxeiMxnHB8gd4wTInx4Rtma7wbr5GAiVrG4tLh52tqlaHugUVkHO?=
- =?us-ascii?Q?cCZ2heN5l4VWOc1sd2Y9fhqWyR8FGTOBJyyuPJ47XhehCMFwPNXaD73jjMKB?=
- =?us-ascii?Q?oabCbz3HZ95ipJa4rKJI/m/CW3u3NlicvCpfHU3mKqLPQWH9JHHEJlU0JbhY?=
- =?us-ascii?Q?pl0d13NsMeJ1ZNJ5uCh+oOGBKdEb4CqBip0NX285dsxelfe91cL96qtV9jfA?=
- =?us-ascii?Q?3HIe4xSbF2ORJ3jUjYCC3EYTo1kQKDxBkwJgEmW6p0k0EVDTKmw7AxEZQ5fS?=
- =?us-ascii?Q?oiLU1K+qjTwkUIaye1+HrOKaOf20dOx+F37tzXvTB8/5ARC65tks8I4kiR/5?=
- =?us-ascii?Q?rZenmNtcweA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ItIvZdAWSYXMxowzTwr2iwfoUnTmgZcTAg3k30W5Xci2P8uTaoL95AILik0I?=
- =?us-ascii?Q?GA7yAuJSYzzi7SitLnyUspAjArwK4xiGvqfxbfnuI1GsDZco6D9BeGUVZLpt?=
- =?us-ascii?Q?lMD0dLea3bQKbA3QVHbZ1Gw9luDSU/xzEMvhaK73tiOVIDKBHg/TT3QiA5qt?=
- =?us-ascii?Q?MPtnIyEEZ6evZ1d3QpVzlNoicHBBK+eNShtup5AEeYweUoVVQDGQvVoRN4Yq?=
- =?us-ascii?Q?+HuN8Y8xrTH2w1Ya71fv6BCFiL6XPUaCiwB2gWd8SlBrctr54zDgfFy2cbtA?=
- =?us-ascii?Q?SjFywKVjGoLl3vdgUWpgcAS3nhwPG1YZM5CUsYBDXMM4pj/b0mNusWWMUkXe?=
- =?us-ascii?Q?3B9L8h91HYVkJMywQJP700+VsG3zVx9x4DQtS5Sxi+FQp/r2GMr/F1xdTgka?=
- =?us-ascii?Q?2lgsnDPr3RLtltor1jcGRUDQCAf/mAmo7laZvsC5SpjTlXpRdTAeAnoulc5F?=
- =?us-ascii?Q?CGtOzv4985IBt+7+pvFa/FCmBtbWrbk/Fx0rlHWyHjPPmf+fL1oxmykHsYG7?=
- =?us-ascii?Q?cL1gA+7U+DXgIfXGf4N3/WVgEgvmsMX6qgXai6FHFOH9+sK4sQYjJZmcYt5i?=
- =?us-ascii?Q?RHj0QWp0SfoRdH35T9WtFv5/gES02/4WRv7U30ft76sx0r1q/wcbJp+GuTS3?=
- =?us-ascii?Q?9Vh5nYE1BhM5Ave5b1SnPGgReW23EAnVocCrixGYFgycxf9/hSdayb4vra9k?=
- =?us-ascii?Q?ZoTH03jF/rC7era2C5/ToTwSAZehwYDFpdLYI2CIvcC++FW0ZKCOAyfqtyXj?=
- =?us-ascii?Q?CRLxxcMWX9fy2m+zQuWj3t8bTzwT9a47oapeiE3AUQnMz7qg3miFmloH94T8?=
- =?us-ascii?Q?hWv7P32Uc6RCPeezZ6tFwYd23UOEw+/rm4axG099qqgIQoVjuWZflgB+e4Go?=
- =?us-ascii?Q?o4HZVMrZr38jowP4bL9h0DSibQbtdHtgvwXR0o4z5vVBfaAaK2Lhf5tNahdM?=
- =?us-ascii?Q?wmqzqmtkm1wf6Y2G+jL+4OdiJh4FgMGDgk3HkcGQtGVMNIojxIMgov+ktP7J?=
- =?us-ascii?Q?8ZUWiK9BKiVk/GDeddJhbKEuPvxbKbVeuRoRPQF8FYWrPOXNANJEmX5om43D?=
- =?us-ascii?Q?MaaSlW+Vu19WWKqy/F935EDzMPsl1H1he2JJ7avIIEkJLCnRx3rd9hE15lEU?=
- =?us-ascii?Q?TdiE+8/EjsBZl+v+48PSSl1mw7f45LhkAKVTO5hpelNmJiG3prg4O+kizphv?=
- =?us-ascii?Q?LCkFM5ij9ikiEEWFahkT+SnA+CEDxMVGBNW09DL8tuVAmhmNZdCDUH5uCaG1?=
- =?us-ascii?Q?RcVAqinl0/uaoYccN4RCKu7I4hCYuXOSOvqDI0X86HKlGEgaERjyI2Zyx7TO?=
- =?us-ascii?Q?Ur/O24CAZc8WE7VM0xyjn+D7Qxv1HoVRxxnVTboHro7sOrNLEtfKgzkGhF1p?=
- =?us-ascii?Q?dOKdtgyZqtulXcr3JeEBia1U90ZjwviSc2j4c0eQReOMg1YWAdYH6oq6e/VK?=
- =?us-ascii?Q?Ais9HxP0dSEIqeQRN5scxUXkW4wNv2e9niS+WuHVaoMxcbGK/ad+996Vieu3?=
- =?us-ascii?Q?/+bZO9LZrakBn0S3Pd8utZzx4pnKCMltVTwOktUR2s4/XbM+JlMpUk1j3wqg?=
- =?us-ascii?Q?wzC9LOPk1RKJSis/VzdgcvHGaak808f/9m54ru6g?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52ed5b9e-29d1-4739-f4dd-08ddadd7a330
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 19:46:22.8443
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eCWNLjYcF5E49aHsbFyrZ8D9aW1pmDoEqZkVXvrDGJE6airu5nJ2n0adEz1mqLnc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6430
+User-Agent: Mozilla Thunderbird
+Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
+To: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>
+References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025 at 03:39:19PM -0400, Peter Xu wrote:
-> On Tue, Jun 17, 2025 at 12:47:35PM -0400, Peter Xu wrote:
-> > On Tue, Jun 17, 2025 at 12:41:57PM -0300, Jason Gunthorpe wrote:
-> > > On Tue, Jun 17, 2025 at 11:39:07AM -0400, Peter Xu wrote:
-> > > >  
-> > > > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
-> > > >  static unsigned long vfio_device_get_unmapped_area(struct file *file,
-> > > >                                                    unsigned long addr,
-> > > >                                                    unsigned long len,
-> > > > @@ -1370,6 +1371,7 @@ static unsigned long vfio_device_get_unmapped_area(struct file *file,
-> > > >         return device->ops->get_unmapped_area(device, file, addr, len,
-> > > >                                               pgoff, flags);
-> > > >  }
-> > > > +#endif
-> > > >  
-> > > >  const struct file_operations vfio_device_fops = {
-> > > >         .owner          = THIS_MODULE,
-> > > > @@ -1380,7 +1382,9 @@ const struct file_operations vfio_device_fops = {
-> > > >         .unlocked_ioctl = vfio_device_fops_unl_ioctl,
-> > > >         .compat_ioctl   = compat_ptr_ioctl,
-> > > >         .mmap           = vfio_device_fops_mmap,
-> > > > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
-> > > >         .get_unmapped_area = vfio_device_get_unmapped_area,
-> > > > +#endif
-> > > >  };
-> > > 
-> > > IMHO this also seems like something the core code should be dealing
-> > > with and not putting weird ifdefs in drivers.
-> > 
-> > It may depend on whether we want to still do the fallbacks to
-> > mm_get_unmapped_area().  I get your point in the other email but not yet
-> > get a chance to reply.  I'll try that out to see how it looks and reply
-> > there.
+
+
+On 2025-06-17 11:39 a.m., Vince Weaver wrote:
+> Hello
 > 
-> I just noticed this is unfortunate and special; I yet don't see a way to
-> avoid the fallback here.
+> When running the perf_fuzzzer on a raptor-lake machine I get a
+> 	unchecked MSR access error: WRMSR to 0x3f1
+> error (see below).
 > 
-> Note that this is the vfio_device's fallback, even if the new helper
-> (whatever we name it..) could do fallback internally, vfio_device still
-> would need to be accessible to mm_get_unmapped_area() to make this config
-> build pass.
+> A similar message happened before back in 2021 and was fixed in
+> commit 2dc0572f2cef87425147658698dce2600b799bd3 so not sure if this is the 
+> same problem or something new.
 
-I don't understand this remark?
+The commit 2dc0572f2cef was triggered by the fake event VLBR_EVENT.
+But this error should be triggered by the Topdown perf metrics event,
+INTEL_TD_METRIC_RETIRING, which uses the idx 48 internally.
 
-get_unmapped_area is not conditional on CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP?
+We never support perf metrics events in sampling mode. The PEBS cannot
+be enabled in counting mode. So it's weird the cpuc->pebs_enabled has
+the idx 48 set.
 
-Some new mm_get_unmapped_area_aligned() should not be conditional on
-CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP? (This is Lorenzo's and Liam's remark)
+The recent change I did for the PEBS is commit e02e9b0374c3
+"perf/x86/intel: Support PEBS counters snapshotting". But it should not
+impact the above.
 
-So what is VFIO doing that requires CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP?
+Could you please help on the below questions?
+- It only happens on the p-core, right?
+- Which kernel base do you use? Is it 6.16-rc2?
+- Can this be easily reproduced?
+  Is it possible to bisect the error commit? (Maybe start from the
+commit e02e9b0374c3?)
 
-Jason
+Thanks,
+Kan>
+> Vince Weaver
+> vincent.weaver@maine.edu
+> 
+> [12646.001692] unchecked MSR access error: WRMSR to 0x3f1 (tried to write 0x0001000000000001) at rIP: 0xffffffffa98932af (native_write_msr+0xf/0x20)
+> [12646.001698] Call Trace:
+> [12646.001700]  <TASK>
+> [12646.001700]  intel_pmu_pebs_enable_all+0x2c/0x40
+> [12646.001703]  intel_pmu_enable_all+0xe/0x20
+> [12646.001705]  ctx_resched+0x227/0x280
+> [12646.001708]  event_function+0x8f/0xd0
+> [12646.001710]  ? __pfx___perf_event_enable+0x10/0x10
+> [12646.001711]  remote_function+0x42/0x50
+> [12646.001713]  ? __pfx_remote_function+0x10/0x10
+> [12646.001714]  generic_exec_single+0x6d/0x130
+> [12646.001715]  smp_call_function_single+0xee/0x140
+> [12646.001716]  ? __pfx_remote_function+0x10/0x10
+> [12646.001717]  event_function_call+0x9f/0x1c0
+> [12646.001718]  ? __pfx___perf_event_enable+0x10/0x10
+> [12646.001720]  ? __pfx_event_function+0x10/0x10
+> [12646.001721]  perf_event_task_enable+0x7b/0x100
+> [12646.001723]  __do_sys_prctl+0x56f/0xca0
+> [12646.001725]  do_syscall_64+0x84/0x2f0
+> [12646.001727]  ? exit_to_user_mode_loop+0xcd/0x120
+> [12646.001729]  ? do_syscall_64+0x1ef/0x2f0
+> [12646.001730]  ? try_to_wake_up+0x7e/0x640
+> [12646.001732]  ? complete_signal+0x2e8/0x350
+> [12646.001734]  ? __send_signal_locked+0x2e3/0x450
+> [12646.001735]  ? send_signal_locked+0xb6/0x120
+> [12646.001736]  ? do_send_sig_info+0x6e/0xc0
+> [12646.001737]  ? kill_pid_info_type+0xa6/0xc0
+> [12646.001738]  ? kill_something_info+0x167/0x1a0
+> [12646.001739]  ? syscall_exit_work+0x132/0x140
+> [12646.001740]  ? do_syscall_64+0xbc/0x2f0
+> [12646.001741]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> [12646.001743] RIP: 0033:0x7efe86afd40d
+> [12646.001744] Code: 00 48 89 44 24 18 31 c0 48 8d 44 24 60 c7 04 24 18 00 00 00 48 89 44 24 08 48 8d 44 24 20 48 89 44 24 10 b8 9d 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 1b 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
+> [12646.001745] RSP: 002b:00007ffcd6444cf0 EFLAGS: 00000246 ORIG_RAX: 000000000000009d
+> [12646.001746] RAX: ffffffffffffffda RBX: 000000000000000e RCX: 00007efe86afd40d
+> [12646.001747] RDX: 0000000000000001 RSI: 00007ffcd6444d24 RDI: 0000000000000020
+> [12646.001747] RBP: 00007ffcd6444d60 R08: 00007efe86bc625c R09: 00007efe86bc6260
+> [12646.001748] R10: 00007efe86bc6250 R11: 0000000000000246 R12: 0000000000000000
+> [12646.001748] R13: 00007ffcd64471b8 R14: 0000559eb2a2edd8 R15: 00007efe86c30020
+> [12646.001749]  </TASK>
+> 
+
