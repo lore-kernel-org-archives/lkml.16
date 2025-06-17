@@ -1,127 +1,173 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE452219A79;
-	Tue, 17 Jun 2025 18:34:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C6923AE84
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185266; cv=none; b=lDrQeQ83lHiohx3yXSILYHKBpB+rVm2//SvxC68nFB+Vw8p6dkZ6+ZNfVUwsK4FNUXb/wiXLLwMAIqbWUWq18yra+NkwzH+LRDmmwxEiQSRQbKAREXQQx6BSxwOsonH070zTaQoyhGBALT8dZ0DSQVv61+sr8FmJ/6C/OTOrSH8=
+	t=1750185298; cv=none; b=A594mMEenh+H7h31rOKSAL53hbrNea/rDRAmRXdvQafadqDnLN9VfRRucL2R40GXdwA6fs3c/SG3v/TJMp4KZZjEztndi4NTdZ7KOtC4nvI5kDOWBZek4Al1NqQv8GsQ1Zfb9d5sGBohrw72ct478/6ucmTF1EVzEzPCB7BhCiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185266; c=relaxed/simple;
-	bh=lKT+LivCZpChLEpwppAaxNEigjPq2YzeLeNedsDCFu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hVQYHYVWsWrS/EN05zi7SzOqZgT7raI81zVTl05CvP1QW8f0To/5wA3ljd5nmlqfCe421h+/NeIhlLblJ1tjFnU4KqjkBDGwoB9IET0hiXJdG+bRUStZIjGMxOsz/Psif/CteliwgRLV8uOI2CPzPN3Hh+6krTOeXRZT9KWElTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCuFygZp; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750185298; c=relaxed/simple;
+	bh=vNXK4oDmkZ/5vEde1tk21+hvLrX1mK5D+uSj7F3uoxY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qi2YJ6OEVAotwh0We7wni2yyTx3AbCntd3qReODggqXwk7PVfHeCUTpIUZfz/f7lsMsAMf6mGhd1Kfhlpplr8YPMPKTkkUiiFYUogtgmOLypTnq0hbdLKntPEp2/JCi2AO/kgd6tMp1aQ2ER38mZd6RNunlQXhaDQ5xiRXojYbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=SW6fBmVh; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCuFygZp"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad93ff9f714so1096939666b.2;
-        Tue, 17 Jun 2025 11:34:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="SW6fBmVh"
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a585dc5f4aso78894561cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:34:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750185263; x=1750790063; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lKT+LivCZpChLEpwppAaxNEigjPq2YzeLeNedsDCFu4=;
-        b=jCuFygZpRSIjAut91bwBlAafs92kKU5yPwM+5YyxQou3DBJcAtXQYrblXhzZah2KnZ
-         7RS0GtZpdEyL4CnOhiACHYJ3quGPsA6My++iLGRyoHIim488oOeN3SthrM3lOQNgFU2J
-         cc00mjgfvPvzkFs180FX+QbltyD17BBDkjtyRH11dMI/qlinQyZ4C13IYZXIGzpqNvGR
-         Al+uPcYaTDPDMtp+27q79TXBPQ/CbXfGAbE9AKRkzJ+dpTp5n8uWZqJhpOx5O0DChZSX
-         d5ulq+jFsso5O0MXF+YHHFF61wOhClcVPbwuKpTt1k20sKrUHZsTr6tT1PHLqEbzBzWb
-         IOKQ==
+        d=ziepe.ca; s=google; t=1750185294; x=1750790094; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IkUw7K1fNTUFr0XSmkjhiZVRjINQnKgrdCWIYf4LhiU=;
+        b=SW6fBmVhRIDyMil9P+ONyamLGQ+q2K8ad+OW+owAVvPuliycX23+XDnXPKi29J5uQg
+         YvXvKp2hUg7jUzUmBIjnmT4zPQLzwAg5LcPSAMOIskePlaxqMaGZvIBy+nufqbc4J7cQ
+         6m/25EF0/S8ptbo6HUSnGApHMRBM6Ow1Fh6+Dck2t6WzLvCo10vZJIjwDoFVl58/Rn7x
+         W+aQX8r6NAtBN0okuV0/CAzA1S9vdQTD/i53ZtZV6a78RkSILxyL/bRlBIsb/yHZb+2Z
+         K+ySpHlALFM7Op+GnP31DpQF4Je9/A26J1XQejZ37kUOlFehgmMcqWCTY1T/5QuhHb3K
+         L1IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750185263; x=1750790063;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lKT+LivCZpChLEpwppAaxNEigjPq2YzeLeNedsDCFu4=;
-        b=lGhDBASZ/edQ7FkKWyWa5YcT65JshBgqT5vyjaQXm4Q+uQcYz4zdzoAk8AZDBTImvd
-         Kb4G4uHxQmCIIpUxENp0820xrHGJ8i91c+b9T/v4Oo3fFaQRBRoAYtw6AwcKTaLBkPYs
-         PX6mjq7rpD/VLklMjCHCqUiDzUNLbSHiIznsC1RmAJ3vA/LmepOuIm+2A9EBR74hb7TN
-         S5unwVmjky3OxUg7O2if8IrUgBCRcbCLR4wge6bk4vlslpFYlx5ORd1o/NYBkPB1qLm6
-         MXBJmD0K/oJDjtkLamvLdAdvxq82tAG1vmsyuoC/67qpQERmNPJ4MbWDXw9X0AqOnd0o
-         V/sg==
-X-Forwarded-Encrypted: i=1; AJvYcCUULCqAFSVMudGqNgJRvl3N0EUuNrZ55nlhfOFqBULToO2A6Grz2Bj8D7o1bkcl/IHoY1rUPjiiw68=@vger.kernel.org, AJvYcCW/LFW9XlrYi/0uZDutc4UgPbhdMkZY0xCV/cYjYkcZXUbFCyQXC3aKBmbfh/vbs45ZzbEsl98fwm5p8T1r@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTzucXsXmfBrg7ZHMV501WeKI/FaYVOdkMi1ASdfzSI6aHxxhi
-	kUYvzGTpFZxHTVd4jXtsDoW1akvpuvD5WYDsUDJDDlTaZ5O0xn2Zb23rHiifObhUvsMwfrEKHKp
-	xy8GV0ir+qYbfw+fqqn9V2BuwQmWjWDhmv3W2
-X-Gm-Gg: ASbGncvFizoS15JExNXeiuUNyffxIn6oKLV5iVoEi3OmFwdawWzl8VOIT8NQ8G0YRaZ
-	i3ifS4QGderPcka2qdb0OvEnWLDWXLPMejdl1pC8McklKB1fC2WHZCnSVhhrey0ygea/Y+soCnQ
-	11rgzy2lYWWZUbK3c0m8N1TuoGIplrKdbM0QjPowMdP3o=
-X-Google-Smtp-Source: AGHT+IHpKXFzdzDT6KNbCdcOO5MoI7epaUZvX6IPgz0Yb0HPyzXTrHxEJLjX3+yQBj8mcAwUbIikY6JJtqMplZviVVk=
-X-Received: by 2002:a17:907:72cc:b0:acf:15d:2385 with SMTP id
- a640c23a62f3a-adfad357b7bmr1483062166b.16.1750185263083; Tue, 17 Jun 2025
- 11:34:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750185294; x=1750790094;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IkUw7K1fNTUFr0XSmkjhiZVRjINQnKgrdCWIYf4LhiU=;
+        b=DPFFbsYX57+l77BODYlpJ2EgAkrUJh94j1uIzJWXpSe2k6080OkWQFIlZXZDI1lpgI
+         Wx20yBYCZY/Vn6SGGT4254lmVQrLGIsFbQlHD2k4/suwAb1YcazHCGQz7cNeyz50R0YR
+         S741yYSNVWYC/WXukxe3CfRshamwM0PLfvKlUhQSyQ5Mvp4x5Uvic9MKHzChBEVAG+vd
+         c0ZZN2mMS04q6+z2KB7+wEOaMv8/sQDA7kSjHrYzPgFO3GMDwpGlAdTgML5pdz6D2wZi
+         e5sHcGbTAEC6d35qdFlbeF8Rvd8ThcfeAhW86oGKzm5hGokd372TYsuKFSY6UxqLF7b+
+         WqwQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQZsgQffOD8aShzWDIBwQCID2VKcmnXWsj9n4noHc5aoQDmt1P3LXMVziXthNM5meORyvsSbzoHhlmFaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxi0d0+Y538SZMHnyFTOLb1PhZoh+r6d1CZV8xI46sf0Avq16jl
+	3I0uDl/qSUqyRE8qyEdSF2giAg+/GxRPBsIkN23q1hmlZ4NFoR2ho0Ipnya5R93T8p4=
+X-Gm-Gg: ASbGncvAr5IzoyekHl3nPCjy6oYPkpoPhk7BNTme/by8cI8i/2aaUB/Dt8/Z3KmSZE7
+	9X47GS6IAnh4vTvc/P/CIupohCCIopp3q+BL28rpB9YcSwOKv+UGBc2L4HuyBsJuo+TWpiqogDk
+	0AD7bR5s5+vWlZHFBS2nn8rwLIFBXoljsYuwO0FvJsew3pj64DjNp5pnVDTaX5VjwhDJTCK4sQh
+	y6QEmHAWUxQuQG/hWBQJyGvXT/Cz1mm9Tx4TNwmwQ17cd0sB8s/ISomhRQdCDourGb8wJ4NzaxZ
+	GU35bKNg9Bmnpxq7KwN7x/C2QEZEoprR3FqfZhQ+/rai6i/ZKh8+Uf3liCLhVemL4SQBfCIJvab
+	hyb9fDm98gEPKqBvTP1VkMbAlU/qLnG4VH0Ca/g==
+X-Google-Smtp-Source: AGHT+IF+gpQV430tU9VpFbWOEEO9nCtbhkf7JKZT2vfz8vbnYNPhZr+BRPLWyOfEF+iclrfKMJ7agA==
+X-Received: by 2002:ac8:598b:0:b0:494:a2b8:88f0 with SMTP id d75a77b69052e-4a73c589061mr236405141cf.33.1750185293762;
+        Tue, 17 Jun 2025 11:34:53 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4b0cb9sm64018831cf.50.2025.06.17.11.34.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 11:34:53 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uRb92-00000006bm4-2q58;
+	Tue, 17 Jun 2025 15:34:52 -0300
+Date: Tue, 17 Jun 2025 15:34:52 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH] iommufd: Destroy vdevice on device unbind
+Message-ID: <20250617183452.GG1376515@ziepe.ca>
+References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
+ <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250612172645.GA1011960@ziepe.ca>
+ <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250613124202.GD1130869@ziepe.ca>
+ <yq5abjqotim7.fsf@kernel.org>
+ <BN9PR11MB527633CA2F698E83E12BFBD68C70A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250616164941.GA1373692@ziepe.ca>
+ <yq5azfe6ssev.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616090423.575736-1-andriy.shevchenko@linux.intel.com>
- <FR3P281MB1757C6A610D39EA737A19EFBCE70A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
- <CAHp75Ve68H448v3Tgv930yoMYCCKVC3kefuP+Rermj7SaiP41g@mail.gmail.com> <FR3P281MB175775DBE90C5469637F3C66CE73A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-In-Reply-To: <FR3P281MB175775DBE90C5469637F3C66CE73A@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 17 Jun 2025 21:33:46 +0300
-X-Gm-Features: AX0GCFsDji8BZdcobaIKwiBIkoOAcTydMFV4jTG0Oi7REx-n2SYPb2Qz9s_nj4Q
-Message-ID: <CAHp75Ve0aQLaRS1-J5WoCxUAfX+Y=s2oj4ZkVvUG1XysXopZxw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] iio: imu: inv_icm42600: Convert to uXX and sXX
- integer types
-To: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5azfe6ssev.fsf@kernel.org>
 
-On Tue, Jun 17, 2025 at 5:43=E2=80=AFPM Jean-Baptiste Maneyrol
-<Jean-Baptiste.Maneyrol@tdk.com> wrote:
-> >From: Andy Shevchenko <andy.shevchenko@gmail.com>
-> >Sent: Monday, June 16, 2025 16:33
-> >On Mon, Jun 16, 2025 at 5:16=E2=80=AFPM Jean-Baptiste Maneyrol
-> ><Jean-Baptiste.Maneyrol@tdk.com> wrote:
-> >
-> >> thanks a lot for having done all the work.
-> >
-> >Please, avoid top-posting!
-> >
-> >> Do you think it is possible to add a fixes tag so it can be backported=
- to ease automatic backport of further patches?
-> >> Otherwise for sure all further fixes will have to be backported manual=
-ly.
-> >
-> >The idea behind the series that it may depend on some kind of
-> >cleanups. In such a case (according to Greg KH) no need to have Fixes
-> >tag on a cleanup, because it's confusing. On the contrary the
-> >infrastructure for stable kernels will catch this up. You need to
-> >follow the Documentation on how to submit for stable (basically the
-> >main hint is to use stable@ in the Cc line _inside_ the commit
-> >message, as a tag).
-> >
-> >> The driver code is full of intXX_t and uintXX_t types which is
-> >> not the pattern we use in the IIO subsystem. Switch the driver
-> >> to use kernel internal types for that. No functional changes.
+On Tue, Jun 17, 2025 at 01:37:04PM +0530, Aneesh Kumar K.V wrote:
+ 
+> How do we reclaim that object id for further reuse? 
 
-> >> As noted before the pattern is used in less than 10% files in IIO,
-> >> So it's safe to assume that IIO prefers uXX/sXX types over C99 ones.
-> >
->
-> it is good for me if we can add Cc to stable.
-> I don't know if I need to add the Cc tag here or when a fixed patch will
-> require the rework. In doubt, here it is.
->
-> Acked-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>
-> Cc: stable@vger.kernel.org
+Maybe just don't? Userspace did something it shouldn't, it now leaked
+8 bytes of kernel memory until the FD is closed.
 
-It makes no sense here. This is a standalone change. It's not part of
-any "fixes" series. You need to attach this patch to your series as
-patch 1 and mark Cc stable all of the patches.
+> is it that if there is a request for a iommufd_object_remove() with object
+> refcount > 1, we insert a XA_ZERO_ENTRY and convert that to NULL entry
+> on IOMMU_DESTROY?
 
---=20
-With Best Regards,
-Andy Shevchenko
+Oh no we can't do that, if the refcount is elevated that is a problem,
+it means some thread somewhere is using that memory.
+
+We can sleep and wait for shortterm_users to go to zero and if users
+is still elevated then we are toast. WARN_ON and reatin it in the
+xarray and hope for the best.
+
+So the thread that will trigger the detruction needs to have a users
+refcount of 1. Meaning users needs to be one while idle in the xarray,
+and the idevice destruction will obtain a users=2 from its pointer
+under some kind of lock.
+
+> -enum {
+> -	REMOVE_WAIT_SHORTTERM = 1,
+> -};
+> +#define	REMOVE_WAIT_SHORTTERM	BIT(0)
+> +#define	REMOVE_OBJ_FORCE	BIT(1)
+
+You can keep the enum for flags, but 'force' isn't the right name. I
+would think it is 'tombstone'
+
+> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+> index b7aa725e6b37..d27b61787a53 100644
+> --- a/drivers/iommu/iommufd/main.c
+> +++ b/drivers/iommu/iommufd/main.c
+> @@ -88,7 +88,8 @@ struct iommufd_object *iommufd_get_object(struct iommufd_ctx *ictx, u32 id,
+>  
+>  	xa_lock(&ictx->objects);
+>  	obj = xa_load(&ictx->objects, id);
+> -	if (!obj || (type != IOMMUFD_OBJ_ANY && obj->type != type) ||
+> +	if (!obj || xa_is_zero(obj) ||
+> +	    (type != IOMMUFD_OBJ_ANY && obj->type != type) ||
+>  	    !iommufd_lock_obj(obj))
+
+xa_load can't return xa_is_zero(), xas_load() can
+
+We already use XA_ZERO_ENTRY to hold an ID during allocation till
+finalize.
+
+I think you want to add a new API
+
+iommufd_object_tombstone_user(idev->ictx, &idev->vdev->obj);
+
+Which I think is the same as the existing
+iommufd_object_destroy_user() except it uses tombstone..
+
+The only thing tombstone does is:
+
+	xas_store(&xas, (flags & REMOVE_OBJ_TOMBSTONE) ? XA_ZERO_ENTRY : NULL);
+
+All the rest of the logic including the users and shorterm check would
+be the same.
+
+> --- a/drivers/iommu/iommufd/viommu.c
+> +++ b/drivers/iommu/iommufd/viommu.c
+> @@ -213,6 +213,8 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+>  	/* vdev lifecycle now managed by idev */
+>  	idev->vdev = vdev;
+>  	refcount_inc(&vdev->obj.users);
+> +	/* Increment refcount since userspace can hold the obj id */
+> +	refcount_inc(&vdev->obj.users);
+>  	goto out_put_idev_unlock;
+
+I don't think this should change.. There should be no extra user refs
+or userspace can't destroy it.
+
+The pointer back from the idevice needs locking to protect it while a
+refcount is obtained.
+
+Jason
