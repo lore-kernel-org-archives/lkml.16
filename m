@@ -1,81 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mail-m21468.qiye.163.com (mail-m21468.qiye.163.com [117.135.214.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967093C01;
-	Tue, 17 Jun 2025 05:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA6E3C01;
+	Tue, 17 Jun 2025 05:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.214.68
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750139783; cv=none; b=ZiOlHND8ws+4XUhuJg+3pqllD6IbDsCxHMA54P3eyqV7Hi8JTNCdyZ1qUfjzZRCMSZzyigXvuW6amtOJR0ap4R+zTGshN6Axt6rnZ5taYs4JKD2iBAYdpgLngOBdllA1ePO6bLGlvUI/0nkWFZoxx/a+WBVaPL715iGTqJ/R/i0=
+	t=1750139864; cv=none; b=RXtlq2NerAWG4XYBkkqFqJ5jt2tbDVYUjEFFMmVBJP4vfsju6J0rp4iLQGM9VCNih5t0+CiLwq+wlr8gdy+Eq++Y7lMH4mS1+sXryl+E8gecyewVe7gJzYgChCUhVODmpvjiyc+Y8co5hykOYEfgAmrOSuGcVDUEtQBV6boaYBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750139783; c=relaxed/simple;
-	bh=xewPBDnE/yjPAn+yZQtmYb2YxGdO2c/xqGHXteCy85o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dysM7PGOLwPUthcJ/1bWNLluXmlhRbJD2fupUKhLJh7F61FEMe1BeU0udwhwPk2P1k59vewLk92L0FGyeyv90IzOYFoZ3EwhgVD/5RMZ0/8WFYw1/bvsHri+jRyshspxbBI0aJLgZ63o7uylJ5qKIy+9snifECadPra2L16wUr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IpG78emY; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750139864; c=relaxed/simple;
+	bh=cH7uEc+o+GNDoYHU6R/Q75XFkTN1WFvZxjN/8EZRu1E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=T0c7B5BtZKrWDtRaXZoW6VWazx+sN1LjGTJMq6qNIw68QFRN1FmnA7C0Y+2G7nNX6JBCqwZUnVLoDPPR0V3x8PARGDIkEArB/3+msXaODLHQyG2+nqf+z7KjwGaPEM/yQhzE/6+aCIhAMaAdCNWAHxLu14XVO/9Mdec0wcNRwsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com; spf=pass smtp.mailfrom=hillstonenet.com; dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b=Vbo8TecS; arc=none smtp.client-ip=117.135.214.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=hillstonenet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hillstonenet.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IpG78emY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750139781; x=1781675781;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xewPBDnE/yjPAn+yZQtmYb2YxGdO2c/xqGHXteCy85o=;
-  b=IpG78emYiX5cAY/LGhC8/uJZkdZTYJXuXTblk5l7bg00CrwEkBmB0ZvE
-   3BEyzK/JzQUna51Q2W0y/0y5o7piGg3dtezPRPCEWDHp10Jpm8Y2rysJJ
-   aOi1yN4Uylra72z0XtsSi9K9vL+eDIVgsFq/cYqdqVmD59lbM1Pa7e9EC
-   UUMn9VBQ3L38SbQQcT+mpgsB3QltMS4qq4LiJZT8f9KaeLX5ybVblMheE
-   dLmfy8k6vxdY6InzaqiphWP4R6A+FeDIF4lIUaXAQOcmr2rW/5cc/lafr
-   ThRTILKw4iGpm79A4ErLSXpJPcPN4i1L0pRbf90cbVLKLdl0PIgFazwJz
-   Q==;
-X-CSE-ConnectionGUID: 3WWl6gsYRz6mUJ1kKe5QdA==
-X-CSE-MsgGUID: 04hDHwbwSkaBXXFLSJeRgQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52282453"
-X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="52282453"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 22:56:21 -0700
-X-CSE-ConnectionGUID: 3aNWoODoQm+WuDOajIOeAQ==
-X-CSE-MsgGUID: tUaEPf/HRoCHCkkErhZhQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="148512056"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP; 16 Jun 2025 22:56:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 00FF312C; Tue, 17 Jun 2025 08:56:17 +0300 (EEST)
-Date: Tue, 17 Jun 2025 08:56:17 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Linux PM <linux-pm@vger.kernel.org>,
-	Linux ACPI <linux-acpi@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v1] ACPI: PM: Set .detach in acpi_general_pm_domain
- definition
-Message-ID: <20250617055617.GR2824380@black.fi.intel.com>
-References: <4665476.LvFx2qVVIh@rjwysocki.net>
+	dkim=pass (1024-bit key) header.d=hillstonenet.com header.i=@hillstonenet.com header.b="Vbo8TecS"
+Received: from localhost.localdomain (unknown [123.123.73.125])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 18ea241cd;
+	Tue, 17 Jun 2025 13:57:29 +0800 (GMT+08:00)
+From: Haixia Qu <hxqu@hillstonenet.com>
+To: Jon Maloy <jmaloy@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Cc: Haixia Qu <hxqu@hillstonenet.com>,
+	netdev@vger.kernel.org,
+	tipc-discussion@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 net] tipc: fix null-ptr-deref when acquiring remote ip of ethernet bearer
+Date: Tue, 17 Jun 2025 05:56:24 +0000
+Message-ID: <20250617055624.2680-1-hxqu@hillstonenet.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4665476.LvFx2qVVIh@rjwysocki.net>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGEJIVhlDQkJPSElMSEkfS1YVFAkWGhdVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlKSUhVSklIVUxIVUpJTllXWRYaDxIVHRRZQVlPS0hVSktISk5MTlVKS0
+	tVSkJLS1kG
+X-HM-Tid: 0a977c76c96803a8kunme8d0af4014995cb
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6PRw*QzE5AjkMFxkzEiwT
+	LggwCjNVSlVKTE5LSkhCQ05LSE5CVTMWGhIXVRMDCg47ExIXFwgPFBUeFR4PVRgUFkVZV1kSC1lB
+	WUpJSFVKSUhVTEhVSklOWVdZCAFZQUlOTEM3Bg++
+DKIM-Signature:a=rsa-sha256;
+	b=Vbo8TecS6d6OvR5CbRuEvSPIp2mHfTDL1BvlolKF6K9X8tDjH67g8tAMBT0xbmTg6Kp6SHjvMTtejoyqUEqEqvn6IUboYuFD+4ueNTL84PfJNuer+qElN+KKVAaH2t/t4I6qic7FoKZozFrwLUkqonggRUVGkhkxSQpvSSm0ibg=; c=relaxed/relaxed; s=default; d=hillstonenet.com; v=1;
+	bh=JMF0aAROw+9+kAyVzUFm6TfojGxyJA29t9heYE5wWFo=;
+	h=date:mime-version:subject:message-id:from;
 
-On Mon, Jun 16, 2025 at 08:20:28PM +0200, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Instead of setting the .detach callback pointer for acpi_general_pm_domain
-> every time it is attached to a device, which is confusing, set it once
-> in the definition of acpi_general_pm_domain.
-> 
-> No intentional functional impact.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+The reproduction steps:
+1. create a tun interface
+2. enable l2 bearer
+3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+tipc: Started in network mode
+tipc: Node identity 8af312d38a21, cluster identity 4711
+tipc: Enabled bearer <eth:syz_tun>, priority 1
+Oops: general protection fault
+KASAN: null-ptr-deref in range
+CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
+Hardware name: QEMU Ubuntu 24.04 PC
+RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
+
+the ub was in fact a struct dev.
+
+when bid != 0 && skip_cnt != 0, bearer_list[bid] may be NULL or
+other media when other thread changes it.
+
+fix this by checking media_id.
+
+Fixes: 832629ca5c313 ("tipc: add UDP remoteip dump to netlink API")
+Signed-off-by: Haixia Qu <hxqu@hillstonenet.com>
+---
+v4:
+  - make commit message more descriptive
+v3: https://patchwork.kernel.org/project/netdevbpf/patch/20250616042901.12978-1-hxqu@hillstonenet.com/
+  - add Fixes tag in commit message
+  - add target tree net
+---
+ net/tipc/udp_media.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/tipc/udp_media.c b/net/tipc/udp_media.c
+index 108a4cc2e001..258d6aa4f21a 100644
+--- a/net/tipc/udp_media.c
++++ b/net/tipc/udp_media.c
+@@ -489,7 +489,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
+ 
+ 		rtnl_lock();
+ 		b = tipc_bearer_find(net, bname);
+-		if (!b) {
++		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
+ 			rtnl_unlock();
+ 			return -EINVAL;
+ 		}
+@@ -500,7 +500,7 @@ int tipc_udp_nl_dump_remoteip(struct sk_buff *skb, struct netlink_callback *cb)
+ 
+ 		rtnl_lock();
+ 		b = rtnl_dereference(tn->bearer_list[bid]);
+-		if (!b) {
++		if (!b || b->bcast_addr.media_id != TIPC_MEDIA_TYPE_UDP) {
+ 			rtnl_unlock();
+ 			return -EINVAL;
+ 		}
+-- 
+2.43.0
+
