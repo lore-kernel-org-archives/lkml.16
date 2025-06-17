@@ -1,191 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DF0143C61;
-	Tue, 17 Jun 2025 07:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBF7143C61;
+	Tue, 17 Jun 2025 07:38:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750145887; cv=none; b=o0e30TXdoZOyxsn8jN8ooQfscGJkpGZi60+FkEI+f4w1oK7N6c/HTxknnoQYA/v/8ybpMIrSRvNFULpKgjAJ0yTexe0elHNj/BYOm29ehkWD1GJRMv2YcSUpFrWHR6KN6ekc0wUm4d8B0S9Td4PqlUjlu2h1t+iESGa/hrHtLTs=
+	t=1750145891; cv=none; b=HP4UTad1DFh8I4VJt4OdTKWmfM6E+eUEKMpeGpTVIABzKcU3aP2AsONYr6F23llMq7reZqM1Ue47uaFsgbmZGlxIDH9bLuDqJpkSdAdd9RK6Q6lFls7Uz2CNJFoP/uzSvU1n8/p5SgwSyTJ9gHsb6PZlvgPyikI6MZE/+JZBtLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750145887; c=relaxed/simple;
-	bh=Myb/a2mx0UY1Y9+zH78gK82S4/j/1Vy28cbhy55CR/4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Wo5OdCaSJqdZ02RIrJ27r3p5n9hMEW9JD2wA3JC+kt5/79NSnE2hIzXI0IQ6YjgZi+W1iM/DXviD4JFpvp5UWTj2+YeK5PYwznZTAuytIiE7TICvhITk+20N0k82bv/BxrIQPQU3V/UhjSK7R4j0Lwq+38+v5mBMui8ATg3AYz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTzhnvp3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750145891; c=relaxed/simple;
+	bh=tyaDThqvTan4SFqZmuFuvgF7eC24WC/L2WkQ2brenYA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwU8Jsv47QMV10lbskmTCktKkJM+7yT0XvRTkI3gD5sKfQq4/IPBDOS0SfqEDx0xol2pRs6U2v51XQGvTOUllZHAAURLDWfh4A12+5tezigPIButORDk3Fwiy3kYaY/Ruy6Uo1axaqJhRejNk8QW6CcWbfgV72Fq0x6ZkA10rRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZiHCHOx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTzhnvp3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D037C4CEE3;
-	Tue, 17 Jun 2025 07:38:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZiHCHOx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFFCC4CEE3;
+	Tue, 17 Jun 2025 07:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750145886;
-	bh=Myb/a2mx0UY1Y9+zH78gK82S4/j/1Vy28cbhy55CR/4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=lTzhnvp3f/BVpu8OuHLsP0JHLieV3MSB92WOzbotDM2mIm+hCo+e1YEguVW70Ir6V
-	 n7MaPbWYJ6gt/txGDt/cQ8O9/bpmEI2EJ5WDejXYXSrV4OR+i9TRuMzQQpdV4a6nGs
-	 j4ZT9qE3RXCbigVKLRDGy+XqkFMcXEHEAGBDatJBywhfcRezxSgoAHaMiJoNnRXNl6
-	 L+ahUyh4H+qDj0c/TI0WtKPUvcKtPzErv+DLYh75q+CY9NEBSoaAHU23T8TE2nT2XZ
-	 XO5O+/DzriWBxdshp4Z9KFg8VkO7xHt5t5tFok6/iwi5dzGDOFXR/3ez4QvY1MMdKM
-	 yoY1EZfbwcLUw==
+	s=k20201202; t=1750145890;
+	bh=tyaDThqvTan4SFqZmuFuvgF7eC24WC/L2WkQ2brenYA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MZiHCHOxxfxaNdZR8gjpqWDQUGY2g3pW0iRrFiaNfKnj08kUpu9MS6Eki/fUZL8/B
+	 UcdOHOkT6H2y+VdThwdsiAWBeQtf0BXMBCAgI1KDjxbcqUe4ALwXFv9FfjHq0CLJw3
+	 cFObrxaFgCqXy9of6CxIcmDTFfHw83UuzIfTXt6W4nRL5G5RMyNjl2+L9jTX6hVJFK
+	 lz+vJFnvnYWjCt230vl5NEDXuBsG0txXZYTbcZY7ppejmrLPB2sSnaZnpt2VyvQA9N
+	 +4ycAa/ZCoNNKgt0t7E7nA1lMt+uZZwhEU63h6SWagtIBPdPKMf/gq1J701KiSFcsp
+	 +4Wo1jzrOxVTg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRQtR-000000000ke-0O49;
+	Tue, 17 Jun 2025 09:38:05 +0200
+Date: Tue, 17 Jun 2025 09:38:05 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+	mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+	kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+	kw@linux.com, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+	qiang.yu@oss.qualcomm.com, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v2 1/4] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for sa8775p
+Message-ID: <aFEbXfl2GMGMBk_R@hovoldconsulting.com>
+References: <20250617021617.2793902-1-quic_ziyuzhan@quicinc.com>
+ <20250617021617.2793902-2-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 17 Jun 2025 09:38:02 +0200
-Message-Id: <DAOMXR37F36S.2P4ZRUYF7E140@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/2] uaccess: rust: add
- UserSliceReader::strcpy_into_buf
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Andrew Morton" <akpm@linux-foundation.org>, "Alexander Viro"
- <viro@zeniv.linux.org.uk>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>
-X-Mailer: aerc 0.20.1
-References: <20250616-strncpy-from-user-v5-0-2d3fb0e1f5af@google.com>
- <20250616-strncpy-from-user-v5-2-2d3fb0e1f5af@google.com>
-In-Reply-To: <20250616-strncpy-from-user-v5-2-2d3fb0e1f5af@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617021617.2793902-2-quic_ziyuzhan@quicinc.com>
 
-On Mon Jun 16, 2025 at 2:41 PM CEST, Alice Ryhl wrote:
-> This patch adds a more convenient method for reading C strings from
-> userspace. Logic is added to NUL-terminate the buffer when necessary so
-> that a &CStr can be returned.
->
-> Note that we treat attempts to read past `self.length` as a fault, so
-> this returns EFAULT if that limit is exceeded before `buf.len()` is
-> reached.
->
-> Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On Tue, Jun 17, 2025 at 10:16:14AM +0800, Ziyue Zhang wrote:
+> The gcc_aux_clk is required by the PCIe controller but not by the PCIe
+> PHY. In PCIe PHY, the source of aux_clk used in low-power mode should
+> be gcc_phy_aux_clk. Hence, remove gcc_aux_clk and replace it with
+> gcc_phy_aux_clk.
 
-I have one concern left below, when we fix or resolve that:
+> +++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+> @@ -176,6 +176,8 @@ allOf:
+>            contains:
+>              enum:
+>                - qcom,qcs615-qmp-gen3x1-pcie-phy
+> +              - qcom,sa8775p-qmp-gen4x2-pcie-phy
+> +              - qcom,sa8775p-qmp-gen4x4-pcie-phy
+>                - qcom,sc8280xp-qmp-gen3x1-pcie-phy
+>                - qcom,sc8280xp-qmp-gen3x2-pcie-phy
+>                - qcom,sc8280xp-qmp-gen3x4-pcie-phy
+> @@ -197,8 +199,6 @@ allOf:
+>            contains:
+>              enum:
+>                - qcom,qcs8300-qmp-gen4x2-pcie-phy
 
-Reviewed-by: Benno Lossin <lossin@kernel.org>
+What about qcs8300, isn't this equally wrong for that platform?
 
-> ---
->  rust/kernel/uaccess.rs | 60 ++++++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 59 insertions(+), 1 deletion(-)
->
-> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> index 635a03e0989f3fe99be80987aa47763782de1d3f..106aa05ea1b88868fe48f64ca=
-9c86b20ad7db68e 100644
-> --- a/rust/kernel/uaccess.rs
-> +++ b/rust/kernel/uaccess.rs
-> @@ -291,6 +291,65 @@ pub fn read_all<A: Allocator>(mut self, buf: &mut Ve=
-c<u8, A>, flags: Flags) -> R
->          unsafe { buf.inc_len(len) };
->          Ok(())
->      }
-> +
-> +    /// Read a NUL-terminated string from userspace and return it.
-> +    ///
-> +    /// The string is read into `buf` and a NUL-terminator is added if t=
-he end of `buf` is reached.
-> +    /// Since there must be space to add a NUL-terminator, the buffer mu=
-st not be empty. The
-> +    /// returned `&CStr` points into `buf`.
-> +    ///
-> +    /// Fails with [`EFAULT`] if the read happens on a bad address (some=
- data may have been
-> +    /// copied).
-> +    #[doc(alias =3D "strncpy_from_user")]
-> +    pub fn strcpy_into_buf<'buf>(self, buf: &'buf mut [u8]) -> Result<&'=
-buf CStr> {
-> +        if buf.is_empty() {
-> +            return Err(EINVAL);
-> +        }
-> +
-> +        // SAFETY: The types are compatible and `strncpy_from_user` does=
-n't write uninitialized
-> +        // bytes to `buf`.
-> +        let mut dst =3D unsafe { &mut *(buf as *mut [u8] as *mut [MaybeU=
-ninit<u8>]) };
-> +
-> +        // We never read more than `self.length` bytes.
-> +        if dst.len() > self.length {
-> +            dst =3D &mut dst[..self.length];
-> +        }
-> +
-> +        let mut len =3D raw_strncpy_from_user(dst, self.ptr)?;
-> +        if len < dst.len() {
-> +            // Add one to include the NUL-terminator.
-> +            len +=3D 1;
-> +        } else if len < buf.len() {
-> +            // This implies that `len =3D=3D dst.len() < buf.len()`.
-> +            //
-> +            // This means that we could not fill the entire buffer, but =
-we had to stop reading
-> +            // because we hit the `self.length` limit of this `UserSlice=
-Reader`. Since we did not
-> +            // fill the buffer, we treat this case as if we tried to rea=
-d past the `self.length`
-> +            // limit and received a page fault, which is consistent with=
- other `UserSliceReader`
-> +            // methods that also return page faults when you exceed `sel=
-f.length`.
-> +            return Err(EFAULT);
-> +        } else {
-> +            // This implies that `len =3D=3D buf.len()`.
-> +            //
-> +            // This means that we filled the buffer exactly. In this cas=
-e, we add a NUL-terminator
-> +            // and return it. Unlike the `len < dst.len()` branch, don't=
- modify `len` because it
-> +            // already represents the length including the NUL-terminato=
-r.
-> +            //
-> +            // SAFETY: Due to the check at the beginning, the buffer is =
-not empty.
-> +            unsafe { *buf.last_mut().unwrap_unchecked() =3D 0 };
+> -              - qcom,sa8775p-qmp-gen4x2-pcie-phy
+> -              - qcom,sa8775p-qmp-gen4x4-pcie-phy
+>      then:
+>        properties:
+>          clocks:
 
-What about the case `self.length =3D=3D 0`? Will `raw_strncpy_from_user`
-return early with a page fault, or will it return with `len =3D=3D 0`?
-Because if it is the latter, then this will result in UB.
-
----
-Cheers,
-Benno
-
-> +        }
-> +
-> +        // This method consumes `self`, so it can only be called once, t=
-hus we do not need to
-> +        // update `self.length`. This sidesteps concerns such as whether=
- `self.length` should be
-> +        // incremented by `len` or `len-1` in the `len =3D=3D buf.len()`=
- case.
-> +
-> +        // SAFETY: There are two cases:
-> +        // * If we hit the `len < dst.len()` case, then `raw_strncpy_fro=
-m_user` guarantees that
-> +        //   this slice contains exactly one NUL byte at the end of the =
-string.
-> +        // * Otherwise, `raw_strncpy_from_user` guarantees that the stri=
-ng contained no NUL bytes,
-> +        //   and we have since added a NUL byte at the end.
-> +        Ok(unsafe { CStr::from_bytes_with_nul_unchecked(&buf[..len]) })
-> +    }
->  }
-> =20
->  /// A writer for [`UserSlice`].
-> @@ -380,7 +439,6 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Res=
-ult {
->  /// When this function returns `Ok(len)`, it is guaranteed that the firs=
-t `len` bytes of `dst` are
->  /// initialized and non-zero. Furthermore, if `len < dst.len()`, then `d=
-st[len]` is a NUL byte.
->  #[inline]
-> -#[expect(dead_code)]
->  fn raw_strncpy_from_user(dst: &mut [MaybeUninit<u8>], src: UserPtr) -> R=
-esult<usize> {
->      // CAST: Slice lengths are guaranteed to be `<=3D isize::MAX`.
->      let len =3D dst.len() as isize;
-
+Johan
