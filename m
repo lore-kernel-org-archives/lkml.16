@@ -1,133 +1,252 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47FA22A819;
-	Tue, 17 Jun 2025 11:34:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DEC31FAC50;
+	Tue, 17 Jun 2025 11:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750160076; cv=none; b=ULPBJDSVQrcapqrup2BwakQwOjhRmH4I/eaISl8hrN+8fC0RYIy1dFYqfZcLUNaA0pKtm7khcTW2aZfqoOp2Fl+0lHPavN1teZAwPZ5sadTv1f2cQa7k7YsJCsOtxH7jprsAP8sPge1x4ICI/RvaU3Sd6VlOkkIrHKv91q/f8eI=
+	t=1750160109; cv=none; b=qm9gGm8BT4rAQDEfCP95xf6J453JN1xFJkj2yGdCXUAUM3S/YfTCRVV0RZ3cZSWDYYpFjkoi01/ykFwCFd69XlQcN5cBLIYHArogQOv8Pe2WL8z0Y90dS6chVuQqapsQ9aM5tkVHEhwq7Oxws7GKX0Egepj8VATdRhfr8xvfB5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750160076; c=relaxed/simple;
-	bh=DRJcE8diTniQcTLE6xqu8Zzg2MNnUbfcHwoL3VgRNTc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rSsSrFJvnAt42AsAC5clsQjDxHii0umbL7yJUCN4K7TXR4v+ciaS1TwxBBzIl0b6nxJhUrXVlHLtZ+i4EkyiUQjJpLYl6jrwCmf1FSd0GB510/OW8zJlrhblvEyIzyxN6r1/PAlJUbnVk8Zh9SSrDKENwbC7aGbJP7BAZ0yrUFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmnHSsxj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750160109; c=relaxed/simple;
+	bh=VBD9zifaN/iud4mKyV1zNbV/YCSuiu+Ra58MtmkrC5s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nOFdxN3vKekU8DR85qscFi72UugFxh1Gl++I7roUNfWDiohCWEpTzcfvcJlkDnAGqMjFSlksQSoPQ5LYN1kkDn9dieU+8C7fvrqbfiMPlftvxXbUM3htTEkr18Og/hOgDf8qlJ0QKGmAIAxXZ9Sn2D6tVt0Xe97Ay6590vHmCFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q05OpGtQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmnHSsxj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BB8DC4CEE3;
-	Tue, 17 Jun 2025 11:34:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q05OpGtQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA96C4CEE3;
+	Tue, 17 Jun 2025 11:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750160075;
-	bh=DRJcE8diTniQcTLE6xqu8Zzg2MNnUbfcHwoL3VgRNTc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=FmnHSsxj+sDM8fByicA7sTRUUIfHFIo3rk9UyEVTcmAPSeKg61Nxx8cA1cC6p+VYD
-	 0u3ZTQumKrGkne5eLRC9dTlecL+Bc4yFxkou1MuUigt/Lm9lZYevDOy1NF0q07704Y
-	 LXxIx3cNCcr5HS89IlbyWUL+GTCWgyDd6OjtNqxpZYo3zHygNOmZts5iZxtzOEWSaT
-	 kjNzcaDRiW5FCRVl+3BGtBOY3w6fxcneojook3ffwDtr7IVuiVVGMqQWL8uMQO2aR5
-	 TfUbWIjBnc7dWBck29nE4AN/DVNC2YNx1bvo/Ludb/o6ye9j4HMNg5fZzb0DED7psP
-	 SfOHN0wbcpb/g==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Lyude Paul" <lyude@redhat.com>
-Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
-  "Boqun Feng" <boqun.feng@gmail.com>,  "FUJITA Tomonori"
- <fujita.tomonori@gmail.com>,  "Frederic Weisbecker" <frederic@kernel.org>,
-  "Thomas Gleixner" <tglx@linutronix.de>,  "Anna-Maria Behnsen"
- <anna-maria@linutronix.de>,  "John Stultz" <jstultz@google.com>,  "Stephen
- Boyd" <sboyd@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex
- Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin" <lossin@kernel.org>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v5 7/7] rust: hrtimer: Add forward_now() to HrTimer and
- HrTimerCallbackContext
-In-Reply-To: <20250613232754.451450-8-lyude@redhat.com> (Lyude Paul's message
-	of "Fri, 13 Jun 2025 19:22:28 -0400")
-References: <20250613232754.451450-1-lyude@redhat.com>
-	<tukN4NRM_8_XSWRUL0WKgutHrMffeR3pGmMvHvbv4ZHQV9e_RWpvsThzkuMPpEilIyLqwliZydhO1FaQtwfNQA==@protonmail.internalid>
-	<20250613232754.451450-8-lyude@redhat.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 17 Jun 2025 13:34:21 +0200
-Message-ID: <87jz5aa9fm.fsf@kernel.org>
+	s=k20201202; t=1750160108;
+	bh=VBD9zifaN/iud4mKyV1zNbV/YCSuiu+Ra58MtmkrC5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q05OpGtQszQfBCKRbIqRMGwNjPJ/a1U7OLbOqW8ypHEI0TmryIF7pTTbS8WubTciY
+	 oZ5L7bFkyYuuJ5f5YsIf8eCk5E8jlUnPtCo8iVyHlNU+uurRDrgbVtGQ7wfRp62Do+
+	 NAZOf+e4rlvWZJSSbbGSaMu9qi9vSYORNndV3eIVEmbh4XFuERYqJAjFY98K2eTHEr
+	 89WomPFZlPz46K9hxoQkreiF34470U4koUTNvnmHsqdu6oVWRHa5I0eTCuBe4ruBD3
+	 rgsjLIEup7MEaj5wangbYKfXxCndqGcjthvDFtem+DNq79uULf5LnGn6D4sqa2ZOsZ
+	 Jy1IgpXUPOe3A==
+Date: Tue, 17 Jun 2025 17:04:59 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
+	robin.murphy@arm.com
+Subject: Re: [PATCH v10 7/9] optee: support protected memory allocation
+Message-ID: <aFFS43j3o4YdWPe3@sumit-X1>
+References: <20250610131600.2972232-1-jens.wiklander@linaro.org>
+ <20250610131600.2972232-8-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610131600.2972232-8-jens.wiklander@linaro.org>
 
-"Lyude Paul" <lyude@redhat.com> writes:
-
-> Using the HrTimer::raw_time_cb() function, we can now add an equivalent to
-
-You called it `raw_cb_time`.
-
-> hrtimer_forward_now() to both HrTimer and HrTimerCallbackContext.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
->
+On Tue, Jun 10, 2025 at 03:13:51PM +0200, Jens Wiklander wrote:
+> Add support in the OP-TEE backend driver for protected memory
+> allocation. The support is limited to only the SMC ABI and for secure
+> video buffers.
+> 
+> OP-TEE is probed for the range of protected physical memory and a
+> memory pool allocator is initialized if OP-TEE have support for such
+> memory.
+> 
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 > ---
-> V2:
-> * Change from Ktime to Delta
-> * Make sure that forward_now() takes a mutable reference to the timer
->   struct
-> * Reword this to point out that we're adding forward_now() to both callback
->   context and mutable timer reference
-> * Rename interval to duration
->
-> V4:
-> * Fix rust documentation for HrTimerCallbackContext (forgot to update both
->   forward_now() declarations)
-> * Use Pin<&mut Self> for context-less forward.
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/kernel/time/hrtimer.rs | 58 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 57 insertions(+), 1 deletion(-)
->
-> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index 79d86e1099a1e..0908359b0550a 100644
-> --- a/rust/kernel/time/hrtimer.rs
-> +++ b/rust/kernel/time/hrtimer.rs
-> @@ -201,7 +201,6 @@ unsafe fn raw_forward(self_ptr: *mut Self, now: HrTimerInstant<T>, interval: Del
->      /// - The caller must ensure that the `hrtimer_clock_base` cannot possibly change in the context
->      ///   this function is being called in. This means either exclusive access to `self_ptr` is
->      ///   required, or we must be from within the timer callback context of `self_ptr`.
-> -    #[expect(unused)]
->      unsafe fn raw_cb_time(self_ptr: *const Self) -> HrTimerInstant<T>
->      where
->          T: HasHrTimer<T>,
-> @@ -243,6 +242,44 @@ pub fn forward(self: Pin<&mut Self>, now: HrTimerInstant<T>, interval: Delta) ->
->          //   exclusive access to it - fulfilling the requirements of the C API.
->          unsafe { Self::raw_forward(self.get_unchecked_mut(), now, interval) }
->      }
+>  drivers/tee/optee/Kconfig         |  5 +++
+>  drivers/tee/optee/core.c          | 10 +++++
+>  drivers/tee/optee/optee_private.h |  2 +
+>  drivers/tee/optee/smc_abi.c       | 70 ++++++++++++++++++++++++++++++-
+>  4 files changed, 85 insertions(+), 2 deletions(-)
+
+Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+
+-Sumit
+
+> 
+> diff --git a/drivers/tee/optee/Kconfig b/drivers/tee/optee/Kconfig
+> index 7bb7990d0b07..50d2051f7f20 100644
+> --- a/drivers/tee/optee/Kconfig
+> +++ b/drivers/tee/optee/Kconfig
+> @@ -25,3 +25,8 @@ config OPTEE_INSECURE_LOAD_IMAGE
+>  
+>  	  Additional documentation on kernel security risks are at
+>  	  Documentation/tee/op-tee.rst.
 > +
-> +    /// Conditionally forward the timer.
-> +    ///
-> +    /// This is a variant of [`forward()`](Self::forward) that uses an interval after the current
-> +    /// time of the base clock for the [`HrTimer`].
-> +    pub fn forward_now(self: Pin<&mut Self>, interval: Delta) -> u64
-> +    where
-> +        T: HasHrTimer<T>,
-> +    {
-> +        // SAFETY: `self` is a mutable reference, guaranteeing it is both a valid pointer to Self
-> +        // and that we also have exclusive access to `self`.
-> +        let now = unsafe { Self::raw_cb_time(&*self.as_ref()) };
+> +config OPTEE_STATIC_PROTMEM_POOL
+> +	bool
+> +	depends on HAS_IOMEM && TEE_DMABUF_HEAPS
+> +	default y
+> diff --git a/drivers/tee/optee/core.c b/drivers/tee/optee/core.c
+> index c75fddc83576..4b14a7ac56f9 100644
+> --- a/drivers/tee/optee/core.c
+> +++ b/drivers/tee/optee/core.c
+> @@ -56,6 +56,15 @@ int optee_rpmb_intf_rdev(struct notifier_block *intf, unsigned long action,
+>  	return 0;
+>  }
+>  
+> +int optee_set_dma_mask(struct optee *optee, u_int pa_width)
+> +{
+> +	u64 mask = DMA_BIT_MASK(min(64, pa_width));
 > +
-> +        self.forward(now, interval)
-> +    }
+> +	optee->teedev->dev.dma_mask = &optee->teedev->dev.coherent_dma_mask;
 > +
-> +    /// Return the time expiry for this [`HrTimer`].
-> +    ///
-> +    /// This value should only be used as a snapshot, as the actual expiry time could change after
-> +    /// this function is called.
-> +    pub fn expires(&self) -> HrTimerInstant<T>
-
-Commit message does not mention this method.
-
-
-Best regards,
-Andreas Hindborg
-
-
+> +	return dma_set_mask_and_coherent(&optee->teedev->dev, mask);
+> +}
+> +
+>  static void optee_bus_scan(struct work_struct *work)
+>  {
+>  	WARN_ON(optee_enumerate_devices(PTA_CMD_GET_DEVICES_SUPP));
+> @@ -181,6 +190,7 @@ void optee_remove_common(struct optee *optee)
+>  	tee_device_unregister(optee->supp_teedev);
+>  	tee_device_unregister(optee->teedev);
+>  
+> +	tee_device_unregister_all_dma_heaps(optee->teedev);
+>  	tee_shm_pool_free(optee->pool);
+>  	optee_supp_uninit(&optee->supp);
+>  	mutex_destroy(&optee->call_queue.mutex);
+> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
+> index dc0f355ef72a..5e3c34802121 100644
+> --- a/drivers/tee/optee/optee_private.h
+> +++ b/drivers/tee/optee/optee_private.h
+> @@ -272,6 +272,8 @@ struct optee_call_ctx {
+>  
+>  extern struct blocking_notifier_head optee_rpmb_intf_added;
+>  
+> +int optee_set_dma_mask(struct optee *optee, u_int pa_width);
+> +
+>  int optee_notif_init(struct optee *optee, u_int max_key);
+>  void optee_notif_uninit(struct optee *optee);
+>  int optee_notif_wait(struct optee *optee, u_int key, u32 timeout);
+> diff --git a/drivers/tee/optee/smc_abi.c b/drivers/tee/optee/smc_abi.c
+> index f0c3ac1103bb..cf106d15e64e 100644
+> --- a/drivers/tee/optee/smc_abi.c
+> +++ b/drivers/tee/optee/smc_abi.c
+> @@ -1584,6 +1584,68 @@ static inline int optee_load_fw(struct platform_device *pdev,
+>  }
+>  #endif
+>  
+> +static struct tee_protmem_pool *static_protmem_pool_init(struct optee *optee)
+> +{
+> +#if IS_ENABLED(CONFIG_OPTEE_STATIC_PROTMEM_POOL)
+> +	union {
+> +		struct arm_smccc_res smccc;
+> +		struct optee_smc_get_protmem_config_result result;
+> +	} res;
+> +	struct tee_protmem_pool *pool;
+> +	void *p;
+> +	int rc;
+> +
+> +	optee->smc.invoke_fn(OPTEE_SMC_GET_PROTMEM_CONFIG, 0, 0, 0, 0,
+> +			     0, 0, 0, &res.smccc);
+> +	if (res.result.status != OPTEE_SMC_RETURN_OK)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	rc = optee_set_dma_mask(optee, res.result.pa_width);
+> +	if (rc)
+> +		return ERR_PTR(rc);
+> +
+> +	/*
+> +	 * Map the memory as uncached to make sure the kernel can work with
+> +	 * __pfn_to_page() and friends since that's needed when passing the
+> +	 * protected DMA-buf to a device. The memory should otherwise not
+> +	 * be touched by the kernel since it's likely to cause an external
+> +	 * abort due to the protection status.
+> +	 */
+> +	p = devm_memremap(&optee->teedev->dev, res.result.start,
+> +			  res.result.size, MEMREMAP_WC);
+> +	if (IS_ERR(p))
+> +		return p;
+> +
+> +	pool = tee_protmem_static_pool_alloc(res.result.start, res.result.size);
+> +	if (IS_ERR(pool))
+> +		devm_memunmap(&optee->teedev->dev, p);
+> +
+> +	return pool;
+> +#else
+> +	return ERR_PTR(-EINVAL);
+> +#endif
+> +}
+> +
+> +static int optee_protmem_pool_init(struct optee *optee)
+> +{
+> +	enum tee_dma_heap_id heap_id = TEE_DMA_HEAP_SECURE_VIDEO_PLAY;
+> +	struct tee_protmem_pool *pool = ERR_PTR(-EINVAL);
+> +	int rc;
+> +
+> +	if (!(optee->smc.sec_caps & OPTEE_SMC_SEC_CAP_PROTMEM))
+> +		return 0;
+> +
+> +	pool = static_protmem_pool_init(optee);
+> +	if (IS_ERR(pool))
+> +		return PTR_ERR(pool);
+> +
+> +	rc = tee_device_register_dma_heap(optee->teedev, heap_id, pool);
+> +	if (rc)
+> +		pool->ops->destroy_pool(pool);
+> +
+> +	return rc;
+> +}
+> +
+>  static int optee_probe(struct platform_device *pdev)
+>  {
+>  	optee_invoke_fn *invoke_fn;
+> @@ -1679,7 +1741,7 @@ static int optee_probe(struct platform_device *pdev)
+>  	optee = kzalloc(sizeof(*optee), GFP_KERNEL);
+>  	if (!optee) {
+>  		rc = -ENOMEM;
+> -		goto err_free_pool;
+> +		goto err_free_shm_pool;
+>  	}
+>  
+>  	optee->ops = &optee_ops;
+> @@ -1752,6 +1814,9 @@ static int optee_probe(struct platform_device *pdev)
+>  		pr_info("Asynchronous notifications enabled\n");
+>  	}
+>  
+> +	if (optee_protmem_pool_init(optee))
+> +		pr_info("Protected memory service not available\n");
+> +
+>  	/*
+>  	 * Ensure that there are no pre-existing shm objects before enabling
+>  	 * the shm cache so that there's no chance of receiving an invalid
+> @@ -1787,6 +1852,7 @@ static int optee_probe(struct platform_device *pdev)
+>  		optee_disable_shm_cache(optee);
+>  	optee_smc_notif_uninit_irq(optee);
+>  	optee_unregister_devices();
+> +	tee_device_unregister_all_dma_heaps(optee->teedev);
+>  err_notif_uninit:
+>  	optee_notif_uninit(optee);
+>  err_close_ctx:
+> @@ -1803,7 +1869,7 @@ static int optee_probe(struct platform_device *pdev)
+>  	tee_device_unregister(optee->teedev);
+>  err_free_optee:
+>  	kfree(optee);
+> -err_free_pool:
+> +err_free_shm_pool:
+>  	tee_shm_pool_free(pool);
+>  	if (memremaped_shm)
+>  		memunmap(memremaped_shm);
+> -- 
+> 2.43.0
+> 
