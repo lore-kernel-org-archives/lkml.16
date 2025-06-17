@@ -1,116 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07352E7654;
-	Tue, 17 Jun 2025 18:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7DA2EF9A7
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:59:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750186720; cv=none; b=KXx0mEMz6YdMWOM26KN9cZCbBRzdKa0FcFgrNYrPThoxXH5xJinCOeWv2wJz24/h2PSVlvTJf1fbSkYQoAoFm9xMKGyllTt81+wEDJVHWRIsW+0r63pTvp1jaDS6pEQLGDCkxMdIOrZ3RzAImHZjbi8jew+XJXiNq/8eNweDLhk=
+	t=1750186751; cv=none; b=jZCH3VrvuFj6GQ66CFltmIQQhWFgSLnZDGl2qcXMW4c5KVtdrGSzKLwO3guiou0wPlcaI18e6G8X5p3NrVZBu3XJpUMXnhQRvUqTqbYxTKSesn01EJeAgVgEazidP8yJL0inI6G14614eLLlrbTtvp3z9QxJTZAYpfQ8y8CzEfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750186720; c=relaxed/simple;
-	bh=fathgjpu4TtjgIw+H0jxaE0vGoL3UlXM8PjYa6z7KOU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QfKzcQzbOHO0xs4fXE1Sm18wF3uw+2H81p1m4cCMDEQuIJ14hwIvtnsOI+W8dk5opXUSUfxjKM6crmJL77+qMbitUiUovrflSYIjT9egCa8iORsaeSAE8AN47bysb6xZK/Mlztq6Sy/TpBXBG3DWJoy0SSFCvNgsTCrMolfqJaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccD4QCoD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750186751; c=relaxed/simple;
+	bh=5F3LpL6vunuAVxOK1mb3LnEq8KY8+KGsx4Ei/gymlXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ftFMUAdirDzLOXqUROlzvNVBi/FWPHeNFqdP2qUtIpM9/rvL/Oh2iDDR/Vz08ourUcrD00hPfQEd15Pw9PVL7odWEeakoSUgYqaOhWm+gAoQq+LCehOua9+u6/kvn/dsjBgTj6T3D4k28GgbsdCodrdxYuJW3KMsF2FBwZb5IFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnihIsaS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccD4QCoD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44886C4CEE3;
-	Tue, 17 Jun 2025 18:58:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnihIsaS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3FE6C4CEE3;
+	Tue, 17 Jun 2025 18:59:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750186716;
-	bh=fathgjpu4TtjgIw+H0jxaE0vGoL3UlXM8PjYa6z7KOU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ccD4QCoD+ZGvTQkOsHpnF3wFYsaS+2mPtPs61OKV8jkigWs0rUM4C09vZEaKfUzpy
-	 QKF6B5RPPHz2PMzRcUkjrEZdEpJiTOGc3m78Bgfi2C1RE1RwUpcEjaqQyZa322wWTC
-	 FvFNcQmk9ngwL3B5TTZXRe6LIC25FDLQjkEatEUIgRbWnorOmWnjnLDgyGdBn65ceK
-	 b97LXzRiSQsBLGgEc6AfYS3go0wBaGsd79ZDLokUv17Gs3hjxmlo8w5mZxYWnFQeso
-	 /OpZrKXVHAXaBYwm403fhWC2zziEprKcGuYgtGEy2lB9TspjDC3oLdU//v/pBTwBL9
-	 8RGm8dk/yAmjg==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Gregory Price <gourry@gourry.net>,
-	David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com,
-	damon@lists.linux.dev
-Subject: Re: [RFC PATCH 1/4] mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
-Date: Tue, 17 Jun 2025 11:58:34 -0700
-Message-Id: <20250617185834.58000-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <CAMvvPS4aiyA7nXTN=QkMz4ikvf77ZaZ05ys-4N09AFLrgeS_Pw@mail.gmail.com>
-References: 
+	s=k20201202; t=1750186750;
+	bh=5F3LpL6vunuAVxOK1mb3LnEq8KY8+KGsx4Ei/gymlXc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pnihIsaSlo0Bz5E4fKbs65+AnKyfOtvvV4LzpyeDHfAJvmzf5/7PJJ8dro8yGWT7s
+	 axIJwdmkqFwnZmtV8QXdiNlgVqEu8QNbsCRVl36+bHgJHJuTdMs+UOnmmuVki9hTgk
+	 CWjSY/kJEyu5iJ6BJz61UAZjAzIBbs3Xd9+y5xt17QzbDHSuSHfWbg0STIJyIw3x3x
+	 TDIRtA6L08T/NwawvHInagT1jFXld4KSuUSOYuvSg+dvcY3yyVzLun2osvwjtAKlpB
+	 vNafLqcjzKxg1gYIt24DOImS8oC+pFSgj12sklCWKVB7HZ8YHxmYpUxBU3RAKxCe6/
+	 irUeRFbRqq5WA==
+Date: Tue, 17 Jun 2025 08:59:04 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Chuyi Zhou <zhouchuyi@bytedance.com>
+Cc: longman@redhat.com, jiangshanlai@gmail.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] workqueue: Initialize wq_isolated_cpumask in
+ workqueue_init_early()
+Message-ID: <aFG6-Jk4A7BwGmSU@slm.duckdns.org>
+References: <20250617044216.1401878-1-zhouchuyi@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617044216.1401878-1-zhouchuyi@bytedance.com>
 
-On Mon, 16 Jun 2025 17:16:16 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-
-> Hi Gregory,
+On Tue, Jun 17, 2025 at 12:42:16PM +0800, Chuyi Zhou wrote:
+> Now when isolcpus is enabled via the cmdline, wq_isolated_cpumask does
+> not include these isolated CPUs, even wq_unbound_cpumask has already
+> excluded them. It is only when we successfully configure an isolate cpuset
+> partition that wq_isolated_cpumask gets overwritten by
+> workqueue_unbound_exclude_cpumask(), including both the cmdline-specified
+> isolated CPUs and the isolated CPUs within the cpuset partitions.
 > 
-> On Mon, Jun 16, 2025 at 12:43 PM Gregory Price <gourry@gourry.net> wrote:
-> >
-> > On Mon, Jun 16, 2025 at 09:16:55AM -0500, Bijan Tabatabai wrote:
-[...]
-> > Hate to interject here,
-
-Please don't hesitate :)
-
-[...]
-> > I will just say that mempolicy is *extremely* current-task centric - and
-> > very much allocation-time centric (i.e. the internal workings don't
-> > really want to consider migration all that much).  You'll probably find
-> > that this project requires rethinking mempolicy's external interfaces in
-> > general (which is sorely needed anyway).
-> >
-> > I think this path to modifying mempolicy to support DAMON is a bit
-> > ambitious for where mempolicy is at the moment. You may be better off
-> > duplicating the interleave-weight logic and making some helper functions
-> > to get the weight data, and then coming back around to generalize it
-> > later.
-
-Thank you for the nice clarification and opinion, Gregory.
-
+> Fix this issue by initializing wq_isolated_cpumask properly in
+> workqueue_init_early().
 > 
-> This may be true, but I think I will be able to avoid a lot of this
-> nastiness with what I need. I am going to try with the mempolicy
-> approach for the next revision, but if I get too much resistance, I
-> will probably switch to this approach.
+> Fixes: fe28f631fa94 ("workqueue: Add workqueue_unbound_exclude_cpumask() to exclude CPUs from wq_unbound_cpumask")
+> Signed-off-by: Chuyi Zhou <zhouchuyi@bytedance.com>
 
-I have no strong opinion about use of mempolicy for now, as long as mempolicy
-folks are fine.
+Applied to wq/for-6.16-fixes.
 
-Nonetheless, I just wanted to mention Gregory's suggestion also sounds fairly
-good to me.  It would avoid unnecessary coupling of the concepts of
-allocation-time interleaving and after-allocation migration.  Also it feels
-even more aligned with a potential future extension of this project that we
-discussed[1]: letting users set multiple target nodes for
-DAMOS_MIGRATE_{HOT,COLD} with arbitrary weights.
+Thanks.
 
-[1] https://lore.kernel.org/20250613171237.44776-1-sj@kernel.org
-
-
-Thanks,
-SJ
-
-[...]
+-- 
+tejun
