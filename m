@@ -1,79 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FF71EF39F;
-	Tue, 17 Jun 2025 17:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE41323815F;
+	Tue, 17 Jun 2025 17:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750180656; cv=none; b=tkLQAtwguapsxf079gDvpLkxN6P3ZNoRYFpv4W6bv5jdJlAqjBPocaGczyWMroZ5soz9Jhcw7tkDeOaec/mFscPkboCmhCQ+a2yECXq84yYjw+HdfQIx78tWa2mcthnilLkIHax418WXtLt/egfCrtWOy5KzQyc/2hLGDdGPHUM=
+	t=1750180802; cv=none; b=G53WRzfIGdxb7shxpmkTuYrNS6qiGIrEt7tulHQ/jfItI9x9DBhseoUAWTG1Jd6bTsRR1swyn+rEbuRtzQMxQBZ25Q958nVMpbaSmO5888oVPCp0EvFHdXd3qysfIdFh27ObFamGvhUSNg3FMFX36cdIwKrmNOUd/+O7qLdofxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750180656; c=relaxed/simple;
-	bh=Ys/A26/nKtP0UfmYYHt4uHbOtrmbM5To6KwBk23zyIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NCLGpACIe5DuQIkqwIHSbaFuFkYYFicMfBAOX1BUpzMA1jWFt8di3CWe9JQ98g31DpSNzsi0APB6N9wjIykltOHYSKs0GXOtMYdwk3MZYvgY0zUKGKIHbWzzF3qMvSne++SD78yNxrzx0jNFz7/Btg2fUNsmxnOjIkync6dHh3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAiptaa1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750180802; c=relaxed/simple;
+	bh=cKyV/mkD8jxvYKoynMzKj1qaBBdMAIab8NheaMVXBeY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NICo5GhTrumBfVuzJfeO6aZ3u5qkC71edNqbWlGOJE/cjrpwXfQ/amm//5/h06Yx+snYykqadqwkV1q0XhZbifiiYV6sk06/7KForh+V0S+8imiSbuBDO8Cat5Cl0LMlpHMF97/ztoDKfsFXgcBGnM23S5Pn3gtY6RbQrvpYeoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jxEJClBz; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAiptaa1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E355C4CEE3;
-	Tue, 17 Jun 2025 17:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750180655;
-	bh=Ys/A26/nKtP0UfmYYHt4uHbOtrmbM5To6KwBk23zyIQ=;
-	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QAiptaa1h4FcJzrEvXJ9tCipwYGtHpBn8qabljNP/gtBgC4AyJhESn6/VluD8MxMj
-	 s00TxfiMotIXZ6MHz0s6upsGPX9mr/0bT882zGDiTwExR13K5y/vOL4jU8S24QLLUR
-	 9SPwfjBcoJmFCjTASR6Bw+hzDN6oQIAoMEsxSyN2dLcJqx+/aMw7BUj4zV5Gw0H92z
-	 T00OxVbBcHAuZzCYtYuyxUOJ7to2b4o9TU1x+9QjRK241qZHWb5Hgq8UzRQwRU3pTa
-	 qmQkFJ95zKb4A8qeSPwFc9+hJXpnMQLrfdvLGUvxq9GtU+3zE4Ku+thrYocwmetWW3
-	 BpWHefNNgwc1A==
-Message-ID: <bae6e1f3-efbc-47d9-8eb4-653f851311d7@kernel.org>
-Date: Tue, 17 Jun 2025 19:17:32 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxEJClBz"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so10939705e9.1;
+        Tue, 17 Jun 2025 10:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750180799; x=1750785599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TDB6xMy7Iuc/iOQ4SrEQAS3H7+wQAGooH9bcJnPnMP0=;
+        b=jxEJClBzIGBlD5Ci6SSsnJ2J0iFVXiCyghtYjvxYcXaAGbwAnVH07qsDBfV9qIhH1c
+         DKJj6SkuI9Hq/eScanvJjADJHo/ME03ttFfpEGWCIzv6fUFp+rSEuoC3pW9RzX1qR0Lo
+         VyjG+b178E5MDGb508Cml7Lv68mfUR4LSmvXzVkS1Ak1WEk3CI5e3LVIGpDxvUcjGr1P
+         96Sd8ldJpEYH64+W8EFviUzmuLdRFYHiik0gYU7k+jUyAcdnDzTOPRgO9OqLr5v+qG36
+         /GJTuxRBg8JcreJHooxRt0vGJMLKla/kdrJiIm/w2Q044uEvt4Ybf3+SJlTKZwvtqQuv
+         RCMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750180799; x=1750785599;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TDB6xMy7Iuc/iOQ4SrEQAS3H7+wQAGooH9bcJnPnMP0=;
+        b=OI7AkCHHGLDK1HjWL1NN6rkcNt6S3u8R01BkMzHk1gFkSA59iudDeAYiSdWToUoKVW
+         MX4oFNOLhSfpT6FP0dRIno7rV3vZkbl4BFDTwigVtu0tjwAniSGdEWNFJx7bdqZANqL6
+         x8B2oGlbX0Zh6Otl0SYWQ1D6+UZlxOIQlH/Dbecrh8QbTouZyiVCodL8wTFC+JmRWKNS
+         mOmCp0aITclMKxk/YgOwK2Uc7SaqlJrX8Ba37oSnUUszrrkSONYbOevVlGKJB7WgTieO
+         +VjaZXpIuwfWi7eJFAG9PgCmZt9w2KMnoyv/An83ASZ3JYdIvIhUlHnSmeGTuEHnoue3
+         CRgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWgoIbA5OfKGLJrpmSHN8Y2K6mN0Sik+jZr0fsb/KqCuf2xBlK67a/CrX2Dl5j1eylobG45vbbaxfHK@vger.kernel.org, AJvYcCWmooFolgMCOCwvwc+iP3pa0IfDdu/W+V+2AxaO04thSqLjXA069XpMF9cuuBAXxddcFBgSLullv6Oss/wN@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywx/eeNDqtI4Vgtspo/HeAhdwtfkWTzmYjpb/gM1ZlNSmZKovpZ
+	VmFeWPT2sfotz3rDvmPaXA+a48DGTKt9LRrdAT1a1jisKpjGpFqRp+ng
+X-Gm-Gg: ASbGncuVfWgit9jlFF9wleW73i4zbAS3ORJNDsrzEnCztiyvLl2CgbuY9XJjYPzg64o
+	i+BT7IpCmP+cY7EmPKLENpA9aHFazrD7MEJW/1NBTocB1VGKP4i2KPqn1GNmR1iNdnGqTyDY4I6
+	NZRkMuKpKFQOzZWtmo0ORp7gyiGgKnyxSQCndpAoPE77itloMAlxYaV7oL8UvLYulhURVoQJ1aY
+	ZxKOUhF66szvS2WEmnhTbBBm1qbYxA2wqRD01yt7j2z6bdi/S5JD8TwY1BuN0sVjlsJMkdmx4iV
+	LJ1e0VAqwrQ/rucJnMlfL9KWq5amigqFtih2v+UZzQBymm4TRONSYXgUbh/TIuGoFqm010u8Y50
+	2GCP6hiCWHMU=
+X-Google-Smtp-Source: AGHT+IFtamchSoe+JsYZSVBoJ45sCIZrvI5qvxWHfGnUbY2XkMJPXkbLJvCegUnbM4ABtdh40jk+UQ==
+X-Received: by 2002:a05:600c:5797:b0:453:9b3:5b58 with SMTP id 5b1f17b1804b1-4533b241110mr102705925e9.4.1750180798604;
+        Tue, 17 Jun 2025 10:19:58 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25f207sm180875415e9.35.2025.06.17.10.19.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 10:19:58 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v2 0/4] Add initial support for RZ/N2H SoC and EVK
+Date: Tue, 17 Jun 2025 18:19:53 +0100
+Message-ID: <20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: Daniel Gomez <da.gomez@kernel.org>
-Subject: Re: [PATCH 1/2] module: Fix memory deallocation on error path in
- move_module()
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>,
- Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
- <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250607161823.409691-1-petr.pavlu@suse.com>
- <20250607161823.409691-2-petr.pavlu@suse.com>
- <ae967353-71fa-4438-a84b-8f7e2815f485@kernel.org>
- <c7dbb33d-98b6-45da-be77-e86b9e6787ee@suse.com>
- <7cf40cd1-fe0d-4493-ac15-e70c418e54a5@kernel.org>
- <97f26140-bf53-4c4d-bf63-2dd353a3ec85@suse.com>
- <732dedee-c7c5-4226-ad87-f4c2311b11b3@kernel.org>
- <2c277bfe-3086-4007-bf04-ef229e6cbfb7@suse.com>
-Content-Language: en-US
-From: Daniel Gomez <da.gomez@kernel.org>
-Organization: kernel.org
-In-Reply-To: <2c277bfe-3086-4007-bf04-ef229e6cbfb7@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+Hi All,
 
->> One thing though, we are "releasing" the memory even if we have skipped the
->> allocation in the first place. So, I think it would make sense to release only
->> for the types we have actually allocated. What do you think?
-> 
-> I noticed this too, specifically because move_module() is inconsistent
-> in this regard with free_mod_mem(). The latter function contains:
-> 
-> if (mod_mem->size)
-> 	module_memory_free(mod, type);
-> 
-> However, my preference is actually to update free_mod_mem() and remove
-> the check. The function module_memory_free() should be a no-op if
-> mod->base is NULL, similarly to how calling free(NULL) is a no-op.
-> 
+This patch series adds initial support for the Renesas RZ/N2H SoC and
+the RZ/N2H Evaluation Board (EVK). The series includes:
+1. An initial SoC DTSI for the RZ/N2H SoC, which includes the basic
+   configuration of the SoC blocks such as EXT CLKs, 4X CA55, SCIF,
+   CPG, GIC, and ARMv8 Timer.
+2. A new DTSI for the R9A09G087M44 variant of the RZ/N2H SoC, which
+   features a 4-core configuration.
+3. Refactoring of the RZ/T2H EVK device tree to extract common entries
+   into a new file, `rzt2h-n2h-evk-common.dtsi`, to reduce
+   duplication between the RZ/T2H and RZ/N2H EVK device trees.
+4. An initial device tree for the RZ/N2H EVK, which includes
+   the common entries from the previous step and sets up the board
+   model and compatible strings.
 
-Sound good to me. Perhaps a different patch type for cleanup/refactor. The fix
-here would be back-ported to stable branches. So these are 2 different things.
+Note,
+- I've split up this patch from original series [1] to make it easier
+  to review and apply.
+- This patch series applied on top of the series [2].
+
+[1] https://lore.kernel.org/all/20250609203656.333138-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+[2] https://lore.kernel.org/all/20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+v1->v2:
+- Reordered the `l3_ca55` node and renamed it to `L3_CA55` for consistency
+- Renamed the file to `rzt2h-n2h-evk-common.dtsi` to better reflect its
+  purpose.
+- Updated model string to "Renesas RZ/N2H EVK Board based on r9a09g087m44"
+- Added reviewed-by tag from Geert
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (1):
+  arm64: dts: renesas: Add initial SoC DTSI for RZ/N2H SoC
+
+Paul Barker (3):
+  arm64: dts: renesas: Refactor RZ/T2H EVK device tree
+  arm64: dts: renesas: Add DTSI for R9A09G087M44 variant of RZ/N2H SoC
+  arm64: dts: renesas: Add initial support for RZ/N2H EVK
+
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    |  17 +--
+ arch/arm64/boot/dts/renesas/r9a09g087.dtsi    | 124 ++++++++++++++++++
+ .../dts/renesas/r9a09g087m44-rzn2h-evk.dts    |  16 +++
+ arch/arm64/boot/dts/renesas/r9a09g087m44.dtsi |  13 ++
+ .../dts/renesas/rzt2h-n2h-evk-common.dtsi     |  24 ++++
+ 6 files changed, 180 insertions(+), 16 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g087.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g087m44-rzn2h-evk.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g087m44.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/rzt2h-n2h-evk-common.dtsi
+
+-- 
+2.49.0
+
