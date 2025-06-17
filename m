@@ -1,179 +1,208 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB472EFD89;
-	Tue, 17 Jun 2025 20:22:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DF12EFDB5;
+	Tue, 17 Jun 2025 20:26:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750191758; cv=none; b=BG8ib6PYHZE0V4B9I8dfLOOLUUWwl9f5Rf3dYGQYbtquVR2NNHi0hhuPdKqaelA7LAPaQrfhvWwCUroo/dCnXVaORg5Xrq86CVrAvzp0wGbVCF2Cqw21drdPvZfC+HOkuv1qW1wpM3Nc5qkEpaLMCyvLmordxcdWAtrpu17PLig=
+	t=1750191990; cv=none; b=TQ8OKf/z/1jtb8auWLwo7fav/hX9fUFSs+e59/5TyCbF87rVLcNpqjbBZ14dvvYm/JApkpZ7xlsQ6M9JPoQnVanHn+PDavZ7MXGdC408tPl8VTH2aZJinOvyDn74zE3ZamgTZAH88fABtyd4VmLXw2kgC7rwl2Radvwj1xu5KkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750191758; c=relaxed/simple;
-	bh=J6g0JMbLqQPGqasC6o9XOXSYlfEwiBhYFRmGDDOKVKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e1cNMfFfTfrHDrAg9WfK2eKJDW002Kh045vjS87m7dK7FvzBJuhnpyJi3FaRlhhdvPuFJGBnNGiIUO+dQkVCB48R9WDry8i6B6WPXOQdbUYQ1HE0yCX1U0qp0FAFYuZoR1naakOqEpVR4L3BZtTz7nSVEL4a22db/R0BM/cb5FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDGsc1mh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDGsc1mh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34571C4CEE3;
-	Tue, 17 Jun 2025 20:22:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750191757;
-	bh=J6g0JMbLqQPGqasC6o9XOXSYlfEwiBhYFRmGDDOKVKk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HDGsc1mhUWSEa8FKP84Yqh4/mc3eosyuoTZNAuaZ99uZ59tERqY8mwEvz697A9CN5
-	 zwTIptPUEfGyGckjrte0eOrnVVQz8D/DNKApTH8LhLCSUN8/pPNWRYqnEM5mPoXj0J
-	 iBV1EOkAm5encrjRlcZqXylH6PFTOr4T21z0EqN+Ly+6YPTuUN3LBYIqJsseDThtbP
-	 easTYu+UXRUBZxf22exZF3zuvZagMPzQMQqL8vYL48flKYuqiZN89cg5MuniBRc2Bz
-	 tj9ULiqqIorn0Znw+DqFFYSZxt5mLf11wgUJILhzv1YFVekciGl98+MftbF1rTyFzw
-	 Up8otWSF17luA==
-Message-ID: <08257531-c8e4-47b1-a5d1-1e67378ff129@kernel.org>
-Date: Tue, 17 Jun 2025 15:22:34 -0500
+	s=arc-20240116; t=1750191990; c=relaxed/simple;
+	bh=cqTl9Etvsf352tMZUXRY8foMIfzXbvY0PzDroxDp5co=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hp9bTY5URufTG0Sa9sbGy6RfLydYxvq5e0MjewNKFrjdcmyIe/+ZjraFeTZsm+CR4fz1ixCk4dyReM92v1c6clTDlE84sXJiN0S1O0qhoDuBbUCP4VwlKREH2nyX6zMfqc0dZ/QOZSXUxinjbZCaqWZN1qba6rG/iJAotyzNzm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf01.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id AA5181D6A5B;
+	Tue, 17 Jun 2025 20:26:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf01.hostedemail.com (Postfix) with ESMTPA id 3319F60010;
+	Tue, 17 Jun 2025 20:26:20 +0000 (UTC)
+Date: Tue, 17 Jun 2025 16:26:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
+ <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Namhyung Kim <namhyung@kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro
+ <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
+ <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
+ Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
+ <irogers@google.com>
+Subject: [RFC][PATCH v2] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250617162625.1d44862b@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] vgaarb: Look at all PCI display devices in VGA
- arbiter
-To: Alex Williamson <alex.williamson@redhat.com>,
- David Airlie <airlied@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
- Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250617175910.1640546-1-superm1@kernel.org>
- <20250617175910.1640546-7-superm1@kernel.org>
- <20250617132228.434adebf.alex.williamson@redhat.com>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250617132228.434adebf.alex.williamson@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 3319F60010
+X-Stat-Signature: b7rn7txh4sm3734rzip95rghbr8gxj3g
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19VqbkcwJiB/aMINIF944FtS/w2WfpSG/8=
+X-HE-Tag: 1750191980-497717
+X-HE-Meta: U2FsdGVkX192M0RQ/UyFwqpdmFwlfSoe3kdAM/l1EYJsXgfMrcRu/YaY7RqGN8+ydHnrzXxfoL46pQg833zXkT8htVH3KMfXmeMYFaGZr2Zrvbk1FN7n09yDpjB+TK5UoRYjCc+B+BsLDA8uiPTe1+rc9iVnS28dqcXVxWwzJpAkyOH47uEieCQgUgs+laz6zG/8I7eLHZpNPFbQNlfCjmJq2DXDE84l9OsnZ6+Qv9EFBPE1y/mmlxFP2B1fnlSwepCmJVtetULl59sT3WPebrRwPqRbr8AteVWYrqdeQhisZ0ftQWgXYGlaFP6U978rxKC7eg1yhPl3RK1RvFUE25jUNWIW1wXXqxoP9hhDDM+Wl2P2KIio66m1j0mORIjfyzRBF1rkiXFmy35+AU7JNA==
 
 
+In January 2015, tracefs was created to allow access to the tracing
+infrastructure without needing to compile in debugfs. When tracefs is
+configured, the directory /sys/kernel/tracing will exist and tooling is
+expected to use that path to access the tracing infrastructure.
 
-On 6/17/25 2:22 PM, Alex Williamson wrote:
-> On Tue, 17 Jun 2025 12:59:10 -0500
-> Mario Limonciello <superm1@kernel.org> wrote:
-> 
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> On a mobile system with an AMD integrated GPU + NVIDIA discrete GPU the
->> AMD GPU is not being selected by some desktop environments for any
->> rendering tasks. This is because neither GPU is being treated as
->> "boot_vga" but that is what some environments use to select a GPU [1].
->>
->> The VGA arbiter driver only looks at devices that report as PCI display
->> VGA class devices. Neither GPU on the system is a PCI display VGA class
->> device:
->>
->> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
->> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
->>
->> If the GPUs were looked at the vga_is_firmware_default() function actually
->> does do a good job at recognizing the case from the device used for the
->> firmware framebuffer.
->>
->> Modify the VGA arbiter code and matching sysfs file entries to examine all
->> PCI display class devices. The existing logic stays the same.
->>
->> This will cause all GPUs to gain a `boot_vga` file, but the correct device
->> (AMD GPU in this case) will now show `1` and the incorrect device shows `0`.
->> Userspace then picks the right device as well.
->>
->> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
->> Suggested-by: Daniel Dadap <ddadap@nvidia.com>
->> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
->> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->> ---
->>   drivers/pci/pci-sysfs.c | 2 +-
->>   drivers/pci/vgaarb.c    | 8 ++++----
->>   2 files changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
->> index 268c69daa4d57..c314ee1b3f9ac 100644
->> --- a/drivers/pci/pci-sysfs.c
->> +++ b/drivers/pci/pci-sysfs.c
->> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
->>   	struct device *dev = kobj_to_dev(kobj);
->>   	struct pci_dev *pdev = to_pci_dev(dev);
->>   
->> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
->> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
->>   		return a->mode;
->>   
->>   	return 0;
->> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->> index 78748e8d2dbae..63216e5787d73 100644
->> --- a/drivers/pci/vgaarb.c
->> +++ b/drivers/pci/vgaarb.c
->> @@ -1499,8 +1499,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->>   
->>   	vgaarb_dbg(dev, "%s\n", __func__);
->>   
->> -	/* Only deal with VGA class devices */
->> -	if (!pci_is_vga(pdev))
->> +	/* Only deal with PCI display class devices */
->> +	if (!pci_is_display(pdev))
->>   		return 0;
->>   
->>   	/*
->> @@ -1546,12 +1546,12 @@ static int __init vga_arb_device_init(void)
->>   
->>   	bus_register_notifier(&pci_bus_type, &pci_notifier);
->>   
->> -	/* Add all VGA class PCI devices by default */
->> +	/* Add all PCI display class devices by default */
->>   	pdev = NULL;
->>   	while ((pdev =
->>   		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
->>   			       PCI_ANY_ID, pdev)) != NULL) {
->> -		if (pci_is_vga(pdev))
->> +		if (pci_is_display(pdev))
->>   			vga_arbiter_add_pci_device(pdev);
->>   	}
->>   
-> 
-> At the very least a non-VGA device should not mark that it decodes
-> legacy resources, marking the boot VGA device is only a part of what
-> the VGA arbiter does.  It seems none of the actual VGA arbitration
-> interfaces have been considered here though.
-> 
-> I still think this is a bad idea and I'm not sure Thomas didn't
-> withdraw his ack in the previous round[1].  Thanks,
+To allow backward compatibility, when debugfs is mounted, it would
+automount tracefs in its "tracing" directory so that tooling that had hard
+coded /sys/kernel/debug/tracing would still work.
 
-Ah; I didn't realize that was intended to be a withdrawl.
-If there's another version of this I'll remove it.
+It has been over 10 years since the new interface was introduced, and all
+tooling should now be using it. Start the process of deprecating the old
+path so that it doesn't need to be maintained anymore.
 
-Dave,
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20250617133614.24e2ba7f@gandalf.local.home/
 
-What is your current temperature on this approach?
-
-Do you still think it's best for something in the kernel or is this 
-better done in libpciaccess?
-
-Mutter, Kwin, and Cosmic all handle this case in the compositor.
+- Fixed pr_warn() print, and move it to when debugfs accesses the tracing dir
+  and not when tracefs automount is registered
 
 
-> 
-> Alex
-> 
-> [1]https://lore.kernel.org/all/bc0a3ac2-c86c-43b8-b83f-edfdfa5ee184@suse.de/
-> 
+ .../ABI/obsolete/automount-tracefs-debugfs    | 20 +++++++++++++++++++
+ kernel/trace/Kconfig                          | 13 ++++++++++++
+ kernel/trace/trace.c                          | 14 +++++++++----
+ 3 files changed, 43 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/obsolete/automount-tracefs-debugfs
+
+diff --git a/Documentation/ABI/obsolete/automount-tracefs-debugfs b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+new file mode 100644
+index 000000000000..8d03cf9e579f
+--- /dev/null
++++ b/Documentation/ABI/obsolete/automount-tracefs-debugfs
+@@ -0,0 +1,20 @@
++What:		/sys/kernel/debug/tracing
++Date:		May 2008
++KernelVersion:	2.6.27
++Contact:	linux-trace-kernel@vger.kernel.org
++Description:
++
++	The ftrace was first added to the kernel, its interface was placed
++	into the debugfs file system under the "tracing" directory. Access
++	to the files were in /sys/kernel/debug/tracing. As systems wanted
++	access to the tracing interface without having to enable debugfs, a
++	new interface was created called "tracefs". This was a stand alone
++	file system and was usually mounted in /sys/kernel/tracing.
++
++	To allow older tooling to continue to operate, when mounting
++	debugfs, the tracefs file system would automatically get mounted in
++	the "tracing" directory of debugfs. The tracefs interface was added
++	in January 2015 in the v4.1 kernel.
++
++	All tooling should now be using tracefs directly and the "tracing"
++	directory in debugfs should be removed by January 2027.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index a3f35c7d83b6..93e8e7fc11c0 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -199,6 +199,19 @@ menuconfig FTRACE
+ 
+ if FTRACE
+ 
++config TRACEFS_AUTOMOUNT_DEPRECATED
++	bool "Automount tracefs on debugfs [DEPRECATED]"
++	depends on TRACING
++	default y
++	help
++	  The tracing interface was moved from /sys/kernel/debug/tracing
++	  to /sys/kernel/tracing in 2015, but the tracing file system
++	  was still automounted in /sys/kernel/debug for backward
++	  compatibility with tooling.
++
++	  The new interface has been around for more than 10 years and
++	  the old debug mount will soon be removed.
++
+ config BOOTTIME_TRACING
+ 	bool "Boot-time Tracing support"
+ 	depends on TRACING
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 95ae7c4e5835..2dafe2748b16 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6303,7 +6303,7 @@ static bool tracer_options_updated;
+ static void add_tracer_options(struct trace_array *tr, struct tracer *t)
+ {
+ 	/* Only enable if the directory has been created already. */
+-	if (!tr->dir)
++	if (!tr->dir && !(tr->flags & TRACE_ARRAY_FL_GLOBAL))
+ 		return;
+ 
+ 	/* Only create trace option files after update_tracer_options finish */
+@@ -8984,13 +8984,13 @@ static inline __init int register_snapshot_cmd(void) { return 0; }
+ 
+ static struct dentry *tracing_get_dentry(struct trace_array *tr)
+ {
+-	if (WARN_ON(!tr->dir))
+-		return ERR_PTR(-ENODEV);
+-
+ 	/* Top directory uses NULL as the parent */
+ 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
+ 		return NULL;
+ 
++	if (WARN_ON(!tr->dir))
++		return ERR_PTR(-ENODEV);
++
+ 	/* All sub buffers have a descriptor */
+ 	return tr->dir;
+ }
+@@ -10256,6 +10256,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
+ 	ftrace_init_tracefs(tr, d_tracer);
+ }
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ {
+ 	struct vfsmount *mnt;
+@@ -10277,6 +10278,8 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	if (IS_ERR(fc))
+ 		return ERR_CAST(fc);
+ 
++	pr_warn("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
++
+ 	ret = vfs_parse_fs_string(fc, "source",
+ 				  "tracefs", strlen("tracefs"));
+ 	if (!ret)
+@@ -10287,6 +10290,7 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
+ 	put_fs_context(fc);
+ 	return mnt;
+ }
++#endif
+ 
+ /**
+  * tracing_init_dentry - initialize top level trace array
+@@ -10311,6 +10315,7 @@ int tracing_init_dentry(void)
+ 	if (WARN_ON(!tracefs_initialized()))
+ 		return -ENODEV;
+ 
++#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
+ 	/*
+ 	 * As there may still be users that expect the tracing
+ 	 * files to exist in debugfs/tracing, we must automount
+@@ -10319,6 +10324,7 @@ int tracing_init_dentry(void)
+ 	 */
+ 	tr->dir = debugfs_create_automount("tracing", NULL,
+ 					   trace_automount, NULL);
++#endif
+ 
+ 	return 0;
+ }
+-- 
+2.47.2
 
