@@ -1,142 +1,442 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4221ADC97;
-	Tue, 17 Jun 2025 16:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211902EF2AA
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177908; cv=none; b=DV8e04304/nR9z9Oeqxt6475m1I91vzI7imxWxVZ33DNa/pj5/+qkIbN1P/UcDkFI5j/B36pFhXbQIbzax/eGS8PaYYmbRqUiHXiePgQhI0S+08vXlsRyE0hbI9tfVSAPQ/Z7ERIFDkMtrchkfbQ84SFuKhTfedkr4nHfVSGOfE=
+	t=1750177944; cv=none; b=LF/OE9CDBr6Ey9Yr/0Cl0vvbQMhTX/0jrQWgD1VkkSwwqpOPoJZ12OM8UPL9m3KkrBICjI5Bbpz5VX+6SGZEVWktHlors7KHNj+sGB+CeEizqKI60rCvn3fxBdLxkaWvT5mYQQB5TAw6/czWnnqMqJ25QA5uHVES3AnfDvrjn4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177908; c=relaxed/simple;
-	bh=dkKZ72afcw6YlMGevnUXEdoK4heTyOjoh5qic9k/T+0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e0kABNubHw3nK91UdfwUV029ocknIlJbRTsPnljK1ct3FnclJCKUarBrtEEvJy+xtN0r5wSkPdtGx1ERGeFb1BXMrRdGl0PkC8MTb/GmgU9GI9G3/MnN7B8F/T+LX7jZDf5qhSKZ0tW+oMIH5eAeMC1MYAsnKmXZvHYXO+PSfqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OHQLfeZZ; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750177944; c=relaxed/simple;
+	bh=qvFO4rZP1vheikCq97E6JdYmCzgNrA/orS5E0K9O8kg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+Lm3VdvtkBTsrngRRVXYWft4/oa7BW/LTHCiHYqG2MlhlalE0G68h9Zc/9ixPHfBDNSf0BlSTe1N734ayywP+4qFSpYhshUoNlHA9YoN/9B22jFdRdg4HZbqftIPXJ8LVCfnxnK/vSzxF8Pvtn6VbfNXb5gU51JgT4I6cPVNk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=XO8lVH6E; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OHQLfeZZ"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b2c4476d381so4976473a12.0;
-        Tue, 17 Jun 2025 09:31:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="XO8lVH6E"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fad8b4c927so51048736d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750177906; x=1750782706; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=qEy8ITm8kZbY094KyaBllE3KCXj9q9J+tbpb00m7Skw=;
-        b=OHQLfeZZLrQjNf/Vc6yucsZ0FzVMAdDwWXY6jOhkSpXRUbVsYJNAOCfP/eRgqr6nT9
-         OqOENh17BRPyWxUztqpCHfV/ITU6J+0Pqy9ftKbxbif5YYgffIPhRtbYWcFIBa9eEsyZ
-         jI1KezTx7sKZiMFat4IlipVYq50qFDXG0vvkGnyMrtnHVNB9KuTqN8t04jqEerwUiltc
-         c+GaqJN115xD4QEDIS0sYejN6tM/Jx+AQG3NwMmOLREktJEufZEwC6BW+0Rb4Wcus72E
-         THR439Q4XCJLmLX2eqNucPEEGPzG9XpWNBvS6Zr1QgXZv/hWnEppXrQ3ZtKH+ulqPLbg
-         17qA==
+        d=ziepe.ca; s=google; t=1750177941; x=1750782741; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nC7rm+Bwrl6nau/SPrD4L98tdg/BZZbxkCiAvlgkDgo=;
+        b=XO8lVH6EQvFyCFjZfDyZVTjbIgV+hWrqrq3d6inZGpaTNWV/C72q1m0GNjAnAwY609
+         L6rU33XFr3xwTOFFTCZn9f5ExUgBEkLbcJIhMdZs/+15CFZIayM5BIDTNshgK1eum7ef
+         KGzQYzFPJc2vKqQ5Q23TLWbz7pGDCogBVVzl1LHJIRIyS+yKgdgTvuRpq+hti9pVhKge
+         csySmV1sT67CtoWEdBFsrD/d7KnOpd9AbjUSz0Dw4ph2CP6wyPWESL4j+3sp62+XN4QU
+         DcF1ruZvKg/6BAQTsUJhGCVDB1JBCQ+NOFHRX56tU+VWxVjMpC6I/5Wa0LxUGhHwuS9e
+         RhAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750177906; x=1750782706;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1750177941; x=1750782741;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qEy8ITm8kZbY094KyaBllE3KCXj9q9J+tbpb00m7Skw=;
-        b=Noh8OZO4d3l8xqH+GEVxWvaDIxR0Rv4lFjVSYr4Q7SJNZLdUsLZehjLekgE8df4y8x
-         wQC25RLKMdFgy/FaSGgWhMPk3LTQryG54R9rz+TeyEm5RalByadjqbRNB6Q/MToLOVi7
-         G/n/mnOALEoMvmTsSknRuGBRkAI8cSN/biWUboTxcyFgGJDmeLfQWFOx4N5RhSTuDNsF
-         2W1srKv0M1dHRUKOmbwBDVvz5mu7zlprJAGy6EBI/PV/pi7y0Oiwv8IO8FVaqtOekFDR
-         NvyJDjy82jKhCQVL+ps+lVKu9fHbV3Z2tizxyv3Eqh/udSrXEVjABVNURXa+Krz/8N6y
-         GJgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUNxxLElUprAZwQ5JHukuPSEntxqsJJHDyWf16fG/U49wJIQR3Z4I410CNo3/FDMT4+ZcrV3FNv@vger.kernel.org, AJvYcCWy49EV/6O/boPOsK8p4l16qvZKSq+IRFAmqzxQum9q+E5LU6MEFTevjKBjl4no3yE7WWGOf2HiBjOSTBw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwhrcY+OngjqiaEXvbsp5P9WYNAnWLumhKhJgltBY/ckkjsfWX/
-	0vgtZqN1w4CqfgPJdPo14mwwdtk2qYEo3p5XSKMpm8CBk/OjP3kCWrva
-X-Gm-Gg: ASbGncubljsk9XD+W69sfRaBTRGlQ6N0YWjWk0FYMZOCthlYgGrUOVJ1bM+Bk9xIP4P
-	ovSh0SKZLErfL1fNSOF3Do4NB8WuX8oGEWDMcgkB4MvaHdAMCbdcG2+yblP8nR74T7FqT6Ttak9
-	n6RpkxcTAjRTDTjgxc3rMFtlPGJWLfVuciCRS0UW6+O6ORdN1+pLIedeahY2ql0CxBmm35R4J6Y
-	q7awWLqqPu9yNq/vIy9VVQj/UsmVPQFTuSwZUvzp69egIUL9ndl+IX/830VDZiEmXMQU337Ekw0
-	BEm3cG8vShfstidC55smkBWU5+nCNia4KYozXxF4EDHHLvpeBO+1lwqnprC29zn8tGgCzY/vYSO
-	2ObW06Df4WQuWjQ==
-X-Google-Smtp-Source: AGHT+IGBHXbhNJJLqivrzogQpY/UsXMQJIVKz0r40L6q9ynE4qBtKdw94Wxz249Ku8WVDPxw8YqbHQ==
-X-Received: by 2002:a05:6a21:e8a:b0:21f:53e4:1919 with SMTP id adf61e73a8af0-21fbc62b6a1mr27074051637.3.1750177906251;
-        Tue, 17 Jun 2025 09:31:46 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1639dffsm7709506a12.3.2025.06.17.09.31.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 09:31:44 -0700 (PDT)
-Message-ID: <c6c2c573-de9d-41c8-b686-a98a737c2d48@gmail.com>
-Date: Tue, 17 Jun 2025 09:31:42 -0700
+        bh=nC7rm+Bwrl6nau/SPrD4L98tdg/BZZbxkCiAvlgkDgo=;
+        b=dUsoLozrbHu24JnW0pA0+HzbxRfplVH4fEgQWbU2FUt4RgJeUBemkqB4L6MFWx/Ih5
+         rgptA7PywjL1h+CVX+hXhGCFlQ3xFzwOhTUrYW0Ru+QNo5hCz/0nHu4dCT/h7nkjJjKa
+         eScbsIQmK2C0mHY7mtHTDGAtD1WFpTc7ODFu+0o/kCp6JwK1qsTDNmRjaxa0DvHTWBjO
+         Qm9pwpdKOGqEx36cXNqTMhO2wQ3PpFu36KXIZtiJ3i2FXnxNg4aMqw1LC+W1n69lw6Zf
+         /btFxYjX+HrrUCJIWw0q+DKupWD8h4BqiO4tpwrFgrHVTBYlQPfWCnm/xGEJohttX3SF
+         LnbA==
+X-Forwarded-Encrypted: i=1; AJvYcCWJUsCD4hAYBCkKvaA9GVXkdQNa5b94ItnBlzFekmYiVFdtMGYF/u3i0J76j4mYUWAehTFHcpxZQ95IWpk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/1AQqyYRlOarzaf2hSaVWrYIP6q5F69W0SqAjK1zdApGq0jlk
+	5CJxzpKXVZdP7PYLtFnuwfDKcZKzOU8JrW01LVaGwawdoHAovBbeYaBt4b5nqT5/I8k=
+X-Gm-Gg: ASbGncuQBHv3NY5Gel3w24mL6jptHgrYYeZP9yyyMrvHrQbupAuQseHObOtUGtt+cMP
+	/LkKR/ibN7X614wed2O0BAM1HbKO0z5kqVCSSFnTmMN+WjCvx68rsQJBo/9NraYPIgiPfIbak2h
+	fVtVzJ7JRIp/gTsgpBgstEtQau+Rsl1m6NWU19FjAaOqNGV+CLgc+XM2iRkZdlHwAZkIhOrWaf7
+	cKfcp7hZRksez3D8psK97NttkdgWLvs0Ok4jGfArpLhSUPJqxiZf3SYBU3lAg3t1OHhLMwsywld
+	snC9xiaglqXdKlGFSL+6KpdkI65xf1+UTqUd/vIOgudapq0N+73i5OfYbRY9OKI2FbAU5irDnFF
+	fxu+STdTda7sY/fj/ABLCUU7N8r5kjRBlRDMcVA==
+X-Google-Smtp-Source: AGHT+IEn/8UILucmSUjm3Ghk3vbiODu7JZ3ElN7VeLJXr7Tqd6s5+YqK3eHc6OVfIyOPTPJQFQWeeQ==
+X-Received: by 2002:a05:6214:2344:b0:6fa:bd17:32a with SMTP id 6a1803df08f44-6fb47798100mr185358346d6.29.1750177940786;
+        Tue, 17 Jun 2025 09:32:20 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb5f63431bsm8459256d6.43.2025.06.17.09.32.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 09:32:20 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uRZER-00000006X8g-3Ob6;
+	Tue, 17 Jun 2025 13:32:19 -0300
+Date: Tue, 17 Jun 2025 13:32:19 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+	nicolas.dufresne@collabora.com, p.zabel@pengutronix.de,
+	mchehab@kernel.org, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
+	kernel@collabora.com
+Subject: Re: [PATCH 3/5] iommu: Add verisilicon IOMMU driver
+Message-ID: <20250617163219.GF1376515@ziepe.ca>
+References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
+ <20250616145607.116639-4-benjamin.gaignard@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/356] 6.6.94-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250617152338.212798615@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250617152338.212798615@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616145607.116639-4-benjamin.gaignard@collabora.com>
 
-On 6/17/25 08:21, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.94 release.
-> There are 356 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 19 Jun 2025 15:22:33 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.94-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+On Mon, Jun 16, 2025 at 04:55:51PM +0200, Benjamin Gaignard wrote:
 
-On ARCH_BRCMTB using 32-bit and 64-bit kernels, build on BMIPS_GENERIC:
+> +static struct vsi_iommu *vsi_iommu_from_dev(struct device *dev)
+> +{
+> +	struct vsi_iommudata *data = dev_iommu_priv_get(dev);
+> +
+> +	return data ? data->iommu : NULL;
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+It would be a serious bug if dev_iommu_priv_get() is null, don't check
+for it, let it crash.
+
+> +static struct iommu_domain *vsi_iommu_domain_alloc_paging(struct device *dev)
+> +{
+> +	struct vsi_iommu_domain *vsi_domain;
+> +
+> +	if (!dma_dev)
+> +		return NULL;
+> +
+> +	vsi_domain = kzalloc(sizeof(*vsi_domain), GFP_KERNEL);
+> +	if (!vsi_domain)
+> +		return NULL;
+> +
+> +	/*
+> +	 * iommu use a 2 level pagetable.
+> +	 * Each level1 (dt) and level2 (pt) table has 1024 4-byte entries.
+> +	 * Allocate one 4 KiB page for each table.
+> +	 */
+> +	vsi_domain->dt = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
+> +					      SPAGE_SIZE);
+> +	if (!vsi_domain->dt)
+> +		goto err_free_domain;
+> +
+> +	vsi_domain->dt_dma = dma_map_single(dma_dev, vsi_domain->dt,
+> +					    SPAGE_SIZE, DMA_TO_DEVICE);
+> +	if (dma_mapping_error(dma_dev, vsi_domain->dt_dma)) {
+> +		dev_err(dma_dev, "DMA map error for DT\n");
+> +		goto err_free_dt;
+> +	}
+> +
+> +	vsi_domain->pta = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
+> +					       SPAGE_SIZE);
+> +	if (!vsi_domain->pta)
+> +		goto err_unmap_dt;
+> +
+> +	vsi_domain->pta_dma = dma_map_single(dma_dev, vsi_domain->pta,
+> +					     SPAGE_SIZE, DMA_TO_DEVICE);
+> +	if (dma_mapping_error(dma_dev, vsi_domain->pta_dma)) {
+> +		dev_err(dma_dev, "DMA map error for PTA\n");
+> +		goto err_free_pta;
+> +	}
+> +	vsi_domain->pta[0] = vsi_mk_pta(vsi_domain->dt_dma);
+
+> +
+> +	vsi_table_flush(vsi_domain, vsi_domain->pta_dma, 1024);
+> +	vsi_table_flush(vsi_domain, vsi_domain->dt_dma, NUM_DT_ENTRIES);
+
+dma_map_single already flushes, put things in the write order and no
+need to double flush.
+
+> +	spin_lock_init(&vsi_domain->iommus_lock);
+> +	spin_lock_init(&vsi_domain->dt_lock);
+> +	INIT_LIST_HEAD(&vsi_domain->iommus);
+> +
+> +	vsi_domain->domain.geometry.aperture_start = 0;
+> +	vsi_domain->domain.geometry.aperture_end   = DMA_BIT_MASK(32);
+> +	vsi_domain->domain.geometry.force_aperture = true;
+
+Initialize domain.pgsize_bitmap here and remove this:
+
++       .pgsize_bitmap = VSI_IOMMU_PGSIZE_BITMAP,
+
+It is going away.
+
+> +	return &vsi_domain->domain;
+> +
+> +err_free_pta:
+> +	iommu_free_pages(vsi_domain->pta);
+> +err_unmap_dt:
+> +	dma_unmap_single(dma_dev, vsi_domain->dt_dma,
+> +			 SPAGE_SIZE, DMA_TO_DEVICE);
+> +err_free_dt:
+> +	iommu_free_pages(vsi_domain->dt);
+> +err_free_domain:
+> +	kfree(vsi_domain);
+> +
+> +	return NULL;
+> +}
+> +
+> +static phys_addr_t vsi_iommu_iova_to_phys(struct iommu_domain *domain,
+> +					  dma_addr_t iova)
+> +{
+> +	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
+> +	unsigned long flags;
+> +	phys_addr_t pt_phys, phys = 0;
+> +	u32 dte, pte;
+> +	u32 *page_table;
+> +
+> +	spin_lock_irqsave(&vsi_domain->dt_lock, flags);
+
+No locking should be here. Drivers are supposed to use cmpxchg to set
+the new tables to avoid races, however there is complexity around the
+cache flushing that this locking solves.
+
+IDK, you might be better to use the new iommupt stuff since all these
+algorithms including the complicated lockless cache flushing
+optmization are sorted out there.
+
+https://lore.kernel.org/linux-iommu/0-v3-a93aab628dbc+521-iommu_pt_jgg@nvidia.com/
+
+> +	dte_index = vsi_iova_dte_index(iova);
+> +	dte_addr = &vsi_domain->dt[dte_index];
+> +	dte = *dte_addr;
+> +	if (vsi_dte_is_pt_valid(dte))
+> +		goto done;
+> +
+> +	page_table = (u32 *)get_zeroed_page(GFP_ATOMIC | GFP_DMA32);
+> +	if (!page_table)
+> +		return ERR_PTR(-ENOMEM);
+
+Don't use get_zeroed_page for page table memory.
+
+> +
+> +	pt_dma = dma_map_single(dma_dev, page_table, SPAGE_SIZE, DMA_TO_DEVICE);
+> +	if (dma_mapping_error(dma_dev, pt_dma)) {
+> +		dev_err(dma_dev, "DMA mapping error while allocating page table\n");
+> +		free_page((unsigned long)page_table);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	dte = vsi_mk_dte(pt_dma);
+> +	*dte_addr = dte;
+> +
+> +	vsi_table_flush(vsi_domain, pt_dma, NUM_PT_ENTRIES);
+> +	vsi_table_flush(vsi_domain,
+> +			vsi_domain->dt_dma + dte_index * sizeof(u32), 1);
+
+Double flushing again.
+
+> +static int vsi_iommu_map_iova(struct vsi_iommu_domain *vsi_domain, u32 *pte_addr,
+> +			      dma_addr_t pte_dma, dma_addr_t iova,
+> +			      phys_addr_t paddr, size_t size, int prot)
+> +{
+> +	unsigned int pte_count;
+> +	unsigned int pte_total = size / SPAGE_SIZE;
+> +	phys_addr_t page_phys;
+> +
+> +	assert_spin_locked(&vsi_domain->dt_lock);
+> +
+> +	for (pte_count = 0; pte_count < pte_total; pte_count++) {
+> +		u32 pte = pte_addr[pte_count];
+> +
+> +		if (vsi_pte_is_page_valid(pte))
+> +			goto unwind;
+> +
+> +		pte_addr[pte_count] = vsi_mk_pte(paddr, prot);
+
+So why is this:
+
+#define VSI_IOMMU_PGSIZE_BITMAP 0x007ff000
+
+If the sizes don't become encoded in the PTE? The bits beyond 4k
+should reflect actual ability to store those sizes in PTEs, eg using
+contiguous bits or something.
+
+> +		paddr += SPAGE_SIZE;
+> +	}
+> +
+> +	vsi_table_flush(vsi_domain, pte_dma, pte_total);
+> +
+> +	return 0;
+> +unwind:
+> +	/* Unmap the range of iovas that we just mapped */
+> +	vsi_iommu_unmap_iova(vsi_domain, pte_addr, pte_dma,
+> +			     pte_count * SPAGE_SIZE);
+> +
+> +	iova += pte_count * SPAGE_SIZE;
+> +	page_phys = vsi_pte_page_address(pte_addr[pte_count]);
+> +	pr_err("iova: %pad already mapped to %pa cannot remap to phys: %pa prot: %#x\n",
+> +	       &iova, &page_phys, &paddr, prot);
+
+No pr_errs prints on normal errors.
+
+> +static void vsi_iommu_detach_device(struct iommu_domain *domain,
+> +				    struct device *dev)
+> +{
+> +	struct vsi_iommu *iommu;
+> +	struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
+> +	unsigned long flags;
+> +	int ret;
+> +
+> +	/* Allow 'virtual devices' (eg drm) to detach from domain */
+> +	iommu = vsi_iommu_from_dev(dev);
+> +	if (WARN_ON(!iommu))
+> +		return;
+> +
+> +	dev_dbg(dev, "Detaching from iommu domain\n");
+> +
+> +	if (!iommu->domain)
+> +		return;
+> +
+> +	spin_lock_irqsave(&vsi_domain->iommus_lock, flags);
+> +	list_del_init(&iommu->node);
+> +	spin_unlock_irqrestore(&vsi_domain->iommus_lock, flags);
+
+The list del should probably be after the vsi_iommu_disable()? We
+expect invalidations to continue to keep the IOTLB consistent until
+the HW is no longer walking the page table.
+
+> +static struct iommu_device *vsi_iommu_probe_device(struct device *dev)
+> +{
+> +	struct vsi_iommudata *data;
+> +	struct vsi_iommu *iommu;
+> +
+> +	data = dev_iommu_priv_get(dev);
+> +	if (!data)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	iommu = vsi_iommu_from_dev(dev);
+> +
+> +	pr_info("%s,%d, consumer : %s, supplier : %s\n",
+> +		__func__, __LINE__, dev_name(dev), dev_name(iommu->dev));
+
+No prints
+
+> +	/*
+> +	 * link will free by platform_device_del(master) via
+> +	 * BUS_NOTIFY_REMOVED_DEVICE
+> +	 */
+> +	data->link = device_link_add(dev, iommu->dev,
+> +				     DL_FLAG_STATELESS | DL_FLAG_PM_RUNTIME);
+> +
+> +	/* set max segment size for dev, needed for single chunk map */
+> +	if (!dev->dma_parms)
+> +		dev->dma_parms = kzalloc(sizeof(*dev->dma_parms), GFP_KERNEL);
+> +	if (!dev->dma_parms)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+
+I'm not sure this should be in an iommu driver??? Doesn't dma-iommu.c
+deal with this stuff
+
+> +static void vsi_iommu_release_device(struct device *dev)
+> +{
+> +	struct vsi_iommudata *data = dev_iommu_priv_get(dev);
+> +
+> +	device_link_del(data->link);
+
+Leaking data..
+
+> +static int vsi_iommu_of_xlate(struct device *dev,
+> +			      const struct of_phandle_args *args)
+> +{
+> +	struct platform_device *iommu_dev;
+> +	struct vsi_iommudata *data;
+> +
+> +	data = devm_kzalloc(dma_dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	dev_info(dev, "%s,%d\n", __func__, __LINE__);
+> +	iommu_dev = of_find_device_by_node(args->np);
+> +
+> +	data->iommu = platform_get_drvdata(iommu_dev);
+> +
+> +	dev_iommu_priv_set(dev, data);
+
+Can you use iommu_fwspec_add_ids() instead of this?
+
+The only thing 'data' is doing here is to pass the iommu_dev, it is
+much better if you can get that from the fwspec in probe, like say ARM
+does it:
+
+	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+
+	smmu = arm_smmu_get_by_fwnode(fwspec->iommu_fwnode);
+
+And then don't allocate memory in the of_xlate.
+
+> +static struct iommu_ops vsi_iommu_ops = {
+> +	.domain_alloc_paging = vsi_iommu_domain_alloc_paging,
+> +	.probe_device = vsi_iommu_probe_device,
+> +	.release_device = vsi_iommu_release_device,
+> +	.device_group = generic_single_device_group,
+> +	.pgsize_bitmap = VSI_IOMMU_PGSIZE_BITMAP,
+
+move pgsize_bitmap to alloc paging
+
+
+> +static int vsi_iommu_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct vsi_iommu *iommu;
+> +	struct resource *res;
+> +	int num_res = pdev->num_resources;
+> +	int err, i;
+> +
+> +	iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
+> +	if (!iommu)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, iommu);
+
+This should be done last after the function can't fail
+
+> +
+> +	iommu->group = iommu_group_alloc();
+> +	if (IS_ERR(iommu->group)) {
+> +		err = PTR_ERR(iommu->group);
+> +		goto err_unprepare_clocks;
+> +	}
+
+This should not be in iommu drivers. I'm guessing you want
+generic_single_device_group() ?
+
+> +	/*
+> +	 * use the first registered sysmmu device for performing
+> +	 * dma mapping operations on iommu page tables (cpu cache flush)
+> +	 */
+> +	if (!dma_dev)
+> +		dma_dev = &pdev->dev;
+
+Huh? This is racey, and why? What is the reason not to use the current
+device always? Put the dev in the iommu_domain during
+domain_alloc_paging and get it from  dev->iommu->iommu_dev->dev.
+
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	err = iommu_device_sysfs_add(&iommu->iommu, dev, NULL, dev_name(dev));
+> +	if (err)
+> +		goto err_put_group;
+> +
+> +	err = iommu_device_register(&iommu->iommu, &vsi_iommu_ops, dev);
+> +	if (err)
+> +		goto err_remove_sysfs;
+
+Register should usually be last.
+
+> +	for (i = 0; i < iommu->num_irq; i++) {
+> +		int irq = platform_get_irq(pdev, i);
+> +
+> +		if (irq < 0)
+> +			return irq;
+> +
+> +		err = devm_request_irq(iommu->dev, irq, vsi_iommu_irq,
+> +				       IRQF_SHARED, dev_name(dev), iommu);
+> +		if (err)
+> +			goto err_unregister;
+> +	}
+
+Why allocate interrupts after registration?
+
+Jason
