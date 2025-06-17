@@ -1,138 +1,132 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F48298CB3
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF05128A406;
+	Tue, 17 Jun 2025 08:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148429; cv=none; b=jp6AI8Ugm2mUdeH9XsgXmnMMnROWfO1CqGISjfLOM0Wh1HDifgFtURtSlEifKKah3NZ1MlAPJongN3FNactLc8ig4nKeDAZXMcJnRju6sFAt5QjXK1yl2chCR4NRPT5affeWxwDUSE5+LFH4QrDINYx19zZI1UFzg34lEQRMj0s=
+	t=1750148452; cv=none; b=mjCUZwI4Z17xZ1v3V3tJokQ7jIybzmiQYQdZgWGVX/qPQmyaeCdixr+lnYkl14xQHN+tUb/zU5FM5kLJtaCHj3cJ/P/zPhgcocK9+XKkBJT+LbdEKPd2Px/wMfQvbY4qORUazevl+QJN+0Q7KJOK427faH1IGm0Zv7iQLsQtaK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148429; c=relaxed/simple;
-	bh=/WQbHnfRtWRIQdeI3JmHziVIp79qdv/zvvBmBI3l+1E=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rtPl4ef02u8AWzR7b9RZN1IHWlyk5pMG/r5jMtXLLlQqUw5bwRM2r1+yrBAktUF/sQ+Ssf9gOzeNNTJxCokCAaNHCy1qeUBA/Acdd9vDmkeG04nfjOmGyvp8onawddWgtvQPF6ghaXoU4xeYONz92O+vXBUOXlc+K9THQAP5uz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ybOdJdyu; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750148452; c=relaxed/simple;
+	bh=Ev+wfPjNp3+1OpBLuAzKgLGnCgCxFvUoz+LDbZgxvhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=szE3E80BwcHHsLkLit7h0TAaMLToQNJy8L60xjfwqH4e/yM3XPF3vxhFHRyixX2F6cIDTXzLQ+bcRs4cnDdslhQdfT1ztZpvxZOacyqOZCF99lrg5vyAlXmrLzDoQLgkJtygkq+eN0j+LL6y0MOOlMhuTQHYWYfhmR7pUObMrSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B631/Nn/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ybOdJdyu"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so66843955e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750148426; x=1750753226; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rRutXZGiZkOK4IPQRRMmCzuE+5vrVS6DYaoEnbP08XU=;
-        b=ybOdJdyuZMD2fRIELjfaJYkQEeC0b0FTf+KKPTGHTdoyvUCND82s8eqpVHuuBjVCUv
-         Snj3dG3OWEgoeBdartElATKsUPQXauMXR6kc0Jxo+MYCX87Dp9mE6Y8+Ny+3Qz01kBVt
-         /DrQ4BjdggovMVpISBWH4zwfwJMs8KLlMSUqx2MLpzsXhjNo/ncHxD2qWB4GyBWxcrCy
-         TuIaQ2ffKh1LZM6sVOsvUdihln9EkgxddP/DZYS5AjLoLpk2WDQSaJXBSTV+tLmhDmhK
-         tzbmQ9MBabQZeQBw0sB7bnYv8glIrB1Kvw///G9yO5r4FWD3L5EU42AItoq+7TjMZGP+
-         wIZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750148426; x=1750753226;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=rRutXZGiZkOK4IPQRRMmCzuE+5vrVS6DYaoEnbP08XU=;
-        b=lNkDsHIPiCIfH9Pt99OOrnKArQk1Li+LA7mkumvjzrTQ+aYzwETN80duLtA7USXNvd
-         qNSJaL5fPbXi06xcJ7Ec9Z9i9NVOxtYgf/y3HpSUJ+y9zSuMwJEcQ5TEW94vZ/4YsMKS
-         m8JgIJeprGLyE1xzRBYyPrtBOtN/5I7qFz9gIA3pdYmReW/77Sa1+63SerapuO1Gh/Qj
-         XydCJ6z56gJwM/xyMIuMip/2Y//WeU7Ntt9OSacEZuY2PR8VDJeHE6kjPOAY7enR9QIQ
-         DqEItYbzZYQaJuTrbAeAB74F3QAr8EuOSDJ5BENbziaEY7p0MeGY+q9XquBQzGUlz959
-         44Yw==
-X-Forwarded-Encrypted: i=1; AJvYcCV6hwO0sT+AGPygXksyv/YGb303NaUuesqssy/Cvs2fU3DNiB0TGb/QHlLR3wvexGf6ihWe9n5Z3qSSWOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJt2QgcIi2KLoGOOegXCen2CsDkJDYnoyuhEXo7PHs+qKNEF/F
-	6xL+95f4rFsjo6sGggCJyxzgFuOjUkrTQItFnpq7ozmJtB3dRc2m6c1jZbMILX9gkeA=
-X-Gm-Gg: ASbGncvP0zw6fXwsaVCO/q4FZ74rbSy6L8vTrNTYI/JWAu/ScpNF2BJxf7RQjz90ZGj
-	fuTs/WJ//Al+KufDVWHDtjckgc8AlsGZqMevrU7R5pVouKveni3ElNZMRqxmW8+CqF+NM7U2rrq
-	tWnJI75+dNy/a2OybBMlcp7rjAdPEAXHY57Wgm0sXZMSvH1eZCQ7SbaEHjaGa4Q3xCw3kdwTlhd
-	VUrgMOzLa2JxHaY/zF6dtTTxB4XI4rgmCt1k+ZlUDawNyZCymumg5yZsFXeqd3zfB5w1xLrhgU6
-	bpV2WvM/S/KvX5XUEArqaB2YWe0eLG8wTG3VYYHCXOantGgjO2gISpu51YKj5UBJB0UhFlk7mz3
-	Q5YMYVWf885g0/WkwEl6T2a0CvtEa84+IZQnX57B82tcphYjf+A==
-X-Google-Smtp-Source: AGHT+IFEN/PY92LwnlT1UIgo+2I6xRqQ1JxYeqAwOpj11+y0e6KjDrQEgfFE+cFB2pOIqzh1vYyHiA==
-X-Received: by 2002:a05:6000:2486:b0:3a5:52d4:5b39 with SMTP id ffacd0b85a97d-3a572398ea5mr10039548f8f.8.1750148426115;
-        Tue, 17 Jun 2025 01:20:26 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:3819:3250:4f73:db31? ([2a01:e0a:3d9:2080:3819:3250:4f73:db31])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e268de2sm168241545e9.40.2025.06.17.01.20.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 01:20:25 -0700 (PDT)
-Message-ID: <b56ae254-2b13-4a28-bd97-c815ee773abb@linaro.org>
-Date: Tue, 17 Jun 2025 10:20:25 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B631/Nn/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70AAAC4CEED;
+	Tue, 17 Jun 2025 08:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750148451;
+	bh=Ev+wfPjNp3+1OpBLuAzKgLGnCgCxFvUoz+LDbZgxvhw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=B631/Nn/cy/bQXrqyd3ei8DtsMgnXhazeRqQkZSn3r7+4lFyU0dJ4K3/kANNBgW14
+	 /IJk4Gx0bP0iS4dwvfIQj/C7rSqJ1xRIrO1eJBE+sGKiNzbGYJZndyChvFT2H3pfTR
+	 Zd8ykZVTdGMrugCfPhV8yQCfQOgFTHhuCaagmPg3p9spWAZWH8JcVcjrvJLyXJBLb+
+	 /0tZQC+vNyMXUuUQiu4AS6wK0l3AVvSV49BW/c6iKoi/SifkiZBzzWftpWbk6nmDtT
+	 091bccuhSLNxXP9ymwB0935kN97KX4RL4xxNNodZJJ1sEXkF6Xi92CCYH6TuZLCftn
+	 L3+3O7dapRE3A==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-60497d07279so11150843a12.3;
+        Tue, 17 Jun 2025 01:20:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVgLb88huYwDisJWgf11K0lhWVd47c9CfUvtQsWhQaZUkZHJDpwTXJtvVVwDUmbNohvQBquHfzRPinH4qkHfq6y@vger.kernel.org, AJvYcCWcfbkwRzWtxtSS3KkMoDrKSBlNuu/aZqYetGa03ICJYyWMN/exZXfpod6L4SUeHWZMJ4gZIYX6Co838g==@vger.kernel.org, AJvYcCXgh1YqNnQ7h6/wb+MIfFLWvaH8KiU7ENSqc2fDwLfkIZUMCBPOSSYD4mVJfilEfoqp0ddwDcE/7I4h3Jk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQKMyhU06gnvRnyDMq0NHP9bevbo9zL5Yi2T5Wx9RyLuH34+59
+	S5YfUJAQCZYzhiTQls9VDSw/W8mfLSNG8CDK7i6IHOSzr31tjYwGXDc2zr6dY7NeqsM+YSf6TOg
+	Z8+enWPdNylavCz054ISF+4sFb9lPpvo=
+X-Google-Smtp-Source: AGHT+IGCY996UEycX3rPs/EXwjI2oXNCo8GiIM3kOQg1rxmp+0q/+J/gPPFAcdHzYME/kA8NqX297i+ePyR0A3UBcQk=
+X-Received: by 2002:a05:6402:40c3:b0:602:ef0a:cef8 with SMTP id
+ 4fb4d7f45d1cf-608d09c0ademr9953300a12.18.1750148450032; Tue, 17 Jun 2025
+ 01:20:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH] phy: qcom: m31-eusb2: fix match data santity check
-To: Johan Hovold <johan+linaro@kernel.org>, Vinod Koul <vkoul@kernel.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>,
- Wesley Cheng <quic_wcheng@quicinc.com>,
- Melody Olvera <melody.olvera@oss.qualcomm.com>,
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250617080503.11262-1-johan+linaro@kernel.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250617080503.11262-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250611-kunit-mips-v4-0-1d8997fb2ae4@linutronix.de> <20250611-kunit-mips-v4-1-1d8997fb2ae4@linutronix.de>
+In-Reply-To: <20250611-kunit-mips-v4-1-1d8997fb2ae4@linutronix.de>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 17 Jun 2025 16:20:38 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H42T9gE99HWx8xg_Te7CTvahJrTR0WF=pX94jauPKkW-Q@mail.gmail.com>
+X-Gm-Features: AX0GCFszQjuGTwZ5dXKkObFTNt0vTANijboW7ch2caZ1wYDoEtdyzvT3RCBSrUk
+Message-ID: <CAAhV-H42T9gE99HWx8xg_Te7CTvahJrTR0WF=pX94jauPKkW-Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] MIPS: Don't crash in stack_top() for tasks without
+ ABI or vDSO
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, linux-mips@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/06/2025 10:05, Johan Hovold wrote:
-> The device_get_match_data() helper returns NULL if a new entry is ever
-> added without corresponding match data.
-> 
-> Fixes: 9c8504861cc4 ("phy: qcom: Add M31 based eUSB2 PHY driver")
-> Cc: Wesley Cheng <quic_wcheng@quicinc.com>
-> Cc: Melody Olvera <melody.olvera@oss.qualcomm.com>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+
+On Wed, Jun 11, 2025 at 7:28=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> Not all tasks have an ABI associated or vDSO mapped,
+> for example kthreads never do.
+> If such a task ever ends up calling stack_top(), it will derefence the
+> NULL ABI pointer and crash.
+>
+> This can for example happen when using kunit:
+>
+>     mips_stack_top+0x28/0xc0
+>     arch_pick_mmap_layout+0x190/0x220
+>     kunit_vm_mmap_init+0xf8/0x138
+>     __kunit_add_resource+0x40/0xa8
+>     kunit_vm_mmap+0x88/0xd8
+>     usercopy_test_init+0xb8/0x240
+>     kunit_try_run_case+0x5c/0x1a8
+>     kunit_generic_run_threadfn_adapter+0x28/0x50
+>     kthread+0x118/0x240
+>     ret_from_kernel_thread+0x14/0x1c
+>
+> Only dereference the ABI point if it is set.
+>
+> The GIC page is also included as it is specific to the vDSO.
+> Also move the randomization adjustment into the same conditional.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
+> Reviewed-by: David Gow <davidgow@google.com>
 > ---
->   drivers/phy/qualcomm/phy-qcom-m31-eusb2.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c b/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
-> index 9b987911fcdb..9ad7af503baa 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-m31-eusb2.c
-> @@ -252,7 +252,7 @@ static int m31eusb2_phy_probe(struct platform_device *pdev)
->   		return -ENOMEM;
->   
->   	data = device_get_match_data(dev);
-> -	if (IS_ERR(data))
-> +	if (!data)
->   		return -EINVAL;
->   	phy->data = data;
->   
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+>  arch/mips/kernel/process.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/mips/kernel/process.c b/arch/mips/kernel/process.c
+> index b630604c577f9ff3f2493b0f254363e499c8318c..02aa6a04a21da437909eeac4f=
+149155cc298f5b5 100644
+> --- a/arch/mips/kernel/process.c
+> +++ b/arch/mips/kernel/process.c
+> @@ -690,18 +690,20 @@ unsigned long mips_stack_top(void)
+>         }
+>
+>         /* Space for the VDSO, data page & GIC user page */
+> -       top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
+> -       top -=3D PAGE_SIZE;
+> -       top -=3D mips_gic_present() ? PAGE_SIZE : 0;
+> +       if (current->thread.abi) {
+> +               top -=3D PAGE_ALIGN(current->thread.abi->vdso->size);
+> +               top -=3D PAGE_SIZE;
+> +               top -=3D mips_gic_present() ? PAGE_SIZE : 0;
+> +
+> +               /* Space to randomize the VDSO base */
+> +               if (current->flags & PF_RANDOMIZE)
+> +                       top -=3D VDSO_RANDOMIZE_SIZE;
+> +       }
+>
+>         /* Space for cache colour alignment */
+>         if (cpu_has_dc_aliases)
+>                 top -=3D shm_align_mask + 1;
+>
+> -       /* Space to randomize the VDSO base */
+> -       if (current->flags & PF_RANDOMIZE)
+> -               top -=3D VDSO_RANDOMIZE_SIZE;
+> -
+>         return top;
+>  }
+>
+>
+> --
+> 2.49.0
+>
