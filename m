@@ -1,78 +1,38 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01572EF9A7
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71902E3AF8;
+	Tue, 17 Jun 2025 20:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750190626; cv=none; b=YvLpDRZnYYe56SHHCU5Jt+/QnBM2XFWyGTtiMvo2sMegDp/WyXFTpjRYg4KpzbXRg8pXCQyZd9Ju+rszmznLy0SKIPAgs3/NSqMHsBtpOaZuKg/OFQyAgvqaDwelEcVF1XA/7CbNjNCZKt38zOF6bTmwYHSeVnQ+VFpNarzq1zo=
+	t=1750190650; cv=none; b=eQHc91cK+QIrkcqHWGoAa4wPL3BcaYq0wxXUaAw/KzA9PcLSOOyETS7FfOBFCUa2EfUXNlSu4dEMz7L1TiIwMLLC9DmUjqaSOM0d9zf7Nw0MzHqHJpYtbBZ81uDBr/uftBF+fVUvQNwBRO9o5agRLikiG4kWwiuI3/Hn2b4fcxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750190626; c=relaxed/simple;
-	bh=+SZWp0yWZXIEP9hozJgVkbTK7MVZxQPu1JyEvegG34Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BFMrCO1HwZF/9OS7LhRKXiRh5EnO1bzUxpE4HlQBBOmFV4Xe8d7yMSfjmUT9D0eRSPDZofHwtqPbL5+nQUDGmLiLJQfOcf7cFn7SxnKfMIDt6hNFYCyIbOJuaModBALAx5oYEgrVBAOWaZ2hM7gmPNeNyd/a8YtDkn3KcOB8j88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Av2mQ+76; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750190650; c=relaxed/simple;
+	bh=pGjplF3VV7f7WBNYLa3u+BbCGJciyZq1HNlyXp3mq4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=GpWxELCzVA1x2BeUeH1QqvbJPBcHzgjSaC1c52/m8DNPKgWlhyujpGehOBrQ64JQRp4Qibg1/WfbfNIiIarFKeoBGQbjZYUuIMf/iVEMq73LdhjFnN58Jo5BqLBf9yLUO6YuoYa8a2aQVbCqR3ZYdIonajIRI7vGpm5ZbrK9W5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFoLuLhi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Av2mQ+76"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750190623;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8324I6pJOAdXJVtS3tvokmcUAhG9rUL2oHwZTNfmFm8=;
-	b=Av2mQ+76fEKrmvGOdJtNY9fPkCCD0LJs9+GS5px9DNWJL+KlC4msRbJ/o4V12vZZgCMVhi
-	nthBku+06OigrlvOjUtQYsepaNyslKwdHDaP+FP+Xb4mXJU/e8+cTVVDQ/4nMIBiVmiBiw
-	xOHapuGtVHOWqKi9BNP9Rpb1EbSnIbU=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-669-YFz9OF5bNQWgpDOTETEz4w-1; Tue, 17 Jun 2025 16:03:42 -0400
-X-MC-Unique: YFz9OF5bNQWgpDOTETEz4w-1
-X-Mimecast-MFC-AGG-ID: YFz9OF5bNQWgpDOTETEz4w_1750190622
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d22790afd2so960130985a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:03:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750190622; x=1750795422;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8324I6pJOAdXJVtS3tvokmcUAhG9rUL2oHwZTNfmFm8=;
-        b=VG480uc9PCBzxB5y/Cw9SkeaHnORRTyOQ7aaOMMSuSbnEvKyHObrd0q2zY+feE8r1K
-         9hkez3gm4C032leCjDZK+s1jNu5hsI8kBMBODlA5L/D0/2895BSc6lUKl3wSBEKUB9wT
-         FEe4U3gt8EvZxoGWhKKao6X7Xgw/tYd3zI7MHtpODpsaTXPRhdQqTsLk+snoHVTj9v3I
-         rpmqoRuQiQdbseahYC7//KKtKeDbzqwgpPNOXwQBcw+vmreeyxWCJP3012HU9XrY4rGe
-         Y4iB5Ex6yUt52Xjoqr2T7lpxh9/Nu7D8eJHSx4K9hcro1PCZvBGcJ3gOcFfoWa2/NXBa
-         pDgg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwtz0ZzVqNaXPUCOK7IcOaMo5yIr/mJVG2w1opJHOSNjM980RWUsQi4KcJKAD8GFXu/A49lToWddizQlo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPhvkpspQaopPn9z5P9/3IUlhXQDpxuhu1ECH9Nr3eaxoW/2x3
-	hPJdrAd4p3YC9q8wkEKwwNKlkmew6KJ++Tan0nh7mlNv9CKEN8unD9TUv0c80N0F8pEYZsjFHRZ
-	L2XjiRiTxqA4MHMVbjBobSrqDYsfZ6gxRQJA32nOIKmTpqtXV0n6qZMWjzsCpAMcYqQ==
-X-Gm-Gg: ASbGncvQMlu+8VwRfoAld9jUbtXgc1163tofGj2x1yXm1O4+E4ZgYfua4FboYSivu29
-	/fxvHLW/kPTa7KGAjQe7w/5ZokFqYiEUuz1Kj1Uhh1p4Jr4nHgJIEdAjEOeVRJOJ7FJUgYNnnkG
-	QGjCoMwAJRz5HmADcZXmLWOkcqA8s1wYH1bgbwL+shpCcdsBtt6Xsv45ruRzQr/zt+gvRbo9t2e
-	eANtSPzJ6zO99+n11yy8kbAWH+eHB/wmYbG6CCXbYEUU4TcBOJBuRv66rXKmMPdpnrcRum6Z638
-	67qvSlbNgna6BttboF9t7owhnEoriU2B3pVLcEklz8zPBA==
-X-Received: by 2002:a05:620a:25d1:b0:7c5:cd94:adc with SMTP id af79cd13be357-7d3c6c1f5e7mr1993680285a.21.1750190621780;
-        Tue, 17 Jun 2025 13:03:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0hO0kmJUNiG8VP+Z83zSUCQkaNcGSMd2Z9D69EwCHqPR9pgESyvh8M5fvF1+LPf7+Mr6DWw==
-X-Received: by 2002:a05:620a:25d1:b0:7c5:cd94:adc with SMTP id af79cd13be357-7d3c6c1f5e7mr1993675285a.21.1750190621341;
-        Tue, 17 Jun 2025 13:03:41 -0700 (PDT)
-Received: from x1 (c-73-183-52-120.hsd1.pa.comcast.net. [73.183.52.120])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8e28623sm687342985a.51.2025.06.17.13.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 13:03:40 -0700 (PDT)
-Date: Tue, 17 Jun 2025 16:03:38 -0400
-From: Brian Masney <bmasney@redhat.com>
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, linux@armlinux.org.uk,
-	linux-clk@vger.kernel.org, devarsht@ti.com,
-	linux-kernel@vger.kernel.org, tomi.valkeinen@ideasonboard.com,
-	Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH] clk: Add clk_determine_rate function call
-Message-ID: <aFHKGvHlXP-cdC7d@x1>
-References: <20250616103527.509999-1-j-choudhary@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFoLuLhi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42536C4CEE3;
+	Tue, 17 Jun 2025 20:04:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750190650;
+	bh=pGjplF3VV7f7WBNYLa3u+BbCGJciyZq1HNlyXp3mq4g=;
+	h=Date:From:To:Cc:Subject:From;
+	b=nFoLuLhi7ViutAtgg+glKMXV6bKjaxoHVsC3uK+dwzUebTq8BI19iUouQlQY2tj+c
+	 e+6Bmf1fK0m4x6NegQ1y8ZQ5SBqGbszHJLxjhdPGYIj4y10XCJQDhmgX8t7sjHI/1y
+	 p+5vVxigSyKwvPFICIEteKCoOq8X9w7sTdEQtyS0qNwWeB8JJwcmvtre5/eRXMqcFJ
+	 xde65K5abt5viLM9vvf1YRCVx1/QMojLkHI7y9WKqCTZeprLqOEZiDzFLTHPzgeTo/
+	 U/BbEEb49YphiO+3xiGa+hp0SNmi1/6Ebg8lVXMcmLbcPij78qQNntmOH20KhIF/DK
+	 0hHX/yP5agzpg==
+Date: Tue, 17 Jun 2025 13:04:06 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-kbuild@vger.kernel.org, Nicolas Schier <nicolas@fjasle.eu>
+Subject: as-instr in Kbuild broken for arch/arm
+Message-ID: <20250617200406.GA3636948@ax162>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,33 +41,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250616103527.509999-1-j-choudhary@ti.com>
-User-Agent: Mutt/2.2.14 (2025-02-20)
 
-On Mon, Jun 16, 2025 at 04:05:27PM +0530, Jayesh Choudhary wrote:
-> Add a function to determine if a particular rate can be set for a clock
-> with its argument being the clock and the desired rate so that it could
-> be exposed to other peripherals.
-> For example, the display controllers typically has to perform multiple
-> checks for supported display resolutions including those related to
-> clock rates. The controller has to check this way before it actually
-> enables the clock and has to do it multiple times (typically for each
-> mode), and therefore using the clk_set_rate when its not needed, does
-> not make sense.
-> 
-> The driver does have "__clk_determine_rate()" but this cannot be used
-> by other subsystems because of the function arguments used.
-> "clk_hw" is not accessible to other peripherals due to clk and clk_core
-> structure definition in driver instead of include file, so we cannot use
-> already exisiting "__clk_determine_rate()" in other drivers.
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Hi Masahiro,
 
-Do you have a link to how this will be used within the DRM subsystem? If
-not, could you post a new series to include the user of this new API so
-that we can see specifically how it will be used.
+I backported commit d5c8d6e0fa61 ("kbuild: Update assembler calls to use
+proper flags and language target") to 5.4 due to an upstream clang
+change that necessitates this [1] but it causes a failure for as-instr
+with arm [2] because arch/arm/Makefile uses '-include asm/unified.h' for
+KBUILD_AFLAGS but LINUXINCLUDE is not present in the as-instr command,
+resulting in
 
-Thanks,
+  <built-in>:1:10: fatal error: 'asm/unified.h' file not found
+      1 | #include "asm/unified.h"
+        |          ^~~~~~~~~~~~~~~
+  1 error generated.
 
-Brian
+There does not appear to be any uses of as-instr within Kbuild (as
+opposed to Kconfig) for arch/arm after commit 541ad0150ca4 ("arm: Remove
+32bit KVM host support") in 5.7 but as far as I can tell, it is still
+possible to hit this issue in upstream if one were to be added.
 
+I see two obvious solutions but I am not sure what you would prefer.
+
+1. Add LINUXINCLUDE to the as-instr invocation, which would ensure
+relative '-include' flags can always be interpreted correctly, but I am
+unsure if this has other implications.
+
+diff --git a/scripts/Makefile.compiler b/scripts/Makefile.compiler
+index ef91910de265..3dc814f0cae8 100644
+--- a/scripts/Makefile.compiler
++++ b/scripts/Makefile.compiler
+@@ -38,7 +38,7 @@ as-option = $(call try-run,\
+ # Usage: aflags-y += $(call as-instr,instr,option1,option2)
+ 
+ as-instr = $(call try-run,\
+-	printf "%b\n" "$(1)" | $(CC) -Werror $(CLANG_FLAGS) $(KBUILD_AFLAGS) -Wa$(comma)--fatal-warnings -c -x assembler-with-cpp -o "$$TMP" -,$(2),$(3))
++	printf "%b\n" "$(1)" | $(CC) -Werror $(CLANG_FLAGS) $(LINUXINCLUDE) $(KBUILD_AFLAGS) -Wa$(comma)--fatal-warnings -c -x assembler-with-cpp -o "$$TMP" -,$(2),$(3))
+ 
+ # __cc-option
+ # Usage: MY_CFLAGS += $(call __cc-option,$(CC),$(MY_CFLAGS),-march=winchip-c6,-march=i586)
+
+2. Turn 'asm/unified.h' into an absolute path, which easily fixes this
+particular instance but does not prevent it from occurring again. It
+seems unlikely that it would because '-include' does not appear to be
+too common across the tree but I am always leery of silent failures like
+this.
+
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 4808d3ed98e4..e31e95ffd33f 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -149,7 +149,7 @@ endif
+ # Need -Uarm for gcc < 3.x
+ KBUILD_CPPFLAGS	+=$(cpp-y)
+ KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
+-KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) -Wa,$(arch-y) $(tune-y) -include asm/unified.h -msoft-float
++KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) -Wa,$(arch-y) $(tune-y) -include $(srctree)/arch/arm/include/asm/unified.h -msoft-float
+ KBUILD_RUSTFLAGS += --target=arm-unknown-linux-gnueabi
+ 
+ CHECKFLAGS	+= -D__arm__
+
+[1]: https://lore.kernel.org/20250604233141.GA2374479@ax162/
+[2]: https://lore.kernel.org/CACo-S-1qbCX4WAVFA63dWfHtrRHZBTyyr2js8Lx=Az03XHTTHg@mail.gmail.com/
+
+Cheers,
+Nathan
