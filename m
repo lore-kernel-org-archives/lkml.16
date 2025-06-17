@@ -1,150 +1,169 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F00725486E
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 454572550D4
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194140; cv=none; b=Ply1zJ0/Um9n1nNshq2XKA2q/T7PqWjFiyNwN+Hk6W21q01JSOdGlGAavX1kB6ltnSwqpn5BMVUU3RwcjvDO7GGRZvBbXBh2lASIZsehWAp3hhWcq3VhwfXqy7nhzmVKPUJwyLgZSFCIasD9Qq5UZxhhEcqWerpIzBb6e9zc5cI=
+	t=1750194151; cv=none; b=DVrlNzBoHvk6yTRv49k1QJ5euyaDkd9c8Ik7K89e/13VjQHGh/3bgHMI99GIHD3q4F+Inb1RfwS2BneIbXovosvnLjjFvHXqNy7VJbcK6L36pDYaa2kEZXEMRpsZrLXQyRd+NZL90yO8wuFfKdcQZKSQhcnolcd4gEwyRO4b6Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194140; c=relaxed/simple;
-	bh=bbJvFUQkw3L5PkboYUMBfNQJNB7Cj+N0QgAqzbHFUjs=;
+	s=arc-20240116; t=1750194151; c=relaxed/simple;
+	bh=IaC7pO6+0/KdfsjCt6ai0GcL3RIEQP9Q1HiWBwCI9Js=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VEPIEtuvAp6WSOiJhY7CtCY1XnjyS0ScDEpKTFdIzm2gTX7flkUhCtWC4EgjD5I0DSfj+s0r67vKnhcmizvBUhcTiPFRidQKeetOwD5DqRsYWotN6FCtATV8OdUtiH8yK2N4Coixrkcmq3cahQo795PlU7Di3vmcLVgmh6QM2xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aDn1j1Y0; arc=none smtp.client-ip=209.85.214.169
+	 To:Cc:Content-Type; b=s2wlEjVuGvjOI6vE/ROaArzU+qHutP4hb/+Q7tPPvdYzGPoCnU/AlbOwHfUGxB2OWGSY5cz65oS6XoR7QTVGb+Ukc9URVazzVLAeVK3eUx2b8jN3pUkBZTWgEE5gY+pCAIVJ0IK2kUm3IkdwfLyi4/pAUCKY+gy+bBzrgFcGMjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z2l8UHLR; arc=none smtp.client-ip=209.85.167.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aDn1j1Y0"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235ca5eba8cso55545ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:02:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z2l8UHLR"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e7967cf67so6346096e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:02:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750194138; x=1750798938; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750194147; x=1750798947; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FJpTkL6dnMUxXhqmmFV6413864xvIfSCiGQ5PuutKRk=;
-        b=aDn1j1Y0l7AYNZt7Qy2X/e0gj9YhLQyvqm5fO3SG1G8YnpRudZJlswM9i1g/sLnTmF
-         sbK03Wq2AEDVQTVRZ/cSFGIZLx+IjFb8gYhKVxvWBe09v4Bnrc9Ge1dBAInBw5m8BmQh
-         i7sTsW8G+fteiiRuitK8u7d+5+lS8p8TRMcOJbBGTi8b+B5WelEd3mFtSbIW+2sRp26y
-         kGWI+VC7sTUvztAHKIQhkqIjEkA8P6TN+r9F+R6EP0O20xnOBi/ht4pTgW5rrnBUSKBW
-         FbLA2i6ben0GVHPNh8AZ3cRGFxNf/yzICjzPnzlzYPKgQXWuO1dpG91TpYDFPVzuOUkw
-         TduQ==
+        bh=PJBYievKNfCEHacHMV9ZIC+ridMvs+KwmtxKpRY2HrU=;
+        b=Z2l8UHLRl5I86wusj+eS3Of7gxA9g7xqsaAK7AbMvtEVzrSSCDDU3BcOULAsgjCrjN
+         +8qPK/rPjp/nM6GZ9NFoBc8wi8KJz1Yk1NLQ7WvbSOYOHuOovlGpSkpqugqwvOw/EanT
+         jIYnJfCTTpb767Z06MXcC7glybakDWKifnuLFe1dGwdM+eZ3y8UNmLH4DzY32mRG4YG3
+         2c+0QwHseKWxHtDWKbMzcW25JuSyJtoYscWKte8QYeYV+DVhmndDqwqKr80SP7HrHxpl
+         P5gF5dPnI/lL1HGEHOb6VCYwXMYmHe9tKs+Dy/1AlDj1JAxOHZqKJhP5ziARSZW5eccr
+         PnTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750194138; x=1750798938;
+        d=1e100.net; s=20230601; t=1750194147; x=1750798947;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FJpTkL6dnMUxXhqmmFV6413864xvIfSCiGQ5PuutKRk=;
-        b=pcxy2Eis5uoi8XxC3doDL0ALqGU+tkhVvbiG+rb/TzECSbCYyJ+b59Km6b7D/AWJSZ
-         giSPj3hNRiNsqY0bQG3/pOrDHWt0J2lenTtdkgAbrvHF0Ar7OFHUpIsLlmC8RqvkqeJ+
-         9HIO6TVBsZRUG59Tt+ICiGhsvFnAUtGi+2401cMmPTGYNZIa+7SelVz3uV5bcWA3qPy4
-         zcl84ULlHlqoGwD8oexctg8LX6uPxAby2M5ijQ3l6UYnrji6f+z6wBmT3duk3no0FUAY
-         aDvDg2fwxZ/YU/8aZJFSC82a1rTuGWTnM4zC7l4DYfAH6IbvTqR1r5deqbttgahpst9k
-         Z07w==
-X-Forwarded-Encrypted: i=1; AJvYcCUdn0tiCWk7jmkrRSb6igQeOHLoCr5nOfKGIG4BEGUrrl6/O5ArvQCNcXRFgRoxIoegEjlCTr2NKWHOnP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjAAmiNxfW/fvxr5wJfT8O+3O+PYiUV/nj/RKjZH37am5JglUt
-	Tw7/yEDSIK4oJ8hfgZVBXXXzqG+/vzUISwF7b14H7tJ3aAbneJ04b1n2QLPmNAYRVTWAXJ4ioQu
-	lsqdjEuvwAbAUl9eeLNxFWH4Wyne7/0B24ilLzQNV8SchknQWQ1rLnYJo
-X-Gm-Gg: ASbGncvDnp/PyxTc9kCvhIv1Jc1gBjupIqgEEYQ09Dzo43B0j6Pxp//Y4OzevpNQgGF
-	SkG1Fqulgxcf0oPkmjdUpBHu2n5rblcvCazQZD5KvOEJgraglF31VJW+orBFuWppnMGIUYchc5j
-	1vuSBhJBf0GxQsB52ci4HlfGbhxLTodAdVmFx0CEzHpFBDidh7gdaEWTIlINtZPZLER/7EECqNq
-	Q==
-X-Google-Smtp-Source: AGHT+IHgMRu1fKsSV7XOy4vWnT6+ZEd1bH1oAglzGxguVpljDMbdpGfPlD9igC63Hsmb+pjcSFZ3ktzSSxCDH6UqpcY=
-X-Received: by 2002:a17:902:694c:b0:231:ddc9:7b82 with SMTP id
- d9443c01a7336-2366eef033amr6826765ad.13.1750194138053; Tue, 17 Jun 2025
- 14:02:18 -0700 (PDT)
+        bh=PJBYievKNfCEHacHMV9ZIC+ridMvs+KwmtxKpRY2HrU=;
+        b=FbVgOwNzQB+cXWiTYE0YFxLkgc11PoYq+m/wXQvkLlX8AYzvCO+yNuT7MhZvAtqYZG
+         2pYv86DqwzLdj1Ff+d+n/G7/s5JwS+6IqZ5oS8M4D9jKrdScth3r26tyNHJrl71TWDh3
+         rzmuuZGfvRwTwVWppSd67nj3zdpxMA9LImoAbVtukq0YDQy0eNb3C0U+0OcE3MnZzO9V
+         0sHXjGUvyw4kXQfXneevq6cMgBN8JDBRBHAjJPkhDMwvSrKyrmzHMAyooZLF8ps4tUOx
+         3eih8pgndzQ8QFmZMGhm0e5NdH1pHKw7w5UNPoTMlweuqecNuKDEzeqptlLMXX48fQg7
+         DtuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWOQ3kqEIyKNvV8C/OD3NvkVX1cuXlJuSBZ+BkpKi7jm+rlQij7fcRdlacQqyPMhmFNfMacgylpzO7h8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3b0bBrKdbduS1Sxt5YlqWs/zLYxw4cJFulJ3Wd9M4RKIQzMoT
+	fw4pk9sV7p0JoC0nsWl6juKH7pJ5p7l7Y8VPcaMp1eHXfsRiivc69M4MISiaSyGdnzzASc83tPV
+	LHXg8IXL86KF00btroWMnykg6sjLoiiJl08uTRsQ=
+X-Gm-Gg: ASbGnct1FdPCIrXmltYA4FzrBlAcaHrItTNeeVCXm+hcCrklyIng91ZSleUi78l0qKm
+	mINo78m3qI9Vw3DW5BqR1nX9AbG6XwSA24KNpc7X1nWxhrMCSjiQMRzt3mquOWcodGjxByuFy/n
+	EM9jqjwwvrq/iEQEBMvEtwRDUxtvJahbUJgm76enWl8WqnCiNXW3A39wiLwaBoIQ01QyHGac0=
+X-Google-Smtp-Source: AGHT+IF7sTQYGGBwCF4kAUzw/HchYbiway7musm8Os50fNb5cA76yIicDTBJe181wiAxG4715hg2/8AO/GJeuaxl92c=
+X-Received: by 2002:ac2:4c41:0:b0:553:37e7:867b with SMTP id
+ 2adb3069b0e04-553b6ee8899mr4611437e87.31.1750194147074; Tue, 17 Jun 2025
+ 14:02:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616080530.GA279797@maili.marvell.com> <d152d5fa-e846-48ba-96f4-77493996d099@huawei.com>
-In-Reply-To: <d152d5fa-e846-48ba-96f4-77493996d099@huawei.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 17 Jun 2025 14:02:05 -0700
-X-Gm-Features: AX0GCFvUw1z75ffCbqGSTrvshjJ_0t0dfFX0hDbMSAmZ2EGaeyX7sOFJGQGhBUs
-Message-ID: <CAHS8izNBNoMfheMbW5_FS1zMHW61BZVzDLHgv0+E0Zn6U=jD-g@mail.gmail.com>
-Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
-To: Yunsheng Lin <linyunsheng@huawei.com>
-Cc: Ratheesh Kannoth <rkannoth@marvell.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com
+References: <20250617155355.1479777-1-kuyo.chang@mediatek.com>
+In-Reply-To: <20250617155355.1479777-1-kuyo.chang@mediatek.com>
+From: John Stultz <jstultz@google.com>
+Date: Tue, 17 Jun 2025 14:02:14 -0700
+X-Gm-Features: AX0GCFtWGhwas8ObpV8SSgSSLy0WEYla_bnrUoClImFq7kWv5WAqODjqVFnEkwI
+Message-ID: <CANDhNCrUtLCU86hNk4qyfbqn9eXsmbzgzJCxYmXGRCko0r=VbQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] sched/deadline: Fix dl_server runtime calculation formula
+To: Kuyo Chang <kuyo.chang@mediatek.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 11:34=E2=80=AFPM Yunsheng Lin <linyunsheng@huawei.c=
-om> wrote:
+On Tue, Jun 17, 2025 at 8:54=E2=80=AFAM Kuyo Chang <kuyo.chang@mediatek.com=
+> wrote:
 >
-> On 2025/6/16 16:05, Ratheesh Kannoth wrote:
-> > Hi,
-> >
-> > Recently customer faced a page pool leak issue And keeps on gettting fo=
-llowing message in
-> > console.
-> > "page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
-> >
-> > Customer runs "ping" process in background and then does a interface do=
-wn/up thru "ip" command.
-> >
-> > Marvell octeotx2 driver does destroy all resources (including page pool=
- allocated for each queue of
-> > net device) during interface down event. This page pool destruction wil=
-l wait for all page pool buffers
-> > allocated by that instance to return to the pool, hence the above messa=
-ge (if some buffers
-> > are stuck).
-> >
-> > In the customer scenario, ping App opens both RAW and RAW6 sockets. Eve=
-n though Customer ping
-> > only ipv4 address, this RAW6 socket receives some IPV6 Router Advertise=
-ment messages which gets generated
-> > in their network.
-> >
-> > [   41.643448]  raw6_local_deliver+0xc0/0x1d8
-> > [   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
-> > [   41.652149]  ip6_input_finish+0x48/0x70
-> > [   41.655976]  ip6_input+0x44/0xcc
-> > [   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
-> > [   41.663546]  ip6_sublist_rcv+0x16c/0x22c
-> > [   41.667460]  ipv6_list_rcv+0xf4/0x12c
-> >
-> > Those packets will never gets processed. And if customer does a interfa=
-ce down/up, page pool
-> > warnings will be shown in the console.
-> >
-> > Customer was asking us for a mechanism to drain these sockets, as they =
-dont want to kill their Apps.
-> > The proposal is to have debugfs which shows "pid  last_processed_skb_ti=
-me  number_of_packets  socket_fd/inode_number"
-> > for each raw6/raw4 sockets created in the system. and
-> > any write to the debugfs (any specific command) will drain the socket.
-> >
-> > 1. Could you please comment on the proposal ?
+> From: kuyo chang <kuyo.chang@mediatek.com>
 >
-> I would say the above is kind of working around the problem.
-> It would be good to fix the Apps or fix the page_pool.
+> [Symptom]
+> The calculation formula for dl_server runtime is based on
+> Frequency/capacity scale-invariance.
+> This will cause excessive RT latency (expect absolute time).
 >
-> > 2. Could you suggest a better way ?
+> [Analysis]
+> Consider the following case under a Big.LITTLE architecture:
 >
-> For fixing the page_pool part, I would be suggesting to keep track
-> of all the inflight pages and detach those pages from page_pool when
-> page_pool_destroy() is called, the tracking part was [1], unfortunately
-> the maintainers seemed to choose an easy way instead of a long term
-> direction, see [2].
+> Assume the runtime is: 50,000,000 ns, and Frequency/capacity
+> scale-invariance defined as below:
+>
+> Frequency scale-invariance: 100
+> Capacity scale-invariance: 50
+> First by Frequency scale-invariance,
+> the runtime is scaled to 50,000,000 * 100 >> 10 =3D 4,882,812
+> Then by capacity scale-invariance,
+> it is further scaled to 4,882,812 * 50 >> 10 =3D 238,418.
+>
+> So it will scaled to 238,418 ns.
+>
+> [Solution]
+> The runtime for dl_server should be fixed time
+> asis RT bandwidth control.
+> Fix the runtime calculation formula for the dl_server.
 
-This is not that accurate IMO. Your patch series and the merged patch
-series from Toke does the same thing: both keep track of dma-mapped
-pages, so that they can be unmapped at page_pool_destroy time. Toke
-just did the tracking in a simpler way that people were willing to
-review.
+Thanks again for iterating on this patch! I've got a few minor nits below.
 
-So, if you had a plan to detach pages on page_pool_destroy on top of
-your tracking, the exact same plan should work on top of Toke's
-tracking. It may be useful to code that and send an RFC if you have
-time. It would indeed fix this periodic warning issue.
+> Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
+> Acked-by: Juri Lelli <juri.lelli@redhat.com>
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+>
+> v1: https://lore.kernel.org/all/20250614020524.631521-1-kuyo.chang@mediat=
+ek.com/
+>
+> ---
+>  kernel/sched/deadline.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index ad45a8fea245..f68a158d01e9 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1504,7 +1504,9 @@ static void update_curr_dl_se(struct rq *rq, struct=
+ sched_dl_entity *dl_se, s64
+>         if (dl_entity_is_special(dl_se))
+>                 return;
+>
+> -       scaled_delta_exec =3D dl_scaled_delta_exec(rq, dl_se, delta_exec)=
+;
+> +       scaled_delta_exec =3D delta_exec;
+> +       if (!dl_se->dl_server)
+> +               scaled_delta_exec =3D dl_scaled_delta_exec(rq, dl_se, del=
+ta_exec);
 
---=20
-Thanks,
-Mina
+Just a nit, but would
+    if (!dl_server(dl_se))
+
+be a little cleaner/consistent with other readers?
+
+>         dl_se->runtime -=3D scaled_delta_exec;
+>
+> @@ -1624,7 +1626,9 @@ void dl_server_update_idle_time(struct rq *rq, stru=
+ct task_struct *p)
+>         if (delta_exec < 0)
+>                 return;
+>
+> -       scaled_delta_exec =3D dl_scaled_delta_exec(rq, &rq->fair_server, =
+delta_exec);
+> +       scaled_delta_exec =3D delta_exec;
+> +       if (!rq->fair_server.dl_server)
+> +               scaled_delta_exec =3D dl_scaled_delta_exec(rq, &rq->fair_=
+server, delta_exec);
+>
+>         rq->fair_server.runtime -=3D scaled_delta_exec;
+
+I'm a little confused on the conditional here. Is
+fair_server.dl_server ever not true (after the first call to
+dl_server_start())?
+
+Also, in the discussion on your first version, it seemed there might
+be a need for different servers to have different requirements, but it
+seemed like fair_server would always not want to be scaled.
+
+thanks
+-john
