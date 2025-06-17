@@ -1,153 +1,95 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAAF2ED868;
-	Tue, 17 Jun 2025 16:26:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5480C2ED868;
+	Tue, 17 Jun 2025 16:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177618; cv=none; b=Ql9dfokQz95X9k/RXtdDN2slQ33sfDhwz2qOnw4jXJECCaH+Mz9eFvKhHBJx9PpCpbFE2wRuG87UYlbY12UQAgKzl9y9pJ/aERAkhuY3JjzgWzCZMvuLWPvH+N0rxxYAcBL6MOr5fT9TiUm5gpkvQcw5RI3/m5f+ZbB+PrvHzr4=
+	t=1750177623; cv=none; b=m4bqxc9wxFAhhP7uXKpYUDpAAqC7VghSbo9nnPPtEX8t/qlLHpD+G3Y4A1u5HtRWmXc0mJrbkoigp70o5VczfJiRfk8OGs3Nt1IRGRv7MR8gb/SdgjUuj6eRwPtP3NupiweO6daQpH1QYlGBdv0yHEJPJERYw0YMd99ezBn7oGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177618; c=relaxed/simple;
-	bh=gcYtgfygnQQQpxyGja4Ww0pSmxn9UnF2hNVedw7xXtc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pKXdFba3YgsFedFD6dCtWpln7NV55R9ej9xHHiCsLVbwyCoRRcASrLb2fnLgBucb+pklszdPbgANjIhHW6z5xHifmUxpSMOm+RgAqCwVyVy1N4riyvMzEX0ezoDvKIG87cFZRq0ucz6KYKTn0tSKckZKTS7S+P8EVFtKG2AJm3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=OKQRS5Vu; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750177623; c=relaxed/simple;
+	bh=F51JDOYIn5h9dNZW6ihjN280RdHMlDIc7Gr1e38ZgJY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iyFgA5vNndzDJi4GUw0mxpUg1QAwIHiTyfVKNaPubbax78v78vsMI9zUIptJ6c1o6swh0lg4Egj9urvIXeqDvT6nH3o2it+gEAzNogpDgCTMXQEaBlm8Lh0439lWOMyxkC+NrqywHMFPn8An9Ko1QDarFCSys5vLX+ssp2eV8Xs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffZawkpg; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="OKQRS5Vu"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id BB23625CF4;
-	Tue, 17 Jun 2025 18:26:55 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 2Et__IjP5nuD; Tue, 17 Jun 2025 18:26:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750177614; bh=gcYtgfygnQQQpxyGja4Ww0pSmxn9UnF2hNVedw7xXtc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OKQRS5VuwWsVTZZzk/HvnbjS3AO28oSt0GAVf9bNdqa5H7+89R+TOzFxWz6YgKPht
-	 IG77f+bJWVB3LfXRUdBcU4yI0brygQMWpH3No7xqRyKzcM6u7rWfjk60QMYDBlPszr
-	 UsGb6MUuksZE17b9nlZAu34uzFUfoupF09NyUjb4xswdC3UFrOYcWcQtnZs3RrfRn3
-	 P5Rct+0AbfqFVVW7c+FpgZry8H7u4anqbZYb4KpFMvtykzI5Wl8qUgFnp5zTHeJyTE
-	 gJpFtc/y0qcFeP5Xf7r8bR//Xbb80F56j05TaR6J11hsX6GjjxrfSCge6nILBF1H16
-	 o/KsWzYA4h/TA==
-From: Yao Zi <ziyao@disroot.org>
-To: Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>
-Cc: linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>,
-	Yao Zi <ziyao@disroot.org>
-Subject: [PATCH v2 6/8] clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
-Date: Tue, 17 Jun 2025 16:24:24 +0000
-Message-ID: <20250617162426.12629-7-ziyao@disroot.org>
-In-Reply-To: <20250617162426.12629-1-ziyao@disroot.org>
-References: <20250617162426.12629-1-ziyao@disroot.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffZawkpg"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so703418a91.1;
+        Tue, 17 Jun 2025 09:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750177621; x=1750782421; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F51JDOYIn5h9dNZW6ihjN280RdHMlDIc7Gr1e38ZgJY=;
+        b=ffZawkpg/vy84fBqI0wJR9Q6ANdsi+rgHq0RR3YnW7Li0NkH8ZPKpyBMqPSw71RtaY
+         ffTq81wwK4+AFRWyAKUIXaETTgvChs/l6NjXBlCry2TkQSGG7TGHc1/lOYpBz8ECfuwV
+         6e2PZCrO3ed8X9FtaGuOIsQAtLQWKIzHvb8f17x58dqJGlVWZqOizR7WQDrniNQ9BO/m
+         t2ggFdv7tNE2GWEAp3kKWm4Y74RDz+BEUz1esYd2Z0l9OkyAXk+zL94GhfBZX9iptXfY
+         Sguax4WSQsFXXg8UzDRDcS1MzWgkwwhmX6mdmbUUBrzf6kMTUxC6lUyFOKmq3QoVj4CI
+         +jZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750177621; x=1750782421;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F51JDOYIn5h9dNZW6ihjN280RdHMlDIc7Gr1e38ZgJY=;
+        b=oL9hAq/Qa2AwxzhNTW4ntwO4ssTyKQo9nTLOroQBi7ntgG9mN1hRwOttOKE4p2GUAk
+         +1uvRy/jA7J30Pr6X/BfGH1euCEj5roBNSUEUwheQiAKIMcdm+lpsxqzre+DD804by7c
+         jFznilNttqrMPZ9ga9QBqfAuURVGM4kDplRV0FvLPb63Cd/9b7iM+v34IrQtuVDXfjIR
+         VwzwopsjpUyD+t1NmEHxaJtNXjScH3AL8Aq2MO3oeZnDLcq9DwTrRibBJeRiI7DRVQA0
+         5vCpCHTfRRW1r6xJniaAae+kdDHJ7WJefBH3R0rzYfDGfQ3jRHlj3Ks3pKYVjD3aKeib
+         9c/A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3/HsFFSWNCKuH1KydK3Rabu9dsQ0jKPMCfSU8zhAgi7Oe8mshBfuLCFivBLC7/2P15K1F/IX9k6ER/vbcuTM=@vger.kernel.org, AJvYcCWhsM8z2xVwxIK20cWqX5Y8PsA/2VGhhX44DXLleF2/GqaU+CdRQtL3ORXvGCyGCPgm6pFWNEGZ7Ky+JUU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK8XDomnuuZH37f+ZZwKgx1cHLKWSDrTV3HA/VeYkNTrpaA1Jx
+	lpJ7dxgLXy7MXcrJRBMzz8YznayCk1iuv+/CE5Vfi4whMOd1soTQkc0rOCpgHfrESo3R6FZd0Fk
+	X0rCY5gQ4ele50kKNPGf1vJcw2ASMlFk=
+X-Gm-Gg: ASbGncsRHGri7Q/aqTKuWZgHeY1+yF7s2fRiMY39xHuHqSxpvm4uA36kZB7GCu/T7oJ
+	K38mORavyZnnad5h3VktBwQ0U2BAgmQOR7Xi3EsIMEX33BNwa9zl7dJtXUZs4uI6pKn5D197YQ1
+	oW6HPScNk35lw3VAH2F2+QL/w2+XDOM6sWY7weN4S7Z74=
+X-Google-Smtp-Source: AGHT+IHcmb9NQChH3GIvkatRmyIxieky9J1mXG02lOTxM9Rt4noubdb3rJ2E/Oa0yJDcdsTQeB8KKdY9GuqMZVoqA/I=
+X-Received: by 2002:a17:90b:4b4b:b0:313:151a:8653 with SMTP id
+ 98e67ed59e1d1-313f1de63b5mr7729221a91.8.1750177621484; Tue, 17 Jun 2025
+ 09:27:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250616153604.49418-1-boqun.feng@gmail.com> <20250616153604.49418-2-boqun.feng@gmail.com>
+ <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com> <aFE0pjPsuB0gBgvT@google.com>
+In-Reply-To: <aFE0pjPsuB0gBgvT@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 17 Jun 2025 18:26:46 +0200
+X-Gm-Features: AX0GCFtCj839nTFDnIwha9xYGkw6_-6Cxy9wRtrEveDCzdYvTNQAJma8Z_zymNc
+Message-ID: <CANiq72=mQ+JCGsfhADR6NYeyA1qrNFWfs8ke4GVEHeWX3o9jUA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@samsung.com, tmgross@umich.edu, dakr@kernel.org, mingo@redhat.com, 
+	peterz@infradead.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
+	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com, 
+	fujita.tomonori@gmail.com, mingo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The clock controller of Loongson 2K0300 consists of three PLLs, requires
-an 120MHz external reference clock to function, and generates clocks in
-various frequencies for SoC peripherals.
+On Tue, Jun 17, 2025 at 11:26=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+>
+> We will need to coordinate with
+> https://github.com/rust-lang/rust/pull/142579
 
-Clock definitions for previous SoC generations could be reused for most
-clock hardwares. There're two gates marked as critical, clk_node_gate
-and clk_boot_gate, which supply the CPU cores and the system
-configuration bus. Disabling them leads to a SoC hang.
+Upstream Rust just closed it rejecting the change, so no change (so
+far) needed for this patch.
 
-Signed-off-by: Yao Zi <ziyao@disroot.org>
----
- drivers/clk/clk-loongson2.c | 48 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+It would be nice to know if they feel the signature will stay
+reasonably stable now -- we can ask them tomorrow.
 
-diff --git a/drivers/clk/clk-loongson2.c b/drivers/clk/clk-loongson2.c
-index 52a9f1c2794a..1d210a7683ea 100644
---- a/drivers/clk/clk-loongson2.c
-+++ b/drivers/clk/clk-loongson2.c
-@@ -12,6 +12,7 @@
- #include <linux/platform_device.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- #include <dt-bindings/clock/loongson,ls2k-clk.h>
-+#include <dt-bindings/clock/loongson,ls2k0300-clk.h>
- 
- enum loongson2_clk_type {
- 	CLK_TYPE_PLL,
-@@ -137,6 +138,52 @@ struct loongson2_clk_board_info {
- 		.fixed_rate	= _rate,			\
- 	}
- 
-+static const struct loongson2_clk_board_info ls2k0300_clks[] = {
-+	/* Reference Clock */
-+	CLK_PLL(LS2K0300_PLL_NODE, "pll_node",   0x00, 15, 9, 8, 7),
-+	CLK_PLL(LS2K0300_PLL_DDR,  "pll_ddr",    0x08, 15, 9, 8, 7),
-+	CLK_PLL(LS2K0300_PLL_PIX,  "pll_pix",    0x10, 15, 9, 8, 7),
-+	CLK_FIXED(LS2K0300_CLK_STABLE, "clk_stable", NULL, 100000000),
-+	CLK_FIXED(LS2K0300_CLK_THSENS, "clk_thsens", NULL, 10000000),
-+	/* Node PLL */
-+	CLK_DIV(LS2K0300_CLK_NODE_DIV, "clk_node_div", "pll_node", 0x00, 24, 7),
-+	CLK_DIV(LS2K0300_CLK_GMAC_DIV, "clk_gmac_div", "pll_node", 0x04, 0, 7),
-+	CLK_DIV(LS2K0300_CLK_I2S_DIV,  "clk_i2s_div",  "pll_node", 0x04, 8, 7),
-+	CLK_GATE(LS2K0300_CLK_NODE_PLL_GATE,   "clk_node_pll_gate", "clk_node_div", 0x00, 0),
-+	CLK_GATE(LS2K0300_CLK_GMAC_GATE,       "clk_gmac_gate",	    "clk_gmac_div", 0x00, 1),
-+	CLK_GATE(LS2K0300_CLK_I2S_GATE,        "clk_i2s_gate",	    "clk_i2s_div", 0x00, 2),
-+	CLK_GATE_FLAGS(LS2K0300_CLK_NODE_GATE, "clk_node_gate",	    "clk_node_scale",
-+		       0x24, 0, CLK_IS_CRITICAL),
-+	CLK_SCALE_MODE(LS2K0300_CLK_NODE_SCALE,    "clk_node_scale",    "clk_node_pll_gate",
-+		       0x20, 0, 3, 3),
-+	/* DDR PLL */
-+	CLK_DIV(LS2K0300_CLK_DDR_DIV, "clk_ddr_div", "pll_ddr", 0x08, 24, 7),
-+	CLK_DIV(LS2K0300_CLK_NET_DIV, "clk_net_div", "pll_ddr", 0x0c, 0, 7),
-+	CLK_DIV(LS2K0300_CLK_DEV_DIV, "clk_dev_div", "pll_ddr", 0x0c, 8, 7),
-+	CLK_GATE(LS2K0300_CLK_NET_GATE,		"clk_net_gate", "clk_net_div", 0x08, 1),
-+	CLK_GATE(LS2K0300_CLK_DEV_GATE,		"clk_dev_gate",	"clk_dev_div", 0x08, 2),
-+	CLK_GATE_FLAGS(LS2K0300_CLK_DDR_GATE,	"clk_ddr_gate",	"clk_ddr_div",
-+		       0x08, 0, CLK_IS_CRITICAL),
-+	/* PIX PLL */
-+	CLK_DIV(LS2K0300_CLK_PIX_DIV,	 "clk_pix_div",	   "pll_pix", 0x10, 24, 7),
-+	CLK_DIV(LS2K0300_CLK_GMACBP_DIV, "clk_gmacbp_div", "pll_pix", 0x14, 0, 7),
-+	CLK_GATE(LS2K0300_CLK_PIX_PLL_GATE, "clk_pix_pll_gate",	"clk_pix_div", 0x10, 0),
-+	CLK_GATE(LS2K0300_CLK_PIX_GATE,	    "clk_pix_gate",	"clk_pix_scale", 0x24, 6),
-+	CLK_GATE(LS2K0300_CLK_GMACBP_GATE,  "clk_gmacbp_gate",	"clk_gmacbp_div", 0x10, 1),
-+	CLK_SCALE_MODE(LS2K0300_CLK_PIX_SCALE,	"clk_pix_scale",	"clk_pix_pll_gate",
-+		       0x20, 4, 3, 7),
-+	/* clk_dev_gate */
-+	CLK_DIV(LS2K0300_CLK_SDIO_SCALE, "clk_sdio_scale", "clk_dev_gate", 0x20, 24, 4),
-+	CLK_GATE(LS2K0300_CLK_USB_GATE,	 "clk_usb_gate",	"clk_usb_scale", 0x24, 2),
-+	CLK_GATE(LS2K0300_CLK_SDIO_GATE, "clk_sdio_gate",	"clk_sdio_scale", 0x24, 4),
-+	CLK_GATE(LS2K0300_CLK_APB_GATE,  "clk_apb_gate",	"clk_apb_scale", 0x24, 3),
-+	CLK_GATE_FLAGS(LS2K0300_CLK_BOOT_GATE, "clk_boot_gate",	"clk_boot_scale",
-+		       0x24, 1, CLK_IS_CRITICAL),
-+	CLK_SCALE_MODE(LS2K0300_CLK_USB_SCALE,  "clk_usb_scale",  "clk_dev_gate", 0x20, 12, 3, 15),
-+	CLK_SCALE_MODE(LS2K0300_CLK_APB_SCALE,  "clk_apb_scale",  "clk_dev_gate", 0x20, 16, 3, 19),
-+	CLK_SCALE_MODE(LS2K0300_CLK_BOOT_SCALE, "clk_boot_scale", "clk_dev_gate", 0x20, 8, 3, 11),
-+};
-+
- static const struct loongson2_clk_board_info ls2k0500_clks[] = {
- 	CLK_PLL(LOONGSON2_NODE_PLL,   "pll_node", 0,    16, 8, 8, 6),
- 	CLK_PLL(LOONGSON2_DDR_PLL,    "pll_ddr",  0x8,  16, 8, 8, 6),
-@@ -393,6 +440,7 @@ static int loongson2_clk_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id loongson2_clk_match_table[] = {
-+	{ .compatible = "loongson,ls2k0300-clk", .data = &ls2k0300_clks },
- 	{ .compatible = "loongson,ls2k0500-clk", .data = &ls2k0500_clks },
- 	{ .compatible = "loongson,ls2k-clk", .data = &ls2k1000_clks },
- 	{ .compatible = "loongson,ls2k2000-clk", .data = &ls2k2000_clks },
--- 
-2.49.0
-
+Cheers,
+Miguel
