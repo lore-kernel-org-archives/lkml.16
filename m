@@ -1,101 +1,92 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13252E06D9;
-	Tue, 17 Jun 2025 13:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847182E7191
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168498; cv=none; b=hpoX+c1zHnLK3V9fRkk7munQrQysuSN22ehZCFcPnl5J++bdXG2oMxbGUbpx2ETN5CvVuu36YxIqpX8pT/IHQ7e1Z4/S/ffDsYsI5sYgo41RAthDAIFiARrdAj3YB1eL2D+Nc/9mi7cRvohNIByKcjLIvJn8RwrRXmMbbzgLrTI=
+	t=1750168609; cv=none; b=ns2w0HxoWn9XhTdBVZfEdfMHJ9b+woO+G9CClytrQZ8itcgC0WgpIk6A0Qbk2tESB6HVIOlA0NtFHOps3XIYfiBELlGHEWCxKlOI1HGz9uHCuYQ+eGxi6+X6d+CNc+V8nF5kyNsmh63FTrjQcqvNVdB1XJvh6V/i/TUdsnwTjGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168498; c=relaxed/simple;
-	bh=MH4f7ssedlOhhd0/OlUlv5GCda7tMpUfS4PTAFm+JNQ=;
+	s=arc-20240116; t=1750168609; c=relaxed/simple;
+	bh=3zbvvtG7YQuVKX9TYGQMUeZBbqaW7QzuUhVqFlHBOaM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P4IS7QxGedPYM3j73Vn0X7T2dVZIx86hoKCqKw8HyOC0J2fnoVJtfhWhPmvZMLN2M/rBRwSPXePuygXPldEXwCsymJm92R/8x0fk9Hw69KjD0gbGzSPzcdAdI/uVGKYFqHB9lN5yZfPUKdgvjWwJ7SNRcadLWG7FtdUBz8ectmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ec4ec218fso913943241.3;
-        Tue, 17 Jun 2025 06:54:56 -0700 (PDT)
+	 To:Cc:Content-Type; b=UE+k28cGm/UCW8pWLPW3EwAtY/wDmuaKEqg9GJVW4gBKaCPR3W49Av5R3MOAS4oxvToWBmlACIMHFr919xKZLtyQCnoWWC0uAA4uWBdn+1EL5e2oCy1BuQc4phdtmhKMdkOwmf6HBwr1Lp6U9KSPYEvDuT6JtKAejqgW0GyK4PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lc6HioDs; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lc6HioDs"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81f311a86fso5451128276.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750168606; x=1750773406; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=xofT8fwCIcw3ss7J9p9tyTyHI6bgKbUW4cnKWlrbyJw=;
+        b=lc6HioDsR8xWZDKQ9gdlqf5qRxHNWNvCkGJuP2EY8RUswu9W/4Kls77VCdEITwslWh
+         6MXrzV6q6MV4iASm74QHizstBUy/xFgZd+ppQpYD7sbFmuE/tY+9RGJAS32u0OFx19Yq
+         r2RLciR4xRdDJzbPLycrb2sTahnQM5gW+SdtLZYk0TpiKOrSFfBz+4EcTT6YsYYoi8az
+         HPeaQoRln5u55zFjOZIfvUtA0Oo1SF2AfB7pHziqmwXKMjcQ1iTmIHp5381FrpS7EXku
+         FBM522ukZptoB5oQiZhRRraEfTMdGxj+Z52H0fe03crLn2EDPDM7JY6uw84H6eGSfAr5
+         xuaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750168494; x=1750773294;
+        d=1e100.net; s=20230601; t=1750168606; x=1750773406;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+NPFOGmKwe57k8665KU6g7tXyTNhIGu+1JDxa3K0Buc=;
-        b=n4OdgwnKqhpe2CLKmrp2dyGfQkRcnejPOV0FCeUwbFhD8bcBH2ltwjFYuzKS9T9OwZ
-         oF+yomAmqvCOpM9HuxYCKxHPdNHsWRRZkrGFCIYliugQM1WBFxsxMKdbKLPZQMoF1Ye5
-         EeFEYDehjh5o+uQl3orYK+utcGkzEl2ncQDQfllag2tyC2+E4lGh/fkM2VfA5WjTczxW
-         yHqYzYhKSSOQTOQhQ1dqdYChvMkhLFCSHWuUFORqBAf2owh26e1Ct5fS3NgbhT7UWWn3
-         fHTA8ptg93kbd1rZ+T/kXkQBAUwZS+iTmlIVs5iuWpI9Z0w88azR1jtXhVoqTncMgkKe
-         WgiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEn26O5i6qZ6/pyCCbgg3IEHdAedYwsspj5cq1fugQuussagXsnkWy2c8NUUlnGMh28SlEiRNjGKBCiufmwAaAX2s=@vger.kernel.org, AJvYcCUv6uxbdoLfU5L89h7L1azk0qeYlSAJBtb76N3EJTOEohrp2MQWjGcNJDu6iceNBUrWSuTHsthMiVwOgAHt@vger.kernel.org, AJvYcCWkO7t1NYD7QZ8FkjZdl/+G905SpXbhxmirl3yjrKK/Fl8rH/u737T9LUb5uVI6KJmHapFbFF7x1g+DjcEk@vger.kernel.org, AJvYcCX6o+SckBnts30cK1aIV7W8wlxRfXxXrswy5qWg9PwuNaoJUgLE5s/XKLH4IxuSCAXOZOuogzKPGi+Y@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMTrWOG3s/7HCyWoniqCoS8gIg7IjWpMy8rs8TXjaYIWk++jkM
-	Ezs5pUP1edYq4SCkP7YZ842Xzs6OuTXfvh+M/eAq50UIhiIdwh5/pxmQlfWdThwf
-X-Gm-Gg: ASbGnctY9GIHuAaggjRGDkanJG+Ng/zudQDsfkhruEYivi9rwuPqUb+4gw4oSKC0iFr
-	Z9NCcoK7syARy6uLxXUaeAWrwgsGo3F1e5NRoGyyUNViweHi1926spktWZw2wWlpd75Xlu5xRsR
-	wrxNvn44dbC7FfLkXGY2o2I5VMZwuLCoQzD+ru6pScj4L3e4AQk8yh2I1WFxVcnxsacIhXvSrSZ
-	rSAikKK2qNf7r33onLPkL0iB3rq8kAm8EdHUMfB+4h/i988Lbj+YjcoYsSJWFXmdE53fLXYGi+K
-	/KMRtr/tDJ87gczOoWcgMKVlwCyuKHKth/6aVD3x8Oq/WaXC9VqQ+oFVphZmG0AlOjDK7Hnb13E
-	A9J9YPaPEafdw100FqZgHQCg6
-X-Google-Smtp-Source: AGHT+IFGw6LmJ/SAiaHvjQoGdgf0CMGd58YqOwuiu9L4GQSVNPHszkgSUJed45u4aG5Z8ALkxKJ9Sw==
-X-Received: by 2002:a05:6102:4193:b0:4e5:963b:738a with SMTP id ada2fe7eead31-4e7f6260e2bmr8202500137.16.1750168494020;
-        Tue, 17 Jun 2025 06:54:54 -0700 (PDT)
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f28c31f33sm987522241.16.2025.06.17.06.54.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 06:54:53 -0700 (PDT)
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7ef5d6bffso1300695137.3;
-        Tue, 17 Jun 2025 06:54:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWLjIwrmgVRj40vDfcGsP6C0LjqfFt7rKyDgu5hQJgKYU3mKfwF3lJTKhTgtAQoUZDFSF7QOmgkQt3q@vger.kernel.org, AJvYcCWrd4BVgqK6nEj5YETJ6i8uq5IlB9RMS0PYYElhtqZwMUjEq7io8DlZtHmtvL+Qwcc6CsKqEAAA1SZ69GBv@vger.kernel.org, AJvYcCXH99TCjoBViOJmJHH2wVoJTklxZobOlyj/J2tFqJULN0TILGHz8te5t1wtgZ0o6JFon9MuJf7nP5yPilrDEt3TX7o=@vger.kernel.org, AJvYcCXTr8X+BztmCjj4KbZmtIkebli0E54efRj2sFmWEQzRHG9/GL08dsL+nIpkOlBxXWPmNaVPlZyFs/V6AnhP@vger.kernel.org
-X-Received: by 2002:a05:6102:6f0b:b0:4e9:8488:ceb0 with SMTP id
- ada2fe7eead31-4e98488d207mr923020137.15.1750168493078; Tue, 17 Jun 2025
- 06:54:53 -0700 (PDT)
+        bh=xofT8fwCIcw3ss7J9p9tyTyHI6bgKbUW4cnKWlrbyJw=;
+        b=Txwm4sT2hKrbUvVKZpVOIp+haye0qJqRtW1ASqFulxRV6a0MPcdGcbhVY+mVQSkyP3
+         wtc8j/0wB+x2N79Fr33j/6hNeraOpxDf3C1musoIrQR2AaWktGOUVkhIAqrsqgdMLRf1
+         xjSkPoD+FnIu9V4BaLZrx1MLX0mVIyPdPJ36wQMpQEwEZcpzCEVeTzn6ZNX1qiJcG+Gl
+         p19ngFS5vRfGI57su4ua5EdGBw3Idy7d/p22Vg1vMwDDwAKFVJHnORDAR1ElTbCLcacX
+         V49WqpZSCKXD8Z5wnqIV+OJcS0YVfsh1NY8jtk5nLkMHQOwA/c3EckyQjWML9kBoG+eX
+         8MVg==
+X-Gm-Message-State: AOJu0YxbHbBnRQLKQiqPTyrTrnNGX/ijMbpM1MkbdRZDvfykWBkYiSXk
+	Ot6H0b9I9EqoXb23FoQ5WLUJkQ4t9Sjjsl/Ne/wYpj4FiBPcoU9eoNHSD5hNvIjY53VPeLcrNk/
+	WFNrQarIoTZGmsb6CHZndsD+NR4G/rxkIzhuM6Vn1hcPBt/P39RYR
+X-Gm-Gg: ASbGncuLlnFVju2ggKOiaehFOchxBZ/fhTr5XE1qDAeOToj89CiPExt8LBsFJArUjXJ
+	a9J/eiQUz2ndriJ4BLVvwI1uSvyRi78gkHqMSxzdWev9vVnvSZB/CtseaCphTb7m7Fyl8WBMis3
+	EXd2xHrw5fAsmxyZtg5gG1e3snpJ9Zu+IxSPf/65zMzFKp
+X-Google-Smtp-Source: AGHT+IHuXsga1oBDQoLkES6fJaLQd3hottwmMudsb72N1YF49HztC//8v/4qepEDNCi8SqWDXlsgFDqxRNIpopuLq+w=
+X-Received: by 2002:a05:6902:1687:b0:e82:c36:feb5 with SMTP id
+ 3f1490d57ef6-e822abf7a10mr17023480276.16.1750168606542; Tue, 17 Jun 2025
+ 06:56:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250617134504.126313-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250617134504.126313-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 17 Jun 2025 15:54:41 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWuh=O5HJ1euwed6NBHWOyi_sMuKXVttVX+QzbgbHNfWg@mail.gmail.com>
-X-Gm-Features: Ac12FXyhfEkegCCAJkC3v3V_yqUqFj0Dol0lfCSMeSBROmWrtxx-3LxVrYZ7Ujw
-Message-ID: <CAMuHMdWuh=O5HJ1euwed6NBHWOyi_sMuKXVttVX+QzbgbHNfWg@mail.gmail.com>
-Subject: Re: [PATCH v12 4/7] serial: sh-sci: Replace direct stop_rx/stop_tx
- calls with port ops in sci_shutdown()
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250610111633.504366-1-ulf.hansson@linaro.org>
+In-Reply-To: <20250610111633.504366-1-ulf.hansson@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 17 Jun 2025 15:56:10 +0200
+X-Gm-Features: AX0GCFtmZtjXZ3TSs816xYOPxJZIfqU9jxiY-vmD84gGmwkB_IMpvHaAnZiwJew
+Message-ID: <CAPDyKFpWrBDQjUdGkhnRVxrYGLMfqmyd9U8Kv44aRZWwhqTG3A@mail.gmail.com>
+Subject: Re: [PATCH 0/4] mmc: rtsx_usb_sdmmc: Improve sd_set_power_mode()
+To: Ricky Wu <ricky_wu@realtek.com>, linux-mmc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 17 Jun 2025 at 15:45, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, 10 Jun 2025 at 13:16, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 >
-> Replace direct calls to sci_stop_rx() and sci_stop_tx() with port ops
-> callbacks in sci_shutdown(). This enables the RSCI driver, which reuses
-> the SCI core but implements its own stop_rx and stop_tx logic, to reuse
-> sci_shutdown() without duplicating code.
+> The code in sd_set_power_mode() is a bit obfuscated and also has some minor
+> issue in its error-path. This small series addresses these problems.
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Ulf Hansson (4):
+>   mmc: rtsx_usb_sdmmc: Fix error-path in sd_set_power_mode()
+>   mmc: rtsx_usb_sdmmc: Print debug-messages at power-on/off errors
+>   mmc: rtsx_usb_sdmmc: Convert sd_set_power_mode() into void
+>   mmc: rtsx_usb_sdmmc: Re-work the code in sd_set_power_mode()
+>
+>  drivers/mmc/host/rtsx_usb_sdmmc.c | 31 ++++++++++++++++++++-----------
+>  1 file changed, 20 insertions(+), 11 deletions(-)
+>
+> --
+> 2.43.0
+>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Ricky, I would appreciate your feedback on these too. Or at least an ack.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Kind regards
+Uffe
