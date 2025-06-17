@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB2233993;
-	Tue, 17 Jun 2025 01:40:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1491A840A;
+	Tue, 17 Jun 2025 01:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750124453; cv=none; b=URXqTCNxKj30OOws3125NBci9vHhREjkCW1/Etff9uONp7wLm9kMLmj1guwL2r4tboX/IpViRtp+YonA277PubxJXFoUa064evYLTV9feHoSHdHBEmv9ULgca/R8EkvRYpn3R2e2xH1/J6an39mQzgU18aA1yqHBzikWhmueq4c=
+	t=1750124454; cv=none; b=cnB+CO10Vvsmku5zm4XsVmUhX/cDO/YuehTsdN7mdGjdUk9535txYBYmigTqm0o3QE/+ESq0OEvFnqazxSclfII3EZyXYyMzGcXDXYMmISJXVw00dtoJP+7Pia8uEfVRmhtra1irV51Zs5ZFeS5D//hbPue4RZPd38lG5Re8OWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750124453; c=relaxed/simple;
-	bh=da8Jwzo2ic5R94yd+CIBR13juhRPWVZW26d2H4D0CW0=;
+	s=arc-20240116; t=1750124454; c=relaxed/simple;
+	bh=fnNy2300F4fNazQu+CwpRxz57yQpIn0TkQNblICptZ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SvjUE7i59arNLHmSdYm9C7PVpIreFPqiEwsA77SU89bp9z1hyOnLLdMcI8hkX+ho3SvqfNoNcGHtyTX2fj6gG/LCbJjogSQut2alN98Zyq7TBB+BvwYy16QvUCXcPZII5sktST8Ln8LfLUZ0Y2uylUPE0zHys8AIksXmx6/Y5iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JBnQX9Nq; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=C9KWXS4clQCN7fmgrFO5PkkzOZSxgZzvA/w1ACFkZc/NS5kHGfKL6XEVHnXHuOa5TLxroOC+cHXFn3UBEGEbwepQ6FRwmR/mRmGq47K+lnmo4QY44kLqgtNJ1ZuWoEI6TPJyzmsouV8Si4F0rMxKF5KqmwOXhcmraTlwqT3buc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fO15wIQJ; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JBnQX9Nq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fO15wIQJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750124452; x=1781660452;
+  t=1750124453; x=1781660453;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=da8Jwzo2ic5R94yd+CIBR13juhRPWVZW26d2H4D0CW0=;
-  b=JBnQX9Nq/bxZdHP1dqYmDlkuEThXNb82juoVns1zEfRQUR4izDpzM30x
-   r4EFyxE4nltsewxcGE7yQYOLHLgQ1bYAdyHKgrX4Sp1ZjyYeHgemhB6Pw
-   d17HuFFdXPSE2i2M4YQOMoo1zYyA+6X5UcqNLYxEmKHUMyhF+XT8VEm7x
-   bheMal73gWsopjj6jtbakWTPOAjFgPvWRU08gZdpOG8DFCbdPpfxmDix+
-   DsA6TZOv/hPqH/f8YWXHjbsAFklIpENsJOn6TQUF6rpai50UO4JbwocFN
-   7eQX4oisk3uMuUJ4dH5TkHugmHf6p82wwVSb2/n5tn2pDqzFxHM0GAB6a
-   g==;
-X-CSE-ConnectionGUID: LYCxFfG6TQiiNKQxq5hDmA==
-X-CSE-MsgGUID: dwdbvbHdRjq4BQxsA0CCUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62556530"
+  bh=fnNy2300F4fNazQu+CwpRxz57yQpIn0TkQNblICptZ8=;
+  b=fO15wIQJgZl5vRqBEy7KaOUS0vKHS/GzGa9P0dtqCok26zE41YrSew3q
+   c2xP8jq3w2vYX6lHO7qIXoZ8/ecpFpe5zjRKpVFAatLUtetmwUgDM8pOS
+   ZsEgNoh1sxfGk48zWJ41EYbOtKzKIj201cZoY8KTVfVzic6Vvnb9JAZFy
+   HZfCaf5UHVuSDziv5F6pMhoEGjsGCHIxSKFda9f1qV0dCcxM11EAvj37l
+   rbttiPb/JkK7EDiPj00IkuAUwBmDUUv7MUUfn1pq6a6X5mUAqc0J4TIqQ
+   /CqRX/fA1qxStUkfzTkRtQ2wPbNCgwRrqxIWfAVbTXfl92Pv2qZ9ctR57
+   w==;
+X-CSE-ConnectionGUID: i/rjlz19R7yUTIzT5BR5zw==
+X-CSE-MsgGUID: G/FQb+nFTNCT9hRgUg7+Ew==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62556537"
 X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="62556530"
+   d="scan'208";a="62556537"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:50 -0700
-X-CSE-ConnectionGUID: QdsZ0PMkQyeWCXHl4eEkUA==
-X-CSE-MsgGUID: joqf27UNSmuLoEHfq5vxUA==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:51 -0700
+X-CSE-ConnectionGUID: oyn90jnDT1qdu9GSCiVv3Q==
+X-CSE-MsgGUID: TsLMDAD/ShqcpacpcEHkqw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="148989437"
+   d="scan'208";a="148989447"
 Received: from spandruv-desk2.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.124.223.117])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:49 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:50 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
@@ -53,9 +53,9 @@ To: linux-kernel@vger.kernel.org,
 	tony.luck@intel.com,
 	xi.pardee@linux.intel.com
 Cc: hdegoede@redhat.com
-Subject: [PATCH V2 01/15] MAINTAINERS: Add link to documentation of Intel PMT ABI
-Date: Mon, 16 Jun 2025 18:40:25 -0700
-Message-ID: <20250617014041.2861032-2-david.e.box@linux.intel.com>
+Subject: [PATCH V2 03/15] platform/x86/intel/vsec: Create wrapper to walk PCI config space
+Date: Mon, 16 Jun 2025 18:40:27 -0700
+Message-ID: <20250617014041.2861032-4-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250617014041.2861032-1-david.e.box@linux.intel.com>
 References: <20250617014041.2861032-1-david.e.box@linux.intel.com>
@@ -65,10 +65,15 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Add a link to the documentation for the Intel Platform Monitoring
-Technology ABI in Documentation/ABI/testing/sysfs-class-intel_pmt
+Combine three PCI config space walkers =E2=80=94 intel_vsec_walk_dvsec(),
+intel_vsec_walk_vsec(), and intel_vsec_walk_header() =E2=80=94 into a new w=
+rapper
+function, intel_vsec_feature_walk().  This refactoring simplifies the probe
+logic and lays the groundwork for future patches that will loop over these
+calls. No functional changes.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
@@ -76,21 +81,62 @@ Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 Changes in v2:
   - No changes
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel/vsec.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa16..b704107859a6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12386,6 +12386,7 @@ F:	include/linux/mfd/intel_soc_pmic*
- INTEL PMT DRIVERS
- M:	David E. Box <david.e.box@linux.intel.com>
- S:	Supported
-+F:	Documentation/ABI/testing/sysfs-class-intel_pmt
- F:	drivers/platform/x86/intel/pmt/
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel=
+/vsec.c
+index 59fb6568a855..f01651f498ca 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -349,6 +349,27 @@ int intel_vsec_register(struct pci_dev *pdev,
+ }
+ EXPORT_SYMBOL_NS_GPL(intel_vsec_register, "INTEL_VSEC");
 =20
- INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
++static void intel_vsec_feature_walk(struct pci_dev *pdev, bool *have_devic=
+es,
++				    struct intel_vsec_platform_info *info)
++{
++	/*
++	 * Both DVSEC and VSEC capabilities can exist on the same device,
++	 * so both intel_vsec_walk_dvsec() and intel_vsec_walk_vsec() must be
++	 * called independently. Additionally, intel_vsec_walk_header() is
++	 * needed for devices that do not have VSEC/DVSEC but provide the
++	 * information via device_data.
++	 */
++	if (intel_vsec_walk_dvsec(pdev, info))
++		*have_devices =3D true;
++
++	if (intel_vsec_walk_vsec(pdev, info))
++		*have_devices =3D true;
++
++	if (info && (info->quirks & VSEC_QUIRK_NO_DVSEC) &&
++	    intel_vsec_walk_header(pdev, info))
++		*have_devices =3D true;
++}
++
+ static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_dev=
+ice_id *id)
+ {
+ 	struct intel_vsec_platform_info *info;
+@@ -372,15 +393,7 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, =
+const struct pci_device_id
+ 	priv->info =3D info;
+ 	pci_set_drvdata(pdev, priv);
+=20
+-	if (intel_vsec_walk_dvsec(pdev, info))
+-		have_devices =3D true;
+-
+-	if (intel_vsec_walk_vsec(pdev, info))
+-		have_devices =3D true;
+-
+-	if (info && (info->quirks & VSEC_QUIRK_NO_DVSEC) &&
+-	    intel_vsec_walk_header(pdev, info))
+-		have_devices =3D true;
++	intel_vsec_feature_walk(pdev, &have_devices, info);
+=20
+ 	if (!have_devices)
+ 		return -ENODEV;
 --=20
 2.43.0
 
