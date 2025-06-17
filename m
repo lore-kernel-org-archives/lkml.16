@@ -1,216 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118A8156CA;
-	Tue, 17 Jun 2025 09:03:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5030F28C873;
+	Tue, 17 Jun 2025 09:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151005; cv=none; b=E3J/IG9clgNzhYuf2arCfsEVeM/G73Z3Ky1nZh0z7kOqfBhL0X6uMsKz9z/0x4j6oH7N5w3YHxeO7R2O9OIV6wXBYnNLdYW7UEZpFUJltz/RPmUZLvt7CvRYlBDAMQNkbYz1mysM9yJQmtAM/Kt58UCP+tfcMz5dtZiDnqTZy3o=
+	t=1750151022; cv=none; b=t79OIS9ihkbnPG5zgDYc2ylj6VdHb9is+DphDHBKWP8F5pRGOnmeJvQDQGguaMmU5ZP/Y3qPDhTAJbsZBk1YWd2motS7x7kDR/WiuTOe6hJE4dcCwpaqFO2AHRCgGNNDQIm8uoIFQdI2gbYM04AbYwVaWKQiSAUq6maHqno6Rrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151005; c=relaxed/simple;
-	bh=0DYfy7oV7hZejEsNdGGSQ2iXZmli62ztZyPKxeghuuo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j7uVqUBcsQKN7/7cZFtd5MZAk02pubB8C37rQyID3QqREq4BfT1zmJGrqx5V/qlSRmC+tTE4RJxEtI5vhDxUvmrx6e2CvnXjIWqvF7uITxI9PnpGP09wvfqZlb6EaqciZGIcpax12BIPIeC+xMTDJql5sYBoWKI215BtdhGzAJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYyXHUrX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750151022; c=relaxed/simple;
+	bh=0jXIXmWCiLrPFyDn+WH7Az5AxH7uOGz0L78bXYR4JJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OzYijdMvAGeRuDrtUmBrFv4r3gU1JvE8ELxa18W+v6pch1hdodhY6D/M0b/QUU04A+l04WJVQigHUXtuOZk86vQDlhbk8nEsh/rbZSw/51u+S+sVvDzwltKf9GXYwnDBRYdF8VMf9Uj4/FcFw+i5S3R80wRlgcgwWFfG2K+cK/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FokIEwN1; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYyXHUrX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5253FC4CEE3;
-	Tue, 17 Jun 2025 09:03:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750151004;
-	bh=0DYfy7oV7hZejEsNdGGSQ2iXZmli62ztZyPKxeghuuo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=mYyXHUrX9U8DFj4b9o/6OY86j2qqY6DzvqM92CZevFKOPaE6K7LumEpP/2hsZqWCO
-	 2bnYk1tcOUG/5Cdo9JRL9to1ZUrqZS7j58cK2fKiaDOH+1kQWGiGglMX5Q8zMpHX+Z
-	 WQfp57rDgx2HE4X2CVQbZX5pN6pT0ByZrrdJMylJoVwC1st8fzr197aVQUA5zK5qHs
-	 Xy/0CTfpTsciSiBioPU8bqXMY9GfNdv88ZB7qoAxLqZhXalsDrINNqNDQLhRMV5rbP
-	 sjuWVtAOYOpX/99BTlA8lRb4cNox14piOc9dHHcFS84/aF9z7ex0Zu43w01fO1EWkF
-	 Wephtbhyq522g==
-Date: Tue, 17 Jun 2025 11:03:18 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Alexandre Courbot <gnurou@gmail.com>
-Cc: Albert Esteve <aesteve@redhat.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Jason Wang <jasowang@redhat.com>, Xuan Zhuo
- <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, gurchetansingh@google.com,
- daniel.almeida@collabora.com, adelva@google.com, changyeon@google.com,
- nicolas.dufresne@collabora.com, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Message-ID: <20250617110318.7c89d999@foz.lan>
-In-Reply-To: <20250617104938.09d21b7c@foz.lan>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-	<20250526141316.7e907032@foz.lan>
-	<DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-	<20250527111311.105246f2@sal.lan>
-	<CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
-	<20250527153547.6603eaf4@sal.lan>
-	<CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
-	<20250617104938.09d21b7c@foz.lan>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FokIEwN1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=O1aQjgQO8XR30rV5R8gCxQHfePvnGGG/SprTQSTa2jQ=; b=FokIEwN1p2FvqL66tn8K60SPz5
+	UxyId9D5qadVtujZCBWpP+KG+S8Maktqmk6GE1Z4HyidDnL0PwQgUMbpjFVyLIkVaWErihzIuDYWU
+	eNJ1PM3tJH7vrCzr3Q4XEuZXRITaqd1HIX5QS1O24phxhJe30qGcEJIQmdhQ3pAZwzn/uhkHROKtH
+	GD3lD2oxvkwfVPbFwPlq6fLPDL1ONmSATfrEKCdlL+3o094P/igJY1JnYm6Jdh8R6S5hiaOvnyQyq
+	6l+ImSPR79wi0VB7IGHHcMNl5dO0yfrXexEWQNJqeeVU/5pV2WmIcBmYyNSEustE4pKn215vVQRhS
+	ihWPZ+pg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRSE6-0000000GvSG-1dCk;
+	Tue, 17 Jun 2025 09:03:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 83070308523; Tue, 17 Jun 2025 11:03:29 +0200 (CEST)
+Date: Tue, 17 Jun 2025 11:03:29 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, seanjc@google.com,
+	pbonzini@redhat.com, sohil.mehta@intel.com, brgerst@gmail.com,
+	tony.luck@intel.com, fenghuay@nvidia.com
+Subject: Re: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its
+ architectural reset value
+Message-ID: <20250617090329.GO1613376@noisy.programming.kicks-ass.net>
+References: <20250617073234.1020644-1-xin@zytor.com>
+ <20250617073234.1020644-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617073234.1020644-2-xin@zytor.com>
 
-Em Tue, 17 Jun 2025 10:49:38 +0200
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+On Tue, Jun 17, 2025 at 12:32:33AM -0700, Xin Li (Intel) wrote:
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index 8feb8fd2957a..3bd7c9ac7576 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -2243,20 +2243,17 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
+>  #endif
+>  #endif
+>  
+> -/*
+> - * Clear all 6 debug registers:
+> - */
+> -static void clear_all_debug_regs(void)
+> +static void initialize_debug_regs(void)
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < 8; i++) {
+> -		/* Ignore db4, db5 */
+> -		if ((i == 4) || (i == 5))
+> -			continue;
+> +	/* Control register first */
+> +	set_debugreg(0, 7);
+> +	set_debugreg(DR6_RESERVED, 6);
+>  
+> +	/* Ignore db4, db5 */
+> +	for (i = 0; i < 4; i++)
+>  		set_debugreg(0, i);
+> -	}
+>  }
+>  
+>  #ifdef CONFIG_KGDB
 
-> Hi Alex,
-> 
-> Em Tue, 27 May 2025 23:03:39 +0900
-> Alexandre Courbot <gnurou@gmail.com> escreveu:
-> 
-> > > > > Btw, I was looking at:
-> > > > >
-> > > > >         https://github.com/chromeos/virtio-media
-> > > > >
-> > > > > (I'm assuming that this is the QEMU counterpart, right?)    
-> > > >
-> > > > crosvm actually, but QEMU support is also being worked on.    
-> > >
-> > > Do you have already QEMU patches? The best is to have the Kernel driver
-> > > submitted altogether with QEMU, as Kernel developers need it to do the
-> > > tests. In my case, I never use crosvm, and I don't have any Chromebook
-> > > anymore.    
-> > 
-> > IIRC Albert Esteve was working on this, maybe he can share the current status.  
-> 
-> Any news regards to it?
-> 
-> > Note that crosvm does not require a Chromebook, you can build and run
-> > it pretty easily on a regular PC. I have put together a document to
-> > help with that:
-> > 
-> > https://github.com/chromeos/virtio-media/blob/main/TRY_IT_OUT.md  
-> 
-> I started looking on it today. Already installed crossvm (I had to
-> install libcap-devel to build it). Still, I'm not familiar with
-> crossvm, which is a little be painful. In particular, how can I
-> enable network on it and speedup it? With suggested parameters,
-> it picked only one CPU, and very few memory on it:
-> 
-> 	# cat /proc/cpuinfo|grep processor
-> 	processor       : 0
-> 
-> 	# free
->                total        used        free      shared  buff/cache   available
-> 	Mem:          221876       34780      139712         272       56096      187096
-> 	Swap:              0           0           0
-> 
-> I'd like to be able to compile things on it and use ssh/scp. So,
-> the VM needs more CPUs, more memory, more network and GPU.
-> 
-> Btw, on a quick test with v4l2-compliance, something looks weird:
-> I started a camera application at the host. Still, v4l2-compliance
-> said successfully excecuted mmap:
-> 
-> Streaming ioctls:
->         test read/write: OK (Not Supported)
->         test blocking wait: OK
->         test MMAP (no poll): OK                           
->         test MMAP (select): OK                            
->         Vide[2025-06-17T08:44:49.177972817+00:00 ERROR virtio_media::ioctl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
-> [2025-06-17T08:44:49.178164554+00:00 ERROR virtio_media::ioctl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
-> o Capturtest MMAP (epoll): OK                             
->         test USERPTR (no poll): OK (Not Supported)
->         test USERPTR (select): OK (Not Supported)
->         test DMABUF (no poll): OK (Not Supported)
->         test DMABUF (select): OK (Not Supported)
-> 
-> Which doesn't make any sense, as the host OS should not allow access
-> to mmap while streaming.
+Maybe like so?
 
-Ah, this was with the "simple" device, not with the proxy one.
-With the proxy one, I'm getting:
-
-# v4l2-ctl --all
-Driver Info:
-        Driver name      : virtio-media
-        Card type        : usb video: usb video
-        Bus info         : platform:virtio-media
-        Driver version   : 6.15.0
-        Capabilities     : 0x84200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps      : 0x04200001
-                Video Capture
-                Streaming
-                Extended Pix Format
-Priority: 2
-Video input : 0 (Camera 1: ok)
-Format Video Capture:
-        Width/Height      : 1280/720
-        Pixel Format      : 'MJPG' (Motion-JPEG)
-        Field             : None
-        Bytes per Line    : 0
-        Size Image        : 1843200
-        Colorspace        : sRGB
-        Transfer Function : Rec. 709
-        YCbCr/HSV Encoding: ITU-R 601
-        Quantization      : Default (maps to Full Range)
-        Flags             : 
-Crop Capability Video Capture:
-        Bounds      : Left 0, Top 0, Width 1280, Height 720
-        Default     : Left 0, Top 0, Width 1280, Height 720
-        Pixel Aspect: 1/1
-Selection Video Capture: crop_default, Left 0, Top 0, Width 1280, Height 720, Flags: 
-Selection Video Capture: crop_bounds, Left 0, Top 0, Width 1280, Height 720, Flags: 
-Streaming Parameters Video Capture:
-        Capabilities     : timeperframe
-        Frames per second: 30.000 (30/1)
-        Read buffers     : 0
-
-User Controls
-
-                     brightness 0x00980900 (int)    : min=-128 max=127 step=1 default=-11 value=-11
-                       contrast 0x00980901 (int)    : min=0 max=255 step=1 default=148 value=148
-                     saturation 0x00980902 (int)    : min=0 max=255 step=1 default=180 value=180
-                            hue 0x00980903 (int)    : min=-128 max=127 step=1 default=0 value=0
-
-# v4l2-compliance -d0 -s
-
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-        test blocking wait: OK
-                fail: v4l2-test-buffers.cpp(1345): node->streamon(q.g_type()) != EINVAL
-        test MMAP (no poll): FAIL
-                fail: v4l2-test-buffers.cpp(1345): node->streamon(q.g_type()) != EINVAL
-        test MMAP (select): FAIL
-                fail: v4l2-test-buffers.cpp(1345): node->streamon(q.g_type()) != EINVAL
-        test MMAP (epoll): FAIL
-        test USERPTR (no poll): OK (Not Supported)
-        test USERPTR (select): OK (Not Supported)
-[2025-06-17T08:55:20.768760714+00:00 ERROR virtio_media::ioctl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
-        test DMABUF (no poll): OK (Not Supported)
-[2025-06-17T08:55:20.769745707+00:00 ERROR virtio_media::ioctl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
-        test DMABUF (select): OK (Not Supported)
-
-At the host, I'm getting:
-
-Streaming ioctls:
-        test read/write: OK (Not Supported)
-        test blocking wait: OK
-                fail: ../utils/v4l2-compliance/v4l2-test-buffers.cpp(1346): node->streamon(q.g_type()) != EINVAL
-        test MMAP (no poll): FAIL
-                fail: ../utils/v4l2-compliance/v4l2-test-buffers.cpp(1346): node->streamon(q.g_type()) != EINVAL
-        test MMAP (select): FAIL
-                fail: ../utils/v4l2-compliance/v4l2-test-buffers.cpp(1346): node->streamon(q.g_type()) != EINVAL
-        test MMAP (epoll): FAIL
-        test USERPTR (no poll): OK                        
-        test USERPTR (select): OK                         
-        test DMABUF: Cannot test, specify --expbuf-device
-
-The device I'm using for test is a UVC HDMI capture board:
-
-	Bus 005 Device 008: ID 534d:2109 MacroSilicon usb video
-
-Thanks,
-Mauro
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2206,15 +2206,14 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard)
+ 
+ static void initialize_debug_regs(void)
+ {
+-	int i;
+-
+-	/* Control register first */
++	/* Control register first -- to make sure everything is disabled. */
+ 	set_debugreg(0, 7);
+ 	set_debugreg(DR6_RESERVED, 6);
+-
+-	/* Ignore db4, db5 */
+-	for (i = 0; i < 4; i++)
+-		set_debugreg(0, i);
++	/* dr5 and dr4 don't exist */
++	set_debugreg(0, 3);
++	set_debugreg(0, 2);
++	set_debugreg(0, 1);
++	set_debugreg(0, 0);
+ }
+ 
+ #ifdef CONFIG_KGDB
