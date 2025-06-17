@@ -1,110 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from relay.hostedemail.com (smtprelay0012.hostedemail.com [216.40.44.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252331CDA2E;
-	Tue, 17 Jun 2025 14:36:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC231AA1DB
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171014; cv=none; b=S+DyROj2g3D5KAIMUCATckEECrLsv2oS8RGbP5D7BobpESW8Q9FiTb9/bazbBfYi06G5SGcBdBMHbxGWM4SIpbBgryoxRA3XwlVJjtfURkdww73nsCgC3jNX/1a+V+SetonFx5rULiYItBJB90Pu9RtjjXMthrajWOhKbPcKSIg=
+	t=1750171109; cv=none; b=Gg7wmHG293/tgD/j05MLK7GQJ1gax4YRsQR/K08Mv/DMDEG6qDICnz/nXoAlU+/8yOLj6gXvfOzjyYSM8/hWzWXdb+cagdi3eqaA//+yx35kycwbAnjCGMbP7bIv6jV1ZWxLuh1uRrxKqrb579dZvkOMlnt9llKhpj/JqZk7hcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171014; c=relaxed/simple;
-	bh=bH5eztucliOZhea2XXdkOphR9rOQDw32gpLCRrbUAIg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U/2pXYb2TF46BT7LPc0em6Pkf+X/Kqo2QYnnP/jY7nj3b+Up+uNfG7oszVtHNinq+WFWkV3a7CGBqLjsWJTQSpDfmXsytrhNigA+9ojwmVT+tSzwh5COFsB2G/8a44Jt0rlN4A8Z8Y+N8EjrM5xAxyXu6RABUeAWBMZhsnGvH+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E7gHG8O5; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E7gHG8O5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750171013; x=1781707013;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bH5eztucliOZhea2XXdkOphR9rOQDw32gpLCRrbUAIg=;
-  b=E7gHG8O51WRdcERJpUKCG8Zr60PALSQP0ExCsasg/dThaHXlyNW6tIsa
-   xP8r1pHBnz31uuRa8Vb1+UQ8LMUC5jsNJgWATXIRzMMYpWcHxnwmfwzHU
-   +F1e0AjIw3hObntE96iO0v32z59T8ZVRRuRrakc2IzonTKCgQVOgOKY7Q
-   2K7h2r8wGEbQA1mVUIWAGQkQ+/iR/GMp8MKI2v3VSpNbgDBRZRb37nB2f
-   g8uZKe3/Vpemljzf5EKpsXkgmaD59gSmmavbFwEgQGoP0viznKtPu/Nqv
-   2wwkq1fJ58PX+r+FnDguXCRhTjbjAIiS0K862dYL2HDI+3JliWDHpk7Bj
-   g==;
-X-CSE-ConnectionGUID: Jq4ONtGzQQ+phiOjvS6J3g==
-X-CSE-MsgGUID: hA+5qZc9TrSt4wQtKCnPBA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52490070"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="52490070"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:36:52 -0700
-X-CSE-ConnectionGUID: sNFJbrCnRfCBKO/VS9iFeQ==
-X-CSE-MsgGUID: D8nGVFcKRJWzKZ22rsQFrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="149690666"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:36:47 -0700
-Date: Tue, 17 Jun 2025 16:35:55 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Shannon Nelson <shannon.nelson@amd.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH net] ethernet: ionic: Fix DMA mapping test in
- `ionic_xdp_post_frame()`
-Message-ID: <aFF9S1BX8HgY+ihO@mev-dev.igk.intel.com>
-References: <20250617091842.29732-2-fourier.thomas@gmail.com>
+	s=arc-20240116; t=1750171109; c=relaxed/simple;
+	bh=qqBcutOWrUy2OBIvx4k6gFQSBfYCgp760gkiPso8wEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ux88OecjHM2G8bZBlda72iT/O8IbvJXsK+micDttaYlQjS4Sbex8NsD7Sr9EIxvQKO0nOT1NgagF6Zgi0f/TfoATUHReR6Ajz89lBg75SmFDnDQdrzfbGF6vMR/Z1KRRQyY+BGCUKCM10zedGJqr7AgXZBps6E12nEKJ59GqaWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 98DF1B8DE2;
+	Tue, 17 Jun 2025 14:38:24 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id E3E4F2000E;
+	Tue, 17 Jun 2025 14:38:21 +0000 (UTC)
+Date: Tue, 17 Jun 2025 10:38:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Francesco Ansanelli <francians@gmail.com>
+Cc: mingo@kernel.org, bigeasy@linutronix.de, dietmar.eggemann@arm.com,
+ juri.lelli@redhat.com, linux-kernel@vger.kernel.org, mgorman@suse.de,
+ peterz@infradead.org, sshegde@linux.ibm.com, tglx@linutronix.de,
+ torvalds@linux-foundation.org, vincent.guittot@linaro.org,
+ vschneid@redhat.com
+Subject: Re: [PATCH 20/43] sched/smp: Make SMP unconditional
+Message-ID: <20250617103827.25ee218e@gandalf.local.home>
+In-Reply-To: <CAF0E3p61W1fs_t4-LX86HATHVy0+-+ru_3wfw3vE5t2HwuCTsQ@mail.gmail.com>
+References: <CAF0E3p61W1fs_t4-LX86HATHVy0+-+ru_3wfw3vE5t2HwuCTsQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617091842.29732-2-fourier.thomas@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: E3E4F2000E
+X-Stat-Signature: rfaqi35b6qj71eqck7ce35uok9wajwar
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+l7nNce2itAtT9CDF/sA1VTt0I3a2W5qY=
+X-HE-Tag: 1750171101-207520
+X-HE-Meta: U2FsdGVkX1+zpa7BTnIpwSzAcIchcIUvjFwIav0/Uw40P5HADM+sg+FcbDksftuPHwOY/WCVqFAQpkUtK7DDISdU0OsVTuq7ZdGtulKvDozHFbE2RKdReW0fp3hYB4t7cn2JNG07S2vaOZrqOuuXep0j+6bUvZBxfUcGQZotU/CYkD9rd8/0zpn1XwJ/DYtNAaqRhCpkek6JWKaTMjyLnznwQMnTjz6pu2bZ5iS+/LkbfEChyz0D0MnEwvn20HplpgeZsG8UJDL6kJLxhyZmEUUVgIu60JO4vwpwbXi6055ep7F23GVTe2qq6AKF8LgdhJ90UmepbpfHFDeHDfULnTxlsQkiaNbM
 
-On Tue, Jun 17, 2025 at 11:18:36AM +0200, Thomas Fourier wrote:
-> The `ionic_tx_map_frag()` wrapper function is used which returns 0 or a
-> valid DMA address.  Testing that pointer with `dma_mapping_error()`could
-> be eroneous since the error value exptected by `dma_mapping_error()` is
-> not 0 but `DMA_MAPPING_ERROR` which is often ~0.
+On Tue, 17 Jun 2025 06:43:00 +0200
+Francesco Ansanelli <francians@gmail.com> wrote:
+
+> I hope this is the right way of reaching you.
+> I was reviewing the patch in subject and noticed a possible error:
 > 
-> Fixes: ac8813c0ab7d ("ionic: convert Rx queue buffers to use page_pool")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->  drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> -#if defined(CONFIG_RT_GROUP_SCHED) || (defined(CONFIG_FAIR_GROUP_SCHED) &&
+> \
+> - (defined(CONFIG_SMP) || defined(CONFIG_CFS_BANDWIDTH)))
+> +#if defined(CONFIG_RT_GROUP_SCHED) || defined(CONFIG_FAIR_GROUP_SCHED)
 > 
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> index 2ac59564ded1..beefdc43013e 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> @@ -357,7 +357,7 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
->  			} else {
->  				dma_addr = ionic_tx_map_frag(q, frag, 0,
->  							     skb_frag_size(frag));
-> -				if (dma_mapping_error(q->dev, dma_addr)) {
-> +				if (!dma_addr) {
->  					ionic_tx_desc_unmap_bufs(q, desc_info);
->  					return -EIO;
+> I think it should be:
+> 
+> +#if defined(CONFIG_RT_GROUP_SCHED) || (defined(CONFIG_FAIR_GROUP_SCHED) &&
+> defined(CONFIG_CFS_BANDWIDTH))
 
-Right, in ionic_tx_map_skb() it is used correctly (like here now).
-Thanks for fixing.
+Nope, it was right as is. The "Make SMP unconditional" means CONFIG_SMP is
+now always defined. The original was:
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+#if defined(CONFIG_RT_GROUP_SCHED) || (defined(CONFIG_FAIR_GROUP_SCHED) && \
+ (defined(CONFIG_SMP) || defined(CONFIG_CFS_BANDWIDTH)))
 
->  				}
-> -- 
-> 2.43.0
+With defined(CONFIG_SMP) always true, the:
+
+  (defined(CONFIG_SMP) || defined(CONFIG_CFS_BANDWIDTH))
+
+is always true as well, which makes it:
+
+#if defined(CONFIG_RT_GROUP_SCHED) || (defined(CONFIG_FAIR_GROUP_SCHED) && (true))
+
+Or just:
+
+#if defined(CONFIG_RT_GROUP_SCHED) || defined(CONFIG_FAIR_GROUP_SCHED)
+
+-- Steve
+
+
