@@ -1,61 +1,61 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306E42F0035
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE8B2F0049
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750190943; cv=none; b=t1c8yicXAqt6RzUIsVv8qW35i5hT33zzdbkU5qeddtyF/1n/eALncKyfcQBWyP3iC6JMV0XMTnh8Dol+RFoTXyKPrBekI4MVuhFV2nSPKcAEMjS8dXEg+vd0gHyIhaZUN4d0q+IklP83TptIgj5vNmpMekHvmaNeqytUYVAkfCQ=
+	t=1750190946; cv=none; b=RlSiuTNnMNuYduBfLUdL0zAZMtk/fBJHRuO0eomr381Yw7qcXO8qcy+LOQtVST5bnERICAP/iIo98qbBEHakJQ2DaeZI7dO4hUB7/d0kkleaKqNAS5eLkWfYdHdRAkL0muMp0MXVVb7XR6UUWqoCb7FoOyb1pYwlQ/lOfMzc+tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750190943; c=relaxed/simple;
-	bh=y/92ANFHZ511JoHlisgi/C+y3GJFbQaZiVIkYRVBlNk=;
+	s=arc-20240116; t=1750190946; c=relaxed/simple;
+	bh=WKZqq2YEuAVNJBHG19OIJ1BG7TY/8FPSe5eCYcffo/A=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lFsIrbEXhmV/GoADwhumT4xh90sgVUdTVd0fHqWr69sfESv3Qk5SIsOPaqpAa5Oq5BXfobkDqxTDKo/REIRkMO5OhD22LHdpdDhVUpaBUOViJuPUYVJUUGEqBQ5oy0/ElJYJq6N9xe5HpsBEKQEpVFrWKjCQgZVqs6OWnfQyQZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+Jwwots; arc=none smtp.client-ip=209.85.215.178
+	 MIME-Version; b=pczoQz9pBNQ/wHylgewppnOSuY0z1acMXRuyRK80UswpfcMOpTXTtGsKcGX+W6WQ6avJTnKjRr2A0MMYszUSdI/o5HANxEwSLMhoKiZ0acaBtx6kES6uNbFeVUBeyBx0rapBlWWnr58owvlvGatPVQH/SJ+lYsb7fEjag80D6TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l4B0F+nj; arc=none smtp.client-ip=209.85.216.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+Jwwots"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b3192eab3c9so4242800a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:09:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l4B0F+nj"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3122368d7cfso4802176a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750190941; x=1750795741; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750190944; x=1750795744; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=00q9qP51ZqXMmsGMK1vazt4rv0rlL3V11s+lyKYXhXE=;
-        b=R+JwwotsZ9b6GNVaM2ErqnQ5mNDFubeBAwEuN4TKl2VCjQsVPQqxm4M++Fpq4OKpoz
-         j3/h6SzXCM1SWOyTbyTxL4RTjHkoUAlDya2F3DEvMlbiM8HRIhnfEE9m7qKDaIyASiUy
-         guvWpIJ/WqhLHGzw2X0GiKNEY5mwK20bZLlh3kyVGAcXH+U3rwaT6KX/5D5l3yubGboq
-         8BEoQUmtky3Vo25qDn7yG77TEyrJDFi8ye6Zra8bgvRZvXxZ6ANBVju0LAVCEXKfmVHZ
-         Jm9dNYFIJhE0H0j0P8y/xASUhgHPbcRjT45ymf/jZbuukPVabrq/ehXWO7Nmsj2bhrat
-         NFXQ==
+        bh=giWfCtGbWEqU63iGbzpmokmH0FMbVzty9wx804zxVgU=;
+        b=l4B0F+nj7Z4CabdhItD7ShVrJXhoePvwZUWK/NmlS8JmMCGiZleAKb2g0nY3RHmzbF
+         arlDGDQSGNBlTm8lKUg+jj3nbL5lNW4NFirbRCqNUVXrC874qyOrKOJPswPix//11E1t
+         7DF/w1OsYYQOC5HA5XHGB6Ip5Kv+hndVsi9u3G/nmwLDQdYVIZnxKweIKFw83pSarIg6
+         OVTjOsjmBai9cjd2JYURD7368H9srOcgUNfwpzHokxdptaeu2cPXVpOigr1VVk6StHq0
+         2Ye3IzVIc2gMR3qpqyrUh/unOy0KU2sdtkpk8cBqI/gp35oxJrBXijNJEtr3EFos2lHa
+         Zw6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750190941; x=1750795741;
+        d=1e100.net; s=20230601; t=1750190944; x=1750795744;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=00q9qP51ZqXMmsGMK1vazt4rv0rlL3V11s+lyKYXhXE=;
-        b=AuYnDgpC+Hd3zNV7v6NAuieZ4nxrDjHIz3wF//WqUy/Nz7r27Tqg8N2yjjXTdD92b+
-         9B5RBENS+yMkCaO8AdF7JtjmyM7/vxvy1S/c9gH4O2KsIWPGYGDyEWcL+e47UlIKYH67
-         ZAVjEsZxm7GYp6HHghVzy0SzMhGRonecceg2Jsn2UXEkMbXGKKvQDU//KCHbzn8g1X+l
-         OcEulO3owaw7JToB/xD8m1+ogwkgfrLOYJXPrT4z6AXj6Y283XMww1HkEjztW7eO8ck7
-         Z3r9UOHeuQMS4roMpxydMmI9tO15tn1fsaaRxR8/CYKqns0lZRBJpq36kDK4eJdmOH9I
-         Pbaw==
-X-Gm-Message-State: AOJu0Yxzi/eCEwsgY3YoCNQvg8npwV0lLBLAbFClQOCeaTSpgg4grfki
-	02CVL2reDEsWg/SS6nN/fJkiihObsnVb6nyRKJxbddvdlJA7l1c/YsqRfpS0Jg==
-X-Gm-Gg: ASbGncvSaSgB24xptzf1bn8ZqzyKEw5R4r/HMvdilcGAgw+EeZRnHh57/5Ib2H+VDIJ
-	uleXFFEjBaPe6hePfqb1RtFT5dj5TU6xn+lH7P7kXUcZtOBibX9PI9qZYTR9/BdYBurdph6WVWl
-	XATTIO7LWP6j4NfoN8vc33W/Kufckmr53L3D9IoxA/rnngrbISJKaWCrS2KhGuoANuq9Khi5Jqq
-	RiOkvmMyeB6w0LBTyMyRKpaG5liDror4xcfdrypIs6FGhadnbdbfUBXGQFOZMZq/o1BEkRioPSq
-	reYFgoPRpRpdP4P/nJg0T5zSfiuE2vGhZzQbyMWGw3hujBayz9afAiQsdTFc0Q==
-X-Google-Smtp-Source: AGHT+IH4aJlT4Jznp4cFCkV03jW/H5H2uxAyPFy6FzGxp9BA0qtEcKBLdDrG1BpopG6M5fjnOQXJZA==
-X-Received: by 2002:a05:6a20:47e4:b0:215:e60b:3bd3 with SMTP id adf61e73a8af0-21fbd57fbdcmr17971190637.29.1750190941232;
-        Tue, 17 Jun 2025 13:09:01 -0700 (PDT)
+        bh=giWfCtGbWEqU63iGbzpmokmH0FMbVzty9wx804zxVgU=;
+        b=K3LrK8ssetXVoXKCDxOmJIG312/ucZUk3p5Pu55uiSM4fUYEHZrLP3HutyLdjfGp6/
+         jllUDHdTEOZSZrgP2xGYBTs9eIC4ScH1cTPJDPdunxpp6cLCTlPOTcYB/wu0f0UlIZ/4
+         k92s+fn4PEpP+yAOKNGIKoOi+D8iUncmJ4hOiYvjJFMVJ3LctiLRyIjD0zGN1G26evHW
+         0PkZRKQEsXgU8k88cVGkD4deUWn2McEOyUGOp7OkN86zf1ByJ5Hc60DdDKPZudL8ROTy
+         PhPxyrYTAu45eMu9ETijTGGX7Log7U/NVqwGWbz3IT9pi3coeWKWi6zrpGKiaBOEkHZ4
+         CaCA==
+X-Gm-Message-State: AOJu0Yy1OX8T4t/4OvU1q4KuetKxfsRp2p0T9d5z7vXO+m6UmmKJ0+Zx
+	Oz1XQZXEve5K1ujp8LcgkeTVJwBlEyYAv6xFgxT2axQ/ociXwvDH0KHj9jdcTw==
+X-Gm-Gg: ASbGnctOH04QQdpArpgeT0eowg4ZKCkPtNC7hWPiPFs7gADwGQSfY30p5RVViiJQuyx
+	YKvgSXq7tandOS733GJxRw5EE9l5DiCwTWQdYB0IbFnCgXDVujZuKPTqYJyexnABXFT8QRi1QUt
+	9QLVOGDMdJ+VxIzYmxlthuWPcPLc4QSp5neyHgN/2YWohWr1WZFzrxOem45X1d8G/G3V649Rwlc
+	fI9lNozBuKJKRY3qsSwXVy7zIdjO4voE1fjhwWZpUtkGmpvrC5dOsO0FVmO0RmTUxga7IUd46q5
+	SIDufA6sEV2W3tdI24yDQt09pRVUse1iI531IpHaed/U6BMHeoo3A10mKAp7Vw==
+X-Google-Smtp-Source: AGHT+IHx3MgIVSGDCv7wBGiIbtFBuDWjnqCVHuNC6JWptkhYTjdBZ7XEoFqqkfqKpxQhJESw4O+4Nw==
+X-Received: by 2002:a17:90b:1b48:b0:313:287e:f1e8 with SMTP id 98e67ed59e1d1-313f1ca745fmr20457548a91.8.1750190943937;
+        Tue, 17 Jun 2025 13:09:03 -0700 (PDT)
 Received: from localhost ([216.228.127.128])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1680c54sm9390462a12.47.2025.06.17.13.09.00
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313f9ee73c1sm7009784a91.16.2025.06.17.13.09.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 13:09:00 -0700 (PDT)
+        Tue, 17 Jun 2025 13:09:03 -0700 (PDT)
 From: Yury Norov <yury.norov@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	"Yury Norov [NVIDIA]" <yury.norov@gmail.com>,
@@ -64,9 +64,9 @@ To: linux-kernel@vger.kernel.org,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Stephen Boyd <sboyd@kernel.org>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v3 1/3] bitmap: generalize node_random()
-Date: Tue, 17 Jun 2025 16:08:51 -0400
-Message-ID: <20250617200854.60753-2-yury.norov@gmail.com>
+Subject: [PATCH v3 2/3] cpumask: introduce cpumask_random()
+Date: Tue, 17 Jun 2025 16:08:52 -0400
+Message-ID: <20250617200854.60753-3-yury.norov@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250617200854.60753-1-yury.norov@gmail.com>
 References: <20250617200854.60753-1-yury.norov@gmail.com>
@@ -80,101 +80,36 @@ Content-Transfer-Encoding: 8bit
 
 From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
 
-Generalize node_random() and make it available to general bitmaps and
-cpumasks users.
-
-Notice, find_first_bit() is generally faster than find_nth_bit(), and we
-employ it when there's a single set bit in the bitmap.
-
-See commit 3e061d924fe9c7b4 ("lib/nodemask: optimize node_random for
-nodemask with single NUMA node").
+Propagate find_random_bit() to cpumask API.
 
 Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
 ---
- include/linux/find.h     |  2 ++
- include/linux/nodemask.h | 16 +---------------
- lib/find_bit.c           | 24 ++++++++++++++++++++++++
- 3 files changed, 27 insertions(+), 15 deletions(-)
+ include/linux/cpumask.h | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/linux/find.h b/include/linux/find.h
-index 5a2c267ea7f9..98c61838002c 100644
---- a/include/linux/find.h
-+++ b/include/linux/find.h
-@@ -44,6 +44,8 @@ unsigned long _find_next_bit_le(const unsigned long *addr, unsigned
- 				long size, unsigned long offset);
- #endif
+diff --git a/include/linux/cpumask.h b/include/linux/cpumask.h
+index 7ae80a7ca81e..39b71b662da3 100644
+--- a/include/linux/cpumask.h
++++ b/include/linux/cpumask.h
+@@ -354,6 +354,18 @@ unsigned int cpumask_next_wrap(int n, const struct cpumask *src)
+ 	return find_next_bit_wrap(cpumask_bits(src), small_cpumask_bits, n + 1);
+ }
  
-+unsigned long find_random_bit(const unsigned long *addr, unsigned long size);
-+
- #ifndef find_next_bit
- /**
-  * find_next_bit - find the next set bit in a memory region
-diff --git a/include/linux/nodemask.h b/include/linux/nodemask.h
-index f08ae71585fa..1cedc7132b76 100644
---- a/include/linux/nodemask.h
-+++ b/include/linux/nodemask.h
-@@ -492,21 +492,7 @@ static __always_inline int num_node_state(enum node_states state)
- static __always_inline int node_random(const nodemask_t *maskp)
- {
- #if defined(CONFIG_NUMA) && (MAX_NUMNODES > 1)
--	int w, bit;
--
--	w = nodes_weight(*maskp);
--	switch (w) {
--	case 0:
--		bit = NUMA_NO_NODE;
--		break;
--	case 1:
--		bit = first_node(*maskp);
--		break;
--	default:
--		bit = find_nth_bit(maskp->bits, MAX_NUMNODES, get_random_u32_below(w));
--		break;
--	}
--	return bit;
-+	return find_random_bit(maskp->bits, MAX_NUMNODES);
- #else
- 	return 0;
- #endif
-diff --git a/lib/find_bit.c b/lib/find_bit.c
-index 06b6342aa3ae..d4b5a29e3e72 100644
---- a/lib/find_bit.c
-+++ b/lib/find_bit.c
-@@ -18,6 +18,7 @@
- #include <linux/math.h>
- #include <linux/minmax.h>
- #include <linux/swab.h>
-+#include <linux/random.h>
- 
- /*
-  * Common helper for find_bit() function family
-@@ -291,3 +292,26 @@ EXPORT_SYMBOL(_find_next_bit_le);
- #endif
- 
- #endif /* __BIG_ENDIAN */
-+
 +/**
-+ * find_random_bit - find a set bit at random position
-+ * @addr: The address to base the search on
-+ * @size: The bitmap size in bits
++ * cpumask_random - get random cpu in *src.
++ * @src: cpumask pointer
 + *
-+ * Returns: a position of a random set bit; >= @size otherwise
++ * Return: random set bit, or >= nr_cpu_ids if @src is empty.
 + */
-+unsigned long find_random_bit(const unsigned long *addr, unsigned long size)
++static __always_inline
++unsigned int cpumask_random(const struct cpumask *src)
 +{
-+	int w = bitmap_weight(addr, size);
-+
-+	switch (w) {
-+	case 0:
-+		return size;
-+	case 1:
-+		/* Performance trick for single-bit bitmaps */
-+		return find_first_bit(addr, size);
-+	default:
-+		return find_nth_bit(addr, size, get_random_u32_below(w));
-+	}
++	return find_random_bit(cpumask_bits(src), nr_cpu_ids);
 +}
-+EXPORT_SYMBOL(find_random_bit);
++
+ /**
+  * for_each_cpu - iterate over every cpu in a mask
+  * @cpu: the (optionally unsigned) integer iterator
 -- 
 2.43.0
 
