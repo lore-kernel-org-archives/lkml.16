@@ -1,124 +1,152 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379F02DE1E0
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683772DE1E0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750162826; cv=none; b=mQHguNMCvb9b38fly1nRhjqt5icxnroeeVn7X6Viau91RCBorJBz/+p02FwFdpPVFSusT/aLZWcJnFCgSj8xox+eHud2z1qdITjoN+HHkXr7AEXgWR+1gzVP0jSYlLzWqVk8BAfoND0nkLxTxjxyeV6Eeb6kbVfK/Dx2bBRm7XE=
+	t=1750162874; cv=none; b=QdPZLq00xM/95/8FWYc2aVBX6QicIoLxmadWjdOGUPaHaTVEY43uHifSPiT5zX6NMPIeLpA3BvMvD07gYY38JIu1446vNkAU5IOtDqBxLQGaQK+W6wcBijOXok/3+tXPC/DrJn6pMN9aNsABOvGhYj+qzkIlogVjix31bloGd8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750162826; c=relaxed/simple;
-	bh=DwcF0NlBlxdXmxZ4P1HYVbWm6Pa7UHrd11SXdQpckGI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=inxte0t0YVOLYow6mkzLdOtNmE6l9kVZPBLLyZzAapFLBSpftbbref5QmnLxN2kYdPC8cRpqjLqGe7aYyx+fQULnObn12pPmqKA4mVOltsRZFLmrUHDiIlJ7fjtcuO9KyPOHBObmc9ZrH2iD6ygqmIXzBIdrsEjmVLmMEqt/jxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=OL0VXSCc; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1750162874; c=relaxed/simple;
+	bh=+iFEKsrNEpT2xbTy++KT2dWotgeE2bVlaPMJ1iFaUdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L8rQ6VBVfftZ3XE0EkH+eChkSbz116w37dkn1gA5jMehDR0oueqes0CHQyGOVbH6KhUp+ILBzY/NlhxUuOAEdyeYKStTxXlHA/eNZMvrEsbibz13PiNTqZg9b7Iv7/6HzGCozGwIl1CuFBFw6QBERsuoAENFvAASi3eLl76nkLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=S2CwKANI; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="OL0VXSCc"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-60794c43101so8956007a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:20:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750162822; x=1750767622; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EUdlhR7H14Eo2mUGN1/ZO0ngxMr42fTDow94RiXbg9k=;
-        b=OL0VXSCc/eUsfqlBUy0rYg1yUN79DIw8lPDh1ZA3L0n/44xmAqcqXzNJXNi+srWz/H
-         EPeGpXgc9ErDTlDB7tql/uvTa2SlGMWwyI/FPhK4NWXALlgXCJlH9bXN5fVw5QGNPjZ4
-         p1OwbC0jHtpRMrIGILXSmu8aT30qpHPaRchEzOFssPoMqIpyet0ljMwc26TU7q594tcC
-         XetWKaE3q4EikCBFPpRBThJaW/Pc+XhKUAC/rPunSI2DbDaHCus1QtvyR/BlCRvDYB05
-         QMg9OPAPRdt28uD0iAwhQgbieYIYungae/XLJVlhWDz+quAJX9WIMwIpgJ5xLMRXo4sz
-         +Yhg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="S2CwKANI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750162871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hWbGPsCL+dHyM0VVvvwNT45eKA8G9B5bfX+3auMPkdM=;
+	b=S2CwKANIfJ649Xm/Nj0zKnAk2wpq55hnB0JTRNMuIY95amn8J0a0ih7Fs54X5gRu/JhJo7
+	ZnTKFTuxZ4mCFN/cId5WoSBXcLpvoLJLk1Mz7Kw0f5vQqWWBfJZiYy04sZLAcQ8X49uIef
+	Yv1KwZ/hdYQAFvRjtfRJIjIA2HZnse4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-223-ApzKROTePlKgz5m4jSg7jg-1; Tue, 17 Jun 2025 08:21:09 -0400
+X-MC-Unique: ApzKROTePlKgz5m4jSg7jg-1
+X-Mimecast-MFC-AGG-ID: ApzKROTePlKgz5m4jSg7jg_1750162869
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4f8192e2cso2725481f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:21:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750162822; x=1750767622;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EUdlhR7H14Eo2mUGN1/ZO0ngxMr42fTDow94RiXbg9k=;
-        b=LRV9QEMCg5BThytkMzdvk3NiL8BYRLVIRgTNhMvYXfO7z0u6CwHJLeJ8JCMbxDLklQ
-         +51S+SHCTfahLLHY+bAbWlCnglFsgz9fw7xPS2Ocb/e0CJhj4ZoRUUGXLgEEwJV4BKPh
-         TI85Eo0yIlcTRdxfPtORnzKL9zy84C9lm5Bws7ykrWxYsxhwMvcVlyyNTy5pG7s1moOf
-         EnwM78s/igfCfUFDzoGSOfzRM7vX7BD+jeb+6VKhyQNQuQ+r7wrLqL9dzW88w27+PVsS
-         A22Jtz2fWZD82641D4Toc0RKMQrLgN33xfsvEaJxyeqCuNQa61nVhBHZogWVdjf7S8PK
-         TZLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXISWgPPiNZOBAH6ip+5XCKyITAX4nx0ZHcUYsda7vNm3Pk22s1qpiQVEmN59J/gu1WMD6d7QxRBaXLAkc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlpJdTgrH9b7cBc21JVqnzMw6+i+dSSeJLrcHV3mPC5L0JkRSx
-	mbttFLYDjgZti8yNICw415dMj0VofjO9H2++UnDeNKFY8ufe9AcnjyZyp8yaq6JbmTN21K7ydDn
-	XlyNeplE=
-X-Gm-Gg: ASbGncvtDOFZl/Wj59uBZBALYL6bUq6IUCqkwfLcbVO9smbL7CUEG6WOo0dUtfgf7CD
-	RhOKNDNBH79EHj5HoJESYsz/F9kBhj/aSDzJqrNPqVODn3exoa9iqkt+ctYUE1KAt9Cqz194vAG
-	0nvAgiq0mCjm/lW9zXRScD/jl6K2lh0NmigCoXihByAF1YtLXgtOlhcaZkkqot4/zsQ2i/M/AC5
-	sVzUbEfaiF1Mc7gvmXnNmtZnqzeuoNW31+eYGk5LnIUbsELODm6pP7F8sPOyVwWo+x1k9rJ8z9u
-	espGlwoEwxHv9izxD2N135w83YtyTXOOp/W2P3E++X6Hx1SSFTXyVxvEt4l0GlwAJKjPU53Dj74
-	Q2pNXfWXsQR/luMcay8+zY+ndVuR6tNR3
-X-Google-Smtp-Source: AGHT+IHXdzCpZsabrbUfZ1/mAGhW1nkU1uiB24DWPjENG/rLfQm1pdzkmZDiD5h6daPKGYzfxXx5lw==
-X-Received: by 2002:a05:6402:3506:b0:607:32e8:652 with SMTP id 4fb4d7f45d1cf-608d09998eemr11138714a12.19.1750162822453;
-        Tue, 17 Jun 2025 05:20:22 -0700 (PDT)
-Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a8c34asm8053834a12.55.2025.06.17.05.20.21
+        d=1e100.net; s=20230601; t=1750162868; x=1750767668;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hWbGPsCL+dHyM0VVvvwNT45eKA8G9B5bfX+3auMPkdM=;
+        b=oyCFfkqRWmp8LzmJBXPT2naMVI7NF7uwE3VumXs3X5jTdZjttQ+t2aZAiaQEU+PArK
+         GRHIg2G9s+VoLivB6/jMqeOl6b1/y45g6G0M9dsMJ4qVxfIGKSC65lnzqIYvBK+tZZPm
+         YbuyVNdXMyQcYdBqd/CgMomnSQeD462RJlNRWRbKIerTHua81QJR+/Rla+xklJiyeH+i
+         jW4T75jrGSsp8TMeLhVI26YTL11Ns58F+uBL8RRLOZyN4dICtASd0iA4EQTeV2edrQxm
+         xuXl5O9yUCZHIGTdh4xsPA5BrKMbdLMFWyTdj6mRkKi83zt/US3rIqyggil5Vf7jMll4
+         a8+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWBhLfx6vHTf0HQvcOp3OHLh9YJxOP5e/m7wJqQIbG2B165CKFGaq33/3BB2Wd3ThSuPDBcC3tBMjfCTMA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3pMGvTWQJ+SKtDSJ8UljigeHihVZmvSYOO08OV9t24kuchh05
+	2yZFfZpaPpqQCqU9mD4fViKCYRj0BfgqyLQtdysBjliAXn35QKAeZzhw57aour4Ew7knuZAmiyh
+	PUOejNlDfYCbPH+PNEpVLUqAVNpds7I3Ne7vXxxKjbhnGCSiFb9Kpm//XkWeN2A98tA==
+X-Gm-Gg: ASbGncuYQ98/+rMvrH3j3IQA1S7OnSS0NBMrUzpiM+e/ySrXDgPg8Rno+oy8DsEQX4W
+	nI0tKUBdEDWu6ij9alvNb7CL9sxD8rJrEcj1ZBwkbpkEJi4E7la99H0gEZVazEASVWM9r+wzgdS
+	pJSRLMp404yu1Z9DhYMcc/47Qx+xefrQddCpvoC88Pb/VyE4mZhO1tZqKUinMaQxFaWpmqIW/Od
+	apEOy9fmGo3f8dO9JnYuDp7vgcmHSp6sAD58faeDvlY8UwmD4nKxh4dWoVINVckg5lnspTwnvt3
+	2CCO9KpX157AdNIVNzoFPvWw9hmpxPIJ7D/eMZ1JH4L7Gm3NjLfdFw==
+X-Received: by 2002:a5d:64c2:0:b0:3a4:fbd9:58e6 with SMTP id ffacd0b85a97d-3a572e56e89mr10226295f8f.50.1750162868608;
+        Tue, 17 Jun 2025 05:21:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGZ6HFIcgPA61VTLE6MxwcViqBvvaSiTLm55w5wu/A8YbCBmIm2sEb6MdwAS+c2/XoeDsQZRA==
+X-Received: by 2002:a5d:64c2:0:b0:3a4:fbd9:58e6 with SMTP id ffacd0b85a97d-3a572e56e89mr10226267f8f.50.1750162868192;
+        Tue, 17 Jun 2025 05:21:08 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([151.29.151.199])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089c2sm14026313f8f.59.2025.06.17.05.21.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:20:22 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Tue, 17 Jun 2025 14:20:12 +0200
-Subject: [PATCH] ASoC: qcom: sm8250: Fix possibly undefined reference
+        Tue, 17 Jun 2025 05:21:07 -0700 (PDT)
+Date: Tue, 17 Jun 2025 14:21:05 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>
+Cc: luca abeni <luca.abeni@santannapisa.it>, linux-kernel@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>
+Subject: Re: SCHED_DEADLINE tasks missing their deadline with
+ SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
+Message-ID: <aFFdseGAqImLtVCH@jlelli-thinkpadt14gen4.remote.csb>
+References: <ce8469c4fb2f3e2ada74add22cce4bfe61fd5bab.camel@codethink.co.uk>
+ <aBTO3r6Py_emwf1Y@jlelli-thinkpadt14gen4.remote.csb>
+ <f532441d8b3cf35e7058305fd9cd3f2cbd3a9fac.camel@codethink.co.uk>
+ <20250507222549.183e0b4a@nowhere>
+ <92690eb9158c1019dc0945f8298800cad17cae05.camel@codethink.co.uk>
+ <20250523214603.043833e3@nowhere>
+ <c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
+ <aDgrOWgYKb1_xMT6@jlelli-thinkpadt14gen4.remote.csb>
+ <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-snd-sm8250-dep-fix-v1-1-879af8906ec4@fairphone.com>
-X-B4-Tracking: v=1; b=H4sIAHtdUWgC/x3MSwqAMAxF0a1IxgZs638r4qDYVDOwSgMiiHs3O
- DwX3ntAKDMJjMUDmS4WPpLClAUsm08rIQc12Mo2VWs6lBRQ9l6FgU6MfGPtBhe98yZ2FnR4ZtL
- 8n07z+35i7VCTZAAAAA==
-X-Change-ID: 20250617-snd-sm8250-dep-fix-4393fa3a1f72
-To: Srinivas Kandagatla <srini@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Wesley Cheng <quic_wcheng@quicinc.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Matthew Croughan <matthew.croughan@nix.how>, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
 
-With CONFIG_SND_SOC_SM8250=y and CONFIG_SND_SOC_QCOM_OFFLOAD_UTILS=m
-selected in kconfig, the build will fail due to trying to link against a
-symbol only found in the module.
+On 02/06/25 16:59, Marcel Ziswiler wrote:
+> Hi Juri
+> 
+> On Thu, 2025-05-29 at 11:39 +0200, Juri Lelli wrote:
 
-  aarch64-linux-gnu-ld: sound/soc/qcom/sm8250.o: in function `sm8250_snd_exit':
-  sound/soc/qcom/sm8250.c:52:(.text+0x210): undefined reference to `qcom_snd_usb_offload_jack_remove'
+...
 
-Fix this by declaring the dependency that forces CONFIG_SND_SOC_SM8250=m
-when CONFIG_SND_SOC_QCOM_OFFLOAD_UTILS is =m.
+> > It should help us to better understand your setup and possibly reproduce
+> > the problem you are seeing.
 
-Reported-by: Matthew Croughan <matthew.croughan@nix.how>
-Fixes: 1b8d0d87b934 ("ASoC: qcom: qdsp6: Add headphone jack for offload connection status")
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- sound/soc/qcom/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+OK, it definitely took a while (apologies), but I think I managed to
+reproduce the issue you are seeing.
 
-diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-index e86b4a03dd61d2d3ad6a4d9602f69effbaefaa83..3d9ba13ee1e5250c7c4ecce664ff5a62dddf5094 100644
---- a/sound/soc/qcom/Kconfig
-+++ b/sound/soc/qcom/Kconfig
-@@ -186,6 +186,7 @@ config SND_SOC_SM8250
- 	tristate "SoC Machine driver for SM8250 boards"
- 	depends on QCOM_APR && SOUNDWIRE
- 	depends on COMMON_CLK
-+	depends on SND_SOC_QCOM_OFFLOAD_UTILS || !SND_SOC_QCOM_OFFLOAD_UTILS
- 	select SND_SOC_QDSP6
- 	select SND_SOC_QCOM_COMMON
- 	select SND_SOC_QCOM_SDW
+I added SCHED_FLAG_RECLAIM support to rt-app [1], so it's easier for me
+to play with the taskset and got to the following two situations when
+running your coreX taskset on CPU1 of my system (since the issue is
+already reproducible, I think it's OK to ignore the other tasksets as
+they are running isolated on different CPUs anyway).
 
----
-base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-change-id: 20250617-snd-sm8250-dep-fix-4393fa3a1f72
+This is your coreX taskset, in which the last task is the bad behaving one that
+will run without/with RECLAIM in the test.
 
-Best regards,
--- 
-Luca Weiss <luca.weiss@fairphone.com>
+|sched_deadline = sched_period | sched_runtime | CP max run time 90% of sched_runtime | utilisation | reclaim |
+| -- | -- | -- | -- | -- |
+|  5 ms  | 0.15 ms | 0.135 ms |  3.00% | no |
+| 10 ms  | 1.8 ms  | 1.62 ms  | 18.00% | no |
+| 10 ms  | 2.1 ms  | 1.89 ms  | 21.00% | no |
+| 14 ms  | 2.3 ms  | 2.07 ms  | 16.43% | no |
+| 50 ms  | 8.0 ms  | 7.20 ms  | 16:00% | no |
+| 10 ms  | 0.5 ms  | **1      |  5.00% | no |
+
+Without reclaim everything looks good (apart from the 1st tasks that I
+think suffers a bit from the granularity/precision of rt-app runtime
+loop):
+
+https://github.com/jlelli/misc/blob/main/deadline-no-reclaim.png
+
+Order is the same as above, last tasks gets constantly throttled and
+makes no harm to the rest.
+
+With reclaim (only last misbehaving task) we indeed seem to have a problem:
+
+https://github.com/jlelli/misc/blob/main/deadline-reclaim.png
+
+Essentially all other tasks are experiencing long wakeup delays that
+cause deadline misses. The bad behaving task seems to be able to almost
+monopolize the CPU. Interesting to notice that, even if I left max
+available bandwidth to 95%, the CPU is busy at 100%.
+
+So, yeah, Luca, I think we have a problem. :-)
+
+Will try to find more time soon and keep looking into this.
+
+Thanks,
+Juri
+
+1 - https://github.com/jlelli/rt-app/tree/reclaim
 
