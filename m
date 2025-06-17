@@ -1,149 +1,176 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11022127.outbound.protection.outlook.com [40.93.195.127])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017CB2E8E12;
-	Tue, 17 Jun 2025 16:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178874; cv=none; b=ldHS+ay2fgZZUGs0MjZzHvKRXgT7omA2MbiGO8aRl6g0eFQjAogXaOzN/wezuSU9ikC7AtfyBfglImR2IvxGnyAVZiYdXkZIv9Adfz6ylTNePrj8y5g0hDxEzm5X4vV2xh6yQ9Dv7uGbXeyZIxlepXrXObGWXLqm2BznoIs5VQk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178874; c=relaxed/simple;
-	bh=bv8Bxsp+wqUnaImph/LN5QBdG6peA6A2txdgC3zX1MM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=P6avrUgUhXN/d3q3djK5hq77W7weVjMQ4KEm3330c3OX2NQ1n9EjVGvXMvg9Tk8XAmUvH3hGzswMDs+fryPkHf3C2L9FZ+Odd8m/byHyTQFF3jtXbGec/RoLti6+8Svv8qlBNpJfQzJd3yfr+FNpK5P7bv9ZLEdRjJJz4G3zHLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNMyLSTP; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675B62FA650;
+	Tue, 17 Jun 2025 16:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.127
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750178931; cv=fail; b=ZB32Fe9RnxnIVp+1uqQBQ+NkS/RJQRjFSeDBu8vmnZXowL+bBKvMr0s9vLzYaK46/8y67l7gjhl2lQXfrY7jV7sP65hnEIGrYNy465Agr+EP7dKXvCIG94CkWYORLBqB+u5HzRyXDPNr1PjiNvRFgzi5wDj63IxxywPjNsuQc+U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750178931; c=relaxed/simple;
+	bh=qSq1Rw86G6OKgk92QBYq9VmCVK4ej+wcqqbvv8OKZvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=T7tFiG7QtHI4EA2hiryDJG4viwriKtFsMjvIHf3q8qsPVDmSgjFciRzbPOjIEzSEcqKdpH+4EHIXBKBqIFmPkNiCokAJJjR5bEJ1AI4khDTCIu3JvwuBnRM2vnTvvcOfuxvtpDigA8dRnh3+sDPpX/nmq2wYUbHReVUYkmaU4g8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tektelic.com; spf=pass smtp.mailfrom=tektelic.com; dkim=pass (1024-bit key) header.d=Tektelic.onmicrosoft.com header.i=@Tektelic.onmicrosoft.com header.b=gzzFt/4N; arc=fail smtp.client-ip=40.93.195.127
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tektelic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tektelic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNMyLSTP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A59C4CEF1;
-	Tue, 17 Jun 2025 16:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750178873;
-	bh=bv8Bxsp+wqUnaImph/LN5QBdG6peA6A2txdgC3zX1MM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZNMyLSTPok0plXtSQRVeR35mIMWYttQFoRsg7101Exfaxx1j63e8bHq3iq0fCYdA6
-	 OH7chKtVrGN5wyiqnbwzMjJ51fAUeVh0HD/d9BtnX7Tdda6qRUyLCtQnMQe3l3+WCL
-	 RdmE8gciBbPjRV3a+FqVrSNKq4SNPlPma+bcbVvKvRGlLybuQvDg8gp9sespTNU+FV
-	 P1a/thpRNVyfkRhuXXyY5SDGaduXEKPM/7zuD8QnyxuOP6RzVrJBllDZX9DS8IcGH/
-	 XnfDZGefPxk6LQcSEzhksczVblQuPZ+Is8ABsU8bgj5RWP0o+5pgpeeUbUKoRrofPD
-	 04cq6am1mjGUw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uRZTT-007eVr-5s;
-	Tue, 17 Jun 2025 17:47:51 +0100
-Date: Tue, 17 Jun 2025 17:47:50 +0100
-Message-ID: <86msa6co21.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Will Deacon <will@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Nick Chan <towinchenmi@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Janne Grunau <j@jannau.net>,
-	Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>,
-	Sven Peter <sven@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	asahi@lists.linux.dev,
+	dkim=pass (1024-bit key) header.d=Tektelic.onmicrosoft.com header.i=@Tektelic.onmicrosoft.com header.b="gzzFt/4N"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Pi9hSeSDkcSve47qvwEy1h2jjznB4V1r2blubPQAJsdQ8a2g+L4XJpcCYbenLTR2WXpdlIbYscvBHJIvagQyh3jLeCPxKbxANojp8OOKO6tcvgMnXxm4//mn48d4C36YICvfBk0vPRVPdYFlXdbJVscemQR29NyboiSiGASY3DnnnMXjx+YQ+xr4GNiOB1/ozXEJTdzajqC/9mQeUPAQ9mYazxNfknVnP4ziO+CS64Wonc6Or/MIUVPYUq2dad5s4i3HjwnTaLvTVEEkz9DkPAaSp3Pfow7OKT7x7l0oawSFCpXsINsw6wcrF1H0x6hMncAUleauZ7oDXkRkUjKJCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dnREvnrzRa1a71IJj6tQF2kH0MBcSEDuVcWeDWY0xfs=;
+ b=EoUku5yMNqhQqg85EpEiJdAZ5ErZo/yqUVPZfK/XUdG2H6ktMYkqLzuP5qHPQFAONa90UXaJY/JowpCcd8xLrGHS3KC/82TAGBP3a7OKSNjWdSgaKnDCSwc6NXb6ZJ55vYjal0yidlr3Hp3Rpv0F9sn3rzk9+pETx4y3iZc1oUbaQ1kf7o6n5Tim7t+rk/mSsgryT3H8VcLK1bp2/kz3ft4sIQ94dEPPfF9J5yWcrzq/FyTKNSIRUpPWT5mFhK6pqfF7AheWiq7PISjt9xpiJFUj2b58dpzvm0jk/ctWZpZDsS5oTFQQ9g28hlp+A598OAjMzOkNpN4RBK10wAN9RQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=tektelic.com; dmarc=pass action=none header.from=tektelic.com;
+ dkim=pass header.d=tektelic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Tektelic.onmicrosoft.com; s=selector2-Tektelic-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dnREvnrzRa1a71IJj6tQF2kH0MBcSEDuVcWeDWY0xfs=;
+ b=gzzFt/4NNxHnmVcchKilt/ngwPbA3MzCWDiPLtxbaycVUe6XSQxYepYfsC0VjSCaJFvaqTyVm7U9xjh1neM/X9M7z+w91gW3LEydJgIspcySseBEfuqe1w0et0aOoNiIx+p3lb+3w4Z6pGvEl6U7vtxfCgBQ4Y141HKhV1+lhhs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=tektelic.com;
+Received: from DM6PR05MB4923.namprd05.prod.outlook.com (2603:10b6:5:f9::28) by
+ MW4PR05MB8747.namprd05.prod.outlook.com (2603:10b6:303:12a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.18; Tue, 17 Jun
+ 2025 16:48:45 +0000
+Received: from DM6PR05MB4923.namprd05.prod.outlook.com
+ ([fe80::27b8:b7d6:e940:74bc]) by DM6PR05MB4923.namprd05.prod.outlook.com
+ ([fe80::27b8:b7d6:e940:74bc%4]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 16:48:45 +0000
+From: Aidan Stewart <astewart@tektelic.com>
+To: gregkh@linuxfoundation.org,
+	jirislaby@kernel.org
+Cc: tony@atomide.com,
+	linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH RESEND v7 00/21] drivers/perf: apple_m1: Add Apple A7-A11, T2 SoC support
-In-Reply-To: <20250617141649.GA19021@willie-the-truck>
-References: <20250616-apple-cpmu-v7-0-df2778a44d5c@gmail.com>
-	<CAP-5=fXSwgxMc+uh=PBAFh4Zm96tL5RDyKPOJ8Q40O4s=EaArA@mail.gmail.com>
-	<20250616102945.GA17431@willie-the-truck>
-	<CAP-5=fVjJyV2eA1aDnk6cqAhJGc9FZVyHhP7-f=1OyWmzxjN8w@mail.gmail.com>
-	<20250617141649.GA19021@willie-the-truck>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	Aidan Stewart <astewart@tektelic.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] serial: core: restore of_node information in sysfs
+Date: Tue, 17 Jun 2025 10:48:19 -0600
+Message-ID: <20250617164819.13912-1-astewart@tektelic.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MW4PR03CA0019.namprd03.prod.outlook.com
+ (2603:10b6:303:8f::24) To DM6PR05MB4923.namprd05.prod.outlook.com
+ (2603:10b6:5:f9::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: will@kernel.org, irogers@google.com, towinchenmi@gmail.com, mark.rutland@arm.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, j@jannau.net, alyssa@rosenzweig.io, neal@gompa.dev, sven@kernel.org, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, devicetree@vger.kernel.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, krzysztof.kozlowski@linaro.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR05MB4923:EE_|MW4PR05MB8747:EE_
+X-MS-Office365-Filtering-Correlation-Id: 09548a00-0cbf-49a5-cd6f-08ddadbed2de
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tBjOjFU4yM9fvFPOOKMctqJujjdNFgEinOS16+49Os9aL7YMJexgsX4iAM71?=
+ =?us-ascii?Q?yL48DKEdIfmj9lde04G5Ch+bJwww7BZSE7Ks4JtwFYaC3YCQ8Rqbn2pVAFjV?=
+ =?us-ascii?Q?u0+KFTwRC/5cg7p4PeJvyqnSZA6uwuBZxlebE19HFxe+jbpfu1vl/uD/7bb9?=
+ =?us-ascii?Q?/N8Spc+YI5d52mjhswujPYmfIze1blZaq7oNk/BsaLofsdOu0r2NGSA/rVwa?=
+ =?us-ascii?Q?tCnqYl4U4ECkLTjE8Lm6oG2jqwX1dxR4ECpVL75fK1UIm/loOtfvslPt59Ra?=
+ =?us-ascii?Q?+Jh2DsWLOMjp1GwP4WqHcmzWddi3X1gm0miXzwGUeTNZ3edyeHwv0apZLqZw?=
+ =?us-ascii?Q?BrMFOPWTckeKNvEV1mPkMUqSnCMHUvDDkMcf2a4ZZFmFZD3T8P7YovsWfcD8?=
+ =?us-ascii?Q?DV957NauzOPDN4/vkR6YuzYWGXytPn3zJ/dXiZKZpBeAkte13uaJB+Sy+9mY?=
+ =?us-ascii?Q?7QqxkV+a4eOhXqjIdeouTMs05wfz779vEski9YjsmgfRPn4XUpadTrQDh2ga?=
+ =?us-ascii?Q?7bf2gu+3vRjDx4iZmd+UVlN36ZKzFwbgRegVFU7gF4HCeRecB3RPN06h0/e1?=
+ =?us-ascii?Q?3l1+y+DLMdqhFyL7wOyrqOGXUnxZry1GmGtTNi8S8VlQO97D/YXxDS4BV4Qy?=
+ =?us-ascii?Q?2/MVDZmpljzEUKNsIWAygh5T6RrEJWXoZbM9UfoeJXVNwFsnUkeo7yrigHax?=
+ =?us-ascii?Q?T2UX4Llgji8CKEOsvkjA6Y5nlcrK1hzHFMQQAkZjCLoR57ezqVGp+S6fMAUL?=
+ =?us-ascii?Q?IovgbVRA7hneZSySO9bm5wachDLVaKIaDXzjgbgnlT0mye6/VFM7P/+et0sR?=
+ =?us-ascii?Q?A9VjDWS14ZqbxshVLa/GRZZFMegJ+R9Gj1utV8vAj1pGshxzsJfoINFQvT1O?=
+ =?us-ascii?Q?Y2cD9+RAyVL9LJfGiAAxZdRblMQON7UIBF6DBHRhMTGIibxwt2EBq5iI5R6m?=
+ =?us-ascii?Q?SXeariNiisVqPAWUgAOjMt6+t0r1/FUozKH3ho7fhNFDDcM61+fHNCN1azqI?=
+ =?us-ascii?Q?95Ais8hRIQwyKUH9Ij71RkZ/A0LBb6FrL3pMpjDZK09hV5pla5Nd97aomPcf?=
+ =?us-ascii?Q?ED0zOXFygI00LCPiVT9DAD76yZ3YsCUKqLsp2OIYt0sJ3F7Xsym4qWM8Fd6o?=
+ =?us-ascii?Q?BUKHEOmckSbA3hvUre/GOx1i9gZmkaR62G4bA5aBkS4r6UBWqNkpZmP67jGS?=
+ =?us-ascii?Q?rZIajXnVTLrf8KOR3MVVAIV01snVv/wB7pvWipK6EaEUFZ++S9AZ+iKFfOfb?=
+ =?us-ascii?Q?/VLWdmMofefGneLK4P0RDlNxwBsU0/WGt+cVQwBj3nL3n8aq2tQRFJLh3G2K?=
+ =?us-ascii?Q?EbFZZivdf/Nr1YspKXxxPmw9YC/f1I/k8lxaZfr++PCc5q1m9eA5b+Tf6MkL?=
+ =?us-ascii?Q?9rFCtZRL71qR+Iyb32QGAgTlVtMyrPIJdMcbTyXhTJPeksbZjrn9Y/HhbJQc?=
+ =?us-ascii?Q?7t7wFhFfUQ9XbE90RltaY5KRtkoNtPuQdV0Ua6CVOMUaeCc+MRdcfdRsruDU?=
+ =?us-ascii?Q?v29TZd4jS5O3kIE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR05MB4923.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ddMDX8ddpKh+sWU1aLvJmbmZ87NVePgLcooXanSHfjQIShMEfh/WQW29k7+7?=
+ =?us-ascii?Q?CqFX1BcVlozDYnXjVO7l5B0hZTZmu57aECsQYRp05GAjHjp/FC+i/BMMEzZQ?=
+ =?us-ascii?Q?p+cu4rnizKOVXI4NbVuFK+rMTUk4RY0f59Rns4rDGtazt6FI7u58o4A6HMXH?=
+ =?us-ascii?Q?RZ0KLSQqqE+t4uZEB3vwtil1SeTubTsYmpIJoOqr+X79q4/hAL6Gr+a5z5YX?=
+ =?us-ascii?Q?80UD2OMfZWB6JtvxUAp2CFD9glXWK0bzHqFHgmHqmQm3nlKNJZiVkNTEQsLm?=
+ =?us-ascii?Q?p+h90eFlpXy87UfkBkbhPeOvnpzwn07fLVI6JeGemlHT1OmlEIvH4XiscQov?=
+ =?us-ascii?Q?nWp9nhEJDCDPIw4XePD8CCXCiyv/tIQd4RWvhy9h756pEqJ7V0gwqtX2mNNY?=
+ =?us-ascii?Q?eic1K0EB3n5wOlGG/2xww3+HURWsbcecId4sBoYYRKb8k0lHYn3jGN6WEfnv?=
+ =?us-ascii?Q?3LdosvR8xsElno4NFKqPHvSUaxN0oC5G1Dlm+zrXRW5JvkiUhRiF3cF+ZjD3?=
+ =?us-ascii?Q?HUkvZTs5Ya4QyZcTQdKhRZGzOsHd59p1OYEi9E9Ffqz6OrgbAhruklEHKHPD?=
+ =?us-ascii?Q?jQRsIUC2HjoxLlsoZsq+pJTs1OeEnziFXjA32vZdnxBqNmHWcTPvmx+72yQz?=
+ =?us-ascii?Q?AmNwX49S0M2L2qu5vTBLhbSBazPVD5V5WeL0MQP9rUTeeejONz5F3qHmtfPo?=
+ =?us-ascii?Q?2BYsacNGy/AEAJyb183/OgiKjjYoYiD7SvGuAkvgnxgQ5tX1pmSaDAJfVm1F?=
+ =?us-ascii?Q?zBbpI4s52ELWzoosqaLpwWkJXvgaqj1ojIh4A5pHsaVL+Lk11SG19IEsXqRv?=
+ =?us-ascii?Q?e+wRuBxtAn3pA6OyOgllLjzzXnYTFV2F5BvN5USs8l/nkmVLIadrjZ53GRkK?=
+ =?us-ascii?Q?ePIFct0Lh0kRojf+dcGrS3wPFVpxB7+jKbRJHFfh27J6YvLWXt671LoLAy2N?=
+ =?us-ascii?Q?bmcl8jJiuj+x8DXoXsFspXUZQ2uY/FJkckou9210PblJxAr1GYc05GvWOgY3?=
+ =?us-ascii?Q?AGvaVxAyX0W78Ho3owzNcurE5vD7iCJf2WYSK7KMSUZE+DaFLfy5ik12gtWC?=
+ =?us-ascii?Q?Pi0TdiMy0QWRDy40hNY0GiVAWEtBC8x9arFfDz9/WabbFDz7N/p7vNfQsH1w?=
+ =?us-ascii?Q?2dfX2fkhGpmT3M4RJncrd6u2OIMhPt9AaDp6OVj5QYr/z3eZWqy0DB3zLBiA?=
+ =?us-ascii?Q?obzsOTEIXkOuCdrCg7OqvS5dLWE064sFz9vRLjbwwm88Emxd0bjJzSYOcD/n?=
+ =?us-ascii?Q?IqgRou6AUMWFKlkz9Oq+DOp416lesEkf1Z3/TpR41b3ZrPMxwkWeIq2hu3XP?=
+ =?us-ascii?Q?wAr9iMUWlLLa0niVXciJmF6kuow/+85ifCalcHXJWvkBmeCNa29CjvZVqfgq?=
+ =?us-ascii?Q?epsbv7NytoIRuN446HLdA322j9nh5pyArhW4CKFri1vZheBdSeYEd6Th55qk?=
+ =?us-ascii?Q?2I9lfBk4WqXoRHuywpCVbvqcUM6rxm5S2WEa0U8D26GuNZv0hMDiF3c/hlCF?=
+ =?us-ascii?Q?rEUQD/IQAPst2LlPsa3ZsA7u/qfI8vYC03DoRpoD0D2FRSl5Z9oR0VO4Kodo?=
+ =?us-ascii?Q?TU34BDkCFyVpCJqG35rhiXKfSPeNTEGW1vZk5aRG?=
+X-OriginatorOrg: tektelic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 09548a00-0cbf-49a5-cd6f-08ddadbed2de
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR05MB4923.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 16:48:45.1933
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 852583a0-3638-4a6d-8abc-0bf61d273218
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VPqguBsA2TWrCp90g3GpCEHw8r2r5xrCqLwTYAgZ9U8bhZxPNiRjCDDyV288T2ZEt2sl084K6+sCJ1YXIF/EiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR05MB8747
 
-On Tue, 17 Jun 2025 15:16:50 +0100,
-Will Deacon <will@kernel.org> wrote:
->=20
-> On Mon, Jun 16, 2025 at 03:44:49AM -0700, Ian Rogers wrote:
-> > On Mon, Jun 16, 2025 at 3:29=E2=80=AFAM Will Deacon <will@kernel.org> w=
-rote:
-> > >
-> > > On Mon, Jun 16, 2025 at 02:36:18AM -0700, Ian Rogers wrote:
-> > > > On Sun, Jun 15, 2025 at 6:32=E2=80=AFPM Nick Chan <towinchenmi@gmai=
-l.com> wrote:
-> > > > >
-> > > > > This series adds support for the CPU PMU in the older Apple A7-A1=
-1, T2
-> > > > > SoCs. These PMUs may have a different event layout, less counters=
-, or
-> > > > > deliver their interrupts via IRQ instead of a FIQ. Since some of =
-those
-> > > > > older SoCs support 32-bit EL0, counting for 32-bit EL0 also need =
-to
-> > > > > be enabled by the driver where applicable.
-> > > > >
-> > > > > Patch 1 adds the DT bindings.
-> > > > > Patch 2-7 prepares the driver to allow adding support for those
-> > > > > older SoCs.
-> > > > > Patch 8-12 adds support for the older SoCs.
-> > > > > Patch 13-21 are the DT changes.
-> > > > >
-> > > > > Signed-off-by: Nick Chan <towinchenmi@gmail.com>
-> > > >
-> > > > Hi Nick,
-> > > >
-> > > > This is substantial work and it looks good to me. Do you know why
-> > > > there's been little progress on landing these patches? Buggy Apple =
-ARM
-> > > > PMU support in the kernel has led to reworking the perf tool. It se=
-ems
-> > > > best that we can have the best drivers possible.
-> > >
-> > > You reworked the perf tool to support these things? Why? These changes
-> > > are targetting chips in old iPhones afaict (as opposed to "Apple Sili=
-con").
-> > > I think that (a) most people don't particularly care about them and (=
-b)
-> > > they're not fully supported _anyway_ because of crazy stuff like [1].
-> >=20
-> > I was meaning that we reworked the perf tool to work around the Apple
-> > ARM PMU driver expecting to work as if it were an uncore rather than a
-> > core PMU driver. More context here:
-> > "[REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5"
-> > https://lore.kernel.org/lkml/08f1f185-e259-4014-9ca4-6411d5c1bc65@marca=
-n.st/
-> > But in general it would be nice Apple ARM PMU support were well loved.
-> > I think we went 2 or 3 minor releases with the perf tool not working,
-> > threats of substantial reverts to avoid the PMU driver bug being
-> > exposed, etc.
->=20
-> It's unfortunate that you've had a torrid time with the Apple PMU driver,
-> but I think it's important to realise that it's both unmaintained (it
-> ends up with me via the catch-all for drivers/perf/) and was written
-> based off whatever reverse-engineering people could be bothered to do in
-> their spare time. It's frankly remarkable that it works as well as it
-> does.
+Since in v6.8-rc1, the of_node symlink under tty devices is
+missing. This breaks any udev rules relying on this information.
 
-Also, the "broken" driver actually works as expected. Ian blames the
-userspace breakage on that driver, but that's only because the way we
-deal with PMUs on ARM doesn't match his mental model. Oh well.
+Link the of_node information in the serial controller device with the
+parent defined in the device tree. This will also apply to the serial
+device which takes the serial controller as a parent device.
 
-	M.
+Fixes: b286f4e87e32 ("serial: core: Move tty and serdev to be children of serial core port device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Aidan Stewart <astewart@tektelic.com>
+---
+v1 -> v2:
+ - v1: https://lore.kernel.org/linux-serial/20250616162154.9057-1-astewart@tektelic.com
+ - Remove IS_ENABLED(CONFIG_OF) check.
+---
+ drivers/tty/serial/serial_base_bus.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---=20
-Without deviation from the norm, progress is not possible.
+diff --git a/drivers/tty/serial/serial_base_bus.c b/drivers/tty/serial/serial_base_bus.c
+index 5d1677f1b651..cb3b127b06b6 100644
+--- a/drivers/tty/serial/serial_base_bus.c
++++ b/drivers/tty/serial/serial_base_bus.c
+@@ -72,6 +72,7 @@ static int serial_base_device_init(struct uart_port *port,
+ 	dev->parent = parent_dev;
+ 	dev->bus = &serial_base_bus_type;
+ 	dev->release = release;
++	device_set_of_node_from_dev(dev, parent_dev);
+ 
+ 	if (!serial_base_initialized) {
+ 		dev_dbg(port->dev, "uart_add_one_port() called before arch_initcall()?\n");
+-- 
+2.49.0
+
