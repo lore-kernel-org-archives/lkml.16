@@ -1,113 +1,335 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AAC20D519
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B5D2E9732
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172733; cv=none; b=g3mdPq5zi1BOvEhX6F5jpnE/PdxRm64kCJPf9ipKeq2GIAhR/k4SWTvM0GDxCUhB7r5qJ9rQ349mXmXRMUwNo3Ee6OT4ZGGH2nDEuwGg/VH2LnPHsfMl42wbxj1hNUiwEibHQEccYHyqAwrgg3ZUCfvfXk/m4SyCSF4YdIav8dE=
+	t=1750172738; cv=none; b=M3RWBPj1R0dEks/0lHyycp4na/6rT43AabDzyM9712u9VaQSDMVGRD2eZhqxrDA8XxfS6zpjW0ht2wKMJVAXuDbyDe854vimRPg4ALS5ihqk1jiXoRY3IrSMWUt6/sEpyA31gJ9ZYjujtjGcdpAkW+iDEEvL1wDViko1GYKo6h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172733; c=relaxed/simple;
-	bh=GbeqsHHd1vL8W4r3bOtXBX0HxgW5+uwomab9h1t1d8E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q7Gn6TMapB3vXrwwBEMgPiU1eIeNzc0fl9vDj2Ul+9OOZhHeDQNF2ou9GcK5XWVRFgv6dP3tKaj0Iuhfij8AWMuw01+JoOXUGSk8CsxOfix11ncTaQyWqGCCmIJPzAy8LPNTM1YYMlIS8skCyALNKeautZ42K/4RBz4rBMSdR/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Gyl2XYtY; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750172738; c=relaxed/simple;
+	bh=whBs2iAagZKltqwmIXWaToW4Srekvx9gqm0G/7aOwhc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k7zB0JGrFDz5gmplP6D8gnrcVMrUCF+YUziwMB20Vb029WYtp+iBQjYcHRuXtCLlaVaE8wMO+itx0KyP1XYSsUBjEd+of9sXNsXjQeGZEKKzZmghvf8EDOf5mKGo2tJ+idiUvy44XaSQg19PUPgbFVjTLxDdWRUECPO+BjThoNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YjZ75WEW; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gyl2XYtY"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-609b169834cso5175a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750172730; x=1750777530; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xdDBWUy9j2pqUSBQx3kBN47BSA5JF5clYU2Pq1utjBw=;
-        b=Gyl2XYtYAM9whj7zekxDf3mSDC/qTL5iL+O1/QxxCZqmS4f7HZO0gdVRtbMyDWssrd
-         OvtyJDlbd0f0xKivWVSBzGMrAn/R8IKKJxmCwcfvnuJ/7taJqX8jKTZwXNbL/YOtLLe5
-         QlvEzpG/de+KSovIct14jdZQD2mcCnPDjWM1F4X2TY7l7SRmG7th8Wk8fFoUzCjMlmaU
-         Iw8sBiz/CeytgfUzZgaXpxawH1tRxzE/UnMRFvUuJePFgjVzyNvt2hmwKB8ApOZGCe5/
-         lc5PiQhvQta/MY58KzBxxWiEiCrPYqZeJPh/Ne34ZaHyMZ4pSNE0j5swdHej3O7AyNwN
-         eO9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750172730; x=1750777530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xdDBWUy9j2pqUSBQx3kBN47BSA5JF5clYU2Pq1utjBw=;
-        b=YmlARZGS7RMMzv0WAT6vcvy/bQ6F98OCQE4F/dvhWNp1OPNIThjCBRr1PM69Uiqfft
-         ovJyDaypWKANc/IC7kmG9exVpJ81mcnvDQkTKVox6R2r+RGw9rb5KVbl1WMzLyVTGxVF
-         I6hOyFZ5642RlwtyPCVEOQxC+WikM0mn+WcddGKz6X/IcWLlBrN6ek7dv/VTn+49V3Dh
-         UbcHbeiM3ku6miMR3YJZlV233+GR36VsX1QuoB/PzeFsLIDQuucmVTu1Uar9K+rs1BXf
-         Xp04UckG5/onkeDyxdSmha5mvXPlhMIU0w/e9ZPaLQXDPtb22xFh7QLuWyXjNJ+5Fmko
-         eZbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUgWcNVXnxg4FotqzE4qdKDEAF9ZqEsoU76x/KdTaKxLwvBRYgZ4I1EVMw2oNlQV02nHMepGOBt+k08/uw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw57iHJZqOwU2AQ6AWybg2LQ2lyYcuUuUFtNcL+RpMLyw4kqodz
-	kr1JItrJQIjgOgpb80T/dCrZg1c1jzByiOhpO7KbMaH2g3UqinF3+ajSDz8Urqrdvd7MdHFUWr/
-	uBlv5FI9Nsgbp4HFL5CXn14i2HChQDI5fofK1fSHU
-X-Gm-Gg: ASbGnctNvlBgudDNCh5M8Htxaxb1nYYewa3v7dv6ZcPuyECqsZez1v1BmTwy4EJnAt5
-	S679ffNbkNsn4u4ENPtvGuGWbq02rHnor7rh7vJKcoqy1Yj7a0vmloWZnCPgGmLee8iEuKSexc4
-	5lK+V/m0EEv17uS//IIL2GsDFeBJOUgLkL7Pxg6nikKWBPMWJv2ooJ90MWdGZTX07BAIET+VyuJ
-	A==
-X-Google-Smtp-Source: AGHT+IGRa+ebswKWFvguxlBNnkaQydcOCTcdUc1tpDY2GOdw3o8/6AoW8HLi2nmZXoRCM54Zx9JT9odQlOQ7f8488xU=
-X-Received: by 2002:a05:6402:1298:b0:608:fb55:bf12 with SMTP id
- 4fb4d7f45d1cf-608fb55cf20mr248560a12.4.1750172730198; Tue, 17 Jun 2025
- 08:05:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YjZ75WEW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750172737; x=1781708737;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=whBs2iAagZKltqwmIXWaToW4Srekvx9gqm0G/7aOwhc=;
+  b=YjZ75WEWMSyusE5PPF/QhyiexgsFrrY2h09x7hDFGyRz0VbN2+WdDgTE
+   hQBclWf4lm2ASpFU4XxHxaEewWer8aNt9Pr2h5RRyb9jG7UneaWhZpQu6
+   5u1nSUPIEwptHivovvNSj8b2Pe3zr+Rxfk5gDXLeBIqAdCjKr5qt8Mpga
+   mPxSb0nPHYD3wuzxERc1l+U9nKhhdf8gXdNMUayxJwonIG9O2Y+36h0fJ
+   JrXM+V3Xa5RPY2h+/YcBy82KH657E3sLJmHVGxJbgqSgnxhf01BExBuWJ
+   ExXc/VzQn5HvEukTLNwlQuO9RbbX7N3tDCjkCtwgwjB1dd4XYNYlTisIC
+   Q==;
+X-CSE-ConnectionGUID: o1dTaVOXRiet3RDTkAIZAg==
+X-CSE-MsgGUID: hXaFlvIeRHOy6/NjqoQBvw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63008738"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="63008738"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 08:05:37 -0700
+X-CSE-ConnectionGUID: kdMoRDLJTxGzpmGblCnDKw==
+X-CSE-MsgGUID: Eeux6R3QT4+Zehgvx1wkWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="152672151"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 08:05:30 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	Karthik Poosa <karthik.poosa@intel.com>,
+	Raag Jadav <raag.jadav@intel.com>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	linux-mtd@lists.infradead.org,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	intel-gfx@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Tomas Winkler <tomasw@gmail.com>
+Subject: [PATCH v14 1/8] mtd: add driver for intel graphics non-volatile memory device
+Date: Tue, 17 Jun 2025 17:51:51 +0300
+Message-ID: <20250617145159.3803852-2-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250617145159.3803852-1-alexander.usyskin@intel.com>
+References: <20250617145159.3803852-1-alexander.usyskin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610162258.324645-1-cachen@purestorage.com> <2cd3947a-63d9-4a79-a24a-eb1ae8164169@suse.com>
-In-Reply-To: <2cd3947a-63d9-4a79-a24a-eb1ae8164169@suse.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 17 Jun 2025 08:05:16 -0700
-X-Gm-Features: AX0GCFtqkKIf4xqb1bUZ_2PHwjODhV30fsR1AexyTYrzdWW3sQdis91nCJ5F--0
-Message-ID: <CAJuCfpGxEYZ_7Ff-vpBThfM98ZbUu9pSPeoumkkKuLZiqLpORg@mail.gmail.com>
-Subject: Re: [PATCH] alloc_tag: remove empty module tag section
-To: Petr Pavlu <petr.pavlu@suse.com>
-Cc: Casey Chen <cachen@purestorage.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
-	linux-arch@vger.kernel.org, kent.overstreet@linux.dev, arnd@arndb.de, 
-	mcgrof@kernel.org, pasha.tatashin@soleen.com, yzhong@purestorage.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 2:27=E2=80=AFAM Petr Pavlu <petr.pavlu@suse.com> wr=
-ote:
->
-> On 6/10/25 6:22 PM, Casey Chen wrote:
-> > The empty MOD_CODETAG_SECTIONS() macro added an incomplete .data
-> > section in module linker script, which caused symbol lookup tools
-> > like gdb to misinterpret symbol addresses e.g., __ib_process_cq
-> > incorrectly mapping to unrelated functions like below.
-> >
-> >   (gdb) disas __ib_process_cq
-> >   Dump of assembler code for function trace_event_fields_cq_schedule:
-> >
-> > Removing the empty section restores proper symbol resolution and
-> > layout, ensuring .data placement behaves as expected.
->
-> The patch looks ok me, but I'm somewhat confused about the problem.
-> I think a linker should not add an empty output section if it doesn't
-> contain anything, or if .data actually contains something then the extra
-> dummy definition should be also harmless?
+Add auxiliary driver for intel discrete graphics
+non-volatile memory device.
 
-I also assumed so but apparently this is not entirely harmless.
+CC: Lucas De Marchi <lucas.demarchi@intel.com>
+Reviewed-by: Raag Jadav <raag.jadav@intel.com>
+Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Co-developed-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Tomas Winkler <tomasw@gmail.com>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ MAINTAINERS                        |   7 ++
+ drivers/mtd/devices/Kconfig        |  11 +++
+ drivers/mtd/devices/Makefile       |   1 +
+ drivers/mtd/devices/mtd_intel_dg.c | 134 +++++++++++++++++++++++++++++
+ include/linux/intel_dg_nvm_aux.h   |  30 +++++++
+ 5 files changed, 183 insertions(+)
+ create mode 100644 drivers/mtd/devices/mtd_intel_dg.c
+ create mode 100644 include/linux/intel_dg_nvm_aux.h
 
->
-> This also reminds me of my previous related fix "codetag: Avoid unused
-> alloc_tags sections/symbols" [1] which fell through the cracks. I can
-> rebase it on top of this patch.
->
-> [1] https://lore.kernel.org/all/20250313143002.9118-1-petr.pavlu@suse.com=
-/
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7e7515a412e9..521730530243 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12086,6 +12086,13 @@ L:	linux-kernel@vger.kernel.org
+ S:	Supported
+ F:	arch/x86/include/asm/intel-family.h
+ 
++INTEL DISCRETE GRAPHICS NVM MTD DRIVER
++M:	Alexander Usyskin <alexander.usyskin@intel.com>
++L:	linux-mtd@lists.infradead.org
++S:	Supported
++F:	drivers/mtd/devices/mtd_intel_dg.c
++F:	include/linux/intel_dg_nvm_aux.h
++
+ INTEL DRM DISPLAY FOR XE AND I915 DRIVERS
+ M:	Jani Nikula <jani.nikula@linux.intel.com>
+ M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
+diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
+index aed653ce8fa2..46cebde79f34 100644
+--- a/drivers/mtd/devices/Kconfig
++++ b/drivers/mtd/devices/Kconfig
+@@ -183,6 +183,17 @@ config MTD_POWERNV_FLASH
+ 	  platforms from Linux. This device abstracts away the
+ 	  firmware interface for flash access.
+ 
++config MTD_INTEL_DG
++	tristate "Intel Discrete Graphics non-volatile memory driver"
++	depends on AUXILIARY_BUS
++	depends on MTD
++	help
++	  This provides an MTD device to access Intel Discrete Graphics
++	  non-volatile memory.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called mtd-intel-dg.
++
+ comment "Disk-On-Chip Device Drivers"
+ 
+ config MTD_DOCG3
+diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
+index d11eb2b8b6f8..9fe4ce9cffde 100644
+--- a/drivers/mtd/devices/Makefile
++++ b/drivers/mtd/devices/Makefile
+@@ -18,6 +18,7 @@ obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
+ obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
+ obj-$(CONFIG_MTD_ST_SPI_FSM)    += st_spi_fsm.o
+ obj-$(CONFIG_MTD_POWERNV_FLASH)	+= powernv_flash.o
++obj-$(CONFIG_MTD_INTEL_DG)	+= mtd_intel_dg.o
+ 
+ 
+ CFLAGS_docg3.o			+= -I$(src)
+diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
+new file mode 100644
+index 000000000000..c2d0dbfb0378
+--- /dev/null
++++ b/drivers/mtd/devices/mtd_intel_dg.c
+@@ -0,0 +1,134 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
++ */
++
++#include <linux/device.h>
++#include <linux/intel_dg_nvm_aux.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++struct intel_dg_nvm {
++	struct kref refcnt;
++	void __iomem *base;
++	size_t size;
++	unsigned int nregions;
++	struct {
++		const char *name;
++		u8 id;
++		u64 offset;
++		u64 size;
++	} regions[] __counted_by(nregions);
++};
++
++static void intel_dg_nvm_release(struct kref *kref)
++{
++	struct intel_dg_nvm *nvm = container_of(kref, struct intel_dg_nvm, refcnt);
++	int i;
++
++	pr_debug("freeing intel_dg nvm\n");
++	for (i = 0; i < nvm->nregions; i++)
++		kfree(nvm->regions[i].name);
++	kfree(nvm);
++}
++
++static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
++			      const struct auxiliary_device_id *aux_dev_id)
++{
++	struct intel_dg_nvm_dev *invm = auxiliary_dev_to_intel_dg_nvm_dev(aux_dev);
++	struct intel_dg_nvm *nvm;
++	struct device *device;
++	unsigned int nregions;
++	unsigned int i, n;
++	int ret;
++
++	device = &aux_dev->dev;
++
++	/* count available regions */
++	for (nregions = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
++		if (invm->regions[i].name)
++			nregions++;
++	}
++
++	if (!nregions) {
++		dev_err(device, "no regions defined\n");
++		return -ENODEV;
++	}
++
++	nvm = kzalloc(struct_size(nvm, regions, nregions), GFP_KERNEL);
++	if (!nvm)
++		return -ENOMEM;
++
++	kref_init(&nvm->refcnt);
++
++	for (n = 0, i = 0; i < INTEL_DG_NVM_REGIONS; i++) {
++		if (!invm->regions[i].name)
++			continue;
++
++		char *name = kasprintf(GFP_KERNEL, "%s.%s",
++				       dev_name(&aux_dev->dev), invm->regions[i].name);
++		if (!name)
++			continue;
++		nvm->regions[n].name = name;
++		nvm->regions[n].id = i;
++		n++;
++	}
++	nvm->nregions = n; /* in case where kasprintf fail */
++
++	nvm->base = devm_ioremap_resource(device, &invm->bar);
++	if (IS_ERR(nvm->base)) {
++		ret = PTR_ERR(nvm->base);
++		goto err;
++	}
++
++	dev_set_drvdata(&aux_dev->dev, nvm);
++
++	return 0;
++
++err:
++	kref_put(&nvm->refcnt, intel_dg_nvm_release);
++	return ret;
++}
++
++static void intel_dg_mtd_remove(struct auxiliary_device *aux_dev)
++{
++	struct intel_dg_nvm *nvm = dev_get_drvdata(&aux_dev->dev);
++
++	if (!nvm)
++		return;
++
++	dev_set_drvdata(&aux_dev->dev, NULL);
++
++	kref_put(&nvm->refcnt, intel_dg_nvm_release);
++}
++
++static const struct auxiliary_device_id intel_dg_mtd_id_table[] = {
++	{
++		.name = "i915.nvm",
++	},
++	{
++		.name = "xe.nvm",
++	},
++	{
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(auxiliary, intel_dg_mtd_id_table);
++
++static struct auxiliary_driver intel_dg_mtd_driver = {
++	.probe  = intel_dg_mtd_probe,
++	.remove = intel_dg_mtd_remove,
++	.driver = {
++		/* auxiliary_driver_register() sets .name to be the modname */
++	},
++	.id_table = intel_dg_mtd_id_table
++};
++module_auxiliary_driver(intel_dg_mtd_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Intel Corporation");
++MODULE_DESCRIPTION("Intel DGFX MTD driver");
+diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
+new file mode 100644
+index 000000000000..00b6c1301bd8
+--- /dev/null
++++ b/include/linux/intel_dg_nvm_aux.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: MIT */
++/*
++ * Copyright(c) 2019-2025, Intel Corporation. All rights reserved.
++ */
++
++#ifndef __INTEL_DG_NVM_AUX_H__
++#define __INTEL_DG_NVM_AUX_H__
++
++#include <linux/auxiliary_bus.h>
++#include <linux/container_of.h>
++#include <linux/ioport.h>
++#include <linux/types.h>
++
++#define INTEL_DG_NVM_REGIONS 13
++
++struct intel_dg_nvm_region {
++	const char *name;
++};
++
++struct intel_dg_nvm_dev {
++	struct auxiliary_device aux_dev;
++	bool writable_override;
++	struct resource bar;
++	const struct intel_dg_nvm_region *regions;
++};
++
++#define auxiliary_dev_to_intel_dg_nvm_dev(auxiliary_dev) \
++	container_of(auxiliary_dev, struct intel_dg_nvm_dev, aux_dev)
++
++#endif /* __INTEL_DG_NVM_AUX_H__ */
+-- 
+2.43.0
 
-Yes please.
-
->
-> --
-> Thanks,
-> Petr
