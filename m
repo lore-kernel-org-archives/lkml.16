@@ -1,142 +1,118 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016C6230D0E
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13CFE2E2EF1;
+	Tue, 17 Jun 2025 12:56:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750164999; cv=none; b=GT/SdIOkNTJjy3KARl3ka+npXP/kztJkI/0c4+fLvgHjcFYKzd20qEY9acbtCOZXKmBJGcJOwwIrRVSED02waGagAMjfwYYCtKglvlrQv6535ay3MFOe4KgmBAZB6Y6MQxVPlsQ21VUMLdB2aR/8VGZcVQge7GxlBhbTXYy5zpw=
+	t=1750165003; cv=none; b=Aqctyq9K63I8uyKHxhqMx9LJ68/RncCECc2ZUn/ExJz6c5nS8KRWCI7odhTriOPPryLKuGHbGt6CEdYRtrLOyS7wnrHRGFHJLHoImQP2YHTHr6pTwPx9mB/OmMkKdG3sezoWmDRevG+b3H0UdeQAe98dsCXvVTFy4YP4MHHlIWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750164999; c=relaxed/simple;
-	bh=DKEqcJaeP8X1SLMpYbVwd7qUBQUW2PR23+GTcJd7GsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YaZamDMiJYEB7FAbh77C78kQ8tUfhzIqxCZ5NFdqX+220ibz9yBKLVWcRfpktLIxCeXJL4QZOpPPwUhxgKy8GNHVpKv+jMIwObgwZ6LPYaHOYRGQtbjX1ThTTj1yTJxUY/LKYocCxNZoTItJ0oL3h8DGxCadJMcTCMfBSX3+WS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gFj3/XTH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gFj3/XTH"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H85tlB016813
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:56:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=reLhBblkFjKNgFgw0iZCw73Q
-	eAmoIcUiJNhR7l2+5Wo=; b=gFj3/XTHwtHhusu1XkABetp6zBh6LBV2MqeT5ozg
-	lVp6xUMtaqNtiiXctXE34Mlu+L1I0orf7wUl7fHGlxaIo11wTuW6MTxeGX2UDRRa
-	k9YPcoTINGCD850rfQDzCYkM4Ystr7YtkDYEhhIDoI7Ec7h6MF36bWKx60IIHYui
-	R6Hxdj7Q1sM/mA4peducECHxUEdTWlA/t68V1iXYEDnvcamUruNCAxZlVeOudLUM
-	ySz+Njh2uN6tMhxbA7Cqzk3fRGYxQ2VuejrtgpMVQR9Em1A1V6Q0stLrpl1DxKy8
-	ZG75DBs14WiwqWKXOliEGeAGaF5jhqpLbnLojYBp8R7OkQ==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfgekb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:56:37 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d3d3f6471cso361019085a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:56:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750164996; x=1750769796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=reLhBblkFjKNgFgw0iZCw73QeAmoIcUiJNhR7l2+5Wo=;
-        b=wG7UsgpPkdt+YmTUDyv5i/aCsIeRpjkCGh9gj3WoW4FSG+uQp74+ZAd+SdI9NA8E5L
-         GPxc63RzQNCG8ffV0AOWD/kQl1f3XSrDM3c+hRsBzPRjgbX22luymIhMG+fT2L8ATVC2
-         gFtwg+2NBwvLaXvTMHfNfkyKh1rA2nfLxumq4IzJI7o72H8KkQgngFcL31fIMCAI53B7
-         IMA5It49T785nQD98THZ/I+7cScSkLvVeVkYY3bGDEJvFj5Kk5/X7grV2C97FVbtsgp1
-         4AN73h7rELj9Ihb8DlNQdVE5lgRHKO+4q5RTksB2qWN7IZObubfHdqpO4/dtY3JwdPMH
-         PTWA==
-X-Forwarded-Encrypted: i=1; AJvYcCUY+o0skwZZzOtCw/gYF6Wj2ndrgrpEozVnXCUWpxNFRddayb81silskx+OGpGj0aQvqXduG+3vY4N5hes=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKpMvdgpF7cy3pmPP24HwOE+rk8DNVZVAQ1R0sDwaLJL/YDJqy
-	Pqk7Fl96NJB/yvD+M7Db6u5vLckoU6aulP0qfk64QSl3LbWjwAB3BxdH/sdrDvgC+fp9RHID0s4
-	RC2p+SxvrMud8EAGhbmNGhes6hYk7ajwGpov6StBgszb3ivVOBWKfjjxRgXcOFAQGhx0=
-X-Gm-Gg: ASbGncv+zua/nDwWHf0r9gz3Uz4uRoqIKa+sGIQO76avJ3g+p+ooFDpANA/LP4l2VaT
-	QnkrVMMYdB7zuyznK5b8GkR5Mvw2D7DnhjLT2JcT27sx14eFigb0a3stCvFIBDrhuAOeMkc5jCE
-	Xs8Y/lXv3zstKerS6OU5cHP5qfUcU/2wT3Iycw6cKwbQ5gP/3LlP5KjwfNGs3mFCiN60+Z0QLPv
-	razYF9lwiJNPXe9qa+ym2+UbKeAcEWwnQquHDERCSX0MqTpE+CrTJHJthWZ7ZWhiK7XaF8oeKe2
-	buNXo8t3gz9/QbAQ1Pc4TMXiGQmnQdw6HO8zNHxmraXYtuO+m/dqYW9/7ACYocW+VUfwwKzrZ9M
-	P7E4J5q17cEUPKvoc0VgM7+DDr2VTaGig08o=
-X-Received: by 2002:a05:6214:810e:b0:6fb:4fdc:dd83 with SMTP id 6a1803df08f44-6fb4fdcde32mr136702676d6.40.1750164995776;
-        Tue, 17 Jun 2025 05:56:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvCoVuhabEm27A62sEPcn/Fb55CORSI3jmx2fmiprrI/xC488IzmD9JyAr83daF6LLrrsC2Q==
-X-Received: by 2002:a05:6214:810e:b0:6fb:4fdc:dd83 with SMTP id 6a1803df08f44-6fb4fdcde32mr136702296d6.40.1750164995406;
-        Tue, 17 Jun 2025 05:56:35 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac135c22sm1912726e87.65.2025.06.17.05.56.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 05:56:34 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:56:32 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Weiss <luca.weiss@fairphone.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@linaro.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v2 2/2] phy: qualcomm: phy-qcom-eusb2-repeater: Don't
- zero-out registers
-Message-ID: <hgtbmst73ijkfptznqh5r6usdnn2tdx4fxow53g5pyl3yagbh3@4thxrkp5zcnv>
-References: <20250617-eusb2-repeater-tuning-v2-0-ed6c484f18ee@fairphone.com>
- <20250617-eusb2-repeater-tuning-v2-2-ed6c484f18ee@fairphone.com>
+	s=arc-20240116; t=1750165003; c=relaxed/simple;
+	bh=1bfgQo9mR1ETUyRu4Bf4IbeGVR6ggw/u+CitXdXSyeY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jDMmqg3AIcKuT1TrxSC1ndHDE+d/bL9MICK+ClxJ3OvO4ThXRBODN1i1AD4rTjGatzMiE+X+4CPKh+mYkCoq8To7YFJJwrkSQlVeDFHLnTRSvT/n+Kr0O5pXWChMVftheXxVpcL8BRPdY3MrLanKXSDOx5LIm4krmCXGJQskXB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B6BD1595;
+	Tue, 17 Jun 2025 05:56:20 -0700 (PDT)
+Received: from [10.1.196.50] (e121345-lin.cambridge.arm.com [10.1.196.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85B123F673;
+	Tue, 17 Jun 2025 05:56:40 -0700 (PDT)
+Message-ID: <9710acf3-9ffd-4b29-a51a-21d91cbbdf5e@arm.com>
+Date: Tue, 17 Jun 2025 13:56:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617-eusb2-repeater-tuning-v2-2-ed6c484f18ee@fairphone.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDEwMyBTYWx0ZWRfX8sdqQ90++eFv
- L2Zj71AvpoWZB2NweELYHOvMdmrLSPRG19STbXMBMclFmk9IoMjpXjq369eOfJyxh8iR7n0TISr
- gvr1GFGLrhu0k/e2M0EtpF83LNrRyXERZFr4d2MtiGpZpghERfZGunHEOkwCDD4XDy6oz3fvL+Z
- vZRlILfWt7mbpf8mrilbvcebDoCfhOA0Vi1vRql07X3hzZugJjoO1iOeuuOm9HgfEEZQ+p2KpTe
- lJvXOSmhWZAZmX7K6AWggpX4cHC5u8b+ssDsjV3tE4lhXuvQanemDs9TL2cOsZY4Ab70wv1d3ST
- xiJNW8aoBCBDdyw+o7NdJgyCt+jiHCKRfS+2uOu4ULEMt0f30Hcyp/L3U01H3x2+2IWt8Sk7kfp
- RT49uMWZ2Y1pGymgrgb1sEm0Wv5XyYgFGppQ+CHpGh80OHW4+rUi+nyji0UPQrssuKjQoYiY
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68516605 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=6H0WHjuAAAAA:8
- a=cispc58g6-s63dKQH_wA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
- a=cvBusfyB2V15izCimMoJ:22 a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-GUID: AtlQLVScgI4MK7ufjqqG-w3TS-Lx7gd9
-X-Proofpoint-ORIG-GUID: AtlQLVScgI4MK7ufjqqG-w3TS-Lx7gd9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=948
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506170103
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
+To: Christian Loehle <christian.loehle@arm.com>,
+ "zhenglifeng (A)" <zhenglifeng1@huawei.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-pm <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
+ <34651625-08eb-46df-8075-4c5a08d15c18@arm.com>
+ <4b551b8c-6572-4fd1-9bd8-6669aaf69271@huawei.com>
+ <e9fc6154-7199-4709-b428-3f848f1597e8@arm.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <e9fc6154-7199-4709-b428-3f848f1597e8@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 10:26:36AM +0200, Luca Weiss wrote:
-> Zeroing out registers does not happen in the downstream kernel, and will
-> "tune" the repeater in surely unexpected ways since most registers don't
-> have a reset value of 0x0.
+On 17/06/2025 9:20 am, Christian Loehle wrote:
+> On 6/17/25 03:14, zhenglifeng (A) wrote:
+>> On 2025/6/17 3:10, Robin Murphy wrote:
+>>> On 2025-06-16 6:25 pm, Christian Loehle wrote:
+>>>> The boost_enabled early return in policy_set_boost() caused
+>>>> the boost disabled at initialization to not actually set the
+>>>> initial policy->max, therefore effectively enabling boost while
+>>>> it should have been enabled.
+>>>>
+>>>> Fixes: 27241c8b63bd ("cpufreq: Introduce policy_set_boost()")
+>>>
+>>> I think it's a bit older than that - I noticed this with 6.15 stable, prior to that refactoring, and from a poke through the history the underlying logic appears to date back to dd016f379ebc ("cpufreq: Introduce a more generic way to set default per-policy boost flag"). Hopefully someone can figure out the appropriate stable backport.
+>>>
+>>> I can at least confirm that equivalently hacking out the "&& policy->boost_enabled != cpufreq_boost_enabled()" condition previously here does have the desired effect for me of initialising scaling_max_freq correctly at boot, but I'm not sure that's entirely correct on its own...
+>>>
+>>> Thanks,
+>>> Robin.
+>>>
+>>>> Reported-by: Robin Murphy <robin.murphy@arm.com>
+>>>> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+>>>> ---
+>>>>    drivers/cpufreq/cpufreq.c | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+>>>> index d7426e1d8bdd..e85139bd0436 100644
+>>>> --- a/drivers/cpufreq/cpufreq.c
+>>>> +++ b/drivers/cpufreq/cpufreq.c
+>>>> @@ -1630,7 +1630,7 @@ static int cpufreq_online(unsigned int cpu)
+>>>>         */
+>>>>        if (cpufreq_driver->set_boost && policy->boost_supported &&
+>>>>            (new_policy || !cpufreq_boost_enabled())) {
+>>>> -        ret = policy_set_boost(policy, cpufreq_boost_enabled());
+>>>> +        ret = cpufreq_driver->set_boost(policy, cpufreq_boost_enabled());
+>>>>            if (ret) {
+>>>>                /* If the set_boost fails, the online operation is not affected */
+>>>>                pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
+>>>
+>>>
+>>
+>> I don't quite understand what problem you've met. It semms like you guys
+>> propose that set_boost() should be called no matter what
+>> policy->boost_enabled is. Having more details would help to clarify things,
+>> such as which driver you use and what you expect but not be achieved.
+>>
 > 
-> Stop doing that and instead just set the registers that are in the init
-> sequence (though long term I don't think there's actually PMIC-specific
-> init sequences, there's board specific tuning, but that's a story for
-> another day).
+> so calling policy_set_boost(policy, enable) is a noop here if
+> policy->boost_enabled == cpufreq_boost_enabled():
 > 
-> Fixes: 99a517a582fc ("phy: qualcomm: phy-qcom-eusb2-repeater: Zero out untouched tuning regs")
-> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-eusb2-repeater.c | 83 ++++++++++----------------
->  1 file changed, 30 insertions(+), 53 deletions(-)
+> 	if (policy->boost_enabled == enable)
+> 		return 0;
 > 
+> We have policy->boost_enabled == false on boot, thus never actually
+> setting policy->max up ever, which leads to the following:
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+And for clarity, this is with the cpufreq_dt driver (at least in my case).
 
+Thanks,
+Robin.
 
--- 
-With best wishes
-Dmitry
+> # cat /sys/devices/system/cpu/cpufreq/policy4/scaling_boost_frequencies
+> 2016000
+> # cat /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+> 2016000
+> # cat /sys/devices/system/cpu/cpufreq/boost
+> 0
+> # echo 1 > /sys/devices/system/cpu/cpufreq/boost
+> # echo 0 > /sys/devices/system/cpu/cpufreq/boost
+> # cat /sys/devices/system/cpu/cpufreq/policy4/scaling_boost_frequencies
+> 1800000
+> 
+> Anyway I'll bisect some more to find the actual first bad commit and
+> resend.
