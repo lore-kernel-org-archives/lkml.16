@@ -1,155 +1,101 @@
-Received: from h5.fbrelay.privateemail.com (h5.fbrelay.privateemail.com [162.0.218.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF56818DB35;
-	Tue, 17 Jun 2025 01:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C332CCC0;
+	Tue, 17 Jun 2025 01:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750125205; cv=none; b=u+Ia1f4J1kSMh+c54dLvJoXreIH0KJiVSzBzswNI2RiwCmQYcz2faz8Eukk0byKvTDgjc6O3iLB/LEjz+yZkktQU7lm7Uk03hHFK4+t3oL8mbWBiWRCXcI//jyBPmY/keI6PHX03Crc5I08VUsKCN9vZ31i8cp/MfkLTUhdTPpw=
+	t=1750125324; cv=none; b=A16mC9FJqa8WxwN/9a9YR6JWu9oIE8PbIWpUvmNqWkwRSWTlkZxHmU/HLIz+bn0xgv5Ug6cAW11fKVXAjGodyGUp638l+z8GbaIVRWIfx7cW0GdLyKZ2a4VqWgu/nblCL/63WCbZW5B4jEsQrxONUELOjGuB1kxTO5KSVjULozo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750125205; c=relaxed/simple;
-	bh=QPuWm1cBSdO+XjfyWejuOqfuZ6+UEWsxXCPUDQ2C6Sw=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=qygwChBbLO44/zhqqUMgnIznt6CF78QTC9uUWUGQlOEDQ9eGMtTRXu1c2MPZfi/o7ep8CihfEsDKryFpApU5eWeMByfAGGCUzhnJZwIp7+v5b0wruK9GkfepnCQPx9O1c0OrZ7/6mB/IJol0oUDFjrEVWHa2qNh8jq2e9wE2beM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=nYjkIqhD; arc=none smtp.client-ip=162.0.218.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
+	s=arc-20240116; t=1750125324; c=relaxed/simple;
+	bh=7D2Sij5eStXvjkPStHg2z59sJpTqCj9kwkk2rUQzLJM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cW5hTyWMUh9cgXAKnArDXa8IqAWqJVKo4xtjfFzsA8km5aBJo+udSPhbtl3JMlpVn2DHQV46Mghb3y/FIc2E45/k6Wz5d6dfWXJatbGl4saI/pdwMpY7bnvFti56IQ8yqh8Zw2S+wmd1Xiji68o3kyElLmWRZa6ve7BQq8Hqlgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AStBf2jO; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="nYjkIqhD"
-Received: from MTA-05-3.privateemail.com (mta-05.privateemail.com [198.54.127.60])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	by h5.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4bLqXp5n1Fz2xkw;
-	Tue, 17 Jun 2025 01:48:58 +0000 (UTC)
-Received: from mta-05.privateemail.com (localhost [127.0.0.1])
-	by mta-05.privateemail.com (Postfix) with ESMTP id 4bLqXg0z5Dz3hhVj;
-	Mon, 16 Jun 2025 21:48:51 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
-	t=1750124931; bh=QPuWm1cBSdO+XjfyWejuOqfuZ6+UEWsxXCPUDQ2C6Sw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=nYjkIqhDLZVwluWaA6CrLNoISCLwrAvFBJoPoHKu/ASEsZZ7WSnLvO4OVfV6SoTgw
-	 /6jwUDf7VBIcP00Dph+m3olInaTwSJ1D5t4tiom1vQTDqm/7zF7x4G5SyuubOGl9br
-	 bcEgZg3wOlojBxxtbbxGST1m67zkaaOaIqSaiuztenLQcbfyHstB32+6eEj9DwmsyK
-	 FoMk3NhPvXlncBPnGSzIPN1TVLFW0UqrIxFSYR8enXLG3YLSyBu6vbHkNVBhlZ2bFS
-	 Zm1sWuGPPd3la8xoue0bli4sBnep7Po6d66WzV1a3k2MquyGYvv/TehjkGqj08RTGp
-	 bLHrjjd3GFGyw==
-Received: from APP-12 (unknown [10.50.14.212])
-	by mta-05.privateemail.com (Postfix) with ESMTPA;
-	Mon, 16 Jun 2025 21:48:40 -0400 (EDT)
-Date: Tue, 17 Jun 2025 03:48:40 +0200 (CEST)
-From: Marco Bonelli <marco@mebeim.net>
-To: Alexandre Ghiti <alex@ghiti.fr>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "terrelln@fb.com" <terrelln@fb.com>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"mhiramat@kernel.org" <mhiramat@kernel.org>,
-	"mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>,
-	"aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Message-ID: <890717501.210398.1750124920866@privateemail.com>
-In-Reply-To: <df439eb4-4dbd-4f0f-bfd2-27c6b1534f39@ghiti.fr>
-References: <960240908.630790.1748641210849@privateemail.com>
- <1552795452.650306.1748692371190@privateemail.com>
- <c239ee1b-f201-4e7b-80f8-03a7fb02b666@ghiti.fr>
- <1338988468.1011577.1749045125350@privateemail.com>
- <191074362.1248877.1749238947947@privateemail.com>
- <df439eb4-4dbd-4f0f-bfd2-27c6b1534f39@ghiti.fr>
-Subject: Re: Broken 32-bit riscv debug build with ZSTD and FTRACE
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AStBf2jO"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4e7b20bdbdeso220106137.2;
+        Mon, 16 Jun 2025 18:55:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750125322; x=1750730122; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sUuVVGPtVjyT2ofmlY7W4gndj0hfhhNOGd7d9phE6/c=;
+        b=AStBf2jOhoWCeBuzJSog6QqL1DacwDZ6ZIzyUHZUlLB5odbAIV315Abax9t0zHTX/k
+         LQm/SwqTnxfT8bg44RZrlX/Wi5G5eEFAQTk9hjl7QPZJZ9BO0HXtyobMURa1VQ+OYCuQ
+         t/M4brFzFpiUWDHxy+Gb61TxOYORCcSxf55TUq7MNT9hkjzLgPWedn9r9DNxBwgZDC68
+         8h8+3XpUkRWhBBbBCvxYP25QWjKutjCWa81jKow96FfdZgILzNsLBFvLuAtXkcWKmt4p
+         EcqWBi94QrwHeRT8wtK1ZWUTypL+Oqv+TJa//+Y/Uj+K9/3vwJ4T4ZmfjxcdCCLAwpTK
+         KTIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750125322; x=1750730122;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sUuVVGPtVjyT2ofmlY7W4gndj0hfhhNOGd7d9phE6/c=;
+        b=wGZo5p6G7c6gX9wvcRZfjRtFca6VJ+nedzSs+5n+lJI6stdT9+vkBsfRZGLagOoM4V
+         D435x9hKKNk3CQjWMDZRh7ndJAgxVivL3+HT6u5TThrvgvK70X75DxldLDFrjUv6sHPB
+         YKL3DjwB3qmLOpUaOgT+zwSWlRBeeuS42SFfurkWrpr5cAoAeL8Z74m+99W6L6OMP0J/
+         WUHIK+nDyTAwnb5HWDntOPig9UGISNbbs/avpbH7w1opmgF81oPzbggoeGXN6gYsZ7/6
+         BsabKy+0FSMupv+6M1XSWJBaUf4zNlIP8udw3EBxudqoqi6zyP38Jvee22ZyzPBwegjt
+         zj7g==
+X-Forwarded-Encrypted: i=1; AJvYcCVK5f+ZmwbUkiUX3YXHftcG7spxgu3PKe2Yl1ZD9wD0Jp0atC3gLrN4i6UWn8Ds19UVKZJBgj0o5lcLba5IjuM=@vger.kernel.org, AJvYcCVnz/E6UdeHVKjpxjSyGUC02Gp6FJg05OTUqZYmt74sM9RACZAFGt+u3t39ev/mBMGXLvxFMzukKlYI8Yk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQvH6bQugnvLA3afXSrAXK+pmPBYeaspdcuWXxo+ubfL2UGqyr
+	K/U3G1GQ/yMTJNszF5emt9e1ETqbvPCT6aPXQZ5XaYdWrcpZFoubzR10WI/SozYq4Wp4pWWMpsd
+	T2TO5jb+yrq6U/gadfLfRKDebBUzQbiA=
+X-Gm-Gg: ASbGncvfXjhljP7dQGUf1ajMqjtvHWb9Egm7DlEf7krF4onK2VIAwafXtkLhzV4nYOG
+	GqLxq5UKZd5eMC23ZiyCliCl9NsOjfnc/TnuFkWux4ARZ5nKYSySIQGdM0QWu52nMr+xmL0MvVc
+	Rdq0QPDqq69K8QeuOaSO0pfwS8kDPrcT/KBkmLXHpxCCG/
+X-Google-Smtp-Source: AGHT+IEMim/AX7cWcitNok29/D3Fxnz8CTs9VqWlM9ZEE5RHw6xa11aIKBhKkCg5Gb6IHewhq8dzNlja2kGCQ80ueHU=
+X-Received: by 2002:a05:6102:3e0f:b0:4c3:64f6:861d with SMTP id
+ ada2fe7eead31-4e7f63b9c10mr2597207137.7.1750125321567; Mon, 16 Jun 2025
+ 18:55:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev78
-X-Originating-Client: open-xchange-appsuite
-X-Virus-Scanned: ClamAV using ClamSMTP
+References: <20250615072042.133290-1-christiansantoslima21@gmail.com>
+ <DANSZ6Q476EC.3GY00K717QVUL@nvidia.com> <CABm2a9cs+pTT49GW28QViwaK-VT3=Y+sV209-Lk5S_YxEnXv+Q@mail.gmail.com>
+ <DAOESYD6F287.3U3M64X0S1WN5@nvidia.com>
+In-Reply-To: <DAOESYD6F287.3U3M64X0S1WN5@nvidia.com>
+From: Christian <christiansantoslima21@gmail.com>
+Date: Mon, 16 Jun 2025 22:55:09 -0300
+X-Gm-Features: AX0GCFu6NPEKJPI2ZZ2g360Ul51fQ6ryF10BwAr-A376uo_LsITLk6cJ86mkDgg
+Message-ID: <CABm2a9dGo1eMBAAUkEgtKoQ7w=Vdz8e4yw_prGnxj6v=mMq9_g@mail.gmail.com>
+Subject: Re: [PATCH v7] rust: transmute: Add methods for FromBytes trait
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, ~lkcamp/patches@lists.sr.ht, 
+	richard120310@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-I did some digging adding prints to modpost.c, trying to understand the errors
-complaining about "local symbol 'xxx' was exported" for now. For reference, I am
-using commit 494e7fe591bf834d57c6607cdc26ab8873708aa7 for the broken build and
-tag v6.14 for the sane build. Config as per my previous mail:
+> Or if that is still unclear, consider the following doctest in `dma.rs`
+> that fails with this patch:
+>
+>     struct MyStruct { field: u32, }
+>
+>     // SAFETY: All bit patterns are acceptable values for `MyStruct`.
+>     unsafe impl kernel::transmute::FromBytes for MyStruct{};
+>     // SAFETY: Instances of `MyStruct` have no uninitialized portions.
+>     unsafe impl kernel::transmute::AsBytes for MyStruct{};
+>
+> It fails because the `FromBytes` implementation for `MyStruct` does not provide
+> a definition for `from_bytes` and `from_mut_bytes`. Fixing this is just a
+> matter of changing the `impl FromBytes` into `impl FromBytesSized`. But without
+> the latter, how do you make this example build without providing a definition
+> of `from_bytes` and `from_bytes_mut`?
 
-	export ARCH=riscv CROSS_COMPILE=riscv32-linux-
-	make distclean
-	make defconfig
-	make 32-bit.config
-	./scripts/config \
-		-e FTRACE \
-		-e CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT \
-		-d RD_ZSTD \
-		-d SECURITY_APPARMOR_INTROSPECT_POLICY \
-		-d BTRFS_FS
-	make olddefconfig
-	make -j vmlinux
+Well, that's fine with me. I'll send the next patch with this fix. Can
+I put it as `suggested-by`?
 
-It seems like modpost is right: the sanity check for exported symbols fails
-because somehow some of the entries of .rela.export_symbol reference wrong
-LOCAL symbols. 
-
-Inspecting the sane vmlinux.o built on v6.14 I see:
-
-	$ readelf -W -r vmlinux.o | grep -A10 -F .rela.export_symbol
-	Relocation section '.rela.export_symbol' at offset 0x255c28c contains 11089 entries:
-	 Offset     Info    Type                Sym. Value  Symbol's Name + Addend
-	00000004  0862be01 R_RISCV_32             00000028   system_state + 0
-	00000010  0892f901 R_RISCV_32             00000018   static_key_initialized + 0
-	00000018  084f0e01 R_RISCV_32             00000014   reset_devices + 0
-	00000020  08933601 R_RISCV_32             00000008   loops_per_jiffy + 0
-	0000002c  083fcf01 R_RISCV_32             00000110   init_uts_ns + 0
-	00000038  08761f01 R_RISCV_32             00000354   wait_for_initramfs + 0
-	00000040  084c4c01 R_RISCV_32             00000340   init_task + 0
-	00000048  0863e901 R_RISCV_32             00000aca   riscv_cached_mvendorid + 0
-	00000050  08423d01 R_RISCV_32             00000af4   riscv_cached_marchid + 0
-
-While for the broken vmlinux.o on 494e7fe5 I see:
-
-	$ readelf -W -r vmlinux.o | grep -A10 -F .rela.export_symbol
-	Relocation section '.rela.export_symbol' at offset 0x27aa24cc contains 11425 entries:
-	 Offset     Info    Type                Sym. Value  Symbol's Name + Addend
-	00000004  fff15b01 R_RISCV_32             00000028   system_state + 0
-	00000010  ffeed801 R_RISCV_32             00000018   static_key_initialized + 0
-	00000018  fff07d01 R_RISCV_32             00000014   reset_devices + 0
-	00000020  00149201 R_RISCV_32             000036ed   .LASF3838 + 0
-	0000002c  ffde7c01 R_RISCV_32             00000324   init_uts_ns + 0
-	00000038  ffc4c801 R_RISCV_32             00000b3a   wait_for_initramfs + 0
-	00000040  000d6801 R_RISCV_32             00011e04   .LASF2005 + 0
-	00000048  ffb72201 R_RISCV_32             000012b0   riscv_cached_mvendorid + 0
-	00000050  ffd14901 R_RISCV_32             000012da   riscv_cached_marchid + 0
-
-Notice how the 4th and 7th relocation entries reference some .LASFxxx label in
-the broken build, but reference loops_per_jiffy and init_task in the sane build.
-
-Those relocation entries seem bogus and point to LOCAL symbols. For example,
-for .LASF3838 we have ELF32_R_SYM(rela->r_info) = 0x1492 = 5266, which is:
-
-	$ readelf -s vmlinux.o | grep ' 5266:'
-	5266: 000036ed     0 NOTYPE  LOCAL  DEFAULT  178 .LASF3838
-
-So rela->r_info is bad, and when modpost looks at it, it rightfully complains
-about the symbol being local. However, rela->r_offset (0x20) seems correct as it
-points to __export_symbol_loops_per_jiffy (taken as offset in .export_symbols).
-Therefore, we get the weird error message:
-
-	ERROR: modpost: vmlinux: local symbol 'loops_per_jiffy' was exported
-
-Even though loops_per_jiffy is *GLOBAL* and *should* be exported.
-
-FWIW, the call chain is:
-
-	section_rela() -> check_section_mismatch() -> check_export_symbol().
-
-Anyhow, that's all I have for now. Seems like vmlinux.o is being built with
-RELA relocations that have bogus r_info. Not sure how, will have to do more
-digging if/when I have more time.
-
---
-Marco Bonelli
+Thanks,
+Christian
