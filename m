@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A63462EAB81
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAB7A2EAB9E
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:36:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185405; cv=none; b=DyowIXvxz21BfrzETxgLTU9kBIQnwKAHwlF3r/5wRmMf2mvfel9Y7QBF2sgLgT0LdraZEBwMwNWqHqPF83Hc1kPCQYwk0lis2388DeA8aIethTRki56PLQImCymzFABlyXRYSaJNY4gyrD1arCNSfv+0zZ933OxkaCucQLVkM8U=
+	t=1750185407; cv=none; b=q9XoYvQCo+ln7FS3KjMnnAOtw0iAnelKlzGwTvV72Q7hrh273MoRNkvKRppMgz3XuNDLvjUa5BKdwpTyw1GmJyOHJcfEGDig1lRZkshi08H7Mn+OIZtD7XhLnISF1lir4Aj3qo7V7PTClMDRCOeuDcBFoFzlen37jgq+1mhlUf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185405; c=relaxed/simple;
-	bh=R493132gqU9B31xhB9TPxuyYr9uybxkv3ZiFSO7FeI0=;
+	s=arc-20240116; t=1750185407; c=relaxed/simple;
+	bh=FBL/Yw+hyg6tCVM/ypbqIOIUz4oo8ynHiYmBndj6lho=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bHs/Sd3UZEzCI8Pp04GmUwg8qYr1quFGXpZctlCz2Ckb954vI6F4BFZx+ELAFph9QPQETRTW2J38LtR3MhHB8CCRLblPxXtLIM3UsopjUhmXY9cI0rhwlu7fZHu+QsP0fTpSuzg3jcDwiGY+4ud2kGMzEoEpyZj9cRKDvRdAcU8=
+	 MIME-Version; b=mhkvyw9JHhr9LIKE3ZLfUKJQu5880Wq+qBORGwGO+0J745+OnhFpmZQEyHRXv3MZgC8w6ils/JPl6enyC4cx1Nk6WnJbRVXWfo9e6qbC16IrIY+7dXymdXqQtsG9C5rSGNls2GMkC+xR3jPKxPgcBtVFlYbD7X8PEHSaXPg7fUA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 197DD1A32;
-	Tue, 17 Jun 2025 11:36:22 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 294DA1BB0;
+	Tue, 17 Jun 2025 11:36:24 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 26E4B3F58B;
-	Tue, 17 Jun 2025 11:36:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 37E5C3F58B;
+	Tue, 17 Jun 2025 11:36:43 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	will@kernel.org,
@@ -31,9 +31,9 @@ To: catalin.marinas@arm.com,
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v3 2/7] arm64/kvm: expose FEAT_LSUI to guest
-Date: Tue, 17 Jun 2025 19:36:30 +0100
-Message-Id: <20250617183635.1266015-3-yeoreum.yun@arm.com>
+Subject: [PATCH v3 3/7] arm64/Kconfig: add LSUI Kconfig
+Date: Tue, 17 Jun 2025 19:36:31 +0100
+Message-Id: <20250617183635.1266015-4-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250617183635.1266015-1-yeoreum.yun@arm.com>
 References: <20250617183635.1266015-1-yeoreum.yun@arm.com>
@@ -45,36 +45,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-expose FEAT_LSUI to guest.
+Since Armv9.6, FEAT_LSUI supplies the load/store instructions for
+previleged level to access to access user memory without clearing
+PSTATE.PAN bit.
+It's enough to add CONFIG_AS_HAS_LSUI only because the code for LUSI uses
+indiviual `.arch_extension` entries.
 
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 ---
- arch/arm64/kvm/sys_regs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/Kconfig | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 76c2f0da821f..5c5a9c3ace2f 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1636,7 +1636,8 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
- 			val &= ~ARM64_FEATURE_MASK(ID_AA64ISAR2_EL1_WFxT);
- 		break;
- 	case SYS_ID_AA64ISAR3_EL1:
--		val &= ID_AA64ISAR3_EL1_FPRCVT | ID_AA64ISAR3_EL1_FAMINMAX;
-+		val &= ID_AA64ISAR3_EL1_FPRCVT | ID_AA64ISAR3_EL1_FAMINMAX |
-+		       ID_AA64ISAR3_EL1_LSUI;
- 		break;
- 	case SYS_ID_AA64MMFR2_EL1:
- 		val &= ~ID_AA64MMFR2_EL1_CCIDX_MASK;
-@@ -2921,7 +2922,7 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 					ID_AA64ISAR2_EL1_APA3 |
- 					ID_AA64ISAR2_EL1_GPA3)),
- 	ID_WRITABLE(ID_AA64ISAR3_EL1, (ID_AA64ISAR3_EL1_FPRCVT |
--				       ID_AA64ISAR3_EL1_FAMINMAX)),
-+				       ID_AA64ISAR3_EL1_FAMINMAX | ID_AA64ISAR3_EL1_LSUI)),
- 	ID_UNALLOCATED(6,4),
- 	ID_UNALLOCATED(6,5),
- 	ID_UNALLOCATED(6,6),
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 55fc331af337..769fbb507996 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -2237,6 +2237,15 @@ config ARM64_GCS
+ 
+ endmenu # "v9.4 architectural features"
+ 
++config AS_HAS_LSUI
++	def_bool $(as-instr,.arch_extension lsui)
++	help
++	 Unprivileged Load Store is an extension to introduce unprivileged
++	 variants of load and store instructions so that clearing PSTATE.PAN
++	 is never required in privileged mode.
++	 This feature is available with clang version 20 and later and not yet
++	 supported by gcc.
++
+ config ARM64_SVE
+ 	bool "ARM Scalable Vector Extension support"
+ 	default y
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
