@@ -1,71 +1,144 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211872DE1E7;
-	Tue, 17 Jun 2025 12:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB7D2DE1E7;
+	Tue, 17 Jun 2025 12:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750163146; cv=none; b=dxR/ZZ5e0JPumdbltTHg6EUOyQZt+R06kRZWzw3WWhiGdC+iS09i8vbee4XaHRpwxjrPT+TtTWjgG+uljOAI/GnVqnLUy6YYyp3rANY09XY7iBQ7Gg+4LrdhPL8UNpY8t/A3OhWjiX8NVivONJ7xQkb4VIO6Wkp7f/Jj5Qx7fs0=
+	t=1750163149; cv=none; b=o5fkYAempXQ28TBczqn6KeMf/JFYSdGx/fK1XkzsxfsuO0YVcsTQMOjOqi629gmpjNYQVV+snLW5ywyXe4HkNZmkqbnaDSo9A8N5N03gKDZc1b9cZFdTzad+qS+IGPpw3ORlJZOdWVRS8VzUUAKh9JgcLaxOVckzpfnuPnDJ410=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750163146; c=relaxed/simple;
-	bh=6FdY91tZOWr2iy3CJC2/wII2A6WW1nxnp4yaFqsCVw0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B5bahWf/VBHgrAPuhmKiBmzL3+tOL7/cMSexfqAXYmL2kZfLWmlNqqq6VQ9RzJGbfvDKR44WU3y4XFYFaPh5r89bDdt4qPKBpJQxDg2TUhJ+K1D0s9GhM1+DQbyQAwLrATnMUxEW+hEXDBh5PkgXb8+y39nbyEEcugMc35TUKZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay02.hostedemail.com (Postfix) with ESMTP id 3F7FC120128;
-	Tue, 17 Jun 2025 12:25:42 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id D41AA20037;
-	Tue, 17 Jun 2025 12:25:39 +0000 (UTC)
-Date: Tue, 17 Jun 2025 08:25:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-ID: <20250617082544.24b54ad2@gandalf.local.home>
-In-Reply-To: <CA+G9fYtuiFHYBuRpB5MVwnZqc+WVRnnYMRHUExXAyu3_jMVurQ@mail.gmail.com>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
-	<20250610105337.68df01f4@gandalf.local.home>
-	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
-	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
-	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
-	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
-	<CA+G9fYtuiFHYBuRpB5MVwnZqc+WVRnnYMRHUExXAyu3_jMVurQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750163149; c=relaxed/simple;
+	bh=aoNET68UJIiLHYzCWITUHaaHkuJoHm/VQY7CwpH5NQw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EdzR1AkWnASsXRoxZrwegzDll+Oiy2ocZKb68xRWhhhZ5v0pgHo5n8Ul13RjhPUFL2ZGoCD9zi/bScbsCr9i73+HxhPyUDqg1ohGnaWHphtv3x1RdcRVMkzBfsMF4FVpGI2ltd4AMWyIQnxyUiOWvgMVsCB1CFLYHaLpUHHI6E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhZ/y8oV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhZ/y8oV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87FF6C4CEE3;
+	Tue, 17 Jun 2025 12:25:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750163149;
+	bh=aoNET68UJIiLHYzCWITUHaaHkuJoHm/VQY7CwpH5NQw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=lhZ/y8oVCPQyDybARc9LQ/ZtkG8+ESnzbX40CQqwTEW8F1VrJVAs2VNyFB+LcPwTN
+	 BuVDDoVAGMnXpDtVqRFVfLW/BWMNdjV6+I8MHQA26MHUkmi6f1nxLri8kGUemQogX3
+	 ZjBlJmS4yD0k7xwww+1ihUoJlspN9UZla6vZukSPtMIc8NEKGSPk5Z5rAP1rBWsHhY
+	 kbTg1ssV4t+gkxNQxDRQOrMWhzSkFoAtDm8Jri6ckVq4RFRdQkjq7i4iTworFioluh
+	 EHR6GNGonvywjhZAstchFCGYE5WXom0gyT5KEJZoUHHk4M7tGl/OKLOnFl+tH8dewq
+	 7VpmW1naLviqA==
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH v5 0/2] dma-buf: heaps: Support carved-out heaps
+Date: Tue, 17 Jun 2025 14:25:39 +0200
+Message-Id: <20250617-dma-buf-ecc-heap-v5-0-0abdc5863a4f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: D41AA20037
-X-Stat-Signature: 5579cswyb6cigd6h7h8b1hp1baduqrpj
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19GffxTTqAxvPY9cvicDJb5L7cNQ2/4k5A=
-X-HE-Tag: 1750163139-143501
-X-HE-Meta: U2FsdGVkX1+5U9sqwPvXoAl/JlJbv/2RNVfH7ghnvUR1BfXW/5fyWgALvMH6Jee8vyCM+6J36W/IUr/6u7XI3o8phpqbsvNUfuEeyBXZ5bGgG4XCGf7BOjkjqAvdGUobnO0TxO8kq67e6eDjRlf7F1Qi+fR6/G/Z0OZFwBNdNV0WiSLqlily8t1aVy3pqyJCewwXgVJ8HkJF614vlnFwRDcIxcXbyiShWNZrhLRH9ztocoQktiKe4LG7acCLvdbo4JAMpII5dcuFkVdIr5uSTn8NxWaPHcyRCUVgOnOqw7grsa4gC5XwTxF0KnLctB6xYJ9IorxCVb7Wy+BufqLSNG1aezLDi7qKZC8xthBSYflB3KjfFOBE8WDKBvx3b9KGp0fQaIvXbcGU+ciojDjpHA==
+X-B4-Tracking: v=1; b=H4sIAMNeUWgC/33N3U7DMAyG4VuZcoyR7Tgb5Yj7QDvIj7NGQDulr
+ AJNvXeySQjQKg7fT/Ljs5m0Fp3M4+Zsqs5lKuPQwt1tTOz9cFAoqbVhZEFHDtKbh3DKoDFCr/4
+ I/OAtUeLYiZp2dqyay8eVfN637sv0PtbP64eZLus/2EyA4CSGkFA6R/T0onXQ1/uxHsxFm/lbc
+ ChIKwI3AcXmhLj15PONYH8LuxXBNqHbxZTs1rvM3Y0gP4JjXBEECEJipUwhCMc/wrIsX+uH3YR
+ 3AQAA
+X-Change-ID: 20240515-dma-buf-ecc-heap-28a311d2c94e
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, 
+ Sumit Semwal <sumit.semwal@linaro.org>, 
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>, 
+ "T.J. Mercier" <tjmercier@google.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Andrew Davis <afd@ti.com>, Jared Kangas <jkangas@redhat.com>, 
+ Mattijs Korpershoek <mkorpershoek@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3003; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=aoNET68UJIiLHYzCWITUHaaHkuJoHm/VQY7CwpH5NQw=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBmBcSf8lUxWPr39QW9m2N5G/bJYdkHZNd805rH/d7l1+
+ HTjpiuSHVNZGIQ5GWTFFFmeyISdXt6+uMrBfuUPmDmsTCBDGLg4BWAi3baMteIrVhzjql6pvG9D
+ Wsl0b+FPh9wOnFnMl7L8v6Ob/xLb+QdfzGFJmfq1ZEHM88lbPVOfqjM2rL47XbCaQ0Voe9S1sET
+ +aAezgxtjj0760TnlScgvl6kze/y4JtxcE35qsopg+rJzao9iAA==
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-On Tue, 17 Jun 2025 17:40:25 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+Hi,
 
-> > Please test below;
-> >  
-> 
-> Do you mean only this single patch on top of the Linux next ?
+This series is the follow-up of the discussion that John and I had some
+time ago here:
 
-Looking at Masami's analysis, yeah, I think you only need that one patch.
+https://lore.kernel.org/all/CANDhNCquJn6bH3KxKf65BWiTYLVqSd9892-xtFDHHqqyrroCMQ@mail.gmail.com/
 
--- Steve
+The initial problem we were discussing was that I'm currently working on
+a platform which has a memory layout with ECC enabled. However, enabling
+the ECC has a number of drawbacks on that platform: lower performance,
+increased memory usage, etc. So for things like framebuffers, the
+trade-off isn't great and thus there's a memory region with ECC disabled
+to allocate from for such use cases.
+
+After a suggestion from John, I chose to first start using heap
+allocations flags to allow for userspace to ask for a particular ECC
+setup. This is then backed by a new heap type that runs from reserved
+memory chunks flagged as such, and the existing DT properties to specify
+the ECC properties.
+
+After further discussion, it was considered that flags were not the
+right solution, and relying on the names of the heaps would be enough to
+let userspace know the kind of buffer it deals with.
+
+Thus, even though the uAPI part of it has been dropped in this second
+version, we still need a driver to create heaps out of carved-out memory
+regions. In addition to the original usecase, a similar driver can be
+found in BSPs from most vendors, so I believe it would be a useful
+addition to the kernel.
+
+Let me know what you think,
+Maxime
+
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+Changes in v5:
+- Rebased on 6.16-rc2
+- Switch from property to dedicated binding
+- Link to v4: https://lore.kernel.org/r/20250520-dma-buf-ecc-heap-v4-1-bd2e1f1bb42c@kernel.org
+
+Changes in v4:
+- Rebased on 6.15-rc7
+- Map buffers only when map is actually called, not at allocation time
+- Deal with restricted-dma-pool and shared-dma-pool
+- Reword Kconfig options
+- Properly report dma_map_sgtable failures
+- Link to v3: https://lore.kernel.org/r/20250407-dma-buf-ecc-heap-v3-0-97cdd36a5f29@kernel.org
+
+Changes in v3:
+- Reworked global variable patch
+- Link to v2: https://lore.kernel.org/r/20250401-dma-buf-ecc-heap-v2-0-043fd006a1af@kernel.org
+
+Changes in v2:
+- Add vmap/vunmap operations
+- Drop ECC flags uapi
+- Rebase on top of 6.14
+- Link to v1: https://lore.kernel.org/r/20240515-dma-buf-ecc-heap-v1-0-54cbbd049511@kernel.org
+
+---
+Maxime Ripard (2):
+      dt-bindings: reserved-memory: Introduce carved-out memory region binding
+      dma-buf: heaps: Introduce a new heap for reserved memory
+
+ .../bindings/reserved-memory/carved-out.yaml       |  49 +++
+ drivers/dma-buf/heaps/Kconfig                      |   8 +
+ drivers/dma-buf/heaps/Makefile                     |   1 +
+ drivers/dma-buf/heaps/carveout_heap.c              | 362 +++++++++++++++++++++
+ 4 files changed, 420 insertions(+)
+---
+base-commit: d076bed8cb108ba2236d4d49c92303fda4036893
+change-id: 20240515-dma-buf-ecc-heap-28a311d2c94e
+
+Best regards,
+-- 
+Maxime Ripard <mripard@kernel.org>
+
