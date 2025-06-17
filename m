@@ -1,136 +1,121 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F55139D1B
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B4BB21C179;
+	Tue, 17 Jun 2025 14:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172283; cv=none; b=bv0neI542JTZXWDmlo8V4WFHVhFey/0+GjnxEBc7boKfB+9r0moap0suou+cuc8W7qgSt4EgizxjiIfTMHlFLnzN4RfjK9QFS/xwpn96PG4zu9XNNvKA2O32QJ1Ok+WZLfazVZEivYtwt2KcNMNIpGj7NKRQO55Yxn1FWk/MCd0=
+	t=1750172328; cv=none; b=P0qzd+944w6T7Zqu2IIE1S8mfLoMhgIGsykUB0ixA1vgM+7q0jEFzEJlJjh0PtiB/DRpgiYldwfhHs5qhTEw3eF7a8PA4vkxaXmlQsYbZglnjXQ57yv+kDiJNQyS7L+67ywzFPWmHX/4BrjUqoO7sArMxj+u5hLHP0m5g5uiXIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172283; c=relaxed/simple;
-	bh=Rd0OXgda9M1rTVKqs0ju+giyiR7S3cAysIoNUe/Wx2E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eCpJ4FXazz8NtJBc+nfGIE4YJVY9mBF9t2lTPQUaIsPCdZaDDtL/Y8MOPorc94Xqa4HvuzDoOVExga+bDCKqMBzxIRFeCz4D37MRiw28tr3eVm4wOVfqNIMhKPgNEljO/M9ST2Ad475uZJx4h+/ieLTBBCQilf1tQBZ5Khr4yiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BThyNa/H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PLQnx63c; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BThyNa/H; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PLQnx63c; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750172328; c=relaxed/simple;
+	bh=aNMSlYMqBh7TGkZwIvZm9sYZFPP2n8ZRe16P/iTVhJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ADbc5MGNT/N6cgWdxyedadouIHpjQUdyNhHm0/ukFKpLERrUM0Bbcfp4wg1Tlr4kdFx+MrGVrUBMaGAyAhvT5bzdrTUm3k46IkUa3B/e03wIVL2mHnF2C3o9haNWn3KZ6wjJ9h9UycrFbjvbqRxb/g2MiPkCnWATm4jKY83YSHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RIao7zf4; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BThyNa/H";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PLQnx63c";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BThyNa/H";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PLQnx63c"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6C70C211B0;
-	Tue, 17 Jun 2025 14:57:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750172279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oxbsJPKMCRy8qLfecuQJVS1ieougPY8e6ctyg9yMaWw=;
-	b=BThyNa/HC6upmOASxsC7FgqNKTWRb9eIoZ48KDX0Z8x78ra6tT+6iZzyr4IKycU9jeRIkq
-	j4DJNCH7wyUw/hv2HQVjmtq/npzdkSibzYBfn6rG0sgR03Lcx5wgvkKslULe2F2y3Ll11G
-	aPrk1BXqPwc7T4R/+R/0IUXPaXD4rQg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750172279;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oxbsJPKMCRy8qLfecuQJVS1ieougPY8e6ctyg9yMaWw=;
-	b=PLQnx63c1OdDKeZ/iK9bWgWiLok29djlzYO9JqzrR9Sdb0QCL8ahrlifJ33ESMJFghN5YJ
-	H/+RtXNYB+tux2CQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="BThyNa/H";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PLQnx63c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750172279; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oxbsJPKMCRy8qLfecuQJVS1ieougPY8e6ctyg9yMaWw=;
-	b=BThyNa/HC6upmOASxsC7FgqNKTWRb9eIoZ48KDX0Z8x78ra6tT+6iZzyr4IKycU9jeRIkq
-	j4DJNCH7wyUw/hv2HQVjmtq/npzdkSibzYBfn6rG0sgR03Lcx5wgvkKslULe2F2y3Ll11G
-	aPrk1BXqPwc7T4R/+R/0IUXPaXD4rQg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750172279;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oxbsJPKMCRy8qLfecuQJVS1ieougPY8e6ctyg9yMaWw=;
-	b=PLQnx63c1OdDKeZ/iK9bWgWiLok29djlzYO9JqzrR9Sdb0QCL8ahrlifJ33ESMJFghN5YJ
-	H/+RtXNYB+tux2CQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D2080139E2;
-	Tue, 17 Jun 2025 14:57:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1pYoMHaCUWgkcwAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Tue, 17 Jun 2025 14:57:58 +0000
-Date: Tue, 17 Jun 2025 15:57:53 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>, 
-	David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v2] MAINTAINERS: add additional mmap-related files to
- mmap section
-Message-ID: <gbr6rp2wn3yrgqinccw6qjheyvlchaso43rxz7hyd6ei7mr3rn@v7gccuyt75mx>
-References: <20250617144130.147847-1-lorenzo.stoakes@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RIao7zf4"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ade58ef47c0so203131866b.1;
+        Tue, 17 Jun 2025 07:58:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750172325; x=1750777125; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tFMbIK8XdkubBwMqAxMT+AE6lntMwC1zhKGYkr2V1/Q=;
+        b=RIao7zf4QsZDfaDHcQu4Z4758i4indZhpB5pDkhoz3dUtylnSwLYsLC61NNGT+zDMA
+         Q0VVhSV4sH7/gOelhcdcQRBefriyGf151r/li0Fo2SbKyY7qjyykDIm6Xj9AqxVAbcHN
+         gbaEgYm7P9vVgJ7rc2VhitQrqKdnL2nvPMHlj8mJv+GLaxIjA1+r30S4/xUk2oqheqML
+         /69jkMutD7GeoGxJ/vxpaEvnlOECYdW8ixGHG8PMDqP7vTnRMCnwy7zQb+mc8aCUqQVU
+         M8U8wzpdHozzMoo5TuNIhLZPJKm0ySwnXL1AhgnIbzNtDHZoO+5dxqnDgCq6EyHxjASx
+         PBZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750172325; x=1750777125;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tFMbIK8XdkubBwMqAxMT+AE6lntMwC1zhKGYkr2V1/Q=;
+        b=ueEYb2bfpouZgI07/PlbJQUwehcwHi2FrL/N3gRCHAdAey6i5pmgTKp4+alcfNIlsi
+         cpFvqOgTVv2Dl7rZrZLkzlYUWNbKbe9+TBhTnKdXs1bZu60jC7Ue+XqwM5baJ52Ns7LR
+         jL9W+Wy0BaZv+h4VgLE+qaAv9pq25cN/1rwu8GHxKDIOGNBVSXh/bwlYzhIZ6UlVhUbB
+         8E03KVbbQnD0OkwiZfiIUs3x0QrdE7jqtYup40llXqvnlaPjqwSq49gPNH+QV9tgB2dx
+         mQ2tza5vbyApBT9ooiDH5pDQuTB3PjIaxhu3OM4Vz4QsJq21ZT/KcN+9nXGjuuPmWwIE
+         86Xw==
+X-Forwarded-Encrypted: i=1; AJvYcCU1zuWt9zWzSW04jSAk3r8PDuQs58cfRzsn6iCFeHP4o9H4yyJk9HVJjCPEmXSVrv600qzbmjXftcipplp/@vger.kernel.org, AJvYcCUnhk4XFQxaTm0cfpXQd17u63Blwj8JeyNKwlxsDckCY9mdzEa10scnh88Ha+yncicA8k4vtET9dIkpM1fq@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuljwBSxW++HXu65hZEcalWYTitpoPmhRV3DXsnkQzs9lg2KCs
+	WPQ8P3MrIF2KFwHXNV276qHr/5IB4tqofRKojoa1/rO0nvDlGo/elpVmL/bwE1vpoQZV4rmyoxq
+	H8l5sQ3UjXyWRyDdCM0PO3oL9Ja5fbZM=
+X-Gm-Gg: ASbGncsMyPStklaZRO2sAFF32cWmv6ckK0MYPeAzc1yejVOyQcI7nELDkhUIqbe4oBm
+	r3FmX5NoeEDsmCeHOmcTC87lAigsIyAxHQjJFB3VUVSjKNXncqfyvvCqLaegqE65E0yHYiQLfeJ
+	T1UonHYEeuMsdzPeDH484DfeF79P/Ka5NyjMFLaySl6Q==
+X-Google-Smtp-Source: AGHT+IEETojlBs4zeufKnNAfPKmtN/B8jrW05fqGi8+W2dBQjH4hXvU3OfIrvlGAII9WXyCqbuomLNHiFkYPUz/b9eM=
+X-Received: by 2002:a17:907:6d0a:b0:ad2:27b1:7214 with SMTP id
+ a640c23a62f3a-adf9e1d7e73mr1415402966b.17.1750172324179; Tue, 17 Jun 2025
+ 07:58:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617144130.147847-1-lorenzo.stoakes@oracle.com>
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 6C70C211B0
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.01
+References: <20250528175943.12739-1-zxue@semtech.com> <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
+In-Reply-To: <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
+From: Aleksander Morgado <aleksander.morgado@gmail.com>
+Date: Tue, 17 Jun 2025 16:58:30 +0200
+X-Gm-Features: AX0GCFuY-iFnlHE8Oy6B-92n0XRHmRePA1s_4SqNR6ji4ozUguRonyfoH8Ay69c
+Message-ID: <CAA3JqEfpuwn5OL6SasVGRU82+2+D5nNXk-WALzcnWnuz9384kQ@mail.gmail.com>
+Subject: Re: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x
+ and set MRU to 32768 for better performance.
+To: Manivannan Sadhasivam <mani@kernel.org>
+Cc: Adam Xue <zxue@semtech.com>, Thomas Perrot <thomas.perrot@bootlin.com>, 
+	Aleksander Morgado <aleksander@aleksander.es>, manivannan.sadhasivam@linaro.org, 
+	slark_xiao@163.com, johan+linaro@kernel.org, quic_vpernami@quicinc.com, 
+	tglx@linutronix.de, fabio.porcedda@gmail.com, quic_msarkar@quicinc.com, 
+	mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, imocanu@semtech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 03:41:30PM +0100, Lorenzo Stoakes wrote:
-> msync and nommu are directly related to memory mapping, mincore is less so
-> but all are roughly speaking operating on virtual memory mappings from the
-> point of view of the user so this seems the most appropriate place for
-> them.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+On Tue, Jun 17, 2025 at 11:27=E2=80=AFAM Manivannan Sadhasivam <mani@kernel=
+.org> wrote:
+>
+> On Wed, May 28, 2025 at 10:59:43AM -0700, Adam Xue wrote:
+>
+> + Thomas and Aleksander (for EM919X related question)
+>
+> > Add MHI controller config for EM929x. It uses the same configuration
+> > as EM919x. Also set the MRU to 32768 to improve downlink throughput.
+> >
+>
+> This also affects the EM919X modem. So I want either Thomas or Aleksander=
+ to
+> confirm that it doesn't cause any regression.
+>
+> Rest looks good to me.
+>
+> - Mani
+>
+> > 02:00.0 Unassigned class [ff00]: Qualcomm Technologies, Inc Device 0308
+> >       Subsystem: Device 18d7:0301
+> >
+> > Signed-off-by: Adam Xue <zxue@semtech.com>
+> > ---
+> >  drivers/bus/mhi/host/pci_generic.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/=
+pci_generic.c
+> > index 03aa88795209..9bf8e7991745 100644
+> > --- a/drivers/bus/mhi/host/pci_generic.c
+> > +++ b/drivers/bus/mhi/host/pci_generic.c
+> > @@ -695,6 +695,7 @@ static const struct mhi_pci_dev_info mhi_sierra_em9=
+19x_info =3D {
+> >       .config =3D &modem_sierra_em919x_config,
+> >       .bar_num =3D MHI_PCI_DEFAULT_BAR_NUM,
+> >       .dma_data_width =3D 32,
+> > +     .mru_default =3D 32768,
 
-Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-
-Looks good, thanks!
-
--- 
-Pedro
+I cannot test this now, I need to look for the EM9191 that I know I
+have somewhere, but this default MRU update feels right. Hopefully
+Thomas can verify.
