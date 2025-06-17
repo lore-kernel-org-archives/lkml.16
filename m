@@ -1,88 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B14420D4FF;
-	Tue, 17 Jun 2025 22:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB582F532F;
+	Tue, 17 Jun 2025 22:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199407; cv=none; b=mAfE2H8dO8EZgkCZCZdGE83lnmghxB8252Yid4VIo4c5KeKP7DyAkPqx6vFhET/Ysc1O23JBb4I9iI+U7fTpDAitJvly3fQKRkvP+IfKxhdLG1Qt1vALJ8gXKPNm5XJ817eTrRN8fWQDkxMJ4fzEbwQRollXI9PztLt6/kOihgw=
+	t=1750199532; cv=none; b=bofsKWILsGZrUPyGdU5xchoLRsrrNE1lUye0GMcIsyp/qaXWT1MSim4qRnLOZ3FnRXxiMQlyHCUCLMjYtXoPMWvk6RME8P8F1zoVXQem+b6BrC9tHBnGspPMlFYYV0thnuMN4D/gC3mWfpFzfyHUqFWVcSUv6Aq4+5khFA0EkS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199407; c=relaxed/simple;
-	bh=SGGyiCoTGoTxw00KV1kNaqflYtCwj4p1ZTrArbPnXIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S+xqcn834W0501ZV4J0Qk70Eghx0F/jybGsEhs3roKdtuwaIT51x9KpmDs14r/pe8r13+gD2FuPSJZYFwTya7FLMNLmXDN+1V2HNOXRUPh7hBjs7CQcSr90pYbGkBwWv4SLnpJtEmxcG3HsHPfvLEU+BSqeMkX5IEkDwFpB9jg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HF8NQaqd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750199532; c=relaxed/simple;
+	bh=nIg121UCuhRPAARvxyMgNGYeXPPt0yPDCGheulVUPew=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fYf0TK65mXtqwXYhvVzB5HFxZpEVwd6ao3Sg1rZEilMIVRfBeJfZkV3LGbwF9pFYrdHMGg6F5omOBjgAkiv5lGgGQqN4RAQAYVNf7Q4Mx1CHK1tDfM0OHm9PoZW54bz5FSiywtPt1gVNrdUSMF/Hkp3lVXLMnmakJT3ULK6IBgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=kibDh6Lg; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HF8NQaqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFDD7C4CEE3;
-	Tue, 17 Jun 2025 22:30:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750199407;
-	bh=SGGyiCoTGoTxw00KV1kNaqflYtCwj4p1ZTrArbPnXIg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HF8NQaqdgVNbeHkHl3F1yA+9mKX3t6FafblUPQ6vixdZRiOBXLamWK1sgcmtAQWdP
-	 wcdIlJekyyZibdEs78WcHv4n/5GYwJrI54JPxp67dy48ssMlHjdpOFVcprQUsXBCY8
-	 AubqlKue0z0/rGlkLM0zsXdZCB68odDs1AaWTNtod2ppAW+UbHR3Llhz7oHQIocz2D
-	 0cRTGWiXnm+mwRJi1nJ5eqIG+lT047LaTVf+ZlOrD4032jf+KCfxgIuWdNz99tck4r
-	 2SYBG4JBnGoNY2F93E8Ax9MLSW3cf+mpa0+NZFMP0rWrRgZZZn8V6a9GHnV6tj9MKy
-	 IcgF9wKcy3rOQ==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	Gregory Price <gourry@gourry.net>,
-	David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	corbet@lwn.net,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com,
-	damon@lists.linux.dev
-Subject: Re: [RFC PATCH 1/4] mm/mempolicy: Expose policy_nodemask() in include/linux/mempolicy.h
-Date: Tue, 17 Jun 2025 15:30:05 -0700
-Message-Id: <20250617223005.2526-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <CAMvvPS7yQPoXxAecSi6B74a1Bgm1H06i+MqNDgdsZODEZSYFuw@mail.gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="kibDh6Lg"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4762441B5F;
+	Tue, 17 Jun 2025 22:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750199523;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=50/m+/yb0jxBjg1zUH7OGJM94gBchdEwxDdiaXdUt8c=;
+	b=kibDh6LgFbbHogi/cLqDkDUuFnWUKPi51fZeyLRVk1ZUZVbfEKsPeFmlykH7krrqSY9qEj
+	EwyJsh8npSM38ionZkwt5Cjnb9U3MOGI69yHD5GU8W3fZJm+OQ+MBbKTlTlUiSirCFVuac
+	Nr++Cx+bhdAx+d37y8BInbkXlOs0Ky4K4zruOv7z7m6gEgXZ/kEIvSe+NQKyMQlGox4EYF
+	7o98CNi45zM+JxdX275n+vTA9UVZz7QuNQ2XprM0UV32GErgrRwtPFLYB/eXec+XIB8Kvx
+	qGB9dIuCIlprDp1ZZ8byTixDpwg2CtKZmcTM0asLpZhKuI0QDFRmISeBu4KErA==
+From: Olivier Benjamin <olivier.benjamin@bootlin.com>
+Subject: [PATCH 0/3] Fix the Rockchip PinePhone Pro DTS warnings.
+Date: Wed, 18 Jun 2025 00:31:59 +0200
+Message-Id: <20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN/sUWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDM0ML3ZSSpPi0zIrUYl1LczMTUxOguKFRqhJQfUFRKlgCqDw6trYWAL5
+ +fvdbAAAA
+X-Change-ID: 20250618-dtb_fixes-97645402512e
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Olivier Benjamin <olivier.benjamin@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddufeelucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepqfhlihhvihgvrhcuuegvnhhjrghmihhnuceoohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtledttdduvdfhjeeiffevieegleevieelfeelfffhueelveevjeelhedvheekieenucfkphepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeipdhhvghloheplgduledvrdduieekrddurddvtdgnpdhmrghilhhfrhhomhepohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmpdhrtghpt
+ hhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqrhhotghktghhihhpsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: olivier.benjamin@bootlin.com
 
-On Tue, 17 Jun 2025 14:54:39 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+Small fixes to the PinePhone Pro DTS to fit bindings and
+suppress warnings at build.
 
-[...]
-> Given this discussion, as well as Joshua's comments earlier [1], it
-> sounds like while people aren't exactly opposed to using mempolicy for
-> this, the building consensus is that it would be best not to. I will
-> move the interleave logic to DAMON for the next revision. However, I
-> still think it makes sense to use the global weights (probably via
-> get_il_weight) for now to avoid allocating pages a certain way and
-> then migrating them soon after.
+Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+---
+Olivier Benjamin (3):
+      arm64: dts: rockchip: Fix the panel compatible for the PinePhone Pro
+      arm64: dts: rockchip: Fix the mipi port definition for RK3399
+      arm64: dts: rockchip: Remove unused property in PinePhone Pro MIPI panel
 
-Makes sense to me :)
+ arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+---
+-- 
+Olivier Benjamin <olivier.benjamin@bootlin.com>
 
-> 
-> I'll try to send the next version of the patch set by the end of the week.
-
-Looking forwrd to it!
-
-
-Thanks,
-SJ
-
-[...]
