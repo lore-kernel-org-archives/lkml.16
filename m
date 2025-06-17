@@ -1,153 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED15123B601;
-	Tue, 17 Jun 2025 09:19:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF05292B27
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:19:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151978; cv=none; b=WBk2Bl3BkSyl5QfXCeBw5aOEMItVd+ivPRzyBKeQYkweBnGZI/DB2I1Z1g9pRYuMsPPGmyLJYAun9ZZ4qOeN4tFKiNpvjcL8QcmD8RBpFtAJGcOFLKXd4pvISa+a9ZdETPwJyb9FN8R/ckCZ1py97xgbBEqGjjCYYK+IbZXIpLg=
+	t=1750151984; cv=none; b=CFtBCRVCemPLHwOvjUKiXuzPCsVtudSUQHKdqUlBWy2S2ALrwzzGgnjU7DCL5OdY81JN8av1Xj6HgyoMo7iNEGtbBBuguycrEtl/H8pvClTX231u4/Iu8444Vqd8IQC/hxZJ2wIDBIkGCrk4cL9vwG8CGpmcEZSJOFk+Bcj1Bjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151978; c=relaxed/simple;
-	bh=4KUYIV6SZlEja+Pg1akvLLX7vi5cpb/CJh39gaHB/dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C/mr6t4quzxznLITP7On4CJw6RsFwaecAwDEgB9E83wViySCRBU9verleFnn11i3cXzwaBulv1KH3bHg4QNkk2jZNlTSy5iiW7HeZr/6aaTz3HTLz8bRW4IvTEXu67YdEIeo0Hq/bj048F5QTB4epiHFX1X55+ruvOboYqZdjuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uXjOG/DR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750151984; c=relaxed/simple;
+	bh=+5SWU1o8juSDYZoOuyQJC1B+OKlGQ52mSspkNeSUazk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m337ilCLrSIujvg948SByyz0gwBIucLtro4+Dxovgdr3sXTKPBklfKqiswyw6L/IiGnvJHAE1JjXphQMdffC8OMhJxWZCHesnzzdmZY2Yt63WGa1bBPYV5t0oRwV8o4j2u//yDQVioN1jWVohM5CTr1IMoHzK6epDOKuj3e/q2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Hpyv6nxu; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uXjOG/DR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7552DC4CEE3;
-	Tue, 17 Jun 2025 09:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750151977;
-	bh=4KUYIV6SZlEja+Pg1akvLLX7vi5cpb/CJh39gaHB/dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uXjOG/DRrQEwqXPdzif6cWhErEsTTfQZtVq2RMLAmyxozUWlUs4m4DmZLrHB//CUs
-	 AsEQx3UzDzro7hwMDSuuBaLRCAJi4aSMzkVPP9YdO2b28MsDUMrSlNNqtjmvCvx09+
-	 P4k6RP074fKZkwC7n/vw5swJBthCk6RUlLp1Rft6haNLawa4eFiFp1GDdIaUh3ytNO
-	 c73VVZMYcv+GLdl6uI12odB7gmIeXBr8RwV1ogc82EOWMp1yoE/hVnlxBA2VtwrLSt
-	 MKEEBx6VQHsfhQjujA3CmK58xEpDgpEQ6Ya5QE6HxnXwCaIOTUypQFj3YfnP7ovx7C
-	 m2JrXYgvHDekw==
-Date: Tue, 17 Jun 2025 14:49:30 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Qiang Yu <qiang.yu@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	jeff.hugo@oss.qualcomm.com, mhi@lists.linux.dev, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, quic_bqiang@quicinc.com, can.guo@oss.qualcomm.com, 
-	Mayank Rana <mayank.rana@oss.qualcomm.com>
-Subject: Re: [PATCH v2] mhi: host: Add standard elf image download
- functionality
-Message-ID: <5g6j4guzrbhl4zqmt7amdgewdusycccsh5rdxlpjbkhjdhbdoa@h6tlwam4i3kq>
-References: <20250603-standard_elf_image_load_support-v2-1-cce97644e99e@oss.qualcomm.com>
- <sdhop6vyvt4y63tbbtorqfd5xa4ckbiwxdad5g6zzwlljqvd6q@eoaqmairdeey>
- <aEKefb87GTR/scbO@hu-qianyu-lv.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hpyv6nxu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750151979;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Pl6PxwbpUS7ADU1xqvtXXrf/iKUynSR5SAu+83BnGX4=;
+	b=Hpyv6nxuUkYyaiSPWyTENXhMPXmMziP5LWCNJqk+SV/gM4mOWMsHPPHyk8T1g1LZ+wvtp6
+	VDeDiWzC2xAxN6S+QkgrSoYDOIFb0O5R0EhqmeWfP7XfVtCc+5cL2pcU31a/IyOlsEzGpE
+	+ORyZjkGIviB99mAWsh5xEXPqt6iQKg=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-581-X7CusjIoM3aWrqbaQb0xJQ-1; Tue, 17 Jun 2025 05:19:38 -0400
+X-MC-Unique: X7CusjIoM3aWrqbaQb0xJQ-1
+X-Mimecast-MFC-AGG-ID: X7CusjIoM3aWrqbaQb0xJQ_1750151977
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f8fd1856so2649347f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:19:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750151977; x=1750756777;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Pl6PxwbpUS7ADU1xqvtXXrf/iKUynSR5SAu+83BnGX4=;
+        b=h/5RO+QEuzxp0bDsTsOdef1+7kFgQ9iJnE44u6HeiQRGW/P2X7FgkKyatzfLrwKM3I
+         inoWKCpatgGyWdM2PQIhFIcA2GOhrUFtd9hbZ4Vxpq/rPc1UQB30gzWi3RtyazEIIjcD
+         4A8I33cXZeUN+LfBNQIiRcnkIghzidrONm1BhyIEH05JAtPOdMb1PE/atV/aDiTdaIsF
+         P9tnuwmlBJFxrBfO3CWG4lPCicmnstrKje5p8fALZihtDtFSZOnipwPmAJynLG9m9P80
+         /Db0yVSNLdhgp1n9f3Cr9E8bLeLwPbr3x2UOZZFjtuQq5Ak4uhKcsqd7okD5Qmv1cxrG
+         dHiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVjIZXnQB3evfzBnajv3tp5tYqSY9dfS/pyXcsbV+FTXTPGkB1ZxIoGm9W9xW0zHwY4hKuYP2ozeVrx3Hk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSdVe63s6U0A5/Ql4GUyl2KKze59a3jLUXx8L3QZyvhAbU7UDL
+	tHf0hAlHWa+gHn4okIa52QgjEPzNbhQdugVg2y2jZi2bpaP6/PItJKEz1NaOe/fGHeVEiSeAxWw
+	/xHVL/U4AvCcEadAuXkEzcTLob2/jpNnTv3i4OAZBc+vFZdGD7qNjfzdLa1qVxMr/6g==
+X-Gm-Gg: ASbGncvw6QdQcOqmZDCRj4oZif2jvVdYznGaJblBoSAaG7UIJXXU9pbS/6ZfH1E5rkt
+	PNyRC3gea44e5uweX3OuDQj4ReYShVvbY4NrhKllLPNadd6poOFBRR+4ThjAMAhGbMoSVNZACPT
+	diONjZMHYqjAHdYTJq6nl5mOcQkOt88OcbWaZbQZUwxNE/wxXR6aVJ8bQTOsxGQVa+eWr6vnAw0
+	Hgin2dd/YSNVRFduvOiz9pV+YsF3NP4J5E9TnIAvoXmJ1F/wmPIyQw4VoMP2om9mcOvPu2ZXOV/
+	oLiglq2WZSdqJGNOB/nLQftD5mBpiE3J33G9prgo1Ips8qORR/cOjFEu2pLmlBjcoI5ydcBS1R2
+	KUxFzGTs0reqzI92tsp0KV7ff43kQYsyqRkBa2GVCNYdTQ70=
+X-Received: by 2002:a05:6000:4202:b0:3a4:dfaa:df8d with SMTP id ffacd0b85a97d-3a572367c45mr11265691f8f.9.1750151977243;
+        Tue, 17 Jun 2025 02:19:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHt8iXJvJT0W2e4sI8GT6VcpVG8jxrePAU09oM8r6xnq4XSbjmN3FC6k4gXR+D2djVSpIQQtw==
+X-Received: by 2002:a05:6000:4202:b0:3a4:dfaa:df8d with SMTP id ffacd0b85a97d-3a572367c45mr11265656f8f.9.1750151976687;
+        Tue, 17 Jun 2025 02:19:36 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08e21sm13528866f8f.52.2025.06.17.02.19.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:19:36 -0700 (PDT)
+Message-ID: <bf855ce0-d0ba-4bd6-bfc1-8be2fdbdfe70@redhat.com>
+Date: Tue, 17 Jun 2025 11:19:34 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aEKefb87GTR/scbO@hu-qianyu-lv.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/14] mm: Convert pXd_devmap checks to vma_is_dax
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <361009510f346090fad328c53ec228d99bb955ee.1750075065.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <361009510f346090fad328c53ec228d99bb955ee.1750075065.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 06, 2025 at 12:53:33AM -0700, Qiang Yu wrote:
-> On Thu, Jun 05, 2025 at 10:34:50PM +0530, Manivannan Sadhasivam wrote:
-> > On Tue, Jun 03, 2025 at 02:05:44AM -0700, Qiang Yu wrote:
-> > > From: Mayank Rana <mayank.rana@oss.qualcomm.com>
-> > > 
-> > > Currently, the FBC image is a non-standard ELF file that contains a single
-> > > ELF header, followed by segments for SBL, RDDM, and AMSS. Some devices are
-> > > unable to process this non-standard ELF format and therefore require
-> > > special handling during image loading.
-> > > 
-> > 
-> > What are those "some devices"? Why are they not able to process this format
+On 16.06.25 13:58, Alistair Popple wrote:
+> Currently dax is the only user of pmd and pud mapped ZONE_DEVICE
+> pages. Therefore page walkers that want to exclude DAX pages can check
+> pmd_devmap or pud_devmap. However soon dax will no longer set PFN_DEV,
+> meaning dax pages are mapped as normal pages.
 > 
-> Eg. QCC2072
+> Ensure page walkers that currently use pXd_devmap to skip DAX pages
+> continue to do so by adding explicit checks of the VMA instead.
+ > > Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
+> ---
+> 
+> Changes from v1:
+> 
+>   - Remove vma_is_dax() check from mm/userfaultfd.c as
+>     validate_move_areas() will already skip DAX VMA's on account of them
+>     not being anonymous.
 
-Is it a new kind of WLAN chipset using the ath12k driver?
+This should be documented in the patch description above.
 
+> ---
+>   fs/userfaultfd.c | 2 +-
+>   mm/hmm.c         | 2 +-
+>   mm/userfaultfd.c | 6 ------
+>   3 files changed, 2 insertions(+), 8 deletions(-)
 > 
-> > which is used across the rest of the Qcom devices?
-> 
-> These devices include TME-L (Trust Management Engine Lite).
-> Currently, the FBC image is a non-standard ELF file containing an ELF
-> header followed by segments for SBL and WLAN firmware. The ELF header and
-> SBL segment within the first 512KB are loaded via BHI, while the full FBC
-> image is loaded via BHIe.
-> 
-> Due to TME-L limitations, the full FBC image loaded via BHIe cannot be
-> processed, as it does not conform to the standard ELF format. 
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index ef054b3..a886750 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -304,7 +304,7 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
+>   		goto out;
+>   
+>   	ret = false;
+> -	if (!pmd_present(_pmd) || pmd_devmap(_pmd))
+> +	if (!pmd_present(_pmd) || vma_is_dax(vmf->vma))
+>   		goto out;
 
-Okay. These information should be part of the patch description.
+VMA checks should be done before doing any page table walk.
 
-> > 
-> > > Add standard_elf_image flag to determine whether the device can process
-> > > the non-standard ELF format. If this flag is set, a standard ELF image
-> > > must be loaded, meaning the first 512 KB of the FBC image should be
-> > > skipped when loading the AMSS image over the BHIe interface.
-> > 
-> > Please explain what is present in the first 512KiB and why skipping that is
-> > required.
-> 
-> ELF header and SBL segment are in the first 512KiB.
-> 
-> New FBC image format adds second ELF header in the start of WLAN FW
-> segment on top of current format. After loading SBL, second ELF header
-> and WLAN FW segment is loaded using BHIe.
-> > 
-> > > Note that
-> > > this flag does not affect the SBL image download process.
-> > > 
-> > > Signed-off-by: Mayank Rana <mayank.rana@oss.qualcomm.com>
-> > > Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> > > Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-> > > ---
-> > > Changes in v2:
-> > > - V1 patch is paused because of no user. WLAN team plan to add support for
-> > >   new WLAN chip that requires this patch, so send v2.
-> > > - Change author and SOB with new mail address.
-> > > - Reword commit message.
-> > > - Place standard_elf_image flag after wake_set in struct mhi_controller
-> > > - Link to v1: https://lore.kernel.org/mhi/1689907189-21844-1-git-send-email-quic_qianyu@quicinc.com/
-> > > ---
-> > >  drivers/bus/mhi/host/boot.c | 7 +++++++
-> > >  include/linux/mhi.h         | 4 ++++
-> > >  2 files changed, 11 insertions(+)
-> > > 
-> > > diff --git a/drivers/bus/mhi/host/boot.c b/drivers/bus/mhi/host/boot.c
-> > > index efa3b6dddf4d2f937535243bd8e8ed32109150a4..f1686a8e0681d49f778838820b44f4c845ddbd1f 100644
-> > > --- a/drivers/bus/mhi/host/boot.c
-> > > +++ b/drivers/bus/mhi/host/boot.c
-> > > @@ -584,6 +584,13 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
-> > >  	 * device transitioning into MHI READY state
-> > >  	 */
-> > >  	if (fw_load_type == MHI_FW_LOAD_FBC) {
-> > > +		dev_dbg(dev, "standard_elf_image:%s\n",
-> > > +			(mhi_cntrl->standard_elf_image ? "True" : "False"));
-> > 
-> > This print is just a noise even for debug.
-> 
-> Will drop it.
-> 
-> > 
-> > > +		if (mhi_cntrl->standard_elf_image) {
-> > > +			fw_data += mhi_cntrl->sbl_size;
-> > > +			fw_sz -= mhi_cntrl->sbl_size;
-> > 
-> > Is it possible to detect the image type during runtime instead of using a flag?
-> > Also, the flag is currently unused. So it should come along an user.
-> 
-> Perhaps we can check the second ELF Magic Number, but I don't think it's
-> safe to determine the format by doing such check. Using a flag is simple
-> and safe.
+>   
+>   	if (pmd_trans_huge(_pmd)) {
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index feac861..5311753 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -441,7 +441,7 @@ static int hmm_vma_walk_pud(pud_t *pudp, unsigned long start, unsigned long end,
+>   		return hmm_vma_walk_hole(start, end, -1, walk);
+>   	}
+>   
+> -	if (pud_leaf(pud) && pud_devmap(pud)) {
+> +	if (pud_leaf(pud) && vma_is_dax(walk->vma)) {
+>   		unsigned long i, npages, pfn;
+>   		unsigned int required_fault;
+>   		unsigned long *hmm_pfns;
 
-Why do you think it is not safe? IMO, relying on a flag is the not so safe
-option. What would happen if an user has used old FW? The driver would blindly
-assume that the FW is always of the new format, but the user is not aware of it.
-It may lead to weird FW crash that would be difficult to debug.
+Dito.
 
-- Mani
+> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
+> index 58b3ad6..8395db2 100644
+> --- a/mm/userfaultfd.c
+> +++ b/mm/userfaultfd.c
+> @@ -1818,12 +1818,6 @@ ssize_t move_pages(struct userfaultfd_ctx *ctx, unsigned long dst_start,
+>   
+>   		ptl = pmd_trans_huge_lock(src_pmd, src_vma);
+>   		if (ptl) {
+> -			if (pmd_devmap(*src_pmd)) {
+> -				spin_unlock(ptl);
+> -				err = -ENOENT;
+> -				break;
+> -			}
+> -
+>   			/* Check if we can move the pmd without splitting it. */
+>   			if (move_splits_huge_pmd(dst_addr, src_addr, src_start + len) ||
+>   			    !pmd_none(dst_pmdval)) {
+
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Cheers,
+
+David / dhildenb
+
