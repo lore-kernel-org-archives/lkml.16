@@ -1,82 +1,144 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DADC298261;
-	Tue, 17 Jun 2025 09:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1272DA762
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153779; cv=none; b=L6x1IAP1lK50L//yAIgKvE2ZFwotj5MsAL0Y7fmBG331h0KVx05KoNae/Ic1HnvqROycANvXZFkhjQoNctulBvJv01iO3Jn8BLA1ceNj3BjXog6gU/HOUHtqzK8LXK4IoN2leiqAcLs2sDrTV9nak7vzwpR0LMTiHLLe7VZuejo=
+	t=1750153782; cv=none; b=YkfSItkNE+qYeaTgp2Z6nxQXH4W52iqJDILYZInSg0kZM/nMacH1KGivCJCroaqBFfsv7IyO5om+FKyQFd5AXCiqCFKr778WN1xwG2efeqcb6ehxiQEKJ0ExihKlHkEqjSYR97jaBZ71cODnIlTEk+1kWRVVVAJsSj252hy6RB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153779; c=relaxed/simple;
-	bh=DP9DqrgR2bh8NqZ6FizF/KGOAPXqqAR5joYEFv95tPk=;
+	s=arc-20240116; t=1750153782; c=relaxed/simple;
+	bh=GWDev21kMk2PfZZCQNtZQ/tufdRgAISEjZGNO6cmMps=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uedlCDYpD+3CH6ld7duzvZLHItkIBlMailGqfTplwC4gLcQTIjIqv29Zrvg8mP62RQeLmn/HDWkV6aJLnGwFKYoeW6iAQwtncXTOd93iPNQQRYO8E4rklgR3oOfuXYZdJQFVf0LHbCABWcZnA6sH1mvX7RC3B63yXFbZlM3snqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ade5b8aab41so1173964566b.0;
-        Tue, 17 Jun 2025 02:49:36 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=AIsMY7Q0nLO6ybt/WIdzTtjlhEcqaSjROSx+DvmoeM1JXMEVxgtQbmwNM3gjPpRTQgKd/QzCle44KwpJm4DoXLmUMtmJxrxfMB8IjnqjyCley1DkvUc5B75q9vl9H63aWhGZtErTuPGnhRqG2AQrl8v+TQzLH2L3mH0JVBZR9Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UEoIk8Ia; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UEoIk8Ia"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-453426170b6so15828475e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:49:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750153779; x=1750758579; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GWDev21kMk2PfZZCQNtZQ/tufdRgAISEjZGNO6cmMps=;
+        b=UEoIk8IaMVyqXUJoXExQvZAFuq0Bzk0dnMQBTKAZwHITzOaASrwFmG4VH4MujPbKXY
+         QB5hoN9mR7LtKIaFOmAAOs9/+U29dK4811TnAATjn9I6yag4STMQlYfJgvMvGaqDiv1t
+         ZoSp63z5tj8qy8yFzS6RmhNwxRO+qTWL+pPaSe6D8HcMorFj2y3gga1nmn+9S7Tplb7a
+         3M4rbePaa0TO3W9I/2A8i+h7jvDjHpE+30YRbIM3VSnJvx6xu7/IxteiZY7WR5SOIRAp
+         xQ4KsZjlgpE4I64uc1MvVg97UFd3MlrccODGFryWG8oA87FFnpdcqeHUMoH/NW7H+stU
+         AOKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153775; x=1750758575;
+        d=1e100.net; s=20230601; t=1750153779; x=1750758579;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WNjpKIWFUO3UwHjqSrvxZH4sVoUp8DK07nEW60sO6KA=;
-        b=CHpiGry8Q9/+676xvBpi9YHXz3JOH7iu+FTbEGuFaoKNmZyinPXLld8SaFu5uVsUz8
-         JFmV0SGBHvQmdi8X65jUlfPDh87icfkRZZuMRGnHE76M8lR/lZPCWd6K7AXHtNg5Y7Hp
-         /qd6h9gAL0/pm1kvmgl5aEi+dLDgd87FPFN49QP5QaRO5xSvYCyqbd+0K1N9SB3e75vl
-         CdvWM2N4r4CgoperwKaTfdN2gfgCWRWk6ake4UAAGWMBl4in8OeQgMlkmTwBdPr5EA7Z
-         5RAttYXla27JfFdI6z9mPJSUp+18XN1g1kJATdfNJ+bUr9U1dNkPvTuba03l6rz1uIF4
-         bkOg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/jFyWPiDWOWQJqbjou5GxJexqbguN5nxxIGEXkTor4cGfbD4MUiQbllpQmkFKQE5VFr/kP5Ir@vger.kernel.org, AJvYcCWxeVHkr+LkTOKiHnquPBJbKtDZGg9MGqBUo+CT4wi8t7oHRwiRe1B+iThfSnybV2wvQHUQUqHJdzhS6Ws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzjmJcpjHHusFvhfc2+8gkFNeBb7ykDhARj2+3/2dNOSKgTyjm
-	cNjLCyOPA6U7EqB+8rjhLv8M7uZjpblkTrCG/zA+vfW5eRoi91dy0ngk
-X-Gm-Gg: ASbGncsb4dSXrBnGj40vYFDA1pm7jTET0QFgF20BpPULB8VohwJSRywOiAajAcicOtS
-	JuWvWrjB2H4Vw77i5F7ahp9OC02WaufPqPbB5C4H3Nqdh21gImNlCFp22WCur2FLw2wXAm6dqmV
-	JatzYodJqNRBlooQ293pZBHJQTwhMPaXC/YKK5C6mJ+KOqwOxCgjjxF8D0+8NvZuBlUixxISWq5
-	5aohAf1IimLFpjDjE1nPdqsmdJnbtU24zQwbS45TQayfCgYxPaLYRMveCt4HXAuRvMEcOrrRhQd
-	p0tZWlLJNK3pg85u3FcrYy6aJ5/y6pFk4faWEiXEdGpaY3xsrbBZnQ==
-X-Google-Smtp-Source: AGHT+IHW9294E3OtqJ+f28GiD9wYZ86H8EQy05fIL/mh1QaSIzEMnsqq5NiG7/2VBActvbbuMbdfRg==
-X-Received: by 2002:a17:907:1c0c:b0:adb:2462:d921 with SMTP id a640c23a62f3a-adfad277532mr1325684366b.5.1750153775307;
-        Tue, 17 Jun 2025 02:49:35 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:71::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec81c5c5fsm843320666b.63.2025.06.17.02.49.33
+        bh=GWDev21kMk2PfZZCQNtZQ/tufdRgAISEjZGNO6cmMps=;
+        b=b3HheMthFMsv5bUFryWg2IOgDIa+QImRoFoWTg7uYMfzdnu+iwtudeM/XG1a0D2hfT
+         d2c5Zduu7+vjgIcVjWouw8Fy1o01lUgLR/8ypHEogCQvLXDLEAD5ubD8+4rFYPqR3OMc
+         3CVkeDDYLflilHyYUnOllQOsEZRb6rJzbp04DSIokZFNp+w10TJhl7tGhwIAPxylaI0t
+         ITf4xtNm7FXYD+/kQcfRi4/VxgVXxp0KsXwgxaynBKPcxL++yCH7EVDLcweqTV4hF95B
+         yKYUfywCuGTJXEzEbLa0ITk9T+cLbakavSri5FuGANCRnSyUpBy8p93IU/VU0CCBVeYC
+         z9hw==
+X-Gm-Message-State: AOJu0YzO6ZI4qsLM8RTbwB2jOuZadbwfM+vGPtvcwcxwLLjSB2DMSyjB
+	TkixYilsd3gqqLPR4U+AhwjS8gRYsUtAD3A/ry6SHienmfrQwfOxoy+PQtUmUAiM+gm7fJxyX53
+	QjUNJqGU=
+X-Gm-Gg: ASbGncuffXTm0RaiEY2TRvkH0YwY/2hjg7qJSoMwB+4LUUUa8Pai6In9QogN4oPRLbn
+	CQMSy8IfdGYYN6eIkKPxwdOIfrLsnR/39mYy0YMFB7Mdt7Hzc1wauHzxairN4xgDHA7RCT8OEx6
+	v9mg2kvv9vC5Ek/3I3YVvXWGVfaWgklTg3Ytt00TiTHVZLzTFLGqVw/eFBh7aFr6rMTXNOUXSLV
+	v4zflKHAldMtCvP+g0o45fvh/qvv2Z3rpdwt2JBo8WTlNpVxfo83Yj7Uj2u4Xvil98m9OF1HFKZ
+	LjBoO5qswHVGeHTXEj+2Yp+iqckSozO7qfhelcG5VbFlNC5o2KHvn+I3ysLSIESU
+X-Google-Smtp-Source: AGHT+IEOvxWVDOlNZWXip6ImB2ddbE7O2B8u/+uYGYg94jAlO+CMlOLLaVPrqILnw9oEr4gJgo9dxQ==
+X-Received: by 2002:a05:6000:2504:b0:3a4:f7ae:77c9 with SMTP id ffacd0b85a97d-3a5723840d3mr10086383f8f.5.1750153778998;
+        Tue, 17 Jun 2025 02:49:38 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a57b2bfc69sm7527269f8f.76.2025.06.17.02.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:49:34 -0700 (PDT)
-Date: Tue, 17 Jun 2025 02:49:32 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 09/15] tools: ynl_gen_rst.py: clanup coding style
-Message-ID: <aFE6LIpZsFfy3rRU@gmail.com>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
- <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
+        Tue, 17 Jun 2025 02:49:38 -0700 (PDT)
+Date: Tue, 17 Jun 2025 11:49:36 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Tiffany Yang <ynaffit@google.com>
+Cc: linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
+	kernel-team@android.com, John Stultz <jstultz@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
+	Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Chen Ridong <chenridong@huawei.com>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
+Message-ID: <gn6xiuqczaoiepdczg364cj46riiskvqwgvyaawbb3bpaybaw4@5iiohkyscrek>
+References: <20250603224304.3198729-3-ynaffit@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dj6i5wtbfqaemcxf"
 Content-Disposition: inline
-In-Reply-To: <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
+In-Reply-To: <20250603224304.3198729-3-ynaffit@google.com>
 
-On Tue, Jun 17, 2025 at 10:02:06AM +0200, Mauro Carvalho Chehab wrote:
-> Cleanup some coding style issues pointed by pylint and flake8.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Reviewed-by: Breno Leitao <leitao@debian.org>
+--dj6i5wtbfqaemcxf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [RFC PATCH] cgroup: Track time in cgroup v2 freezer
+MIME-Version: 1.0
+
+Hello.
+
+On Tue, Jun 03, 2025 at 10:43:05PM +0000, Tiffany Yang <ynaffit@google.com> wrote:
+> The cgroup v2 freezer controller allows user processes to be dynamically
+> added to and removed from an interruptible frozen state from
+> userspace.
+
+Beware of freezing by migration vs freezing by cgroup attribute change.
+The latter is primary design of cgroup v2, the former is "only" for
+consistency.
+
+> This feature is helpful for application management, as it
+> allows background tasks to be frozen to prevent them from being
+> scheduled or otherwise contending with foreground tasks for resources.
+
+> Still, applications are usually unaware of their having been placed in
+> the freezer cgroup, so any watchdog timers they may have set will fire
+> when they exit. To address this problem, I propose tracking the per-task
+> frozen time and exposing it to userland via procfs.
+
+But the watchdog fires rightfully when the application does not run,
+doesn't it?
+It should be responsibility of the "freezing agent" to prepare or notify
+the application about expected latencies.
+
+> but the main focus in this initial submission is establishing the
+> right UAPI for this accounting information.
+
+/proc/<pid>/cgroup_v2_freezer_time_frozen looks quite extraordinary with
+other similar metrics, my first thought would be a field in
+/proc/<pid>/stat (or track it per cgroup as Tejun suggests).
+
+Could you please primarily explain why the application itself should
+care about the frozen time (and not other causes of delay)?
+
+Thanks,
+Michal
+
+--dj6i5wtbfqaemcxf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFE6LAAKCRB+PQLnlNv4
+CI0vAQC5P5WI9MTxhoy5l1ZfngNl+iV61djqa8dUqqxkexlC4QEA+Gqby40dN6Q/
+BPa8zfglVJFybFxTO++SbIEs6CQkXQU=
+=mtgT
+-----END PGP SIGNATURE-----
+
+--dj6i5wtbfqaemcxf--
