@@ -1,31 +1,31 @@
 Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934AF2F0C42;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935892F0C46;
 	Tue, 17 Jun 2025 22:51:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750200684; cv=none; b=IyKIEaRgdPRANlBPGbG3jFMZs6an+//oZ9gLZPu0VX25EmN+rP+4Nwb8mZ4r6xHlv09IpMDC2daHUflYD+8QdfMelimSByCN1pvaJqNNiK3efyiWVE3CAMVLT/vv+918GoevrPSurdO/1zrIsXmgvb/LrmVqDncYY5RxpNlPhQE=
+	t=1750200685; cv=none; b=q5oiIBY6W76+025kOokSDZyvUI7JcUMpG0K2wdnEGBKGxpgTET8+rIENKgOJIzeCS2aiqsCJ8Z8/gPZH0b5jUphdNxqH/XcxvEvSCbj/57X57D3nB5evFLgbdpoq7AXqb+FuWGwPHMKxlkv/gpdh+BV8flUrVUCb3Zr5FOWpuGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750200684; c=relaxed/simple;
-	bh=+1dKUkXeGNCMo2SsOx0RVb/skigBKBZOQ6KCmMD4/Gk=;
+	s=arc-20240116; t=1750200685; c=relaxed/simple;
+	bh=w3zlkwOetCuL4IjiyP6cPFfl8DekoC294wC1K1nFMzE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=Sty2Ayew7ZxBuDCjzFwNQhLONYdGIuxO5tBt+l/c5EjHJ+AR/i8bwpr9dhav8iy2HB7T181DJ+82JeEn8EiwKGSYRaGDiG5HiQQ0WZ5xhad25Cg0BTVwe2qXKYr0iBNBXKUiIEajvDdnW1h83bSVnwC7h3GFcZ5n8dJV8OjQfCk=
+	 Content-Type; b=R/hWifxisjWh8V3/7Bmdg7P0PMifQk33V+7DosSHibIDYOMFw8Fp+UjC4sHYev5aTo6eRmQXQywU+fDHrMbJW7SAbXmevH8/XUQiMK52dvfiM4u1TOEKtFWYaE7qSAGN5aAoONYFAp+Aj1FlKpUrsPV+K0FnSwN5f/fEDrc7iRs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 0D6FB1D35B0;
-	Tue, 17 Jun 2025 22:51:15 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id E241E20026;
+Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 418F1BE35C;
+	Tue, 17 Jun 2025 22:51:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 2ABA820010;
 	Tue, 17 Jun 2025 22:51:11 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uRf9C-00000002L7q-3YE6;
+	id 1uRf9C-00000002L5Q-00GT;
 	Tue, 17 Jun 2025 18:51:18 -0400
-Message-ID: <20250617225118.701549034@goodmis.org>
+Message-ID: <20250617225117.857138090@goodmis.org>
 User-Agent: quilt/0.68
-Date: Tue, 17 Jun 2025 18:50:19 -0400
+Date: Tue, 17 Jun 2025 18:50:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -46,7 +46,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Jens Remus <jremus@linux.ibm.com>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v6 10/12] unwind_user/sframe: Show file name in debug output
+Subject: [PATCH v6 05/12] unwind_user/sframe: Detect .sframe sections in executables
 References: <20250617225009.233007152@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,205 +55,147 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Queue-Id: E241E20026
-X-Stat-Signature: k4y3g7y9beza9yu3kn7g1rjpn1rwoa16
-X-Rspamd-Server: rspamout07
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 2ABA820010
+X-Stat-Signature: ktbu8gxos6gsdxyc1mg5yj7ifbb75fk8
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/yTP2AI7BIPMOkpjB8iVdpaCBUNHtqKRE=
-X-HE-Tag: 1750200671-419350
-X-HE-Meta: U2FsdGVkX1++lvpNJjpML/jAnkQJMIJ5BA5d8vzqZeOxdKDapeFb5iOLZN70ZMeS3xOQaFlEtoG7iinF2SqA1XbKJGJF1DHJ//7aQl8NGIZFbUeqYbv3g6JaR9VhRvqBncD4KksrvnUV7gnf135F3YWGN5fL1csE8854LvrIJRI+L2tc7+0T5H5V+Y/D2vC+Hhf8qIXSOTTgRnH0wkqjtVcOf20IYSpFtIwnjoMTS+q8dcfRGxQPamfoKEV+NxA4Bm4cVuVAAOXv7HyzKv9N5izZAaUUs7XXPmLvEDzqC3ixq1fuQq/3xvCLmyV9JVVIDxzgp+hmhmrHM2fIqLbsxtr8sk5b3lwoYGaEaxGeUOqi7bV9FgiZYDYEfHX6JG60pmr83N/n7VnaXWxdFOoe+LCl9gig6TQGDu/zw1gxBp4=
+X-Session-ID: U2FsdGVkX18FGArJhoVyKe6RDYevAgj6d/gAL0qynOY=
+X-HE-Tag: 1750200671-922853
+X-HE-Meta: U2FsdGVkX1/X080nOaR1PxwCcFKgfjzjCzc5fl3DBa93GszobtHhJQRm8X3Q/IXlps53Ayf1lNbcrc+yR4/u0OW+AnLQonx847AqAz4EflmmMlSRPg0nE5Ov+EXg0VvAMxkCNtJPrCuvRuGcZAFqHXc1bfWGpfYON9ovadUG6GaYCZwCiwDpe41n+nSqR2rd8ZWU44QgIw/umuPEWcWua0DRcZTVCdFLODEFp97LO7tt02kKkC1y1xt6REv9vy10aFfCFb46q57w8qRysUMdTOv22ByWKd7YNYpPyuNr34K3OrOqpJ61dPyJe2l5JpUtOpPQTrBJJQP9ewtCyDn8E0r6WWrGjO02jKvP9Wh8ZAD26BwvZtFr3OIyDkCGOvK160+jYhDAng4dja1dluhpEyVjC1EbUbCRKWzUAe6Pzb0=
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-When debugging sframe issues, the error messages aren't all that helpful
-without knowing what file a corresponding .sframe section belongs to.
-Prefix debug output strings with the file name.
+When loading an ELF executable, automatically detect an .sframe section
+and associate it with the mm_struct.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/linux/sframe.h       |  4 +++-
- kernel/unwind/sframe.c       | 23 ++++++++++--------
- kernel/unwind/sframe_debug.h | 45 +++++++++++++++++++++++++++++++-----
- 3 files changed, 56 insertions(+), 16 deletions(-)
+ fs/binfmt_elf.c          | 49 +++++++++++++++++++++++++++++++++++++---
+ include/uapi/linux/elf.h |  1 +
+ 2 files changed, 47 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sframe.h b/include/linux/sframe.h
-index 9a72209696f9..b79c5ec09229 100644
---- a/include/linux/sframe.h
-+++ b/include/linux/sframe.h
-@@ -10,7 +10,9 @@
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index a43363d593e5..e7128d026ec0 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -47,6 +47,7 @@
+ #include <linux/dax.h>
+ #include <linux/uaccess.h>
+ #include <linux/rseq.h>
++#include <linux/sframe.h>
+ #include <asm/param.h>
+ #include <asm/page.h>
  
- struct sframe_section {
- 	struct rcu_head	rcu;
--
-+#ifdef CONFIG_DYNAMIC_DEBUG
-+	const char	*filename;
-+#endif
- 	unsigned long	sframe_start;
- 	unsigned long	sframe_end;
- 	unsigned long	text_start;
-diff --git a/kernel/unwind/sframe.c b/kernel/unwind/sframe.c
-index f246ead6c2a0..66d3ba3c8389 100644
---- a/kernel/unwind/sframe.c
-+++ b/kernel/unwind/sframe.c
-@@ -311,14 +311,17 @@ int sframe_find(unsigned long ip, struct unwind_user_frame *frame)
- end:
- 	user_read_access_end();
+@@ -622,6 +623,21 @@ static inline int make_prot(u32 p_flags, struct arch_elf_state *arch_state,
+ 	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
+ }
  
--	if (ret == -EFAULT)
-+	if (ret == -EFAULT) {
-+		dbg_sec("removing bad .sframe section\n");
- 		WARN_ON_ONCE(sframe_remove_section(sec->sframe_start));
++static void elf_add_sframe(struct elf_phdr *text, struct elf_phdr *sframe,
++			   unsigned long base_addr)
++{
++	unsigned long sframe_start, sframe_end, text_start, text_end;
++
++	sframe_start = base_addr + sframe->p_vaddr;
++	sframe_end   = sframe_start + sframe->p_memsz;
++
++	text_start   = base_addr + text->p_vaddr;
++	text_end     = text_start + text->p_memsz;
++
++	/* Ignore return value, sframe section isn't critical */
++	sframe_add_section(sframe_start, sframe_end, text_start, text_end);
++}
++
+ /* This is much more generalized than the library routine read function,
+    so we keep this separate.  Technically the library read function
+    is only provided so that we can read a.out libraries that have
+@@ -632,7 +648,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
+ 		struct arch_elf_state *arch_state)
+ {
+-	struct elf_phdr *eppnt;
++	struct elf_phdr *eppnt, *sframe_phdr = NULL;
+ 	unsigned long load_addr = 0;
+ 	int load_addr_set = 0;
+ 	unsigned long error = ~0UL;
+@@ -658,7 +674,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 
+ 	eppnt = interp_elf_phdata;
+ 	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
+-		if (eppnt->p_type == PT_LOAD) {
++		switch (eppnt->p_type) {
++		case PT_LOAD: {
+ 			int elf_type = MAP_PRIVATE;
+ 			int elf_prot = make_prot(eppnt->p_flags, arch_state,
+ 						 true, true);
+@@ -697,6 +714,20 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
+ 				error = -ENOMEM;
+ 				goto out;
+ 			}
++			break;
++		}
++		case PT_GNU_SFRAME:
++			sframe_phdr = eppnt;
++			break;
++		}
 +	}
- 
- 	return ret;
- }
- 
- static void free_section(struct sframe_section *sec)
- {
-+	dbg_free(sec);
- 	kfree(sec);
- }
- 
-@@ -329,7 +332,7 @@ static int sframe_read_header(struct sframe_section *sec)
- 	unsigned int num_fdes;
- 
- 	if (copy_from_user(&shdr, (void __user *)sec->sframe_start, sizeof(shdr))) {
--		dbg("header usercopy failed\n");
-+		dbg_sec("header usercopy failed\n");
- 		return -EFAULT;
- 	}
- 
-@@ -337,18 +340,18 @@ static int sframe_read_header(struct sframe_section *sec)
- 	    shdr.preamble.version != SFRAME_VERSION_2 ||
- 	    !(shdr.preamble.flags & SFRAME_F_FDE_SORTED) ||
- 	    shdr.auxhdr_len) {
--		dbg("bad/unsupported sframe header\n");
-+		dbg_sec("bad/unsupported sframe header\n");
- 		return -EINVAL;
- 	}
- 
- 	if (!shdr.num_fdes || !shdr.num_fres) {
--		dbg("no fde/fre entries\n");
-+		dbg_sec("no fde/fre entries\n");
- 		return -EINVAL;
- 	}
- 
- 	header_end = sec->sframe_start + SFRAME_HEADER_SIZE(shdr);
- 	if (header_end >= sec->sframe_end) {
--		dbg("header doesn't fit in section\n");
-+		dbg_sec("header doesn't fit in section\n");
- 		return -EINVAL;
- 	}
- 
-@@ -360,7 +363,7 @@ static int sframe_read_header(struct sframe_section *sec)
- 	fres_end   = fres_start + shdr.fre_len;
- 
- 	if (fres_start < fdes_end || fres_end > sec->sframe_end) {
--		dbg("inconsistent fde/fre offsets\n");
-+		dbg_sec("inconsistent fde/fre offsets\n");
- 		return -EINVAL;
- 	}
- 
-@@ -416,6 +419,8 @@ int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
- 	sec->text_start		= text_start;
- 	sec->text_end		= text_end;
- 
-+	dbg_init(sec);
 +
- 	ret = sframe_read_header(sec);
- 	if (ret) {
- 		dbg_print_header(sec);
-@@ -424,8 +429,8 @@ int sframe_add_section(unsigned long sframe_start, unsigned long sframe_end,
- 
- 	ret = mtree_insert_range(sframe_mt, sec->text_start, sec->text_end, sec, GFP_KERNEL);
- 	if (ret) {
--		dbg("mtree_insert_range failed: text=%lx-%lx\n",
--		    sec->text_start, sec->text_end);
-+		dbg_sec("mtree_insert_range failed: text=%lx-%lx\n",
-+			sec->text_start, sec->text_end);
- 		goto err_free;
++	if (sframe_phdr) {
++		eppnt = interp_elf_phdata;
++		for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
++			if (eppnt->p_flags & PF_X) {
++				elf_add_sframe(eppnt, sframe_phdr, load_addr);
++			}
+ 		}
  	}
  
-@@ -447,7 +452,7 @@ static int __sframe_remove_section(struct mm_struct *mm,
- 				   struct sframe_section *sec)
- {
- 	if (!mtree_erase(&mm->sframe_mt, sec->text_start)) {
--		dbg("mtree_erase failed: text=%lx\n", sec->text_start);
-+		dbg_sec("mtree_erase failed: text=%lx\n", sec->text_start);
- 		return -EINVAL;
+@@ -821,7 +852,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	int first_pt_load = 1;
+ 	unsigned long error;
+ 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
+-	struct elf_phdr *elf_property_phdata = NULL;
++	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
+ 	unsigned long elf_brk;
+ 	bool brk_moved = false;
+ 	int retval, i;
+@@ -930,6 +961,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 				executable_stack = EXSTACK_DISABLE_X;
+ 			break;
+ 
++		case PT_GNU_SFRAME:
++			sframe_phdr = elf_ppnt;
++			break;
++
+ 		case PT_LOPROC ... PT_HIPROC:
+ 			retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
+ 						  bprm->file, false,
+@@ -1227,6 +1262,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			elf_brk = k;
  	}
  
-diff --git a/kernel/unwind/sframe_debug.h b/kernel/unwind/sframe_debug.h
-index 055c8c8fae24..7794bf0bd78c 100644
---- a/kernel/unwind/sframe_debug.h
-+++ b/kernel/unwind/sframe_debug.h
-@@ -10,26 +10,59 @@
- #define dbg(fmt, ...)							\
- 	pr_debug("%s (%d): " fmt, current->comm, current->pid, ##__VA_ARGS__)
- 
-+#define dbg_sec(fmt, ...)						\
-+	dbg("%s: " fmt, sec->filename, ##__VA_ARGS__)
++	if (sframe_phdr) {
++		for (i = 0, elf_ppnt = elf_phdata;
++		     i < elf_ex->e_phnum; i++, elf_ppnt++) {
++			if ((elf_ppnt->p_flags & PF_X))
++				elf_add_sframe(elf_ppnt, sframe_phdr, load_bias);
++		}
++	}
 +
- static __always_inline void dbg_print_header(struct sframe_section *sec)
- {
- 	unsigned long fdes_end;
+ 	e_entry = elf_ex->e_entry + load_bias;
+ 	phdr_addr += load_bias;
+ 	elf_brk += load_bias;
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index 819ded2d39de..92c16c94fca8 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -41,6 +41,7 @@ typedef __u16	Elf64_Versym;
+ #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
+ #define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
+ #define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
++#define PT_GNU_SFRAME	(PT_LOOS + 0x474e554)
  
- 	fdes_end = sec->fdes_start + (sec->num_fdes * sizeof(struct sframe_fde));
  
--	dbg("SEC: sframe:0x%lx-0x%lx text:0x%lx-0x%lx "
--	    "fdes:0x%lx-0x%lx fres:0x%lx-0x%lx "
--	    "ra_off:%d fp_off:%d\n",
--	    sec->sframe_start, sec->sframe_end, sec->text_start, sec->text_end,
--	    sec->fdes_start, fdes_end, sec->fres_start, sec->fres_end,
--	    sec->ra_off, sec->fp_off);
-+	dbg_sec("SEC: sframe:0x%lx-0x%lx text:0x%lx-0x%lx "
-+		"fdes:0x%lx-0x%lx fres:0x%lx-0x%lx "
-+		"ra_off:%d fp_off:%d\n",
-+		sec->sframe_start, sec->sframe_end, sec->text_start, sec->text_end,
-+		sec->fdes_start, fdes_end, sec->fres_start, sec->fres_end,
-+		sec->ra_off, sec->fp_off);
-+}
-+
-+static inline void dbg_init(struct sframe_section *sec)
-+{
-+	struct mm_struct *mm = current->mm;
-+	struct vm_area_struct *vma;
-+
-+	guard(mmap_read_lock)(mm);
-+	vma = vma_lookup(mm, sec->sframe_start);
-+	if (!vma)
-+		sec->filename = kstrdup("(vma gone???)", GFP_KERNEL);
-+	else if (vma->vm_file)
-+		sec->filename = kstrdup_quotable_file(vma->vm_file, GFP_KERNEL);
-+	else if (vma->vm_ops && vma->vm_ops->name)
-+		sec->filename = kstrdup(vma->vm_ops->name(vma), GFP_KERNEL);
-+	else if (arch_vma_name(vma))
-+		sec->filename = kstrdup(arch_vma_name(vma), GFP_KERNEL);
-+	else if (!vma->vm_mm)
-+		sec->filename = kstrdup("(vdso)", GFP_KERNEL);
-+	else
-+		sec->filename = kstrdup("(anonymous)", GFP_KERNEL);
-+}
-+
-+static inline void dbg_free(struct sframe_section *sec)
-+{
-+	kfree(sec->filename);
- }
- 
- #else /* !CONFIG_DYNAMIC_DEBUG */
- 
- #define dbg(args...)			no_printk(args)
-+#define dbg_sec(args...	)		no_printk(args)
- 
- static inline void dbg_print_header(struct sframe_section *sec) {}
- 
-+static inline void dbg_init(struct sframe_section *sec) {}
-+static inline void dbg_free(struct sframe_section *sec) {}
-+
- #endif /* !CONFIG_DYNAMIC_DEBUG */
- 
- #endif /* _SFRAME_DEBUG_H */
+ /* ARM MTE memory tag segment type */
 -- 
 2.47.2
 
