@@ -1,195 +1,183 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBAE2FA64A;
-	Tue, 17 Jun 2025 17:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441A3238D49;
+	Tue, 17 Jun 2025 17:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750181784; cv=none; b=ppSFmbKcepjf/neKEw7fOpvdlj6m9Ec0LK24sGIZXvpTenpPL42usukybQFbqbzn5twS/APOmhNloVYn+ZrykAwIeH+sCvGYuwzswZlI78TSS7nO59NQ1IP5k0TFNaaGoMaseAWcpxu2A1uYUAsM2sHUnyZx5DdY1jSoUFIkfts=
+	t=1750181867; cv=none; b=TJeaGNRZPJkBItw0uU0xPdOVKLs8B3h8SG+HC+1+ZZXGAS42s7XQIUJYOSY72vdQ5S2LunrtYGYCFgU1L1VY1Rke0uHhAjTFTJrv6m2O5ET7SBztWQ9i8UFedmwcs87/FWHOuWb9OkjtI0z6n2/qCEDsZtvEd9fwb2Ilsk1HP1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750181784; c=relaxed/simple;
-	bh=aDtTwD/1evND5VhE6Q8dawqpAXAcy4IC/CQHUul3Khs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=J8QqiLJZuBgC4WV7Yie4sT9NMF3j7mKAxZwSeDScClmSMrnETr3JZtSGwRFI/0Gnxyi+QU8vnpLGHFEyKgiZTetwArG41JNSyGwk/o+zOosdoBd1ANIcVoQWXasTtbd/eTIDFJWtN7kknK2cIpolpAHBiY4RA0fkOQErRjs6Zeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 6DB8AB9A89;
-	Tue, 17 Jun 2025 17:36:13 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id EE94120013;
-	Tue, 17 Jun 2025 17:36:08 +0000 (UTC)
-Date: Tue, 17 Jun 2025 13:36:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, "linux-trace-users@vger.kernel.org"
- <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Namhyung Kim <namhyung@kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Viro
- <viro@ZenIV.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara
- <jack@suse.cz>, Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic
- Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers
- <irogers@google.com>
-Subject: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
-Message-ID: <20250617133614.24e2ba7f@gandalf.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750181867; c=relaxed/simple;
+	bh=tPM1ERGTQDQ05aYoKr5NmEZeCXbd0I3kyp9i8yKwlzY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mi9gRLXWetiWN4O1ghWwZ3wI+w2AlKnHOBnJTY0WDJqGCISLewSPo6TqH6W9lOENxrs3U5nU5vwuzXAb/LbX+HncGtuijCEKV+NQDqepPJmh0qvpdfzVF+GBFxW4qAJCsZzwtlI190HsbIGKolZhN6CIXxx9R/oAH3fDJvgETik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVwN0gYT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVwN0gYT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8AEC4CEE3;
+	Tue, 17 Jun 2025 17:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750181867;
+	bh=tPM1ERGTQDQ05aYoKr5NmEZeCXbd0I3kyp9i8yKwlzY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WVwN0gYToBvYkX/rmMNJD8xgfFvc/Q30jaum38YjCkSNZRKxetIDFgIqKTmBOG+C1
+	 jskFy8ZebIdxD2NV2xsOat17ZcOgDG9UIoih9NvtcDUfG191p2Z/7RZSU4Hmdq24zi
+	 VVHCXMshVxgrEbntAZEobvgMJsTpv0rL2IDqLUxj5qh5wz9L4a/oN8WtQ1sRAc4QfP
+	 coc3BjIR8OKZ7SCc2hV6xGwu5tYjbOhxom7SfNMezYKPiv0nJMW5LSzXZera4ERl5R
+	 CKhaZ3+iZM4YRnge4MfV8gU3RHA580xhOz6/twIkbzLRJ3g01KDy0NymvJuZ62RHxB
+	 ic+SbtgXfWy5A==
+From: Song Liu <song@kernel.org>
+To: live-patching@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: jpoimboe@kernel.org,
+	jikos@kernel.org,
+	mbenes@suse.cz,
+	pmladek@suse.com,
+	joe.lawrence@redhat.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	dylanbhatch@google.com,
+	fj6611ie@aa.jp.fujitsu.com,
+	mark.rutland@arm.com,
+	kernel-team@meta.com,
+	Song Liu <song@kernel.org>,
+	Suraj Jitindar Singh <surajjs@amazon.com>,
+	Torsten Duwe <duwe@suse.de>,
+	Breno Leitao <leitao@debian.org>,
+	Andrea della Porta <andrea.porta@suse.com>
+Subject: [PATCH v4] arm64: Implement HAVE_LIVEPATCH
+Date: Tue, 17 Jun 2025 10:37:34 -0700
+Message-ID: <20250617173734.651611-1-song@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: nnxyxe7tyknqmm8jrdxbstextmrrj81j
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: EE94120013
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18OxZ+CG0kwkfwg95MiZKD5Hk6FVZuwQYQ=
-X-HE-Tag: 1750181768-318576
-X-HE-Meta: U2FsdGVkX19CCSom9anBKbrOJocLZlNYFJzMVAFoWisTTGlYDYXj1G2FTF6KvQmRDgETUp4yv8OOJYmTK8+ctqMi0ij2QqMNtMGdaC0ENcd9R5JoEBpOZN5SfSnOx6dkQz1Csy2X3qbB5F8bI6fU4P8823F9uMPyFmtkHbRC9Wr2/R1blrNU798UgYHt+rwHsZZ6XnYzMGrbUHP8iBfLKTWmGt+SKywm+tjmUDDS6BIF6ZOE8oPbklDNHE31SOJ4FhjOpsW+jMeHcBC6VX4X4jhQ+BbCodrRwGz0irum4/msSLvUcRKgrntPMnj7fgnIM1j6sgJcaHdqgyOTtmMWjjdhLe57nFOy3GR4JJ+Zi/DKeHaXH0d4C/mpsMwgXeAOAYkAR2JtH+3cDf4JLhjr9w==
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+This is largely based on [1] by Suraj Jitindar Singh.
 
-In January 2015, tracefs was created to allow access to the tracing
-infrastructure without needing to compile in debugfs. When tracefs is
-configured, the directory /sys/kernel/tracing will exist and tooling is
-expected to use that path to access the tracing infrastructure.
+Test coverage:
 
-To allow backward compatibility, when debugfs is mounted, it would
-automount tracefs in its "tracing" directory so that tooling that had hard
-coded /sys/kernel/debug/tracing would still work.
+- Passed manual tests with samples/livepatch.
+- Passed all but test-kprobe.sh in selftests/livepatch.
+  test-kprobe.sh is expected to fail, because arm64 doesn't have
+  KPROBES_ON_FTRACE.
+- Passed tests with kpatch-build [2]. (This version includes commits that
+  are not merged to upstream kpatch yet).
 
-It has been over 10 years since the new interface was introduced, and all
-tooling should now be using it. Start the process of deprecating the old
-path so that it doesn't need to be maintained anymore.
+[1] https://lore.kernel.org/all/20210604235930.603-1-surajjs@amazon.com/
+[2] https://github.com/liu-song-6/kpatch/tree/fb-6.13
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Suraj Jitindar Singh <surajjs@amazon.com>
+Cc: Torsten Duwe <duwe@suse.de>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
+Tested-by: Breno Leitao <leitao@debian.org>
+Tested-by: Andrea della Porta <andrea.porta@suse.com>
+Signed-off-by: Song Liu <song@kernel.org>
+
 ---
- .../ABI/obsolete/automount-tracefs-debugfs    | 20 +++++++++++++++++++
- kernel/trace/Kconfig                          | 13 ++++++++++++
- kernel/trace/trace.c                          | 13 ++++++++----
- 3 files changed, 42 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/ABI/obsolete/automount-tracefs-debugfs
 
-diff --git a/Documentation/ABI/obsolete/automount-tracefs-debugfs b/Documentation/ABI/obsolete/automount-tracefs-debugfs
-new file mode 100644
-index 000000000000..8d03cf9e579f
---- /dev/null
-+++ b/Documentation/ABI/obsolete/automount-tracefs-debugfs
-@@ -0,0 +1,20 @@
-+What:		/sys/kernel/debug/tracing
-+Date:		May 2008
-+KernelVersion:	2.6.27
-+Contact:	linux-trace-kernel@vger.kernel.org
-+Description:
+Note: This patch depends on [3] and [4].
+
+[3] https://lore.kernel.org/linux-arm-kernel/20250521111000.2237470-2-mark.rutland@arm.com/
+[4] https://lore.kernel.org/linux-arm-kernel/20250603223417.3700218-1-dylanbhatch@google.com/
+
+Changes v3 => v4:
+1. Only keep 2/2 from v3, as 1/2 is now included in [3].
+2. Change TIF_PATCH_PENDING from 7 to 13.
+
+v3: https://lore.kernel.org/linux-arm-kernel/20250320171559.3423224-1-song@kernel.org/
+
+Changes v2 => v3:
+1. Remove a redundant check for -ENOENT. (Josh Poimboeuf)
+2. Add Tested-by and Acked-by on v1. (I forgot to add them in v2.)
+
+v2: https://lore.kernel.org/live-patching/20250319213707.1784775-1-song@kernel.org/
+
+Changes v1 => v2:
+
+1. Rework arch_stack_walk_reliable().
+
+v1: https://lore.kernel.org/live-patching/20250308012742.3208215-1-song@kernel.org/
+---
+ arch/arm64/Kconfig                   | 3 +++
+ arch/arm64/include/asm/thread_info.h | 5 ++++-
+ arch/arm64/kernel/entry-common.c     | 4 ++++
+ 3 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index b7462424aa59..110218542920 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -280,6 +280,7 @@ config ARM64
+ 	select USER_STACKTRACE_SUPPORT
+ 	select VDSO_GETRANDOM
+ 	select HAVE_RELIABLE_STACKTRACE
++	select HAVE_LIVEPATCH
+ 	help
+ 	  ARM 64-bit (AArch64) Linux support.
+ 
+@@ -2499,3 +2500,5 @@ endmenu # "CPU Power Management"
+ source "drivers/acpi/Kconfig"
+ 
+ source "arch/arm64/kvm/Kconfig"
 +
-+	The ftrace was first added to the kernel, its interface was placed
-+	into the debugfs file system under the "tracing" directory. Access
-+	to the files were in /sys/kernel/debug/tracing. As systems wanted
-+	access to the tracing interface without having to enable debugfs, a
-+	new interface was created called "tracefs". This was a stand alone
-+	file system and was usually mounted in /sys/kernel/tracing.
++source "kernel/livepatch/Kconfig"
+diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+index 1269c2487574..f241b8601ebd 100644
+--- a/arch/arm64/include/asm/thread_info.h
++++ b/arch/arm64/include/asm/thread_info.h
+@@ -70,6 +70,7 @@ void arch_setup_new_exec(void);
+ #define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
+ #define TIF_SECCOMP		11	/* syscall secure computing */
+ #define TIF_SYSCALL_EMU		12	/* syscall emulation active */
++#define TIF_PATCH_PENDING	13	/* pending live patching update */
+ #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
+ #define TIF_FREEZE		19
+ #define TIF_RESTORE_SIGMASK	20
+@@ -96,6 +97,7 @@ void arch_setup_new_exec(void);
+ #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
+ #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+ #define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
++#define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+ #define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
+ #define _TIF_32BIT		(1 << TIF_32BIT)
+@@ -107,7 +109,8 @@ void arch_setup_new_exec(void);
+ #define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY | \
+ 				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
+ 				 _TIF_UPROBE | _TIF_MTE_ASYNC_FAULT | \
+-				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING)
++				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING | \
++				 _TIF_PATCH_PENDING)
+ 
+ #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
+ 				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
+diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+index 7c1970b341b8..a56878d7c733 100644
+--- a/arch/arm64/kernel/entry-common.c
++++ b/arch/arm64/kernel/entry-common.c
+@@ -8,6 +8,7 @@
+ #include <linux/context_tracking.h>
+ #include <linux/kasan.h>
+ #include <linux/linkage.h>
++#include <linux/livepatch.h>
+ #include <linux/lockdep.h>
+ #include <linux/ptrace.h>
+ #include <linux/resume_user_mode.h>
+@@ -144,6 +145,9 @@ static void do_notify_resume(struct pt_regs *regs, unsigned long thread_flags)
+ 				       (void __user *)NULL, current);
+ 		}
+ 
++		if (thread_flags & _TIF_PATCH_PENDING)
++			klp_update_patch_state(current);
 +
-+	To allow older tooling to continue to operate, when mounting
-+	debugfs, the tracefs file system would automatically get mounted in
-+	the "tracing" directory of debugfs. The tracefs interface was added
-+	in January 2015 in the v4.1 kernel.
-+
-+	All tooling should now be using tracefs directly and the "tracing"
-+	directory in debugfs should be removed by January 2027.
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index a3f35c7d83b6..93e8e7fc11c0 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -199,6 +199,19 @@ menuconfig FTRACE
+ 		if (thread_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
+ 			do_signal(regs);
  
- if FTRACE
- 
-+config TRACEFS_AUTOMOUNT_DEPRECATED
-+	bool "Automount tracefs on debugfs [DEPRECATED]"
-+	depends on TRACING
-+	default y
-+	help
-+	  The tracing interface was moved from /sys/kernel/debug/tracing
-+	  to /sys/kernel/tracing in 2015, but the tracing file system
-+	  was still automounted in /sys/kernel/debug for backward
-+	  compatibility with tooling.
-+
-+	  The new interface has been around for more than 10 years and
-+	  the old debug mount will soon be removed.
-+
- config BOOTTIME_TRACING
- 	bool "Boot-time Tracing support"
- 	depends on TRACING
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 95ae7c4e5835..71bd1f001e79 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6303,7 +6303,7 @@ static bool tracer_options_updated;
- static void add_tracer_options(struct trace_array *tr, struct tracer *t)
- {
- 	/* Only enable if the directory has been created already. */
--	if (!tr->dir)
-+	if (!tr->dir && !(tr->flags & TRACE_ARRAY_FL_GLOBAL))
- 		return;
- 
- 	/* Only create trace option files after update_tracer_options finish */
-@@ -8984,13 +8984,13 @@ static inline __init int register_snapshot_cmd(void) { return 0; }
- 
- static struct dentry *tracing_get_dentry(struct trace_array *tr)
- {
--	if (WARN_ON(!tr->dir))
--		return ERR_PTR(-ENODEV);
--
- 	/* Top directory uses NULL as the parent */
- 	if (tr->flags & TRACE_ARRAY_FL_GLOBAL)
- 		return NULL;
- 
-+	if (WARN_ON(!tr->dir))
-+		return ERR_PTR(-ENODEV);
-+
- 	/* All sub buffers have a descriptor */
- 	return tr->dir;
- }
-@@ -10256,6 +10256,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 	ftrace_init_tracefs(tr, d_tracer);
- }
- 
-+#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
- static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- {
- 	struct vfsmount *mnt;
-@@ -10287,6 +10288,7 @@ static struct vfsmount *trace_automount(struct dentry *mntpt, void *ingore)
- 	put_fs_context(fc);
- 	return mnt;
- }
-+#endif
- 
- /**
-  * tracing_init_dentry - initialize top level trace array
-@@ -10311,6 +10313,8 @@ int tracing_init_dentry(void)
- 	if (WARN_ON(!tracefs_initialized()))
- 		return -ENODEV;
- 
-+#ifdef CONFIG_TRACEFS_AUTOMOUNT_DEPRECATED
-+	pr_warning("NOTICE: Automounting of tracing to debugfs is deprecated and will be removed in 2027\n");
- 	/*
- 	 * As there may still be users that expect the tracing
- 	 * files to exist in debugfs/tracing, we must automount
-@@ -10319,6 +10323,7 @@ int tracing_init_dentry(void)
- 	 */
- 	tr->dir = debugfs_create_automount("tracing", NULL,
- 					   trace_automount, NULL);
-+#endif
- 
- 	return 0;
- }
 -- 
-2.47.2
+2.47.1
 
