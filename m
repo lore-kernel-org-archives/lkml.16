@@ -1,611 +1,220 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2068.outbound.protection.outlook.com [40.107.92.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4D7293C66;
-	Tue, 17 Jun 2025 22:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198354; cv=none; b=soFp6Eeo7o6MKY+W8rhgsKn/sX3YPMfOwZZ8BEYxOFVHMEbhaGkbu+JRRVU0bElwDrDGvXWxqcFHYazOCPfwIUnxF3vPw6Ky86REVzmk1Y5wgXF/vV8kenqgPX7r6XRjHeJRPb7Uh77jbpaFFFabf/xIptcMGZWP7/mtIsfiFk4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198354; c=relaxed/simple;
-	bh=vXQgqX4cwECQb/yyHP1NAKKZrhFAMq0I9NFlFdykUMM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Zpat+ygZI1FYIVZyBsoTKjGEGBXWaLJrfg+nXg3Do4mJzws5GFhvgbsA2aKV6pP9W3JxZB/bhDOjjHBuwFSFxFyDQBX5sTgjx/3qPuKKXlwCAllFU+3eFwoaxdqQMmZYthe7hq7DfG3h6gl9X4gazkCv2By4+QLLnNIJTuLuH0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pd+YHfYT; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F86E291C15;
+	Tue, 17 Jun 2025 22:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750198408; cv=fail; b=ZNgZVSXbmRUzgrPmiV0qL2KOq7kx/ev7OGnxC3O2hbSiWu3E9oa3plp9lq+j4C8+m748xxvgc4cK3hXddvoj9/vFDT8JyLJerj3S4RFlVwkUCJI/l74CHwl985VlFpfbJfU8064tZDVMMRJap9OzHcDXoqM4hhrZiPAGbOp+5xM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750198408; c=relaxed/simple;
+	bh=eV1gpmamIbg+Y0ytpclkpBjBK3t2K76M0mWZBXAW6U4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=C7GM4CRGpqxBfZuev+/hi+YhEsShHdeR0rzZyGBVsw1Plrrn4UKpEa1b61G7kUriS8CY/xDKNh7oMY1klI9yV05Cn9+0pHTJ5+aep7yXzEYwSChIYK3y94mhu/XUtm0LPD+NTrYePMbSBXXlOXu/hvTRJviIHxqlxaFyv4exzug=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=N+0LPoZS; arc=fail smtp.client-ip=40.107.92.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pd+YHfYT"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23508d30142so73778765ad.0;
-        Tue, 17 Jun 2025 15:12:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750198352; x=1750803152; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z8gXYJnEafjKFnqAPCdulGzG36GQKyIi/NCT10xK3xQ=;
-        b=Pd+YHfYTIaWItE6yK2Q3IZpeEOZ4JL6P56dMJe8CfuZQmyWPXl1cG8R1GTHFnGkmhq
-         vZ3p0mDXv6FmBPanz6gUWctD4XCSX/mnpyU4FNe5f22ZCv7DB7uB47syI+ET1BVTXPxN
-         Yq/ya0JodmSXwZaMSM6m76fXsg5vTp7qMNCOj2A8S2dB7WmAkDDytBkwOa91nK44prvk
-         BR1a15E63PA6PBbiHdUA/Qd8ppHUzv0JJ2Tllt54R0DylAkPgYnaGVG/E5FJB3eEHQyR
-         lMx1XU76uLQ/0QYR52Al2wXsbz4ZGQR8Mau7z3/riMoDCtDt6G/PSpS317h4gnmGrZpH
-         J5nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750198352; x=1750803152;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z8gXYJnEafjKFnqAPCdulGzG36GQKyIi/NCT10xK3xQ=;
-        b=sIf8mDjgpgsRqSrGJV5GEpUfzSCuwD58K7delgt4Q6YinutoAeGDOGyc2KrNfuvwGM
-         vPf5ETHfEyaN49ODI3+HOuWK5np6gyN1uQ1GSEKJdZgGYSJnR+Gn0ccXTUYP/Kv258lC
-         INnQRALh/gywK8lq2bZ0Qchw9Lm8oY2d3RnaArQ8lbqDuQtd1SzBDgcfrj6AjUHiMSIh
-         s2FY1AgbWRrJOS0YZWSt7aKWSC+TNmQilwnAbneKbzCOJ/rAlr1YxeJT+7vUSwS6VNV9
-         IU/pLMeHqM71oYSlMC6xR2bGQHZd8/71/BGx89JQL7asYE+V0LWfBjdbIFBTgAPNR7GL
-         mRsA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbbWaGXzQRa4cYxm6sDn6qaRds9kZ5Eb6pG7BYhv3izJTK1SwcZESO4xwUzkMS9Kx+lWRz0gVS5kiA@vger.kernel.org, AJvYcCWBVC5egr0qTgtB3/p1je7TwXgrRj3z1EWyqDSwVcsF05LkUsJkllx2lsNHKDXPfxlrh2PaqDAn2qMkXeFF@vger.kernel.org
-X-Gm-Message-State: AOJu0YxcPu5qBdHdWYd7KmvdL5SGIq3rE4M3JvRPHyHyYxqRyfw+6WJf
-	GWwsQ9wQf5R1ztbQs/7WeY9RjLcoWM+8X6/twPAhSUCsTbUej82qxJFzNkIRL+42
-X-Gm-Gg: ASbGncvwuABs9b+izRvrb+Tmege0LsZFUI6q+bRpj0zOMWBCneU9uug+GFsa+TPF0/z
-	UI71JBqEXCyZ7M9GMHSnbtxloIJn1gfi0SbmxCHt9Vh+Ukva8UXbXjsKFQEyaPHl+gzuITyccyU
-	T/mQBNoQddvu6mm5bDCPB4sHxyYv/UIJEVBXtCfeqjm+7s8Ux3zZdGQjUuI6LBYQxuNkbtVV1as
-	QZex3qASQxDHvX+MmKMJv6xQcXXrFxAX2qwrwEMx4n8KOUNWQAW4GzqmGyj5O7XuWeku7ZDooGM
-	kvyDCvpoMwMaXM7pVnby7mVaOwZlYxxMvnmntkVzRWdEt78wyKUpjmmR4AeSyw==
-X-Google-Smtp-Source: AGHT+IFtkrAplUv4ijy1Gku2qJd1mqtD2Rpwpn5OIvyZoDUjthCNETbGnfJNAy75zZy7lX3AAiNB2A==
-X-Received: by 2002:a17:902:ce88:b0:234:a779:47cd with SMTP id d9443c01a7336-2366affb2d9mr238867435ad.15.1750198351717;
-        Tue, 17 Jun 2025 15:12:31 -0700 (PDT)
-Received: from wash.local ([50.46.184.91])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de781c7sm85862635ad.128.2025.06.17.15.12.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 15:12:31 -0700 (PDT)
-From: Joseph Kogut <joseph.kogut@gmail.com>
-Date: Tue, 17 Jun 2025 15:12:01 -0700
-Subject: [PATCH v5 3/3] arm64: dts: rockchip: Add support for CM5 IO
- carrier
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="N+0LPoZS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W5JNyJyqvvSR87K+L/1/sAFXZo0Idc0X2LRIvLil2jgeYCNjaY5cVjkCQJASZX82mgATxj4uRPLmgAxYrmsRqKXLOE4hvJK2i4n4MoiZxg2R1IiUfPurqbQPg1GCxM94Uq5OUUnIMYw+wHS6IXEY2YUpnBTMH45O+qHoLH086YLznuOLhWlpjQa+QR6gmWYCUEdRbuYenm4sCSw8OGkDnfqkpgpB5LW3pKQ53R816+aRdWxyy2LFvgmzlsG82oDYZIaY6M1GncwbuOn12hSsJkiJQNALZBD29rDUFwAn+k9J3cBQUc0nmRxtxI4jFDrrwzSkh7nOOB2W7q03dJA1uQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t/mNw2/GshPZMcIYbVkDr6L5E/GMPCnN3io1EBFAPqE=;
+ b=CcQi8FqF9LXmdzcylQh3sIl62G0iZpDpI6p7v//Iqs0NHJnATFqllV9+IDBDDEz5uQMRdmydl9FCdZJzpnHk2XahoAmaLk65PQbiXYa/g3U9hHqDZ1PjaNB9e7QAlrlqjvF1WE1u2gFtZrBMJRAblruitUX2CU5j7yH0FV74vOB77S8JbSmyQ+QrgFlnrQkHPh9TgyA9wM0Izixt4LIfUa4sdcGMVmV7G4N+GRRO+hqSRaMaJn6LI1NTI21J1sAfJU0AUP2uMKmJ+GhYqaz1QzAUt3AWym0p5gYWtNWejbzaly6o8hBeG4gRSvCt5iiiHoJAFgG+D6Qp84ChgJzq2g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t/mNw2/GshPZMcIYbVkDr6L5E/GMPCnN3io1EBFAPqE=;
+ b=N+0LPoZSUeCfpK/E9ZNhKuTF51qAvgJckA4pRWUVXqNRDx3YTfTLN3qBlcb7YxV1lRMeoEga1Qa8f+rVniXsWHoJ4yn/mCFgrhBWYB7rgxiLdYRGFKCl4wr/JtFH83fuJdSy3M0xvNdtt0X5Pp6XiPgoqD83mT0rtWYvu6TxkzMvMTnwm5E0Lgo6tjxz2qjTcl18mWd0NTQRiV3DBrN0rvKZ52m0T2GJABlBLe5fLbR99Si2xMruzpq91HRvT5eXkwzMKLpa64/LQNvg5dgi+OYXR5VFFD7HQtwT5sfc38mDpGaqJymWFsYRm0lOta5xEtQAymhP4mqV3gEYPP7mZA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ LV9PR12MB9831.namprd12.prod.outlook.com (2603:10b6:408:2e7::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.28; Tue, 17 Jun 2025 22:13:24 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%6]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 22:13:24 +0000
+Message-ID: <d4b51d33-e46b-448d-b6d3-f0845b1d05f8@nvidia.com>
+Date: Tue, 17 Jun 2025 15:13:22 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dmaengine: idxd: Remove improper idxd_free
+To: Yi Sun <yi.sun@intel.com>, vinicius.gomes@intel.com,
+ dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dave.jiang@intel.com, gordon.jin@intel.com
+References: <20250617102712.727333-1-yi.sun@intel.com>
+ <20250617102712.727333-2-yi.sun@intel.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250617102712.727333-2-yi.sun@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH3PEPF00004099.namprd05.prod.outlook.com
+ (2603:10b6:518:1::45) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-rk3588s-cm5-io-dts-upstream-v5-3-8d96854a5bbd@gmail.com>
-References: <20250617-rk3588s-cm5-io-dts-upstream-v5-0-8d96854a5bbd@gmail.com>
-In-Reply-To: <20250617-rk3588s-cm5-io-dts-upstream-v5-0-8d96854a5bbd@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Jimmy Hon <honyuenkwun@gmail.com>
-Cc: Steve deRosier <derosier@cal-sierra.com>, devicetree@vger.kernel.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Joseph Kogut <joseph.kogut@gmail.com>
-X-Mailer: b4 0.14.2
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|LV9PR12MB9831:EE_
+X-MS-Office365-Filtering-Correlation-Id: 60e097ec-f6fd-47bb-dacc-08ddadec2d23
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?d0xXSktScXczZGxxcVBEcHhUamxCVWtIQXBoSjgrTC8vQ1dFQ3RBVWVrSTlT?=
+ =?utf-8?B?YWdqVGErMmJiZ3phSm96bTBGVUFJaUVkTjdFNlNyZEpPZEl2cUh6Uy90RjJL?=
+ =?utf-8?B?d0FsVWJYc29PczNISmlVZk9uRGJDcnE1ZTJSV0U4aDZ0MVA2WVRoOWRBVVdK?=
+ =?utf-8?B?eFdKWjhzRHY0UmoyUW8vZzFNSWN2QjA0Q2hic3hZbzBZWlVmVGVtdy9HcVZp?=
+ =?utf-8?B?TTlTQ3NRcVdvZHhCOGt4V3VMT2xvaVg0S3ZHcng5NkxYZ2FwcUxvbTFJSEtR?=
+ =?utf-8?B?ZzRnUEg5eWhYRW5HQU94Q0NhZWJzNHBVb3FYdmtWTTd3SkFMS1VWTU9qTmVR?=
+ =?utf-8?B?YzE0ZlZ1cXNWSGFGaVFrMzNQUzJpUWRjWmZVSlVkSWhDYU1lalVYaEJGaGxv?=
+ =?utf-8?B?Nld6TEFYalJFbDlwdVZ2V2E0U3NmNlg0Y3RuTWNzMVRDdzhla3VrU2U4Ujd2?=
+ =?utf-8?B?M3ZOODB1QjFOdzkxVk5yU3JrQTNiWTFpVGlYSkJmMjBYUkpSc0xoSis0VU8w?=
+ =?utf-8?B?dkdncnRFZmZoMHVqcHllaGFSanR1UzFGRmhKYU92czRXd1dOdUF3ZGMzMHdW?=
+ =?utf-8?B?OXcrYzhJRXg5cktleWNpakFmMGdTK1dEVnp0cmlRbHFsaG5kVlc0WFFhdEJo?=
+ =?utf-8?B?bXVTaXFCM1hXYjM5a0xxdEJSYmJ6VFdoRnZlbFNRTmVvMGhTUHlHOFV3WDNL?=
+ =?utf-8?B?WjZ2OGptaXVJM3pjOXJsOW9yRjhES3JpYW1QRnlLYjBnUUYxNDB3TEJoNWxy?=
+ =?utf-8?B?T1dSbGdFOVB3MGpnMmh5WjM2S0J2Q1pvYkp2Y1dKV1p6ZlJSVktaUU9MYWhE?=
+ =?utf-8?B?UDd6S0xzdk5jak9qaGRubzB0b0h1UzNwaHFTcWFHcHpBekJUckFtdUs4NUE2?=
+ =?utf-8?B?dEFtQ0xEM3BPZjllSXNHK3Q5aXlpUWZ6c1I2UjZxSGNRcTl2eitlNlViT2Nr?=
+ =?utf-8?B?TUNqQWtqR3FSUkdROVcvZEE1OWY5VGhCRXJTbmhQdmc0U2EvcFdjc1ZWZUkr?=
+ =?utf-8?B?UzZMZjhjdFZZN0F6L2psc0l6NmZDSyszUlJ0MDVhRzRlRDl6bFNrTzBhUS9z?=
+ =?utf-8?B?ekh5ZkpKY0I0WHo1blNOLzZLenVYVXVWcTdCNVdabXJYSDFKNE4wamNqZmU3?=
+ =?utf-8?B?ak5ETnZpWWlXRjhFY0FGU25mTk9nUFdGUE5yT3ZaVTY0QVlvN1Vtc2JUejRV?=
+ =?utf-8?B?VzMzMnkySmU3QW4yOXhhOEgyS0VrUnZZYzNiOUExeXlTbnBpVUNHVVlXcmxt?=
+ =?utf-8?B?ckp0c1dCeHhXVXZMWG4zZ3hnVE12a0FXSW02Yi9mRWREa2ltL3VjbUFrc1VD?=
+ =?utf-8?B?ZjF6YTVFY1E2TkpDUFhoNjdRelJvRSt4Q2FQRDBmUGJ0YkUwWVBVNDlTYWdl?=
+ =?utf-8?B?cHkwOTVKM21TSkk0Ums1U3l2cUgydHBBS2RCMnZIT3IrUzRCTy9USW9WYndi?=
+ =?utf-8?B?bzV1UkdncDNQTU54K1NBSHNIeExLZGRzODJuTldZZUVrWlZ2S3ZWR2h2Wm14?=
+ =?utf-8?B?Q2ZCejVmUWdIK29uU0Yvblh3OWxFUnhWT04rMDV4UkFTNW9yUVBLVnVabStD?=
+ =?utf-8?B?dHd1VXF0elBGd2xTSHB4cnZKVzBUY1VnWUswWWhtQUNmRVkyN2Q5Q3F6R3hZ?=
+ =?utf-8?B?bis1MS9GMUx6aWVoUjhQcUpZTkNWVVRZbUl0ZzY2Z1JyTWx5SWFDK1c3b0sv?=
+ =?utf-8?B?eTBjcW0vZmJpRU5yMnp5algxTmRjU1hKWWhvTS9VTGVhcVp0T2g3V0ZTdVlG?=
+ =?utf-8?B?QlVGM2p6bC9FZTFNUDFMWXVTNjJQUkZEdEpTc1JVVEpxQWFMREF3NlNxdkNu?=
+ =?utf-8?B?UEF3ZkZSbGlKMVQ2TU9qN2ZFUnZPZ2NMNkJVV1p5QmFmdG5Fcm94NmJGc1lz?=
+ =?utf-8?B?d1FZMHl6aktHTFFUdTFNK05xZ3NORlVOLzZRVnAzVk5xNTNvZnFrYkRxYk95?=
+ =?utf-8?Q?1iAouka121U=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?L1VMN1QybVNxbFpLdjFJcDg1MENPS2JqVGl1dVhtOVppdnZZSWkxUjA4dW4z?=
+ =?utf-8?B?M00yN09aQldoemI4TEpDbllPenlZRWxVR0laMms1UVUweGtTVXZGdDNieE1J?=
+ =?utf-8?B?U2k4eFNDUzB1SlB3bEN0ajFEQXg4dEtqdHJScUFRRjlnZ3g1Y2ZsTXQ2RWxr?=
+ =?utf-8?B?WklEakl5T0RKNzBLbzYzTHdUaVlyZG5nNHU4NWxiU1hsS0hmQ2RtUnlJVnNN?=
+ =?utf-8?B?RWx3VUJjcW8rQUFYbDhad3RoZzJrbGdBdVhpVkl6RStidjdjTWFsUTJSTHBq?=
+ =?utf-8?B?azlacllwVDdJZnpRMjRiaFQzTU5IZFVkN1AwUHNuRXJNK3RKV2ZrMFdNLzc0?=
+ =?utf-8?B?bEpMU2hCN1JuMmlkMG5JTFJwU2RsVStpUzJVM2xmR2lOaFBBTlJBQWpOUGZs?=
+ =?utf-8?B?aGloMzZaY2JyMDRWcGN0UjBjRUFiSjR0TTlkR2tDQWdBZzhJMi9LWkxYZTc2?=
+ =?utf-8?B?U3JFdERXVHp3TFQvQkhTWDdsajJoTXhOT1ErQlJ2Qkk5b2poNng1Y081SnZ1?=
+ =?utf-8?B?QTZQMDBCWTllQVlpcGZKMS8xdk1UV1pJdjlxeWtRaFNyZ2YvY0dtcHN2S1g5?=
+ =?utf-8?B?UFlzNFAxemhXSG85bmRzLytVY2Qwakw4bnFrRmZXeTNZMkdSZ0lrTVpTUThO?=
+ =?utf-8?B?TWVtU25nc3I1eW9TdS9UK0NXdncxWjlPTjcwL0ttSVZseXZxQ0NITG5WWlJ1?=
+ =?utf-8?B?aVRteWlmU3NwdVozZCtwZ3MyVnNVT0piS0dETEZIWUMzYmNZMVJHdjJUVlY1?=
+ =?utf-8?B?L05RbGlQVlJ4QWp0Lzc2SkZyT1VET1k4VUZiNzQvRzdNOGMxVWVDdkF6VlZv?=
+ =?utf-8?B?R25hVDRiSEp0UUxlTXhWemlPNjlta2tQbU96NGg2d3p4WCsvYmxXdjh4blZR?=
+ =?utf-8?B?WmtWYjhjWmFTVWR3REhZN3dOai9GbWVSdGxsSlBRSGsvYi9uK2ZJSm9tUGtT?=
+ =?utf-8?B?Uk1wY2FhY3Y3SEZWWVU4a0JkMU5zMmJTWHc1ZGQ4b3FPUFA1YlRjRzFTV0xN?=
+ =?utf-8?B?K01jZUFDemltVGNEMXNCUlJ6NXFtOTM1d0lLZE4wc3JUZVhXdVUyWWJBcHZ2?=
+ =?utf-8?B?bW95V01IbGVHL0NucWNjNHpTNStzOUQyMTZ1MVBaZ3hhSHErMjFLRTZlSzh1?=
+ =?utf-8?B?MVEvLzVYTU9XTS9PekpZbXk1Y1AyM05GeU5tUFNZaG0yU3crQjFWeHdLb0I2?=
+ =?utf-8?B?UVY5Sjh6am1sUkMrbXN0VUFEVWdxb3BGZ1NibHhjdUlsdXd3SGx6VlhJdFNw?=
+ =?utf-8?B?WVMyL2JIRENlMlBuSnBvWS9XWmpwQnZpNll2OXdzTDh6ZGY4dlhtTndqbG1P?=
+ =?utf-8?B?djdJcENrYU9ZbWhZcVc3dWxTV1Nmb0ZTMG1oUDE5QUUyZUNnTis3ZVB2MGU3?=
+ =?utf-8?B?bmZaVjREK2pqNVA2Q08rTEhoeVlYaDlPSXJqeDF4T2pLd3RiMWhUSUJ2SWl1?=
+ =?utf-8?B?RmVMSTFJZFR0ZU1kNDJ0dWZDb0FKcUtmejM1RTNxS2hVcDBsMkJ0ZFV1S1Rt?=
+ =?utf-8?B?V3pBT2RiVEhIZCtGcmZFRGxvQVBIMUphbm1POXdiRk5IaitwaEN4NzdJaUpu?=
+ =?utf-8?B?SHZIREFJbXMwdU11UzNFdXVTMFgxK2d4RUVpRjF6dnJTYXdMYUpLckJEVGZW?=
+ =?utf-8?B?NDNPY280QWM2cDdFM3pBc20wekpiMUhTTmdxN0ZNNU5sc1RMYUx2dzZ5dWk4?=
+ =?utf-8?B?RDNwN0ZDYkpFTE5tWEFPUVpwSFkvWWZ5cDNhN0FGWTRmdnFmbHc1NXQ0U1hs?=
+ =?utf-8?B?SlBVS25iTW9mcUpnS0Y5V3M4RUVMbWRNZFFKZTZsbm5xUS9HQlJCcWRzdUs5?=
+ =?utf-8?B?RkdZQnNad3IwMlJwRHlQaU1DUmFzenNqRDRlN3oyRHZrOTU4MU1uYzdZZjJ5?=
+ =?utf-8?B?ZytGRFN0WXNtSFZnaExVRDE0QWF6RGpoUDFpMU0xNUp1NWhUN2g1U2FUM0xO?=
+ =?utf-8?B?Z2NkZ3VWTWROWFZoVVBqNXBuTm00TDM4eGJZcTA5THpJeHhnS3hqNm5TUDJN?=
+ =?utf-8?B?RU4wcmttT2dpK0dVdURjeGRkZ2NMTWFHVXJybFlrRXMvR0pDd2l0UnZ5UVNl?=
+ =?utf-8?B?UHJyRnBtRlJlNHJzUTJKVXZCOGEzVFVLSE52a0h1SENKdDlzOVJCdHZVdWN2?=
+ =?utf-8?Q?u/3jEdDdHc0NSv5uQj0jdqFat?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 60e097ec-f6fd-47bb-dacc-08ddadec2d23
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 22:13:23.9878
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9Y8NnPAppTAgOKlkb5wiAD7J3HztKgpPCDVcG0lYaOihiW80CLbmq8JaIgLAcmHPUxCG0Ke0mHtwf1LkmAIGxw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV9PR12MB9831
 
-Specification:
-- 1x HDMI
-- 2x MIPI DSI
-- 2x MIPI CSI
-- 1x eDP
-- 1x M.2 E key
-- 1x USB 3.0 Host
-- 1x USB 3.0 OTG
-- 2x USB 2.0 Host
-- Headphone jack w/ microphone
-- Gigabit Ethernet w/ PoE
-- microSD slot
-- 40-pin expansion header
-- 12V DC
+Hi, Yi,
 
-Signed-off-by: Joseph Kogut <joseph.kogut@gmail.com>
----
- arch/arm64/boot/dts/rockchip/Makefile              |   1 +
- .../boot/dts/rockchip/rk3588s-radxa-cm5-io.dts     | 486 +++++++++++++++++++++
- 2 files changed, 487 insertions(+)
+On 6/17/25 03:27, Yi Sun wrote:
+> The call to idxd_free() introduces a duplicate put_device() leading to a
+> reference count underflow:
+> refcount_t: underflow; use-after-free.
+> WARNING: CPU: 15 PID: 4428 at lib/refcount.c:28 refcount_warn_saturate+0xbe/0x110
+> ...
+> Call Trace:
+>   <TASK>
+>    idxd_remove+0xe4/0x120 [idxd]
+>    pci_device_remove+0x3f/0xb0
+>    device_release_driver_internal+0x197/0x200
+>    driver_detach+0x48/0x90
+>    bus_remove_driver+0x74/0xf0
+>    pci_unregister_driver+0x2e/0xb0
+>    idxd_exit_module+0x34/0x7a0 [idxd]
+>    __do_sys_delete_module.constprop.0+0x183/0x280
+>    do_syscall_64+0x54/0xd70
+>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>
+> The idxd_unregister_devices() which is invoked at the very beginning of
+> idxd_remove(), already takes care of the necessary put_device() through the
+> following call path:
+> idxd_unregister_devices() -> device_unregister() -> put_device()
+>
+> In addition, when CONFIG_DEBUG_KOBJECT_RELEASE is enabled, put_device() may
+> trigger asynchronous cleanup via schedule_delayed_work(). If idxd_free() is
+> called immediately after, it can result in a use-after-free.
+>
+> Remove the improper idxd_free() to avoid both the refcount underflow and
+> potential memory corruption during module unload.
+>
+> Fixes: d5449ff1b04d ("dmaengine: idxd: Add missing idxd cleanup to fix memory leak in remove call")
+> Signed-off-by: Yi Sun <yi.sun@intel.com>
+>
+> diff --git a/drivers/dma/idxd/init.c b/drivers/dma/idxd/init.c
+> index 80355d03004d..40cc9c070081 100644
+> --- a/drivers/dma/idxd/init.c
+> +++ b/drivers/dma/idxd/init.c
+> @@ -1295,7 +1295,6 @@ static void idxd_remove(struct pci_dev *pdev)
+>   	idxd_cleanup(idxd);
+>   	pci_iounmap(pdev, idxd->reg_base);
+>   	put_device(idxd_confdev(idxd));
+> -	idxd_free(idxd);
 
-diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-index 3e8771ef69ba1c1428117cc2ae29b84e13523e21..bc09420cacde4557c42935066e9f70bca1190f82 100644
---- a/arch/arm64/boot/dts/rockchip/Makefile
-+++ b/arch/arm64/boot/dts/rockchip/Makefile
-@@ -177,6 +177,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-nanopi-r6c.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-odroid-m2.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-orangepi-5b.dtb
-+dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-radxa-cm5-io.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5a.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3588s-rock-5c.dtb
- 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5-io.dts b/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5-io.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..18e11a9c7f03770c9b39056ccc91ae03a9d191c5
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s-radxa-cm5-io.dts
-@@ -0,0 +1,486 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2025 Joseph Kogut <joseph.kogut@gmail.com>
-+ */
-+
-+/*
-+ * CM5 IO board data sheet
-+ * https://dl.radxa.com/cm5/v2200/radxa_cm5_io_v2200_schematic.pdf
-+ */
-+
-+/dts-v1/;
-+#include "rk3588s.dtsi"
-+#include "rk3588s-radxa-cm5.dtsi"
-+
-+/ {
-+	model = "Radxa Compute Module 5 (CM5) IO Board";
-+	compatible = "radxa,cm5-io", "radxa,cm5", "rockchip,rk3588s";
-+
-+	aliases {
-+		ethernet0 = &gmac1;
-+		mmc1 = &sdmmc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:1500000n8";
-+	};
-+
-+	hdmi-con {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi_con_in: endpoint {
-+				remote-endpoint = <&hdmi0_out_con>;
-+			};
-+		};
-+	};
-+
-+	vcc12v_dcin: regulator-12v0-vcc-dcin {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc12v_dcin";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
-+	vcc5v0_host: vcc5v0-host-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_host";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		enable-active-high;
-+		gpio = <&gpio1 RK_PA0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vcc5v0_host_en>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc5v0_sys: regulator-5v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc12v_dcin>;
-+	};
-+
-+	vbus5v0_typec: vbus5v0-typec {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbus5v0_typec";
-+		gpio = <&gpio0 RK_PD5 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vbus5v0_typec_en>;
-+		enable-active-high;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc3v3_pcie: regulator-3v3-vcc-pcie {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3_pcie2x1l0";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		enable-active-high;
-+		regulator-boot-on;
-+		regulator-always-on;
-+		gpios = <&gpio1 RK_PD3 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <50000>;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc_3v3_s0: pldo-reg4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_s0";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-ramp-delay = <12500>;
-+
-+		regulator-state-mem {
-+			regulator-off-in-suspend;
-+		};
-+	};
-+};
-+
-+&combphy0_ps {
-+	status = "okay";
-+};
-+
-+&combphy2_psu {
-+	status = "okay";
-+};
-+
-+&gmac1 {
-+	clock_in_out = "output";
-+	phy-handle = <&rgmii_phy1>;
-+	phy-mode = "rgmii-id";
-+	phy-supply = <&vcc_3v3_s0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac1_miim
-+		     &gmac1_tx_bus2
-+		     &gmac1_rx_bus2
-+		     &gmac1_rgmii_clk
-+		     &gmac1_rgmii_bus
-+		     &gmac1_clkinout>;
-+	status = "okay";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+};
-+
-+&hdmi0_in {
-+	hdmi0_in_vp0: endpoint {
-+		remote-endpoint = <&vp0_out_hdmi0>;
-+	};
-+};
-+
-+&hdmi0_out {
-+	hdmi0_out_con: endpoint {
-+		remote-endpoint = <&hdmi_con_in>;
-+	};
-+};
-+
-+&hdmi0_sound {
-+	status = "okay";
-+};
-+
-+&hdptxphy0 {
-+	status = "okay";
-+};
-+
-+&i2c6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c6m3_xfer>;
-+	status = "okay";
-+
-+	fusb302: usb-typec@22 {
-+		compatible = "fcs,fusb302";
-+		reg = <0x22>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PC4 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usbc0_int>;
-+		vbus-supply = <&vbus5v0_typec>;
-+
-+		connector {
-+			compatible = "usb-c-connector";
-+			data-role = "dual";
-+			label = "USB-C";
-+			power-role = "dual";
-+			try-power-role = "sink";
-+			source-pdos = <PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>;
-+			sink-pdos = <PDO_FIXED(5000, 1000, PDO_FIXED_USB_COMM)>;
-+			op-sink-microwatt = <1000000>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					usbc0_orientation_switch: endpoint {
-+						remote-endpoint = <&usbdp_phy0_orientation_switch>;
-+					};
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					usbc0_role_switch: endpoint {
-+						remote-endpoint = <&usb_host0_xhci_role_switch>;
-+					};
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					usbc0_dp_altmode_mux: endpoint {
-+						remote-endpoint = <&usbdp_phy0_dp_altmode_mux>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&i2s5_8ch {
-+	status = "okay";
-+};
-+
-+&pcie2x1l2 {
-+	reset-gpios = <&gpio3 RK_PD1 GPIO_ACTIVE_HIGH>;
-+	vpcie3v3-supply = <&vcc3v3_pcie>;
-+	status = "okay";
-+};
-+
-+&pinctrl {
-+	fusb302 {
-+		vbus5v0_typec_en: vbus5v0-typec-en {
-+			rockchip,pins = <0 RK_PD5 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		usbc0_int: usbc0-int {
-+			rockchip,pins = <0 RK_PC4 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
-+	usb {
-+		vcc5v0_host_en: vcc5v0-host-en {
-+			rockchip,pins = <1 RK_PA0 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&sdmmc {
-+	bus-width = <4>;
-+	cap-mmc-highspeed;
-+	cap-sd-highspeed;
-+	disable-wp;
-+	max-frequency = <200000000>;
-+	no-sdio;
-+	no-mmc;
-+	sd-uhs-sdr104;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdmmc_bus4 &sdmmc_clk &sdmmc_cmd &sdmmc_det>;
-+	vmmc-supply = <&vcc_3v3_s3>;
-+	vqmmc-supply = <&vccio_sd_s0>;
-+	status = "okay";
-+};
-+
-+&spi2 {
-+	assigned-clocks = <&cru CLK_SPI2>;
-+	assigned-clock-rates = <200000000>;
-+	num-cs = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi2m2_cs0 &spi2m2_pins>;
-+	status = "okay";
-+
-+	pmic@0 {
-+		compatible = "rockchip,rk806";
-+		reg = <0x0>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_pins>, <&rk806_dvs1_null>,
-+			    <&rk806_dvs2_null>, <&rk806_dvs3_null>;
-+		spi-max-frequency = <1000000>;
-+		system-power-controller;
-+
-+		vcc1-supply = <&vcc5v0_sys>;
-+		vcc2-supply = <&vcc5v0_sys>;
-+		vcc3-supply = <&vcc5v0_sys>;
-+		vcc4-supply = <&vcc5v0_sys>;
-+		vcc5-supply = <&vcc5v0_sys>;
-+		vcc6-supply = <&vcc5v0_sys>;
-+		vcc7-supply = <&vcc5v0_sys>;
-+		vcc8-supply = <&vcc5v0_sys>;
-+		vcc9-supply = <&vcc5v0_sys>;
-+		vcc10-supply = <&vcc5v0_sys>;
-+		vcc11-supply = <&vcc_2v0_pldo_s3>;
-+		vcc12-supply = <&vcc5v0_sys>;
-+		vcc13-supply = <&vdd2_ddr_s3>;
-+		vcc14-supply = <&vdd2_ddr_s3>;
-+		vcca-supply = <&vcc5v0_sys>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		rk806_dvs1_null: dvs1-null-pins {
-+			pins = "gpio_pwrctrl1";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs2_null: dvs2-null-pins {
-+			pins = "gpio_pwrctrl2";
-+			function = "pin_fun0";
-+		};
-+
-+		rk806_dvs3_null: dvs3-null-pins {
-+			pins = "gpio_pwrctrl3";
-+			function = "pin_fun0";
-+		};
-+
-+		regulators {
-+			vdd_gpu_s0: dcdc-reg1 {
-+				regulator-name = "vdd_gpu_s0";
-+				regulator-boot-on;
-+				regulator-enable-ramp-delay = <400>;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd_cpu_lit_s0: dcdc-reg2 {
-+				regulator-name = "vdd_cpu_lit_s0";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <550000>;
-+				regulator-max-microvolt = <950000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vccio_sd_s0: pldo-reg5 {
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vccio_sd_s0";
-+
-+				regulator-state-mem {
-+					regulator-off-in-suspend;
-+				};
-+			};
-+
-+			vdd2_ddr_s3: dcdc-reg6 {
-+				regulator-name = "vdd2_ddr_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+				};
-+			};
-+
-+			vcc_2v0_pldo_s3: dcdc-reg7 {
-+				regulator-name = "vdd_2v0_pldo_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <2000000>;
-+				regulator-max-microvolt = <2000000>;
-+				regulator-ramp-delay = <12500>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <2000000>;
-+				};
-+			};
-+
-+			vcc_3v3_s3: dcdc-reg8 {
-+				regulator-name = "vcc_3v3_s3";
-+				regulator-always-on;
-+				regulator-boot-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+
-+				regulator-state-mem {
-+					regulator-on-in-suspend;
-+					regulator-suspend-microvolt = <3300000>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&u2phy0 {
-+	status = "okay";
-+};
-+
-+&u2phy0_otg {
-+	status = "okay";
-+};
-+
-+&u2phy2 {
-+	status = "okay";
-+};
-+
-+&u2phy2_host {
-+	status = "okay";
-+};
-+
-+&u2phy3 {
-+	status = "okay";
-+};
-+
-+&u2phy3_host {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2m0_xfer>;
-+	status = "okay";
-+};
-+
-+&usb_host0_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host0_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host0_xhci {
-+	dr_mode = "otg";
-+	usb-role-switch;
-+	status = "okay";
-+
-+	port {
-+		usb_host0_xhci_role_switch: endpoint {
-+			remote-endpoint = <&usbc0_role_switch>;
-+		};
-+	};
-+};
-+
-+&usb_host1_ehci {
-+	status = "okay";
-+};
-+
-+&usb_host1_ohci {
-+	status = "okay";
-+};
-+
-+&usb_host2_xhci {
-+	status = "okay";
-+};
-+
-+&usbdp_phy0 {
-+	mode-switch;
-+	orientation-switch;
-+	sbu1-dc-gpios = <&gpio3 RK_PC4 GPIO_ACTIVE_HIGH>;
-+	sbu2-dc-gpios = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		usbdp_phy0_orientation_switch: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&usbc0_orientation_switch>;
-+		};
-+
-+		usbdp_phy0_dp_altmode_mux: endpoint@1 {
-+			reg = <1>;
-+			remote-endpoint = <&usbc0_dp_altmode_mux>;
-+		};
-+	};
-+};
-+
-+&vop {
-+	status = "okay";
-+};
-+
-+&vop_mmu {
-+	status = "okay";
-+};
-+
-+&vp0 {
-+	vp0_out_hdmi0: endpoint@ROCKCHIP_VOP2_EP_HDMI0 {
-+		reg = <ROCKCHIP_VOP2_EP_HDMI0>;
-+		remote-endpoint = <&hdmi0_in_vp0>;
-+	};
-+};
+Simply removing idxd_free() causes two issues:
 
--- 
-2.50.0
+1. This hits memory leak issues because allocated idxd, ida, map are not 
+freed.
+
+2. There is still an underflow issue for dev refcnt in 
+idxd_pci_probe_alloc() when idxd_register_devices() fails. Here 
+get_device() is not called but put_device() is called.
+
+A right fix is to remove the put_device() in idxd_free(). This will fix 
+all the above issues.
+
+Thanks.
+
+-Fenghua
 
