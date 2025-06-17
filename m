@@ -1,88 +1,117 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638F9D2FB;
-	Tue, 17 Jun 2025 08:14:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD4F1DD9AC
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148048; cv=none; b=arKWYsv2Hug6p9jpBdtTgsXlNoIYBhOaxX7x34dN+5DagXkPKq9YwvNo5muQUYSuVAEatlAQKhCg6pkLk/jlAFYLxfJv7in3jw1mcU5IzZjzu5tdI0abebaHLjgu342Afdh/9GMwTt5LIn4Fc6+d//FP2MGuKNdvGqcs3eMejkM=
+	t=1750148109; cv=none; b=DlaESgantcTfzN6haEh1gkI2EPj2YsDsQda59KCmBNGNLzjRoaflzFWKdaCfGToMyrWN8NkOCkuKmOUYA95eTU6doiyHJm2/0NQE9NNW4qNf656qhPZR6FKE2+ZNnWLVqKTu3I9Iny4Zj3adqe37eo5B8tAqohjSgvnoueN71ws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148048; c=relaxed/simple;
-	bh=k/E4tuvDIfwhOgujXNxrjLQos1RXOfrBVSIIOpcuDMA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YIu0lc+2BN+GjbWaxdCC9BmlmP1/6QqcV1LM2aUf7h8i9K6tScFRhfQNakKdt3FeSXjsSNCt5eGQ8IVZ8F7kw0ttZDfwRxIYC8o/Cd/v7MY/uJN1LmH3YTvY395inGQ6x1DwIJAoDJc3TSCn20PLzY2uYwINmnvnSdeOxSeVLdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WLmC+v3t; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750148109; c=relaxed/simple;
+	bh=KwSIjv44MRzDX7fYjpH8GsU9Gf+pOgaUjlvtr+C24BQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I9ISDTItSO2HscBgvkabGRd+n6qGMTA7HwwGhrX7FWrE6hB/B+F6oX67CtVGxunWKs+21eKcq7/kafBOj7aDIizJlqkIGlzKQkHY1pLwyPwrL+syaDDqpqYcaFYcwpHxZcFjkQAD/sxyoKpRGgU9x+lNv3rvhjSxDhLlFu1TzYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UaroarKD; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLmC+v3t"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-234eaea2e4eso5047995ad.0;
-        Tue, 17 Jun 2025 01:14:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750148046; x=1750752846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ar0/P5Kw1m8fmFtjiCxao5il/3/x8AeYn4OHNHEjEZ8=;
-        b=WLmC+v3t30iSBC12BS1tgkStYDfIWCOhgEvBRzTtNNTuQhvU78A6Fo3rhhFql7im/s
-         TOiON0eJbahB0YDv0gvEHde3zUBpTDDVtaK0I8wpY0lvQn5/vWxls+C5vZGEkMZQLUCh
-         axO3S/5wfyokoA/mjpSrhikqOHwY6xXHRYHQWmlHEZWOmQdCn1OMqHoA5NzQuDcqPOsI
-         +pycA2dHphLm780/jtyWUZ6XfDPO2DwNpBUieDx8de6YfqV44Co9OkOmA/kOTdFblR3Y
-         RvD488EvmheCF1rPmCSb4jK6SvVVc7EKg1C5MNEvdMUxqSFFtl1KxRIzlsLL1Y08pSr7
-         kMyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750148046; x=1750752846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ar0/P5Kw1m8fmFtjiCxao5il/3/x8AeYn4OHNHEjEZ8=;
-        b=bUKLO86T/b64TLiGNXHsBJKfi+WcF+qk5PMsScHQDWr3qkGVVhPnncr49VMUDvDZ96
-         bZiXOjgRRS4dD67aqvgBglSOoL+wxBNMdhvQELJybf/Suwixx4Y+zbyCLyyLteQEk+5U
-         2faYG1yGhiwXXoF6tk3y7rLx69M+Gk7z2OFF774EBJuTlrTIaW+Xau+d0KfMOmsZCHN0
-         Idm7gzRqN/xkfx1QlEq1rNSjzlfoRNvkLhWGMrP+p4pV5GH0VPr1YSs4CgawGgedULFo
-         uVQP/lpfE/2E587ntR1ynGX8oSP8sfOuH9tY4M3yPVRH7BLfE3jBvkLwCq/fc03vGOO7
-         b9Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmn+XMdxwiL7YpD6FnorUbvCufGKdKyJlNruDLW+IMmIcAssttJ60csRNx0CcdPeGD4BPcnrQ+C5sG/1UZvDs=@vger.kernel.org, AJvYcCVFNjz92a5BlMX5rPmylHTcQrHtIowz3dS6zqPh2V3hmf03TnLrY7xKTQfS7Dem9R20BMuHsF9bsqZVO8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXr/QHcdNwAQlIONS0T3SVJ5/vm2ELh0KkmDmfp/hdspiUFwDY
-	baP7D6Tiun3Ns/sQlyq0W1fn32YrOMwlCYWoVFRrNv3mbnrjpJgAr/bbFiIG7eA13drMX0526SX
-	O3F7jDrraxWH/T+IdspdoMcnMOnlweS8=
-X-Gm-Gg: ASbGncuW35tYw8ew3+kHXTCipTJMGLa40+yBMBKbLp3L9wbbAqro2H4ZTktx4Bp9R+n
-	19FA1woFKmE6gfcCvpHaDah4NNfQ3kZ5/PoRZq3Kia7/yVa0LVbsIkpvo2QcdNe2ssDE6nTkkhm
-	S0PFmRAj1AMwkS9cICIu42XJEFUeiF3Eivxv1ImHzVY44k33pJxdu5DQ==
-X-Google-Smtp-Source: AGHT+IEwXsaJz09g0M+sCi5MGJqpAP6O4Bn6uzXPyB5z8CD7Hpnlz/4qj935HZY40/z1/cUf2R/60T30fjbq8FhVwMA=
-X-Received: by 2002:a17:902:d48d:b0:234:d14c:50ff with SMTP id
- d9443c01a7336-2366b00ba59mr65090025ad.6.1750148046614; Tue, 17 Jun 2025
- 01:14:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UaroarKD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=wu1YqUKDAIZe46nJTh0zOWvtjY27cIyBiMrhkGj1bjo=; b=UaroarKD2bunTxoEoqx0AmWepA
+	yjQ34RGvjoJSilRTlwOmfbZpuGlnZ9zEJQ6D6Mcvj+XyaGZmvYDqz2bHcWm/Hr7L8amsN5HzFZcET
+	9euMGvr7y/z43hjYvZniTpWXmNv8NcmG2vbeqlUcLvf5xrBnXSfefqsbS+WMWTWQjIH9aqh/dt9O7
+	2SLbOot54yyG5JBHZlqYKhrAPzHRNS/Fszj4EiHABgVk5hz4qrNffMe5/sH2x5zNYwQvOSBaX8Tbk
+	4IWsvqVJQaJYvx77N88DeKKIfgL8S7nih1SkRLYKrvrNG1mnBohx9msORjRiRlOzRYdgIB6vKhXCn
+	DPggJaIQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRRTA-0000000GsxA-1Pom;
+	Tue, 17 Jun 2025 08:15:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F265B308523; Tue, 17 Jun 2025 10:14:58 +0200 (CEST)
+Date: Tue, 17 Jun 2025 10:14:58 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+Message-ID: <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250613134943.3186517-7-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250614081312.763606-1-ewhk9887@gmail.com> <DAMGM426FUU1.2IESY59SPIIHN@kernel.org>
-In-Reply-To: <DAMGM426FUU1.2IESY59SPIIHN@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 17 Jun 2025 10:13:54 +0200
-X-Gm-Features: AX0GCFsiKreLRYvHVJ996TB9IOhASLP3kCM0tIA-R3RP27FVCr0UYyKJ8YfeNNY
-Message-ID: <CANiq72=egnqm_uY6F0t0t69ToTpREYfENwjVZqUPqi01m0hRZg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] rust: macros: allow optional trailing comma in module!
-To: Benno Lossin <lossin@kernel.org>
-Cc: Eunsoo Eun <ewhk9887@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Eunsoo Eun <naturale@hufs.ac.kr>, 
-	Benno Lossin <benno.lossin@proton.me>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134943.3186517-7-kan.liang@linux.intel.com>
 
-On Sat, Jun 14, 2025 at 8:16=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
-ote:
->
-> I didn't get the second patch advertised in the subject, did something
-> go wrong when sending the patch?
+On Fri, Jun 13, 2025 at 06:49:37AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> More regs may be required in a sample, e.g., the vector registers. The
+> current sample_regs_XXX has run out of space.
+> 
+> Add sample_ext_regs_intr/user[2] in the struct perf_event_attr. It's used
+> as a bitmap for the extension regs. There will be more than 64 registers
+> added.
+> Add a new flag PERF_PMU_CAP_EXTENDED_REGS2 to indicate the PMU which
+> supports sample_ext_regs_intr/user.
+> 
+> Extend the perf_reg_validate() to support the validation of the
+> extension regs.
+> 
+> Extend the perf_reg_value() to retrieve the extension regs. The regs may
+> be larger than u64. Add two parameters to store the pointer and size.
+> Add a dedicated perf_output_sample_ext_regs() to dump the extension
+> regs.
+> 
+> This is just a generic support for the extension regs. Any attempts to
+> manipulate the extension regs will error out, until the driver-specific
+> supports are implemented, which will be done in the following patch.
+> 
 
-It seems the series is somehow broken:
+> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+> index 78a362b80027..e22ba72efcdb 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -382,6 +382,10 @@ enum perf_event_read_format {
+>  #define PERF_ATTR_SIZE_VER6			120	/* Add: aux_sample_size */
+>  #define PERF_ATTR_SIZE_VER7			128	/* Add: sig_data */
+>  #define PERF_ATTR_SIZE_VER8			136	/* Add: config3 */
+> +#define PERF_ATTR_SIZE_VER9			168	/* Add: sample_ext_regs_intr */
+> +							/* Add: sample_ext_regs_user */
+> +
+> +#define PERF_ATTR_EXT_REGS_SIZE			2
+>  
+>  /*
+>   * 'struct perf_event_attr' contains various attributes that define
+> @@ -543,6 +547,10 @@ struct perf_event_attr {
+>  	__u64	sig_data;
+>  
+>  	__u64	config3; /* extension of config2 */
+> +
+> +	/* extension of sample_regs_XXX */
+> +	__u64	sample_ext_regs_intr[PERF_ATTR_EXT_REGS_SIZE];
+> +	__u64	sample_ext_regs_user[PERF_ATTR_EXT_REGS_SIZE];
+>  };
 
-    https://lore.kernel.org/rust-for-linux/CANiq72=3DQUbe-koU-BEhEJ1-7AafC0=
-kGcG6HOhiVaR1TWqPoLFg@mail.gmail.com/
+Did anybody read this email?
 
-Cheers,
-Miguel
+  https://lkml.kernel.org/r/20250416155327.GD17910@noisy.programming.kicks-ass.net
+
+The current regs interface really was designed for regular registers,
+and trying to squish SIMD registers into it is a trainwreck.
+
+Not to mention that AAAARGHH64 and Risc-V have vector widths up to 2048
+bit.
+
+
