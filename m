@@ -1,111 +1,233 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDA961A9B24;
-	Tue, 17 Jun 2025 11:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E4054BC6;
+	Tue, 17 Jun 2025 11:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750159904; cv=none; b=QAtG+z9EN52V9/Bu3WmthB8fNhMRNaWU+HYKj5fkl8WESEXUw5pu1QnNkzhusTwNAZw3q1+7O3wqMRw4f/I2lZB2kpLpTjQEbrbeo541V/2h+yx1EdmUYqY1iwC5u2gMVrpzqjcdoCvvUQMJy+PC5T1S2kPTDKCX0P7WMwZ4ZpU=
+	t=1750159970; cv=none; b=G6TJ6kiShBo+afC1lOZ1q8oR0iXNL8qltbUI8xQqpUI5lWVa9osVgyr7PxBa0BvIITX9EwdeGK8NwXpqLWw2pmKZBVt/77lbIqThf06OAyYggdVMFvc1Asuva/8PFWMpNCfFW7omvF8YRvECBvnm17uHHJUAKVc28nv86pYLXyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750159904; c=relaxed/simple;
-	bh=9Mw48Zg0cv0dF4bSYaCiGS8ZVAaR/yW9yOs0j/Ch5ps=;
+	s=arc-20240116; t=1750159970; c=relaxed/simple;
+	bh=CRnbVtr0GLb3lzwVaUxRD662hwv3QeuvoQMwpeWJVEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b5K+tHE2jCpmcRzunofFAPRvS7xiTY9JTwm2yGWdJgac9NFlLZ5bwbOnuQp4AOfO06yp4y1R5Zw9vig5ATEuzISaVgt2zD0tBmFK2nugD7yTRMFoC50XSTmmaOw4Oel+LtVRKte6QklFg4955lLFZUWYaoGFbvgGr/SowOdZZqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDGH4viT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rulyVUZmS10JBCPVl0lhOOVnhd2kofyVjVP/ymo4QPSwXYkyiip0KP0lPUIx2yqAnZt4d+NiH/ZaDeTAkeZX3E1Ln0dtvIHR7zgE7r/59arr/NDApsxCpJQdGcTxVfDwArStfyaIeftvHa/n7gV9J8FOJpaKI/bzLFbUFwxHyzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kzkXwuL1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDGH4viT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA97EC4CEE3;
-	Tue, 17 Jun 2025 11:31:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kzkXwuL1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32DEFC4CEE3;
+	Tue, 17 Jun 2025 11:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750159903;
-	bh=9Mw48Zg0cv0dF4bSYaCiGS8ZVAaR/yW9yOs0j/Ch5ps=;
+	s=k20201202; t=1750159969;
+	bh=CRnbVtr0GLb3lzwVaUxRD662hwv3QeuvoQMwpeWJVEU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UDGH4viTAriSsrD4EJMESxN56NOG3wDwakAG2dKKMuWb1Xf4Fvs8de+SewHJNBeF+
-	 W7cf9OOF3XlqlLjV4xjZHyAAIl+2Hmaf5shgfntuUPqxmNZSHVcvSybrEGy/Zs0Sz5
-	 lO5GkdOvkm1p5S1WQdyq44321SulB2Rp0CZfmTegP6pro4gigdlM+qKa2ZDLoXUg2A
-	 qvTS5EICV1TbjXcD1R7gC7TpnfC2RGg+nDK9hvxG4rTP40zQO9iKvwbcyGTSCZCNX2
-	 7Q47oH6NqNjWiMfBYDtaI4poxHP5TZNgcAaAQkxjOwdM6JDXsX/uiM5uicv0SA0HR+
-	 XZly4CVAyOHBw==
-Date: Tue, 17 Jun 2025 13:31:17 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	David Sterba <dsterba@suse.com>, David Howells <dhowells@redhat.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Jan Kara <jack@suse.cz>, Benjamin LaHaise <bcrl@kvack.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Tigran A . Aivazian" <aivazian.tigran@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, 
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Dave Kleikamp <shaggy@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Carlos Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
-	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-mm@kvack.org, linux-btrfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
-	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 00/10] convert the majority of file systems to
- mmap_prepare
-Message-ID: <20250617-ansetzen-mathematik-08f6d9b51f3d@brauner>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <20250616161111.74e10321c4c421674f78d689@linux-foundation.org>
+	b=kzkXwuL1P9QjyVWGow80aEJoOUAhmHjnyJjnxodlDQK10dgSZTFCk9cUHzT6a+xEI
+	 F4zaSAlMkQVtSgZKqGqp6f4J4dWVQNSt5+oYMNV5WUyzGJLNmq+QQdPlRnApG4baEb
+	 8Wo7h32OsM5SlumGiOB5doGG0MqgC333Y5Qd7ykvbR5MfovNQx6HgAz+7FPo/Q+6Bv
+	 Bj+9MsrH2tz0ybMehGhQeP799yQ/J7kKd85Y3srd4EitEdzbtRnSV8sKxLhWvEF1pk
+	 J8QgypJY63uKLSp3o+pohBAWSC3hKHrBIKw1/EbVNQIDBQzCjZn/UVKoVdV40eJCZz
+	 x9VcIgMi/7nng==
+Date: Tue, 17 Jun 2025 17:02:40 +0530
+From: Sumit Garg <sumit.garg@kernel.org>
+To: Jens Wiklander <jens.wiklander@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	op-tee@lists.trustedfirmware.org,
+	linux-arm-kernel@lists.infradead.org,
+	Olivier Masse <olivier.masse@nxp.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Brian Starkey <Brian.Starkey@arm.com>,
+	John Stultz <jstultz@google.com>,
+	"T . J . Mercier" <tjmercier@google.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	azarrabi@qti.qualcomm.com, Simona Vetter <simona.vetter@ffwll.ch>,
+	Daniel Stone <daniel@fooishbar.org>,
+	Rouven Czerwinski <rouven.czerwinski@linaro.org>,
+	robin.murphy@arm.com
+Subject: Re: [PATCH v10 6/9] tee: add tee_shm_alloc_dma_mem()
+Message-ID: <aFFSWDiVsxA1CbCX@sumit-X1>
+References: <20250610131600.2972232-1-jens.wiklander@linaro.org>
+ <20250610131600.2972232-7-jens.wiklander@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250616161111.74e10321c4c421674f78d689@linux-foundation.org>
+In-Reply-To: <20250610131600.2972232-7-jens.wiklander@linaro.org>
 
-On Mon, Jun 16, 2025 at 04:11:11PM -0700, Andrew Morton wrote:
-> On Mon, 16 Jun 2025 20:33:19 +0100 Lorenzo Stoakes <lorenzo.stoakes@oracle.com> wrote:
+On Tue, Jun 10, 2025 at 03:13:50PM +0200, Jens Wiklander wrote:
+> Add tee_shm_alloc_dma_mem() to allocate DMA memory. The memory is
+> represented by a tee_shm object using the new flag TEE_SHM_DMA_MEM to
+> identify it as DMA memory. The allocated memory will later be lent to
+> the TEE to be used as protected memory.
 > 
-> > I am basing this on the mm-new branch in Andrew's tree, so let me know if I
-> > should rebase anything here. Given the mm bits touched I did think perhaps
-> > we should take it through the mm tree, however it may be more sensible to
-> > take it through an fs tree - let me know!
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+> ---
+>  drivers/tee/tee_shm.c    | 85 +++++++++++++++++++++++++++++++++++++++-
+>  include/linux/tee_core.h |  5 +++
+>  2 files changed, 88 insertions(+), 2 deletions(-)
 > 
-> It's more fs/ than mm/ purely from a footprint point of view.  But
-> there any expectation that there will be additional patches which build
-> on this?
-> 
-> I'll scoop it into mm-new for now, see what happens.
+> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
+> index e63095e84644..60b0f3932cee 100644
+> --- a/drivers/tee/tee_shm.c
+> +++ b/drivers/tee/tee_shm.c
+> @@ -5,6 +5,8 @@
+>  #include <linux/anon_inodes.h>
+>  #include <linux/device.h>
+>  #include <linux/dma-buf.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/highmem.h>
+>  #include <linux/idr.h>
+>  #include <linux/io.h>
+>  #include <linux/mm.h>
+> @@ -13,9 +15,14 @@
+>  #include <linux/tee_core.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/uio.h>
+> -#include <linux/highmem.h>
+>  #include "tee_private.h"
+>  
+> +struct tee_shm_dma_mem {
+> +	struct tee_shm shm;
+> +	dma_addr_t dma_addr;
+> +	struct page *page;
+> +};
+> +
+>  static void shm_put_kernel_pages(struct page **pages, size_t page_count)
+>  {
+>  	size_t n;
+> @@ -48,7 +55,16 @@ static void tee_shm_release(struct tee_device *teedev, struct tee_shm *shm)
+>  {
+>  	void *p = shm;
+>  
+> -	if (shm->flags & TEE_SHM_DMA_BUF) {
+> +	if (shm->flags & TEE_SHM_DMA_MEM) {
+> +#if IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS)
 
-I'm going to carry this in the vfs-6.17.mmap_prepare branch after fixing
-up the various minor issues spotted in the series.
+nit: this config check can be merged into the above if check.
+
+> +		struct tee_shm_dma_mem *dma_mem;
+> +
+> +		dma_mem = container_of(shm, struct tee_shm_dma_mem, shm);
+> +		p = dma_mem;
+> +		dma_free_pages(&teedev->dev, shm->size, dma_mem->page,
+> +			       dma_mem->dma_addr, DMA_BIDIRECTIONAL);
+> +#endif
+> +	} else if (shm->flags & TEE_SHM_DMA_BUF) {
+
+Do we need a similar config check for this flag too?
+
+With these addressed, feel free to add:
+
+Reviewed-by: Sumit Garg <sumit.garg@oss.qualcomm.com>
+
+-Sumit
+
+>  		struct tee_shm_dmabuf_ref *ref;
+>  
+>  		ref = container_of(shm, struct tee_shm_dmabuf_ref, shm);
+> @@ -303,6 +319,71 @@ struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size)
+>  }
+>  EXPORT_SYMBOL_GPL(tee_shm_alloc_priv_buf);
+>  
+> +#if IS_ENABLED(CONFIG_TEE_DMABUF_HEAPS)
+> +/**
+> + * tee_shm_alloc_dma_mem() - Allocate DMA memory as shared memory object
+> + * @ctx:	Context that allocates the shared memory
+> + * @page_count:	Number of pages
+> + *
+> + * The allocated memory is expected to be lent (made inaccessible to the
+> + * kernel) to the TEE while it's used and returned (accessible to the
+> + * kernel again) before it's freed.
+> + *
+> + * This function should normally only be used internally in the TEE
+> + * drivers.
+> + *
+> + * @returns a pointer to 'struct tee_shm'
+> + */
+> +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
+> +				      size_t page_count)
+> +{
+> +	struct tee_device *teedev = ctx->teedev;
+> +	struct tee_shm_dma_mem *dma_mem;
+> +	dma_addr_t dma_addr;
+> +	struct page *page;
+> +
+> +	if (!tee_device_get(teedev))
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	page = dma_alloc_pages(&teedev->dev, page_count * PAGE_SIZE,
+> +			       &dma_addr, DMA_BIDIRECTIONAL, GFP_KERNEL);
+> +	if (!page)
+> +		goto err_put_teedev;
+> +
+> +	dma_mem = kzalloc(sizeof(*dma_mem), GFP_KERNEL);
+> +	if (!dma_mem)
+> +		goto err_free_pages;
+> +
+> +	refcount_set(&dma_mem->shm.refcount, 1);
+> +	dma_mem->shm.ctx = ctx;
+> +	dma_mem->shm.paddr = page_to_phys(page);
+> +	dma_mem->dma_addr = dma_addr;
+> +	dma_mem->page = page;
+> +	dma_mem->shm.size = page_count * PAGE_SIZE;
+> +	dma_mem->shm.flags = TEE_SHM_DMA_MEM;
+> +
+> +	teedev_ctx_get(ctx);
+> +
+> +	return &dma_mem->shm;
+> +
+> +err_free_pages:
+> +	dma_free_pages(&teedev->dev, page_count * PAGE_SIZE, page, dma_addr,
+> +		       DMA_BIDIRECTIONAL);
+> +err_put_teedev:
+> +	tee_device_put(teedev);
+> +
+> +	return ERR_PTR(-ENOMEM);
+> +}
+> +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
+> +#else
+> +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
+> +				      size_t page_count)
+> +{
+> +	return ERR_PTR(-EINVAL);
+> +}
+> +EXPORT_SYMBOL_GPL(tee_shm_alloc_dma_mem);
+> +#endif
+> +
+>  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
+>  			     int (*shm_register)(struct tee_context *ctx,
+>  						 struct tee_shm *shm,
+> diff --git a/include/linux/tee_core.h b/include/linux/tee_core.h
+> index f17710196c4c..e46a53e753af 100644
+> --- a/include/linux/tee_core.h
+> +++ b/include/linux/tee_core.h
+> @@ -29,6 +29,8 @@
+>  #define TEE_SHM_POOL		BIT(2)  /* Memory allocated from pool */
+>  #define TEE_SHM_PRIV		BIT(3)  /* Memory private to TEE driver */
+>  #define TEE_SHM_DMA_BUF		BIT(4)	/* Memory with dma-buf handle */
+> +#define TEE_SHM_DMA_MEM		BIT(5)	/* Memory allocated with */
+> +					/* dma_alloc_pages() */
+>  
+>  #define TEE_DEVICE_FLAG_REGISTERED	0x1
+>  #define TEE_MAX_DEV_NAME_LEN		32
+> @@ -310,6 +312,9 @@ void *tee_get_drvdata(struct tee_device *teedev);
+>   */
+>  struct tee_shm *tee_shm_alloc_priv_buf(struct tee_context *ctx, size_t size);
+>  
+> +struct tee_shm *tee_shm_alloc_dma_mem(struct tee_context *ctx,
+> +				      size_t page_count);
+> +
+>  int tee_dyn_shm_alloc_helper(struct tee_shm *shm, size_t size, size_t align,
+>  			     int (*shm_register)(struct tee_context *ctx,
+>  						 struct tee_shm *shm,
+> -- 
+> 2.43.0
+> 
