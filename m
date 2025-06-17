@@ -1,161 +1,104 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 619303F9D2;
-	Tue, 17 Jun 2025 21:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2D82F5302;
+	Tue, 17 Jun 2025 21:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750196893; cv=none; b=m3geFX3Ez2X3FfGNXhNvg9L3tKGF4OAmfrQKcjEP3tG3+gekEy+6UuPzvxhwcANKVWs1YJO3ISk/oUdfCxCIhtYIfsyQhMpR6ueRWLtjN7BqQ+HhtRlQ0vTheWKdWN7+cYmfkjX3srU3JJl7dOJXUoTK0Ej/rGDAjlHhkot0JzM=
+	t=1750196958; cv=none; b=JscFfYxo3ccKg+7iQD+EsDnfyq01e8CyGYx3pQqL5nVnpqspdGZz55gwKbuDX5ySahccF1jb208asxF6H0XAEpbr5PU1afwvu5kUga6K0M/RJNhxAzcUUXKBK1sZkxtO14Dcagv/M5HcXfpOvEnotFGGWe1XUvvWgp217jc+mDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750196893; c=relaxed/simple;
-	bh=aj/Wy7evYX9v7Wv54ccnGDYJ2AbAnwlQRzYR8DDqeq0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O5r6XucZXYMxxbB329l81tVZ4vm6PNZp2MSQ8l/+Xg+rIcx5LmdvaHVqmrjOnlM/VL/auwuWKvDi54u/8t/dleKjXTF2IkjJ+NBLJgzGf/y4togEq4S+OtdBiUW4kgU4g3+HhfkplABIYDGIijmfNZuBc2AMduUfqrAqur74l4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5I9rQ3v; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750196958; c=relaxed/simple;
+	bh=7XpKNyduYd7HZ4lR7XtY36sozGh6y07qukvqZEHKC1k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ok6Ue94nhCZ/8f+OkaKEX6ACd6saHgMGfZFsBS1gPfDR/eCUmp9rxa5fHB5R2en1QKiJ2eupoJpv2JBDBZRGzkcAicG1KG5M+QRrjHComdjOWE+OBxZq3G3nr2rv1siiqaBTT7WaGVMCTdTWakGmAgMvkZmG9/3JcANVgNqY3jQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uhavmyD+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5I9rQ3v"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b271f3ae786so4605975a12.3;
-        Tue, 17 Jun 2025 14:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750196892; x=1750801692; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nJ3vllYy11hbEH9SlsLjL7SUHq59yOigX87yktj+ViE=;
-        b=X5I9rQ3v7tp3r0PU2R+AI2vxx3mBFk+AzTlLEj1JfkpdNSOUxaK+j1Wxf41zyoZn3n
-         R0VOW2pRmK2UrLrbLWjNcGSoTBW0RfTVHXqHIMzVGwkCczxNc98ZKhx7ZShSPqtahGmT
-         4jQV4uIRqLrE8p+1edDaV9Ztx8kaLdUwlPP5/q+ucPQervahC9Ag9yitZyXV+vEvb4Hu
-         k/gRbV/64ZQSc68aY3e6RDyAlj7fHUbEZhTQBMZpNpr+6YBUnkFWYM5qJlA1fIklsrfp
-         qpA0C93jwGfAy+FQc152TVlEEepnEfU19mLbHZ2bDnwmvabtIvKq+mFayEiT3A5UHpbu
-         dVoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750196892; x=1750801692;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nJ3vllYy11hbEH9SlsLjL7SUHq59yOigX87yktj+ViE=;
-        b=FQ46JidmX5B3YKpdN5ITnxH40SqyMsL+HpmqBL/IojJsHz2kZUZP9NYycc7eQckMsF
-         SeamLGDYxqWO7qQSyJM1ELhCUQjiEiOH03Dm4K/DpUc/v/KkPFtIxbrafqNH+RJq646v
-         ihYYm0uM+ewqiYDXur41hPqdpbeidv4P5zYJAZ/qM1Rz9PEvcETencgdkerzpNHibG1r
-         nbNu4zkfwHxq3Cl/g7W+xv0KP/Ko8BoG4Vf8aihWQx8R3/BxyPHX6CbbN5flGjt7ZDRI
-         xBsMW63e4Ho4jCQYVljm4ERTplhTNg8MrnjDJub9h+i4UdiHdBQdAHr7gipQnC8jWMOJ
-         s0SQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6EP7bIAJ3dREzvG3IkszHVueSyIMn3snLO6YyxPT7OwN24/T0CdNiVcOlLJPOVHKTNz49VcFVHIVzHcsH@vger.kernel.org, AJvYcCXtUgOW4roW+X9TOgXJlZFjnWN69Rn3qb6bQVtliHlYeJVcxXqeIhyT/knLwB9jprmQDfrGOCXApk7N@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT1HTk4W4FeRLz9bDSSn16pt95Pr42HXPvPA2tmKRm8Werxvx+
-	bc939PctfrdiRiYRsbi88F9pQU4Vq6d75RxFH9p8aEY0aa1S+nadufOI
-X-Gm-Gg: ASbGnctA9sJi5OU2WbWs0uo0RWpf0fBioj51GJX2Txtgctfbqm8Yr9su/pdAtYis7ht
-	wOcTH/WEke5FMR3pSr3gPecmFQHfq0bBUovMxyGa6ihbhNvNfGdFL4jvzgHvxyK8xSDdA9jHrTj
-	1s/1iKbSe5NGjFYQBPlYim8bFPyn/lQbYhEIxhdGK6dnFci7VbOaCJp+Eh1AJZsFz9xTSKWJR/M
-	562p+9aV6WEhoEXTz8/gPbMNlykS9o7JVLbKym1y+VrzRj6R4DGw0Kqj4LqF3WEydKnaLni/jLo
-	76Mri74bnGG9dTSpeFVMQ+YbSnBTxQrfJ7P1YoYwlSr3APopq+d4c91y7SCSdtz1mhYyfYYPiQ7
-	+hhy24oRyjXvkwA==
-X-Google-Smtp-Source: AGHT+IEDw2iGWX2b5gw8FTy4FhzKLFo936hcr3OjS6yoh5w9bvnKliafJqtqiSlNqfSMVKHqxChefw==
-X-Received: by 2002:a17:903:943:b0:234:cc7c:d2e2 with SMTP id d9443c01a7336-2366afc485bmr225397205ad.1.1750196891558;
-        Tue, 17 Jun 2025 14:48:11 -0700 (PDT)
-Received: from jpkobryn-fedora-PF5CFKNC.lan ([2601:648:8100:3b5:c6ef:bbff:fec0:9e95])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dea890asm85694445ad.143.2025.06.17.14.48.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 14:48:09 -0700 (PDT)
-From: JP Kobryn <inwardvessel@gmail.com>
-To: tony.luck@intel.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	aijay@meta.com
-Cc: x86@kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH] mce: include cmci during intel feature clearing
-Date: Tue, 17 Jun 2025 14:47:52 -0700
-Message-ID: <20250617214752.178263-1-inwardvessel@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uhavmyD+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B548C4CEE3;
+	Tue, 17 Jun 2025 21:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750196955;
+	bh=7XpKNyduYd7HZ4lR7XtY36sozGh6y07qukvqZEHKC1k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uhavmyD+hHibOpPUmDwZrtIx1P4Nolb+XiaK7K5mZRgmWLRTYkW/KRBxHkUZriGy6
+	 hP6HFq6dhvEuXEZqEiPG0LUsDJzPFbDGek9dr+9ohjCiJfhTclR5ye8mnV4Js2Ip+6
+	 kZAiyr1aHvR1d7V7CrZMK0PWB6Magkh9zMpk30Fh68aSPpIgMRcgvtSDMhmQXrWNvy
+	 hFTx+m3AFsPyoDuiLlMz5OHPIuLfFLX2wsL2v8ae3ziOvQFHLVpnnEBK6N0VizqWB0
+	 78j2IE2o4oyGzQQZNqTfQwVTCwMwtqnrX9Fi7lTRxecLXIE0GErR1p74Kxkqi7w3mN
+	 2CgSuGrryxrDA==
+Date: Tue, 17 Jun 2025 18:49:12 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Howard Chu <howardchu95@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events
+ and thread
+Message-ID: <aFHi2FUDZy_cEA5A@x1>
+References: <20250614004108.1650988-1-irogers@google.com>
+ <20250614004108.1650988-3-irogers@google.com>
+ <CAH0uvojjfOcoZmxPL+bG5NEid8xcAVth7UxOUc=aYjgF5nqs2A@mail.gmail.com>
+ <aFBF1ejZQBBvX7F4@x1>
+ <aFHeY_-hVNKtXPAD@x1>
+ <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWXQBdg8Uq1hFgRPC4z4vQAvUuT6TnUkPHSBfdGPNaYwg@mail.gmail.com>
 
-It was found that after a kexec on an intel CPU, MCE reporting was no
-longer active. The root cause has been found to be that ownership of CMCI
-banks is not cleared during the shutdown phase. As a result, when CPU's
-come back online, they are unable to rediscover these occupied banks. If we
-clear these CPU associations before booting into the new kernel, the CMCI
-banks can be reclaimed and MCE reporting will become functional once more.
+On Tue, Jun 17, 2025 at 02:32:37PM -0700, Ian Rogers wrote:
+> On Tue, Jun 17, 2025 at 2:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > On Mon, Jun 16, 2025 at 01:27:04PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Fri, Jun 13, 2025 at 5:41 PM Ian Rogers <irogers@google.com> wrote:
+> > > > > Caught by leak sanitizer running "perf trace BTF general tests".
 
-The existing code does seem to have the intention of clearing MCE-related
-features via mcheck_cpu_clear(). During a kexec reboot, there are two
-sequences that reach a call to mcheck_cpu_clear(). They are:
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
 
-1) Stopping other (remote) CPU's via IPI:
-native_machine_shutdown()
-	stop_other_cpus()
-		smp_ops.stop_other_cpus(1)
-		x86 smp: native_stop_other_cpus(1)
-			apic_send_IPI_allbutself(REBOOT_VECTOR)
+> > > > Acked-by: Howard Chu <howardchu95@gmail.com>
 
-...IPI is received on remote CPU's and IDT sysvec_reboot invoked:
-	stop_this_cpu()
-		mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> > > Small enough, applied to perf-tools.
 
-2) Seqence of stopping the active CPU (the one performing the kexec):
-native_machine_shutdown()
-	stop_other_cpus()
-		smp_ops.stop_other_cpus(1)
-		x86 smp: native_stop_other_cpus(1)
-			mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
-
-In both cases, the call to mcheck_cpu_clear() leads to the vendor specific
-call to intel_feature_clear():
-
-mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
-	__mcheck_cpu_clear_vendor(c)
-		switch (c->x86_vendor)
-		case X86_VENDOR_INTEL:
-			mce_intel_feature_clear(c)
-
-Now looking at the pair of functions mce_intel_feature_{init,clear}, there
-are 3 MCE features setup on the init side:
-
-mce_intel_feature_init(c)
-	intel_init_cmci()
-	intel_init_lmce()
-	intel_imc_init(c)
-
-On the other side in the clear function, only one of these features is
-actually cleared:
-
-mce_intel_feature_clear(c)
-	intel_clear_lmce()
-
-Just focusing on the feature pertaining to the root cause of the kexec
-issue, there would be a benefit if we additionally cleared the CMCI feature
-within this routine - the banks would be free for acquisition on the boot
-up side of a kexec. This patch adds the call to clear CMCI to this intel
-routine.
-
-Reported-by: Aijay Adams <aijay@meta.com>
-Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
----
- arch/x86/kernel/cpu/mce/intel.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index efcf21e9552e..9b149b9c4109 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -478,6 +478,7 @@ void mce_intel_feature_init(struct cpuinfo_x86 *c)
- void mce_intel_feature_clear(struct cpuinfo_x86 *c)
- {
- 	intel_clear_lmce();
-+	cmci_clear();
- }
+> > root@number:~# perf trace -e *sleep ls
+> > anaconda-ks.cfg  bin  bla  commands  dtel  firefly  logind.conf  perf-install.txt  python
+> > perf: Segmentation fault
+> > Obtained 11 stack frames.
+> > perf() [0x5c595e]
+> > perf() [0x5c59f9]
+> > /lib64/libc.so.6(+0x19c30) [0x7fd43ce27c30]
+> > perf() [0x5dc497]
+> > perf() [0x492d54]
+> > perf() [0x49860e]
+> > perf() [0x49890e]
+> > perf() [0x413413]
+> > /lib64/libc.so.6(+0x35f5) [0x7fd43ce115f5]
+> > /lib64/libc.so.6(__libc_start_main+0x88) [0x7fd43ce116a8]
+> > perf() [0x413a45]
+> > Segmentation fault (core dumped)
+> > root@number:~#
  
- bool intel_filter_mce(struct mce *m)
--- 
-2.47.1
+> Thanks, I'll take a look to see if I can spot what's broken. Seeing
+> this stack trace makes me remember we haven't landed:
+> https://lore.kernel.org/lkml/20250611221521.722045-1-irogers@google.com/
 
+Yeah, I just pushed perf-tools to soak in linux-next/pending-fixes for a
+few days and will switch to processing patches for perf-tools-next, will
+try and pick that one, I also noticed that the backtrace wasn't
+symbolized, thus your patch wasn't there :-\
+
+- Arnaldo
