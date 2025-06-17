@@ -1,250 +1,227 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABBC02EACFF
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839762DF3C0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153894; cv=none; b=uQa2nMpx0cay07wzbLjnwJItepg/J+XH4s6gpFteN0amSz/Qrkx6X9YT0mmBSwWRGJdHCda2L3Vzo2WfGMil8uqldMO+F3HbkHhjYxLQaCNLLk4xRknAHrUsZ5qIn/JycLIXYi44Y/g0EGhM7oToCicsoYOBTOYVG+ZpncN4X3k=
+	t=1750153903; cv=none; b=ZZ/Dg7BmzB1upOtAD+h9M9qSeHBaNq8a47QNcygyC/rbK+tlaQTEpknb3nMm0UEYiBuAHwCf/dLjwwBNyr4vJQLRumiQRGigj807u3rCtpn2GlJMYaT+J0ru9MZ5ESUWkccshjC2BywOqxrQ1qyUmvdUWYUZu5KsCeiicFp2irw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153894; c=relaxed/simple;
-	bh=i/RC7w7SIukP0reEqSf0TuoW4olsTf8kWiDHI+cmm14=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U0N0fzeliS8eFAq7yQqS+qdFYdJGptMSHXm0oURG+xk7khvcXtZJRX3S6kV+RePzfStGnhrsygVlBd655KzIRgcJ9C2MVxG8ExpfUI9UHhL4vEZEdW6RiIXw9OarA/0TQsFoNcttmABSRn31pvSGMIrQp44B1kk96QHpklmSdm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0171A22EE;
-	Tue, 17 Jun 2025 02:51:11 -0700 (PDT)
-Received: from mazurka.cambridge.arm.com (mazurka.cambridge.arm.com [10.2.80.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8D463F58B;
-	Tue, 17 Jun 2025 02:51:28 -0700 (PDT)
-From: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-To: ryan.roberts@arm.com,
-	yang@os.amperecomputing.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	jean-philippe@linaro.org,
-	robin.murphy@arm.com,
-	joro@8bytes.org,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	james.morse@arm.com,
-	broonie@kernel.org,
-	ardb@kernel.org,
-	baohua@kernel.org,
-	suzuki.poulose@arm.com,
-	david@redhat.com,
-	jgg@ziepe.ca,
-	nicolinc@nvidia.com,
-	jsnitsel@redhat.com,
-	mshavit@google.com,
-	kevin.tian@intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	iommu@lists.linux.dev
-Cc: =?UTF-8?q?Miko=C5=82aj=20Lenczewski?= <miko.lenczewski@arm.com>
-Subject: [PATCH v7 4/4] arm64/mm: Elide tlbi in contpte_convert() under BBML2
-Date: Tue, 17 Jun 2025 09:51:04 +0000
-Message-ID: <20250617095104.6772-5-miko.lenczewski@arm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617095104.6772-1-miko.lenczewski@arm.com>
-References: <20250617095104.6772-1-miko.lenczewski@arm.com>
+	s=arc-20240116; t=1750153903; c=relaxed/simple;
+	bh=8vtl0Cdt6DXG6me1m4jejmsCOnOuNWgjjHF8FIGQbP4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PaYFm81B1KRi9xukO4EIXtnEnCigvMV27W4q4oJYW/4sSyX6Yu7RjkwO0Nw+kd+8Yzllokh/k5uJbwOJ7R88zckKj9EmUotgPWyQ1zZuYrgJ7OuVfGIdLEJsjTUasCCqts1nSk4WjEbGd76wUIyq8YVnwrF+YG64DZ0uO8pDHPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Fi+E+HZy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fi+E+HZy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750153900;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z1J9EKk4I7H6WmvI/18gnTD4j7ClTvJrTACRAA21oo8=;
+	b=Fi+E+HZyG2DSpJyknBLdGzyRwsTrsD1u4Oajq+GpYyCK1j3Kf/PUhuphPdRhGtq4RUkIEP
+	tmWLZjSzC+9gnxRFVhOEZmKM1+nI6zVOGQzQHHpVTcjIl2vbdWu5aaR+8I0ghEcQDagT8o
+	KBQowGyF5LNtPfGVqivVX5nnMW2ftJc=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-283-CCJxdZUcP0aMSJx-PPmHjQ-1; Tue, 17 Jun 2025 05:51:38 -0400
+X-MC-Unique: CCJxdZUcP0aMSJx-PPmHjQ-1
+X-Mimecast-MFC-AGG-ID: CCJxdZUcP0aMSJx-PPmHjQ_1750153897
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4535011d48eso9275945e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:51:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750153897; x=1750758697;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1J9EKk4I7H6WmvI/18gnTD4j7ClTvJrTACRAA21oo8=;
+        b=aMRGG0oOEdtqMyi2aJ2CpgvX0R+GxzIUUM+MfhdbNGFy6kGkh+kj7DzvYBnTR2XCa5
+         mHBDfqnFp1c9wYzIOYenL5RS8FcU/k/aUmclDPFE/rI/sCtn4pd7RdthS5hWhBOBMtcu
+         WfHJyOYG8Cs2VXaCWiddSAC+ulIV4fydZt+OS7ULeQYudXIXUOBJPbgzU6Cg9lf038Q9
+         U0G3i/W3n6XzDCv8SuYz5DkcZi0guFwUqZmGqXf9k0J0Ff0I2yShRoumrQRe7aj8CIoz
+         GZ9U6myPzMvgjBINvJ6CfQGTOOg9JJqvNoyYzCgRcoCj+zi8wIkrFcPTQBR257TyoHTr
+         PA8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXViX3wWkv+d/UkbpeQ//goHBELX89UA5WSNH0zNjgdqZc4INhz+4D5Zm9Bb1gpl8epBLOUuBaL6+8sbps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgVJXKl04FwELtOdoIQfp/QWiMOP0g2edXAif9XsANDqX9511q
+	xXZWTxZ2HWP1MO5jt/z7KAd9w7gOhWbCmbel0/JT3scakNQEZVSBtTnah5o5ixdBKxgrGJi+hMw
+	Gif2msTBMV3hVc/KxmUjY0F9s4/m/c+XcggliEerjD5WwaTb8nZBjxTvrwQddgkBtPw==
+X-Gm-Gg: ASbGnctUWW5dCOS9yUPzJ6w5DGt+mKRW4xy7azLTcbyqcFC/HFnwn1LZ0zbzKQK3BRu
+	yDJDMi6jNKHgONQEhL01EGKV/bfgmtcHjBWby0vVVuhPLOEEAhDg7yh1xDM+tln5PbwfWSLL4HJ
+	G8AZhTBtpqvz7KzxQhB1JrVZQJlyYTckGSdjj7x8ETFkQvOW9q1lAU/muLeHniIzZRxG6OhCK6o
+	K4yV9e5ANRCaE8yE1oY/LYpckJur42W4gPXkm3yn5rdGFTXoujN0/4Lq1BtLJ4fcZ3Y6/lUB+y9
+	yRLxb2Df9k4=
+X-Received: by 2002:a05:600c:8b01:b0:441:d437:e3b8 with SMTP id 5b1f17b1804b1-4533cac9179mr105803415e9.23.1750153897091;
+        Tue, 17 Jun 2025 02:51:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFldMEnuo9yC084iP1KvhWhShNC4LmtmIc7iidP4b8onqmO+ZGv8akFrhh6Cvt1pfxb1j8zTw==
+X-Received: by 2002:a05:600c:8b01:b0:441:d437:e3b8 with SMTP id 5b1f17b1804b1-4533cac9179mr105803085e9.23.1750153896629;
+        Tue, 17 Jun 2025 02:51:36 -0700 (PDT)
+Received: from pollux ([2a00:79c0:62e:9200:abf:b8ff:feee:998b])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e224600sm171952695e9.8.2025.06.17.02.51.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 02:51:36 -0700 (PDT)
+Date: Tue, 17 Jun 2025 11:51:34 +0200
+From: Danilo Krummrich <dakr@redhat.com>
+To: Rob Clark <rob.clark@oss.qualcomm.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+	freedreno@lists.freedesktop.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
+Message-ID: <aFE6pq8l33NXfFdT@pollux>
+References: <20250613235705.28006-1-robin.clark@oss.qualcomm.com>
+ <20250613235705.28006-3-robin.clark@oss.qualcomm.com>
+ <aE1RPZ_-oFyM4COy@pollux>
+ <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
+ <aFCO7_RHuAaGyq1Q@pollux>
+ <CACSVV03WboQp_A1bzQ+xpX5DDkfaoXmbTuo9RfZ9bMaVTqdU+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACSVV03WboQp_A1bzQ+xpX5DDkfaoXmbTuo9RfZ9bMaVTqdU+A@mail.gmail.com>
 
-When converting a region via contpte_convert() to use mTHP, we have two
-different goals. We have to mark each entry as contiguous, and we would
-like to smear the dirty and young (access) bits across all entries in
-the contiguous block. Currently, we do this by first accumulating the
-dirty and young bits in the block, using an atomic
-__ptep_get_and_clear() and the relevant pte_{dirty,young}() calls,
-performing a tlbi, and finally smearing the correct bits across the
-block using __set_ptes().
+On Mon, Jun 16, 2025 at 03:25:08PM -0700, Rob Clark wrote:
+> On Mon, Jun 16, 2025 at 2:39 PM Danilo Krummrich <dakr@redhat.com> wrote:
+> >
+> > On Sat, Jun 14, 2025 at 08:03:20AM -0700, Rob Clark wrote:
+> > > On Sat, Jun 14, 2025 at 3:39 AM Danilo Krummrich <dakr@redhat.com> wrote:
+> > > >
+> > > > On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wrote:
+> > > > > For UNMAP/REMAP steps we could be needing to lock objects that are not
+> > > > > explicitly listed in the VM_BIND ioctl in order to tear-down unmapped
+> > > > > VAs.  These helpers handle locking/preparing the needed objects.
+> > > >
+> > > > Yes, that's a common use-case. I think drivers typically iterate through their
+> > > > drm_gpuva_ops to lock those objects.
+> > > >
+> > > > I had a look at you link [1] and it seems that you keep a list of ops as well by
+> > > > calling vm_op_enqueue() with a new struct msm_vm_op from the callbacks.
+> > > >
+> > > > Please note that for exactly this case there is the op_alloc callback in
+> > > > struct drm_gpuvm_ops, such that you can allocate a custom op type (i.e. struct
+> > > > msm_vm_op) that embedds a struct drm_gpuva_op.
+> > >
+> > > I did use drm_gpuvm_sm_xyz_ops_create() in an earlier iteration of my
+> > > VM_BIND series, but it wasn't quite what I was after.  I wanted to
+> > > apply the VM updates immediately to avoid issues with a later
+> > > map/unmap overlapping an earlier map, which
+> > > drm_gpuvm_sm_xyz_ops_create() doesn't really handle.  I'm not even
+> > > sure why this isn't a problem for other drivers unless userspace is
+> > > providing some guarantees.
+> >
+> > The drm_gpuva_ops are usually used in a pattern like this.
+> >
+> >         vm_bind {
+> >                 for_each_vm_bind_operation {
+			    drm_gpuvm_sm_xyz_ops_create();
+> >                         drm_gpuva_for_each_op {
+> >                                 // modify drm_gpuvm's interval tree
+> >                                 // pre-allocate memory
+> >                                 // lock and prepare objects
+> >                         }
+> >                 }
+> >
+> >                 drm_sched_entity_push_job();
+> >         }
+> >
+> >         run_job {
+> >                 for_each_vm_bind_operation {
+> >                         drm_gpuva_for_each_op {
+> >                                 // modify page tables
+> >                         }
+> >                 }
+> >         }
+> >
+> >         run_job {
+> >                 for_each_vm_bind_operation {
+> >                         drm_gpuva_for_each_op {
+> >                                 // free page table structures, if any
+> >                                 // free unused pre-allocated memory
+> >                         }
+> >                 }
+> >         }
+> >
+> > What did you do instead to get map/unmap overlapping? Even more interesting,
+> > what are you doing now?
+> 
+> From what I can tell, the drivers using drm_gpva_for_each_op()/etc are
+> doing drm_gpuva_remove() while iterating the ops list..
+> drm_gpuvm_sm_xyz_ops_create() itself does not modify the VM.  So this
+> can only really work if you perform one MAP or UNMAP at a time.  Or at
+> least if you process the VM modifying part of the ops list before
+> proceeding to the next op.
 
-This approach works fine for BBM level 0, but with support for BBM level
-2 we are allowed to reorder the tlbi to after setting the pagetable
-entries. We expect the time cost of a tlbi to be much greater than the
-cost of clearing and resetting the PTEs. As such, this reordering of the
-tlbi outside the window where our PTEs are invalid greatly reduces the
-duration the PTE are visibly invalid for other threads. This reduces the
-likelyhood of a concurrent page walk finding an invalid PTE, reducing
-the likelyhood of a fault in other threads, and improving performance
-(more so when there are more threads).
+(Added the drm_gpuvm_sm_xyz_ops_create() step above.)
 
-Because we support via allowlist only bbml2 implementations that never
-raise conflict aborts and instead invalidate the tlb entries
-automatically in hardware, we can avoid the final flush altogether.
+I went through the code you posted [1] and conceptually you're implementing
+exactly the pattern I described above, i.e. you do:
 
-However, avoiding the intermediate tlbi+dsb must be carefully considered
-to ensure that we remain both correct and performant. We document our
-reasoning and the expected interactions further in the contpte_convert()
-source. To do so we rely on the aarch64 spec (DDI 0487L.a D8.7.1.1)
-requirements RNGLXZ and RJQQTC to provide guarantees that the elision is
-correct.
+	vm_bind {
+		for_each_vm_bind_operation {
+			drm_gpuvm_sm_xyz_exec_lock();
+		}
 
-Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
----
- arch/arm64/mm/contpte.c | 139 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 138 insertions(+), 1 deletion(-)
+		for_each_vm_bind_operation {
+			drm_gpuvm_sm_xyz() {
+				// modify drm_gpuvm's interval tree
+				// create custom ops
+			}
+		}
 
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index bcac4f55f9c1..203357061d0a 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -68,7 +68,144 @@ static void contpte_convert(struct mm_struct *mm, unsigned long addr,
- 			pte = pte_mkyoung(pte);
- 	}
- 
--	__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
-+	/*
-+	 * On eliding the __tlb_flush_range() under BBML2+noabort:
-+	 *
-+	 * NOTE: Instead of using N=16 as the contiguous block length, we use
-+	 *       N=4 for clarity.
-+	 *
-+	 * NOTE: 'n' and 'c' are used to denote the "contiguous bit" being
-+	 *       unset and set, respectively.
-+	 *
-+	 * We worry about two cases where contiguous bit is used:
-+	 *  - When folding N smaller non-contiguous ptes as 1 contiguous block.
-+	 *  - When unfolding a contiguous block into N smaller non-contiguous ptes.
-+	 *
-+	 * Currently, the BBML0 folding case looks as follows:
-+	 *
-+	 *  0) Initial page-table layout:
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |RO,n|RO,n|RO,n|RW,n| <--- last page being set as RO
-+	 *   +----+----+----+----+
-+	 *
-+	 *  1) Aggregate AF + dirty flags using __ptep_get_and_clear():
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |  0 |  0 |  0 |  0 |
-+	 *   +----+----+----+----+
-+	 *
-+	 *  2) __flush_tlb_range():
-+	 *
-+	 *   |____ tlbi + dsb ____|
-+	 *
-+	 *  3) __set_ptes() to repaint contiguous block:
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |RO,c|RO,c|RO,c|RO,c|
-+	 *   +----+----+----+----+
-+	 *
-+	 *  4) The kernel will eventually __flush_tlb() for changed page:
-+	 *
-+	 *                  |____| <--- tlbi + dsb
-+	 *
-+	 * As expected, the intermediate tlbi+dsb ensures that other PEs
-+	 * only ever see an invalid (0) entry, or the new contiguous TLB entry.
-+	 * The final tlbi+dsb will always throw away the newly installed
-+	 * contiguous TLB entry, which is a micro-optimisation opportunity,
-+	 * but does not affect correctness.
-+	 *
-+	 * In the BBML2 case, the change is avoiding the intermediate tlbi+dsb.
-+	 * This means a few things, but notably other PEs will still "see" any
-+	 * stale cached TLB entries. This could lead to a "contiguous bit
-+	 * misprogramming" issue until the final tlbi+dsb of the changed page,
-+	 * which would clear out both the stale (RW,n) entry and the new (RO,c)
-+	 * contiguous entry installed in its place.
-+	 *
-+	 * What this is saying, is the following:
-+	 *
-+	 *  +----+----+----+----+
-+	 *  |RO,n|RO,n|RO,n|RW,n| <--- old page tables, all non-contiguous
-+	 *  +----+----+----+----+
-+	 *
-+	 *  +----+----+----+----+
-+	 *  |RO,c|RO,c|RO,c|RO,c| <--- new page tables, all contiguous
-+	 *  +----+----+----+----+
-+	 *   /\
-+	 *   ||
-+	 *
-+	 *  If both the old single (RW,n) and new contiguous (RO,c) TLB entries
-+	 *  are present, and a write is made to this address, do we fault or
-+	 *  is the write permitted (via amalgamation)?
-+	 *
-+	 * The relevant Arm ARM DDI 0487L.a requirements are RNGLXZ and RJQQTC,
-+	 * and together state that when BBML1 or BBML2 are implemented, either
-+	 * a TLB conflict abort is raised (which we expressly forbid), or will
-+	 * "produce an OA, access permissions, and memory attributes that are
-+	 * consistent with any of the programmed translation table values".
-+	 *
-+	 * That is to say, will either raise a TLB conflict, or produce one of
-+	 * the cached TLB entries, but never amalgamate.
-+	 *
-+	 * Thus, as the page tables are only considered "consistent" after
-+	 * the final tlbi+dsb (which evicts both the single stale (RW,n) TLB
-+	 * entry as well as the new contiguous (RO,c) TLB entry), omitting the
-+	 * initial tlbi+dsb is correct.
-+	 *
-+	 * It is also important to note that at the end of the BBML2 folding
-+	 * case, we are still left with potentially all N TLB entries still
-+	 * cached (the N-1 non-contiguous ptes, and the single contiguous
-+	 * block). However, over time, natural TLB pressure will cause the
-+	 * non-contiguous pte TLB entries to be flushed, leaving only the
-+	 * contiguous block TLB entry. This means that omitting the tlbi+dsb is
-+	 * not only correct, but also keeps our eventual performance benefits.
-+	 *
-+	 * For the unfolding case, BBML0 looks as follows:
-+	 *
-+	 *  0) Initial page-table layout:
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |RW,c|RW,c|RW,c|RW,c| <--- last page being set as RO
-+	 *   +----+----+----+----+
-+	 *
-+	 *  1) Aggregate AF + dirty flags using __ptep_get_and_clear():
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |  0 |  0 |  0 |  0 |
-+	 *   +----+----+----+----+
-+	 *
-+	 *  2) __flush_tlb_range():
-+	 *
-+	 *   |____ tlbi + dsb ____|
-+	 *
-+	 *  3) __set_ptes() to repaint as non-contiguous:
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |RW,n|RW,n|RW,n|RW,n|
-+	 *   +----+----+----+----+
-+	 *
-+	 *  4) Update changed page permissions:
-+	 *
-+	 *   +----+----+----+----+
-+	 *   |RW,n|RW,n|RW,n|RO,n| <--- last page permissions set
-+	 *   +----+----+----+----+
-+	 *
-+	 *  5) The kernel will eventually __flush_tlb() for changed page:
-+	 *
-+	 *                  |____| <--- tlbi + dsb
-+	 *
-+	 * For BBML2, we again remove the intermediate tlbi+dsb. Here, there
-+	 * are no issues, as the final tlbi+dsb covering the changed page is
-+	 * guaranteed to remove the original large contiguous (RW,c) TLB entry,
-+	 * as well as the intermediate (RW,n) TLB entry; the next access will
-+	 * install the new (RO,n) TLB entry and the page tables are only
-+	 * considered "consistent" after the final tlbi+dsb, so software must
-+	 * be prepared for this inconsistency prior to finishing the mm dance
-+	 * regardless.
-+	 */
-+
-+	if (!system_supports_bbml2_noabort())
-+		__flush_tlb_range(&vma, start_addr, addr, PAGE_SIZE, true, 3);
- 
- 	__set_ptes(mm, start_addr, start_ptep, pte, CONT_PTES);
- }
--- 
-2.49.0
+		drm_sched_entity_push_job();
+	}
+
+	run_job {
+		for_each_vm_bind_operation {
+			for_each_custom_op() {
+				// do stuff
+			}
+		}
+	}
+
+However, GPUVM intends to solve your use-case with the following, semantically
+identical, approach.
+
+	vm_bind {
+		for_each_vm_bind_operation {
+			drm_gpuvm_sm_xyz_ops_create();
+
+			drm_gpuva_for_each_op {
+				// modify drm_gpuvm's interval tree
+				// lock and prepare objects (1)
+			}
+		}
+
+		drm_sched_entity_push_job();
+	}
+
+	run_job {
+		for_each_vm_bind_operation {
+			drm_gpuva_for_each_op() {
+				// do stuff
+			}
+		}
+	}
+
+(Note that GPUVM already supports to extend the existing OP structures; you
+should take advantage of that.)
+
+Hence, the helper we really want is to lock and prepare the objects at (1). I.e.
+a helper that takes a pointer to a struct drm_gpuva_op and locks / validates the
+corresponding objects.
+
+[1] https://gitlab.freedesktop.org/robclark/msm/-/blob/sparse-newer/drivers/gpu/drm/msm/msm_gem_vma.c
 
