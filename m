@@ -1,93 +1,162 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2835E2E88A0;
-	Tue, 17 Jun 2025 15:12:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800B12E54A9;
+	Tue, 17 Jun 2025 15:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750173124; cv=none; b=tjSNRNEw3tLhATeuAAv112amU9iKAc5+g/8u6bmadPqxcy08BePEsyxBJONo8zm2KcWRLnGE2UEKRqW2ImvgCL095lMmoHpjK4pJx6YekBWufcndKFYY48NVzub9wqexfeaOJLMtuYiGGkJkG4j7bCnwdh80XW5HF8l9BXlnvsU=
+	t=1750173241; cv=none; b=doUDiv6qBudSHHGN4/idXrVH37XtKFzIpp+oA/CIUT+fq+AZOT6vhO/ql1k65T8+3eedzptpeVzoWkJq3QRGmSjDnGmaqLlnbwKQAq9JXZGNyb+UnR8kYJ3NP5+RjZmXIT2vVuWdLDy//TI3SmXmd1u1v8zHkMGyi9TZEnW9sI8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750173124; c=relaxed/simple;
-	bh=iSVaWuGCzz2VvOehEKH/IXJYB849DKqm1zj3HRIKzDY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PYH/fbB1LaHjbheP33HRZ5wdPkwWb76zFFV5jbeSLvJ3uGS2w3wRBr0PEAw3kwpK5TFesquoglSHY+Iz+UjC27Wj0D5SSV3mUROwBvcZQoz+MEXjaALAilxGl1pvaonuNufEUs5EpTzI1uXc4GYzO2YUPvUuP2LWWtB988cLVw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf05.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay04.hostedemail.com (Postfix) with ESMTP id 439FB1A045C;
-	Tue, 17 Jun 2025 15:11:58 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf05.hostedemail.com (Postfix) with ESMTPA id 89CEA20029;
-	Tue, 17 Jun 2025 15:11:51 +0000 (UTC)
-Date: Tue, 17 Jun 2025 11:11:57 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Lyude Paul <lyude@redhat.com>, rust-for-linux@vger.kernel.org, Thomas
- Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Daniel Almeida
- <daniel.almeida@collabora.com>, Ingo Molnar <mingo@redhat.com>, Peter
- Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, Mel Gorman
- <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, Will Deacon
- <will@kernel.org>, Waiman Long <longman@redhat.com>, Miguel Ojeda
- <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo
- <gary@garyguo.net>, =?UTF-8?B?QmrDtnJu?= Roy Baron
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Andreas
- Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
- Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, David
- Woodhouse <dwmw@amazon.co.uk>, Jens Axboe <axboe@kernel.dk>, Sebastian
- Andrzej Siewior <bigeasy@linutronix.de>, NeilBrown <neilb@suse.de>, Caleb
- Sander Mateos <csander@purestorage.com>, Ryo Takakura
- <ryotkkr98@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: Re: [RFC RESEND v10 03/14] irq & spin_lock: Add counted interrupt
- disabling/enabling
-Message-ID: <20250617111157.36b1b17e@gandalf.local.home>
-In-Reply-To: <aFF84rW5fNXrnwC8@Mac.home>
-References: <20250527222254.565881-1-lyude@redhat.com>
-	<20250527222254.565881-4-lyude@redhat.com>
-	<20250617101120.7c946656@gandalf.local.home>
-	<aFF84rW5fNXrnwC8@Mac.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750173241; c=relaxed/simple;
+	bh=VzacSK8CHt4963WLrZki0L0yVFovLxHcIRT7RHBkl5g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rGe6CBaLr6Kvn71rrNUnkK3K1k0QggwnqstIUfgn0Y+8G0SUojVK5+HR95IE2wxx91ee4GhG6UZclp2lK4wuwuIRljEqSM836tQWwIf/ylYuKBAEq2qwAS4mOCDxwEc7faJ7+4Zjxe9jyyLvSS8nq3jtvsxTzkbvY58xEWqYWh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h56s71rz; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h56s71rz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8F4EC4CEE7;
+	Tue, 17 Jun 2025 15:13:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750173240;
+	bh=VzacSK8CHt4963WLrZki0L0yVFovLxHcIRT7RHBkl5g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h56s71rzs/udGDVL1EShezKp0igc+0Rne8OItAUMPt/V+imFOpByZva5b6rNSPCPz
+	 x10s7tra/R4mERRgf1U6LZdeQuS0OjGghdedHAzChpkjI4cmakcBFle+SkXx+xKxO3
+	 fQEQ6CsdJ0QtyeRFsfnzAkg34fORkchNKKRSmoBWH6E1VgFnVavZK75gAUYGoE0sms
+	 KN0t3zoB/6qZ2Qm+4xkeFhn8DBLPh4Y5NLk0NUNI2c5YktuwVjsmUFIaAoxRA9pFKF
+	 WMuWczHQy+H+fLL+0dnlFXqnt0zphLrMZa092gk7WuVwIhvxN7cNTHhHH/0/fPX3Xd
+	 jtgAQcoYn0Yhg==
+Date: Tue, 17 Jun 2025 10:13:54 -0500
+From: Rob Herring <robh@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>,
+	Kyungmin Park <kyungmin.park@samsung.com>,
+	Chanwoo Choi <cw00.choi@samsung.com>,
+	Georgi Djakov <djakov@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>,
+	Jia-Wei Chang <jia-wei.chang@mediatek.com>,
+	Johnson Wang <johnson.wang@mediatek.com>,
+	=?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+	Landen Chao <Landen.Chao@mediatek.com>,
+	DENG Qingfang <dqfext@gmail.com>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Lorenzo Bianconi <lorenzo@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v4 01/13] dt-bindings: net: mediatek,net: update for
+ mt7988
+Message-ID: <20250617151354.GA2392458-robh@kernel.org>
+References: <20250616095828.160900-1-linux@fw-web.de>
+ <20250616095828.160900-2-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 89CEA20029
-X-Stat-Signature: e3s8h6w1kni6rrrrihmu9ypukputaqry
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19TknEx4XMi3HQmIWa4vCKYwjQ2yQ7MiEQ=
-X-HE-Tag: 1750173111-5368
-X-HE-Meta: U2FsdGVkX18p34QXPUmiazssk0nZAEejI7F9//J6Y1czVHu2YbcdQFCBV6tmYvtnO9Tk0AQMRJtid2GWkOtzzEwVEGb4A0bBWbj11kWKwqgabO02dpVdW21qfPSsjlNWmZMIROtuxLS+NCkvVAkNW/4AQ8an5wErcRhO4LOJtu2Vj9GPheiMoCDnKZ6EOC+QU8D0JMlOzsndXC0gQjWXyygpAmhbkIUgBkjplw1o0Lxiun+XOygNaIYLFg/YaIwkuy4P6IYfunrKokOFC2v+1rowpo6rRIW60VHIHE86L3Ma7H5Al3WLrAGJ0UZaU9PudGNw1BrZxwuk3NGV+xcYNMaXADFurvM+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616095828.160900-2-linux@fw-web.de>
 
-On Tue, 17 Jun 2025 07:34:10 -0700
-Boqun Feng <boqun.feng@gmail.com> wrote:
-
-> Because the new local_interrupt_{disable, enable}() participate the
-> preempt count game as well, for example, __raw_spin_lock_irq_disable()
-> doesn't call an additional preempt_disable() and
-> __raw_spin_unlock_irq_enable() doesn't call preempt_enable(). And the
-> following can happen:
+On Mon, Jun 16, 2025 at 11:58:11AM +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
 > 
-> 	spin_lock(a);
-> 	// preemption is disabled.
-> 	<interrupted and set need_resched>
+> Update binding for mt7988 which has 3 gmac and 2 reg items.
 > 
-> 	spin_lock_irq_disable(b);
+> With RSS-IRQs the interrupt max-items is now 6. Add interrupt-names
+> to make them accessible by name.
 > 
-> 	spin_unlock(a);
-> 	spin_unlock_irq_enable(b):
-> 	  local_interrupt_enable():
-> 	  // need to check should_resched, otherwise preemption won't
-> 	  // happen.
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> v4:
+> - increase max interrupts to 8 because of RSS/LRO interrupts
 
-Ah, because preempt count can be set to non-zero *before* interrupts are
-disabled. That makes sense. Thanks.
+But the schema says 6?
 
-Hmm, I wonder if we should add a comment stating that here?
-
--- Steve
+> - dropped Robs RB due to this change
+> - allow interrupt names
+> - add interrupt-names without reserved IRQs on mt7988
+>   this requires mtk driver patch:
+>   https://patchwork.kernel.org/project/netdevbpf/patch/20250616080738.117993-2-linux@fw-web.de/
+> 
+> v2:
+> - change reg to list of items
+> ---
+>  .../devicetree/bindings/net/mediatek,net.yaml | 28 ++++++++++++++++---
+>  1 file changed, 24 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/mediatek,net.yaml b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> index 9e02fd80af83..f8025f73b1cb 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> +++ b/Documentation/devicetree/bindings/net/mediatek,net.yaml
+> @@ -28,7 +28,10 @@ properties:
+>        - ralink,rt5350-eth
+>  
+>    reg:
+> -    maxItems: 1
+> +    items:
+> +      - description: Register for accessing the MACs.
+> +      - description: SoC internal SRAM used for DMA operations.
+> +    minItems: 1
+>  
+>    clocks:
+>      minItems: 2
+> @@ -40,7 +43,11 @@ properties:
+>  
+>    interrupts:
+>      minItems: 1
+> -    maxItems: 4
+> +    maxItems: 6
+> +
+> +  interrupt-names:
+> +    minItems: 1
+> +    maxItems: 6
+>  
+>    power-domains:
+>      maxItems: 1
+> @@ -348,7 +355,17 @@ allOf:
+>      then:
+>        properties:
+>          interrupts:
+> -          minItems: 4
+> +          minItems: 2
+> +
+> +        interrupt-names:
+> +          minItems: 2
+> +          items:
+> +            - const: tx
+> +            - const: rx
+> +            - const: rx-ring0
+> +            - const: rx-ring1
+> +            - const: rx-ring2
+> +            - const: rx-ring3
+>  
+>          clocks:
+>            minItems: 24
+> @@ -381,8 +398,11 @@ allOf:
+>              - const: xgp2
+>              - const: xgp3
+>  
+> +        reg:
+> +          minItems: 2
+> +
+>  patternProperties:
+> -  "^mac@[0-1]$":
+> +  "^mac@[0-2]$":
+>      type: object
+>      unevaluatedProperties: false
+>      allOf:
+> -- 
+> 2.43.0
+> 
