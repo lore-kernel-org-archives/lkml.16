@@ -1,91 +1,139 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BCE2EF9A0;
-	Tue, 17 Jun 2025 18:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D646627817A;
+	Tue, 17 Jun 2025 18:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750185770; cv=none; b=lWVuQASn/VQrkHabneDvSnlU2JF8BAATwpYGQTaTegyJHEZe3Oaj1lDBmXQ3NvULEbsMfpYyp4ibA/tAgSJIFg4XsAQwqaa+jCVBQmccUlCH3pTzZ+TP4UAS4bypmbip+VmwhUxP5F9tdkSc1FrcPMA0Cyh2gJY2J2kjlcs/GVY=
+	t=1750185948; cv=none; b=MlCgDC8Uzx9+s8PRAi7nK+szr/bsPuNX0Nm3pZzppE23bzRGaRRpn6S1g6BkkxXaNZWcJNm5/S0DpErIB4pQ4t4ehc4I/buG600MivUCfaQ2+r5fGjZ3IHPLj7sKCOC8xsWbJ2RsCoZHyDOyGxevGGc+eIYUCpXF85QdiNiVgDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750185770; c=relaxed/simple;
-	bh=8S2U9qHLvtURdDB1hnc3jx1OaEuFXQrxVY9sKdqwrm0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VFLNMWUypmXmIE1VBpGB89omPctAQtVsIST4ye+gbUsz5AtLGXUpCaeJhtJAmpxkmLTvufWjZ7TUurmQ48UsGYm/NrBcdyJqh9Qs/3otaS26DNhw7AkaoYwfEaC+ocotvb8JIQ7iCjrweHcPNQ7ocMIDttsZlQ6PGzXmwsKy7eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kJz4ERqY; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750185948; c=relaxed/simple;
+	bh=H6RblS2J+vqUPof4s/zsYpMfRSX75gdTkoOssu9sOV4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZPBpuXm+6VQKUuoEuj9GozMM33c5mLXjW+uH4Em9YPtaqZ8rrchQF3wT0CFviFyozP0zxJEh1qOW3rJ1ZQegeUBIcAQQ0KsinpTsL32NZ9ZIM3v7sC8B9rgX5eK87vgrXbfgqVa7rquYIvYqdzFymGrCAxcJg9UWNcdqYm1db/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sz2VEuJ1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kJz4ERqY"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2fc93728b2so5074158a12.0;
-        Tue, 17 Jun 2025 11:42:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750185769; x=1750790569; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=54YceHIrKZZVlUR0dFkqL6sInfVu/iYSsjlmqLJUSpA=;
-        b=kJz4ERqYohD1qaD9xd2TF3ZbPn0rtZwrClao7VceoUYMbzwaNpSDGDXfuoBhE7Kd0e
-         RnBABb89RcK67OdZaXdGBgZkrUFISvimHx/7YYO8tat1JTyVGeUE1v4385lULIWIR6h6
-         yRrczMPQEftzyS0o3FIfEFWfMUtSdIavhtDf4zV5TFd+kGwiRzgWgkvNA+kITQxkFGQd
-         LeqWIdYWpVwWY9gkzjCGwwzBqv0tsOO5lBbMOWXTqEGKhU4914oAnmZbPHWUVSjFlzoM
-         LQl45M4IaHKYM2K+sFstk2/LRDwWfTjZi2D6K6Wb+gYQbtUlF/K1BrkRyxpYsNHzYSQh
-         qClw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750185769; x=1750790569;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=54YceHIrKZZVlUR0dFkqL6sInfVu/iYSsjlmqLJUSpA=;
-        b=SMkF25cR9lL89wIxSSAbIrbxZWk4+CWz0x5VdQYr1u5nUMSqviiwvtLq6y7UnDUP79
-         +rJW3Bt5oL/8wY4ewBcTUZTM30NlVul3McsjW1713ODXJMHsKY8pv0AgMdptPopudq3a
-         jfuM7oI3XcXp/rCvxFoHu6VLgkekCLgSx1ctSZefahIkAjHq30uiam6W4l/BPUbIsn6l
-         hXIEG3N9TMnEUzm73ogyLb4iGVoWR0JfxYpqUp99y2lSzMipZ6k2kyImBlMp013CU9Vp
-         WG/vzLkapfCyFZhjolzltWejHew9ilMMbN50uKl2eIl9P58AcX6p0C6tY4W+8DQnRtyx
-         5Huw==
-X-Forwarded-Encrypted: i=1; AJvYcCU6xdVOn1EqKSC13GFyaiGItbjczonq94RRrzDMfyzLBYFYRXRPleIkNROXf8EQtweqO5Y65yyT@vger.kernel.org, AJvYcCVUUZzkfGPbzZMerjfXTP3rSQ7H0DBQxdyo99dgFDTi493/ACkektYLSiTcaoUO2Gme9ANY8QIgR3IfaIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWz5MQveId1fig0MN7qwXnq8Gf3BqzSbVcVsyIaZHnAyZc81/K
-	sGtScscApDyfEKh0YSiPeM3Tv9Z2EUJWpSLGSL/Dw0eQLpxD2KyIE/w=
-X-Gm-Gg: ASbGncsfag55GNxoYz7FvkAyE1L6zvsFBE2vvHXDmXU+Rr4mAdOfOi5wSj2vWByBZxO
-	f6O4kRbwR8IPVYgQ47eCejzt8+VU3t9eTGO79Ic7YtKCC48Jw/3i+v5/YCzvnCkzR2uWFgduCTw
-	W1pP4U01TijNLnQtInYfDVvIh88yFS7agjRSKjElUrl1tP8FyYd8wg6TR2zbbz1eRNh4yjj51ur
-	zhnTxnPFC0FknszjTpRjjMnLBp2U4s/UsRzFlxv9wiSEX3+6jX3PGVdTWVp3Ni8qMHy8aibuBY8
-	ivfPJXoG5T0p3ELA/JOGRpwhKXjbEjw6OPBOOpw=
-X-Google-Smtp-Source: AGHT+IHGDC/lrSSRe9clXHUODDRbrxI1IEfIhRoCtqWaFoCqNO8Lj53w+wtRZo2FEQPFAKRgzG+xNg==
-X-Received: by 2002:a05:6a21:330b:b0:21f:5674:3dd8 with SMTP id adf61e73a8af0-21fbd63161cmr20230668637.26.1750185768627;
-        Tue, 17 Jun 2025 11:42:48 -0700 (PDT)
-Received: from fedora.. ([2601:647:6700:3390::c8d1])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d255fsm9547149b3a.172.2025.06.17.11.42.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 11:42:48 -0700 (PDT)
-From: Kuniyuki Iwashima <kuni1840@gmail.com>
-To: yuehaibing@huawei.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	horms@kernel.org,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	Kuniyuki Iwashima <kuniyu@google.com>
-Subject: Re: [PATCH net-next] tcp: Remove inet_hashinfo2_free_mod()
-Date: Tue, 17 Jun 2025 11:42:41 -0700
-Message-ID: <20250617184245.1816150-1-kuni1840@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617130613.498659-1-yuehaibing@huawei.com>
-References: <20250617130613.498659-1-yuehaibing@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sz2VEuJ1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E14CAC4CEF1;
+	Tue, 17 Jun 2025 18:45:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750185948;
+	bh=H6RblS2J+vqUPof4s/zsYpMfRSX75gdTkoOssu9sOV4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=sz2VEuJ1I8R4gH+wbhoc5jJY/X6YkFIEqxyY38hfhRJvZdKl60O2LX4qlNV5c294P
+	 4Wr9I+nOrTtaYJUr67ZRq3QUd2iwJfTDNAY1iukWKSNJ3waNdDleKCCY86EpTdAEZo
+	 n1xvxDk/epR95l1mc6zFJyaNb9nRgZ9AEVZvLmnabZ1xC6KgW/yYog7Lev1GpDG1om
+	 UfHtGQIRgGWpuuvpYi127KwRcK1frRk6m5YPfPajDgC4fSdMVCpRJhn+RzdDBAa8fS
+	 wQN61zDjGPWVJZrVNzVxKjjQwKqvHC5FaBsKHqSUe1DxiNhyVD+rOfXAXZma5DYrCr
+	 3rPLyTV0vM5Mw==
+Message-ID: <f2a643c9d9148916fe816958e98ac346f0c14946.camel@kernel.org>
+Subject: Re: [PATCH 4/4] nfs: new tracepoint in match_stateid operation
+From: Trond Myklebust <trondmy@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>, Benjamin Coddington
+ <bcodding@redhat.com>
+Cc: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 17 Jun 2025 14:45:46 -0400
+In-Reply-To: <d19d4a507361dad7d0cde2b94f01faf0fb866676.camel@kernel.org>
+References: <20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org>
+		 <20250603-nfs-tracepoints-v1-4-d2615f3bbe6c@kernel.org>
+		 <9BD9513B-972A-4C83-9100-A11F289191E5@redhat.com>
+	 <d19d4a507361dad7d0cde2b94f01faf0fb866676.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Yue Haibing <yuehaibing@huawei.com>
-Date: Tue, 17 Jun 2025 21:06:13 +0800
-> DCCP was removed, inet_hashinfo2_free_mod() is unused now.
-> 
-> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+On Tue, 2025-06-10 at 09:09 -0400, Jeff Layton wrote:
+> On Tue, 2025-06-10 at 09:04 -0400, Benjamin Coddington wrote:
+> > On 3 Jun 2025, at 7:42, Jeff Layton wrote:
+> >=20
+> > > Add new tracepoints in the NFSv4 match_stateid minorversion op
+> > > that show
+> > > the info in both stateids.
+> > >=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > > =C2=A0fs/nfs/nfs4proc.c=C2=A0 |=C2=A0 4 ++++
+> > > =C2=A0fs/nfs/nfs4trace.h | 56
+> > > ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > > =C2=A02 files changed, 60 insertions(+)
+> > >=20
+> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > index
+> > > 341740fa293d8fb1cfabe0813c7fcadf04df4f62..80126290589aaccd801c896
+> > > 5252523894e37c44a 100644
+> > > --- a/fs/nfs/nfs4proc.c
+> > > +++ b/fs/nfs/nfs4proc.c
+> > > @@ -10680,6 +10680,8 @@ nfs41_free_lock_state(struct nfs_server
+> > > *server, struct nfs4_lock_state *lsp)
+> > > =C2=A0static bool nfs41_match_stateid(const nfs4_stateid *s1,
+> > > =C2=A0		const nfs4_stateid *s2)
+> > > =C2=A0{
+> > > +	trace_nfs41_match_stateid(s1, s2);
+> > > +
+> > > =C2=A0	if (s1->type !=3D s2->type)
+> > > =C2=A0		return false;
+> > >=20
+> > > @@ -10697,6 +10699,8 @@ static bool nfs41_match_stateid(const
+> > > nfs4_stateid *s1,
+> > > =C2=A0static bool nfs4_match_stateid(const nfs4_stateid *s1,
+> > > =C2=A0		const nfs4_stateid *s2)
+> > > =C2=A0{
+> > > +	trace_nfs4_match_stateid(s1, s2);
+> > > +
+> > > =C2=A0	return nfs4_stateid_match(s1, s2);
+> > > =C2=A0}
+> > >=20
+> > > diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+> > > index
+> > > 73a6b60a848066546c2ae98b4982b0ab36bb0f73..9b56ce9f2f3dcb31a3e21d5
+> > > 740bcf62aca814214 100644
+> > > --- a/fs/nfs/nfs4trace.h
+> > > +++ b/fs/nfs/nfs4trace.h
+> > > @@ -1497,6 +1497,62 @@
+> > > DECLARE_EVENT_CLASS(nfs4_inode_stateid_callback_event,
+> > > =C2=A0DEFINE_NFS4_INODE_STATEID_CALLBACK_EVENT(nfs4_cb_recall);
+> > > =C2=A0DEFINE_NFS4_INODE_STATEID_CALLBACK_EVENT(nfs4_cb_layoutrecall_f=
+i
+> > > le);
+> > >=20
+> > > +#define show_stateid_type(type) \
+> > > +	__print_symbolic(type, \
+> > > +		{ NFS4_INVALID_STATEID_TYPE, "INVALID" }, \
+> > > +		{ NFS4_SPECIAL_STATEID_TYPE, "SPECIAL" }, \
+> > > +		{ NFS4_OPEN_STATEID_TYPE, "OPEN" }, \
+> > > +		{ NFS4_LOCK_STATEID_TYPE, "LOCK" }, \
+> > > +		{ NFS4_DELEGATION_STATEID_TYPE, "DELEGATION" },
+> > > \
+> > > +		{ NFS4_LAYOUT_STATEID_TYPE, "LAYOUT"
+> > > },	\
+> > > +		{ NFS4_PNFS_DS_STATEID_TYPE, "PNFS_DS" }, \
+> > > +		{ NFS4_REVOKED_STATEID_TYPE, "REVOKED" })
+> >=20
+> > Let's add NFS4_FREED_STATEID_TYPE at the end here, for after
+> > 77be29b7a3f89.
+> >=20
+> > Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+> >=20
+> > Ben
+>=20
+> Thanks, good catch. I did these patches a while ago and may have
+> missed
+> some of the more recent changes. Anna, can you fix that up or would
+> you
+> rather I resend the set?
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@google.com>
+Can you please just resend?
 
+Thanks!
+
+--=20
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trondmy@kernel.org, trond.myklebust@hammerspace.com
