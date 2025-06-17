@@ -1,151 +1,187 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72F11BE65
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:13:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87FFBE65
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:13:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147983; cv=none; b=IvP39zp2BvSj+Jkfx+oL39E5qe12O0cTqPmKs8ArHBaQTkKh4yJpr8/hiCqUlN3ippyqZiSUcWyMPEBCea7po7IODY4251MXy0f9SfCYlNaUxOgSugww4iOlsoyi2ueUXRQgaY/mjCFceXTl+ybSEsrjnALPnPQLLSxODKP9ue0=
+	t=1750148024; cv=none; b=KlXIA8N9NQ0xIYXWGFae9M1ECF/VLcpgo0ZGn+HloeBqCEJsJLWurBum5j+yIdV+g7saHbVODbFG09QCYXcitC0n2efP39zv5Oluz9MYcash9rNWPv0QPNILc+SdZ9fM6urvftuVuRFLVZRc2BCyFktMcU1OCwbG8wAYt6Y7TWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147983; c=relaxed/simple;
-	bh=yZ2rudRmr33RYh9OVOX8UzfJ/YJIWEg1jDmses83dhs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UhVbGAEbQeFihpyRm0y4NCisWl//uJnUny86G3viJTFLTfciXLNGDkHT1+2OJs9RiG5dg97CjSems6MoxmEq3YFmjS9mNNtTIZhMYakfYs/zFbzT0cuyB29UmLRwE62jITGkmUfgiK+Tey1DBM8QwYA/0sbCvzPwa5GtF5MTKOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D8DC15A1;
-	Tue, 17 Jun 2025 01:12:38 -0700 (PDT)
-Received: from [10.57.84.117] (unknown [10.57.84.117])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E31613F673;
-	Tue, 17 Jun 2025 01:12:57 -0700 (PDT)
-Message-ID: <f1876bc1-94f5-46d0-b51d-12537d979830@arm.com>
-Date: Tue, 17 Jun 2025 09:12:56 +0100
+	s=arc-20240116; t=1750148024; c=relaxed/simple;
+	bh=I1EHvaVJSlf9Rho0QjwvLu4eMTl1rbdzruHHALFqps4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=bMSyWWM8fWCeDdgPZ+PzTNLxhvINqeUUcKLk1YoKdo4gtRNVMdciI1obdgqUSCDmzHR8woMjC2mhkt+sLjSvX5nEVZOx6iaSosa9yQl+t1VTzz+Kx+he6d+DFRSSX/65EjfmxDnqj6on+Z6y5xD7RtST7bcQnAGeaSkT/UWiQ7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeJdAnnl; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeJdAnnl"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234d3261631so35954705ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750148022; x=1750752822; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WujX+FsFURe4z4iiEtEXeSpobOb65gUavCK/T69N4H4=;
+        b=UeJdAnnl6F+VCUEZMRfRWZK6+dRQB2LtktFujBgI9CWCOUq2nEzOVG61uCtuvZSTE/
+         NQKFInF5S9Dr1EzBhc2FIPOYLQ/oM90/cfwyfjbjUeMBQCU64TKJjvhYlfphHbHBm5ra
+         WBePCui1mXMBw2/6tGLdedLErWb0nPQLBKlF9ChNPPXQlDJ0nOTU0u/upIYu26h6wIU/
+         RJLHhGiS83vYDLkM2tDXTAQzXPWLnXi9VScs8A1mOg2C+0sDGCrTlF74/bpIap4Kl+zg
+         PB9hnCda4ipUiNgVMRGOH1dqrXn2tOASX8kYzsHokrmlamI609m6T31Lu+oJizUleCmE
+         AVJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750148022; x=1750752822;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WujX+FsFURe4z4iiEtEXeSpobOb65gUavCK/T69N4H4=;
+        b=ag/h0rYk2lnzUVQYb/YluzHB96KMViQ8JPKOgC63Koi7g21kN2MhgzhHndTg4XR6b3
+         6RX0+VFIIe7gpQ89i+volxf8BocQ0SlUxGQ31ZXFz7EOeKpTTK7wNGo+yQmwEVJBU9cn
+         0ZeC1kJejr9edwFUzRIqmIJMcMPly2PYy5q/9fCnwr4KkZbZt5s2uaGDIJA7LCuZ/Tkw
+         CfzdhE2YqPkHAWY/tr+j/SwU6gxUvwuCRUTiWS7QJZl/6jwlLppBIEcjND49ptfbxf8k
+         buKlVFhpIx6MPMQ1Xp1SzpnJc8SRv2+MeERWeSmArli51MWqbnXHSr0zxHEC0V8mUxad
+         EjtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWd4e56HZrV61uuhIppOT0MNl0FjFEIYHJh7biVCW+9LT6n44a6BIPLYLKnvCty8xqLdhL3CVoWZZiyp3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0pIql6Jo+tGAMa5KS4wKaSDU4DyQ6T7omUvDKoUz84h9iw4GL
+	er6w09sXJIXI7NIOdXrsKRAExvmg4Iv9GvRhx6Lygu3rmQ7ES0s1Al47ttoWYseNnYZeFg==
+X-Gm-Gg: ASbGncvZJGu4wmwwAQ2Qsm1E8CvKpqxRCd8VYlPOR9AKR/Duu9W2qei1HPTrQJzs9Ln
+	WdMd9c0ot9V4WiaTaB8T73V3HUi3V+T3rwTZiZtEfuTRpY/IHel66C0Jj8twU8VnCn2R9wa2yvh
+	BP53F4Fh4E0IE6vTkXE0wz4RfJCHOIW8tXWwHwRodo9k4PtnWH0sojYx46CGzskQ6dSlYcstFTr
+	26w6ec4pUso1FpHbscvyJuffJjHZERO8uKdiov/dxp7lkvAwtCnbJp9tJAdtnlqU0Nlv94sSj11
+	u85784xdnf2DG95p86CYH8U53XUwZhOb1xGZjx8fJEHTUmQzd1ZY6IY1r9SV2S/yjMF4HZyY
+X-Google-Smtp-Source: AGHT+IF4ELH4gDEJLP3yzCnMbU/2mpYbWqQYo+PKSyKyYF0gWHZ++ahqmeMq2otdvCVoeq/38ffZQg==
+X-Received: by 2002:a17:902:d4c2:b0:235:eb71:a389 with SMTP id d9443c01a7336-2366b17af40mr173905215ad.36.1750148022030;
+        Tue, 17 Jun 2025 01:13:42 -0700 (PDT)
+Received: from smtpclient.apple ([202.8.105.124])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a17e4sm73802375ad.56.2025.06.17.01.13.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Jun 2025 01:13:41 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: Enable vmalloc-huge with ptdump
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
- kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- david@redhat.com
-References: <20250616103310.17625-1-dev.jain@arm.com>
- <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
- <5f7b0a4d-fb3f-43bc-9f2a-3951222cfff2@arm.com>
- <ec8a398c-727c-420a-9110-5362ce35f786@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <ec8a398c-727c-420a-9110-5362ce35f786@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v0] [RFC] cleanup: Unify DEFINE_LOCK_GUARD_0 and
+ DEFINE_LOCK_GUARD_1
+From: Jemmy Wong <jemmywong512@gmail.com>
+In-Reply-To: <6850686f3088c_2491100fa@dwillia2-xfh.jf.intel.com.notmuch>
+Date: Tue, 17 Jun 2025 16:13:26 +0800
+Cc: Jemmy <jemmywong512@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Christian Brauner <brauner@kernel.org>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Al Viro <viro@zeniv.linux.org.uk>,
+ =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Ingo Molnar <mingo@kernel.org>,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4513F5D8-A3DF-4477-B54D-D9D614DDC2AF@gmail.com>
+References: <20250616111436.665171-1-jemmywong512@gmail.com>
+ <6850686f3088c_2491100fa@dwillia2-xfh.jf.intel.com.notmuch>
+To: Dan Williams <dan.j.williams@intel.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-On 17/06/2025 04:59, Dev Jain wrote:
-> 
-> On 17/06/25 8:24 am, Dev Jain wrote:
->>
->> On 16/06/25 11:37 pm, Ryan Roberts wrote:
->>> On 16/06/2025 11:33, Dev Jain wrote:
->>>> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
->>>> because an intermediate table may be removed, potentially causing the
->>>> ptdump code to dereference an invalid address. We want to be able to
->>>> analyze block vs page mappings for kernel mappings with ptdump, so to
->>>> enable vmalloc-huge with ptdump, synchronize between page table removal in
->>>> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
->>>> use mmap_read_lock and not write lock because we don't need to synchronize
->>>> between two different vm_structs; two vmalloc objects running this same
->>>> code path will point to different page tables, hence there is no race.
->>>>
->>>> For pud_free_pmd_page(), we isolate the PMD table to avoid taking the lock
->>>> 512 times again via pmd_free_pte_page().
->>>>
->>>> We implement the locking mechanism using static keys, since the chance
->>>> of a race is very small. Observe that the synchronization is needed
->>>> to avoid the following race:
->>>>
->>>> CPU1                            CPU2
->>>>                         take reference of PMD table
->>>> pud_clear()
->>>> pte_free_kernel()
->>>>                         walk freed PMD table
->>>>
->>>> and similar race between pmd_free_pte_page and ptdump_walk_pgd.
->>>>
->>>> Therefore, there are two cases: if ptdump sees the cleared PUD, then
->>>> we are safe. If not, then the patched-in read and write locks help us
->>>> avoid the race.
->>>>
->>>> To implement the mechanism, we need the static key access from mmu.c and
->>>> ptdump.c. Note that in case !CONFIG_PTDUMP_DEBUGFS, ptdump.o won't be a
->>>> target in the Makefile, therefore we cannot initialize the key there, as
->>>> is being done, for example, in the static key implementation of
->>>> hugetlb-vmemmap. Therefore, include asm/cpufeature.h, which includes
->>>> the jump_label mechanism. Declare the key there and define the key to false
->>>> in mmu.c.
->>>>
->>>> No issues were observed with mm-selftests. No issues were observed while
->>>> parallelly running test_vmalloc.sh and dumping the kernel pagetable through
->>>> sysfs in a loop.
->>>>
->>>> v2->v3:
->>>>   - Use static key mechanism
->>>>
->>>> v1->v2:
->>>>   - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
->>>>   - In case of pud_free_pmd_page(), isolate the PMD table to avoid taking
->>>>     the lock 512 times again via pmd_free_pte_page()
->>>>
->>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
->>>> ---
->>>>   arch/arm64/include/asm/cpufeature.h |  1 +
->>>>   arch/arm64/mm/mmu.c                 | 51 ++++++++++++++++++++++++++---
->>>>   arch/arm64/mm/ptdump.c              |  5 +++
->>>>   3 files changed, 53 insertions(+), 4 deletions(-)
->>>>
+Hi Dan,
 
-[...]
+> On Jun 17, 2025, at 2:54=E2=80=AFAM, Dan Williams =
+<dan.j.williams@intel.com> wrote:
+>=20
+> Jemmy Wong wrote:
+>> Hi,
+>>=20
+>> This patch consolidates the DEFINE_LOCK_GUARD_0 and =
+DEFINE_LOCK_GUARD_1
+>> macros into a single, unified 'DEFINE_LOCK_GUARD' macro to provide
+>> a consistent and simplified API for lock guard definitions.
+>>=20
+>> API changes:
+>> =46rom    DEFINE_LOCK_GUARD_0(name, lock, unlock, ...)
+>> to      DEFINE_LOCK_GUARD(name, *void*, lock, unlock, ...)
+>>=20
+>> =46rom    DEFINE_LOCK_GUARD_1(name, type, lock, unlock, ...)
+>> to      DEFINE_LOCK_GUARD(name, type, lock, unlock, ...)
+>>=20
+>> =46rom    CLASS(name, var)(args...)
+>> to      CLASS(name, var, args...)
+>>=20
+>> =46rom    guard(name)(args)
+>> to      guard(name, args)
+>=20
+> No, I think this organization is instructive for understanding how =
+these
+> helpers work. I.e.  that the macro is instantiating a function with an
+> automatic variable result, and the arguments to that function arrive =
+in
+> @args. This becomes even more important to understand with the =
+ACQUIRE()
+> and ACQUIRE_ERR() proposal that instantiate different functions to
+> retrieve other properties of the automatic variable result.
+>=20
+>> No change:
+>> scoped_guard(name, args...)
+>> scoped_cond_guard(name, fail, args...)
+>=20
+> Effectively these are not returning an automatic variable result to =
+the
+> current scope and the different calling convention is consistent with
+> that difference.
 
->>>> +    pud_clear(pudp);
->>> How can this possibly be correct; you're clearing the pud without any
->>> synchronisation. So you could have this situation:
->>>
->>> CPU1 (vmalloc)            CPU2 (ptdump)
->>>
->>>                 static_branch_enable()
->>>                   mmap_write_lock()
->>>                     pud = pudp_get()
->>
->> When you do pudp_get(), you won't be dereferencing a NULL pointer.
->> pud_clear() will nullify the pud entry. So pudp_get() will boil
->> down to retrieving a NULL entry. Or, pudp_get() will retrieve an
->> entry pointing to the now isolated PMD table. Correct me if I am
->> wrong.
->>
->>> pud_free_pmd_page()
->>>    pud_clear()
->>>                     access the table pointed to by pud
->>>                     BANG!
-> 
-> I am also confused thoroughly now : ) This should not go bang as the
-> 
-> table pointed to by pud is still there, and our sequence guarantees that
-> 
-> if the ptdump walk is using the pmd table, then pud_free_pmd_page won't
-> 
-> free the PMD table yet.
+I have some concerns about this point.
 
-You're right... I'm not sure what I was smoking last night. For some reason I
-read the pXd_clear() as "free". This approach looks good to me - very clever!
-And you even managed to ensure the WRITE_ONCE() in pXd_clear() doesn't get
-reordered after taking the lock via the existing dsb in the tlb maintenance
-operation - I like it!
+Both guard and scoped_guard use CLASS(...) to instantiate an anonymous =
+automatic variable,=20
+differing only in their scope, while CLASS instantiates a named =
+automatic variable.
 
-I'll send a separate review with some nits, but I'm out today, so that might
-have to wait until tomorrow.
+To ensure consistency, I believe guard, scoped_guard and CLASS should =
+share the same calling convention.
+This change would unify their syntax to:=20
+CLASS(name, var, args...), guard(name, args...) and scoped_guard(name, =
+args...),=20
+improving consistency and clarity.
 
-Thanks, and sorry again for the noise!
-Ryan
+In most cases, an anonymous automatic guard variable suffices to manage =
+object lifecycles,=20
+aligning with object-oriented programming languages that inherently =
+support automatic lifecycle management=20
+(constructing objects at initialization and destructing them upon scope =
+exit).=20
+
+For example, anonymous object instantiation in other languages includes:
+C++: 		People("Alice", 30)
+Python: 	People("Alice", 30)
+C#: 		new People("Alice", 30)
+PHP: 		new People("Alice", 30)
+Jave: 		new People("Alice", 30)
+JaveScript:	new People("Alice", 30)
+
+This unified syntax would make the API more intuitive and consistent =
+with established programming practices.
+
+>> ---
+>>=20
+>> Deailted changes:
+>>=20
+>> - DEFINE_CLASS(_name, _type, _exit, _init, _init_args...)
+>> The void type for _init_args is not required when the constructor =
+takes no arguments,
+>> as an int argc is implicitly inserted as the first argument. (int =
+argc, void) is an error.
+>>=20
+>> This patch includes only the core changes.
+>> Follow-up patches will be submitted once the approach is accepted.
+>=20
+> Appreciate the RFC first to avoid the thrash while deciding on the
+> format change, but it is a nak from me.
+
+Best,
+Jemmy
+
 
