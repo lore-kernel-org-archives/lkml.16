@@ -1,158 +1,175 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EA32749E3
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2F625A334;
+	Tue, 17 Jun 2025 19:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750188192; cv=none; b=CeGUQT1iW+EDXZvfxTg0ULu31Tr1xbh7eWbMh746NjTXTXfQNdh9wr5dIxZfeRA0XEZdQ+mBd1odNoeG7/o5y1+GJp4P/l5ogVgVhVHfmLNgvpBL/I21G3/MbKVLCK6aTu3dLxXlQyg9CJhU5L1nxkwiDCPEhnZWcx1yAuqLZCw=
+	t=1750188287; cv=none; b=P5W1I0wWXjGc7AojWSpX8O9Hoq+cR0N8hoNexZm29tp+HbTaUUvD1Df8IqWY650xjYNji7JbLA87FSVEm2VmEjOAO/rWVRlOnpolMV/Xl9nnzbkY9RFqdpf32deCewFIZtIfVH/lI7uD3xfEvXDj6ju/+5g/NDVZFr+k9DEpoIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750188192; c=relaxed/simple;
-	bh=MognockFkcOcnIkzl6aBSdw4zvGQ2TZZ9c6TgXrj9X0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TTfikbfuCPLsO+Ffwn1lia9QLxaMfJ2meStl1nYSv4gyJsv6Dsh1rCjvAIlJWSfYGStqBtGVcLve7+v5ALxAS6SSwg+c6+IE1nvjf/NWb+RdtlTJei0WrmrtM2zBmrRTCT78lmpcZfo7bzkGDTEON3ekPU8aOpdFys3BtDehyWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E5rz0Dk7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750188287; c=relaxed/simple;
+	bh=NVq4bJPC87OrYBibcu75PkM9np1jsYMAmLgnABHikSg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fmtdXZpRWvm6Ed+haDdchdsXYdGSg0bk/r6ashFETW4dc9ukky8pjfrK1e2qedmirHWy1lsiNT1uE5kCssSQXqXG5zVvfkcOXeSerx4vdwKqD1TPia8PEWUp6/+8crZ6p5UGLq4wYflE0561CWuVZVNHbMrfn60lGUVWCRT/pEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ImeXYWeH; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E5rz0Dk7"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HJDTN6002291
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:23:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LdzPHGOIKz6OedKEjfrT+dQssvLIdj/9tY0eYX+UX7A=; b=E5rz0Dk7OSeCVzLx
-	h5/deRqpIuEEeowUpsWk9y+bYSYSnmr5N4AWBVRLez8WLzBe4g1T/sG8xo4F2v+6
-	uSQxI8t8Dl1bD6Tsw+tBhZokQmYdgu04WUavzNUAJIBrdXQsCMJ4To7TlW9/nrSR
-	tllmnvY//GLJIjcGB1IJtdTcqLqPbzsk8zOqjSQ3Xv5azlk9mPP6FzEsDJ9tPbig
-	eJBVCiJTY24SX2f569sxTXA2iR4oYT1eroSsoWmTFl2HcM3ZR+0xlhD0FvG/nh1w
-	fbIy1C0gdztrLOVrrGDfWQt3/dRvxq7woVaPa0G7eeCiJfIA4F0jUX8iHxuhXVrX
-	040Bvw==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47akuwcyrc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:23:10 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d21080c26fso166388285a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:23:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImeXYWeH"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32b595891d2so24723201fa.2;
+        Tue, 17 Jun 2025 12:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750188284; x=1750793084; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E32c5RFJYZM9jGHfnakeuQyDnVaI0nCOfN94RWXfGg8=;
+        b=ImeXYWeHzbWK/6T64P04Z7GsR9qixETPEM5A5vV773LVJPLNn9/XFj62uxMZPp6b92
+         5WFKh+sdD1x/f4rw4fZbBinqUvkLblwGeEPbdq17pdZX4dIxwVJYdqyYcLv0755sgm0y
+         xbpoopgfjPKs+9dPnJcJoSD/NDcESv/dGzx7XDjZyLP1L0XTpwak3NHGETtnIM/KFU0c
+         yudg9WDGABTh7ADl4WXnR7zEQNbNj1Hib9fC1hrvks0Kc9rSvEpmvZ/sxyEXKjVDw+XB
+         IVtVCaa+yw+MLQ6UOo8R/x9m+nDy8OVybiWp+GNl+HSvIfP+R36QKiltqmGCRrnUaEeD
+         DoIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750188189; x=1750792989;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LdzPHGOIKz6OedKEjfrT+dQssvLIdj/9tY0eYX+UX7A=;
-        b=JbP6Tn+lgfcqiT8H+AwvSc2HK8GV+qcmh3O3P/XKjhemissNs2PEqeKhGsTmsd+oRW
-         vENlTx/XT9H2wIpu/xZbe82fd76uUlglv0AKW3HFTiEas19ZcKEAYCl/lazi9dqwJNhX
-         /cnQagMud8l9y95N4Klk9Py+XSC//OXDjoXUtRDHsaIVecY70vu7x3HZqbjutUEKGEA4
-         HioTjU8jFMNQHN7KS1RPd+H5zHPvBKYE4hyWnL1pbqBB8pUZTYs9np1uyTHAQb8Ah66U
-         DYUju/ZQglL8CuUCQx/R3ts9ynVSWCqr5HoZF1PG4UpZLpn6Cvu+bTcBkZnQpqitZbKK
-         9Ftg==
-X-Forwarded-Encrypted: i=1; AJvYcCXDWa9FWZ9v+r5ioJr1zt8Viwplhp9juK9JTuSdAv7YwyUDPJnU5l5K6Kwhctw5tWN14bGUbEGKXOw2eo8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5M4adqOTiU9yVzHHw+HqR4UR+6agx9BHEzcW2qHkdy/l8sudU
-	dbjdmgDfIx/rgGwQIWwjCpEMz8cobMmwuLuD96eRcLTwduNG1BnmKftBKAV8nU2Rz9Aqj2+XZZ5
-	yo2VAZ9MF6kkiIBqjEQ6SCcLdgfcAS5REVGXiqhh2q18ViU8PTA7ebS4yDkAVT4CF2cE=
-X-Gm-Gg: ASbGncuVmYKm1GALTG8yDxcazpCUxh0mc9Y8nHdRhJPSJFqveI60vgZ0h3JeJy2YjHu
-	NPwl5Gazbdgg+E8gasW5wdY2ptoyvDnnsebuX12jU3T1viAPfrj9oEXwFdZrRSdGK4VPbNmS/7L
-	uGE/oXB3kWSl35+yLoN1vyzVr4OBLTRjYmPxLnn+qI/EG6SumoDKFMA5DaUDo3/cdx36n3tgjA5
-	FiYjBQKXOA6Bdu+uxpVQccy4TUe0rUSCJLzhtm8AjGQNV+tzKmTHFfWPze/l+UvQDGaHES0Iz8J
-	hjUVPVDcX+gYlV0h4qV47L+fntOSg+0mVy0dys7eXoq6FiFHiRMHWdKLrCFSohcZp9fbJV0RJiX
-	IxyU=
-X-Received: by 2002:a05:620a:1727:b0:7c7:9d87:9e2 with SMTP id af79cd13be357-7d3ddfc335fmr269471085a.12.1750188188666;
-        Tue, 17 Jun 2025 12:23:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH0yvPjKPU38lsTFY4yNQOSMkrjfXE9YWA0WVDxHRlxx4vA+NZcrpEX0zx8IWsyvawWlt53nQ==
-X-Received: by 2002:a05:620a:1727:b0:7c7:9d87:9e2 with SMTP id af79cd13be357-7d3ddfc335fmr269468285a.12.1750188188108;
-        Tue, 17 Jun 2025 12:23:08 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88feb23sm914603466b.96.2025.06.17.12.23.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 12:23:07 -0700 (PDT)
-Message-ID: <d23b8cf0-1ba0-45f6-b06b-f7a862bae457@oss.qualcomm.com>
-Date: Tue, 17 Jun 2025 21:23:05 +0200
+        d=1e100.net; s=20230601; t=1750188284; x=1750793084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E32c5RFJYZM9jGHfnakeuQyDnVaI0nCOfN94RWXfGg8=;
+        b=vN7k2qa76dHpTFWmX5vfTebvnnJwvbt27rokgkn6Kptc0bOM7lUDEEckxrLTFZYKUQ
+         t2KzD1joZyL1UEtjjOv9co2zRagJnbCP5puK5U/lsuVMgzWVdb/Zr4kcTVloDkZLNIHp
+         Lc0amNd01MXTNSU93njDYvDWm8XHr2jj1/3oZqEMIOf3fv4NPyv2TgZu3RoU2S8N87um
+         reES1K0XM/CYpOJZ3GcQPbHMij830LZC8pd3fpwfK55UYyM7CKtWvVYeK1SlsI7frbP6
+         vei/gezSuiRYTZvtaS6i6tvO5yq0OKPSJSGHUw5E9F1zeVUtnqJHfXX+98fDlxFSQkOk
+         J7VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZpTU1gMJvU7/vXg19tQUzHocBAjzOD1Dr3A6tCkY6D29+/xjgsOwM2nSfSFhjIyEjUSQ7MNZJpItXIRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMqvv7PAFzhsFHDtSoRAyiON+MbP/vBRJwGGwigYQQDcuo4QpU
+	A7xnkUWIJnB7O9mlDkB0K7CjubUy9PIQDjt8Poo78DRE2tDlIS3364DKLJv2AfTmz4D0HWekfLW
+	wxa/aSllgZUpL90jIfeX1wFFF9GGTBOo=
+X-Gm-Gg: ASbGncvxCtA/jRnvIcyEF1Jba2fgQeXNI5Mt12hreAOhLRYEjfEEnZKOrURnjGHyaAw
+	cPYfYXE28GgVstBjpfxeYPa9Whe7Bj7wkUPWdBiM/fOJZbGUqR/PzNZW0KRTk9PKGGeAAqgoK02
+	rkGgOWW/7bsvnCcG3uwaxbyZSShDNRI9dV/9kuY20iItlpW0kCBVwcm19vzz9uSvikkGiFMmrVF
+	824
+X-Google-Smtp-Source: AGHT+IFeRRlJdOkye1DoYPuZQXVCJZ7xvW17k3+gX3t97yT6MSy+jL3T4341z4P2POOFHfKv7hcx6jPqIsON6JTSFy4=
+X-Received: by 2002:a05:651c:1987:b0:32b:3cf5:7358 with SMTP id
+ 38308e7fff4ca-32b4a5c4531mr50932491fa.28.1750188283483; Tue, 17 Jun 2025
+ 12:24:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: qcs8300: Add EPSS l3 interconnect
- provider node
-To: Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>,
-        Georgi Djakov <djakov@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: Mike Tiption <mdtipton@quicinc.com>, Sibi Sankar
- <quic_sibis@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250617090651.55-1-raviteja.laggyshetty@oss.qualcomm.com>
- <20250617090651.55-4-raviteja.laggyshetty@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250617090651.55-4-raviteja.laggyshetty@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: bfujdCc_pmWQncFV8toRno9e_TxbuptO
-X-Authority-Analysis: v=2.4 cv=He0UTjE8 c=1 sm=1 tr=0 ts=6851c09e cx=c_pps
- a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=LJL_6YULmAKA-UV3y8AA:9
- a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-GUID: bfujdCc_pmWQncFV8toRno9e_TxbuptO
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE1NSBTYWx0ZWRfX4pesE0iupym7
- llMz2T32CFkS1gHk/Qx3z+K9hdEj93sQbqcpgqcbXJeaPQw9P+FUsiY1/gNgYjby9RBIPQPwcIM
- +t/Fp4gQN711qiUQDwQHnbhUjxnzk6LJ40g9lcsE+TbKt6EayrJGuQ2OF8lN4fp+O8vKGDRrpT8
- QOK+wOnnqhOisAGWfv7D3LrnJOV5moW14OdJuvC55W/ZCi5c8MqaPVKF025u4EOyuZ9YlrWbM8R
- uBEkqSRBqwT/phZ1FmPDPRl/tZ7Hqeq+Os9TWgwf5WxSk6SuMtrfkdt5vl1A35KiJBTvJXOy+3n
- ufpydQdXgvjmW14VojHoPd1gyioedpWepyzy09zcD3dtFlm3QvidW2D/QNyjwHRiZwAiQmNRbaM
- ynb5PG0eXTf9XiyNx8usULoJAP1JDwEL6ihZeq94hrGWnJgtnjE0sifdJc1HkKXU6Q/RDAAZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_08,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 suspectscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506170155
+References: <20250611190056.355878-1-akshayaj.lkd@gmail.com>
+In-Reply-To: <20250611190056.355878-1-akshayaj.lkd@gmail.com>
+From: Akshay Jindal <akshayaj.lkd@gmail.com>
+Date: Wed, 18 Jun 2025 00:54:32 +0530
+X-Gm-Features: AX0GCFvvyCqvsVdhQnKmvJkfpZXnjkosl0Jz_b3GjAbl1DeOvvB5c6_D1FCMHu0
+Message-ID: <CAE3SzaQS66-vbwKe18i=fMGa-B+JZ4P=za=bOTutoTxOMwANKA@mail.gmail.com>
+Subject: Re: [PATCH] PCI/AER: Add Error Log in case when AER_MAX_MULTI_ERR_DEVICES
+ limit hit during AER handling.
+To: bhelgaas@google.com, ilpo.jarvinen@linux.intel.com, 
+	Jonathan.Cameron@huawei.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
+	kwilczynski@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com, 
+	karolina.stolarek@oracle.com, lukas@wunner.de, pandoh@google.com
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/17/25 11:06 AM, Raviteja Laggyshetty wrote:
-> Add Epoch Subsystem (EPSS) L3 interconnect provider node for QCS8300 SoC.
-> 
-> Signed-off-by: Raviteja Laggyshetty <raviteja.laggyshetty@oss.qualcomm.com>
+On Thu, Jun 12, 2025 at 12:31=E2=80=AFAM Akshay Jindal <akshayaj.lkd@gmail.=
+com> wrote:
+>
+> When an error is detected at a PCIe device and the root port receives the
+> error message, the threaded IRQ handler aer_isr traverses down the
+> hierarchy from the root port and keeps on adding those pcie devices on
+> which error has been recorded into the e_info->dev[] array for
+> respective error handling and recovery. The e_info->dev[] array has size
+> AER_MAX_MULTI_ERR_DEVICES which currently has been defined as 5.
+> This change adds an error message in case this limit is hit.
+>
+> Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
 > ---
->  arch/arm64/boot/dts/qcom/qcs8300.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> index 7ada029c32c1..e056b3af21d5 100644
-> --- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/dma/qcom-gpi.h>
->  #include <dt-bindings/firmware/qcom,scm.h>
->  #include <dt-bindings/interconnect/qcom,icc.h>
-> +#include <dt-bindings/interconnect/qcom,osm-l3.h>
->  #include <dt-bindings/interconnect/qcom,qcs8300-rpmh.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/mailbox/qcom-ipcc.h>
-> @@ -5433,6 +5434,14 @@ rpmhpd_opp_turbo_l1: opp-9 {
->  			};
->  		};
->  
-> +		epss_l3_cl0: interconnect@18590000 {
-> +			compatible = "qcom,qcs8300-epss-l3", "qcom,epss-l3";
-> +				reg = <0x0 0x18590000 0x0 0x1000>;
-> +				clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GCC_GPLL0>;
-> +				clock-names = "xo", "alternate";
+>
+> Testing:
+> =3D=3D=3D=3D=3D=3D=3D=3D
+> Verified log in dmesg on QEMU.
+>
+> 1. Following command created the required environment. As mentioned below=
+ a
+> pcie-root-port and a virtio-net-pci device are used on a Q35 machine mode=
+l.
+> ./qemu-system-x86_64 \
+>         -M q35,accel=3Dkvm \
+>         -m 2G -cpu host -nographic \
+>         -serial mon:stdio \
+>         -kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
+>         -initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.c=
+pio.gz \
+>         -append "console=3DttyS0 root=3D/ pci=3Dpcie_scan_all" \
+>         -device pcie-root-port,id=3Drp0,chassis=3D1,slot=3D1 \
+>         -device virtio-net-pci,bus=3Drp0
+>
+> ~ # mylspci -t
+> -[0000:00]-+-00.0
+>            +-01.0
+>            +-02.0
+>            +-03.0-[01]----00.0
+>            +-1f.0
+>            +-1f.2
+>            \-1f.3
+> 00:03.0--> pcie-root-port
+>
+>
+> 2. Kernel bzImage compiled with following changes:
+>         2.1 CONFIG_PCIEAER=3Dy in config
+>         2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
+>         Since there is no pcie-testdev in QEMU, it is impossible to creat=
+e
+>         a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
+>         error scenario by changing the limit to 0.
+>         2.3 Log added at the required place in aer.c.
+>
+> 3. Both correctable and uncorrectable errors were injected on
+> pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
+> HMP Command used are as follows:
+>         3.1 pcie_aer_inject_error -c rp0 0x1
+>         3.2 pcie_aer_inject_error -c rp0 0x40
+>         3.3 pcie_aer_inject_error rp0 0x10
+>
+> Resulting dmesg:
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> [    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
+> [   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addit=
+ion of PCIe devices for AER handling
+> [  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addit=
+ion of PCIe devices for AER handling
+> [  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addit=
+ion of PCIe devices for AER handling
+>
+>  drivers/pci/pcie/aer.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 70ac66188367..3995a1db5699 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, vo=
+id *data)
+>                 /* List this device */
+>                 if (add_error_device(e_info, dev)) {
+>                         /* We cannot handle more... Stop iteration */
+> -                       /* TODO: Should print error message here? */
+> +                       pci_err(dev, "Exceeded max allowed (%d) addition =
+of PCIe "
+> +                               "devices for AER handling\n", AER_MAX_MUL=
+TI_ERR_DEVICES);
+>                         return 1;
+>                 }
+>
+> --
+> 2.43.0
+>
+Gentle reminder.
 
-Very odd indentation
-
-You should also immediately bind these providers to something,
-otherwise sync_state will happily take them to whatever minimum
-rate the hardware allows, making things worse
-
-Konrad
-
+Thanks,
+Akshay.
