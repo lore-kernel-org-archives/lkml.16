@@ -1,164 +1,123 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B632E8882
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C42111865EE;
+	Tue, 17 Jun 2025 15:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172888; cv=none; b=O6MXyHjgneUYBJzwS6hFEB2kGyb3c054ZxPuGD3JXwlB9o+jNfvbzHwuplH/jEB9QPoNB+gl6DWt9fDo621n82M41v+7B4JEAgpEvxQ2fyds7MkDqLFXVASbExFKY6Ww0oTXiAz1130FVu+/efd4oHMoVwsQ6OspwgtMEWbs2lA=
+	t=1750172942; cv=none; b=QMUuLiiFdCZhvmU6TmOOtli3G8mk/hEqmLl8Lbl1NhEkL0EvKmWVkRABGPZLVql4zLzfhPg2FAbouiBvGh/bJw0oziF5ySJNjEcUe6rXh5Z4KYN0Fmmb0n8C+mcxdjNV2lsnqCCM43/yU7NHRPn9O/ZF22zpRnToajrXBW/iPV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172888; c=relaxed/simple;
-	bh=MlST4HpCX/8lpMelJ6BJ1R2IsWPXG8rqsXFPnElrw7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P/jaBDfqePsqr0VauW/T89gum8FoF4fMRQWsr/KP6yJ8V4dEVEKR1xtTm8pv2yCm1/LulNuieAkNSMotLfhyNXycymjc86PAxZlOFImj+DxBgcoAoXuIo/K+POWIfsz2pU700bOT6xSB3JmvIgHayN2Os2mzgIe2fhqhCmJInMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uRXuZ-0003lG-6t; Tue, 17 Jun 2025 17:07:43 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uRXuX-003zen-1k;
-	Tue, 17 Jun 2025 17:07:41 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 2A3B842AA50;
-	Tue, 17 Jun 2025 15:07:41 +0000 (UTC)
-Date: Tue, 17 Jun 2025 17:07:40 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
-	Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, imx@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de, Frank Li <Frank.Li@nxp.com>, 
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v3 03/10] net: fec: add missing header files
-Message-ID: <20250617-funky-auspicious-stallion-25f396-mkl@pengutronix.de>
-References: <20250617-fec-cleanups-v3-0-a57bfb38993f@pengutronix.de>
- <20250617-fec-cleanups-v3-3-a57bfb38993f@pengutronix.de>
- <b6687ad2-1fd9-4cb5-8f5d-8c203599f002@intel.com>
+	s=arc-20240116; t=1750172942; c=relaxed/simple;
+	bh=GFHXVRfzC0mqtyiNtLvDOfJgC8NaMnttOwFnd4gpPos=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uv1TPFX8L9nmZ9nyyVhssxdogrls6fzBTPgJwMlPMIo5vlw5PWiEixWAgZ8p5KP8IlVaYtUU5ZydpZL8UFP7BoxgCAZb0F+OPCQs196QqP86LKLZu/C+wyF18r6gCb59QZbH5etjwkN3/pteiIR/tXTqQBp8DFsAYNSpgha6CO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u+easgqy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u+easgqy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7359C4CEE3;
+	Tue, 17 Jun 2025 15:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750172942;
+	bh=GFHXVRfzC0mqtyiNtLvDOfJgC8NaMnttOwFnd4gpPos=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=u+easgqyr5Nv1UFLjGa/E1qiPETFVvSl5Mw1ks1H5dNWdDhN5AQeioE8a8z2xpels
+	 vQBcgfZS07SupunLRnHH9UIAn/+8P7j4G3+1nxOqQ3ZusnXyEjta9oR6MRJMCdT4qn
+	 oBBsqOoY/Uaj2hOoXcSwxmH19+tF1F6UxyR4IOj8j4jHauqPDaKT+wMU9DGQpfMd0Y
+	 7jYzGESm5km23wghRhfFiTBcHDVP554sTMB3laNnp2/0B5K/YNJhSfjQA6j1Wk+6BO
+	 O/d/B1D74zlauqA56fdKRFyriyW7XMY+DSJG9Ao83zXdbAtR9GjuU7hYsZR5CqaNLY
+	 v9p5UWiEqdjoQ==
+Date: Tue, 17 Jun 2025 17:08:57 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
+Message-ID: <aFGFCc7eiZJM8RKM@pollux>
+References: <20250612144953.111829-2-phasta@kernel.org>
+ <aFFy5aG1eOeMU44S@phenom.ffwll.local>
+ <aFF3YIAFkgsAKvQV@pollux>
+ <aFF6xeu78cXTGFH0@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vb7ad2zc4mjylvxd"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b6687ad2-1fd9-4cb5-8f5d-8c203599f002@intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <aFF6xeu78cXTGFH0@phenom.ffwll.local>
 
+On Tue, Jun 17, 2025 at 04:25:09PM +0200, Simona Vetter wrote:
+> On Tue, Jun 17, 2025 at 04:10:40PM +0200, Danilo Krummrich wrote:
+> > On Tue, Jun 17, 2025 at 03:51:33PM +0200, Simona Vetter wrote:
+> > > On Thu, Jun 12, 2025 at 04:49:54PM +0200, Philipp Stanner wrote:
+> > > > + * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
+> > > > + * theoretically can deadlock. It must be guaranteed that submit_wq never has
+> > > > + * more than max_active - 1 active tasks, or if max_active tasks are reached at
+> > > > + * least one of them does not execute operations that may block on dma_fences
+> > > > + * that potentially make progress through this scheduler instance. Otherwise,
+> > > > + * it is possible that all max_active tasks end up waiting on a dma_fence (that
+> > > > + * can only make progress through this schduler instance), while the
+> > > > + * scheduler's queued work waits for at least one of the max_active tasks to
+> > > > + * finish. Thus, this can result in a deadlock.
+> > > 
+> > > Uh if you have an ordered wq you deadlock with just one misuse. I'd just
+> > > explain that the wq must provide sufficient forward-progress guarantees
+> > > for the scheduler, specifically that it's on the dma_fence signalling
+> > > critical path and leave the concrete examples for people to figure out
+> > > when the design a specific locking scheme.
+> > 
+> > This isn't a concrete example, is it? It's exactly what you say in slightly
+> > different words, with the addition of highlighting the impact of the workqueue's
+> > max_active configuration.
+> > 
+> > I think that's relevant, because N - 1 active tasks can be on the dma_fence
+> > signalling critical path without issues.
+> > 
+> > We could change
+> > 
+> > 	"if max_active tasks are reached at least one of them must not execute
+> > 	 operations that may block on dma_fences that potentially make progress
+> > 	 through this scheduler instance"
+> > 
+> > to 
+> > 
+> > 	"if max_active tasks are reached at least one of them must not be on the
+> > 	 dma_fence signalling critical path"
+> > 
+> > which is a bit more to the point I think.
+> 
+> My point was to more state that the wq must be suitable for the scheduler
+> jobs as the general issue, and specifically then also highlight the
+> dma_fence concurrency issue.
 
---vb7ad2zc4mjylvxd
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH net-next v3 03/10] net: fec: add missing header files
-MIME-Version: 1.0
+Sure, there are more guarantees the driver has to uphold, but this is one of
+them, so I think we should explain it.
 
-On 17.06.2025 16:55:19, Alexander Lobakin wrote:
-> From: Marc Kleine-Budde <mkl@pengutronix.de>
-> Date: Tue, 17 Jun 2025 15:24:53 +0200
->=20
-> > The fec.h isn't self contained. Add missing header files, so that it ca=
-n be
-> > parsed by language servers without errors.
-> >=20
-> > Reviewed-by: Wei Fang <wei.fang@nxp.com>
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> > ---
-> >  drivers/net/ethernet/freescale/fec.h | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >=20
-> > diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/etherne=
-t/freescale/fec.h
-> > index ce1e4fe4d492..4098d439a6ff 100644
-> > --- a/drivers/net/ethernet/freescale/fec.h
-> > +++ b/drivers/net/ethernet/freescale/fec.h
-> > @@ -15,7 +15,9 @@
-> >  /*********************************************************************=
-*******/
-> > =20
-> >  #include <linux/clocksource.h>
-> > +#include <linux/ethtool.h>
-> >  #include <linux/net_tstamp.h>
-> > +#include <linux/phy.h>
-> >  #include <linux/pm_qos.h>
-> >  #include <linux/bpf.h>
-> >  #include <linux/ptp_clock_kernel.h>
->=20
-> Sort alphabetically while at it? You'd only need to move bpf.h AFAICS.
+> But it's not the only one, you can have driver locks and other fun involved
+> here too.
 
-After sorting, the incremental diff will look like this:
+Yeah, but it boils down to the same issue, e.g. if a driver takes a lock in
+active work, and this lock is taken elsewhere for activities that violate the
+dma_fence signalling critical path.
 
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/fr=
-eescale/fec.h
-index 15334a5cce0f..1fe5e92afeb3 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -14,16 +14,16 @@
- #define FEC_H
- /*************************************************************************=
-***/
-=20
-+#include <dt-bindings/firmware/imx/rsrc.h>
-+#include <linux/bpf.h>
- #include <linux/clocksource.h>
- #include <linux/ethtool.h>
-+#include <linux/firmware/imx/sci.h>
- #include <linux/net_tstamp.h>
- #include <linux/phy.h>
- #include <linux/pm_qos.h>
--#include <linux/bpf.h>
- #include <linux/ptp_clock_kernel.h>
- #include <linux/timecounter.h>
--#include <dt-bindings/firmware/imx/rsrc.h>
--#include <linux/firmware/imx/sci.h>
- #include <net/xdp.h>
-=20
- #if defined(CONFIG_M523x) || defined(CONFIG_M527x) || defined(CONFIG_M528x=
-) || \
+All the cases I have in mind boil down to that we potentially, either directly
+or indirectly (through some synchronization primitive), wait for things we are
+not allowed to wait for in the dma_fence signalling critical path.
 
-Is that okay? If so, I'll squash it.
+Or do you mean something different?
 
-regards,
-Marc
+> Also since all the paragraphs above talk about ordered wq as the example
+> where specifying your own wq makes sense, it's a bit confusing to now
+> suddenly only talk about the concurrent wq case without again mentioned
+> that the ordered wq case is really limited.
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+I mean, it talks about both cases in a generic way, i.e. if you set
+max_active == 1 in the text it covers the ordered case.
 
---vb7ad2zc4mjylvxd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhRhLkACgkQDHRl3/mQ
-kZynRwf5AfBSqlvS6ZPaUDdzbaT4ChHehHLaV34f0P/3xHED8RIiw7WIX23Zui9c
-JoTWQ6dr2L24g9pj0yaq6sxcuKCLnN5Cg0HXZ/p+ZhQr52HozhR+wT7BHAnNjkfn
-P6rUERHpn/RikEUObpv6UVjfCKTR5IUlNF6ByYDhJeYJ/SVqc99NgnQj/g5FkHV4
-4Fz2zVrwe8Szj0IscA+2BVYEPog5pYDnlRUx+X28G9hE0C9nmatzWnYLcTAn2ooV
-UBPCqwpYHHQUWBwlG3CDUXhmB3ZANddW68zg1jX8lw6lA3cpRU1/tceo67puj9Pp
-VSEwopzAQSPGlsU9RmGwLiZc4a6kqw==
-=1zfJ
------END PGP SIGNATURE-----
-
---vb7ad2zc4mjylvxd--
+Or do you mean to say that we should *only* allow ordered workqueues to be
+shared with the driver?
