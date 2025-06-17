@@ -1,128 +1,115 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D28B295D85;
-	Tue, 17 Jun 2025 23:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144012957AD;
+	Tue, 17 Jun 2025 23:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750202391; cv=none; b=Bvj+WIuOakfI9eNVlNRnyJHAwnkac4WlZbkh75xwTx3r/UC1uk+p2ll7POdh00zD++q4PLF14gSAasVlK3xiZWOsxQgHsU7bd6PHVRZulXKa4RetSu2mFyEhxi/8NBWtWYy5MEkr1oDG8SxOzbnzGvThJymNpQrlA7CZ55CBmU0=
+	t=1750202393; cv=none; b=qRgzuCkqDEVuPvIN3rclUMwgSuVwCAZsANblmZPH4Dwl/cdOE/PJSxmZiqIklmBAmeVO5thrbCpAQ3nV6zs3oTj4bP7M04+zwHJD6V5LhkGNYBNMjKEFPIIgLzyaDzCAroyGvAANxZF24iV2Rig/Bs7FF314P7tMBWH7d6aYT+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750202391; c=relaxed/simple;
-	bh=72RiHssNvDFQJNQq4LIcMB+q+Uc4lLwzNNUsDHHaPag=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cESDcWhSvygWSHNC/DCYRSg4YmXynRCJ8UbHV0Ps7TuDa+8qF2VxQaJgeKFFdRs9WDV719BNA9UN7lIP7HqFc0IeJzt/1778JYJ1gTu46ovianGPFYa3shEbq10Dp+B6W/oYO3QP3H0O4Ft/fgnHXwRx7KluMV/yAT6XSfscGJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OUmhq80p; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750202393; c=relaxed/simple;
+	bh=w4a/xlZzvzSTeyCYtqL9aFLjbsWcjKMfPUooqnwUlXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Or85ZStXCWGnacc0kxJlhjAIB24JtNYcYRXEwnMA0DJ1N91PI1a+mFObh/lCe7PYpK7KVG0EjP12UzzV4+XRHuehmPTYZz54cEJ9Aeti5C8cvLvhDdLVyvQdLOzV6xvJ9PInkcIs/4LP//W29N/IceGXp7kbTaK5RCgaVp556PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZFEJsdLe; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OUmhq80p"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23602481460so61731955ad.0;
-        Tue, 17 Jun 2025 16:19:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750202390; x=1750807190; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8kqTpESSgpiUk9q9r1gwFAkl1Q36FcCmMv3qMR5ZJs=;
-        b=OUmhq80pZFqs0MbizXnBpqzixTOei6T/+6Dw2b6/SH1TKjqPCF+X0RBqs+JybuGefO
-         jAUuOE/3Oy1Rj03HdTRe06uyQ/icyKfnvzoIzecTh53z9NQ8jaJighs+j0CXdGc1zD8B
-         HuTP9MFfMWgc4wWgF0YOScTg9CLFbGswU+7gKteVdWHRRQ+tKRHofJymhsbTCsBQYV2g
-         uzRinzKzrNnAevquhcsnnuZ9/M0QzKtMMIarMzh/kNvfWIzc0crxRBI2UTw+qwsmEO07
-         DSFdnsFfIdXZZgfGglRWL78nge50de/W6b1RpNxRbfkrLzR+sNGWfTjqBo5WzT723w+r
-         SAwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750202390; x=1750807190;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c8kqTpESSgpiUk9q9r1gwFAkl1Q36FcCmMv3qMR5ZJs=;
-        b=Rw9CSdkbKzuM2GRUXMOdnzH6zho4eEi6gV/fNKNyBSTgoQBa+4/BuEc39iO8KdRuTw
-         or7SlpKvwaRu+F1qZbdS1ftVgtApcG0pekSgOavkpoMNen+6t+IJLxlp0LXf1Np50Fah
-         MnxgpgwHuEXFIYEGzMpmro5k/ilx3uVbp8H9Nqc13N0AD0UnkqgcFPZ5IoZET4yJcazK
-         HQM3U9IJ8sRlHcp9vlgIQ3/8IdjWpk1+RRWwQCAIiE1roOEQLXF91gThRDzW1ZYC+Y4h
-         5aXY03DY/W/tdOIJZi0Ir1R53nn7LTY/HSeg9dKe4AxEDMTmHrpfMFya07mRpo3S9anO
-         oVPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUMNjzHheEE3Vgh8p+bOBPcdwuS/2Kt+vZacRC4V9jsReFLKSVu5mKccluvQ4+dFEQsCEZAnCGTutHv@vger.kernel.org, AJvYcCUoZ6FCTse48JDcn7DE+gYiJ9YH17CjhCk1xfqgf7m2BhmMlN5Q2ln8KUNjCZGtZpgOfrAzVW5tsKYhIVnc@vger.kernel.org, AJvYcCVjXKBa4HPR97w3ZmO7uK9slD6j+h6W13j5UpZYQoozK4BhFmOcUHL89v0RcQaGcg4bZ8urjResBT4P@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZ5ApPoUl+44P9547TzPU7Qxik/aM+a4IAZcfYn/aDWNnFFKJe
-	5JcjA9g9J0u14Pe4vrLDinbH2n1+Kn05tGwn0ZZcFiKG0H+mFnad9Alb
-X-Gm-Gg: ASbGnctRsPGcf7ufaQORvMk97PaecsxKLfyzUdrf618KE/Jf1t7kBygXhdWfLXT1TbY
-	n/RZcx2IVCUuKNAXVf1QsDZiMFkfM1UH1DQ1hDF1mgJ7jI1khd709Ne47yHG5+V45Otma5TNxY8
-	boNGhyLFtHu4PX708Q76ZM4xIt/VeQ3A5blIexpqK8kqpjPpSPvwzz6uHrBN5NV/qiZZJCPRIQz
-	Ajx6vP8GTz6YrE8T+F+++7IT80WSuxjZS+hXl1Ac6YSqOx9JeniSBZxWVXkdULbeGa5dZEmyTQz
-	j6y58Id2ncpwF4JTO9J5jRrXFBJNDD12pzacZrFu2a8ocrKtVtNQnYhOodGNjg==
-X-Google-Smtp-Source: AGHT+IHnlTzH8mh8gEyI3HuM9I4iPM9eqDaoTtYmvsv4BhKj8WV44E0nTVYmDn94/Ci0M7hmdQfhAg==
-X-Received: by 2002:a17:902:f68e:b0:234:cf24:3be8 with SMTP id d9443c01a7336-2366b12f541mr253789605ad.28.1750202389638;
-        Tue, 17 Jun 2025 16:19:49 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365d88c239sm86423235ad.11.2025.06.17.16.19.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 16:19:49 -0700 (PDT)
-Date: Wed, 18 Jun 2025 07:18:32 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Rob Herring <robh@kernel.org>, Inochi Amaoto <inochiama@gmail.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, sophgo@lists.linux.dev, Jingbao Qiu <qiujingbao.dlmu@gmail.com>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Move sophgo,cv1800b-rtc to rtc directory
-Message-ID: <mig7k5zyhmata6uvjwlwlompwf22qffwvma2nhjww3cmsmxnas@y2t5ukucs76q>
-References: <20250608224252.3902421-1-robh@kernel.org>
- <ywln42bb3i5hyzlsmfbx3xt2kjbefqmcxytcqxdcgah77gcesi@2cdw3cgxbg4c>
- <20250617130924.GA1678432-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZFEJsdLe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750202392; x=1781738392;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=w4a/xlZzvzSTeyCYtqL9aFLjbsWcjKMfPUooqnwUlXU=;
+  b=ZFEJsdLevJg05UmzxzZrRZUFnj7bp73Hh1Or+eHWmOWgrwQpI0aZy3hj
+   9SB/kak7iYn1m/6YW3I4u/X0HZuXAaDBGUfg+YNWadB74USzXf6Yjlv3e
+   P4gfsdSwWtpDU3z9jjk0WOMIvIappRjfXaroUYJnnEYV7P9LahW2ONrfo
+   0IzDfVB3sfprGWcXXTVJcl9UYwaQ2OU9uVtPQRbkB0H1CWI7JWPB9D2cR
+   z2fxAPSJvuAOVQh5TNyhjAA2zp6SE3ceKvJG7gWmGYWj9h4G5TW22yG1Q
+   RUrlMiSOMmFzISpw8AWmvJhVZZ12hvlDwGkS9B0gFpNEX0Vmyrnxet4Yw
+   g==;
+X-CSE-ConnectionGUID: RTnOJGrYQGyANF+t/b1TeQ==
+X-CSE-MsgGUID: Nxjpg6YiQ6evvdPe1TOqiA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63439716"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="63439716"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 16:19:52 -0700
+X-CSE-ConnectionGUID: JaLInWayQWiJjpRNfSwbfg==
+X-CSE-MsgGUID: pQ6mF+dRQWuhjiqMsiw52w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="152921944"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.16])
+  by fmviesa003.fm.intel.com with ESMTP; 17 Jun 2025 16:19:51 -0700
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To: rui.zhang@intel.com,
+	daniel.lezcano@linaro.org,
+	rafael@kernel.org,
+	lukasz.luba@arm.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH] thermal: int340x: processor_thermal: Add Wildcat Lake PCI ID
+Date: Tue, 17 Jun 2025 16:19:40 -0700
+Message-ID: <20250617231940.3314546-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617130924.GA1678432-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 08:09:24AM -0500, Rob Herring wrote:
-> On Mon, Jun 09, 2025 at 06:49:38AM +0800, Inochi Amaoto wrote:
-> > On Sun, Jun 08, 2025 at 05:42:51PM -0500, Rob Herring (Arm) wrote:
-> > > The $id path for the sophgo,cv1800b-rtc binding was missing part of the
-> > > path 'soc'. However, the correct place for RTC bindings (even if it's
-> > > also a "syscon") is the rtc directory, so move the binding there while
-> > > fixing the $id value.
-> > > 
-> > > Fixes: 76517429dbfd ("dt-bindings: soc: sophgo: add RTC support for Sophgo CV1800 series")
-> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > > ---
-> > >  .../bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml        | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >  rename Documentation/devicetree/bindings/{soc/sophgo => rtc}/sophgo,cv1800b-rtc.yaml (96%)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> > > similarity index 96%
-> > > rename from Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
-> > > rename to Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> > > index 5cf186c396c9..c695d2ff9fcc 100644
-> > > --- a/Documentation/devicetree/bindings/soc/sophgo/sophgo,cv1800b-rtc.yaml
-> > > +++ b/Documentation/devicetree/bindings/rtc/sophgo,cv1800b-rtc.yaml
-> > > @@ -1,7 +1,7 @@
-> > >  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > >  %YAML 1.2
-> > >  ---
-> > > -$id: http://devicetree.org/schemas/sophgo/sophgo,cv1800b-rtc.yaml#
-> > > +$id: http://devicetree.org/schemas/rtc/sophgo,cv1800b-rtc.yaml#
-> > >  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> > >  
-> > >  title: Real Time Clock of the Sophgo CV1800 SoC
-> > > -- 
-> > > 2.47.2
-> > > 
-> > 
-> > As the rtc syscon has a sub function for remoteproc, is it proper to
-> > move this binding into rtc subsystem?
-> 
-> Does that affect the binding (is there more to add)? Looks like an RTC 
-> from the binding.
-> 
+Add Wildcat Lake PCI ID for processor thermal device.
 
-I think at least "resets" property may be added for the this, but I am
-not sure whether there will be more.
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+ .../thermal/intel/int340x_thermal/processor_thermal_device.h  | 1 +
+ .../intel/int340x_thermal/processor_thermal_device_pci.c      | 4 ++++
+ .../thermal/intel/int340x_thermal/processor_thermal_rfim.c    | 1 +
+ 3 files changed, 6 insertions(+)
 
-Regards,
-Inochi
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h
+index 9a6ca43b6fa2..49398794124a 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.h
+@@ -31,6 +31,7 @@
+ #define PCI_DEVICE_ID_INTEL_SKL_THERMAL	0x1903
+ #define PCI_DEVICE_ID_INTEL_TGL_THERMAL	0x9A03
+ #define PCI_DEVICE_ID_INTEL_PTL_THERMAL	0xB01D
++#define PCI_DEVICE_ID_INTEL_WCL_THERMAL	0xFD1D
+ 
+ struct power_config {
+ 	u32	index;
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
+index 00160936070a..d4d7e8e147d2 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device_pci.c
+@@ -499,6 +499,10 @@ static const struct pci_device_id proc_thermal_pci_ids[] = {
+ 	  PROC_THERMAL_FEATURE_DLVR | PROC_THERMAL_FEATURE_DVFS |
+ 	  PROC_THERMAL_FEATURE_MSI_SUPPORT | PROC_THERMAL_FEATURE_WT_HINT |
+ 	  PROC_THERMAL_FEATURE_POWER_FLOOR | PROC_THERMAL_FEATURE_PTC) },
++	{ PCI_DEVICE_DATA(INTEL, WCL_THERMAL, PROC_THERMAL_FEATURE_MSI_SUPPORT |
++	  PROC_THERMAL_FEATURE_RAPL | PROC_THERMAL_FEATURE_DLVR |
++	  PROC_THERMAL_FEATURE_DVFS | PROC_THERMAL_FEATURE_WT_HINT |
++	  PROC_THERMAL_FEATURE_POWER_FLOOR | PROC_THERMAL_FEATURE_PTC) },
+ 	{ },
+ };
+ 
+diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
+index 3a028b78d9af..1f3d22b659db 100644
+--- a/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
++++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_rfim.c
+@@ -442,6 +442,7 @@ int proc_thermal_rfim_add(struct pci_dev *pdev, struct proc_thermal_device *proc
+ 		switch (pdev->device) {
+ 		case PCI_DEVICE_ID_INTEL_LNLM_THERMAL:
+ 		case PCI_DEVICE_ID_INTEL_PTL_THERMAL:
++		case PCI_DEVICE_ID_INTEL_WCL_THERMAL:
+ 			dlvr_mmio_regs_table = lnl_dlvr_mmio_regs;
+ 			dlvr_mapping = lnl_dlvr_mapping;
+ 			break;
+-- 
+2.49.0
+
