@@ -1,86 +1,44 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88182EF655;
-	Tue, 17 Jun 2025 14:10:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8B22EF67F;
+	Tue, 17 Jun 2025 14:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169410; cv=none; b=b3tbUYpzKg0OLQ6ENVPmoE/qCGcjbg/xF09gZq6GM4HXE6AmEFnC1Ia7URhrCmv8j8RzuPsOTjSSM7GsvpjFK7dha4dgnQQGUUIVaIIeCIyF+Kr1FibPDQcEPQBIZ7kut4sKzqm4rM6twz6gf39+LvwGIefmnqGqc7ZUQ/Q4yeE=
+	t=1750169446; cv=none; b=REs6GUu7kTdk/R4Y+HtSJtfI376S8/qA7MCFtcFRmt+aL5YtuMSf1/Xo8v8Rjqh8sP4c3SQA1+X6XWUE2d7LPjAGSe0zbyqXjitrYprAxPmVtR3OGRPyy1CBK+B3bp6rpKBxFnU7mpxna4OPVj1cAO/6ZaKloyKoJYoIKVUgWLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169410; c=relaxed/simple;
-	bh=iyMKWm3mSC0FkjcF0R3622r5I8u9Cp5VpdkuiRTVNH4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iQHG+4X0A78y/BGHAEiH2MoNY4cWzSMp7ZM54ejlvtAE+TALjffpMzXeK0eIdLm5p7vqAk//0xYCfapEu1yQgtZnuwVQ1ny1m2aK1+j0ZvJ35w7Rd8r7qk3gW/r5x/j9L94uEKTyPf4DqL2nT8R3NrPcGcFuavKemKlT1E9RRYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsXpbUsT; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750169446; c=relaxed/simple;
+	bh=h/mgp9A4Cdb1y4wnoba8PjQx1Zhxgyk1hRev/3ZeAuY=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ggKXDO2Vc5wZVUhsB8WhVjubKuEzw/yTjAaMqnDdrQ5pxqs/U3ixhMG9EeOYTMrEi76pamqbDg86WvXcWC2wfuH+19VfAt7V03R03nV1j+jJQKI4n5cS8RO1dIeBvNFntSczxOhhEt0oYQW3bFH1fqH2UJGE13CvzeyAC8+37hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2Fg5CnB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsXpbUsT"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a54836cb7fso4013762f8f.2;
-        Tue, 17 Jun 2025 07:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750169407; x=1750774207; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4yIBACmWgX7l966LbMVSZorYkOqXPTghDqN6AWOfmEo=;
-        b=XsXpbUsTDddmGAqedEmbTnx/o+neePRmjVujiRvNSf+MVnjsaBDrjWEkGaJnYNLIXK
-         1E85tXEOncucEtLZ792tMUeqZRTihz6URxB3TPmAQQxmiZYpQKcexXCW7ouzvw4AM98a
-         EfMqH0OJJ6JvrUnpcEQPP85g+OXIi7R/cCZrKzCCrYPSDCyZrDKLMxLH//j2fZxOgH5x
-         yki9hWN3gvb0aHy9NYuhBM0a+zSH4pnbSsYK5Pu2zMSQrV1HMOhKjmj0tkK5h7K1HkQR
-         GyKqvjjp3GQlI6Om6Zr/UIWgDg5Hf1LRx969/8DQZl5HLJpjBNAdx3csu7ob8KMI6sDY
-         zy6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750169407; x=1750774207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4yIBACmWgX7l966LbMVSZorYkOqXPTghDqN6AWOfmEo=;
-        b=RtmtHtZez5NSHp7PLK5OB7DnLaLy6KstSc/yl9dNdoD95q/CxB3N6gADkWQnHm/Dp9
-         N5b4c6AxivPGDQw+aids9tiBuMRumRSldQNLg2ymXFNfNxehrkHSZ2hpuJU8nAO0bEYe
-         JmeUxeAGFdbtfANfFE3POLIeKH1+8RlRF+WXkzPdH8GMmhCJpfT0QV2DblSWoFuHODTu
-         01DEJFuF+AQZB4sqV4iQgi/8giNsgcrWYZNtjNoan3YSyQ85TQYVxDnwYOD31oj8GCZw
-         Yf983x294r8a1Wmsj+oky7nnNLWwN/rKkhMWHiBqbhxTfkADWkKkVGZL9V5GYwPc2V0B
-         2nxw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5Lq+5/86MQJMdjIu1we7vZtH6JIkJFP66fhhIsEsOuU2vWLXuOwO6DAakpSWuhJrjS63jxXc8ShkC@vger.kernel.org, AJvYcCUp8eQ2hUGfU4v4nCohHR5mCm2/ZJvh29aHE4QJovr8qIeEj9AICuxC4wPil46YhQIvD2aI2OdMzOxVR7C3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrLAsVElBfbT65a6VmN80dDq6de5Nhg8l3x21nOsp/MO/hrhfC
-	EjFlMqiTPEFgyQ9m3gtauaIPHY1A5fMJa4uPl3/Ngrb9NqOMpxaRG2xd
-X-Gm-Gg: ASbGnct6t2xrrYKZAcU+pXehMonuHg6fN0wJhzsULnGM5wb6nMe0O/6IRonvBa6kMfi
-	irD505v2LvxoN6qiHc3GXasPRfYhwSsxQLJO+1pJ7ozL3sUNIymapqNIYraPeD5XOQyE6uanVsv
-	r/w0kiQ5CEPDnGpOzqJqE95grQdeVT+8PX2SNzJcpXQuSg7TfEY1utH5ijQ6mHe+OWURa7lEQQt
-	meEZP7LBgF4muZBuxCNmz4+jpnXdJGeU06H8PYZOiF/JBdB+fMUnGKZ537a6D6RmW3CchJ9l0b7
-	KO0n5yvJCIz42EugtxvA5x9/w26duwWT9wRcVCD76/2x2D53tDVy0+AyeZXd
-X-Google-Smtp-Source: AGHT+IHhV6aPwQ3z4bGt2UdYrL2Uo5IQ2qap/P3r5HVqRrVdq5gQPZ8PvS+O0eqHB3HO/uSvbblRDA==
-X-Received: by 2002:a05:6000:4024:b0:3a4:edf5:b942 with SMTP id ffacd0b85a97d-3a572e586f1mr11172093f8f.57.1750169406549;
-        Tue, 17 Jun 2025 07:10:06 -0700 (PDT)
-Received: from andrea ([217.201.252.229])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a577e928f7sm10557923f8f.64.2025.06.17.07.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:10:05 -0700 (PDT)
-Date: Tue, 17 Jun 2025 16:09:57 +0200
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Thomas Haas <t.haas@tu-bs.de>, Peter Zijlstra <peterz@infradead.org>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	lkmm@lists.linux.dev, hernan.poncedeleon@huaweicloud.com,
-	jonas.oberhauser@huaweicloud.com,
-	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-Message-ID: <aFF3NSJD6PBMAYGY@andrea>
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
- <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
- <aEwHufdehlQnBX7g@andrea>
- <9264df13-36db-4b25-b2c4-7a9701df2f4d@tu-bs.de>
- <aE-3_mJPjea62anv@andrea>
- <357b3147-22e0-4081-a9ac-524b65251d62@rowland.harvard.edu>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2Fg5CnB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B66C4CEE3;
+	Tue, 17 Jun 2025 14:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750169445;
+	bh=h/mgp9A4Cdb1y4wnoba8PjQx1Zhxgyk1hRev/3ZeAuY=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=F2Fg5CnBoiadAoDPsCPoZhQwSCPkuJLn/e1uVKTCMnfOv21b5ug8fDAC6GNEKcY3B
+	 qUSBV/V/7egoCEWOlKrkBjN6+POhJtDz6wIDFqDO6HVlp2ANX3FOQe37JiX2x2CUrD
+	 R0jZ043diAKoznqXl4DP2QfD/wmJOaoWz78DXIqGZp9EQksu2YEZ3pN/UvdXkBWlco
+	 YExvEN261vgqBgM9qXR2f2VT47TzalIWFUIC15yg4DnoNhFtsrlAoZNsZdxjuUxe0K
+	 eSotaVgVkNkszp4mt4D22HuFa0+CYEFC4XpxvEizzhYhjlvSBeA8NnWkTmFfzrn+x7
+	 VMpdpXSqvbk4Q==
+Date: Tue, 17 Jun 2025 16:10:40 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Philipp Stanner <phasta@kernel.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
+Message-ID: <aFF3YIAFkgsAKvQV@pollux>
+References: <20250612144953.111829-2-phasta@kernel.org>
+ <aFFy5aG1eOeMU44S@phenom.ffwll.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,51 +47,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <357b3147-22e0-4081-a9ac-524b65251d62@rowland.harvard.edu>
+In-Reply-To: <aFFy5aG1eOeMU44S@phenom.ffwll.local>
 
-> My question is: Do we have enough general knowledge at this point about 
-> how the various types of hardware handle mixed-size accesses to come up 
-> with a memory model everyone can agree one?
+On Tue, Jun 17, 2025 at 03:51:33PM +0200, Simona Vetter wrote:
+> On Thu, Jun 12, 2025 at 04:49:54PM +0200, Philipp Stanner wrote:
+> > + * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
+> > + * theoretically can deadlock. It must be guaranteed that submit_wq never has
+> > + * more than max_active - 1 active tasks, or if max_active tasks are reached at
+> > + * least one of them does not execute operations that may block on dma_fences
+> > + * that potentially make progress through this scheduler instance. Otherwise,
+> > + * it is possible that all max_active tasks end up waiting on a dma_fence (that
+> > + * can only make progress through this schduler instance), while the
+> > + * scheduler's queued work waits for at least one of the max_active tasks to
+> > + * finish. Thus, this can result in a deadlock.
+> 
+> Uh if you have an ordered wq you deadlock with just one misuse. I'd just
+> explain that the wq must provide sufficient forward-progress guarantees
+> for the scheduler, specifically that it's on the dma_fence signalling
+> critical path and leave the concrete examples for people to figure out
+> when the design a specific locking scheme.
 
-You know, I can imagine a conversation along the following line if I
-were to turn this question to certain "hardware people":
+This isn't a concrete example, is it? It's exactly what you say in slightly
+different words, with the addition of highlighting the impact of the workqueue's
+max_active configuration.
 
-  [Me/LKMM] People, how do you order such and those MSAs?
-   [RTL/DV] What are Linux's uses and requirements?
+I think that's relevant, because N - 1 active tasks can be on the dma_fence
+signalling critical path without issues.
 
-that is to say that the work mentioned is probably more "interactive"
-and more dynamic than how your question may suggest.  ;)
+We could change
 
-Said this, I do like to think that we (LKMM supporters and followers)
-have enough knowledge to approach that effort.  It would require some
-changes to herd7 (and klitmus7), starting from teaching the tools the
-new MSAs syntax and how to generate rf, co and other basic relations
-(while monitoring potential non-MSA regressions).  Non-trivial maybe,
-but seems doable.  Suffice it to say that herd7 can't currently parse
-the following C test, but it can run its "lowerings"/assembly against
-a bunch of hardware models and implementations, including arm64, x86,
-powerpc and riscv!  Any volunteers with ocaml expertise interested in
-contributing to the LKMM?  ;)
+	"if max_active tasks are reached at least one of them must not execute
+	 operations that may block on dma_fences that potentially make progress
+	 through this scheduler instance"
 
-C C-thomas-haas
+to 
 
-{
-u32 x;
-u16 *x_lh = x; // herd7 dialect for "... = &x;"
-}
+	"if max_active tasks are reached at least one of them must not be on the
+	 dma_fence signalling critical path"
 
-P0(u32 *x)
-{
-	WRITE_ONCE(*x, 0x10001);
-}
-
-P1(u16 **x_lh, u32 *x)
-{
-	u16 r0;
-	u32 r1;
-
-	r0 = xchg_relaxed(*x_lh, 0x2);
-	r1 = smp_load_acquire(x);
-}
-
-exists (1:r0=0x1 /\ 1:r1=0x2)
+which is a bit more to the point I think.
