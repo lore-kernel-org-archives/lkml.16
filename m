@@ -1,202 +1,109 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from sendmail.purelymail.com (sendmail.purelymail.com [34.202.193.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935892F0C46;
-	Tue, 17 Jun 2025 22:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E79295DBA
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=34.202.193.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750200685; cv=none; b=q5oiIBY6W76+025kOokSDZyvUI7JcUMpG0K2wdnEGBKGxpgTET8+rIENKgOJIzeCS2aiqsCJ8Z8/gPZH0b5jUphdNxqH/XcxvEvSCbj/57X57D3nB5evFLgbdpoq7AXqb+FuWGwPHMKxlkv/gpdh+BV8flUrVUCb3Zr5FOWpuGQ=
+	t=1750200771; cv=none; b=LQIFddHXeR+/BLCMEiVNdIy3Jo0iqyk9FVhq/RkjIsPjl72FPxaE3n4NbfoXEEOBnYRnAlx49YmRoh/qLb4zwHNM2MyBSROKoPDoJkojwPD9XZdpdVFpZlOvgwNR7mEG4Fv2NKTahI6Ti58jrFsGbJBmAh9pTKRg+fnGfQGcG8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750200685; c=relaxed/simple;
-	bh=w3zlkwOetCuL4IjiyP6cPFfl8DekoC294wC1K1nFMzE=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=R/hWifxisjWh8V3/7Bmdg7P0PMifQk33V+7DosSHibIDYOMFw8Fp+UjC4sHYev5aTo6eRmQXQywU+fDHrMbJW7SAbXmevH8/XUQiMK52dvfiM4u1TOEKtFWYaE7qSAGN5aAoONYFAp+Aj1FlKpUrsPV+K0FnSwN5f/fEDrc7iRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf13.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 418F1BE35C;
-	Tue, 17 Jun 2025 22:51:14 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf13.hostedemail.com (Postfix) with ESMTPA id 2ABA820010;
-	Tue, 17 Jun 2025 22:51:11 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uRf9C-00000002L5Q-00GT;
-	Tue, 17 Jun 2025 18:51:18 -0400
-Message-ID: <20250617225117.857138090@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 17 Jun 2025 18:50:14 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- x86@kernel.org
-Cc: Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Andrii Nakryiko <andrii@kernel.org>,
- Indu Bhagat <indu.bhagat@oracle.com>,
- "Jose E. Marchesi" <jemarch@gnu.org>,
- Beau Belgrave <beaub@linux.microsoft.com>,
- Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v6 05/12] unwind_user/sframe: Detect .sframe sections in executables
-References: <20250617225009.233007152@goodmis.org>
+	s=arc-20240116; t=1750200771; c=relaxed/simple;
+	bh=A0ZxN9aZ5KdP0dwFmuWSkqKp5m+dIkABM5Qg/UoFprs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=nGSgHDamJinLdheD9QrIL0la6Cz3LKOZafSlIMXeQXijM02/MUdwYAz4AHrEzr8+wbHu1IC9Du9evkS7RYYSSI6EW7tNE35eFSx0QGi8YPRQidAUs5o7sR2PMyNN38ZwVw+eKYfYVgkpVXG/TX+sLKxyAH51EAR7v+owoKusCUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=elijahs.space; spf=pass smtp.mailfrom=elijahs.space; dkim=pass (2048-bit key) header.d=elijahs.space header.i=@elijahs.space header.b=KBN2S6J3; dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b=Em0VfFx5; arc=none smtp.client-ip=34.202.193.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=elijahs.space
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=elijahs.space
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=elijahs.space header.i=@elijahs.space header.b="KBN2S6J3";
+	dkim=pass (2048-bit key) header.d=purelymail.com header.i=@purelymail.com header.b="Em0VfFx5"
+DKIM-Signature: a=rsa-sha256; b=KBN2S6J3FfQ02LL+cDATLQtsENXBtZzsjiiVnFofZ3sS/vqCuzXvYoFOAnE1peGIMosoQDZzmENhiU0qU55Q+CuTeDTmsGOTPedN+uZIRNwEbTjsc9cTK5ATW5HSzuWsADxTgsuq5iesC7SxAGh5TXgVPDtM53twC2ASz1tGGm0PQRmC0Mdo3nZEmWF8DvwiKttqD13qgzvGgH0T68JRaL83i3rgtUww8vURca5gquG13NQ0a8scqnhni6zRghkHzawlBDJjslCF2VGNvvR59RkOmHE9dTXt3iWK2cGj4VHLYT75gC4drTla7PsaFaHae1AOgONhc141KkXkKvgRbg==; s=purelymail3; d=elijahs.space; v=1; bh=A0ZxN9aZ5KdP0dwFmuWSkqKp5m+dIkABM5Qg/UoFprs=; h=Received:Date:Subject:To:From;
+DKIM-Signature: a=rsa-sha256; b=Em0VfFx5rItcOwhidEMJKTId6c8XgJMxS/rC92O03l6t7gKrgIqxSLhJYGcobmmi4X5NrUBjJPMi/m6sODoTKFlQq16UkUyJaVb+8YOiHhnPgdWGzRRrw51rcqhn95YTRUizVf6WfNi91YN4TuzFiFaQylcuHHV+IQWsST0FHD6NtKxMGyU546127OCYfMRN8Stb7/A40teZ0gy+fewSp54tj3de7w70GW7t+uEQEnMHYtUyB++QrekD1Sx50cP/OOD1iNsADfVkZtpcxj9zM45fGOn8g5+92j1NBUSeIuNJL8gHvJBHtXd3JuE2EUL/JuylnV9NP1CbB4AVErzJrQ==; s=purelymail3; d=purelymail.com; v=1; bh=A0ZxN9aZ5KdP0dwFmuWSkqKp5m+dIkABM5Qg/UoFprs=; h=Feedback-ID:Received:Date:Subject:To:From;
+Feedback-ID: 147366:4866:null:purelymail
+X-Pm-Original-To: linux-kernel@vger.kernel.org
+Received: by smtp.purelymail.com (Purelymail SMTP) with ESMTPSA id -738148538;
+          (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384);
+          Tue, 17 Jun 2025 22:52:30 +0000 (UTC)
+Message-ID: <b2644203-b1cd-4bc9-9afe-bd0ae0390ae4@elijahs.space>
+Date: Tue, 17 Jun 2025 15:52:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 2ABA820010
-X-Stat-Signature: ktbu8gxos6gsdxyc1mg5yj7ifbb75fk8
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18FGArJhoVyKe6RDYevAgj6d/gAL0qynOY=
-X-HE-Tag: 1750200671-922853
-X-HE-Meta: U2FsdGVkX1/X080nOaR1PxwCcFKgfjzjCzc5fl3DBa93GszobtHhJQRm8X3Q/IXlps53Ayf1lNbcrc+yR4/u0OW+AnLQonx847AqAz4EflmmMlSRPg0nE5Ov+EXg0VvAMxkCNtJPrCuvRuGcZAFqHXc1bfWGpfYON9ovadUG6GaYCZwCiwDpe41n+nSqR2rd8ZWU44QgIw/umuPEWcWua0DRcZTVCdFLODEFp97LO7tt02kKkC1y1xt6REv9vy10aFfCFb46q57w8qRysUMdTOv22ByWKd7YNYpPyuNr34K3OrOqpJ61dPyJe2l5JpUtOpPQTrBJJQP9ewtCyDn8E0r6WWrGjO02jKvP9Wh8ZAD26BwvZtFr3OIyDkCGOvK160+jYhDAng4dja1dluhpEyVjC1EbUbCRKWzUAe6Pzb0=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: mq-deadline: check if elevator is attached to
+ queue in dd_finish_request
+To: Bart Van Assche <bvanassche@acm.org>
+References: <20250617205630.207696-1-git@elijahs.space>
+ <1e25d17b-f481-485c-85a6-d5a8440c1c96@acm.org>
+Content-Language: en-US
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Elijah Wright <git@elijahs.space>
+In-Reply-To: <1e25d17b-f481-485c-85a6-d5a8440c1c96@acm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-MIME-Autoconverted: from 8bit to quoted-printable by Purelymail
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+I see. would it be possible to detach the elevator from the queue in=20
+elevator_exit instead?
 
-When loading an ELF executable, automatically detect an .sframe section
-and associate it with the mm_struct.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- fs/binfmt_elf.c          | 49 +++++++++++++++++++++++++++++++++++++---
- include/uapi/linux/elf.h |  1 +
- 2 files changed, 47 insertions(+), 3 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index a43363d593e5..e7128d026ec0 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -47,6 +47,7 @@
- #include <linux/dax.h>
- #include <linux/uaccess.h>
- #include <linux/rseq.h>
-+#include <linux/sframe.h>
- #include <asm/param.h>
- #include <asm/page.h>
- 
-@@ -622,6 +623,21 @@ static inline int make_prot(u32 p_flags, struct arch_elf_state *arch_state,
- 	return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
- }
- 
-+static void elf_add_sframe(struct elf_phdr *text, struct elf_phdr *sframe,
-+			   unsigned long base_addr)
-+{
-+	unsigned long sframe_start, sframe_end, text_start, text_end;
-+
-+	sframe_start = base_addr + sframe->p_vaddr;
-+	sframe_end   = sframe_start + sframe->p_memsz;
-+
-+	text_start   = base_addr + text->p_vaddr;
-+	text_end     = text_start + text->p_memsz;
-+
-+	/* Ignore return value, sframe section isn't critical */
-+	sframe_add_section(sframe_start, sframe_end, text_start, text_end);
-+}
-+
- /* This is much more generalized than the library routine read function,
-    so we keep this separate.  Technically the library read function
-    is only provided so that we can read a.out libraries that have
-@@ -632,7 +648,7 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 		unsigned long no_base, struct elf_phdr *interp_elf_phdata,
- 		struct arch_elf_state *arch_state)
- {
--	struct elf_phdr *eppnt;
-+	struct elf_phdr *eppnt, *sframe_phdr = NULL;
- 	unsigned long load_addr = 0;
- 	int load_addr_set = 0;
- 	unsigned long error = ~0UL;
-@@ -658,7 +674,8 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 
- 	eppnt = interp_elf_phdata;
- 	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
--		if (eppnt->p_type == PT_LOAD) {
-+		switch (eppnt->p_type) {
-+		case PT_LOAD: {
- 			int elf_type = MAP_PRIVATE;
- 			int elf_prot = make_prot(eppnt->p_flags, arch_state,
- 						 true, true);
-@@ -697,6 +714,20 @@ static unsigned long load_elf_interp(struct elfhdr *interp_elf_ex,
- 				error = -ENOMEM;
- 				goto out;
- 			}
-+			break;
-+		}
-+		case PT_GNU_SFRAME:
-+			sframe_phdr = eppnt;
-+			break;
-+		}
-+	}
-+
-+	if (sframe_phdr) {
-+		eppnt = interp_elf_phdata;
-+		for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
-+			if (eppnt->p_flags & PF_X) {
-+				elf_add_sframe(eppnt, sframe_phdr, load_addr);
-+			}
- 		}
- 	}
- 
-@@ -821,7 +852,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 	int first_pt_load = 1;
- 	unsigned long error;
- 	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
--	struct elf_phdr *elf_property_phdata = NULL;
-+	struct elf_phdr *elf_property_phdata = NULL, *sframe_phdr = NULL;
- 	unsigned long elf_brk;
- 	bool brk_moved = false;
- 	int retval, i;
-@@ -930,6 +961,10 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				executable_stack = EXSTACK_DISABLE_X;
- 			break;
- 
-+		case PT_GNU_SFRAME:
-+			sframe_phdr = elf_ppnt;
-+			break;
-+
- 		case PT_LOPROC ... PT_HIPROC:
- 			retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
- 						  bprm->file, false,
-@@ -1227,6 +1262,14 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			elf_brk = k;
- 	}
- 
-+	if (sframe_phdr) {
-+		for (i = 0, elf_ppnt = elf_phdata;
-+		     i < elf_ex->e_phnum; i++, elf_ppnt++) {
-+			if ((elf_ppnt->p_flags & PF_X))
-+				elf_add_sframe(elf_ppnt, sframe_phdr, load_bias);
-+		}
-+	}
-+
- 	e_entry = elf_ex->e_entry + load_bias;
- 	phdr_addr += load_bias;
- 	elf_brk += load_bias;
-diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
-index 819ded2d39de..92c16c94fca8 100644
---- a/include/uapi/linux/elf.h
-+++ b/include/uapi/linux/elf.h
-@@ -41,6 +41,7 @@ typedef __u16	Elf64_Versym;
- #define PT_GNU_STACK	(PT_LOOS + 0x474e551)
- #define PT_GNU_RELRO	(PT_LOOS + 0x474e552)
- #define PT_GNU_PROPERTY	(PT_LOOS + 0x474e553)
-+#define PT_GNU_SFRAME	(PT_LOOS + 0x474e554)
- 
- 
- /* ARM MTE memory tag segment type */
--- 
-2.47.2
-
+On 6/17/2025 3:25 PM, Bart Van Assche wrote:
+> On 6/17/25 1:56 PM, Elijah Wright wrote:
+>> in dd_finish_request(), per_prio points to a rq->elv.priv[0], which=20
+>> could be
+>> free memory if an in-flight requests completes after its associated=20
+>> scheduler
+>> has been freed
+>>
+>> Signed-off-by: Elijah Wright <git@elijahs.space>
+>> ---
+>> =C2=A0 block/mq-deadline.c | 16 +++++++++-------
+>> =C2=A0 1 file changed, 9 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/block/mq-deadline.c b/block/mq-deadline.c
+>> index 2edf1cac06d5..4d7b21b144d3 100644
+>> --- a/block/mq-deadline.c
+>> +++ b/block/mq-deadline.c
+>> @@ -751,13 +751,15 @@ static void dd_finish_request(struct request *rq)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct dd_per_prio *per_prio =3D rq->elv.=
+priv[0];
+>> -=C2=A0=C2=A0=C2=A0 /*
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 * The block layer core may call dd_finish_requ=
+est() without having
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 * called dd_insert_requests(). Skip requests t=
+hat bypassed I/O
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 * scheduling. See also blk_mq_request_bypass_i=
+nsert().
+>> -=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> -=C2=A0=C2=A0=C2=A0 if (per_prio)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atomic_inc(&per_prio->stats.=
+completed);
+>> +=C2=A0=C2=A0=C2=A0 if (rq->q->elevator) {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * The block layer core may c=
+all dd_finish_request() without=20
+>> having
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * called dd_insert_requests(=
+). Skip requests that bypassed I/O
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * scheduling. See also blk_m=
+q_request_bypass_insert().
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (per_prio)
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 atom=
+ic_inc(&per_prio->stats.completed);
+>> +=C2=A0=C2=A0=C2=A0 }
+>> =C2=A0 }
+>=20
+> The warnings in dd_exit_sched() will be triggered if dd_finish_request()
+> is ever called with rq->q->elevator =3D=3D NULL.
+>=20
+> If this can happen, it should be fixed in the block layer core instead
+> of in the mq-deadline scheduler.
+>=20
+> Thanks,
+>=20
+> Bart.
 
