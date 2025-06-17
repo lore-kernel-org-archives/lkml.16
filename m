@@ -1,108 +1,154 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CBD28BA9C;
-	Tue, 17 Jun 2025 12:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED9E269CF0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750164842; cv=none; b=pWr/Ldcrn10deAbsPUepRfsbkEIIHGpXA+H8nbcMppg3mFS4d1Hd0NE8t/ot7SXH4B7kR6xTszjUkeMldg2ZkjuxFtTonk4849SwZ23t1mdTF7fPfIZg+YWtu/AeRYPN8B+IitjBX0kDeNNbl+U+yDvT9wFnWa2zdO/tUvDN7G0=
+	t=1750164885; cv=none; b=l4gAULruG+qwjOMt6fisl/AhYvNNrHVsB2xyjQrzLiZ9J2sdu8Rm24/Mf2hgQoVDOkhYZVBvTsh7/O5SB+cEI1yzekx4ZJfoBjtPaS1vuZnw51+9viZ8XwFF8shQqFdIidSsz9lJtitmXyWZL0UE4rIYhodXAUEN/x4etIwERvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750164842; c=relaxed/simple;
-	bh=nsIHRKezEmziLU1IJs87s8AVlVENslTNvHbXCbMiYU4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g+2qMkVce9BMOFHxemq6cAVopV5vivMEoA2tlZ8FHYV3NDHHL/AMrlPlSLf5cqdgz1EYy9q4mtHBkukU18V+Bxl8jgSO/Vcx2MZtLA7tY74l99M3u8TG2dxXawbJqDcL/a2O0fyawM0sH9C+2mhGtb82zT4HX+EQAoEkEE2Qlyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hSxNEb/l; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750164885; c=relaxed/simple;
+	bh=FxzlxQZZ8ErMBigR9fc+Rjf5JKpOe1VdKISwtp/3ATE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nMda+mrH/gCx6JjBgGjmOIpSfkpnq5y2o129VpiUfI3wB1zYytT9dKBpbFfXij9OizyexrFt8TWzCi65jx2AJ2M736ntoS/jMG7CGjhPnBUk3CSj3mgFg+JdkvQIbfl3mIXxHHBWplFIMWzhIV5I49UlvTtT3pP+F5yqBwHpSTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MXPtRxzw; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hSxNEb/l"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2383F7E1;
-	Tue, 17 Jun 2025 14:53:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750164827;
-	bh=nsIHRKezEmziLU1IJs87s8AVlVENslTNvHbXCbMiYU4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hSxNEb/lvXWlEa+3gXYqE5B2bVxMRu9v2oMznuyx4M+JvkLkCiTY5/Pz5EqocEb7y
-	 T/xr8tCp0h6UhpLch7E5Ut5TXt79xu8TBJg+7mznUGc0wZTtuk3OnA+C9wyb5qbt2v
-	 cr9vw7xrjcQGOp6dzcrvkiVA4LDu36ZGRbXnNwFQ=
-Date: Tue, 17 Jun 2025 15:53:43 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Hans Verkuil <hans@jjverkuil.nl>
-Cc: Hans de Goede <hansg@kernel.org>,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] media: uvcvideo: Enable keep-sorted
-Message-ID: <20250617125343.GB10006@pendragon.ideasonboard.com>
-References: <20250429-keep-sorted-v1-0-2fa3538c0315@chromium.org>
- <f9275079-842a-406e-8bb7-b22a22b7c7e6@kernel.org>
- <CANiDSCt18PUWo2Z-9T2nBMMJfpRcdAGhO5S0jE85-1ZPO1qD7g@mail.gmail.com>
- <b78cde8b-23b2-48c5-b8c6-b935a403963f@kernel.org>
- <CANiDSCuPP+EOCps0gjH_bpJWsbyJDBcD+NoOeTB-sSUjUr0=Sg@mail.gmail.com>
- <61600bf6-92dc-49cd-bad9-a7342ce2fef9@kernel.org>
- <08a426ae-be6e-4cbc-aaaf-7197bf839632@jjverkuil.nl>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MXPtRxzw"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7481600130eso6216559b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750164883; x=1750769683; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KIz/FMRtgwsTC+HYTMdCl4f60+W4V34OeVftKEDL+z8=;
+        b=MXPtRxzwQXk2l3JY8lPGaA8SNNErTITJVRy38BJeZXZ8rj9SZthnZgFA9PKeHBAYbq
+         G6BB0Q7pMQyJzTnTuVg3mK4xv3RJrzZzJD/8EzAzBz4XV2t+Ihyl/BK1x3yUINNqQQuI
+         65FIjlr7XZU0CrV0c5f+dHuoaupgsfReN2JFQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750164883; x=1750769683;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KIz/FMRtgwsTC+HYTMdCl4f60+W4V34OeVftKEDL+z8=;
+        b=GrwlbvJzBnWTtnWA/mLGztVPUV2rJWDY/fD1eMg7eqBQdTolorr3gCL1IpkqcBeXZs
+         9sz7ii7H2sB+QROCQtMfMrHmy3QSETkS8ECrJ7xtzuJ7M9uAgUl9BPtNYYpaDb/s3OHq
+         +XzyJxQMYvJgbNlYBxjgsryJkbTEmAc7NiNbIiueM9j2bHlEHeBJ+/XWoPh8rpcA8QTi
+         nAawINr+8aak3q7Myul6SnNZ0TAPSh/LbYoTdhttlQzPlFqDw17i0YKqriQxiEzXt/5J
+         g085X95UeZUncOJt8E/w2mmBlJ3xCj5/vfv/mmyI3RIin5bLdtJ1qOjpSruI6ER+y9x8
+         ImKA==
+X-Forwarded-Encrypted: i=1; AJvYcCVocrRD86APQ3ourJ0XFFjpq7aYME2pe4yNYRURzTO2ueae8JZ4dCeQdikcDItRjiuORl+mrwGV11fiqb8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkwZVguPLYXy5IP8eU7TgQRWp7gqp/5+5nS4jm46uOkL0FJa5Y
+	SvHd2JYouerJkSWOLiFFbnGmXhihKdIrkmp7o6soGlkcz36QMgtA2Fnl618YZkWCpmBKPOUL2WE
+	hAgv/Wcjwf9Rv6iPY/eRy+KaVCZXHwNpGhH7oOT7Z
+X-Gm-Gg: ASbGncvhd6ycV9pgGXkKScEftda3Du/5Ukf1Z59SzNtmZu/XXMUnI7vv9FowRTAa5im
+	RgUxBOGhhAvk+MaEOnBTY06ph+ifnSVUgee11HO9+N6PhyN6nd3xDA6N+40g3Riub8kHjAfNTo7
+	6UxQKjVmR7PJuenRkfPh+iqjAIoo02hzxGBrD1wc389uEmNzZN22/B1fhtxPAkIoGJ0Lds
+X-Google-Smtp-Source: AGHT+IFNOIUYi+5hHdN381jMozlhdv8TZWEs3iifK29iavCfU0mKB9p4IykhjV/IvnnwJXRpXtMdEPE9xxaRduPeRhY=
+X-Received: by 2002:a05:6a00:a86:b0:73e:598:7e5b with SMTP id
+ d2e1a72fcca58-7489cfc27edmr16829475b3a.1.1750164883054; Tue, 17 Jun 2025
+ 05:54:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <08a426ae-be6e-4cbc-aaaf-7197bf839632@jjverkuil.nl>
+References: <20250616133147.1835939-1-akuchynski@chromium.org>
+ <20250616133147.1835939-7-akuchynski@chromium.org> <aFEtT5JAaGQIs-vG@kuha.fi.intel.com>
+In-Reply-To: <aFEtT5JAaGQIs-vG@kuha.fi.intel.com>
+From: Andrei Kuchynski <akuchynski@chromium.org>
+Date: Tue, 17 Jun 2025 14:54:29 +0200
+X-Gm-Features: AX0GCFsTu0UqkokKiq4xWkmUWDTeZ6ZnpJ0o1xk-NKRJ9vpe9u9k_-Fhg2uUkHU
+Message-ID: <CAMMMRMctfOabMK3Rwfk_i+P0XsLECg5yOfhYO+9yqp-SFZrVEQ@mail.gmail.com>
+Subject: Re: [PATCH 06/10] Revert "usb: typec: displayport: Receive DP Status
+ Update NAK request exit dp altmode"
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Dmitry Baryshkov <lumag@kernel.org>, Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
+	Jameson Thies <jthies@google.com>, Benson Leung <bleung@chromium.org>, 
+	Tzung-Bi Shih <tzungbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Guenter Roeck <groeck@chromium.org>, Pooja Katiyar <pooja.katiyar@intel.com>, 
+	Badhri Jagan Sridharan <badhri@google.com>, RD Babiera <rdbabiera@google.com>, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 01:52:50PM +0200, Hans Verkuil wrote:
-> On 16/06/2025 15:38, Hans de Goede wrote:
-> > On 16-Jun-25 15:31, Ricardo Ribalda wrote:
-> >> On Mon, 16 Jun 2025 at 15:26, Hans de Goede <hansg@kernel.org> wrote:
-> >>> On 16-Jun-25 15:22, Ricardo Ribalda wrote:
-> >>>> On Mon, 16 Jun 2025 at 15:05, Hans de Goede <hansg@kernel.org> wrote:
-> >>>>> On 29-Apr-25 15:47, Ricardo Ribalda wrote:
-> >>>>>> When committers contribute quirks to the uvc driver, they usually add
-> >>>>>> them out of order.
-> >>>>>>
-> >>>>>> We can automatically validate that their follow our guidelines with the
-> >>>>>> use of keep-sorted.
-> >>>>>>
-> >>>>>> This patchset adds support for keep-sorted in the uvc driver. The two
-> >>>>>> patches can be squashed if needed.
-> >>>>>>
-> >>>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> >>>>>
-> >>>>> I've no objections against these 2 patches, but these need to be
-> >>>>> rebased on top of the latest uvc/for-next. Can you send out a new
-> >>>>> version please ?
-> >>>>
-> >>>> I was waiting for HansV to say that keep-sorted was useful and then
-> >>>> add it to the CI.
-> >>>
-> >>> Ok, so should we drop this series from patchwork then ?
-> >>
-> >> If the series does not bother you too much in patchwork let it stay
-> >> there until HansV replies to the makefile series.
-> 
-> I did that. Basically I don't like the keep-sorted annotation unless it
-> is rolled out kernel-wide. It's not something we should do just in the
-> media subsystem.
-> 
-> That doesn't mean that a patch fixing the uvc_ids order isn't welcome,
-> but just drop the annotation.
-> 
-> If we do that, then patch 1/2 is also no longer needed. Although it
-> feels more logical that match_flags is at the end. I leave that to
-> HdG and Laurent to decide.
+On Tue, Jun 17, 2025 at 10:54=E2=80=AFAM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
+>
+> Hi Andrei,
+>
+> On Mon, Jun 16, 2025 at 01:31:43PM +0000, Andrei Kuchynski wrote:
+> > This reverts commit b4b38ffb38c91afd4dc387608db26f6fc34ed40b.
+> >
+> > The commit introduced a deadlock with the cros_ec_typec driver.
+> > The deadlock occurs due to a recursive lock acquisition of
+> > `cros_typec_altmode_work::mutex`.
+> > The call chain is as follows:
+> > 1. cros_typec_altmode_work() acquires the mutex
+> > 2. typec_altmode_vdm() -> dp_altmode_vdm() ->
+> > 3. typec_altmode_exit() -> cros_typec_altmode_exit()
+> > 4. cros_typec_altmode_exit() attempts to acquire the mutex again
+> >
+> > This revert is considered safe as no other known driver sends back
+> > DP_CMD_STATUS_UPDATE command with the NAK flag.
+> >
+> > Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
+> > ---
+> >  drivers/usb/typec/altmodes/displayport.c | 4 ----
+> >  1 file changed, 4 deletions(-)
+> >
+> > diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typ=
+ec/altmodes/displayport.c
+> > index b09b58d7311d..ac84a6d64c2f 100644
+> > --- a/drivers/usb/typec/altmodes/displayport.c
+> > +++ b/drivers/usb/typec/altmodes/displayport.c
+> > @@ -393,10 +393,6 @@ static int dp_altmode_vdm(struct typec_altmode *al=
+t,
+> >               break;
+> >       case CMDT_RSP_NAK:
+> >               switch (cmd) {
+> > -             case DP_CMD_STATUS_UPDATE:
+> > -                     if (typec_altmode_exit(alt))
+> > -                             dev_err(&dp->alt->dev, "Exit Mode Failed!=
+\n");
+> > -                     break;
+>
+> Commit b4b38ffb38c9 ("usb: typec: displayport: Receive DP Status
+> Update NAK request exit dp altmode") addressed a very real problem
+> with failure to execute data role swap. You are not really offering
+> anything else for that issue here.
 
-.match_flags is first to match the order of the fields in the
-usb_device_id structure. Is there a need to move it last, or is only the
+Thanks, I see the problem now. Reverting the patch is not feasible.
 
-	}, {
+>
+> Is it not an option to just schedule the mode exit here instead to
+> solve the problem?
 
-construct that the tool doesn't like ?
+Of course, that's an option. Alternatively, maybe I could resolve the
+deadlock within the `cros_ec_typec` driver. Regardless, this seems like
+a separate patch.
 
-> > Sure that works for me.
-
--- 
-Regards,
-
-Laurent Pinchart
+>
+> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec=
+/altmodes/displayport.c
+> index b09b58d7311d..2abbe4de3216 100644
+> --- a/drivers/usb/typec/altmodes/displayport.c
+> +++ b/drivers/usb/typec/altmodes/displayport.c
+> @@ -394,8 +394,7 @@ static int dp_altmode_vdm(struct typec_altmode *alt,
+>         case CMDT_RSP_NAK:
+>                 switch (cmd) {
+>                 case DP_CMD_STATUS_UPDATE:
+> -                       if (typec_altmode_exit(alt))
+> -                               dev_err(&dp->alt->dev, "Exit Mode Failed!=
+\n");
+> +                       dp->state =3D DP_STATE_EXIT;
+>                         break;
+>                 case DP_CMD_CONFIGURE:
+>                         dp->data.conf =3D 0;
+>
+>
+> --
+> heikki
