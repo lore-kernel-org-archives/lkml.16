@@ -1,117 +1,111 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC921EB2F
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2D333993
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750123864; cv=none; b=ZjLATrbBj5p5YJ1cdwoSeM8RA4b6C+ey3KdFYQ1dPaiZmuSmir4KwPpH4UipvPloCgNBCON7VPFIaPR7wsMNbcciYE4HsSsefh1NO68yDX4gfCHp4iKUYFr6h0mD7a3tGzpj7s9+7H9gtpcztcXT0WpkgWMmu1Vnv5OQT1wZKQ0=
+	t=1750124276; cv=none; b=O2xw2JU6/vw8K+R6JO+l+/8jWGD/7Ui/Zm7657+qiRAuyOc+KvDHXG8o+duEQFQZQUO7RVrB3cyjf229csAew8BxROgyz9oSUMynGxPuSztZYUZ8bP0QF1XF3e4RA0Ru8QXlNHENLdPCgoYZ/4uICllHXjAqLKU5E3j3d4Ymirw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750123864; c=relaxed/simple;
-	bh=I+zqYwAfK+YiEx7uIfOv1HGtGN28Ut7HY8HBmwKNkIk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=HkupLiGDKEeLgbm4Tt6ZR0zxYuVOiq0Hx27r1YWRx6iD2wp4QjyQL+hfHNv97FuItUfZTaoRw0uL8yRVbUPmtiBOfAjP5BQQ18eyJ6FGWpMzv7fs7WVZq6dmIcE131mlU+MJl1Ya4iX9r5/05LocqWsv6jMuve0brBGF7b2xTMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddd03db24dso43704665ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 18:31:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750123862; x=1750728662;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5FdNNSnjRFE5bmr7BMXeWp1oDtnA0sIisCoz5qpy4pE=;
-        b=Vt5uh9W1uDLY/npzUs9noag8uPy9ohhr/zT2TsXXBqrhtQfomQy29qL/0knGJZ7VRl
-         YTFKyWLv1v9LnqatPWmJTgiDXT9WWiUxnmxFiruFpPML/AUMCfA0C0mCV8w0VB5ryED/
-         xWJ+g1QeZV1ZdmhEAN7ByH4QfsXpK83Hlvy11rVoj/TxlirVBsoPaVZ0uTGXnYoXoYQ0
-         WrTRPWfS0eF2dvMMTYr7uebMcILkx3u346frq8MaqhkeY2qkMm8KHwBjkAURHVUrUl+6
-         bmRifGKYdMJONZ31VGAQdxK3vnnsbj2d/jZWwPSXIIqLKYuhqfPsRDW9z8XAbew/JxML
-         3osw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJIztvweMqVwruBBe8f0i/v49UXaI2APgE3oe9CMIZKAgDlI8hv8W0RPdoC10UzqEIf1oq4r5GSQdzU1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4KrTVusRLpetiPkfHsW6tyCJwXdyXYrHDjwtrJ0zBZCGeNvaI
-	cZxH4/2cOchQqoTMIIHblSlLWTBwe02ns5yqSleFzW466OMM2cUMGVt9VF+q1iC4uLBFkHz9Tyg
-	IlJhgOdwEOqD9M1168lpV51F50R0KTlV53snrc+w+cau5vjt+wRrUQxSulj8=
-X-Google-Smtp-Source: AGHT+IGzTAA6QX46exnUcGEVeRIZkqCnSUQnFanMcn11v+cWM7IV6+oruhWuq+3WeMhpnGvP3tkS85acA6X+nYCmGkMZv7Rbyl66
+	s=arc-20240116; t=1750124276; c=relaxed/simple;
+	bh=HzHh17AhtI00MRQ0FRmfvj3yZsKOrK/43wpwNt/3t24=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=PUbWS3W1ckYPToTKCasYkv17jGu0wb1ENx8Krn9aaWBlovcyXMhlx7uqrAr5VQWWUOVMkZuQo9uzjGdq4/63lOn4N9ToaXwIlc+leKyhFG6mQSAPg+HGzMJ4PtS/T3j4rSyTOnY+ruMbK7hcvG4TTCco23dy0F3XlJgdG1bTfXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NXOhlO6Z; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NXOhlO6Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93D2C4CEEA;
+	Tue, 17 Jun 2025 01:37:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750124276;
+	bh=HzHh17AhtI00MRQ0FRmfvj3yZsKOrK/43wpwNt/3t24=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NXOhlO6Z8cAxxcUHr6pxmWeVcJTdZNwzpsOYoXcGAyRedqqndUEVgw1Vnz8Y+neXR
+	 ypgtGg+Vx7GyMcb3Tp1r6YHZaXiFmBPl8x7q1fL0eizRAQguv8IPii8/RFLj/B73Wq
+	 YiZdjarNSpkKfhsYxeE/+aEnQ4sFcM7dJaV4wlV4=
+Date: Mon, 16 Jun 2025 18:37:55 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, David Hildenbrand <david@redhat.com>, Johannes
+ Weiner <hannes@cmpxchg.org>, Vlastimil Babka <vbabka@suse.cz>, Oscar
+ Salvador <osalvador@suse.de>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Mel Gorman
+ <mgorman@techsingularity.net>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>,
+ Richard Chang <richardycc@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 0/6] Make MIGRATE_ISOLATE a standalone bit
+Message-Id: <20250616183755.16fbdd5e867752db14e321cc@linux-foundation.org>
+In-Reply-To: <20250616121019.1925851-1-ziy@nvidia.com>
+References: <20250616121019.1925851-1-ziy@nvidia.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:338d:b0:3dd:cc26:61c7 with SMTP id
- e9e14a558f8ab-3de07d34062mr133154915ab.20.1750123861978; Mon, 16 Jun 2025
- 18:31:01 -0700 (PDT)
-Date: Mon, 16 Jun 2025 18:31:01 -0700
-In-Reply-To: <tencent_E537B64A4A759576C7662A3C9D3784977009@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6850c555.a70a0220.395abc.01f6.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
-From: syzbot <syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Mon, 16 Jun 2025 08:10:13 -0400 Zi Yan <ziy@nvidia.com> wrote:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
+> Hi all,
+> 
+> This patchset moves MIGRATE_ISOLATE to a standalone bit to avoid
+> being overwritten during pageblock isolation process. Currently,
+> MIGRATE_ISOLATE is part of enum migratetype (in include/linux/mmzone.h),
+> thus, setting a pageblock to MIGRATE_ISOLATE overwrites its original
+> migratetype. This causes pageblock migratetype loss during
+> alloc_contig_range() and memory offline, especially when the process
+> fails due to a failed pageblock isolation and the code tries to undo the
+> finished pageblock isolations.
+> 
+> It is on top of mm-everything-2025-06-15-23-48.
 
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in net/mac80211/mlme.c:7224:41
-index 4 is out of range for type 'u8[0]' (aka 'unsigned char[0]')
-CPU: 0 UID: 0 PID: 1041 Comm: kworker/u4:8 Not tainted 6.16.0-rc2-syzkaller-g9afe652958c3-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- ubsan_epilogue+0xa/0x40 lib/ubsan.c:233
- __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:455
- ieee80211_rx_mgmt_beacon+0x24be/0x2f20 net/mac80211/mlme.c:7224
- ieee80211_iface_process_skb net/mac80211/iface.c:1630 [inline]
- ieee80211_iface_work+0x49c/0xfe0 net/mac80211/iface.c:1722
- cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
----[ end trace ]---
-Kernel panic - not syncing: UBSAN: panic_on_warn set ...
-CPU: 0 UID: 0 PID: 1041 Comm: kworker/u4:8 Not tainted 6.16.0-rc2-syzkaller-g9afe652958c3-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: events_unbound cfg80211_wiphy_work
-Call Trace:
- <TASK>
- dump_stack_lvl+0x99/0x250 lib/dump_stack.c:120
- panic+0x2db/0x790 kernel/panic.c:382
- check_panic_on_warn+0x89/0xb0 kernel/panic.c:273
- __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:455
- ieee80211_rx_mgmt_beacon+0x24be/0x2f20 net/mac80211/mlme.c:7224
- ieee80211_iface_process_skb net/mac80211/iface.c:1630 [inline]
- ieee80211_iface_work+0x49c/0xfe0 net/mac80211/iface.c:1722
- cfg80211_wiphy_work+0x2df/0x460 net/wireless/core.c:435
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+mm-new would be a better target.  mm-new is not (yet) included in
+linux-next, hence it is not in mm-everything.
+
+I hit a few issues (x86_64 allmodconfig):
+
+In file included from ./include/linux/slab.h:16,
+                 from ./include/linux/irq.h:21,
+                 from ./include/linux/of_irq.h:7,
+                 from drivers/gpu/drm/msm/hdmi/hdmi.c:9:
+./include/linux/gfp.h:428:25: error: expected identifier before '(' token
+  428 | #define ACR_NONE        ((__force acr_flags_t)0)        // ordinary allocation request
+      |                         ^
+drivers/gpu/drm/msm/generated/hdmi.xml.h:71:9: note: in expansion of macro 'ACR_NONE'
+   71 |         ACR_NONE = 0,
+      |         ^~~~~~~~
 
 
-Tested on:
 
-commit:         9afe6529 Merge tag 'x86_urgent_for_6.16-rc3' of git://..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12db1e82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
-dashboard link: https://syzkaller.appspot.com/bug?extid=6554b492c7008bcd3385
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12ae190c580000
+And this was needed:
+
+kernel/kexec_handover.c uses set_pageblock_migratetype()
+
+--- a/include/linux/page-isolation.h~mm-page_isolation-remove-migratetype-from-move_freepages_block_isolate-fix
++++ a/include/linux/page-isolation.h
+@@ -45,6 +45,8 @@ void __meminit init_pageblock_migratetyp
+ 					  enum migratetype migratetype,
+ 					  bool isolate);
+ 
++void set_pageblock_migratetype(struct page *page, enum migratetype migratetype);
++
+ bool pageblock_isolate_and_move_free_pages(struct zone *zone, struct page *page);
+ bool pageblock_unisolate_and_move_free_pages(struct zone *zone, struct page *page);
+ 
+--- a/mm/page_alloc.c~mm-page_isolation-remove-migratetype-from-move_freepages_block_isolate-fix
++++ a/mm/page_alloc.c
+@@ -525,8 +525,7 @@ void clear_pfnblock_bit(const struct pag
+  * @page: The page within the block of interest
+  * @migratetype: migratetype to set
+  */
+-static void set_pageblock_migratetype(struct page *page,
+-				      enum migratetype migratetype)
++void set_pageblock_migratetype(struct page *page, enum migratetype migratetype)
+ {
+ 	if (unlikely(page_group_by_mobility_disabled &&
+ 		     migratetype < MIGRATE_PCPTYPES))
+_
 
