@@ -1,111 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9302192EA
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:53:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4CA52192EA;
+	Tue, 17 Jun 2025 10:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750157597; cv=none; b=euGikEMfTp4+PO6JgYxgqBCSpZRrflTCIXGMhK+mVpjE3bysDY2AO4E2eHSxeXhdF02noIN7kPA5AeJ4THwNv+Obuv9oIS60b064N/TxbPmSzWkhJUiZd6zrOtB4qZwsrjT1hj+ZcDy2P/L4Pqce+CjHzBnyTLwfzbUVdXOVboA=
+	t=1750157616; cv=none; b=G0iYiQEljZvKcLDiPvgzgxr4y9veBhp9hJStPxCAZd6b78R3mlF+kOwyvnP6uyX1OYv4bWjsBHKH4qlFS7EwYOXglM2vYquS7QlL4rMx/XO4PTAdM+Z1tc9PXPHM8Ntx+llZHHGn9C+kkFkx9Io7K46wuYx6HOQjQ2x10qtMIAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750157597; c=relaxed/simple;
-	bh=UgCGhu7fYeMI4mIfoFDow90naCmWaWja5M31mu4hz14=;
+	s=arc-20240116; t=1750157616; c=relaxed/simple;
+	bh=LXzxy9GJIJvOZ6hEU8LpqCZKVoKFWaP9J0LdMqIm7TU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WoSUseeOPei1PKaPRlnP2gKd8YBUPSyBsMoSuJhOxOxkCw2+yN6DecOpy1RvGL/IQzMG3tFmJgdFrSlmH8EviD0AbrRDVEQkiugyNYZobIPASHi4iYQmnOq22miNs1QRJ3iEmDWF+/kMiNicdAJ5tkKk8BY0RQnK34RxTEdtkG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=afpqtohj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9/e3hQGOP0Y0h7RWhN5MHuIUtmsLm0LgwErQjLz1qVS1Zk/y/EV8cISknWOC653t7lT2EV3hjYPA2BpMZEj1LZHW01S9uFRIuOnROWrr9mG2SLqYqQgDO0sF3st7XsELxQq9K5WCpPtbzbl6abrw2dHSSa7oK7/j84Y/RZkm2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=S8y3ONei; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="afpqtohj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750157594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U0ncJVs04Al38TEGKEfhY3VBsmgJ1MjE0cgapDAotLM=;
-	b=afpqtohjLqRluzD7ApFR5xi0H0sgk2mPQdFcU1qHnyHlwXMknyC+fnULHz4CelrIM8b/cp
-	mZhJ+UInFXI4gvkg7BeDGzvhOfIYy63/90Tj19iQw7yMR8O54YrF2yjjlgmSQwZ5oDn1ky
-	abRwDdooCn7qDbqoCJJNqUj2Fw32b3c=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-581-Nf1SH4g6PqWzvE_XXZcHWA-1; Tue,
- 17 Jun 2025 06:53:09 -0400
-X-MC-Unique: Nf1SH4g6PqWzvE_XXZcHWA-1
-X-Mimecast-MFC-AGG-ID: Nf1SH4g6PqWzvE_XXZcHWA_1750157587
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 43ED21955F45;
-	Tue, 17 Jun 2025 10:53:06 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.173])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1CD2D18002B5;
-	Tue, 17 Jun 2025 10:52:56 +0000 (UTC)
-Date: Tue, 17 Jun 2025 07:52:55 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, David Vernet <dvernet@meta.com>, 
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>, DietmarEggemann@uudg.org, 
-	dietmar.eggemann@arm.com, Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RESEND PATCH v4] sched: do not call __put_task_struct() on rt
- if pi_blocked_on is set
-Message-ID: <kq6edcqhqwzy25y4uurbjkty6r3vzmz74wizmmy4vxu6rvofvk@opm4sjchvegc>
-References: <aEw-KjUjjP2gYH6z@uudg.org>
- <20250617092609.GR1613376@noisy.programming.kicks-ass.net>
- <20250617093627.ykSeZMqk@linutronix.de>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="S8y3ONei"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id 28DA321176D6; Tue, 17 Jun 2025 03:53:34 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 28DA321176D6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750157614;
+	bh=xsFfvfMOhD513ZWl589KLiqfUEOcBNPPyV+LjOiXiLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S8y3ONeiQr4oBJBn8VMHAJxLV/eWmSHN6tWd+UG5WGdZTb6TB5cRHkJp2t9T/SqCM
+	 geCh8p2qHCfvb3IginFivGq4/3ftZUOs8vXnFtzF+xkYzx+MDLXIJU9sMPtVBEaBrN
+	 ueF3s+jFbMuwsHyOr2GOOw7R6QPYFnhbUoElCDP4=
+Date: Tue, 17 Jun 2025 03:53:34 -0700
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Yury Norov <yury.norov@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Kevin Tian <kevin.tian@intel.com>, Long Li <longli@microsoft.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Krzysztof Wilczy???~Dski <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Konstantin Taranov <kotaranov@microsoft.com>,
+	Simon Horman <horms@kernel.org>, Leon Romanovsky <leon@kernel.org>,
+	Maxim Levitsky <mlevitsk@redhat.com>,
+	Erni Sri Satya Vennela <ernis@linux.microsoft.com>,
+	Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org, Paul Rosswurm <paulros@microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH v6 0/5] Allow dyn MSI-X vector allocation of MANA
+Message-ID: <20250617105334.GC23702@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749650984-9193-1-git-send-email-shradhagupta@linux.microsoft.com>
+ <20250611085416.2e09b8cd@kernel.org>
+ <20250612061055.GA20126@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20250616181148.2aed5dfe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250617093627.ykSeZMqk@linutronix.de>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+In-Reply-To: <20250616181148.2aed5dfe@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Tue, Jun 17, 2025 at 11:36:27AM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-17 11:26:09 [+0200], Peter Zijlstra wrote:
-> > On Fri, Jun 13, 2025 at 12:05:14PM -0300, Luis Claudio R. Goncalves wrote:
-> > > With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
-> > > from rt_mutex_adjust_prio_chain() could happen in preemptible context and
-> > > with a mutex enqueued. That could lead to this sequence:
+On Mon, Jun 16, 2025 at 06:11:48PM -0700, Jakub Kicinski wrote:
+> On Wed, 11 Jun 2025 23:10:55 -0700 Shradha Gupta wrote:
+> > On Wed, Jun 11, 2025 at 08:54:16AM -0700, Jakub Kicinski wrote:
+> > > On Wed, 11 Jun 2025 07:09:44 -0700 Shradha Gupta wrote:  
+> > > > Changes in v6
+> > > >  * rebased to linux-next's v6.16-rc1 as per Jakub's suggestion  
 > > > 
-> > >         rt_mutex_adjust_prio_chain()
-> > >           put_task_struct()
-> > >             __put_task_struct()
-> > >               sched_ext_free()
-> > >                 spin_lock_irqsave()
-> > >                   rtlock_lock() --->  TRIGGERS
-> > >                                       lockdep_assert(!current->pi_blocked_on);
-> > > 
-> > > Fix that by unconditionally resorting to the deferred call to
-> > > __put_task_struct() if PREEMPT_RT is enabled.
-> > > 
+> > > I meant a branch, basically apply the patches on the v6.16-rc1 tag
+> > > and push it out to GitHub, kernel.org or somewhere else public.
+> > > Then we can pull it in and maintain the stable commit IDs.
+> > > No need to repost the patches, FWIW, just share the branch here
+> > > once you pushed it out..  
 > > 
-> > Should this have a Fixes: tag and go into /urgent?
+> > Oh, understood. Thanks for the clarity. Here is a github repo branch
+> > with the changes on v6.16-rc1 tag
+> > https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc1
 > 
-> I would say so. I'm not sure what caused it. I think Luis said at some
-> point that it is caused by a sched_ext case or I mixed it up with
-> something. Luis?
+> The tag was good, but when I pulled it my check scripts complained:
 > 
-> The other question I have, do we need to distinguish between PREEMPT_RT
-> and not or can we do this unconditionally?
+> Commit a19036b86845 ("net: mana: Allocate MSI-X vectors dynamically")
+> 	committer Signed-off-by missing
+> 	author email:    shradhagupta@linux.microsoft.com
+> 	committer email: shradhagupta@microsoft.com
+> 	Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 > 
+> etc. You seem to have committed the patches with a slightly different
+> email address. Not a huge deal but better to fix it if we can.
+> 
+> So please base the tag. The code can stay the same just adjust the
+> committer or author/signoff email addrs. We can use this as an
+> opportunity to add Bjorn's email.
+> 
+> No need to repost the code just ping here once you updated the tag.
 
-That's something I had been wondering myself. However, since this code
-runs in multiple places, I was concerned it might trigger some obscure
-corner-case issue. In any case, if we decide to remove the
-PREEMPT_RT conditional, I’d prefer to handle that in a follow-up patch.
+Hi Jakub,
 
-> Sebastian
-> 
+I have updated the tag with the corrected author and committer details
+and added Bjorn's ack:
+https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc1
 
+By 'please base the tag', did you mean we rebase the changes with rc2?
+If so, I have also created a rc2 tag branch, JFYI
+https://github.com/shradhagupta6/linux/tree/shradha_v6.16-rc2
+
+Hope this helps.
+
+Thanks,
+Shradha.
