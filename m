@@ -1,233 +1,119 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E17237162;
-	Tue, 17 Jun 2025 16:49:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC422FA65D;
+	Tue, 17 Jun 2025 16:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178962; cv=none; b=FAqWXvDOZAtYLajICJPQ4ivmUD+Ene+FtEnDbBa1lA2/hJdPB9DapB1OLQgxteaShhlJIzdr7yMEaHycSCGcCeioSGNi2mqLJhI+Joeg8ef7JjpIkBhFE0LZ3T6XFM8icxzEe3WSml9jPBryzzjLLHEvgFKaBD7JOicokO6P8xk=
+	t=1750178974; cv=none; b=LqO+xcpOpw881jn40oM8PaZ5mn3D/02NY6PxJfssU/V0U5gRwbIVMShOGbPI5eaYCPdkq/8EeOY7FZICytgGKkl2ne6maDTa1BKapMSLOp31kS8H8IFb6AYOn1ZUsMK/2rAjWhVLDDZ2zJOwVEtb8XYS5BdRo3+26p1AdzsT/sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178962; c=relaxed/simple;
-	bh=KRh/3IWUi8wJK9HBTanwpW1Ne/zckpysbpzJqR2v3lY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZXZtDDLJD7ZQjcnsOlbh1qUXrNCbwNbuL/9z9nTnRYN+3UijDQNsxbjwUlmfwUm1AAX5kuB9zmQyFUDDae4dLFok47DOACt4X9Eh99BhGiCAbuPMt2DyWWLHsV3xs9QZXkOuOCDNwQH5N3WLTTFXYlD/C0V/CrVPhJoNoEdSnEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HlqgBPyZ; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750178974; c=relaxed/simple;
+	bh=jEpQjHvEgxjUr21tptc9aTVBtZFn15TNyZmIdalww0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HB5yQMlWK9Qgl7mr+UyffdpYtI62/nrmmLqJPj485nj5V8ElFnUT3rikzcJ2XoQsBT0ZWlFyRvTFfy6r5ErPmTeJ7Qea+FaVoj97aItDWj1sWWo44aBnOVvyu+aUzUQ030j05EIMNy11P4UlTz9MFt0HqbCbtL2E/lUfZWprd9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaFF0MHs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HlqgBPyZ"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-453398e90e9so33077395e9.1;
-        Tue, 17 Jun 2025 09:49:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750178959; x=1750783759; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5XIMm+//qp4wqccCF+D0DH+tZhbKp+Az+d9fFWrYfco=;
-        b=HlqgBPyZSVPAhUuyfQuGYlSovg7s5bUsvHkbUsSAwyyg0ugt49eaAuJI18u4Vl2yCE
-         2+MBAjSirqpf97fvt+kVFlOf3xbcvJKkZPC/ItuAot3/NukvBokNAWH39k+QXbfT2182
-         RGfGFcoLcAc94vqbKW9oSHleXvsqXJZ9EEP4wjeYQpRN6MdSWc7nuButQxjKVHT21owO
-         ijX6tR2hxfuEUaZ/aHd5XuawcXeC+/S/qb4QperMqneeodV3ka2zYK74mVLmuHnRGCQS
-         SeFG2KhUh9bFk4l4RlTIFmcdykU+1JGlOUjW4fODFtFsKAH53jpzHIka6o/+JZW3k7QO
-         1thw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750178959; x=1750783759;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5XIMm+//qp4wqccCF+D0DH+tZhbKp+Az+d9fFWrYfco=;
-        b=k/1TmAZkiOiiSqPfKEYAbzkvBfg72LwB+TW+8Qgzkskg8zhQTsQon04v5CC958N1Do
-         K753iU2SqL6XQX8LnBQwQwHK1Eb627sytIzl/g40f6U8jyEDdthMLsCtX9zniStzb9mp
-         BKQHNCYeedXa7NlsoTR+fDk3gquqNgfVY1rikopuC31C2nncRWk9sCVOpwNTzlX/jrM7
-         4f5NcNv2zlYTVYxdgh4AT+PZsO34fXnw14n9uDxCCAFsBSfd/xiXImlGLFXX9xEHmRDv
-         Yr1HhS2R0l5fQiNVZJuXdGM7qjAxXMl8RwUK2YfJ6uiPY0s/90Iuk+zyxyWmdu49BGgB
-         fu4w==
-X-Forwarded-Encrypted: i=1; AJvYcCU2aG5rMles9viZao//HwSqU0aP7dH/qzgcFw9KEIC/hoe5ncTF/Z33OSKiUTRCBKgZfmoZSopnonaE/bur@vger.kernel.org, AJvYcCU8aY3g/960ZZYRZtvnKHOdFOzjfioHJcFiuHhjGPuYv3noSH773D3w9mpcuRHqS48sRe1zputodm/ZnzY4k0vW7L8=@vger.kernel.org, AJvYcCWCSVX3dFb4V9sq+SsqljobnulYLVIN9Dl1569ctKO5Z0OY4r6x0mT83rwZ6tDZNF73K4EAS6uB9NUp@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxSvGRZ8x5aIwYHAdwfRL69z/q5BQ+nCGg5BVRi3mOLFL64BpQ
-	1IRLBbnB9HjyO8VIGh7L2PG2TQOiahYq5dyQbQ++HFdOsPEUZXLNXtsp
-X-Gm-Gg: ASbGncsCAuBaue4sSyv7hhzpyC6unrmsrJojqyL1NOaHlUPVKs7BpHfL6XvlxdQf2uJ
-	jqadNyKkKnazMX1qM1xhi2H6nH6j7jl3Xz/GQrykt5JUkE11dH9tVmx+35JKP4Ff+ats6zMMtGe
-	EhC3sIuRksAd3fdW68dHTa3mqEFXztMbgQgwjB1uUxJG38Afs8O6ZdQBPE8WF8vO7FCxsQaKS4N
-	+3HEJY/Jw+XmPzvFXRiTMUVMkK586DFTaw9EsAnBJipXbKdgdxRwrNZ7+Uag1IT/scx4f/S0bFl
-	lmLAUa6up7o548UQdegvgIn40byjLhhjcdSyolu5iCV5HkfqdSBVTVPhsvjkEHzoBLLsXaI49hQ
-	lEMQBePQIICQ=
-X-Google-Smtp-Source: AGHT+IHqPQo3No+AxPf3KB6UZMn8Svd+qINdy29DPZOX/zUQw5gwrIihVc5xl0ma5/mBOSDc0/zJTg==
-X-Received: by 2002:a05:6000:65b:b0:3a5:88cf:479c with SMTP id ffacd0b85a97d-3a588cf4cadmr2820887f8f.30.1750178958740;
-        Tue, 17 Jun 2025 09:49:18 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b18f96sm14597105f8f.66.2025.06.17.09.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:49:18 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-mmc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2] dt-bindings: mmc: renesas,sdhi: Document RZ/T2H and RZ/N2H support
-Date: Tue, 17 Jun 2025 17:49:14 +0100
-Message-ID: <20250617164914.158091-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaFF0MHs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FEC7C4CEE3;
+	Tue, 17 Jun 2025 16:49:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750178973;
+	bh=jEpQjHvEgxjUr21tptc9aTVBtZFn15TNyZmIdalww0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gaFF0MHsIlQAMMGGdeGyfqazHmIaiExIxbYl9dG/yuKZuPzP4vz8JZTPn+P5UfyJE
+	 gsaH1Icp7eGIGSOhrf5ez6dgr72NtugZZuVd73SXPuvGL7HUTucSraLfLKtjwmwFeo
+	 QSrbtRCFp0J6uQE1RVRPRk/NjYSVaggophWc3NabXIztzOP5HDZqHDxaBOdLNNqA+R
+	 jugmHjWGEVwisejQDpgyFQ2KJtdxVtbqL9pjCEUZbTqqjDST/wd/b67Ul7mfz+u1tM
+	 z2QvFqgTegUfBx0VXEJwRfgAsT2JsEdzEMJxuW99urb12avw44vArKm8UWqm+DGJhq
+	 btAkgz/2uSQYQ==
+Date: Tue, 17 Jun 2025 22:19:26 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org, 
+	robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] Relax max-link-speed check to support PCIe
+ Gen5/Gen6
+Message-ID: <d26lnkthpe66s5jg5wufew3p4n6suoldijhcgnihiir5kkjtck@ik5io2tcmx2q>
+References: <20250529021026.475861-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250529021026.475861-1-18255117159@163.com>
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, May 29, 2025 at 10:10:23AM +0800, Hans Zhang wrote:
+> This patch series extends PCIe Gen5/Gen6 support for the max-link-speed
+> property across device tree bindings and kernel validation logic.
+> 
+> With PCIe 6.0 now supported in the Linux kernel and industry IP providers
+> like Synopsys/Cadence offering PCIe 6.0-compatible IPs, existing device
+> tree bindings and checks for max-link-speed (limited to Gen1~Gen4) no
+> longer align with hardware capabilities.
+> 
+> Documentation updates:
+> 
+> Patch 1/3 extends the PCI host controller binding (pci-bus-common.yaml) to
+> explicitly include Gen5/Gen6.
+> 
+> Patch 2/3 updates the PCI endpoint binding (pci-ep.yaml) with the same
+> extension.
+> 
+> Kernel validation fix:
+> 
+> Patch 3/3 relaxes the max-link-speed check in of_pci_get_max_link_speed()
+> to accept values up to 6, ensuring compatibility with newer generations.
+> 
+> These changes ensure that device tree configurations for modern PCIe
+> controllers (e.g., Synopsys/Cadence IP-based designs) can fully utilize
+> Gen5/Gen6 speeds without DT validation errors.
+> 
+> ---
+> In my impression, they have already obtained the relevant certifications.
+> 
+> e.g.:
+> Synopsys:
+> https://www.synopsys.com/dw/ipdir.php?ds=dwc_pcie6_controller
+> 
+> Cadence:
+> https://www.cadence.com/en_US/home/tools/silicon-solutions/protocol-ip/pcie-and-compute-express-link/controller-for-pcie-and-cxl/controller-for-pcie.html
+> ---
+> 
+> ---
+> Changes for v2:
+> - The following files have been deleted:
+>   Documentation/devicetree/bindings/pci/pci.txt
+> 
+>   Update to this file again:
+>   dtschema/schemas/pci/pci-bus-common.yaml
+> ---
+> 
+> Hans Zhang (3):
+>   dt-bindings: PCI: Extend max-link-speed to support PCIe Gen5/Gen6
+>   dt-bindings: PCI: pci-ep: Extend max-link-speed to PCIe Gen5/Gen6
 
-Add SDHI bindings for the Renesas RZ/T2H (a.k.a R9A09G077) and RZ/N2H
-(a.k.a R9A09G087) SoCs. Use `renesas,sdhi-r9a09g057` as a fallback since
-the SD/MMC block on these SoCs is identical to the one on RZ/V2H(P),
-allowing reuse of the existing driver without modifications.
+Applied patch 2 to pci/dt-bindings, thanks!
 
-Update the binding schema to reflect differences: unlike RZ/V2H(P),
-RZ/T2H and RZ/N2H do not require the `resets` property and use only a
-two clocks instead of four.
+- Mani
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
-v1->v2:
-- Added the high speed clock to the clocks list.
----
- .../devicetree/bindings/mmc/renesas,sdhi.yaml | 85 ++++++++++++-------
- 1 file changed, 53 insertions(+), 32 deletions(-)
+>   PCI: of: Relax max-link-speed check to support PCIe Gen5/Gen6
+> 
+>  dtschema/schemas/pci/pci-bus-common.yaml          | 2 +-
+>  Documentation/devicetree/bindings/pci/pci.txt     | 5 +++--
+>  drivers/pci/of.c                                  | 2 +-
+>  3 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> 
+> base-commit: fee3e843b309444f48157e2188efa6818bae85cf
+> -- 
+> 2.25.1
+> 
 
-diff --git a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-index 7563623876fc..ba15ccbda61a 100644
---- a/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-+++ b/Documentation/devicetree/bindings/mmc/renesas,sdhi.yaml
-@@ -72,6 +72,8 @@ properties:
-           - enum:
-               - renesas,sdhi-r9a09g047 # RZ/G3E
-               - renesas,sdhi-r9a09g056 # RZ/V2N
-+              - renesas,sdhi-r9a09g077 # RZ/T2H
-+              - renesas,sdhi-r9a09g087 # RZ/N2H
-           - const: renesas,sdhi-r9a09g057 # RZ/V2H(P)
- 
-   reg:
-@@ -129,59 +131,78 @@ allOf:
-         compatible:
-           contains:
-             enum:
--              - renesas,sdhi-r9a09g057
--              - renesas,rzg2l-sdhi
-+              - renesas,sdhi-r9a09g077
-+              - renesas,sdhi-r9a09g087
-     then:
-       properties:
-+        resets: false
-         clocks:
-           items:
--            - description: IMCLK, SDHI channel main clock1.
--            - description: CLK_HS, SDHI channel High speed clock which operates
--                           4 times that of SDHI channel main clock1.
--            - description: IMCLK2, SDHI channel main clock2. When this clock is
--                           turned off, external SD card detection cannot be
--                           detected.
--            - description: ACLK, SDHI channel bus clock.
-+            - description: ACLK, IMCLK, SDHI channel bus and main clocks.
-+            - description: CLK_HS, SDHI channel High speed clock.
-         clock-names:
-           items:
--            - const: core
--            - const: clkh
--            - const: cd
-             - const: aclk
--      required:
--        - clock-names
--        - resets
-+            - const: clkh
-     else:
-       if:
-         properties:
-           compatible:
-             contains:
-               enum:
--                - renesas,rcar-gen2-sdhi
--                - renesas,rcar-gen3-sdhi
--                - renesas,rcar-gen4-sdhi
-+                - renesas,sdhi-r9a09g057
-+                - renesas,rzg2l-sdhi
-       then:
-         properties:
-           clocks:
--            minItems: 1
--            maxItems: 3
--          clock-names:
--            minItems: 1
--            uniqueItems: true
-             items:
--              - const: core
--              - enum: [ clkh, cd ]
--              - const: cd
--      else:
--        properties:
--          clocks:
--            minItems: 1
--            maxItems: 2
-+              - description: IMCLK, SDHI channel main clock1.
-+              - description: CLK_HS, SDHI channel High speed clock which operates
-+                             4 times that of SDHI channel main clock1.
-+              - description: IMCLK2, SDHI channel main clock2. When this clock is
-+                             turned off, external SD card detection cannot be
-+                             detected.
-+              - description: ACLK, SDHI channel bus clock.
-           clock-names:
--            minItems: 1
-             items:
-               - const: core
-+              - const: clkh
-               - const: cd
-+              - const: aclk
-+        required:
-+          - clock-names
-+          - resets
-+      else:
-+        if:
-+          properties:
-+            compatible:
-+              contains:
-+                enum:
-+                  - renesas,rcar-gen2-sdhi
-+                  - renesas,rcar-gen3-sdhi
-+                  - renesas,rcar-gen4-sdhi
-+        then:
-+          properties:
-+            clocks:
-+              minItems: 1
-+              maxItems: 3
-+            clock-names:
-+              minItems: 1
-+              uniqueItems: true
-+              items:
-+                - const: core
-+                - enum: [ clkh, cd ]
-+                - const: cd
-+        else:
-+          properties:
-+            clocks:
-+              minItems: 1
-+              maxItems: 2
-+            clock-names:
-+              minItems: 1
-+              items:
-+                - const: core
-+                - const: cd
- 
-   - if:
-       properties:
 -- 
-2.49.0
-
+மணிவண்ணன் சதாசிவம்
