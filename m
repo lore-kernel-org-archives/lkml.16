@@ -1,108 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A73D2F5310
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6372F5310;
+	Tue, 17 Jun 2025 22:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750200658; cv=none; b=hR8ams3ECvFjubyEYKZXodCu0CMn0BhB6OOIehJB5UyA+a1W+BrRkua0/d0CsOJa1F6vKRj1QWubl12xvfS7x55UugUsojpcBt6ZXx2pOHpcZSZT+vMIH6h/pdRjQa78j9mujho5jhEmDJU5klntE8NNVOH3hd0l6q3I5tAilgk=
+	t=1750200678; cv=none; b=a/AY6WqwJ7BavUz3NEyMOxRf7iiwqNs2fIhOirZXAYAHbVxpRq/6dQEy4WERhYlqtEtTQHt4Poccqt5z/xWxfSRt+qQwRq87pbu9NfjA/O0lHvUrlNVhCea/TdpcilDwlmuIQ92DWipQILd7hjO3kdcr8L0O0UZtK7cxNF0fmSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750200658; c=relaxed/simple;
-	bh=kIJZkon3PpVO1xO+Y1dqXu0EPSWvOnvPVKJ734wyHYI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ZxnqgiAA8N+OnZ+PEaL+YQSXNhlP06ItLcbMoCXaUwV3Kn+zs/apbnggQlr/4s3sfo2WfoP8xoHbC5QMWL1cS9+iyTrZ24oIGzqoleZyd6WEH+0VgtEfMbqsW3KF4lNNbEFCcHZqs0+EmjelaU3480pOyNRliNlLwZNZoD/X/78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=K21XFM9n; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="K21XFM9n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55ACAC4CEE3;
-	Tue, 17 Jun 2025 22:50:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750200657;
-	bh=kIJZkon3PpVO1xO+Y1dqXu0EPSWvOnvPVKJ734wyHYI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=K21XFM9nN0omO6l6y3lzXoFZTDDxsuz+KxauHElK4d6V1eVHhSaIIM/uE0hpXrXpB
-	 IqDnHv383DOUVN0pJHAhRqSS32hMrMpGdLmfgA+4TTtrPz8AOWJzpBCFYgqv+1oZqI
-	 GZ1CPJClQE+KTy7q2cKA1sFam3IU4c9TUdhfBZ24=
-Date: Tue, 17 Jun 2025 15:50:56 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Rasmus Villemoes
- <linux@rasmusvillemoes.dk>, John Stultz <jstultz@google.com>, Thomas
- Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/3] bitmap: generalize node_random()
-Message-Id: <20250617155056.5c1d292d8831e7c7a27c8e5f@linux-foundation.org>
-In-Reply-To: <20250617200854.60753-2-yury.norov@gmail.com>
-References: <20250617200854.60753-1-yury.norov@gmail.com>
-	<20250617200854.60753-2-yury.norov@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750200678; c=relaxed/simple;
+	bh=iXGszjtXOZHDy7gWbPWg+lr0E7dCDoezrDFH319UBvg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=TgNLYWg7DDrY6a6XO/pGL2V84mwmP/uP8M2QV+aHPBEMnLrPKubBX6Ufc+TVRW10jq/GanRCcZErJNy3C50XazULRTwiHjH7lFWQRg2hTPnaSwsp3+Ng1qf1PnHNARLSrY6cRwK47tCRy7PyIN312ttl+jSDlIH4tr7WGnXi61A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id B67CD1017B3;
+	Tue, 17 Jun 2025 22:51:14 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id B0B0530;
+	Tue, 17 Jun 2025 22:51:11 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uRf9C-00000002L6s-29si;
+	Tue, 17 Jun 2025 18:51:18 -0400
+Message-ID: <20250617225118.364667867@goodmis.org>
+User-Agent: quilt/0.68
+Date: Tue, 17 Jun 2025 18:50:17 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v6 08/12] unwind_user/sframe/x86: Enable sframe unwinding on x86
+References: <20250617225009.233007152@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Stat-Signature: q7ycq9d9dkc7owgwa5cynr53tds45bj8
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: B0B0530
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/Uzply6cl3gsXjJr1KesH0wywOxldb14w=
+X-HE-Tag: 1750200671-394734
+X-HE-Meta: U2FsdGVkX19AJUtTTAelvx03X7L/01djQSa83Uwsp3IhNfD2PRZCjVo0MqQWFJfaGNNof5VwHcEYxMnzNbSJWrh8w/oiY9wOtCwKDtiNXIB1pekrwVTMxdwmQykBPnET6Fc+5MRvFv1+i3GGNotahAsOxsh11izQoycQjERlY2zkxVkfrmC7XgvRjVGBEhNYKrWmOSEYT+h8fATbnln8bU8PVukvSQwR92XlwNMXVW0bgw6KVInYGxTg6v2qrmPJaSoJ2kSGKzUVK8CjNKlF3UPTLc8fOOUwa35jIHkUzRwq+Kd05rIJS90PhmdJa/IzYJwR0pN/rWQOy9Bhk/eLau7tlIRFC3vxeZFLGMO08rFlS6uo8oBQX902PMbymuAn80vrv6ghWqMugBD5MguW3yJF6Ad1+Lz2xrA9CzsizHE=
 
-On Tue, 17 Jun 2025 16:08:51 -0400 Yury Norov <yury.norov@gmail.com> wrote:
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-> From: "Yury Norov [NVIDIA]" <yury.norov@gmail.com>
-> 
-> Generalize node_random() and make it available to general bitmaps and
-> cpumasks users.
-> 
-> Notice, find_first_bit() is generally faster than find_nth_bit(), and we
-> employ it when there's a single set bit in the bitmap.
-> 
-> See commit 3e061d924fe9c7b4 ("lib/nodemask: optimize node_random for
-> nodemask with single NUMA node").
-> 
-> ...
->
-> --- a/include/linux/nodemask.h
-> +++ b/include/linux/nodemask.h
-> @@ -492,21 +492,7 @@ static __always_inline int num_node_state(enum node_states state)
->  static __always_inline int node_random(const nodemask_t *maskp)
->  {
->  #if defined(CONFIG_NUMA) && (MAX_NUMNODES > 1)
-> -	int w, bit;
-> -
-> -	w = nodes_weight(*maskp);
-> -	switch (w) {
-> -	case 0:
-> -		bit = NUMA_NO_NODE;
+The x86 sframe 2.0 implementation works fairly well, starting with
+binutils 2.41 (though some bugs are getting fixed in later versions).
+Enable it.
 
-If the mask has no bits set, return -1.
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/x86/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> -		break;
-> -	case 1:
-> -		bit = first_node(*maskp);
-> -		break;
-> -	default:
-> -		bit = find_nth_bit(maskp->bits, MAX_NUMNODES, get_random_u32_below(w));
-> -		break;
-> -	}
-> -	return bit;
-> +	return find_random_bit(maskp->bits, MAX_NUMNODES);
->
-> ...
->
-> +unsigned long find_random_bit(const unsigned long *addr, unsigned long size)
-> +{
-> +	int w = bitmap_weight(addr, size);
-> +
-> +	switch (w) {
-> +	case 0:
-> +		return size;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 3f7bdc9e3cec..e282c5123385 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -304,6 +304,7 @@ config X86
+ 	select HAVE_UNSTABLE_SCHED_CLOCK
+ 	select HAVE_UNWIND_USER_COMPAT_FP	if IA32_EMULATION
+ 	select HAVE_UNWIND_USER_FP		if X86_64
++	select HAVE_UNWIND_USER_SFRAME		if X86_64
+ 	select HAVE_USER_RETURN_NOTIFIER
+ 	select HAVE_GENERIC_VDSO
+ 	select VDSO_GETRANDOM			if X86_64
+-- 
+2.47.2
 
-If the mask has no bits set, return the mask's size.
 
-> +	case 1:
-> +		/* Performance trick for single-bit bitmaps */
-> +		return find_first_bit(addr, size);
-> +	default:
-> +		return find_nth_bit(addr, size, get_random_u32_below(w));
-> +	}
-> +}
-
-I'm not seeing how this is correct?
