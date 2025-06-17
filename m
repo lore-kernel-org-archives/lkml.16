@@ -1,156 +1,125 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48316282EE
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 101502C18A
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750136342; cv=none; b=a3iTvvzzc5nggNK5xePK5z+qmI1EeoLUtbC5iwIPxzVo57O/Vfs4QBwkVdmHCxsZOov/W007gjHk+8J3An7+MrG3zOHF222plwm0x8SMlYNPEfGVOFtS3z8sVRyM9S6PPA2uHgwC48fKIQCYVSTNIEQqlidVyU+XGNjsFtoRAb0=
+	t=1750136428; cv=none; b=ntWEYJEo2R7jqYRaBGDkymXzlLqnb3zAYaopTi3zclxQcIsrmsOaf7/sO3mN8nufrp5YcxGxw1AIS4omftWl0FvzfclWYAM9hS1bfdyb+2VArCa2kWQnU0DKSFkdUJ4vgMxVBA+xMVzX6U46EDQKJfg9NmA7Qf2623w2mLaZDYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750136342; c=relaxed/simple;
-	bh=oC0N+8iJdsFa6t85idz8kAO5kH1GbcyGScpKZjQ9qts=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GlRw3a+1g5kxjiCVay2dmO/4DMxg/PQyzcLzkowptCicI2A34CvSuYYMFAqLScxzqov7O3Cgka0snXMoLhubhZVXF/ah+FYmzLfFxyuFlG++oL3ATpBhe2FIV1ip6OtaExji+hjr/bpStd+lrRB7P5As6tfQ5lTPI3KG7Jq/lcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=lsKfXB5K; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1750136428; c=relaxed/simple;
+	bh=V+Z9viGW2mQHUgAQAM4wmU9u5Q1wfMoJw+aGoGLrovI=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=kwyIGzeqZX4RK5O1a5SNyAuidS8CUOlJr7Xl/blySnoxojhwleJKKMavCoHtF4rhm2ORdFCLmlvMtM8IjniDh9498C+X6fZl2FfD514NMtEj7xemdSFpcXk1UV/saEha40TNDOD1R1y4tWjjmDrpilMwkZTmnBuxpEhlkbdk3aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cARlHsoc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="lsKfXB5K"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b544e7b4so3907573e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 21:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750136338; x=1750741138; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TabJOmc9YbjjVWqBpFHGZqmoipuAKz7Dqc3oFlaWkHM=;
-        b=lsKfXB5KK6bN7fKrVDgcmmEZXIz3o0vvm6lnUOBMaV4wtMpczawzJEhQWQNw3pKs6A
-         iVhiaJrbj/hUqmMeNkkBMlh5+XHkNg0YyFdd44R2hlPr+BIcglHniIIncAc2Tt11cATT
-         I4XkRq/ayTQqgq5HdXZSYmCaFGEipFCq7lpVlf4UC7W25p9CkhAzCaipxlJryBg6jM1W
-         at1yph0HkcebBR6tMPVgk70IwKEYhVNZUXNTykLGS0ygJ7XUYnsBcQg0Y/H0UC3WHHTF
-         uwMmFfnpaWbxf8iJZs+e4woYHk3K1KulIiYX+KTCJERGV9ZxizY7DIawMIkfVYoOhrP3
-         Qe4w==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cARlHsoc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750136424;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1NyyrjVp7x7bd0ZYGuL5yez7PypbZT8ag8gXavULDWU=;
+	b=cARlHsocE57LT+oNcw7ny5KYFCEMXjk2/Q12JMHyPcngN29KFs08YpnwlywlMfMbA246nG
+	xa4St/lsGsxUQVaLGw2wE+wgKDrV0cW9e5txSVcoP3PgZADG/hW0yGb1ANEj2iAq8PzW6A
+	2yqUkcqaarVcoulsd5pP9BNw1U9BRvo=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-674-T_tOuXE5MQunv9WluzSEjQ-1; Tue, 17 Jun 2025 01:00:22 -0400
+X-MC-Unique: T_tOuXE5MQunv9WluzSEjQ-1
+X-Mimecast-MFC-AGG-ID: T_tOuXE5MQunv9WluzSEjQ_1750136422
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d099c1779dso910300685a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:00:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750136338; x=1750741138;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TabJOmc9YbjjVWqBpFHGZqmoipuAKz7Dqc3oFlaWkHM=;
-        b=ZY5W6hFpHJRyfcPzO4Ie53jIm/WRpKqNjMdv6lKlOf7M/UujMp/hPdklBRPr/OVozD
-         +dpoVovawfnzCvPtPVPuzpCrb3zU0gagnmfqPTN13hMw3vXzIJFv83ZyREPMM6v+pteF
-         YVjV/0hQl5WRCct+efCOBRtkcGLQs/lMR8sI2t9Eeaeq3o4S3mjfqX3SF49J3EuhWMxj
-         5OoVyRrT1uKWsOKL5QBfFohm8LxGq3FB5aEvYaaj4yjBeB1YuOPBSA2Z6x5Kd6QVrlkF
-         X5grnb8h1EuAPezs0vxH/oXoZSSYcOl/4NNv6lL4Yx0HbXgGB44FEp9VNDnA24Bjj70e
-         60rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWzf5eIeEvcbSIs9RfcvY1P5GHhDn58GCYf881YoGp6Igp5imDo8Ngv0VnYmJHgg+kUUcJZ3M1u3xuA7Fo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKKE8LNaScn2Zij0/txxxg65olnEbsclYaYfayyX9GbxrO5Xbu
-	zZ1H/7iyG32gtFJwxj6QZz3Li9rAnVr5ZAc9Yg3oMh4S8JkmIMvSixcXO1BFUjohZCjNbspd9+Q
-	Ty/ozkMvUI6hglTvL6ixE9Dosi+oi2ybpvrLX5H+urA==
-X-Gm-Gg: ASbGncvZLKTqpKvbf/VUZj6b7uKMcQYUcRYooknzRPyQCqB11ZZ6Vufwt0TGoLnbDZl
-	tPgInZvhCV5yio93gQDRfrTDBmmutbV1usi3OmC7+HGPMWG/FitSdojvgXXmHrabUaQ/8kFhJK8
-	QDV4QSkrzHgYlO9QiKTHdVGhreDKyz+yUYTYh3OwTaA/7U
-X-Google-Smtp-Source: AGHT+IFH8UXFsAgXaqMjPDngF+lr7LJYJmQ6Doqaj2U7P69oabZRjWW7AlVBQ0Razbz6dxJNJnlmZobYZZyydWbrHDc=
-X-Received: by 2002:a05:6512:110d:b0:553:2450:5895 with SMTP id
- 2adb3069b0e04-553b6e71411mr3168533e87.4.1750136338338; Mon, 16 Jun 2025
- 21:58:58 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750136422; x=1750741222;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1NyyrjVp7x7bd0ZYGuL5yez7PypbZT8ag8gXavULDWU=;
+        b=fj6JMlrOn65ymksQy8CKU/+yw9DeZBJ5s11nDE0bXl/5IJCA6+biXmY9uh9RXNIlxT
+         jGCW5QebvLsxyCLANJXGJDxHr9ZEi0i6Hp9Tim7Xwdwd5kNs43dakK0CFX2Wyxf5yufi
+         jecWKWL8uFkhZSkolpXlHeSZbCE9nEvDvidZ4p+fChO92B0Bt2HmaPp52pNHbTcOV0Nn
+         Rg1BwwEFBVrQWW1Xq6X9diSCnVJMxAhx6Wv5hl5i/LkWuJByvVqkYoxQjBoaPP4av6pP
+         E+JW1KBGBVyTZHAYO/5JOOJUxeDq105GEHBTFIOFnnKwBcquUxQ2jTWsyJYpYzg853dD
+         qK/A==
+X-Gm-Message-State: AOJu0YwwMNr4t5gqGe0Nxd6KBHm6VbgNyGs5AvnUWyFu6yCVB8Yj1Gcb
+	ojf+VwOrc06Ahz2fvF7z298YOhszJTQLsnulNGbSGEBDjeV55z8g3AFiDqU6IAABbnLOVWngoKH
+	gqj9n983eaAKGdl6WBrTInEX0RWogDMrKABy2CfXb/yTj4iEEg1wmVqR4NkvPRCIrXQ==
+X-Gm-Gg: ASbGncvNb5OJpq2Woa6QxJM6R5O3TZUi5skBYM/zWpRz1hMhWwCxoZ+eLIaF9LNcJys
+	E1qKLeb2fr7wCee4D3pLgTz1aEG57R4TrOEXGSCGnG5DhbGJUnDb1FpATb/9w0lgFvI8hIJ3myn
+	Rf7TDeMlTCspIU8rgEK5YDGOFFdVhIeMsVbI+th+oxeWfYxLQDtEGyN7fxpPP+wCS46JqOsicu5
+	V8rL604JxM7tjNI8j92Vn6HW0/edThCicTA/bDD8QTmgKht9n8KUkPgGOhcdqykFGv8DqGLHJO1
+	51cqj0DJSI4lRhJZXQ==
+X-Received: by 2002:a05:620a:1b90:b0:7c5:49e3:3347 with SMTP id af79cd13be357-7d3c6cdfc36mr1906793585a.35.1750136421892;
+        Mon, 16 Jun 2025 22:00:21 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGWt3mL2iPG6Mtb+S9nFMv063s+W6wfyZG0t6TruzJS9fy8nsWTcjT0oQazpLajvLMysHRzBQ==
+X-Received: by 2002:a05:620a:1b90:b0:7c5:49e3:3347 with SMTP id af79cd13be357-7d3c6cdfc36mr1906788585a.35.1750136421520;
+        Mon, 16 Jun 2025 22:00:21 -0700 (PDT)
+Received: from [192.168.21.4] ([4.8.26.34])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8dce5d3sm609299885a.16.2025.06.16.22.00.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jun 2025 22:00:20 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <407f7b2b-cb60-4cd6-be4f-8ad335ad2e38@redhat.com>
+Date: Tue, 17 Jun 2025 01:00:19 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613065743.737102-1-apatel@ventanamicro.com>
- <20250613065743.737102-7-apatel@ventanamicro.com> <422c5677-48d1-41be-b128-595829c27167@linux.dev>
-In-Reply-To: <422c5677-48d1-41be-b128-595829c27167@linux.dev>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Tue, 17 Jun 2025 10:28:45 +0530
-X-Gm-Features: AX0GCFvh2GOQL0PlDDoaK4dE-NJWM8cyM_PZVHGF4_9faoB70s17Wy1wHH6F0Fs
-Message-ID: <CAK9=C2UQAKk3kVswTzKRG43Ds3T3etfK-45Y+Uv2g3wn+Qg1fg@mail.gmail.com>
-Subject: Re: [PATCH v2 06/12] RISC-V: KVM: Implement kvm_arch_flush_remote_tlbs_range()
-To: Atish Patra <atish.patra@linux.dev>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, 
-	Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] workqueue: Initialize wq_isolated_cpumask in
+ workqueue_init_early()
+To: Chuyi Zhou <zhouchuyi@bytedance.com>, tj@kernel.org,
+ jiangshanlai@gmail.com
+Cc: linux-kernel@vger.kernel.org
+References: <20250617044216.1401878-1-zhouchuyi@bytedance.com>
+Content-Language: en-US
+In-Reply-To: <20250617044216.1401878-1-zhouchuyi@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Jun 14, 2025 at 6:14=E2=80=AFAM Atish Patra <atish.patra@linux.dev>=
- wrote:
->
->
-> On 6/12/25 11:57 PM, Anup Patel wrote:
-> > The kvm_arch_flush_remote_tlbs_range() expected by KVM core can be
-> > easily implemented for RISC-V using kvm_riscv_hfence_gvma_vmid_gpa()
-> > hence provide it.
-> >
-> > Also with kvm_arch_flush_remote_tlbs_range() available for RISC-V, the
-> > mmu_wp_memory_region() can happily use kvm_flush_remote_tlbs_memslot()
-> > instead of kvm_flush_remote_tlbs().
-> >
-> > Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> > ---
-> >   arch/riscv/include/asm/kvm_host.h | 2 ++
-> >   arch/riscv/kvm/mmu.c              | 2 +-
-> >   arch/riscv/kvm/tlb.c              | 8 ++++++++
-> >   3 files changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm=
-/kvm_host.h
-> > index ff1f76d6f177..6162575e2177 100644
-> > --- a/arch/riscv/include/asm/kvm_host.h
-> > +++ b/arch/riscv/include/asm/kvm_host.h
-> > @@ -43,6 +43,8 @@
-> >       KVM_ARCH_REQ_FLAGS(5, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
-> >   #define KVM_REQ_STEAL_UPDATE                KVM_ARCH_REQ(6)
-> >
-> > +#define __KVM_HAVE_ARCH_FLUSH_REMOTE_TLBS_RANGE
-> > +
-> >   #define KVM_HEDELEG_DEFAULT         (BIT(EXC_INST_MISALIGNED) | \
-> >                                        BIT(EXC_BREAKPOINT)      | \
-> >                                        BIT(EXC_SYSCALL)         | \
-> > diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> > index 29f1bd853a66..a5387927a1c1 100644
-> > --- a/arch/riscv/kvm/mmu.c
-> > +++ b/arch/riscv/kvm/mmu.c
-> > @@ -344,7 +344,7 @@ static void gstage_wp_memory_region(struct kvm *kvm=
-, int slot)
-> >       spin_lock(&kvm->mmu_lock);
-> >       gstage_wp_range(kvm, start, end);
-> >       spin_unlock(&kvm->mmu_lock);
-> > -     kvm_flush_remote_tlbs(kvm);
-> > +     kvm_flush_remote_tlbs_memslot(kvm, memslot);
-> >   }
-> >
-> >   int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
-> > diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
-> > index da98ca801d31..f46a27658c2e 100644
-> > --- a/arch/riscv/kvm/tlb.c
-> > +++ b/arch/riscv/kvm/tlb.c
-> > @@ -403,3 +403,11 @@ void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
-> >       make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE_VVMA_ALL,
-> >                           KVM_REQ_HFENCE_VVMA_ALL, NULL);
-> >   }
-> > +
-> > +int kvm_arch_flush_remote_tlbs_range(struct kvm *kvm, gfn_t gfn, u64 n=
-r_pages)
-> > +{
-> > +     kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0,
-> > +                                    gfn << PAGE_SHIFT, nr_pages << PAG=
-E_SHIFT,
-> > +                                    PAGE_SHIFT);
-> > +     return 0;
-> > +}
->
-> LGTM. However, I noticed that kvm_flush_remote_tlbs_range doesn't
-> increment remote_tlb_flush_requests/remote_tlb_flush stat counter.
->
-> So we would be losing those stats here. Do you know if there is a
-> specific reason behind not supporting the stat counters in the *tlbs_rang=
-e
-> function ?
 
-Looks like this was missed out in generic kvm_flush_remote_tlbs_range().
+On 6/17/25 12:42 AM, Chuyi Zhou wrote:
+> Now when isolcpus is enabled via the cmdline, wq_isolated_cpumask does
+> not include these isolated CPUs, even wq_unbound_cpumask has already
+> excluded them. It is only when we successfully configure an isolate cpuset
+> partition that wq_isolated_cpumask gets overwritten by
+> workqueue_unbound_exclude_cpumask(), including both the cmdline-specified
+> isolated CPUs and the isolated CPUs within the cpuset partitions.
+>
+> Fix this issue by initializing wq_isolated_cpumask properly in
+> workqueue_init_early().
+>
+> Fixes: fe28f631fa94 ("workqueue: Add workqueue_unbound_exclude_cpumask() to exclude CPUs from wq_unbound_cpumask")
+> Signed-off-by: Chuyi Zhou <zhouchuyi@bytedance.com>
+> ---
+>   kernel/workqueue.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 97f37b5bae669..9f91480758288 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -7767,7 +7767,8 @@ void __init workqueue_init_early(void)
+>   		restrict_unbound_cpumask("workqueue.unbound_cpus", &wq_cmdline_cpumask);
+>   
+>   	cpumask_copy(wq_requested_unbound_cpumask, wq_unbound_cpumask);
+> -
+> +	cpumask_andnot(wq_isolated_cpumask, cpu_possible_mask,
+> +						housekeeping_cpumask(HK_TYPE_DOMAIN));
+>   	pwq_cache = KMEM_CACHE(pool_workqueue, SLAB_PANIC);
+>   
+>   	unbound_wq_update_pwq_attrs_buf = alloc_workqueue_attrs();
 
-Regards,
-Anup
+Right, the wq_isolated_cpumask isn't initialized properly. Thank for 
+fixing that.
+
+Reviewed-by: Waiman Long <longman@redhat.com>
+
