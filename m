@@ -1,140 +1,208 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40FC2E2669
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302E12E7166
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750189169; cv=none; b=lsf1VP4L1rj9Q6aY/yLBG0DVbj03smnDtcbVZzkYuMCgt1c3SmwWbgLD2UAteBID6Fg8iIXk+XkdmNEladOpueu4OVKNGf26bplvgfNB3XbGberYn4ZAduPS+vWieWrsL1fCzYrh9xrbyujiqMADUNgO91BGOki9g/qVVCSoBd0=
+	t=1750189391; cv=none; b=dkVIOYfHkRMA5xpwTpYmzAregedOas4h7nW/FJWtZTXhE4gxn2Z+KlzGB6FXKDw4b3ZOK2FAkhjFweDFjsdGxyjf8rU7jCwShLpbwPS4l2B+tN+GRthYoq0zPvVNJrOvF2asSFFtgG/SBOgr4Gb94cB/uOEWUn7Du4S2re0O6Ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750189169; c=relaxed/simple;
-	bh=F8sGT+/sgtF0uvYnPIHZZx0Lfe8FrbZyk0U6/gz6wZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RokjHapWNndNtkwAjikRMK1f+v4NWljG6BH4mVt+mphgrss/PyLWp3LPJ49wS0CZev/qxtoIBmucbu1LPkJVxq0jwNRGrpNY1UtTaYC6D+bZxDAIy/62WSgkHj7hBFDzA6AvpQKwzQ6w0G6i4bybOvcRzYknp2Z0Bj2WjJ5Xo80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=i7cZYVN6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750189391; c=relaxed/simple;
+	bh=l7SzB8NO+rrP5k4367W9aS0ArpEC+aDkSTC3pfTFz30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=XDWPiLdnogVAvfOPJrjO2t1SsW7f2ENDiSSWS5GOSm0wIwGS4GfdEYuZBRBHJXZmr8W8hgFOC6orqgSQlvsdsbx/+eDsVwltN/JR/MYSHTAw+Bt8lKsE1Nta2WnIVwtgNIAcQe4oMHK5Xgywo4L78UPCiXCsjturmSzueUNBUn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tQn+1aMb; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i7cZYVN6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750189167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XJl3ISS5vZpEM73Zu2QnVbFcIkeedrpFNBWR+QK1Ynw=;
-	b=i7cZYVN6MSJFAjq37Y8sZkqitrheGKWNFzOtojrFec5DU05wrDatk1bwAomCMM1QBi/Jw9
-	H5JN7Wjevi9EedzE0i8RJvHaGSFFptcjpOihKi2jSx3HFZmB8YffD21j0Ij7QNeZaIbcVT
-	h8LVRNKxwS7rnNBNx7UWXUvLnI6NfN8=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-201-9P6EhR8qMS-qke6QR5mGJg-1; Tue, 17 Jun 2025 15:39:25 -0400
-X-MC-Unique: 9P6EhR8qMS-qke6QR5mGJg-1
-X-Mimecast-MFC-AGG-ID: 9P6EhR8qMS-qke6QR5mGJg_1750189165
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-74834bc5d37so8957539b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:39:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750189165; x=1750793965;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XJl3ISS5vZpEM73Zu2QnVbFcIkeedrpFNBWR+QK1Ynw=;
-        b=bWxBxprTyihsOqJjlKkGC5vvDxyVLgjZVmRnNV8YDd172LrIBXK4yujcH9ACToPSP7
-         wR4UXzl1Vn8Q7jvGClJ3p1zN5FeffGH6Bevooz3KNl4+GDKcHoJm8Ugl3nmSc0HRnaTz
-         dAME8iySfwig1EO2/5bZDFXHPJMTzj1iuJKmHntIGjbwM5fR5YOJtdKP4zyp0ZfrbQci
-         vVzHxROVAHiS870BYDRpBufH4pC1G9cbQ9tpem0ho1diTylyL+wkj4ak9oiQwjpXHHMe
-         mq2j2hfIdlMSX+pdRQ/0MNhTZ32GtAGeKMt1bcXdkFrC/ja9awHclzwYRt6xT7dXg2tz
-         Me+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWZm21GK6QihGM2IzQzhKL117K0n7sAd63aQYVXQ54FTDr6tXIX4e6SCZ67h9/Gv+JeK41PuzujjjnjXFU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk4t4q++gu2hXrvUBX67GIx1ACKBYFBq5WQWRflPUPVSPXkX+5
-	yvdgp45ner6N84Z5XAhh1p125XjG5zpsKjjEyyKUeORvONdx8a+O8eEmpRRukmIse5FNZdVTRGy
-	TsdolxVMonzu+mDYO9uNM4PqqW72EN96IGZnnnto+LkXwI9FEaDOuctbP4jkU53Tkug==
-X-Gm-Gg: ASbGncsXH++qEo7hFBq3EfIim+X3wOIPjZriRUSjDqCGJRVeoLgLx0d13ZvH6R9WgSY
-	LTJ8FI59H6zmDBTYVYsusC4iA7a6qHDd3nxMv7DizkCSuU64n2ynxH4fryBfgpzMf6Q2c477lY0
-	AXhV8o+649PisyGCCIadoVUFBzpTB+Jcxx3f8MIY6trOdcGdQbnOaI4fDZUb3hPOQWbBm0Nf6LT
-	jimf1QBmOLTd2deXdDkNuhJZXFxhjpzzIOwk3oeiEtpFLayXZkbP/EzTU88kvc5Qu7MvHcphDUx
-	LIt8RvZ3coKS6g==
-X-Received: by 2002:a05:6a00:3a19:b0:746:2ae9:fc3d with SMTP id d2e1a72fcca58-7489cffb6bbmr18361942b3a.23.1750189164739;
-        Tue, 17 Jun 2025 12:39:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0d0QqjyrjopZorTKaCRFU/Z21FT70P9cxE4DFi+E6/jbvdkezfloKB99Q5wHRPPT6YtfIBg==
-X-Received: by 2002:a05:6a00:3a19:b0:746:2ae9:fc3d with SMTP id d2e1a72fcca58-7489cffb6bbmr18361911b3a.23.1750189164376;
-        Tue, 17 Jun 2025 12:39:24 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748d8093c63sm1700538b3a.57.2025.06.17.12.39.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 12:39:23 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:39:19 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, kvm@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 4/5] vfio: Introduce vfio_device_ops.get_unmapped_area
- hook
-Message-ID: <aFHEZw1ag6o0BkrS@x1.local>
-References: <20250613134111.469884-5-peterx@redhat.com>
- <202506142215.koMEU2rT-lkp@intel.com>
- <aFGMG3763eSv9l8b@x1.local>
- <20250617154157.GY1174925@nvidia.com>
- <aFGcJ-mjhZ1yT7Je@x1.local>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tQn+1aMb"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250617194308euoutp02857ea47871a6cd763e88838ab161204a~J6-nL49Nt2272722727euoutp02D
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:43:08 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250617194308euoutp02857ea47871a6cd763e88838ab161204a~J6-nL49Nt2272722727euoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750189388;
+	bh=SsrrapZlggFpVYw95Drc6h8mJo8KmYhpbhG7VYywjIs=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=tQn+1aMbwyFepAeZyTjCE0hzZXQjkbcCqJBGARftZbkUFKJLWTc9EfdDMG3TezNAh
+	 DIlbOcm9eVbr72Cc5FNc0HMpIvgf9sldMIsyFi1JfXTsCWsUDcCuEV/qJQQp0PfA/q
+	 NJT7rOLr+MUFVmvLKM0BTaZbJfXq8aja9MxXgRbc=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250617194306eucas1p118ec57136b8265b7e13aeb1ea93a14b7~J6-l2QnM52077420774eucas1p1s;
+	Tue, 17 Jun 2025 19:43:06 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250617194305eusmtip14ca5682a8b9fab2b3547be7105427287~J6-kraHC01904619046eusmtip1_;
+	Tue, 17 Jun 2025 19:43:05 +0000 (GMT)
+Message-ID: <98d6b8e5-4694-44df-9ba0-33e6c00d8183@samsung.com>
+Date: Tue, 17 Jun 2025 21:43:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aFGcJ-mjhZ1yT7Je@x1.local>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/9] pwm: Add Rust driver for T-HEAD TH1520 SoC
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
+	Gross <tmgross@umich.edu>, Drew Fustini <drew@pdp7.com>, Guo Ren
+	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, Benno
+	Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-clk@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <aFF7qqlexxh540FW@pollux>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250617194306eucas1p118ec57136b8265b7e13aeb1ea93a14b7
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250617140839eucas1p2d13775f8e6d34a516e93d3b426d5fb16
+X-EPHeader: CA
+X-CMS-RootMailID: 20250617140839eucas1p2d13775f8e6d34a516e93d3b426d5fb16
+References: <20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com>
+	<CGME20250617140839eucas1p2d13775f8e6d34a516e93d3b426d5fb16@eucas1p2.samsung.com>
+	<20250617-rust-next-pwm-working-fan-for-sending-v3-4-1cca847c6f9f@samsung.com>
+	<aFF7qqlexxh540FW@pollux>
 
-On Tue, Jun 17, 2025 at 12:47:35PM -0400, Peter Xu wrote:
-> On Tue, Jun 17, 2025 at 12:41:57PM -0300, Jason Gunthorpe wrote:
-> > On Tue, Jun 17, 2025 at 11:39:07AM -0400, Peter Xu wrote:
-> > >  
-> > > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
-> > >  static unsigned long vfio_device_get_unmapped_area(struct file *file,
-> > >                                                    unsigned long addr,
-> > >                                                    unsigned long len,
-> > > @@ -1370,6 +1371,7 @@ static unsigned long vfio_device_get_unmapped_area(struct file *file,
-> > >         return device->ops->get_unmapped_area(device, file, addr, len,
-> > >                                               pgoff, flags);
-> > >  }
-> > > +#endif
-> > >  
-> > >  const struct file_operations vfio_device_fops = {
-> > >         .owner          = THIS_MODULE,
-> > > @@ -1380,7 +1382,9 @@ const struct file_operations vfio_device_fops = {
-> > >         .unlocked_ioctl = vfio_device_fops_unl_ioctl,
-> > >         .compat_ioctl   = compat_ptr_ioctl,
-> > >         .mmap           = vfio_device_fops_mmap,
-> > > +#ifdef CONFIG_ARCH_SUPPORTS_HUGE_PFNMAP
-> > >         .get_unmapped_area = vfio_device_get_unmapped_area,
-> > > +#endif
-> > >  };
-> > 
-> > IMHO this also seems like something the core code should be dealing
-> > with and not putting weird ifdefs in drivers.
+
+
+On 6/17/25 16:28, Danilo Krummrich wrote:
+> On Tue, Jun 17, 2025 at 04:07:27PM +0200, Michal Wilczynski wrote:
+>> +    fn write_waveform(
+>> +        chip: &mut pwm::Chip,
+>> +        pwm: &mut pwm::Device,
 > 
-> It may depend on whether we want to still do the fallbacks to
-> mm_get_unmapped_area().  I get your point in the other email but not yet
-> get a chance to reply.  I'll try that out to see how it looks and reply
-> there.
+> I think you can't hand out mutable references here. This would allow things like
+> mem::swap(), which I think are not valid on those structures.
+> 
+>> +        wfhw: &Self::WfHw,
+>> +        parent_dev: &Device<Bound>,
+>> +    ) -> Result {
+>> +        let data: &Self = chip.drvdata().ok_or(EINVAL)?;
+>> +        let hwpwm = pwm.hwpwm();
+>> +        let iomem_guard = data.iomem.access(parent_dev)?;
+> 
+> Technically, this isn't a guard, hence would't call it that way.
+> 
+>> +        let iomap = iomem_guard.deref();
+>> +        let was_enabled = pwm.state().enabled();
+>> +
+>> +        if !wfhw.enabled {
+>> +            if was_enabled {
+>> +                iomap.try_write32(wfhw.ctrl_val, th1520_pwm_ctrl(hwpwm))?;
+>> +                iomap.try_write32(0, th1520_pwm_fp(hwpwm))?;
+>> +                iomap.try_write32(wfhw.ctrl_val | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwpwm))?;
+>> +            }
+>> +            return Ok(());
+>> +        }
+>> +
+>> +        iomap.try_write32(wfhw.ctrl_val, th1520_pwm_ctrl(hwpwm))?;
+>> +        iomap.try_write32(wfhw.period_cycles, th1520_pwm_per(hwpwm))?;
+>> +        iomap.try_write32(wfhw.duty_cycles, th1520_pwm_fp(hwpwm))?;
+>> +        iomap.try_write32(wfhw.ctrl_val | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwpwm))?;
+> 
+> None of the offsets are known at compile time? :(
 
-I just noticed this is unfortunate and special; I yet don't see a way to
-avoid the fallback here.
+Sadly they are computed based on runtime parameter hwpwm, so Rust can't
+guarantee correctness during compilation :-(.
 
-Note that this is the vfio_device's fallback, even if the new helper
-(whatever we name it..) could do fallback internally, vfio_device still
-would need to be accessible to mm_get_unmapped_area() to make this config
-build pass.
+Thank you for your other feedback, appreciate it !
 
-So I think I'll need my fixup here..
+> 
+>> +
+>> +        // The `PWM_START` bit must be written in a separate, final transaction, and
+>> +        // only when enabling the channel from a disabled state.
+>> +        if !was_enabled {
+>> +            iomap.try_write32(wfhw.ctrl_val | PWM_START, th1520_pwm_ctrl(hwpwm))?;
+>> +        }
+>> +
+>> +        dev_dbg!(
+>> +            chip.device(),
+>> +            "PWM-{}: Wrote (per: {}, duty: {})",
+>> +            hwpwm,
+>> +            wfhw.period_cycles,
+>> +            wfhw.duty_cycles,
+>> +        );
+>> +
+>> +        Ok(())
+>> +    }
+>> +}
+> 
+> <snip>
+> 
+>> +impl platform::Driver for Th1520PwmPlatformDriver {
+>> +    type IdInfo = ();
+>> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+>> +
+>> +    fn probe(
+>> +        pdev: &platform::Device<Core>,
+>> +        _id_info: Option<&Self::IdInfo>,
+>> +    ) -> Result<Pin<KBox<Self>>> {
+>> +        let dev = pdev.as_ref();
+>> +        let resource = pdev.resource(0).ok_or(ENODEV)?;
+>> +        let iomem = pdev.ioremap_resource_sized::<TH1520_PWM_REG_SIZE>(resource)?;
+>> +        let clk = Clk::get(pdev.as_ref(), None)?;
+>> +
+>> +        clk.prepare_enable()?;
+>> +
+>> +        // TODO: Get exclusive ownership of the clock to prevent rate changes.
+>> +        // The Rust equivalent of `clk_rate_exclusive_get()` is not yet available.
+>> +        // This should be updated once it is implemented.
+>> +        let rate_hz = clk.rate().as_hz();
+>> +        if rate_hz == 0 {
+>> +            dev_err!(dev, "Clock rate is zero\n");
+>> +            return Err(EINVAL);
+>> +        }
+>> +
+>> +        if rate_hz > time::NSEC_PER_SEC as usize {
+>> +            dev_err!(
+>> +                dev,
+>> +                "Clock rate {} Hz is too high, not supported.\n",
+>> +                rate_hz
+>> +            );
+>> +            return Err(ERANGE);
+>> +        }
+>> +
+>> +        let chip = pwm::Chip::new(dev, MAX_PWM_NUM, 0)?;
+>> +
+>> +        let drvdata = KBox::new(Th1520PwmDriverData { iomem, clk }, GFP_KERNEL)?;
+>> +        chip.set_drvdata(drvdata);
+>> +
+>> +        let registration = pwm::Registration::new(chip, &TH1520_PWM_OPS)?;
+>> +
+>> +        Ok(KBox::new(
+>> +            Th1520PwmPlatformDriver {
+>> +                _registration: registration,
+>> +            },
+>> +            GFP_KERNEL,
+>> +        )?
+>> +        .into())
+> 
+> Here you are setting up the registration for the correct lifetime, however
+> drivers could extend the lifetime of the registration arbitrarily, which would
+> break the guarantee of the &Device<Bound> we rely on in the callbacks above
+> (e.g. write_waveform()).
+> 
+> Hence, pwm::Registration's lifetime has to be controlled by Devres. I'll also
+> add a corresponding comment in your registration patch.
+> 
+>> +    }
+>> +}
+> 
 
+Best regards,
 -- 
-Peter Xu
-
+Michal Wilczynski <m.wilczynski@samsung.com>
