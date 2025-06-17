@@ -1,79 +1,59 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25C7293C64;
-	Tue, 17 Jun 2025 10:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624017262B;
+	Tue, 17 Jun 2025 10:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750156014; cv=none; b=Q4rV1ZCcOUsrz+cI1E5RuzT4B54E9qKq2OLN18f2CKU9FBM8lhRaJHKTC1FGE5rNYHzkl5X6/X2fCU+h3nz3wotpPe2HMTaXqvGbVu0jGCaiagnxJVJlUYQPmoPDig5R+9m9YhY2WSXkDdWQGwAWcUqP2z0OWNt1HBN2mGG4d5o=
+	t=1750156055; cv=none; b=Z9/D+V5q3I/DEuI/uzdZCkCTzXP9aG6EhMS/suPeBZ7KqGrC5AmZ1TSTUUgqjnMwKKAD8P0eCsxC0QKIVyMsDyeFCV1URZQRm1fGUvuoJFwIBFWVHFiJm6GgaI2U/32hxbqJkDB/ASUoYzddyBggR57xFYgQ294QdNmTugslY8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750156014; c=relaxed/simple;
-	bh=c7SJ8S5i0EZ71+KLteXSUyF3nQXE2e502C4Rl9OAeiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YwXVCrI9wCiUg9s3ArKXyByr8m+gIKKPnUXf4fwLmBqXdBNzU+ZXn0LTQuq1ouspEzdV4ouLGxd68zl9LJxoU18zYKtIXxDbn/Co7LAZf1MOWOPrcfE1Jd2n3EzbRV9jKrC5ip1NevEuouORz3mXuUicAxJJPIDvYtZ6r8zQ0xU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4Tu15w9; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750156055; c=relaxed/simple;
+	bh=2tZwtsmmZ89rixmQAEOd6QkHBjBjpGHUSoMUF1n7xEk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ILkN+Q4vgcxZMwzF8zsVE4+nUpmZZ+9AZcpxPWTER9zU8fPbcgGJVysxuGqUEgURSOtIIeW8uoPtBtZd9HM2Wze2mfcYlChUcfRchYvBu61joKUs6bu2aK8AB4sG4JFXZ9YDogX4no/xOnSA72AiSa/avmj/68UWStQFq5ElpJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAuAh7WW; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4Tu15w9"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3137c20213cso6608848a91.3;
-        Tue, 17 Jun 2025 03:26:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750156012; x=1750760812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HZz6MHsNO6dIlJ6aj/tvnzfPrgOsbHqDiUlqtB5Es+k=;
-        b=d4Tu15w9mPe4I9AiESzvjNTZjHcABRB9mYznpgNwxg5Q7X50dgIh1rtJbz6FlJYpjr
-         NhPKvR6/fdai0yvtB9+akEOR31ya4rwvykY9xyhaKMRnhv9RAJX9GS4tLTeThRQoVXA2
-         9+uQLUT5AGBB+jYqopFx2BcA1b6hB/njt1+5yCph9vW8p+wsJbfUq0Asb3/EUKyv66rw
-         kiWn9Dzr0SFZtrCacWckNAGGx+rXlOWQT7bGp9NvPGkZLhhU9Vxxy6xoc/QeONois+fN
-         48skoBSTBDXb3CXkCTi8h+JLPijXL2+OM0XH0df8D3LQMs0FCaP/+LqV0Sqw8qbqqtbd
-         JfXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750156012; x=1750760812;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HZz6MHsNO6dIlJ6aj/tvnzfPrgOsbHqDiUlqtB5Es+k=;
-        b=qUPnxNVHp7OHLBDgvTSu6bCEsaKiH9qpX8s+X29ZOVxVX7yWyot0rcM7y1UjVnkB5o
-         MqMSxXy8FO6FR2oNXZhFEDcEvJrFcEOj97ZrTsU/5wEFEGkGG3ATyLrcX6V/RdHa385J
-         PgyuXUETEbo/63PXYzO4+eQ7t+Z06rc42O/4ubjDhPPB2yoVr4IEhVb9BC0N46slsC/m
-         Yz7EAPgP+SG4BGWGfqj/pkzYydK0Sun3S0gsPHUjTq0bR125m09F6FWOknMy/UNSMXzI
-         FPDyn/psUdwyswRSgkPyxp8QjO4H9fkd5IHmhF94vuR/IciAT4k8iyYhhhWU4sXFt1MI
-         PRkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeiUGY4iIjjDG0QRm+aeUZN2yNmouG5BMlIbGMEOdjMAx1qKgt6UlmJx7XbfLaXt1phgtpn5A9ZEG9GlQIOsVCr/F69w==@vger.kernel.org, AJvYcCUosPFmW9rQTgd2vfQFZRvjzHoS+J3hKolfPzmog+ro7l3TnlY4xHEoXK/KRHYrapvTlk1zXfz6+5RMmdw=@vger.kernel.org, AJvYcCVTmodj5cCTX4HV2RSiiMW2C/WVfVK4M99XfG5pBDFlohSFqeWWzVy2qZBCKxseoaHCfraDGGff@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY2/sU+QuvvM/90LTrjiX9MjPpSRdojfeJXKy+j9EQmG7cXEHb
-	aH0mAHmi95lJK7mvxkkA6XqGFQ6xYxb7il+B3xtVtZ6GfkJtpAOZKZ0f
-X-Gm-Gg: ASbGncvC+/HZMXPOrrrps2X072qdEK2as66Y+g0WmYjMmmnMHEzhZvCuc/J42ul/ErV
-	wiq/bOnFajcnhkFkk/icQ4RRkHuxvDANReH+FskDqeUtrBDpCiYeJ0VRMMXXuNZEmzvFx0XpuO4
-	u0Y6RGOhLrcED+3XANcrurSBVRQensBWxMAjcCsGaFHvUGK8viLCh5RoBrtF2NbwM/sZ8PJZFib
-	l6/A8ARPKxKTS9iMFWJ8E74pKmjYAqEe8JkzXdE1rwI/3QRdxNUo3sgEJMfSUBgDHAVUFCKhJJP
-	nnSM1EeJCJqCd+0fnEQHVk1GnOoPcZCTSy+XputnuRW5EkOWEtS9ASy68dwyzzjlfYBCtrjCJY/
-	riIXb
-X-Google-Smtp-Source: AGHT+IEvpo0maN0m+gyRmMErklVTxeyTK+JnMtREA8aMyFe7PwoLhFvswRDMfRFhsxdH7wrvpIfxhw==
-X-Received: by 2002:a17:90b:274d:b0:312:959:dc4d with SMTP id 98e67ed59e1d1-313f1beafdcmr21027180a91.7.1750156011965;
-        Tue, 17 Jun 2025 03:26:51 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.254.76])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88bf0esm76165935ad.31.2025.06.17.03.26.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 03:26:51 -0700 (PDT)
-From: Hai Tran <hoanghaivn0406@gmail.com>
-To: i@rong.moe
-Cc: hdegoede@redhat.com,
-	i@hack3r.moe,
-	ikepanhc@gmail.com,
-	ilpo.jarvinen@linux.intel.com,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	stable@vger.kernel.org,
-	Hai Tran <hoanghaivn0406@gmail.com>
-Subject: Re: [PATCH] platform/x86: ideapad-laptop: use usleep_range() for EC polling
-Date: Tue, 17 Jun 2025 17:25:22 +0700
-Message-ID: <20250617102522.2524-1-hoanghaivn0406@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAuAh7WW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750156054; x=1781692054;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2tZwtsmmZ89rixmQAEOd6QkHBjBjpGHUSoMUF1n7xEk=;
+  b=eAuAh7WWmdjCdbATAEsPK1LbwIOucBMCCnbt7jy5M1j5f2pKzIALZJX1
+   C96D85QuFHwkH90TuHsSG6s30CC6FBTWhsUxnF7UsJ5TzE+6RmudKGKDj
+   1v4h6rw4dQ0t+cMyYWQCWLQDbD31KWqTb0EGSrRNyzUzJ+BwN30Fcx8Y2
+   apWA5M0Rg9WkQ02c/EXzmoDfxB59zLRqYCpe4WLra3x6LW0jTK7/COCoy
+   XNz5NfLSQdkfPc1L5GhL4KYy/YrhArYZ/w+aTIAO6ex/HLGMhOxBvom6G
+   JUxQcBb5zoDTaiEknZC7fdR59O9Rg0cY2z2MUF0w5Q8RGsFFVNL7P/kwu
+   w==;
+X-CSE-ConnectionGUID: zNj8nQEPQtKXGRTt4ct8fQ==
+X-CSE-MsgGUID: MiwU3IyOQN6iQ/2z75I+DA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="52462044"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52462044"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 03:27:32 -0700
+X-CSE-ConnectionGUID: 6KS2sxHcR/6jOhhDIhs04Q==
+X-CSE-MsgGUID: FdpfRI4FTsST35tQ3MfDDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="154033928"
+Received: from ysun46-mobl (HELO YSUN46-MOBL..) ([10.239.96.51])
+  by orviesa005.jf.intel.com with ESMTP; 17 Jun 2025 03:27:30 -0700
+From: Yi Sun <yi.sun@intel.com>
+To: vinicius.gomes@intel.com,
+	dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: dave.jiang@intel.com,
+	yi.sun@intel.com,
+	gordon.jin@intel.com,
+	fenghuay@nvidia.com
+Subject: [PATCH v3 0/2] dmaengine: idxd: Fix refcount and cleanup issues on module unload
+Date: Tue, 17 Jun 2025 18:27:10 +0800
+Message-ID: <20250617102712.727333-1-yi.sun@intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250525201833.37939-1-i@rong.moe>
-References: <20250525201833.37939-1-i@rong.moe>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,8 +62,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tested on my ThinkBook 16 G6+ AHP and everything is working fine now with:
-- Fn+F5/F6 inputs to change brightness are not shutdown unexpectedly anymore.
-- Sleep is working after closing the lid or via power button.
+This patch series addresses two issues related to the device reference
+counting and cleanup path in the idxd driver.
 
-Tested-by: Hai Tran <hoanghaivn0406@gmail.com> 
+Recent changes introduced improper put_device() calls and duplicated
+cleanup logic, leading to refcount underflow and potential use-after-free
+during module unload.
+
+Patch 1 removes an unnecessary call to idxd_free(), which could result in a
+use-after-free when paired with asynchronous put_device().
+
+Patch 2 refactors the cleanup path to avoid redundant put_device() calls
+introduced in commit a409e919ca3. The existing idxd_unregister_devices()
+already handles proper device reference release.
+
+Both patches have been verified on hardware platform.
+
+Both patches have been run through `checkpatch.pl`. Patch 2 gets 1 error
+and 1 warning. But these appear to be limitations in the checkpatch script
+itself, not reflect issues with the patches.
+
+---
+Changes in V3:
+- Removed function idxd_disable_sva which got removed recently (Vinicius)
+Changes in v2:
+- Reworded commit messages supplementing the call traces (Vinicius)
+- Explain why the put_device are unnecessary. (Vinicius)
+
+Yi Sun (2):
+  dmaengine: idxd: Remove improper idxd_free
+  dmaengine: idxd: Fix refcount underflow on module unload
+
+ drivers/dma/idxd/init.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+-- 
+2.43.0
