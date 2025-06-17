@@ -1,78 +1,96 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD1C2BEC3F;
-	Tue, 17 Jun 2025 09:50:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 101A62BFC67;
+	Tue, 17 Jun 2025 09:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153818; cv=none; b=odDmQfOVhTYHbryTC5FfVvnB3LtXfTbavi13TLPQVxkAbdI5cyEn9aUvpFt7dnSaFzt9/B+gwMxTo/XSNM0LLrSiuxMtmV3a/JW+TOZt5ggkCs5SA77Uw0XelJxo5j2j1Q/rZIWS2aj1X3qC5ivaSRtSrIlbUKbf2KQiDnRtfFM=
+	t=1750153826; cv=none; b=bNzm4RLaUTng/qLzRsk3wfQIIrs7qC3kdwj8rM3R5skkxiQg90xjbnl9dU4mE7uon6QrIo/BrdYcc+MZ3j31M6Wz90AjJyZHzoihW8JLgtmPWQOz9Gl1dWA/SX+TbHGTZ9YUrjfM5IOt18YGT89Jw+ri8tKL4/vv6S8oZmxeZYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153818; c=relaxed/simple;
-	bh=YH8snW+HQzPkJeXMoGvcgRiLRIoHK3vIXAy0/dbKPZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhASUgrFWdJQhFQVsoakRELqk6gfu5bytzxQjCaFxL267vgv/Yeqm6swIOpyMbsyn3Bdzzji4zAiJxVRQyE/3dAuxUZbMxK1iChu+aMFXm2nUeih+l9BKhU0lqrThrjcEyNkTMu99ubJJaaxrCBOH6uPSwAKFFR1pXtRYVGjQVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-adb5cb6d8f1so1015268066b.3;
-        Tue, 17 Jun 2025 02:50:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153815; x=1750758615;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YH8snW+HQzPkJeXMoGvcgRiLRIoHK3vIXAy0/dbKPZI=;
-        b=SYKA5iefyaticxCC7Ksl3setSKZGVbFczoPXGTzkrTsVbheIKXohuPllm/k5RY32f2
-         /G6nL6icjDn2q9geRxib3uvazVLiJiN5BTPfWMz6y1kTZ/6+BOhSOfiPxarK6n4eKdPC
-         pC6tPfrKYr7GtLOpp8DKJwmsWZvZo8pv4jmB3WfO8rbuvmX8REqFSgot280abXnXXlz9
-         MOMlnst0l56WTgEBWsNZ7Xnh2G3uVMxAVWD3JOlapmJXZJ9eHADhQ0WIm9VzJQGSJe87
-         pEUXfysyW97nfpVFeViL1HjQjXAJDTnRPgapTb8ldrZg0mDGQbc7vhU5caaRQ1cFG0+J
-         1Ypw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIpdNptlk/SDPzDhIp2B0ku/ENEWYhAbbmh9sJ48Lc6Q+Ja0IwI1dw/XBQrBNXAuxcGh1NVJ52@vger.kernel.org, AJvYcCWIp1xZ0GOhnlJC0DZjuei3dX0Einftj6ceGNfZjErfDbwwUbuVZWaceJ60GUpk8V8oGkhjcz/iT2jiJtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjldqOsu17jzw3rwsPpXmV2DnEvdN1CreVhciYgJmPtXjysz+N
-	lGJEvfkIqR5bIN9fITCk9oPnpFeSlRw9xe4N/2FXfsruB1X0tI/wDH/D
-X-Gm-Gg: ASbGncs17nIUUFY4IBOuwQdHysdGjT7vCAb49zt9mM+JXztSM3/JjI+ABOwGRBYNII0
-	XdShNOrED1X/2nI6q6uXTXegtbV4AfbXoUWZ1OVtuBvLXd5EbHevaje3HhZOn2UtW3V5ISfbk7m
-	THgjB7xWT9vTxRuPnLyJm6HdUFX78rhbHPFwLGFRxMPZ3aTZhpSvwULE96BPVOtYSyTeoOAW7DG
-	HCtaD7jxzHwAxP/I/i7niJzsMoGFzL9NzPkcb1k3BABuo6Rgi/YrLdcp5HizGv56cASs6+9XOSY
-	4z8ugEdz1NIfIkG6JdqfCRyjhHgwhVjVidGgSyQLVbmKE9w/82EF5Q==
-X-Google-Smtp-Source: AGHT+IHn2FJqs9RO9flMz3wqH58LiFdg5OFFDyapqZw3NxqVXI1mx4LABvm24mwAZpwVpNqg2v/fsQ==
-X-Received: by 2002:a17:907:1ca0:b0:adb:2bee:53c9 with SMTP id a640c23a62f3a-adfad29d046mr1234466066b.3.1750153814797;
-        Tue, 17 Jun 2025 02:50:14 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:74::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8977545sm844022366b.147.2025.06.17.02.50.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:50:14 -0700 (PDT)
-Date: Tue, 17 Jun 2025 02:50:11 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 09/15] tools: ynl_gen_rst.py: clanup coding style
-Message-ID: <aFE6U9e1Y3Qu+v62@gmail.com>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
- <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1750153826; c=relaxed/simple;
+	bh=5GsdevIxGH4DwmsS8ehE6KbJIaaZA2uhhha9UifZLhk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=uJ5L/KY6sTSlIks7KRqod7M3zzo2CSDsbAEUQs/mQm3KnYzwD6pH0nWd69twft4EGxumLW5aiNYjPklMhU9kK6K7YYvrvegSoy82BMFbVyiBRaN2LDZTTYhBy9idL/g4S+p9Yfaww7KuZRfSjx5pTdobzOIsQN7tjUBv1uHabdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.164])
+	by gateway (Coremail) with SMTP id _____8Cx_eJcOlFoZk4YAQ--.15430S3;
+	Tue, 17 Jun 2025 17:50:20 +0800 (CST)
+Received: from [10.20.42.164] (unknown [10.20.42.164])
+	by front1 (Coremail) with SMTP id qMiowMBxnhtYOlFoqyoeAQ--.32990S2;
+	Tue, 17 Jun 2025 17:50:18 +0800 (CST)
+Subject: Re: [PATCH v10 2/5] crypto: loongson - add Loongson RNG driver
+ support
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: lee@kernel.org, jarkko@kernel.org, linux-kernel@vger.kernel.org,
+ loongarch@lists.linux.dev, davem@davemloft.net,
+ linux-crypto@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
+ linux-integrity@vger.kernel.org, Yinggang Gu <guyinggang@loongson.cn>,
+ Huacai Chen <chenhuacai@loongson.cn>
+References: <20250528065944.4511-1-zhaoqunqin@loongson.cn>
+ <20250528065944.4511-3-zhaoqunqin@loongson.cn>
+ <aElLJY9MnkEQx935@gondor.apana.org.au>
+From: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Message-ID: <4efdb35f-dfb0-c44f-b3ec-7ca98717820c@loongson.cn>
+Date: Tue, 17 Jun 2025 17:49:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
+In-Reply-To: <aElLJY9MnkEQx935@gondor.apana.org.au>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMBxnhtYOlFoqyoeAQ--.32990S2
+X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj9xXoWrZr4rKw45ZFW8tFyrtr1kJFc_yoW3JFXEqa
+	n2v3s8ur97CF4rX34akr4rWry8GFW3tFZ2grykZayxtw4fXa98uF48ur1a9F4qgryfCr93
+	urn8G39Yqr1UWosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbDxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
+	oVCq3wAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
+	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
+	Yx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
+	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
+	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr
+	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
+	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+	cVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUcpBTUUUUU
 
-On Tue, Jun 17, 2025 at 10:02:06AM +0200, Mauro Carvalho Chehab wrote:
-> Cleanup some coding style issues pointed by pylint and flake8.
 
-Sorry, forgot to mention that there is a typo in the commit title.
+在 2025/6/11 下午5:23, Herbert Xu 写道:
+> On Wed, May 28, 2025 at 02:59:41PM +0800, Qunqin Zhao wrote:
+>> +	if (!rng_devices.is_init) {
+>> +		ret = crypto_register_rng(&loongson_rng_alg);
+>> +		if (ret) {
+>> +			dev_err(&pdev->dev, "failed to register crypto(%d)\n", ret);
+>> +			return ret;
+>> +		}
+>> +		INIT_LIST_HEAD(&rng_devices.list);
+>> +		mutex_init(&rng_devices.lock);
+>> +		rng_devices.is_init = true;
+>> +	}
+> This doesn't look right.  What stops two devices from both entering
+> this code path when is_init == false?
+
+Will use __MUTEX_INITIALIZER  macro to statically initialize 
+rng_devices. lock,
+
+and then use this lock to stop two devices form both entering this code 
+path.
+
+
+Thanks,
+
+Qunqin
+
+>
+> Cheers,
+
