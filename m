@@ -1,169 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31BE4430;
-	Tue, 17 Jun 2025 06:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B5B74430;
+	Tue, 17 Jun 2025 06:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750140868; cv=none; b=Fj/BR7hf8g/OBlY/kFM1b94klmD7a5oYyWXllCWKgF6fjE7caA1BRcbc2UM2q8T39k/eqTMzbLP/IqmtpZqXvagUQeQ3ZcFxL5zNieQo/0/VYqcbqOYfTDac85xGIGaxbHXnPnn8WDPDlS/2XaDsBxxhGamjhhh9yyfTzMQL1kU=
+	t=1750140993; cv=none; b=QSMvN/CRs3d3bxJ1GfMfKvB0KgALL0BVaZxoMaJsRjAkj0rFMLUWIni0NKuFr5nUJR2TylzIJ5f6CmfZbvSrBKRZH4IyUfH0yyOFM4knSOAkyxMsDi8+g1s0sM32jyFEiu5ES9pQaiuIUIGjT+kNvcoGv8rjURZM8wYQ+Iuan3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750140868; c=relaxed/simple;
-	bh=atcA+m1RP63WSr7kzFhVShoS22kZRQhKEPWYi3FCQsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CDQ1GVFBDZ+6rNUkyfVje+Sc8w0A83tvQdVuqi4MjQNbSg7Y6u3a5P6M1VtXaFIWSDDRSDVlqKhwvZuQUahTH6JvfCNnMkGchSkVALkINfrSyKYgdn3fPXWvY8I5CAtPIwIEBT34353PibnmD6qWizjiQExA8LgYrVOr2fMg7ko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9yxKEh1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750140993; c=relaxed/simple;
+	bh=em5afbSxDVZTWjiIIfEt3ro5pNH4iDv1ddey82xb5k4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kpmfcWM31C6+gxsbrAjdOb4eyo7f2zoxdSL8V85AVA5J30oQv9hsd4po6kCcdLz0f+wWPd2ZMKqB3hs0xXP6gZEUepZFxYEU4h+SC1S1mq9AkXllSuSU3wVNhj/wEdp+37PbRtbieLXM8w0IA73wYvNhvmz1mFMMTFvHV54wtuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=MLNQdKQP; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9yxKEh1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32F9CC4CEE3;
-	Tue, 17 Jun 2025 06:14:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750140868;
-	bh=atcA+m1RP63WSr7kzFhVShoS22kZRQhKEPWYi3FCQsU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N9yxKEh1Kjf62bOHmpOn1cYdpdRn1gofl+mZtpTpBPwQZ5vvawpJBCsM9W17N15FQ
-	 9VN9Gavv5SrMW9KFbY0jiP9jjpNvgFxtGtE/z3HswJiawSpfuGys4Zo4zekCvLi+/b
-	 kHETdWjx85ognmiLMpXTv86ZUfgur00+k1na1l/1Xc7nLwSl/hnuEVP5K+ClMwvgWR
-	 2YRux22WQv+jwy+DpMTp4kvHQobCS4bfk3Ijx3z6AF8ruzH/P8RooaJi0SfcAvWETX
-	 CHG++iPmEW5Sl3nv06WN8TuWcILgS8cILbXnAnVkr7Bl9spDuRZO8Crfo9iY0dIYd0
-	 L/9AfKJukd63Q==
-Message-ID: <c7aef6cd-e07d-4422-a34a-ce04c37ad2e8@kernel.org>
-Date: Tue, 17 Jun 2025 08:14:23 +0200
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="MLNQdKQP"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 12CB02115DDF; Mon, 16 Jun 2025 23:16:31 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 12CB02115DDF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750140991;
+	bh=KzS9ZS6fAvo4puvySZm9ixLEffc5yo2/sxVEQs2cdqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MLNQdKQPFuyylGJu0lRnPbIsyUPkT/7uauh3pgrAFlT7B4qXM5Zzs4mQYZTPPCHgN
+	 AA4B/1p5BZThRtiT3pAvtQpiKOlV1RvjIRYXbFX+4EQa0tb2WUYR4oEEKOJwhiP7Ou
+	 f7MPIxQTtGfs/RIvQR2dr8BD8sKoE4ohEFGGTeAY=
+Date: Mon, 16 Jun 2025 23:16:31 -0700
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+	kotaranov@microsoft.com, horms@kernel.org,
+	shirazsaleem@microsoft.com, leon@kernel.org,
+	shradhagupta@linux.microsoft.com, schakrabarti@linux.microsoft.com,
+	gerhard@engleder-embedded.com, rosenp@gmail.com, sdf@fomichev.me,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH net-next v2 0/4] Support bandwidth clamping in mana using
+ net shapers
+Message-ID: <20250617061631.GA19561@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1749813627-8377-1-git-send-email-ernis@linux.microsoft.com>
+ <20250614130354.0a53214e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/5] dt-bindings: media: venus: Add qcm2290 dt schema
-To: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-Cc: quic_vgarodia@quicinc.com, quic_dikshita@quicinc.com,
- bryan.odonoghue@linaro.org, mchehab@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, stanimir.varbanov@linaro.org,
- linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250613140402.3619465-1-jorge.ramirez@oss.qualcomm.com>
- <20250613140402.3619465-2-jorge.ramirez@oss.qualcomm.com>
- <6f4e715f-1c73-450e-b7eb-92781b7fa050@kernel.org> <aFATp3zoSgkrj3YX@trex>
- <a76789cf-afe1-4d91-afdf-65c3af5ad11f@kernel.org> <aFBDzWLkKC9MWGoC@trex>
- <48e6cc62-ffb0-4ca7-80c8-9e510db505db@kernel.org> <aFBNVjl4n7I+OkO5@trex>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJoF1BKBQkWlnSaAAoJEBuTQ307
- QWKbHukP/3t4tRp/bvDnxJfmNdNVn0gv9ep3L39IntPalBFwRKytqeQkzAju0whYWg+R/rwp
- +r2I1Fzwt7+PTjsnMFlh1AZxGDmP5MFkzVsMnfX1lGiXhYSOMP97XL6R1QSXxaWOpGNCDaUl
- ajorB0lJDcC0q3xAdwzRConxYVhlgmTrRiD8oLlSCD5baEAt5Zw17UTNDnDGmZQKR0fqLpWy
- 786Lm5OScb7DjEgcA2PRm17st4UQ1kF0rQHokVaotxRM74PPDB8bCsunlghJl1DRK9s1aSuN
- hL1Pv9VD8b4dFNvCo7b4hfAANPU67W40AaaGZ3UAfmw+1MYyo4QuAZGKzaP2ukbdCD/DYnqi
- tJy88XqWtyb4UQWKNoQqGKzlYXdKsldYqrLHGoMvj1UN9XcRtXHST/IaLn72o7j7/h/Ac5EL
- 8lSUVIG4TYn59NyxxAXa07Wi6zjVL1U11fTnFmE29ALYQEXKBI3KUO1A3p4sQWzU7uRmbuxn
- naUmm8RbpMcOfa9JjlXCLmQ5IP7Rr5tYZUCkZz08LIfF8UMXwH7OOEX87Y++EkAB+pzKZNNd
- hwoXulTAgjSy+OiaLtuCys9VdXLZ3Zy314azaCU3BoWgaMV0eAW/+gprWMXQM1lrlzvwlD/k
- whyy9wGf0AEPpLssLVt9VVxNjo6BIkt6d1pMg6mHsUEVzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmgXUF8FCRaWWyoACgkQG5NDfTtBYptO0w//dlXJs5/42hAXKsk+PDg3wyEFb4NpyA1v
- qmx7SfAzk9Hf6lWwU1O6AbqNMbh6PjEwadKUk1m04S7EjdQLsj/MBSgoQtCT3MDmWUUtHZd5
- RYIPnPq3WVB47GtuO6/u375tsxhtf7vt95QSYJwCB+ZUgo4T+FV4hquZ4AsRkbgavtIzQisg
- Dgv76tnEv3YHV8Jn9mi/Bu0FURF+5kpdMfgo1sq6RXNQ//TVf8yFgRtTUdXxW/qHjlYURrm2
- H4kutobVEIxiyu6m05q3e9eZB/TaMMNVORx+1kM3j7f0rwtEYUFzY1ygQfpcMDPl7pRYoJjB
- dSsm0ZuzDaCwaxg2t8hqQJBzJCezTOIkjHUsWAK+tEbU4Z4SnNpCyM3fBqsgYdJxjyC/tWVT
- AQ18NRLtPw7tK1rdcwCl0GFQHwSwk5pDpz1NH40e6lU+NcXSeiqkDDRkHlftKPV/dV+lQXiu
- jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
- zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
- XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <aFBNVjl4n7I+OkO5@trex>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250614130354.0a53214e@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On 16/06/2025 18:59, Jorge Ramirez wrote:
-> On 16/06/25 18:23:18, Krzysztof Kozlowski wrote:
->> On 16/06/2025 18:18, Jorge Ramirez wrote:
->>> On 16/06/25 16:41:44, Krzysztof Kozlowski wrote:
->>>> On 16/06/2025 14:52, Jorge Ramirez wrote:
->>>>>>
->>>>>>> +  The Venus AR50_LITE IP is a video encode and decode accelerator present
->>>>>>> +  on Qualcomm platforms
->>>>>>> +
->>>>>>> +allOf:
->>>>>>> +  - $ref: qcom,venus-common.yaml#
->>>>>>> +
->>>>>>> +properties:
->>>>>>> +  compatible:
->>>>>>> +    const: qcom,qcm2290-venus
->>>>>>> +
->>>>>>> +  power-domains:
->>>>>>> +    minItems: 2
->>>>>>> +    maxItems: 3
->>>>>>> +
->>>>>>> +  power-domain-names:
->>>>>>> +    minItems: 2
->>>>>>
->>>>>> Why is this flexible? Either you have two or three. Not mixed.
->>>>>
->>>>> please check 5b380f242f360256c96e96adabeb7ce9ec784306
->>>>
->>>> This does not explain why this is optional HERE. You cannot use for a
->>>> new platform an argument that some existing platform was changed in
->>>> ABI-preserving way.
->>>
->>> thanks for quick the follow up.
->>>
->>> but bear with me please because I dont follow - why can the same logic
->>> be used - it being applicable - and therefore result in a definition
->>> similar to those other platforms?
->>
->> Because this platform either has 2 or 3, not both. Unless that's not
->> true, but then please share some arguments.
+On Sat, Jun 14, 2025 at 01:03:54PM -0700, Jakub Kicinski wrote:
+> On Fri, 13 Jun 2025 04:20:23 -0700 Erni Sri Satya Vennela wrote:
+> > This patchset introduces hardware-backed bandwidth rate limiting
+> > for MANA NICs via the net_shaper_ops interface, enabling efficient and
+> > fine-grained traffic shaping directly on the device.
+> > 
+> > Previously, MANA lacked a mechanism for user-configurable bandwidth
+> > control. With this addition, users can now configure shaping parameters,
+> > allowing better traffic management and performance isolation.
+> > 
+> > The implementation includes the net_shaper_ops callbacks in the MANA
+> > driver and supports one shaper per vport. Add shaping support via
+> > mana_set_bw_clamp(), allowing the configuration of bandwidth rates
+> > in 100 Mbps increments (minimum 100 Mbps). The driver validates input
+> > and rejects unsupported values. On failure, it restores the previous
+> > configuration which is queried using mana_query_link_cfg() or
+> > retains the current state.
+> > 
+> > To prevent potential deadlocks introduced by net_shaper_ops, switch to
+> > _locked variants of NAPI APIs when netdevops_lock is held during
+> > VF setup and teardown.
+> > 
+> > Also, Add support for ethtool get_link_ksettings to report the maximum
+> > link speed supported by the SKU in mbps.
+> > 
+> > These APIs when invoked on hardware that are older or that do
+> > not support these APIs, the speed would be reported as UNKNOWN and
+> > the net-shaper calls to set speed would fail.
 > 
-> as with every other venus schema with more than 1 power domain, the
-> argument is the same one that I have shared with you a couple of
-> messages back (DVFS).
+> Failed to apply patch:
+> Applying: net: mana: Fix potential deadlocks in mana napi ops
+> error: patch fragment without header at line 23: @@ -2102,9 +2108,11 @@ static void mana_destroy_rxq(struct mana_port_context *apc,
+> error: could not build fake ancestor
+> hint: Use 'git am --show-current-patch=diff' to see the failed patch
+> hint: When you have resolved this problem, run "git am --continue".
+> hint: If you prefer to skip this patch, run "git am --skip" instead.
+> hint: To restore the original branch and stop patching, run "git am --abort".
+> hint: Disable this message with "git config set advice.mergeConflict false"
+> Patch failed at 0001 net: mana: Fix potential deadlocks in mana napi ops
 > 
-> verbatim:
->     Venus needs to vote for the performance state of a power domain (cx)
->     to be able to support DVFS. This 'cx' power domain is controlled by
->     rpm and is a common power domain (scalable) not specific to
->     venus alone. This is optional in the sense that, leaving this power
->     domain out does not really impact the functionality but just makes
->     the platform a little less power efficient.
+> please rebase
+Hi Jakub,
 
-That's not definition of optional. The domain is needed for this device,
-the device is one way or another having its rails routed to that domain.
-It is not optional.
+Thank you for your reply. I will rebase and repost.
 
-> 
-> Seeing all these venus schemas follow the same pattern, it seems to me
-> that this is the correct way of implementing the above.
-
-No for the reason I mentioned earlier.
-
-> 
-> You seem to disagree. please could you explain?
-
-I already explained. You add new device, so argument to preserve ABI,
-which was accepted THAT TIME, is not valid. You do not have ABI.
-
-
-Best regards,
-Krzysztof
+- Vennela
+> -- 
+> pw-bot: cr
