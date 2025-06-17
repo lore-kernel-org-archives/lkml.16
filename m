@@ -1,120 +1,110 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA2D1FDA9E
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252331CDA2E;
+	Tue, 17 Jun 2025 14:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170986; cv=none; b=By3KfHSw3cagaPScmF2/Bp1za/WLx6uCS6gZwO4gsSrjUg0sf/LleMqRny0Mifi6vLcWY69plvgY/w88f+AFCJXfg8luX1/yx6M1w6MrMR+cflj2BTSPpGtRl8Ni+QLXARDiimoUe8VJkvtITBun//vJifyCdN3BS9s8kMEcv4Y=
+	t=1750171014; cv=none; b=S+DyROj2g3D5KAIMUCATckEECrLsv2oS8RGbP5D7BobpESW8Q9FiTb9/bazbBfYi06G5SGcBdBMHbxGWM4SIpbBgryoxRA3XwlVJjtfURkdww73nsCgC3jNX/1a+V+SetonFx5rULiYItBJB90Pu9RtjjXMthrajWOhKbPcKSIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170986; c=relaxed/simple;
-	bh=XascYBoc9NckCIIv+PQoeUxYqjNPXzZSnGc/V/kEwjs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Q3eMZYZKXKpa52ztfET87GhWeRIj9aesaUDBjeJkXg+2/CWMk0fcHvIrMOYuLKmhwQpiwQhjFte3w+1gWU7knbAE6Ej8/7W668fvOrmpjfc3pcFTecuvJPbEVQwHbPGPkQkiHLOyJa4cT4fd+JQsuouvzdt9W2y81ehIzDxDI80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sp6cQCew; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750171014; c=relaxed/simple;
+	bh=bH5eztucliOZhea2XXdkOphR9rOQDw32gpLCRrbUAIg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U/2pXYb2TF46BT7LPc0em6Pkf+X/Kqo2QYnnP/jY7nj3b+Up+uNfG7oszVtHNinq+WFWkV3a7CGBqLjsWJTQSpDfmXsytrhNigA+9ojwmVT+tSzwh5COFsB2G/8a44Jt0rlN4A8Z8Y+N8EjrM5xAxyXu6RABUeAWBMZhsnGvH+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E7gHG8O5; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sp6cQCew"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74620e98ec8so4801265b3a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:36:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750170984; x=1750775784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uMwlSkCNIqJfHOH66+3JA30LqpAbnp8KrvmDSuhH/Ag=;
-        b=sp6cQCewnH92bNA3UZI8X8hP07fmWYuMOsZFn/8O65BPTv+z6ZCvPu/ojtyUV9SXvX
-         mBCG2EjVcEoFmAZCBOuDLT33Vd44Vh7RAEfY5L8JEhdB7+lCH4nlES0WGb7lKDB3hM9j
-         Yiskl6ZyWJsFjhGboi7+YTS22KwCkUwqKNBe3PZkQykFY/Dk8Azlp2Ey1oOdJydzLh4c
-         8ilxDWLLMRpUiug3LF64R1HDJUDQZaJaHd8Rv9TGhb2Z9MypVYwa6GIiFUwEeZA7Nuq9
-         6sKUgt/Km5ayiEjNHf5U3B36Uy42B0IQ9WmXSoZyPeb3iXT4kV4UHv39vqQ651MOr+u2
-         fTsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750170984; x=1750775784;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=uMwlSkCNIqJfHOH66+3JA30LqpAbnp8KrvmDSuhH/Ag=;
-        b=Z5Ab3d+5QzS1RscLFLU7iBoZsp8g3xGIDFOa9wBWsqdf9cwkpuK96WGS0gMlc7V9jR
-         5548u5Vb0GD6T2WxrJ3rkB6L+VQ86NYya6PRowhFDCD23unvxR7C0jauOREQ5euwCarl
-         Tfctci+ZXCvrfLhgEthIkz2S+AvGJMn4xxhagP4Bsw8dl5FUiTAb4EmLtsoZrS0cg9Of
-         Yy2HQNTropkM02lmac4pwO3TxlzYRofiPMEoGIWTWLdDBdsSEud7hodtyqAAoS+xvZnq
-         cK0yi98SPgJpDhvn0B/iKAN+n53bP6KtqMEx7rDzNCtcwgVyd8BaoCHohgPwm1cFQIxR
-         pUlA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFYZGRhRpxiFfCIQ6i4kbcMiB6G5m11KHCSf3Ibvz98gpgSwicWImNEMEUkM+X17cJ1FGc58XQnxwzW7k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwrcPffWfRVmsUaSrIpW2q3bDFyJAkzu9P6oOx9Cnn3pqheeda0
-	nYr1TtQXo5CyIyg6WJ5fMRwv9TVsDm2LeBvUeImq2eHuHBUgBPX9RyE2VtRhayz9wbBp4qxENKs
-	rQPAOXg==
-X-Google-Smtp-Source: AGHT+IFdJLXMZEEu8DdlQZ+U+oQwIvzvdGgAICIJ+geqiAScmpG1InwG5WTe3wRE1wV8wV8tzAaYKmdEpJA=
-X-Received: from pfnw6.prod.google.com ([2002:aa7:8586:0:b0:747:a8e8:603e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9181:b0:748:a0b9:f873
- with SMTP id d2e1a72fcca58-748a0b9f8d2mr16220059b3a.9.1750170984466; Tue, 17
- Jun 2025 07:36:24 -0700 (PDT)
-Date: Tue, 17 Jun 2025 07:36:22 -0700
-In-Reply-To: <CAK9=C2WFA+SDt4MCLj0reQnkkA2kxUmfWhT8HZxjT_DdW8W_rQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E7gHG8O5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750171013; x=1781707013;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=bH5eztucliOZhea2XXdkOphR9rOQDw32gpLCRrbUAIg=;
+  b=E7gHG8O51WRdcERJpUKCG8Zr60PALSQP0ExCsasg/dThaHXlyNW6tIsa
+   xP8r1pHBnz31uuRa8Vb1+UQ8LMUC5jsNJgWATXIRzMMYpWcHxnwmfwzHU
+   +F1e0AjIw3hObntE96iO0v32z59T8ZVRRuRrakc2IzonTKCgQVOgOKY7Q
+   2K7h2r8wGEbQA1mVUIWAGQkQ+/iR/GMp8MKI2v3VSpNbgDBRZRb37nB2f
+   g8uZKe3/Vpemljzf5EKpsXkgmaD59gSmmavbFwEgQGoP0viznKtPu/Nqv
+   2wwkq1fJ58PX+r+FnDguXCRhTjbjAIiS0K862dYL2HDI+3JliWDHpk7Bj
+   g==;
+X-CSE-ConnectionGUID: Jq4ONtGzQQ+phiOjvS6J3g==
+X-CSE-MsgGUID: hA+5qZc9TrSt4wQtKCnPBA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52490070"
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="52490070"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:36:52 -0700
+X-CSE-ConnectionGUID: sNFJbrCnRfCBKO/VS9iFeQ==
+X-CSE-MsgGUID: D8nGVFcKRJWzKZ22rsQFrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
+   d="scan'208";a="149690666"
+Received: from mev-dev.igk.intel.com ([10.237.112.144])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 07:36:47 -0700
+Date: Tue, 17 Jun 2025 16:35:55 +0200
+From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+To: Thomas Fourier <fourier.thomas@gmail.com>
+Cc: Shannon Nelson <shannon.nelson@amd.com>,
+	Brett Creeley <brett.creeley@amd.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH net] ethernet: ionic: Fix DMA mapping test in
+ `ionic_xdp_post_frame()`
+Message-ID: <aFF9S1BX8HgY+ihO@mev-dev.igk.intel.com>
+References: <20250617091842.29732-2-fourier.thomas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <50989f0a02790f9d7dc804c2ade6387c4e7fbdbc.1749634392.git.zhouquan@iscas.ac.cn>
- <20250611-352bef23df9a4ec55fe5cb68@orel> <aEmsIOuz3bLwjBW_@google.com>
- <20250612-70c2e573983d05c4fbc41102@orel> <aEymPwNM59fafP04@google.com> <CAK9=C2WFA+SDt4MCLj0reQnkkA2kxUmfWhT8HZxjT_DdW8W_rQ@mail.gmail.com>
-Message-ID: <aFF9ZqbvZZtbUnGt@google.com>
-Subject: Re: [PATCH] RISC-V: KVM: Avoid re-acquiring memslot in kvm_riscv_gstage_map()
-From: Sean Christopherson <seanjc@google.com>
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Andrew Jones <ajones@ventanamicro.com>, zhouquan@iscas.ac.cn, anup@brainfault.org, 
-	atishp@atishpatra.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617091842.29732-2-fourier.thomas@gmail.com>
 
-On Sun, Jun 15, 2025, Anup Patel wrote:
-> On Sat, Jun 14, 2025 at 3:59=E2=80=AFAM Sean Christopherson <seanjc@googl=
-e.com> wrote:
-> >
-> > On Thu, Jun 12, 2025, Andrew Jones wrote:
-> > > On Wed, Jun 11, 2025 at 09:17:36AM -0700, Sean Christopherson wrote:
-> > > > Looks like y'all also have a bug where an -EEXIST will be returned =
-to userspace,
-> > > > and will generate what's probably a spurious kvm_err() message.
-> > >
-> > > On 32-bit riscv, due to losing the upper bits of the physical address=
-? Or
-> > > is there yet another thing to fix?
-> >
-> > Another bug, I think.  gstage_set_pte() returns -EEXIST if a PTE exists=
-, and I
-> > _assume_ that's supposed to be benign?  But this code returns it blindl=
-y:
->=20
-> gstage_set_pte() returns -EEXIST only when it was expecting a non-leaf
-> PTE at a particular level but got a leaf PTE=20
+On Tue, Jun 17, 2025 at 11:18:36AM +0200, Thomas Fourier wrote:
+> The `ionic_tx_map_frag()` wrapper function is used which returns 0 or a
+> valid DMA address.  Testing that pointer with `dma_mapping_error()`could
+> be eroneous since the error value exptected by `dma_mapping_error()` is
+> not 0 but `DMA_MAPPING_ERROR` which is often ~0.
+> 
+> Fixes: ac8813c0ab7d ("ionic: convert Rx queue buffers to use page_pool")
+> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> ---
+>  drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+> index 2ac59564ded1..beefdc43013e 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
+> @@ -357,7 +357,7 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
+>  			} else {
+>  				dma_addr = ionic_tx_map_frag(q, frag, 0,
+>  							     skb_frag_size(frag));
+> -				if (dma_mapping_error(q->dev, dma_addr)) {
+> +				if (!dma_addr) {
+>  					ionic_tx_desc_unmap_bufs(q, desc_info);
+>  					return -EIO;
 
-Right, but isn't returning -EEXIST all the way to userspace undesirable beh=
-avior?
+Right, in ionic_tx_map_skb() it is used correctly (like here now).
+Thanks for fixing.
 
-E.g. in this sequence, KVM will return -EEXIST and incorrectly terminate th=
-e VM
-(assuming the VMM doesn't miraculously recover somehow):
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
 
- 1. Back the VM with HugeTLBFS
- 2. Fault-in memory, i.e. create hugepage mappings
- 3. Enable KVM_MEM_LOG_DIRTY_PAGES
- 4. Write-protection fault, kvm_riscv_gstage_map() tries to create a writab=
-le
-    non-huge mapping.
- 5. gstage_set_pte() encounters the huge leaf PTE before reaching the targe=
-t
-    level, and returns -EEXIST.
-
-AFAICT, gstage_wp_memory_region() doesn't split/shatter/demote hugepages, i=
-t
-simply clears _PAGE_WRITE.
-
-It's entirely possible I'm missing something that makes the above scenario
-impossible in practice, but at this point I'm genuinely curious :-)
+>  				}
+> -- 
+> 2.43.0
