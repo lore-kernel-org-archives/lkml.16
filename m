@@ -1,113 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7592221F14;
-	Tue, 17 Jun 2025 16:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7AD2EA153;
+	Tue, 17 Jun 2025 16:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177420; cv=none; b=fLhggOPk57CrZtUEfPaBVH/ZCHxGB+ORTBvsTlqk3T5zoNpi5w23q8khaqW4jX9RjNPmHWZ9XNqCcwzhVagME4x+kEyxmgP7zJJ0jYYpy+4AShFnGyv5nbzUo8nOMR7WeGBX1MRR21R5cBfS8t520FzTB+7Dou8rjOti0WUf8S8=
+	t=1750177502; cv=none; b=II0GhPiioTPhXZcOtq/3gIq5GEFcDUamA+zKH3jDstMfmgZhjGU8dZ4CWeZsEXs543mmvVcUJUpR3D5TW0BZqrRCcZjQbPdeNV3aR4j6MqvGEM0SpTPZ8ZzlIKhhDozRTjie/QLrqk+s6iTvNxa/sKLZP2gIs02Ag8Fo4RDvdxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177420; c=relaxed/simple;
-	bh=V8t5bo5FF6oerOdwGkDXKtDkx0wzlN6pNvzLOhsekAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DOeQQM1CLbHx58aR6eUVYi/sq43uUdgQwVl/oa1GggNK4q5sq4AZlsqRIB2a8TDzWlnDEm2c60J3ChW6P/VaPozce7LNBgB9x0iBaoCThTQNNNwlnP2qVOk5KMkmh+i0VgDWM/gUbmt+OJJPYlG5OtXJHHrSYftW2Yn/PbLeGiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jfgI3HFf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750177502; c=relaxed/simple;
+	bh=FVR61cCvuPODVHOG+7g4ratLDexhFAS3ISo2xPSD1gw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mw/Mn5hEO2OWvYH3PmCnR35u0qELqdzUj+6UXq+Dna6rXlcaWDsQlFadzT7arHgBoLr6nVpGeBujumwh0FEtOW7yPAnvYJSSnanFVz2F754N+RiWRTfxWFGq7vHFYppAWAjiNXyGuWjsOghgUpXeD3tpfWa4cvhAqwfotCg/mFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=lHQE29hR; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jfgI3HFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3B54C4CEE3;
-	Tue, 17 Jun 2025 16:23:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750177420;
-	bh=V8t5bo5FF6oerOdwGkDXKtDkx0wzlN6pNvzLOhsekAY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jfgI3HFf4DEK5tMMrbCmXDo5gMBLSPmrFShaTkHn2SAYErrKEoooB22PsftEu4Dn6
-	 gd/vU85cZRp54Nkmkt8VCBy+Mobpj/xQ27uts5EZWwRstndjB5Mbpms0JmfsNhJVoN
-	 U/YRwgamazLTUCw5K7qGQlE77O6v4EgbH+X1tYTXbMNySQPZC4rzZiaX9FPI97Kkc+
-	 h0Bl2j/VYdgEtIZmIiWxxfPyAlaCwyZZF+QpOCIMQQ2koP3yAm5llS8cj9Bz3HKRbW
-	 9m80iAeyOKXvCBxxi27V0NdXOKVLYqwEbvZB9/MZAu3tt4Y8TFqQKGhd5pT/AeKmSx
-	 SclUXo7xd5Psg==
-Date: Tue, 17 Jun 2025 21:53:28 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	manivannan.sadhasivam@linaro.org, robh@kernel.org, bhelgaas@google.com, krzk+dt@kernel.org, 
-	neil.armstrong@linaro.org, abel.vesa@linaro.org, kw@linux.com, conor+dt@kernel.org, 
-	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org, konradybcio@kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, quic_qianyu@quicinc.com, 
-	quic_krichai@quicinc.com, quic_vbadigan@quicinc.com
-Subject: Re: [PATCH v5 0/4] pci: qcom: Add QCS615 PCIe support
-Message-ID: <t6bwkld55a2dcozxz7rxnvdgpjis6oveqzkh4s7nvxgikws4rl@fn2sd7zlabhe>
-References: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
- <d67ba247-6b2d-4f2e-9583-ddbe375bf08d@quicinc.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="lHQE29hR"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 6FD7325D1A;
+	Tue, 17 Jun 2025 18:24:59 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 0vwZ-zQvPBPT; Tue, 17 Jun 2025 18:24:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750177498; bh=FVR61cCvuPODVHOG+7g4ratLDexhFAS3ISo2xPSD1gw=;
+	h=From:To:Cc:Subject:Date;
+	b=lHQE29hR2+jH2w6VRfjJbKtp4W3Ku1i64dh1+EYhSbz9DWPjTk04hXCcXxZgZ0nJq
+	 TZQVJIZpLDKRwrqZBwfwL6oVZuZDNYSBOHM/ZiVY2180LzMCI2snK+qkERXRX4uTOR
+	 8RFKkxuLlqr9qtk1tOjFa4CBbOxAX7KqVYedy7m2SCpcsb34A2Ui9GyCg6fmZ6f6GO
+	 ApOm+S00Z3kJCpEQnFBsCiPpSRxyHysbyHeo6ZZyIbskYpL5OEHL0+E+B38te00iGM
+	 A/l5IVPzLgtVD/oISjc3DWpIvaEJ+VKYbT74m+spgzleyZqFjdbt6LXbbwHUBDe5gf
+	 lB9eRKoVfHDcA==
+From: Yao Zi <ziyao@disroot.org>
+To: Yinbo Zhu <zhuyinbo@loongson.cn>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>
+Cc: linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>,
+	Yao Zi <ziyao@disroot.org>
+Subject: [PATCH v2 0/8] Add clock support for Loongson 2K0300 SoC
+Date: Tue, 17 Jun 2025 16:24:18 +0000
+Message-ID: <20250617162426.12629-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d67ba247-6b2d-4f2e-9583-ddbe375bf08d@quicinc.com>
 
-On Tue, Jun 17, 2025 at 06:34:03PM +0800, Ziyue Zhang wrote:
-> 
-> On 5/27/2025 3:20 PM, Ziyue Zhang wrote:
-> > This series adds document, phy, configs support for PCIe in QCS615.
-> > 
-> > This series depend on the dt-bindings change
-> > https://lore.kernel.org/all/20250521-topic-8150_pcie_drop_clocks-v1-0-3d42e84f6453@oss.qualcomm.com/
-> > 
-> > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-> > ---
-> > Have following changes:
-> > 	- Add a new Document the QCS615 PCIe Controller
-> > 	- Add configurations in devicetree for PCIe, including registers, clocks, interrupts and phy setting sequence.
-> > 	- Add configurations in devicetree for PCIe, platform related gpios, PMIC regulators, etc.
-> > 
-> > Changes in v5:
-> > - Drop qcs615-pcie.yaml and use sm8150, as qcs615 is the downgraded
-> >    version of sm8150, which can share the same yaml.
-> > - Drop compatible enrty in driver and use sm8150's enrty (Krzysztof)
-> > - Fix the DT format problem (Konrad)
-> > - Link to v4: https://lore.kernel.org/all/20250507031559.4085159-1-quic_ziyuzhan@quicinc.com/
-> > 
-> > Changes in v4:
-> > - Fixed compile error found by kernel test robot(Krzysztof)
-> > - Update DT format (Konrad & Krzysztof)
-> > - Remove QCS8550 compatible use QCS615 compatible only (Konrad)
-> > - Update phy dt bindings to fix the dtb check errors.
-> > - Link to v3: https://lore.kernel.org/all/20250310065613.151598-1-quic_ziyuzhan@quicinc.com/
-> > 
-> > Changes in v3:
-> > - Update qcs615 dt-bindings to fit the qcom-soc.yaml (Krzysztof & Dmitry)
-> > - Removed the driver patch and using fallback method (Mani)
-> > - Update DT format, keep it same with the x1e801000.dtsi (Konrad)
-> > - Update DT commit message (Bojor)
-> > - Link to v2: https://lore.kernel.org/all/20241122023314.1616353-1-quic_ziyuzhan@quicinc.com/
-> > 
-> > Changes in v2:
-> > - Update commit message for qcs615 phy
-> > - Update qcs615 phy, using lowercase hex
-> > - Removed redundant function
-> > - split the soc dtsi and the platform dts into two changes
-> > - Link to v1: https://lore.kernel.org/all/20241118082619.177201-1-quic_ziyuzhan@quicinc.com/
-> > 
-> > Krishna chaitanya chundru (2):
-> >    arm64: dts: qcom: qcs615: enable pcie
-> >    arm64: dts: qcom: qcs615-ride: Enable PCIe interface
-> > 
-> > Ziyue Zhang (2):
-> >    dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings
-> >      for QCS615
-> >    dt-bindings: PCI: qcom,pcie-sm8150: document qcs615
-> > 
+This series adds support for Loongson 2K0300's clock controller.
+Loongson 2 clock driver is prepared to support more clock variants and
+its flexibility is improved. All clock hardwares except the output one
+for GMAC module are then defined.
 
-Applied to pci/dt-bindings, thanks!
+A clock tree dump could be obtained here[1]. This series depends on v3
+of series "Initial support for CTCISZ Forever Pi"[2] to apply.
 
-- Mani
+[1]: https://gist.github.com/ziyao233/160bb4693e7758b2a2a996d4510b7247
+[2]: https://lore.kernel.org/all/20250523095408.25919-1-ziyao@disroot.org/
+
+Changed from v1:
+- Fold loongson,ls2k0300-clk.yaml into loongson,ls2k-clk.yaml
+- Include the new binding header in MAINTAINERS
+- Link to v1: https://lore.kernel.org/all/20250523104552.32742-1-ziyao@disroot.org/
+
+Yao Zi (8):
+  dt-bindings: clock: loongson2: Add Loongson 2K0300 compatible
+  clk: loongson2: Allow specifying clock flags for gate clock
+  clk: loongson2: Support scale clocks with an alternative mode
+  clk: loongson2: Allow zero divisors for dividers
+  clk: loongson2: Avoid hardcoding firmware name of the reference clock
+  clk: loongson2: Add clock definitions for Loongson 2K0300 SoC
+  LoongArch: dts: Add clock tree for Loongson 2K0300
+  LoongArch: dts: Remove clock-frquency from UART0 of CTCISZ Forever Pi
+
+ .../bindings/clock/loongson,ls2k-clk.yaml     |  26 +++-
+ MAINTAINERS                                   |   1 +
+ .../dts/loongson-2k0300-ctcisz-forever-pi.dts |   1 -
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  |  17 ++-
+ drivers/clk/clk-loongson2.c                   | 124 +++++++++++++++---
+ .../dt-bindings/clock/loongson,ls2k0300-clk.h |  54 ++++++++
+ 6 files changed, 193 insertions(+), 30 deletions(-)
+ create mode 100644 include/dt-bindings/clock/loongson,ls2k0300-clk.h
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.49.0
+
