@@ -1,44 +1,35 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB1412DF3CA
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:53:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE1D0C2D1;
+	Tue, 17 Jun 2025 13:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168409; cv=none; b=sUHY0u/HIpdNmGn2dXxclglhce5vrbxum7t9KyFg3S+XlG72P/8CpCPdXpiGLykuzAdYrrDtyJuaNEZKIsKqZ6tRn5D09MDO+7B4JnRLAzd3SwffjjtqgVVNb+sB+az3KoF7JewHUtHQVGL7vH/B4BLb4ZU3TMrnwVPEyVZ40Nk=
+	t=1750168458; cv=none; b=d2iQV0DfCRRNv1FW+PjvZPrt7MZYfLnFn37R2wo8VKcYsYWUOyhfZ683euA5f2iOTJRjFfZl5pkM2SNtoBsHavpd2RP/ZR2eSrt5/agAEWHFo7DNqtguc2BL0DRhy4kphFq942VTEbHq+mlFqneS7eumTDyE+vAeZbGjv31Vbm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168409; c=relaxed/simple;
-	bh=NZKg4wa8vVf4B62e57Cic7zPSKwig91Ih3EmxJQLJBc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nL+hs7GHYlllnGtn7yu3lfz+msLTCCtTOwYQDRnb7sx/WuKGXTA4kCxm7ehmVsxLPNZbg/9N4dRXx8XUhlRgTTwR1ESUAfbippMbxGtvI4DqqSKND5miRdSV2O/v0X8ppOfOYIGnuRQEs7M0oZZr/TfQ58dAG/a6sSDkYk6u1VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y/Op96qo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nptp+fnK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750168458; c=relaxed/simple;
+	bh=t3v2gCfs3hvB2F8i2l+4fa99QiR0O16IHlX1eprudQU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZO/FAqodSDSdZX6x6hsi+QSQpYtc1WN6RkTFa3gSVb9VWVjJ9hBM7ua5FGLsMDRXyklLtlKz+IuwR7gtSPi9PKkk1VtyljfnkRtcbTz5IVQbKidTjwb8QUjWaxkBl/qYhofx8cs2tBejN4oE0xxXYoGi4pZ0Je/GB95ng7s8m6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lCg8jExe; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y/Op96qo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nptp+fnK"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750168405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=p2KqeKdW8sHhhAuKR11sOYDRX7INggsdzTxSiKJAp4M=;
-	b=Y/Op96qo4L8mSSNDtUcrmyw9IgJJt9/kUr82j104rxQ1pj1zDkXRbmISbiOssBfwBCuP5B
-	dLK34sF/Dpla8W0FjYQV8blY24vGqGLDyEK3JirD+HTyfYputYXKI+CVra01qXY8V3kubG
-	vAUkAICHyhBEtWWT7a0oWI0v0hDmi6iFnw9J+fv8i3y/fPZlr6gYmx76SAJrCwyWbjEuWA
-	v1vNzPZfEg86DTvKkv5JHkoVeb/7/99aIjqVh3y1uREwFteNXe0IStC5MAGgqxJaRbmJmx
-	//cxkGK856Z3f+XbBoVhuBakiSi50EWINyTv7QKiAP/BuOJK5EoBoP5bbNafew==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750168405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=p2KqeKdW8sHhhAuKR11sOYDRX7INggsdzTxSiKJAp4M=;
-	b=nptp+fnKV7IzXmT8I5LxyAkorgyjHrQ0ozB3DE65mPtC50FeApxzyT/dCVv0zZqQvn+Vwq
-	q17yc5BAmRUjflBg==
-Date: Tue, 17 Jun 2025 15:52:55 +0200
-Subject: [PATCH RFC] um: time: fix userspace detection during tick
- accounting
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lCg8jExe"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id ECB242A4B;
+	Tue, 17 Jun 2025 15:54:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750168442;
+	bh=t3v2gCfs3hvB2F8i2l+4fa99QiR0O16IHlX1eprudQU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=lCg8jExe+FK/U16zxToF1FnP0JTKhF+iLvsMrizss/kNRPN23uu82u3bMMXPaLzzT
+	 DPpgXcMWz/wZ13HRQTSd+N42g3jGhhipq0NTW7HFxNESlyhVdTFoQ6511XRu2WNhtD
+	 JF5JXhGxH5SzqXDHmCsE2auVMcsAu0GyL24FVO5g=
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Date: Tue, 17 Jun 2025 15:53:59 +0200
+Subject: [PATCH v8 1/4] media: pisp_be: Drop reference to non-existing
+ function
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,92 +37,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250617-uml-tick-timer-v1-1-01aab312f56b@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIADZzUWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0Nz3dLcHN2SzORsIJGbWqRrYZSaaGFpYmmanGymBNRUUJSallkBNjB
- aKcjNWSm2thYABqP4x2UAAAA=
-X-Change-ID: 20250617-uml-tick-timer-82ea89495cc6
-To: Richard Weinberger <richard@nod.at>, 
- Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
- Johannes Berg <johannes@sipsolutions.net>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Thomas Meyer <thomas@m3y3r.de>, Anton Ivanov <aivanov@brocade.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750168402; l=2406;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=NZKg4wa8vVf4B62e57Cic7zPSKwig91Ih3EmxJQLJBc=;
- b=fgLn2APrjZIegFKZhsjPGBR/Ns+aqzryNNZOjmlLlkX2tzCKF6NJkw62zHLmGYAJfU/Rw7Xeh
- 1JDtQSn4TIzDPZUbXSpGDAiVNf5JQYHsrAebCOWJjnt7EKmCdtI7mDZ
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-1-e58ae199c17d@ideasonboard.com>
+References: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-0-e58ae199c17d@ideasonboard.com>
+In-Reply-To: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-0-e58ae199c17d@ideasonboard.com>
+To: Naushir Patuck <naush@raspberrypi.com>, 
+ Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>, 
+ David Plowman <david.plowman@raspberrypi.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1264;
+ i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
+ bh=t3v2gCfs3hvB2F8i2l+4fa99QiR0O16IHlX1eprudQU=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoUXOEefIqfHkyLanL11HSFQZXFl3/OcOSvD9DF
+ T3Ct5kBOIeJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaFFzhAAKCRByNAaPFqFW
+ PEmED/9uRRqnVk6h3i9fAs+SnLvMZo8sFhDHTiVIKnpcyGfIyCzHejwz0wG1eS8lqRiz94QKMQ0
+ xiLnF//2R+KUAHgqTMz0Mfht6fB3c3L5Pdo7EcmdMjmRjCTN53brl37Dze5L4bRf6CslTtcPW5D
+ osQRCWnJ5T/c8XxTtQpYme3D6dJVavnMgFz3eOuHgrT1z/zhJh2H3d97PunPoPwlsjYi40QDBoF
+ VpAFXexzgjnBL81EI1RyiGOASCN8t2hc+BliiI6/vIWsMV2ZLtWFi6jVAaflUViTHhWaeR57qvw
+ vqKb1EwqR+Cfs/ZYLaQH9uCaGiyTR12ydW1nxqm84PsFHgdnJpr2e9c4noqLiQEnVLigYnAXtF3
+ 1vZW6nU9qHRRfFNXl2heLCUwo5lIhRy27zE2OBF2zaYvr7tTm7nhaCSvzYXwXilJzSj27EvQ+Xn
+ Ryh30xEQ/66UBaN5wwzArI9uEBE0uXZyJJQ8FiNT8r57CiBTdc4CSuwrKV4SC8yA2Y22h5EcGYM
+ bInVn3ZsT7fx5XxNN44eQfERkoWD/MaxKsisU2msoFuZLHuoBYYyyLo4wSBpNcoKDM+e/J6A038
+ pg3g4sMnnxr8ovUtuG/BAg0vA+AxI2lk1/zdvKF905ZWs6vE2dFBIpBtvSxVEGPAgJCH9w2fcQ6
+ gkqxcfDT9x8cIdA==
+X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-The cpu usage timekeeping triggered by the tick credits passed time to
-either the kernel or the currently running userspace process.
-On UML, tick interrupts firing while userspace is running are not marked
-correctly so this bookkeeping is broken and always credits the idle task.
+A comment in the pisp_be driver references the
+pispbe_schedule_internal() function which doesn't exist.
 
-The rootcause is the following callchain always passing user_tick=false
-to account_process_tick():
+Drop it.
 
-um_timer()
-  -> handle_irq_event()
-    -> tick_handle_periodic()
-      -> tick_periodic()
-        -> update_process_times(user_tick=user_mode(get_irq_regs()))
-          -> account_process_tick(task, user_tick=false)
-
-As a result CPUCLOCK_VIRT does not advance,
-breaking for example signal(SIGVTALRM).
-
-The issue can be reproduced easily with the selftest
-tools/testing/selftests/timers/posix_timers.c,
-which hangs in the ITIMER_VIRTUAL/SIGVTALRM testcase.
-
-Fix up the IRQ regs by correctly setting is_user in the IRQ registers.
-
-Fixes: 2eb5f31bc4ea ("um: Switch clocksource to hrtimers")
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Naushir Patuck <naush@raspberrypi.com>
+Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
 ---
-I'm not familiar with UML, so this is probably not the right fix.
-Feel free to treat it as a bugreport instead.
----
- arch/um/kernel/time.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/media/platform/raspberrypi/pisp_be/pisp_be.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
-index ae0fa2173778f43273fd0550f77fc99bbb1c3e3a..a6c17302403aeb3170a1104117c4e713e3afdfe0 100644
---- a/arch/um/kernel/time.c
-+++ b/arch/um/kernel/time.c
-@@ -856,6 +856,7 @@ static struct clock_event_device timer_clockevent = {
- 
- static irqreturn_t um_timer(int irq, void *dev)
- {
-+	struct pt_regs *regs;
- 	/*
- 	 * Interrupt the (possibly) running userspace process, technically this
- 	 * should only happen if userspace is currently executing.
-@@ -864,9 +865,13 @@ static irqreturn_t um_timer(int irq, void *dev)
- 	 */
- 	if (time_travel_mode != TT_MODE_INFCPU &&
- 	    time_travel_mode != TT_MODE_EXTERNAL &&
--	    get_current()->mm)
-+	    get_current()->mm) {
- 		os_alarm_process(get_current()->mm->context.id.pid);
- 
-+		regs = get_irq_regs();
-+		regs->regs.is_user = true;
-+	}
-+
- 	(*timer_clockevent.event_handler)(&timer_clockevent);
- 
- 	return IRQ_HANDLED;
+diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+index 7596ae1f7de6671484d4d351015b234829f642d4..b1449245f39436d02c9c710916e2d0605606a327 100644
+--- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
++++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+@@ -368,10 +368,7 @@ static void pispbe_xlate_addrs(struct pispbe_dev *pispbe,
+ 	ret = pispbe_get_planes_addr(addrs, buf[MAIN_INPUT_NODE],
+ 				     &pispbe->node[MAIN_INPUT_NODE]);
+ 	if (ret <= 0) {
+-		/*
+-		 * This shouldn't happen; pispbe_schedule_internal should insist
+-		 * on an input.
+-		 */
++		/* Shouldn't happen, we have validated an input is available. */
+ 		dev_warn(pispbe->dev, "ISP-BE missing input\n");
+ 		hw_en->bayer_enables = 0;
+ 		hw_en->rgb_enables = 0;
 
----
-base-commit: 9afe652958c3ee88f24df1e4a97f298afce89407
-change-id: 20250617-uml-tick-timer-82ea89495cc6
-
-Best regards,
 -- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+2.49.0
 
