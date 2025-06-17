@@ -1,134 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BAD296142;
-	Tue, 17 Jun 2025 09:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5014E2116E9
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:08:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151248; cv=none; b=gvZkelp+OgRL/T3mA/oDculXnv/s0zq2nih6I2RnAoPB04sHcUojLa0KyBgl+PpPfKGpjId0r1oa385fXyH9G7h/NSDkbdTEo+htgvUssQHQgO665Ek7IcMyKTJq+WmbmfFiIpS7RDZ9IjoXvVc+PUap/pmUuoUamzMr3qpS7ss=
+	t=1750151305; cv=none; b=aCtRnmD3nxU1Xl3LOHeBjA2WJgGN2uicevg9NP+byPdEee9psS4Wr86F/P3efgKDaeXe/s1EM6HPtYDXB2dqQAhTRFrslolXlkHvtvjkhGm4Ac4KrY2GGcVMyB4dfebfC+9xqqM+URwhZbBDOi1MrbYXF/AtypYM/tOaCQOiX/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151248; c=relaxed/simple;
-	bh=SseOVKGpd8b5VDsqaBskNVXohkDASV2r56JlAC/rmKA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Yt8h+xZT+YHW07oUHU9kboAQFPMyhygmvOxnAK6ZtzassWjsEk1QomU1q+7qBtyGBWAwwLpZVgZ0A2ZzND/+PkoCx2F71t6AkhcXxWd9UqeP975RTrmr5vYL44mzeLOlgr9zwAmAME1qdeJ6ydRJQh9E/kMuNJrY2ySgU3PB/Ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUSla1Oi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750151305; c=relaxed/simple;
+	bh=z0fKOYwV+dsFs21nS2jxYOO5t4aC6ljU0NF3BjIkz5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=llBtBM/NMsr6KfTGfPLK+hPgBXFfjwBrAoIDVSc7k4KBOX5lCAZHO5kzVeotAwfAntCKNOQGPaYH1P2sTwghq8uU3eV6zN12Ewkh+spkQSZyzukUHRzL14wnwJWL3IFSbio/Bm/2o30DSOx53bCc+pPkUTFjJu3TOUOyt0g8Zgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fby11LH4; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUSla1Oi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9EA76C16AAE;
-	Tue, 17 Jun 2025 09:07:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750151247;
-	bh=SseOVKGpd8b5VDsqaBskNVXohkDASV2r56JlAC/rmKA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=nUSla1OinD9g1WMOSlNR3qY5wrV3mRJx1Vq1Pgy60sDgy0TEa4XNyI1dR0xwM1jH/
-	 DhMzme7LX+4g4CbuzFHXx9qJ84MEiDvI1asszYfAXvY9dv67q98d8KeZq1AH2Xe/kh
-	 3QbuduN/PxW1WJvBGV4W709RsC9YPzTAXwg3ah0YYTndGSMtodKV6w75/3t4XDRkax
-	 olWNHSpKbkLYPNTzJQL+3aBLNDOI80zjWts5RNQC5uo0F4QrloxNmSIPZe4iOR1jFd
-	 I/a1oDX53yFlHabVbTQTutCR4xiaTWxZ9ZgJrYnTfRNcajyR//YvoahZditFvxSnLa
-	 ++J4ctkkr8xRw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9400DC71136;
-	Tue, 17 Jun 2025 09:07:27 +0000 (UTC)
-From: Michael Riesch via B4 Relay <devnull+michael.riesch.collabora.com@kernel.org>
-Date: Tue, 17 Jun 2025 10:54:46 +0200
-Subject: [PATCH 5/5] arm64: dts: rockchip: add mipi csi-2 dphy nodes to
- rk3588
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fby11LH4"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a53359dea5so3729961f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:08:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750151302; x=1750756102; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gKAD3svXOw7buq7HtIEdYKllqfFeijr7NxfdlNG4wcY=;
+        b=fby11LH4Wt3FtCM6ebjWHIb+SlIvq+3hOl1Vyr23S8WpyRU9CU7V96JQujTyJsIpVo
+         jfxLDPyovDLDvY+4LqXuNVtKDlEDME2dzx9TPdb1jwrvv7ACVCNm0Qy0HDaLHusdncdV
+         eT9dZvtN7Fe4DQTVXbr78dGf1Q9Y8ouop9sOz+rLPaBID/hedM5EZT6oKwwkwP8ccqoO
+         FiR51C7qvCn+FXbDwJi+rawRsEFl+H2ZzLjvBn2Ey00SFept7ACNSwlhOtspPwoytK8l
+         L3A8b7fBAU8MmcsjAyvuKvxpSfwSQpHJe78PUj50WO6w3qk8K/kdRUP7XrQI0Qh+6sOI
+         lG7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750151302; x=1750756102;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gKAD3svXOw7buq7HtIEdYKllqfFeijr7NxfdlNG4wcY=;
+        b=c75rDiAOfiHiJf4lnL3lICqFLtDPXkVxcinB9OES7G65nW4p0GmpKLTHv8+I+Bkcmp
+         vj0cB0WCeLNScJstHXs8K9jR5geNo5uYgp1wwM0uMs16s+cyq0W/+3OTNt/eDbJqlz8c
+         xEJmqrkDaIHNhSe7eL25T8A+4DaqrhSPVU1isEGfi2qtGboQvkSFevkyNokEFLan7beL
+         FDmXPaKsyrZhgZWcuUJ8WXY0puv5z4DtfsZ+SpBRJK8+42EipIvMOUNSR1cRT1rpbuOF
+         hGhU5q0TcO3hFSbu5BBf7jmWKKNnKFPiNOoetYHzlJ+g2/ajq8m6KyRs3GaAYHuGcnNT
+         PvMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXgk7AW4Eou33HkZj2/2eKlpJyes8gcdOrofwS1GiYUPhrpN0UzClMFcus4aiR5xXBNDkWThl4poRGuNqw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIgsYKEWB/CvXNBTTxYN8f/wD1TkHyXZdfM5wLqhfb08shFRc6
+	CJtqHV+sU7+X0GG99MbBE3PCfRtGMWUp9D36msIVDO8t8zaInyWiJ/GrtDtT3dppcMU=
+X-Gm-Gg: ASbGncsVxtW+E+8waZBokmRE/dAdagLfsXOeTIz22iIvLd2i4lSAdrrs5i9QlYI45/i
+	6z5Wf71MGVLviT4g+oF/J/2wKMpMs+MSc8Qz8KyEOormhcM+beXLifUQyMCH4VbUW5Uu0JEfivb
+	dehZhU8FWYHTWKxlsNZuJZdOgQ6KSmBmIyhS9q/LUc2w4RCIX+cmUg0TcyeqJy2JSRK8heMjMCN
+	q2d7SH/9Fzhrh265ySWksrenlAiHvYrWIGGvJX0uAQ1W8sK9mhd1o86v1VsNhZ/54ImNLXmvJqq
+	sofK6DbY0Qo1INU6Dpwie2ASCO4tMZD3waoEzNGvfiquVtWfS/xwi5WAWiVj8WtU
+X-Google-Smtp-Source: AGHT+IHZD55Cs3Zu1HygCPmxe5Uy/nwrwnFD2un/64EwIJaV4i4CI3mWQiyOSmwe7CiHE9VlU6rzCQ==
+X-Received: by 2002:a05:6000:65c:b0:3a5:8a68:b81b with SMTP id ffacd0b85a97d-3a58a68bcc4mr888857f8f.44.1750151301539;
+        Tue, 17 Jun 2025 02:08:21 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e16a097sm174029075e9.33.2025.06.17.02.08.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 02:08:21 -0700 (PDT)
+Date: Tue, 17 Jun 2025 11:08:19 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Jemmy Wong <jemmywong512@gmail.com>, Tejun Heo <tj@kernel.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>
+Cc: Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
+Message-ID: <2dd7rwkxuirjqpxzdvplt26vgfydomu56j3dkmr37765zk67pd@aou7jw4d6wtq>
+References: <20250606161841.44354-1-jemmywong512@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250616-rk3588-csi-dphy-v1-5-84eb3b2a736c@collabora.com>
-References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
-In-Reply-To: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Jagan Teki <jagan@amarulasolutions.com>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Collabora Kernel Team <kernel@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-phy@lists.infradead.org, 
- Michael Riesch <michael.riesch@collabora.com>
-X-Mailer: b4 0.12.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750150493; l=1867;
- i=michael.riesch@collabora.com; s=20250410; h=from:subject:message-id;
- bh=qrX7R9Yf+higl2wbSf3x1h05wV3AtHIap5SggDm1ypA=;
- b=c84nks+JEIFvKM2PQXYe5Sigfe8rKm+GsUo6dxEijt2RPl2ZO4XAEDjgHV/Lapw/2TX710uRl
- gb9OUZeBuxgCbK95HJRW0PI8pg2A3oRvDAL8d5h81ksM11iGvCrd4Gi
-X-Developer-Key: i=michael.riesch@collabora.com; a=ed25519;
- pk=+MWX1fffLFZtTPG/I6XdYm/+OSvpRE8D9evQaWbiN04=
-X-Endpoint-Received: by B4 Relay for michael.riesch@collabora.com/20250410
- with auth_id=371
-X-Original-From: Michael Riesch <michael.riesch@collabora.com>
-Reply-To: michael.riesch@collabora.com
-
-From: Michael Riesch <michael.riesch@collabora.com>
-
-The Rockchip RK3588 features two MIPI CSI-2 DPHYs. Add the device
-tree nodes for them.
-
-Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
----
- arch/arm64/boot/dts/rockchip/rk3588-base.dtsi | 31 +++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-index 70f03e68ba55..6a4ee0247fcf 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-base.dtsi
-@@ -621,6 +621,16 @@ php_grf: syscon@fd5b0000 {
- 		reg = <0x0 0xfd5b0000 0x0 0x1000>;
- 	};
- 
-+	csidphy0_grf: syscon@fd5b4000 {
-+		compatible = "rockchip,rk3588-csidphy-grf", "syscon";
-+		reg = <0x0 0xfd5b4000 0x0 0x1000>;
-+	};
-+
-+	csidphy1_grf: syscon@fd5b5000 {
-+		compatible = "rockchip,rk3588-csidphy-grf", "syscon";
-+		reg = <0x0 0xfd5b5000 0x0 0x1000>;
-+	};
-+
- 	pipe_phy0_grf: syscon@fd5bc000 {
- 		compatible = "rockchip,rk3588-pipe-phy-grf", "syscon";
- 		reg = <0x0 0xfd5bc000 0x0 0x100>;
-@@ -3052,6 +3062,27 @@ mipidcphy1: phy@fedb0000 {
- 			 <&cru SRST_S_MIPI_DCPHY1>;
- 		reset-names = "m_phy", "apb", "grf", "s_phy";
- 		#phy-cells = <1>;
-+	};
-+
-+	csi_dphy0: phy@fedc0000 {
-+		compatible = "rockchip,rk3588-csi-dphy";
-+		reg = <0x0 0xfedc0000 0x0 0x8000>;
-+		clocks = <&cru PCLK_CSIPHY0>;
-+		clock-names = "pclk";
-+		#phy-cells = <0>;
-+		resets = <&cru SRST_CSIPHY0>, <&cru SRST_P_CSIPHY0>;
-+		rockchip,grf = <&csidphy0_grf>;
-+		status = "disabled";
-+	};
-+
-+	csi_dphy1: phy@fedc8000 {
-+		compatible = "rockchip,rk3588-csi-dphy";
-+		reg = <0x0 0xfedc8000 0x0 0x8000>;
-+		clocks = <&cru PCLK_CSIPHY1>;
-+		clock-names = "pclk";
-+		#phy-cells = <0>;
-+		resets = <&cru SRST_CSIPHY1>, <&cru SRST_P_CSIPHY1>;
-+		rockchip,grf = <&csidphy1_grf>;
- 		status = "disabled";
- 	};
- 
-
--- 
-2.39.5
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="toh6m6x3hhh3r2az"
+Content-Disposition: inline
+In-Reply-To: <20250606161841.44354-1-jemmywong512@gmail.com>
 
 
+--toh6m6x3hhh3r2az
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
+MIME-Version: 1.0
+
+Hello.
+
+I understand why this might have been controversial but I'm surprised it
+remains so when the lock guards are already used in the kernel code.
+Documentation/process/coding-style.rst isn't partisan in either way.
+
+Johannes:
+> heebeejeebees - it's asymmetric and critical sections don't stand out
+> visually at all.
+- I'd say that's the point of it for functions that are made to
+  manipulate data structures under the lock. Not to spoil the code.
+- Yes, it's a different coding style that one has to get used to.
+
+> extra indentation
+- deeper indentation =3D=3D deeper locking, wary of that
+- although I admit, in some cases of the reworked code, it's overly deep
+
+Further reasoning is laid out in include/linux/cleanup.h. I noticed
+there exists no_free_ptr() macro and that suggests an idea for analogous
+no_exit_class() (or unguard()) macro (essential an unlock + signal for
+compiler to not call cleanup function after this BB).
+
+Tejun:
+> There are no practical benefits to converting the code base at this point.
+
+I'd expect future backports (into such code) to be more robust wrt
+pairing errors.
+At the same time this is also my biggest concern about this change, the
+wide-spread diff would make current backporting more difficult.  (But
+I'd counter argue that one should think forward here.)
+
+
+Further benefits I see:
+- it is fewer lines (code is to the point),
+- reliable cleanup paths,
+- it is modern and evolution step forward (given such constructs
+  eventually emerge in various languages).
+
+
+On Sat, Jun 07, 2025 at 12:18:38AM +0800, Jemmy Wong <jemmywong512@gmail.co=
+m> wrote:
+> v1 changes:
+> - remove guard support for BPF
+> - split patch into parts
+>=20
+> v0 link:
+> https://lore.kernel.org/all/20250605211053.19200-1-jemmywong512@gmail.com/
+>=20
+> Jemmy Wong (3):
+>   cgroup: add lock guard support for cgroup_muetx
+>   cgroup: add lock guard support for css_set_lock and rcu
+>   cgroup: add lock guard support for others
+
+As for the series in general
+- I'm still in favor of pursuing it (with remarks to individual
+  patches),
+- it's a good opportunity to also to append sparse __acquires/__releases
+  cleanup to it (see also [1]).
+
+Regards,
+Michal
+
+[1] https://lore.kernel.org/r/Z_6z2-qqLI7dbl8h@slm.duckdns.org
+
+
+--toh6m6x3hhh3r2az
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFEwewAKCRB+PQLnlNv4
+CK2vAQD5wq0LatsmiHUSbsmOJCpcGVFHuDfH/0uJGeQSmsKWFAD/bb7kMZdxWv52
+HASiX8FCeJv9AO+0Oc7OQOOKl9+Rlgw=
+=luDQ
+-----END PGP SIGNATURE-----
+
+--toh6m6x3hhh3r2az--
