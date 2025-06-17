@@ -1,93 +1,110 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822462E7162
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E75269CF0;
+	Tue, 17 Jun 2025 13:35:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750167223; cv=none; b=hiV1j3DZ2+Vvrrwr2V06xDYRjT8kAE90kr0KEi2D4C+V/PF/qijR9PFGo9AJC0bjK7shpf6ORr9x4rRZGMSU29nM/eP+s4PeodqvsYEFeVcVkQ9H1uZhzTOptNbJpU4E/4xYZ1Cl8PbnyolGuef5tv9j4Pu8qtgSAJgLL+Psn9M=
+	t=1750167309; cv=none; b=sBtqWVNGxvy8r38zIWKgWGBtwk9KEU49WdK1dPtOs3LWApSAVMiFDEyWSqb5OSnu+nDXaQlMFcWZaJ6KEl4uFtzbXuEr4txM/AyOTEU3fNX9SOTii3/6IGG7FIQEwOOETK/YOSS+ejD+wsgl8RKWCvvKF7xm5++No5RDPG6tE/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750167223; c=relaxed/simple;
-	bh=3ZhmStOGZf56LKjbpFRdrjhHyqg5tGG9IYbPYH7L4GU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEqed3fE3ZdutG8vxbvQDwBAgmjTglx+i/sBSRDkfgm5E8o+so+gnEGCIqEp7MQ/POcX6NDI9lEdxh9+RRZLPSSGs/4DjCyfxsdcM/fFJycKm5UBfFshMm0TZSWuSws6r4MBbIi5tF4L6lLcVHPc4wSaBMYBsrnsIGMBCNtRcEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FOpgH2ru; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750167309; c=relaxed/simple;
+	bh=4GnMChYZ859nCJCN1piCqEZeHco0KjO/v6zHU+fvsTk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=CzNoArlNz1EhZfgTkiPV9H90S1VJ1Y9rKFZY+DofM/QbUoRw+X28HVz+svA/fQl51FOt8i3kw1zBMuuK71GxXyrHoywTL6HGQQaE5DDxIvyF13UXxjfSrbDrsCkqk+/r+2uAGZSKOIUILMGhlPBFMEDfxGk3WVfHFn6RtX+DeI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mwWc+jtO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7JpNvPqt; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FOpgH2ru"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=B0/yq5kUFeVi4rQvRYXL5/CAp45+JBoeH+Zgo7cgbwk=; b=FOpgH2ruBtQQs/muQ5aQyqxMzu
-	TQdyD3SOPb/Cv39oTDDMWmX5ZKSZVeutFfz1g0EuL17ySE3cMaiYtoWHqgFRh3nmopiopqnO2eQFI
-	/VWdbgaTOmyoWEVVqY8lPFjEACIg4r2aLTT0LvbAe/hI9BsRIzVGNAxTfGh0D9S7A9PQb9g6q4wCA
-	Qrai7WqnQ2DSLJpkeu5CnXuCV+9VmYJZtA99hTypUfD3+7W84gSI+gPkQhoC+9+527pNFJMxGUjiy
-	b+mnEaBGsLrtL4An5JS6QcJXCLk27U8vYCAEQYqGfoJsFv82IHQPNYCdo1JGroObp/C4bz8064ydG
-	QxjMBGVA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRWRT-0000000HC2l-0VPL;
-	Tue, 17 Jun 2025 13:33:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B774030BDAD; Tue, 17 Jun 2025 15:33:33 +0200 (CEST)
-Date: Tue, 17 Jun 2025 15:33:33 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: kan.liang@linux.intel.com, mingo@redhat.com, acme@kernel.org,
-	namhyung@kernel.org, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, irogers@google.com,
-	adrian.hunter@intel.com, jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-	ak@linux.intel.com, zide.chen@intel.com
-Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
-Message-ID: <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
-References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
- <20250613134943.3186517-7-kan.liang@linux.intel.com>
- <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
- <8fbf7fc5-2e38-4882-8835-49869b6dd47f@linux.intel.com>
- <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
- <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mwWc+jtO";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7JpNvPqt"
+From: Kurt Kanzenbach <kurt@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750167305;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4GnMChYZ859nCJCN1piCqEZeHco0KjO/v6zHU+fvsTk=;
+	b=mwWc+jtO0EL+s3NZP9Z52AznBBTIoMuNIF5GhIJMZE7V2sJx749KMcKZvdfB4wP43lVDq8
+	84v97VmC2EGwHxXg2Cy6vBADl+pMim9SaHH3j5mMlmGm/iCFjz486pBtLsqT9HR+nBjze5
+	4DQIjVMyEkymXmo1Nu4AnUGGDGXVLImdVF3LkFFhZnWoZl1W/Iez5ofVrAJfvwN65dx0oI
+	R6ZRfMB1iD6JjYxE0wXKrh8JaRqguoRZaXXMA9aHBnfgNznRoWsvlJZ+bZ037t70hva16K
+	ip3VaPaZG30rLR1BfwOfLAZLJQZRIw+NPmAxokU6+9lslAVVPV7nVmeymoZlfw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750167305;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4GnMChYZ859nCJCN1piCqEZeHco0KjO/v6zHU+fvsTk=;
+	b=7JpNvPqtL1cK8IuFdiKGRKLO2h+WW24bZEhSFTssxtq2UTYXNUnx89ED7pBHeUaqTbsE/+
+	L/HBD5y6pJ7Ht+CA==
+To: Marc =?utf-8?Q?Str=C3=A4mke?= <marc.straemke@eltropuls.de>, Sebastian
+ Andrzej Siewior
+ <bigeasy@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to
+ intel? IGB
+In-Reply-To: <19a46896-3d26-415b-9820-730a42b0702e@eltropuls.de>
+References: <20250613145434.T2x2ML8_@linutronix.de>
+ <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
+ <20250613195838.0-gZ6bqS@linutronix.de>
+ <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
+ <20250617092814.vqKdu23w@linutronix.de>
+ <bb74b5b6-bc23-4aa4-83df-449dc7c9006b@eltropuls.de>
+ <20250617100013.1o5lsPLq@linutronix.de>
+ <b7179ac8-c64b-44dd-b25a-62b34eb49c24@eltropuls.de>
+ <20250617101507.jU00mupE@linutronix.de> <87v7ou7i4i.fsf@jax.kurt.home>
+ <19a46896-3d26-415b-9820-730a42b0702e@eltropuls.de>
+Date: Tue, 17 Jun 2025 15:35:03 +0200
+Message-ID: <87plf27apk.fsf@jax.kurt.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On Tue, Jun 17, 2025 at 08:14:36PM +0800, Mi, Dapeng wrote:
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> > We're going to do a sane SIMD register set with variable width, and
-> > reclaim the XMM regs from the normal set.
-> 
-> Ok, so we need to add two width variables like
-> sample_ext_regs_words_intr/user,
+On Tue Jun 17 2025, Marc Str=C3=A4mke wrote:
+> Hi Kurt,
+> On 17.06.25 12:54, Kurt Kanzenbach wrote:
+>>> You don't have to live with it. You could add a read after the writes in
+>>> the loop (wrfl()). This should help.
+>> Something like this, which was done for Intel e1000?
+>>
+>> https://lore.kernel.org/intel-wired-lan/20241219192743.4499-1-gerhard@en=
+gleder-embedded.com/
+>>
+>> Thanks,
+>> Kurt
+>
+> This works wonders (Latency spike down to 120 us from 700) ! I will=20
+> prepare a patch and submit it to LKML.
 
-s/ext/simd/
+Great :-)
 
-Not sure it makes sense to have separate vector widths for kernel and
-user regs, but sure.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> then reuse the XMM regs bitmap to represent the extend regs bitmap.
+-----BEGIN PGP SIGNATURE-----
 
-But its not extended; its the normal bitmap.
-
-> Considering the OPMASK regs and APX
-> extended GPRs have same bit-width (64 bits), we may have to combine them
-> into a single bitmap, e.g. bits[15:0] represents R31~R16 and bits[23:16]
-> represents OPMASK7 ~ OPMASK0. 
-
-Again confused, bits 0:23 are the normal registers (in a lunatic
-order). The XMM regs are in 32:63 and will be free if the SIMD thing is
-present.
-
-SPP+APX should definitely go there.
-
-Not sure about OPMASK; those really do belong with the SIMD state. Let
-me go figure out what ARM and Risc-V look like in more detail.
-
+iQJHBAEBCgAxFiEEvLm/ssjDfdPf21mSwZPR8qpGc4IFAmhRbwcTHGt1cnRAbGlu
+dXRyb25peC5kZQAKCRDBk9HyqkZzgh7iD/9AhKQvwYw7NbR2KFo0qxCOmiopk+C1
+pi7nFjIGbwEVhTR5MykXg7wbsgq6H/CB1UEQj6GLCfEs4t0gg1pSso2gbcDmJucS
+Co2TSy3NTSy25P7Gz9WcklCS5H7p1xH78Ih7oMtI0AZF829f74OL0HUo65EwdJaq
+zYk6plJFQu0L0wG42unWZbhySgTP+jAkx3EYIOlc/k1gTU4yslhgFcGqqCxtaR+4
+J/zkzF8WQ8U1tcFjwkE2z3YdDppZ+IFU/R3/IyMCo9C7FzcpoxJak0QeowUQiiPP
+ULlgvDhaoXXQcwAhLuf1kLS08UxCJPw4gj9sxAJA6aWazP2fQquzByjQbsHCV5WL
+ldT6bsSQxGorpHMWD0UyyQeOIegJOJSWPppfDi0XZCIW+1B1iXKRLhRgr5P/B4Ca
+r81pLACZ81EBsVJA1PUzfSRmbMa5rXVWbPkGRfXgwMdIrGdlpWVd//7EAI0aBXP+
+MFT7hqE5CB4dzmrEPt2Zv8lHZ1n+ZXa9pS2UDy4+xwRnnSRqGvxkLKs0awJH1Fmc
+P7PFoOgD35fgJCQEkik0CV0mvHSE3lFNvpD6a6J/NTN5O/+d16RL2oeirqrbPVbh
+bQuDIpYmlnef5m9xn4S9LZls7V6Ot3WIBgoQcyrHej8YXph5YTDPoMrD5F8t6NZm
+1+rf8IF1PJyffA==
+=sHup
+-----END PGP SIGNATURE-----
+--=-=-=--
