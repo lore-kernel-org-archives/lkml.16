@@ -1,144 +1,74 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC47D291157;
-	Tue, 17 Jun 2025 08:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B382116E9
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148353; cv=none; b=EEQoXcK7eCptmJm4gySBJEw0bggVc/OvDjncoF5fq6B8xAG81D8nJJr/S4StEa+UjrGh4MCjsuSJ3UXkufzQS2WR4nx1dkj8gQ5r8VmdxGsBVlT6+84IU425E5Lz65/jREECSO8ovhFS1SvV29kqWyei5xrEzHmoqO1+Ge4p+8w=
+	t=1750148362; cv=none; b=XD/LVmqfJTdYnwfUR+2DU+qHM5QIBrlsvHjBmg72B3dXa8NoqG58hypPSGhQDSjUYCSXJ4VptWQhj9wAwujU/k6XzafzH9ZKWw6UBZ66MeUTEHCyyAMQuDe3h1nFHcPus+/4zmE3CPBkWrlIO0wfWKUkPlSAVE77hJebUKZol2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148353; c=relaxed/simple;
-	bh=7bTE/G7XUwA/kVf5XxBEU/9ZUs5UqQAeJdICImaJLPY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=StV7Xe1y1jbc1+ILfwABYJJsLd6Nb+hIVVaiIkgfLdusev+gOVlmZCVyYpIpiOrxZNmPqDN8J0hTAO/+r5qu63J1eq/UbSuzTUwdbM+ltyP880Mip46qWoF3up3fbB1GsvUsQShsj44tCc4NXI+2wg/mEXGfDVYPeC10lLest2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ad89333d603so1003322066b.2;
-        Tue, 17 Jun 2025 01:19:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750148350; x=1750753150;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LeajAKYpoows+g4P7650D8aOy+Pi3G5qwSfEQ3Y1fI8=;
-        b=SRCoAnEBzTx2pfVRqjmRlmJLz2WS/nCkgdSe484TGg3SaHIvkuCVQKmV0ey2K499bG
-         6bMGxd07mBPXIqS9jK3/QPAfCfOMRT23HMu3nz6lI30E1AtKwdgIqjFJIUsTkOaWgWJp
-         W4ebGJMTK26Fwzncq8EEG+DopGyClN2HB1M38kkuKXHYN5oVXcBl7JYt74lIqcM2eTMP
-         UdytsGXGoVKx9YlQrp1VSu38N0sNiJSOyPTk6R8wgxs5Hd62I9iVfUgfpnMKg7HOTJZ0
-         2Lz2+5DtDtuMVaUIgJOQKUgLrE+pP0vmqbJuH5n7yir5qLHsIC9cbXrlCY+hDPFmNpKR
-         tizQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVE7qKSSmRJQ5JzbaCGHfihrx5by+eKqyZkUYULC5nvUDhB+NjoShPX84bhLb4hNFoXFmxhIN9vnAwHORNCL0Yr@vger.kernel.org, AJvYcCXbFBIcsp+XglSO/1BeS+XcmSzgnr4at3K8Qo/9AgJlQq8AwgfxsPF0qigjyQeHkBdugL0Djt2mEp6Ut1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeUNkOl3HR2ER/VzWAxVR9TxNYgkYVQGfQosm/Q0KgaL4tDtk1
-	joqp+84/gWp033MCVEHwhI6EWnwSVgQet1rW4dNeQTN0+gyyBv9ArzLu
-X-Gm-Gg: ASbGncviqmguTB/zCfKCNZ9AYrd5Tnl57pPfKyT5t/1MvqETixhvRMJoCa5Iv+FBV4F
-	ukVlxSHH+pCYKVWOUsUvzXi8wSlCigXpezgk1Jjr/POkXS7WJrzY9i00uHHDikbUj2s0aR9b9sw
-	Q34aiTKofcdO3mt5LS0MoVrPQFaJq8jnQNdDu64hVTWZysJ4NEgG3QCYm1ZgK2QtS+HdEtOg+MW
-	tzY0tgqjMpSfmJzpP4lBuMHqGSWXaxQA8BApMWzWn5mEwyzux4r81EHp8RElJKhs8OpwwfwaeeM
-	q9hsYFVNP1aygKakb6aEzKAo26meJ9eBQJAnHqMrgLpZrRgFdl6/
-X-Google-Smtp-Source: AGHT+IF0mLEPQrvM663gaZ8FaaBbSS2col1J40tAb3DaS7Lz7DmEBxKbo3aAuqpplB49aCZ4TGoybA==
-X-Received: by 2002:a17:906:c105:b0:ad8:8529:4f7e with SMTP id a640c23a62f3a-adfad5d023amr1097081566b.53.1750148350038;
-        Tue, 17 Jun 2025 01:19:10 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:7::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60992edde8dsm513899a12.23.2025.06.17.01.19.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 01:19:09 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Tue, 17 Jun 2025 01:19:00 -0700
-Subject: [PATCH net-next v3 4/4] netdevsim: account dropped packet length
- in stats on queue free
+	s=arc-20240116; t=1750148362; c=relaxed/simple;
+	bh=zBRP4wob/MdQCdrMyAuRoiAZ142n6H59KQkCbWlV8EU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tpmIewgcLluWEfiyrq9UCfDN4bxv8F6DrNhgxJLra4W1aAUpxJ0sfGyxzY3rzmH0HgE1lztXcGyb7p/RSaKjKRtmSgO0GOIOMNORSSQYkkm5zLCWk31MbkTJ5UUnFqdVvqO50Ghmbv64QbDgTudQYxkK08IxDfDDL9u/7LKyeUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ACEUFgiK; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ACEUFgiK"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=G81JPc7Pxd70u2E5S536IHkdmuK5zD+fZXmV+GL3ujk=; b=ACEUFgiKvcxGO3RcTVSiQKUOgL
+	7DOSWSK2W8hR6pV9Pd7RVG4/NQH12KNUsAcIhA+qYH7St0bNNmsbkNxRWrryWMXuuanxgJ71blgbg
+	Puvv951aeGlht4gwZA5BQsTxb4uh09wZDALBnr75kSKr5GHOEFNS4ePBCwQ+eyys9QoKeD4/BnPsm
+	L6Z3xgRP5BlaUlHLKz30aWBNZqwC9xlClArPWcyvuVwC14Zb9mBl2DjTETYji0njT4+mb64TOx3Y4
+	aZIPugts0OQMWwKBQsMZj3e468Uw9T7OuA7Goo3coWPKsk7hmV9pRwQHYfKwX6iUTXrew/vlF+KBX
+	IrVoOqsQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRRXB-00000003k3p-1lLS;
+	Tue, 17 Jun 2025 08:19:10 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0CE3F308523; Tue, 17 Jun 2025 10:19:04 +0200 (CEST)
+Date: Tue, 17 Jun 2025 10:19:04 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
+Subject: Re: [RFC PATCH 08/12] perf/x86: Add APX in extended regs
+Message-ID: <20250617081904.GJ1613376@noisy.programming.kicks-ass.net>
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250613134943.3186517-9-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-netdevsim_stat-v3-4-afe4bdcbf237@debian.org>
-References: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
-In-Reply-To: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Paolo Abeni <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
- gustavold@gmail.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1770; i=leitao@debian.org;
- h=from:subject:message-id; bh=7bTE/G7XUwA/kVf5XxBEU/9ZUs5UqQAeJdICImaJLPY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoUST3PrLTzP3psEvjdg5T0ylUHZIFtN2Bjmecu
- KNlL35baYeJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaFEk9wAKCRA1o5Of/Hh3
- bQVID/4hMQtm+luiiBqD6qkSR92UwcTtZYmySSKba4eQkLE996vNi8E9ow1WBxfuDFDyCYiLIhP
- h6Y2wpJsHZQ45G3dES+u44D+hdA6olGC58Pb4I9bWxoXh3Ak9Altws4x2XWctOtUjrQpp/unVUT
- CJLsAfDqM7j7TqNezss79EA/N+jOdFzHzb/aKO/obA/T4ahT0YfBcpohxTVGqofZahZyGq1rzEw
- 37wbHhgriYSBNLyjmDTl5XHCDvojfbVek0Or8YS92Oy2khnxAUf0ITukyIKh6LN3OexInOyb9iN
- AX04d6yCOwdDLpzUVTxENzUl90YKPbptpdIIJKtSm9Hd21dDYlJ3UwEZtdNGCjEFLuz18YC5A3O
- 61WH/3HDsjIG4uYoCwitO7ISbuu5ZBAHopEMDLeWjgqmC+HxwHcLGIStDMdJn7Wd7plZFR9tnfS
- ympRhYXcYAFvQCzk/Q72JHhuRqHnEP75QABkNVrYNbIuBgr9nOp0iRrXtjiLs3byzv3w/+l27CD
- vlaywv/AmOWZeMEFfgh7qfLVyN71ObNJdN9eg8cPH4JmR24kZo6HTHnK93gKvH+BOU/MlrQa8ha
- qioUx0mOSfbqy3Lrv8T3/4an0eGLVAYvysA2aVCc/YOG3rch82SwTGQoaXgv+kRlM47lhTMyQvW
- lVb77YIC0jGJbkw==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250613134943.3186517-9-kan.liang@linux.intel.com>
 
-Add a call to dev_dstats_rx_dropped_add() in nsim_queue_free() to
-account for the number of packets dropped when purging the skb queue.
+On Fri, Jun 13, 2025 at 06:49:39AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Support APX as the extended registers. It can be configured in the
+> sample_ext_regs_intr/user.
+> 
+> Only the PMU with PERF_PMU_CAP_EXTENDED_REGS2 supports the feature.
+> The value can be retrieved via the XSAVES.
+> 
+> Define several macros to simplify the code.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-This improves the accuracy of RX drop statistics reported by
-netdevsim.
+Yuck.
 
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/netdevsim/netdev.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index de309ff69e43e..5d0b801e81129 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -632,9 +632,10 @@ static struct nsim_rq *nsim_queue_alloc(void)
- 	return rq;
- }
- 
--static void nsim_queue_free(struct nsim_rq *rq)
-+static void nsim_queue_free(struct net_device *dev, struct nsim_rq *rq)
- {
- 	hrtimer_cancel(&rq->napi_timer);
-+	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
- 	skb_queue_purge_reason(&rq->skb_queue, SKB_DROP_REASON_QUEUE_PURGE);
- 	kfree(rq);
- }
-@@ -681,7 +682,7 @@ nsim_queue_mem_alloc(struct net_device *dev, void *per_queue_mem, int idx)
- 	return 0;
- 
- err_free:
--	nsim_queue_free(qmem->rq);
-+	nsim_queue_free(dev, qmem->rq);
- 	return err;
- }
- 
-@@ -695,7 +696,7 @@ static void nsim_queue_mem_free(struct net_device *dev, void *per_queue_mem)
- 		if (!ns->rq_reset_mode)
- 			netif_napi_del_locked(&qmem->rq->napi);
- 		page_pool_destroy(qmem->rq->page_pool);
--		nsim_queue_free(qmem->rq);
-+		nsim_queue_free(dev, qmem->rq);
- 	}
- }
- 
-@@ -913,7 +914,7 @@ static void nsim_queue_uninit(struct netdevsim *ns)
- 	int i;
- 
- 	for (i = 0; i < dev->num_rx_queues; i++)
--		nsim_queue_free(ns->rq[i]);
-+		nsim_queue_free(dev, ns->rq[i]);
- 
- 	kfree(ns->rq);
- 	ns->rq = NULL;
-
--- 
-2.47.1
+How about reclaiming the current horrible XMM register space when the
+new sample_simd_reg_words != 0 ?
 
