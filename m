@@ -1,60 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8171E3DCF
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EC576026;
+	Tue, 17 Jun 2025 08:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750150083; cv=none; b=nAJHflxHQjNWDZFnhkAmCwbo8clU0D2IcECzT8qeUMUsu7oIg8OoVRNYzxmYaXKFwC7RUG32yOgMaEsCGbEAuy5N/ePB2FUxIICmisxNLmlLZ16zXJB5ab86I+SE8HGISAVkOOu6yA0r4V48E32qPKvpkRgegnXz4o2IB/D2T8k=
+	t=1750150126; cv=none; b=RaUvPAR9oEyEaFoHgobgebSFAQga0WTJc2A6PUvy1UAPv7jASG8vOJEhwZbC+jHky/tlxHYWYMWxyRbi2JkPrAwBwqI/Y2tlFUPpPluycNVgZwyeRJtWtZ0R1SSXmMbPVanYfJ7CwKKQmMs0PTk5bgwCzEjcqPyzAVAuQaA9QYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750150083; c=relaxed/simple;
-	bh=lwZsYn4Ge9MGc7LNCh8JCB93frlnvsXVFfEfZJfaD1g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OlGx3+tm3q/62Nm3+iINGjoFRZ6A1Q2BQrdI4TuBaKrtfCZIJ8ov+th0Jx/5A9nXdBFRI5mJBleCQRxkH2saBS/xwdApD/jTnqT50kg1lzcq9XfuTEaawNQfudVLLFqlbg3OQrd64wMkvf/9Tj51+usxR7OYngchi+BUoiKByTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=xrr8s3/s; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="xrr8s3/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9036C4CEF0;
-	Tue, 17 Jun 2025 08:48:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750150083;
-	bh=lwZsYn4Ge9MGc7LNCh8JCB93frlnvsXVFfEfZJfaD1g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xrr8s3/sVTyuu63TAysokFZONxMkXxd2FMHX0wgKfZHSS8u60Whl9yOeZwGQPUF24
-	 h4OzyvhbNApvElntPeCbP9lSTEGfxe7W/aGnPwrzIIJ1pcUjJTwaZtwYtU0UESMtOn
-	 6D6Gk3NABiv2HjmEnq3UFt1hpWlkbJNIagZjoXEA=
-Date: Tue, 17 Jun 2025 10:48:00 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] sysfs: finalize the constification of 'struct
- bin_attribute'
-Message-ID: <2025061702-retention-lion-48c3@gregkh>
-References: <20250530-sysfs-const-bin_attr-final-v3-0-724bfcf05b99@weissschuh.net>
- <fa9b1cb8-28a7-4ae0-89c8-8e3f9f149c56@t-8ch.de>
+	s=arc-20240116; t=1750150126; c=relaxed/simple;
+	bh=vuoNr13Rqzsj6LgDL0QJ3v3rep1txRGacEWw//RdxO0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eUWwCwe+5hbrL+W1B0n/CGnUPAYQESfiDN6rQnXAu6CtnNaP1lKV7X7gVNB9ZFQKi+r25e9nD9qrSjQjI9QiBqnhOeyfm4Z1M1qFH5wVe6EAaHTSvuwBHnZDm3iBdInH10OkQ7fB45xfxwYgZQqVPRlF7W5+HZFgJzd9CVXnD4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [192.168.33.151] (unknown [210.73.43.2])
+	by APP-01 (Coremail) with SMTP id qwCowAAn2dfZK1FoBBEkBw--.8277S2;
+	Tue, 17 Jun 2025 16:48:26 +0800 (CST)
+Message-ID: <10ab212f-e06b-4214-99cd-a687659fcf71@iscas.ac.cn>
+Date: Tue, 17 Jun 2025 16:48:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
+ K1
+To: Krzysztof Kozlowski <krzk@kernel.org>, Yixun Lan <dlan@gentoo.org>,
+ Guodong Xu <guodong@riscstar.com>, Ze Huang <huangze@whut.edu.cn>,
+ spacemit@lists.linux.dev
+Cc: Vivian Wang <uwu@dram.page>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
+ <74e3c488-4457-4026-9597-806b98fd4e11@kernel.org>
+From: Vivian Wang <wangruikang@iscas.ac.cn>
+In-Reply-To: <74e3c488-4457-4026-9597-806b98fd4e11@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <fa9b1cb8-28a7-4ae0-89c8-8e3f9f149c56@t-8ch.de>
+X-CM-TRANSID:qwCowAAn2dfZK1FoBBEkBw--.8277S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4kCw13Kr1kWF1rZw15CFg_yoW8CF45pr
+	Z3u3ZayFZrAF40gws29rZrWa4ruwn7Za15JFn5Gr1rAFZ8XFyagrWxJw1j9w1UXrZ5Xa47
+	Xa1DZ3s7uF4UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Ib7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMc
+	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
+	1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjxUy38nDUUUU
+X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-On Sat, Jun 14, 2025 at 08:23:24AM +0200, Thomas Wei�schuh wrote:
-> Hi Greg,
-> 
-> friendly ping. You wanted to send this to Linux at around -rc1.
-> The changes should now apply cleanly to mainline.
+Hi Krzysztof,
 
-I've taken the first 4 patches into driver-core-testing at the moment
-(will move to driver-core-next if it passes 0-day testing).  The last 2
-I'll hold off of for the next -rc1 as I was way too late here, sorry, my
-fault.  I blame travel, which I had to do a bunch of the past few weeks :(
+On 6/17/25 14:21, Krzysztof Kozlowski wrote:
+> On 17/06/2025 07:21, Vivian Wang wrote:
+>> The SpacemiT K1 has various static translations of DMA accesses. Add
+>> these as simple-bus nodes. Devices actually using these translation will
+>> be added in later patches.
+>>
+>> The bus names are assigned according to consensus with SpacemiT [1].
+>
+> Read the feedback there:
+>
+> "So, as you are submitting the first node(s) under network_bus: bus@5, you
+> should have this added into your patchset, instead of sending out with
+> none."
+As mentioned in the patch extra message, this is an RFC meant for
+achieving consensus on what the bus nodes should look like, not an
+actual patch meant to be taken. I was hoping I was clear on that, but I
+guess that paragraph was buried too deep. Well...
+> Plus simple bus within MMIO node needs unit address. IOW, don't mix MMIO
+> with non-MMIO. I also suspect this does not pass checks, so the tools
+> can do our review...
 
-thanks,
+This DT passes "make dtbs_check" fine, with only unrelated warnings on
+sec_uart1 that was already there before:
 
-greg k-h
+  DTC [C] arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dtb
+.../arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dtb: serial@f0612000
+(spacemit,k1-uart): 'clock-names' is a required property
+        from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+  DTC [C] arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dtb
+.../arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dtb: serial@f0612000
+(spacemit,k1-uart): 'clock-names' is a required property
+        from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
+
+To be honest, I don't understand what "within MMIO node" means here.
+Should the buses be taken out of /soc and added as its siblings?
+
+Thanks,
+Vivian "dramforever" Wang
+
+> Best regards,
+> Krzysztof
+
