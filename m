@@ -1,194 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B0621C9FF;
-	Tue, 17 Jun 2025 11:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848ED2DF3E5;
+	Tue, 17 Jun 2025 11:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161288; cv=none; b=XCGvbWILQWm7cxo28S4PvooNHCIH626J6i4Zn8KsbPDvElv1W0jdVnEsELsFIMjnK5nnYYMcPHBv/jmb21B8IjClWVd7HMuIs9QW899+TwD79828JThQvWuGjJpzJ98UYOyt0qmQD9a8xyQzq4CTiOXjiLHhKFeIC2ANDzEOo2A=
+	t=1750161315; cv=none; b=fkUHK3h/+SOD+CXKVQ+LbLLoHH2cGivuplaQSLg2CBxVIFtEnB7TrBnm2ehAm7f1hseExz0QzIIw+pLTSqoNxGfCBYl6C7R79OgPFzYaCsTHvPLwYstI86bu1nCpSUgAKLDSudOeeKFWnJURh85zO3FkJVx0y6O/1LVts0ShccE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161288; c=relaxed/simple;
-	bh=FM4A89teoGTiVHD+mgfi0AiySK9n5DYBMecgMr0uDqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hi+xBP+Cjg9gQIx3Ziv0eWWk+XcsfFL5FVRdXOJ7dpUwbd2aSYE6sT162UGZMsu6Utqz4ypWLvkHNjfuag35MxwFnoGAY9AHkwbu330JzuTBEUzICNOufGlqMyXy363e6kMb8VAYQ9GqexGNY1okpQUgMjg6WRtpOfJF4PaYUPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFaXplkY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750161315; c=relaxed/simple;
+	bh=1mdzfzKY2H5RvEK9/I1kxmjAzNzCY7/xCZXh85LBGB4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bxgbYU+XyHrVFYFCgiNgUXkBce9lNwyzJLhIVzlpru/umPFFy5GiGv0EuAY++DHN3Asc30UX0W1v11W5KNJnXpLv6zZ07xQ2pFaEMTp2zLRt83fTMdY6rRoRJumlTkmoDu8b8rmQl7zdbVcGycxMm1Q0Rw7tdOzQrrPt9lNnrKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NEkTWDgK; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFaXplkY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FE2BC4CEE3;
-	Tue, 17 Jun 2025 11:54:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750161287;
-	bh=FM4A89teoGTiVHD+mgfi0AiySK9n5DYBMecgMr0uDqg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tFaXplkY5nyo20ol4Egr1jKpFof+Bu6EVWj8rd7Q/XVflaJDEuUt2QBZbBOzt+ds9
-	 QqRJ0416pNcF2gR1cOk/fhlCLM2NyYyFsqO7E+6LcmkPsrh7dOxbot5r+EPV6Mf/Eg
-	 m8Y6DUqcdfGWwY+D64Xca2p2YAi1GLXZEZrvZUt4zBrfooL7qgslbeGTMTkIs72Kmi
-	 ZyPQ8xq03VfK0FOehVNSaD+X4yl6DS92oWcHFB7su60iMijW1l2mzbjqhQKi8Q2XlY
-	 I0aiDlWsnalkNnHvD2WZzlIylBsOw4cpNRmvr5us4RCENbN2fbk5X67yCW3LloR+n5
-	 oLveA9uaTcrqQ==
-Date: Tue, 17 Jun 2025 13:54:21 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Jens Axboe <axboe@kernel.dk>, Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Eric Van Hensbergen <ericvh@kernel.org>, 
-	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Christian Schoenebeck <linux_oss@crudebyte.com>, David Sterba <dsterba@suse.com>, 
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Benjamin LaHaise <bcrl@kvack.org>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, "Tigran A . Aivazian" <aivazian.tigran@gmail.com>, 
-	Kees Cook <kees@kernel.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, 
-	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>, 
-	Hongbo Li <lihongbo22@huawei.com>, Namjae Jeon <linkinjeon@kernel.org>, 
-	Sungjong Seo <sj1557.seo@samsung.com>, Yuezhang Mo <yuezhang.mo@sony.com>, 
-	Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Viacheslav Dubeyko <slava@dubeyko.com>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Yangtao Li <frank.li@vivo.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>, 
-	Dave Kleikamp <shaggy@kernel.org>, Trond Myklebust <trondmy@kernel.org>, 
-	Anna Schumaker <anna@kernel.org>, Ryusuke Konishi <konishi.ryusuke@gmail.com>, 
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
-	Joseph Qi <joseph.qi@linux.alibaba.com>, Bob Copeland <me@bobcopeland.com>, 
-	Mike Marshall <hubcap@omnibond.com>, Martin Brandenburg <martin@omnibond.com>, 
-	Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.org>, 
-	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
-	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
-	Zhihao Cheng <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>, 
-	Carlos Maiolino <cem@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
-	Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn <jth@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, linux-aio@kvack.org, linux-unionfs@vger.kernel.org, 
-	linux-bcachefs@vger.kernel.org, linux-mm@kvack.org, linux-btrfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org, 
-	linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-um@lists.infradead.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org, 
-	ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev, 
-	linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org, linux-cifs@vger.kernel.org, 
-	samba-technical@lists.samba.org, linux-xfs@vger.kernel.org, nvdimm@lists.linux.dev
-Subject: Re: [PATCH 09/10] fs: convert most other generic_file_*mmap() users
- to .mmap_prepare()
-Message-ID: <20250617-allenfalls-brummen-3ce2da5794f8@brauner>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
- <08db85970d89b17a995d2cffae96fb4cc462377f.1750099179.git.lorenzo.stoakes@oracle.com>
- <gexpfonlstqrggxbwxlorn7c6qvt42e2dof6lahipfyfecgfru@vexc23jbaxwc>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NEkTWDgK"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad88d77314bso1241475066b.1;
+        Tue, 17 Jun 2025 04:55:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750161312; x=1750766112; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O5Oyc6Nb5eleQJDRHBvWia2WFxGzJ8AhQsoAb9pIQzw=;
+        b=NEkTWDgKTZ0pYOJAjnUOTStCbWC8MrqQWVimioPXkYKXEvQNjGWQPIHf0U7hI3I+dQ
+         JiuF7zLmqY0uzx8Q6CSlD7u1tITtOLK0xA8cK1MHi2jiP+ebAVcQeARzc8dtcRgGhZ9x
+         Slt3/2MPSRrButbQU1WeIuFWY03PSfwZGSLRWKGANyBqcXWPgGIHBkOaP0U0mSPooKZ5
+         riXOWSi2fHsRFBDcfPaBuxL6bgESs9LUV7Jw+h04Hbs6tetDEt4p10xzXg97lNBc45hg
+         aQGgxsJ4M3m772vkzNHSdnemGU7zWb1Fg2YNrHmViuen+upoIiDIjBCYHP76jG73a28E
+         HFrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750161312; x=1750766112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O5Oyc6Nb5eleQJDRHBvWia2WFxGzJ8AhQsoAb9pIQzw=;
+        b=q6bkeD6hf15IlQl1Npb0M6Z5/Clmhlo2qAjCtTkxh7/VB9bKMM+uWo/9ApcyBG8lQw
+         OQ8DP/+pUu6YXB6NQfpX5y2GeWF9LHrPxJITGWg9OB14A5r7CrRkK58WgiOE9isaI8ev
+         w0lQaD/00Qp8YdSsq/z7SIvcQzycxd7X9l/up9BzByuUvawWl4FHuRDTbVNAjgwXiaIs
+         PsJNrsjbKLhid+39RQXM1VjDVnJBw4BLlI8s+UNfw2TjQUcq6KeHob3WPjFKSeS2rvk7
+         Hd5gLJSAQaYjDdPMuQzYt0jFFBcaAbplH8rFZws9P5vmUrN+XD8OaBCCzSZS1LblS03X
+         xhKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU71Zf3iK+yOvz3afxjwafCiOr9HkRHLrIpW6ET8d7PoABIRwRkWwUHlnJ96/JVdx+scY9O+TVf084=@vger.kernel.org, AJvYcCVIY3tragJ1fqTum7BJjBKLCWOiiNP6Ol+E1xBIfFF2yzfChDQGjZMhf1yO6cv/DkLBEC9L1PcqlpxO@vger.kernel.org, AJvYcCXmRdXTTstQkhm+doXcpCwfpq6I6j2pgQ4jJ+10p+LFTRuRLsM7dE0bInjIhkdtttiAwrTGhDAzCWONLBEF@vger.kernel.org
+X-Gm-Message-State: AOJu0YxE44cJKXjl+PIhRZ15+WPKmuJPL6FBLKomTQBdU+z3dRrkjMTQ
+	FdBVO1ONt77BEgaRI8Ho4pDFSJyksDRtLHvCF4IrnegZ+AIGFEKLDBP6gsUHEnJLh7NVlDoPA8z
+	zrlTxlvfB7q9lDcup8JwkctTl8fwKe5I=
+X-Gm-Gg: ASbGncuPfkpqjDJ3C7rv70X+Pg+pvFoWyiAzwwQQn0UwdvhYlbnDh6+lodjnWcUhITP
+	7u0xBtYQhzzxenU0WNuFX9eXebx9yNdw/IH4Knnc0hGpUH/bdiYlBT80h+dU80s2bXudbKofZIA
+	cyBqyzb6I1/fA4X/onAUhK791yQovFi5XYn2Uga6DijY981A==
+X-Google-Smtp-Source: AGHT+IE6ecDP+jSmXMWWxoAXtXPEY1Y64xRVJKCLhMyqxuvRkxxX5n8x3JBcxUdDDseal6dmwhL67NBQE9f9wzc0CiQ=
+X-Received: by 2002:a17:907:1ca2:b0:add:fa4e:8a61 with SMTP id
+ a640c23a62f3a-adfad53d2cdmr1362691666b.38.1750161311622; Tue, 17 Jun 2025
+ 04:55:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <gexpfonlstqrggxbwxlorn7c6qvt42e2dof6lahipfyfecgfru@vexc23jbaxwc>
+References: <20250615222258.117771-1-l.rubusch@gmail.com> <20250615222258.117771-6-l.rubusch@gmail.com>
+ <CAHp75VdWtY6nxFFTucoCRiq+tM5caL5N1yp_15=FSAZ7Vyk_7Q@mail.gmail.com> <CAFXKEHYzaCCNbZo47AUHFEyS=HBFZnVNEHeQG+4VA2jhhT+yEw@mail.gmail.com>
+In-Reply-To: <CAFXKEHYzaCCNbZo47AUHFEyS=HBFZnVNEHeQG+4VA2jhhT+yEw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 17 Jun 2025 14:54:35 +0300
+X-Gm-Features: AX0GCFvqVsLjg7NVzpiLV7joBeHOpKz_dSx-5s5g22mcanhHrTnZaIYNIG97mW4
+Message-ID: <CAHp75VeDj1sE55_PdR6=QHAT-Nv0fwv3kss=7oeh8isdmOMoOw@mail.gmail.com>
+Subject: Re: [PATCH v5 5/8] iio: accel: adxl313: add inactivity sensing
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, bagasdotme@gmail.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 12:23:41PM +0200, Jan Kara wrote:
-> On Mon 16-06-25 20:33:28, Lorenzo Stoakes wrote:
-> > Update nearly all generic_file_mmap() and generic_file_readonly_mmap()
-> > callers to use generic_file_mmap_prepare() and
-> > generic_file_readonly_mmap_prepare() respectively.
-> > 
-> > We update blkdev, 9p, afs, erofs, ext2, nfs, ntfs3, smb, ubifs and vboxsf
-> > file systems this way.
-> > 
-> > Remaining users we cannot yet update are ecryptfs, fuse and cramfs. The
-> > former two are nested file systems that must support any underlying file
-> > ssytem, and cramfs inserts a mixed mapping which currently requires a VMA.
-> > 
-> > Once all file systems have been converted to mmap_prepare(), we can then
-> > update nested file systems.
-> > 
-> > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> Overall the patch looks good. Just a couple of notes regarding pointless
-> local variable being created...
-> 
-> > ---
-> >  block/fops.c           |  9 +++++----
-> >  fs/9p/vfs_file.c       | 11 ++++++-----
-> >  fs/afs/file.c          | 11 ++++++-----
-> >  fs/erofs/data.c        | 16 +++++++++-------
-> >  fs/ext2/file.c         | 12 +++++++-----
-> >  fs/nfs/file.c          | 13 +++++++------
-> >  fs/nfs/internal.h      |  2 +-
-> >  fs/nfs/nfs4file.c      |  2 +-
-> >  fs/ntfs3/file.c        | 15 ++++++++-------
-> >  fs/smb/client/cifsfs.c | 12 ++++++------
-> >  fs/smb/client/cifsfs.h |  4 ++--
-> >  fs/smb/client/file.c   | 14 ++++++++------
-> >  fs/ubifs/file.c        |  8 ++++----
-> >  fs/vboxsf/file.c       |  8 ++++----
-> >  14 files changed, 74 insertions(+), 63 deletions(-)
-> > 
-> > diff --git a/block/fops.c b/block/fops.c
-> > index 1309861d4c2c..5a0ebc81e489 100644
-> > --- a/block/fops.c
-> > +++ b/block/fops.c
-> > @@ -911,14 +911,15 @@ static long blkdev_fallocate(struct file *file, int mode, loff_t start,
-> >  	return error;
-> >  }
-> >  
-> > -static int blkdev_mmap(struct file *file, struct vm_area_struct *vma)
-> > +static int blkdev_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
-> >  	struct inode *bd_inode = bdev_file_inode(file);
-> 
-> I guess no need to create 'file' variable here since it has only one use in
-> the line above...
+On Tue, Jun 17, 2025 at 1:10=E2=80=AFPM Lothar Rubusch <l.rubusch@gmail.com=
+> wrote:
+> On Mon, Jun 16, 2025 at 12:59=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Jun 16, 2025 at 1:23=E2=80=AFAM Lothar Rubusch <l.rubusch@gmail=
+.com> wrote:
 
-Agreed, fixed in-tree.
+[...]
 
-> > -static int afs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> > +static int afs_file_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
-> >  	struct afs_vnode *vnode = AFS_FS_I(file_inode(file));
-> 
-> Same comment about pointless local variable here as well.
+> > > +       switch (info) {
+> > > +       case IIO_EV_INFO_VALUE:
+> > > +               switch (dir) {
+> > > +               case IIO_EV_DIR_RISING:
+> > > +                       ret =3D regmap_read(data->regmap,
+> > > +                                         adxl313_act_thresh_reg[ADXL=
+313_ACTIVITY],
+> > > +                                         &act_threshold);
+> > > +                       if (ret)
+> > > +                               return ret;
+> > > +                       *val =3D act_threshold * 15625;
+> > > +                       *val2 =3D MICRO;
+> > > +                       return IIO_VAL_FRACTIONAL;
+> > > +               case IIO_EV_DIR_FALLING:
+> > > +                       ret =3D regmap_read(data->regmap,
+> > > +                                         adxl313_act_thresh_reg[ADXL=
+313_INACTIVITY],
+> > > +                                         &inact_threshold);
+> > > +                       if (ret)
+> > > +                               return ret;
+> >
+> > > +                       *val =3D inact_threshold * 15625;
+> > > +                       *val2 =3D MICRO;
+> > > +                       return IIO_VAL_FRACTIONAL;
+> > > +               default:
+> > > +                       return -EINVAL;
+> > > +               }
+> > > +       case IIO_EV_INFO_PERIOD:
+> > >                 ret =3D regmap_read(data->regmap,
+> > > -                                 adxl313_act_thresh_reg[ADXL313_ACTI=
+VITY],
+> > > -                                 &act_threshold);
+> > > +                                 ADXL313_REG_TIME_INACT,
+> > > +                                 &inact_time_s);
+> > >                 if (ret)
+> > >                         return ret;
+> > > -               *val =3D act_threshold * 15625;
+> > > -               *val2 =3D MICRO;
+> > > -               return IIO_VAL_FRACTIONAL;
+> > > +               *val =3D inact_time_s;
+> > > +               return IIO_VAL_INT;
+> > >         default:
+> > >                 return -EINVAL;
+> > >         }
+> >
+> > I still don't get what's wrong with helpers for nested switches?
+> > Instead of doing ping-pong with so many lines (due to indentation
+> > changes), just create a helper from the beginning. In this case this
+> > will look more like
+> >
+> >   if (nfo =3D=3D IIO_EV_INFO_VALUE)
+> >     return my_cool_helper_for_THIS_case(...);
+> >
+> > Note, I admit that not all the cases may be done like this, but just
+> > look at this again and perhaps something can be optimised.
+>
+> First, about helpers dealing with nested switches. The resulting
+> structure then is like
+>
+> switch (type) {
+> case IIO_EV_TYPE_MAG:
+>     switch (info) {
+>     case IIO_EV_INFO_VALUE:
+>         switch (dir) {
+>         case IIO_EV_DIR_RISING:  // activity
+>             ....
+>         case IIO_EV_DIR_FALLING: // inactivity
+>             ....
+>         }
+>         case IIO_EV_INFO_PERIOD:
+>             ...
+>     }
+> case IIO_EV_TYPE_MAG_ADAPTIVE:
+>       // same as above, again for _AC events
+>  ...
+> }
+>
+> Actually I'm using a helper for nested switches. But currently I'm
+> adding it quite late, when I have cases for ACTIVITY, INACTIVITY and
+> ACTIVITY_AC and INACTIVITY_AC, since this results in code duplication.
+> The resulting structure the looks as follows.
+>
+> helper_mag(...)
+> {
+>     switch (info) {
+>     case IIO_EV_INFO_VALUE:
+>         switch (dir) {
+>         case IIO_EV_DIR_RISING:  // activity
+>             ....
+>         case IIO_EV_DIR_FALLING: // inactivity
+>             ....
+>         }
+>         case IIO_EV_INFO_PERIOD:
+>             ...
+>     }
+> }
+>
+> switch (type) {
+> case IIO_EV_TYPE_MAG:
+>     helper_mag(...);
+> case IIO_EV_TYPE_MAG_ADAPTIVE:
+>         // same as above, again for _AC events
+>     helper_mag(...);
+> }
+>
+> Is this reasonable? For the v6 now, I plan on introducing this helper
+> when adding INACTIVITY sensing, having ACTIVITY already in place. This
+> is, because INACTIVITY as distinguishable type is still not available,
+> but would be needed as function argument as well. Does this make
+> sense? Or, should I start with the helper right at the beginning? Is
+> it ok to have once a nested switch in the helper?
 
-Same.
+Yes, that's what even would propose here, is to make a helper with the
+current code (if it's not empty) and then fill it with the content. In
+any case try and see.
 
-> > -static int erofs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> > +static int erofs_file_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
-> > +
-> >  	if (!IS_DAX(file_inode(file)))
-> 
-> And here...
+The (end) idea is to have only one level of the switch-case per
+function in this case and use helpers for the inner ones:
 
-Same.
+foo()
+{
+  if (...)
+    return -EINVAL;
+  switch (dir) {
+  case BAZ:
+    ...
+    break;
+  }
+}
 
-> > -int cifs_file_strict_mmap(struct file *file, struct vm_area_struct *vma)
-> > +int cifs_file_strict_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
-> >  	int xid, rc = 0;
-> >  	struct inode *inode = file_inode(file);
-> 
-> Again pointless local variable 'file' here.
+switch (type) {
+case FOO:
+  return _do_foo();
+}
 
-Same.
+> Second question is about the adxl313_read_event_config() functions,
+> I'd like to have here 0 or 1 in regular cases (<0 for error). Is it ok
+> if I adjust the functions slightly to guarantee this? Currently it
+> generally returns >0 in cases of "true" which is correct. But this is
+> most of the times 1, in some cases can be 8 or something. I just like
+> it to be uniform for testing (which is not a valid argumentation). Is
+> this legitimate?
 
-> > -int cifs_file_mmap(struct file *file, struct vm_area_struct *vma)
-> > +int cifs_file_mmap_prepare(struct vm_area_desc *desc)
-> >  {
-> > +	struct file *file = desc->file;
-> >  	int rc, xid;
-> 
-> And here (the only use is in cifs_revalidate_file(file)).
+If this is an ABI, better to unify this to have the same meaning of
+each of the returned values independently on the functions, if this is
+just an internal, who cares? However, there is, of course, a corner
+case if MSB is set and you will return a (positive) value as an error
+code. So, just look at the functions and decide which path you take.
 
-Same.
+--=20
+With Best Regards,
+Andy Shevchenko
