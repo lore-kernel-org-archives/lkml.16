@@ -1,180 +1,170 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012026.outbound.protection.outlook.com [52.101.66.26])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79AA3208;
-	Tue, 17 Jun 2025 07:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750146341; cv=fail; b=FmUoMpSb7M+EBpDHfpYVi4Py2/uRaUy/CWUZwmy0NgFZM50MVNm3zz4nIox9UCU3VHSHz9z9stqrZQzM2zgKNMVhqUnt7VAHBrPTJ0A/clCBaS36GO3M0JO16ZETWuRQZcKZXSxyt0v+d+7jj02ceRKu+OpNX/K7hSkGoBU/NXY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750146341; c=relaxed/simple;
-	bh=DdSIqeOPC5rNnU40i6RerunTatpfmANOG/r0yAINXPc=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=Nmwch45OSL5aNRY91upoFDzpxLxf+ou6xzbytuS1yeP+deUhL6Gsy1oxRRFejFyRjXTl7rRE5KVywcC2Ez0QHdFuwvrnjaZTfd3AUzwnSLR2afcvUneQwNfpAO36gHWtZHMl6dq9V83APeFntOS/uAKx/gE6MuJzVVtYIakLqpM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=JZtRfw0g; arc=fail smtp.client-ip=52.101.66.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8D0E1A4E9D
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750146461; cv=none; b=lpqqS9bb+MTnQF7eVyuoWPbW5STojINjLPz+XO2Lgcjf0ZGCZXadxKOqciETt9qqgjYxashdnI+mc6qD9mxHb+WsYbYW+MzIaJyh2u3z7/VWpw1ikkeZrFilyR/QenWY0F0TOwRRtwS1kxXr4taQ4uP6grzGlRWPOb/eT/nFKjo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750146461; c=relaxed/simple;
+	bh=gvGTnzT7emXNPqNSe293HDAOvLp4nNIKyfj3apMtfk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ot++D80FKoBHMkfO81Gx/1nLepo1G4rVSBbor2X0uTZK4yam0KjqwSo93fEBDhWc4q3ZEBb4Bz66INrPBEvDJ449JV3BYqDtn1BRH0Mh/V6RXifR/aJ6hRScboMGP5qCYNKQ+N630j5MapR/7XyBXJy8AFPW0ZzcxEDNUKtdPso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V6uGtkvO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="JZtRfw0g"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dfpaki68oF0fGet3zwt8abyZ3Dw045XnTl+e9qnW6SkDk8vI1xpeY2BNRtNa8cBp4iLNbIYbeR1ulUNc97UFBkKfi7TPCIeL0aeH4oajHt5bdg71qbMZAF4WTEeoADNh8wC8rUWg/SJTpnEPmYPp7zK5Kh3VozH7SHfLY5SwjPEmeMrX0ei4DPm/zJ4ycpLHAiV+iS4rjqc4yukDbeL0zvaIrSDXo+g2QTyVXOGzy0C1/S0PMiVFVFeiEGfnl2987R6nZSA88tJ9UULs8KwMiiu1Co1uWZ3vKoZK3fm2UG9+I7lQcFyLzNZMrfSBnPcPPyifm7uCxPzGUY/tV3oRQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+fTLUsZHJZP+/3O9umRySe14AIlzu1APj7CPNszBmZU=;
- b=yKhL3QdvERHdp17wbnIPrdfrxH8hEVbUsgs7uXuYZ0bKs6WyzmL/glZjzLtXLd8S16k8yVWhZds6b75ienLeMDAjW7dYs5c7Z+/Dn+xW9ip4Q8sg/kv71TsmDdtBrWkHRD0JXD/Ly4fHqWwlQ97I+3/bPvDX5k/VXKDQaZQ74C/HD2cfBKPNpNDN8bRQnX5Qz8N8KMB4s+CD/Q8T4j2vsFaZY+gzhO9KCLGjJ+k3Zl+3e8JBTaNbLwRjzj6/RtV64MpfrQpNVP7MGOI61LIPyJQu+O+AYuqMdzSq1ixSjGNxBKE87nJ4ODQd52UwM9d38DTR87+JYDR89N8ig1gAVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+fTLUsZHJZP+/3O9umRySe14AIlzu1APj7CPNszBmZU=;
- b=JZtRfw0ghhxSFU+/u/hgi60YOR2d3+X8r3M4vyQY4yyzJxrdJr9IyLr3HvqzpdRuUmhpS+xP9DvVE00vg3MO7kFRLpoUqB/AjKVlL41aku/0TlLI1CxhqQ0XFP4XAaO5m6kfwrWXjMtkKrMwaPiCKtgs6XtT2mR3jVgi90CeSDxi0KoErCRfSaBGCJWKR3j/rtcdd1HgpZfI2hT96AREaNxXchemTtbowsHaZlmD2SJbD8QLvUv8cTUIUs3kWxaaP4RW2vqJNBxPOeXMY21TDafaJTy6Uf+YjBRNFhMSpkXomdjhad2uCLoDyhKpmU1jrLQ6Q1pwYCioIDo756W5yg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB7044.eurprd04.prod.outlook.com (2603:10a6:208:191::20)
- by PA1PR04MB10916.eurprd04.prod.outlook.com (2603:10a6:102:483::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 07:45:37 +0000
-Received: from AM0PR04MB7044.eurprd04.prod.outlook.com
- ([fe80::7be0:296:768c:e891]) by AM0PR04MB7044.eurprd04.prod.outlook.com
- ([fe80::7be0:296:768c:e891%4]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
- 07:45:36 +0000
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: david.rhodes@cirrus.com,
-	rf@opensource.cirrus.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	shengjiu.wang@gmail.com
-Subject: [PATCH] ASoC: cs42xx8: Move reset operation to runtime resume
-Date: Tue, 17 Jun 2025 15:43:34 +0800
-Message-Id: <20250617074334.3229001-1-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: OSBPR01CA0105.jpnprd01.prod.outlook.com
- (2603:1096:604:71::21) To AM0PR04MB7044.eurprd04.prod.outlook.com
- (2603:10a6:208:191::20)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V6uGtkvO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750146456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=w85+TmujKpyVvjZF4Q1cpgNIQmyHhdsfDRHePX2Qcrg=;
+	b=V6uGtkvO1ISyeQtjav/YoGkXL6gvj3tOS+Tu0wq1nHW7vTogTSEZ0lInwRQLP/RGPcT8rt
+	AT7V9uSjbWtay0OeVHol7/XXzXEbt3wjzebViu3grO8KIKWTSLbJKzBEA4pcAWu8ZJGktP
+	ede/FrRCL+dZwHoIeKEhUhWP0WLHwO8=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-615-79lJa0syOeyLmYJx9wlxfw-1; Tue, 17 Jun 2025 03:47:35 -0400
+X-MC-Unique: 79lJa0syOeyLmYJx9wlxfw-1
+X-Mimecast-MFC-AGG-ID: 79lJa0syOeyLmYJx9wlxfw_1750146455
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d21fc72219so439666685a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:47:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750146455; x=1750751255;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=w85+TmujKpyVvjZF4Q1cpgNIQmyHhdsfDRHePX2Qcrg=;
+        b=VMcBTzZZgah7FZ9etgkSPr6csyajZEH2cNzKftrQNF2BZLpKdhgWJmj/i8LOnyPzSH
+         wHOfiAh09HxMHHiT3ubl81F8G04C5p96ABIojKOidr8ZIzeEM3jUWQQLtEr7kxogMVkp
+         pjDUkbTKUA6FAk53Hhx3NriKYlcAOCdmSgA0hiSI6cTLgkYGAIVrCJspLrEswYUxx7b2
+         Z5B5OUBgz7EBvWERJ+4a/rbBGW0MtY7gvaF1szPtYJJLxgjdO0RMY1NUv79sorMokOW9
+         4jgsKx2sYUit6vFySf3PM/qUxYT2tdR1lOcyjONCP/hQO+QkfHWap2zrWBCnIOrEX+yx
+         TfPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAcViSwROSvEm1Qui1j5hcvgQi2vHmfTvd9cRWnXscd/8RDonIGaIdT2td43sAswYUy8PKbFaOqrsoZ/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVLNgPMcMCTTq9PalGM8276PLTH23rGHZokH5njHIJFOrmjEii
+	ENl7nkN1PYVXird518tU2F62t55w0M3WVHaaCYL0akH2WIO7zwi9MwRy7u5s4Pc1evztEO5k+fd
+	K56/cXiJasCI6G5cVJcmdMidpM3D/pEpB5pPTHAx/Tb0tAFCuDMTWDc41sXAW3u6OwA==
+X-Gm-Gg: ASbGnctNVR6aXmW/VgvpuPlZfQJ0s0yWSidPC/5PlP38fB557cIANSsTZXvvN3tjSBz
+	rc7n1a7+GhLCXey+ffgT7rlZcLscTlr5/E18iXjhqlyLgrrlkSuyT9G+cJL84uwK+vo/qfu3BPl
+	k2JtMlCCfY2yduMAjR414IHQWMj98OOkU+gqdKY0WGomqEOprAhHt1Eq6/i05qlVJCUMCg5V3FI
+	ngoE9T1ciRNSWUnvB6ctnEDnC9HRDoE58G8ZWw/VJqLgSli+On8nv2ISbyZBj+qvNp1+v0pA0nH
+	WcjlxDKWmB2ZQ2eUX46M46Bk0+4XrzGrzh2az+jn4THQidAhmyYiKPSngjYzJe/FcbzReWgTWgh
+	+/3KXkIkIlDshwaTBl6enWGR+V7Lxi3u6ZJ8fufZP4i/eAfw=
+X-Received: by 2002:a05:620a:17aa:b0:7c5:5670:bd77 with SMTP id af79cd13be357-7d3c6d09a79mr2044697685a.55.1750146454665;
+        Tue, 17 Jun 2025 00:47:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+NlvRpZN2fLlDaqQ6VLi/ugCZ+JEULI90ieq+QHLjqAcoHZ/8hkGys7iGpvhWF+uJtFQSzw==
+X-Received: by 2002:a05:620a:17aa:b0:7c5:5670:bd77 with SMTP id af79cd13be357-7d3c6d09a79mr2044695785a.55.1750146454328;
+        Tue, 17 Jun 2025 00:47:34 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8edbe29sm618288785a.91.2025.06.17.00.47.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 00:47:33 -0700 (PDT)
+Message-ID: <5bbf39b9-ddfc-4d97-8f08-8bd43223982f@redhat.com>
+Date: Tue, 17 Jun 2025 09:47:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB7044:EE_|PA1PR04MB10916:EE_
-X-MS-Office365-Filtering-Correlation-Id: 421d4f2f-8a2f-4df4-ce22-08ddad72f29a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|52116014|7416014|376014|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PqH7mMoZ+ntq9JUWu9Ua6r04vNvSahiHpLMHivX3b79FG0egODhB1DjrCpiP?=
- =?us-ascii?Q?KAD8ERmuwbsC2dX9xKrhZt/XStI9I1oe6nxPCqhvdifTn5cideznMtYSGqeJ?=
- =?us-ascii?Q?E3W5GBrLVKpgsLw4jNaXX2yOSWjMdCM5ioaAAMSamalJC8KgNG1w1TmvX3ks?=
- =?us-ascii?Q?rIQxP2axSi/AI6lSLIbAdB8pMeCq9KscZgcYBXqwPp9d6Jt8Wg/O3pvNIn/n?=
- =?us-ascii?Q?vAMa3Zl5+pId2y0RlqHj8TnpD5z1I3y+FGeMD0QP210xj9RgeLV+R0fp0a8y?=
- =?us-ascii?Q?jJjAlqXi32d1Nn24gL15INR1o+hrMrrFg0oVfEYBReeu98xGV4QoSxS33slh?=
- =?us-ascii?Q?7BVP0uw50sMWKo/ppcwVk66E7+cMH8Y173Npvpgi8nwYCaHlivsIycgF06Py?=
- =?us-ascii?Q?sUiydY7ronbchovkXPm5Nv/9k+7k7eb9JPIahPI/ETjPMPbYjwB4Fomf3NZ9?=
- =?us-ascii?Q?q8GmRPcH8e1V9rxVHqA4gErwWmv/dUhBtlWxGOgmyT8Ijd9aVDYeCKlEfUYS?=
- =?us-ascii?Q?vThKleI9oEcoabCXVDmJM292cEWqKRm6LR2TzA8n7/O15TwwxxNvXiTCPHMj?=
- =?us-ascii?Q?GWrwHAI4mt5cq+pwii2AFERKC254lT0kSF08jRZ0OaPKY4D+oCioVg+0jhAm?=
- =?us-ascii?Q?x7SfpxgT0rVZiZ/lxlmt+AQeBe2/S8uwUCwimQmzYdXgrIylYH8ZHZrtbPCZ?=
- =?us-ascii?Q?jfkVN4l0Gf988ThuoMNCeVJyMbmeiNIkyCJAvgZZFD0Kyj6t+ZrUUlBsuYNn?=
- =?us-ascii?Q?B+feDKaLzpTfix9FJ7BwSU1v1ie2AUniFegfj1aYHI4LPw1zuf1pzXlN7oGQ?=
- =?us-ascii?Q?esaHBWkUVqE9fEtSqO3FhE1e9/qXfPPoSaO1cyR2C+WdprOFFMpivy4kq47a?=
- =?us-ascii?Q?iEoDeNwT2xKPTj8QYF0tnegdZX08sXWRnUgNyUCSM0Q/jkHK+q7WUEpZuesO?=
- =?us-ascii?Q?ZB2SCt+pWHUrg/kBNY+/slpAQLevAy4TxCIbe20pFHvab94CjLgfrr4wqPum?=
- =?us-ascii?Q?cYb2r3dF3FNqCuwpuvViwC7l2/3D7kqJ5XDranJiGwvgjqgdyTCkuMAZ5eYJ?=
- =?us-ascii?Q?GKOglBYgSInwfMfMFjaKEA/h2DJRBpC6ChUL8PD/tGoP8qBji3XQNLnBmgqd?=
- =?us-ascii?Q?h3BPRp4TAXJ/k3m1wSpV0mj5O+21Kjt1J5Jg6oLwTz8ILLtL1Y3tWSGTkrWG?=
- =?us-ascii?Q?Wby0TxcVow2n72QQJQ/R1rTpxNZ0p/V+v+ogSLYnkCoqWUi23yituKIxi2CR?=
- =?us-ascii?Q?C2AAvp0pYZfoCOeifctlWiKRDINpWZcgvVPG1Hf9DuEMJo9mNI1EJd9W+FGg?=
- =?us-ascii?Q?j/9PdYBNPUu/dF8/qV7ZUi4BsVYDQbCi8WXcOjBt++y5WL0HnLNGpXH2rXHZ?=
- =?us-ascii?Q?5FYGIqEaESNK4V9Nb47Ejsd+2N7jj54vVUhO/VHS5Bid/bNUS4SClHwekD6t?=
- =?us-ascii?Q?YnH/NzRXS06ndXXk39GPzuzoyILV83JkOSt+/DO1BEuZYWlVZie5yzpyuwgW?=
- =?us-ascii?Q?DprjNJcvYO5m+hE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7044.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(7416014)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?UGSX31NtkRZMAtgzr5hWqOHnwy3bza+oNe/yAddeoLa5hGU0gJy99kYe7ch0?=
- =?us-ascii?Q?Czhx4uq6mK9WJeOPNjyJ3oPsPni+b5WGxVfXFouWpwsSvqKIaeV6oEDjfau1?=
- =?us-ascii?Q?FiUBf9eyVE7pGYIovmeJotHCN33a6eXK6cibcViZ1tBjyYxkv3xOvbOMyzi0?=
- =?us-ascii?Q?5q8AHkUu1ZS4CIHxRK6mgBMt4MtdWExFuz9ma4kSAQQ82hilYhZm0orD4hH3?=
- =?us-ascii?Q?/eC0ZbmFGfsf8OUG6xMQerjmL+0wSgSL4lISUGOuZVvnDLTvEmy8lPHXVrZi?=
- =?us-ascii?Q?WEeajAoCIi7K9PR3Cpkus3Np8NbY/kpte140WfhHj1DLe6pLmeAm5cSFRio8?=
- =?us-ascii?Q?yaJmZgTuiJhS8cMVVK9w8mrSY+cHAbWabUPdTOTAMuQ+BshuXNLSH4ALRWal?=
- =?us-ascii?Q?iuXdv6JNcg2EXO1zesQKYQJkm2zgtLp3SgBQx9XbL/KRdK8qzMbo6YhNLDnh?=
- =?us-ascii?Q?q2E9Px0LMsz/8omCCyy7QMc85TJtJns1c67FKWsuHf+YtbcLZcWUtUotqzp+?=
- =?us-ascii?Q?kBpCZX8HZXyadzQxuuynSLTN3RYlZ9VTgh4hNjolYnP0fd0sWwxWHxMivZ1W?=
- =?us-ascii?Q?Tye3ykrQQ+eTf0QVUEzMXbEf/gepq2ieiSENlthKCL5E4KGy+/MFeQwpNWkj?=
- =?us-ascii?Q?N6r2kTv2gwZg65KGXbAUPBpeXN+BJ6zluuaYriJ+7T8mu6t88AUAZUcjlLRn?=
- =?us-ascii?Q?hO9rdj8hTj4WkfDVMsinvPc1SsM8eDfkwA4ojCrUKJLTlrHP8s+vf0DJn7rs?=
- =?us-ascii?Q?GdIQp+eZI2M3S40lm6TROlqwEoek3RstJsT/LYd54NNX84xekpVwNGgbVWhx?=
- =?us-ascii?Q?LodPWXJWLKxp5UzA/UjPOJnjAMb437mfv++PykuNXB4ONsrXUYz3QN4i667f?=
- =?us-ascii?Q?USPod39LqVTyrMEi5+oEhK7z4fN5P3gtShAE32nCMmwx+NLy2PyjPPjcrBUy?=
- =?us-ascii?Q?6R6dJPPR0JunX0xRLIB8UABPGhiZTcKvBj/daWmMIGlES7ZH5zQ6hcbYNJEb?=
- =?us-ascii?Q?fBlES/QiOM3q4TVqenHRBn15FnDu9jC54fpf+upJWv5shm9DAcUCjJ8Cg12L?=
- =?us-ascii?Q?ZyWGicWMXxg6rZA+uOJP8JGMm2+C9GvZ6q4zuJG7MVAyVSbNdlTEodGXI6GI?=
- =?us-ascii?Q?T5RXEMPDTW6t4Bx+Edxst4x69cjgCWo8mFKg6mq/jnTikEX0Ne3FTO44WC1p?=
- =?us-ascii?Q?43D7+V6h4QeeOkPFOQX9Qbfd7W85Yd5Nr33Vf0zMjI4vTDQDF2M81Pj9/VHv?=
- =?us-ascii?Q?/PAmGPbB0PrDUpJdxUVCRAWjM3Au5mISeNzNJo5vaZUmBNRYoQmlHUg5E1IR?=
- =?us-ascii?Q?MiVfaCxQzgdvaljCSqdZSFTKmJox2ef6IewqUyePkpcE5WNfHvpkBmyJzRzy?=
- =?us-ascii?Q?crI3SdX0cVjKJiIIgLy1lRLdmGuwCfIu23qVhX+ouObiT9hSf3gpfsd4HJyw?=
- =?us-ascii?Q?RxY4TN17N41oeoIGgSWProqJiafrQ8pLM+cL7GrnwUKS/8dPIOBQs0u0ap9N?=
- =?us-ascii?Q?l+woQa2sS+HuluQGCAwOU0cil9qksVcpKqHbtZTVz1hsNi83nsTyx6Y51u9l?=
- =?us-ascii?Q?2tQjC2MG53qvtJaTvmZPopy1mDSKdjcgE0CSQlZh?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 421d4f2f-8a2f-4df4-ce22-08ddad72f29a
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB7044.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 07:45:36.8760
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vDFMbU2qQHN7PBY6haDAI0KZgq9VmyrquGXBngE17x5HtmvS2CYx9+j0xFDFZTXTNtfOrtz+LbTnnUnn9rbrww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10916
+User-Agent: Mozilla Thunderbird
+Subject: Re: [QUESTION] xas_reload() in iter_xarray_populate_pages()
+To: Dev Jain <dev.jain@arm.com>, ziy@nvidia.com, willy@infradead.org,
+ dhowells@redhat.com, hughd@google.com
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, ryan.roberts@arm.com,
+ aneesh.kumar@kernel.org
+References: <20250526063524.22597-1-dev.jain@arm.com>
+ <918d552a-085a-4529-8f20-a060b1f0c9f1@arm.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <918d552a-085a-4529-8f20-a060b1f0c9f1@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When codec is in idle state, the runtime suspend is executed, if codec
-has been reset and user wants to use i2ctransfer command to get the
-codec registers, i2c access will fail.
+On 17.06.25 07:10, Dev Jain wrote:
+> 
+> On 26/05/25 12:05 pm, Dev Jain wrote:
+>> Hello all,
+>>
+>> After doing an xas_load() and xas_retry(), we take neither a reference nor a lock
+>> on the folio, and we do an xas_reload(). Is this just to reduce the time window
+>> for a race?
+>>
+>> If the above is true, then, there is a negligible window between xas_load() and
+>> xas_reload(), because only xas_retry() exists between them, so why to even reload()?
+>>
+>> Thanks,
+>> Dev
+> 
+> I do not completely remember our discussion in THP Cabal; I recall David Howells maybe
+> saying that the folios are already locked, so it is safe to do xas_load and then do
+> a folio_get()? Even if we remove the redundant xas_reload(), I still don't understand
+> why we won't need xas_reload() at least after folio_get()?
 
-Move reset operation to the runtime resume stage to avoid such issues.
+I think the points where
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/codecs/cs42xx8.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+(a) this should go all away soon
 
-diff --git a/sound/soc/codecs/cs42xx8.c b/sound/soc/codecs/cs42xx8.c
-index 6a925f3f7137..be215cd2a714 100644
---- a/sound/soc/codecs/cs42xx8.c
-+++ b/sound/soc/codecs/cs42xx8.c
-@@ -617,6 +617,7 @@ static int cs42xx8_runtime_resume(struct device *dev)
- 		return ret;
- 	}
- 
-+	gpiod_set_value_cansleep(cs42xx8->gpiod_reset, 1);
- 	gpiod_set_value_cansleep(cs42xx8->gpiod_reset, 0);
- 
- 	ret = regulator_bulk_enable(ARRAY_SIZE(cs42xx8->supplies),
-@@ -658,8 +659,6 @@ static int cs42xx8_runtime_suspend(struct device *dev)
- 	regulator_bulk_disable(ARRAY_SIZE(cs42xx8->supplies),
- 			       cs42xx8->supplies);
- 
--	gpiod_set_value_cansleep(cs42xx8->gpiod_reset, 1);
--
- 	clk_disable_unprepare(cs42xx8->clk);
- 
- 	return 0;
+(b) there is the expectation that the folios cannot get truncated
+     concurrently. So we can do an unconditional folio_get(), don't have
+     to check folio->mapping etc.
+
+(c) The xas_reload() seems unnecessary and can be dropped.
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
