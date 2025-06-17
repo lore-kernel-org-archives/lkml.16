@@ -1,149 +1,94 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DFA2EFD89
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33F02EFD89;
+	Tue, 17 Jun 2025 20:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750191578; cv=none; b=T7Ek2c82Di1sMsyB47KnsyExVXFGEFPIHJ8GdUbdwzWgsE/vhuquJnTqS35RwfkmTdxN7hE5qq0UlXOk7CsRP9O/847PRgb0HQ9xvrB19FsND2oPkeMHoz84pdxRFVWQ2cq4D2mbw1aIjvxJcyxq2WZ4uaeg9f3i+zB7vr+SAeo=
+	t=1750191651; cv=none; b=q0em9k07D/ucx8KG3BettAS8F8rHQ6FV0wMuWRLk3U0OzOokwyyJUluLFcWYIGxauOlL1CrNGsFGp6Md4/yJy78skyPYNVIUdmrqUrM2UL/mgdRd2MmHtRt07y/MwhoMy675WdfktwYeoZHUF3KAJnb7AMJ7VMjeMGFkDctpdMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750191578; c=relaxed/simple;
-	bh=vKALW/+sH/ZkyGI/FMVc+IdRyTBozE1Yhwl+ZAe27wQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzoKiHCXhmi6Vay00TTlZtv6joEa1riAB+kiTuwghNWoPe6pIHWOp/mQqQiG1Llex4zO7SmdJaYY0FHSIXkpBUjd5+qsnCDJi7cnEMm8T46BM4Wu2mLle5g65mHXGecX+hng80jYTfORX1pLkoFqD+tGuCMf4R7xBqL/JjJso78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MRtrYlSj; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=mNTixEym; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=rTqpBmLN; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=G/PN/7KN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750191651; c=relaxed/simple;
+	bh=PoWkML0br1CB5IKrik82J2Iqxt05XtbYr/y6VLetGDo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=saMIOwhzQjxzFrvKZNknlKZKBB8N6Zx2pZQLmWJZ/YdFHMX0QIoumsoyIjVYinVKgVRipl5WUfFviWGBvM+ab8Ufs0WnYERGyzYTmienkSan7xf3xRZjEf+HViuC2aQ7S5IFMqnlajhq2YLJ3iEzqStajfuXVrFRA27d6A4ayaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g0JSUnRq; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MRtrYlSj";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="mNTixEym";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="rTqpBmLN";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="G/PN/7KN"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EC5DD21195;
-	Tue, 17 Jun 2025 20:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750191575;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oikjIAvfCHoDy16GhZNIt3/nlsh3cDXd3xCKEpliscE=;
-	b=MRtrYlSjr70PxOBUllk8mR/vTPeSTeQJIeQg5tbVFpHHN7FOSASkX+9Vbqg9tyANaeDQfX
-	yCguHGH6AF5ZnFEKbS6NBUFdJ+B8fv/Q8JpiT9oJjBTRtqBynizCUsDEArX3Mvt71RG3Z0
-	hB29XcAp9lLbxaMlhYAIbbe1Ljeozkg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750191575;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oikjIAvfCHoDy16GhZNIt3/nlsh3cDXd3xCKEpliscE=;
-	b=mNTixEymP/Nnfsxg7LTVTkFPNS4eWwX6F3zjRFX3gE8jrzuVOBYFs2dy7kGbHLf5iZ5LEq
-	WS7eijFCBU6FyeBw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750191574;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oikjIAvfCHoDy16GhZNIt3/nlsh3cDXd3xCKEpliscE=;
-	b=rTqpBmLNagwhG3APBXmuRAOcr9o3XeiICydmsB7xcsWrN23w2BLXv2wd9ywsCg/NDXxSma
-	spnQZsbRRu5NtYkmtFj0g3UvTuQwMqtTFgHQkYfDvNhhryS66h4XIRUw9oVDcRNEirDNwn
-	JgGkziv1qCy1nkNcTpHxbJfgL4k2OSI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750191574;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oikjIAvfCHoDy16GhZNIt3/nlsh3cDXd3xCKEpliscE=;
-	b=G/PN/7KNXMBXNq4QM43/6uBoY1YYTmLZG+5Lb1F9EgggTWK1Dj2mRMiAQIjKpPZmj15+dY
-	zC0JFVRN5V2WemAA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CC59A13A69;
-	Tue, 17 Jun 2025 20:19:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Wb+oMdbNUWi8TQAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 17 Jun 2025 20:19:34 +0000
-Date: Tue, 17 Jun 2025 22:19:33 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>, linux-btrfs@vger.kernel.org,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Subject: Re: [PATCH 0/2] Simplify the shash wrappers for the CRC32 library
-Message-ID: <20250617201933.GF4037@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250613183753.31864-1-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0JSUnRq"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade5a0442dfso1166831966b.1;
+        Tue, 17 Jun 2025 13:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750191648; x=1750796448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PoWkML0br1CB5IKrik82J2Iqxt05XtbYr/y6VLetGDo=;
+        b=g0JSUnRq91uWK1e9N2u6KiKHVAK23ZnB94lWy8paIKVtulMc6TuFPmzPPWjpV3TTdB
+         2RvjKtPEJNcMLu3c24reuDH7Ppyv2LW6scPgZJidmqF0aa/yLHpQfBtwQLYaRQ69rLt6
+         Xi+MLZWbzs7xKY/VRlBW7vSwHa0yc0soYRtjEJvPD6tk7FYC+3szZ6i2S7MdhhEurVLs
+         vRrXGTjpf2VSmvwU719eikqRw+hitFDpi0/72C4ccQD+/J2W7ai1m4P4fdNMpfLcG7f6
+         ede09Qi6Fh/waBfiVXCA++/7OjmV+NMBR+LTb5XTcKPwDG7BH8EuU3mdNwcq1mKhWjui
+         f7/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750191648; x=1750796448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PoWkML0br1CB5IKrik82J2Iqxt05XtbYr/y6VLetGDo=;
+        b=mFOdhpnJJRtLevV6Zg2fOGrYB06x6hSHlqYfrBEP8aoJ7iXlKTaDgwSFCv4nt1IIXZ
+         Q0oNsjcCwdWTaREE/2m5QdlKbY+FoUlB0rwaZXTDkxkci1yEa224KoAb1r+7UuXCrS5Z
+         bqYOrhy7RsuORYO+LzP31k7KDnb0t0S/t8Tb4JCak5dGBmEZNmmZTCIE/JSw8KsZi3Rl
+         eV6ugvemcaYBjhvPpKaMpNZZBN2JEnKVOOKgi/levh40h/zUYl96iJWGnd6bYOlgl1Eh
+         W0OMHayEOJo+lvkvElR6dDY2uyOBDDzeW5XVhx3sAbOvX0FJLNxKMqZkooHf1Dbpktey
+         C5Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNfDbtZRt/yxgyh4xad03TbrozfjPCQVFGqCnn07/muQVpkstNA06+IxdzHlDXNOf7D41nmdcdvXjbK+Gi@vger.kernel.org, AJvYcCVgr/1UOOpo+QCsMuIQKjxOyXF2SQgXsRzUCR4EXHBCCwPUPRuaI6ApbJCzGvyVmI7sj18qqq1pgXk7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj2UQqSHSHRzbR2k+kq3EjCJnrqFvlQxLg2kZA6Jss0H4XcRXg
+	S8WKFgJG4RP2oMlDHp4ec+M/lalmPjCpETIreI+0ePlnWNLgTWiUdYOeiIfROzkod2N5UD+0Gkb
+	BLe6LpP3ZPpiXkJbKf54mZpHrRdM/H8Y=
+X-Gm-Gg: ASbGncviGbG/YAfrdLCPxqxwN6hiWzu5mOFG7kEPTFyCA//IkOfrwI9Hd2IZ8FIJQ4D
+	m1OjuA8cARwx9CSrRrWM8SZdMBDSfd9fxbF5qbCLQ8YpECA9chaPLW+oraBJxBA/FhRUrICZgk8
+	SQG15ae43Bs9oJHhwYVN1Vx3w94IBD7r22ZFuKJpkFm7w=
+X-Google-Smtp-Source: AGHT+IH55q2E7WN90zlOR6v7MpoEZG1ZkgzQBcnVbtaOcZW1nXjzThJdLm8vxQ3uGqz1hgnih3z7TEc6CNrqy3XXCpk=
+X-Received: by 2002:a17:907:6088:b0:ad5:5302:4023 with SMTP id
+ a640c23a62f3a-adfad5a09f1mr1412781866b.44.1750191648049; Tue, 17 Jun 2025
+ 13:20:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250613183753.31864-1-ebiggers@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:mid,suse.com:email,imap1.dmz-prg2.suse.org:helo];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
+References: <20250617-gpiochip-set-rv-gpio-v1-0-903703881fa2@linaro.org> <20250617-gpiochip-set-rv-gpio-v1-3-903703881fa2@linaro.org>
+In-Reply-To: <20250617-gpiochip-set-rv-gpio-v1-3-903703881fa2@linaro.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 17 Jun 2025 23:20:11 +0300
+X-Gm-Features: AX0GCFv4-ZOYtBYGK94NP7YGG7FmZo--RTOkdcfKWd4WwJAEnvHM4GXHaVOeSrs
+Message-ID: <CAHp75Vf5DhkNL3pb=KW9CsKr=9Cxr6d3Kwi4R+raF0T0h20x4Q@mail.gmail.com>
+Subject: Re: [PATCH 03/12] gpio: pch: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
+	Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 11:37:51AM -0700, Eric Biggers wrote:
-> This series simplifies how the CRC32 library functions are exposed
-> through the crypto_shash API.  We'll now have just one shash algorithm
-> each for "crc32" and "crc32c", and their driver names will just always
-> be "crc32-lib" and "crc32c-lib" respectively.  This seems to be all
-> that's actually needed.
-> 
-> As mentioned in patch 2, this does change the content of
-> /sys/fs/btrfs/$uuid/checksum again, but that should be fine.
+On Tue, Jun 17, 2025 at 3:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 
-Yes, this is fine, I don't think any ABI applies here and the
-implementation was only informative.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+I don't expect any conflicts in this driver in this cycle, feel free
+to take via your tree directly.
 
-> This is based on v6.16-rc1, and I'm planning to take these patches
-> through the crc-next tree.  These supersede
-> https://lore.kernel.org/r/20250601224441.778374-2-ebiggers@kernel.org/
-> and
-> https://lore.kernel.org/r/20250601224441.778374-3-ebiggers@kernel.org/,
-> and they fix the warning in the full crypto self-tests reported at
-> https://lore.kernel.org/r/aExLZaoBCg55rZWJ@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com/
-> 
-> Eric Biggers (2):
->   btrfs: stop parsing crc32c driver name
->   crypto/crc32[c]: register only "-lib" drivers
-
-Acked-by: David Sterba <dsterba@suse.com>
-
-Thanks.
+--=20
+With Best Regards,
+Andy Shevchenko
