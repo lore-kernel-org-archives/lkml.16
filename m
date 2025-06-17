@@ -1,141 +1,133 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B979290DAC
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:14:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C71F1C7017;
+	Tue, 17 Jun 2025 09:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151664; cv=none; b=kvzDM6AIXKxh4acoUyOuUpL5Z6jW6uIBYVuL6EePIE2Tmhz5Fx2IBHO73XijirBxoviEqLv/TY7QLPjJq7z8Q8C0+tRYPjGo/HPlML77JtpP4tTe53mfkITWV9+0/Rw2+XG0wzmtpiqVHWVX5ork6IqIJPsdOpWwrANjIdP+sUc=
+	t=1750151786; cv=none; b=nEDUQsaqlXo6HctcJSGoVCmHI7/+pXbP4zDJBGK4ExkM53kdWkjPdkLKIPklfXBKUTxGWIF4Jz+RZK6deYuKl/6RE746pCJEKjBwkdlcNXqtWkE0EM3eBP2oL33jM+WrL50xPP+5Vx4uCgsoCj6lB+savPR0MD3DGfxCBSoHDDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151664; c=relaxed/simple;
-	bh=7WDJZGLza1OHlk0gQlkqb4Yxfh5XP2wKfRxEaeiBz1A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l5JKppVPLXZzGmqHyVAJs/0livPSQ8ANSbImL3PTN/1GxCDJYHTTyFUUGaR6Jh7cMoxm8VQvYRySLdRKROH54J0W9nbPhdNxE0OnvGiA97wTu/ELKBZ7tFJYHAbLiKtmZZr8ny/tKCuvN0lfKO4T0DncCgdlnXpPjNvD5rK+I4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rY4Za35o; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750151786; c=relaxed/simple;
+	bh=STvRZQJwA3XC3xAYQftHzEDHDwhWS8nqBCyKnSZhUU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OD537WFpj5uRoVxmCUenK9lt8YjMH1qlgg7N7NTAd+vZo1FrcmEF9LtoG1PJV+oejh8g73lZwZt/XP8m4xd4OemPYj6WCAzB6LZyLHuIMOylDkivqi1EVBCRsqE9W+TH4qcijrY9GSii6KMatDXm/Mej6aHPD6FXOsP3z1Gavz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zhAM8GQa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dSKfFSbi; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rY4Za35o"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a503d9ef59so4638064f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:14:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750151661; x=1750756461; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z2DwhOwUsMunVDJWED8rmtY3JjlBmcuuZx6kyq72hSI=;
-        b=rY4Za35oGlalwwh9bWutx+y1NTSYmJJ9QIqXkH9DcLLAbVch0GVAQbDrp0oJe5uIfh
-         6BHkiwIBA5kfSo/noJxNZXFydCVth5cmZ6d862I3aXaj6GIXzcv7exvTESSlMFP4Y5sz
-         0iAG1SF8uWCnjmF/dHaW28g2jfE7oHiMbguusXZjvW2Fu9b9Zemc8VuIUa6iPdW8/zmz
-         CxU1iGfdCORTeXgUK5Ck1+tNu8N39PxF3omYfPsYgWz4guLr6I/4WZlCeo13n6KZ2grB
-         Kg3Q66IjblgUl4BrikeCb5qm3Byeo3YH/ckkO/rzL9XXW5Ut7yxLwpHmGwYIVAHeLvCt
-         bj7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750151661; x=1750756461;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z2DwhOwUsMunVDJWED8rmtY3JjlBmcuuZx6kyq72hSI=;
-        b=TEj1nl/QfHbwxhApuJuLXizJduSG1RZpyJyN5ZY0TScbkBXNk9iPJImfiUi7VFH7hp
-         Z64NWjnqve5n4inkMxA90q2hfIMtz6oRt5F6DpaeuNWKvvlZKI7xEScVACInTCNY26cQ
-         HTFdWvGqR+ay01VpRZA+zGXu/pb6Gpi59Hi9q56BeqWGk70ejyGL1vxN8CyBzTCcqI7P
-         LdMmcPqD88SbY7S+/WRdPXfVUdlJPDeLVGnw44yjI5OiWnZLBgzyW6Ui/f9wc87g2jZO
-         Ma0Z+rqrRcHBgiZoKxvAiGMkfTt7RCoORM+Cel8Lz8aXtxmU4yiaq+xvCvfNCHJRvEvR
-         Ng7w==
-X-Forwarded-Encrypted: i=1; AJvYcCW1C9JVV1jx39WAGfyRCf+1s82uMxNKtsGg0PkDYz3fWEa+qmD2nKRKgA80+sAuROhPtBrSVsBucVoRFYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrNK7Ck9cEzY+cVLPSAWjzCIbJ2YfFYuGqKm+HwXdg0ao3ihVI
-	U2Qo6v60o2OZJP3bcyPogBfQEMmNGdgIMya6O44cxWwzgEBF/ZoFgUQnWGozB6xium8=
-X-Gm-Gg: ASbGncsKOwI992MHIeo+DLT+TZYZ7BW6yjvmWJJGco1PSSXeMVrOE1Ahjmeqr3obaSZ
-	9W1SaG+2YBzylyD5tOWWEVVRSI/I74CcXLBdlPsHYnD3ZwFRSoKdkp2HiRlRsJSrLbVm3WvYb7M
-	z8jWsCBZ//xwRooTSkll/vCVhfjHOCHUk1GlQbZronIp8vMChO1h9Jjs0dgAXFR+5WTE3jqB7NR
-	2lpZFwfta0hBwqIw6h5qLC8XUKI7Nb0LKvfSRTteO1N5Lu6DZSMqkTe/Qb6BSndtBddlA5bYKSD
-	oMgKU1LuThhmfRIkCXahA0KnFzGCX+AOoFwkhq7IThOKLafQVvWEu0B0uO8rTNw=
-X-Google-Smtp-Source: AGHT+IHJrUzq11FqzFpCalpA8oxq7QOoJUd6doTIPdsMKhwT2j2fIZKoD5gQsAT4CYJMYxX4N6Amdw==
-X-Received: by 2002:a05:6000:230e:b0:3a4:e740:cd72 with SMTP id ffacd0b85a97d-3a572396df6mr10071598f8f.13.1750151661308;
-        Tue, 17 Jun 2025 02:14:21 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:90df:ded7:9cbf:4074])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm13280685f8f.26.2025.06.17.02.14.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:14:20 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Daire McNamara <daire.mcnamara@microchip.com>,
-	Daniel Palmer <daniel@thingy.jp>,
-	Romain Perier <romain.perier@gmail.com>,
-	Avi Fishman <avifishman70@gmail.com>,
-	Tomer Maimon <tmaimon77@gmail.com>,
-	Tali Perry <tali.perry1@gmail.com>,
-	Patrick Venture <venture@google.com>,
-	Nancy Yuen <yuenn@google.com>,
-	Benjamin Fair <benjaminfair@google.com>,
-	Grygorii Strashko <grygorii.strashko@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Kevin Hilman <khilman@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	openbmc@lists.ozlabs.org,
-	linux-omap@vger.kernel.org
-Subject: Re: [PATCH 00/12] gpio: convert another round of GPIO drivers to using new line value setters
-Date: Tue, 17 Jun 2025 11:14:17 +0200
-Message-ID: <175015165197.21779.16487408157196142174.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
-References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zhAM8GQa";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dSKfFSbi"
+Date: Tue, 17 Jun 2025 11:16:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750151782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=STvRZQJwA3XC3xAYQftHzEDHDwhWS8nqBCyKnSZhUU0=;
+	b=zhAM8GQaUoLIpGBk3b+2DPKXr2791hRG8YCg8OEPjweRs59bLCzwshS4t+JTP2N5TdOI7e
+	mCt2zWg8oqy98UqIsdfpCpai9WfO75/U05aB51HNs2Lx+WFvNFOBM1h8zhwyW/g9Po3JoG
+	Z1S4TLd4R2FGkXdlX7Es+vZdoESffmigA8aeGPtJ2QBE//BlIssfIJfQsjvNpEx/K86rKG
+	ektzx6WbreYMrzpogO4CCKMvBusaotqTDEWWgRO6+HqHDYwVYBG0kQl+X5GWtvox5FFTul
+	vWT+2w0icjQg58bXoywchIMGDOCDGrmDPUftaprsMNWoSxod+6ivzytnhL9itA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750151782;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=STvRZQJwA3XC3xAYQftHzEDHDwhWS8nqBCyKnSZhUU0=;
+	b=dSKfFSbixbdO7OJftIyib+LrBAvib6zwUIzCgSAeP/FZFJ2Bw/kOiHx9kyKWQKoi4RXzac
+	h/JlijUxSfMSnADA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Marc =?utf-8?Q?Str=C3=A4mke?= <marc.straemke@eltropuls.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel?
+ IGB
+Message-ID: <20250617091621.IZh5OyYh@linutronix.de>
+References: <20250613145434.T2x2ML8_@linutronix.de>
+ <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
+ <20250613195838.0-gZ6bqS@linutronix.de>
+ <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
+ <d72bc0b1-7898-4513-9b50-60b56112c8e1@eltropuls.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d72bc0b1-7898-4513-9b50-60b56112c8e1@eltropuls.de>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 2025-06-16 17:10:33 [+0200], Marc Str=C3=A4mke wrote:
+> Hi Sebastian,
+Hi Marc,
 
+> I am still trying to figure that puzzle out: Please see the following
+> function trace snippet:
+>=20
+> ip-690530=C2=A0 [000] ..... 178636.460435: rtnl_is_locked <-__dev_change_=
+flags
+> ip-690530=C2=A0 [000] ..... 178636.460435: __local_bh_disable_ip <-__dev_=
+change_flags
+> ip-690530=C2=A0 [000] ..... 178636.460435: migrate_disable <-__local_bh_d=
+isable_ip
+> ip-690530=C2=A0 [000] ...1. 178636.460435: preempt_disable: caller=3D__lo=
+cal_bh_disable_ip+0x76/0xe0 parent=3D__local_bh_disable_ip+0x76/0xe0
+> ip-690530=C2=A0 [000] ...11 178636.460435: preempt_enable: caller=3D__loc=
+al_bh_disable_ip+0x76/0xe0 parent=3D__local_bh_disable_ip+0x76/0xe0
+> ip-690530=C2=A0 [000] ....1 178636.460435: rt_spin_lock <-__local_bh_disa=
+ble_ip
+> ip-690530=C2=A0 [000] ....1 178636.460436: __rcu_read_lock <-rt_spin_lock
+> ip-690530=C2=A0 [000] ....1 178636.460436: migrate_disable <-__local_bh_d=
+isable_ip
+> ip-690530=C2=A0 [000] ....2 178636.460436: __rcu_read_lock <-__local_bh_d=
+isable_ip
+> ip-690530=C2=A0 [000] b...2 178636.460436: rt_spin_lock <-__dev_change_fl=
+ags
+> ip-690530=C2=A0 [000] b...2 178636.460436: __rcu_read_lock <-rt_spin_lock
+> ip-690530=C2=A0 [000] b...2 178636.460436: migrate_disable <-__dev_change=
+_flags
+> ip-690530=C2=A0 [000] b...3 178636.460436: __dev_set_rx_mode <-__dev_chan=
+ge_flags
+> ip-690530=C2=A0 [000] b...3 178636.460437: igb_set_rx_mode <-__dev_change=
+_flags
+>=20
+> It is my understanding that __local_bh_disable_ip called from
+> netif_addr_lock_bh seems to be the origin of my latency.
 
-On Tue, 10 Jun 2025 14:33:10 +0200, Bartosz Golaszewski wrote:
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones. This series
-> converts another round of GPIO drivers.
-> 
-> 
-> [...]
+How so?
 
-Applied, thanks!
+> What i do not understand is, even if the bottom halves are disabled.
+> Shouldn't I see the interrupt arriving in the trace?
+Yes.
 
-[01/12] gpio: mmio: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/b908d35d0003cc75d4ebf7c24a61b07d34e7f5dc
-[02/12] gpio: mm-lantiq: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/d27746181905c256eced857f4b2c051ac44b0b45
-[03/12] gpio: moxtet: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/b454580cf11b45a9da22821543f1455a6a31c5ee
-[04/12] gpio: mpc5200: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/80d42372d9d87626b55516779e935c012cecdae7
-[05/12] gpio: mpfs: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/3aa3628f8168df9fe154b09b1710d3314b9fa4b7
-[06/12] gpio: mpsse: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/e63d9fbe9f148b44f2fdc211941f2d4485022549
-[07/12] gpio: msc313: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/88a775454a0fe923f3d34d8f30cd1d6b75be0859
-[08/12] gpio: nomadik: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/aaec273c7b511a7826df09123a1fd6e4896c1bfd
-[09/12] gpio: npcm-sgpio: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/0e1a8930c941e3a7bea25928b254ece8caa5135d
-[10/12] gpio: octeon: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/f02614561493da22f24b0e2ec1c2ae0d5b41c68b
-[11/12] gpio: omap: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/57065d62e672bce193f186c7b759f928b9a90ca0
-[12/12] gpio: palmas: use new GPIO line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/f3763403a6bbc3a18379fe4c415bda899a111d55
+> If i understood it correctly, your talk "Unblocking the softirq lock for
+> PREEMPT_RT" during the plumbers conference 2023 is exactly about that cas=
+e,
+> right?
+No.
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Probably fixing this issue is out of my abilities for now ;-) The wast
+> variety of locking concepts inside the kernel is quite intimidating for a
+> newcomer in kernel land...
+
+If you would have only the scheduler events enabled and you would see
+that "ip-690530" is doing something, then an interrupt fires, that
+interrupts wakes a thread, CPU switches to that thread and that thread
+does sched_pi_setprio() and switches back to "ip-690530" until it is
+done _then_ it would be what I said on plumbers in 2023.
+
+Your trace snippet above is short latency wise. It covers just 2us.
+=46rom that it all looks good. If you go further down in your trace,
+there has to be a spike between igb_update_mc_addr_list() and
+asm_sysvec_apic_timer_interrupt().
+
+> Regards,
+>=20
+>=20
+> Marc
+
+Sebastian
