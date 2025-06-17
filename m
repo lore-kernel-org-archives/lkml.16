@@ -1,177 +1,98 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45622116E9;
-	Tue, 17 Jun 2025 06:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8D2289349;
+	Tue, 17 Jun 2025 06:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750142016; cv=none; b=mclrOpGc+UUtim9qYRUYLTEL/WbEJ++pOEyjXUN5Q7dUyKpGrwIqnvKNkZK9qxYlyPAM7r3iBoLq4irv5w2FdYX56P/woIph7KRZNXlZBA5MxnRHvTnyJMwcKcrAUJxZj0LRbAqfk4mqccE5z01CJZh2vVVwVsku0N8BYTxmUfY=
+	t=1750142029; cv=none; b=cnSJ39WR64ckWHd9OofDbDag2NPOBQxxcGjwKH9b5Da2YqTdRCOeb9Qe10OXFrJE7NRK8RAp7mZegfgbBUBHpUzRD2YzTw6RPb77GcCnMg6Ezsv6QVenbHnajCWO6v4ty/ma31C2sm0FexdRA76bvyaEnkR0bcQA+NgrOP05rbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750142016; c=relaxed/simple;
-	bh=keXtiVN31fKx64oUF/7iPO90TbGTcSFJ55j+G9vybIY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U/pzqVFuDbyt6VbeNW7WexmsJw/T0dR6eTvzRDMdPUUuYJmEljj3n+WzdSVB8Vgc+28sFgJMw2hk1k5bdL8nvowvwOrwroY/i4XyyNT+M+GlJRY+Ds1P6hiBPLTRm5z8c9sBCFJ7DNdJVzEKr8C2lBjLW92X3exlylMGFMLeQjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4CM7Uxl; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B4CM7Uxl"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade326e366dso977231966b.3;
-        Mon, 16 Jun 2025 23:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750142013; x=1750746813; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NA0TLB9oKte+OwEm1gowNLenoPqaplJehC52uwcC+A8=;
-        b=B4CM7UxlP3GE188GSYm4ntjeFvvmfM8WyENFmMVTLimXbiK2Pdfe56cAGFrhmX2VtV
-         YAdh55pvvrSiAQ5rCk6DR0jGR1oWG82FiIXHhnzM7ttWsRvbDZPZ7D+CVcKGgoQMoNHF
-         2X5Fa06Qp0Y5oRewjAq/x9OgOQBfJqMONR1ro/BcOZCaDsblPCLX8B3Rubm2llzdhErm
-         41ChbDYsLzk/v/cabcHySoEu/lgO+4bht8dAnI6+Ag72zfwS/xkOEXAUzYIXjUmJMjom
-         eGXjPgwBN5hlctn4rt1ecYTruoEk8fnraRneaM4iFVqDSTdoujTCBXGQnWXzN4KOdKwp
-         jKvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750142013; x=1750746813;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NA0TLB9oKte+OwEm1gowNLenoPqaplJehC52uwcC+A8=;
-        b=C/cEvK7YrcSno457yXrg1GCfqucnwsCyITY1wFQ9wZ5zx7tbyY7MtcM9ekbFmfdXAW
-         qeEayGrv7x790n3B32ehtwPMk4zcqP5hwGscUnyYLhiZ/7E62qsbHsV8rYEnDcWLFeBa
-         cGce8wYj4GvvV1LrZdBDiQewo6lKjeqLcCejJijr8/EfUsL7YZoSStZ92eeezZkF2/cz
-         13AQyneqKVrbZgwvrcogTE1Qq4E2YkXWfFxGWliDuq1TUQmhN03Um4AlZHMbsJitXjoR
-         2aiDBB9VQtroaFrZgGGNN6SYlizVqhBod+4nnPaotYjXdZXEBev/JRUQp8Ne9Lg+JoiJ
-         /OsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdqVeZAe+3hdY+Dz65EyMImN7ep4jdHFjtcj3SmHnQEX+ST9wNdVda/CFxBeDxzzHcffGenF/KTEA=@vger.kernel.org, AJvYcCWvSuEkYsFB6u3yXUCfK6NYQ+FrWvkebb3IWI5jgPd+oCnBPJ11V8WyZQGrkTQlp0drdDWPszXQYEfMXztq@vger.kernel.org
-X-Gm-Message-State: AOJu0YygGhJ3OPuqm49Le2xEspqcr7QsWTw5ei7c1qWuSUKEvmENvuZi
-	SlFV6CIYGckyA3QCNvMVAj6cRVeJ7I0JhyEaI3mQmU+PUN34flYWyk1q/RzaDGygVg/IfhtWy5H
-	IHdh9Oz1SxP8AHcvvpWpoXnbmzM5rN5U=
-X-Gm-Gg: ASbGnctr8Puv0uYpCSlhD82rVKSTVL7la6gSxKpHAS218qXpx0fz1BiOgEPkeFfpOJ9
-	8Xam9sfcAVzlxbelcDEWHd+wj+Y6TEUMhim2oCNSYGKH1b1MP1BCzijh3rOQ/psnLenRyYWX/A4
-	vnj5m0uUlYCDzeTatNCgvCdDtsJA3n21kB+IlegSLcq5Dk/Q==
-X-Google-Smtp-Source: AGHT+IEPibyVVx6ANOKw4K146U1HPHC7bbE3rmky9TQQiRKsFBaiNe2CFrP1DN4lcLRKeGTdSO8sI6qrP8ASCwjEySc=
-X-Received: by 2002:a17:907:7e92:b0:ad8:97d8:a52e with SMTP id
- a640c23a62f3a-adfad4f40f1mr1188544366b.55.1750142013006; Mon, 16 Jun 2025
- 23:33:33 -0700 (PDT)
+	s=arc-20240116; t=1750142029; c=relaxed/simple;
+	bh=p0ZHKgJeiGzErL88/GscM6rOo7KxAVj1KVR5oh3Kqqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bZagmUituwAcwYukxWLjjaTabSPiAOHPiYGmlz0HuNg9R2wSVckeaBIDXIKtr8VCMIaXjRltYkjuA/5Ceb8PfBksivDOzL+Mlkpp4CboF148C4iWl5j3XtzKLIC6ZYBKbho57uf5QsCId4zu8wM3l/3mKZtlj9w4QPbNJQpLXzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bLxmS2ZDfzRkQc;
+	Tue, 17 Jun 2025 14:29:28 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3C7F31402DB;
+	Tue, 17 Jun 2025 14:33:44 +0800 (CST)
+Received: from [10.67.112.40] (10.67.112.40) by dggpemf200006.china.huawei.com
+ (7.185.36.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 17 Jun
+ 2025 14:33:43 +0800
+Message-ID: <d152d5fa-e846-48ba-96f4-77493996d099@huawei.com>
+Date: Tue, 17 Jun 2025 14:33:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com> <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
-In-Reply-To: <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 17 Jun 2025 09:32:56 +0300
-X-Gm-Features: AX0GCFujvum22WkIySIVbQeVbVZg254I-tYPkhT9vPcG30nWAYbTMKR0MrYZHaE
-Message-ID: <CAHp75Ve+6BjG0vFy0ohMsODkybH3L+4EM6RODJYDRw+W6Gdtmg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] iio: imu: bmi270: add support for motion events
-To: Gustavo Silva <gustavograzs@gmail.com>
-Cc: Alex Lanzano <lanzano.alex@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lothar Rubusch <l.rubusch@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
+To: Ratheesh Kannoth <rkannoth@marvell.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>
+References: <20250616080530.GA279797@maili.marvell.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <20250616080530.GA279797@maili.marvell.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-On Tue, Jun 17, 2025 at 2:53=E2=80=AFAM Gustavo Silva <gustavograzs@gmail.c=
-om> wrote:
->
-> Any-motion event can be enabled on a per-axis basis and triggers a
-> combined event when motion is detected on any axis.
->
-> No-motion event is triggered if the rate of change on all axes falls
-> below a specified threshold for a configurable duration. A fake channel
-> is used to report this event.
->
-> Threshold and duration can be configured from userspace.
+On 2025/6/16 16:05, Ratheesh Kannoth wrote:
+> Hi,
+> 
+> Recently customer faced a page pool leak issue And keeps on gettting following message in
+> console.
+> "page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
+> 
+> Customer runs "ping" process in background and then does a interface down/up thru "ip" command.
+> 
+> Marvell octeotx2 driver does destroy all resources (including page pool allocated for each queue of
+> net device) during interface down event. This page pool destruction will wait for all page pool buffers
+> allocated by that instance to return to the pool, hence the above message (if some buffers
+> are stuck).
+> 
+> In the customer scenario, ping App opens both RAW and RAW6 sockets. Even though Customer ping
+> only ipv4 address, this RAW6 socket receives some IPV6 Router Advertisement messages which gets generated
+> in their network.
+> 
+> [   41.643448]  raw6_local_deliver+0xc0/0x1d8
+> [   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
+> [   41.652149]  ip6_input_finish+0x48/0x70
+> [   41.655976]  ip6_input+0x44/0xcc
+> [   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
+> [   41.663546]  ip6_sublist_rcv+0x16c/0x22c
+> [   41.667460]  ipv6_list_rcv+0xf4/0x12c
+> 
+> Those packets will never gets processed. And if customer does a interface down/up, page pool
+> warnings will be shown in the console.
+> 
+> Customer was asking us for a mechanism to drain these sockets, as they dont want to kill their Apps.
+> The proposal is to have debugfs which shows "pid  last_processed_skb_time  number_of_packets  socket_fd/inode_number"
+> for each raw6/raw4 sockets created in the system. and
+> any write to the debugfs (any specific command) will drain the socket.
+> 
+> 1. Could you please comment on the proposal ?
 
-...
+I would say the above is kind of working around the problem.
+It would be good to fix the Apps or fix the page_pool.
 
-> +#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) ((val) * (scale) + \
-> +                                                 ((val2) * (scale)) / ME=
-GA)
+> 2. Could you suggest a better way ?
 
-Much easier to read and maintain when it's split logically, i.e.
+For fixing the page_pool part, I would be suggesting to keep track
+of all the inflight pages and detach those pages from page_pool when
+page_pool_destroy() is called, the tracking part was [1], unfortunately
+the maintainers seemed to choose an easy way instead of a long term
+direction, see [2].
 
-#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) \
-        ((val) * (scale) + ((val2) * (scale)) / MEGA)
-
-...
-
-> +#define BMI270_RAW_TO_MICRO(raw, scale) ((((raw) % (scale)) * MEGA) / sc=
-ale)
-
-Ditto for the sake of consistency with the above.
-
-...
-
-> +       case IIO_ACCEL:
-> +               switch (type) {
-> +               case IIO_EV_TYPE_ROC:
-> +                       return FIELD_GET(BMI270_INT_MAP_FEAT_NOMOTION_MSK=
-,
-> +                                        regval) ? 1 : 0;
-
-I would do it with logical split despite being longer (than 80) line
-
-                       return
-FIELD_GET(BMI270_INT_MAP_FEAT_NOMOTION_MSK, regval) ?
-                                        1 : 0;
-
-Or even
-                       return
-!!FIELD_GET(BMI270_INT_MAP_FEAT_NOMOTION_MSK, regval);
-
-if 1 is important here, or w/o !! if not.
-
-> +               case IIO_EV_TYPE_MAG_ADAPTIVE:
-> +                       ret =3D bmi270_read_feature_reg(data, BMI270_ANYM=
-O1_REG,
-> +                                                     &motion_reg);
-> +                       if (ret)
-> +                               return ret;
-> +
-> +                       feat_en =3D FIELD_GET(BMI270_INT_MAP_FEAT_ANYMOTI=
-ON_MSK,
-> +                                           regval);
-> +                       switch (chan->channel2) {
-> +                       case IIO_MOD_X:
-> +                               axis_en =3D FIELD_GET(BMI270_FEAT_MOTION_=
-X_EN_MSK,
-> +                                                   motion_reg);
-> +                               break;
-> +                       case IIO_MOD_Y:
-> +                               axis_en =3D FIELD_GET(BMI270_FEAT_MOTION_=
-Y_EN_MSK,
-> +                                                   motion_reg);
-> +                               break;
-> +                       case IIO_MOD_Z:
-> +                               axis_en =3D FIELD_GET(BMI270_FEAT_MOTION_=
-Z_EN_MSK,
-> +                                                   motion_reg);
-> +                               break;
-> +                       default:
-> +                               return -EINVAL;
-> +                       }
-> +                       return (axis_en && feat_en) ? 1 : 0;
-
-Do you expect boolean to be not 1 when it's true? IIRC this is part of
-the C standard.
-
-> +               default:
-> +                       return -EINVAL;
-> +               }
-
-...
-
-> +       int ret, reg;
->         u16 regval;
-> -       int ret;
-
-Why? And why is reg signed? Also check other cases with reg and
-semantically similar variables.
-
---=20
-With Best Regards,
-Andy Shevchenko
+1. https://lore.kernel.org/all/20250307092356.638242-1-linyunsheng@huawei.com/
+2. https://lore.kernel.org/all/20250409-page-pool-track-dma-v9-0-6a9ef2e0cba8@redhat.com/
