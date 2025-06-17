@@ -1,97 +1,403 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBF229DB7E;
-	Tue, 17 Jun 2025 08:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7FB328FFF3;
+	Tue, 17 Jun 2025 08:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147357; cv=none; b=Xe2VajlXdRD1tokNM9lzkDl+TNNncInXnU9WdYCIVpYtzvdcBbaU+eGkEOzNOQkQQWfUM85wKK6/XjoD/UXf3yCfqQJZbXxaMBkZsiXjy7A6PMr4/3T/T5pepYltxnBUr5XIPm3tGaDNERgVdIT/fE53QtDWio5ZLKpJ6tBiKNg=
+	t=1750147352; cv=none; b=YU1APOlE2/K1FJ7XiKSjZMCwbvQX+fdjZABM53hW0bDz6OyEeznNzY6tHP0qayyeFCjtqRhoSJ/1U2bSRVu9NKSequBP9kFP2vSuPLe9yghcyBbz8mcxXE+/4jynQtX7UujE/p9aIDPlT/HHlp7vy26hMA3Jag6tJCbXPTja0qA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147357; c=relaxed/simple;
-	bh=YowyLAJdvaGSFtQcwvYz9C46N3KUQ87WRTTq4W0CK+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JtR4LGjvFUSLRzGWYuSnPBAgnif7WEFLJljrPSnhLBeM9m7118q8d4nQjmjGg3z9Ji6aBhPegPk+eNkm7ujRl+8z5U7gmZHKivIibC9/Hqh1s7kJFqI4ohxfZjodrkyKt+zttLJ5PxpqKp+Mt84JnmDHvYiQh2NdamXSST7mgbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkLEpF1x; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750147352; c=relaxed/simple;
+	bh=iVC0GdftjUz57Jcaq/naOorp34P65m/H+bbrvm2J+Fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TtB2esjLvdCaan8lwejD66MFbsRBIo5zzzsQOow0t+WhAHdDd7F6D5m5rySResYC6Boe3d0nn0iVxOdroSK9HnbGXUZ6+Wcc/ELAmD9OA8AmbRVLbuCBXOi3cFbda2EPdLg/WmVqxrzyzEjZuFEBD/pWL60SxDMsalsRt85I908=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DSmzQ35B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkLEpF1x"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234a45e69c8so3835025ad.2;
-        Tue, 17 Jun 2025 01:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750147355; x=1750752155; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A4QfHLbe3t8h1nBqhkMwci51K0hGySst45gh0x+/MZw=;
-        b=WkLEpF1xbTf8P56zR4BwClx2w6uoq1r45E9nnXmQR1F+G6tSsYOubMI0g/3tX7RTQa
-         DNC9QW+PFPNDkcv5tOL4p3Iif3RXUPVK16SfhMc1OKXDCFIYbrPeqWuL0YiLUC3Jmv7T
-         pLmFzu6EgNBjIEvNBobDi3TnhMmG8yAjpcxe+xVb3nWeaY7TO/tpruNGdEIaHf7U4OU8
-         bC80sfMgmAaQ0HhVzO7IjHi8v23iHBYpJd6zUhBRIbz04f2lPvkxcH0A+k/BJMAFRzqn
-         mVZ1LwCalp8Uv1a/9y2Po7t9U4mhUjkaZVr4MIjm9++Kg4hIfutpBxkN1hb2ZXK80j70
-         oDoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750147355; x=1750752155;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A4QfHLbe3t8h1nBqhkMwci51K0hGySst45gh0x+/MZw=;
-        b=odneEzD9x2iAzFS9+ee5rXOA25yV1zS6jS/Fa7nqUixqFWaIlk0i4iwMLPpAMFVTUZ
-         mEqO75YDHNNcyd23IvqxTbJvPy96qTrmaftpgSRSWg3voYTyGwKrPPnyDshYasHcaOFw
-         ng1HczrQHfUleQ5COT1SfpOOERNr6np1cnF2f5+tSm+Ah5gdislXeIfeCpi81OTDp/+e
-         U5vrSP1TWEPyRVm17seXenjef4KsjGr9DZzvzbtAlCMa/OP0qg8vOKdDbLbqpNLtGjhn
-         Lu8UzOztjgJg+QhNcPSk1XOkPzjTcnxNB7k2vzgSUbW4YRNs6g4NIATeRyeSIf2ywcaN
-         bH8w==
-X-Forwarded-Encrypted: i=1; AJvYcCU4LGQQAxnube6Lh3r/LBiVCQwaKL7V7hacTNNnCWeG2ceRnBu7JkyI7fbkeAzFXA5PXgXPWiQ97PCTTcTkS6o=@vger.kernel.org, AJvYcCVz14Ged6GwllQk9aXuWYKqq/aH1uBqkFOb1URyIo3L0TYtYz7I8Y2RgyHEE8Kf3LeCJ5l9VMxI2pd7Gpo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHglo+1ZPPgSg34S9o/RDcB7CQanQqntcFiLqIi+HOy/HqCchq
-	dWWdUkNlgYgBnZmPAdlj1sXBmWyukQn3/Qp4hM5oXk62zdHq1F4tYw4LoJO+MbpLJkFhMcG1RoP
-	qM+emqGj3XjQ/KH7TpTlgvCt9Auor1Po=
-X-Gm-Gg: ASbGnctkgkDFboqWt34gvAwdX4OLe4T4dJ7+F1M2NIL33Vaa3UAAkXy572OI3NfCi50
-	hflYXVngTgmHBC3AcK7p0+vXBIr6uKDj9O1A4Y44zwya5ge14GJ3XG7lqKlowXyUZBa2iFiuMhM
-	a84r7mse/FGax8bzHDc7tcr/BTm1IS8kzdcDk0wiCZSIw=
-X-Google-Smtp-Source: AGHT+IE9Y1Quhv3vHwJj61PiVkeCG9+l2m52l/QkhOWmDyJ1PXuCBt8XYd6aMaToeAvNfrbJRLedUx778wvZOgZkkic=
-X-Received: by 2002:a17:902:d486:b0:231:c9bb:6105 with SMTP id
- d9443c01a7336-2368eaa6b5emr15343475ad.0.1750147354863; Tue, 17 Jun 2025
- 01:02:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DSmzQ35B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC52BC4CEF6;
+	Tue, 17 Jun 2025 08:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750147352;
+	bh=iVC0GdftjUz57Jcaq/naOorp34P65m/H+bbrvm2J+Fc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DSmzQ35BS+UYLALCVOZIoFHWI8oWmaK3k+xvWA3aTVCQYnqFgZIgTNsokNjFZOqCr
+	 tXpOGcApTGWDatdqlpLcn7MFTagWI4TgdGTjUYdNdB1FPR79DYRNsIwfNPi5KBhc41
+	 9MoQSX4mngTCnHCEgX2BTuQ9Vzp/K8gqiGq+RD74xer2xcDlmOoGlLqomgxVANxCVd
+	 zOtF5fqIN7OLAQfzF2pCV42/VqtG8U5evo2ltCDOthjXOIe8TGo/6QXqo7J/3aR/eN
+	 ppCTf37XxYr73iI3gVKTj1A+DmUbpWyBLJfniMXQFGRI61yK1qfmB6w6JL912jUmFF
+	 +KIXrqaXBiksQ==
+Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
+	(envelope-from <mchehab+huawei@kernel.org>)
+	id 1uRRH4-00000001vdN-0X8d;
+	Tue, 17 Jun 2025 10:02:30 +0200
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	"Akira Yokosawa" <akiyks@gmail.com>,
+	"Breno Leitao" <leitao@debian.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	"Donald Hunter" <donald.hunter@gmail.com>,
+	"Eric Dumazet" <edumazet@google.com>,
+	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
+	"Jan Stancek" <jstancek@redhat.com>,
+	"Marco Elver" <elver@google.com>,
+	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
+	"Paolo Abeni" <pabeni@redhat.com>,
+	"Ruben Wauters" <rubenru09@aol.com>,
+	"Shuah Khan" <skhan@linuxfoundation.org>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Simon Horman <mchehab+huawei@kernel.org>,
+	joel@joelfernandes.org,
+	linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	lkmm@lists.linux.dev,
+	netdev@vger.kernel.org,
+	peterz@infradead.org,
+	stern@rowland.harvard.edu
+Subject: [PATCH v5 09/15] tools: ynl_gen_rst.py: clanup coding style
+Date: Tue, 17 Jun 2025 10:02:06 +0200
+Message-ID: <b86d44729cc0d3adfdddc607a432f96f06aaf1be.1750146719.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616153604.49418-1-boqun.feng@gmail.com> <20250616153604.49418-3-boqun.feng@gmail.com>
- <CANiq72mES+dPBuhsdh0-hJcV69AO74j6W5vhCeo+yV5S-Zp+yg@mail.gmail.com> <20250617.120453.1403624234989149033.fujita.tomonori@gmail.com>
-In-Reply-To: <20250617.120453.1403624234989149033.fujita.tomonori@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 17 Jun 2025 10:02:22 +0200
-X-Gm-Features: AX0GCFshvH8jdS2U4z-D_S4Wp3zw2WqEku03xiGYr0kIDRQ98ngBwep5D0EjCnA
-Message-ID: <CANiq72kB4hxsyi9D-PV0YDc9KEgfC9iYCTJVEOosZv3fg1+mYA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] rust: task: Add Rust version of might_sleep()
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: boqun.feng@gmail.com, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
-	a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu, 
-	dakr@kernel.org, mingo@redhat.com, peterz@infradead.org, 
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	pmladek@suse.com, mingo@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-On Tue, Jun 17, 2025 at 5:05=E2=80=AFAM FUJITA Tomonori
-<fujita.tomonori@gmail.com> wrote:
->
-> How about adding a link to the header file where the might_sleep macro
-> is defined, like this?
+Cleanup some coding style issues pointed by pylint and flake8.
 
-Sounds good to me. Though, for APIs that have rendered docs, we
-typically point to those instead:
+No functional changes.
 
-    https://docs.kernel.org/driver-api/basics.html#c.might_sleep
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ tools/net/ynl/pyynl/netlink_yml_parser.py | 75 ++++++++---------------
+ tools/net/ynl/pyynl/ynl_gen_rst.py        |  2 +-
+ 2 files changed, 27 insertions(+), 50 deletions(-)
 
-(Ideally those kernel.org docs would then have a source view
-themselves, but that is a different problem... :)
+diff --git a/tools/net/ynl/pyynl/netlink_yml_parser.py b/tools/net/ynl/pyynl/netlink_yml_parser.py
+index 839e78b39de3..f71360f0ceb7 100755
+--- a/tools/net/ynl/pyynl/netlink_yml_parser.py
++++ b/tools/net/ynl/pyynl/netlink_yml_parser.py
+@@ -18,17 +18,12 @@
+ """
+ 
+ from typing import Any, Dict, List
+-import os.path
+-import sys
+-import argparse
+-import logging
+ import yaml
+ 
+ 
+-# ==============
+-# RST Formatters
+-# ==============
+ class RstFormatters:
++    """RST Formatters"""
++
+     SPACE_PER_LEVEL = 4
+ 
+     @staticmethod
+@@ -36,81 +31,67 @@ class RstFormatters:
+         """Return space to format"""
+         return " " * (level * RstFormatters.SPACE_PER_LEVEL)
+ 
+-
+     @staticmethod
+     def bold(text: str) -> str:
+         """Format bold text"""
+         return f"**{text}**"
+ 
+-
+     @staticmethod
+     def inline(text: str) -> str:
+         """Format inline text"""
+         return f"``{text}``"
+ 
+-
+     @staticmethod
+     def sanitize(text: str) -> str:
+         """Remove newlines and multiple spaces"""
+         # This is useful for some fields that are spread across multiple lines
+         return str(text).replace("\n", " ").strip()
+ 
+-
+     def rst_fields(self, key: str, value: str, level: int = 0) -> str:
+         """Return a RST formatted field"""
+         return self.headroom(level) + f":{key}: {value}"
+ 
+-
+     def rst_definition(self, key: str, value: Any, level: int = 0) -> str:
+         """Format a single rst definition"""
+         return self.headroom(level) + key + "\n" + self.headroom(level + 1) + str(value)
+ 
+-
+     def rst_paragraph(self, paragraph: str, level: int = 0) -> str:
+         """Return a formatted paragraph"""
+         return self.headroom(level) + paragraph
+ 
+-
+     def rst_bullet(self, item: str, level: int = 0) -> str:
+         """Return a formatted a bullet"""
+         return self.headroom(level) + f"- {item}"
+ 
+-
+     @staticmethod
+     def rst_subsection(title: str) -> str:
+         """Add a sub-section to the document"""
+         return f"{title}\n" + "-" * len(title)
+ 
+-
+     @staticmethod
+     def rst_subsubsection(title: str) -> str:
+         """Add a sub-sub-section to the document"""
+         return f"{title}\n" + "~" * len(title)
+ 
+-
+     @staticmethod
+     def rst_section(namespace: str, prefix: str, title: str) -> str:
+         """Add a section to the document"""
+         return f".. _{namespace}-{prefix}-{title}:\n\n{title}\n" + "=" * len(title)
+ 
+-
+     @staticmethod
+     def rst_subtitle(title: str) -> str:
+         """Add a subtitle to the document"""
+         return "\n" + "-" * len(title) + f"\n{title}\n" + "-" * len(title) + "\n\n"
+ 
+-
+     @staticmethod
+     def rst_title(title: str) -> str:
+         """Add a title to the document"""
+         return "=" * len(title) + f"\n{title}\n" + "=" * len(title) + "\n\n"
+ 
+-
+     def rst_list_inline(self, list_: List[str], level: int = 0) -> str:
+         """Format a list using inlines"""
+         return self.headroom(level) + "[" + ", ".join(self.inline(i) for i in list_) + "]"
+ 
+-
+     @staticmethod
+     def rst_ref(namespace: str, prefix: str, name: str) -> str:
+         """Add a hyperlink to the document"""
+@@ -119,10 +100,9 @@ class RstFormatters:
+                     'nested-attributes': 'attribute-set',
+                     'struct': 'definition'}
+         if prefix in mappings:
+-            prefix = mappings[prefix]
++            prefix = mappings.get(prefix, "")
+         return f":ref:`{namespace}-{prefix}-{name}`"
+ 
+-
+     def rst_header(self) -> str:
+         """The headers for all the auto generated RST files"""
+         lines = []
+@@ -132,7 +112,6 @@ class RstFormatters:
+ 
+         return "\n".join(lines)
+ 
+-
+     @staticmethod
+     def rst_toctree(maxdepth: int = 2) -> str:
+         """Generate a toctree RST primitive"""
+@@ -143,16 +122,13 @@ class RstFormatters:
+ 
+         return "\n".join(lines)
+ 
+-
+     @staticmethod
+     def rst_label(title: str) -> str:
+         """Return a formatted label"""
+         return f".. _{title}:\n\n"
+ 
+-# =======
+-# Parsers
+-# =======
+ class YnlDocGenerator:
++    """YAML Netlink specs Parser"""
+ 
+     fmt = RstFormatters()
+ 
+@@ -164,7 +140,6 @@ class YnlDocGenerator:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_do(self, do_dict: Dict[str, Any], level: int = 0) -> str:
+         """Parse 'do' section and return a formatted string"""
+         lines = []
+@@ -177,16 +152,16 @@ class YnlDocGenerator:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_do_attributes(self, attrs: Dict[str, Any], level: int = 0) -> str:
+         """Parse 'attributes' section"""
+         if "attributes" not in attrs:
+             return ""
+-        lines = [self.fmt.rst_fields("attributes", self.fmt.rst_list_inline(attrs["attributes"]), level + 1)]
++        lines = [self.fmt.rst_fields("attributes",
++                                     self.fmt.rst_list_inline(attrs["attributes"]),
++                                     level + 1)]
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_operations(self, operations: List[Dict[str, Any]], namespace: str) -> str:
+         """Parse operations block"""
+         preprocessed = ["name", "doc", "title", "do", "dump", "flags"]
+@@ -194,7 +169,8 @@ class YnlDocGenerator:
+         lines = []
+ 
+         for operation in operations:
+-            lines.append(self.fmt.rst_section(namespace, 'operation', operation["name"]))
++            lines.append(self.fmt.rst_section(namespace, 'operation',
++                                              operation["name"]))
+             lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
+ 
+             for key in operation.keys():
+@@ -206,7 +182,8 @@ class YnlDocGenerator:
+                     value = self.fmt.rst_ref(namespace, key, value)
+                 lines.append(self.fmt.rst_fields(key, value, 0))
+             if 'flags' in operation:
+-                lines.append(self.fmt.rst_fields('flags', self.fmt.rst_list_inline(operation['flags'])))
++                lines.append(self.fmt.rst_fields('flags',
++                                                 self.fmt.rst_list_inline(operation['flags'])))
+ 
+             if "do" in operation:
+                 lines.append(self.fmt.rst_paragraph(":do:", 0))
+@@ -220,7 +197,6 @@ class YnlDocGenerator:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_entries(self, entries: List[Dict[str, Any]], level: int) -> str:
+         """Parse a list of entries"""
+         ignored = ["pad"]
+@@ -235,17 +211,19 @@ class YnlDocGenerator:
+                 if type_:
+                     field_name += f" ({self.fmt.inline(type_)})"
+                 lines.append(
+-                    self.fmt.rst_fields(field_name, self.fmt.sanitize(entry.get("doc", "")), level)
++                    self.fmt.rst_fields(field_name,
++                                        self.fmt.sanitize(entry.get("doc", "")),
++                                        level)
+                 )
+             elif isinstance(entry, list):
+                 lines.append(self.fmt.rst_list_inline(entry, level))
+             else:
+-                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)), level))
++                lines.append(self.fmt.rst_bullet(self.fmt.inline(self.fmt.sanitize(entry)),
++                                                 level))
+ 
+         lines.append("\n")
+         return "\n".join(lines)
+ 
+-
+     def parse_definitions(self, defs: Dict[str, Any], namespace: str) -> str:
+         """Parse definitions section"""
+         preprocessed = ["name", "entries", "members"]
+@@ -270,7 +248,6 @@ class YnlDocGenerator:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_attr_sets(self, entries: List[Dict[str, Any]], namespace: str) -> str:
+         """Parse attribute from attribute-set"""
+         preprocessed = ["name", "type"]
+@@ -279,7 +256,8 @@ class YnlDocGenerator:
+         lines = []
+ 
+         for entry in entries:
+-            lines.append(self.fmt.rst_section(namespace, 'attribute-set', entry["name"]))
++            lines.append(self.fmt.rst_section(namespace, 'attribute-set',
++                                              entry["name"]))
+             for attr in entry["attributes"]:
+                 type_ = attr.get("type")
+                 attr_line = attr["name"]
+@@ -301,13 +279,13 @@ class YnlDocGenerator:
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_sub_messages(self, entries: List[Dict[str, Any]], namespace: str) -> str:
+         """Parse sub-message definitions"""
+         lines = []
+ 
+         for entry in entries:
+-            lines.append(self.fmt.rst_section(namespace, 'sub-message', entry["name"]))
++            lines.append(self.fmt.rst_section(namespace, 'sub-message',
++                                              entry["name"]))
+             for fmt in entry["formats"]:
+                 value = fmt["value"]
+ 
+@@ -315,13 +293,14 @@ class YnlDocGenerator:
+                 for attr in ['fixed-header', 'attribute-set']:
+                     if attr in fmt:
+                         lines.append(self.fmt.rst_fields(attr,
+-                                                self.fmt.rst_ref(namespace, attr, fmt[attr]),
+-                                                1))
++                                                         self.fmt.rst_ref(namespace,
++                                                                          attr,
++                                                                          fmt[attr]),
++                                                         1))
+                 lines.append("\n")
+ 
+         return "\n".join(lines)
+ 
+-
+     def parse_yaml(self, obj: Dict[str, Any]) -> str:
+         """Format the whole YAML into a RST string"""
+         lines = []
+@@ -344,7 +323,8 @@ class YnlDocGenerator:
+         # Operations
+         if "operations" in obj:
+             lines.append(self.fmt.rst_subtitle("Operations"))
+-            lines.append(self.parse_operations(obj["operations"]["list"], family))
++            lines.append(self.parse_operations(obj["operations"]["list"],
++                                               family))
+ 
+         # Multicast groups
+         if "mcast-groups" in obj:
+@@ -368,11 +348,9 @@ class YnlDocGenerator:
+ 
+         return "\n".join(lines)
+ 
+-
+     # Main functions
+     # ==============
+ 
+-
+     def parse_yaml_file(self, filename: str) -> str:
+         """Transform the YAML specified by filename into an RST-formatted string"""
+         with open(filename, "r", encoding="utf-8") as spec_file:
+@@ -381,7 +359,6 @@ class YnlDocGenerator:
+ 
+         return content
+ 
+-
+     def generate_main_index_rst(self, output: str, index_dir: str) -> None:
+         """Generate the `networking_spec/index` content and write to the file"""
+         lines = []
+diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
+index 624b0960476e..5d29ce01c60c 100755
+--- a/tools/net/ynl/pyynl/ynl_gen_rst.py
++++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
+@@ -23,7 +23,7 @@ SRC_DIR = os.path.dirname(os.path.realpath(__file__))
+ 
+ sys.path.insert(0, os.path.join(SRC_DIR, LIB_DIR))
+ 
+-from netlink_yml_parser import YnlDocGenerator
++from netlink_yml_parser import YnlDocGenerator        # pylint: disable=C0413
+ 
+ 
+ def parse_arguments() -> argparse.Namespace:
+-- 
+2.49.0
 
-Cheers,
-Miguel
