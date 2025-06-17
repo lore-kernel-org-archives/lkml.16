@@ -1,114 +1,122 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 192FE1A2632
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:28:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA962F94A0;
+	Tue, 17 Jun 2025 16:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177695; cv=none; b=fz0OBzlk/joLB2T1uo4DI/U5JX/zxht8EKEMsyoNRANfZSvopnnbHCXqeDx1Q3u+rMgmYv68d8wyKcruOHTe4Nwk9MonQb8KAlH2xul0PuTAmKoDujS0GHd/9/RMGUm+4g0k36ZxrSElDwnjAuwxfRqsF3kGAfurOX0ZM8u1/e4=
+	t=1750177695; cv=none; b=l7oYUWoNXiq5XC/6U+lz/cb5Uo/GE4KGe8WqUYAxqBkDg+Xf8GbaS857d7r2VQYdHy+xueYgb9mWEaR1rkr0WymCT3m1rcmKnhj/OeE/1mrIuPpLIp9QWKITVAyM8lw9JfQi86u36Qp7R4Ydo73C4ZcpeFFv7IaL/az80Zec1m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750177695; c=relaxed/simple;
-	bh=Y3mY6JxTrLq7oCWQ27VxeUjNdJNLBZQ2maBG9kQMvyM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oZn0MNqO3zhJDhfae5qoyKKQsu1i7RcHxYbDEf7kh4xLKJSjOQZAfQeTa/v7boILaNeFadRRXset+6tm4+u84Kk3QoaPgCwW9cVYqLu2xNXxEx/jxObtAvepdJY6FotgNWxf0zJJc7pLl1URWZlvSCUvvhbWXVhhVVKFFP+KgL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMC2c52jwz6M4HK;
-	Wed, 18 Jun 2025 00:27:36 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8A246140136;
-	Wed, 18 Jun 2025 00:28:10 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
- 2025 18:28:09 +0200
+	bh=WPq3JWpj4T0LLXcgwGZDa4XJ695aFvFYkWFLEZeOlQM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f1J5GQ8uiWOxpEKkyTwyLcos6032iFkh9FoXcT1s0SgP2kABJB5Fnq8l1O/OkXBH+0Ypk7GSE8qZtp4r+nY3yBo/Oxlbry0Ryr8RyeAL3XaVY0gToFs05Hi0190pjqlSHbwjggvrGzU691eHduJ8pFdknhGxbtJ6pQLSp5BbgW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W1ELNsYP; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1ELNsYP"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-450cea01b9cso27948125e9.0;
+        Tue, 17 Jun 2025 09:28:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750177692; x=1750782492; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CeAjYWHmPLh9Hw9EMkec3T/WAZXs6LJVpGmHJAJzDVk=;
+        b=W1ELNsYPiyC2pWVurfkOOPDURMXwsZP6n0iNF9ylGfZtw4Ez9kwGI1BUr02Pr4Dgzy
+         YgTFXMe6rNShYx2WbZK2PZ79ghQRtlwWboBzru3MrZ76iDf/U5oNEudKgOI+At0MwiSm
+         Zs72uZYPCfGzwUuMbeysYqx5FFOqLEMQ/HeqMGUPFqSTV0Hey7OoseWTgNlcT2gJoAsj
+         HCw9z+xBimrZE7FwSX4eBPIFwCP1/Xt4meqiXVjP4/P/7wxuSm9tUQphlv3MEIy7Y4du
+         h7YtZFKpvXGJqp6oIP+I0Qw7JuCvAvSe5eL0U2JlZIN8Pm1GKFeDQGFfH6StMoeQCHfj
+         zHwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750177692; x=1750782492;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CeAjYWHmPLh9Hw9EMkec3T/WAZXs6LJVpGmHJAJzDVk=;
+        b=WDAH0IIZtRs3MzCxO5PHDtNNZ7qFMoUlbOVfXlFEtaUc20RFLKDDsrNaRDOEOC+n71
+         Ln+CELvLE+QfRVsMsebVFrupDGKOiZPwqvRZqbNkpvdtHE3YKnFvwzoSEoTxU3Q3L71p
+         gKYFFA/m6SoXHTvDLyYRVVgqsxPuni0u5HsWymhSTQaZ9AFQLmTrnwLHjNglKYhFLUEk
+         Rip759kkL1FoSYNpF1Tk562B6p8S9tDo6rhj/O6cMGJ3Ffcs6gHaK+CMMs+yYAKEsv0e
+         WhueQhDKa+a+GFaZPPAJV95Mi8kh+H7A8y8v8NlUvkkt2rYA145XhY7FMoQbtJw91ciV
+         zyZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVEGRE2d30YzBXmKoJoJ4qxwjB/+oY18rlHMMerkgPWtT28ITSmiifCAm2n5oNECmAdLJCZ8f2YTCkg226K8BPX39U=@vger.kernel.org, AJvYcCXvfe7TGxDvvq0MPuwqHoqI2Y6cBise6dyeEbiSDes/UP32HhHTkFxz1aImYnsCi8CLGVLobSIsYVvZ69M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6OKyAAOqeymfsUL0WcfwyuUQXkP963Zej0DnAWAdMx5WBfIdg
+	StB+DJoihZ0ttEK3qCGpu/vveS/TSWv6MwLAVvVbFJSGKUIOAWjyG5md
+X-Gm-Gg: ASbGncvmhChqKti94z6QYsxqg66pZinPmzZfTy1boN9sGb1HYFwZSYwuiPV1rjeivfa
+	4wRT3LcH92H0bwEtsqa8qd0HEpi4Th41tnX/k+05fjnegvpRHEE1yXAhbIsv+Vyb5zL5VVXZQXZ
+	0H4M7jQrHhPCNICy+8PERBCcF3RI+z96em64G3ti7vKOlIXe15BCEbhUjTWniEl9Jtjd1YBLdXk
+	3GSrpFljCM1GmiIC+FS2Uu9s5c8vOul/193Ca3+hks5mQX54BNveqz0WpRPVUYnt7dKqGm4cMqY
+	FYMs5xfVSi0GHsMXINTc99OOAJoTtv4TWvms0kuqJP0MsD7zJd3fo3MDgNsM2cNWqhb8UdjQ3YM
+	D8gaAP0Dtmik=
+X-Google-Smtp-Source: AGHT+IEmAZ4PHSs+Aq2RaFoqRSFIEGnoqReAjXOKg6nCw21gqFpnBoUSMqnAU4kIsFlf12e1mD7R0Q==
+X-Received: by 2002:a05:600c:4e46:b0:450:d4a6:799d with SMTP id 5b1f17b1804b1-45350ba126dmr48631495e9.7.1750177691713;
+        Tue, 17 Jun 2025 09:28:11 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:a081:30f1:e1c7:6f28])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a68b0esm14220831f8f.29.2025.06.17.09.28.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 09:28:11 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-renesas-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v11 0/2] Add initial support for Renesas RZ/T2H SoC and eval board
 Date: Tue, 17 Jun 2025 17:28:08 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: James Morse <james.morse@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Ben Horgan <ben.horgan@arm.com>
-Subject: Re: [PATCH 5/5] cacheinfo: Add helper to find the cache size from
- cpu+level
-Message-ID: <20250617172808.00005c14@huawei.com>
-In-Reply-To: <20250613130356.8080-6-james.morse@arm.com>
-References: <20250613130356.8080-1-james.morse@arm.com>
-	<20250613130356.8080-6-james.morse@arm.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+Message-ID: <20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Fri, 13 Jun 2025 13:03:56 +0000
-James Morse <james.morse@arm.com> wrote:
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> The MPAM driver needs to know the size of a cache associated with a
-> particular CPU. The DT/ACPI agnostic way of doing this is to ask cacheinfo.
-> 
-> Add a helper to do this.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
+Hi all,
 
+This patch series adds initial support for the Renesas RZ/T2H SoC
+and the RZ/T2H evaluation board.
 
+Note: This patch series is split up from the original series [1] to make it
+  easier to review.
+[1] https://lore.kernel.org/all/20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com/
 
-> ---
->  include/linux/cacheinfo.h | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/include/linux/cacheinfo.h b/include/linux/cacheinfo.h
-> index 9c959caf8af8..3f1b6b2e25b5 100644
-> --- a/include/linux/cacheinfo.h
-> +++ b/include/linux/cacheinfo.h
-> @@ -148,6 +148,26 @@ static inline int get_cpu_cacheinfo_id(int cpu, int level)
->  	return ci ? ci->id : -1;
->  }
->  
-> +/*
-> + * Get the size of the cache associated with @cpu at level @level.
-> + * cpuhp lock must be held.
-To me kernel-doc would be appropriate.  Particularly the return 0 thing.
-However there isn't any for existing cacheinfo interfaces so maybe
-fair enough to 'follow local style' on that.
+v10 -> v11:
+- Rebased on latest linux-next.
+- Updated model string in the RZ/T2H eval board dts file.
+- Dropped GIC_CPU_MASK_SIMPLE from timer node
+- Added hypervisor timer in timer node and added the missing interrupt-names
+- Reordered the `extal_clk` node
+- Reordered the `l3_ca55` node and renamed it to `L3_CA55` for consistency
 
-> + */
-> +static inline unsigned int get_cpu_cacheinfo_size(int cpu, int level)
-> +{
-> +	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(cpu);
-> +	int i;
-> +
-> +	if (!ci->info_list)
-> +		return 0;
-> +
-> +	for (i = 0; i < ci->num_leaves; i++) {
-> +		if (ci->info_list[i].level == level)
-> +			return ci->info_list[i].size;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-Why not
+Cheers,
+Prabhakar
 
-static inline unsigned int get_cpu_cacheinfo_size(int cpu, int level)
-{
-	struct cpu_cachinfo *ci = get_cpu_cacheinfo_level(cpu, lev);
+Thierry Bultel (2):
+  arm64: dts: renesas: Add initial support for renesas RZ/T2H SoC
+  arm64: dts: renesas: Add initial support for renesas RZ/T2H eval board
 
-	return ci ? ci->size; 0;
-}
+ arch/arm64/boot/dts/renesas/Makefile          |   2 +
+ arch/arm64/boot/dts/renesas/r9a09g077.dtsi    | 124 ++++++++++++++++++
+ .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    |  31 +++++
+ arch/arm64/boot/dts/renesas/r9a09g077m44.dtsi |  13 ++
+ 4 files changed, 170 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077.dtsi
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
+ create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077m44.dtsi
 
-Like existing get_cpu_cacheinfo_id()?
-
->  #if defined(CONFIG_ARM64) || defined(CONFIG_ARM)
->  #define use_arch_cache_info()	(true)
->  #else
+-- 
+2.49.0
 
