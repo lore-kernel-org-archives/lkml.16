@@ -1,145 +1,138 @@
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26A3277008
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 18:49:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FC12EF9D4;
+	Tue, 17 Jun 2025 18:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750186150; cv=none; b=arU+sjZ7QI8bK3VCQsVGnKLqJAdV5ZseKWHrCPRriQebteBBQwN1Rptymm+X+Ela861x/se1gsQUYc8ovTbwlN9XpZr4DyiqHDU75vb542dVWIyzpVPC7D44pnIW1OR82lsPGWRbZ2V/wV5TvIc2R368d3Gdq1VFNl19KByi6to=
+	t=1750186341; cv=none; b=NUG9YtyZu30XAvUmunTrSzjlJ6UO0pmr38zJEF5nPN+fmOQccurxosCS5McXy8AitHUvvpOZvm0tM2A5ploVJw+/hbhFXGcPY0iKSpHb3VVDKo4LFeOYLhPlyaHtC0H7i+Q4ozdyl5PxAfNiUBuzpRq/gkUw8hv/hp0OIpp1V2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750186150; c=relaxed/simple;
-	bh=KwqSD/mvRel9xI3T5LRWWp1qv/dt+bofRF5gsGxGzwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iM2rjnLU1nuC5VxN8WO2HglvXZfkTJO6cQg2vEq9kkgyvg/yJSHR9Nwnw/7KwIGSfiMey8l2GxYPRnpilQHODozk+WvumSBAdoQePmqaHj9hSl3Bw1/Q1ucZCNOh0iKm5IDAV1SaVwScmLaW/On0c2pTnDPOStr9k0ugwK7ei7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y4vyDUn/; arc=none smtp.client-ip=209.85.166.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750186341; c=relaxed/simple;
+	bh=qlusW2sr4sVU2uXJRPIMCSXV7SxcfJyTdbN5C74eRL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Cx9jIPMZpNPfG5ux5QiJe7sHd/y2xfAITBeBcYtOX6BM1Jgob5ms3zaHENkwC6K+ML+Am0X5kHYQSDB9M5rfYWaZKiG60Zhuq7ZjKAJigTvrMhEYPlI9DqFBqebQkUKWZ7CB3RenJYtOWCmWSafLwnKiEaYeWCOAVnoI08wcs/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CS7CaFXV; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y4vyDUn/"
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3de210e6076so19005ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:49:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CS7CaFXV"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-23649faf69fso60441425ad.0;
+        Tue, 17 Jun 2025 11:52:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750186147; x=1750790947; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q8EJ5NTBcmp1K+DlZlLHbsBISbfgOHA/1xl7u6O9rkw=;
-        b=Y4vyDUn/WDsPTuUnxBSM9qdYXy5w18OKHDjxgvpcFP0B2veSRcvPZ1aJ5k+6jpWQ34
-         ayMssVNN9tLeQNiXEGIx6MRuWQkT2l8HZRjTn1Glgegm3cjNtPtxe58+OG+JXioZWS+F
-         qPI1ALFKc/KJxzkC5/JWJpf6l/C82L3/OsGNG5h9/CMqQ92QRKFT/5yCfhjwivSRjEel
-         zEFRSxDtJxP8yyJwSvBHgv9Y1k3H1YN7d/pqWiyiGB2aXFfWZctss4oYy6lN48lTs3RS
-         8qEaZFxoClgG74O6Ku6kByHu6T+AjRRsTUA22qCu7qFix4jAmtQLgIL4B/b+4NTz96z6
-         jYaw==
+        d=gmail.com; s=20230601; t=1750186339; x=1750791139; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rrjM2YpDGiy0ALMLMuxjn2ko9PVZeOACLyeqPzUnd5A=;
+        b=CS7CaFXVpPoowWtJiHDw3RuJ3q+zsPORiTN3ZUcMmRv7wDCg7rUyaoO5K7Abv1KCJS
+         lmz08A8uQk4hjGSKG3SedYF6+QUEjB60+htWfHJvHWMpDuM/v23Qvn8rvSoo7ieEleoN
+         vubjKw/YPqG/siV7M8FvbX229O4XIclvRZ4pH2+iGPAvcRJruwFnQshYxX19q2xDlirY
+         mDN5sFX/m5gW6p4nxvsFVhHyBoosu/EvIdOXkzjq+wHvPzamtNqNcPJFDeKC/Bo1MO8O
+         VDs9xrfxjrHlLoueLGGs+fNjNPFFUW6gzPrc7sGugJzV898YMxAXU2dI23hB8xUsKibc
+         IjRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750186147; x=1750790947;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q8EJ5NTBcmp1K+DlZlLHbsBISbfgOHA/1xl7u6O9rkw=;
-        b=gK6V3lgfydKsyeZ1ci3FshTBLCtFoiL1rh6dAVDlinA1gTPqRHET5MAGydbWO6KArE
-         CACkVdN8COqVYYCvY+cAFwAEqhrYqacMTbTfXpMg42M2mgdiavTbyTr6RGhCP4dag5Ga
-         Ba0jzi0Os5P+4YuDLUV9iDtPxmEniRIoE5JPYIrZFWYh5XcPEOua7EiZ1ose8WIfJ7km
-         aoxyLttyVnfq9wnlP8D8q4QJ8I4ej3wv9iqN+2brt2CKj7vJei2wQiKfV3xzkGdErAhv
-         y/9NUTUoShyB7k8h3U7IESawyXfmPGhOfE/nVMKTXWW+C8vzN9CD1e1cEanDroYTuEgM
-         vX3g==
-X-Gm-Message-State: AOJu0YxgNy5Yv89OmHm8vs85IsW9eCD8h8vuCSSpGnSpYdGwRpw8nBz/
-	pvlbnQRXrSww/AeoRYsMVVwyhcElf17gfG2llK+A1swaT7EvQWspFohgFAGVptycWMkhJbrujtB
-	pxBrASdL2z6Bq4tG2Xkglb67QsAy78wvZOY2JkrnH
-X-Gm-Gg: ASbGncv6Bt8y3HdzGiguFDi2+iDPGi+BRsXIgnssUVieibd183bQ7lz1Lu3ovOIvoqA
-	5b6PLZhup47tDOGPY1To1xAp6gg7KByOsm8g9RvSTPge+qvaSmB1zPk7Q/k1Q6Cwk20TmVvXiJI
-	MJ7t/ZD3rnDFTfLr8huB2inCJPecNcJMpUcu6qv6DU/nM8vG6IeBFR5/WiYn8/Oo3BycgW8L7Q
-X-Google-Smtp-Source: AGHT+IFzrUwC9gszj0tD9vuBEBQF9n3D4Q3WJTaRCUVhXGHHOddGa1pIqtmbyT4XwSHM/7FECm5kvyzNP+0l4d7kUpg=
-X-Received: by 2002:a92:ca47:0:b0:3dc:8596:b15 with SMTP id
- e9e14a558f8ab-3de08e309cemr12018435ab.20.1750186146706; Tue, 17 Jun 2025
- 11:49:06 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750186339; x=1750791139;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rrjM2YpDGiy0ALMLMuxjn2ko9PVZeOACLyeqPzUnd5A=;
+        b=HrEQTRsvR2fgZIJ7KIdfkYpas2l628XcFBxsetlVC2RaqQ5SiaTdXMdYY6dRpsWUBb
+         J9QLr2eX9Vn2jmAtN93CZ6RP2+n21X3KfaDBTBeh9fFxFojPWvOMni+SNV1eG741vWAg
+         tcGOayiGPJSzjlaT3zhQwcCw6g/yE3RIxK5o2IlNd9KEDPaEOKmzIW0urOKm3SgKjuM7
+         MZrREhEFS/LP6AsgI4+I7BTtG6TQsioOooz2gOIAs8hXwDIjRuSsFg9iugMVSPOW5Mv9
+         RfxZn2Rn6/frKBJHmNLlj7q07gdqv9aDWhsyr1RuwlLORRf3iJ7Bq8HFd+iwWHw+CFrT
+         Fh2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbsSMIWpZ5/Xn02UWVRQB2dJqglAMj5taBiD3uXA03tSsU/6Ey/1joSbjWdQLcji+4io1bOplTjjWJWQ==@vger.kernel.org, AJvYcCV6QQ9Ca5dBLsbP64kV7bu7rMQw/JQo03KLdyIaozNqylwJpa5aAJv19hWR0KO0Nagbzw8dliSZlGMX@vger.kernel.org, AJvYcCVOBJ0bmT25E0wZhSkVfPrq76UCPD6xKmY4JrspRNPYhj6qg1ShANoiH0Kg2rV3Mz3pjX2ytKAH+os9OIQn@vger.kernel.org, AJvYcCXml1NQ+hXKvJP33XkebY144cKHWYBMCkJk9+a8tnijOg17+rquIfCcBsyusQheMIeUsdr2kFqt8n19@vger.kernel.org
+X-Gm-Message-State: AOJu0YxocRwehglKhzCHG90riSR5LQLEikGUiBhnUB+Lk4kIyh3qpend
+	2PlpNF4Dy00KUmGxn3abfOj+MyZpg0HCyNZYexezmBz/BsVEMYbyEmSK
+X-Gm-Gg: ASbGncsgr9RJIN7hbbyNT1kT/Q18om1Ush4b9s9/TQm6tw1FuFqZRGNaSgKvYbv51VC
+	UNw9GkGKVzdGRb1zTd6ty0SCsBvpmFLuCde2IBxqAk1Em9aAE1taCcCRNOcUEWIETMTWCRX9n9e
+	DNWuisvm1Z/P327DuMQqOzpw3cqJ99e2naZ8a5ip4LG+Fp6acRIQB+3PjIbpelGKbRIFLgrl59I
+	5bQZfXUOerBiT4Dp1/QAepUEPnfEo7hPJ5LoHtmb/KR5SsE/2mue6vKXxWqdtSqRKXRurGhIBbt
+	Abxr3zd1OjwckLwgPOcK+zXRl5EXRYSFg/HQ7C0j4uoFbk2NPoH5Um4RqgQYGm2mQj7LmCR/8q4
+	f/NhOZg==
+X-Google-Smtp-Source: AGHT+IEbxeRsrV9v0cFZpm/JNC9Jn+xijTCUioEIcN6OlyBZRQCnX9DQlgMFOHdhLztTsnPvJxpk4Q==
+X-Received: by 2002:a17:902:d552:b0:234:d7b2:2ab9 with SMTP id d9443c01a7336-2366b005cd2mr247602865ad.12.1750186339109;
+        Tue, 17 Jun 2025 11:52:19 -0700 (PDT)
+Received: from localhost ([2804:30c:4000:5900:b4c4:6073:1a92:4077])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365e0d0ab2sm84238655ad.246.2025.06.17.11.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 11:52:17 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:54:06 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ana-Maria Cusco <ana-maria.cusco@analog.com>, jic23@kernel.org,
+	lars@metafoo.de, Michael.Hennerich@analog.com, nuno.sa@analog.com,
+	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
+Subject: Re: [PATCH v5 02/11] iio: adc: Add basic support for AD4170
+Message-ID: <aFG5zufl_znUw3xL@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1749582679.git.marcelo.schmitt@analog.com>
+ <48598c0753cccf515addbe85acba3f883ff8f036.1749582679.git.marcelo.schmitt@analog.com>
+ <c29feb5b-2699-411a-87dc-249f5b9ff6c0@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617133614.24e2ba7f@gandalf.local.home> <20250617174107.GB1613376@noisy.programming.kicks-ass.net>
- <3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org> <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 17 Jun 2025 11:48:53 -0700
-X-Gm-Features: AX0GCFv1wtGvcgVGSD1sgzvmQHC0HhNLOA8sTZ3tUy13Qbfl9q8mNJDIZ58ROyM
-Message-ID: <CAP-5=fVH1HfdXT7HLZhav9k6m7t7Ji-=y2Gw13h1qMtgW8cRQA@mail.gmail.com>
-Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
-	"linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-	Namhyung Kim <namhyung@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Frederic Weisbecker <fweisbec@gmail.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c29feb5b-2699-411a-87dc-249f5b9ff6c0@baylibre.com>
 
-On Tue, Jun 17, 2025 at 11:00=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> On Tue, Jun 17, 2025 at 01:54:46PM -0400, Steven Rostedt wrote:
-> >
-> >
-> > On June 17, 2025 1:41:07 PM EDT, Peter Zijlstra <peterz@infradead.org> =
-wrote:
-> > >On Tue, Jun 17, 2025 at 01:36:14PM -0400, Steven Rostedt wrote:
-> > >> From: Steven Rostedt <rostedt@goodmis.org>
-> > >>
-> > >> In January 2015, tracefs was created to allow access to the tracing
-> > >> infrastructure without needing to compile in debugfs. When tracefs i=
-s
-> > >> configured, the directory /sys/kernel/tracing will exist and tooling=
- is
-> > >> expected to use that path to access the tracing infrastructure.
-> > >>
-> > >> To allow backward compatibility, when debugfs is mounted, it would
-> > >> automount tracefs in its "tracing" directory so that tooling that ha=
-d hard
-> > >> coded /sys/kernel/debug/tracing would still work.
-> > >>
-> > >> It has been over 10 years since the new interface was introduced, an=
-d all
-> > >> tooling should now be using it. Start the process of deprecating the=
- old
-> > >> path so that it doesn't need to be maintained anymore.
-> > >
-> > >I've always used /debug/tracing/ (because /debug is the right place to
-> > >mount debugfs). You're saying this is going away and will break all my
-> > >scripts?!
-> >
-> > You could mount tracefs in /tracing too:
-> >
-> >   # mount -t tracefs nodev /tracing
-> >
-> > And update you scripts with a simple sed script.
->
-> If I have to edit the mount table, I'll just keep it at /debug/tracing/.
-> Tracing is very much debug stuff anyway. While I knew there was tracefs,
-> I never knew there was another mount point.
->
-> Just annoying I now have to add two entries to every new machine.. Oh
-> well.
+On 06/16, David Lechner wrote:
+> On 6/10/25 3:31 PM, Marcelo Schmitt wrote:
+> > From: Ana-Maria Cusco <ana-maria.cusco@analog.com>
+> > 
+> > The AD4170 is a multichannel, low noise, 24-bit precision sigma-delta
+> > analog to digital converter. The AD4170 design offers a flexible data
+> > acquisition solution with crosspoint multiplexed analog inputs,
+> > configurable ADC voltage reference inputs, ultra-low noise integrated PGA,
+> > digital filtering, wide range of configurable output data rates, internal
+> > oscillator and temperature sensor, four GPIOs, and integrated features for
+> > interfacing with load cell weigh scales, RTD, and thermocouple sensors.
+> > 
+> > Add basic support for the AD4170 ADC with the following features:
+> > - Single-shot read.
+> > - Analog front end PGA configuration.
+> > - Differential and pseudo-differential input configuration.
+> > 
+> 
+> ...
+> 
+> > +static int ad4170_fill_scale_tbl(struct iio_dev *indio_dev,
+> > +				 struct iio_chan_spec const *chan)
+> > +{
+> > +	struct ad4170_state *st = iio_priv(indio_dev);
+> > +	struct ad4170_chan_info *chan_info = &st->chan_infos[chan->address];
+> > +	struct device *dev = &st->spi->dev;
+> > +	int bipolar = chan->scan_type.sign == 's' ? 1 : 0;
+> > +	int precision_bits = chan->scan_type.realbits;
+> > +	int pga, ainm_voltage, ret;
+> > +	unsigned long long offset;
+> > +
+> > +	ainm_voltage = 0;
+> > +	ret = ad4170_get_ain_voltage_uv(st, chan->channel2, &ainm_voltage);
+> > +	if (ret < 0)
+> > +		return dev_err_probe(dev, ret, "Failed to fill scale table\n");
+> > +
+> > +	for (pga = 0; pga < AD4170_NUM_PGA_OPTIONS; pga++) {
+> 
+> From what I read in the datasheet, it sounds like if adi,reference-buffer is
+> precharge, then the PGA is bypassed, so there would only be 1 option in that
+> case (gain = 1).
+> 
+Although not explicit in the datasheet, looks like there are two precharge
+buffers. One precharge buffer is used with the voltage reference inputs and is
+associated with the adi,positive/negative-reference-buffer dt properties. The
+configuration of that buffer is set through the REF_BUF_P/M fields of AFE
+registers. The datasheet doesn't mention the PGA on the section dedicated to
+describing reference and reference buffering features.
 
-It seems cleaning this up is a good thing wrt permission issues. On my
-local debian derived machine:
-```
-$ ls  /sys/kernel/debug/tracing/events
-ls: cannot access '/sys/kernel/debug/tracing/events': Permission denied
-$ ls  /sys/kernel/tracing/events
-alarmtimer        fib             irq            nmi             sunrpc
-...
-```
-I see a number of references to debug/tracing in places like perf testing:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/common/init.sh?h=3Dperf-tools-next#n122
-are you planning patches for these?
-
-Thanks,
-Ian
+The other places a precharge buffer is mentioned refer to it as 'gain = 1 precharge'.
+My understanding is that the PGA bypass precharge buffer is a different buffer
+that is only used when PGA option 9 is set in the PGA_GAIN filed of AFE reg.
+The PGA bypass precharge buffer would be used in the analog input path while
+the reference buffers would be used in the reference input path.
