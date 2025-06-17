@@ -1,103 +1,83 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F972ECE87
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:05:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E549F2ED15A;
+	Tue, 17 Jun 2025 16:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750176358; cv=none; b=cGDNISCMc39FAW870F7OqBXTJSJ+3XpolaZ2oGcRQi5m8wWbROUJl442Wjqc+6WOyVh0NMsl/S5f6EI8J+NzQjNNtY8XrJScfTZjR+1+ChxbWAXAkmBMXl+VznLJRiJojRSF7VIAUKCPHCH8an3zxOXb9PcIA8rqTxiMbaaVygs=
+	t=1750176360; cv=none; b=Ju5zy8zgDGOCJx+QdhvZwwFRI8ELYGuLfptfE2unfHYgkmlynj7JZYafOOKcmq10e2j6FOFbBe1G1bnebZJXFQRCZfpW9iC2UxMyXEIBtgcBSGRDz3zUexbxxB4uMCrwaZbzqNYh0cibYB58OvDyjBRLPV8nHJVrvcG4XOH96WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750176358; c=relaxed/simple;
-	bh=bsFV27v3wF542P8dao4+wXDIqwpBSwTUmPKD0hthgfM=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ORYzw8ZOllvFnK9V6mbkM/xnbVvobWjt6ZubGOwX0lQReZFg50LnvMcq3vGfgtyAq4S3n3OCiL+f/y2x/ARrjrtEP9w6G6WJgCeXSefDy3bjTZGMm0Mq7tTpoFCLmTvQTMSvWAE/FGNj0GY00h4xdXVXOlyZjaFTIsB9qp8rzcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMBXv69shz6M4SN;
-	Wed, 18 Jun 2025 00:05:19 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id B53611402F5;
-	Wed, 18 Jun 2025 00:05:53 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
- 2025 18:05:53 +0200
-Date: Tue, 17 Jun 2025 17:05:50 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: James Morse <james.morse@arm.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
-	<rafael@kernel.org>, <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Ben Horgan <ben.horgan@arm.com>
-Subject: Re: [PATCH 2/5] cacheinfo: Add arch hook to compress CPU h/w id
- into 32 bits for cache-id
-Message-ID: <20250617170550.0000621b@huawei.com>
-In-Reply-To: <20250613130356.8080-3-james.morse@arm.com>
-References: <20250613130356.8080-1-james.morse@arm.com>
-	<20250613130356.8080-3-james.morse@arm.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1750176360; c=relaxed/simple;
+	bh=SNdgHJE/X20HFoSToPtJnMgu1jFH6EnxA9NRuQ3YCog=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=liLE/foxusZSd+pZhQgAHdCrLYeoA733sBWSohJczT8npLcfB1vmNYk1cW7Td8k4qtwWJ92IA+RfTpzXJkCqC/zrHYm6LjwL2fJaV9Vj/0HGcVubZPdq2DSpLXwap48TUa3tabD1b6Vqa77qu7txP1i4hpRSyUGjmX8qAgr6y38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62CCF1595;
+	Tue, 17 Jun 2025 09:05:37 -0700 (PDT)
+Received: from u103485.austin.arm.com (u103485.arm.com [10.118.30.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 25D433F58B;
+	Tue, 17 Jun 2025 09:05:58 -0700 (PDT)
+From: Prachotan Bathi <prachotan.bathi@arm.com>
+To: Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Stuart Yoder <stuart.yoder@arm.com>
+Cc: linux-integrity@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prachotan Bathi <prachotan.bathi@arm.com>
+Subject: [PATCH v6 1/2] tpm_crb_ffa: Fix typos in function name
+Date: Tue, 17 Jun 2025 11:05:43 -0500
+Message-ID: <20250617160544.444321-2-prachotan.bathi@arm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250617160544.444321-1-prachotan.bathi@arm.com>
+References: <20250617160544.444321-1-prachotan.bathi@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Transfer-Encoding: 8bit
 
-On Fri, 13 Jun 2025 13:03:53 +0000
-James Morse <james.morse@arm.com> wrote:
+s/recieve/receive in __tpm_crb_ffa_send_receive
 
-> Filesystems like resctrl use the cache-id exposed via sysfs to identify
-> groups of CPUs. The value is also used for PCIe cache steering tags. On
-> DT platforms cache-id is not something that is described in the
-> device-tree, but instead generated from the smallest CPU h/w id of the
-> CPUs associated with that cache.
-> 
-> CPU h/w ids may be larger than 32 bits.
-> 
-> Add a hook to allow architectures to compress the value from the devicetree
-> into 32 bits. Returning the same value is always safe as cache_of_set_id()
-> will stop if a value larger than 32 bits is seen.
-> 
-> For example, on arm64 the value is the MPIDR affinity register, which only
-> has 32 bits of affinity data, but spread across the 64 bit field. An
-> arch-specific bit swizzle gives a 32 bit value.
-> 
-> Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
+---
+ drivers/char/tpm/tpm_crb_ffa.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Looks fine to me
-Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
-
-> ---
->  drivers/base/cacheinfo.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
-> index 9888d87840a2..d8e5b4c7156c 100644
-> --- a/drivers/base/cacheinfo.c
-> +++ b/drivers/base/cacheinfo.c
-> @@ -184,6 +184,10 @@ static bool cache_node_is_unified(struct cacheinfo *this_leaf,
->  	return of_property_read_bool(np, "cache-unified");
->  }
->  
-> +#ifndef arch_compact_of_hwid
-> +#define arch_compact_of_hwid(_x)	(_x)
-> +#endif
-> +
->  static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
->  {
->  	struct device_node *cpu;
-> @@ -193,6 +197,7 @@ static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
->  		struct device_node *cache_node __free(device_node) = of_find_next_cache_node(cpu);
->  		u64 id = of_get_cpu_hwid(cpu, 0);
->  
-> +		id = arch_compact_of_hwid(id);
->  		if (FIELD_GET(GENMASK_ULL(63, 32), id)) {
->  			of_node_put(cpu);
->  			return;
+diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+index 4ead61f01299..089d1e54bb46 100644
+--- a/drivers/char/tpm/tpm_crb_ffa.c
++++ b/drivers/char/tpm/tpm_crb_ffa.c
+@@ -178,7 +178,7 @@ int tpm_crb_ffa_init(void)
+ }
+ EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
+ 
+-static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
++static int __tpm_crb_ffa_send_receive(unsigned long func_id,
+ 				      unsigned long a0,
+ 				      unsigned long a1,
+ 				      unsigned long a2)
+@@ -251,7 +251,7 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
+ 
+ 	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
+ 
+-	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
++	rc = __tpm_crb_ffa_send_receive(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
+ 	if (!rc) {
+ 		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
+ 			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
+@@ -289,7 +289,7 @@ int tpm_crb_ffa_start(int request_type, int locality)
+ 
+ 	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
+ 
+-	return __tpm_crb_ffa_send_recieve(CRB_FFA_START, request_type, locality, 0x00);
++	return __tpm_crb_ffa_send_receive(CRB_FFA_START, request_type, locality, 0x00);
+ }
+ EXPORT_SYMBOL_GPL(tpm_crb_ffa_start);
+ 
+-- 
+2.43.0
 
