@@ -1,110 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A492957CE
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731B2295DB4;
+	Tue, 17 Jun 2025 09:30:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152647; cv=none; b=f+B1JoJ0i6NeGbgAVDlc7NSulvFzV6vsHq7eHXO5fh+pjZK5TOtwalk8K25miwnGzBkTyvnkDLJuIRJyoV9c9wQJkFhysMCsEfioxqc73Pu5AH+G+tfVmwutBEhnsRnurH9Z9Kx6wehuZkWPF22j+MdaiyOE23u8V7kWY/ksBtc=
+	t=1750152653; cv=none; b=N/mjaRiLwQOVjh7qkxJyBxmyHB7nWOJNtKhCIsMQLontjAvWgdB5S7Ek4HwH4akGt4YiItTAEGf0vBMZj0XmC5VrpUDWm01j/MqOyd9UCUu4npCkXgurnlo85070L0vKyI5RK8QMJllI0bVfCzzOBjmhVVIMy5FzqtNedznaseY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152647; c=relaxed/simple;
-	bh=RuBj++1/pe3YouI4HYElxKXPKmVAfwO/glPTZFQJIqg=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JLllXNuBYYj2WQelgxskovX/KuNYXsA2dv6B4AE5c4SPHzFJEEjaMSth6UB64dD5Fo+AoeEG187O8SgFvZ91XmT71Vl5LLGjX16+Uy+jLnTQldg964a7wHsB2HmanG1z1vEhZSl2NHK8XPs8lZaLAGQ+CcbbBz1x2Hc9ENYFXnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idk3egZ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750152653; c=relaxed/simple;
+	bh=ahXYpy6b5z94lLRpTJNKCrx/2szWukoc47M+62W5SEM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=l4yIKPq26/+wYMO//xGl0mrmo+zxZGxE+N3T6gcxEoUFTA7X4+5HjYLmdd1HM+HFChDF1LAFjekpsKKHjYiQn/fmNPcQNFCzrMWlPjnSr/vCYbIe/1bHgp3wka2uICFG7DrkawGIOMtq/TuNsSYhkAe3N5eXv782dvLomID893s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lK/R0VPe; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idk3egZ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F636C4CEED;
-	Tue, 17 Jun 2025 09:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750152647;
-	bh=RuBj++1/pe3YouI4HYElxKXPKmVAfwO/glPTZFQJIqg=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=idk3egZ5D7RzFAAQDUK7wM0d6wOWzgqMB6AcmczQVn9lTChWCwO6gtX6w+cDflfKK
-	 5P/aCrahSeKH5onrDZaqHDRkWQmsFkBkAcNWR+OMXAPYodRs3W2YOqRijc0a/uSTtG
-	 FjMvpXKlfcf1fsi0auxg1W8wcEJUQThGqnkaz3xEyuNLjdgUDUaLMaaT1s5znTr+4t
-	 8Xavpi6a5r13dQbzZABuyP0bzepgaKdTp2MLRzJDZ4+Gq3n0+zrIevG83I4qWQ7M+8
-	 7gUJ9vsIxGaEeRuYWbzPQ+Ii25fxZ3c+QK7uEG+6yXb4PffCRAOx0pH6SuUubW9vLf
-	 j5gl/haEAzjqQ==
-Message-ID: <e6a2233f-5f32-4e1a-87b3-4ecb935e3997@kernel.org>
-Date: Tue, 17 Jun 2025 17:30:43 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lK/R0VPe"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-74264d1832eso6167147b3a.0;
+        Tue, 17 Jun 2025 02:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750152651; x=1750757451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YUy2iNvi0PiX0CYP7UDZSBz4yqEIrUjnjrM9oMXgtwo=;
+        b=lK/R0VPenTT5FTAyOADFD/TgeiLQuzNQonfUDtPKaVSDFojcxF1GZcUVuXzv7E/h9T
+         OR4xZfVOCV+BRH8FuNSgCUTAVGsf+cg3o613mGlm35HEG4l7lb+nysb43fAI+GpMbNH4
+         ufjOuNU19Ii52w0am7Blf2ra06Z5ZcWfHLHUy7QYTVXiP0jttKBrKcFmU+gmfnTzRWzV
+         k6kUlqNE/pleEIBe0Uy2ZYXeJcL/hEm39Kcio+s/mB4fEVugplfKn7plY2CMU9L7HS7+
+         ep94WdWhLz1QJgo71hZP2bqiB7hUXMJI8MUtk5W72hYKyPayVYZSPVWmXVFVjs7f95bR
+         c9bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750152651; x=1750757451;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YUy2iNvi0PiX0CYP7UDZSBz4yqEIrUjnjrM9oMXgtwo=;
+        b=M01zditqBH0zXFHM/TbjwAUzX0FPxzTIrwS9MolxSVY7iPAbrmYTTVcG4WJNS3ZwqG
+         LBikVR7bc0MmgKCe7qtEv+ueEAh4ws9Mi0NoaO0jKgIjGjlFD59uuy6XT/4mvVx5staG
+         LaXp39yl4EDGSShk8b1i9KrgYdv8wP8+PxNJOV9A6/wVu2vB7Jb1rz/CiOTYscMcCwtP
+         ul1ryhbKASDXJVISaNbi4eVRbSl/yHIDsMnQkqE4CK86lGF6VfzxWNsa2q7hGStulDvY
+         aILjQ97+CKw6QfJYqCyhtO0Cc0Vd9I3cKbHZn5ivP2aBW88YZ8hBcbwj0Xk9bq1m+PF0
+         sdLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUapR71z9IsqE2q/4I36QMCYLZxg0PuqI2JSFRiZryfqwZP+wfJifWlL7oGOcepDeMLqAH4d/uwwK5U1KAP@vger.kernel.org, AJvYcCVZk9+sz8tGL0X3HFlTp7mc5uyquCDHB6cd1W5/VC0f5LTlaiuG7WbkfCfapXS64wFDG14i+7x6ZtKm@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqAdKbS6ENrhD6wNOND5qHIKPxjUL78PgE+KngqKJMtCJ/GqR8
+	xhvqef7BJRy9ML+BtlWbG7N/ir9YXmAFSdPswuw9SZ6I4VifjCoiIM1x
+X-Gm-Gg: ASbGncvjeoD5u2rHEixXIs+SG/GbEO1+oOxWQpRV+xjgZ30DkU32Ud1sq2zIvZ1YDJj
+	DOZEvOEXxCRxgxn74ipsQEViL2kCzHQXkTYnNISR2jLnRS2oFisFqQga+lNe59QMaXshxZ/xn4/
+	bn8CqXoV+c9hr9JnaUwciyDvTaPCAdQPczRvosB1/c9lH+4/uXOB+lO2glvzgwTlUBIq0y7SMhp
+	dUkjN+MRzOO/jrr/NwAxm8TcR6pZIJE1hwkOXwrpS+4qmaBh0dE+oU6B9BPGQx7E0A0vY1Fzz5b
+	tB41ZsQvtirae0211Y8iDFD12JIXWvzpLknTVLO8xb22Ltd3/9frqeX75Lao
+X-Google-Smtp-Source: AGHT+IEK+eNCuv6Irhscm02qIY6jE0+50/H0iDnYviXAHobFD+Hm0v2Tiz35A2McOjw2OnbjoYzaBA==
+X-Received: by 2002:a05:6a00:3a19:b0:746:2ae9:fc3d with SMTP id d2e1a72fcca58-7489cffb6bbmr15975596b3a.23.1750152651576;
+        Tue, 17 Jun 2025 02:30:51 -0700 (PDT)
+Received: from nuvole.. ([144.202.86.13])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748d8093c63sm714417b3a.57.2025.06.17.02.30.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 02:30:51 -0700 (PDT)
+From: Pengyu Luo <mitltlatltl@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Eric Biggers <ebiggers@google.com>,
+	Len Brown <len.brown@intel.com>,
+	Benno Lossin <lossin@kernel.org>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Joel Granados <joel.granados@kernel.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Pengyu Luo <mitltlatltl@gmail.com>
+Subject: [PATCH 4/4] firmware: qcom: scm: Allow QSEECOM on Ntmer TW220
+Date: Tue, 17 Jun 2025 17:29:29 +0800
+Message-ID: <20250617092929.1492750-5-mitltlatltl@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250617092929.1492750-1-mitltlatltl@gmail.com>
+References: <20250617092929.1492750-1-mitltlatltl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, feng.han@honor.com, jaegeuk@kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: avoid non-section-aligned size
- pinned file generation
-To: wangzijie <wangzijie1@honor.com>, linux-f2fs-devel@lists.sourceforge.net
-References: <6ccfdae1-13f7-421d-b7d3-76883c2e7b8b@kernel.org>
- <20250617073643.2361088-1-wangzijie1@honor.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250617073643.2361088-1-wangzijie1@honor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/17/25 15:36, wangzijie wrote:
->> On 6/17/25 11:57, wangzijie wrote:
->>> To prevent non-section-aligned size pinned file generated from truncation,
->>> add check condition in setattr.
->>>
->>> Signed-off-by: wangzijie <wangzijie1@honor.com>
->>> ---
->>>  fs/f2fs/file.c | 6 ++++++
->>>  1 file changed, 6 insertions(+)
->>>
->>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->>> index 6bd3de64f..72f7d1b4a 100644
->>> --- a/fs/f2fs/file.c
->>> +++ b/fs/f2fs/file.c
->>> @@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->>>  {
->>>  	struct inode *inode = d_inode(dentry);
->>>  	struct f2fs_inode_info *fi = F2FS_I(inode);
->>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
->>>  	int err;
->>>  
->>>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
->>> @@ -1047,6 +1048,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
->>>  			!IS_ALIGNED(attr->ia_size,
->>>  			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
->>>  			return -EINVAL;
->>> +		if (f2fs_is_pinned_file(inode) &&
->>> +			attr->ia_size < i_size_read(inode) &&
->>
->> Do we need to consider attr->ia_size > i_size case?
->>
->> Thanks,
-> 
-> Hi, Chao
-> After commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned
-> files"), when we want to write data to pinned file, we need to use pin+fallocate, 
-> and we did CAP_BLKS_PER_SEC roundup align when fallocate pinned file:
-> 
-> block_t sec_len = roundup(map.m_len, sec_blks);
-> 
-> Even if we truncate the file to a larger size(maybe larger than sec_len, section
-> align or not), and write data to offset beyond sec_len, the write will fail(commit
-> 3fdd89b452c2 prevent it). The scattered pin block cannot be generated by this way,
-> so I did not consider attr->ia_size > i_size case.
-> Do you have some suggestions?
+Add the Ntmer TW220 to the allowlist.
 
-Ah, correct, so what about adding comments here to describe why we don't
-need consider attr->ia_size > i_size case?
+Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
+---
+ drivers/firmware/qcom/qcom_scm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
->>> +			!IS_ALIGNED(attr->ia_size,
->>> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
->>> +			return -EINVAL;
->>>  	}
->>>  
->>>  	err = setattr_prepare(idmap, dentry, attr);
-> 
-> 
-> 
+diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+index f63b716be..0fb829975 100644
+--- a/drivers/firmware/qcom/qcom_scm.c
++++ b/drivers/firmware/qcom/qcom_scm.c
+@@ -2000,6 +2000,7 @@ static const struct of_device_id qcom_scm_qseecom_allowlist[] __maybe_unused = {
+ 	{ .compatible = "microsoft,blackrock" },
+ 	{ .compatible = "microsoft,romulus13", },
+ 	{ .compatible = "microsoft,romulus15", },
++	{ .compatible = "ntmer,tw220" },
+ 	{ .compatible = "qcom,sc8180x-primus" },
+ 	{ .compatible = "qcom,x1e001de-devkit" },
+ 	{ .compatible = "qcom,x1e80100-crd" },
+-- 
+2.49.0
 
