@@ -1,116 +1,110 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D35929A9ED;
-	Tue, 17 Jun 2025 09:30:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A492957CE
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152642; cv=none; b=NTCTd3wTJ/dYJZ96ijgyWKprzAiircGi1KREhw9SwmPnvMWezK9ysspsYL+XsLMk4TTOzeeWbneQYaFJkWnfdxJIJsGAH1Lj/QOnJj8RDxwtAt68ENw1rUNMgRxboRZOeWAv8hFx9Nqk7sXXHp5Zq/c1JelM7erml0lVCKUSonQ=
+	t=1750152647; cv=none; b=f+B1JoJ0i6NeGbgAVDlc7NSulvFzV6vsHq7eHXO5fh+pjZK5TOtwalk8K25miwnGzBkTyvnkDLJuIRJyoV9c9wQJkFhysMCsEfioxqc73Pu5AH+G+tfVmwutBEhnsRnurH9Z9Kx6wehuZkWPF22j+MdaiyOE23u8V7kWY/ksBtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152642; c=relaxed/simple;
-	bh=9xQsne9GSMDLL/WRbZGXifZmwJoyh0DZFua8btj4XoE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p+jWlpTooOqwLAhTTkXJZqvgXU+FQDomWhpqyAzsDQhNiGzQazy0H80I2aBbSRm8NySTMDb220qkMX9inh09QZ5aiwt2YAL5dBzHwOjBxH5XBzaymkvHWOlzGx4BrNRg7VcLAsITMiOiQonXbdVlcMOqM9tiLJXOrVMp1UFHiUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nG2LpPlF; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750152647; c=relaxed/simple;
+	bh=RuBj++1/pe3YouI4HYElxKXPKmVAfwO/glPTZFQJIqg=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JLllXNuBYYj2WQelgxskovX/KuNYXsA2dv6B4AE5c4SPHzFJEEjaMSth6UB64dD5Fo+AoeEG187O8SgFvZ91XmT71Vl5LLGjX16+Uy+jLnTQldg964a7wHsB2HmanG1z1vEhZSl2NHK8XPs8lZaLAGQ+CcbbBz1x2Hc9ENYFXnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=idk3egZ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nG2LpPlF"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af51596da56so4877142a12.0;
-        Tue, 17 Jun 2025 02:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750152640; x=1750757440; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uF5Bna+lHOFudtzymqm817LY3dKww4cMPcSIGpegkAI=;
-        b=nG2LpPlFpNzPpdXOAXE04S8pZLkxqHyG60PzYqN9XGv+Bny53rPR16JtEsi11tR6Bc
-         +ELsl5XQVGmsUZ1BQ9FK4pUuseEfGRubvSAv1bS4uHtz7P04c8jLNnEsl9goTwIbFrmN
-         hWcZUUWdboEmcsYy6rqdcWob8BXnzV14R/djdFCd7lqiXYKhUHWMnbatSu6iWX8DHPQC
-         VooQQdKVLlKToE74zSoZyaU8j1AmjApEIQGNdDZA7hSbwNZpqPK5XbDwLeQlxmyRC24X
-         cVaMty/Yichgk086GQbVr0l26u005Sp1f3bvHPK5masYWrWNNsy9PYMqvi7psinjg1dn
-         nPUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152640; x=1750757440;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uF5Bna+lHOFudtzymqm817LY3dKww4cMPcSIGpegkAI=;
-        b=MBOFkNpMjBmTkHYI/ERL5nFE/MSF7wOXvZTy+LNEUO+tnq2Y0F63r5ueOz0mUDDwNe
-         XM32Ym4++jqBK9gi66FxpSHQlLQddXU4HNYLuKmTaYdpex6/CAIQ1zfIOP38lQgBRYyW
-         cygrsdw397oUhCZf93WRf5g8WnjLAmoo9M7kx5JLKK3oDxx8P0YfUcd7pIjCAdAmIjv9
-         7iB/Lk93tzHlWa+BVkeit2NetflxlK0aAxrLSy345ggd9mfVhBWll2Xa0fuMtmoPEqLm
-         9GdzsFLVZcR2qLuiIU/BszdgUEta9iCGh1wcx9RRGa9bn9LZS4JR/mvnM04RlEvd/9e3
-         6E8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUwhch3IFHZjHWG2LkiFO73pNhqeCBPkTna1HpvF9hwaVsj4BDLs8Ye9IcQK29LNXAQ+Dl709N5GiovSevs@vger.kernel.org, AJvYcCW58CHEc1R2VKuvCSfFK+/iRP2I4KmVr0xQ9hb/dbxWaIH6RE24PrX5KAnGxsXSJUWqQUvv5ByjbKwQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8SEg/AXDsAFylOd43LYi0JyNSJCbo4F3+k+Ja7R53hC7ZJIV9
-	UakEaLQ9MEwBAEaz6iIcJ7lTpbI8SVi22EbTLQdD1DlNOmAe1O8H53kx
-X-Gm-Gg: ASbGnctw8k2sQ+8sl73sWAq0VhIQNoVFWMao8uylT5ruEygp04I9GhYvulWUYeEYoL9
-	gRYCTr6yV2h3p9LDluUzmR4UGg5kdUr2HYw2f0qzrbNy8Ow22D8MjZFoRNnGMazyAQbU/JH0wSK
-	RBa9BqyL70e4gEQQs01KDWEt2LAmxuWjNyA0avYDJPvLzUD2hgx/gHcTS85XF0944MIlXT0cejZ
-	YkVy+MHK6rpQcrUy5J8Uk0Q6skyqdGockgQCQY2jwJaJBNU84DdOobC6/MrcUU5uteEFuvArPGT
-	feLRP1LiZm/gCEi9zXNCMebAhKH9jEWLukMVNCx1EHJtJAO5kXcv1J/S2ZJD
-X-Google-Smtp-Source: AGHT+IHDM1WwPrSCUMsN0nugvtXjDvjQgc8tDKCWAzLWCVMTvM1TRTKnVB3aKaCj6+nNVRu3HF5N6g==
-X-Received: by 2002:a05:6a21:158e:b0:204:432e:5fa4 with SMTP id adf61e73a8af0-21fbd5598admr18662542637.23.1750152640375;
-        Tue, 17 Jun 2025 02:30:40 -0700 (PDT)
-Received: from nuvole.. ([144.202.86.13])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748d8093c63sm714417b3a.57.2025.06.17.02.30.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:30:40 -0700 (PDT)
-From: Pengyu Luo <mitltlatltl@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Len Brown <len.brown@intel.com>,
-	Benno Lossin <lossin@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Joel Granados <joel.granados@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Pengyu Luo <mitltlatltl@gmail.com>
-Subject: [PATCH 2/4] dt-bindings: arm: qcom: Add Ntmer TW220
-Date: Tue, 17 Jun 2025 17:29:27 +0800
-Message-ID: <20250617092929.1492750-3-mitltlatltl@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617092929.1492750-1-mitltlatltl@gmail.com>
-References: <20250617092929.1492750-1-mitltlatltl@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="idk3egZ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F636C4CEED;
+	Tue, 17 Jun 2025 09:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750152647;
+	bh=RuBj++1/pe3YouI4HYElxKXPKmVAfwO/glPTZFQJIqg=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=idk3egZ5D7RzFAAQDUK7wM0d6wOWzgqMB6AcmczQVn9lTChWCwO6gtX6w+cDflfKK
+	 5P/aCrahSeKH5onrDZaqHDRkWQmsFkBkAcNWR+OMXAPYodRs3W2YOqRijc0a/uSTtG
+	 FjMvpXKlfcf1fsi0auxg1W8wcEJUQThGqnkaz3xEyuNLjdgUDUaLMaaT1s5znTr+4t
+	 8Xavpi6a5r13dQbzZABuyP0bzepgaKdTp2MLRzJDZ4+Gq3n0+zrIevG83I4qWQ7M+8
+	 7gUJ9vsIxGaEeRuYWbzPQ+Ii25fxZ3c+QK7uEG+6yXb4PffCRAOx0pH6SuUubW9vLf
+	 j5gl/haEAzjqQ==
+Message-ID: <e6a2233f-5f32-4e1a-87b3-4ecb935e3997@kernel.org>
+Date: Tue, 17 Jun 2025 17:30:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, feng.han@honor.com, jaegeuk@kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: avoid non-section-aligned size
+ pinned file generation
+To: wangzijie <wangzijie1@honor.com>, linux-f2fs-devel@lists.sourceforge.net
+References: <6ccfdae1-13f7-421d-b7d3-76883c2e7b8b@kernel.org>
+ <20250617073643.2361088-1-wangzijie1@honor.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250617073643.2361088-1-wangzijie1@honor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The Ntmer TW220 is a WOS tablet based on the Qualcomm SC8280XP
-platform. This device is also known as Robo&kala 2-in-1 Laptop.
+On 6/17/25 15:36, wangzijie wrote:
+>> On 6/17/25 11:57, wangzijie wrote:
+>>> To prevent non-section-aligned size pinned file generated from truncation,
+>>> add check condition in setattr.
+>>>
+>>> Signed-off-by: wangzijie <wangzijie1@honor.com>
+>>> ---
+>>>  fs/f2fs/file.c | 6 ++++++
+>>>  1 file changed, 6 insertions(+)
+>>>
+>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>> index 6bd3de64f..72f7d1b4a 100644
+>>> --- a/fs/f2fs/file.c
+>>> +++ b/fs/f2fs/file.c
+>>> @@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>>>  {
+>>>  	struct inode *inode = d_inode(dentry);
+>>>  	struct f2fs_inode_info *fi = F2FS_I(inode);
+>>> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+>>>  	int err;
+>>>  
+>>>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+>>> @@ -1047,6 +1048,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>>>  			!IS_ALIGNED(attr->ia_size,
+>>>  			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+>>>  			return -EINVAL;
+>>> +		if (f2fs_is_pinned_file(inode) &&
+>>> +			attr->ia_size < i_size_read(inode) &&
+>>
+>> Do we need to consider attr->ia_size > i_size case?
+>>
+>> Thanks,
+> 
+> Hi, Chao
+> After commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned
+> files"), when we want to write data to pinned file, we need to use pin+fallocate, 
+> and we did CAP_BLKS_PER_SEC roundup align when fallocate pinned file:
+> 
+> block_t sec_len = roundup(map.m_len, sec_blks);
+> 
+> Even if we truncate the file to a larger size(maybe larger than sec_len, section
+> align or not), and write data to offset beyond sec_len, the write will fail(commit
+> 3fdd89b452c2 prevent it). The scattered pin block cannot be generated by this way,
+> so I did not consider attr->ia_size > i_size case.
+> Do you have some suggestions?
 
-Signed-off-by: Pengyu Luo <mitltlatltl@gmail.com>
----
- Documentation/devicetree/bindings/arm/qcom.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Ah, correct, so what about adding comments here to describe why we don't
+need consider attr->ia_size > i_size case?
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-index b14206d11..e17435e88 100644
---- a/Documentation/devicetree/bindings/arm/qcom.yaml
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -861,6 +861,7 @@ properties:
-               - lenovo,thinkpad-x13s
-               - microsoft,arcata
-               - microsoft,blackrock
-+              - ntmer,tw220
-               - qcom,sc8280xp-crd
-               - qcom,sc8280xp-qrd
-           - const: qcom,sc8280xp
--- 
-2.49.0
+> 
+>>> +			!IS_ALIGNED(attr->ia_size,
+>>> +			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
+>>> +			return -EINVAL;
+>>>  	}
+>>>  
+>>>  	err = setattr_prepare(idmap, dentry, attr);
+> 
+> 
+> 
 
