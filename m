@@ -1,90 +1,105 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AF21A5BBE
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0B87647;
+	Tue, 17 Jun 2025 01:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750124706; cv=none; b=RFt+Y0/H/RN8s2mlomzgdvy5F8v910as92f3GkGXPK4Epabkwy/ee9QKI4uMbcK4Vu5DmS10EYaK9YQAodc2XgHHMb3a7PgYOExsYa11h94aAlXveg+/ssg+z6yDf3/TA8GNPmBuplZ+suWj4arqqdCtzuH1AbEdO2wkWlk05TY=
+	t=1750125088; cv=none; b=V3RSYcLPB0TlMnuV/rs7EgvnDTI8qnYRL+xlcwiqbz/OhKp64CcM+yo6NvjHcNlcoCc+GOh85TDsyn6//HbTwsgkIzbm5Dw8IszxoE/tKNmMqC4uCzxRvwAy2gTYJhJRygewqZzW2/nFZ5QOqDmR6UzcB1twyM21OQctmOsSdGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750124706; c=relaxed/simple;
-	bh=FrMNpoU0KsNW0qg02rDXo3Uu0wX8loscUpEUTMv+OGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bixFrijrxqmYO9QGfh+kv40TZb+pUsXoF/vQRnptWAca0apEa7Yap9Gv3zLU9TCzefPn4BZhh/Z5/enxGFVHROsgjq9ji6qFzWmTzpVYQZF8GGcQQjtsrAH82scLxkC7G2OQI7RjAWXj9E/t8Mq1IbrsvXa3/fPiktbmknxChYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ByRUu2Ts; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750125088; c=relaxed/simple;
+	bh=5KYYBXG/nAkJ1xi/D5yrAC4wQOZScmN/0NZd5CV4BJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pWSWh7D8tb2yLcIfEF/2QlGDu8rPnNy8mhpvfm3wWymSIrgUqjnZip88IKJOVDzcl8JckQvTtBW/YTNChwurCVH+ZPaOKHOLaQSxf91dQJMYO6PoPmrj0hNW9vNQjhuvxr1wDjc0DdHec1Z5DrdSpYK5QNRlU1EVbozy3YReJfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlkEQ6EJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ByRUu2Ts"
-Message-ID: <9aa4278e-0f43-420b-b6b5-78a32263d7ec@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750124692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9j6dPiBh9J0ibfK+wZrIlMMj9iz4s5guo08DGg4VYmg=;
-	b=ByRUu2TsHF2kz4dnEeUzXvAzZoJvp6QzwxAHILKnjkUbd27t2f/4c3I8MO1igzw19z9HJi
-	cpyvTkgoFoearRR5vcWUdGSeM7Rq2Xlf7HcbDjOec5DcKIP71O+Oz0OxcFVDpIJBmrDo4y
-	nZsqxe5Oulo0XOp0MXeyb4cF7JAsmS4=
-Date: Tue, 17 Jun 2025 09:44:43 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlkEQ6EJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32779C4CEEA;
+	Tue, 17 Jun 2025 01:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750125088;
+	bh=5KYYBXG/nAkJ1xi/D5yrAC4wQOZScmN/0NZd5CV4BJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nlkEQ6EJ/iP5Crl9HFErvsLjbTi0TTQPr7lu5SeDJysqLRBK/PTUnDKu5hRPjE3Pg
+	 mCjVkFiUlYIbkutcMVN5Qe8LOMD1Pi/U1AzYaoLyGTkMGvjoMbw8S/a46kdt6Z7UBz
+	 gE8ZK7gbNO1rX17Q8frrAiU8taLZmpnZvWxaByDUjG57QakM+tJP2PpAqVt90mXf7/
+	 85pt+bpseYf9BA7y6RYgy5GvE0r3m7cb+MHSzB0BZi92Tj52HRXlUE7iCCecgDFCYj
+	 VWQvdPIzc9LENAi4ZCZRdbM0BO5v91xti+pRysCLP4vqtRUpJQXc+smFNY0xX9DPo7
+	 UEmcubYcDFJnw==
+Date: Mon, 16 Jun 2025 21:51:26 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Florian Weimer <fweimer@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	workflows@vger.kernel.org, tools@kernel.org
+Subject: Re: [RFC 08/19] exec: add API specification for execve
+Message-ID: <aFDKHhaqB75Qi212@lappy>
+References: <20250614134858.790460-1-sashal@kernel.org>
+ <20250614134858.790460-9-sashal@kernel.org>
+ <87ikkvv018.fsf@oldenburg.str.redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] docs/zh_CN: update git command examples in how-to.rst
-To: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250616134003.3981866-1-dzm91@hust.edu.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250616134003.3981866-1-dzm91@hust.edu.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <87ikkvv018.fsf@oldenburg.str.redhat.com>
 
-
-在 6/16/25 9:40 PM, Dongliang Mu 写道:
-> This patch leverages `checkout -b` to shorten branch & checkout
-> and fix the missing checkout.
+On Mon, Jun 16, 2025 at 11:39:31PM +0200, Florian Weimer wrote:
+>* Sasha Levin:
 >
-> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
+>> +	KAPI_RETURN("long", "Does not return on success; returns -1 on error")
+>> +		.type = KAPI_TYPE_INT,
+>> +		.check_type = KAPI_RETURN_ERROR_CHECK,
+>> +	KAPI_RETURN_END
+>
+>Is the -1 part correct?
 
-Acked-by: Yanteng Si <si.yanteng@linux.dev>
+Maybe :) That's one of the things I wasn't sure about: we're documenting
+the execve syscall rather than the function itself. A user calling
+execve() will end up with -1 on failure, and errno set with the error
+code.
+
+You could argue that it's libc that sets errno and we're trying to spec
+the kernel here, not the userspace interface to it.
+
+At the end I managed to lawyer myself into a decision that I liked: I
+figured that since klibc is really a kernel library that is merely
+packaged seperately from the kernel, it is really a kernel interface,
+and so I followed the libc convention.
+
+Open for suggestions...
+
+>Many later errors during execve are not recoverable and result in execve
+>succeeding (nominally) and a fatal signal being delivered to the process
+>instead.  Not sure if the description covers that.
+
+I was afraid of the "signals" rabit hole: from what I recall, you can
+have fatal signals pending past the point of no return but before
+execve() completes from both execve() failures as well as external
+sources.
+
+There's definitely room for a longer explanation of how all of this
+works together.
+
+I'd suggest that we tackle signal specs in the near future, and see how
+we can tie those into the rest of the API specs. Right now I'm pretty
+unhappy with the vague KAPI_SIGNAL().
+
+>What about the effect of unblocking a parent thread that has vfork'ed?
+
+In my mind it's vfork() that is waiting for the execve to complete (via
+wait_for_vfork_done()) rather than execve() actively waking up the
+vfork() parent.
+
+We can list it as a side effect of execve()? I suppose that its similar
+to something like read() in one process waking up a different process
+from epoll_wait(), so we should probably be documenting those as well...
 
 
+Thanks for the comments!
+
+-- 
 Thanks,
-
-Yanteng
-
-> ---
->   Documentation/translations/zh_CN/how-to.rst | 5 ++---
->   1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/translations/zh_CN/how-to.rst b/Documentation/translations/zh_CN/how-to.rst
-> index 569b0209385a..0896f13d8b8d 100644
-> --- a/Documentation/translations/zh_CN/how-to.rst
-> +++ b/Documentation/translations/zh_CN/how-to.rst
-> @@ -177,8 +177,7 @@ git和邮箱配置
->   请执行以下命令，新建开发分支::
->   
->   	git checkout docs-next
-> -	git branch my-trans
-> -	git checkout my-trans
-> +	git checkout -b my-trans
->   
->   译文格式要求
->   ------------
-> @@ -286,7 +285,7 @@ warning 不需要解决::
->   然后执行以下命令为补丁追加更改::
->   
->   	git checkout docs-next
-> -	git branch test-trans
-> +	git checkout -b test-trans-new
->   	git am 0001-xxxxx.patch
->   	./scripts/checkpatch.pl 0001-xxxxx.patch
->   	直接修改您的翻译
+Sasha
