@@ -1,126 +1,115 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5522F5302
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5F528C00E
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:52:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750197135; cv=none; b=PEjbKPOXORdPDjsypfbyVl/8SnSrWypmneg/FmxrM2IHBMRBuK7g5eo/i9cIPP84bm9a+7r9+6VDdcJgOvxV6OMXjLb2Yd+uX6eCagQZVAhRKuXgDqe1JX7VX47Ae+9fxqbogRxP+51HEtHRHBcNFQHFavHsfki1LtMf84mn3zg=
+	t=1750197152; cv=none; b=HU+fZv67Am2G5e941EKEB2ohCu88xfWgSIUuQTVo3MgvxrKEdUY+lXgWApSNLMeUQDvhX075X0FPbXgnyHxVG0lJjh345fVqzt082FyJ/AMdqqHd2l8Vmh/Bz+E0IyDxYw9bQA3H0JGrf+jYO4BcLTumwdArmY24NVMS2J4OyEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750197135; c=relaxed/simple;
-	bh=OLfr+FjabWyxMYerPlgVHisNdZNdT+c/fmhZ7112qy0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=RWVGugT1cr+h5n4KpddBpIm2pxCcEFBZBKmRydXriPc4hToddjul9euORYPcFbAK1fiAobY8LAmqBsRgXBaYYsRnnOwzt1J2oZ1+Xkdiw8UNHhGxj0X6hCMJDd4jHRFuXW5DTt4Z3JSwkeBFGrO5NNr1x9iyuguTJJ8JyDCkpss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=l7lfIlnH; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750197152; c=relaxed/simple;
+	bh=G6aq9UULzQSeWStHfJCFlTRXAe06thPa3pLZymjNKfU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L+EnK3ZY4H25Olkb/eaTdj4A1kJukJJxBr/9UUt7WgC0WY509meDTsG1pgDA5PUf/AFYXCRnkIjMoNqJV4fcBn2UNRqitGXgFqMcnHxMC/2knpND68KMNCDOGBL5YynsglE0tDWS+2OV8i+k1eKUVvsj+rMIWYr61amP7ORzegk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zJsXlUhe; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="l7lfIlnH"
-Content-Type: text/plain;
-	charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750197129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OLfr+FjabWyxMYerPlgVHisNdZNdT+c/fmhZ7112qy0=;
-	b=l7lfIlnH6MrA7WVL2V8//JSomnTHRfbWDjaQBb1LheEmc6wFCtFpqRl6l2Lw1YK4CDRwj/
-	P8FdSos5+SLten1oM0ZKBSwu0iDTUEGJ60rBwwsRoVnHGP5Mk2j2iPXnBXdrTopARRw7NF
-	mbb+6HMHb2pPk5BCtebLKvrm5zAlFrk=
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zJsXlUhe"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-235e389599fso62925ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:52:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750197150; x=1750801950; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tk9GnGftZvypb/fve6Tub1/yPh7i0cO/ST2epnsknjQ=;
+        b=zJsXlUheUCW2JIG/15+IHtVHkX/mQF9dlkr4jyeK+BLPjAAOHU0m2nmqrga7HVGzC9
+         7unkZHSVF8xWoPA+H391ji4FGmtIcWqkgTumss1HQYXdqA8l0mJEhZUkp+R+z7jXGsuk
+         iWp462bbNrPjHik0Y9rYmgkSWDgVTo8IyqC6YdJyEYn3lEyTVMb5Un8wRfITR9+9O+AZ
+         /A1nKHjlxsxIpEZsqpLaXQWkyN9YO7uY5Ksm+2aBZEWG2JKbv/erbbK7ab+0wVkNAlht
+         I1InBMejwQsrOXiIIhJu/L3euzIiI9YnCS8rwt8cBRPY9I7+S1WZHbY758kmCoCtojUr
+         S94g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750197150; x=1750801950;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tk9GnGftZvypb/fve6Tub1/yPh7i0cO/ST2epnsknjQ=;
+        b=XX6RAmDAGBManMleLuLLNZ0+Rd8uc72pM5PV5fj4fDfhWqHf+2xZ2jtnbEO2hUouNu
+         BxeMRusZqQNjo3KV2ptf8LRJUJTaDcEBXYrUuSh7nIOKzAZsxdhriCeGY4orJ0hoOb1S
+         ffyJFau0zImgeQnxb/YYT9206nsLcuKrq2E6wUycVZe1k3/+j7CeoOkgIEZrbruqPnKM
+         tDVLjgKq/302t/sdqS89WZJkMtMwRRKxfhWdrSayj8+mV+YSZkhnjowlpM558KxXW5kB
+         rttq7ZrLWLeJ/i1hOMZG4K7xJKobw4ZpsdLrnh+rBHLzsyuFf9KT6c73a4e7SlPA0S5+
+         qjTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUdYoBnym4/jy7v5PArZUXrNY02z4VxN4hWhd7mXrPbQzm6AXJWquHLqZXhw/1sgLF/DR1LMyNPWbwaEMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQSLIJ6oFKTEoD+8rxZysSQHWCMaEBQ37x8c+S0VmNQ9R3fPxr
+	0LS5sThdY5yT8R83f72bkcrpOFl4NLO7UxXahYdoa2lbWN7JzkF36b+VA7gufo9Oiv+aYCbCs0b
+	8+dqa0R+1MfwPgs72JP3i5iHGclcfWUmxopyMYaG3
+X-Gm-Gg: ASbGncvJZxp42ImWR7iiNnauM1BekL6qg7/ZAxPobJ99PC5xRKPdnVt7NUPVogNF/X4
+	sqjmtUUsJijXT6JKo0UOU3zwNGM24ABqhc0HtLWAOK05TZJpi1q/RdBx7eyJ0dmdkgaoH+GB66t
+	UHyF0DiVuGak2CobjlB3qUka+LHhkSOh8LgNE5HfeDMmiWEaIK9lENWs6aJfFyvyyCIO2MjbHWn
+	A==
+X-Google-Smtp-Source: AGHT+IEjic+DQ+x5I1iXBb3/VZNJM4D7edP1sy7P3+y0WzbFzyD+lgXbWJrCNXbJ7hLkiIre4KJPn7EyvpHv7CZV3kw=
+X-Received: by 2002:a17:902:f78e:b0:235:e1d6:5339 with SMTP id
+ d9443c01a7336-2366c8140dfmr9959955ad.26.1750197150134; Tue, 17 Jun 2025
+ 14:52:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3853.100.6.1.1\))
-Subject: Re: [PATCH 0/2] Add nokbdwakeup quirk and enable it for MSI Claw
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Matthew Schwartz <matthew.schwartz@linux.dev>
-In-Reply-To: <lgedr3vr65tlmdt6p7gsd4cqlhgtadu5gj63ibwpzjuaxgrnwt@vlp3utkui3fh>
-Date: Tue, 17 Jun 2025 14:50:07 -0700
-Cc: linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250617210950.1338107-1-almasrymina@google.com>
+ <CAHS8izMWiiHbfnHY=r5uCjHmDSDbWgsOOrctyuxJF3Q3+XLxWw@mail.gmail.com> <aFHeYuMf_LCv6Yng@mini-arch>
+In-Reply-To: <aFHeYuMf_LCv6Yng@mini-arch>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 17 Jun 2025 14:52:17 -0700
+X-Gm-Features: AX0GCFvx4bn0aOYkN3CSqdpJSpRaKHHjptdW4cwpAa8d5lG6VPslMmhVC6iQfF0
+Message-ID: <CAHS8izOMfmj6R8OReNqvoasb_b0M=gsnrCOv3budBRXrYjO67g@mail.gmail.com>
+Subject: Re: [PATCH net v1] netmem: fix skb_frag_address_safe with unreadable skbs
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	ap420073@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <72732EC5-5244-40D5-8928-1FA7F161EFE6@linux.dev>
-References: <20250617051930.3376981-1-matthew.schwartz@linux.dev>
- <5isz34mtyxezwrhmvtedygszhhnstsqa4dmcttb33p5dgw47st@3n6wswp2p6di>
- <98727492-5E7C-41A5-B0EF-1A21852FFB05@linux.dev>
- <lgedr3vr65tlmdt6p7gsd4cqlhgtadu5gj63ibwpzjuaxgrnwt@vlp3utkui3fh>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-X-Migadu-Flow: FLOW_OUT
 
+On Tue, Jun 17, 2025 at 2:30=E2=80=AFPM Stanislav Fomichev <stfomichev@gmai=
+l.com> wrote:
+>
+> On 06/17, Mina Almasry wrote:
+> > On Tue, Jun 17, 2025 at 2:09=E2=80=AFPM Mina Almasry <almasrymina@googl=
+e.com> wrote:
+> > >
+> > > skb_frag_address_safe() needs a check that the
+> > > skb_frag_page exists check similar to skb_frag_address().
+> > >
+> > > Cc: ap420073@gmail.com
+> > >
+> >
+> > Sorry, I realized right after hitting send, I'm missing:
+> >
+> > Fixes: 9f6b619edf2e ("net: support non paged skb frags")
+> >
+> > I can respin after the 24hr cooldown.
+>
+> The function is used in five drivers, none of which support devmem tx,
+> does not look like there is a reason to route it via net.
+>
+> The change it self looks good, but not really sure it's needed.
+> skb_frag_address_safe is used in some pass-data-via-descriptor-ring mode,
+> I don't see 'modern' drivers (besides bnxt which added this support in 20=
+15)
+> use it.
 
+Meh, a judgement call could be made here.  I've generally tried to
+make sure skb helpers are (unreadable) netmem compatible without a
+thorough analysis of all the callers to make sure they do or will one
+day use (unreadable) netmem. Seems better to me to fix this before
+some code path that plumbs unreadable memory to the helper is actually
+merged and that code starts crashing.
 
-> On Jun 17, 2025, at 2:45=E2=80=AFPM, Dmitry Torokhov =
-<dmitry.torokhov@gmail.com> wrote:
->=20
-> On Tue, Jun 17, 2025 at 02:33:34PM -0700, Matthew Schwartz wrote:
->>=20
->>=20
->>> On Jun 17, 2025, at 1:50=E2=80=AFPM, Dmitry Torokhov =
-<dmitry.torokhov@gmail.com> wrote:
->>>=20
->>> Hi Matthew,
->>>=20
->>> On Mon, Jun 16, 2025 at 10:19:28PM -0700, Matthew Schwartz wrote:
->>>> This patch series aims to solve an issue on the MSI Claw, a series =
-of
->>>> handheld gaming PCs, where their volume buttons will wake the =
-system out
->>>> of s2idle because they are registered via an i8042 keyboard device. =
-This
->>>> is not expected behavior on a handheld device that lacks an actual
->>>> keyboard, as it is very easy to press the volume buttons while =
-handling
->>>> the device in its suspended state.=20
->>>>=20
->>>> To solve this, introduce a new quirk based on DMI match that will =
-disable
->>>> the wakeup property of an i8042 keyboard device and enable it for =
-current
->>>> MSI Claw models.
->>>=20
->>> Why does this need to be done in kernel instead of having a udev =
-rule
->>> to toggle this through sysfs:
->>>=20
->>> /sys/devices/platform/i8042/serio0/power/wakeup
->>>=20
->>> Thanks.
->>=20
->> Yes this would work, but it would also mean relying on individual
->> distros to discover such a udev rule is necessary and figure out how
->> to ship this as a device specific workaround within userspace such
->> that it won=E2=80=99t apply to other devices that do want to maintain =
-i8042
->> keyboard wakeup functionality.
->=20
-> If you submit the rule to systemd repository then distributions will
-> get it when they update to the new systemd release. Very similar to =
-the
-> kernel.
->=20
->=20
->> I will investigate implementing this
->> via udev in some sort of packaged fashion, but a kernel quirk seemed
->> like the better option here in my opinion, especially because a quirk
->> system is already in place for i8042 within the kernel.
->>=20
->=20
-> Quirks in the kernel should be used when they are needed for booting.
-> When configuration can be delayed to [early] userspace then we should
-> try to use userspace solutions. This way we are not wasting =
-unswappable
-> kernel memory.
-
-I see, I will look into implementing this via systemd in that case. =
-Thanks!
-
->=20
-> Thanks.
->=20
-> --=20
-> Dmitry
-
-
+Similarly I put this in net because it's a fix and not a feature. I
+can send to net-next if preferred.
