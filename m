@@ -1,168 +1,95 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C92762980AF
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B1F32135CE
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153478; cv=none; b=mG4pXz6ht76ufWXpTh7vbrxib/MCeZloa7nYc28Y5ujdoan3TkzTZRGijxvPlzF+JtrP499+rYOJTDxVjQw2zJFFXVEa7q2QhQiTTWB0YL9/H+dU7xUE+qF0of0OLNW2TleSJ8vwSBDGMccfxsUzC3DSB8I5HpnmJJA5lwa3/rQ=
+	t=1750153545; cv=none; b=XSF2B5m2uCy7xyClNE5xdXNXZyqU+JV87koAZi6dg807sz030gtIdp03GvCwQBKHCt8P39ZOChtHqhTHakKLgkfKz5fUhBue47DuuuS4Z36svp6pI1oHHwcsb3bAmtI9YRjvD8wW2IlNuSmBQPPQbuXPwUeHmhhWJ0KMbXwoxJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153478; c=relaxed/simple;
-	bh=SEIeerzS0thI+z5d6kA6cGgH8szp0nPEZ+WNtrQjWT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dcg2ddK1ptLwfmoUgYwcYpRtnAV6Lxu4CwT+56I7C9j7d9xoH1KRQZnKC2SHB5f1Sxfz1ZyM0QDu3+z6Mn/7IXEFyxMQkk60AViBzk8pW1z/0Jc22apgsOVQ8AbBVHCrITG/PIHUHmVK+bjhtbTatU2SholEgHUF+z0t7p8cO8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HzkAvfQ5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HzkAvfQ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750153475;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=sdEh9cEys/eVA2SD9wfMRib1+LZeWMxS5mffwDFqNgM=;
-	b=HzkAvfQ5MxcdicUALf8x+HJQ6rSnG6en5uVXFbpN5p7IIQg8wsyrYNKbvGRIfahqmatl66
-	bdDS32JdHJKsv+TlHV1MoFmk8t6EJwDoD1XHnrdkQ5k7lovxogAD7ftAczwnfDO7+nAEcm
-	F5e1O3jlh6AtTAu8gH/HK6fOh8tf/5o=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-345-UgJ223H4PV6JXv16bYAaDg-1; Tue, 17 Jun 2025 05:44:34 -0400
-X-MC-Unique: UgJ223H4PV6JXv16bYAaDg-1
-X-Mimecast-MFC-AGG-ID: UgJ223H4PV6JXv16bYAaDg_1750153473
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45311704d1fso31175675e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:44:34 -0700 (PDT)
+	s=arc-20240116; t=1750153545; c=relaxed/simple;
+	bh=1JlOzkLmqYWnLlGehwecqpC4uZ0U+sKtPyTOjaX2WFw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=EFGcSg3JsJs5Y5z3eAUB8cDNUSc0gaMMTGRUbRbix50OWFdbjoXEpCHOquo5Fq7OKZi8Qi14EgUDNu95LADrMFOGlznadDbo45ItsOXgV3k/toyhlw/934MBbTGDqaErNsXd+s2aM8GEzwyON2mtOzP/0CDUerLorCsm1+wzZmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc0a6d4bdso69266235ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:45:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153473; x=1750758273;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=sdEh9cEys/eVA2SD9wfMRib1+LZeWMxS5mffwDFqNgM=;
-        b=E3wv1BNwvHJjCZkoZW27YdkH97bHGG1sx1ru3oWq7vVqqz3r77SIMU+5LvzjpW2NKV
-         lHjakK315UDyTK+/+zxq7liUR6BBAalqXn0uOSSiQ0VJ/HPvu0V+RJK5chrfvVsDiB6g
-         nUEVe/IOrV925t1GXkNxEDWJTsQC8hxT9IGb8aGwDfpNdE4KBSq5g6Uc84JgAFdBlgh+
-         GDNZjH4nxropN/gwLJxaT3IJnIRWIbi1QYoU5DJenjRq8P7Ngr6bsj+qpuf7LqY3Zf4V
-         O5KAgmI/Eg9nHWPdveOBOU2pQYIL1zXXJ2AfA4gu7HTMYx/gU/a3icv7fYvEeUYaV+K7
-         oyHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdUO/JfcDCMAatRz5a869wcD3gyah6pXNToVKdZ3V7yE0IC5KLTFl1acDCsHQcMc/fRH22aTHQvtDrZzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHe4B+ndF7hOjuPL+Nd7PTobIdyVeKpGe4ZXWtOgC+RYk8Z+3z
-	EcMgCDLwc75o0oUnHuyn5dvID3bfmqPewNeYQAUmcH1F3nKzndEJtpUp9oDXj1haBXuVKBWR7PQ
-	Mxm243KFS7d3yMuQ+bOS4DqHmaHC3bkHYDNZTqXPMHjQNriXH0M53CoNMD2dJJyMzDw==
-X-Gm-Gg: ASbGncvSPTZjtXCaYHZPFanH/xaa+BlEWBOKXsHhilYy+jOtBO52XUl8j0vpmaaNoXn
-	O2vfbtQRuR0ojdwfDhg0rg1v+Pvm5pvPAX0B6rYZB9GEllumaChFN3TeOQV6RVYQR7nLRP9KJQ8
-	X0B/sN9CgdWcNmGntp5VJH9ZCOctWd0LBL6TV5uH7fyGnvPeI0BxQZ8y7ckWTT9+FKpxywhJO7n
-	3Y3cPUZAFkSVjCvvqOT1UyRy8j1kniH+jo5Y59ZF1v1FSgyWb/ydIefOGijkfGA5gxaQpO2BMld
-	jT2uDJmrjEQNowg9jaN4JHBNWi1ZiwSh3sl3o1Jp8PryvGRoI2e7JXG4UsZDn3NPEJidEYSSl8S
-	GecFcxo4Epe5y25bJMDSzMx7o97Bdii0hEHLLwC4yeu0TkXw=
-X-Received: by 2002:a05:6000:65a:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a588e9a99bmr1291325f8f.1.1750153473102;
-        Tue, 17 Jun 2025 02:44:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHQpVd3mwZ+TEDjCXC20DL1F3MMRYh4Y/yZHPnb93a/Bf/b7RyUJmn1/nXnnPCK9NELoBd4w==
-X-Received: by 2002:a05:6000:65a:b0:3a5:88e9:a54f with SMTP id ffacd0b85a97d-3a588e9a99bmr1291288f8f.1.1750153472667;
-        Tue, 17 Jun 2025 02:44:32 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b4b67bsm13257644f8f.83.2025.06.17.02.44.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 02:44:31 -0700 (PDT)
-Message-ID: <31bdbfcf-bbfa-46b7-a427-806d42d88cec@redhat.com>
-Date: Tue, 17 Jun 2025 11:44:30 +0200
+        d=1e100.net; s=20230601; t=1750153543; x=1750758343;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4bEHA2qX/oVaaMcpR/YbNSPA/WmlhQAFoeNLoNBQEF4=;
+        b=S7wHn5W9Ejjmq92B0mlXHXqdQgmXDVOEh7VdPneEIZW9fPiEMEuqmhqj8VHNFEnDP2
+         GcHphhORv3kawL2ciuAUQD0xT7RpBSoN0ersGRkxWaUktGQUrpKxshQjdcMhK20mQBpa
+         9yloPVj0SlRsEGt4X/SvY80/HjGudRMWQq6nZeCGMPkRdfWGr6LPkhSUQYQPlaykjERT
+         FDzoUd9VjBKDZrBxpvcX1VIbKhqqg8+5Ty0jCkZH48eFqK1gPwY19C9tyEDfiEAvjyHN
+         bjF0vs/mlRG51CbipNIvmrbtkGAvxb+org+UN8mm/mRQ+FFvLztei255jqPovcWUNFbP
+         K5LA==
+X-Gm-Message-State: AOJu0YzEgAl73Tdy2owYjZ8NfVdtxpo55vOgaTzyCHmT0VJ6TsvzqhqO
+	8sfLxraJf7lbAUfK1eUMya3HS+/lhv0KqaRl4s3yU+GgdBYiOCe96bui1LZiZl6rSD/kBfBWu6N
+	8l9zMdGXIngBsOix/WLysjOs7ofecIrbOMKGwP1MkLQUgP8REk5QKxbWUzyE=
+X-Google-Smtp-Source: AGHT+IGn4GRfWAWyngxTTGQBJGcaRnD1dz+v41puZb8KTD+fWnJZfLelx9tJZyNPlggAVJrjE4su5ABXpRyLQ+VU78Ol1X2N8n/C
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 08/14] mm/khugepaged: Remove redundant pmd_devmap()
- check
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
- dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
- balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
- m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
-References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
- <d4aa84277015fe21978232ed4ac91bd7270e9ee0.1750075065.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <d4aa84277015fe21978232ed4ac91bd7270e9ee0.1750075065.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:2583:b0:3dd:d18c:126f with SMTP id
+ e9e14a558f8ab-3de07d50c73mr127290935ab.10.1750153543491; Tue, 17 Jun 2025
+ 02:45:43 -0700 (PDT)
+Date: Tue, 17 Jun 2025 02:45:43 -0700
+In-Reply-To: <00000000000096ee8f061e991433@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68513947.a70a0220.395abc.0210.GAE@google.com>
+Subject: Re: [syzbot] [PATCH wireless] wifi: ath6kl: remove WARN on bad
+ firmware input
+From: syzbot <syzbot+92c6dd14aaa230be6855@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 16.06.25 13:58, Alistair Popple wrote:
-> The only users of pmd_devmap were device dax and fs dax. The check for
-> pmd_devmap() in check_pmd_state() is therefore redundant as callers
-> explicitly check for is_zone_device_page(), so this check can be dropped.
-> 
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com.
 
-Looking again, is this true?
+***
 
-If we return "SCAN_SUCCEED", we assume there is a page table there that 
-we can map and walk.
+Subject: [PATCH wireless] wifi: ath6kl: remove WARN on bad firmware input
+Author: johannes@sipsolutions.net
 
-But I assume we can drop that check because nobody will ever set 
-pmd_devmap() anymore?
+From: Johannes Berg <johannes.berg@intel.com>
 
-So likely just the description+sibject of this patch should be adjusted.
+If the firmware gives bad input, that's nothing to do with
+the driver's stack at this point etc., so the WARN_ON()
+doesn't add any value. Additionally, this is one of the
+top syzbot reports now. Just print a message, and as an
+added bonus, print the sizes too.
 
-FWIW, I think check_pmd_state() should be changed to work on pmd_leaf() 
-etc, but that's something for another day.
+Reported-by: syzbot+92c6dd14aaa230be6855@syzkaller.appspotmail.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+---
+#syz test
+---
+ drivers/net/wireless/ath/ath6kl/bmi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/wireless/ath/ath6kl/bmi.c b/drivers/net/wireless/ath/ath6kl/bmi.c
+index af98e871199d..5a9e93fd1ef4 100644
+--- a/drivers/net/wireless/ath/ath6kl/bmi.c
++++ b/drivers/net/wireless/ath/ath6kl/bmi.c
+@@ -87,7 +87,9 @@ int ath6kl_bmi_get_target_info(struct ath6kl *ar,
+ 		 * We need to do some backwards compatibility to make this work.
+ 		 */
+ 		if (le32_to_cpu(targ_info->byte_count) != sizeof(*targ_info)) {
+-			WARN_ON(1);
++			ath6kl_err("mismatched byte count %d vs. expected %zd\n",
++				   le32_to_cpu(targ_info->byte_count),
++				   sizeof(*targ_info));
+ 			return -EINVAL;
+ 		}
+ 
 -- 
-Cheers,
-
-David / dhildenb
+2.49.0
 
