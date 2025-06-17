@@ -1,165 +1,163 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA4A1F4606
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C37A1F5828
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198452; cv=none; b=LSFxqF2rEQg+tkFoj/DBsDergLyrQzGMRYdCPD7ysMgmtvzDjoP6lrm5j8342gaupWyQ+NrT3ndX01xPb5HjiCBSe6XdMGDvFISE5pw3sbcd4wkRk+BkrejSRNIkaqCELVwrRtDZi/hA31X0qcWNsO6wCpaR63Q8uUI82tKjjfY=
+	t=1750198519; cv=none; b=R4IYcaZ54ZOW6DmZET8vomqZblvpaJc/vJNDYmKnueuG7IuCITiBE+4cn8slRNB6zVR05z9lc457wi9+YPgiA2Lh3iBHHoPFlLP4sh5eZm4MB8eFfcHxbtwRg+f/p6y3K9JsAkOifqfovpEbCYZR392EmzFBRprrC3gu95+88zI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198452; c=relaxed/simple;
-	bh=kwbbyB0B0QuRG9hwjbKdJ2CGL2BZQWPKXY9uBhNi+fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iv/IrJqEuu/7fp5uffBN15VWfupNyU6iKS+AlQOHsWXCWVad0B5ZrEhMgj4EiZ3+gnnsJ0pfyuWPOnF6X86whJtmtmo2w6I1TW3y7nUZ0Hcg7H807wM328T6NNrFQm2zhZGLMMkP4Dcgc8yIAT56ukbNbJ5dWkbagdH5E7MWKY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=x/EYJP9/; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	s=arc-20240116; t=1750198519; c=relaxed/simple;
+	bh=c0MNaMding3voNo3iR/0QNnfN9F6WyYGN7tTzyJ2TWE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=leW1soz4ehCJED1Wbf/EPXHNSN/NrEZoKGuMaI5LZzUBNPXtS8QlWyFTYE7usA/SQPsqZLhv9Jmgqyzk+XGyTcTNTlCs0Lo6S+KCSBGnkwwUd+lu/DXy9WRIna7UDKMuSDFsoolytUq1k44NYBP9tcQKBQ4RsjK+dpNm9T5H+LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--paullawrence.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CaWvqUB3; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--paullawrence.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="x/EYJP9/"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3138e64b42aso7200588a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:14:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CaWvqUB3"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-313fab41f4bso4860068a91.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1750198451; x=1750803251; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rht1pWqTVlNemlSkA4kJuYwRKU6KD6oE4FAwP7gkVd8=;
-        b=x/EYJP9/iefEds7XCAbKnSIQAYRU1H20zSxIscVIbDQJgscWpLVdS4lUT0BN3CHkOj
-         l3lbdmwh0FKmNMiPkohEqrShdqPfVXGqtm6lxpC5wcxR0h6hT7sV76M5Y9SgL3x60ZG0
-         KrcG3JnF5Eti4X7c12CXlZ8Jd9Rn4aXKkVs+xQ4jkPO5b4d9EKuHrzYznV2FDRZRDFeq
-         xqBLyC0VCY3T0iU9TEP2G/Owa6VuemXofod939Dm925L2UtS+y7U+oXvp2u15wpnRmpJ
-         DteB8t4iPbL1H42HifdHmi6626Cvczmy9Pyfpa0SiYAlMkrEkUToRkCX5YuK3ZtCrorf
-         Y/nA==
+        d=google.com; s=20230601; t=1750198515; x=1750803315; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cxl+kwKVqjyvT/nu1rNj4Skgg23PRS8cBlmGvckwlhY=;
+        b=CaWvqUB3WaW0IbiEDGGe2/knK+DpAymxJ3/2vcx5vh9T0VrA1tlGSu44J1uS2mf2Vp
+         xH7bHNUhUMjgx/YZPHMrnBUdxOjC6M60PNulQW3y5DGR8+97CvCJorISeetSj9YXy0Ip
+         cLx2YYRXC2PPPTW8H/3xNJOY3owATOK11PLGP1YC3cn954J/7/hJHPk4af2DwIFAW4b5
+         YG4nDGo6FyZqR7sijdnRreB4BekgNI363qu166qzKmAK7GXUvDTOt6ltL7LbSCwDkHma
+         O4+8baenOZ3KHoXUZLpSnbhj+hGaaHn2/F2Zl/ZlHTemEezEN+WTY68Y9KXLR876PBUH
+         aCTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750198451; x=1750803251;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1750198515; x=1750803315;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rht1pWqTVlNemlSkA4kJuYwRKU6KD6oE4FAwP7gkVd8=;
-        b=LCIKYuPuxuYmKqrSAtN/NC/6eWL3Cw2Q/Cls313UB01odmLtOvpgZsTi2z0MyPJv+E
-         75iGxAZLlPMLXFLrZ4Ze4sJzJcb7AKC4Kopi8nUMiSeHjExnx8Bt5hsMYYhorbJhncZo
-         k/vIHlT9o1W6Lqv1dRTUdOiw8Lt1vQtjCHYyl1cHgKFpFSluELSV3dJb6U7vBYXTn9Ya
-         lx7hpyXlBXx2sNkXc4ET/0UbqpSXdIS6mRVBuK4hnShk2GQ0R2YbVIf8ubu2uZseYrhS
-         5RwF7+r2eGSQ+pKqBql2Jrt2lRjDTVkJLV6ijaKH4O3o0WjD2BQGBJNmqfQImFko/bba
-         suBA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8AB580q/J/9nCr1vzN4lMTJClJrcEBJwuX6uPW4XMva3/r2NYWQCz/KEN/q/6UKGe+dkR7/r80VH5Hvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4/I9og/bxyruHGCnvXHCbJ5YFcipdOwPWt/LGhyX/totp9qfM
-	ScGMD8BbG+pSP4ihXtSt/jh4XE6qE65PUzStd5ke/ewudGUmSICk1m8kU8hpvw9ARG4=
-X-Gm-Gg: ASbGncv6lJqqC8H5x5DfnuifHtmGVVKF3PoaC4YfYb1K9F4vIO2cspcr2Xnm0H7tIH1
-	sCyLmJ4Ksk7enUv6bp7s10dO1LNZG5IyNzac+AeHWJuZqKhNXWeLDz6fRtBqYTTT7CXKd2LRVCc
-	5kxYdxnTaS6kdOtRXO2rAxlKzb6TcVEhX86eJTeFx1XntOKx1wgn6YY1KOS1nXWbiJ4RwIziIjs
-	JtoZTzMOhcMtelBts74zKTFgFZ+5b0QLU1FyS5AmDy9KOQvG8LxECspgpzAZ8lIC36YSmtI+Bvi
-	++uQdr42oj7tl2vp9VvBy1GJ5gTdldFTAmkOxfpEdmJmUvBti6TLKQ6J613i58EiteU+kgo=
-X-Google-Smtp-Source: AGHT+IGjtDH8+7Qdmc6DGmjSJpavFXI06zS+xsVxnGKMVqLF3EoMugjqqf5A/sV2C5cZ3H3jbI/Tpg==
-X-Received: by 2002:a17:90a:dfc8:b0:311:f05b:86a5 with SMTP id 98e67ed59e1d1-313f19d2977mr26267870a91.0.1750198450546;
-        Tue, 17 Jun 2025 15:14:10 -0700 (PDT)
-Received: from x1 (97-120-250-80.ptld.qwest.net. [97.120.250.80])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb0fabsm85895565ad.181.2025.06.17.15.14.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 15:14:10 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:14:08 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v4 0/8] Add TH1520 GPU support with power sequencing
-Message-ID: <aFHosEvn35Fr3LFv@x1>
-References: <CGME20250614180906eucas1p116f8a13a4013edd3bbedfd2e4a8b0aa3@eucas1p1.samsung.com>
- <20250614-apr_14_for_sending-v4-0-8e3945c819cd@samsung.com>
+        bh=cxl+kwKVqjyvT/nu1rNj4Skgg23PRS8cBlmGvckwlhY=;
+        b=SUulO3r6e/2YYpcGf0gI7Qfn68J56eQ+cKJKLCliimqlPcxvhGcXEffC7PCPFHGLDy
+         NT1HKdyDCdo/z3f882hNwHJBoHT67PFCpDzTDMCt+8tva30798WxTTS5QCL1kqjzwrbD
+         b3smkSxfEO1ohIUZl3jx55PA7k3cW5Si2hIO+XY+Gj0ZZBADjiBuYBp7Gm/VXqeGfpkJ
+         MdEEtplxPHbW5NOqjes9D6zYKvQQVloneTYxCMyIoFPWHKHRjhp90RcdtDkhh7w++eFO
+         ANyjo3c5a7RDonypW6zMdNvbnLUsVzOdQISQHRS/WjtO1IOhj1e8RHJQuhJngQN72+YI
+         8r9Q==
+X-Gm-Message-State: AOJu0YzU5V6MdeVm+muOQrLKS550O86EKuCzAzhWOMh4kgjuK99OFca4
+	TIKUnO+aKjuIEVJeMcf2VmwMn836i6wD9bLcJgiA8/G6SlSG2S6z6tbWr/yrK7E7AuuDGc1whMv
+	6jZLFfMlTayHfV6PpzkZRMcxoAJqywQ==
+X-Google-Smtp-Source: AGHT+IH9HQM0vcszPINZ5N3o0BH6niLOJ3JMv+4bB5SHG+D+SpR+2xXkA4w53B91ufCZAsEaEvV3umnB4D3GTEDCdVA=
+X-Received: from pjzz13.prod.google.com ([2002:a17:90b:58ed:b0:2fe:800f:23a])
+ (user=paullawrence job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2d47:b0:312:db8f:9a09 with SMTP id 98e67ed59e1d1-313f1c380f7mr27765761a91.14.1750198515563;
+ Tue, 17 Jun 2025 15:15:15 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:14:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250614-apr_14_for_sending-v4-0-8e3945c819cd@samsung.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
+Message-ID: <20250617221456.888231-1-paullawrence@google.com>
+Subject: [PATCH v1 0/2] RFC: Extend fuse-passthrough to directories
+From: Paul Lawrence <paullawrence@google.com>
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	Paul Lawrence <paullawrence@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 14, 2025 at 08:06:06PM +0200, Michal Wilczynski wrote:
-> This patch series introduces support for the Imagination IMG BXM-4-64
-> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
-> managing the GPU's complex power-up and power-down sequence, which
-> involves multiple clocks and resets.
-> 
-> The TH1520 GPU requires a specific sequence to be followed for its
-> clocks and resets to ensure correct operation. Initial discussions and
-> an earlier version of this series explored managing this via the generic
-> power domain (genpd) framework. However, following further discussions
-> with kernel maintainers [1], the approach has been reworked to utilize
-> the dedicated power sequencing (pwrseq) framework.
-> 
-> This revised series now employs a new pwrseq provider driver
-> (pwrseq-thead-gpu.c) specifically for the TH1520 GPU. This driver
-> encapsulates the SoC specific power sequence details. The Imagination
-> GPU driver (pvr_device.c) is updated to act as a consumer of this power
-> sequencer, requesting the "gpu-power" target. The sequencer driver,
-> during its match phase with the GPU device, acquires the necessary clock
-> and reset handles from the GPU device node to perform the full sequence.
-> 
-> This approach aligns with the goal of abstracting SoC specific power
-> management details away from generic device drivers and leverages the
-> pwrseq framework as recommended.
-> 
-> The series is structured as follows:
-> 
-> Patch 1: Introduces the pwrseq-thead-gpu auxiliary driver to manage the
->          GPU's power-on/off sequence.
-> Patch 2: Adds device tree bindings for the gpu-clkgen reset to the
->          existing thead,th1520-aon binding.
-> Patch 3: Extends the pm-domains driver to detect the gpu-clkgen reset
->          and spawn the pwrseq-thead-gpu auxiliary driver.
-> Patch 4: Updates the Imagination DRM driver to utilize the pwrseq
->          framework for TH1520 GPU power management.
-> Patch 5: Adds the thead,th1520-gpu compatible string to the PowerVR GPU
->          device tree bindings.
-> Patch 6: Adds the gpu-clkgen reset property to the aon node in the
->          TH1520 device tree source.
-> Patch 7: Adds the device tree node for the IMG BXM-4-64 GPU and its
->          required fixed-clock.
-> Patch 8: Enables compilation of the Imagination PowerVR driver on the
->          RISC-V architecture.
-> 
-> This patchset finishes the work started in bigger series [2] by adding
-> all remaining GPU power sequencing piece. After this patchset the GPU
-> probes correctly.
-> 
-> This series supersedes the previous genpd based approach. Testing on
-> T-HEAD TH1520 SoC indicates the new pwrseq based solution works
-> correctly.
-> 
-> An open point in Patch 7/8 concerns the GPU memory clock (gpu_mem_clk),
-> defined as a fixed-clock. The specific hardware frequency for this clock
-> on the TH1520 could not be determined from available public
-> documentation. Consequently, clock-frequency = <0>; has been used as a
-> placeholder to enable driver functionality.
-> 
+This is the first part of a much larger patch set that would allow a direct=
+ory
+to be marked =E2=80=98passthrough=E2=80=99. At a high level, the fuse daemo=
+n can return an
+optional extra argument to FUSE_LOOKUP that contains an fd. Extra fields ar=
+e
+added to the fuse_dentry, fuse_inode and fuse_file structs to have a backin=
+g
+path, inode and file respectively. When fuse is performing an operation, it=
+ will
+check for the existence of a backing object and if it exists forward the
+operation to the backing object.
 
-I don't have any more information that what is in the public PDFs [1],
-so I think it is okay to have a placeholder frequency.
+These two patches add the core infrastructure, handling of the extra argume=
+nt
+response to lookup, and forwarding open, flush and close to the backing fil=
+e.
+This is sufficient to validate the concept.
 
-Is it the case that the frequency doesn't really matter from the
-perspective of the driver?
+The questions I have:
 
-Thanks,
-Drew
+* Is this something that interests the fuse maintainers and community?
+* Is this approach the correct one?
+* (if we agree yes to 1 & 2) Detailed analysis of the patches for errors.
 
-[1] https://git.beagleboard.org/beaglev-ahead/beaglev-ahead/-/tree/main/docs
+A few observations:
+
+I have matched backing objects to their fuse objects. Currently fuse passth=
+rough
+puts a backing file into the fuse inode. I=E2=80=99m not quite sure why thi=
+s was done -
+it seems to have been a very late change in the passthrough patch sets whic=
+h
+happened without comment. It does not really make sense for full directory
+passthrough since unopened inodes still need to have backing inodes. The on=
+e
+advantage I can see is that it reduces the number of opens/closes of the ba=
+cking
+file. However, this may also be a disadvantage - it moves closes, in partic=
+ular,
+to an arbitrary point when the inode is flushed from cache.
+
+Backing operations need to happen in the context of the daemon, not the cal=
+ler.
+(I am a firm believer of this principle.) This is not yet implemented, and =
+is
+not (currently, and unfortunately) the way Android uses passthough. It is n=
+ot
+hard to do, and if these patches are otherwise acceptable, will be added.
+
+There was a long discussion about the security issues of using an fd return=
+ed
+from the fuse daemon in the context of fuse passthrough, and the end soluti=
+on
+was to use an ioctl to set the backing file. I have used the previously-rej=
+ected
+approach of passing the fd in a struct in the fuse_daemon response. My defe=
+nse
+of this approach is
+
+* The fd is simply used to pull out the path and inode
+* All operations are revalidated
+* Thus there is no risk even if a privileged process with a protected fd is
+tricked into passing that fd back in this structure.
+
+I=E2=80=99m sure we will discuss this at length if this patch set is otherw=
+ise deemed
+valuable, and I am certainly not wedded to this approach.
+
+I have written tests to validate this approach using tools/testing/selftest=
+s. I
+don=E2=80=99t want this patch set to get derailed by a discussion of the wa=
+y I wrote the
+tests, so I have not included them. I am very open to any and every suggest=
+ion
+as to how (and where) tests should be written for these patches.
+
+Paul Lawrence (2):
+  fuse: Add backing file option to lookup
+  fuse: open/close backing file
+
+ fs/fuse/Kconfig           |  13 +++++
+ fs/fuse/Makefile          |   1 +
+ fs/fuse/backing.c         |  97 ++++++++++++++++++++++++++++++++
+ fs/fuse/dev.c             |  14 +++++
+ fs/fuse/dir.c             | 108 +++++++++++++++++++++++++-----------
+ fs/fuse/file.c            |  34 ++++++++----
+ fs/fuse/fuse_i.h          |  61 +++++++++++++++++++-
+ fs/fuse/inode.c           | 114 ++++++++++++++++++++++++++++++++++----
+ include/uapi/linux/fuse.h |   4 ++
+ 9 files changed, 392 insertions(+), 54 deletions(-)
+ create mode 100644 fs/fuse/backing.c
+
+--=20
+2.49.0.1112.g889b7c5bd8-goog
+
