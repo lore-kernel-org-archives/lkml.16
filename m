@@ -1,78 +1,82 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D7A3208
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB29A28ECC0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750146798; cv=none; b=Bxb2ozWFEm9j+kIRkPHiJTvhC88gIA2fbgyKBA/BSRcT+abSjRbQgF9w6Zp1ORFYvNFlh/n4IpdcHV/BbL3FfqSHDTO83Qy0fkFW4QtLZoTEkVMw7VcpzM0OJ3vpUcbelxcQ8bri5oGgOaf4YBAOJrlcylcV0GyMgioFyWMfXKA=
+	t=1750146804; cv=none; b=oGrzym6jHYF8Y5uIB1uGsswjcvqzHvFBVLDgDpbdnDzETdy2gafmYss5Tt4qi3JnPhhOVuX1aHcp5Q9LRX48CwLN46wc9Bm2g1gGIsOX00R/4gcygsU8qIhiZ/AJhY2qa/UL8JhCjLZd+7I9ocM3cdNuX06myO4PTKoNEL9+d6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750146798; c=relaxed/simple;
-	bh=0/uaU13JstmJ60lccriBsi0VWlKbxW39y0zNVpOEsB0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=QB7ZMA5AYx+QJbi3QqGgKZXlSrQ7YEGGEotSIBmFMQXDlVLWAGmWwPslIb7SkXzkN5YWiq018UUiw106WcNiJkC/5ssyKLczqT5Jr3qfSyw/yfDkLrphWCh0QGj9nh2bbkK1eU/M0R6XQYTWv2fIh2TSL+XLyqfMD5LlZDqptbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=CmXS3sIU; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="CmXS3sIU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750146783; bh=0E11VlxV3JqO6c0wX6S/UsZCO3CVG2Kmj3LxHrp0x9Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CmXS3sIUesvIUbCwsTnP1yjXM7rQAfh5Te2vwe0it9ukq9OEHLjOxS3g/WFVOvEFK
-	 X/a20MXeZbrzu1eBupBXJLy7ma0kKH0HUqgju3xqh2m53ht2UKasF6Ji3Fr+SZq0cg
-	 Y4BzNPpB6YvZJY4yi5veGfCm1E+RfWhk0oTaz/CI=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id BAE9364B; Tue, 17 Jun 2025 15:46:46 +0800
-X-QQ-mid: xmsmtpt1750146406tba7kyv70
-Message-ID: <tencent_78F762B76A86D9D36003690962E3BE844205@qq.com>
-X-QQ-XMAILINFO: MRLc0g//fdpvS6U+i0xWidi3CkHliDweVQrbhtJlayB1FeHmU/qkvtf83QCU/g
-	 vEoB3iHwnLgau0f9p4uBJHu7QgEref+zkhD5V8lXbyHbpoi1/oXb+ASVoTl1fNEgo3iVCA9a9SRj
-	 H2UTxYLry+rsbdeyqnxtUp2gUmQLs1NFcdSPjHSw3/j2yvOBMlek7HP6dPj4hQei//blbnRqozMg
-	 X0RPKAAENuO6Tm6OBB6Ci4Zo4AAJjtrV0wX1eW5xlukJ+KVYzBbAbAqEDUfnzbRqoztvBGo/ODGK
-	 SqJB4d5E6iaVd8FHoe10mRzUXiBl/ABhybF6WyWLxphs9S/cuCuLOwDP70Tt7MqDbcf9/9SJIYxi
-	 JvTl6PLfkbw3UJPe2vbY4ChynEZjWem61hMMraTfpe4AXWemdFJX27819RTWS30GaPOZcRIcnjNe
-	 F5K8sMpZi+WcLeRMCEPYYGZ6oRaZ7SvQySmV+Em210LjJcRORlSRXoNgd2ThF9aCCdVgR9L+VOtU
-	 VKpGCEwlrr6l/d5UdNhEQZXNEeMOle4fEeT0RtCV8fq2LamT2Fdu15h7WSp1ZRBDyfR465uaVbEy
-	 YBCSL4cIl8ZcdJEMqkOyKLdrOC+4SeYnHm9yTrmwf699jLLmzutyoUa5s6Yqxj2g1In8STXSBzH8
-	 bXIr6GV3CEy6b45JS50y3WgwTt9a+LeisXeQbgPfjiuRGdW3Q4z9C3uNRKvRDkbxCjZFYtDkjiDt
-	 8gL5xJwUx61/VnmqIG5AsgSKtUxKePBt6pp1X22Vh2++xfNKE8eKQ9N/HiBVJt55qqXfPCibyr3/
-	 dt/5BIQHkgNZ1fQhuPn6vm3PNzX1CKe3n9ck82CcK9fZrNy6JPZNAggakvg9cFit+nf5akPzFk6L
-	 2ykpeChPeAbtV3eQLTTFltdGyOrWpX7CEPqowfTkpi53SDEdZKx3SM0BNbBfobSKzrnuK/ZiDWEV
-	 WCob6w25c=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
-Date: Tue, 17 Jun 2025 15:46:47 +0800
-X-OQ-MSGID: <20250617074646.575163-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <68504add.a70a0220.395abc.01e7.GAE@google.com>
-References: <68504add.a70a0220.395abc.01e7.GAE@google.com>
+	s=arc-20240116; t=1750146804; c=relaxed/simple;
+	bh=rEr+5N/mTMWE4Y3jEsGYmoyWb3myE5IMlly4FRJ2MGw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=mpU6+Fgl+7yYUw81HCrDH7wSx62aU2CPVIZ30g76zH+UbC9OPYny+ms8WRTLlYv6RdCT4Kp0DvmxHdK/pwdeksTMxfaNHMk/Uhdwx8v5W5Dbtn4kRwzn0nl4GAVAGKgTq+/2Og1NKJIwB9HzQ9IkoHoH6BCQq4bZ8OWk0WjSuyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddb4dcebfaso131506005ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:53:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750146802; x=1750751602;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=R2+rGIVSS+A+aClXDZH5sduqubbo8vIVGKtWBDyBvzA=;
+        b=UdTz14xmHWzH5hiCryGxnQHbSIlBj93iCImxbAIYmyC+hkAYmlR4ttRxmQOIggjObi
+         DdXGSUnN1G0L5Ihho1U13xLvKxLFpVJdCIlyMKlKD2DrUC3AzldR3/ujyGfi9o+L5kHA
+         Hp3+8GP5jTtzuN4ZIC/QDZUFO8wqWRd+eOuDQCpudDqwKEcKzQwyP0TV3rLKATwUqHo7
+         Pl+nZ45/3Nb8yzSVHpWEr8m17p3bn9EmqDsswGlYcRPW5UaHcMqXJLZMMu4n9dQRsdcI
+         covtNWyckoivfDLp/DXMCmyGzTSBzN6R4Qn/iAnsTP9kGDoDOnRyvrHpHzHQiifzi8Cz
+         27ow==
+X-Gm-Message-State: AOJu0YxYpnGa7S3IwhXCCfzGYGbWrVtsdeO6JiH3gZAWrFn4NpWMGV3v
+	PHTvnzUz4zBcHtB2tI1XHu5rthe2Y64yviY1j3V4z4LmOBAlkCnD10j7GKqV4FIJXL9Og3xBPjc
+	Qex/r5Abv8FYHZcTfVr0XGQYoTRYK5RWr3WXOFAuGh2E8IVvOJddBqzmculA=
+X-Google-Smtp-Source: AGHT+IFHa8CSHcQSVOjgppdoJiutDcaXPPigLSse3J4TM/L/kvmHIMK5NY3KRlUcwlN3rH+SCnEUilvr9ZfwCPs/3Z4UxWV+qZJw
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1c05:b0:3dd:f813:64c5 with SMTP id
+ e9e14a558f8ab-3de07cd451emr150549135ab.22.1750146802058; Tue, 17 Jun 2025
+ 00:53:22 -0700 (PDT)
+Date: Tue, 17 Jun 2025 00:53:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68511ef2.050a0220.2608ac.0010.GAE@google.com>
+Subject: [syzbot] Monthly pm report (Jun 2025)
+From: syzbot <syzbot+liste1df6065339a4cbd4e74@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-#syz test
+Hello pm maintainers/developers,
 
-diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
-index ce377f7fb912..556ce95e0b0f 100644
---- a/include/linux/ieee80211.h
-+++ b/include/linux/ieee80211.h
-@@ -1278,7 +1278,7 @@ struct ieee80211_ext {
- 			u8 sa[ETH_ALEN];
- 			__le32 timestamp;
- 			u8 change_seq;
--			u8 variable[0];
-+			u8 variable[];
- 		} __packed s1g_beacon;
- 	} u;
- } __packed __aligned(2);
+This is a 31-day syzbot report for the pm subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/pm
 
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 5 issues are still open and 10 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 2086    Yes   possible deadlock in console_lock_spinning_enable (5)
+                  https://syzkaller.appspot.com/bug?extid=622acb507894a48b2ce9
+<2> 810     Yes   WARNING in enable_work
+                  https://syzkaller.appspot.com/bug?extid=7053fbd8757fecbbe492
+<3> 2       Yes   possible deadlock in dpm_for_each_dev
+                  https://syzkaller.appspot.com/bug?extid=2a03726f1d4eff48b278
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
