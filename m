@@ -1,87 +1,111 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA0D2EFD88;
-	Tue, 17 Jun 2025 21:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D322EFD88
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194771; cv=none; b=eHSKidSDYvS1TRBf0yI1gCacg35n0rqRg9kM/wts639bZtkeriHJ7KeNPyE4hR2oM5eu3gWRz68ybhpvVQrfhH4Ap1rnkz4wAfrqNSdjzxXNZhxZdSj8UBPooWVSKN6ww3MvI1URBdzSSxSgR4+6gNkjJxA65x5fnVCi+6Kcls4=
+	t=1750194847; cv=none; b=grqm1Evd4nT00RxF0+jPavaT23p43Tl7A359nnHYGPvQBS2M0EPaYZHmkqFyY8Hy3YdjqWdbgnFJvyowSEiVNnJ+LomdpDXxB+Ao9p2x+ymc+kwJo/tBxcPHMDaqutPYsUbpAH1FDZ56QDpnjrsSHvB/8rLyLSxTNry+alq3fDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194771; c=relaxed/simple;
-	bh=/ZMU4IZCLKJZ5MCxD7SiFjBDb6ZcwMiAKf8DjG/r7ls=;
+	s=arc-20240116; t=1750194847; c=relaxed/simple;
+	bh=SrRpeaxXNGWfFb/1PTz2R6YEk4t6TG0fvw2R3i9KdSI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qm+6CZlnFwxhrv4FwOyrED7J8iCjHvGF6fLToGiAeirKH/x6MO1GNX1xR1q2fN6agKTYBQTjQ3jiY/iWIJg59HHrWwVK59s9vh5KtmLtw0RtPc+y86h0gHba2Eka5JIxm3s6tzbi8uLdUNKcr9jNbxQzgCUEqnMS/k+oDwAfeHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X+RWcs+A; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ADKREi8QCoDGjV1Xbty4AmgeQzw6IqdMLIPAXksEauiGF8jpWv+dFcJpwQiA5jw0D/NyoJdkRkqn/frQxd5KgbRzwGTYH4nSCCZxpnmPjzzoFgbEva6YiysBNgUqCDCuCmSHBjWFdMwxvIfc8RDyrGfTLFxSZiA9I7zZ78FF/2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WrI4WpNC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+RWcs+A"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b1fd59851baso4077571a12.0;
-        Tue, 17 Jun 2025 14:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750194769; x=1750799569; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CvaQB65i1nAUIBN5pIaikJqPNlo97Mbg5ejhsX2HPKQ=;
-        b=X+RWcs+AUFQJdg9yCfX7UeF8rN3Qnvoii7Ck907dF/6fcfbUQcMXKfcyRJ3uyV+8ze
-         HJilYEVtDIXEdVtojif5fiRmojYFmCLjkL9TB8CziW+zDr6Fnmv/8QjlFSPZBWw/qkCu
-         NbARTmL+4fIyj+cdIMKR0hKfhuO/pn88cObSF3hdF4hBxDrCT3Lou/G0WOWAHxPaC33x
-         H5AtTeWa347VDaBFmQfdvdVkB7A2hpAiVbcWHUNL9fpJ/gBwzClbm9lrXf9kIBXGi5VY
-         J5YIeY2hWAnsaWwrHF9Prm41MWzNc92hBnveh47i23yY07XWXDeesmygWRM2E4XZc8Vo
-         QS/A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrI4WpNC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750194844;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5xyVcI21nsfxdfOvk8Q+hN3uxkhpR2sAV2MrhUYOX6E=;
+	b=WrI4WpNCcLyDDcGVcuMCVmrV/PKgMJCmP7/Cjm/w3uoqZ5zDRQYrE6qmStP6ru23BI8Yhu
+	gk9vrSIrOzkvP+KMC895E02pP4ZxPleazBTgisYjJ/sla/2FeTr+6XhcDd2nQvkZfFpCeH
+	Y5J4yEV4cHgTMYv9LfLl0AT86/YfFnI=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-677-iCaOQ-duMfmYCOppV-QCXg-1; Tue, 17 Jun 2025 17:14:03 -0400
+X-MC-Unique: iCaOQ-duMfmYCOppV-QCXg-1
+X-Mimecast-MFC-AGG-ID: iCaOQ-duMfmYCOppV-QCXg_1750194843
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fb1c6b5ea7so94461876d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:14:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750194769; x=1750799569;
+        d=1e100.net; s=20230601; t=1750194843; x=1750799643;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CvaQB65i1nAUIBN5pIaikJqPNlo97Mbg5ejhsX2HPKQ=;
-        b=tcPsL7xR8MJRPw33hCH3sYbVYAOotzsrXfBib4fXqD2LkCecNSre3GhS8A5W1KqJjo
-         xRP/F6cXoahojSRBwG6Mczqz9jFeUGw/jqBRNt0iXfVCjFBydWt26XLHSDS8H6Vzjgsg
-         OM4P0kJ9waD6zElNvL/B1u5KBSR0445q0oCGXqyHSS7NBxIdg0UWtAJ+1g8llCrG6CEz
-         WI3N0Mu2SUMAzMFqHCvmIqTZa9iIQIqa5WT6gjcq9qf9YSC3toB0CD97v7DayUf/8HeB
-         qszrl5a5dWvqHY+wlzdDF/oIZHHIBz2IkKGwmyhG0eIFmTvoej5s4mKc/jmR2RdmM2R1
-         dANA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDpWpo1NoSUDeiougZ8oIfLaZM15Ckn/63DyA5tiQeGT4vZydyql9CiWBNhgYoaCnEAycO1wOgY+agFw==@vger.kernel.org, AJvYcCWDGzyfthVDa0xdYQubLskR6n9Tpg4vyUCOe8I/Ymudkr/CmoEbOpOLAou/KdAZ1ImacTeGDq+LCPs3WWF/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSsHg3DnI1CQ/0UGXVIjOYBrhHviHOvACecmjMu7qb5wy9fZL3
-	0EHW3g1JtqcernyS4FQDLiuzN56M5hAD8Uug1uIzjJ9H/GBAelqC28Jo
-X-Gm-Gg: ASbGnctxzRcAeZiVoQ6oXWR+Ho3OLz58V6gGbXPZCpm093XZhqAgGPv1SLxfupUwvPF
-	LBUx5Fs5aDqjhuWF4aR+hStJxU+wzLGz9nGBEt919iIhdnx7Qs2HQelRX8ymCWN99HPeqSzaw12
-	XLZ279N4IdDFju4izrjImEscsp/wlgjB+tOabkuX4CqDmYhxDi7qpynClCstlfUgkxTK5PPtGEf
-	ZPJb3DILnlUlMMmy3bT0/YB47lNlsNfp5TGgRFNHzjQKvCSYSmVnokg4CtZCSFG4FX3WlCGEHB6
-	66SX4qO+tAzs6RWOU4Ee/6RA3/u67T//EAZdL7Om1sxxIGF1c6FD5gL6B7THSLk=
-X-Google-Smtp-Source: AGHT+IFzJR0bljyfS8j+i0qdsC1qELOq4eXRYLRLp58zlzJs8Zkne4rE3KlHYYhXHNawf4+Ic8+OZg==
-X-Received: by 2002:a05:6a21:4a4a:b0:1f5:92ac:d6a1 with SMTP id adf61e73a8af0-21fbd4953fbmr21768368637.4.1750194769347;
-        Tue, 17 Jun 2025 14:12:49 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:4cd9:8b8e:24cd:5a36])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900829d7sm9375336b3a.80.2025.06.17.14.12.48
+        bh=5xyVcI21nsfxdfOvk8Q+hN3uxkhpR2sAV2MrhUYOX6E=;
+        b=XcWTKARhBFo0fwIxXci/XQp/SS7CW1JKBBzL8iq0vbr2WQVOxVgp5G/y9IoH7tswnR
+         n1NXijXpUyaNbjSkLWGEOjhuwWC60+ThzNs58KTLKEuMaa3TX1ZFIYwoblhs6xYjIZCD
+         6a/ML1QuopJPhcU1uOM212Bh3AYkbHUOecJLJbhdWmrFBUwPqperUJLkKwGw4b9gzmX4
+         TabXVhmP5HZPVTpL1woDoWWm5c3fqjnH9tZybvA6hvK4qqisFbV4hNldgLSRtXrn7tvU
+         hfblBZKxrfGQyKL0sCXrmTrk2qo8mFFybLPRD/40b5O6iOowEJiIv/KFGH2rxs8cpwRy
+         FY/g==
+X-Gm-Message-State: AOJu0YxxlYhRbuYM0xEM0XLsY1+dR4H3ZtIhuKH7I5bf+ODKp8mrjRIJ
+	UIllzy+z+VEwwR1oJ/+5qSoVlzn4EjEthFHZPcsfm3uCB2SK2qY9anUKcopUVyE3CJYVii2cGb9
+	vg6ArO/lCIKLBNsIWY2Kf0QCqklJ61zAAEx9ZzSw3kEwtzAf+Ni5RjtY3r8EZ1uM7uA==
+X-Gm-Gg: ASbGncvxJyeEcO8nnDKfohYTKt/w1UlBDg+RE2hDrpR9sWApJQjAjh1CNm7kXEOJtev
+	ZMzmLQMs3xdxkLi2jEqzKta0ziFIKjS2xLUZsHPJx03pyHExyHMiRZQuH3GCx5hgdRbI9+WTfdI
+	ACTAwgnZiES0GrituH9SBH2rtr8N666RpuUlK9xZtPjHLP6Wl5IYieN0yx13bENNwJYyVSG7dtz
+	gfRtLKQR4p/15TRi4MSeSRWm84tqXWszBMOH2VEo4dgrGg5qxPkpRnTQpF9IhzVBgCSq/p+ZE2g
+	pCv5ul4Pd2c3cA==
+X-Received: by 2002:a05:6214:5c47:b0:6fa:fddf:734b with SMTP id 6a1803df08f44-6fb47778883mr208411066d6.24.1750194842855;
+        Tue, 17 Jun 2025 14:14:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGd9iW2NHB23PfBNcvXV74RskpHtC25owk7vFs1c30i5QjvUnprzErLHz+PlrbZV3IBT1BdGg==
+X-Received: by 2002:a05:6214:5c47:b0:6fa:fddf:734b with SMTP id 6a1803df08f44-6fb47778883mr208410726d6.24.1750194842564;
+        Tue, 17 Jun 2025 14:14:02 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8f2c4d3sm690671485a.116.2025.06.17.14.14.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 14:12:48 -0700 (PDT)
-Date: Tue, 17 Jun 2025 14:12:46 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Sangwon Jee <jeesw@melfas.com>, linux-input@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Input: Fully open-code compatible for grepping
-Message-ID: <xm5eta2774qnyu4cmah5xbo6n77z3ikt7ocadwkscbp24hotqv@kjtmanetsdff>
-References: <20250613071653.46809-2-krzysztof.kozlowski@linaro.org>
+        Tue, 17 Jun 2025 14:14:02 -0700 (PDT)
+Date: Tue, 17 Jun 2025 17:13:59 -0400
+From: Peter Xu <peterx@redhat.com>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
+	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
+Message-ID: <aFHal-sGQfrdpztL@x1.local>
+References: <20250613134111.469884-1-peterx@redhat.com>
+ <20250613134111.469884-2-peterx@redhat.com>
+ <20250616090134.476427c0@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250613071653.46809-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250616090134.476427c0@pumpkin>
 
-On Fri, Jun 13, 2025 at 09:16:54AM +0200, Krzysztof Kozlowski wrote:
-> It is very useful to find driver implementing compatibles with `git grep
-> compatible`, so driver should not use defines for that string, even if
-> this means string will be effectively duplicated.
+On Mon, Jun 16, 2025 at 09:01:34AM +0100, David Laight wrote:
+> On Fri, 13 Jun 2025 09:41:07 -0400
+> Peter Xu <peterx@redhat.com> wrote:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
+> > the helper instead to dedup the lines.
+> 
+> Would it make more sense to make it an inline wrapper?
+> Moving the EXPORT_SYMBOL to mm_get_unmapped_area_vmflags.
 
-Applied, thank you.
+Yes, makes sense to me. However that seems to be better justified as a
+separate patch.
+
+If you wouldn't mind, I hope we can land the minimum version of the series
+first without expanding too much of what it touches.  I already start to
+regret having the first two patches, but since I've posted, I'll carry them
+as of now.  Please let me know if you have strong feelings.
+
+Thanks a lot for taking a look,
 
 -- 
-Dmitry
+Peter Xu
+
