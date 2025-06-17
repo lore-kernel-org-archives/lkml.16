@@ -1,79 +1,103 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD576CA6F;
-	Tue, 17 Jun 2025 04:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D251E008B;
+	Tue, 17 Jun 2025 04:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750134082; cv=none; b=fDq+j5kXzbeVGUzNSRnVgAIGOEnT3K5m+xaERqBjFh71u9gOFti6cpxb0ohGM+CP86TTM8EUB8LiGqDY1p7vcnzaucs7Ux3wV39rNYespH2Q4tyku1y+iqBw1/w0JM2a60nE2rmL5Gux5errCrD2vDws4QBL5QLYxVQ78Gx8mCM=
+	t=1750134272; cv=none; b=e7B7xo9F7kDGvGe9OOXlzLR/lKaAilfIvdd9XKFpRwpQVhAmYYWjqNijLD5lClVcmYXqj30vWmtwm4UqOfcAwKWlkCQWtGWxce9wPGFx39/w7UTpIRh0SQOsWOjCo6waKYlG+6EAWi6Nh7nInynq8IEENU3naa/h3ar5s1b39Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750134082; c=relaxed/simple;
-	bh=sWOJgWiT5ir4cBianDJs0fWxwF6frPPYdHH+x20jiVc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BLbDHuv+himQN43zQVJjX5MSked4qpEd9S6Ig7sBhrmNIqyApcOui5mChcb/LaUyKLu7EMN1L9ULKHMVTwr/AUhGHLasQJ7b8BTpLqFVMGQEUJcZ7il0rZC0MMlSPFz8q5QSxuCFqYyaEHI/WvfitZF3oYsVSVPAH3Z9FETSIHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowABHXFQ67VBobZoTBw--.100S2;
-	Tue, 17 Jun 2025 12:21:14 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: stern@rowland.harvard.edu,
-	gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] usb: ohci-spear: Remove unnecessary NULL check before clk_disable_unprepare()
-Date: Tue, 17 Jun 2025 12:20:50 +0800
-Message-Id: <20250617042050.1930940-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750134272; c=relaxed/simple;
+	bh=hS1jLez6pg2f2TjhjY9W1XKul5ilJirXcpZ9vDFaRGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MwY3Ug/NBwgQzAkHk1bUWg87QpdaR1pMU6p5RyH49ZcUYjjTtm4kC7cRAUvleY6JFldJFKNrkmPMULU3ceKiuA5uDDteGYZSpQd+FerEYaWD5ztpG0ripdaZhyet8G3a3JbrSfifuk9FEU87UOFKUC28sB1C9EX8SI6+zWIaMhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ahzXS8Sg; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ahzXS8Sg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750134270; x=1781670270;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=hS1jLez6pg2f2TjhjY9W1XKul5ilJirXcpZ9vDFaRGE=;
+  b=ahzXS8SgbcC/OFnLD/sR7e5uKx+WsU5AdW1jFY2GVsRkvFZ9jFNS9NNl
+   g8TZmb2CfLQP1aUT85u26KJ3vNoNm4D50cgJcwS32leaOLmGweGcaFkrs
+   7kS2Ej5XAJlMhZSUEBgratyi9D5M9LsDc/x4Np77lmR5n0qAv20feEMg9
+   nzyZNZy2h0U5lhOoVG35hO2+cqgUsR2T34BCeSpT2NTMsQNiF8lbFbfnL
+   7V9W8dblkf32/G/VUMf3zuQ3kgA2WjuPhsaVW9794jPJWQUGmDkdsdN+F
+   e1LGvDoUM6dNRBAJbFrVzQuBYr1BHIIIh0F8+5KMqdVhpjESd1RtAglKr
+   g==;
+X-CSE-ConnectionGUID: qoTuCe63RpiN+8Tfxwdyog==
+X-CSE-MsgGUID: Dyg5ZuYyT2GSIdQMwRszog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="54909366"
+X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
+   d="scan'208";a="54909366"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 21:24:29 -0700
+X-CSE-ConnectionGUID: osI7mkNFQI24GZf/sZPogQ==
+X-CSE-MsgGUID: 9yvR0dzZRHWogZ9sJL5FrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
+   d="scan'208";a="153956949"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 21:24:22 -0700
+Message-ID: <c3842cc4-f057-4ab6-b0bd-f7742ca7c645@linux.intel.com>
+Date: Tue, 17 Jun 2025 12:23:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABHXFQ67VBobZoTBw--.100S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XFyrKF1DXr47tr17ZFykAFb_yoW3Awc_Cr
-	y5Gr1kGF109rn0q34jqF15ArZrtF1DuFsaqF97tw45Ka4qvrn8ursrZrZ3Aay5G3y8tF9r
-	Cw1DZryfAr1IkjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
-	W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_Gryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjfU80PfDUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 07/25] iommufd/access: Add internal APIs for HW queue
+ to use
+To: Nicolin Chen <nicolinc@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>
+Cc: kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+ bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+ thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+ shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+ peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+ praan@google.com, zhangzekun11@huawei.com, iommu@lists.linux.dev,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, patches@lists.linux.dev, mochs@nvidia.com,
+ alok.a.tiwari@oracle.com, vasant.hegde@amd.com, dwmw2@infradead.org
+References: <cover.1749884998.git.nicolinc@nvidia.com>
+ <64145b184a0fa7c9b60532c9b475a51625edb77c.1749884998.git.nicolinc@nvidia.com>
+ <20250616133719.GC1174925@nvidia.com> <aFDSNYOTToFSbFA2@nvidia.com>
+Content-Language: en-US
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <aFDSNYOTToFSbFA2@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-clk_disable_unprepare() already checks NULL by using IS_ERR_OR_NULL.
-Remove unneeded NULL check for clk here.
+On 6/17/25 10:25, Nicolin Chen wrote:
+>>>   struct iommufd_eventq {
+>>>   	struct iommufd_object obj;
+>>>   	struct iommufd_ctx *ictx;
+>>> diff --git a/drivers/iommu/iommufd/device.c b/drivers/iommu/iommufd/device.c
+>>> index 9293722b9cff..ad33f1e41a24 100644
+>>> --- a/drivers/iommu/iommufd/device.c
+>>> +++ b/drivers/iommu/iommufd/device.c
+>>> @@ -1084,7 +1084,39 @@ void iommufd_access_destroy_object(struct iommufd_object *obj)
+>>>   	if (access->ioas)
+>>>   		WARN_ON(iommufd_access_change_ioas(access, NULL));
+>>>   	mutex_unlock(&access->ioas_lock);
+>>> -	iommufd_ctx_put(access->ictx);
+>>> +	if (access->ops)
+>>> +		iommufd_ctx_put(access->ictx);
+>> I was hoping we could null the ictx to signal internal? That didn't
+>> work out?
+> access->ictx should be NULL for internal. It should have been:
+> +	if (access->ictx)
+> +		iommufd_ctx_put(access->ictx);
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/usb/host/ohci-spear.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+access->ictx could be treated as user ownership token. If it's NULL,
+there is no user ownership, indicating it's owned by the kernel. This is
+the concept here?
 
-diff --git a/drivers/usb/host/ohci-spear.c b/drivers/usb/host/ohci-spear.c
-index d7131e5a4477..6843d7cb3f9f 100644
---- a/drivers/usb/host/ohci-spear.c
-+++ b/drivers/usb/host/ohci-spear.c
-@@ -103,8 +103,7 @@ static void spear_ohci_hcd_drv_remove(struct platform_device *pdev)
- 	struct spear_ohci *sohci_p = to_spear_ohci(hcd);
- 
- 	usb_remove_hcd(hcd);
--	if (sohci_p->clk)
--		clk_disable_unprepare(sohci_p->clk);
-+	clk_disable_unprepare(sohci_p->clk);
- 
- 	usb_put_hcd(hcd);
- }
--- 
-2.25.1
-
+Thanks,
+baolu
