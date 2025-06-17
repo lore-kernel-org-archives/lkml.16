@@ -1,135 +1,108 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10408169AE6
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9578C1E9B3A;
+	Tue, 17 Jun 2025 20:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750193258; cv=none; b=f/njL+gmGyDdlD64483TOLXpzFXkRdloc3E9NFjAnM9zzwJwsh94c5RALFnFMN+IWgUtvZtdtEZByYiTKgYeSyBPafqOL/BiuN94T6P6uzCP6VaHv5hdsukvJdwi5D8EY+1bfPebWqsmx6VfB62Y884oaZP6KZIgYN2HWh1pPKk=
+	t=1750193306; cv=none; b=ah42a+SQjY+6JuBWs58wtPRVhap612/wU7g0O7NM13PCSmVhPCfliKgB8E+zAyfIPDFZQThnwEW0QYFp5J8kqKoVbaOTYsi25EfPcDGceWSk6dJVZnplfzO6eosB7r41XV89Dekiz7Td9iBSH21vX9SdmloY5KU1CGftvjC01cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750193258; c=relaxed/simple;
-	bh=3/vgO2MAgi61sccA47cBBHfs3OLzoq8V5yMiIVJ4/Gg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FfUDHGoHIGnZ10PXNGJuvhQfbt/dH+DuWTRRYsU4Zz1B+WNA8r+lLM2P0W+VDxe5TR+9WeuDDTf+qNli/CzI3E3YWGa63URutbvPUSO3z0DEEj7q8xCzbmnLxfUjGEvnEp5GyT51FlJLRXrvSa5ZRzKq+VCEiXKWMoRBNkzBmEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aozH+P0n; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750193306; c=relaxed/simple;
+	bh=Wec92PgEyyyypFkgDUUa/r5kvbTpPe84rjzT+I7CgGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cyzwj34IFGAjp6uXtaHDDnTvrpmbN/Hsg4XFiR/9Lm/DFZ+pZJDEFhfwM86vgb7KEtzGB2NZOTiMR2aZmRJ8x4mBpPBIMOqxezLS5t5p6myRd9imo4vBmvJAITUwAlaHleCEVGk2y6LyENzINRRJlFzfzfjeyYN6Y0N2qM8lcWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lgSJ0lqk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aozH+P0n"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b16b35ea570so6173946a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:47:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750193256; x=1750798056; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FnyrMYQY3dnwrg2Tl4Z0xb3GVnj67wqrvUNa97aPsfM=;
-        b=aozH+P0nCatKkzarYW8mZ3o97ddUQmF2i7+vFo+SrbGQhG3FqX+5dIOU1iJMNg+kHZ
-         a8szhT0WKU2AiZ0y8hwNceYnUG+Ha4G51+/ZTwKbT4dwAef5Oi2TPLRJSf0LPshC3wp2
-         pV5vHJMd1uK15ZES8ldjP6nwAuoNhNUuzZ9xXvqTysmJMxopyzOTmgO8/k8pHKmcXhXR
-         AQ4mRML4WPasHscuP4rggIHPt3CWmKNHqDfr8I3Sq4hFEls+B55q7AdeoJLuigVC/Gra
-         gY3xvJUiSnw3BeiizCdw0hVfb4QHzoCbT5g4wcRwPLWRL/P3qt0TM3uT8TCDEntVE4z1
-         raXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750193256; x=1750798056;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FnyrMYQY3dnwrg2Tl4Z0xb3GVnj67wqrvUNa97aPsfM=;
-        b=FcVfEu5SdyP7sRwO7xrQyErXvEFVO9hx17w7c3LcgchpIzztyXZ9jiIMP6RNJmnHeJ
-         wFNENiOtPiQLTNcjy1HoRha80VAjhxplFjQiEMIo96jlUMCEbDMpltuUQLiGpQWIn2SW
-         51ONyY1v0nxCuzjpiQckUbiHxGoItsg6WhzhZqRNSBybKTrEANXukzAvG0zeFNkPg3Xb
-         iMGDi2Sx5bzipFSFGxkVchVDXsR2rMo962P5YmbvRWa8g+fUnUy/2v1iISdJBE+Pr42v
-         NeaMuxYYs/Tf4zBlLQuFRg9w2yGAlXZpzno+QuRd8gA1OhEDmRAFllEZZfHyE/ZUdiuh
-         akjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeIQ4NV6/Y3R14zI0ViicVltom6GirKjaLDhiGNmMqqkTYCevJ1QyRkvpfLls0IrDxJvyGKUO0dpuOgs8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6IpNFSNJ5TP/RQI5Z597A5n3qUCnbsF/gueszDhqm9lwoTatG
-	s5saV4F5NWQprOoxPJosvG/zky18ipuUL8T3FMTjK4Tf27UkRDVhUr1FSdKaIsQ/nGrabVT87I4
-	FFljTZA==
-X-Google-Smtp-Source: AGHT+IG3bCBsOcrBYJmDX9OVwj2KQ4phrXgCiORMgy9ics3yw/XvqHxvG2UzR55s0Mz/gkrg7oUsOfqWfp0=
-X-Received: from pgbbf10.prod.google.com ([2002:a65:6d0a:0:b0:b2e:bad0:b462])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:7313:b0:21a:ef2f:100b
- with SMTP id adf61e73a8af0-21fbd666e45mr24322046637.24.1750193256240; Tue, 17
- Jun 2025 13:47:36 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:47:34 -0700
-In-Reply-To: <fa32b6e9-b087-495a-acf1-a28cfed7e28a@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgSJ0lqk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9BCBC4CEE3;
+	Tue, 17 Jun 2025 20:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750193306;
+	bh=Wec92PgEyyyypFkgDUUa/r5kvbTpPe84rjzT+I7CgGo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lgSJ0lqkBuEtJ1chPa4W9jPDllq9N2AjyD4mbN6tSXLughX0fEeaTftNIVJ7kk8V3
+	 /ysj3OU0qgCaaTI8DuPOPGE7odUV0cnfCcAV+ZrZGRrSOSDIINlL5GA9mmBmvYhHQ6
+	 td2nB3wliud1qlR4G99+QEBTcckMpp9R158DXC5g1dB6frhMZIT2LzoUhORQXaUdZw
+	 ZFHq1LG2aeKAiLjhWR7DvJxi8EdSTD1BGzX8brKAGjDjs687TwfJuX5VzYrm3GnR+/
+	 mjQyMVemT+6KVcdEsqlS7yzkKx4Fg7miyt0XB4/yQkh2RnMC99te7eKP3Q1DN9l58A
+	 42bQUpgocBj8Q==
+Date: Tue, 17 Jun 2025 13:47:56 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: David Sterba <dsterba@suse.cz>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>, linux-btrfs@vger.kernel.org,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>
+Subject: Re: [PATCH 2/2] crypto/crc32[c]: register only "-lib" drivers
+Message-ID: <20250617204756.GD1288@sol>
+References: <20250613183753.31864-1-ebiggers@kernel.org>
+ <20250613183753.31864-3-ebiggers@kernel.org>
+ <20250617201748.GE4037@suse.cz>
+ <20250617202050.GB1288@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250617073234.1020644-1-xin@zytor.com> <20250617073234.1020644-2-xin@zytor.com>
- <fa32b6e9-b087-495a-acf1-a28cfed7e28a@intel.com>
-Message-ID: <aFHUZh6koJyVi3p-@google.com>
-Subject: Re: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its
- architectural reset value
-From: Sean Christopherson <seanjc@google.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	pbonzini@redhat.com, peterz@infradead.org, brgerst@gmail.com, 
-	tony.luck@intel.com, fenghuay@nvidia.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617202050.GB1288@sol>
 
-On Tue, Jun 17, 2025, Sohil Mehta wrote:
-> On 6/17/2025 12:32 AM, Xin Li (Intel) wrote:
-> > diff --git a/arch/x86/include/uapi/asm/debugreg.h b/arch/x86/include/uapi/asm/debugreg.h
-> > index 0007ba077c0c..8f335b9fa892 100644
-> > --- a/arch/x86/include/uapi/asm/debugreg.h
-> > +++ b/arch/x86/include/uapi/asm/debugreg.h
-> > @@ -15,7 +15,12 @@
-> >     which debugging register was responsible for the trap.  The other bits
-> >     are either reserved or not of interest to us. */
-> >  
-> > -/* Define reserved bits in DR6 which are always set to 1 */
-> > +/*
-> > + * Define reserved bits in DR6 which are set to 1 by default.
-> > + *
-> > + * This is also the DR6 architectural value following Power-up, Reset or INIT.
-> > + * Some of these reserved bits can be set to 0 by hardware or software.
-> > + */
-> >  #define DR6_RESERVED	(0xFFFF0FF0)
-> >  
+On Tue, Jun 17, 2025 at 01:20:50PM -0700, Eric Biggers wrote:
+> On Tue, Jun 17, 2025 at 10:17:48PM +0200, David Sterba wrote:
+> > On Fri, Jun 13, 2025 at 11:37:53AM -0700, Eric Biggers wrote:
+> > > From: Eric Biggers <ebiggers@google.com>
+> > > 
+> > > For the "crc32" and "crc32c" shash algorithms, instead of registering
+> > > "*-generic" drivers as well as conditionally registering "*-$(ARCH)"
+> > > drivers, instead just register "*-lib" drivers.  These just use the
+> > > regular library functions crc32_le() and crc32c(), so they just do the
+> > > right thing and are fully accelerated when supported by the CPU.
+> > > 
+> > > This eliminates the need for the CRC library to export crc32_le_base()
+> > > and crc32c_base().  Separate patches make those static functions.
+> > > 
+> > > Since this patch removes the "crc32-generic" and "crc32c-generic" driver
+> > > names which crypto/testmgr.c expects to exist, update crypto/testmgr.c
+> > > accordingly.  This does mean that crypto/testmgr.c will no longer
+> > > fuzz-test the "generic" implementation against the "arch" implementation
+> > > for crc32 and crc32c, but this was redundant with crc_kunit anyway.
+> > > 
+> > > Besides the above, and btrfs_init_csum_hash() which the previous patch
+> > > fixed, no code appears to have been relying on the "crc32-generic" or
+> > > "crc32c-generic" driver names specifically.
+> > > 
+> > > btrfs does export the checksum driver name in
+> > > /sys/fs/btrfs/$uuid/checksum.  This patch makes that file contain
+> > > "crc32c-lib" instead of "crc32c-generic" or "crc32c-$(ARCH)".  This
+> > > should be fine, since in practice the purpose of this file seems to have
+> > > been just to allow users to manually check whether they needed to enable
+> > > the optimized CRC32C code.  This was needed only because of the bug in
+> > > old kernels where the optimized CRC32C code defaulted to off and even
+> > > needed to be explicitly added to the ramdisk to be used.  Now that it
+> > > just works in Linux 6.14 and later, there's no need for users to take
+> > > any action and this file is basically obsolete.
+> > 
+> > Well, not the whole file, because it says which checksumming algo is
+> > used for the filesystem, but the implementation part is.
 > 
-> Calling this "RESERVED" and saying some bits can be modified seems
-> inconsistent. These bits may have been reserved in the past, but they
-> are no longer so.
-> 
-> Should this be renamed to DR6_INIT or DR6_RESET? Your commit log also
-> says so in the beginning:
-> 
->    "Initialize DR6 by writing its architectural reset value to ensure
->     compliance with the specification."
-> 
-> That way, it would also match the usage in code at
-> initialize_debug_regs() and debug_read_reset_dr6().
-> 
-> I can understand if you want to minimize changes and do this in a
-> separate patch, since this would need to be backported.
+> Oh, right.  It's one of those sysfs files that don't follow the normal sysfs
+> convention and contain multiple values.  I'll update the paragraph above to
+> clarify that it's referring to the driver name part of the file.
 
-Yeah, the name is weird, but IMO DR6_INIT or DR6_RESET aren't great either.  I'm
-admittedly very biased, but I think KVM's DR6_ACTIVE_LOW better captures the
-behavior of the bits.  E.g. even if bits that are currently reserved become defined
-in the future, they'll still need to be active low so as to be backwards compatible
-with existing software.
+I revised it to:
 
-Note, DR6_VOLATILE and DR6_FIXED_1 aren't necessarily aligned with the current
-architectural definitions (I haven't actually checked), rather they are KVM's
-view of the world, i.e. what KVM supports from a virtualization perspective.
-
-Ah, and now I see that DR6_RESERVED is an existing #define in a uAPI header (Xin
-said there were a few, but I somehow missed them earlier).  Maybe just leave that
-thing alone, but update the comment to state that it's a historical wart?  And
-then put DR6_ACTIVE_LOW and other macros in arch/x86/include/asm/debugreg.h?
-
-/*
- * DR6_ACTIVE_LOW combines fixed-1 and active-low bits.
- * We can regard all the bits in DR6_FIXED_1 as active_low bits;
- * they will never be 0 for now, but when they are defined
- * in the future it will require no code change.
- *
- * DR6_ACTIVE_LOW is also used as the init/reset value for DR6.
- */
-#define DR6_ACTIVE_LOW	0xffff0ff0
-#define DR6_VOLATILE	0x0001e80f
-#define DR6_FIXED_1	(DR6_ACTIVE_LOW & ~DR6_VOLATILE)
+btrfs does export the checksum name and checksum driver name in
+/sys/fs/btrfs/$uuid/checksum.  This commit makes the driver name portion
+of that file contain "crc32c-lib" instead of "crc32c-generic" or
+"crc32c-$(ARCH)".  This should be fine, since in practice the purpose of
+the driver name portion of this file seems to have been just to allow
+users to manually check whether they needed to enable the optimized
+CRC32C code.  This was needed only because of the bug in old kernels
+where the optimized CRC32C code defaulted to off and even needed to be
+explicitly added to the ramdisk to be used.  Now that it just works in
+Linux 6.14 and later, there's no need for users to take any action and
+the driver name portion of this is basically obsolete.  (Also, note that
+the crc32c driver name already changed in 6.14.)
