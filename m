@@ -1,104 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D717293C68;
-	Tue, 17 Jun 2025 09:27:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F3B293B4F
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152440; cv=none; b=D/uRH0mtKionms8SBYt6EsnJS4ZjPvamVTpV5oiW/eZ0qu0SOu/c3Xwo1u1yi/Z1JnkiEMD2uv1RuJKPzthkSRRGbX143Umk/1B9I/cUhqm48zV3VW23ijRt8LQzmSgY2LBIvtT1MXQEGByueQzQXVx7pQDgp5E8N++GfvdWUWU=
+	t=1750152463; cv=none; b=NdeU0aXtCPl2EX/U2lhnGPe/9hTbD/9laDO5u8nvUWUQcYZpzi3S+sjcMugCMUIoN3W/Kd1ZYMLezJ0b+yle2pBfA3e7i7s2TMU8krxrbvECHRbfTgqqaPKllY+6GpcAA9UaLQk6t3QpB+Q/FSu8wynQxA749ku0zM7TMOiNLH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152440; c=relaxed/simple;
-	bh=/j9qw9CPeikjZGsZN2keC06a14oGdbXh/cFa9quarCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HM9T5pPU17Tne/oeIIoK2mVuj0FJfLcyZu9bgBnbcH07qECDIqGyPKewueGN6yLvwUu24Wp0jYgpYb8xGufg/lya+v0C2TZAdznFESUnIr3dwXcmv9dTEJaYuekmDOKFvBgrMYx5+Qqext3qrDteS7Gv8ZqF7nZpvgVbaQZdN6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ME6cL/4G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750152463; c=relaxed/simple;
+	bh=f3FXbCp1zJT2e/y37zile6+NsyCTyyggM8rYqlTqvGc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rA8SAbl6sP4b9m2cI4o9+cqS9EWzuk9SaJxb+pUeWRmtd8jowGoKVy7NLBAY3ZhvnAIFdFk80lp7SWF4mizyYlyvBSrj7YUrMaLdJERt1fReE7f8XaPeLbSIPPSv0r0Tf4ZKrzrnJ4c755Fcueqqh2ffylBDFuzevlenTotZ0Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=HfaFhXWh; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ME6cL/4G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81322C4CEED;
-	Tue, 17 Jun 2025 09:27:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750152440;
-	bh=/j9qw9CPeikjZGsZN2keC06a14oGdbXh/cFa9quarCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ME6cL/4GMsQtRnijbudm4iGh8KzyGl0NTc/VXArUH+mvjy1T33nog+OwCG93otWrk
-	 DYBqmNHjytCJwzC1Xulz/YxqBh3EEFJzrvjJK3x/yE8eW1EPJ950sePx54GQ2mSIAV
-	 2QHhLS4V/c03f1RRao2qOVdiYcN9bd5x9s8zwqEvHwNBgN5TCSnIJu92m5kaCpb9pa
-	 EbquN/L70dtcGp22NxwgtLWVHcAMDBWiCr5ZYbp7apLQPT6Jt1VGgSfD8WSqbf/uTZ
-	 VTLmdopIHDu0ib2z/YRTyxBRqvQIJhmVLvA9KLh3ZCv5j6kVsw/KaT2+r1GDl4Men8
-	 988a/p9L4qQ3g==
-Date: Tue, 17 Jun 2025 14:57:11 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Adam Xue <zxue@semtech.com>, Thomas Perrot <thomas.perrot@bootlin.com>, 
-	Aleksander Morgado <aleksander@aleksander.es>
-Cc: manivannan.sadhasivam@linaro.org, slark_xiao@163.com, 
-	johan+linaro@kernel.org, quic_vpernami@quicinc.com, tglx@linutronix.de, 
-	fabio.porcedda@gmail.com, quic_msarkar@quicinc.com, mhi@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, imocanu@semtech.com
-Subject: Re: [PATCH v1] bus: mhi: host: pci_generic: Add support for EM929x
- and set MRU to 32768 for better performance.
-Message-ID: <gt6uyoohzyjlqsbb4wro7vjsyhgwpvca46ixmivo6ybvmejsc3@nc3syx4lk4t3>
-References: <20250528175943.12739-1-zxue@semtech.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="HfaFhXWh"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso3163621f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:27:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750152460; x=1750757260; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=boN3t4QQQ5CJaq9F2B9aIVemxFll5K0ZGpv67UpOwpI=;
+        b=HfaFhXWhDA6c/ysVVOaYkIshY6amQ6jMyyRlRTgXilO33yD0L5Gwt70j+8+S5hy7f9
+         FCKkZrirayOh2DCyT5oll6krNLYGAIBPl5gpc7bSxOdkIYntMGrmw2ioqWPswjXk2kRB
+         LpfJv/Cn1f4Uk8SNPEok7e3hzUVmeND3FP5mawsihpE9f3GiwOAw22ENxnCWtWoZGS/8
+         of/6VYb+E8tKheFtFsy0XOXrvHLfuusuv7+we0mqDAPMtekgoAaUVUNuGNDzHGR4rMHt
+         CKC9mMRca3gsL1G88cpDB9JHJxl1v6ve/WpzGqDFruJVLqUlg7OqrnnK9R5S0L5P4SU7
+         FXzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750152460; x=1750757260;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=boN3t4QQQ5CJaq9F2B9aIVemxFll5K0ZGpv67UpOwpI=;
+        b=uCMHQSiu0rc5mKbcgre9Jp1nr7aXhVmyemFhCMlpkDsu5g87i2n8J9KTAWXMnfHMfP
+         YFX6u03tOB0tepbEJmpVUFKGBXgwvRYEv2160/kbgyZvQnRjPvTvE569A1J4admc1m8z
+         OAYtliF8GvNXPGpNWLtFA1fPxmOsGAB/gKYPx99o5MRp+GA84w3lZl+/+dbr90HH2E5w
+         Ei/Q3mAbvQYuCDFmgtvJo7rDlbGozt2unNTBMmz851CXTc8YnBXeBdM3VWSzNYV1frRv
+         CVq26IEyRYI+QEQmVD8zE+0HlYPBXsnaIqofoRLYPFk1cveux+QzIfdU0OohH/2k98x4
+         qCnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQjagvHVdqa8hfdTBexvd1CqEAX/LW4lxs2vrDJxERXopCAP4/NOiz9ET02A4/lipkz3qv+ZWaXhJKSiw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6YB2fN1NoYwXXKw1QzqMKzOJOpX5BClZLrJ5ZVEv8RS59Hgb3
+	BOs1k/u0zeXx3bd48Vzs0uGVksXigHZsr+lrII7742V5etefRzePWmhGcmvGsMgT7KA=
+X-Gm-Gg: ASbGncs0oHxZQk4+6+nSL8+qVAYwgj/fXFCRzngriDPdJKzm0d59pZD011reFH0eJpC
+	MV3shU25iOJan6BQE+cujPC1ucvJNDhdJUSAQyZkO/JhqDsQ7k3+PEXzrQBdkmEh+S/QHaQthjw
+	bdI7HCPLDVJjGo7pP7ncSGSCigBppjxk5dnngv3JVD0eed7GAZBfYDJB+pdjsI9fdVum2UjcgDY
+	Xb2CIhrRaxqplqTywXpHFjYbeu5Jd2PGwncog4rh1fDfAFwUVtPDDn68HKl8nF6boQZCr6cLB7V
+	+IsVBdDOxkw3InrlYwrETnn1jBc2esECRzi7yb9TnZWb0uyFCwqypAbwlT2/kqdH9w==
+X-Google-Smtp-Source: AGHT+IFM9Lj5qJWTtP6+l5n+/04TRA1i4YBOucx2CbKedvvZJIa35JF0Mqa14giJEb7sodnjrvIhwA==
+X-Received: by 2002:a05:6000:708:b0:3a5:5278:e635 with SMTP id ffacd0b85a97d-3a572367577mr9469207f8f.3.1750152460099;
+        Tue, 17 Jun 2025 02:27:40 -0700 (PDT)
+Received: from [10.100.51.209] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b18f96sm13555006f8f.66.2025.06.17.02.27.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:27:39 -0700 (PDT)
+Message-ID: <2cd3947a-63d9-4a79-a24a-eb1ae8164169@suse.com>
+Date: Tue, 17 Jun 2025 11:27:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250528175943.12739-1-zxue@semtech.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] alloc_tag: remove empty module tag section
+To: Casey Chen <cachen@purestorage.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-arch@vger.kernel.org, surenb@google.com, kent.overstreet@linux.dev,
+ arnd@arndb.de, mcgrof@kernel.org, pasha.tatashin@soleen.com,
+ yzhong@purestorage.com
+References: <20250610162258.324645-1-cachen@purestorage.com>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250610162258.324645-1-cachen@purestorage.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 28, 2025 at 10:59:43AM -0700, Adam Xue wrote:
-
-+ Thomas and Aleksander (for EM919X related question)
-
-> Add MHI controller config for EM929x. It uses the same configuration
-> as EM919x. Also set the MRU to 32768 to improve downlink throughput.
+On 6/10/25 6:22 PM, Casey Chen wrote:
+> The empty MOD_CODETAG_SECTIONS() macro added an incomplete .data
+> section in module linker script, which caused symbol lookup tools
+> like gdb to misinterpret symbol addresses e.g., __ib_process_cq
+> incorrectly mapping to unrelated functions like below.
 > 
-
-This also affects the EM919X modem. So I want either Thomas or Aleksander to
-confirm that it doesn't cause any regression.
-
-Rest looks good to me.
-
-- Mani
-
-> 02:00.0 Unassigned class [ff00]: Qualcomm Technologies, Inc Device 0308
-> 	Subsystem: Device 18d7:0301
+>   (gdb) disas __ib_process_cq
+>   Dump of assembler code for function trace_event_fields_cq_schedule:
 > 
-> Signed-off-by: Adam Xue <zxue@semtech.com>
-> ---
->  drivers/bus/mhi/host/pci_generic.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/bus/mhi/host/pci_generic.c b/drivers/bus/mhi/host/pci_generic.c
-> index 03aa88795209..9bf8e7991745 100644
-> --- a/drivers/bus/mhi/host/pci_generic.c
-> +++ b/drivers/bus/mhi/host/pci_generic.c
-> @@ -695,6 +695,7 @@ static const struct mhi_pci_dev_info mhi_sierra_em919x_info = {
->  	.config = &modem_sierra_em919x_config,
->  	.bar_num = MHI_PCI_DEFAULT_BAR_NUM,
->  	.dma_data_width = 32,
-> +	.mru_default = 32768,
->  	.sideband_wake = false,
->  };
->  
-> @@ -813,6 +814,9 @@ static const struct pci_device_id mhi_pci_id_table[] = {
->  	/* EM919x (sdx55), use the same vid:pid as qcom-sdx55m */
->  	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0306, 0x18d7, 0x0200),
->  		.driver_data = (kernel_ulong_t) &mhi_sierra_em919x_info },
-> +	/* EM929x (sdx65), use the same configuration as EM919x */
-> +	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0308, 0x18d7, 0x0301),
-> +		.driver_data = (kernel_ulong_t) &mhi_sierra_em919x_info },
->  	/* Telit FN980 hardware revision v1 */
->  	{ PCI_DEVICE_SUB(PCI_VENDOR_ID_QCOM, 0x0306, 0x1C5D, 0x2000),
->  		.driver_data = (kernel_ulong_t) &mhi_telit_fn980_hw_v1_info },
-> -- 
-> 2.45.2
-> 
-> 
-> To view our privacy policy, including the types of personal information we collect, process and share, and the rights and options you have in this respect, see www.semtech.com/legal.
+> Removing the empty section restores proper symbol resolution and
+> layout, ensuring .data placement behaves as expected.
+
+The patch looks ok me, but I'm somewhat confused about the problem.
+I think a linker should not add an empty output section if it doesn't
+contain anything, or if .data actually contains something then the extra
+dummy definition should be also harmless?
+
+This also reminds me of my previous related fix "codetag: Avoid unused
+alloc_tags sections/symbols" [1] which fell through the cracks. I can
+rebase it on top of this patch.
+
+[1] https://lore.kernel.org/all/20250313143002.9118-1-petr.pavlu@suse.com/
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+Petr
