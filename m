@@ -1,80 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E2372ECE90;
-	Tue, 17 Jun 2025 16:05:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F972ECE87
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:05:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750176357; cv=none; b=PUvjgGIVbEe6dFvAq5dJbMod5w2Y9oNmwjs10rPwTO/WI/15G5ZEVhjvv7P3vAxiPE89M5x62qn6UXFguMqi6YGhGMMbhXgAwqP3IYiT5Pnbxsdvv9pTLKiughR/sp5coHD+k2N4mfoEkCMXr8zeaNdeRQ06LDcDF6w9Z2+ie0Y=
+	t=1750176358; cv=none; b=cGDNISCMc39FAW870F7OqBXTJSJ+3XpolaZ2oGcRQi5m8wWbROUJl442Wjqc+6WOyVh0NMsl/S5f6EI8J+NzQjNNtY8XrJScfTZjR+1+ChxbWAXAkmBMXl+VznLJRiJojRSF7VIAUKCPHCH8an3zxOXb9PcIA8rqTxiMbaaVygs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750176357; c=relaxed/simple;
-	bh=/u//Ad1jDTkQ1ypTWwUqaw4fj2DPdYTou2KtqckTitQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kryQlvTncgNRrHE/jo6H8XCE7TOBT0wWebSO769W1Y9iqVXcFLYSEJrju6Kt+jTSUh39eNeSONukRtVxIw+S9k+cu8KResRMwEVwMEXBF8Mdq2VQL+Dg4Oy0tcBYxyEOyiIfUwF5kD6C49VUwKWff+D7CvIhfwurvLD5oy0ug/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0028150C;
-	Tue, 17 Jun 2025 09:05:34 -0700 (PDT)
-Received: from u103485.austin.arm.com (u103485.arm.com [10.118.30.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73F3E3F58B;
-	Tue, 17 Jun 2025 09:05:55 -0700 (PDT)
-From: Prachotan Bathi <prachotan.bathi@arm.com>
-To: Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Stuart Yoder <stuart.yoder@arm.com>
-Cc: linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prachotan Bathi <prachotan.bathi@arm.com>
-Subject: [PATCH v6 0/2] tpm_crb_ffa: handle tpm busy return code
-Date: Tue, 17 Jun 2025 11:05:42 -0500
-Message-ID: <20250617160544.444321-1-prachotan.bathi@arm.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750176358; c=relaxed/simple;
+	bh=bsFV27v3wF542P8dao4+wXDIqwpBSwTUmPKD0hthgfM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ORYzw8ZOllvFnK9V6mbkM/xnbVvobWjt6ZubGOwX0lQReZFg50LnvMcq3vGfgtyAq4S3n3OCiL+f/y2x/ARrjrtEP9w6G6WJgCeXSefDy3bjTZGMm0Mq7tTpoFCLmTvQTMSvWAE/FGNj0GY00h4xdXVXOlyZjaFTIsB9qp8rzcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMBXv69shz6M4SN;
+	Wed, 18 Jun 2025 00:05:19 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id B53611402F5;
+	Wed, 18 Jun 2025 00:05:53 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
+ 2025 18:05:53 +0200
+Date: Tue, 17 Jun 2025 17:05:50 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: James Morse <james.morse@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Ben Horgan <ben.horgan@arm.com>
+Subject: Re: [PATCH 2/5] cacheinfo: Add arch hook to compress CPU h/w id
+ into 32 bits for cache-id
+Message-ID: <20250617170550.0000621b@huawei.com>
+In-Reply-To: <20250613130356.8080-3-james.morse@arm.com>
+References: <20250613130356.8080-1-james.morse@arm.com>
+	<20250613130356.8080-3-james.morse@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-Platforms that support FF-A direct message request v2 can implement
-Secure Partitions (SPs) that host multiple services. When the TPM
-service shares its SP with other services, message requests from the
-driver may fail with a BUSY response if another service is currently
-active.
+On Fri, 13 Jun 2025 13:03:53 +0000
+James Morse <james.morse@arm.com> wrote:
 
-To improve robustness in such scenarios, we need to introduce retry
-logic in the driver. When a BUSY error is received, the driver will
-re-attempt the TPM request until it succeeds or a run-time configurable 
-timeout(default: 2000 ms) is reached. This ensures reliable TPM access 
-under shared-SP conditions.
+> Filesystems like resctrl use the cache-id exposed via sysfs to identify
+> groups of CPUs. The value is also used for PCIe cache steering tags. On
+> DT platforms cache-id is not something that is described in the
+> device-tree, but instead generated from the smallest CPU h/w id of the
+> CPUs associated with that cache.
+> 
+> CPU h/w ids may be larger than 32 bits.
+> 
+> Add a hook to allow architectures to compress the value from the devicetree
+> into 32 bits. Returning the same value is always safe as cache_of_set_id()
+> will stop if a value larger than 32 bits is seen.
+> 
+> For example, on arm64 the value is the MPIDR affinity register, which only
+> has 32 bits of affinity data, but spread across the 64 bit field. An
+> arch-specific bit swizzle gives a 32 bit value.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
 
-Add a module parameter, `busy_timeout_ms`, which specifies the
-maximum amount of time (in milliseconds) to retry on BUSY before giving
-up.
+Looks fine to me
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-This change builds on top of commit a85b55ee64a5, which introduced
-support for TPM service communication using the FF-A direct message v2
-path, in accordance with section 3.3 of the TPM Service Command
-Response Buffer Interface specification.
-https://developer.arm.com/documentation/den0138/latest/
-
-This was tested with an FF-A based fTPM currently not publicly available. 
-There are plans to open source the fTPM.
-
-Changes in v6:
-- Typo fixes in function name.
-- Introduce __tpm_crb_ffa_try_send_receive.
-- Modify tpm_crb_ffa_send_receive to use the new function with retry logic.
-- Use memzero() macro instead of memset() for clearing buffers.
-
-Prachotan Bathi (2):
-  tpm_crb_ffa: Fix typos in function name
-  tpm_crb_ffa: handle tpm busy return code
-
- drivers/char/tpm/tpm_crb_ffa.c | 70 ++++++++++++++++++++++++++--------
- 1 file changed, 55 insertions(+), 15 deletions(-)
-
--- 
-2.43.0
+> ---
+>  drivers/base/cacheinfo.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+> index 9888d87840a2..d8e5b4c7156c 100644
+> --- a/drivers/base/cacheinfo.c
+> +++ b/drivers/base/cacheinfo.c
+> @@ -184,6 +184,10 @@ static bool cache_node_is_unified(struct cacheinfo *this_leaf,
+>  	return of_property_read_bool(np, "cache-unified");
+>  }
+>  
+> +#ifndef arch_compact_of_hwid
+> +#define arch_compact_of_hwid(_x)	(_x)
+> +#endif
+> +
+>  static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
+>  {
+>  	struct device_node *cpu;
+> @@ -193,6 +197,7 @@ static void cache_of_set_id(struct cacheinfo *this_leaf, struct device_node *np)
+>  		struct device_node *cache_node __free(device_node) = of_find_next_cache_node(cpu);
+>  		u64 id = of_get_cpu_hwid(cpu, 0);
+>  
+> +		id = arch_compact_of_hwid(id);
+>  		if (FIELD_GET(GENMASK_ULL(63, 32), id)) {
+>  			of_node_put(cpu);
+>  			return;
 
