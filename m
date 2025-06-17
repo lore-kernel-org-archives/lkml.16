@@ -1,244 +1,164 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775783C2F;
-	Tue, 17 Jun 2025 07:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3341D289829
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750145629; cv=none; b=sd0CLevUo3GOs3NB8xxtOuTPgEqZ+dHbuVpqzfY6jQJiZxe4TXnI8K5SW6fDWbzBo5eCOxKaIsa2QoXxGSsO3aFcoBxjAGQFRHsepkRMZWtTbrZsY14BlgYWAfxVmoR6aaEuHu/KJUna89QdXlTPt4ioy9fyEzmtJQ65GD8Uc2o=
+	t=1750145688; cv=none; b=OR6dkEB+FR7+Ig4hZBwLSitsXyqhoSwIfD5M/aNgTuuAmSNBUJvIl/NXrypry96Yudcbm197FvkYXQ/3MivSuKO5os+xDtDrYZRcipN5LU6cY5LRL9pFWaviJRlFlvMUR0qY/BI9qyyC6yrbujhpyan67PZ5GVxUBLvTQC5EljQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750145629; c=relaxed/simple;
-	bh=r2hXSsjEbQxu0mOvM191VLjPAl5LgTFDXv+l4XfTIJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QvCiJMGbiO4MyX6lln30vvRS4oC8Lmhj9Ao3oMz4xFoRfXI2xSaX0Wfq1+ru4PDzLK187WRA6qH9moBMeVHlebz7rnyx8t+JI5uoLzPtLSSbmunsrTwnTl5hJWYURCQjRzx7VGz0B7nPhF3YoFsHVcKKxbKn9qqk61MHamL/NqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=iCMGcPJW; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750145688; c=relaxed/simple;
+	bh=vrIfBgdPSzVCtB6193rUgIP44Dtod8O7oM7+ne4bjZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nPaoV5Me6+vY8NIMKNuuEOqWWwhmz7BsOt7KTVILtCXneTi4UwHgmx0aSKN0bM48KkLEg3ENfDJmGgGNSu8KIABGUt9+OlAd4U+EdglPUyoLFnsHOI8nrhHXVezEsLCyKacTVWuVyjEmswJt2kfRFAzFvupt5L8dW5HrQ3pW2JM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwsD3FU9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iCMGcPJW"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55H7WY8x1020658
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 17 Jun 2025 00:32:38 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55H7WY8x1020658
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750145559;
-	bh=M0DKhA38fEw6Bm/3Z+zol8C78ucdC08/MmuvHH4gP5o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iCMGcPJWNrjKttAGX2SFY0d7+3klYcr5d/LKLeAAoPd4ZvIOMSke8zdJqd/BHnl46
-	 x5rbdYIXpQaC4fdTQFDUFqLoHU0wnvzLixKayRGJOoxHCCEfzXzwgnFADxIBPeTcIy
-	 p0mMfJCtFhWOPVHXYdMAlBhxvuRHlYOIY0J1hjO0+0t4qTY0IgAsgstjRGSlgzXAhe
-	 r1jzoCnAIxycfQqb06iqNFhz8jbzyPUuL5NdtU95ur+v3E24eu4kOO+jgTxZ8OemdZ
-	 /Peu/ItwJWejYVDcFp8kbRFXJtdlPhpLlsa4C+9vVTkUcuBoDKeXdCKlq6jRiHAK+5
-	 q/MrFIg8uUb9w==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
-        sohil.mehta@intel.com, brgerst@gmail.com, tony.luck@intel.com,
-        fenghuay@nvidia.com
-Subject: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its architectural reset value
-Date: Tue, 17 Jun 2025 00:32:33 -0700
-Message-ID: <20250617073234.1020644-2-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250617073234.1020644-1-xin@zytor.com>
-References: <20250617073234.1020644-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwsD3FU9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBABCC4CEEE;
+	Tue, 17 Jun 2025 07:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750145687;
+	bh=vrIfBgdPSzVCtB6193rUgIP44Dtod8O7oM7+ne4bjZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iwsD3FU9LPqMjjdLOzh2W6G7CrZEGI+q+ZlF0kRXug1I9Y4ChRv/D+MkFlAZhdqsZ
+	 g8qhvLomdTqbS6W61AVPjRajt9tq51LtfvAdPJWfg1j0PEakuUr8F9opKfX7JOOID6
+	 oYiiWT/4bfXPOsaQabcM/6l+Te2qXiT5kS+KSPYWd4yIcPkpkPUqtdGWq6v64EFCqZ
+	 lkUs4+aYTZJLroM92VGi0fqbAUDrW9vyGhM7VYwOvC+uZUWPJLEwnZws6N3KbrGZLV
+	 jHu5bzxQ5cdzmO8rOHXwNApbmV4GHAAfbi9ZJd3RoqRdbV3KwZl6aoKnSgAdXOLIjQ
+	 ts4NAmTgzRNgg==
+Date: Tue, 17 Jun 2025 10:34:42 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Steve Wahl <steve.wahl@hpe.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	Vishal Chourasia <vishalc@linux.ibm.com>,
+	samir <samir@linux.ibm.com>,
+	Naman Jain <namjain@linux.microsoft.com>,
+	Saurabh Singh Sengar <ssengar@linux.microsoft.com>,
+	srivatsa@csail.mit.edu, Michael Kelley <mhklinux@outlook.com>,
+	Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
+Subject: Re: [PATCH v4 1/2] sched/topology: improve topology_span_sane speed
+Message-ID: <20250617073442.GG750234@unreal>
+References: <20250610123618.GB10669@unreal>
+ <4110e533-6cab-4845-bd11-11279ebc9150@app.fastmail.com>
+ <aEiKCqoaEWnZvlCI@swahl-home.5wahls.com>
+ <20250611060607.GM10669@unreal>
+ <f5fad97d-f880-49a4-9595-ca3f5b41d9bb@amd.com>
+ <20250612074157.GO10669@unreal>
+ <5a673979-e96c-4dc2-b84b-849c6c8084ae@amd.com>
+ <223b16a5-8532-4f5b-b34a-c7a0448f2454@amd.com>
+ <20250615064207.GA750234@unreal>
+ <aFAnwZLdGn8zrrqG@swahl-home.5wahls.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFAnwZLdGn8zrrqG@swahl-home.5wahls.com>
 
-Initialize DR6 by writing its architectural reset value to ensure
-compliance with the specification.  This avoids incorrectly zeroing
-DR6 to clear DR6.BLD at boot time, which leads to a false bus lock
-detected warning.
+On Mon, Jun 16, 2025 at 09:18:41AM -0500, Steve Wahl wrote:
+> On Sun, Jun 15, 2025 at 09:42:07AM +0300, Leon Romanovsky wrote:
+> > On Thu, Jun 12, 2025 at 04:11:52PM +0530, K Prateek Nayak wrote:
+> > > On 6/12/2025 3:00 PM, K Prateek Nayak wrote:
+> > > > Ah! Since this happens so early topology isn't created yet for
+> > > > the debug prints to hit! Is it possible to get a dmesg with
+> > > > "ignore_loglevel" and "sched_verbose" on an older kernel that
+> > > > did not throw this error on the same host?
+> > 
+> > This is dmesg with reverted two commits "ched/topology: Refinement to
+> > topology_span_sane speedup" and "sched/topology: improve
+> > topology_span_sane speed"
 
-The Intel SDM says:
+<...>
 
-  1) Certain debug exceptions may clear bits 0-3 of DR6.
+> > > 
+> > > One better would be running with the following diff on top of v6.16-rc1
+> > > is possible:
+> > 
+> > We are working to get this one too.
 
-  2) BLD induced #DB clears DR6.BLD and any other debug exception
-     doesn't modify DR6.BLD.
-
-  3) RTM induced #DB clears DR6.RTM and any other debug exception
-     sets DR6.RTM.
-
-  To avoid confusion in identifying debug exceptions, debug handlers
-  should set DR6.BLD and DR6.RTM, and clear other DR6 bits before
-  returning.
-
-The DR6 architectural reset value 0xFFFF0FF0, already defined as
-macro DR6_RESERVED, satisfies these requirements, so just use it to
-reinitialize DR6 whenever needed.
-
-Since clear_all_debug_regs() no longer zeros all debug registers,
-rename it to initialize_debug_regs() to better reflect its current
-behavior.
-
-Since debug_read_clear_dr6() no longer clears DR6, rename it to
-debug_read_reset_dr6() to better reflect its current behavior.
-
-Reported-by: Sohil Mehta <sohil.mehta@intel.com>
-Link: https://lore.kernel.org/lkml/06e68373-a92b-472e-8fd9-ba548119770c@intel.com/
-Fixes: ebb1064e7c2e9 ("x86/traps: Handle #DB for bus lock")
-Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Cc: stable@vger.kernel.org
----
-
-Changes in v2:
-*) Use debug register index 6 rather than DR_STATUS (PeterZ and Sean).
-*) Move this patch the first of the patch set to ease backporting.
----
- arch/x86/include/uapi/asm/debugreg.h |  7 +++++-
- arch/x86/kernel/cpu/common.c         | 17 ++++++--------
- arch/x86/kernel/traps.c              | 34 +++++++++++++++++-----------
- 3 files changed, 34 insertions(+), 24 deletions(-)
-
-diff --git a/arch/x86/include/uapi/asm/debugreg.h b/arch/x86/include/uapi/asm/debugreg.h
-index 0007ba077c0c..8f335b9fa892 100644
---- a/arch/x86/include/uapi/asm/debugreg.h
-+++ b/arch/x86/include/uapi/asm/debugreg.h
-@@ -15,7 +15,12 @@
-    which debugging register was responsible for the trap.  The other bits
-    are either reserved or not of interest to us. */
- 
--/* Define reserved bits in DR6 which are always set to 1 */
-+/*
-+ * Define reserved bits in DR6 which are set to 1 by default.
-+ *
-+ * This is also the DR6 architectural value following Power-up, Reset or INIT.
-+ * Some of these reserved bits can be set to 0 by hardware or software.
-+ */
- #define DR6_RESERVED	(0xFFFF0FF0)
- 
- #define DR_TRAP0	(0x1)		/* db0 */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 8feb8fd2957a..3bd7c9ac7576 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -2243,20 +2243,17 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
- #endif
- #endif
- 
--/*
-- * Clear all 6 debug registers:
-- */
--static void clear_all_debug_regs(void)
-+static void initialize_debug_regs(void)
- {
- 	int i;
- 
--	for (i = 0; i < 8; i++) {
--		/* Ignore db4, db5 */
--		if ((i == 4) || (i == 5))
--			continue;
-+	/* Control register first */
-+	set_debugreg(0, 7);
-+	set_debugreg(DR6_RESERVED, 6);
- 
-+	/* Ignore db4, db5 */
-+	for (i = 0; i < 4; i++)
- 		set_debugreg(0, i);
--	}
- }
- 
- #ifdef CONFIG_KGDB
-@@ -2417,7 +2414,7 @@ void cpu_init(void)
- 
- 	load_mm_ldt(&init_mm);
- 
--	clear_all_debug_regs();
-+	initialize_debug_regs();
- 	dbg_restore_debug_regs();
- 
- 	doublefault_init_cpu_tss();
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index c5c897a86418..36354b470590 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -1022,24 +1022,32 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
- #endif
- }
- 
--static __always_inline unsigned long debug_read_clear_dr6(void)
-+static __always_inline unsigned long debug_read_reset_dr6(void)
- {
- 	unsigned long dr6;
- 
-+	get_debugreg(dr6, 6);
-+	dr6 ^= DR6_RESERVED; /* Flip to positive polarity */
-+
- 	/*
- 	 * The Intel SDM says:
- 	 *
--	 *   Certain debug exceptions may clear bits 0-3. The remaining
--	 *   contents of the DR6 register are never cleared by the
--	 *   processor. To avoid confusion in identifying debug
--	 *   exceptions, debug handlers should clear the register before
--	 *   returning to the interrupted task.
-+	 *   Certain debug exceptions may clear bits 0-3 of DR6.
-+	 *
-+	 *   BLD induced #DB clears DR6.BLD and any other debug
-+	 *   exception doesn't modify DR6.BLD.
- 	 *
--	 * Keep it simple: clear DR6 immediately.
-+	 *   RTM induced #DB clears DR6.RTM and any other debug
-+	 *   exception sets DR6.RTM.
-+	 *
-+	 *   To avoid confusion in identifying debug exceptions,
-+	 *   debug handlers should set DR6.BLD and DR6.RTM, and
-+	 *   clear other DR6 bits before returning.
-+	 *
-+	 * Keep it simple: write DR6 with its architectural reset
-+	 * value 0xFFFF0FF0, defined as DR6_RESERVED, immediately.
- 	 */
--	get_debugreg(dr6, 6);
- 	set_debugreg(DR6_RESERVED, 6);
--	dr6 ^= DR6_RESERVED; /* Flip to positive polarity */
- 
- 	return dr6;
- }
-@@ -1239,13 +1247,13 @@ static noinstr void exc_debug_user(struct pt_regs *regs, unsigned long dr6)
- /* IST stack entry */
- DEFINE_IDTENTRY_DEBUG(exc_debug)
- {
--	exc_debug_kernel(regs, debug_read_clear_dr6());
-+	exc_debug_kernel(regs, debug_read_reset_dr6());
- }
- 
- /* User entry, runs on regular task stack */
- DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
- {
--	exc_debug_user(regs, debug_read_clear_dr6());
-+	exc_debug_user(regs, debug_read_reset_dr6());
- }
- 
- #ifdef CONFIG_X86_FRED
-@@ -1264,7 +1272,7 @@ DEFINE_FREDENTRY_DEBUG(exc_debug)
- {
- 	/*
- 	 * FRED #DB stores DR6 on the stack in the format which
--	 * debug_read_clear_dr6() returns for the IDT entry points.
-+	 * debug_read_reset_dr6() returns for the IDT entry points.
- 	 */
- 	unsigned long dr6 = fred_event_data(regs);
- 
-@@ -1279,7 +1287,7 @@ DEFINE_FREDENTRY_DEBUG(exc_debug)
- /* 32 bit does not have separate entry points. */
- DEFINE_IDTENTRY_RAW(exc_debug)
- {
--	unsigned long dr6 = debug_read_clear_dr6();
-+	unsigned long dr6 = debug_read_reset_dr6();
- 
- 	if (user_mode(regs))
- 		exc_debug_user(regs, dr6);
--- 
-2.49.0
+ [    0.435961] smp: Bringing up secondary CPUs ...
+ [    0.437573] smpboot: x86: Booting SMP configuration:
+ [    0.438611] .... node  #0, CPUs:        #1
+ [    0.440449] .... node  #1, CPUs:    #2  #3
+ [    0.442906] .... node  #2, CPUs:    #4  #5
+ [    0.445298] .... node  #3, CPUs:    #6  #7
+ [    0.447715] .... node  #4, CPUs:    #8  #9
+ [    0.481482] smp: Brought up 5 nodes, 10 CPUs
+ [    0.483160] smpboot: Total of 10 processors activated (45892.16 BogoMIPS)
+ [    0.486872] tl(SMT) CPU(0) ID(0) CPU_TL_SPAN(0) ID_TL_SPAN(0)
+ [    0.488029] tl(SMT) CPU(1) ID(1) CPU_TL_SPAN(1) ID_TL_SPAN(1)
+ [    0.489151] tl(SMT) CPU(2) ID(2) CPU_TL_SPAN(2) ID_TL_SPAN(2)
+ [    0.489761] tl(SMT) CPU(3) ID(3) CPU_TL_SPAN(3) ID_TL_SPAN(3)
+ [    0.490876] tl(SMT) CPU(4) ID(4) CPU_TL_SPAN(4) ID_TL_SPAN(4)
+ [    0.491996] tl(SMT) CPU(5) ID(5) CPU_TL_SPAN(5) ID_TL_SPAN(5)
+ [    0.493115] tl(SMT) CPU(6) ID(6) CPU_TL_SPAN(6) ID_TL_SPAN(6)
+ [    0.493754] tl(SMT) CPU(7) ID(7) CPU_TL_SPAN(7) ID_TL_SPAN(7)
+ [    0.494875] tl(SMT) CPU(8) ID(8) CPU_TL_SPAN(8) ID_TL_SPAN(8)
+ [    0.496008] tl(SMT) CPU(9) ID(9) CPU_TL_SPAN(9) ID_TL_SPAN(9)
+ [    0.497129] tl(PKG) CPU(0) ID(0) CPU_TL_SPAN(0-1) ID_TL_SPAN(0-1)
+ [    0.497763] tl(PKG) CPU(1) ID(0) CPU_TL_SPAN(0-1) ID_TL_SPAN(0-1)
+ [    0.498954] tl(PKG) CPU(2) ID(2) CPU_TL_SPAN(2-3) ID_TL_SPAN(2-3)
+ [    0.500167] tl(PKG) CPU(3) ID(2) CPU_TL_SPAN(2-3) ID_TL_SPAN(2-3)
+ [    0.501371] tl(PKG) CPU(4) ID(4) CPU_TL_SPAN(4-5) ID_TL_SPAN(4-5)
+ [    0.501792] tl(PKG) CPU(5) ID(4) CPU_TL_SPAN(4-5) ID_TL_SPAN(4-5)
+ [    0.503001] tl(PKG) CPU(6) ID(6) CPU_TL_SPAN(6-7) ID_TL_SPAN(6-7)
+ [    0.504202] tl(PKG) CPU(7) ID(6) CPU_TL_SPAN(6-7) ID_TL_SPAN(6-7)
+ [    0.505419] tl(PKG) CPU(8) ID(8) CPU_TL_SPAN(8-9) ID_TL_SPAN(8-9)
+ [    0.506637] tl(PKG) CPU(9) ID(8) CPU_TL_SPAN(8-9) ID_TL_SPAN(8-9)
+ [    0.507843] tl(NODE) CPU(0) ID(0) CPU_TL_SPAN(0-1,8-9) ID_TL_SPAN(0-1,8-9)
+ [    0.509199] tl(NODE) CPU(1) ID(0) CPU_TL_SPAN(0-1,8-9) ID_TL_SPAN(0-1,8-9)
+ [    0.509792] tl(NODE) CPU(2) ID(2) CPU_TL_SPAN(2-3,8-9) ID_TL_SPAN(2-3,8-9)
+ [    0.511143] Failed tl: NODE
+ [    0.511789] Failed for CPU: 2
+ [    0.512466] ID CPU at tl: 2
+ [    0.513115] Failed CPU span at tl: 2-3,8-9
+ [    0.513701] ID CPU span: 2-3,8-9
+ [    0.514419] ID CPUs seen: 0
+ [    0.515055] CPUs covered: 0-1,8-9
+ [    0.515802] ------------[ cut here ]------------
+ [    0.516753] WARNING: CPU: 0 PID: 1 at kernel/sched/topology.c:2499 build_sched_domains.cold+0x96/0x23a
+ [    0.517937] Modules linked in:
+ [    0.518630] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.16.0-rc1master_70c6e66 #1 NONE
+ [    0.520353] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.13.0-0-gf21b5a4aeb02-prebuilt.qemu.org 04/01/2014
+ [    0.522008] RIP: 0010:build_sched_domains.cold+0x96/0x23a
+ [    0.523102] Code: c2 80 33 91 83 48 c7 c7 0d 6e 68 82 e8 76 1f 00 00 8b 35 80 1d f8 01 48 c7 c2 c0 33 91 83 48 c7 c7 24 6e 68 82 e8 5d 1f 00 00 <0f> 0b bd f4 ff ff ff e9 fe 08 28 00 be 40 00 00 00 bf 0f 00 00 00
+ [    0.526338] RSP: 0000:ffff88810096be18 EFLAGS: 00010246
+ [    0.527408] RAX: 0000000000000015 RBX: 0000000000000002 RCX: ffff88843ffd26a8
+ [    0.528804] RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000001
+ [    0.529808] RBP: ffff888100062150 R08: 0000000000000000 R09: 0000000000000000
+ [    0.531211] R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000002
+ [    0.532607] R13: 0000000000000002 R14: 0000000000000002 R15: ffff88838000b480
+ [    0.533813] FS:  0000000000000000(0000) GS:ffff8881b9358000(0000) knlGS:0000000000000000
+ [    0.535478] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ [    0.536639] CR2: ffff88843ffff000 CR3: 0000000002e5d001 CR4: 0000000000370eb0
+ [    0.537802] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ [    0.539203] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ [    0.540564] Call Trace:
+ [    0.541138]  <TASK>
+ [    0.541647]  sched_init_smp+0x32/0xa0
+ [    0.542434]  kernel_init_freeable+0x169/0x330
+ [    0.543329]  ? rest_init+0x1b0/0x1b0
+ [    0.544092]  kernel_init+0x17/0x140
+ [    0.544830]  ret_from_fork+0x140/0x1b0
+ [    0.545419]  ? rest_init+0x1b0/0x1b0
+ [    0.546185]  ret_from_fork_asm+0x11/0x20
+ [    0.547041]  </TASK>
+ [    0.547586] irq event stamp: 8887
+ [    0.548321] hardirqs last  enabled at (8897): [<ffffffff814b3b9a>] __up_console_sem+0x5a/0x70
+ [    0.549918] hardirqs last disabled at (8908): [<ffffffff814b3b7f>] __up_console_sem+0x3f/0x70
+ [    0.551593] softirqs last  enabled at (8292): [<ffffffff814363b2>] irq_exit_rcu+0x82/0xe0
+ [    0.553208] softirqs last disabled at (8285): [<ffffffff814363b2>] irq_exit_rcu+0x82/0xe0
+ [    0.553909] ---[ end trace 0000000000000000 ]---
 
