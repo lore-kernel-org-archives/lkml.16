@@ -1,114 +1,193 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EAF21771A;
-	Tue, 17 Jun 2025 19:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B8C2580E1
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750188134; cv=none; b=L7vQlpt42uCGrgV/q5tYcEQNLIrH+YUs8LlzeIkTSKth8SyYt3nnV3QdWZEWsDfSe4YBVYyQYG81B3EKGH/wwR8aqOtQiShqEfM0rp3gtBlI2k5StYFYrYLQi6oIXjaQDBI1fFEdAcwvRTkP6k28UGnSeD0ueUKrM/JvJs0Dzik=
+	t=1750188158; cv=none; b=rwVA1cFvUNgDB5Gr6Gy+8lDTQA7JExhpdURVI/1CrfMgCw41LcKsnq24Nd9wx99bmn8TDY0/0IPZXW1bVc3DHPTQP8qho+9X2hFxHfwrg5ljY3HhJTeTH0hGWc2EF37rIjYYI2JlZVhULyZ/0O5O24Vmuns8bnP7HXONx0YNC2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750188134; c=relaxed/simple;
-	bh=DIeweH4tJgRpIMI6A93lfPzWuHCR0d9IDLxqeAGEsJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZD+Uz2NUjcG4H4KowDsTtRE3V/AJVa6ym0CQWsePW++OCdIClFrkCxS7bKi2BWTEmREhqUu0DyKx2/UbAA8SCfGaAflxt3l/ri8O+pZGQ2xhUDqV3XmQO0x51SqzK8lrf+F1DLWhwf97qGHYDqqmfzfUX8sai1UbLzNxZ2gOZpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axo6SFaY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750188158; c=relaxed/simple;
+	bh=dZ8EpPRp5zdcTdYmD+K/PnV4Ns2pBMLOQBSl4kHSQcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mmxtsL8AdvBRRiv2bGp98+I5Ko99w1io2ZPyekRav2ShzOKCEOECbKP7BbtfpvI8S9ogwc90XBrqohvXDOCamFMkzTTUvrTQZp7nRUuSEi6rSoDKxW+gfqOCn0TOMJdQSnSwVuXPSDFBPAYHZ6Cc7Ha+xoDu8ekOvKEk+9p5yrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VuVZEPWy; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axo6SFaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA501C4CEE3;
-	Tue, 17 Jun 2025 19:22:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750188134;
-	bh=DIeweH4tJgRpIMI6A93lfPzWuHCR0d9IDLxqeAGEsJ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=axo6SFaYaKEZtTtcZaKVei2M5O0lKIXRPx4u/MNnAOO+0bF2HOtITPs3y7H0ALP4g
-	 KKK04dXoQRHYOgBrwNnMdSyZhnWbSk/GagXcltvVYEn6s0k7veB4uGMXHXE0/A0gkv
-	 D/tZbxEYdExfyODv0Ie0mWcHFrKzFSNgt4yu1FRZj9AeiKuZzRcdrojpBJv5fIsnGr
-	 IPNAszMnDgJtoFmYVULSx4B/oC7/P/yN5TuUbsv9bhjHsDMcMCDX8r+PvYGhgeNLAv
-	 ESPGFAZuTwnWs8tzMkLgW+I1oOtKdoGuqYwO51+lcR2vsGfO0kPfoaBjSRUPHTT2So
-	 t99/eHv/dZ9NA==
-Date: Tue, 17 Jun 2025 19:22:12 +0000
-From: Eric Biggers <ebiggers@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>
-Subject: Re: [PATCH v2 00/17] SHA-512 library functions
-Message-ID: <20250617192212.GA1365424@google.com>
-References: <20250616014019.415791-1-ebiggers@kernel.org>
- <20250617060523.GH8289@sol>
- <CAHk-=wi5d4K+sF2L=tuRW6AopVxO1DDXzstMQaECmU2QHN13KA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VuVZEPWy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750188154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BSn7XHZFzYmsxbIxESph49ANKqfYGKBPdtCCcSk0qA0=;
+	b=VuVZEPWyEXTPiozupCu4VoBF8aDhRbpMfKP8pihLcFsQnZYV2CWe6/pbduQIQbXgqx8WDO
+	rQSh4nLp1jK6NAVHoHdXCK0b3Wuh6hbn8ww8Y6HWn0CArEJPagW8O98Jl+6+hwv5CH8PvG
+	5Jy+9LIHe3upVrhfJcnZB0UU0+PE21M=
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com
+ [209.85.166.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-80-tcsm6dEcOhmqbUwHqFj3hQ-1; Tue, 17 Jun 2025 15:22:33 -0400
+X-MC-Unique: tcsm6dEcOhmqbUwHqFj3hQ-1
+X-Mimecast-MFC-AGG-ID: tcsm6dEcOhmqbUwHqFj3hQ_1750188153
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-875b54cfffaso71068839f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:22:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750188153; x=1750792953;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BSn7XHZFzYmsxbIxESph49ANKqfYGKBPdtCCcSk0qA0=;
+        b=rhfU1VGNmiZ9ipzVEDuuztsruV6xAKNY6OcaSQUh77PFAmjyOp3TTTW1OFwnxm1Sn4
+         eW/i+ipX0APdcM353284ljuc2wjU9KQ63IORHAsx1l3JU1RKrSPkP4xyQmAw9YhVHR1D
+         z1SQ5g7+W2fhTIGDHuk3bLH6Tv/Kowggs2OAqAUFqN+P7BsMsWFxmaGZvLMlsdTeTZ2p
+         9oYAaWT25CD6qY1sZDxOOQ9KOVED6MAvqbRWRV7fyOBaDbtETHvLC7y/6DC4nIJfppcS
+         Kvvv8rwpbSH+kb2K7Jxmd4wqhm3INI/7k/XRQaJxlcYIdcw0FkMVlBEQS7u1IPIWEIDD
+         R00w==
+X-Forwarded-Encrypted: i=1; AJvYcCVK9Ok1imJwBV/9O2ByHBNk0CJDawtzS+fHBJr+RvBisBYabJfK/VxFUYuSoxdthmXWLkn1vAAwAGq5t5M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJDK0VveKYaY7Bwlt2pxFrlcA9dYtUJd5DyL5Pv56P6R7Fqb2H
+	YI8Uz/6j3s429EUL7vdVF7CB+5ZhtN6KTZc/osNdlMgrkMxHgQtR4Pm1bO9KC3HYd/WtcFffNZC
+	ZLJaHlnWljZ9ZyvGyBD2lIblDRI4ol7bBWYJa6c+Rj+UD3PXa9owf1Sfdv5/SpM39wg==
+X-Gm-Gg: ASbGncviMlZ3NMXp+2vH3eib3TaJasVrTvz9WujnyBuWufqe/Wyk9qBTdqyV9Y21cXp
+	A3AZYgJ6Hu/ADU9Afd0xHIve4n3c8t2ngSSHu0GGmyLAhl7NFNwLUCAwqtiHuLWvkqxGXSpE7IL
+	ZZdVIR+butcbjO91usLZd/ZJ5jjN5BAO0MpJuL8vhOD+JvzVl3dAC0zPR5/VTVkg7zjEWSyWYzE
+	jnTav1kXgUun/qyavtGv9L6aWqJcQtOzhe3cgos7YPwDNWq7hUwtntVuQSc8XK7n0kMm3wsO+pr
+	xGW62AlVOVTeb+svAFasfQk+uA==
+X-Received: by 2002:a05:6602:6d01:b0:85b:544c:ba6c with SMTP id ca18e2360f4ac-875ded03081mr426800739f.1.1750188152647;
+        Tue, 17 Jun 2025 12:22:32 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGvT+wWOgl7pfKZbTZ4DvfyUSmBDBBx9AlWceV4usmHGm1/hFR2YB75bZK6jJl5rI9kUZOEVg==
+X-Received: by 2002:a05:6602:6d01:b0:85b:544c:ba6c with SMTP id ca18e2360f4ac-875ded03081mr426799139f.1.1750188152172;
+        Tue, 17 Jun 2025 12:22:32 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149b9e03fsm2396367173.52.2025.06.17.12.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 12:22:30 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:22:28 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Alex Deucher
+ <alexander.deucher@amd.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Woodhouse
+ <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, Robin Murphy
+ <robin.murphy@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+ <tiwai@suse.com>, dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+ linux-kernel@vger.kernel.org (open list), iommu@lists.linux.dev (open
+ list:INTEL IOMMU (VT-d)), linux-pci@vger.kernel.org (open list:PCI
+ SUBSYSTEM), kvm@vger.kernel.org (open list:VFIO DRIVER),
+ linux-sound@vger.kernel.org (open list:SOUND), Daniel Dadap
+ <ddadap@nvidia.com>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v2 6/6] vgaarb: Look at all PCI display devices in VGA
+ arbiter
+Message-ID: <20250617132228.434adebf.alex.williamson@redhat.com>
+In-Reply-To: <20250617175910.1640546-7-superm1@kernel.org>
+References: <20250617175910.1640546-1-superm1@kernel.org>
+	<20250617175910.1640546-7-superm1@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi5d4K+sF2L=tuRW6AopVxO1DDXzstMQaECmU2QHN13KA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025 at 11:29:15AM -0700, Linus Torvalds wrote:
-> On Mon, 16 Jun 2025 at 23:05, Eric Biggers <ebiggers@kernel.org> wrote:
-> >
-> > An additional note on testing: [..]
-> 
-> Talking about testing - when adding test scripts, can you do it as a
-> separate thing entirely - either before or after?
-> 
-> As it is, this code movement is hard to judge just because the stats
-> are all messed up with new tests:
-> 
->  77 files changed, 4012 insertions(+), 1756 deletions(-)
-> 
-> that's 2k+ new lines of code that pretty much entirely hides the
-> question of "did this code movement result in a simpler / same / more
-> complex end result".
-> 
-> So in general, I'd really prefer big re-organizations to be *separate*
-> from new code changes.
-> 
-> It's just a pain to review renaming when it's mixed up with other
-> changes - whether renaming variables or whole files.
-> 
-> And that's as true on an individual commit level (we try to avoid
-> renaming things *and* making other changes in one go) as it is on a
-> pull request level.
-> 
-> If I see a pull request that only adds new tests, it's a no-brainer.
-> 
-> If I see a pull request that only re-organizes the code and the
-> diffstat just just renames with some small updates for new locations,
-> it's a no-brainer.
-> 
-> If I see a pull request that does both, it's a pain in the arse,
-> because then I need to start to look into individual commits and go
-> "which does what".
+On Tue, 17 Jun 2025 12:59:10 -0500
+Mario Limonciello <superm1@kernel.org> wrote:
 
-The tests are already in their own patches: patches 4 and 5.  Yes, this patchset
-has a negative diffstat once you subtract them.
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> On a mobile system with an AMD integrated GPU + NVIDIA discrete GPU the
+> AMD GPU is not being selected by some desktop environments for any
+> rendering tasks. This is because neither GPU is being treated as
+> "boot_vga" but that is what some environments use to select a GPU [1].
+> 
+> The VGA arbiter driver only looks at devices that report as PCI display
+> VGA class devices. Neither GPU on the system is a PCI display VGA class
+> device:
+> 
+> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+> 
+> If the GPUs were looked at the vga_is_firmware_default() function actually
+> does do a good job at recognizing the case from the device used for the
+> firmware framebuffer.
+> 
+> Modify the VGA arbiter code and matching sysfs file entries to examine all
+> PCI display class devices. The existing logic stays the same.
+> 
+> This will cause all GPUs to gain a `boot_vga` file, but the correct device
+> (AMD GPU in this case) will now show `1` and the incorrect device shows `0`.
+> Userspace then picks the right device as well.
+> 
+> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
+> Suggested-by: Daniel Dadap <ddadap@nvidia.com>
+> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci-sysfs.c | 2 +-
+>  drivers/pci/vgaarb.c    | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 268c69daa4d57..c314ee1b3f9ac 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>  	struct device *dev = kobj_to_dev(kobj);
+>  	struct pci_dev *pdev = to_pci_dev(dev);
+>  
+> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
+>  		return a->mode;
+>  
+>  	return 0;
+> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+> index 78748e8d2dbae..63216e5787d73 100644
+> --- a/drivers/pci/vgaarb.c
+> +++ b/drivers/pci/vgaarb.c
+> @@ -1499,8 +1499,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>  
+>  	vgaarb_dbg(dev, "%s\n", __func__);
+>  
+> -	/* Only deal with VGA class devices */
+> -	if (!pci_is_vga(pdev))
+> +	/* Only deal with PCI display class devices */
+> +	if (!pci_is_display(pdev))
+>  		return 0;
+>  
+>  	/*
+> @@ -1546,12 +1546,12 @@ static int __init vga_arb_device_init(void)
+>  
+>  	bus_register_notifier(&pci_bus_type, &pci_notifier);
+>  
+> -	/* Add all VGA class PCI devices by default */
+> +	/* Add all PCI display class devices by default */
+>  	pdev = NULL;
+>  	while ((pdev =
+>  		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+>  			       PCI_ANY_ID, pdev)) != NULL) {
+> -		if (pci_is_vga(pdev))
+> +		if (pci_is_display(pdev))
+>  			vga_arbiter_add_pci_device(pdev);
+>  	}
+>  
 
-(And most of the positive diffstat in the tests is generated test vectors.  The
-rest is mostly code that I'll reuse later in tests for other hash functions; it
-just gets blamed to this one because it's the first one.)
+At the very least a non-VGA device should not mark that it decodes
+legacy resources, marking the boot VGA device is only a part of what
+the VGA arbiter does.  It seems none of the actual VGA arbitration
+interfaces have been considered here though.
 
-I'd really prefer to keep testing as a first-class citizen.  Tests should be
-contributed along with the code itself.
+I still think this is a bad idea and I'm not sure Thomas didn't
+withdraw his ack in the previous round[1].  Thanks,
 
-And the point of this patchset is not just "code movement", but rather adding a
-library API, including documentation *and tests*.
+Alex
 
-Later, I'll be converting various in-kernel users to use that API, just as I've
-been doing for crc32 and sha256.  It's already been shown that the
-"librarification" works well and is much simpler than the old-school Crypto API.
+[1]https://lore.kernel.org/all/bc0a3ac2-c86c-43b8-b83f-edfdfa5ee184@suse.de/
 
-If you really want patches 4-5 in a separate patchset that's based on this one,
-I can do that.  Ultimately, the result would be the same.
-
-I think your request for there to be a separate "tests" pull request is a
-non-starter, though.  That would imply separate git trees, and we then wouldn't
-be able to land tests at the same time as the code itself.
-
-- Eric
