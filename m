@@ -1,157 +1,265 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D37290BC8
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:34:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A05B293C58
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152874; cv=none; b=tSue85l01Dmz2JpwwNN5g9i3bbJMw/uSp8CNv8VlKjg7CqXbl6FGfntdmARJdsmIuAWKoo9yUB3YBdDAZ2hQQnkppZP+hYE7iD+qAD0fiMDpmQs5jKPLIfrETZYOIR5kO+rjOdioSse0odR0R8zxXu/Q5Fgv/IW8Q8Dpg/STEZQ=
+	t=1750152882; cv=none; b=tjpDTMxaQBWU1R43G2NmSNYn2BO3UbvArfLixvMDJrushwg5ndBofXkNnWzrrUm4aWwDIEbW2Rxf+S7GfHGoEPnqSIcm2MPauBgMBy3iREHVl6SCcP7ETyMedi4C3S0eCGht9FYrdFZF7snYuAdIYGAKbVF7mic31CojRdhS6Ck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152874; c=relaxed/simple;
-	bh=/l+blL0P/WvKFXEmP8UAB8+2DcgBYjMRCa/JF+NxGbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qOwXuAjykiCr3vZo+6aXEQFj8ErnFMiKvYEDsiVpZZ3Y3OAknYX3B3T4s3ppOHGUEvU9sYlW4BESek6GqRUFOedf19vTbSerKlLR3j/M+ISXodRUgFCRtTWansXF3KijVYCbaVSDeoSm0m+O+VbK0FLFmLzd01QSSpRghKgUWU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H17Ga4VT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750152882; c=relaxed/simple;
+	bh=4mXybjNql83roRvkXEyu7iXZ4aNdvN0yFRChnAR8npc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m31M9xQ7foXpcKUt8fVFJBTOm/F+f4LMRN9TQxgXfx6IhlE4Buf+FjG346X2CFRCl6rJUEEsYK2QkCK+h9NEkka5i3uHjaBzT4g2jKKU5Wh9NpP/CV4WPJOg5NYAQPFmyyY3VM3C8ZXoveSIp0oOVPBUnhhfq9VW/7bGDrbpWms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y4AW5cXS; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H17Ga4VT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750152872;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=UoO6Im3sdMj9qrKiZw97K0g1BjWI//UD+48kISxcxhU=;
-	b=H17Ga4VTXpLcJQtVGtOXTLTdsFRxwKIZHlHmDp2f3q4yHxHlYVq0ynSoYBY/wGSjSEXrdP
-	g/u+MBzDyHyrpTb8c4q4v4wOZCmmwb9NRwni4iJ4qkwmUjmxgg/DTemp6jmXWVHFthclTk
-	fu1Xru0KpxBxLCTSONuPH5GsGdosqhI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-258-0U5Ei7I4Mr2BnOHngu1nmA-1; Tue, 17 Jun 2025 05:34:29 -0400
-X-MC-Unique: 0U5Ei7I4Mr2BnOHngu1nmA-1
-X-Mimecast-MFC-AGG-ID: 0U5Ei7I4Mr2BnOHngu1nmA_1750152868
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a578958000so997808f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:34:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y4AW5cXS"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235e1d4cba0so48343235ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750152879; x=1750757679; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R7f5U2YQyJ7Sib6/GxtNtbuYrRnQxjNTxtDfhJh7cr4=;
+        b=Y4AW5cXSzmvc6qBTeU9V4baHoxDs173VJaX8YBMsepvGZt95fhNHV1r0aL0YjMIEbR
+         723Gbe8+wgzrs3Sfc0bE9kn8lOZ4f//Wwc3eSaGpszr3z3yF9WjyKoG58kmP9HrxNa10
+         wpR+T672cPfHTwuHK5hsNQy53VRyrR+sThYsrwBhCH0pnjRxVgy279Y9BSKC+SSD11zT
+         dzWY+G1R4uvXIcplrvoCM3tJd7T87uyaYaAPowYVu6Rs+2BeJ1uwN3f79c3/N0Gz/d2C
+         9HCiQcCktOoIpu4xWfdpf/L6MYcotzOlrTw01v/gCSSVXVtbHNtArFmlv+KLsjya1Jof
+         O7VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152868; x=1750757668;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UoO6Im3sdMj9qrKiZw97K0g1BjWI//UD+48kISxcxhU=;
-        b=Md2sjsGPa+KYULiU3PWUTXfJVAbVHN/Ck1D01frX1Y1Zp2PhueQe7soqUrUZu7luUy
-         gDFrOpe2D+ffy5DsOW1lUNVm447Ixhj0C1wwhi19gNqtol2H+Un6fvVCGS1P+QUp59DR
-         y70eiB7al2RCGYFfGkNB0y+hzBCwaaKDLVv1PQx7L+wMPos0Ad12uRjJ2RbMhvrZKmWC
-         Nvemmqeo7pJ9wgpyJhO5hZ83CUBamlLbNTxLpuw7/RRsyJ6xqsRsY6ET++rhk3HHfnTq
-         hLRDja5VfXw/4odHhvWD6n72V8ZOwJ39228Z/t0MdtkAjXXeaLWL6t9nmJbXJkIZfuQR
-         WnUw==
-X-Forwarded-Encrypted: i=1; AJvYcCWiqR6damsXJ5SJQlIZ60Wa19DtrK0XUDXzgaFkvjHjeVySiH+uvi35EiQ3un6BMigsQ/98eMXM9BHkiEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4lgtfWdyt4yJfoG5UOUUFubaMcTcUqGCBfE/DWx/Xevg17pth
-	0F/1Yq0jdyFAL/a0HcbZScinjFsd3C9gXgCZubqffLYU7g50unFCMnf8KZKaYY2ZCirCfwVIxKL
-	OoT7WeCqmjPMZuotzIg6heJEHj2SMjMt9dWx4ZQuGfnGnejyDPx49WQZW3uluhRIjgA==
-X-Gm-Gg: ASbGncuB9YhCYaYxrklH4AX8xLfzYyyMhA82uEJ9p1wABmD4kTkkrdh/CCE6BE8gn3J
-	5IGgpseA7gA61OZhklFCMuI6tVUpbS03lIe8aM02ZcHFNHw6eXmMuJL6cXvMQQZkAuJLU/+s5I6
-	RTjdwhvGCQiex26jTBKqGnIKcR3OJS4yden4e2qRWSL5G2AIKCEcIcf/z/3kTpg0UVtYxcbSNaZ
-	VM/7KlnxzTKjDuEwGkH29kgkLnDsdmt8+QHoxhbAIwp24GhuxseBWAuyG/+uR8gHsDuPc5P3TNW
-	SuYlfTrhVt5vStgIXkdKyz7FP8kbFq5D77WwjeW767PxRqM48rX3mrMQFWVFRnP7S+ilcgJUUos
-	3aK+ZLmh6jj7NdY3uJj9DGxZV5HfN4Sn7F/troFYdn9I41Ws=
-X-Received: by 2002:a05:6000:480d:b0:3a4:ed2f:e82d with SMTP id ffacd0b85a97d-3a5723a49e0mr9462615f8f.22.1750152867957;
-        Tue, 17 Jun 2025 02:34:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGAmkCmIe8r1op6vQb6TFjyJmDKs7yVrH6V8NRIzvLkSM/8ZQuEH09JTbMfp0YgKwsQ3nxlSg==
-X-Received: by 2002:a05:6000:480d:b0:3a4:ed2f:e82d with SMTP id ffacd0b85a97d-3a5723a49e0mr9462594f8f.22.1750152867607;
-        Tue, 17 Jun 2025 02:34:27 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7f8f9sm13367621f8f.42.2025.06.17.02.34.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 02:34:27 -0700 (PDT)
-Message-ID: <b2640810-d528-4a3f-b69a-87847943dc2b@redhat.com>
-Date: Tue, 17 Jun 2025 11:34:25 +0200
+        d=1e100.net; s=20230601; t=1750152879; x=1750757679;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R7f5U2YQyJ7Sib6/GxtNtbuYrRnQxjNTxtDfhJh7cr4=;
+        b=vtfqNq/V7Uz2Igct50flv0+m3Nbg17uZ60MisL8LZUbxEWtei58l8OO8GPGyLO9c8w
+         x/eNwTDHiJTGILB5L5mBiPzTyyR5aSztvBgA7AU496Ont3Dwtd509dEmQGy4/j+c3uCR
+         AKChgTPCqlzV32xdjEhRlMXuawqAcFbOe4KnrPyqBpBKdHi/bAViT5F3GmcxNREJkiFn
+         +Y8fs+ggZpolFMH4Q2ylWG+UsJRYY7+lXPQPJxw4WOPHMVoY7bNce7vTGaP68ntEoVwQ
+         3tWW9HJAWR9TRuAdZc4njOsaSh92Rl5TECyDsjP55XNaRL+i2CWgwMRbJjUymcgmfzh1
+         Aylw==
+X-Forwarded-Encrypted: i=1; AJvYcCVeVE+0rQbOkkVjUjM/IMp/3Rxei/5mfBbESpawRYKkyRVMeVOh7L+iFr9m4GwMPTgaoShm/stk6d87LXE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLymVDRhAkV7uzsuc7QrjBnxlT+8yro3zcFt3biqg7YlFxvewN
+	sBwm9kUuAKLzeJoAfEIV+5UO9OIZ31ODS5ZjHor6Az3V3yQz+OmDdVIhkdYfME3HZiH8qPDzvzQ
+	zDTF79SHjEvI8SD3FPbqIAsHPBQpFAtlzNyiX9IQN
+X-Gm-Gg: ASbGncsulBl/jWR+kCnlntiY8U0QZovRzwwSOILMPxpi3mPrfNOMw7S0V1zJoeoBM0j
+	DD5lRZhSJk3/zsPq2LMH7V5pNy3ZX9d1GDNtgq8rOQ7uHikBApTemScBypvxX//cDWSYnyI15RX
+	op714GQE41f9aMaQ5NZNTrvQwNvqzAqr8xOXun+XCYza1Xeb4KYhV/ZgWrkVw3/hoRE3yxGPPKy
+	VT+PXaK7RM=
+X-Google-Smtp-Source: AGHT+IF0V6IpDA0g/g88zQN1Y5jwthq4vJStWs8fyODDsQaoYNjd5ntqaH61CbzS6DeZH1dw+BJNe+YrREENeD63aH0=
+X-Received: by 2002:a17:90b:1d81:b0:313:352f:6620 with SMTP id
+ 98e67ed59e1d1-313f1be63ebmr17632161a91.4.1750152878984; Tue, 17 Jun 2025
+ 02:34:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/14] mm/memremap: Remove unused devmap_managed_key
-To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
- dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
- linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
- linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
- zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
- balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
- linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
- m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
-References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
- <51ccdbbc3d7b76a7f6e2aefb543eba52d653a230.1750075065.git-series.apopple@nvidia.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <51ccdbbc3d7b76a7f6e2aefb543eba52d653a230.1750075065.git-series.apopple@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <6850d3bd.a70a0220.395abc.01fa.GAE@google.com>
+In-Reply-To: <6850d3bd.a70a0220.395abc.01fa.GAE@google.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Tue, 17 Jun 2025 11:34:27 +0200
+X-Gm-Features: AX0GCFtmlTXwGd4wbmbNXD1rdGyEhDesrG7ukmKKzoYmJc174K-z66naXEiAI1k
+Message-ID: <CANp29Y68ZaQnb0R2fZSLjcCxiOE3uZyW4b7wLEYMAycF0WHNUg@mail.gmail.com>
+Subject: Re: [syzbot] [wireless?] WARNING: net/mac80211/tx.c:LINE at
+ __ieee80211_beacon_get, CPU: syz.NUM.NUM/NUM
+To: syzbot <syzbot+468656785707b0e995df@syzkaller.appspotmail.com>
+Cc: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 16.06.25 13:58, Alistair Popple wrote:
-> It's no longer used so remove it.
-> 
-> Signed-off-by: Alistair Popple <apopple@nvidia.com>
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+#syz dup: WARNING in __ieee80211_beacon_get
+
+On Tue, Jun 17, 2025 at 4:32=E2=80=AFAM syzbot
+<syzbot+468656785707b0e995df@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    050f8ad7b58d Add linux-next specific files for 20250616
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D125e190c58000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd2efc7740224b=
+93a
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3D468656785707b0e=
+995df
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e0775=
+7-1~exp1~20250514183223.118), Debian LLD 20.1.6
+>
+> Unfortunately, I don't have any reproducer for this issue yet.
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/49faa18d2f53/dis=
+k-050f8ad7.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/7c6f9cd7fe5d/vmlinu=
+x-050f8ad7.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/84a08d6403ee/b=
+zImage-050f8ad7.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+468656785707b0e995df@syzkaller.appspotmail.com
+>
+> ------------[ cut here ]------------
+> WARNING: net/mac80211/tx.c:5024 at __ieee80211_beacon_update_cntdwn net/m=
+ac80211/tx.c:5024 [inline], CPU#1: syz.4.243/6807
+> WARNING: net/mac80211/tx.c:5024 at __ieee80211_beacon_get+0x125d/0x1630 n=
+et/mac80211/tx.c:5453, CPU#1: syz.4.243/6807
+> Modules linked in:
+> CPU: 1 UID: 0 PID: 6807 Comm: syz.4.243 Not tainted 6.16.0-rc2-next-20250=
+616-syzkaller #0 PREEMPT(full)
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
+oogle 05/07/2025
+> RIP: 0010:__ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5024 [inline=
+]
+> RIP: 0010:__ieee80211_beacon_get+0x125d/0x1630 net/mac80211/tx.c:5453
+> Code: e7 e8 27 f2 2f f7 45 31 f6 4c 8b bc 24 a0 00 00 00 e9 78 fe ff ff e=
+8 92 bf d6 f6 90 0f 0b 90 e9 e0 f7 ff ff e8 84 bf d6 f6 90 <0f> 0b 90 e9 38=
+ fb ff ff e8 76 bf d6 f6 48 c7 c7 a0 5c 79 8f 4c 89
+> RSP: 0018:ffffc90000a089f8 EFLAGS: 00010246
+> RAX: ffffffff8ae9aaac RBX: ffffffff8ae99886 RCX: ffff888025e8da00
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: ffff888025e8da00 R09: 0000000000000003
+> R10: 0000000000000007 R11: 0000000000000100 R12: ffff888058976500
+> R13: dffffc0000000000 R14: ffff8880589769d0 R15: ffff888032955024
+> FS:  00007fbd84f5b6c0(0000) GS:ffff888125d40000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000555570bf35c8 CR3: 000000002eed6000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <IRQ>
+>  ieee80211_beacon_get_tim+0xb4/0x2b0 net/mac80211/tx.c:5580
+>  ieee80211_beacon_get include/net/mac80211.h:5638 [inline]
+>  mac80211_hwsim_beacon_tx+0x3ce/0x860 drivers/net/wireless/virtual/mac802=
+11_hwsim.c:2319
+>  __iterate_interfaces+0x2a8/0x590 net/mac80211/util.c:761
+>  ieee80211_iterate_active_interfaces_atomic+0xdb/0x180 net/mac80211/util.=
+c:797
+>  mac80211_hwsim_beacon+0xbb/0x1c0 drivers/net/wireless/virtual/mac80211_h=
+wsim.c:2353
+>  __run_hrtimer kernel/time/hrtimer.c:1761 [inline]
+>  __hrtimer_run_queues+0x529/0xc60 kernel/time/hrtimer.c:1825
+>  hrtimer_run_softirq+0x187/0x2b0 kernel/time/hrtimer.c:1842
+>  handle_softirqs+0x283/0x870 kernel/softirq.c:579
+>  __do_softirq kernel/softirq.c:613 [inline]
+>  invoke_softirq kernel/softirq.c:453 [inline]
+>  __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+>  irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+>  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inli=
+ne]
+>  sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
+>  </IRQ>
+>  <TASK>
+>  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.=
+h:702
+> RIP: 0010:finish_wait+0x5/0x1f0 kernel/sched/wait.c:358
+> Code: 0f 1e fa 44 89 ef e8 7a 68 f5 ff eb 96 0f 1f 84 00 00 00 00 00 90 9=
+0 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 55 <41> 57 41 56 41=
+ 55 41 54 53 48 83 ec 10 48 89 f3 49 89 fd 48 bd 00
+> RSP: 0018:ffffc9001bccf5f0 EFLAGS: 00000246
+> RAX: 7fffffffffffffff RBX: dffffc0000000000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffc9001bccf640 RDI: ffff888028058700
+> RBP: ffffc9001bccf6f0 R08: ffffffff8fa14ff7 R09: 1ffffffff1f429fe
+> R10: dffffc0000000000 R11: fffffbfff1f429ff R12: ffff888028058700
+> R13: ffffc9001bccf640 R14: 1ffff92003799ec4 R15: 7fffffffffffffff
+>  unix_wait_for_peer+0x22f/0x2e0 net/unix/af_unix.c:1587
+>  unix_dgram_sendmsg+0xb1f/0x1870 net/unix/af_unix.c:2188
+>  sock_sendmsg_nosec net/socket.c:712 [inline]
+>  __sock_sendmsg+0x219/0x270 net/socket.c:727
+>  ____sys_sendmsg+0x52d/0x830 net/socket.c:2566
+>  ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+>  __sys_sendmmsg+0x227/0x430 net/socket.c:2709
+>  __do_sys_sendmmsg net/socket.c:2736 [inline]
+>  __se_sys_sendmmsg net/socket.c:2733 [inline]
+>  __x64_sys_sendmmsg+0xa0/0xc0 net/socket.c:2733
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7fbd8418e929
+> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007fbd84f5b038 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+> RAX: ffffffffffffffda RBX: 00007fbd843b5fa0 RCX: 00007fbd8418e929
+> RDX: 0400000000000041 RSI: 0000200000000000 RDI: 0000000000000005
+> RBP: 00007fbd84210b39 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000000 R14: 00007fbd843b5fa0 R15: 00007ffe98cac8e8
+>  </TASK>
+> ----------------
+> Code disassembly (best guess):
+>    0:   0f 1e fa                nop    %edx
+>    3:   44 89 ef                mov    %r13d,%edi
+>    6:   e8 7a 68 f5 ff          call   0xfff56885
+>    b:   eb 96                   jmp    0xffffffa3
+>    d:   0f 1f 84 00 00 00 00    nopl   0x0(%rax,%rax,1)
+>   14:   00
+>   15:   90                      nop
+>   16:   90                      nop
+>   17:   90                      nop
+>   18:   90                      nop
+>   19:   90                      nop
+>   1a:   90                      nop
+>   1b:   90                      nop
+>   1c:   90                      nop
+>   1d:   90                      nop
+>   1e:   90                      nop
+>   1f:   90                      nop
+>   20:   90                      nop
+>   21:   90                      nop
+>   22:   90                      nop
+>   23:   90                      nop
+>   24:   90                      nop
+>   25:   f3 0f 1e fa             endbr64
+>   29:   55                      push   %rbp
+> * 2a:   41 57                   push   %r15 <-- trapping instruction
+>   2c:   41 56                   push   %r14
+>   2e:   41 55                   push   %r13
+>   30:   41 54                   push   %r12
+>   32:   53                      push   %rbx
+>   33:   48 83 ec 10             sub    $0x10,%rsp
+>   37:   48 89 f3                mov    %rsi,%rbx
+>   3a:   49 89 fd                mov    %rdi,%r13
+>   3d:   48                      rex.W
+>   3e:   bd                      .byte 0xbd
+>
+>
 > ---
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Cheers,
-
-David / dhildenb
-
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion visit https://groups.google.com/d/msgid/syzkaller=
+-bugs/6850d3bd.a70a0220.395abc.01fa.GAE%40google.com.
