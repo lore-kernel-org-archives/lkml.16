@@ -1,107 +1,88 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C883C2FA630;
-	Tue, 17 Jun 2025 16:50:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05AA2FA630;
+	Tue, 17 Jun 2025 16:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750179052; cv=none; b=NkXWq95piJCHbfYySTTqJ/S7tBbVtN1D06FqbHlGQhvVeAmg9JpDjvqUdGNPDyOHceeoBu8KIFwlbvMMARV02g3yFFi2zSwB3OrPild78zSo2sJ8pE2tjFpxOP48x3QqV5vcZwgWUamKez7Dkauyqv8GZv845xTU+BB7+ZrOigQ=
+	t=1750179056; cv=none; b=bww0aHdg07VX8yBHKE1W7dXxBebXx8GXiRGcqq7DALjFGkTwZd5XMTANXXJhiwA1XQKO826r/KUk1k2LLizfiDYkFKGdB0Xv/ESvbael/2NG4smBzTSe3O2f9jRlO0MDRJu1HnFdRCBxwCh4kg4DW2sk6UShXctYPJ3TyT5UKqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750179052; c=relaxed/simple;
-	bh=kvX5YZmcGBW67g2eNbTrFZChsb+bypZuiwraRmBEuAc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sXJgFejbPwZHEZRsCGZgUxn+/tYa2vdg8LwnfFb/NO6RHJBYqa1LXBitY+QlQv1Sw+YVaIJQMlDVdAlgGt9xLJOTZL+i7CPR7etcAJZ83JY6h5H5TjEPkvQhGel3dtkOUFoccVjgB5oirYHwtnaM8C1396qA39F7UP1vVHkXM98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TbHkFOLa; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750179056; c=relaxed/simple;
+	bh=G8asLFykMSjJ6bSeXKgxGkckfXh721m/A50zrFfuCvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NjAy9+GfX/5dVstOdXPI8mTdNc8417Dce/1pmf39CiCSXoGogVgFY/O0j7yaxQN2qlTlgU1XbFzd56gnyHYWS4hm1pN5mXsKhp3Ea+lZ4gko0cGD3OWn8ziua8Mnzi03FXa7dpM/6zlh1bILHgyypYIDDeAv7B7W9GLhJwwCimI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sfj9yeEq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TbHkFOLa"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b2f62bbb5d6so4853729a12.0;
-        Tue, 17 Jun 2025 09:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750179050; x=1750783850; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MNcITrU6JuukDFgJVARWTcJMEqL8Jll48FxhL2fmWas=;
-        b=TbHkFOLaU9XxeaaXE3cpggXRZL1+WAaWaBewzU4noXhTfvmSSU+nSaGNZV4NIlU+4G
-         yg1FmCL27q9ja1LehA9Z8wmYUEOOxceNgo+a1P8MvezrluRiMSLFIk9txrR+bIV3RmdX
-         7gx/Mb185xRm8b77+HZ9IzUyb4rDrlrf74z+S29sMwUxbSTa6aXX/hys69LRI78Ky22Z
-         QT1E1ErJ2tZUjYxae9geQNX7NuSmgjNESuiC2lWKWayI7P/DvsUgOrMpIwYZ8kba/hEv
-         uaHGdl/SoRZzlqFN0w7csKoPkV2vJptnknPlzXskEP00DlrbNjtnU9wiEf5kXweocyUp
-         0XnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750179050; x=1750783850;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MNcITrU6JuukDFgJVARWTcJMEqL8Jll48FxhL2fmWas=;
-        b=t2IAhItEx8E5b3A1gemVc2qPxw2GN5iRXHzby8HlmC5h4kUi1ci8WJc8re4GfaCZCj
-         PtUkR8WrqCVTyo6pYEc/xLubvJ7KqhVyV1Zhs9LjZSYYBGuXcZ4h5cBYfEJfdjksVbfi
-         eXi3AzOth/HPK7v7KVz9etpZVgrcoHGCmm1Wb7lITIDMVokVU1g5iEUSzUWhqjFM3vkj
-         r+zwtRIQ6ZmtXuRlmx9Q5IiVIUbO5WRle4lV2fcRSDjE+Pu6Ee0dE/BMpJro895Z0AWo
-         AyH+yebfENHBmqc2LZqEhQEPQEzjjn9JjxWS+tI3K8yITx59ypfW8vOm7nJAEyq6EpLa
-         huFA==
-X-Forwarded-Encrypted: i=1; AJvYcCUyJr/WVqqzrH4ZHH86invCJbcbWa5wNzYr6cCpa9DpOsrQXwxxHiDNpGmgmIZMhs0G6gwpnzpc1SpQUHE2@vger.kernel.org, AJvYcCV9HnG13OFSTtPDhmrVs9qV+Xmpapp3RkltYXiicmj1XVZt96IXo6eeszGlzNIiGYll3zH2kfo94Hi2@vger.kernel.org, AJvYcCVU1ucZadWE+DiFkn3Ql/zMboyPQtEuVCrIhvrQLVWQFZTanpyWKV6SDvZUeO/xIm97xlGxVj99RuKE@vger.kernel.org, AJvYcCX9Ck+Dc+5JHk3VWVk9QW72xB80x9aTUoIC4PfXVtBdrl2kkipYort5vfKNXeHQw30dY2aUYvTbhTFh9A==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4mAM77cxwI9T7uShlCEZ14jXTIFvW6/HExqAQFEaboYODrla+
-	aGgustTyBsEJeLOwXcl3keZGQURd4Jkvsx0QG5OhfKLFIm5y2EO28Lsp
-X-Gm-Gg: ASbGnctciwZNSinV0YiGEgBDOA/E2rxQbHLc4E8r4S9/BpdU31l2FwvDAdsKIeqgVEx
-	/vZSFs3fiRoLucUGIDcrU5U3zU/TjhpXM2BvE0GhSnXrLcWzaurpbrZH/zn+nOC+Axi9WB0zKC0
-	MNnL2YWuypi8N0yYLO+Qh1rIAfx83QLOfiZUeU5wIJ/QvmpASoa8D4lGSgyIGDVs6/SRTegsro1
-	ejXMtKPMTbZg/SRnrPuY/3ePLUuQLqfmz+Aq0aPfKXq11wdmyQp+reGS+ujldCDFxa8t52kImxU
-	5NzBdvUxBdFjRO0HgsTXaMVqWttOaf0a/GvqFmTQVXDcgIa4pa4/2DxOMbKW1km7B1qQyxSEAjB
-	3WhA2WnE=
-X-Google-Smtp-Source: AGHT+IFrh0CqCS+0EnmoW16xodzDguEs41RmnPUFRPeJCtO3FLwjDQLXiW4zZXZnhF4eFRlEfGg/gw==
-X-Received: by 2002:a05:6a00:6f46:b0:748:e150:ac5c with SMTP id d2e1a72fcca58-748e150ad75mr1169690b3a.23.1750179049998;
-        Tue, 17 Jun 2025 09:50:49 -0700 (PDT)
-Received: from DESKTOP-P76LG1N.lan ([42.113.163.91])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748e3afb1cesm50488b3a.3.2025.06.17.09.50.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:50:49 -0700 (PDT)
-From: Nam Tran <trannamatk@gmail.com>
-To: rdunlap@infradead.org
-Cc: lee@kernel.org,
-	pavel@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	corbet@lwn.net,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 2/4] leds: add TI/National Semiconductor LP5812 LED Driver
-Date: Tue, 17 Jun 2025 23:50:44 +0700
-Message-Id: <20250617165044.21146-1-trannamatk@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <8a9647fc-3156-461e-8460-e3cade2c6f5d@infradead.org>
-References: <8a9647fc-3156-461e-8460-e3cade2c6f5d@infradead.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sfj9yeEq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17CD9C4CEF0;
+	Tue, 17 Jun 2025 16:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750179055;
+	bh=G8asLFykMSjJ6bSeXKgxGkckfXh721m/A50zrFfuCvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sfj9yeEq9P+YpxAmAbKAVH7IF2WhEg1gPyAZRAHMZAai/ch6Qsx0d2WHEbH6XQEDU
+	 sQYlcEHIy/F9RvDvyb5RT9K/ZKU408kOQ0jT9NGCcTzfiZj97j0lZnBZGNarDs4swp
+	 TJYcyEC2WqKZNPxaTfSHYKR6PeReSifYaMHsLwQEGW1gXXabeKQTYHJ6YFMfwp0Sb7
+	 AQgsmOhqBGqFrvP55yRUXeH/7slVuUtrLDpqnskCLtl8CEZAo06QBWdwaDlaySZkLZ
+	 kdE6OSfSDPIx1rA/9T/Js+tVz/W+TgXoLbRnuRBjRVu7s7be5KOvvyHZLZkbmBtXyR
+	 0D+GROoncHVPA==
+Date: Tue, 17 Jun 2025 22:20:47 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org, 
+	robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] PCI: of: Relax max-link-speed check to support
+ PCIe Gen5/Gen6
+Message-ID: <5baxv7vnmm46ye6egf6i54letsl6c6zcsle4aoaigxnve33pfk@qn33xy5wfghv>
+References: <20250529021026.475861-1-18255117159@163.com>
+ <20250529021026.475861-4-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250529021026.475861-4-18255117159@163.com>
 
-On Tue, 10 Jun 2025, Randy Dunlap wrote:
-
-> > +config LEDS_LP5812
-> > +	tristate "LED support for Texas Instruments LP5812"
-> > +	depends on I2C
-> > +	help
-> > +	  If you say Y here you get support for TI LP5812 LED driver.
-> > +	  The LP5812 is a 4 × 3 matrix RGB LED driver with autonomous
+On Thu, May 29, 2025 at 10:10:26AM +0800, Hans Zhang wrote:
+> The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4),
+> but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 support.
+> This patch updates the validation in `of_pci_get_max_link_speed` to allow
+> values up to 6, ensuring compatibility with newer PCIe generations.
 > 
-> 	The '×' character does not display well (not at all) in menuconfig
-> 	or nconfig. The graphical configs (gconfig, xconfig) can display it.
-> 	I would change it to 4x3 (letter 'x') but it's up to you.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
 
-Thanks for pointing that out.
-I'll change it to 'x' for better compatibility with config tools.
+DT binding validation should be sufficient. But still...
 
-Appreciate your time and feedback.
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 
-Best regards,
-Nam Tran
+- Mani
+
+> ---
+>  drivers/pci/of.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index ab7a8252bf41..379d90913937 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *node)
+>  	u32 max_link_speed;
+>  
+>  	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
+> -	    max_link_speed == 0 || max_link_speed > 4)
+> +	    max_link_speed == 0 || max_link_speed > 6)
+>  		return -EINVAL;
+>  
+>  	return max_link_speed;
+> -- 
+> 2.25.1
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
