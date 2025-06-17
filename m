@@ -1,221 +1,189 @@
-Received: from mail.archlinux.org (mail.archlinux.org [95.216.189.61])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010026.outbound.protection.outlook.com [52.101.69.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F9228BABD;
-	Tue, 17 Jun 2025 07:06:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.216.189.61
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750144003; cv=none; b=bSvvcyq4zUAowgsmpPuB81YrXJA9ea2hE3AD0hNTMu+DgnsMTqAzTSRoxqr/3dbGod5+pdbJYBHl7ZUwzfFsHon0wx58K2WDZ43u1mJG6aduybAvfuaYnCPf20CTjGm4QKE5lWA4oiiJ7e4Qpm2x3ki19OA1k3NXe4DGU5zpcHg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750144003; c=relaxed/simple;
-	bh=nvMdHSpWVUPTjrFiKn24e2laEyS1rQMORZ9YpXHTrVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XTqyCR25WGo0cNLFJzYF8XohzlTiFyfIM4v00QZOIEXHz2o74S2QpRxIt7KwwQbFlN9Pwf+f1RcNxgvra2jNRuOBqj+xJrUE8QvFDbE8Cnzdq8ieXp7zhHTwKuXagnNXtS/HzjlDaApulxAJEAdLKo1t9G0POo1TBrIwEUyqCEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org; spf=pass smtp.mailfrom=archlinux.org; dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=rvWxmHMC; dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b=j24T8DRD; arc=none smtp.client-ip=95.216.189.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=archlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=archlinux.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AF62BF017;
+	Tue, 17 Jun 2025 07:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750144283; cv=fail; b=kh2daBKtDU04KTHWrmH0vn/GfV5Pi7XzrmSpC1jdPBDtKJ2f6nM7xo8vOD5USijttTxnucasb7jdoAltyJsuvuoXy8W5zQrLBCzlSerRUvVvsxrwY6oVWsCRzBioqLxTVJUJ22JWW7Xtq+/rIfln3raYzkv7eZOTAIQAVM/yn7I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750144283; c=relaxed/simple;
+	bh=bgHO7+MoUuQGPB9SwffZNir+EMhJxe/Wd3BLJKao3K4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=IfgCGzi941GdaaNWa6EJIdT/GERsaKOidwOkig9s9ZXj88erJ1hwoulfSu9zgMOLzFyVj6LhefHL+kgWk4Y72IX1EtYU/rUxT7YpKBz/TfEZu84EZLOv8l+6tyRgrYK76x+Whxphh9h/uBySNMglnqhGtPLGOamfuv0lucoON7g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=BrTNm6MC; arc=fail smtp.client-ip=52.101.69.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="rvWxmHMC";
-	dkim=permerror (0-bit key) header.d=archlinux.org header.i=@archlinux.org header.b="j24T8DRD"
-From: George Hu <integral@archlinux.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=archlinux.org;
-	s=dkim-rsa; t=1750143632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eRoqgXRJ2jvZqZ0wCNBlPWys9iezWcvb617+aqNYKXw=;
-	b=rvWxmHMCqy73aEU+7tj3KNDRS5o83sS09bzRfoCoL1i3T7PZmw1ar2hNNdFu/tb6+d4KZh
-	ekW1nqdWrg0aSW8kUu7AFrKzQNNTINKBZLoNiVZdwyyaJGAl4T33GVDfmiu5BDbrKyiBoK
-	RKdtoO/Q+XQPyk2Wmo/sC+C8xsK5Top64LPmk6tMv34c7RQSbiHykobA/49v/pyawl+QV1
-	GcQMBr6P48NVUb0bGlj9iXALv8K6DHoKPf7G75X0TA8wqO8DAVSAo6KKxnISG2jaqXK0kv
-	2L6GlpnMrq3y8IhLlPXol7U4/A8dX8+l7qjmFax9/cMC4dBq9XbOxFj+zZ0sXJj7usUwol
-	omXk6Wxy+3nI1nJfc35Jj+TokLi7m5tzaKtDMEPbrWpm8XwphBZpZT7FCft7IwxghVBw1l
-	mPbrfJ9jiZOktIYSnLaddyFQDpWmZdyLUixSSFcx5QcBvS38HkQrNN4YswnZ6uGQEph/Hb
-	cGdVqtFUbyj5kwdxiIsDRbcqPlakNTHR1ya/cK+9TWH+4Am7SfECd9R2GI1UXDoBwYKZCT
-	AillVH+PxfWpU8snw+l3avWTXQ7v5gHbFd1Y66CgQizgjjmmnOL3F3xyOoV7gyDqX9bfey
-	uB3pJfTTdY2eeLAmzzqz7/jtfSo/GE9TqEmj3bfxAgXil86fn/5EU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=archlinux.org;
-	s=dkim-ed25519; t=1750143632;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=eRoqgXRJ2jvZqZ0wCNBlPWys9iezWcvb617+aqNYKXw=;
-	b=j24T8DRDT5dhQYaPIdobl7Bam9a3TiBbsBiwmrszpqKQ7424GRwcwm+GoZOQfTVHfzNgo4
-	UjJdIejrpHefiGAw==
-Authentication-Results: mail.archlinux.org;
-	auth=pass smtp.auth=integral smtp.mailfrom=integral@archlinux.org
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	George Hu <integral@archlinux.org>
-Subject: [PATCH v2 RESEND] bcachefs: use union for bch_compression_opt to make encode & decode easier
-Date: Tue, 17 Jun 2025 15:00:36 +0800
-Message-ID: <20250617070036.10685-1-integral@archlinux.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="BrTNm6MC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nCvWbAh1FCCkOjpRHlIIsrP6gwz/ZDnbEYv2wTBgx+ElWptUllzGNJjcn7lnJG15kWehPWfotbluM58IRKqAtcEbqjsUPzq8s/26zucmFcf/z4ZpmnxzOldt5zrhAplBXAfSTKWwKpwikA2Pmmycdz5vBXlKuubsMyJri8XOldDGUt3NRqH3fHx3KY3AE27yx0kCZIWYndO5PGZj3I0aC9AZwPkdDmmXEDAUT3i4BqLOZqWbJcR8TJ1eY9EGt+TawTkmJ1wK7mQlylPgUIw8q4iZ7DVd1XMuP+ZqipHBR0TeFMGltHKfiYReYL73wY2jbzAJxniw8+jPPv3ODvexlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BUHE7ZUqgb9wyTiXP7suOSz1xQnHPf7kR4TsQmCvW3k=;
+ b=VXP6MZrTcTDJ9NsENTu/P3fCurF79A0CZIGN1AQNs5pTXcm+JY4Zb3SH3e8W2q67na7mQ7FCmxT1t3xYg/vK0Ekkm+gkKxrq3HgkH0b5wnfVOKxQdxCZeIyHt8uTjrkqo9WcVOYuEuWBPoFidz1doAI7Ep1QAlz3mKSwSHp847DoD7761cqQn9dquRPd9yVOu8Sk88gUz5r3w7d0QDKukiCwxpVVJRj5IJ5ls3NvCrVGCFjNLvwO9gzPW22wh/n6+/QwgbXMQSXrjFFYDASN6xqFIbNIZT6xqpH7KM0c3kG33hYiqMred0zIn1REbyeYhl8DBb0izond7n12N+TKPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BUHE7ZUqgb9wyTiXP7suOSz1xQnHPf7kR4TsQmCvW3k=;
+ b=BrTNm6MCQfZk5rsZSzAuIXx5ieSgYrs3sKSVk4kEGejDoqfpyfePoUnOLfQjKPxLHuiJ6aifr4PS0Etec0LZVHe4vYJ1Zt2e3KWZVkM74RfNuDtS7LBYHEGAWe8pnvqNPYwj2ETflWJ/4Sk2JrjPFrn138JQixwgEPz7Ap/FWTu3yBO2z/lylcoyC/Tr4OuKImspBJcejL2U+Cfh98XbIf9cKXYCGJkaFAA5u6wEKsGekgUh/mnsCNE5xLDrY50CyBTM4U9rbxiHgn+vQl0L5HdErvM4vy1GtZ7Epmvr3BiMT9yJzYkX2xGOps8dANSMA4fQ6oBglc9zpnC8vnwn9g==
+Received: from AS4P251CA0025.EURP251.PROD.OUTLOOK.COM (2603:10a6:20b:5d3::12)
+ by AS4PR10MB5799.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:506::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
+ 2025 07:11:13 +0000
+Received: from AMS1EPF0000004C.eurprd04.prod.outlook.com
+ (2603:10a6:20b:5d3:cafe::37) by AS4P251CA0025.outlook.office365.com
+ (2603:10a6:20b:5d3::12) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.29 via Frontend Transport; Tue,
+ 17 Jun 2025 07:11:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.206) by
+ AMS1EPF0000004C.mail.protection.outlook.com (10.167.16.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.15 via Frontend Transport; Tue, 17 Jun 2025 07:11:13 +0000
+Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
+ (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Tue, 17 Jun
+ 2025 09:10:58 +0200
+Received: from RNGMBX3002.de.bosch.com (10.124.11.207) by
+ FE-EXCAS2001.de.bosch.com (10.139.217.200) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.57; Tue, 17 Jun 2025 09:10:57 +0200
+Received: from [10.34.219.93] (10.34.219.93) by smtp.app.bosch.com
+ (10.124.11.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.26; Tue, 17 Jun
+ 2025 09:10:45 +0200
+Message-ID: <d59f8392-c4ca-4f39-a57f-83c669e3efb2@de.bosch.com>
+Date: Tue, 17 Jun 2025 09:10:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] samples: rust: platform: don't call as_ref()
+ repeatedly
+To: Danilo Krummrich <dakr@kernel.org>, <igor.korotin.linux@gmail.com>,
+	<gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+	<alex.gaynor@gmail.com>, <boqun.feng@gmail.com>, <gary@garyguo.net>,
+	<bjorn3_gh@protonmail.com>, <benno.lossin@proton.me>,
+	<a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>
+CC: <rust-for-linux@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250613135407.1233005-1-igor.korotin.linux@gmail.com>
+ <20250616194439.68775-1-dakr@kernel.org>
+ <20250616194439.68775-2-dakr@kernel.org>
+Content-Language: en-GB
+From: Dirk Behme <dirk.behme@de.bosch.com>
+In-Reply-To: <20250616194439.68775-2-dakr@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS1EPF0000004C:EE_|AS4PR10MB5799:EE_
+X-MS-Office365-Filtering-Correlation-Id: 05bd1d6c-5fef-42cf-6d63-08ddad6e24e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SHFjVVpEdG5wZGdiem16Q1BKYVFNK0luM1NvMkphUURVektqaFc1RkVRVDdz?=
+ =?utf-8?B?NHFMQmpHY1BWY0dacFBLTGVCT2R2Rm92OFhxNm9vZG1YbVNsSm0zbXp4aTVF?=
+ =?utf-8?B?QmdtU2VaamhrKzdXQm1vRnpBTE5HK04zRURTLzBUaXZYN2djWHNXYjBGZkVs?=
+ =?utf-8?B?c0dldXlSRTJ1N0lLaXlzeDEvZ1RzMmgxbjV5STdVSmgrSlJ3ejlOSGVGM0t1?=
+ =?utf-8?B?VGJuZE1UbUFOMmU0RitPckkwa1l1RGZ6Q2dLby9oS2dmYm8xZ1ZxZFRicThu?=
+ =?utf-8?B?VFl6aktubVNVSGE2U1hVNUJKeHNQakdvM3VPdWlMZGxSWnZURFNhemFacHdP?=
+ =?utf-8?B?K0V4dkpHK3JKQ2MvTVh4UlZjak10V09iYnIrU0UvTXFRWUozeFhOYm9sMG8r?=
+ =?utf-8?B?K1YwYzN1U3N3Vzg5NktIVGNTYnhMSmpnWk1wM2JLeTZDTk9lbzRxTm5lcXBl?=
+ =?utf-8?B?aW9xL2FZVVpobG5DdzVDTEJBNTVkeUxRTDAzeFZxQTRpcGFMc1NBdmp2b0E4?=
+ =?utf-8?B?SExkRGtERHYvZU9DMjJrQS9kSXJZN2dvVHQybG81amNxTUFWOTZ1ZWU2R0FN?=
+ =?utf-8?B?M2tyUTJ0dDJYdWkxU2NjWm1weWJja2ViYTBaOHJqUDZPUXQ5aTUzdDhkN0JI?=
+ =?utf-8?B?aGorcWVPRVkxOFNUeG9hK0V3QTZPOTV0alNKbDNad3BZcERTZDRuZ3NVNVlx?=
+ =?utf-8?B?enJwNFZFak50eWgwdHV1RFNmVEtMMnhqWkR1S1ZwRDc4TXBKcU9wS0pyV2tu?=
+ =?utf-8?B?VlcwWEVLeDlrT3FhLzFXZHhlbzREd2o5MVlrblZyTGpkczd5ejl0cmthbi9w?=
+ =?utf-8?B?eDhkb3BFU2NtdmxtcjFkSWI1cWcwZ1BrSjlCTEtIMmhpODdqT1plMkJKaWw3?=
+ =?utf-8?B?ZjFhTE1UemtDZm4rWG5FOVNzdFd1NklCWnJMWmZ1MWRKeFk5SUx3aUFHaDV6?=
+ =?utf-8?B?SjhkZTdOTGJaQXhwRVhDcExMSUdEVVFLeDNjcHZhMFZaMGMyMHU4akhDUGtF?=
+ =?utf-8?B?NU9iQUszM0s2L2t2WGpacFNPZzYyQUNra0t1Q2RFNzdrNmNpN1R1RmM3cmMr?=
+ =?utf-8?B?VGoySDNXSG53WnlEdXRiOXU0R1VITHpwVGJHSnVDaUVQUGVBK2VMRVl6ekcz?=
+ =?utf-8?B?ZGtIOU5XYkM2Nit0LzNsYWJnWm95M0Z1RlZzTnRzcVRhOEpPcnhjYVJuZ3VO?=
+ =?utf-8?B?WFRieHVhUnpBWHJ2MFNyU0pzUjJFWFZNdEMxZ3lKdDVBd203NTk3SHhKSDc3?=
+ =?utf-8?B?TllwT1IxeEJiRWw1dE1pNFJyU2V4bTduMWVpZGhDNUpvM2pCbDJjVU9ZUFNU?=
+ =?utf-8?B?SFUvcm9jVHlsZkNreXRGY1czQjA4Ym5qYUR2YytJaVZoN2JnTUJEcTlVSi9h?=
+ =?utf-8?B?WGh0NmFzc1N0ZjBZZXVOQzg4K2dQeHdaV3BMTVhvTVJVeEFoMFlpMzhuczAv?=
+ =?utf-8?B?bzlXTW9ST2l5bGJMNjg5V1k0V25nNFUyMVdiWnZpdWNyM0JkbUhnT0dSRGlX?=
+ =?utf-8?B?NmJuSjYxMlpBY21XVHFhSW9zUDdqeStzVTNmT3h0WWYvbWpYTVdYRDdXRHhG?=
+ =?utf-8?B?WEpkdlBoY1hCL3U4eVAxRUFVZWY5cFVyTlZVeDF0OVV3T0xIT29UZ25RaFMz?=
+ =?utf-8?B?UHlvOTFtcjhvYXJzR3VxWFFXQTh2bm04YXZuNWRYcm1NTXFNRnFNQXBXMEdH?=
+ =?utf-8?B?ZkFTeTFLa3J5TXlPOUd0aEsydWxONXVYbHora3pnRlZJK1pKVzZiakZPVlBD?=
+ =?utf-8?B?OExNbGZGM2Z3Q0NQc0UrdDNGN3NNOWNvSjNBT3ZIK0hhdWp3MmZUR2I2Y3lU?=
+ =?utf-8?B?T2lBYnpDSHBXMXl5aXVoK3VYQjRDOTVnOVQvYlVNNVh4VmFhejBzNElmcTJL?=
+ =?utf-8?B?Q284Z2ZtQXNoN3JkVVpvd3FCTlVPZGtPQzVIVTZCOGhqY1lwbjlsSlRjdi9I?=
+ =?utf-8?B?VlUwUkpRSFEzbXVZT2VtVDhqelZGaUQ1aGdtODZURjNaT0FlUnp2U21HVW1y?=
+ =?utf-8?B?QXMyV1VHWnRTdXFPdmFScDdRcmhkRVVhN2t4NUJUSU9Na1hRN2JCNWhnRlh0?=
+ =?utf-8?B?Z3JLMjlTNEZMNEs4ZS9pTVhTeStTcysxQ2ZIUT09?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 07:11:13.2717
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05bd1d6c-5fef-42cf-6d63-08ddad6e24e3
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS1EPF0000004C.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR10MB5799
 
-Eliminate redundant encode & decode function by using union for
-bch_compression_opt, which reduces code complexity.
+On 16/06/2025 21:40, Danilo Krummrich wrote:
+> In SampleDriver::probe() don't call pdev.as_ref() repeatedly, instead
+> introduce a dedicated &Device.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>  samples/rust/rust_driver_platform.rs | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+> index c0abf78d0683..000bb915af60 100644
+> --- a/samples/rust/rust_driver_platform.rs
+> +++ b/samples/rust/rust_driver_platform.rs
+> @@ -32,13 +32,15 @@ fn probe(
+>          pdev: &platform::Device<Core>,
+>          info: Option<&Self::IdInfo>,
+>      ) -> Result<Pin<KBox<Self>>> {
+> -        dev_dbg!(pdev.as_ref(), "Probe Rust Platform driver sample.\n");
+> +        let dev = pdev.as_ref();
+> +
+> +        dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
+>  
+>          if let Some(info) = info {
+> -            dev_info!(pdev.as_ref(), "Probed with info: '{}'.\n", info.0);
+> +            dev_info!(dev, "Probed with info: '{}'.\n", info.0);
+>          }
+>  
+> -        Self::properties_parse(pdev.as_ref())?;
+> +        Self::properties_parse(dev)?;
+>  
+>          let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
 
-Signed-off-by: George Hu <integral@archlinux.org>
----
- fs/bcachefs/compress.c | 17 +++++++++--------
- fs/bcachefs/compress.h | 36 +++++++++++-------------------------
- fs/bcachefs/extents.c  |  2 +-
- 3 files changed, 21 insertions(+), 34 deletions(-)
+Yes!
 
-diff --git a/fs/bcachefs/compress.c b/fs/bcachefs/compress.c
-index b37b1f325f0a..5f74de920c92 100644
---- a/fs/bcachefs/compress.c
-+++ b/fs/bcachefs/compress.c
-@@ -336,7 +336,7 @@ static int attempt_compress(struct bch_fs *c,
- 			    void *workspace,
- 			    void *dst, size_t dst_len,
- 			    void *src, size_t src_len,
--			    struct bch_compression_opt compression)
-+			    union bch_compression_opt compression)
- {
- 	enum bch_compression_type compression_type =
- 		__bch2_compression_opt_to_type[compression.type];
-@@ -426,7 +426,7 @@ static int attempt_compress(struct bch_fs *c,
- static unsigned __bio_compress(struct bch_fs *c,
- 			       struct bio *dst, size_t *dst_len,
- 			       struct bio *src, size_t *src_len,
--			       struct bch_compression_opt compression)
-+			       union bch_compression_opt compression)
- {
- 	struct bbuf src_data = { NULL }, dst_data = { NULL };
- 	void *workspace;
-@@ -553,7 +553,7 @@ unsigned bch2_bio_compress(struct bch_fs *c,
- 
- 	compression_type =
- 		__bio_compress(c, dst, dst_len, src, src_len,
--			       bch2_compression_decode(compression_opt));
-+			       (union bch_compression_opt){ .value = compression_opt });
- 
- 	dst->bi_iter.bi_size = orig_dst;
- 	src->bi_iter.bi_size = orig_src;
-@@ -602,7 +602,8 @@ static int __bch2_check_set_has_compressed_data(struct bch_fs *c, u64 f)
- int bch2_check_set_has_compressed_data(struct bch_fs *c,
- 				       unsigned compression_opt)
- {
--	unsigned compression_type = bch2_compression_decode(compression_opt).type;
-+	unsigned int compression_type = ((union bch_compression_opt){ .value = compression_opt })
-+					.type;
- 
- 	BUG_ON(compression_type >= ARRAY_SIZE(bch2_compression_opt_to_feature));
- 
-@@ -683,7 +684,7 @@ static int __bch2_fs_compress_init(struct bch_fs *c, u64 features)
- 
- static u64 compression_opt_to_feature(unsigned v)
- {
--	unsigned type = bch2_compression_decode(v).type;
-+	unsigned int type = ((union bch_compression_opt){ .value = v }).type;
- 
- 	return BIT_ULL(bch2_compression_opt_to_feature[type]);
- }
-@@ -703,7 +704,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
- {
- 	char *val = kstrdup(_val, GFP_KERNEL);
- 	char *p = val, *type_str, *level_str;
--	struct bch_compression_opt opt = { 0 };
-+	union bch_compression_opt opt = { 0 };
- 	int ret;
- 
- 	if (!val)
-@@ -736,7 +737,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
- 		opt.level = level;
- 	}
- 
--	*res = bch2_compression_encode(opt);
-+	*res = opt.value;
- err:
- 	kfree(val);
- 	return ret;
-@@ -744,7 +745,7 @@ int bch2_opt_compression_parse(struct bch_fs *c, const char *_val, u64 *res,
- 
- void bch2_compression_opt_to_text(struct printbuf *out, u64 v)
- {
--	struct bch_compression_opt opt = bch2_compression_decode(v);
-+	union bch_compression_opt opt = { .value = v };
- 
- 	if (opt.type < BCH_COMPRESSION_OPT_NR)
- 		prt_str(out, bch2_compression_opts[opt.type]);
-diff --git a/fs/bcachefs/compress.h b/fs/bcachefs/compress.h
-index bec2f05bfd52..667ddb91d47a 100644
---- a/fs/bcachefs/compress.h
-+++ b/fs/bcachefs/compress.h
-@@ -10,41 +10,27 @@ static const unsigned __bch2_compression_opt_to_type[] = {
- #undef x
- };
- 
--struct bch_compression_opt {
--	u8		type:4,
--			level:4;
--};
--
--static inline struct bch_compression_opt __bch2_compression_decode(unsigned v)
--{
--	return (struct bch_compression_opt) {
--		.type	= v & 15,
--		.level	= v >> 4,
-+union bch_compression_opt {
-+	u8 value;
-+	struct {
-+#if defined(__LITTLE_ENDIAN_BITFIELD)
-+		u8 type:4, level:4;
-+#elif defined(__BIG_ENDIAN_BITFIELD)
-+		u8 level:4, type:4;
-+#endif
- 	};
--}
-+};
- 
- static inline bool bch2_compression_opt_valid(unsigned v)
- {
--	struct bch_compression_opt opt = __bch2_compression_decode(v);
-+	union bch_compression_opt opt = { .value = v };
- 
- 	return opt.type < ARRAY_SIZE(__bch2_compression_opt_to_type) && !(!opt.type && opt.level);
- }
- 
--static inline struct bch_compression_opt bch2_compression_decode(unsigned v)
--{
--	return bch2_compression_opt_valid(v)
--		? __bch2_compression_decode(v)
--		: (struct bch_compression_opt) { 0 };
--}
--
--static inline unsigned bch2_compression_encode(struct bch_compression_opt opt)
--{
--	return opt.type|(opt.level << 4);
--}
--
- static inline enum bch_compression_type bch2_compression_opt_to_type(unsigned v)
- {
--	return __bch2_compression_opt_to_type[bch2_compression_decode(v).type];
-+	return __bch2_compression_opt_to_type[((union bch_compression_opt){ .value = v }).type];
- }
- 
- struct bch_write_op;
-diff --git a/fs/bcachefs/extents.c b/fs/bcachefs/extents.c
-index 036e4ad95987..8bdcb1551814 100644
---- a/fs/bcachefs/extents.c
-+++ b/fs/bcachefs/extents.c
-@@ -1512,7 +1512,7 @@ int bch2_bkey_ptrs_validate(struct bch_fs *c, struct bkey_s_c k,
- 			const struct bch_extent_rebalance *r = &entry->rebalance;
- 
- 			if (!bch2_compression_opt_valid(r->compression)) {
--				struct bch_compression_opt opt = __bch2_compression_decode(r->compression);
-+				union bch_compression_opt opt = { .value = r->compression };
- 				prt_printf(err, "invalid compression opt %u:%u",
- 					   opt.type, opt.level);
- 				return bch_err_throw(c, invalid_bkey);
--- 
-2.49.0
+Reviewed-by: Dirk Behme <dirk.behme@de.bosch.com>
 
+Thanks,
+
+Dirk
