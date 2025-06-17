@@ -1,75 +1,44 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DB020C028;
-	Tue, 17 Jun 2025 14:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29FD5253F28
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172099; cv=none; b=TQkFPMr5GuwiKnkU0UCckKAa4EJ6HJN+FiEJE99imBYQnJRv+RcQns6f32v+kmuwCSwEfbQaUwIW6WtUPgcpFCnvaHdjv0VYntzCyzdqln8MTwcHbniiScNrroP3k6DQMTXf6o0I+tPuBiOQ0hwdDjDtaUE4E+LlM8VCunI1Cgo=
+	t=1750172108; cv=none; b=oAKMEZFnsFFH2qm6jOe7HALg4DDk/VO8T8VggL9FNkk31OsS+G2T4gOB0P1QJ+8DyYSrKjyyeedmo2lkxYUp7GLyyC3INXJhgBptCqgYH/JFQPgiYjoHqu/KWZYhaHa7P3vR1GvTqAcNKaz22WiGM/0/AkLVXwfMZ9kAFIBRTXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172099; c=relaxed/simple;
-	bh=WlsqYl8XHOpFK2916YvNKbhg2OIoZ5baI1A6jC+Jx4g=;
+	s=arc-20240116; t=1750172108; c=relaxed/simple;
+	bh=HAzt8qCKKmIjvC1HzMQ8bWLKoSrUUV5A0yew5XtORB4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fKoSe8+EYzH2oOUga62I+sj+fotoI2EuA2ckN0kBzV18Dgv7VFgJBwjFO/jOBXqyr9U6J03PMZTY9Qa19shBDfQzbJic7kH3S8llo1waXJdQyo2wez0VzvsmRXjta9qruupegjcp9pKgraKRijm3t5Ziu3NrTxBt/sR6heUvJKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3dkbfB5; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3dkbfB5"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so50196075e9.1;
-        Tue, 17 Jun 2025 07:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750172096; x=1750776896; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wOiAASZQ1fSoiMZFjqnunFPeJrMlMkcRR6CTRxTDfeQ=;
-        b=F3dkbfB50775Vi6ZEt+iPCdMkqpKiTTpfpCL0fFwiSoxa2zOtrFOYLRPnrBTQp8TvL
-         onfJB145qdc62Vlm69q9GKbOE2E8Ycb6ZK0ETzkczWnLPaTZbBhNQVD0x1tdlMT93MDz
-         uAcMlvU+bDltPjC4LNb7aWmyCrjOiCr3gnN4omKeiRwD0RDBA+dR+gqf1jzd08X0dOK6
-         cpKpIFp6le3Fv2+2Img8PC5v0vmt2NAqoZk++vLWbp5t/Fu+hZgnVCahYYsgcImQziue
-         rfWI2w5LAqyUdqSKJNdDP4tmJYbmLcdY1sIj+BtA+h0uIVIq9BCMY/ybsDfHzDTjWcx9
-         d2nA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750172096; x=1750776896;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wOiAASZQ1fSoiMZFjqnunFPeJrMlMkcRR6CTRxTDfeQ=;
-        b=hdnH9+EOSgizjrMHvNaU0ZO9aAZuD2P0oDJSqYayWQ/lrn9fXitP6Ew/BP/V/R6Dzk
-         eKMPk/uuZ89Tn7YHxS2hCcvTxW5XmXT+sz9dyNDwD9Z8HsRJFGckVGsirLtS+y1W3qTz
-         nbR7cLrMtPSg1VcoQQfTD7Y7L0wqugyTMjz4s1wOGdl8xK7v1QXWLo77+VcTW/Q9c7Ta
-         6x2bAHycFQ35io2VnJ7gWDihpDG6WPBoUdHYypDN2cfprbda6zXxzEtjivdM2sGGnZyU
-         edFandHnM9f5gpXLJStLug0kd0+ITbPeSZ5T/41ZDurFzCSOvX3IQM8bRK0Eq7q0OyoT
-         B+qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVJXYm7nEaZca8ayvko51rVEVU6YhVJVyjnfxkamTt18W/hwvjKb1cqoF7CPGDp9uLmlSd5u3phFu7/SR4t@vger.kernel.org, AJvYcCX6WimsTuJ7WGjwYlhhErKL+4GNR3HAJwiSIyGsR/G+8zo5lpcJYrvQG8Mw1B//ZZMslO24w013Iasx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZrWFxx2QucF8bmlHzDj4P3GVvKlk8ojcrZy3TkkwN+1JihznJ
-	z37aEJjNcmF8XgQYbdJASCKnJyCWA83h8YhaOVcxC84R0GNSsa5ctd8C
-X-Gm-Gg: ASbGncsdys3vNGsU+T3JtSsxXfrq8kWKO4HxX0DLBsHv18Z974ssLh2QJRaHsJcdt5Y
-	X0BfRGwrRzunKmU3xL0GqqHbVux4RPBLi3FsahhQ4SriaCzoubSj7mKe9/Bpsa624tPFNJobxSg
-	UXL5Y13JBCEF7H0VWNxwpAsMbWBLXYngNNqywDVwr4FiUnojkWqphaVAvDIRbwTy3UFRDC+D0dI
-	a+fNZ1hHpMTr57AP7irz6q3bRFEMcDjpkXV1tNBqLg5X8QdVKrSk8GdSpYZM4S1jb4c9vrCF9A5
-	ua+BwDvQDm0JTNF5dTnLbnWtaQulY6c94htU93fhck4yS3I22oLxQLcItkxBL4NxC4ABKTNHswF
-	AIkUfDSU=
-X-Google-Smtp-Source: AGHT+IHp83XMB3hs9kIXUVOw1BkW7osPtl3xgqCJV23FdxhPgCZfxhcMaKwGJMNhPIpGaA1nHTlqqg==
-X-Received: by 2002:a05:600c:6097:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-4533caa11ecmr140958915e9.18.1750172095717;
-        Tue, 17 Jun 2025 07:54:55 -0700 (PDT)
-Received: from HYB-DlYm71t3hSl.ad.analog.com ([137.71.226.91])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08dfesm14435672f8f.60.2025.06.17.07.54.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:54:55 -0700 (PDT)
-Date: Tue, 17 Jun 2025 16:54:52 +0200
-From: Jorge Marques <gastmaier@gmail.com>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] i3c: master: Add driver for Analog Devices I3C
- Controller IP
-Message-ID: <i6lqe2n42gueqzs2xru4yk5jzlt766jsmoolhb2q3nnvbkz6uu@dijk4qihk37f>
-References: <20250606-adi-i3c-master-v2-0-e68b9aad2630@analog.com>
- <20250606-adi-i3c-master-v2-2-e68b9aad2630@analog.com>
- <11b278ac-20ba-4e75-b307-6608ea8b4522@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=hEeVSnD15OyhdjFqH+ocXWYRPOUEVyV6NAjXFghAV/+WmhV+wBNG1q++Lf1wij/yT4FihQwb6xlss+FtzOdB7+zrxxFphePfJT9JCdxrWRpy3Z2Sl4SYWLCECmUwfxKvfSBlgkpuFs4MRDe0cxh+nfYWtXIRyN632hI1JOw8lhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50AD5150C;
+	Tue, 17 Jun 2025 07:54:44 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA9DA3F673;
+	Tue, 17 Jun 2025 07:55:02 -0700 (PDT)
+Date: Tue, 17 Jun 2025 15:55:00 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, kan.liang@linux.intel.com,
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, zide.chen@intel.com, broonie@kernel.org
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+Message-ID: <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250613134943.3186517-7-kan.liang@linux.intel.com>
+ <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
+ <8fbf7fc5-2e38-4882-8835-49869b6dd47f@linux.intel.com>
+ <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
+ <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+ <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,91 +47,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <11b278ac-20ba-4e75-b307-6608ea8b4522@oracle.com>
+In-Reply-To: <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
 
-Hi Alok,
-On Sat, Jun 07, 2025 at 02:03:42AM +0530, ALOK TIWARI wrote:
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..b3799071573f4066eb14123c94ee599cc6331b3d
-> > --- /dev/null
-> > +++ b/drivers/i3c/master/adi-i3c-master.c
-> > @@ -0,0 +1,1037 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * I3C Controller driver
-> > + * Copyright 2025 Analog Devices Inc.
-> > + * Author: Jorge Marques <jorge.marques@analog.com>
-> > + */
-> > +
-> > +#include <linux/bitops.h>
-> > +#include <linux/bitfield.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/err.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/i3c/master.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +
-> > +#define VERSION_MAJOR(x)		((u32)FIELD_GET(GENMASK(23, 16), (x)))
-> > +#define VERSION_MINOR(x)		((u32)FIELD_GET(GENMASK(15, 8), (x)))
-> > +#define VERSION_PATCH(x)		((u32)FIELD_GET(GENMASK(7, 0), (x)))
-> > +
-> > +#define MAX_DEVS			16
-> > +
-> > +#define REG_VERSION			0x000
-> > +#define REG_ENABLE			0x040
-> > +#define REG_IRQ_MASK			0x080
-> > +#define REG_IRQ_PENDING			0x084
-> > +#define   REG_IRQ_PEDING_CMDR		BIT(5)
-> > +#define   REG_IRQ_PEDING_IBI		((u32)BIT(6))
-> > +#define   REG_IRQ_PEDING_DAA		BIT(7)
+On Tue, Jun 17, 2025 at 04:44:16PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 17, 2025 at 03:24:01PM +0100, Mark Rutland wrote:
 > 
-> typo PEDING -> PENDING
+> > TBH, I don't think we can handle extended state in a generic way unless
+> > we treat this like a ptrace regset, and delegate the format of each
+> > specific register set to the architecture code.
+> > 
+> > On arm64, the behaviour is modal (with two different vector lengths for
+> > streaming/non-streaming SVE when SME is implemented), per-task
+> > configurable (with different vector lengths), can differ between
+> > host/guest for KVM, and some of the registers only exist in some
+> > configurations (e.g. the FFR only exists for SME if FA64 is
+> > implemented).
 > 
-Haaa ups, thank you!
-> > +#define REG_CMD_FIFO			0x0d4
-> > +#define	  REG_CMD_FIFO_0_IS_CCC		BIT(22)
-> > +#define   REG_CMD_FIFO_0_BCAST		BIT(21)
-> > +#define   REG_CMD_FIFO_0_SR		BIT(20)
-> > +#define   REG_CMD_FIFO_0_LEN(l)		FIELD_PREP(GENMASK(19, 8), (l))
-> > +#define   REG_CMD_FIFO_0_LEN_MAX	4095
-> > +#define   REG_CMD_FIFO_0_DEV_ADDR(a)	FIELD_PREP(GENMASK(7, 1), a)
-> > +#define   REG_CMD_FIFO_0_RNW		BIT(0)
-> > +#define   REG_CMD_FIFO_1_CCC(id)	FIELD_PREP(GENMASK(7, 0), (id))
-> [snip]
-> > +
-> > +static int adi_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
-> > +				     struct i3c_priv_xfer *xfers,
-> > +				     int nxfers)
-> > +{
-> > +	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-> > +	struct adi_i3c_master *master = to_adi_i3c_master(m);
-> > +	struct adi_i3c_xfer *xfer;
-> > +	int i, ret;
-> > +
-> > +	for (i = 0; i < nxfers; i++) {
-> > +		if (xfers[i].len > REG_CMD_FIFO_0_LEN_MAX)
-> > +			return -EOPNOTSUPP;
-> > +	}
-> > +
-> > +	if (!nxfers)
-> > +		return 0;
+> Well, much of this is per necessity architecture specific. But the
+> general form of vector registers is similar enough.
 > 
-> this can move before for
-> 
-Oh well, I will actually remove the LEN_MAX define since the depth is
-actually a HDL parameter. Instead, the FIFO ROOM will be checked before
-writing new SDOs and CMDs.
-> > +
-> > +	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
-> > +	if (!xfer)
-> > +		return -ENOMEM;
-> 
-> Thanks
-> alok
+> The main point is to not try and cram the vector registers into multiple
+> GP regs (sadly that is exactly what x86 started doing).
 
-Best regards,
-Jorge
+I see, sorry for the noise. I completely agree that we shouldn't cram
+this stuff into GP regs.
+
+> Anyway, your conditional length thing is 'fun' and has two solutions:
+> 
+>   - the arch can refuse to create per-cpu counters with SIMD samples, or
+> 
+>   - 0 pad all 'unobtainable state'.
+> 
+> Same when asking for wider vectors than the hardware supports; eg.
+> asking for 512 wide registers on Intel clients will likely end up in a
+> lot of 0s for the high bits -- seeing how AVX512 is mostly a server
+> thing on Intel.
+
+Yep, those options may work for us, but we'd need to think harder about
+it. Our approach for ptrace and signals has been to have a header and
+pack at the active vector length, so padding to a max width would be
+different, but maybe it's fine.
+
+Having another representation feels like a recipe waiting to happen.
+
+Mark.
