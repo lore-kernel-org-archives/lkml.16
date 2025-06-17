@@ -1,122 +1,109 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2041465A5
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07F228B3F9;
+	Tue, 17 Jun 2025 10:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750154379; cv=none; b=MUM6W0lsyOL7fnFoZ/KVmqjwbUms9x+E9NxX4M0hwDTJFkZccAOTuYqxLKHqcNZZqcj/QRlI7u9QAIXfLrshQdskalSNnPMUmtqdxXUN7xAiafoIXmg6tGkTuwl0RcZmHmQjFDqnfgZHolcADIqGe9yoB7qDnqUHXeZCT4bMJk8=
+	t=1750154418; cv=none; b=oZRvkX78N58lBx9YvxTdK756K7t2Xt/zDsSxu3tq4brtHf0KYbUkxXxHT9k3oXEw6KKeHXvZSSInxq47mB5I9W6LOZFNiGpnxbR1S4hte9JIqdZno2rMPsfap00r46t8yNSpsd/3wYtzypdP6+dMlFVqwvyZ4p+oQIZ+6wO17vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750154379; c=relaxed/simple;
-	bh=T11Yz+QUum6W/Sp7RvfgeObytTx3A4fLEIOKNpWe1W0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pPTglzCNd363fSClxBAcPV7tQvSmotbpFTJAmGa+YbUstTuaGh0G6hVj+JrJpEd/ntkOk1Y14UDWT3V7SoT/shOC6ytU4yJIuCAu0h2Ml+dWsxvREap3Jdm/nQC6L9vnoxVnHfbPZrC+Ypiy4cdJvkNAKa0p2xBcl7OUNGI/i6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0TjXq9ws; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750154418; c=relaxed/simple;
+	bh=f19g9E++oiCOV6aofv7KnqVQbAFQx7H7h2E49vXYj94=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rmV4heB1ePGFmznmeMJ12o0wbehggKOmTugs5SGG6gfBFooDUs0rFd6umo+3ssZZL/AyWsRkbllW9cefl4IQ1tdlmwm6NSyxSopnh1ITVGCCUMHDAzdbl0RH7VJFFJ/bYr5+LOD0fZN5bba5Z34df4QMFvjSUCSJMrBLPFtBxxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qu3ksYk6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=khnOWno4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0TjXq9ws"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313a001d781so4944108a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750154377; x=1750759177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T11Yz+QUum6W/Sp7RvfgeObytTx3A4fLEIOKNpWe1W0=;
-        b=0TjXq9wsqHxffuRU1c2RR3tmQWMF3rgMBTSDAo9A/RLJjl0o6leFDXIaZdZtjY1xU0
-         RShNNws1gi6oJK/iG1MnJMBfexe4U28MD1AhI2ZbxliYTZ0FMQxxP6F8hDSnvp8YT3AE
-         iZCXg6bqiczFP9ms8kUlOCQ6J/fYs2ALe58KBZBV/QhPRqrs8iwdvhvXgX9lDhWQEqga
-         EjhzdnNnx+1+X2T5Cx0VAdmZ5c+IqTJONdibdkyxozeNKAVNjJ9BCphcORfcz1xRrxNu
-         wg+GYtQDp6udbBNvZLfXj21lGHzYfrZOZDXFhHep/4JL/cuQAG2iMnpBqlYijnou7H0X
-         DCGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750154377; x=1750759177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T11Yz+QUum6W/Sp7RvfgeObytTx3A4fLEIOKNpWe1W0=;
-        b=d8s/za90Uo+Vc4vPPSJwg2+CqjifLjWdKxww0sWVA5cY2gACcUQ2nQFBzFLF0nOkf4
-         XqHMQGDCaSe1fWH+612zsOpOvEVt23CnMWlwSBoemDHkQf6U829gyqb+ZX2qddCKJNEx
-         CRKfOmNYG25WYUmwipD4swq8PrNmRElQ+B4XI69Fx905octRbAloEz47VwH881QveULm
-         hjvuu+tT37QScZN8O0aM6H/e4XYSPxHBhavsRtg7Ksc08GDAb81ePpOdqmkA388Du4o0
-         XDuIcr7GGZNVgijglLVx4YZAGbRjF5a9N4EteP5X//P3LvonYpo5nMJfUEjsj73GmSqm
-         iHfw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVsW7jQ2XbpkdENrZ46pZHK2e4OPfsOjr+eLPvFfgUqvyxvYUJ6e6KxSv31SlsWRyxbevqvVs7tJwRuDc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqvQynv4PCbeojuKgyhjzfV0c0oyvEBKmTyYrbBrKqFHnLoIQc
-	drrJQiRHwPauRdnk8tIJC7Uqbat1woxeIsOOx6tK3z5fYeVj28JLUU0Iu01qSn+lzRcP8i7seB0
-	Ger3bCdhOzJjR9wCKtuVJrkMf7edo30eA1a4vGmUK
-X-Gm-Gg: ASbGnctXbB5ULX3teWnP35kpX5pau4owjxgw5u6Hsd5X6cdwFhIiZV0VPvIPPzNtb30
-	J3iqZ0A6USFq7Zty/GUDuoHUWUIWsUCEuIZOkfsaM61dPqRBmQIcSaIA/fdLgnI6sXEs8qI+sNp
-	xVZVvF9oLWv6GMwFB0sKidy0kNKRpukcDIQ6d6PdxXzWC9atSBTzIoE+pxOeDyM8xODa0BlIX+
-X-Google-Smtp-Source: AGHT+IHNeTT68NvBOK6LqdXHKIzzjhA446o1WLmbvK+HGnNpsJHS6OxLDqwqwuxWZSw59pGNsBTCbNKTHvryBpKg8jQ=
-X-Received: by 2002:a17:90b:3a4b:b0:313:5d2f:54f8 with SMTP id
- 98e67ed59e1d1-313f1e22fc8mr22826886a91.33.1750154377458; Tue, 17 Jun 2025
- 02:59:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qu3ksYk6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="khnOWno4"
+Date: Tue, 17 Jun 2025 12:00:13 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750154415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f19g9E++oiCOV6aofv7KnqVQbAFQx7H7h2E49vXYj94=;
+	b=qu3ksYk6SV7x0SKs36RpIvZACWbB2Rz/S2aDdiuTpwo9RMpRgpUtKy19jYQJZUSTj05zgg
+	9ebqZeO+X3AZJypTuwFmp2Fn7+/vBKxPnvr10EZ3fKLzw4AxEpAuAXes5wDMYZcG8SOoaQ
+	nG0hpPcZL3EfOVL0Rtz8Q2JYVwD445cdSt1NI31wKC9uyt3PBrsEHuWD0ogfwGt5iYr/Is
+	iPPKB7c9x6Zs3GmZxhjPaquRzhfKiRJG+Ur/7jhuvCvJf9pF+OEhwXDySysqY+RkEtx5CT
+	RVx848A95jbzZQN9IUAziMuqTSY5RIy0LDmxWLwijEFyPkL7GisF5KFpBJmRng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750154415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=f19g9E++oiCOV6aofv7KnqVQbAFQx7H7h2E49vXYj94=;
+	b=khnOWno4XKhgKO2W5Q2ioFlopW34PvODVzBDHUWjBid+rb6SNJ4vHh4TjVtsZ6Z4hxEYfr
+	/EEqLPIt2w12QkDA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Marc =?utf-8?Q?Str=C3=A4mke?= <marc.straemke@eltropuls.de>
+Cc: linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: Latency spikes on V6.15.1 Preempt RT and maybe related to intel?
+ IGB
+Message-ID: <20250617100013.1o5lsPLq@linutronix.de>
+References: <20250613145434.T2x2ML8_@linutronix.de>
+ <E1uQ6I0-000000003aa-37uJ@smtprelay05.ispgateway.de>
+ <20250613195838.0-gZ6bqS@linutronix.de>
+ <97638b0b-cd96-40e2-9dc2-5e6f767b90a4@eltropuls.de>
+ <20250617092814.vqKdu23w@linutronix.de>
+ <bb74b5b6-bc23-4aa4-83df-449dc7c9006b@eltropuls.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6850d3bd.a70a0220.395abc.01fa.GAE@google.com> <CANp29Y68ZaQnb0R2fZSLjcCxiOE3uZyW4b7wLEYMAycF0WHNUg@mail.gmail.com>
- <97d6493279ab5c63e8844e8b0f349b2528d2832b.camel@sipsolutions.net>
- <CANp29Y5+W426u0jUz0PT=zVde+QqSD9H1fLpTuaKSzCLrt5FcA@mail.gmail.com> <49456d11ed8d4ff3adc71286b17dc657a6db131b.camel@sipsolutions.net>
-In-Reply-To: <49456d11ed8d4ff3adc71286b17dc657a6db131b.camel@sipsolutions.net>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Tue, 17 Jun 2025 11:59:24 +0200
-X-Gm-Features: AX0GCFtZpFbzd7aS93ErUYuYC0VlHJTlAFEcYitrHyt4jKcV8u_uptKDLdvv-rk
-Message-ID: <CANp29Y4hwwLhju3=AVeNuGt-yCwR_Rey1ML_Tkc5sTFzu55yUw@mail.gmail.com>
-Subject: Re: [syzbot] [wireless?] WARNING: net/mac80211/tx.c:LINE at
- __ieee80211_beacon_get, CPU: syz.NUM.NUM/NUM
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: syzbot <syzbot+468656785707b0e995df@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <bb74b5b6-bc23-4aa4-83df-449dc7c9006b@eltropuls.de>
 
-On Tue, Jun 17, 2025 at 11:50=E2=80=AFAM Johannes Berg
-<johannes@sipsolutions.net> wrote:
->
-> On Tue, 2025-06-17 at 11:48 +0200, Aleksandr Nogikh wrote:
-> > On Tue, Jun 17, 2025 at 11:43=E2=80=AFAM Johannes Berg
-> > <johannes@sipsolutions.net> wrote:
-> > >
-> > > On Tue, 2025-06-17 at 11:34 +0200, Aleksandr Nogikh wrote:
-> > > > #syz dup: WARNING in __ieee80211_beacon_get
-> > > >
-> > >
-> > > Not just this one :)
-> > >
-> > > https://lore.kernel.org/linux-wireless/20250617104902.146e10919be1.I8=
-5f352ca4a2dce6f556e5ff45ceaa5f3769cb5ce@changeid/
-> > >
-> >
-> > Ah, interesting :)
-> >
-> > FWIW, in this particular case, syzbot sent the duplicate report
-> > because the WARNING format has somewhat changed in the latest
-> > linux-next. So before we updated syzbot's parsing rules, it had
-> > managed to re-report quite a few duplicates.
->
-> Right, I had noticed that, but then I looked and the old counter is
-> already at well over 100k so I decided to finally look at it again ;-)
+On 2025-06-17 11:45:52 [+0200], Marc Str=C3=A4mke wrote:
+> Hi Sebastian,
+Hi Marc,
 
-Nice! So re-reporting things is not always that bad ;)
-Thanks for looking into the problem!
+> On 17.06.25 11:28, Sebastian Andrzej Siewior wrote:
+> > Between those two functions you have 800us delay. Interrupts are not
+> > disabled so the CPU stalls. As explained earlier, I expect the read on
+> > the bus flushes the writes causing the spike.
+> >=20
+> So the delay you think is really the hardware(CPU) being stalled on the b=
+us
+> for so long? Or do you mean that this is the reason for the long runtime =
+of
+Yes.
 
->
-> This is a really long-standing problem that we discussed a few times in
-> the past I think, and basically the system is loaded enough that the
-> hwsim hrtimer can fire on time and pull the beacon, but the workqueues
-> are overloaded and cannot do the necessary work within the ~100ms beacon
-> interval ...
->
-> Should be rare in practice, but a WARN_ON() that doesn't say anything
-> about what's going on doesn't help anyway.
+> the IGB function only?
+Both. The bus is flushed, the CPU stalls until the end and then the
+function takes long _and_ the due to the stall the interrupt can not
+fire any sooner.
 
-That sounds totally reasonable indeed.
+> Shouldn't the other core (it is 2 core machine) still be able to handle t=
+he
+> timer interrupt then? (I did some testing with isolating IP on one core a=
+nd
 
->
-> johannes
+You have two cores and two cyclictest threads - one on each CPU. This is
+explicit per-CPU. No migration between those two cores. Timers for CPU0
+are always handled by CPU0.
+Even if CPU1 would handle CPU0's timers then it would wake cyclictest on
+CPU0 but that thread would have to wake until CPU0 is done with the PCI
+bus. CPU1 knows nothing about it.
+
+> cyclictest on the other, I am not sure if I moved the timer IRQ to the
+> second core)
+
+> My mistake was to search for where the Interrupt was being disabled in
+> Kernelspace (I did not think that the hardware could introduce and IRQ de=
+lay
+> for 800us..)
+
+Yeah.=20
+
+> Marc
+
+Sebastian
