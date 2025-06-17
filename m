@@ -1,224 +1,198 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40352FA626;
-	Tue, 17 Jun 2025 16:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750179425; cv=fail; b=Tolp7W+DM5aKUWlhG3u0NPqBJNwT1/SQFos3DNTGiTOSzG18TEASX+Vf+KLulqYXyg1jdyhVwWh+EKZBSVXRcA7h9+ULYHTNie7pO0aXFoqlbik/ig0uRkmOSe6DqcImHKEMNJ6fmgAcRAnOWO30wKP5XPsQz+V9cl72hnyIH28=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750179425; c=relaxed/simple;
-	bh=Kmq6t9AFCrRL8qzkMsymKCGt1Q1yFa8G9VpXfCnEFkk=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ALKwRrVH87kN7MPEqj2f41FVh0hVtQAmoXjmE0DOH/6oQlB64rwlZapYDywGi3W3AY7eua1K4onAAfNNMtStf/p3f4p7o8eLHegFmVj/epA8L9aGhc7UACbuk60EYxyzVuyhbXBQaHvKoTeK5/e1B4Z1FQVIgYIjyB2HdDKY0iQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xJV6QTYd; arc=fail smtp.client-ip=40.107.93.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DE12FA62F;
+	Tue, 17 Jun 2025 16:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750179490; cv=none; b=u6DI7J51Z/NVy2mQTllgBr9MQz/4+mKj9KVvhvYy+Ujh3YSYoQpNi+Z8hxt+8zek1ebsWIoO0zX+nHWfuK+EZtZ8DvGhBFXY16KOGq7sK13B+p6B2yO3CcDkbJu+XQkyc4v4YHXMe1fjq5bD90FiuI8+sxR7/ZLRydc7DkKd+94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750179490; c=relaxed/simple;
+	bh=1Bs87EcWnkvpggmdbY0wX6xeH68zxUYyV6RtUK++704=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hFg0xyCO4FM73rfQOCpQpJaO40b9DD7fiJVn1fUZaZtWkW1khJIOYCqSetCqXeUgowKSzzr7LqSslHiU7PiFYpN5Jy1bNlhsnho9LvmQYU3nugipapBYr4NyyPuAP1TqvFV+63nJMZrD8MhNLQn+Xp+JH+ug8keWrkx5GSIyX9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QCKl/2je; arc=none smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xJV6QTYd"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=lRKT7Tc6B2Y7o0Bj8kCMNck1+X32jycuKzvMWc6/orm0CmFfaMrwvooAMI/2tx9GSCS8gsviVULNuU4cfWYmC7IOrw9ssCxYtGKdKbiPCkS/LSTNrhxnS45qlsz0YqhiTvNxdn19w5BR/ft6pIMMqfM8Y6f/BOtS5yHfzd20JPAwCRZWFq4KcjBO/8Op0hi+RuNcc+6oh94qt5hBl8J89xODUSkD/BXq2enZOfLJ22XeZhk4m0GmelBbqADTuDU+wAemGwvrpPACXSOY21jiqhm48BvpL6/6i7skV4HkwgfXfHJt9dJGKmxOLkMEw3drfjFui7/AeWsVd1+nLj7ibQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KS40hNbZWKObH2JGr4Svfzy0u7vkdgvxAzQaeFvfK7o=;
- b=icxvMLIx8VelS61AqzFrG55yo2kSnCx73PzdGF92jQ6IYY/m6cIu7yoIC2LpSTNJlFxoViU0nLh18APXG/mOxKRy1rE4j4GH0ydHbF++uMERJ50apo51SKN2vGjCkcTZ7K+rbdZx9XM6Ezrxnf0aSSJk8l7/fc4OjbAZcT05nDzefwscwNCJU4D4NEPHRxr9w4YroOpNnvmQEaEiXokJ/IJ+G7gcTcoKr/2os5hHl4zrqvXDWShtpwfD0K41CTyiuP/VJFB9Fpmaf/bYO+mHDuv3QYanHA/kLF5ElnYvr9Tu3IWpzcFd47QQNNYA1bZ+Eb9T3JNbd0IPodF/VlPG8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KS40hNbZWKObH2JGr4Svfzy0u7vkdgvxAzQaeFvfK7o=;
- b=xJV6QTYdEgVyRAm0Vdk+3jqAN5BiXStBxh2x6s1R1wkl5XXaj9NJtrMkDwUpvjxPVcgFER7pRshrmyTgRQhRB30nKLrfSzzPA5LTHZP4yrHLPMy6RiT8N0HHdx3z+qG7bbtEv5D5LDCMBqdowb95JbL7yL1/FU96aayx3zECgD8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com (2603:10b6:510:28d::5)
- by DS2PR12MB9712.namprd12.prod.outlook.com (2603:10b6:8:275::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Tue, 17 Jun
- 2025 16:57:01 +0000
-Received: from PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a]) by PH0PR12MB7982.namprd12.prod.outlook.com
- ([fe80::bfd5:ffcf:f153:636a%5]) with mapi id 15.20.8835.023; Tue, 17 Jun 2025
- 16:57:00 +0000
-Message-ID: <3b19f145-8318-4f92-aa92-3ab160667c79@amd.com>
-Date: Tue, 17 Jun 2025 09:56:55 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] ethernet: ionic: Fix DMA mapping test in
- `ionic_xdp_post_frame()`
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Shannon Nelson <shannon.nelson@amd.com>,
- Brett Creeley <brett.creeley@amd.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>,
- Vladimir Oltean <vladimir.oltean@nxp.com>,
- Caleb Sander Mateos <csander@purestorage.com>,
- Taehee Yoo <ap420073@gmail.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250617091842.29732-2-fourier.thomas@gmail.com>
-Content-Language: en-US
-From: Brett Creeley <bcreeley@amd.com>
-In-Reply-To: <20250617091842.29732-2-fourier.thomas@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YT4P288CA0033.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:d3::11) To PH0PR12MB7982.namprd12.prod.outlook.com
- (2603:10b6:510:28d::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCKl/2je"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a43972dcd7so76363971cf.3;
+        Tue, 17 Jun 2025 09:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750179488; x=1750784288; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=rilYjlhaNDVdjd7csRjL4EGUNwGQ/gFFWVDo17odFDc=;
+        b=QCKl/2je1eg90We8hnhEyRJpcVfocV3/62cQsIrIi1gYp3tXq0mYfCuP0Ddf+wuTv7
+         PFxWL6mXWSxm+yvFKlDZYsWYPJeman4iAsdwuQQWcffA/tOh2QEXRqWfgqI/vhv2myat
+         /BoQuQdR7mFJZPgnOa9tU4PmXTWPeDILi254tz9IjBji2ojUGlAkLN0qXhkpFl6Kg1xi
+         k5Bl7Fej2KyyoknrHRl+oEx2rIh5gauT5mgQTvQfwh5MjOeVsZIe4GHasNJ7Z6/LDHUe
+         I9jtHIXZuNI/MCZ4rZjL4OQRomv8T7TDyHY5OKUobvY/zVHt0onF7CWx9AMtbTvRVOLT
+         ecjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750179488; x=1750784288;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rilYjlhaNDVdjd7csRjL4EGUNwGQ/gFFWVDo17odFDc=;
+        b=TsJ+y7Ab6eHlpomq2V0bT7+30Qu814w/ttv5xvzezjejrIVnGojyR+Vnb0DUf6JoYr
+         tI4NIY5ux2daoiPTiCkpu01Yd2U4N696lsDE/rcyo7I+knQZV1YThKHesVQYN4ITFwZA
+         2LSCej2dnx0zMjn4RSzHMFQE5uqusCAcZWjBaqe7CimMkQ26qC3B4dgmAeaZn6HtAPHP
+         fBrz0YYi4MTkN7Xub7hI2WLlz3KMZCcSD/E2D5BpWLAoQ5jjmTq54/oZ1EhqBUchA9Ma
+         Iefxi5lo/R62BivshzBH9LGetcAQTcYSdU743EtMRs5Bb9xjo2AIwNtV46QDaiHa8G+r
+         JBVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVpfHqY+CBp8TW1VEmhEZCGLkIvZhvP/NVdMLGmL3/Cy9JTB8iVDaHavOmzwgfsVvxXsldOotMZRmxpiXksQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3uompiZRsHGJ+xTBwfMFAUR3JP6ktJFbZhnjP1WjVTaQuVYP1
+	aRXiYX/DDL9gsuw9xoIXHvOBc0LXAXNJzGTL5mmLe3ZFFnzfdXEohA6fR7aorA==
+X-Gm-Gg: ASbGncugbNeb8HxNhTvSuWrpqXRISRtVf61dNQ17A+0a8TNfuMKQTqNxCBvGruWqaH4
+	5OaNqjvVi9PO2OXGpWbmH6lCENQFN+diSe13Wq+vykE9og96SkfzjQ6gY5oY8BTSziIMDInk16P
+	rhmecCJBU1KJogamCOQTVTTw++7HNaZ61UakJpKginngHkc36ioXWOYy2RKgMgzgJEHkoide4tq
+	6eZ2onczKHe24hkP2AdUCdFFJeJX3lGKOaNj2A6cYCj3V82JYK+EQ5Fvbe9dh6hCxFUpJGQImcf
+	4PPSQ7ZSWWfst4iIIuaIpyZcYSwHMfz6E7TH6SfMyBCtxnvIk9+seJUNY1sPxbiHaV8PxIdYTCh
+	JQ2pPuKmDwvnwaKg2Z85N3EuQXM4JYFJ9RsBVYMa9YONvXQ3CgC8NYnIQrnPeZ3Q=
+X-Google-Smtp-Source: AGHT+IGuFWeaYecImy2bHGqxSNTqfw6S5I6X5n9MeyDbLsDjZgSMdwMyJxl4k4V7F/D+P2UHM7r6Gg==
+X-Received: by 2002:a05:622a:303:b0:4a4:2c75:aa57 with SMTP id d75a77b69052e-4a73c6196a8mr210254991cf.44.1750179487521;
+        Tue, 17 Jun 2025 09:58:07 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4e144bsm62932181cf.62.2025.06.17.09.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 09:58:07 -0700 (PDT)
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 77E8F1200069;
+	Tue, 17 Jun 2025 12:58:06 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Tue, 17 Jun 2025 12:58:06 -0400
+X-ME-Sender: <xms:np5RaP9Cdbvkg9dycDthwKIQQj6ZN75RNrcyJF47txBmXuEfGrLk6A>
+    <xme:np5RaLu8KFgHN6-_RDIo5LwFKkaht6H7soAL1mkHxB8kERm5bOxQuEPjOuRlN70w7
+    -wbOl0XbVnDe34z1w>
+X-ME-Received: <xmr:np5RaNC1rED4vQTqf8fuwflPKHrk0G2IcG7vIk7St4G4k8vJ8H7vQ7k0MXE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdejudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
+    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuf
+    fkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegs
+    ohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhepudevie
+    dvudeuteefleethefftddufeehfeevhfetvdeikeeivdfgheejvdetjeffnecuffhomhgr
+    ihhnpeguohgtthgvshhtshgpkhgvrhhnvghlpghgvghnvghrrghtvggurdhrshenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
+    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
+    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
+    vgdpnhgspghrtghpthhtohepvdehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
+    hmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpdhrtghp
+    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+    pdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvg
+    igrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhih
+    ghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilh
+    drtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdp
+    rhgtphhtthhopegrrdhhihhnuggsohhrghesshgrmhhsuhhnghdrtghomh
+X-ME-Proxy: <xmx:np5RaLe1hfV4MNhdSV5osNPd2gjVrV6wvTQ3ZBx1zIhtMLV9IRmDQQ>
+    <xmx:np5RaEONKB6AwKC3dMi55W3nn9SZ7keu5ttqL8OPWV-sepjI0hXjBw>
+    <xmx:np5RaNnz2BrrhpjP2Q_fVrBnLYG79KIpw2tH6TN8YhSmqKlUQRUhew>
+    <xmx:np5RaOtaHsZGMPZz4bqBsQEql-5KvlZqs36Hy2Ft9XjJlsFZPmaLaw>
+    <xmx:np5RaOuk8EM-LXz6DV4OnPOTsCyBzB2gKe2L9iukOxJ0HXcPvAYgwq8b>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 17 Jun 2025 12:58:05 -0400 (EDT)
+Date: Tue, 17 Jun 2025 09:58:05 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu,
+	dakr@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	juri.lelli@redhat.com, vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com,
+	fujita.tomonori@gmail.com, mingo@kernel.org
+Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
+Message-ID: <aFGenbg8S36G1aeP@tardis.local>
+References: <20250616153604.49418-1-boqun.feng@gmail.com>
+ <20250616153604.49418-2-boqun.feng@gmail.com>
+ <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com>
+ <aFFwumsjuAEIJVUF@Mac.home>
+ <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB7982:EE_|DS2PR12MB9712:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0f7dbe99-9cb5-47e8-796f-08ddadbffa36
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cEV6RmhkYUxrb09wSHQ1UVdCQUVnK291OHVWRERlamhSd29iMHY1SjJ6SkZT?=
- =?utf-8?B?ZjZTaDBIcmZLSGJ2WDJkbFA5NENnc3JOZlhBWHRzeFZpT2k3OU1sY0U4VEwy?=
- =?utf-8?B?MXdLRGRqZ29CQUNReEc2OW5lM2U0R2JKRm5MbFpaMHl2WkRvWFFvY1drRURM?=
- =?utf-8?B?cStHbUJGZkxqakswZEdtSUp5ZkxCTXo1cjhSRXJpYm9PZ2lEQzlUR1RGd0RJ?=
- =?utf-8?B?NVgxNzJscGx6ZDhnSzdZNHFWbkowUS92T1ZOTTRxeG10YWlHZlpldmI1QW16?=
- =?utf-8?B?VjVqS21sNEFwMnVLZTdrTmRVVnhWTExGL1hoZmxyMmVaalZ0Q1R0WFppSzlS?=
- =?utf-8?B?TFRleFN4bHc4R3FrZWk0MFlHY1lDQlJMbnkrY2J5NGFyTks3ZlE5WndkNnFK?=
- =?utf-8?B?ZE9XK2hKNTgvd3pkQzRxWnVYSVJTQUZORW5UOUU0MDlIVG9sMVI5aTNXeXJz?=
- =?utf-8?B?S2dIMnhWT3FMcXdvc0tiZWtPb0NsWmhJLzZqaG5mQWp6czlsVG1lUVhOczhJ?=
- =?utf-8?B?YzRrV2tOblRwNHhmUEhJQ2NHTHhVMFhXTGF4aloza2lmUTZ6R1F6RVJCV256?=
- =?utf-8?B?Ymg1VkZzUlM0ZWpybFdDQXJxaU5LSUZwcGh0bkFPbWRseVNTbStsOVpXbXpw?=
- =?utf-8?B?WktQWDhuMVdSWnVlQkd6R2dxbzVTVWh3NGpmYWdlYjRtR2t0TzlCbFgrUkpO?=
- =?utf-8?B?Z09qdjF1bldOdU9RNVdqYWt5aWlFdTUrTDZhRUw3bTVGdGR1S2EzUURRQ0Ns?=
- =?utf-8?B?UTJ3cEFsdHBJYzFqUVlzVFlVUzgrMXpoSmpvWlpiMXNGaTk2V0pmdW02SGhz?=
- =?utf-8?B?RjNvNTc2VXV1a0J2WTZpWlNHU29Oa3pRSkpIdGpacUkwOTQzblJpcm1Od0RD?=
- =?utf-8?B?eCtQMDBKM05ESWlwYm5TWGY4MW1EN3d1WCsreDMrVnN6dFdJV1p6ckpPSXBR?=
- =?utf-8?B?OGdpbWR6ME5yMXFYYXBHVTdJdGZrc2pLTCtDUHlmOTBKZnNTcEV0THZJT3Fp?=
- =?utf-8?B?d25HTWVQTkk0NnBad3dTWThBaUtQYkpoV1ZqQmJVY0loYjlNS1llOFB0Mk1l?=
- =?utf-8?B?RDY1dW5DOWtoYVZ6UVN0OUhBRGFZQnFMaEZpOVJpSGM3bU14TEgvMUhNMWpk?=
- =?utf-8?B?OXJpSjZZbTdwMCtYWW1vTWlRSW5CZjZEZ3cvVkw4OHpObDBoQmI1WmVsaGVs?=
- =?utf-8?B?UHNUaEFtNkV0cWExak5VUDkxTWIva1p5ZFNacTlCUjYwZURhMVZvQnZuRFhl?=
- =?utf-8?B?UkI5a1dja21LaUZkYjc1T0g5dGpHU3dGZzMxeCtxNElOYWxtY3Vhd1Q5RTlt?=
- =?utf-8?B?SExTT21HcXpzZWp2eDJaNi8xY0kxaURZcWVDWEU0VFpwdTVLUzdoZ0wwN29C?=
- =?utf-8?B?TXJ6aytLcGNzQlFoRU9iZzJZSzZGUDlFbDNsblJzR2lKWU1iWmF6VXlZRlZI?=
- =?utf-8?B?ZEZUVHdSdUVvODFXclBLazV6QTJQM0tzNFNIdEhZUjFPOEhPS0IrVWdyWTZk?=
- =?utf-8?B?aVZvM0VGcFRxclcxejM3UWRJQTdWb0Npb0FvdkhlZGZKcyszMFRyRHpsU1BL?=
- =?utf-8?B?ajhkYVFPaVZ5MnZSMkZ6aFB5TzFMNE1XR09uTkd6TW1KSldnN1Y4S2lsTVpK?=
- =?utf-8?B?TndzVnJmdXIvbjJpVzBHbVU3R0VEZmtVcXMzSVNwOGcwZkJnRTlhZE5FZDZD?=
- =?utf-8?B?cy9rM3FXbmNTTVNHc3hZQ1lJUlMzbHNXWDY2NGJjT3pzU0tmRHAvM1NmWEZt?=
- =?utf-8?B?NEFoVXR2Zzl0U0wrWDFhTDJEWnJGOU80OEtUSzN1TGlacHl0V0M4WWhQSEp3?=
- =?utf-8?B?NVJtRkF6V01QM3RvQlVxM21zMlMyakNFQ0J3R0IrUmdGMjBaandCNHJZK05r?=
- =?utf-8?B?R0Y4cDA2WVhmMlAwU29DK1F3NzUvK1FySWpzOGg5VnAranJrZzd6aUx3NFBo?=
- =?utf-8?Q?L9vTsxtoKkI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7982.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZGsvZ01GV1FwUzExNURVYTFiUmtza1hmYlZQSE5iMU1HaERJZ01HSmhkUG1s?=
- =?utf-8?B?WnhUSUk2Ym5YM3lWd09CWUJ5bGtpQnhsWkhVVGFyWDh4WWIycnNOaVpFM3pU?=
- =?utf-8?B?cmRCaWRmNDdDZlY0VkgxNkJCckU1ZzJ5MFdqK0RTUW05dnpnY3pJblR4Zlk1?=
- =?utf-8?B?Q2lrUnoxbmxoeCtlTEllc1hCSWdONmpMUXVzdlNZZzVVVEVubDlSOHMzODlG?=
- =?utf-8?B?QncyelBsVVZId1BlYjV0YjBPS1U0NCt0Q2xNVXNjYXdsT3M0R2ZiQmpVNjdq?=
- =?utf-8?B?dlp4MjBNUzBhK0hOemV3SDN3U1ZGaHJXVkdzQTlYM0g5bUl4V1BnMDEwWHM5?=
- =?utf-8?B?eHlKTlpDbHpqY1kycm1FVUhxY0JIVXpFQU42Z2NIWmVGY1lCN0hQYmpvV091?=
- =?utf-8?B?dDFXY0tmSko1cVNSZTdQQk9EeXVUdWQwZTZpckNwTmdKcXB0ZFR0L215QXVu?=
- =?utf-8?B?NCt0Q2lsRzFCYmdjcjN4ZHJ1OHJsbHhHZVozQTlhZytlazRtendjbkZzZ0ZW?=
- =?utf-8?B?a2dDRGh2dk1sV2NVYnBld2RsaldlYUt4TVRIUHlQYzBkZGlMb0o3eWtzZ2Fm?=
- =?utf-8?B?Q2JibVJRNlpYUzVCRlI0a0FTWUZMRVliKzRXMDF4Z05UeHFTdHljcSttcHl5?=
- =?utf-8?B?KzRlczFMazNybTN1M2ZQa1R2VVFzYkJET0dHTlBBSjBkQkszZGxjbFk3TnZH?=
- =?utf-8?B?aVdOeUVMOUtkV3ZlNjhrMnV3ZDJTd2VBaW1Ld2NnV2lFNGZkOVZaUW4rS2s2?=
- =?utf-8?B?cnpKKzA1MW9OMElwbVlTNHZtTlFIOERYejNZTTZJN2VvRTdvbkdmcHdETnhO?=
- =?utf-8?B?dUhrV3ErRGQ3ZzB3OEF6bVBzdzRWYmF2bEZPajdWVGNON2VlOXpPSjJidWE2?=
- =?utf-8?B?MHNQTG1IZGltUnR4V29vNHRGM1FTa29WU0M4dm5BNmtnTk54QUYrTElyQ01E?=
- =?utf-8?B?cExwaWVaSjdTMnVTMURZQ055a3BiQk13N0N3T3hTNFVwNzA1NEJBb09JRXov?=
- =?utf-8?B?dzRuVkhzbDdPM1pDSGJYQitUVzUrQnZkWmptT2N4bUVBM1VKdk13ak9LVlpZ?=
- =?utf-8?B?YnpIdE0vRGpuSWVCUmFleUxCMmxISmk2d2JlWmhZS3R5cmpEQnlOT0VvYU5j?=
- =?utf-8?B?Z3NidU43ejllcVVnSzN5Y1g4TjRsenBDeVdVejlESDNjUk9EVWRnWnJFQU1y?=
- =?utf-8?B?SFZGTWhKQkhJeDduajlwTG9SRWRqSm5FeUg0aDYyK1pFZ3A0UzhUZkt3bnF5?=
- =?utf-8?B?NU9iNytpM05zS0Zvd3RhWnhlZUZkWjZVanpyY3pLR3FpRzY0dHlnOUptTjR6?=
- =?utf-8?B?aFZXSVd5V0FpSi96cEh3M0FQSGdQVktVWWVXVEx2c1hSNzhoVjkxWU1Tcy9K?=
- =?utf-8?B?Wm1sVjJ6WTJ5bzM0V21tUWpsaXBWZnNIWHNwUndsWU5RNUt5end6YmdWN0pZ?=
- =?utf-8?B?WTJqS1cvdXptUkFTYVJCYzJrVk14SEF0OGRDTmxrR0NwN0FBak8xbm5PbkZV?=
- =?utf-8?B?bHVZUk55aEN2bjd4ZnVXKzFOZUM4WnBlbktoaVdhWkZXWmdpNUdqVjJJYWRC?=
- =?utf-8?B?MnRtOFl2V1dtNGV2RkVWL3V2UDJwVGhmZVAvVWpWMnM0OUhlL2JHNXB0TG9L?=
- =?utf-8?B?NGo5VHhwQkF5WnhpUVUyUnhHaWlVaHBVUkVYbmJoK1pYOUNDQ2owM0t3WHVW?=
- =?utf-8?B?ZUs0a0hDakp4MjBHTkFQa211emhEZXBtQnRDamdNN3UxMkEzTiswOFVXMEtH?=
- =?utf-8?B?VXJGdjA1OHNLK0psWGpyeGJDTGZnUDFmVGVBYlpyQmExK2pVMzBpWUc4cFk4?=
- =?utf-8?B?U1ZNSjl2Q1JqSWxLV25hMnpieTh0ODd1cGdHNWlBM1h4cHQzSmxHYThISVVG?=
- =?utf-8?B?ZmFkMjRZTnRFY2oyaklrdmo3QmhSS2JUdXlWZ0RNR2puUEF1dlNUYVJWTDR6?=
- =?utf-8?B?dytOTWdyT0NSVnhBWlNSTysvQWRZZEJvVXQ2TldaMXNhV2gyUWw4YTQybktp?=
- =?utf-8?B?bzUvQ2UxLzhQQmJ4VkszeHE1UlB4K2hETzFhaTRpS0lDeFYwOGxyMTJ5Q0pJ?=
- =?utf-8?B?UGhJbzl6aW8zTjVnaVBubWFaUkRCTnJJUU1YZ0tpVmRZcEp2NjV5QW8vRDRV?=
- =?utf-8?Q?WV47+c5dXzHNnHGzbcSnb8Voj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f7dbe99-9cb5-47e8-796f-08ddadbffa36
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7982.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 16:57:00.6877
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kH8wNvJZJhJRpM034m+g4MsKFN3gUpWmYw67yWN8ZUHGOoUQt2eMvRZOCGX7He8ZizZ7jFKl1cURcKE690qL6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS2PR12MB9712
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
 
-On 6/17/2025 2:18 AM, Thomas Fourier wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+On Tue, Jun 17, 2025 at 05:28:41PM +0200, Miguel Ojeda wrote:
+> On Tue, Jun 17, 2025 at 3:42 PM Boqun Feng <boqun.feng@gmail.com> wrote:
+> >
+> > Will do, one thing though: the comment lines seem to wrap at 78 or 80
+> > chars, so do other lines for conditional features in rust/kernel/lib.rs.
+> > However I believe in Rust code we use 100 chars text width, any
+> > particular reason that I should keep these new lines the same (wrapping
+> > at 80 characters)? Otherwise I will make the new lines wrap at 100.
 > 
-> 
-> The `ionic_tx_map_frag()` wrapper function is used which returns 0 or a
-> valid DMA address.  Testing that pointer with `dma_mapping_error()`could
-> be eroneous since the error value exptected by `dma_mapping_error()` is
-> not 0 but `DMA_MAPPING_ERROR` which is often ~0.
-> 
-> Fixes: ac8813c0ab7d ("ionic: convert Rx queue buffers to use page_pool")
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> ---
->   drivers/net/ethernet/pensando/ionic/ionic_txrx.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> index 2ac59564ded1..beefdc43013e 100644
-> --- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> +++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-> @@ -357,7 +357,7 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
->                          } else {
->                                  dma_addr = ionic_tx_map_frag(q, frag, 0,
->                                                               skb_frag_size(frag));
-> -                               if (dma_mapping_error(q->dev, dma_addr)) {
-> +                               if (!dma_addr) {
-
-Thanks for the fix.
-
-After looking at this and Olek's comment, I think it makes the most 
-sense to return DMA_MAPPING_ERROR from ionic_tx_map_frag() and 
-ionic_tx_map_single() instead of 0 on failures.
-
-Then any callers would do the following check:
-
-	if (unlikely(dma_addr == DMA_MAPPING_ERROR))
-		/* failure path */
-
-Another option is always returning dma_addr regardless of 
-success/failure from the ionic_tx_map* functions, but then I'd be 
-inclined to use dma_mapping_error() again in the caller. This approach 
-seems wrong to me, especially when CONFIG_DMA_API_DEBUG is enabled.
-
-Thanks,
-
-Brett
-
-
-
->                                          ionic_tx_desc_unmap_bufs(q, desc_info);
->                                          return -EIO;
->                                  }
-> --
-> 2.43.0
+> We have both styles, so up to you.
 > 
 
+I will use 100 characters then.
+
+> It would have been nice to at least know already if `rustfmt` would
+> eventually land on 80 or 100 for this, even if the automatically
+> wrapping is not stable :(
+> 
+> > Sure, will do, but I'm afraid there is only case, unless I misunderstood
+> > you:
+> 
+> I meant the "If `file_with_nul()` is not available" vs. the available
+> one (since it is mentioned in the docs already).
+> 
+
+Yes, but the example would be one, just the output would be different,
+hence I said the "only case", but see below:
+
+> > /// use kernel::file_from_location;
+> 
+> I would hide this line, since it is a single import of the item itself.
+> 
+> > ///     pr_info!("{}\n", file_from_location(caller));
+> 
+> I would suggest adding a comment on top of this line mentioning the
+> output it could potentially show, e.g.
+> 
+>     // Output: ...
+> 
+
+This actually helped me find a bug in the current implementation: I
+should use core::ffi::CStr::to_bytes_with_nul() instead of to_bytes().
+Please see below for the update "Examples" section:
+
+/// # Examples
+///
+/// ```
+/// # use kernel::file_from_location;
+///
+/// #[track_caller]
+/// fn foo() {
+///     let caller = core::panic::Location::caller();
+///
+///     // Output:
+///     // - If file_with_nul() available: "rust/doctests_kernel_generated.rs"
+///     // - otherwise: "<Location::file_with_nul() not supported>"
+///     pr_info!("{}\n", file_from_location(caller));
+/// }
+///
+/// # foo();
+
+> Thanks for this!
+> 
+
+Thank you!
+
+Regards,
+Boqun
+
+> Cheers,
+> Miguel
