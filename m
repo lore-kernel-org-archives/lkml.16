@@ -1,272 +1,189 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2076.outbound.protection.outlook.com [40.107.243.76])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DDF2E06C8;
-	Tue, 17 Jun 2025 11:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.76
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750161594; cv=fail; b=JCRuOy1AkOflQNLhZPzWCp6g30k+8bdBHH1bBxQ0a2DmDMdSgyMZ6IAsJgcWIHCVB7D/CwPRSLriOUaKwl0WCIrPbhEQD5e0baI4SQjyOS8t9NO1fs9WuVo2F3xlWgBd7t1KO7mhBuYTFC1UGVa/Voyl/4QTcZy0dCPk2SnLsE0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750161594; c=relaxed/simple;
-	bh=H3kSNJ8022yx/ltMSwm82qCjeXksWQwu+cAsnC8SfFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=sKLl0cdQsybQIPa1ILc6WIWsGSghF7hfMeZ+dkEwQ26PPbJNNXaNRAER/909qM6YW69tXMGIrqJ20VQj+GV/um2p3iA0GhhlKCxdfLkhgeMdFryZnxxRXYvBX04Lh0ijniBoF5ypBwJTjqBu1CMQy1lUS/zrb2JXQRz/Ep/cCHU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NZu+bvPO; arc=fail smtp.client-ip=40.107.243.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8942EA479
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750161597; cv=none; b=lfqYVfDchJZNyb2ooVkmkXo1Dbr7bnHraPzgmStWUtoTHqtd0i+KV/zyrSJbgWumTw/24bKnKaSMfg+SsrJULvfzciXdZ8RQnrFNApZ+nS9uhsNWV14gQAWh7pl+Cp/roywM4QeXKWW45K3OZBq7qDhvyhBqPJ6fsjfwQbXbIoU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750161597; c=relaxed/simple;
+	bh=9nOZhAg66hqyI/84pWFJj9MHdQy17RoVhpx+uocrR1M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eve3IPcRyedMues32UdHaJKB+9ZfzMLx5NdyVKsssUqZjZRqS6iFn8Uflm/Sx293X2ykTuFSIoCy1vE7wKo1dZXUrfykUcGKWb0DwPvyVWLw6h3J0oGtAIDY2fsZRAiREWmsF6F7qlJvUwz+2W8e514CE7ACpu3G4PSOAgGDrTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R9ypEt+H; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NZu+bvPO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oZF/DhnVh9cKvLeF6qdqc0iE4cS5O37kt2fdOzO6coQeiwRWsSqhfoHwmTgkkIQ3pTQl63LDFP6ETPeBrBAy6ztHlfJXDm1rpZ1T2jRd6SlLhvb9q9zzLsg2kNz/E67FW1HZiY/awnuZkgD6Vkln3zwJklETxJ3r26VLgNLW+ZyQnKl/SGqvL7cxnARb9Q6Vk3tmbuBqGd8/De5y2XkGN99kEtRzu00BeaSeZWg2xeLYmGrf3nGNZ+V8xrFge5kmxLXGJm55THoHiNIKDOFGAa/KzJnascQI//PoP7ZTelHb4ZH8vm1vDj50dn3Nj8x3xLuoiNcJwQ6hzxdjbJFqtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dX+e8fBz6wNU4+sZu7h41JuiAF0gpFoLGe12JqE769g=;
- b=jaJQTdsJ3GwtJmFNZ3txMU5ZZNWj3n4myWa6vzijccz7wU1H2w9TpTokFYEOnEbsoO0ZYbbVYh4z7D+krKUF1Xr7YgbIaxLAYnAZRRmg9zMp3rj8MdnyKbrLPBeT7FK28hcs0VUD3yVo3dUgnQ5a2LTbjEziwrMDuC8Yn4vdvMAIJe+gIIWX+94clDsu+/dyg2NicMSvMDVX+CTDZwST+Xq3D08jmW3LkPWVmqnn516pID86J63KaeX/ruArKHY74H8RLMRCEqa7RuY3DZ2vJ3eiHov+XFrpjXLrRQX7P7CMMvz903nkhK2NgqmORfs6wytksUPqziLrp5vJpYjkQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dX+e8fBz6wNU4+sZu7h41JuiAF0gpFoLGe12JqE769g=;
- b=NZu+bvPOuHFSXnd9uTeBWMbi7pTlNHCw/Rg0Udc3pGV1WZRkKi0Ein8STUbnyhOL4oDH2ZorfCkX3wYJ93ee84uJ2ci4KaFcMxPzhWRgrCiAhD5sTEUdXbqkmSXZZIQhw2Q4K3Zj3VM7B0OxVrb77fN7VZhbZYo5qJwoHDOAHMnYF9ZUHa7hr5sK5dkRhgi84JnVlJ92hTUkvdufEy++6YyUdvZbAo/361//qlPMlxBnQFRtQoVyljCbmQcAj7y2ih9ZmwrzvxJICzRomNd1XNWctdmifyb6CdCVUqeQtTuFNrbW1xP8GSRU8XrApbLklbCQDrf56vgqQrrzibz2yg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by DS0PR12MB7583.namprd12.prod.outlook.com (2603:10b6:8:13f::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 11:59:50 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.023; Tue, 17 Jun 2025
- 11:59:50 +0000
-Date: Tue, 17 Jun 2025 08:59:48 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: kevin.tian@intel.com, shuah@kernel.org, joao.m.martins@oracle.com,
-	steven.sistare@oracle.com, iommu@lists.linux.dev,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.weissschuh@linutronix.de
-Subject: Re: [PATCH rc 1/4] iommufd/selftest: Fix iommufd_dirty_tracking with
- large hugepage sizes
-Message-ID: <20250617115948.GV1174925@nvidia.com>
-References: <cover.1750049883.git.nicolinc@nvidia.com>
- <9515eb5cb58bc8dfec083df51550bd9ae6d60da9.1750049883.git.nicolinc@nvidia.com>
- <20250616162501.GN1174925@nvidia.com>
- <aFDMoMX8eL7azoUL@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFDMoMX8eL7azoUL@nvidia.com>
-X-ClientProxiedBy: YT4PR01CA0410.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:10b::16) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R9ypEt+H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750161594;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=m3kEGwFA75VuiPq7lg+V4SoBEQCcbai8y87ujNCUAt4=;
+	b=R9ypEt+HO0QxG/2GVBySdAklGeuHlPIByGLZjNwUdsOeccEi97T9h8mkz3OMNASjEafq78
+	YNvXE53NLgH7zaqyucm9x7WyGU0nigS6NEXMLjQQ8F6L+RgGmJoFTtoDBP6BmP1txYgAI2
+	63mqDCZCh2frZnefggfruMNlaETERvk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-449-5uVE3XfGNICrZyKPoNNmDg-1; Tue, 17 Jun 2025 07:59:53 -0400
+X-MC-Unique: 5uVE3XfGNICrZyKPoNNmDg-1
+X-Mimecast-MFC-AGG-ID: 5uVE3XfGNICrZyKPoNNmDg_1750161592
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d290d542so34158275e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:59:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750161592; x=1750766392;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=m3kEGwFA75VuiPq7lg+V4SoBEQCcbai8y87ujNCUAt4=;
+        b=Tv4rHCmRvS3BOMHIqvUBFAvuyvnkKmJnZ/+PWJk/3029Y7bpbMW30ShPJ/2BdJf0qT
+         u24Zgk3Xfp+qe4FhugA+R0PUFLM3F9hmYyUOfrBmXqAoVSO0omJEqCS7U1LvNhzYQ1Ic
+         0dx52GB92dqPlm1i3UopxYLWF+6ptGyzWhKmoJb8ZSNdQRLViB41Ubu+OQE3GyqH3Em0
+         IaGaG5IkRE6GlPsAeb4ExqE7E/qI+qyrgDWPNyD+m3y3fLMsA5JahndZhEn9wY1rsAl6
+         QkKKu5++REA847Fjas6ncfCEfKnvb1KsmimaLMBOkqpUYsqkLGDizuivs5T3v8wlW/tA
+         77nw==
+X-Gm-Message-State: AOJu0Yy6sZC+MGpY0MOl1oYAPPTCqTgUlvNLwZGeg7GTxvocYszjINbu
+	A9AvvRGT0VJjUCJWSan8wT+fZA/2wJU+SmOVSUm1ehSkWWAg/pdoa5xMQWLkmWF4rvF1mhyD/O8
+	sn7BDUpeqjY4eG0A8mNvqyxoCRLiyDZl8KvFZjftGivbuYXfINENhfWCuRlrdAFUD4Q==
+X-Gm-Gg: ASbGncsMReY1sdPtXmuxqh4ri9PhZ9DV1AjKbe7ZgblDbnwN6/XF/0Jy10KKf90jmyZ
+	HTN7zempaPdfSwEl8b6AOF6AFeSJI+6fskG+lQkatfzZ+fEh0+OYooU7kccml8xe88eJG5Mqdf+
+	oelbRiAhb2Rso6d4cUYqSo9OxdxSyqnhHG4lLPX5Lr4s2KA2brnSgdW/zUJEKHzRjJbTeNCwj+N
+	d4t8bOA2N7gHAs30t39PoaMVvqpy+7OSEDzCLBrWZKznxs29fAOFyIqjLYjmq4p/DiP68IlrknE
+	86eTqJqJuO9Wah5VF5SbrNOBrYpdkfGEAlM7foi9fgxeOL8CDYLi+RVWSqNPnp8w9sISXq1vR/B
+	MniWY/Is77iMYGda5qNMEHm491Q1wWYbc8hgOH1U5y9IsUSU=
+X-Received: by 2002:a05:600c:4e54:b0:442:d9fc:7de with SMTP id 5b1f17b1804b1-4533caa21d9mr104115585e9.22.1750161591840;
+        Tue, 17 Jun 2025 04:59:51 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEKcix1FzFhSz1vLXa92huVqpQa/bFyDvxo6Bnl1VEwl2ZJ7gHIUtu3EDoH+eOKHJrUZ+NJUw==
+X-Received: by 2002:a05:600c:4e54:b0:442:d9fc:7de with SMTP id 5b1f17b1804b1-4533caa21d9mr104115345e9.22.1750161591460;
+        Tue, 17 Jun 2025 04:59:51 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e14fc98sm180074115e9.29.2025.06.17.04.59.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 04:59:51 -0700 (PDT)
+Message-ID: <e77b2fb5-f2ff-4c11-8b3a-6b5ee89738e0@redhat.com>
+Date: Tue, 17 Jun 2025 13:59:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|DS0PR12MB7583:EE_
-X-MS-Office365-Filtering-Correlation-Id: b900efcc-3dc8-4150-fe73-08ddad967641
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bC9BWFlEMUw3OENnb1NybXRjWXFHWTZqMFR2Sk42dlNLL0YzaU1RRms2a254?=
- =?utf-8?B?UGdTMEk2eUVEb1dsaXVnempNMTVXRCtFaWhNVXE2L0c1NEFMQUlsczFDK3Bn?=
- =?utf-8?B?WGtlOXJubGZNQzd2Z3pMMERkbnFhdHNOZVpHMUh5cFV0SHh3TS9CVUZ0SWNI?=
- =?utf-8?B?bVRUUVYyNUo1eVdYVDdBeHppdkpHeHZ0RzNBSXhVdWFETTd0bGlOSTJla2Ro?=
- =?utf-8?B?aFAwV1llK3g1QkZhTXFQdS91cnJrbHZtWVk0UXFhTmo5N3NaSGtrczhCc0FF?=
- =?utf-8?B?R3M5N1JYaXh3UDByK25nS2FnZTZLMHpEQlg2SzNuemZ6MFB6NG5xaFg3elpX?=
- =?utf-8?B?dUFEQkRzQTdqTy9rWmhMSjV3RUpzYVAxLzkyRkt0UXljS2tDTDNhYjRGTDVQ?=
- =?utf-8?B?ZjFMQUxhVHJUaGhJOUVHUWVld25yV3NFK081OU5KYVdwREZOSmxTaHN0TWc1?=
- =?utf-8?B?ZWRicVQxdHlBaEkxcFpWZnVhVEV3RjNTOFZ4RWU4aFU5UkVEQzBSamxRNE9y?=
- =?utf-8?B?VzdEOGk5SUZhZ1hwUzhNYnpxVVh4N29OK1pYVlg4QkxUbHdJaGxOQ05aKzBD?=
- =?utf-8?B?QlViQndvMlI1N3Z5eWN3YzMzMmVSRkprR1NKOXMyeDFtSXgySW10Q1ppRnN2?=
- =?utf-8?B?cnFNTlBPRWRNaG41MXM2S0FIYnY3TTJMSU1TK3dFQVhLOHcvV3JXRFN6SWhl?=
- =?utf-8?B?UlhPUnRJelE5ZVpMaVZVS0IwUkZGbXFDeEpqSGVQTFVMUWNBbWtyaFVteUNO?=
- =?utf-8?B?d3IzcXJMUVlROURsMTBFK291RjMycktJaWtXVm13eDBINDFCQWk2cHU5OFR6?=
- =?utf-8?B?THBpclNQU1VkNnVqaEttNG9oekpFTGo4OG9ZOXJPZ3JTSUNLa3l0TXA3dVhU?=
- =?utf-8?B?TU9NMHZGYXpuWittby9ESVZUM3pvakRUWUMrdlRCbW9JWXh1aUJ6cnhYbEpj?=
- =?utf-8?B?STVPUzRraEFvdkVkZmorUWtBOEVVSWU0WmwyRU15T2tWM2JXbHkzb1pGV2Nx?=
- =?utf-8?B?aEJDcWRUbVZuaXlnQlNKN0VVS3pUeGxRM0Rxb0NUaFpUSStidTJReE14VVh2?=
- =?utf-8?B?YXNPUUt4bVdmcmlDNGpVTXRzRXRIUHdMQ2taVDV6UkpoL1VzRlFXc2d0NEF2?=
- =?utf-8?B?UWRpc1ZXQ0xOSFJFNE92UFpsLzJQR3ptNG5zdHB0SUVZWTJEQ3B2N1NRY3dh?=
- =?utf-8?B?U2ZEODZLZXFHRGR1cnErZG1oMXV6Ky9KUnF5VWhwSmNFYkU4akowZDNaT0d1?=
- =?utf-8?B?a3ZpNCtUSGo1R2tuaHJjc1RiSGQyQnJqZUNaMkVBOWtuaXRQbE9zV3lXNHhG?=
- =?utf-8?B?MlpPNEhrZ3AzQTBhblBDSkIvN3FtYVZlSjliZkF5NStmRTZlQ2xKTXIvRHM3?=
- =?utf-8?B?WXBBK0hHMTgrZ0dyN3JreHIvZDg4SlVCODdBdnhQOUhYNityL0Q4bmxuVWpS?=
- =?utf-8?B?Sk1xeElaU05SMW5Kb3lPdFpmRndXcUtXc2FWNk5GUlVpOWpud3o2UDI5Zk9L?=
- =?utf-8?B?cG9uc0Vubk1pZjJvTWhRd2ZZaVpkWVc4a0cyTVR4VGsyaEJQUGZiL041bS8w?=
- =?utf-8?B?Mnl6bjA1T0ZEaXlzbUp3eGhWSmkvbmtDak5aZVJPS1JxRnhQQjZqeU0zUHNu?=
- =?utf-8?B?UWxoenpJTVpKRTZTWHpEdzhtUjZYRFRVQjBvbTVXNzRtWk0yb09DUytPcGtq?=
- =?utf-8?B?SmtPbGdwVGlvZ2szQld6amtjbkxqK05acTVQeGFpTklJSGpsYzcxbmt2c21n?=
- =?utf-8?B?VUdJNmE0NzdvTlhJY0dTTUJRSWJ1M1V0SFBhUUNLY29oWlVBSXBkaGxxQzNU?=
- =?utf-8?B?RDBodWsxaUZhdzFOc0VCaFVORGN2VG9BR1B4akhkb0FJVWlRUXQrMFRwRXlt?=
- =?utf-8?B?V09SUUpiR2dPaVZ4WmgrOGswNUV2eU1Dakhwem5oR1JpRHc9PQ==?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RDhIRVc5SDlmeHhNLzBhZkR6Z1ZVYWxob2ZyUVVoSFR3Ull4WWdvUGxMbDRM?=
- =?utf-8?B?YmwwV1BraFFXVzFnajhCQ0tiQ0F1U3R1dURweWtLUFpwbmg2YSthUHlPd2h2?=
- =?utf-8?B?VXpOd1lMb1o5blM4bi9RaUloT1NsMjlaT0FJMmt5S0lrVS9xNW5nWUtKVEdE?=
- =?utf-8?B?MTRYeHdmOHJ0MUZ5aWZDaEhuQkphbnlmSDhvMVhZSHV6TFNLR1hoazU3aTRh?=
- =?utf-8?B?aWdHbktNWEVuWnJLTXZTSG9SMFRUNGtmSnB0ZWE1Rk1wT0N6US8xQkRmZzNM?=
- =?utf-8?B?emswL29VZGNzSWloOGJzRDJiWWZjb0xoSVNtRDNPUGRBWFkxUlZKWnBkUzR2?=
- =?utf-8?B?dnU5SHBBNm1XV3NXRHpiK0liNjBhYUk0bmpVUXNTbGlnWGozb011QllDWHk1?=
- =?utf-8?B?ckVub2d3Q09NQy90RFdVUUpRQmxRNW9ZOENBWDE4R01FSHgzWjJGTzJBYkN4?=
- =?utf-8?B?UHhITS82K1FlNkh1dkdaR25wLzFlQktpc0hYZ2hvb3R2dnBQT2RlWUNLeDBN?=
- =?utf-8?B?S2dsUVZBTzIwVjFRNFR1MFdPVDdoOUxnak1vcTZYZE92RnZFa2grZCtleTNS?=
- =?utf-8?B?ZE92bUg2Zkhma3J6eGxDLzlKWlE4OXJvVmhwcG1SOHhoVkVSU3B6c1FFOFVG?=
- =?utf-8?B?ZTIrdGQ3NDZ1K3VEM3FrM2NmaFB6V2Y5NVFkazVIaklVZ3UwK0RlK3BUNTFi?=
- =?utf-8?B?UEFxWnhNUFNhc283MjNRWE5SSmNwSlhQeDFrK3IzZ1BianFOckdiNnJYd3Nj?=
- =?utf-8?B?dHQ0dXdIbFZ5VDBhVzJEaml5Vi9qNC9ISkw3NUJ3SmFDWkF0SW91TzBocmlz?=
- =?utf-8?B?QzhzVkVXdDNWUGYzNEtrY2gyL1RoWG9kaFRYVWZoOEJpb1NMTFFSNTRWcXRO?=
- =?utf-8?B?Ym9LRzR3ZnNIRkZGUWY5ekI3b0ljWE8yYStpb1M0NG9VWFM2TjFvNmJ3bll5?=
- =?utf-8?B?SmI3dGM1a0cvb2VrcmdUcG1wdUcyem1TbHcyUEhXa0J2UVVYQW1yMWJncWwy?=
- =?utf-8?B?UlZPbXdhbFNxQS80U3BpVDVicDN2eEE3dklYdlNEZVhCUm9adWRqQi9iZmM3?=
- =?utf-8?B?QzVsOTZhSitQQ05vdUdkbitaQWc5RzZvRnJvT0s3L04vTDFUa3FOV0pOQnNs?=
- =?utf-8?B?YlZBbGFlV2p5REhQWEVKTGIyd1NQaEg3KzQremJONE52SCt2Y3hSUTZTMFlz?=
- =?utf-8?B?bWtGa3JKZ3E4Q2FJUjc5em9KbHJiYUpzbzgzSlUvVGpFQkRBa1V1MmMvSzYw?=
- =?utf-8?B?czY2bTYwa0s4bVpkVmx1amFmQ0NKY25zdmplMTRBOEI2aFlYaWpVclNHVW94?=
- =?utf-8?B?T2VWREhjQVNCNDVkYXpBMzVuWjd3YXVDdUkxSGNJWjJZcFNKeWUyVUIzS1Q2?=
- =?utf-8?B?dkVCaC96cXQ5RERyWHp3d2pudlhKTkRXaldYZWUvek1ndnBmS2R0RFMrMkZ2?=
- =?utf-8?B?U2kzemhHNjdmUnkvT1hMVUd4dlVBaXVMNHVPWUJXbGpKblFDUDVpbXBieVlQ?=
- =?utf-8?B?Z1ZLKzRzdWJlQURlSHBldi92bDhLenl1VlR2ZDBVVXJKVW03SjFUdnlTdFNU?=
- =?utf-8?B?cVh0alNZeUU3dDEzWHpiMWZrNnVkMi9VSmFrbEVWU1IrTzJ0ZWVhVnc1aUp6?=
- =?utf-8?B?RUhNVmc4amtWSERlUnE3TEpWem1yVDlIdDdqdWZDMjlFRlJKSG5YTXVlWGxF?=
- =?utf-8?B?amRGdUt4QjBuc2VWbTZNZHpabkZMckQzRGxVSmRhazlhSnlneDNRRmVIMUVQ?=
- =?utf-8?B?ZDBOUWV0VjVuaHRkTlhEMzU2RjNSandSUWt4Y0JURTlmeWpkRk9xbHk5K1VX?=
- =?utf-8?B?TElMRTIvNHZuanVvdmVVdjdrYUNUOGxranpxdDRaS0gxT0F1S0ZLRm41Q1Jq?=
- =?utf-8?B?RndxTHNMWnVxbDZmN2hzbTJSQ3pUQ0drZkI1VmRMRWxQSzZxR04rREJFTkp5?=
- =?utf-8?B?YU1Qa3VEN0NIRXNZa21TZ29oSUV2UHlzdGx4eWpXemFtQVhNbVluL1BOVHp3?=
- =?utf-8?B?aG84OHBtbm91OHZEbG1WWFRRUCtrMXNpM2V6TnBtZ09uUnJpbEdtWCtJR2xQ?=
- =?utf-8?B?aGxTT3V5cUg2QVVEYmxsaFBaTFdiN1BJU3h3bDVVVEdNSXJIeUl6SzBiaCtC?=
- =?utf-8?Q?oyTbykD2lo9XgWamPffMwkJOu?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b900efcc-3dc8-4150-fe73-08ddad967641
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 11:59:50.0385
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KNj6mOzIxC3TA64vMHHjZqtECEFZLtycwoTdeN13mnNOuDNqYso3Xyqgt5FZBpmq
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7583
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 mm-stable] uprobes: Revert ref_ctr_offset in
+ uprobe_unregister error path
+To: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250514101809.2010193-1-jolsa@kernel.org>
+ <aECseBOkQynCpnfK@krava> <aElE4r21ZYhLWTZz@krava> <aFFYTi4FcKE7rmlI@krava>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aFFYTi4FcKE7rmlI@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 07:02:08PM -0700, Nicolin Chen wrote:
-> On Mon, Jun 16, 2025 at 01:25:01PM -0300, Jason Gunthorpe wrote:
-> > On Sun, Jun 15, 2025 at 10:02:03PM -0700, Nicolin Chen wrote:
-> > >  FIXTURE_TEARDOWN(iommufd_dirty_tracking)
-> > >  {
-> > > -	munmap(self->buffer, variant->buffer_size);
-> > > -	munmap(self->bitmap, DIV_ROUND_UP(self->bitmap_size, BITS_PER_BYTE));
-> > > +	unsigned long size = variant->buffer_size;
-> > > +
-> > > +	if (variant->hugepages)
-> > > +		size = __ALIGN_KERNEL(variant->buffer_size, HUGEPAGE_SIZE);
-> > > +	munmap(self->buffer, size);
-> > > +	free(self->buffer);
-> > > +	free(self->bitmap);
-> > >  	teardown_iommufd(self->fd, _metadata);
-> > 
-> > munmap followed by free isn't right..
+On 17.06.25 13:58, Jiri Olsa wrote:
+> ping
 > 
-> You are right. I re-checked with Copilot. It says the same thing.
-> I think the whole posix_memalign() + mmap() confuses me..
-> 
-> Yet, should the bitmap pair with free() since it's allocated by a
-> posix_memalign() call?
-> 
-> > This code is using the glibc allocator to get a bunch of pages mmap'd
-> > to an aligned location then replacing the pages with MAP_SHARED and
-> > maybe HAP_HUGETLB versions.
-> 
-> And I studied some use cases from Copilot. It says that, to use
-> the combination of posix_memalign+mmap, we should do:
-> 	aligned_ptr = posix_memalign(pagesize, pagesize);
-> 	unmap(aligned_ptr, pagesize);
-> 	mapped = mmap(aligned_ptr, pagesize, PROT_READ | PROT_WRITE,
-> 		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
-> 	munmap(mapped, pagesize);
-> 	// No free() after munmap().
+> On Wed, Jun 11, 2025 at 10:57:08AM +0200, Jiri Olsa wrote:
+>> hi, ping ;-)
+>>
+>> On Wed, Jun 04, 2025 at 10:28:42PM +0200, Jiri Olsa wrote:
+>>> On Wed, May 14, 2025 at 12:18:09PM +0200, Jiri Olsa wrote:
+>>>> From: Jiri Olsa <olsajiri@gmail.com>
+>>>>
+>>>> There's error path that could lead to inactive uprobe:
+>>>>
+>>>>    1) uprobe_register succeeds - updates instruction to int3 and
+>>>>       changes ref_ctr from 0 to 1
+>>>>    2) uprobe_unregister fails  - int3 stays in place, but ref_ctr
+>>>>       is changed to 0 (it's not restored to 1 in the fail path)
+>>>>       uprobe is leaked
+>>>>    3) another uprobe_register comes and re-uses the leaked uprobe
+>>>>       and succeds - but int3 is already in place, so ref_ctr update
+>>>>       is skipped and it stays 0 - uprobe CAN NOT be triggered now
+>>>>    4) uprobe_unregister fails because ref_ctr value is unexpected
+>>>>
+>>>> Fixing this by reverting the updated ref_ctr value back to 1 in step 2),
+>>>> which is the case when uprobe_unregister fails (int3 stays in place),
+>>>> but we have already updated refctr.
+>>>>
+>>>> The new scenario will go as follows:
+>>>>
+>>>>    1) uprobe_register succeeds - updates instruction to int3 and
+>>>>       changes ref_ctr from 0 to 1
+>>>>    2) uprobe_unregister fails  - int3 stays in place and ref_ctr
+>>>>       is reverted to 1..  uprobe is leaked
+>>>>    3) another uprobe_register comes and re-uses the leaked uprobe
+>>>>       and succeds - but int3 is already in place, so ref_ctr update
+>>>>       is skipped and it stays 1 - uprobe CAN be triggered now
+>>>>    4) uprobe_unregister succeeds
+>>>>
+>>>> Fixes: 1cc33161a83d ("uprobes: Support SDT markers having reference count (semaphore)")
+>>>> Acked-by: David Hildenbrand <david@redhat.com>
+>>>> Acked-by: Oleg Nesterov <oleg@redhat.com>
+>>>> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+>>>> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+>>>
+>>> hi,
+>>> I can't find this in any related tree, was this pulled in?
 
-> ---breakdown---
-> Before `posix_memalign()`:
->   [ heap memory unused ]
-> 
-> After `posix_memalign()`:
->   [ posix_memalign() memory ]  ← managed by malloc/free
->   ↑ aligned_ptr
-> 
-> After `munmap(aligned_ptr)`:
->   [ unmapped memory ]          ← allocator no longer owns it
+@Andrew, I assume you should pick this.
 
-Incorrect. The allocator has no idea about the munmap and munmap
-doesn't disturb any of the allocator tracking structures.
+-- 
+Cheers,
 
-> After `mmap(aligned_ptr, ..., MAP_FIXED)`:
->   [ anonymous mmap region ]    ← fully remapped, under your control
->   ↑ mapped
-> ---end---
+David / dhildenb
 
-No, this is wrong.
-
-> It points out that the heap bookkeeping will be silently clobbered
-> without the munmap() in-between (like we are doing):
-
-Nope, doesn't work like that.
-
-> ---breakdown---
-> After `posix_memalign()`:
->   [ posix_memalign() memory ]  ← malloc thinks it owns this
-> 
-> Then `mmap(aligned_ptr, ..., MAP_FIXED)`:
->   [ anonymous mmap region ]    ← malloc still thinks it owns this (!)
->   ↑ mapped
-> ---end---
-
-Yes, this is correct and what we are doing here. The allocator always
-owns it and we are just replacing the memory with a different mmap.
-
-> It also gives a simpler solution for a memory that is not huge
-> page backed but huge page aligned (our !variant->hugepage case):
-> ---code---
-> void *ptr;
-> size_t alignment = 2 * 1024 * 1024; // or whatever HUGEPAGE_SIZE was
-> size_t size = variant->buffer_size;
-> 
-> // Step 1: Use posix_memalign to get an aligned pointer
-> if (posix_memalign(&ptr, alignment, size) != 0) {
->     perror("posix_memalign");
->     return -1;
-> }
-
-Also no, the main point of this is to inject MAP_SHARED which
-posix_memalign cannot not do.
-
-> Also, for a huge page case, there is no need of posix_memalign():
-> "Hugepages are not part of the standard heap, so allocator functions
->  like posix_memalign() or malloc() don't help and can even get in the
->  way."
-
-> Instead, it suggests a cleaner version without posix_memalign():
-> ---code---
-> void *addr = mmap(NULL, variant->buffer_size, PROT_READ | PROT_WRITE,
->                   MAP_SHARED | MAP_ANONYMOUS | MAP_HUGETLB | MAP_POPULATE,
-> 		  -1, 0);
-> if (addr == MAP_FAILED) { perror("mmap"); return -1; }
-> ---end---
-
-Yes, we could do this only for MAP_HUGETLB, but it doesn't help the
-normal case with MAP_SHARED.
-
-So I would leave it alone, use the version I showed.
-
-Jason
