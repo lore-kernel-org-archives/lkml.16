@@ -1,70 +1,40 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pmxout2.rz.tu-bs.de (pmxout2.rz.tu-bs.de [134.169.4.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019B04430;
-	Tue, 17 Jun 2025 06:18:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39242AF1D;
+	Tue, 17 Jun 2025 06:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.169.4.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141130; cv=none; b=IEpkqaL3J6PnoVJVGvC5HP9iMtJTgvaGWZ2ozGchTfwexkVZwUz6UXfgcAM9nqK3daVg6zjbiv7pzeSjGjNrc+KiCWksOpvn85A/WAoZOtqdQk2Fd6EtAkgw+WeefFc/o4LWci/oMcg0IkbfbxUCP2NB8xv3KoW0LV6QyidP9SA=
+	t=1750141171; cv=none; b=lj2re5yD8ffr0oY1mVw8sc3sbD4mjUDZZBmDyT9bnX9fOW6H3glA2x0DwkziDba3YoH7kRwEfFAfXII5Gu7J/by3cWemRMFS5VBzqtaPRZsT1SwRmfxgYYGcRDX/4PvxtQQBpPedeTyZekIbQWy02OqEbxHdbTZAgxf5+2JyAJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141130; c=relaxed/simple;
-	bh=hC3N6mB43enMOOEM98dOuvar9RH8tCwqnwUmAhEnHMI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ow/9NeSc5O3Jwu9pDelQQNvgcH4SUKZfkhXTfhqEmp3WipSzF8+LJvnmsbD6z3hMB1z2Ya548IxFVQ762POV6emyum273WNz4QIIJok57HqCajRsTmQveILsdGVui56R5zGiVwnnqJLZE+baOPQkNQ6dd5mQvwTUordU5Uw4Txw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cL58Bri+; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750141171; c=relaxed/simple;
+	bh=VjFkRRhFdHHoBge3xQSHL8uoXr0Xi+waBNVuB3kRpE0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KmHLk1aBGREDhX3yEUuawIMbGXGmzDFzf2HFdUmmpKEzUDsoAE792G9y7xb2l3xGtaqmpQkwxP9v2iUIggVftKjcRBNvSoplxqSOTpvdwYtmVqVzEEX1CNaeguGm/lSK92H5zBPKGw1a6vhOjWSHyYCy09y2RyOr2ksQwKqQVe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de; spf=pass smtp.mailfrom=tu-braunschweig.de; dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b=VuWaXs7k; arc=none smtp.client-ip=134.169.4.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tu-bs.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tu-braunschweig.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cL58Bri+"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-453426170b6so14347645e9.1;
-        Mon, 16 Jun 2025 23:18:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750141127; x=1750745927; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5g9a+ee0HF8AQqt4aQIZgSq68mE+z3YEyfrqwRi2gq0=;
-        b=cL58Bri+l03eQM3GgsVD4GTkRjXhS7XIl4wPj0yhM9Cu/6gAzw5oKEVVdZSxSGQfNk
-         kB2BWbpfE0zf2lsaYi4mt31qo5LCzm+cV2TBE7dt2f2r+/o0QysrTOSjVTEDQ+knkyBr
-         yr/BfxmD65x8LJvcRntrmanUVzYYS3xHVkO1paWddbXkAdum+PDCajBH8+IxeO3xdiyo
-         h5NUvl5r9qRwg4Rjcdq2ptlZsXb68Q02qwTNzTaaMHOFiTUSqOUJDkKCqLl/5r1Y3jeC
-         AUHWekpJmWX2t0aZcxHHyHPwHIqh48TlnvAsdILj0H4mzDo2KODH34SwdC8B3uEV9AQF
-         A8Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750141127; x=1750745927;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5g9a+ee0HF8AQqt4aQIZgSq68mE+z3YEyfrqwRi2gq0=;
-        b=j5n8OVpf89yNOvqd/cZJxOzyL26igIRqFfM48fkIhklYt2pgQCjWWtFe9+p/ui2Qpa
-         BSZ3akb7BcrvHSUZNvaGaNgb+2jgUN7y1y5K4QNG2fmmcpsHaa9OIQNExHPO6OnjsYBr
-         lQRnA58u0NTNrFb76n00un2dXpOMpfxeL4laYkHXTQXfNKRJAw0N8CBVdgtn9y0mgrJf
-         s2rlNvZovQ1PqyMoUfhWBmLbsweXW1G928MKOdX6icl1p/VoLJMYWUtznw6id4RpsuTj
-         GjXZbn8nCSTjTXP3uIp7sMd67UFQBuTfizAc5b3f4nyZ0Yc3WwkN8+xi8xJcoImricnG
-         90Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOQ43IHkboMF0+1W95smnMp5xShtcw/eRwYR6yGDJ2wLPQGY3beXZxGPw5tvhiu9tKMM4lQMGOD8btaH/B+GY=@vger.kernel.org, AJvYcCVhsolEuJv/JNz8pqK/XnkYMlQFh2M0mSXTvNiW+9j7fT488u5IsIeUS6uOMEkpnmudgF4Zr4UfNj9rmZo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwT9Lx2SNx1KiYGPkY2QD2xsNHU7nuhKDOgE5W2iO8WJ6B7zsRf
-	8xOd310LoMkq6s4zP6UshiOKpzlQHzWIAP3nyxQc/j+TqvFOxpznVVAJ
-X-Gm-Gg: ASbGncsYXHIWhOzbksSXaMGZgkQacrj2vDcgACf+Jy0Bp6PEIPrcA2z3IxRbdrVptvL
-	Q7JEYmb7cBMFDdnki0uHaXGJYP85QmyhaFLauIYcQsQ2uQHpQ907JG2pVnR8jtPxNYVwX2vS7Mc
-	dQby0KkL/QlZnm+xqW+wzMtjA6lCKEemorenQ0Cwk91jOOuNXFDLHRlxMMFm8djwrRWgmkd9+cJ
-	WEc7QKidwC4vsBw+Xh1zTVQv9kq+dhAFg74Ber2fLweZFtVEcDKDLpSWZNpVKX2QWFS9ibrAGyl
-	dOnRNlPyGveZRkkOOSdNMFIOEuOa8tW746N099fK8CoOmnwmFYygu3K6upAQm4bpUrgwUFxdEdD
-	er+Zrubgft5v33GCA4diix7BWtiRCGaV7NhEd6Ud26GAGbsovqER8NvaWBQ==
-X-Google-Smtp-Source: AGHT+IFK073YbC2M2l+D0rpiNN+kHfW4htKCPOH38yO5FXCFdPw6UP7/xSiAaoY7PuYoZ+KXJBGA9A==
-X-Received: by 2002:a05:6000:310b:b0:3a4:d9d3:b7cc with SMTP id ffacd0b85a97d-3a56d853c46mr10278186f8f.28.1750141126967;
-        Mon, 16 Jun 2025 23:18:46 -0700 (PDT)
-Received: from shift (p200300d5ff34db0050f496fffe46beef.dip0.t-ipconnect.de. [2003:d5:ff34:db00:50f4:96ff:fe46:beef])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087a9sm13212196f8f.55.2025.06.16.23.18.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jun 2025 23:18:46 -0700 (PDT)
-Received: from localhost ([127.0.0.1])
-	by shift.daheim with esmtp (Exim 4.98.2)
-	(envelope-from <chunkeey@gmail.com>)
-	id 1uRPe7-000000004Fn-2CHN;
-	Tue, 17 Jun 2025 08:18:45 +0200
-Message-ID: <6454c831-24e7-4b72-979c-7922092877ba@gmail.com>
-Date: Tue, 17 Jun 2025 08:18:45 +0200
+	dkim=pass (2048-bit key) header.d=tu-bs.de header.i=@tu-bs.de header.b="VuWaXs7k"
+Received: from Hermes02.ad.tu-bs.de (hermes02.rz.tu-bs.de [134.169.4.130])
+	by pmxout2.rz.tu-bs.de (Postfix) with ESMTPS id 7FE6A4E02D2;
+	Tue, 17 Jun 2025 08:19:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tu-bs.de;
+	s=exchange_neu; t=1750141161;
+	bh=VjFkRRhFdHHoBge3xQSHL8uoXr0Xi+waBNVuB3kRpE0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To:From;
+	b=VuWaXs7knl9b9ks04VE2uCnO9fUdz7VrPybO2p77gj9HxFL9Fc4o0TDDdJnF/JXTo
+	 xoU7+aNjgc7WhsFv0spPtowo+hp3NP/pidaP4S4ywdpueOZTE4Q+KPZbiQe4HZaGHl
+	 iTbAECwWvFOjpwLAJVcFUOzG7jojCGReRxsmDr7hiNAywaMX5wav/Hi3iiLrCdy0Mc
+	 VO6H/8nOHFTvJdZBbk2DH8Q1+dLtaQxS2I5Oe2bichPZEd0bD6I0Vmwt10b599nMXY
+	 6bPg8gYwxHOgHCzBcvsR7dK6deEzPdcNqRjqvvQtGl3r0GkYXFxts/QVMYGPC52p75
+	 X+bny3O4k0kDA==
+Received: from [192.168.178.23] (134.169.9.110) by Hermes02.ad.tu-bs.de
+ (134.169.4.130) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 17 Jun
+ 2025 08:19:20 +0200
+Message-ID: <d66d0351-b523-40da-ae47-8b06f37bf3b6@tu-bs.de>
+Date: Tue, 17 Jun 2025 08:19:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,69 +42,136 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: carl9170: do not ping device which has failed to
- load firmware
-To: Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>, linux-wireless@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jeff Johnson <quic_jjohnson@quicinc.com>
-References: <6bacdb9c-6064-43ea-9dfe-0eca496d1c9b@gmail.com>
- <20250616181205.38883-1-dmantipov@yandex.ru>
-Content-Language: de-DE
-From: Christian Lamparter <chunkeey@gmail.com>
-In-Reply-To: <20250616181205.38883-1-dmantipov@yandex.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
+To: Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+CC: Alan Stern <stern@rowland.harvard.edu>, Andrea Parri
+	<parri.andrea@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Nicholas Piggin
+	<npiggin@gmail.com>, David Howells <dhowells@redhat.com>, Jade Alglave
+	<j.alglave@ucl.ac.uk>, Luc Maranget <luc.maranget@inria.fr>, "Paul E.
+ McKenney" <paulmck@kernel.org>, Akira Yokosawa <akiyks@gmail.com>, Daniel
+ Lustig <dlustig@nvidia.com>, Joel Fernandes <joelagnelf@nvidia.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<lkmm@lists.linux.dev>, <hernan.poncedeleon@huaweicloud.com>,
+	<jonas.oberhauser@huaweicloud.com>, "r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
+References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+ <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
+ <20250616142347.GA17781@willie-the-truck>
+Content-Language: en-US
+From: Thomas Haas <t.haas@tu-bs.de>
+In-Reply-To: <20250616142347.GA17781@willie-the-truck>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: Hermes07.ad.tu-bs.de (134.169.4.135) To
+ Hermes02.ad.tu-bs.de (134.169.4.130)
 
-On 6/16/25 8:12 PM, Dmitry Antipov wrote:
-> Syzkaller reports [1, 2] crashes caused by an attempts to ping
-> the device which has failed to load firmware. Since such a device
-> doesn't pass 'ieee80211_register_hw()', an internal workqueue
-> managed by 'ieee80211_queue_work()' is not yet created and an
-> attempt to queue work on it causes null-ptr-deref.
-> 
-> [1] https://syzkaller.appspot.com/bug?extid=9a4aec827829942045ff
-> [2] https://syzkaller.appspot.com/bug?extid=0d8afba53e8fb2633217
-> Fixes: e4a668c59080 ("carl9170: fix spurious restart due to high latency")
-> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-Acked-by: Christian Lamparter <chunkeey@gmail.com>
-Cc: <stable@vger.kernel.org>
 
-> ---
-> v2: prefer pr_warn_once() over WARN_ON_ONCE()
-> ---
->   drivers/net/wireless/ath/carl9170/usb.c | 19 +++++++++++++------
->   1 file changed, 13 insertions(+), 6 deletions(-)
+
+On 16.06.25 16:23, Will Deacon wrote:
+> On Fri, Jun 13, 2025 at 09:55:01AM +0200, Peter Zijlstra wrote:
+>> On Thu, Jun 12, 2025 at 04:55:28PM +0200, Thomas Haas wrote:
+>>> We have been taking a look if mixed-size accesses (MSA) can affect the
+>>> correctness of qspinlock.
+>>> We are focusing on aarch64 which is the only memory model with MSA support
+>>> [1].
+>>> For this we extended the dartagnan [2] tool to support MSA and now it
+>>> reports liveness, synchronization, and mutex issues.
+>>> Notice that we did something similar in the past for LKMM, but we were
+>>> ignoring MSA [3].
+>>>
+>>> The culprit of all these issues is that atomicity of single load
+>>> instructions is not guaranteed in the presence of smaller-sized stores
+>>> (observed on real hardware according to [1] and Fig. 21/22)
+>>> Consider the following pseudo code:
+>>>
+>>>      int16 old = xchg16_rlx(&lock, 42);
+>>>      int32 l = load32_acq(&lock);
+>>>
+>>> Then the hardware can treat the code as (likely due to store-forwarding)
+>>>
+>>>      int16 old = xchg16_rlx(&lock, 42);
+>>>      int16 l1 = load16_acq(&lock);
+>>>      int16 l2 = load16_acq(&lock + 2); // Assuming byte-precise pointer
+>>> arithmetic
+>>>
+>>> and reorder it to
+>>>
+>>>      int16 l2 = load16_acq(&lock + 2);
+>>>      int16 old = xchg16_rlx(&lock, 42);
+>>>      int16 l1 = load16_acq(&lock);
+>>>
+>>> Now another thread can overwrite "lock" in between the first two accesses so
+>>> that the original l (l1 and l2) ends up containing
+>>> parts of a lock value that is older than what the xchg observed.
+>>
+>> Oops :-(
+>>
+>> (snip the excellent details)
+>>
+>>> ### Solutions
+>>>
+>>> The problematic executions rely on the fact that T2 can move half of its
+>>> load operation (1) to before the xchg_tail (3).
+>>> Preventing this reordering solves all issues. Possible solutions are:
+>>>      - make the xchg_tail full-sized (i.e, also touch lock/pending bits).
+>>>        Note that if the kernel is configured with >= 16k cpus, then the tail
+>>> becomes larger than 16 bits and needs to be encoded in parts of the pending
+>>> byte as well.
+>>>        In this case, the kernel makes a full-sized (32-bit) access for the
+>>> xchg. So the above bugs are only present in the < 16k cpus setting.
+>>
+>> Right, but that is the more expensive option for some.
+>>
+>>>      - make the xchg_tail an acquire operation.
+>>>      - make the xchg_tail a release operation (this is an odd solution by
+>>> itself but works for aarch64 because it preserves REL->ACQ ordering). In
+>>> this case, maybe the preceding "smp_wmb()" can be removed.
+>>
+>> I think I prefer this one, it move a barrier, not really adding
+>> additional overhead. Will?
 > 
-> diff --git a/drivers/net/wireless/ath/carl9170/usb.c b/drivers/net/wireless/ath/carl9170/usb.c
-> index a3e03580cd9f..564ca6a61985 100644
-> --- a/drivers/net/wireless/ath/carl9170/usb.c
-> +++ b/drivers/net/wireless/ath/carl9170/usb.c
-> @@ -438,14 +438,21 @@ static void carl9170_usb_rx_complete(struct urb *urb)
->   
->   		if (atomic_read(&ar->rx_anch_urbs) == 0) {
->   			/*
-> -			 * The system is too slow to cope with
-> -			 * the enormous workload. We have simply
-> -			 * run out of active rx urbs and this
-> -			 * unfortunately leads to an unpredictable
-> -			 * device.
-> +			 * At this point, either the system is too slow to
-> +			 * cope with the enormous workload (so we have simply
-> +			 * run out of active rx urbs and this unfortunately
-> +			 * leads to an unpredictable device), or the device
-> +			 * is not fully functional after an unsuccessful
-> +			 * firmware loading attempts (so it doesn't pass
-> +			 * ieee80211_register_hw() and there is no internal
-> +			 * workqueue at all).
->   			 */
->   
-> -			ieee80211_queue_work(ar->hw, &ar->ping_work);
-> +			if (ar->registered)
-> +				ieee80211_queue_work(ar->hw, &ar->ping_work);
-> +			else
-> +				pr_warn_once("device %s is not registered\n",
-> +					     dev_name(&ar->udev->dev));
->   		}
->   	} else {
->   		/*
+> I'm half inclined to think that the Arm memory model should be tightened
+> here; I can raise that with Arm and see what they say.
+> 
+> Although the cited paper does give examples of store-forwarding from a
+> narrow store to a wider load, the case in qspinlock is further
+> constrained by having the store come from an atomic rmw and the load
+> having acquire semantics. Setting aside the MSA part, that specific case
+> _is_ ordered in the Arm memory model (and C++ release sequences rely on
+> it iirc), so it's fair to say that Arm CPUs don't permit forwarding from
+> an atomic rmw to an acquire load.
+> 
+> Given that, I don't see how this is going to occur in practice.
+> 
+> Will
+
+You are probably right. The ARM model's atomic-ordered-before relation
+
+      let aob = rmw | [range(rmw)]; lrs; [A | Q]
+
+clearly orders the rmw-store with subsequent acquire loads (lrs = 
+local-read-successor, A = acquire).
+If we treat this relation (at least the second part) as a "global 
+ordering" and extend it by "si" (same-instruction), then the problematic 
+reordering under MSA should be gone.
+I quickly ran Dartagnan on the MSA litmus tests with this change to the 
+ARM model and all the tests still pass.
+
+We should definitely ask ARM about this. I did sent an email to Jade 
+before writing about this issue here, but she was (and still is) busy 
+and told me to ask at memory-model@arm.com .
+I will ask them.
+
+
+-- 
+=====================================
+
+Thomas Haas
+
+Technische Universität Braunschweig
+Institut für Theoretische Informatik
+Mühlenpfordtstr. 23, Raum IZ 343
+38106 Braunschweig | Germany
+
+t.haas@tu-braunschweig.de
+https://www.tu-braunschweig.de/tcs/team/thomas-haas
 
