@@ -1,116 +1,202 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F3718C034;
-	Tue, 17 Jun 2025 09:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A331DE2BF;
+	Tue, 17 Jun 2025 09:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152772; cv=none; b=hG5kAOtywesWIHZvZDUfEEUPiWj3GaCvmCgK8PaWKPcuJCZEYSY3dLOjwFFtIEPNYfsO/g9NFLQinDNh95dvdjaFC282wanr2MvbNHIRLp1kVqdBjLADEHc1w2g7FTAJFjaHFN78GVkNdwXw8/a8YpL4aDpso2mpM+AjHXISnvM=
+	t=1750152799; cv=none; b=VZmFm+uKt4BQgchSelL6Ebbg8oGDrgw+hGFXwkTQBFjFYlZf1XpHxlhfb0fJ/aeWq3/RsjvOnuNVYViWNqeO8eE3hmJ4xJjX/Z7Ul9N1ZJxRUU/Jvyikx8zWGiU8HMoaGHqTT/WK3CyabwGHq9Xmg9gXp4LPAG39RixLgrRMvTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152772; c=relaxed/simple;
-	bh=q7w5+CTnJ0yLDPAwJSUlND9pevORmQQFzUJ/Y7Mz7jU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QBjxUzxQoPLKMDoYMz8d2j6p7c4x5PsD5tkmBFxmtLR19c4TtGPP3ViMUd6R/Eq1ZERIUcfwEp2U6H4Ccba43aPrWLwS2JqmK1vNVImbRrMjNtopP5AnooYMBAUu3RTlAvjIEY0B8QVwffxZARdMboqG/QcZKGjJD3SGWwvqAAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5313ea766d8so1330083e0c.0;
-        Tue, 17 Jun 2025 02:32:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152767; x=1750757567;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IpyRO35mdNeXwjpxX8WgCP2jvjoVuRIOBEbtU0BIjNU=;
-        b=DsXDtu3+FsLlsxUHAyrHcB2/NNuis0LkaOKaZn/ZB17cib3VPZdKWoic6YkLLROagG
-         RxKlOJPu34Z9xgtxVR1hQo8/Hb2Z1fzOtntGltdb14KxidO3VTVKVcEs+KXW4yZ0SmcJ
-         QsycMvm3jOE9DC+fVuGhwk07iXb+oIHLxXZJqUVtNXvulpYKPXel8+2prw6Jd+fBXS4O
-         iNW5+JaHUGN4AKhwsU4RFSc+/6MwvUlE/jktymftD6q03/l558g6JCpWkuINQLQBqF7O
-         v7ebl9zpmohgQIFf8Cu/CwQoqYh0zVfPVsnSu8WEjdJKzgP0qTrRfNtfOPup+IGb2D1A
-         QZVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWCmK+PZ6Z7yExxaara/Xu9zfTKfD4lOhX18j1qNvPxn3U7WftjOyphHlExTmPjW40pOJse7s6SqQ1URV/n@vger.kernel.org, AJvYcCXTQfjHg7vF+CYTB4XjSdQ+9B0xqXwHbTpplz6Vq0TDOLwI5Zdjg1yaj6TWOs0IyiIZARM0b2E87ac6ack=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydLiqWDtSdXALwtW8t9ZYaRB9VUj78dhT//naPPS8WYjRgCkw3
-	bVqK9keRgACvZMeuwmch9Tj4FXft3viaeb3OVKV6nuaL0k1n9wwA4F2BFY1PYogh
-X-Gm-Gg: ASbGnctCfo9PDK0skWZCGdKUQzqdh73Y4PpNPN1AlTHwl/P2E4zNzftSWZ1zJb4T3jO
-	Y91X6O60WzDOAjMMA2kCdhdQKzELCJOPvM1zb4DN4s/4LTl/bjOgl3xX9+oPiaVzrGjxHJAdFEE
-	XLq24MkIGJ6uIh9PL4Xi1O1V+XVg5GMHnfSZmj8qqhJBEeljEeZf0p/IfSOyoHYQkEM/Y7F1vkX
-	pEjpPm2w7zNN9SUY0VgEsKtTsa2ynlC0hSeNHBY6ts3mIAq4tTIqHbu5muUiRrjIuVmOtBpEhfq
-	oLkeltXhXVGBbluVQBfaJnPRUDq0nus/wNqEKfxDlv2NWLi3Cwo4d2KN23brHMp+AI2XWvR7Uj0
-	J7e+WfPZdDcz5bzsjcB1mcCFDNtXSHWvNV6zxvKg=
-X-Google-Smtp-Source: AGHT+IH9XZjos/K8EMOSEmRI9McTtuJvEjHbJ0fJCrOsgyj2bTk11VwH98wTG/uLCl4cOQOaK0TIkQ==
-X-Received: by 2002:a05:6122:2b1a:b0:530:720b:abe9 with SMTP id 71dfb90a1353d-531497442d1mr6333258e0c.7.1750152766999;
-        Tue, 17 Jun 2025 02:32:46 -0700 (PDT)
-Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com. [209.85.221.176])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5313dd7a7c4sm1559455e0c.1.2025.06.17.02.32.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 02:32:45 -0700 (PDT)
-Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5313ea766d8so1330067e0c.0;
-        Tue, 17 Jun 2025 02:32:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWzPy8xNPBNnVD4uU/ZBuYKChj4uZyviEbhXE0XzwvKgvA3ADZp/hnn4oaij9FxApw/Y/1MjnPbXfg3UYk=@vger.kernel.org, AJvYcCXy+Z3X3BRlMv+GOEEulz2G3vylJt9u1XT0t6W/1NDkjiiONFSw152peP3M3vAuVQjQ3iIoB8m4PDGIusFw@vger.kernel.org
-X-Received: by 2002:a05:6122:547:b0:529:2644:8c with SMTP id
- 71dfb90a1353d-531497d3ee3mr7253853e0c.8.1750152765304; Tue, 17 Jun 2025
- 02:32:45 -0700 (PDT)
+	s=arc-20240116; t=1750152799; c=relaxed/simple;
+	bh=KyzMbQfhZJNmDrTnESBqCjvNW4ddcm/X4dit05DF09A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UhsZxyQT9QKVCWBpjZaWYlbwc0uZhOIyV/xlwfwBnSvZRPh6KJo2Uj4wgn1/kI4El9L9jn3RycosLyVLUeedlFmv3J09QtRYRT7SsrU1AwpL0oqiMfqc/7nHQvB393L5ZWkvmmdtcnePQWlZZJxsvV3iinHzLcdToSci8x09J4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvTEgw9U; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvTEgw9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08452C4CEE3;
+	Tue, 17 Jun 2025 09:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750152797;
+	bh=KyzMbQfhZJNmDrTnESBqCjvNW4ddcm/X4dit05DF09A=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FvTEgw9UmFMMc1dqWUmhZ94c2FSeqzHYW0RewK1Zb4PVvQHjAeont1yXOUbM4U53T
+	 9Vqmug6RGUbD7DoaArpYISACU4ws7xZ4GtSQTAfZH4UqQLOW1WV4gyIYPtAZwSum79
+	 h2/KNlh1vGVyJUmBKTbc78UMtGSfKp52mCyRO8Vyxlcvkl9pNOIKhii4u2OWkkgX9Q
+	 kfkIo9A+N6IXLUdiuAO/ANP9GYHCMQAZhwka6Nos9ZL8YxFUqr8wotDQB0q5e2c+8z
+	 6wyc8k4+CEuv3be9KbmdzR8OL06yiWq5jL7NJWYGzfryP3+HHXmDt3SWI658KAMNJB
+	 QEY6sQiuTVusg==
+Message-ID: <9233836e-c50e-4118-95f6-0be02dc0c45e@kernel.org>
+Date: Tue, 17 Jun 2025 11:33:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606-printk-cleanup-part2-v1-0-f427c743dda0@suse.com>
- <20250606-printk-cleanup-part2-v1-7-f427c743dda0@suse.com> <aFAkD2i0ceH6qYQz@pathway.suse.cz>
-In-Reply-To: <aFAkD2i0ceH6qYQz@pathway.suse.cz>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 17 Jun 2025 11:32:32 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXN4Xf1o03cYU3ug_gRdFtBXJC5Nvvt9U6UeP=U2AQTTA@mail.gmail.com>
-X-Gm-Features: AX0GCFtvZQSD4F-97UDxOqiDqN4VEggSrDhztYpPcqEOiEQEvpc1f_0ccYJ9a2M
-Message-ID: <CAMuHMdXN4Xf1o03cYU3ug_gRdFtBXJC5Nvvt9U6UeP=U2AQTTA@mail.gmail.com>
-Subject: Re: [PATCH 7/7] printk: Don't check for CON_ENABLED on console_unblank
-To: Petr Mladek <pmladek@suse.com>
-Cc: Marcos Paulo de Souza <mpdesouza@suse.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
-	Douglas Anderson <dianders@chromium.org>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	kgdb-bugreport@lists.sourceforge.net, linux-um@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/4] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org
+References: <20250604-uvc-meta-v6-0-7141d48c322c@chromium.org>
+ <20250604-uvc-meta-v6-4-7141d48c322c@chromium.org>
+ <d1e5942b-f8e5-42c6-98ae-d346927df3cb@kernel.org>
+ <CANiDSCtXmXYkv3b_62iegTFOxBVrGUv9+mbioxvQvPsadwBpqg@mail.gmail.com>
+ <ec722aa6-17d4-4264-b99f-bdae1d908713@kernel.org>
+ <CANiDSCu1b2n9c7WH2ZHysOY2xV1RbV9Z6AHBuXXfF8fV8OwYgg@mail.gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <CANiDSCu1b2n9c7WH2ZHysOY2xV1RbV9Z6AHBuXXfF8fV8OwYgg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Petr,
+Hi,
 
-On Mon, 16 Jun 2025 at 17:27, Petr Mladek <pmladek@suse.com> wrote:
-> On Fri 2025-06-06 23:53:49, Marcos Paulo de Souza wrote:
-> > All consoles found on for_each_console_srcu are registered, meaning that all of
-> > them are already CON_ENABLEDed.
-> >
-> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> > ---
-> >  kernel/printk/printk.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> > index 658acf92aa3d2a3d1e294b7e17e5ee96d8169afe..8074a0f73691cfc5f637361048097ace1545c7c0 100644
-> > --- a/kernel/printk/printk.c
-> > +++ b/kernel/printk/printk.c
-> > @@ -3360,7 +3360,7 @@ void console_unblank(void)
-> >               if (flags & CON_SUSPENDED)
-> >                       continue;
-> >
-> > -             if ((flags & CON_ENABLED) && c->unblank) {
-> > +             if (c->unblank) {
->
-> It might actually make sense to check is_console_usable() here.
+On 16-Jun-25 11:02 PM, Ricardo Ribalda wrote:
+> Hi Hans
+> 
+> On Mon, 16 Jun 2025 at 22:47, Hans de Goede <hansg@kernel.org> wrote:
+>>
+>> Hi Ricardo,
+>>
+>> On 16-Jun-25 5:04 PM, Ricardo Ribalda wrote:
+>>> Hi Hans
+>>>
+>>> On Mon, 16 Jun 2025 at 16:38, Hans de Goede <hansg@kernel.org> wrote:
+>>>>
+>>>> Hi Ricardo,
+>>>>
+>>>> On 4-Jun-25 14:16, Ricardo Ribalda wrote:
+>>>>> If the camera supports the MSXU_CONTROL_METADATA control, auto set the
+>>>>> MSXU_META quirk.
+>>>>>
+>>>>> Reviewed-by: Hans de Goede <hansg@kernel.org>
+>>>>> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+>>>>> ---
+>>>>>  drivers/media/usb/uvc/uvc_metadata.c | 72 ++++++++++++++++++++++++++++++++++++
+>>>>>  include/linux/usb/uvc.h              |  3 ++
+>>>>>  2 files changed, 75 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
+>>>>> index df3f259271c675feb590c4534dad95b3b786f082..cd58427578ff413591b60abe0a210b90802dddc7 100644
+>>>>> --- a/drivers/media/usb/uvc/uvc_metadata.c
+>>>>> +++ b/drivers/media/usb/uvc/uvc_metadata.c
+>>>>> @@ -10,6 +10,7 @@
+>>>>>  #include <linux/list.h>
+>>>>>  #include <linux/module.h>
+>>>>>  #include <linux/usb.h>
+>>>>> +#include <linux/usb/uvc.h>
+>>>>>  #include <linux/videodev2.h>
+>>>>>
+>>>>>  #include <media/v4l2-ioctl.h>
+>>>>> @@ -188,11 +189,82 @@ static const struct v4l2_file_operations uvc_meta_fops = {
+>>>>>       .mmap = vb2_fop_mmap,
+>>>>>  };
+>>>>>
+>>>>> +static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
+>>>>> +
+>>>>> +static struct uvc_entity *uvc_meta_find_msxu(struct uvc_device *dev)
+>>>>> +{
+>>>>> +     struct uvc_entity *entity;
+>>>>> +
+>>>>> +     list_for_each_entry(entity, &dev->entities, list) {
+>>>>> +             if (!memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
+>>>>> +                     return entity;
+>>>>> +     }
+>>>>> +
+>>>>> +     return NULL;
+>>>>> +}
+>>>>> +
+>>>>> +#define MSXU_CONTROL_METADATA 0x9
+>>>>> +static int uvc_meta_detect_msxu(struct uvc_device *dev)
+>>>>> +{
+>>>>> +     u32 *data __free(kfree) = NULL;
+>>>>> +     struct uvc_entity *entity;
+>>>>> +     int ret;
+>>>>> +
+>>>>> +     entity = uvc_meta_find_msxu(dev);
+>>>>> +     if (!entity)
+>>>>> +             return 0;
+>>>>> +
+>>>>> +     /*
+>>>>> +      * USB requires buffers aligned in a special way, simplest way is to
+>>>>> +      * make sure that query_ctrl will work is to kmalloc() them.
+>>>>> +      */
+>>>>> +     data = kmalloc(sizeof(*data), GFP_KERNEL);
+>>>>> +     if (!data)
+>>>>> +             return -ENOMEM;
+>>>>> +
+>>>>> +     /* Check if the metadata is already enabled. */
+>>>>> +     ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id, dev->intfnum,
+>>>>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
+>>>>> +     if (ret)
+>>>>> +             return 0;
+>>>>> +
+>>>>> +     if (*data) {
+>>>>> +             dev->quirks |= UVC_QUIRK_MSXU_META;
+>>>>> +             return 0;
+>>>>> +     }
+>>>>> +
+>>>>> +     /*
+>>>>> +      * We have seen devices that require 1 to enable the metadata, others
+>>>>> +      * requiring a value != 1 and others requiring a value >1. Luckily for
+>>>>> +      * us, the value from GET_MAX seems to work all the time.
+>>>>> +      */
+>>>>> +     ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id, dev->intfnum,
+>>>>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
+>>>>> +     if (ret || !*data)
+>>>>> +             return 0;
+>>>>> +
+>>>>> +     /*
+>>>>> +      * If we can set MSXU_CONTROL_METADATA, the device will report
+>>>>> +      * metadata.
+>>>>> +      */
+>>>>> +     ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
+>>>>> +                          MSXU_CONTROL_METADATA, data, sizeof(*data));
+>>>>> +     if (!ret)
+>>>>> +             dev->quirks |= UVC_QUIRK_MSXU_META;
+>>>>
+>>>> Since we set the ctrl to enable MSXU fmt metadata here, this means that
+>>>> cameras which also support V4L2_META_FMT_D4XX will be switched to MSXU
+>>>> metadata mode at probe() time.
+>>>
+>>> Not sure that I completely follow you. D4XX cameras will not be
+>>> switched to MSXU, they will support MSXU and D4XX with the current
+>>> patchset.
+>>
+>> Is MSXU an extension on top of D4XX ? If not then we need to tell
+>> the camera which metadata we want in uvc_meta_v4l2_set_format()
+> 
+> I think I know where the miss-comunication happened :)
+> 
+> MSXU is indeed a superset of D4xx. D4xx metadata is formatted in MSXU.
+> 
+> If an app fetches D4XX and MSXU from an Intel D4xx device, they are identical.
+> 
+> Or in other words, if D4XX devices have MSXU_CONTROL_METADATA, they
+> are probably today initialized with a value != 0.
 
-My first thought was: one more to convert to a better name!
-But the actual function is already called console_is_usable() ;-)
+Ok I see. But I still think the way this is handled in patch 3/4
+is a bit "clunky". I think we should maybe add a 0 terminated
+meta_format array to struct uvc_device and populate that during
+probe with (again maybe) a uvc_device_add_metadata_fmt() helper?
 
-Gr{oetje,eeting}s,
+Having such an array should make uvc_meta_v4l2_try_format() /
+uvc_meta_v4l2_set_format() / uvc_meta_v4l2_enum_format() much
+cleaner. And maybe we can even use a single implementation
+for try and set?
 
-                        Geert
+Can you give this approach a try ?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Hans
+
+
+
