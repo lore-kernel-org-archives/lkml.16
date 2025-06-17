@@ -1,66 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E32156CA;
-	Tue, 17 Jun 2025 09:06:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A221156CA;
+	Tue, 17 Jun 2025 09:07:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151173; cv=none; b=aDx98A2Xk/DoYalCzx2qNUkO98K8Lb5MAkHu32JbKRkcw3yQ/ItStWvV1f9DZmpLGAT+olm2kkd+lF0US3Iz0kqdzhDk3RpzBCf+bzt43zGYCCexreCdI21oa3L3FFlZQIC/zBI3Lx5Jh/rbv4rBz1VhCbLcgNhwf/BXImB3wHY=
+	t=1750151224; cv=none; b=eDFEyp+8VxKJtLWIXZsl2qyvd4B0ePzam/6nTodDof9B0ZYtflVublQSkQyv65RAN/boGSz+tpf3EENotPH9wkX+hMzqQxaNLlL0siZcXQrjzsR70Izxkswx2R/Dxumrm8knaR0aN2hMbCm8kGKiU5x/4lqCqOEEP5ilN4kcQXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151173; c=relaxed/simple;
-	bh=jZgOoYFpNvwzgzRt3ysPnLed5AmQcMwnqp+UrepIMDQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0y1fTVUtI7C4SIKDo8lFyY1x2gYYMnUcQs3MjvFdnfpOMZjwwYcGtfQHOGtJXs6m3Y/1T+0nxOVW0J8pz0EOi3z0u2rVX80Bo3LvoqeGf13uB0hUEd4p8yw10hshVBcHatSLftJ7stwt/VO8sC5bB3KSP0L335yRoJRt3Gqiuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RNKLrWUy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750151224; c=relaxed/simple;
+	bh=QJLiXROGIvQwuM4ojw3rsLJXVIV36PkVK5wy0ON0z40=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=oXhppdjrslJcsp8694GVbj3QWMgUMMurmrmNDmeNfRQHGjp15yZJWVuINiJcgkt4HsFnKOjliXZCjlIoDwwSJeFNALWvB74ZpjCSz9z7uG4kynYP/earv88lkH9ltjQciLldYhVuXr07HehAC88D1GPVcI4PiPBTFBEyzZ7+Ck0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frG4H7uC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RNKLrWUy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FDACC4CEE3;
-	Tue, 17 Jun 2025 09:06:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frG4H7uC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB005C4CEE3;
+	Tue, 17 Jun 2025 09:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750151171;
-	bh=jZgOoYFpNvwzgzRt3ysPnLed5AmQcMwnqp+UrepIMDQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RNKLrWUy9kJXRbzPfLc9Dvk3y9Zp4eiu77yCQZarASu49VVh1oLA5pAIM0C3Aj+BG
-	 5Gq75R3i4HEWNc+imFZteVmCCOu4QlLfMxxGUXPb/brqzs68v+11ZDtE0gU5jXbfVc
-	 NBPTosA2R10QBdJ0adyzadIXTyunia8+sAO9kv8qyRDu7pkypfSMznDstgTEd5i6ut
-	 U/gSU/3E+HMs477dGBrRFCJ7GlvtgNpSD3kTpdeSpswjz+WXbx4yaVj8viuW5CL8re
-	 Aw+G7+ZkpCLeuQMtB3iB0Tm0cAQsadtVqY7Gj0e8t1lbpPNqAoWGdBTPdgxQo2LXkx
-	 veBTwXAfjYhgg==
-Date: Tue, 17 Jun 2025 11:06:08 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Waqar Hameed <waqar.hameed@axis.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, kernel@axis.com, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: proximity: Add Nicera D3-323-AA
- PIR sensor
-Message-ID: <20250617-vagabond-fulmar-of-penetration-dbe048@kuoka>
-References: <cover.1749938844.git.waqar.hameed@axis.com>
- <e2b1b56fbee07047f3fb549f17257dc3764af395.1749938844.git.waqar.hameed@axis.com>
+	s=k20201202; t=1750151224;
+	bh=QJLiXROGIvQwuM4ojw3rsLJXVIV36PkVK5wy0ON0z40=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=frG4H7uCSOwmWaJmnoJUuQZkYR/x255EI54nMTZFtt2N+HyqznM/+vjPVWzEQtAVn
+	 VIoUqJNR3BggMiiG/ERdKhKyJt6Kd+qBUNVmdrBXjy0TjozaS9xVXykrQGUQhjA8O2
+	 L9p1y5JOkbDX/DH9mXIg906V1q3Ry/9FhhNMXan6xKQG8ZgnjnOW2SpRKrMKg0QVZm
+	 vEqIZFOLYAQFx9JeZUeGJbICSsqejW3kMwn+sQ5J6YuaHbFPHheR9GUdTqxD1Jp83C
+	 qi4DwdB/Cb9OxtaQ9xnoD7zRSpYNiXQmp+I5Wl3U42IZidlRF5FtKjKryU3WwJ5Yiq
+	 uYb23jP2LH0OQ==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: johan+linaro@kernel.org, mhi@lists.linux.dev, 
+ Manivannan Sadhasivam <mani@kernel.org>, Slark Xiao <slark_xiao@163.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250606095019.383992-1-slark_xiao@163.com>
+References: <20250606095019.383992-1-slark_xiao@163.com>
+Subject: Re: [PATCH] bus: mhi: host: pci_generic: Change T99W515 to T99W640
+Message-Id: <175015122147.21818.13498820747290372997.b4-ty@kernel.org>
+Date: Tue, 17 Jun 2025 14:37:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e2b1b56fbee07047f3fb549f17257dc3764af395.1749938844.git.waqar.hameed@axis.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Sun, Jun 15, 2025 at 12:14:02AM GMT, Waqar Hameed wrote:
-> +examples:
-> +  - |
-> +    proximity {
-> +        compatible = "nicera,d3323aa";
-> +        vdd-supply = <&regulator_3v3>;
-> +        vout-clk-gpios = <&gpio 78 0>;
-> +        data-gpios = <&gpio 76 0>;
 
-Same comment as before.
-
-> +    };
-> +...
-> -- 
-> 2.39.5
+On Fri, 06 Jun 2025 17:50:19 +0800, Slark Xiao wrote:
+> T99W515 is a LGA device but not a M.2 modem device.
+> So correct this name in case a name mismatch issue.
 > 
+> 
+
+Applied, thanks!
+
+[1/1] bus: mhi: host: pci_generic: Change T99W515 to T99W640
+      commit: 105e6a6810bf1399a5f4eebec18bdf429648b733
+
+Best regards,
+-- 
+Manivannan Sadhasivam <mani@kernel.org>
+
