@@ -1,135 +1,72 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF3B2BD5B7
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C2136A;
+	Tue, 17 Jun 2025 23:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750203146; cv=none; b=AgledIt3+TBkUEhOBwpCDE6dzU3VTVx2gtSwqAseGhsBKetpODpLc3DNc9kST5azdTc41UVSOps+BIj+bS1PKVg5Fpfx38IbKnNcf1/ykhcSJ5IMeJD8zpnh7UFdmTlW0cyQM2KMqXnCesYDSJNbCkK7JoMbeTA1ftFlQOXIEQ4=
+	t=1750203166; cv=none; b=byBBq6tm370Q5CEU3UaM66EyKis3U8095To5zR2JhoYfFhyC9t6C4Kcx/Elb+V0FM6sYSu5Xbg0kGds5UK4zenr9OKIwnxAoB665Z6nAKaDbjF/eC0oidTSMh2I4ZcmdJrFoafjOYgv9F76Hj4+r5KcjD82qnZeX9q7tNGsKCsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750203146; c=relaxed/simple;
-	bh=AfxMsF94tF349EpItID6PgNiNVqvXkqdbawyp3tz8Jc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=K7QqzZj4IOVeSjMINjlDkJ0FNnWXBkytvIXWgzxKg4MiGXN2T4Eb6l4XC378QR1GKpee9//iWn713h/BL5zFVz3OKEO5LI0JwqqvXl6HhkURatd9Off7hIwyw9D4J7g8PCn2QLQzI2v7PAOzDY7kS+ERqDYks1Juo2DXwnWKaR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XnfGXFke; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XnfGXFke"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HDOPrK022895
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:32:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	VH/vxjqeQUdn+kO/cJnT4XNxKWalkHSfP+TNuNuY+T8=; b=XnfGXFkei+fRye3p
-	yo1Tdtw2eBZktxgfEeR5RLtZKs8t+10KdO5GxMcqkckMZ2elRjJGhUKbueafPGIs
-	ecGTrDomEXGgxid29vYqBEChhzqOyyMAJ/juyYFIt6nqCz5Qh2z7NbwL/DpTWArI
-	GDRGJ1As5j5wp5pOKs7dR0Fcp9nod8C55dyRf83RWpd25ERPteLhkdnz7kPCMca8
-	aCT7j7oMSrp7I8juvUkYuPHtHkCgr7fz5AHrxWahezx6oJTHv2T+/GixzmsP1bTY
-	+saGJ9rT+K/2JXbpPG3svrDTMefo5xPmU/2Feb1UaR55Z/Qbg3CVQLdy/k1kZt9a
-	iom4XA==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hd261c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:32:24 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-235e1d70d67so55639585ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:32:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750203143; x=1750807943;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VH/vxjqeQUdn+kO/cJnT4XNxKWalkHSfP+TNuNuY+T8=;
-        b=RmcCLi8du9ad8Pj70jKHmM6PyJy5krW3VQpUK0nOaus2U+QADNI0msQMXHt4KzR+Yd
-         3fuSN1RKdWU9p49gvMJOEW/BX3hy9c05VCQl4zvpOluYzD8hNsh8KviooYhnLJQ5PGk+
-         jHiuVi7V5I0hu0xA52s5Nju1f1DDYrW85SmWRvlT/bOrjCWgtGsdw+y2NZi7OiAexqd/
-         PxY60RhW3BsyDVA354PwTaZPxUaMaU33NylaUcsROu4vK06qRwF35G89xBQ7jWn/8gEZ
-         AmYPaTyT0afsOkGEX78aGF5HXrpXDsFMediSCnsf6CozOeHxmKtwxHTly9jazjo40zj+
-         PeYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUCAtjus9UXc4sY11tBZHNvryEMSSfgQLdbATpQZwp5EHcyW2AO+0DyF7b/SqcmZNCbSAHXLOXsmZOwZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx765jyd6u8hXBl8mG5LWy0SawrVjaddZvIv96qktQO9nVGOaJ
-	LX0PAmIPZYkzwApBnBn7ZV2xpsrfM5fGmQ9rObkbYPlL6F5RuzIwQqdWIfyIWG3b2RBDZ4O7j2Y
-	Mg5f9WWIpTHAH7yFR/7bMtkORng3kpLgPBhMzVeDbn39ryAeYfPJ7es9YLGCaM1sPI6QwMrEMo5
-	I=
-X-Gm-Gg: ASbGncsclmRnuJHgeW4MmSYbfLr1S9HU7EjXxCuZptiuPASc3el8wGI5HI9LUziTEuK
-	DYtXQQwFoEafTVAEj6x0SApTfgsmv68Ay4v8S4MK/9J+BdwX2rXpIDXdX7C3lgOToe8CoAyWTpA
-	f8olW9jWiyIh6QLqRKHgKzFjgaTyj4vZlfJGZES0TWLjxEJUEzk4O15/VlZaMnFVOXX72vg0EEl
-	YPOniEbEbujfRWHyrc+UEM/wx1lZNs+ThsUMjRAhhI70Zod8kxGVlPOimMgGTTjuoG8i9BcaUy+
-	xOE0ulLZseIOaIiF8EWoxz1mJcX6bZjaR3Ks0q2x1sgRfnLXhEb299aBJbk=
-X-Received: by 2002:a17:902:d585:b0:235:f45f:ed4c with SMTP id d9443c01a7336-2366b13c99dmr252533255ad.24.1750203143011;
-        Tue, 17 Jun 2025 16:32:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEOndezAISbh89EZjT329rhotx16f4QoMZN73NV4uaafxkFVLDwAG95zuM7H0TtUbyAkTOQ4w==
-X-Received: by 2002:a17:902:d585:b0:235:f45f:ed4c with SMTP id d9443c01a7336-2366b13c99dmr252532935ad.24.1750203142508;
-        Tue, 17 Jun 2025 16:32:22 -0700 (PDT)
-Received: from [169.254.0.1] (Global_NAT1.qualcomm.com. [129.46.96.20])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c19b84e5sm12731527a91.2.2025.06.17.16.32.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 16:32:21 -0700 (PDT)
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-To: Christian Lamparter <chunkeey@googlemail.com>,
-        Dmitry Antipov <dmantipov@yandex.ru>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20250616181205.38883-1-dmantipov@yandex.ru>
-References: <6bacdb9c-6064-43ea-9dfe-0eca496d1c9b@gmail.com>
- <20250616181205.38883-1-dmantipov@yandex.ru>
-Subject: Re: [PATCH v2] wifi: carl9170: do not ping device which has failed
- to load firmware
-Message-Id: <175020314103.3793705.16544660436986036473.b4-ty@oss.qualcomm.com>
-Date: Tue, 17 Jun 2025 16:32:21 -0700
+	s=arc-20240116; t=1750203166; c=relaxed/simple;
+	bh=Cmo2gfCSY2IOU3EBYm8tRgNqy6MFqagqNSoNv0PfM0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hbFH9ZcDIpEgi+uHmvb8cgmCCzLtEikZat+xuwSVvZcNMJNGJtBi2K77p9OLAGWI691pEFqJdfQAjJtNtm5LUKl7uHZAe2u+RbMfJw/9szIwJZqfnpKDHcBiyuUZL9XPjWm7x2VBa2Hwmmx8AEWD+nQZBCP8opQQUsnH5zDneWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id CE47F1612CE;
+	Tue, 17 Jun 2025 23:32:38 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 9DF073D;
+	Tue, 17 Jun 2025 23:32:36 +0000 (UTC)
+Date: Tue, 17 Jun 2025 19:32:42 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
+ <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
+ Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
+ Carpenter <dan.carpenter@linaro.org>, Anders Roxell
+ <anders.roxell@linaro.org>
+Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
+ tracing Oops int3 kernel panic
+Message-ID: <20250617193242.394edfc9@gandalf.local.home>
+In-Reply-To: <20250618080554.15415cc4ff7535554850c689@kernel.org>
+References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
+	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
+	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
+	<20250610105337.68df01f4@gandalf.local.home>
+	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
+	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
+	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
+	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
+	<CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
+	<20250618080554.15415cc4ff7535554850c689@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE5MiBTYWx0ZWRfX7Zg9OcRFHqyY
- ngUWEz0O/QOSLzfa3gjtE/AMfZmRZ0VZ6JxYF3MrN1lVXbzV9UEN0OI0o+WaUoSmr3XCQyyiyxl
- NVpyKuW+H+jR3Qkc21n36hAbCBSx3rTErXJFijw9XZH6PLgeiP6e3s0nvx4O2o3ZEO7pVZ7ix6J
- ZXPmVbV5d/3Hn57uu4FSvyp7xVRs5aym8SJ4Qkq72WNTd+I5GqgtQoejsqh9Vv+itjA+/uwAIMy
- n3ovuw4oYne5Jgz4XlMPJEU+nnsPN0XPPxdw5pnVZeggwKrRiJ6Ol0hI7bRv+ShIuuVQTFIWbgi
- iStf3YuT0Z/OXYLQHQCEQf+3d5e0oIdYddFSVOtTq5z4TNCG/+XMl6ThlIdqic4/34XmTdGobO+
- tDttF8Vffqwap7W+kI4+MVwV25NkvqB0FqrrV0ItYAKjJfGeZRuiCIfN9QvYUSF0z8sjtfsa
-X-Authority-Analysis: v=2.4 cv=PtaTbxM3 c=1 sm=1 tr=0 ts=6851fb08 cx=c_pps
- a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=8oJg6Rz7cn6bK4rY:21 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=edf1wS77AAAA:8
- a=EUspDBNiAAAA:8 a=z7cAG3P89-7qryZaYlMA:9 a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10
- a=zZCYzV9kfG8A:10 a=GvdueXVYPmCkWapjIL-Q:22 a=DcSpbTIhAlouE1Uv7lRv:22
-X-Proofpoint-ORIG-GUID: YKER3PLr-ga7NnVAxhzuR8SJQMs2AOcF
-X-Proofpoint-GUID: YKER3PLr-ga7NnVAxhzuR8SJQMs2AOcF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_09,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 mlxlogscore=887 suspectscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506170192
+X-Rspamd-Queue-Id: 9DF073D
+X-Stat-Signature: mj4ygokcrgw336uotm664h4mxxhxjh7e
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/RncOSInQYoMNFCmaEIx7ApmUQuON9NWc=
+X-HE-Tag: 1750203156-490063
+X-HE-Meta: U2FsdGVkX19FeYJmQQAOXmOqfl9jgVXIeyeNGTyXyuxc0mKBmYBhcy1pd07qj5XyUc9b3bjsIxmNGWmGvYHz8Gx4UWMYa0lHxf/i+Oa4RtsgamSo+lAdvy6nAZKQNReod9U5nF47FP6+bfHq/zzy5nloh8aDoMt8gN2+HvLxGQpwb6vFUMc3VwKW4VPwpIdERR3I+tm86XbHEEEmcQRMRbX8Vd0bfQc04h+wapfyFd5lXYy6dAlCry8bLTs10j0eQCSVEZQlLe9OvzgTuZ++A0dXbYRRQPW/eteXgs9DIKp3GJ0L/6MlXR19iYoduX3Sf5oymKCMMN5wSouFPzzgc/1MLIABl4Vrqi+8D6MC8xoiwT+gtY8eFIBE244XdjKMbDYd0ZJEKpkfargHjrgquA==
 
+On Wed, 18 Jun 2025 08:05:54 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-On Mon, 16 Jun 2025 21:12:05 +0300, Dmitry Antipov wrote:
-> Syzkaller reports [1, 2] crashes caused by an attempts to ping
-> the device which has failed to load firmware. Since such a device
-> doesn't pass 'ieee80211_register_hw()', an internal workqueue
-> managed by 'ieee80211_queue_work()' is not yet created and an
-> attempt to queue work on it causes null-ptr-deref.
+> > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>  
 > 
-> [1] https://syzkaller.appspot.com/bug?extid=9a4aec827829942045ff
-> [2] https://syzkaller.appspot.com/bug?extid=0d8afba53e8fb2633217
-> 
-> [...]
+> Thank you for testing!
+> This is a good chance for me to setup LTP environment locally :)
 
-Applied, thanks!
+It's a beast and so far, it continues to fail to build for me :-p
 
-[1/1] wifi: carl9170: do not ping device which has failed to load firmware
-      commit: 15d25307692312cec4b57052da73387f91a2e870
-
-Best regards,
--- 
-Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-
+-- Steve
