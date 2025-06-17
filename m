@@ -1,153 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893F728D8EF;
-	Tue, 17 Jun 2025 07:31:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AAC022AE45
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750145503; cv=none; b=qUbJvNYWctg69SUmAAm8NQqK7yzX3JwIwnttYdG6HrVv3SDwrDY244GMyh5IqO1/vNxxgG2IX92qOh5Kg5o8PC70UdnKOT41xabIXt1Ra3792d4YvEE2fnzAJq8h4Uotg1pmX0PYPC3FZLTQOl1+gVc/VisP/KaLNFwsUVqlho8=
+	t=1750145537; cv=none; b=hgD7vHWe9iD0Q6w+FRCQEt9g2J35lydTY+LM0XTHyix2aw+luNrnMQ6bXahlMze/JqVDvuw1t1kHhZsmjwn2em60ywsKUkAzvLfYt4yB8Kv0deV2X4TERKBPjsGDjTzvvg8kzyYMF1hLyeTMuNWaU6aFKG5QCK+woQ7Fe5PTgBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750145503; c=relaxed/simple;
-	bh=oUO3rGrZkpHIi+iMi+rCIYqbermkEnOKYHA1KrimKQ4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MsCt+sI1rCKJ5+q5E5/HWkhN07KIbrKrqVWsYke8dwmDpJwvES5RWoT+JUHiy5zYZW/+xPunpmAoflRY7DkOM1hQV6BZrsrKYGsdvViz4EN67hN3SMDh7D/OEfBPJGvpz5KkkJ+v3GJpNLbiwYtS0UHC9ztJw1c1v9mHaGHYCdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FApXZNeJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750145537; c=relaxed/simple;
+	bh=rMddHsA3nzBTFN0QMqBt9MpSn7HX6CFwqw9BP1SyU0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=EsUWw8H6aaT60GItah7fzbecAJlPbsHC401K4IIy7M3xJPJKA9S7CYIHgeBF7tnoHbTsJcfBjKOojw7eKZ93fcOCz/hXdjC8tsjG7locMap/WIpOABABd73xx6MFQznCwUp2qEt1ke5akQtecHukhayFZxRA7VLJG3plOVTYG4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xhxWABFc; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FApXZNeJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2464CC4CEED;
-	Tue, 17 Jun 2025 07:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux.dev; s=korg;
-	t=1750145503; bh=oUO3rGrZkpHIi+iMi+rCIYqbermkEnOKYHA1KrimKQ4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FApXZNeJQrH5oX4VUZoebh3loCH96YxFWLJrBSrUqMaul91yxobC6ykJ2aFkMU2xb
-	 fZ7AGKF1DBIdMMhrpAifIUH48zENP4lE0W+6hpI/ErflJQY4qusIwCz1FA4b/zD5XK
-	 97N3sgXBHZC/mimoMChfHAiIcd6p5/cLV5KU2FII=
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189E7C71136;
-	Tue, 17 Jun 2025 07:31:43 +0000 (UTC)
-From: Richard Leitner <richard.leitner@linux.dev>
-Date: Tue, 17 Jun 2025 09:31:41 +0200
-Subject: [PATCH v5 07/10] media: i2c: ov9282: add strobe_duration v4l2
- control
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xhxWABFc"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-60179d8e65fso9750774a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750145534; x=1750750334; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DitCPFk6i35uURXkN5+J10Jk6mGckO0efyDQ/Ffatgo=;
+        b=xhxWABFcIZeFn8Pt8t83WJmt64nDnT0T0VTvlOAp/BH4BTLM3lGm/h+5rm9elimzEb
+         EBVJuja2f9E36/+xSe81Z9+ffnI1g9vp8Wvo0IpKFE+dsbjk5ekDdaB6n648KFWwaFYn
+         /rQHkOXrKr7Xagn+E9jFrJG5KqbQ9/PqXZjvnQCQ96saCYdLgx9YlDsxhrKZXqaLvF8o
+         d6s6WTFVp/FrwbHGVGIgLQzQ3lf/DZI5vROwOp8QbXrA9AxSe30n3uYTiCDlaxsT2N2s
+         VeF/qWs/cqdpOHNYlioQ7s/3Rc86eEXW9+30jHT9hzsKNxBfNgNQOjLhjrTIHQF6uW8S
+         nxGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750145534; x=1750750334;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DitCPFk6i35uURXkN5+J10Jk6mGckO0efyDQ/Ffatgo=;
+        b=EJ0y0mQ2r5aJHbgx2oE3meHGLVQuTh5qPVFx8Pfl2uiOkuPHo5NN8t7I11QNYImM9m
+         YA9SLoAktq8wlLfyjSylRIIoFp7OW3CMs7FPdLn2VLIrQXdzaK0Ryanycn9Ohz3YWiTc
+         HDX6qhfBHoJ34HPXk4uEZMPl6WhfVq1n6OvsqM/G69rFJayH+hZE55O95qSUbxeVR63N
+         Mv2+xC0UrfjAswYvF/Vtts/avw0226kdep8j+Hme0iHUGH6Qxcb/dUk2y/GrwPqy1uha
+         stO/2dMpSJ6Wz+VhUOU+8LKYCm2opTcRDKEwKzZdvvRmPwqbr/KH2fmVVIdfPP7liai4
+         Gfeg==
+X-Gm-Message-State: AOJu0YzYHr+yvL0qOQx9W3v2C17LquZDnTXrG2gUJ60KZseRLCx77Xta
+	qwmz+8KsYgfPz0asF9dhttV4+BU14gMSzicM/l144XMJuXM8GSsjbbrwSMEaAhHtvojH/0zcp+e
+	9LjaB
+X-Gm-Gg: ASbGncvk/fvgK0EIJirxPdnaEid4gLzXI9YoaEswhfUpDURdfgVu/C5yo3G1jvIX8uB
+	8IXU7PolnGZxa1U0AFnjn07iJXKUZQ91oOsH29p5rh+9skYM0ZVJsPD5Xvhy37uUrlQvrf2N3p4
+	AgRjHJ/JpHGYz5PynkLJQa5Iot9QiLKX2pzzDQLcxyfQ2y0JW4iu6OpIpw4PK3skDCyqsULNFUy
+	kBs3VRWIuNPxYbxNTKfJe6IDKZ3CeLempp0zXWamlGrrFzDRTf7796d/X1hGqWIrnpJDbMOQZhk
+	BsjvmliFUCWMrWyJUSiL4jsiJRNwP9AtfMghxGq1A/2PVDFJyAXXXDjQg81zSkkwc6+10K6qp6+
+	T6aTNrdBpdEDSV+hSQHbEBGa0aTyZ
+X-Google-Smtp-Source: AGHT+IH9/yGt1B2R5aOqGlO4giU7a4MpvEhipVbdlnV+bODahZF4ciyHZm2yTFfr8OIZsO0wiR54nQ==
+X-Received: by 2002:a05:6402:4402:b0:607:d234:7d8f with SMTP id 4fb4d7f45d1cf-608d09af98emr11886262a12.33.1750145533721;
+        Tue, 17 Jun 2025 00:32:13 -0700 (PDT)
+Received: from rayden (h-98-128-140-123.A175.priv.bahnhof.se. [98.128.140.123])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a5e72csm7605436a12.48.2025.06.17.00.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 00:32:13 -0700 (PDT)
+Date: Tue, 17 Jun 2025 09:32:11 +0200
+From: Jens Wiklander <jens.wiklander@linaro.org>
+To: arm@kernel.org, soc@kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	op-tee@lists.trustedfirmware.org
+Subject: [GIT PULL] OP-TEE fix for 6.16
+Message-ID: <20250617073211.GA1005592@rayden>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250617-ov9282-flash-strobe-v5-7-9762da74d065@linux.dev>
-References: <20250617-ov9282-flash-strobe-v5-0-9762da74d065@linux.dev>
-In-Reply-To: <20250617-ov9282-flash-strobe-v5-0-9762da74d065@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, 
- Pavel Machek <pavel@kernel.org>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, 
- Richard Leitner <richard.leitner@linux.dev>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750145501; l=3465;
- i=richard.leitner@linux.dev; s=20250225; h=from:subject:message-id;
- bh=oUO3rGrZkpHIi+iMi+rCIYqbermkEnOKYHA1KrimKQ4=;
- b=NgECwZ1ajnQD/6frScq4DKWGtzmK1kmPmz75ObFUf6bRiVxSFuQiVuC5e53YELEuSi8OkLPJR
- FFO+JGPesWFA3w83C8M2XFW0VGY6DWi3tbvmHW2i7YV1AHiLlXMaDZF
-X-Developer-Key: i=richard.leitner@linux.dev; a=ed25519;
- pk=8hZNyyyQFqZ5ruVJsSGBSPIrmJpfDm5HwHU4QVOP1Pk=
-X-Endpoint-Received: by B4 Relay for richard.leitner@linux.dev/20250225
- with auth_id=350
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Add V4L2_CID_FLASH_DURATION support using the "strobe_frame_span"
-feature of the sensor. This is implemented by transforming the given µs
-value by an interpolated formula to a "span step width" value and
-writing it to register PWM_CTRL_25, PWM_CTRL_26, PWM_CTRL_27,
-PWM_CTRL_28 (0x3925, 0x3926, 0x3927, 0x3928).
+Hello arm-soc maintainers,
 
-The maximum control value is set to the period of the current default
-framerate.
+Please pull this patch for the optee driver. It relates to the FF-A driver
+PR https://lore.kernel.org/all/20250609105207.1185570-1-sudeep.holla@arm.com
+but it makes sense on its own and can be applied independently.
 
-All register values are based on the OV9281 datasheet v1.53 (jan 2019)
-and tested using an ov9281 VisionComponents module.
+Thanks,
+Jens
 
-Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
----
- drivers/media/i2c/ov9282.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+The following changes since commit 0ff41df1cb268fc69e703a08a57ee14ae967d0ca:
 
-diff --git a/drivers/media/i2c/ov9282.c b/drivers/media/i2c/ov9282.c
-index b6de96997426f7225a061bfdc841aa062e8d0891..871cd7e796531c1f958790eba733290d39e99f0c 100644
---- a/drivers/media/i2c/ov9282.c
-+++ b/drivers/media/i2c/ov9282.c
-@@ -97,6 +97,10 @@
- #define OV9282_REG_MIPI_CTRL00	0x4800
- #define OV9282_GATED_CLOCK	BIT(5)
- 
-+/* Flash/Strobe control registers */
-+#define OV9282_REG_FLASH_DURATION	0x3925
-+#define OV9282_FLASH_DURATION_DEFAULT	0x0000001a
-+
- /* Input clock rate */
- #define OV9282_INCLK_RATE	24000000
- 
-@@ -687,6 +691,25 @@ static int ov9282_set_ctrl_flash_led_mode(struct ov9282 *ov9282, int mode)
- 				current_val);
- }
- 
-+static int ov9282_set_ctrl_flash_duration(struct ov9282 *ov9282, u32 value)
-+{
-+	/*
-+	 * Calculate "strobe_frame_span" increments from a given value (µs).
-+	 * This is quite tricky as "The step width of shift and span is
-+	 * programmable under system clock domain.", but it's not documented
-+	 * how to program this step width (at least in the datasheet available
-+	 * to the author at time of writing).
-+	 * The formula below is interpolated from different modes/framerates
-+	 * and should work quite well for most settings.
-+	 */
-+	u32 val = value * 192 / (ov9282->cur_mode->width + ov9282->hblank_ctrl->val);
-+
-+	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION, 1, (val >> 24) & 0xff);
-+	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 1, 1, (val >> 16) & 0xff);
-+	ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 2, 1, (val >> 8) & 0xff);
-+	return ov9282_write_reg(ov9282, OV9282_REG_FLASH_DURATION + 3, 1, val & 0xff);
-+}
-+
- /**
-  * ov9282_set_ctrl() - Set subdevice control
-  * @ctrl: pointer to v4l2_ctrl structure
-@@ -756,6 +779,9 @@ static int ov9282_set_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_FLASH_LED_MODE:
- 		ret = ov9282_set_ctrl_flash_led_mode(ov9282, ctrl->val);
- 		break;
-+	case V4L2_CID_FLASH_DURATION:
-+		ret = ov9282_set_ctrl_flash_duration(ov9282, ctrl->val);
-+		break;
- 	default:
- 		dev_err(ov9282->dev, "Invalid control %d", ctrl->id);
- 		ret = -EINVAL;
-@@ -1346,7 +1372,7 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 	u32 lpfr;
- 	int ret;
- 
--	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 11);
-+	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 12);
- 	if (ret)
- 		return ret;
- 
-@@ -1418,6 +1444,9 @@ static int ov9282_init_controls(struct ov9282 *ov9282)
- 			       (1 << V4L2_FLASH_LED_MODE_TORCH),
- 			       V4L2_FLASH_LED_MODE_NONE);
- 
-+	v4l2_ctrl_new_std(ctrl_hdlr, &ov9282_ctrl_ops, V4L2_CID_FLASH_DURATION,
-+			  0, 13900, 1, 8);
-+
- 	ret = v4l2_fwnode_device_parse(ov9282->dev, &props);
- 	if (!ret) {
- 		/* Failure sets ctrl_hdlr->error, which we check afterwards anyway */
+  Linux 6.15 (2025-05-25 16:09:23 -0700)
 
--- 
-2.47.2
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/jenswi/linux-tee.git tags/optee-fix-for-v6.16
 
+for you to fetch changes up to 312d02adb959ea199372f375ada06e0186f651e4:
+
+  optee: ffa: fix sleep in atomic context (2025-06-12 12:04:57 +0200)
+
+----------------------------------------------------------------
+A fix in the OP-TEE driver for v6.16
+
+Fixing a sleep in atomic context in the FF-A notification callback by
+adding a work queue to process in a non-atomic context.
+
+----------------------------------------------------------------
+Jens Wiklander (1):
+      optee: ffa: fix sleep in atomic context
+
+ drivers/tee/optee/ffa_abi.c       | 41 ++++++++++++++++++++++++++++++---------
+ drivers/tee/optee/optee_private.h |  2 ++
+ 2 files changed, 34 insertions(+), 9 deletions(-)
