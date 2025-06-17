@@ -1,88 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414341A5BBE;
-	Tue, 17 Jun 2025 01:42:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AF21A5BBE
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750124552; cv=none; b=Y6etizOay8OmXkyPita/u0oqTQ+w737g4ByT/0i38SIF4oAba+pbioXJzz31eRBM3ruX4TtaRRw2s3xiSXGwxkLQHeh7uD4TnyiMzywB3GhOSCiqf/pxIIdx5+wUhPHC6TiVFP06H8cn+Jsym3OO6EN69VM0xj1BDQjtv43Phhg=
+	t=1750124706; cv=none; b=RFt+Y0/H/RN8s2mlomzgdvy5F8v910as92f3GkGXPK4Epabkwy/ee9QKI4uMbcK4Vu5DmS10EYaK9YQAodc2XgHHMb3a7PgYOExsYa11h94aAlXveg+/ssg+z6yDf3/TA8GNPmBuplZ+suWj4arqqdCtzuH1AbEdO2wkWlk05TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750124552; c=relaxed/simple;
-	bh=vW8+vb1swfPDo3QTugetg1Qq57hrQn+fLgudj+eQrww=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=emWbR1vyPGTQo/dO1UeAbvg6QtY6x3zWmspx65AmPTJo8Itb090EmYSwhNXUhxQxReXjn6InHD6o74WKr72/kRIIMR30sOc4HyTH1DQAlN8sd6vwMijdIYK3/PVoVKsAz/SnV14lQ3hGV9M+1RM8ycFtjwGONd+iyaxCweYPvPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kj/itKc6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750124706; c=relaxed/simple;
+	bh=FrMNpoU0KsNW0qg02rDXo3Uu0wX8loscUpEUTMv+OGA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bixFrijrxqmYO9QGfh+kv40TZb+pUsXoF/vQRnptWAca0apEa7Yap9Gv3zLU9TCzefPn4BZhh/Z5/enxGFVHROsgjq9ji6qFzWmTzpVYQZF8GGcQQjtsrAH82scLxkC7G2OQI7RjAWXj9E/t8Mq1IbrsvXa3/fPiktbmknxChYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ByRUu2Ts; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kj/itKc6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E85F1C4CEEA;
-	Tue, 17 Jun 2025 01:42:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750124551;
-	bh=vW8+vb1swfPDo3QTugetg1Qq57hrQn+fLgudj+eQrww=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Kj/itKc6fK83Sk9qIDDIQcbumKnGslbe+PCAbB88N7M50IQh0YM0QxOzfBsFjx7TF
-	 PFlziGG4IdqcmsMcu9ZJAKDEjFjFTm9cRThAN+x+72ClhJDJa6PB4I+8PBCiIWGxnJ
-	 XiMYX55fvUdWyNKB8an/ied+hjnxPVgHjvxyFVc0M2jwMth4Z3D6k5QTMYrvLNTTWk
-	 cyXFgpwXG/dU7xkA0vWgPGz5Z5y/IlNBRicwchFK/1QKfaqaU0BlNxxLJpEmj8yP4g
-	 vWj0nBk5IQFiZG19m1Fpn/eIddC1vw/xSNEO04cRfPCdjVdrxgx/Z5Kl6N8pXnko43
-	 NBnFOWbZTa2bA==
-Date: Mon, 16 Jun 2025 19:42:28 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kees Cook <kees@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH][next] stddef: Introduce TRAILING_OVERLAP() helper macro
-Message-ID: <aFDIBBeYgRSx1ekO@kspp>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ByRUu2Ts"
+Message-ID: <9aa4278e-0f43-420b-b6b5-78a32263d7ec@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750124692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9j6dPiBh9J0ibfK+wZrIlMMj9iz4s5guo08DGg4VYmg=;
+	b=ByRUu2TsHF2kz4dnEeUzXvAzZoJvp6QzwxAHILKnjkUbd27t2f/4c3I8MO1igzw19z9HJi
+	cpyvTkgoFoearRR5vcWUdGSeM7Rq2Xlf7HcbDjOec5DcKIP71O+Oz0OxcFVDpIJBmrDo4y
+	nZsqxe5Oulo0XOp0MXeyb4cF7JAsmS4=
+Date: Tue, 17 Jun 2025 09:44:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Subject: Re: [PATCH] docs/zh_CN: update git command examples in how-to.rst
+To: Dongliang Mu <dzm91@hust.edu.cn>, Alex Shi <alexs@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250616134003.3981866-1-dzm91@hust.edu.cn>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yanteng Si <si.yanteng@linux.dev>
+In-Reply-To: <20250616134003.3981866-1-dzm91@hust.edu.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Add new TRAILING_OVERLAP() helper macro to create a union between
-a flexible-array member (FAM) in a struct and a set of additional
-members that would otherwise follow it.
 
-Co-developed-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Kees Cook <kees@kernel.org>
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/stddef.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+在 6/16/25 9:40 PM, Dongliang Mu 写道:
+> This patch leverages `checkout -b` to shorten branch & checkout
+> and fix the missing checkout.
+>
+> Signed-off-by: Dongliang Mu <dzm91@hust.edu.cn>
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index 929d67710cc5..635513ff2829 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -93,4 +93,24 @@ enum {
- #define DECLARE_FLEX_ARRAY(TYPE, NAME) \
- 	__DECLARE_FLEX_ARRAY(TYPE, NAME)
- 
-+/**
-+ * TRAILING_OVERLAP() - Overlap a flexible-array member with trailing members.
-+ *
-+ * Creates a union between a flexible-array member (FAM) in a struct and a set
-+ * of additional members that would otherwise follow it.
-+ *
-+ * @TYPE: Flexible structure type name, including "struct" keyword.
-+ * @NAME: Name for a variable to define.
-+ * @FAM: The flexible-array member within @TYPE
-+ * @MEMBERS: Trailing overlapping members.
-+ */
-+#define TRAILING_OVERLAP(TYPE, NAME, FAM, MEMBERS)				\
-+	union {									\
-+		TYPE NAME;							\
-+		struct {							\
-+			unsigned char __offset_to_fam[offsetof(TYPE, FAM)];	\
-+			MEMBERS							\
-+		};								\
-+	}
-+
- #endif
--- 
-2.43.0
+Acked-by: Yanteng Si <si.yanteng@linux.dev>
 
+
+Thanks,
+
+Yanteng
+
+> ---
+>   Documentation/translations/zh_CN/how-to.rst | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/translations/zh_CN/how-to.rst b/Documentation/translations/zh_CN/how-to.rst
+> index 569b0209385a..0896f13d8b8d 100644
+> --- a/Documentation/translations/zh_CN/how-to.rst
+> +++ b/Documentation/translations/zh_CN/how-to.rst
+> @@ -177,8 +177,7 @@ git和邮箱配置
+>   请执行以下命令，新建开发分支::
+>   
+>   	git checkout docs-next
+> -	git branch my-trans
+> -	git checkout my-trans
+> +	git checkout -b my-trans
+>   
+>   译文格式要求
+>   ------------
+> @@ -286,7 +285,7 @@ warning 不需要解决::
+>   然后执行以下命令为补丁追加更改::
+>   
+>   	git checkout docs-next
+> -	git branch test-trans
+> +	git checkout -b test-trans-new
+>   	git am 0001-xxxxx.patch
+>   	./scripts/checkpatch.pl 0001-xxxxx.patch
+>   	直接修改您的翻译
