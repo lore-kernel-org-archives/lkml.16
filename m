@@ -1,73 +1,74 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C16218AA0
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED01B218AA0
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:49:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153791; cv=none; b=WVY6MMfwbATIyJ7oCd2BhBlpLJhxIFB2ivzNRt5M5WS6bjMhOyjgke4aDJbZVVuPhkm7yazHcCI+YpQPKlYnjl4kFSfrFpmBnM2ozEp0L5rxtIreGYNh+JdjaVGVVq5fLaLgtSYOEXNd3cA3rQz1h010Im5rhxxZtDhlqEqDzPw=
+	t=1750153798; cv=none; b=ZxKSLw5uAe5vaCTdI8WrcJzeYWnQxmXRqaf6AnexwHXTUxH1lCI6FEik/qW82S5/TCvzcxNrqapiKjiQ94sGnIzyl+kIIx/hjrfln2gRbUyv84+TiEl8Rk2EkNDRgBD/NtHk99nEeLYLU5sMt30kDj6uynoWvymnGrlF8v4k7Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153791; c=relaxed/simple;
-	bh=dXw2koHc8UFjgXNHPwgDuWQ1C54kUQxtSSpnKFQknPI=;
+	s=arc-20240116; t=1750153798; c=relaxed/simple;
+	bh=y9PWU5GUxhjJggeZ2t0v/qrg4XfMxZpcGntNLDW1ll0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pAzIyHUZOdssLE1FkU6cm+G5Kq5MMTIN9lKk9arN0Td6hSxXpLAVbRQlNZetNW+8yR/4PK+47aeVrRJcmwn3QHnaDdWXKCaIOiJSzKaYg+jETEqS/+9sPB0mCdhAZVGFppI0SuwA4Ji0QU09urwOCgPdOk4CakJXqVwgp5BjIXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BNIwxYas; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=B3yg6XM1EJc3PZikQney66Di0mhkGcGEHWq6643ErwZ1WrpgejKhrw1aJa5zH+gW4Cgx3sn/2/wEz61X65zAwAj+jbw/mJdMOAe6RicT1kQ0dlgBqvxIA9KNYWAKg1ybkR9ErOzRYMBJ3FUaHj4uoSZbxtGc5HiWdyN2TxoASiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UVllxpjf; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BNIwxYas"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UVllxpjf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750153788;
+	s=mimecast20190719; t=1750153796;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DF2LSLjoIDZihiRcdf30WHksttB87jWZgxoeifw/8vs=;
-	b=BNIwxYasbCufquJMv8PTP3TA9tL5rbY7VE0lYOZYL2/id32vV+LlGpreXILvaTZvmpBJMj
-	4NeSxduxmkiPhMyxz2I9NNT2dHbeakR1VdXNzXXVo57S+qaROJigSTFpNtvREiWJYHAMhs
-	540Na2xZlNznF1GUCjo16CZTDT6s2wc=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=lg0mFUm80r9X0igLB1pMrSxygF5fgmEE/5oZN4jlRBc=;
+	b=UVllxpjfq4NTLOAeZ8pKi1d44tGpr94rfVasZwcZRIqB+4O33UEfA7h8CIzS2DLvGhZSEl
+	JPvl7Ay/8+0ErqemkOdcLwr5z8aFIv85IoT3LvKrSkYCGY9siy1w+G5VsScinvCme/MfXD
+	Myq1PzFVmEQC3rlGxBUdpeuwXR6seI8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-cWqG1oj3MLiQ1_Wu8MG4Gg-1; Tue, 17 Jun 2025 05:49:47 -0400
-X-MC-Unique: cWqG1oj3MLiQ1_Wu8MG4Gg-1
-X-Mimecast-MFC-AGG-ID: cWqG1oj3MLiQ1_Wu8MG4Gg_1750153786
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-451d7de4ae3so35687205e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:49:46 -0700 (PDT)
+ us-mta-98-WfHqdoyhNjaBV4HTeBq59Q-1; Tue, 17 Jun 2025 05:49:24 -0400
+X-MC-Unique: WfHqdoyhNjaBV4HTeBq59Q-1
+X-Mimecast-MFC-AGG-ID: WfHqdoyhNjaBV4HTeBq59Q_1750153763
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4530ec2c87cso28193605e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:49:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750153786; x=1750758586;
+        d=1e100.net; s=20230601; t=1750153763; x=1750758563;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=DF2LSLjoIDZihiRcdf30WHksttB87jWZgxoeifw/8vs=;
-        b=qkav8D6LIxQ8glWp/eO2+ei+4epYq8EuOSLI2LWN1Kd+6YfyP97r7u+ubekQSC4vG7
-         qTb81QBFiCmD1N+8d5lOSkypoFagZSndH1vgm6v5cbW6B3v1TQAcf929AUczLUg8akUj
-         mheuHtugixeV5Ru3yHitGOFypKNridNWk1ZVixuGjvQkQCjkG+ypKXm3v1HUxHGMhdfJ
-         H4BLm9ZFeSi33kpu3+JizcBkzIyuD+bqaH2E90NNyMfGXQNh5vZNnE5UMz83lUuDBV1x
-         qgdroisqxDUl9uOGiD11nlRLwBa/2EDKOO16/+BCYrnNDFFiY/l+na9vj9Lenqe307zL
-         W5zw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmXiOJEnefEaRTuZKXL3F+kd1Xz2jwnjmBHSkB5JFJsS7UcCMWA1VrYoaoQxnkPXEQM81aDHv1u5R9gLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLV5N5MXfs5bd5IMeHC0Xik5/xRRDkqtSyKHJ/F7Rid7h8nwdu
-	uN9eQoZiasYdhRCZ3V9CNOsmb6vdHoGHEAw4h/mKLyTi5TUjhy0FsdN8D2E+I1+aTIPPUbOr9Yv
-	vvV/YbvTAtsHb7aVLWQRvpg4W9/jSllaYeP1ferqcvQiwi4RkA0Sm7QqsFI+P4UKCAw==
-X-Gm-Gg: ASbGncvSp35aGaw7uxXcdHDMR+PM9DpkEl02SvYz7UeavQBSdeh/NYYlr85r/TXnRUw
-	7eAMTVw1ax+j84hWoCt/1f21lqCsvZwPhhvrZHHIWoPkX0rRr2GNcHQYDjdctxOn3Om8thJ4vVw
-	8v0IKAf+lbRGBPzjkgzsrviE/idsTpHL1lxR7cUUqxLBFM1ABfEYI3lzOmfO58BAfOj/FrVb3bP
-	5hVHsyC8jG44yphXFpCHrf1SiIbHbCZo6saApHYQ/qTmAkOeswyifem6b/wXcWGhZxFkeCbtbEg
-	zlgLazZ7qKDq3D1LxeKo2WhNDUuV/hUxEyABwfqarqlhVc7F2+OSq7+eZChN5RZR7V0EA9zI+JZ
-	6gRjqM0ahwWVdIFjrAzxZ8mSPBwElc+DWSemXhwQuf0uAAvU=
-X-Received: by 2002:a05:600c:1e1a:b0:43c:f513:958a with SMTP id 5b1f17b1804b1-453501b41d8mr46951385e9.13.1750153785831;
-        Tue, 17 Jun 2025 02:49:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEvM94fKFQqOi6f/UiYAlYA5Dbtm0BuNIi449CTJMM+YlZg/bJp3A8qBZE/OedzVBw3uw9beA==
-X-Received: by 2002:a05:600c:1e1a:b0:43c:f513:958a with SMTP id 5b1f17b1804b1-453501b41d8mr46951115e9.13.1750153785434;
-        Tue, 17 Jun 2025 02:49:45 -0700 (PDT)
+        bh=lg0mFUm80r9X0igLB1pMrSxygF5fgmEE/5oZN4jlRBc=;
+        b=R/ZDRhLIEEA5fmWYlW1q2eRR+1xkPs/1Q28rqj0pFQofQyhQp4jswap+PUqjN3J5J1
+         zVY9q2kMqw5klDHBiPubzO6kvhCfLe3NV2KxjUToyvZ3WoQK7UEa52ks6ErJl8hR5Fd0
+         b33JB000d8wC0kXXJ4O0QbLnfIUX2eaMwUYpcSpW8Qpj82wdc5EmHAwHsmx4QAF7lzbR
+         DR4mmRlT8PRTwFmftExzeqULgkJRc7+V7uQnHm/Zie6lZqUmK2DektIyQpEa+3YyFE95
+         6a0OkVg/VIp0I0GFkCOlEEH3ezUMw0TuVYUbcJmqQVrozq/opteIwG9oWVMQKbBLsoZX
+         c8wg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjespQI/SXEVyLnIwgzviLtXNoIOKjxpavvKGLIUkFQXS/+lfo+7g4gPRB4lS7FYp8cAxlxJs0ZvX0WRs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlHA+WO6b675032bP+DZeM9CPhAcheEi3+WmciB+hp5fmlFQNm
+	/xS+3L5r3t9nss+u3VY1eedbmKBPqTzar+/UmbedhrEjie/yr/k/bhiuksHqU1JnmhBDO1+yc2L
+	C+To60+8YfWM8twdUCeManNaRsqXqaDC+73uQGFPeffIgI8dfxkg+O7ByHQVIFt3W2aHXX47tPB
+	mP
+X-Gm-Gg: ASbGncvoxk+tqKQWTTmWxtQkvtO7Mn6IvrvFuNysW5+QMk7Zuse2BNgBHvkyWAy8UTI
+	Pt6zwovu9gLlQFca8goER/TVKdHSkv37Mv6aaip9NdtmtSryrsjbORDUcJMwFolMuOauAbiPzT5
+	5nQXglAP/C6dXNv+LTt767wb7DuYmi7A1C0ZPQ0/8Z9iXDAIS2uRKyMSR//ye+xwKMteIZofoGr
+	Xax9Oep5TMQFJlS27jSbYV3KxdqJIqta6kxQH/82l7w0JQV7BYtkQoH/Xq/qb8hAA4lblY34fNW
+	HOs8aHFuqUGaP5PXvpQsxvQYsoW3rRWRVfd/B01/X7u8mBmIYHU6bI2rDneGqyfl+DP2g4ns2VG
+	0gSODS0VggScUmLxufuM6mwdJv8rEU26Wtzy6GgnKnPwrelY=
+X-Received: by 2002:a05:600c:8b66:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-4533ca71c4cmr120176285e9.9.1750153763449;
+        Tue, 17 Jun 2025 02:49:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFXZNQ8PD9qufR5L3UGiEianFrRGislf+YnSmpb1KcTqInns51iN3qzkWWM7hMwKXRBlIkEGg==
+X-Received: by 2002:a05:600c:8b66:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-4533ca71c4cmr120175955e9.9.1750153763021;
+        Tue, 17 Jun 2025 02:49:23 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e256d95sm169069565e9.31.2025.06.17.02.49.44
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a578510edcsm9430995f8f.8.2025.06.17.02.49.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 02:49:44 -0700 (PDT)
-Message-ID: <b88d58d2-59f8-4007-a6c5-d32ba4972bea@redhat.com>
-Date: Tue, 17 Jun 2025 11:49:43 +0200
+        Tue, 17 Jun 2025 02:49:22 -0700 (PDT)
+Message-ID: <6bb233ef-5e56-4546-b571-6a5f052d8b45@redhat.com>
+Date: Tue, 17 Jun 2025 11:49:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,14 +76,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for
- large folio
-To: lizhe.67@bytedance.com
-Cc: akpm@linux-foundation.org, alex.williamson@redhat.com,
- kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- peterx@redhat.com
-References: <e0c741a0-450a-4512-8796-bd83a5618409@redhat.com>
- <20250617094713.12501-1-lizhe.67@bytedance.com>
+Subject: Re: [PATCH v2 06/14] mm/huge_memory: Remove pXd_devmap usage from
+ insert_pXd_pfn()
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <67bc382c49ed8b165cfbd927886372272c35f508.1750075065.git-series.apopple@nvidia.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -130,38 +139,77 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250617094713.12501-1-lizhe.67@bytedance.com>
+In-Reply-To: <67bc382c49ed8b165cfbd927886372272c35f508.1750075065.git-series.apopple@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 17.06.25 11:47, lizhe.67@bytedance.com wrote:
-> On Tue, 17 Jun 2025 09:43:56 +0200, david@redhat.com wrote:
->   
->>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
->>> index e952bf8bdfab..d7653f4c10d5 100644
->>> --- a/drivers/vfio/vfio_iommu_type1.c
->>> +++ b/drivers/vfio/vfio_iommu_type1.c
->>> @@ -801,16 +801,43 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->>>           return pinned;
->>>    }
->>>    
->>> +/* Returned number includes the provided current page. */
->>> +static inline unsigned long folio_remaining_pages(struct folio *folio,
->>> +               struct page *page, unsigned long max_pages)
->>> +{
->>> +       if (!folio_test_large(folio))
->>> +               return 1;
->>> +       return min_t(unsigned long, max_pages,
->>> +                    folio_nr_pages(folio) - folio_page_idx(folio, page));
->>> +}
->>
->> Note that I think that should go somewhere into mm.h, and also get used
->> by GUP. So factoring it out from GUP and then using it here.
+On 16.06.25 13:58, Alistair Popple wrote:
+> Nothing uses PFN_DEV anymore so no need to create devmap pXd's when
+> mapping a PFN. Instead special mappings will be created which ensures
+> vm_normal_page_pXd() will not return pages which don't have an
+> associated page. This could change behaviour slightly on architectures
+> where pXd_devmap() does not imply pXd_special() as the normal page
+> checks would have fallen through to checking VM_PFNMAP/MIXEDMAP instead,
+> which in theory at least could have returned a page.
 > 
-> I think I need to separate this out into a distinct patch within the
-> patchset. Is that correct?
+> However vm_normal_page_pXd() should never have been returning pages for
+> pXd_devmap() entries anyway, so anything relying on that would have been
+> a bug.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> 
+> ---
+> 
+> Changes since v1:
+> 
+>   - New for v2
+> ---
+>   mm/huge_memory.c | 12 ++----------
+>   1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index b096240..6514e25 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -1415,11 +1415,7 @@ static int insert_pmd(struct vm_area_struct *vma, unsigned long addr,
+>   		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
+>   	} else {
+>   		entry = pmd_mkhuge(pfn_t_pmd(fop.pfn, prot));
+> -
+> -		if (pfn_t_devmap(fop.pfn))
+> -			entry = pmd_mkdevmap(entry);
+> -		else
+> -			entry = pmd_mkspecial(entry);
+> +		entry = pmd_mkspecial(entry);
+>   	}
+>   	if (write) {
+>   		entry = pmd_mkyoung(pmd_mkdirty(entry));
+> @@ -1565,11 +1561,7 @@ static void insert_pud(struct vm_area_struct *vma, unsigned long addr,
+>   		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PUD_NR);
+>   	} else {
+>   		entry = pud_mkhuge(pfn_t_pud(fop.pfn, prot));
+> -
+> -		if (pfn_t_devmap(fop.pfn))
+> -			entry = pud_mkdevmap(entry);
+> -		else
+> -			entry = pud_mkspecial(entry);
+> +		entry = pud_mkspecial(entry);
+>   	}
+>   	if (write) {
+>   		entry = pud_mkyoung(pud_mkdirty(entry));
 
-Yes, that's what I would do.
+
+Why not squash this patch into #3, and remove the pmd_special() check 
+from vm_normal_page_pmd() in the same go? Seems wrong to handle the 
+PMD/PUD case separately.
+
+But now I am confused why some pte_devmap() checks are removed in patch 
+#3, while others are removed in #7.
+
+Why not split it up into (a) stop setting p*_devmap() and (b) remove 
+p*_devmap().
+
+Logically makes more sense to me ... :)
 
 -- 
 Cheers,
