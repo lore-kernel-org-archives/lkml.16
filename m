@@ -1,138 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD7CF9C1;
-	Wed, 18 Jun 2025 01:14:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC055F9C1
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:16:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750209286; cv=none; b=n77lBI2LqHivJWsyCmf+zRQ/iwQ2oJ1gK76zCIGQ2T/xDQFEkowhHjdnUkTpTFvhTG1pt5WCoVst3XfBiWl0lpxqKMM+6zX5S7GuomTsM8iJcnnJ4eM9m6QttXqKQ3To+ULGXJmHhArgoam1UAnkr633CK84xJ0tDgAI/2s+CzA=
+	t=1750209392; cv=none; b=YUjPBlwz4pn8LxOCloc2mzkgNLbV3wSlQdX6QwYv3t8jLORHXLFUYLGtShW0f+H/Q9TpM0yr95J2bGfFoqIToY6LUSdQhzq5x5ugdyIOn8a1DyBD26FrQcXxLFMszNheHMBCzoL/kVg4K0u0xnj0pb4Dv+YxCoJE34TT4Bu2/3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750209286; c=relaxed/simple;
-	bh=h2YputM22TLsFmaGuZOmTSbK7C6G8IcXF/esgzdBeMU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HJrfryJUWY0hP4fs2idSyMZFKHCbt6UrEXclohaVUK0gevQLVrLsibDxV2RZKVMHY0TUY99LGnw7U10JycMp1DNcXMVHbH0WsBaf9/QAybuaZy3tgheYFK1eiIBxjM1kPuDfFVVeUVyhXVRbXgxYwsSpN1/0COlhETkg8/2TLqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2ORsYPK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750209392; c=relaxed/simple;
+	bh=7ce7jAhwqOB5zHH/zH5Kg3MgJ/DeiNlQbq24eO3eKrg=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=jSGYsBh+YBh8fbe/3IBOKZLJicV3h0C31P6JEkd5cs820RbOEN4+p1ovj862c/ghMmsPU0FuKPuOdl24c+eMHdrVZDWA+j6gT5IHk8Y7e5YuFp3mLH+EgcHKr8JdXTmsmCiD385/jIk9uAd0oADcY/Bl18bR9vqq4bfi+bY+sC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=l+yVhniC; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2ORsYPK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AAFC4CEF6;
-	Wed, 18 Jun 2025 01:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750209285;
-	bh=h2YputM22TLsFmaGuZOmTSbK7C6G8IcXF/esgzdBeMU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=h2ORsYPKEf7Szaa3wjBCMWTtOLGDSCQvsfp9Bq5p3ne+H0+0t9jML5uuyaThHtceQ
-	 Au5EvYAGNKSbukyDT5ZaoQXt92ToLL6dDSd+kVocG9cg3OtLfHAOj8WwGZ6tp2Mjx3
-	 7DpgnMHpCU4SPSGkMwRC7AlzbZfuwYfEGHlCmUDvRSxL649gwsEjx61Jrujheo7rTp
-	 qJ0m/s1OPMMJKW0Fm8sMTLdBFtzIuia2f/5YFBxLoaFla3VMVr7uCX2/29W+xwpeQU
-	 QpXYUNz+RV2tVCo4jZsHYSPpdOFbcRPkh9Tj8SiJnNt/iCCptbBmLINW2ONw5bxPOp
-	 1fkWuhAiISscA==
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso3944634e87.1;
-        Tue, 17 Jun 2025 18:14:45 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUr463HkX/HFYWwmWqS9woWwzRcfspfxJGBzDFoTNMr1n9KmFmsL5LAmHlsCvdjlhr23CLZOVs352I=@vger.kernel.org, AJvYcCVHYO9OFxaaWHNM2cauB42818Tf5UM9hjbPUPnOAlULCLwu+yObuaiHci9Mnir0pQ9pFcd6A5Uz9eQr4bw1@vger.kernel.org, AJvYcCVXn/MClVqyT8Z/lbfxbg8IlqMJ9hWroVt9Mk/s1AakhDr4jwFMDWXnpiqJfzTiJ6KgiRzcQBiXuoXx@vger.kernel.org, AJvYcCWI83DaMlda8JCbKF5uUHekLmd35JG5OtjdWZ3tAcEc4bZMOgek9REvUutjf2+lD9dM48I/GNnmFqQ2bEDA@vger.kernel.org, AJvYcCWRoOya3tyvJo7A+Tz2okzmOP0lvAI3ZcMB06GLWCnfPAsLdRjGDqsN22kYeWKaTBxyb7ORfrvTlnLUDRNMHVmG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzV5cPXBQIMDBwCM8sPhmFBRfYaoIbjN+a7xWfqrLzzOCyQQCZt
-	QKV1WHTD0nuUkvli++1I6sHye9V+sBFLi4CLDWyJ5D/PjdlVhvjukZqMdvP9ILp8yVtz51+uGE9
-	6BmBg+R/aYSrZZwoUxEJDUQzhbJ8cbNI=
-X-Google-Smtp-Source: AGHT+IE7MRJL1Yw0xIAiT0g6qe8cPzPnAw/z8vD2sHRVWPnU9T42hH7IJfTK5kp8NNXpkwOUOaUNXTzluaBXDYEml0s=
-X-Received: by 2002:a05:6512:3b8b:b0:553:2ed1:ab1e with SMTP id
- 2adb3069b0e04-553b6f4cc5cmr3710057e87.46.1750209284091; Tue, 17 Jun 2025
- 18:14:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="l+yVhniC"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250618011627epoutp02f94875f077b77f8864dcf06c4bda2b9c~J-io7M_AC2236422364epoutp02f
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:16:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250618011627epoutp02f94875f077b77f8864dcf06c4bda2b9c~J-io7M_AC2236422364epoutp02f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750209387;
+	bh=wRMlbA7pPv12jHHuru+v6fogzQ7XIEeseEz9D/+56lE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=l+yVhniC9cyeqVRljDADHfge3OKpyASwHOW+U7TBP0uMGdfB1nGwsEw0RqzoqA6Q5
+	 nSrtlPyQlIpZO1Io/lCVhlHfXxn14twINn5Lsjg34GcEW0964DVJpPiBBBE2S+xDM0
+	 kf15+rMvIL/djwzKJyK7Idqt4v8UPry+HFNRsQTQ=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250618011626epcas5p2ca60f5bcd17d26af9261e5b0e56a1ee6~J-ino0dRK1703617036epcas5p25;
+	Wed, 18 Jun 2025 01:16:26 +0000 (GMT)
+Received: from epcas5p1.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bMQmk6Hglz3hhTH; Wed, 18 Jun
+	2025 01:16:22 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250617171023epcas5p3e6e775a8c375edeca1ef9dd0ee905a50~J46PaZeUn1047610476epcas5p3u;
+	Tue, 17 Jun 2025 17:10:23 +0000 (GMT)
+Received: from INBRO001840 (unknown [107.122.3.105]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250617171020epsmtip23ef4349f3a07b2221f3be0969ba87e87~J46Mk13VN2161021610epsmtip2U;
+	Tue, 17 Jun 2025 17:10:19 +0000 (GMT)
+From: "Pritam Manohar Sutar" <pritam.sutar@samsung.com>
+To: "'Neil Armstrong'" <neil.armstrong@linaro.org>, <vkoul@kernel.org>,
+	<kishon@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
+	<andre.draszik@linaro.org>, <peter.griffin@linaro.org>,
+	<kauschluss@disroot.org>, <ivo.ivanov.ivanov1@gmail.com>,
+	<m.szyprowski@samsung.com>, <s.nawrocki@samsung.com>
+Cc: <linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <rosa.pila@samsung.com>,
+	<dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
+	<muhammed.ali@samsung.com>, <selvarasu.g@samsung.com>
+In-Reply-To: <9455a4e1-6352-4832-ac9f-2816f889c3a4@linaro.org>
+Subject: RE: [PATCH v3 9/9] arm64: dts: exynos: ExynosAutov920: add USB and
+ USB SS combo phy nodes
+Date: Tue, 17 Jun 2025 22:40:18 +0530
+Message-ID: <000001dbdfaa$b605f640$2211e2c0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
- <20250611-kunit-kselftests-v3-2-55e3d148cbc6@linutronix.de>
- <CAK7LNATuk_tpDAq07e5oSU4FptRO_88Oxh2=W=3YmBotbGuU5g@mail.gmail.com> <20250617093523-e7f54d95-96d0-4411-92d6-dd80fe84ee98@linutronix.de>
-In-Reply-To: <20250617093523-e7f54d95-96d0-4411-92d6-dd80fe84ee98@linutronix.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 18 Jun 2025 10:14:07 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARr-ypWkNR52-my2WJFQ3b26EGV===J8b1MROLuf31oRw@mail.gmail.com>
-X-Gm-Features: AX0GCFv7u6eSzDMgQ1fz3QLMoGrvpETTxg10qNUIysrWURln8hEL4ilzYDnFugA
-Message-ID: <CAK7LNARr-ypWkNR52-my2WJFQ3b26EGV===J8b1MROLuf31oRw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/16] kbuild: userprogs: also inherit byte order and
- ABI from kernel
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	workflows@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNTkACKxnsdZBPuyPiYuNftoBZF1gGRKuf5ApVTYEcCparjMbDhz82w
+Content-Language: en-in
+X-CMS-MailID: 20250617171023epcas5p3e6e775a8c375edeca1ef9dd0ee905a50
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250613055106epcas5p46a2e5e2d6f0e8811644643f6282fd9ca
+References: <20250613055613.866909-1-pritam.sutar@samsung.com>
+	<CGME20250613055106epcas5p46a2e5e2d6f0e8811644643f6282fd9ca@epcas5p4.samsung.com>
+	<20250613055613.866909-10-pritam.sutar@samsung.com>
+	<9455a4e1-6352-4832-ac9f-2816f889c3a4@linaro.org>
 
-On Tue, Jun 17, 2025 at 4:39=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Mon, Jun 16, 2025 at 11:49:41PM +0900, Masahiro Yamada wrote:
-> > On Wed, Jun 11, 2025 at 4:38=E2=80=AFPM Thomas Wei=C3=9Fschuh
-> > <thomas.weissschuh@linutronix.de> wrote:
-> > >
-> > > Make sure the byte order and ABI of the userprogs matches the one of =
-the
-> > > kernel, similar to how the bit size is handled.
-> > > Otherwise the userprogs may not be executable.
-> > > This happens for example on powerpc little endian, or riscv32.
-> > >
-> > > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de=
->
-> > > ---
-> > >  Makefile | 4 ++--
-> > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/Makefile b/Makefile
-> > > index c4293cf91e968ca8ee64452841fb266e24df63f6..b9aa1058321dabd3b3dd5=
-610e45a2807dfa257f4 100644
-> > > --- a/Makefile
-> > > +++ b/Makefile
-> > > @@ -1129,8 +1129,8 @@ ifneq ($(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS),)
-> > >  LDFLAGS_vmlinux        +=3D --emit-relocs --discard-none
-> > >  endif
-> > >
-> > > -# Align the bit size of userspace programs with the kernel
-> > > -USERFLAGS_FROM_KERNEL :=3D -m32 -m64 --target=3D%
-> > > +# Align the bit size, byte order and architecture of userspace progr=
-ams with the kernel
-> > > +USERFLAGS_FROM_KERNEL :=3D -m32 -m64 -mlittle-endian -mbig-endian --=
-target=3D% -march=3D% -mabi=3D%
-> > >  KBUILD_USERCFLAGS  +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_=
-CPPFLAGS) $(KBUILD_CFLAGS))
-> > >  KBUILD_USERLDFLAGS +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_=
-CPPFLAGS) $(KBUILD_CFLAGS))
+Hi Neil,=20
+
+> -----Original Message-----
+> From: neil.armstrong=40linaro.org <neil.armstrong=40linaro.org>
+> Sent: 13 June 2025 02:42 PM
+> To: Pritam Manohar Sutar <pritam.sutar=40samsung.com>; vkoul=40kernel.org=
+;
+> kishon=40kernel.org; robh=40kernel.org; krzk+dt=40kernel.org;
+> conor+dt=40kernel.org; alim.akhtar=40samsung.com; andre.draszik=40linaro.=
+org;
+> peter.griffin=40linaro.org; kauschluss=40disroot.org;
+> ivo.ivanov.ivanov1=40gmail.com; m.szyprowski=40samsung.com;
+> s.nawrocki=40samsung.com
+> Cc: linux-phy=40lists.infradead.org; devicetree=40vger.kernel.org; linux-
+> kernel=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-
+> samsung-soc=40vger.kernel.org; rosa.pila=40samsung.com;
+> dev.tailor=40samsung.com; faraz.ata=40samsung.com;
+> muhammed.ali=40samsung.com; selvarasu.g=40samsung.com
+> Subject: Re: =5BPATCH v3 9/9=5D arm64: dts: exynos: ExynosAutov920: add U=
+SB
+> and USB SS combo phy nodes
+>=20
+> On 13/06/2025 07:56, Pritam Manohar Sutar wrote:
+> > Update the USB 3.1 DRD controller and USB31DRD phy nodes to support SS
+> > combo phy for this soc.
 > >
+> > The USB 3.1 DRD controller has the following features:
+> > * DWC3 compatible
+> > * compliant with both USB device 3.1 and USB device 2.0 standards
+> > * compliant with USB host 3.1 and USB host 2.0 standards
+> > * supports USB device 3.1 and USB device 2.0 interfaces
+> > * supports USB host 3.1 and USB host 2.0 interfaces
+> > * full-speed (12 Mbps) and high-speed (480 Mbps) modes with USB device
+> >    2.0 interface
+> > * super-speed (5 Gbps) mode with USB device 3.1 Gen1 interface
+> > * super-speed plus (10 Gbps) mode with USB device 3.1 Gen2 interface
+> > * single USB port which can be used for USB 3.1 or USB 2.0
+> > * on-chip USB PHY transceiver
+> > * supports up to 16 bi-directional endpoints
+> > * compliant with xHCI 1.1 specification
 > >
-> > Why didn't you do like this?
+> > USB3.1 SSP+(10Gbps) is supported in this commit and SS phy in combo
+> > phy only supports PIPE3 interface and it is added in index 0 of SS phy.
+> > UTMI+ and PIPE3 PHY interfaces are specified in =22phys=22 property,
+> > UTMI+ (index 0 HS phy) and PIPE3 (index 0 SS phy).
 > >
-> > USERFLAGS_FROM_KERNEL :=3D $(filter -m32 -m64 -mlittle-endian
-> > -mbig-endian --target=3D% -march=3D% -mabi=3D%, $(KBUILD_CPPFLAGS)
-> > $(KBUILD_CFLAGS))
-> > KBUILD_USERCFLAGS  +=3D $(USERFLAGS_FROM_KERNEL)
-> > KBUILD_USERLDFLAGS +=3D $(USERFLAGS_FROM_KERNEL)
->
-> The idea was to keep the USERFLAGS_FROM_KERNEL line free of clutter, as i=
-t is
-> probably going to change more often. To improve reviewability and gain so=
-me
-> available horizontal space in case it should be needed at some point.
->
-> If you prefer the other layout I'll be happy to switch it around.
+> > Signed-off-by: Pritam Manohar Sutar <pritam.sutar=40samsung.com>
+> > ---
+> >   .../arm64/boot/dts/exynos/exynosautov920-sadk.dts =7C  4 ++++
+> >   arch/arm64/boot/dts/exynos/exynosautov920.dtsi    =7C 15
+> +++++++++++++--
+> >   2 files changed, 17 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+> > b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+> > index a21386bd9af3..40588f7c9998 100644
+> > --- a/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+> > +++ b/arch/arm64/boot/dts/exynos/exynosautov920-sadk.dts
+> > =40=40 -88,6 +88,10 =40=40 &xtcxo =7B
+> >   =7D;
+> >
+> >   /* usb */
+> > +&usbdrd31_ssphy =7B
+> > +	status =3D =22okay=22;
+> > +=7D;
+> > +
+> >   &usbdrd31_hsphy =7B
+> >   	status =3D =22okay=22;
+> >   =7D;
+> > diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > index 4efc005cae80..5ee7fad346b9 100644
+> > --- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > +++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > =40=40 -1048,6 +1048,17 =40=40 pinctrl_hsi1: pinctrl=4016450000 =7B
+> >   			interrupts =3D <GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>;
+> >   		=7D;
+> >
+> > +		usbdrd31_ssphy: phy=4016480000 =7B
+> > +			compatible =3D =22samsung,exynosautov920-usb31drd-
+> ssphy=22;
+> > +			reg =3D <0x16480000 0x0200>;
+> > +			clocks =3D <&cmu_hsi1 CLK_MOUT_HSI1_NOC_USER>,
+> > +				 <&cmu_hsi1 CLK_MOUT_HSI1_USBDRD>;
+> > +			clock-names =3D =22phy=22, =22ref=22;
+> > +			=23phy-cells =3D <1>;
+> > +			samsung,pmu-syscon =3D <&pmu_system_controller>;
+> > +			status =3D =22disabled=22;
+> > +		=7D;
+> > +
+> >   		usbdrd31_hsphy: phy=4016490000 =7B
+> >   			compatible =3D =22samsung,exynosautov920-usbdrd-
+> hsphy=22;
+> >   			reg =3D <0x16490000 0x0200>;
+> > =40=40 -1109,8 +1120,8 =40=40 usbdrd31_dwc3: usb=400 =7B
+> >   					 <&cmu_hsi1
+> CLK_MOUT_HSI1_USBDRD>;
+> >   				clock-names =3D =22ref=22, =22susp_clk=22;
+> >   				interrupts =3D <GIC_SPI 491
+> IRQ_TYPE_LEVEL_HIGH>;
+> > -				phys =3D <&usbdrd31_hsphy 0>;
+> > -				phy-names =3D =22usb2-phy=22;
+> > +				phys =3D <&usbdrd31_hsphy 0>,
+> <&usbdrd31_ssphy 0>;
+> > +				phy-names =3D =22usb2-phy=22, =22usb3-phy=22;
+> >   				snps,has-lpm-erratum;
+> >   				snps,dis_u2_susphy_quirk;
+> >   				snps,dis_u3_susphy_quirk;
+>=20
+> I think at least patch 6 & 9 should be squashed.
+>=20
 
+Patch 6 and 9 are posted to add support for HS and SS phys in combo phy sep=
+arately.
+We will squash them in next version of patch-set (v4).=20
 
-$(filter ... $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
+> Neil
 
-is duplicated in the two lines.
+Thank you.
 
-That is the reason for my suggestion.
+Regards,
+Pritam
 
-
-
---=20
-Best Regards
-Masahiro Yamada
