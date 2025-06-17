@@ -1,122 +1,129 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5B728C2D1
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCB9293C72
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750158066; cv=none; b=gqqhZwHZmxvnykszmUkwpIJOpUDqc4O7UrfdRl1MIt+ASctkQaYr6sT8qKo1QLVdUxy4YaArv34B4SF8BDmdZnAiWJZQDKJgDcKWElVuWA9LkboYUoM3cZrSF/TViAjSZQn05F5kw0la3YN9steIyzv/6y7BMltWGMePfYrNjA4=
+	t=1750158094; cv=none; b=Z1jYGbNR8MM1x8sY6g4DilJeHoQ/WivIs2gk2ecvJl8FxiL9JjG7Zj8GsZeyLjLOR2NR/wFP2/1883tnAeMt0W+YxBnIYuCKpyrVCKfbAxP5W1kMPSjQoYO15gszAWGJtfbXARFXGBaLyj+EDBrRqw0NGSWztu3vLMSLNRPisGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750158066; c=relaxed/simple;
-	bh=Jy4lsrusakvX9u6DHHyu1tpppoeRSJrKpQOBCTREiTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e4uFJaBgT7nfgiAsytGsNnKthwJmvBmTpDAJ+tVpQ5NQ4aNeUD6Frc81pgJWZB+L9w1DYlOVtd966XjaOT95r/iccTzYA0JW2yLHy5TZgYw1BeRdtS7foULL+bc4xzK+/wbUCvTK9WaDrGGmbvJGT15ve3Pv4sNXUYVeXanDjuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iO39BHbf; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750158094; c=relaxed/simple;
+	bh=IBYQZSudqTgn34Kapoq78rT+fFWNWZ9+bS43x3EWBcc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XUDPyfbfBNUB7VtgvEIda6ssESeYkGf2+C6oTCTyO52ZeeYsbs4G8ZZ8nka6zEmBVztW7HlsWr/N0WlC8VfQ1+//14JHXptIakwU2dnuLjCR+eiA+HpHsEm9fsllp2hd6TIfLZU/xreAlAoh5Und/Yq7fnG4U3UiHwTnrA8xHrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=Qa0Mmh0S; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iO39BHbf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750158063;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rPzSBRIX8lNbzruQuHcxrBhpa2JtXIadSLv81sT6P6c=;
-	b=iO39BHbfCPo0S0nb+VqXNP5ZXDGV/7KCBH9XktSXLN0o70ULkmXFFyYEvnskiTya+DOdHz
-	fB8OXrmXsrufHPTVpDiii/15xNGa3WItadA1gB0xb5mtYaWLQpLhZDHub9UL7iT9HEC5Tw
-	/4a1/vS2IWJeQh+4oqt5Hnq6WGp16h8=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-636-KPsvAo6bNleaT4uwMuxypA-1; Tue, 17 Jun 2025 07:00:59 -0400
-X-MC-Unique: KPsvAo6bNleaT4uwMuxypA-1
-X-Mimecast-MFC-AGG-ID: KPsvAo6bNleaT4uwMuxypA_1750158058
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a37a0d1005so3357190f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:00:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="Qa0Mmh0S"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-235a3dd4f0dso35398425ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:01:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=inventec.com; s=google; t=1750158089; x=1750762889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1DHyU2R8WPjOq8eE9G+orQPQ64Wuq4IqqrSMYFwTCBc=;
+        b=Qa0Mmh0SUDjvxQros6xspDcRisYS82W0rofYbdCTcSlLbgn0LyzGGoCz9sYazZGFKF
+         T5w9mLsYXIE0y887zNgX+V6aiBSXYnwclbM/naIuDkv9Y0romKwnXW29WgtzIXiHUDeA
+         HOIcqEv3L/RKmVEJsve+GNZTSlmBGljrJ6AWE79GU31U4zsiqf89HmfLrrV9z9G/bDdY
+         5dkYhg+k28MP6xLcXwDbME8hlEsoAwKSSm6wOaaKWmr8luoQo/c+VLlLJ2FY1FqSOcVu
+         IvvNYEhokAWi/iDO8Gdgn2q5Y7jTkt6lZ6DrohoRW+SIq/7IEWEOOU5CquhnR+8Op2KC
+         Wy1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750158058; x=1750762858;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rPzSBRIX8lNbzruQuHcxrBhpa2JtXIadSLv81sT6P6c=;
-        b=oJXD7OWEtb1CbCIbfSqM6OqZsEYZWM0Sly5IurO/mjJoZxYeUNQeE7E+L38LzxjU3c
-         VJmi2+WZxYNQ0X2DrB0+QzkyJP1EC4AMG9pkGYmYRyTXcSgUTpTryE6jlf4DlfE+IBW9
-         r3RSv0cQrvs1Ux7rUt2X6uaQMmhP/FQUK+PSsu69CBay2HjeVyaiQlouboSzPahJhUg/
-         UlQYsGTeNcEeCVgYZPoFaTBeJOv/7Av/NCtmCh/saAy1yObE+xmfbbT9YFqt+rpmItUk
-         PlLSjzhXTN1IfODiT3GR6cSLS0AKCkqGLjgJy4CvXEllcGXP0o8U13+K+JwovEQw5JW7
-         FqOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUV0+bPqtbtb09ClW5iqSrmGwjDZlLa/tasOy6W/xT46l0ymZJqkL0f74clO7SlnNxfGKUxb3QqTWXRGUk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuW7Hoiim2U+GL0c7J/zghXWdEvpGtLtOW5cl6kwaSkhVQsXV/
-	dH3FIRoG3jtgwaEOfFVNHCUA9zDTWYgc5hPeG2JRsp4MFqhUXKvx72L2AqslXgf2RlhmgweyE0s
-	KRpNb1DGGRKnLoOIotr9yfV1gsRT85kswCy0wAygTtfxTePUQVdm7gRbSmHdeGp8r0w==
-X-Gm-Gg: ASbGncucQCfqFyWEHD985GxA/996JcALpqNLhwGQxurX0EiKgUUDH5I9BB9n6VwuwU8
-	TnSjJ8Tfn28+gTpU4PLYltMm8aMpYR0LU30W6Qirva5TbIBqjc7QEmHVI2sIlJd7dgsTEtOcQk2
-	kM45qpP2W36ZBap9de6g/SqUYTdP/7fG+lTjS/ehFI4T0x9VZtny99TkNjN2zVJmoPRfWgZFj0s
-	j2dc6CKtoQlPgBDrm9dCBF8jmctu3nD1xO9k7dPMQNY4wOcCYpepmO9a0jwclgKhuSdoDKbm55y
-	K6Bokj8VQOGdkvmgQleaDi5i/IgFWPconvONAGJRMWghQuiImZwIOpKmzdCfprcvCzPBNA==
-X-Received: by 2002:a5d:64ca:0:b0:3a5:34ea:851e with SMTP id ffacd0b85a97d-3a5723a15ccmr11339903f8f.25.1750158058255;
-        Tue, 17 Jun 2025 04:00:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFCaVw5kHOpYYCnYDEK29xi4S4qdkGakFHB4vHzCbXbbNO46yHFb/HC43oPZrbhbnAnFGzcRw==
-X-Received: by 2002:a5d:64ca:0:b0:3a5:34ea:851e with SMTP id ffacd0b85a97d-3a5723a15ccmr11339824f8f.25.1750158057393;
-        Tue, 17 Jun 2025 04:00:57 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2448:cb10:3ac6:72af:52e3:719a? ([2a0d:3344:2448:cb10:3ac6:72af:52e3:719a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087a9sm13905989f8f.55.2025.06.17.04.00.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 04:00:56 -0700 (PDT)
-Message-ID: <da990565-b8ec-4d34-9739-cf13a2a7d2b3@redhat.com>
-Date: Tue, 17 Jun 2025 13:00:53 +0200
+        d=1e100.net; s=20230601; t=1750158089; x=1750762889;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1DHyU2R8WPjOq8eE9G+orQPQ64Wuq4IqqrSMYFwTCBc=;
+        b=bO//yXqilHYtTFWkHxUfMQ29dMelGCwd0HMFtVzMItMtRx0mF6z++IHne9Z78bLZg6
+         2hR5ielUIqSX+ukoacpOy0WvJ5YY4nbYaigdTs4Z7REqkY0jWAUtC3t0fjXogvAGcvzW
+         TrQqlOlOxFGyEO2AYYE6ButQkn8CGQcr+ASozTw2s6LlVz9cBl5bbjHI/khLt0Y6MGfm
+         RBaH7dq3zsMgYfyvHwIF1fiAb+AJPoMFDDW1VqNaBoZLOCmsClUC7IKGuo51CaQ7V/5F
+         IC9j1QBYggWJu4zECZe06+3y50fkfh/YA2PL1cftKImCFApledColaeMzCn7wRtBRqmu
+         YEHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWAoo44JP7cRp02YzE0qg8fLxvC+B0I3NytV7NpUp9I8sVNgR1XetLi0VFoLPfEqgEzEcCYbtNebfjikCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf2orIzHVxGdhTl32GuGs0akLERH0oqcb0Nkm39ln9uJH2ALKD
+	PfaIN8Ijs2fkdw5gEMwddTqV+9loet5ADEgsZKB4qUyoq9C5J93FtGHjqcyDQxW7+gY=
+X-Gm-Gg: ASbGnct/kyqhfsUXv5dgrDcnjZfhbjJU/FyGTZWPT1Y7DS1YDDy+CQEPd2iMsVr4/fS
+	ux9GYuYXy2pAQpUVgUrVripEpM70N/N+khfca4V7KnGxFucgtSCrNWb6nyvZceaYZKc5bGdZPaz
+	d56ZjscwuOAr4eqR3XrJJqZ7KWbKAtPBTmYFS7DirVK3vamML21FjumqhHHhKuGaFvFbIMYftdY
+	TYGLEQAhw5OMvmZvv0F9QCPMmRXMabMu9X/FHQB8ieVyrZMOjuAvNemt0NrdFsNFsrHclIOwS0h
+	8B3YeVzN15PsEvlmcSEuS001tg/B2E3kigWg+eMUBVF/sPKHhmsiZwVcDqP6FpCq1F3aDQS1jVa
+	lKDQBqRE=
+X-Google-Smtp-Source: AGHT+IFhiIFZVVRkKW6KlPv5Ms3limyDQ3qCAx3P+UVC13Dsqu72f+r1sPGNNNtDItxGQ9ngdyMNEQ==
+X-Received: by 2002:a17:903:1a83:b0:234:9656:7db9 with SMTP id d9443c01a7336-2366b122186mr205102705ad.32.1750158088915;
+        Tue, 17 Jun 2025 04:01:28 -0700 (PDT)
+Received: from localhost.localdomain ([123.51.235.216])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88f423sm77142515ad.12.2025.06.17.04.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 04:01:28 -0700 (PDT)
+From: Brian Chiang <chiang.brian@inventec.com>
+X-Google-Original-From: Brian Chiang <Chiang.Brian@inventec.com>
+To: linux@roeck-us.net
+Cc: alex@ghiti.fr,
+	aou@eecs.berkeley.edu,
+	chiang.brian@inventec.com,
+	corbet@lwn.net,
+	jdelvare@suse.com,
+	linux-doc@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com
+Subject: Re: [PATCH v9 2/2] hwmon: (pmbus/tps53679) Add support for TPS53685
+Date: Tue, 17 Jun 2025 18:51:41 +0800
+Message-Id: <20250617105141.4081335-1-Chiang.Brian@inventec.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <b278e83a-473f-46ee-b353-3f8c14d03aaf@roeck-us.net>
+References: <b278e83a-473f-46ee-b353-3f8c14d03aaf@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 1/2] tcp_metrics: set maximum cwnd from the dst entry
-To: Petr Tesarik <ptesarik@suse.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>,
- "open list:NETWORKING [TCP]" <netdev@vger.kernel.org>
-Cc: David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250613102012.724405-1-ptesarik@suse.com>
- <20250613102012.724405-2-ptesarik@suse.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250613102012.724405-2-ptesarik@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/13/25 12:20 PM, Petr Tesarik wrote:
-> diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
-> index 4251670e328c8..dd8f3457bd72e 100644
-> --- a/net/ipv4/tcp_metrics.c
-> +++ b/net/ipv4/tcp_metrics.c
-> @@ -477,6 +477,9 @@ void tcp_init_metrics(struct sock *sk)
->  	if (!dst)
->  		goto reset;
->  
-> +	if (dst_metric_locked(dst, RTAX_CWND))
-> +		tp->snd_cwnd_clamp = dst_metric(dst, RTAX_CWND);
-> +
->  	rcu_read_lock();
->  	tm = tcp_get_metrics(sk, dst, false);
->  	if (!tm) {
-> @@ -484,9 +487,6 @@ void tcp_init_metrics(struct sock *sk)
->  		goto reset;
->  	}
->  
-> -	if (tcp_metric_locked(tm, TCP_METRIC_CWND))
-> -		tp->snd_cwnd_clamp = tcp_metric_get(tm, TCP_METRIC_CWND);
-> -
->  	val = READ_ONCE(net->ipv4.sysctl_tcp_no_ssthresh_metrics_save) ?
->  	      0 : tcp_metric_get(tm, TCP_METRIC_SSTHRESH);
->  	if (val) {
+> On Mon, 16 Jun 2025 09:15:43 -0700 Guenter Roeck wrote:
+> 
+> On 6/10/25 03:25, Chiang Brian wrote:
+> ...
+> > @@ -263,6 +282,10 @@ static int tps53679_probe(struct i2c_client *client)
+> >   		info->identify = tps53681_identify;
+> >   		info->read_word_data = tps53681_read_word_data;
+> >   		break;
+> > +	case tps53685:
+> > +	    info->pages = TPS53679_PAGE_NUM;
+> > +	    info->identify = tps53685_identify;
+> > +		break;
+> 
+> 0-day rightfully complains about the bad alignment above.
+> 
+> If you want this patch to be applied for the next kernel release,
+> I would suggest to copy the hardware monitoring list on the first patch
+> of the series. Without it, I get
+> 
+> WARNING: DT compatible string "ti,tps53685" appears un-documented -- check ./Documentation/devicetree/bindings/
+> #296: FILE: drivers/hwmon/pmbus/tps53679.c:316:
+> +	{.compatible = "ti,tps53685", .data = (void *)tps53685},
+> 
+> Since I am not copied on the first patch of the series, that patch has to be applied
+> through a different maintainer tree, and I have to wait until that is the case.
+> Not that I understand the logic behind it, but I mentioned that before, so I assume
+> this is on purpose.
 
-It's unclear to me why you drop the tcp_metric_get() here. It looks like
-the above will cause a functional regression, with unlocked cached
-metrics no longer taking effects?
+Thank you for the feedback. I'll address both issues in v10:
 
-/P
+1. Fix the indentation alignment in the switch case
+2. CC linux-hwmon@vger.kernel.org on all patches in the series
 
+I apologize for the oversight, this wasn't intentional, but rather due to 
+my automated CC generation only considering per-patch maintainers.
+
+For v10, I'll ensure all the devicetree and hwmon maintainer lists are 
+included on all patches so you can see the complete series.
+
+Best Regards,
+Brian Chiang
