@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A281FDA7B;
-	Tue, 17 Jun 2025 01:40:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98B1212B0A;
+	Tue, 17 Jun 2025 01:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750124459; cv=none; b=LP8xGp55yln/VC3QOqdQ+TaE72QueFtwU7i3nY0OcgmyOhGwgzcSrxyOxUjaUvRd0LYvz5miFQ2wRif4l3zCpwRJtqMZ9tIaFwR74p8iNAfiYTHMYc6Aw6K8P2uuyVT3P8nwRUA6akeX/V2p9JoDFsWl3p97BHzWu3xX9iJp3JQ=
+	t=1750124461; cv=none; b=Hz6XF++u9dDOaBXEW+/CB2Kvnhys+RsrQapsRhtdLh31FhD/wbpvGqjJrDcZLgd0AkWiskI2OFJM0pjzuy+qUtX93+Fevzkj8RxoWMDkvxJSYf41oQ4bjEV43xcnR6Rnkvd0880Ud1Ey71VZlpyX1SvER2v8fn+2GT62S24LaG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750124459; c=relaxed/simple;
-	bh=XflA3He/uIQWKsjj58cuT+fiN2doM1NxpPliAQNNeWI=;
+	s=arc-20240116; t=1750124461; c=relaxed/simple;
+	bh=u03g1QF8vlE8P0p3HURWg5DdY5uYgZ7AT9aZJATUpfI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cA4edb1E4FbGJMrQZRI0Ny5AegrpBTsXPRSSdAIfQkqPV7Dwzaf5NflHwyW42N1kipvaFtk7sabwp5SGuzd6FqjJLmkzCpEV076ccmcrpDbEQSFtycYQNVwjMZytBHWltixSS33/nU6B8MPClv553JfWZ97ahRrNog3WY2zXSZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VwBgqN5g; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version:Content-Type; b=gIgZPJ5UCMGZulMGP4lPJBjWoBcwRWim01aD85lBX9ZIr7lqlP1nEkr3kEkldS32NPaMfcx1VIKI3UqUhWdKV45pvPbo/zOsK496sDU7vio0UZi2km/nMxNkvnYSFQB1dg7DmchxIT+eRYgtmCczEAsMVdYnxw9jkAGPVkVtvmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GTA8BRkv; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VwBgqN5g"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GTA8BRkv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750124458; x=1781660458;
+  t=1750124460; x=1781660460;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=XflA3He/uIQWKsjj58cuT+fiN2doM1NxpPliAQNNeWI=;
-  b=VwBgqN5gfyypoYy6YAX3SFqIBPHuJj9l8s6ihMMSx/N0oMFRJPXzUJY2
-   T/zoVKZy30+hHWZJdq+vHL+8bg9hPOSsGXfpAxTGpPLw34u32KN9SY56I
-   B8XxQtWdFsSfmwYHf7fI2iYr85HdWOdddF2acKbLdwwl1UobIOXFOWwjN
-   nx8HtzsjrjYicA6El+9lRvZA1YTtpR+nFTAq4TRHJ3/5KTIusAUN5WqTF
-   gPOOXfdQYtNP/9thmrukTGaxz9iApftZ+qdW7ucNMO+ZnKQRU1PxSbyr0
-   03fCe8vWTIlaoHE/aYSuAHdrd3lxC6YDH245ZGnINDNBELXfvLfoNnE/g
-   Q==;
-X-CSE-ConnectionGUID: RJQqFsGnRbatxv0PWxrPgg==
-X-CSE-MsgGUID: 8gWL1g/MRrSOasIZ7OG8+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62556570"
+  bh=u03g1QF8vlE8P0p3HURWg5DdY5uYgZ7AT9aZJATUpfI=;
+  b=GTA8BRkvOmXvry6bEZABOFCmdeFkT1C0uuOkF7xxvhK72efzCcbgf5Oo
+   5BIq34mOYTTlzZYCp4owH/Dg6fDCuuhoHwgDueFPvYAgAWuxDrdKudwfG
+   Z+cy2X+q8E2XfCNjr9K4m76IH+CMN2ng40pGHlqmaMTl7H7nNuBgMDbfY
+   Y67S540em1ruvfKj1q9NKDY0l12eCkmltdkFZFwDIO5Kqxa3ZYjSErTGX
+   tMwKUuf8dlWkAc5mDhxP3avSG78PLHG8zJzhN2txrlFUt0qUW7jmYWs+h
+   Z61bskWvyy1FJNf7YUysTTwJEHsRj+ZXHvbIOuHDvwOnNRgmb0y88RFHk
+   A==;
+X-CSE-ConnectionGUID: 5ZL3RQyMQ7OXfu9xe7uXFQ==
+X-CSE-MsgGUID: 9B76va7ESj2UoGdEpNyE4A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="62556580"
 X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="62556570"
+   d="scan'208";a="62556580"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:54 -0700
-X-CSE-ConnectionGUID: O4jfocQ7SoGkJAujRTwtYQ==
-X-CSE-MsgGUID: O0z7k+4pQ52mCb+eW+1mGg==
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:55 -0700
+X-CSE-ConnectionGUID: SmGOr9BASY+EuTgaPKXsQw==
+X-CSE-MsgGUID: Cirqfy02Rxi2ogwWXKq0VQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
-   d="scan'208";a="148989481"
+   d="scan'208";a="148989493"
 Received: from spandruv-desk2.amr.corp.intel.com (HELO debox1-desk4.intel.com) ([10.124.223.117])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:52 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2025 18:40:54 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: linux-kernel@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
@@ -53,9 +53,9 @@ To: linux-kernel@vger.kernel.org,
 	tony.luck@intel.com,
 	xi.pardee@linux.intel.com
 Cc: hdegoede@redhat.com
-Subject: [PATCH V2 09/15] docs: Add ABI documentation for intel_pmt feature directories
-Date: Mon, 16 Jun 2025 18:40:33 -0700
-Message-ID: <20250617014041.2861032-10-david.e.box@linux.intel.com>
+Subject: [PATCH V2 12/15] platform/x86/intel/tpmi: Get OOBMSM CPU mapping from TPMI
+Date: Mon, 16 Jun 2025 18:40:36 -0700
+Message-ID: <20250617014041.2861032-13-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250617014041.2861032-1-david.e.box@linux.intel.com>
 References: <20250617014041.2861032-1-david.e.box@linux.intel.com>
@@ -68,194 +68,57 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Add a new sysfs ABI documentation file describing the layout and content of
-the features-<PCI BDF>/ directory used by Intel PMT (Platform Monitoring
-Technology). This directory exposes telemetry and control feature details
-for a given PMT PCI device.
+Copy TPMI=E2=80=99s OOBMSM platform info into a common area within VSEC pri=
+vate
+data via intel_vsec_set_mapping(). This enables other Intel VSEC features
+to access the CPU mapping without additional queries.
+
+Additionally, designate the TPMI driver as a supplier for the Telemetry
+driver, ensuring it can obtain the necessary platform information for
+future feature extensions.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
 
 Changes in v2:
-  - Spell out RMID and add description of the feature.
-  - Add a description of the watcher API
-  - Update example to use snake case for pmt_sp_policy
+  - Add missing comma in mtl_info
 
- .../testing/sysfs-class-intel_pmt-features    | 134 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 135 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-class-intel_pmt-features
+ drivers/platform/x86/intel/vsec.c      | 2 +-
+ drivers/platform/x86/intel/vsec_tpmi.c | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-class-intel_pmt-features b/Doc=
-umentation/ABI/testing/sysfs-class-intel_pmt-features
-new file mode 100644
-index 000000000000..cddb30e5bdf6
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-class-intel_pmt-features
-@@ -0,0 +1,134 @@
-+What:          /sys/class/intel_pmt/features-<PCI BDF>/
-+Date:          2025-04-24
-+KernelVersion: 6.16
-+Contact:       david.e.box@linux.intel.com
-+Description:
-+               The `features-<PCI BDF>/` directory represents the "feature=
-s"
-+               capability exposed by Intel PMT (Platform Monitoring Techno=
-logy)
-+               for the given PCI device.
-+
-+               Each directory corresponds to a PMT feature and contains
-+               attributes describing the available telemetry, monitoring, =
-or
-+               control functionalities.
-+
-+Directory Structure:
-+
-+  /sys/class/intel_pmt/features-<PCI BDF>/
-+  =E2=94=9C=E2=94=80=E2=94=80 accelerator_telemetry/		# Per-accelerator te=
-lemetry data
-+  =E2=94=9C=E2=94=80=E2=94=80 crash_log/			# Contains system crash telemet=
-ry logs
-+  =E2=94=9C=E2=94=80=E2=94=80 per_core_environment_telemetry/	# Environmen=
-tal telemetry per core
-+  =E2=94=9C=E2=94=80=E2=94=80 per_core_performance_telemetry/	# Performanc=
-e telemetry per core
-+  =E2=94=9C=E2=94=80=E2=94=80 per_rmid_energy_telemetry/	# Energy telemetr=
-y for RMIDs
-+  =E2=94=9C=E2=94=80=E2=94=80 per_rmid_perf_telemetry/		# Performance tele=
-metry for RMIDs
-+  =E2=94=9C=E2=94=80=E2=94=80 tpmi_control/			# TPMI-related controls and =
-telemetry
-+  =E2=94=9C=E2=94=80=E2=94=80 tracing/				# PMT tracing features
-+  =E2=94=94=E2=94=80=E2=94=80 uncore_telemetry/			# Uncore telemetry data
-+
-+Common Files (Present in all feature directories):
-+
-+  caps
-+    - Read-only
-+    - Lists available capabilities for this feature.
-+
-+  guids
-+    - Read-only
-+    - Lists GUIDs associated with this feature.
-+
-+Additional Attributes (Conditional Presence):
-+
-+  max_command_size
-+    - Read-only
-+    - Present if the feature supports out-of-band MCTP access.
-+    - Maximum supported MCTP command size for out-of-band PMT access (byte=
-s).
-+
-+  max_stream_size
-+    - Read-only
-+    - Present if the feature supports out-of-band MCTP access.
-+    - Maximum supported MCTP stream size (bytes).
-+
-+  min_watcher_period_ms
-+    - Read-only
-+    - Present if the feature supports the watcher API.
-+      The watcher API provides a writable control interface that allows us=
-er
-+      configuration of monitoring behavior, such as setting the sampling or
-+      reporting interval.
-+    - Minimum supported time period for the watcher interface (millisecond=
-s).
-+
-+  num_rmids
-+    - Read-only
-+    - Present if the feature supports RMID (Resource Monitoring ID) teleme=
-try.
-+      RMIDs are identifiers used by hardware to track and report resource =
-usage,
-+      such as memory bandwidth or energy consumption, on a per-logical-ent=
-ity
-+      basis (e.g., per core, thread, or process group).
-+    - Maximum number of RMIDs tracked simultaneously.
-+
-+Example:
-+For a device with PCI BDF `0000:00:03.1`, the directory tree could look li=
-ke:
-+
-+  /sys/class/intel_pmt/features-0000:00:03.1/
-+  =E2=94=9C=E2=94=80=E2=94=80 accelerator_telemetry/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-+  =E2=94=9C=E2=94=80=E2=94=80 crash_log/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-+  =E2=94=9C=E2=94=80=E2=94=80 per_core_environment_telemetry/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-+  =E2=94=9C=E2=94=80=E2=94=80 per_rmid_energy_telemetry/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 num_rmids
-+  =E2=94=9C=E2=94=80=E2=94=80 tpmi_control/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=9C=E2=94=80=E2=94=80 tracing/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=9C=E2=94=80=E2=94=80 uncore_telemetry/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 guids
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_command_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 max_stream_size
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 min_watcher_period_ms
-+
-+Notes:
-+  - Some attributes are only present if the corresponding feature supports
-+    the capability (e.g., `max_command_size` for MCTP-capable features).
-+  - Features supporting RMIDs include `num_rmids`.
-+  - Features supporting the watcher API include `min_watcher_period_ms`.
-+  - The `caps` file provides additional information about the functionality
-+    of the feature.
-+
-+Example 'caps' content for the 'tracing' feature:
-+
-+  /sys/class/intel_pmt/features-0000:00:03.1/
-+  =E2=94=9C=E2=94=80=E2=94=80 tracing/
-+  =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 caps
-+
-+	telemetry                                Available: No
-+	watcher                                  Available: Yes
-+	crashlog                                 Available: No
-+	streaming                                Available: No
-+	threashold                               Available: No
-+	window                                   Available: No
-+	config                                   Available: Yes
-+	tracing                                  Available: No
-+	inband                                   Available: Yes
-+	oob                                      Available: Yes
-+	secure_chan                              Available: No
-+	pmt_sp                                   Available: Yes
-+	pmt_sp_policy                            Available: Yes
-+	mailbox                                  Available: Yes
-+	bios_lock                                Available: Yes
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b704107859a6..31ab584890cc 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12387,6 +12387,7 @@ INTEL PMT DRIVERS
- M:	David E. Box <david.e.box@linux.intel.com>
- S:	Supported
- F:	Documentation/ABI/testing/sysfs-class-intel_pmt
-+F:	Documentation/ABI/testing/sysfs-class-intel_pmt-features
- F:	drivers/platform/x86/intel/pmt/
+diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel=
+/vsec.c
+index 8c330b57e4d4..eaab313037d2 100644
+--- a/drivers/platform/x86/intel/vsec.c
++++ b/drivers/platform/x86/intel/vsec.c
+@@ -720,7 +720,7 @@ static const struct intel_vsec_platform_info mtl_info =
+=3D {
+ static const struct vsec_feature_dependency oobmsm_deps[] =3D {
+ 	{
+ 		.feature =3D VSEC_CAP_TELEMETRY,
+-		.supplier_bitmap =3D VSEC_CAP_DISCOVERY,
++		.supplier_bitmap =3D VSEC_CAP_DISCOVERY | VSEC_CAP_TPMI,
+ 	},
+ };
 =20
- INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
+diff --git a/drivers/platform/x86/intel/vsec_tpmi.c b/drivers/platform/x86/=
+intel/vsec_tpmi.c
+index d95a0d994546..7748b5557a18 100644
+--- a/drivers/platform/x86/intel/vsec_tpmi.c
++++ b/drivers/platform/x86/intel/vsec_tpmi.c
+@@ -799,6 +799,10 @@ static int intel_vsec_tpmi_init(struct auxiliary_devic=
+e *auxdev)
+ 			ret =3D tpmi_process_info(tpmi_info, pfs);
+ 			if (ret)
+ 				return ret;
++
++			ret =3D intel_vsec_set_mapping(&tpmi_info->plat_info, vsec_dev);
++			if (ret)
++				return ret;
+ 		}
+=20
+ 		if (pfs->pfs_header.tpmi_id =3D=3D TPMI_CONTROL_ID)
 --=20
 2.43.0
 
