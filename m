@@ -1,207 +1,157 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B10D230D0E
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D37290BC8
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750152855; cv=none; b=fbewd39roHviZZwJf9dUJbC+QIktcf/UMETsFgeBHoiFRUl+8BhtbktdQi/1vpJHGIEOgPT7BIRTxytmUab9uUHX8vRN3b7NrRkEjCQAOld4+uHv4LaSfygfgy7PGtNfNnnW+u2aDZE4tPr6qCPJ6FS2UmyFXDPFtPMp1wipKhY=
+	t=1750152874; cv=none; b=tSue85l01Dmz2JpwwNN5g9i3bbJMw/uSp8CNv8VlKjg7CqXbl6FGfntdmARJdsmIuAWKoo9yUB3YBdDAZ2hQQnkppZP+hYE7iD+qAD0fiMDpmQs5jKPLIfrETZYOIR5kO+rjOdioSse0odR0R8zxXu/Q5Fgv/IW8Q8Dpg/STEZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750152855; c=relaxed/simple;
-	bh=G5eezadzLBW93ru6voapn97o+0muFg8uZIO6GHGGoCg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lPqKw+GJs0doQW0zMC+xutjeau6Xx8awToNg0ZSLT7TYNSYAepYsAqoiMFRJZRdMTQC2q+YosMWsdSNgQS45Xl5S/tCQ4oNh5ObAVjpMGaleH1ACoGfBrIXfWaAr605Y5a3I7bw0BweC8K1nzNMgD/pMWqhg7VsmuDWER3O1FzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WuJpyJsX; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750152874; c=relaxed/simple;
+	bh=/l+blL0P/WvKFXEmP8UAB8+2DcgBYjMRCa/JF+NxGbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOwXuAjykiCr3vZo+6aXEQFj8ErnFMiKvYEDsiVpZZ3Y3OAknYX3B3T4s3ppOHGUEvU9sYlW4BESek6GqRUFOedf19vTbSerKlLR3j/M+ISXodRUgFCRtTWansXF3KijVYCbaVSDeoSm0m+O+VbK0FLFmLzd01QSSpRghKgUWU8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H17Ga4VT; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WuJpyJsX"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3122a63201bso5132161a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:34:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750152852; x=1750757652; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iy9ozREwXM6yajfHwp8sB5SkUjs9u/5sdv2yga+HurE=;
-        b=WuJpyJsXBcG2MAKsFjqblnCmyc1coWOKTasu4l+akIP9qa+QVXKX0oBnpt8YYf9c0F
-         o/4z9wknLKpvBExiM33lfoktXxoQvYyKV5FcW4G5dHn180f8a9HywDeI+5e8mKgp90ei
-         IWWtbPnuqB7GCUH5NtzVlHKx9EHxdTEHZgwAqgi2wFohe4x9fm8jUXrkWrbSE8l5vTqI
-         OfAWzDgKMJ3yIvV9Gci10BqmcgOYpwqD21wHcIRegVFv4jFMFTnWXNNg4yEFCmrxI0Rd
-         oXmeLn+MHQWKA9+zPmRT5hJ3t7uVlf5cHDPYqPEKdOxTV+LVgHtWXZsVNQkSom/jWQqp
-         x6OQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H17Ga4VT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750152872;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UoO6Im3sdMj9qrKiZw97K0g1BjWI//UD+48kISxcxhU=;
+	b=H17Ga4VTXpLcJQtVGtOXTLTdsFRxwKIZHlHmDp2f3q4yHxHlYVq0ynSoYBY/wGSjSEXrdP
+	g/u+MBzDyHyrpTb8c4q4v4wOZCmmwb9NRwni4iJ4qkwmUjmxgg/DTemp6jmXWVHFthclTk
+	fu1Xru0KpxBxLCTSONuPH5GsGdosqhI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-258-0U5Ei7I4Mr2BnOHngu1nmA-1; Tue, 17 Jun 2025 05:34:29 -0400
+X-MC-Unique: 0U5Ei7I4Mr2BnOHngu1nmA-1
+X-Mimecast-MFC-AGG-ID: 0U5Ei7I4Mr2BnOHngu1nmA_1750152868
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a578958000so997808f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:34:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750152852; x=1750757652;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iy9ozREwXM6yajfHwp8sB5SkUjs9u/5sdv2yga+HurE=;
-        b=s/zlSk6aRNcOOOHqOhsbaqfgX+bhARuH5tE/on+6a/SM/EAp+NyBgOej+yDGXzQcVX
-         rNjP50JLUQP5gFWmNFyt92Yxl8yyo1NxV8abT7cmmlHSVi2MbCs8xfdvrBkznPAY+t5L
-         fvBIFSy5aBH6iifWZvx5/o7erMEC6b6Dibdwb4lmrjz8CEn1KotSljkrYDoaZg+dAiUw
-         b+B7levEMXGA/CRdurRJDjoBQOZaP0HkYALLZU8rg7G1s24dwdkbl6DQFinR60eZAqIE
-         Ni31ZF/c6i0mSctBNIUWCTsz50EImw0ibJY/nR6DJqA7pSUtrR+cH/ycG6FCfNaCWTgw
-         boMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVRJX8a1dTNNWcmqwsquOKFfnGES8Qb6uuoTzMEXnZz2Uq+Ip9iZnKX1mVXtu02h4cRoQKoMN554od1uc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyT3vYAVmyeuF93kzGRxHEuDDm11qB+s5DOr9MytQeRC6dmKId8
-	aiYvkvIBO/y4oBTTS7htrfHVy6/uqP63eC7mUBIfj1euF0nRwl4pB8jigLMjQ+1w4BbsJZNVDCu
-	jVDMXs5hCvBFB519id4PbHay265w+K609WY/V0PWIqJkx/mhhlSYB6KCg
-X-Gm-Gg: ASbGnctGMZU6SIvnOsOoWewxthvp5OIrRh5m6Xae2OcqM//Gp5hfdT0JQQYiYNwDbGy
-	SJMd6sSTfC97tq25cLXElfHPjDwa6OsLyPManIZWbMzOu+yzjoayP7iJViBi4wZWTOW/6RoDlmg
-	X5iMxseh7j5OjIfhyQ8mE0PmHXQlX3/NCqlgdi4DHXsYCNx7clH8hkMbyW2xhUoa1ev8DQHMU7
-X-Google-Smtp-Source: AGHT+IGmEOYrE0DsdOuE8bNLBAUcGIGtWS0fLaxdWfeUWjsCOySE0e4ca0Wc/AhJzhXC0KwRwmQwOczpGP+O7aLEQL8=
-X-Received: by 2002:a17:90b:35ce:b0:311:d670:a10d with SMTP id
- 98e67ed59e1d1-313f1d96b23mr16599599a91.26.1750152852309; Tue, 17 Jun 2025
- 02:34:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750152868; x=1750757668;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UoO6Im3sdMj9qrKiZw97K0g1BjWI//UD+48kISxcxhU=;
+        b=Md2sjsGPa+KYULiU3PWUTXfJVAbVHN/Ck1D01frX1Y1Zp2PhueQe7soqUrUZu7luUy
+         gDFrOpe2D+ffy5DsOW1lUNVm447Ixhj0C1wwhi19gNqtol2H+Un6fvVCGS1P+QUp59DR
+         y70eiB7al2RCGYFfGkNB0y+hzBCwaaKDLVv1PQx7L+wMPos0Ad12uRjJ2RbMhvrZKmWC
+         Nvemmqeo7pJ9wgpyJhO5hZ83CUBamlLbNTxLpuw7/RRsyJ6xqsRsY6ET++rhk3HHfnTq
+         hLRDja5VfXw/4odHhvWD6n72V8ZOwJ39228Z/t0MdtkAjXXeaLWL6t9nmJbXJkIZfuQR
+         WnUw==
+X-Forwarded-Encrypted: i=1; AJvYcCWiqR6damsXJ5SJQlIZ60Wa19DtrK0XUDXzgaFkvjHjeVySiH+uvi35EiQ3un6BMigsQ/98eMXM9BHkiEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4lgtfWdyt4yJfoG5UOUUFubaMcTcUqGCBfE/DWx/Xevg17pth
+	0F/1Yq0jdyFAL/a0HcbZScinjFsd3C9gXgCZubqffLYU7g50unFCMnf8KZKaYY2ZCirCfwVIxKL
+	OoT7WeCqmjPMZuotzIg6heJEHj2SMjMt9dWx4ZQuGfnGnejyDPx49WQZW3uluhRIjgA==
+X-Gm-Gg: ASbGncuB9YhCYaYxrklH4AX8xLfzYyyMhA82uEJ9p1wABmD4kTkkrdh/CCE6BE8gn3J
+	5IGgpseA7gA61OZhklFCMuI6tVUpbS03lIe8aM02ZcHFNHw6eXmMuJL6cXvMQQZkAuJLU/+s5I6
+	RTjdwhvGCQiex26jTBKqGnIKcR3OJS4yden4e2qRWSL5G2AIKCEcIcf/z/3kTpg0UVtYxcbSNaZ
+	VM/7KlnxzTKjDuEwGkH29kgkLnDsdmt8+QHoxhbAIwp24GhuxseBWAuyG/+uR8gHsDuPc5P3TNW
+	SuYlfTrhVt5vStgIXkdKyz7FP8kbFq5D77WwjeW767PxRqM48rX3mrMQFWVFRnP7S+ilcgJUUos
+	3aK+ZLmh6jj7NdY3uJj9DGxZV5HfN4Sn7F/troFYdn9I41Ws=
+X-Received: by 2002:a05:6000:480d:b0:3a4:ed2f:e82d with SMTP id ffacd0b85a97d-3a5723a49e0mr9462615f8f.22.1750152867957;
+        Tue, 17 Jun 2025 02:34:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGAmkCmIe8r1op6vQb6TFjyJmDKs7yVrH6V8NRIzvLkSM/8ZQuEH09JTbMfp0YgKwsQ3nxlSg==
+X-Received: by 2002:a05:6000:480d:b0:3a4:ed2f:e82d with SMTP id ffacd0b85a97d-3a5723a49e0mr9462594f8f.22.1750152867607;
+        Tue, 17 Jun 2025 02:34:27 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7f8f9sm13367621f8f.42.2025.06.17.02.34.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:34:27 -0700 (PDT)
+Message-ID: <b2640810-d528-4a3f-b69a-87847943dc2b@redhat.com>
+Date: Tue, 17 Jun 2025 11:34:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <68512333.a70a0220.395abc.0207.GAE@google.com>
-In-Reply-To: <68512333.a70a0220.395abc.0207.GAE@google.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Tue, 17 Jun 2025 11:33:59 +0200
-X-Gm-Features: AX0GCFt3-7Tensh_rDRvxoQAm3XeFrHhfv0OAVC0DXQfsgghdTDrMcup7qn11gs
-Message-ID: <CANp29Y5oXu0WN79EOvCLAYy7-ThWQoz8vswCo0OTuS+5bhJkzQ@mail.gmail.com>
-Subject: Re: [syzbot] [v9fs?] WARNING: mm/page_alloc.c:LINE at
- __alloc_frozen_pages_noprof, CPU: syz.NUM.NUM/NUM
-To: syzbot <syzbot+c44c80c9d28ec68d1c06@syzkaller.appspotmail.com>
-Cc: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
-	linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com, 
-	v9fs@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 14/14] mm/memremap: Remove unused devmap_managed_key
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com, Jason Gunthorpe <jgg@nvidia.com>
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <51ccdbbc3d7b76a7f6e2aefb543eba52d653a230.1750075065.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <51ccdbbc3d7b76a7f6e2aefb543eba52d653a230.1750075065.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-#syz dup: WARNING in __alloc_frozen_pages_noprof
-
-
-On Tue, Jun 17, 2025 at 10:11=E2=80=AFAM syzbot
-<syzbot+c44c80c9d28ec68d1c06@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    050f8ad7b58d Add linux-next specific files for 20250616
-> git tree:       linux-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D17949e8258000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3Dd2efc7740224b=
-93a
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dc44c80c9d28ec68=
-d1c06
-> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e0775=
-7-1~exp1~20250514183223.118), Debian LLD 20.1.6
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D14fd95d4580=
-000
->
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/49faa18d2f53/dis=
-k-050f8ad7.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/7c6f9cd7fe5d/vmlinu=
-x-050f8ad7.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/84a08d6403ee/b=
-zImage-050f8ad7.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+c44c80c9d28ec68d1c06@syzkaller.appspotmail.com
->
-> ------------[ cut here ]------------
-> WARNING: mm/page_alloc.c:4935 at __alloc_frozen_pages_noprof+0x2c8/0x370 =
-mm/page_alloc.c:4935, CPU#1: syz.0.16/6030
-> Modules linked in:
-> CPU: 1 UID: 0 PID: 6030 Comm: syz.0.16 Not tainted 6.16.0-rc2-next-202506=
-16-syzkaller #0 PREEMPT(full)
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS G=
-oogle 05/07/2025
-> RIP: 0010:__alloc_frozen_pages_noprof+0x2c8/0x370 mm/page_alloc.c:4935
-> Code: 74 10 4c 89 e7 89 54 24 0c e8 d4 12 0d 00 8b 54 24 0c 49 83 3c 24 0=
-0 0f 85 a5 fe ff ff e9 a6 fe ff ff c6 05 f3 c0 73 0d 01 90 <0f> 0b 90 e9 18=
- ff ff ff a9 00 00 08 00 48 8b 4c 24 10 4c 8d 44 24
-> RSP: 0018:ffffc90003cdf9c0 EFLAGS: 00010246
-> RAX: ffffc90003cdfa00 RBX: 000000000000002a RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffc90003cdfa28
-> RBP: ffffc90003cdfaa8 R08: ffffc90003cdfa27 R09: 0000000000000000
-> R10: ffffc90003cdfa00 R11: fffff5200079bf45 R12: 0000000000000000
-> R13: 1ffff9200079bf3c R14: 0000000000040d40 R15: dffffc0000000000
-> FS:  000055557e5fb500(0000) GS:ffff888125d40000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007fff1db25138 CR3: 00000000762fa000 CR4: 00000000003526f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  __alloc_pages_noprof+0xa/0x30 mm/page_alloc.c:4993
->  __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
->  alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
->  ___kmalloc_large_node+0x85/0x210 mm/slub.c:4272
->  __kmalloc_large_node_noprof+0x18/0x90 mm/slub.c:4300
->  __do_kmalloc_node mm/slub.c:4316 [inline]
->  __kmalloc_noprof+0x36f/0x4f0 mm/slub.c:4340
->  kmalloc_noprof include/linux/slab.h:909 [inline]
->  kzalloc_noprof include/linux/slab.h:1039 [inline]
->  v9fs_fid_get_acl+0x4f/0x100 fs/9p/acl.c:32
->  __v9fs_get_acl fs/9p/acl.c:66 [inline]
->  v9fs_get_acl+0x9a/0x360 fs/9p/acl.c:92
->  v9fs_qid_iget_dotl fs/9p/vfs_inode_dotl.c:131 [inline]
->  v9fs_inode_from_fid_dotl+0x221/0x2b0 fs/9p/vfs_inode_dotl.c:154
->  v9fs_get_new_inode_from_fid fs/9p/v9fs.h:251 [inline]
->  v9fs_mount+0x6eb/0xa50 fs/9p/vfs_super.c:144
->  legacy_get_tree+0xfa/0x1a0 fs/fs_context.c:666
->  vfs_get_tree+0x92/0x2b0 fs/super.c:1802
->  do_new_mount+0x24a/0xa40 fs/namespace.c:3885
->  do_mount fs/namespace.c:4222 [inline]
->  __do_sys_mount fs/namespace.c:4433 [inline]
->  __se_sys_mount+0x317/0x410 fs/namespace.c:4410
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f87d618e929
-> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f=
-7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
- ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffe32d1a898 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> RAX: ffffffffffffffda RBX: 00007f87d63b5fa0 RCX: 00007f87d618e929
-> RDX: 0000200000000b80 RSI: 00002000000003c0 RDI: 0000000000000000
-> RBP: 00007f87d6210b39 R08: 0000200000000580 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> R13: 00007f87d63b5fa0 R14: 00007f87d63b5fa0 R15: 0000000000000005
->  </TASK>
->
->
+On 16.06.25 13:58, Alistair Popple wrote:
+> It's no longer used so remove it.
+> 
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 > ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
->
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
->
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
->
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
->
-> If you want to undo deduplication, reply with:
-> #syz undup
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion visit https://groups.google.com/d/msgid/syzkaller=
--bugs/68512333.a70a0220.395abc.0207.GAE%40google.com.
+
+Acked-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Cheers,
+
+David / dhildenb
+
