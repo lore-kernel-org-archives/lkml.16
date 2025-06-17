@@ -1,279 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0382E2662
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B8C2E2662
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750172785; cv=none; b=TZV+z+u7d8ZPdsx40w9zfgzXicDDe4Xyuy6t/e5FcdlmOxaRKPifsb67pD9jJFsj7j6Ex/hUgF1yKEkPYfSdT7CeRDdtcZI6B9OCUA4EvYPITIeKBxfopJPnzbUXP2HMYlz2qmwPXUQtjSds7XQ4wf7px8uF81FevppdW8HbrKA=
+	t=1750172858; cv=none; b=myujr1h8TO9VJ+bddQtEgN9AO+rW0UkOch4rVEVYIa3J1H86jNxrykTI0cxZ6q8zaqM+SQRkZ2rlq+X21LTAJuJq9O2WY1kwV2K1MhMieiInc9ZYwxfJSy0f669i0bxov3ssavDshy5KBlEPBnSBRjAcBe12xSmENkcmaJv5J7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750172785; c=relaxed/simple;
-	bh=fH2hdGzwTf4pZxd5L5oHs+dVIY/4d4It2eb8BdPFp3E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dCxo1qo8NdveDy2ZCkC2O4CPbSy3aQgnQR7ROcTNnUyva4LIYAqq0kG3ccLqAPQvA3IRLRJyQiyl7aV5xUeSxivNfyZ+riy9eSG0fmTO41eIaH/YN482c3i2ae6RRgW77SN/zRYuW3k8vbFR49EYwnQ8xIvY8B0Zh+bP7AYinx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Y8mpSpPX; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750172858; c=relaxed/simple;
+	bh=pf3mbNNCBaoa+Q8rkyFdnWm1f//ZilqgGf8nwGrFL50=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YaviwAWGCd8EqGeIn0dbdlQyYufFtUwCqfqFWC2dRZ4pXr4S5ndivcNwC3SJKu8aReOC3zdkSohlwZ4hoeGDURIiK8e39vfu8x5NziCvPEokOyso3uPcaReJIfXiAncT7Y7qSAcW9021FOVn3Z+tHuHL1Iq7pY7NxpbC6Yktfyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Ry/r1+nq; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Y8mpSpPX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750172784; x=1781708784;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fH2hdGzwTf4pZxd5L5oHs+dVIY/4d4It2eb8BdPFp3E=;
-  b=Y8mpSpPXpu3iwk1oAaQCqwr/LLcLkiXFC4oidNVs5XxHYhSZeTetD+Me
-   sEBIIT8H6CRuq9VeVMrLBQq0dFrJUktwcZc3RLp/BgQLgODD68JSUSMtp
-   ZHJYTxezi5yX0/EQ2j1EuMwWmUix3hsYrvj8a95rzBSdDKZSioqBJ3QW5
-   x7QzjyxIvzE0CPKvGgdi3ZEJT3zO7lTAthA3zSQGa+nG14DvzuhsxTkoF
-   7KjCZZXEIoVzsl836O1iduwrICtWhzct9cnlAG5x0SBxpYskM9jdOeuOm
-   qjjbLA4kkjCJDGfydLdhX2VNSzFX+bhNBVMWpsoYIA0+zGvw1bhhX8F8p
-   w==;
-X-CSE-ConnectionGUID: lho62PyeS6SCnvWhPpRkNw==
-X-CSE-MsgGUID: YYlW5peMTwG7ODaG9t4oMg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63009088"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="63009088"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 08:06:24 -0700
-X-CSE-ConnectionGUID: 7kDG+z/ZRkWrEXaNarPRlA==
-X-CSE-MsgGUID: 73MgP5m+R4OaWWFt4moqSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="152672573"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 08:06:17 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	Karthik Poosa <karthik.poosa@intel.com>,
-	Raag Jadav <raag.jadav@intel.com>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	linux-mtd@lists.infradead.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Alexander Usyskin <alexander.usyskin@intel.com>
-Subject: [PATCH v14 8/8] drm/xe/nvm: add support for non-posted erase
-Date: Tue, 17 Jun 2025 17:51:58 +0300
-Message-ID: <20250617145159.3803852-9-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250617145159.3803852-1-alexander.usyskin@intel.com>
-References: <20250617145159.3803852-1-alexander.usyskin@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Ry/r1+nq"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so33088075e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750172855; x=1750777655; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ILCJmIUaqb1ZxYNljoCiDSpEgRAkdZcWul2gnHHS/uI=;
+        b=Ry/r1+nqtYhFYjET2QNPM+jFZ2M3klU41N2rEBOX6Nab9gdsoOCQ9cHeo3gW4Snm2f
+         N0jQrtv/y/DNMyLmUw6LdiLG2wMAkPUwOeVeY5MStpiWqae1JLz0JRugS7zgiVVnChUu
+         +nfoeGOmgSWWOJ36zRiYhfhIx2e1dFZiWYgRiJKPWl1UmXF9yEY4HJeW/AJkcDsOIe7W
+         fBLfjf1xLzgF/vdmesx3WcEq4rp9nOrcZIUWI6eWv50W5V1sWtGgv+jatJmodTLoaVC0
+         9b4LYDGQn47p4134GVoR1CdEaCExHgqcoEKZ2vexU3r3GaJUCd+pA398K6hxOi+bjacn
+         wnQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750172855; x=1750777655;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ILCJmIUaqb1ZxYNljoCiDSpEgRAkdZcWul2gnHHS/uI=;
+        b=uH6xESvvnMbwIagDAGNdkuJtrMZJ2Pvzk4gR/zDFbodnswusut2/v4DmQOEPAZ0J5k
+         +93uBhEEh/PkdFNIjAaTQ1BjXwRyLuq+dg0zTz9c7i97EgOjZYAPsnhsw1uDq3FrcG1v
+         d8RSz0fQ+9PoXGnkUrWfmAgz2iraOAxD7EjbqLydxfxEcyqcTa2yOBROVHsvUPTvst2g
+         OlQBm5CwCezxmyw8VJbYwO3jLKCK4X01fapqyK3CuRQxXEDgEsza5IhzbfiNEcnVm1XR
+         OGKCcVrylSOViSduSZAFfGu89h1L7WmDb4fSEd3qQbaiNUTluVjNyhoa9iaYtXNZrrm2
+         3DvA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/u39y5cKWXe/METao61PO3Jy2noR3S38DbJ99vfvUknoXMJJTStUqOZO1p36dZT3vwxhGfFCArZU1bZc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzFjs9Eh3Y/KGSVGD7MssDKsWokEoSwgJyLEkKKDUKvZTx5vP4
+	MUEccP17slE6jMj3Se+NujFOI2lO1kV5X+upLyaIcUXLmdPTnO4ud6fezR9OSKW4u9Q=
+X-Gm-Gg: ASbGncviaEI9/6OSd368TPqXb57TkldT1dsPSbvxqixeMHrPbdJUxEHXR3pssRCbdtO
+	JwE+c9/0W1F3Y+w3YAZOKFO5envXwzyoym+rx5VcNxChFlP6YDLOgPjOXf0NDQ1E34F58bIISkM
+	krkGYcQfmZOMcSbDX5rZ4wYc58njL5FHuKtMG9/AJ4/J3x/Q4KeOHcZHXXP1ymQWsfiHDWMkkU2
+	S3onbvanEOAz5US6hfroO20abIOe0lwn1djQavSmCu8GsUdzd6hAeVhq1VyUQrEDWnyD9nW0Tq/
+	aI+6lAcZ/Yy3FmF8esWSANDOrFUX2ahxjz3KFGGHhUQFqgCdlQpi3cXZRblReRjxCOLiv3v1OLs
+	X
+X-Google-Smtp-Source: AGHT+IFvJAhymz+MlrW7YQcbajgL5kYk/RtK6I3q6YaocDMYQM4Sy3QB0kS30GlFXiWwssZmFhkdPg==
+X-Received: by 2002:a05:600c:a07:b0:453:99f:b1b0 with SMTP id 5b1f17b1804b1-4533caa5c1fmr112862035e9.20.1750172854807;
+        Tue, 17 Jun 2025 08:07:34 -0700 (PDT)
+Received: from [10.100.51.209] ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532dea1cc5sm183871865e9.16.2025.06.17.08.07.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 08:07:34 -0700 (PDT)
+Message-ID: <1f175340-d109-41c2-be1e-1c5261f9e0d9@suse.com>
+Date: Tue, 17 Jun 2025 17:07:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] kunit: test: Drop CONFIG_MODULE ifdeffery
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Brendan Higgins <brendan.higgins@linux.dev>,
+ David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>,
+ linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com
+References: <20250612-kunit-ifdef-modules-v1-0-fdccd42dcff8@linutronix.de>
+ <20250612-kunit-ifdef-modules-v1-3-fdccd42dcff8@linutronix.de>
+ <fb2a41b2-a872-4fcd-8a97-df3a946c6a81@suse.com>
+ <20250617095936-50d985a4-ea18-49cf-9d16-dfd0dd0b627f@linutronix.de>
+Content-Language: en-US
+From: Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20250617095936-50d985a4-ea18-49cf-9d16-dfd0dd0b627f@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Reuven Abliyev <reuven.abliyev@intel.com>
+On 6/17/25 10:39 AM, Thomas Weißschuh wrote:
+> On Tue, Jun 17, 2025 at 09:44:49AM +0200, Petr Pavlu wrote:
+>> On 6/12/25 4:53 PM, Thomas Weißschuh wrote:
+>>> The function stubs exposed by module.h allow the code to compile properly
+>>> without the ifdeffery. The generated object code stays the same, as the
+>>> compiler can optimize away all the dead code.
+>>> As the code is still typechecked developer errors can be detected faster.
+>>>
+>>> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+>>
+>> I'm worried that patches #2 and #3 make the code harder to understand
+>> because they hide what is compiled and when.
+>>
+>> Normally, '#ifdef CONFIG_XYZ' or IS_ENABLED(CONFIG_XYZ) directly
+>> surrounds functionality that should be conditional. This makes it clear
+>> what is used and when.
+> 
+> #ifdef is discouraged in C files and IS_ENABLED(CONFIG_MODULES) does not work
+> (here) without patch #2.
+> 
+>> The patches obscure whether, for instance, kunit_module_notify() in
+>> lib/kunit/test.c is actually used and present in the resulting binary
+>> behind several steps. Understanding its usage requires tracing the code
+>> from kunit_module_notify() to the definition of kunit_mod_nb, then to
+>> the register_module_notifier() call, and finally depends on an ifdef in
+>> another file, include/linux/module.h.
+> 
+> I agree that it is not completely clear what will end up in the binary.
+> On the other hand we can program the happy path and the compiler will take care
+> of all the corner cases.
+> We could add an "if (IS_ENABLED(CONFIG_MODULES))" which does not really change
+> anything but would be clearer to read.
+> 
+>> Is this really better? Are there places where this pattern is already
+>> used? Does it actually help in practice, considering that CONFIG_MODULES
+>> is enabled in most cases?
+> 
+> This came up for me when refactoring some KUnit internal code.
+> I used "kunit.py run" (which uses CONFIG_MODULES=n) to test my changes.
+> But some callers of changed functions were not updated and this wasn't reported.
 
-Erase command is slow on discrete graphics storage
-and may overshot PCI completion timeout.
-BMG introduces the ability to have non-posted erase.
-Add driver support for non-posted erase with polling
-for erase completion.
+I see.
 
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Acked-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Signed-off-by: Reuven Abliyev <reuven.abliyev@intel.com>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/gpu/drm/xe/xe_nvm.c        | 25 ++++++++++++++++++
- drivers/mtd/devices/mtd_intel_dg.c | 42 ++++++++++++++++++++++++++++--
- include/linux/intel_dg_nvm_aux.h   |  2 ++
- 3 files changed, 67 insertions(+), 2 deletions(-)
+> 
+> The stub functions are a standard pattern and already implemented by module.h.
 
-diff --git a/drivers/gpu/drm/xe/xe_nvm.c b/drivers/gpu/drm/xe/xe_nvm.c
-index 20aa3b5d3637..61b0a1531a53 100644
---- a/drivers/gpu/drm/xe/xe_nvm.c
-+++ b/drivers/gpu/drm/xe/xe_nvm.c
-@@ -14,7 +14,15 @@
- #include "xe_sriov.h"
- 
- #define GEN12_GUNIT_NVM_BASE 0x00102040
-+#define GEN12_DEBUG_NVM_BASE 0x00101018
-+
-+#define GEN12_CNTL_PROTECTED_NVM_REG 0x0010100C
-+
- #define GEN12_GUNIT_NVM_SIZE 0x80
-+#define GEN12_DEBUG_NVM_SIZE 0x4
-+
-+#define NVM_NON_POSTED_ERASE_CHICKEN_BIT BIT(13)
-+
- #define HECI_FW_STATUS_2_NVM_ACCESS_MODE BIT(3)
- 
- static const struct intel_dg_nvm_region regions[INTEL_DG_NVM_REGIONS] = {
-@@ -29,6 +37,16 @@ static void xe_nvm_release_dev(struct device *dev)
- {
- }
- 
-+static bool xe_nvm_non_posted_erase(struct xe_device *xe)
-+{
-+	struct xe_gt *gt = xe_root_mmio_gt(xe);
-+
-+	if (xe->info.platform != XE_BATTLEMAGE)
-+		return false;
-+	return !(xe_mmio_read32(&gt->mmio, XE_REG(GEN12_CNTL_PROTECTED_NVM_REG)) &
-+		 NVM_NON_POSTED_ERASE_CHICKEN_BIT);
-+}
-+
- static bool xe_nvm_writable_override(struct xe_device *xe)
- {
- 	struct xe_gt *gt = xe_root_mmio_gt(xe);
-@@ -86,6 +104,7 @@ int xe_nvm_init(struct xe_device *xe)
- 	nvm = xe->nvm;
- 
- 	nvm->writable_override = xe_nvm_writable_override(xe);
-+	nvm->non_posted_erase = xe_nvm_non_posted_erase(xe);
- 	nvm->bar.parent = &pdev->resource[0];
- 	nvm->bar.start = GEN12_GUNIT_NVM_BASE + pdev->resource[0].start;
- 	nvm->bar.end = nvm->bar.start + GEN12_GUNIT_NVM_SIZE - 1;
-@@ -93,6 +112,12 @@ int xe_nvm_init(struct xe_device *xe)
- 	nvm->bar.desc = IORES_DESC_NONE;
- 	nvm->regions = regions;
- 
-+	nvm->bar2.parent = &pdev->resource[0];
-+	nvm->bar2.start = GEN12_DEBUG_NVM_BASE + pdev->resource[0].start;
-+	nvm->bar2.end = nvm->bar2.start + GEN12_DEBUG_NVM_SIZE - 1;
-+	nvm->bar2.flags = IORESOURCE_MEM;
-+	nvm->bar2.desc = IORES_DESC_NONE;
-+
- 	aux_dev = &nvm->aux_dev;
- 
- 	aux_dev->name = "nvm";
-diff --git a/drivers/mtd/devices/mtd_intel_dg.c b/drivers/mtd/devices/mtd_intel_dg.c
-index 97e1dc1ada5d..b438ee5aacc3 100644
---- a/drivers/mtd/devices/mtd_intel_dg.c
-+++ b/drivers/mtd/devices/mtd_intel_dg.c
-@@ -25,6 +25,9 @@ struct intel_dg_nvm {
- 	struct mtd_info mtd;
- 	struct mutex lock; /* region access lock */
- 	void __iomem *base;
-+	void __iomem *base2;
-+	bool non_posted_erase;
-+
- 	size_t size;
- 	unsigned int nregions;
- 	struct {
-@@ -41,6 +44,7 @@ struct intel_dg_nvm {
- #define NVM_VALSIG_REG        0x00000010
- #define NVM_ADDRESS_REG       0x00000040
- #define NVM_REGION_ID_REG     0x00000044
-+#define NVM_DEBUG_REG         0x00000000
- /*
-  * [15:0]-Erase size = 0x0010 4K 0x0080 32K 0x0100 64K
-  * [23:16]-Reserved
-@@ -72,6 +76,9 @@ struct intel_dg_nvm {
- #define NVM_FREG_ADDR_SHIFT 12
- #define NVM_FREG_MIN_REGION_SIZE 0xFFF
- 
-+#define NVM_NON_POSTED_ERASE_DONE BIT(23)
-+#define NVM_NON_POSTED_ERASE_DONE_ITER 3000
-+
- static inline void idg_nvm_set_region_id(struct intel_dg_nvm *nvm, u8 region)
- {
- 	iowrite32((u32)region, nvm->base + NVM_REGION_ID_REG);
-@@ -373,13 +380,32 @@ static ssize_t idg_read(struct intel_dg_nvm *nvm, u8 region,
- static ssize_t
- idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_addr)
- {
-+	void __iomem *base2 = nvm->base2;
- 	void __iomem *base = nvm->base;
- 	const u32 block = 0x10;
-+	u32 iter = 0;
-+	u32 reg;
- 	u64 i;
- 
- 	for (i = 0; i < len; i += SZ_4K) {
- 		iowrite32(from + i, base + NVM_ADDRESS_REG);
- 		iowrite32(region << 24 | block, base + NVM_ERASE_REG);
-+		if (nvm->non_posted_erase) {
-+			/* Wait for Erase Done */
-+			reg = ioread32(base2 + NVM_DEBUG_REG);
-+			while (!(reg & NVM_NON_POSTED_ERASE_DONE) &&
-+			       ++iter < NVM_NON_POSTED_ERASE_DONE_ITER) {
-+				msleep(10);
-+				reg = ioread32(base2 + NVM_DEBUG_REG);
-+			}
-+			if (reg & NVM_NON_POSTED_ERASE_DONE) {
-+				/* Clear Erase Done */
-+				iowrite32(reg, base2 + NVM_DEBUG_REG);
-+			} else {
-+				*fail_addr = from + i;
-+				return -ETIME;
-+			}
-+		}
- 		/* Since the writes are via sgunit
- 		 * we cannot do back to back erases.
- 		 */
-@@ -388,7 +414,8 @@ idg_erase(struct intel_dg_nvm *nvm, u8 region, loff_t from, u64 len, u64 *fail_a
- 	return len;
- }
- 
--static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
-+static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device,
-+			     bool non_posted_erase)
- {
- 	u32 access_map = 0;
- 	unsigned int i, n;
-@@ -448,7 +475,10 @@ static int intel_dg_nvm_init(struct intel_dg_nvm *nvm, struct device *device)
- 			n++;
- 	}
- 
-+	nvm->non_posted_erase = non_posted_erase;
-+
- 	dev_dbg(device, "Registered %d regions\n", n);
-+	dev_dbg(device, "Non posted erase %d\n", nvm->non_posted_erase);
- 
- 	/* Need to add 1 to the amount of memory
- 	 * so it is reported as an even block
-@@ -729,7 +759,15 @@ static int intel_dg_mtd_probe(struct auxiliary_device *aux_dev,
- 		goto err;
- 	}
- 
--	ret = intel_dg_nvm_init(nvm, device);
-+	if (invm->non_posted_erase) {
-+		nvm->base2 = devm_ioremap_resource(device, &invm->bar2);
-+		if (IS_ERR(nvm->base2)) {
-+			ret = PTR_ERR(nvm->base2);
-+			goto err;
-+		}
-+	}
-+
-+	ret = intel_dg_nvm_init(nvm, device, invm->non_posted_erase);
- 	if (ret < 0) {
- 		dev_err(device, "cannot initialize nvm %d\n", ret);
- 		goto err;
-diff --git a/include/linux/intel_dg_nvm_aux.h b/include/linux/intel_dg_nvm_aux.h
-index 00b6c1301bd8..625d46a6b96e 100644
---- a/include/linux/intel_dg_nvm_aux.h
-+++ b/include/linux/intel_dg_nvm_aux.h
-@@ -20,7 +20,9 @@ struct intel_dg_nvm_region {
- struct intel_dg_nvm_dev {
- 	struct auxiliary_device aux_dev;
- 	bool writable_override;
-+	bool non_posted_erase;
- 	struct resource bar;
-+	struct resource bar2;
- 	const struct intel_dg_nvm_region *regions;
- };
- 
+Stub functions are ok, I have no concerns about that pattern.
+
+> I have not found a header which hides structure definitions.
+
+It seems you're right. I think that makes patch #2 acceptable, it is
+consistent with other kernel code.
+
+> 
+> Documentation/process/coding-style.rst:
+> 
+> 	21) Conditional Compilation
+> 	---------------------------
+> 
+> 	Wherever possible, don't use preprocessor conditionals (#if, #ifdef) in .c
+> 	files; doing so makes code harder to read and logic harder to follow.  Instead,
+> 	use such conditionals in a header file defining functions for use in those .c
+> 	files, providing no-op stub versions in the #else case, and then call those
+> 	functions unconditionally from .c files.  The compiler will avoid generating
+> 	any code for the stub calls, producing identical results, but the logic will
+> 	remain easy to follow.
+> 
+> I should add the documentation reference to patch #2.
+
+This part discusses stub functions. I feel patch #3 stretches the
+intention of the coding style described here. As discussed, the patch
+somewhat hides when the functions are actually used, which might not be
+desirable, but I'll leave it to the kunit folks to decide what they
+prefer.
+
 -- 
-2.43.0
-
+Thanks,
+Petr
