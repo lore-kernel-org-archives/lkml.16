@@ -1,97 +1,264 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.manguebit.org (mx1.manguebit.org [143.255.12.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73132951CA;
-	Tue, 17 Jun 2025 22:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD54288CBE;
+	Tue, 17 Jun 2025 22:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=143.255.12.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750198991; cv=none; b=eUGyfteRsPhPN7L1hTQQu/qEcN5X0fqEyH4XgdVLeSXCOdGv6Q0Xk3Gqdyt54DM3/eMzU+4aAM8ZSW96LEhVUlXeYLpPc0Pke4hdq0UqTr99yjl95zHPWOgiZ7embnZB+gTkViqNIsajy7VM6uoc+gewRahw1IewANc8/9zGlSA=
+	t=1750199010; cv=none; b=HDmPpXsvRq8bJ6oHJGIVrOVWJRHIPrNqt/FsyXxB5WRnjJluepiXbHzKhQfMY2G4o7JwF9Opow0D5RUh6XbaZDJkMTQTAzqx3rhuWwYvIQB0VwL2L6cmOMRaQfEbZlPSRStbWIw8cx65EJTn5eFqMRl+480lbat7M/RZW8GmRS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750198991; c=relaxed/simple;
-	bh=kz2nXruoOT+8n1Te4FqDwPlaM62tv+vpn008cqwOM8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NZQRIVh3frLu+B/nE0KvDl6eGx691fNxUb/kwmCzA1f0lhHpaqqNa/kDu2PsXPykv0GD1LEbrmnnynW+5UorL7VTHJI7d3surNg+ZpFEEKIKRPobj5nezh6KkN9SQtNUdn6DJNG3LrPkD0XLQFrNdmvEKbUoA2+vhk/ctE0zIdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OGXaYPTm; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750199010; c=relaxed/simple;
+	bh=HWTgcAluF1Xehmd5jq3YAq2FpPbLVXIHQLsk+SJDiwA=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=JDB6mKinauCrgw50hIkxVhEJCKpnrN7LUL2swYuXvSrXzUkxUzhevzWDD4qtIVkOYbqEnI6CzQ2eWkhNfijNtTedoaUbm8o40L0zTEFKn7CW1LMU7h+1QXzQ/sj5+zwicAljjOkM2RexNTdDoHb1PR4XNkWUdFLSi7B94oDZnkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org; spf=pass smtp.mailfrom=manguebit.org; dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b=DINv8T2J; arc=none smtp.client-ip=143.255.12.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGXaYPTm"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-748cd3c8829so1049214b3a.2;
-        Tue, 17 Jun 2025 15:23:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750198989; x=1750803789; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ba9cyjWK9a5gtS/G1pUFwvKLF+g6GdyoidJ+9RnzRZo=;
-        b=OGXaYPTmdJvyEow3zqrrsrVzhmbmHbGsYQQ5vWhUzu6AEw3u79UDM29UUwi6zDSNiv
-         MmoheKqpMh0phV9314nlJfe+/uC+Df4Jk72VwmoTftBMk2Syi0+P5ENJNF6MtzN4lPZH
-         MCx5HKmC6ICMbLsv6QrOTAFGhwxmOer8gCVwa7iHaUdDVhgP8JlwxwRoEZxXXD8FKGfG
-         nuoogAEmSHT6SshXekLw3GgkfIZSTLxejJDnqgoAxxidMlaoWQBHkXRz3EUKyKOGgn4z
-         7X7VjUNVjVYPoe+lAyqKghjNmCzTKFP1bXh4W7B0d6t1TkNEpLg9KfykTHjsuyiENj/g
-         pf8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750198989; x=1750803789;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ba9cyjWK9a5gtS/G1pUFwvKLF+g6GdyoidJ+9RnzRZo=;
-        b=pikFatr1NQpqv4pZdId7S2mStHV8mnf8mrnIcr8QE2imAOy54z97Awgm4O4ctHJf21
-         +1z8PSFnUI9v2QmwBU4Ermpwnhv2ulUsmt3+d720d/0EMEonT00kGT7XxXB+zkZlUg3G
-         mSOuVxBfq65izcJvMKzWhzrynFSK/WTquutTAsonRaXCxy0aANI740gO2mEL6SAih8yT
-         iRM4X767Se8nYbXqxIJBAmNy63OmOd1Zab4lHlCRBHqN00jxITPU+AJk5+P9/U5vJEft
-         PxbLkpOFN898UItK2DhbkPPQvzWkrmmVZmHdbi+JdDRdSUkVPeS1ByaA9j/Jts1psw1W
-         OncA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIiW1OfGgOxLvkawAJzX5Ue1osWUQy1v9PdtobpiexN8SVKKbB+0b0k3/yVEH8VvfMvwFv9hQo0Ntt@vger.kernel.org, AJvYcCUO2D4JPpbBpoFs/RKMljo+G95RcIHxUAZLCD05opcVLTL53869jCOs2DuYucXMRtmriLdY8tItpJfpY1/X@vger.kernel.org, AJvYcCXpkmKOVDzbbsivUVWJPwWox47uLBFhP0q3v65J+BjQ8yaL4AxQUg+eTTJAUldLCRcR5lrW1fZMUiI=@vger.kernel.org, AJvYcCXzCC+HH1qGL83iE7AQtvoTbOADh/u87t2I+pYiiml+zMs7WpMIDsfysU4nw0sJQE2oXOGXI+ge5t1OrQk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHiGDt9p22yoVEOf6vKkuNBtrERZAWWfpYpvnnGA1Hyx1aSAop
-	RCZW2QpbSkWVNnZyo01k5SfuoH1jpva6Yl/wQnRxLCKe9frnnFFXqeXP
-X-Gm-Gg: ASbGncv7ikYOjkK2/x4RcM24nZ+qN1+mICEKZ0DAytkVyyi65EdflFcnkBekf4vxwoJ
-	mR9p6j2FYS+kdP1SuV15NKRcKaFkxnpkMvmToRJSQYK7EnlAQAk2poiC3QN/GeoZJzpxiiTZVju
-	c4kBdtccCFjJ+eXb3/AY0Tz/2lJBqU1n0Ei287AzlcWWqigTg9cOBHmc2fidqIcFicDbLSbiQWf
-	6K2XE53eSeDEoRlsYxg7qbjrMPH+d4pSl6J8TNwp10pNDr7LBylX4YXXMOD93ilFlrXMj614MZx
-	c8IPQn+reIewBzfNAnPUY28JPWa9zYebarm2XnaxqfasFJ5Jv5QgZPYZmIj/d0E=
-X-Google-Smtp-Source: AGHT+IE6oCWcEIA9hAHCoer2+7IQhN18TAtn+EtjnVuvExVsZnZ1yzO0ig6GCb71zYvYy290rTKOoQ==
-X-Received: by 2002:a05:6a00:1787:b0:748:1bac:aff9 with SMTP id d2e1a72fcca58-7489cfc7ed0mr20839980b3a.18.1750198988866;
-        Tue, 17 Jun 2025 15:23:08 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:4cd9:8b8e:24cd:5a36])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900b0bfasm9434791b3a.122.2025.06.17.15.23.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 15:23:08 -0700 (PDT)
-Date: Tue, 17 Jun 2025 15:23:05 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: samuel.kayode@savoirfairelinux.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Frank Li <Frank.li@nxp.com>, imx@lists.linux.dev, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pm@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>, Abel Vesa <abelvesa@linux.com>, 
-	Robin Gong <b38343@freescale.com>, Robin Gong <yibin.gong@nxp.com>, 
-	Enric Balletbo i Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v7 4/6] input: pf1550: add onkey support
-Message-ID: <5eehb37ccuoafc6x2axbgesr3mweeepoco46ih2hs2ncekch4v@ku25pypnlads>
-References: <20250612-pf1550-v7-0-0e393b0f45d7@savoirfairelinux.com>
- <20250612-pf1550-v7-4-0e393b0f45d7@savoirfairelinux.com>
+	dkim=pass (2048-bit key) header.d=manguebit.org header.i=@manguebit.org header.b="DINv8T2J"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=manguebit.org; s=dkim; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:Date:References:In-Reply-To:Subject:Cc:To:From:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nyB3m1fpiw8K9TdQoH921+ZZmwLQ0t1P/X3upfafQOA=; b=DINv8T2JjiyvWlO0/8ZOE1yBiy
+	yPMDDJy7gZNOMa9yYOswZ/5aFZn4Eg2sDv9KMer8UHyKFduC2cwtn1uVVowiTPw3rxbFTVgirFa4p
+	lYncTRfVnxmRa0bGnM/wH+uarnpeQJ6SyE4yrn7SHGQhmXch1Nu7ig55/IikzrEWSIWnlTg/g8kQQ
+	ShOyR9tcuj4NT/DIAe5JD7uG8mKNkx/U9sjvvNWbXE5vR6gOoSl0RwJwiaMqX13VttBH2Kk/UEfvX
+	xlEjxnVXSd4Zuv3ahACjpvK6HRHa9g0M8iOnD+wH1ZWRVPbI+eTgZmSFVLk4gM2w/QgtTSSLXevuA
+	cyxcEfsA==;
+Received: from pc by mx1.manguebit.org with local (Exim 4.98.2)
+	id 1uRei3-00000000B3v-25Km;
+	Tue, 17 Jun 2025 19:23:19 -0300
+Message-ID: <470d6baeb8e569aa1587de19c46f43c2@manguebit.org>
+From: Paulo Alcantara <pc@manguebit.org>
+To: Pali =?utf-8?Q?Roh=C3=A1r?= <pali@kernel.org>, Steve French
+ <sfrench@samba.org>, Tom
+ Talpey <tom@talpey.com>
+Cc: linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] cifs: Show reason why autodisabling serverino support
+In-Reply-To: <20250610181502.15839-1-pali@kernel.org>
+References: <20250610172221.ihsrjrikbiijyb4n@pali>
+ <20250610181502.15839-1-pali@kernel.org>
+Date: Tue, 17 Jun 2025 19:23:15 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250612-pf1550-v7-4-0e393b0f45d7@savoirfairelinux.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Score: 1.1 (+)
 
-On Thu, Jun 12, 2025 at 10:55:46AM -0400, Samuel Kayode via B4 Relay wrote:
-> From: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
-> 
-> Add support for the onkey of the pf1550 PMIC.
-> 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Samuel Kayode <samuel.kayode@savoirfairelinux.com>
+Pali Roh=C3=A1r <pali@kernel.org> writes:
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Extend cifs_autodisable_serverino() function to print also text message w=
+hy
+> the function was called.
+>
+> The text message is printed just once for mount then autodisabling
+> serverino support. Once the serverino support is disabled for mount it wi=
+ll
+> not be re-enabled. So those text messages do not cause flooding logs.
+>
+> This change allows to debug issues why cifs.ko decide to turn off server
+> inode number support and hence disable support for detection of hardlinks.
+>
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+> ---
+> Paulo and Tom, could you check if this change is better now for you?
+> It should address problems with logs flooding and also information about
+> harlinks (it is already printed as can be seen also in this diff).
+> I would like to get your ACK, so I'm trying to improve it.
+> ---
+>  fs/smb/client/cifsproto.h | 2 +-
+>  fs/smb/client/connect.c   | 2 +-
+>  fs/smb/client/dfs_cache.c | 2 +-
+>  fs/smb/client/inode.c     | 6 +++---
+>  fs/smb/client/misc.c      | 6 +++++-
+>  fs/smb/client/readdir.c   | 4 ++--
+>  6 files changed, 13 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/smb/client/cifsproto.h b/fs/smb/client/cifsproto.h
+> index d550662b4e72..07a67c8c37ce 100644
+> --- a/fs/smb/client/cifsproto.h
+> +++ b/fs/smb/client/cifsproto.h
+> @@ -586,9 +586,9 @@ extern int cifs_do_set_acl(const unsigned int xid, st=
+ruct cifs_tcon *tcon,
+>  			   const struct nls_table *nls_codepage, int remap);
+>  extern int CIFSGetExtAttr(const unsigned int xid, struct cifs_tcon *tcon,
+>  			const int netfid, __u64 *pExtAttrBits, __u64 *pMask);
+>  #endif /* CIFS_ALLOW_INSECURE_LEGACY */
+> -extern void cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb);
+> +extern void cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb, con=
+st char *reason, int rc);
+>  extern bool couldbe_mf_symlink(const struct cifs_fattr *fattr);
+>  extern int check_mf_symlink(unsigned int xid, struct cifs_tcon *tcon,
+>  			      struct cifs_sb_info *cifs_sb,
+>  			      struct cifs_fattr *fattr,
+> diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
+> index 6bf04d9a5491..819721dfd5bb 100644
+> --- a/fs/smb/client/connect.c
+> +++ b/fs/smb/client/connect.c
+> @@ -3907,9 +3907,9 @@ int cifs_mount(struct cifs_sb_info *cifs_sb, struct=
+ smb3_fs_context *ctx)
+>  	/*
+>  	 * After reconnecting to a different server, unique ids won't match any=
+more, so we disable
+>  	 * serverino. This prevents dentry revalidation to think the dentry are=
+ stale (ESTALE).
+>  	 */
+> -	cifs_autodisable_serverino(cifs_sb);
+> +	cifs_autodisable_serverino(cifs_sb, "Reconnecting to different server, =
+inode numbers won't match anymore", 0);
 
-Thank you for making the changes.
+We are mounting an DFS share, not reconnecting.  The message is
+misleading.
 
--- 
-Dmitry
+>  	/*
+>  	 * Force the use of prefix path to support failover on DFS paths that r=
+esolve to targets
+>  	 * that have different prefix paths.
+>  	 */
+> diff --git a/fs/smb/client/dfs_cache.c b/fs/smb/client/dfs_cache.c
+> index 4dada26d56b5..c3fe85c31e2b 100644
+> --- a/fs/smb/client/dfs_cache.c
+> +++ b/fs/smb/client/dfs_cache.c
+> @@ -1288,9 +1288,9 @@ int dfs_cache_remount_fs(struct cifs_sb_info *cifs_=
+sb)
+>  	/*
+>  	 * After reconnecting to a different server, unique ids won't match any=
+more, so we disable
+>  	 * serverino. This prevents dentry revalidation to think the dentry are=
+ stale (ESTALE).
+>  	 */
+> -	cifs_autodisable_serverino(cifs_sb);
+> +	cifs_autodisable_serverino(cifs_sb, "Reconnecting to different server, =
+inode numbers won't match anymore", 0);
+
+Ditto.
+
+>  	/*
+>  	 * Force the use of prefix path to support failover on DFS paths that r=
+esolve to targets
+>  	 * that have different prefix paths.
+>  	 */
+> diff --git a/fs/smb/client/inode.c b/fs/smb/client/inode.c
+> index cd06598eacbd..b1c6e3986278 100644
+> --- a/fs/smb/client/inode.c
+> +++ b/fs/smb/client/inode.c
+> @@ -1076,9 +1076,9 @@ static void cifs_set_fattr_ino(int xid, struct cifs=
+_tcon *tcon, struct super_blo
+>  		if (*inode)
+>  			fattr->cf_uniqueid =3D CIFS_I(*inode)->uniqueid;
+>  		else {
+>  			fattr->cf_uniqueid =3D iunique(sb, ROOT_I);
+> -			cifs_autodisable_serverino(cifs_sb);
+> +			cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number via=
+ get_srv_inum", rc);
+
+Looks good.
+
+>  		}
+>  		return;
+>  	}
+>=20=20
+> @@ -1529,9 +1529,9 @@ cifs_iget(struct super_block *sb, struct cifs_fattr=
+ *fattr)
+>  		if (fattr->cf_flags & CIFS_FATTR_INO_COLLISION) {
+>  			fattr->cf_flags &=3D ~CIFS_FATTR_INO_COLLISION;
+>=20=20
+>  			if (inode_has_hashed_dentries(inode)) {
+> -				cifs_autodisable_serverino(CIFS_SB(sb));
+> +				cifs_autodisable_serverino(CIFS_SB(sb), "Inode number collision dete=
+cted", 0);
+
+Looks good.
+
+>  				iput(inode);
+>  				fattr->cf_uniqueid =3D iunique(sb, ROOT_I);
+>  				goto retry_iget5_locked;
+>  			}
+> @@ -1596,9 +1596,9 @@ struct inode *cifs_root_iget(struct super_block *sb)
+>  iget_root:
+>  	if (!rc) {
+>  		if (fattr.cf_flags & CIFS_FATTR_JUNCTION) {
+>  			fattr.cf_flags &=3D ~CIFS_FATTR_JUNCTION;
+> -			cifs_autodisable_serverino(cifs_sb);
+> +			cifs_autodisable_serverino(cifs_sb, "Cannot retrieve attributes for j=
+unction point", rc);
+
+This has nothing to do with not being able to retrieve attributes.  It
+is simply disabling 'serverino' to prevent inode collisions with
+surrogate reparse points (automounts).  This should also printed with
+FYI.
+
+>  		}
+>  		inode =3D cifs_iget(sb, &fattr);
+>  	}
+>=20=20
+> diff --git a/fs/smb/client/misc.c b/fs/smb/client/misc.c
+> index e77017f47084..409277883e8a 100644
+> --- a/fs/smb/client/misc.c
+> +++ b/fs/smb/client/misc.c
+> @@ -551,9 +551,9 @@ dump_smb(void *buf, int smb_buf_length)
+>  		       smb_buf_length, true);
+>  }
+>=20=20
+>  void
+> -cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb)
+> +cifs_autodisable_serverino(struct cifs_sb_info *cifs_sb, const char *rea=
+son, int rc)
+>  {
+>  	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM) {
+>  		struct cifs_tcon *tcon =3D NULL;
+>=20=20
+> @@ -561,8 +561,12 @@ cifs_autodisable_serverino(struct cifs_sb_info *cifs=
+_sb)
+>  			tcon =3D cifs_sb_master_tcon(cifs_sb);
+>=20=20
+>  		cifs_sb->mnt_cifs_flags &=3D ~CIFS_MOUNT_SERVER_INUM;
+>  		cifs_sb->mnt_cifs_serverino_autodisabled =3D true;
+> +		if (rc)
+> +			cifs_dbg(VFS, "%s: %d\n", reason, rc);
+> +		else
+> +			cifs_dbg(VFS, "%s\n", reason);
+>  		cifs_dbg(VFS, "Autodisabling the use of server inode numbers on %s\n",
+>  			 tcon ? tcon->tree_name : "new server");
+>  		cifs_dbg(VFS, "The server doesn't seem to support them properly or the=
+ files might be on different servers (DFS)\n");
+>  		cifs_dbg(VFS, "Hardlinks will not be recognized on this mount. Conside=
+r mounting with the \"noserverino\" option to silence this message.\n");
+> diff --git a/fs/smb/client/readdir.c b/fs/smb/client/readdir.c
+> index 787d6bcb5d1d..06e90921f751 100644
+> --- a/fs/smb/client/readdir.c
+> +++ b/fs/smb/client/readdir.c
+> @@ -412,9 +412,9 @@ _initiate_cifs_search(const unsigned int xid, struct =
+file *file,
+>  	if (rc =3D=3D 0) {
+>  		cifsFile->invalidHandle =3D false;
+>  	} else if ((rc =3D=3D -EOPNOTSUPP) &&
+>  		   (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)) {
+> -		cifs_autodisable_serverino(cifs_sb);
+> +		cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number via =
+query_dir_first", rc);
+
+Looks good.
+
+>  		goto ffirst_retry;
+>  	}
+>  error_exit:
+>  	cifs_put_tlink(tlink);
+> @@ -1006,9 +1006,9 @@ static int cifs_filldir(char *find_entry, struct fi=
+le *file,
+>  	if (de.ino && (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_SERVER_INUM)) {
+>  		fattr.cf_uniqueid =3D de.ino;
+>  	} else {
+>  		fattr.cf_uniqueid =3D iunique(sb, ROOT_I);
+> -		cifs_autodisable_serverino(cifs_sb);
+> +		cifs_autodisable_serverino(cifs_sb, "Cannot retrieve inode number", 0);
+
+Perhaps also mention which function it wasn't able to retrieve inode
+number from like above?
