@@ -1,76 +1,53 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502252EFDB2;
-	Tue, 17 Jun 2025 21:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3A532F0036;
+	Tue, 17 Jun 2025 21:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750195813; cv=none; b=DYq4ONdMrGsQUXtROgjMl95HGrR+rKWjNIwkPDNwdfRcdfbECnJrT0MT1ln74B+zu+9QNo79QIacYAYQQps92Qqiv56rJ8L4fdNXLm6tQB5ca+cik3Ffr3BVRDGVynnSW7zGoS6nYQ/mBvfHytaLg/M28DGdtaO54dbQHxK8GWA=
+	t=1750195816; cv=none; b=H6FdBRFxeW821iyiHXuOXkk1s5oUPueRLzL14pBl24iXVC71Mhikyj2cY+hoLicFbuXVjRH53qbd+xYTH26egrMGp5T9lFXVn3UUpdMn14wZXlhAEIehGaE/Y87lhBjfF7YDq7TKybY8LL6hde6aq+A0pPaFOaOVcvgOiFmFu7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750195813; c=relaxed/simple;
-	bh=jiP8xbBvm1cvkS8muOTzto5Z82L2aKeW+7MsVHYfaYY=;
+	s=arc-20240116; t=1750195816; c=relaxed/simple;
+	bh=X19Ye8EF8Rp89W90Ce0baJd8El5CfJxp6Ir6ZXClc/g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nv3oUU8Esq4PpYdvnpPKjLoJxvC7SI5z5vo7YXG3bTCqiqACta2gd347m7nhTmzUhDAGuMhQWvxEMaZJ7jZc5HUSZDg6EZuYOAHqXUxgrmB7Mv9rebxVM9fmTzghXisRI5M/Nfjv8QdN4KdK4+ef4kblP7FqPVIe0p2ku1l5LKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XEyxF3f4; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=IRd8cMk9lXt+eFhy/50dlxXGJAMMj2ZJ+vuwhuG/LaReai6wg5uGohMEt22MQnbHvz+g7xq4VmFn7hM1fGykpvlB4Rk4+O+bcN3okUgkd7ZeZVGbpnjgPUILWs0Z60mfZTdGgK4Vg3Aov3K2ajz2aDLh4h6e6HMHxQkHVAYcX+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NEe9XWYB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEyxF3f4"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234d366e5f2so82769015ad.1;
-        Tue, 17 Jun 2025 14:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750195811; x=1750800611; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=mTbtcXAi0UCuLpVRrm81ZJg6wnZpaGU+V9PP7dgvRgE=;
-        b=XEyxF3f47Dd4GsFdLFThJpnIYwQo6Q9yKisX0eChc2PZrErRXYlIzkSJjv8zixmo7N
-         U+D6NARiANKXNxxGV/S7OapjmAKsBhngH8movJat2RHcVRw//yO6AMzeA2K4h7coUtTw
-         uQa7UgaeRcHw/Aiti7yAqiytUkGppQA/EUxhfRNS5vJeND0OgzRVT5notBRxfUolUKax
-         PEyu4lgVwAy/VffnHwlssKPKDcAZyHdaSfKRLl4SjBHuYWNcdXF96ah6Krf/5cYC72wA
-         SySmh8Q7H53PjPaM/5ZgtgFzz5UdQamDltHKI5tAOL/RM+GA0Jkp/SZYZu93QcTYARI+
-         fL/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750195811; x=1750800611;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mTbtcXAi0UCuLpVRrm81ZJg6wnZpaGU+V9PP7dgvRgE=;
-        b=R+IGi9ppi4uQvmDSLUmZdStPWGYPbi5WiIqqaZ+xPT8pNGvGVLprDUKCkuiohxX7BQ
-         rVH5RORJzCiQ4DdidcOFNpMCWzebU6j5Gx1BZ4eCOmRfbNYzMRco9TAcJGouCztjfwH2
-         DMbM3urSzQjW9+6pX3ZY64k0loPWkdpKRm/UZqUhlOVT31B1h6qq0LuECZ5pSoHbBZE+
-         zHoQ2m7iN/MYb4k2WByNNdP3YpMQXz7X2h4QecQXMFMpwPj7L5dwDdxrsUARjLUwrGd3
-         23eomUNZW4CmQFG5FwoOm3OL56kEjl8tCQJe2Cljx+AgYtr2ttkgkyd7rVSnS/fonsBk
-         lnPA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmIO9JBF8XaTNeu3RJYayVy7j36p/5oOjVckLP6j4MKkSN9Yng0XIghaxz0vCWrY76X8PSx6V8LcGH/U8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVYoYmtg8WfGVj/N1TyLoXU7qwxDRu32+eyQEBN5rZhFuMgUuT
-	oFR5bCpoovu3mzQeWmhUwXS3+zB1meWfGmdwlG+2B/tugmWArLyKJ0M=
-X-Gm-Gg: ASbGncvoY5EKjVIbm58kPjR8fgmtj2nOG75UrXfCny0BDingLUxky+sCPWr+TxOpeEY
-	ilvphJk92VKlT2awk5MeTfHDymW5/2nC6UBrl3DcPd2fJb9aHQEj85AU3ykZG8LEhTs9cjhd8tD
-	2vJUADO02JbPeTlTP5eEqVsUVF0rrQqQfgtGAR9PT3g6FyJ9mmp448BPW6eI1NfbI1C52NrnEj1
-	T1WfqWzvIVaTrN/1YS/kouBOXEnBOPsG+7D5mGKt5nzh2NRtjfI1DR13gCnil5SOnlAFUFBBQwI
-	1L5nf689wRh1rNfnEJPBHEf1rnsFvdlWbR7ibQ5C3kKpkYJTzdcxj74EGMPnojkF+TjffcTiJ0Y
-	2ATxkDX32NJfz/38IGtZOug0=
-X-Google-Smtp-Source: AGHT+IHiCZunwaaJjtzIQEZAsX9pMdt7B3YfAFAsa8w34AEtZGaqLSQlr+9zn9U1so3Qbi/LBOui+w==
-X-Received: by 2002:a17:903:124a:b0:235:f3e6:467f with SMTP id d9443c01a7336-2366b3138e6mr234079925ad.2.1750195811419;
-        Tue, 17 Jun 2025 14:30:11 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365decb0c5sm85211725ad.215.2025.06.17.14.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 14:30:10 -0700 (PDT)
-Date: Tue, 17 Jun 2025 14:30:10 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, ap420073@gmail.com
-Subject: Re: [PATCH net v1] netmem: fix skb_frag_address_safe with unreadable
- skbs
-Message-ID: <aFHeYuMf_LCv6Yng@mini-arch>
-References: <20250617210950.1338107-1-almasrymina@google.com>
- <CAHS8izMWiiHbfnHY=r5uCjHmDSDbWgsOOrctyuxJF3Q3+XLxWw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NEe9XWYB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA016C4CEEE;
+	Tue, 17 Jun 2025 21:30:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750195814;
+	bh=X19Ye8EF8Rp89W90Ce0baJd8El5CfJxp6Ir6ZXClc/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NEe9XWYBVvyAvv4Fi9EM3m7sdLSGIQwMgIQ9JTKHs6YpvA4QuVe+sgMFMHM+ulGXI
+	 s+mni8kQW3N2AHIXnpdtC4Az6vwD7dfUdH/K5kIY5V11beZ/f7ErWyfdsil7mS0ihV
+	 70WLEnaL8dZqYsmaEtC7n1Jq7fABTQSskV9hDf3UW3M6d+lpmTmdIWXE08b72B8YxP
+	 nmtKygaQEpxKU3Ez7gg9eaOyka5YHnaWPbx1vNpPQwtvyAFzZ0ldhWfvXp1GcJ1ObE
+	 2MHm9Ei6ID2ewED7Hr/fcrOU8bLMmNgNayulySp3ZWxJEQ+i3oJzRFnu2dKSUjmfii
+	 k8Cjs4JaamgfA==
+Date: Tue, 17 Jun 2025 18:30:11 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Michael Petlan <mpetlan@redhat.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/4] perf trace: Add missed freeing of ordered events
+ and thread
+Message-ID: <aFHeY_-hVNKtXPAD@x1>
+References: <20250614004108.1650988-1-irogers@google.com>
+ <20250614004108.1650988-3-irogers@google.com>
+ <CAH0uvojjfOcoZmxPL+bG5NEid8xcAVth7UxOUc=aYjgF5nqs2A@mail.gmail.com>
+ <aFBF1ejZQBBvX7F4@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,27 +57,79 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHS8izMWiiHbfnHY=r5uCjHmDSDbWgsOOrctyuxJF3Q3+XLxWw@mail.gmail.com>
+In-Reply-To: <aFBF1ejZQBBvX7F4@x1>
 
-On 06/17, Mina Almasry wrote:
-> On Tue, Jun 17, 2025 at 2:09 PM Mina Almasry <almasrymina@google.com> wrote:
-> >
-> > skb_frag_address_safe() needs a check that the
-> > skb_frag_page exists check similar to skb_frag_address().
-> >
-> > Cc: ap420073@gmail.com
-> >
+On Mon, Jun 16, 2025 at 01:27:04PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Fri, Jun 13, 2025 at 09:16:26PM -0700, Howard Chu wrote:
+> > TL;DR: (definitely lost: 5,248 bytes in 17 blocks, 3,586 bytes in 12
+> > blocks) -> (definitely lost: 4,992 bytes in 16 blocks, indirectly
+> > lost: 0 bytes in 0 blocks), the leak of thread__new() is fixed.
+> > 
+> > Thank you so much for fixing this.
+> > 
+> > On Fri, Jun 13, 2025 at 5:41 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > Caught by leak sanitizer running "perf trace BTF general tests".
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > 
+> > Acked-by: Howard Chu <howardchu95@gmail.com>
 > 
-> Sorry, I realized right after hitting send, I'm missing:
-> 
-> Fixes: 9f6b619edf2e ("net: support non paged skb frags")
-> 
-> I can respin after the 24hr cooldown.
+> Small enough, applied to perf-tools.
 
-The function is used in five drivers, none of which support devmem tx,
-does not look like there is a reason to route it via net.
+root@number:~# perf trace -e *sleep ls
+anaconda-ks.cfg  bin  bla  commands  dtel  firefly  logind.conf  perf-install.txt  python
+perf: Segmentation fault
+Obtained 11 stack frames.
+perf() [0x5c595e]
+perf() [0x5c59f9]
+/lib64/libc.so.6(+0x19c30) [0x7fd43ce27c30]
+perf() [0x5dc497]
+perf() [0x492d54]
+perf() [0x49860e]
+perf() [0x49890e]
+perf() [0x413413]
+/lib64/libc.so.6(+0x35f5) [0x7fd43ce115f5]
+/lib64/libc.so.6(__libc_start_main+0x88) [0x7fd43ce116a8]
+perf() [0x413a45]
+Segmentation fault (core dumped)
+root@number:~# 
 
-The change it self looks good, but not really sure it's needed.
-skb_frag_address_safe is used in some pass-data-via-descriptor-ring mode,
-I don't see 'modern' drivers (besides bnxt which added this support in 2015)
-use it.
+⬢ [acme@toolbx perf-tools]$ git bisect good
+e340815ea559052d8d590a145bab7d7105608e7d is the first bad commit
+commit e340815ea559052d8d590a145bab7d7105608e7d
+Author: Ian Rogers <irogers@google.com>
+Date:   Fri Jun 13 17:41:06 2025 -0700
+
+    perf trace: Add missed freeing of ordered events and thread
+    
+    Caught by leak sanitizer running "perf trace BTF general tests".
+    
+    Signed-off-by: Ian Rogers <irogers@google.com>
+    Acked-by: Howard Chu <howardchu95@gmail.com>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Andi Kleen <ak@linux.intel.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Kan Liang <kan.liang@linux.intel.com>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Michael Petlan <mpetlan@redhat.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+    Link: https://lore.kernel.org/r/20250614004108.1650988-3-irogers@google.com
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+ tools/perf/builtin-trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
+⬢ [acme@toolbx perf-tools]$
+
+Removing it:
+
+root@number:~# perf trace -e *sleep sleep 1
+     0.000 (1000.057 ms): sleep/2693449 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 0 }, rmtp: 0x7fffedc43ab0) = 0
+root@number:~#
+
+- Arnaldo
