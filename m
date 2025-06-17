@@ -1,101 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6282E7183;
-	Tue, 17 Jun 2025 13:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCED2C031D;
+	Tue, 17 Jun 2025 13:12:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165919; cv=none; b=OBwC4nBnUWFmkegzoytj73712z1UkOqs01bJoPoXhJH0bOtn1QQZE+/a/DvfRDcfvShipYKhmuQsMqlJpL3a5CtdIMXhpJkTUXeK3rQvSDRBgxYLZYb1ZOC5a7CG//mqes2b0BWQp/oXRqTXDzW0A/3rzNhwGU2FI7Sr1raN7Og=
+	t=1750165967; cv=none; b=UOX3gzwvWXkCRLH9kcCHMYOLcJ/X6cvv2nnORtzUFIYTYrHkOHKhILRTWoUJMJ72mMji5eNYpbTnt5uu9+HPJm+Pcrqz5O8YY7EGNDRFOQcmEFDeACq4jBjF/kN5FSfYsEBu5McXjJgHwGl8ZY0uSqP6jB0D6E/r1S87y7RZh40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165919; c=relaxed/simple;
-	bh=kLpVHH/oSXMyWtAknVnnOLvs1mUmoq/Job7UKUflMWc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZokV5P6LyhBs5SnS6GspkN76IPYeR2aSZwpE39F7HeKCHI9sHjhMAORV7MevHjT6bLCGLpYSpx1iwv0N0dyrNPqfyXzr3U60ELPl3wvhDnzb0ix7ZX8GHTVVjI8SouUKxmzHAMgiENL8JYp/Dj5n5d2dimWNSa9JQX+y4VKf9ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkvDV9HX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750165967; c=relaxed/simple;
+	bh=QDtaQLsmnu/VyAKGKSXvf8sIHBRd+mWxtBwWEhfm1PU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=OfhW5lTBRwFJaifdRivKpc/ADhKwltmT/Kjhxr30QgumNGhwQL5D7F6HS2W4U+mk/HEr0UQR7AmenTXSI7augO0/QuF3WqiK+SVDdKgQkTSBufAB4p9p3z8wAMXt5vvS/Rwoyi45CLN1Dx5A5W5ozT5rf1hzSsQTK5ad6sepRCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=booYi7ia; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkvDV9HX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F430C4CEE3;
-	Tue, 17 Jun 2025 13:11:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="booYi7ia"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0265FC4CEE3;
+	Tue, 17 Jun 2025 13:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750165918;
-	bh=kLpVHH/oSXMyWtAknVnnOLvs1mUmoq/Job7UKUflMWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rkvDV9HX+sS5KL7PRdL3WMFnyO67XeGcjBX/QFs9fcDIclkUwTEgJNcmTAc+vWHug
-	 gmvpPfcr8BC8tEgi44BavGHJqFfGh1IEr+9mfqNRxwB5lDPTFlwganEjeJwF5w/Raw
-	 3Jz/yLv+n0a4J3G08mml4+XOvaQBXvPR33V2BQGM91C/VcBse6wopqXKClO16Ps+N+
-	 qszS4Vg97PFs1TTPWclO1wk1QAqGYEAm2nMv5sMbGR/eM2vIPvhS7zIB+3+swCgKg3
-	 KeEbSPK5eZ4aAUzIRJBUBObE9urTqShqOn377qsPAAGvoJXD9MjfM7RvdjFyPG5cCT
-	 Bc/LxB6+MLGBg==
-Date: Tue, 17 Jun 2025 15:11:52 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Remo Senekowitsch <remo@buenzli.dev>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Mark Brown <broonie@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] samples: rust: platform: Add property child and
- reference args examples
-Message-ID: <aFFpmKLKR2hGs1I1@pollux>
-References: <20250616154511.1862909-1-remo@buenzli.dev>
- <20250616154511.1862909-4-remo@buenzli.dev>
- <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
+	s=k20201202; t=1750165967;
+	bh=QDtaQLsmnu/VyAKGKSXvf8sIHBRd+mWxtBwWEhfm1PU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=booYi7iaE75ULoYnaOkSj+Sco2TT5VcyKnijhY3tzCTNXZE20Skxp4Du+o3EUcRbQ
+	 s2ofawWcsni39UpVClAIK07GBTqObBCg7C5koKhrRePE6NXtpCpn/RVX7Fmu3DWvHm
+	 p0L63lA5XbrBHRTthiJ7hKmpuSj8pwrAuO93EhmK1BmrppttCtzLJOcrBhE8dyFlfi
+	 k/a+oKIbST/T9zbFsQ9sAj5PTxTdOPHr+e/jfQc+82DamA5axYwEK9bcsP/6R+EK8t
+	 lWaPgCdECV0qLSxShgCLaFF822d+dSZIdB3e3MFzAIK+Ekq9tzB1ucjUJGM7VznYtI
+	 D62v0xCWFDVLg==
+Date: Tue, 17 Jun 2025 08:12:46 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: conor+dt@kernel.org, ping.bai@nxp.com, imx@lists.linux.dev, 
+ broonie@kernel.org, lgirdwood@gmail.com, aisheng.dong@nxp.com, 
+ ye.li@nxp.com, frank.li@nxp.com, krzk+dt@kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Joy Zou <joy.zou@nxp.com>
+In-Reply-To: <20250617102025.3455544-2-joy.zou@nxp.com>
+References: <20250617102025.3455544-1-joy.zou@nxp.com>
+ <20250617102025.3455544-2-joy.zou@nxp.com>
+Message-Id: <175016596600.1706958.16046350914927298265.robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-bindings: regulator: add PF0900 regulator
+ yaml
 
-On Tue, Jun 17, 2025 at 08:01:08AM -0500, Rob Herring wrote:
-> On Mon, Jun 16, 2025 at 10:45 AM Remo Senekowitsch <remo@buenzli.dev> wrote:
-> > @@ -91,6 +95,13 @@ fn properties_parse(dev: &device::Device) -> Result {
-> >          let prop: KVec<i16> = fwnode.property_read_array_vec(name, 4)?.required_by(dev)?;
-> >          dev_info!(dev, "'{name}'='{prop:?}' (KVec)\n");
-> >
-> > +        for child in fwnode.children() {
-> > +            let name = c_str!("test,ref-arg");
-> > +            let nargs = NArgs::N(2);
-> > +            let prop: FwNodeReferenceArgs = child.property_get_reference_args(name, nargs, 0)?;
+
+On Tue, 17 Jun 2025 18:20:24 +0800, Joy Zou wrote:
+> Add device binding doc for PF0900 PMIC driver.
 > 
-> Is there some reason we can just pass 2 in rather than nargs? Seems
-> overly verbose for my tastes.
+> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> ---
+>  .../regulator/nxp,pf0900-regulator.yaml       | 179 ++++++++++++++++++
+>  1 file changed, 179 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml
+> 
 
-It's because you could also pass NArgs::Prop("foo-bar") to indicate the the
-name of the property telling the number of arguments.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-NArgs is defined as
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/regulator/nxp,pf0900-regulator.yaml:34:8: [warning] wrong indentation: expected 8 but found 7 (indentation)
 
-	pub enum NArgs<'a> {
-	    /// The name of the property of the reference indicating the number of
-	    /// arguments.
-	    Prop(&'a CStr),
-	    /// The known number of arguments.
-	    N(u32),
-	}
+dtschema/dtc warnings/errors:
 
-and FwNode::property_get_reference_args() can match against the corresponding
-enum variant to cover both cases.
+doc reference errors (make refcheckdocs):
 
-> > +            dev_info!(dev, "'{name}'='{prop:?}'\n");
-> > +        }
-> > +
-> >          Ok(())
-> >      }
-> >  }
-> > --
-> > 2.49.0
-> >
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250617102025.3455544-2-joy.zou@nxp.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
