@@ -1,84 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017802E92BE;
-	Tue, 17 Jun 2025 13:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13252E06D9;
+	Tue, 17 Jun 2025 13:54:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168466; cv=none; b=VLd1Fu2pkp9KnJlOhjIOjKyUlLR7vqDM75krubVuaO/fK2Ol1jfECPXZC96p60RAebv0T4idh9aectCaIxAuZDXH7woFINFRAtmQ2q+HcUAx+trfT8R6fE0oL3nZ3VGNeBAON0/DJylgoEOw7hktMK9frpDXSWYY6mDz8KBZ8Jw=
+	t=1750168498; cv=none; b=hpoX+c1zHnLK3V9fRkk7munQrQysuSN22ehZCFcPnl5J++bdXG2oMxbGUbpx2ETN5CvVuu36YxIqpX8pT/IHQ7e1Z4/S/ffDsYsI5sYgo41RAthDAIFiARrdAj3YB1eL2D+Nc/9mi7cRvohNIByKcjLIvJn8RwrRXmMbbzgLrTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168466; c=relaxed/simple;
-	bh=0k2cvXqcvQ++6SyJaasJsgpYXhw/jpea2Kwx1uvjjR4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S5xs3Z2gwimwUZ8EbvE5YnLIUNs+kD7Z2I+8gYKEI31FbyWvM4Q9lYvcrjrpxpxQWbYnW9bUc5PRumMtjnm3eoXxN2kUj3W26kvX4OXjDNSJdE5VDWD3uPitTYwpkQfgcN1krrWei7TGUtB6OTGFcPmxIOz0dLNxGwBLZ37QkQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnWj9Uy2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnWj9Uy2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C1C9C4CEE3;
-	Tue, 17 Jun 2025 13:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750168465;
-	bh=0k2cvXqcvQ++6SyJaasJsgpYXhw/jpea2Kwx1uvjjR4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tnWj9Uy2c7BCkpWha/u5uEkmT9SIqT2blzfoI0++eLbOOlF9K8/ENCbm14xbzK6Hp
-	 P+imT5MRdqto5N7EKqoPey2PiJfxbqPYCn06GNnC7RvNU0O2WL3eFQFcbwWA+AHheJ
-	 VtZmUFcF6PRX1htfkCNNYnuDuNqqFxNBDbVdJEKm2kV7IqavgTt1eCwSzds7yJLx49
-	 ClwaApk4XLGc6lGRsFEbipSSflok8A2jb0Z6bstQV3hjllpB1OlTcxn4Ec1bFgZhKA
-	 TUdOMw6wcOmpi82Qa1SMg/Hi3dgQ6p2PwFa6g4kwVSfvrwfyYwdzEgqtzIS2+/rskC
-	 3bR5PRmt2Hcog==
-Date: Tue, 17 Jun 2025 15:54:19 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, dri-devel@lists.freedesktop.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rust: types: add Opaque::from_raw
-Message-ID: <aFFzi88miMbCZ0yQ@pollux>
-References: <20250617-opaque-from-raw-v1-1-a2e99efa3ba2@google.com>
+	s=arc-20240116; t=1750168498; c=relaxed/simple;
+	bh=MH4f7ssedlOhhd0/OlUlv5GCda7tMpUfS4PTAFm+JNQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P4IS7QxGedPYM3j73Vn0X7T2dVZIx86hoKCqKw8HyOC0J2fnoVJtfhWhPmvZMLN2M/rBRwSPXePuygXPldEXwCsymJm92R/8x0fk9Hw69KjD0gbGzSPzcdAdI/uVGKYFqHB9lN5yZfPUKdgvjWwJ7SNRcadLWG7FtdUBz8ectmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ec4ec218fso913943241.3;
+        Tue, 17 Jun 2025 06:54:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750168494; x=1750773294;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+NPFOGmKwe57k8665KU6g7tXyTNhIGu+1JDxa3K0Buc=;
+        b=n4OdgwnKqhpe2CLKmrp2dyGfQkRcnejPOV0FCeUwbFhD8bcBH2ltwjFYuzKS9T9OwZ
+         oF+yomAmqvCOpM9HuxYCKxHPdNHsWRRZkrGFCIYliugQM1WBFxsxMKdbKLPZQMoF1Ye5
+         EeFEYDehjh5o+uQl3orYK+utcGkzEl2ncQDQfllag2tyC2+E4lGh/fkM2VfA5WjTczxW
+         yHqYzYhKSSOQTOQhQ1dqdYChvMkhLFCSHWuUFORqBAf2owh26e1Ct5fS3NgbhT7UWWn3
+         fHTA8ptg93kbd1rZ+T/kXkQBAUwZS+iTmlIVs5iuWpI9Z0w88azR1jtXhVoqTncMgkKe
+         WgiA==
+X-Forwarded-Encrypted: i=1; AJvYcCUEn26O5i6qZ6/pyCCbgg3IEHdAedYwsspj5cq1fugQuussagXsnkWy2c8NUUlnGMh28SlEiRNjGKBCiufmwAaAX2s=@vger.kernel.org, AJvYcCUv6uxbdoLfU5L89h7L1azk0qeYlSAJBtb76N3EJTOEohrp2MQWjGcNJDu6iceNBUrWSuTHsthMiVwOgAHt@vger.kernel.org, AJvYcCWkO7t1NYD7QZ8FkjZdl/+G905SpXbhxmirl3yjrKK/Fl8rH/u737T9LUb5uVI6KJmHapFbFF7x1g+DjcEk@vger.kernel.org, AJvYcCX6o+SckBnts30cK1aIV7W8wlxRfXxXrswy5qWg9PwuNaoJUgLE5s/XKLH4IxuSCAXOZOuogzKPGi+Y@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMTrWOG3s/7HCyWoniqCoS8gIg7IjWpMy8rs8TXjaYIWk++jkM
+	Ezs5pUP1edYq4SCkP7YZ842Xzs6OuTXfvh+M/eAq50UIhiIdwh5/pxmQlfWdThwf
+X-Gm-Gg: ASbGnctY9GIHuAaggjRGDkanJG+Ng/zudQDsfkhruEYivi9rwuPqUb+4gw4oSKC0iFr
+	Z9NCcoK7syARy6uLxXUaeAWrwgsGo3F1e5NRoGyyUNViweHi1926spktWZw2wWlpd75Xlu5xRsR
+	wrxNvn44dbC7FfLkXGY2o2I5VMZwuLCoQzD+ru6pScj4L3e4AQk8yh2I1WFxVcnxsacIhXvSrSZ
+	rSAikKK2qNf7r33onLPkL0iB3rq8kAm8EdHUMfB+4h/i988Lbj+YjcoYsSJWFXmdE53fLXYGi+K
+	/KMRtr/tDJ87gczOoWcgMKVlwCyuKHKth/6aVD3x8Oq/WaXC9VqQ+oFVphZmG0AlOjDK7Hnb13E
+	A9J9YPaPEafdw100FqZgHQCg6
+X-Google-Smtp-Source: AGHT+IFGw6LmJ/SAiaHvjQoGdgf0CMGd58YqOwuiu9L4GQSVNPHszkgSUJed45u4aG5Z8ALkxKJ9Sw==
+X-Received: by 2002:a05:6102:4193:b0:4e5:963b:738a with SMTP id ada2fe7eead31-4e7f6260e2bmr8202500137.16.1750168494020;
+        Tue, 17 Jun 2025 06:54:54 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f28c31f33sm987522241.16.2025.06.17.06.54.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 06:54:53 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7ef5d6bffso1300695137.3;
+        Tue, 17 Jun 2025 06:54:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWLjIwrmgVRj40vDfcGsP6C0LjqfFt7rKyDgu5hQJgKYU3mKfwF3lJTKhTgtAQoUZDFSF7QOmgkQt3q@vger.kernel.org, AJvYcCWrd4BVgqK6nEj5YETJ6i8uq5IlB9RMS0PYYElhtqZwMUjEq7io8DlZtHmtvL+Qwcc6CsKqEAAA1SZ69GBv@vger.kernel.org, AJvYcCXH99TCjoBViOJmJHH2wVoJTklxZobOlyj/J2tFqJULN0TILGHz8te5t1wtgZ0o6JFon9MuJf7nP5yPilrDEt3TX7o=@vger.kernel.org, AJvYcCXTr8X+BztmCjj4KbZmtIkebli0E54efRj2sFmWEQzRHG9/GL08dsL+nIpkOlBxXWPmNaVPlZyFs/V6AnhP@vger.kernel.org
+X-Received: by 2002:a05:6102:6f0b:b0:4e9:8488:ceb0 with SMTP id
+ ada2fe7eead31-4e98488d207mr923020137.15.1750168493078; Tue, 17 Jun 2025
+ 06:54:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617-opaque-from-raw-v1-1-a2e99efa3ba2@google.com>
+References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250617134504.126313-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250617134504.126313-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Jun 2025 15:54:41 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWuh=O5HJ1euwed6NBHWOyi_sMuKXVttVX+QzbgbHNfWg@mail.gmail.com>
+X-Gm-Features: Ac12FXyhfEkegCCAJkC3v3V_yqUqFj0Dol0lfCSMeSBROmWrtxx-3LxVrYZ7Ujw
+Message-ID: <CAMuHMdWuh=O5HJ1euwed6NBHWOyi_sMuKXVttVX+QzbgbHNfWg@mail.gmail.com>
+Subject: Re: [PATCH v12 4/7] serial: sh-sci: Replace direct stop_rx/stop_tx
+ calls with port ops in sci_shutdown()
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
+	devicetree@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 01:36:47PM +0000, Alice Ryhl wrote:
-> Since commit b20fbbc08a36 ("rust: check type of `$ptr` in
-> `container_of!`") we have enforced that the field pointer passed to
-> container_of! must match the declared field. This caused mismatches when
-> using a pointer to bindings::x for fields of type Opaque<bindings::x>.
-> 
-> This situation encourages the user to simply pass field.cast() to the
-> container_of! macro, but this is not great because you might
-> accidentally pass a *mut bindings::y when the field type is
-> Opaque<bindings::x>, which would be wrong.
-> 
-> To help catch this kind of mistake, add a new Opaque::from_raw that
-> wraps a raw pointer in Opaque without changing the inner type.
+On Tue, 17 Jun 2025 at 15:45, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Replace direct calls to sci_stop_rx() and sci_stop_tx() with port ops
+> callbacks in sci_shutdown(). This enables the RSCI driver, which reuses
+> the SCI core but implements its own stop_rx and stop_tx logic, to reuse
+> sci_shutdown() without duplicating code.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-The patch does more than that, it also adds a hint to container_of!() and fixes
-up two occurences. I feel like we should split it up.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> +    /// The opposite operation of [`Opaque::raw_get`].
-> +    pub const fn from_raw(this: *const T) -> *const Self {
+Gr{oetje,eeting}s,
 
-Do we want to name this from_raw()? Usually from_raw() methods return either
-Self or &'a Self.
+                        Geert
 
-Maybe something like cast_from() and rename raw_get() to cast_into()? I think
-the latter may be confusing anyways, since it sounds like it would do somthing
-with reference counting.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +        this.cast()
-> +    }
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
