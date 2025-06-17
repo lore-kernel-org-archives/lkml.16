@@ -1,188 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A4C428DB76;
-	Tue, 17 Jun 2025 08:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABBF229DB7E;
+	Tue, 17 Jun 2025 08:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147352; cv=none; b=ej9zQdPGae2DdJ/7feiOfspVWtbfdb+ShqnJrNInVgt+6QtqAyTvRFcH2XHUaonXmIpj3PM6wljMCDGYzVyvEGf0R/EO2WRsZqJXA2veEtWWjc86BxU3W1KCAptaFBU9qZ2AcOnhIVj8MgAFDVuCwZH5QSebYK6aIJnP6ZCSHrM=
+	t=1750147357; cv=none; b=Xe2VajlXdRD1tokNM9lzkDl+TNNncInXnU9WdYCIVpYtzvdcBbaU+eGkEOzNOQkQQWfUM85wKK6/XjoD/UXf3yCfqQJZbXxaMBkZsiXjy7A6PMr4/3T/T5pepYltxnBUr5XIPm3tGaDNERgVdIT/fE53QtDWio5ZLKpJ6tBiKNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147352; c=relaxed/simple;
-	bh=kQHlY3bWllau5HvjKpHpFCWRhH0lO7fc0jbc3mDapcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pqqcQzLltLshKMN8ZR1FaEhY/IlZOOEC/71UeE9Njy1Wj7JLIuZB4uQ7CCpkRX8NfZ4PqvceenYoXvYkPKiIKhnLYI444V9T2wUx/EQ/lqlpbuhVVPPXP2QZ03QGSM2F/NEaJcldT/9rd7l16g8ACazqJpqOvo02dsKlzzb0GLQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T89YkpEh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750147357; c=relaxed/simple;
+	bh=YowyLAJdvaGSFtQcwvYz9C46N3KUQ87WRTTq4W0CK+U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JtR4LGjvFUSLRzGWYuSnPBAgnif7WEFLJljrPSnhLBeM9m7118q8d4nQjmjGg3z9Ji6aBhPegPk+eNkm7ujRl+8z5U7gmZHKivIibC9/Hqh1s7kJFqI4ohxfZjodrkyKt+zttLJ5PxpqKp+Mt84JnmDHvYiQh2NdamXSST7mgbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WkLEpF1x; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T89YkpEh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1369C4AF0C;
-	Tue, 17 Jun 2025 08:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750147352;
-	bh=kQHlY3bWllau5HvjKpHpFCWRhH0lO7fc0jbc3mDapcU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=T89YkpEh+yt7E9PInVmtgyC2VDTBKs7zzPkmPoAaZkLz2LrXbXnwfVDE70OlWLtx+
-	 0jAotLmsVKi6yOsZEyptFffUQ1BcuiT3JB47zpJX7OiVAixDEcAGmse7HKKgi6aU2t
-	 uv/nlmr1d1120spfzMgqt/i3mxqcv0jSr62cRcvv6zTm5P6S16Tf13J6BeYV1HU8Tz
-	 xOVRVkNdJEUYc7CRgh3H0ug3WO9x+LH1QWW/Ev9H/mJj3b1mU8vHo5woYxJVE9ZMcI
-	 TTgWuokyEo1obBsCVkRB2vKs1ErAjDWp/+sQDX/L3AuCSVSa0BFkD8gjMDqedlbcqX
-	 Kzm4OUdAYHiDg==
-Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
-	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uRRH4-00000001vdV-0m2s;
-	Tue, 17 Jun 2025 10:02:30 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>
-Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Breno Leitao" <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	"Donald Hunter" <donald.hunter@gmail.com>,
-	"Eric Dumazet" <edumazet@google.com>,
-	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
-	"Jan Stancek" <jstancek@redhat.com>,
-	"Marco Elver" <elver@google.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Paolo Abeni" <pabeni@redhat.com>,
-	"Ruben Wauters" <rubenru09@aol.com>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Simon Horman <mchehab+huawei@kernel.org>,
-	joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev,
-	netdev@vger.kernel.org,
-	peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: [PATCH v5 11/15] docs: use parser_yaml extension to handle Netlink specs
-Date: Tue, 17 Jun 2025 10:02:08 +0200
-Message-ID: <f4eecf1c638c0d98369dd16818d5b175e208d138.1750146719.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WkLEpF1x"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234a45e69c8so3835025ad.2;
+        Tue, 17 Jun 2025 01:02:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750147355; x=1750752155; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A4QfHLbe3t8h1nBqhkMwci51K0hGySst45gh0x+/MZw=;
+        b=WkLEpF1xbTf8P56zR4BwClx2w6uoq1r45E9nnXmQR1F+G6tSsYOubMI0g/3tX7RTQa
+         DNC9QW+PFPNDkcv5tOL4p3Iif3RXUPVK16SfhMc1OKXDCFIYbrPeqWuL0YiLUC3Jmv7T
+         pLmFzu6EgNBjIEvNBobDi3TnhMmG8yAjpcxe+xVb3nWeaY7TO/tpruNGdEIaHf7U4OU8
+         bC80sfMgmAaQ0HhVzO7IjHi8v23iHBYpJd6zUhBRIbz04f2lPvkxcH0A+k/BJMAFRzqn
+         mVZ1LwCalp8Uv1a/9y2Po7t9U4mhUjkaZVr4MIjm9++Kg4hIfutpBxkN1hb2ZXK80j70
+         oDoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750147355; x=1750752155;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A4QfHLbe3t8h1nBqhkMwci51K0hGySst45gh0x+/MZw=;
+        b=odneEzD9x2iAzFS9+ee5rXOA25yV1zS6jS/Fa7nqUixqFWaIlk0i4iwMLPpAMFVTUZ
+         mEqO75YDHNNcyd23IvqxTbJvPy96qTrmaftpgSRSWg3voYTyGwKrPPnyDshYasHcaOFw
+         ng1HczrQHfUleQ5COT1SfpOOERNr6np1cnF2f5+tSm+Ah5gdislXeIfeCpi81OTDp/+e
+         U5vrSP1TWEPyRVm17seXenjef4KsjGr9DZzvzbtAlCMa/OP0qg8vOKdDbLbqpNLtGjhn
+         Lu8UzOztjgJg+QhNcPSk1XOkPzjTcnxNB7k2vzgSUbW4YRNs6g4NIATeRyeSIf2ywcaN
+         bH8w==
+X-Forwarded-Encrypted: i=1; AJvYcCU4LGQQAxnube6Lh3r/LBiVCQwaKL7V7hacTNNnCWeG2ceRnBu7JkyI7fbkeAzFXA5PXgXPWiQ97PCTTcTkS6o=@vger.kernel.org, AJvYcCVz14Ged6GwllQk9aXuWYKqq/aH1uBqkFOb1URyIo3L0TYtYz7I8Y2RgyHEE8Kf3LeCJ5l9VMxI2pd7Gpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHglo+1ZPPgSg34S9o/RDcB7CQanQqntcFiLqIi+HOy/HqCchq
+	dWWdUkNlgYgBnZmPAdlj1sXBmWyukQn3/Qp4hM5oXk62zdHq1F4tYw4LoJO+MbpLJkFhMcG1RoP
+	qM+emqGj3XjQ/KH7TpTlgvCt9Auor1Po=
+X-Gm-Gg: ASbGnctkgkDFboqWt34gvAwdX4OLe4T4dJ7+F1M2NIL33Vaa3UAAkXy572OI3NfCi50
+	hflYXVngTgmHBC3AcK7p0+vXBIr6uKDj9O1A4Y44zwya5ge14GJ3XG7lqKlowXyUZBa2iFiuMhM
+	a84r7mse/FGax8bzHDc7tcr/BTm1IS8kzdcDk0wiCZSIw=
+X-Google-Smtp-Source: AGHT+IE9Y1Quhv3vHwJj61PiVkeCG9+l2m52l/QkhOWmDyJ1PXuCBt8XYd6aMaToeAvNfrbJRLedUx778wvZOgZkkic=
+X-Received: by 2002:a17:902:d486:b0:231:c9bb:6105 with SMTP id
+ d9443c01a7336-2368eaa6b5emr15343475ad.0.1750147354863; Tue, 17 Jun 2025
+ 01:02:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+References: <20250616153604.49418-1-boqun.feng@gmail.com> <20250616153604.49418-3-boqun.feng@gmail.com>
+ <CANiq72mES+dPBuhsdh0-hJcV69AO74j6W5vhCeo+yV5S-Zp+yg@mail.gmail.com> <20250617.120453.1403624234989149033.fujita.tomonori@gmail.com>
+In-Reply-To: <20250617.120453.1403624234989149033.fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 17 Jun 2025 10:02:22 +0200
+X-Gm-Features: AX0GCFshvH8jdS2U4z-D_S4Wp3zw2WqEku03xiGYr0kIDRQ98ngBwep5D0EjCnA
+Message-ID: <CANiq72kB4hxsyi9D-PV0YDc9KEgfC9iYCTJVEOosZv3fg1+mYA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] rust: task: Add Rust version of might_sleep()
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: boqun.feng@gmail.com, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu, 
+	dakr@kernel.org, mingo@redhat.com, peterz@infradead.org, 
+	juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com, 
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
+	pmladek@suse.com, mingo@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Instead of manually calling ynl_gen_rst.py, use a Sphinx extension.
-This way, no .rst files would be written to the Kernel source
-directories.
+On Tue, Jun 17, 2025 at 5:05=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> How about adding a link to the header file where the might_sleep macro
+> is defined, like this?
 
-We are using here a toctree with :glob: property. This way, there
-is no need to touch the netlink/specs/index.rst file every time
-a new Netlink spec is added/renamed/removed.
+Sounds good to me. Though, for APIs that have rendered docs, we
+typically point to those instead:
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- Documentation/Makefile                          | 17 -----------------
- Documentation/conf.py                           | 13 +++++++------
- Documentation/networking/index.rst              |  2 +-
- .../networking/netlink_spec/readme.txt          |  4 ----
- 4 files changed, 8 insertions(+), 28 deletions(-)
- delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+    https://docs.kernel.org/driver-api/basics.html#c.might_sleep
 
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index b98477df5ddf..820f07e0afe6 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -104,22 +104,6 @@ quiet_cmd_sphinx = SPHINX  $@ --> file://$(abspath $(BUILDDIR)/$3/$4)
- 		cp $(if $(patsubst /%,,$(DOCS_CSS)),$(abspath $(srctree)/$(DOCS_CSS)),$(DOCS_CSS)) $(BUILDDIR)/$3/_static/; \
- 	fi
- 
--YNL_INDEX:=$(srctree)/Documentation/networking/netlink_spec/index.rst
--YNL_RST_DIR:=$(srctree)/Documentation/networking/netlink_spec
--YNL_YAML_DIR:=$(srctree)/Documentation/netlink/specs
--YNL_TOOL:=$(srctree)/tools/net/ynl/pyynl/ynl_gen_rst.py
--
--YNL_RST_FILES_TMP := $(patsubst %.yaml,%.rst,$(wildcard $(YNL_YAML_DIR)/*.yaml))
--YNL_RST_FILES := $(patsubst $(YNL_YAML_DIR)%,$(YNL_RST_DIR)%, $(YNL_RST_FILES_TMP))
--
--$(YNL_INDEX): $(YNL_RST_FILES)
--	$(Q)$(YNL_TOOL) -o $@ -x
--
--$(YNL_RST_DIR)/%.rst: $(YNL_YAML_DIR)/%.yaml $(YNL_TOOL)
--	$(Q)$(YNL_TOOL) -i $< -o $@
--
--htmldocs texinfodocs latexdocs epubdocs xmldocs: $(YNL_INDEX)
--
- htmldocs:
- 	@$(srctree)/scripts/sphinx-pre-install --version-check
- 	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,html,$(var),,$(var)))
-@@ -186,7 +170,6 @@ refcheckdocs:
- 	$(Q)cd $(srctree);scripts/documentation-file-ref-check
- 
- cleandocs:
--	$(Q)rm -f $(YNL_INDEX) $(YNL_RST_FILES)
- 	$(Q)rm -rf $(BUILDDIR)
- 	$(Q)$(MAKE) BUILDDIR=$(abspath $(BUILDDIR)) $(build)=Documentation/userspace-api/media clean
- 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index e887c1b786a4..a17940ac730f 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -25,7 +25,7 @@ include_patterns = ['**.rst']
- exclude_patterns = []
- 
- # List of patterns that contain directory names in glob format.
--dyn_include_patterns = []
-+dyn_include_patterns = ['netlink/specs/*.yaml']
- dyn_exclude_patterns = ['output']
- 
- # Properly handle include/exclude patterns
-@@ -93,7 +93,7 @@ needs_sphinx = '3.4.3'
- extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include',
-               'kfigure', 'sphinx.ext.ifconfig', 'automarkup',
-               'maintainers_include', 'sphinx.ext.autosectionlabel',
--              'kernel_abi', 'kernel_feat', 'translations']
-+              'kernel_abi', 'kernel_feat', 'translations', 'parser_yaml']
- 
- # Since Sphinx version 3, the C function parser is more pedantic with regards
- # to type checking. Due to that, having macros at c:function cause problems.
-@@ -191,10 +191,11 @@ else:
- # Add any paths that contain templates here, relative to this directory.
- templates_path = ['sphinx/templates']
- 
--# The suffix(es) of source filenames.
--# You can specify multiple suffix as a list of string:
--# source_suffix = ['.rst', '.md']
--source_suffix = '.rst'
-+# The suffixes of source filenames that will be automatically parsed
-+source_suffix = {
-+        '.rst': 'restructuredtext',
-+        '.yaml': 'yaml',
-+}
- 
- # The encoding of source files.
- #source_encoding = 'utf-8-sig'
-diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-index ac90b82f3ce9..b7a4969e9bc9 100644
---- a/Documentation/networking/index.rst
-+++ b/Documentation/networking/index.rst
-@@ -57,7 +57,7 @@ Contents:
-    filter
-    generic-hdlc
-    generic_netlink
--   netlink_spec/index
-+   ../netlink/specs/index
-    gen_stats
-    gtp
-    ila
-diff --git a/Documentation/networking/netlink_spec/readme.txt b/Documentation/networking/netlink_spec/readme.txt
-deleted file mode 100644
-index 030b44aca4e6..000000000000
---- a/Documentation/networking/netlink_spec/readme.txt
-+++ /dev/null
-@@ -1,4 +0,0 @@
--SPDX-License-Identifier: GPL-2.0
--
--This file is populated during the build of the documentation (htmldocs) by the
--tools/net/ynl/pyynl/ynl_gen_rst.py script.
--- 
-2.49.0
+(Ideally those kernel.org docs would then have a source view
+themselves, but that is a different problem... :)
 
+Cheers,
+Miguel
