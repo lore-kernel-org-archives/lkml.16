@@ -1,72 +1,98 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C2136A;
-	Tue, 17 Jun 2025 23:32:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC722F5326;
+	Tue, 17 Jun 2025 23:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750203166; cv=none; b=byBBq6tm370Q5CEU3UaM66EyKis3U8095To5zR2JhoYfFhyC9t6C4Kcx/Elb+V0FM6sYSu5Xbg0kGds5UK4zenr9OKIwnxAoB665Z6nAKaDbjF/eC0oidTSMh2I4ZcmdJrFoafjOYgv9F76Hj4+r5KcjD82qnZeX9q7tNGsKCsc=
+	t=1750203271; cv=none; b=Zwteb9U8Q7y+x0CPf6IyiKvmFMtvEn5R3ZNF8HRhHdqOj9F9fZGG2ICA1IRUVyyYjFT5BPhymELF4GlmE46QjfuH43dosS14sTOZAeVCGBoHM0Zo/metD6FAWL+ukaE4Qf6EIzXkhZ/KrNXO7QPWR0pXS6Es0220Ouf5hulknO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750203166; c=relaxed/simple;
-	bh=Cmo2gfCSY2IOU3EBYm8tRgNqy6MFqagqNSoNv0PfM0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hbFH9ZcDIpEgi+uHmvb8cgmCCzLtEikZat+xuwSVvZcNMJNGJtBi2K77p9OLAGWI691pEFqJdfQAjJtNtm5LUKl7uHZAe2u+RbMfJw/9szIwJZqfnpKDHcBiyuUZL9XPjWm7x2VBa2Hwmmx8AEWD+nQZBCP8opQQUsnH5zDneWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id CE47F1612CE;
-	Tue, 17 Jun 2025 23:32:38 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf14.hostedemail.com (Postfix) with ESMTPA id 9DF073D;
-	Tue, 17 Jun 2025 23:32:36 +0000 (UTC)
-Date: Tue, 17 Jun 2025 19:32:42 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list
- <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, Stephen
- Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Dan
- Carpenter <dan.carpenter@linaro.org>, Anders Roxell
- <anders.roxell@linaro.org>
-Subject: Re: next-20250605: Test regression: qemu-x86_64-compat mode ltp
- tracing Oops int3 kernel panic
-Message-ID: <20250617193242.394edfc9@gandalf.local.home>
-In-Reply-To: <20250618080554.15415cc4ff7535554850c689@kernel.org>
-References: <CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com>
-	<20250609220934.2c3ed98ba8c624fc7cb45172@kernel.org>
-	<CA+G9fYsoCc3DnNGoavFiBdymVpdJiEfUSEq967GgThVQW7bTPA@mail.gmail.com>
-	<20250610105337.68df01f4@gandalf.local.home>
-	<CA+G9fYv+1FPMD8e1ZadA3nLcfSRDAWvPRW-A3bGrV0y1VP2zLQ@mail.gmail.com>
-	<20250613172753.3479f786d40c29ec7b51df0a@kernel.org>
-	<20250616163659.d372cf60ee0c476168cd448e@kernel.org>
-	<20250617194159.d74b9cde9268ee8ace8e9018@kernel.org>
-	<CA+G9fYsBhS+yUa5KSzGDzqPhbRxW5p9_qLjt5taecAcguj7oNA@mail.gmail.com>
-	<20250618080554.15415cc4ff7535554850c689@kernel.org>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750203271; c=relaxed/simple;
+	bh=oZPYI309J/U93c7kpIV29ggMe76bat7e5UmdmKCbRwY=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=gk9eOeJNnAkdohJv7RWi2/cRz6PxN8JTZ0R6dOimXbeW/+qrYNcc5lP/f4kwQG/Ns1ZewpVxDF9l5CI+pigMK2NXk+KI/ri4rAoTWkmTMY+MFNg9DiRXOPTEOq9qup6PA0/LR3VCCqlS+cFKfF0dTLpFENuVC/Z+ZOXIOilndEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=esMCtyII; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WBqw3k40; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="esMCtyII";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WBqw3k40"
+Date: Tue, 17 Jun 2025 23:34:26 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750203267;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=2Rif5vJkFVsJ24ErE3jEirnmoA4XHvgFf9yZDniMFWQ=;
+	b=esMCtyIInkmb+CmtPJwHAIAPzZuhbUmUiig46K3RxdVYABkOWnJhK+SXG6IgFjgdqsFIXP
+	Bl3cuH+WRq7Our02pNFkcIeY0WzJbJ2lBpn2tzLw0iKWGUCxn9KdkOkeUbpopi4wjzhSaq
+	qt/bn7jcFt5kVT6NNCa/PfhZCtyXzyzQnkFgB6U7tyY0xZHdRMEis1tRyXm+bcaqxI6v3I
+	tNN4s4PW/opvXrXRZ03Vl7Vj/RawStYkebC/dp0IxdxkNyvLhzFD/0o/xCHwof/QvY0tz3
+	LAFD9srsOYZtSYqUiJrBNCP4Eg19YORDu7GZJ6FTK6dXd3CForxW7113+T0sig==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750203267;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=2Rif5vJkFVsJ24ErE3jEirnmoA4XHvgFf9yZDniMFWQ=;
+	b=WBqw3k40XXVdBDyBN4nc0AmkVpJ1pMbgGVIwrd7XbcGzK6mfJBiM4EhN1frJna45fKU96N
+	RtOk70P2/1zaJJCw==
+From: "tip-bot2 for Lukas Bulwahn" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/its: Fix an ifdef typo in its_alloc()
+Cc: Lukas Bulwahn <lukas.bulwahn@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <175020326650.406.9400096129663103162.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 9DF073D
-X-Stat-Signature: mj4ygokcrgw336uotm664h4mxxhxjh7e
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/RncOSInQYoMNFCmaEIx7ApmUQuON9NWc=
-X-HE-Tag: 1750203156-490063
-X-HE-Meta: U2FsdGVkX19FeYJmQQAOXmOqfl9jgVXIeyeNGTyXyuxc0mKBmYBhcy1pd07qj5XyUc9b3bjsIxmNGWmGvYHz8Gx4UWMYa0lHxf/i+Oa4RtsgamSo+lAdvy6nAZKQNReod9U5nF47FP6+bfHq/zzy5nloh8aDoMt8gN2+HvLxGQpwb6vFUMc3VwKW4VPwpIdERR3I+tm86XbHEEEmcQRMRbX8Vd0bfQc04h+wapfyFd5lXYy6dAlCry8bLTs10j0eQCSVEZQlLe9OvzgTuZ++A0dXbYRRQPW/eteXgs9DIKp3GJ0L/6MlXR19iYoduX3Sf5oymKCMMN5wSouFPzzgc/1MLIABl4Vrqi+8D6MC8xoiwT+gtY8eFIBE244XdjKMbDYd0ZJEKpkfargHjrgquA==
 
-On Wed, 18 Jun 2025 08:05:54 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> > Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>  
-> 
-> Thank you for testing!
-> This is a good chance for me to setup LTP environment locally :)
+Commit-ID:     3c902383f2da91cba3821b73aa6edd49f4db6023
+Gitweb:        https://git.kernel.org/tip/3c902383f2da91cba3821b73aa6edd49f4db6023
+Author:        Lukas Bulwahn <lukas.bulwahn@redhat.com>
+AuthorDate:    Mon, 16 Jun 2025 12:04:32 +02:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 17 Jun 2025 16:10:57 -07:00
 
-It's a beast and so far, it continues to fail to build for me :-p
+x86/its: Fix an ifdef typo in its_alloc()
 
--- Steve
+Commit a82b26451de1 ("x86/its: explicitly manage permissions for ITS
+pages") reworks its_alloc() and introduces a typo in an ifdef
+conditional, referring to CONFIG_MODULE instead of CONFIG_MODULES.
+
+Fix this typo in its_alloc().
+
+Fixes: a82b26451de1 ("x86/its: explicitly manage permissions for ITS pages")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20250616100432.22941-1-lukas.bulwahn%40redhat.com
+---
+ arch/x86/kernel/alternative.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 6455f7f..9ae80fa 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -228,7 +228,7 @@ static void *its_alloc(void)
+ 	struct its_array *pages = &its_pages;
+ 	void *page;
+ 
+-#ifdef CONFIG_MODULE
++#ifdef CONFIG_MODULES
+ 	if (its_mod)
+ 		pages = &its_mod->arch.its_pages;
+ #endif
