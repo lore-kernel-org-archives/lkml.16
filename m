@@ -1,90 +1,124 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093F92E7168;
-	Tue, 17 Jun 2025 13:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 558612E7166;
+	Tue, 17 Jun 2025 13:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166005; cv=none; b=lDJ3iQLQc80opfUpV/Fj7lcdHXeQtyCndOSp5RWjLo1TgQvZCo/huL4RJ50LP8/LE135qN1FHzkhqyc5NdihSiKSmBTslT2U08tQjWjwbncSirnvgBbAa6158WW1XkxfA+TF+ju2q56Ue/ajTTkVI3QqSBqQZaM3aIAzoqSP5eU=
+	t=1750166073; cv=none; b=XXp1iJJ5mq20N/E9mo/gxfQ3EKp6w7yxCYfqOIX7wt0ItkTZ+AyVUD8rnxNy2t7dz21asohaSnrQg/r5tJiRK/nQnEo2bgr8tCKXtfkY1PfDUVVqmhbvgjyzRMI5RZh1FhRYdjv5WFGeS+WLt21VcU8HOuSJDraQNzHvTyLkgiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166005; c=relaxed/simple;
-	bh=2QQlzIeQjLr36zCapGUnPjkf3+Sk1qRs9LPAKl1DBRk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bak21mNvjweL/HYJw5VOjYq1a8w3u4lFw6djW1/CypBjLbclwFR+IsZa6sglTc7JHismmP762X5TW8wpN5sp9Azix55rti80ESbSonHiG8+WBzUl6AbB+kAkuB7fABvrCUAyu6CVn7mZuG52KVSd5/pPrhop64Y4YeFcTeWjchc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from zq-Legion-Y7000.. (unknown [180.110.114.155])
-	by APP-05 (Coremail) with SMTP id zQCowACHCgniaVFopu48Bw--.10997S2;
-	Tue, 17 Jun 2025 21:13:06 +0800 (CST)
-From: zhouquan@iscas.ac.cn
-To: anup@brainfault.org,
-	ajones@ventanamicro.com,
-	atishp@atishpatra.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	Quan Zhou <zhouquan@iscas.ac.cn>
-Subject: [PATCH] RISC-V: KVM: Use find_vma_intersection() to search for intersecting VMAs
-Date: Tue, 17 Jun 2025 21:04:23 +0800
-Message-Id: <230d6c8c8b8dd83081fcfd8d83a4d17c8245fa2f.1731552790.git.zhouquan@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750166073; c=relaxed/simple;
+	bh=0LVGSzjpwovh30wyVpbwCgepNApCu+zccovSdlBTF/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XWd7F5llHdR1lP3KDt6+PrMLAEraEz6hL/Hw/A782/ycHbd7pigalVK0l2uYS7vS6X3OBZ7j9wy72pGpI2aEHPLcObMQ6I7OuuWNruQMlm07O+yhEesjabm2VobJ8Dx5Bco6mOiJHOPpITvOWRiGb5IJWxdAZYad/Ad3NGh+MTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+40mfOC; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+40mfOC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C3B4C4CEE3;
+	Tue, 17 Jun 2025 13:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750166072;
+	bh=0LVGSzjpwovh30wyVpbwCgepNApCu+zccovSdlBTF/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a+40mfOCghiaCI3d0KSVALtjmhxZJ/ZB5G9TvM4lNwVuY0IDj1D1HZG1LGKa7sggb
+	 Uty+f9DuDun9IRNAf/j2FKI1/eg8uBBNuHG35MChBFR7jXMnIhHf/wRi3ZHFV27biY
+	 vte+ELk4Va+wVUBT0/Lm+y+PJ8Cxg2a8HcLNM277B9DXbH/snpVojgAVbJbp92ObH3
+	 xxoHOGpD4HyCXMh8QAbqsoAr5OMyET/HvPVYIviyWkeCYdy0wMNbYtQXiWpKmUdkNV
+	 n5WwyE1SyEUGCUvrmFwT2qBxU24QPRQmgw7PATB8NL/VutywV+JeQek9mGQXGNlT3i
+	 VlJCyUoPmLSBQ==
+Date: Tue, 17 Jun 2025 08:14:29 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+Subject: Re: [PATCH v5] remoteproc: Add device awake calls in rproc boot and
+ shutdown path
+Message-ID: <2vzz6gtepjp4zmeei3jbxaagpluxs5owjctahn5qczmwa74tc6@2yzzvb26cjvk>
+References: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowACHCgniaVFopu48Bw--.10997S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7XrWxCrW7Xw1UKF4Uur17ZFb_yoWfGFX_CF
-	WxJa4kGry7JF1xZa1DCw1fWF4kW3y0yF4xXr129r4UGrnrGwnIyws8KrWUXrW8XF4xXF15
-	Jr98JrZ3tr9rtjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
-	1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
-	cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUFVyIDUUUU
-X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAYQBmhRLHXKVQAAsj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250408104317.926833-1-quic_schowdhu@quicinc.com>
 
-From: Quan Zhou <zhouquan@iscas.ac.cn>
+On Tue, Apr 08, 2025 at 04:13:17PM +0530, Souradeep Chowdhury wrote:
+> Add device awake calls in case of rproc boot and rproc shutdown path.
+> Currently, device awake call is only present in the recovery path
+> of remoteproc. If an user stops and starts rproc by using the sysfs
+> interface, then on pm suspension the firmware fails to load as the
+> request_firmware call under adsp_load relies on usermodehelper 
+> process which gets freezed on pm suspension. Add device awake calls 
+> to fix this.
+> 
 
-There is already a helper function find_vma_intersection() in KVM
-for searching intersecting VMAs, use it directly.
+This is much better, but it still leaves me guessing what the actual
+problem is. Does the firmware call time out? Does firmware loading
+explicitly fail upon a freeze?
 
-Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
----
- arch/riscv/kvm/mmu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Also, please rephrase the commit message to follow the order defined in
+https://docs.kernel.org/process/submitting-patches.html#describe-your-changes 
+i.e. start with the description of the problem, not the word "Add".
 
-diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-index b63650f9b966..3452a8b77af3 100644
---- a/arch/riscv/kvm/mmu.c
-+++ b/arch/riscv/kvm/mmu.c
-@@ -487,10 +487,11 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
- 	 *     +--------------------------------------------+
- 	 */
- 	do {
--		struct vm_area_struct *vma = find_vma(current->mm, hva);
-+		struct vm_area_struct *vma;
- 		hva_t vm_start, vm_end;
- 
--		if (!vma || vma->vm_start >= reg_end)
-+		vma = find_vma_intersection(current->mm, hva, reg_end);
-+		if (!vma)
- 			break;
- 
- 		/*
--- 
-2.34.1
+Regards,
+Bjorn
 
+> Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
+> Reviewed-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
+> ---
+> Changes in v5
+> 
+> *Added more details to commit description
+> 
+> Changes in v4
+> 
+> *Remove stability from mailing list
+> *Remove the extra tab in v3
+> *Change the commit description
+> 
+>  drivers/remoteproc/remoteproc_core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index c2cf0d277729..5d6c4e694b4c 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -1917,6 +1917,7 @@ int rproc_boot(struct rproc *rproc)
+>  		return -EINVAL;
+>  	}
+>  
+> +	pm_stay_awake(rproc->dev.parent);
+>  	dev = &rproc->dev;
+>  
+>  	ret = mutex_lock_interruptible(&rproc->lock);
+> @@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
+>  		atomic_dec(&rproc->power);
+>  unlock_mutex:
+>  	mutex_unlock(&rproc->lock);
+> +	pm_relax(rproc->dev.parent);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(rproc_boot);
+> @@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
+>  	struct device *dev = &rproc->dev;
+>  	int ret = 0;
+>  
+> +	pm_stay_awake(rproc->dev.parent);
+>  	ret = mutex_lock_interruptible(&rproc->lock);
+>  	if (ret) {
+>  		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
+> @@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
+>  	rproc->table_ptr = NULL;
+>  out:
+>  	mutex_unlock(&rproc->lock);
+> +	pm_relax(rproc->dev.parent);
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL(rproc_shutdown);
+> -- 
+> 2.34.1
+> 
