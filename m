@@ -1,401 +1,220 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11013014.outbound.protection.outlook.com [52.101.127.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ECF829291F
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:10:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151429; cv=none; b=AzxeVe8zGDu6ArjkYuKdp6XDqvPuJnHIalxPtlyJfwzpWc0kHKLMY+oAna/ukimlNJgURJJASbPzZjf+C/URgh7JsxcvOFAMjFX4KsdGRTeUh0GRPudEmdoHZ2C+2OARTjB6isr2fnqLWuCugRBiMwAA8yXt3jJc16ZyXgfy2Vc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151429; c=relaxed/simple;
-	bh=otoScECg61+ltEOPLG5w32zlzqXsj7xk7GQT57bBCA8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bzE1alK1+7pRYxqEuXYINd/s1BbppryqOppHH4ItkvGltGnDZOtV17wqlvqsHGqoHUdkxqXlBErAWhzVoTDmsXgAeL3wtHY1flZDXtK2u9u6OIZKrnyiCGP3BaBdswrjEGkoVmiwqWrf96ruwkJXsscmP8td66e2eNDsKACLf6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SjRmPx41; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD3823B601
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750151460; cv=fail; b=H3vmp1lHmRwoonA309gEkUNv7E2FLak3aJXZkWNdCo+J80Bz2xs/Ouo8Gt6afRRwhsqPqRUg9iG6W2yAt0t8IFfmMevWuD0wQI+Ad0/isx9g0snrysHfnsto2zYnvJ3zMden2kcRLC33DDO9p7mox+lqhK+bh2/nhgujICmZQlY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750151460; c=relaxed/simple;
+	bh=1L0DvgB3tkIwcZLZ8SQYepJtQEI9kqVCFUDmJ8WtTcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=GmoMsXz9KlW0q9dsH3Q1jduWvS4LOM2DuX5uZyJjJxD8csuOc8iYXnVXQ4+B4MthuzJ++XlQHoO5L+Fiass/wfJ3haxueO6T78xV2zxOdU//wnfFI6eGCC6JTX/2/9H5Sjauf6+pAkL7yu54ehgdRU1qDUqypEohev3l4cWU6yk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=Y6wuV5uv; arc=fail smtp.client-ip=52.101.127.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SjRmPx41"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a525eee2e3so4134530f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750151425; x=1750756225; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p85MWLRSl7tSClGDzgcJNqp9okEsiysUB+XfmcVwvTk=;
-        b=SjRmPx41d23SlAcwWvdKpDTtvPybZ7nawwkf5nD+8YtM92oGGnCeMkIbLD5Yb4epCw
-         7gC6oaAyyeDOP0R1nCiVuvQyawzDi3XRcDQ7/C5bdkb3/wxPgNEWQGs7bkjJQOJ14trc
-         KfUzuDJMnt+aOEqbjyVP7vZ9pn4jnRr9DvL2YrKh1lZZx7o8YDfO05qGZhJZDwxOyPil
-         mJkDeMu5rQU20HISKzy6o+rn0P//Sgh2aO3REdzMSex4DmoVxeJo0rBzj1QDbtqgMaME
-         YOARyn0Ck8srvGtrfBGqjNWCt12e/ooPkr8hVGbTMKZAzZJ3eDrXPg3EzF3aydU+NQy8
-         YJYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750151425; x=1750756225;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p85MWLRSl7tSClGDzgcJNqp9okEsiysUB+XfmcVwvTk=;
-        b=YH3cpO6Xc6vqRJkTbjUFpLF2PheP8kzMMZfNCpduOdKYjCf1f6x06jdjrWJPoWHPsx
-         Obhb2AoWmPICD6Ph3VVEcmxyfUW9pbAMGEKRf3fcyAOA7X9+v0SIdBHXSQIUmhqRBTT7
-         vO+KHK/k6k2xz7Diz7JcLDQVuLcidcxhQ7kpyMQx4iuxExpIpAJOq7/+xbl+pgZbDGZM
-         WGWg2zANQV9cGiqWQxDP9/mOyLm9jkFAz/pFPNa/t0tC+1H1xQFKN64y6hHwY/rcjo/m
-         7X0xpQ3g71KZkKNFGNk7tgQcCiOVhHX9U6zM4hA4owDfptKb2PT2rPvNAuDdBEIrQhF4
-         SXqw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvZBCttFn3N2JdOyf28ypJUzLRVPpzGYKRBmVL6KDFWjaBxkHdyM4LR+GiI7sB0/yE0gevGItd5CtdfA8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/6oHjrvN9Ub1NufHJI/Hg7ozEq/rs121aSZO4y/buCvaMXeOX
-	fXNiAj3tGs123SnmEJTzRC61kqlEE+IHQPH3y4eJRhj7XDjtS+cmduNY1vDHfkf42Wg=
-X-Gm-Gg: ASbGnctg/AcQaNgba2kAZPYs0Tz3q1gs/K2qREN+9ERtzax4ow7e8fXAvsBBbB3haDe
-	iZfaWONwP6kAQ5M+BMnjCdzeknQTBNue0Ng86mvmrqmjmSKKV0xed3C7x2agk/Ips/e6NTattMD
-	HB9aep9tIsCcsOA8YwH5XGUMSEMvMOMkpVBAAv2kEXc4g4wqMuzR9H1HO23PEnXFZ2HpRAllv7X
-	OHfvn4loQsQImfnNJ8Mb4XZQ001NdKpVPRvjc7EnC8frQ0DUVQimSHTBiqp1bO5Oa3/d4bHyFCT
-	OE1/XOcl2MXMpsMea+/8cNTTPMUkEO9RnO25JdAo0e9KgPnVfcFAmhuFJNC/u0T1
-X-Google-Smtp-Source: AGHT+IGhCrY1n0bCSGTojtFVhMrVZUB+uu0uVlbZ4FWlM9pGVwvZlgKGgNo60UlIBTF8KDhhsJtBWg==
-X-Received: by 2002:a05:6000:2486:b0:3a5:2465:c0c8 with SMTP id ffacd0b85a97d-3a5723978aamr10028419f8f.7.1750151425315;
-        Tue, 17 Jun 2025 02:10:25 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e261ebdsm175226505e9.39.2025.06.17.02.10.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:10:24 -0700 (PDT)
-Date: Tue, 17 Jun 2025 11:10:23 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Jemmy Wong <jemmywong512@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] cgroup: add lock guard support for others
-Message-ID: <zgfcsd3rsaxrdqhu4kinv7fouurcy6gixsfavx4xx2op3sgynd@s7avawjn7sb4>
-References: <20250606161841.44354-1-jemmywong512@gmail.com>
- <20250606161841.44354-4-jemmywong512@gmail.com>
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="Y6wuV5uv"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RhPUKRZrYwmHqEgvyGRhoDfvii/x60OAN/iCFy/z/WrwmqXdAtw/wWAZsXyqBiRhlDVexHt0DpJoZ51acVjGBInxG7a15U8ApozjxiMGPuk787TwRR6YWo1ozXFS2StjBM+iYzwCT/QnxXlC0uS2EgTvhYHeAXj8IBpUU+4c+TB/TPKLhx3oo2P6sM+x+E0LtAYQZ0NwWYXI0j/DGC5BwIob8+KfXOP3SLN61G9RqrVYrUZ3pl0t/SjUsISL/AlS2q7jYinJbpuLMRm9S/2GXhs1czyYDbVDpiypJODdGjNpXV9F9mvxUOQD408TVLwdCmodhUDFSoF5IHRv4X3kcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=R4HC7o1TAE/UOMIPvHlJI52ljMYyaSj6BwJXQg7lqkg=;
+ b=BfiLunqbDHZq8WPETDZAdR8oT+yL60NOA5ZnFuj9eLzZbAaA37hr/QlFcScjgs1p/0MQFcQQHNzgkYR20z8IATY8bdTzNhzpd6zl+iMumaCp09NsaEGuzcVBhoE8gmymH4qx6Vv86AVe+5adI5l+PRqBJEHGRrcJz99JwQDd4W4FZsE1Xhl7Jq3h45zO0eMNjPCYLkw3POvTugOQLguiYgOKRiHZZosF0kWF7hMlY3dGQzj7eJ2fvK+gX1IZOuGdJzEDh8AVHsOXK+poJsOcCkskNBvqjXmjwmY0S34SObaqXNmGqid9vGkGZOLJommjoUBoGlbwX4DYZz3T7CSwLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R4HC7o1TAE/UOMIPvHlJI52ljMYyaSj6BwJXQg7lqkg=;
+ b=Y6wuV5uvy83Oup8cVMiOQ+yKLcJvCIuwG1BQPVkhLjsEZS5/qaM6moRywC9koLy21TVcoQaD/a6oy0f4jBmKNsJApgx2jelRpMlg0rIdfEGdN1GkpIsLjFylttr/yoMpgk4r1anCgyocNEkZFet06WDxwNyl8no9Xc1iDqgL5S5YL92mJTvqaCgA1mzEwZEZsLZxm1IhXEPGcagwjBUC1GrgjoOLyYY4HbdaeCMFO4msFaPcU4A3KE60b0V7ra/gHepJHVViqcUz9eF+IAx1WktvTtlbNsWqq2iLlleLIFjy57nifKcRBckEIcrqblWr8h64TmcXATRHNQ7AxMVhtA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
+ by TY1PPF9851F8D71.apcprd06.prod.outlook.com (2603:1096:408::91f) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
+ 2025 09:10:54 +0000
+Received: from JH0PR06MB6849.apcprd06.prod.outlook.com
+ ([fe80::ed24:a6cd:d489:c5ed]) by JH0PR06MB6849.apcprd06.prod.outlook.com
+ ([fe80::ed24:a6cd:d489:c5ed%6]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 09:10:54 +0000
+From: Zhiguo Jiang <justinjiang@vivo.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: opensource.kernel@vivo.com,
+	Zhiguo Jiang <justinjiang@vivo.com>
+Subject: [PATCH] mm: rt-threads retry mempool allocation without delay
+Date: Tue, 17 Jun 2025 17:10:44 +0800
+Message-ID: <20250617091044.1062-1-justinjiang@vivo.com>
+X-Mailer: git-send-email 2.41.0.windows.3
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0183.apcprd06.prod.outlook.com (2603:1096:4:1::15)
+ To JH0PR06MB6849.apcprd06.prod.outlook.com (2603:1096:990:47::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z7ayi4izy43l2hlq"
-Content-Disposition: inline
-In-Reply-To: <20250606161841.44354-4-jemmywong512@gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: JH0PR06MB6849:EE_|TY1PPF9851F8D71:EE_
+X-MS-Office365-Filtering-Correlation-Id: a5360c91-a8ca-46a9-57c6-08ddad7edd4c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Mt5yO/vgMsaHJhMoiIsVwRBPkgLMnupXcXVJ1Fx9pEjz+bzDtIRyOfgqHAju?=
+ =?us-ascii?Q?CNalUt7EZUZ9D5XWpLnbiNipCre+hzejYZAmjp9Q4jboNykZkF1lYWEF8hEu?=
+ =?us-ascii?Q?Q9f8k86Y+0gwRv2Mi1gwmhe2PRbNlUw+gEKoZI//TxKI02/ZfWOU1TK+4qb3?=
+ =?us-ascii?Q?uKERQ7qfv4OTwrDr5xrmmCfMwTsofYVpoxWnkXt91KQZuFXzGfgRNgIKdJIl?=
+ =?us-ascii?Q?JfuKVSGyzqpGi548wgD2kaq/WMg4LC1aIKJHJo1vZwRWcmcf5iss1dXzMGgu?=
+ =?us-ascii?Q?jQT1HafpAZGB8b9/eImmpYhZfQUADSgbTMRhQxssv2u0ZRiFHGIN/tOtslCv?=
+ =?us-ascii?Q?ooiSsriuvG+ieLuPr5kZZn2BAcaZlumAmlywg6GqPV7iFUXNGET+b1C/0i1R?=
+ =?us-ascii?Q?Gm64yaVEEKM/+VR8qKtjjFOMcDbbJHferQju/kU3B7gEmA4DV3dqKh9yqLDK?=
+ =?us-ascii?Q?Uflccv2O2v7EUue7t8PdeVtkTORfEzeMw/u/+ID0+UZ2YP3gEI0HQ1kgZ14X?=
+ =?us-ascii?Q?fNazpmsUfyk7+2Mb5PpghQRSxfG8E0TWXS+ikUAx6SS6vo4aQrPyS+qS6s2b?=
+ =?us-ascii?Q?QtRlKwVyi4wHDNohZon2XjeXzOKxBkjl3aHpEns+E91/aVbWa2nOzGh434q3?=
+ =?us-ascii?Q?Hh8OGDOAo9D8X9oIIuXSwftIq36wVuYQHMYQw3PCQFhJj7HWUINK5lJwD8I7?=
+ =?us-ascii?Q?JeIUqA7KulR6fXqaHIcQgN7C/Q7neN1Xs0a055AHwhbDcsTd790OY9TVuu6y?=
+ =?us-ascii?Q?dBEo+MrNDG5fZwOm2oUgI69TdsKNRT6CUzKmfJQ3kSrFaxDFxs2mCmh2S0zH?=
+ =?us-ascii?Q?ImzEAcBi/h1omA8eb6ChMm28UJejAOQ+LVpgAaADTOeLDLkSnBUj9IceY8t1?=
+ =?us-ascii?Q?wRIAdTibq/igU5stGloMIROWftNKQZM9XUAi3NUStHTfB/YxIqdNhK3J37L/?=
+ =?us-ascii?Q?NbEOYNJOIlNcr9lVail+bu1K/O/w8ijY+Kb7VMZ8VCW0lfOhC1Patug62Q1m?=
+ =?us-ascii?Q?zdlRbmB2n3nlJPqnyChScVnWVfqwMARuMfNwvqQQd9c3d70pxB7jJoNNe5LL?=
+ =?us-ascii?Q?kDpcRU6Ja75fVv+UYben9HXuOYtkLUZcVyeAv7vO83zBrSQbbXay3QJt5nVm?=
+ =?us-ascii?Q?80BHcCngCndDSkdbui5gG6uHnZOcruJAH/auxpRO7KaVK+XPDx7CrxBgjf7j?=
+ =?us-ascii?Q?9HQC20ciZiwOsJcCLq61cw1MJ6GFNz4zV+IVS7IQThYhfiSzXyDvhNgqgNn6?=
+ =?us-ascii?Q?M2xgEVfpsS0R+rO6FKRG8OJtQYKDnllzyDRgUrbp3mu6B80sPx/3f37KQNku?=
+ =?us-ascii?Q?QKws0I99exMiy8xNsIjGnctzlzf2+KITxBul8+nkLEYbb1bxG7bogM2JY1Ts?=
+ =?us-ascii?Q?Jl0aXhd0xO4OA6snCGE+hy0/Ipw2oihexu3jkUeSOTywA6MWnAneBcEpbYDf?=
+ =?us-ascii?Q?B6yY9Hod3osoHT092vFBU4mtZ2EJQMJid5QLMk8CiKc1AFrOCs6Cxg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:JH0PR06MB6849.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?tXdku+MdoP//FYuNtpsggGyGHa1MemOB6ho2M65Upte9yoHoukYsCBUMtBr/?=
+ =?us-ascii?Q?8abkm4Ri3/sFrKzXSMgV9A5OYzn5JWeGYZTIsnIaq489j2ih21NsF+uBuwQQ?=
+ =?us-ascii?Q?FL2vHf4QvLeqwXTYSxW6GDrHt6CQ/RXnDcK5U27I99e/CEz9u85/FkwMKjJq?=
+ =?us-ascii?Q?9hkUqhuqLZBvszEYw6zLXhRKCb0UsTmv1fcly+mgvDiP5b+mM4PwVV2Zjcyw?=
+ =?us-ascii?Q?zWlfcsFrZER6sVGBOrht9+j5wuwRyokY3W46amd2hF4WaaGDfJqYeYUOz4My?=
+ =?us-ascii?Q?MH6bBs2mU5ql5Iek/7Q8PsMK6zg/AF3hU3EjQVmAvNtWklTTnsxgWpSyDvPH?=
+ =?us-ascii?Q?UwvuK+KsKUoOGQRG75Q0OJ0ERxhazfTQH7uphRQWyjd+fz9LyCIvs1uljhzz?=
+ =?us-ascii?Q?S2MoX+N4Z04/0M8RZmxZvHf3N+nZHvFaiu8q8qLYZt/Mhssm8WzAHa6xTryv?=
+ =?us-ascii?Q?mpOihSOk3OjjioMIjSqSY0Ipd0ZyKJoF8zoBxmuJVtErqNkxQhccX+xH6t4U?=
+ =?us-ascii?Q?0av8l1LebeaWf1Y+aml3wak2inwcyHrtxNveFzSZewbFRQMCpJ+LHlYXnQGp?=
+ =?us-ascii?Q?5vqdt4Xz+OSPjgyOrWZc2D2KHXiLPFvj2oSOeeT4QCIrgPjG3VCEA4OAF1yG?=
+ =?us-ascii?Q?35wdSNeTLkquUEa/zpMuLlyDKmPVuKjx1oNwgxEJpD4St/CFjj3ZkTtIyt+b?=
+ =?us-ascii?Q?734D//43nfA5euCGp/eGFtvm78vP5tWJiSu3JA4vpnvYy4x7idreNoFcfN12?=
+ =?us-ascii?Q?5cOz0E0ev8oDj/ZX7/bqMHrX2j1zSC+4oIJCbKMIFu1q0GjDoaP6uN9mkFO+?=
+ =?us-ascii?Q?H5euS45BEYXUBZO9ssX8K9bFKzObTyhQFHlw2cgowLPm0TKg1f5+JL3dGPw/?=
+ =?us-ascii?Q?V/VPFaRaN6Jv5zAmBjm3knxCfEWRmpvNSGEcSxAD7iMT2uHYdJOv4sROX6rx?=
+ =?us-ascii?Q?xm1NHPGXCZO4WsOIiD0Ib7ZjVP3wqlLZRNkPbH4uemJDm68sbmO0pIdPCNyC?=
+ =?us-ascii?Q?4957eaWnImxoY6TmNziJBh0AsY+RhA4+HpGuZOhcy5KazB5QQUgI4QEuDgf1?=
+ =?us-ascii?Q?4FUeqPUpb0neefo9E2lCEGJuNGgIaS8ubxXUJqEO28gHeI+31PWaAymGLh0m?=
+ =?us-ascii?Q?1vwSVBd56ZUZ0+oiB+0ZBiHB7nUF5YNbU4Ywor7pkVAmTY3N0ISRjDYMWC3h?=
+ =?us-ascii?Q?VFfEHMel/1+EBrRE/MH/OH8+RDnC1M9OnZ4zuWFsfeKjgVuC3J+H6usQ9Pzv?=
+ =?us-ascii?Q?u8LtWsscNE8Xnu3iLG5Z7RyIVPim7OlljlCf/aGLKKIQVkrEyD9/44SQt8Vx?=
+ =?us-ascii?Q?7TgZ3ec2zWQ1DL9DzgUJM0w55zxOKgKvAx70DassvSFMwaULZdiVZcXENfhO?=
+ =?us-ascii?Q?FD8fn9OziIciw79V05KDxelSyz9S24IGLiJw6X2OJfelbM3oKGog5jNN5FTq?=
+ =?us-ascii?Q?RyM/rPA5Lf9MrqvRDT2+t8r/EkfI3bkcievFUwUar73qX6xGqb20tD2t5lGt?=
+ =?us-ascii?Q?fdLCLwPDFD7lwu9PmIKA7yPmO+9+g073B61pJwAXhamonjUDzvwbH+UV5+zJ?=
+ =?us-ascii?Q?p9OhcNB4jiEIkVrP4bw7zsgSnNusU9cG6CLp5t5N?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a5360c91-a8ca-46a9-57c6-08ddad7edd4c
+X-MS-Exchange-CrossTenant-AuthSource: JH0PR06MB6849.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 09:10:54.8299
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wt+ibXCRXTncKu9+vrP8ME3HL4d7HUEra3KK6xt5i2qFLiCoKQDz+MeLr/81btyF51ExEUqR3ma1ClYgaCZOgg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PPF9851F8D71
 
+The real-time(rt) threads are delayed for 5 seconds in mempool_alloc,
+which will seriously affect the timeliness of front-end applications
+and the user experience lag issues.
 
---z7ayi4izy43l2hlq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 3/3] cgroup: add lock guard support for others
-MIME-Version: 1.0
+The real-time(rt) threads should retry mempool allocation without
+delay and in order to obtain the required memory resources as soon as
+possible.
 
-On Sat, Jun 07, 2025 at 12:18:41AM +0800, Jemmy Wong <jemmywong512@gmail.co=
-m> wrote:
-> Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
->=20
-> ---
->  kernel/cgroup/cgroup-internal.h |  8 ++--
->  kernel/cgroup/cgroup-v1.c       | 11 +++--
->  kernel/cgroup/cgroup.c          | 73 ++++++++++++---------------------
->  3 files changed, 35 insertions(+), 57 deletions(-)
->=20
-> diff --git a/kernel/cgroup/cgroup-internal.h b/kernel/cgroup/cgroup-inter=
-nal.h
-> index b14e61c64a34..5430454d38ca 100644
-> --- a/kernel/cgroup/cgroup-internal.h
-> +++ b/kernel/cgroup/cgroup-internal.h
-> @@ -198,8 +198,6 @@ void put_css_set_locked(struct css_set *cset);
-> =20
->  static inline void put_css_set(struct css_set *cset)
->  {
-> -	unsigned long flags;
-> -
->  	/*
->  	 * Ensure that the refcount doesn't hit zero while any readers
->  	 * can see it. Similar to atomic_dec_and_lock(), but for an
-> @@ -208,9 +206,9 @@ static inline void put_css_set(struct css_set *cset)
->  	if (refcount_dec_not_one(&cset->refcount))
->  		return;
-> =20
-> -	spin_lock_irqsave(&css_set_lock, flags);
-> -	put_css_set_locked(cset);
-> -	spin_unlock_irqrestore(&css_set_lock, flags);
-> +	scoped_guard(spinlock_irqsave, &css_set_lock) {
-> +		put_css_set_locked(cset);
-> +	}
->  }
+The following example shows that the real-time(rt) QoSCoreThread
+prio=98 blocks 5 seconds in mempool_alloc, seriously affecting the
+user experience.
 
-This should go to the css_set_lock patch.
+Running process:	system_server (pid 2245)
+Running thread:	QoSCoreThread 2529
+State:	Uninterruptible Sleep - Block I/O
+Start:	12,859.616 ms
+Systrace Time:	100,063.057104
+Duration:	5,152.591 ms
+On CPU:
+Running instead:	kswapd0
+Args:	{kernel callsite when blocked:: "mempool_alloc+0x130/0x1e8"}
 
->  /*
-> diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-> index fcc2d474b470..91c6ba4e441d 100644
-> --- a/kernel/cgroup/cgroup-v1.c
-> +++ b/kernel/cgroup/cgroup-v1.c
-> @@ -1291,7 +1291,6 @@ struct cgroup *task_get_cgroup1(struct task_struct =
-*tsk, int hierarchy_id)
->  {
->  	struct cgroup *cgrp =3D ERR_PTR(-ENOENT);
->  	struct cgroup_root *root;
-> -	unsigned long flags;
-> =20
->  	guard(rcu)();
->  	for_each_root(root) {
-> @@ -1300,11 +1299,11 @@ struct cgroup *task_get_cgroup1(struct task_struc=
-t *tsk, int hierarchy_id)
->  			continue;
->  		if (root->hierarchy_id !=3D hierarchy_id)
->  			continue;
-> -		spin_lock_irqsave(&css_set_lock, flags);
-> -		cgrp =3D task_cgroup_from_root(tsk, root);
-> -		if (!cgrp || !cgroup_tryget(cgrp))
-> -			cgrp =3D ERR_PTR(-ENOENT);
-> -		spin_unlock_irqrestore(&css_set_lock, flags);
-> +		scoped_guard(spinlock_irqsave, &css_set_lock) {
-> +			cgrp =3D task_cgroup_from_root(tsk, root);
-> +			if (!cgrp || !cgroup_tryget(cgrp))
-> +				cgrp =3D ERR_PTR(-ENOENT);
-> +		}
+   QoSCoreThread-2529  (   2245) [000] d..2. 100063.057104: sched_switch:
+   prev_comm=QoSCoreThread prev_pid=2529 prev_prio=000255001000098
+   prev_state=D ==> next_comm=kswapd0 next_pid=107
+   next_prio=000063310000120
+ [GT]ColdPool#14-23937 (  23854) [000] dNs2. 100068.209675: sched_waking:
+ comm=QoSCoreThread pid=2529 prio=98 target_cpu=000
+ [GT]ColdPool#14-23937 (  23854) [000] dNs2. 100068.209676:
+ sched_blocked_reason: pid=2529 iowait=1 caller=mempool_alloc+0x130/0x1e8
+ [GT]ColdPool#14-23937 (  23854) [000] dNs3. 100068.209695: sched_wakeup:
+ comm=QoSCoreThread pid=2529 prio=98 target_cpu=000
+ [GT]ColdPool#14-23937 (  23854) [000] d..2. 100068.209732: sched_switch:
+ prev_comm=[GT]ColdPool#14 prev_pid=23937 prev_prio=000003010342130
+ prev_state=R ==> next_comm=QoSCoreThread next_pid=2529
+ next_prio=000255131000098
 
-Ditto.
+Signed-off-by: Zhiguo Jiang <justinjiang@vivo.com>
+---
+ mm/mempool.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
->  		break;
->  	}
-> =20
-> diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-> index 46b677a066d1..ea98679b01e1 100644
-> --- a/kernel/cgroup/cgroup.c
-> +++ b/kernel/cgroup/cgroup.c
-> @@ -335,28 +335,23 @@ static int cgroup_idr_alloc(struct idr *idr, void *=
-ptr, int start, int end,
->  	int ret;
-> =20
->  	idr_preload(gfp_mask);
-> -	spin_lock_bh(&cgroup_idr_lock);
-> -	ret =3D idr_alloc(idr, ptr, start, end, gfp_mask & ~__GFP_DIRECT_RECLAI=
-M);
-> -	spin_unlock_bh(&cgroup_idr_lock);
-> +	scoped_guard(spinlock_bh, &cgroup_idr_lock) {
-> +		ret =3D idr_alloc(idr, ptr, start, end, gfp_mask & ~__GFP_DIRECT_RECLA=
-IM);
-> +	}
->  	idr_preload_end();
->  	return ret;
->  }
-> =20
->  static void *cgroup_idr_replace(struct idr *idr, void *ptr, int id)
->  {
-> -	void *ret;
-> -
-> -	spin_lock_bh(&cgroup_idr_lock);
-> -	ret =3D idr_replace(idr, ptr, id);
-> -	spin_unlock_bh(&cgroup_idr_lock);
-> -	return ret;
-> +	guard(spinlock_bh)(&cgroup_idr_lock);
-> +	return idr_replace(idr, ptr, id);
->  }
-> =20
->  static void cgroup_idr_remove(struct idr *idr, int id)
->  {
-> -	spin_lock_bh(&cgroup_idr_lock);
-> +	guard(spinlock_bh)(&cgroup_idr_lock);
->  	idr_remove(idr, id);
-> -	spin_unlock_bh(&cgroup_idr_lock);
->  }
-> =20
->  static bool cgroup_has_tasks(struct cgroup *cgrp)
-> @@ -583,20 +578,19 @@ struct cgroup_subsys_state *cgroup_get_e_css(struct=
- cgroup *cgrp,
->  	if (!CGROUP_HAS_SUBSYS_CONFIG)
->  		return NULL;
-> =20
-> -	rcu_read_lock();
-> +	guard(rcu)();
-> =20
->  	do {
->  		css =3D cgroup_css(cgrp, ss);
-> =20
->  		if (css && css_tryget_online(css))
-> -			goto out_unlock;
-> +			return css;
->  		cgrp =3D cgroup_parent(cgrp);
->  	} while (cgrp);
-> =20
->  	css =3D init_css_set.subsys[ss->id];
->  	css_get(css);
-> -out_unlock:
-> -	rcu_read_unlock();
-> +
->  	return css;
->  }
->  EXPORT_SYMBOL_GPL(cgroup_get_e_css);
+diff --git a/mm/mempool.c b/mm/mempool.c
+--- a/mm/mempool.c
++++ b/mm/mempool.c
+@@ -18,6 +18,7 @@
+ #include <linux/export.h>
+ #include <linux/mempool.h>
+ #include <linux/writeback.h>
++#include <linux/sched/prio.h>
+ #include "slab.h"
+ 
+ #ifdef CONFIG_SLUB_DEBUG_ON
+@@ -386,7 +387,7 @@ void *mempool_alloc_noprof(mempool_t *pool, gfp_t gfp_mask)
+ 	void *element;
+ 	unsigned long flags;
+ 	wait_queue_entry_t wait;
+-	gfp_t gfp_temp;
++	gfp_t gfp_temp, gfp_src = gfp_mask;
+ 
+ 	VM_WARN_ON_ONCE(gfp_mask & __GFP_ZERO);
+ 	might_alloc(gfp_mask);
+@@ -433,6 +434,16 @@ void *mempool_alloc_noprof(mempool_t *pool, gfp_t gfp_mask)
+ 		return NULL;
+ 	}
+ 
++	/*
++	 * We will try to direct reclaim cyclically, if the rt-thread
++	 * is without __GFP_NORETRY.
++	 */
++	if (!(gfp_src & __GFP_NORETRY) && current->prio < MAX_RT_PRIO) {
++		spin_unlock_irqrestore(&pool->lock, flags);
++		gfp_temp = gfp_src;
++		goto repeat_alloc;
++	}
++
+ 	/* Let's wait for someone else to return an element to @pool */
+ 	init_wait(&wait);
+ 	prepare_to_wait(&pool->wait, &wait, TASK_UNINTERRUPTIBLE);
+-- 
+2.48.1
 
-This should go to the RCU patch.
-
-> @@ -1691,9 +1685,9 @@ static void cgroup_rm_file(struct cgroup *cgrp, con=
-st struct cftype *cft)
->  		struct cgroup_subsys_state *css =3D cgroup_css(cgrp, cft->ss);
->  		struct cgroup_file *cfile =3D (void *)css + cft->file_offset;
-> =20
-> -		spin_lock_irq(&cgroup_file_kn_lock);
-> -		cfile->kn =3D NULL;
-> -		spin_unlock_irq(&cgroup_file_kn_lock);
-> +		scoped_guard(spinlock_irq, &cgroup_file_kn_lock) {
-> +			cfile->kn =3D NULL;
-> +		}
-> =20
->  		timer_delete_sync(&cfile->notify_timer);
->  	}
-> @@ -4277,9 +4271,9 @@ static int cgroup_add_file(struct cgroup_subsys_sta=
-te *css, struct cgroup *cgrp,
-> =20
->  		timer_setup(&cfile->notify_timer, cgroup_file_notify_timer, 0);
-> =20
-> -		spin_lock_irq(&cgroup_file_kn_lock);
-> -		cfile->kn =3D kn;
-> -		spin_unlock_irq(&cgroup_file_kn_lock);
-> +		scoped_guard(spinlock_irq, &cgroup_file_kn_lock) {
-> +			cfile->kn =3D kn;
-> +		}
->  	}
-> =20
->  	return 0;
-> @@ -4534,9 +4528,7 @@ int cgroup_add_legacy_cftypes(struct cgroup_subsys =
-*ss, struct cftype *cfts)
->   */
->  void cgroup_file_notify(struct cgroup_file *cfile)
->  {
-> -	unsigned long flags;
-> -
-> -	spin_lock_irqsave(&cgroup_file_kn_lock, flags);
-> +	guard(spinlock_irqsave)(&cgroup_file_kn_lock);
->  	if (cfile->kn) {
->  		unsigned long last =3D cfile->notified_at;
->  		unsigned long next =3D last + CGROUP_FILE_NOTIFY_MIN_INTV;
-> @@ -4548,7 +4540,6 @@ void cgroup_file_notify(struct cgroup_file *cfile)
->  			cfile->notified_at =3D jiffies;
->  		}
->  	}
-> -	spin_unlock_irqrestore(&cgroup_file_kn_lock, flags);
->  }
-> =20
->  /**
-> @@ -4560,10 +4551,10 @@ void cgroup_file_show(struct cgroup_file *cfile, =
-bool show)
->  {
->  	struct kernfs_node *kn;
-> =20
-> -	spin_lock_irq(&cgroup_file_kn_lock);
-> -	kn =3D cfile->kn;
-> -	kernfs_get(kn);
-> -	spin_unlock_irq(&cgroup_file_kn_lock);
-> +	scoped_guard(spinlock_irq, &cgroup_file_kn_lock) {
-> +		kn =3D cfile->kn;
-> +		kernfs_get(kn);
-> +	}
-> =20
->  	if (kn)
->  		kernfs_show(kn, show);
-> @@ -4987,11 +4978,10 @@ static void css_task_iter_advance(struct css_task=
-_iter *it)
->  void css_task_iter_start(struct cgroup_subsys_state *css, unsigned int f=
-lags,
->  			 struct css_task_iter *it)
->  {
-> -	unsigned long irqflags;
-> =20
->  	memset(it, 0, sizeof(*it));
-> =20
-> -	spin_lock_irqsave(&css_set_lock, irqflags);
-> +	guard(spinlock_irqsave)(&css_set_lock);
-> =20
->  	it->ss =3D css->ss;
->  	it->flags =3D flags;
-> @@ -5004,8 +4994,6 @@ void css_task_iter_start(struct cgroup_subsys_state=
- *css, unsigned int flags,
->  	it->cset_head =3D it->cset_pos;
-> =20
->  	css_task_iter_advance(it);
-> -
-> -	spin_unlock_irqrestore(&css_set_lock, irqflags);
->  }
-> =20
-
-css_set_lock
-
->  /**
-> @@ -5018,14 +5006,12 @@ void css_task_iter_start(struct cgroup_subsys_sta=
-te *css, unsigned int flags,
->   */
->  struct task_struct *css_task_iter_next(struct css_task_iter *it)
->  {
-> -	unsigned long irqflags;
-> -
->  	if (it->cur_task) {
->  		put_task_struct(it->cur_task);
->  		it->cur_task =3D NULL;
->  	}
-> =20
-> -	spin_lock_irqsave(&css_set_lock, irqflags);
-> +	guard(spinlock_irqsave)(&css_set_lock);
-> =20
->  	/* @it may be half-advanced by skips, finish advancing */
->  	if (it->flags & CSS_TASK_ITER_SKIPPED)
-> @@ -5038,8 +5024,6 @@ struct task_struct *css_task_iter_next(struct css_t=
-ask_iter *it)
->  		css_task_iter_advance(it);
->  	}
-> =20
-> -	spin_unlock_irqrestore(&css_set_lock, irqflags);
-> -
->  	return it->cur_task;
->  }
-> =20
-
-css_set_lock
-
-> @@ -5051,13 +5035,10 @@ struct task_struct *css_task_iter_next(struct css=
-_task_iter *it)
->   */
->  void css_task_iter_end(struct css_task_iter *it)
->  {
-> -	unsigned long irqflags;
-> -
->  	if (it->cur_cset) {
-> -		spin_lock_irqsave(&css_set_lock, irqflags);
-> +		guard(spinlock_irqsave)(&css_set_lock);
->  		list_del(&it->iters_node);
->  		put_css_set_locked(it->cur_cset);
-> -		spin_unlock_irqrestore(&css_set_lock, irqflags);
->  	}
-> =20
->  	if (it->cur_dcset)
-
-css_set_lock
-
-> @@ -6737,10 +6718,10 @@ void cgroup_post_fork(struct task_struct *child,
->  				 * too. Let's set the JOBCTL_TRAP_FREEZE jobctl bit to
->  				 * get the task into the frozen state.
->  				 */
-> -				spin_lock(&child->sighand->siglock);
-> -				WARN_ON_ONCE(child->frozen);
-> -				child->jobctl |=3D JOBCTL_TRAP_FREEZE;
-> -				spin_unlock(&child->sighand->siglock);
-> +				scoped_guard(spinlock, &child->sighand->siglock) {
-> +					WARN_ON_ONCE(child->frozen);
-> +					child->jobctl |=3D JOBCTL_TRAP_FREEZE;
-> +				}
-> =20
->  				/*
->  				 * Calling cgroup_update_frozen() isn't required here,
-> --=20
-> 2.43.0
->=20
-
---z7ayi4izy43l2hlq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFEw/AAKCRB+PQLnlNv4
-COhkAP0bs1P9uZ0S6HoPGA8hFuBWiun70gS3IVnF9IkbkChl9wEAnx1ut7HG6VwP
-X4WQguNd0f9A30kzYGrpmar5SD6rdAg=
-=GmHH
------END PGP SIGNATURE-----
-
---z7ayi4izy43l2hlq--
