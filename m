@@ -1,64 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A872F5326;
-	Tue, 17 Jun 2025 23:34:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 616752F5326;
+	Tue, 17 Jun 2025 23:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750203300; cv=none; b=LeburJsaiM+ClaImQuDMFmvGba9o1TiCE89HGSTcvcuYvXcQGDZBvUNz/TTVX0XyZkkZnVft4JXN6pBqLCAC1ONKY9VVRiuQXyZ/lAKnxceWKPY0CDgDwkMyMCv4x8p4lbhrgserAZkmhi0fZAoJyldOeDUajcWzM12NBT9C86c=
+	t=1750203341; cv=none; b=bUPMjSW+gCUo+DPnFPSIiUMnc8kKAkYm7SHdScA9e41U0DuecnkHs49vO7K2N0ynfrdgRaoB+U1Y1pYh5bvPbv6n2REUQTnj3/fUk9Yyo4kl8K3oVXOZkz4gyVRhlSl04TPVuVoMG2LPaql43fdxS6orZ9NQUD/yU4La5OeMBX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750203300; c=relaxed/simple;
-	bh=sC4PjFXnrul5dZVI0fMfyCQpQA1apYIfhFJlTLPwiyI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mjqxsDefefWz3h/chSgmm1tCskNs4nVZCxZLd/oGV6mndM0gr2iBJXQPlyFiOPZy1JXu95R08vO+cQ+HKs3lNdLDsEuYzOn7NYhD4QiwsgbesLxog0N8iFpeQKViovxeyaljVBcRGs9dnAi5clNcw2pq1B3NFcxOWw2ZhbCY/Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=F8Kzyfy6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750203341; c=relaxed/simple;
+	bh=iLoQCihGzEBGYCVh3p3W+/pZ3DPuaTjIgYAmG7jTQxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=hnzySM1qMTN+XoTwcalGsFLJhH4urD4y8ZbVMD5gb8TsZ70Jnm5wMsV5LR799HEbA6w73w057VthjyJ1qaasWpXEZfgSt69SfQbu6trPhbRLITL9VOAKlf1Dj3r6oac/hYmiZjm1lLC3mMP2MHq2bp6f/gNLKewhYC2OKYQwVRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPd8kitl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="F8Kzyfy6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53737C4CEED;
-	Tue, 17 Jun 2025 23:34:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1750203299;
-	bh=sC4PjFXnrul5dZVI0fMfyCQpQA1apYIfhFJlTLPwiyI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=F8Kzyfy6v59bFcIYQ9edZ6OPAXXgihpMRvduiLoo1pz3y8Y0yWyCVhWvOWydOeAAF
-	 73QBnSSS5SR6N4Ep5dlGhObFvvW6ZBlxx5CXkwjZ2cfXhxrvlrElKCTbaHIwiAZa1n
-	 dJeU0kY/wETuxiMZQkznhcqAhoscjh7oPav7hBlo=
-Date: Tue, 17 Jun 2025 16:34:58 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, Muhammad
- Usama Anjum <usama.anjum@collabora.com>
-Subject: Re: [PATCH v1] fs/proc/task_mmu: fix PAGE_IS_PFNZERO detection for
- the huge zero folio
-Message-Id: <20250617163458.a414a62e49f029a41710c7ae@linux-foundation.org>
-In-Reply-To: <20250617143532.2375383-1-david@redhat.com>
-References: <20250617143532.2375383-1-david@redhat.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPd8kitl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB5D7C4CEE3;
+	Tue, 17 Jun 2025 23:35:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750203340;
+	bh=iLoQCihGzEBGYCVh3p3W+/pZ3DPuaTjIgYAmG7jTQxQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=RPd8kitlsBO7a3MKgi/kF14PhO4LBtooMT2SU/HDAz0urVacRH48WrnVuO+QWq+h+
+	 4H0VACCWifknEQMJ/1p+ai0D8q0i/xbfLLT9DYjey8Txq1HJB+kC1ZaiUhU/nU+0Ui
+	 SbySFcxjmiPf99FWM9Lq9w1SyUHuIW76EI17PCPqZoTe7TP5jKFrRFvVlzlLgf4zey
+	 iEW8wCBwTawXbESa88yzoKRe9dPPzGDeg+bZ7yGaxrEyqdfPKrPLVJOrBfc/yLaVQv
+	 w1ERbvroGJ+MBOdhi+pqgxfMnYDaqjKgZ+DjFT23VKsTeh11RE7z84yOnXI757M4D+
+	 zubUGhRDZFGCQ==
+Date: Tue, 17 Jun 2025 18:35:39 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Amit Pundir <amit.pundir@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>
+Subject: Re: [PATCH v9 4/5] PCI/pwrctl: Add PCI power control core code
+Message-ID: <20250617233539.GA1177120@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240612082019.19161-5-brgl@bgdev.pl>
 
-On Tue, 17 Jun 2025 16:35:32 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Wed, Jun 12, 2024 at 10:20:17AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Some PCI devices must be powered-on before they can be detected on the
+> bus. Introduce a simple framework reusing the existing PCI OF
+> infrastructure.
 
-> is_zero_pfn() does not work for the huge zero folio. Fix it by using
-> is_huge_zero_pmd().
-> 
-> Found by code inspection.
-> 
-> Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> Probably we should Cc stable, thoughts?
+> +/**
+> + * struct pci_pwrctl - PCI device power control context.
+> + * @dev: Address of the power controlling device.
+> + *
+> + * An object of this type must be allocated by the PCI power control device and
+> + * passed to the pwrctl subsystem to trigger a bus rescan and setup a device
+> + * link with the device once it's up.
+> + */
+> +struct pci_pwrctl {
+> +	struct device *dev;
+> +
+> +	/* Private: don't use. */
+> +	struct notifier_block nb;
+> +	struct device_link *link;
+> +};
 
-Depends on the userspace effects.  I'm thinking these are "This can
-cause the PAGEMAP_SCAN ioctl against /proc/pid/pagemap to omit pages"
-so yup, cc:stable.
+This is old and I should have noticed before, but we have partial
+kernel-doc for this struct:
+
+  $ find include -name \*pci\* | xargs scripts/kernel-doc -none
+  Warning: include/linux/pci-pwrctrl.h:45 struct member 'nb' not described in 'pci_pwrctrl'
+  Warning: include/linux/pci-pwrctrl.h:45 struct member 'link' not described in 'pci_pwrctrl'
+  Warning: include/linux/pci-pwrctrl.h:45 struct member 'work' not described in 'pci_pwrctrl'
 
