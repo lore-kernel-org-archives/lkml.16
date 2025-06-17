@@ -1,126 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CCC2DE215;
-	Tue, 17 Jun 2025 13:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFA62E7160;
+	Tue, 17 Jun 2025 13:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166561; cv=none; b=SlT4g02HsO0VvK+DIcKtvYtoSs0CBwnmo6r9s+VTrH5CHdAppRfLsaaeDURSQYq/DjXFvikiT+QrvDSNf6H+JaiiBjuXKFTRBDKtEcyzk9jpOujBBR5CMihVqX2dEhCvcjDSauEvRPtFbTeTDw2fBPIX7GTEuAzydmBOTIzmnN0=
+	t=1750166619; cv=none; b=QwEIq2fiRVQUixobG+G5Ng7DjUA0rYMa/rOSGnqSW0J02XlMFtweaGS9J0yFMYI1Yr4J7Cce5HQqIBTalYesrRDm61s+/1CFvmnYBn34fdqg+gXJ5Sy1YM9CGfrjpCwLIpIRR+If/KlH4t1Mh4xctTdWHDYPuQwXlVDl+dWqtZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166561; c=relaxed/simple;
-	bh=mtfjAvMUwVQD5LjcQAMrNSUEtO+aja2BRtG/zJIG5z0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hv/kRKEM7iAt5Yz0ZnvCkqxxFV/ECQKd3f2fpoyMVGqfGVypajUevfhIDAQGUHYoIorU0Kz7FvVaP80IYSJpl6kO7oGaTZWpptNStGVH58NYaxCSc79Dk4MZoMcsRAVpBJYRx5iHjNpzjoKuJkfLM+mOljVUp5W4zkikb1qyr/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SWgz2FZ7; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750166619; c=relaxed/simple;
+	bh=aq+jLmLEZueUREtaCloPI8dNoT19sceodfbAKjhjFCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UIdSW7XlExN9Sl1X9V4CWRMq2ivcf8mtwdiDNwMhi4fbbvHtdeKCLdXiB736iPupOjDyHcN4OuUBteuLKWUU96gzKO2yY5Dxq/MrP0Q+tt05b+WmLifYEwyltAgwyw/h559jOWZbSyC/ZAbu9dgELE++ZpZNznMNyQqPQPamv7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/LLvZmM; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SWgz2FZ7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750166560; x=1781702560;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mtfjAvMUwVQD5LjcQAMrNSUEtO+aja2BRtG/zJIG5z0=;
-  b=SWgz2FZ7mYa+2fN0ox3zGTKpjvixVT933VU95CUFU7S/udXr4jfawiTO
-   aBfk14NN1+QBH/e9+9hR3b/nIhwLPb18Xv7XuOAMZK5lYuo27Uyb9aTtP
-   ckLGBoZVoIi3enuLUp9Mkb8qUbc0Mhg02DX3HMam7enjBjenBQgqNdChl
-   RsnuyRNxtdqbNkuzS+Huows+73SeXBxyQST/92KjuILnesWgs08XitExi
-   UCZSWVOfXsZqqGq7BCBlHQPfxCLNdhhOlN2CwaXG3LIDcmTjsLal/7Jcy
-   rZAWw3ejYqwB5QgPIztiJrsqOxM3RwiVZt0eb0NOS9oAZN57/rWDJMVuc
-   w==;
-X-CSE-ConnectionGUID: 9cZuZeB9QNONjCqqVAhkCQ==
-X-CSE-MsgGUID: rd7eD+9+TpWGuhoezry+5w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52258087"
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="52258087"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 06:22:39 -0700
-X-CSE-ConnectionGUID: uy6Q+LdwR5yrR8Ci8N/CHQ==
-X-CSE-MsgGUID: JQsHNTR2RhmPrB4ibjx/lA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,243,1744095600"; 
-   d="scan'208";a="149671821"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 17 Jun 2025 06:22:32 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRWGk-000G0i-1S;
-	Tue, 17 Jun 2025 13:22:30 +0000
-Date: Tue, 17 Jun 2025 21:21:52 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Kochetkov <al.kochet@gmail.com>,
-	Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, Nishad Saraf <nishads@amd.com>,
-	Lizhi Hou <lizhi.hou@amd.com>, Jacky Huang <ychuang3@nuvoton.com>,
-	Shan-Chun Hung <schung@nuvoton.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>, Zhou Wang <wangzhou1@hisilicon.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Andy Shevchenko <andy@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Keguang Zhang <keguang.zhang@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v2 2/2] !!! TESTING ONLY !!! Allow compile virt-dma users
- on ARM64 platform
-Message-ID: <202506172123.A2I5Sxtj-lkp@intel.com>
-References: <20250616124934.141782-3-al.kochet@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/LLvZmM"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-60780d74c8cso10331975a12.2;
+        Tue, 17 Jun 2025 06:23:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750166616; x=1750771416; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Da7GngsMQn+NCqkD4TvMnzofO+IHiaf6PmzIm2w+GkQ=;
+        b=S/LLvZmMYIc390LjFnsM/8hEit306FUYPx9j40KQLIqDjpAhto8LQqmfWmHBKycYnM
+         /koZfjoaJDiL+PyImkhJPS9rZJbZJxXAp1YTqDMJVdE6mp3jh7SbJDb1pjXoiCN3Ljz3
+         KXnwyMAQ4ag30VgrWcPii7NqtEh9XZgomFrqHZVnbI3BI1cEVDAfm4G5vLCpSdivg9FR
+         KKyidejDobs6jJqaaass3zkkAOBj9CXVP9Hi7Fs43dixN3lVw8yfsHWpj3jNFQ69FDrn
+         CUxmmJfIHrGS6E6eSI3UdBu2a7JqOBfSzLZVPgnmO4Z4MY9twGoXmL/ajf7IPWOT6vHz
+         9Otg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750166616; x=1750771416;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Da7GngsMQn+NCqkD4TvMnzofO+IHiaf6PmzIm2w+GkQ=;
+        b=TOO7rY5D/FC0/dqqZiEtLeIhiSzDEHW1TEWKJzDGNEskQIBCeuJ0stjgZsGmweoDs/
+         /csOv+4LqSoKQ4NBU8q436/ml6zenZ3dt2ON9qx82VcjNe+jyIsUG5yPOmhml7SXSN7l
+         Ab/aXObs8Q2Xz4h0bDl6OurAE2osPHijKliiZK0LU0zCeio6EBe49M25dEoxLXmpOOWP
+         WkCKaBGSc9s8u1k0hrgfPQwCFY46u1GDlEThwyXrXb0ZrQi0Vlqs98MtfzFxK+DmYlwz
+         Ce7gvp9uGmhGs0S87ATF/5m9VFMBATRyopSacBh1/MiIIM80OUb07QAcLOd3/2p5T2BY
+         Dmfw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXXuazmmx581XZ76XssK+4R2b8h/HdBVbjHMegLO1jSem5ZAUEoyOLYqSjfH1rAaqeUuhlRx6qbPMR@vger.kernel.org, AJvYcCVTd/URaHSgAesFxAXbX50JDw9Qo0aU+2mGOA0RGjKDqKsidYxlQYlapIJ1dMNNwVENBdoB+v2WAxfUlw0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcUUcKxprCWQA5q94TH9VoE3FWywg3EVmzkCIba1x0Whd3+wJ6
+	ilCz9QRAvS/P51NgmQukZ7kYeQQEW/ruiV/JC3POkIr1Jf/KL5pDKgb6WiFELXCgLn0Ut4ra5Ld
+	HK591qqGl3xZtGyluBH+JZ1DSOh7pV6mzjN+Wnf4=
+X-Gm-Gg: ASbGnctMhqH9QeG32FimNHQV4M2d21A8F81DhTXpfYsH6gb0FmZfw7cw0oPa7LkKjqP
+	I3Cdhi76W6YKr+6iGbXd7CD6HCZkGUhL1d+m0fUEX9pEriY9xVuwHh+CpLY4VQgKTg3OIhySSAG
+	TxW7NFGjGF5cL5Cgmoce286ZjtTp4AfVkP86GSisehmwEZ6i7Y5MOkBuvw3XkMUhxovrwX4qhdB
+	uSc4lD9uTDsQcFc
+X-Google-Smtp-Source: AGHT+IF35zRDouRKgsl23iu8Ip8Af2QD0L6RBLQ4Z6LxvD9CFO2X76jNFfDTlSdWniAE8FphyNnG7TzaPsay7oaHoT4=
+X-Received: by 2002:a05:6402:510c:b0:602:3e3:dada with SMTP id
+ 4fb4d7f45d1cf-608d0977a42mr11931446a12.25.1750166615605; Tue, 17 Jun 2025
+ 06:23:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616124934.141782-3-al.kochet@gmail.com>
+References: <20250616110313.372314-1-pranav.tyagi03@gmail.com> <2025061610-basics-attendee-cd02@gregkh>
+In-Reply-To: <2025061610-basics-attendee-cd02@gregkh>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Tue, 17 Jun 2025 18:53:23 +0530
+X-Gm-Features: AX0GCFvpbJIGp1gRUpPgvLsO-IJEhIBlsBKcgaCSHrIHCpbktmH_xOFexTbviFw
+Message-ID: <CAH4c4jLn78OYPqqEESh6vRhxfD8s=J8a-cX0WzVE1bEPKVAHEg@mail.gmail.com>
+Subject: Re: [PATCH] fs/xfs: use scnprintf() in show functions
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: cem@kernel.org, skhan@linuxfoundation.org, linux-xfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alexander,
+On Mon, Jun 16, 2025 at 7:50=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+>
+> On Mon, Jun 16, 2025 at 04:33:13PM +0530, Pranav Tyagi wrote:
+> > Replace all snprintf() instances with scnprintf(). snprintf() returns
+> > the number of bytes that would have been written had there been enough
+> > space. For sysfs attributes, snprintf() should not be used for the
+> > show() method. Instead use scnprintf() which returns the number of byte=
+s
+> > actually written.
+>
+> No, please use sysfs_emit() if you really want to change this.
+>
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > ---
+> >  fs/xfs/xfs_sysfs.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/fs/xfs/xfs_sysfs.c b/fs/xfs/xfs_sysfs.c
+> > index 7a5c5ef2db92..f7206e3edea2 100644
+> > --- a/fs/xfs/xfs_sysfs.c
+> > +++ b/fs/xfs/xfs_sysfs.c
+> > @@ -257,7 +257,7 @@ larp_show(
+> >       struct kobject  *kobject,
+> >       char            *buf)
+> >  {
+> > -     return snprintf(buf, PAGE_SIZE, "%d\n", xfs_globals.larp);
+>
+> There is nothing wrong with the original code here, you could use
+> sprintf() and it too is ok.  So this type of change is not needed.  But
+> again, if you really want to, use sysfs_emit() instead.
+>
+> Same for all the other show() callback changes you just made.
+>
+> thanks,
+>
+> greg k-h
 
-kernel test robot noticed the following build warnings:
+Hi,
 
-[auto build test WARNING on vkoul-dmaengine/next]
-[also build test WARNING on shawnguo/for-next sunxi/sunxi/for-next lee-mfd/for-mfd-next linus/master v6.16-rc2 next-20250617]
-[cannot apply to atorgue-stm32/stm32-next lee-mfd/for-mfd-fixes]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks for the feedback. I understand the original code is
+perfectly fine. All these show callback changes were intended as
+cleanups. I'll drop these patches. And will use sysfs_emit() if
+I ever have to.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Kochetkov/dmaengine-virt-dma-convert-tasklet-to-BH-workqueue-for-callback-invocation/20250616-205118
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/vkoul/dmaengine.git next
-patch link:    https://lore.kernel.org/r/20250616124934.141782-3-al.kochet%40gmail.com
-patch subject: [PATCH v2 2/2] !!! TESTING ONLY !!! Allow compile virt-dma users on ARM64 platform
-config: sh-kismet-CONFIG_COMMON_CLK-CONFIG_MFD_INTEL_LPSS-0-0 (https://download.01.org/0day-ci/archive/20250617/202506172123.A2I5Sxtj-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20250617/202506172123.A2I5Sxtj-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506172123.A2I5Sxtj-lkp@intel.com/
-
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for COMMON_CLK when selected by MFD_INTEL_LPSS
-   WARNING: unmet direct dependencies detected for COMMON_CLK
-     Depends on [n]: !HAVE_LEGACY_CLK [=y]
-     Selected by [y]:
-     - MFD_INTEL_LPSS [=y] && HAS_IOMEM [=y]
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards
+Pranav Tyagi
