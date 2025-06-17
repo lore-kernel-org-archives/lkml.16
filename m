@@ -1,95 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F45B2BF3D3
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39FD2980AC;
+	Tue, 17 Jun 2025 11:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750158341; cv=none; b=MMQ9X35kzyQ/p/G0nGjIkHUOxq8YY/0MV0jJJ+UHdljODi95RpphQ/IzJlcKcyuUvxFa952j5crE6q+nFLZ+AjtbPxYaK9rmH7M8169KZW79McGv0zONF4MTFOvKKJhsnEH7ukkQRdcskRuxBhtsT1LbGNhkjM74pqwtQqnpHk8=
+	t=1750158389; cv=none; b=GiQKKMVeKwDEcJpu/vHINVtlooop93KBhRcobw/9XZsPege7DDIIRLg/CP5PnPytK2yWeAm2swihUqUotlmfZ16cAvhVjuHDhFN1Rj4wACVa6DeLrvyYESSnrrHjkr/d+7zEqYIatBI54uuzhlJl4cydbM/KIkpC1bLrHh+ZaCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750158341; c=relaxed/simple;
-	bh=0um0R3zeYp1Vpz2CP5NnfVmYK0iAYL/nakFl/p17qOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lf+4Qy58qoX9kJV2sVzsaO3jbr7snw4AZCETPKg0GJUApD0td8lwlsvGOOEvs4eRwBGNNOJo5Pe2dKMu71QxMiRq7tXjNzmzZ42p/wV8CYf3PLWUuyPqfXSyAT90LMDtSB4qdO+DnpjEVjl0XyZcDRL4g6GaSrWjeRU8uPQYy98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JKzNwXJb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750158389; c=relaxed/simple;
+	bh=1C4RRmc7ffNd2QpyjYUYw7u+vmX6TfyP5K837LcQEno=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=uNsDDBXue6ckwtSHBgE6ERD+09j+rm7vNzrA/BrtHgwZpZyGx5DRnpN7uBVrIZktkUAFqUxJ61Yroqzdz7GXOFmxvMuKSWIuyMc0lenYpUnjN7p9D834RynBzyYpu38Xj2ew4mb+UmpqxeWXKK+aXeVFf2vSwWnMP4/VG4BI4mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KXqpEiK2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JKzNwXJb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750158339;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TiYdceZwMX0acoVDusyjf9I10Ybg+SrHFujR2B70YK0=;
-	b=JKzNwXJbHC0uYf2iNTLC3x+1AkY9NFre6w/GmnMADzlVgqFYfkSBVp1kkwa3abzu9d6AAC
-	jKSilPzbOOIuEAe58yZ0gW6uuEl1O2tGR+rjcq85ErmTUf8YUbOCAx4kt3tZpLE6yr9Bea
-	oXOXH8jZ0clyK8yBT0DQV9zpZT7GlYI=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-664--BLfXEdfNw6yvtH9Eb6OFA-1; Tue,
- 17 Jun 2025 07:05:35 -0400
-X-MC-Unique: -BLfXEdfNw6yvtH9Eb6OFA-1
-X-Mimecast-MFC-AGG-ID: -BLfXEdfNw6yvtH9Eb6OFA_1750158333
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 087B9180028F;
-	Tue, 17 Jun 2025 11:05:33 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.84])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 00C901956094;
-	Tue, 17 Jun 2025 11:05:25 +0000 (UTC)
-Date: Tue, 17 Jun 2025 19:05:20 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux Regressions <regressions@lists.linux.dev>,
-	Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	kbusch@kernel.org, Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: selftests ublk UBLK_IO_F_NEED_REG_BUF undeclared
-Message-ID: <aFFL8DQufPXnerlm@fedora>
-References: <CA+G9fYsiWN1gWhHBk9uruDBzVHvLYCTL-VcxU2iiPMcS1EXyBg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KXqpEiK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E41C4CEE3;
+	Tue, 17 Jun 2025 11:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750158389;
+	bh=1C4RRmc7ffNd2QpyjYUYw7u+vmX6TfyP5K837LcQEno=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=KXqpEiK2nFDL6/l9q3agJVUgyF/PKDx4TKPoZklTYYpTTxR+6siihPsgaHeImXAGg
+	 89ZRjGrmRtxQziHAxlBw/xzh3WIvMp8ZfA1nwcrhztdKw7SIyTbs2OjFNwYnQmn900
+	 YhUJ0nVlW/cMoou9y21okZuQ8UzM6fWYmJiJ58SsEgXmtK4TnG5xSLe7VEkZ05NPRd
+	 3cypkmBQ0RkinuBfoGKjWssev+wVMhAfh+jtqI6308pKW6IERQxt31QsvjbyMiDDi/
+	 9Fzq2sN1qW803AwD2EpYoWUlD89wHsaO3nD1pYaK6HhWtveuFZoCtuvnIw2E5Z+qu+
+	 v1l8XxMmCSBmw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Lyude Paul" <lyude@redhat.com>
+Cc: <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  "Boqun Feng" <boqun.feng@gmail.com>,  "FUJITA Tomonori"
+ <fujita.tomonori@gmail.com>,  "Frederic Weisbecker" <frederic@kernel.org>,
+  "Thomas Gleixner" <tglx@linutronix.de>,  "Anna-Maria Behnsen"
+ <anna-maria@linutronix.de>,  "John Stultz" <jstultz@google.com>,  "Stephen
+ Boyd" <sboyd@kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex
+ Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
+  =?utf-8?Q?Bj=C3=B6rn?=
+ Roy Baron <bjorn3_gh@protonmail.com>,  "Benno Lossin" <lossin@kernel.org>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v5 3/7] rust: hrtimer: Add HrTimer::raw_forward() and
+ forward()
+In-Reply-To: <20250613232754.451450-4-lyude@redhat.com> (Lyude Paul's message
+	of "Fri, 13 Jun 2025 19:22:24 -0400")
+References: <20250613232754.451450-1-lyude@redhat.com>
+	<4Rf91KlM5JnN2uS8MTxNNV8J9cfytVsmWEZbqfkjQmTtSmXkj2pYyGt9Z8IrzTfjWuFTPIlfAbm1faXoY8X7fw==@protonmail.internalid>
+	<20250613232754.451450-4-lyude@redhat.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Tue, 17 Jun 2025 13:06:18 +0200
+Message-ID: <875xgubpat.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYsiWN1gWhHBk9uruDBzVHvLYCTL-VcxU2iiPMcS1EXyBg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain
 
-On Tue, Jun 17, 2025 at 04:27:31PM +0530, Naresh Kamboju wrote:
-> The following build warnings / errors noticed while building the selftest/ublk
-> with gcc-13 and clang-nightly toolchains on Linux next tree.
-> 
-> Please suggest if I am missing something in my build setup.
-> 
-> Regressions found on arm arm64 x86_64
->   -  selftests ublk
-> 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducibility? Yes
-> 
-> Build regression: selftests ublk UBLK_IO_F_NEED_REG_BUF undeclared
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> ## Build log
-> 
->  CC       kublk
+"Lyude Paul" <lyude@redhat.com> writes:
 
-Please run 'make headers_install' before running the test.
+> Within the hrtimer API there are quite a number of functions that can only
+> be safely called from one of two contexts:
+>
+> * When we have exclusive access to the hrtimer and the timer is not active.
+> * When we're within the hrtimer's callback context as it is being executed.
+>
+> This commit adds bindings for hrtimer_forward() for the first such context,
+> along with HrTimer::raw_forward() for later use in implementing the
+> hrtimer_forward() in the latter context.
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+>
+> ---
+> V4:
+> * Fix the safety contract for raw_forward()
+> * Require Pin<&mut Self>, not &mut self
+> * Drop incorrect UniquePin example
+> * Rewrite documentation a bit (re: Andreas)
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  rust/kernel/time/hrtimer.rs | 48 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> index c775d7abdf5ce..6fdd54e3328c5 100644
+> --- a/rust/kernel/time/hrtimer.rs
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -168,6 +168,54 @@ pub(crate) unsafe fn raw_cancel(this: *const Self) -> bool {
+>          // handled on the C side.
+>          unsafe { bindings::hrtimer_cancel(c_timer_ptr) != 0 }
+>      }
+> +
+> +    /// Forward the timer expiry for a given timer pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// - `self_ptr` must point to a valid `Self`.
+> +    /// - The caller must either have exclusive access to the data pointed at by `self_ptr`, or be
+> +    ///   within the context of the timer callback.
+> +    #[inline]
+> +    unsafe fn raw_forward(self_ptr: *mut Self, now: HrTimerInstant<T>, interval: Delta) -> u64
+> +    where
+> +        T: HasHrTimer<T>,
+> +    {
+> +        // SAFETY:
+> +        // * The C API requirements for this function are fulfilled by our safety contract.
+> +        // * `self_ptr` is guaranteed to point to a valid `Self` via our safety contract
+> +        unsafe {
+> +            bindings::hrtimer_forward(
+> +                Self::raw_get(self_ptr),
+> +                now.into_nanos(),
+> +                interval.into_nanos(),
+> +            )
+> +        }
+> +    }
+> +
+> +    /// Conditionally forward the timer.
+> +    ///
+> +    /// If the timer expires after `now`, this function does nothing and returns 0. If the timer
+> +    /// expired at or before `now`, this function forwards the timer by `interval` until the timer
+> +    /// expires after `now` and then returns the number of times the timer was forwarded by
+> +    /// `interval`.
+> +    ///
+> +    /// This function is mainly useful for timer types which can provide exclusive access to the
+> +    /// timer when the timer is not running. For forwarding the timer from within the timer callback
+> +    /// context, see [`HrTimerCallbackContext::forward()`].
+
+I think rustdoc is going to complain about this link being broken. Can
+you add the last sentence when add the target of the link?
 
 
-Thanks,
-Ming
+Best regards,
+Andreas Hindborg
+
 
