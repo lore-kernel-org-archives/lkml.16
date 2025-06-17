@@ -1,98 +1,138 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381D22DBF77
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A282DF3ED
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 11:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750160373; cv=none; b=DlZ9uqsg1xhNv2aNEsPMnad7s+EQzY7408+1Y/wHypiuC1kX6PoegNkmUDWyP20wmuGmkWYebrlinWhA/NIyigDg5qyGKjyfDDDCIPuJel62HxcBXgdIel79Houcspk7PqtUdQmC6yM9zs72XiNYgealeo7UMZpMPy6908mE248=
+	t=1750160389; cv=none; b=at4YMoUcKBGhTcuR+1QPMd+dtfQY+dph2DG7RAxyFau/BPFOo/iWxkWOD6MIC/POPQRoNKioRrpgW6JhPDx0NpP+s7U/IfoKm1DZxq8eoQKnvGdM1oL7EYaXo3qetah3EiVk7c6s5rPFCfxgrf6UmVeHUqsH0d90dRm9Awj5KS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750160373; c=relaxed/simple;
-	bh=aHr7ZCdGKdUx/X7yilpI5xZxQAjoyhpSsv3WDHso6bo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YA9h6gES3pQMCFhLi8mpSGP99ZxyHuDIgGi3/jySgIl/3NcyIl3lUZThA4MUD+tW6BRj6U0Z6+A4/GITHs/Um7ncEJIkXPA8g6r+CZsjv0eBUoxxPa4zgiXIMBEnPPKfxULJ8Vr2E0tZ4js5tTB8a6XFsV+5R4bcONrhD3MxyuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=EMzwUgfQ; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1750160389; c=relaxed/simple;
+	bh=uBYkXCuQ9GPuR838kEKZEznJMLtfKtXvjt/ijlersb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sVu+9APgfGFji/iBjSOev94XAs3IkmWG/BrR9dqK1OgbYQcspwBH4vlLJHI9VRMZH64ttw1muPq75dZQvxEreVcxuVNwO2X5ZsKyqdHXNCO++m6igmsFLgvkrcl8x0v6JNhzWP0IEUBgSuereCBiO0VmdMS3bQgAj1WLDaaeZII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MRmYZ6YK; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="EMzwUgfQ"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4533a53a6efso3022925e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:39:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="MRmYZ6YK"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a5828d26e4so263579f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:39:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1750160369; x=1750765169; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qW4YqwwFCuMF0+LE9SQ/jZp97dNuLzD63AryOXprXzU=;
-        b=EMzwUgfQX4QMWHQaKAuDD5V8bV5GKVqpIELS5P0Z03FYqoIIrpx8mjkHYdjMEWtF1H
-         3GYgI8isV6Dzm5ew36UxUXO9KsXd0ZJP9Eo6B+Y2ptWnyCnS22n/l4hH2Kz/WkzTa3KW
-         xTT3vrqsDN+5LhiAqZ0LcKW8HFfr3M73fCSc7UucM0H1cEC+vqhdpodlmiMeL2KZtScV
-         U2+ejePl/o9dFt1+OZWxFNShsqltdJqiFcJPKEFOC44Gx1vYBFnhrrd1QsaNFldRKaug
-         RqEwMGqmtE4b3UL/BuPMjbc/pEi6Spi6WVJ12dd3LvFJLu40KD2L9DLkeL8JTdEgdF5V
-         4cvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750160369; x=1750765169;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=suse.com; s=google; t=1750160385; x=1750765185; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qW4YqwwFCuMF0+LE9SQ/jZp97dNuLzD63AryOXprXzU=;
-        b=ebzcm5mexg0hVtBUKqkISMQKItLHxXvh1VzoHlgui69pwAXL6IRSyGVkL3F/JsTWmb
-         QBDNfSTZEEa23/wevBiKyCGz8cdZ773/qbmzJ17wN0OyvE3T8v62KGGlFa3tE9PVXafw
-         IaOr7C7HShX1ksCD8Q1OMpPCtx5HVqhKkAMvn85Zd/H2Eu3+0D+OrPVI92nLDJVWfmgd
-         F7S6b8O0XwVuHcJ0Zm1cBF4lfVdQGtO8pi3HBlc/H/IsBA8NUWVb10msiC/i/yWibGYF
-         h37sZvHZL+RyWrfVVmPTTtQZFcdOUiT6MS9FPwgSUcx9WE+AI6CFWDpuE2jsOhvhrco0
-         /Gdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGASpj+7tPdWD2c7Rnp9BqBYrPCjlGVEWdnEyAE5tYFSlfchTc4BF6wI1bPyMn6EFLyPrAyBEnDI0gHJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+7nzwEvWNldXizQod2YEiBNnfnN8sa3y4DXhqeGAhBS7HcPPq
-	xsinX/4KdSkHPHCxo+KRNjXGLUlZEHKb7asNENRBz7l5vDiuhDaNOGMZUzy3RH/sYw==
-X-Gm-Gg: ASbGncuNbWGdmDcmkM6iwRDxrUcpwa/7c4iu1xAVdOCC4g5vB9RbrWsLLrcNj742c3N
-	B162qdZ59PmaACkEx0Yn+tRW3jEiJGfvJB6DcGeZVzGCTpSu9WL10kqdWr6ENd5LrosxaEqYKUY
-	p60yKhMFnPrmR/5lJvvTm8X+I2z3Th3Qv2729wSE4t5C1Y8qCGduViUzm2WBHgVL94Pm7Ynzo1L
-	YH2mWweiXCnhX2T1biHlw7z+wzPhWzpuiwLkwNvCeKc/pxe018fxH3H66VFgncZJMdEV/R6o3zA
-	cwwFShuLN0G2TDvrakw4JJIAo/6fm7Id/2+PppHz7RGFc8WvM+HVjnek4yIfYMxKGQVhiNI9fFm
-	vF2ExOGkUIv+BSYqZdWuePyabUFRhhX9tHteQVCI5UQ==
-X-Google-Smtp-Source: AGHT+IEUvDRURTMB/hVyl5/+Dq/7PwoqgbYAYF8XZZB0DJfGgwJu+ruqrz8OL2hC2gyw87LK8X5+3Q==
-X-Received: by 2002:a05:600c:1549:b0:43d:fa5f:7d30 with SMTP id 5b1f17b1804b1-4533c97c5eamr119451035e9.16.1750160369154;
-        Tue, 17 Jun 2025 04:39:29 -0700 (PDT)
-Received: from cyber-t14sg4 (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25302dsm167878505e9.26.2025.06.17.04.39.28
+        bh=9DxsziclowNGPfRWwm7RNdYqFFkdoOFIz/PY09f+zkA=;
+        b=MRmYZ6YKg5X0DsT+indsu8E85O0pQ8S3rfM52ob2Q2qPdkjHtcEWE9slYfXxvM9OXz
+         G+yn8OMqEmdqxva/bC7UsIOLV+oDfUl8J8nxYfGQB0HESMuoRQH33+HSql6zSCKzWhxo
+         Ov7E/vjLxCSKEt8lqRrxwGABUc/kG7b73bLw56+3gNvQPyBrZB+kTpAhraDWR4YKaaIM
+         zQKsb1G3T94yLxTxBp3rQ0pFa06pZfaqPeHecm4lBOrMdkx5CFClhbpn3olGnwMbQAuo
+         QAC4J5i4hky6D4eHSLHx98gNU5+7tlUmznMcgSt9Qe4l92bEp2pjXS1jI7s59gat3oaV
+         ADYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750160385; x=1750765185;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9DxsziclowNGPfRWwm7RNdYqFFkdoOFIz/PY09f+zkA=;
+        b=GRxzpc/Gy+aHJuhnTKF8FkCqs7haXW0W9xVmUs960CV3TG76wndiV2NaxEFumwJyiK
+         FJrj234wXiQtVmPK84NxFz6YetZupJpJp8HFOgSS580xwm2xIBRQAsbqG0A0clbqiL00
+         XhHGvzYHO6FpJRpM+3+4Ol3QlZ2V5ibJvH4oUVZrGuD1qgq12Peu52AaNj0CXG1mhRNc
+         hnehSTSs7/+7XhjRZafStM9xoeMoI+ClRyEulS5W27PjMo22X9prqn7CGaAFhzezmw3d
+         cTqO723VGv1L5SXJuPZLDifROJYmnMi7pTCbn4j6c21c4X+fb1W7h6GSVKuTilljUAZI
+         A85A==
+X-Forwarded-Encrypted: i=1; AJvYcCWIRrgikfRsM43lyuCtH6miNL52f8qWyQqarEOLZAxsDvKpMqYZu5H+L+4SpeasHPCgt+N0AqNsgV9MCRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn4bu8/Eq9aPF0/PkuK+SyTfDYzQxfIHbn7cFC+4nkwQgv2ToM
+	8MXi37PoP1IwQU7wrgLAWq8HZcaYjABYLFDC0p2vL9gSc8nXWMcHoe5VIitw46miqWMqDhU0Zb4
+	I0TMHriA=
+X-Gm-Gg: ASbGncuOaABL42dlEQ8wkuP9Rldq9OYKbBfEJYSj7Yg1v4kpZDw4Esamj7EwsMfZK4J
+	6Hv999LsaUAlB8Kb8G+WakzLV46cP7FqeddKGpQi56r/beqcMLvtwZWPxNT7xL5UH1Qo14tGRJe
+	jeYWvefZ0rAzVKffBhF9k0T//HpuSkDuhzsusdkvoGezbF7jHezfcbAfT1lOzb2khNyMOnea8fE
+	0lZu0krOzHm1h+VxeHaxRemiOcFPUj25tPN7U3qguCUEVbfytwZ8wmwfDIwmG4uXZbf9mvF2bPI
+	FLLiO9T31diHk0zs6893KubyYZIci7pNbNW8pYByI9FaAnOdAOBet83VzHcJahOStHQ3maVl/+B
+	GYaazF2BdLFmrW5vE96WcyGn90BDueRjOxG+7MaoSLXDr71ZBlUlxtSM3Q0h5qBGVPu6FRfK3Xn
+	572Q==
+X-Google-Smtp-Source: AGHT+IFz2TELEpwQcNHi8Big5gdYlVAna1EaFTngQhDTZ9V9P9v+M+A7dI/QxYGajqOZu85nOYax3A==
+X-Received: by 2002:a05:600c:500d:b0:442:e608:12a6 with SMTP id 5b1f17b1804b1-4533ca468d3mr46445835e9.1.1750160385015;
+        Tue, 17 Jun 2025 04:39:45 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45320562afbsm173008185e9.1.2025.06.17.04.39.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 04:39:28 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:39:26 +0200
-From: Michal Gorlas <michal.gorlas@9elements.com>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	Julius Werner <jwerner@chromium.org>, marcello.bauer@9elements.com,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] firmware: coreboot: loader for Linux-owned SMI
- handler
-Message-ID: <aFFT7g8w4kTJZ-1w@cyber-t14sg4>
-References: <cover.1749734094.git.michal.gorlas@9elements.com>
- <6cfb5bae79c153c54da298c396adb8a28b5e785a.1749734094.git.michal.gorlas@9elements.com>
- <aEtW3e7mwjTTvfO9@google.com>
- <aE1yNZ484DcWjR4h@cyber-t14sg4>
- <aFBdfckccRv7Pbc6@google.com>
+        Tue, 17 Jun 2025 04:39:44 -0700 (PDT)
+Date: Tue, 17 Jun 2025 13:39:35 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, "open list:NETWORKING [TCP]"
+ <netdev@vger.kernel.org>, David Ahern <dsahern@kernel.org>, Jakub Kicinski
+ <kuba@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 1/2] tcp_metrics: set maximum cwnd from the dst
+ entry
+Message-ID: <20250617133935.60f621db@mordecai.tesarici.cz>
+In-Reply-To: <da990565-b8ec-4d34-9739-cf13a2a7d2b3@redhat.com>
+References: <20250613102012.724405-1-ptesarik@suse.com>
+	<20250613102012.724405-2-ptesarik@suse.com>
+	<da990565-b8ec-4d34-9739-cf13a2a7d2b3@redhat.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFBdfckccRv7Pbc6@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 11:07:57AM -0700, Brian Norris wrote:
-> I must have either misread or misremembered checkpatch's behavior.
-> Possibly both. It has various other delay-realted warnings that point
-> you at the kerneldoc comments for mdelay() and msleep() though, and the
-> mdelay() comments say:
+On Tue, 17 Jun 2025 13:00:53 +0200
+Paolo Abeni <pabeni@redhat.com> wrote:
+
+> On 6/13/25 12:20 PM, Petr Tesarik wrote:
+> > diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+> > index 4251670e328c8..dd8f3457bd72e 100644
+> > --- a/net/ipv4/tcp_metrics.c
+> > +++ b/net/ipv4/tcp_metrics.c
+> > @@ -477,6 +477,9 @@ void tcp_init_metrics(struct sock *sk)
+> >  	if (!dst)
+> >  		goto reset;
+> >  
+> > +	if (dst_metric_locked(dst, RTAX_CWND))
+> > +		tp->snd_cwnd_clamp = dst_metric(dst, RTAX_CWND);
+> > +
+> >  	rcu_read_lock();
+> >  	tm = tcp_get_metrics(sk, dst, false);
+> >  	if (!tm) {
+> > @@ -484,9 +487,6 @@ void tcp_init_metrics(struct sock *sk)
+> >  		goto reset;
+> >  	}
+> >  
+> > -	if (tcp_metric_locked(tm, TCP_METRIC_CWND))
+> > -		tp->snd_cwnd_clamp = tcp_metric_get(tm, TCP_METRIC_CWND);
+> > -
+> >  	val = READ_ONCE(net->ipv4.sysctl_tcp_no_ssthresh_metrics_save) ?
+> >  	      0 : tcp_metric_get(tm, TCP_METRIC_SSTHRESH);
+> >  	if (val) {  
 > 
->  * Please double check, whether mdelay() is the right way to go or whether a
->  * refactoring of the code is the better variant to be able to use msleep()
->  * instead.
+> It's unclear to me why you drop the tcp_metric_get() here. It looks like
+> the above will cause a functional regression, with unlocked cached
+> metrics no longer taking effects?
 
-Okay, will check if msleep() has the same effects in case SMI takes too
-long.
+Unlocked cached TCP_METRIC_CWND has never taken effects. As you can
+see, tcp_metric_get() was executed only if the metric was locked. 
 
-Best,
-Michal
+In fact, the cwnd parameter in the route does not have any effect
+either. It's even documented in the manual page of ip-route(8):
+
+              cwnd NUMBER (Linux 2.3.15+ only)
+                     the clamp for congestion window. It is ignored if
+                     the lock flag is not used.
+
+Note that here is also an initcwnd parameter, and I'm not changing
+anything about the handling of that one.
+
+Now, if you think that this TCP_METRIC_CWND is quite useless, then I
+wholeheartedly agree with you, but we cannot simply remove it, as it
+has become part of uapi, defined in include/uapi/linux/tcp_metrics.h.
+
+Petr T
