@@ -1,132 +1,160 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3316028C877;
-	Tue, 17 Jun 2025 20:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE2C1F1315
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750193954; cv=none; b=UL+xrD4KSfAOmv0rSI1FSa3obcBt+Al7vOx0SID4ydixKq9txFmnbwAXc0QX24RJ4GNTyhQ1u6xJBDcw61AoscT18Wiip0eIK1hpc0X+gp7UDSTr2Mjo60d9T3oioPK40D6CIj90q9YRFPW0ev1Fy7UiW9mza3h7Ur13rcK7ZQc=
+	t=1750194019; cv=none; b=gds5NhwAjfaL31qyPHXrMruPuEINxmUfN1ZR98rPgycTv53nqj1nW/ReKyfkG6Lm6O9hhhe25AyBd4c6LPi5AHXqf/bNWe6IWO72fRSbVx9DPiyWLgfDdqjq/KnH59a0hYPjC8zJknB29NcMgkxTd4pS2jYGrlmmIiZnSxKBM8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750193954; c=relaxed/simple;
-	bh=RgrsISeJz5JwdvIh9PDyYOFzsJuf10v2V3C+ejHvCfc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O0R+r5l40ni0EQ35Lmq59w0JNAmRjJyCGGC4GgomznQwQvXV8AUbIZAvT/hXhhmQKcrLSGsMq4q1rQ1qR/feyVGKAeFW1mCzvd/QuVKOsi5//bUz95jZ3KAY9s+yFxRtOJFnFZl6WVgrnjqwcSpnFQCb1bEpSryB6kkrwhqntAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=bkkPQr91; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1750194019; c=relaxed/simple;
+	bh=4f5dqrbKwcAvHZlIrGkjLHnul5z/2rv5406LjB7sPiU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AsXkTF9QJ4SkomXxbWLb/1RQuQGB0FJxeRFWp7Rsr3tiBDKtQDUidGW3+4h26OKOUYbs21XjMcr13CrN6iSjpiLb4texfw1ITkQwEL1mJrNGtUlGzzswjIjgWmM7wJPLVF+2sS6loGYcFX+oGcIH0SfHSwyEOX6EMpZ0K+lckKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XAoUxP68; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="bkkPQr91"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750193936; x=1750798736; i=w_armin@gmx.de;
-	bh=RgrsISeJz5JwdvIh9PDyYOFzsJuf10v2V3C+ejHvCfc=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=bkkPQr916M3LW7n4cKqzfasMCJhDsEtutLFAZS04CitSNec6Tp2rEbam8Q42A82i
-	 2SmM2UV2DTaDmaPDToi7UfTd9gEP06zH8fDknpC3DvDcvndsyAitiRUUfXTdFhqSG
-	 YJB3JUqXZCmTw57VehDRItsbaQRChbgkbbokLl50DHy2KemeAHy+/W4zF3lF1NHWC
-	 maTS+eLpzvWTqR7giWz94zfC2NwFXzo0t5s1qlrPZgYPG4NUvpMKM4oyaroNNv5AZ
-	 /x5oCKjcO1I3QjuZ0iV0O7YH1UVyMvFnpXHqV0lCAPuIwMeFKTeCRHWbXagIMVizM
-	 LbLgQlvclvt1g+J5aw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MowGa-1v8xpu21eQ-00nzAO; Tue, 17
- Jun 2025 22:58:56 +0200
-Message-ID: <5b4f683a-e512-4633-a2a3-e0eb9789bf66@gmx.de>
-Date: Tue, 17 Jun 2025 22:58:54 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XAoUxP68"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2348ac8e0b4so10655ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:00:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750194017; x=1750798817; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tiRIrmoj5IuklufcKZYpm0KBeQtG0GR5U+zFpfqjxBA=;
+        b=XAoUxP683/YrlSCjYKrX7/AsGH0VHSgas9Qnx19H7ma9rUgMK0fWqPu6sDou+CNAy9
+         BSnIQKtAydWUM/e/rhy3SYGT9WhGXJ/zuJzF8YeGa1U5ptf+rksT0StH6I4d4x+0sX8i
+         C4+XSzg96D9wApcQVrX6MkEbw9w0qUB0LOOJaWZ76ZMjohx2AfitiG+nGMm25qkXME01
+         mhzDVB9svAmhepjFhcv3NBDx1xsrwdZ//Kk7Dy+2Rp/mgfeuxliR+jY6jQNpuJhGmEPJ
+         a0VFhhsxSgazLDZwe/DL+tBYTmtudYSsrkZ1TochxPPp7IJhhHArDQlwmQfCoE5CgJYK
+         2WRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750194017; x=1750798817;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tiRIrmoj5IuklufcKZYpm0KBeQtG0GR5U+zFpfqjxBA=;
+        b=nEwgJXwE4kQtUaeZ82r2K+GvFk5VWJU2domqa6CUPLhP5c/6KFmDbDniPATuGMRjSj
+         l0zBlL+h3dHDbyco4EWAHdQhYDOLbX+ecUgjPJz+CKEmslmL4CxsH1EPVO5VSSJh5EJp
+         Uv1aBfaafr3e4xRTreEgvhYO3v4b1DlYG3ePV25W1aRgaDCCfTxjNIWQuta9h+UTlJJ+
+         Q7UKp3Iysuv37GVnBAJjSFs9bILqfi7JtDMFYQpcb+kb2euatorfe0vUZPSdib4LZ3J5
+         wi7MdzWpIoMPYrjjheSR0IzWspjgNOZBsAJGw5TjNa5h7+oZF/9/d85DBs9smtBV/YVQ
+         6SbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUb9KJc5QwL9wYSF+hidqghppUrLLb1dFX8R1eaj1zgP9+zSa/bQkyCml8jQTqQ22Ri00RYB3M0Hv9CEwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlNwb9tWS1hSPBjUI8JKql0epVPRDB//cjYde9Hzeh3MiwddhU
+	xkOfZ//hsexf5byOzWpvrMQ3sCwB8HdJdxoE7T4gVSNGq2DLWBhm7eEu7ETuKxZU02RqJXH+SWd
+	ZU0VBdJLCJg5Q+9oFNoEUHe4C8kCezq4idZhfkCl3GdykaWlkIcW+O1qgIzE=
+X-Gm-Gg: ASbGnctsI6TAW29+SGGJMcKAepoZp2Y297Ffh50xrFK4GMkIzSadIQ5rTlulBF3UpLY
+	PyMEl+vqGr9L8QMc+A3/C0sYwyJYP1FwZaT6JESjLVvfNO3TmROtEtd4A21/Ev457BqdtBdCgqV
+	EWeoKWZgXregJJY8I9+MrWCgAnWmvo4XbimSSuvl4EJ0e/AT38r6pHlk2iHxa05kdWVZC1Zu3R6
+	g==
+X-Google-Smtp-Source: AGHT+IGYSyFPYEN3CJyP+J4kYg78+j8ZP3rtGU70Fmfbq95+uHvXwqdRzI7fEaoV24mHUCX5t/AWMY+acWJiCCug0xE=
+X-Received: by 2002:a17:903:1a27:b0:234:bf4:98ba with SMTP id
+ d9443c01a7336-2366c5bf768mr9634365ad.6.1750194017160; Tue, 17 Jun 2025
+ 14:00:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] platform/x86: Add Uniwill WMI driver
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, ilpo.jarvinen@linux.intel.com,
- hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de,
- wse@tuxedocomputers.com, ggo@tuxedocomputers.com
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-References: <20250615175957.9781-1-W_Armin@gmx.de>
- <20250615175957.9781-2-W_Armin@gmx.de>
- <78c3f757-0ca9-4017-9360-4f97e0086c5d@oracle.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <78c3f757-0ca9-4017-9360-4f97e0086c5d@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:ay0mWEkruz1D/Rh8N0Q/5sAryZ+GUQw4TZYTmFzw2cNdKjLmP/N
- 1J3sc5KOHW6LYTbybFOiGTLtRpp8bJEUtWWJsLZj0a3dqHQWx9aneEQSN8JV1V8ylGT4O8D
- tGQotUhm4doMLE3E1ENo6ZvSsxdyua3RJDbHChZqFxJmWo/n6EhJviiMl6KUtwzXttqKKVv
- VPvZu3VJBICwvqg4SB/qw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VF+qT+uJ79w=;8GEXYIWfVu1u0ujI6y80zsekvfj
- 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
+References: <20250616080530.GA279797@maili.marvell.com>
+In-Reply-To: <20250616080530.GA279797@maili.marvell.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Tue, 17 Jun 2025 14:00:04 -0700
+X-Gm-Features: AX0GCFuSvuiFb2EDQuylqXhXT-A4igR9a0X-pfgq6hhpfPcew2gQaR66_tUKLZ8
+Message-ID: <CAHS8izN6M3Rkm_woO9kiqPfHxb6g+=gNo7NEjQBZdA4d+rPPnQ@mail.gmail.com>
+Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
+To: Ratheesh Kannoth <rkannoth@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	linyunsheng@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-QW0gMTUuMDYuMjUgdW0gMjE6MDUgc2NocmllYiBBTE9LIFRJV0FSSToNCg0KPg0KPg0KPiBPbiAx
-NS0wNi0yMDI1IDIzOjI5LCBBcm1pbiBXb2xmIHdyb3RlOg0KPj4gKyNkZWZpbmUgVU5JV0lMTF9P
-U0RfU0lMRU5UX01PREVfT04gMHgwNg0KPj4gKyNkZWZpbmUgVU5JV0lMTF9PU0RfU0lMRU5UX01P
-REVfT0ZGwqDCoMKgwqDCoMKgwqAgMHgwNw0KPj4gKw0KPj4gKyNkZWZpbmUgVU5JV0lMTF9PU0Rf
-V0xBTl9PTsKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgwOA0KPj4gKyNkZWZpbmUgVU5JV0lMTF9P
-U0RfV0xBTl9PRkbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4MDkNCj4+ICsNCj4+ICsjZGVmaW5l
-IFVOSVdJTExfT1NEX1dJTUFYX09OwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDBBDQo+PiArI2Rl
-ZmluZSBVTklXSUxMX09TRF9XSU1BWF9PRkbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4MEINCj4+
-ICsNCj4+ICsjZGVmaW5lIFVOSVdJTExfT1NEX0JMVUVUT09USF9PTsKgwqDCoMKgwqDCoMKgIDB4
-MEMNCj4+ICsjZGVmaW5lIFVOSVdJTExfS0VZX0JMVUVUT09USF9PRkbCoMKgwqDCoMKgwqDCoCAw
-eDBEDQo+DQo+IHdoeSB0aGlzIGlzIFVOSVdJTExfS0VZX0JMVUVUT09USF9PRkYNCj4gbm90IFVO
-SVdJTExfT1NEX0JMVUVUT09USF9PRkYgdHlwbyA/DQoNCkdvb2QgY2F0Y2gsIHRoaXMgc2hvdWxk
-IGluZGVlZCBoYXZlIGJlZW4gVU5JV0lMTF9PU0RfQkxVRVRPT1RIX09GRi4NCg0KVGhhbmtzLA0K
-QXJtaW4gV29sZg0KDQo+DQo+PiArDQo+PiArI2RlZmluZSBVTklXSUxMX09TRF9SRl9PTsKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgMHgwRQ0KPj4gKyNkZWZpbmUgVU5JV0lMTF9PU0RfUkZfT0ZGwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAweDBGDQo+PiArDQo+PiArI2RlZmluZSBVTklXSUxMX09TRF8z
-R19PTsKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgMHgxMA0KPj4gKyNkZWZpbmUgVU5JV0lMTF9PU0Rf
-M0dfT0ZGwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAweDExDQo+PiArDQo+PiArI2RlZmluZSBVTklX
-SUxMX09TRF9XRUJDQU1fT07CoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4MTINCj4+ICsjZGVmaW5l
-IFVOSVdJTExfT1NEX1dFQkNBTV9PRkbCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDB4MTMNCj4NCj4N
-Cj4gVGhhbmtzLA0KPiBBbG9rDQo=
+On Mon, Jun 16, 2025 at 1:06=E2=80=AFAM Ratheesh Kannoth <rkannoth@marvell.=
+com> wrote:
+>
+> Hi,
+>
+> Recently customer faced a page pool leak issue And keeps on gettting foll=
+owing message in
+> console.
+> "page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
+>
+
+This is not exactly a 'leak' per say. The page_pool doesn't allow
+itself to exit until all the packets that came from it are freed. The
+line just tells the user this is happening.
+
+> Customer runs "ping" process in background and then does a interface down=
+/up thru "ip" command.
+>
+> Marvell octeotx2 driver does destroy all resources (including page pool a=
+llocated for each queue of
+> net device) during interface down event. This page pool destruction will =
+wait for all page pool buffers
+> allocated by that instance to return to the pool, hence the above message=
+ (if some buffers
+> are stuck).
+>
+> In the customer scenario, ping App opens both RAW and RAW6 sockets. Even =
+though Customer ping
+> only ipv4 address, this RAW6 socket receives some IPV6 Router Advertiseme=
+nt messages which gets generated
+> in their network.
+>
+> [   41.643448]  raw6_local_deliver+0xc0/0x1d8
+> [   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
+> [   41.652149]  ip6_input_finish+0x48/0x70
+> [   41.655976]  ip6_input+0x44/0xcc
+> [   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
+> [   41.663546]  ip6_sublist_rcv+0x16c/0x22c
+> [   41.667460]  ipv6_list_rcv+0xf4/0x12c
+>
+> Those packets will never gets processed. And if customer does a interface=
+ down/up, page pool
+> warnings will be shown in the console.
+>
+
+Right, I have a few recommendations here:
+
+1. Check that commit be0096676e23 ("net: page_pool: mute the periodic
+warning for visible page pools") is in your kernel. That mutes
+warnings for visible page_pools.
+
+2. Fix the application to not leave behind these RAW6 socket data.
+Either processing the data incoming in the socket or closing the
+socket itself would be sufficient.
+
+> Customer was asking us for a mechanism to drain these sockets, as they do=
+nt want to kill their Apps.
+> The proposal is to have debugfs which shows "pid  last_processed_skb_time=
+  number_of_packets  socket_fd/inode_number"
+> for each raw6/raw4 sockets created in the system. and
+> any write to the debugfs (any specific command) will drain the socket.
+>
+> 1. Could you please comment on the proposal ?
+
+Oh boy. I don't think this would fly at all. The userspace simply
+closing the RAW6 socket would 'fix' the issue, unless I'm missing
+something.
+
+Having a roundabout debugfs entry that does the same thing that
+`close(socket_fd);` would do is going to be a very hard sell upstream.
+
+I think we could also mute the page_pool warning or make it less
+visible. The kernel usually doesn't warn when the userspace is leaking
+data.
+
+We could also do what Yunsheng suggests and actually disconnect the
+pages from the page_pool and let the page_pool clean up, but that may
+be a complicated change.
+
+Honsetly there are a lot of better solutions here than this debugfs file.
+
+--=20
+Thanks,
+Mina
