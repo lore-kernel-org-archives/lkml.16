@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803C4296150;
-	Tue, 17 Jun 2025 23:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82EA298275;
+	Tue, 17 Jun 2025 23:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750201203; cv=none; b=D/vw/dYQGgXFsqRxWJ8YvH7hO+QJ0oGwGHD73Y2hpkOA0jLC7PTSVOQkATlukGDumaaJqhgNNW5IQ3F2V0Sohnx6gSWXcAFuA8dyDZhsOjSadAtO4r6r3OvafvQXH8mU/p/p1ZkBRv2/9+2Gu8qy7IeG5M7HNnGM/dHedcHQDjg=
+	t=1750201204; cv=none; b=Avr3kV4Rs7o51MRazZ37QkvyUA4tSKCLKMz0gCohhEvXTxWshoQBf5xMO5b211knZJKP3TPUmrJX0Qm3t79a442IqvxtCdX1+0HLbLTmYMhmN/TdkvHVnDW5L0KcTfFsH9Bm/lS8zJph5tpJ8bGhjXRUvUkdDlAy5BnusF6fkts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750201203; c=relaxed/simple;
-	bh=eBnpcYHTpCSmU93N+2v6XceuO10N+zsU0JFmZnOplrI=;
+	s=arc-20240116; t=1750201204; c=relaxed/simple;
+	bh=HuFBBcDx/SSiJ1CaVdEQJoYVORBHZvXh4C+mUcAk3Ww=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JdJlNazToSlwWIOC3CgokmWWDQXaDSECyhr96kIKXs3/xZTcS/9Gtp4Sjo6DGwoyZ+af4rBCvQrjljtNkYkrL/cGyAXJ6GP1fvatVEVSySSoxt5O4juECtt3kDZMnMs9mJh7+c8mk1KjLG1+eW7lHDGwlNEVZB3guOrSJAEvo/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BMal2/kG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=nHFuol+226vXD/OHPy93TebCS+UYZ0OKbRkTy5Taglg0iGE30aLiDtZr6bg49SeCoO+pGIaJoKqQ6o1az/mfXeKGFNv/ObBmAZdVG+MUR+Sy3gLwqC5WsmLHFhVfP79v0ZQoV4aBnQx+bxF2rlkplYU8kHw/rii0vlVhUBGD3xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYsLRobG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BMal2/kG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EED55C4CEE3;
-	Tue, 17 Jun 2025 23:00:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYsLRobG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3854EC4CEE3;
+	Tue, 17 Jun 2025 23:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750201203;
-	bh=eBnpcYHTpCSmU93N+2v6XceuO10N+zsU0JFmZnOplrI=;
+	s=k20201202; t=1750201204;
+	bh=HuFBBcDx/SSiJ1CaVdEQJoYVORBHZvXh4C+mUcAk3Ww=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=BMal2/kG7p9adfLOYPsFlwx7QJcfAOR/JkzMnAEsvOTCyLuJg0BbFZ3Yhs+uc8bVZ
-	 3qULv+TiUD5kWSaPW4zxoSkuuoSuUe25++naDUWIV54nGQjrvWsospg2xts38Q5pyF
-	 Ot0ZnMOdXMIS8RIMJ5H6MtAIxgRFGdKpL0CeR18zpQX+ZlUBOtfNJ/cQgQTpRJ0P0B
-	 36SKX0suGdi3objtJmAW2A5pcJ7LPLvVP8y+9bs5sGuGy2TjpcK7bxVhIzNxxZpDfX
-	 DMTAbbFJVtifnOYfSyUIspcKUqLmr8PJ7KkKwqcULBhbFMqQOYwMzNuRBE7sl2uePG
-	 DKDNQbYhAZq1w==
+	b=dYsLRobGovWK8YlNN+8KEm4q+NEiFup2AJfdINStHkZP30RvUNH/EOCUAd2gCroCs
+	 jHysuMYhD7KWuEZPchtsF5YhcxtssHA9PLJlblCw/Ij1Lqkr1k86Oz2SujS86EdEpi
+	 Ok8ZSUCrbo/14vLR06waub6fNjKr/09NTGKUEa4ZJO5LaJZiV+QDZZh9su7H/fKx1P
+	 bnItIeVDOu01E0sELihmEbBatR37wPS4sBISZLXIeUUMgQCfr6/bMaQ3PJuLnyrVVv
+	 GC/1Ow2kVzmeORPZLNBWqF+J6bDSTyQrw3Facm077vkfPgPdodejEIn6YpnpTdhV4Y
+	 Zmu9K8rHN8Z4A==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADED838111DD;
-	Tue, 17 Jun 2025 23:00:32 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFDC38111DD;
+	Tue, 17 Jun 2025 23:00:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,42 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2] net: ti: icssg-prueth: Fix packet handling for
- XDP_TX
+Subject: Re: [PATCH net v1] net: netmem: fix skb_ensure_writable with
+ unreadable
+ skbs
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175020123150.3727356.10882505957565617518.git-patchwork-notify@kernel.org>
-Date: Tue, 17 Jun 2025 23:00:31 +0000
-References: <20250616063319.3347541-1-m-malladi@ti.com>
-In-Reply-To: <20250616063319.3347541-1-m-malladi@ti.com>
-To: Meghana Malladi <m-malladi@ti.com>
-Cc: namcao@linutronix.de, john.fastabend@gmail.com, hawk@kernel.org,
- daniel@iogearbox.net, ast@kernel.org, pabeni@redhat.com, kuba@kernel.org,
- edumazet@google.com, davem@davemloft.net, andrew+netdev@lunn.ch,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com,
- rogerq@kernel.org, danishanwar@ti.com
+ <175020123275.3727356.1557210847421675241.git-patchwork-notify@kernel.org>
+Date: Tue, 17 Jun 2025 23:00:32 +0000
+References: <20250615200733.520113-1-almasrymina@google.com>
+In-Reply-To: <20250615200733.520113-1-almasrymina@google.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ willemb@google.com, sdf@fomichev.me, asml.silence@gmail.com
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 16 Jun 2025 12:03:19 +0530 you wrote:
-> While transmitting XDP frames for XDP_TX, page_pool is
-> used to get the DMA buffers (already mapped to the pages)
-> and need to be freed/reycled once the transmission is complete.
-> This need not be explicitly done by the driver as this is handled
-> more gracefully by the xdp driver while returning the xdp frame.
-> __xdp_return() frees the XDP memory based on its memory type,
-> under which page_pool memory is also handled. This change fixes
-> the transmit queue timeout while running XDP_TX.
+On Sun, 15 Jun 2025 20:07:33 +0000 you wrote:
+> skb_ensure_writable should succeed when it's trying to write to the
+> header of the unreadable skbs, so it doesn't need an unconditional
+> skb_frags_readable check. The preceding pskb_may_pull() call will
+> succeed if write_len is within the head and fail if we're trying to
+> write to the unreadable payload, so we don't need an additional check.
+> 
+> Removing this check restores DSCP functionality with unreadable skbs as
+> it's called from dscp_tg.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,v2] net: ti: icssg-prueth: Fix packet handling for XDP_TX
-    https://git.kernel.org/netdev/net/c/60524f1d2bdf
+  - [net,v1] net: netmem: fix skb_ensure_writable with unreadable skbs
+    https://git.kernel.org/netdev/net/c/6f793a1d0537
 
 You are awesome, thank you!
 -- 
