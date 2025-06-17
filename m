@@ -1,243 +1,175 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B6E8F54;
-	Tue, 17 Jun 2025 19:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE88220297C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750187002; cv=none; b=H9oNkeW4wLe/tvBH2Ut1V+YuliJZaQJrzP1cFSDJ1BUhAqAa2Unb2ke3mKWLT2LCUMwAJ6dH0nm/0zJkK983Zs8Y7coqMmh3TrmihUZqrxuRO0EfIh88L4YlS7tm9s/wfiNVKzPDkZ1O6BEs+bSwAjG0GRjDqP0iEZkzuWSqcNQ=
+	t=1750187035; cv=none; b=Acm5rgKvOcEqh9d/kvaMyP543adlHR6+0xhD9kQufryMPZmf5qhL2EQTm6K7J/hnP2Nue5Nj/9Q/0wSaeSpYYSCA3sZC56YKprrjMPky2rSWb5xhP7NZxW3Qc19VP1HpLGdBNHWYSqjn0jaTv0GlGt5Bc+ctS2jpvbZpnZxoRNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750187002; c=relaxed/simple;
-	bh=WQjtsw0NPGqZlrAYykaoA04ih9gqLZRnTR2w8Qkg6OI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TqfM9OgNbltiH9MjPq81ilWYhHiRmSBKKca/IjMwo+n5lWGdTHhmZGOei256rtd32Eftf0iMcWx50HC+GanO3Gv799DukH4YvlgTfr5g+SFwwLGzQ+H2MGhtHTv+cc+wBW1NNMNiueeQZAwEdEXqH/4J0netvAvKmZpCVEVeQsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bqazzS8c; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750187035; c=relaxed/simple;
+	bh=wwOYibFG+0lc4A/gtOOt61sduDspvlNz8GZmN+PC6dk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kfmtYO0Il9EGePij/f8KAuV2z+UCYBeIjA57M/fJKFKYGqX6et6Hw072k+u04bpPVUprfG6nn5JHDS9xBLNCIGgZR5fHJViLVJVXv17a1AWK/3X6kfJh6Jj1ersTi3ePCinPvVe2DOCfb6WVvKGAvopKXVX+oZAZQ/Ao2aOoI2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cavMUKDf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bqazzS8c"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4f64cdc2dso541627f8f.1;
-        Tue, 17 Jun 2025 12:03:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750186996; x=1750791796; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EO3mzn9mneUBLNjzsLrlXivcJJ9LbOVSxL2XTHOAkJs=;
-        b=bqazzS8cjw8wVy7rPFpETia1j9JuFPepabBkeuiC0LG1Je02Ngh5/cBq8yNWxd27jv
-         h91mkw5djEa+ks8NzhWTgoUe3MQ1mHu121I8QoYyjrMcN9IbZjhMXLiti1uaQpgy29aA
-         MKpHb/9XuiPLsOCOlFGVH5msXewhgguitMiXnWg9NF9iXeCdGT2cZYjzWwR+rChEp18l
-         uN0Qxga1wWd570ZhTRmohQ8aX6e9gD5uZSIYN3pEA5SOgXucTjLlSaKf+yd+Q9nvZOGW
-         7eSiClWKWZQD2fCLiuSjXupZwpXXNKKXpVKabnqgC6UO3xFbfRmwVuZQNamKI+leeSp9
-         ae4Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cavMUKDf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750187032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=APmLizck+xWiMMK/9wwlTCNkq9CY0MJkhFk3I3onfsA=;
+	b=cavMUKDfadL+l3J4B31uCNmrKWgkPDcRou8xa3V+39eoVphBUb+jMk5NggRXZoJD7uBI5x
+	esm3bClc/PgoO+/Rkl5s6K5ZluGqdgE7rS58b4sYHKtbp/6BVDAfxgx3+uxbkMNG/OQv1L
+	eCsV47giYq87kUSzzkB6OR4CiePQumk=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-433-6hSi6jyjPeO7emom7cys3g-1; Tue, 17 Jun 2025 15:03:51 -0400
+X-MC-Unique: 6hSi6jyjPeO7emom7cys3g-1
+X-Mimecast-MFC-AGG-ID: 6hSi6jyjPeO7emom7cys3g_1750187030
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so30182205e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:03:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750186996; x=1750791796;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EO3mzn9mneUBLNjzsLrlXivcJJ9LbOVSxL2XTHOAkJs=;
-        b=U/hbzVvUY1u+KptM9W/3v+AjfD/C8W9LNwRyhnvsNoHPYNWsVWwfskAcTXr0Ftc6eX
-         RGHoXELtwZY8C5phQ5cW0HYdHJXc4WRx2Qp3ijC2XFQ9AszJ03bpKdss37XEfEoz27fr
-         rc9qLbkoCviyXcqbSqfD+dFE+v6WRsT324mgfTtoNUn9njckvMkB+q7ChyC6McSTShNN
-         sAnuePdzKlUBpFs8KsYjSInkiPivgILY4Rx/NjArHaiRHYUsAHKGN0yKMrHK4CLtUwHk
-         0Nv84BAUGU1kqjf2hkNOht9PyENSEvHQGug89UGE8BEqPF1CXw2v2JE7Br30ZvM4XWqK
-         2BmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU6KFjsasAU8k75SicccmnwrXoCaiy266s5nQWedsXNaFHPom4jLlPDGHjKy3Qfexwm3GM6WzE@vger.kernel.org, AJvYcCWp0pI83aFjpoKG424DKEaUNoYUe7g/sWfCQaraONgpIgGNfREx/VLXdGb9ZdwjNzYb72k0jn0QWOHLOnI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9GvlUHyoldkchSBTxBp3H5O+lXCNWeXx3GvhuvfJHBhnNaMvt
-	TmzBZBw4IdO377FK/1sM+H3dut4n2b9fdN9mT2QihIR8ZDZvvDy8FHRO
-X-Gm-Gg: ASbGncuj3wI57P70AcKM1kSqTA3VHRedA7rJdM0a6Qy8GLgzH7hiyyS1jlQXG1ULnps
-	Vh2tF34i6OLQoq4648WHcPzphOCoKE+iQ4F1MQP2KHM1z3HQ6mGFCGZXUUW+rCO8nsgEYszqSMR
-	mKbFOZyid7y2VIGGZ4vbxWu04/7XsEiOOycbSKNA/KuUwjhkWrCmrNOSSBydgSSwFHr9Cjy3FJk
-	544wnQIpyU1R3cKl3VeZ37bnzjzVvl4HHHqizW80FKZrNmAk7Qt/SEeL0zw8MRbpgknpwOsbpLk
-	P855c4gfXztOP0tj73GACQISpOgkG7k106GjGfr9D0Cn0UwINMD96prN6UVakznbkQKHdoIqL5v
-	Cz4QaD/re23khCynZrLvPmZum3A+vVk9KzCGYQDfuH4qdrJ1rfm/nDnHNrQPnPzy5WlPANuoVPE
-	Y=
-X-Google-Smtp-Source: AGHT+IGPYOJx3kioh4/Cp5rmSZs9Wa2Eub6qaVkHJvzcap4KstPmLTQfvBIw1iPfY+vo3y+94HhsEQ==
-X-Received: by 2002:a05:6000:188d:b0:3a5:28f9:7175 with SMTP id ffacd0b85a97d-3a572e7a00cmr4222203f8f.9.1750186996274;
-        Tue, 17 Jun 2025 12:03:16 -0700 (PDT)
-Received: from thomas-precision3591.home (2a01cb00014ec300200c9c87d117a78e.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:200c:9c87:d117:a78e])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e1838e4sm187427735e9.40.2025.06.17.12.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 12:03:15 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Shannon Nelson <shannon.nelson@amd.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Arthur Kiyanovski <akiyano@amazon.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	Caleb Sander Mateos <csander@purestorage.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net,v2] ethernet: ionic: Fix DMA mapping tests
-Date: Tue, 17 Jun 2025 20:57:52 +0200
-Message-ID: <20250617185949.80565-3-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <3b19f145-8318-4f92-aa92-3ab160667c79@amd.com>
-References: <3b19f145-8318-4f92-aa92-3ab160667c79@amd.com>
+        d=1e100.net; s=20230601; t=1750187030; x=1750791830;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=APmLizck+xWiMMK/9wwlTCNkq9CY0MJkhFk3I3onfsA=;
+        b=jdJYiF0E7rC1ah9pndEJ+RNmbkT/e89z+VNu6In7XoV7XsocMZb33NOzo1RratE3TY
+         we6zPmlm9ddUop0v+Hzvu688sdcwcvJWf8RvChtSz1ZguJSQUjySMocpRgPqy2OiaC5+
+         Yg85MCaz8eQsD96Fp2Yn6EtK4oPgE6PDOLgZC0DTrsOZ46HqlQK1GEghxJ/WAEhE9Jay
+         4i8Pp5Y/9u8TXLk72VedMAECNV2AC22iBRCRqfMwpkpED8fGvmcZ7xxOm1xTx4O1QrbW
+         ulTqbG5uBGBrB3hTZlQR7D9logDrhnuDm4pVyuH3bJtJ3NlvTxOJco8YYMeQA18PCs/o
+         8ffg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAurp0R66H9FhP6OimnrcjH71MugwaU30XUdWzKnWAHuTKs3YdvZlsqMfvPA5hXkP0O/THXEo8lFhLMjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzilF3v596YwzldMV0/SOhlJBj7HlNJcTLqwV4zATnvIs6wnPsI
+	gyjx9674FhzRsh7dZfo28/0Ey6iCP7BgfTwPlGAsIClkqxOX2qJF5P/kUs/n0j4X9BM3AeLW0ED
+	oDHI1RrAsj8V4dTzyFyDVrXN0jZq6bYpxOIbxzTMJjaFTl+zX/JeeQga7IB2fXWYCQQ==
+X-Gm-Gg: ASbGncsdxMq87vz9dJfLd9eKtgHz5QSHzL9BV7bpLmPVGtjgDnmTSFuPU6VbJCiu0+2
+	yMUBPmFeB1vf0BXEUDtZWyziniGr40dxlGTCdAkqpsZuHU0PdW8hsLm0+SHkeAdWNSdVFxwbWac
+	43SmUUETo0ErXAoiXUsRFVC1cRJ2xX8JaYzwEUaVIvE66ZlKMwNJJNXi7oW6/KllaQSFB5nnksI
+	iIZH/xvGBKzTMypP9WllJz/OsWZJDbuAnC2LeOBWascTrQnfx6Y+BGXMb2VvJ7nyVzcnJzU4mQv
+	n+HhwUWoPLNyK9/LMzFudaspC8ycObjbA8UGaOu3Vu5UGln6ZX+Kg2fVR/qMPkvnGWfNEsAFB40
+	TelDJ/Y2iXDzHdB/OmtfRGD32Rb5DU+88zpmeRyH97/aFVO0=
+X-Received: by 2002:a05:600c:6097:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-4533caa11ecmr150256955e9.18.1750187029982;
+        Tue, 17 Jun 2025 12:03:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFL6ImA2UU6jpdyVeBNK3EdkZb1tdRvZ2FM1i3UsxlNpHfOcIuOvhidIRSiKHB6ZPekQkc8RA==
+X-Received: by 2002:a05:600c:6097:b0:442:f482:c432 with SMTP id 5b1f17b1804b1-4533caa11ecmr150256565e9.18.1750187029622;
+        Tue, 17 Jun 2025 12:03:49 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e22460bsm194107705e9.6.2025.06.17.12.03.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 12:03:49 -0700 (PDT)
+Message-ID: <42f132ca-63bb-4d21-95cc-9281d95f71f7@redhat.com>
+Date: Tue, 17 Jun 2025 21:03:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: Update maintainers for HugeTLB
+To: Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Muchun Song <muchun.song@linux.dev>, Vlastimil Babka <vbabka@suse.cz>,
+ Peter Xu <peterx@redhat.com>, Michal Hocko <mhocko@suse.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250617185910.471406-1-osalvador@suse.de>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250617185910.471406-1-osalvador@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Removing wrappers around `dma_map_XXX()` to prevent collision between
-0 as a valid address and 0 as an error code.
+On 17.06.25 20:59, Oscar Salvador wrote:
+> Change my role to Maintainer as I am quite involved in HugeTLB development,
+> and will be more so with the upcoming HugetLB-pagewalk unification, so I
+> would like to help Munchun take care of the code.
+> Besides, having two people will help in offloading some pressure.
+> 
+> Also add David as a Reviewer since he has quite some knowledge in the field
+> and has already provided valuable feedback.
+> 
+> Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> ---
+> I also asked Peter Xu to become a R, but I think he is currently too busy to
+> commit to that, but he was happy to be CCed instead :-).
+> I already talked to Munchun and he agreed.
+> ---
+>   MAINTAINERS | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4243612aa7ee..7b274ce8a872 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10975,7 +10975,8 @@ F:	include/linux/platform_data/huawei-gaokun-ec.h
+>   
+>   HUGETLB SUBSYSTEM
+>   M:	Muchun Song <muchun.song@linux.dev>
+> -R:	Oscar Salvador <osalvador@suse.de>
+> +M:	Oscar Salvador <osalvador@suse.de>
+> +R:	David Hildenbrand <david@redhat.com>
+>   L:	linux-mm@kvack.org
+>   S:	Maintained
+>   F:	Documentation/ABI/testing/sysfs-kernel-mm-hugepages
 
-Fixes: ac8813c0ab7d ("ionic: convert Rx queue buffers to use page_pool")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
-Another solution is to remove the wrappers altogether so that it doesn't
-call multiple times the `dma_mapping_error()`.  This also makes the code 
-more similar to other calls of the DMA mapping API (even if wrappers
-around the DMA API are quite common, checking the return code of mapping
-in the wrapper does not seem to be common).
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Thomas
-
- .../net/ethernet/pensando/ionic/ionic_txrx.c  | 70 ++++++-------------
- 1 file changed, 22 insertions(+), 48 deletions(-)
-
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-index 2ac59564ded1..1905790d0c4d 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_txrx.c
-@@ -12,12 +12,7 @@
- #include "ionic_lif.h"
- #include "ionic_txrx.h"
- 
--static dma_addr_t ionic_tx_map_single(struct ionic_queue *q,
--				      void *data, size_t len);
- 
--static dma_addr_t ionic_tx_map_frag(struct ionic_queue *q,
--				    const skb_frag_t *frag,
--				    size_t offset, size_t len);
- 
- static void ionic_tx_desc_unmap_bufs(struct ionic_queue *q,
- 				     struct ionic_tx_desc_info *desc_info);
-@@ -320,9 +315,9 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
- 		dma_sync_single_for_device(q->dev, dma_addr,
- 					   len, DMA_TO_DEVICE);
- 	} else /* XDP_REDIRECT */ {
--		dma_addr = ionic_tx_map_single(q, frame->data, len);
--		if (!dma_addr)
--			return -EIO;
-+		dma_addr = dma_map_single(q->dev, frame->data, len, DMA_TO_DEVICE);
-+		if (dma_mapping_error(q->dev, dma_addr))
-+			goto dma_err;
- 	}
- 
- 	buf_info->dma_addr = dma_addr;
-@@ -355,11 +350,12 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
- 							   skb_frag_size(frag),
- 							   DMA_TO_DEVICE);
- 			} else {
--				dma_addr = ionic_tx_map_frag(q, frag, 0,
--							     skb_frag_size(frag));
-+				dma_addr = skb_frag_dma_map(q->dev, frag, 0,
-+							    skb_frag_size(frag),
-+							    DMA_TO_DEVICE);
- 				if (dma_mapping_error(q->dev, dma_addr)) {
- 					ionic_tx_desc_unmap_bufs(q, desc_info);
--					return -EIO;
-+					goto dma_err;
- 				}
- 			}
- 			bi->dma_addr = dma_addr;
-@@ -388,6 +384,12 @@ static int ionic_xdp_post_frame(struct ionic_queue *q, struct xdp_frame *frame,
- 	ionic_txq_post(q, ring_doorbell);
- 
- 	return 0;
-+
-+dma_err:
-+	net_warn_ratelimited("%s: DMA map failed on %s!\n",
-+			     dev_name(q->dev), q->name);
-+	q_to_tx_stats(q)->dma_map_err++;
-+	return -EIO;
- }
- 
- int ionic_xdp_xmit(struct net_device *netdev, int n,
-@@ -1072,38 +1074,6 @@ int ionic_txrx_napi(struct napi_struct *napi, int budget)
- 	return rx_work_done;
- }
- 
--static dma_addr_t ionic_tx_map_single(struct ionic_queue *q,
--				      void *data, size_t len)
--{
--	struct device *dev = q->dev;
--	dma_addr_t dma_addr;
--
--	dma_addr = dma_map_single(dev, data, len, DMA_TO_DEVICE);
--	if (unlikely(dma_mapping_error(dev, dma_addr))) {
--		net_warn_ratelimited("%s: DMA single map failed on %s!\n",
--				     dev_name(dev), q->name);
--		q_to_tx_stats(q)->dma_map_err++;
--		return 0;
--	}
--	return dma_addr;
--}
--
--static dma_addr_t ionic_tx_map_frag(struct ionic_queue *q,
--				    const skb_frag_t *frag,
--				    size_t offset, size_t len)
--{
--	struct device *dev = q->dev;
--	dma_addr_t dma_addr;
--
--	dma_addr = skb_frag_dma_map(dev, frag, offset, len, DMA_TO_DEVICE);
--	if (unlikely(dma_mapping_error(dev, dma_addr))) {
--		net_warn_ratelimited("%s: DMA frag map failed on %s!\n",
--				     dev_name(dev), q->name);
--		q_to_tx_stats(q)->dma_map_err++;
--		return 0;
--	}
--	return dma_addr;
--}
- 
- static int ionic_tx_map_skb(struct ionic_queue *q, struct sk_buff *skb,
- 			    struct ionic_tx_desc_info *desc_info)
-@@ -1115,9 +1085,9 @@ static int ionic_tx_map_skb(struct ionic_queue *q, struct sk_buff *skb,
- 	skb_frag_t *frag;
- 	int frag_idx;
- 
--	dma_addr = ionic_tx_map_single(q, skb->data, skb_headlen(skb));
--	if (!dma_addr)
--		return -EIO;
-+	dma_addr = dma_map_single(q->dev, skb->data, skb_headlen(skb), DMA_TO_DEVICE);
-+	if (dma_mapping_error(q->dev, dma_addr))
-+		goto dma_early_fail;
- 	buf_info->dma_addr = dma_addr;
- 	buf_info->len = skb_headlen(skb);
- 	buf_info++;
-@@ -1125,8 +1095,8 @@ static int ionic_tx_map_skb(struct ionic_queue *q, struct sk_buff *skb,
- 	frag = skb_shinfo(skb)->frags;
- 	nfrags = skb_shinfo(skb)->nr_frags;
- 	for (frag_idx = 0; frag_idx < nfrags; frag_idx++, frag++) {
--		dma_addr = ionic_tx_map_frag(q, frag, 0, skb_frag_size(frag));
--		if (!dma_addr)
-+		dma_addr = skb_frag_dma_map(q->dev, frag, 0, skb_frag_size(frag), DMA_TO_DEVICE);
-+		if (dma_mapping_error(q->dev, dma_addr))
- 			goto dma_fail;
- 		buf_info->dma_addr = dma_addr;
- 		buf_info->len = skb_frag_size(frag);
-@@ -1147,6 +1117,10 @@ static int ionic_tx_map_skb(struct ionic_queue *q, struct sk_buff *skb,
- 	}
- 	dma_unmap_single(dev, desc_info->bufs[0].dma_addr,
- 			 desc_info->bufs[0].len, DMA_TO_DEVICE);
-+dma_early_fail:
-+	net_warn_ratelimited("%s: DMA map failed on %s!\n",
-+			     dev_name(dev), q->name);
-+	q_to_tx_stats(q)->dma_map_err++;
- 	return -EIO;
- }
- 
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
