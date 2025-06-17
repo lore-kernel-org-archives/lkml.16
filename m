@@ -1,198 +1,176 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2065.outbound.protection.outlook.com [40.107.94.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEB92DE1E2
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750164701; cv=fail; b=Eh0ya/C+zU0T/dE39EngDOaJtYjMXYZGn8yxhizNHlF4I2YGcZgjHQHhb529rOe0hYJSSV3ijbFPJgVWHjqx7LN9wzzaswqDK3fWd7ukA4jBY0VkaysVEqvTDHfo83Vl6b2h0KuIja04OQIRjveBWej/Y9XKHyYtrLXcu7/6lXk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750164701; c=relaxed/simple;
-	bh=q3ZJawOMaO6TjkgtTAANcxjsNJBAXEwRzZr+PUmwfPE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Nxvy7YoYFqGqpQ+hkPvLZ66EK9Y8OTktMJVa49/WIv+fw1sHqirDFdgOCy06svvTDBn5AS1uj7UjZP8a1dxb+ofSI8TGobefQ7zOfdK3S5rFus8qgUfNYsJWXxeIYYASzb6cb+JvDBOX8ZUpOXrQTEVQuBtfzVRV5fgwoE3XVZQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=eZzb7Byp; arc=fail smtp.client-ip=40.107.94.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EE62E06D5
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750164708; cv=none; b=d1pIf4QGnvk8AsF2FCOapqN809rqiYZ34JF98qa4kpTBZayH8w77myjggW4L/9sCnTvZt1ngAB7HiKnmrqi8eZLzYyTstEJpcS2eELbUSQpKQljfUGIHpBqJ6ESg5Rfzi4jOx4xw1rzlt4C6xDPqJsPpQM+dwolQHa0g9qmhHS0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750164708; c=relaxed/simple;
+	bh=y8+C7iI8r1NplDnN9G0yvYuEi4mGegIOzJfcfmDW34w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GOag2aJzXzNFLaGnj9ZWfWH4qcjzq/SM6+4GgWYkolURKg9HzD32ZPa8gFe03gB5OFv+FhGf0LMtW9fs9O6uJyWitbIQe2y5DZRFxemsF1WT0MnTN4YqhpBqJTRr21lrjDvvVNVIt85JlRIS6+dhPxsVRFVxZbN7EKFcFRkRkh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6ksRUfO; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="eZzb7Byp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=a7TJUv6q45TJInzSEb3YIAnPBUkeo+NrOow2vzBcZx+pnJIx1iwh2zIjaVRsYB/wRx3CAFogz/ZazTLpM7vOLsO+/WC6hZ5bEiGRSle44oEBlKoB08tlnrkgfpWIEBMHFZN8uIJp8hTsHaLuaaxGyp/AjyJ9QEkp6Y/RTOax2ZsvJz+AK/ZH8hNr26JguD4wB25wRcHcIPNJDUwfE3B7UJkw2tGugva6Y6csWi+Y8VpRiiQUrD+f5bVKA0adkIXJzMsDxuTQxRDDjmi9XjLkDqj325ABQk1sV76NSx98QmIKi3idhDiEuqoeXEJnL9dqKL8L42ZYrB7E01cyY3rwjw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UVmJZbdfmcpBfPSLZ93yNr6G+xO0su2/R0ZqNBL6XAI=;
- b=hmO1svqjw8zZtQjFIZ94BII6ZJcJIYdlraVHpMTQ3XyubOYUkjSFSNptJoHhP1SMXyPUEJ2H/+/3304w9BTqPjXIX+qpkd+qxv5jUL48Y0/AGdt6908Xr+XseTmrUK/vP+W7XjzJ2GdeG8Dag38HOQEjecnHu6mywpf4EE9Hb+HTcTNvb4pJZZ5SlHjkuyD31G/XYDLRCUP8Yf0NEIkPUUcjpUbRED7AKOjHwSfKso5hgz77QiPnJloyVnBDAXRKqpITJuHcmMyYLCYQGeus7kE4SqF1ia3rGdO9BqMsO9z45/mH549f8WZa0Am1A3nOt0Dtw9Op/vNRKKR4GzG4sA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UVmJZbdfmcpBfPSLZ93yNr6G+xO0su2/R0ZqNBL6XAI=;
- b=eZzb7BypxRKKobFjxqulnQaE5FWDmwB7a9st2E7OTxkKadRKGGvbg1bVigPFXXs6/Klb+1Ug6l7eOgKk1DLcc2yqZ+4C9mZ+99o9vOq12TkzOHl2vYKzTT9F2henlOzplOMBHx0Z5cUaCPfYxGb7wPK3YH8R7ZxTDU0NgCD2Jx8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by SN7PR12MB7884.namprd12.prod.outlook.com (2603:10b6:806:343::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
- 2025 12:51:35 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8722.031; Tue, 17 Jun 2025
- 12:51:35 +0000
-Message-ID: <deedc450-e349-44a5-bb9e-05eaab351983@amd.com>
-Date: Tue, 17 Jun 2025 14:51:28 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 1/6] drm: amdgpu: Allow NULL pointers at
- amdgpu_vm_put_task_info()
-To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
- Alex Deucher <alexander.deucher@amd.com>, siqueira@igalia.com,
- airlied@gmail.com, simona@ffwll.ch, Raag Jadav <raag.jadav@intel.com>,
- rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
- Xaver Hugl <xaver.hugl@gmail.com>,
- Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-References: <20250617124949.2151549-1-andrealmeid@igalia.com>
- <20250617124949.2151549-2-andrealmeid@igalia.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20250617124949.2151549-2-andrealmeid@igalia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR2P281CA0121.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:9d::12) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6ksRUfO"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso6587021a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:51:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750164706; x=1750769506; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hSxo0ZHyfJr1fQpftYFJehkxIFFbw7pyxo/Db9fNjFU=;
+        b=Q6ksRUfOsysgThik+T+fXiOfIlhecpIpbh4jpq5HpqPFJ69ODF32MumHUtGfQqjxy7
+         FAOYfYY6sne0BUTpF/aAm6SvlM0pQv4AO3mVe98d4ezXgqUCiUf0/Z/9aQMdByPi+ZQ9
+         odPFrC9btB4cuSt94yKHDevTuixWpgIbTuW+in6kc98ddD/F9KHgagvjiV33btZB2Gta
+         z/vfsQdeFBEHM/gFSc6VROtWa4jDoJ41NTSOx/fR+Gtt56aRXaBC29nvEC76KvGrbjda
+         XxQX2HULSCg3aEEc+KI+K85K3qkoIFgNq4HtISbID5wPw+GoIqeD51ZU+xNJ2Axm049c
+         4dUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750164706; x=1750769506;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hSxo0ZHyfJr1fQpftYFJehkxIFFbw7pyxo/Db9fNjFU=;
+        b=O7LUoi9NevDZ3qoHrjNXrbDOAGk0HHuVzRRZp9yAI67fwbDtLwQiCm4r8rzImFiVE1
+         jLZwfU1gFxvPf5Qxtn+fAST/CHJ6GEc6yVHfEavhZwpz/vToi+8nso5MvcIbawq/7lqC
+         nGxIHJK1XIlSdvzdiX3YBwSfLwqs5PRQTSF0xl3hv+mM3uocQb3QXQvgaz37dEImg6xL
+         CJCPJj1BdirfAnItCU20eyshw+PNRY7X7DHWJf7lqK93J/FuPOAuXsDrNnG9PKrdQHsp
+         dvcqAcvOyUbCN97JewGkY3PmXlltOa6jef20l/PDLqzp6f7sgCuPjKs6X5Jnwz+LN4ke
+         Zw6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVrK8bvD6ChUOzkfSXP35Y5laeUxfiagU/Du5Vh3//892YPOl08q9tzQHK444v1L5yD9KLx34/GdIN9VXc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygVENO3lTVekk/rGAxJ+eFICGGYjr0Rg0mkkdtAVl9y5tK+Cye
+	IKBIKblaE2N+aDnVmkuM6FVAmOCRv05hP03XCyHTLsaK/Y7jFoRJmwkG
+X-Gm-Gg: ASbGnct/TTiSpsGKTzHwhE2p2O4Ty6OkoxKj26eUt61HZKC5jjrJVzjmMX88MHvmQ67
+	t/o9PEyaiFeRGFilxyH8ZiPiMy/NnObA8YAtCvFBmVWOllgy1UY+JxMRRXbX839T4B/GdJqmshp
+	wIox8Yxe95mX/ruuLiIfTqbS9ByDBwqsfC+vPoO048Lt2JawpxHbCF3k7bae6kp2c952gDwwNz9
+	ZkbmNWF07CZGRhrOeXghpeHFzn8RRUskQbTOpHePMSvihqyr/z51ViaUgnAvCpAtZtBZFo9LG/s
+	e7vtzWhO4TRIYCTf6SyN3oSod+gmoGBTS0XfyAil42oPv8Ni1h9K+qn1BP/YcEub+x9IdziOXz1
+	I92pANM4B0X1hQCxpYg==
+X-Google-Smtp-Source: AGHT+IFDyTmPgMZj/RHIVJLIOL48m69TjdL4fouKx5vArpbDJpyInEok0Mk+dEvaEXL3/xudr7VNHA==
+X-Received: by 2002:a17:90a:dfc8:b0:311:f05b:86a5 with SMTP id 98e67ed59e1d1-313f19d2977mr23454941a91.0.1750164706232;
+        Tue, 17 Jun 2025 05:51:46 -0700 (PDT)
+Received: from manjaro.domain.name ([2401:4900:1c68:884c:5800:7324:c411:408d])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1806282sm10421980a91.0.2025.06.17.05.51.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 05:51:45 -0700 (PDT)
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+To: johan@kernel.org,
+	elder@kernel.org,
+	gregkh@linuxfoundation.org,
+	vireshk@kernel.org
+Cc: greybus-dev@lists.linaro.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: [PATCH] greybus: firmware: use strscpy, fix tag size
+Date: Tue, 17 Jun 2025 18:21:37 +0530
+Message-ID: <20250617125137.24503-1-pranav.tyagi03@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|SN7PR12MB7884:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19be623a-0ad6-439c-2852-08ddad9db0e5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c0ZKVWtwRmE5dTdieVd3RnJQRER1bzFIbEVKK2VFY1NNRElhOFlENGYwTEE4?=
- =?utf-8?B?blNhdzJoQmhWaCtvUnM5cXc4OXhHaTF3RXB0aXpES3dvM3VFNjM2MFZXcHRr?=
- =?utf-8?B?bDFnNFVYUzBwK2lFVnJwaUlVc2pTVFZ4OWJLNkJsTXhRZHRxQ2NQaFpIQnQ1?=
- =?utf-8?B?bTIrK25sWGhtTUtCSDVFdHBrTlgzWHJ0aDN1T1BNYmRLMG1rb2ZEY29LQjZz?=
- =?utf-8?B?NkZrVzlHcE9zZldRMjN5ekpycmkwU0k1K1VZMDBXcW54SDQyUlY1MkpoSC9P?=
- =?utf-8?B?TW9PWXlIMWRhNGhrWXBQU05mTnQyaHJiRFE5Szc5dER6VTMxOGZsOEQzWDVv?=
- =?utf-8?B?MGwvMHRSL0taQUtrV1ZsUEtpM2tkckpWdWpQd05oZGRrRzIzZDhONlp6Yzcr?=
- =?utf-8?B?YWNzYWYrbGRKN3FtZmhIcVcrN2lpN25rWHVlMlpHVStZaE1nekRuaGtObGdt?=
- =?utf-8?B?YXRUQW1kY2NwYW1WWmNMQUNUYm1aN0ZOTHl5czV3TjRZSG1rUk5DV2V6Qlcv?=
- =?utf-8?B?VEFRTzgzS0xEcWdpVHMycHFLRTZRTWVMYzduV1UxMldsWExTRUcrUDV6VHNT?=
- =?utf-8?B?ajJCSUpjWWowdW14bG5HZGVxZU9pVlduNnFBVmI2dDFVT2hOMzQ0TEV5Zkxv?=
- =?utf-8?B?Y3dGSktkQjdDTjZCU3pIVHRsQW92NHJpandVZjZpRW9OenRBbjNZcGo1NmhO?=
- =?utf-8?B?UVlGYytzdHZKYTBtTWxiS05NSGthZThia3ozS1pFV1VOUHJvRDQrdktQaHBy?=
- =?utf-8?B?VVpRSTZzMDZpY1FITzF1dWhaeEtVeS92Q0tiVnExRlh2V1h1VmVYRzVtM21E?=
- =?utf-8?B?bDZkMHBmWHFVSDFSNFNEWjg3UkgvTXJ3dm9CdkpZeHpoOVhhZDIvQjhQNkVt?=
- =?utf-8?B?T0ZaWkp3dXFuQmlEZFJpZXczOU9ockorMGw1YWY1L3Zqc2xzdzRrVXRiZmY2?=
- =?utf-8?B?bDVTWjJEaXNJcDZHRHc5SmpWU1hHdld2VWw4WjJXQ1JaQnEzVzFVUytOZWps?=
- =?utf-8?B?VWhFRSsydVdTRWpXUTJjQi8rT2FUd0NFbkc1bklBRktEZVIyeVpSaU0xVGFV?=
- =?utf-8?B?RjVkbE9WSTMzR1dnbjdJVlMyNGV2dm1xdlJza1VCYWlFL3poTVEzRDJwUU9J?=
- =?utf-8?B?aStqTk5qU09BUmNhY0tHUzF3allzTHE0SDlvMWE5TG1La3I5d3VHSFEwWE11?=
- =?utf-8?B?UkFKL3NBaHNLQVpzY2lvRG8xZEw3Y2M5cDJ1bEd4L1JtOGJWMlN6MGhOWnFw?=
- =?utf-8?B?UjJqeWprNlhrMmhhQXRwcitvQjVGNVZJdlB0aytOQ2Rza24rbXVPQ0duL1Vw?=
- =?utf-8?B?MStsOVpXQmlnVlR6Y0hnTVZ4UVJpNGZqeGxUalRLcG10Q0R1RlFSeHZTM3R6?=
- =?utf-8?B?T2daOGp4UGVyN2lIR05IdXJabVAvd0JmTmZGOUpYb1V6YnllM3Y4Snp0bTNi?=
- =?utf-8?B?RGl6Zm5GMjdPcnJnWktvNS83RWdIRG1CVmVoZVJUcGg2dVRHYm5PVTh5aHVP?=
- =?utf-8?B?YitSOVp5czFFWk1KS0xOVFZkRGdVNGlFVnExUS8xUGlFNDRQVjZmQmhtNm9M?=
- =?utf-8?B?YjRSRi9ETkVNbzVXRzVrWFIzUHpTcUFWT2MrOGZwZEZxWUd6VmRDRzJzSkRX?=
- =?utf-8?B?YW5ZMUZlczdVekdYRzdabzFkM2VKMmltd1QxUHpMNlN6dTYrdEFBREJ6eE1B?=
- =?utf-8?B?TEN2aEx1RzdjYjhyVnFIck9mQWxWTzRvaCtmS0x4MzB6bVhMZW10VEpGWC9R?=
- =?utf-8?B?YnJvYjVvVy9nbWhDbjluMldWU2ZPQXZZenBsdnhVclJyUmZpejJOWWtZczdt?=
- =?utf-8?B?cjBZNVJZTUU1UE1qU3RKT1dkK2I0TjRGMmVYZ3lqQ3Y2bXk1UFRuYzVMRDNt?=
- =?utf-8?B?b2JySUsyYWFDOUxiUUJ6ZzZHaHdrSlZud3ZDVjNQc0hYOCtNVGdDa0Nma0hw?=
- =?utf-8?B?enZWN3lYcXljTTNSdlUvL1JRRWdlSXh5a3pwNzl2WHV3TmNtSkNVSVFCTmNn?=
- =?utf-8?B?cnRUQmhPRTVnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MUtrampRMWVoZzBZcW9OYUlYZHBrQ2R3ZGdiSElRZ1BETm9mSzlod284SHZq?=
- =?utf-8?B?MmZqeUp3VlA0dlYwcHlGVWI5T01QbFNIeUZNUUxITytvQnFzakhkOGpselVP?=
- =?utf-8?B?ZTk5c1R0ZlFmUGtBMVF5MUF2QVp2eWh6WXU5NVBpL3NCcFNVZWIydnlSSUpv?=
- =?utf-8?B?SERWT1huc1hIRkd5d3FOT1AzNml3bTNYc3ZEU0RsbDlkQlJrdTFGZW1BbTh4?=
- =?utf-8?B?TVhMWnFnV2Z3d21RclRrd3JBZ2VMeFFMVDdrSldjYXFEVldyaWZUbzBBa2xw?=
- =?utf-8?B?MFNEd2lGUFEzcEJDeG0rcEMzaVE3MlplRFg4TjdDeXdUNjUvUzZTbkVGakY1?=
- =?utf-8?B?TmRJZER0VWFFVExmaXJSdTR1OURRNS9PRXNURS9pSG51SW5mTGE4cDNtTWFC?=
- =?utf-8?B?Wng2TUdleitzaHROTHAzdjdNemtsdm9BUVE0SUtPYjNRM0Nzd0ZNbERnRGk3?=
- =?utf-8?B?V1U2ZzEyRG5iVzY4TmczSkN2SSthZDR0cDFvN1N1R21yM1dIZFhraFl3bTla?=
- =?utf-8?B?MGtGWE9qelh0TEVRVkkvd2J3Z3hRTG52Q3dtRjFDSFRHTGhkSkxFejN4aVls?=
- =?utf-8?B?QkhTWkN5MGE2WldPZ2UweDIyT2JMeHpFeDFES1VMRyt4eUZveEwyeGhNSlFY?=
- =?utf-8?B?WnpYYjJJaXpIY1YyK0NEZ01RdmE1bkNsWFE4dGxXNm5FZ3JSWno5aGdLODVo?=
- =?utf-8?B?YTQvdTM2SkNJaXFPUHZrbGl0d3A1alJaRnJQWlR5ODRQeGhtdW9oY1Q1ckpI?=
- =?utf-8?B?OEFkdzNJQTFyS2czUUxXQVUxTFNxZWw0b2xkVElXalc5RmdWcjZtdE1QbGxo?=
- =?utf-8?B?KzdoWDUzTitaTit6SFU3bzdIMHp5K1lrVTVvQi9IdlhDUmVVL0VqbDhScCtu?=
- =?utf-8?B?NUpNckpYWHRjUDJ6UUhvQUZxWEU0QXNvMVh5ZDZLOEprU3VCaXhVWFdzbC9W?=
- =?utf-8?B?TkExZERUeUJUYjVGYXBnNFVnTFd5MUFacXJWYkZpMU1WL2U1dmVoNWJnS3Ji?=
- =?utf-8?B?SHpmL1dNTVM0VWliUjBZaU5qTXNxdVUxOERhVm90aHk2YVArZFpKU3BnUTZs?=
- =?utf-8?B?ckZCaXFlYUJpT1ZKMlMxQVhMdGpYQmx5eHF2SXJIeWxnZnhhZTQxZXZLbUJr?=
- =?utf-8?B?cE5aVXc3NDJBTEFjbFNSd1lhVlVlNEV6VFBBVTlCZy8yQ2hpNXVscEE1WEk4?=
- =?utf-8?B?bFVHUWVnemhLNTUxV01MdTVDSVBQdExrK21Xa3J0SFpxOU1ZZW43eENCUkFz?=
- =?utf-8?B?d3I1VHdPTTBIRFdvOGU2SXMwMzVISTRHcU95SW1ZUDMyVVF0TjIvYVRwd3hw?=
- =?utf-8?B?MWo2eURNQUJtczJMWHgzM29KZytNTElVTkN3WWhhRnhoZTV0OUMrZjJERWNH?=
- =?utf-8?B?aE5YdG9HZy9zM29KT3JabmtCUjNMaGJyL3YzOE1Pb3RTOHQ5RDVWYnZhd1Ns?=
- =?utf-8?B?ZGpXTy9aZXdlTUQ5S3Y2bjRlM3RUaVplK1RNWC9leU9vSTJ4WWVqcnNiQ2I1?=
- =?utf-8?B?dXl2VkFOQkpLYXpRbTdLT1pPSWFhc2dFMkgxQmN1K2lqbFZwL09GMUttS2pw?=
- =?utf-8?B?WlhNVHN4YWRyaFVSZWVyR2ZRS0VDN1Rmazk4MWRnUnlTaFlyem1EcEZSUmJp?=
- =?utf-8?B?bE92R2lqeENEK0EwSUl2QVVJQ3V1U1FUTVV6b1U4YXZPaURwT3FPUy9oOWdB?=
- =?utf-8?B?eDFDdU8rKzhIM0txbmlwYVpwdjZtOTFjcDNYdFg1N2J0aGZOVnpGL1RkQkUz?=
- =?utf-8?B?NHIySVM4dFF5dlUrYUtiTktKaExUbERXeklnTDV2WWxIa1k3dVljUHdob2tY?=
- =?utf-8?B?dkJ6bC9BMjJPaXlmeUpnOHh3RlZka1FoRlM4MVM1M2V5ZHFiTmNPWHcyc3FP?=
- =?utf-8?B?a3lkS2VOdG1TRDFpeFI2ZFRORnhBUDdCdE5rNGFoWjRBMXVTUzBDWHV1dUhR?=
- =?utf-8?B?VW5wTGR3aEJMUzY1MXhtRnNCcjUxZEd3RzU3WUhLOTR1NTEwYVpGU3NiRGdL?=
- =?utf-8?B?ZDZQY2JDS1FVK1lCV0JwOUF5ckVkdTRPMVhUMkpFbDdKenpyZld3b3hpc09B?=
- =?utf-8?B?YmtiZmcrTmxMRUV0cHVScXZ4d2s4MWdhbFFJZVhJc0JTYmFpUS9BY1NLVnpx?=
- =?utf-8?Q?i7X4pteW5PcpkZTsVftwxAJsW?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19be623a-0ad6-439c-2852-08ddad9db0e5
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 12:51:34.8919
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 98dgQt/jOv5nZTgOKmy8lwTo4HwmXrkm3qKDehV97fO9Pg8sm6dCUiKkNpBnAf3g
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7884
+Content-Transfer-Encoding: 8bit
 
-On 6/17/25 14:49, André Almeida wrote:
-> Allow NULL pointers at amdgpu_vm_put_task_info() as it common practice
-> for "put" or "free" functions. This avoid an extra check for NULL for
-> callers.
-> 
-> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+Increase the size of firmware_tag arrays in the following structs from
+GB_FIRMWARE_U_TAG_MAX_SIZE to GB_FIRMWARE_U_TAG_MAX_SIZE + 1 to
+accommodate null termination:
+	- fw_mgmt_ioc_intf_load_and_validate
+	- fw_mgmt_ioc_get_backend_version
+	- fw_mgmt_ioc_backend_fw_update
+	- fw_mgmt_ioc_get_intf_version
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
+Replace strncpy() with strscpy() to ensure proper null termination as
+firmware_tag is interpreted as a null-terminated string
+and printed with %s.
 
-> ---
-> v9: use if (task) instead of if (ZERO_OR_NULL_PTR(task))
-> v8: New patch
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> index 3911c78f8282..de914a39e3f6 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_vm.c
-> @@ -2447,7 +2447,8 @@ amdgpu_vm_get_vm_from_pasid(struct amdgpu_device *adev, u32 pasid)
->   */
->  void amdgpu_vm_put_task_info(struct amdgpu_task_info *task_info)
->  {
-> -	kref_put(&task_info->refcount, amdgpu_vm_destroy_task_info);
-> +	if (task_info)
-> +		kref_put(&task_info->refcount, amdgpu_vm_destroy_task_info);
->  }
->  
->  /**
+Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+---
+ .../greybus/Documentation/firmware/firmware.c        | 12 ++++++------
+ drivers/staging/greybus/greybus_firmware.h           |  8 ++++----
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/staging/greybus/Documentation/firmware/firmware.c b/drivers/staging/greybus/Documentation/firmware/firmware.c
+index 765d69faa9cc..3b4061f4b34a 100644
+--- a/drivers/staging/greybus/Documentation/firmware/firmware.c
++++ b/drivers/staging/greybus/Documentation/firmware/firmware.c
+@@ -63,8 +63,8 @@ static int update_intf_firmware(int fd)
+ 	intf_load.major = 0;
+ 	intf_load.minor = 0;
+ 
+-	strncpy((char *)&intf_load.firmware_tag, firmware_tag,
+-		GB_FIRMWARE_U_TAG_MAX_SIZE);
++	strscpy((char *)&intf_load.firmware_tag, firmware_tag,
++		GB_FIRMWARE_U_TAG_MAX_SIZE + 1);
+ 
+ 	ret = ioctl(fd, FW_MGMT_IOC_INTF_LOAD_AND_VALIDATE, &intf_load);
+ 	if (ret < 0) {
+@@ -101,8 +101,8 @@ static int update_backend_firmware(int fd)
+ 	/* Get Backend Firmware Version */
+ 	printf("Getting Backend Firmware Version\n");
+ 
+-	strncpy((char *)&backend_fw_info.firmware_tag, firmware_tag,
+-		GB_FIRMWARE_U_TAG_MAX_SIZE);
++	strscpy((char *)&backend_fw_info.firmware_tag, firmware_tag,
++		GB_FIRMWARE_U_TAG_MAX_SIZE + 1);
+ 
+ retry_fw_version:
+ 	ret = ioctl(fd, FW_MGMT_IOC_GET_BACKEND_FW, &backend_fw_info);
+@@ -129,8 +129,8 @@ static int update_backend_firmware(int fd)
+ 	/* Try Backend Firmware Update over Unipro */
+ 	printf("Updating Backend Firmware\n");
+ 
+-	strncpy((char *)&backend_update.firmware_tag, firmware_tag,
+-		GB_FIRMWARE_U_TAG_MAX_SIZE);
++	strscpy((char *)&backend_update.firmware_tag, firmware_tag,
++		GB_FIRMWARE_U_TAG_MAX_SIZE + 1);
+ 
+ retry_fw_update:
+ 	backend_update.status = 0;
+diff --git a/drivers/staging/greybus/greybus_firmware.h b/drivers/staging/greybus/greybus_firmware.h
+index b6042a82ada4..ad5b2c8a6461 100644
+--- a/drivers/staging/greybus/greybus_firmware.h
++++ b/drivers/staging/greybus/greybus_firmware.h
+@@ -38,20 +38,20 @@
+ 
+ /* IOCTL support */
+ struct fw_mgmt_ioc_get_intf_version {
+-	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
++	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
+ 	__u16 major;
+ 	__u16 minor;
+ } __packed;
+ 
+ struct fw_mgmt_ioc_get_backend_version {
+-	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
++	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
+ 	__u16 major;
+ 	__u16 minor;
+ 	__u8 status;
+ } __packed;
+ 
+ struct fw_mgmt_ioc_intf_load_and_validate {
+-	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
++	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
+ 	__u8 load_method;
+ 	__u8 status;
+ 	__u16 major;
+@@ -59,7 +59,7 @@ struct fw_mgmt_ioc_intf_load_and_validate {
+ } __packed;
+ 
+ struct fw_mgmt_ioc_backend_fw_update {
+-	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
++	__u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
+ 	__u8 status;
+ } __packed;
+ 
+-- 
+2.49.0
 
