@@ -1,94 +1,89 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974E8293C63
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12120295DA5;
+	Tue, 17 Jun 2025 10:36:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750156578; cv=none; b=dl/1JT6UKnIsXU3d7bz5eYbWw/r0Ql+jGt1LnZLKD6fFXYDCFzkQVmbaODzBQQyFC+YLNNlDp3X5w5wlOJZY2Iv0XgESpJGVrjC5JTlZyBlDLP2apK8nEwjwrS5NkKFfEKEWlMqV2kuq9DAP/d2AUv1mo0sZ6AF3NcrqrzIl7GY=
+	t=1750156599; cv=none; b=Sl+XYPpXrZEYOgj4wyWVQK31eqS/K8I0l3gArYeGzdkPrDndXomp68RfXspM8TYEPLUEmp5WYqvVu1TqHrxR71zbTK8Igelv4FcmXQOOlLEmjV9jTdSKgjmYPMZP8BLio4CmV1hcrmzqz50O0eJTz6U8DHjvYsVE2ixaMhnOQSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750156578; c=relaxed/simple;
-	bh=FliwTJtvVKtpFJoL19ZDyrHjDwdBZkgsGFSnrPqHsgQ=;
+	s=arc-20240116; t=1750156599; c=relaxed/simple;
+	bh=Mt4oHekiA92rE/VwZpu/nA4D4ECjqqc2xguHzhD9/qU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rUHojnB7+IBJEkcO3DHL526la0kBjMLpYefjKfTALQjqBTTwW4pflQpqjVffgk2n5ulCRX6mkN8fyRzv4Y6GVQfZNHjaI5wr75/7zS8GBZT/R8G/wUkObrCDEvpalikjkySjlevRat8HT4MXs6COM1wxGE6Lt0BKEiXqTX+Ce9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=MI9emjxK; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jCSgMYMDSNJD/26lSyp9H2dhA8xi9giFDwCFhqBRUuISzna3QGve7k3uxmmDOSTkco3xqJL7UxmrhygPLoHtxXNE6j5KzCm1r5zz0kIOXglSSwi2uoeWOLNCyjDY2KuXKGIEZexs2LBt8t1GZTHNj48tg6AVuvKYC8kKIoNMZGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j6UCKw5+; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="MI9emjxK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=WR+y
-	GA3QOuuCLXDTtWxRTnyvke0vfwA5ofKcR4PEDyQ=; b=MI9emjxK4t5EXmAfEu+y
-	BEtHy3+eVwqUzFX+tmjVHAdAGt8D9yr1ynJlj9nQ1jX5txgm/qixvS10N+wV0TmM
-	pZPne0JY7ftwQEJ8qEanaVswbsoGw2q7K+jsu8UN9b8hwYJcNW0oJwVxCnyppSDO
-	ERAWxKPT3bASG8FnE9LTFxBvaREajUw1C4xInJP0r865c/ytR/nby8Wbp7N2QBzx
-	cYOGm07jS9EPQTkfr1s2gtHb9G+Yr1TiCZvfG1PjAJ4mJacrc/hud6XapLZwSqi6
-	UZIgfu0/Ofea9xd11lAY1VOV9KejMtrBFgUC6LEVT3Dht/9x4lpTzhve1youexlD
-	qA==
-Received: (qmail 1615502 invoked from network); 17 Jun 2025 12:36:13 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 17 Jun 2025 12:36:13 +0200
-X-UD-Smtp-Session: l3s3148p1@8s/WFMI3oq4gAwDPXy2/ACpZfVCNKldR
-Date: Tue, 17 Jun 2025 12:36:12 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>,
-	linux-i2c <linux-i2c@vger.kernel.org>
-Subject: Re: [GIT PULL] i2c-host-fixes for v6.16-rc2
-Message-ID: <aFFFHIlDqvbAJKFq@shikoro>
-References: <sihm5iy2rnldcrk3zyh73kp55r7zywvraycgijtihh27yu5uny@zaj4w54t5ywc>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j6UCKw5+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=coH03vPFT2rsdcf33PRUsXpuL1g7ZkrTHF5F6QDpPTw=; b=j6UCKw5+yqg03P3VhjtZ9xHG8P
+	e4cSe5GL2d0JRvRqNrvswgi6bodPQzOEVUO5+zrI4dSd94fYfRq81jJ68n3ymYKF3kgnqk1w7PlQD
+	2rs0P1TaU43pNhvwf8LQj0XqJwyn/ztplssurZC7V2hUpBegF42QbnoqQ4qKCFRDc8vBV5jpcsLKm
+	fYB9/KUDmQJpBm1HuRUzFUIWtp1HTUjk6gitVpAulJxDtYup8LIzJTEbrlS/wy1njjaew/4jiN6sq
+	Pj03UWhF7nhi3p0cn7WieeXViPmoo4yWwK3V+nl+/JQqU9jQcTOADPV3/FKrc6GyLg8jeH2AB7Rkt
+	svxY6k8w==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRTfv-0000000H0cK-2kRJ;
+	Tue, 17 Jun 2025 10:36:19 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 02E7A30BDAD; Tue, 17 Jun 2025 12:36:19 +0200 (CEST)
+Date: Tue, 17 Jun 2025 12:36:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Koichi Okuno <fj2767dz@fujitsu.com>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Andersson <quic_bjorande@quicinc.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	=?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] perf: Fujitsu: Add the Uncore PCI PMU driver
+Message-ID: <20250617103618.GT1613376@noisy.programming.kicks-ass.net>
+References: <20250617102819.3685543-1-fj2767dz@fujitsu.com>
+ <20250617102819.3685543-3-fj2767dz@fujitsu.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nzUylVGjxIl1ks7N"
-Content-Disposition: inline
-In-Reply-To: <sihm5iy2rnldcrk3zyh73kp55r7zywvraycgijtihh27yu5uny@zaj4w54t5ywc>
-
-
---nzUylVGjxIl1ks7N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250617102819.3685543-3-fj2767dz@fujitsu.com>
 
-Hi Andi,
+On Tue, Jun 17, 2025 at 07:27:50PM +0900, Koichi Okuno wrote:
+> +	pcipmu->pmu = (struct pmu) {
+> +		.parent		= dev,
+> +		.task_ctx_nr	= perf_invalid_context,
+> +
+> +		.pmu_enable	= fujitsu_pci__pmu_enable,
+> +		.pmu_disable	= fujitsu_pci__pmu_disable,
+> +		.event_init	= fujitsu_pci__event_init,
+> +		.add		= fujitsu_pci__event_add,
+> +		.del		= fujitsu_pci__event_del,
+> +		.start		= fujitsu_pci__event_start,
+> +		.stop		= fujitsu_pci__event_stop,
+> +		.read		= fujitsu_pci__event_read,
+> +
+> +		.attr_groups	= fujitsu_pci_pmu_attr_grps,
+> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
 
-> I'm just back from a short break (from the mailing lists).
-> This week there's a fix for a previous binding conversion to
-> yaml.
+Should these drivers not also have PERF_PMU_CAP_NO_INTERRUPT ? Per them
+being uncore they cannot generate samples.
 
-Thanks, pulled!
-
-I was swamped by other things last week, so I'll send this for rc3
-instead. Should still be fine. I will also push my naming conversion
-patch then. I assume you would have protested by now if you don't want
-me to push it further ;)
-
-All the best and happy hacking,
-
-   Wolfram
+> +	};
 
 
---nzUylVGjxIl1ks7N
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmhRRRkACgkQFA3kzBSg
-KbZ6kA//VOI24df63N6N4Kfd7HrNRHEHL+k6PMRZkRrnUJ5pN74NR+1l87fgIW6W
-Rj+efML9eoXE5iLOg69G6bS6Q3a39ebeUAmoZUhqZtEyzy2wTpXVjiIGmOZi/JF7
-fctQVl2CqxlTNWAMmoFmqAOCf0Wa+aFWWwKR2CLhbXB7nlQOaNxoNJ/GuD6WzK7h
-RrssMV84wNcHJhj5g9SXaAVdQDssykEnseObhSaDRkslhRIrYmYZ9V1E9I+Eiblj
-4pTU1dicUpiZuKgho4f+iSmLEIoeCAFzXI8CPCE3seqVIWk+nF/Xy9U0V+i5WVfR
-RP1KXgCDIWJFG/mZOoFKnDnEFSgyXG2m4DGj8nvcdGofe+D1CwOjD8oDXXYp4ReU
-uBKoi62fuSv7JqNKeBsd62f+DFmOU/iKqJoCx508V0PWP+cWLkLXzWsShezhxFtP
-nStbuoo+kUnS2zsRwl69eVJHeN4Ea1ibtU5XbIBLSLteNK1WGgbHVxlCGRHwKZsQ
-P5nqRXlIkaaKNiym51JYnUZCGXIBtLUt3j4mgO1nCZON+pf+nnsT4cTMDjjvReP/
-jz2rIJpontO5jXrofWmoIgJdeix5p2sQZP8+JhjCekLtHC6RF8uDkV5tr35n6lAX
-0//5GkRDRv745KFcKPSlPJCsEHc4ai91A7DTSOb4I85PzKmkVac=
-=VUYO
------END PGP SIGNATURE-----
-
---nzUylVGjxIl1ks7N--
