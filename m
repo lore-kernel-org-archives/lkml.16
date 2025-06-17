@@ -1,74 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8072F28FA9E;
-	Tue, 17 Jun 2025 08:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663208460
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147707; cv=none; b=duTwxAMSaW400TuxVmzgqBfkcfCZdg2UQeo8tS9SSypEIHoobM75ePMZUivRIMTR4Z83jxOY3X54PQNo5J2gzp+brp94ZF0sEhYfSkaJhFd3fCojr0W0WQtQhYsR0aS+u9fMccf84muGzRWqi8gNUCwzRIp06r6Rb+kQaFkgEdU=
+	t=1750147747; cv=none; b=tyaQGOVGwF7EHCEhapS7owgWQvIarylT7Q3N1Gqsh+3PgH0/gnX6HnSo6DoziwIlmp9tQ2gUY8Ca/Ofp+/1BtcvIiegReSCYK66VsJjpxd4zOGIlX1EGYsYqPvbahZyg9Fofh3VqKw1Ds5DAWlzD7QgoanoWzCUfUHHXSgElIpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147707; c=relaxed/simple;
-	bh=VRMaUDETe6ZIVApAGqRg9acRfkODjIcR6Fz/uyGEimk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TCWrqqBB5KxTFfZQnLI+Q+2aZMlfbezALVBiCnDubU+4k6pY3I2ZGaORiaGlCsxxElj3OfSTONLmcCfMJ3HJ4+PQba94Oz64S9YPEG8P5/CH4A+0bEONvsstc60XsQlyGPXTk77g/PduzyAC513mof/uWXGm/YdeZthHy8PSa3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bp9CshIc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bp9CshIc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 612F6C4CEE3;
-	Tue, 17 Jun 2025 08:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750147707;
-	bh=VRMaUDETe6ZIVApAGqRg9acRfkODjIcR6Fz/uyGEimk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=bp9CshIc9H7RhpRBRZBtyIrCqCEoI8B+ZXV6e5PRj70ZxN5d1nI8JAum4ljdDiFcT
-	 256mr1K86U/XE6GXOEz/t88tnho7YL0UKNtUGnYHS0y2e2Sjw/E87yRRWdeYPaH+4x
-	 wGP64iuqCL5bmsNKTvH5XX/ZMWHmqrdRSdr4IuLGI8YQjwwCSAMZb4l5tBhl+nxg2c
-	 o0XhsdTN8D12iMtxyrd+yLhdw+u9H4pb1eCFGx53Ie5CrVhiNH+Q2u8HagcA36C1li
-	 TG7g8S4mznllqjTkj8u69S3c6BUDQfg7NcA8QJExu3aSRUguODSoaFA1FHrrVHTPiG
-	 n1G30HCMuY5SA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Johannes Thumshirn" <Johannes.Thumshirn@wdc.com>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>,  "Miguel Ojeda" <ojeda@kernel.org>,
-  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Gary Guo" <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>,  "Benno
- Lossin"
- <lossin@kernel.org>,  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross"
- <tmgross@umich.edu>,  "Danilo Krummrich" <dakr@kernel.org>,  "Jens Axboe"
- <axboe@kernel.dk>,  "linux-block@vger.kernel.org"
- <linux-block@vger.kernel.org>,  "rust-for-linux@vger.kernel.org"
- <rust-for-linux@vger.kernel.org>,  "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 9/9] rnull: add soft-irq completion support
-In-Reply-To: <2399a39e-a4e5-4f19-a5c7-2582b584e9d7@wdc.com> (Johannes
-	Thumshirn's message of "Mon, 16 Jun 2025 13:56:16 +0000")
-References: <20250616-rnull-up-v6-16-v1-0-a4168b8e76b2@kernel.org>
-	<20250616-rnull-up-v6-16-v1-9-a4168b8e76b2@kernel.org>
-	<5Mb2NxReiXPkSFjrUdLfq-5bzuvoWJyGLqgZlnc05SLScI4ezIlnWZ--jl6zZeCBNEG4KkuUQxDp2qt8GiwTsw==@protonmail.internalid>
-	<2399a39e-a4e5-4f19-a5c7-2582b584e9d7@wdc.com>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Tue, 17 Jun 2025 10:08:17 +0200
-Message-ID: <87bjqmbxji.fsf@kernel.org>
+	s=arc-20240116; t=1750147747; c=relaxed/simple;
+	bh=H/52YTvujAF9qhviVY4o69BYKqm7KCOTQFPnfOaiHt0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RclFCdk1dtnFCN94FlYTkOzRo+quZ2B0A1rvHfgn0e3jFxHs5TwmdIVvaFQQ+9L+3YPNqb+sTCcyFW3JrOnJyC1Txxv2q+NMqY27/lgmpYfRehv8VnywURlhOrN7QhsUYnBhqw87o9DeQQ+VAiUYPfh/AcPsn/mFBaXe/o1u6Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddc65f95b8so116261275ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:09:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750147744; x=1750752544;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=harcUdMCnYS6rwoDnFxQ0g79WZ8KXCvFNZZZWOLaejs=;
+        b=JXRXzkZXisLO0O0bfIL0bcCWaxq00TG1w9dpXjoHybSr6kXhk+pPTTP5Q+j1pvTz8A
+         CjlK8UjFtY35Ehp9xxizCAZ4205/RgUKXNwCrtaDwBDvD0dqUtYBml3Zut5G6hdUmytb
+         4R+pzNaFildiFPpq6jKqm72EMmmSGKFMI0fYGh4VrhrFcxrXY0c9JFuS267v48V+3RgK
+         nbqdrwDO99fD0XCvxOpxf0katUByy5/NUiCBGpicHMUKRB+ZAt6YZCqejs71YgJB6crg
+         OdM2bBKxv9qK/GEybEsRLU0L0m9crXw/oDiAZmM4hpGafsIx7l5RtSiHyz5CtJ2fTZbW
+         tEKw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9pF+1Mqpxm/UDqQXixF0AwmQtXiUCCz5JXFNLwDcehulmRS9yrQIa06aFDW+zoVWf5ecOg4iG5ueo2d4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyr8E6bJm5/PgVkXSr7y3goG4wpeLCL1tMJ5tcECdM4kIGvwFBl
+	WJWoO2EYNI6SJWLc/hS34DA6xhy7nZVwSQ6JZ9ErZR3rQXbB7Mw7LmVbwKXM2bg3RoLRl5ODVq9
+	nsAMVmS5ta6Aj+a2pwUztgLaBHzWP7aadFeZqOhvJ23K+tnvBFZLVdPBUhX0=
+X-Google-Smtp-Source: AGHT+IHEZAWIDDQHGmsmQLU5xrO09nysXPQBqd8PtglshhoEB/nUm7ccAFud5cuxPGTUiOVDu4PDF3ap4Yo+atSjDpFMGe7CelK/
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-Received: by 2002:a05:6e02:1445:b0:3dc:87c7:a5b5 with SMTP id
+ e9e14a558f8ab-3de07c2710fmr144218225ab.3.1750147744469; Tue, 17 Jun 2025
+ 01:09:04 -0700 (PDT)
+Date: Tue, 17 Jun 2025 01:09:04 -0700
+In-Reply-To: <tencent_78F762B76A86D9D36003690962E3BE844205@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685122a0.050a0220.2608ac.0011.GAE@google.com>
+Subject: Re: [syzbot] [wireless?] UBSAN: array-index-out-of-bounds in ieee80211_rx_mgmt_beacon
+From: syzbot <syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-"Johannes Thumshirn" <Johannes.Thumshirn@wdc.com> writes:
+Hello,
 
-> On 16.06.25 15:28, Andreas Hindborg wrote:
->> rnull currently only supports direct completion. Add option for completing
->> requests across CPU nodes via soft IRQ or IPMI.
->
-> No idea about the Rust stuff but I think you ment IPI not IPMI.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-Absolutely, thanks! Sneaky little M got in there.
+Reported-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+Tested-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
 
+Tested on:
 
-Best regards,
-Andreas Hindborg
+commit:         9afe6529 Merge tag 'x86_urgent_for_6.16-rc3' of git://..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a19e82580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+dashboard link: https://syzkaller.appspot.com/bug?extid=6554b492c7008bcd3385
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=17b94370580000
 
-
-
+Note: testing is done by a robot and is best-effort only.
