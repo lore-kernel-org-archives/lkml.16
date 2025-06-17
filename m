@@ -1,120 +1,366 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED902FA62D;
-	Tue, 17 Jun 2025 16:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C6BF2FA658;
+	Tue, 17 Jun 2025 16:41:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750178488; cv=none; b=jd13RzbDVJena9Sjqa6RMkYuELX+KT7quK/3s9N10JONTxeAAG1xVEav79Zcnkp7sZ6+GSzE5xzGo+hzFTsmhc9VXQSYvj/rvSueweOT8Q2aIAkz1bub6ESVT3bLJQ8ysBMLCAq2jkxpY1Lwl6pZpT4rPdgn5wAi4kTqd4Um7Kw=
+	t=1750178498; cv=none; b=OZ+g3zDRtAFPll1rax1DYAihoPxdWJAOmVLEK4yG4M/2Ufezs53kDv6/x0Ifcj/x7GAUVQvtUyJyMmb/IP+MQOpWFEgpAm+oN61MjayKGL6ihBnse5j2C1nmsWd8InWOoUH8hLOtk68RXeoCed271VANKWbc9zdfuinXlVLrkgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750178488; c=relaxed/simple;
-	bh=rdxjPTpTsVt/SnRY7PKjl1A9WOWE6Jp00hg/fNkh9po=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KHsaKIIObXnXtGiYyUlso/QKn9WsDxPeCohsJFToM3mOcvByIsN726TrSpinY4LI/SUx/5rPrs+SpSdk3CFrw9Ul1gm0C1IxYHiskUeZPscEnvO05vyokSUIEmGQl+1uBhRSVs7X0gM6ONmfARnegWHbKms1C/13lFleLP0EZiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R25Xp4nc; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750178498; c=relaxed/simple;
+	bh=wnUcnUrHCtNAofhwaWj0RqNYScisFk9XZXennVYc114=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ODs6CGdAGqW65DyDH2OJuu/AMYUFPEmiIjRhFkfeGyCqTpuHBONdPnjqOPDPwL2tj91flhCeNv7M41faMegYRzOg7P1IYg+iUZ2E87mEI6HSOe5lnVGyonb46s9DDe4E1Av+PRi8+nA1W98FR3uzhkJFoRhhsR5auO3f/rQJzbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1AE5qfyV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R25Xp4nc"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so10573055e9.1;
-        Tue, 17 Jun 2025 09:41:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750178485; x=1750783285; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=21G7K3oa7nNa6fSkku+S/f2TFwa2VN9LqV0I5kPoxQ0=;
-        b=R25Xp4nc0eJKwbv6cmE+W2UZUiAukiMzseD8g1FgBE/WcdUZniks8Twbp8IuPKsvDb
-         on6xcUvCwOSfRz8bZJYFYGpXF3i6/kcBZKSaOXjbDFaRQ8mZG9FAoREsIjFDFVrNrkph
-         PaVhqr3Ip6UJAbYMy4UL7eQ03lKDWNa1lfh1YcjnNTgi4esl+6Dg2L8v/cHCFJRa4xqr
-         V/J9mDkmT1z5IP+IhrqTCgxC2CtPWFZaoP0d3Paaz4lL5A+yo8/aYe8RQUJtKmPctMqJ
-         JkmZVI0G7qWuDPk8B7imTwBQZF25y5nFnKP4lopvGEW1tXfm0L1sE6eygRpcO6ZKYmrU
-         NgcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750178485; x=1750783285;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=21G7K3oa7nNa6fSkku+S/f2TFwa2VN9LqV0I5kPoxQ0=;
-        b=OVccAgdn5ZGRBPij7tjjACG/+DTfj7g0waaIjWvWqGVIdUiWssXpQYql7WBxyI8iUN
-         sqEL6Rd7F/jF9xm3o5T+vqWF40PljE0dRKT4/p2zHRBGnH2QKUdty+eVFOUMJkp7w8sU
-         q+fLU41aAK41tBo9uIJfm1U8Jcra6MeBxdyXEayIFAjI0VfD2SmBi/tVdk/huaL6ytMN
-         bd9+7Ss+HOew0+fBzvVEj9/UWkbnLbikAUyY6Tgt6Cs74ghSYXxdJNVcaWd7o/6gvJxe
-         Jn60TD5Xyr7JXFdDNMEvZGbPA1QP8nhgGnPVaLNt4XhujKXkIsnMJldxQ8KTUVNMXl+o
-         YLww==
-X-Forwarded-Encrypted: i=1; AJvYcCVVlS3nUbA9tKNRfQ299GptYLw5eY0FN4dvinAZCFSSeCFmfKHctBFI+x5MGrxhiehElrbStsEG/rR2UGMesYs=@vger.kernel.org, AJvYcCWF/s+AAJmmK327BUj1vchVuZXTz3lywfPp2xxD5k3ktrKrYpj6xQMKFmMpZ7fb6hdZnyVgy3INqfia28Gg@vger.kernel.org, AJvYcCXUr+1mkJQGzRgkr6Wbh1BpeFYlpH05DI8+nBWZp4lcnfjpnRzRKgZc4wpjKMuQRJrkh5pX4P5V2ylp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEeV/xzHwmjMQ5s18CzTniW3B1iXl/bQE4KVATH4W6fE+/DvTF
-	cNm7Krtsjuv3oO7xgq1IQUn/Q6GX11elqILxnpRrHGjMyLT5aa7bzaBu
-X-Gm-Gg: ASbGncucLcL9Z04X7J+syVnrkqCLPAaIAuWy7BSeIDoZUTJkDvkbviHyVxm6YSluAQQ
-	6222mzim6ksHTeFnLFIfXY7bVrOd2NipRfLnxcP8t9nFyMCdJTdKpu9bHFP2zH/g3G4KsMZ+Pcm
-	7ENoeVtTawJw0AJGsohDPA/9gAP93bg0D6dldg24pWvwqiV1XgW7xkGNJLNxdEkQcd2VpxHvK07
-	IJ6DRSyo7VIbw5aDyUnq+t6eXMZx+HTsggDS6tkjIcUhM59KWa3x0i75E1RRCnFSZiLnrhJA4Gs
-	SZLYJ4YHRQDM6CzJN1FvyVEweARHsJjc3Y7ZzHYxxIYxhUbH09UVOzeOtfratUjEjffV
-X-Google-Smtp-Source: AGHT+IFmZhow4l5H2yFI4b5oAR++LPmg9+bxohsFEM/5hvW+POf0Ml4orx9ZxlbbJYmos+qnKOd3xw==
-X-Received: by 2002:a05:600c:828d:b0:450:cabc:a6c6 with SMTP id 5b1f17b1804b1-4533c971330mr140024935e9.15.1750178484289;
-        Tue, 17 Jun 2025 09:41:24 -0700 (PDT)
-Received: from [10.38.1.85] ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e195768sm182014045e9.0.2025.06.17.09.41.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 09:41:23 -0700 (PDT)
-Message-ID: <f29b4eba-bd79-4f74-940c-8cff65495ae0@gmail.com>
-Date: Tue, 17 Jun 2025 17:39:07 +0100
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1AE5qfyV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CDA0C4CEE3;
+	Tue, 17 Jun 2025 16:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750178498;
+	bh=wnUcnUrHCtNAofhwaWj0RqNYScisFk9XZXennVYc114=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=1AE5qfyVRCsvIjJVfI7gn68292Jn0apzjVGj4y9fN8bHFfavjkPChRabCoXuJA/Su
+	 DDPA320UqaWFeh6JXRezOmWxh+MID2nzeB5+tnmLftZuFpY55/s94l8w9DFB7AnZsb
+	 rpePbx0fmi7cmhDUdwx1wC+pl1XWQGZrnn1vR6zQ=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Ian Rogers <irogers@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Gary Guo <gary@garyguo.net>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Howard Chu <howardchu95@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Stephen Brennan <stephen.s.brennan@oracle.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.15 468/780] perf symbol: Fix use-after-free in filename__read_build_id
+Date: Tue, 17 Jun 2025 17:22:56 +0200
+Message-ID: <20250617152510.547482531@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+References: <20250617152451.485330293@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 6/6] samples: rust: add ACPI match table example to
- platform driver
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org,
- gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org,
- boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com,
- tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com,
- viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
-References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
- <20250613135407.1233005-1-igor.korotin.linux@gmail.com>
- <aFB2FZEFcXUsW8lN@pollux>
-Content-Language: en-US
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-In-Reply-To: <aFB2FZEFcXUsW8lN@pollux>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+6.15-stable review patch.  If anyone has any objections, please let me know.
+
+------------------
+
+From: Ian Rogers <irogers@google.com>
+
+[ Upstream commit fef8f648bb47726d96a5701fe31ed606268da73d ]
+
+The same buf is used for the program headers and reading notes. As the
+notes memory may be reallocated then this corrupts the memory pointed
+to by the phdr. Using the same buffer is in any case a logic
+error. Rather than deal with the duplicated code, introduce an elf32
+boolean and a union for either the elf32 or elf64 headers that are in
+use. Let the program headers have their own memory and grow the buffer
+for notes as necessary.
+
+Before `perf list -j` compiled with asan would crash with:
+```
+==4176189==ERROR: AddressSanitizer: heap-use-after-free on address 0x5160000070b8 at pc 0x555d3b15075b bp 0x7ffebb5a8090 sp 0x7ffebb5a8088
+READ of size 8 at 0x5160000070b8 thread T0
+    #0 0x555d3b15075a in filename__read_build_id tools/perf/util/symbol-minimal.c:212:25
+    #1 0x555d3ae43aff in filename__sprintf_build_id tools/perf/util/build-id.c:110:8
+...
+
+0x5160000070b8 is located 312 bytes inside of 560-byte region [0x516000006f80,0x5160000071b0)
+freed by thread T0 here:
+    #0 0x555d3ab21840 in realloc (perf+0x264840) (BuildId: 12dff2f6629f738e5012abdf0e90055518e70b5e)
+    #1 0x555d3b1506e7 in filename__read_build_id tools/perf/util/symbol-minimal.c:206:11
+...
+
+previously allocated by thread T0 here:
+    #0 0x555d3ab21423 in malloc (perf+0x264423) (BuildId: 12dff2f6629f738e5012abdf0e90055518e70b5e)
+    #1 0x555d3b1503a2 in filename__read_build_id tools/perf/util/symbol-minimal.c:182:9
+...
+```
+
+Note: this bug is long standing and not introduced by the other asan
+fix in commit fa9c4977fbfb ("perf symbol-minimal: Fix double free in
+filename__read_build_id").
+
+Fixes: b691f64360ecec49 ("perf symbols: Implement poor man's ELF parser")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Link: https://lore.kernel.org/r/20250528032637.198960-2-irogers@google.com
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Gary Guo <gary@garyguo.net>
+Cc: Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: Howard Chu <howardchu95@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Weilin Wang <weilin.wang@intel.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
+Cc: Benno Lossin <benno.lossin@proton.me>
+Cc: Björn Roy Baron <bjorn3_gh@protonmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Trevor Gross <tmgross@umich.edu>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/perf/util/symbol-minimal.c | 168 +++++++++++++------------------
+ 1 file changed, 70 insertions(+), 98 deletions(-)
+
+diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
+index d8da3da01fe6b..36c1d3090689f 100644
+--- a/tools/perf/util/symbol-minimal.c
++++ b/tools/perf/util/symbol-minimal.c
+@@ -90,11 +90,23 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+ {
+ 	FILE *fp;
+ 	int ret = -1;
+-	bool need_swap = false;
++	bool need_swap = false, elf32;
+ 	u8 e_ident[EI_NIDENT];
+-	size_t buf_size;
+-	void *buf;
+ 	int i;
++	union {
++		struct {
++			Elf32_Ehdr ehdr32;
++			Elf32_Phdr *phdr32;
++		};
++		struct {
++			Elf64_Ehdr ehdr64;
++			Elf64_Phdr *phdr64;
++		};
++	} hdrs;
++	void *phdr;
++	size_t phdr_size;
++	void *buf = NULL;
++	size_t buf_size = 0;
+ 
+ 	fp = fopen(filename, "r");
+ 	if (fp == NULL)
+@@ -108,119 +120,79 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
+ 		goto out;
+ 
+ 	need_swap = check_need_swap(e_ident[EI_DATA]);
++	elf32 = e_ident[EI_CLASS] == ELFCLASS32;
+ 
+-	/* for simplicity */
+-	fseek(fp, 0, SEEK_SET);
+-
+-	if (e_ident[EI_CLASS] == ELFCLASS32) {
+-		Elf32_Ehdr ehdr;
+-		Elf32_Phdr *phdr;
+-
+-		if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1)
+-			goto out;
++	if (fread(elf32 ? (void *)&hdrs.ehdr32 : (void *)&hdrs.ehdr64,
++		  elf32 ? sizeof(hdrs.ehdr32) : sizeof(hdrs.ehdr64),
++		  1, fp) != 1)
++		goto out;
+ 
+-		if (need_swap) {
+-			ehdr.e_phoff = bswap_32(ehdr.e_phoff);
+-			ehdr.e_phentsize = bswap_16(ehdr.e_phentsize);
+-			ehdr.e_phnum = bswap_16(ehdr.e_phnum);
++	if (need_swap) {
++		if (elf32) {
++			hdrs.ehdr32.e_phoff = bswap_32(hdrs.ehdr32.e_phoff);
++			hdrs.ehdr32.e_phentsize = bswap_16(hdrs.ehdr32.e_phentsize);
++			hdrs.ehdr32.e_phnum = bswap_16(hdrs.ehdr32.e_phnum);
++		} else {
++			hdrs.ehdr64.e_phoff = bswap_64(hdrs.ehdr64.e_phoff);
++			hdrs.ehdr64.e_phentsize = bswap_16(hdrs.ehdr64.e_phentsize);
++			hdrs.ehdr64.e_phnum = bswap_16(hdrs.ehdr64.e_phnum);
+ 		}
++	}
++	phdr_size = elf32 ? hdrs.ehdr32.e_phentsize * hdrs.ehdr32.e_phnum
++			  : hdrs.ehdr64.e_phentsize * hdrs.ehdr64.e_phnum;
++	phdr = malloc(phdr_size);
++	if (phdr == NULL)
++		goto out;
+ 
+-		buf_size = ehdr.e_phentsize * ehdr.e_phnum;
+-		buf = malloc(buf_size);
+-		if (buf == NULL)
+-			goto out;
+-
+-		fseek(fp, ehdr.e_phoff, SEEK_SET);
+-		if (fread(buf, buf_size, 1, fp) != 1)
+-			goto out_free;
+-
+-		for (i = 0, phdr = buf; i < ehdr.e_phnum; i++, phdr++) {
+-			void *tmp;
+-			long offset;
+-
+-			if (need_swap) {
+-				phdr->p_type = bswap_32(phdr->p_type);
+-				phdr->p_offset = bswap_32(phdr->p_offset);
+-				phdr->p_filesz = bswap_32(phdr->p_filesz);
+-			}
+-
+-			if (phdr->p_type != PT_NOTE)
+-				continue;
+-
+-			offset = phdr->p_offset;
+-			if (phdr->p_filesz > buf_size) {
+-				buf_size = phdr->p_filesz;
+-				tmp = realloc(buf, buf_size);
+-				if (tmp == NULL)
+-					goto out_free;
+-				buf = tmp;
+-			}
+-			fseek(fp, offset, SEEK_SET);
+-			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
+-				goto out_free;
++	fseek(fp, elf32 ? hdrs.ehdr32.e_phoff : hdrs.ehdr64.e_phoff, SEEK_SET);
++	if (fread(phdr, phdr_size, 1, fp) != 1)
++		goto out_free;
+ 
+-			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
+-			if (ret == 0) {
+-				ret = bid->size;
+-				break;
+-			}
+-		}
+-	} else {
+-		Elf64_Ehdr ehdr;
+-		Elf64_Phdr *phdr;
++	if (elf32)
++		hdrs.phdr32 = phdr;
++	else
++		hdrs.phdr64 = phdr;
+ 
+-		if (fread(&ehdr, sizeof(ehdr), 1, fp) != 1)
+-			goto out;
++	for (i = 0; i < elf32 ? hdrs.ehdr32.e_phnum : hdrs.ehdr64.e_phnum; i++) {
++		size_t p_filesz;
+ 
+ 		if (need_swap) {
+-			ehdr.e_phoff = bswap_64(ehdr.e_phoff);
+-			ehdr.e_phentsize = bswap_16(ehdr.e_phentsize);
+-			ehdr.e_phnum = bswap_16(ehdr.e_phnum);
++			if (elf32) {
++				hdrs.phdr32[i].p_type = bswap_32(hdrs.phdr32[i].p_type);
++				hdrs.phdr32[i].p_offset = bswap_32(hdrs.phdr32[i].p_offset);
++				hdrs.phdr32[i].p_filesz = bswap_32(hdrs.phdr32[i].p_offset);
++			} else {
++				hdrs.phdr64[i].p_type = bswap_32(hdrs.phdr64[i].p_type);
++				hdrs.phdr64[i].p_offset = bswap_64(hdrs.phdr64[i].p_offset);
++				hdrs.phdr64[i].p_filesz = bswap_64(hdrs.phdr64[i].p_filesz);
++			}
+ 		}
++		if ((elf32 ? hdrs.phdr32[i].p_type : hdrs.phdr64[i].p_type) != PT_NOTE)
++			continue;
+ 
+-		buf_size = ehdr.e_phentsize * ehdr.e_phnum;
+-		buf = malloc(buf_size);
+-		if (buf == NULL)
+-			goto out;
+-
+-		fseek(fp, ehdr.e_phoff, SEEK_SET);
+-		if (fread(buf, buf_size, 1, fp) != 1)
+-			goto out_free;
+-
+-		for (i = 0, phdr = buf; i < ehdr.e_phnum; i++, phdr++) {
++		p_filesz = elf32 ? hdrs.phdr32[i].p_filesz : hdrs.phdr64[i].p_filesz;
++		if (p_filesz > buf_size) {
+ 			void *tmp;
+-			long offset;
+-
+-			if (need_swap) {
+-				phdr->p_type = bswap_32(phdr->p_type);
+-				phdr->p_offset = bswap_64(phdr->p_offset);
+-				phdr->p_filesz = bswap_64(phdr->p_filesz);
+-			}
+-
+-			if (phdr->p_type != PT_NOTE)
+-				continue;
+ 
+-			offset = phdr->p_offset;
+-			if (phdr->p_filesz > buf_size) {
+-				buf_size = phdr->p_filesz;
+-				tmp = realloc(buf, buf_size);
+-				if (tmp == NULL)
+-					goto out_free;
+-				buf = tmp;
+-			}
+-			fseek(fp, offset, SEEK_SET);
+-			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
++			buf_size = p_filesz;
++			tmp = realloc(buf, buf_size);
++			if (tmp == NULL)
+ 				goto out_free;
++			buf = tmp;
++		}
++		fseek(fp, elf32 ? hdrs.phdr32[i].p_offset : hdrs.phdr64[i].p_offset, SEEK_SET);
++		if (fread(buf, p_filesz, 1, fp) != 1)
++			goto out_free;
+ 
+-			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
+-			if (ret == 0) {
+-				ret = bid->size;
+-				break;
+-			}
++		ret = read_build_id(buf, p_filesz, bid, need_swap);
++		if (ret == 0) {
++			ret = bid->size;
++			break;
+ 		}
+ 	}
+ out_free:
+ 	free(buf);
++	free(phdr);
+ out:
+ 	fclose(fp);
+ 	return ret;
+-- 
+2.39.5
 
 
-On 6/16/25 20:52, Danilo Krummrich wrote:
->> +kernel::acpi_device_table!(
->> +    ACPI_TABLE,
->> +    MODULE_ACPI_TABLE,
->> +    <SampleDriver as platform::Driver>::IdInfo,
->> +    [(acpi::DeviceId::new(c_str!("TEST4321")), Info(0))]
-> 
-> Let's use something like "SAMPLE_DRV0" instead.
 
-Nope, that's prohibited by ACPI HID naming rules. A brief description
-can be found here:
-https://uefi.org/specs/ACPI/6.5/06_Device_Configuration.html.
-According to section 6.1.5, ACPI IDs must be 7 or 8 characters long and
-follow the format "AAA####" or "AAAA####", where A is an uppercase
-letter [A–Z] and # is an uppercase letter or digit [A–Z, 0–9]. No
-underscores or special characters are allowed.
-
-The `iasl` utility throws an error if an invalid HID string is used in a
-dsl file.
-
-I could suggest on of the following:
-DRV0001
-DRVR0001
-PDRV0001
-TEST0001
-TST0001
-
-Let me know which one you'd prefer for the code and documentation.
-
-Best Regards
-Igor
