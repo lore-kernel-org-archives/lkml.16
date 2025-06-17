@@ -1,183 +1,236 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 441A3238D49;
-	Tue, 17 Jun 2025 17:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014F42ECD23;
+	Tue, 17 Jun 2025 17:40:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750181867; cv=none; b=TJeaGNRZPJkBItw0uU0xPdOVKLs8B3h8SG+HC+1+ZZXGAS42s7XQIUJYOSY72vdQ5S2LunrtYGYCFgU1L1VY1Rke0uHhAjTFTJrv6m2O5ET7SBztWQ9i8UFedmwcs87/FWHOuWb9OkjtI0z6n2/qCEDsZtvEd9fwb2Ilsk1HP1A=
+	t=1750182050; cv=none; b=WKrnIrgeNKosYaz8ejcm0DiOLblTviy5rVC+VmvGVpgvRVOdg0QYHekHakAAueDdRJX5UT2wOm0TnVPy9lQch47G1nXsSk29hb17m1EW7hxkNKaOcGPpbew6+9s0ZChuC4dUbqrMLQNAfrN8U1Kf48BFU5JTeWiHe0X3y6MKXww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750181867; c=relaxed/simple;
-	bh=tPM1ERGTQDQ05aYoKr5NmEZeCXbd0I3kyp9i8yKwlzY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mi9gRLXWetiWN4O1ghWwZ3wI+w2AlKnHOBnJTY0WDJqGCISLewSPo6TqH6W9lOENxrs3U5nU5vwuzXAb/LbX+HncGtuijCEKV+NQDqepPJmh0qvpdfzVF+GBFxW4qAJCsZzwtlI190HsbIGKolZhN6CIXxx9R/oAH3fDJvgETik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVwN0gYT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750182050; c=relaxed/simple;
+	bh=K0vxcsqHQKl0mgOXeJnuKBSYZIgPQRDBokS04NUAV2Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rNtFrEUijLqFOo0obfEgMFqwzof94gerDk46wG/odpjTB9shfhoidSLsff0rrdqYOm3x9eCVrnt/vWZnvM365+E9LGh4lLW07OV/3LW0KxsRYLlwxyW5iMS3RiIWLCHnD8tNagJ6rwbNDAO6vY9Hw5SYadnmLEEIHsRkPMOXg74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=IKCyTGnP; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVwN0gYT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8AEC4CEE3;
-	Tue, 17 Jun 2025 17:37:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750181867;
-	bh=tPM1ERGTQDQ05aYoKr5NmEZeCXbd0I3kyp9i8yKwlzY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=WVwN0gYToBvYkX/rmMNJD8xgfFvc/Q30jaum38YjCkSNZRKxetIDFgIqKTmBOG+C1
-	 jskFy8ZebIdxD2NV2xsOat17ZcOgDG9UIoih9NvtcDUfG191p2Z/7RZSU4Hmdq24zi
-	 VVHCXMshVxgrEbntAZEobvgMJsTpv0rL2IDqLUxj5qh5wz9L4a/oN8WtQ1sRAc4QfP
-	 coc3BjIR8OKZ7SCc2hV6xGwu5tYjbOhxom7SfNMezYKPiv0nJMW5LSzXZera4ERl5R
-	 CKhaZ3+iZM4YRnge4MfV8gU3RHA580xhOz6/twIkbzLRJ3g01KDy0NymvJuZ62RHxB
-	 ic+SbtgXfWy5A==
-From: Song Liu <song@kernel.org>
-To: live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: jpoimboe@kernel.org,
-	jikos@kernel.org,
-	mbenes@suse.cz,
-	pmladek@suse.com,
-	joe.lawrence@redhat.com,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	dylanbhatch@google.com,
-	fj6611ie@aa.jp.fujitsu.com,
-	mark.rutland@arm.com,
-	kernel-team@meta.com,
-	Song Liu <song@kernel.org>,
-	Suraj Jitindar Singh <surajjs@amazon.com>,
-	Torsten Duwe <duwe@suse.de>,
-	Breno Leitao <leitao@debian.org>,
-	Andrea della Porta <andrea.porta@suse.com>
-Subject: [PATCH v4] arm64: Implement HAVE_LIVEPATCH
-Date: Tue, 17 Jun 2025 10:37:34 -0700
-Message-ID: <20250617173734.651611-1-song@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="IKCyTGnP"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HFaTiR013203;
+	Tue, 17 Jun 2025 19:40:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	BCDEKH89I2K3oqjv3tljOt2+d5QzCMjlDICRktrlLTw=; b=IKCyTGnPnox4Lq0F
+	vOPeRvGck68q98cBsI1r908q9qQaq0urFuUVIibrgqbHbAF8QnrTAh1syjaauuJI
+	Z9fbs2dQMkOJe1WcvbSnPzbQmmMNKhCEGWyV2mx7qoqnIN07dFr7JvdJlSbDV9Zq
+	TjRmnsKJc8xXpZRgal2yWz9OHRKVNjr2aYyucZPU7LyStZkEV0PfMCh5kDPsCW0I
+	yH3k3rNOtGLEqnfB17zBUwYSnS54AhP49bBzuyxg5/FObZaIvK7EKxEvvt98FKqA
+	WMGjPD39u4D2/xnXa0995jsQF7bsnjaBK0utur3Zss/fYyrf6wHQTCVLjRigP0C2
+	CqQZdQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4790e27jt9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 19:40:16 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D153640045;
+	Tue, 17 Jun 2025 19:39:10 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C2540B88169;
+	Tue, 17 Jun 2025 19:38:20 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
+ (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 17 Jun
+ 2025 19:38:20 +0200
+Received: from [10.48.86.121] (10.48.86.121) by SAFDAG1NODE1.st.com
+ (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 17 Jun
+ 2025 19:38:19 +0200
+Message-ID: <cda96440-5c53-4b7a-8b51-51506f5e7cc3@foss.st.com>
+Date: Tue, 17 Jun 2025 19:38:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v18 3/6] remoteproc: Introduce release_fw optional
+ operation
+To: Bjorn Andersson <andersson@kernel.org>
+CC: Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Jens Wiklander
+	<jens.wiklander@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>
+References: <20250616075530.4106090-1-arnaud.pouliquen@foss.st.com>
+ <20250616075530.4106090-4-arnaud.pouliquen@foss.st.com>
+ <6ekro2uytz7kguphtub54wivmclpnfkjobduhsom4kvxlmov2l@hgcjoposj3md>
+Content-Language: en-US
+From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
+Organization: STMicroelectronics
+In-Reply-To: <6ekro2uytz7kguphtub54wivmclpnfkjobduhsom4kvxlmov2l@hgcjoposj3md>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_08,2025-06-13_01,2025-03-28_01
 
-This is largely based on [1] by Suraj Jitindar Singh.
+Hello Bjorn,
 
-Test coverage:
+On 6/17/25 06:44, Bjorn Andersson wrote:
+> On Mon, Jun 16, 2025 at 09:55:27AM +0200, Arnaud Pouliquen wrote:
+>> The release_fw operation is the inverse operation of the load, responsible
+>> for releasing the remote processor resources configured from the loading
+>> of the remoteproc firmware (e.g., memories).
+>>
+> 
+> I was under the impression that we agreed that this would unroll
+> rproc_parse_fw() not the "load" in general.
 
-- Passed manual tests with samples/livepatch.
-- Passed all but test-kprobe.sh in selftests/livepatch.
-  test-kprobe.sh is expected to fail, because arm64 doesn't have
-  KPROBES_ON_FTRACE.
-- Passed tests with kpatch-build [2]. (This version includes commits that
-  are not merged to upstream kpatch yet).
+Not Krystal clear to me what you are expecting here.
+Is it just on the description or on the design?
 
-[1] https://lore.kernel.org/all/20210604235930.603-1-surajjs@amazon.com/
-[2] https://github.com/liu-song-6/kpatch/tree/fb-6.13
+Unroll only the rproc_parse_fw is not sufficient. The need here is also
+to go back from a LOAD state of the TEE. So in such case the role of
+release_fw() would be to unroll the load + the parse of the resource.
+Is it your expectation?
 
-Cc: Suraj Jitindar Singh <surajjs@amazon.com>
-Cc: Torsten Duwe <duwe@suse.de>
-Acked-by: Miroslav Benes <mbenes@suse.cz>
-Tested-by: Breno Leitao <leitao@debian.org>
-Tested-by: Andrea della Porta <andrea.porta@suse.com>
-Signed-off-by: Song Liu <song@kernel.org>
+> 
+>> The operation is called in the following cases:
+>>  - An error occurs on boot of the remote processor.
+>>  - An error occurs on recovery start of the remote processor.
+>>  - After stopping the remote processor.
+>>
+>> This operation is needed for the remoteproc_tee implementation after stop
+>> and on error.
+> 
+> And if it's defined to unroll rproc_parse_fw() it can be used for other
+> things where some resources was allocated to set up the resource table.
 
----
+True
 
-Note: This patch depends on [3] and [4].
+> 
+>> Indeed, as the remoteproc image is loaded when we parse the resource
+>> table, there are many situations where something can go wrong before
+>> the start of the remote processor(resource handling, carveout allocation,
+>> ...).
+> 
+> Unbalanced parenthesis? I think you can write this in less
+> conversational style.
+> 
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+>> ---
+>>  drivers/remoteproc/remoteproc_core.c     | 6 ++++++
+>>  drivers/remoteproc/remoteproc_internal.h | 6 ++++++
+>>  include/linux/remoteproc.h               | 3 +++
+>>  3 files changed, 15 insertions(+)
+>>
+>> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+>> index d06eef1fa424..4c1a4bc9e7b7 100644
+>> --- a/drivers/remoteproc/remoteproc_core.c
+>> +++ b/drivers/remoteproc/remoteproc_core.c
+>> @@ -1857,6 +1857,8 @@ static int rproc_boot_recovery(struct rproc *rproc)
+>>  
+>>  	/* boot the remote processor up again */
+>>  	ret = rproc_start(rproc, firmware_p);
+>> +	if (ret)
+>> +		rproc_release_fw(rproc);
+>>  
+>>  	release_firmware(firmware_p);
+>>  
+>> @@ -1998,6 +2000,8 @@ int rproc_boot(struct rproc *rproc)
+>>  		}
+>>  
+>>  		ret = rproc_fw_boot(rproc, firmware_p);
+>> +		if (ret)
+>> +			rproc_release_fw(rproc);
+>>  
+>>  		release_firmware(firmware_p);
+>>  	}
+>> @@ -2067,6 +2071,8 @@ int rproc_shutdown(struct rproc *rproc)
+>>  
+>>  	rproc_disable_iommu(rproc);
+>>  
+>> +	rproc_release_fw(rproc);
+>> +
+>>  	/* Free the copy of the resource table */
+>>  	kfree(rproc->cached_table);
+>>  	rproc->cached_table = NULL;
+> 
+> These are allocated in rproc_parse_fw(), would it not make sense to
+> clean them up in your newly introduced function?
 
-[3] https://lore.kernel.org/linux-arm-kernel/20250521111000.2237470-2-mark.rutland@arm.com/
-[4] https://lore.kernel.org/linux-arm-kernel/20250603223417.3700218-1-dylanbhatch@google.com/
+It seems possible as proposed in v11 3/7[1], but this needs an exception
+for rproc_detach().
+[1]
+https://patchew.org/linux/20241009080108.4170320-1-arnaud.pouliquen@foss.st.com/20241009080108.4170320-4-arnaud.pouliquen@foss.st.com/
 
-Changes v3 => v4:
-1. Only keep 2/2 from v3, as 1/2 is now included in [3].
-2. Change TIF_PATCH_PENDING from 7 to 13.
+> 
+>> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+>> index 0cd09e67ac14..c7fb908f8652 100644
+>> --- a/drivers/remoteproc/remoteproc_internal.h
+>> +++ b/drivers/remoteproc/remoteproc_internal.h
+>> @@ -221,4 +221,10 @@ bool rproc_u64_fit_in_size_t(u64 val)
+>>  	return (val <= (size_t) -1);
+>>  }
+>>  
+>> +static inline void rproc_release_fw(struct rproc *rproc)
+>> +{
+>> +	if (rproc->ops->release_fw)
+>> +		rproc->ops->release_fw(rproc);
+>> +}
+>> +
+>>  #endif /* REMOTEPROC_INTERNAL_H */
+>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>> index 8fd0d7f63c8e..80128461972b 100644
+>> --- a/include/linux/remoteproc.h
+>> +++ b/include/linux/remoteproc.h
+>> @@ -381,6 +381,8 @@ enum rsc_handling_status {
+>>   * @panic:	optional callback to react to system panic, core will delay
+>>   *		panic at least the returned number of milliseconds
+>>   * @coredump:	  collect firmware dump after the subsystem is shutdown
+>> + * @release_fw:	optional function to release the loaded firmware, called after
+>> + *              stopping the remote processor or in case of error
+> 
+> The struct firmware is released at the end of startup and the typical
+> carveout memory where the firmware is loaded into is released at
+> rproc_shutdown().
+> 
+> As such, this won't help anyone understand the purpose of the ops unless
+> they know your system design (and know you added it).
 
-v3: https://lore.kernel.org/linux-arm-kernel/20250320171559.3423224-1-song@kernel.org/
+Could you detail which improvement you are expecting here?
+Name of the ops, associated comment? both?
 
-Changes v2 => v3:
-1. Remove a redundant check for -ENOENT. (Josh Poimboeuf)
-2. Add Tested-by and Acked-by on v1. (I forgot to add them in v2.)
+Thanks,
+Arnaud
 
-v2: https://lore.kernel.org/live-patching/20250319213707.1784775-1-song@kernel.org/
-
-Changes v1 => v2:
-
-1. Rework arch_stack_walk_reliable().
-
-v1: https://lore.kernel.org/live-patching/20250308012742.3208215-1-song@kernel.org/
----
- arch/arm64/Kconfig                   | 3 +++
- arch/arm64/include/asm/thread_info.h | 5 ++++-
- arch/arm64/kernel/entry-common.c     | 4 ++++
- 3 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index b7462424aa59..110218542920 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -280,6 +280,7 @@ config ARM64
- 	select USER_STACKTRACE_SUPPORT
- 	select VDSO_GETRANDOM
- 	select HAVE_RELIABLE_STACKTRACE
-+	select HAVE_LIVEPATCH
- 	help
- 	  ARM 64-bit (AArch64) Linux support.
- 
-@@ -2499,3 +2500,5 @@ endmenu # "CPU Power Management"
- source "drivers/acpi/Kconfig"
- 
- source "arch/arm64/kvm/Kconfig"
-+
-+source "kernel/livepatch/Kconfig"
-diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-index 1269c2487574..f241b8601ebd 100644
---- a/arch/arm64/include/asm/thread_info.h
-+++ b/arch/arm64/include/asm/thread_info.h
-@@ -70,6 +70,7 @@ void arch_setup_new_exec(void);
- #define TIF_SYSCALL_TRACEPOINT	10	/* syscall tracepoint for ftrace */
- #define TIF_SECCOMP		11	/* syscall secure computing */
- #define TIF_SYSCALL_EMU		12	/* syscall emulation active */
-+#define TIF_PATCH_PENDING	13	/* pending live patching update */
- #define TIF_MEMDIE		18	/* is terminating due to OOM killer */
- #define TIF_FREEZE		19
- #define TIF_RESTORE_SIGMASK	20
-@@ -96,6 +97,7 @@ void arch_setup_new_exec(void);
- #define _TIF_SYSCALL_TRACEPOINT	(1 << TIF_SYSCALL_TRACEPOINT)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
- #define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
-+#define _TIF_PATCH_PENDING	(1 << TIF_PATCH_PENDING)
- #define _TIF_UPROBE		(1 << TIF_UPROBE)
- #define _TIF_SINGLESTEP		(1 << TIF_SINGLESTEP)
- #define _TIF_32BIT		(1 << TIF_32BIT)
-@@ -107,7 +109,8 @@ void arch_setup_new_exec(void);
- #define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY | \
- 				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
- 				 _TIF_UPROBE | _TIF_MTE_ASYNC_FAULT | \
--				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING)
-+				 _TIF_NOTIFY_SIGNAL | _TIF_SIGPENDING | \
-+				 _TIF_PATCH_PENDING)
- 
- #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
- 				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
-diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
-index 7c1970b341b8..a56878d7c733 100644
---- a/arch/arm64/kernel/entry-common.c
-+++ b/arch/arm64/kernel/entry-common.c
-@@ -8,6 +8,7 @@
- #include <linux/context_tracking.h>
- #include <linux/kasan.h>
- #include <linux/linkage.h>
-+#include <linux/livepatch.h>
- #include <linux/lockdep.h>
- #include <linux/ptrace.h>
- #include <linux/resume_user_mode.h>
-@@ -144,6 +145,9 @@ static void do_notify_resume(struct pt_regs *regs, unsigned long thread_flags)
- 				       (void __user *)NULL, current);
- 		}
- 
-+		if (thread_flags & _TIF_PATCH_PENDING)
-+			klp_update_patch_state(current);
-+
- 		if (thread_flags & (_TIF_SIGPENDING | _TIF_NOTIFY_SIGNAL))
- 			do_signal(regs);
- 
--- 
-2.47.1
-
+> 
+> Regards,
+> Bjorn
+> 
+>>   */
+>>  struct rproc_ops {
+>>  	int (*prepare)(struct rproc *rproc);
+>> @@ -403,6 +405,7 @@ struct rproc_ops {
+>>  	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+>>  	unsigned long (*panic)(struct rproc *rproc);
+>>  	void (*coredump)(struct rproc *rproc);
+>> +	void (*release_fw)(struct rproc *rproc);
+>>  };
+>>  
+>>  /**
+>> -- 
+>> 2.25.1
+>>
