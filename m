@@ -1,110 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8020C4430;
-	Tue, 17 Jun 2025 06:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6C1223B606;
+	Tue, 17 Jun 2025 06:21:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141244; cv=none; b=dnVNj7cwYGFri80AKf22+zSGZjlQnGhOlBS0jvS4IAlWQ3oIjW8pEOyJ06Mupp9e3WUadFhYwhmffn3Jv+mnfiMrFDo8BOgISTFmY4giHq1LNi3exgLeYBsQYsrw1y/MW9jYtZ5Ozsemh2HUKvRMuwTsCT4npqtgY8a/YnLu06A=
+	t=1750141317; cv=none; b=gp0jVN5QJHCx3D6hu+Y4vf2QcSKywqAEhPVsRNAFs6bs52weNtTvUoy75omNm/90cd9/6cBqHl6I+cCZEERZaPMM09EUaQrLhn96rUA1CG8xNQ760/h4Ws9DeUzQR9Fg0mJLk19+cCGbH+BvYd1BlM95H+YBV1WjB1g88PkAyFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141244; c=relaxed/simple;
-	bh=u3O95KE8NMjq/YtPJoQWCUtVyluWqez6mFmjxn3YSVI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MdF3604zg5AWMDBpzgwW5STwhi0nTMvOu9e2pVHF8NyWUIWYcFC9E9Od9A/JekA+083qUzhC2y+nstni0DCEM5IATU5yd9F0l8Z/WucERhiLnxLCLcY/jbsbHdQiuhIex5LPkhL0TPESu/W11SOj5kTiCY4b6IxJWpMPcymg9wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lhlp6DqN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750141317; c=relaxed/simple;
+	bh=PRf1TQGc91W+MBcp+JrNM86Phml+lx1uiU82f4QGL+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j62vC42j8z691RWJPR/GyPivLhHQLrfxaxubHY7TEcfFiNToSqXUYUp2Le05XIQ8EKk4OiyK8+09znD9ook51JgHEuaAJ94BF2ty7jT7Z19ynDu1z/z7PLlniV8LeJaUOyQ4QxhfDMO3HesAFFuau4uCNo5KmarIxR9aRQRDC7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TM7snzrJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lhlp6DqN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 063E7C4CEF9;
-	Tue, 17 Jun 2025 06:20:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TM7snzrJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1FD2C4CEE3;
+	Tue, 17 Jun 2025 06:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750141244;
-	bh=u3O95KE8NMjq/YtPJoQWCUtVyluWqez6mFmjxn3YSVI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Lhlp6DqNxVcVz1dCamkFKPpzu8pZRNdo1CZN3k9RSsKSDLS0BHn8DRL54JH9Da2/m
-	 nvwn6jQYCnHBg18M1P9I8nMCLGvKCEJvxTswESLpo6DTwZsvt5yDGql3TgVhc/9ksF
-	 5/l+8lvDEhj0JwTWvFAYz4PRHglvTagx/0H1tOI4haIIWmGOeNPsWa0cHm9Xo0FcJg
-	 /hG86EZPJrwQv33KmPZifburIvG0ts1b495o+7kxnf4qj8yhFZToS48+NsnG4VXKJ3
-	 TpP0cpKGUuADk0rgDZeh2Vo/htyYRDMb1jzS4Li0RcIgT6Gc+3cNqXWbAD2aPJxNZJ
-	 EZcxTZaYv5EKQ==
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4a58f79d6e9so66528311cf.2;
-        Mon, 16 Jun 2025 23:20:43 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnxCfVn0pZPUNEys9wQrAf0b9feLDc86L+QBe1KU7wEmbN1697qTlk6D0N0hhzpkFDGuHSN2pGaD5MAUVulg==@vger.kernel.org, AJvYcCV6BY/ep6oKYVwrhTCFEnqesoDm1babUyarMWsGCG5PRjB02VFS9ce+oasW/60/FX6P0hoUJdrcQZpdl0Y2@vger.kernel.org, AJvYcCVqJ77O2jN1W6tukGOe5AnAM24eoKuh/RnUaNhp8PP/cPdWS8OVdvPr1WK5TmPD30nDxUkmJodpEabiuahAKcbhto4JcifV@vger.kernel.org, AJvYcCWmOAGWZim5R+eKxD1BF3D4A/0dqe2RUT5LWqZhi25/EQUucWEX2zIi+s1cfviuNVcH8Hg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxz/b0K2tfguwKQh589GqxaIdtZ8PXf9E+2141PzbeLcEinxkt
-	KSQiPToWHu1SnpVUbEY8tL/Rz2J5Wn4jUs0QNHQvic65PSHwjG81FuiNDhT3YDJQJsDjknVeR+F
-	QhyPypwsXIjIPCi+cu0nSftVWFB5IN6g=
-X-Google-Smtp-Source: AGHT+IFZ2TRPLBFHmBOZTnfR5Pb1FyA1L8NE+zM+lH2GvsQm33BUwd4NKksdhGTBuyRJIy1l1HDMxjixcrU9dVrUJJ8=
-X-Received: by 2002:a05:622a:1a24:b0:494:aa40:b0c3 with SMTP id
- d75a77b69052e-4a73c51f9b5mr161338631cf.10.1750141242988; Mon, 16 Jun 2025
- 23:20:42 -0700 (PDT)
+	s=k20201202; t=1750141317;
+	bh=PRf1TQGc91W+MBcp+JrNM86Phml+lx1uiU82f4QGL+Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TM7snzrJHgfVCbcORkMvQZwsSqpRCZqk7wEaCRWx/7RBNeCzhJIVxS3lomNDz3RKH
+	 aoahLvyMEY2EDH3Jx2tPGRGq9cp55nRllYRNvyaUucV8a47nSi+/woQVK7DCPi+cer
+	 N39QM9j5kQzOT8IT/TCje9bdPnni/vAup9jDuzDYOp5CXgcISGwN5ft8tv/toeWlVd
+	 VCw78EBMsCtgGFFbb/0p47893A1Vbbq6G+BOz5GmWbGUfGSr2IG50MhxuVhJwYjPOf
+	 VE8xE83ZLJSDKcolJcaq0cyHR7Zmb0U8QW2SXBsF29xUIBOtCbsEtPImvTJTibONS+
+	 Xc6nnheKFWyfw==
+Message-ID: <74e3c488-4457-4026-9597-806b98fd4e11@kernel.org>
+Date: Tue, 17 Jun 2025 08:21:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606213015.255134-1-song@kernel.org> <20250606213015.255134-2-song@kernel.org>
- <174959847640.608730.1496017556661353963@noble.neil.brown.name>
- <CAPhsuW6oet8_LbL+6mVi7Lc4U_8i7O-PN5F1zOm5esV52sBu0A@mail.gmail.com>
- <20250611.Bee1Iohoh4We@digikod.net> <CAPhsuW6jZxRBEgz00KV4SasiMhBGyMHoP5dMktoyCOeMbJwmgg@mail.gmail.com>
- <e7115b18-84fc-4e8f-afdb-0d3d3e574497@maowtm.org> <CAPhsuW4LfhtVCe8Kym4qM6s-7n5rRMY-bBkhwoWU7SPGQdk=bw@mail.gmail.com>
- <csh2jbt5gythdlqps7b4jgizfeww6siuu7de5ftr6ygpnta6bd@umja7wbmnw7j>
- <zlpjk36aplguzvc2feyu4j5levmbxlzwvrn3bo5jpsc5vjztm2@io27pkd44pow>
- <20250612-erraten-bepacken-42675dfcfa82@brauner> <afe77383-fe56-4029-848e-1401e3297139@maowtm.org>
-In-Reply-To: <afe77383-fe56-4029-848e-1401e3297139@maowtm.org>
-From: Song Liu <song@kernel.org>
-Date: Mon, 16 Jun 2025 23:20:30 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW735dqFzHyVnZXOX3AVRtuVZ5QPCvss+DkHCWB7wHkw1A@mail.gmail.com>
-X-Gm-Features: AX0GCFvvMXRiZXydmA5bWHytCJnIjryEUzvxUctPeTuiH78KsqQ-oZiOBzDBAJ4
-Message-ID: <CAPhsuW735dqFzHyVnZXOX3AVRtuVZ5QPCvss+DkHCWB7wHkw1A@mail.gmail.com>
-Subject: Re: Ref-less parent walk from Landlock (was: Re: [PATCH v3 bpf-next
- 1/5] namei: Introduce new helper function path_walk_parent())
-To: Tingmao Wang <m@maowtm.org>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	NeilBrown <neil@brown.name>, bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, 
-	kpsingh@kernel.org, mattbobrowski@google.com, amir73il@gmail.com, 
-	repnop@google.com, jlayton@kernel.org, josef@toxicpanda.com, 
-	gnoack@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
+ K1
+To: Vivian Wang <wangruikang@iscas.ac.cn>, Yixun Lan <dlan@gentoo.org>,
+ Guodong Xu <guodong@riscstar.com>, Ze Huang <huangze@whut.edu.cn>,
+ spacemit@lists.linux.dev
+Cc: Vivian Wang <uwu@dram.page>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 15, 2025 at 5:24=E2=80=AFPM Tingmao Wang <m@maowtm.org> wrote:
-[...]
-> >
-> > I would not want it in the first place. But I have a deep seated
-> > aversion to exposing two different variants.
->
-> Hi Christian, Jan, Song,
->
-> I do appreciate your thoughts here and thanks for taking the time to
-> explain.  I just have some specific points which I would like you to
-> consider:
->
-> Taking a step back, maybe the specific designs need a bit more thought,
-> but are you at all open to the idea of letting other subsystems take
-> advantage of a rcu-based parent walk?
+On 17/06/2025 07:21, Vivian Wang wrote:
+> The SpacemiT K1 has various static translations of DMA accesses. Add
+> these as simple-bus nodes. Devices actually using these translation will
+> be added in later patches.
+> 
+> The bus names are assigned according to consensus with SpacemiT [1].
 
-I cannot really speak for VFS folks, but I guess rcu-based parent walk
-out of fs/ is not preferred.
 
-> Testing shows that for specific
-> cases of a deep directory hierarchy the speedup (for time in Landlock) ca=
-n
-> be almost 60%, and still very significant for the average case. [1]
-[...]
-> I'm happy to wait till Song's current patch is finished before continuing
-> this, but if there is strong objection to two separate APIs, I would
-> really appreciate if we can end up in a state where further change to
-> implement this is possible.
+Read the feedback there:
 
-In v5, path_walk_parent API is not exported. We can easily change it
-in the future. Therefore, I don't think we need to rush into a rcu-walk
-design before landing path_walk_parent.
+"So, as you are submitting the first node(s) under network_bus: bus@5, you
+should have this added into your patchset, instead of sending out with
+none."
 
-Thanks,
-Song
+Plus simple bus within MMIO node needs unit address. IOW, don't mix MMIO
+with non-MMIO. I also suspect this does not pass checks, so the tools
+can do our review...
 
-[...]
+Best regards,
+Krzysztof
