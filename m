@@ -1,147 +1,132 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940CB14A09C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 04:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F570238145;
+	Tue, 17 Jun 2025 04:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750136029; cv=none; b=PRWgzsCKqieDFsOEu/PEKkRRa3X52pUZDff5nU8O9WwjKP8dt9TOdGyHTaDP8vMNJPuCksu3M8kOZoLR5CtuOJFXIavL2q5YFpzsRq2AbeKuwiofuImowNe7fmE236gelhHzKoM03IBuqZUI+5+kmWk1cken55IKC3vRIRG/aa0=
+	t=1750136043; cv=none; b=iEjIzft+JKyXa126klf+byu6QiIAGFaEuPBfx71whTrIv+wnFiliE2DfO4MOjAiEElrlJcUicMex0FY5l8Qkld0KaibvKriAVYqSIQ7mkzYyB0Ru/NDA8i2C3uZwHZixqJMn2CoJHWAauiEc2ZEnKAmA1aI546pD5TdY8JGYGeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750136029; c=relaxed/simple;
-	bh=6IyjReoCdm+T/kSV6sIzz7NWOV2ij316HTP5qWv5iRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LTFn+FKE30CfH7o6yUp6t6lMOjA7pwqdXqlzLgqhrN+bUkyiwXsVOIplN6L46JDpUoLR1g/RJhgL57lDxfkG+MOoDcac6/MK7kIp6B2XXHnVduGBAMA9jSzexWJNlvLXHhqkpFUzPNC0JRNqKwbQY/wL9TDvUr0iqSYneKpKTDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GdWv6waq; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750136043; c=relaxed/simple;
+	bh=kMm7lgYQCIkhpkVmH9clHM0HFhSUZpxy/D1RGQ/mP4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=p9VaPGz0ckkN7WNTsu4UsjCQTp3O37UAEji609CJA0l9BYmDXTptsA/SKzlUJR2Ak5kjvwyXtV4R0f7e3Mb2FY/g8eE+egXtRQ4ewKzT6JIzJenAdQTgF/jYK2SZAMJVbnJ2onMfXW0CnANqpEC1IRGV6jl95ZHvRkxMpgQt2Vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a7AzYwaX; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GdWv6waq"
-Date: Mon, 16 Jun 2025 21:53:20 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750136012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jfQt0Dij5bdaK/Ln/2PNF4m7CbwXt4vuxElA2oz6HGE=;
-	b=GdWv6waq8gMoqhYgz1Ox/03WCWiGI51+/Ufw5GcNEbiisvJWm8mRugwaxcDZounToMDDPO
-	yRTK/Iq9nqK78oyXKeFWMAwyFt9CV5twVoyjraVwgBOP8nK5rMbD8WWLq/1Va/y3ETkJzg
-	2vmmdVlb9wF9ptv8EwI9Rhl6liwRyRs=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Jintack Lim <jintack@cs.columbia.edu>,
-	Christoffer Dall <christoffer.dall@arm.com>
-Subject: Re: [PATCH] KVM: arm64: nv: Fix s_cpu_if->vgic_lr[] indexing in
- vgic_v3_put_nested()
-Message-ID: <aFD0wHqZ-8CRWIW-@linux.dev>
-References: <20250614145721.2504524-1-r09922117@csie.ntu.edu.tw>
- <86qzzkc5xa.wl-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7AzYwaX"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7426c44e014so4366090b3a.3;
+        Mon, 16 Jun 2025 21:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750136041; x=1750740841; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ux2aPBTIrlfQIKX8kOjNghDVGII2fwjUeeGrkzAJB28=;
+        b=a7AzYwaXCUwysr5wLSYBtshcbVyg7jVz4JqoDZY6PK49odjGnIa3dzNIirU+KAxaCC
+         jJSD+6wN/FtL5QmHnrpem1isbzbBzcdRZZh+vywzAsmsntjxDYOGg2reyFGe2E4UvYKt
+         JXyrkOsB/EWvt95x7SVBJe2bCh6T3fReYJE5GYOMU9BBFmFqlmHdKLXBP9Ci+8j5Gj+k
+         68+9CWpC+V/e51+/uKMn383JAqb34A58C6HzXp1TyGOX1/D9pcLoVkyBvHbz6knrdfjG
+         6BoODdog0qEztTGjc0fjRe8N3JFsB7+QTPOe/rh3pPlxZrsb5g5boK45JlVIPyOI2dlC
+         wKHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750136041; x=1750740841;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ux2aPBTIrlfQIKX8kOjNghDVGII2fwjUeeGrkzAJB28=;
+        b=bGs6LW+MdGi5bo91KfluO3N5Uwk7Jp4r7qL4QMP0jOMSL1Px0O4/zZJmaGI6cUCr70
+         qNTMY5ox+jAxsee0LTeeyZOOVB4Zn8CVHuUOjj9goTbIKV5ld6pj07xcuaZJRK7syuZ/
+         txpEBh0c0yGcBpHdrz1OoRQavVFKzYNw1N1Rpk3MUbTGneLha3/JzDPfWKG/Iej9AMKq
+         CJtLrE0fHKNV1U0s/NREpcQWPzR62/7qH1ujE3asSqd2cTC8V/YjDRh4FhGFvitg6kXR
+         ywBjNI39/yesLIpULD5tpdSEvUjm4DsBjiz7tGcU7uugXpZXpsjLlsC4Nt363KSixG/6
+         chRg==
+X-Forwarded-Encrypted: i=1; AJvYcCURhC2H4OHnr20ueCshqbPHmHfEE3Nd5zneGHhdSJq8NH6c73ZOGWRxiuUT2gkZblORyg/XX5QLHW4pUgJ4@vger.kernel.org, AJvYcCVH7fxU2HTplDhvAtYte0bDUy96S8Miw1BdVfNDLbZYQ0lWb0UfkKV7lIzjYKoJGq35d58=@vger.kernel.org, AJvYcCWTvPS7rAnz/+UcxH1JFj9W3ERyiE1B14nfecJFCKlweWJXNASYYyuPCn9zzzXY2M0GDu/98GoB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJg2vZDUY1cyFy/H1qqxFSgp2OvYZRVUbTK8wxtHbjdEVdtGPg
+	CErsL+ifrS8kLWzzH1tPT8U0KLcjW5uh0xhOOSBNqKhsdZVzkFUuYurz
+X-Gm-Gg: ASbGncviA4o4EEynq8r/A/3K2IFO9+69ihm2cBh9DRLYtJKJTZow7XXSvengdmFE5iY
+	ywsxrRv385yUJANNVG57OsIfeNHJcPMuXTFxdAU+4hGakFdDe7REb+t3w3dQ6GjfhkDrATThXJo
+	TeZIdjuRGLBlDu+wr16YOH3ap5HpLUowZZPw36R84aZTgLd43UXOc5qpLLuT0K3+W3QLR4adSUL
+	fIP+IJgLf+qBif3GUn7XcCGJUKszd57+DhSdUlivLq0JkBJjMBAvJnzp0P/5r1/0O2L0y6Pho1s
+	zGZG6+pZqUbW0QvA4xSC5EQT2eAw/dHIQpjnk25gkK2Ac1qOQAqhpG+PiZWIbG0qgziDrI1jDma
+	KuD2rpWpd
+X-Google-Smtp-Source: AGHT+IEL2/Y3YEJoexZQiqPz6UZhDVycLFbjekKweKWb+g9AdWGm8CY4Beq+i2yz4rRVpeHFYam8DA==
+X-Received: by 2002:a05:6a00:1823:b0:737:9b:582a with SMTP id d2e1a72fcca58-7489cfdb64bmr18949764b3a.24.1750136041147;
+        Mon, 16 Jun 2025 21:54:01 -0700 (PDT)
+Received: from devant.antgroup-inc.local ([47.89.83.0])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890005f47sm8132852b3a.51.2025.06.16.21.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 21:54:00 -0700 (PDT)
+From: Xuewei Niu <niuxuewei97@gmail.com>
+X-Google-Original-From: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+To: sgarzare@redhat.com,
+	mst@redhat.com,
+	pabeni@redhat.com,
+	jasowang@redhat.com,
+	xuanzhuo@linux.alibaba.com,
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	stefanha@redhat.com,
+	leonardi@redhat.com
+Cc: virtualization@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	fupan.lfp@antgroup.com,
+	Xuewei Niu <niuxuewei.nxw@antgroup.com>
+Subject: [PATCH net-next v3 0/3] vsock: Introduce SIOCINQ ioctl support
+Date: Tue, 17 Jun 2025 12:53:43 +0800
+Message-Id: <20250617045347.1233128-1-niuxuewei.nxw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86qzzkc5xa.wl-maz@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 11:54:57AM +0100, Marc Zyngier wrote:
-> On Sat, 14 Jun 2025 15:57:21 +0100,
-> Wei-Lin Chang <r09922117@csie.ntu.edu.tw> wrote:
-> > 
-> > s_cpu_if->vgic_lr[] is filled continuously from index 0 to
-> > s_cpu_if->used_lrs - 1, but vgic_v3_put_nested() is indexing it using
-> > the positions of the set bits in shadow_if->lr_map. So correct it.
-> > 
-> > Signed-off-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-> > ---
-> >  arch/arm64/kvm/vgic/vgic-v3-nested.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kvm/vgic/vgic-v3-nested.c b/arch/arm64/kvm/vgic/vgic-v3-nested.c
-> > index 4f6954c30674..29741e3f077b 100644
-> > --- a/arch/arm64/kvm/vgic/vgic-v3-nested.c
-> > +++ b/arch/arm64/kvm/vgic/vgic-v3-nested.c
-> > @@ -343,7 +343,7 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
-> >  	struct shadow_if *shadow_if = get_shadow_if();
-> >  	struct vgic_v3_cpu_if *s_cpu_if = &shadow_if->cpuif;
-> >  	u64 val;
-> > -	int i;
-> > +	int i, index = 0;
-> >  
-> >  	__vgic_v3_save_vmcr_aprs(s_cpu_if);
-> >  	__vgic_v3_deactivate_traps(s_cpu_if);
-> > @@ -368,10 +368,11 @@ void vgic_v3_put_nested(struct kvm_vcpu *vcpu)
-> >  		val = __vcpu_sys_reg(vcpu, ICH_LRN(i));
-> >  
-> >  		val &= ~ICH_LR_STATE;
-> > -		val |= s_cpu_if->vgic_lr[i] & ICH_LR_STATE;
-> > +		val |= s_cpu_if->vgic_lr[index] & ICH_LR_STATE;
-> >  
-> >  		__vcpu_sys_reg(vcpu, ICH_LRN(i)) = val;
-> > -		s_cpu_if->vgic_lr[i] = 0;
-> > +		s_cpu_if->vgic_lr[index] = 0;
-> > +		index++;
-> >  	}
-> >  
-> >  	shadow_if->lr_map = 0;
-> 
-> Nice catch, thanks a lot for tracking it down.
-> 
-> However, I think we should get rid of this double-indexing altogether,
-> or at least make it less error-prone. This thing is extremely fragile,
-> and it isn't the first time we are getting bitten with it.
-> 
-> Looking at the code, it becomes pretty obvious that the shadow index
-> is always the number of bits set in lr_map, and that we could
-> completely drop the 'index' thing if we simply counted these bits
-> (which isn't that expensive).
-> 
-> I came up with the (admittedly much bigger) following fix.
-> 
-> Thoughts?
-> 
-> 	M.
-> 
-> From 2484950b8fc3b36cca32bf5e86ffe7975a43e0e7 Mon Sep 17 00:00:00 2001
-> From: Marc Zyngier <maz@kernel.org>
-> Date: Sun, 15 Jun 2025 16:11:38 +0100
-> Subject: [PATCH] KVM: arm64: nv: Fix tracking of shadow list registers
-> 
-> Wei-Lin reports that the tracking of shadow list registers is
-> majorly broken when resync'ing the L2 state after a run, as
-> we confuse the guest's LR index with the host's, potentially
-> losing the interrupt state.
-> 
-> While this could be fixed by adding yet another side index to
-> track it (Wei-Lin's fix), it may be better to refactor this
-> code to avoid having a side index altogether, limiting the
-> risk to introduce this class of bugs.
-> 
-> A key observation is that the shadow index is always the number
-> of bits in the lr_map bitmap. With that, the parallel indexing
-> scheme can be completely dropped.
-> 
-> While doing this, introduce a couple of helpers that abstract
-> the index conversion and some of the LR repainting, making the
-> whole exercise much simpler.
-> 
-> Reported-by: Wei-Lin Chang <r09922117@csie.ntu.edu.tw>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Link: https://lore.kernel.org/r/20250614145721.2504524-1-r09922117@csie.ntu.edu.tw
+Introduce SIOCINQ ioctl support for vsock, indicating the length of unread
+bytes.
 
-Besides Wei-Lin's comments, LGTM.
+Similar with SIOCOUTQ ioctl, the information is transport-dependent.
 
-Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+The first patch adds SIOCINQ ioctl support in AF_VSOCK.
 
-Thanks,
-Oliver
+The second patch wraps the ioctl into `ioctl_int()`, which implements a
+retry mechanism to prevent immediate failure.
+
+The last one adds two test cases to check the functionality. The changes
+have been tested, and the results are as expected.
+
+Signed-off-by: Xuewei Niu <niuxuewei.nxw@antgroup.com>
+
+--
+
+v1->v2:
+https://lore.kernel.org/lkml/20250519070649.3063874-1-niuxuewei.nxw@antgroup.com/
+- Use net-next tree.
+- Reuse `rx_bytes` to count unread bytes.
+- Wrap ioctl syscall with an int pointer argument to implement a retry
+  mechanism.
+
+v2->v3:
+https://lore.kernel.org/netdev/20250613031152.1076725-1-niuxuewei.nxw@antgroup.com/
+- Update commit messages following the guidelines
+- Remove `unread_bytes` callback and reuse `vsock_stream_has_data()`
+- Move the tests to the end of array
+- Split the refactoring patch
+- Include <sys/ioctl.h> in the util.c
+
+Xuewei Niu (3):
+  vsock: Add support for SIOCINQ ioctl
+  test/vsock: Add retry mechanism to ioctl wrapper
+  test/vsock: Add ioctl SIOCINQ tests
+
+ net/vmw_vsock/af_vsock.c         | 22 +++++++++
+ tools/testing/vsock/util.c       | 37 ++++++++++----
+ tools/testing/vsock/util.h       |  1 +
+ tools/testing/vsock/vsock_test.c | 82 ++++++++++++++++++++++++++++++++
+ 4 files changed, 133 insertions(+), 9 deletions(-)
+
+-- 
+2.34.1
+
