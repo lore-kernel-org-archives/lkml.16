@@ -1,53 +1,55 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785B1171C9
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95F94A0C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750127490; cv=none; b=cZGmALm+Smre/YwyDlYZwUBHWCeE40g4I3QH2cOncLkVlUf0035S8NyqsSxRsH3HbWMmbMTnP1qYelTCpYENCryrYkjeO7StTSDYaaLjAQZpQ9cGgzC7Y7Fmsic/PEioFerU9uQHDOP1sDiDbnbyptxghIhXXuhjbbvP4FembN0=
+	t=1750127551; cv=none; b=Bx/sjEwl4ndmyLjyu/STv44t9mcNg7nRYxgX3L5Hf+XlnO/wIin6gNPrG8NVYt11bRH5e8CUOVTGQU6IhwovujgOZPTlgH4AWcVDBzRHWkDDS4N8PBibsAUpea0AJty2baZC9SQFMQ7G3pWd7P/pdAMM7LqfluicrU+QFgiwXdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750127490; c=relaxed/simple;
-	bh=p6kZzIdIozkt+BENNu5+VbNYxKxtJ1a2ToKv0G4dh2Q=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HKXUxKmD/1Qn2iO0OzrCVADdHl5k/eoSp8zTWahCsSVkKDXylQdXEZFqfPilMr2qfWTL0rQOwyEpxM5rr1x40brpSRJkK7+h+x+/VjiCYCoKrU4K/Wnd0SHRJ1JckvKvZ+J+TLE5vZNXSOESItuJAW0Hrwf9g4pCxn0DNNw8XIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+	s=arc-20240116; t=1750127551; c=relaxed/simple;
+	bh=h4q1rdV/jvVwTNYLtRk4eAkzcqF8Q9upnPzV7KCRXuM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Z5JeEwXMX3Bp/2BbUA/OlaD1KQR03VPLou/gyQyCCvzRRg5503aG8gfnMUlLTAmn2qRWobmZTeoXhA99cOS8noclSqExJkLHjf6NmWL14GdRgBbcd7TYPQkCsTaiiGqB6POqGhGDqa2nmcVgJp07eFVQAhIG88qm+Qo82w1cag4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc65f95b8so110461325ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:31:28 -0700 (PDT)
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddc9e145daso83074245ab.2
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 19:32:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750127487; x=1750732287;
+        d=1e100.net; s=20230601; t=1750127549; x=1750732349;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iICH6rGkCd0NMk5QLBV914Vt0rPaUBnhf5fohNbLyBA=;
-        b=NyaUP+OxvMZNp8TUwEUC0+kPVocFqQU4tEx0PrJp1W6Hn7uBNHw7wmsm0wEdUJ2wLB
-         3rnETFGq7FZTvfEo0ihCww/C2TJHWzDK349gyqV5BNjqAGhqqtZ0K8qRgWP2pdvwOYVl
-         YHgosc4AejHAQ+jnEdVbQwsE3F43JfBvt3YUt0k1OsCRU0PTOpumHq9fHSuPZrkiJuAs
-         07idwV8IfCJbGxmETZ+plM5H/oYSxmZZ8hj02oXfRG37m02RVflcA20vhAhX5dsfIf13
-         s6/5LQjF6v7lS+Y0Qi0I83YH4DbysrVx0OwmLEHhYmZjTcT5AvJ66jHMXJhvQHrhnwi/
-         RsUA==
-X-Forwarded-Encrypted: i=1; AJvYcCUwqBq14rp0tUjOCg8KMzyg6B7KVJhaU7QUibZf0Yweny1OcBrYhaEdmXWkq/DorjQhnPjVBBzaaE/OXY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtUCKKevbu2/3R0RzMIyvHOuNlC5mlyc1Y+GkWNKWNoFkfKSlb
-	O/Aae1KqhU2To22qs7GaycA3epBaXifwfQLG0+lkqjwHnarQNa/daVIHaNyB4CvQi+4PsfSPgIq
-	dBZbVPT73sLUOF9E93F9uq3yeZri3ONp5gJ4bYdqbkNw1cgK01Lc6W2b0FKY=
-X-Google-Smtp-Source: AGHT+IF5zYMUboyj8eAxrp3c74PsEWNVpNs0IZe3ofWVWAHz/ZMN4tQC557mWqcpG9ZeTG+I0683iCBzQU8eQ1aoQu7LmuB2bMkc
+        bh=2kFs6ehQrsbeV5OtP9QYHlGeA6LyGbaav1qAD3QYV/E=;
+        b=bfMVoov3zT1RpjmE4lg4ndnaIcVlKjUMF7YDiRre74bLvUiQgcHZ/Ko+ch+sgTJL0S
+         PL4A6aVnRjPRNdC3zlGrHSRtDYImPfogr2rxeaRTZOiO+X6NBcuJ29agIHrgxv/ohvGK
+         LJYxJzJc3Dag1w0l1Q+eopZPMnvSPc2tvEhnLLt2PpEIVigyVBY+wM7lso8ZLqyiSxIZ
+         5YRKHQiPy56ulNpwpQ1T71ttDDTH7fTiD4vUPHJbckVLEXmtlbxZm1FMsqSPmSLqQFLn
+         zF3/SAqxorqy1jW5LspixD7yRundPkh3C9UmGDsOGWbTm5J7bBkW9iY32j/W7NAQcEdl
+         WEvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3m2xe0nYiF3rzVqswK5hf1bJNNydHVX5+QgCUC+4zTmo8v7Eivkm/w5VE+6VtaKFdikDpkQ1Ixxa1bAg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrDbOmJiTBTaNbTLW3ZefFiurWhi46t05ncnKmmuOjrxTXe6qz
+	eaPcVGl+TLY04QLhIEqNu7AjWGgkhkGwAE4G4LnstH+1m0DzZN17z77e83IY6rArh2I5a6vHLv1
+	dbE13k+TAsCBS+fxjNgvHdl3CZOjw6ZherMhzDlcpccxz6J7Z7u+2hwYGA8k=
+X-Google-Smtp-Source: AGHT+IGojPqlwd05Ofb94SwCCl6PaTM0bN7hniK2siRdvVj6Tbgu9X+chhmupx/zHOzGW4YUeA41zt3BbVmujP3nhoOv+1667f7c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2143:b0:3dd:d178:9315 with SMTP id
- e9e14a558f8ab-3de07c414d8mr130321735ab.8.1750127487587; Mon, 16 Jun 2025
- 19:31:27 -0700 (PDT)
-Date: Mon, 16 Jun 2025 19:31:27 -0700
+X-Received: by 2002:a05:6e02:1a2b:b0:3dd:d746:25eb with SMTP id
+ e9e14a558f8ab-3de07cd170amr127784865ab.16.1750127549067; Mon, 16 Jun 2025
+ 19:32:29 -0700 (PDT)
+Date: Mon, 16 Jun 2025 19:32:29 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6850d37f.a70a0220.395abc.01f9.GAE@google.com>
-Subject: [syzbot] [jfs?] WARNING: fs/jfs/jfs_dmap.c:LINE at dbAdjTree, CPU: jfsCommit/NUM
-From: syzbot <syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com>
-To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <6850d3bd.a70a0220.395abc.01fa.GAE@google.com>
+Subject: [syzbot] [wireless?] WARNING: net/mac80211/tx.c:LINE at
+ __ieee80211_beacon_get, CPU: syz.NUM.NUM/NUM
+From: syzbot <syzbot+468656785707b0e995df@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net, linux-kernel@vger.kernel.org, 
+	linux-wireless@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
@@ -56,55 +58,128 @@ syzbot found the following issue on:
 
 HEAD commit:    050f8ad7b58d Add linux-next specific files for 20250616
 git tree:       linux-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=11e0190c580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=125e190c580000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=d2efc7740224b93a
-dashboard link: https://syzkaller.appspot.com/bug?extid=077d9ebda84f426a6a1e
+dashboard link: https://syzkaller.appspot.com/bug?extid=468656785707b0e995df
 compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17aa1e82580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e0190c580000
+
+Unfortunately, I don't have any reproducer for this issue yet.
 
 Downloadable assets:
 disk image: https://storage.googleapis.com/syzbot-assets/49faa18d2f53/disk-050f8ad7.raw.xz
 vmlinux: https://storage.googleapis.com/syzbot-assets/7c6f9cd7fe5d/vmlinux-050f8ad7.xz
 kernel image: https://storage.googleapis.com/syzbot-assets/84a08d6403ee/bzImage-050f8ad7.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/65c809c20ad8/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=178095d4580000)
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+077d9ebda84f426a6a1e@syzkaller.appspotmail.com
+Reported-by: syzbot+468656785707b0e995df@syzkaller.appspotmail.com
 
 ------------[ cut here ]------------
-WARNING: fs/jfs/jfs_dmap.c:2867 at dbAdjTree+0x454/0x4e0 fs/jfs/jfs_dmap.c:2867, CPU#0: jfsCommit/113
+WARNING: net/mac80211/tx.c:5024 at __ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5024 [inline], CPU#1: syz.4.243/6807
+WARNING: net/mac80211/tx.c:5024 at __ieee80211_beacon_get+0x125d/0x1630 net/mac80211/tx.c:5453, CPU#1: syz.4.243/6807
 Modules linked in:
-CPU: 0 UID: 0 PID: 113 Comm: jfsCommit Not tainted 6.16.0-rc2-next-20250616-syzkaller #0 PREEMPT(full) 
+CPU: 1 UID: 0 PID: 6807 Comm: syz.4.243 Not tainted 6.16.0-rc2-next-20250616-syzkaller #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:dbAdjTree+0x454/0x4e0 fs/jfs/jfs_dmap.c:2867
-Code: 5a ff ff ff e8 dd ed 81 fe eb 05 e8 d6 ed 81 fe 48 83 c4 28 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc cc e8 bd ed 81 fe 90 <0f> 0b 90 eb e1 44 89 e1 80 e1 07 80 c1 03 38 c1 0f 8c e1 fb ff ff
-RSP: 0018:ffffc90002de7988 EFLAGS: 00010293
-RAX: ffffffff833e7c73 RBX: ffff88807806f010 RCX: ffff88801eb2bc00
-RDX: 0000000000000000 RSI: 0000000000000155 RDI: 0000000000020056
-RBP: 0000000000020056 R08: ffffea0001e01bc7 R09: 1ffffd40003c0378
-R10: dffffc0000000000 R11: fffff940003c0379 R12: ffff88807806f018
-R13: dffffc0000000000 R14: 0000000000000004 R15: 0000000000000155
-FS:  0000000000000000(0000) GS:ffff888125c40000(0000) knlGS:0000000000000000
+RIP: 0010:__ieee80211_beacon_update_cntdwn net/mac80211/tx.c:5024 [inline]
+RIP: 0010:__ieee80211_beacon_get+0x125d/0x1630 net/mac80211/tx.c:5453
+Code: e7 e8 27 f2 2f f7 45 31 f6 4c 8b bc 24 a0 00 00 00 e9 78 fe ff ff e8 92 bf d6 f6 90 0f 0b 90 e9 e0 f7 ff ff e8 84 bf d6 f6 90 <0f> 0b 90 e9 38 fb ff ff e8 76 bf d6 f6 48 c7 c7 a0 5c 79 8f 4c 89
+RSP: 0018:ffffc90000a089f8 EFLAGS: 00010246
+RAX: ffffffff8ae9aaac RBX: ffffffff8ae99886 RCX: ffff888025e8da00
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: ffff888025e8da00 R09: 0000000000000003
+R10: 0000000000000007 R11: 0000000000000100 R12: ffff888058976500
+R13: dffffc0000000000 R14: ffff8880589769d0 R15: ffff888032955024
+FS:  00007fbd84f5b6c0(0000) GS:ffff888125d40000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005555944916f8 CR3: 00000000736f2000 CR4: 00000000003526f0
+CR2: 0000555570bf35c8 CR3: 000000002eed6000 CR4: 00000000003526f0
 DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
 DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
+ <IRQ>
+ ieee80211_beacon_get_tim+0xb4/0x2b0 net/mac80211/tx.c:5580
+ ieee80211_beacon_get include/net/mac80211.h:5638 [inline]
+ mac80211_hwsim_beacon_tx+0x3ce/0x860 drivers/net/wireless/virtual/mac80211_hwsim.c:2319
+ __iterate_interfaces+0x2a8/0x590 net/mac80211/util.c:761
+ ieee80211_iterate_active_interfaces_atomic+0xdb/0x180 net/mac80211/util.c:797
+ mac80211_hwsim_beacon+0xbb/0x1c0 drivers/net/wireless/virtual/mac80211_hwsim.c:2353
+ __run_hrtimer kernel/time/hrtimer.c:1761 [inline]
+ __hrtimer_run_queues+0x529/0xc60 kernel/time/hrtimer.c:1825
+ hrtimer_run_softirq+0x187/0x2b0 kernel/time/hrtimer.c:1842
+ handle_softirqs+0x283/0x870 kernel/softirq.c:579
+ __do_softirq kernel/softirq.c:613 [inline]
+ invoke_softirq kernel/softirq.c:453 [inline]
+ __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
+ </IRQ>
  <TASK>
- dbJoin+0x238/0x300 fs/jfs/jfs_dmap.c:2835
- dbFreeBits+0x4e1/0xdb0 fs/jfs/jfs_dmap.c:2332
- dbFreeDmap fs/jfs/jfs_dmap.c:2081 [inline]
- dbFree+0x336/0x650 fs/jfs/jfs_dmap.c:398
- txFreeMap+0x7ff/0xde0 fs/jfs/jfs_txnmgr.c:2534
- txUpdateMap+0x308/0x9c0 fs/jfs/jfs_txnmgr.c:-1
- txLazyCommit fs/jfs/jfs_txnmgr.c:2664 [inline]
- jfs_lazycommit+0x43f/0xa90 fs/jfs/jfs_txnmgr.c:2733
- kthread+0x711/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:finish_wait+0x5/0x1f0 kernel/sched/wait.c:358
+Code: 0f 1e fa 44 89 ef e8 7a 68 f5 ff eb 96 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 55 <41> 57 41 56 41 55 41 54 53 48 83 ec 10 48 89 f3 49 89 fd 48 bd 00
+RSP: 0018:ffffc9001bccf5f0 EFLAGS: 00000246
+RAX: 7fffffffffffffff RBX: dffffc0000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffc9001bccf640 RDI: ffff888028058700
+RBP: ffffc9001bccf6f0 R08: ffffffff8fa14ff7 R09: 1ffffffff1f429fe
+R10: dffffc0000000000 R11: fffffbfff1f429ff R12: ffff888028058700
+R13: ffffc9001bccf640 R14: 1ffff92003799ec4 R15: 7fffffffffffffff
+ unix_wait_for_peer+0x22f/0x2e0 net/unix/af_unix.c:1587
+ unix_dgram_sendmsg+0xb1f/0x1870 net/unix/af_unix.c:2188
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ ____sys_sendmsg+0x52d/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmmsg+0x227/0x430 net/socket.c:2709
+ __do_sys_sendmmsg net/socket.c:2736 [inline]
+ __se_sys_sendmmsg net/socket.c:2733 [inline]
+ __x64_sys_sendmmsg+0xa0/0xc0 net/socket.c:2733
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fbd8418e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fbd84f5b038 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+RAX: ffffffffffffffda RBX: 00007fbd843b5fa0 RCX: 00007fbd8418e929
+RDX: 0400000000000041 RSI: 0000200000000000 RDI: 0000000000000005
+RBP: 00007fbd84210b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fbd843b5fa0 R15: 00007ffe98cac8e8
  </TASK>
+----------------
+Code disassembly (best guess):
+   0:	0f 1e fa             	nop    %edx
+   3:	44 89 ef             	mov    %r13d,%edi
+   6:	e8 7a 68 f5 ff       	call   0xfff56885
+   b:	eb 96                	jmp    0xffffffa3
+   d:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+  14:	00
+  15:	90                   	nop
+  16:	90                   	nop
+  17:	90                   	nop
+  18:	90                   	nop
+  19:	90                   	nop
+  1a:	90                   	nop
+  1b:	90                   	nop
+  1c:	90                   	nop
+  1d:	90                   	nop
+  1e:	90                   	nop
+  1f:	90                   	nop
+  20:	90                   	nop
+  21:	90                   	nop
+  22:	90                   	nop
+  23:	90                   	nop
+  24:	90                   	nop
+  25:	f3 0f 1e fa          	endbr64
+  29:	55                   	push   %rbp
+* 2a:	41 57                	push   %r15 <-- trapping instruction
+  2c:	41 56                	push   %r14
+  2e:	41 55                	push   %r13
+  30:	41 54                	push   %r12
+  32:	53                   	push   %rbx
+  33:	48 83 ec 10          	sub    $0x10,%rsp
+  37:	48 89 f3             	mov    %rsi,%rbx
+  3a:	49 89 fd             	mov    %rdi,%r13
+  3d:	48                   	rex.W
+  3e:	bd                   	.byte 0xbd
 
 
 ---
@@ -117,10 +192,6 @@ https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
 
 If you want to overwrite report's subsystems, reply with:
 #syz set subsystems: new-subsystem
