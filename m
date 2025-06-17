@@ -1,224 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E2028CF65
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AC028ECCD;
+	Tue, 17 Jun 2025 07:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147150; cv=none; b=b0gzlqK6X123mZd5ofZtGH3fRTiDM0DOgySxIzfsHkW1Oe4ZR34LTQ6REQtO9IlDcZYvpK7Rb67Bd85QKkAPBygIgeyHLpsICIxahpNjUM7Dcr9UZ53PBiUcdm3rGBejmpac527rXsnkc34lSV734ELP7tjgKZMBMolpMUrNKvI=
+	t=1750147151; cv=none; b=nzpRFkFMYZeWjba0C+U4Z6ghAmg6I3+O5CV9E/IwckRdRoQBIA8Sit6QF8uYgfbty+FUoGhVMM/8cCxQFP3Nqc96Ja/V4QaRJgCWtheMuqTp+FttPXept50jd4G35EjqNpzkFw5mKvqeyPFkYhGicPkXT3ZJrmAlv/fJkgAqL6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750147150; c=relaxed/simple;
-	bh=zjk3Lu99iWLnSGoEQnV13yzZ0ZggfgFJolxyWKbVVQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bu37sBcfM7MegdYiQneLGTw8NtiVr9bJglmWY2/NWpazXqKItAozQefI2q/mgo6IdkWv+6CBuj091gpWYkUeYvXH5MUt4e0bAp6xF1DQUzPVnVd9nC5zdBoeneLTkXiJXAXa8t2ooduz0ei62t7qZjo1/sJGoGv5EFw5BAqiKHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AkQX+5ry; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750147151; c=relaxed/simple;
+	bh=NIgJ6S2IMm67sNgLluaxm/t93R9SpN5EK5tTKzscYko=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rg8UqNTLUtGw/5zPkUs1SpKD2yxfxptljTPMIbHfOgIUbBzA1fj9ASL6FfJCkH6m9EtZ5o71AeT1Bbn8b9ecoV5Qa9keC+5QdC19TTKDdqC+hKVgZj0sMFhnmGwwdkl6ryuyUx56+8NpSfL1EfAF1yylnBVCSwqAvnu02gPaQVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=riuj8blw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3dlU8pnc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AkQX+5ry"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750147146;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="riuj8blw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3dlU8pnc"
+Date: Tue, 17 Jun 2025 09:59:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750147148;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Iuh3uJ5HTbfwgFoHlIeRrGD2skEzJ92Kdquc4NMIC1A=;
-	b=AkQX+5ryPfF9boZS9a2s9E3Fg4JclceHVA5R8QwOvAvuzyFYMESl9QRM6NpRHG6DLXIlpA
-	qL41EWiOnLq8ztIKBlEQE/Bcoz0JUn6lnnpIGHqaMRuAhAKftHni92zk+FJP70i1o3jqal
-	aO8+rjKHlXPaFLIltaiUbEaDBQqMjMo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-644-fFs5qevgN3qAVqETi5adRg-1; Tue, 17 Jun 2025 03:59:05 -0400
-X-MC-Unique: fFs5qevgN3qAVqETi5adRg-1
-X-Mimecast-MFC-AGG-ID: fFs5qevgN3qAVqETi5adRg_1750147144
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so26478115e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 00:59:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750147144; x=1750751944;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Iuh3uJ5HTbfwgFoHlIeRrGD2skEzJ92Kdquc4NMIC1A=;
-        b=HuQlz6Crl2JKbkciaHDQpRLUKTg0x4oXQMFM5HyJO2F33nPQr+ucIvjHL+o+p8s1DY
-         CEsLUpnqptdGTtRG7GSKgamvCpJsDxa2wMzbriLHRD/l0jr04ezFFJwQX1XWFcZwUHGz
-         oB1j5lDd+y11mh/+fqeyRtk9wXteYnUg8PEXpJdIKDm7hwhwqBGsmwia8nHdszgXwV6N
-         DInArpja80iCMnQqxc/hff71a2sPeJdoB3jeBnjyuJzDKBTqHyFLuDcQnPkQCrUuWLH2
-         BiQvnYt0j0LK1gLLH3aZ7nmTOs4a9jKFOi6T8tfC0+jFoMEp7OeLgccSKdFmhrq8B7/K
-         ERRg==
-X-Forwarded-Encrypted: i=1; AJvYcCUD7Bw3tocilLagLH5OmLsz1FqWIlv5UOjWTfqnwQbAY3vZSLxZYdFwU+TzIr44P1lsY+W6C4NfgcoHXu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzrCUkyxVWASfJrOs/p2FRlzaf7quj6jf4PrcIwVVm+UO5wrHv
-	tmZFnSttrts2GNvzZ1a5jcY5lqxr+shSflKb7rq85Aw4elL+uZKD7GAKKQ/i7H4BOJ+SUQ01h+2
-	9DqTveB9P0zdgIJGO4wlA0TwAOwwugQmsXhyTJhMnCsouE5QRZByoNaDkVBiV5AZdjw==
-X-Gm-Gg: ASbGncskvRWaFwLkxWbZu8zct7IIBOk9bYJonFCL9N2is1hYbe2qV+SCUP3Kvv25+PH
-	m7WorzKjct25flnyjjJ5Y2jvy1IFeMqPGfhQm0uJ8nmTEdCUeAmnci4MRNjks7jJHhmT0VRHhIE
-	1p8CAp+7V1yckg85smF5N8FxirHiWaumHwx7QRFRNVvnY+6bGrqU+CrLMMVwpkfmo1yD1Fqhy+K
-	Xqt+Euh7eR1/cs4geGEsa2GYtkFrug0Yi15QDfaCWFC+5GLerizJK1tWm/7L01f+4Atwdi6Jo8M
-	OM5aGAdg4tYBsnhuV2ouusQrQFwp6YKDv9uvWdrkUdukEDzOj4OBjpotr2b6rrLYSllcdW5E8jL
-	qpLiV0WLbqFrBONIG40RuVr0A90/md30lzkT99atl59tmuGc=
-X-Received: by 2002:a05:600c:1d9e:b0:453:7bd:2e30 with SMTP id 5b1f17b1804b1-4533cac455fmr114431715e9.29.1750147143916;
-        Tue, 17 Jun 2025 00:59:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IETHzi79K36v23NPAMCQa2de/RDdUyXF0ggT/lPYXw1DZwj4wovdsEUGNLpA2OIEK65+pL5MA==
-X-Received: by 2002:a05:600c:1d9e:b0:453:7bd:2e30 with SMTP id 5b1f17b1804b1-4533cac455fmr114431445e9.29.1750147143478;
-        Tue, 17 Jun 2025 00:59:03 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a73a7bsm13392978f8f.36.2025.06.17.00.59.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 00:59:03 -0700 (PDT)
-Message-ID: <4b0036ae-5b92-49b5-8396-412c7026b105@redhat.com>
-Date: Tue, 17 Jun 2025 09:59:01 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=hj2LJB5Pz+vjWi8da/Iv2JkklxNhs1V6axP5pIrqxJM=;
+	b=riuj8blwvDOsP6wUDdP3Ci9HXHbVoAlg32Weak2qNVuiCsD1ol6m/pAdmc6Wz+nOKmmqKg
+	3IeYSlbgY2321vJgf0z88CN2TJeN2qF5hfUcRL4jBlVM2dUs3HE7qD16NAvAmHP/2Q0Tiu
+	Bv4zf2GgxWNfyv3tMCpI3wG2QM2gYLo0w2MiidaFYgj1M6iVe1g6wxrJ1VTkOJvr9Jf1rH
+	cXvYeuXURM43LbebVBKLsOIftA5ESr5OIcgKGY3NSdHi38sICPCCjfkEXkqUUNYg//cVI+
+	+91Qelw5eKrsAUCwxPXvtbH9iLIk+rBeQm+lUtOKp6N02yrLbZppHMyNUJ3vEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750147148;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hj2LJB5Pz+vjWi8da/Iv2JkklxNhs1V6axP5pIrqxJM=;
+	b=3dlU8pncy0paXbKmJi5ztkGhzw3FggNzV5ZHCn4tYoW6SfRQ/nfHyS2G+ZITRQ05Cj+PIu
+	F15f2+z9rzshWKDQ==
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Willy Tarreau <w@1wt.eu>, 
+	Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, linux-doc@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, workflows@vger.kernel.org
+Subject: Re: [PATCH v3 04/16] kbuild: userprogs: add nolibc support
+Message-ID: <20250617095102-d3df1c46-3d51-4f77-af0a-8299f5e71ad9@linutronix.de>
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
+ <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
+ <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] MAINTAINERS: add further core files to mm core
- section
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250616203844.566056-1-lorenzo.stoakes@oracle.com>
- <727b5e89-89d7-4abf-a93c-8d6f2cb2c438@redhat.com>
- <aFDm0YrbSAvXc5Wp@kernel.org>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aFDm0YrbSAvXc5Wp@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com>
 
-On 17.06.25 05:53, Mike Rapoport wrote:
-> On Mon, Jun 16, 2025 at 11:10:41PM +0200, David Hildenbrand wrote:
->> On 16.06.25 22:38, Lorenzo Stoakes wrote:
->>> There are a number of files which don't quite belong anywhere else, so
->>> place them in the core section. If we determine in future they belong
->>> elsewhere we can update incrementally but it is preferable that we assign
->>> each file to a section as best we can.
->>>
->>> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
->>> ---
->>> REVIEWERS - let me know if these seem appropriate, I'm eyeballing
->>> this. even if they are not quite best placed a 'best effort' is still
->>> worthwhile so we establish a place to put all mm files, we can always
->>> incrementally update these later.
->>>
->>>    MAINTAINERS | 28 ++++++++++++++++++++++++----
->>>    1 file changed, 24 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 4523a6409186..a61d56bd7aa4 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -15740,10 +15740,6 @@ F:	include/linux/memory_hotplug.h
->>>    F:	include/linux/memory-tiers.h
->>>    F:	include/linux/mempolicy.h
->>>    F:	include/linux/mempool.h
->>> -F:	include/linux/memremap.h
->>> -F:	include/linux/mmzone.h
->>> -F:	include/linux/mmu_notifier.h
->>> -F:	include/linux/pagewalk.h
->>>    F:	include/trace/events/ksm.h
->>>    F:	mm/
->>>    F:	tools/mm/
->>
->> Probably better to have some section than none ... was just briefly
->> wondering if "CORE" is the right section for some of that. Some of that
->> might be better of in a "MM MISC" section, maybe.
+On Tue, Jun 17, 2025 at 12:35:07AM +0900, Masahiro Yamada wrote:
+> On Wed, Jun 11, 2025 at 4:38 PM Thomas Weißschuh
+> <thomas.weissschuh@linutronix.de> wrote:
+> >
+> > Userprogs are built with the regular kernel compiler $CC.
+> > A kernel compiler does not necessarily contain a libc which is required
+> > for a normal userspace application.
+> > However the kernel tree does contain a minimal libc implementation
+> > "nolibc" which can be used to build userspace applications.
+> >
+> > Introduce support to build userprogs against nolibc instead of the
+> > default libc of the compiler, which may not exist.
+> >
+> > Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> >
+> > ---
+> > This could probably be moved out of the generic kbuild makefiles.
+> > I think the ergonimics would suffer and this functionality could be
+> > used by other users of userprogs.
+> >
+> > Also this does currently not support out-of-tree builds.
+> > For that tools/include/nolibc/*.h and usr/include/*.h would need to be
+> > installed into the build directory.
+
+<snip>
+
+> > --- a/scripts/Makefile.userprogs
+> > +++ b/scripts/Makefile.userprogs
+> > @@ -16,10 +16,17 @@ user-csingle        := $(addprefix $(obj)/, $(user-csingle))
+> >  user-cmulti    := $(addprefix $(obj)/, $(user-cmulti))
+> >  user-cobjs     := $(addprefix $(obj)/, $(user-cobjs))
+> >
+> > +user_nolibc_ccflags := -nostdlib -nostdinc -static -fno-ident -fno-asynchronous-unwind-tables \
+> > +                     -ffreestanding -fno-stack-protector \
+> > +                     -isystem $(objtree)/usr/include -include $(srctree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc/
 > 
-> Maybe rather than add files to MM CORE we should move mm/ there and add the
-> MM MISC section for files we explicitly want to exclude from MM CORE?
+> The tools/ directory is a different world, and Kbuild scripts do not know
+> anything about it.
 
-Also an option, yes,
+Ack.
 
->   
->>> @@ -15764,16 +15760,40 @@ S:	Maintained
->>>    W:	http://www.linux-mm.org
->>>    T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
->>>    F:	include/linux/memory.h
->>> +F:	include/linux/memremap.h
->>>    F:	include/linux/mm.h
->>>    F:	include/linux/mm_*.h
->>>    F:	include/linux/mmdebug.h
->>> +F:	include/linux/mmu_notifier.h
->>> +F:	include/linux/mmzone.h
->>>    F:	include/linux/pagewalk.h
->>>    F:	kernel/fork.c
->>>    F:	mm/Kconfig
->>>    F:	mm/debug.c
->>> +F:	mm/debug_page_ref.c
->>> +F:	mm/debug_vm_pgtable.c
->>
->> Wondering if there should be a MM DEBUG section. But then, no idea who in
->> their right mind would be willing to maintain that ;)
-> 
-> The same people that maintain MM CORE? ;-)
+How does this statement affect the next patch which creates
+tools/include/nolibc/Kconfig.nolibc ?
+Is it fine to create the Kconfig file in tools/ or should I move it?
+I do want to maintain this file as part of nolibc and not KUnit.
+The possibilities I see are init/Kconfig.nolibc or lib/Kconfig.nolibc.
 
-Heh :P
+> And, you do not need to implement this in scripts/Makefile.userprogs
+> because you can move this to lib/kunit/Makefile.kunit-uapi or somewhere.
 
->   
->>> +F:	mm/folio-compat.c
->>> +F:	mm/highmem.c
->>>    F:	mm/init-mm.c
->>> +F:	mm/internal.h
->>> +F:	mm/interval_tree.c
-> 
-> Looks like VMA to me.
+Understood. This is not unexpected, as hinted in the commit message.
 
-It's more about anon_vma I guess, so rmap ... maybe.
+> > +user_nolibc_ldflags := -nostdlib -nostdinc -static
+> > +
+> >  user_ccflags   = -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(userccflags) \
+> > -                       $($(target-stem)-userccflags)
+> > -user_ldflags   = $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags)
+> > -user_ldlibs    = $(userldlibs) $($(target-stem)-userldlibs)
+> > +                       $($(target-stem)-userccflags) $(if $($(target-stem)-nolibc),$(user_nolibc_ccflags))
+> > +user_ldflags   = $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-stem)-userldflags) \
+> > +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldflags))
+> > +user_ldlibs    = $(userldlibs) $($(target-stem)-userldlibs) \
+> > +                       $(if $($(target-stem)-nolibc),$(user_nolibc_ldlibs))
+> >
+> >  # Create an executable from a single .c file
+> >  quiet_cmd_user_cc_c = CC [U]  $@
 
--- 
-Cheers,
 
-David / dhildenb
-
+Thomas
