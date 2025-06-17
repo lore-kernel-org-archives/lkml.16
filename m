@@ -1,76 +1,78 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943F5231A37
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0838A2FA64A
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 17:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750181669; cv=none; b=O8TnhkjR/wVtfFA6rj5pJeV6X259KesFgUf6pxUwkWJCErDxatJgLLMenOHKTomy0kZy/ouJyyWMgUlO4DV7Kb/uZX89LEdpA5XR3rsTm0Ills3Rm6XkJ3NV0//2nXweSrJCskmmGtBP6WD+M6sJKrMiOm4m0UIfiM1NynMKu6Y=
+	t=1750181765; cv=none; b=IVzYpzMwdnTeco5UVU8pUdV8Ycjf9u4+SxGVm/gEBsD8mHgEnzTHVfjYlKtqRBXNAMAT9ss3D0HI4ciUpbSdxVqDzGex4ZpuPWTt7yqkZoUvlI0klxgVGFrCU7omrAvCuQ98MNmn2g5ge1wgTyrQ8c2WbOvkCvVJGzhXHpaiqA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750181669; c=relaxed/simple;
-	bh=8OWWSPCDDIIwDYsGYom4AVqOne0w6l7B60o95VYkg8U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lr1LH97v8rQDW4ViXHPA0oVBvENqVrPYIv/89meJEM2/a0xnRbo0ysYDZWzt/fUn9nfe1HxPfjQXMZgr3JDYwhKqgU00udEmJ8k2MW9Nte/1vSk28e3z5IfMYLd8jPzdzc3OC7GsY2XY2oV7+IKWrTbHk9DiIXyZLOh/5lRPrSU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BXvr6vKc; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BXvr6vKc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=t0CIhuOYbClFLmEawNrM0QLL4X/uIPMc9hdz0SZAWz4=; b=BXvr6vKcxFH0AKKE9nCN8P/hdx
-	89oVTgLJc/NyaqiFVR+eEU/+m7ZZMZOghJJhjyprO6jT0BmrPdFxusQ143OUUYA6cKet6RyGP7ooU
-	f06f2uNRT8KehWBVgB0Bjr2rbdaXg+On7xPJH7/9RDRczFVmidHSvD4oUY3CoHD/r2KMJTiJmixTy
-	2h9XOoeaf74LceyG07HZk/FIIHKnvvb11lWORVzF5WfcyzFNntivzggBS/N0scBaaUaSYe/6rit8S
-	HKvAHLTlk1OzFoHCV6whyfziPzYEZRigpwMPbJXXHpouWw9s+dnvmW98AIBcj4VNsdtAFdMIYJDnD
-	xQVw6v0A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRaCT-0000000HRhQ-05VS;
-	Tue, 17 Jun 2025 17:34:21 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 7AEB030BDAD; Tue, 17 Jun 2025 19:34:20 +0200 (CEST)
-Date: Tue, 17 Jun 2025 19:34:20 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
-	adrian.hunter@intel.com, jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-	dapeng1.mi@linux.intel.com, ak@linux.intel.com, zide.chen@intel.com
-Subject: Re: [RFC PATCH 00/12] Support vector and more extended registers in
- perf
-Message-ID: <20250617173420.GA1613376@noisy.programming.kicks-ass.net>
-References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
- <20250617082423.GK1613376@noisy.programming.kicks-ass.net>
- <60c18595-c6a8-4c39-98fe-0822755fbdb7@linux.intel.com>
- <20250617142952.GX1613376@noisy.programming.kicks-ass.net>
- <893f1888-b8cb-4976-a0d6-606460438d73@linux.intel.com>
+	s=arc-20240116; t=1750181765; c=relaxed/simple;
+	bh=po5VHLFgAh0+4aYh5ZRnHIy7yH8amwWKV9UqEt/DDsw=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=RHjJ7e7Ddn6ih+GwtAYVcUmSbOlctRWyNPy/BQHQ9Cdz1P2/g8cvXH+rHwqaR1mu4YVvLmOjemb/he3Z3XJ2AKoB+pHYy0u+dFQL1B+6I5RrDSKznt+vNDg+PNsrTIA0/4vXGi0zfr8Ro0lhgtEei5bhy920lwQ4DHGXyjBxX9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddce213201so62004855ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 10:36:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750181763; x=1750786563;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tRp9PCwUOoJxnwPAseC8adT2g24KGuJfatti5I5xZLM=;
+        b=rVnYTLsSjDTq3alcAmAVmAhYP5WZoU4oNYBKXmYhmumbQK6q5PupTcek10zIMXIVhO
+         NpWlUk75iGgdartDpIcMlRTNfiya033r8Am90ls/lJoNzyP7Mpulr6Q9+3euTOVv1iVk
+         kebZ0FaCcUTKsvtIsAvqhbUvwinFB0d7dkE5bycubDK8NZouo68EjAiy+pQYnQ/88BlV
+         eCM+0HXm0K3I5lwQ5MKpURYmjvNiZgN7giI+LKU8C1C678B247u47JZseCHtCEO6Q3VT
+         S5JNi2eDdIr4A9WQS6w9BaiW6xrkhHbjg11YsfNPC6/pap9cruFMO5+OWz09K6qnFPNu
+         MA0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWWcCpydaADjv7CqKRfwL6ZEuuVNxVznwlStbUM3BN5jVyjOUhYCtTIH3pSenBLcYW4qpD7BAMmMCWfu04=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOUa8ka0DFkJwo9Fy+sdoG1GICx6qiohhWEm12drgLmN0QmJTk
+	14ZYKz7ehzzvcf8y8ANvKqitXpGNwIapx7MV5UUKm3XSrm57Vw6daVbVPJDD4YiaakOWITeT4//
+	CPh2vSLUooxUcFmUwk0s+ikdiEKnHTY1J0dxRI+wJ0+bxMNQkRLBQAi6UazQ=
+X-Google-Smtp-Source: AGHT+IG2NnluvTF+ZS28/wS/Yl0jJbq3XTO0UDSSYpDOQu1R2P+FhlbO87/9ojA0d4TJI8bdCFXKYRbWZeTyt/ycEYH/ig194OZg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <893f1888-b8cb-4976-a0d6-606460438d73@linux.intel.com>
+X-Received: by 2002:a05:6e02:c72:b0:3dc:9b89:6a3b with SMTP id
+ e9e14a558f8ab-3de22cef37amr31040435ab.8.1750181763142; Tue, 17 Jun 2025
+ 10:36:03 -0700 (PDT)
+Date: Tue, 17 Jun 2025 10:36:03 -0700
+In-Reply-To: <0000000000004fc49a0617826da3@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6851a783.050a0220.2608ac.001f.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] possible deadlock in mgmt_remove_adv_monitor_complete
+From: syzbot <syzbot+e8651419c44dbc2b8768@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	johan.hedberg@gmail.com, kuba@kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, luiz.von.dentz@intel.com, 
+	marcel@holtmann.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 11:23:10AM -0400, Liang, Kan wrote:
-> 
-> 
-> On 2025-06-17 10:29 a.m., Peter Zijlstra wrote:
-> > On Tue, Jun 17, 2025 at 09:52:12AM -0400, Liang, Kan wrote:
-> > 
-> >> OK. So the sample_simd_reg_words actually has another meaning now.
-> > 
-> > Well, any simd field being non-zero means userspace knows about it. Sort
-> > of an implicit flag.
-> 
-> Yes, but the tool probably wouldn't to touch any simd fields if user
-> doesn't ask for simd registers
+syzbot suspects this issue was fixed by commit:
 
-Trivial enough to have the tool unconditionally write a simd_words size
-if the attr thing is big enough. But sure, whatever :-)
+commit e6ed54e86aae9e4f7286ce8d5c73780f91b48d1c
+Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+Date:   Tue Jun 3 20:12:39 2025 +0000
+
+    Bluetooth: MGMT: Fix UAF on mgmt_remove_adv_monitor_complete
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=177d790c580000
+start commit:   4c49f38e20a5 net: stmmac: fix TSO DMA API usage causing oops
+git tree:       net
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1362a5aee630ff34
+dashboard link: https://syzkaller.appspot.com/bug?extid=e8651419c44dbc2b8768
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11348b30580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17abf40f980000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: Bluetooth: MGMT: Fix UAF on mgmt_remove_adv_monitor_complete
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
