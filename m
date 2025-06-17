@@ -1,163 +1,213 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B840B2F2714
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750190776; cv=none; b=bVq7QmONdXQDl7QQ1Y7GNWEU/EIrInhnfS7N9Bl2TGWHZrYp+cqqxkwTsMJSEprlQAsIAHFxgH1NcCu1ZTB9KiIvlbbcm0GjByfqPpkxx0Zbn4faoC8G58R4lLUU4FE/Er/O7qDOlmSWt6NkZcILXGTDiPYFT3uzTBPIyKSn+uk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAA42F2733
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750190776; cv=fail; b=gncfqEO4Mj4PQtabTA0oAG+o/gXsFAaWhmdqt2Jn1oTLeissnvXYxHuUVem4CYzay1LYhRcVUNdaQBwLFf53deBuhQ45/Sl29jwU1t3somH1TDNFXAB9G/FqG1QM6jEStCwsDigM1jnmitqX6nMZ9WlOwhHCXgykiB0ALluC1n4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750190776; c=relaxed/simple;
-	bh=nxG0MN8gNOMVDZDTw/GF5IpT1tBDjSa6XvsqeaNOsRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0DTL+ZAVMv5AvaFKD9M7U//avbJt2ftL+ZNd3ks9xZAFAyWx1Jwx48eMB5ygMx0a0ZfVUmnhPRarW9WpPs5/H6X9dxCqRzI6J+0n1v4fV0ow334hdlQZp+OvbEPcREaUfezfq6VZ6SvO/kItkFgXUllu6JirzVm0LUbAIEhp3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NJ70yeuu; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	bh=QhxUDThs67x0k8qqo08vISFBwIeTJOcica1WhY2mVMs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Frzenjuqsd13kEkXqmj9ul4LiVg2Ewt7pRaunNrNaZLucioKubryRqOglDTiJaicdELk0P3ybJAkztrxfnzGwCjJ3et9qdQPjJUVDEaTIc218iQGxQFjwtXfzNrQKnKAiXoLXr0DxS212Wf1ngZ9YGVBFHlxd61Vaw7tHCoiT6k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=L5ZLLtiB; arc=fail smtp.client-ip=40.107.223.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NJ70yeuu"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 5098140E01D6;
-	Tue, 17 Jun 2025 20:06:11 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id CdwBwy_wbeSr; Tue, 17 Jun 2025 20:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750190765; bh=XvlQhiaovgN0UX7t8GkLS4GdvYCHO1JNmYVvwUvQgTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NJ70yeuuq82hluIe6QeArqw8ggjLztu94ilbEOtzZZwpTcpt4ZaWVXzdyfrjeAYnt
-	 ufkAbW24IFdlBlkpTKJKp9Bl7MzAVfhnqt8HY41oXfqDReCwobs9nQ6ByV+BId18x4
-	 eUPOTjqvMcQ0sGV+EfNPM9a4UJgXbG9bX9jumxZ22DCXcplQQC5FRiRcq974FuPa85
-	 F8nWmKUXyDv5sDDKG6T6F4dZEbsvmrp+ZFnAkpNjdq7zV7VJuFPEpVbTBqECFtjh9q
-	 wmtcO7IkNsSWnaem3k4GqBC90on8yOVEtdSWheauMctfts6LftuyXOLHEvJBPBdzra
-	 +rkIj6HglAmV3ONhUfD5gKd2uElK+krjA+UNsBJcf2+kqn9TyRKVL0DbBGC/GmJZwP
-	 hSwzy0DyIXyfP+8uyIFLk8CIgbL9/KqhemDIZWX3yAGuq67Rmq0xXt5XzRV3G6tVNB
-	 N0Dl5L6Q3Vf3TQKvgJ16UYRNSLmMos7WD2u0TGFR/hw/R9jWsfNPvfVPwaqYo5IyuD
-	 R9zp7uUtPcG1eBjMbi5JGlU1bd7j6SlL2rCwqXAsdTR87679gMkaUiDjdgWDdjAtGy
-	 vi64cHPGyDg8FQtTaB+/Xh9J/xdYhDJC26qw7dZkRtczRH9/HjRy3mhTxlpA0fEN7z
-	 mlVvxN/JgArGfg7E1KnXuguU=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 26E2B40E00DD;
-	Tue, 17 Jun 2025 20:05:58 +0000 (UTC)
-Date: Tue, 17 Jun 2025 22:05:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mikhail Paulyshka <me@mixaill.net>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="L5ZLLtiB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jz+z8YDGMHZA86783Tx1UVZN3yLWV2h7jLoDd9QgOSeGonho3D4SDiBOY+m0m/25lwWY1+azt0as0LexmZGGnEACE9haRjCukSyiehbAj3huWxa+QGC3Y2pF5fLPoMTxjBUPIm1410a3gdhSUzDNYQ1RgDv1w7Dl2odTiJFcK4K47ksrjFMY+Hp0tcq0X3uULczzkfyr4qLmQAFqICHNVXCg5mcDannaT6IKgYkRQLINQ3uCHBchkdoQ21c1EI6RENxttmnbUE9mAFvAMUbyyrOWBBjTLA25kHc1noyvusmUz2s4QXv3rkuu3ZHCWWZQk9f3WagXjZQwuV+pLvvH4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ugt2KV14dwIST7JdQy7v5q9Q2dpKYvMlxlYi34outxY=;
+ b=id1y8q5wAp7OUJm9vOLiBlP/5/XcdrHC1+ZIk5rHgh/eDjJmPIX+TKOOyIBtcs3pnd59T8lrFqRn6jVeEMc11fc7iJUU4WNAg9C9Cx40SNDaAHdAvIriI9V+c/nQQ49zDBpI7ZXMq92WIAV4MKjGfaEUF7jDen+1mBuRQVYHIrNCaohcR3ZZ1pcPz/WWQB6/O7VjNCKbtwmeNmGJIYzXEGGUcKbH2NrGz0wv53sSGfjz/ZmWCU0DGZjiWO4276WAbJ0MBH3eSbxbil/0RJEk1GJZ4xL6pHtBjx8MfmKm7XjDVhn6zOmzq/4Wc75L7savVpFdYCT7MgFsX5jo65+SRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ugt2KV14dwIST7JdQy7v5q9Q2dpKYvMlxlYi34outxY=;
+ b=L5ZLLtiBHx9N6Ox5jTEZIFaAJ1fBJPttjsFMgSHCfr76NvFyidZOQ9Jn9L6rr3/XcLeDiO0go0t/xZ3ty04ZAKi6olXIHGZKZGfXOgVp6sqGJbWuNIfxTA69iBGH6OMN2MVkrH95kBZLLBXqKifAOXUQvgtDXWrPnAf329j9gbL1Ha7uBNuFTOqM+HWHMw25z5W/ZWZWDKp72UGL88RjZ+c8ibuE7dSRAbKP4xysmdQTDySeTbfJUVc+XbDZzcnfx+zfbqp+eg22Xf5q4ILPlW1QkdwVw6w86kYbeusowLVj3Ake2U8hp4F/sA6X6UR8XJjrGiChVt6YulFqGuYY2w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by BL1PR12MB5731.namprd12.prod.outlook.com (2603:10b6:208:386::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Tue, 17 Jun
+ 2025 20:06:12 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 20:06:12 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: linux-kernel@vger.kernel.org,
 	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] x86/rdrand: disable RDSEED on AMD Cyan Skillfish
-Message-ID: <20250617200551.GIaFHKnyPV_XsSjlMP@fat_crate.local>
-References: <20250524145319.209075-1-me@mixaill.net>
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>
+Subject: [PATCH v4 04/15] sched/deadline: Prevent setting server as started if params couldn't be applied
+Date: Tue, 17 Jun 2025 16:05:07 -0400
+Message-ID: <20250617200523.1261231-5-joelagnelf@nvidia.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250617200523.1261231-1-joelagnelf@nvidia.com>
+References: <20250617200523.1261231-1-joelagnelf@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BL1PR13CA0165.namprd13.prod.outlook.com
+ (2603:10b6:208:2bd::20) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250524145319.209075-1-me@mixaill.net>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|BL1PR12MB5731:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6a0e8a43-ddbe-4078-d3a7-08ddadda682b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|1800799024|366016|7416014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?tvNgKJDHm3N2CmgBozgdQybeg844BTmFl9w/8rXiQXW+HL+Y95kUnkyDItmy?=
+ =?us-ascii?Q?K1Zde2UA17HMD8GT6wbwWTexucrs/pF5ht0kc0DSdQQLDE+rLS9FEEHY7n9d?=
+ =?us-ascii?Q?Rs9bHZxzdlode+6QBMKUjib6j4v42uqycvrqoh+zzmkUMKdBybXjflzryoSM?=
+ =?us-ascii?Q?/mfhZDLYLWvL4OVWby9W+Fnl8g00zidMz5+wEdt8st9SQ2hPRx7AvsyAhJ5K?=
+ =?us-ascii?Q?YJAbKc/WI5sDYSQoBNTv29U7M3l0ADL2YNN7c2zR190I2pNjGl63on1K27Gy?=
+ =?us-ascii?Q?N2r+bHNphIe5HmK4HgUw3KhWBtaI+y4QbPHOc49h/Ponba9tpbVceVj1PmUE?=
+ =?us-ascii?Q?fb8DcM8vXvD2CkHu8JD+gYJ82qOgzTFDiDJRJ0sEhzU4rBH3CnxQ6KGUlqWU?=
+ =?us-ascii?Q?ETzHStS7FcGqX4KunXtESfaWGnyXUatI5HjYdPoaNpgn9Wzi6tX9ckr1umfF?=
+ =?us-ascii?Q?f5uaiQPFnELlCN0qDtXEh4hamNwjbrq3bHIwDwcMgzsN8r7acJ2Y2pcpfxRQ?=
+ =?us-ascii?Q?ApqrZ2ktsJN1zWN+m7iWcctep4X2ZN/2UfHAdnavhOCdYY4j/CnM7E9MnvZ1?=
+ =?us-ascii?Q?uXavNXot04YTW8M90uP71eWtyz6p1w9fpoGuHU38ylYeaflPcFpmtylUVIXg?=
+ =?us-ascii?Q?jjn3rcj97qJVAqyZP6lG04fiej1w9PjlWjtNgx88MgjKzHk7BTuHzbm7sydB?=
+ =?us-ascii?Q?q3BRUMkMc20M3FZ0Gh5gnVEzer2dJdRkihg7yOjcpaXF9b3LPmCG/WjyuE4V?=
+ =?us-ascii?Q?DEuR17O70MkKHZJHMLkSD8+Dcrbpm3VsvCdgL1XX/SFo6Vqouz7njFucU2bz?=
+ =?us-ascii?Q?6Qftmq8wDCpotovFNj8i6OILNJfN0xqQ50AoO8w8xz5tRjSldJ4dFo0GLrR/?=
+ =?us-ascii?Q?Hszy855FxVt3ebn4NJIgdqt9OEGameYGank+edhIMTkJGYUQguCPhyIrXF0k?=
+ =?us-ascii?Q?oVwKA3teWWzp/HNFrARRDe6JzghhKyWvEYEMLL9qIQm8oAM33TrTcU7OjXfI?=
+ =?us-ascii?Q?tyLb+1Q6MWKORMypYE4091u1LiwE0QX45cHWz+iO3Wvw0G/3hV6D0GuVDhHG?=
+ =?us-ascii?Q?Fk+TCrUb409QiCtnR30pHTAVDxgCs7cSxKtKv6ENMCUZRCSkYMNV7s15l3A1?=
+ =?us-ascii?Q?V0JKb/9WaMAV0lqPdeirJqx/lBQl8ZCVPUiDSiT5b7NpMmp9HmL5ZrgVBJLK?=
+ =?us-ascii?Q?+gTgc9DDov5L8OAnEzbHphijAT+Q+gy3Q2A8NgTf9Aba1a4DTR9Je5vHkdi9?=
+ =?us-ascii?Q?QvPkCMU5KlPfX6CNre70xyosmySBJrNXUuWM+PbwsTIGre8pJxpUPD83BopB?=
+ =?us-ascii?Q?kL8XXRlpZyt6JLoS+QoxwHrDen06H6trqL5Jidnm4buEMISDGkYqQMpjfUSK?=
+ =?us-ascii?Q?AmPYBBZafmFzGw5I3e7M7NnioKVHxRPyaYrFmRg5iBpuyVhG2WHnqDwDLEt6?=
+ =?us-ascii?Q?H1cMuB2iodI9A7kQp0wgK/Fe6CCakW546Uy2FPM6wq5ks66DS9qhHQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?AApksaSQ8Q5CizatJCdHZYHuUWUFzNngyyDqG4zKGuFP1/o/ciTkweAas2oi?=
+ =?us-ascii?Q?FxxdrhnVr5eRpYV7et4Ti77RyYz/j5DJ9sUMKMob7fzVVkbxsEL7kLpZm8tL?=
+ =?us-ascii?Q?8IOaNa3rBOivztkIQtbtzFyIwkItJISoGJ6QzeKRfPN75Py9uGF+gAgfNvBI?=
+ =?us-ascii?Q?RmxOlg5RGQqExXe0CDDl0tn4/iDFEHDbqpxYlgvCx2SlWcr2ArMbIlLrHJYD?=
+ =?us-ascii?Q?iLgjx2jgp/n3MJZAI45xw+oiI4yDIdh8u+bIyQY+IXfsmvKW75BqZnVY5Tar?=
+ =?us-ascii?Q?Kb7zgd9ypmWP6+wE9A5VOgKByrbyywBlCkXm3aGL+96yjBuh398+u/gLAOCN?=
+ =?us-ascii?Q?uS5zCY9Sgt1TwWVJ7KhPvxBzMkABs64TmFYEK7fdbVhLHlN41e2yUaKDzFhw?=
+ =?us-ascii?Q?7H8rHVrdKGYxYj8bc3koyOwNFz8VCFEw4LpMFbHGN1YG9u6zJ1GtbZlXyg6z?=
+ =?us-ascii?Q?QgQloqsOSNK7LJ8vhV9+wrUI4qtw+4NT7Rrzpjovg8/zEhc7xRT7Ek7iws0g?=
+ =?us-ascii?Q?fbwGwb3xlxT1hLdQaa2BdTVjGy5fJHmXRBNiqdRe/ih5S6A++wmmKy1aKeSb?=
+ =?us-ascii?Q?5iCBgK0IHfWrDF5N0C2xvr/XhI9tH9m/swi3JHOVzqiEVpnUqAymTy43pkzQ?=
+ =?us-ascii?Q?3kVPaGrVvdzV/7W0OiyAh+pq4TfZuZUZ3E7Qfiym2nIUUm0hixEvbNSjedIF?=
+ =?us-ascii?Q?uh1fE02EdKA3xUK/0nViGdD6htpuQULgm6f9eTH8isEmU0+h20U7bwIQdsLP?=
+ =?us-ascii?Q?JLY5u6dpPVEKOwFG8kFeCfaFeSra8IIeNo7mikJLKGb+UzKKxzOcPComih/z?=
+ =?us-ascii?Q?mC9/geIJa6FveqCCb2xDMKSvMTI7bJ4Tl5NZ8w/csE2jmTzerCnJW0XJDs1V?=
+ =?us-ascii?Q?GEHu+pDsqNAsnWvb6tRlzL/oKR8xKEwzxmUO0O9Hocngz02l9Opky6MeT7Nd?=
+ =?us-ascii?Q?elhlfVCJE3063JyKuxdq8hqGH94o6enoahFXj0k0iyGW6VZh8DZr3hbc4UmX?=
+ =?us-ascii?Q?chSx6E0u+mN5D/kpP5GSSpds5E8GkH7lxsVsStJNYpw62iTWZp66yWbA34Oq?=
+ =?us-ascii?Q?QumHFXoxwfj6fqMKdsLyQCoWV8ZoeI2naZ/3bWr1WTV7jEOi436CJYzWxahN?=
+ =?us-ascii?Q?owdqXX38uYiCW+1rIey4Tka66WDJbQrsSOV7dF3SUsgYa9BirVwjoVbBE+/q?=
+ =?us-ascii?Q?sxpBEyFqauTYXR9psECjAG9RB0Sy9hsazDrXTREFOIKOxvesTyax1h7N9lvq?=
+ =?us-ascii?Q?63/GinEtq+AsEMnqA4oMRVGMf7gfyiUnOjkzTNy00mR2NKu2R87vKUnhAYUl?=
+ =?us-ascii?Q?b2bn9FkcmnLOg6wjrUUR2D5zjTY1uv3gwQ5iSsiWj5daMwGVA+UJEENS1N7F?=
+ =?us-ascii?Q?7JE63I6juYRTrYt+90AK9ASDgUzMbx57GWkihq/POiHwdQvNVLu7Buf1fudh?=
+ =?us-ascii?Q?t+6pR7p2QjuM0qB6iCN7d5tKxMZ7CcnhIkBWJ9DIe0g1pHNIN+M8MY5tBNkD?=
+ =?us-ascii?Q?d+FptZAffD98Y+gKM5rB1YZFv5Kq2j7GQX7RkfQGhZ7fJ5LjDlBQTCdj4NcC?=
+ =?us-ascii?Q?l0838zOWzpVlIS6wTyDuqC+grOsCYBLRJx6CuOyY?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6a0e8a43-ddbe-4078-d3a7-08ddadda682b
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 20:06:11.9702
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 02ZTW+f4V3o0+xNPiDU2CS3o1o/3kylH9073QnqOVvboAqxDFf9SEKaWuLFxMchSJVxMtAXYbQzT28l2uMySOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5731
 
-On Sat, May 24, 2025 at 05:53:19PM +0300, Mikhail Paulyshka wrote:
-> AMD Cyan Skillfish (Family 17h, Model 47h, Stepping 0h) has an
-> error that causes RDSEED to always return 0xffffffff, while RDRAND
-> works correctly.
-> 
-> This patch masks the RDSEED cap for this CPU so that both
-> /proc/cpuinfo and direct CPUID read report RDSEED as unavailable.
-> 
-> 
-> v2:
->   * Limit changes to AMD Cyan Skillfish
->   * Replace the runtime RDSEED sanity check with a simple
->     family/model/stepping match
-> 
-> Signed-off-by: Mikhail Paulyshka <me@mixaill.net>
-> ---
->  arch/x86/include/asm/msr-index.h       | 1 +
->  arch/x86/kernel/cpu/rdrand.c           | 9 +++++++++
->  tools/arch/x86/include/asm/msr-index.h | 1 +
->  3 files changed, 11 insertions(+)
+The following call trace fails to set dl_server_apply_params() as
+dl_bw_cpus() is 0 during CPU onlining.
 
-Does this one work too?
+[   11.878356] ------------[ cut here ]------------
+[   11.882592]  <TASK>
+[   11.882685]  enqueue_task_scx+0x190/0x280
+[   11.882802]  ttwu_do_activate+0xaa/0x2a0
+[   11.882925]  try_to_wake_up+0x371/0x600
+[   11.883047]  cpuhp_bringup_ap+0xd6/0x170
+[   11.883172]  cpuhp_invoke_callback+0x142/0x540
+[   11.883327]  _cpu_up+0x15b/0x270
+[   11.883450]  cpu_up+0x52/0xb0
+[   11.883576]  cpu_subsys_online+0x32/0x120
+[   11.883704]  online_store+0x98/0x130
+[   11.883824]  kernfs_fop_write_iter+0xeb/0x170
+[   11.883972]  vfs_write+0x2c7/0x430
+[   11.884091]  ksys_write+0x70/0xe0
+[   11.884209]  do_syscall_64+0xd6/0x250
+[   11.884327]  ? clear_bhb_loop+0x40/0x90
+[   11.884443]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
+It is too early to start the server. Simply defer the starting of the
+server to the next enqueue if dl_server_apply_params() returns an error.
+In any case, we should not pretend like the server started and it does
+seem to mess up with the sched_ext CPU hotplug test.
+
+With this, the sched_ext hotplug test reliably passes.
+
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 ---
-From: Mikhail Paulyshka <me@mixaill.net>
-Date: Sat, 24 May 2025 17:53:19 +0300
-Subject: [PATCH] x86/rdrand: Disable RDSEED on AMD Cyan Skillfish
+ kernel/sched/deadline.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-AMD Cyan Skillfish (Family 17h, Model 47h, Stepping 0h) has an error that
-causes RDSEED to always return 0xffffffff, while RDRAND works correctly.
-
-Mask the RDSEED cap for this CPU so that both /proc/cpuinfo and direct CPUID
-read report RDSEED as unavailable.
-
-  [ bp: Move to amd.c, massage. ]
-
-Signed-off-by: Mikhail Paulyshka <me@mixaill.net>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250524145319.209075-1-me@mixaill.net
----
- arch/x86/include/asm/msr-index.h       | 1 +
- arch/x86/kernel/cpu/amd.c              | 7 +++++++
- tools/arch/x86/include/asm/msr-index.h | 1 +
- 3 files changed, 9 insertions(+)
-
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index b7dded3c8113..5cfb5d74dd5f 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -628,6 +628,7 @@
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
-+#define MSR_AMD64_CPUID_FN_7		0xc0011002
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 93da466dfe2c..c2ef5ab4a9e3 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -930,6 +930,13 @@ static void init_amd_zen2(struct cpuinfo_x86 *c)
- 	init_spectral_chicken(c);
- 	fix_erratum_1386(c);
- 	zen2_zenbleed_check(c);
-+
-+	/* Disable RDSEED on AMD Cyan Skillfish because of an error. */
-+	if (c->x86_model == 0x47 && c->x86_stepping == 0x0) {
-+		clear_cpu_cap(c, X86_FEATURE_RDSEED);
-+		msr_clear_bit(MSR_AMD64_CPUID_FN_7, 18);
-+		pr_emerg("RDSEED is not reliable on this platform; disabling.\n");
-+	}
- }
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ae15ec6294cf..d2eb31b45ba9 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1656,8 +1656,8 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+ 		u64 runtime =  50 * NSEC_PER_MSEC;
+ 		u64 period = 1000 * NSEC_PER_MSEC;
  
- static void init_amd_zen3(struct cpuinfo_x86 *c)
-diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
-index e7d2f460fcc6..2333f4e7bc2f 100644
---- a/tools/arch/x86/include/asm/msr-index.h
-+++ b/tools/arch/x86/include/asm/msr-index.h
-@@ -624,6 +624,7 @@
- #define MSR_AMD64_OSVW_STATUS		0xc0010141
- #define MSR_AMD_PPIN_CTL		0xc00102f0
- #define MSR_AMD_PPIN			0xc00102f1
-+#define MSR_AMD64_CPUID_FN_7		0xc0011002
- #define MSR_AMD64_CPUID_FN_1		0xc0011004
- #define MSR_AMD64_LS_CFG		0xc0011020
- #define MSR_AMD64_DC_CFG		0xc0011022
+-		dl_server_apply_params(dl_se, runtime, period, 1);
+-
++		if (dl_server_apply_params(dl_se, runtime, period, 1))
++			return;
+ 		dl_se->dl_server = 1;
+ 		dl_se->dl_defer = 1;
+ 		setup_new_dl_entity(dl_se);
+@@ -1674,7 +1674,7 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+ 
+ void dl_server_stop(struct sched_dl_entity *dl_se)
+ {
+-	if (!dl_se->dl_runtime)
++	if (!dl_se->dl_runtime || !dl_se->dl_server_active)
+ 		return;
+ 
+ 	dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
 -- 
 2.43.0
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
