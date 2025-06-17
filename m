@@ -1,39 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617EB2DA753;
-	Tue, 17 Jun 2025 12:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5092D130C;
+	Tue, 17 Jun 2025 12:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750162344; cv=none; b=iVN7uSQY3q/9BX8g3JPkVVfCSPCyLoKWLjX7MOoSISeMWXbE9NTCuqeuk/E9E1wE5PJRU5AMheI5c8GMTh1cYxIxlrjpK9droPSQktrxd23SFQ0x5PgJEKvVfgQanCkqlnB4wYymmv8Xw4SBDOrRe2BiV495lPt3hoV01ep0ieQ=
+	t=1750162344; cv=none; b=ltZFd5P0BZc+neVHwzTUUtQ4g4CIkgCPusHVVfvqSEq1DQ3h6Ldl92Neui/SvYYJUHM5/gioR6Wev+6BlGUcwR/IQJSGoKTqlFBXG3Y2ECfzdVNCBvzqbG+aQIqvRJ/SvsFzf0CAHLVWJYU4e122J34/i/+sIahQZtvrkSYbzhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750162344; c=relaxed/simple;
-	bh=b2ramXA7WDiddwHvOyc2rdCp2HujwluILQb+xuD72nU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cHTwcfLN9wweZ+u07FWo1ZOlIMCOgE61yaubOCe5Jgsfs6IkLwYdxndb9x9qWTKHKh/tsuC0l8rBfpIyV/n8l1a2s0SPzmrPFVRD/bgVld7KsYu/U6iIR2Q+OoL/pW3BZuEmU6l5nSUyWMTCk33ovXqFudO+DS/RBK1TRn+AD3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zd1N0Zzj; arc=none smtp.client-ip=217.70.183.197
+	bh=zfXuh5LChNxin0NOuK+KJycuot0waWJOHQU7nNX9Vc4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hz1x0TCdlclbbuk56+5WJFUl0YhfTUUQ7eS5DqDzOYqe2cUIlvEhRwgrLF3Mqj0ZVqUyjWuJMYAWZ/ycavI0QSEml9m+pz7kV6o0DtyvWgYaOK9Ts+yKEEoqN9+4Cn/xfHnHS0YY2TcGgo+wqEl7HmMj6vLtOhBpRsaqYZ22f1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gQjlm63I; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zd1N0Zzj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 52CFF439F6;
-	Tue, 17 Jun 2025 12:12:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gQjlm63I"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F298F4330B;
+	Tue, 17 Jun 2025 12:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750162340;
+	t=1750162333;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+9CG1jbgujwSWclC/ew/MoVPCcqpOJrBrX2yshzx8iI=;
-	b=Zd1N0ZzjpukWzefeYP9Do10AVYt6QyTbgX+qjOedw/3nzWOP9t6GjnQvruJ4+lukVmzt6T
-	7LUpNJAm3rFvQJsuHLh/6SM8YOmkuNomAGlAvSOpxFMkaZMMYfhXW6gD33Kcr6FTeCfiEV
-	BhilcmiGyIFWwjCs/lHH6r2J6PE8VhaAe44HIxhOtoOzrRV+IRv0yE0RsAFEeDrRK8UvLC
-	LOhmifHfZoxpYQiTcgWYSUxk3ky4sq53m/SSedpcMLMUHMaKaPz/C+hFiSZhIa1q+9istB
-	uRmue8KVTm8QyQ1q1G5TGGrq4fZq02QTaFGVB/4M6hZmqRDTVLqfEcpH/aDL5w==
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3jAgYafGml+HhjgOeowwsKz9h8DBM7eX6esJMDyooYc=;
+	b=gQjlm63ISAln/6toDCSB81RCZUTPnqLuX4kIfS3RclmSS2lEvI0vBYKv36vPQeu0rqOEqt
+	3yBAHJ4PR+hCcpV8DjBEuoWQklvOcdeelkOH62QIOIflHVJ6Vn3whLx5w/Cvv2XVv7ztdR
+	0EeFQiYy3eGkdy4YzEf912I/gWOfT5TAmCwivigSHZ+syJ1kQfJoWpCI6XHG4/lmpapESM
+	S9ki8oM3yrpNnBfcp8RtgosIR3/kgvOcIOd1/IL0kclXLtb+OO8GPYSsvXV5lO9bO3K8X3
+	gkucQc975UdvMYaKHaixQYyvpuZTkp4fluU7zS/4McO8gbtWOL/t6JKEBHgJ2Q==
 From: Kory Maincent <kory.maincent@bootlin.com>
-Date: Tue, 17 Jun 2025 14:12:04 +0200
-Subject: [PATCH net-next v14 05/13] net: ethtool: Add support for new power
- domains index description
+Subject: [PATCH net-next v14 00/13] Add support for PSE budget evaluation
+ strategy
+Date: Tue, 17 Jun 2025 14:11:59 +0200
+Message-Id: <20250617-feature_poe_port_prio-v14-0-78a1a645e2ee@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +40,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-feature_poe_port_prio-v14-5-78a1a645e2ee@bootlin.com>
-References: <20250617-feature_poe_port_prio-v14-0-78a1a645e2ee@bootlin.com>
-In-Reply-To: <20250617-feature_poe_port_prio-v14-0-78a1a645e2ee@bootlin.com>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAI9bUWgC/3XSzWrDMAwA4FcpOS/Dkv932nuMURxbXg1bUpIsd
+ JS++5zASEbigw+28GfJ0r0aqE80VC+ne9XTlIbUtXkD4ulU+YtrP6hOIR9UyFAwC7yO5Mbvns7
+ Xbl79eL72qaudBEdBc47kq3z32lNMtwV+q1oa65ZuY/WeI5c0jF3/s7w4wRKfbWAMC/YENau10
+ UyKqAUF+dp03fiZ2mfffS3mhBuHs5KD2bFSWoVIJLTbO3x1AKHk8OwYjtZGp6zSfu+IP0eynFD
+ JEdkJ3oLjnnkweu/I1UEwJUdmhwcnjCIZgxJ7R6+OYEVHz/8TZfSWcnU+7B2zcUCVHJMdIZTnN
+ niuudk7duNgse92dkBHz5iWGg/yAbZCkhUTApYlKZW2+ZOsjPZAgo2ExRGCeRabxkUhNEGDB7U
+ BbiVRlOZpDGpuGISo3UH3ga+SgnJO8zx6ScGDaiwR/pcej8cv58A30ucDAAA=
 To: Andrew Lunn <andrew@lunn.ch>, Oleksij Rempel <o.rempel@pengutronix.de>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -60,158 +63,184 @@ Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
  Dent Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, 
  Maxime Chevallier <maxime.chevallier@bootlin.com>, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>
+ "Kory Maincent (Dent Project)" <kory.maincent@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.15-dev-8cb71
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvefgvdfgkeetgfefgfegkedugffghfdtffeftdeuteehjedtvdelvddvleehtdevnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgepgeenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkhihlvgdrshifvghnshhonhesvghsthdrthgvtghh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffufffkgggtgffvvefosehtkeertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepudfhveduteffgfekvdfhveehgeehtdelgefhffduiefffedvheefgeeiiedvkeetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehkohhrhidrmhgrihhntggvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghom
+ hdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhihlhgvrdhsfigvnhhsohhnsegvshhtrdhtvggthh
 X-GND-Sasl: kory.maincent@bootlin.com
 
 From: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
 
-Report the index of the newly introduced PSE power domain to the user,
-enabling improved management of the power budget for PSE devices.
+This series brings support for budget evaluation strategy in the PSE
+subsystem. PSE controllers can set priorities to decide which ports should
+be turned off in case of special events like over-current.
+
+This patch series adds support for two budget evaluation strategy.
+1. Static Method:
+
+   This method involves distributing power based on PD classification.
+   It’s straightforward and stable, the PSE core keeping track of the
+   budget and subtracting the power requested by each PD’s class.
+
+   Advantages: Every PD gets its promised power at any time, which
+   guarantees reliability.
+
+   Disadvantages: PD classification steps are large, meaning devices
+   request much more power than they actually need. As a result, the power
+   supply may only operate at, say, 50% capacity, which is inefficient and
+   wastes money.
+
+2. Dynamic Method:
+
+   To address the inefficiencies of the static method, vendors like
+   Microchip have introduced dynamic power budgeting, as seen in the
+   PD692x0 firmware. This method monitors the current consumption per port
+   and subtracts it from the available power budget. When the budget is
+   exceeded, lower-priority ports are shut down.
+
+   Advantages: This method optimizes resource utilization, saving costs.
+
+   Disadvantages: Low-priority devices may experience instability.
+
+The UAPI allows adding support for software port priority mode managed from
+userspace later if needed.
+
+Patches 1-2: Add support for interrupt event report in PSE core, ethtool
+	     and ethtool specs.
+Patch 3: Adds support for interrupt and event report in TPS23881 driver.
+Patches 4,5: Add support for PSE power domain in PSE core and ethtool.
+Patches 6-8: Add support for budget evaluation strategy in PSE core,
+	     ethtool and ethtool specs.
+Patches 9-11: Add support for port priority and power supplies in PD692x0
+	      drivers.
+Patches 12,13: Add support for port priority in TPS23881 drivers.
 
 Signed-off-by: Kory Maincent (Dent Project) <kory.maincent@bootlin.com>
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
+Changes in v14:
+- Remove useless extacks messages.
+- Forgot to release the pse_pw_d_mutex in __pse_pw_d_release.
+- Move ethnl_pse_send_ntf() under rtnl_lock following Jakub suggestion.
+- Add pse_control_get_netdev() helper.
+- Removed Oleksij reviewed-by on patch 2 due to few code change.
+- Link to v13: https://lore.kernel.org/r/20250610-feature_poe_port_prio-v13-0-c5edc16b9ee2@bootlin.com
 
 Changes in v13:
 - Small change, no need for >0 condition check for unsigned variables.
+- Link to v12: https://lore.kernel.org/r/20250524-feature_poe_port_prio-v12-0-d65fd61df7a7@bootlin.com
+
+Changes in v12:
+- Rebase on net-next.
+- Link to v11: https://lore.kernel.org/r/20250520-feature_poe_port_prio-v11-0-bbaf447e1b28@bootlin.com
+
+Changes in v11:
+- Move the PSE events enum description fully in the ethtool spec.
+- Remove the first patch which was useless as not used.
+- Split the second patch to separate the attached_phydev introduction to
+  the PSE interrupt support.
+- Link to v10: https://lore.kernel.org/r/20250506-feature_poe_port_prio-v10-0-55679a4895f9@bootlin.com
+
+Changes in v10:
+- Change patch 2 and 7 due to possible used after free scenario or
+  deadlock scenario. Move the PSE notification send management to a
+  workqueue to protect it from the deadlock scenario.
+- Link to v9: https://lore.kernel.org/r/20250422-feature_poe_port_prio-v9-0-417fc007572d@bootlin.com
+
+Changes in v9:
+- Add a missing check after skb creation.
+- Link to v8: https://lore.kernel.org/r/20250416-feature_poe_port_prio-v8-0-446c39dc3738@bootlin.com
+
+Changes in v8:
+- Rename a few functions for better clarity.
+- Add missing kref_init in PSE power domain support and a wrong error
+  check condition.
+- Link to v7: https://lore.kernel.org/r/20250408-feature_poe_port_prio-v7-0-9f5fc9e329cd@bootlin.com
+
+Changes in v7:
+- Add reference count and mutex lock for PSE power domain.
+- Add support to retry enabling port that failed to be powered in case of
+  port disconnection or priority change.
+- Use flags definition for pse events in ethtool specs.
+- Small changes in the TPS23881 driver.
+- Link to v6: https://lore.kernel.org/r/20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com
+
+Changes in v6:
+- Few typos.
+- Use uint instead of bitset for PSE_EVENT.
+- Remove report of budget evaluation strategy in the uAPI.
+- Link to v5: https://lore.kernel.org/r/20250218-feature_poe_port_prio-v5-0-3da486e5fd64@bootlin.com
+
+Changes in v5:
+- Remove the first part of the patch series which tackled PSE
+  improvement and already gets merged:
+  https://lore.kernel.org/netdev/20250110-b4-feature_poe_arrange-v3-0-142279aedb94@bootlin.com/
+- Remove the PSE index support which is useless for now. The PSE power
+  domain ID is sufficient.
+- Add support for PD692x0 power supplies other than Vmain which was already
+  in the patch series.
+- Few other small fixes.
+- Link to v4: https://lore.kernel.org/r/20250103-feature_poe_port_prio-v4-0-dc91a3c0c187@bootlin.com
+
+Changes in v4:
+- Remove disconnection policy.
+- Rename port priority mode to budget evaluation strategy.
+- Add cosmetic changes in PSE core.
+- Add support for port priority in PD692x0 driver.
+- Link to v3: https://lore.kernel.org/r/20241121-feature_poe_port_prio-v3-0-83299fa6967c@bootlin.com
 
 Changes in v3:
-- Do not support power domain id = 0 because we can't differentiate with
-  no PSE power domain.
+- Move power budget to regulator core.
+- Add disconnection policies with PIs using the same priority.
+- Several fixes on the TPS23881 drivers.
+- Several new cosmetic patches.
+- Link to v2: https://lore.kernel.org/r/20241030-feature_poe_port_prio-v2-0-9559622ee47a@bootlin.com
 
 Changes in v2:
-- new patch.
+- Rethink the port priority management.
+- Add PSE id.
+- Add support for PSE power domains.
+- Add get power budget regulator constraint.
+- Link to v1: https://lore.kernel.org/r/20241002-feature_poe_port_prio-v1-0-787054f74ed5@bootlin.com
+
 ---
- Documentation/netlink/specs/ethtool.yaml       | 5 +++++
- Documentation/networking/ethtool-netlink.rst   | 4 ++++
- drivers/net/pse-pd/pse_core.c                  | 3 +++
- include/linux/pse-pd/pse.h                     | 2 ++
- include/uapi/linux/ethtool_netlink_generated.h | 1 +
- net/ethtool/pse-pd.c                           | 7 +++++++
- 6 files changed, 22 insertions(+)
+Kory Maincent (13):
+      net: pse-pd: Introduce attached_phydev to pse control
+      net: pse-pd: Add support for reporting events
+      net: pse-pd: tps23881: Add support for PSE events and interrupts
+      net: pse-pd: Add support for PSE power domains
+      net: ethtool: Add support for new power domains index description
+      net: pse-pd: Add helper to report hardware enable status of the PI
+      net: pse-pd: Add support for budget evaluation strategies
+      net: ethtool: Add PSE port priority support feature
+      net: pse-pd: pd692x0: Add support for PSE PI priority feature
+      net: pse-pd: pd692x0: Add support for controller and manager power supplies
+      dt-bindings: net: pse-pd: microchip,pd692x0: Add manager regulator supply
+      net: pse-pd: tps23881: Add support for static port priority feature
+      dt-bindings: net: pse-pd: ti,tps23881: Add interrupt description
 
-diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 92b34a19f308..dfd9b842a4e7 100644
---- a/Documentation/netlink/specs/ethtool.yaml
-+++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -1406,6 +1406,10 @@ attribute-sets:
-         type: nest
-         multi-attr: true
-         nested-attributes: c33-pse-pw-limit
-+      -
-+        name: pse-pw-d-id
-+        type: u32
-+        name-prefix: ethtool-a-
-   -
-     name: rss
-     attr-cnt-name: __ethtool-a-rss-cnt
-@@ -2229,6 +2233,7 @@ operations:
-             - c33-pse-ext-substate
-             - c33-pse-avail-pw-limit
-             - c33-pse-pw-limit-ranges
-+            - pse-pw-d-id
-       dump: *pse-get-op
-     -
-       name: pse-set
-diff --git a/Documentation/networking/ethtool-netlink.rst b/Documentation/networking/ethtool-netlink.rst
-index 433737865bc2..e9af8e58564c 100644
---- a/Documentation/networking/ethtool-netlink.rst
-+++ b/Documentation/networking/ethtool-netlink.rst
-@@ -1789,6 +1789,7 @@ Kernel response contents:
-                                                       limit of the PoE PSE.
-   ``ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES``       nested  Supported power limit
-                                                       configuration ranges.
-+  ``ETHTOOL_A_PSE_PW_D_ID``                      u32  Index of the PSE power domain
-   ==========================================  ======  =============================
- 
- When set, the optional ``ETHTOOL_A_PODL_PSE_ADMIN_STATE`` attribute identifies
-@@ -1862,6 +1863,9 @@ identifies the C33 PSE power limit ranges through
- If the controller works with fixed classes, the min and max values will be
- equal.
- 
-+The ``ETHTOOL_A_PSE_PW_D_ID`` attribute identifies the index of PSE power
-+domain.
-+
- PSE_SET
- =======
- 
-diff --git a/drivers/net/pse-pd/pse_core.c b/drivers/net/pse-pd/pse_core.c
-index f2fb7ccbc4c2..7d424c22225e 100644
---- a/drivers/net/pse-pd/pse_core.c
-+++ b/drivers/net/pse-pd/pse_core.c
-@@ -1098,6 +1098,9 @@ int pse_ethtool_get_status(struct pse_control *psec,
- 	pcdev = psec->pcdev;
- 	ops = pcdev->ops;
- 	mutex_lock(&pcdev->lock);
-+	if (pcdev->pi[psec->id].pw_d)
-+		status->pw_d_id = pcdev->pi[psec->id].pw_d->id;
-+
- 	ret = ops->pi_get_admin_state(pcdev, psec->id, &admin_state);
- 	if (ret)
- 		goto out;
-diff --git a/include/linux/pse-pd/pse.h b/include/linux/pse-pd/pse.h
-index f736b1677ea5..2f8ecfd87d43 100644
---- a/include/linux/pse-pd/pse.h
-+++ b/include/linux/pse-pd/pse.h
-@@ -114,6 +114,7 @@ struct pse_pw_limit_ranges {
- /**
-  * struct ethtool_pse_control_status - PSE control/channel status.
-  *
-+ * @pw_d_id: PSE power domain index.
-  * @podl_admin_state: operational state of the PoDL PSE
-  *	functions. IEEE 802.3-2018 30.15.1.1.2 aPoDLPSEAdminState
-  * @podl_pw_status: power detection status of the PoDL PSE.
-@@ -135,6 +136,7 @@ struct pse_pw_limit_ranges {
-  *	ranges
-  */
- struct ethtool_pse_control_status {
-+	u32 pw_d_id;
- 	enum ethtool_podl_pse_admin_state podl_admin_state;
- 	enum ethtool_podl_pse_pw_d_status podl_pw_status;
- 	enum ethtool_c33_pse_admin_state c33_admin_state;
-diff --git a/include/uapi/linux/ethtool_netlink_generated.h b/include/uapi/linux/ethtool_netlink_generated.h
-index 3864aa0de8c7..ed344c8533eb 100644
---- a/include/uapi/linux/ethtool_netlink_generated.h
-+++ b/include/uapi/linux/ethtool_netlink_generated.h
-@@ -652,6 +652,7 @@ enum {
- 	ETHTOOL_A_C33_PSE_EXT_SUBSTATE,
- 	ETHTOOL_A_C33_PSE_AVAIL_PW_LIMIT,
- 	ETHTOOL_A_C33_PSE_PW_LIMIT_RANGES,
-+	ETHTOOL_A_PSE_PW_D_ID,
- 
- 	__ETHTOOL_A_PSE_CNT,
- 	ETHTOOL_A_PSE_MAX = (__ETHTOOL_A_PSE_CNT - 1)
-diff --git a/net/ethtool/pse-pd.c b/net/ethtool/pse-pd.c
-index 5443b4e0065a..6a978a55959e 100644
---- a/net/ethtool/pse-pd.c
-+++ b/net/ethtool/pse-pd.c
-@@ -83,6 +83,8 @@ static int pse_reply_size(const struct ethnl_req_info *req_base,
- 	const struct ethtool_pse_control_status *st = &data->status;
- 	int len = 0;
- 
-+	if (st->pw_d_id)
-+		len += nla_total_size(sizeof(u32)); /* _PSE_PW_D_ID */
- 	if (st->podl_admin_state > 0)
- 		len += nla_total_size(sizeof(u32)); /* _PODL_PSE_ADMIN_STATE */
- 	if (st->podl_pw_status > 0)
-@@ -148,6 +150,11 @@ static int pse_fill_reply(struct sk_buff *skb,
- 	const struct pse_reply_data *data = PSE_REPDATA(reply_base);
- 	const struct ethtool_pse_control_status *st = &data->status;
- 
-+	if (st->pw_d_id &&
-+	    nla_put_u32(skb, ETHTOOL_A_PSE_PW_D_ID,
-+			st->pw_d_id))
-+		return -EMSGSIZE;
-+
- 	if (st->podl_admin_state > 0 &&
- 	    nla_put_u32(skb, ETHTOOL_A_PODL_PSE_ADMIN_STATE,
- 			st->podl_admin_state))
+ .../bindings/net/pse-pd/microchip,pd692x0.yaml     |   22 +-
+ .../bindings/net/pse-pd/ti,tps23881.yaml           |    8 +
+ Documentation/netlink/specs/ethtool.yaml           |   76 ++
+ Documentation/networking/ethtool-netlink.rst       |   49 +
+ drivers/net/mdio/fwnode_mdio.c                     |   26 +-
+ drivers/net/pse-pd/pd692x0.c                       |  225 +++++
+ drivers/net/pse-pd/pse_core.c                      | 1066 +++++++++++++++++++-
+ drivers/net/pse-pd/tps23881.c                      |  403 +++++++-
+ include/linux/ethtool_netlink.h                    |    7 +
+ include/linux/pse-pd/pse.h                         |  106 +-
+ include/uapi/linux/ethtool_netlink_generated.h     |   40 +
+ net/ethtool/pse-pd.c                               |   64 ++
+ 12 files changed, 2038 insertions(+), 54 deletions(-)
+---
+base-commit: 1770343cde9b1cd2c1890abd909c441c322be386
+change-id: 20240913-feature_poe_port_prio-a51aed7332ec
 
+Best regards,
 -- 
-2.43.0
+Köry Maincent, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
