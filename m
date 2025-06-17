@@ -1,149 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84B02EFD8C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B0D2EFD8C;
+	Tue, 17 Jun 2025 20:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750192351; cv=none; b=DJDPDPABjW4G81EzFNUNf3qrTBLYSDDtIilZ/QB0ozj2MmkDYoLxZ++Rh8GoKcQsbuk1Uvq01eUyBZ3aTdWWlwJ7VRs2ePLMHNEL7gIJZ7oTRsEktoan06r7Wpx7o8T/zm7Q/bSxtalhphPtAqOgsasmxVgVb5+LeLsgKZa5YSI=
+	t=1750192404; cv=none; b=E71oOQJzEfe1mD1Y/TwPcPtA3dQmOFU0c/pm1uFaUHjkgzLZJJzgV1TPDX6KNfPpQMW12jftrSE6TFruieO4YgVjlU8Hf7zYCxRoH1Bqv5/qS/CgJA/l4bQ6ploxyNOOtCYJeRWKLXbRR7QzQpSXeW4/1iq56g7D7va7bOqgT3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750192351; c=relaxed/simple;
-	bh=t15GzUBTFymOWyDKXqbcy1Md6W8mYGu1qrdMqwhs0cI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KhrVn+K01Ii/MxrnH4NIPN0mA8vNhiaypn0O2pti2IJ6nmx97io+qAK2Cwwcr0xuDE96yso2vzQ49p2ZG1nH5l/8FAs8M/VC18oYhLoahZK0t0K6AzKQmzr6+IUux63Xv3wtiqMbQ+b3/i4SYJF0fJ+lCMSjuSRYk6odtei3nfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d7TDstPY; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750192404; c=relaxed/simple;
+	bh=m4Iw7odXBvaU5NhYgp5hg7BYI4mtkDYlgIUb/0y1/eY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=utsCcngy8IIqo9LvI+YtQHU8GKpedGqKRIVwmpby0HEyaYyDapFothO0FKWWmn5l9m5bVcD4lY8I85H46yRZPBLt3rALcHnwmDqr/eNmjzbz2MeeXHUtsdxYp69VDEY1e9PE2IXvDqYtG7VejfyOlB4AoTUrGi03130fQacIcb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fJU8smtn; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d7TDstPY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750192349; x=1781728349;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=t15GzUBTFymOWyDKXqbcy1Md6W8mYGu1qrdMqwhs0cI=;
-  b=d7TDstPYOTVReuwp65ZTtyZ+PW326gWM4L5LlIRvLZb5Xkp3eQOMYrF6
-   qWRNqBZSVlEIG7+1N4wNkIZr1n5XqKa07EdCV1VYBWO5Ba1+EX9edVc78
-   cIkBlIh+vLisf1A35CC5iMdczu3AQCJMuz0e4mDntDc8AzH6AGoMe/Pw/
-   /6myBMzfQaVxtb75dGkpyZMJwalRYwlEbGgtRPrbYhY/hNX6nVlmOoMiN
-   7yy9vs/kueq0PUhfLh3XpOp619F7L1Cck6mE1w+q6YTlkH12S206heByK
-   sMfEia3BqreRkcxPsKiRRsZsjpFQd8Xgq2KOggKS8f9AVYqSWud0SVBc/
-   w==;
-X-CSE-ConnectionGUID: ZkcZ64HWSUCyp7g2oMCUaA==
-X-CSE-MsgGUID: GINnZNIXRVKCQLSq9wAY9g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56191508"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="56191508"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:32:28 -0700
-X-CSE-ConnectionGUID: Bo19y/xBTpy9ToCWtAO74g==
-X-CSE-MsgGUID: BY1X6FaJR3+A2bZrgGB70A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="148808082"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:32:28 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 39CA720B5736;
-	Tue, 17 Jun 2025 13:32:26 -0700 (PDT)
-Message-ID: <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
-Date: Tue, 17 Jun 2025 16:32:24 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJU8smtn"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e7387d4a336so5299358276.2;
+        Tue, 17 Jun 2025 13:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750192402; x=1750797202; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OgLoQ6crTT76lXOGCSJP/UyWl0Y3WfZNh5XaX/5vgKU=;
+        b=fJU8smtnLAdoOLRQajGYrhhfp64ACDeps7edPFUrUFXknkWxexi/Cyh3kQbdTqKWd7
+         J0nvLOKIA0TOU08SQOrjwS/fAz7O5gd6Ka0xp2S7wgCl6SLjq7jurUqraTvK51o5LEEC
+         tAYrUQQYiWJvLfj16LSftpEPxI9x75VFQ9GrKzjNOaBoqi0AC4IYl6q+6eLNz6d5toO5
+         FDLBuRAhRRlb9NnQEC+2fIatJatvBdqahRnS6Hqmgu1C83oN4tSt8qv/ZJyVtwrIoLeg
+         /1SnIAtJTKO9kz//2H9uGq261INcbURkV9N8+fDYmgMs/5+2Pj850fRdzdcsdccYFPEr
+         r1Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750192402; x=1750797202;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OgLoQ6crTT76lXOGCSJP/UyWl0Y3WfZNh5XaX/5vgKU=;
+        b=K3fn+swLKAaAmtfO3/DNXgd/N+Lin8a8gZb22wiUGaCBqFa0c1M+c2f7MucmEiPuAF
+         1Klm8TxYJCIljZ/MxHDsKCA2Wtb9du8KhBfZok701IojsbgOBg1iAvE6ZDTVLeKVAFy8
+         uwsEfwwLFxWckOkqhzwcuiFhdLxs4RbUp2rsMNmkoPEIfHqxRFX/f/PTFa0XfE3dbahA
+         y1oGVs2J6jcCCoZ4IIQ9mJrPmFkT3n5iXzK+dsc79jFItrdn6XXPAP9+NNsnD+Ymejwo
+         3eeUdJlBAu9GnNBPYG+LiHuvRECC5gZMrINozXo9oC+Hgx7EdAZLjxCs82y3QerKSmIV
+         hknQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWMLFauE0Sg2VnAfowf99WOcg3YUB+7QJ1GVMdDqsm8SvZPGFun06lTeWPnRaNyH0AJACFxxzzLaQakaF8/@vger.kernel.org, AJvYcCX27icFWNjdnhZEIzJG9CfOrxo77Lxa9wK8NFH7DQUJ0aRw0hIgUzGrTJ3xFqIT1VOfhY0dRU3px8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+mvF4g11LhCW64VWMfMcXxotI4agVfA7kqQ0VUOj3IOduxepo
+	RIBW9L4rAxqdyijKZaoAgeUhKh1L7Wz1kteWu03BFqQSBmPSWLQPV157
+X-Gm-Gg: ASbGnctxfp8Xh99toOxuzghRU1DNvf25A0wCH9IV+vR7TsD/d4sgV3HExRt/aaVJTbW
+	P5xQ9y3SStMappO8HW0b24ENkx82gmuEntgcjEKA5j25drvKFB+FOJKEJu0HsTjTtWTy2sOw52G
+	GADfKRpNRbdE/c9xPxWwbzcOicibMM1J4D5SKvSWPcVhfOHNouS9Tpn/eUw41E+kFx4bTwwHYBm
+	LuegWo593PgL04+nGMOZUwZ/m4zLTdl+vAqKzBJgou5pMISBpCRl0MqXP584yekMhy2czCUp60k
+	P1uHd6s1AfkcoSLvyeYalkUexCVpZQR1QSyNEvC7A9nOtkGbSk2M++jku+Gg2g==
+X-Google-Smtp-Source: AGHT+IF4aCgWzzElVpwcBxwysKSGd2rmi3eJJOOMWNk1eC0qay4rNw1WoWP5TiayvNS1VGCs9tKV9A==
+X-Received: by 2002:a05:6902:18cb:b0:e81:f8cf:77d1 with SMTP id 3f1490d57ef6-e822acb2e0fmr19569399276.43.1750192401682;
+        Tue, 17 Jun 2025 13:33:21 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:56::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e8251aba27asm1603749276.12.2025.06.17.13.33.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 13:33:21 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: Gregory Price <gourry@gourry.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Terry Bowman <terry.bowman@amd.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH] [HACK] drop zen5_init checks due to segfault
+Date: Tue, 17 Jun 2025 13:33:18 -0700
+Message-ID: <20250617203320.1760101-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aCO1TGvrXajf1s4_@rric.localdomain>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
-To: Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
- acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
- dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
- jolsa@kernel.org, alexander.shishkin@linux.intel.com,
- linux-kernel@vger.kernel.org, ak@linux.intel.com, zide.chen@intel.com,
- broonie@kernel.org
-References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
- <20250613134943.3186517-7-kan.liang@linux.intel.com>
- <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
- <8fbf7fc5-2e38-4882-8835-49869b6dd47f@linux.intel.com>
- <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
- <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
- <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
- <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
- <aFF6gdxVyp36ADOi@J2N7QTR9R3>
- <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
- <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+On Tue, 13 May 2025 23:10:36 +0200 Robert Richter <rrichter@amd.com> wrote:
 
-
-On 2025-06-17 10:55 a.m., Mark Rutland wrote:
-> On Tue, Jun 17, 2025 at 04:44:16PM +0200, Peter Zijlstra wrote:
->> On Tue, Jun 17, 2025 at 03:24:01PM +0100, Mark Rutland wrote:
->>
->>> TBH, I don't think we can handle extended state in a generic way unless
->>> we treat this like a ptrace regset, and delegate the format of each
->>> specific register set to the architecture code.
->>>
->>> On arm64, the behaviour is modal (with two different vector lengths for
->>> streaming/non-streaming SVE when SME is implemented), per-task
->>> configurable (with different vector lengths), can differ between
->>> host/guest for KVM, and some of the registers only exist in some
->>> configurations (e.g. the FFR only exists for SME if FA64 is
->>> implemented).
->>
->> Well, much of this is per necessity architecture specific. But the
->> general form of vector registers is similar enough.
->>
->> The main point is to not try and cram the vector registers into multiple
->> GP regs (sadly that is exactly what x86 started doing).
+> On 04.04.25 22:38:58, Gregory Price wrote:
+> > Unclear why this is occuring, but a raw call to the PRM at this point
+> > causes segfaults on my Zen5 system.  Later calls to the prm work just
+> > fine, and modifying the structure to include pci_dev info still results
+> > in a segfault.
+> > 
+> > Debugging this is not possible on my end since the crash happens deep in
+> > the ACPI prm code.  Seems maybe the PRM interface isn't ready or something?
 > 
-> I see, sorry for the noise. I completely agree that we shouldn't cram
-> this stuff into GP regs.
+> There is a subsys_initcall order dependency if driver is builtin:
 > 
->> Anyway, your conditional length thing is 'fun' and has two solutions:
->>
->>   - the arch can refuse to create per-cpu counters with SIMD samples, or
->>
->>   - 0 pad all 'unobtainable state'.
->>
->> Same when asking for wider vectors than the hardware supports; eg.
->> asking for 512 wide registers on Intel clients will likely end up in a
->> lot of 0s for the high bits -- seeing how AVX512 is mostly a server
->> thing on Intel.
+> subsys_initcall(cxl_acpi_init);
+> subsys_initcall(efisubsys_init);
 > 
-> Yep, those options may work for us, but we'd need to think harder about
-> it. Our approach for ptrace and signals has been to have a header and
-> pack at the active vector length, so padding to a max width would be
-> different, but maybe it's fine.
+> A fix using subsys_initcall_sync(cxl_acpi_init) solves the issue.
 > 
-> Having another representation feels like a recipe waiting to happen.
+> efi_rts_wq workqueue is used by cxl_acpi_init() before its allocation
+> in efisubsys_init(). I will address that in the next submission.
+> 
+> Thanks for looking into this.
+> 
+> -Robert
 > 
 
-I'd like to make sure I understand correctly.
-If we'd like an explicit predicate register word, the below change in
-struct perf_event_attr is OK for ARM as well, right?
+Hello Robert,
 
-	__u16 sample_simd_pred_reg_words;
-	__u16 sample_simd_pred_reg_intr;
-	__u16 sample_simd_pred_reg_user;
-	__u16 sample_simd_reg_words;
-	__u64 sample_simd_reg_intr;
-	__u64 sample_simd_reg_user;
+I hope you are doing well! Sorry for reviving an old thread. I'm currently
+trying to apply this patchset, and saw the same issue that Gregory was having.
+Keeping the PRM checks would be helpful for debugging when things go wrong, so
+I wanted to try and apply your suggestion, but had a bit of trouble
+understanding what the core of the problem was.
 
-BTW: would that be easier for ARM if changing the _words to _type?
-You may define some types like, stream_sve, n_stream_sve, etc.
-The output will depend on the types, rather than the max length of
-registers.
+I was hoping for some help in understanding your explanation here -- I don't
+think I can see where the dependency appears. (In particular, I'm having
+trouble understanding where the efi_rts_wq dependnecy matters during the
+cxl_zen5_init function). 
 
-Thanks,
-Kan
+Thank you for this patchset, and for your help!
+Joshua
 
+Sent using hkml (https://github.com/sjp38/hackermail)
