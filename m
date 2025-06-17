@@ -1,121 +1,104 @@
-Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277B523770A
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F055123E35B;
+	Tue, 17 Jun 2025 05:08:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750136932; cv=none; b=EHQdxiVDfMijudfnPz0jsdivu1qnX/NBRKLqTr2JuEe0C3m/99LwTxVR+MapPZU3HV7Do8cmkQAFZ2ZCdoFgJ6ton4hg7CmDBny44RSU5TXSVzTkBTENUco4veFJiajWaKy4tY06Zb4yigBzI2ebcvGjmfSq8yvvIv6kA5O0HXQ=
+	t=1750136932; cv=none; b=e5b6aDMC+AKLYudLjXHon0NIXP3LGVQYRC5Glpx+KkA76dnXoQ04ec6zZDu2rYWpOEhwIOPMTQz6/fDFJJ/ohNRXV2ehCw1PUVa1ywy+RV+Af23ftzFlJiBorZXqOI9l52BbE/AhoAakY0QmJJxSYb/Pn31wWqlEIJ+xnqGNnAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750136932; c=relaxed/simple;
-	bh=+7dQxfUhGAy4SS1ZpusUklS9/5+phcCn7k7KJyX8YGk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=t3As310OA4hWt2gppKqbHGZUv+JOZ2GLN8ihQ1+Np7G3hV3soZZUkhHw3WDRrH4BOfixhQ2D9yX2Hz640R3+1HxzSVuAc7CWpdhJJ/fWV4ux2o0TbaEy8INPg5F9DjtPzc2tbHcJ3LtDR+mgRbER/oa8TA54d7PRm4N7v6AMjCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--khtsai.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QtriyEwb; arc=none smtp.client-ip=209.85.208.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--khtsai.bounces.google.com
+	bh=jn+AZcoS+gknzUx30CvE3/KJcpJXhjiNQQiH43qHxgI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h7ZpdGgk1hxIMYGAmpSzv0gKnDuswlp8MS7gjaxslxxsBrzu3m3LAkcIuf8DCExOd6qRjLaiMKOc5Vw+LNESlAoLmGbKfxJ6wP0q9ip6YNe64vGL1zvIo1byzeylwH0nai2iopVKiiD7Ne2+//cUUL9junKOf8PtikBkkeBEZeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FyX1Kb6H; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QtriyEwb"
-Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-32b378371b1so21942771fa.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Jun 2025 22:08:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FyX1Kb6H"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b2c4e46a89fso4139233a12.2;
+        Mon, 16 Jun 2025 22:08:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750136928; x=1750741728; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i4dXhN7ywt5V6z7FHvJ0Inv2dYG936KTwLKv+c4EnAc=;
-        b=QtriyEwboByUju6vVYF/5SO9P9TVo30yx270KgBvhSwB4IrkQNlaLH/aQqhuBa9UyA
-         n7FkFTpgdrLLWEwGnZLPjtofqNHcUAKEa4GikOlYxi7jFlvF67Rpvvil1kIoL8Y897VN
-         4KkzMwnU0rcu2TE+h3mX1WRP1OaLXMguKc++S9wWuqC4OYvhcOAFJYm7Wfa5bWNo54Fv
-         Pjs9znkUitRXmbVHfyGDiEeWC/9Bk82eyzJxYUQwPUOqCoe1dmyMRzN4SKWEPvlGo7Bm
-         8dkrYcbOkvD61RIneuLbrV98CFapRgaFcXevo3SG0ds3dZwi3+aLHNKd5pbgGAgX6fb/
-         jYAA==
+        d=gmail.com; s=20230601; t=1750136930; x=1750741730; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ORQSZScH5iwOR20pfQirho3FdyqdaURMxGfN/YBE6uA=;
+        b=FyX1Kb6HkJkuRHbB38tyB5PgIrCJqM/PNGfcr9ShPhesgrxZY3AD1yomxIYTuL2Xlw
+         Y3JqA7Rdtjcxtq9xTOYkqUlJUCiHoBe4u+3dvwBNhLEiM7IuGjDBYW3XLOzk8YeRnPF1
+         8Iw3ppX6eDvf+b29rJepGNuAkrdESCIM5Y2CENtvAHfsN0P55LASwI7iksRAd7LC8KNU
+         196t5O6cRnqN8hYURmoGNui9of5NmG2u4cw4ejzLM8E1OzknX23f0h5K4p+bXZ0u1jEJ
+         BkvA5bMKTnZbJiFvsy2xlxZ+3ay0NAbWeSiwRTard9RF3QZpAvLNGHq8zIi6prKj6Opb
+         bmyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750136928; x=1750741728;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i4dXhN7ywt5V6z7FHvJ0Inv2dYG936KTwLKv+c4EnAc=;
-        b=K2eNUAtogEVXAqnN11Wt8YwWkDMLQxXNLVd/AZLok0RTawylj21z0St1LLGDNR4op5
-         haLIiHndd1ttjnHmFc0s2KUmAAZa1z5xgOLMGee90GcMXIlqUtCAJeCQRPfj7VK9twuA
-         dIBjM+ltsX5O763gYir/t8wXjAlicJynQl8DXtrRhH+GYMHzhfMhj+lYfHKXinr1Cgnn
-         WY70IMqim//TofrX8G7qhaVVmghue0IbxHnf7ylphFoerxBAtP7EEq4MC6s1AJs/qou4
-         keHkkZV2Bo+2enHwWXJ5Bi1IDo5LQSGYAMbKCT06BoPD5PnVIDvJ03kFIbnMvzaLGQKJ
-         Ljaw==
-X-Forwarded-Encrypted: i=1; AJvYcCW1UZcdhFylPoxLyzNBsvzQcpxJazdSqxLXW16Lfjvc8XwWUuBwR65sKlW0IJv5CaUZPHD/40yr251Km/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yywr8AAEB03431Q0pvQhVarwSqwEK8PQ0FMN4y/wW4iGYxPOrW6
-	IszmxMSH+Omd8TLHNOiGpE+S0qTi94mhwJZDgkiTZXNujRaCgjIW2ZeTmxRwW/7zCYZN8D9ViPz
-	jV85HFA==
-X-Google-Smtp-Source: AGHT+IH4I8plCvioKdZPJMsYCNlKjSMJlVrKTpGxX4/Kq8vkc4UpNbDk8MhbJk4PV7yT/LvA0ujCcpLOmy4=
-X-Received: from ljbq21.prod.google.com ([2002:a2e:a015:0:b0:32b:3deb:7b97])
- (user=khtsai job=prod-delivery.src-stubby-dispatcher) by 2002:a05:651c:b20:b0:32a:847c:a1c0
- with SMTP id 38308e7fff4ca-32b4a0c5893mr29872581fa.6.1750136928270; Mon, 16
- Jun 2025 22:08:48 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:07:11 +0800
+        d=1e100.net; s=20230601; t=1750136930; x=1750741730;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ORQSZScH5iwOR20pfQirho3FdyqdaURMxGfN/YBE6uA=;
+        b=OvBAm+0omD19sk5oQpXBgHtgdsZkFw8Dxo03cE8En21MJ7qZH6H/WI3/skWhHQUiDn
+         KpNHbEv67OmjSiyyWQE/w7Em/5uPsHwEhVIgYKt6Op6rLI6ltf/T8fGoG9JpvcGKSCvj
+         eU1GoLssKhL8nQFwWDjkyE5yciv4lbBSMOhESSV0Xy/lXltMJbUi7tu9zfqP6WKaemXC
+         WZrUcDIGFXLVCxp39D61h4RnKNQ4pQgxT0Mp+MJAZgfjyIezGquokAtA4yqWtKg/Zv3J
+         Q4+onoVERN4PiSzJ+SpALsgi/ZDIMKDTs4vv0wxEZPuOVUc3382hqb/KzOSXT65CArHK
+         cwuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXURPp3y7EwLGZx+Z2clcXAqc6TZDvMSi5dzzZsc+Qcuk+ki2XjnQzGZDwuG5bWcVNwGLKi53FaNlx9jgE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzS8bRzMpb8stEIdg/hUWNw6M+Xoix7ssbTy7/diVUUMYpil4AT
+	ki8pBGxBFOECKSk9O4FIM1QuGYvPQTu4pWOV2dsZK6mR9H1lVpobuIlr
+X-Gm-Gg: ASbGncupAJ65qnS+pAqr80f6+lLq3K6Vuro+loMrvaO9rwqBP8rPEJ/lR+QVWf7Lqy4
+	Ua10XwlUhbo6Dgn5NO9RKmk0XdovT9fuwlfLa3gMVgn1Zr2S2PYbSZ313S3j/jjv8HHJeStS3ee
+	0/yDLi38LGnrJTQ1Q1YLgDntFXxUrvQzNpjAATDVUaLvNuhEm/C1i3/U7BMtW//kZkULaMHrXd2
+	Tc7eL2WdxRijhj/xVJBWWaznEdMGR6ONuBvLoI82UHZpaN5kHeXnns0jKJfKvUnwn+ZHaTGxYhv
+	zhWloY1hid/l0WTma9s6jHT7ZuWbG3b/oA4dlitkSOEU14BpBpDYZ6+eJ+1Nnw==
+X-Google-Smtp-Source: AGHT+IEqDf/C089XDze8DuijQXHRfftyr4C1u9LoRguwB27oUwZ29eFwHxr18ltua7GFqGz7HGzG5Q==
+X-Received: by 2002:a17:90a:e7c2:b0:312:639:a062 with SMTP id 98e67ed59e1d1-313f1daa971mr21369290a91.16.1750136930150;
+        Mon, 16 Jun 2025 22:08:50 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-313c19d1eafsm9712177a91.18.2025.06.16.22.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jun 2025 22:08:49 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Inochi Amaoto <inochiama@gmail.com>
+Cc: devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yixun Lan <dlan@gentoo.org>,
+	Longbin Li <looong.bin@gmail.com>
+Subject: Re: [PATCH] riscv: dts: sophgo: sg2044: Add missing riscv,cbop-block-size property
+Date: Tue, 17 Jun 2025 13:07:22 +0800
+Message-ID: <175013680588.1018298.10559632401541865399.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250613074513.1683624-1-inochiama@gmail.com>
+References: <20250613074513.1683624-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.rc2.692.g299adb8693-goog
-Message-ID: <20250617050844.1848232-1-khtsai@google.com>
-Subject: [PATCH v2 1/2] Revert "usb: gadget: u_serial: Add null pointer check
- in gs_start_io"
-From: Kuen-Han Tsai <khtsai@google.com>
-To: gregkh@linuxfoundation.org, prashanth.k@oss.qualcomm.com, 
-	khtsai@google.com, hulianqin@vivo.com, krzysztof.kozlowski@linaro.org, 
-	mwalle@kernel.org, jirislaby@kernel.org
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-This reverts commit ffd603f214237e250271162a5b325c6199a65382.
+On Fri, 13 Jun 2025 15:45:12 +0800, Inochi Amaoto wrote:
+> The kernel complains no "riscv,cbop-block-size" and disables the Zicbop
+> extension. Add the missing property to keep it functional.
+> 
+> 
 
-Commit ffd603f21423 ("usb: gadget: u_serial: Add null pointer check in
-gs_start_io") adds null pointer checks at the beginning of the
-gs_start_io() function to prevent a null pointer dereference. However,
-these checks are redundant because the function's comment already
-requires callers to hold the port_lock and ensure port.tty and port_usb
-are not null. All existing callers already follow these rules.
+Applied to for-next, thanks!
 
-The true cause of the null pointer dereference is a race condition. When
-gs_start_io() calls either gs_start_rx() or gs_start_tx(), the port_lock
-is temporarily released for usb_ep_queue(). This allows port.tty and
-port_usb to be cleared.
+[1/1] riscv: dts: sophgo: sg2044: Add missing riscv,cbop-block-size property
+      https://github.com/sophgo/linux/commit/b8518378ffd3469b5ba871ee0210b3c16de45d66
 
-Fixes: ffd603f21423 ("usb: gadget: u_serial: Add null pointer check in gs_start_io")
-Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
----
-v2:
-- Remove Cc: stable
-
----
- drivers/usb/gadget/function/u_serial.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index ab544f6824be..c043bdc30d8a 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -544,20 +544,16 @@ static int gs_alloc_requests(struct usb_ep *ep, struct list_head *head,
- static int gs_start_io(struct gs_port *port)
- {
- 	struct list_head	*head = &port->read_pool;
--	struct usb_ep		*ep;
-+	struct usb_ep		*ep = port->port_usb->out;
- 	int			status;
- 	unsigned		started;
-
--	if (!port->port_usb || !port->port.tty)
--		return -EIO;
--
- 	/* Allocate RX and TX I/O buffers.  We can't easily do this much
- 	 * earlier (with GFP_KERNEL) because the requests are coupled to
- 	 * endpoints, as are the packet sizes we'll be using.  Different
- 	 * configurations may use different endpoints with a given port;
- 	 * and high speed vs full speed changes packet sizes too.
- 	 */
--	ep = port->port_usb->out;
- 	status = gs_alloc_requests(ep, head, gs_read_complete,
- 		&port->read_allocated);
- 	if (status)
---
-2.50.0.rc2.692.g299adb8693-goog
+Thanks,
+Inochi
 
