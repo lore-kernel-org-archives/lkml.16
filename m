@@ -1,268 +1,290 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9464D2E06C8
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750164522; cv=fail; b=LDH5J+KXeOMZ8mb2fUB2S3g9YYgvssjtQd/wg4y684MgdPpbQ1hcLfwRktQRcnD/8eSA51V6jHBxbAK9BP5QEMRF1GZAYhjp65XM7JCw/fzfJ2UiPu+Ov0Ablh513yMOW07zaJ1qO1flJjICwgyKAtEQ9mtiy2olcf0Aask7aUI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750164522; c=relaxed/simple;
-	bh=aBtT9P13rzGz272waLvtWCs6WN28MP8rrEcA2PHTPSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=ggT0uVi+hCICB4m7qVMSAGbHIWmFlAlHovVQeteCj28zQCoQKOrj7IRaWfuzCJjGbb3SAlIATq3ByQxGnlYgMmtXWPZ+YeTX6e5zk/J09TEq1lNPWzrmLsZY0WrKgZ2ZGnkCLzRroo4YS8HI4xOs/YFLu6/w/6KARMtCH4qSpBs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=qu4fM+YP; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=SpIrsG90; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367E34689
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750164548; cv=none; b=VxVpM1IqUjUtCk78QRgL/Y3Uyxsag93a8T+U7RvAIj3snUUu1dS6FIf0vmuctZqiaEfw4v+MhhEP+PT+PLONzX0DyDRnXb+KwDAhysP5aoheUjvRyK6RvexzXs1Z9LMIg+7LcEcG5sWf5K4hoP+ceAyEG6o3qHUji7xvGUAK7IQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750164548; c=relaxed/simple;
+	bh=vqglCvKb/kVnaBK7RDUWDgQ/lpuelVEe/fAU5UV78nY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R2V5sTuAklqreSPT5qcZWIQq8uxLGk7lIbRggO7QtiE+ZDMeVFwM5qXDTY810THUtWrt4m1cfiCtikpwryIYFqAnHsWnWbz5OATBFhhDdU6ap3yYGKD0CBNYuvCSBFXFauq5qwgDSxODuztdHg4ws0J7c/lFbpSfFPACsMJCWj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=TzbgZmve; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qu4fM+YP";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="SpIrsG90"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H8twxU023672;
-	Tue, 17 Jun 2025 12:47:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=aBtT9P13rzGz272waL
-	vtWCs6WN28MP8rrEcA2PHTPSA=; b=qu4fM+YPletA7OVNhenxzeo1PWjSFtNBAV
-	EFp+o4rUxlbcwXn89fmxSUqmJyUpdq0PD+rmGh3Et1ouFwYqZPECgfW15Dbn4zg7
-	1JeSsFxI4Qx2UnypsI28F7BOyubccQWr5d6LEit4dd8g76Mucqt/RMqZ1qfqJEdW
-	2mzz5iDGdxkdbOqMP0HhahsoUJiVuFrA292Ijx4XnXGDdVTUQJxWgsQvoa9oqpNG
-	Zxw1C7GKt2+5zoEyDjFsME4und1dr5XO7hCzuu1lu0iowScuYQdYifZO+A4AwIgC
-	UlMglC1v9zb8T21ow4lXfXY322A5NqD3nad8IP7pwS0kPQJt8QbA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yp4n8hh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Jun 2025 12:47:47 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55HChVUw035100;
-	Tue, 17 Jun 2025 12:47:46 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10on2043.outbound.protection.outlook.com [40.107.93.43])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yh8xnyj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 17 Jun 2025 12:47:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=sead4wa3T2cH4ZXZx3EUH40QuP5dDSjVDA1saFdfCCca7Gv5v7OSeSM09KRFZfieWQWyFVSR3fGzMiCiaFA72+3JKvo5uvVn08N2xAVRtS7uobPvvAql+TVx1iERahd586UHfWZv1eTihkQp+xTypq6OXS2eKjZuS5V7H+jd0rx2gmVnule5PnAp4vzvRFpBRfMKuMEtMZb0H8+liAUqwINUkQkz0ULPzRVblORjDbvUMkTM7badA4JOXJw0zTfn4Gcq0vdmo5Y5sn2XtKdFrjF7gS6XZ/vMG8io89FcArj3kgWTmIflvmSmC09p72GTPUBGVfweB/mPXYYewaMhBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aBtT9P13rzGz272waLvtWCs6WN28MP8rrEcA2PHTPSA=;
- b=qVpG9HZ7SiKdMsatWgBrJMLxor0h9fj4Y8AwPXrlFwc4ulsclht50VZCGbrfyPp16Znjd1gfNHeW0ZXXLac5R2fyYYBOS0yDeIAgCUyNNX7ix8ujUQmeaS5uqUGz6aL58zo+MyZo2Oj1BeA9+m0RJsGu3ey48l4geiL1Kdy9jnG9dgzLGalp8OMw9FmYTlKwnufevQM1L0LAbj31h6HrTsrvSf6f6ibybdazsy2XiaHYJVaHTdIuBw9AsEM3pmJjB+OKwe7FBmfXtAzEqTT9Of4Mg0/ym/5HNzOfb3/bn9pjtlRQN6pXxTgabivoXhs7o3zWpd8Xvc7D3Bclz/SFmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aBtT9P13rzGz272waLvtWCs6WN28MP8rrEcA2PHTPSA=;
- b=SpIrsG90Aige1aH3H/lGeyVAAXw4aRfxS4qWg5l4FdDGgykK88mY2vLbNqrp25Ht4sHkdM2XfmehvDHF4NPF1iV9c7fmE1OCuyNfZ2UhEpPgRhBMbp1RJyb906CSduxktvyLRAjX5B7PJsgtwvAnk6Z4GkJfxuyDhaG8tESH5T4=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by DS7PR10MB5007.namprd10.prod.outlook.com (2603:10b6:5:3ab::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 17 Jun
- 2025 12:47:41 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8835.026; Tue, 17 Jun 2025
- 12:47:41 +0000
-Date: Tue, 17 Jun 2025 13:47:39 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Pedro Falcato <pfalcato@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Rik van Riel <riel@surriel.com>,
-        Harry Yoo <harry.yoo@oracle.com>, Zi Yan <ziy@nvidia.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-        Dev Jain <dev.jain@arm.com>, Jakub Matena <matenajakub@gmail.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Barry Song <baohua@kernel.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] mm/mremap: introduce more mergeable mremap via
- MREMAP_RELOCATE_ANON
-Message-ID: <93528cdf-93d1-4931-b668-51c9fb29d73c@lucifer.local>
-References: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
- <7e51e1e2-7272-48d5-9457-40ab87ad7694@redhat.com>
- <b65dd020-5e02-4863-8994-def576e3d3dd@redhat.com>
- <76zi626uk53dtfzmezzt6cfz45ansam2gpcumddqxnipnw5jkh@qwfzoxgi255b>
- <68d8c7ad-aea0-4556-be63-9b67d70e4386@redhat.com>
- <58560256-58da-4fa6-a953-d2c4695ffba8@lucifer.local>
- <f86c4211-fa9c-43a4-b60a-4fc563fd4d61@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f86c4211-fa9c-43a4-b60a-4fc563fd4d61@redhat.com>
-X-ClientProxiedBy: LO4P265CA0093.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2bc::18) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="TzbgZmve"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H6u2Y3030619
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:49:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:to; s=
+	qcppdkim1; bh=HsjtAPzi1ENatdMFvPbZQiDIcA+6y5YgY7lBmrMZq70=; b=Tz
+	bgZmveOd9ZR3FCr//DrV1wJ5RbUDyeeS/1oVqfYTxGwKV1YNLgwrsDMidzxggcxT
+	F+xsRKtD3jvaeIRmvXDYwyvaxzs1yRob0Jo1FerC1EX3iTLf74IV/e6oH3NiEOvS
+	HRWcz9qOQdBQ2Nos83rJJB+iQWpC+tsZOwaDQL4/2PA8nb1iTajurisRrgl/pQtd
+	5jnIL7esx+xD7c+pUMqTuafQ1TrHjpAVkckI2rmUHEq6jLfWc9RtWvy5M4z4N7D1
+	rZf6CZHd9E5vTOnPInLyiJGEKUFZEjpnt2U4oVsXntJxeOlPFD/jgzo3X2hGLFn4
+	289CCKKb+DQ2kU8o9lpg==
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47928mg9ym-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:49:05 +0000 (GMT)
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-2e8f1365181so3598231fac.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 05:49:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750164544; x=1750769344;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HsjtAPzi1ENatdMFvPbZQiDIcA+6y5YgY7lBmrMZq70=;
+        b=ZQPN2t2H+WSwk5cNfRfijyl7i9419SYplSWRTLpk1IJopEMRsc1mTAfZHZ/gcX+uNW
+         fi8Qf2Nrara8cVSqkvC9xdRbw3cixv5TbJ6T4xl4pY0Wedzv61X6NV7D1CWXtSzGVsuE
+         dB7ihHqQPeYDwDJo7UKuWT+FPquvkP4zyyCRNTT6yrc5mxY7QzboozlM0YUR6M4gompN
+         wSlcYIV9FF2wXhh1PCQQj2FnbAapZWrf1l/aIWTQ5Cxb78pjXHK34B58NsrU/nHeOG2u
+         p5YG9JHQiW+v9Ru9Q6sSOHKpAL4HFMa2SMM8cRkGBsb1UlYCKxJ2+2Xne2vS0I/zpCGv
+         90Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGZUkUNlfhpPQpeguhDJsdk57Z7NLwy9T9oL609/GqYK5DTw79tzTmh9MbLyihYjuoGqp3DeTqcLWJKcU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztjzElzKR6yc7lw77gLTaAltTByJ0oZ5Lgt9Hwtn+jpBSehjRJ
+	PmSIaqjAr+rSitvSfBDvcXSpl0aBZRhqNqoWslFKipuNlvws9X+qozd3au44y2kYtEyFplbvH8v
+	gdU0K5sAqi7w9vNI5gX8uQtdDQmqkVCqO/v47n43jyjHXehik3GAC3qkrm1Br0S6ITyaWpZg7Gs
+	I064/CAiArAJqqmOeQjJjzbonJ7jwWhrDRMoAnpBYoAw==
+X-Gm-Gg: ASbGncubUnFTK9FEY8MswvrpMD5FcahzOqkdo9a+i3oePXMlcvHhcg6O+xWRYiyOZ+p
+	nyNl4FnkRVAmgQ8qHzpK4PAlbVQjHZGbhP5mKAOldxQEBQ+X6ZzuMEFvTF5rrX51JcpjiMFBeDi
+	NsxDAgcBZiFUHMv7iYCpdWPsptF9MGKihcjWw=
+X-Received: by 2002:a05:6871:808:b0:2c6:7f82:d38c with SMTP id 586e51a60fabf-2eaf08f5e95mr7741560fac.31.1750164544082;
+        Tue, 17 Jun 2025 05:49:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFVcM/MQTWFafHIfMYka9uN1j4G7MdwAjNhpq/R3LYdd+ev5tTG9Q8+EdYKxyTexzb9k6Yr8QjEodNKm2RNHAk=
+X-Received: by 2002:a05:6871:808:b0:2c6:7f82:d38c with SMTP id
+ 586e51a60fabf-2eaf08f5e95mr7741553fac.31.1750164543683; Tue, 17 Jun 2025
+ 05:49:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|DS7PR10MB5007:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1c09c398-9d7e-430c-551e-08ddad9d2627
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3hDeUto9qzsIyoHagTCQyG0olW+Dd2HQRhTKQWvI5xRe6K3NxeKuFab7gmol?=
- =?us-ascii?Q?oBfmrW0wkVFCWjbn3WwnWUX4h9Y4vOL1yWRaTMKpuJC393fraPBtUD6K/bxM?=
- =?us-ascii?Q?IpXLZK8tSohnwrdTd4TIb43vGGU+I3wsq1zCO7e5HqR/9827ibNbuBKTHEms?=
- =?us-ascii?Q?o0FFTPueKPf7tb8r454uEH/Skwu11rVqYi1myirhRp1o2KGCUEvwotAqwlWQ?=
- =?us-ascii?Q?Y+TWqPkKJpdthqX/hmdQSYc1fK7VLUt2Eg2r9aVSnDodyTAGE2FsSbpc8cvz?=
- =?us-ascii?Q?epVkfeBra+xCGguseWsp8zAss70fPRI+nOLf/u0jPQWSmvITkEWJlflJJjyi?=
- =?us-ascii?Q?hqWYTQ1of99QgKzTQZaVsWkrh3ICuxbfBWMrM5EMym/TKITYb+PoYJUAmA3f?=
- =?us-ascii?Q?cflX6nlor8UxMQSPUsmFfieWzEPRADcM5ZBXca+/1c/mozN8HYf1+8mvTO7Y?=
- =?us-ascii?Q?zOOiPnRlf0bNzpGDaE7alF2rneOkdjo9DiAaTCH6n0lunGpuYjRybQj7GNZa?=
- =?us-ascii?Q?nIOWkaqcMP/c6IBuwJHVcU5nYGYKXbiusR/sbLoPKIPJQz8kXtbP7qtsF0dx?=
- =?us-ascii?Q?pwgye8YLqMuKYIz30KijShnUFahI83RqRRPnnOIO/ikM8MX93SaJxf46AjM0?=
- =?us-ascii?Q?uZ5lR7bg540zH4Bnl93AlrzDKT01BwIp+7uraUcSdhNk3yLA83kBLnryaq2R?=
- =?us-ascii?Q?Y2KEpYrMyp5eCy0cpE++0WgIh/cn2zjxm/Yu+BJttyILN3YRvfHGR4GetahV?=
- =?us-ascii?Q?2o9WxX93pzOiuMleXbmHuX5qSHonz5RTF8fcGBewowk4pT7gHt6ZJIf9xHDT?=
- =?us-ascii?Q?4ykPJaYYJXyp6ZQCzSDTbo7s/NsBsuWhet8HM0HP+8R3sVUV+Ty6bdTQD5gW?=
- =?us-ascii?Q?w0+96prdrCWCiDzaT+U3V2yppMusA9ZHlBnyGvHhuMVSmNdU/PdKR9k/CBLc?=
- =?us-ascii?Q?aCShANUsbQRwciLzbiHtOmYTm7joKs+iF5JLcxWHhpi7veMh7gRoiU+Dy3GY?=
- =?us-ascii?Q?YXDPylIrnpX4UXWqcibtSGhlc5iGGqaglGXmUTwMHBBgoJtVDRQwwF4eau4Z?=
- =?us-ascii?Q?/yyw03+Bwz5MP1CDOryTg7hdgs56Pv3jdHYw4033ihnKulXV8nSlGJw+Jwd0?=
- =?us-ascii?Q?cb8c/WcjDWG+oQM6wXRCxTjr4x+zJ4OMXYcEFnOEv0N9VspISvdIF1fQ/hZG?=
- =?us-ascii?Q?/eiIdubmKX7fp4sPmwVonRMh4vPqaYDTI2Em3FE3LA8LXYXQMq99u/M5MJfy?=
- =?us-ascii?Q?niL+4nnw5nN0CmcSgGDwKkKaFA6nw93TRtiTUqD6ZDrQgZ810oZWoq1upfKD?=
- =?us-ascii?Q?gySEExp1l/D++5AjC8qK0E8Jw/OvQBBWs4RtwiwSkMDmZl6nCbSXn0e9NcLk?=
- =?us-ascii?Q?Ahczz7yPh/+f5dPfWCkgbO1/EfUqCqlKJn0D67XMhOnP/0wcgA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?S75+zgrMaFYjIlxZ03TMRda7V6Ykz2iHwItSr4BFij4nsBlMwKP1R0YmPbS/?=
- =?us-ascii?Q?LkFPgDrZn0ZbNazpKzAVdTzQhN5Qr9BeB7kcu2I6wSZaD2+iRoSwUYZoIzp3?=
- =?us-ascii?Q?q9D0FhAgk64nFvua4LOIPGsyB82ts5J0piGC/LW98hqHgl0qyoRsBl34l8p8?=
- =?us-ascii?Q?ajehAmgOGmHbP6m8GkxHTjlAXEPCNRf62gSoQH2CNEBTAFlAPyAwr6E+gW4K?=
- =?us-ascii?Q?jNlVNrbp8VaVNcRXUnywBbkBkwliROieVLuxD8gFGkFkkftbd1B8+aSt/MnM?=
- =?us-ascii?Q?Cd9kIqlKlQS0ZWHrvEv/8rIOiQkzi6ebcKFhDKydn9HRnb65nWCOou8jkiSF?=
- =?us-ascii?Q?elMstOX4nlT7k8Qm3nFtmK40zTJRZ23mqRCjiq2pdEWNZHo4KKQYODsRsYUC?=
- =?us-ascii?Q?0nQ9D3fBCe7SjMEZQL8wiciZdd4oyNS0y5qBjHNCM8MpOY0nQV7CXbIjTfES?=
- =?us-ascii?Q?VZkw0DmEjbFj5ThKSuZZJ6kZb4OJdernCK6nAqNtGknoo8hZEzGOq4e475/e?=
- =?us-ascii?Q?6JzTathKPvnaWEsLALOTXj8t/7SyINKMUMF3Lkf92SR3xYyFAA5itcJVLAtI?=
- =?us-ascii?Q?z1AQCORLHYtdxb0L6tELXhLH4JnThmx6+08tWV36x1TIYVa8GrbcdV18hvZG?=
- =?us-ascii?Q?FuuIhdL82nvX7NqIcNcVthKd7wKVnlqxNQJIy01IHmAWNM7+mAYL7fGzCP/p?=
- =?us-ascii?Q?15dNk4JfoKvnNLT6dlohQJUsRVTtNlapTVEl8EPKQdC4NhtvQ5UT7tD+2wvk?=
- =?us-ascii?Q?fDl2AjZX1OIpdkRULK9PBQSrfRpDkBKtkaGmrCFjPBb5zOhwP9c8Woa46RpE?=
- =?us-ascii?Q?vkKyzETeqp5jXU5TEEDt5+lx+idAG0EIUl4kkas7cryaWreuLdJOIKPzcG+u?=
- =?us-ascii?Q?Yv1e9DgE2On7taoYlp+gEIV1fKM+QkBrFgutbQ+89yLwUrMGp6YXDCsGHbWS?=
- =?us-ascii?Q?h9Ww4zBmafkJ/f43fPyAxayA7Tq922xSqZhPEUb+4uPhzg5azBjLCjZYtWKp?=
- =?us-ascii?Q?oMF6GsEBig3WRajWiKnnHaamNDarH7Ey9hwrbmxDgNepwWX4WqkSN80SGKaz?=
- =?us-ascii?Q?MDYVxnmVRTqEa4ogYiFeObg4ta2rsU4w//Xx1VDK5RWv1hGlVntnq0rw9bkl?=
- =?us-ascii?Q?w09KC5b/McLE+J1vNusW/4e/+fuFhWhlssm7ptcQCfg/cA963NepI3ekL7hU?=
- =?us-ascii?Q?5yJGb2zvDdEB5rq5r53SOxx1kY40HRjOA8SOuObSP8g6i2mIRB+YFssu072V?=
- =?us-ascii?Q?3gERgLYJeLx1fB6egnZO5WNwEZM6AzCnX5E8pSe4gelp5KePpDkC+B1uGgyo?=
- =?us-ascii?Q?AVFctuuh+LUQthW8ig9++wnpgCGjT5feU/cpBStLmhnuZv+2+mJlZITFu984?=
- =?us-ascii?Q?dF++HL3haDSdDCn/4PNY2rVqK6dKzvFGkL0ckgEj3lxP5pFHlVreLSsR1R5F?=
- =?us-ascii?Q?8fobXQRUShKsoPSQBGh5gZhPVj366XsKyVJ+yhcYJr91cILAAJf1f+hCanWB?=
- =?us-ascii?Q?hXoO3lDBjRT/hIeVoOLP/GCl2BstdsdnzQ2enFU9wEi6frDxU5d679yiLCD/?=
- =?us-ascii?Q?WWZ4bKvsV9I9a0+7keLIehSpv6Yag2Fpo3cfrhVmrmR8EYIPQnwydGBHVSH8?=
- =?us-ascii?Q?lw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	haAD5FuZQz8L74OcneIxFJUZFf4+IvgBVR6ZfNu+LVhrazhXyEPvgybu7NXiKUsGXxDwlB2eQsc/ON9GwWNVW4UyevjCmUcNRF0rz63SwFy9ifb7krCspq4cH7n+8BWCL1wMHWebR37WxkvjS6dSpIfBIlvM2RwS8WT38o0bVDRTKuCtRHMb87a6fmFpPM//wLyAzmG5cIcHEec2uchwhsx28lu0PJZ0nKb5fMEIf1/kcZpYQSK+CYzZcBnIrpGf7kVjC6VIo5eBXS9ukvnldAnAVYBAydapT2uXgWPEyFDjPq/12eONq0d7U2Aw+50zfvBWbIWQCytC1fMR+OekvafD6tYA6uQzdVlJJQ9Gr1sMijULrNhUfTCOHu4Qsgi1u8P5Vhc8Mf4/ztpNsc5Eoplf0tumJxGQsZHM3c5ChjyigijooOc8dHHLJPX4jvgGhs79BOZsMRXpM28iM6MS4k+e3XcWBLD0ASfVD8Z9j8suZDE/gA2Qs3UaLQtIUGced1riaadatmjwYfD17wZoOgWo8YMM0momuhuiOsfkcEhrJVoyd5AzkojwVCRjfGaTO+nOB+Dh/pEHBT8qw2TDwJR42Z18PqUYIg0jwz2BvI4=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1c09c398-9d7e-430c-551e-08ddad9d2627
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 12:47:41.9003
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3RptridQuy+BvP+oFMJdT7d3PA50ETEo7rZx6fVsrH93QOGKMGnoriEjgD3FCdX7ld+/kf7/snXp0V5MZF54+Ea1OA947TZbvf07sZdW0m0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5007
+References: <20250613235705.28006-1-robin.clark@oss.qualcomm.com>
+ <20250613235705.28006-3-robin.clark@oss.qualcomm.com> <aE1RPZ_-oFyM4COy@pollux>
+ <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
+ <aFCO7_RHuAaGyq1Q@pollux> <CACSVV03WboQp_A1bzQ+xpX5DDkfaoXmbTuo9RfZ9bMaVTqdU+A@mail.gmail.com>
+ <aFE6pq8l33NXfFdT@pollux>
+In-Reply-To: <aFE6pq8l33NXfFdT@pollux>
+Reply-To: rob.clark@oss.qualcomm.com
+From: Rob Clark <rob.clark@oss.qualcomm.com>
+Date: Tue, 17 Jun 2025 05:48:52 -0700
+X-Gm-Features: AX0GCFtPfTlA2GRsU9ACng3Ixka2Eu1d511bEmpGNDNZ-mVIdVL_VX43qMBCLHE
+Message-ID: <CACSVV00VzOfTDh2sKst+POzkZ-5MH+0BDY-GVB2WKTyONRrHjw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDEwMiBTYWx0ZWRfX90kOh4Saje90
+ GDONgA9rIDgq2oSp8qs+/ELKUNpxbfP0K+Tdl+c56XYMoAT7IE2Nom8VYPW26osJ6yfPqcua9uR
+ YzV+U7ziuCm33QYmH17j+strt9/Q1MDpJS2rLM8oEepHfQ5QhpGDOJ2sTAUqFLjb9vDAhGBrzr3
+ N8ya/ExBCJAmn4kRn/adfhWiXcwONtKs0n4NG+zoWaBIZx8fKNfZPLAHVli4aQTRyxTJzJyTuoI
+ xZABdPfTJ/quIo+wBOuedaDX8cWFnTFe2SRHbBgJDeeNr0o5giGtpiwuSym9C6AI0tLSL9iKFII
+ H+jDRE1eRgVPpCDd7yJtN00njB9WYhDuwUA7v+PsPF1dJdE6gdy0LaFpU17dAQA63HtXuv1M2bX
+ xuzsq82KdXgtV+OaMuId5d8xinh4yGvg/mAfSsqV9uOLOhja7sj3t/eLmsnu7Q2Eds4xFujU
+X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=68516441 cx=c_pps
+ a=Z3eh007fzM5o9awBa1HkYQ==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=e5mUnYsNAAAA:8 a=20KFwNOVAAAA:8 a=hmUYbjr5NfTcrHOMeKgA:9 a=QEXdDO2ut3YA:10
+ a=eBU8X_Hb5SQ8N-bgNfv4:22 a=Vxmtnl_E_bksehYqCbjh:22
+X-Proofpoint-GUID: I6TDdIaGuIifpm7R0ua5hiWTxJpQNWC-
+X-Proofpoint-ORIG-GUID: I6TDdIaGuIifpm7R0ua5hiWTxJpQNWC-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-06-17_05,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- malwarescore=0 adultscore=0 phishscore=0 suspectscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506170101
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDEwMSBTYWx0ZWRfXzusLTquy1ejI 7jyuaqYkui7wIzc/VCoSxS0vWduGZnTY6NZJXAK4qFeE3LFegRBXq9ip7LQJeOEQBLfZvorkQKz Ts2mllNQnqkoPbhdMbLPlhMwpahvu/dgVaBJb15/U/NgCCjPj2Hm3NETVownIzJcYXfh/0k4Wmi
- pz2553vzG2OIGLFRxh1986gHp7LTgT7n4fOFs4zEdhod6Z6lV5Ui6uFqDje2t/inhclbw0yTUAB Vk7Td62ZckhS21meefYPpwQp3p7UjWGg4Z7SGUD1x5bPMvyu64Wyqm/bS3zY/PBC0Fg/I1XuzQ9 Z4sk6/nEmCLtx0u8+yh5tAWdZvuKN4h7eAIPbrS/EcvemeziUl2sA7shJ4YREUJqxi3I5olGmHd
- Wxf1YyIeHXXAYPyfwrmvsgNeARL6eLAWeBUqTqtEW3n5GAfOqH7bTPfZc93wcjuz9DgdnYLk
-X-Authority-Analysis: v=2.4 cv=K5EiHzWI c=1 sm=1 tr=0 ts=685163f3 cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=K1PO1kuyM94JsJ6F1mQA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: 8nZ3kGjtL295YFIL14ozd99Tq10xqI5b
-X-Proofpoint-ORIG-GUID: 8nZ3kGjtL295YFIL14ozd99Tq10xqI5b
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506170102
 
-On Tue, Jun 17, 2025 at 01:58:59PM +0200, David Hildenbrand wrote:
-> On 17.06.25 12:57, Lorenzo Stoakes wrote:
-> > On Tue, Jun 17, 2025 at 10:45:53AM +0200, David Hildenbrand wrote:
-> > > mremap() is already an expensive operation ... so I think we need a pretty
-> > > convincing case to make this configurable by the user at all for each
-> > > individual mremap() invocation.
+On Tue, Jun 17, 2025 at 2:51=E2=80=AFAM Danilo Krummrich <dakr@redhat.com> =
+wrote:
+>
+> On Mon, Jun 16, 2025 at 03:25:08PM -0700, Rob Clark wrote:
+> > On Mon, Jun 16, 2025 at 2:39=E2=80=AFPM Danilo Krummrich <dakr@redhat.c=
+om> wrote:
+> > >
+> > > On Sat, Jun 14, 2025 at 08:03:20AM -0700, Rob Clark wrote:
+> > > > On Sat, Jun 14, 2025 at 3:39=E2=80=AFAM Danilo Krummrich <dakr@redh=
+at.com> wrote:
+> > > > >
+> > > > > On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wrote:
+> > > > > > For UNMAP/REMAP steps we could be needing to lock objects that =
+are not
+> > > > > > explicitly listed in the VM_BIND ioctl in order to tear-down un=
+mapped
+> > > > > > VAs.  These helpers handle locking/preparing the needed objects=
+.
+> > > > >
+> > > > > Yes, that's a common use-case. I think drivers typically iterate =
+through their
+> > > > > drm_gpuva_ops to lock those objects.
+> > > > >
+> > > > > I had a look at you link [1] and it seems that you keep a list of=
+ ops as well by
+> > > > > calling vm_op_enqueue() with a new struct msm_vm_op from the call=
+backs.
+> > > > >
+> > > > > Please note that for exactly this case there is the op_alloc call=
+back in
+> > > > > struct drm_gpuvm_ops, such that you can allocate a custom op type=
+ (i.e. struct
+> > > > > msm_vm_op) that embedds a struct drm_gpuva_op.
+> > > >
+> > > > I did use drm_gpuvm_sm_xyz_ops_create() in an earlier iteration of =
+my
+> > > > VM_BIND series, but it wasn't quite what I was after.  I wanted to
+> > > > apply the VM updates immediately to avoid issues with a later
+> > > > map/unmap overlapping an earlier map, which
+> > > > drm_gpuvm_sm_xyz_ops_create() doesn't really handle.  I'm not even
+> > > > sure why this isn't a problem for other drivers unless userspace is
+> > > > providing some guarantees.
+> > >
+> > > The drm_gpuva_ops are usually used in a pattern like this.
+> > >
+> > >         vm_bind {
+> > >                 for_each_vm_bind_operation {
+>                             drm_gpuvm_sm_xyz_ops_create();
+> > >                         drm_gpuva_for_each_op {
+> > >                                 // modify drm_gpuvm's interval tree
+> > >                                 // pre-allocate memory
+> > >                                 // lock and prepare objects
+> > >                         }
+> > >                 }
+> > >
+> > >                 drm_sched_entity_push_job();
+> > >         }
+> > >
+> > >         run_job {
+> > >                 for_each_vm_bind_operation {
+> > >                         drm_gpuva_for_each_op {
+> > >                                 // modify page tables
+> > >                         }
+> > >                 }
+> > >         }
+> > >
+> > >         run_job {
+> > >                 for_each_vm_bind_operation {
+> > >                         drm_gpuva_for_each_op {
+> > >                                 // free page table structures, if any
+> > >                                 // free unused pre-allocated memory
+> > >                         }
+> > >                 }
+> > >         }
+> > >
+> > > What did you do instead to get map/unmap overlapping? Even more inter=
+esting,
+> > > what are you doing now?
 > >
-> > My measurements suggest, unless you hit a very unfortunate case of -huge
-> > faulted in range all mapped PTE- that the work involved is not all that
-> > much more substantial in terms of order of magnitude than a normal mremap()
-> > operation.
+> > From what I can tell, the drivers using drm_gpva_for_each_op()/etc are
+> > doing drm_gpuva_remove() while iterating the ops list..
+> > drm_gpuvm_sm_xyz_ops_create() itself does not modify the VM.  So this
+> > can only really work if you perform one MAP or UNMAP at a time.  Or at
+> > least if you process the VM modifying part of the ops list before
+> > proceeding to the next op.
 >
-> Which means we could at least try without such a flag.
+> (Added the drm_gpuvm_sm_xyz_ops_create() step above.)
 >
-> Regarding MREMAP_MUST_RELOCATE_ANON, I absolutely hate it.
-
-Ack this isn't life or death we can drop it.
-
+> I went through the code you posted [1] and conceptually you're implementi=
+ng
+> exactly the pattern I described above, i.e. you do:
 >
-> I'll reply to your comment to my other mail once I get to it.
-
-Thanks!
-
-I know this is a gnarly series so appreciate you (and Harry of course!) looking.
-
+>         vm_bind {
+>                 for_each_vm_bind_operation {
+>                         drm_gpuvm_sm_xyz_exec_lock();
+>                 }
 >
-> Users that really care (testing) could figure out if merging worked by
-> looking at /proc/. Other users ... no idea what they are even supposed to do
-> in that case. Not mremap()? But what is the use case ...
+>                 for_each_vm_bind_operation {
+>                         drm_gpuvm_sm_xyz() {
+>                                 // modify drm_gpuvm's interval tree
+>                                 // create custom ops
+>                         }
+>                 }
 >
-> If the "not merged" case would be relevant, a workaround would be ...
-> mremapping it simply back?
-
-True true.
-
+>                 drm_sched_entity_push_job();
+>         }
 >
-> So if we can, let's just try without any of these flags first.
+>         run_job {
+>                 for_each_vm_bind_operation {
+>                         for_each_custom_op() {
+>                                 // do stuff
+>                         }
+>                 }
+>         }
 
-Ack.
+Close, but by the time we get to run_job there is just a single list
+of ops covering all the vm_bind operations:
 
+        run_job {
+                for_each_custom_op() {
+                        // do stuff
+                }
+        }
+
+rather than a list of va ops per vm_bind op.
+
+> However, GPUVM intends to solve your use-case with the following, semanti=
+cally
+> identical, approach.
 >
-> MREMAP_MUST_RELOCATE_ANON could always be added later on top, once the use
-> case for it is clear. Removing it from this series would not make this
-> series any less valuable I think.
-
-Sure.
-
+>         vm_bind {
+>                 for_each_vm_bind_operation {
+>                         drm_gpuvm_sm_xyz_ops_create();
 >
-> (and of course, doing it without any flags will make this series much more
-> valuable :P )
+>                         drm_gpuva_for_each_op {
+>                                 // modify drm_gpuvm's interval tree
+>                                 // lock and prepare objects (1)
 
-Yeah, I'd prefer this overall if possible...
+I currently decouple lock+pin from VM modification to avoid an error
+path that leaves the VM partially modified.  Once you add this back
+in, the va-ops approach isn't simpler, IMHO.
 
+>                         }
+>                 }
 >
-> --
-> Cheers,
+>                 drm_sched_entity_push_job();
+>         }
 >
-> David / dhildenb
+>         run_job {
+>                 for_each_vm_bind_operation {
+>                         drm_gpuva_for_each_op() {
+>                                 // do stuff
+>                         }
+>                 }
+>         }
 >
+> (Note that GPUVM already supports to extend the existing OP structures; y=
+ou
+> should take advantage of that.)
 >
+> Hence, the helper we really want is to lock and prepare the objects at (1=
+). I.e.
+> a helper that takes a pointer to a struct drm_gpuva_op and locks / valida=
+tes the
+> corresponding objects.
 
-Thinking of undo, here's an idea:
+I still prefer that we don't _require_ using va-ops.  But if it makes
+it more useful for other drivers I could add a helper which
+exec_lock's based on a list of va-ops instead.
 
-1. increment refcount on folio
-2. isolate from LRU
-3. Add to linked list
+BR,
+-R
 
-Do this for all folios.
-
-Then if we encounter a problem we can simply walk the list + fixup, drop
-refcount, re-add to LRU.
-
-It's ugly, but it guarantees we can undo what we set?
+> [1] https://gitlab.freedesktop.org/robclark/msm/-/blob/sparse-newer/drive=
+rs/gpu/drm/msm/msm_gem_vma.c
+>
