@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0928DF02;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E4FA28F51B;
 	Tue, 17 Jun 2025 08:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147352; cv=none; b=OA7EFKI01QLNxMXYdk8xGqxf3p51JkMNZShHTrvywkVm9ZYsgEc6IxIExZgKuJug7oQPsl44e85FnxWjUBYeTAxu23xxCv0VG0s/MR+MjvfLlCru6oVF8to6/pppv5dD7Hm+eIPbM/aF1o/w/YxyzvqvajijJ6TzcDCi+Y6ZcBY=
+	t=1750147352; cv=none; b=ZY+c43CbIeFr7goR+b3pdEUUGRQMxKAjZBgJgbmE/g3+BLjrqXF4GSBgGHPmYKb6lEW8apHoCnBmtvvOmbq2xYOUrpchkrIVVOC0kiU3shZUscWjyXswmOEsQ987H/Lb5Xd710YJqPnjTfYBYf+9seLgmWPY8JSE7KU9jmhpaSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750147352; c=relaxed/simple;
-	bh=5GdVV6A8bXN64ovkNLx7Xdx5aR1iPXnV/yeu24lgmqI=;
+	bh=00F9KG3FuikbC/77I/aVEWzxRtC/68GGYQsrs3gqu00=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hSeJsa+vdNL5MIeuUAZ8N5QbOHhl1gAnnzu/7fHw8GqqF43UV/mnksjfu2jZ0nDrt72i9Jh834cSA/Kj0Y2mZC6/luxyue/VbSs4P2EJ6fguaxb2H401cApnjFtlMza9NCoMFik6e+jFJsdflYf3tsd6EwwrhZU7WfEAnHPHdQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOMOPn+m; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=n28cdbUGChDvhbFlT69pJVrR2gTKH6MK4GheD1avy0gE/Jgjx3myXRhkv7y0eKD9TObmUAdu+eCR+re76WHsgOeSBookCeFCAF3Ih8gLwq870jxuZvZGKGH+Y1NDidrYbrN60dX8ls2qu0AyuvEd6PbEgAbYsTj3ZsSOyoFyhXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TwuajmCw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOMOPn+m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AEFC4CEF4;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TwuajmCw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2B69C4CEF5;
 	Tue, 17 Jun 2025 08:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750147352;
-	bh=5GdVV6A8bXN64ovkNLx7Xdx5aR1iPXnV/yeu24lgmqI=;
+	bh=00F9KG3FuikbC/77I/aVEWzxRtC/68GGYQsrs3gqu00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uOMOPn+m1yfIhvgONplR1Usc4iysrHrJZYnc/Q0rROBjUYdNggtuelIGRJwH9B3d/
-	 1INd1hXWAJAmucd2fKQ5FiqAhOQJmj18KP4/lO8b3nLgPYY9WST80I7CTFmLD3KSU4
-	 MsE5gG6gg/62uvuI2hf5kcJS0UwwRIpV8EtYW2kZBnOCF16ffTZT+Z0pTfu77qQL5C
-	 qN5Wj856IIonXqPWr6l/m8YKzrBYibIF3wodC79JH+nF6cOog21p7dp1j9dEGZKk70
-	 0+T2hSj7Qri0N+ShAb9TopsCDoZqahWNM0EnalAamHpfP117o6unK8xos/K9AulRkh
-	 QSvXLVKscyzGA==
+	b=TwuajmCwI0oYrAjWxUXovlNWnhKTzm3MsHRU/cSDm+wvx4aELova1XQHPzzCBgo/U
+	 1R/UVYEOR291s1EwlmG7TOERRgb+XHPnDHi+yrNY7uyL+LlqcNmACTRq3R7ytci+I/
+	 0bw4kjF5yHg0CsmipHj2lnsfQHkyOllZzEN6w4xBSA4cVmCc/PUKpoIF+xVF5QCVff
+	 A2xvY63Ya2RqF69ElOrAO/jbHUXzteiJfw0PK4jKcittts7SzSFnb835GQGbHTtjUO
+	 k7uxQslvrUYYEiRd3d1OAqabrZvWwAbjTs5lWmuRS5iVnFX1GfUn3qTpCdxf6F5KR6
+	 OPYqpNxk3J2XA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uRRH3-00000001vd2-469f;
-	Tue, 17 Jun 2025 10:02:29 +0200
+	id 1uRRH4-00000001vdY-0tj6;
+	Tue, 17 Jun 2025 10:02:30 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
@@ -55,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v5 04/15] docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
-Date: Tue, 17 Jun 2025 10:02:01 +0200
-Message-ID: <2ad71c748e2f6dc3095b6ce67ec4d43f0fcc038c.1750146719.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v5 12/15] docs: uapi: netlink: update netlink specs link
+Date: Tue, 17 Jun 2025 10:02:09 +0200
+Message-ID: <33f4626404cc92ee3f3aab481a8d163e9b4a0f6c.1750146719.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
 References: <cover.1750146719.git.mchehab+huawei@kernel.org>
@@ -70,39 +70,41 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Having :doc: references with relative paths doesn't always work,
-as it may have troubles when O= is used. So, replace them by
-Sphinx cross-reference tag that are now created by ynl_gen_rst.py.
+With the recent parser_yaml extension, and the removal of the
+auto-generated ReST source files, the location of netlink
+specs changed.
+
+Update uAPI accordingly.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- Documentation/userspace-api/netlink/netlink-raw.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/userspace-api/netlink/index.rst | 2 +-
+ Documentation/userspace-api/netlink/specs.rst | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/userspace-api/netlink/netlink-raw.rst b/Documentation/userspace-api/netlink/netlink-raw.rst
-index 31fc91020eb3..aae296c170c5 100644
---- a/Documentation/userspace-api/netlink/netlink-raw.rst
-+++ b/Documentation/userspace-api/netlink/netlink-raw.rst
-@@ -62,8 +62,8 @@ Sub-messages
- ------------
+diff --git a/Documentation/userspace-api/netlink/index.rst b/Documentation/userspace-api/netlink/index.rst
+index c1b6765cc963..83ae25066591 100644
+--- a/Documentation/userspace-api/netlink/index.rst
++++ b/Documentation/userspace-api/netlink/index.rst
+@@ -18,4 +18,4 @@ Netlink documentation for users.
  
- Several raw netlink families such as
--:doc:`rt-link<../../networking/netlink_spec/rt-link>` and
--:doc:`tc<../../networking/netlink_spec/tc>` use attribute nesting as an
-+:ref:`rt-link<netlink-rt-link>` and
-+:ref:`tc<netlink-tc>` use attribute nesting as an
- abstraction to carry module specific information.
+ See also:
+  - :ref:`Documentation/core-api/netlink.rst <kernel_netlink>`
+- - :ref:`Documentation/networking/netlink_spec/index.rst <specs>`
++ - :ref:`Documentation/netlink/specs/index.rst <specs>`
+diff --git a/Documentation/userspace-api/netlink/specs.rst b/Documentation/userspace-api/netlink/specs.rst
+index 1b50d97d8d7c..debb4bfca5c4 100644
+--- a/Documentation/userspace-api/netlink/specs.rst
++++ b/Documentation/userspace-api/netlink/specs.rst
+@@ -15,7 +15,7 @@ kernel headers directly.
+ Internally kernel uses the YAML specs to generate:
  
- Conceptually it looks as follows::
-@@ -162,7 +162,7 @@ then this is an error.
- Nested struct definitions
- -------------------------
+  - the C uAPI header
+- - documentation of the protocol as a ReST file - see :ref:`Documentation/networking/netlink_spec/index.rst <specs>`
++ - documentation of the protocol as a ReST file - see :ref:`Documentation/netlink/specs/index.rst <specs>`
+  - policy tables for input attribute validation
+  - operation tables
  
--Many raw netlink families such as :doc:`tc<../../networking/netlink_spec/tc>`
-+Many raw netlink families such as :ref:`tc<netlink-tc>`
- make use of nested struct definitions. The ``netlink-raw`` schema makes it
- possible to embed a struct within a struct definition using the ``struct``
- property. For example, the following struct definition embeds the
 -- 
 2.49.0
 
