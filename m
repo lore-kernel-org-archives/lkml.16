@@ -1,127 +1,92 @@
-Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 517F528ECC0;
-	Tue, 17 Jun 2025 08:27:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D7B292906;
+	Tue, 17 Jun 2025 08:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148835; cv=none; b=mgUZjXMoTBpxnLOUqH71Lj2q47isEOfchhXDVUyZptSHP/GA9NAhQZh5ZWSjO3lEPfvJcJNlK2/MSmTdjqQIxRl1fPAQqXBSRjNlzai8WdQpdq9nyqfLULen4r2C1zca9NqUL3leDQLPzlLVmb2mtQbwBt/D2Z7vln5y/YjRs4A=
+	t=1750148838; cv=none; b=BaXDKH88J4RrEkharBG2RZT7YELIjNGv9MeyuczQnBCxcd4PQaglOemwA59f1SoI+r6oqr5w28w/S+ik4JnjtVH1QQcDF8BAF12+Rz6nzQlWLFQByDz4gCrV+hxE89dMk5MJUuqlWQD4u17mdamzhE51xzrIly1OADDFkAUwaQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148835; c=relaxed/simple;
-	bh=p+OBljdaXw+ZNWtuzpzHmw1IKToyT5gfg5mlshVql+U=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=YZhLupDcp5W5o8QGB9nDlAEMXjL0039QRzazAQZEXejI3AgKE85wZX9ZsG+7RdH6dOIzZlgxGnBYFKc81UMk6WNCcTi9Lfj5+mQk+fZ9PtF36uDc+t7w5PJz8r+7yBkO0p6KTGdk7vrzw2UaHnCzTORkW1cHHr396BZ+rXyudc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=JrMdTAX9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TiaGR9+6; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1750148838; c=relaxed/simple;
+	bh=wFWNddruW+kvHK/NOURMNgfhmqAjINHuhoKUoDLtdD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGuVhVjiwrnoOlil/tmgx4HX1GmoKhdk9EVi1LtTwPFZBPtVkjShaERakthkdc6gulYjyA9fGfocS61KXGsoHalNv9ECxYG7X4D+Ty6l3aKWI2ZUPr1CDf+myxvoY8NKYSMjn5/GXJBJn8gWt6/QUgU763qIUIc6xPUfgQWqEoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g/QB2ICS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="JrMdTAX9";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TiaGR9+6"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 7F1431140132;
-	Tue, 17 Jun 2025 04:27:12 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-05.internal (MEProxy); Tue, 17 Jun 2025 04:27:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750148832;
-	 x=1750235232; bh=AapnD22KoJa7oOuX3gAhhYqhmyCztWp6yYLSnan63Qg=; b=
-	JrMdTAX9qEcDetAUa8gdNPNggBZ0VX3PM6DceesLGYw2IrORWf27TSzqkmnGQASq
-	d4q0/aFTlgN+j151YjXwetWhqU++1gNAAM3/wJcrVezjZbNtokh0wXywUqJnYjWl
-	V22CGr1zRtIchMPQM3uY5QGFYsy8VxPqtJhmDukYplIMKRPF7UNfOUq6FSAKx77s
-	7Dp0nGj3nPCx711tOuHSN9n826eUz0LKOZ5BA3M8lWfA8unAo75XpoNe/xhBHq+L
-	HnYYc6he0p3/8CbJ/guwfDc6Ds4FMOieTbAJDhstQj25DiDaWVdvt6f3dPmxHEzK
-	w9JSCIsZ9NeULOzGArtRzQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750148832; x=
-	1750235232; bh=AapnD22KoJa7oOuX3gAhhYqhmyCztWp6yYLSnan63Qg=; b=T
-	iaGR9+6KZg4HEiv45FneefPIinNWlBL01WyxEpIk/KeYNg8Csu5vZXBc8lHwFaZZ
-	1Gl4XEIaaiL2dKuGmHgLNYV2JcSDMbMqz8km5xLM4Hu+C6AfqSaIDjUURtBt3Nfk
-	I4gL8viWhaog930ranXn34kuMaMkVyoYxoYtXgtl5ANlPmDs2VWQ7H3YuUokkZhH
-	jYs6thLDTkH2Csy9qczXpbsYSTThicDoruFnMXciVUIn6I6OedUaksxm12ibgrQ/
-	dgP3eliOh4PgtQUhuBrz1LGxlGpmpy3yw+Fj6ykioPGQ9b2z//BBowcB12eu6Dwe
-	P0rpq26f5aX2j9QtAbWtg==
-X-ME-Sender: <xms:4CZRaE87h-nRftsg_6kNXBmMHLJq0HBhc0K1KAq5etLTTfRG0nqD0g>
-    <xme:4CZRaMtWp2Q2rX18Kmb_pYH-BmF7S8Xwm6yhQ4ZlllvofuxN_b0W995PZ9kLgWEZc
-    WV2JFrJwj_OBih0GYs>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddugddvkeekjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdp
-    uffrtefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivg
-    hnthhsucdlqddutddtmdenucfjughrpefoggffhffvvefkjghfufgtgfesthejredtredt
-    tdenucfhrhhomhepfdetrhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusg
-    druggvqeenucggtffrrghtthgvrhhnpefhtdfhvddtfeehudekteeggffghfejgeegteef
-    gffgvedugeduveelvdekhfdvieenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggvpdhnsggprhgtphhtthhopedu
-    gedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihse
-    grrhhmrdgtohhmpdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgt
-    phhtthhopehlkhhpsehinhhtvghlrdgtohhmpdhrtghpthhtohepsghrohhonhhivgeskh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtohepjhgrmhgvshdrtghlrghrkheslhhinhgrrhho
-    rdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtph
-    htthhopehiohhmmhhusehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtohepohgv
-    qdhksghuihhlugdqrghllheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhope
-    hhtghhsehlshhtrdguvg
-X-ME-Proxy: <xmx:4CZRaKCuvjcZvNREdfFxg7iIlgpJRLaX9h2AZfDfVY1s02hVY8zVBg>
-    <xmx:4CZRaEeGdw1nk2-e77DoTV2ERy4elO4vkVOcQw0mJ0KZa4FHKtkn-g>
-    <xmx:4CZRaJO6P7aes_EnrNS8eMslf1FGeHJ1r8MzJsuZNsXD7hZuTGSX5Q>
-    <xmx:4CZRaOkeLdWNP6cyzVOuqYSq4wEESZMugGAQ2r2vHEWLkjFEkGhByg>
-    <xmx:4CZRaDTJrF_knVLInAnOd3RLFGXBxbBKmsQhFSvAGN7vnQ00aANYMEWt>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 23FDD700062; Tue, 17 Jun 2025 04:27:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g/QB2ICS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B566C4CEED;
+	Tue, 17 Jun 2025 08:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750148837;
+	bh=wFWNddruW+kvHK/NOURMNgfhmqAjINHuhoKUoDLtdD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g/QB2ICSsqBe4u9VRM1R1/6wN38bWi3oSH/ONJztU5yH5nKrJkBMlmGqo25o9w41u
+	 xvwiZLIaAghu1czqfHoCtxoOSotW0Twmj8KjqJsvdCSxVrjZagZIIPmQW+YvkDYJWV
+	 MW/qAhf9m3t3KxDDljBMRJny7SxfxpPtMWZoCvRRwbG6EmMPShXsyclP30RcIQPSlD
+	 GtoO7tPTbX9eRIrJLvb1e6WfvLVr6TQVrBmqJxvSXaLyBpJIaVI7JMRNdAojw2/wrw
+	 FsiY9doFsvRjVN+LfmKq8l2o6ut5rtORUYeTYgW+x0QgZVBQH6+FqALahoL3SuwMzj
+	 GYYvoiH00GwgQ==
+Date: Tue, 17 Jun 2025 10:27:15 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Sean Paul <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] dt-bindings: opp: adreno: Update regex of OPP
+ entry
+Message-ID: <20250617-ambrosial-amphibian-oyster-ae7cae@kuoka>
+References: <20250611-x1p-adreno-v2-0-5074907bebbd@oss.qualcomm.com>
+ <20250611-x1p-adreno-v2-1-5074907bebbd@oss.qualcomm.com>
+ <492417fe-c086-4980-b108-0487bad08155@kernel.org>
+ <d482653e-5c0e-4b03-98d6-2c898b445917@quicinc.com>
+ <750da319-d25f-454d-b376-ebbc194e0e41@kernel.org>
+ <31c50188-986a-44e8-8765-c1fce6ad3c2c@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T4808b90e09d8ad4f
-Date: Tue, 17 Jun 2025 10:26:51 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Christoph Hellwig" <hch@lst.de>
-Cc: "James Clark" <james.clark@linaro.org>, "Mark Brown" <broonie@kernel.org>,
- "Vladimir Oltean" <olteanv@gmail.com>, oe-kbuild-all@lists.linux.dev,
- "Larisa Grigore" <larisa.grigore@nxp.com>, "Frank Li" <Frank.li@nxp.com>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org,
- "kernel test robot" <lkp@intel.com>,
- "Marek Szyprowski" <m.szyprowski@samsung.com>,
- "Robin Murphy" <robin.murphy@arm.com>, iommu@lists.linux.dev
-Message-Id: <76a8c896-d7ea-4471-99a2-34b3a7ac9804@app.fastmail.com>
-In-Reply-To: <5de445aa-048b-4f60-9045-df5d45341436@app.fastmail.com>
-References: <20250616120832.GA24959@lst.de>
- <2d62254e-5cbe-4174-95d8-e80cae4f4543@sirena.org.uk>
- <20250616121444.GA25443@lst.de>
- <7cfcf919-3c7d-4f0c-911f-697ea3141080@linaro.org>
- <20250616131346.GB29838@lst.de>
- <83855c1a-c128-4762-9d6b-e17f2c4c8820@linaro.org>
- <d16bdc40-20d6-49db-bf41-18bb9b8e01fd@linaro.org>
- <20250616131944.GA30260@lst.de>
- <f723d490-c228-42d5-9f9f-158df54a092d@linaro.org>
- <9788991a-ac37-4fde-81db-c55035d00f27@app.fastmail.com>
- <20250617044833.GE1824@lst.de>
- <5de445aa-048b-4f60-9045-df5d45341436@app.fastmail.com>
-Subject: Re: [PATCH] dma-mapping: Stub out dma_{alloc,free,map}_pages() API
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <31c50188-986a-44e8-8765-c1fce6ad3c2c@oss.qualcomm.com>
 
-On Tue, Jun 17, 2025, at 09:53, Arnd Bergmann wrote:
+On Mon, Jun 16, 2025 at 10:18:24PM GMT, Akhil P Oommen wrote:
+> On 6/12/2025 4:59 PM, Krzysztof Kozlowski wrote:
+> > On 11/06/2025 14:24, Akhil P Oommen wrote:
+> >>>>  
+> >>>>  patternProperties:
+> >>>> -  '^opp-[0-9]+$':
+> >>>> +  '^opp(-?[0-9]+)*$':
+> >>>
+> >>> Not correct regex. You allow "opp", "opp1" and all other unusual
+> >>> variants. Commit does not explain what problem you are solving, so I
+> >>> have no clue what you want here, but for sure opp1 is wrong.
+> >>
+> >> Just to confirm, would this be fine for the requirement I mentioned above?
+> >>
+> >> "'^opp(-[0-9]+)*$'"
+> > 
+> > No, You did not solve half of the problems - still allows "opp" and
+> > commit msg does not explain why "opp" is now correct. Describe the
+> > actual problem and then write the regex solving it in specific way, not
+> > causing other effects.
+> 
+> Gotcha. If we want to be super strict, the regex should be:
+> ^opp(-[0-9]+){1,2}$
+> 
 
-> Between SH72xx/SH76xx, SUN3 and M68328, I believe the
-> supported machines are all limited to between 1MB and 32MB in
-> the maximum configuration, which is obviously extremely
-> tight.
+Yes, looks good.
 
-I checked the exact numbers we're talking about here: enabling
-CONFIG_HAS_DMA on rsk7269_defconfig adds 10KB of extra vmlinux
-size, which doesn't seem too bad:
+Best regards,
+Krzysztof
 
-   text	   data	    bss	    dec	    hex	filename
-3295084	1111396	 112264	4518744	 44f358	vmlinux-before
-3302836	1113652	 112264	4528752	 451a70	vmlinux-after
-
-      Arnd
