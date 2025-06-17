@@ -1,236 +1,87 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014F42ECD23;
-	Tue, 17 Jun 2025 17:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE422ECD2F;
+	Tue, 17 Jun 2025 17:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750182050; cv=none; b=WKrnIrgeNKosYaz8ejcm0DiOLblTviy5rVC+VmvGVpgvRVOdg0QYHekHakAAueDdRJX5UT2wOm0TnVPy9lQch47G1nXsSk29hb17m1EW7hxkNKaOcGPpbew6+9s0ZChuC4dUbqrMLQNAfrN8U1Kf48BFU5JTeWiHe0X3y6MKXww=
+	t=1750182078; cv=none; b=n1AjGDOF+HgSD+fYlgTZ4vDyycT26JEYLXTOwWSt6d78Es94bVFR7PaTuisrQ6UZ0bKAERvwKUleHa9bvX22oK2Pqm8I3tkwNmiFeUxAq4Ph1eqfPno+RWb9qn9mdYcKfQ0kovgjHUYQx/d8kzZYNFPjalWg9XEIhYE6KSTDmU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750182050; c=relaxed/simple;
-	bh=K0vxcsqHQKl0mgOXeJnuKBSYZIgPQRDBokS04NUAV2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rNtFrEUijLqFOo0obfEgMFqwzof94gerDk46wG/odpjTB9shfhoidSLsff0rrdqYOm3x9eCVrnt/vWZnvM365+E9LGh4lLW07OV/3LW0KxsRYLlwxyW5iMS3RiIWLCHnD8tNagJ6rwbNDAO6vY9Hw5SYadnmLEEIHsRkPMOXg74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=IKCyTGnP; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750182078; c=relaxed/simple;
+	bh=kEsOiW97Bcf2UFTEnRGArnnuf8pV7ZZSm5QvPKYynxs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6lM0LOxX/LSLkR+VHhgo7GZ3EsOjZc3GNdZ38S6mRYe31iiqBEJcirSYDI5YbnebYjC7PmhYQLehibRBY1Q2ypHtBJ9NEQhr5lFcAiga04ByU3JTtTWM7ImdkOaH7qJ0Doo+cZvh8BFoKjkAu60Bvkmz54pebmPmCJD+i63mCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ssf4hRqc; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="IKCyTGnP"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HFaTiR013203;
-	Tue, 17 Jun 2025 19:40:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	BCDEKH89I2K3oqjv3tljOt2+d5QzCMjlDICRktrlLTw=; b=IKCyTGnPnox4Lq0F
-	vOPeRvGck68q98cBsI1r908q9qQaq0urFuUVIibrgqbHbAF8QnrTAh1syjaauuJI
-	Z9fbs2dQMkOJe1WcvbSnPzbQmmMNKhCEGWyV2mx7qoqnIN07dFr7JvdJlSbDV9Zq
-	TjRmnsKJc8xXpZRgal2yWz9OHRKVNjr2aYyucZPU7LyStZkEV0PfMCh5kDPsCW0I
-	yH3k3rNOtGLEqnfB17zBUwYSnS54AhP49bBzuyxg5/FObZaIvK7EKxEvvt98FKqA
-	WMGjPD39u4D2/xnXa0995jsQF7bsnjaBK0utur3Zss/fYyrf6wHQTCVLjRigP0C2
-	CqQZdQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 4790e27jt9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 19:40:16 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id D153640045;
-	Tue, 17 Jun 2025 19:39:10 +0200 (CEST)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C2540B88169;
-	Tue, 17 Jun 2025 19:38:20 +0200 (CEST)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 17 Jun
- 2025 19:38:20 +0200
-Received: from [10.48.86.121] (10.48.86.121) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 17 Jun
- 2025 19:38:19 +0200
-Message-ID: <cda96440-5c53-4b7a-8b51-51506f5e7cc3@foss.st.com>
-Date: Tue, 17 Jun 2025 19:38:19 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ssf4hRqc"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=FwLjmwxkqnQKLWrMNKO4jM1CMEAni4isTNQFnM7Aajc=; b=ssf4hRqczVYaT1rWFwdz1oT2kD
+	j1Ye7rkHGWFqeD7QDRoCI8DVgOPtXmapqMa4nCQOL+lw0qWT/auluc2swjCAbtaNMSeeuSHDIbWaw
+	T5zk1um5eMdmyUB8xfI+8o8TPXGKdAzZu7jbbrqJH4jOdUd5c7eN3HVJ176eQgdKvASvQr3h7VIYN
+	4YpbLyNgc0qN7lyDPPjhjffnGC5Fg1HWGvJpyof3IAq+ArAX2uwSINHCq7yeJ47MXUCE28Qj+Yzdw
+	qLv3etanu+1cEbuX9HmPfYMCzuUWyP2aZSXwWDvW0BEyNII66xutwBCmprxpc3I10YZDYnvrzNqUH
+	y0qJTUiw==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRaJ1-0000000HS4R-3Kvt;
+	Tue, 17 Jun 2025 17:41:07 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 5AE2E30BDAD; Tue, 17 Jun 2025 19:41:07 +0200 (CEST)
+Date: Tue, 17 Jun 2025 19:41:07 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	"linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Frederic Weisbecker <fweisbec@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250617174107.GB1613376@noisy.programming.kicks-ass.net>
+References: <20250617133614.24e2ba7f@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v18 3/6] remoteproc: Introduce release_fw optional
- operation
-To: Bjorn Andersson <andersson@kernel.org>
-CC: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Jens Wiklander
-	<jens.wiklander@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>
-References: <20250616075530.4106090-1-arnaud.pouliquen@foss.st.com>
- <20250616075530.4106090-4-arnaud.pouliquen@foss.st.com>
- <6ekro2uytz7kguphtub54wivmclpnfkjobduhsom4kvxlmov2l@hgcjoposj3md>
-Content-Language: en-US
-From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Organization: STMicroelectronics
-In-Reply-To: <6ekro2uytz7kguphtub54wivmclpnfkjobduhsom4kvxlmov2l@hgcjoposj3md>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-17_08,2025-06-13_01,2025-03-28_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617133614.24e2ba7f@gandalf.local.home>
 
-Hello Bjorn,
+On Tue, Jun 17, 2025 at 01:36:14PM -0400, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> In January 2015, tracefs was created to allow access to the tracing
+> infrastructure without needing to compile in debugfs. When tracefs is
+> configured, the directory /sys/kernel/tracing will exist and tooling is
+> expected to use that path to access the tracing infrastructure.
+> 
+> To allow backward compatibility, when debugfs is mounted, it would
+> automount tracefs in its "tracing" directory so that tooling that had hard
+> coded /sys/kernel/debug/tracing would still work.
+> 
+> It has been over 10 years since the new interface was introduced, and all
+> tooling should now be using it. Start the process of deprecating the old
+> path so that it doesn't need to be maintained anymore.
 
-On 6/17/25 06:44, Bjorn Andersson wrote:
-> On Mon, Jun 16, 2025 at 09:55:27AM +0200, Arnaud Pouliquen wrote:
->> The release_fw operation is the inverse operation of the load, responsible
->> for releasing the remote processor resources configured from the loading
->> of the remoteproc firmware (e.g., memories).
->>
-> 
-> I was under the impression that we agreed that this would unroll
-> rproc_parse_fw() not the "load" in general.
-
-Not Krystal clear to me what you are expecting here.
-Is it just on the description or on the design?
-
-Unroll only the rproc_parse_fw is not sufficient. The need here is also
-to go back from a LOAD state of the TEE. So in such case the role of
-release_fw() would be to unroll the load + the parse of the resource.
-Is it your expectation?
-
-> 
->> The operation is called in the following cases:
->>  - An error occurs on boot of the remote processor.
->>  - An error occurs on recovery start of the remote processor.
->>  - After stopping the remote processor.
->>
->> This operation is needed for the remoteproc_tee implementation after stop
->> and on error.
-> 
-> And if it's defined to unroll rproc_parse_fw() it can be used for other
-> things where some resources was allocated to set up the resource table.
-
-True
-
-> 
->> Indeed, as the remoteproc image is loaded when we parse the resource
->> table, there are many situations where something can go wrong before
->> the start of the remote processor(resource handling, carveout allocation,
->> ...).
-> 
-> Unbalanced parenthesis? I think you can write this in less
-> conversational style.
-> 
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
->> ---
->>  drivers/remoteproc/remoteproc_core.c     | 6 ++++++
->>  drivers/remoteproc/remoteproc_internal.h | 6 ++++++
->>  include/linux/remoteproc.h               | 3 +++
->>  3 files changed, 15 insertions(+)
->>
->> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
->> index d06eef1fa424..4c1a4bc9e7b7 100644
->> --- a/drivers/remoteproc/remoteproc_core.c
->> +++ b/drivers/remoteproc/remoteproc_core.c
->> @@ -1857,6 +1857,8 @@ static int rproc_boot_recovery(struct rproc *rproc)
->>  
->>  	/* boot the remote processor up again */
->>  	ret = rproc_start(rproc, firmware_p);
->> +	if (ret)
->> +		rproc_release_fw(rproc);
->>  
->>  	release_firmware(firmware_p);
->>  
->> @@ -1998,6 +2000,8 @@ int rproc_boot(struct rproc *rproc)
->>  		}
->>  
->>  		ret = rproc_fw_boot(rproc, firmware_p);
->> +		if (ret)
->> +			rproc_release_fw(rproc);
->>  
->>  		release_firmware(firmware_p);
->>  	}
->> @@ -2067,6 +2071,8 @@ int rproc_shutdown(struct rproc *rproc)
->>  
->>  	rproc_disable_iommu(rproc);
->>  
->> +	rproc_release_fw(rproc);
->> +
->>  	/* Free the copy of the resource table */
->>  	kfree(rproc->cached_table);
->>  	rproc->cached_table = NULL;
-> 
-> These are allocated in rproc_parse_fw(), would it not make sense to
-> clean them up in your newly introduced function?
-
-It seems possible as proposed in v11 3/7[1], but this needs an exception
-for rproc_detach().
-[1]
-https://patchew.org/linux/20241009080108.4170320-1-arnaud.pouliquen@foss.st.com/20241009080108.4170320-4-arnaud.pouliquen@foss.st.com/
-
-> 
->> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
->> index 0cd09e67ac14..c7fb908f8652 100644
->> --- a/drivers/remoteproc/remoteproc_internal.h
->> +++ b/drivers/remoteproc/remoteproc_internal.h
->> @@ -221,4 +221,10 @@ bool rproc_u64_fit_in_size_t(u64 val)
->>  	return (val <= (size_t) -1);
->>  }
->>  
->> +static inline void rproc_release_fw(struct rproc *rproc)
->> +{
->> +	if (rproc->ops->release_fw)
->> +		rproc->ops->release_fw(rproc);
->> +}
->> +
->>  #endif /* REMOTEPROC_INTERNAL_H */
->> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
->> index 8fd0d7f63c8e..80128461972b 100644
->> --- a/include/linux/remoteproc.h
->> +++ b/include/linux/remoteproc.h
->> @@ -381,6 +381,8 @@ enum rsc_handling_status {
->>   * @panic:	optional callback to react to system panic, core will delay
->>   *		panic at least the returned number of milliseconds
->>   * @coredump:	  collect firmware dump after the subsystem is shutdown
->> + * @release_fw:	optional function to release the loaded firmware, called after
->> + *              stopping the remote processor or in case of error
-> 
-> The struct firmware is released at the end of startup and the typical
-> carveout memory where the firmware is loaded into is released at
-> rproc_shutdown().
-> 
-> As such, this won't help anyone understand the purpose of the ops unless
-> they know your system design (and know you added it).
-
-Could you detail which improvement you are expecting here?
-Name of the ops, associated comment? both?
-
-Thanks,
-Arnaud
-
-> 
-> Regards,
-> Bjorn
-> 
->>   */
->>  struct rproc_ops {
->>  	int (*prepare)(struct rproc *rproc);
->> @@ -403,6 +405,7 @@ struct rproc_ops {
->>  	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
->>  	unsigned long (*panic)(struct rproc *rproc);
->>  	void (*coredump)(struct rproc *rproc);
->> +	void (*release_fw)(struct rproc *rproc);
->>  };
->>  
->>  /**
->> -- 
->> 2.25.1
->>
+I've always used /debug/tracing/ (because /debug is the right place to
+mount debugfs). You're saying this is going away and will break all my
+scripts?!
