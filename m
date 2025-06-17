@@ -1,218 +1,119 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3851F4CAE;
-	Tue, 17 Jun 2025 14:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50361FDA7B
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750170875; cv=none; b=NaeUjS/3609QUp7K88huK3nszLQhytam+5OYhC1xT/oCIZKtHIE2AHaISPxKAyW5f5G1SiMd4+exH/hGj1KVzy1HPdGPJo6nIVs7orafspk422vwiQ6NZ6D5I509B5QWJuGgqro/YhWfUL6BtJaxD0u3s1g18jp9vBTPWJ4Wquc=
+	t=1750170941; cv=none; b=pTNfm2quFRlYfDuwjetto8zUunfB460MB7KxjvMkr3MUq/kDyPlnWasc+Uxx4i7nRBoOK4Qyh02oJY4swYqXOweTC3D+mm0yeaoqc3fFX6DcsXv3UO2ZKdkpJ0RLghsYYCabI1f/8lEGvl1tv1aG6peM1XTC//eDNCBmoaDP/qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750170875; c=relaxed/simple;
-	bh=7eVSwYhRrsGw308e1gWXBm5X3J3BsCedcVcfc7DyDMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VJcm2I2oXdB/bjRHadD7/eHuxVNDBNUxyjgj71bHyLBFjxomnKNJ+YUaXE3pPTqdA3maM9W/HrJjnqQopjpRcoAbIzZJGesLReXiHb/SYbxIE3un+pTV6/Iy7afSlHBjeSlNyek+GTPujyCUa05QH9uVoAtz0J4oKkQcAQ8+VJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eRFjA2m2; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750170941; c=relaxed/simple;
+	bh=FemY+hsQFrUD5ZAGM9NrybsPZvSowNvRmXOgYe8eQXU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KLRgLYwljqHRKB/gFb8PT2DZOx2UtUNRdfyNoHv/5Jjf53q3OyZpxtCcxpg6FIidm1S2JK3b1lUgFD+qSmUFpOmYW6GcRoiWA1+WHrhSZbKl9IyVomG26M/WcRQVg0UwFRYQdXK9chjmK3goS1cNhwP59/yxYjf8+fMV1B/5bNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fswuEnnH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eRFjA2m2"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2EEB57E1;
-	Tue, 17 Jun 2025 16:34:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750170859;
-	bh=7eVSwYhRrsGw308e1gWXBm5X3J3BsCedcVcfc7DyDMo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eRFjA2m2TzJPaNadVlp/g6nZhQtjBw8DzZMp2uaxV4XCS8ILolO/l48V2PRSJkYG7
-	 615Ja/S+EC/SeBscdF5aji3VzhpJUeZz9rvH316vYgyFJ7rrCXG3BHCzHm8kDFKSkv
-	 bpv0l1rrXPZER84ZeLYfbQ/1c6YQqdHsDId+UYeg=
-Date: Tue, 17 Jun 2025 17:34:16 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rui Miguel Silva <rmfrfs@gmail.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Robert Chiras <robert.chiras@nxp.com>,
-	"Guoniu.zhou" <guoniu.zhou@nxp.com>
-Subject: Re: [PATCH v5 04/13] media: nxp: imx8-isi: Use
- devm_clk_bulk_get_all() to fetch clocks
-Message-ID: <20250617143416.GA21052@pendragon.ideasonboard.com>
-References: <20250522-8qxp_camera-v5-0-d4be869fdb7e@nxp.com>
- <20250522-8qxp_camera-v5-4-d4be869fdb7e@nxp.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fswuEnnH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750170937;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=jgNdlNRbfBs1E1Ur5QzUEwyVJhDqK+C7eqNF6/N6wfM=;
+	b=fswuEnnHWgLDBD0CEeR1bzUFLXjVu0dISYUcWcpcNzTT9IlVBmEuAdFtfIyt/IpST7xxM3
+	7Zl9aZV6CoJZBgyMKubSFgxz0CN17uTf4GQFQ+vNiQ/arKFJhXv9h2JwFjqA+vYvwPQdVo
+	yqIE5GsVLRTnROWPQPnoqzKavZZD+Jg=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-622-1egTKZD0Myit2jU_eok3HA-1; Tue, 17 Jun 2025 10:35:36 -0400
+X-MC-Unique: 1egTKZD0Myit2jU_eok3HA-1
+X-Mimecast-MFC-AGG-ID: 1egTKZD0Myit2jU_eok3HA_1750170935
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43eea5a5d80so34468625e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:35:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750170935; x=1750775735;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jgNdlNRbfBs1E1Ur5QzUEwyVJhDqK+C7eqNF6/N6wfM=;
+        b=I4JYNeDlW3iPeE8V3jjr9MAT2PYz2ftnZjJAcLOEOHOGeJ7videcuOn3LRRUN+jw3V
+         QrPTn8YCWJJnQ907si1RJIKh8Aomzwocrfjq9t+kK64YzlsUH9O/gX907MfqYQ3dS3Z0
+         WWfWYVJB087nMj2oH8IgX279+PYD9B3AFAhZp/uwWFyNKBb7vfSaYRPpG4MRGZfR0Vh4
+         TBNn1Ae+EnUXJZ/oOWD7w7SgniAtV6XqT2FYdxGtig8CnZyl1p7/7lvggbZYzwRTccOX
+         uw1G3beahc8ZM5U8SmQPv1V7kmHm4lxcHQ07bca5nxqI3X7qrqHd/YqYyTXSiS4Dwses
+         p7+g==
+X-Gm-Message-State: AOJu0YweyqIDZBDPQNdHCnpLlhJiSbExRrOh3FEVUmLGMC4ncNGvmXRe
+	pr4XmIMVfAli+Z2OE/TZXauYqlMKmpn9nkwRlJV21PvH2PAsq2CiHQ839d9dXB+u47wVOyYNDCj
+	juxKksBnC0gcj/e8aW5lntx4Jg6BLFa8b3eeexKazmEGq9x7L1BfihjyTdnm1HjLBdUtpCsodfr
+	qjKvexr8JAXmvl62aLNBfa+nRi85pRiLIEePSK90ryU0rRuPMA
+X-Gm-Gg: ASbGnct3PDM+TxAQPwZihYc57ielp4m42vM3ibq/UBlekoBFlNFnwhjlTz8MC+jhtfH
+	cQUBV1uhokOZ/EGe9tvHeu5k/3tYueyNrveXikc34asb+Uc4tFu5VcIN7xN54buTERK7IRYlPQ7
+	86/O96YLfLm3j9jh6m0JkSdycOU4FOrG6yUDuG4g8UMM7hgxQp9ZwfjHOpVvzUQU/9yR4/HZzFA
+	PjgKtMxJyYVRtwafV+QZ113b8I/o2MT+i4yU5JSxbUeDxqAfvBI9zWaC+RFIeR8TudxhZhKF6IQ
+	T/GkFF7B4DKOn0S8yJQpukp/3hzNLdgoJvIKo3sUin3wU3mMveFRwHXLwZV4b7XPxwUq0oXi2dV
+	oukpb1g==
+X-Received: by 2002:a5d:5c84:0:b0:3a4:f902:3845 with SMTP id ffacd0b85a97d-3a5723a261fmr11736178f8f.21.1750170934788;
+        Tue, 17 Jun 2025 07:35:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHPkPKlpTmwMDIOZJAPGaDCPoTWf6kGLLVQZf/ykyAoEKvG2AJhCQQXS3FLdC7hGH+p405nNw==
+X-Received: by 2002:a5d:5c84:0:b0:3a4:f902:3845 with SMTP id ffacd0b85a97d-3a5723a261fmr11736147f8f.21.1750170934317;
+        Tue, 17 Jun 2025 07:35:34 -0700 (PDT)
+Received: from localhost (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a568b47198sm13954565f8f.81.2025.06.17.07.35.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 07:35:33 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Subject: [PATCH v1] fs/proc/task_mmu: fix PAGE_IS_PFNZERO detection for the huge zero folio
+Date: Tue, 17 Jun 2025 16:35:32 +0200
+Message-ID: <20250617143532.2375383-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250522-8qxp_camera-v5-4-d4be869fdb7e@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Frank,
+is_zero_pfn() does not work for the huge zero folio. Fix it by using
+is_huge_zero_pmd().
 
-On Thu, May 22, 2025 at 01:56:42PM -0400, Frank Li wrote:
-> Use devm_clk_bulk_get_all() helper to simplify clock handle code.
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+Found by code inspection.
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: 52526ca7fdb9 ("fs/proc/task_mmu: implement IOCTL to get and optionally clear info about PTEs")
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
 
-> ---
-> change in v5
-> - none
-> ---
->  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
->  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
->  2 files changed, 6 insertions(+), 43 deletions(-)
-> 
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> index ecfc95882f903..015350c6f2784 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
-> @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
->  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
->  };
->  
-> -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
-> -	{ .id = "axi" },
-> -	{ .id = "apb" },
-> -};
-> -
->  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
->  	.model			= MXC_ISI_IMX8MN,
->  	.num_ports		= 1,
-> @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
->  	.reg_offset		= 0,
->  	.ier_reg		= &mxc_imx8_isi_ier_v1,
->  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> -	.clks			= mxc_imx8mn_clks,
-> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
->  	.buf_active_reverse	= false,
->  	.gasket_ops		= &mxc_imx8_gasket_ops,
->  	.has_36bit_dma		= false,
-> @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
->  	.reg_offset		= 0x2000,
->  	.ier_reg		= &mxc_imx8_isi_ier_v2,
->  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> -	.clks			= mxc_imx8mn_clks,
-> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
->  	.buf_active_reverse	= true,
->  	.gasket_ops		= &mxc_imx8_gasket_ops,
->  	.has_36bit_dma		= true,
-> @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
->  	.reg_offset		= 0x0,
->  	.ier_reg		= &mxc_imx8_isi_ier_v2,
->  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> -	.clks			= mxc_imx8mn_clks,
-> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
->  	.buf_active_reverse	= true,
->  	.has_36bit_dma		= false,
->  };
-> @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
->  	.reg_offset		= 0,
->  	.ier_reg		= &mxc_imx8_isi_ier_v2,
->  	.set_thd		= &mxc_imx8_isi_thd_v1,
-> -	.clks			= mxc_imx8mn_clks,
-> -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
->  	.buf_active_reverse	= true,
->  	.gasket_ops		= &mxc_imx93_gasket_ops,
->  	.has_36bit_dma		= false,
-> @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
->  {
->  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
->  
-> -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
-> +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
->  
->  	return 0;
->  }
-> @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
->  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
->  	int ret;
->  
-> -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
-> +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
->  	if (ret) {
->  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
->  		return ret;
-> @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
->   * Probe, remove & driver
->   */
->  
-> -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
-> -{
-> -	unsigned int size = isi->pdata->num_clks
-> -			  * sizeof(*isi->clks);
-> -	int ret;
-> -
-> -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
-> -	if (!isi->clks)
-> -		return -ENOMEM;
-> -
-> -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
-> -				isi->clks);
-> -	if (ret < 0) {
-> -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
-> -			ret);
-> -		return ret;
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  static int mxc_isi_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
->  	if (!isi->pipes)
->  		return -ENOMEM;
->  
-> -	ret = mxc_isi_clk_get(isi);
-> -	if (ret < 0) {
-> -		dev_err(dev, "Failed to get clocks\n");
-> -		return ret;
-> -	}
-> +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
-> +	if (isi->num_clks < 0)
-> +		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
->  
->  	isi->regs = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(isi->regs)) {
-> diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> index e7534a80af7b4..bd3cfe5fbe063 100644
-> --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
-> @@ -169,8 +169,6 @@ struct mxc_isi_plat_data {
->  	const struct mxc_isi_ier_reg  *ier_reg;
->  	const struct mxc_isi_set_thd *set_thd;
->  	const struct mxc_gasket_ops *gasket_ops;
-> -	const struct clk_bulk_data *clks;
-> -	unsigned int num_clks;
->  	bool buf_active_reverse;
->  	bool has_36bit_dma;
->  };
-> @@ -282,6 +280,7 @@ struct mxc_isi_dev {
->  
->  	void __iomem			*regs;
->  	struct clk_bulk_data		*clks;
-> +	int				num_clks;
->  	struct regmap			*gasket;
->  
->  	struct mxc_isi_crossbar		crossbar;
+Probably we should Cc stable, thoughts?
 
+We should also extend the pagemap_ioctl selftest to cover this case, but I
+don't have time for that right now. @Muhammad ?
+
+---
+ fs/proc/task_mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 27972c0749e78..4be91eb6ea5ca 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -2182,7 +2182,7 @@ static unsigned long pagemap_thp_category(struct pagemap_scan_private *p,
+ 				categories |= PAGE_IS_FILE;
+ 		}
+ 
+-		if (is_zero_pfn(pmd_pfn(pmd)))
++		if (is_huge_zero_pmd(pmd))
+ 			categories |= PAGE_IS_PFNZERO;
+ 		if (pmd_soft_dirty(pmd))
+ 			categories |= PAGE_IS_SOFT_DIRTY;
 -- 
-Regards,
+2.49.0
 
-Laurent Pinchart
