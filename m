@@ -1,154 +1,126 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8202CCC5;
-	Tue, 17 Jun 2025 14:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C484502A;
+	Tue, 17 Jun 2025 14:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168961; cv=none; b=a2v58JBNrQuHQbNr/ixEcdr1LcyRLoZDcUpQCcZuw4b8OvVp/7mGaFyJu6BnfPgDwChZVDS4lp/GOJ4z+xemXAyVibCVbh6x6lQgqbtw+P5WKQVPhTBw1+i2zV13DywtNukxpsug3gumHOlDXLfSZZcZJGN5smMP0MuF3Ja4r6E=
+	t=1750169058; cv=none; b=B5TtvhVEuJf3Wn37LxUcE1v/H+ScIu2KQAkxKGPHGrOgUt7JTJFLfmhRrJjDzmG0HVuNUqxcCRTdtxSs7cAckq+GxvEfxQOIgCjHmIPM8j+SJSZNf55wCgaMSrd4NDu/YYScXC66gOEMvvJUufD4O3gUVvIHZIcrstQqWVY9o/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168961; c=relaxed/simple;
-	bh=P9zYp6tDIUFMpMfxG878+zEknO7QZ7sQkH+KSyaTPj8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Da3Kcvqf5h2j6g3N9uQ3sH1Yy4Gnp/A9eba72GF9q+cczhjs1c2i1P6jTsFrQc4iTIgdbC/+IlUgx/XQml7NoTRU3EabYi+NVIdgIAhySp8vIpSW9cXr7a5Rlmc6eoMwPksMsAWDkbFQE2o23pEeeznCBkeU6UwgIcxY+LGRfJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs05NptC; arc=none smtp.client-ip=209.85.215.177
+	s=arc-20240116; t=1750169058; c=relaxed/simple;
+	bh=0dWU6HXzlHK6iJEuju+cyMKuq1U2jlz4qZX3uNUjrog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=E0e9a3s1Ksh344ToZ523vq1GE6BblVaSau+FqHRYoBZuun9MMDhIwAZ5vLCiEQW4mxJ6CBBfv6eJZut6XqCHF9A3j2zylc5NWV67nho6UcBmxbXaYzNk14rQjhHT3A82xHBz/y0e6hVj68mHCcc60NHHUVgg/XpjNePds83x/s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qi5frF+1; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs05NptC"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b2c40a7ca6eso6043911a12.1;
-        Tue, 17 Jun 2025 07:02:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qi5frF+1"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-453426170b6so17995225e9.1;
+        Tue, 17 Jun 2025 07:04:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750168960; x=1750773760; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QDaAx6iiEt3ZsmgY/NM7GzXn943URIlFJ5nTMeHEO1M=;
-        b=bs05NptC7uc0xaAGc03VDlpqc5YHCXQPykzk31CwIj7yw6Dh8X+bsa3b3t7wuoym+a
-         YIaGSkO2R1OsQNRk0pwQmMprQZ/AzCrXrO4/bqx6lWO3nEXGA9pg+4MuSLFDGAvyl7W/
-         bKaJLmxLoGzM8iEQtBC6zKFZCNtiS6fsioSOXx/pOeFTrwokdlcyyLXHl9dkGhRDT7KX
-         C01VCfDmX0j6IrlfNrpEEYt4J4F4UlTkPVuuSXYi1qkM5oi85SmwXKn87pqhzml9Xq1H
-         /5MNHsaW8eKLjuAWA0pz8B7MjVqeXtc7ImXuHbF4OpkuFdPv9ink0l6lTMEfWUz3hHtB
-         EoYw==
+        d=gmail.com; s=20230601; t=1750169055; x=1750773855; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yKMl5Q4rEMPmCxIPeuqakKIQuXk9JJJz0TSzFVQwXWU=;
+        b=Qi5frF+1TS3ntDe3uE/FcTYZrR84aT3eo/G3CcRfDMt4sSlglHZdPSekWngIjjuOC7
+         tBB7pBiHCdmSECKRLLMMyeVjw2/Sni/W97hPhe1pFN80aqFkFKgFSugZmnzYzcsbvPsn
+         TPSrWJxT4qllQjKpS58hUCjmUBs74AvVt97QshcwCJeK46E9i6Kof/aAH67qdwn/Pbhx
+         80TjmjUczZFCNyvJfWLaekAh7jPBqY9Sn9wqNSXij6+Z3N9F1HP6ZrLwXqORP4swu0GZ
+         5KI+MKjJAlQZ0X2hVEx2f65q84fetdrcJBlSGQvF6Xa2TDgtp0hlsVoAjrUdj6e/NV76
+         ymzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750168960; x=1750773760;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QDaAx6iiEt3ZsmgY/NM7GzXn943URIlFJ5nTMeHEO1M=;
-        b=wp4aSFxJZtDOFAgQKNXIUhgOHy/7UiWckyodTjOWxTKan9ICASRBQxKYrNhsujz3NH
-         zB6OQjEyH+gqvQf8NpdjE7kTS/aY8VV9csckLHO2CqYPYGqcGU8C3vFETWxD5wgAHItX
-         KhlWlhjB9DBbE6lpNEmTosUcKuZCwXAaq926WxBkJmMKCK7K65/etWaHhzCZAJMTOGIz
-         KnWecYG2k73WSDkr5E4jTdFn9i7/ITotk0l8wsj4RGxwduwJVwjmx4n7y3fFaHTuKx2z
-         Ngwx9VQwP/qVa1nKbbmWyHMSAP/n3hajw+YyTDeERGHfw6hZt8wTZh+8goBOoN5NUtQ+
-         i2tA==
-X-Forwarded-Encrypted: i=1; AJvYcCWqJzyrBtz3Dtr0PnQx7wiXwPmhn5RnLNDlKda5BgCH3LBv6kw5fhw3oWSk/2eu1Z5+Unu4T4gq9yjnf5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4KLU7ZU2CvzJVGp10ib9U8SG0pyi1jzlIxcJAU/OJX4VEg8mt
-	PJpWlMSt3e6ujM4sV44fapNu6BYdfbQqaMSHQeK7t9ZdxnOXxxioMZ+9
-X-Gm-Gg: ASbGncu3dOvdkjb65nwSZJX3drj5/m9tRkt3hr6sXrVGMmjuYeP+9ULECamW/3MX5KO
-	tFNHLfJBFJi4PvjnC37lo1EqJYyM9rD2tKLJckPIMZuvUmfkjTaOqtjS+f2FVnQLqz/UdDGMyUB
-	HDbR06tMAQA3bXXWhO25MJoJoY/fiC6mn67YfgHZhC9V8AER/z2OlKt9I01vV/seeDfAJ46KoNz
-	0Q+JKuuRmtIeKfdceZ6xIih8UDPbtgSK/4W5ZS0puygDp74W7s+uqCWgQmGpc7vwEJkn2IgJ4Fl
-	WA3PQjoJ5nrA05R7Gh16mudtcdpD3rskOJV1+AJLlQnBTIvEns+CRRDC/Hh55H6ccF3wHgVyu5F
-	nppOlZaY=
-X-Google-Smtp-Source: AGHT+IGxlu46JuoRs7SX37W5zvnLj8SuUaGSNH6Wjv5XlWMMKthDM3nr+4HSmo11Rnp8eMdcL/10Jg==
-X-Received: by 2002:a05:6a20:9143:b0:1f5:87dc:a315 with SMTP id adf61e73a8af0-21fbd5d85c3mr19622857637.12.1750168959572;
-        Tue, 17 Jun 2025 07:02:39 -0700 (PDT)
-Received: from ubuntu.localdomain ([39.86.156.14])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1639eb8sm7519405a12.10.2025.06.17.07.02.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:02:39 -0700 (PDT)
-From: Penglei Jiang <superman.xpt@gmail.com>
-To: axboe@kernel.dk
-Cc: io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	superman.xpt@gmail.com
-Subject: Re: [PATCH] io_uring: fix page leak in io_sqe_buffer_register()
-Date: Tue, 17 Jun 2025 07:02:34 -0700
-Message-Id: <20250617140234.40664-1-superman.xpt@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <618aaa53-14a7-4d85-90d4-6e4a8e1ce3a1@kernel.dk>
-References: <618aaa53-14a7-4d85-90d4-6e4a8e1ce3a1@kernel.dk>
+        d=1e100.net; s=20230601; t=1750169055; x=1750773855;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yKMl5Q4rEMPmCxIPeuqakKIQuXk9JJJz0TSzFVQwXWU=;
+        b=BrxYporcmEFBC5k2wvk0VhH1SfR8KKTuqSEygZPKnkguXCWyd6yYtdxUZwP0m1+BPc
+         wtrkne3SljuvtyhkQOK/7w5BgxlQAeWpyK30vzc0jZ4rCKp5D7duAtN9r68O21HZWM8i
+         qGaNlQGqJm1uHR6UfxvTFgu5VllUhDie2PmWe+Ygx9Y2sJMRfbeUd19YISUFczekdgnY
+         aAfyydk405/wouiMfD2mTaKlVw39vn1yDFN1omFL3DNDS15Dg1tikpCLabv2sBcvW+u0
+         RZ9SkIlpu1fK54o+OAQLM3/Yqd+lYlIRcyJm20hZCpoERM+61BB8P/FYs09SC7Vb/AuW
+         kvfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVEbzxRc5IzmyQ0EWHJPRQrm8H9biS7CmYE9e+djErqT3zy3PGntNjzWoFlC2EA462uPYruN6/GithJsD2G@vger.kernel.org, AJvYcCW9tcAfTGwZ47+EI8SMuu8dFVtB6chlxel2MSq99z6be3bcnehPdzFvLGABpXr6io/gG98Kh+V/q3SRWdAq@vger.kernel.org, AJvYcCWo6S7Er2+wqSWY794C8ybxqQI6FM73vJDFkr/v48uxiE41Pnb1A/rRjf0l1ZtTMUvRR0/WlWBGuoQW@vger.kernel.org, AJvYcCWoDgYn+CRTy1/aNzbdN/ZhRwIwRNqppxgoVMQ1BlbuFORt8cblj6dhchCBOWzeAiwsmGqUaFIMJ9L2gHPMKA/kMjI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfUFbcReihSmyIvpGtmGObYFoRudK1xj1vWQtquRa+qFnKI4q9
+	MRlqM4dQv/yZqwOyjluXIQLLY3ASJMGP/MLkPwvxbaimm3hZ2VlFalKtGjus8BzLe0WAUbleXVj
+	qTjzXvmCpqRGm7Prgq2ZwQOD0b3v7vdS+e9AEhNQcRg==
+X-Gm-Gg: ASbGncuMdpZUnMVQpOvA8m4APQ8gbqf8yIcZrco4x8wCmjcvG19I4UefOLHC2QzoLd+
+	wYdzBepnmZjhAjvpBDeo6U31wOyZ4jgZc1jT5CBhNneey75w6nQZhn++rtS+7s9RRz9JWugQlLf
+	blOiHxpATHQF9ea81k/oD8OQ1h/DzommiGHWeIvv8+AUHdghpv8c0w
+X-Google-Smtp-Source: AGHT+IG9Pd3zZCpCDabPNRID3/mweW9Pg6ysqzFUrlRGkOmnfcaK7N+ZJqlPWghn7sHnYXCnMj8x0pPDPqWqSZzTk/Y=
+X-Received: by 2002:a05:6000:310f:b0:3a4:e231:8632 with SMTP id
+ ffacd0b85a97d-3a57239587bmr10636654f8f.12.1750169054933; Tue, 17 Jun 2025
+ 07:04:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250617134504.126313-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWfsqYvdL16hrbWug3PhK1XrSunaWtduajRzViKBRPeCA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWfsqYvdL16hrbWug3PhK1XrSunaWtduajRzViKBRPeCA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 17 Jun 2025 15:03:47 +0100
+X-Gm-Features: AX0GCFvJJnMjoVIyb00wCS8LqVIBgjEn19qTstoiiFay-qVXscEY4QfRsMV1AmY
+Message-ID: <CA+V-a8sx9iuUjn3uvSqq3Sd=JeTj_UMyDiLzisrnj1uQw6nbGQ@mail.gmail.com>
+Subject: Re: [PATCH v12 7/7] arm64: defconfig: Enable Renesas RZ/T2H serial SCI
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 17 Jun 2025 06:53:04 -0600, Jens Axboe wrote:
-> On 6/17/25 6:39 AM, Penglei Jiang wrote:
-> > Add missing unpin_user_pages() in the error path
-> > 
-> > Fixes: d8c2237d0aa9 ("io_uring: add io_pin_pages() helper")
-> > Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
+Hi Geert,
+
+On Tue, Jun 17, 2025 at 2:57=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, 17 Jun 2025 at 15:45, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> >
+> > Selects RZ/T2H (aka r9a09g077) SCI (serial) specific code.
+> >
+> > Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Thanks for your patch!
+>
 > > ---
-> >  io_uring/rsrc.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-> > index c592ceace97d..f5ac1b530e21 100644
-> > --- a/io_uring/rsrc.c
-> > +++ b/io_uring/rsrc.c
-> > @@ -804,8 +804,10 @@ static struct io_rsrc_node *io_sqe_buffer_register(struct io_ring_ctx *ctx,
-> >  	}
-> >  
-> >  	imu = io_alloc_imu(ctx, nr_pages);
-> > -	if (!imu)
-> > +	if (!imu) {
-> > +		unpin_user_pages(pages, nr_pages);
-> >  		goto done;
-> > +	}
-> >  
-> >  	imu->nr_bvecs = nr_pages;
-> >  	ret = io_buffer_account_pin(ctx, pages, nr_pages, imu, last_hpage);
-> 
-> Wouldn't it be better to have the unpin be part of the normal error
-> handling? Not sure why the pin accounting failure doesn't do that
-> already.
-> 
-> Totally untested...
-> 
-> diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-> index 94a9db030e0e..a68f0cd677a3 100644
-> --- a/io_uring/rsrc.c
-> +++ b/io_uring/rsrc.c
-> @@ -809,10 +809,8 @@ static struct io_rsrc_node *io_sqe_buffer_register(struct io_ring_ctx *ctx,
->  
->  	imu->nr_bvecs = nr_pages;
->  	ret = io_buffer_account_pin(ctx, pages, nr_pages, imu, last_hpage);
-> -	if (ret) {
-> -		unpin_user_pages(pages, nr_pages);
-> +	if (ret)
->  		goto done;
-> -	}
->  
->  	size = iov->iov_len;
->  	/* store original address for later verification */
-> @@ -840,6 +838,7 @@ static struct io_rsrc_node *io_sqe_buffer_register(struct io_ring_ctx *ctx,
->  	}
->  done:
->  	if (ret) {
-> +		unpin_user_pages(pages, nr_pages);
->  		if (imu)
->  			io_free_imu(ctx, imu);
->  		io_cache_free(&ctx->node_cache, node);
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+>
+> I don't expect GregKH to apply this patch (or better: I expect GregKH
+> to not apply this patch ;-) so IMO there is no point in including it
+> in this series.
+>
+Ok, got you.
 
-Thank you for taking the time to address this issue!
+> Thierry's original version is still in my queue, together with the
+> DTS patches, waiting for the RSCI DT bindings to be accepted...
+>
+I plan to send a new version for RZ/T2H DTS/I which includes fixes
+from series [0] squashed and also mainly update the model string from
+"Renesas Development EVK based on r9a09g077m44" to "Renesas RZ/T2H EVK
+Board based on r9a09g077m44". Is that OK with you?
 
-However, if io_pin_pages() fails, it will also jump to the done label,
-but at that point, the value of nr_pages is undefined because nr_pages
-is only assigned a value inside io_pin_pages() if it succeeds.
+[0] https://lore.kernel.org/all/20250613135614.154100-1-prabhakar.mahadev-l=
+ad.rj@bp.renesas.com/
 
-	pages = io_pin_pages((unsigned long) iov->iov_base, iov->iov_len,
-				&nr_pages);
-	if (IS_ERR(pages)) {
-		ret = PTR_ERR(pages);
-		pages = NULL;
-		goto done;
-	}
-
-	...
-
-	done:
-		if (ret) {
-			unpin_user_pages(NULL, undefined-value);
-			...
-
-I'm not sure what the impact of calling unpin_user_pages() in this way would be.
+Cheers,
+Prabhakar
