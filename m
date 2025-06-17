@@ -1,101 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63C423B601;
-	Tue, 17 Jun 2025 08:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A7285260;
+	Tue, 17 Jun 2025 08:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750150007; cv=none; b=q6EHs57lGeyDUc689RuEeNWiL5Bya7QqertaK08dsoG3jNAQEbWSfAualBy4ib0vszsCIuiC6GL//UXwdL03RW4+RMvRNmim8RtSUCELFyFEXwvmuYvZKauWeVa32wGvlJhNbwNlO8OMg+fQuOm+NCN00Mv2Hc9Y/4iFm8TcMqU=
+	t=1750150033; cv=none; b=KUVbL0Ho2Cq/i+bNiTqq1NY/rFSUtNski48pNyqfJxunP2DS06I828djgRp3t8ZkqI6cG8feVWIKJl4GcThjYxIbxcHdLUhDlupCkY7nTifsPztc78XDeLWJIYV85jA1gGFn62iya/D8zhJm8Kwk/p4siMcPSVJj+XM75ws9nKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750150007; c=relaxed/simple;
-	bh=UOC+kxOE3OLiMAYZQ8H+yk57DcCQ6dMktSpb1jyC+6A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S486Z+4+w7BLS2XE2ngMf0BoyaieGjiI5Vxv6MafLkf8CUGMBK+kwPt1kGy0PCCg5FoVvSiwhn5SfhQcQ7AuxjWU8RIMhY/DeW8nkPJteFMa7PYvZSb457T5QlxvoIFJlLdzKfAIu3r5LYrM8MnyjL+iTsI1gKj4K6vsHAcgAso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXmPsthd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750150033; c=relaxed/simple;
+	bh=LfBfzJOI9hyof9Q7j7bpwacs6cutsXJf8ZFmcOMRXnA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jOldw4tqb8FmJMlp2y0V6GK3z+437uU1FUPHTQpcFiq1zc56IkVijqnX7POK4g3yT6Sh6KOmkm0pMzuS9EmDj1pBtc8KnIG1xsMU4ef1yue3HLcMehyqF/0s5wVpOC8gKc6iuhhSsCR3hTgYFkjFtsCzf+d/eLochwbc7X88nR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o71sq5U6; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXmPsthd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CBBC4CEE3;
-	Tue, 17 Jun 2025 08:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750150007;
-	bh=UOC+kxOE3OLiMAYZQ8H+yk57DcCQ6dMktSpb1jyC+6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RXmPsthdJOuimlL4S/oQli4WOuXI41v/dyqIfStlaJikD3cjHFQNJ9QJpwfoD76gl
-	 TItbD3NTfoq4+GgKg1wTFekzpYALQb+GNBiXwThN32ghyR3zGQBwPDD4YePHNNpOqL
-	 fdi+tx0QysjjARUkFKCoD2amPfQ7ldaGbHJJM3tOeZjvwKs06QrpPtqWV/RAPZyYgr
-	 wtseBup9QqemwmilqI9W63RIEk5GpxWAr9lcWv8uteeT/Y4kv+4tJsvHTOFmHsxVaC
-	 g8M7YKSPof+JYC2CgL7kAdOyGdS5aRzZivIn9HZ2IgbjKE0dRGE8aWXFKNSfIEX8hA
-	 gm8qc8Kn1FwBA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRRxt-000000003p7-16ok;
-	Tue, 17 Jun 2025 10:46:45 +0200
-Date: Tue, 17 Jun 2025 10:46:45 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Praneesh P <praneesh.p@oss.qualcomm.com>
-Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
-	P Praneesh <quic_ppranees@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Miaoqing Pan <quic_miaoqing@quicinc.com>,
-	Remi Pommarel <repk@triplefau.lt>, linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] wifi: ath12k: fix dest ring-buffer corruption
-Message-ID: <aFErdeZlT-Hm63pu@hovoldconsulting.com>
-References: <20250604144509.28374-1-johan+linaro@kernel.org>
- <20250604144509.28374-2-johan+linaro@kernel.org>
- <6f3eb9fa-617e-4434-8fc4-33dd92c4bdd2@quicinc.com>
- <aEFqsghEuJc3xxlU@hovoldconsulting.com>
- <ed06d62a-4b98-443a-a2ed-c92058bb521a@quicinc.com>
- <63c2c889-0a09-4b25-a1d2-2aaa92d75d9f@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o71sq5U6"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55H5gW7j027045;
+	Tue, 17 Jun 2025 08:47:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=V0az5VXjqwYak6U75gaKDM
+	VsBD+fhMtuhxxxgPjDMGM=; b=o71sq5U6vpw4d4KnnO/tcaojBjbtE2hhV1f4qj
+	+oy3ymo/u5pz6dBR5QHUTt+EFUqxcKrcuiBDWVn4VRzTSshnIH0qMd/aSIbhBO6o
+	N6W/kxquwFfxgjn4oQyE3c0TcYIPmUAN5ZJ/SuZ9WckiiWu4GyP7c7vbGtVOR0Do
+	NW2imdIftUv/ZfJb+q/WsH3d3iM09q4gkgT+7uyEb5JPFEW/vSdily1OyLHOKj6j
+	4K6LiICcHNnXbqZ/Ud3zwLbslSvQSFJWIlwUN4ssinzxWJCx+Md9+Fg/N/9Tb4n2
+	ilUadY6prfpdbXFhOU2+2uFMCRy2/k2lunRO8DuxRzLaeTZQ==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hffq1y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 08:47:07 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55H8l6w0019108
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 17 Jun 2025 08:47:07 GMT
+Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 17 Jun 2025 01:47:04 -0700
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
+To: <rafael@kernel.org>, <len.brown@intel.com>, <pavel@kernel.org>,
+        <gregkh@linuxfoundation.org>, <dakr@kernel.org>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_zhonhan@quicinc.com>
+Subject: [PATCH] PM: sleep: Drop superfluous might_sleep() calls
+Date: Tue, 17 Jun 2025 16:46:50 +0800
+Message-ID: <20250617084650.341262-1-quic_zhonhan@quicinc.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <63c2c889-0a09-4b25-a1d2-2aaa92d75d9f@oss.qualcomm.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDA3MCBTYWx0ZWRfXxUxF55PT81qD
+ m0BR7hu26yW/zYrUDbFPGtHPJGJe3ZX1aLvHQki6DtTKYSNrQrI7MCVRWMWIXaktEeKn7JH4ehI
+ BrLRT+Az9JuwJwHwoAckiUHbaCNoBvhJbCa/6hC/OD2WUgAipx36KRQeDYP+g/mde5/C6Y3ULtq
+ aNaYy3VLDfsdovGKZtEc9oP3eTw75rDr2Nq+8oYI4bu4zu4A9lxoLlOSrF2stMKj20vNlilRPLY
+ waqax3aU9KCrRaG8ZVXyEjo2UKCrFHyNElJZbuukpG0oBnlDZ0Hyq2l3zN0fc1kaqvhr2spIQvo
+ yMjNa7gPcKHZKEGOBQLJeKl2+Irb3bz4pHNgmm8LLsgS8ktmbBe8qYRR58hP/viLigY2tGnT6s6
+ ip9f09HrpAwdD4AIEhje2yKC/rNqgBCXLr6V9f+V5gmT6zsWNWMgdrtUNYnkE5mRwbO+0qkV
+X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68512b8b cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=Ct5OFoWzB3YGJjc9bSsA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: VkNDCt0wgTQKyumgFyg4F16KeqF0D_Co
+X-Proofpoint-ORIG-GUID: VkNDCt0wgTQKyumgFyg4F16KeqF0D_Co
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_03,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1011 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506170070
 
-On Mon, Jun 16, 2025 at 02:59:24PM +0530, Praneesh P wrote:
-> On 6/5/2025 4:19 PM, Baochen Qiang wrote:
-> > On 6/5/2025 6:00 PM, Johan Hovold wrote:
-> >> On Thu, Jun 05, 2025 at 04:41:32PM +0800, Baochen Qiang wrote:
-> >>> On 6/4/2025 10:45 PM, Johan Hovold wrote:
+Drop superfluous might_sleep() calls from dpm_resume(), dpm_complete(),
+and dpm_prepare(). These functions already invoke primitives that
+implicitly check for sleep in atomic context:
 
-> >>>> Add the missing memory barrier to make sure that destination ring
-> >>>> descriptors are read after the head pointers to avoid using stale data
-> >>>> on weakly ordered architectures like aarch64.
-> >>>>
-> >>>> The barrier is added to the ath12k_hal_srng_access_begin() helper for
-> >>>> symmetry with follow-on fixes for source ring buffer corruption which
-> >>>> will add barriers to ath12k_hal_srng_access_end().
-> >>>>
-> >>>> Note that this may fix the empty descriptor issue recently worked around
-> >>>> by commit 51ad34a47e9f ("wifi: ath12k: Add drop descriptor handling for
-> >>>> monitor ring").
+- dpm_resume() and dpm_complete() invoke mutex_lock(), which internally
+  triggers might_sleep()
+- dpm_prepare() calls wait_for_device_probe(), which internally uses
+  flush_work(), and thus might_sleep()
 
-> >>> why? I would expect drunk cookies are valid in case of HAL_MON_DEST_INFO0_EMPTY_DESC,
-> >>> rather than anything caused by reordering.
+These annotations are unnecessary and can be dropped to reduce clutter.
 
-> >> Based on a quick look it seemed like this could possibly fall in the
-> >> same category as some of the other workarounds I've spotted while
-> >> looking into these ordering issues (e.g. f9fff67d2d7c ("wifi: ath11k:
-> >> Fix SKB corruption in REO destination ring")).
-> >>
-> >> If you say this one is clearly unrelated, I'll drop the comment.
+Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+---
+ drivers/base/power/main.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> > Praneesh, could you comment here since you made that change?
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index eebe699fdf4f..0f40c00c1401 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -1095,7 +1095,6 @@ void dpm_resume(pm_message_t state)
+ 	ktime_t starttime = ktime_get();
+ 
+ 	trace_suspend_resume(TPS("dpm_resume"), state.event, true);
+-	might_sleep();
+ 
+ 	pm_transition = state;
+ 	async_error = 0;
+@@ -1198,7 +1197,6 @@ void dpm_complete(pm_message_t state)
+ 	struct list_head list;
+ 
+ 	trace_suspend_resume(TPS("dpm_complete"), state.event, true);
+-	might_sleep();
+ 
+ 	INIT_LIST_HEAD(&list);
+ 	mutex_lock(&dpm_list_mtx);
+@@ -2109,7 +2107,6 @@ int dpm_prepare(pm_message_t state)
+ 	int error = 0;
+ 
+ 	trace_suspend_resume(TPS("dpm_prepare"), state.event, true);
+-	might_sleep();
+ 
+ 	/*
+ 	 * Give a chance for the known devices to complete their probes, before
+-- 
+2.43.0
 
-> Empty/Drop descriptor is intentionally issued by the hardware during 
-> backpressure scenario
-> and is unrelated to the issue discussed in this patch series.
-
-Thanks for confirming. I've dropped this comment in v3:
-
-	https://lore.kernel.org/lkml/20250617084402.14475-1-johan+linaro@kernel.org/
-
-Johan
