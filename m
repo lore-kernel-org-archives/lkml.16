@@ -1,216 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6421C2E92AF;
-	Tue, 17 Jun 2025 13:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E352E7189
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:47:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750167943; cv=none; b=PMOsl89hW1BfZa1apVWKhRj552aQZjoLBT7/g5yIf+MB4BwlWgGGZIxNqpRET6r+xIiF8D0TWP4ph6/eEdC7EuC5LHiQ8oUTjEvSOpNexYLnnzFJC00YNazSK4f9f3/y+/JJmqkiHY7xJN6e3P6RYw6e38qq5h2PlaunqQh3yrM=
+	t=1750168039; cv=none; b=J9f9Wna+8bMPldxKXX5x2WHr2wIqVjwV/0HIZySlyL+EhvBOnD08INHnfGLdEQt20sZ57G7eUd8KcFR6aa3aVjoNh+mNBR9bIYMFtj436toAoREmIbX+j5p+U0lp/Dru2iTn1iCW+9Xhl4dLOO7g6k7QH5V+Ku/cax7MOTa7jw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750167943; c=relaxed/simple;
-	bh=ux2MZsXlsHSW59iGcAQCXxGRPv8UoAugfNzkdboujmM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rPKx4Lz3QOAb9tQqMoSRSNCBBi7hMeXsgfXqFHsYrSm3m4hqPtPfhEMRNFqz274FLCFP3fJW8sW2fsoIM0CXwVWXF+v3YsviGEpiFbIb4hRaT54iNHPAPRByumEwkGn9RcC+ujE5k6rPr7YI4b11FKt4nvIRpbxDQj6qjFEVZmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MbDZonE3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750168039; c=relaxed/simple;
+	bh=3KneNQy+7LnUK6MxYSz93/UV9xWUwtWWCkbCWT0OPEQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=grCn8isqGSiHunk8QYbz+O6+QQVDCnJuA5t9LSOWBmXW83TXeOvzXdyG8klOmXf17cOWcym3Yr4/seqWZQyNwskbi191fAcM8F2WohyE+5FB0bRtFQvd3vb5+2VleSKK1xoA8GtF3r9dIECVKQIr4d865yTdLVbumwbaiIAzFn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WKArWCmJ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MbDZonE3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F64FC4CEE3;
-	Tue, 17 Jun 2025 13:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750167941;
-	bh=ux2MZsXlsHSW59iGcAQCXxGRPv8UoAugfNzkdboujmM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MbDZonE3miDIH090KT4CtwEWTnjThuEGFTqMpiDlbpo4JIKTAIZSbERO9dQwIDNE6
-	 lAqsm/ob61Jh7AFeSK3J3XFx9zg0Rk7BEdN4cyoVUDuwkwxF4qJYEI8qlEA8AbM2BH
-	 S4b3F+bM6HWSTswF8ONTGzKAYIVRWW6v11hHw90jXj+Osrj5NoaJVyFXGhBkA8i+an
-	 ARyY3J/01aT0PfYh5nxHY1i41rMCuXoBaH0ZB16MT5lBmm1eQu4lHlGU7bu25vZPxJ
-	 Ll28nXuUENYUl+54y1eaaHEkTrj0/wrj3n4C27LTFgjnifnOntc59h/krIOSmvCBh9
-	 h28tUE9/d98kg==
-Message-ID: <92cd3a83e5c244a3e4a5afd5af61cfb3f8962338.camel@kernel.org>
-Subject: Re: [PATCH 00/10] convert the majority of file systems to
- mmap_prepare
-From: Jeff Layton <jlayton@kernel.org>
-To: Al Viro <viro@zeniv.linux.org.uk>, Lorenzo Stoakes
-	 <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, "Liam R . Howlett"	
- <Liam.Howlett@oracle.com>, Jens Axboe <axboe@kernel.dk>, Jani Nikula	
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>,  Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, Eric Van Hensbergen <ericvh@kernel.org>,
- Latchesar Ionkov <lucho@ionkov.net>,  Dominique Martinet
- <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>,
- David Sterba	 <dsterba@suse.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne	 <marc.dionne@auristor.com>, Christian Brauner <brauner@kernel.org>,
- Jan Kara	 <jack@suse.cz>, Benjamin LaHaise <bcrl@kvack.org>, Miklos Szeredi
-	 <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, Kent Overstreet	
- <kent.overstreet@linux.dev>, "Tigran A . Aivazian"
- <aivazian.tigran@gmail.com>,  Kees Cook <kees@kernel.org>, Chris Mason
- <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, Xiubo Li	
- <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, Jan Harkes	
- <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu, Tyler Hicks <code@tyhicks.com>, Gao
- Xiang	 <xiang@kernel.org>, Chao Yu <chao@kernel.org>, Yue Hu
- <zbestahu@gmail.com>,  Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
- Dhavale <dhavale@google.com>, Hongbo Li	 <lihongbo22@huawei.com>, Namjae
- Jeon <linkinjeon@kernel.org>, Sungjong Seo	 <sj1557.seo@samsung.com>,
- Yuezhang Mo <yuezhang.mo@sony.com>, Theodore Ts'o	 <tytso@mit.edu>, Andreas
- Dilger <adilger.kernel@dilger.ca>, Jaegeuk Kim	 <jaegeuk@kernel.org>, OGAWA
- Hirofumi <hirofumi@mail.parknet.co.jp>,  Viacheslav Dubeyko	
- <slava@dubeyko.com>, John Paul Adrian Glaubitz
- <glaubitz@physik.fu-berlin.de>,  Yangtao Li <frank.li@vivo.com>, Richard
- Weinberger <richard@nod.at>, Anton Ivanov	
- <anton.ivanov@cambridgegreys.com>, Johannes Berg
- <johannes@sipsolutions.net>,  Mikulas Patocka
- <mikulas@artax.karlin.mff.cuni.cz>, David Woodhouse <dwmw2@infradead.org>,
- Dave Kleikamp	 <shaggy@kernel.org>, Trond Myklebust <trondmy@kernel.org>,
- Anna Schumaker	 <anna@kernel.org>, Ryusuke Konishi
- <konishi.ryusuke@gmail.com>, Konstantin Komarov
- <almaz.alexandrovich@paragon-software.com>, Mark Fasheh <mark@fasheh.com>,
- Joel Becker	 <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>,
- Bob Copeland	 <me@bobcopeland.com>, Mike Marshall <hubcap@omnibond.com>,
- Martin Brandenburg	 <martin@omnibond.com>, Steve French
- <sfrench@samba.org>, Paulo Alcantara	 <pc@manguebit.org>, Ronnie Sahlberg
- <ronniesahlberg@gmail.com>, Shyam Prasad N	 <sprasad@microsoft.com>, Tom
- Talpey <tom@talpey.com>, Bharath SM	 <bharathsm@microsoft.com>, Zhihao
- Cheng <chengzhihao1@huawei.com>, Hans de Goede <hdegoede@redhat.com>,
- Carlos Maiolino <cem@kernel.org>, Damien Le Moal	 <dlemoal@kernel.org>,
- Naohiro Aota <naohiro.aota@wdc.com>, Johannes Thumshirn	 <jth@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox	
- <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn	
- <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
-	linux-afs@lists.infradead.org, linux-aio@kvack.org, 
-	linux-unionfs@vger.kernel.org, linux-bcachefs@vger.kernel.org, 
-	linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
- ceph-devel@vger.kernel.org, 	codalist@coda.cs.cmu.edu,
- ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
-	linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
-	linux-um@lists.infradead.org, linux-mtd@lists.infradead.org, 
-	jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org, 
-	linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
- ocfs2-devel@lists.linux.dev, 	linux-karma-devel@lists.sourceforge.net,
- devel@lists.orangefs.org, 	linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, 	linux-xfs@vger.kernel.org,
- nvdimm@lists.linux.dev
-Date: Tue, 17 Jun 2025 09:45:32 -0400
-In-Reply-To: <20250616204149.GK1880847@ZenIV>
-References: <cover.1750099179.git.lorenzo.stoakes@oracle.com>
-	 <20250616204149.GK1880847@ZenIV>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WKArWCmJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750168034;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bp6ENcV0aA4vnCPH9W0BnZj/GXwwIDGb2kBXy/7zwAc=;
+	b=WKArWCmJS5Wl35ZZQhw6y34OAZvbDD66dIBFNqukSv3ECL44yXV3nz4gflLEpT8P2+vKUx
+	2HqathdYQSvZ493LFKorlm6cnlbO7RS2UAkPaY45Iyg2WLCWIaed2EH2rg4xpRxcUXzoyz
+	D34cs6bVNow8DCHmG+dBK/eh6a80q4w=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-557-zsK-X74LMH2jFA33BN_Avw-1; Tue, 17 Jun 2025 09:47:13 -0400
+X-MC-Unique: zsK-X74LMH2jFA33BN_Avw-1
+X-Mimecast-MFC-AGG-ID: zsK-X74LMH2jFA33BN_Avw_1750168031
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-450d64026baso39674675e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:47:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750168031; x=1750772831;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bp6ENcV0aA4vnCPH9W0BnZj/GXwwIDGb2kBXy/7zwAc=;
+        b=mrSVeyFSUfuLYMMgmidkTEeBeUJF9SwPtnZDDSCPZq2x9BwmIxlXlX0e/HjaNl6m2m
+         AgXM0aUP/seNSkiHIasnd4lfqCTYBLK8hUYkf9vKRnuAr//S1HYmLPd/kRCxdraEhwPo
+         pbWNbawe2Zj3yKoq6l2K3WlcbiQvEdjcbXjOq//Oxb9q2fNptylSDWZE1eO/FweWXy8b
+         oGEvbo/yzmgDYgUMv+7Gu1I3jzAMI1RtIfXp1ijV39ZxUwh88BwrbmdQ7Qwn4gBQWI+E
+         Wcf9lg18jY9m9PipW5e4KbldEBxMY/Lzz35VVA5snGy0o+55XxZA+dxvjjfnZmGba01x
+         wxKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWJsmtpArGiF52bbISX7Ns4t76sRtczn4l/Pi6Bl/uq5E+HhCF/QJ91aOVNCMY123oNohJjoabTI78u/p0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAXSllNV3Aet+gSE39rJsy0R/GYA0xWGxDWKNB18HLq828RZeJ
+	9ayI88/mfdEJWKxCBj5bHqihZYKQHEBaHLAPtgnV+ViFQZ7JasqlFDm9OUwU2CgiNQ73VnLSm7J
+	0zXIlGkwYPlcKlNxmatXLLPZLCOMFRIvDmf2LEYXJSA9Lq8lyHZQNoOlzvi10rPxeIg==
+X-Gm-Gg: ASbGncsqY8KLANJwu/00jDL6UeQT02HpvH/WwueC9dEAcUVaTZPT6eMOMRVhBqXRZzo
+	ldaohkLVqo1Uvd7VCnFBIkBjWGGmtIakQ5LFu2o8djXL2AyHRnxX1jytq2SWg1uBlNjyxXE0t2t
+	YrPnyDLHeUNhSWrexL6ZaHBkgF6lNH13Ej0WAU1hS2e4/K+v0+gmY5sQkQPtLsJQhEa+aOcqDwD
+	SQMB5VJUJm33oq6KRq/soVc7ulyePuQvs45RLeXcxsfKzmEIhTI84YHCl234ccCOQDlgNIn+JZ5
+	zLGIAyC9BkNMQdWWbNWxAi+vhIZpATlPG/EVaZK/Yi/0pVlgZUWj67S87KS2W0XS9d4swGOml/M
+	7X/CeWxvxVWQFc1/b9/g5cBKzhnXSNePNwxKqlNCfJo/jZKA=
+X-Received: by 2002:a05:6000:26c9:b0:3a5:3b03:3bc6 with SMTP id ffacd0b85a97d-3a5723a3b1bmr11136835f8f.28.1750168031154;
+        Tue, 17 Jun 2025 06:47:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGVmSmymoptVLD56Q0F0aGhFd2deYP5b/9WMJydaeD500eQ6DyIM+aFL3Ip+nyZDxwm/Dcb8A==
+X-Received: by 2002:a05:6000:26c9:b0:3a5:3b03:3bc6 with SMTP id ffacd0b85a97d-3a5723a3b1bmr11136812f8f.28.1750168030779;
+        Tue, 17 Jun 2025 06:47:10 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2522b1sm174366915e9.25.2025.06.17.06.47.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 06:47:10 -0700 (PDT)
+Message-ID: <ce2af146-499b-4fce-8095-6c5471fdf288@redhat.com>
+Date: Tue, 17 Jun 2025 15:47:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for
+ large folio
+To: lizhe.67@bytedance.com
+Cc: akpm@linux-foundation.org, alex.williamson@redhat.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ peterx@redhat.com
+References: <b88d58d2-59f8-4007-a6c5-d32ba4972bea@redhat.com>
+ <20250617124218.25727-1-lizhe.67@bytedance.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250617124218.25727-1-lizhe.67@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2025-06-16 at 21:41 +0100, Al Viro wrote:
-> On Mon, Jun 16, 2025 at 08:33:19PM +0100, Lorenzo Stoakes wrote:
-> > REVIEWER'S NOTES
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >=20
-> > I am basing this on the mm-new branch in Andrew's tree, so let me know =
-if I
-> > should rebase anything here. Given the mm bits touched I did think perh=
-aps
-> > we should take it through the mm tree, however it may be more sensible =
-to
-> > take it through an fs tree - let me know!
-> >=20
-> > Apologies for the noise/churn, but there are some prerequisite steps he=
-re
-> > that inform an ordering - "fs: consistently use file_has_valid_mmap_hoo=
-ks()
-> > helper" being especially critical, and so I put the bulk of the work in=
- the
-> > same series.
-> >=20
-> > Let me know if there's anything I can do to make life easier here.
->=20
-> Documentation/filesystems/porting.rst?
+On 17.06.25 14:42, lizhe.67@bytedance.com wrote:
+> On Tue, 17 Jun 2025 11:49:43 +0200, david@redhat.com wrote:
+>   
+>> On 17.06.25 11:47, lizhe.67@bytedance.com wrote:
+>>> On Tue, 17 Jun 2025 09:43:56 +0200, david@redhat.com wrote:
+>>>    
+>>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+>>>>> index e952bf8bdfab..d7653f4c10d5 100644
+>>>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>>>> @@ -801,16 +801,43 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>>>>>            return pinned;
+>>>>>     }
+>>>>>     
+>>>>> +/* Returned number includes the provided current page. */
+>>>>> +static inline unsigned long folio_remaining_pages(struct folio *folio,
+>>>>> +               struct page *page, unsigned long max_pages)
+>>>>> +{
+>>>>> +       if (!folio_test_large(folio))
+>>>>> +               return 1;
+>>>>> +       return min_t(unsigned long, max_pages,
+>>>>> +                    folio_nr_pages(folio) - folio_page_idx(folio, page));
+>>>>> +}
+>>>>
+>>>> Note that I think that should go somewhere into mm.h, and also get used
+>>>> by GUP. So factoring it out from GUP and then using it here.
+>>>
+>>> I think I need to separate this out into a distinct patch within the
+>>> patchset. Is that correct?
+>>
+>> Yes, that's what I would do.
+> 
+> How do you think of this implementation?
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 242b05671502..eb91f99ea973 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2165,6 +2165,23 @@ static inline long folio_nr_pages(const struct folio *folio)
+>          return folio_large_nr_pages(folio);
+>   }
+>   
+> +/*
+> + * folio_remaining_pages - Counts the number of pages from a given
+> + * start page to the end of the folio.
+> + *
+> + * @folio: Pointer to folio
+> + * @start_page: The starting page from which to begin counting.
+> + *
+> + * Returned number includes the provided start page.
+> + *
+> + * The caller must ensure that @start_page belongs to @folio.
+> + */
+> +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> +               struct page *start_page)
+> +{
+> +       return folio_nr_pages(folio) - folio_page_idx(folio, start_page);
+> +}
+> +
+>   /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
+>   #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+>   #define MAX_FOLIO_NR_PAGES     (1UL << PUD_ORDER)
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 15debead5f5b..14ae2e3088b4 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -242,7 +242,7 @@ static inline struct folio *gup_folio_range_next(struct page *start,
+>   
+>          if (folio_test_large(folio))
+>                  nr = min_t(unsigned int, npages - i,
+> -                          folio_nr_pages(folio) - folio_page_idx(folio, next));
+> +                          folio_remaining_pages(folio, next));
+>   
+>          *ntails = nr;
+>          return folio;
+> diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> index b2fc5266e3d2..34e85258060c 100644
+> --- a/mm/page_isolation.c
+> +++ b/mm/page_isolation.c
+> @@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+>                                  return page;
+>                          }
+>   
+> -                       skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
+> +                       skip_pages = folio_remaining_pages(folio, page);
+>                          pfn += skip_pages - 1;
+>                          continue;
+>                  }
+> ---
 
-Also, an entry for ->mmap_prepare in Documentation/filesystems/vfs.rst
-would be good.
+Guess I would have pulled the "min" in there, but passing something like 
+ULONG_MAX for the page_isolation case also looks rather ugly.
 
-I went there first to understand what the requirements of mmap_prepare
-are, but there is nothing.
---=20
-Jeff Layton <jlayton@kernel.org>
+-- 
+Cheers,
+
+David / dhildenb
+
