@@ -1,107 +1,148 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6FF223B61C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D7823B61C;
+	Tue, 17 Jun 2025 19:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750188837; cv=none; b=XQKsC4gTXjc6vDjaW3xrcDY9JdHPtuCIw6C360f7tucKJQYsgQSfvq92sLCeU9QbidLw1yClTtnMblE64Pl95t03eM9GqNCpf3CHdUEkfa327vGLpMI9huB5UNSeUNETOvYdjJA0x8I1g67HpbTDUHXr1YDN4/5XuJrcOT5urmY=
+	t=1750188962; cv=none; b=gklraFLDp8RgTxfj48TN1lAzmi0h5aLcBSHka8qPQ5E/RwLA3bkWM80m4tFmtlk4aVFItnwPsLMMvWfbmztad+VwTRxJScJjSE6gFaSAGQZbBOPVW+gYoQD/0ccUw3qQB0VIYNBM1/a6evPzOPkSnDHdQ99CID9F6UlWRNoSqmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750188837; c=relaxed/simple;
-	bh=k/TpLa/PtWMfFkZ4PpMbzwrabb0DP58l+kNvcugkCXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qj3Uc9ZnKR57pbEzvsSGXXEb7Sj23695RzJOs8Ub+eK1Qz7g8zqGxrY2BntxBD6rE/MH5eiv+jUaZN8GLOw+LKifHQmS0KMybtnDITjl/wrzOiSt7i66VAtyXCGCLPlSeAzmlnUXby9cXsW7hMaZce1y1GT7RoyIGwJiyLNLmI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to; spf=none smtp.mailfrom=dama.to; dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b=savLHHtk; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dama.to
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=dama.to
+	s=arc-20240116; t=1750188962; c=relaxed/simple;
+	bh=1uEeGF9p7kz9UCL3FmlVdwCP0lAngpPAygjFaSOXfyM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BQqO+JJ2z7nJq1YR2XkJLlC1FA0Y8NAg3ntaWJnTBzHuYmXKIb796XmxRbRtXuPto/Gub+yIUwqdwjXKVeMW6jeXpAYcT6R82ZmCT6ZrRiocLuGqo+zMIY6nPkI1Rgbqd4ulO+btxDoBF+4tcJslGYsTMerAigEndzuhdj3rxRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ng0kFYrl; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dama-to.20230601.gappssmtp.com header.i=@dama-to.20230601.gappssmtp.com header.b="savLHHtk"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a54700a463so4935f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:33:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ng0kFYrl"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso6566568b3a.2;
+        Tue, 17 Jun 2025 12:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dama-to.20230601.gappssmtp.com; s=20230601; t=1750188833; x=1750793633; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m9AFIG2TIq+3H8Om9x4puK4H6GBxJfrgH+yDtc9rGns=;
-        b=savLHHtkigRbwEN8fhi74siBsUCc+NdjO2fW09sXrReDg/AVqKUvVC/SOJeM2QCqjj
-         HEiK8N8OVoaPKnYMb6tiz37a0lmQBfVgXBSTLFhqI1WKko/32WNYGy9Iom0lTSIWKaa8
-         YwZq3WDXWIbmnrHfQEijcdZ1pailuJNzHv3upGZ0yD/Giuo/OennSjsTBGz3ALZWt/sp
-         DmuclvbbpFJ46Lb+QzJW22013+rxP/sPT8NFEuino0+VP4KswBTO8lQznQZc1j+BK91Y
-         FkQi0DNAz43EnDBBe1Rf0zF9a9c8wGlio9SChnfutmruV0UPwbX3f9eY00/qUcYwgF+3
-         zkCg==
+        d=gmail.com; s=20230601; t=1750188960; x=1750793760; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ticf1f4PmQmZwFcANzazYxHsrbux47xCzbGTbFHeNUw=;
+        b=ng0kFYrlmN6D5tQn55FtzTIqC7Dp0+q68c16oN3DJTYfsspEJaEl82aF9kY6oGBnkN
+         gCikSVXbXtFTHPQhGXmVWAyEWWDcBn3IAC0wHc00AwfHoW0lzCQvjqZlCGkf39/8gIwU
+         yvrVyYvgQI8hzyY1w7S5v9VZXxAdKFxQTxjKUnoaAR5pL3pBnknjZ8YaEPUJ2hC52r8h
+         PXJIJMQkBzIJWM+fOERhi2/Akuk6PykuGakhW2hP8GbhbK2Q7A2QZY1C4+C3sHBR3O5J
+         E2ElfUHKrPJQsb8XRze548CKoCFd+UQViZsh5Ayqs+T2IY6LLOlDP1iKhw+FQVo7zKXp
+         shZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750188833; x=1750793633;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m9AFIG2TIq+3H8Om9x4puK4H6GBxJfrgH+yDtc9rGns=;
-        b=q2sHGLnrYt1pZJ00astnC0wSEb/+vNDJzPix9qPm0EY20E5NXNKgJ7vgGxA9YM8jII
-         o/H2OHY8qfw1amYoNLmLFZKx4SdqwcuVnLCS48LdeyHzEzWpaOmC81OtAzLMTEMvCrsW
-         XOXXQws8Qsca8bdVwbTQqH3Epn7CoUvxGMQeuFEgza8tmFmC1Ht51lStvdX2GSBiElWe
-         6PKuvDHVFG05H5E/obZOVN/wT16uSNfK3sHTH17tcWV6e4N//h8yax++K8Cb6HSuzwUm
-         /7yWMviRwWsQ6CewNZhVIAt7Hq2jKbdLZtfK35cqAStKxGJd0lyeWmnc+pukti37ao0F
-         TnLw==
-X-Forwarded-Encrypted: i=1; AJvYcCUw3cCa2LvDvDCDdFabLyiY0ViHt1LO4wwa0lsHpLgVjH4IdLVnJG+d7AVFyDJ6sYIBU1n7l7yFJphCgqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJQm1lhAhqBzMBAGzVlLh8yEAi0CmPI4sS0QF/MwsrTE5HcPhZ
-	HOUOAB/MepcX9HBb2G++cUl4yMN8fyo/nU6q/oAYotwcYIBpvWtwfyHvWzALQwxstqY=
-X-Gm-Gg: ASbGncumiLsnNarGK14EJ3mMGA8k0OT+ZWPoK7E8LGyOP5Zm0VFxdxgY42tMmJUGBUY
-	nAFcQdRgTVf43JnftbrX820aS98rRe19DWEyMzHkhaJvkSz7JjIaLZjK/mfM0ne3eYkTjzIfP54
-	tF7kRnj0yfwsl/YcbcKNxrtKmk19pqcbaKpojiXnbBZDvo8SWwkzxD8Jsjp42hdl9aeLVJezNwY
-	D2LZS3V4BO1FyEOXNn2he03tFkRAIcvoED1r9SpaNhPUOBU2Z6aPHcmcS6iplAdBrCejSl5PwG7
-	KM3Cl1GImL0V1HC8qoUvnj2lwa+S4OTq3vZz34a9Qx4AK41c5CdMfHXa4uaFcY6HuiOE6aBz1OX
-	A9g==
-X-Google-Smtp-Source: AGHT+IFdeD1FalHjh/M0Id4CVVT8Uo1X9UM+/h0kDU2haqdwcsz+E9jE8GI2CMfLB+2+NJ4yrS8evQ==
-X-Received: by 2002:a05:6000:2f86:b0:3a3:7117:1bba with SMTP id ffacd0b85a97d-3a572e85245mr12261631f8f.24.1750188832660;
-        Tue, 17 Jun 2025 12:33:52 -0700 (PDT)
-Received: from MacBook-Air.local ([5.100.243.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b089b5sm14613782f8f.48.2025.06.17.12.33.50
+        d=1e100.net; s=20230601; t=1750188960; x=1750793760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ticf1f4PmQmZwFcANzazYxHsrbux47xCzbGTbFHeNUw=;
+        b=Qj2miSYTYpxzrat7Iyq+Ek8ZNMJp2EaTC7b747QYyi/FGE5a5u5leO03tI5OxhjoKE
+         XLB6oJ9EONAKhfS51dwVcWLYMR3nybqR6DRwE2HrZXDVFnoXnnmwWwnBx/b//YdlWyPn
+         5il9rSGk/ECl60whOmQpcdWNGPHZQooezWD80nD1ZW677ezrd6pHZ6smrrc0TqiIdv6F
+         CjmVXehrI5WkJJlou27w9uZ1CkXXd6EaueWVGiU1oOrYKOb8BG9FWGEJzsO7c4sTyEoA
+         SnpEtL/i2Iw9/LKfx4VqUtwXyX2co9T23K5PEwY5wK8MZQS2pXEOwIkMMH0mXe5BbrT+
+         aPxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVTb66yU8QLMSTbiY+39c89WnX7Jm5PFDyFWdeQlB3tEmgwQ3QEmB2LAVS7GI2RAOpf0m2EcgjNNf0=@vger.kernel.org, AJvYcCVucujthUnmsvCL39DhsNB+cjdche4FlNwgK5XhhbnBCj78lAE+VGvhT7GrtxzXdEDXDhtmiWAUJSkScC3j2g8MZw==@vger.kernel.org, AJvYcCWtLdbgKohE/iCUHqI4z1ZUtHRTk+l3TiBG2a60X0O8Bkt/gz0e85zaqpvWXQ1YDFrHMiZnKZ4wUvUUl8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDPcHmumA1URpFNGNStP7h6wY8Dtn6aom9Kq4XJfsZ+HzRgRem
+	cdBmJ0mketrL+zP//8vI+7zoQFuBMvhBjP+Dgc2Qxj7ta29uSJExw3WS
+X-Gm-Gg: ASbGnctUOoKHFDgxMYV9c/UC94FkF8HnNv7ZC7S4NtcT+Nj8bndnLu72utQWMQuvONq
+	8H9ne8v2HSoAnA/FeNx1v9hp5iky418tQuuiGVNialZqeedrLxN0FjFoXcnX/FLTqkC4Hp8Dhc5
+	7uPW9YYF9k5hp4zI4AEdc0v/hfrkqBN09fj7dbtvraaZhzVWX/3rVbs7LorvQ8JniwZ7BfsKsiM
+	dOJxOo3oDKJEMQK1LF/OFdyrJgBS6HXevSn7TLwm7IHlrOKMvmYgzFvlqeoG1ZLxeIfjA8EzRgL
+	CSMAPDtzup/Mj8ehsbU7a1yYGxSVrE1+x9Pz+qtmfNkbUcmB/hCYAbxfzjV8Q8IRY+g+jBNYXy+
+	UnKDGIJrQ
+X-Google-Smtp-Source: AGHT+IFusaGvuCb7ZR1Ws5Y5oPYYDpHSdWxbRb5ZmiLNV78bJUEaevAuOwvHQpQaXM6A0+dTKeJfPQ==
+X-Received: by 2002:a05:6a00:23ce:b0:748:de24:1ade with SMTP id d2e1a72fcca58-748de241b57mr2814970b3a.7.1750188959655;
+        Tue, 17 Jun 2025 12:35:59 -0700 (PDT)
+Received: from hiagof-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d7340sm9648582b3a.179.2025.06.17.12.35.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 12:33:52 -0700 (PDT)
-Date: Tue, 17 Jun 2025 22:33:48 +0300
-From: Joe Damato <joe@dama.to>
-To: Breno Leitao <leitao@debian.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	David Wei <dw@davidwei.uk>, Shuah Khan <shuah@kernel.org>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	gustavold@gmail.com
-Subject: Re: [PATCH net-next v3 3/4] net: add dev_dstats_rx_dropped_add()
- helper
-Message-ID: <aFHDHOAAqym2DKIq@MacBook-Air.local>
-Mail-Followup-To: Joe Damato <joe@dama.to>,
-	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	David Wei <dw@davidwei.uk>, Shuah Khan <shuah@kernel.org>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	gustavold@gmail.com
-References: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
- <20250617-netdevsim_stat-v3-3-afe4bdcbf237@debian.org>
+        Tue, 17 Jun 2025 12:35:59 -0700 (PDT)
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>,
+	daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>
+Subject: [PATCH v5 0/3] remoteproc: imx_rproc: allow attaching to running core kicked by the bootloader
+Date: Tue, 17 Jun 2025 16:34:47 -0300
+Message-Id: <20250617193450.183889-1-hiagofranco@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617-netdevsim_stat-v3-3-afe4bdcbf237@debian.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 01:18:59AM -0700, Breno Leitao wrote:
-> Introduce the dev_dstats_rx_dropped_add() helper to allow incrementing
-> the rx_drops per-CPU statistic by an arbitrary value, rather than just
-> one. This is useful for drivers or code paths that need to account for
-> multiple dropped packets at once, such as when dropping entire queues.
-> 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  include/linux/netdevice.h | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
+From: Hiago De Franco <hiago.franco@toradex.com>
 
-Reviewed-by: Joe Damato <joe@dama.to>
+This patch series depends on Ulf's patches that are currently under
+review, "pmdomain: Add generic ->sync_state() support to genpd" [1].
+Without them, this series is not going to work.
+
+For the i.MX8X and i.MX8 family SoCs, currently when the remotecore is
+started by the bootloader and the M core and A core are in the same
+partition, the driver is not capable to detect the remote core and
+report the correct state of it.
+
+This patch series implement a new function, dev_pm_genpd_is_on(), which
+returns the power status of a given power domain (M core power domains
+IMX_SC_R_M4_0_PID0 and IMX_SC_R_M4_0_MU_1A in this case). If it is
+already powered on, the driver will attach to it.
+
+Finally, the imx_rproc_clk_enable() function was also changed to make it
+return before dev_clk_get() is called, as it currently generates an SCU
+fault reset if the remote core is already running and the kernel tries
+to enable the clock again. These changes are a follow up from a v1 sent
+to imx_rproc [2] and from a reported regression [3].
+
+[1] https://lore.kernel.org/all/20250523134025.75130-1-ulf.hansson@linaro.org/
+[2] https://lore.kernel.org/lkml/20250423155131.101473-1-hiagofranco@gmail.com/
+[3] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+
+v5:
+- pm_runtime_get_sync() removed in favor of pm_runtime_resume_and_get(),
+  checking the return value of it.
+- Added pm_runtime_disable() and pm_runtime_put() to imx_rproc_remove().
+- Fixed missing "()" in dev_pm_genpd_is_on description.
+- Updated dev_pm_genpd_is_on() function description to be explicit the
+  function reflects the current power status of the device and that this
+  might change after the function returns, especially if the genpd is
+  shared.
+
+v4:
+- https://lore.kernel.org/lkml/20250602131906.25751-1-hiagofranco@gmail.com/
+
+v3:
+- https://lore.kernel.org/all/20250519171514.61974-1-hiagofranco@gmail.com/
+
+v2:
+- https://lore.kernel.org/lkml/20250507160056.11876-1-hiagofranco@gmail.com/
+
+v1:
+- https://lore.kernel.org/lkml/20250505154849.64889-1-hiagofranco@gmail.com/
+
+Hiago De Franco (3):
+  pmdomain: core: introduce dev_pm_genpd_is_on()
+  remoteproc: imx_rproc: skip clock enable when M-core is managed by the
+    SCU
+  remoteproc: imx_rproc: detect and attach to pre-booted remote cores
+
+ drivers/pmdomain/core.c        | 33 +++++++++++++++++++++++++++
+ drivers/remoteproc/imx_rproc.c | 41 ++++++++++++++++++++++++++++------
+ include/linux/pm_domain.h      |  6 +++++
+ 3 files changed, 73 insertions(+), 7 deletions(-)
+
+-- 
+2.39.5
+
