@@ -1,48 +1,40 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F0422BF016
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A051E8322;
+	Tue, 17 Jun 2025 08:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750149067; cv=none; b=tlb0F+HwgCBuR4IKdD4eY+uHBvuR7L1K/OoY17l2GjjGd97IGQBEl5TkygAZIe+gzbOuJtkhhuPfmHnFIz9QgDIb/ZCpwKivYhZ9IjYw1RVzDOVSaIXR8dlP9Mwri5LQwZfNarjp3CJbnekB+XW8H+1CXyZm8HSwNPDMrjZIuf8=
+	t=1750149199; cv=none; b=t3QYYeR7TTslbnXt+lv3fjB+X7xG3OERP3LoT30N2gGBV/02M9DeYHbrrYsHXL2dSY7IPN/1QbIhRhou0V0foLc4mfhF9CkdaZYU+vrMXMNkl77aINY4O+JoEGc2bFjGJOvb1n2uaA3Klq/q0Y5NAk7M+LAXocJLLZWQ0VLVdnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750149067; c=relaxed/simple;
-	bh=h0cIatrA8QlhAxODbULEtlvQfUO67Wc1K5ivENaMF2s=;
+	s=arc-20240116; t=1750149199; c=relaxed/simple;
+	bh=J3uBircDaCsikS6zp/2NlGSEyMrpYXwN6XyXGUf2EPE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ChH+qD3n11j1m4Ay/rX6f3lC/ZK1mywt3CcdBtqLo+XaQ3NWxbc5tT+TZjZFL6Fe+sT3o1SfEvdrhV/UoBJ5v8OG5pTWYa5GpG1LX5ss152hhZJGNPN8KddcuqOb1hIpQNsIcWWgCzNmV9lBq7Nujd7z65J48DAKo8/UiAGMOuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=aUFclMGf; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=N5YSJmNTNsHl4SmVVvO1yHFvxj5l8T2C2dq4x9UY56lRb3TSBYrC5E/8fCGEy4W20kuY3qGl9un8JjuDwZCDDD+TRHyy4jwe/DbTibcaJALXWwj0oANjQOvqHyN55aqW2xOnSe/5VAD+57WHPqXmWEYHw4wTogRQXUqIJiIySMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=urM31CXt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aUFclMGf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=teGU0f+r+dx/oNJ7C6ACflbmc2p2xmyRlx0sA8jT8Dw=; b=aUFclMGft5euXrqVmqAP1nvhVU
-	zd9nYlV15nHu6bE7N+4wsOeGm27wN55bcIjf8one1RzDrttML8RF4+ns+D2rEUsTMyRvfMvf7JHcd
-	3SeAJ2WpG3nLuQbm1du+XRl6LiciTkQVLq4I4WaRb2haKprUSFiR5i+R1ugnwM7qYEhStGpQPviqQ
-	uOCEz6YRIV8fYqzco6K4mVHl91tDc4wZ75TRBRo3Gl1MCTy2pMkJDMNOHQ99/u/kz0cay0nf9hYcr
-	AvZ999I/WzRbarJnmFWMhXPqgFDOIWTmBb7B4SzUd+x96RIVHBODjgQ2Eer2GyJD9VnO6Iu6ppBgb
-	1lWE8osw==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRRif-00000003kKk-0Vwp;
-	Tue, 17 Jun 2025 08:31:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 28255308523; Tue, 17 Jun 2025 10:30:59 +0200 (CEST)
-Date: Tue, 17 Jun 2025 10:30:59 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, linux-kernel@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH 2/2 sched_ext/for-6.16-fixes] sched_ext, sched/core:
- Don't call scx_group_set_weight() prematurely from sched_create_group()
-Message-ID: <20250617083059.GL1613376@noisy.programming.kicks-ass.net>
-References: <aEyy27BecPPHDWHc@slm.duckdns.org>
- <aEyzhBAl5zkP6Ku-@slm.duckdns.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="urM31CXt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9135C4CEE3;
+	Tue, 17 Jun 2025 08:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750149198;
+	bh=J3uBircDaCsikS6zp/2NlGSEyMrpYXwN6XyXGUf2EPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=urM31CXtBBmq58JIbq06B4BahJitYR6DPcw8Q5YoOiNtXXkt9/03apRE0RRdvqQ0I
+	 vBY9DCKkSHs0TXs4lMrjyCCfa9wKkcROEYW/2nVT4awHQwPQHnL6KCQQTvf4f8pQ9W
+	 w8q45rzfoI/S2/Hixt9JFaUFXY/7E3UPuNXNHMxOTCYuj8+D/GC/OvZEl8jdemp3oP
+	 Gkz5/5or+8Oup7KM62NKY1hNR3Ul9ZJ1epytcdBlvlo+obwEuCY9DxfDsnlt48zZ2h
+	 toWk5lbO/0DxPxADcALs+ZzYMWWXxAO24/YdjSvSQoG9lAQUK/S0/vdbKOZ7epOl6e
+	 +buiooYjlpQcA==
+Date: Tue, 17 Jun 2025 09:33:14 +0100
+From: Simon Horman <horms@kernel.org>
+To: Shannon Nelson <shannon.nelson@amd.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, brett.creeley@amd.com
+Subject: Re: [PATCH] MAINTAINERS: Remove Shannon Nelson from MAINTAINERS file
+Message-ID: <20250617083314.GE5000@horms.kernel.org>
+References: <20250616224437.56581-1-shannon.nelson@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,25 +43,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aEyzhBAl5zkP6Ku-@slm.duckdns.org>
+In-Reply-To: <20250616224437.56581-1-shannon.nelson@amd.com>
 
-On Fri, Jun 13, 2025 at 01:25:56PM -1000, Tejun Heo wrote:
-> During task_group creation, sched_create_group() calls
-> scx_group_set_weight() with CGROUP_WEIGHT_DFL to initialize the sched_ext
-> portion. This is premature and ends up calling ops.cgroup_set_weight() with
-> an incorrect @cgrp before ops.cgroup_init() is called.
+On Mon, Jun 16, 2025 at 03:44:37PM -0700, Shannon Nelson wrote:
+> Brett Creeley is taking ownership of AMD/Pensando drivers while I wander
+> off into the sunset with my retirement this month.  I'll still keep an
+> eye out on a few topics for awhile, and maybe do some free-lance work in
+> the future.
 > 
-> sched_create_group() should just initialize SCX related fields in the new
-> task_group. Fix it by factoring out scx_tg_init() from sched_init() and
-> making sched_create_group() call that function instead of
-> scx_group_set_weight().
+> Meanwhile, thank you all for the fun and support and the many learning
+> opportunities :-).
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Fixes: 819513666966 ("sched_ext: Add cgroup support")
-> Cc: stable@vger.kernel.org # v6.12+
-> ---
-> Ingo, Peter, while this touches kernel/sched/core.c, the changes are trivial
-> and only affect sched_ext. I'm planning to route it through
-> sched_ext/for-6.14-fixes. Please holler if you want it routed through tip.
+> Special thanks go to DaveM for merging my first patch long ago, the big
+> ionic patchset a few years ago, and my last patchset last week.
+> Cheers,
+> sln
+> 
+> Signed-off-by: Brett Creeley <brett.creeley@amd.com>
+> Signed-off-by: Shannon Nelson <shannon.nelson@amd.com>
 
-Seems fine, go ahead and take it.
+Nice symmetry.
+
+Enjoy whatever comes next and thanks for all your contributions.
+It's always been a pleasure.
+
+Reviewed-by: Simon Horman <horms@kernel.org>
+
+...
