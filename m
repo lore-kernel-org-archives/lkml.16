@@ -1,166 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 625E9155C88;
-	Tue, 17 Jun 2025 20:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750192955; cv=none; b=mhhztWH1K5JCYkomQEMaGxUASUxd6FOwtItRa9aabQ4xO8BOMXZ6ZVylO2cUat4WuqcDy4J/9RdVwrROfSq9/iahgUTi3Og+FaaoMOCeWHJyBoq449K3imnPzmu3jp3FeFqAvyRpN9pYowvIc/wHwKL6axQd7LB/m06U5rZ1oIc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750192955; c=relaxed/simple;
-	bh=q1SGR7cquCfqIcHgDM+KF+k+8AQGKd0ZfPTWkoXLe20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrqmSdgBVS71fmSSzfrrWnn5YDNdgB03wAK/m8ArFE2tSdQ/SPynRTEZF5qN4BpedaOZop+L6Zg2zijRn6kIcP3AC4U8pSmoy6HF1nXivlQUYDiVzOTgh89bM+HYofdk3Z4FPWzVrvG72aTp92RwHrcOzGjo2tbVUDAQdhA1jXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g8vS5rjj; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D763F2EFD8C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750192989; cv=fail; b=K+qbIJOyMUjxO/BmvSwaxJPGVE9BuTinS2LArSwzlvclI+DwroUBPFgM+8CMGm8j9o+CkZ3d71ikoIncwNUy2mdH40KDcrtYiJG45vmdjq/rT6gRPlIQf/y2jKTHiwkRYGOCRBBH8yRhg+7jixap8TxIo5lUFb2IASNkVY39SJQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750192989; c=relaxed/simple;
+	bh=Sb3ai1I2wjlVAJWHLCCOie/YvP9Qh4TdGZ+y30QsOn8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=uMjWj1PRaAYzXkaW3GzRGZC66rGuYlpdehYafPrCIRruepe0WiTmDTlmaLgJoLF7yKk8gxGCw3Bs9j6620jytCcHlozqFdBhHRCmNNmvh93f3Y46ULikPT8BRQAeFNxbc0bAqWJvflov0pq8+/YoBzqCa+xP1EzbenKMtNUMvhw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=RUMw3Zuq; arc=fail smtp.client-ip=40.107.237.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g8vS5rjj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750192954; x=1781728954;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q1SGR7cquCfqIcHgDM+KF+k+8AQGKd0ZfPTWkoXLe20=;
-  b=g8vS5rjj264+D8tbMXPv5SB7P9CKplc4HPM9clC2RpYpA+n8dJXwEipt
-   /kYvOe9OjgWWpXVZ3dKmMRrwC0U7O0MHzC68+MunvlMgaqxmCLKY5W4/4
-   0xz26rSAQVepTVazr7mAvH4k3NIrZmMv7Ih9oAcquUqjB+JmpfkPDbt/Y
-   uZ1PfPH7E+Ev/D2hEPwinvKdxWm2sCKVUj0k4Gp5Ztk8LIzlw6zipHqLP
-   s9NFDbWKLlwk3WajS+yEvRFbz+YxC9lCmmS0IclvRinzVGX5GFnFh7luk
-   1OGx2IrWhTTkJ9oZN/5zBeHRfwLOdjlk/W/Jo8jc5PJpCeSx5vcO7Tk/w
-   w==;
-X-CSE-ConnectionGUID: W5QXtVt9Q8uWVjy0HiReig==
-X-CSE-MsgGUID: kMbbmpjeTAWJEo1KNW8JVg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52092276"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="52092276"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:42:33 -0700
-X-CSE-ConnectionGUID: kCU4Wz79RNqXXf+CqVELjg==
-X-CSE-MsgGUID: +3KcfnBIQ8mKBIY2uYtsig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="149315947"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 17 Jun 2025 13:42:27 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRd8T-000I4w-25;
-	Tue, 17 Jun 2025 20:42:25 +0000
-Date: Wed, 18 Jun 2025 04:41:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Sebastian Reichel <sre@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org,
-	=?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>,
-	Guenter Roeck <groeck@chromium.org>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v10 2/7] reboot: hw_protection_trigger: use standardized
- numeric shutdown/reboot reasons instead of strings
-Message-ID: <202506180402.ly0g2TQe-lkp@intel.com>
-References: <20250617094945.3619360-3-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="RUMw3Zuq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GoGyMVUF2DKB83rUCoOQdWruRg8sRSZlS8WW6xFC3HIQ/6SQnekWVSGwIwtTpsbEr9Q2KA7tiVCk9liPlp/lKzLvR1Jyjys+B0KugKMKrDh8hU0Szi2nzZmnvDLNe7yWRWF5Stds50GO/gEXIoMAdBOPV6k0dn7J0OPIehJ0dPnYhEk167bsNwrTi4kGiKaf+CIXNJ37UQlhQenamvJVhIOb6Iu+zvo9kmu4KS8MDdDukJSykkSNhtI6nDXL6zNbldHBBJpVvOHfelQcKZ07deuLIeBRz4KwIGoLxHfPZ6JoeDjYsifQHXa9+gQpX49T6tljNQp19hHHkDExGI1PnA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h93VsFaJdFEgbdz2gOY68t764FSbog4OQjtnUCTT3LU=;
+ b=PlXUSrz5eUetcGeNUC2WxAXsE3k+qL3RblzYKwJVHhDkUqVhEzB/oUfsyTsZBJER03CJimsEfqQlZrklSrnxOdG8kNjeasLEWkGcEwH/ds4VSJ67inAMERN1a3gFnaGcfHJl3NRgeWkYcLOn3p3haABhg1GJZigSQPa5dF7/+7o4RtFeZGUMmAHcYzlHoxYhwwrSLpl6/uDCnUcf/Yri22C0xQi5h+a5EpnK7gPjSMaS0Qxap/dSBBNEsAoHg5ca48Knd9u9U2ENYoJEpH3PnwcQlBK8jqweGsymO0o2lxmd/AIQkaucpW6pHs7Lfzo/RUu2LdgqbqmIunKnTGG3MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h93VsFaJdFEgbdz2gOY68t764FSbog4OQjtnUCTT3LU=;
+ b=RUMw3ZuqauFHE4oQyjQHSDf+NGpcim9bEEwpCTVm6DmhFNTb9u+LgQaBs7RM/cSvJhHR0JF/4BPcfpZAqbnsrXs/PhpHr0hRCvzFdl698RM/hjsCsfqHXFAhnOWjGEwiIPvf2V7oPuEMbGBsKZvSGpv16WeZ/uijgPCTjYXp51Y40nLITr+DtUXN35GSNw92GmBEN3j9XI47FlWJt3E09tWPGzZwMMvX5EdPWI0WVduKWTW57bxFp5Elf6f9bSDnenjMX2xb7dSVsdKusw8z/YWA38/f5udJjwv2NitAIuC7lvRDd9up+S3TZ5cytdqRvF7iIbFmp1zhW3PphiUo6w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com (2603:10b6:408:2a1::19)
+ by IA1PR12MB6409.namprd12.prod.outlook.com (2603:10b6:208:38b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Tue, 17 Jun
+ 2025 20:43:04 +0000
+Received: from LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c]) by LV8PR12MB9620.namprd12.prod.outlook.com
+ ([fe80::1b59:c8a2:4c00:8a2c%6]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 20:43:04 +0000
+Date: Tue, 17 Jun 2025 22:42:48 +0200
+From: Andrea Righi <arighi@nvidia.com>
+To: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v4 14/15] Remove the ext server BW before changing tasks
+ to FAIR
+Message-ID: <aFHTSJzanNYjIwJt@gpd4>
+References: <20250617200523.1261231-1-joelagnelf@nvidia.com>
+ <20250617200523.1261231-15-joelagnelf@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617200523.1261231-15-joelagnelf@nvidia.com>
+X-ClientProxiedBy: MI1P293CA0030.ITAP293.PROD.OUTLOOK.COM
+ (2603:10a6:290:3::17) To LV8PR12MB9620.namprd12.prod.outlook.com
+ (2603:10b6:408:2a1::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617094945.3619360-3-o.rempel@pengutronix.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9620:EE_|IA1PR12MB6409:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b217414-91b1-4228-f8c0-08ddaddf8ea2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?NLuu1AxXycC/9UgOXAWu7Fum9F02sXJNIa7mpHwdCDTYHBFCRWej8Kadp8hr?=
+ =?us-ascii?Q?UFj80Ky40AHlGyexEdEQhwGUkwiqGlYy0BDxTRcwMrbOG5puhiokAstP21fO?=
+ =?us-ascii?Q?veBj7zb15wSeTMV622sFdXJ2qy48TSc8SqYuq6+EA5EsjcY8PlP6/zeH4th7?=
+ =?us-ascii?Q?Qb7jiNF5IYmP2FoOfUsrnSu1qidTj3XN+Q34snOr/bcJ9lGuVwlZpN0KzXhQ?=
+ =?us-ascii?Q?gY3mN6g2emNYFGH+kZ/4td9P+p1v5IbIbi92KwuFyrje6hkOtNwGN71lcpQx?=
+ =?us-ascii?Q?o6+wS/VF8BvoqGJJkN7/YvoNKJPWNOw4+F2wRQsIe6gaC8h+k1JVrfFRd6EG?=
+ =?us-ascii?Q?n/2wfhtLcr5ZS71z73CH5ASpP1vm/4pIgWU/NywV0FkMriv3+S2qKKWyPHGg?=
+ =?us-ascii?Q?eV1EIHLpE6POV52SGkoFzMygD5SD+k1XOejtgoFaTliXfdpWZXz8DPd+B0lk?=
+ =?us-ascii?Q?bwm7EWyhUwts7dtjMzmkXUv+V0BH9wSOC0RftEDarfX8m+Dow6XqTEIVBeAm?=
+ =?us-ascii?Q?HrWEGt7UaLOZ2pG1RgKS7gbHqa/483zZTZRJrXMC1H8gFt5kuNWS00JXt1oV?=
+ =?us-ascii?Q?yvsLD2w3GALTGMLzeigMONE4OraZ6HQ0j2wm6cymm6JwE5K2U44PwAumjgyq?=
+ =?us-ascii?Q?ZqFZxXNzxg1BZqnNxHEsMs69jDGDbkoiIMzWm2ErHhaJTtQazTHPxYOlH3mq?=
+ =?us-ascii?Q?Du2hz50PrhoSm/Ey8kB5wSRXp3WV4WjGzzaYbr3ZE1OA7C9mL7BPrZLenhjA?=
+ =?us-ascii?Q?skWZGQ3wiykerDWkc47qEcoIdtPYS/gYHDCmWu+R/J7djQ2T3pB6olq3BBU4?=
+ =?us-ascii?Q?bL3t//KffEkj2y7rdVTdD7Gqw3j+/CbYFHOAbHGZX7HknbUpgdyHiWQ14jKs?=
+ =?us-ascii?Q?TZ1cS7zu56XPpxptI4NHytrIWQq7k+DveaVMBsenpfCiWLAu0okOHTsrKCb2?=
+ =?us-ascii?Q?r2t1BV3PGlsmEk8MJM8mkRYBrdda14fi6DefCleiuNdUwPaT7Ve6bz3p4mW6?=
+ =?us-ascii?Q?32tTnbPqN4gpSpSHCwggvvIkQygHIHEvnK7pYtH/55pB8dAH6FPAaNxKkg4x?=
+ =?us-ascii?Q?wi7dKy7bM+ar2ulzojeFUKbSU82L/g5yzeDHuXqs4FuKygcxuZQIeMStjb6e?=
+ =?us-ascii?Q?MhA6YSkfxTUuwB64Ax3roCZmpM9W1Gnd6dpbMFFBNU+9salBi28vdKAd5ttK?=
+ =?us-ascii?Q?CzaM8BAPmV2YCBwvWazSbSHwq4HTfocefFnufWSSWOf8J1ZFKowJVmsrb7nA?=
+ =?us-ascii?Q?iMVg4HjSksyY9eQxPbSQTXCSu4dQJSNCHNilTyWbwCGvLxXyOQuLGj5fRSDy?=
+ =?us-ascii?Q?TyLl7h5v0zbusXIA7sLvf63H+CRG70tm30XAodJRKnpGGI/UlhP/tffr44qv?=
+ =?us-ascii?Q?lTcT/4KAOa7DdGmZysuOSL9X/PCfUMtte7aW6YcsQePq8F81e2kv2u4X9u1c?=
+ =?us-ascii?Q?4QGLUiRrzAI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9620.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?rnvCyn7rLRizc0eLIGTRBbAXErUZrl/U2eXl0TY7UjtpQK1oF4WLzNVCwiYM?=
+ =?us-ascii?Q?0bk0Nw1iY7L53pDfRM7lyAJXfed11vstaobmkFgMFwCpETAqZOroffj3q98S?=
+ =?us-ascii?Q?z4xD56IFb13sNqSq6IXRb9btjink6KcvsU8+40SLMGjXAaYKQBLc63cbmYUS?=
+ =?us-ascii?Q?ui6wfZzzDcbASq22BPukbAmwZFqC3bxF9WlRq3ewL/gtYlEvCfvwgEPTLY5t?=
+ =?us-ascii?Q?C52rhnQtJx3w0wTKrRL/1LCWEDpNADHIZPK7D80/CUZgTv8yoWxUv5bR04ds?=
+ =?us-ascii?Q?B1c4yMRQstof78C89D1ly87a1sYcmIE3h+44PwijelmUDeLx6Tib9sFnmUUJ?=
+ =?us-ascii?Q?RxcPyAahdrIlIq4daF54MJEOlgPvgkoIEvcISoDxcv9mffU28l/EvQsLPv4t?=
+ =?us-ascii?Q?OD2LZ0alVeGSHMf8EOwJhtpKavGQyFNCVeZVDQqvTKudxu6ZbJSHCDyN6RVz?=
+ =?us-ascii?Q?T1qZc2nt1iQgFtK8eEjAzZvYwuoFzBNfTXfLjUYNEcHaUzxYqwFLEmqvoLvK?=
+ =?us-ascii?Q?lP6OtmeVAaGS7Ldpca/SgIfnF0F94/puGY1vXRU1B9YIYUfzJgos9g/3A0Mt?=
+ =?us-ascii?Q?Hx+GW8YLSMaPDnUuaBmkVSipZalpZMXnhxiz7jJ6E+ABZHb3+L1xvNf8SI8o?=
+ =?us-ascii?Q?pg9j1IBBKTGu3wfWB6D9dKqcVZjisdYBYU9GexMJNIvFuj12RFffHkfQiXKK?=
+ =?us-ascii?Q?80u3NHzdG92CJU76aEat5CiG/o+2Z8ETOhYuJNKzw1cQdxIhGjjrtGNQMeRZ?=
+ =?us-ascii?Q?NrXdUB4Cv6NGCBkU0RwnA5VYA+k8aemoocU5Lu5GnlJrizn5koJT2S9Ril0y?=
+ =?us-ascii?Q?AFUrEY2FDBseKfUQEz/nDdBSYEKS/YtoKvGIGVvWr4CyxRJfJh+76fJ3PkZO?=
+ =?us-ascii?Q?NEyAx2XrOt5bvUUo5jullo5/KUczaLTE7VvxWpaQTVKO+dv/nUehRS0P3Xin?=
+ =?us-ascii?Q?spHQrgefJXfY38j90dzFevw7i5ON+vQEhchd2NdrTql9CY1qSkN1QwKXwQBL?=
+ =?us-ascii?Q?pqvXDv1y6UynEFL0kTDl380AoAlfP0V6dXn4vMjC+0IaAuzu5m9qmKMC4qZV?=
+ =?us-ascii?Q?rqEB6ICz1WAWZ5Rw8gA4r1IlSn1DhbnsBf9EjjDmYwfFOUhDIc0fk9PNrJiL?=
+ =?us-ascii?Q?edEb7cNCnIHA+LDL0qU/YQJhTQSHCaaLda9/Fguj+kzLJWhSLOvFq25QIKcc?=
+ =?us-ascii?Q?R2aIUqa4IkvF6fQXRM3WmsKIyveHdTonqBnXJ88IRVlTY2XyGsz+9NVEuLco?=
+ =?us-ascii?Q?bSXfexyWV60Sv1Vtvioo/g1bQo97+3fkKDhjOn9E/lnjxxaHgaWt3JRIYGM5?=
+ =?us-ascii?Q?FA9diT31EHTwBQo1fkyu3RnvMHBb2e3bDj0eHBp+BpaGyXHndVx30ydxXhkx?=
+ =?us-ascii?Q?2yesupS2d802EKKyS9TniK45c4tMTeGsDcqcFe/taki61GxzQjSSCRiON4WC?=
+ =?us-ascii?Q?Di6wxkbuj4ORl0zrFOnMFgq1aHpn+fx5BrKkgF+RwR/JAKO5IgGBk+V3Uez6?=
+ =?us-ascii?Q?U9ixS5RQ0dPwQQXMw1qApXDhLzuQdMtor/dv7ezXR0PIsVMr4CTpJY57faZh?=
+ =?us-ascii?Q?4Pw56UvkAjDkRq+pqO9tFUDaM61zMu9WK1d1VtHv?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b217414-91b1-4228-f8c0-08ddaddf8ea2
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9620.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 20:43:04.0970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yMU6VJHt24KFFKVww+f5m5g7b2/7qmmqZ3A1/rR8kBRnvjBs8YQKHlSe92EkTuolTpKOP3CArxEUsm1mozb3sA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6409
 
-Hi Oleksij,
+Hi Joel,
 
-kernel test robot noticed the following build warnings:
+On Tue, Jun 17, 2025 at 04:05:17PM -0400, Joel Fernandes wrote:
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> ---
+>  kernel/sched/ext.c | 39 +++++++++++++++++++++++++--------------
+>  1 file changed, 25 insertions(+), 14 deletions(-)
+> 
+> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+> index 84ccab8cb838..23e5711bc4fc 100644
+> --- a/kernel/sched/ext.c
+> +++ b/kernel/sched/ext.c
+> @@ -4960,6 +4960,31 @@ static void scx_disable_workfn(struct kthread_work *work)
+>  
+>  	scx_init_task_enabled = false;
+>  
+> +	for_each_possible_cpu(cpu) {
+> +		struct rq *rq = cpu_rq(cpu);
+> +		struct rq_flags rf;
+> +
+> +		/*
+> +		 * Invalidate all the rq clocks to prevent getting outdated
+> +		 * rq clocks from a previous scx scheduler.
+> +		 */
+> +		scx_rq_clock_invalidate(rq);
 
-[auto build test WARNING on sre-power-supply/for-next]
-[also build test WARNING on broonie-regulator/for-next chrome-platform/for-next chrome-platform/for-firmware-next linus/master v6.16-rc2 next-20250617]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+We're also calling scx_rq_clock_invalidate(rq) twice (see below).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Oleksij-Rempel/power-Extend-power_on_reason-h-for-upcoming-PSCRR-framework/20250617-175433
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
-patch link:    https://lore.kernel.org/r/20250617094945.3619360-3-o.rempel%40pengutronix.de
-patch subject: [PATCH v10 2/7] reboot: hw_protection_trigger: use standardized numeric shutdown/reboot reasons instead of strings
-config: hexagon-randconfig-001-20250618 (https://download.01.org/0day-ci/archive/20250618/202506180402.ly0g2TQe-lkp@intel.com/config)
-compiler: clang version 19.1.7 (https://github.com/llvm/llvm-project cd708029e0b2869e80abe31ddb175f7c35361f90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250618/202506180402.ly0g2TQe-lkp@intel.com/reproduce)
+> +
+> +		/*
+> +		 * We are unloading the sched_ext scheduler, we do not need its
+> +		 * DL server bandwidth anymore, remove it for all CPUs. Whenever
+> +		 * the first SCX task is enqueued (when scx is re-loaded), its DL
+> +		 * server bandwidth will be re-initialized.
+> +		 */
+> +		rq_lock_irqsave(rq, &rf);
+> +		update_rq_clock(rq);
+> +		if (dl_server_active(&rq->ext_server))
+> +			dl_server_stop(&rq->ext_server);
+> +		dl_server_remove_params(&rq->ext_server);
+> +		rq_unlock_irqrestore(rq, &rf);
+> +	}
+> +
+> +
+>  	scx_task_iter_start(&sti);
+>  	while ((p = scx_task_iter_next_locked(&sti))) {
+>  		const struct sched_class *old_class = p->sched_class;
+> @@ -4985,26 +5010,12 @@ static void scx_disable_workfn(struct kthread_work *work)
+>  
+>  	for_each_possible_cpu(cpu) {
+>  		struct rq *rq = cpu_rq(cpu);
+> -		struct rq_flags rf;
+>  
+>  		/*
+>  		 * Invalidate all the rq clocks to prevent getting outdated
+>  		 * rq clocks from a previous scx scheduler.
+>  		 */
+>  		scx_rq_clock_invalidate(rq);
+> -
+> -		/*
+> -		 * We are unloading the sched_ext scheduler, we do not need its
+> -		 * DL server bandwidth anymore, remove it for all CPUs. Whenever
+> -		 * the first SCX task is enqueued (when scx is re-loaded), its DL
+> -		 * server bandwidth will be re-initialized.
+> -		 */
+> -		rq_lock_irqsave(rq, &rf);
+> -		update_rq_clock(rq);
+> -		if (dl_server_active(&rq->ext_server))
+> -			dl_server_stop(&rq->ext_server);
+> -		dl_server_remove_params(&rq->ext_server);
+> -		rq_unlock_irqrestore(rq, &rf);
+>  	}
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506180402.ly0g2TQe-lkp@intel.com/
+We should probably remove this for_each_possible_cpu() completely.
 
-All warnings (new ones prefixed by >>):
+>  
+>  	/* no task is on scx, turn off all the switches and flush in-progress calls */
+> -- 
+> 2.43.0
+> 
 
->> drivers/regulator/core.c:5280:2: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
-    5280 |         default:
-         |         ^
-   drivers/regulator/core.c:5280:2: note: insert '__attribute__((fallthrough));' to silence this warning
-    5280 |         default:
-         |         ^
-         |         __attribute__((fallthrough)); 
-   drivers/regulator/core.c:5280:2: note: insert 'break;' to avoid fall-through
-    5280 |         default:
-         |         ^
-         |         break; 
-   1 warning generated.
-
-
-vim +5280 drivers/regulator/core.c
-
-  5253	
-  5254	/**
-  5255	 * regulator_handle_critical - Handle events for system-critical regulators.
-  5256	 * @rdev: The regulator device.
-  5257	 * @event: The event being handled.
-  5258	 *
-  5259	 * This function handles critical events such as under-voltage, over-current,
-  5260	 * and unknown errors for regulators deemed system-critical. On detecting such
-  5261	 * events, it triggers a hardware protection shutdown with a defined timeout.
-  5262	 */
-  5263	static void regulator_handle_critical(struct regulator_dev *rdev,
-  5264					      unsigned long event)
-  5265	{
-  5266		enum psc_reason pscr;
-  5267	
-  5268		if (!rdev->constraints->system_critical)
-  5269			return;
-  5270	
-  5271		switch (event) {
-  5272		case REGULATOR_EVENT_UNDER_VOLTAGE:
-  5273			pscr = PSCR_UNDER_VOLTAGE;
-  5274			break;
-  5275		case REGULATOR_EVENT_OVER_CURRENT:
-  5276			pscr = PSCR_OVER_CURRENT;
-  5277			break;
-  5278		case REGULATOR_EVENT_FAIL:
-  5279			pscr = PSCR_REGULATOR_FAILURE;
-> 5280		default:
-  5281			pscr = PSCR_UNKNOWN;
-  5282		}
-  5283	
-  5284		hw_protection_trigger(pscr,
-  5285				      rdev->constraints->uv_less_critical_window_ms);
-  5286	}
-  5287	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+-Andrea
