@@ -1,187 +1,88 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87FFBE65
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638F9D2FB;
+	Tue, 17 Jun 2025 08:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750148024; cv=none; b=KlXIA8N9NQ0xIYXWGFae9M1ECF/VLcpgo0ZGn+HloeBqCEJsJLWurBum5j+yIdV+g7saHbVODbFG09QCYXcitC0n2efP39zv5Oluz9MYcash9rNWPv0QPNILc+SdZ9fM6urvftuVuRFLVZRc2BCyFktMcU1OCwbG8wAYt6Y7TWU=
+	t=1750148048; cv=none; b=arKWYsv2Hug6p9jpBdtTgsXlNoIYBhOaxX7x34dN+5DagXkPKq9YwvNo5muQUYSuVAEatlAQKhCg6pkLk/jlAFYLxfJv7in3jw1mcU5IzZjzu5tdI0abebaHLjgu342Afdh/9GMwTt5LIn4Fc6+d//FP2MGuKNdvGqcs3eMejkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750148024; c=relaxed/simple;
-	bh=I1EHvaVJSlf9Rho0QjwvLu4eMTl1rbdzruHHALFqps4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=bMSyWWM8fWCeDdgPZ+PzTNLxhvINqeUUcKLk1YoKdo4gtRNVMdciI1obdgqUSCDmzHR8woMjC2mhkt+sLjSvX5nEVZOx6iaSosa9yQl+t1VTzz+Kx+he6d+DFRSSX/65EjfmxDnqj6on+Z6y5xD7RtST7bcQnAGeaSkT/UWiQ7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UeJdAnnl; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1750148048; c=relaxed/simple;
+	bh=k/E4tuvDIfwhOgujXNxrjLQos1RXOfrBVSIIOpcuDMA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YIu0lc+2BN+GjbWaxdCC9BmlmP1/6QqcV1LM2aUf7h8i9K6tScFRhfQNakKdt3FeSXjsSNCt5eGQ8IVZ8F7kw0ttZDfwRxIYC8o/Cd/v7MY/uJN1LmH3YTvY395inGQ6x1DwIJAoDJc3TSCn20PLzY2uYwINmnvnSdeOxSeVLdU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WLmC+v3t; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeJdAnnl"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234d3261631so35954705ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:13:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLmC+v3t"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-234eaea2e4eso5047995ad.0;
+        Tue, 17 Jun 2025 01:14:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750148022; x=1750752822; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750148046; x=1750752846; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WujX+FsFURe4z4iiEtEXeSpobOb65gUavCK/T69N4H4=;
-        b=UeJdAnnl6F+VCUEZMRfRWZK6+dRQB2LtktFujBgI9CWCOUq2nEzOVG61uCtuvZSTE/
-         NQKFInF5S9Dr1EzBhc2FIPOYLQ/oM90/cfwyfjbjUeMBQCU64TKJjvhYlfphHbHBm5ra
-         WBePCui1mXMBw2/6tGLdedLErWb0nPQLBKlF9ChNPPXQlDJ0nOTU0u/upIYu26h6wIU/
-         RJLHhGiS83vYDLkM2tDXTAQzXPWLnXi9VScs8A1mOg2C+0sDGCrTlF74/bpIap4Kl+zg
-         PB9hnCda4ipUiNgVMRGOH1dqrXn2tOASX8kYzsHokrmlamI609m6T31Lu+oJizUleCmE
-         AVJg==
+        bh=Ar0/P5Kw1m8fmFtjiCxao5il/3/x8AeYn4OHNHEjEZ8=;
+        b=WLmC+v3t30iSBC12BS1tgkStYDfIWCOhgEvBRzTtNNTuQhvU78A6Fo3rhhFql7im/s
+         TOiON0eJbahB0YDv0gvEHde3zUBpTDDVtaK0I8wpY0lvQn5/vWxls+C5vZGEkMZQLUCh
+         axO3S/5wfyokoA/mjpSrhikqOHwY6xXHRYHQWmlHEZWOmQdCn1OMqHoA5NzQuDcqPOsI
+         +pycA2dHphLm780/jtyWUZ6XfDPO2DwNpBUieDx8de6YfqV44Co9OkOmA/kOTdFblR3Y
+         RvD488EvmheCF1rPmCSb4jK6SvVVc7EKg1C5MNEvdMUxqSFFtl1KxRIzlsLL1Y08pSr7
+         kMyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750148022; x=1750752822;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750148046; x=1750752846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WujX+FsFURe4z4iiEtEXeSpobOb65gUavCK/T69N4H4=;
-        b=ag/h0rYk2lnzUVQYb/YluzHB96KMViQ8JPKOgC63Koi7g21kN2MhgzhHndTg4XR6b3
-         6RX0+VFIIe7gpQ89i+volxf8BocQ0SlUxGQ31ZXFz7EOeKpTTK7wNGo+yQmwEVJBU9cn
-         0ZeC1kJejr9edwFUzRIqmIJMcMPly2PYy5q/9fCnwr4KkZbZt5s2uaGDIJA7LCuZ/Tkw
-         CfzdhE2YqPkHAWY/tr+j/SwU6gxUvwuCRUTiWS7QJZl/6jwlLppBIEcjND49ptfbxf8k
-         buKlVFhpIx6MPMQ1Xp1SzpnJc8SRv2+MeERWeSmArli51MWqbnXHSr0zxHEC0V8mUxad
-         EjtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWd4e56HZrV61uuhIppOT0MNl0FjFEIYHJh7biVCW+9LT6n44a6BIPLYLKnvCty8xqLdhL3CVoWZZiyp3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0pIql6Jo+tGAMa5KS4wKaSDU4DyQ6T7omUvDKoUz84h9iw4GL
-	er6w09sXJIXI7NIOdXrsKRAExvmg4Iv9GvRhx6Lygu3rmQ7ES0s1Al47ttoWYseNnYZeFg==
-X-Gm-Gg: ASbGncvZJGu4wmwwAQ2Qsm1E8CvKpqxRCd8VYlPOR9AKR/Duu9W2qei1HPTrQJzs9Ln
-	WdMd9c0ot9V4WiaTaB8T73V3HUi3V+T3rwTZiZtEfuTRpY/IHel66C0Jj8twU8VnCn2R9wa2yvh
-	BP53F4Fh4E0IE6vTkXE0wz4RfJCHOIW8tXWwHwRodo9k4PtnWH0sojYx46CGzskQ6dSlYcstFTr
-	26w6ec4pUso1FpHbscvyJuffJjHZERO8uKdiov/dxp7lkvAwtCnbJp9tJAdtnlqU0Nlv94sSj11
-	u85784xdnf2DG95p86CYH8U53XUwZhOb1xGZjx8fJEHTUmQzd1ZY6IY1r9SV2S/yjMF4HZyY
-X-Google-Smtp-Source: AGHT+IF4ELH4gDEJLP3yzCnMbU/2mpYbWqQYo+PKSyKyYF0gWHZ++ahqmeMq2otdvCVoeq/38ffZQg==
-X-Received: by 2002:a17:902:d4c2:b0:235:eb71:a389 with SMTP id d9443c01a7336-2366b17af40mr173905215ad.36.1750148022030;
-        Tue, 17 Jun 2025 01:13:42 -0700 (PDT)
-Received: from smtpclient.apple ([202.8.105.124])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a17e4sm73802375ad.56.2025.06.17.01.13.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Jun 2025 01:13:41 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        bh=Ar0/P5Kw1m8fmFtjiCxao5il/3/x8AeYn4OHNHEjEZ8=;
+        b=bUKLO86T/b64TLiGNXHsBJKfi+WcF+qk5PMsScHQDWr3qkGVVhPnncr49VMUDvDZ96
+         bZiXOjgRRS4dD67aqvgBglSOoL+wxBNMdhvQELJybf/Suwixx4Y+zbyCLyyLteQEk+5U
+         2faYG1yGhiwXXoF6tk3y7rLx69M+Gk7z2OFF774EBJuTlrTIaW+Xau+d0KfMOmsZCHN0
+         Idm7gzRqN/xkfx1QlEq1rNSjzlfoRNvkLhWGMrP+p4pV5GH0VPr1YSs4CgawGgedULFo
+         uVQP/lpfE/2E587ntR1ynGX8oSP8sfOuH9tY4M3yPVRH7BLfE3jBvkLwCq/fc03vGOO7
+         b9Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUmn+XMdxwiL7YpD6FnorUbvCufGKdKyJlNruDLW+IMmIcAssttJ60csRNx0CcdPeGD4BPcnrQ+C5sG/1UZvDs=@vger.kernel.org, AJvYcCVFNjz92a5BlMX5rPmylHTcQrHtIowz3dS6zqPh2V3hmf03TnLrY7xKTQfS7Dem9R20BMuHsF9bsqZVO8c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXr/QHcdNwAQlIONS0T3SVJ5/vm2ELh0KkmDmfp/hdspiUFwDY
+	baP7D6Tiun3Ns/sQlyq0W1fn32YrOMwlCYWoVFRrNv3mbnrjpJgAr/bbFiIG7eA13drMX0526SX
+	O3F7jDrraxWH/T+IdspdoMcnMOnlweS8=
+X-Gm-Gg: ASbGncuW35tYw8ew3+kHXTCipTJMGLa40+yBMBKbLp3L9wbbAqro2H4ZTktx4Bp9R+n
+	19FA1woFKmE6gfcCvpHaDah4NNfQ3kZ5/PoRZq3Kia7/yVa0LVbsIkpvo2QcdNe2ssDE6nTkkhm
+	S0PFmRAj1AMwkS9cICIu42XJEFUeiF3Eivxv1ImHzVY44k33pJxdu5DQ==
+X-Google-Smtp-Source: AGHT+IEwXsaJz09g0M+sCi5MGJqpAP6O4Bn6uzXPyB5z8CD7Hpnlz/4qj935HZY40/z1/cUf2R/60T30fjbq8FhVwMA=
+X-Received: by 2002:a17:902:d48d:b0:234:d14c:50ff with SMTP id
+ d9443c01a7336-2366b00ba59mr65090025ad.6.1750148046614; Tue, 17 Jun 2025
+ 01:14:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v0] [RFC] cleanup: Unify DEFINE_LOCK_GUARD_0 and
- DEFINE_LOCK_GUARD_1
-From: Jemmy Wong <jemmywong512@gmail.com>
-In-Reply-To: <6850686f3088c_2491100fa@dwillia2-xfh.jf.intel.com.notmuch>
-Date: Tue, 17 Jun 2025 16:13:26 +0800
-Cc: Jemmy <jemmywong512@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Christian Brauner <brauner@kernel.org>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Al Viro <viro@zeniv.linux.org.uk>,
- =?utf-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- David Lechner <dlechner@baylibre.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Ingo Molnar <mingo@kernel.org>,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250614081312.763606-1-ewhk9887@gmail.com> <DAMGM426FUU1.2IESY59SPIIHN@kernel.org>
+In-Reply-To: <DAMGM426FUU1.2IESY59SPIIHN@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 17 Jun 2025 10:13:54 +0200
+X-Gm-Features: AX0GCFsiKreLRYvHVJ996TB9IOhASLP3kCM0tIA-R3RP27FVCr0UYyKJ8YfeNNY
+Message-ID: <CANiq72=egnqm_uY6F0t0t69ToTpREYfENwjVZqUPqi01m0hRZg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] rust: macros: allow optional trailing comma in module!
+To: Benno Lossin <lossin@kernel.org>
+Cc: Eunsoo Eun <ewhk9887@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Eunsoo Eun <naturale@hufs.ac.kr>, 
+	Benno Lossin <benno.lossin@proton.me>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <4513F5D8-A3DF-4477-B54D-D9D614DDC2AF@gmail.com>
-References: <20250616111436.665171-1-jemmywong512@gmail.com>
- <6850686f3088c_2491100fa@dwillia2-xfh.jf.intel.com.notmuch>
-To: Dan Williams <dan.j.williams@intel.com>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
 
-Hi Dan,
+On Sat, Jun 14, 2025 at 8:16=E2=80=AFPM Benno Lossin <lossin@kernel.org> wr=
+ote:
+>
+> I didn't get the second patch advertised in the subject, did something
+> go wrong when sending the patch?
 
-> On Jun 17, 2025, at 2:54=E2=80=AFAM, Dan Williams =
-<dan.j.williams@intel.com> wrote:
->=20
-> Jemmy Wong wrote:
->> Hi,
->>=20
->> This patch consolidates the DEFINE_LOCK_GUARD_0 and =
-DEFINE_LOCK_GUARD_1
->> macros into a single, unified 'DEFINE_LOCK_GUARD' macro to provide
->> a consistent and simplified API for lock guard definitions.
->>=20
->> API changes:
->> =46rom    DEFINE_LOCK_GUARD_0(name, lock, unlock, ...)
->> to      DEFINE_LOCK_GUARD(name, *void*, lock, unlock, ...)
->>=20
->> =46rom    DEFINE_LOCK_GUARD_1(name, type, lock, unlock, ...)
->> to      DEFINE_LOCK_GUARD(name, type, lock, unlock, ...)
->>=20
->> =46rom    CLASS(name, var)(args...)
->> to      CLASS(name, var, args...)
->>=20
->> =46rom    guard(name)(args)
->> to      guard(name, args)
->=20
-> No, I think this organization is instructive for understanding how =
-these
-> helpers work. I.e.  that the macro is instantiating a function with an
-> automatic variable result, and the arguments to that function arrive =
-in
-> @args. This becomes even more important to understand with the =
-ACQUIRE()
-> and ACQUIRE_ERR() proposal that instantiate different functions to
-> retrieve other properties of the automatic variable result.
->=20
->> No change:
->> scoped_guard(name, args...)
->> scoped_cond_guard(name, fail, args...)
->=20
-> Effectively these are not returning an automatic variable result to =
-the
-> current scope and the different calling convention is consistent with
-> that difference.
+It seems the series is somehow broken:
 
-I have some concerns about this point.
+    https://lore.kernel.org/rust-for-linux/CANiq72=3DQUbe-koU-BEhEJ1-7AafC0=
+kGcG6HOhiVaR1TWqPoLFg@mail.gmail.com/
 
-Both guard and scoped_guard use CLASS(...) to instantiate an anonymous =
-automatic variable,=20
-differing only in their scope, while CLASS instantiates a named =
-automatic variable.
-
-To ensure consistency, I believe guard, scoped_guard and CLASS should =
-share the same calling convention.
-This change would unify their syntax to:=20
-CLASS(name, var, args...), guard(name, args...) and scoped_guard(name, =
-args...),=20
-improving consistency and clarity.
-
-In most cases, an anonymous automatic guard variable suffices to manage =
-object lifecycles,=20
-aligning with object-oriented programming languages that inherently =
-support automatic lifecycle management=20
-(constructing objects at initialization and destructing them upon scope =
-exit).=20
-
-For example, anonymous object instantiation in other languages includes:
-C++: 		People("Alice", 30)
-Python: 	People("Alice", 30)
-C#: 		new People("Alice", 30)
-PHP: 		new People("Alice", 30)
-Jave: 		new People("Alice", 30)
-JaveScript:	new People("Alice", 30)
-
-This unified syntax would make the API more intuitive and consistent =
-with established programming practices.
-
->> ---
->>=20
->> Deailted changes:
->>=20
->> - DEFINE_CLASS(_name, _type, _exit, _init, _init_args...)
->> The void type for _init_args is not required when the constructor =
-takes no arguments,
->> as an int argc is implicitly inserted as the first argument. (int =
-argc, void) is an error.
->>=20
->> This patch includes only the core changes.
->> Follow-up patches will be submitted once the approach is accepted.
->=20
-> Appreciate the RFC first to avoid the thrash while deciding on the
-> format change, but it is a nak from me.
-
-Best,
-Jemmy
-
-
+Cheers,
+Miguel
