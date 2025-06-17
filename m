@@ -1,133 +1,125 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB6822DF80;
-	Tue, 17 Jun 2025 16:17:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ADD21018A
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750177041; cv=none; b=A01Ogq5qleH5krrzqOfD8YpRPkD9hVhPpZMletJhJ4uVaSZiMFtsuyRpxacPotzVpHTGfE0g7kHelzffTJuRdcgdJVV/Vf8wpzjQgARHCtvwOD5Sx5yEomDJuU6dAeQ1H3fmsuXex8bgV7ws6mNBcHmCSqrAmn8W8bjnkKm2wcs=
+	t=1750177100; cv=none; b=jQHk3TOxniH7tLVpPIUri6NLNgwRGGkKevnztus+2P1cVc/6aun9+XouHjGblvZjY8UalLccRjzNImmz2K2iupAno7RlvB7N30aquORiiMJC37+/m53JhyZbQFiU6zzu7skEG12MszRhvrZnycFhyoN3cmDGEidv+eIj9tKPywM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750177041; c=relaxed/simple;
-	bh=oecCs2PWJBNrb+O9Kzm5FEOBYJVbUn0UtcA+nBuBlwo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tvnrug7tfRNgeUBX33OdlH731Mn6g/XBLwK65n+9Mn8uBiyWh99ORZZCPDc3dznFgMWZ8gFZPgqvEBAw6I0M6oI5iMvtHEGgifOB5zUFq22Hvjxy7ViHmBSP2cvobXyrbUla/rAaUJLdvPPJU4aWXT8SFarxd+oJI2xYF68s7fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c3op10iv; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750177100; c=relaxed/simple;
+	bh=BDk9NerncGTKWnCMkEh4NcxNRABqig9U0sMgwlclsFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ptLMv2vVr7sTAOLTnYeSTU4wLGQc1cgorfvHbhS+mn4XUC93azQVzTnmdo4MwTgP/YHSIAVu1j0c1TamMEK5+JLwtMaWsb06ISVBUS79BcN+FEfmmbmDb8oopmCS7JKK4NBJOCdqr/nc7CO305iH7uYjp93Vei6QD5ORPKKhtlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=C9OyXwPm; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3op10iv"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a528e301b0so793478f8f.1;
-        Tue, 17 Jun 2025 09:17:14 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="C9OyXwPm"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3141f9ce4d1so1788776a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750177033; x=1750781833; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W4IRp8lOuDYBi74yqX5sUOj7piA7uY8U+OIdNTvBqxM=;
-        b=c3op10iv82zBJB6s77v42N0VmDeB9yM3+lASgetDtrgRF09OaRgVtBCyGelDJb/25D
-         atohHJBoxuFFMalAroKNJwcWCM2PQhgtJKezW6TF03JGYmf50rK401waq5yHw9eweqas
-         5TL7wlHzQGKAkhYlAQrujuFVpdA2ktBa5D8I8dagifShfPMuzkdMNJVPI0ym8KgjAmtp
-         qG8GhebGlFy03WcFBFt68gh12KG+vHpPicBvV8DLeHZk1C1B7BFu9MgJAweExCdB0lM+
-         5qK2OfBujeBRNcxscwpoeAYyk/HOtAlhVkZjShe/5L8WANrQ2bwEP3ZC689HlxNxlooB
-         rPkA==
+        d=broadcom.com; s=google; t=1750177098; x=1750781898; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZBTZgEr/jdYE4IOPEYCC1EEPCPcizM+4dIMiF/rIsPI=;
+        b=C9OyXwPmTycTftesLyFM4ly2lENSGSS5j8YmPrgrLWuC8bGyhY2toGQK466ReVZ+DT
+         AkOIMub1KxkcuA2koa8oh2atWq96cl9RVmirA3t30tGTXOwWwiDcy+BaCuPBr0YuX2FJ
+         5KCvygLYOF5e4wPcJUOXz3rUFdJunYF1EHnJU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750177033; x=1750781833;
-        h=in-reply-to:content-disposition:mime-version:references:reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W4IRp8lOuDYBi74yqX5sUOj7piA7uY8U+OIdNTvBqxM=;
-        b=g8Z3Znc4h9yutQ6c0pZL1UCKHuvj67Dme5RDYhPsRR7XDlEwptg/fUCqXBcS/kHBXa
-         P/yOBKJ8zlYdUrg8A2QVf2egOatzV0oWicY6CO0bJoeITWvj9dCmjdnJIccde+8X0r8t
-         eOYAk5cbz6Jy2YjW+qKwfjwIpvlWBaYEaj338yG0/fKIFiQZqY3OPDcymz72ukWM5/mP
-         keF8Xb1kbSDAsXQ0YYouctDsxprSTIgedE/pdvAPG3ZBi1iP48+fUGJvpkxQAnKizCST
-         neDjOwJaxrzAh2ngxjI1mxMbBjsJ+psOsLRACODDzWjUxsDn0ucSJHYbfGrQgM6iB77T
-         YnrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVppdb9PP67pMRiGtJZ5io8uSgo4dK3k6B9MmefXTI5/FM4Rienzq/BcRRTO+3tIUjEM2GadOHRX1MgA==@vger.kernel.org, AJvYcCV1rqZh94MNAQaNkbcX1UQ7Gkn3V+fcCt6eEcViw0ZCOZPoAnEYPhCCOeqEw1WF7tCxEEg4dpXeHfC9@vger.kernel.org, AJvYcCVjQEZmFKaM+4RqgGEmcyLKc0LvEfkxyej8gYn4czvIOefCroZ4voOlaIijgSJBQ9o5AnCKLvWbtQ2OeEpY@vger.kernel.org, AJvYcCXf3xvtwNDmKAkl+ettmR7H88bNwK/iIIPMPqcfdki0aPQIS+NEU+q5VjIXLzeIaynUdFPnmO/jOn7W@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzCp8NBiOrmzsltpqU6VgvUgIL+gSV0l61PYoVqYLteB3v2fia
-	Z3wefmsms6o6lX2EuKUg8R4MT4wprdzhqMQG2ynK2baED18bPcHZ69aD
-X-Gm-Gg: ASbGncsrMdUrNTU4F28lNUgt51tj/vT2OnnmV4FKkrOVLsB3VGXLZaU7d4ZbaeoZGFm
-	5FHd6Q64TxVZBCPERkuGbHV1N/HZPmSW4Td97V4uns7ZwqcpEZDlWlPL5RAElTw8ulstwzcwgMu
-	chcCXLBpDE6tr3U1Gxac3CnOy2Q3Tsss0ZTCMEYZoMLoagDdgKM2KWAV/rkdJ+MjQaeXJxDCIul
-	W4FaEnZR1draXhxc2Werdc9iglus06ZKT+Mz09OomCb1m3Y9R5K+e6dxfKIaNUVCAJPMOEQhJyj
-	zoNTNmvvfoZMLUOCYzsbh+voOGsyFGPhbf60HOM0MAyVyelmpMY0xu2KnMJ13Bevnk8vSzwJqNv
-	S5Y8GHDw=
-X-Google-Smtp-Source: AGHT+IHy4HYvP0zCPs29Z6Pt9vtjdN3X2LsRWCcO9xNMOK3GaEZ/sae43xY5py7YO0nSTpfphfLHSA==
-X-Received: by 2002:a05:6000:40cb:b0:3a5:78f6:c7c1 with SMTP id ffacd0b85a97d-3a578f6d4f8mr3102801f8f.1.1750177032732;
-        Tue, 17 Jun 2025 09:17:12 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b48564sm14185037f8f.82.2025.06.17.09.17.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:17:12 -0700 (PDT)
-Date: Tue, 17 Jun 2025 13:17:05 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v11 11/11] iio: adc: ad7768-1: add low pass -3dB cutoff
- attribute
-Message-ID: <aFGVAWi7CZAy0E8k@JSANTO12-L01.ad.analog.com>
-Reply-To: aEwd4cS7j0Vvypg8@smile.fi.intel.com
-References: <cover.1749569957.git.Jonathan.Santos@analog.com>
- <804d66f1858014d7278aec3344d81c223661e878.1749569957.git.Jonathan.Santos@analog.com>
- <aEwd4cS7j0Vvypg8@smile.fi.intel.com>
+        d=1e100.net; s=20230601; t=1750177098; x=1750781898;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZBTZgEr/jdYE4IOPEYCC1EEPCPcizM+4dIMiF/rIsPI=;
+        b=HRz90McrNC7YmIUVFWwJMmP0pcueIuiyJOUl6jVnbIXmp+gfcoX0V1gHa8ALEeyaCY
+         GJLF1oXtpLq5dQUp4edp5MqRJ76n9AFjdacX9EcQF+mhDInL5q0rTQ0UbsY5s6qFWeF4
+         bhJv7YwktZr4+qAwxE3Z0AUzT+Grl2Waf3yRnieimBBg68kkjUHchXsD1hHrbYTWnPFs
+         xyrooCWsdcRZAjlUnMxnzLtIOCioHMXwf3qGBf3g1LolNnCvJqXjdKSRglOwkCXjgNey
+         uBfXGpp0U3pLxOSiaexe+KcFKBy1Lg7W7k5W3xq/PT5OYIvwPVPhMj7kNJws5ajpHMqk
+         YqIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXWxGuW+qB+vvy0LtnxbcnxMq3AVhaWMMai8NRcy3toQnyZkrEe9zEnsYBtIt/kfovwLzvyPNxrmDAbHaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxk9VChhWIzN0x6NWaP203bn3oZDoc8g7NG6puC6m6k1h5gFpCl
+	fhJUPh7uormnK6bmWRZn9+D83EvnwdTeNsdN8mHbEXTlnn1J46oZESArwe7IXnL6FQ==
+X-Gm-Gg: ASbGncu6cc0BJWVA4lpWXK9PULufJ7JjbBfcCyAwJn9xLljLnqy3jjQSiKVdNPQ7yPl
+	gM4wrTlbuEo4oZmGe1HiMvEgJ2gSiZn5gX6KCo5dZEUTkIg/ntHa+DJml6LNdzf7UMcfJT+Snay
+	RtFzWZ05XswA6hxJlc8tCioK+cR7HaByp2T6Z3BZhkh7u6HeiYOZtT25BkmlFKUIT61iWwx8YHO
+	n9mN45YDlNZR6kI0vtVZbt/DLLkYQn0P8G29qEn3QtFFu8HymFBKqbuBbtvrZkWYmdDvBJNJFHp
+	OYfEGrnYTC/2dWGyhuMJdkRQMAXCno933uX7KbfQTjSMdJNwteWkGnZUyJV+O5CglOdL/uePZXo
+	a5ojHzmGhyO+5airZ79QStQnrcA==
+X-Google-Smtp-Source: AGHT+IFOgj9cKNRmusfNs/8i1W+vPbt1qmsmD7dSd8TjsTe+5kY3DJx4i4oWbfmwAaPvyr3fdv5lRw==
+X-Received: by 2002:a17:90b:3ec5:b0:311:e8cc:4248 with SMTP id 98e67ed59e1d1-313f1e51737mr24178526a91.33.1750177097908;
+        Tue, 17 Jun 2025 09:18:17 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1b6d4c8sm10841327a91.48.2025.06.17.09.18.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 09:18:16 -0700 (PDT)
+Message-ID: <de8cd4e8-144d-468c-9267-51d642800cdf@broadcom.com>
+Date: Tue, 17 Jun 2025 09:18:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aEwd4cS7j0Vvypg8@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 12/14] net: dsa: b53: fix unicast/multicast
+ flooding on BCM5325
+To: =?UTF-8?Q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+ jonas.gorski@gmail.com, andrew@lunn.ch, olteanv@gmail.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, vivien.didelot@gmail.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dgcbueu@gmail.com
+References: <20250614080000.1884236-1-noltari@gmail.com>
+ <20250614080000.1884236-13-noltari@gmail.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <20250614080000.1884236-13-noltari@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 06/13, Andy Shevchenko wrote:
-> On Wed, Jun 11, 2025 at 08:52:03AM -0300, Jonathan Santos wrote:
-> > Ad7768-1 has a different -3db frequency multiplier depending on
-> > the filter type configured. The cutoff frequency also varies according
-> > to the current ODR.
-> > 
-> > Add a readonly low pass -3dB frequency cutoff attribute to clarify to
-> > the user which bandwidth is being allowed depending on the filter
-> > configurations.
+On 6/14/25 00:59, Álvaro Fernández Rojas wrote:
+> BCM5325 doesn't implement UC_FLOOD_MASK, MC_FLOOD_MASK and IPMC_FLOOD_MASK
+> registers.
+> This has to be handled differently with other pages and registers.
 > 
-> > +/* -3dB cutoff frequency multipliers (relative to ODR) for each filter type. */
-> > +static const int ad7768_filter_3db_odr_multiplier[] = {
-> > +	[AD7768_FILTER_SINC5] = 204,		/* 0.204 */
-> > +	[AD7768_FILTER_SINC3] = 262,		/* 0.2617 */
-> > +	[AD7768_FILTER_SINC3_REJ60] = 262,	/* 0.2617 */
-> > +	[AD7768_FILTER_WIDEBAND] = 433,		/* 0.433 */
-> 
-> Just to be sure, is it 0.433 or 0.4333(3) actually? Sometimes datasheets have
-> rounding that even may lead to problems (see TSC issues for some of the Intel
-> CPUs in the past). That's behind my question.
-> 
+> Fixes: a8b659e7ff75 ("net: dsa: act as passthrough for bridge port flags")
+> Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
 
-Every reference I have specifies it as 0.433, so I believe that is it.
-
-> > +};
-> 
-> ...
-> 
-> > +	case IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY:
-> > +		temp = st->samp_freq * ad7768_filter_3db_odr_multiplier[st->filter_type];
-> > +		*val = DIV_ROUND_CLOSEST(temp, 1000);
-> 
-> MILLI? KILO/ MICRO/MILLI? ...?
-> 
-
-Yes, MILLI.
-
-Thanks,
-Jonathan S.
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
+-- 
+Florian
