@@ -1,61 +1,96 @@
-Received: from baidu.com (mx24.baidu.com [111.206.215.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA99B288C39
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 06:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.206.215.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172F0202C48;
+	Tue, 17 Jun 2025 06:38:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750142303; cv=none; b=L+TXN8CYqUpiLRBlCmJZrmXY3ErgY7Ar0dmQg4NGXsUBKFdzYjxeHVYIaC5ulA1v8YChqaOLmBxuOEehnO2qqChdVz50eH+yAdbKp765wTSgx+QeGfAmHTvkdrSpgWN5nk+zS1664H2nmZ4pq77IFmf4bIvvKDBq4arKSVIa/DI=
+	t=1750142337; cv=none; b=usTc/gzmHg+FyIG8ZMnIpT5iOOKUPJugWF5aj8wxMobw5iU0Xr1ic5xUKqdOkr+KmldTPrwVfqaRj3bjYOcPKsqJ+ugQ/wxudmRY5+DQ0Z6kF2pXQx7UkzBeoSWiHiWrbLLMh9y1cpLAg6hxl2wMgOBY8+PXMsZP8+Yasnl94xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750142303; c=relaxed/simple;
-	bh=SqrDemTKsCW272OVpEmXBQqwurVhef25klcLb23F5N8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=YeWyTNybE0rMQXOglDyvq9j155oaX+Am1/oxgNJAZYjEihj0eGCXM2nWmoiF6t0A3jV4+G+XBMtboVp9IPO5n+yIqPANgQizczMHu4VhYO0kCAPdgRiuRE1s+1HWK9LNbjImvBuywkWZbkPyFNMVJVnU3pGMu3wkSjPyPAV3sxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com; spf=pass smtp.mailfrom=baidu.com; arc=none smtp.client-ip=111.206.215.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=baidu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baidu.com
-From: "Li,Rongqing" <lirongqing@baidu.com>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-CC: "mingo@redhat.com" <mingo@redhat.com>, "peterz@infradead.org"
-	<peterz@infradead.org>, "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-	"dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>, "rostedt@goodmis.org"
-	<rostedt@goodmis.org>, "bsegall@google.com" <bsegall@google.com>,
-	"mgorman@suse.de" <mgorman@suse.de>, "vschneid@redhat.com"
-	<vschneid@redhat.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: =?utf-8?B?562U5aSNOiBb5aSW6YOo6YKu5Lu2XSBSZTogW1BBVENIXSBzY2hlZC9jcHV0?=
- =?utf-8?Q?ime:_Fix_a_mostly_theoretical_divide_by_zero?=
-Thread-Topic: =?utf-8?B?W+WklumDqOmCruS7tl0gUmU6IFtQQVRDSF0gc2NoZWQvY3B1dGltZTogRml4?=
- =?utf-8?Q?_a_mostly_theoretical_divide_by_zero?=
-Thread-Index: AQHb1UB9Uh7C2aJ+ekCiq94zr/3OHrQFtOCg//+VZACAAXsLkA==
-Date: Tue, 17 Jun 2025 06:36:37 +0000
-Message-ID: <4709b236e32a41158994dae282f2be75@baidu.com>
-References: <20250604110442.8251-1-lirongqing@baidu.com>
- <54c4aa198131420d9c77542bad5d27e7@baidu.com>
- <CAKfTPtBKm7WgwcUHcMXnH3PL3KFSniy02mb6Ag4eQ1fA3e+H3g@mail.gmail.com>
-In-Reply-To: <CAKfTPtBKm7WgwcUHcMXnH3PL3KFSniy02mb6Ag4eQ1fA3e+H3g@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1750142337; c=relaxed/simple;
+	bh=z+vpObESyxPEfQz9MODClMQrhR21GENy2LtWC3VhyO0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xy3gLeOMboLkc7R1S5ZIgGvYPN0wzutV2+X8JeVZa8JmCnIQxsnaiC9VZQfy4HyfDhY4gfK24SfaGJ5CfIT/QOw0NTjMSXHfpGkizquHffdEdr3dKQN8zdRa6zku0ycC4mCtU6JD1ts6vzqBN3cbi+X22GKe/DsieDvipA56ov4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEh/V+VF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEh/V+VF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23A1FC4CEE3;
+	Tue, 17 Jun 2025 06:38:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750142336;
+	bh=z+vpObESyxPEfQz9MODClMQrhR21GENy2LtWC3VhyO0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KEh/V+VFAkpmYeRXwXnW4Gtssa2FNm9M3j6QIyoBW8wLdMDarSedKQkM5wzrG+5zp
+	 cDL8UlZw948WVJawBmkQ5bOJq1V1WafNt3pk8AqVwrJSIOrd0edtxuIW34dKju+Yen
+	 YLTQKnn6NA8HIXNSv7V8VMYCiPosyKRg1IFgrTxiX5Z3ZoM55FTuqFCB8dbcd6INTC
+	 CA+kgxgZlqZ1cO+g5hYngjyGmQuiTOxpajoMqizwH98nb2/sawVxBjwQgVn+i98AEz
+	 AKa2ptfcM0APRnv3r/Lm/NPQwnbxEIleXIpe0PszbavEUG6TiihejDHPP2yV/BUBE5
+	 Ftd3IsvnZbuxg==
+Date: Tue, 17 Jun 2025 12:08:53 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Abin Joseph <abin.joseph@amd.com>
+Cc: michal.simek@amd.com, yanzhen@vivo.com, radhey.shyam.pandey@amd.com,
+	palmer@rivosinc.com, u.kleine-koenig@baylibre.com, git@amd.com,
+	dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: zynqmp_dma: Add shutdown operation support
+Message-ID: <aFENfW0v0gmtY2Gu@vaman>
+References: <20250612162144.3294953-1-abin.joseph@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 172.31.50.11
-X-FE-Policy-ID: 52:10:53:SYSTEM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612162144.3294953-1-abin.joseph@amd.com>
 
-PiBUaGVvcmV0aWNhbCBpcyB0aGUgcmlnaHQgd29yZDsgSWYgYWxsIDJeMzIgcG9zc2libGUgdGhy
-ZWFkcyBiZWxvbmcgdG8gdGhlIHByb2Nlc3MsDQo+IHdlIGNhbiBnZXQgYW4gb3ZlcmZsb3cgdG8g
-MCBhZnRlciB+NHNlYyBydW4gdGltZSBvZiBlYWNoIHRocmVhZC4gQnV0IHRoZW4gaG93DQo+IGxv
-bmcgd2lsbCBpdCB0YWtlIHRvIGhhdmUgdGhvc2UgMl4zMiB0aHJlYWRzIHJ1biA0c2VjIG9uIGEg
-c3lzdGVtIC4uLg0KPiANCj4gSXQgd291bGQgYmUgZ29vZCB0byBnZXQgbnVtYmVyIHRvIHNob3cg
-aG93IHJlYWxpc3RpYyBvciBub3QgaXQgY291bGQgYmUgdG8NCj4gcmVhY2ggdGhpcyB2YWx1ZQ0K
-PiANCj4NCg0KVGhlIDJeNjQgbnMgaXMgNTg0IHllYXJzLCBpZiBhIHByb2Nlc3Mgd2l0aCAxMDAw
-IGJ1c3kgcG9sbGluZyB0aHJlYWRzIGlzIHJ1bm5pbmcgaW4gYSBtYWNoaW5lIHdpdGggbW9yZSB0
-aGFuIDEwMDAgQ1BVcywgdGhlIHJ1bnRpbWUgd2lsbCBvdmVyZmxvdyBhYm91dCBoYWxmIHllYXIN
-Cg0KVGhhbmsNCi1MSQ0KDQo=
+On 12-06-25, 21:51, Abin Joseph wrote:
+> Implement shutdown hook to ensure dmaengine could be stopped inorder for
+> kexec to restart the new kernel.
+> 
+> Signed-off-by: Abin Joseph <abin.joseph@amd.com>
+> ---
+>  drivers/dma/xilinx/zynqmp_dma.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/drivers/dma/xilinx/zynqmp_dma.c b/drivers/dma/xilinx/zynqmp_dma.c
+> index d05fc5fcc77d..8f9f1ef4f0bf 100644
+> --- a/drivers/dma/xilinx/zynqmp_dma.c
+> +++ b/drivers/dma/xilinx/zynqmp_dma.c
+> @@ -1178,6 +1178,18 @@ static void zynqmp_dma_remove(struct platform_device *pdev)
+>  		zynqmp_dma_runtime_suspend(zdev->dev);
+>  }
+>  
+> +/**
+> + * zynqmp_dma_shutdown - Driver shutdown function
+> + * @pdev: Pointer to the platform_device structure
+> + */
+> +static void zynqmp_dma_shutdown(struct platform_device *pdev)
+> +{
+> +	struct zynqmp_dma_device *zdev = platform_get_drvdata(pdev);
+> +
+> +	zynqmp_dma_chan_remove(zdev->chan);
+> +	pm_runtime_disable(zdev->dev);
+> +}
+> +
+>  static const struct of_device_id zynqmp_dma_of_match[] = {
+>  	{ .compatible = "amd,versal2-dma-1.0", .data = &versal2_dma_config },
+>  	{ .compatible = "xlnx,zynqmp-dma-1.0", },
+> @@ -1193,6 +1205,7 @@ static struct platform_driver zynqmp_dma_driver = {
+>  	},
+>  	.probe = zynqmp_dma_probe,
+>  	.remove = zynqmp_dma_remove,
+> +	.shutdown = zynqmp_dma_shutdown,
+
+Why not do all operations performed in remove..?
+
+>  };
+>  
+>  module_platform_driver(zynqmp_dma_driver);
+> -- 
+> 2.34.1
+
+-- 
+~Vinod
