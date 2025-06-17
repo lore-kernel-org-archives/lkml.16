@@ -1,148 +1,203 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5882EE604
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121F92E265C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169279; cv=none; b=Ltm2UybOSY0BGd2+vHBy/EsEp/BDRy+5e3UFRdwvC8JsxkJ6ITPwA3HFKfYETYKqCtLTqTFhDb7s6daFAz6fLuat6g2rBRsIr0Cvq8gpEvr0liPs/Lfst6iiuY0eFh6Q0JkZS6gjuH6KDvx7nJEv4o1Z3Yl+cqAWVEXaGl6Mfbg=
+	t=1750169320; cv=none; b=rfiY56crEj+4was/PNfNo02PsIO8ZWxL1WKwjUrM8FlqunrrDTyzdyplktssy4R4R2u5acVdCGZZpebApKgHH/b/AlSiWTEs3pr8ToV6MfAIgMLHWVv4yDpn/amW0Ix7FU1jU4BeI6DaGYXpacBD0N0Nen4I9Zd9GfK5NjDNFcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169279; c=relaxed/simple;
-	bh=mrVz5aQbXDSkFCUfa28x+our51fySbAWuqOQYZ7A8Yk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unSR2NgxECD/F0DLMbWaHZHq5GM91a0EANPEliWIvPAqrCCYA/qU4Z+vfvGgUv+W/U395bPNI8a5HBU0O8hl3wRsiTOerFf9W9BiIzNJl9U+nvtdyP2z2BbfaeqBjxCC0gfFV2HCYaHyE7xmMhqzDugx+ZRLGmPLVGfqe+nkVYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bY8+66kK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750169320; c=relaxed/simple;
+	bh=wIUdELw5d+3Ec1l9wdJQcDovNkzFk6lPx+XmhyELMdY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:To:Cc:Content-Type:
+	 References; b=jWSpMWVooHBiDfl3GXaI+R7KNzzt0J8M2lVEvfVGNu6+nD7bqu4dskOUqiJWJk7Cpn4T35Q+A9c9hDTw8F7R3bO1UJO87SFMOZNGrjelTRdpyLfg2CeLwvVzJqaLcI4VXW7FndNqC1BgWvSOsUAbr366ePH+NSQiMSbv46MC9SU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=i7+cLRz4; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bY8+66kK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750169276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zx0Q2MBzTTKliPXoPTodX154c6A+J9aen4rIOAnQ4Lk=;
-	b=bY8+66kKVI8E/ezyXa7uqVTTymRJUor2STZuLBinHYKVaa2i3ismT0huYDfqMryt2ZD5Ul
-	0ZasnshrZjSV5FkGINMc3uQdjjm4xDNvJ8OqAX8YGekXTvCoFxYSOHErNCJKnf1l12CUQz
-	j/p0yDskjueyLVPuZnH8ZMPvxt+us78=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-7qoSejBiOZS5vYt1MFZrYQ-1; Tue,
- 17 Jun 2025 10:07:52 -0400
-X-MC-Unique: 7qoSejBiOZS5vYt1MFZrYQ-1
-X-Mimecast-MFC-AGG-ID: 7qoSejBiOZS5vYt1MFZrYQ_1750169270
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5E890180AE04;
-	Tue, 17 Jun 2025 14:07:50 +0000 (UTC)
-Received: from wcosta-thinkpadt14gen4.rmtbr.csb (unknown [10.22.88.173])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id B0311195E342;
-	Tue, 17 Jun 2025 14:07:42 +0000 (UTC)
-Date: Tue, 17 Jun 2025 11:07:40 -0300
-From: Wander Lairson Costa <wander@redhat.com>
-To: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Tejun Heo <tj@kernel.org>, David Vernet <dvernet@meta.com>, 
-	Barret Rhoden <brho@google.com>, Josh Don <joshdon@google.com>, Crystal Wood <crwood@redhat.com>, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Juri Lelli <juri.lelli@redhat.com>, Ben Segall <bsegall@google.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ingo Molnar <mingo@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v5] sched: do not call __put_task_struct() on rt if
- pi_blocked_on is set
-Message-ID: <b3lzfprjfzuyk5x2xhd2xx2v7mhuzkkkugvfuvl3hmqlsbvtfc@o6bz42judcyy>
-References: <aFF1BKtdQCnuYMaS@uudg.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="i7+cLRz4"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250617140835euoutp010f322bfcafb72dd1bd9416d42539a65c~J2bgo1abj2832528325euoutp01C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:08:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250617140835euoutp010f322bfcafb72dd1bd9416d42539a65c~J2bgo1abj2832528325euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750169315;
+	bh=WwJz1SRbg41KtiY1sC2X2Jl4FNkK7CMRxy66cA1ctow=;
+	h=From:Subject:Date:To:Cc:References:From;
+	b=i7+cLRz4ZBYWaDqaSVC49r1Ux8zw1JU4fXQiqsfZNL+17atx59lMmTg9nWEUU+U28
+	 Xh8zVeQZJlEZJC92ZP51vStMT479XA4VS4FwFkUEFp10ryb7cZX+T+Izv+DMG0B+g3
+	 1f/jTAPn3+W3PZCZCMaL6UBJMeXluLMqcuXUR49M=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617140834eucas1p2b35624cd4903bed6d52b7cc432e6da64~J2bf7aTvf3036730367eucas1p2P;
+	Tue, 17 Jun 2025 14:08:34 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250617140833eusmtip1eb981f749122290e9bd69bf7317df783~J2betIXdC2516525165eusmtip1A;
+	Tue, 17 Jun 2025 14:08:33 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: [PATCH v3 0/9] Rust Abstractions for PWM subsystem with TH1520 PWM
+ driver
+Date: Tue, 17 Jun 2025 16:07:23 +0200
+Message-Id: <20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFF1BKtdQCnuYMaS@uudg.org>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJt2UWgC/5WNsQ6DIBQAf8Uw9zWAvho79T+aDiigpBEMKNoY/
+	73o0nRrx7vhbiVBeaMCuWYr8SqaYJxNkJ8y0nTCtgqMTEw45UiRF+CnMIJVywjD3MPs/NPYFrS
+	woJ2HoKzcGZELySWrWZWT1Bq80mY5PvdH4s6E0fnXsY1st/8eIgMKtUwTpFWhdXkLog+Tbc+N6
+	8n+iPzTvTD6a5enbom54hWiZox+d7dtewM0AGuRNAEAAA==
+X-Change-ID: 20250524-rust-next-pwm-working-fan-for-sending-552ad2d1b193
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,  Miguel Ojeda
+	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,  Boqun Feng
+	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,  Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,  Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>, Drew Fustini <drew@pdp7.com>,  Guo
+	Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,  Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,  Conor Dooley
+	<conor+dt@kernel.org>,  Paul Walmsley <paul.walmsley@sifive.com>,  Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,  Alexandre
+	Ghiti <alex@ghiti.fr>,  Marek Szyprowski <m.szyprowski@samsung.com>,  Benno
+	Lossin <lossin@kernel.org>,  Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Benno Lossin <lossin@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,  Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250617140834eucas1p2b35624cd4903bed6d52b7cc432e6da64
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250617140834eucas1p2b35624cd4903bed6d52b7cc432e6da64
+X-EPHeader: CA
+X-CMS-RootMailID: 20250617140834eucas1p2b35624cd4903bed6d52b7cc432e6da64
+References: <CGME20250617140834eucas1p2b35624cd4903bed6d52b7cc432e6da64@eucas1p2.samsung.com>
 
-On Tue, Jun 17, 2025 at 11:00:36AM -0300, Luis Claudio R. Goncalves wrote:
-> With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
-> from rt_mutex_adjust_prio_chain() could happen in preemptible context and
-> with a mutex enqueued. That could lead to this sequence:
-> 
->         rt_mutex_adjust_prio_chain()
->           put_task_struct()
->             __put_task_struct()
->               sched_ext_free()
->                 spin_lock_irqsave()
->                   rtlock_lock() --->  TRIGGERS
->                                       lockdep_assert(!current->pi_blocked_on);
-> 
-> Fix that by unconditionally resorting to the deferred call to
-> __put_task_struct() if PREEMPT_RT is enabled.
-> 
-> Suggested-by: Crystal Wood <crwood@redhat.com>
-> Fixes: 893cdaaa3977 ("sched: avoid false lockdep splat in put_task_struct()")
-> Signed-off-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> ---
-> 
-> v2: (Rostedt) remove the #ifdef from put_task_struct() and create
->     tsk_is_pi_blocked_on() in sched.h to make the change cleaner.
-> v3: (Sebastian, PeterZ) always call the deferred __put_task_struct() on RT.
-> v4: Fix the implementation of what was requested on v3.
-> v5: Add the "Fixes:" tag.
-> 
->  include/linux/sched/task.h |   17 ++++++++---------
->  1 file changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 0f2aeb37bbb04..51678a541477a 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -134,11 +134,8 @@ static inline void put_task_struct(struct task_struct *t)
->  	if (!refcount_dec_and_test(&t->usage))
->  		return;
->  
-> -	/*
-> -	 * In !RT, it is always safe to call __put_task_struct().
-> -	 * Under RT, we can only call it in preemptible context.
-> -	 */
-> -	if (!IS_ENABLED(CONFIG_PREEMPT_RT) || preemptible()) {
-> +	/* In !RT, it is always safe to call __put_task_struct(). */
-> +	if (!IS_ENABLED(CONFIG_PREEMPT_RT)) {
->  		static DEFINE_WAIT_OVERRIDE_MAP(put_task_map, LD_WAIT_SLEEP);
->  
->  		lock_map_acquire_try(&put_task_map);
-> @@ -148,11 +145,13 @@ static inline void put_task_struct(struct task_struct *t)
->  	}
->  
->  	/*
-> -	 * under PREEMPT_RT, we can't call put_task_struct
-> +	 * Under PREEMPT_RT, we can't call __put_task_struct
->  	 * in atomic context because it will indirectly
-> -	 * acquire sleeping locks.
-> +	 * acquire sleeping locks. The same is true if the
-> +	 * current process has a mutex enqueued (blocked on
-> +	 * a PI chain).
->  	 *
-> -	 * call_rcu() will schedule delayed_put_task_struct_rcu()
-> +	 * call_rcu() will schedule __put_task_struct_rcu_cb()
->  	 * to be called in process context.
->  	 *
->  	 * __put_task_struct() is called when
-> @@ -165,7 +164,7 @@ static inline void put_task_struct(struct task_struct *t)
->  	 *
->  	 * delayed_free_task() also uses ->rcu, but it is only called
->  	 * when it fails to fork a process. Therefore, there is no
-> -	 * way it can conflict with put_task_struct().
-> +	 * way it can conflict with __put_task_struct().
->  	 */
->  	call_rcu(&t->rcu, __put_task_struct_rcu_cb);
->  }
-> 
+This patch series introduces Rust support for the T-HEAD TH1520 PWM
+controller and demonstrates its use for fan control on the Sipeed Lichee
+Pi 4A board.
 
-Reviewed-by: Wander Lairson Costa <wander@redhat.com>
+The primary goal of this patch series is to introduce a basic set of
+Rust abstractions for the Linux PWM subsystem. As a first user and
+practical demonstration of these abstractions, the series also provides
+a functional PWM driver for the T-HEAD TH1520 SoC. This allows control
+of its PWM channels and ultimately enables temperature controlled fan
+support for the Lichee Pi 4A board. This work aims to explore the use of
+Rust for PWM drivers and lay a foundation for potential future
+Rust based PWM drivers.
+
+The core of this series is a new rust/kernel/pwm.rs module that provides
+abstractions for writing PWM chip provider drivers in Rust. This has
+been significantly reworked from v1 based on extensive feedback. The key
+features of the new abstraction layer include:
+
+ - Ownership and Lifetime Management: The pwm::Chip wrapper is managed
+   by ARef, correctly tying its lifetime to its embedded struct device
+   reference counter. Chip registration is handled by a pwm::Registration
+   RAII guard, which guarantees that pwmchip_add is always paired with
+   pwmchip_remove, preventing resource leaks.
+
+ - Modern and Safe API: The PwmOps trait is now based on the modern
+   waveform API (round_waveform_tohw, write_waveform, etc.) as recommended
+   by the subsystem maintainer. It is generic over a driver's
+   hardware specific data structure, moving all unsafe serialization logic
+   into the abstraction layer and allowing drivers to be written in 100%
+   safe Rust.
+
+ - Ergonomics: The API provides safe, idiomatic wrappers for other PWM
+   types (State, Args, Device, etc.) and uses standard kernel error
+   handling patterns.
+
+The series is structured as follows:
+ - Rust PWM Abstractions: The new safe abstraction layer.
+ - TH1520 PWM Driver: A new Rust driver for the TH1520 SoC, built on
+   top of the new abstractions.
+ - Clock Fix: A necessary fix to the TH1520 clock driver to ensure bus
+   clocks remain enabled.
+ - Device Tree Bindings & Nodes: The remaining patches add the necessary
+   DT bindings and nodes for the TH1520 PWM controller, a thermal
+   sensor, and the PWM fan configuration for the Lichee Pi 4A board.
+
+Testing:
+Tested on the TH1520 SoC. The fan works correctly. The duty/period
+calculaties are correct. Fan starts slow when the chip is not hot and
+gradually increases the speed when PVT reports higher temperatures.
+
+The patches are based on mainline, with some dependencies which are not
+merged yet - platform Io support [1] and math wrapper [2].
+
+Reference repository with all the patches together can be found on
+github [3].
+
+[1] - https://lore.kernel.org/rust-for-linux/20250509-topics-tyr-platform_iomem-v8-0-e9f1725a40da@collabora.com/
+[2] - https://lore.kernel.org/all/20250609-math-rust-v1-v1-1-285fac00031f@samsung.com/
+[3] - https://github.com/mwilczy/linux/commits/rust-next-pwm-working-fan-for-sending-v7/
+
+---
+Changes in v3:
+ - Addressed feedback from Uwe by making multiple changes to the TH1520
+   driver and the abstraction layer.
+ - Split the core PWM abstractions into three focused commits to ease
+   review per Benno request.
+ - Confirmed the driver now works correctly with CONFIG_PWM_DEBUG enabled
+   by implementing the full waveform API, which correctly reads the
+   hardware state.
+ - Refactored the Rust code to build cleanly with
+   CONFIG_RUST_BUILD_ASSERT_ALLOW=n, primarily by using the try_* family of
+   functions for IoMem access.
+ - Included several cosmetic changes and cleanups to the abstractions
+   per Miguel review.
+
+- Link to v2: https://lore.kernel.org/r/20250610-rust-next-pwm-working-fan-for-sending-v2-0-753e2955f110@samsung.com
+
+Changes in v2:
+ - Reworked the PWM abstraction layer based on extensive feedback.
+ - Replaced initial devm allocation with a proper ARef<Chip> lifetime model
+   using AlwaysRefCounted.
+ - Implemented a Registration RAII guard to ensure safe chip add/remove.
+ - Migrated the PwmOps trait from the legacy .apply callback to the modern
+   waveform API.
+ - Refactored the TH1520 driver to use the new, safer abstractions.
+ - Added a patch to mark essential bus clocks as CLK_IGNORE_UNUSED to fix
+   boot hangs when the PWM and thermal sensors are enabled.
+- Link to v1: https://lore.kernel.org/r/20250524-rust-next-pwm-working-fan-for-sending-v1-0-bdd2d5094ff7@samsung.com
+
+---
+Michal Wilczynski (9):
+      rust: pwm: Add Kconfig and basic data structures
+      rust: pwm: Add core 'Device' and 'Chip' object wrappers
+      rust: pwm: Add driver operations trait and registration support
+      pwm: Add Rust driver for T-HEAD TH1520 SoC
+      clk: thead: Mark essential bus clocks as CLK_IGNORE_UNUSED
+      dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM controller
+      riscv: dts: thead: Add PWM controller node
+      riscv: dts: thead: Add PVT node
+      riscv: dts: thead: Add PWM fan and thermal control
+
+ .../devicetree/bindings/pwm/thead,th1520-pwm.yaml  |  48 ++
+ MAINTAINERS                                        |   8 +
+ arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts  |  67 ++
+ arch/riscv/boot/dts/thead/th1520.dtsi              |  18 +
+ drivers/clk/thead/clk-th1520-ap.c                  |   5 +-
+ drivers/pwm/Kconfig                                |  23 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm_th1520.rs                          | 328 ++++++++
+ rust/bindings/bindings_helper.h                    |   1 +
+ rust/helpers/helpers.c                             |   1 +
+ rust/kernel/lib.rs                                 |   2 +
+ rust/kernel/pwm.rs                                 | 886 +++++++++++++++++++++
+ 12 files changed, 1386 insertions(+), 2 deletions(-)
+---
+base-commit: 79b01ff21368605a62b76535ab1ab5f1f726de60
+change-id: 20250524-rust-next-pwm-working-fan-for-sending-552ad2d1b193
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
 
