@@ -1,209 +1,204 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F2324E4AF;
-	Tue, 17 Jun 2025 14:42:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 367312CCDE
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750171357; cv=none; b=B8+nLZcrY7xi1zgOJ+I7NcF0chcwXbKmnYNa2ji/374bKc8YrS25fbxLva/e0QpjrSbP06BZ6LZHNFEXSLAVVpMM1BCThSHKNPPCKripK1B9Hp5DvsrG567FOBiMeebSC5+loid0wpSSlL7KuwNnnUC2RrbOY2vBYxSqq9cqV2c=
+	t=1750171360; cv=none; b=rGUWheyh1+bCbwBuuItst04nmuTd1zOvbS82zx1nb+lZoPCZcGKJwUSgQef23BYkqWjXL13mbCH8pPCsTmYI7EcwLkuOpgtHj7PLLtolGPeq1oqb19UuV9EJkdF6LPTrd4UbyORN1wXfMzauy3WpIIim3NeqP4fZ33On/G5xl9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750171357; c=relaxed/simple;
-	bh=8F3Gej9CQvM5OpILI6AI+BRXx8mI3MbC8tMra4NwCTU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gmkFXJJlqBN4tsFLu9SSCuIm4y4pdDJlNgXSiKRLig2PCrtfgxapGmvg1A7zVZschaLSqokHV1csuwUHfJ0oVjVLGOQStWGLKH+yJQqf22My28mGkE4nT5EwyeynQfFbSe5v1oEk6KlTe7uAhFGOjWx3jEqPDrfCRbRpW/zvST0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HUcj26EG; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750171360; c=relaxed/simple;
+	bh=J3RMIWij4olJIZvhHBis/MZpmxz342SGDI+rntvCR3E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=KnJfXHKRxgk2kZo3jFQyxR10NqpJmRoctRrD2/qhyPjr1FfoEUgJtwyo0vNkgugU1anusvwzoS1t5QGafVTEZnhWhEyQkFvoPI9kwHbn8bNf33Jz2I30G4tfLgf7m28PCPh1Ef1Fhnhx1W2UilsYvEYE+rNdi3CloyGY8WovYmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=a4jBjP9f; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUcj26EG"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b3192eab3c9so3800078a12.3;
-        Tue, 17 Jun 2025 07:42:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a4jBjP9f"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553644b8f56so5987647e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:42:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750171353; x=1750776153; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aviX3nO2T2fNDcaXkbjG6JoePALe4g3/UdTCpFXe6Nw=;
-        b=HUcj26EGUTfil+9CpPc8BOSz6fl0IpgtqDXk2wrohcSjBIrufstH03l4MzvLW3OXuj
-         wgE3PFUxtxHM99ngSlj20aU7r1VG5oTnsEKJX2hpa/0xMoWHRTeWzOnBkwQrh1mHCx3Y
-         9zm1BzD9OZIGYY6J35+6vlLYfY3rD23/DX/8RK3AiFsVLD1GhP5s/g7TK/L1UoUfsPiD
-         rgKDc3U4562Yp6g89ZwvQlX+ZqxkkTgve8hMiHI2s3EFM5zaOIYpAaYzVIkqRRkA0Ezx
-         /eP7iFvLjuW6ReiXlen7VvEWAWdHsa/vOzdrM8aXPonX0Lo60iEMFmZbrVZYQF4wKOfe
-         kS6w==
+        d=chromium.org; s=google; t=1750171355; x=1750776155; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mwBKWLCDONZ1Mqgm0XmcqesVTqC7UAS+k/XRYW3pzKs=;
+        b=a4jBjP9fsRF6nntaJwVgxMNYnAEKt2tgnqf+Y9opzaYtMNqL3Fd73zMctIdkzoae05
+         GUfrm6hER7ybG3bH2RfaCkAyr4j48tMHpKXcwSDJxlCK2acH7NNXMxAK0Zg/QGYB9DK+
+         y5hwHAof0BMgHD3AV/LxcXfX5V9vGfbChLXxY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750171353; x=1750776153;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750171355; x=1750776155;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aviX3nO2T2fNDcaXkbjG6JoePALe4g3/UdTCpFXe6Nw=;
-        b=ATOAAP35vx4kdt6nPkX/e3d0FuIqHaaFxLyPMAaZMYmIMfmxC+GC95lf7IGb3grVOW
-         goyIpmC1F67KafB7D+M6kB9YfzOuI5u7jYm+c2DC4jbxPal63cvWTlelRcyNyo5b5wkl
-         /65IMA9FWmFTNbqvT3DFtu0/TPe7I3bKMuI0zdtaSSt1GissnVNxvy8Um1qgF09+qylq
-         af7rB02tlguSCYZ5Y4mr6aXv6RfOqmpUX06dI89gd/BLBVYnHi+oBgGmGVHgZWnBrHmT
-         JIAaxwew5jK1eKBpfXLh/5F3wuEhQ2jFP1rahx6P5VyqvvS36XjOw/rRHWoGKmI2ODE3
-         nzPA==
-X-Forwarded-Encrypted: i=1; AJvYcCW+WY4X+w9o1qT2OnQZmTNmUsF1zbhCMUmmWEDHFEb7V83s7wEyZgkS5fdZ693J3yWauIZd7y+Itf7WkN5wxx4=@vger.kernel.org, AJvYcCXSlYCgfBySuB1Tod5nZT4B7+ND9CUo2SaCdpzpNgEbpuJhZ1ID9In1VjWZy5TqPbd9TMfv0fwqAbmEph0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKRaM2TbxueMDbqOjegUV2RFxkfryPgP6M5IpYEch3vrK37nlN
-	Ku59Yq5eGGqpHbw0mfUsC/HiFBtRQR9aMK4iEUnZc4/7zaAb33R8SNyp
-X-Gm-Gg: ASbGncteJxY2MaUmUMwjpDJ3mBGSdud4CEfK5Y8PdoNnED7w9LRvrKecGRJySbOqpNa
-	WrZr2iLNUOJmuRD/TVD9Gv10X6KzOjJv4zhN1LVogsU0YgHfrPtGTjXbvD8kwhsgVWCy7PjADhc
-	Dd55QGKXQF8pmZo/ige7BvA5fPe6Ols5NYvHlEMkO0g8zlnfG5yV/KfqxEytr97nAzsCS9BCDCT
-	uQFTiBQAAS0+dcMi1pkx6/TNNy0z3WhxwjvxBPzQQRB7TLnRfLRceoyApZStx6Wh6BZxL4z+3kQ
-	YY1T42ol8Tjv0vpF+laDTR+wFvi8LfPXAFDlUPNOKfKQxMev4Lpc1DMi0kzXohMzxO2xEaWdfqu
-	LbHzP4/+FgOao+4caI0tcWktzx9TSAT0/89k=
-X-Google-Smtp-Source: AGHT+IHXaySx6R1AWkUSP4opgLvhnfsHJyH2iUuHDkUiwQvxjfSFdAllWb1EJTDv9UqjGHvuDj1nRg==
-X-Received: by 2002:a17:90b:4cd1:b0:313:1a8c:c2c6 with SMTP id 98e67ed59e1d1-313f1ce5ca1mr26235185a91.16.1750171352919;
-        Tue, 17 Jun 2025 07:42:32 -0700 (PDT)
-Received: from bee.. (p5332007-ipxg23901hodogaya.kanagawa.ocn.ne.jp. [180.34.120.7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1c5feebsm12029828a91.41.2025.06.17.07.42.28
+        bh=mwBKWLCDONZ1Mqgm0XmcqesVTqC7UAS+k/XRYW3pzKs=;
+        b=qXsZmLQocYJ5BFxIT08Dm1fmiA2BEZkfH8ehs57/ei53lYFtdrml+hQCgrOFq7T8Wg
+         J/g3V4yyCNUADXe4uCM1n+JySr3cvP580DrU8i6PFLFPvnwkglrlya+X2fTVegHTxp0u
+         gLLkXuG8uWKWdAiQraagOQh5v5FQeBsXn+UsaA7LUlhc78BlDs5ZDbfMUniJayr/lx4D
+         Tql137uQndl02YSuBVJWa3EuttdTH6Kc9N1Sx+hjY8baMg8Tpqgjz6lZ5oXdcVLGjie8
+         4LtGUsgASH5AfZNJ/6A5VDwfuLRYgAN16JyYMy2f9pqE1Sv4g0ciKy+ovlGupKgcQQxB
+         35ww==
+X-Forwarded-Encrypted: i=1; AJvYcCX3Y0+Vwea/k2/PsldR1jByc7gY9ojHB18kAR7IHxjVBqr7E6E9y3yPWDHrfrDguKme0et5x8C6uuK/+oU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP/9MdWnDeoCnucPR9AG/VIngTxfTk7QtamcVmxhZif6pmY4D9
+	5DHXSnv3YfSTw0XKQyHSB013KAuX7RbZvQ4oerJTse3ZpZjsfssBRfVi0i/7hpYfJw==
+X-Gm-Gg: ASbGncsO4knjJ2S9kEPM9SOK+DpKWKF2/6ivNXEXGgKbNQRuIJc14k7ghFwnXkCbMvD
+	8zA6dPanR20f1mcZvAEZknHCcp/8WgRpBI/rcf0igU0zuA42SLxFXcIsn7VuoOZ/hE/nMu4+2Bj
+	hQG1euK4lpZHEoCry3a+SoP5TtqhVdH7CIb+qxMVsUULlcYGIItp918zEYQPOrQNrJJ/jL4WgEa
+	Ju5plsqCArrSrL+9SrJkJ4WtsYYdVa28xyR/jG6AwwIobaNpT/SBnfa8FCExoq9pTz/Ru8KvQc6
+	A1cviXym8n9J8ht9qyz7anIKPMJbI0IDsw3IUv7xm0SMceMgq6lvKE5RZBj0kjvRthzCuRU+M38
+	0Uwbcu12FJEpRnw/Pii1UMyeYj25ISkRWjXcUx4D3Tw==
+X-Google-Smtp-Source: AGHT+IHTAtFnky+kYSniVlDKGuaCPlXNADAnSZ6a7R69ZvRqK5HmhgT/JD2sTazuhQ0dI0Lbnlp1+w==
+X-Received: by 2002:a05:6512:39c3:b0:553:23f9:bb3b with SMTP id 2adb3069b0e04-553b6f43089mr3171505e87.49.1750171354955;
+        Tue, 17 Jun 2025 07:42:34 -0700 (PDT)
+Received: from ribalda.c.googlers.com (166.141.88.34.bc.googleusercontent.com. [34.88.141.166])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ae234437sm1814992e87.53.2025.06.17.07.42.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:42:32 -0700 (PDT)
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-To: a.hindborg@kernel.org,
-	alex.gaynor@gmail.com,
-	ojeda@kernel.org
-Cc: aliceryhl@google.com,
-	anna-maria@linutronix.de,
-	bjorn3_gh@protonmail.com,
-	boqun.feng@gmail.com,
-	dakr@kernel.org,
-	frederic@kernel.org,
-	gary@garyguo.net,
-	jstultz@google.com,
-	linux-kernel@vger.kernel.org,
-	lossin@kernel.org,
-	lyude@redhat.com,
-	rust-for-linux@vger.kernel.org,
-	sboyd@kernel.org,
-	tglx@linutronix.de,
-	tmgross@umich.edu,
-	Fiona Behrens <me@kloenk.dev>,
-	Daniel Almeida <daniel.almeida@collabora.com>
-Subject: [PATCH v1 2/2] rust: time: Add wrapper for fsleep() function
-Date: Tue, 17 Jun 2025 23:41:55 +0900
-Message-ID: <20250617144155.3903431-3-fujita.tomonori@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250617144155.3903431-1-fujita.tomonori@gmail.com>
-References: <20250617144155.3903431-1-fujita.tomonori@gmail.com>
+        Tue, 17 Jun 2025 07:42:34 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 17 Jun 2025 14:42:26 +0000
+Subject: [PATCH v7 5/5] media: uvcvideo: Auto-set UVC_QUIRK_MSXU_META
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250617-uvc-meta-v7-5-9c50623e2286@chromium.org>
+References: <20250617-uvc-meta-v7-0-9c50623e2286@chromium.org>
+In-Reply-To: <20250617-uvc-meta-v7-0-9c50623e2286@chromium.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Hans de Goede <hansg@kernel.org>, Hans de Goede <hansg@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-usb@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.14.2
 
-Add a wrapper for fsleep(), flexible sleep functions in
-include/linux/delay.h which typically deals with hardware delays.
+If the camera supports the MSXU_CONTROL_METADATA control, auto set the
+MSXU_META quirk.
 
-The kernel supports several sleep functions to handle various lengths
-of delay. This adds fsleep(), automatically chooses the best sleep
-method based on a duration.
-
-fsleep() can only be used in a nonatomic context. This requirement is
-not checked by these abstractions, but it is intended that klint [1]
-or a similar tool will be used to check it in the future.
-
-Link: https://rust-for-linux.com/klint [1]
-Reviewed-by: Gary Guo <gary@garyguo.net>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Reviewed-by: Fiona Behrens <me@kloenk.dev>
-Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Reviewed-by: Hans de Goede <hansg@kernel.org>
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- rust/helpers/time.c       |  6 +++++
- rust/kernel/time.rs       |  1 +
- rust/kernel/time/delay.rs | 49 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 56 insertions(+)
- create mode 100644 rust/kernel/time/delay.rs
+ drivers/media/usb/uvc/uvc_metadata.c | 71 ++++++++++++++++++++++++++++++++++++
+ include/linux/usb/uvc.h              |  3 ++
+ 2 files changed, 74 insertions(+)
 
-diff --git a/rust/helpers/time.c b/rust/helpers/time.c
-index 08755db43fc2..a318e9fa4408 100644
---- a/rust/helpers/time.c
-+++ b/rust/helpers/time.c
-@@ -1,8 +1,14 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/drivers/media/usb/uvc/uvc_metadata.c b/drivers/media/usb/uvc/uvc_metadata.c
+index b09f81d907d64f7d7a3b0dc52de319879b7e68be..5c3e0f8c5b720a2b962ae82470b836f870dc64b6 100644
+--- a/drivers/media/usb/uvc/uvc_metadata.c
++++ b/drivers/media/usb/uvc/uvc_metadata.c
+@@ -10,6 +10,7 @@
+ #include <linux/list.h>
+ #include <linux/module.h>
+ #include <linux/usb.h>
++#include <linux/usb/uvc.h>
+ #include <linux/videodev2.h>
  
-+#include <linux/delay.h>
- #include <linux/ktime.h>
- #include <linux/timekeeping.h>
+ #include <media/v4l2-ioctl.h>
+@@ -166,6 +167,71 @@ static const struct v4l2_file_operations uvc_meta_fops = {
+ 	.mmap = vb2_fop_mmap,
+ };
  
-+void rust_helper_fsleep(unsigned long usecs)
++static struct uvc_entity *uvc_meta_find_msxu(struct uvc_device *dev)
 +{
-+	fsleep(usecs);
++	static const u8 uvc_msxu_guid[16] = UVC_GUID_MSXU_1_5;
++	struct uvc_entity *entity;
++
++	list_for_each_entry(entity, &dev->entities, list) {
++		if (!memcmp(entity->guid, uvc_msxu_guid, sizeof(entity->guid)))
++			return entity;
++	}
++
++	return NULL;
 +}
 +
- ktime_t rust_helper_ktime_get_real(void)
++#define MSXU_CONTROL_METADATA 0x9
++static int uvc_meta_detect_msxu(struct uvc_device *dev)
++{
++	u32 *data __free(kfree) = NULL;
++	struct uvc_entity *entity;
++	int ret;
++
++	entity = uvc_meta_find_msxu(dev);
++	if (!entity)
++		return 0;
++
++	/*
++	 * USB requires buffers aligned in a special way, simplest way is to
++	 * make sure that query_ctrl will work is to kmalloc() them.
++	 */
++	data = kmalloc(sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	/* Check if the metadata is already enabled. */
++	ret = uvc_query_ctrl(dev, UVC_GET_CUR, entity->id, dev->intfnum,
++			     MSXU_CONTROL_METADATA, data, sizeof(*data));
++	if (ret)
++		return 0;
++
++	if (*data) {
++		dev->quirks |= UVC_QUIRK_MSXU_META;
++		return 0;
++	}
++
++	/*
++	 * We have seen devices that require 1 to enable the metadata, others
++	 * requiring a value != 1 and others requiring a value >1. Luckily for
++	 * us, the value from GET_MAX seems to work all the time.
++	 */
++	ret = uvc_query_ctrl(dev, UVC_GET_MAX, entity->id, dev->intfnum,
++			     MSXU_CONTROL_METADATA, data, sizeof(*data));
++	if (ret || !*data)
++		return 0;
++
++	/*
++	 * If we can set MSXU_CONTROL_METADATA, the device will report
++	 * metadata.
++	 */
++	ret = uvc_query_ctrl(dev, UVC_SET_CUR, entity->id, dev->intfnum,
++			     MSXU_CONTROL_METADATA, data, sizeof(*data));
++	if (!ret)
++		dev->quirks |= UVC_QUIRK_MSXU_META;
++
++	return 0;
++}
++
+ int uvc_meta_register(struct uvc_streaming *stream)
  {
- 	return ktime_get_real();
-diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
-index 445877039395..cbe8949ce074 100644
---- a/rust/kernel/time.rs
-+++ b/rust/kernel/time.rs
-@@ -26,6 +26,7 @@
+ 	struct uvc_device *dev = stream->dev;
+@@ -195,6 +261,11 @@ int uvc_meta_init(struct uvc_device *dev)
+ 	static const u32 ms_format[] = {V4L2_META_FMT_UVC,
+ 					V4L2_META_FMT_UVC_MSXU_1_5, 0};
+ 	bool support_msxu;
++	int ret;
++
++	ret = uvc_meta_detect_msxu(dev);
++	if (ret)
++		return ret;
  
- use core::marker::PhantomData;
+ 	support_msxu = dev->quirks & UVC_QUIRK_MSXU_META;
  
-+pub mod delay;
- pub mod hrtimer;
+diff --git a/include/linux/usb/uvc.h b/include/linux/usb/uvc.h
+index bce95153e5a65613a710d7316fc17cf5462b5bce..ee19e9f915b8370c333c426dc1ee4202c7b75c5b 100644
+--- a/include/linux/usb/uvc.h
++++ b/include/linux/usb/uvc.h
+@@ -29,6 +29,9 @@
+ #define UVC_GUID_EXT_GPIO_CONTROLLER \
+ 	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, \
+ 	 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x03}
++#define UVC_GUID_MSXU_1_5 \
++	{0xdc, 0x95, 0x3f, 0x0f, 0x32, 0x26, 0x4e, 0x4c, \
++	 0x92, 0xc9, 0xa0, 0x47, 0x82, 0xf4, 0x3b, 0xc8}
  
- /// The number of nanoseconds per microsecond.
-diff --git a/rust/kernel/time/delay.rs b/rust/kernel/time/delay.rs
-new file mode 100644
-index 000000000000..a2fcc15ebfd4
---- /dev/null
-+++ b/rust/kernel/time/delay.rs
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Delay and sleep primitives.
-+//!
-+//! This module contains the kernel APIs related to delay and sleep that
-+//! have been ported or wrapped for usage by Rust code in the kernel.
-+//!
-+//! C header: [`include/linux/delay.h`](srctree/include/linux/delay.h).
-+
-+use super::Delta;
-+use crate::prelude::*;
-+
-+/// Sleeps for a given duration at least.
-+///
-+/// Equivalent to the C side [`fsleep()`], flexible sleep function,
-+/// which automatically chooses the best sleep method based on a duration.
-+///
-+/// `delta` must be within `[0, i32::MAX]` microseconds;
-+/// otherwise, it is erroneous behavior. That is, it is considered a bug
-+/// to call this function with an out-of-range value, in which case the function
-+/// will sleep for at least the maximum value in the range and may warn
-+/// in the future.
-+///
-+/// The behavior above differs from the C side [`fsleep()`] for which out-of-range
-+/// values mean "infinite timeout" instead.
-+///
-+/// This function can only be used in a nonatomic context.
-+///
-+/// [`fsleep()`]: https://docs.kernel.org/timers/delay_sleep_functions.html#c.fsleep
-+pub fn fsleep(delta: Delta) {
-+    // The maximum value is set to `i32::MAX` microseconds to prevent integer
-+    // overflow inside fsleep, which could lead to unintentional infinite sleep.
-+    const MAX_DELTA: Delta = Delta::from_micros(i32::MAX as i64);
-+
-+    let delta = if (Delta::ZERO..=MAX_DELTA).contains(&delta) {
-+        delta
-+    } else {
-+        // TODO: Add WARN_ONCE() when it's supported.
-+        MAX_DELTA
-+    };
-+
-+    // SAFETY: It is always safe to call `fsleep()` with any duration.
-+    unsafe {
-+        // Convert the duration to microseconds and round up to preserve
-+        // the guarantee; `fsleep()` sleeps for at least the provided duration,
-+        // but that it may sleep for longer under some circumstances.
-+        bindings::fsleep(delta.into_micros_ceil() as c_ulong)
-+    }
-+}
+ #define UVC_GUID_FORMAT_MJPEG \
+ 	{ 'M',  'J',  'P',  'G', 0x00, 0x00, 0x10, 0x00, \
+
 -- 
-2.43.0
+2.50.0.rc2.692.g299adb8693-goog
 
