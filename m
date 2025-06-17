@@ -1,67 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C19B28BAA4;
-	Tue, 17 Jun 2025 12:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AFDC28C2D2;
+	Tue, 17 Jun 2025 12:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165176; cv=none; b=DcfgOYAnLj/F+Vo/r0F0MbyWRi0QtQLTx7+WfD3w2xQd3XmAf25GAfGYTU1xvy4vK79v4sYPBnwqEPDn80n+gnHUPSpXxR6z7MI4UYCgqCTzaP52lhFy0v4nV+XSYljY+/IC0xTyjTL5QqfgQ0JRcVHW/l6GpHljJtLN54pV6bE=
+	t=1750165199; cv=none; b=XsGNs2uZfu5SpkBm8BrmIeoQqozKyWMVGhPVhLD6BcdsCgR0o2pC2wVR1G5hlJCqmZ9p5PVArI+xgPyfoM6U8GvzVNP14q/8CdQdNE/5gQuF1cwb7cev7nYoLxhCaBhytDief2LqLBsPuRyY5YnZefMrJ3DRb7OblLb/xas8PVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165176; c=relaxed/simple;
-	bh=aIK2wnwgcxtmTmwtKOfHykGGdw3wB5ydycAxXeFYp+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NvepmLeh5KmM5H9ceibZtb9CHKdZFe4BL4n+Oak5trK1SXarUxX17y7L2lEXApG7DAUKBAvuZC77fatelbllBVdV5yS6kMZo+Q5kz/Kz/nwMOWUpDXg9xiVfv24I6qLE16OoSLGz6HW+bQjeaN7WA5Ls2kgfbAQRZlLTplbSs5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfpONRB2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750165199; c=relaxed/simple;
+	bh=bQYR6efMPCgHSXc5WbPc2ysqUPrzj3om34G9i+1jBvg=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=eWAHxV2coJmFYOnZw3pwttMEM2vBKvfQJ1qIyleyGo2+x3PPTZ5R3eQoLEoCMBo6ot9GTWvTZAmSPWCfx2OtX/DQ7AgDUA042w/gqfGPncjfOMlsWkuICBiIrbeFBn8YQCqAp8UAnXT4ypqLxR88InszChn6b+AFqXhVMvaWzRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZ8e+JbD; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfpONRB2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63DB3C4CEE3;
-	Tue, 17 Jun 2025 12:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750165175;
-	bh=aIK2wnwgcxtmTmwtKOfHykGGdw3wB5ydycAxXeFYp+M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QfpONRB2dfHGZnqXZHUWKaABo/6hD3MxxLOaZJrN4+zrF39+c4PAShKgsSzKqcIvH
-	 rSIV7AE9VpX24GffCXbfqzMXKEHqgP7ZpsfISiUDuwxV4UVLGudKeq3rkE2qIj+FfJ
-	 AjJUoHqIO1KzVBNexEx75vdt6nYniFae5k9Xcz5wfWFGasDVhp8ZCZ1xhENJeYOjVr
-	 IFdcT92yEFhRiExqHoPPegEx3v4pSZmLu/vWx1tpFGV919U8m2K0QdQpAQW8kfCd61
-	 ACPcDL0tJe/F1oezbwnNysoF3AA08GiLKbhb6dUbHJD/pVZrqEPeIftninpxG0M9V5
-	 E2iThAsBFEBmw==
-Date: Tue, 17 Jun 2025 05:59:34 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, Shuah Khan
- <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, gustavold@gmail.com
-Subject: Re: [PATCH net-next v3 4/4] netdevsim: account dropped packet
- length in stats on queue free
-Message-ID: <20250617055934.3fd9d322@kernel.org>
-In-Reply-To: <20250617-netdevsim_stat-v3-4-afe4bdcbf237@debian.org>
-References: <20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org>
-	<20250617-netdevsim_stat-v3-4-afe4bdcbf237@debian.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZ8e+JbD"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a54690d369so5808568f8f.3;
+        Tue, 17 Jun 2025 05:59:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750165196; x=1750769996; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pfUao9xL+Nf+9UmRpe2eBeY78KoI4cSH6kfRJvoG+2g=;
+        b=IZ8e+JbDU247dvRSngS3trxMbzdKl+s2XrnSdnt7Lz8OPmGANcs0jJFzXY4ViWb6LL
+         0hVt6UeiVU1Q+nTy+QJN9adokASpxZ4jnx1TrpMR9k+RjxufVPIT5rMz5R84GpWiLPPj
+         BqH9Ih237hqNmGXNG1k0yJ7qoAI0pLgouyNGJYR+nsPan0UWLbAZ4cyuvX7L+3UyJRR5
+         FOUPKO0yJoIaYUd5D4e9NZ7vMLh4R0WH4+28LDBqn95HEpuxHYwH/cbzxJSrdOSte3xg
+         gDbObEzMA3nN/Kh39VmoIwjav2MQ4MvGMrbBLo5zIEqlzlfphEXj7QqBEZvCzobfFji3
+         24tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750165196; x=1750769996;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pfUao9xL+Nf+9UmRpe2eBeY78KoI4cSH6kfRJvoG+2g=;
+        b=gmGzOcUOsAVZDUtxHzgQqnJtFaUKed8DHkZx/8RhRA2VMgIgnU79UKHp6MY0sDmmZ9
+         9ZO5AzREc55eWVBdzaxjJmPDRl6HhWjMl1XZzNEt+jngvaFLP33YrPjxn9EIYsA5daMP
+         POizl5YnGrcDqyBPi6XwO8TkfDm4RcC6zoRwC7x5Jbm0evWDidp02QJ7Zss2PjvpyV+j
+         XAHjJvtVRKFMXLsTu+7fTXkFTjSzIWyRaJs/imI5RbWebbS1jHqz1p4M6YfMHXLINzEq
+         xa6XeGbovBF4nkGuxp2CP6YAZj7fIrdf2OrKdfMmMWlrvXUi3NfpGcLt7fhpXiPg3j+E
+         MFQg==
+X-Forwarded-Encrypted: i=1; AJvYcCVq2/ST2mpuRiwLSHKDmvBWC3qJQ3aejRIn0Rs5/TQM1XKOlSRORSUTBG6vGvuVWbELIcIMFwr+pn1q3iI=@vger.kernel.org, AJvYcCWSVrBj3kzkcg66IbvSRwj8i/lqViPzVFIpfsYXjYkKzp5P00+x/ifl/ALviVEcEMPWMS/eZ+R/@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJzjsf6Ed2l7cSU++tHAgQPwkafW5xtNil6FP5f//FxKZHOxrw
+	UL6LM9UXLl/nPgu3FBE5QOa3KWtTqjK9En1bxXUXq+GNJkjGq3ks9FNG
+X-Gm-Gg: ASbGncvasTM5q3phYAiWfgDUtDWFSf/g80JBwAZCjNOQYwCsT6b1CA4RKL3EpWQQM/7
+	RKjbpoEyGYl9oIotfotjkd37PwkMCsWYv8psptU4xiyiWF9nvpkcQMD7uPuE6td2BGcIErjfXtm
+	31lrOHdxNsDjDGPTOYESyK0EMJzjwXD0ZeP+wUfTJC9CsiBONfR1ugpe6Pgp5DmavmHYOYL21OB
+	/lSNdAVdYze0/Z+zFIQoeYWag0/ptzpjVu/lOTd7PqulydGKXI0BhjTLnDl1B2GzCN75NEefEAs
+	THAnoxlh4C3F8hHXGQWDqv1Ws/6UxWM+lNajmM+U7T5qXcB3BU3C+ZMn6WU7+r5567j5hU+Ly7c
+	=
+X-Google-Smtp-Source: AGHT+IF61fOL3eHzYcgqTc6vlyac0Gb7tm3KYDOskETixTUcfYre70Gc0Oij3ykKtyQjrqCRI7YAKw==
+X-Received: by 2002:a05:6000:2884:b0:3a4:cb4f:ac2a with SMTP id ffacd0b85a97d-3a572374884mr11851638f8f.21.1750165195752;
+        Tue, 17 Jun 2025 05:59:55 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:8931:baa3:a9ed:4f01])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2449f1sm180628625e9.23.2025.06.17.05.59.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 05:59:55 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,  Jonathan Corbet
+ <corbet@lwn.net>,  "Akira Yokosawa" <akiyks@gmail.com>,  "Breno Leitao"
+ <leitao@debian.org>,  "David S. Miller" <davem@davemloft.net>,  "Eric
+ Dumazet" <edumazet@google.com>,  "Ignacio Encinas Rubio"
+ <ignacio@iencinas.com>,  "Jan Stancek" <jstancek@redhat.com>,  "Marco
+ Elver" <elver@google.com>,  "Paolo Abeni" <pabeni@redhat.com>,  "Ruben
+ Wauters" <rubenru09@aol.com>,  "Shuah Khan" <skhan@linuxfoundation.org>,
+  joel@joelfernandes.org,  linux-kernel-mentees@lists.linux.dev,
+  linux-kernel@vger.kernel.org,  lkmm@lists.linux.dev,
+  netdev@vger.kernel.org,  peterz@infradead.org,  stern@rowland.harvard.edu
+Subject: Re: [PATCH v5 01/15] docs: conf.py: properly handle include and
+ exclude patterns
+In-Reply-To: <cca10f879998c8f0ea78658bf9eabf94beb0af2b.1750146719.git.mchehab+huawei@kernel.org>
+Date: Tue, 17 Jun 2025 11:38:06 +0100
+Message-ID: <m21prilkkx.fsf@gmail.com>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+	<cca10f879998c8f0ea78658bf9eabf94beb0af2b.1750146719.git.mchehab+huawei@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Tue, 17 Jun 2025 01:19:00 -0700 Breno Leitao wrote:
-> -static void nsim_queue_free(struct nsim_rq *rq)
-> +static void nsim_queue_free(struct net_device *dev, struct nsim_rq *rq)
->  {
->  	hrtimer_cancel(&rq->napi_timer);
-> +	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 
-here we are in process context and debug checks complain about the use
-of this_cpu_ptr(). Let's wrap this in local_bh_disable() / enable() ?
+> When one does:
+> 	make SPHINXDIRS="foo" htmldocs
+>
+> All patterns would be relative to Documentation/foo, which
+> causes the include/exclude patterns like:
+>
+> 	include_patterns = [
+> 		...
+> 		f'foo/*.{ext}',
+> 	]
+>
+> to break. This is not what it is expected. Address it by
+> adding a logic to dynamically adjust the pattern when
+> SPHINXDIRS is used.
+>
+> That allows adding parsers for other file types.
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
->  	skb_queue_purge_reason(&rq->skb_queue, SKB_DROP_REASON_QUEUE_PURGE);
->  	kfree(rq);
->  }
--- 
-pw-bot: cr
+Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
