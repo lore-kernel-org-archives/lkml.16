@@ -1,119 +1,49 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DE12FA62F;
-	Tue, 17 Jun 2025 16:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7559C2FA624;
+	Tue, 17 Jun 2025 16:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750179490; cv=none; b=u6DI7J51Z/NVy2mQTllgBr9MQz/4+mKj9KVvhvYy+Ujh3YSYoQpNi+Z8hxt+8zek1ebsWIoO0zX+nHWfuK+EZtZ8DvGhBFXY16KOGq7sK13B+p6B2yO3CcDkbJu+XQkyc4v4YHXMe1fjq5bD90FiuI8+sxR7/ZLRydc7DkKd+94=
+	t=1750179592; cv=none; b=hblZbkPZPY2ptjPvhsv4LjVbIOu4cu0tmBFG8dtkTKpalSrcL7F+PHSeGLD86MSB89MsTMvrq3kWZ3vNWxuKjPWS3MJm4khwLBfrnFGxKPuuTwEK8Z6iMP8ccS1/eNrXP1ITT4w+2k4zQhQZYvhPIWf7m1GP/EIhPHxUcvMvIzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750179490; c=relaxed/simple;
-	bh=1Bs87EcWnkvpggmdbY0wX6xeH68zxUYyV6RtUK++704=;
+	s=arc-20240116; t=1750179592; c=relaxed/simple;
+	bh=cpdFqG8VE3oUn40geLA2DBr+wtB8mZ02xKcGoI5IPQY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hFg0xyCO4FM73rfQOCpQpJaO40b9DD7fiJVn1fUZaZtWkW1khJIOYCqSetCqXeUgowKSzzr7LqSslHiU7PiFYpN5Jy1bNlhsnho9LvmQYU3nugipapBYr4NyyPuAP1TqvFV+63nJMZrD8MhNLQn+Xp+JH+ug8keWrkx5GSIyX9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QCKl/2je; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xqbcjmhn6xdbITEY55U0v2jzFIHKHF9s/YyI3GoaVuKNYWHPGLAlu/f9hQ7EJ7f8+Xwf3RiW9t2aUvNGc1qZj403Boumfsoyi0spTqYmxT1b6/6+kkB9rBmmslr6zXbzcX+8afa2QpB07QcOkZhQTpM6H9UgEEkX0swOVOzbt7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=U05IuaD1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCKl/2je"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4a43972dcd7so76363971cf.3;
-        Tue, 17 Jun 2025 09:58:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750179488; x=1750784288; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=rilYjlhaNDVdjd7csRjL4EGUNwGQ/gFFWVDo17odFDc=;
-        b=QCKl/2je1eg90We8hnhEyRJpcVfocV3/62cQsIrIi1gYp3tXq0mYfCuP0Ddf+wuTv7
-         PFxWL6mXWSxm+yvFKlDZYsWYPJeman4iAsdwuQQWcffA/tOh2QEXRqWfgqI/vhv2myat
-         /BoQuQdR7mFJZPgnOa9tU4PmXTWPeDILi254tz9IjBji2ojUGlAkLN0qXhkpFl6Kg1xi
-         k5Bl7Fej2KyyoknrHRl+oEx2rIh5gauT5mgQTvQfwh5MjOeVsZIe4GHasNJ7Z6/LDHUe
-         I9jtHIXZuNI/MCZ4rZjL4OQRomv8T7TDyHY5OKUobvY/zVHt0onF7CWx9AMtbTvRVOLT
-         ecjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750179488; x=1750784288;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rilYjlhaNDVdjd7csRjL4EGUNwGQ/gFFWVDo17odFDc=;
-        b=TsJ+y7Ab6eHlpomq2V0bT7+30Qu814w/ttv5xvzezjejrIVnGojyR+Vnb0DUf6JoYr
-         tI4NIY5ux2daoiPTiCkpu01Yd2U4N696lsDE/rcyo7I+knQZV1YThKHesVQYN4ITFwZA
-         2LSCej2dnx0zMjn4RSzHMFQE5uqusCAcZWjBaqe7CimMkQ26qC3B4dgmAeaZn6HtAPHP
-         fBrz0YYi4MTkN7Xub7hI2WLlz3KMZCcSD/E2D5BpWLAoQ5jjmTq54/oZ1EhqBUchA9Ma
-         Iefxi5lo/R62BivshzBH9LGetcAQTcYSdU743EtMRs5Bb9xjo2AIwNtV46QDaiHa8G+r
-         JBVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVpfHqY+CBp8TW1VEmhEZCGLkIvZhvP/NVdMLGmL3/Cy9JTB8iVDaHavOmzwgfsVvxXsldOotMZRmxpiXksQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw3uompiZRsHGJ+xTBwfMFAUR3JP6ktJFbZhnjP1WjVTaQuVYP1
-	aRXiYX/DDL9gsuw9xoIXHvOBc0LXAXNJzGTL5mmLe3ZFFnzfdXEohA6fR7aorA==
-X-Gm-Gg: ASbGncugbNeb8HxNhTvSuWrpqXRISRtVf61dNQ17A+0a8TNfuMKQTqNxCBvGruWqaH4
-	5OaNqjvVi9PO2OXGpWbmH6lCENQFN+diSe13Wq+vykE9og96SkfzjQ6gY5oY8BTSziIMDInk16P
-	rhmecCJBU1KJogamCOQTVTTw++7HNaZ61UakJpKginngHkc36ioXWOYy2RKgMgzgJEHkoide4tq
-	6eZ2onczKHe24hkP2AdUCdFFJeJX3lGKOaNj2A6cYCj3V82JYK+EQ5Fvbe9dh6hCxFUpJGQImcf
-	4PPSQ7ZSWWfst4iIIuaIpyZcYSwHMfz6E7TH6SfMyBCtxnvIk9+seJUNY1sPxbiHaV8PxIdYTCh
-	JQ2pPuKmDwvnwaKg2Z85N3EuQXM4JYFJ9RsBVYMa9YONvXQ3CgC8NYnIQrnPeZ3Q=
-X-Google-Smtp-Source: AGHT+IGuFWeaYecImy2bHGqxSNTqfw6S5I6X5n9MeyDbLsDjZgSMdwMyJxl4k4V7F/D+P2UHM7r6Gg==
-X-Received: by 2002:a05:622a:303:b0:4a4:2c75:aa57 with SMTP id d75a77b69052e-4a73c6196a8mr210254991cf.44.1750179487521;
-        Tue, 17 Jun 2025 09:58:07 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4e144bsm62932181cf.62.2025.06.17.09.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:58:07 -0700 (PDT)
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 77E8F1200069;
-	Tue, 17 Jun 2025 12:58:06 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Tue, 17 Jun 2025 12:58:06 -0400
-X-ME-Sender: <xms:np5RaP9Cdbvkg9dycDthwKIQQj6ZN75RNrcyJF47txBmXuEfGrLk6A>
-    <xme:np5RaLu8KFgHN6-_RDIo5LwFKkaht6H7soAL1mkHxB8kERm5bOxQuEPjOuRlN70w7
-    -wbOl0XbVnDe34z1w>
-X-ME-Received: <xmr:np5RaNC1rED4vQTqf8fuwflPKHrk0G2IcG7vIk7St4G4k8vJ8H7vQ7k0MXE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdejudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpggftfghnshhusghstghrihgsvgdpuffr
-    tefokffrpgfnqfghnecuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvfevuf
-    fkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegs
-    ohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnhepudevie
-    dvudeuteefleethefftddufeehfeevhfetvdeikeeivdfgheejvdetjeffnecuffhomhgr
-    ihhnpeguohgtthgvshhtshgpkhgvrhhnvghlpghgvghnvghrrghtvggurdhrshenucevlh
-    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhm
-    vghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekhe
-    ehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghm
-    vgdpnhgspghrtghpthhtohepvdehpdhmohguvgepshhmthhpohhuthdprhgtphhtthhope
-    hmihhguhgvlhdrohhjvggurgdrshgrnhguohhnihhssehgmhgrihhlrdgtohhmpdhrtghp
-    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
-    hpthhtoheprhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvg
-    igrdhgrgihnhhorhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhih
-    ghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilh
-    drtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdp
-    rhgtphhtthhopegrrdhhihhnuggsohhrghesshgrmhhsuhhnghdrtghomh
-X-ME-Proxy: <xmx:np5RaLe1hfV4MNhdSV5osNPd2gjVrV6wvTQ3ZBx1zIhtMLV9IRmDQQ>
-    <xmx:np5RaEONKB6AwKC3dMi55W3nn9SZ7keu5ttqL8OPWV-sepjI0hXjBw>
-    <xmx:np5RaNnz2BrrhpjP2Q_fVrBnLYG79KIpw2tH6TN8YhSmqKlUQRUhew>
-    <xmx:np5RaOtaHsZGMPZz4bqBsQEql-5KvlZqs36Hy2Ft9XjJlsFZPmaLaw>
-    <xmx:np5RaOuk8EM-LXz6DV4OnPOTsCyBzB2gKe2L9iukOxJ0HXcPvAYgwq8b>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 17 Jun 2025 12:58:05 -0400 (EDT)
-Date: Tue, 17 Jun 2025 09:58:05 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@samsung.com, aliceryhl@google.com, tmgross@umich.edu,
-	dakr@kernel.org, mingo@redhat.com, peterz@infradead.org,
-	juri.lelli@redhat.com, vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, vschneid@redhat.com, pmladek@suse.com,
-	fujita.tomonori@gmail.com, mingo@kernel.org
-Subject: Re: [PATCH v3 1/2] rust: Introduce file_from_location()
-Message-ID: <aFGenbg8S36G1aeP@tardis.local>
-References: <20250616153604.49418-1-boqun.feng@gmail.com>
- <20250616153604.49418-2-boqun.feng@gmail.com>
- <CANiq72mZV3Ezxb4FvDdMvn=O+ReUPBx9usUahLgwTKKCFD_+cA@mail.gmail.com>
- <aFFwumsjuAEIJVUF@Mac.home>
- <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="U05IuaD1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7AB8C4CEE3;
+	Tue, 17 Jun 2025 16:59:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750179592;
+	bh=cpdFqG8VE3oUn40geLA2DBr+wtB8mZ02xKcGoI5IPQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U05IuaD1bJIohe7AWSw6RJtjOsWhQJenPkMDttC2JsPV3u/WK0613Q2jx++HkMUqe
+	 OY+GtUyehrqkNdtyVyTeOfN9yIeaQMOHKzrIA0dMNtJEYb5uzaIRYyK9qF2ua345cz
+	 91yICdBzyCvdLXb/bho0HFh42Zr572zghzcqmOeQ=
+Date: Tue, 17 Jun 2025 17:49:49 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sean Anderson <sean.anderson@linux.dev>
+Cc: Saravana Kannan <saravanak@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] driver core: Prevent deferred probe loops
+Message-ID: <2025061740-banter-acclaim-2006@gregkh>
+References: <cb354fd2-bece-42ef-9213-de7512e80912@linux.dev>
+ <20250610183459.3395328-1-sean.anderson@linux.dev>
+ <CAGETcx-koKBvSXTHChYYF-qSU-r1cBUbLghJZcqtJOGQZjn3BA@mail.gmail.com>
+ <a52c513c-ff93-4767-a370-3f7c562df7bd@linux.dev>
+ <2025061147-squishier-oversleep-80cd@gregkh>
+ <7d6d8789-e10b-4b06-aa99-5c1a1bdd3b4c@linux.dev>
+ <CAGETcx9E5DB4UtdjjAO2=XfTNXdXocj7uk0JkVZ8hf9YadwNcA@mail.gmail.com>
+ <70958a2e-abc8-4894-b99a-f2981db9981f@linux.dev>
+ <2025061700-unmapped-labrador-a8c9@gregkh>
+ <0ee2f641-c3f3-4a3a-87b4-e1279a862d68@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -123,76 +53,66 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72k+d3FzM8O7R9_WrpU3o3RygpGAS3S0Z5wPZsvC3k6=WA@mail.gmail.com>
+In-Reply-To: <0ee2f641-c3f3-4a3a-87b4-e1279a862d68@linux.dev>
 
-On Tue, Jun 17, 2025 at 05:28:41PM +0200, Miguel Ojeda wrote:
-> On Tue, Jun 17, 2025 at 3:42 PM Boqun Feng <boqun.feng@gmail.com> wrote:
-> >
-> > Will do, one thing though: the comment lines seem to wrap at 78 or 80
-> > chars, so do other lines for conditional features in rust/kernel/lib.rs.
-> > However I believe in Rust code we use 100 chars text width, any
-> > particular reason that I should keep these new lines the same (wrapping
-> > at 80 characters)? Otherwise I will make the new lines wrap at 100.
+On Tue, Jun 17, 2025 at 11:35:04AM -0400, Sean Anderson wrote:
+> On 6/17/25 04:50, Greg Kroah-Hartman wrote:
+> > On Thu, Jun 12, 2025 at 04:40:48PM -0400, Sean Anderson wrote:
+> >> On 6/12/25 13:56, Saravana Kannan wrote:
+> >> > On Thu, Jun 12, 2025 at 8:53 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+> >> >>
+> >> >> On 6/11/25 08:23, Greg Kroah-Hartman wrote:
+> >> >> > On Tue, Jun 10, 2025 at 07:44:27PM -0400, Sean Anderson wrote:
+> >> >> >> On 6/10/25 19:32, Saravana Kannan wrote:
+> >> >> >> > On Tue, Jun 10, 2025 at 11:35 AM Sean Anderson <sean.anderson@linux.dev> wrote:
+> >> >> >> >>
+> >> >> >> >> A deferred probe loop can occur when a device returns EPROBE_DEFER after
+> >> >> >> >> registering a bus with children:
+> >> >> >> >
+> >> >> >> > This is a broken driver. A parent device shouldn't register child
+> >> >> >> > devices unless it is fully read itself. It's not logical to say the
+> >> >> >> > child devices are available, if the parent itself isn't fully ready.
+> >> >> >> > So, adding child devices/the bus should be the last thing done in the
+> >> >> >> > parent's probe function.
+> >> >> >> >
+> >> >> >> > I know there are odd exceptions where the parent depends on the child,
+> >> >> >> > so they might add the child a bit earlier in the probe
+> >> >> >>
+> >> >> >> This is exactly the case here. So the bus probing cannot happen any
+> >> >> >> later than it already does.
+> >> >> >
+> >> >> > Please fix the driver not to do this.
+> >> >>
+> >> >> How? The driver needs the PCS to work. And the PCS can live on the MDIO
+> >> >> bus.
+> >> > 
+> >> > Obviously I don't know the full details, but you could implement it as
+> >> > MFD. So the bus part would not get removed even if the PCS fails to
+> >> > probe. Then the PCS can probe when whatever it needs ends up probing.
+> >> 
+> >> I was thinking about making the MDIO bus a separate device. But I think
+> >> it will be tricky to get suspend/resume working correctly. And this
+> >> makes conversions more difficult because you cannot just add some
+> >> pcs_get/pcs_put calls, you have to split out the MDIO bus too (which is
+> >> invariably created as a child of the MAC).
+> >> 
+> >> And what happens if a developer doesn't realize they have to split off
+> >> the MDIO bus before converting? Everything works fine, except if there
+> >> is some problem loading the PCS driver, which they may not test. Is this
+> >> prohibition against failing after creating a bus documented anywhere? I
+> >> don't recall seeing it...
+> > 
+> > What do you mean "failing after creating a bus"?  If a bus is failed to
+> > be created, you fail like normal, no difference here.
 > 
-> We have both styles, so up to you.
-> 
+> Creating the bus is successful, but there's an EPROBE_DEFER failure after
+> that. Which induces the probe loop as described in my initial email.
 
-I will use 100 characters then.
+Then don't allow a defer to happen :)
 
-> It would have been nice to at least know already if `rustfmt` would
-> eventually land on 80 or 100 for this, even if the automatically
-> wrapping is not stable :(
-> 
-> > Sure, will do, but I'm afraid there is only case, unless I misunderstood
-> > you:
-> 
-> I meant the "If `file_with_nul()` is not available" vs. the available
-> one (since it is mentioned in the docs already).
-> 
+Or better yet, just succeed and spin up a new thread for the new bus to
+attach it's devices to.  That's what many other busses do today.
 
-Yes, but the example would be one, just the output would be different,
-hence I said the "only case", but see below:
+thanks,
 
-> > /// use kernel::file_from_location;
-> 
-> I would hide this line, since it is a single import of the item itself.
-> 
-> > ///     pr_info!("{}\n", file_from_location(caller));
-> 
-> I would suggest adding a comment on top of this line mentioning the
-> output it could potentially show, e.g.
-> 
->     // Output: ...
-> 
-
-This actually helped me find a bug in the current implementation: I
-should use core::ffi::CStr::to_bytes_with_nul() instead of to_bytes().
-Please see below for the update "Examples" section:
-
-/// # Examples
-///
-/// ```
-/// # use kernel::file_from_location;
-///
-/// #[track_caller]
-/// fn foo() {
-///     let caller = core::panic::Location::caller();
-///
-///     // Output:
-///     // - If file_with_nul() available: "rust/doctests_kernel_generated.rs"
-///     // - otherwise: "<Location::file_with_nul() not supported>"
-///     pr_info!("{}\n", file_from_location(caller));
-/// }
-///
-/// # foo();
-
-> Thanks for this!
-> 
-
-Thank you!
-
-Regards,
-Boqun
-
-> Cheers,
-> Miguel
+greg k-h
