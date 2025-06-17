@@ -1,103 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FB4C2D1;
-	Tue, 17 Jun 2025 06:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB2E27461;
+	Tue, 17 Jun 2025 06:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750141702; cv=none; b=lDwcudUd9euXmblN4sR9Lzkqm4CnSZ4Hmn/QteNJfB6oJR/tzI08LjJOX7bT2K49Z/RQh7XBw0FEWif0iXxbsggUOqvS6HlqdEnf/HtWxHjDCx34K2qeN42Nh0aiIfYYIgkq5i9W8XJYxhqIxN0nhwpDMUB1pKWrvTm6O10edx8=
+	t=1750141910; cv=none; b=YF0iEpO3G00fc9zMZmYV3xnoRmdQAHgPW31Fvvojn1EPGqDGpmaVz5aHIygWBrtQZLA7fYI2lczIm4Osfv3JkdEfTUlHunjU7Zva9EmU4+GiTagsThySxpZSaDPvTkqit/A1H2ufahVTDmBauz7UeaP5/RjVjCQIkOFriq3V6uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750141702; c=relaxed/simple;
-	bh=LF9auu4JR+Lf7VFoXANiRubeszBNmKcaT9+J6iYCMqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xzv9SfPAs9s+VVZuigNQYhs2joW+EJzL9vfOc8Xs8Av+tLkuU9Dl391vSRcdHvL5khfSt8xGn/an6dr4qtcsZ2I3MyisF9WAx0QeZo8X7J8fn53WS0mnktvFwzyott1On+LYpANGsO26eVqZ7mMiD12rJb1JGQQ1A4pBkDPTYmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=si0ySmFf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750141910; c=relaxed/simple;
+	bh=Ai7vF5RV57bV/NmagLGT4gN2aemR9Fwghr5/jJb67CM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Iz2Chi7xqBKmK8nkuXMPcY8BX4FOKRiRfgF1d1SSm3CG+n945b57XFLNSasrQ3qk1cAi7KP382498O4afxJdIf8nNrt2zLQSXqvYp1Mc3EYxBoCRmOocjvUG/VAd3S3HoUekKhrCJAs1HFcyOTz5s9pCFhpYBXUity8M0G5owZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=QL+1KHxv; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="si0ySmFf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB45C4CEE7;
-	Tue, 17 Jun 2025 06:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750141701;
-	bh=LF9auu4JR+Lf7VFoXANiRubeszBNmKcaT9+J6iYCMqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=si0ySmFf06Kx/pNC4mfe6nBcvFNV89lyyiFLJWdWrDmhso9gixojQO98veDgzlFS2
-	 bS4eVP0/5UE4jURK+g1fRox6cuIv53sWw8Du+l6BfR1pPc0WQR4nceAvkuxGbqQw9q
-	 HfsqK6V1xxQJPg7WDS0pb1SyDq2oY+HTxzLt4PdtAfaEnySYIVD2h9q+wO2LNP5LYB
-	 SHFzQ99MFGGSFuxx9uYyrD9ZT5pD96cdUNXz/RlL96Y9hQbrjGZN3HL3XSror6hl1l
-	 gCpKHF9/DfjEtIPPPvZWYUlLuCeyvNBZrGZFyXg9voZF6JW2FP/NWHR6QBwPzE7YJu
-	 snYheb0NY7lNQ==
-Date: Tue, 17 Jun 2025 08:28:19 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Xueqi Zhang <xueqi.zhang@mediatek.com>
-Cc: Yong Wu <yong.wu@mediatek.com>, Will Deacon <will@kernel.org>, 
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Project_Global_Chrome_Upstream_Group@mediatek.com, 
-	Ning li <ning.li@mediatek.com>, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux.dev
-Subject: Re: [RFC PATCH 1/8] dt-bindings: iommu: mediatek: Add mt8196 support
-Message-ID: <20250617-woodoo-uakari-of-cubism-c2bedf@kuoka>
-References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
- <20250616025628.25454-2-xueqi.zhang@mediatek.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="QL+1KHxv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Pk2oPHCqJ/oLBd26Ay4PWRHlFgJzTH2Jf8vliD86dZw=;
+	t=1750141908; x=1751351508; b=QL+1KHxvmAmxM6Ix61aUSoAEhm/APFvJBgsoo1dasgcsEy2
+	rLqbTdZ81amqL0eUR7WoF9+knPOmSzWsZWdeQlNtV3GjNN6TAIKcEk5CNMR62Dg48d5DbAHhbX9AD
+	/5nXbC7S4yFuVseCKRh4Tq9FV8K6T/lb16nscr0XCI/7R/q0U9TiiBr6umA/0Fc2y1E7f823JjiYm
+	4Zb25TPSO1gMCaqv/rTgRwe+YPspmcnw+pJY1ueHQX14A8XQp8vdtFuBbsfOJMRsp2pk0pHLK4JIX
+	xgCnO0xFInSGX2NJNRlZcD71i8fR9oQPYTn7gNXPFlt5oKYVZvzmg8YPlrsRVoOw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uRPqz-0000000DxKA-21pr;
+	Tue, 17 Jun 2025 08:31:30 +0200
+Message-ID: <86bbb07755d748c9b582c0ab234e8a4ce0314ce4.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: mac80211: fix oob in ieee80211_rx_mgmt_beacon
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Edward Adam Davis <eadavis@qq.com>, 
+	syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Date: Tue, 17 Jun 2025 08:31:27 +0200
+In-Reply-To: <tencent_8DCFF079526DB42E796E5095C0E8E2EE1E0A@qq.com>
+References: <68504add.a70a0220.395abc.01e7.GAE@google.com>
+	 <tencent_8DCFF079526DB42E796E5095C0E8E2EE1E0A@qq.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250616025628.25454-2-xueqi.zhang@mediatek.com>
+X-malware-bazaar: not-scanned
 
-On Mon, Jun 16, 2025 at 10:56:07AM GMT, Xueqi Zhang wrote:
-> 1. Mediatek has its own implementation for wrapper interrupts and
-> power management. Add the SoC specific compatible for MT8196
-> implementing arm,smmu-v3.
-> 2. APU SMMU need wait until its power is ready, thus add a phandle
-> smmu-mediatek-parents to its power node.
-> 
-> Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
+On Tue, 2025-06-17 at 12:41 +0800, Edward Adam Davis wrote:
+> According to ieee80211_s1g_optional_len(), it can be clearly seen that th=
+e
+> maximum size of variable is 4 and it is an array. Based on the above, the
+> parsing of the frame control field and optional field is optimized.
+>=20
+> Fixes: 1e1f706fc2ce ("wifi: cfg80211/mac80211: correctly parse S1G beacon=
+ optional elements")
+> Reported-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=3D6554b492c7008bcd3385
+> Tested-by: syzbot+6554b492c7008bcd3385@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 > ---
->  .../bindings/iommu/arm,smmu-v3.yaml           | 24 ++++++++++++++++++-
->  1 file changed, 23 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> index 75fcf4cb52d9..c9a99e54de69 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu-v3.yaml
-> @@ -20,7 +20,12 @@ properties:
->    $nodename:
->      pattern: "^iommu@[0-9a-f]*"
->    compatible:
-> -    const: arm,smmu-v3
-> +    - description: MediaTek SoCs implementing "arm,smmu-v3"
-> +      items:
-> +        - enum:
-> +            - mediatek,mt8196-apu-smmu
-> +            - mediatek,mt8196-mm-smmu
-> +        - const: arm,smmu-v3
+>  include/linux/ieee80211.h | 2 +-
+>  net/mac80211/mlme.c       | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/linux/ieee80211.h b/include/linux/ieee80211.h
+> index ce377f7fb912..556ce95e0b0f 100644
+> --- a/include/linux/ieee80211.h
+> +++ b/include/linux/ieee80211.h
+> @@ -1278,7 +1278,7 @@ struct ieee80211_ext {
+>  			u8 sa[ETH_ALEN];
+>  			__le32 timestamp;
+>  			u8 change_seq;
+> -			u8 variable[0];
+> +			u8 variable[4];
 
-You just broke every existing user, so this was not tested.
+That's incorrect when those fields aren't present, and will result in
+wrong sizeof(). I believe the correct fix is one I sent before, to just
+make it []:
 
-Limited review follows - test your patches first.
+https://lore.kernel.org/linux-wireless/20250614003037.a3e82e882251.I2e8b58e=
+56ff2a9f8b06c66f036578b7c1d4e4685@changeid/
 
->  
->    reg:
->      maxItems: 1
-> @@ -69,11 +74,28 @@ properties:
->        register access with page 0 offsets. Set for Cavium ThunderX2 silicon that
->        doesn't support SMMU page1 register space.
->  
-> +  mediatek,smmu-parents:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      A phandle to the SMMU's power node. The SMMU should wait until its power
-> +      is ready
-
-No, power domains express power relationship. Or some other existing
-properties or simply parent-child relationships.
-
-Best regards,
-Krzysztof
-
+johannes
