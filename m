@@ -1,108 +1,144 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36642ECE8A;
-	Tue, 17 Jun 2025 16:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48152EE5F2
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750176753; cv=none; b=Tj2GKGgd3JDDNVRXuBB5m+N9VFr3Z9FfFVgvIgf7wk8x+odHWjWs2SQmvcEkYXV0FOM6eBokeawLZc0Xy4Esljeu8gVosaWzoaXJtjtDlexkZQBvej9pBp0Bb8pSrSjyU1tcCkMh9yOEC1wBY/ONlawBRDkKYiYmf0AZpzMvxw8=
+	t=1750176860; cv=none; b=m5sx+XXDz0gQw5ozQ33reQ4M9EDW9Ff17YxtfI+XlhxGVaNl6Eq3Dl83M+nbLuc9MXz2+j6adiW6qqimkHYHcBhZS9OpnyYK5UrmtnsMGUbV00RFpWsweNjDr31v9zerV6IA11jVSmrNse7SIi4G3ilkeTcmHVL9ow6u1Iv8KIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750176753; c=relaxed/simple;
-	bh=TJvZblJpIa9D0x7fZX2D6OvOlnJtJsWT6fGloKub2DA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ML4K7I+Ltm7C6CcoW9LmsxOVM2wxkmngT05xX2IRnZMLfAarLHsNgV2paK5ksII3EJd6tGv7I/7ME/IPqO84OfM5rZBFRpiAJlDZ9pDUnkw/ixkC5Db4qv6RrBd+gsGWG4vzgGHjOz+Zizwn3xwoLGXtoh76pQ1nQAOuZ0YCKnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V4iz+ev2; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V4iz+ev2"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a577ab8c34so274105f8f.3;
-        Tue, 17 Jun 2025 09:12:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750176750; x=1750781550; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FKODIo+PGL4FfaP6Gv7XmJHhwu908ENQS1onyL5vDbs=;
-        b=V4iz+ev2HKWXUB1ehpemF63iXEVQ7Qzkqeyqw1swJYgld4bdbnRcfox15lGKIZ5s+k
-         f/mSWBwSQYjgoCBKBjrknSlqBZWte2VwOpZenuAJ24e76WYBkZUwS5VMrlsmKvkDtht7
-         8cJc7sDwVtr6aC9RSMGSIUU/60KNy8i2HndO6q5BwB7zQZdTJ2q+5teoi8Xle1tJpQr/
-         HKbplm4X6SmcGaYUNn87eaSEKmNeGvdeoIU26xo/QD8V9P01JPhYfFR87WaFlFDkN0zo
-         ZVYnw11xO3ezD3Z9gQ/9cB3M1Lcz0vYgRB3rBpURgNZgBt3q3vCG5TwiNEaCpVSMj2cN
-         5JlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750176750; x=1750781550;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FKODIo+PGL4FfaP6Gv7XmJHhwu908ENQS1onyL5vDbs=;
-        b=VCnKl4rD7ze6Sz2BL3gcQ8se8bZEUzu601KpinyaHtbQwG2/m51IGvyQ9K2sam2GhX
-         WhOCDUORK26TBI1M64pYB3CGjo6STjl5aITbYKoDqtmSTlDTftEbJx4gsxhCR2Yt3ayI
-         yaYAW4CwAXXEHAmmUhcMbdSbmVgtQTTJA0b9vnZYZ1gMsCNzlSoBf3eiztKs9Ht23TyA
-         nnFrHZTc7U6D7NoQUqmjA1jDJU21bCO4VPXWxbAD8PphhVtYkP/nximrdQHaXALNo3hn
-         BCUxIXZwmZG70MzVdXvx+/iDYDonHUblRcyuQx4pHb6B6M9HhMXxqJdAKN5u+ZtEPOoi
-         wAXw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5QjiHQhcL6YXVQaIUMGtC7C6DPXWtYenvj2ZNOKV6yEeKIfOU+AsAjChRUUqRtQQzFAED89Atu95YOgc=@vger.kernel.org, AJvYcCWB0FYGQp5GVyWS7w4Ha32Y16csQDD+PLS7JHZdUToqeyXOfHRy1z0azrWuJ9UG0cW9mjoAkpvfN6/EkQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvTt5YtuENBuoaN+mESyNkzpJeFRwdDsBDQnKGbyWAXPtKuwrZ
-	Uk2kze8shK+xqKFS10FnxD5kx3h8qfwkn1yZ5V7+5xQ6Ay72LWeASfuz
-X-Gm-Gg: ASbGncsHraCWSfOtO+mu9jP2SY2dyeOlzxQWAps00vViqPc/4PlPEW0avDbG2lS75pJ
-	ClQWsdXIyo7y4qqLOZogT1Xb/tgkAiGj4F1rj4MmGf6hHmLtnbbVmqeJMIxftV1RuVK3SIRm+k8
-	CjKmVRCpF1fzreS+SP0ndCDkcJdJKeDxwsIErOV6OZMvoXIMeV9lM1iJoQPlbjQB3cB0YSanuGS
-	kUAI6JUaMPaaAt35tkl//40n4XD+Atsrcr4nP0s/OLW1j78CDJ8Do3H6MgpnIqs+XtFD7ztFBdQ
-	Us0n7aInCCzYUbBlm3+9o0/zRkA4z3Dl+u3qElscZ81T1YBwYjF1D8htPX2KWdOXSC6Er+jdfCN
-	q85VZUCuzYBkFf5iJRxYR14Im7w4fF29vWpz7Nd9ohnz9taWdWrkCWrQbne4SwLQ3pqiN4sxDXh
-	0=
-X-Google-Smtp-Source: AGHT+IGnvRMOWFkNNdD8ewDwN5gHHgHwhRjmoB0NywW6zfw9yWQjU3U9ktOL5CXPfd0twGaki/XvoQ==
-X-Received: by 2002:a05:6000:40cf:b0:3a4:dd00:9ac3 with SMTP id ffacd0b85a97d-3a585f7d579mr1235736f8f.12.1750176750098;
-        Tue, 17 Jun 2025 09:12:30 -0700 (PDT)
-Received: from thomas-precision3591.home (2a01cb00014ec300dae5d691da698f4c.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:dae5:d691:da69:8f4c])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e151c3csm185089575e9.30.2025.06.17.09.12.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 09:12:29 -0700 (PDT)
-From: Thomas Fourier <fourier.thomas@gmail.com>
-To: 
-Cc: Thomas Fourier <fourier.thomas@gmail.com>,
-	Nilesh Javali <njavali@marvell.com>,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Joe Carnuccio <joe.carnuccio@qlogic.com>,
-	Himanshu Madhani <hmadhani@marvell.com>,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] scsi: qla2xxx: Fix dma mapping test in `qla24xx_get_port_database()`
-Date: Tue, 17 Jun 2025 18:11:11 +0200
-Message-ID: <20250617161115.39888-2-fourier.thomas@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750176860; c=relaxed/simple;
+	bh=cdQAuWBGF0LJ1ru34tIKO497UmotX7rAN1T4X0C0CrQ=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AN46+glPIW6TfuEi3KDlQIxoMgThli4zSbya4e9V4lKD0aCg/wR9MHbutEEVp5kBFWOCUBuQdpxLuJpoHrDdKHFmlTPm2RvJot2bE/wkhxfF0XDGxA58Yn4Mx/aPg1a8wUHy+L2T8nkitS/aTcXy5x/GVuugj33Rm+2gJOUGglA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.31])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bMBkX4PRVz6M4HK;
+	Wed, 18 Jun 2025 00:13:40 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6906814011D;
+	Wed, 18 Jun 2025 00:14:14 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 17 Jun
+ 2025 18:14:13 +0200
+Date: Tue, 17 Jun 2025 17:14:10 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: James Morse <james.morse@arm.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Ben Horgan <ben.horgan@arm.com>
+Subject: Re: [PATCH 3/5] arm64: cacheinfo: Provide helper to compress MPIDR
+ value into u32
+Message-ID: <20250617171410.000004cf@huawei.com>
+In-Reply-To: <20250613130356.8080-4-james.morse@arm.com>
+References: <20250613130356.8080-1-james.morse@arm.com>
+	<20250613130356.8080-4-james.morse@arm.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-`dma_map_XXX()` functions return as error values DMA_MAPPING_ERROR which
-is often ~0.  The error value should be tested with
-`dma_mapping_error()` like it was done in `qla26xx_dport_diagnostics()`.
+On Fri, 13 Jun 2025 13:03:54 +0000
+James Morse <james.morse@arm.com> wrote:
 
-Fixes: 818c7f87a177 ("scsi: qla2xxx: Add changes in preparation for vendor extended FDMI/RDP")
-Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
----
- drivers/scsi/qla2xxx/qla_mbx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Filesystems like resctrl use the cache-id exposed via sysfs to identify
+> groups of CPUs. The value is also used for PCIe cache steering tags. On
+> DT platforms cache-id is not something that is described in the
+> device-tree, but instead generated from the smallest MPIDR of the CPUs
+> associated with that cache. The cache-id exposed to user-space has
+> historically been 32 bits.
+> 
+> MPIDR values may be larger than 32 bits.
+> 
+> MPIDR only has 32 bits worth of affinity data, but the aff3 field lives
+> above 32bits. The corresponding lower bits are masked out by
+> MPIDR_HWID_BITMASK and contain an SMT flag and Uni-Processor flag.
+> 
+> Swizzzle the aff3 field into the bottom 32 bits and using that.
+> 
+> In case more affinity fields are added in the future, the upper RES0
+> area should be checked. Returning a value greater than 32 bits from
+> this helper will cause the caller to give up on allocating cache-ids.
+Hi James,
 
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 0cd6f3e14882..13b6cb1b93ac 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -2147,7 +2147,7 @@ qla24xx_get_port_database(scsi_qla_host_t *vha, u16 nport_handle,
- 
- 	pdb_dma = dma_map_single(&vha->hw->pdev->dev, pdb,
- 	    sizeof(*pdb), DMA_FROM_DEVICE);
--	if (!pdb_dma) {
-+	if (dma_mapping_error(&vha->hw->pdev->dev, pdb_dma)) {
- 		ql_log(ql_log_warn, vha, 0x1116, "Failed to map dma buffer.\n");
- 		return QLA_MEMORY_ALLOC_FAILED;
- 	}
--- 
-2.43.0
+I'd mention that in the code via a comment, not just the commit message.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+
+Seems a few unrelated tiny things snuck in here.
+
+Otherwise seems fine to me.
+
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
+
+> ---
+>  arch/arm64/include/asm/cache.h | 14 ++++++++++++++
+>  arch/arm64/kernel/sleep.S      |  1 +
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/cache.h b/arch/arm64/include/asm/cache.h
+> index 99cd6546e72e..f8798dc96364 100644
+> --- a/arch/arm64/include/asm/cache.h
+> +++ b/arch/arm64/include/asm/cache.h
+> @@ -42,6 +42,7 @@
+>  
+>  #include <asm/cputype.h>
+>  #include <asm/mte-def.h>
+> +#include <asm/suspend.h>
+That seems a little random?  Why?
+>  #include <asm/sysreg.h>
+>  
+>  #ifdef CONFIG_KASAN_SW_TAGS
+> @@ -87,6 +88,19 @@ int cache_line_size(void);
+>  
+>  #define dma_get_cache_alignment	cache_line_size
+>  
+> +/* Compress a u64 MPIDR value into 32 bits. */
+> +static inline u64 arch_compact_of_hwid(u64 id)
+> +{
+> +	u64 aff3 = MPIDR_AFFINITY_LEVEL(id, 3);
+> +
+> +	/* These bits are expected to be RES0 */
+> +	if (FIELD_GET(GENMASK_ULL(63, 40), id))
+> +		return id;
+
+I would add a comment that the way this fails is to ensure
+there are bits in the upper bits.  It is a little unusual
+as APIs go but matches the not defined variant so sort of
+makes sense.
+
+> +
+> +	return (aff3 << 24) | FIELD_GET(GENMASK_ULL(23, 0), id);
+> +}
+> +#define arch_compact_of_hwid	arch_compact_of_hwid
+> +
+>  /*
+>   * Read the effective value of CTR_EL0.
+>   *
+> diff --git a/arch/arm64/kernel/sleep.S b/arch/arm64/kernel/sleep.S
+> index f093cdf71be1..ebc23304d430 100644
+> --- a/arch/arm64/kernel/sleep.S
+> +++ b/arch/arm64/kernel/sleep.S
+> @@ -50,6 +50,7 @@
+>  	lsr	\mask ,\mask, \rs3
+>  	orr	\dst, \dst, \mask		// dst|=(aff3>>rs3)
+>  	.endm
+> +
+
+Stray change.
+
+>  /*
+>   * Save CPU state in the provided sleep_stack_data area, and publish its
+>   * location for cpu_resume()'s use in sleep_save_stash.
 
