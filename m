@@ -1,108 +1,89 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4032E54D1
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87789237180;
+	Tue, 17 Jun 2025 19:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750190283; cv=none; b=uywwdm3YBT8IrEFKEX9+4DoqZYPhNKg+E/IvjPUfDvKeMJ7AB5QrSC1mZ+sY+qZrNkBSAiCdYAryxtrvFK0EOQblKDohBoa5Fbdo/vcNSJthOcqyvSznDDcdKbwlshKhrP84uNgX+6CF/kMN+vF7BLJllkKpBA/ZItbIHlX1n/Q=
+	t=1750190369; cv=none; b=IbsmmhpS0g7abPSIM/7W8lVMxFg+zXCH7+Z6Qm5Pq3xrRm59iWJMbXaPJcih6jdYIV4gMausMYkRzrf5xib67fgg7k5VQK+SI4gFlNrluVWQL8lfDL7s+M36pZtB17cwBORVStFr0V/NyWqPqJydP6QSY0C/T50ipUico6L9AWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750190283; c=relaxed/simple;
-	bh=oXikNS+kgN+2w3qPcZgZY0QITtEf/BerEbAt8eoZsE0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HKlnGblGoU0eOF3sgm1hl2TUMrVG3mfho6UVnZOUtJI+dzfsAcqiu7/73dJYYeosi4wHpRfpC3U8lVXixsRs6INdAtiWAQHViVAIXzapuVNp6v3w4XlLrqpo8kitalJPCNmbq4v/1EEhlGJQ16Ig+I5IhaysseSV1j4oCucIJQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I9ibs7Iv; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750190369; c=relaxed/simple;
+	bh=sVM19GCCKQhRp7EuGvOjAU8kPQ/rNAQiUgZpz7qYa9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Imx5qijM2bqwO5Lnsqy5AWScFOYGnf91TRdcUoaCKfYY1Qe3jDW+22IjPFKOuWl/etc2myAXSI8D5qG7q8t5rW4JsbUhz6DyFSKKwgwcnfqarKzZ/r/IIagx8ytQyuxUjqCy5++8Sem+ln1TdAMfCjset46ktvCNpbI8cH9yl1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpuuywa+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I9ibs7Iv"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750190279;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ffjH9W3JevRTfPRrE/1Jq8fYf5w4/j5rXWB6dZVk6cA=;
-	b=I9ibs7Iv16R19VtNHI3r16YWM+R6GMUxfrW9o3AoqGOnyIw7QNWgzHjiBF2OouseZBhI/b
-	cFmoHTCP6F93DIuqWY3swCmM87/IRdkwPldjOW/Ma7hF8p7K1v2rU1Sd61zsYFxxAIm0nW
-	heZJLdNjUGJa8lzobV+R8sh6gXchSE8=
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	JP Kobryn <inwardvessel@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Yosry Ahmed <yosry.ahmed@linux.dev>,
-	bpf@vger.kernel.org,
-	linux-mm@kvack.org,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: [PATCH v3 4/4] memcg: cgroup: call css_rstat_updated irrespective of in_nmi()
-Date: Tue, 17 Jun 2025 12:57:25 -0700
-Message-ID: <20250617195725.1191132-5-shakeel.butt@linux.dev>
-In-Reply-To: <20250617195725.1191132-1-shakeel.butt@linux.dev>
-References: <20250617195725.1191132-1-shakeel.butt@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpuuywa+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D714C4CEE3;
+	Tue, 17 Jun 2025 19:59:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750190369;
+	bh=sVM19GCCKQhRp7EuGvOjAU8kPQ/rNAQiUgZpz7qYa9w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jpuuywa+IXfUA58X/baAFYHnGhet/xCyxu6nUDvANGgktcIrxSAm0C3qyjPft1OJ8
+	 /y4dJgVEs9CvsoBUi7zm41P2K5DVBQGFHkF63SMXLVtBPNg+RNoCDRhykPgB/cCb/I
+	 0GUs7QVKT7dzc10B7nKJBKSa+HGdx8xUpToVFPL/pn9lQnclWua9imiZaTuOFliWkK
+	 QJ3Lk7X8LqghgjWhlMoEew05m6Q36dKnoSXfGrVIyruIKgN0nV1Ro/IMSMFobGM2Ss
+	 yUn50Tvu5YRZwURvrxaD4PLtRZwUsym+zN1F6jHXG/OF7wTlnMynGIiEcyupVN8L2t
+	 rC07wEKDje+cg==
+Date: Tue, 17 Jun 2025 12:58:58 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org, x86@kernel.org,
+	Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Re: [PATCH v2 00/17] SHA-512 library functions
+Message-ID: <20250617195858.GA1288@sol>
+References: <20250616014019.415791-1-ebiggers@kernel.org>
+ <20250617060523.GH8289@sol>
+ <CAHk-=wi5d4K+sF2L=tuRW6AopVxO1DDXzstMQaECmU2QHN13KA@mail.gmail.com>
+ <20250617192212.GA1365424@google.com>
+ <CAHk-=wiB6XYBt81zpebysAoya4T-YiiZEmW_7+TtoA=FSCA4XQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiB6XYBt81zpebysAoya4T-YiiZEmW_7+TtoA=FSCA4XQ@mail.gmail.com>
 
-css_rstat_updated() is nmi safe, so there is no need to avoid it in
-in_nmi(), so remove the check.
+On Tue, Jun 17, 2025 at 12:43:54PM -0700, Linus Torvalds wrote:
+> On Tue, 17 Jun 2025 at 12:22, Eric Biggers <ebiggers@kernel.org> wrote:
+> >>
+> > The tests are already in their own patches: patches 4 and 5.  Yes, this patchset
+> > has a negative diffstat once you subtract them.
+> 
+> Yes, the patches were separate, but my point stands.
+> 
+> Let me repeat that part of the email since you seem to have missed it:
+> 
+> > If I see a pull request that only adds new tests, it's a no-brainer.
+> >
+> > If I see a pull request that only re-organizes the code and the
+> > diffstat just just renames with some small updates for new locations,
+> > it's a no-brainer.
+> >
+> > If I see a pull request that does both, it's a pain in the arse,
+> > because then I need to start to look into individual commits and go
+> > "which does what".
+> 
+> IOW, I really prefer pull requests to do clearly separate things too
+> when we're talking re-organization. Or at the very least spell things
+> out *very* clearly.
+> 
+> Otherwise I have to waste time just to go split things out _anyway_.
 
-Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
----
- mm/memcontrol.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Again, the tests depend on the code they test being added first.
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 902da8a9c643..d122bfe33e98 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -573,9 +573,7 @@ static inline void memcg_rstat_updated(struct mem_cgroup *memcg, int val,
- 	if (!val)
- 		return;
- 
--	/* TODO: add to cgroup update tree once it is nmi-safe. */
--	if (!in_nmi())
--		css_rstat_updated(&memcg->css, cpu);
-+	css_rstat_updated(&memcg->css, cpu);
- 	statc_pcpu = memcg->vmstats_percpu;
- 	for (; statc_pcpu; statc_pcpu = statc->parent_pcpu) {
- 		statc = this_cpu_ptr(statc_pcpu);
-@@ -2530,7 +2528,8 @@ static inline void account_slab_nmi_safe(struct mem_cgroup *memcg,
- 	} else {
- 		struct mem_cgroup_per_node *pn = memcg->nodeinfo[pgdat->node_id];
- 
--		/* TODO: add to cgroup update tree once it is nmi-safe. */
-+		/* preemption is disabled in_nmi(). */
-+		css_rstat_updated(&memcg->css, smp_processor_id());
- 		if (idx == NR_SLAB_RECLAIMABLE_B)
- 			atomic_add(nr, &pn->slab_reclaimable);
- 		else
-@@ -2753,7 +2752,8 @@ static inline void account_kmem_nmi_safe(struct mem_cgroup *memcg, int val)
- 	if (likely(!in_nmi())) {
- 		mod_memcg_state(memcg, MEMCG_KMEM, val);
- 	} else {
--		/* TODO: add to cgroup update tree once it is nmi-safe. */
-+		/* preemption is disabled in_nmi(). */
-+		css_rstat_updated(&memcg->css, smp_processor_id());
- 		atomic_add(val, &memcg->kmem_stat);
- 	}
- }
--- 
-2.47.1
+I could do two pull requests, the first with all non-test code and the second
+with all test code, where the second depends on the first, i.e. it will have the
+last commit of the first as its base commit.  Is that what you want?  Or are you
+misunderstanding and thinking the tests are independent and apply to current
+mainline?
 
+- Eric
