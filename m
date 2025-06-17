@@ -1,174 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41D5186294;
-	Wed, 18 Jun 2025 01:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA24F9C1
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750209395; cv=none; b=O3ZspbkjQsZP5y98mY5UtnstbLBY4vHZy2q0SUbU99uWPDlm7KNIpwDUWqJjFuMz9E1DLy7dkZ4Mw3WL7qxEqQDmFuZBqm3AjcWDn9roMQyNAVa6P7iDP/bq/ErlB5cuDQJtbsxhGyO930omcNN70EEGJ8jxojd81oBLaxAg5x0=
+	t=1750209418; cv=none; b=LEE8kwCPuQ3gW7IqN36WA/Pbp/5ktUy2a1WS2wOTiYHyufeRqCcJc4PI2CD4MhWpltBBsn+4qTRq2XpyESb+pbjuog+q9eTk2QAcm1ZmWQobG/nwF9RGESFZf9F9eCEpv5c4vKFgnCL7xPRFRED/S367AZqadjjhW+EmP1yUXE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750209395; c=relaxed/simple;
-	bh=SBDJcf09SwcwG06z/rkKrsCcFxSZMbyKPtB+DVPGYhA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AZvXDo/kHFf5dYrB2id6FS9qqkQidMYD8Q9UL66nntmHakD0OkEPKv1bBMkjD7bVy5HOq9nnNXHb2qMrwlzL+AU/WEMMCETERVBhmfcgPxS0IYQ6dy5XWGdCP7GE2uXrNcCrT1SQ/jGECtH7cPj/DwtsMwCJyg5I5XiP2QPd8fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wf4hpB4t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750209418; c=relaxed/simple;
+	bh=JmIeeAjhfR2ALUFDgefbbnk1JUrhQSJna76hP+wcJgM=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=jXpINyj/HzJTMo03xjtUZ47eW1W9K+MiyFcsGBrbc3QOa9eZw7+mRkk/KzsZOJWZRtaHz9gcjPXk+qLfAoqFd5CJeLtXOVCoTMpapehdH8/Zme6uIf9rNhBLUBBAlSWg46vY1r6xz7Wo9q8loOKBiaAXZMblCvblYMO7XQkeP8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SZSwcp6V; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wf4hpB4t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C92BC4CEF4;
-	Wed, 18 Jun 2025 01:16:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750209395;
-	bh=SBDJcf09SwcwG06z/rkKrsCcFxSZMbyKPtB+DVPGYhA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Wf4hpB4tJy8O25elPcp4jElL23bQfdMwbL9Fk3DmQrcmWBKK9JoS1aGKpV/gSEWpy
-	 8yTAdqLARCWZNz18qgoio2PISfKsdbaB0z1DzTfJkSQKLCdEBuhnBIga8kmBrXGIg+
-	 Ojl3wCJ/C9gfzhG0hnj2cdWK1YZ7r/cgmv5CGqOyTd15Wl6nyPwCcc7dduhxtcZGYa
-	 GjaphDhlBvxuPa9vOFq7auClfHBnSr+lcZANi574+eM4D169J9HwYr9/diRwKWoVvx
-	 C7wl8SyebWKZMYO62StGWDp4t+LWunxvD0TZUYU9qL5AwwNhC+5+ppZqPYvsdVEFGj
-	 QEDF42xpUloGg==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553bcba4ff8so3358872e87.2;
-        Tue, 17 Jun 2025 18:16:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUljt6RYt1NXImKKctjMcw2aJiFpN0iCwOrtqVe4Oa6bCmpPoc9AmRPNCSxuFnkaf6aR2Lfq9UQyHoi7RR4@vger.kernel.org, AJvYcCVVsJ0k/tD80rqvK3kvPjlfkNo+oGvDz7b56XyhgvEWUiUvo2cx0Cy5+O6VeSkrDMeQ1uB4k4CwKtA=@vger.kernel.org, AJvYcCVXhkaYGbjq9VYr6++sg2iqn9gcqd/sqqlD/UsavkbDhLU0AU5wapHRg21kwWJLUs1tqmk77hbx4qnf+q9ycA6G@vger.kernel.org, AJvYcCWravQNrMct1F9N8BcHvkcFUCPdmrUFqnXBavH7CFyw8QvsDpk6Vevx1+iGjWg9Mqjde/HM5pDGIivRlNNR@vger.kernel.org, AJvYcCXPpEHT2uXcVH/GJQqPpnNUBFFiuHNR6uTfvkrUURX11gCkw9GmrVdIHUWRpJ5jep0mLERDpwDU3Kkp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLbo1V3dJ7W01KxCYIfohwUTJdjXMpGFvoeR+CiTgalwNwzVV5
-	AB28Xn381WjioC/D4/9IPRZz2O4xqXyGEdts4Wo7Qm4sjnWQyhKoMSCAHnev2IvT8P0OFlGx/+A
-	AIcO1tk1cg4112+cr1dk0hy7RYTpIPz4=
-X-Google-Smtp-Source: AGHT+IFiIfr5F6VDkk3G3Oh9AbB4n2HtzYAJy/s+BIZll9kvq4oJWZgFM8XLjVs97si6LTR33fQZ3chGvUAjn7TxohA=
-X-Received: by 2002:a05:6512:39d3:b0:553:3073:c38b with SMTP id
- 2adb3069b0e04-553b6e734c9mr3786666e87.1.1750209393856; Tue, 17 Jun 2025
- 18:16:33 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SZSwcp6V"
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250618011655epoutp01bc3c495c452ed817ddf54864264c2b40~J-jChSz2o3247232472epoutp01W
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:16:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250618011655epoutp01bc3c495c452ed817ddf54864264c2b40~J-jChSz2o3247232472epoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750209415;
+	bh=kJtuG8LEDcYSFAfIXOntrtk20/ZtcCaun/G8S26fAFA=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=SZSwcp6VAVJCuEGMrd9h3aywaQNCUxF18jr/iWIqWA/5LRbB6ybEXuQm6foqLvtDk
+	 Qf8gq2tncGDg74cjACfxyXFT/4e1uJDGutJdh3C4nJ4X9dqI+9cJknXcaTwDbMlhcm
+	 Q1FsUkmfEZd+LRGgJugOsB3qVkpn/JR2QkdbB2eI=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250618011654epcas5p49a82be1ea2581070ed7fff72bda51313~J-jB9rluI2305723057epcas5p4q;
+	Wed, 18 Jun 2025 01:16:54 +0000 (GMT)
+Received: from epcas5p4.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4bMQnJ47DHz3hhTG; Wed, 18 Jun
+	2025 01:16:52 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250617172501epcas5p24ed02011139817ab0a947cf24dbac464~J5HBkVc0u0301503015epcas5p23;
+	Tue, 17 Jun 2025 17:25:01 +0000 (GMT)
+Received: from INBRO001840 (unknown [107.122.3.105]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250617172458epsmtip2fbf57099ebaa2954678ed528a0d39971~J5G_prIYN3172131721epsmtip2P;
+	Tue, 17 Jun 2025 17:24:58 +0000 (GMT)
+From: "Pritam Manohar Sutar" <pritam.sutar@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Neil Armstrong'"
+	<neil.armstrong@linaro.org>
+Cc: <vkoul@kernel.org>, <kishon@kernel.org>, <robh@kernel.org>,
+	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <alim.akhtar@samsung.com>,
+	<andre.draszik@linaro.org>, <peter.griffin@linaro.org>,
+	<kauschluss@disroot.org>, <ivo.ivanov.ivanov1@gmail.com>,
+	<m.szyprowski@samsung.com>, <s.nawrocki@samsung.com>,
+	<linux-phy@lists.infradead.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <rosa.pila@samsung.com>,
+	<dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
+	<muhammed.ali@samsung.com>, <selvarasu.g@samsung.com>
+In-Reply-To: <20250616-perfect-fervent-robin-a1bc3c@kuoka>
+Subject: RE: [PATCH v3 9/9] arm64: dts: exynos: ExynosAutov920: add USB and
+ USB SS combo phy nodes
+Date: Tue, 17 Jun 2025 22:54:57 +0530
+Message-ID: <000101dbdfac$c1a35f40$44ea1dc0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
- <20250611-kunit-kselftests-v3-4-55e3d148cbc6@linutronix.de>
- <CAK7LNAQUN3hWYh_1=LMzVp1Ddbq3W=yGHZ5__LbcfBajfuhscg@mail.gmail.com> <20250617095102-d3df1c46-3d51-4f77-af0a-8299f5e71ad9@linutronix.de>
-In-Reply-To: <20250617095102-d3df1c46-3d51-4f77-af0a-8299f5e71ad9@linutronix.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 18 Jun 2025 10:15:57 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASe0aQdO1m6sUQXEkYxgXT+_2xOVnX4x4f4V4adpaeZ0w@mail.gmail.com>
-X-Gm-Features: AX0GCFvJl9wi9pNxHMzc9efbA-PWAwWgE5oc_vBzkXhWJDp4BubPAbGKLKZ0oL4
-Message-ID: <CAK7LNASe0aQdO1m6sUQXEkYxgXT+_2xOVnX4x4f4V4adpaeZ0w@mail.gmail.com>
-Subject: Re: [PATCH v3 04/16] kbuild: userprogs: add nolibc support
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	workflows@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQNTkACKxnsdZBPuyPiYuNftoBZF1gGRKuf5ApVTYEcCparjMQJvpOKesM5XFRA=
+Content-Language: en-in
+X-CMS-MailID: 20250617172501epcas5p24ed02011139817ab0a947cf24dbac464
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250613055106epcas5p46a2e5e2d6f0e8811644643f6282fd9ca
+References: <20250613055613.866909-1-pritam.sutar@samsung.com>
+	<CGME20250613055106epcas5p46a2e5e2d6f0e8811644643f6282fd9ca@epcas5p4.samsung.com>
+	<20250613055613.866909-10-pritam.sutar@samsung.com>
+	<9455a4e1-6352-4832-ac9f-2816f889c3a4@linaro.org>
+	<20250616-perfect-fervent-robin-a1bc3c@kuoka>
 
-On Tue, Jun 17, 2025 at 4:59=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Tue, Jun 17, 2025 at 12:35:07AM +0900, Masahiro Yamada wrote:
-> > On Wed, Jun 11, 2025 at 4:38=E2=80=AFPM Thomas Wei=C3=9Fschuh
-> > <thomas.weissschuh@linutronix.de> wrote:
-> > >
-> > > Userprogs are built with the regular kernel compiler $CC.
-> > > A kernel compiler does not necessarily contain a libc which is requir=
-ed
-> > > for a normal userspace application.
-> > > However the kernel tree does contain a minimal libc implementation
-> > > "nolibc" which can be used to build userspace applications.
-> > >
-> > > Introduce support to build userprogs against nolibc instead of the
-> > > default libc of the compiler, which may not exist.
-> > >
-> > > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de=
->
-> > >
-> > > ---
-> > > This could probably be moved out of the generic kbuild makefiles.
-> > > I think the ergonimics would suffer and this functionality could be
-> > > used by other users of userprogs.
-> > >
-> > > Also this does currently not support out-of-tree builds.
-> > > For that tools/include/nolibc/*.h and usr/include/*.h would need to b=
-e
-> > > installed into the build directory.
->
-> <snip>
->
-> > > --- a/scripts/Makefile.userprogs
-> > > +++ b/scripts/Makefile.userprogs
-> > > @@ -16,10 +16,17 @@ user-csingle        :=3D $(addprefix $(obj)/, $(u=
-ser-csingle))
-> > >  user-cmulti    :=3D $(addprefix $(obj)/, $(user-cmulti))
-> > >  user-cobjs     :=3D $(addprefix $(obj)/, $(user-cobjs))
-> > >
-> > > +user_nolibc_ccflags :=3D -nostdlib -nostdinc -static -fno-ident -fno=
--asynchronous-unwind-tables \
-> > > +                     -ffreestanding -fno-stack-protector \
-> > > +                     -isystem $(objtree)/usr/include -include $(srct=
-ree)/tools/include/nolibc/nolibc.h -isystem $(srctree)/tools/include/nolibc=
-/
+Hi Krzysztof,
+
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzk=40kernel.org>
+> Sent: 16 June 2025 01:39 PM
+> To: Neil Armstrong <neil.armstrong=40linaro.org>
+> Cc: Pritam Manohar Sutar <pritam.sutar=40samsung.com>; vkoul=40kernel.org=
+;
+> kishon=40kernel.org; robh=40kernel.org; krzk+dt=40kernel.org;
+> conor+dt=40kernel.org; alim.akhtar=40samsung.com; andre.draszik=40linaro.=
+org;
+> peter.griffin=40linaro.org; kauschluss=40disroot.org;
+> ivo.ivanov.ivanov1=40gmail.com; m.szyprowski=40samsung.com;
+> s.nawrocki=40samsung.com; linux-phy=40lists.infradead.org;
+> devicetree=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-arm-
+> kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.org;
+> rosa.pila=40samsung.com; dev.tailor=40samsung.com;
+> faraz.ata=40samsung.com; muhammed.ali=40samsung.com;
+> selvarasu.g=40samsung.com
+> Subject: Re: =5BPATCH v3 9/9=5D arm64: dts: exynos: ExynosAutov920: add U=
+SB
+> and USB SS combo phy nodes
+>=20
+> On Fri, Jun 13, 2025 at 11:12:26AM GMT, neil.armstrong=40linaro.org wrote=
+:
+> > On 13/06/2025 07:56, Pritam Manohar Sutar wrote:
+> > >   		usbdrd31_hsphy: phy=4016490000 =7B
+> > >   			compatible =3D =22samsung,exynosautov920-usbdrd-
+> hsphy=22;
+> > >   			reg =3D <0x16490000 0x0200>;
+> > > =40=40 -1109,8 +1120,8 =40=40 usbdrd31_dwc3: usb=400 =7B
+> > >   					 <&cmu_hsi1
+> CLK_MOUT_HSI1_USBDRD>;
+> > >   				clock-names =3D =22ref=22, =22susp_clk=22;
+> > >   				interrupts =3D <GIC_SPI 491
+> IRQ_TYPE_LEVEL_HIGH>;
+> > > -				phys =3D <&usbdrd31_hsphy 0>;
+> > > -				phy-names =3D =22usb2-phy=22;
+> > > +				phys =3D <&usbdrd31_hsphy 0>,
+> <&usbdrd31_ssphy 0>;
+> > > +				phy-names =3D =22usb2-phy=22, =22usb3-phy=22;
+> > >   				snps,has-lpm-erratum;
+> > >   				snps,dis_u2_susphy_quirk;
+> > >   				snps,dis_u3_susphy_quirk;
 > >
-> > The tools/ directory is a different world, and Kbuild scripts do not kn=
-ow
-> > anything about it.
->
-> Ack.
->
-> How does this statement affect the next patch which creates
-> tools/include/nolibc/Kconfig.nolibc ?
-> Is it fine to create the Kconfig file in tools/ or should I move it?
-> I do want to maintain this file as part of nolibc and not KUnit.
-> The possibilities I see are init/Kconfig.nolibc or lib/Kconfig.nolibc.
+> > I think at least patch 6 & 9 should be squashed.
+>=20
+> Yes. Changing lines which were just added is a strong hint, that patchset=
+ is
+> incorrectly organized.
 
-Personally I like init/Kconfig.nolibc.
-(I am even fine with adding this new entry to init/Kconfig)
-But, this file is not what I maintain. It is up to you after all.
+we will squash these 2 patches in next version of the patch-set (v4).
 
+>=20
+> >
+> > Neil
 
+Thank you.
 
-> > And, you do not need to implement this in scripts/Makefile.userprogs
-> > because you can move this to lib/kunit/Makefile.kunit-uapi or somewhere=
-.
->
-> Understood. This is not unexpected, as hinted in the commit message.
-
-One existing example is lib/vdso/Makefile.include, which is included
-from multiple Makefiles.
+Regards,
+Pritam
 
 
 
-
-
-> > > +user_nolibc_ldflags :=3D -nostdlib -nostdinc -static
-> > > +
-> > >  user_ccflags   =3D -Wp,-MMD,$(depfile) $(KBUILD_USERCFLAGS) $(usercc=
-flags) \
-> > > -                       $($(target-stem)-userccflags)
-> > > -user_ldflags   =3D $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-s=
-tem)-userldflags)
-> > > -user_ldlibs    =3D $(userldlibs) $($(target-stem)-userldlibs)
-> > > +                       $($(target-stem)-userccflags) $(if $($(target=
--stem)-nolibc),$(user_nolibc_ccflags))
-> > > +user_ldflags   =3D $(KBUILD_USERLDFLAGS) $(userldflags) $($(target-s=
-tem)-userldflags) \
-> > > +                       $(if $($(target-stem)-nolibc),$(user_nolibc_l=
-dflags))
-> > > +user_ldlibs    =3D $(userldlibs) $($(target-stem)-userldlibs) \
-> > > +                       $(if $($(target-stem)-nolibc),$(user_nolibc_l=
-dlibs))
-> > >
-> > >  # Create an executable from a single .c file
-> > >  quiet_cmd_user_cc_c =3D CC [U]  $@
->
->
-> Thomas
-
-
---
-Best Regards
-Masahiro Yamada
