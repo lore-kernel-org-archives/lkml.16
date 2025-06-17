@@ -1,66 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D07A8528E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1371D88AC;
 	Tue, 17 Jun 2025 08:02:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750147352; cv=none; b=VhNbvn3X6Yw2K/I58h+e0LyE7VVBs82w872PvIdB4H9iRdCH2sptpp0W8NNJ5QBGk13BzUH4LPXrBAsS4Act/9+oIluK97NyAlZ7wamWWxegG8+qZNHkBviAkK3sJf9TFvlvcYBR6OzKJFfsKwXWZGuyxIwyy53jIY8/aUAt6ZI=
+	t=1750147352; cv=none; b=p+FXU2HKllALMMR3Ysf04uQTFNo/vWQsKFo47+uhsQkhJQhoRWL/9oS74otJ3+/TZf2g/aBsYAdaziH4inHkHlZnTYlxd/LU/f6mJ6Kff0Sm37S5PmCbcs87CZBfynMmVtCZltSJCKvwWKT7DFMRwSOEk/wEOAyFW5HfiGvelN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750147352; c=relaxed/simple;
-	bh=zjfj2Tm7h9LKUnhgzAVTuVnT8YUaP6pYYIdRhxmKFAc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VcGYxhPQVcRjb/AX3C2wQeWjHagu927qWb7bYheZNEI45GKboj64FDn5wxz6ULQ2qmqezSjNrnxflpFJ2K6+0cPJa1pMP4QTqVWn+cNog3UG4UqWum2CkbfuNJzH2gu4X7iR57dJ62cIfaaB5HFYTYRVyYaJcCm0T66V0yvU1WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tf5PXJHb; arc=none smtp.client-ip=10.30.226.201
+	bh=Bmc1dcL/vKMpcG3gmR7p+QTIxzrCe6x9Ewb/iBXx3i4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jr6p/BxzIx37AAwbUlP0A6gYT6cFqqvSFdk2UnuRF8jcjFoQR7+TrXOrZixzdJ/1squBqlS+cuxpZ517Hx/CkKxLhjnbZ+Bb4Cyg212owAxjT7y1v1HOEUAexoq04SKuAyJFxyokiCfjbkACBBymFkkNZD/XtyJbx1aFRUJdxro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CRS/iG9r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tf5PXJHb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1C8C4CEE3;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CRS/iG9r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6C0CC4AF09;
 	Tue, 17 Jun 2025 08:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750147351;
-	bh=zjfj2Tm7h9LKUnhgzAVTuVnT8YUaP6pYYIdRhxmKFAc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Tf5PXJHbyqoDMJUjhFzgNd2QGPUruuk54hW8GfaiY4HU/qL1o+lPlFJ4ixNuynI+I
-	 LgDzId9V2N2/TBnov9FlC+ewqG+seIJu21fNhZQalb2Z+c38L5lWALHfK40MHkUrkz
-	 rjdD5mtoXusfnPP5ksGOkgtAOH8vtnQ7UX34RX34vdPdBjX4ZQXW+MtlLGjq2iUh94
-	 ScnqiaNRn8Kw/zchQ1QNIbu4pnRHYxj6AYirHgpT+InZ9lflxBH1ksL5Xnge+LabWM
-	 y0CkkOO+WxmJxLa+mla504XWl2rQtvPJZXMQ7ITvVL3uIEG7xsquNK4YdcDPpqywRV
-	 SpN7aT8dbEagg==
+	bh=Bmc1dcL/vKMpcG3gmR7p+QTIxzrCe6x9Ewb/iBXx3i4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CRS/iG9rRgPnce4tyJMHGV9BjQMNm8HrVXKixDQywp13eFOqk2fvEcvfiRUsUWgJP
+	 p9lPf4LghIe1yslQXDNg+PV/WIEY+gP8G/iEM5CNZmbiJ+xqkwFxiErJ49cbkYIFYh
+	 v0Lyod+7IollBzGERTKzGoLS2vV8L+i272d37FBX1TQKq5iPf4E9Pgk5QHputHl1fV
+	 qRzTSGDBibtMgBDs8W20NsTq/arXPxRGgsewZqVntd9d84Y7wndAYZJvMT2vtEbf2v
+	 hOOVMJ5McR5etd2Ilk+u7ipJerJInE+4Lpz1JZtQjLDW3e1Kqmzk2bkKdgIzTlTT2x
+	 ri/DEJ9nQFqAQ==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uRRH4-00000001vd6-01hy;
-	Tue, 17 Jun 2025 10:02:30 +0200
+	id 1uRRH3-00000001vcm-3bGt;
+	Tue, 17 Jun 2025 10:02:29 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
 	Jonathan Corbet <corbet@lwn.net>
 Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-	"Akira Yokosawa" <akiyks@gmail.com>,
-	"Breno Leitao" <leitao@debian.org>,
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Akira Yokosawa <akiyks@gmail.com>,
 	"David S. Miller" <davem@davemloft.net>,
-	"Donald Hunter" <donald.hunter@gmail.com>,
-	"Eric Dumazet" <edumazet@google.com>,
-	"Ignacio Encinas Rubio" <ignacio@iencinas.com>,
-	"Jan Stancek" <jstancek@redhat.com>,
-	"Marco Elver" <elver@google.com>,
-	"Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>,
-	"Paolo Abeni" <pabeni@redhat.com>,
-	"Ruben Wauters" <rubenru09@aol.com>,
-	"Shuah Khan" <skhan@linuxfoundation.org>,
-	Jakub Kicinski <mchehab+huawei@kernel.org>,
-	Simon Horman <mchehab+huawei@kernel.org>,
+	Ignacio Encinas Rubio <ignacio@iencinas.com>,
+	Marco Elver <elver@google.com>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Donald Hunter <donald.hunter@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jan Stancek <jstancek@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ruben Wauters <rubenru09@aol.com>,
 	joel@joelfernandes.org,
 	linux-kernel-mentees@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
 	lkmm@lists.linux.dev,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: [PATCH v5 05/15] tools: ynl_gen_rst.py: make the index parser more generic
-Date: Tue, 17 Jun 2025 10:02:02 +0200
-Message-ID: <1cd8b28bfe159677b8a8b1228b04ba2919c8aee8.1750146719.git.mchehab+huawei@kernel.org>
+	stern@rowland.harvard.edu,
+	Breno Leitao <leitao@debian.org>,
+	Jakub Kicinski <mchehab+huawei@kernel.org>,
+	Simon Horman <mchehab+huawei@kernel.org>
+Subject: [PATCH v5 00/15] Don't generate netlink .rst files inside $(srctree)
+Date: Tue, 17 Jun 2025 10:01:57 +0200
+Message-ID: <cover.1750146719.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750146719.git.mchehab+huawei@kernel.org>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,78 +67,91 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-It is not a good practice to store build-generated files
-inside $(srctree), as one may be using O=<BUILDDIR> and even
-have the Kernel on a read-only directory.
+As discussed at:
+   https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
 
-Change the YAML generation for netlink files to allow it
-to parse data based on the source or on the object tree.
+changeset f061c9f7d058 ("Documentation: Document each netlink family")
+added a logic which generates *.rst files inside $(srctree). This is bad
+when O=<BUILDDIR> is used.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+A recent change renamed the yaml files used by Netlink, revealing a bad
+side effect: as "make cleandocs" don't clean the produced files and symbols
+appear duplicated for people that don't build the kernel from scratch.
+
+This series adds an yaml parser extension and uses an index file with glob for
+*. We opted to write such extension in a way that no actual yaml conversion
+code is inside it. This makes it flexible enough to handle other types of yaml
+files in the future. The actual yaml conversion logic were placed at 
+netlink_yml_parser.py. 
+
+As requested by YNL maintainers, this version has netlink_yml_parser.py
+inside tools/net/ynl/pyynl/ directory. I don't like mixing libraries with
+binaries, nor to have Python libraries spread all over the Kernel. IMO,
+the best is to put all of them on a common place (scripts/lib, python/lib,
+lib/python, ...) but, as this can be solved later, for now let's keep it this
+way.
+
 ---
- tools/net/ynl/pyynl/ynl_gen_rst.py | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-index 7bfb8ceeeefc..b1e5acafb998 100755
---- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-+++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-@@ -365,6 +365,7 @@ def parse_arguments() -> argparse.Namespace:
- 
-     parser.add_argument("-v", "--verbose", action="store_true")
-     parser.add_argument("-o", "--output", help="Output file name")
-+    parser.add_argument("-d", "--input_dir", help="YAML input directory")
- 
-     # Index and input are mutually exclusive
-     group = parser.add_mutually_exclusive_group()
-@@ -405,11 +406,14 @@ def write_to_rstfile(content: str, filename: str) -> None:
-     """Write the generated content into an RST file"""
-     logging.debug("Saving RST file to %s", filename)
- 
-+    dir = os.path.dirname(filename)
-+    os.makedirs(dir, exist_ok=True)
-+
-     with open(filename, "w", encoding="utf-8") as rst_file:
-         rst_file.write(content)
- 
- 
--def generate_main_index_rst(output: str) -> None:
-+def generate_main_index_rst(output: str, index_dir: str) -> None:
-     """Generate the `networking_spec/index` content and write to the file"""
-     lines = []
- 
-@@ -418,12 +422,18 @@ def generate_main_index_rst(output: str) -> None:
-     lines.append(rst_title("Netlink Family Specifications"))
-     lines.append(rst_toctree(1))
- 
--    index_dir = os.path.dirname(output)
--    logging.debug("Looking for .rst files in %s", index_dir)
-+    index_fname = os.path.basename(output)
-+    base, ext = os.path.splitext(index_fname)
-+
-+    if not index_dir:
-+        index_dir = os.path.dirname(output)
-+
-+    logging.debug(f"Looking for {ext} files in %s", index_dir)
-     for filename in sorted(os.listdir(index_dir)):
--        if not filename.endswith(".rst") or filename == "index.rst":
-+        if not filename.endswith(ext) or filename == index_fname:
-             continue
--        lines.append(f"   {filename.replace('.rst', '')}\n")
-+        base, ext = os.path.splitext(filename)
-+        lines.append(f"   {base}\n")
- 
-     logging.debug("Writing an index file at %s", output)
-     write_to_rstfile("".join(lines), output)
-@@ -447,7 +457,7 @@ def main() -> None:
- 
-     if args.index:
-         # Generate the index RST file
--        generate_main_index_rst(args.output)
-+        generate_main_index_rst(args.output, args.input_dir)
- 
- 
- if __name__ == "__main__":
+v5:
+- some patch reorg;
+- netlink_yml_parser.py is now together with ynl tools;
+- minor fixes.
+
+v4:
+- Renamed the YNL parser class;
+- some minor patch cleanups and merges;
+- added an extra patch to fix a insert_pattern/exclude_pattern logic when
+   SPHINXDIRS is used.
+
+v3:
+- Two series got merged altogether:
+  - https://lore.kernel.org/linux-doc/cover.1749723671.git.mchehab+huawei@kernel.org/T/#t
+  - https://lore.kernel.org/linux-doc/cover.1749735022.git.mchehab+huawei@kernel.org
+
+- Added an extra patch to update MAINTAINERS to point to YNL library
+- Added a (somewhat unrelated) patch that remove warnings check when
+  running "make cleandocs".
+
+
+Mauro Carvalho Chehab (15):
+  docs: conf.py: properly handle include and exclude patterns
+  docs: Makefile: disable check rules on make cleandocs
+  tools: ynl_gen_rst.py: create a top-level reference
+  docs: netlink: netlink-raw.rst: use :ref: instead of :doc:
+  tools: ynl_gen_rst.py: make the index parser more generic
+  tools: ynl_gen_rst.py: Split library from command line tool
+  scripts: lib: netlink_yml_parser.py: use classes
+  docs: netlink: index.rst: add a netlink index file
+  tools: ynl_gen_rst.py: clanup coding style
+  docs: sphinx: add a parser for yaml files for Netlink specs
+  docs: use parser_yaml extension to handle Netlink specs
+  docs: uapi: netlink: update netlink specs link
+  tools: ynl_gen_rst.py: drop support for generating index files
+  docs: netlink: remove obsolete .gitignore from unused directory
+  MAINTAINERS: add netlink_yml_parser.py to linux-doc
+
+ Documentation/Makefile                        |  19 +-
+ Documentation/conf.py                         |  63 ++-
+ Documentation/netlink/specs/index.rst         |  13 +
+ Documentation/networking/index.rst            |   2 +-
+ .../networking/netlink_spec/.gitignore        |   1 -
+ .../networking/netlink_spec/readme.txt        |   4 -
+ Documentation/sphinx/parser_yaml.py           |  76 ++++
+ Documentation/userspace-api/netlink/index.rst |   2 +-
+ .../userspace-api/netlink/netlink-raw.rst     |   6 +-
+ Documentation/userspace-api/netlink/specs.rst |   2 +-
+ MAINTAINERS                                   |   1 +
+ tools/net/ynl/pyynl/netlink_yml_parser.py     | 360 ++++++++++++++++
+ tools/net/ynl/pyynl/ynl_gen_rst.py            | 385 +-----------------
+ 13 files changed, 523 insertions(+), 411 deletions(-)
+ create mode 100644 Documentation/netlink/specs/index.rst
+ delete mode 100644 Documentation/networking/netlink_spec/.gitignore
+ delete mode 100644 Documentation/networking/netlink_spec/readme.txt
+ create mode 100755 Documentation/sphinx/parser_yaml.py
+ create mode 100755 tools/net/ynl/pyynl/netlink_yml_parser.py
+
 -- 
 2.49.0
+
 
