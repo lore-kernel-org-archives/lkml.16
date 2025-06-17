@@ -1,443 +1,571 @@
-Received: from sonic306-28.consmr.mail.ne1.yahoo.com (sonic306-28.consmr.mail.ne1.yahoo.com [66.163.189.90])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2102.outbound.protection.outlook.com [40.107.244.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C6A42EBBAB
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:11:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.189.90
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194685; cv=none; b=rZ3NnuNzr6RBlzpD1F5017P5roSTe315xlWBrHOv/SsnW9QNVv+6Uj2YMXtEL1xaY/cZiNIVFNwqtBpg+odsdZzTkmtwTOMlPtSF9v9Cb2lqlf5L4Vp7OcOYDDMoELSloMf7U5cwR+zCana9hA5VP3aranRs0VSfIk8GlWkaPvo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194685; c=relaxed/simple;
-	bh=s6Zlbdl8RXwqc2QBqLF39ACjWvYfI+KbaL3DtQhXQ0U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LlvBn6eYzLzL2j0YNiFy7rrf19DcEtL0sTA6Il7u5HiFtiERlnBP4IWvgcwIv+PMVNzprVnv2twM2nihZckaI1SwvWOSH1krZxVMsLYzEf04KCCn7ddWX34x2o5gazPMBZQTMGFf0Jc09sHijBZg+WlSxVAQVMLD/oxcGopXJdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=MwZSrMmU; arc=none smtp.client-ip=66.163.189.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8EDE2F004C
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750194690; cv=fail; b=lYsQqrCj2rvSSN79H7JNzqsi1ynq7sJlQY4WneHhZwcm1LsGh44WUx+Mu+wx6KNHcq6nTNHrSqmFXa8OUveIFmk5uy+QokOpfeIYvkHa9EZQwi2C6OzW6vAn2G0mmpRfESsdeWq9FUm5JUDIq0VyA9ucYp7cAzVzFzr8v/gEhBg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750194690; c=relaxed/simple;
+	bh=O1tKmiV6cI7R98yj1yWzeU6+R9bys0auwxB61/m87wA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ppVHtFOsIbzRPRs4HCLAzXbMqKFoKFDKKDlGphEoHDhduTehpNvqj9bDxDvgy/XosF6ECwtKTUBEuBQ8KW/e/HxJjSPpzzheZ1xFq/hUE76vERG2bbTFH+iyh5E/orPFZ/l5aJLFNJ+Yx8pvdrksffeLbx7XEOipa8xcL1IigUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=M2VDeR+1; arc=fail smtp.client-ip=40.107.244.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="MwZSrMmU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1750194683; bh=xkBYRFAHX7ZhFADk14XFnsgj0mIElQL2qR7XvnrGWF8=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=MwZSrMmUGgZi1W4Bd0oPFHhSsXcX9wzn5fW7i0cU4CPB0PFCpxbn1ZaXZEUDICSmC1BcvbtJmC5j/ZREErgZ+/RUwyYYHmqvWFqjBXGhIbO3Qk75XOF0L7YxnxHY8UCtoaqPApK5ENcnSjY/jhbjCBLZaDN0vQzIajWNEn48M2Xr+RzSu7nO0r1rUI++QltgpDqY3NEwezlRI8PSTyy8ldXwkYoItPD+g+skggiV+xDkbSVZFx7+ROT0xY1woZ2cG8Z+a4q3Mau9pf3nDWsy31q5CqVcvmvuAVAVRgm3WzRR92qPa/hxSkBri3sXtA8IomcNxoFXsX8GB8WiqAkRgg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1750194683; bh=s7TX8Ruh14bgzZW8w8wjHsCJIwt4Dccs9rkHwfDINvG=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=nYV9ABjx+yPtmkM/mTsmee7xW2YfM+xdlxjbWPwfk7aoq7joUSC0zTGsqNAlUNEb0xJGPq50hYErlywqzZTXMEBFJ4YOoIcuIKaWg7quV+OOtrXSXLSmdtJtvfS1cgwtmibZX0y4263Haf/p0lnvydtzq41Ww/QE+ENxuvM/eOWI0fYdmuetZPKlkvau+ApxtMJkEVvtLWoJE+npWaLuAPpzBsc7KbFdFF52kwHOAlHibx7MH3uo87dCB6tavROiTzqQrCKCORsZMZwWyR/C4VuhebIJM+dz9tr5kBI9jDP+U24QSleGe8QIjoOnQ3CTN3JLZWl2AoqG8/hjTsYXNg==
-X-YMail-OSG: KZRtb5YVM1lVDF9XgijnLRCF2Xol2vu1vFyI_i2uLuYWS9r62LW3OEcXWxsP6wr
- 3_QzUJJQ_A2pqzm_OVNaFaJHOFfiEJUB882XtfgCuWwCUxe_wps1lxyA7mrHc6AMb_U7IHGnQveX
- YNN.vkZ2ycfWZpwfgjTnEPcrEs96aRX83CZi7b1m5NWghXP3IKoFFuWhpk2KJzB53YaKKCaA4bA2
- H9n2K6GYSwZaGD9bUz.qAdu036bMw55AR1R_Yb8_84.EfGkUy8y3jNjHFMv8DZ91t8cjL30ngC5j
- 6dMHU9Jo3q2dNsZdQJpeE0NtH6NwVfFVEDdxuVHwoQvr8mcPbkfsdoeoXqKcQ1AFhN3s8KNFxwpj
- tzLo3eC9pXmIvnsTi2H9e5.w_4G80q_2CJhAKSui8P52Ah5SutOex4_JV6anTgl9D4Rh.okqCkPN
- eIbVOrr2rWOYkPiBok79vVYtyZzyUX8j29dxw0UtmuOMJMWw23GAe_eDVl7xAoWnpLqSw6yGx2hf
- q179kaHDeOSeiRf_pofl3s92aA3hPUflKb_87KQ7wIx.NScTIHqdlgfvofI2g.ZRcWxDVu92.Wf9
- N1ZtjUvC9lVroYAT9JxcY.m_fXZ1nQlwqEkpZSxeLt2EN3n6bv3OCAIDNyx1KPuX9u2S.tCAIjot
- Va.BZ6PE5V2Rjh_gFlRnCBFzLYYbgHI6GuODeTS19WH7cXZX9Twb8nxhf4OgRKjA8DDps4yTRXZz
- fvxX7upR4wn8b6CAVdo995RFrTJEqghApcTPhZ5zS1S9eN7WkW4Ga5aCcc_KV_El86uAdRPM.ulU
- vhJUMouHyjq6iSnkYKZPbkbnv44NEGaee28Q4dJqn_9lYze7iZ_VFS4PJ04HdEN6NCInUi_d79Gq
- tGQQakmxnaUQnXMjL0sf48dn1DdQy._57oSLcBNd3hkzGbPaCGy9pF_iGVJwRzlhM6GGApXc2Vt3
- dJbA1FDK3qReNp2E0RoQ0o4xUe7I.8hGd_hUwbE6_zixYsrGOGzWAvukgjNk1P3eIbKnXAU68aoc
- ckQ.r90TGDvRttHskLLAxWecsagXHvKEKef0R7c8mt24Tuk9d5b25CHW3tmw2NsJ2gFRdJtT7RBG
- hYgVi1zX8otdendmprOVwY6xBCYkSEhWSMRBVK8kw9WvusEVgNEVZnJ2LEiNwz0V.YXKIp89jWNI
- 9xOv4rY_mVy.njTxgg7n3PNQY0g30cgTtjw1SK5YMHxMbDiwpmqp.TCPk96hbOEskG7XH.Uns9qn
- n0sJa6uBgPvYVcwhEE7w6tip8dnno_ZJcYBbQXBOPpngy4W5ekRrE76JoJyXwMib7Hg036frG0F9
- HCUaYQWX6ITbjf6eRQkkI3lvZ98dJGp_AR5faXMHaEGYy4.zPE08p13KaGpjsQ.2hT0RMpFZb3GY
- FVMn7aUOIQGgkfpf3nHZtn7jhClp6kehRVLKF6zupbkr._IHp3l.WMrH7xrduGlHFoXUfcNx4qCh
- oUyFAPgYakmKDZ72RhYXSMPSN0pY9kkNoOhq.Zs9FtDttPkUAPdAIP0QZSIynjMEj2z9E.554kgw
- nKUTV7Mu2k.bA_nnl8bYv2NhyYXRyao3xYwIDaiUeaXoFN7OcxQEjotptaJQ6bE48pCyuO_Qkk1Q
- cOUxL1wMpqbqjf__fwBy0kqKUtnq_lscAlbsm0e2GlkqOuLdBchT.Dh.SYp3_jJ_U9KBOmRwa.pc
- hLRKF01GaxckjpZvVZxc1UPK6wTClLd837nhHAeCnu1LA.WP2mx7Aev4WzDE0RZvC_Pewa3VEDR1
- coIhpfPY5FZvxXb0N230eUg5mm4YqHxQDgNQ3V1rfGbxbI8HLjj__5IAsEKw7N9o_6LYzJsKf4.w
- _9I4DLP0Ea1reJd.J9.ktdNlEXv7rkPH509nS9K1jX0K17nsUfEX06NPT2JqhNZM1OHWX.BcyF46
- DO0NgClvf6geIkhHAU0IWawc2hsG72gb2Pk5SG.QeupqR3Xlv19oUJSn4AB.xxC_gTxXzcMbDRjd
- hFPvgF34jRI7JIBmZg1K6XjGyAqjHg9DYphlXW53165czptIp9uPctDBOfYqUBBSkvyRdw4_DnI3
- X5gbo50ZEgPCgi1yfxMoPGS0uM9sQIlKsT5Mq9iE7URUsTmDcmTxI9FFvFckmqzEjSDNHQ2DA7xf
- bhbZWjGoNVmepRESXrQnkq4WRaqqQxqPcqVz5Za2K9zbi54n0CeOxRAts5EF9HtPtB34a4F120bV
- c3IrowqtY13FYBJzGbB7FP2sh8pq7DNmWki7b3EynaW0lvYboJ4Sx5pWQk.jfwbJz0UPt2fE042b
- pK09WEF2aW8LGUxEYQiWGw9Ysfpjd
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 7d08d374-ec9d-4edb-9e4d-1b9affbe8ac1
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Jun 2025 21:11:23 +0000
-Received: by hermes--production-gq1-74d64bb7d7-f4j4n (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 5c2f63bee58180d330568dcd5f1b3323;
-          Tue, 17 Jun 2025 21:01:14 +0000 (UTC)
-From: Casey Schaufler <casey@schaufler-ca.com>
-To: casey@schaufler-ca.com,
-	paul@paul-moore.com,
-	eparis@redhat.com,
-	linux-security-module@vger.kernel.org
-Cc: jmorris@namei.org,
-	serge@hallyn.com,
-	keescook@chromium.org,
-	john.johansen@canonical.com,
-	penguin-kernel@i-love.sakura.ne.jp,
-	stephen.smalley.work@gmail.com,
-	linux-kernel@vger.kernel.org,
-	selinux@vger.kernel.org
-Subject: [PATCH 3/3] LSM: Infrastructure management of the mnt_opts security blob
-Date: Tue, 17 Jun 2025 14:01:05 -0700
-Message-ID: <20250617210105.17479-4-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250617210105.17479-1-casey@schaufler-ca.com>
-References: <20250617210105.17479-1-casey@schaufler-ca.com>
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="M2VDeR+1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=b6tByGJzUsafd9VPS8RlUOtb3hP0NGYDFO1LDY72ez1oGYjZ1oWAQhsx501yXNljzACv1+Fp8TbT4MGOkkiBXdnuLFhFAd6ddMr/KQyBnUZ6BJe66OIYfl7hbq/ywbG9jF617HrYg6fLn6AE7/i8R4AkxM5Wm0lQG/qZ1POXaS9mCJrGp8ApSRXrss41bGQ5PzALBVglhP7OnaIZIjGYRhoIK2LXmNPZ6oumCTA0YwP1jlcOUYIJiSZO2F2xuVLQEdMS94u4SzpKFXLigS+khsUiooqopErynqjzvONTpr+gy34UpxVpR55ZdunZE5ZfdvEYOAY7RAD6Ef1bxbKk+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AD7gFHfHrEgMU51ZYG9T4AmN9Bmv29mSbCnUTIhkpcU=;
+ b=mA6unuAXFvMtEvSHavjhD38k1eaJKc0x+wYsdNjXy0VQj7URINJnaGC7OI12xQvo3y6Tz4IR7nIxraZaZ1qqX7qxDgOATiUl0ThMY3ERLP8i/RTcMQSdYORDYffpFgaiktjg7RSVduM87WT+flUwCBfY3E4eF81X3h2qIue2hO8aXMSfwgj2dZQzNW7O4TXAfhflWsT3tHxpXkWpUgz59GsnfjT2GbJLL3ZsPZRG3ozveJmVkoSLz1Mc2e0npgYJUT/aMTRq8SmLJGgKDI/sxfebvzZ1rsyOe6qY5w9bzboHzi1BGNHPrlHOdZd+G/xSxZZzZTsUS6NFVlGyJQokqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AD7gFHfHrEgMU51ZYG9T4AmN9Bmv29mSbCnUTIhkpcU=;
+ b=M2VDeR+1EVkX7M0tb68iGsURvO8LEE5jk1/+ORirG37Jsc1DVvLD00q5ZQnzsjxjWJAU9w7zLiimoPO3j+xPRZt7W1E2mbka4ra33HWgEn//1et5snAjM8Kmwfs1oNgu5OQN+2ACfHBRSg6RPKiSxu3XTWODnJOs2dh4l5V7adA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from CH0PR01MB6873.prod.exchangelabs.com (2603:10b6:610:112::22) by
+ SJ2PR01MB8404.prod.exchangelabs.com (2603:10b6:a03:542::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.29; Tue, 17 Jun 2025 21:11:24 +0000
+Received: from CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460]) by CH0PR01MB6873.prod.exchangelabs.com
+ ([fe80::3850:9112:f3bf:6460%6]) with mapi id 15.20.8835.027; Tue, 17 Jun 2025
+ 21:11:24 +0000
+Message-ID: <96cea729-437a-4bd8-8dbf-7ff651979387@os.amperecomputing.com>
+Date: Tue, 17 Jun 2025 14:11:20 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/4] arm64: mm: make __create_pgd_mapping() and helpers
+ non-void
+To: Ryan Roberts <ryan.roberts@arm.com>, will@kernel.org,
+ catalin.marinas@arm.com, Miko.Lenczewski@arm.com, dev.jain@arm.com,
+ scott@os.amperecomputing.com, cl@gentwo.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+References: <20250531024545.1101304-1-yang@os.amperecomputing.com>
+ <20250531024545.1101304-3-yang@os.amperecomputing.com>
+ <38fb7875-88c0-4687-8421-f92ae3ffaa72@arm.com>
+Content-Language: en-US
+From: Yang Shi <yang@os.amperecomputing.com>
+In-Reply-To: <38fb7875-88c0-4687-8421-f92ae3ffaa72@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CY5P221CA0005.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:930:b::17) To CH0PR01MB6873.prod.exchangelabs.com
+ (2603:10b6:610:112::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH0PR01MB6873:EE_|SJ2PR01MB8404:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72192c79-403d-41ce-fb27-08ddade38436
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SWYzWTVFNXFMTVNkdURTR2o2YjlWUWhYYzlkVkpNTk1wUDYwTUNiRVhmOHlC?=
+ =?utf-8?B?RVVtY09vLzR3Zy91Z2dCdktzNUdPa0Z3V0wrUHVJSHg1Zmx3UVM1Z0E3NTFJ?=
+ =?utf-8?B?d1owQXRZRm1MSHp1aHpiWHJyRnNCVmU5TjhPWFYwUy9sRFpIQ09HSHk4M3Bi?=
+ =?utf-8?B?a1NXajlISjRLdmdsa0wvWVFiK1NSWCttQTFDMU56VHM0UmpEMDNnbUgyVFkx?=
+ =?utf-8?B?cHZnOGltZWFCTXB0SkN2cWlUeVZXRm1Eb3hoQ3lkNGt1Qkhrb09hR283RlQ0?=
+ =?utf-8?B?RGh5eUJXZE00TEpyUURLdFBxZTZldlZFTG9JdkhnVnlQcVFRWVNzK2c5cVZO?=
+ =?utf-8?B?eWpHYm4yZGUrSUtNSkVGMDBWMm1ub2lvY3Rzb3FmU3BDMmYvaTlhZWtaMjZM?=
+ =?utf-8?B?SFdpakVVK0p4ZWN6bnZyKzhGZTdLU3krVE9nQVNXM3p5Q1N4V3NJdG1ZWFVx?=
+ =?utf-8?B?V2VIbXZlZWRhY3J2NzFNNnlBZS9XZjZjd21aT0swVURQQ1haTE9KTW1GakJn?=
+ =?utf-8?B?WlFyM2ZvdDQvMU41MDFud01Wemgvc21SZndDVXhOMXZUSXNxdzJRUFQvWVFi?=
+ =?utf-8?B?ekd1ZUFRYmFuam9keTlSNWk3M2tHUFJBT2FFeVpOb2cxa2JQY3JHN0UvMVFj?=
+ =?utf-8?B?U0dBVTVYTXNuSUVrOFk1bzVUbWRnWGtlK3RvQzM5OXhiZFVtRVZRZVZ2bCtu?=
+ =?utf-8?B?R3UyYzZWYXZjNnIxY2pyNVFYdmw3MXRCazBEbWlPNmgyb2ZyZENFcitBRVl3?=
+ =?utf-8?B?cVBYUGpBbVdyWmxJSXZUZGdzTy92TEN6NlRKNXBmcmtRZVIzVTRwemRSOXJO?=
+ =?utf-8?B?c0tmZ1pHM20zWFNlUkt0SGlQT1Q3UGZ3QVVNMUUwdVBWcFA5MWVzWlkwOFR5?=
+ =?utf-8?B?NnowYVZnTTVsSlBMMzRZaUxVbE1PRlVnQVdwZWxtWFA3TlRUWUYrazdkYWVy?=
+ =?utf-8?B?ay9WQThWRE5QNlUyeWQ1K2Q4TkJpazhJRlNnSU1nYzBEU3lCT3B5SEpQRE5M?=
+ =?utf-8?B?VzR0dHZqaTNDckk4NEw5Rm5jLzgwMDFLSUt1OFM4bHB3ZU1pSVZMMEFDTFhQ?=
+ =?utf-8?B?Skdjbzl4VUdNZkRtUEtLV2ZlQS91OFM3WWhaSU1OUDhiYmNSTjR6TGZBdHVp?=
+ =?utf-8?B?L2pDU05kR0llYmk5b1JpaE5XZ3ZIckVNcHBQK0E3K1NuVWFKSlZSa09kUFQ3?=
+ =?utf-8?B?TFpQT3ZRa3RYTFZrMjhJZWR3S3luMVJLVU9naXV1Y0hZV2ZMSGQrdERQc1c5?=
+ =?utf-8?B?SHJxcTBLSTQ5VVZyajQ0U0dwazloOThnTGFDZlNxOXdmRGx2NVppNFB1R2Fu?=
+ =?utf-8?B?aFdXaWNJSlRxalowT08zdjQrTzhKSmlZLzVwbGMxeVp3TGtIazBGYW5DckRy?=
+ =?utf-8?B?TE1aZXlRbmtMTS9wRlVZNFdiUE9kZXJOVS92Z3Y1MnVOSTI0dEFuSFpIYlJM?=
+ =?utf-8?B?QVhmQ0piYUkyZCsrTGRtNFJQYmcvTGkrYmJIZWpGbXp1K1dSM0I0QUhDM3Qr?=
+ =?utf-8?B?ZXhndk91WkJ1K294ZGphNHhLUkpnMWN3MGY3Rks4eFE0b0hNMFFnRjBJM3Q0?=
+ =?utf-8?B?V200Z3FTbzlQN3pSWEtLODBqM0FuT05YTFVyYitxV0VUSmtYaTZ2VUFidllt?=
+ =?utf-8?B?VkpMU2s2Q2NicmtFTEt0UEN2RlV0MVB0Tk11VENLV3VQMHJLRDRqMDkwZXNB?=
+ =?utf-8?B?RmFFU2hzRDgyaG5JeEN5MFJrSEdXcitvc2wwTzc4MmIzRUNLbXZRN1FDcnFQ?=
+ =?utf-8?B?SXA1a1YzNVZORkE5OUVwemxDS21INzBvRDM3R1R3eE8vSDFiZEJ3YkN3QmEw?=
+ =?utf-8?B?KzZUUUhFMkdJYUdRWEdYb0lMZXFheGtVQlRDMGZZUCtOU21tbmFjWHdXNHNx?=
+ =?utf-8?B?aGVPMXl5WmlQR1pxODRLQ2R4VmZaYjFrQ2xUd3BvUTJWWEE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR01MB6873.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?MGROdllOZkhKalBzd2ZZbnNNMGFLVEswNFJ4SEVzWkYvN29sTGp5WXc1NGs4?=
+ =?utf-8?B?R2xHaldRYUxiNXNEQ2MrR3VMRmdzVWtMK3F3dUxIUHo3K1BCTWFlUFhqejVZ?=
+ =?utf-8?B?VFNld0NDTnVVc21nWTJvMnlMRjI5MU5XVE9VZVdQdWJmT29XdWtJbWU2KzRy?=
+ =?utf-8?B?djJiNlhhMzVkOFBJV2tSS2ttbTZLdGtLSmY0WWJ0eWVzTVBjMlZzWjdvTVEv?=
+ =?utf-8?B?Uy9tOUdrbEtXTWd1Q1I3RjdaTXRUR01OajhyOThSdDdXbjVub1RPbFJ0TExq?=
+ =?utf-8?B?Y1ZqVVkvR2dQTndrbUpoSkxLZFRxeTlLYnR5WVlNMFJ0SmdFVWFvd1dIaEgy?=
+ =?utf-8?B?dFMvL0JpQ28zV3ZPMFF0ZGhHOFp3RGtjUDBGSVRmOXF3eGt3WUFFbVBqdmJs?=
+ =?utf-8?B?ekdBU1dFbjFBaHk0VWlXVmVtOWxDaE10ditISDZsWVA2ME51Zm9OdWc1ZjJB?=
+ =?utf-8?B?VUd4M042aHo3Z1ZQQjdMWEUzN1JGMEk3bnkrd29TKzRTQlU0WU0zeDVDNTdm?=
+ =?utf-8?B?cTNLQXRldEpsL3VDRThXQXNnTzJkWnhzeWFkemVXK2V6TjBTMzVqblhnbEgy?=
+ =?utf-8?B?a2V4M1plM2RuMDFoU1RnK0dNaS9nV1BTMGxCb1JTdlJMSUZGRmZwRlpkT1J0?=
+ =?utf-8?B?d2l0aTdiL2EveGJlclpBMmtzUjhEdkFDdW53Q0pHRFdSbWFXODhxQkVCMWM0?=
+ =?utf-8?B?UFI4bDJBNW5YakIySS9OSHh1WDBkZmwxYmxYNitMMVRQUzdFY0xhQ3J1NUpH?=
+ =?utf-8?B?a2Q3R3VOeG13MWlweEFnMVdCZ3g1WEtiSWxHaHVNSWFBY1Z3NmVnSlNuVWNp?=
+ =?utf-8?B?eW54ai9KTERDb05yQmI5R0k3aVFZaHdGQXdjM1FoRWtHN0NOZU5hek5hVnRH?=
+ =?utf-8?B?S2xBTW5jS3hHSjBVU09OZm9aekxkRGtIL08wdTVYRVlONUZDZHlLRXFSNHhW?=
+ =?utf-8?B?RjEvZFMvamFIdUNPUW5OajJrTlkvOFA2YjE1N1BDUDBKQnF3NEF2R2Zhdmx4?=
+ =?utf-8?B?UEd4ckc0SmhUeHNDeVZZaUhsS2oyeU5VNGFNM0xqTFZoZklwTy9lWWM0bFBK?=
+ =?utf-8?B?WWhMcVB1VGsrbnhvRHRpUDk5WE9TVXRBblU3SVNUYUdwbGx4eU9CT2pTREM4?=
+ =?utf-8?B?Wkk5VjZzWDY4MkFHTXJJRkRuM3prVDkwbU5zNDVJMUlZR2s3S3RDbTQ4YTA5?=
+ =?utf-8?B?VDZVd052NnZTUWNFOE1ZTEJRRGN1bEZmd1VOcVlIVGptUlprdVJLbDBpV1hM?=
+ =?utf-8?B?N3o3bW9OWGpXUnd1bmRGUUIvU1RIZUo3VmUwZFc1Qml2L2lCOC9uTnBCNS9P?=
+ =?utf-8?B?eHptMzlMN3plYUg0Vmd3WGY0dUE0S3ptWkttVFh2NWFNbE8rRmN3SmhGT1Z3?=
+ =?utf-8?B?Zi9RblJRc2dqZ0dzQmJUeU1BVjhJN3hsL0lRajFvSEdWVW5YRFk0QkRud1VV?=
+ =?utf-8?B?N2dpZTVFdlBjTHIycGZLODRaczNmOXMyYUJJb0UzMzhrb2psZ1NqNHlFRGtV?=
+ =?utf-8?B?LzhKamsrV0VYVWJmOSs4aTREWGMwNmZBM1pJYXZCaXVVVzdlMGpoQnZ2TS93?=
+ =?utf-8?B?aXUrdDFyNUN2TzF1ZHdLU0IrMDVycGIxM3EwdENLbWkwUGlGczRhaUd0ZHdX?=
+ =?utf-8?B?Wk0wL1JjOFlUSVc0Zk5MeFZIRERhd2J6bXY0N0Z2VDhVWjZUd2ptMGNzdUUy?=
+ =?utf-8?B?VjJpblJJOHlrc3ViVVVsMkRlVUp1Misyc1dVeDB2RjVDc3dsSW5RL1BPSU1h?=
+ =?utf-8?B?b3pTYU5SWlB6LzNDaDByOU1UOFpkczR2c3FKcjFuQUpZeFFCM0ExdlY4TW9p?=
+ =?utf-8?B?ZjQ4RTV5OHN4NlpsNGZpdElUTmkxbVlWaUExc0FmaHFxOUdhYStGZWp1dDhv?=
+ =?utf-8?B?MHZGcEV2NnhPVTNHdm1VbkJ3dnUyRGN4RXd1SkNFeVFPem5QZlZGZUVTRDZQ?=
+ =?utf-8?B?UExScDZHaGlUd2tmaVhoRCtoUkMrTkpydEJ6VlI5VHU4RGZtZEtZa0JveU5x?=
+ =?utf-8?B?bC94bVB0U1pxaEFnNGNrVGhKWEJRa2xtR2hxNnF1VmVydXpXUnNkQXl3cXZJ?=
+ =?utf-8?B?bnNqRk1iaDdKUEVadnBKbTc2Uy9sbC9jUlVYSTNkMXBaRWpkeVA1TG5qUkNs?=
+ =?utf-8?B?K0UwVy8xUEEwdWdKNmQ1MzhkZ2oxTnJCN09tR0F0U0NKSjBxZGhIeEE1dFFT?=
+ =?utf-8?Q?wT/mzOoabs6NdBfQdUClUiQ=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72192c79-403d-41ce-fb27-08ddade38436
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR01MB6873.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2025 21:11:24.5105
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +gUoFlV6oOkMKhNFn7M/58QFh0mBcAidOXZHyky1stqpiYJVNFRHFrPtekSfwi0YikJfsTmqIQ6De63rxRxJ1mKQ9Bs2bf2KUJ8eVYaLCx4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR01MB8404
 
-Move management of the mnt_opts->security blob out of the
-individual security modules and into the security
-infrastructure. Blobs are still allocated within the modules
-as they are only required when mount options are present.
-The modules tell the infrastructure how much space is required,
-and the space is allocated if needed. Modules can no longer
-count on the presence of a blob implying that mount options
-specific to that module are present, so flags are added
-to the module specific blobs to indicate that this module
-has options.
 
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
----
- security/security.c        | 14 ++++-----
- security/selinux/hooks.c   | 58 +++++++++++++++++++++++-------------
- security/smack/smack_lsm.c | 61 ++++++++++++++++++++++++++------------
- 3 files changed, 85 insertions(+), 48 deletions(-)
 
-diff --git a/security/security.c b/security/security.c
-index ec61fb7e6492..01fa3b5336b0 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -843,17 +843,14 @@ int security_fs_context_parse_param(struct fs_context *fc,
- 				    struct fs_parameter *param)
- {
- 	struct lsm_static_call *scall;
--	int trc;
--	int rc = -ENOPARAM;
-+	int rc;
- 
- 	lsm_for_each_hook(scall, fs_context_parse_param) {
--		trc = scall->hl->hook.fs_context_parse_param(fc, param);
--		if (trc == 0)
--			rc = 0;
--		else if (trc != -ENOPARAM)
--			return trc;
-+		rc = scall->hl->hook.fs_context_parse_param(fc, param);
-+		if (rc != -ENOPARAM)
-+			return rc;
- 	}
--	return rc;
-+	return -ENOPARAM;
- }
- 
- /**
-@@ -927,6 +924,7 @@ void security_free_mnt_opts(void **mnt_opts)
- 	if (!*mnt_opts)
- 		return;
- 	call_void_hook(sb_free_mnt_opts, *mnt_opts);
-+	kfree(*mnt_opts);
- 	*mnt_opts = NULL;
- }
- EXPORT_SYMBOL(security_free_mnt_opts);
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index f7eda0cce68f..b00c78e0a650 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -378,15 +378,28 @@ static void inode_free_security(struct inode *inode)
- }
- 
- struct selinux_mnt_opts {
-+	bool initialized;
- 	u32 fscontext_sid;
- 	u32 context_sid;
- 	u32 rootcontext_sid;
- 	u32 defcontext_sid;
- };
- 
-+static inline struct selinux_mnt_opts *selinux_mnt_opts(void *mnt_opts)
-+{
-+	if (mnt_opts)
-+		return mnt_opts + selinux_blob_sizes.lbs_mnt_opts;
-+	return NULL;
-+}
-+
- static void selinux_free_mnt_opts(void *mnt_opts)
- {
--	kfree(mnt_opts);
-+	struct selinux_mnt_opts *opts;
-+
-+	if (mnt_opts) {
-+		opts = selinux_mnt_opts(mnt_opts);
-+		opts->initialized = false;
-+	}
- }
- 
- enum {
-@@ -641,7 +654,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
- 	const struct cred *cred = current_cred();
- 	struct superblock_security_struct *sbsec = selinux_superblock(sb);
- 	struct dentry *root = sb->s_root;
--	struct selinux_mnt_opts *opts = mnt_opts;
-+	struct selinux_mnt_opts *opts = selinux_mnt_opts(mnt_opts);
- 	struct inode_security_struct *root_isec;
- 	u32 fscontext_sid = 0, context_sid = 0, rootcontext_sid = 0;
- 	u32 defcontext_sid = 0;
-@@ -657,7 +670,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
- 	mutex_lock(&sbsec->lock);
- 
- 	if (!selinux_initialized()) {
--		if (!opts) {
-+		if (!opts || !opts->initialized) {
- 			/* Defer initialization until selinux_complete_init,
- 			   after the initial policy is loaded and the security
- 			   server is ready to handle calls. */
-@@ -695,7 +708,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
- 	 * also check if someone is trying to mount the same sb more
- 	 * than once with different security options.
- 	 */
--	if (opts) {
-+	if (opts && opts->initialized) {
- 		if (opts->fscontext_sid) {
- 			fscontext_sid = opts->fscontext_sid;
- 			if (bad_option(sbsec, FSCONTEXT_MNT, sbsec->sid,
-@@ -1004,7 +1017,7 @@ static int selinux_sb_clone_mnt_opts(const struct super_block *oldsb,
-  */
- static int selinux_add_opt(int token, const char *s, void **mnt_opts)
- {
--	struct selinux_mnt_opts *opts = *mnt_opts;
-+	struct selinux_mnt_opts *opts;
- 	u32 *dst_sid;
- 	int rc;
- 
-@@ -1019,12 +1032,12 @@ static int selinux_add_opt(int token, const char *s, void **mnt_opts)
- 		return -EINVAL;
- 	}
- 
--	if (!opts) {
--		opts = kzalloc(sizeof(*opts), GFP_KERNEL);
--		if (!opts)
-+	if (!*mnt_opts) {
-+		*mnt_opts = lsm_mnt_opts_alloc(GFP_KERNEL);
-+		if (!*mnt_opts)
- 			return -ENOMEM;
--		*mnt_opts = opts;
- 	}
-+	opts = selinux_mnt_opts(*mnt_opts);
- 
- 	switch (token) {
- 	case Opt_context:
-@@ -1051,6 +1064,7 @@ static int selinux_add_opt(int token, const char *s, void **mnt_opts)
- 		WARN_ON(1);
- 		return -EINVAL;
- 	}
-+	opts->initialized = true;
- 	rc = security_context_str_to_sid(s, dst_sid, GFP_KERNEL);
- 	if (rc)
- 		pr_warn("SELinux: security_context_str_to_sid (%s) failed with errno=%d\n",
-@@ -2650,10 +2664,7 @@ static int selinux_sb_eat_lsm_opts(char *options, void **mnt_opts)
- 	return 0;
- 
- free_opt:
--	if (*mnt_opts) {
--		selinux_free_mnt_opts(*mnt_opts);
--		*mnt_opts = NULL;
--	}
-+	selinux_free_mnt_opts(*mnt_opts);
- 	return rc;
- }
- 
-@@ -2704,13 +2715,13 @@ static int selinux_sb_mnt_opts_compat(struct super_block *sb, void *mnt_opts)
- 
- static int selinux_sb_remount(struct super_block *sb, void *mnt_opts)
- {
--	struct selinux_mnt_opts *opts = mnt_opts;
-+	struct selinux_mnt_opts *opts = selinux_mnt_opts(mnt_opts);
- 	struct superblock_security_struct *sbsec = selinux_superblock(sb);
- 
- 	if (!(sbsec->flags & SE_SBINITIALIZED))
- 		return 0;
- 
--	if (!opts)
-+	if (!opts || !opts->initialized)
- 		return 0;
- 
- 	if (opts->fscontext_sid) {
-@@ -2808,9 +2819,13 @@ static int selinux_fs_context_submount(struct fs_context *fc,
- 	if (!(sbsec->flags & (FSCONTEXT_MNT|CONTEXT_MNT|DEFCONTEXT_MNT)))
- 		return 0;
- 
--	opts = lsm_mnt_opts_alloc(GFP_KERNEL);
--	if (!opts)
--		return -ENOMEM;
-+	if (!fc->security) {
-+		fc->security = lsm_mnt_opts_alloc(GFP_KERNEL);
-+		if (!fc->security)
-+			return -ENOMEM;
-+	}
-+	opts = selinux_mnt_opts(fc->security);
-+	opts->initialized = true;
- 
- 	if (sbsec->flags & FSCONTEXT_MNT)
- 		opts->fscontext_sid = sbsec->sid;
-@@ -2818,14 +2833,14 @@ static int selinux_fs_context_submount(struct fs_context *fc,
- 		opts->context_sid = sbsec->mntpoint_sid;
- 	if (sbsec->flags & DEFCONTEXT_MNT)
- 		opts->defcontext_sid = sbsec->def_sid;
--	fc->security = opts;
- 	return 0;
- }
- 
- static int selinux_fs_context_dup(struct fs_context *fc,
- 				  struct fs_context *src_fc)
- {
--	const struct selinux_mnt_opts *src = src_fc->security;
-+	const struct selinux_mnt_opts *src = selinux_mnt_opts(src_fc->security);
-+	struct selinux_mnt_opts *dst;
- 
- 	if (!src)
- 		return 0;
-@@ -2834,7 +2849,8 @@ static int selinux_fs_context_dup(struct fs_context *fc,
- 	if (!fc->security)
- 		return -ENOMEM;
- 
--	memcpy(fc->security, src, sizeof(*src));
-+	dst = selinux_mnt_opts(fc->security);
-+	memcpy(dst, src, sizeof(*src));
- 	return 0;
- }
- 
-diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-index 1d456df40096..e88de89a5bc1 100644
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -544,6 +544,7 @@ static int smack_sb_alloc_security(struct super_block *sb)
- }
- 
- struct smack_mnt_opts {
-+	bool initialized;
- 	const char *fsdefault;
- 	const char *fsfloor;
- 	const char *fshat;
-@@ -551,24 +552,37 @@ struct smack_mnt_opts {
- 	const char *fstransmute;
- };
- 
-+static inline struct smack_mnt_opts *smack_mnt_opts(void *mnt_opts)
-+{
-+	if (mnt_opts)
-+		return mnt_opts + smack_blob_sizes.lbs_mnt_opts;
-+	return NULL;
-+}
-+
- static void smack_free_mnt_opts(void *mnt_opts)
- {
--	kfree(mnt_opts);
-+	struct smack_mnt_opts *opts;
-+
-+	if (mnt_opts) {
-+		opts = smack_mnt_opts(mnt_opts);
-+		opts->initialized = false;
-+	}
- }
- 
- static int smack_add_opt(int token, const char *s, void **mnt_opts)
- {
--	struct smack_mnt_opts *opts = *mnt_opts;
-+	struct smack_mnt_opts *opts;
- 	struct smack_known *skp;
- 
--	if (!opts) {
--		opts = kzalloc(sizeof(struct smack_mnt_opts), GFP_KERNEL);
--		if (!opts)
-+	if (!s)
-+		return -EINVAL;
-+
-+	if (!*mnt_opts) {
-+		*mnt_opts = lsm_mnt_opts_alloc(GFP_KERNEL);
-+		if (!*mnt_opts)
- 			return -ENOMEM;
--		*mnt_opts = opts;
- 	}
--	if (!s)
--		return -ENOMEM;
-+	opts = smack_mnt_opts(*mnt_opts);
- 
- 	skp = smk_import_entry(s, 0);
- 	if (IS_ERR(skp))
-@@ -601,6 +615,7 @@ static int smack_add_opt(int token, const char *s, void **mnt_opts)
- 		opts->fstransmute = skp->smk_known;
- 		break;
- 	}
-+	opts->initialized = true;
- 	return 0;
- 
- out_opt_err:
-@@ -622,10 +637,12 @@ static int smack_fs_context_submount(struct fs_context *fc,
- 	struct smack_mnt_opts *ctx;
- 	struct inode_smack *isp;
- 
--	ctx = lsm_mnt_opts_alloc(GFP_KERNEL);
--	if (!ctx)
--		return -ENOMEM;
--	fc->security = ctx;
-+	if (!fc->security) {
-+		fc->security = lsm_mnt_opts_alloc(GFP_KERNEL);
-+		if (!fc->security)
-+			return -ENOMEM;
-+	}
-+	ctx = smack_mnt_opts(fc->security);
- 
- 	sbsp = smack_superblock(reference);
- 	isp = smack_inode(reference->s_root->d_inode);
-@@ -655,6 +672,7 @@ static int smack_fs_context_submount(struct fs_context *fc,
- 				return -ENOMEM;
- 		}
- 	}
-+	ctx->initialized = true;
- 	return 0;
- }
- 
-@@ -668,16 +686,21 @@ static int smack_fs_context_submount(struct fs_context *fc,
- static int smack_fs_context_dup(struct fs_context *fc,
- 				struct fs_context *src_fc)
- {
--	struct smack_mnt_opts *dst, *src = src_fc->security;
-+	struct smack_mnt_opts *src;
-+	struct smack_mnt_opts *dst;
- 
-+	src = smack_mnt_opts(src_fc->security);
- 	if (!src)
- 		return 0;
- 
--	fc->security = lsm_mnt_opts_alloc(GFP_KERNEL);
--	if (!fc->security)
--		return -ENOMEM;
-+	if (!fc->security) {
-+		fc->security = lsm_mnt_opts_alloc(GFP_KERNEL);
-+		if (!fc->security)
-+			return -ENOMEM;
-+	}
- 
--	dst = fc->security;
-+	dst = smack_mnt_opts(fc->security);
-+	dst->initialized = src->initialized;
- 	dst->fsdefault = src->fsdefault;
- 	dst->fsfloor = src->fsfloor;
- 	dst->fshat = src->fshat;
-@@ -787,7 +810,7 @@ static int smack_set_mnt_opts(struct super_block *sb,
- 	struct superblock_smack *sp = smack_superblock(sb);
- 	struct inode_smack *isp;
- 	struct smack_known *skp;
--	struct smack_mnt_opts *opts = mnt_opts;
-+	struct smack_mnt_opts *opts = smack_mnt_opts(mnt_opts);
- 	bool transmute = false;
- 
- 	if (sp->smk_flags & SMK_SB_INITIALIZED)
-@@ -820,7 +843,7 @@ static int smack_set_mnt_opts(struct super_block *sb,
- 
- 	sp->smk_flags |= SMK_SB_INITIALIZED;
- 
--	if (opts) {
-+	if (opts && opts->initialized) {
- 		if (opts->fsdefault) {
- 			skp = smk_import_entry(opts->fsdefault, 0);
- 			if (IS_ERR(skp))
--- 
-2.47.0
+On 6/16/25 3:04 AM, Ryan Roberts wrote:
+> On 31/05/2025 03:41, Yang Shi wrote:
+>> The later patch will enhance __create_pgd_mapping() and related helpers
+>> to split kernel linear mapping, it requires have return value.  So make
+>> __create_pgd_mapping() and helpers non-void functions.
+>>
+>> And move the BUG_ON() out of page table alloc helper since failing
+>> splitting kernel linear mapping is not fatal and can be handled by the
+>> callers in the later patch.  Have BUG_ON() after
+>> __create_pgd_mapping_locked() returns to keep the current callers behavior
+>> intact.
+>>
+>> Suggested-by: Ryan Roberts <ryan.roberts@arm.com>
+>> Signed-off-by: Yang Shi <yang@os.amperecomputing.com>
+> With the nits below taken care of:
+>
+> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+
+Thank you. Although this patch may be dropped in the new spin per our 
+discussion, this is still needed to fix the memory hotplug bug.
+
+>
+>> ---
+>>   arch/arm64/kernel/cpufeature.c |  10 ++-
+>>   arch/arm64/mm/mmu.c            | 130 +++++++++++++++++++++++----------
+>>   2 files changed, 99 insertions(+), 41 deletions(-)
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index 25e1fbfab6a3..e879bfcf853b 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -1933,9 +1933,9 @@ static bool has_pmuv3(const struct arm64_cpu_capabilities *entry, int scope)
+>>   #define KPTI_NG_TEMP_VA		(-(1UL << PMD_SHIFT))
+>>   
+>>   extern
+>> -void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+>> -			     phys_addr_t size, pgprot_t prot,
+>> -			     phys_addr_t (*pgtable_alloc)(int), int flags);
+>> +int create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+>> +			    phys_addr_t size, pgprot_t prot,
+>> +			    phys_addr_t (*pgtable_alloc)(int), int flags);
+>>   
+>>   static phys_addr_t __initdata kpti_ng_temp_alloc;
+>>   
+>> @@ -1957,6 +1957,7 @@ static int __init __kpti_install_ng_mappings(void *__unused)
+>>   	u64 kpti_ng_temp_pgd_pa = 0;
+>>   	pgd_t *kpti_ng_temp_pgd;
+>>   	u64 alloc = 0;
+>> +	int err;
+>>   
+>>   	if (levels == 5 && !pgtable_l5_enabled())
+>>   		levels = 4;
+>> @@ -1986,9 +1987,10 @@ static int __init __kpti_install_ng_mappings(void *__unused)
+>>   		// covers the PTE[] page itself, the remaining entries are free
+>>   		// to be used as a ad-hoc fixmap.
+>>   		//
+>> -		create_kpti_ng_temp_pgd(kpti_ng_temp_pgd, __pa(alloc),
+>> +		err = create_kpti_ng_temp_pgd(kpti_ng_temp_pgd, __pa(alloc),
+>>   					KPTI_NG_TEMP_VA, PAGE_SIZE, PAGE_KERNEL,
+>>   					kpti_ng_pgd_alloc, 0);
+>> +		BUG_ON(err);
+>>   	}
+>>   
+>>   	cpu_install_idmap();
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index ea6695d53fb9..775c0536b194 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -189,15 +189,16 @@ static void init_pte(pte_t *ptep, unsigned long addr, unsigned long end,
+>>   	} while (ptep++, addr += PAGE_SIZE, addr != end);
+>>   }
+>>   
+>> -static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>> -				unsigned long end, phys_addr_t phys,
+>> -				pgprot_t prot,
+>> -				phys_addr_t (*pgtable_alloc)(int),
+>> -				int flags)
+>> +static int alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>> +			       unsigned long end, phys_addr_t phys,
+>> +			       pgprot_t prot,
+>> +			       phys_addr_t (*pgtable_alloc)(int),
+>> +			       int flags)
+>>   {
+>>   	unsigned long next;
+>>   	pmd_t pmd = READ_ONCE(*pmdp);
+>>   	pte_t *ptep;
+>> +	int ret = 0;
+>>   
+>>   	BUG_ON(pmd_sect(pmd));
+>>   	if (pmd_none(pmd)) {
+>> @@ -208,6 +209,10 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>>   			pmdval |= PMD_TABLE_PXN;
+>>   		BUG_ON(!pgtable_alloc);
+>>   		pte_phys = pgtable_alloc(PAGE_SHIFT);
+>> +		if (pte_phys == -1) {
+> It would be better to have a macro definition for the invalid PA case instead of
+> using the magic -1 everywhere. I think it can be local to this file. Perhaps:
+>
+> #define INVAL_PHYS_ADDR -1
+
+OK
+
+>
+>> +			ret = -ENOMEM;
+>> +			goto out;
+>> +		}
+>>   		ptep = pte_set_fixmap(pte_phys);
+>>   		init_clear_pgtable(ptep);
+>>   		ptep += pte_index(addr);
+>> @@ -239,13 +244,17 @@ static void alloc_init_cont_pte(pmd_t *pmdp, unsigned long addr,
+>>   	 * walker.
+>>   	 */
+>>   	pte_clear_fixmap();
+>> +
+>> +out:
+>> +	return ret;
+>>   }
+>>   
+>> -static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+>> -		     phys_addr_t phys, pgprot_t prot,
+>> -		     phys_addr_t (*pgtable_alloc)(int), int flags)
+>> +static int init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+>> +		    phys_addr_t phys, pgprot_t prot,
+>> +		    phys_addr_t (*pgtable_alloc)(int), int flags)
+>>   {
+>>   	unsigned long next;
+>> +	int ret = 0;
+>>   
+>>   	do {
+>>   		pmd_t old_pmd = READ_ONCE(*pmdp);
+>> @@ -264,22 +273,27 @@ static void init_pmd(pmd_t *pmdp, unsigned long addr, unsigned long end,
+>>   			BUG_ON(!pgattr_change_is_safe(pmd_val(old_pmd),
+>>   						      READ_ONCE(pmd_val(*pmdp))));
+>>   		} else {
+>> -			alloc_init_cont_pte(pmdp, addr, next, phys, prot,
+>> +			ret = alloc_init_cont_pte(pmdp, addr, next, phys, prot,
+>>   					    pgtable_alloc, flags);
+>> +			if (ret)
+>> +				break;
+>>   
+>>   			BUG_ON(pmd_val(old_pmd) != 0 &&
+>>   			       pmd_val(old_pmd) != READ_ONCE(pmd_val(*pmdp)));
+>>   		}
+>>   		phys += next - addr;
+>>   	} while (pmdp++, addr = next, addr != end);
+>> +
+>> +	return ret;
+>>   }
+>>   
+>> -static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+>> -				unsigned long end, phys_addr_t phys,
+>> -				pgprot_t prot,
+>> -				phys_addr_t (*pgtable_alloc)(int), int flags)
+>> +static int alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+>> +			       unsigned long end, phys_addr_t phys,
+>> +			       pgprot_t prot,
+>> +			       phys_addr_t (*pgtable_alloc)(int), int flags)
+>>   {
+>>   	unsigned long next;
+>> +	int ret = 0;
+>>   	pud_t pud = READ_ONCE(*pudp);
+>>   	pmd_t *pmdp;
+>>   
+>> @@ -295,6 +309,10 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+>>   			pudval |= PUD_TABLE_PXN;
+>>   		BUG_ON(!pgtable_alloc);
+>>   		pmd_phys = pgtable_alloc(PMD_SHIFT);
+>> +		if (pmd_phys == -1) {
+>> +			ret = -ENOMEM;
+>> +			goto out;
+>> +		}
+>>   		pmdp = pmd_set_fixmap(pmd_phys);
+>>   		init_clear_pgtable(pmdp);
+>>   		pmdp += pmd_index(addr);
+>> @@ -314,21 +332,27 @@ static void alloc_init_cont_pmd(pud_t *pudp, unsigned long addr,
+>>   		    (flags & NO_CONT_MAPPINGS) == 0)
+>>   			__prot = __pgprot(pgprot_val(prot) | PTE_CONT);
+>>   
+>> -		init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
+>> +		ret = init_pmd(pmdp, addr, next, phys, __prot, pgtable_alloc, flags);
+>> +		if (ret)
+>> +			break;
+>>   
+>>   		pmdp += pmd_index(next) - pmd_index(addr);
+>>   		phys += next - addr;
+>>   	} while (addr = next, addr != end);
+>>   
+>>   	pmd_clear_fixmap();
+>> +
+>> +out:
+>> +	return ret;
+>>   }
+>>   
+>> -static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+>> -			   phys_addr_t phys, pgprot_t prot,
+>> -			   phys_addr_t (*pgtable_alloc)(int),
+>> -			   int flags)
+>> +static int alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+>> +			  phys_addr_t phys, pgprot_t prot,
+>> +			  phys_addr_t (*pgtable_alloc)(int),
+>> +			  int flags)
+>>   {
+>>   	unsigned long next;
+>> +	int ret = 0;
+>>   	p4d_t p4d = READ_ONCE(*p4dp);
+>>   	pud_t *pudp;
+>>   
+>> @@ -340,6 +364,10 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+>>   			p4dval |= P4D_TABLE_PXN;
+>>   		BUG_ON(!pgtable_alloc);
+>>   		pud_phys = pgtable_alloc(PUD_SHIFT);
+>> +		if (pud_phys == -1) {
+>> +			ret = -ENOMEM;
+>> +			goto out;
+>> +		}
+>>   		pudp = pud_set_fixmap(pud_phys);
+>>   		init_clear_pgtable(pudp);
+>>   		pudp += pud_index(addr);
+>> @@ -369,8 +397,10 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+>>   			BUG_ON(!pgattr_change_is_safe(pud_val(old_pud),
+>>   						      READ_ONCE(pud_val(*pudp))));
+>>   		} else {
+>> -			alloc_init_cont_pmd(pudp, addr, next, phys, prot,
+>> +			ret = alloc_init_cont_pmd(pudp, addr, next, phys, prot,
+>>   					    pgtable_alloc, flags);
+>> +			if (ret)
+>> +				break;
+>>   
+>>   			BUG_ON(pud_val(old_pud) != 0 &&
+>>   			       pud_val(old_pud) != READ_ONCE(pud_val(*pudp)));
+>> @@ -379,14 +409,18 @@ static void alloc_init_pud(p4d_t *p4dp, unsigned long addr, unsigned long end,
+>>   	} while (pudp++, addr = next, addr != end);
+>>   
+>>   	pud_clear_fixmap();
+>> +
+>> +out:
+>> +	return ret;
+>>   }
+>>   
+>> -static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>> -			   phys_addr_t phys, pgprot_t prot,
+>> -			   phys_addr_t (*pgtable_alloc)(int),
+>> -			   int flags)
+>> +static int alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>> +			  phys_addr_t phys, pgprot_t prot,
+>> +			  phys_addr_t (*pgtable_alloc)(int),
+>> +			  int flags)
+>>   {
+>>   	unsigned long next;
+>> +	int ret = 0;
+>>   	pgd_t pgd = READ_ONCE(*pgdp);
+>>   	p4d_t *p4dp;
+>>   
+>> @@ -398,6 +432,10 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>>   			pgdval |= PGD_TABLE_PXN;
+>>   		BUG_ON(!pgtable_alloc);
+>>   		p4d_phys = pgtable_alloc(P4D_SHIFT);
+>> +		if (p4d_phys == -1) {
+>> +			ret = -ENOMEM;
+>> +			goto out;
+>> +		}
+>>   		p4dp = p4d_set_fixmap(p4d_phys);
+>>   		init_clear_pgtable(p4dp);
+>>   		p4dp += p4d_index(addr);
+>> @@ -412,8 +450,10 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>>   
+>>   		next = p4d_addr_end(addr, end);
+>>   
+>> -		alloc_init_pud(p4dp, addr, next, phys, prot,
+>> +		ret = alloc_init_pud(p4dp, addr, next, phys, prot,
+>>   			       pgtable_alloc, flags);
+>> +		if (ret)
+>> +			break;
+>>   
+>>   		BUG_ON(p4d_val(old_p4d) != 0 &&
+>>   		       p4d_val(old_p4d) != READ_ONCE(p4d_val(*p4dp)));
+>> @@ -422,23 +462,27 @@ static void alloc_init_p4d(pgd_t *pgdp, unsigned long addr, unsigned long end,
+>>   	} while (p4dp++, addr = next, addr != end);
+>>   
+>>   	p4d_clear_fixmap();
+>> +
+>> +out:
+>> +	return ret;
+>>   }
+>>   
+>> -static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+>> -					unsigned long virt, phys_addr_t size,
+>> -					pgprot_t prot,
+>> -					phys_addr_t (*pgtable_alloc)(int),
+>> -					int flags)
+>> +static int __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+>> +				       unsigned long virt, phys_addr_t size,
+>> +				       pgprot_t prot,
+>> +				       phys_addr_t (*pgtable_alloc)(int),
+>> +				       int flags)
+>>   {
+>>   	unsigned long addr, end, next;
+>>   	pgd_t *pgdp = pgd_offset_pgd(pgdir, virt);
+>> +	int ret = 0;
+>>   
+>>   	/*
+>>   	 * If the virtual and physical address don't have the same offset
+>>   	 * within a page, we cannot map the region as the caller expects.
+>>   	 */
+>>   	if (WARN_ON((phys ^ virt) & ~PAGE_MASK))
+>> -		return;
+>> +		return -EINVAL;
+>>   
+>>   	phys &= PAGE_MASK;
+>>   	addr = virt & PAGE_MASK;
+>> @@ -446,10 +490,14 @@ static void __create_pgd_mapping_locked(pgd_t *pgdir, phys_addr_t phys,
+>>   
+>>   	do {
+>>   		next = pgd_addr_end(addr, end);
+>> -		alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
+>> +		ret = alloc_init_p4d(pgdp, addr, next, phys, prot, pgtable_alloc,
+>>   			       flags);
+>> +		if (ret)
+>> +			break;
+>>   		phys += next - addr;
+>>   	} while (pgdp++, addr = next, addr != end);
+>> +
+>> +	return ret;
+>>   }
+>>   
+>>   static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+>> @@ -458,17 +506,20 @@ static void __create_pgd_mapping(pgd_t *pgdir, phys_addr_t phys,
+>>   				 phys_addr_t (*pgtable_alloc)(int),
+>>   				 int flags)
+>>   {
+>> +	int err;
+>> +
+>>   	mutex_lock(&fixmap_lock);
+>> -	__create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
+>> -				    pgtable_alloc, flags);
+>> +	err = __create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
+>> +					  pgtable_alloc, flags);
+>> +	BUG_ON(err);
+>>   	mutex_unlock(&fixmap_lock);
+>>   }
+>>   
+>>   #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+>>   extern __alias(__create_pgd_mapping_locked)
+>> -void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+>> -			     phys_addr_t size, pgprot_t prot,
+>> -			     phys_addr_t (*pgtable_alloc)(int), int flags);
+>> +int create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+>> +			    phys_addr_t size, pgprot_t prot,
+>> +			    phys_addr_t (*pgtable_alloc)(int), int flags);
+>>   #endif
+> Personally I would have converted this from an alias to a wrapper:
+>
+> void create_kpti_ng_temp_pgd(pgd_t *pgdir, phys_addr_t phys, unsigned long virt,
+> 			     phys_addr_t size, pgprot_t prot,
+> 			     phys_addr_t (*pgtable_alloc)(int), int flags)
+> {
+> 	int ret;
+>
+> 	ret = __create_pgd_mapping_locked(pgdir, phys, virt, size, prot,
+> 					  pgtable_alloc, flags);
+> 	BUG_ON(err);
+> }
+>
+> Then there is no churn in cpufeature.c. But it's not a strong opinion. If you
+> prefer it like this then I'm ok with it (We'll need to see what Catalin and Will
+> prefer ultimately anyway).
+
+I don't have strong preference either.
+
+Thanks,
+Yang
+
+>
+> Thanks,
+> Ryan
+>
+>>   
+>>   static phys_addr_t __pgd_pgtable_alloc(int shift)
+>> @@ -476,13 +527,17 @@ static phys_addr_t __pgd_pgtable_alloc(int shift)
+>>   	/* Page is zeroed by init_clear_pgtable() so don't duplicate effort. */
+>>   	void *ptr = (void *)__get_free_page(GFP_PGTABLE_KERNEL & ~__GFP_ZERO);
+>>   
+>> -	BUG_ON(!ptr);
+>> +	if (!ptr)
+>> +		return -1;
+>> +
+>>   	return __pa(ptr);
+>>   }
+>>   
+>>   static phys_addr_t pgd_pgtable_alloc(int shift)
+>>   {
+>>   	phys_addr_t pa = __pgd_pgtable_alloc(shift);
+>> +	if (pa == -1)
+>> +		goto out;
+>>   	struct ptdesc *ptdesc = page_ptdesc(phys_to_page(pa));
+>>   
+>>   	/*
+>> @@ -498,6 +553,7 @@ static phys_addr_t pgd_pgtable_alloc(int shift)
+>>   	else if (shift == PMD_SHIFT)
+>>   		BUG_ON(!pagetable_pmd_ctor(ptdesc));
+>>   
+>> +out:
+>>   	return pa;
+>>   }
+>>   
 
