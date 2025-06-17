@@ -1,113 +1,121 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF22128D827;
-	Tue, 17 Jun 2025 07:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EBA28D8EA
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750143828; cv=none; b=naZ2N9R46KNWD55iVyuAYsFvPtTXouPyXBqrJ6pCMqEGQEuME3E6iSdjy6fvXaotJIjxhgZl0wzgDz8VzUDMzA8lJB7YRaR1rQsq478wFAjjYeJurynYQCWhzVubPGJLlLRoiaK/kzDOpYQ+4G5iTrVnQSpTMLYHGihHcBnPiD8=
+	t=1750143841; cv=none; b=TMkH8I+WZCMXMql8YXnxcyH1Z7tyzVaS0taIEprfRAaDBWawozzRvlLuHFXKkQL64Wkm/79wWQivASeD1/qSyO1AMpR2TbBPAVg8QMUzWKO49r037ostj3hk3H9WiCrnR77dVWakT2deM6X0vRPWjtZ2pBdkqu3grdbHM9PH8ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750143828; c=relaxed/simple;
-	bh=Go9kQY4Cf/0m/2ndhISA/csNmyOdz1/clqv8HISg6JA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aSuI0vq+kdT1/QdOxER/QaHOl22tBMRSiCTpxKMksATBsf7eFVEoNDwOirkTIANMtlI8GVVzn0hjvNtT0ABCbx0UvdHBhZxP4jnSXtIFrjD/HemzckcX9fTxdsRQB2Fb8sO1TnM9woKfoJSAGFnRIOf0yFUhrv7mcbamZ+VbbVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IdY4XOMQ; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750143841; c=relaxed/simple;
+	bh=HQ8YwPXH3tjWKjgG77C8MtR06NMh+4CK2/PrreWPfkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ml3CQXWUcei0WbBwonvz1mdUmZxIfaEt4RVMY5fE5rKqTHZzDU/stjXswMse1XQNNIdGSZtFcsLMpxqR9jpvQlh8fT3xzFDwXNPRS0MSeInphhQ/CIvybUoKUlffcGyQroGWi4Zu9CebT/A6tW8UoRqJXk74OZ9dL/RokaIVeeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TaOsY0Of; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IdY4XOMQ"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54998f865b8so5048255e87.3;
-        Tue, 17 Jun 2025 00:03:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750143824; x=1750748624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=67aHHGr/9M3riI6drWDtEAom9IKHNVLM2r7fXP9AaVs=;
-        b=IdY4XOMQhKC/FK+SWrpqJZsml5pwXczNaX6PV6L2d5x8eIePP0odQ/AKZQPNNnMCvh
-         eg01GD+r86ARApf3CdQl7Tx621gm6K12ukw5vKaGzdAELNvTyRb6DvxZBZlNd0F/D+rK
-         8znq8jhww4ULHIz2d0tEreC7yTGkCGvUwQ9CX1QxGmNszZXv/wVtJoLR6qWmH2yHctDZ
-         La+VOQIrguhieZo8P0LpgHcCE7NBVhtO0sZFP9Bwp4DAo5l0M24o7vf2VZHN56RkEhZS
-         /qTbPz6KCNbS6yLFqeqCo+uoTTNVnSkTGusmGvfi+wQqRf+akF7oxi5dK/MF0i7wpDvL
-         mEPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750143824; x=1750748624;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=67aHHGr/9M3riI6drWDtEAom9IKHNVLM2r7fXP9AaVs=;
-        b=WftAVZtUyP3gSn/wWTlTJqVOUfb1JGXCeTfvXEJFAmI3BruD349r9fEhq8WiU7yOtb
-         PCSu+MkUKqUd/BODru2l5iqhJeNmTA8ALKAkYiT93SFIxO0MPuNcHAnMS/VYe2P118ge
-         VvohAKZciDtWsiWY7B8QGeabeoHkmmhktPYtCXgGszNppzM4t8YtPzQ2/w8oHjFLJO4n
-         DONK4M16+YpkI6LgkKi7y6HKflxlCNMIYMg3mOvy6iZmxDMTCzsCXrGhr3An6/cWwzFy
-         13ss+WRZtAA/IIH7YlRbc5gv+aul6YfGcidAW09ggesLoJrcMV5so+z+TX+NI0peehs6
-         tJBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUch2jo45g4sv84D9i48yidpXSijheHEvItVNEDlL3PUMfJpB6E8zSuvLcY9/SBXgPZywPdEm0jFZrj9s8=@vger.kernel.org, AJvYcCVY3CCoTXeDv6i/7tmqD9C6SWwibtcy+tBgr2fMPb0SCILkC29Tr8ip4eD1FNhb6JZpptXhiXA9u1F91fE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHkBwTxzqVzOCVQcpWavnkvWY2oJkn3ycWB/CDkuPxYqzF4QcD
-	Bq4zsM0A+psSoGjTjByVKVcZ5Hw5I85QsR7g37vfAxyb/1JL8PV2q+mn
-X-Gm-Gg: ASbGnct76ODKFVqhCuP9ZKt1DI9UC3IYC6+xFGBTi7id0tQPLS0hFDZ9UlYEFreAi0n
-	LoZ51bQ9hwSK54OrUtEdurveeSmlh8No3J7PclSXt2COEl9ZkeAJ367xQYzMy680iJzznjivSap
-	q2KFQsshPzEl9H2IsnJ/UQQw1xhs5MRyCzwR+vf3SNiz/15FVAzIkeI6C97TGfuor0HA1X+nmrJ
-	y9V93Ob3Ugsnn6N1PplTEN8jHkybeq1LtpqSaBw5duIVFs/Ku53HBRridvcBXZjxOBi/MxjFdef
-	mPTGy5GzUc5qoWqhhPaQ9D1+J+UHEPxk0TXNDcOtWOzgQ7tUjv0QhA==
-X-Google-Smtp-Source: AGHT+IGTb1O/R8WuLXbPa6uJop8ySVEJbpXR+bXI7d2N+cIJY9LKjjahO+fjAIWgfPkDYNU1wIIuKA==
-X-Received: by 2002:a05:6512:1150:b0:553:2a16:2513 with SMTP id 2adb3069b0e04-553b6f4cd59mr2847802e87.47.1750143823668;
-        Tue, 17 Jun 2025 00:03:43 -0700 (PDT)
-Received: from xeon.. ([188.163.112.61])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1ab9c8sm1800427e87.114.2025.06.17.00.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 00:03:42 -0700 (PDT)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Thierry Reding <treding@nvidia.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Svyatoslav Ryhel <clamor95@gmail.com>,
-	David Heidelberg <david@ixit.cz>,
-	Ion Agorria <ion@agorria.com>
-Cc: devicetree@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/2] dt-bindings: arm: tegra: Add Asus VivoTab RT TF600T
-Date: Tue, 17 Jun 2025 10:03:19 +0300
-Message-ID: <20250617070320.9153-2-clamor95@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250617070320.9153-1-clamor95@gmail.com>
-References: <20250617070320.9153-1-clamor95@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TaOsY0Of"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750143839; x=1781679839;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HQ8YwPXH3tjWKjgG77C8MtR06NMh+4CK2/PrreWPfkg=;
+  b=TaOsY0OfqwvxBN2UeJPOCBCha22r+Mbuozuzy303YqZr1KkC8oxs6bkE
+   fKbyeydgYWa92WFAmGQVah/vZ8yQp8v4t9SXsTVtSMUarCveYb7VskeMx
+   NwMhieuO91fwUl9VueFwbWPlaXJeUssPGxVjt6/lZq/ZdFpIt5ssmTYud
+   oTaQEn7eHS5XojYUkyZAKIuuA92GfYnZDgNNYAPzUHjcmwgfqVNG2dAbu
+   rdRKWpmRalm+e3BfwL4+jiwHdqKml8jh5a0xmu9ZxFC7EVFIhVKcCfDiR
+   yMaTAdSlkOcJPYHo1ioQO4HIt7XCQI1AwJmYr6sqOgMrwkYUz7Kh1vhMp
+   Q==;
+X-CSE-ConnectionGUID: gXMCNoY+QEmSI8wSTNaj9w==
+X-CSE-MsgGUID: t7H62jx+R1CpfcvXOQzmoQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11465"; a="74838592"
+X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
+   d="scan'208";a="74838592"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 00:03:58 -0700
+X-CSE-ConnectionGUID: tKCvDGCtRgy6dUU/aEpmzQ==
+X-CSE-MsgGUID: wktvsOXqSDOYdlPPEud21Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,242,1744095600"; 
+   d="scan'208";a="185945975"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 17 Jun 2025 00:03:56 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRQMM-000FhQ-0M;
+	Tue, 17 Jun 2025 07:03:54 +0000
+Date: Tue, 17 Jun 2025 15:03:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: onur-ozkan <work@onurozkan.dev>, linux-kernel@vger.kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	boqun.feng@gmail.com, onur-ozkan <work@onurozkan.dev>,
+	thatslyude@gmail.com
+Subject: Re: [PATCH] Add `ww_mutex` support & abstraction for Rust tree
+Message-ID: <202506171422.JVA1Gpbc-lkp@intel.com>
+References: <20250616162448.31641-1-work@onurozkan.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616162448.31641-1-work@onurozkan.dev>
 
-From: Maxim Schwalm <maxim.schwalm@gmail.com>
+Hi onur-ozkan,
 
-Add a compatible for the Asus VivoTab RT TF600T.
+kernel test robot noticed the following build errors:
 
-Signed-off-by: Maxim Schwalm <maxim.schwalm@gmail.com>
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
----
- Documentation/devicetree/bindings/arm/tegra.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+[auto build test ERROR on rust/rust-next]
+[also build test ERROR on linus/master v6.16-rc2 next-20250616]
+[cannot apply to tip/locking/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-index 79b027740694..534197a87439 100644
---- a/Documentation/devicetree/bindings/arm/tegra.yaml
-+++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-@@ -65,6 +65,10 @@ properties:
-               - asus,tf300tl
-               - asus,tf700t
-           - const: nvidia,tegra30
-+      - description: Asus VivoTab RT
-+        items:
-+          - const: asus,tf600t
-+          - const: nvidia,tegra30
-       - description: LG Optimus 4X P880
-         items:
-           - const: lg,p880
+url:    https://github.com/intel-lab-lkp/linux/commits/onur-ozkan/Add-ww_mutex-support-abstraction-for-Rust-tree/20250617-003523
+base:   https://github.com/Rust-for-Linux/linux rust-next
+patch link:    https://lore.kernel.org/r/20250616162448.31641-1-work%40onurozkan.dev
+patch subject: [PATCH] Add `ww_mutex` support & abstraction for Rust tree
+config: x86_64-randconfig-074-20250617 (https://download.01.org/0day-ci/archive/20250617/202506171422.JVA1Gpbc-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250617/202506171422.JVA1Gpbc-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506171422.JVA1Gpbc-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ***
+   *** Rust bindings generator 'bindgen' < 0.69.5 together with libclang >= 19.1
+   *** may not work due to a bug (https://github.com/rust-lang/rust-bindgen/pull/2824),
+   *** unless patched (like Debian's).
+   ***   Your bindgen version:  0.65.1
+   ***   Your libclang version: 20.1.2
+   ***
+   ***
+   *** Please see Documentation/rust/quick-start.rst for details
+   *** on how to set up the Rust support.
+   ***
+>> error[E0063]: missing field `__bindgen_anon_1` in initializer of `bindings::lock_class_key`
+   --> rust/kernel/sync/lock/ww_mutex.rs:52:26
+   |
+   52 |             acquire_key: bindings::lock_class_key {},
+   |                          ^^^^^^^^^^^^^^^^^^^^^^^^ missing `__bindgen_anon_1`
+--
+>> error[E0063]: missing field `__bindgen_anon_1` in initializer of `bindings::lock_class_key`
+   --> rust/kernel/sync/lock/ww_mutex.rs:53:24
+   |
+   53 |             mutex_key: bindings::lock_class_key {},
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^ missing `__bindgen_anon_1`
+
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
