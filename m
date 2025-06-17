@@ -1,105 +1,146 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E66928C5B6
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0BB215F6C;
+	Tue, 17 Jun 2025 07:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750144438; cv=none; b=YLnD7FL/gm0eA0kOoN4jof4oK+IwIhEr2BrSX7XuExPeeFv7CyIsY+cn5zIY76srIbJ33xB37zS+12lLnbSZ317NkvSLb/0Q4KTHsfd2Zz1Ha6GsmEhAqTb7XNxaapPiotCp4V2wOAowDqfaOW/FmyQZivUvUiyDLSBdMbZ81XA=
+	t=1750144540; cv=none; b=Q9KtXxraEDMbcdS90rUvWod7ker+M1vR+4qMCBfvypjRi899xRIzGDMP3ThDhRM0neniUpl4wLiXEEZ+de5D8A1YnrABA04z1TUJ650Hyxumv8BSc89EmWeQNl1hVBJG2S3Ff8pArrTSgMEQKROCNTZKRJBKnFpnp8+p9BAI/Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750144438; c=relaxed/simple;
-	bh=qJY8bj9CtbYWcniHkdEgxnX7+YzcTn7+I2xj0uZMQIg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=k/sn0rabq2eVuDnlTaizbe4hQBH9HNb7coIwx6mCYAz9D7iYF3au8LaAHPwpsb9udzgXR228RHZGAr9MXhkPkhmqLWrvRl+GvtdpHtDsektY44FFd+rMqftbS6rRlZwsKnjhysRMY9HV69CudYehKusv8LN0qPHCFz0BBwboTjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FFDbRdnR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750144540; c=relaxed/simple;
+	bh=pP72oOdMXEcgp4XGBGwY1R6OIGnf8hEZKBDdV1FJyYE=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Q/Ey2XX/Pr/cD7PP4A/hf6jL6xwrdKr8fxQUx1iGLMzwkjNoXBgnoyoQ+emEtskvaIt90ceGCPgms1dxs/4xHiLFCZXQIj7MqrYAOLl//3DSOK5+UAQHp08Mjjc6XRhHNgm3Y03D/f41DlhHQFNYhmQFHth9TZtnOsnDxEwCjUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZ3Oub/c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FFDbRdnR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750144435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OPf5/BotB2xeNpXMqUEi097upqbb8LBKJ2dT9gWuPvU=;
-	b=FFDbRdnRu0Y4S0cU8UXP2jn8GXDYo7jsWe5XLd/sYArKqBXG3xIzK3FTE4TYNoVUpOEKFz
-	dGAStDZPMFTKwH1O7ao6hI37UHqJpXvPyxysvGAeUoDjAzzlOkuJ44rlE27K8sHtFSQjIT
-	Y3RGkWTDfie3NZ1HnNNS3tHHbhuCFaE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-179-5rCRh91LPYOqx456wpzUNA-1; Tue,
- 17 Jun 2025 03:13:51 -0400
-X-MC-Unique: 5rCRh91LPYOqx456wpzUNA-1
-X-Mimecast-MFC-AGG-ID: 5rCRh91LPYOqx456wpzUNA_1750144430
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 609A71809C80;
-	Tue, 17 Jun 2025 07:13:50 +0000 (UTC)
-Received: from oldenburg.str.redhat.com (unknown [10.45.224.8])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 604C01956094;
-	Tue, 17 Jun 2025 07:13:48 +0000 (UTC)
-From: Florian Weimer <fweimer@redhat.com>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org,  linux-api@vger.kernel.org,
-  workflows@vger.kernel.org,  tools@kernel.org
-Subject: Re: [RFC 08/19] exec: add API specification for execve
-In-Reply-To: <aFDKHhaqB75Qi212@lappy> (Sasha Levin's message of "Mon, 16 Jun
-	2025 21:51:26 -0400")
-References: <20250614134858.790460-1-sashal@kernel.org>
-	<20250614134858.790460-9-sashal@kernel.org>
-	<87ikkvv018.fsf@oldenburg.str.redhat.com> <aFDKHhaqB75Qi212@lappy>
-Date: Tue, 17 Jun 2025 09:13:44 +0200
-Message-ID: <87y0tqu9g7.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZ3Oub/c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3B9C4CEE3;
+	Tue, 17 Jun 2025 07:15:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750144539;
+	bh=pP72oOdMXEcgp4XGBGwY1R6OIGnf8hEZKBDdV1FJyYE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=UZ3Oub/cjumcIByh96JpMuQIFG6esR7YzGXh7e0PmDGtVMPvXBeS6yYulnbcgiCPt
+	 Bz2J/gkL4TkwHmT89BIlZVq17rZCaU6aHzKYocx/wn4ZGdCcM5GRR4IxRuK5sBmjOb
+	 3ID2pyPKqFeQPpUtFTvP3H/kWWWFDqgfyUf2QXbjQZHNMY3YGs9dpLXIHVNurxhTux
+	 AJSqUWGci0uOBO8UxJ2bFL3Sibif8zkuACWx3tfSZIQOeuv02HPVj7sfWaZwpu87yv
+	 4sPtsLAphR3PCZ6ZR3mSB2sOH1zkRPtR7jl/FYdeud7YRtvykOD02PATxESBHd2xRB
+	 K3CipQj73r3bQ==
+Message-ID: <2fbc985b-113a-4409-9825-49bdd029e95b@kernel.org>
+Date: Tue, 17 Jun 2025 09:15:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/6] dt-bindings: i2c: renesas,riic: Document RZ/N2H
+ support
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
+ Andy Shevchenko <andy@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+References: <20250613113839.102994-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250613113839.102994-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250617-enthusiastic-anaconda-of-tenacity-2f79e2@kuoka>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250617-enthusiastic-anaconda-of-tenacity-2f79e2@kuoka>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-* Sasha Levin:
-
-> On Mon, Jun 16, 2025 at 11:39:31PM +0200, Florian Weimer wrote:
->>* Sasha Levin:
+On 17/06/2025 09:13, Krzysztof Kozlowski wrote:
+> On Fri, Jun 13, 2025 at 12:38:36PM GMT, Prabhakar wrote:
+>> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >>
->>> +	KAPI_RETURN("long", "Does not return on success; returns -1 on error")
->>> +		.type = KAPI_TYPE_INT,
->>> +		.check_type = KAPI_RETURN_ERROR_CHECK,
->>> +	KAPI_RETURN_END
+>> Document support for the I2C Bus Interface (RIIC) found on the Renesas
+>> RZ/N2H (R9A09G087) SoC. The RIIC IP on this SoC is identical to that on
+>> the RZ/T2H SoC so `renesas,riic-r9a09g077` will be used as a fallback
+>> compatible.
 >>
->>Is the -1 part correct?
->
-> Maybe :) That's one of the things I wasn't sure about: we're documenting
-> the execve syscall rather than the function itself. A user calling
-> execve() will end up with -1 on failure, and errno set with the error
-> code.
+>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>> Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> ---
+>>  Documentation/devicetree/bindings/i2c/renesas,riic.yaml | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+>> index 86d79e167547..6876eade431b 100644
+>> --- a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+>> +++ b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
+>> @@ -33,6 +33,10 @@ properties:
+>>            - renesas,riic-r9a09g057   # RZ/V2H(P)
+>>            - renesas,riic-r9a09g077   # RZ/T2H
+>>  
+>> +      - items:
+>> +          - const: renesas,riic-r9a09g087  # RZ/N2H
+>> +          - const: renesas,riic-r9a09g077  # RZ/T2H
+> 
+> Where is an entry renesas,riic-r9a09g077 alone? Please add complete
+> bindings, not half-patch and then next time second half.
 
-Well, it doesn't say execve, it says sys_execve.
 
-> You could argue that it's libc that sets errno and we're trying to spec
-> the kernel here, not the userspace interface to it.
+Ah, sorry, I saw it in patch #2 (the tooling I use jumped straight to
+patch #3 so that's the reason).
 
-And I think this would be appropriate.
+Anyway, this should be squashed with #2, because it is trivial and
+entire 4 lines of commit msg plus 3 reviews is really too much for
+something like that. Don't inflate work for us.
 
-Note that in the future, the glibc version of execve will not be a
-straightforward system call wrapper because we need to obtain a
-consistent snapshot of the environment array.  That is actually pretty
-hard because we cannot atomically replace the process image, unblock
-signals, and unmap a copy of the environment.
-
-So I think it's best for the kernel to stick with the system call
-interface and not try to document what libcs are doing.
-
-An even more thorny example are the setuid family of system calls, where
-the kernel is extremely far away from what POSIX requires, and we have
-to fix it in userspace.
-
-Thanks,
-Florian
-
+Best regards,
+Krzysztof
