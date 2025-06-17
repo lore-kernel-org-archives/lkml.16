@@ -1,108 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE592F2C41;
-	Tue, 17 Jun 2025 15:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D213C2CCC5;
+	Tue, 17 Jun 2025 15:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175419; cv=none; b=fVNBghu7mfJqh+kLjyKVUb5KLhIdZ5rl8j/rS5eT4EEf/hUYRvmbx5l/XYCOiEBok6+yGTEPLzczsOpx3rkCSdQN44JKq96OIHzF65hXfGWInoa8B1ERhdBZ0uzTpxlcdB9E2enBdIac8rvSvmiwCzyJgD6NO6FgbHtLkELzTlU=
+	t=1750175467; cv=none; b=TzXsZmRzqJCAjL8afTnZAQMOrv3BIn5pQnobibY6tt08D5bIpoFisJBzP5lKwIqEWScoHYMNJUUD5Zuaod+kcniUPUVR0NQw1+c2VYgJgrM3rhL/vS4F4GZsQnwhTfsUwU2HR8M5ZxNqs0CEBRyOmYCqI3mhlBCoKjUTULqi7uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175419; c=relaxed/simple;
-	bh=LNC2w8LSdPeWSFo7aYqjVJu6bohSIps4pbr6GI4K0BA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BMub4BeFW7RTCF/MG/FI76+WPR0OR7kB8tCKaFQRfYxgysqufziL/r+XXMNNoLP5hyfzZwzYs2hlT/6RKFwByLClXn2yRx1YUTaf28J9pA5RupmDjXwyTOZ7Ju0uEge/YG0u6AYZaoIw/nzJMKT1h2kR81DygTY4Hm6pZt1YJq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8ybcfpx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8ybcfpx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B85CC4CEE3;
-	Tue, 17 Jun 2025 15:50:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750175419;
-	bh=LNC2w8LSdPeWSFo7aYqjVJu6bohSIps4pbr6GI4K0BA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g8ybcfpxWV2OtWW99thzTjWTfLwKsYYyaqcTvP7aHzalyqXMXPorjLvVi6xHimaHF
-	 eJsTaSqfWINmIeb2EWU2+/1+1jmxVvUKxnQVRhZUALS1HDkfjHe1OCSVKeKD6cMpT1
-	 jD8uwP4U1MtAJpojwUNjP8SJAr9bp+FteCTVASwSS77HmIqjK1cEtysYmef1wfU7Um
-	 EURHWiaOCN3HV7rbcHdsJDcgHHmGnmyc9SHUZ/5P92AhI2AZ2xt4gPLhtJUX1WHsCu
-	 TGiAuinoczfD8wisKatLD5XmFhJtiY/HaD0eXCqDoVmrX4+TYH5y5xXYeQNZ+BGEeO
-	 3mSt/BnDa6lwA==
-Date: Tue, 17 Jun 2025 21:12:58 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, kvm@vger.kernel.org, 
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org, Sairaj Kodilkar <sarunkod@amd.com>, 
-	Vasant Hegde <vasant.hegde@amd.com>, Maxim Levitsky <mlevitsk@redhat.com>, 
-	Joao Martins <joao.m.martins@oracle.com>, Francesco Lavra <francescolavra.fl@gmail.com>, 
-	David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH v3 38/62] KVM: SVM: Take and hold ir_list_lock across
- IRTE updates in IOMMU
-Message-ID: <qhvns5twcxwzrz2fhp7njmyqb5x5icgiz4iszwvwmeoxhw7ycv@3we3xqqaqeib>
-References: <20250611224604.313496-2-seanjc@google.com>
- <20250611224604.313496-40-seanjc@google.com>
+	s=arc-20240116; t=1750175467; c=relaxed/simple;
+	bh=5RqjtlgUUeuy/fAmRiej3LgLEt2jOXDeeg6BVuZlz38=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3UNBpiMWqNJDRxTHvO9s8lvV4/Wfl8ksPOJpUnAt9v/x06KofgwzVQLPMP3+WGCKbe7IOS3XdA4GDSbzKJnyHVwptUu21p6fOIsfYXvbNBEdS4CyBJRf5+NdtQyR6snpMdwqLB9R1Q509/4EvaxjANfM9eH9R0oheuyY2U6+ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7fb730078so992295137.1;
+        Tue, 17 Jun 2025 08:51:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750175464; x=1750780264;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OWqem8pDRB+jdxImbAtTRPgwW7lDiNsUzIpmKoUsHz4=;
+        b=Px+MLzP5um6MdMYgFr4ki2uvKKHACV5fxFQj6z3je4MEwrCNxDcHyuaAjVmRbIQxEw
+         PnJmqE4UQ4e9YPD5fSkFT3X04ozAj0vYkzX4UEUggRB3tXb4s1rjG6PGwgUW+udiSwVf
+         zj9/aVZvQ5Dq/dx0bMgJIZrQfo2mpoPSb5kzJfeVKgz6VVsOOdRKkq2bJV40kHztnKHx
+         AwTP6iUWp6ScKliboTjRC+biLQbdedM4cvfSJ0xNUdcFy+v6OLJMQTT2EhXld/TRXaHT
+         GyFOoVrWqkYBZ6tWmGF+8Rmit8XNcD9XzGkRyt6Fbxz+msEEFyZl+f4MLwfrM/qlWPq8
+         HxqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTG1CTCZnidGAOuHmC7eecJMQVykufZQ5O7yaU56NByzwUFeMp1fBIQNydy36cjt6U4HCcOcaF8mS1@vger.kernel.org, AJvYcCWanNbcH+Pq4P4F+dfxVdlz6lmLPdbNGJ0fa7mik8YV1w7XRju5OlW0l/IlK3bUiFJoGZN7sD76GW4RL1RrA660H54=@vger.kernel.org, AJvYcCXfNHX/HpgmgK2wFvAd6ZIZwJnI/e3N4C37h/l2QU/7XZbFTAtMuBlSOvHm/UD5e6rXsyaajOCBh7UoPu86@vger.kernel.org, AJvYcCXlOSj2FS2ZPqe2UEcXY71LmIZ8ndzvklWoxjdLnYo4OvYCIvQOfdgH03CL71NDkFaqn6kXXlFt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTwuY3JHfc4ONEoV7m5cxuwwDU/oUgWDJsduGJiazddNkxo91A
+	mDPqRHMgXeWu7QKaKumvfRmongzTMmkcnxUaOtBTPmxTz0SoZ+Jr9e3FNzKW28Qb
+X-Gm-Gg: ASbGncuhAsj0T8IwdFc1Cye2nj9iGBG6YSdX71n+r7C53pWfkc8XPKkBqeddlsV7Zv4
+	5Lqf2vXXKi8Xwj1HvagzxbpAVYGJEgSml/FtQRFthsLEwgSEwodQVuZzObeZxx8hsfasHHztz7j
+	0bNP9f9NqegR1G9AYXYzsAeSbdY6a8+6X2xpddU9LQwks66ll1NqvcWmJziE3SwmlcmJVPTFrZp
+	k6L9eY/mFyGd8TtasG9gcDo0tFHhZfmJYw9/cfB2RSNszaAhZ9tcn4uOAFaMOyXhl/k1h5xvLgE
+	T2PWPsLE3FPHyB/xuNpLugl2LhV9Pows4rCop+KQ/j56jNwspysMvQ56EdnN3LZ3RfyHuoJAwjS
+	FQVdr9t0j32TpHU+Su4gGKysw5A0a2/lgwSM=
+X-Google-Smtp-Source: AGHT+IEYnm3bsCHqtvQsTtYnEmS222ydUHeJsXfCGfB3ygwEnvT/dNNuIa75K2agZgGorXX1wavBgQ==
+X-Received: by 2002:a05:6102:2927:b0:4e6:245b:cf5e with SMTP id ada2fe7eead31-4e7f62a5240mr9649994137.17.1750175463588;
+        Tue, 17 Jun 2025 08:51:03 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87f0fb54157sm1590908241.27.2025.06.17.08.51.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 08:51:03 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87f234ba1abso642533241.1;
+        Tue, 17 Jun 2025 08:51:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4U6/pXgl6a/mYaRWTLR6HdZJmqXd792SUhqQRoaLS6+MHfA2PTTwObHRtpt/jwnitpC0/K+Skhg4w@vger.kernel.org, AJvYcCVqvROObTfYX3Mme6oKGX5eJXs6KYHk6tQaLzhHFJjk+pgTV2ChY6XZb7y2VOaUxnsRU5ICWWs54yECJlek@vger.kernel.org, AJvYcCW+fMuEPqamnIHccAoogjdEjZD8IlrQsuiHFMFn4EsShJHN+ZyZ+YiFA+KRYQl1yZhePYKL0DFJ@vger.kernel.org, AJvYcCW6Vk8esDhWSmEUgBG6zopDrDLdBDFQ0m5SmZMhiUUTREhRaBruhMVdz1ECtpvuF0nWQjxjI5resd2bl6RaXKdS02s=@vger.kernel.org
+X-Received: by 2002:a05:6102:26c2:b0:4e2:ecd8:a1f with SMTP id
+ ada2fe7eead31-4e7f6186014mr8280933137.1.1750175462827; Tue, 17 Jun 2025
+ 08:51:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611224604.313496-40-seanjc@google.com>
+References: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com> <20250611061609.15527-4-john.madieu.xa@bp.renesas.com>
+In-Reply-To: <20250611061609.15527-4-john.madieu.xa@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 17 Jun 2025 17:50:50 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWJNCSUj6mUweKtXycHNNok4L=TFQipVO8n9g7DiU=b9A@mail.gmail.com>
+X-Gm-Features: Ac12FXwk4GGI8MpQTiHifAVx3-K2qs_irp8n-7ldxy3kuIQEgMz6LOdOM9uXcm0
+Message-ID: <CAMuHMdWJNCSUj6mUweKtXycHNNok4L=TFQipVO8n9g7DiU=b9A@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: rzg3e-smarc-som: Enable
+ eth{0-1} (GBETH) interfaces
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: andrew+netdev@lunn.ch, conor+dt@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, krzk+dt@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, robh@kernel.org, 
+	biju.das.jz@bp.renesas.com, devicetree@vger.kernel.org, john.madieu@gmail.com, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	magnus.damm@gmail.com, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 11, 2025 at 03:45:41PM -0700, Sean Christopherson wrote:
-> Now that svm_ir_list_add() isn't overloaded with all manner of weird
-> things, fold it into avic_pi_update_irte(), and more importantly take
-> ir_list_lock across the irq_set_vcpu_affinity() calls to ensure the info
-> that's shoved into the IRTE is fresh.  While preemption (and IRQs) is
-> disabled on the task performing the IRTE update, thanks to irqfds.lock,
-> that task doesn't hold the vCPU's mutex, i.e. preemption being disabled
-> is irrelevant.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  arch/x86/kvm/svm/avic.c | 55 +++++++++++++++++------------------------
->  1 file changed, 22 insertions(+), 33 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/svm/avic.c b/arch/x86/kvm/svm/avic.c
-> index f1e9f0dd43e8..4747fb09aca4 100644
-> --- a/arch/x86/kvm/svm/avic.c
-> +++ b/arch/x86/kvm/svm/avic.c
-> @@ -769,32 +769,6 @@ static void svm_ir_list_del(struct kvm_kernel_irqfd *irqfd)
->  	spin_unlock_irqrestore(&to_svm(vcpu)->ir_list_lock, flags);
->  }
->  
-> -static void svm_ir_list_add(struct vcpu_svm *svm,
-> -			    struct kvm_kernel_irqfd *irqfd,
-> -			    struct amd_iommu_pi_data *pi)
-> -{
-> -	unsigned long flags;
-> -	u64 entry;
-> -
-> -	irqfd->irq_bypass_data = pi->ir_data;
-> -
-> -	spin_lock_irqsave(&svm->ir_list_lock, flags);
-> -
-> -	/*
-> -	 * Update the target pCPU for IOMMU doorbells if the vCPU is running.
-> -	 * If the vCPU is NOT running, i.e. is blocking or scheduled out, KVM
-> -	 * will update the pCPU info when the vCPU awkened and/or scheduled in.
-> -	 * See also avic_vcpu_load().
-> -	 */
-> -	entry = svm->avic_physical_id_entry;
-> -	if (entry & AVIC_PHYSICAL_ID_ENTRY_IS_RUNNING_MASK)
-> -		amd_iommu_update_ga(entry & AVIC_PHYSICAL_ID_ENTRY_HOST_PHYSICAL_ID_MASK,
-> -				    true, pi->ir_data);
-> -
-> -	list_add(&irqfd->vcpu_list, &svm->ir_list);
-> -	spin_unlock_irqrestore(&svm->ir_list_lock, flags);
-> -}
-> -
+Hi John,
 
-There are a few comments in avic_vcpu_load() and avic_vcpu_put() which 
-still refer to svm_ir_list_add(). Would be good to update those.
+On Wed, 11 Jun 2025 at 11:00, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
+> Enable the Gigabit Ethernet Interfaces (GBETH) populated on the RZ/G3E SMARC EVK
+>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
 
-- Naveen
+Thanks for your patch!
 
+> --- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+
+> @@ -77,6 +79,74 @@ &audio_extal_clk {
+>         clock-frequency = <48000000>;
+>  };
+>
+> +&eth0 {
+> +       phy-handle = <&phy0>;
+> +       phy-mode = "rgmii-id";
+> +
+> +       pinctrl-0 = <&eth0_pins>;
+> +       pinctrl-names = "default";
+> +       status = "okay";
+> +
+> +       mdio {
+
+&mdio0 {
+
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               compatible = "snps,dwmac-mdio";
+
+No need for these three properties, as they are already present in the
+SoC-specific DTS with the exact same values.
+
+Same for the second interface.
+
+The rest LGTM, so with the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
