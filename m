@@ -1,166 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C98132E266E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ACF2E2667;
 	Tue, 17 Jun 2025 13:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750168460; cv=none; b=c2Mm4hIvAH4mugDHphcEXgDie0Wjodbk9w5I3DmDphdNanMX6LObfPFQFOUV5FKBJkyhgcnwZHlohYSwSF2y2hQvY95eWp3nmuAIOxaFGYDFYjS5s4BoIdkjYGvMe0g6zewvNvJouRZN2ELiTAnUBcLVhw3HgPZPo74aAifg1S4=
+	t=1750168461; cv=none; b=Z6P3M49+afad8XON8sIMbW6+6RSHdVO77oA3xTZkDNb5w5TwbrsW1ODE8pz630Murf3C41GUyydqZ4owA0pMgyK0yVsvVNbPLbduiCZNtRRQPVg/lUJe+OyWZJwSyTtiJEaN0A6OVjp4D+0yQWHH7fwb4eFPxhXHICn5EMd1DmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750168460; c=relaxed/simple;
-	bh=+mvYcib1jOLn2MJdJlLe3/Of17qNWzn3vv5uSzZoKSU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kl/yJjI2fxj794RFGX1W66GaO/HqBu3oYdwnoKk3K2k8e9FwB9AL+PU18zphQadJuaYjFSiQ7opWs0gwaPIdiuL/ZGKb1oGwFGi+NJ09xnnulnYlJ3vgDTZ2++LZI8W0H10gl2PuGm95LgWXOlsyIKD4gQ/kUwFuOpgtdgz27jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQbquBVW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750168461; c=relaxed/simple;
+	bh=LQpsALkTPotTLV0L5B38pVMNZD6nPoEHZMe5t0uCYmY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ATpJ02sE9YbATUOdugYxrKIsVlg5iHLlFqzVIap2JBfZM9cANQV8YFTMqgreOLqA4oJ0m0iXR1VlT4uV0U9Bb5ctrNLrVWm0zcjf0Xh+lnJMX2YyIpQ3nV+lKJHmAU1RHz5jckUDA9pXJwDRlM6WH4lWcpbxkMgyH65LgBs7CeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=NHU7vyyc; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQbquBVW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161CEC4CEF5;
-	Tue, 17 Jun 2025 13:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750168459;
-	bh=+mvYcib1jOLn2MJdJlLe3/Of17qNWzn3vv5uSzZoKSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qQbquBVWTNilpD9J2DZukqDqhw6dYV6sQdAC3swnhkXDCzrarHfIjtDx6+iaanIj2
-	 /w49fQnKSs5gIvxmaG8LRqyy10uW6vxniN9Vtlf836msmzLX6mULgZBsyo2VCzTtdQ
-	 v8HEJuCYV3Vzp6qLFx9lNWclFdUMun1+SF3Xe0r/IgIThr2gBMuIJcCrwNKPXlzr4k
-	 qKVgTe3En5KlysSFaraPhOlK6Hm77MlTIQOT81QI2BUf7+QXEZ3OYgm8HvmQq5bDyj
-	 EA6ptglxv3jHHKeLyaL/2d/HPCJgn2G8R6Gxm7WZ6HZYrmkdGksTvaIIGBQm3ZA2aU
-	 6u12Pn3Ty9DSA==
-Date: Tue, 17 Jun 2025 16:54:15 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: keyrings@vger.kernel.org, Steve French <sfrench@samba.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	Paulo Alcantara <pc@manguebit.org>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Jeffrey Altman <jaltman@auristor.com>, hch@infradead.org,
-	linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-	linux-cifs@vger.kernel.org, linux-security-module@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-crypto@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Keyrings: How to make them more useful
-Message-ID: <aFFzWwPoXMhMJjTL@kernel.org>
-References: <462886.1749731810@warthog.procyon.org.uk>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="NHU7vyyc"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D7A762A6E;
+	Tue, 17 Jun 2025 15:54:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750168443;
+	bh=LQpsALkTPotTLV0L5B38pVMNZD6nPoEHZMe5t0uCYmY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=NHU7vyycIFe0HBI4fykD18fkCNWRJLcihiOR6Xb9oRBhD/2MDLRHkuy4YcDM0yitV
+	 Q2fTWUGVLzkljeGrVyxnkFu2hSxHaj3Q9Ef6saGv1cppCXizoUXf0w2cNnTPHKcvdF
+	 8i/ardEtnZow0qmslyN5HaJAtvfAFkesHcXL6sow=
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Date: Tue, 17 Jun 2025 15:54:00 +0200
+Subject: [PATCH v8 2/4] media: pisp_be: Remove config validation from
+ schedule()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <462886.1749731810@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-2-e58ae199c17d@ideasonboard.com>
+References: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-0-e58ae199c17d@ideasonboard.com>
+In-Reply-To: <20250617-pispbe-mainline-split-jobs-handling-v6-v8-0-e58ae199c17d@ideasonboard.com>
+To: Naushir Patuck <naush@raspberrypi.com>, 
+ Nick Hollinghurst <nick.hollinghurst@raspberrypi.com>, 
+ David Plowman <david.plowman@raspberrypi.com>, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3083;
+ i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
+ bh=LQpsALkTPotTLV0L5B38pVMNZD6nPoEHZMe5t0uCYmY=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoUXOEe7cRNKLlBfoyNp4m4u6p8xuPVwbfvEjPn
+ apV/+o47TWJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaFFzhAAKCRByNAaPFqFW
+ PNckEACr0tkqemhNUDeWmwwqOg6XrM4nHAm6A1FMlo9IyBTo0B6fPO/frB3qCVVv9UPybKTrSgh
+ 8GJ4j0yzPfhAyEBYpmNU2/ghXGCttalOPzgC8YU6prLapngYH4LXncVFsGPF19wqHNZk+9R8sBa
+ ktooy16Cw6m4wfl5Huv+9YCZIQ7RuSpluTuiWzdOVSV1Iu+d/M02eDEiCrc1eu2A021VTL07TqK
+ ZN22ZtJ6rmKIsKJihvYKuAnAufyjUOY7PhzKOcwFUCE4/YvqGni9wuQnnnfnE2jVhKNEVYguXCN
+ mhaNqvnez8g6Nw1r4OvVw2TYzMtzkJq8BsZG2lXzwAjqtWKSSMTYLRsAbQ0MrDp3jbMgi1VwDgU
+ MEjBJlbf9vMWwc5mH9xp0Hl+0NguN+9Tsn5q68essJCktZ8/FvP5dvWz7tLg5AwBMzC5TtWM3vp
+ GhWOAaJHsSUbkkzhHz50Z07G9J52rfNX1FlQ2wmUT7psI5muXik0jTi5f6qxT67gmrh42HkTCvj
+ xrGwj8QmbWXoxUoewggDR/uqYna5+4b8hLuTOQDqMMWb3j9NViIHGtHSZrvY/1Tpo5Z2z8FtSWs
+ D21ZT9+xdBHBA6xqPQ4JOTBNXbm7D4FPO7Lk1OeHs9Rh9y7AgCPOqH1323BM33QHsHcPKUsn5l9
+ aIBenMFybodxJZw==
+X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-On Thu, Jun 12, 2025 at 01:36:50PM +0100, David Howells wrote:
-> Hi Jarkko, Steve, Chuck, Mimi, et al.,
-> 
-> I think work needs to be done on the keyrings subsystem to make them more
-> useful for network filesystems and other kernel services such as TLS and
-> crypto.
-> 
-> There are a number of issues that I think need addressing:
-> 
->  (1) One of the flaws in the initial design is that whilst keys have a type
->      (which is necessary), this has to be specified as part of the lookup or
->      the search, which is overly restrictive.
-> 
->      It probably would have been better to search by description alone and
->      then, if a key is found, have any type of key with that description
->      returned and let the app/service investigate the key to find the type.
-> 
->      Now, this is still possible to implement on top of the existing API: just
->      allow a NULL type to be passed in - but we might need some way to
->      enumerate all the keys with that description, but of different types.
->      Possibly, the search function should return all the matching keys.
-> 
->      Possibly, within the kernel, for each keyring, all the keys of the same
->      description can be stored within a group structure, and the search
->      returns the group.  This could also have the added benefit of maybe
->      making it easier to handle updates.
+The config parameters buffer is already validated in
+pisp_be_validate_config() at .buf_prepare() time.
 
-All keys matching the description can be collected by iterating all the
-key types (instead of passing NULL).
+However some of the same validations are also performed at
+pispbe_schedule() time. In particular the function checks that:
 
-Having only a syscall for the process has of course much better
-concurrency properties.  Just trying to understand the improvements by
-actual measure, that's all.
+1) config.num_tiles is valid
+2) At least one of the BAYER or RGB input is enabled
 
->  (2) For certain applications, keys need versioning - and we need to be able
->      to get access to older versions (at least to some extent) of the keys.
->      An example of this is cifs where (if I understand it correctly) the key
->      version gets cranked, but not all servers may have caught up yet, so we
->      need to be able to try the keys in descending order of version.
-> 
->      This could also work within the group idea mentioned above.
-> 
->  (3) For certain applications, such as AFS and AF_RXRPC, we may need to be
->      able to keep a number of keys around that have the same description
->      (e.g. cell name) and basic type (e.g. rxrpc) and version, but that have
->      different crypto types (e.g. Rx security classes and Kerberos types, such
->      as RxGK+aes256-cts-hmac-sha1-96, RxGK+aes128-cts-hmac-sha256-128 or
->      RxKAD) as different servers in the same cell might not support all or we
->      might be implementing a server that is offering multiple crypto types.
-> 
->      So we might need a "subtype" as well as a version.
+The input config validation is already performed in
+pisp_be_validate_config() and while job.hw_enables is modified by
+pispbe_xlate_addrs(), the function only resets the input masks if
 
-1. How the history is capped? I presume it is a fixed-size circular
-   buffer, where the oldest entry is deleted, when the key is updated.
-1. How history queried by the caller?
-2. How a newer version is revoked in favor of a newer version?
+- there is no input buffer available, but pispbe_prepare_job() fails
+  before calling pispbe_xlate_addrs() in this case
+- bayer_enable is 0, but in this case rgb_enable is valid as guaranteed
+  by pisp_be_validate_config()
+- only outputs are reset in rgb_enable
 
->  (4) I think the keyring ACLs idea need to be revived.  We have a whole bunch
->      of different keyrings, each with a specific 'domain' of usage for the
->      keys contained therein for checking signatures on things.  Can we reduce
->      this to one keyring and use ACLs to declare the specific purposes for
->      which a key may be used or the specific tasks that may use it?  Use
->      special subject IDs (ie. not simply UIDs/GIDs) to mark this.
+For this reasons there is no need to repeat the check at
+pispbe_schedule() time.
 
-Is subject ID some kind of token that a process can hold (and possibly
-can be sent to a process)?
+The num_tiles validation can be moved to pisp_be_validate_config() as
+well. As num_tiles is a u32 it can'be be < 0, so change the sanity
+check accordingly.
 
-> 
->  (5) Replace the upcall mechanism with a listenable service channel, so that a
->      userspace service (possibly part of systemd or driven from systemd) can
->      listen on it and perform key creation/maintenance services.
-> 
->      From previous discussions with the systemd maintainer, it would be a lot
->      easier for them to manage if the key is attached to a file descriptor -
->      at least for the duration of the maintenance operation.
-> 
->      Further, this needs to be containerised in some way so that requests from
->      different containers can be handled separately - and can be
->      distinguished
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Reviewed-by: Naushir Patuck <naush@raspberrypi.com>
+Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+---
+ .../media/platform/raspberrypi/pisp_be/pisp_be.c   | 25 ++++++----------------
+ 1 file changed, 7 insertions(+), 18 deletions(-)
 
-This sounds like an universally sane idea (outside the scope of the
-patch set).
+diff --git a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+index b1449245f39436d02c9c710916e2d0605606a327..92c452891d6c2d68aff9aa269c06fa1af77e3885 100644
+--- a/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
++++ b/drivers/media/platform/raspberrypi/pisp_be/pisp_be.c
+@@ -588,24 +588,6 @@ static void pispbe_schedule(struct pispbe_dev *pispbe, bool clear_hw_busy)
+ 	pispbe->hw_busy = true;
+ 	spin_unlock_irqrestore(&pispbe->hw_lock, flags);
+ 
+-	if (job.config->num_tiles <= 0 ||
+-	    job.config->num_tiles > PISP_BACK_END_NUM_TILES ||
+-	    !((job.hw_enables.bayer_enables | job.hw_enables.rgb_enables) &
+-	      PISP_BE_BAYER_ENABLE_INPUT)) {
+-		/*
+-		 * Bad job. We can't let it proceed as it could lock up
+-		 * the hardware, or worse!
+-		 *
+-		 * For now, just force num_tiles to 0, which causes the
+-		 * H/W to do something bizarre but survivable. It
+-		 * increments (started,done) counters by more than 1,
+-		 * but we seem to survive...
+-		 */
+-		dev_dbg(pispbe->dev, "Bad job: invalid number of tiles: %u\n",
+-			job.config->num_tiles);
+-		job.config->num_tiles = 0;
+-	}
+-
+ 	pispbe_queue_job(pispbe, &job);
+ 
+ 	return;
+@@ -703,6 +685,13 @@ static int pisp_be_validate_config(struct pispbe_dev *pispbe,
+ 		return -EIO;
+ 	}
+ 
++	if (config->num_tiles == 0 ||
++	    config->num_tiles > PISP_BACK_END_NUM_TILES) {
++		dev_dbg(dev, "%s: Invalid number of tiles: %d\n", __func__,
++			config->num_tiles);
++		return -EINVAL;
++	}
++
+ 	/* Ensure output config strides and buffer sizes match the V4L2 formats. */
+ 	fmt = &pispbe->node[TDN_OUTPUT_NODE].format;
+ 	if (bayer_enables & PISP_BE_BAYER_ENABLE_TDN_OUTPUT) {
 
-> 
->  (6) Move away from keeping DNS records in a keyring, but rather keep them in
->      some sort of shrinkable list.  They could still be looked up over a
->      secure channel.
+-- 
+2.49.0
 
-Don't expertise to understand the benefits of this change. 
-
-
-> 
-> To aid with at least (1), (2) and (3) and possibly (4), I think it might be
-> worth adding an extended add_key() system call that takes an additional
-> parameter string:
-> 
-> 	key_serial_t add_key2(const char *type,
-> 			      const char *description,
-> 			      const char *parameters,
-> 			      const void payload, size_t plen,
-> 			      key_serial_t keyring);
-> 
-> The parameters would get passed to the key type driver for it to extract
-> things like version number and subtype from without the need to try and fold
-> it into the payload (which may, for example, be a binary ticket obtained from
-> kerberos).  Though possibly that is a bad example as the kerberos ticket may
-> contain multiple keys.
-
-Does the parameter list mimic kernel command-line style of comma
-separated attributes?
-
-BR, Jarkko
