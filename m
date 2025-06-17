@@ -1,161 +1,158 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CFE291C0C
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CCD293468
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750153043; cv=none; b=Q40m3HazFxM5xJff+pIiZiud2V5Lqgzg0g86eiLIG51VXvpbYBQ2iayG+/6qTYTQXDdC6kgrufdjU0egXV1d3R6O4Fi+nL8YqgUahFNS3KDH0PKkVlBzvn5PSawNK4p/JbE4fMM7Y+qFZN0gXSKXNjAg4ATMJymZXgzMLHbf/UE=
+	t=1750153044; cv=none; b=PrY63Vmeyfz3Z3t+rVWyLND3pwyiP6cSmqawrzfw8/enqy50YdfMMfKU0507H4W5zsGbHldQESX24ZEm7dJnrb/+Y/File6h98Q8lzZ65KPmOBnzR/tgN2dqbBPkluFPBs7QRVcARJfmkHaWnUmPglLzpbPNAJHDdIkj3LaXLIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750153043; c=relaxed/simple;
-	bh=YHPHcbEtKx3e1/IQVsfntHxD7KeC7qvG/QgbnDsiHg8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S7k/yHwXiKj7X+kxpLbe+yUZEci2p7oVbtjHh0EPttr1qFCpub0fJFG2x6wzKQS2enasnTfmYR9pKl0DMVuxbAIFgdlgvpR0a9lCrm32nlt63fpuCqMvGTJQ1CExU6KFukIB1rqB66aH1Q/gfwCuHgBNU7JjrATkAXzmT6tvmVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=JFNCPeRz; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1750153044; c=relaxed/simple;
+	bh=aLrgdQZSb4Tg33mZZ0YCaNA7yWG9NOovoj46L7LIZFk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZLGj5yIO6Tt/50FxkhSWzK94Qu6Ptp8qA76dBjxc4NSwEcpzCM4t1vTIghbu9jYYxd9OnANimjRDshoIYy/sQHMjst2FWdVzSbQLEpPfp+JXslkSKKMRBfNgNeQXSVYTZDWjTkzRyoL0zAG7sxQ77A8wpIN1CGUJaVQVHGn1BY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cXvpZU/G; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="JFNCPeRz"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a536ecbf6fso3671313f8f.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cXvpZU/G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750153042;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0iZWBl/87jpgBtc7g8vCiBj8fMDtEnqMgq5VqeHe2b4=;
+	b=cXvpZU/GoIIQvNunSyBw6x0ESa0YB7oRzbBWh6+1kU8r8CY0k65D+ZLvSl5tSnPoxcps/s
+	V6a05b8f7bmr6XSOXA/hid1HpwqDgAhgqP3ZyKR8R5SGdqKSKQBIfAwsAnM/yWvAOB5Wld
+	xWB1JwxXlWOT/SMO6rJXuaEHVfnHYV8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-507-pGo6qV3yOwudJQCo_H7epw-1; Tue, 17 Jun 2025 05:37:20 -0400
+X-MC-Unique: pGo6qV3yOwudJQCo_H7epw-1
+X-Mimecast-MFC-AGG-ID: pGo6qV3yOwudJQCo_H7epw_1750153040
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a578958000so999461f8f.3
         for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1750153039; x=1750757839; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xQLWgJwCNGpOjHI3jmeKcf+m7mG0t5rZQIDZcAxVNp4=;
-        b=JFNCPeRzV4Q/sEvCpJfsD6F5x52Sa2rYkHfmHEvcu/fAPZLLFbWWDdU/wrDO03VnFp
-         jtkKIb1YEgPyiPDHmW42bMf1r78dETpgvxLHX1/hxZunMeVl3LCcFfhHjkhB04y+FLIf
-         9nTWvSeyYxp+NySeyswlvCMkBPifOk710Dag/KpsNLPfdEcqpsAatqmN4T/q6OLAcrFW
-         CdqVjwCXMOrCUakyBnmfsn9IX7nO+RBlYw5AmURErwtoew0IOaK375qQXFBiPzFnyyzC
-         uzokLF9EOHDArdycaQdsbnIjhFJlIsBGjo/HbfTw5lcf817BkXllTMjHoF5Cf7lMS9Pk
-         s7dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750153039; x=1750757839;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xQLWgJwCNGpOjHI3jmeKcf+m7mG0t5rZQIDZcAxVNp4=;
-        b=cuItj/ypYOpwz5NoHaHG9Gjo4Y7zrSN38XbNaUoitQIbNA0GvlQ6e9mpvcHM8fXFKs
-         mvZT++UJvPTW3XkoqDykd1qaUw/ci2lLA98YW3C+1cWZVDNCxNF4kfrX5wmyrLvdoyGK
-         kb9eRzLIvn634PbjXa1l/bIKXL9PbCDmUGgqNMJHhU03YkYFy8b4/lBuuGtKRwtt+n7p
-         YootEHCuj65dkosgU+/HV8BgIFU8m194FPp/OnPlYgwwUJPcNELPFYA59yK3vhDonRyy
-         TuK6HSmvUztTHd8+JY+lf63fOw1h0FjMVoF3dWiI+u8VIp0O4ebLzx01U2NFU501/p96
-         4hSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV/qhQ/vr1ibE+edAPCpohU284auxiKx8O6qfts3IeXyX0IvHtyOOJ/lpRRrO2FnSH5Dxn5EpDB7J9c9AA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJcyjMSOy+NzUCps4lHh6HC4W7KmFNB39hpOBsz2ERGrW/lPbf
-	Sg7ZSYEgGa0JUO0tEvQKHCxXvYXh3cTcK48H8sx1NTzsi/Mpu4iMf7VU5WoVYMnZ7A==
-X-Gm-Gg: ASbGnctesPI0t784s6cdVi4zsqTY2KpaD9zbHRqFSLeqo1KYr6YAyU99Tl11wgDkciL
-	N1+HpZULWwe2CjuAblBzZ515jvKrP1zhyC30URaryawjur5owDfyMvZX3YnYqdOAsDeM4o44cLH
-	MnzdqeKWkTssHIQyoIh5OYlxYFQVydeoX0yKhQqwc4mjhh7kUDNbESblpJ287YHuyKBn2TcgFVS
-	oCUg1MwAe2No/31osdvWXPnYgueVPD2sKYaBe+wflGB7I6uaWKAyB/NNkN6QqlxIs5C2e5UQEsv
-	+XWkXMYcckK3PGaM9ZEcojSMGRRhB6znFqx+HfImAgkeDEwu6uAjchFBVUtUjZ9Q5oaCBZoE0PX
-	wKGGZGNlV2ZT020qoZzIbQQEOU2D+buH2bQAPSLMOvA==
-X-Google-Smtp-Source: AGHT+IFVAOAbd/qgKSVKbDicAB2PnOt83B6zNjx9qBCLEy9aEwwB0HmDR3fUYBp5jRLGG5xc8Apugw==
-X-Received: by 2002:a05:6000:26c4:b0:3a3:652d:1638 with SMTP id ffacd0b85a97d-3a572e585a1mr9727634f8f.48.1750153039313;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0iZWBl/87jpgBtc7g8vCiBj8fMDtEnqMgq5VqeHe2b4=;
+        b=NQVIRMUMTk9aIwHv4Pgekbhj9+95iVjIPOzvkKBbHhLkKRIJoV3217DTB+Rd9hcqJK
+         ti6Xw5bZXLVmYCGXoq1J15rzrYPQ84hMxcx3f9PRXzASUq5Q3jmbP0sI5p01LRW2BoJB
+         aC4qwClxRVtEnJVaP8NneizD/WH6Ok4vYY204JvjHWy6FZWU8q1uXJfa8FmFII158bY+
+         lPtX516ihw8fvs9VPwMguADr4kU9pV7S+kzMshGgWi4T3YGS3zSo4UOuepOTmq05hind
+         G5PQChEfMGrpPsGcbUtfzt3h6QdbUZ47KO0ycH1a/3vUx4aMb6hjAGydRFFNUlJySxNh
+         dDaA==
+X-Forwarded-Encrypted: i=1; AJvYcCU5x2AgK0g53QNTKLYTAi3TR4lyknhVE71Zato6fS8+ubJ8GcPZ26Ovbr23pLHfyq4XvCHMwGSFm9V4PgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZevYLTt57lvAPzBFYuJFNuwbfOR+cAwydUZYnPhi4rDUa/8cR
+	vJH1j4EjcGuoEMHg4dOnUIoQVKWqUQtDWsTnGy8O7okcX6bML4ZZnibE/daF/VG9MEAG+aiPGqD
+	Zg9oMnjQxVtFcbOwQ2wVwR5wEeijNLWDei3DEXlXm13ZvnumtWOWjxp1uj5JijaIF6g==
+X-Gm-Gg: ASbGncsGOKe721E68DQe9i9NbcpNdsCtUgWIYMB8JLFvjoz5TBImjswUl0276W4O5AH
+	DvX7WDOxjhCJfCpjZFSA7NFbYbVeJEYD10Dy3Addi77sqdeQl9wTWXigVmUdwp3wnNc0Q0A/fSf
+	I8HzvSxME7ZjJH6L+ZRtbKKaUpcFAcNpcIG30PcFreO1vS81Y+HbBS3B/1Pxo1pLOQdvQtcsY2p
+	Zwd/M9Lsjabtg95CknpO78AYC5UdLbBj+pmnywIoE9Fwmj1OvcoRFTyCl+4nK+GUu6uoqgq+qPG
+	XSMy8RP4ObQ+zhwBgcrD9CJ4tbadqnDbdFNGpC+CyPC1w5vSK4iacIpov6+0m2wqLZ4je8LT7Ak
+	nfrIX2oOPXxS3SjD/yPVAkH0nTq4uBNyJot8+RWusHmzkSo0=
+X-Received: by 2002:a05:6000:2089:b0:3a5:2ec5:35b8 with SMTP id ffacd0b85a97d-3a572398cecmr9501298f8f.11.1750153039522;
         Tue, 17 Jun 2025 02:37:19 -0700 (PDT)
-Received: from cyber-t14sg4 (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a57b2bfc69sm7492985f8f.76.2025.06.17.02.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+X-Google-Smtp-Source: AGHT+IGn0r2S94rVo2KuanbuIlCONOQLmf7OLS7ZUZs7agOAWDn3Sa7W8ftax638hwNbov3D5qaGyQ==
+X-Received: by 2002:a05:6000:2089:b0:3a5:2ec5:35b8 with SMTP id ffacd0b85a97d-3a572398cecmr9501261f8f.11.1750153038988;
         Tue, 17 Jun 2025 02:37:18 -0700 (PDT)
-Date: Tue, 17 Jun 2025 11:37:17 +0200
-From: Michal Gorlas <michal.gorlas@9elements.com>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Tzung-Bi Shih <tzungbi@kernel.org>,
-	Julius Werner <jwerner@chromium.org>, marcello.bauer@9elements.com,
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] firmware: coreboot: support for parsing SMM
- related informations from coreboot tables
-Message-ID: <aFE3TVxqpt4-lmYP@cyber-t14sg4>
-References: <cover.1749734094.git.michal.gorlas@9elements.com>
- <815080fae73a4e879bae4851367ac7c0ad2cd551.1749734094.git.michal.gorlas@9elements.com>
- <aEtWtBKfNhDT1bF9@google.com>
- <aE1wvuamXqVTzpny@cyber-t14sg4>
- <aFBfcg7E38ywGD5W@google.com>
+Received: from ?IPV6:2003:d8:2f31:700:3851:c66a:b6b9:3490? (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c64esm175838425e9.7.2025.06.17.02.37.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 02:37:18 -0700 (PDT)
+Message-ID: <d9fc2e4f-3a4d-4bf2-9a45-b4d890f2b0d8@redhat.com>
+Date: Tue, 17 Jun 2025 11:37:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFBfcg7E38ywGD5W@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/14] fs/dax: Remove FS_DAX_LIMITED config option
+To: Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org
+Cc: linux-mm@kvack.org, gerald.schaefer@linux.ibm.com,
+ dan.j.williams@intel.com, jgg@ziepe.ca, willy@infradead.org,
+ linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+ linux-xfs@vger.kernel.org, jhubbard@nvidia.com, hch@lst.de,
+ zhang.lyra@gmail.com, debug@rivosinc.com, bjorn@kernel.org,
+ balbirs@nvidia.com, lorenzo.stoakes@oracle.com,
+ linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-cxl@vger.kernel.org, dri-devel@lists.freedesktop.org, John@Groves.net,
+ m.szyprowski@samsung.com
+References: <cover.8d04615eb17b9e46fc0ae7402ca54b69e04b1043.1750075065.git-series.apopple@nvidia.com>
+ <bbade6a3154d14d958f5f9cf65fd6424897ec9c2.1750075065.git-series.apopple@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
+ 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
+ rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
+ wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
+ 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
+ pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
+ KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
+ BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
+ 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
+ 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
+ M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
+ AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
+ boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
+ 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
+ XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
+ a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
+ Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
+ 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
+ kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
+ th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
+ jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <bbade6a3154d14d958f5f9cf65fd6424897ec9c2.1750075065.git-series.apopple@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 16, 2025 at 11:16:18AM -0700, Brian Norris wrote:
-> On Sat, Jun 14, 2025 at 02:53:18PM +0200, Michal Gorlas wrote:
-> > On Thu, Jun 12, 2025 at 03:37:40PM -0700, Brian Norris wrote:
-> > > > @@ -112,8 +122,8 @@ void coreboot_driver_unregister(struct coreboot_driver *driver);
-> > > >   * boilerplate.  Each module may only use this macro once, and
-> > > >   * calling it replaces module_init() and module_exit()
-> > > >   */
-> > > > -#define module_coreboot_driver(__coreboot_driver) \
-> > > > +#define module_coreboot_driver(__coreboot_driver)                  \
-> > > >  	module_driver(__coreboot_driver, coreboot_driver_register, \
-> > > > -			coreboot_driver_unregister)
-> > > > +		      coreboot_driver_unregister)
-> > > 
-> > > You're making arbitrary whitespace changes in this hunk. Try to avoid
-> > > that, please.
-> > > 
-> > 
-> > Sure, will do. It came from a style warning when running
-> > scripts/checkpatch.pl. I thought it could be useful to fix it on the
-> > same go.
+On 16.06.25 13:58, Alistair Popple wrote:
+> The dcssblk driver was the last user of FS_DAX_LIMITED. That was marked
+> broken by 653d7825c149 ("dcssblk: mark DAX broken, remove FS_DAX_LIMITED
+> support") to allow removal of PFN_SPECIAL. However the FS_DAX_LIMITED
+> config option itself was not removed, so do that now.
 > 
-> That's odd, I don't see any such warning. Anyway, typically I'd expect
-> such things not to be lumped together under the "separate your changes"
-> guidance of Documentation/process/submitting-patches.rst (if they're
-> worth changing at all), although that may not be a hard and fast rule.
+> Signed-off-by: Alistair Popple <apopple@nvidia.com>
 
-My bad, the whitespace were not a consequence of checkpatch.pl
-complaints, but rather running clang-format on coreboot_table.h
-on a clean tree:
+Acked-by: David Hildenbrand <david@redhat.com>
 
- * $ clang-format -i drivers/firmware/google/coreboot_table.h
- * $ git diff
- * diff --git a/drivers/firmware/google/coreboot_table.h b/drivers/firmware/google/coreboot_table.h
- * index bb6f0f7299b4..3d933c657535 100644
- * --- a/drivers/firmware/google/coreboot_table.h
- * +++ b/drivers/firmware/google/coreboot_table.h
- * @@ -61,15 +61,15 @@ struct lb_framebuffer {
- *         u32 x_resolution;
- *         u32 y_resolution;
- *         u32 bytes_per_line;
- * -       u8  bits_per_pixel;
- * -       u8  red_mask_pos;
- * -       u8  red_mask_size;
- * -       u8  green_mask_pos;
- * -       u8  green_mask_size;
- * -       u8  blue_mask_pos;
- * -       u8  blue_mask_size;
- * -       u8  reserved_mask_pos;
- * -       u8  reserved_mask_size;
- * +       u8 bits_per_pixel;
- * +       u8 red_mask_pos;
- * +       u8 red_mask_size;
- * +       u8 green_mask_pos;
- * +       u8 green_mask_size;
- * +       u8 blue_mask_pos;
- * +       u8 blue_mask_size;
- * +       u8 reserved_mask_pos;
- * +       u8 reserved_mask_size;
- *  };
- * 
- *  /* A device, additionally with information from coreboot. */
- * @@ -112,8 +112,8 @@ void coreboot_driver_unregister(struct coreboot_driver *driver);
- *   * boilerplate.  Each module may only use this macro once, and
- *   * calling it replaces module_init() and module_exit()
- *   */
- * -#define module_coreboot_driver(__coreboot_driver) \
- * +#define module_coreboot_driver(__coreboot_driver)                  \
- *         module_driver(__coreboot_driver, coreboot_driver_register, \
- * -                       coreboot_driver_unregister)
- * +                     coreboot_driver_unregister)
- * 
- *  #endif /* __COREBOOT_TABLE_H */
+-- 
+Cheers,
 
-Anyway, I am not sure if it is even worth changing, its rather cosmetic. I
-removed these changes in v2. 
+David / dhildenb
 
-Best,
-Michal
