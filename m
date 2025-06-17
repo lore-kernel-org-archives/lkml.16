@@ -1,63 +1,63 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B535D2E973A;
-	Tue, 17 Jun 2025 13:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB35D2E9745;
+	Tue, 17 Jun 2025 13:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750165535; cv=none; b=adDSqWKIH7yeaBuyLnTTSQsnhB0sdO6R/dJQRy8ZmmbaU2bwTXnpAGrAfx0+NCcikRgrIMA+9RG7unVTIXy9S2IGOoRjzLzZYAnfIO17k89Td5PWnYrk2WS6zcjCOW74SerU9/W9xf2WcZnhZDfz5l2IuWp1lv+6X3vlBOk87Zk=
+	t=1750165536; cv=none; b=ZbtDKctqL/TJZAIdwpufcRim2OYwRaBc6kNRRxOn+5EIsFxGJNi1yI9WgDggG2LvU8iLA5wvxCABJUHc7C5N/ZJeZEMiltksGavJ0LZOnYSIcWeJp8SzOh4FMCohnLw9VMehlm1W9rLrHv/R78veppxNdPBFdTjlsT/ex4syIgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750165535; c=relaxed/simple;
-	bh=O2wcZfEghBL4o0hs351DQn+d1BMaIjzNvULr3vmMvbs=;
+	s=arc-20240116; t=1750165536; c=relaxed/simple;
+	bh=Y1jhm9G4SP/4vxnYEyVeKD7jxvHJZ383xo4yScrKClI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KHES/0HZRM+OxQpr54340svDf0tqgrDVBp4uG7622ieqN0wS0/U4iP+0RpHHsIx8GBbhhFz6Ijt7HRUmiEiODnVXLngaqJqBozLRj2TCb5QIshnq5Bc507+xTaSWmChkWTa1Gb7LjRAbYQX1LcGqJ14EBJ38YxhIgsAi0E2kXX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkNpCsZ7; arc=none smtp.client-ip=209.85.128.48
+	 MIME-Version; b=Si2BUaBdvAOVFVCygUrFziuf95K4ZEY1hy4Z1vVNA7UhcTop8nrzIvV3WAP7OJCH1GhnM8CQVna70IeAgEwX4cehIGtOIs+Ky01La3bcDzSQrzaspUt/LjoKQeoc7PlJ4ut7db7J9/nHOynkkwdfk0ObE7ctYkaeMEmKlwrayHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eyV1SvyS; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkNpCsZ7"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so70827465e9.1;
-        Tue, 17 Jun 2025 06:05:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyV1SvyS"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451d7b50815so48140505e9.2;
+        Tue, 17 Jun 2025 06:05:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750165532; x=1750770332; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750165533; x=1750770333; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6n6KBuEMwScCfdTc5bm4Wfj5mczAlbliacsP6nODpNs=;
-        b=fkNpCsZ79/TnsAsw45wCe4MjaSzbswOk3SKj7z+nPv7o1pUZt8G0nTBdOMXfEyYOgC
-         KoNi94xLtXxUHRCPz7Fc6XcLimHZiE8bV+dcGQlJHvllA7WJlKZJJB6fJEWBHZ3NWb2d
-         lxnXHD5rCLd83w0JH4pq+sqVpmdDieAhs2TzxSRnYgQrhrcAwwmCH1GZjfGXLjTY8t5w
-         O99yCULxxmUXISl+q3BlQC07tAHeELCovKu1I2s8f+AheGz+xSw5hMtRyF9TERe65QFE
-         XjyYN4uzUtPlezf9w9IB1aGdCFXpANChQR/g9H9r7A/7QicfNEkMjpyfCpgMSGYdu5Rp
-         FAww==
+        bh=HZSWNkllSNOP0Alk5Rg5mB/Z0/Xf3katUWXaq3TCIC0=;
+        b=eyV1SvySAsvQpt7CcD/AV3thLdEkBM0vyrjNJHaRxEGv5ZmiBiOZAv+rjeekVe0ihM
+         w+w+ZjUtIy/vxwPHXR8AjP5y9HmTNa+BltV9CSSehUQlnHB+U4zAPoZ6segQLYN7Twy8
+         v4Sb52jtNiInyVZaTrsNkZ5mRThsxc/6y883c06jTxNferlp4/1Dz6WXYIP785IqN/VS
+         7ry4sQLOZIyzAwnOTZhd/4rURxVMIh66wQNNsqWPo7sP02U+W7u8BsEcD/sVsiPagUjn
+         +zK8rw3bPGlmCrPzLgBQ2VB1FU+E1BNQ4lNi4PYIK7xOB98zSwztOkL0RINAiltsp62K
+         gNSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750165532; x=1750770332;
+        d=1e100.net; s=20230601; t=1750165533; x=1750770333;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6n6KBuEMwScCfdTc5bm4Wfj5mczAlbliacsP6nODpNs=;
-        b=d+7EYjAi8XF7IjYeF5VBiI9xkh9G7RBr2pvf4oscrr4hyPHr6d78YSQ504GwiIYm8h
-         yjV5FJiYjJnM6bsvwJq7OZIC/Xb/eW7IYg9mA2Jsef+B+DbIU6VjgsEKz53IyCWO5lCl
-         WF1edkunj2HAYOrg11GgOv85iLGQzdTfCccLPENjSxySD/wRHTjJ2b9Z4pwPrIIrGMlP
-         KHeRGTkkUL3Ev0KuVIm9dIbAm0Zn7BEdgwq0oVct3b91vlbtRA5DyHjSwpOepeM519z4
-         n4rYvCkHNqWt//WCHwa6VcNybIzxyYlT/+82wk9AZljasfx+ykWUPMz/0+Tsut2EFjOy
-         rtgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW14+X7elMWlRntsC1g7IyeMz5KAD6r73ujC8B6F+bWqTlAxwHTEotjEYMcYWbzxIh7DdPiLSejI0cJ@vger.kernel.org, AJvYcCWneOJkPmr1O9wNp5tXkTnI1U6sqqSLR+3WD4BFvmU9RAVsgC7ye3T5mEp9o3zpfSB6eBlLGDrBmAB2tBKU@vger.kernel.org, AJvYcCXQ8zua8s0MQlJ+KoqGyDj4bGiddZWWA6dePHCYWISim8AlVQJ6OdxaVLIR++SSY7dz1BCj6CGsnZRL@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxf7TtBOiFwxSWotp420jApOuNOSGNAoail3Vhab+9pCJyEKqL
-	DLcA5Kh+hVkEU8w32MTRPTeyejU+qiWLWhSDpjoiuS0yFj8Rk7Wnzi1XKA/Rcw==
-X-Gm-Gg: ASbGncvVPNHU5TKM4zA6XyBLdnKAZ60bNOcX8zQJs94lXzDtbSVue45a5VHSOj8fYAL
-	UWNp3N2IG5G56EMU8NZbO9inlqOJv2CBzYkhtjCKPfiU7Dj5biE8trc00G+ATY5lla213LBS4zP
-	to6UzPwO8osRAaGGGwxq/3I35luEsuAniWMUck6LJGWPUQ9Mm1K/ksB4TZCSTbEcwR3cW5fuX3f
-	SLGoDf3mZx+ECikUIGZZ63+vOrh1pG1k+qwmGtXjuZc+dBNKIVifd32GH9VVXTuk5cEAVSjIAEP
-	wTH0Hg6YNpBo0v2YXewTnd2MyunOsk34npVGCbY9ksfUGgbFvAoCguzc4KKxjzAqz9TfCJcqxbG
-	KjUaItXkPJdBxnXJtSHvLG5zXBkHuDjY=
-X-Google-Smtp-Source: AGHT+IEMQvWMlCfJyefCK7DPf6UlJlVMBkYQR3jgRfaXXu+WEw+jdmMda2UeQQQ4jppqU3msd5ChAw==
-X-Received: by 2002:a05:600c:3ba6:b0:450:d012:df7a with SMTP id 5b1f17b1804b1-4533cab857cmr107301975e9.28.1750165530133;
-        Tue, 17 Jun 2025 06:05:30 -0700 (PDT)
+        bh=HZSWNkllSNOP0Alk5Rg5mB/Z0/Xf3katUWXaq3TCIC0=;
+        b=SZwowLdaX+frwz7rXZdUurNHS5U7NtUX7h7SO5rRl7oglZRhkCrMfbZwOGTtwWrTkA
+         jCAkPXfDVHJk32+kGoif5Ky7E7VyVLIxLlNU/LIwhb3Q7E4sN208OxthzWcEyQc9iFHF
+         yd0Fvn+/v3NB0ybKyt7ObQYzYEP9Erw4YB6S7A4LrvdhPWlyw0lU+/oopYs4riq/oXGp
+         t2H5cWTFXF4dDOgUnRBldoYUZMQNITiIMkgD51V8a4i3Gh4w+3Wrxj5li59db6CW7Hca
+         oXtuWsd7C/R11yTLtU2yKr1Sasi1K8ltEyjDhASc6jYLNl68sOLo86HXaDGVVD7n7ySA
+         VvVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVF30OBK0kjcNsQiBZXzA05oTeBaA0xUY+s3XCogmezgCqPwMhQ6nAGjK7hzDovcJGu6kmwp5/pOhpv@vger.kernel.org, AJvYcCVgkXrN1CE+An/C5b7ACWeFS1OlCMXHUuzW12IOPycbvCm7tEPu78O0jxN058GX9uy64K+XCGhHl9RF@vger.kernel.org, AJvYcCXWfsfhXCk4OSIKxH9JWtSkcxv/CyaEieoimSyCR0ELQxaFe8MUJo6hMX2jrrGiUm5ZB0m5Zfl5m3Pg9FuC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAPuPJvkcDpy5x/cNKAuB56401gyCv0Kky3KqCOqe6xJLrTQuP
+	0bPGEuGsA02GeSAKWkqIL9jTchT9+zPzENjg0TlD76g+8GQOeJBl8YRo
+X-Gm-Gg: ASbGncuTg213Nv/O4ciiY6fy5K8RRQGP5OxOb2wvzyTTa+ZUxbMFio0EdEqmo3oUtsz
+	z2pY+UGHvEdQwhHU7oQXPReErPW3AWXPM4zP8+0tW4+MZXFz4n5e4IfRI2ibhFkSLgI3FijCt2T
+	FbIzMqebbiisE4z3n/pHjQjTK/dKWZsekQGAt+RfKcLeBOkWAepsh1oWyyIAbjbavRkWOK0ElJr
+	anhJztA4h21hFj9ubbkI8WGssLKXMAKwONSpCWNEp50YS8ACnnn7x3llpm5DzIpffiSafbfqDYG
+	sJdg5l8XuQm86cmZ5v5Tyr0NriDKTI9TkjCOR9C5fmGsux5fGs/X2n0O3++GkPJtSErq8C0AZyL
+	qCZgBCEL8+e7rMXVB/AK8Y0NXZ5duKbc=
+X-Google-Smtp-Source: AGHT+IHINz6TP2OxYogxHsV9z7CWehOy9zUSrxOanKAqSJpCphw+YmrXFCvLl6RW2RuWZgVEtbJ7VA==
+X-Received: by 2002:a05:600c:6388:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-4533d49b94amr127487045e9.14.1750165532339;
+        Tue, 17 Jun 2025 06:05:32 -0700 (PDT)
 Received: from localhost.localdomain (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e24b0c8sm173809435e9.24.2025.06.17.06.05.28
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532e24b0c8sm173809435e9.24.2025.06.17.06.05.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 06:05:29 -0700 (PDT)
+        Tue, 17 Jun 2025 06:05:31 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -70,9 +70,9 @@ To: Michael Turquette <mturquette@baylibre.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [PATCH v2 04/10] clk: en7523: add support for .set_rate
-Date: Tue, 17 Jun 2025 15:04:47 +0200
-Message-ID: <20250617130455.32682-5-ansuelsmth@gmail.com>
+Subject: [PATCH v2 06/10] dt-bindings: clock: airoha: Document new property airoha,chip-scu
+Date: Tue, 17 Jun 2025 15:04:49 +0200
+Message-ID: <20250617130455.32682-7-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250617130455.32682-1-ansuelsmth@gmail.com>
 References: <20250617130455.32682-1-ansuelsmth@gmail.com>
@@ -84,176 +84,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for EN7523 driver to configure rate. The SoC expose both
-base clock selector and clock divisor hence it's possible to change the
-rate.
-
-This will be especially needed for new SoC AN7583 that require changes
-for the MDIO and the eMMC.
-
-The clock were assumed correctly configured by the bootloader but this
-goes against the rule of "kernel should not depend on external
-configuration".
+Document new property airoha,chip-scu used on new Airoha SoC to
+reference the Chip SCU syscon node used for PCIe configuration.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- drivers/clk/clk-en7523.c | 141 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 141 insertions(+)
+ .../devicetree/bindings/clock/airoha,en7523-scu.yaml      | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/clk/clk-en7523.c b/drivers/clk/clk-en7523.c
-index 10fb0dcdc88b..54c0462c0dee 100644
---- a/drivers/clk/clk-en7523.c
-+++ b/drivers/clk/clk-en7523.c
-@@ -506,8 +506,149 @@ static unsigned long en75xx_recalc_rate(struct clk_hw *hw,
- 	return rate / en7523_get_div(desc, val);
- }
+diff --git a/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml b/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml
+index fe2c5c1baf43..bce77a14c938 100644
+--- a/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml
++++ b/Documentation/devicetree/bindings/clock/airoha,en7523-scu.yaml
+@@ -49,6 +49,11 @@ properties:
+     description: ID of the controller reset line
+     const: 1
  
-+static int en75xx_get_base_val_for_rate(const struct en_clk_desc *desc,
-+					int div, unsigned long rate)
-+{
-+	int i;
++  airoha,chip-scu:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: Phandle to the Chip SCU syscon node for PCIe
++      configuration
 +
-+	/* Single base rate */
-+	if (!desc->base_bits) {
-+		if (rate != desc->base_value / div)
-+			goto err;
-+
-+		return 0;
-+	}
-+
-+	/* Check every base rate with provided divisor */
-+	for (i = 0; i < desc->n_base_values; i++)
-+		if (rate == desc->base_values[i] / div)
-+			return i;
-+
-+err:
-+	return -EINVAL;
-+}
-+
-+static int en75xx_get_vals_for_rate(const struct en_clk_desc *desc,
-+				    unsigned long rate,
-+				    u32 *base_val, u32 *div_val)
-+{
-+	int tmp_base_val = 0;
-+	int tmp_div_val = 0;
-+
-+	if (!desc->base_bits && !desc->div_bits)
-+		return -EINVAL;
-+
-+	/* Divisor not supported, just search in base rate */
-+	if (!desc->div_bits) {
-+		tmp_base_val = en75xx_get_base_val_for_rate(desc, 1, rate);
-+		if (tmp_base_val < 0) {
-+			pr_err("Invalid rate for clock %s\n",
-+			       desc->name);
-+			return -EINVAL;
-+		}
-+
-+		goto exit;
-+	}
-+
-+	/* Check if div0 satisfy the request */
-+	if (desc->div_val0) {
-+		tmp_base_val = en75xx_get_base_val_for_rate(desc,
-+							    desc->div_val0,
-+							    rate);
-+		if (tmp_base_val >= 0)
-+			goto exit;
-+
-+		/* Skip checking first divisor val */
-+		tmp_div_val = 1;
-+	}
-+
-+	/* Simulate rate with every divisor supported */
-+	for (; tmp_div_val < BIT(desc->div_bits) - 1; tmp_div_val++) {
-+		int div = (tmp_div_val + desc->div_offset) * desc->div_step;
-+
-+		tmp_base_val = en75xx_get_base_val_for_rate(desc, div,
-+							    rate);
-+		if (tmp_base_val >= 0)
-+			goto exit;
-+	}
-+
-+	if (tmp_div_val == BIT(desc->div_bits) - 1) {
-+		pr_err("Invalid rate for clock %s\n",
-+		       desc->name);
-+		return -EINVAL;
-+	}
-+
-+exit:
-+	*base_val = tmp_base_val;
-+	*div_val = tmp_div_val;
-+
-+	return 0;
-+}
-+
-+static long en75xx_round_rate(struct clk_hw *hw, unsigned long rate,
-+			      unsigned long *parent_rate)
-+{
-+	struct en_clk *en_clk = container_of(hw, struct en_clk, hw);
-+	u32 div_val, base_val;
-+	int err;
-+
-+	/* Just check if the rate is possible */
-+	err = en75xx_get_vals_for_rate(en_clk->desc, rate,
-+				       &base_val, &div_val);
-+	if (err)
-+		return err;
-+
-+	return rate;
-+}
-+
-+static int en75xx_set_rate(struct clk_hw *hw, unsigned long rate,
-+			   unsigned long parent_rate)
-+{
-+	struct en_clk *en_clk = container_of(hw, struct en_clk, hw);
-+	const struct en_clk_desc *desc = en_clk->desc;
-+	struct regmap *map = en_clk->map;
-+	u32 base_val, div_val;
-+	u32 reg, val, mask;
-+	int err;
-+
-+	err = en75xx_get_vals_for_rate(en_clk->desc, rate,
-+				       &base_val, &div_val);
-+	if (err)
-+		return err;
-+
-+	if (desc->div_bits) {
-+		reg = desc->div_reg ? desc->div_reg : desc->base_reg;
-+
-+		mask = (BIT(desc->div_bits) - 1) << desc->div_shift;
-+		val = div_val << desc->div_shift;
-+
-+		err = regmap_update_bits(map, reg, mask, val);
-+		if (err) {
-+			pr_err("Failed to update div reg for clock %s\n",
-+			       desc->name);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	if (desc->base_bits) {
-+		mask = (BIT(desc->base_bits) - 1) << desc->base_shift;
-+		val = base_val << desc->base_shift;
-+
-+		err = regmap_update_bits(map, desc->base_reg, mask, val);
-+		if (err) {
-+			pr_err("Failed to update reg for clock %s\n",
-+			       desc->name);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static const struct clk_ops en75xx_clk_ops = {
- 	.recalc_rate = en75xx_recalc_rate,
-+	.round_rate = en75xx_round_rate,
-+	.set_rate = en75xx_set_rate,
- };
+ required:
+   - compatible
+   - reg
+@@ -66,6 +71,8 @@ allOf:
  
- static int en75xx_register_clocks(struct device *dev,
+         '#reset-cells': false
+ 
++        airoha,chip-scu: false
++
+   - if:
+       properties:
+         compatible:
+@@ -97,5 +104,6 @@ examples:
+         reg = <0x0 0x1fb00000 0x0 0x970>;
+               #clock-cells = <1>;
+               #reset-cells = <1>;
++        airoha,chip-scu = <&chip_scu>;
+       };
+     };
 -- 
 2.48.1
 
