@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2932C2E54A0;
-	Tue, 17 Jun 2025 22:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848BE2BDC28;
+	Tue, 17 Jun 2025 22:30:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750199402; cv=none; b=ng3x6muhAeYYTVLWS3z8Ud13KJAuYskhM1VPzNrVXlc+7ZmStpiYDjQ8E7P/JlBI1deEq0xZIDEfksi0WN9kV4jTqhndKMThQzHcglN4ZVmcHqLYJZ5gTekV7Fd7PXxt/PIpDInyUzfr1XlcAJJbljOoVwIM24DY0lvC+Q1C/wI=
+	t=1750199401; cv=none; b=BgCCOCkPbzR1L9D8Ecpx5aa93WQFwkTv+hpFyHcyRbB+/q5U/2j2CYSHllVFoXHJJV3OA2pCSOtB+3XM2kJc0awRk8U9IVLPZYZRfO9hU0HHG71kPgW2HW/pV4EuOiTswe8mA8IQSvwBwv25ItC8HZGvQAkOozcFXlmX390qPvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750199402; c=relaxed/simple;
-	bh=oGJq6YZzLbO82TcEMZLZBS9E98OIIOd5KDDOCIIYowQ=;
+	s=arc-20240116; t=1750199401; c=relaxed/simple;
+	bh=hkPIvoqxShZhMTTDhLVtDi8Yqmn39FL66nVo8qVRu1Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jPMIFCZiIVVcsYln0yh0IW0fz5qKqGQFwS1wsXKbyhwBA84xF7XBSpglF0g7ePz9xDfG2FbB9Ax6+Lie9N3Z64bVeIVadKVe2iX0kAeq9fzCaKMqOiPm9JXITaEnvmQMcESjyA44bzCRT0PFAoVuNrIZyG9QRPzfmWmAKdjTuVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SovLzznF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=XNjtubKqPUZ3qCEMKpSvblnHExajfaCawLTN+k4lXIS7JJ7hJJQUPIMMJk/2PhERzXngzwaD3gUanLcais3siwoY7Hp8SdSrtvaV0JA83hlNzvlF6LcxwuO5/o0LNW7rrER3sWLZ2iHgJG9Qb09L2XqZAgrVCsS1GJhrHz2l78o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CKc8qPKa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SovLzznF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF370C4CEF8;
-	Tue, 17 Jun 2025 22:30:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKc8qPKa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC62AC4CEF6;
+	Tue, 17 Jun 2025 22:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750199402;
-	bh=oGJq6YZzLbO82TcEMZLZBS9E98OIIOd5KDDOCIIYowQ=;
+	s=k20201202; t=1750199401;
+	bh=hkPIvoqxShZhMTTDhLVtDi8Yqmn39FL66nVo8qVRu1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SovLzznFPfIAEgcoGd3wa7ftl9jecC4+XnxcYbmljKPn6KsHB6owxneOsiWiHlnab
-	 muiKIw9awT6KzPqUeNlzqPMNRQ6FYy7/UhXGHPM/wLDCfc1FPzhQZtrSQX6W5VQKa4
-	 50B2rUTWfZHWORPDSaKSt4nf8HFzuFx1dUcky6sSdjuVTg5jP3l3Ie8z4zoxN0BeIB
-	 5vJahEvic3FD72FGGK9qwYIGiNTNyNAnjg9FNwA98XjMM+3bCyH7NImzGI7tl4fW1C
-	 By1EilFtNRcoK8uUYNAou3W+ESJ441BuamWF8ppNnSTp3K+Rnnx3FCX2Vt8euhkRiM
-	 JB91sT3DxJ9UQ==
+	b=CKc8qPKacvgviafDJA8lSI2yrliEIiRaHqww9PSNVArp3EkmSThFIj0ix9/MqJPwg
+	 3t0MqZLXdwckLnEcpIcbnuhL8zrVWrFYzDDuEke7tXOvMfDa3J7RRrKLmU+uetbjZ4
+	 bG1iU16tXN1rrqNMaQxv+54OWdd/MEWLvXU9V0sacQR86Pehnf0mSBErESrSvBLLqb
+	 ntGC/IsNfd2afRrg89OWW2gQnIbUZFr5ADvscwB9ZsXqG8WMWm0JAyG4OPxWA5H3Q7
+	 T9Uy/6lgMcgbVxTl3aSfMvp3Nmeamfxr1OxiYp1oJMF4LdCD3rAm7+Q0WUupeSaq0t
+	 O5Ni41xVr1NEw==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -38,9 +38,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-s390@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	x86@kernel.org
-Subject: [PATCH 9/9] MAINTAINERS: drop arch/*/lib/crypto/ pattern
-Date: Tue, 17 Jun 2025 15:27:26 -0700
-Message-ID: <20250617222726.365148-10-ebiggers@kernel.org>
+Subject: [PATCH 7/9] lib/crypto/sparc: move arch/sparc/lib/crypto/ to lib/crypto/sparc/
+Date: Tue, 17 Jun 2025 15:27:24 -0700
+Message-ID: <20250617222726.365148-8-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250617222726.365148-1-ebiggers@kernel.org>
 References: <20250617222726.365148-1-ebiggers@kernel.org>
@@ -54,32 +54,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Eric Biggers <ebiggers@google.com>
 
-arch/*/lib/crypto/ will no longer be used, and its contents have been
-moved to lib/crypto/.  (Well, except for a few .gitignore files which
-are intentionally being kept for a while.)  Therefore, remove the
-arch/*/lib/crypto/ pattern from MAINTAINERS.
+Move the contents of arch/sparc/lib/crypto/ into lib/crypto/sparc/.
+
+The new code organization makes a lot more sense for how this code
+actually works and is developed.  In particular, it makes it possible to
+build each algorithm as a single module, with better inlining and dead
+code elimination.  For a more detailed explanation, see the patchset
+which did this for the CRC library code:
+https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org/.
+Also see the patchset which did this for SHA-512:
+https://lore.kernel.org/linux-crypto/20250616014019.415791-1-ebiggers@kernel.org/
+
+This is just a preparatory commit, which does the move to get the files
+into their new location but keeps them building the same way as before.
+Later commits will make the actual improvements to the way the
+arch-optimized code is integrated for each algorithm.
 
 Signed-off-by: Eric Biggers <ebiggers@google.com>
 ---
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+ arch/sparc/lib/Makefile                                  | 1 -
+ lib/crypto/Kconfig                                       | 2 +-
+ lib/crypto/Makefile                                      | 1 +
+ {arch/sparc/lib/crypto => lib/crypto/sparc}/Kconfig      | 0
+ {arch/sparc/lib/crypto => lib/crypto/sparc}/Makefile     | 0
+ {arch/sparc/lib/crypto => lib/crypto/sparc}/sha256.c     | 0
+ {arch/sparc/lib/crypto => lib/crypto/sparc}/sha256_asm.S | 0
+ 7 files changed, 2 insertions(+), 2 deletions(-)
+ rename {arch/sparc/lib/crypto => lib/crypto/sparc}/Kconfig (100%)
+ rename {arch/sparc/lib/crypto => lib/crypto/sparc}/Makefile (100%)
+ rename {arch/sparc/lib/crypto => lib/crypto/sparc}/sha256.c (100%)
+ rename {arch/sparc/lib/crypto => lib/crypto/sparc}/sha256_asm.S (100%)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa163..8ca374b24a806 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6408,11 +6408,10 @@ M:	Jason A. Donenfeld <Jason@zx2c4.com>
- M:	Ard Biesheuvel <ardb@kernel.org>
- L:	linux-crypto@vger.kernel.org
- S:	Maintained
- T:	git https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git libcrypto-next
- T:	git https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git libcrypto-fixes
--F:	arch/*/lib/crypto/
- F:	lib/crypto/
+diff --git a/arch/sparc/lib/Makefile b/arch/sparc/lib/Makefile
+index 5cf9781d68b40..ef8860eb3f3d1 100644
+--- a/arch/sparc/lib/Makefile
++++ b/arch/sparc/lib/Makefile
+@@ -2,11 +2,10 @@
+ # Makefile for Sparc library files..
+ #
  
- CRYPTO SPEED TEST COMPARE
- M:	Wang Jinchao <wangjinchao@xfusion.com>
- L:	linux-crypto@vger.kernel.org
+ asflags-y := -ansi -DST_DIV0=0x02
+ 
+-obj-y                 += crypto/
+ lib-$(CONFIG_SPARC32) += ashrdi3.o
+ lib-$(CONFIG_SPARC32) += memcpy.o memset.o
+ lib-y                 += strlen.o
+ lib-y                 += checksum_$(BITS).o
+ lib-$(CONFIG_SPARC32) += blockops.o
+diff --git a/lib/crypto/Kconfig b/lib/crypto/Kconfig
+index 278b7ef5ec4f9..b98543c7ef231 100644
+--- a/lib/crypto/Kconfig
++++ b/lib/crypto/Kconfig
+@@ -206,11 +206,11 @@ source "lib/crypto/riscv/Kconfig"
+ endif
+ if S390
+ source "lib/crypto/s390/Kconfig"
+ endif
+ if SPARC
+-source "arch/sparc/lib/crypto/Kconfig"
++source "lib/crypto/sparc/Kconfig"
+ endif
+ if X86
+ source "arch/x86/lib/crypto/Kconfig"
+ endif
+ endif
+diff --git a/lib/crypto/Makefile b/lib/crypto/Makefile
+index 4cda1f5cd21d4..748d1fc6b6be2 100644
+--- a/lib/crypto/Makefile
++++ b/lib/crypto/Makefile
+@@ -107,5 +107,6 @@ obj-$(CONFIG_ARM) += arm/
+ obj-$(CONFIG_ARM64) += arm64/
+ obj-$(CONFIG_MIPS) += mips/
+ obj-$(CONFIG_PPC) += powerpc/
+ obj-$(CONFIG_RISCV) += riscv/
+ obj-$(CONFIG_S390) += s390/
++obj-$(CONFIG_SPARC) += sparc/
+diff --git a/arch/sparc/lib/crypto/Kconfig b/lib/crypto/sparc/Kconfig
+similarity index 100%
+rename from arch/sparc/lib/crypto/Kconfig
+rename to lib/crypto/sparc/Kconfig
+diff --git a/arch/sparc/lib/crypto/Makefile b/lib/crypto/sparc/Makefile
+similarity index 100%
+rename from arch/sparc/lib/crypto/Makefile
+rename to lib/crypto/sparc/Makefile
+diff --git a/arch/sparc/lib/crypto/sha256.c b/lib/crypto/sparc/sha256.c
+similarity index 100%
+rename from arch/sparc/lib/crypto/sha256.c
+rename to lib/crypto/sparc/sha256.c
+diff --git a/arch/sparc/lib/crypto/sha256_asm.S b/lib/crypto/sparc/sha256_asm.S
+similarity index 100%
+rename from arch/sparc/lib/crypto/sha256_asm.S
+rename to lib/crypto/sparc/sha256_asm.S
 -- 
 2.49.0
 
