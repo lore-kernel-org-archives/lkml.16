@@ -1,163 +1,91 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5014E2116E9
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 09:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F040292906;
+	Tue, 17 Jun 2025 09:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750151305; cv=none; b=aCtRnmD3nxU1Xl3LOHeBjA2WJgGN2uicevg9NP+byPdEee9psS4Wr86F/P3efgKDaeXe/s1EM6HPtYDXB2dqQAhTRFrslolXlkHvtvjkhGm4Ac4KrY2GGcVMyB4dfebfC+9xqqM+URwhZbBDOi1MrbYXF/AtypYM/tOaCQOiX/c=
+	t=1750151327; cv=none; b=lNws7FVsmG4rmz+qoBVIAKxBOk9YrUeGV72bwMgSpCKOFfGYjPdb8qRwA8iO17ULAGFxWspsJW5QQ94fYlhfmfiYRfIv83nBocx7jjuGN/KoWK19CRonUCY8mgG28hz4Z2jtScO5h457dwFbSJq/oZnWDh11RkuPnAQtr3fX8Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750151305; c=relaxed/simple;
-	bh=z0fKOYwV+dsFs21nS2jxYOO5t4aC6ljU0NF3BjIkz5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=llBtBM/NMsr6KfTGfPLK+hPgBXFfjwBrAoIDVSc7k4KBOX5lCAZHO5kzVeotAwfAntCKNOQGPaYH1P2sTwghq8uU3eV6zN12Ewkh+spkQSZyzukUHRzL14wnwJWL3IFSbio/Bm/2o30DSOx53bCc+pPkUTFjJu3TOUOyt0g8Zgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fby11LH4; arc=none smtp.client-ip=209.85.221.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1750151327; c=relaxed/simple;
+	bh=y2kpAHe6WXsS++Wx3Pgute+9Qw0FzzbQqOP2DPszjUM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=CUsGdDKgzPz4ogpdX0wtnnbOOwcb3feoJ9dViCgI1jG8G3YS1p67ScOgDiwcrwManWCo1DG5TSJPIIzfvnbJwF50X33rATCRICNZC89LtLDddoL4BDnbiZ154HPV97bYdLZU+h5V0MH47+CP7g430lUG4niI6B7dtpaAIkjje9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=J0XMvo//; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fby11LH4"
-Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3a53359dea5so3729961f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 02:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1750151302; x=1750756102; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gKAD3svXOw7buq7HtIEdYKllqfFeijr7NxfdlNG4wcY=;
-        b=fby11LH4Wt3FtCM6ebjWHIb+SlIvq+3hOl1Vyr23S8WpyRU9CU7V96JQujTyJsIpVo
-         jfxLDPyovDLDvY+4LqXuNVtKDlEDME2dzx9TPdb1jwrvv7ACVCNm0Qy0HDaLHusdncdV
-         eT9dZvtN7Fe4DQTVXbr78dGf1Q9Y8ouop9sOz+rLPaBID/hedM5EZT6oKwwkwP8ccqoO
-         FiR51C7qvCn+FXbDwJi+rawRsEFl+H2ZzLjvBn2Ey00SFept7ACNSwlhOtspPwoytK8l
-         L3A8b7fBAU8MmcsjAyvuKvxpSfwSQpHJe78PUj50WO6w3qk8K/kdRUP7XrQI0Qh+6sOI
-         lG7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750151302; x=1750756102;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gKAD3svXOw7buq7HtIEdYKllqfFeijr7NxfdlNG4wcY=;
-        b=c75rDiAOfiHiJf4lnL3lICqFLtDPXkVxcinB9OES7G65nW4p0GmpKLTHv8+I+Bkcmp
-         vj0cB0WCeLNScJstHXs8K9jR5geNo5uYgp1wwM0uMs16s+cyq0W/+3OTNt/eDbJqlz8c
-         xEJmqrkDaIHNhSe7eL25T8A+4DaqrhSPVU1isEGfi2qtGboQvkSFevkyNokEFLan7beL
-         FDmXPaKsyrZhgZWcuUJ8WXY0puv5z4DtfsZ+SpBRJK8+42EipIvMOUNSR1cRT1rpbuOF
-         hGhU5q0TcO3hFSbu5BBf7jmWKKNnKFPiNOoetYHzlJ+g2/ajq8m6KyRs3GaAYHuGcnNT
-         PvMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgk7AW4Eou33HkZj2/2eKlpJyes8gcdOrofwS1GiYUPhrpN0UzClMFcus4aiR5xXBNDkWThl4poRGuNqw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIgsYKEWB/CvXNBTTxYN8f/wD1TkHyXZdfM5wLqhfb08shFRc6
-	CJtqHV+sU7+X0GG99MbBE3PCfRtGMWUp9D36msIVDO8t8zaInyWiJ/GrtDtT3dppcMU=
-X-Gm-Gg: ASbGncsVxtW+E+8waZBokmRE/dAdagLfsXOeTIz22iIvLd2i4lSAdrrs5i9QlYI45/i
-	6z5Wf71MGVLviT4g+oF/J/2wKMpMs+MSc8Qz8KyEOormhcM+beXLifUQyMCH4VbUW5Uu0JEfivb
-	dehZhU8FWYHTWKxlsNZuJZdOgQ6KSmBmIyhS9q/LUc2w4RCIX+cmUg0TcyeqJy2JSRK8heMjMCN
-	q2d7SH/9Fzhrh265ySWksrenlAiHvYrWIGGvJX0uAQ1W8sK9mhd1o86v1VsNhZ/54ImNLXmvJqq
-	sofK6DbY0Qo1INU6Dpwie2ASCO4tMZD3waoEzNGvfiquVtWfS/xwi5WAWiVj8WtU
-X-Google-Smtp-Source: AGHT+IHZD55Cs3Zu1HygCPmxe5Uy/nwrwnFD2un/64EwIJaV4i4CI3mWQiyOSmwe7CiHE9VlU6rzCQ==
-X-Received: by 2002:a05:6000:65c:b0:3a5:8a68:b81b with SMTP id ffacd0b85a97d-3a58a68bcc4mr888857f8f.44.1750151301539;
-        Tue, 17 Jun 2025 02:08:21 -0700 (PDT)
-Received: from blackdock.suse.cz ([193.86.92.181])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e16a097sm174029075e9.33.2025.06.17.02.08.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 02:08:21 -0700 (PDT)
-Date: Tue, 17 Jun 2025 11:08:19 +0200
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Jemmy Wong <jemmywong512@gmail.com>, Tejun Heo <tj@kernel.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>
-Cc: Waiman Long <longman@redhat.com>, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
-Message-ID: <2dd7rwkxuirjqpxzdvplt26vgfydomu56j3dkmr37765zk67pd@aou7jw4d6wtq>
-References: <20250606161841.44354-1-jemmywong512@gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="J0XMvo//"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750151016; bh=hphOaMPhVeReQubhMjEgQY7y3BcvT7JT2QC8BwFPfho=;
+	h=From:To:Cc:Subject:Date;
+	b=J0XMvo//egT0/n9OK8WI+zsZ8HUGgKBmDMLcIZCl+MSIYyiC6iK27mrvD6gCrGQCl
+	 xt8PK8Zn5fYqJGLN+/HU9AaejlVAEJqGpuv6MbRmUqe8Qu3Fb8RvEfkciIM1iSJRsw
+	 Fajy/Zg09gKfwH3Bs4jSc7q/E6tSsogS+EWeEA74=
+Received: from VM-222-126-tencentos.localdomain ([14.22.11.162])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id E28CA6A; Tue, 17 Jun 2025 17:03:34 +0800
+X-QQ-mid: xmsmtpt1750151014tzvu4q5rh
+Message-ID: <tencent_BD16D2DE705D6E27FC5B93ECDEEF9A7B5009@qq.com>
+X-QQ-XMAILINFO: OcNQvPIwPRPcCZww6mf1bDJ83odA4DL4U3jXTfU7FCAcFQEuOrwsasSzgo/Jna
+	 78pM9VeNIPMxk92QyRRNrxSlouqa0pLOvQGoi5a0SyJwZrcRdCg+qHIbPdr7atFIwjVqAi+/n6ai
+	 L+ekxepNmQedfoOs/R2ko3XKV5O/sdzDUZ2PZ4AIw88IrCivCEWtcGyS2H2Y7Y9sW16m1W+WcVax
+	 VqnWVwyFU9RkmztHaUxZWFpmUVfXIprh3/z3AhQxw4WQsIDcosl+x+24E2TqhKCtu1wWzN5+Nn9T
+	 /EUDeWEQA2N3hXEfRTxokMN7vmJk9hF4j8DEpbUtI1sli14j2m81iYsB+0Ek7C4/GjwCh5XbW5wD
+	 6iUBoVNAu2rPsukjuKGWqSt7fmQ6lYJuUiZlqnTEgaJ6Er4fosxKXmIKFPXfzWe5vOLQuOGO7ba+
+	 KoEeHTdh8ytIL9i8N1PGpGKyQ81eJvlow73jGK/p4R05wrGcAXWL6/p0A4THFXT4/gYmVjB+Ab3q
+	 KiwOTyVf8GEdPvrbt/9zFpauOgKkf1nvWw7qLI8kuB8gUX2Vfgr9zOOJgd/SvOvIL9J8R1FXHpv7
+	 kcPabNZ8xuaa4Pusw54RXAcOY/i/we6UtbfkB5beybQhReAn+8/hT3oqK/fg/SY9MPbfDYgBHiCB
+	 Xgk5WsGvnhqKpAnluTLnEuoeeaeWBD8TP0nFlD18g1ALoStiYhgG2hukL4f028aTyo8zut4zVy4V
+	 NM9WjNs/QmiqswzrASuNY+VE7rRzigWakvgl6MDxdvl+zDvXYddtRpInULKEZTqP1hM5sbY8uO/B
+	 oSwhY/bSijfBtkJiODqVO3iDQxuGBxXtFd00SCVXrz+6OMtgNtWqhJTDpY4WmVRmvyXlBhijTGdH
+	 xqnDuKM0kdQxEwLvsooiNWMcJEJogpXy4YDWuGzPZOgFhPj9F2U0m4LV2ONZS6mGjtAj5XeutKN3
+	 nlFZQ0Au2epd2jYDTX5o1qWztGcx7Zld+bglf5GH2xBchIBgJIAN03jx4lILMUQ8xb5vI0XbD7iy
+	 o3oGYI5rjIABL5lOdxyQ5N9tAc9+ZBywmEiNmJItupcFGuUqfMLJBzVnEkX8vGqG/L0aWY6w==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+From: jackysliu <1972843537@qq.com>
+To: James.Bottomley@HansenPartnership.com
+Cc: martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jackysliu <1972843537@qq.com>
+Subject: [PATCH] scsi: fix out of bounds error in /drivers/scsi
+Date: Tue, 17 Jun 2025 17:03:26 +0800
+X-OQ-MSGID: <20250617090326.753352-1-1972843537@qq.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="toh6m6x3hhh3r2az"
-Content-Disposition: inline
-In-Reply-To: <20250606161841.44354-1-jemmywong512@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+Out-of-bounds vulnerability found in ./drivers/scsi/sd.c,
+sd_read_block_limits_ext Function Due to Unreasonable boundary checks.
+Out-of-bounds read vulnerability exists in the
+Linux kernel's SCSI disk driver (./drivers/scsi/sd.c).
+The flaw occurs in the sd_read_block_limits_ext function
+ when processing Vital Product Data (VPD) page B7 (Block Limits Extension)
+ responses from storage devices
 
---toh6m6x3hhh3r2az
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 0/3] cgroup: Add lock guard support
-MIME-Version: 1.0
+Signed-off-by: jackysliu <1972843537@qq.com>
+---
+ drivers/scsi/sd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hello.
+diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+index 3f6e87705b62..eeaa6af294b8 100644
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@ -3384,7 +3384,7 @@ static void sd_read_block_limits_ext(struct scsi_disk *sdkp)
+ 
+ 	rcu_read_lock();
+ 	vpd = rcu_dereference(sdkp->device->vpd_pgb7);
+-	if (vpd && vpd->len >= 2)
++	if (vpd && vpd->len >= 6)
+ 		sdkp->rscs = vpd->data[5] & 1;
+ 	rcu_read_unlock();
+ }
+-- 
+2.43.5
 
-I understand why this might have been controversial but I'm surprised it
-remains so when the lock guards are already used in the kernel code.
-Documentation/process/coding-style.rst isn't partisan in either way.
-
-Johannes:
-> heebeejeebees - it's asymmetric and critical sections don't stand out
-> visually at all.
-- I'd say that's the point of it for functions that are made to
-  manipulate data structures under the lock. Not to spoil the code.
-- Yes, it's a different coding style that one has to get used to.
-
-> extra indentation
-- deeper indentation =3D=3D deeper locking, wary of that
-- although I admit, in some cases of the reworked code, it's overly deep
-
-Further reasoning is laid out in include/linux/cleanup.h. I noticed
-there exists no_free_ptr() macro and that suggests an idea for analogous
-no_exit_class() (or unguard()) macro (essential an unlock + signal for
-compiler to not call cleanup function after this BB).
-
-Tejun:
-> There are no practical benefits to converting the code base at this point.
-
-I'd expect future backports (into such code) to be more robust wrt
-pairing errors.
-At the same time this is also my biggest concern about this change, the
-wide-spread diff would make current backporting more difficult.  (But
-I'd counter argue that one should think forward here.)
-
-
-Further benefits I see:
-- it is fewer lines (code is to the point),
-- reliable cleanup paths,
-- it is modern and evolution step forward (given such constructs
-  eventually emerge in various languages).
-
-
-On Sat, Jun 07, 2025 at 12:18:38AM +0800, Jemmy Wong <jemmywong512@gmail.co=
-m> wrote:
-> v1 changes:
-> - remove guard support for BPF
-> - split patch into parts
->=20
-> v0 link:
-> https://lore.kernel.org/all/20250605211053.19200-1-jemmywong512@gmail.com/
->=20
-> Jemmy Wong (3):
->   cgroup: add lock guard support for cgroup_muetx
->   cgroup: add lock guard support for css_set_lock and rcu
->   cgroup: add lock guard support for others
-
-As for the series in general
-- I'm still in favor of pursuing it (with remarks to individual
-  patches),
-- it's a good opportunity to also to append sparse __acquires/__releases
-  cleanup to it (see also [1]).
-
-Regards,
-Michal
-
-[1] https://lore.kernel.org/r/Z_6z2-qqLI7dbl8h@slm.duckdns.org
-
-
---toh6m6x3hhh3r2az
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFEwewAKCRB+PQLnlNv4
-CK2vAQD5wq0LatsmiHUSbsmOJCpcGVFHuDfH/0uJGeQSmsKWFAD/bb7kMZdxWv52
-HASiX8FCeJv9AO+0Oc7OQOOKl9+Rlgw=
-=luDQ
------END PGP SIGNATURE-----
-
---toh6m6x3hhh3r2az--
