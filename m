@@ -1,114 +1,117 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EA432ED16D
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372792EA15F;
+	Tue, 17 Jun 2025 15:55:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175700; cv=none; b=BWv4NujParju25IG5cTrA3Y6AR3TmTB8EXNv7ryICJ36h1QkxQpSi5HR7jd2zJH/BloVbkjS2zc2/jFW0doOdo+6n2GS5W7AQzt9kQjd1E1UPleqk4BMq1TJOEK25oLTXDSo1nSONdIcOS0Z2J0gOfJ9C0FaINcWWhniO0M0oPQ=
+	t=1750175717; cv=none; b=uFGOvYJw5VlkGuDWEYELZJS1UgrgYTA6MSYUmv/wOYqnUSehpLWzjsnJjeuydHkaQ4OPGfsqq1QQX/caKUDpl87ixlJVommI0K30Bo8z1Hbj6ghFRSbs+lybTRquCA0Psh2GVQlJzeTjEdeMi5aaDmVyWKKZZX+oraHOr1uBStk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175700; c=relaxed/simple;
-	bh=DgmeVtT0WIbCRRv339k+cmX+mpoOuUhSgcVes2asjCQ=;
+	s=arc-20240116; t=1750175717; c=relaxed/simple;
+	bh=xT9LTxXRsAvFMMm/rUTVAJh+ZpJa8uGFFOblzL9irwo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=E4iFuxl5w61C6z1xCcc0Kx893Q8WzDKOGkwzCvvb2epyND5geB6f85LWP+9EzLvjSh5VAwYSJY92ldLOzXdXq3ZYs94amVDHSgguFoEtKLqR3ti8kmKS341ztT5CzFWU6XuW1iE1wFV697W3Qe++U2WMrVFbA4NWVCS5QIKbKc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com; spf=pass smtp.mailfrom=criticallink.com; dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b=jxQ9Tce+; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=criticallink.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=criticallink.com
+	 To:Cc:Content-Type; b=L8hS2QYBU36PDAUnENayQhEjFYDiz1rmdVzDtxTYTrno5nI+stJMkMGmFobbAsOdSVGavDb+j92KfkdDeUf1aeAPuSaqqWN5PzgQX9LuL6b7kxLVPHB6hRjHb2rDtIJuIiuOYOO2pZyWxPQyIia06ZqEIgl/A6GG9l5gtg30e2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zk9PjmnJ; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=criticallink.com header.i=@criticallink.com header.b="jxQ9Tce+"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso3422578e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:54:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zk9PjmnJ"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-451d7b50815so50331175e9.2;
+        Tue, 17 Jun 2025 08:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=criticallink.com; s=google; t=1750175696; x=1750780496; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750175713; x=1750780513; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7491lPqRbW4F9hQ07LYAxQPIWHZ/u23nfZ8i+9TOWv8=;
-        b=jxQ9Tce+Jm5wydAE+OuBCHVuQVG+bAH3Sm5XzdurWqbrFXWfIsilRrCao2Lwc7dyYS
-         Ye5p2yq90E0uOqclB+pPx7qpWV+ipmC44j9d4uqjVENB7L3bAu3YOGJfQLQ3BDFW/1vb
-         gprBw6qNJM67wst981izx5UwScG4SyOmS6R2cavF/D8fe7LstSeJycmOuL7/4krSecPv
-         SStSJzkdDHfBWVijZ9y1qoQEEckvbrgc6R+HXLRUtgREqMq0+4GsV5wSb8AbXZLuvaP9
-         2uHDmROXWP43FzNivkbRLp6uwvQ3LG63XqIvr+PaaPLM34FAJkq7s2POHcUEbxXSPaL+
-         P+ZA==
+        bh=xT9LTxXRsAvFMMm/rUTVAJh+ZpJa8uGFFOblzL9irwo=;
+        b=Zk9PjmnJUuZwUjAUQ+lXSOf+cvvzFkT2WW3OcXG9J9VBI1E3ma4OYyv9RnV82csl/7
+         SN1HvPbSUO2ggKGqTxRzdRZ7WBXSwzJ0+8jMchQg019gfb8fUWwlJ97ZZWtCXgZAIyaa
+         JriQykskH47fpofL7uEwwpL02isvFdJZuLVTatXA8bk2v0H4iJyyD1e9i8sb+9KASSV5
+         S5rh7gzwlju+4S2weXWO/T/n76PeHhDhaKXQXls+ki57Zr4j0fj5hQ1QDJqwcZl//VSf
+         DwCelb+mzQLc0J0oULZBjcl0qUHsf8KIyRaDvKktkCqzZb69qMe1mhJkrmfo1ue1U498
+         iTJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750175696; x=1750780496;
+        d=1e100.net; s=20230601; t=1750175713; x=1750780513;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7491lPqRbW4F9hQ07LYAxQPIWHZ/u23nfZ8i+9TOWv8=;
-        b=lm1ihkXFk9EKZLKBVzPs2vWTu5iBmkB+eGHoeWXPm7eh4uy0QethhDzLhhV95bhRft
-         RHDbqqvBk2kvlEYskLmYfTOOMuA0/DJhIA0vOP5CbhwRzhYQ5cP1dy6G8kVDNcSJYcJn
-         hS2Z/hXTgkKJx92DDeGLZyNAn+of3sdBE09tVTxYu3jQswJmfdFuLU7Hdpc/1xRSMlL/
-         2Uj2/UgjO/8XBHn+82gmDaSUCC8wlQpD8DQKxTLQHtnjuES8KXSfyZ00aukNM6xncU/8
-         etRuLklpW966i25gOnEYYYppLUxzwdc3lrKlPJIaKiO3g/w5/6DvEcZiePyzceUTW6MW
-         fYcw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEGi5G94l7xcUs8nvd4hm90stRj2RUEGY8ugQsis4V+0IG650iOgkMcT/lrgwQE5daXB6qX8D1g9ZY6bY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXYPQA0wcwXKEeNpBv+/L6OGq4VoMopRUTeHY4pBZer+QNhHeA
-	yq7AIrlno7T2SRhIBSKfDpZXaOjMxyO4mJPBP0DD4ow0F7i84gk+Eg+32ga1TVY+PBuLICPsM1W
-	tph3AqUpGYCz2ges3s+mi05mdLYTE9cVTFm6d0rL2
-X-Gm-Gg: ASbGncuBhg//maNzP2PfF8TSPZ4vD0NowYHnIkeTxnUCFA6/mDyHFyJdp9Kx3gEzS3R
-	y8ZMGNd0l32BMg4PoI8AvollkZnCuKV1UJcmbP0LfUK5N99xm9IOLOypY9wa6G/JKWxeyLEbuyx
-	o2S4RCMznHXG6ur+JinzoM2g7e2ybRH9H1MlqUt3Jdxvokb4CeI84k
-X-Google-Smtp-Source: AGHT+IHb1aCFJPoJFf9UDRiwIVaRVYSfkm4626qafulBbisD0pCHZaBHpY5By1h92m6KS0F+VPFALhCVjE9/87XOTQY=
-X-Received: by 2002:a05:6512:398b:b0:553:3532:5b30 with SMTP id
- 2adb3069b0e04-553b6f1377cmr3734810e87.27.1750175696058; Tue, 17 Jun 2025
- 08:54:56 -0700 (PDT)
+        bh=xT9LTxXRsAvFMMm/rUTVAJh+ZpJa8uGFFOblzL9irwo=;
+        b=xOKnjYDe+xQ+VQdFA5KjVvuUQrP9vSAhxvFM40hFIkmmywY3HMkK+UatK12WYaY3b4
+         OkUPn6iXaebGwDEZ8Q/tx5dfi3C8QUMWDZNigEoEhdJtJlAhUTfuHJycfX94ht7cW158
+         qAF/Vd1vZe2QMSGsWgBVjVB1/NBKHfiivGP9/03WCnRbfekV4Bq8Kk/u8QiwpFnkIbT6
+         67/GqIPffTM3HeSZPp0ObqmnTPqv9tTfcRJrOZgNEY9gYMTc1i3eieL0gd1N0T6LFlOF
+         QZrDI4n0u3S9J775JJOtpG0PCv//E11k+uaoyyvlxkROWw4eEG9dsZMpZYwNGwFejXzC
+         AFjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWzTnP/r/PEpnl3xsrj/U37pYX7o0xwShHomAKTCRgqoOIyIUcLZHIRff9npg6dl/bfBts=@vger.kernel.org, AJvYcCXn9rvKPcfy/tOQtas0+a0EE2ETYmSGFRLPKQSpFtl7wfEurHvHqJJrx9K9K8LWJygdsxNZwTaExr/bEoQI@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAZJi+9oqUVBQmO5JjgH+NvoRNOYosAq8KADmcrEm9zyg41CVy
+	Wec1vuGczHA7F3Io4Zp4qOcknlwDlG5eyoRnahsztcm/hBB0jIj/PJ5YUdSTfvSigQN+5VneyJZ
+	i1+13CEevTP7A5P7wp8on81p+209ABHc=
+X-Gm-Gg: ASbGnctHERm1y59nrAdYvgKbszxceI1saOPSPHcsvbJFbx+Rl3RR2mpCDCEUUft8Uig
+	rBPGlPklOeZDiQmLszxFTU5uFIbFMOSopCv+s9n6kiEbd7yO7qJ2dJqUIcX56d3usXMiQJcVEGq
+	tutL+6HvkT2QYH1uAZ7iqzzjf/1w3frFtKgOw7ja3b+ekUFfRK0fa+a0NLpTvghO/8sgdHFg==
+X-Google-Smtp-Source: AGHT+IF6loupEqjpkVoCPngFmIidvYe1fOTHJr4ZZlPwfgyxgdy4K9J73YY9qX/1LHgXt7eEFFKPM9xetfTxt+TpbGk=
+X-Received: by 2002:a05:600c:3f0c:b0:450:d07e:ee14 with SMTP id
+ 5b1f17b1804b1-4533cb3be4bmr141812455e9.17.1750175713255; Tue, 17 Jun 2025
+ 08:55:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250520-linux-stable-tps6594-pwrbutton-v1-0-0cc5c6e0415c@criticallink.com>
- <20250520-linux-stable-tps6594-pwrbutton-v1-2-0cc5c6e0415c@criticallink.com> <20250613140913.GF897353@google.com>
-In-Reply-To: <20250613140913.GF897353@google.com>
-From: Job Sava <jsava@criticallink.com>
-Date: Tue, 17 Jun 2025 11:54:42 -0400
-X-Gm-Features: Ac12FXyfNbK2pB7IPkCZD5SA804DLNcmvGU99uvVPgKiMdJy7x-SejG9WptqFuo
-Message-ID: <CAKMwjwSuPRZO2Oyy56C-_QCf-gh-jcCmW_Xc8NCQ+yioRTumNA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mfd: tps6594-pwrbutton: Add powerbutton functionality
-To: Lee Jones <lee@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Julien Panis <jpanis@baylibre.com>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, 
-	jcormier@criticallink.com
+References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
+ <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
+In-Reply-To: <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 17 Jun 2025 08:55:02 -0700
+X-Gm-Features: AX0GCFuGWDZ5CEkf-fL4zF2NILLUkNtwwrauBu-BssEi-zQPHDI4c5GBqJQAG7s
+Message-ID: <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
+To: Matt Fleming <matt@readmodwrite.com>
+Cc: Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
+	Matt Fleming <mfleming@cloudflare.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025 at 10:09=E2=80=AFAM Lee Jones <lee@kernel.org> wrote:
+On Tue, Jun 17, 2025 at 2:43=E2=80=AFAM Matt Fleming <matt@readmodwrite.com=
+> wrote:
 >
-> On Tue, 20 May 2025, Job Sava wrote:
->
-> > TPS6594 defines two interrupts for the powerbutton one for push and
-> > one for release.
+> On Mon, Jun 16, 2025 at 4:51=E2=80=AFPM Song Liu <song@kernel.org> wrote:
 > >
-> > This driver is very simple in that it maps the push interrupt to a key
-> > input and the release interrupt to a key release.
+> > On Mon, Jun 16, 2025 at 2:55=E2=80=AFAM Matt Fleming <matt@readmodwrite=
+.com> wrote:
+> > >
+> > > From: Matt Fleming <mfleming@cloudflare.com>
+> > >
+> > > Calls to kfree() in trie_free() can be expensive for KASAN-enabled
+> > > kernels. This can cause soft lockup warnings when traversing large ma=
+ps,
 > >
-> > Signed-off-by: Job Sava <jsava@criticallink.com>
-> > ---
-> >  drivers/input/misc/Kconfig             |  10 +++
-> >  drivers/input/misc/Makefile            |   1 +
-> >  drivers/input/misc/tps6594-pwrbutton.c | 126 +++++++++++++++++++++++++=
-++++++++
-> >  drivers/mfd/tps6594-core.c             |  25 ++++++-
+> > I think this could also happen to KASAN-disabled kernels, so the commit=
+ log
+> > is a bit misleading.
 >
-> This should be a separate patch.
-
-Hello Lee,
-
-Thank you for the response!
-
-Sure thing I will convert this into a separate patch.
-
-Best Regards,
-- Job
-
+> This issue can definitely affect KASAN-disabled kernels.
 >
-> >  4 files changed, 160 insertions(+), 2 deletions(-)
->
-> [...]
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> I mentioned KASAN to give context and explain why I saw this and
+> nobody else seems to have reported it. I'm happy to reword this part
+> of the commit message if needed but I still think it should mention
+> KASAN somewhere because that's the reason I discovered it.
+
+kfree is so slow that it triggers softlock up ?
+
+> soft lockup - CPU#41 stuck for 76s
+
+How many elements are in the trie that it takes 76 seconds??
+
+I feel the issue is different.
+It seems the trie_free() algorithm doesn't scale.
+Pls share a full reproducer.
+
+pw-bot: cr
