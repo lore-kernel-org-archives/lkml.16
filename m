@@ -1,75 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B21A2D9EFD;
-	Tue, 17 Jun 2025 10:39:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B9B291C13;
+	Tue, 17 Jun 2025 10:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750156754; cv=none; b=Bm/iYZJ2KB6TKtUpX6OF9fU7u2N54hzgFTKJBaPiqRL32k8WTenOKSDJtQ/5r5GjhalLeYX84fu87CIijQpcTdeUK/Dm+5/XRuBoV3QtBYXPPFn+8rpxmbeuSQ9pk1BUAfQ10JAyWN5V3QCp0h5uF98vIDLNrm4hgMFWrJESusc=
+	t=1750156802; cv=none; b=GjfIz/0eXHlpu1fZ0qsOHlcN16hxqOO7C4ZQ86K5hxeCQvBZM+SRfCnjqqz6YqxjtEgFyVOcr+9hBOe2y51d9rMbXCIDaJT4BV4wxOVRSPMAcjpLQ+wVDdlmJnmCg2VHQXLEDEREDHJ2t5Q5FQX9Qxlvu7jHg/k/VeifIWoilNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750156754; c=relaxed/simple;
-	bh=zfe8QtqZfAkq5Z9cBvdQsM5VqULg0+gYDZijw/m4oLs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mEsyg88iEIGKjF6XkBdAPqAV2dp6yNIr1SAYclV11yP9rtImVZXzw/7iFckWU9Y6F/tbE2xG2UNYLwsMtfgKKTzXdkZXGlJr0JHxmP3+rXMwq6+7VSMnxqfzox5j9IYv867PFJr9ffMFzb1cOlPSPYfidWbUkz7Aly0mRyyoZoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cnMpDcRX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750156802; c=relaxed/simple;
+	bh=qHDehiEf7FkPkXNpC0E+vVdk3OUloB21p0vLW7HN+3o=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=G51rxHREysAUjfP4cu2e5+pgs3teeJQeGslmjzcFIo5qF8iu35Y/se82Jx/sCL10tbbPXJVHUuEzvlwEN6FvDrLOUAVW0sW4EjPb7cXqNRif8OoYrKoaX6tQQBeR5PD2zW+KcigdnnRRpsjEgKFOEabb+pMbXbucd4HfR5idW7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hsz9kIDM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cnMpDcRX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F95C4CEED;
-	Tue, 17 Jun 2025 10:39:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hsz9kIDM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBD1C4CEE3;
+	Tue, 17 Jun 2025 10:40:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750156754;
-	bh=zfe8QtqZfAkq5Z9cBvdQsM5VqULg0+gYDZijw/m4oLs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=cnMpDcRX8fQkNX8Ae/Dejx4iFzjO5yabVZDZyVsI8OdUsG8niRSJOLo+Ny65JF9pe
-	 MmiXko8VmpRk84v6hQAo0FBIbYyBrakv5LveH9UsqYSO+KwbcgzZX1aDDcT03J0uVd
-	 xZMXQaEY+AImtJATZ1Sy3Mei0lEYUxFgInXaJx8/qal47m3ErbUdsRvCY5DNShrQ3q
-	 3wlXYdjDHyRpRDn2qKMYjxw5RaNwglPtFFbErHpx/bVxJfhJqu8lk90nmv1/w5KRum
-	 Db5FTu+Rdsi4tDB5EmbRMlFAiMvebJ+khc5A+fAH/G/oSV/DWWvorR48I0gEGOmr0+
-	 s8/dGV2lAbW2g==
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Manivannan Sadhasivam <mani@kernel.org>, 
- Alexander Wilhelm <alexander.wilhelm@westermo.com>
-Cc: Jeff Hugo <jeff.hugo@oss.qualcomm.com>, mhi@lists.linux.dev, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250519145837.958153-1-alexander.wilhelm@westermo.com>
-References: <20250519145837.958153-1-alexander.wilhelm@westermo.com>
-Subject: Re: [PATCH v4] bus: mhi: host: fix endianness of BHI vector table
-Message-Id: <175015675154.27093.16774093277776625388.b4-ty@kernel.org>
-Date: Tue, 17 Jun 2025 16:09:11 +0530
+	s=k20201202; t=1750156801;
+	bh=qHDehiEf7FkPkXNpC0E+vVdk3OUloB21p0vLW7HN+3o=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hsz9kIDMKPlOO6v9kKEtm8/ofHAxBmJ3FFakQRcoDglOTzcuRkAoh1NyPmzPZF2Yl
+	 aonmJuvT1aLmG96piMlM3Cx4u6uEOaGr9kQFH+m1H4ifsmouW6X0XY584xU5Dg60si
+	 DqrUwh4K36lLib+Y3IVu5OJvjmeH80vAegzUpti8zaADpkMLUGnwU5NRipEHK+4KOC
+	 Oq/sGQVW9ek7a8sVqvUkBDgG78ONQnXDRMOiBN6gGUDSePQpomKjqRg3vmfwWdsITi
+	 Bjf5KFbwRvekQNMRZY6WZjmZJvNdyLuYAgY4Dad516CYCNLp/hltm3Gz2e3fuvU4jZ
+	 m47iYOkdScbgQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2B2380DBF0;
+	Tue, 17 Jun 2025 10:40:31 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 net-next] net: enetc: replace PCVLANR1/2 with
+ SICVLANR1/2
+ and remove dead branch
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175015683050.3069208.4099570428895361110.git-patchwork-notify@kernel.org>
+Date: Tue, 17 Jun 2025 10:40:30 +0000
+References: <20250613093605.39277-1-wei.fang@nxp.com>
+In-Reply-To: <20250613093605.39277-1-wei.fang@nxp.com>
+To: Wei Fang <wei.fang@nxp.com>
+Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev
 
+Hello:
 
-On Mon, 19 May 2025 16:58:37 +0200, Alexander Wilhelm wrote:
-> On big endian platform like PowerPC the MHI bus does not start properly.
-> The following example shows the error messages by using qcn9274 wireless
-> radio module with ath12k driver:
-> 
->     ath12k_pci 0001:01:00.0: BAR 0: assigned [mem 0xc00000000-0xc001fffff 64bit]
->     ath12k_pci 0001:01:00.0: MSI vectors: 1
->     ath12k_pci 0001:01:00.0: Hardware name: qcn9274 hw2.0
->     ath12k_pci 0001:01:00.0: failed to set mhi state: POWER_ON(2)
->     ath12k_pci 0001:01:00.0: failed to start mhi: -110
->     ath12k_pci 0001:01:00.0: failed to power up :-110
->     ath12k_pci 0001:01:00.0: failed to create soc core: -110
->     ath12k_pci 0001:01:00.0: failed to init core: -110
->     ath12k_pci: probe of 0001:01:00.0 failed with error -110
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Fri, 13 Jun 2025 17:36:05 +0800 you wrote:
+> Both PF and VF have rx-vlan-offload enabled, however, the PCVLANR1/2
+> registers are resources controlled by PF, so VF cannot access these
+> two registers. Fortunately, the hardware provides SICVLANR1/2 registers
+> for each SI to reflect the value of PCVLANR1/2 registers. Therefore,
+> use SICVLANR1/2 instead of PCVLANR1/2. Note that this is not an issue
+> in actual use, because the current driver does not support custom TPID,
+> the driver will not access these two registers in actual use, so this
+> modification is just an optimization.
 > 
 > [...]
 
-Applied, thanks!
+Here is the summary with links:
+  - [v2,net-next] net: enetc: replace PCVLANR1/2 with SICVLANR1/2 and remove dead branch
+    https://git.kernel.org/netdev/net-next/c/dd4a5780f7d9
 
-[1/1] bus: mhi: host: fix endianness of BHI vector table
-      commit: 3010503f3e064d6145095cc6612456e4950ae618
-
-Best regards,
+You are awesome, thank you!
 -- 
-Manivannan Sadhasivam <mani@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
