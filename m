@@ -1,108 +1,185 @@
-Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EC576026;
-	Tue, 17 Jun 2025 08:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7F728FFE1
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750150126; cv=none; b=RaUvPAR9oEyEaFoHgobgebSFAQga0WTJc2A6PUvy1UAPv7jASG8vOJEhwZbC+jHky/tlxHYWYMWxyRbi2JkPrAwBwqI/Y2tlFUPpPluycNVgZwyeRJtWtZ0R1SSXmMbPVanYfJ7CwKKQmMs0PTk5bgwCzEjcqPyzAVAuQaA9QYM=
+	t=1750150172; cv=none; b=J79nJpKtIOlzv9OU0JlnqEic+0W3knQVu+u2G2z2tue0KXsmtPfI0XSOX63RiYR0fHQHpWJm+ry7UoQ5y7TdQCj7iZMje7ggNw5uwEOpYIjfYgrUCPV0oiIWSF2QIiwHv3X9omJWVoAwztKq9WZzW8qmy4haf2hQRr5zbKbliL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750150126; c=relaxed/simple;
-	bh=vuoNr13Rqzsj6LgDL0QJ3v3rep1txRGacEWw//RdxO0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eUWwCwe+5hbrL+W1B0n/CGnUPAYQESfiDN6rQnXAu6CtnNaP1lKV7X7gVNB9ZFQKi+r25e9nD9qrSjQjI9QiBqnhOeyfm4Z1M1qFH5wVe6EAaHTSvuwBHnZDm3iBdInH10OkQ7fB45xfxwYgZQqVPRlF7W5+HZFgJzd9CVXnD4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [192.168.33.151] (unknown [210.73.43.2])
-	by APP-01 (Coremail) with SMTP id qwCowAAn2dfZK1FoBBEkBw--.8277S2;
-	Tue, 17 Jun 2025 16:48:26 +0800 (CST)
-Message-ID: <10ab212f-e06b-4214-99cd-a687659fcf71@iscas.ac.cn>
-Date: Tue, 17 Jun 2025 16:48:25 +0800
+	s=arc-20240116; t=1750150172; c=relaxed/simple;
+	bh=Zb0FAtKn57hylXZbbwWlQKoYiVchTs5O181iCBXBun0=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=h1V7PhDyKi1G9IDPm9wrMmD28DobMhfoUK5uZTW0n64AzJBS7TzptiXmLZR1DCAxNgPKfL6jW/GH/E20zYMrFfLYgpCOHAaw0YjCaEqHHhUlezPGQ2k0KfZOOn/GP5bPvl1dy5I8Q4kgShF+GKQPm9wmzaz/rpZoJiWo2pBVVaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3ddbd339f3dso58876865ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 01:49:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750150170; x=1750754970;
+        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=W442XvOuTnKTzRsQQgphpGuH6koS5hmx6kx/lqAmOV8=;
+        b=qt7tJ9uNKg7G4JBn8jjPCtmzgdBZu8iUt5hHf8/BbshOBVaZlmzRdmjfVpT+uhTFzh
+         zPmTY3n4BcGsE2I5AJl8buLPzb5MdOkOVdKC7lCnLUjLe/M8ahEfLJp45InDDB9KuFJ9
+         Gpc3vllVkbCVkFqIrN1xkA7ANs3cobjXl40LoJJCJOZw/vc8i8HROL7md6tRQTL6bIqI
+         ikVDr+MTlhKCt+408K/nirgsA5hDNhfCW6Y/40UnjhNaD4eNKBQbFcU5zUgKa7z+N5HL
+         e13rBQFbWw5IaRzwqTX2+9RHentQABTafyLODxdqTAwSPmEcpOqJKb18c5wHDNKySPDr
+         /hGA==
+X-Forwarded-Encrypted: i=1; AJvYcCU03hRUi7MLvFuFwRs3CFGl+Cql60n/ukBpO34oMhd/DRGDkN3Vmr5GrJDnJcpGFblbBLvTXpAOmE1YG1s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwUTrj3B1PoYlke9wsIFTNP9lZ60PlC49rlXTwapVWf9WHzpsx
+	hPG865f5qje59KLZ2VPXIs+pSD4Ms5fGUyVdNiyrxkJjuw3odQqOIfKnyHv6ttzTeTbhPEO17H/
+	D3fedZiOWTwGOzkZ6aKNFEAhj4P9ikED0HT8vxrJ5MHS5ZXvlqBdyhSUvNls=
+X-Google-Smtp-Source: AGHT+IGUenBbAMDAksYy3HORpzLtGeviAU3aqA0cNh7fxMDYLVWPn3tzagMQG9zva6CC3LuUL/9aTOA1Z069sxPYyyYq5X8BMHp4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] riscv: dts: spacemit: Add DMA translation buses for
- K1
-To: Krzysztof Kozlowski <krzk@kernel.org>, Yixun Lan <dlan@gentoo.org>,
- Guodong Xu <guodong@riscstar.com>, Ze Huang <huangze@whut.edu.cn>,
- spacemit@lists.linux.dev
-Cc: Vivian Wang <uwu@dram.page>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250617-k1-dma-buses-rfc-wip-v1-1-c8ec192fbf58@iscas.ac.cn>
- <74e3c488-4457-4026-9597-806b98fd4e11@kernel.org>
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-In-Reply-To: <74e3c488-4457-4026-9597-806b98fd4e11@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qwCowAAn2dfZK1FoBBEkBw--.8277S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw4kCw13Kr1kWF1rZw15CFg_yoW8CF45pr
-	Z3u3ZayFZrAF40gws29rZrWa4ruwn7Za15JFn5Gr1rAFZ8XFyagrWxJw1j9w1UXrZ5Xa47
-	Xa1DZ3s7uF4UJr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Ib7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-	A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-	w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F4UMc
-	vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY
-	1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
-	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
-	WwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
-	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
-	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
-	IYCTnIWIevJa73UjIFyTuYvjxUy38nDUUUU
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
+X-Received: by 2002:a05:6e02:1a69:b0:3dd:d33a:741a with SMTP id
+ e9e14a558f8ab-3de07d7c963mr143558755ab.18.1750150169939; Tue, 17 Jun 2025
+ 01:49:29 -0700 (PDT)
+Date: Tue, 17 Jun 2025 01:49:29 -0700
+In-Reply-To: <20250617104902.146e10919be1.I85f352ca4a2dce6f556e5ff45ceaa5f3769cb5ce@changeid>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68512c19.a70a0220.395abc.020c.GAE@google.com>
+Subject: Re: [PATCH wireless] wifi: mac80211: don't WARN for late
+ channel/color switch
+From: syzbot <syzbot+468656785707b0e995df@syzkaller.appspotmail.com>
+To: johannes@sipsolutions.net
+Cc: johannes.berg@intel.com, johannes@sipsolutions.net, 
+	linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Krzysztof,
-
-On 6/17/25 14:21, Krzysztof Kozlowski wrote:
-> On 17/06/2025 07:21, Vivian Wang wrote:
->> The SpacemiT K1 has various static translations of DMA accesses. Add
->> these as simple-bus nodes. Devices actually using these translation will
->> be added in later patches.
->>
->> The bus names are assigned according to consensus with SpacemiT [1].
+> From: Johannes Berg <johannes.berg@intel.com>
 >
-> Read the feedback there:
+> There's really no value in the WARN stack trace etc., the reason
+> for this happening isn't directly related to the calling function
+> anyway. Also, syzbot has been observing it constantly, and there's
+> no way we can resolve it there - those systems are just slow.
 >
-> "So, as you are submitting the first node(s) under network_bus: bus@5, you
-> should have this added into your patchset, instead of sending out with
-> none."
-As mentioned in the patch extra message, this is an RFC meant for
-achieving consensus on what the bus nodes should look like, not an
-actual patch meant to be taken. I was hoping I was clear on that, but I
-guess that paragraph was buried too deep. Well...
-> Plus simple bus within MMIO node needs unit address. IOW, don't mix MMIO
-> with non-MMIO. I also suspect this does not pass checks, so the tools
-> can do our review...
+> Instead print an error message (once) and add a comment about what
+> really causes this message.
+>
+> Reported-by: syzbot+468656785707b0e995df@syzkaller.appspotmail.com
+> Reported-by: syzbot+18c783c5cf6a781e3e2c@syzkaller.appspotmail.com
+> Reported-by: syzbot+d5924d5cffddfccab68e@syzkaller.appspotmail.com
+> Reported-by: syzbot+7d73d99525d1ff7752ef@syzkaller.appspotmail.com
+> Reported-by: syzbot+8e6e002c74d1927edaf5@syzkaller.appspotmail.com
+> Reported-by: syzbot+97254a3b10c541879a65@syzkaller.appspotmail.com
+> Reported-by: syzbot+dfd1fd46a1960ad9c6ec@syzkaller.appspotmail.com
+> Reported-by: syzbot+85e0b8d12d9ca877d806@syzkaller.appspotmail.com
+> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> ---
+> #syz test
 
-This DT passes "make dtbs_check" fine, with only unrelated warnings on
-sec_uart1 that was already there before:
+This crash does not have a reproducer. I cannot test it.
 
-  DTC [C] arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dtb
-.../arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dtb: serial@f0612000
-(spacemit,k1-uart): 'clock-names' is a required property
-        from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
-  DTC [C] arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dtb
-.../arch/riscv/boot/dts/spacemit/k1-milkv-jupiter.dtb: serial@f0612000
-(spacemit,k1-uart): 'clock-names' is a required property
-        from schema $id: http://devicetree.org/schemas/serial/8250.yaml#
-
-To be honest, I don't understand what "within MMIO node" means here.
-Should the buses be taken out of /soc and added as its siblings?
-
-Thanks,
-Vivian "dramforever" Wang
-
-> Best regards,
-> Krzysztof
-
+> ---
+>  net/mac80211/debug.h |  5 ++++-
+>  net/mac80211/tx.c    | 29 +++++++++++++++++++++--------
+>  2 files changed, 25 insertions(+), 9 deletions(-)
+>
+> diff --git a/net/mac80211/debug.h b/net/mac80211/debug.h
+> index 5b81998cb0c9..ef7c1a68d88d 100644
+> --- a/net/mac80211/debug.h
+> +++ b/net/mac80211/debug.h
+> @@ -1,10 +1,11 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * Portions
+> - * Copyright (C) 2022 - 2024 Intel Corporation
+> + * Copyright (C) 2022 - 2025 Intel Corporation
+>   */
+>  #ifndef __MAC80211_DEBUG_H
+>  #define __MAC80211_DEBUG_H
+> +#include <linux/once_lite.h>
+>  #include <net/cfg80211.h>
+>  
+>  #ifdef CONFIG_MAC80211_OCB_DEBUG
+> @@ -152,6 +153,8 @@ do {									\
+>  		else							\
+>  			_sdata_err((link)->sdata, fmt, ##__VA_ARGS__);	\
+>  	} while (0)
+> +#define link_err_once(link, fmt, ...)					\
+> +	DO_ONCE_LITE(link_err, link, fmt, ##__VA_ARGS__)
+>  #define link_id_info(sdata, link_id, fmt, ...)				\
+>  	do {								\
+>  		if (ieee80211_vif_is_mld(&sdata->vif))			\
+> diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+> index d8d4f3d7d7f2..d58b80813bdd 100644
+> --- a/net/mac80211/tx.c
+> +++ b/net/mac80211/tx.c
+> @@ -5,7 +5,7 @@
+>   * Copyright 2006-2007	Jiri Benc <jbenc@suse.cz>
+>   * Copyright 2007	Johannes Berg <johannes@sipsolutions.net>
+>   * Copyright 2013-2014  Intel Mobile Communications GmbH
+> - * Copyright (C) 2018-2024 Intel Corporation
+> + * Copyright (C) 2018-2025 Intel Corporation
+>   *
+>   * Transmit and frame generation functions.
+>   */
+> @@ -5016,12 +5016,25 @@ static void ieee80211_set_beacon_cntdwn(struct ieee80211_sub_if_data *sdata,
+>  	}
+>  }
+>  
+> -static u8 __ieee80211_beacon_update_cntdwn(struct beacon_data *beacon)
+> +static u8 __ieee80211_beacon_update_cntdwn(struct ieee80211_link_data *link,
+> +					   struct beacon_data *beacon)
+>  {
+> -	beacon->cntdwn_current_counter--;
+> +	if (beacon->cntdwn_current_counter == 1) {
+> +		/*
+> +		 * Channel switch handling is done by a worker thread while
+> +		 * beacons get pulled from hardware timers. It's therefore
+> +		 * possible that software threads are slow enough to not be
+> +		 * able to complete CSA handling in a single beacon interval,
+> +		 * in which case we get here. There isn't much to do about
+> +		 * it, other than letting the user know that the AP isn't
+> +		 * behaving correctly.
+> +		 */
+> +		link_err_once(link,
+> +			      "beacon TX faster than countdown (channel/color switch) completion\n");
+> +		return 0;
+> +	}
+>  
+> -	/* the counter should never reach 0 */
+> -	WARN_ON_ONCE(!beacon->cntdwn_current_counter);
+> +	beacon->cntdwn_current_counter--;
+>  
+>  	return beacon->cntdwn_current_counter;
+>  }
+> @@ -5052,7 +5065,7 @@ u8 ieee80211_beacon_update_cntdwn(struct ieee80211_vif *vif, unsigned int link_i
+>  	if (!beacon)
+>  		goto unlock;
+>  
+> -	count = __ieee80211_beacon_update_cntdwn(beacon);
+> +	count = __ieee80211_beacon_update_cntdwn(link, beacon);
+>  
+>  unlock:
+>  	rcu_read_unlock();
+> @@ -5450,7 +5463,7 @@ __ieee80211_beacon_get(struct ieee80211_hw *hw,
+>  
+>  		if (beacon->cntdwn_counter_offsets[0]) {
+>  			if (!is_template)
+> -				__ieee80211_beacon_update_cntdwn(beacon);
+> +				__ieee80211_beacon_update_cntdwn(link, beacon);
+>  
+>  			ieee80211_set_beacon_cntdwn(sdata, beacon, link);
+>  		}
+> @@ -5482,7 +5495,7 @@ __ieee80211_beacon_get(struct ieee80211_hw *hw,
+>  				 * for now we leave it consistent with overall
+>  				 * mac80211's behavior.
+>  				 */
+> -				__ieee80211_beacon_update_cntdwn(beacon);
+> +				__ieee80211_beacon_update_cntdwn(link, beacon);
+>  
+>  			ieee80211_set_beacon_cntdwn(sdata, beacon, link);
+>  		}
+> -- 
+> 2.49.0
+>
