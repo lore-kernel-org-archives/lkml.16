@@ -1,208 +1,113 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 302E12E7166
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492712E62D9
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750189391; cv=none; b=dkVIOYfHkRMA5xpwTpYmzAregedOas4h7nW/FJWtZTXhE4gxn2Z+KlzGB6FXKDw4b3ZOK2FAkhjFweDFjsdGxyjf8rU7jCwShLpbwPS4l2B+tN+GRthYoq0zPvVNJrOvF2asSFFtgG/SBOgr4Gb94cB/uOEWUn7Du4S2re0O6Ks=
+	t=1750189456; cv=none; b=KY8oXHUbEEqYwfT6EZTu4oBA075/KdAIdur0KQ3WJmMa1k1Q2sGAf2ztGDkgodZDab/Zbzvs/RXBTjS9GhgtDOMNwQNDquFrUrVbX5H+2iILgge5Z/zFjrbguy0SAUUqS543/gtQQf98ocsXeNj0VeVSCn+ZWLum6TJEZ6+sYtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750189391; c=relaxed/simple;
-	bh=l7SzB8NO+rrP5k4367W9aS0ArpEC+aDkSTC3pfTFz30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=XDWPiLdnogVAvfOPJrjO2t1SsW7f2ENDiSSWS5GOSm0wIwGS4GfdEYuZBRBHJXZmr8W8hgFOC6orqgSQlvsdsbx/+eDsVwltN/JR/MYSHTAw+Bt8lKsE1Nta2WnIVwtgNIAcQe4oMHK5Xgywo4L78UPCiXCsjturmSzueUNBUn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tQn+1aMb; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750189456; c=relaxed/simple;
+	bh=GglwgC9V6N5x5dY/greRFE2ImYu5s9zU1NI2hHBVjMU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O0LakuSqAEqEbpVYkqK7mbtuhCa7noHz/jZVGA+DrFrOh1nvZTFEVCxI/e0ZwHYVhnIaPCnqoJBhxgdglE7aQs97Tpi1qsCFjjxAN6boWJ+bIunXwGXfhtFb+jD+HEpIp0VySofxtDv8mlb1DEstC8boUejvXJ9QxZ3ZOaF44Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=NQQzjbOq; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tQn+1aMb"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250617194308euoutp02857ea47871a6cd763e88838ab161204a~J6-nL49Nt2272722727euoutp02D
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:43:08 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250617194308euoutp02857ea47871a6cd763e88838ab161204a~J6-nL49Nt2272722727euoutp02D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750189388;
-	bh=SsrrapZlggFpVYw95Drc6h8mJo8KmYhpbhG7VYywjIs=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=tQn+1aMbwyFepAeZyTjCE0hzZXQjkbcCqJBGARftZbkUFKJLWTc9EfdDMG3TezNAh
-	 DIlbOcm9eVbr72Cc5FNc0HMpIvgf9sldMIsyFi1JfXTsCWsUDcCuEV/qJQQp0PfA/q
-	 NJT7rOLr+MUFVmvLKM0BTaZbJfXq8aja9MxXgRbc=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617194306eucas1p118ec57136b8265b7e13aeb1ea93a14b7~J6-l2QnM52077420774eucas1p1s;
-	Tue, 17 Jun 2025 19:43:06 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250617194305eusmtip14ca5682a8b9fab2b3547be7105427287~J6-kraHC01904619046eusmtip1_;
-	Tue, 17 Jun 2025 19:43:05 +0000 (GMT)
-Message-ID: <98d6b8e5-4694-44df-9ba0-33e6c00d8183@samsung.com>
-Date: Tue, 17 Jun 2025 21:43:05 +0200
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="NQQzjbOq"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-607c2b96b29so12058322a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1750189452; x=1750794252; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9BlEsfucVc/RasLKZoG4B3LJbpSakOO/+DV6/Nb67hA=;
+        b=NQQzjbOqUu+mki5AFz9jfPsnfnR+o0kX+ev1gARHH1+K+lMy4kh7UvyhM78HvjD7JV
+         8Vtzis3NDCMBFko2oK3YY8mmGfRBjasjQV3I1pGa5jraKewkxkElu3Wraw8dCPdihibP
+         6VkMof1CDemGZF9wL0FX4yEgiusSKWj5RW2Q4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750189452; x=1750794252;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9BlEsfucVc/RasLKZoG4B3LJbpSakOO/+DV6/Nb67hA=;
+        b=rVHOHrj9moH40M/54xQN8jdLaG5xE36V+FajeuhZ9jUCbPZp6OcLvKtsMB7WDXqnum
+         qs6R9xnW5Ysh3sU5fh+aszcdtBejcEf+906I3BO9Xfl6UoGnT94E+j3n9pRXGJVqXHeu
+         +rqsnpnW9MTjSFwNP7VL1eaPcNXz2V1ApCfwrVPNvkyDvaSk84qkks59ssANcFglFZYE
+         BS38cnihXRIWT/uJUYxSsVBw7aZQexDN69M139AQhTyVfDLppMBRAzBmPnytiO/jDkUg
+         MioFC8BibtCQ++T6rApehN3w2xl1J23GboW/dU477d9ANruvgcMP+7HJjoEZ8jgmHeRJ
+         pQcw==
+X-Forwarded-Encrypted: i=1; AJvYcCV91DFFIemYJO2QCEefOZh1Zhu3WXYuq5UMTqVhFyF1zYq/i/1Z5gut/qBEh2P58cMdToio+g3YeG5pT2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9/FChEbYvqhJiwK+eRNk1cJ6i1keMaEHEBGC1DcY1Ogk0grZ/
+	rJE6Sal1iHVtgkqxZBJazTWx1d3KqsyM9BdU92N6U1XLwzudNQA1xaDcC6RaN7RYv8VkmR9Bwbv
+	e/S93DD4=
+X-Gm-Gg: ASbGncudP6M8waKAzVJqbuW4eopHMTJ7bxtqzaiHq7N+zc8FALjMfdJi5y37bnQbWLa
+	5vKwT0UKjZKTOA7R7qkw2/tkyfmm1nCW1nF6c2ZCj6OB8NUBIWVXdKgB9FOycthiRdnMF7lGgmd
+	7exqYYAWfQiTlUrwTHAYPY4VkIQJp5cXcn0Dzv4T5ZJfdQGvIh7RPYxfSVSfF8t0QHV/l7h6YBP
+	pQnCLYf1cPUZxG5uLp2pdA0f3cxb2543oZaHLScsdeA8bWVlOX0Svwy1Fh2emnotn5B76SNSXI3
+	6koOYCNUPxhYU438XDeA9Gj3zRucrRxEs8m04XRf9mB/wa7fK5G91L/hwW17N/Dp3PMpBUZvEyJ
+	Sw0Ig3H+qYYWo+09QSCEGH066bIuVe2DlzEk3
+X-Google-Smtp-Source: AGHT+IH12jZtaqACKeVxKxSOvQPmGKlx+iCUmBq4b1yqYrJGF7hyCVALi9RfZEbaWQ9MLo2GvaltYg==
+X-Received: by 2002:a05:6402:5186:b0:604:a19a:d84b with SMTP id 4fb4d7f45d1cf-608d0836253mr13007469a12.5.1750189452236;
+        Tue, 17 Jun 2025 12:44:12 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6090063ff9asm5712125a12.21.2025.06.17.12.44.11
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 12:44:11 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so12933475a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 12:44:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXzKWtgvulTSzFY+3PvjBI123e9F3Lw0rUnaZogMcGLR/+ZY96/W5pKxcd4lplooocrro2qHfXf3YKZAFs=@vger.kernel.org
+X-Received: by 2002:a05:6402:278e:b0:602:29e0:5e2f with SMTP id
+ 4fb4d7f45d1cf-608d086197cmr14681659a12.10.1750189450991; Tue, 17 Jun 2025
+ 12:44:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/9] pwm: Add Rust driver for T-HEAD TH1520 SoC
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng
-	<boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Drew Fustini <drew@pdp7.com>, Guo Ren
-	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
-	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
-	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, Benno
-	Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <aFF7qqlexxh540FW@pollux>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250617194306eucas1p118ec57136b8265b7e13aeb1ea93a14b7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250617140839eucas1p2d13775f8e6d34a516e93d3b426d5fb16
-X-EPHeader: CA
-X-CMS-RootMailID: 20250617140839eucas1p2d13775f8e6d34a516e93d3b426d5fb16
-References: <20250617-rust-next-pwm-working-fan-for-sending-v3-0-1cca847c6f9f@samsung.com>
-	<CGME20250617140839eucas1p2d13775f8e6d34a516e93d3b426d5fb16@eucas1p2.samsung.com>
-	<20250617-rust-next-pwm-working-fan-for-sending-v3-4-1cca847c6f9f@samsung.com>
-	<aFF7qqlexxh540FW@pollux>
+References: <20250616014019.415791-1-ebiggers@kernel.org> <20250617060523.GH8289@sol>
+ <CAHk-=wi5d4K+sF2L=tuRW6AopVxO1DDXzstMQaECmU2QHN13KA@mail.gmail.com> <20250617192212.GA1365424@google.com>
+In-Reply-To: <20250617192212.GA1365424@google.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 17 Jun 2025 12:43:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiB6XYBt81zpebysAoya4T-YiiZEmW_7+TtoA=FSCA4XQ@mail.gmail.com>
+X-Gm-Features: AX0GCFszNgSlkg9Mnl9IREDvPmSYgcHDQLiQJ6pRqgmPlre4NTxTJm_9n0SX2DU
+Message-ID: <CAHk-=wiB6XYBt81zpebysAoya4T-YiiZEmW_7+TtoA=FSCA4XQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] SHA-512 library functions
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, 
+	sparclinux@vger.kernel.org, x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	"Jason A . Donenfeld" <Jason@zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 17 Jun 2025 at 12:22, Eric Biggers <ebiggers@kernel.org> wrote:
+>>
+> The tests are already in their own patches: patches 4 and 5.  Yes, this patchset
+> has a negative diffstat once you subtract them.
 
+Yes, the patches were separate, but my point stands.
 
-On 6/17/25 16:28, Danilo Krummrich wrote:
-> On Tue, Jun 17, 2025 at 04:07:27PM +0200, Michal Wilczynski wrote:
->> +    fn write_waveform(
->> +        chip: &mut pwm::Chip,
->> +        pwm: &mut pwm::Device,
-> 
-> I think you can't hand out mutable references here. This would allow things like
-> mem::swap(), which I think are not valid on those structures.
-> 
->> +        wfhw: &Self::WfHw,
->> +        parent_dev: &Device<Bound>,
->> +    ) -> Result {
->> +        let data: &Self = chip.drvdata().ok_or(EINVAL)?;
->> +        let hwpwm = pwm.hwpwm();
->> +        let iomem_guard = data.iomem.access(parent_dev)?;
-> 
-> Technically, this isn't a guard, hence would't call it that way.
-> 
->> +        let iomap = iomem_guard.deref();
->> +        let was_enabled = pwm.state().enabled();
->> +
->> +        if !wfhw.enabled {
->> +            if was_enabled {
->> +                iomap.try_write32(wfhw.ctrl_val, th1520_pwm_ctrl(hwpwm))?;
->> +                iomap.try_write32(0, th1520_pwm_fp(hwpwm))?;
->> +                iomap.try_write32(wfhw.ctrl_val | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwpwm))?;
->> +            }
->> +            return Ok(());
->> +        }
->> +
->> +        iomap.try_write32(wfhw.ctrl_val, th1520_pwm_ctrl(hwpwm))?;
->> +        iomap.try_write32(wfhw.period_cycles, th1520_pwm_per(hwpwm))?;
->> +        iomap.try_write32(wfhw.duty_cycles, th1520_pwm_fp(hwpwm))?;
->> +        iomap.try_write32(wfhw.ctrl_val | PWM_CFG_UPDATE, th1520_pwm_ctrl(hwpwm))?;
-> 
-> None of the offsets are known at compile time? :(
+Let me repeat that part of the email since you seem to have missed it:
 
-Sadly they are computed based on runtime parameter hwpwm, so Rust can't
-guarantee correctness during compilation :-(.
+> If I see a pull request that only adds new tests, it's a no-brainer.
+>
+> If I see a pull request that only re-organizes the code and the
+> diffstat just just renames with some small updates for new locations,
+> it's a no-brainer.
+>
+> If I see a pull request that does both, it's a pain in the arse,
+> because then I need to start to look into individual commits and go
+> "which does what".
 
-Thank you for your other feedback, appreciate it !
+IOW, I really prefer pull requests to do clearly separate things too
+when we're talking re-organization. Or at the very least spell things
+out *very* clearly.
 
-> 
->> +
->> +        // The `PWM_START` bit must be written in a separate, final transaction, and
->> +        // only when enabling the channel from a disabled state.
->> +        if !was_enabled {
->> +            iomap.try_write32(wfhw.ctrl_val | PWM_START, th1520_pwm_ctrl(hwpwm))?;
->> +        }
->> +
->> +        dev_dbg!(
->> +            chip.device(),
->> +            "PWM-{}: Wrote (per: {}, duty: {})",
->> +            hwpwm,
->> +            wfhw.period_cycles,
->> +            wfhw.duty_cycles,
->> +        );
->> +
->> +        Ok(())
->> +    }
->> +}
-> 
-> <snip>
-> 
->> +impl platform::Driver for Th1520PwmPlatformDriver {
->> +    type IdInfo = ();
->> +    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
->> +
->> +    fn probe(
->> +        pdev: &platform::Device<Core>,
->> +        _id_info: Option<&Self::IdInfo>,
->> +    ) -> Result<Pin<KBox<Self>>> {
->> +        let dev = pdev.as_ref();
->> +        let resource = pdev.resource(0).ok_or(ENODEV)?;
->> +        let iomem = pdev.ioremap_resource_sized::<TH1520_PWM_REG_SIZE>(resource)?;
->> +        let clk = Clk::get(pdev.as_ref(), None)?;
->> +
->> +        clk.prepare_enable()?;
->> +
->> +        // TODO: Get exclusive ownership of the clock to prevent rate changes.
->> +        // The Rust equivalent of `clk_rate_exclusive_get()` is not yet available.
->> +        // This should be updated once it is implemented.
->> +        let rate_hz = clk.rate().as_hz();
->> +        if rate_hz == 0 {
->> +            dev_err!(dev, "Clock rate is zero\n");
->> +            return Err(EINVAL);
->> +        }
->> +
->> +        if rate_hz > time::NSEC_PER_SEC as usize {
->> +            dev_err!(
->> +                dev,
->> +                "Clock rate {} Hz is too high, not supported.\n",
->> +                rate_hz
->> +            );
->> +            return Err(ERANGE);
->> +        }
->> +
->> +        let chip = pwm::Chip::new(dev, MAX_PWM_NUM, 0)?;
->> +
->> +        let drvdata = KBox::new(Th1520PwmDriverData { iomem, clk }, GFP_KERNEL)?;
->> +        chip.set_drvdata(drvdata);
->> +
->> +        let registration = pwm::Registration::new(chip, &TH1520_PWM_OPS)?;
->> +
->> +        Ok(KBox::new(
->> +            Th1520PwmPlatformDriver {
->> +                _registration: registration,
->> +            },
->> +            GFP_KERNEL,
->> +        )?
->> +        .into())
-> 
-> Here you are setting up the registration for the correct lifetime, however
-> drivers could extend the lifetime of the registration arbitrarily, which would
-> break the guarantee of the &Device<Bound> we rely on in the callbacks above
-> (e.g. write_waveform()).
-> 
-> Hence, pwm::Registration's lifetime has to be controlled by Devres. I'll also
-> add a corresponding comment in your registration patch.
-> 
->> +    }
->> +}
-> 
+Otherwise I have to waste time just to go split things out _anyway_.
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+            Linus
