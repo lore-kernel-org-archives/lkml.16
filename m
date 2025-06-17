@@ -1,111 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00364e01.pphosted.com (mx0a-00364e01.pphosted.com [148.163.135.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D322EFD88
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:14:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37B32E3AF8
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750194847; cv=none; b=grqm1Evd4nT00RxF0+jPavaT23p43Tl7A359nnHYGPvQBS2M0EPaYZHmkqFyY8Hy3YdjqWdbgnFJvyowSEiVNnJ+LomdpDXxB+Ao9p2x+ymc+kwJo/tBxcPHMDaqutPYsUbpAH1FDZ56QDpnjrsSHvB/8rLyLSxTNry+alq3fDs=
+	t=1750194874; cv=none; b=RvSDsCJ1ZQRE9IHH5P5en+XLzIuH3hLxsXB4DsAu1cuO76OXEJwUkhNJ5tTiEqYLSt9N84SJhCZlwOxmHBI9Frx/+nOLN1xh3NVaMtjCdBU00OwwO3Atz1umvqteorNNgVtcwduzguersaT4orJRV5tdb17iJ/BG1V1j8uGxrk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750194847; c=relaxed/simple;
-	bh=SrRpeaxXNGWfFb/1PTz2R6YEk4t6TG0fvw2R3i9KdSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ADKREi8QCoDGjV1Xbty4AmgeQzw6IqdMLIPAXksEauiGF8jpWv+dFcJpwQiA5jw0D/NyoJdkRkqn/frQxd5KgbRzwGTYH4nSCCZxpnmPjzzoFgbEva6YiysBNgUqCDCuCmSHBjWFdMwxvIfc8RDyrGfTLFxSZiA9I7zZ78FF/2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WrI4WpNC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750194874; c=relaxed/simple;
+	bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n0bVutX5nKlmY+X9hoB1C3uHIB8l13mLKsn6QBbK8qFoRSczzPF6Zw+MtSU7TMnT7OD8wiCJWHb0P87Eanh4DD1kxVPkWSxDXOkkgoA5JoR0oJWYpnxRm/SIxYXUuT9tYFr1bOHSY9AdIYMEWoqNvkAl7vjgGdJyYvekUiRrkjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu; spf=pass smtp.mailfrom=columbia.edu; dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b=sL044JYV; arc=none smtp.client-ip=148.163.135.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=columbia.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=columbia.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WrI4WpNC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750194844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5xyVcI21nsfxdfOvk8Q+hN3uxkhpR2sAV2MrhUYOX6E=;
-	b=WrI4WpNCcLyDDcGVcuMCVmrV/PKgMJCmP7/Cjm/w3uoqZ5zDRQYrE6qmStP6ru23BI8Yhu
-	gk9vrSIrOzkvP+KMC895E02pP4ZxPleazBTgisYjJ/sla/2FeTr+6XhcDd2nQvkZfFpCeH
-	Y5J4yEV4cHgTMYv9LfLl0AT86/YfFnI=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-677-iCaOQ-duMfmYCOppV-QCXg-1; Tue, 17 Jun 2025 17:14:03 -0400
-X-MC-Unique: iCaOQ-duMfmYCOppV-QCXg-1
-X-Mimecast-MFC-AGG-ID: iCaOQ-duMfmYCOppV-QCXg_1750194843
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6fb1c6b5ea7so94461876d6.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:14:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=columbia.edu header.i=@columbia.edu header.b="sL044JYV"
+Received: from pps.filterd (m0167068.ppops.net [127.0.0.1])
+	by mx0a-00364e01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HKFhC1004365
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:43:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=columbia.edu; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=pps01;
+ bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
+ b=sL044JYV7uef5oYi0VV89Acktqm8ahYTVj+EwwoHVLCTzeBg3FDGb/w9n4QDgQA6tpxa
+ BJR1rCPYYivPGmJmLaef4EpEZNXlYf2ljtqx8PBhYGiJet8Wqj2MnqPsQRI4biajggAK
+ wQakfJQfmZbRkXLdvZE7P3rwnPLHkFiZpz+rj9UaXrVOvGpVSHolkGCbtIDjntRCoaN5
+ 0UdSUoMIkoYouigvonAct9ROwkVo4ZH2Xk2nk2ptssdhJg2KC+53E3mYOLdnwvWUTSk5
+ TO0bVIZIyfRPOhrSVKa5ZU6Wed98XPF+S+OCrT40JNtaZAWW8hMkCLlhDbDP1PTbkxeQ iA== 
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com [209.85.128.200])
+	by mx0a-00364e01.pphosted.com (PPS) with ESMTPS id 4793byjga7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 16:43:55 -0400
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-70e4bd6510eso83456437b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:43:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750194843; x=1750799643;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5xyVcI21nsfxdfOvk8Q+hN3uxkhpR2sAV2MrhUYOX6E=;
-        b=XcWTKARhBFo0fwIxXci/XQp/SS7CW1JKBBzL8iq0vbr2WQVOxVgp5G/y9IoH7tswnR
-         n1NXijXpUyaNbjSkLWGEOjhuwWC60+ThzNs58KTLKEuMaa3TX1ZFIYwoblhs6xYjIZCD
-         6a/ML1QuopJPhcU1uOM212Bh3AYkbHUOecJLJbhdWmrFBUwPqperUJLkKwGw4b9gzmX4
-         TabXVhmP5HZPVTpL1woDoWWm5c3fqjnH9tZybvA6hvK4qqisFbV4hNldgLSRtXrn7tvU
-         hfblBZKxrfGQyKL0sCXrmTrk2qo8mFFybLPRD/40b5O6iOowEJiIv/KFGH2rxs8cpwRy
-         FY/g==
-X-Gm-Message-State: AOJu0YxxlYhRbuYM0xEM0XLsY1+dR4H3ZtIhuKH7I5bf+ODKp8mrjRIJ
-	UIllzy+z+VEwwR1oJ/+5qSoVlzn4EjEthFHZPcsfm3uCB2SK2qY9anUKcopUVyE3CJYVii2cGb9
-	vg6ArO/lCIKLBNsIWY2Kf0QCqklJ61zAAEx9ZzSw3kEwtzAf+Ni5RjtY3r8EZ1uM7uA==
-X-Gm-Gg: ASbGncvxJyeEcO8nnDKfohYTKt/w1UlBDg+RE2hDrpR9sWApJQjAjh1CNm7kXEOJtev
-	ZMzmLQMs3xdxkLi2jEqzKta0ziFIKjS2xLUZsHPJx03pyHExyHMiRZQuH3GCx5hgdRbI9+WTfdI
-	ACTAwgnZiES0GrituH9SBH2rtr8N666RpuUlK9xZtPjHLP6Wl5IYieN0yx13bENNwJYyVSG7dtz
-	gfRtLKQR4p/15TRi4MSeSRWm84tqXWszBMOH2VEo4dgrGg5qxPkpRnTQpF9IhzVBgCSq/p+ZE2g
-	pCv5ul4Pd2c3cA==
-X-Received: by 2002:a05:6214:5c47:b0:6fa:fddf:734b with SMTP id 6a1803df08f44-6fb47778883mr208411066d6.24.1750194842855;
-        Tue, 17 Jun 2025 14:14:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGd9iW2NHB23PfBNcvXV74RskpHtC25owk7vFs1c30i5QjvUnprzErLHz+PlrbZV3IBT1BdGg==
-X-Received: by 2002:a05:6214:5c47:b0:6fa:fddf:734b with SMTP id 6a1803df08f44-6fb47778883mr208410726d6.24.1750194842564;
-        Tue, 17 Jun 2025 14:14:02 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8f2c4d3sm690671485a.116.2025.06.17.14.14.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 14:14:02 -0700 (PDT)
-Date: Tue, 17 Jun 2025 17:13:59 -0400
-From: Peter Xu <peterx@redhat.com>
-To: David Laight <david.laight.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, kvm@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Jason Gunthorpe <jgg@nvidia.com>,
-	Alex Mastro <amastro@fb.com>, David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 1/5] mm: Deduplicate mm_get_unmapped_area()
-Message-ID: <aFHal-sGQfrdpztL@x1.local>
-References: <20250613134111.469884-1-peterx@redhat.com>
- <20250613134111.469884-2-peterx@redhat.com>
- <20250616090134.476427c0@pumpkin>
+        d=1e100.net; s=20230601; t=1750193034; x=1750797834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u9sQ5FNZIfCRkoh32wY/8yyyp10GkggqKBS9UMhJ8PA=;
+        b=cjt5owjulNoeRlaIku0/I2tDd4vojK4zZgfFQ7uFmcsfq8WXYqq8Tok+sDcvzb4kAD
+         wTlOOYdnuUvq2xFDYRRoPRvMaeiBYYDttpWRLrDeqdc64nQYN9cG8h5q77cdewHl1fKC
+         UcDrlM4ccC+qemOLM9oPNhQ5NBDr5o4ykarsRo03M7do/2+mLOiq8jR6SHtztX0nRUBz
+         eU/4fz46gmoOZGsueb8VEqDtaB8uZP/lny9PGsZgq+xCWMQ04vrrIFPzK3wG1Sc4jF7h
+         jkRIzdrFVcLDooofGyC9cO0Shulcvysbioj1PBkMTFnqEmBf0QMLbwi5D6+EncIUnWsq
+         TspA==
+X-Gm-Message-State: AOJu0YzE2f7F5p9vjyjQ8hyV/ndX+OdwZvg1Zsu0djkAOZPYpVJr7fn6
+	7VMZEQhYrnSoDpWtq7tjqa0/OmAKJHOBRxMY/QSyGm0uXIZwtWn/26qEojry+z36E8UW/63TnuU
+	Z29PRcZ3bWREw++AkuFMyTwqvEvOU2nIzWwrPabLIIuWmPmuL4XBuXlOtsQJnwSoMgL6nU1h4dO
+	FKNiV0FUvOFOcRheAfS3nzLDYNpktOsyvnxbfe
+X-Gm-Gg: ASbGncvYuvMO0o+2RkyA8TSW+vPmwt5SsqiWrEve+hkH7GzW4v5sNj0r/elW/yx2ELW
+	tevM2zaTMq0uE64KxEOzkER2HW870Tz4l1Ac4BneBYEs4aPKitFURrEtKeE79DZ5Ecdhg33OpZz
+	PAFi8U
+X-Received: by 2002:a05:690c:6c83:b0:70e:2cba:868c with SMTP id 00721157ae682-71175489fbcmr243794697b3.11.1750193034534;
+        Tue, 17 Jun 2025 13:43:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFjF0ibehLbKNVTF8HcFuWA6h3KDVMReJtX7DTOphewbVZdmya9vlUAMYxWvtW5I5gCI+10/DiUzzrU1AQ0D2s=
+X-Received: by 2002:a05:690c:6c83:b0:70e:2cba:868c with SMTP id
+ 00721157ae682-71175489fbcmr243794097b3.11.1750193034121; Tue, 17 Jun 2025
+ 13:43:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250616090134.476427c0@pumpkin>
+References: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+In-Reply-To: <20250528-tlb-trace-fix-v1-0-2e94c58f450d@columbia.edu>
+From: Tal Zussman <tz2294@columbia.edu>
+Date: Tue, 17 Jun 2025 16:43:43 -0400
+X-Gm-Features: AX0GCFuiCTOK14X6XurXoh82sgBg97ZdwtwT9OBTjyW80sMOJfdncixxOy-kdtk
+Message-ID: <CAKha_srZTXfQkizBzvrdpWs6Txw2PSgRAqT6QC8gom=PaitYNg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] x86, mm: minor tlb_flush tracepoint adjustments
+To: Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Ingo Molnar <mingo@kernel.org>, Rik van Riel <riel@surriel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        x86@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-GUID: zkQkz7mqF9kMIw6zudBq772NdGMbEFqw
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE3MDE2NSBTYWx0ZWRfX9UrH0FVpyKP8 hFF8iVK9aEHYsvA4bG8IwAAiE6IoIBMdV9kX7Ha0UaeKDzfH1K0aBtGRKtqo6sVeZ6jan4pLBPA KrFIVKRdZvRQZeCTUbgOHAGRLFJHg/WqScCZJkQa8BlHH1Jf6eFUPr7IFqZE7rrGO7AamimROW4
+ pIryhba7C+SD/rDQmqWtYxQ90asrQ98asc/AephQbzWgzastv5d7i37usEHhmuZG7IgWZM895RH SvC1oA6+lGO0Zp4io6TQoCnNy9pF3KFGCmjUkqhTn1oYQuGReGUFJJW3ljK79dBxYTViwNSE2tz XCBl7NSbBwTuma5eBIGWufukcx051gBlCWJytWxtzLVIinD1nPirbUHXk6xrfg9sSL6wRdLZ0yz YhMNaQ0M
+X-Proofpoint-ORIG-GUID: zkQkz7mqF9kMIw6zudBq772NdGMbEFqw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-17_09,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=10
+ phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=765
+ malwarescore=0 bulkscore=10 clxscore=1015 spamscore=0 adultscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506170165
 
-On Mon, Jun 16, 2025 at 09:01:34AM +0100, David Laight wrote:
-> On Fri, 13 Jun 2025 09:41:07 -0400
-> Peter Xu <peterx@redhat.com> wrote:
-> 
-> > Essentially it sets vm_flags==0 for mm_get_unmapped_area_vmflags().  Use
-> > the helper instead to dedup the lines.
-> 
-> Would it make more sense to make it an inline wrapper?
-> Moving the EXPORT_SYMBOL to mm_get_unmapped_area_vmflags.
+On Wed, May 28, 2025 at 1:35=E2=80=AFAM Tal Zussman <tz2294@columbia.edu> w=
+rote:
+>
+> One minor fix and one minor cleanup related to the tlb_flush tracepoint.
+>
+> As an aside, include/trace/events/tlb.h isn't covered by MAINTAINERS,
+> along with other mm related files under include/trace/events/. Flagging
+> this since I see there's a recent effort to overhaul the mm MAINTAINERS
+> entries.
+>
+> It's been a while since I've submitted patches to the mailing list --
+> please let me know if anything looks off. Thanks!
 
-Yes, makes sense to me. However that seems to be better justified as a
-separate patch.
+I don't see this series in any of the mm trees -- anything else that needs =
+to be
+done to get this in?
 
-If you wouldn't mind, I hope we can land the minimum version of the series
-first without expanding too much of what it touches.  I already start to
-regret having the first two patches, but since I've posted, I'll carry them
-as of now.  Please let me know if you have strong feelings.
-
-Thanks a lot for taking a look,
-
--- 
-Peter Xu
-
+Thanks,
+Tal
