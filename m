@@ -1,100 +1,210 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D622ECD2F
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6603A2ECD3A
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 15:43:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750175030; cv=none; b=hUoXeOBoBKbK6XMCyZqjfSvL4P3SZ+jkSHohtiLRIUO06djqPeKy3XuZHhcARc7a1dHGVrZY1hI+lSGkOgefDokJ5KiKOURfcuVxHKdrZMkFseCjLhHam3auHh4/HtrRjl0XRdVaJLw2G37py7axUykFz0yP+gJj59C5SaK+9HM=
+	t=1750175033; cv=none; b=RueBc0q1VDcVqF7EuAmL3+W/Oqrw7IrE2g33bKuC/iplBCGk22piV9rAQAqn0/8JWn4aM/4dZ9CyUuu6UMpK3kPDsoVwjgAOs7V7lbC1G+3mHCcNnT7itx7FN+7NIFtal5RWNJk57PCbXZocX8cr8fSQ3PZZV2kcuzvo+rqmU6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750175030; c=relaxed/simple;
-	bh=jRP/zOTvSPvZdc4E51dkUoMDxpQIXxmewk+hZU8kexs=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=g1BmVU3DHfK3QFUOvuby9yTGGWEdcCMUeeT9fd/t0vAPgfqk59rNT5SY1fin3PRDWo4/TPszlpMVoRPzt+iib7QuFSKIW5ptGR0Yz53AYJqoVwjHn24gw2vD2bu7GCd1MCsurLclpdLiCvAK/2tEvW4SnJIJzNKrnI0S6Mhou5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 682CA16038B;
-	Tue, 17 Jun 2025 15:43:47 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 15AF920026;
-	Tue, 17 Jun 2025 15:43:46 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.98.2)
-	(envelope-from <rostedt@goodmis.org>)
-	id 1uRYTY-000000029Im-0jZS;
-	Tue, 17 Jun 2025 11:43:52 -0400
-Message-ID: <20250617154352.029415598@goodmis.org>
-User-Agent: quilt/0.68
-Date: Tue, 17 Jun 2025 11:43:07 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
+	s=arc-20240116; t=1750175033; c=relaxed/simple;
+	bh=2ze2ECfE4GnTjyP6rEsgveirYn78B01WAaefPYHCdcA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=siN14rXNstQXh2k2sMspnYmuqM2JGbrrmV5VcXeUQ3aQPX+SyHGKi891lUgSc7+/A+C4JLElxIxlig0qCSeduJE94UMrdri2BGuzyzp68gJXtq3gDePgxMH2aDhVAhmZudCIq62y5xINPVT2PGwX06G1UOXhdEagvBSdtIfst5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FMieYBqK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FMieYBqK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750175030;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=S9sktOEUA0QA+KblClROqq+S/PHaRyGhmuWOY3/6T7Q=;
+	b=FMieYBqKVbSJ6SpL0uqdm3eo2pKGt3EH4nrDtBZoi3fH96V74zQILYXA15ESvhBdQAeJbg
+	BSUD/QkNdnOt2v3/vKi30tGg++NEg3Bbf7RwUu/HyVmqYYh3mWL4pvA4/GWF/MYbd8w77j
+	vcs5fPwGsHQ6OTQ0g5YFiYY/8L8/e38=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-150-M7GA525CPzyxGwtaiXPUBQ-1; Tue, 17 Jun 2025 11:43:49 -0400
+X-MC-Unique: M7GA525CPzyxGwtaiXPUBQ-1
+X-Mimecast-MFC-AGG-ID: M7GA525CPzyxGwtaiXPUBQ_1750175028
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4532ff43376so45619525e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 08:43:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750175028; x=1750779828;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S9sktOEUA0QA+KblClROqq+S/PHaRyGhmuWOY3/6T7Q=;
+        b=MD9AjhEKYSz+rSVtd7donxP8qRFF0OHTpeWemWONFUqEr/4yjCSFzlEEsBGzMjssVo
+         XlqWHdIC5pBjn06Mlkx3KZDGghJJQATJ47XDUxGH5/KSdTlCybHuTYfvKehRyK0XV1y+
+         aHU8/d1d0la15AP63nRK0jd12hQT5edl7pc0967+tY8GkBQDwM0T0B2HbKdHKBPHpxw3
+         Xp42+TEayWHsJGeNbd7/7wx6wk+nnqeswaTCbuedhZCjgoXsFH+rNw7rt1mGORqy3+uR
+         an9RKWTXasCyqT3FCwN5fhvv4rxI6Q9s4N6YEl2byURdbTSkSlS1I0p9yD11r+8eBw9g
+         QPZQ==
+X-Gm-Message-State: AOJu0YxlYfcGaanUbPMbq4ICn5jKbcXdMkDf7s8BMpo3CNlcp/1hWoiU
+	QGqe1NXdN8Iv8trM1Qs74i9uFz2/eFAT1UoEExB5X8PfQQQb9PBbW6PFKcGaoCaL9A/ZbKT8HOD
+	eYAHZ4C/+/gLyfrBzUB0rLQNDIZQyYC0eQj2gqGbQ1EpojR94WJlqHrf6zSnERkog4/cm9SLrd8
+	/xWlxmvSIYAOjufEDBFVpwTOvq5LhNsSXBadXtGsLPjXwtfRDt
+X-Gm-Gg: ASbGncuZSiAmB9rpCore8srtMABaWdOMyRcMuhkaFrjnlb5alHjqys33RguzajjKGyX
+	puoD9tmQ+jwNJiAQdpNRAzvDEZzUAKXqgR0XZLsnyiSNc1Z+/Vphiv9hDrsiS3mejvoQy3GT6C8
+	yRG9HnQmsZHjeZTf0cbuikqqb17aJ3KcJYDxEH/tvR8jRPoHWrFtdD1yK0NTHjrfyFCJqq/e+rs
+	OrqGob37Ts7BHo5to3hTWGW0TgyVwEJS0xSrBbnQ1ivHIICSUPN5jCCXI2BfX842n94tfBUYLNC
+	k9Qh+97ZZh3PxemFRzWvsGMlE3OSVyoC91TgZVPsqV2ZAp+j//6DEBubwZS3m0uh9ona/FQsQTM
+	Dl/Joig==
+X-Received: by 2002:a05:600c:1f86:b0:453:1e14:6387 with SMTP id 5b1f17b1804b1-4533f02bb07mr103882495e9.32.1750175027826;
+        Tue, 17 Jun 2025 08:43:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFW7WAxfMB8RzBFcIgkdMMOt5efROkEp4+2gW6BG8c/KNZ4GFdHI8tPJPW7/9sULqKMn/YZhQ==
+X-Received: by 2002:a05:600c:1f86:b0:453:1e14:6387 with SMTP id 5b1f17b1804b1-4533f02bb07mr103881885e9.32.1750175027375;
+        Tue, 17 Jun 2025 08:43:47 -0700 (PDT)
+Received: from localhost (p200300d82f3107003851c66ab6b93490.dip0.t-ipconnect.de. [2003:d8:2f31:700:3851:c66a:b6b9:3490])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4533fb97d88sm116092365e9.36.2025.06.17.08.43.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 08:43:46 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
-Cc: "John Warthog9 Hawley" <warthog9@kernel.org>,
- dhaval@gianis.ca
-Subject: [PATCH 4/4] ktest.pl: Prevent recursion of default variable options
-References: <20250617154303.952651744@goodmis.org>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	nvdimm@lists.linux.dev,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: [PATCH RFC 00/14] mm: vm_normal_page*() + CoW PFNMAP improvements
+Date: Tue, 17 Jun 2025 17:43:31 +0200
+Message-ID: <20250617154345.2494405-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Server: rspamout01
-X-Rspamd-Queue-Id: 15AF920026
-X-Stat-Signature: wdodbgohwd9ygn7xaq35pqccefxe9m75
-X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+OouqrzNlLVePYxXFGDt9gvobDCRBInqo=
-X-HE-Tag: 1750175026-974625
-X-HE-Meta: U2FsdGVkX18Y3YrxJaNV8qiye04dkatnojpJuM/yquJ5WuuFaVTjRxojnANsI0Edorew26BcdTIvFUReO47oXzC24nFidtmwj8zRza0bxXpGNAu6IfTnzQWLmoOMh3EEaJOfJ0Uf2eGxH0qY/oRodkAnr3mFKSlXa5KlDMr1jFIhaLw2jDAda8qMi6vUQO+h9z2YJkfkXGyI5evIinbDQSd5zYYU8LlpVA+R/acPelguaeU4yCh/2MmSPVXKKev53pgC1eoOl+Wqhi8f6rdPBfODKe8LD9wEz5G21GwHwvw4iwEwWnpsGMhVGl6yGC7ykW75eAK8WDKPqylzJVZBd2umMIALum1jBz27zeHRxn36mNuxsMldCBlM+WqUouikRGjkbfsFofgKovbxA6jX8Q==
+Content-Transfer-Encoding: 8bit
 
-From: Steven Rostedt <rostedt@goodmis.org>
+RFC because it's based on mm-new where some things might still change
+around the devmap removal stuff.
 
-If a default variable contains itself, do not recurse on it.
+While removing support for CoW PFNMAPs is a noble goal, I am not even sure
+if we can remove said support for e.g., /dev/mem that easily.
 
-For example:
+In the end, Cow PFNMAPs are pretty simple: everything is "special" except
+CoW'ed anon folios, that are "normal".
 
-  ADD_CONFIG := ${CONFIG_DIR}/temp_config
-  DEFAULTS
-  ADD_CONFIG = ${CONFIG_DIR}/default_config ${ADD_CONFIG}
+The only complication is: how to identify such pages without pte_special().
+Because with pte_special(), it's easy.
 
-The above works because the temp variable ADD_CONFIG (is a temp because it
-is created with ":=") is already defined, it will be substituted in the
-variable option. But if it gets commented out:
+Well, of course, one day all architectures might support pte_special() ...
+either because we added support for pte_special() or removed support for
+... these architectures from Linux.
 
-  # ADD_CONFIG := ${CONFIG_DIR}/temp_config
-  DEFAULTS
-  ADD_CONFIG = ${CONFIG_DIR}/default_config ${ADD_CONFIG}
+No need to wait for that day. Let's do some cleanups around
+vm_normal_page()/vm_normal_page_pmd() and handling of the huge zero folio,
+and remove the "horrible special case to handle copy-on-write behaviour"
+that does questionable things in remap_pfn_range() with a VMA, simply by
 
-Then the above will go into a recursive loop where ${ADD_CONFIG} will
-get replaced with the current definition of ADD_CONFIG which contains the
-${ADD_CONFIG} and that will also try to get converted. ktest.pl will error
-after 100 attempts of recursion and fail.
+... looking for anonymous folios in CoW PFNMAPs to identify anonymous
+folios? I know, sounds crazy ;)
 
-When replacing a variable with the default variable, if the default
-variable contains itself, do not replace it.
+Of course, we add sanity checks that nobody dares installing PFNMAPs of
+anonymous folios in these configs, that could trick us in assuming that
+these are due to CoW.
 
-Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
----
- tools/testing/ktest/ktest.pl | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+We only have to do that without support for pte_special(); for
+architectures that support pte_special(), nothing changes.
 
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index 075c386af5e5..b2971430d7e4 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -1394,7 +1394,10 @@ sub __eval_option {
- 	# If a variable contains itself, use the default var
- 	if (($var eq $name) && defined($opt{$var})) {
- 	    $o = $opt{$var};
--	    $retval = "$retval$o";
-+	    # Only append if the default doesn't contain itself
-+	    if ($o !~ m/\$\{$var\}/) {
-+		$retval = "$retval$o";
-+	    }
- 	} elsif (defined($opt{$o})) {
- 	    $o = $opt{$o};
- 	    $retval = "$retval$o";
+In the same process, add vm_normal_page_pud(), which is easy after the
+cleanups, and improve our documentation. Well, and clarify that
+"vm_ops->find_special_page" XEN thingy.
+
+Briefly tested on UML (making sure vm_normal_page() still works as expected
+without pte_special() support) and on x86-64 with a bunch of tests
+(including ndctl, and cow.c which tests the huge zero folio).
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Nico Pache <npache@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Dev Jain <dev.jain@arm.com>
+Cc: Barry Song <baohua@kernel.org>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Pedro Falcato <pfalcato@suse.de>
+
+David Hildenbrand (14):
+  mm/memory: drop highest_memmap_pfn sanity check in vm_normal_page()
+  mm: drop highest_memmap_pfn
+  mm: compare pfns only if the entry is present when inserting
+    pfns/pages
+  mm/huge_memory: move more common code into insert_pmd()
+  mm/huge_memory: move more common code into insert_pud()
+  mm/huge_memory: support huge zero folio in vmf_insert_folio_pmd()
+  fs/dax: use vmf_insert_folio_pmd() to insert the huge zero folio
+  mm/huge_memory: mark PMD mappings of the huge zero folio special
+  mm/memory: introduce is_huge_zero_pfn() and use it in
+    vm_normal_page_pmd()
+  mm/memory: factor out common code from vm_normal_page_*()
+  mm: remove "horrible special case to handle copy-on-write behaviour"
+  mm: drop addr parameter from vm_normal_*_pmd()
+  mm: introduce and use vm_normal_page_pud()
+  mm: rename vm_ops->find_special_page() to vm_ops->find_normal_page()
+
+ drivers/xen/Kconfig              |   1 +
+ drivers/xen/gntdev.c             |   5 +-
+ fs/dax.c                         |  47 ++----
+ fs/proc/task_mmu.c               |   6 +-
+ include/linux/huge_mm.h          |  12 +-
+ include/linux/mm.h               |  41 +++--
+ mm/Kconfig                       |   2 +
+ mm/huge_memory.c                 | 135 +++++++---------
+ mm/internal.h                    |   2 -
+ mm/memory.c                      | 261 ++++++++++++++++---------------
+ mm/mm_init.c                     |   3 -
+ mm/nommu.c                       |   1 -
+ mm/pagewalk.c                    |  22 +--
+ tools/testing/vma/vma_internal.h |  18 ++-
+ 14 files changed, 281 insertions(+), 275 deletions(-)
+
+
+base-commit: 2f24ee10fe6d1959d674a4298d63b66f54508a68
 -- 
-2.47.2
-
+2.49.0
 
