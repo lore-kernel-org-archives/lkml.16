@@ -1,270 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654AE236A99
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3F3212B3B
+	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 14:12:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750169539; cv=none; b=Qvfrvo7POq6KhpX5JDLt0v9f6gNKlpC0FcxGfkxrYGF48j99HKrS1VcqRQCAm7xV+18E/wxlDz7qOBoDkc1Pm8Zh61tUPlEJa/re0EnFNugfXuot812lnwySjLNiJboWlSpWjnKm2TsIrrVP7uJBUwe/+blQtQDYnAfb/zeMakU=
+	t=1750169562; cv=none; b=EcJS8LyhrSVLguxj9nwpJix38iuJbmjXOSkRgPr7HlVu6l5bV8tQ3MJhoAex0s1nV8xPqo1l7Ee7Le6LD54v+tajtdetDoGg3pEYK+4IBBhqRlbi+zdCecuU6Z+KAeZHptZ3fYwyBLo1AKiAHAGTiAKGI57zpzqY6/jZ/wwWbVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750169539; c=relaxed/simple;
-	bh=p01vA1PBCXZmwTD9ipYGalgea25sUjLAH06zPyyCzos=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZknmREEf1PLX/ggAISdFXjtH5JGdY/y/WHfeKPNuCeIAdA48t7f3WUhnNzAT6JZirwFG2417kRhdF5W/Q2qQaHiiwJKTIbjHB1M2+ZErnLnhX45jlmdrvmgXQLK+fOwsp57/vFGiByi0aR88pqMU5+1GLtrbd9e+PdYUavuTdoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zm9qftkO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750169562; c=relaxed/simple;
+	bh=0s2dRbN0g2gKz6XQ+HO2LSarbkcOLvedvxAPVmt+IDU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=i8bI9kAoTQMt090p53IXqNwU6ecdw5kJFqXMdR+4CMeqJGD8jLb282hwATyVdv/4WjTjfKKJ1SJWE5/liWfaaR4pmef212OkLXks7tZIZLj5fCZnOCKEUaQf0SVIKMe/eBh0524opkycU3Z42gn/zslH4teViIauJLvaE5c3UtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=csKXF/NL; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zm9qftkO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750169536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tDQawTMiyaVh5j2oaJP/el64wEr3+7ENbyMBrC9glDw=;
-	b=Zm9qftkOpvnu+vpPoqdfuba0xsS9wXYSopKrKx8SmeVXZj9Hy53kZiWXYTU/q4UiGXSdGJ
-	z6h9lvE8lBkV3o8sBuKsGQzGWJWfSitvADaRFdYa8ZBrhCImvwcfbZXvJ5iM+1roHV3LrD
-	RRODU90J9s8seQbLQtmT1O7rWVDQ7oc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-U5OE1vtWPteRW_TlH-FVXQ-1; Tue, 17 Jun 2025 10:12:09 -0400
-X-MC-Unique: U5OE1vtWPteRW_TlH-FVXQ-1
-X-Mimecast-MFC-AGG-ID: U5OE1vtWPteRW_TlH-FVXQ_1750169528
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-451d7de4ae3so37564505e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 07:12:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750169528; x=1750774328;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tDQawTMiyaVh5j2oaJP/el64wEr3+7ENbyMBrC9glDw=;
-        b=xGq6WCVKLWafVzI0zB8wDo2lmE9Ry81mHapEaDA4TNHNtO+nGSlHei48x2mqA8J/2/
-         t+niM0rRkktboq570nN8bsW/YBCriIdqK+dF4MdLyqLpwWGisjcTD7tFYKtRTtHACKdk
-         zCwiWBVCztgDCbP7lrfDexNj/tPU1XQJ8iwHcxWzs1ucKLrV63gKstkKeceXBbrHfFr1
-         DJLFHWlDD4v1FbfF/tGiSviooSj+4N/w5S9At4Z5KnQxOoIWlhT+5lZui09OoM7lOweD
-         +kmQN+yDHRq35bRElMvJ2HdLei8+xX7hKfP1i0FMJy6Uox1V3N7xk8r0wHnhOLFHf2sL
-         un5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVKw/GBycmIu2zMXqefBo4YpFFee7U90oEjoDuEcSXlZd8l7CG8Ckuw1Mfg74WGptzMlofdb15C1RTDKEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7JZz6jZtnNnveZtAi2HKjQOhrk8QA/OMm5YQ2ailK44LudjvB
-	cYfyUScKFZKV6sHaJm29EEmJgOPSShJUTjRqJhvRrSlb+Lxfq7kXNlivMsq5nIpAraPH8WLM8oK
-	NzaAr5mM5hfFBfwZSRAR80kdgEjNgdfwreKVhoaHGCMBw8dj42n7vLyUuIDg9dMNLng==
-X-Gm-Gg: ASbGncuBiFsKxPhMrm9uGvGgsNs9eeSS5rrvVxR12vPnBdF/21ZXCcKBkZQHkOqPnhE
-	f2UMFSCzCIz87e3fowSdJChI7/Lz4oP9EItD/fOVctSzK+G/Y3+skFAsPnmAybp/rG0wgaStWR3
-	3GDf/vkx6C2dZW3y+3g7HuaFpCqiwnuMdeKawFeVjq0AYamKc1vU1jvjV0nvpjAFIRf/xK/uqI9
-	yCgLZ+8+ON6/WZkzrdVcUqstWFkypBtP8hNF9z0UhGk2JAhh034bUBFx0sxDJpp0T+NdqL7NDI/
-	yiqeEf+e/v5UXFMCXJkabwEnESda
-X-Received: by 2002:a05:600c:1f94:b0:450:d019:263 with SMTP id 5b1f17b1804b1-4533cad3c9cmr144825125e9.18.1750169528361;
-        Tue, 17 Jun 2025 07:12:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFpOFjhK6ipEOxmVfRV3fbYV+dQY5pR+5sd2WS6/OERnStK2AUSFKitcs+M6aAjkClrM9e7nQ==
-X-Received: by 2002:a05:600c:1f94:b0:450:d019:263 with SMTP id 5b1f17b1804b1-4533cad3c9cmr144824595e9.18.1750169527774;
-        Tue, 17 Jun 2025 07:12:07 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.200.233])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e156e8dsm183349865e9.31.2025.06.17.07.12.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 07:12:06 -0700 (PDT)
-Date: Tue, 17 Jun 2025 16:12:03 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 2/3] vsock/test: Introduce get_transports()
-Message-ID: <sbfcl6s233hmkry3ecq6rwzvpl2gw2z23g2dsymruetn436ou7@znv2hen5wkde>
-References: <20250611-vsock-test-inc-cov-v3-0-5834060d9c20@rbox.co>
- <20250611-vsock-test-inc-cov-v3-2-5834060d9c20@rbox.co>
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="csKXF/NL"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250611-vsock-test-inc-cov-v3-2-5834060d9c20@rbox.co>
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1750169555;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EU6wYxxis5OVyKQeXPeKsMgd/+hFjCLFtAdHnU0fngg=;
+	b=csKXF/NLXzJ1s3RyHE5JxoPiKYUNxWkDu+UfyYwZ3JsUfASSP3vLk3Zsb6mNCI3RBcEF7w
+	nhncl6wMcDAQSbqNOE0tAH/CrmjlrlE7J4robyP6OJajpgPPGjnpG7F2T26uMfR39Pd5/Z
+	Rpk/XjD5wJHpJIS9avPxV1sIPR9SubcSzccGWeKvOFGRzskyqBy0ua51kmVZrB3yRzKkqO
+	XTsBvHplABC7+GGbHWrBsSc3wuHflwWEFnZBciaKvapVA5QJ64cSs4UCqloJ8Bm9BYTxJI
+	9iDDoRMPsupSFLiXbWzNPHvvU3PvaelbsXcGJ6i+5Xh6hJtuD9PjKxrMA/8xUQ==
+Content-Type: multipart/signed;
+ boundary=cdab7635ac7d132188f79799f8586cac554d0abe4ed63d598f1e12607abe;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Tue, 17 Jun 2025 16:12:23 +0200
+Message-Id: <DAOVBOKLXLS2.S9MXDD29X68J@cknow.org>
+Cc: <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <linux-phy@lists.infradead.org>
+Subject: Re: [PATCH 2/5] dt-bindings: phy: rockchip-inno-csi-dphy: add
+ rk3588 variant
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+To: <michael.riesch@collabora.com>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>, "Vinod Koul"
+ <vkoul@kernel.org>, "Kishon Vijay Abraham I" <kishon@kernel.org>, "Philipp
+ Zabel" <p.zabel@pengutronix.de>, "Jagan Teki" <jagan@amarulasolutions.com>,
+ "Sebastian Reichel" <sebastian.reichel@collabora.com>, "Collabora Kernel
+ Team" <kernel@collabora.com>
+References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
+ <20250616-rk3588-csi-dphy-v1-2-84eb3b2a736c@collabora.com>
+In-Reply-To: <20250616-rk3588-csi-dphy-v1-2-84eb3b2a736c@collabora.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 11, 2025 at 09:56:51PM +0200, Michal Luczaj wrote:
->Return a bitmap of registered vsock transports. As guesstimated by grepping
->/proc/kallsyms (CONFIG_KALLSYMS=y) for known symbols of type `struct
->vsock_transport`, or `struct virtio_transport` in case the vsock_transport
->is embedded within.
->
->Note that the way `enum transport` and `transport_ksyms[]` are defined
->triggers checkpatch.pl:
->
->util.h:11: ERROR: Macros with complex values should be enclosed in parentheses
->util.h:20: ERROR: Macros with complex values should be enclosed in parentheses
->util.h:20: WARNING: Argument 'symbol' is not used in function-like macro
->util.h:28: WARNING: Argument 'name' is not used in function-like macro
->
->While commit 15d4734c7a58 ("checkpatch: qualify do-while-0 advice")
->suggests it is known that the ERRORs heuristics are insufficient, I can not
->find many other places where preprocessor is used in this
->checkpatch-unhappy fashion. Notable exception being bcachefs, e.g.
->fs/bcachefs/alloc_background_format.h. WARNINGs regarding unused macro
->arguments seem more common, e.g. __ASM_SEL in arch/x86/include/asm/asm.h.
->
->In other words, this might be unnecessarily complex. The same can be
->achieved by just telling human to keep the order:
->
->enum transport {
->	TRANSPORT_LOOPBACK = BIT(0),
->	TRANSPORT_VIRTIO = BIT(1),
->	TRANSPORT_VHOST = BIT(2),
->	TRANSPORT_VMCI = BIT(3),
->	TRANSPORT_HYPERV = BIT(4),
->	TRANSPORT_NUM = 5,
->};
->
-> #define KSYM_ENTRY(sym) "d " sym "_transport"
->
->/* Keep `enum transport` order */
->static const char * const transport_ksyms[] = {
->	KSYM_ENTRY("loopback"),
->	KSYM_ENTRY("virtio"),
->	KSYM_ENTRY("vhost"),
->	KSYM_ENTRY("vmci"),
->	KSYM_ENTRY("vhs"),
->};
->
->Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> tools/testing/vsock/util.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++
-> tools/testing/vsock/util.h | 29 ++++++++++++++++++++++++
-> 2 files changed, 85 insertions(+)
+--cdab7635ac7d132188f79799f8586cac554d0abe4ed63d598f1e12607abe
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
 
-LGTM!
+Hi,
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+I'm (unfortunately) not seeing any @rock-chips.com recipients ...
 
+On Tue Jun 17, 2025 at 10:54 AM CEST, Michael Riesch via B4 Relay wrote:
+> From: Michael Riesch <michael.riesch@collabora.com>
 >
->diff --git a/tools/testing/vsock/util.c b/tools/testing/vsock/util.c
->index b7b3fb2221c1682ecde58cf12e2f0b0ded1cff39..803f1e075b62228c25f9dffa1eff131b8072a06a 100644
->--- a/tools/testing/vsock/util.c
->+++ b/tools/testing/vsock/util.c
->@@ -7,6 +7,7 @@
->  * Author: Stefan Hajnoczi <stefanha@redhat.com>
->  */
+> The Rockchip RK3588 variant of the CSI-2 DPHY features two reset lines.
+> Add the variant and allow for the additional reset.
 >
->+#include <ctype.h>
-> #include <errno.h>
-> #include <stdio.h>
-> #include <stdint.h>
->@@ -23,6 +24,9 @@
-> #include "control.h"
-> #include "util.h"
+> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+> ---
+>  .../bindings/phy/rockchip-inno-csi-dphy.yaml       | 60 ++++++++++++++++=
+++++--
+>  1 file changed, 55 insertions(+), 5 deletions(-)
 >
->+#define KALLSYMS_PATH		"/proc/kallsyms"
->+#define KALLSYMS_LINE_LEN	512
->+
-> /* Install signal handlers */
-> void init_signals(void)
-> {
->@@ -854,3 +858,55 @@ void enable_so_linger(int fd, int timeout)
-> 		exit(EXIT_FAILURE);
-> 	}
-> }
->+
->+static int __get_transports(void)
->+{
->+	char buf[KALLSYMS_LINE_LEN];
->+	const char *ksym;
->+	int ret = 0;
->+	FILE *f;
->+
->+	f = fopen(KALLSYMS_PATH, "r");
->+	if (!f) {
->+		perror("Can't open " KALLSYMS_PATH);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	while (fgets(buf, sizeof(buf), f)) {
->+		char *match;
->+		int i;
->+
->+		assert(buf[strlen(buf) - 1] == '\n');
->+
->+		for (i = 0; i < TRANSPORT_NUM; ++i) {
->+			if (ret & BIT(i))
->+				continue;
->+
->+			/* Match should be followed by '\t' or '\n'.
->+			 * See kallsyms.c:s_show().
->+			 */
->+			ksym = transport_ksyms[i];
->+			match = strstr(buf, ksym);
->+			if (match && isspace(match[strlen(ksym)])) {
->+				ret |= BIT(i);
->+				break;
->+			}
->+		}
->+	}
->+
->+	fclose(f);
->+	return ret;
->+}
->+
->+/* Return integer with TRANSPORT_* bit set for every (known) registered vsock
->+ * transport.
->+ */
->+int get_transports(void)
->+{
->+	static int tr = -1;
->+
->+	if (tr == -1)
->+		tr = __get_transports();
->+
->+	return tr;
->+}
->diff --git a/tools/testing/vsock/util.h b/tools/testing/vsock/util.h
->index 0afe7cbae12e5194172c639ccfbeb8b81f7c25ac..71895192cc02313bf52784e2f77aa3b0c28a0c94 100644
->--- a/tools/testing/vsock/util.h
->+++ b/tools/testing/vsock/util.h
->@@ -3,8 +3,36 @@
-> #define UTIL_H
->
-> #include <sys/socket.h>
->+#include <linux/bitops.h>
->+#include <linux/kernel.h>
-> #include <linux/vm_sockets.h>
->
->+/* All known vsock transports, see callers of vsock_core_register() */
->+#define KNOWN_TRANSPORTS(x)		\
->+	x(LOOPBACK, "loopback")		\
->+	x(VIRTIO, "virtio")		\
->+	x(VHOST, "vhost")		\
->+	x(VMCI, "vmci")			\
->+	x(HYPERV, "hvs")
->+
->+enum transport {
->+	TRANSPORT_COUNTER_BASE = __COUNTER__ + 1,
->+	#define x(name, symbol)		\
->+		TRANSPORT_##name = BIT(__COUNTER__ - TRANSPORT_COUNTER_BASE),
->+	KNOWN_TRANSPORTS(x)
->+	TRANSPORT_NUM = __COUNTER__ - TRANSPORT_COUNTER_BASE,
->+	#undef x
->+};
->+
->+static const char * const transport_ksyms[] = {
->+	#define x(name, symbol) "d " symbol "_transport",
->+	KNOWN_TRANSPORTS(x)
->+	#undef x
->+};
->+
->+static_assert(ARRAY_SIZE(transport_ksyms) == TRANSPORT_NUM);
->+static_assert(BITS_PER_TYPE(int) >= TRANSPORT_NUM);
->+
-> /* Tests can either run as the client or the server */
-> enum test_mode {
-> 	TEST_MODE_UNSET,
->@@ -82,4 +110,5 @@ void setsockopt_timeval_check(int fd, int level, int optname,
-> 			      struct timeval val, char const *errmsg);
-> void enable_so_zerocopy_check(int fd);
-> void enable_so_linger(int fd, int timeout);
->+int get_transports(void);
-> #endif /* UTIL_H */
->
->-- 
->2.49.0
->
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy=
+.yaml b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
+> index 5ac994b3c0aa..6755738b13ee 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
+> @@ -21,6 +21,7 @@ properties:
+>        - rockchip,rk3326-csi-dphy
+>        - rockchip,rk3368-csi-dphy
+>        - rockchip,rk3568-csi-dphy
+> +      - rockchip,rk3588-csi-dphy
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -39,18 +40,49 @@ properties:
+>      maxItems: 1
+> =20
+>    resets:
+> -    items:
+> -      - description: exclusive PHY reset line
+> +    minItems: 1
+> +    maxItems: 2
+> =20
+>    reset-names:
+> -    items:
+> -      - const: apb
+> +    minItems: 1
+> +    maxItems: 2
+> =20
+>    rockchip,grf:
+>      $ref: /schemas/types.yaml#/definitions/phandle
+>      description:
+>        Some additional phy settings are access through GRF regs.
+> =20
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - rockchip,px30-csi-dphy
+> +              - rockchip,rk1808-csi-dphy
+> +              - rockchip,rk3326-csi-dphy
+> +              - rockchip,rk3368-csi-dphy
+> +              - rockchip,rk3568-csi-dphy
+> +    then:
+> +      properties:
+> +        resets:
+> +          items:
+> +            - description: exclusive PHY reset line
+> +
+> +        reset-names:
+> +          items:
+> +            - const: apb
+> +
+> +      required:
+> +        - reset-names
+> +    else:
+> +      properties:
+> +        resets:
+> +          minItems: 2
+> +
+> +        reset-names:
+> +          minItems: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+> @@ -59,7 +91,6 @@ required:
+>    - '#phy-cells'
+>    - power-domains
+>    - resets
+> -  - reset-names
+>    - rockchip,grf
+> =20
+>  additionalProperties: false
+> @@ -78,3 +109,22 @@ examples:
+>          reset-names =3D "apb";
+>          rockchip,grf =3D <&grf>;
+>      };
+> +  - |
+> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
+> +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
+> +
+> +    soc {
+> +        #address-cells =3D <2>;
+> +        #size-cells =3D <2>;
+> +
+> +        csi_dphy0: phy@fedc0000 {
+> +            compatible =3D "rockchip,rk3588-csi-dphy";
+> +            reg =3D <0x0 0xfedc0000 0x0 0x8000>;
+> +            clocks =3D <&cru PCLK_CSIPHY0>;
+> +            clock-names =3D "pclk";
+> +            #phy-cells =3D <0>;
+> +            resets =3D <&cru SRST_CSIPHY0>, <&cru SRST_P_CSIPHY0>;
+> +            rockchip,grf =3D <&csidphy0_grf>;
+> +            status =3D "disabled";
+> +        };
+> +    };
 
+... which could hopefully tell us what the value is/should be for the
+*required* 'power-domains' property, which is missing in this example.
+IOW: the binding example is invalid according to its own binding.
+(btw: you can drop the 'csi_dphy0' label)
+
+And hopefully also for rk3568 so we can add it to rk356x-base.dtsi and
+you can add it in patch 5 where it's also missing.
+
+Grepping for "csi-dphy" in arch/arm*/boot/dts/rockchip returns:
+- px30.dtsi
+- rk356x-base.dtsi
+
+With this patch set applied, we'd have a 3rd result: rk3588-base.dtsi
+
+For all the listed compatibles, it's only actually defined in px30.dtsi.
+
+Cheers (and sorry),
+  Diederik
+
+--cdab7635ac7d132188f79799f8586cac554d0abe4ed63d598f1e12607abe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaFF3zAAKCRDXblvOeH7b
+bhpEAPwJIALkzS4QIOY/nXMwYzCnZR2In2099ChPU4fsvOLbagEAnx8/aQHAXAqa
+LU1To43ksWlQApoJuHYhWu28pXyU/wo=
+=w/02
+-----END PGP SIGNATURE-----
+
+--cdab7635ac7d132188f79799f8586cac554d0abe4ed63d598f1e12607abe--
