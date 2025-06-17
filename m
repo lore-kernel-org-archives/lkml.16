@@ -1,109 +1,89 @@
-Received: from glittertind.blackshift.org (glittertind.blackshift.org [116.203.23.228])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD742E3B0A
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.23.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720B64A3E;
+	Tue, 17 Jun 2025 13:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750166742; cv=none; b=dB0akPH6Ip63imC8Vu+ikkvL4a/pC18jTTRsmjMDxAXVGTMoSnxAeTEQksLth7PY0YAEpvXp4HI1L3nuDgjqjpHxavw3fVLhAqG3vSdfzQSdkEDwRqSTUCwELuYkJ8fhc3Q4MuVdUSOoDuVubxS+fdme7WJRMflOx3M6aSC7ibc=
+	t=1750166778; cv=none; b=l639SXsJQ8ddd4NYhiOAY3CI94fa9FJdBvDaIxJX1KukKQZ8lAWg2uvhGAGleXcspwvjYyw+R96PPb6X3yNUK0gMb9QK/PixAzbrYZrrIcUa/EOa7PCNwewTU2use+jH7PZKDw6Gzm5H9MwKzjhHbOFZRd4T6Wnr+zTS4mN2VIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750166742; c=relaxed/simple;
-	bh=eqt9u0PahhGFb1NEChhjIN3+SH4MC2Q5qUzt3VoERHE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W9gjXP7TVqtFMPHcGEbdoiHmFF5QRLSFPERdizb02eKxrmmY9u0b93ZuqIUsknwsPGrqVRnMbjy/FQHHWTwiLRZvdgrvNaItQhrMRECNwOUQatU4TQ3Zykn/o1PMejiTABmhYUNO6W7LA3xCMl8w4IJZgdunjCUdDC37yuKk3Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=none smtp.mailfrom=hardanger.blackshift.org; arc=none smtp.client-ip=116.203.23.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hardanger.blackshift.org
-Received: from bjornoya.blackshift.org (unknown [IPv6:2003:e3:7f3d:bb00:e2bf:c3f2:96ab:885d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (secp384r1)
-	 client-signature RSA-PSS (4096 bits))
-	(Client CN "bjornoya.blackshift.org", Issuer "R10" (verified OK))
-	by glittertind.blackshift.org (Postfix) with ESMTPS id 2645E66ED6A
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:25:29 +0000 (UTC)
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id EB66242A851
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 13:25:28 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id CC08F42A7A8;
-	Tue, 17 Jun 2025 13:25:21 +0000 (UTC)
-Received: from hardanger.blackshift.org (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 881f6e66;
-	Tue, 17 Jun 2025 13:25:20 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Tue, 17 Jun 2025 15:24:55 +0200
-Subject: [PATCH net-next v3 05/10] net: fec: fec_restart(): introduce a
- define for FEC_ECR_SPEED
+	s=arc-20240116; t=1750166778; c=relaxed/simple;
+	bh=TvizUw3s32t5WfGidPkDNUWzrMmpAfSocWSh6m0IFEs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FVZNxsHrvxGZaaYpfatyNhsXu4AeWyaKaSg7ypyGSltv7rPgrYNXmNnU+S+N2eIFbg6VNZkXZBXuWDBhm7A5zdBeiz3abQ+VzG6DxuBMhV/R2GAT6zgi5W1f9jBRA0KZz0RhNcDoFB3MWN6PAHOG+3mBdIhdecLNeH9+CenHWcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hisNQ3GG; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hisNQ3GG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 26C8543B1A;
+	Tue, 17 Jun 2025 13:26:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750166767;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XbFldGhGnrwmXccRNPx3zmXGt1+GihInMsMek4sU+M0=;
+	b=hisNQ3GG95DTr3ELv2mNmwWRaNsjAHXpBQaQW/zah0g6fjAS4rNNDUcQNpKetjrtHX+bzX
+	2Y5/WdrjgT05jO3QSrLhXE+H6JG7904+63WJywl4G5QSJAogbA0bmwPhPWqm0YPn9m3RPw
+	+ewGsA/jXCC2wusx4NITLGwl4ahzeX2mf+NCnwq6JNBPVPDRZxdRAcS+C2+fyq7zhzGaXt
+	uAD+pcckWxyHH+8tRA3HFmuNb7aXBPx/vcdMTcm4h6TQ9vipm4Maet9cndXLhxbEHnM5QM
+	sTB1PibZjBUaX96+94YLcPrHQhiHoFL+bUTkDB3m1g47HipQG1LG1Z3FVMFYjw==
+From: =?UTF-8?q?Beno=C3=AEt=20Monin?= <benoit.monin@bootlin.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Monin?= <benoit.monin@bootlin.com>,
+	linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	"Thomas Petazzoni" <thomas.petazzoni@bootlin.com>
+Subject: [PATCH 1/6] dt-bindings: mmc: cdns: add Mobileye EyeQ MMC/SDHCI controller
+Date: Tue, 17 Jun 2025 15:25:51 +0200
+Message-ID: <9b34b471d1e71cf47c503aed7145fab896767ba7.1750156323.git.benoit.monin@bootlin.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1750156323.git.benoit.monin@bootlin.com>
+References: <cover.1750156323.git.benoit.monin@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250617-fec-cleanups-v3-5-a57bfb38993f@pengutronix.de>
-References: <20250617-fec-cleanups-v3-0-a57bfb38993f@pengutronix.de>
-In-Reply-To: <20250617-fec-cleanups-v3-0-a57bfb38993f@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
- Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>
-Cc: imx@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel@pengutronix.de, 
- Marc Kleine-Budde <mkl@pengutronix.de>, Frank Li <Frank.Li@nxp.com>, 
- Andrew Lunn <andrew@lunn.ch>
-X-Mailer: b4 0.15-dev-6f78e
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1320; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=eqt9u0PahhGFb1NEChhjIN3+SH4MC2Q5qUzt3VoERHE=;
- b=owEBbQGS/pANAwAKAQx0Zd/5kJGcAcsmYgBoUWy16GQU7NQUxS8Y/J7hrv2oXVAPAb6RGgWbX
- 3NyNWrTrMiJATMEAAEKAB0WIQSf+wzYr2eoX/wVbPMMdGXf+ZCRnAUCaFFstQAKCRAMdGXf+ZCR
- nG3CCACcg3N7f1pd0K9NkAdj6Q32XsVA36apnjj4a+qXzpqUwZXbKiUNPexL2SpzXo9PLuZmXHK
- OFgPb7/2V5mlaNurqHMbFD8O9cobBRcvE9TfsxOIFX8Arw94M0WTgFcsirNxUJedOPBXxuvgfH+
- 3fymuMrvynBNyR2XVuNzsFSq5AC+prV65jT+ujcDONV8d8KAZo6rrS6LaDkNlqVmtx7HLdJIc/S
- vGzB/XKcy2XI4lM091eJQjOtdboQyfG9IcqwCvoQcYsIpmkZef1DGaqoC+ErQPpJ67KylnqYpy6
- WeWGN/ae4RTnWYsV0/y9D4igRw2eUh3RTexygmDcIe5LNM/B
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvlecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhggtgfgsehtkeertdertdejnecuhfhrohhmpeeuvghnohpfthcuofhonhhinhcuoegsvghnohhithdrmhhonhhinhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdfffeeiieejkeevuefhvdeggeefudffueeuffehffehffevjedugfdtueegtddvnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemudehfeejmehffeehmeelfeeiugemvgelvdehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeduheefjeemfhefheemleefiegumegvledvhedphhgvlhhopehfrhgrmhgvfihorhhkrdhlohgtrghlughomhgrihhnpdhmrghilhhfrhhomhepsggvnhhoihhtrdhmohhnihhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopehulhhfrdhhrghnshhsohhnsehlihhnrghrohdrohhrghdprhgtphhtthhopehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughts
+ ehkvghrnhgvlhdrohhrghdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggv
+X-GND-Sasl: benoit.monin@bootlin.com
 
-Replace "1 << 5" for configuring 1000 MBit/s with a defined constant to
-improve code readability and maintainability.
+The MMC/SD controller from Mobileye is compatible with cdns,sd4hc, but
+will need the preset broken value quirk for speed slower than HS200.
 
-Reviewed-by: Wei Fang <wei.fang@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Benoît Monin <benoit.monin@bootlin.com>
 ---
- drivers/net/ethernet/freescale/fec_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index e0d7365e5b4f..21891baa2fc5 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -276,6 +276,7 @@ MODULE_PARM_DESC(macaddr, "FEC Ethernet MAC address");
- #define FEC_ECR_MAGICEN         BIT(2)
- #define FEC_ECR_SLEEP           BIT(3)
- #define FEC_ECR_EN1588          BIT(4)
-+#define FEC_ECR_SPEED           BIT(5)
- #define FEC_ECR_BYTESWP         BIT(8)
- /* FEC RCR bits definition */
- #define FEC_RCR_LOOP            BIT(0)
-@@ -1207,7 +1208,7 @@ fec_restart(struct net_device *ndev)
- 		/* 1G, 100M or 10M */
- 		if (ndev->phydev) {
- 			if (ndev->phydev->speed == SPEED_1000)
--				ecntl |= (1 << 5);
-+				ecntl |= FEC_ECR_SPEED;
- 			else if (ndev->phydev->speed == SPEED_100)
- 				rcntl &= ~FEC_RCR_10BASET;
- 			else
-
--- 
-2.47.2
-
-
+diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+index 0432cc96f7ca..ac75d694611a 100644
+--- a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+@@ -16,6 +16,7 @@ properties:
+           - amd,pensando-elba-sd4hc
+           - microchip,mpfs-sd4hc
+           - microchip,pic64gx-sd4hc
++          - mobileye,eyeq-sd4hc
+           - socionext,uniphier-sd4hc
+       - const: cdns,sd4hc
+ 
