@@ -1,50 +1,33 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C66F2EFD89
-	for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 20:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB472EFD89;
+	Tue, 17 Jun 2025 20:22:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750191686; cv=none; b=cMWiQTKKeqes9eiqvCoz3CTUy1hXnniBosmXtok2SG9wdiDE1nN7Ul5xFtuiMGfc0y0X1Ezu3XtoftXagT472k8jNTDROUXxAx7X+su/f8+QTyb2ueCoVRAorFLTneS6nikZMRBZBiOaEdIhfK9uowE2RIHfJU1Xu4ln/bQqFSc=
+	t=1750191758; cv=none; b=BG8ib6PYHZE0V4B9I8dfLOOLUUWwl9f5Rf3dYGQYbtquVR2NNHi0hhuPdKqaelA7LAPaQrfhvWwCUroo/dCnXVaORg5Xrq86CVrAvzp0wGbVCF2Cqw21drdPvZfC+HOkuv1qW1wpM3Nc5qkEpaLMCyvLmordxcdWAtrpu17PLig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750191686; c=relaxed/simple;
-	bh=qLmymffMhm8FjC1apL2mvbhyrBdmq840PkeU5geePB8=;
+	s=arc-20240116; t=1750191758; c=relaxed/simple;
+	bh=J6g0JMbLqQPGqasC6o9XOXSYlfEwiBhYFRmGDDOKVKk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GKBq4dpQCkQV59vUmfa3rPk0hD1T5+gtjZy6h1ZFyJiSAE1C5h4R1uIkIner6AAa3+CtqXNekl0LJ7v0+GU6LUAJfSB5UL+1Busd+QgGdLg824VZ2+Shx5nE+glsFKpTwui4+RbF896z/BJfVwEOwc+dFeXXCM1ysDElYpWtOSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TE+HdKKt; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=e1cNMfFfTfrHDrAg9WfK2eKJDW002Kh045vjS87m7dK7FvzBJuhnpyJi3FaRlhhdvPuFJGBnNGiIUO+dQkVCB48R9WDry8i6B6WPXOQdbUYQ1HE0yCX1U0qp0FAFYuZoR1naakOqEpVR4L3BZtTz7nSVEL4a22db/R0BM/cb5FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDGsc1mh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TE+HdKKt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750191685; x=1781727685;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qLmymffMhm8FjC1apL2mvbhyrBdmq840PkeU5geePB8=;
-  b=TE+HdKKt+ZCPLCI/nXHf2ztEk6gWJL785L/PLlo/WnsNJL9/jIkoinnY
-   HqBDSMwh2BNPMe+SCn1l0UyC26zRREkYae5Bd9vyGyefAO1TIL0X87oKK
-   RRhfnc7WOc0WONjRjpmYwH3h8xTcvhfGlyHp/QtlaVyKtS4UnuV93+yLI
-   adV1CYwtC8v++CC1MHgsAuh5iRtbx5o82wU2R4oSgBgJYYdzMX9o9y7zB
-   DSmTgLcSqlaRBpf3ipHoxnyPlpxNBHnq18rIeH4IBYPYO6BRirJiOHVdp
-   LC/GvF/bdsJsc2/7gOoMAA/JOavr1qUnxv0sY/aDPk1MxFeg3z/tqWHb+
-   Q==;
-X-CSE-ConnectionGUID: 3SMwrAWHSxqD7r/a2qZY5Q==
-X-CSE-MsgGUID: 44LTDwyWTmqg5Ai4un4ChQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="52529064"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="52529064"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:21:24 -0700
-X-CSE-ConnectionGUID: LYWGQrbIRdOW8Ldq406c+Q==
-X-CSE-MsgGUID: B+jCyXPKSea28Oo20zmI6w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="149831019"
-Received: from aschofie-mobl2.amr.corp.intel.com (HELO [10.125.108.47]) ([10.125.108.47])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 13:21:23 -0700
-Message-ID: <cfb12298-5214-4fc1-859c-2218c7da4ce3@intel.com>
-Date: Tue, 17 Jun 2025 13:21:23 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDGsc1mh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34571C4CEE3;
+	Tue, 17 Jun 2025 20:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750191757;
+	bh=J6g0JMbLqQPGqasC6o9XOXSYlfEwiBhYFRmGDDOKVKk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HDGsc1mhUWSEa8FKP84Yqh4/mc3eosyuoTZNAuaZ99uZ59tERqY8mwEvz697A9CN5
+	 zwTIptPUEfGyGckjrte0eOrnVVQz8D/DNKApTH8LhLCSUN8/pPNWRYqnEM5mPoXj0J
+	 iBV1EOkAm5encrjRlcZqXylH6PFTOr4T21z0EqN+Ly+6YPTuUN3LBYIqJsseDThtbP
+	 easTYu+UXRUBZxf22exZF3zuvZagMPzQMQqL8vYL48flKYuqiZN89cg5MuniBRc2Bz
+	 tj9ULiqqIorn0Znw+DqFFYSZxt5mLf11wgUJILhzv1YFVekciGl98+MftbF1rTyFzw
+	 Up8otWSF17luA==
+Message-ID: <08257531-c8e4-47b1-a5d1-1e67378ff129@kernel.org>
+Date: Tue, 17 Jun 2025 15:22:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,70 +35,145 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/1] x86/rdrand: disable RDSEED on AMD Cyan Skillfish
-To: Borislav Petkov <bp@alien8.de>, Mikhail Paulyshka <me@mixaill.net>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250524145319.209075-1-me@mixaill.net>
- <20250617200551.GIaFHKnyPV_XsSjlMP@fat_crate.local>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH v2 6/6] vgaarb: Look at all PCI display devices in VGA
+ arbiter
+To: Alex Williamson <alex.williamson@redhat.com>,
+ David Airlie <airlied@gmail.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+ Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Simona Vetter <simona@ffwll.ch>, Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250617175910.1640546-1-superm1@kernel.org>
+ <20250617175910.1640546-7-superm1@kernel.org>
+ <20250617132228.434adebf.alex.williamson@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250617200551.GIaFHKnyPV_XsSjlMP@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <20250617132228.434adebf.alex.williamson@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/17/25 13:05, Borislav Petkov wrote:
-> +	/* Disable RDSEED on AMD Cyan Skillfish because of an error. */
-> +	if (c->x86_model == 0x47 && c->x86_stepping == 0x0) {
-> +		clear_cpu_cap(c, X86_FEATURE_RDSEED);
-> +		msr_clear_bit(MSR_AMD64_CPUID_FN_7, 18);
-> +		pr_emerg("RDSEED is not reliable on this platform; disabling.\n");
-> +	}
 
-Heh, maybe if x86_init_rdrand() did RDSEED too, this wouldn't have
-slipped through QA.
+
+On 6/17/25 2:22 PM, Alex Williamson wrote:
+> On Tue, 17 Jun 2025 12:59:10 -0500
+> Mario Limonciello <superm1@kernel.org> wrote:
+> 
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> On a mobile system with an AMD integrated GPU + NVIDIA discrete GPU the
+>> AMD GPU is not being selected by some desktop environments for any
+>> rendering tasks. This is because neither GPU is being treated as
+>> "boot_vga" but that is what some environments use to select a GPU [1].
+>>
+>> The VGA arbiter driver only looks at devices that report as PCI display
+>> VGA class devices. Neither GPU on the system is a PCI display VGA class
+>> device:
+>>
+>> c5:00.0 3D controller: NVIDIA Corporation Device 2db9 (rev a1)
+>> c6:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Device 150e (rev d1)
+>>
+>> If the GPUs were looked at the vga_is_firmware_default() function actually
+>> does do a good job at recognizing the case from the device used for the
+>> firmware framebuffer.
+>>
+>> Modify the VGA arbiter code and matching sysfs file entries to examine all
+>> PCI display class devices. The existing logic stays the same.
+>>
+>> This will cause all GPUs to gain a `boot_vga` file, but the correct device
+>> (AMD GPU in this case) will now show `1` and the incorrect device shows `0`.
+>> Userspace then picks the right device as well.
+>>
+>> Link: https://github.com/robherring/libpciaccess/commit/b2838fb61c3542f107014b285cbda097acae1e12 [1]
+>> Suggested-by: Daniel Dadap <ddadap@nvidia.com>
+>> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>>   drivers/pci/pci-sysfs.c | 2 +-
+>>   drivers/pci/vgaarb.c    | 8 ++++----
+>>   2 files changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+>> index 268c69daa4d57..c314ee1b3f9ac 100644
+>> --- a/drivers/pci/pci-sysfs.c
+>> +++ b/drivers/pci/pci-sysfs.c
+>> @@ -1707,7 +1707,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>>   	struct device *dev = kobj_to_dev(kobj);
+>>   	struct pci_dev *pdev = to_pci_dev(dev);
+>>   
+>> -	if (a == &dev_attr_boot_vga.attr && pci_is_vga(pdev))
+>> +	if (a == &dev_attr_boot_vga.attr && pci_is_display(pdev))
+>>   		return a->mode;
+>>   
+>>   	return 0;
+>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>> index 78748e8d2dbae..63216e5787d73 100644
+>> --- a/drivers/pci/vgaarb.c
+>> +++ b/drivers/pci/vgaarb.c
+>> @@ -1499,8 +1499,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>>   
+>>   	vgaarb_dbg(dev, "%s\n", __func__);
+>>   
+>> -	/* Only deal with VGA class devices */
+>> -	if (!pci_is_vga(pdev))
+>> +	/* Only deal with PCI display class devices */
+>> +	if (!pci_is_display(pdev))
+>>   		return 0;
+>>   
+>>   	/*
+>> @@ -1546,12 +1546,12 @@ static int __init vga_arb_device_init(void)
+>>   
+>>   	bus_register_notifier(&pci_bus_type, &pci_notifier);
+>>   
+>> -	/* Add all VGA class PCI devices by default */
+>> +	/* Add all PCI display class devices by default */
+>>   	pdev = NULL;
+>>   	while ((pdev =
+>>   		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+>>   			       PCI_ANY_ID, pdev)) != NULL) {
+>> -		if (pci_is_vga(pdev))
+>> +		if (pci_is_display(pdev))
+>>   			vga_arbiter_add_pci_device(pdev);
+>>   	}
+>>   
+> 
+> At the very least a non-VGA device should not mark that it decodes
+> legacy resources, marking the boot VGA device is only a part of what
+> the VGA arbiter does.  It seems none of the actual VGA arbitration
+> interfaces have been considered here though.
+> 
+> I still think this is a bad idea and I'm not sure Thomas didn't
+> withdraw his ack in the previous round[1].  Thanks,
+
+Ah; I didn't realize that was intended to be a withdrawl.
+If there's another version of this I'll remove it.
+
+Dave,
+
+What is your current temperature on this approach?
+
+Do you still think it's best for something in the kernel or is this 
+better done in libpciaccess?
+
+Mutter, Kwin, and Cosmic all handle this case in the compositor.
+
+
+> 
+> Alex
+> 
+> [1]https://lore.kernel.org/all/bc0a3ac2-c86c-43b8-b83f-edfdfa5ee184@suse.de/
+> 
+
