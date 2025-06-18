@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429C32DE1FF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B202DE208;
 	Wed, 18 Jun 2025 11:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247212; cv=none; b=pUl1Th6N4ZHiR6xRrdcwlFsO6lIX7aMZyFjZYERlBGhdd4FaZ7TU7iMFPcSE4gl6kqCieCDFiedJhGil/xklfOE+wpTPa9YLuigy/KZNHiTBspumsutM2H2B8HB89YR3EheCKqWRRVdqbiSdvkbH9u4A4mLJFYiA9rHjOpZsmtk=
+	t=1750247212; cv=none; b=LbTyyT5vfJIlvkzglSXoOYgP1AOwbSLL91y9Osapw+P+P+iTaY00Q3MHZF30+enWl3+YgFQP6L9EJaT+t5MDBqMJ3f3lmdFX/ZR3PBIP9OOP5sPMaHeTiYppeHRnJDLDpufbZ+j68A/O07E1KY2z+PH5VVSz8Xak1V7Faj7VEIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750247212; c=relaxed/simple;
-	bh=ogBoG80VZdRt95wsoC2snRc4eLHl6tjexBrTDr8vuXE=;
+	bh=gCUujhjF05O4bN0j1mBzTOE2gqunIOFmC86Oe+w0BHo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cKnrMxZmYFaJNImOHcjgndumG8B6/ttMkOezAAaaz+tmmWCAH0oSmM0OQZl0vZq1JZLvFAdShd809llE7SLrStJc0wNIwmHFbNspulyv1vohvh2HCbuj29to7owQfHPbm6cAb8gIpj8sHCePAs9iYcL3ieaJN56oDyEUS15el6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqOWMhVg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=t2R7Z0AJIvxgl24SXswsQ7OamKiqlEjvopychJsP4rjfFJrYfByjVc2a65+v7xTFcCCSRoAqwV78kiVSaHF0bBhJutsXiDIBUvEtUmBBtZqP+oSo7wzdTR7pynSOnQnOYjaKJDjAAnMBtpWf3LXtm/JmNpF19+/72KGSn8CuTeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3hKuiok; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqOWMhVg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77690C4CEF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3hKuiok"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFA4C4CEF3;
 	Wed, 18 Jun 2025 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750247211;
-	bh=ogBoG80VZdRt95wsoC2snRc4eLHl6tjexBrTDr8vuXE=;
+	bh=gCUujhjF05O4bN0j1mBzTOE2gqunIOFmC86Oe+w0BHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MqOWMhVgXBtUsi8x3bQXCLmP94NqEgyxWvnIeILMT7qc6HHgMt2mJDyXWnEwzeHQj
-	 5GfF8Z5RF+aXX6MqMfvgLZmfmUnw9x1AcwPrYgolcfB0SacsbH1VoTe7TjamxaS/ye
-	 8TvEWjHleypjBES0T2g1okyv3ecZ4NIRsLqjtXUnTQuaEEr1qmL/WCBPH9nkR0BgXp
-	 wE1ew5+oPICvrjkCTUFAYTb91+jPBnnTK2Ea9r6qRB6O0P+sap9rdwunUB8te/Ehkb
-	 5Nrwsry0QB1FJpmN0QJBEUwuWRqh/gVaXoOpKVeJbVzV2INoG+5K5LiKKauy+ytUNV
-	 e25+OsXt2vExQ==
+	b=B3hKuiokwUIAHVhJAbQbj6y9L1mM6iZ/ZUcWyLY3xwgpIheHmxnQ4iofjmpCbwUpR
+	 rUHNjejo5Uo0qMow2ycK1THE2XibdqHxBrpDh+jjFreLRVxC2csqMWkp59iVWup7MF
+	 /qOvhYTQ9FbyiYvqCbpGZhzdctfEGHiBKb7oQM/QyJF2S0+wX7B3YNt+chSpUSA4RI
+	 dTCuONiUCxqmQdDvQdOIq65C5TF4QqEA3GFya27EK2WWI9WntN/IEjPBVbPXQ/NhPp
+	 K28wx1IPMJO21OCLyu/4Ytf+MGt+c2AdIB7do3RNFdRWITQebfZV2jAuxVj/Q28pZT
+	 h/AyfOFiwfU0A==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uRrFh-000000036Uz-33Dh;
+	id 1uRrFh-000000036Up-2owX;
 	Wed, 18 Jun 2025 13:46:49 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -55,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v6 11/15] docs: netlink: remove obsolete .gitignore from unused directory
-Date: Wed, 18 Jun 2025 13:46:38 +0200
-Message-ID: <f2cd5be5390d0e4588ed340ffe1dc6244202f605.1750246291.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v6 09/15] docs: uapi: netlink: update netlink specs link
+Date: Wed, 18 Jun 2025 13:46:36 +0200
+Message-ID: <1dbe019319a6fd9f0c672280e079ddad1149cbe4.1750246291.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750246291.git.mchehab+huawei@kernel.org>
 References: <cover.1750246291.git.mchehab+huawei@kernel.org>
@@ -70,25 +70,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-The previous code was generating source rst files
-under Documentation/networking/netlink_spec/. With the
-Sphinx YAML parser, this is now gone. So, stop ignoring
-*.rst files inside netlink specs directory.
+With the recent parser_yaml extension, and the removal of the
+auto-generated ReST source files, the location of netlink
+specs changed.
+
+Update uAPI accordingly.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
 ---
- Documentation/networking/netlink_spec/.gitignore | 1 -
- 1 file changed, 1 deletion(-)
- delete mode 100644 Documentation/networking/netlink_spec/.gitignore
+ Documentation/userspace-api/netlink/index.rst | 2 +-
+ Documentation/userspace-api/netlink/specs.rst | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/networking/netlink_spec/.gitignore b/Documentation/networking/netlink_spec/.gitignore
-deleted file mode 100644
-index 30d85567b592..000000000000
---- a/Documentation/networking/netlink_spec/.gitignore
-+++ /dev/null
-@@ -1 +0,0 @@
--*.rst
+diff --git a/Documentation/userspace-api/netlink/index.rst b/Documentation/userspace-api/netlink/index.rst
+index c1b6765cc963..83ae25066591 100644
+--- a/Documentation/userspace-api/netlink/index.rst
++++ b/Documentation/userspace-api/netlink/index.rst
+@@ -18,4 +18,4 @@ Netlink documentation for users.
+ 
+ See also:
+  - :ref:`Documentation/core-api/netlink.rst <kernel_netlink>`
+- - :ref:`Documentation/networking/netlink_spec/index.rst <specs>`
++ - :ref:`Documentation/netlink/specs/index.rst <specs>`
+diff --git a/Documentation/userspace-api/netlink/specs.rst b/Documentation/userspace-api/netlink/specs.rst
+index 1b50d97d8d7c..debb4bfca5c4 100644
+--- a/Documentation/userspace-api/netlink/specs.rst
++++ b/Documentation/userspace-api/netlink/specs.rst
+@@ -15,7 +15,7 @@ kernel headers directly.
+ Internally kernel uses the YAML specs to generate:
+ 
+  - the C uAPI header
+- - documentation of the protocol as a ReST file - see :ref:`Documentation/networking/netlink_spec/index.rst <specs>`
++ - documentation of the protocol as a ReST file - see :ref:`Documentation/netlink/specs/index.rst <specs>`
+  - policy tables for input attribute validation
+  - operation tables
+ 
 -- 
 2.49.0
 
