@@ -1,222 +1,172 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3AA18027;
-	Wed, 18 Jun 2025 02:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DEBE2D600;
+	Wed, 18 Jun 2025 02:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750214429; cv=none; b=uHBCi/lXk3jAShqpYNTowD55sH4baU8gqHWGX9vQSlM8cYMW/k+6WiiwB+jKNwynTOQ8kF2DGMyp7qtvVForjC7gxtwo2JbdaVhLAHvH50951vFQ3tPJxzi3ueSXu1Ib8WuKB8UsTfkecbnbKctpXiRNyeMJZeaiiY5UuRkRPrU=
+	t=1750214542; cv=none; b=kzQx1sLiTm7EwDBQRHAiZuM411Nn6AutHnv1mHtz9BTMlE4RhKt31AWjdDmtHLULAnjrOuQMEYK+0h+RFjchTtoCExRQMV5I1SIVShEM2/eqpCIiicK5BxzxxJ+CHFhcB5gKqasHNdxF5DtSOLuqqgyDJMTmRKFkp+HCO7FJI8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750214429; c=relaxed/simple;
-	bh=qsIA6mNPxnb7OXWg4kd4mkPdogx2qiMHk/5aIJp3TQY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AyO/QXlJ1BWCjc6VtVqtarmy3vMVFbJxpd51NvTBZUHzxI0kbfdmZ1JTwIPoVZmeqiYs+BPJITSiuuXbnogszg/n4TtM1Jok9y31rk16LmZ6jt/gVwxCgXote7NSs/AsoCF8LjKI6nmZbBI2r/M/ANs8Y+n0MdQAci4mipc0xDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bMSY91Ymnz2Cfbr;
-	Wed, 18 Jun 2025 10:36:29 +0800 (CST)
-Received: from dggemv706-chm.china.huawei.com (unknown [10.3.19.33])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7B72C1800B2;
-	Wed, 18 Jun 2025 10:40:23 +0800 (CST)
-Received: from kwepemq500002.china.huawei.com (7.202.195.240) by
- dggemv706-chm.china.huawei.com (10.3.19.33) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 10:40:22 +0800
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- kwepemq500002.china.huawei.com (7.202.195.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 10:40:22 +0800
-Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
- kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
- Wed, 18 Jun 2025 10:40:21 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-CC: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
-	<linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Mark Rutland
-	<mark.rutland@arm.com>, duchangbin <changbin.du@huawei.com>
-Subject: Re: [PATCH] fgraph: Do not enable function_graph tracer when setting
- funcgraph-args
-Thread-Topic: [PATCH] fgraph: Do not enable function_graph tracer when setting
- funcgraph-args
-Thread-Index: AQHb3/pWjfZBtRicskuT1WyP/TidDQ==
-Date: Wed, 18 Jun 2025 02:40:21 +0000
-Message-ID: <ad0745b53e5046b79378bdc12ddfdd51@huawei.com>
-References: <20250617120830.24fbdd62@gandalf.local.home>
-In-Reply-To: <20250617120830.24fbdd62@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <98A46D4A86E7C845BBD920D113FB6E88@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750214542; c=relaxed/simple;
+	bh=7i5+1Vmj56/aTiTJ9aGMjarno6AIHKUGDq5Tb5xI53w=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Qp1uyn0t6Ihj2le3grGWwxxXCn1+khWCGHvSwU4UOhjyuubBmqgiIOh1SG7i6cIZf/loYKlcmNn/VKWIxivDhdOxsBkC3iUo7bsa+QPofMPaWLFcJe+RVjLygN305D8RsQKuNFbkhADKxL0vOGVTRI4XxrPoq+Qt9Tr/RhrWFcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zeac9Oxy; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zeac9Oxy"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-234d3261631so42993285ad.1;
+        Tue, 17 Jun 2025 19:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750214540; x=1750819340; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fuYMA/57H5BAmU65jan5lqjjy5ZSUjRygUj6a7SK/2Y=;
+        b=Zeac9OxyEjM3XiYbjjvZp1WyxDQwQA2xjSyXBDTo8KQar5w9CyV5z1e1LnUhPlBT+H
+         kbSZTNd+9+QCMZeG1BrwZ9Mj6Qu7POCh2/H+He7I2bOqeviGGdyQNPCArwPsslPQeNxh
+         ME9Pes/GBToONF9wFALEeYA5cJqfOZ6KZT2M/LKdrzCINC0+2M0EOb+/UrsLkoU1OnQl
+         8JylhFK+OpEW81/g0cT67kDM9N7EW8FhilYbK6JqQaTZRLJ2hirOonAWSKB81mCwlE1z
+         qOaJ6O4u/QzbR+2Yh7opC8+nQLYoeW0RAfvhOUnFrCaUOfwDq0h+XYyIJA8z2V/VrBUb
+         03Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750214540; x=1750819340;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fuYMA/57H5BAmU65jan5lqjjy5ZSUjRygUj6a7SK/2Y=;
+        b=RN0cAfDPl7PYEaN7z4c1j5YW98RbhXJY4V9lUeoKb0oSSuNJM+/DARd9KpJzuTV792
+         AbpYcvXdoNuO2q1wmw/BWsYIF1oZZdAoFf5gyBVjTAGDwyBkCgo3gOVF2ngGNLYYR1b1
+         h1SHMNjyBmhzHKyVoZLYbxpgdObdyDl10HIJdaqtUG83RF8j1NPIr2Svr9jLuIBGmdll
+         bVgTXGDt+1GzMQC3x4UaAYArRWQ2HsrtADrCsXjsOLXQIu4+BYek/ClJ/Ut1+9lbLU0L
+         99iTJ8pI0sjKtp02LcBtlq54AG8+67PeNxu11IoPVHpI94ZLy8PC+zrmTKaz+Hh9xSqc
+         RkPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLt7hZS8zC5EcZiZi/aKkKQ3FZUKVEffYgy7rSPaO8dPnQWvyI3v7p5NmWyNcb4Pb2ivegDczC@vger.kernel.org, AJvYcCWNv8BBzDRBHDfcQfyDBhaumEVWWfeTznMvRUqZ+5TX+8u42ePazKVmlX9H1qPrIkSk19zusnMhGrM=@vger.kernel.org, AJvYcCX3bKc1k9nL8NmLE0M/fJjhFhsmIrOC+irLpZpoRatQmW64CcN8XTzjPCVth1qhZN3lzewAKtE/nAyq8oeB@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsKKhNMC4br6m60dJVgX42JDvHhOfY2TP/NOB5kA/1bz0JYkHR
+	BPZE1ZNmOnpeRI0n2Sy/unAoXZn9ZRUDd+CtLhfSZAfj9nnzVrN4gTX5
+X-Gm-Gg: ASbGnctElc4OdgGyfJkfiX9wCx6gbIb/azu8BWb1E5pKD7m3+xvV3XqN6Zyp5aBaexM
+	Cker3lhgf/tsEBis4cIdHFwWFVfo8cGXBTHuEaae6KbCEsPFlng8sGZY6eV5xncO9MKRb7xk6H8
+	DhCjx6AZBccLeTVQL4dfwzCZgxafOpmpKXHdCTNBE9tvPtMhSqUIBu3ccuvwOGgWR/vYkWykARj
+	xo12PDQapS+ZiSWTTX2pNCVbs975WuwjugIAssmGu/UN+QYiaRHgQBJswsoskJ3r9mNckg3+Ex2
+	zfcv0j3YWNY6hITZIlLrZOHo6593sYdzaHW1tQ960YTHP5aKSDW0U1PJFVfB9Md4MAbahXzIXGV
+	t1ct3eqXVfiYoIqiwvB+dm3vBNf08EtDt
+X-Google-Smtp-Source: AGHT+IHvoHz8x/cvMCuTAeyI0cA9D+sbDRrQQCvuQAcnDzndTzmiRTQy44tnbpaZaEQHbGQzSCzMBg==
+X-Received: by 2002:a17:903:2347:b0:235:91a:4d with SMTP id d9443c01a7336-2366b0185e5mr212827035ad.23.1750214539698;
+        Tue, 17 Jun 2025 19:42:19 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dfc68c1sm88027995ad.238.2025.06.17.19.42.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 19:42:19 -0700 (PDT)
+Message-ID: <1adba2c6-e4c3-4da2-874e-a304a1fdfd25@gmail.com>
+Date: Wed, 18 Jun 2025 11:42:14 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Akira Yokosawa <akiyks@gmail.com>
+Subject: Re: [PATCH v5 01/15] docs: conf.py: properly handle include and
+ exclude patterns
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: Breno Leitao <leitao@debian.org>, "David S. Miller"
+ <davem@davemloft.net>, Donald Hunter <donald.hunter@gmail.com>,
+ Eric Dumazet <edumazet@google.com>,
+ Ignacio Encinas Rubio <ignacio@iencinas.com>,
+ Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
+ Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
+ linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
+ lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
+ stern@rowland.harvard.edu, Akira Yokosawa <akiyks@gmail.com>
+References: <cover.1750146719.git.mchehab+huawei@kernel.org>
+ <cca10f879998c8f0ea78658bf9eabf94beb0af2b.1750146719.git.mchehab+huawei@kernel.org>
+Content-Language: en-US
+In-Reply-To: <cca10f879998c8f0ea78658bf9eabf94beb0af2b.1750146719.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, Steven,
-On Tue, Jun 17, 2025 at 12:08:30PM -0400, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
->=20
-> When setting the funcgraph-args option when function graph tracer is net
-> enabled, it incorrectly enables it. Worse, it unregisters itself when it
-> was never registered. Then when it gets enabled again, it will register
-> itself a second time causing a WARNing.
->=20
->  ~# echo 1 > /sys/kernel/tracing/options/funcgraph-args
->  ~# head -20 /sys/kernel/tracing/trace
->  # tracer: nop
->  #
->  # entries-in-buffer/entries-written: 813/26317372   #P:8
->  #
->  #                                _-----=3D> irqs-off/BH-disabled
->  #                               / _----=3D> need-resched
->  #                              | / _---=3D> hardirq/softirq
->  #                              || / _--=3D> preempt-depth
->  #                              ||| / _-=3D> migrate-disable
->  #                              |||| /     delay
->  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->  #              | |         |   |||||     |         |
->            <idle>-0       [007] d..4.   358.966010:  7)   1.692 us    |  =
-        fetch_next_timer_interrupt(basej=3D4294981640, basem=3D357956000000=
-, base_local=3D0xffff88823c3ae040, base_global=3D0xffff88823c3af300, tevt=
-=3D0xffff888100e47cb8);
->            <idle>-0       [007] d..4.   358.966012:  7)               |  =
-        tmigr_cpu_deactivate(nextexp=3D357988000000) {
->            <idle>-0       [007] d..4.   358.966013:  7)               |  =
-          _raw_spin_lock(lock=3D0xffff88823c3b2320) {
->            <idle>-0       [007] d..4.   358.966014:  7)   0.981 us    |  =
-            preempt_count_add(val=3D1);
->            <idle>-0       [007] d..5.   358.966017:  7)   1.058 us    |  =
-            do_raw_spin_lock(lock=3D0xffff88823c3b2320);
->            <idle>-0       [007] d..4.   358.966019:  7)   5.824 us    |  =
-          }
->            <idle>-0       [007] d..5.   358.966021:  7)               |  =
-          tmigr_inactive_up(group=3D0xffff888100cb9000, child=3D0x0, data=
-=3D0xffff888100e47bc0) {
->            <idle>-0       [007] d..5.   358.966022:  7)               |  =
-            tmigr_update_events(group=3D0xffff888100cb9000, child=3D0x0, da=
-ta=3D0xffff888100e47bc0) {
->=20
-> Notice the "tracer: nop" at the top there. The current tracer is the "nop=
-"
-> tracer, but the content is obviously the function graph tracer.
->=20
-> Enabling function graph tracing will cause it to register again and
-> trigger a warning in the accounting:
->=20
->  ~# echo function_graph > /sys/kernel/tracing/current_tracer
->  -bash: echo: write error: Device or resource busy
->=20
-> With the dmesg of:
->=20
->  ------------[ cut here ]------------
->  WARNING: CPU: 7 PID: 1095 at kernel/trace/ftrace.c:3509 ftrace_startup_s=
-ubops+0xc1e/0x1000
->  Modules linked in: kvm_intel kvm irqbypass
->  CPU: 7 UID: 0 PID: 1095 Comm: bash Not tainted 6.16.0-rc2-test-00006-gea=
-03de4105d3 #24 PREEMPT
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1=
-.16.3-2 04/01/2014
->  RIP: 0010:ftrace_startup_subops+0xc1e/0x1000
->  Code: 48 b8 22 01 00 00 00 00 ad de 49 89 84 24 88 01 00 00 8b 44 24 08 =
-89 04 24 e9 c3 f7 ff ff c7 04 24 ed ff ff ff e9 b7 f7 ff ff <0f> 0b c7 04 2=
-4 f0 ff ff ff e9 a9 f7 ff ff c7 04 24 f4 ff ff ff e9
->  RSP: 0018:ffff888133cff948 EFLAGS: 00010202
->  RAX: 0000000000000001 RBX: 1ffff1102679ff31 RCX: 0000000000000000
->  RDX: 1ffffffff0b27a60 RSI: ffffffff8593d2f0 RDI: ffffffff85941140
->  RBP: 00000000000c2041 R08: ffffffffffffffff R09: ffffed1020240221
->  R10: ffff88810120110f R11: ffffed1020240214 R12: ffffffff8593d2f0
->  R13: ffffffff8593d300 R14: ffffffff85941140 R15: ffffffff85631100
->  FS:  00007f7ec6f28740(0000) GS:ffff8882b5251000(0000) knlGS:000000000000=
-0000
->  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->  CR2: 00007f7ec6f181c0 CR3: 000000012f1d0005 CR4: 0000000000172ef0
->  Call Trace:
->   <TASK>
->   ? __pfx_ftrace_startup_subops+0x10/0x10
->   ? find_held_lock+0x2b/0x80
->   ? ftrace_stub_direct_tramp+0x10/0x10
->   ? ftrace_stub_direct_tramp+0x10/0x10
->   ? trace_preempt_on+0xd0/0x110
->   ? __pfx_trace_graph_entry_args+0x10/0x10
->   register_ftrace_graph+0x4d2/0x1020
->   ? tracing_reset_online_cpus+0x14b/0x1e0
->   ? __pfx_register_ftrace_graph+0x10/0x10
->   ? ring_buffer_record_enable+0x16/0x20
->   ? tracing_reset_online_cpus+0x153/0x1e0
->   ? __pfx_tracing_reset_online_cpus+0x10/0x10
->   ? __pfx_trace_graph_return+0x10/0x10
->   graph_trace_init+0xfd/0x160
->   tracing_set_tracer+0x500/0xa80
->   ? __pfx_tracing_set_tracer+0x10/0x10
->   ? lock_release+0x181/0x2d0
->   ? _copy_from_user+0x26/0xa0
->   tracing_set_trace_write+0x132/0x1e0
->   ? __pfx_tracing_set_trace_write+0x10/0x10
->   ? ftrace_graph_func+0xcc/0x140
->   ? ftrace_stub_direct_tramp+0x10/0x10
->   ? ftrace_stub_direct_tramp+0x10/0x10
->   ? ftrace_stub_direct_tramp+0x10/0x10
->   vfs_write+0x1d0/0xe90
->   ? __pfx_vfs_write+0x10/0x10
->=20
-> Have the setting of the funcgraph-args check if function_graph tracer is
-> the current tracer of the instance, and if not, do nothing, as there's
-> nothing to do (the option is checked when function_graph tracing starts).
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: c7a60a733c373 ("ftrace: Have funcgraph-args take affect during tra=
-cing")
-> Reported-by: duchangbin <changbin.du@huawei.com>
-> Closes: https://lore.kernel.org/all/4ab1a7bdd0174ab09c7b0d68cdbff9a4@huaw=
-ei.com/
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Hi Mauro,
+
+A comment on compatibility with earlier Sphinx.
+
+On Tue, 17 Jun 2025 10:01:58 +0200, Mauro Carvalho Chehab wrote:
+> When one does:
+> 	make SPHINXDIRS="foo" htmldocs
+> 
+> All patterns would be relative to Documentation/foo, which
+> causes the include/exclude patterns like:
+> 
+> 	include_patterns = [
+> 		...
+> 		f'foo/*.{ext}',
+> 	]
+> 
+> to break. This is not what it is expected. Address it by
+> adding a logic to dynamically adjust the pattern when
+> SPHINXDIRS is used.
+> 
+> That allows adding parsers for other file types.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  kernel/trace/trace_functions_graph.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_fu=
-nctions_graph.c
-> index 9234e2c39abf..b6211c304c7f 100644
-> --- a/kernel/trace/trace_functions_graph.c
-> +++ b/kernel/trace/trace_functions_graph.c
-> @@ -455,10 +455,16 @@ static int graph_trace_init(struct trace_array *tr)
->  	return 0;
->  }
-> =20
-> +static struct tracer graph_trace;
+>  Documentation/conf.py | 52 +++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 48 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/conf.py b/Documentation/conf.py
+> index 12de52a2b17e..e887c1b786a4 100644
+> --- a/Documentation/conf.py
+> +++ b/Documentation/conf.py
+> @@ -17,6 +17,54 @@ import os
+>  import sphinx
+>  import shutil
+>  
+> +# Location of Documentation/ directory
+> +doctree = os.path.abspath('.')
 > +
->  static int ftrace_graph_trace_args(struct trace_array *tr, int set)
->  {
->  	trace_func_graph_ent_t entry;
-> =20
-> +	/* Do nothing if the current tracer is no this tracer */
-typo: no -> not
-
-> +	if (tr->current_trace !=3D &graph_trace)
-> +		return 0;
+> +# List of patterns that don't contain directory names, in glob format.
+> +include_patterns = ['**.rst']
+> +exclude_patterns = []
 > +
-This can fix the issue. But how are tr->current_trace and &graph_trace link=
-ed?
-When are they equal?
 
->  	if (set)
->  		entry =3D trace_graph_entry_args;
->  	else
-> --=20
-> 2.47.2
->=20
->=20
+Where "exclude_patterns" has been with us ever since Sphinx 1.0,
+"include_patterns" was added fairly recently in Sphinx 5.1 [1].
 
---=20
-Cheers,
-Changbin Du
+[1]: https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-include_patterns
+
+So, this breaks earlier Sphinx versions.
+
+Also, after applying all of v5 on top of docs-next, I see these new
+warnings with Sphinx 7.2.6 (of Ubuntu 24.04):
+
+/<srcdir>/Documentation/output/ca.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/cec.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/dmx.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/frontend.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/lirc.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/media.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/net.h.rst: WARNING: document isn't included in any toctree
+/<srcdir>/Documentation/output/videodev2.h.rst: WARNING: document isn't included in any toctree
+
+Sphinx 7.3.7 and later are free of them.  I have no idea which change in
+Sphinx 7.3 got rid of them.
+
+Now that the parallel build performance regression has be resolved in
+Sphinx 7.4, I don't think there is much demand for keeping Sphinx versions
+compatible.
+These build errors and extra warnings would encourage people to upgrade
+there Sphinx.  So I'm not going to nack this.
+
+Of course, getting rid of above warnings with < Sphinx 7.3 would be ideal.
+
+        Thanks, Akira
+
+> +# List of patterns that contain directory names in glob format.
+> +dyn_include_patterns = []
+> +dyn_exclude_patterns = ['output']
+> +
+[...]
