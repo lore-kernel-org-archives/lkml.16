@@ -1,127 +1,129 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145492DFF11;
-	Wed, 18 Jun 2025 09:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358472DFF3E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240794; cv=none; b=jFoK6xt9jZ2UxGGRsXq0sFMT2KopXoYPIxI3MYXUBagGApKp55hTlmg/gPaKot5HmaE2VUweJ6XFOWmpkGqqz1VHnIX3zxgRjE27APGSzJWc71Px04sgqH4TifNsM/oxnMe/I4wYdqmbZpJUkbvr7i1waVpBKH2OlLNo1h++/PY=
+	t=1750240796; cv=none; b=S2we+pgGdTQtko8eTzUf21Nlt8Fb+pz02m7SrOqCPLTJ0PWuZl4P+OarCu9M4cPRwoDIbMdL/cFpma/8a9j6H7GY+9lvqW0BPNUbCjZFTfeJudR1JmtOD/oqibiDf0Ii3h64AHShujOGY/GeF4d6gC4moxWsxRNMAslwXrzLJsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750240794; c=relaxed/simple;
-	bh=+KYT79oixLVsm/5Pjglq0/OkL1hq1IwEz8hrWKZiJOk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dPE62vVtHh42rziMcPfmw4Jj7dX+TWSg+jsfHS06oXizPCrpLw5AIGYvqIfVvemOCkRjVRnrBzLVPd4yHxmSZys5xDWclfoe3Q5Tgc9mW5iIeAUy661feyR5996Ghbd88RVN69cPQNzLGKTNO3R4oECFw5uRMMjs6kxClrlUUEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eKH6SuPA; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750240796; c=relaxed/simple;
+	bh=oj6zxN/DaiB+xfnV2bQHrSQ1cRZOpHdgAlqJjJnAEgw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=SE+Y+pXOt6G6O7avyWtYMI+xf3ys/OLl0U7a2/8NiOr1k6MiN+mxkYqu4uJ+z4HFD1Km+lexOjY+SjeeskwQ/YEMKRpj1QHI7XSUnNqLJREdTFnjQep0KvfB6Z24w5oKIANq0gep61I6y/jcgqUXk81J2Su44wTk4gFbFocKajw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=d56yAncQ; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKH6SuPA"
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so10240579a12.2;
-        Wed, 18 Jun 2025 02:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750240791; x=1750845591; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ec22XHKjG+ejR8ND9PWg/+TxLajWfEjpKEPLdRkBrqE=;
-        b=eKH6SuPAYjzqm+I0r7edotUVasH00kze5NxYzJOhXlN+kY51t5XzZUr3CtdBy1gccq
-         zEtuLpfrot470uf4GNkQELjG5IOvtf/7KnpL8HywCbFcncPcgj+3a/Yc+WnQtBxrT5Dk
-         MHVAkAKkphQ8cwdzrX+KpOh4qIRTpQwVvT3VgAZI9FimILNtRT7QR66hZC+E8w+j06bA
-         cAJ2KokgtBiyWg8CULz0zphrscA9zp19Zh5mBXfUg2bCTZRkRzEDlkPy3TWaHtpkOUaB
-         rG1DCkEUxwIE1sbQaIA/uAZvbfNu/++1FXdoXf1uYLEj/bsPYBQ9zaIbqGkKJc6NvXPv
-         zATg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750240791; x=1750845591;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ec22XHKjG+ejR8ND9PWg/+TxLajWfEjpKEPLdRkBrqE=;
-        b=eoxx5MQqKVmcq8NG0k3zq8IaSK161Bk1YnzaqdUyGoVu3OxVew71/kvTxOdyUXUh+i
-         4vdhUcsYTiVvGVLYB7A/k2QvhMS6sqr71VEZAUm8mrXAU96yc9IHvJCsvKExqoJ3jaz1
-         uHKW+vBlggoCDqFQC4NvYHEEVYBW/pmrVNk1qVXqhfOQiF4nB3fXBM0FSn/CAqM824Z3
-         qanmKZkCrPHIiay5NT5EJ/rQ1tyyMgYrSYbbm25Q+kIE/bObp8uaiamzDIh29+kSPD8m
-         5IwpJLyPYbIaFdmHdiL3IeKoq1FL8qIAd7qoZHgvBAgglqd5dQmYR9XzIYRtqt0fBOOd
-         QEfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyfm/QfLywtwwLgHV7x9lMTd9618kPtQw5/5zh882U46LC/6gavB6pGvqAN+zL8DWqxoyCJfq4p5gOThU5@vger.kernel.org, AJvYcCUypaC0BBgp8QjnS78yhutdmiY6hk8DOc/jFMDIJWpj0a8IWub5n6f5MzMbiO7PfOjvRfFkdJfq7sRt@vger.kernel.org, AJvYcCVE6K+ai7L6jy/nzigU5nW+pZH632DJUUxuBd+KqIlVG5HpR7HFlIxwBfZBaJ824Jdn7SfjY7garcG+Tg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGVOQiJZeIAVmgyBbtggpRFYEaGbaamZx4gbLkt3KW+vFIF0Uo
-	NwG95fnzWa7sMx52ixxCpUEQ5aUdRo19lt2e0TD21Sh0tqA8wy4oXbiT
-X-Gm-Gg: ASbGnctI4KUJm51gYDwpjHnGdjnvnyB3kbyxsbn3q0YJLk31ZopG1FkWWMiOF+qZwlA
-	HVqF7MQPopeKcYg4+aFWk53utH7gAUaS5QKvJZJiYOKXWcezMtjmsc23nyq0PKD/lpiW/3OvhhY
-	t4wfw1wYgD91jiF5tZxDTIKV6+FUR6wAF5WgWIbmNwOc8gpDLmp1istrWwthtIpXNulc5TYeF3/
-	63xHLZXB8+PjelxTEbIQPl3cvm4fCi0SIGj59S8jmcJjok0yTHZBWXcm/FyD5NLcuLyLA5AUpL5
-	N0YiFyw95UvEPCFOEpYfqO2Yt1GBYCkheza9/GvO09/BOGsXp84Gf9oVOScZg+nM38fAN2d05+A
-	=
-X-Google-Smtp-Source: AGHT+IEwMDBbeSHpT0wB215NsckLc9ZFcIVd0MICCrwqb68KTljLkYsjJiAX5ubzR9DASWsy55435g==
-X-Received: by 2002:a05:6402:26c5:b0:607:f513:4800 with SMTP id 4fb4d7f45d1cf-608d08b5dcfmr16192558a12.10.1750240791306;
-        Wed, 18 Jun 2025 02:59:51 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a93b03sm9384691a12.54.2025.06.18.02.59.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 02:59:50 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org (open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)),
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v4 13/19] dt-bindings: media: i2c: max96714: add support for MAX96714R
-Date: Wed, 18 Jun 2025 12:58:49 +0300
-Message-ID: <20250618095858.2145209-14-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250618095858.2145209-1-demonsingur@gmail.com>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="d56yAncQ"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 318F01FB2;
+	Wed, 18 Jun 2025 11:59:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750240772;
+	bh=oj6zxN/DaiB+xfnV2bQHrSQ1cRZOpHdgAlqJjJnAEgw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=d56yAncQg2yYWIbrypCDWSYz1kGVEEdvCLPYUCzhgFICB80ET4q5O5o5F/cLT1B2A
+	 NMyN9FOi6s8RGojFND3/sZrMwOChZ4Cs71dWA2krLet9mpHqFVTADKcGvRjMSUBjjp
+	 /7iRZ5PEUb9WS8KW95bph5bPst6JQiTTz8Z5t6Zc=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 18 Jun 2025 12:59:13 +0300
+Subject: [PATCH v4 10/17] drm/bridge: cdns-dsi: Update htotal in
+ cdns_dsi_mode2cfg()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-cdns-dsi-impro-v4-10-862c841dbe02@ideasonboard.com>
+References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+In-Reply-To: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jayesh Choudhary <j-choudhary@ti.com>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Parth Pancholi <parth.pancholi@toradex.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1954;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=oj6zxN/DaiB+xfnV2bQHrSQ1cRZOpHdgAlqJjJnAEgw=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoUo3/suGvBk17slNEtWBJ5PFTQAkWbkFlJqZtQ
+ lSMaRhcEKSJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaFKN/wAKCRD6PaqMvJYe
+ 9WoDD/wI2gJv6JHMXyz2Q6LXHWvu4iUUDU9F6tliNxCyPfiFf1iUMXVjTsdMbR3GFyuayjOlXUM
+ mnSMs2ZQww7gCj2w97NFsZ15FliiAo3ZmA4eUP3UnaE8aB9J5//vPYel1KlOEtW4oKmshZnkUX7
+ oG2SCg9JkzIrs1mSOm0f7bNp9dqIL/30KhWTIbxhr9iltjz32wOelYErASUTgTrTY0U40ZHP9EM
+ oOtnNehGXP+ssOSEBzv2uAiVFhsKPHsvlKk4NUCq3L4l5rDjzMRdw4zWgo5wUNs5XZNs4Er1+wh
+ JWfOQmnwrizO1B4OWhCcf5gmVqu7J8zb9N1w+8N42tnT3EKOYWW9ENd6mzzflbCBOIiGx5fJ1Ea
+ y/jhVywC+N2sW/nnau3i/rpx8FFKcUiP5tHF9Yy0P4vX0/xf5uSWWB2i7LfN8Q/EEciZ+N3MjjV
+ nr1itM5wWrh5nhwKJUsb8zBJC+jHs3sFxAqnjtr9dqAITN9XDQFAZ8XB8+Hl0JTJ0w12XQmwKqe
+ Gyf8pgLZANW14fODE20DBdhDdeDFBgGVpCYgo8R0kuj3vYfM8lktJSVPkl4tvngfdNfOI1fLfeQ
+ wiVGLYPlsII4MwIPK1OK9zUHHqrJwIIGKl2LnvlohX/AsPXC/3rWJZTWdNTnkNw6mEhfW9V7Gr2
+ qHi47bNK/gONoAA==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-MAX96714R is a lower capability variant of the MAX96714 which only
-supports a fixed rate of 3Gbps in the forward direction.
+cdns_dsi_mode2cfg() calculates the dsi timings, but for some reason
+doesn't set the htotal based on those timings. It is set only later, in
+cdns_dsi_adjust_phy_config().
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+As cdns_dsi_mode2cfg() is the logical place to calculate it, let's move
+it there. Especially as the following patch will remove
+cdns_dsi_adjust_phy_config().
+
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- .../devicetree/bindings/media/i2c/maxim,max96714.yaml        | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-index f53c72e5c572..1c97624833eb 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-@@ -23,7 +23,9 @@ description:
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index b2b6529b1c70..7103878df1e7 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -498,6 +498,13 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+ 	dsi_cfg->hfp = dpi_to_dsi_timing(mode->hsync_start - mode->hdisplay,
+ 					 bpp, DSI_HFP_FRAME_OVERHEAD);
  
-   The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
-   forward direction and 187.5Mbps in the reverse direction.
--  MAX96714F only supports a fixed rate of 3Gbps in the forward direction.
++	dsi_cfg->htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
++	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
++		dsi_cfg->htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
 +
-+  MAX96714F and MAX96714R only support a fixed rate of 3Gbps in the forward
-+  direction.
++	dsi_cfg->htotal += dsi_cfg->hact;
++	dsi_cfg->htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
++
+ 	return 0;
+ }
  
- properties:
-   compatible:
-@@ -32,6 +34,7 @@ properties:
-       - items:
-           - enum:
-               - maxim,max96714
-+              - maxim,max96714r
-           - const: maxim,max96714f
+@@ -514,12 +521,7 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+ 	unsigned int dsi_hfp_ext;
+ 	unsigned int lanes = output->dev->lanes;
  
-   reg:
+-	dsi_htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
+-	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+-		dsi_htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
+-
+-	dsi_htotal += dsi_cfg->hact;
+-	dsi_htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
++	dsi_htotal = dsi_cfg->htotal;
+ 
+ 	/*
+ 	 * Make sure DSI htotal is aligned on a lane boundary when calculating
+
 -- 
-2.49.0
+2.43.0
 
