@@ -1,269 +1,176 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7A219E8;
-	Wed, 18 Jun 2025 11:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5389217F34;
+	Wed, 18 Jun 2025 11:02:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750244519; cv=none; b=l5PjHaK+bzSqfMOCZtnFh5aNkCwn3nKqFA/N6NiEJKQRYqfX1ExQ1p/P/gbQsHkjNcoZcEixpD/WWsnpshoiDD0ZlHCZMnKpFsdm+OJPPEgzXqusUx7MAflBwInxkOCePxoMsKsIRD1qFDB6p5QWAE+u+rb7+1bP7ww1lWV/BSE=
+	t=1750244554; cv=none; b=ounElB3IzBCmYsfqyNRwPCZY3AO4uBqee830KmGDGFYAWk3iaVqQEu/4yiOl+C9vGR7e2Mr/LiKeNVGHn1PcJ0xg0yB6BidEryLmHn7A65HxEqzH4N1BorYfrGGupXhkVVw+/xVvIolUWJr47HLIb3KBpyPFH7HEI8eJ0sVp+ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750244519; c=relaxed/simple;
-	bh=h9/I3nrlPQariwUZfrtnu7LpZAl5DngQgOr++CUKMxU=;
+	s=arc-20240116; t=1750244554; c=relaxed/simple;
+	bh=8Mdl41yfkwjBum/UK7UDtzh/9HHF0ZU7up4KckhO50M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XJj4VLSIH8cqIp5z9XVF04pgzP5OaEDIeBjBVW1jif0dmmLK4DmVSK05he1TxZwU5mqDjLovTV0REUFCmFnvEjrjENxGAlF4/36HHfGZJ8T7iBfEKBYdQW6YY3ruyygfUj6U5M7bqeP/aY6/r7/LE7cwnInyN5wo7/p7bt4uhL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IAvdfn88; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=duiTgl4s4BJbc9BP/UT6kCyJh4WebzTEKdNqhTpCBa/J/44sVhz4QgorsAxZrBc8rCCO+PXi4VnshjL1s+/DwaQPrxij6oxDhGpMyjm0T0ghQwNjHtGX8N18UZsBKgk3Iu+2BoSR7tZrNDvL6dlWAvxtpw+5ltHNW/z3CkT9/bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAvdfn88"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade76b8356cso1357952066b.2;
-        Wed, 18 Jun 2025 04:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750244516; x=1750849316; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h9/I3nrlPQariwUZfrtnu7LpZAl5DngQgOr++CUKMxU=;
-        b=IAvdfn8881IcNH5RB2stUywhK62rh/Wj3Lo78SVCl7g1gebusNQSsDg5hSUlhth43s
-         oQadaXlpwzHEVq+6Z8ulXtEmX3zhmZyGuqzRn9wUWafWPM+fFWE4RO8ljzHxRRNZYGi3
-         K6Wn+LGOPdAyWrmvI32TGzyqL11/uP73lfQpGQA0MsqQKjw2uDlRzAmASWMtREyThHlt
-         m+yC0h960ijT9fopTgIfcK1yVxIPtpHXVOfaa3wseczNkQat5Z9TkHnMBVu+eo9soR1n
-         M1XAousAUjUucezcGZzwHjIUSdeyQ2FFzUn8DFjDwJ1QhAGsxLOpzoqtiYz6WrviVk+b
-         B0QA==
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d3e7641b76so50546585a.3;
+        Wed, 18 Jun 2025 04:02:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750244516; x=1750849316;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h9/I3nrlPQariwUZfrtnu7LpZAl5DngQgOr++CUKMxU=;
-        b=DZT5wdjCClLmYBWbkLcOjLfvNX0B21A2HwgTK6bqb3lJnDlJlZPxapLMwfOIvn74MY
-         rq4cutpofpTBx9/nArYdqjqGenBTuagpDAj0Md71HpT4+47zmz3x/d2ccznR9HPO10wM
-         7TfA0yl1QDR/1Ffz8uOuJzAIO1zplL6eYKtJcBcIwQ8Y3i6+3lHarcj1X4Ib4Jys25CI
-         m3qfGNu++6yqpg17CG66ME6KHvgprQDRn9u8Kj+fgGqVBtqyYNdayC0l1ZW/Mb+zj0NB
-         lukWP8gkY1QHoUqIw1JuVkxYKy6RM8Gqn7fPSyRCrH+kM/Iy69zmFuSMNsSAy3cUEFCd
-         LfXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVzVhPX6D8+sNA1KPdgXjZijci+9ZIVRjThovFYMN+6dHcTaqZ75Q9j6Wj1e2uqWgF94d5mdNN4aQ9s9iGZ@vger.kernel.org, AJvYcCWyqs+XkrPvvXOxeWlxRRW93S7m/NPSAb3SDRmYwK74zIyRSFLvNofTD9bJLOD7/UQyji+kwg/WSaxE/1rt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhxORcoHVp+QTQjpVHli2NjRvk3/yRB1SbX7KjFzLycLJ7iMJR
-	2E4h+0xy4B878IjM/fyycXGV1irHfho5NUDdlfqu3DFccskiBkRMMzxcu1sqZzcO4Azb34ylNNA
-	kh3TTEviJWTKXM02ogZ4l2F6PNRfWnAswZmA8DCU=
-X-Gm-Gg: ASbGncsTQbtyJluDtmtVM0KfTcOSj24Bdrtp9O6Vzwf5erIi/s9HU0i72NUpCYfC/Pq
-	6SWQ8boOmGIPYUDw0fPR6PoUA44hIc6lG67M4swPgDqQwDYPkNzecGQgNqqwYXNXGgtWpQpZ6ib
-	5mOU8C7Dlx9R/OoW5a2H8/K79spqnxTEuINEJTFAySdZY=
-X-Google-Smtp-Source: AGHT+IEKtI8PcX1D79v67vC2jjYuHIlb9UuMWX/KVtnLMUKgldVeIFpe3vkjUwHvA96wjf7M+o1/kuCtqOd5E0aJzO0=
-X-Received: by 2002:a17:907:d1b:b0:ade:17b0:9f48 with SMTP id
- a640c23a62f3a-adfad438459mr1688124366b.23.1750244515256; Wed, 18 Jun 2025
- 04:01:55 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750244551; x=1750849351;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X7K7lx2GqYzdK1GvyZH3DgcdbSQTTX8Ktyuv5Fd5USQ=;
+        b=gCOTw91ddKdpAVcQS64NucKluveUp2C8/ZALdY1RziHkcVLi30TbIcRgIqKDEtAeJA
+         Q4hn4wXAroxlrQ5LVp7rpB2H6Bi9/ZOuWCtEXET08vjnNleaMUzfx+OGQ2r6ym9qBLZ6
+         L6DBJPBcSedUSevF0Ejr6BMhTRj/3/qqXWiwXhBNRDfOgRnp++F2xwobwlVZWihgymxv
+         FsW9F/q8H8Pxxj8IQemCQPTTD5uvzb1KdqVl+d+jsygKlxmzTX1/dNVcIn7IirW6r3+G
+         V6aQCNc82OD+uDrhTa6Qf2SquTlhOGlUK5RePVcUjDCgif59m07O76Wq5dICU0/VL1OI
+         ZRIA==
+X-Forwarded-Encrypted: i=1; AJvYcCV1BnqKZZ+zLdpXrXkcJxOtEqhDpCTECb0vGN+kA2vIkhayywFC3jiYpP4Xach+mEySba+1xofDacqCK4GV@vger.kernel.org, AJvYcCXog2sUwtjTfR39cve5/js2l3QLlAta1d8F+JiwKSKhwkoaVpOMXt811Gp/PDwyfOOFR+P8X+OcOfVG@vger.kernel.org, AJvYcCXw8UIkpd192bDpk7JYADy/CxSwDhvKVYxJx1jMHGYXfUueE5B5KgLfWNPEBMFz7HEnrxWbgpQp@vger.kernel.org, AJvYcCXwrOZPt1BxoDrtApwp0bshRqnb+d3Dx8xxeyxNGfcd3sUca+QhveyEFyDajeV5t5ySWGeYR3uObpQeGNdo0MwyuMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeUndIRHms1ZJYXGNeynii6KJetL7viLGXqAbi1ZoSjDfCaUQN
+	aMTn3SImpP0PQknNBjOm4Zw2d0j1g/QWIiHQ6cCUY4oZE75Bzha1xRHKi+Slm08C
+X-Gm-Gg: ASbGncsj4E9lBzOAn8Ak4qRrzquLztVqE+owwa+QaG3VABwqFLqBB7LsH1ghp5B+C0L
+	0T4OFr+bMGvqIvLZ2jkD32tp9RpjR8vKRVmjXB0DEE5Qoln2q7kQ8uLkmpbYj/C31qMeKyYWXW7
+	RcKFhsenF8qjcMQMY382UBbz4CO549Yr23S7M9hEa4iiy6uM6VhLxOZXqgW2VhPxKVQkf2prafn
+	PvnO/H2XdIjTGW1a0z91+TzFX5mv4cz6nk1hUxtLtr9HMFbc4AAqPJP7zOq5tPj46Lew3Q1AeFN
+	nQFUYQtxdc8ODi0Ay3e7TbjzrM2I/YJNC/78lOPSwPKCV4UzCcmjAQdfGwndDFuQCNmmmuTsNQj
+	oRklim7VUNumx3pIRZvSXKUF46Cdx
+X-Google-Smtp-Source: AGHT+IGk2QTS5CdQMaCrT54yLjS7GK+WjrRV4TvLYgVzmSrxSlhdyC4K2H4/i7pdT76BYCDRBFikHQ==
+X-Received: by 2002:a05:620a:17a1:b0:7d0:a30a:5609 with SMTP id af79cd13be357-7d3c6c1ee79mr2291218885a.21.1750244548700;
+        Wed, 18 Jun 2025 04:02:28 -0700 (PDT)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com. [209.85.222.182])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3e77b827fsm79542785a.15.2025.06.18.04.02.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 04:02:27 -0700 (PDT)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7d20451c016so386594485a.1;
+        Wed, 18 Jun 2025 04:02:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUF+XcDXETGmzSsEzBdb9SaMUVudSZxUBqM0SvgjVOXxZwvolWdn8ENJAPXTaUXi8rl/qLbM6379TFrEt9PiKN/aPQ=@vger.kernel.org, AJvYcCUf0qFoqSzI8uk6aoLR41FtnHvSjWFpkSuo0BrL+1iaD2/sGq1zPcqFBNtTTjc9hqfMCJquHPL89s5s@vger.kernel.org, AJvYcCVFcy8O+1Us+pAhDvKNC59UduiJLPZ+o1lClbQC5n8+9Cci3+FTHMg4HFvKObxBnnaUROGOci0cRDovcAfa@vger.kernel.org, AJvYcCWBNjHoyUW3+6qMoyMYT26MRvH1XR6b/QsHAQVFQvDMNtAHZQpvkgLQbhTzDnFykGWDSmNTEVuH@vger.kernel.org
+X-Received: by 2002:a05:620a:278b:b0:7d3:edb1:40b6 with SMTP id
+ af79cd13be357-7d3edb143eamr109245885a.12.1750244547119; Wed, 18 Jun 2025
+ 04:02:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617221456.888231-1-paullawrence@google.com>
-In-Reply-To: <20250617221456.888231-1-paullawrence@google.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 18 Jun 2025 13:01:44 +0200
-X-Gm-Features: Ac12FXyYCn87um9zhV37U1p8liEd8GGdJB5TEHyQUKyQt08jYyzk84L90hwTdhA
-Message-ID: <CAOQ4uxgaxkJexvUFOFDEAbm+vW4A1qkmvqZJEYkZGR5Mp=gtrg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/2] RFC: Extend fuse-passthrough to directories
-To: Paul Lawrence <paullawrence@google.com>
-Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, Bernd Schubert <bernd.schubert@fastmail.fm>
+References: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com>
+ <20250611061609.15527-2-john.madieu.xa@bp.renesas.com> <CAMuHMdXE-C4FAXOfzQv8xfgFytwpqkARDORGLkosZtCsjK8nmg@mail.gmail.com>
+ <OSCPR01MB14647EFA0DA38119F00DF1D50FF72A@OSCPR01MB14647.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSCPR01MB14647EFA0DA38119F00DF1D50FF72A@OSCPR01MB14647.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 18 Jun 2025 13:02:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWnz3VUeFaJBEgLc0F_gGkdm679H4YqFFuRAEVFKZd8OA@mail.gmail.com>
+X-Gm-Features: Ac12FXwUhhR0-G19jUbGUyODnf8a2OCL8fitfccPJVj6VynoDqAvtG10jGJpeA0
+Message-ID: <CAMuHMdWnz3VUeFaJBEgLc0F_gGkdm679H4YqFFuRAEVFKZd8OA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] clk: renesas: r9a09g047: Add clock and reset
+ signals for the GBETH IPs
+To: John Madieu <john.madieu.xa@bp.renesas.com>
+Cc: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
+	"pabeni@redhat.com" <pabeni@redhat.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	"robh@kernel.org" <robh@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"john.madieu@gmail.com" <john.madieu@gmail.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"magnus.damm@gmail.com" <magnus.damm@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Paul,
+Hi John,
 
-I am very happy that you are getting back to this task
-as I find myself never getting to it.
+On Wed, 18 Jun 2025 at 12:04, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > On Wed, 11 Jun 2025 at 11:02, John Madieu <john.madieu.xa@bp.renesas.com>
+> > wrote:
+> > > Add clock and reset entries for the Gigabit Ethernet Interfaces (GBETH
+> > > 0-1) IPs found on the RZ/G3E SoC. This includes various PLLs,
+> > > dividers, and mux clocks needed by these two GBETH IPs.
+> > >
+> > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > > Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/drivers/clk/renesas/r9a09g047-cpg.c
+> > > +++ b/drivers/clk/renesas/r9a09g047-cpg.c
 
-I would like to ask you to try to build on the code that was already
-merged to the upstream kernel rather than trying to go back to
-the out of tree version concepts.
-
-I've added libfuse maintainer in CC, please remember to CC him
-in future emails about proposed FUSE UAPI changes.
-
-On Wed, Jun 18, 2025 at 12:15=E2=80=AFAM Paul Lawrence <paullawrence@google=
-.com> wrote:
+> > > @@ -214,6 +252,30 @@ static const struct rzv2h_mod_clk
+> > r9a09g047_mod_clks[] __initconst = {
+> > >                                                 BUS_MSTOP(8, BIT(4))),
+> > >         DEF_MOD("sdhi_2_aclk",                  CLK_PLLDTY_ACPU_DIV4,
+> > 10, 14, 5, 14,
+> > >                                                 BUS_MSTOP(8, BIT(4))),
+> > > +       DEF_MOD("gbeth_0_clk_tx_i",             CLK_SMUX2_GBE0_TXCLK,
+> > 11, 8, 5, 24,
+> > > +                                               BUS_MSTOP(8, BIT(5))),
+> > > +       DEF_MOD("gbeth_0_clk_rx_i",             CLK_SMUX2_GBE0_RXCLK,
+> > 11, 9, 5, 25,
+> > > +                                               BUS_MSTOP(8, BIT(5))),
+> > > +       DEF_MOD("gbeth_0_clk_tx_180_i",         CLK_SMUX2_GBE0_TXCLK,
+> > 11, 10, 5, 26,
+> > > +                                               BUS_MSTOP(8, BIT(5))),
+> > > +       DEF_MOD("gbeth_0_clk_rx_180_i",         CLK_SMUX2_GBE0_RXCLK,
+> > 11, 11, 5, 27,
+> > > +                                               BUS_MSTOP(8, BIT(5))),
+> > > +       DEF_MOD("gbeth_0_aclk_csr_i",           CLK_PLLDTY_DIV8, 11, 12,
+> > 5, 28,
+> > > +                                               BUS_MSTOP(8, BIT(5))),
+> > > +       DEF_MOD("gbeth_0_aclk_i",               CLK_PLLDTY_DIV8, 11, 13,
+> > 5, 29,
+> > > +                                               BUS_MSTOP(8, BIT(5))),
+> > > +       DEF_MOD("gbeth_1_clk_tx_i",             CLK_SMUX2_GBE1_TXCLK,
+> > 11, 14, 5, 30,
+> > > +                                               BUS_MSTOP(8, BIT(6))),
+> > > +       DEF_MOD("gbeth_1_clk_rx_i",             CLK_SMUX2_GBE1_RXCLK,
+> > 11, 15, 5, 31,
+> > > +                                               BUS_MSTOP(8, BIT(6))),
+> > > +       DEF_MOD("gbeth_1_clk_tx_180_i",         CLK_SMUX2_GBE1_TXCLK,
+> > 12, 0, 6, 0,
+> >
+> > scripts/checkpatch.pl says:
+> >
+> >     WARNING: please, no space before tabs
+> >
 >
-> This is the first part of a much larger patch set that would allow a dire=
-ctory
-> to be marked =E2=80=98passthrough=E2=80=99. At a high level, the fuse dae=
-mon can return an
-> optional extra argument to FUSE_LOOKUP that contains an fd.
-
-What's wrong with returning a backing_id?
-Why "reinvent" the pre-release wheel?
-
-> Extra fields are
-> added to the fuse_dentry, fuse_inode and fuse_file structs to have a back=
-ing
-> path, inode and file respectively. When fuse is performing an operation, =
-it will
-> check for the existence of a backing object and if it exists forward the
-> operation to the backing object.
-
-I read your patches and I have no idea why you needed to add fields to
-fuse_dentry and why you needed to duplicate the backing file fields in
-fuse_inode and fuse_file. Please explain yourself.
-
+> Noted.
 >
-> These two patches add the core infrastructure, handling of the extra argu=
-ment
-> response to lookup, and forwarding open, flush and close to the backing f=
-ile.
-> This is sufficient to validate the concept.
-
-What I am reading between the lines is that open/close are examples
-of passthrough ops that are expected to be extended to more ops later.
-Please see my WIP branch [1] for a suggestion to use an ops_mask API
-for declaring which inode operations are passthrough.
-
-[1] https://github.com/amir73il/linux/commits/fuse-backing-inode-wip/
-
+> > > +                                               BUS_MSTOP(8, BIT(6))),
+> > > +       DEF_MOD("gbeth_1_clk_rx_180_i",         CLK_SMUX2_GBE1_RXCLK,
+> > 12, 1, 6, 1,
+> > > +                                               BUS_MSTOP(8, BIT(6))),
+> > > +       DEF_MOD("gbeth_1_aclk_csr_i",           CLK_PLLDTY_DIV8, 12, 2,
+> > 6, 2,
+> > > +                                               BUS_MSTOP(8, BIT(6))),
+> > > +       DEF_MOD("gbeth_1_aclk_i",               CLK_PLLDTY_DIV8, 12, 3,
+> > 6, 3,
+> > > +                                               BUS_MSTOP(8, BIT(6))),
+> >
+> > Shouldn't all of these use DEF_MOD_MUX_EXTERNAL() instead of DEF_MOD(),
+> > like on RZ/V2H and RZ/V2N?
+> >
 >
-> The questions I have:
+> Do we really need to use DEF_MOD_MUX_EXTERNAL? Unlike for the RZ/V2H,
+> On G3E, unbind/bind works with DEF_MOD. I can however switch to
+> DEF_MOD_MUX_EXTERNAL for consistency if required.
 >
-> * Is this something that interests the fuse maintainers and community?
+> Please let me know.
 
-Definitely interested in inode ops passthrough.
-I am willing to help with review and implementation if needed.
+Does that mean the monitor bits on RZ/G3E do reflect the correct state of
+external clocks? If yes, then DEF_MOD() is fine.
 
-> * Is this approach the correct one?
+Gr{oetje,eeting}s,
 
-Which approach?
+                        Geert
 
-Miklos and I have been discussing setting up a backing file on
-FUSE_LOOKUP for a while.
-The same concept was discussed also for returning an iomap
-description on FUSE_LOOKUP request [2]
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-[2] https://lore.kernel.org/linux-fsdevel/20250529164503.GB8282@frogsfrogsf=
-rogs/
-
-So yes, the concept of setting up passthough on lookup is the correct one.
-
-One thing that you need to be aware of is that FUSE_LOOKUP is only one
-of several ways to instantiate a fuse dentry/inode.
-
-The commands FUSE_CREATE, FUSE_TMPFILE and FUSE_READDIRPLUS
-also instantiate dentries and need to be dealt with as well.
-
-Therefore, I was looking at the direction of extending struct fuse_entry_ou=
-t
-rather than adding a new argument to FUSE_LOOKUP.
-
-> * (if we agree yes to 1 & 2) Detailed analysis of the patches for errors.
->
-> A few observations:
->
-> I have matched backing objects to their fuse objects. Currently fuse pass=
-through
-> puts a backing file into the fuse inode. I=E2=80=99m not quite sure why t=
-his was done -
-> it seems to have been a very late change in the passthrough patch sets wh=
-ich
-> happened without comment.
-
-It was done to be able to have sane support for mmap passthrough among
-other things and be able to have a sane story about inode attributes.
-
-> It does not really make sense for full directory
-> passthrough since unopened inodes still need to have backing inodes.
-
-I do not understand this statement.
-Why doesn't it make sense?
-Why does it make sense to have a backing path per dentry?
-Are you expecting to map different hardlink aliases to different backing in=
-odes?
-It might have helped if you had a design document explaining the reasoning
-behind the implementation choices.
-
-> The one
-> advantage I can see is that it reduces the number of opens/closes of the =
-backing
-> file. However, this may also be a disadvantage - it moves closes, in part=
-icular,
-> to an arbitrary point when the inode is flushed from cache.
->
-
-Rather than when? when dentry is flushed from cache?
-I do not follow.
-
-> Backing operations need to happen in the context of the daemon, not the c=
-aller.
-
-Correct.
-
-> (I am a firm believer of this principle.) This is not yet implemented, an=
-d is
-> not (currently, and unfortunately) the way Android uses passthough. It is=
- not
-> hard to do, and if these patches are otherwise acceptable, will be added.
->
-
-Note that many of the passthrough method implementations were moved
-to common "library" code for handling backing_file, which may or may not
-be sharable with overlayfs.
-
-I don't think that we need to have all passthough methods implemented in th=
-e
-generic backing_file "library" and share code with overlayfs, but we
-should consider
-it for new methods to see if it makes sense.
-
-> There was a long discussion about the security issues of using an fd retu=
-rned
-> from the fuse daemon in the context of fuse passthrough, and the end solu=
-tion
-> was to use an ioctl to set the backing file. I have used the previously-r=
-ejected
-> approach of passing the fd in a struct in the fuse_daemon response. My de=
-fense
-> of this approach is
->
-> * The fd is simply used to pull out the path and inode
-> * All operations are revalidated
-> * Thus there is no risk even if a privileged process with a protected fd =
-is
-> tricked into passing that fd back in this structure.
-
-Not convinced.
-Are you saying that passing an O_PATH fd of /etc/passwd is ok?
-when that O_PATH is used to do passthrough open?
-I do not follow and I also do not see the problem with sticking with
-the already established backing_id and ioctl solution.
-
-I would add that if you make your solution dependent on io_uring
-then the security concern goes away, but you did not give a strong
-enough reason to have this limitation IMO.
-
->
-> I=E2=80=99m sure we will discuss this at length if this patch set is othe=
-rwise deemed
-> valuable, and I am certainly not wedded to this approach.
->
-> I have written tests to validate this approach using tools/testing/selfte=
-sts. I
-> don=E2=80=99t want this patch set to get derailed by a discussion of the =
-way I wrote the
-> tests, so I have not included them. I am very open to any and every sugge=
-stion
-> as to how (and where) tests should be written for these patches.
->
-
-Apart from specific function tests for passthrough, FUSE_PASSTHROUGH
-was tested with fstests, using the scripts included in libfuse to run the
-passthrough_hp examples in fstests.
-
-So a basic sanity test for your code is that it does not regress fstests th=
-at
-are currently passing with passthrough_hp.
-
-Please let me know if anything I wrote is not clear and if there is anythin=
-g
-else that I can help with.
-
-Thanks,
-Amir.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
