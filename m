@@ -1,36 +1,36 @@
 Received: from mxout2.routing.net (mxout2.routing.net [134.0.28.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C58F2E92BA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5112E7165;
 	Wed, 18 Jun 2025 13:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252060; cv=none; b=lJOGNfqva8VUaH+FFSr6b+NI+c2Z+FT6a1v/wI+O3kFsB+JhAA+kTaleFW9oxR2gpwI+feqmlOpwMO9G5UKKwoBXWV1+6Ka3lkpwkwWrjS8uiPUbo4jLyKrJatwhLpDKgV2zDtZ2U6Ttj9DJrp4So7+nQ40yte38oB75YYyP0S8=
+	t=1750252061; cv=none; b=CD8ciQZB/6FUC9M3n9lxAXTCK4+8u8WPoRT9YpyaloFWf0Xb/tj7wRippb+369xdHDWtRvyBt5SxCm2MQiBzWhdnJ8xqoBQPZFQXrc8WOCSGYSjIkCcuMLBg8/9/JTT7w0+rgReRc3ee7Toc+uuhQYiwkOibhQsQ4elCmJ8o5tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252060; c=relaxed/simple;
-	bh=vGeFMyzIi001gJsnguBDLUpw3q/uIzD9z7wvN68t+wk=;
+	s=arc-20240116; t=1750252061; c=relaxed/simple;
+	bh=t6vAFDzDrK8ZzVOZlXu8C77KiX06i6EU6js6nROcR/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jdDukN9qoi8qC3DM0df5QAtuNaStuvT1eS3PXBblPOYYs00h3YNR+I8nS7EHt8+zo2SzoCtQm8JPpTPnWRZmcLwo/rk1ajD02LmyiB29e4dowCP98adSIhDZC9VZ22FgCFaugcJfV8yxCni+kMoWNmQCN6AIT4yfyyGFCtAiFGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=Y+zLjhmV; arc=none smtp.client-ip=134.0.28.12
+	 MIME-Version; b=o9wDj8cjF8N6WwX5FPYfajeXFUquiy07gAiY6gBu40qZ6/oJlxDrdwUHicxMay5ly3Jn0QUTKxt73gV6mA9D9rgFeO7n73GVwFY4pM3aX35tvyyD6QzrHkQ5Ick2nAb1G0X9QhyWUjFA/s+Nb/6VQT9EPbRrVSplz81CdzVnjOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=GRVyP+7X; arc=none smtp.client-ip=134.0.28.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Y+zLjhmV"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="GRVyP+7X"
 Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
-	by mxout2.routing.net (Postfix) with ESMTP id 8FE9C60254;
-	Wed, 18 Jun 2025 13:07:30 +0000 (UTC)
+	by mxout2.routing.net (Postfix) with ESMTP id 185E260300;
+	Wed, 18 Jun 2025 13:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1750252050;
+	s=20200217; t=1750252051;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=trroXU93EYK0HpRYK6NyRWOhBYcZDpDonMFpc3M9xZg=;
-	b=Y+zLjhmVUMhcz8Tz01Lw9TxB7+n2a23EDXs3CCikCe/CiRy9FHCs8otDeu1qNJX3QN53/z
-	hs2uFTs4Tr2C/nWP7VT/Lw1askSqXJYycdqzFdAgxhs5ObEAcyWIpwSEcCjxV8kkkeqTQn
-	lNHf5Ko61dZfd2YiJRrgZkMJzbtt2AM=
+	bh=R8TYFDiksgklK5x53zlk7GXLxBUpXGWS8/QWLup/HFY=;
+	b=GRVyP+7XYwHbXbkkIjsdwALJCy1LgQQ4gMFDDlrU8flaPcT0imKCGtA714W+91mShFL2xh
+	+M7y+joguRtaK1mrIkaqVgxwRzG7/VHtrgYLkUnrBCFgARcWU8HrLWFQdLYBsr1pvp31qZ
+	EraoDOvtRLRFGuY7igtcnnwxmgz81m4=
 Received: from frank-u24.. (fttx-pool-80.245.76.73.bambit.de [80.245.76.73])
-	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 54D7B122703;
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id D31F2122703;
 	Wed, 18 Jun 2025 13:07:30 +0000 (UTC)
 From: Frank Wunderlich <linux@fw-web.de>
 To: Felix Fietkau <nbd@nbd.name>,
@@ -51,9 +51,9 @@ Cc: Frank Wunderlich <frank-w@public-files.de>,
 	Simon Horman <horms@kernel.org>,
 	Daniel Golle <daniel@makrotopia.org>,
 	arinc.unal@arinc9.com
-Subject: [net-next v5 1/3] net: ethernet: mtk_eth_soc: support named IRQs
-Date: Wed, 18 Jun 2025 15:07:12 +0200
-Message-ID: <20250618130717.75839-2-linux@fw-web.de>
+Subject: [net-next v5 3/3] net: ethernet: mtk_eth_soc: skip first IRQ if not used
+Date: Wed, 18 Jun 2025 15:07:14 +0200
+Message-ID: <20250618130717.75839-4-linux@fw-web.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250618130717.75839-1-linux@fw-web.de>
 References: <20250618130717.75839-1-linux@fw-web.de>
@@ -67,91 +67,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add named interrupts and keep index based fallback for existing
-devicetrees.
-
-Currently only rx and tx IRQs are defined to be used with mt7988, but
-later extended with RSS/LRO support.
+On SoCs without MTK_SHARED_INT capability (all except mt7621 and
+mt7628) platform_get_irq() is called for the first IRQ (eth->irq[0])
+but it is never used.
+Skip the first IRQ and reduce the IRQ-count to 2.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Simon Horman <horms@kernel.org>
 ---
 v5:
-- fix typo in description
-- add comments from previous patch #3 with changes suggested by simon
-
-v2:
-- move irqs loading part into own helper function
-- reduce indentation
-- place mtk_get_irqs helper before the irq_handler (note for simon)
+- change commit title and description
+v4:
+- drop >2 condition as max is already 2 and drop the else continue
+- update comment to explain which IRQs are taken in legacy way
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 46 ++++++++++++++++-----
- 1 file changed, 35 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 12 ++++++++----
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |  4 ++--
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index b76d35069887..39b673ed7495 100644
+index 875e477a987b..7990c84b2b56 100644
 --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -3337,6 +3337,37 @@ static void mtk_tx_timeout(struct net_device *dev, unsigned int txqueue)
- 	schedule_work(&eth->pending_work);
- }
- 
-+static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
-+{
-+	int i;
-+
-+	/* future SoCs beginning with MT7988 should use named IRQs in dts */
-+	eth->irq[1] = platform_get_irq_byname(pdev, "tx");
-+	eth->irq[2] = platform_get_irq_byname(pdev, "rx");
-+	if (eth->irq[1] >= 0 && eth->irq[2] >= 0)
-+		return 0;
-+
-+	/* legacy way:
-+	 * On MTK_SHARED_INT SoCs (MT7621 + MT7628) the first IRQ is taken
-+	 * from devicetree and used for both RX and TX - it is shared.
-+	 * On SoCs with non-shared IRQs the first entry is not used,
-+	 * the second is for TX, and the third is for RX.
-+	 */
-+	for (i = 0; i < 3; i++) {
-+		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
-+			eth->irq[i] = eth->irq[0];
-+		else
-+			eth->irq[i] = platform_get_irq(pdev, i);
-+
-+		if (eth->irq[i] < 0) {
-+			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
-+			return -ENXIO;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static irqreturn_t mtk_handle_irq_rx(int irq, void *_eth)
- {
- 	struct mtk_eth *eth = _eth;
-@@ -5106,17 +5137,10 @@ static int mtk_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	for (i = 0; i < 3; i++) {
+@@ -3354,10 +3354,14 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
+ 	 * the second is for TX, and the third is for RX.
+ 	 */
+ 	for (i = 0; i < MTK_FE_IRQ_NUM; i++) {
 -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
--			eth->irq[i] = eth->irq[0];
+-			eth->irq[i] = eth->irq[MTK_FE_IRQ_SHARED];
 -		else
 -			eth->irq[i] = platform_get_irq(pdev, i);
--		if (eth->irq[i] < 0) {
--			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
--			err = -ENXIO;
--			goto err_wed_exit;
--		}
--	}
-+	err = mtk_get_irqs(pdev, eth);
-+	if (err)
-+		goto err_wed_exit;
-+
- 	for (i = 0; i < ARRAY_SIZE(eth->clks); i++) {
- 		eth->clks[i] = devm_clk_get(eth->dev,
- 					    mtk_clks_source_name[i]);
++		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
++			if (i == 0)
++				eth->irq[MTK_FE_IRQ_SHARED] = platform_get_irq(pdev, i);
++			else
++				eth->irq[i] = eth->irq[MTK_FE_IRQ_SHARED];
++		} else {
++			eth->irq[i] = platform_get_irq(pdev, i + 1);
++		}
+ 
+ 		if (eth->irq[i] < 0) {
+ 			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 8cdf1317dff5..9261c0e13b59 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -643,8 +643,8 @@
+ #define MTK_MAC_FSM(x)		(0x1010C + ((x) * 0x100))
+ 
+ #define MTK_FE_IRQ_SHARED	0
+-#define MTK_FE_IRQ_TX		1
+-#define MTK_FE_IRQ_RX		2
++#define MTK_FE_IRQ_TX		0
++#define MTK_FE_IRQ_RX		1
+ #define MTK_FE_IRQ_NUM		(MTK_FE_IRQ_RX + 1)
+ 
+ struct mtk_rx_dma {
 -- 
 2.43.0
 
