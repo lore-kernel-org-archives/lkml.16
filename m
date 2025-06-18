@@ -1,98 +1,83 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9F6249E5
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC1327E1C3
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253289; cv=none; b=U7nRk1wHQ8uHn8ObV9E4ZjigxJcENC3up2oaMcoBnV5iOZSuGJFx7EcBVhlAEuFFnl8T777qDoFjTuo0XWi7kNBOjX9ST36tgyc1M/mBoeKysWKDhDyKIb3U275jRaHoNcnxj/vqoc78z3aThIrEM+OedPNJCUjxXE1+UpkIR3M=
+	t=1750253413; cv=none; b=Qf23gY/xm4gvhlDxFuSrIb/kyocJGVU51QvSTI5w9IVW+ARVJtAhKSb+UYeDcR3SSn44IwCVlRryUgTls6pD4yJmlImWqYUd/6wtU5uscN6zZ96NUgMK9UGc3yxuP2vwGEz20BtKEN0ZoJkjiFMB7KLFafqY+ARJlFJWo72hHhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253289; c=relaxed/simple;
-	bh=CQWYf5240z2KPgUiqlRF9wP/4RTd2ZVb2iMhFh38Ahk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GjIqBGZoWhs3ilS58mYec83h3ytj053hUR/usHqOo65lg2dAMXtgcrUjQPrrH9Eki/pW5Wc+sJXsk2OA+ME4+mEFKpDeAWNBlEnfQfqUYdjRL7H/93DSCAzzVntaTpPZNFYA9mgeeurZtWfAulR8/rEsj9NzFD7gXDwU4BqHTGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K3Rd4B5a; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750253413; c=relaxed/simple;
+	bh=CUdYwHjpfN9yqk7ew7xfu2PvyAnQygAStPl6RmQaPHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CtgJ5ae/4Dt1mFmtg8AKChIePUHpbX3YFhETlOW09G70ewOaLqetozJZuKNeyyZnoEjkY033RrOH3Taxu27Ne+bfSyJM5LO6vjvNXCoEtPWdCyDsKZ8O0SWHeu7/V5v4XRqtz+PSe1Ovz1c0Yk3sV0zljnd8ZpezeDFESTwVmI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CpOZJr9m; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K3Rd4B5a"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so52175475e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750253285; x=1750858085; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CQWYf5240z2KPgUiqlRF9wP/4RTd2ZVb2iMhFh38Ahk=;
-        b=K3Rd4B5a0O/vYISxLM3S9R0Lns2i/o83cAKPOZuPiBUQ2y8rBvSPlBN+7nPsjrSxlF
-         dUAh7PZVyztBqzet+0LqZR/dXIv6KeNd6P5WpHZ2Dz0vrHBd3ydL2B0dESJrpmeyzxJY
-         FbRMWjwzkrHyA/N0nZ4PTppUq+Jd+GyS+gicWIr6rziApzgq4sHZbCZKvhbRWfddbYzO
-         IhuF5XeT2MWJMpyhts4KLO0QdzmMl7MSWPwM1qmMiXKowD0TItqiQfCSW2mlnKTlBqNR
-         TavoQF2ArdABrMzWumXNu9up5Za3M6MRPeoQQ43rWX40hkIGzkicO8F42oT6HKZQUTrn
-         NU+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750253285; x=1750858085;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CQWYf5240z2KPgUiqlRF9wP/4RTd2ZVb2iMhFh38Ahk=;
-        b=ESfQq+1/WFfUCD17YPTN8NHoA4hAMncvZXmFkzChIxVkXXuoEwe3fvE9F8ye/WYYXc
-         fciaTMFrv3ffomQDiEwhKpHo4h/oSGYA/RE5HUg/HDfNH3AJtAIA8AgPjD4BglSMSKFs
-         JF1RdlLWfXJg15JWBo4JX1XU+ltPCYNKgFLtryRuwSsht8zTepnQ67RNKL4SL3RF0SGq
-         eRpIWfV/rVUFNYRsnRMyJnsAwZPQsTh4JpBpU5gsAuVdNwbx4uq3SDDcKg8LXfBOaTbj
-         j5OrhZClc13euTFWDQY4ZbBEZ/xBHCYlkU/YXs4QLEDAUYNl1PQpKVscknKrusKXTG/f
-         XQEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUVY0MPZYbKI3zl81FdQ2y6GaW7SErhwVQ8gjJPe7JP4Vjc6Qiz0Al3P09A0k2JX1TGhwcOu0w4B64280Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzffEtSBo2M+fdba5u3wl8R4m9dmS8x1j4TnBYYexbd6WPNXCe4
-	RmiVtsJAOyqeeOmc21+Oj9Deroce9UpRVdEbqaWPCjm4kBeSZs3VhqpeAWxg/wl/Z9A=
-X-Gm-Gg: ASbGncv7GE2l3cn0nDnVXHNXXFqRVmqOUmxxmK5YmHNAbc9DqW+cdI5SWFvXsj3i+7D
-	VivZzcnfpenTRKhCj8BTsuDn1ulEC3rIhxlQMnn4nsTBIByQPliRFUNnyq2y9xINZUGe60EV5ZC
-	xZpkLOTlxKJi6Zm3Kl+pG2YWKRD9NTuf2AiDPazher8QSgRxlgTYjorSslsk1pSoS2tp+k7Se5l
-	2u/bOj+msl92bJ77ucfy0NC/eFl5ADSS+2xKw9kRcw/HFLar6UkjL8dMhNvLXyBICo5ScwFh+T8
-	oBZiuhW3Xo1qFCicmuA6+8/FY+QjuX55n7mmupaMh7xiRZHZWDe/XTv8WFcSc1IADn4BBewNZ7B
-	/OALAC9PJi2Y5gataISEQpopDIGL1HHcrVoChbA==
-X-Google-Smtp-Source: AGHT+IHsYnHdB0JOFwGUBbfz/Nz+oX7/Nt70Eian/OZWF7OabodaY5ap19RQq+MRP53eF3NO5RcWyg==
-X-Received: by 2002:a05:600c:1c28:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-4533cb4bc8fmr134287185e9.22.1750253285546;
-        Wed, 18 Jun 2025 06:28:05 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm16799417f8f.26.2025.06.18.06.28.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 06:28:05 -0700 (PDT)
-Message-ID: <ca3c6d72-2fc0-4e04-ac61-486ad75257b8@linaro.org>
-Date: Wed, 18 Jun 2025 14:28:03 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpOZJr9m"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LnEHQ0EYQw6B1hzi83rKPaI4LXCQaqQAumElzeZ06OY=; b=CpOZJr9mLxavdXNrRcOwjSM4Y6
+	h7bIKxZOEkdEqzrCC+zZSB502jy7HFBtBMUguZMaq8jKvuqEdcZTw7UcJa6qN5cxSPP2wnwgJfEg6
+	rvtHolg2hcveYeuBig8S9gfqGFjShM8zD9G2Ye03VVbcJlfYMApIpoYSGZbY4FFxs4g17Wdnk0xdB
+	QQYVstYKivogPRG9OLS2Z7V7Su5UgmLb1h9Q5AJaBpK6y/tosQ6pw74nCyZDbPmX7Lc1Cw9VKYBCg
+	+0CHUiVCGwP3onVjZP70KanN0G3aduT1z7x1PNckwqLSsCYCD5lM/yLxdSy2Jn7VUE0DBZNoI0MNM
+	ohVFWHqw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRsrd-00000003ZxJ-0WW5;
+	Wed, 18 Jun 2025 13:30:05 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E58DC307FB7; Wed, 18 Jun 2025 15:30:03 +0200 (CEST)
+Date: Wed, 18 Jun 2025 15:30:03 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, zide.chen@intel.com, broonie@kernel.org
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+Message-ID: <20250618133003.GC1613200@noisy.programming.kicks-ass.net>
+References: <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
+ <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+ <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
+ <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+ <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
+ <20250618093500.GH1613376@noisy.programming.kicks-ass.net>
+ <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock'
- is held
-To: Johan Hovold <johan@kernel.org>, Bryan O'Donoghue <bod.linux@nxsw.ie>,
- Rob Clark <rob.clark@oss.qualcomm.com>
-Cc: Gabor Juhos <j4g8y7@gmail.com>, Georgi Djakov <djakov@kernel.org>,
- Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>, linux-pm@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <TIkPOGVjPeCjPzjVtlSb6V5CIcpaXf2-6WG6HjAyaOW59Hj01-9VK7Z8DKadakOKr6fJeQICi6h0Z8mft9DQyg==@protonmail.internalid>
- <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
- <ca9f7308-4b92-4d23-bfe7-f8d18d20de10@linaro.org>
- <75a46897-040f-4608-88f5-22c99c8bed97@gmail.com>
- <04ab699e-b344-4ba1-9ca1-04b6e50beefe@nxsw.ie>
- <aFK2Kl2I46dTYBI1@hovoldconsulting.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <aFK2Kl2I46dTYBI1@hovoldconsulting.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
 
-On 18/06/2025 13:50, Johan Hovold wrote:
->> I think we should sort that out, either by removing one of the locks or
->> by at the very least documenting beside the mutex declarations which
->> locks protect what.
-> Feel free to discuss that with Rob who added the icc_lock_bw, but it's
-> unrelated to the regression at hand (and should not block fixing it).
+On Wed, Jun 18, 2025 at 06:10:20AM -0400, Liang, Kan wrote:
 
-True.
+> Maybe we should use a mask to replace the nr_vectors.
+> Because Dave mentioned that the XSAVES may fail.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+XSAVE is a pain in the arse :/
+
+> PERF_SAMPLE_SIMD_REGS := {
+> 	u64 vectors_mask;
+> 	u16 vector_length;
+> 	u64 pred_mask;
+> 	u16 pred_length;
+
+That is not u64 aligned...
+
+> 	u64 data[];
+> }
