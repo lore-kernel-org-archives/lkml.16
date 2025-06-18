@@ -1,155 +1,196 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF41F9CB;
-	Wed, 18 Jun 2025 12:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53E82E8E15
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:15:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248942; cv=none; b=G2HZFuRMhSRH9JxpDt368WFpHKijVh7tIJMek0lBQKuAxLljxMkNu/1EkLtcafejjSxQaPqL6aJwjJZabOJF2B3uElbT4eRz7hT4dGZ+0sa3g/TxdcOFgbOdOVz+Qe9YqbMAivFzHFOZxSuhJevdDYwF/lqvFO5w2jVabm2/0fM=
+	t=1750248942; cv=none; b=bTKkOvo6MN8yxFHu+HSGdGfo2UHG5CqsTWgTJnnAbIHfMgp81Z5p97bhI7uo7TWBuR24wWvT+VVXOKeZUXKTUSibXrfrjqzthOizatEfZlnj0xUMCO5nM/+xaj4MRdv/LqgttgKyzP40sH25RWQBgXNTW0WYehjVMCRb07AekDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750248942; c=relaxed/simple;
-	bh=af7Z/duDzqnUeURCtyDG7bN9lfh0Hcfu3PPcPijVCIk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j9RUPuUFGiCx1Z8pN7mSHnFyroNr9rmbosfi7fN4bLu/QyUP5e5biOwfnHh4zjLmHn9xan2Ll2IoOopyVBnQpD1RyLTl8QXAWh0z3IdjW+O7n4wAUJYBkLDSix1pRL4BjdudSifx9m7oJL1sHlKz0dKPD4tmJwgpS74TTfTOIZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Qxu7bz+v; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	bh=sbelvMc++opfxCsxTvRuuhoDW5jErxOHLIiEYhi1zkg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CySwKASJpgMUSHfggk9FhzTkZaKH7l2N3bWRD2V2TUtPeoCiwcHoZYOTcQarmOzDF4UJHoj5WgIc0tuWv9j+jO7DDcXvAxAtNC4XvN7CucmuKgV9jma3cKLEWQMwv3+PO/ywvWxDb3ATTGJkTWtM1Dox5tOCuKTjyfDPRJF3LVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Q6T1e+vE; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Qxu7bz+v"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0551A4385B;
-	Wed, 18 Jun 2025 12:15:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750248938;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IhGRtRrllEn9wwjuD72VvaIn4CmLcG96rNB7IF0e98w=;
-	b=Qxu7bz+vAQMMU0BHXeDOS9WMVpT9vLHhozBMXRjPrPNpISFPFV4JCda+4Dl0cGxmz0GWLO
-	YDtZMExLiK1dTCVNW3isAni6OzVDZVFqalOIwj+3I231RS/5EJnVXipTP6X0Ovyjmo8pqh
-	VcwhdibXAsFLo1sCWDRuvZIVYmMPKuqsCE06DceF2ET/pkbuLMZfOq1PaXMYJ5BqbZmL8w
-	oqgm8pJjZU40W0Rq24scmVcZLztV9JWW5OXwqYAtjXvsQ/sYtJKaCgNOd5htnWc3s8utcf
-	1NAuZSMeyKsnltqUfNahoAYDt7t7aud7gAHxOu8rAhO1y75Y5glR0LmNy/Zz3g==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Wed, 18 Jun 2025 14:14:22 +0200
-Subject: [PATCH 5/8] mtd: spinand: Add a ->configure_chip() hook
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Q6T1e+vE"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b31c84b8052so911235a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1750248940; x=1750853740; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a9cEkN+1nA6DRTpT1SF2rNqhyyXGV6gcs+oqiG40Gi8=;
+        b=Q6T1e+vERjFeXGD5t2Orf+F65gMPI/NAC2xN228ygIxHrGKchSHtkg+ng96LCbPO42
+         YLbhccvtIpFsnF1o+Az0BPWR+RIzueuw26mo9+CNiLnOjyK8IM1Aus+r6kfBBHrEoktp
+         2NQefy47hwEP6XffqhK5/ql/rA2ejMuOlfuDcXy+fRx+CXtZB6YJImBgTXu+CLVRk16r
+         ejYJfP0eumPBxS7Ih/vd85PAVwVeRPbnOyV7+hogZVaAJ4/ayaPmIx38IfYKHrytgPP/
+         DK1h6Q4I/Tt2QH3NsM0dgCz39MQgfNG4lmjWHTrk2LaBj825PBgaWNZjlBEDEWj2Oq1j
+         Ojjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750248940; x=1750853740;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a9cEkN+1nA6DRTpT1SF2rNqhyyXGV6gcs+oqiG40Gi8=;
+        b=NQjUDGGcGS5qDmwWIaiERvuunit01aAi0ON2uwoqS3ZnS7mJBoFuV2xgtzDdJUKlpl
+         PaKoktH9Sp+z0Yl6xO9Uy/wqY2jmkZKv2MEmU1tviMcX1wipnKu4On7ov61IvkL2FoeX
+         JTyBxAfKiZxqtzYGmNPkHgDwXkn5cUFqPOa5QuwwktPGGVBylJi+m8FRKByMNWhVuswo
+         KjiDSh9kGmTKGa+lWNhctxDcU73neQ2tNygiCtNLiTTlFdRtO4GbfvkIz7mGnfmip4kP
+         p6/8qkFKmyPES0IvWHPN0Wf7Tm21G31cYKuc6wY1JKpHfwHbF0hkr9oIUo6PnBZtV8t5
+         Tiww==
+X-Forwarded-Encrypted: i=1; AJvYcCVTLKgfLhd0pT5oAdWiLWMIcS671Ygq/aUQWgCG8TwLsjJxpV6rFLmLu48FLz96SQF9E6SP4bEp/CdT6t0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1bgTzp3mIzS/wB0VjP+QhKb7dSsdYf+kb9zGhTTXfGRwIDWSj
+	GV7a9nSghAvEyEF3hg5Zsq8dL3cvR1reD3+7Awy7D7p8ExHswNXofeFiWBIBU5GLI74=
+X-Gm-Gg: ASbGncvBeaDbSJiwsjWDyNAUDkCoO1T3JHtNb3Fm+AONWJUAZP/7p5yuWhoUESAjSuZ
+	v+alaNvl3G1ftSfTDws8ajNJFrhAdHb+C28G/50XWr7rTbULKXWda2atzaPE8p9OLP313WUsTCy
+	x/5JFENdgLz8bR42p8LrpcFnuy61rpW7jmcqUB8M+sgKd1WJdfUy1Rh9JXosCasJdRtBFZ47VXR
+	XqPL6yHIUdqm8BBIG5xxrf1X/g+E1WJPFKuKkO4dc392D9+FtK3VanBqPGL/IGcUvpQ0VWCms+v
+	dl41t3y9JPqBwj91piWb7uGrwoRaCC8qIAzUVT8dbFkxlD/QLd+NfTJcrThvD2Clgo619FQbemL
+	IiqSRJee9sn4vvxydzA==
+X-Google-Smtp-Source: AGHT+IEK8qZ+gXPmLTnhrSUH6t88V4GWdt5zL017JHCoKp0U8HqJO2SVy0J385g1j8q2Yo2wHBbtdQ==
+X-Received: by 2002:a05:6a21:9ccb:b0:215:eafc:abda with SMTP id adf61e73a8af0-21fbd4d48f6mr24066795637.18.1750248939720;
+        Wed, 18 Jun 2025 05:15:39 -0700 (PDT)
+Received: from localhost.localdomain ([122.171.23.44])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d7e0asm11201177b3a.174.2025.06.18.05.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 05:15:39 -0700 (PDT)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>,
+	Atish Patra <atishp@rivosinc.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v6 10/23] dt-bindings: Add RPMI system MSI message proxy bindings
+Date: Wed, 18 Jun 2025 17:43:45 +0530
+Message-ID: <20250618121358.503781-11-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618121358.503781-1-apatel@ventanamicro.com>
+References: <20250618121358.503781-1-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-5-513202126013@bootlin.com>
-References: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
-In-Reply-To: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
-To: Mark Brown <broonie@kernel.org>, Richard Weinberger <richard@nod.at>, 
- Vignesh Raghavendra <vigneshr@ti.com>
-Cc: Yogesh S <yogeshs@ti.com>, Santhosh Kumar K <s-k6@ti.com>, 
- Steam Lin <STLin2@winbond.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-spi@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
- Miquel Raynal <miquel.raynal@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvieduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgfehvdduieefieeikeffgffggfdttdeugeffieetheeuleelfeehffdtffetveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopeihohhgvghshhhssehtihdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtp
- hhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuffvnfhinhdvseifihhnsghonhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-There is already a manufacturer hook, which is manufacturer specific but
-not chip specific. We no longer have access to the actual NAND identity
-at this stage so let's add a per-chip configuration hook to align the
-chip configuration (if any) with the core's setting.
+Add device tree bindings for the RPMI system MSI service group
+based message proxy implemented by the SBI implementation (machine
+mode firmware or hypervisor).
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+The RPMI system MSI service group is defined by the RISC-V
+platform management interface (RPMI) specification.
+
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- drivers/mtd/nand/spi/core.c | 16 ++++++++++++++--
- include/linux/mtd/spinand.h |  7 +++++++
- 2 files changed, 21 insertions(+), 2 deletions(-)
+ .../riscv,rpmi-mpxy-system-msi.yaml           | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 03b4b0cda815a2ecc456ea25e802c60e32ee2bae..d3c7f7fdfd40469f9d4c16da6215775a8e06fe98 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -1250,8 +1250,19 @@ static int spinand_id_detect(struct spinand_device *spinand)
- 
- static int spinand_manufacturer_init(struct spinand_device *spinand)
- {
--	if (spinand->manufacturer->ops->init)
--		return spinand->manufacturer->ops->init(spinand);
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
+new file mode 100644
+index 000000000000..1991f5c7446a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (spinand->manufacturer->ops->init) {
-+		ret = spinand->manufacturer->ops->init(spinand);
-+		if (ret)
-+			return ret;
-+	}
++title: RISC-V RPMI system MSI service group based message proxy
 +
-+	if (spinand->configure_chip) {
-+		ret = spinand->configure_chip(spinand);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	return 0;
- }
-@@ -1353,6 +1364,7 @@ int spinand_match_and_init(struct spinand_device *spinand,
- 		spinand->flags = table[i].flags;
- 		spinand->id.len = 1 + table[i].devid.len;
- 		spinand->select_target = table[i].select_target;
-+		spinand->configure_chip = table[i].configure_chip;
- 		spinand->set_cont_read = table[i].set_cont_read;
- 		spinand->fact_otp = &table[i].fact_otp;
- 		spinand->user_otp = &table[i].user_otp;
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index 61a4571cec7ea86bcc5cb439b76964ba778c0f89..69674fd191d9d0753a867334dae2012d8260a02c 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -493,6 +493,7 @@ struct spinand_user_otp {
-  * @op_variants.update_cache: variants of the update-cache operation
-  * @select_target: function used to select a target/die. Required only for
-  *		   multi-die chips
-+ * @configure_chip: Align the chip configuration with the core settings
-  * @set_cont_read: enable/disable continuous cached reads
-  * @fact_otp: SPI NAND factory OTP info.
-  * @user_otp: SPI NAND user OTP info.
-@@ -516,6 +517,7 @@ struct spinand_info {
- 	} op_variants;
- 	int (*select_target)(struct spinand_device *spinand,
- 			     unsigned int target);
-+	int (*configure_chip)(struct spinand_device *spinand);
- 	int (*set_cont_read)(struct spinand_device *spinand,
- 			     bool enable);
- 	struct spinand_fact_otp fact_otp;
-@@ -548,6 +550,9 @@ struct spinand_info {
- #define SPINAND_SELECT_TARGET(__func)					\
- 	.select_target = __func
- 
-+#define SPINAND_CONFIGURE_CHIP(__configure_chip)			\
-+	.configure_chip = __configure_chip
++maintainers:
++  - Anup Patel <anup@brainfault.org>
 +
- #define SPINAND_CONT_READ(__set_cont_read)				\
- 	.set_cont_read = __set_cont_read
- 
-@@ -616,6 +621,7 @@ struct spinand_dirmap {
-  *		passed in spi_mem_op be DMA-able, so we can't based the bufs on
-  *		the stack
-  * @manufacturer: SPI NAND manufacturer information
-+ * @configure_chip: Align the chip configuration with the core settings
-  * @cont_read_possible: Field filled by the core once the whole system
-  *		configuration is known to tell whether continuous reads are
-  *		suitable to use or not in general with this chip/configuration.
-@@ -656,6 +662,7 @@ struct spinand_device {
- 	const struct spinand_manufacturer *manufacturer;
- 	void *priv;
- 
-+	int (*configure_chip)(struct spinand_device *spinand);
- 	bool cont_read_possible;
- 	int (*set_cont_read)(struct spinand_device *spinand,
- 			     bool enable);
-
++description: |
++  The RISC-V Platform Management Interface (RPMI) [1] defines a
++  messaging protocol which is modular and extensible. The supervisor
++  software can send/receive RPMI messages via SBI MPXY extension [2]
++  or some dedicated supervisor-mode RPMI transport.
++
++  The RPMI specification [1] defines system MSI service group which
++  allow application processors to receive MSIs upon system events
++  such as P2A doorbell, graceful shutdown/reboot request, CPU hotplug
++  event, memory hotplug event, etc from the platform microcontroller.
++  The SBI implementation (machine mode firmware or hypervisor) can
++  implement an SBI MPXY channel to allow RPMI system MSI service
++  group access to the supervisor software.
++
++  ===========================================
++  References
++  ===========================================
++
++  [1] RISC-V Platform Management Interface (RPMI) v1.0 (or higher)
++      https://github.com/riscv-non-isa/riscv-rpmi/releases
++
++  [2] RISC-V Supervisor Binary Interface (SBI) v3.0 (or higher)
++      https://github.com/riscv-non-isa/riscv-sbi-doc/releases
++
++properties:
++  compatible:
++    description:
++      Intended for use by the SBI implementation.
++    const: riscv,rpmi-mpxy-system-msi
++
++  mboxes:
++    maxItems: 1
++    description:
++      Mailbox channel of the underlying RPMI transport.
++
++  riscv,sbi-mpxy-channel-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      The SBI MPXY channel id to be used for providing RPMI access to
++      the supervisor software.
++
++required:
++  - compatible
++  - mboxes
++  - riscv,sbi-mpxy-channel-id
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller {
++        compatible = "riscv,rpmi-mpxy-system-msi";
++        mboxes = <&rpmi_shmem_mbox 0x2>;
++        riscv,sbi-mpxy-channel-id = <0x2000>;
++    };
++...
 -- 
-2.48.1
+2.43.0
 
