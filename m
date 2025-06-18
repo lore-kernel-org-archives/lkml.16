@@ -1,105 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202D2FEE30;
-	Wed, 18 Jun 2025 16:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6681C2FEE11;
+	Wed, 18 Jun 2025 16:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265654; cv=none; b=VYIK409iRbqVfpkptYaljEITys3N+gYRxtD8aLG5NoUc00k/L17rynumn/6qBQ1DFhIUgJR+8YUlYI7oQ9FPlB0kkBF65VS9Pli8ghOeslqO9eXf+PozVcHsQekTetkCJQTqIAzDukColqE0OZ1tGhRu/N29RXcpqTHtOTlEyZY=
+	t=1750265676; cv=none; b=IPIOYgyISdRGxuzTKFNYPSph4JvZyK2T4oyUVP8AkPlR6mH8lAj/xwZQxax/7pJ3vVjEsyUWhiJzKLTh4A8gTHtOoUAJWJHPCNFrbbeQdk+VJR5KrjYZchhdAtNZiqNcR67C7ihAkOeIv7Qdr16dE7GAKs4zUtOBpW0dxw5hAx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265654; c=relaxed/simple;
-	bh=fLxaZl4fUsD/kUCYbiqh9qHAbpI8sHC7anX6i5OIkCU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QpHbn/wPk1zYoHqENvJbeYuHYSD5dQ8qVNrVJIJeDSWi1SQ8Kkd3lAvKxesobRdgA/Z1Kfq7L265KygROmxS6yj492YbwTD8of6+oKa0Z50Z2Aw6BW93gHi+wJKnGW92q2/nyYCVOJW8BAuSOl+0OUnHPWR9b/VR0C9t82stNOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CR8Py3et; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750265676; c=relaxed/simple;
+	bh=ttUWxnOPsj1wH58g8SY5eUP5jJTbSwomk5rwycGlWw8=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=EGN2+WZk4pv3+HoD7+pEFKDMTT62clTtHQSCEbui354gZWE5qPunm6sQh/Dk7RsyHzQkQLMQpbDj6rRsGcBizFSjrpkKMhy6gnNaA3sm2MdO0sZBblTB45Vp/DQ31DmVpePOaCsgZkZoVtACOktSZNV6eUd1yM1MzOTH7qblPHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=B0EFl+B5; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CR8Py3et"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750265651; x=1781801651;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fLxaZl4fUsD/kUCYbiqh9qHAbpI8sHC7anX6i5OIkCU=;
-  b=CR8Py3et4CMqZBXIieAmH39c532lFLM8yUuZ727HlWddg3JsF/qIRP3v
-   1EUijONNArdEOnCIS8mpgpZNfN3BgzULBOKTE4MqmzQSlnbhmrxm5FmYw
-   7cfboRS2WRpHF8RGtD5QQ14JBRu7ZvT7NefOqVOhGh7GYEOxnhxAmkFST
-   KPSLd6k03q8uWSguLUbV6aRl1WIMPp1o2xy+KjeoyvCspLMCfcY8FHoMT
-   FtR+5MtIPHZAuI8tt4sfWnnyV0coyqHAn6axAcSKAudWk2cP8ob6wEQUZ
-   HmmrZbZOdj56TB061UkDVeDCJKhplQfxJUUEKg11Z2QejQBUbI5UsXwiy
-   w==;
-X-CSE-ConnectionGUID: DcVGGFHmSwukhuFWvCnmkQ==
-X-CSE-MsgGUID: FLovYuVhS2+Y3iMvKtPXIw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="56314752"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="56314752"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 09:54:10 -0700
-X-CSE-ConnectionGUID: APum73ZBR9mRC8sJtLUPbA==
-X-CSE-MsgGUID: udQ5ZeYFSWGuMe9lD+HUoA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="154613930"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 18 Jun 2025 09:54:08 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRw33-000Jzq-1W;
-	Wed, 18 Jun 2025 16:54:05 +0000
-Date: Thu, 19 Jun 2025 00:53:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>,
-	Linux ext4 <linux-ext4@vger.kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, Theodore Ts'o <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: [PATCH 3/4] Documentation: ext4: Slurp included subdocs in
- dynamic structures docs
-Message-ID: <202506190011.J5FYoooF-lkp@intel.com>
-References: <20250618111544.22602-4-bagasdotme@gmail.com>
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="B0EFl+B5"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 0AE7282879F3;
+	Wed, 18 Jun 2025 11:54:33 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id ueuYGyDCQRzD; Wed, 18 Jun 2025 11:54:31 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id F0DEF8286F81;
+	Wed, 18 Jun 2025 11:54:30 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com F0DEF8286F81
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750265671; bh=TXK4nvk3hVRfTyVxrU16zW6M8nI8oDPJzdJIGj8kYsc=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=B0EFl+B5U0qK16MIf1a72t4z5arjFFgr3ibazQtLKE8gz+ZjP6wwrA/8vIGSqI4UP
+	 mZCG4AypeO9Wf+/6bCjH9n4uNcUxoWWLVwzwXXl1AKJjeRkR6miLLoBO2HDO6Biki7
+	 tc1l1CTz7SIzYj7E9r78PlC6LjhfcgP8N3f4BC6k=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id sxi47ZWzGdik; Wed, 18 Jun 2025 11:54:30 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id A84778286AE2;
+	Wed, 18 Jun 2025 11:54:30 -0500 (CDT)
+Date: Wed, 18 Jun 2025 11:54:28 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
+	linux-pci <linux-pci@vger.kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	christophe leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <581463409.1310624.1750265668004.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: [PATCH v2 0/6] PowerNV PCIe Hotplug Driver Fixes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618111544.22602-4-bagasdotme@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Index: 7ViWVrejj338yZQm64sXoMCfdWvE4A==
+Thread-Topic: PowerNV PCIe Hotplug Driver Fixes
 
-Hi Bagas,
+Hello all,
 
-kernel test robot noticed the following build warnings:
+This series includes several fixes for bugs in the PowerNV PCIe hotplug
+driver that were discovered in testing with a Microsemi Switchtec PM8533
+PFX 48xG3 PCIe switch on a PowerNV system, as well as one workaround for
+PCIe switches that don't correctly implement slot presence detection
+such as the aforementioned one. Without the workaround, the switch works
+and downstream devices can be hot-unplugged, but the devices never come
+back online after being plugged in again until the system is rebooted.
+Other hotplug drivers (like pciehp_hpc) use a similar workaround.
 
-[auto build test WARNING on d3f825032091fc14c7d5e34bcd54317ae4246903]
+Also included are fixes for the EEH driver to make it hotplug safe,
+and a small patch to enable all three attention indicator states per
+the PCIe specification.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bagas-Sanjaya/Documentation-ext4-Slurp-included-subdocs-in-high-level-overview-docs/20250618-191724
-base:   d3f825032091fc14c7d5e34bcd54317ae4246903
-patch link:    https://lore.kernel.org/r/20250618111544.22602-4-bagasdotme%40gmail.com
-patch subject: [PATCH 3/4] Documentation: ext4: Slurp included subdocs in dynamic structures docs
-reproduce: (https://download.01.org/0day-ci/archive/20250619/202506190011.J5FYoooF-lkp@intel.com/reproduce)
+Thanks,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506190011.J5FYoooF-lkp@intel.com/
+Shawn Anastasio (2):
+  pci/hotplug/pnv_php: Properly clean up allocated IRQs on unplug
+  pci/hotplug/pnv_php: Work around switches with broken presence
+    detection
 
-All warnings (new ones prefixed by >>):
+Timothy Pearson (5):
+  powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
+  powerpc/eeh: Make EEH driver device hotplug safe
+  pci/hotplug/pnv_php: Fix surprise plug detection and recovery
+  pci/hotplug/pnv_php: Enable third atetntion indicator state
 
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
-   Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
-   Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
->> Warning: fs/ext4/inode-test.c references a file that doesn't exist: Documentation/filesystems/ext4/inodes.rst
-   Using alabaster theme
+ arch/powerpc/kernel/eeh.c                    |   2 +
+ arch/powerpc/kernel/eeh_driver.c             |  48 ++++--
+ arch/powerpc/kernel/eeh_pe.c                 |  10 +-
+ arch/powerpc/kernel/pci-hotplug.c            |   3 +
+ arch/powerpc/platforms/powernv/eeh-powernv.c |   1 +
+ drivers/pci/hotplug/pciehp.h                 |   1 -
+ drivers/pci/hotplug/pciehp_ctrl.c            |   2 +-
+ drivers/pci/hotplug/pciehp_hpc.c             |  33 +---
+ drivers/pci/hotplug/pnv_php.c                | 172 ++++++++++++++++---
+ drivers/pci/pci.c                            |  31 +++-
+ drivers/pci/pci.h                            |   1 +
+ 11 files changed, 228 insertions(+), 76 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.5
