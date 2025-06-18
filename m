@@ -1,223 +1,129 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF66C28751D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CF127FB16;
+	Wed, 18 Jun 2025 10:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242029; cv=none; b=nYQzAhy+UQkRWdLKh8edWyezOdTlWyxXrbSMNAf7HWYUe8foULh4YMTCOXwMTlhvxmD6zhf3dgFbOjDYBUvlouQSuCUxkqm/by6ash3mWfxA05tRLY1eyc31xv71/ssghu9GyGaiVRAJd058Iiar2tzEGOGArTPKImtVfne4xLU=
+	t=1750242078; cv=none; b=Hop1btReYr79onsNUDs94EmqmpPLNBSlFkBUxw4czIMrokIWKGNmIF7Nye8oGMkxhOtwEebjgZbO95QmVPX3BFBeUys98B0lzVCiOlI002VaaRuHetqRQ1d9sNw8JLA9EMdoNlttSSHXqV6N0cWDht+cIeYupn07I2yhCUZ6sEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242029; c=relaxed/simple;
-	bh=TSkpXMUCGBLGW57RuPGfv/LqzC6cxyMmgIfCk78NNvQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=REklSft7Rk/+QLmhLXsiKGCaxO7aiJF8F2ruIKaLU09uLiddo/qasBi4GvvLFic0qUOpYfCH7/XgwDFctrInMwHHtzAUF2edQlo86Q0zae1UHhPlnhPITC25REKzboFDl+n370gQGEp/vOiPgsU5JzlgrGjWck5+Z4NRILz2VdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VwNFOSi5; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750242078; c=relaxed/simple;
+	bh=Ro329G7e6bLXxjcm0ncpB4tvjdXFieVigZAwXeLjE/g=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=gMHop0TCUvfOakOjpG/kA86r2EYnE7H9knJQMfgUUl5kYGO3H7W+hBfdIWQCcsRn49G3R8VbpnqdduCPoL0myhZ12+F58W91tC2vr/kmaXBXZS8ISH0Qd8+jtldSZaOrnWDuTBFXpexqrrRSYSB389I2VErtJFvg3pPaoWKzreY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=KrwKCEtF; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VwNFOSi5"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-87ec4ec218fso1082585241.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750242026; x=1750846826; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CZscgBK7vQh5GyGDP3R0SwzOToDIeiQZZam9YvCUg+A=;
-        b=VwNFOSi5uvpYti9AuZLJqrSlSr4FVHcx9wFtFhisLU7mIQl3cVr5TA39mekGOHtW6w
-         yDiLu/lWbGM1WQ8BVmu2mS8sbwxEdGfGW/h56F+sV5l4ssflU/tbAfWUiAtYWPJK07q+
-         cRVpyz6NRxDYVuI1yn1lFej3TWloa+VE9Wzgv2cALhPPN62u6YEPnx+pIAFsOEq6wyJK
-         WI/IAApGm9sObcqNDD0YQUcqgfWCxVkC63AWenDcu+JkLNYwWYsngJ9LSdvMBK7ruISW
-         CgtmPK+7QqLpsV2bcgeVkJrKtoSqU3cyUtbkgbr0qmL8zkaGlVFNkENxah0k1J7Duc6q
-         69hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750242026; x=1750846826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CZscgBK7vQh5GyGDP3R0SwzOToDIeiQZZam9YvCUg+A=;
-        b=PT0Wr02/2jc81MbWdqA4PxBya0/tIWKasAiWJ3rt/Wio7nu4Rz/uwmBXo9rk7AFuYt
-         QL6nXniyg8S4E+C/wAGRi1Elwix0tFdyKArJRw8yCEz0CN560okavBcFiCpNpb0w1Ab4
-         JtHKmpoM5mfCzDmi+9nGBv81jui3Cy54f/xt7ZeSShA7xgWdcfDMFrw3PadmmQj8gFDM
-         YNhcRdSVesppF2+rU5fOaZl4ahNkBRhsd1GtmLrt+Q2ySBC8AS+mjQ1rxzPLzSTaEkU5
-         ONaL+hQYZwj99pdFTTO1VG+oybHRtD/fVHyStFaSPTrXe8osHCebon7fSQEA2V/fs5/I
-         Iv0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUlgmGTE9aCY8SPw9QhHo7nQBaNlTtQE/CBO4bP8IjV+kxrQxCkCoj3URyYrHk0VndH4jBTlmosWPCf1Ps=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyRHU7FYJQ8VbEy+f2AGoCmDI1qYKp+SDthjTNGQoQH1uSIY6PZ
-	I9QFiaM55/3kcQgrElcNFYXqS41zHX1V/IO3lHfrurwJF2df7sztML4hSQ0Rd6dYHtsMLEdof5q
-	ZdI+ke4ZXJzV+GgJXlLAyWGKqgauCSxupnQY5Mbz1uw==
-X-Gm-Gg: ASbGncvdtwmDnP70ACVhdvNPE7fqPiYz2yrWRkZs9itsz5ltgbMmUojoznxDyW1+48S
-	aN2fT2U26wbgD3eE85StQDGVXXNXGqfEpgqNtTuaKcow+gAeknTk1OXVdXzihGKBMX7kLp8DtBK
-	3y3rLFE/f2ikGVblxOe2ezAO4ac71a08zfN+t6bdWtYtW0R9xUpFItBg==
-X-Google-Smtp-Source: AGHT+IE3OBH47heT44z75CQFO2vVoaeyYg3Kk8JAVuB+6zADI2o9rVsm2ZYzU9bGVzLJfE7whT3gToQzdyWSK6aa+PY=
-X-Received: by 2002:a05:6102:508b:b0:4e2:aafe:1bde with SMTP id
- ada2fe7eead31-4e7f61b60b9mr12500027137.9.1750242026432; Wed, 18 Jun 2025
- 03:20:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="KrwKCEtF"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4bMfsN1fTbz9t9P;
+	Wed, 18 Jun 2025 12:21:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1750242072;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lT6i+pbNHdJMMvp/mp0MakBah9wX4+JxXhdBuviIlyM=;
+	b=KrwKCEtFvAN+VBa7X22Xk0JlI3P8RyAPLy8FQDaEiWIH3lDrLPI9CO62TdV2kxVNhS6f5Y
+	dSinq5vA+pZShA6qqSi7xDFa5ysleiSeH39khZur18pt/w06CJvNtl42rbxNvzDqZVlB5e
+	NAd+kVoSdKJhiGNq1fITWtHd1b6aDLx/4yaV7hAaLdNsUPVmDbY5icQYBKNKrg0Zm2AHcY
+	tt/M1aqqk1uXhTov8+c8aV2X9m76pcrP3SGL3e8/u5s/d87NzhNtCS8wDM8fkc2Str4V9W
+	3PrBBB7T9dcgU6L+M7KOid2sShijvjCxWtce775GtirlSLX8Fiy0ygp6NrIMeQ==
+Date: Wed, 18 Jun 2025 12:21:07 +0200 (CEST)
+From: Jakub Wartak <jakub.wartak@mailbox.org>
+To: "anthony.yznaga@oracle.com" <anthony.yznaga@oracle.com>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"andreyknvl@gmail.com" <andreyknvl@gmail.com>,
+	"arnd@arndb.de" <arnd@arndb.de>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+	"dave.hansen@intel.com" <dave.hansen@intel.com>,
+	"david@redhat.com" <david@redhat.com>,
+	"ebiederm@xmission.com" <ebiederm@xmission.com>,
+	"khalid@kernel.org" <khalid@kernel.org>,
+	"linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"luto@kernel.org" <luto@kernel.org>,
+	"markhemm@googlemail.com" <markhemm@googlemail.com>,
+	"maz@kernel.org" <maz@kernel.org>,
+	"mhiramat@kernel.org" <mhiramat@kernel.org>,
+	"neilb@suse.de" <neilb@suse.de>, "pcc@google.com" <pcc@google.com>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"vasily.averin@linux.dev" <vasily.averin@linux.dev>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+	"willy@infradead.org" <willy@infradead.org>,
+	"xhao@linux.alibaba.com" <xhao@linux.alibaba.com>
+Message-ID: <1968222200.618999.1750242067613@office-sso.mailbox.org>
+Subject: Re: [PATCH v2 00/20] Add support for shared PTEs across processes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617152338.212798615@linuxfoundation.org>
-In-Reply-To: <20250617152338.212798615@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 18 Jun 2025 15:50:14 +0530
-X-Gm-Features: Ac12FXxVzmGim5VNLRe8LnObfmRIABb-cQ6rWKWTtElMPXcLJuXbjNGza6aHiF0
-Message-ID: <CA+G9fYsda33su7S3ysR9q3TSoytpZnWtMX9jU8XXAKTTjoNz4Q@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/356] 6.6.94-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+Importance: Normal
+X-MBO-RS-META: t8iza63jxqhrn5fkefnmh6rdkxx9a7zh
+X-MBO-RS-ID: afb4a33d23cd47279ad
 
-On Tue, 17 Jun 2025 at 20:58, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.94 release.
-> There are 356 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Jun 2025 15:22:33 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.94-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hi all,
 
+I wanted to share some results. I modified PostgreSQL (master) to use the proposed here msharefs patchset (v2) on top of linux-6.14.7 kernel as I suspected sharing PTEs might be helpful in some cases, especially with high process counts. Traditionally in PostgreSQL having process counts is an anti-pattern and it's not recommended (for various reasons) to have that many backends (process) running, but I was researching for the exact reasons why (there are plenty others too), but in short that's how I suspected dTLB misses, followed up on PTEs and finally arrived here: msharefs.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+I've tried it on a couple scenarios and it always helps (+5% .. 40%) in artificial pgbench readonly measurements on any machine, but here I'm posting results:
+a. from some properly isolated legacy SMP box in homelab (4s32c64/4xNUMA nodes, Xeon 46xx, 128GB RAM)
+b. PostgreSQL's pgbench OLTP-like benchmark was used with -c $c -j 64 -S -T 60 -P 1
+c. PostgreSQLs shared_buffers(shared_memory)=32GB
+d. pgbench -i -s 2000 (~31GB, all used data was in shared memory, not in VFS cache, to avoid syscalls),
+e. no hugepages were used as msharefs seems to not support it yet (but Anthony already told me he's on it) 
+f. I've used cpupower with perf governor, D0 and no_turbo as well and data was prewarmed.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Again, having PostgreSQL with 8k or 16k processes is not the way to go, but it illustrates well that fork() model (1 client = 1 process) can really benefit from msharefs:
 
-## Build
-* kernel: 6.6.94-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 7ef12da06319e12118a7bbb823004d011c57f718
-* git describe: v6.6.93-357-g7ef12da06319
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.9=
-3-357-g7ef12da06319
+shared_memory_type=mmap (default on Linux is mmap(MAP_SHARED)+fork())
+ c=8000 tps  = 143-150k (~4s to init all conns)
+ c=16000 tps = 130-140k (~50s-70s! to init all conns! had to extend benchmark, lots of fork()!)
 
-## Test Regressions (compared to v6.6.92-445-g58cbe685685b)
+shared_memory_type=msharefs (literally same as above, open()/fallocate()/ioctl()/mmap()+fork()):
+ c=8000 tps  = ~189k (3s to init all conns)
+ c=16000 tps = ~189k (6s to init all conns)
 
-## Metric Regressions (compared to v6.6.92-445-g58cbe685685b)
+That's 1.35x - 1.45x.
 
-## Test Fixes (compared to v6.6.92-445-g58cbe685685b)
+Illustrative sample of 1 second of `perf stat -a -e ...` during those run with 16k processes:
 
-## Metric Fixes (compared to v6.6.92-445-g58cbe685685b)
+# mmap:
+#           time             counts unit events
+   190.223101118        15257144598      cycles
+   190.223101118        10485389437      instructions                     #    0.69  insn per cycle
+   190.223101118              34413      context-switches
+   190.223101118                703      cpu-migrations
+   190.223101118                  0      major-faults
+   190.223101118             256302      minor-faults
+   190.223101118         3922621887      dTLB-loads
+   190.223101118           12520660      dTLB-load-misses                 #    0.32% of all dTLB cache accesses
+   
+# msharefs:
+#           time             counts unit events
+   105.122916131        15256454170      cycles
+   105.122916131        10732582790      instructions                     #    0.70  insn per cycle
+   105.122916131              38420      context-switches
+   105.122916131               1125      cpu-migrations
+   105.122916131                  0      major-faults
+   105.122916131              34304      minor-faults
+   105.122916131         4143569524      dTLB-loads
+   105.122916131           12179260      dTLB-load-misses                 #    0.29% of all dTLB cache accesses 
 
-## Test result summary
-total: 217939, pass: 198129, fail: 4284, skip: 15211, xfail: 315
+On smaller hardware and single socket there are also such gains even on the lower process counts, but the more process are running concurrently and accessing shared memory the bigger the performance boost. I hope this feedback is useful (so it's not only lowering memory use for PTEs, but also quite a nice perf. boost). I would like too to thank Anthony and Khalid for answering some initial questions outside mailing list.
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 129 total, 127 passed, 0 failed, 2 skipped
-* arm64: 44 total, 43 passed, 0 failed, 1 skipped
-* i386: 23 total, 23 passed, 0 failed
-* mips: 26 total, 25 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 32 total, 31 passed, 1 failed
-* riscv: 15 total, 15 passed, 0 failed
-* s390: 14 total, 13 passed, 1 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 7 total, 7 passed, 0 failed
-* x86_64: 37 total, 37 passed, 0 failed
+BTW I have not yet posted it to PostgreSQL main hacking mailing list, well... because there's no kernel in the first place to support that ;)
 
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
+-J.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+p.s. I'm not subscribed to linux-mm, so please CC me.
