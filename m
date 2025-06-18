@@ -1,345 +1,103 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A67227979F;
-	Wed, 18 Jun 2025 21:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E6F127A46A;
+	Wed, 18 Jun 2025 21:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750281495; cv=none; b=irrP6yyiPoMtsknq5VbsmR7JdO9XdwVkTZibJMydjQpsJ87WKlShNPnN9E5h0GQs8R9UerrUyAD0E8USwKg01bOmKeQlUK4ELQkuGWYWM4+e/nz5WanQroljlafd8hPQV57Ds5BRpDylNSM2ltrMpwkO6U/yMv6CH+7fjjA6zmg=
+	t=1750281600; cv=none; b=Dw/oiK9MDf98WMNXmKRQyBek92A+UAmWM8aPfYPH8PDx+7LC0byWKNk+0vcFdA3Vegdbh1zhtY1r1LIj9SbRqoTtbaEAqxhYPSkmBSRUQPsMH830kiSEk576u0Pd+4st791JNJp6vODU6Aw0PnJdmWSJ8ZAMaIIHlrtRAghzz9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750281495; c=relaxed/simple;
-	bh=cmQ02WE1thnbt+FouBpjl05lTRtmfIAFPeNWTSd/KDg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJ+fm4XN1Ha5N7jn2bUIEznSJqx3bjDh1RXfoCj8S60ENWjz5i93cBNDwwPsBFn+bz0uXs1z+og3rXtvhuK5muxnnTfWdsnQDaGBcoe5p1TZbdF9kWPDUBKn+KxhpBHI7+vKOm5vFwUjBkG4XzMFWS8j1iG0us/EkUXcw5aCjOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=hpg2gypn; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1750281600; c=relaxed/simple;
+	bh=EbB/q7SwaM5yceRQWTsTZPY00Jn2CZRLRyHwoouPMjk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=FWGyuHoFpPu0v236KFKv1X1qGS+nQtQcVqKjKW+6t9oozEtPySyEURryi/bIaroPYbzMHrQJhUGyQl22FehrLK1afnaw7nQMdEZ/CF8016mqA1zP/Zlo+EJqj3fllaBRCHPUEFPv3khtj+PEHpHIPvm0Jv0K2yv8yDlDyAdx1KE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JO57uXEy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="hpg2gypn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=iYf/tNomgSGgOz7BCTF6vtkNgttRW7/vxsBrfT0uQsA=; b=hpg2gypn+kJFjDrCSZDUtil1Ba
-	6pMf9kt6UtVYEtL93a9okv/tzvA3XIQ9sOuWURR+YsyExYPt/oEk7cg8Zr6pSnT4pchtnt3Q5e+jk
-	AmvFCPd2dx3Rx2sepkzQzk/4rO2/K5tnJWedHXp5LA+ozr8KFyO1WitOnTimRiE3c7pk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uS0A5-00GL1Y-7J; Wed, 18 Jun 2025 23:17:37 +0200
-Date: Wed, 18 Jun 2025 23:17:37 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Vivian Wang <wangruikang@iscas.ac.cn>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Vivian Wang <uwu@dram.page>,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Parthiban Veerasooran <Parthiban.Veerasooran@microchip.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 2/6] net: spacemit: Add K1 Ethernet MAC
-Message-ID: <e55d8a16-5e2c-4a46-99fd-8ea485269843@lunn.ch>
-References: <20250618-net-k1-emac-v2-0-94f5f07227a8@iscas.ac.cn>
- <20250618-net-k1-emac-v2-2-94f5f07227a8@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JO57uXEy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 989E3C4CEE7;
+	Wed, 18 Jun 2025 21:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750281600;
+	bh=EbB/q7SwaM5yceRQWTsTZPY00Jn2CZRLRyHwoouPMjk=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=JO57uXEybUK/Jmj/mZoksyy4r/4rZUpThA9wzRSVbwNieiLu/8+IXRkYK+5gTY4nX
+	 G+DI+/gQkky9XgTCQaZdxcKMug9o161UDbRD/nsjfsg+geq7S4fTGxfQOUQO5jZFE7
+	 28BR686y6vupGG6VSkEGJjs91Em3EAQFADpW8FwNN7iR9KJgiAtAa8plHUqIgVaEKq
+	 Ad5Vl3jORribqoRc6+5XkNvPDWepwiQmIqOBuwFVM/YSwZ7PJjsqMIMN/Qs9lCSpzl
+	 qFlgXhRRpytuJPPGmy+mTQwOg06RzaQtR2RRntMuOfPDqz0qBsX6ziXbvS5Yff4h1m
+	 eA56Xv2s6WRew==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-net-k1-emac-v2-2-94f5f07227a8@iscas.ac.cn>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 23:19:56 +0200
+Message-Id: <DAPZ1KYN5FB6.3C7CI4Y0OKOE0@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Asahi Lina"
+ <lina@asahilina.net>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
+ <20250502-unique-ref-v10-1-25de64c0307f@pm.me>
+ <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org> <aFKICIo8L958iFbz@mango>
+In-Reply-To: <aFKICIo8L958iFbz@mango>
 
-> +/* The sizes (in bytes) of a ethernet packet */
-> +#define ETHERNET_HEADER_SIZE		14
+On Wed Jun 18, 2025 at 11:34 AM CEST, Oliver Mangold wrote:
+> On 250514 1132, Benno Lossin wrote:
+>> On Fri May 2, 2025 at 11:02 AM CEST, Oliver Mangold wrote:
+>>=20
+>> > +/// - That the C code follows the usual mutable reference requirement=
+s. That is, the kernel will
+>> > +///   never mutate the [`Ownable`] (excluding internal mutability tha=
+t follows the usual rules)
+>> > +///   while Rust owns it.
+>>=20
+>> I feel like this requirement is better put on the `Owned::from_raw`
+>> function.
+>
+> Thinking about it some more, the problem I see here is that if the type
+> implements `OwnableMut` this requirement changes from "never mutate" to
+> "never access at all".
+>
+> The safety requirements between `Ownable`, `OwnableMut`, `RefCounted`,
+> `OwnableRefCounted` and `AlwaysRefCounted` are interacting, but I agree
+> that, when looking at it a certain way, `Owned::from_raw()` is the place
+> where one would expect these to be. I'm not sure anymore what is best her=
+e
+> :/
 
-Please replace with ETH_HLEN
+I still think `Owned::from_raw` is the correct place to put this.
 
-> +#define MINIMUM_ETHERNET_FRAME_SIZE	64 /* Incl. FCS */
+>
+>> > +pub unsafe trait OwnableMut: Ownable {}
+>>=20
+>> I don't like the name, but at the same time I also have no good
+>> suggestion :( I'll think some more about it.
+>
+> There was already a bit of discussion about it. I had my own implementati=
+on of this
+> where I used the names `UniqueRefCounted` and `UniqueRef`, but after disc=
+overing
+> this version from Asahi Lina, I took it as it was, keeping the name.
+>
+> No one else came up with different suggestions so far, so maybe we should=
+ just leave it
+> at `Owned`/`Ownable`?
 
-I assume this device supports VLANS? If so, the minimum should
-actually be 68. You can then use ETH_MIN_MTU
-
-> +#define ETHERNET_FCS_SIZE		4
-
-ETH_FCS_LEN
-
-> +static int emac_tx_mem_map(struct emac_priv *priv, struct sk_buff *skb,
-> +			   u32 max_tx_len, u32 frag_num)
-> +{
-> +	struct emac_desc tx_desc, *tx_desc_addr;
-> +	u32 skb_linear_len = skb_headlen(skb);
-> +	struct emac_tx_desc_buffer *tx_buf;
-> +	u32 len, i, f, first, buf_idx = 0;
-> +	struct emac_desc_ring *tx_ring;
-> +	phys_addr_t addr;
-> +
-> +	tx_ring = &priv->tx_ring;
-> +
-> +	i = tx_ring->head;
-> +	first = i;
-> +
-> +	if (++i == tx_ring->total_cnt)
-> +		i = 0;
-> +
-> +	/* If the data is fragmented */
-> +	for (f = 0; f < frag_num; f++) {
-> +		const skb_frag_t *frag = &skb_shinfo(skb)->frags[f];
-> +
-> +		len = skb_frag_size(frag);
-> +
-> +		buf_idx = (f + 1) % 2;
-> +
-> +		/* First frag fill into second buffer of first descriptor */
-> +		if (f == 0) {
-> +			tx_buf = &tx_ring->tx_desc_buf[first];
-> +			tx_desc_addr = &((struct emac_desc *)
-> +						 tx_ring->desc_addr)[first];
-> +			memset(&tx_desc, 0, sizeof(tx_desc));
-> +		} else {
-> +			/*
-> +			 * From second frags to more frags,
-> +			 * we only get new descriptor when frag num is odd.
-> +			 */
-> +			if (!buf_idx) {
-> +				tx_buf = &tx_ring->tx_desc_buf[i];
-> +				tx_desc_addr = &((struct emac_desc *)
-> +							 tx_ring->desc_addr)[i];
-> +				memset(&tx_desc, 0, sizeof(tx_desc));
-> +			}
-> +		}
-> +		tx_buf->buf[buf_idx].dma_len = len;
-> +
-> +		addr = skb_frag_dma_map(&priv->pdev->dev, frag, 0,
-> +					skb_frag_size(frag), DMA_TO_DEVICE);
-> +
-> +		if (dma_mapping_error(&priv->pdev->dev, addr)) {
-> +			netdev_err(priv->ndev, "fail to map dma page: %d\n", f);
-> +			goto dma_map_err;
-> +		}
-> +		tx_buf->buf[buf_idx].dma_addr = addr;
-> +
-> +		tx_buf->buf[buf_idx].map_as_page = true;
-> +
-> +		/* Every desc has two buffers for packet */
-> +		if (buf_idx) {
-> +			tx_desc.buffer_addr_2 = addr;
-> +			tx_desc.desc1 |= make_buf_size_2(len);
-> +		} else {
-> +			tx_desc.buffer_addr_1 = addr;
-> +			tx_desc.desc1 = make_buf_size_1(len);
-> +
-> +			if (++i == tx_ring->total_cnt) {
-> +				tx_desc.desc1 |= TX_DESC_1_END_RING;
-> +				i = 0;
-> +			}
-> +		}
-> +
-> +		if (f == 0) {
-> +			*tx_desc_addr = tx_desc;
-> +			continue;
-> +		}
-> +
-> +		if (f == frag_num - 1) {
-> +			tx_desc.desc1 |= TX_DESC_1_LAST_SEGMENT;
-> +			tx_buf->skb = skb;
-> +			if (emac_tx_should_interrupt(priv, frag_num + 1))
-> +				tx_desc.desc1 |=
-> +					TX_DESC_1_INTERRUPT_ON_COMPLETION;
-> +		}
-> +
-> +		*tx_desc_addr = tx_desc;
-> +		dma_wmb();
-> +		WRITE_ONCE(tx_desc_addr->desc0, tx_desc.desc0 | TX_DESC_0_OWN);
-> +	}
-> +
-> +	/* fill out first descriptor for skb linear data */
-> +	tx_buf = &tx_ring->tx_desc_buf[first];
-> +
-> +	tx_buf->buf[0].dma_len = skb_linear_len;
-> +
-> +	addr = dma_map_single(&priv->pdev->dev, skb->data, skb_linear_len,
-> +			      DMA_TO_DEVICE);
-> +	if (dma_mapping_error(&priv->pdev->dev, addr)) {
-> +		netdev_err(priv->ndev, "dma_map_single failed\n");
-> +		goto dma_map_err;
-> +	}
-> +
-> +	tx_buf->buf[0].dma_addr = addr;
-> +
-> +	tx_buf->buf[0].buff_addr = skb->data;
-> +	tx_buf->buf[0].map_as_page = false;
-> +
-> +	/* Fill TX descriptor */
-> +	tx_desc_addr = &((struct emac_desc *)tx_ring->desc_addr)[first];
-> +
-> +	tx_desc = *tx_desc_addr;
-> +
-> +	tx_desc.buffer_addr_1 = addr;
-> +	tx_desc.desc1 |= make_buf_size_1(skb_linear_len);
-> +	tx_desc.desc1 |= TX_DESC_1_FIRST_SEGMENT;
-> +
-> +	/* If last desc for ring, set end ring flag */
-> +	if (first == tx_ring->total_cnt - 1)
-> +		tx_desc.desc1 |= TX_DESC_1_END_RING;
-> +
-> +	/*
-> +	 * If frag_num is more than 1, data need another desc, so current
-> +	 * descriptor isn't last piece of packet data.
-> +	 */
-> +	tx_desc.desc1 |= frag_num > 1 ? 0 : TX_DESC_1_LAST_SEGMENT;
-> +
-> +	if (frag_num <= 1 && emac_tx_should_interrupt(priv, 1))
-> +		tx_desc.desc1 |= TX_DESC_1_INTERRUPT_ON_COMPLETION;
-> +
-> +	/* Only last descriptor has skb pointer */
-> +	if (tx_desc.desc1 & TX_DESC_1_LAST_SEGMENT)
-> +		tx_buf->skb = skb;
-> +
-> +	*tx_desc_addr = tx_desc;
-> +	dma_wmb();
-> +	WRITE_ONCE(tx_desc_addr->desc0, tx_desc.desc0 | TX_DESC_0_OWN);
-> +
-> +	emac_dma_start_transmit(priv);
-> +
-> +	tx_ring->head = i;
-> +
-> +	return 0;
-> +
-> +dma_map_err:
-> +	dev_kfree_skb_any(skb);
-> +	priv->ndev->stats.tx_dropped++;
-> +	return 0;
-> +}
-
-This is a rather large function. Can parts of it be pulled out into
-helpers? The Coding style document says:
-
-  Functions should be short and sweet, and do just one thing. They
-  should fit on one or two screenfuls of text (the ISO/ANSI screen
-  size is 80x24, as we all know), and do one thing and do that well.
-
-> +static int emac_mdio_init(struct emac_priv *priv)
-> +{
-> +	struct device *dev = &priv->pdev->dev;
-> +	struct device_node *mii_np;
-> +	struct mii_bus *mii;
-> +	int ret;
-> +
-> +	mii_np = of_get_available_child_by_name(dev->of_node, "mdio-bus");
-> +	if (!mii_np) {
-> +		if (of_phy_is_fixed_link(dev->of_node)) {
-> +			if ((of_phy_register_fixed_link(dev->of_node) < 0))
-> +				return -ENODEV;
-> +
-> +			return 0;
-> +		}
-> +
-> +		dev_info(dev, "No mdio-bus child node found");
-> +		return 0;
-> +	}
-
-An mdio-bus node is normally optional. You can pass NULL to
-devm_of_mdiobus_register() and it will do the correct thing, register
-the bus, and scan it for devices.
-
-An MDIO bus and fixed link are also not mutually exclusive. When the
-MAC is connected to an Ethernet switch, you often see an fixed-link,
-and have an MDIO bus, with the switches management interface being
-MDIO.
-
-> +static int emac_ethtool_get_regs_len(struct net_device *dev)
-> +{
-> +	return EMAC_REG_SPACE_SIZE;
-> +}
-> +
-> +static void emac_ethtool_get_regs(struct net_device *dev,
-> +				  struct ethtool_regs *regs, void *space)
-> +{
-> +	struct emac_priv *priv = netdev_priv(dev);
-> +	u32 *reg_space = space;
-> +	int i;
-> +
-> +	regs->version = 1;
-> +
-> +	for (i = 0; i < EMAC_DMA_REG_CNT; i++)
-> +		reg_space[i] = emac_rd(priv, DMA_CONFIGURATION + i * 4);
-> +
-> +	for (i = 0; i < EMAC_MAC_REG_CNT; i++)
-> +		reg_space[i + EMAC_DMA_REG_CNT] =
-> +			emac_rd(priv, MAC_GLOBAL_CONTROL + i * 4);
-> +}
-
-Given this implementation, it would be more readable, and less future
-extension error prone, if emac_ethtool_get_regs_len() returned
-
-EMAC_DMA_REG_CNT + EMAC_MAC_REG_CNT
-
-> +static int emac_ioctl(struct net_device *ndev, struct ifreq *rq, int cmd)
-> +{
-> +	if (!netif_running(ndev))
-> +		return -EINVAL;
-> +
-> +	return phy_mii_ioctl(ndev->phydev, rq, cmd);
-> +}
-
-phy_do_ioctl_running().
-
-> +static int emac_phy_connect(struct net_device *ndev)
-> +{
-> +	struct emac_priv *priv = netdev_priv(ndev);
-> +	struct device *dev = &priv->pdev->dev;
-> +	struct phy_device *phydev;
-> +	struct device_node *np;
-> +	int ret;
-> +
-> +	ret = of_get_phy_mode(dev->of_node, &priv->phy_interface);
-> +	if (ret) {
-> +		dev_err(dev, "No phy-mode found");
-> +		return ret;
-> +	}
-> +
-> +	np = of_parse_phandle(dev->of_node, "phy-handle", 0);
-> +	if (!np && of_phy_is_fixed_link(dev->of_node))
-> +		np = of_node_get(dev->of_node);
-> +	if (!np) {
-> +		dev_err(dev, "No PHY specified");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = emac_phy_interface_config(priv);
-> +	if (ret)
-> +		goto err_node_put;
-> +
-> +	phydev = of_phy_connect(ndev, np, &emac_adjust_link, 0,
-> +				priv->phy_interface);
-> +	if (IS_ERR_OR_NULL(phydev)) {
-> +		dev_err(dev, "Could not attach to PHY\n");
-> +		ret = phydev ? PTR_ERR(phydev) : -ENODEV;
-> +		goto err_node_put;
-> +	}
-
-The documentation for of_phy_connect() says:
-
- * If successful, returns a pointer to the phy_device with the embedded
- * struct device refcount incremented by one, or NULL on failure. The
- * refcount must be dropped by calling phy_disconnect() or phy_detach().
-
-An error code is not possible. So you can simply this.
-	
-    Andrew
+I'm just hung up on the `Mut` part... Haven't come up with a good
+replacement yet.
 
 ---
-pw-bot: cr
+Cheers,
+Benno
