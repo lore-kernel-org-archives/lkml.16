@@ -1,124 +1,132 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EBC21A443;
-	Wed, 18 Jun 2025 19:50:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88E2212FBE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750276215; cv=none; b=YU5QIJAbXDgg5vEgbw/XTkcRwWP+gbuKdH+IrVz3jJ6R37x7XxJNdhJcY4bd/sFpDYQndTE5z14UUr+aA0HcHMzELsW5xH9yT++hnCCMpmFTykFKbgCEGb+8DtpAXPwzRYyC35Ccwwy3h949LWvrGgyhJ5/oHp8NnYUfmlBTM9o=
+	t=1750276222; cv=none; b=dLGrHTn+IkLlSRKMYj1C5iZOqrtvJl9jQXhIxFJoM21XjXwzwVqGSBdoNx7z930vSlrUHhrA1JjjVXrvq0acJo1ZBPyuBHbjQBeDuVAf59aAc8DIo5xVls9lb7lefnMUEw5IqoEOXdadHIfCe6p9S/oHIfY1y8d+vGnt8rJorms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750276215; c=relaxed/simple;
-	bh=24rRaj+riLcN6nNTA2ySQ+hr2w7EcDiuFRRjnmlYPBM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QfgNd0edhclSr0KMutDcg5lcabCRxi4OuCek6QHJxEM+akr43c9t7KS57ILKoTNjap3JF3nyuJQy4OfaJ5ZkQe/UZ2QuH5zoqTcKd0vmamUfnPG/KVayjSNpikDYjPIGrp3XYlMDx7KMPGiBFGWhSwcSlKmFhdqq50QiLoY3/gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgEJMibC; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750276222; c=relaxed/simple;
+	bh=ohQZorVYOM0YtCJqiJcBa1mft+MNoH3QhgUQVZcK3Xg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B7yndPWfKFeX5paEqEb/JdteZD7WIHSr/ByQp3kB4rzyFtF6Hs99BblfrI3gbHHtVQ09Fk6AZLeDHQlzhAOfOPG46oQL1QkGrtM13UIB1wDZL1QU1uHPKWWQ1msci0HipL0pV9Xbi3tIziiAbY9JIjTIZFUy5byS2zew7hyOKK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=M/heW6ey; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgEJMibC"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a56cc0def0so124142901cf.3;
-        Wed, 18 Jun 2025 12:50:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750276213; x=1750881013; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bTiYGH9s90MOiZvQtQe8c1eAjqU7s3NEhM25qAZHZ7o=;
-        b=LgEJMibC1eB+BS3i0gg301Lq4ubxgcXnTAxXAP0/qmN9jNylmMLLVJOq/xbsDyafYx
-         bhVP3KTw8nXwGJCNtSzvF2JYcOIllZ0+Itj+FYwiOuQzaC2GQBFHZ1jAv81G5DObE3cO
-         /a/OUHqQVgvTxUAg3XNLXJH64sztGIAb/hRubqSaKL3c6G6bxZAykSsgsFWZZp6R/cJ3
-         pCIUfG0rlDne1eXrE4GmsVT0l7IsXQlKTamE2iFV6PbFRJePI3UJTtOfI/95lpYF8dCa
-         EAS1gXOXAsyDJ2BSNtYBGtqt9I6bZRxIPUY578W7oRAi3h1ZxSla8zdYqb09ew8JLEff
-         WB7Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="M/heW6ey"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IH9Obk010361
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+Ljc/kXCXngRvy5Fgg33kD8o8huQROVV7GWykDyAjSo=; b=M/heW6eyenmG9NGp
+	URO22lJQ8+l2FJG+R0JKn/SeFgIT+6CviqwDppRt8KF/p4plmmyRk+pSbI4MbyUB
+	rlPdPPRXp8RXN2kF2LosHP7T+vKycy0lhU+Z5Iypw/CGcXuKMsB1pfHGUnqrYBfK
+	2hKoAtokXQqHMvEPOsiWlj/Q6RLIZJX0bsx1cjYSow7Lie1BntDYcfyz2YCi/mb1
+	C0ubdx5YqFSGoKeLbUpxSxrsXJfX3UwBblwo1JLlNfKDKOAPGr4YXbhJf2MHujAg
+	8jqNbg7UyNc+qql3cn/c6vzCCCO4rVe3OrBqLweORAp+w3ZZbC9QXa5Ol2zRCIGw
+	oXSmog==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792ca5jna-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:19 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7cfb7ee97c5so280385a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:50:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750276213; x=1750881013;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bTiYGH9s90MOiZvQtQe8c1eAjqU7s3NEhM25qAZHZ7o=;
-        b=Ny4uU7ycsKmghbhj1+zdQ9al3Gh1se6KvUkBY37sDRJUPvOUcMDB5B1xUwclfngX1z
-         5O7TKYq3eU3SrdejR5HCSgWTXMFbiHqqgn2SR1iYvAOoaaaZxgI3srWRTcCPGL2D9M4C
-         u1UtV8qNmndDcbCJQ8/0ODlWDjCXr7RAAMKRRkYBnE3CO7LpvPoJuMKp2SJ5/tINXSGE
-         nn6FCTkTdGIIFNh1hjXl9OHH43cJ8V1pS7BgPt9yLgj0qmXqTeKVgOBXFuUV2fufAmJx
-         bxKu2tByn5nvb2HmSqn3bb7Y4EOGvJRwGzpg2GdJNM5+k9Z1/x/x+TmwdUckGVMo9w80
-         fjpg==
-X-Forwarded-Encrypted: i=1; AJvYcCW6+EGI7bbEP0WCy9y6ZDMG6Q+nV26alBvYehJZ8XAwZw3JvVfmkoJjX5OXRia9iDE4xjq9Uk1LtP/7QAU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy1Z2lT8vAoP9FkLhiZ5WugRSa6E3vJorM0t0ZyaMF+ujGjtUo
-	eXWsRsjMeu0HyIet7CdG3LFFOBv23NbxXbZfZftTOtyp2IyEy4Ryj809
-X-Gm-Gg: ASbGncshqC7y3dN8more8NwCcLN7dvXMF7vXBh4pu2gnBbp8cyTwUm025Ns5GJoPMi1
-	LALbvEFFFldmymCimufGRz9Us2hLEDIyt5ffUBJrjxiIL6TCPG+ut/dg5aQdvjCpZ8m+C4au7cN
-	hV+pFwQIt0sUIs+xMpMHSAZ3yPJZ38aUz8NaO9qJtOSnJlraCgZYhdcCks4tFDTd4e0te3JnK4O
-	qnnnAakezTGHHig1ARv8HSl5za1mggWla9p/JWOHlRqACCvRfnFu1bdbDbgzWHkXU81o44tK2qv
-	tuqXL9lO2VMD3lZ9l19Bp3Wb1umED/e8JQVvHmshKTq+6buUWwQmLkqvcwGZdLuZBfg4aVsa84G
-	PLGXWuagwVai5o9evWiti9A/WxEe4kqdV4ENPiGn0sLy+golXCF+DhB9+FA==
-X-Google-Smtp-Source: AGHT+IHKjnlIi1+ZbN9Cv9pOmHXRsgVkPdVQJFqdjmvVyd8mttL28Pc0L/VGBS7loLcKsvWreMVKnA==
-X-Received: by 2002:a05:622a:1a29:b0:476:6cd3:d898 with SMTP id d75a77b69052e-4a73c4ca299mr301278841cf.18.1750276213025;
-        Wed, 18 Jun 2025 12:50:13 -0700 (PDT)
-Received: from seungjin-HP-ENVY-Desktop-TE02-0xxx.dartmouth.edu ([129.170.197.81])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ed0150sm801300985a.86.2025.06.18.12.50.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 12:50:12 -0700 (PDT)
-From: Seungjin Bae <eeodqql09@gmail.com>
-To: Mathias Nyman <mathias.nyman@intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	pip-izony <eeodqql09@gmail.com>
-Subject: [PATCH] usb: host: xhci-plat: fix incorrect type for of_match variable in xhci_plat_probe()
-Date: Wed, 18 Jun 2025 15:27:14 -0400
-Message-ID: <20250618192713.20668-2-eeodqql09@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2025061804-existing-taking-1f9c@gregkh>
-References: <2025061804-existing-taking-1f9c@gregkh>
+        d=1e100.net; s=20230601; t=1750276218; x=1750881018;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Ljc/kXCXngRvy5Fgg33kD8o8huQROVV7GWykDyAjSo=;
+        b=KL12riYn9eD4vbkkhs8dRY6H0KWVMCs9I8BCeZCXd8L4A1DkSjfLlO7kX29y7eOFhc
+         r3bJw4DoYRQuKo/P+ISmFbSK+6xTnBB8aXyJSB7v83fta5TDsrZu1dN7aFIpQAoDHbHt
+         owp1jQJsnRMmj2lo+1B1rw2RNvNhoF9rH6VGvQ3w5vjBoTLeDFv84jG2p6NPvo+6OAsx
+         n0Ffgnjic2LWpn9HbqsmvfhdhKCRpjyqelaTVS1TwaUhIerC/RAHo15xL6S12og0b0XG
+         ylin/ui37cT44F4vrlDmj1HSF2xAb7uGb/cuzU10b+Cor7SPi7vw3bkE2Hh2uPM2SbFx
+         vDAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLcGAFRsypmIOAs/fa03Q4H79BiiWZxjCD344DsKcxEe5zv+BR05TzFUw6bq/y1AG7fQ4L0JjNhhTa1Qs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiPs+MxHGmyGAfIEVEYjFEkDxl69MtIZ7tgsyP3/j6u1Ei25a2
+	jD56p646qDcUzAWluiiutMLtcl2iduHLbyM3VthxZr2naDky4H38DugbwZ6HsFjHTN5DQGI83s8
+	MChWyUbyDHvPTuDrn79SUPm8pTdG7n/CwapuOVnao9i9Xs2uO/zm0RfH3gwBqS1rZMLg=
+X-Gm-Gg: ASbGncviS22U3tzNn7mfvSZwZ+hxQlfmhPg7AtGQvPs46mM0RAnzRo96BlYTGrl4EWV
+	uHAZP0FUFWq/RBYqt7QfT6w9VX9Kw6XU4JgnS7nNjeIJWTTXjMOc3CcKegzCiKlKkIEniJnvS0A
+	2RezEGNDNeplMNcXh+lXoBWtglPNV3le4PfTPL3ocAY42DQmYvHoMTGMSI4SSXpNpdgvgOMrXbd
+	u2CHOc/Hcv+a9K9uJHcCH+sr/z+aInnFONQmaS/vNeNjA6b8KaSh6yhGgw0PCXdwJniMs52qj1y
+	5rGHyDFs8u54zonE17TMezi/9u7vz96Wpvzbp1JntDg5bv7mvQuij4xxs6OpZ/aKzQQV3tl8v2G
+	3p4Y=
+X-Received: by 2002:a05:620a:4710:b0:7c5:e283:7d0f with SMTP id af79cd13be357-7d3f1b5e5ecmr37443985a.8.1750276217806;
+        Wed, 18 Jun 2025 12:50:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGfcZRcccmShP6R9wCLOiDGb+StS8GFq53kzUdhUK587RcojJ2gKh2k+QUntxieK0dv2VRsMw==
+X-Received: by 2002:a05:620a:4710:b0:7c5:e283:7d0f with SMTP id af79cd13be357-7d3f1b5e5ecmr37442885a.8.1750276217384;
+        Wed, 18 Jun 2025 12:50:17 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88ff270sm1106349566b.77.2025.06.18.12.50.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 12:50:16 -0700 (PDT)
+Message-ID: <13431db8-83ec-4fed-a6e5-3a6d173176ef@oss.qualcomm.com>
+Date: Wed, 18 Jun 2025 21:50:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sar2130p: correct VBIF region size
+ for MDSS
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+References: <20250618-sar2130p-fix-mdss-v1-0-78c2fb9e9fba@oss.qualcomm.com>
+ <20250618-sar2130p-fix-mdss-v1-2-78c2fb9e9fba@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250618-sar2130p-fix-mdss-v1-2-78c2fb9e9fba@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: XFMo0pW0XCwXp9Iffp3kMAp9pVD7Dqta
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE2OCBTYWx0ZWRfXwQyEYfuaaqC/
+ 9hZSGvO7iVEQ2VNhuMdJz1ZvLmJYBUa1DAEZSOUvIoQIOy8UN5G2Tdjshbhel5rwVzTKj5+OCk2
+ 7H8PNWnCf/ryXARhhi0Gf2vgBNdHaIYRPGFVOU5Js/wbLPryfaAiz4weyQfwxCrFtoyuZSp83mT
+ ZDrNs2DXb/WJW/IDEX19S9QUNKToCqDv3KsdDlofh9OaoyKBK8cBglcDoji8LRr6FuUfYAm+9xo
+ WmZTxLWAAqx+0Rw84P2pCzNOdkielVE9cDPjqJGTvZrXUjFkX0OvECayFdL6dOF5p7pW2EtWC2L
+ 4k6clHaVYfvPrDggiKHHtLG7Y+VMvesRExEMXgV7iznU/REels364XWP8pNqYbKiCvSxsXr1TXA
+ s0VFmY2BIpcCOV49PXt0q6AG26EwY2IXtxgZEC2qFyk3HplXYsz5IR0ELHk7WxVu3FEfJNzC
+X-Proofpoint-ORIG-GUID: XFMo0pW0XCwXp9Iffp3kMAp9pVD7Dqta
+X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=6853187b cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8
+ a=JF0wo2c6fDunmc63d_EA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=675
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506180168
 
-From: pip-izony <eeodqql09@gmail.com>
+On 6/18/25 7:49 PM, Dmitry Baryshkov wrote:
+> Correct the VBIF region size for the display device on the SAR1230P
+> platform.
+> 
+> Fixes: 541d0b2f4dcd ("arm64: dts: qcom: sar2130p: add display nodes")
+> Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Closes: https://lore.kernel.org/all/c14dfd37-7d12-40c3-8281-fd0a7410813e@oss.qualcomm.com/
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
 
-The variable `of_match` was incorrectly declared as a `bool`.
-It is assigned the return value of of_match_device(), which is a pointer of
-type `const struct of_device_id *`.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Fixes: 16b7e0cccb243 ("USB: xhci-plat: fix legacy PHY double init")
-
-Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
----
- drivers/usb/host/xhci-plat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 6dab142e7278..49eb874b1d81 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -152,7 +152,7 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 	int			ret;
- 	int			irq;
- 	struct xhci_plat_priv	*priv = NULL;
--	bool			of_match;
-+	const struct of_device_id *of_match;
- 
- 	if (usb_disabled())
- 		return -ENODEV;
--- 
-2.43.0
-
-Hello Greg,
-
-Thank you for your review and the helpful feedback.
-
-I've corrected Signed-off-by line to use my real name.
-I also updated Fixes tag in the commit.
-
-Regarding the original issue:
-I'm not exactly sure why the compiler didn't catch this,
-but I assume implicit casting from pointer to bool is allowed in this context.
-
-Thank you for your email!
-
-Best regards,
-Seungjin Bae
+Konrad
