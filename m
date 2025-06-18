@@ -1,131 +1,124 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942982192FC
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EBC21A443;
+	Wed, 18 Jun 2025 19:50:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750276213; cv=none; b=bnsjfGvoq6qv9R9295IiYENViE5wFvxV+IEmkFQAneCN5swYZgw9ZKLvmySkSV4M6jgRx8QQu+v2qKryz+F6jYNQRDopE0FQlHijWM9Q+lAwMQ0rirjG4GqkEtgSdk+FRqUc/kBKP9lQMVzcevZ+P3WvlPPoIMPPzuG1h7997MM=
+	t=1750276215; cv=none; b=YU5QIJAbXDgg5vEgbw/XTkcRwWP+gbuKdH+IrVz3jJ6R37x7XxJNdhJcY4bd/sFpDYQndTE5z14UUr+aA0HcHMzELsW5xH9yT++hnCCMpmFTykFKbgCEGb+8DtpAXPwzRYyC35Ccwwy3h949LWvrGgyhJ5/oHp8NnYUfmlBTM9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750276213; c=relaxed/simple;
-	bh=luoJ2EhFdNRnqQJG9cSh5+lCaNdS01/9QmmpcN3PjGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VhtViDTFHUb1XTl+3ol9PIbCzpccwz5OMepTtNjcuknxbwM6O1DaMD1nfpScvrWhp0HO54/HsOUW1A6Lp5vFvfTJUcnq0wezuyHoDhwrczNCqoM7VlpNwTgpk7qcvRmW2t4UpKhEsWFwm+YcWDG/AVpNL0Ks49/nhhTYnHOSp5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hDnOKgRN; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750276215; c=relaxed/simple;
+	bh=24rRaj+riLcN6nNTA2ySQ+hr2w7EcDiuFRRjnmlYPBM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QfgNd0edhclSr0KMutDcg5lcabCRxi4OuCek6QHJxEM+akr43c9t7KS57ILKoTNjap3JF3nyuJQy4OfaJ5ZkQe/UZ2QuH5zoqTcKd0vmamUfnPG/KVayjSNpikDYjPIGrp3XYlMDx7KMPGiBFGWhSwcSlKmFhdqq50QiLoY3/gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LgEJMibC; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hDnOKgRN"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IFv3Kv019267
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Eb0PR7MC8vATjVfhJQjNH3z5UBkyJTka8cUrPI6EnrQ=; b=hDnOKgRNDff/Lyaw
-	quOkZ8IaI5VQYSbR6zgdrzmzL9ZzoMT3n9PDasulA3H8vuV9yVM9bDkjTutLKlIp
-	cG4bra97nsK3EVP++Y2r9jhzwqHwGsR4/cYkni9bvcEhCg13DVs9DlDR6/7P3OZu
-	wtBKcA/ojneNcgQLpnanKt605HR0zMGoQA3h/7Ig+mzgEfydcTA7vcmf5rp0FEXQ
-	gRCVyZpgiVNbAsDnB/AQfD38TM6PuoWaha/4wVq/asD38Plw/yMT1CtUk5IVryHp
-	0VLNfxQ4Pt1L8b/9GEm0mExQGcumVzVgtDiTRLrvOC02LF1EGjUlr7XMQQotDnqX
-	gBpn6A==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hd5jnx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:50:10 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d3eeb07a05so811785a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:50:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgEJMibC"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a56cc0def0so124142901cf.3;
+        Wed, 18 Jun 2025 12:50:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750276213; x=1750881013; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bTiYGH9s90MOiZvQtQe8c1eAjqU7s3NEhM25qAZHZ7o=;
+        b=LgEJMibC1eB+BS3i0gg301Lq4ubxgcXnTAxXAP0/qmN9jNylmMLLVJOq/xbsDyafYx
+         bhVP3KTw8nXwGJCNtSzvF2JYcOIllZ0+Itj+FYwiOuQzaC2GQBFHZ1jAv81G5DObE3cO
+         /a/OUHqQVgvTxUAg3XNLXJH64sztGIAb/hRubqSaKL3c6G6bxZAykSsgsFWZZp6R/cJ3
+         pCIUfG0rlDne1eXrE4GmsVT0l7IsXQlKTamE2iFV6PbFRJePI3UJTtOfI/95lpYF8dCa
+         EAS1gXOXAsyDJ2BSNtYBGtqt9I6bZRxIPUY578W7oRAi3h1ZxSla8zdYqb09ew8JLEff
+         WB7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750276209; x=1750881009;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eb0PR7MC8vATjVfhJQjNH3z5UBkyJTka8cUrPI6EnrQ=;
-        b=TZfih8Q7nxp3JyJxXVIx0iWhOlR3xnvA95SdkMbA5AQ6/L+MzCoI1qtFdTE9FRmt+l
-         8UIvd54ovTvmMva1pbzAMB48Y7Mh60ODppDIA9U0Osr4kymz9WHUyB54HzVrh1O/m2LX
-         Hak6EILqnquZxyHuhzogQfkrmQ2ySauetxChB0LHF59ly10A/hB7OCqnBdwNIn6C3fF2
-         2Qgxxlm+JUo6le/f9PWhYJ6KrIlyp3/FSYQiF37mUrr23zvgGJ0CWB2vypPa8riBinxP
-         cIHcBjDvoxohLaDWKj2p3hkxnourjd+gSzttTfu6f8JDX7RZGYiju+PwpDMKNqjyh8ep
-         3YTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWH0kTEdxxavOYglNlDN3vhXkvBKqFXoZBF4m9doaXCmbnl4i9vEeVou+mg0I2FIogdeJ95j1vLVVICoFQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwMptIZnnTln9I3vVwzX8yB263t+cZFAYwWp/1ObXofwZB/N2Ia
-	+nM0LMq28chTfpM3OGxJQB2a/JBS3ZIrgywPeJVtZCoSi2bP2TgQmawAsEMxk5xzcLt1OlHPzw9
-	etSVtQZRU+awVV342aFJe2WAemk6319v5NsnzhwMUwVEO13M3/tpS5uryh9CtQ8ucjSA=
-X-Gm-Gg: ASbGncuymtAioM1/Ee3x8CvL23iTz3xCsQviTdnRRsnhLRhYKBEEy6X+bfhxMZ9s0NA
-	+NwKjgxJeukip1CbUcXe3DP9M0B9Qt4QwLUv/ZjG9NNYfk1kGfG/WCmwxnCkmhsB8O7E8yyGZw/
-	6HvOPU1vHllyA5H+W1dB/uHe/RWwMNFNvLGAptOocfIssHX5HoL2Fw1L+5wXNnHwVpmxBfrFVWa
-	sniIRkiMAv4ph7tmj0ZjdL4MmD5HxL1gFRvOfLxIgfuKIa3Bre4fKXb/WD1WPGHOl0fCfnlQhTL
-	x7NlBmQNYRYVWncN0WljdxwaKzaP8yhMQS3d4QLzgaM60IIk6w7gf7NOSHC6+pG+uy7vs+pvw+O
-	If38=
-X-Received: by 2002:a05:620a:414a:b0:7cd:4a08:ea12 with SMTP id af79cd13be357-7d3dddd3dcamr452894485a.0.1750276209389;
-        Wed, 18 Jun 2025 12:50:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFL3SJd4iFzCwT5g6MhwkHB+B/Bg64lwAFozgDBTuMDs9zJo+cDkA5jqPxifdTnFFGAD0h1eQ==
-X-Received: by 2002:a05:620a:414a:b0:7cd:4a08:ea12 with SMTP id af79cd13be357-7d3dddd3dcamr452892985a.0.1750276208907;
-        Wed, 18 Jun 2025 12:50:08 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec81c0135sm1090314466b.47.2025.06.18.12.50.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 12:50:08 -0700 (PDT)
-Message-ID: <f2b806af-510c-4f33-a4be-9c84a37cd247@oss.qualcomm.com>
-Date: Wed, 18 Jun 2025 21:50:06 +0200
+        d=1e100.net; s=20230601; t=1750276213; x=1750881013;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bTiYGH9s90MOiZvQtQe8c1eAjqU7s3NEhM25qAZHZ7o=;
+        b=Ny4uU7ycsKmghbhj1+zdQ9al3Gh1se6KvUkBY37sDRJUPvOUcMDB5B1xUwclfngX1z
+         5O7TKYq3eU3SrdejR5HCSgWTXMFbiHqqgn2SR1iYvAOoaaaZxgI3srWRTcCPGL2D9M4C
+         u1UtV8qNmndDcbCJQ8/0ODlWDjCXr7RAAMKRRkYBnE3CO7LpvPoJuMKp2SJ5/tINXSGE
+         nn6FCTkTdGIIFNh1hjXl9OHH43cJ8V1pS7BgPt9yLgj0qmXqTeKVgOBXFuUV2fufAmJx
+         bxKu2tByn5nvb2HmSqn3bb7Y4EOGvJRwGzpg2GdJNM5+k9Z1/x/x+TmwdUckGVMo9w80
+         fjpg==
+X-Forwarded-Encrypted: i=1; AJvYcCW6+EGI7bbEP0WCy9y6ZDMG6Q+nV26alBvYehJZ8XAwZw3JvVfmkoJjX5OXRia9iDE4xjq9Uk1LtP/7QAU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywy1Z2lT8vAoP9FkLhiZ5WugRSa6E3vJorM0t0ZyaMF+ujGjtUo
+	eXWsRsjMeu0HyIet7CdG3LFFOBv23NbxXbZfZftTOtyp2IyEy4Ryj809
+X-Gm-Gg: ASbGncshqC7y3dN8more8NwCcLN7dvXMF7vXBh4pu2gnBbp8cyTwUm025Ns5GJoPMi1
+	LALbvEFFFldmymCimufGRz9Us2hLEDIyt5ffUBJrjxiIL6TCPG+ut/dg5aQdvjCpZ8m+C4au7cN
+	hV+pFwQIt0sUIs+xMpMHSAZ3yPJZ38aUz8NaO9qJtOSnJlraCgZYhdcCks4tFDTd4e0te3JnK4O
+	qnnnAakezTGHHig1ARv8HSl5za1mggWla9p/JWOHlRqACCvRfnFu1bdbDbgzWHkXU81o44tK2qv
+	tuqXL9lO2VMD3lZ9l19Bp3Wb1umED/e8JQVvHmshKTq+6buUWwQmLkqvcwGZdLuZBfg4aVsa84G
+	PLGXWuagwVai5o9evWiti9A/WxEe4kqdV4ENPiGn0sLy+golXCF+DhB9+FA==
+X-Google-Smtp-Source: AGHT+IHKjnlIi1+ZbN9Cv9pOmHXRsgVkPdVQJFqdjmvVyd8mttL28Pc0L/VGBS7loLcKsvWreMVKnA==
+X-Received: by 2002:a05:622a:1a29:b0:476:6cd3:d898 with SMTP id d75a77b69052e-4a73c4ca299mr301278841cf.18.1750276213025;
+        Wed, 18 Jun 2025 12:50:13 -0700 (PDT)
+Received: from seungjin-HP-ENVY-Desktop-TE02-0xxx.dartmouth.edu ([129.170.197.81])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8ed0150sm801300985a.86.2025.06.18.12.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 12:50:12 -0700 (PDT)
+From: Seungjin Bae <eeodqql09@gmail.com>
+To: Mathias Nyman <mathias.nyman@intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pip-izony <eeodqql09@gmail.com>
+Subject: [PATCH] usb: host: xhci-plat: fix incorrect type for of_match variable in xhci_plat_probe()
+Date: Wed, 18 Jun 2025 15:27:14 -0400
+Message-ID: <20250618192713.20668-2-eeodqql09@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2025061804-existing-taking-1f9c@gregkh>
+References: <2025061804-existing-taking-1f9c@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] arm64: dts: qcom: sar2130p: use TAG_ALWAYS for MDSS's
- mdp0-mem path
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-References: <20250618-sar2130p-fix-mdss-v1-0-78c2fb9e9fba@oss.qualcomm.com>
- <20250618-sar2130p-fix-mdss-v1-1-78c2fb9e9fba@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250618-sar2130p-fix-mdss-v1-1-78c2fb9e9fba@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE2OCBTYWx0ZWRfX3v58OEvNpRw8
- EgrcjuC/sA7RRF/pSQXzz8Ch6rKOAUsIFpNVa/+TnKCuBDfT+7JBYZP7ZjhyMdcEHlKAtLZrjZ8
- sWfjmnvFlQ6T8adSBn1T6ciGBmrZ1pQnqIBxMOQ0Pc7gezLFaMAbq4NfmhSZ6oyNefXtY3sjmb8
- FVZ4kN0ZaeMWBWj+yOc1mYKQX2k64eJQQEFB5PkweToTiXtKXNl2Dq4Rq1LznIUdqSmaw/W9iTP
- SBn7X/quqBaLaWabxF7KBqjSG9KXrjUHQbi/EFZ8516DnLK+M/AMOQVeqWTcy0FfhrLYYmO7W+T
- d2VDbq0nn7oOmXvaL+Z8Amoyfp4XXKzK/BXcHi0wlLB8a1PcOP89PceGlHiGo9SKz1eCQ0ojo5w
- g+ddBlpDYOsFLrz5ySBH3ZcTHf0FBxLDEb4AGW3y5aNg4+BbpHSpcMqaJdBvbM/KRikFAa/h
-X-Authority-Analysis: v=2.4 cv=PtaTbxM3 c=1 sm=1 tr=0 ts=68531872 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=LxG8ozSyjN6uvR1bqNQA:9
- a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: cirymbGVCrDE2FGtreGdnTufoM_kWpWR
-X-Proofpoint-GUID: cirymbGVCrDE2FGtreGdnTufoM_kWpWR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 mlxlogscore=763 suspectscore=0 malwarescore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 spamscore=0
- priorityscore=1501 phishscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180168
+Content-Transfer-Encoding: 8bit
 
-On 6/18/25 7:49 PM, Dmitry Baryshkov wrote:
-> Switch the main memory interconnect of the MDSS device to use
-> QCOM_ICC_TAG_ALWAYS instead of _ACTIVE_ONLY.
-> 
-> Fixes: 541d0b2f4dcd ("arm64: dts: qcom: sar2130p: add display nodes")
-> Suggested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
+From: pip-izony <eeodqql09@gmail.com>
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+The variable `of_match` was incorrectly declared as a `bool`.
+It is assigned the return value of of_match_device(), which is a pointer of
+type `const struct of_device_id *`.
 
-Konrad
+Fixes: 16b7e0cccb243 ("USB: xhci-plat: fix legacy PHY double init")
+
+Signed-off-by: Seungjin Bae <eeodqql09@gmail.com>
+---
+ drivers/usb/host/xhci-plat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 6dab142e7278..49eb874b1d81 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -152,7 +152,7 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
+ 	int			ret;
+ 	int			irq;
+ 	struct xhci_plat_priv	*priv = NULL;
+-	bool			of_match;
++	const struct of_device_id *of_match;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+-- 
+2.43.0
+
+Hello Greg,
+
+Thank you for your review and the helpful feedback.
+
+I've corrected Signed-off-by line to use my real name.
+I also updated Fixes tag in the commit.
+
+Regarding the original issue:
+I'm not exactly sure why the compiler didn't catch this,
+but I assume implicit casting from pointer to bool is allowed in this context.
+
+Thank you for your email!
+
+Best regards,
+Seungjin Bae
