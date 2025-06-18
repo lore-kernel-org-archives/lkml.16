@@ -1,267 +1,106 @@
-Received: from mx0b-009a6c02.pphosted.com (mx0b-009a6c02.pphosted.com [148.163.141.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FD91F3FED;
-	Wed, 18 Jun 2025 07:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.141.152
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750230550; cv=fail; b=pIyhluyFOVDhXZ98KzalJpsYn9E9jKaaovUaBt1suB3qJ4Qhak/z3lvLNq0di0mtt3BNPch6Hae46D9thi+L4Fc2GNXINPls6ytMUWmja/K8eVxx9cAY1Pz550rulkL7WTITx2QAqjgpwrrHAV9Y2zVWHjfsyS8D13UsAOHj2y4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750230550; c=relaxed/simple;
-	bh=tojcD1sWJ+5Z8Z3jZrpla6MAEVQaFob3wGtZ0iw3Oqo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ENkiZqaPqiKw80qmyq8kQ+ABB/hZ0BCR6/YN6FipRsmHuMe+qveygYTYI0hbKPUwwloyDm23XOYcB/xzV1dh6pJre3cBMScmn2yuV7fjmDEVznzIGvM1bQIs6vEfE64gzx+H6tEVFfUzf+aM6/lJzTM0suca0FCU1KqS7gP009s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=Tsqj7N1t; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=TORpedka; arc=fail smtp.client-ip=148.163.141.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCBD25A33A;
+	Wed, 18 Jun 2025 07:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750230587; cv=none; b=OZFBZXNHSq/kief2roStYPtlcde6yWsO6FjWuBP5aTLQ/wYY1JTuiW+qnmW0VFlkcGedep9FUhc3v2wi9j1/eVAxv56UhkBpSOmV8I9ue7Fps7zqFArJDJTS6JkSr09Vrz1sHB5rrMx9Jlpj9r9Vf8paCbesCNg14P6odVVOsuQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750230587; c=relaxed/simple;
+	bh=4xt5Yf4yr6KNVWrM3aYxeOfV8GMxBkLmofYpW+mqFoA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MfzZ+S7ML5JSl7EwvimcnT+BPRd+PHllE7xctCYslspvbUP8qQXvPRGnGkisM+sMOEt5DGaaTBobt31qvC1JYShfzb+F5hfbfjR0yiyoF96cpkI/5O2n204qlvm82yNZazFmd/c30mhRJrEgqD61fde1I3jtMrgKrnv9EpeywV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XNDqab9a; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="Tsqj7N1t";
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="TORpedka"
-Received: from pps.filterd (m0462408.ppops.net [127.0.0.1])
-	by mx0b-009a6c02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HNA6nk010207;
-	Wed, 18 Jun 2025 15:08:29 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=20250420; bh=IqTetl6upexAsH4ZMTdRxrm
-	6z3s/zmsA9UK2sAWt5FA=; b=Tsqj7N1tLHLUyKj4gOCIHGV/bBY3vMqYqe/5a5u
-	U117UGgZo3l1ov/7ghhV3ARDVse77mrArxw+rRInh2nu2UHFOx2QA+2/+/0yE12Q
-	KbgshEBruFGM0izBGu1H5SgtHFz2muoD9fTlPGU9EjJ+A8nXJI42n4wlAO9yhwHE
-	BWm77Qit45XBcL1KLpuQoP6ifm9UxBcMZwbq4H8H8ab5otYJYmLxiPF0mErcQ1ms
-	NSttENyjpOsw05Lo5FOrnS+f34XvjKsc9bCcfqEgFI03pEIxtYyukjhXThnkBe6+
-	0ryF29c4g3AK8vnaO1IEsrujJdhnZx/oif9JkPRQlFVdSaQ==
-Received: from seypr02cu001.outbound.protection.outlook.com (mail-koreacentralazon11013027.outbound.protection.outlook.com [40.107.44.27])
-	by mx0b-009a6c02.pphosted.com (PPS) with ESMTPS id 47bhssgfpa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 15:08:29 +0800 (WST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pP+KDz7rvIuyLRIgcMrAdvKdul8OQdawszxZM7JuGLzMJka2mwVaw5ykJAMEKcVXY1qOnbuROZ//Y68Qe6c2gX5zgCOniQUIyA4HzRXy23LQa8V4z3Sk6/tP135LpqQMJ8e7kM7oZulkV/RMhr9hXSTM8gXIheLsIluB1CpBkktUX3DB7jkXEIQqtAWW9e5gixD4fgBBSl8pJg87fnStkKIb0b6W55VRiUHApMBAtvTeN++bMGnNqezCS5CiKE8yMdun8AdIcwKKksK6gV74upt+0Xcxf6qS8yHwWCPR7ScoJYWNVW+WI+w6RXUWZPadE12hihLJoVLOKXoqLGJSmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IqTetl6upexAsH4ZMTdRxrm6z3s/zmsA9UK2sAWt5FA=;
- b=FuAa30OvcC9YbADzP6gD9fWPUOffykTY+MgnogyV0Nfiz9GPyT2Q2oufzxd2VXkM1p2sF0PUhCvBYXCbP9555Icy59Q9RzM9lF7iWJYbOYCgkn8m4Nz3V0vWDkRE98YFSTzrcOlKEyBd9qW4dwWfGHkRcgktUzpb0FWcAqqW+3GtCz4Dk2fiG9o+Md2tvTOINI+rOuPSmcK15Z4UzN5WdrCdDzTnjhQCYrp358LRpfw9pI5C69wJa5pBJI0rQwu7UKmIB2RxRPtGJ1dGcWKbzogUDZFE339pYM0uFrdH9S1jqlfSG1KJECaAHzq2nzSm8Hm07Lq2ebaVq1lab87J0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IqTetl6upexAsH4ZMTdRxrm6z3s/zmsA9UK2sAWt5FA=;
- b=TORpedkarZybDgaIA8npOZR8//ZvmBm83nJfU4aUJkAT+sQyMnljfGGLJI4XLGgLEvtc30ecsddFeyw6HD63+Kwyjoz2zPZz2uXgFM5oCRbr+TFNMEgCeEKst83zsvLgH1crocJci3K4zvv+G/SAsiuGn2i+FtPRvRRBctfitn3lg5dYSUiG8aatj+s0sGGv/3iCumQop07Bew+DDQp3f8HRB65s6eX81NSOY/rpn74tiiPdCFxkF7ytxC2WLW/3fPyRNfFsGZeQVedqnQ1jsKP+x401rkBmdUjuTjs/y0lziiqzdjZz1YGj1mrdLpWRV27IBx+lDKTk99Tt73+ZfA==
-Received: from SI2P153CA0015.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::21) by
- KL1PR04MB7209.apcprd04.prod.outlook.com (2603:1096:820:fb::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.30; Wed, 18 Jun 2025 07:08:24 +0000
-Received: from SG1PEPF000082E5.apcprd02.prod.outlook.com
- (2603:1096:4:140:cafe::87) by SI2P153CA0015.outlook.office365.com
- (2603:1096:4:140::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.5 via Frontend Transport; Wed,
- 18 Jun 2025 07:08:24 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- SG1PEPF000082E5.mail.protection.outlook.com (10.167.240.8) with Microsoft
- SMTP Server id 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025
- 07:08:23 +0000
-From: MarshallZhan-wiwynn <marshall_zhan@wiwynn.com>
-To: patrick@stwcx.xyz
-Cc: Marshall Zhan <marshall_zhan@wiwynn.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@codeconstruct.com.au>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] ARM: dts: aspeed: yosemite4: add gpio name for uart mux sel
-Date: Wed, 18 Jun 2025 15:08:22 +0800
-Message-Id: <20250618070823.4136687-1-marshall_zhan@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XNDqab9a"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a5257748e1so4711270f8f.2;
+        Wed, 18 Jun 2025 00:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750230584; x=1750835384; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hS3rWc1gIurkAt/eh2Z+JrEXYIERg3qQF5u9VddF2Z8=;
+        b=XNDqab9aWIcKfjU/m98KkRpbIG0QBgBq8TPoDIGXfwhEqr7opYNIpW6F1i/RUx1Dqv
+         X00jSayohrCPmH/ZwMkVugXTLMv2KUvdYMW+xSjB53hYUpSAZeK7C9E+h1zRbB/uByH/
+         NEG5hu1/4Y4ytHT0k/9J6ZL0JpO3/IQc7+KMLiAMoz5Y2B+YLeeC6Hnjrky7FoA8VL8r
+         zWLHzqK/BxfPie1EBLQ96S9CIgB3VwqCH9JlTH0wdhDzgxL2AHKBbag2U5KFrJ9HY+Dj
+         WZ5EpmKGuY8ztZheyM0LxuN3cvbqOt5vgT+RdJ38Yo4aUeoquFFYJJ5B3sTwfgqCYFsy
+         qkkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750230584; x=1750835384;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hS3rWc1gIurkAt/eh2Z+JrEXYIERg3qQF5u9VddF2Z8=;
+        b=BZEKaxxbF4whJE9fm3zKT8VRnvUa/canG9iIRSPeWUVYGIiXStJRC1/iyMgMu6Pj4d
+         2AYkeT1Xd9AtiAEVckuonX7tKV03u5N5STrnF1xj6LuSrRJaehBki3E9J7lpRmIzPKP6
+         2UzCTsRC/ptUT6ItVwQIMamvD4gHoiET1lq7DptWxN1UFV61m5c/YyFFHj65RWzcWzHJ
+         8URdPr4mKps4mTqhHC4n75gNxk1MFh6oeTgokhEC9bl5XH068QO0k04o54UZhujpqDvu
+         9uM+Y5ZHxKpwKbK3KxLSaW5LvzwBNXm6mvsbiBxpV4nubQP/vHRKJQNXjycxFNaTfgdw
+         pbhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUERrMshrQHL8BrYVs9L4/dKKDqmqjEHhncBjqIxdV1sIEmIxgJ0PyZF3Ca3Dpi5NAhV8BYCtf4dDNPwqGE1Q==@vger.kernel.org, AJvYcCUzSW5B8Gh5Wy+rZ41Z3HMjgXYENCTAnDIRu1mN8XEdJUA3ypobwkUZoNhGfsxU8BSKBn0W4nEEw9+B@vger.kernel.org, AJvYcCXl87Hk7wAi0VYdoYxmrBpB3N67/6H8JdBOWVSe+74TErajMlBowOMDGRQxhmnbrboAjSD9x+Mdtwt+YEne@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBmmvKoTJBgFnxQdh80jJrdM1TelA1F4093tnxu5rtQz9992Ti
+	YQAnmqhtNi8NSsYEwBPndKnOukfjo5glqXT5yWt583pEuW7d4T2hd9NgPYBz/qUB4AHPs7JOldW
+	g41mAof83g/7iSzQlpmIs1eV7fGzq4oFNosSbWA==
+X-Gm-Gg: ASbGncvtCe9SJ8m+Nil2ywU/CMyRUhcxqHOBocIH5oi8Q5fxFOl93kAgsj8lTJcPI06
+	Rfhfsuq92tjGva6EhzgM5iaWgNmH6iFabCY6iv57SQHhHdsg8BN1v/GxZxhgL8v+5UGIvfULgK2
+	Tidg9gACNa84gN0W94isGEcQoWbBnIcWQAmV+rrRhtKt4=
+X-Google-Smtp-Source: AGHT+IHxDg1j4IMUb8UJTgBDNX/v5xspVufALUfntIJtkB1WiqSqXsP7uXDjZLJI6MjqnCEPj4DV1v/cCltkSFKLHTA=
+X-Received: by 2002:a05:6000:718:b0:3a5:3b63:58f0 with SMTP id
+ ffacd0b85a97d-3a57237178dmr12626003f8f.18.1750230583886; Wed, 18 Jun 2025
+ 00:09:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E5:EE_|KL1PR04MB7209:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 21b7d367-1c78-4832-109b-08ddae36ea53
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?y/xnR1LntkW9zVjmQ8ZufqXY9xVIZDdWkrT2P2Cwu2FynlQU3gGVSc82JlWO?=
- =?us-ascii?Q?RWLbr2fRptKVJZUqk6TSWiTbjhyBTnPQ9G2islc0gu/OIzsll4JBcmaAYtwi?=
- =?us-ascii?Q?xC7FX5mqWZSYfoF4zOOfpKPpaOyk+jLFD4Ezr3RgFpv9zL0qn7baPCZnCheq?=
- =?us-ascii?Q?Lh0VYfqARkkSHQ3D1ardOb5U7eU74p4sRzIum9q3THvXi6wJXdrXmEJybLZ9?=
- =?us-ascii?Q?EEUIKMudT0oFPMaPB++00JQvS5OAawuDH1gqEciHN6efD9U4kFt1f31DgNzX?=
- =?us-ascii?Q?W2teybxa2KejEn1YuSPTYnXKFiKBeoIQNkiJtGwA2nawk5T+DSyOuUbygrf8?=
- =?us-ascii?Q?cV1tCiP3Ni4AX67E4PT5DgBMlXPtG1hC3U2ZgbPgypvTPczyCFEhYcX/PKQE?=
- =?us-ascii?Q?pFKtnsQZu/AJyopf54gtxqTluqw4ZSy7xynN7f6VIeEBdRQEPMerqqE6ZDFu?=
- =?us-ascii?Q?2Hd+u1zkSCI1Ca6nSqy5nN2lxu1Zpy++30SaWtVwr/eFqXyf+xMLadZxXVsB?=
- =?us-ascii?Q?PWSmhDAtgjS/xmuC5L93/c/f56uHkfrBqEJofeGsovotPijCHQ902zub0e7k?=
- =?us-ascii?Q?fzBDafCTucsn2XNljUq4rbpE7ACcHFhtSwRBxWx4I+pXd8JHtMrVnhUtAHmw?=
- =?us-ascii?Q?tBChCABT0SxKuorhealPJ1cYKHMTsfitqEWAVEbjFuFoLL77IOREsWzlRT8V?=
- =?us-ascii?Q?GpgBkeUmvnscwDdM9H8LDws7KOEEborLUlEAIHAaLJ/cbazxlbIaO8Pa3AtR?=
- =?us-ascii?Q?WDvkGSZP+ckh+l5Qbuj5BZpyCQpF1fKbnMDfr6prJMrwQmiO+SGNXVir4X9G?=
- =?us-ascii?Q?7PzEdc9zwVAuGT4CywIX8WpeVE2+GXf3SSbMMnbpaIkVcW+uz2U6AqN2sktW?=
- =?us-ascii?Q?qT9kXyL13uL+Wbb9Jtw3+tADeaeBQoX2xNkIiWzjKNFPVV+PYePvq6VJcpp9?=
- =?us-ascii?Q?OurVaBuu8eL+wn8DjymG6rPfzaBSzFgH/NPKYhhljhBYo8fPguMLULoVOjYO?=
- =?us-ascii?Q?YSzTPkyg47yQ5jmDeh5RyxYE4wVM8LzoBvMmVMVErlClI0sqSa1ZCQ6zc+ZO?=
- =?us-ascii?Q?zxU+Q67VE7GJb+cqC6we6YlCVnzW/21WqB4zC1O+IWatvrU8BR5DmAFxGxmb?=
- =?us-ascii?Q?wYdi2IVuJG4MjhXE2yVYiR8oLHsUZ0PvYPrphhuN79sj370YGa0t73Ekl2SI?=
- =?us-ascii?Q?yN4Y838HsGre23GPkD1mgY6XX78v2HKlJhcZZxAd0HkRVV5bLOjObhAKJTbv?=
- =?us-ascii?Q?DiAfgWmzucfm0ZfMB31dcYZ8beTpIjL8WWZUN1nlxytm9fj0P2HgTTay9KRQ?=
- =?us-ascii?Q?xgQ5fjjLDoVx15wVs29Te1qTJDd1u0gxzBm92MluvVqFNdXMPwuMNsuSyja5?=
- =?us-ascii?Q?8Z4EywcI0uYRH+HJOZvizowQkV8KRBgliE1Xtjbj37DF8psbhAZFKxwyB9zH?=
- =?us-ascii?Q?cN7DUP3FzGP9qPCutRIjkLDHp76rwgPFewIYQgGx9xATCO+9iRVwUA+3j/gy?=
- =?us-ascii?Q?z3F1pCm9N2lGIrflM3Eq5pWRFH2E+99uYPFD?=
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	TrIw56rwnMWtEnDjlXYOqX67GeFoK3fWCirIG0+gA5vnX7hK0xuuABDu6EokBUUuuR9fHzyjsZb0wi4DTcqzesxxdvRTZ9lxWvwKA0JbJsoynSn9t5C5PDgs+XBJnEafF4YJgok887uYmDhB6jBvYu1y450n4BnzRvyKovIq+ODaiOClUeqnZNf1kpQUpThIHd1jf66Tq+4UyjlSzvCEdXaCQHXXRTM5kBP8oudBAEoetJthFaKZY323Hgz9QQwJtBXEqpmc1f3APnIDx3j+6tHDN+/zhGFwllvUPRiRlRjCA+mqA2jWvSONDKs8wMwkjKEEGb9DqDWEqxm4SBw6B49+M3B7GFIymP0egUHjbaepKITCgJ/g8voBDuYHWXWq/OxaypCLxi4oyYH3necCTHYwiwezY77LEeyLedio7mW7P15blvPOy6SITqUqhNtacwWGpKeEUNagw6YfGCiqjwqyrlqGAmzYLtm0cmuNpZg4j/d7uEiLjZ/hFiNTGmHFQuQzSHAVnByH5w/use53pUgVh+NlyptoPw+yG8FbZc26br19YVdpfUsrCIUcslvkkn7JqMvzoVvP2aEbrVw7d2kZ7KwdeenE0M3zoCn7oU8DENGHnRPO7+v7nvNdDlPW
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 07:08:23.2743
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 21b7d367-1c78-4832-109b-08ddae36ea53
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E5.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR04MB7209
-X-Authority-Analysis: v=2.4 cv=B9e50PtM c=1 sm=1 tr=0 ts=685265ed cx=c_pps a=dsIthHTsXEBkGW0VS6idzA==:117 a=6rDDh2uRNVCE5HFPCIqeAA==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=6IFa9wvqVegA:10
- a=4AL28aEVfeMA:10 a=cPYzWk29AAAA:8 a=u2kzlEoHWhBIlCB3pKYA:9 a=oSR2DF9YFqZEN4IGatwP:22
-X-Proofpoint-ORIG-GUID: JnxlT6wqDCj_w1DQZrvvdKl0PVcg-3z6
-X-Proofpoint-GUID: JnxlT6wqDCj_w1DQZrvvdKl0PVcg-3z6
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA2MCBTYWx0ZWRfX7YlxDkhfcZSK pbfEGURS7SPlg4dmgzQT60DiMchr4ssRDOWux7eSSgmrrweEVQVMS733UIcVOemrofUY1ggS3gc Z+cJHluemv1DQmeA3QFx6yZ0BopLHSAFiO+FeZWlmO4vlLBiyRRlZWkuGO3HS59NXXT/NTGgkUa
- cqsitliwk1gjf8qTRP93rxKIDcq7h4Cmvb15ziuDqC0CrBKE27JXM+GZZV4qOtpz9eug1ENV7Em x8i7YfcuE15w9QcWZ5XcRjLpVYXR8CkxsValC2ZG0h47cu56vVAyQJDZVzpEQVPueEYdGspQ9BR 4EQW5EqBiBpGw8rLckCFmcRv7nl6WETu1sTo6dQ/3UfDtVfBIbgZWYw8H6/vD/EfGFFfuSlu22p
- YHolnorY3amw8n/0oIwDvWjh7BlMwVoXyfi7Qdil40899z4koWQkimppwRrsqzjbT3ZYsarq
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=799 adultscore=0 bulkscore=0 malwarescore=0
- clxscore=1015 suspectscore=0 phishscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2505280000
- definitions=main-2506180060
+References: <20250523131605.6624-1-alex.vinarskis@gmail.com> <175021976646.732077.10509920450300400020.b4-ty@kernel.org>
+In-Reply-To: <175021976646.732077.10509920450300400020.b4-ty@kernel.org>
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Date: Wed, 18 Jun 2025 09:09:32 +0200
+X-Gm-Features: Ac12FXxBYceHEF4lQ5RsaGbjXNIAdi347IBr8_4t3UN3rEtybkM1jgjJCaCZGms
+Message-ID: <CAMcHhXrNauiVzhS1EFnCy1WeSn6xzqRRRE1hBMzc=84H1f0osA@mail.gmail.com>
+Subject: Re: (subset) [PATCH v5 0/1] X1E Asus Zenbook A14 support
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Nikita Travkin <nikita@trvn.ru>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Konrad Dybcio <konradybcio@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dmitry.baryshkov@oss.qualcomm.com, maud_spierings@hotmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Add gpio line name to support multiplexed console
+On Wed, 18 Jun 2025 at 06:09, Bjorn Andersson <andersson@kernel.org> wrote:
+>
+>
+> On Fri, 23 May 2025 15:15:07 +0200, Aleksandrs Vinarskis wrote:
+> > As requested, 1/4 was merged to linux-next by USB maintainers.
+> > Resending 4/4 rebased on top of latest linux-next. 2/4, 3/4 already
+> > landed.
+> >
+>
+> Applied, thanks!
+>
+> [1/1] arm64: dts: qcom: Add support for X1-based Asus Zenbook A14
+>       commit: 6516961352a1ef39184a34690ff3cc06953f6fea
 
-Signed-off-by: Marshall Zhan <marshall_zhan@wiwynn.com>
----
- .../aspeed/aspeed-bmc-facebook-yosemite4.dts  | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Hi,
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-index 29f224bccd63..aae789854c52 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts
-@@ -189,6 +189,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT1_UART_SEL0","SLOT1_UART_SEL1",
-+				"SLOT1_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -235,6 +240,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT2_UART_SEL0","SLOT2_UART_SEL1",
-+				"SLOT2_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -281,6 +291,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT3_UART_SEL0","SLOT3_UART_SEL1",
-+				"SLOT3_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -327,6 +342,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT4_UART_SEL0","SLOT4_UART_SEL1",
-+				"SLOT4_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -373,6 +393,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT5_UART_SEL0","SLOT5_UART_SEL1",
-+				"SLOT5_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -419,6 +444,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT6_UART_SEL0","SLOT6_UART_SEL1",
-+				"SLOT6_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -465,6 +495,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT7_UART_SEL0","SLOT7_UART_SEL1",
-+				"SLOT7_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
-@@ -511,6 +546,11 @@ gpio@22 {
- 		reg = <0x22>;
- 		gpio-controller;
- 		#gpio-cells = <2>;
-+		gpio-line-names = "SLOT8_UART_SEL0","SLOT8_UART_SEL1",
-+				"SLOT8_UART_SEL2","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","",
-+				"","","","","","","","";
- 	};
- 
- 	gpio@23 {
--- 
-2.25.1
+Thanks! However it appears it's not the latest version... there is v7
+[1] which fixes typo in the path for purwa firmware and moves GPU
+enabled from dtsi to respective dts...
+Is it still not too late to drop and re-apply v7? Or should I urgently
+send the v5..v7 diff as a standalone patch?
 
+Thanks in advance,
+Alex
+
+[1] https://lore.kernel.org/all/20250614205718.93166-1-alex.vinarskis@gmail.com/
+
+>
+> Best regards,
+> --
+> Bjorn Andersson <andersson@kernel.org>
