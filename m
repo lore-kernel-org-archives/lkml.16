@@ -1,133 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE70F9C1;
-	Wed, 18 Jun 2025 01:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86687F9C1;
+	Wed, 18 Jun 2025 01:10:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750208778; cv=none; b=kdbKOJzbofW7cZzS6LegqFDQ8st09SSFNGhvOoCNNjhyaV9yAqLL/sVxYLc1uWR2xpD9LKj8R4oZRtqH95u/iU3T6x111gP7SQPMyAKJiCcwQLWs2KlmP1litbG0hibv7w2H8ls3/mTmc3qS35BvSZtdo6NhCokems79RwwJIIw=
+	t=1750209021; cv=none; b=R/UY6dZdYgafj6wyBReTBVwGIlVWmWfn4Z77mqmox3U2OWy6m/GUBkrSUZQgodS9rHbWlOIp4YT2SOuDYSrKXBIGOpgEcOjlLG69238G0m4G8I0AotLkEJt9u24DFVs9c5Qe6n1n8MSpr7Y1iZ9VGG5WBbvfTBO4RLv9pKq5Ytc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750208778; c=relaxed/simple;
-	bh=NZJoIl5RzB75/8/+ArVBvSfS7CZuIN+ZCDrLpG14HeY=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=TReBivNfcTDZfqZvx+egazUSswhdLY1O94MOn4JV1783BZL7ye+nx9vvVAjTsuUCVxe4XFgXiCHBEXMXgPvBV/V9XO6ws4Na5yz4QdGuRAQmmsP1s+T5HFn34Dhyb/70xfHA9TKtGYg/mtUxiawcDFZ8bAsNieRsuFAQ9OIvSls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C07hC+Ay; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750209021; c=relaxed/simple;
+	bh=Cw6o99Gvmhp27ZbWfCsnlR86rcOb5E5FSDweUoGXFVU=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=b7yKmSdHRcTN7eFKaeL/ehQyECQZbGLIcR0L1v+bCerrOVNOsjnUQKmJUOpVFRMJyphmqV0BkY0qjC2gEVI0BhEl9GB1DKVROnQAdNlpZVNX8own2o/braSyuyaJLgRHrhPLRt2YH3Q4cO9cjotIZ/rIcrdVQ/fqkQWjuBff65M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=b19ge4sP; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C07hC+Ay"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E04C4CEE3;
-	Wed, 18 Jun 2025 01:06:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750208777;
-	bh=NZJoIl5RzB75/8/+ArVBvSfS7CZuIN+ZCDrLpG14HeY=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=C07hC+AycK0p0NjbZ8fCctadijER0Byvo2iBUSTK5e5yLujQ3+2wJLReMzasZemfS
-	 1Pqztzxyq+DwauqqR+Pyjps/r22fxb0D9v7UpF1y/4IWp4rJdzdaDMgFw7fCWRpEb7
-	 nT7bvQxeugTU9a17anjbMfWtu5y3wBydNQGAcn/UPoi9XcpNFeZh64PUk6DhK7nxDt
-	 Q4DN6rtIK4WaqFcB7ea9UyWTFu8PUdyW9/4Njrfmjdcedm+fJ+nk/RFpg4E1un9Ed4
-	 rMuRta6Lr+Q2xo7cwJp3cXx7AC0s/FBDnTT8LwpRniqBIWjy44RHvCII0GRLdTjKDn
-	 VUlPO855nLHTA==
-Date: Tue, 17 Jun 2025 20:06:16 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="b19ge4sP"
+X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55I193Db83306740, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
+	t=1750208943; bh=E7L6ZWQ6/sv4GzqkUcB6G0LwFcOvfR17Z2ea74AgKI0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=b19ge4sPFRR64nMca62UFYQvvQNT+ICX7Kq02I29OuO7zIED+1ygQM7ClB8A+kg56
+	 OJvSkDYVNx2HlinXN6/JjDAqDlD0j492QIpFXpUTNDrphVcjUypJ/bMYfj2Eg59VS/
+	 70mYd6XtcXsXQHBmz1VfdyvcPxy2G2csjfdf6hCiq3LADQB2I87Dsa4FZK4H2JBrCH
+	 w+QbyD2Ed5MHrcEhuzLOxG20Xqz9CwAgl9bBR/Yb5gbj+Igla7488I1Sgt+oxYIZPf
+	 49a2Umczd0SAwHuV5wZCNZywAARfi1C4BdqvQMxEOl0CYJByzbTKrgkLRrDSGUIPBu
+	 vTg3z4S4SgJEQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55I193Db83306740
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 18 Jun 2025 09:09:03 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 18 Jun 2025 09:09:10 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 18 Jun 2025 09:09:09 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Wed, 18 Jun 2025 09:09:09 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: Daniil Dulov <d.dulov@aladdin.ru>
+CC: Hin-Tak Leung <hintak.leung@gmail.com>,
+        Larry Finger
+	<Larry.Finger@lwfinger.net>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
+Subject: RE: [PATCH v2] rtl818x: Kill URBs before clearing tx status queue
+Thread-Topic: [PATCH v2] rtl818x: Kill URBs before clearing tx status queue
+Thread-Index: AQHb34/NAqhk6rzVnkCG6FF6zvRynrQIF6uQ
+Date: Wed, 18 Jun 2025 01:09:09 +0000
+Message-ID: <493ace2f47b24c739ae4ab3bea2efa93@realtek.com>
+References: <20250617135634.21760-1-d.dulov@aladdin.ru>
+In-Reply-To: <20250617135634.21760-1-d.dulov@aladdin.ru>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Biju Das <biju.das.jz@bp.renesas.com>, 
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-To: Prabhakar <prabhakar.csengg@gmail.com>
-In-Reply-To: <20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Message-Id: <175020874488.4118122.11683882991063236818.robh@kernel.org>
-Subject: Re: [PATCH v11 0/2] Add initial support for Renesas RZ/T2H SoC and
- eval board
 
+Daniil Dulov <d.dulov@aladdin.ru> wrote:
+> In rtl8187_stop() move the call of usb_kill_anchored_urbs() before cleari=
+ng
+> b_tx_status.queue. This change prevents callbacks from using already free=
+d
+> skb due to anchor was not killed before freeing such skb.
+>=20
+>  BUG: kernel NULL pointer dereference, address: 0000000000000080
+>  #PF: supervisor read access in kernel mode
+>  #PF: error_code(0x0000) - not-present page
+>  PGD 0 P4D 0
+>  Oops: Oops: 0000 [#1] SMP NOPTI
+>  CPU: 7 UID: 0 PID: 0 Comm: swapper/7 Not tainted 6.15.0 #8 PREEMPT(volun=
+tary)
+>  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/=
+2015
+>  RIP: 0010:ieee80211_tx_status_irqsafe+0x21/0xc0 [mac80211]
+>  Call Trace:
+>   <IRQ>
+>   rtl8187_tx_cb+0x116/0x150 [rtl8187]
+>   __usb_hcd_giveback_urb+0x9d/0x120
+>   usb_giveback_urb_bh+0xbb/0x140
+>   process_one_work+0x19b/0x3c0
+>   bh_worker+0x1a7/0x210
+>   tasklet_action+0x10/0x30
+>   handle_softirqs+0xf0/0x340
+>   __irq_exit_rcu+0xcd/0xf0
+>   common_interrupt+0x85/0xa0
+>   </IRQ>
+>=20
+> Tested on RTL8187BvE device.
+>=20
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>=20
+> Fixes: c1db52b9d27e ("rtl8187: Use usb anchor facilities to manage urbs")
+> Signed-off-by: Daniil Dulov <d.dulov@aladdin.ru>
 
-On Tue, 17 Jun 2025 17:28:08 +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Hi all,
-> 
-> This patch series adds initial support for the Renesas RZ/T2H SoC
-> and the RZ/T2H evaluation board.
-> 
-> Note: This patch series is split up from the original series [1] to make it
->   easier to review.
-> [1] https://lore.kernel.org/all/20250523142417.2840797-1-thierry.bultel.yh@bp.renesas.com/
-> 
-> v10 -> v11:
-> - Rebased on latest linux-next.
-> - Updated model string in the RZ/T2H eval board dts file.
-> - Dropped GIC_CPU_MASK_SIMPLE from timer node
-> - Added hypervisor timer in timer node and added the missing interrupt-names
-> - Reordered the `extal_clk` node
-> - Reordered the `l3_ca55` node and renamed it to `L3_CA55` for consistency
-> 
-> Cheers,
-> Prabhakar
-> 
-> Thierry Bultel (2):
->   arm64: dts: renesas: Add initial support for renesas RZ/T2H SoC
->   arm64: dts: renesas: Add initial support for renesas RZ/T2H eval board
-> 
->  arch/arm64/boot/dts/renesas/Makefile          |   2 +
->  arch/arm64/boot/dts/renesas/r9a09g077.dtsi    | 124 ++++++++++++++++++
->  .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    |  31 +++++
->  arch/arm64/boot/dts/renesas/r9a09g077m44.dtsi |  13 ++
->  4 files changed, 170 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077.dtsi
->  create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dts
->  create mode 100644 arch/arm64/boot/dts/renesas/r9a09g077m44.dtsi
-> 
-> --
-> 2.49.0
-> 
-> 
-> 
+Reviewed-by: Ping-Ke Shih <pkshih@realtek.com>
 
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250617 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/renesas/' for 20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com:
-
-arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dtb: serial@80005000 (renesas,r9a09g077-rsci): clock-names:0: 'fck' was expected
-	from schema $id: http://devicetree.org/schemas/serial/renesas,rsci.yaml#
-arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dtb: serial@80005000 (renesas,r9a09g077-rsci): clock-names: ['operation', 'bus'] is too long
-	from schema $id: http://devicetree.org/schemas/serial/renesas,rsci.yaml#
-arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dtb: serial@80005000 (renesas,r9a09g077-rsci): clocks: [[3, 1, 8], [3, 0, 13]] is too long
-	from schema $id: http://devicetree.org/schemas/serial/renesas,rsci.yaml#
-arch/arm64/boot/dts/renesas/r9a09g077m44-rzt2h-evk.dtb: serial@80005000 (renesas,r9a09g077-rsci): Unevaluated properties are not allowed ('clock-names', 'clocks' were unexpected)
-	from schema $id: http://devicetree.org/schemas/serial/renesas,rsci.yaml#
-
-
-
+The subject prefix should be "wifi: rtl818x: ...".=20
+I can fix it. Don't need to resend because of this.=20
 
 
