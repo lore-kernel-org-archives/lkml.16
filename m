@@ -1,39 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7AB828640A
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:26:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3783C288C25;
+	Wed, 18 Jun 2025 10:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242385; cv=none; b=mSv/ZHyt3MZDJT5ozXzMongnUAYzvWBRhOc/88dDDVruBysFKoI7pocbRKwP/wNtCZwNAtiM3qPaYykrj1D39A52/ExvrpFkY2jdpC8TEMhfVJiYxT4ik06f1OKRyBW1Kbcw62Tre1XATdVAOwIbdqXP2md2mEUEbp2pgDocSeE=
+	t=1750242400; cv=none; b=div7dbqi2MwAkQZO7G+fpgsVyKwCVPtBOMe+t1A6pH//ff/+dpoMRTuh8pSW19RF/0AF2+0vgUDAbMnmEUcmE+eeTmaILdNq4Cn1HoFsY8T4oObDIT3/A/+OtRo8n75EuDWQAXQudPXIgK2aEGxYdvDkszRLEcVpVFKtsV4BZVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242385; c=relaxed/simple;
-	bh=aaEieDnTiH5VSU6WJru5C9w+/VuxYHwcSr6Gf2XErC0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GjDEVRLNfCQtKiAR5LeHg+eZNV38J2utCpNpD6SwP2C8/wvOLISNW4l/AL0xuT2HIX5iF+VnePZyNVoSoflUdnEI8ofG8cIOYlY5bV2luWS16A8KwzgGHfx/0k0Dd67mJd4BZ+NWhlHS0CKr5h2R/WMTnZ9tvgm58W7Wwb9If3c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D92812FC;
-	Wed, 18 Jun 2025 03:26:02 -0700 (PDT)
-Received: from MacBook-Pro.blr.arm.com (MacBook-Pro.blr.arm.com [10.164.18.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 477253F66E;
-	Wed, 18 Jun 2025 03:26:19 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org,
-	david@redhat.com
-Cc: ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	npache@redhat.com,
-	ryan.roberts@arm.com,
-	baohua@kernel.org,
-	linux-mm@kvack.org,
+	s=arc-20240116; t=1750242400; c=relaxed/simple;
+	bh=fCZg+qa6/P+Asbd0KRfxqaW80M7dwYJ1XuU8KBHp+rI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NVxmcoom04o7qeZbaolkr67REZ0NsV+DH2oQiBZPBQ+SizxP/07s1sMgsOTIa4sqwWY1hfrgQ8x4hIAMYYb0p4RRnm+LRUl9K5/EuOhp40ML717q9tmIwM1Jj9O5uIU+zAcib8FLzV1NOlcUsnTDVI0ppDGONK2IuHszs7jiJhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQbwelzu; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQbwelzu"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a5257748e1so4859615f8f.2;
+        Wed, 18 Jun 2025 03:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750242396; x=1750847196; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LKJ+35t8HG4O3r9CAZlhOHv1jc/h4zjJpE9N6VOcuWY=;
+        b=OQbwelzuFV6htrWm8OUkMzdTM1PH5HTFnjhH5V+Uflf1Z6Vwr7i88XOo874bO0Oeyb
+         cyN2jJok7mGUHprnWFbWflDYRb8tzhl6aHU+VlAPkXk74T5nEsV+AIRwSpRpPTTQU8Yl
+         xs4GF8de0zAE5+iJ8O6SxRdRGjZu/QcZPzQopwzdPWHegMSgtYB0lF+JFUzOJjioX/Ol
+         1IwLirer8by/6M85I7wwxze9sA5/+OdLaaY44dgC+At8FFEdEM5Bx9eIM5OpsVLrpehd
+         7B2TXID9JlSJye6oIoJ1jJuxol5JDad7HA6K8Cq6ZkpED3hZjHXxah4c7+yrxZGjQ1mU
+         kQMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750242396; x=1750847196;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LKJ+35t8HG4O3r9CAZlhOHv1jc/h4zjJpE9N6VOcuWY=;
+        b=kF2dDvWFYQRZUK6kO9VnmG8H54szA4Y1UTMpo/qy5ObQ0I4sR+JwVKoblhYa+Z8vjo
+         63NWR5d55MRfetEcS+/0PGSanLAIUDm0w1uIVwAnvf/MptyENWDREwKzL66sr8KoOBss
+         KsYQLzLEL6DMYc2pc7cAbk90dji4oAJIpsvb6gwwLdHVlIAh3FNAXD19KmYVPxCbW+f3
+         LXVYTh3sXmmuce886I1Q/QG7IzjldT0k4cLp7HhBd9WKvBep1y3BKGUPEgXJh1m87s+L
+         D4HSdu70wkVhxB0iBGpXZM0bGhkqrqT+106zmqQaVepzUDbV54bt5nJkTccUbjubzHr5
+         8IdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWh08koQ8tFYUolQYx8w2l1kxjOg8WXd/t/7iqNncL+ETDPEY4E+g4cR2Szq1dxZHNUgA1G2oMIAa5um5N/@vger.kernel.org, AJvYcCXFLKjbe0BjHX89py/lMN4750Oz63NBAhyy4QIcNB7jgWxisoyb4Sc1DnFuOpqeRMOhQav6tkteVx2S@vger.kernel.org, AJvYcCXMsdCzrgM30stsSpYqdNeNfyZHY4+huimSeV75JVhk5kdxD8A2DMdebaZdW02F6Ta0zXoGwgY+H1R0COHrrBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD4ueTMyZCBKQMx25pKS4QAZuMkixyLUJArAd4frtZy1J4lJjW
+	8ZgZ/XfeYmuplNGgGg7fqgfS+FEscFKO9PpwyFrArasgKE8EkrwNgjSs
+X-Gm-Gg: ASbGncsjBnw16TTO5syV0OLaWFUSbBrMOwOcBXlqtF6413n/0e9eFGXM5Z03ETezOX7
+	TsRJ970eR/MpWPPTy/WSGehD4jcVEai92Nhut/Ni+MOiBxnDoO0PYoR35HVzlZ8phgyU50rCjXX
+	0zumnaO5gwBqQYJfpi/brSJQ23gZlqjJS+6+HLI+f/TuNphDYr+fI5AoiU/me9bC4s1fD5A4Utr
+	iiTaWZlThqBjHsKSfMwRlRPBLUakFbNMX+6TrajohOOu2RZZZIVY4RlOUF65l8uzLQgW8VXuo5/
+	hCfEJ8vn0cwRmiOWrBCewiMV2ffAQhH/WOURlbKD7jMlfDYkaC5TmNTEUCnCufpBY5SH1PRKVmT
+	/gwye4UNE6os50L1Vc52XCT4w7GZufvF9iK2l
+X-Google-Smtp-Source: AGHT+IHb5FsVZYv2LilMOYqaP1j1L8oMI+dOxYRmokRF04f8+Qm6HB/QZ6y9DdDo5scMmE+j6mIm7Q==
+X-Received: by 2002:a05:6000:4202:b0:3a4:dfaa:df8d with SMTP id ffacd0b85a97d-3a572367c45mr15194880f8f.9.1750242396332;
+        Wed, 18 Jun 2025 03:26:36 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2354fbsm199608085e9.15.2025.06.18.03.26.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 03:26:36 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH] khugepaged: Optimize __collapse_huge_page_copy_succeeded() for large folios by PTE batching
-Date: Wed, 18 Jun 2025 15:56:07 +0530
-Message-Id: <20250618102607.10551-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v7 8/9] rust: platform: Add ACPI match table support to `Driver` trait
+Date: Wed, 18 Jun 2025 11:24:34 +0100
+Message-ID: <20250618102434.3049816-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,89 +94,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use PTE batching to optimize __collapse_huge_page_copy_succeeded().
+Extend the `platform::Driver` trait to support ACPI device matching by
+adding the `ACPI_ID_TABLE` constant.
 
-On arm64, suppose khugepaged is scanning a pte-mapped 2MB THP for collapse.
-Then, calling ptep_clear() for every pte will cause a TLB flush for every
-contpte block. Instead, clear_full_ptes() does a
-contpte_try_unfold_partial() which will flush the TLB only for the (if any)
-starting and ending contpte block, if they partially overlap with the range
-khugepaged is looking at.
+This allows Rust platform drivers to define ACPI match tables alongside
+their existing OF match tables. These changes mirror the existing OF
+support and allow Rust platform drivers to match devices based on ACPI
+identifiers.
 
-For all arches, there should be a benefit due to batching atomic operations
-on mapcounts due to folio_remove_rmap_ptes().
-
-No issues were observed with mm-selftests.
-
-Signed-off-by: Dev Jain <dev.jain@arm.com>
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
 ---
- mm/khugepaged.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ rust/kernel/platform.rs | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index d45d08b521f6..649ccb2670f8 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -700,12 +700,14 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
- 						spinlock_t *ptl,
- 						struct list_head *compound_pagelist)
- {
-+	unsigned long end = address + HPAGE_PMD_SIZE;
- 	struct folio *src, *tmp;
--	pte_t *_pte;
-+	pte_t *_pte = pte;
- 	pte_t pteval;
-+	int nr_ptes;
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 2436f55b579b..0d00ab9acef7 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -37,12 +37,18 @@ unsafe fn register(
+             None => core::ptr::null(),
+         };
  
--	for (_pte = pte; _pte < pte + HPAGE_PMD_NR;
--	     _pte++, address += PAGE_SIZE) {
-+	do {
-+		nr_ptes = 1;
- 		pteval = ptep_get(_pte);
- 		if (pte_none(pteval) || is_zero_pfn(pte_pfn(pteval))) {
- 			add_mm_counter(vma->vm_mm, MM_ANONPAGES, 1);
-@@ -719,23 +721,36 @@ static void __collapse_huge_page_copy_succeeded(pte_t *pte,
- 				ksm_might_unmap_zero_page(vma->vm_mm, pteval);
- 			}
- 		} else {
-+			const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
-+			int max_nr_ptes;
-+			bool is_large;
++        let acpi_table = match T::ACPI_ID_TABLE {
++            Some(table) => table.as_ptr(),
++            None => core::ptr::null(),
++        };
 +
- 			struct page *src_page = pte_page(pteval);
+         // SAFETY: It's safe to set the fields of `struct platform_driver` on initialization.
+         unsafe {
+             (*pdrv.get()).driver.name = name.as_char_ptr();
+             (*pdrv.get()).probe = Some(Self::probe_callback);
+             (*pdrv.get()).remove = Some(Self::remove_callback);
+             (*pdrv.get()).driver.of_match_table = of_table;
++            (*pdrv.get()).driver.acpi_match_table = acpi_table;
+         }
  
- 			src = page_folio(src_page);
--			if (!folio_test_large(src))
-+			is_large = folio_test_large(src);
-+			if (!is_large)
- 				release_pte_folio(src);
-+
-+			max_nr_ptes = (end - address) >> PAGE_SHIFT;
-+			if (is_large && max_nr_ptes != 1)
-+				nr_ptes = folio_pte_batch(src, address, _pte,
-+							  pteval, max_nr_ptes,
-+							  flags, NULL, NULL, NULL);
-+
- 			/*
- 			 * ptl mostly unnecessary, but preempt has to
- 			 * be disabled to update the per-cpu stats
- 			 * inside folio_remove_rmap_pte().
- 			 */
- 			spin_lock(ptl);
--			ptep_clear(vma->vm_mm, address, _pte);
--			folio_remove_rmap_pte(src, src_page, vma);
-+			clear_full_ptes(vma->vm_mm, address, _pte, nr_ptes, false);
-+			folio_remove_rmap_ptes(src, src_page, nr_ptes, vma);
- 			spin_unlock(ptl);
--			free_folio_and_swap_cache(src);
-+			free_swap_cache(src);
-+			folio_put_refs(src, nr_ptes);
- 		}
--	}
-+	} while (_pte += nr_ptes, address += nr_ptes * PAGE_SIZE, address != end);
+         // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
+@@ -96,7 +102,7 @@ fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+     }
  
- 	list_for_each_entry_safe(src, tmp, compound_pagelist, lru) {
- 		list_del(&src->lru);
+     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+-        None
++        T::ACPI_ID_TABLE
+     }
+ }
+ 
+@@ -127,7 +133,7 @@ macro_rules! module_platform_driver {
+ /// # Example
+ ///
+ ///```
+-/// # use kernel::{bindings, c_str, device::Core, of, platform};
++/// # use kernel::{acpi, bindings, c_str, device::Core, of, platform};
+ ///
+ /// struct MyDriver;
+ ///
+@@ -140,9 +146,19 @@ macro_rules! module_platform_driver {
+ ///     ]
+ /// );
+ ///
++/// kernel::acpi_device_table!(
++///     ACPI_TABLE,
++///     MODULE_ACPI_TABLE,
++///     <MyDriver as platform::Driver>::IdInfo,
++///     [
++///         (acpi::DeviceId::new(b"TST0001"), ())
++///     ]
++/// );
++///
+ /// impl platform::Driver for MyDriver {
+ ///     type IdInfo = ();
+ ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
++///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
+ ///
+ ///     fn probe(
+ ///         _pdev: &platform::Device<Core>,
+@@ -164,6 +180,9 @@ pub trait Driver: Send {
+     /// The table of OF device ids supported by the driver.
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+ 
++    /// The table of ACPI device ids supported by the driver.
++    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = None;
++
+     /// Platform driver probe.
+     ///
+     /// Called when a new platform device is added or discovered.
 -- 
-2.30.2
+2.43.0
 
