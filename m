@@ -1,44 +1,44 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2090.outbound.protection.outlook.com [40.92.40.90])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2045.outbound.protection.outlook.com [40.92.40.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC3C2F0035;
-	Wed, 18 Jun 2025 16:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297FB2F19BD;
+	Wed, 18 Jun 2025 16:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.45
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750263568; cv=fail; b=W308DICt72BrMFXArAqAhJCrcT1liWroAPuePiJKav28aFz7Hjgim5YXwvq4Xia5AGKnEO0vVWQOIIeNmjWz2spArUJHxF6mDIfpQ0C2JzloD5L/jIgUeLGW+L6vJpBkMQtD/8Wisuhn4NwaqtWLv+HxezuGzozJgt0ogwn6fio=
+	t=1750263577; cv=fail; b=t5Eb6PjX9uXs2128R01CmpLmQtR1sXMUE25TKTRO3wRhLlyp12rLi/mpJDH1afWZFoKAJCCMoLvsBSp0lekDbDsAWmL3Fmcsq1mV4uOmHJm+hroVLde0OyEMKupu2CvSYAbjFeAEAbgbkwCHSDwtnAFt1qMETFFbZ+4Zv/YfiP0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750263568; c=relaxed/simple;
-	bh=R/RoBKXgb6tcn2/xp5oX/d7pxMrDswdQluy+JWcDGF0=;
+	s=arc-20240116; t=1750263577; c=relaxed/simple;
+	bh=1+pOc1gpNYeRajvM7GmwAtDSL1rIudQEwSWloUJcBD4=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OTz6ffkD2ADW5Rq9m7xjOKH/TX4enYWNoWcVB+cs60eSR23qttbbGi0vbQuGd01M+DYv7Ntx8Ae4f23+tzaayjnMo85d9BG+HWmU+d+B0Ssr30niYuHhgEDhbjEcCjV8n6+CAThYRU2krVzhSar8XaFRfRpGiZh0G/31M9S2PDo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=J+athKVM; arc=fail smtp.client-ip=40.92.40.90
+	 Content-Type:MIME-Version; b=ALxyRPcD1rbaLI9x8o98EpRhWPDocTOIPqO2NsyouhJNHgpSZbY5zo1MXaOf8DPxo1zQFLSEMVqNm3QSZsTXJChq9HBChDdiJLwWXPjwW+BI88u5zHaMsrV0e0IEq1ustGsHDS/xptppWpj9yVFRaFYktlV+WLXb9keB1eCHtZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Cn8VpsKM; arc=fail smtp.client-ip=40.92.40.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="J+athKVM"
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Cn8VpsKM"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DjBsdaeDIZK2ehkDpY0LIBGg4ajo3NGTLitWzpXXLX+TW3HYbCAT0HZAl8cjKQGdX+og6IJLpXriQFxjAUJ7yZ31CEWrZuk9PgaAog1ZPeAFtKUAPZKZtz0CSAXcPQs0jk62Ifo8dieegoWnK4eTTKVqJ8wixi0n01Ru548vdZ5l5lBoho0PkQXDLWmSU0mI3/IyKw8PLjF2WDiA91kypbZVx5Eb+8N2xVMBCCOacZLyFY3valvh/xEuz3DopT1GaiwaGZz0gIjbtj9lbT/Qei3YmCKqCJ/FLz6OLWOucLtk7IJ9EAJOer3WWjPt6z7+HqlWgBoBWr4Rx0xTDgQxOA==
+ b=GJzay6wdt8x5qQ5VEpVe9dqnGVomHmX0x61ji7ROyBWdsMRJquhZg0A5iSYdltu7Jfvk/dzAvsFnl9lFVQdsqQTf5ghJHeF6ywYZqw0/mnmVfKbdc+90pB1foBxqI8CYTjLCF9I9/G+TqqlR7Ptp+uoWrAiAas1z+ZI+k49bjAwZyXS4YAL1Blund7CiduWVe3LQ9enTEGBT8KeFKj6vPOYuUY8beHsjeBn9s0vLUbaALpYbF8LKw451Ty9UcorQyHkNMIKvZ4zE5UsDzk3gaTfecGwJoNqsTidsgHyWWQFGceEg5xXF7pnIxAFvIecilf7h5g4ju0qfbCEHlvxC+w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Baz+HaAsEIp8cMqNfnbHgWSvYNT7l/Qxoa3Rz1/Nzvw=;
- b=saBLeCHn03QkCekKy+gK8aTpH5AatQ6OSF5X6cvz1oZ/2o6XcE5wjLfgQ+AXIyb1xYgHscWfZ/Nc/qgRgtt4Sg7hRNpmPeEVMRykO6la289iIRppASc7XFRpQPwAVAmA/bDbzgC8D/c5N19XbDelAy2jxR0jDEAlDVlIlaAri0/37yQ4csFObZMmMCl8lK4WZXU85okXAWxLs0AcNAQ7a0RS62690LNBHUHySgHVP/SbUVyngAyxGwgEXMvaDjFGuE1QCE3n2JTF5EYLL3IS+JsUK16o02IQog53fy+EQx0AaehRkEQHXz3CxCDuaoN/UHEgl8/vzdEy/J2QP+08Ng==
+ bh=oUFg2bbHOiNKmZxOcc1zxw3IIfpdFQmqKpY6wsP6RWA=;
+ b=erhcZd2nj8C90KHROXdBkZz4hV9jQ0mSyARPsAT/zLoiRF+EP4ubAXGfeILkrK4V/j2ZGxQ4VmVjHRTqIurPpNrPekwF/SUzKbVmffAa53GQzqBhyyJ+efNS9ex+vzLZUULGzRpYApKrxiUfK7yUS7RLlD/RZ38rLzX/toKsZZIrg96iBU5n7TrmiV92yXnBa5EeDMRc+ucSLCTsmxwWoj+HsoVLpsqPVZo5wZ/RlwOt5MtcF7y9Z/IZKbpUVIr6U6jrXl0izV6hg9t+OQLX9BKm9mwvvimObE7vTrCppHStnZiV+PabpmTXFw8tqDd1ACGYBWnFfyrnSZ8xQ51Whw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Baz+HaAsEIp8cMqNfnbHgWSvYNT7l/Qxoa3Rz1/Nzvw=;
- b=J+athKVMWRNX1tFdIGxk8n1M1L7xLy1tDZdmz3A++cRDSF/yeatEnnYCrdvNUHSRhoma5/sdHWMqueR7z69wwvWO5WNmZwMIkpq/H1U5OKTEl5dJY+ZPe+eN9d13zt8XPLYtOhDxPqzyXOXH38FY4C8wImQ6CJUfnvtlG9puamhUBOk70OXnPcFS7vp0nHqPvvVJ6KHHNSYe71YAddchKJf5nEd9xRGzcBnpDC4SE3TH0WzH+rRjFVg/sCdTAPrhfIPj6gASeLcBOVivTcsdKW5FwPDr+nsJtHN1K9FO5hAzobHCTG+c8C9Y0rW/UpoohfcnF1vcZtHWJk0t4CI30w==
+ bh=oUFg2bbHOiNKmZxOcc1zxw3IIfpdFQmqKpY6wsP6RWA=;
+ b=Cn8VpsKMOuAgGr0XYaGn45WGyHv5xYVdwE+FswmFWJjhjHYnm59A8Eu1kdapZ5X4H2HQPDsXptKPHNQ54+gQjzyS8A414npfelou3inxWgu4y4Zu+vz6yVJvOblJYa2rg14DGJcRX181tK33B6Aws4ggb4ffYAlHLIaixJt+f0bE7s0ehet99IBqVL2F4wIX9wg5qII0RlMf53JilKVnGZIzBdPlluoelNbHqdCJLxZw/NCfha113xycu8QUZWtsLhMNHP0W3gaW74r6E4+y3QH3X6gIECTZxtWKuK0JAE6sEkKP33Rlrqd2APXJABUFU3dvSbINHuIA21zxfjWWCw==
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
  by SA1PR02MB8462.namprd02.prod.outlook.com (2603:10b6:806:1f6::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
- 2025 16:19:16 +0000
+ 2025 16:19:32 +0000
 Received: from SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
  ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 16:19:16 +0000
+ 16:19:32 +0000
 From: Michael Kelley <mhklinux@outlook.com>
 To: Roman Kisel <romank@linux.microsoft.com>, "alok.a.tiwari@oracle.com"
 	<alok.a.tiwari@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de"
@@ -56,72 +56,72 @@ To: Roman Kisel <romank@linux.microsoft.com>, "alok.a.tiwari@oracle.com"
 CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
 	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
 	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: RE: [PATCH hyperv-next v3 11/15] Drivers: hv: Functions for setting
- up and tearing down the paravisor SynIC
-Thread-Topic: [PATCH hyperv-next v3 11/15] Drivers: hv: Functions for setting
- up and tearing down the paravisor SynIC
-Thread-Index: AQHb1Om8y7QtQ3XcDEmhXsGuIHwOHLQF+8/g
-Date: Wed, 18 Jun 2025 16:19:16 +0000
+Subject: RE: [PATCH hyperv-next v3 13/15] Drivers: hv: Support confidential
+ VMBus channels
+Thread-Topic: [PATCH hyperv-next v3 13/15] Drivers: hv: Support confidential
+ VMBus channels
+Thread-Index: AQHb1Om9mlpZjzDg30Gbl3KESiV2jLQGxH4A
+Date: Wed, 18 Jun 2025 16:19:32 +0000
 Message-ID:
- <SN6PR02MB4157B7036994536E2F89436DD472A@SN6PR02MB4157.namprd02.prod.outlook.com>
+ <SN6PR02MB4157BC99328C8B043749FC90D472A@SN6PR02MB4157.namprd02.prod.outlook.com>
 References: <20250604004341.7194-1-romank@linux.microsoft.com>
- <20250604004341.7194-12-romank@linux.microsoft.com>
-In-Reply-To: <20250604004341.7194-12-romank@linux.microsoft.com>
+ <20250604004341.7194-14-romank@linux.microsoft.com>
+In-Reply-To: <20250604004341.7194-14-romank@linux.microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8462:EE_
-x-ms-office365-filtering-correlation-id: d02e39b2-cb3f-46de-bb80-08ddae83df27
+x-ms-office365-filtering-correlation-id: 89137fcc-0cc7-471a-b52a-08ddae83e8a7
 x-ms-exchange-slblob-mailprops:
- ZILSnhm0P3k1KuhwzYdE6C/ocrAmq9m0lRqMO2l5NxEZ2nzrExUxMExeJjXCKSu8SUs/eMgJnGkjLZIpFo+hrxHD93blQHB5lp/NlnubBC2mO1p0Qx+tILdPYJg3O63dMtbywptBfVNOb2cvX5SB4AiqWJUXTcimeSvZd7gU5+QuoN+Ux6o3A5k3guTUp2Y7QzoybHZeGPisqBJh5bOjZ1ZjLAwuzKzXnqHu77NiPPk2dG3xm9hBq8hjHwYV9i8OpGi8HJCpOjDMmheke6ZOIEjPpoLrZvZb0FpadO3tMqhEoQkY1DVdEboJlCXR8iOfzaicgqaVz1sVfITDaKTagGlN2LsbSjm2FkX9vk9hisWxYzzMQeWceTxSKKkZ2HR9zAIJdDM4xc4IHlziMvp2mCMw5jXo/0H5QM2s3607865goWS1FsgMjFqB9y9p+gEaTexNhUGQMIGfqz9nNPJ/VRmFP2i9KGiwn4z3U1ik1LEk9twhDg1ORwaGsVIifMq5XYTbha3IuhFzsg7NeGcRCbzRWqeZeOrUtWgRv7HgtXbX63SXYf94KtA8j3V+EmKqMYreRasZMGMiFdCn6G6qMJ4r+NDQaQDW164cDkizN1BB7SgxmQSFxVLgGXe02tSmY7TCQBi9Q00NyoooSOApxhAcmhjYKoRqsUZepISN5I065Ye6vGbNcnhwrfQ5VwhzVXH5m3qlDwZVcZA2f/2USf+e0S6LXwX9bZHXiFtj1SjMrY0wkR+AlOj6kwBl1fKOWG7O7aHHiXiELvqKfs/6W7Ye3jEeopf6
+ EgT5Wr3QDKyLtlCs+NimovH+2L5LUdRJarrShVGqDJIZnS8bCfXcJybBg3Bn1fHwg66R3Gh/KrSwQG543e6fWxQBzVulfNmDm9CZlIOUjEeyWVv4U13owRjuETvdWU3sQFezF50yOUnheY+6btzXWG5UxtQ8CaswxUmu8HqOkrgUuxlO7bb/egtun6/1MUU4nbDx6kLLLCr9Zm+Zu9N2tQtD0XZeYqc8gBcBGbLizr7JOAaEIKHOwZaAV3Sx8nUgd7oGFpYvtm/KW/kFuj0JN/x7hD9Quyo5f/T/Vv+OCI1zXlChjC2glzeHZ4YPOvXQf2H7RIZhSawYg+mErltV52PwbJPzfdcm6FZD7ONGQnIYiKzMIisitKsJELHMqTuTmkhPlQdH7eixIx6Aghs4DUVtZtInAs8dSJz/71RKPw7Iow/7RpxtY8lgpHNauGD4ueFQTRvb8dJWLwCush5HPO2lkExx9zCZgiJPYngjKPP6cj1+GywPU+vreOiotMPL8g/bczq3yAbfQrME1F0dMpSbJkr49wM+fUzVfN4TWOhsno4BiRggoZ+m/XMeKWklGIgA/hVEbgr7GluqCaIb8jdApgTIrp+l2mJgApVEPwR/92XjRVZlw9gkxTjHZPEXY0uxO+FEufWFuzbl4MYWR+tg7f9+GUQ3YFww/h0YwWpqbPyAXZC+/rlYxCsY5T2eJCPaOaLM4yPej76EJ+0j9g8Ef71CLPn2hG07gZ8OYd0=
 x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|19110799006|8062599006|15080799009|8060799009|41001999006|3412199025|440099028|40105399003|12091999003|102099032;
+ BCL:0;ARA:14566002|461199028|19110799006|8062599006|15080799009|8060799009|41001999006|3412199025|440099028|40105399003|12091999003|102099032|56899033;
 x-microsoft-antispam-message-info:
- =?us-ascii?Q?735mUU1N6zJ0Kpii1/UaXU9qusaOKAMjr4EE8jb2joRbjFb9WQzKYYUaNQaz?=
- =?us-ascii?Q?Oo6UqPzyP7xG/M7SIOuQoY15jP6LQDr7XWRC8rpGVBsts1QiWPyPu0jRt4Ac?=
- =?us-ascii?Q?/D9u5EemeZddlmN0qumzQpCkey1/wUfHMdy/z1vXzY9ucG0/AQbYiHCeeTuI?=
- =?us-ascii?Q?MgiCe74YjtfcOm4ncjOp+TQwlv4okYhupywsjlBMEXkgRvq5YifWK2TlLw0/?=
- =?us-ascii?Q?30NaVzs6RucMrEGao+rw2E3KDip2ZPZan1z/IGOAtruqK8OWPvZkUTyyLlMb?=
- =?us-ascii?Q?1NwWWCoTnsMsv4nj/WkfWc0L3Hqw4uHPU24N6Sb+B7rOjzpOUK8PD6v7k7f+?=
- =?us-ascii?Q?MyOtdIi2UbuSiGC1PqnQYlUvXt+O5N0Mz30R0Wqq5hMtQyDkTj1ecEWZfzjp?=
- =?us-ascii?Q?8XwtL5bKHxp+DgIKGvhvZPgxdaFPNY2w5mrk2W55CYfGxSOz7TIrlnAaT19q?=
- =?us-ascii?Q?AYBVM0t6K4fJQnUDJGOMn0J5iBYpkmm5bP5xk9xSMyOmrxiJSqDQPxZVkbJU?=
- =?us-ascii?Q?pDPyrV4GGaOx2q+dYwzp29PtHEwYLwovJE8MoLEFiqJi7HQFnpE/NBrieRJk?=
- =?us-ascii?Q?sDWQ/PE5a/qdMzF2SiWfHTYaQenhzcUWSmlu+v0bv5k+M74P00cOALiivwtn?=
- =?us-ascii?Q?r7DzLN7SAP/PVyQzL4JkmyvN8gtZ0k7ex0xpp8ds8enl/Ed7jdSwlF7lYfQ9?=
- =?us-ascii?Q?b6L1O+c1fKQjQRk3Mjs3ttm+oLWN9cWVHNdD2cYrz2kcrEGMpOWObwnFJh3y?=
- =?us-ascii?Q?/LFb9HItwzlmgg9+bY+CIN4sH+IPoi1EG4Bed+hdltxUrp/2MWTLXCk0qQqS?=
- =?us-ascii?Q?Eu3JKc8/Sc3RluKXHMOJZc02c2A8ikJ0myzycvjdsT5bZzbuY32D4bzxk2LI?=
- =?us-ascii?Q?n9o9VZsNN07uf0GS/g/DNhDVu9CP4MOkzNRfXFLAJMDN9WSHKZtG/xg2sAkp?=
- =?us-ascii?Q?txkGajy3TLpzHMa/oOBCvQxeZ4GQ0D9VKmgBFy/MswzGtxhYnjqR9n79lrd3?=
- =?us-ascii?Q?F+Gj5eVKxxuryl76gGNFNBNrzC7GdE1lHDwZ7i2vZZyyTEOr8tgaoj/cVz7K?=
- =?us-ascii?Q?F5WzspoJIyYiHihsZ7PZ0zgkTNeBgPZ4BqREQygr/qDX3jOr+VHl2ZqlzSyF?=
- =?us-ascii?Q?62adcgE4TgaFjZd5PJnC+ambv9im15XF7xscIp6v6QBPjQeSeDnAXME=3D?=
+ =?us-ascii?Q?NKhkm51fjouJxORa9ZtzZ3kX7EbjuovxSrD9SwuPdaRb5eMIR7GD7qy73UUX?=
+ =?us-ascii?Q?FDj7vQjQgRQBSgeKxB7n93j4DqI2/VhxFInvTzLeJOttFmfN9IWbTvePQG5i?=
+ =?us-ascii?Q?hzO9Do4qm1ZGfv1du877epXpw59lGt6FjJcTaQjYYJBaDEVUom/nIWQgH0Qs?=
+ =?us-ascii?Q?u+axKHIgmzQ8i6kFdz6vzY64wQwTj2xNPzkXNS4U75q1y9NDh36rZ+9YN8YM?=
+ =?us-ascii?Q?8L3aGsckgtYYhBpdj2oG7mNNAGB1zuLrOgJ96b35clUKIrDRIsValpTN2Elo?=
+ =?us-ascii?Q?AyXvnUQXhWmhJolBuaiPBIum+0BUZtqHEQcR4peE88C7GWznqNzbjGMnQvsr?=
+ =?us-ascii?Q?X2mPii3qr0GemTQA2FO/sdGl6Whw6lhScxaM2smoy/5S02vN9/EGcb0+EV20?=
+ =?us-ascii?Q?AjAkZe1/PuU+BTxOavQdCcBU05SiSaGHCgrxQJn/5BXB+bj7IT9RBto2E/nj?=
+ =?us-ascii?Q?6+e4vmzankZAmvhqpjmyBbfU4T5tiDr/GPjA9WlCwfTHV9P09f1o6tlcnyVl?=
+ =?us-ascii?Q?+YQ75iw0hPvABftv5ur6MkeFst3ydKm3ria4aX/COksigDAH8lq17Yoe90wP?=
+ =?us-ascii?Q?MbhZXP0kp86QkPFgalITeHhAb9jsJ/G72HAwRBoUUJrRF+AlIqQXf6LFN3sT?=
+ =?us-ascii?Q?CirjDzyMwUG/X7aLl8gPWiE0kzUbRbF0JF/+NhHZ8wuDF7NX9q+W8IBWW5d4?=
+ =?us-ascii?Q?okhByZuV2/87d3lUw4uJg4qH1oym8nNdR42IfcYSYJN5hMZ76914DBnOL31t?=
+ =?us-ascii?Q?IawUlmRn2L3dl6bdG2ntomvJ7e95ZOuAe/rGheYUmJUTDPxYzzgjUzuMAmcN?=
+ =?us-ascii?Q?pCCfTfpWalR+4t5x39lkme6++XUMlGQdqAOaFv1KUvgRkcJFi9TPcYqltE0J?=
+ =?us-ascii?Q?CHuW5N7xro4zY66UwBWTbdu7WzG7n22liEdvGS+qVA6sudjAaLmtkJJ5vmfe?=
+ =?us-ascii?Q?bQF9fDPywnbI63bk/W0ElHbn1QMSYcyYvlUEYUavr0H1slxFcViTzUKg/lvI?=
+ =?us-ascii?Q?7jiZCQhtIs7jGvUg5aIx2lUAs6vGvTUYq9kaXKsc5YROCQZxWasBCIGUHhlt?=
+ =?us-ascii?Q?Ij69XSJunERi4UJcoPwaogZkmg3srE6DKRdAkoQp+y01gCGOKP+AOs3xpeYu?=
+ =?us-ascii?Q?aglVbkFObN+8AYw+WXTBjV3sPisPaOnl7pc2EMor7dCecscUj0/NUFQ=3D?=
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?AbuOmkFOi5UAZcf/pRM0ZrA2GvRXUC5ZetJ9PKoNfDX/gA6yBuBcI4ky6uGC?=
- =?us-ascii?Q?mUvUCOvFxH6n24GeTfwTb+cw2chA399UzFpjKLArfRZcFL7OxdBX/TpotQSh?=
- =?us-ascii?Q?86QFfEf2/Yvdqwm2KXJ2GvJ88OwZcQ30UfUrA1HnkEIr60dErA6Usg53Ux0I?=
- =?us-ascii?Q?+Dc6HdL8Xgiq3lqxzX+0TCTnP3/OP1JouYe2JdTdeuGNFXJC9FnLCSD9otOM?=
- =?us-ascii?Q?mTcCI/WGeh8gcNTphDtYfWYrm2+jn/6JDY94QbaK+ESzDfGeCETLI4tNOgUL?=
- =?us-ascii?Q?73NNc5ofNDmnq5aREOASjYj8IAK4fEtaiqixfC+OiHvnxq13phbkV6i8elPh?=
- =?us-ascii?Q?M9WdfLi4sb9tmVCt9gqhEO8B5wh9CBdZXmw0rwfVxuiGXs9t0rAhxIORdjeC?=
- =?us-ascii?Q?J5LHwSV8pnfs++/jv/IT9+f8ZsEiPV8y0B4DnBVeUx6MyttENkqNrTJjlD0Y?=
- =?us-ascii?Q?fuDsM60t6jEtvRicIBfa1ZjajbKI4d1vPYTFqPA3APzifuYvdn0PZp9eVFM+?=
- =?us-ascii?Q?mJJ7fVb77F8uvteVUJ2ByM3zMy7DTl7xiiGOvQCDsHqlEyd7ao2UsVQ2tcve?=
- =?us-ascii?Q?zh8p6bpTDsgv7a7VY0Gn5sDitc+Fjm6cQQ178YGJxv7c2SiwybPgtCamrtd/?=
- =?us-ascii?Q?5VK226mP4LZ8KXdNwdJH4hniRGqpXF/H1fiWcokU5ssfxPm5iMbgg/4jazmb?=
- =?us-ascii?Q?09hVWdsjllH13RdOPgI91KcuJYJH7h8ql6N+cxfOdLumwcxUI7XfBrfZJYa1?=
- =?us-ascii?Q?GOwxY8uZ6rvkBwZPyk3mo6Lq+uje+5d2zGH4xpGM/Oj79IbZJMkES+G1UVwW?=
- =?us-ascii?Q?T85NCX0104BpZ99MC0y2n2eJxZUE6nb2zy3AGVcO/qZpO2cWHX2hGpsH9ALm?=
- =?us-ascii?Q?++eM2vV/gRcO7wtRVTBjjJdEx6dQtWkKMPg+JBqtuhY1AvlMIh7wRxA1XMTw?=
- =?us-ascii?Q?jNIFI3u5eRdyodXn2Q3sNPY4nuIYorp7nFoKNHOanbgKYLKA9Sga/WZevG8X?=
- =?us-ascii?Q?g2RDKQT/2muRXED3XHlTok8LtjZtoRNuTDGFTmc33r4INxRIJbRG2dpDGjsP?=
- =?us-ascii?Q?oDI2O5BZ4C+LKdfMagBCTbMFsSOhTQwSunYu7P7LjBnsrQnasJ6YjbtcBkSb?=
- =?us-ascii?Q?bgaaVHXTq0S7tP8wF7uIqLrUXZR0W2ail4mvPQIpn2wu0JJr8JvXipL/UP7y?=
- =?us-ascii?Q?s09Pfdb6MKj4AYPiCOndd9VwxbafN00Hn7H2TfWLDXqIzoWIpAyR2QW99OY?=
+ =?us-ascii?Q?zwlo0jclsnLNcZ8Oxg1oIjq4xgaH1TK0Nr0hrbVhGHJAeb/m2EIwG6hAXdWV?=
+ =?us-ascii?Q?2GP38yjobDcxMsa+RCnK63qWDAzgy8Bi5UpMV5bskwD5sA8advBfCgpi4RbM?=
+ =?us-ascii?Q?/FWQnp23EbBuigByLubNWrjbmXtZbPIOBIkUb3u/T1YGLhp/gqvNvRN+IOak?=
+ =?us-ascii?Q?g4f/dG9ovo5Ro/WDIxn/PkMQw4woqegj5M27jM4Qm/6Wdd+1n4sUlw8vfms4?=
+ =?us-ascii?Q?0VYKeZQ1zLJ2xRUEgLYCg7bzYQxYeJD5h3mr6Y4+efs41ns27GhdrYsv8wXl?=
+ =?us-ascii?Q?DqyBswkhwhv2cgvV3xzFwtBPE2iv+dY1k/a7Fwvh8MluOBkKWDjOrMBh3P4d?=
+ =?us-ascii?Q?Q/6i1GNRY45iCIcIj3I3A+9mhTFra02DMZW5RrBjQkyqqRe7AvW8ILr1aABa?=
+ =?us-ascii?Q?zjXmugFYCkWSkArqlo26VqYmEI7XB3WY2z1t/6MGgrRBES7QH/CuTwT15pNa?=
+ =?us-ascii?Q?lQ2ymOFEMQdOczBjjKott/qihD+siKi0ilKhvgTvPIqrVhHIfoB7+DzM/yJu?=
+ =?us-ascii?Q?vAFuqlLfQcPpXtk7/WLeVOBFnSBNl/1j8p85sdwFhSRZTCDaCR5eEOfLujGE?=
+ =?us-ascii?Q?TavF/CUZEOEQPiKjFrVVJPHVmyeSnWeDAMp25QaSIbI+SJxOTPpC4UoqtukX?=
+ =?us-ascii?Q?Bjk0pFf2fHU2c+QNWpTeFwwz0KvPgImZ7g9qigCj6+qGZ+DK8odW7f/8yYwr?=
+ =?us-ascii?Q?jfUPTPDOskJT/fhjhUldXkBY5YtlXlgvyrdiF2Elf9y5vw3l2bBVHtvX3nBY?=
+ =?us-ascii?Q?2teDmEP9dHR9dNLqnV5KmIAjV2V4i+QIY3Dfw5N8EVEUQJIszNWnfWgPd6+U?=
+ =?us-ascii?Q?h4IiRVouzTKRillpwbzr7saPqA2kDHz8oDwCVrbhN97zUgdU7xL2FJC+dT3f?=
+ =?us-ascii?Q?uSEsYUseajmHZYL4QomWINJ2yuTnLDgnnyUArZN5Zoar9V4OjQSjfw0956UT?=
+ =?us-ascii?Q?X9GMF0kObG0lztN38yxRBpMBb00X30+vGDarU/RxdbLz0yeO9t5/kOM+/9xZ?=
+ =?us-ascii?Q?vr50L4ugRWlzsiiPK1FrTNH19SQIz+cukySWDc+bToylelMj6vIryhmKm6uj?=
+ =?us-ascii?Q?tlHPjxfqYlrV/GXPJxywDtJbfxypSpoGak4yh57bzi6C/0GYhftDGqa3gaVI?=
+ =?us-ascii?Q?MktGXMdPDBSbJdzFJ94vGhvXmX4inxtHZjB2V/238sT8pnhTzafWaRlK2mT5?=
+ =?us-ascii?Q?7w+CucQ5QPOc5PewFrmSAVq1igSj8hW8bO5X6d+RV1yb5+xavlFFzn7pAHY?=
  =?us-ascii?Q?=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -135,8 +135,8 @@ X-OriginatorOrg: outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: d02e39b2-cb3f-46de-bb80-08ddae83df27
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 16:19:16.4245
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89137fcc-0cc7-471a-b52a-08ddae83e8a7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 16:19:32.3371
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
@@ -146,364 +146,116 @@ X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8462
 From: Roman Kisel <romank@linux.microsoft.com> Sent: Tuesday, June 3, 2025 =
 5:44 PM
 >=20
-> The confidential VMBus runs with the paravisor SynIC and requires
-> configuring it with the paravisor.
+> To run a confidential VMBus channels, one has to initialize the
+
+How about:
+
+To make use of Confidential VMBus channels, initialize the
+
+> co_ring_buffers and co_external_memory fields of the channel
+> structure.
 >=20
-> Add the functions for configuring the paravisor SynIC
+> Advertise support upon negoatiating the version and compute
 
-Suggest:
+s/negoatiating/negotiating/
 
-Add the functions for configuring the paravisor SynIC. Update
-overall SynIC initialization logic to initialize the SynIC if it is present=
-.
-Finally, break out SynIC interrupt enable/disable code into separate
-functions so that SynIC interrupts can be enabled/disable via the
-paravisor instead of the hypervisor if the paravisor SynIC is present.
-
+> values for those fields and initialize them.
 >=20
 > Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
 > ---
->  drivers/hv/hv.c | 180 +++++++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 169 insertions(+), 11 deletions(-)
+>  drivers/hv/channel_mgmt.c | 19 +++++++++++++++++++
+>  drivers/hv/connection.c   |  3 +++
+>  2 files changed, 22 insertions(+)
 >=20
-> diff --git a/drivers/hv/hv.c b/drivers/hv/hv.c
-> index 2b561825089a..c9649ab3439e 100644
-> --- a/drivers/hv/hv.c
-> +++ b/drivers/hv/hv.c
-> @@ -203,7 +203,7 @@ int hv_synic_alloc(void)
->  				decrypt, "hypervisor SynIC event");
->  			if (ret)
->  				goto err;
-> -			}
-> +		}
-
-This looks like a code cleanup that should be part of Patch 6 of this serie=
-s.
-
+> diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+> index ca2fe10c110a..33bc29e826bd 100644
+> --- a/drivers/hv/channel_mgmt.c
+> +++ b/drivers/hv/channel_mgmt.c
+> @@ -1021,6 +1021,7 @@ static void vmbus_onoffer(struct vmbus_channel_mess=
+age_header *hdr)
+>  	struct vmbus_channel_offer_channel *offer;
+>  	struct vmbus_channel *oldchannel, *newchannel;
+>  	size_t offer_sz;
+> +	bool co_ring_buffer, co_external_memory;
 >=20
->  		if (vmbus_is_confidential()) {
->  			ret =3D hv_alloc_page(cpu, &hv_cpu->para_synic_message_page,
-> @@ -267,7 +267,6 @@ void hv_hyp_synic_enable_regs(unsigned int cpu)
->  	union hv_synic_simp simp;
->  	union hv_synic_siefp siefp;
->  	union hv_synic_sint shared_sint;
-> -	union hv_synic_scontrol sctrl;
+>  	offer =3D (struct vmbus_channel_offer_channel *)hdr;
 >=20
->  	/* Setup the Synic's message page */
->  	simp.as_uint64 =3D hv_get_msr(HV_MSR_SIMP);
-> @@ -288,7 +287,7 @@ void hv_hyp_synic_enable_regs(unsigned int cpu)
->=20
->  	hv_set_msr(HV_MSR_SIMP, simp.as_uint64);
->=20
-> -	/* Setup the Synic's event page */
-> +	/* Setup the Synic's event page with the hypervisor. */
-
-You added "with the hypervisor" to this comment, but not the similar
-comment above for the message page. Consistency .... :-)
-
->  	siefp.as_uint64 =3D hv_get_msr(HV_MSR_SIEFP);
->  	siefp.siefp_enabled =3D 1;
->=20
-> @@ -316,6 +315,11 @@ void hv_hyp_synic_enable_regs(unsigned int cpu)
->  	shared_sint.masked =3D false;
->  	shared_sint.auto_eoi =3D hv_recommend_using_aeoi();
->  	hv_set_msr(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT, shared_sint.as_uint64);
-> +}
-> +
-> +static void hv_hyp_synic_enable_interrupts(void)
-> +{
-> +	union hv_synic_scontrol sctrl;
->=20
->  	/* Enable the global synic bit */
->  	sctrl.as_uint64 =3D hv_get_msr(HV_MSR_SCONTROL);
-> @@ -324,13 +328,90 @@ void hv_hyp_synic_enable_regs(unsigned int cpu)
->  	hv_set_msr(HV_MSR_SCONTROL, sctrl.as_uint64);
->  }
->=20
-> +/*
-> + * The paravisor might not support proxying SynIC, and this
-> + * function may fail.
-> + */
-> +static int hv_para_synic_enable_regs(unsigned int cpu)
-> +{
-> +	int err;
-> +	union hv_synic_simp simp;
-> +	union hv_synic_siefp siefp;
-> +	struct hv_per_cpu_context *hv_cpu
-> +		=3D per_cpu_ptr(hv_context.cpu_context, cpu);
-> +
-> +	/* Setup the Synic's message page with the paravisor. */
-> +	err =3D hv_para_get_synic_register(HV_MSR_SIMP, &simp.as_uint64);
-> +	if (err)
-> +		return err;
-> +	simp.simp_enabled =3D 1;
-> +	simp.base_simp_gpa =3D virt_to_phys(hv_cpu->para_synic_message_page)
-> +			>> HV_HYP_PAGE_SHIFT;
-> +	err =3D hv_para_set_synic_register(HV_MSR_SIMP, simp.as_uint64);
-> +	if (err)
-> +		return err;
-> +
-> +	/* Setup the Synic's event page with the paravisor. */
-> +	err =3D hv_para_get_synic_register(HV_MSR_SIEFP, &siefp.as_uint64);
-> +	if (err)
-> +		return err;
-> +	siefp.siefp_enabled =3D 1;
-> +	siefp.base_siefp_gpa =3D virt_to_phys(hv_cpu->para_synic_event_page)
-> +			>> HV_HYP_PAGE_SHIFT;
-> +	return hv_para_set_synic_register(HV_MSR_SIEFP, siefp.as_uint64);
-> +}
-> +
-> +static int hv_para_synic_enable_interrupts(void)
-> +{
-> +	union hv_synic_scontrol sctrl;
-> +	int err;
-> +
-> +	/* Enable the global synic bit */
-> +	err =3D hv_para_get_synic_register(HV_MSR_SCONTROL, &sctrl.as_uint64);
-> +	if (err)
-> +		return err;
-> +	sctrl.enable =3D 1;
-> +
-> +	return hv_para_set_synic_register(HV_MSR_SCONTROL, sctrl.as_uint64);
-> +}
-> +
->  int hv_synic_init(unsigned int cpu)
->  {
-> +	int err;
-> +
-> +	/*
-> +	 * The paravisor may not support the confidential VMBus,
-> +	 * check on that first.
-> +	 */
-> +	if (vmbus_is_confidential()) {
-> +		err =3D hv_para_synic_enable_regs(cpu);
-> +		if (err)
-> +			goto fail;
-> +	}
-> +
->  	hv_hyp_synic_enable_regs(cpu);
-> +	if (vmbus_is_confidential()) {
-> +		err =3D hv_para_synic_enable_interrupts();
-> +		if (err)
-> +			goto fail;
-> +	} else
-> +		hv_hyp_synic_enable_interrupts();
-
-It would be nice to have some detailed code comments somewhere
-describing how VMBus interrupts work with Confidential VMBus. I
-see that the SINT is set in hv_hyperv_synic_enable_regs() by calling
-hv_set_msr().  hv_set_msr() in turn has special case code for the
-SINT MSRs that write to the hypervisor version of the MSR *and*
-the paravisor version of the MSR (but *without* the proxy bit when
-VMBus is confidential). Then the code above enables interrupts
-via the paravisor if VMBus is confidential, and otherwise via the
-hypervisor.
-
-Assuming my description is correct, maybe just writing that down
-in a comment somewhere will confirm to later developers of this
-code about what is supposed to be happening.
-
->=20
->  	hv_stimer_legacy_init(cpu, VMBUS_MESSAGE_SINT);
->=20
->  	return 0;
-> +
-> +fail:
-> +	/*
-> +	 * The failure may only come from enabling the paravisor SynIC.
-> +	 * That in turn means that the confidential VMBus cannot be used
-> +	 * which is not an error: the setup will be re-tried with the
-> +	 * non-confidential VMBus.
-> +	 *
-> +	 * We also don't bother attempting to reset the paravisor registers
-> +	 * as something isn't working there anyway.
-> +	 */
-> +	return err;
->  }
->=20
->  void hv_hyp_synic_disable_regs(unsigned int cpu)
-> @@ -340,7 +421,6 @@ void hv_hyp_synic_disable_regs(unsigned int cpu)
->  	union hv_synic_sint shared_sint;
->  	union hv_synic_simp simp;
->  	union hv_synic_siefp siefp;
-> -	union hv_synic_scontrol sctrl;
->=20
->  	shared_sint.as_uint64 =3D hv_get_msr(HV_MSR_SINT0 + VMBUS_MESSAGE_SINT)=
-;
->=20
-> @@ -378,14 +458,71 @@ void hv_hyp_synic_disable_regs(unsigned int cpu)
+> @@ -1033,6 +1034,22 @@ static void vmbus_onoffer(struct vmbus_channel_mes=
+sage_header *hdr)
+>  		return;
 >  	}
 >=20
->  	hv_set_msr(HV_MSR_SIEFP, siefp.as_uint64);
-> +}
-> +
-> +static void hv_hyp_synic_disable_interrupts(void)
-> +{
-> +	union hv_synic_scontrol sctrl;
->=20
->  	/* Disable the global synic bit */
->  	sctrl.as_uint64 =3D hv_get_msr(HV_MSR_SCONTROL);
->  	sctrl.enable =3D 0;
->  	hv_set_msr(HV_MSR_SCONTROL, sctrl.as_uint64);
-> +}
->=20
-> -	if (vmbus_irq !=3D -1)
-> -		disable_percpu_irq(vmbus_irq);
-> +static void hv_para_synic_disable_regs(unsigned int cpu)
-> +{
-> +	/*
-> +	 * When a get/set register error is encountered, the function
-> +	 * returns as the paravisor may not support these registers.
-> +	 */
-> +	int err;
-> +	union hv_synic_simp simp;
-> +	union hv_synic_siefp siefp;
-> +
-> +	struct hv_per_cpu_context *hv_cpu
-> +		=3D per_cpu_ptr(hv_context.cpu_context, cpu);
-> +
-> +	/* Disable SynIC's message page in the paravisor. */
-> +	err =3D hv_para_get_synic_register(HV_MSR_SIMP, &simp.as_uint64);
-> +	if (err)
-> +		return;
-> +	simp.simp_enabled =3D 0;
-> +
-> +	if (hv_cpu->para_synic_message_page) {
-> +		free_page((u64)(hv_cpu->para_synic_message_page));
-> +		hv_cpu->para_synic_message_page =3D NULL;
+> +	co_ring_buffer =3D is_co_ring_buffer(offer);
+> +	if (co_ring_buffer) {
+> +		if (vmbus_proto_version < VERSION_WIN10_V6_0 || !vmbus_is_confidential=
+()) {
+> +			atomic_dec(&vmbus_connection.offer_in_progress);
+> +			return;
+> +		}
 > +	}
-
-Freeing the para_synic_message_page memory here causes problems if a
-CPU is taken offline, then back online. This function gets called when the =
-CPU
-goes offline, so the para_synic_message_page and para_synic_event_page
-memory is freed. Then if the CPU comes back online,
-hv_para_synic_enable_regs() runs without the memory being allocated
-again.
-
-Be sure to test the CPU offlining/onlining scenario to make sure it
-works throughout the stack, including the paravisor.
-
 > +
-> +	err =3D hv_para_set_synic_register(HV_MSR_SIMP, simp.as_uint64);
-> +	if (err)
-> +		return;
-> +
-> +	/* Disable SynIC's event page in the paravisor. */
-> +	err =3D hv_para_get_synic_register(HV_MSR_SIEFP, &siefp.as_uint64);
-> +	if (err)
-> +		return;
-> +	siefp.siefp_enabled =3D 0;
-> +
-> +	if (hv_cpu->para_synic_event_page) {
-> +		free_page((u64)(hv_cpu->para_synic_event_page));
-> +		hv_cpu->para_synic_event_page =3D NULL;
+> +	co_external_memory =3D is_co_external_memory(offer);
+> +	if (is_co_external_memory(offer)) {
 
-As above, don't free the memory here.
+Use the local variable co_external_memory instead of the function, like wit=
+h co_ring_buffer?
+Consistency .... :-)
+
+
+> +		if (vmbus_proto_version < VERSION_WIN10_V6_0 || !vmbus_is_confidential=
+()) {
+> +			atomic_dec(&vmbus_connection.offer_in_progress);
+> +			return;
+> +		}
+
+The test for valid vmbus_proto_version and VMBus being confidential is dupl=
+icated. You
+could do:
+
+	if (co_ring_buffer || co_external_memory)
+
+and have just one copy of the tests. Also I'd suggest adding an error messa=
+ge like
+with the "vmbus_is_valid_offer()" test at the start of vmbus_onoffer(). Tha=
+t way
+incoming offers aren't silently ignored. Something is wrong on the paraviso=
+r or
+host side if the tests fail.
+
+Also, since the combination where co_external_memory =3D true and
+co_ring_buffer =3D false is not allowed, perhaps a check for that invalid
+combination should be made here as well.
 
 > +	}
 > +
-> +	hv_para_set_synic_register(HV_MSR_SIEFP, siefp.as_uint64);
-> +}
-> +
-> +static void hv_para_synic_disable_interrupts(void)
-> +{
-> +	union hv_synic_scontrol sctrl;
-> +	int err;
-> +
-> +	/* Disable the global synic bit */
-> +	err =3D hv_para_get_synic_register(HV_MSR_SCONTROL, &sctrl.as_uint64);
-> +	if (err)
-> +		return;
-> +	sctrl.enable =3D 0;
-> +	hv_para_set_synic_register(HV_MSR_SCONTROL, sctrl.as_uint64);
->  }
+>  	oldchannel =3D find_primary_channel_by_offer(offer);
 >=20
->  #define HV_MAX_TRIES 3
-> @@ -398,16 +535,18 @@ void hv_hyp_synic_disable_regs(unsigned int cpu)
->   * that the normal interrupt handling mechanism will find and process th=
-e channel interrupt
->   * "very soon", and in the process clear the bit.
->   */
-> -static bool hv_synic_event_pending(void)
-> +static bool __hv_synic_event_pending(union hv_synic_event_flags *event, =
-int sint)
->  {
-> -	struct hv_per_cpu_context *hv_cpu =3D this_cpu_ptr(hv_context.cpu_conte=
-xt);
-> -	union hv_synic_event_flags *event =3D
-> -		(union hv_synic_event_flags *)hv_cpu->hyp_synic_event_page + VMBUS_MES=
-SAGE_SINT;
-> -	unsigned long *recv_int_page =3D event->flags; /* assumes VMBus version=
- >=3D VERSION_WIN8 */
-> +	unsigned long *recv_int_page;
->  	bool pending;
->  	u32 relid;
->  	int tries =3D 0;
+>  	if (oldchannel !=3D NULL) {
+> @@ -1111,6 +1128,8 @@ static void vmbus_onoffer(struct vmbus_channel_mess=
+age_header *hdr)
+>  		pr_err("Unable to allocate channel object\n");
+>  		return;
+>  	}
+> +	newchannel->co_ring_buffer =3D co_ring_buffer;
+> +	newchannel->co_external_memory =3D co_external_memory;
 >=20
-> +	if (!event)
-> +		return false;
+>  	vmbus_setup_channel_state(newchannel, offer);
+>=20
+> diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
+> index be490c598785..eeb472019d69 100644
+> --- a/drivers/hv/connection.c
+> +++ b/drivers/hv/connection.c
+> @@ -105,6 +105,9 @@ int vmbus_negotiate_version(struct vmbus_channel_msgi=
+nfo *msginfo, u32 version)
+>  		vmbus_connection.msg_conn_id =3D VMBUS_MESSAGE_CONNECTION_ID;
+>  	}
+>=20
+> +	if (vmbus_is_confidential() && version >=3D VERSION_WIN10_V6_0)
+> +		msg->feature_flags =3D VMBUS_FEATURE_FLAG_CONFIDENTIAL_CHANNELS;
 > +
-> +	event +=3D sint;
-> +	recv_int_page =3D event->flags; /* assumes VMBus version >=3D VERSION_W=
-IN8 */
->  retry:
->  	pending =3D false;
->  	for_each_set_bit(relid, recv_int_page, HV_EVENT_FLAGS_COUNT) {
-> @@ -424,6 +563,17 @@ static bool hv_synic_event_pending(void)
->  	return pending;
->  }
->=20
-> +static bool hv_synic_event_pending(void)
-> +{
-> +	struct hv_per_cpu_context *hv_cpu =3D this_cpu_ptr(hv_context.cpu_conte=
-xt);
-> +	union hv_synic_event_flags *hyp_synic_event_page =3D hv_cpu->hyp_synic_=
-event_page;
-> +	union hv_synic_event_flags *para_synic_event_page =3D hv_cpu->para_syni=
-c_event_page;
-> +
-> +	return
-> +		__hv_synic_event_pending(hyp_synic_event_page, VMBUS_MESSAGE_SINT) ||
-> +		__hv_synic_event_pending(para_synic_event_page, VMBUS_MESSAGE_SINT);
-> +}
-> +
->  static int hv_pick_new_cpu(struct vmbus_channel *channel)
->  {
->  	int ret =3D -EBUSY;
-> @@ -517,6 +667,14 @@ int hv_synic_cleanup(unsigned int cpu)
->  	hv_stimer_legacy_cleanup(cpu);
->=20
->  	hv_hyp_synic_disable_regs(cpu);
-> +	if (vmbus_is_confidential()) {
-> +		hv_para_synic_disable_regs(cpu);
-> +		hv_para_synic_disable_interrupts();
-
-The ordering of the interrupt handling here is a bit scary to me, but maybe
-it's right. hv_hyp_synic_disable_regs() first masks the SINT, and because i=
-t's
-a SINT MSR, it does so first in the hypervisor and then in the paravisor.
-Then hv_para_synic_disable_regs() resets the SIMP and SIEFP. Finally
-hv_para_synic_disable_interrupts() does a global interrupt disable via
-the paravisor. I worry about there being gaps between steps where bad
-things can happen. Might want to confirm with the hypervisor and
-paravisor folks.
-
-When VMBus is not confidential, the sequencing is the same as it is
-now, which is good. There's presumably no reason to change that.
-
-This is another aspect of my earlier comment about adding comments
-that clearly describe how interrupts are to be setup/disabled when both
-SynICs are present.
-
-> +	} else {
-> +		hv_hyp_synic_disable_interrupts();
-> +	}
-> +	if (vmbus_irq !=3D -1)
-> +		disable_percpu_irq(vmbus_irq);
->=20
->  	return ret;
->  }
+>  	/*
+>  	 * shared_gpa_boundary is zero in non-SNP VMs, so it's safe to always
+>  	 * bitwise OR it
 > --
 > 2.43.0
 
