@@ -1,117 +1,157 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8232EAB8F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D4B2E54AA;
+	Wed, 18 Jun 2025 14:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256058; cv=none; b=A/ZenIrpOui7k9wuBJIFXUJzokP0fCnOWNQNH9EAb4lQGOL2rQ2f4nMM04EI/c+igujJ6DB4ykwRcAA0pPv8aFpkWakSsbRcZX7rz6Fr3h6wI0Hk51AXcIfVt9y86uT6ZWTkcCTUv7b6qj01T4IwH5fl++iokiY0ae8xoolwgOI=
+	t=1750256097; cv=none; b=dD/4jZGtqezJoZ1kxW/z7E9yRMr+LTNhFoTPigOi75V2gJ2OFxQeWt/H2noUSiF7CIuzHJkIHsEX2xTUYJdfyKNtvq/nZ2DwqJpIRLcOaeuVDCkAxdq/MiO4x4K6LtcXyOPoaNYyAqSHOF1fj9S2MLTj2CLW5lRyRouNW2ysoLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256058; c=relaxed/simple;
-	bh=jgVt/SVczRVLibj05dhADNEqt5586mqdr4CTTYtoNFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CyHA520eepvKIteyEkyAUK/BtatWCNJ2s43aFgf75OaAka0zmHX71vx4KW3VLlG9TCf0U7GPkQnvOoCsD8JOji6xJsYSryB7Kmg6ftCZpq8IC1fD66L2Esr5hOhKL0t/ZKSsyB327mZ0MDV8xkpVDl+pYH25mM43ac1Jn8kiN/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=LgFvDucW; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
+	s=arc-20240116; t=1750256097; c=relaxed/simple;
+	bh=7joRVJmJSVqkdNthqW2fkY4i9Jk1mXkGvpIDShV3Pdk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fdadVgbc1lYs9gg+fdYJ1djoM4p4B5dTgjE4oDTyYt2Ag2/keNmx4IKWId/6d8b6K231syv3+vVLXLoXafXPJCq9C5Yrhopj38bEdInKqKg8x7fYUWSwHlDFQjlR0ecP80N+eAM8/OjFmELVBmd3u1oojmnqDlAjNWkjZFWcFPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M3GMdsgx; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="LgFvDucW"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a58c2430edso9194691cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rowland.harvard.edu; s=google; t=1750256055; x=1750860855; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=445YfBoLgx6LDox/kScDprx/fKxzHTT51XDkZHjyT1M=;
-        b=LgFvDucWNS3hJwus3xKWv1vyBS2/bpGk+hvBZfypu13o26CumgRQLROc62ZgmTE59J
-         zAxPgVQFv+/RK9DKqWieW55hlhTBLcrjDCmNnBbSKfT6wj63vT1iL1Xprh7U+V0q751l
-         +sD3hlDmOpLA/UuGAAYo6NOUAHhWPTv8lraH47p3HEyO1sdnkreKQAH7IvkIWt/FLuWJ
-         Yj+JP6p18ynBHb7K+1GHzu4WN7RBtszYatiVYfysa+HFjibqM/07u3i8vlg3npDYUPab
-         c7fhflzuq0tejFNUX56pZ/+L7B1UwPyMx6gTp6eIcIYuFSX4WFASXwptcURkY23Or18v
-         24Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750256055; x=1750860855;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=445YfBoLgx6LDox/kScDprx/fKxzHTT51XDkZHjyT1M=;
-        b=TVBt+vvhA6BdRZejoGW7mxUy+tOokjZE9e3eVfTJMhYONuS8utrNQzGVTkd7VUuAIc
-         LAF6r85g9T1k/+oU5Ybp+9ZD4pqtgCEkqCOUXL1mdez0qJY1YbhNFsNQiSrppjnuqNHd
-         dnK34kFiJ6IsEwf5gortnTOlw9UVtX9GHgMTQQQuTdaAIPjVFXox49ARqj2fRsuhFoGN
-         Ugm54GBTAHYOqRdh5We9/4aE+RjY7JXIrMtO1/n0j8x4nwbZmosFam1siSnMz2wZwyhi
-         M/I2nEghZ+uG73yvZV0EvW0VGKsMvhMalRGoVDlLAkQsGDalTHGkpBRFCeS79f9ZUzIp
-         wB5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWRHJe4YjflAQBBia0XpI9m04yWfrrNcm52sIY48XGmZYus5XoMcmagderEN/FrppVUOmeJMkexm3YiIbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOuU/YwOhujzCblyK1LUIlUCtOj6Cvye63MHnSwUU32a03tV6/
-	RfV4Emtcvw26FnXx8ENu9p73tbGB67Y/3ILcKLSdSBabz7YliNxrYFFOpwhpmGbreQ==
-X-Gm-Gg: ASbGncv19FYYKmJPX6/jXcICJaQq7Oi3/zU4AlTTfW9kTqdjP9npIbRD8gzLrG5mO3A
-	I/VCxpv+oXGKIURM+7pxr1GpFpZr5Jgw08nPxL/wi1zuZW7CvcvC73gzOjbdDaOVgtmKzoMABEW
-	qHFnFObKI1+yUdpvPfnY/6/izco4uX6USAGDQHk9RD2VzcnxowC0WgiBBjHDIddNRsEhzbB2Ds2
-	AL/WvifXqQ5ylsRkypeMHIwRKCSC274svZ52rBGL5VrELYPCTl6KaDVbYkQG7kYq5WwPWHL7y8a
-	KeJHIIVmP3ydCpLrSxLn7cTMbbSdNP6GGZzd9V7wBvt1dYFbleRZcj2Wgp6GOf5JhGOOyNN3oUS
-	upwmW
-X-Google-Smtp-Source: AGHT+IHon8Mt+YsDs98sHoA4ASN+0uvnNj4bHx3zdDrXtra2R2s63h6+oRbtKgKxWOhcIXxSFRCvgg==
-X-Received: by 2002:a05:622a:28e:b0:4a5:8387:8b8d with SMTP id d75a77b69052e-4a76458bc51mr42956371cf.21.1750256054965;
-        Wed, 18 Jun 2025 07:14:14 -0700 (PDT)
-Received: from rowland.harvard.edu ([140.247.181.15])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4cfe51sm70916891cf.58.2025.06.18.07.14.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 07:14:14 -0700 (PDT)
-Date: Wed, 18 Jun 2025 10:14:12 -0400
-From: Alan Stern <stern@rowland.harvard.edu>
-To: Chen Ni <nichen@iscas.ac.cn>
-Cc: gregkh@linuxfoundation.org, tglx@linutronix.de, andreyknvl@gmail.com,
-	sylv@sylv.io, u.kleine-koenig@baylibre.com, yanzhen@vivo.com,
-	namcao@linutronix.de, krzysztof.kozlowski@linaro.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: dummy_hcd: Use USB API functions rather
- than constants
-Message-ID: <aec873ff-5d0a-4071-8043-fb901ece9141@rowland.harvard.edu>
-References: <20250618065750.816965-1-nichen@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M3GMdsgx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 44DE743A29;
+	Wed, 18 Jun 2025 14:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750256086;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BR2Js8AYTA3uqJ+dhjRGvYCUNC9Z3XvtFngEWfHaNL4=;
+	b=M3GMdsgxD6lk12yug3GZIA8tEeyFYbrlJgFxgmCaHKFUrC5JJagMIGi3UonPF93IgRsa0e
+	91VmMYNOWFqFjkgDwrtJCBNw0kqYZ78J7y/0GcpTTb5w9PScz8COG1ISoU+ymvY6deqwHU
+	eFa8aDov6g1X5Z0U7XvCaG3a2TC3vJx8Q58k96AcZsZcGLy0o+/s8AiHhvL/XRjHZQ57V+
+	t+oMgkfbyWN6LIZZE350GAwt4swQwwMRB8EIuQKKPAygPkzZQX4XpN0jddH+BhU7S55K1X
+	9XFLQ7bAdz5CemKbwN+ahVr+YigNdMg5BZoI32c8u593JeheOJHk+9jqWIv2BA==
+Message-ID: <3acaaf1c-b4ed-47ff-8de5-195a9cfc5338@bootlin.com>
+Date: Wed, 18 Jun 2025 16:14:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618065750.816965-1-nichen@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] arm64: dts: rockchip: Fix the mipi port definition
+ for RK3399
+To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com>
+ <20250618-dtb_fixes-v1-2-e54797ad2eba@bootlin.com>
+ <DAPPHL6RPWWM.94C7P26AUCCN@cknow.org>
+Content-Language: en-US
+From: Olivier Benjamin <olivier.benjamin@bootlin.com>
+In-Reply-To: <DAPPHL6RPWWM.94C7P26AUCCN@cknow.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvkeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepqfhlihhvihgvrhcuuegvnhhjrghmihhnuceoohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvheejtdeifeejvedvffdtuddtheehtdelvdehvefgjeetveejfeeiveduvdejteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeipdhhvghloheplgfkrfggieemvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeingdpmhgrihhlfhhrohhmpeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepughiughirdguvggsihgrnhestghknhhofidrohhrghdprhgtphhtthhop
+ ehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghikhhosehsnhhtvggthhdruggvpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
+X-GND-Sasl: olivier.benjamin@bootlin.com
 
-On Wed, Jun 18, 2025 at 02:57:50PM +0800, Chen Ni wrote:
-> Use the function usb_endpoint_num() rather than constants.
-> 
-> The Coccinelle semantic patch is as follows:
-> 
-> @@ struct usb_endpoint_descriptor *epd; @@
-> 
-> - (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
-> + usb_endpoint_num(epd)
 
-You could make a similar change for usb_endpoint_dir_in() or 
-usb_endpoint_dir_out().
 
-Alan Stern
+On 6/18/25 15:50, Diederik de Haas wrote:
+> Hi (again),
+> 
+Hello again, I appreciate you taking the time!
+> On Wed Jun 18, 2025 at 12:32 AM CEST, Olivier Benjamin wrote:
+>> The RK3399's MIPI DSI has 2 ports: in an out. The definition of
+>> the port property necessitates the value of #address-cells to be 1.
+>>
+>> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+>> index 5ebc380a24df86ba7172b0950b89cac56b61c507..5a7341fb6bcb0613af6f3ac31d99355a0f890e89 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+>> @@ -468,7 +468,7 @@ &mipi_dsi {
+>>   
+>>   	ports {
+>>   		mipi_out: port@1 {
+>> -			#address-cells = <0>;
+>> +			#address-cells = <1>;
+>>   			#size-cells = <0>;
+>>   			reg = <1>;
+>>   
+> 
+> In rk3399-base.dtsi there is already a definition for mipi-in and
+> mipi-out. AFAICT what this change does is require a reg property on the
+> endpoint and I don't think that's correct.
+> 
+Those definitions do indeed exist in the base DTSI.
+> It seems to me that all you need is a mipi_out_panel definition.
+> So what I came up with is this:
+> 
+> ```sh
+> $ git diff
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> index 04ba4c4565d0..b175aeed99e2 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> @@ -466,18 +466,6 @@ &mipi_dsi {
+>   	status = "okay";
+>   	clock-master;
+> 
+> -	ports {
+> -		mipi_out: port@1 {
+> -			#address-cells = <0>;
+> -			#size-cells = <0>;
+> -			reg = <1>;
+> -
+> -			mipi_out_panel: endpoint {
+> -				remote-endpoint = <&mipi_in_panel>;
+> -			};
+> -		};
+> -	};
+> -
+>   	panel@0 {
+>   		compatible = "hannstar,hsd060bhw4";
+>   		reg = <0>;
+> @@ -495,6 +483,12 @@ mipi_in_panel: endpoint {
+>   	};
+>   };
+> 
+> +&mipi_out {
+> +	mipi_out_panel: endpoint {
+> +		remote-endpoint = <&mipi_in_panel>;
+> +	};
+> +};
+> +
+>   &pmu_io_domains {
+>   	pmu1830-supply = <&vcc_1v8>;
+>   	status = "okay";
+> ```
+> 
+Thanks for the suggestion, that looks like it might actually solve the 
+issue.
+> I don't have a PPP so I can't verify it, but ``make CHECK_DTBS=y W=1
+> rockchip/rk3399-pinephone-pro.dtb`` no longer reports issues wrt
+> dsi@ff960000 (after I also fixed the panel compatible like in patch 1
+> and added a LCD1_RST pinctrl definition as indicated in my reply to
+> patch 3).
+> 
+I'll test on my PPP and report back in v2.
+> Cheers,
+>    Diederik
 
-> 
-> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> ---
->  drivers/usb/gadget/udc/dummy_hcd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
-> index 27c9699365ab..21dbfb0b3bac 100644
-> --- a/drivers/usb/gadget/udc/dummy_hcd.c
-> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
-> @@ -623,7 +623,7 @@ static int dummy_enable(struct usb_ep *_ep,
->  
->  	dev_dbg(udc_dev(dum), "enabled %s (ep%d%s-%s) maxpacket %d stream %s\n",
->  		_ep->name,
-> -		desc->bEndpointAddress & 0x0f,
-> +		usb_endpoint_num(desc),
->  		(desc->bEndpointAddress & USB_DIR_IN) ? "in" : "out",
->  		usb_ep_type_string(usb_endpoint_type(desc)),
->  		max, str_enabled_disabled(ep->stream_en));
-> -- 
-> 2.25.1
-> 
+-- 
+Olivier Benjamin, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
