@@ -1,78 +1,107 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312F82FEE03
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69782FEE03
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750267305; cv=none; b=SMWZFfOmg0m5f4kbZWST5ZV6gDmUG6/MEckjh6hs6MrYtDcyxNVnzi4zBPodXiy/3HEKj8E4Mh2i/lca3dxdOjqaTo0uH/Zb2CeArNUphgGlIQ9pCQIZziVBqttzPPoEPPKMWqTjlltcELHpD+Ad7aH8AoQOSjGulH61YgFcULA=
+	t=1750267327; cv=none; b=KQwnCgmm4xbbR5xtSSDKJoNRuiL7nG5RP4vtxGiKvjjc7jDybrZi2alO7DK8qcWjpM8VT14PEI5WXF2jOwVOg8ORbG3oL5KkoK1s5JkDoHUzmlOJ7smx6Tn1FuesnWqWJbWDNfIm4QbtyDFj0DwOdJmXPTGJR+nxCwildLvK7VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750267305; c=relaxed/simple;
-	bh=Ig42YHRYmrVBbfi+OjXog9hjn68e04E/1MFqgrmGhRI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRilujXowGLSEzbqnKDSPUDyOU/yitwoZJTP5KCSSzh4G3JilGUHbcQ3fkgw8PKH5H9ge5rlswjpjGTZUtTg2P1KLKvyiq8J5+jYX2qDeDWQ7ijjycm80n11mhXttyjZ6jbRF3NMm7HA/QBc9bhce8rZEWKaYrII1q8weQO+FYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IMjcnwy7; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750267327; c=relaxed/simple;
+	bh=JQXct5x6xClvcXeIW3n4Ed4wK4FBsJctQGZPbEpfj+c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nEJFusJg/q9q6iD7h6cgsJMW+Izbqw1WrSvu1whRQ2ldrnrIG/2qbbnoKlijs2AV5WqJDuSifYDUGVWSjakxZWzleHs6zz60Wf0qvjLrWQaNqPP7hMilk3QHiOf5XVWpul0cP85C3Kd3VgTcMkTDQJmDa/41FqzGIXSRypgUkbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ORGVXU3I; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IMjcnwy7"
-Date: Wed, 18 Jun 2025 10:21:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750267290;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ORGVXU3I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750267324;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=A3NpJ38lWR4z6hqaBFLevEDpaHIfTo7YXuZVNKBzsa8=;
-	b=IMjcnwy7QV5re4ok3GMG3nK6OJGJLk0CMZXqK4kGOCF51d6Vyxgv5wX6mawvSWkMJej1yZ
-	xcbNOKct1Zihy2R9FrF3njNWIK4R8yLSP3PR+XNLsEC36AG/al+a66mGXOcujTJlskDf2r
-	z7rOfOMjh7+FqGnEXREqqni1Jijqh0c=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
-Cc: tj@kernel.org, hannes@cmpxchg.org, mkoutny@suse.com, 
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cgroup/rstat: change cgroup_base_stat to atomic
-Message-ID: <4rj2fju2cerlxarbqjmd4222jqeoqtltz57uo3ztw6nhirbotk@66brhfp3t5dc>
-References: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
+	bh=iPzAnQ1fZXolnZ1+sIetH1vtwxZcsqJF5DWYrNvf4/M=;
+	b=ORGVXU3IUBOBFmVnPKY6apqQaCMg2wGZ1LypR0lIfRkaSwRggCGoTcF/I6WHeJ0KgJh4Gw
+	4DUAfRkD7k1L5evG0Kdf6YTIALSGEbE8TJy7XJM83kK5A/rQA5pX/x3BZsROqavW6TxxC9
+	Dl7yxyQ8x+XpK2LGNsApcorjI8rLqw0=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-253-zpcEMTcpMraorc_HVKzFoQ-1; Wed,
+ 18 Jun 2025 13:22:01 -0400
+X-MC-Unique: zpcEMTcpMraorc_HVKzFoQ-1
+X-Mimecast-MFC-AGG-ID: zpcEMTcpMraorc_HVKzFoQ_1750267319
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 350691800294;
+	Wed, 18 Jun 2025 17:21:59 +0000 (UTC)
+Received: from [10.22.64.21] (unknown [10.22.64.21])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7618E1956094;
+	Wed, 18 Jun 2025 17:21:56 +0000 (UTC)
+Message-ID: <89a9481a-f788-4e7e-b0ad-b23bb0f24fc9@redhat.com>
+Date: Wed, 18 Jun 2025 13:21:55 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/4] scsi: fnic: Set appropriate logging level for log
+ message
+To: Karan Tilak Kumar <kartilak@cisco.com>, sebaddel@cisco.com
+Cc: arulponn@cisco.com, djhawar@cisco.com, gcboffa@cisco.com,
+ mkai2@cisco.com, satishkh@cisco.com, aeasi@cisco.com, jejb@linux.ibm.com,
+ martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, revers@redhat.com, dan.carpenter@linaro.org
+References: <20250618003431.6314-1-kartilak@cisco.com>
+ <20250618003431.6314-4-kartilak@cisco.com>
+Content-Language: en-US
+From: John Meneghini <jmeneghi@redhat.com>
+Organization: RHEL Core Storge Team
+In-Reply-To: <20250618003431.6314-4-kartilak@cisco.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Tue, Jun 17, 2025 at 12:26:45PM +0200, Bertrand Wlodarczyk wrote:
-> The kernel currently faces scalability issues when multiple userspace
-> programs attempt to read cgroup statistics concurrently.
-> 
-> The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush,
-> which prevents access and updates to the statistics
-> of the css from multiple CPUs in parallel.
-> 
-> Given that rstat operates on a per-CPU basis and only aggregates
-> statistics in the parent cgroup, there is no compelling reason
-> why these statistics cannot be atomic.
-> By eliminating the lock, each CPU can traverse its rstat hierarchy
-> independently, without blocking. Synchronization is achieved during
-> parent propagation through atomic operations.
-> 
-> This change significantly enhances performance in scenarios
-> where multiple CPUs access CPU rstat within a single cgroup hierarchy,
-> yielding a performance improvement of around 50 times compared
-> to the mainline version.
-> Notably, performance for memory and I/O rstats remains unchanged,
-> as these are managed in separate submodules.
-> 
-> Additionally, this patch addresses a race condition detectable
-> in the current mainline by KCSAN in __cgroup_account_cputime,
-> which occurs when attempting to read a single hierarchy
-> from multiple CPUs.
-> 
-> Signed-off-by: Bertrand Wlodarczyk <bertrand.wlodarczyk@intel.com>
+Reviewed-by: John Meneghini <jmeneghi@redhat.com>
 
-Can you please rebase your change over for-6.17 branch of the cgroup
-tree and resend?
+
+On 6/17/25 8:34 PM, Karan Tilak Kumar wrote:
+> Replace KERN_INFO with KERN_DEBUG for a log message.
+> 
+> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+> Reviewed-by: Arun Easi <aeasi@cisco.com>
+> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+> ---
+> Changes between v5 and v6:
+>      - Incorporate review comments from John:
+> 	- Rebase patches on 6.17/scsi-queue
+> 
+> Changes between v4 and v5:
+>      - Incorporate review comments from John:
+> 	- Refactor patches
+> ---
+>   drivers/scsi/fnic/fnic_scsi.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
+> index 7133b254cbe4..75b29a018d1f 100644
+> --- a/drivers/scsi/fnic/fnic_scsi.c
+> +++ b/drivers/scsi/fnic/fnic_scsi.c
+> @@ -1046,7 +1046,7 @@ static void fnic_fcpio_icmnd_cmpl_handler(struct fnic *fnic, unsigned int cq_ind
+>   		if (icmnd_cmpl->scsi_status == SAM_STAT_TASK_SET_FULL)
+>   			atomic64_inc(&fnic_stats->misc_stats.queue_fulls);
+>   
+> -		FNIC_SCSI_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+> +		FNIC_SCSI_DBG(KERN_DEBUG, fnic->host, fnic->fnic_num,
+>   				"xfer_len: %llu", xfer_len);
+>   		break;
+>   
+
