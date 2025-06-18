@@ -1,111 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0B93085A0;
-	Wed, 18 Jun 2025 19:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56186212B3A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750274954; cv=none; b=ZPvxvR3KVvwgxe+94ZtTjir5zZRwh2PnEgkooaDCqNeNL5XEL2FYhteFsRNW0HQpF3ylWp6A+CBEF4Ex2yb1L3y5W+YSYaDsTTOM8zmHTiEFt0eFS+TNIa2QVcJZ7kcTpDoaZNrC/6gVSgXyC0xG2hVv9Ez7bDDBsVWIMUDL7/8=
+	t=1750274975; cv=none; b=SZPb5Zt77OtchM9NG2Ie6D5MACyLjl49mh6YNdB0QNr7shNgkujQIarwMCyblOmvd4pnhJhoI/zbBnwElSed7mTK87Bzm8NtHmbs138tFBcAKzkMrTJoJhQmLZVXoaeJdqeS+CPGUqrstwOkTC53x3Sq7dK3JLEXW/0L8YQQJH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750274954; c=relaxed/simple;
-	bh=db/nmU5G6ALn8w6ZNs2pM1XeBWieETxE4h87P5JvRfs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cPiIQ2iCQ1cmvpUTKD2jLhk3G8bRvrcsv7Ay0GEAg6+2tqCVy660u0l8UMismkYZ8TZx8t5I3UDAnQig8vuIHWOIpYZOwvuaGjL/bGOApo4Ylz4v1aJIYML6RC9Lqurh9fwqX28fPVhRtgaj1xPWmJl23lbwggn7z4pneWzAr+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jd4czJbq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750274975; c=relaxed/simple;
+	bh=EC84Q+n7krh3PBKPeiDn489kr/c1NdIS943x/pEcFs0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e73jPFBm/4CPfX8IMGXF2IWekn1LHubqcz0dqz3mIdajXqr7mynpyRa8KHDyBlAumzkQkW+BC9fIxqF9KBxb+nz4M06NNH4k5YGf3vBlMk+5Q38YX41ZdWsnbc0dBJMvgelV6D59kpMo6tDXRJddowN30E5gW9XYXjQGmQEaIL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PF53b8PG; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jd4czJbq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57860C4CEE7;
-	Wed, 18 Jun 2025 19:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750274953;
-	bh=db/nmU5G6ALn8w6ZNs2pM1XeBWieETxE4h87P5JvRfs=;
-	h=From:Date:Subject:To:Cc:From;
-	b=jd4czJbqw4lInFqHIc9vlDHolDLedomxUEEGNc8XP7/zYSrfZ+ALmfQZA01qmkaX/
-	 SKttlTHgApd4mp4omSjZwiyHaOC5XCscKlCndjgza7BcOAHBuYKFRZWM1jhyYT+eKJ
-	 T2Pvk8oUaLNMBgfxQqJgZrTiMbIL5c5x3IP+WmWFzPbmNBP/Uz+SuvKd3WHoZqOUiR
-	 l6UR5gMFnIlPAOYDGFakt0BLrXCfed9tzWHFIOWigdW505HY0JVqCHgUzoNJrJCHsz
-	 fU3H9MegzSzefU7O+QQHKOqRmV5bK9QETzaIjtyk7wV06vJn9OQZ7PMJuJn9e91XV6
-	 8bT7Ft9El0o4Q==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Wed, 18 Jun 2025 12:29:09 -0700
-Subject: [PATCH] ARM: Use an absolute path to unified.h in KBUILD_AFLAGS
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PF53b8PG"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b31cd61b2a9so42372a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1750274973; x=1750879773; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F8+TZfmF3MLk4xE+85WYNr1ilSLO44mBRcYRUA2SMdE=;
+        b=PF53b8PGuTVdV48QkMNQI/AcQXZST1FLGWdJdbTeAqKtU3vWBVFMVi9T2oyhCoMUJ/
+         eY9b9jU0AlGlSKIQrBZR4bo0MJb4f4Bdra/Btp1kcYzo8jDw8dAyXMlzMNu+ltnP4L/x
+         +9L6vRjU1GprTpe/+ZZjYBFJNdYMYVESr0HzM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750274973; x=1750879773;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F8+TZfmF3MLk4xE+85WYNr1ilSLO44mBRcYRUA2SMdE=;
+        b=RK0wi1tfW3j3UJn7g9u9kTCq+Awfa8svVIsyMJfcQ0jHMueRZ18hCdhGkfcmu7K34w
+         4GMvUvXBN8FA1Jse8VZ8vHjs4zeO6jPNsMldwMmGR98qTe5FTVAbH0+3v9fKKyk8TPZJ
+         ZYuAED9CVjI/SkGabAipTJOAmFNoWOXYgz+oEXiKbqluUW0J7tWm1PGHrKlqizJcsBvu
+         cIoO+jcdwrS80F4/LUFD9Z5B20gqfVaAapkmedTDbMTyGQsEU38uh20nG9pivIZgTyUL
+         IXh0GZj4zeEColZ/CLK4dOTzQupZBFs7YcxCX1Odwog5elxbOAB5xNWpQcDOQIjnDYqI
+         eFiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQPr2nUiO5a2HcgIyUXIaf5cTgO3B6PSLINhaizRgMkkV6KxiossDcyRaFD56fqsu3MP65myNm091xXd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw6RkccSVwcLkyqvPEZMB7GuWpd12FkLw4kHbZyltntjsN0eNw
+	ltgJKJwCsWvXQxXHqvE/CqoN6KBNiKkG381hcNtgtR83SwKviH2qg5bGwcnZkKKy+g==
+X-Gm-Gg: ASbGncuT8Y8CEBEnpl867ZsiudnED5Z4TqFqrVHxGN+jQgQZp8Ue/kj7JqrUFXV/GSd
+	uISgbUrV6QiGQX6FTJUjEAVonFwVHIgApKTnMfjryV7feHZq28+OB2ZXZElxsrEXYP3n95OV6Ma
+	KfEgcweqRD2fqkL10HMKW+lQZ/Iq0XDAXwUiVu5Wjc7EgaW77J/ViNnDcOMVBLSQsR5YfJBEu9D
+	Kkp4XtZRFlEGtOx+8d6EXqt4du2GHg5IgDkwhumt7C2ELd02xfqn4szqHQ/bdLCJV+i6xQziegL
+	WpYDTrQpRxdEXFzAdDqv6q9QCLf8IWvcm7R1EBJcsWwY71EW7f2YoG8IdB1naLcwbn8zPXyZ5g4
+	NHE48ZhFKIBOKfCa+0hJnThBHdCc=
+X-Google-Smtp-Source: AGHT+IEemXY9lgPJEGcgUMUbG4MenbkaeF3LFGibrarvQsRmFlD2WLnpskK4KRqGLBUdq8hkOorarQ==
+X-Received: by 2002:a05:6a21:338c:b0:21e:7d1b:4401 with SMTP id adf61e73a8af0-21fbd55a0e2mr28926494637.22.1750274973514;
+        Wed, 18 Jun 2025 12:29:33 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.144.250])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900cec72sm11451139b3a.150.2025.06.18.12.29.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 12:29:33 -0700 (PDT)
+From: Zack Rusin <zack.rusin@broadcom.com>
+To: dri-devel@lists.freedesktop.org
+Cc: Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	ian.forbes@broadcom.com,
+	martin.krastev@broadcom.com,
+	maaz.mombasawala@broadcom.com,
+	Marko Kiiskila <marko.kiiskila@broadcom.com>,
+	Zack Rusin <zack.rusin@broadcom.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/vmwgfx: Fix guests running with TDX/SEV
+Date: Wed, 18 Jun 2025 15:29:26 -0400
+Message-ID: <20250618192926.1092450-1-zack.rusin@broadcom.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-arm-expand-include-unified-h-path-v1-1-aef6eb4c44ca@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIQTU2gC/x3NQQqDMBBG4avIrDuQCAbpVUoXQ+a3GbBpSGoRx
- Lsbuvw27x3UUA2N7sNBFT9r9skd/jZQTJJfYNNuGt04ueBnlvpm7EWysuW4bgresi0G5cRFvom
- DQ5hEo4oH9U6pWGz/Px7P87wAGq/Kg3MAAAA=
-X-Change-ID: 20250618-arm-expand-include-unified-h-path-60e65adcda1e
-To: Russell King <linux@armlinux.org.uk>, 
- Masahiro Yamada <masahiroy@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, stable@vger.kernel.org, 
- KernelCI bot <bot@kernelci.org>, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2325; i=nathan@kernel.org;
- h=from:subject:message-id; bh=db/nmU5G6ALn8w6ZNs2pM1XeBWieETxE4h87P5JvRfs=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBnBwu0NotVRxoyTe/xvzsw2Ct5S8jM0ZEY7e5/+u+OJ9
- 91TtZQ6SlkYxLgYZMUUWaofqx43NJxzlvHGqUkwc1iZQIYwcHEKwEQytjL895M3c52s0uJlZh9/
- x0uY26BHeL1fVfWnPxbn00yEPuXWMDK0vHHKtH9yXl7w+4vIcw5r8vO5jnEkvt1ytjrmtdUBhjR
- uAA==
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Transfer-Encoding: 8bit
 
-After commit d5c8d6e0fa61 ("kbuild: Update assembler calls to use proper
-flags and language target"), which updated as-instr to use the
-'assembler-with-cpp' language option, the Kbuild version of as-instr
-always fails internally for arch/arm with
+From: Marko Kiiskila <marko.kiiskila@broadcom.com>
 
-  <command-line>: fatal error: asm/unified.h: No such file or directory
-  compilation terminated.
+Commit 81256a50aa0f ("x86/mm: Make memremap(MEMREMAP_WB) map memory as
+encrypted by default") changed the default behavior of
+memremap(MEMREMAP_WB) and started mapping memory as encrypted.
+The driver requires the fifo memory to be decrypted to communicate with
+the host but was relaying on the old default behavior of
+memremap(MEMREMAP_WB) and thus broke.
 
-because '-include' flags are now taken into account by the compiler
-driver and as-instr does not have '$(LINUXINCLUDE)', so unified.h is not
-found.
+Fix it by explicitly specifying the desired behavior and passing
+MEMREMAP_DEC to memremap.
 
-This went unnoticed at the time of the Kbuild change because the last
-use of as-instr in Kbuild that arch/arm could reach was removed in 5.7
-by commit 541ad0150ca4 ("arm: Remove 32bit KVM host support") but a
-stable backport of the Kbuild change to before that point exposed this
-potential issue if one were to be reintroduced.
-
-Follow the general pattern of '-include' paths throughout the tree and
-make unified.h absolute using '$(srctree)' to ensure KBUILD_AFLAGS can
-be used independently.
-
-Cc: stable@vger.kernel.org
-Fixes: d5c8d6e0fa61 ("kbuild: Update assembler calls to use proper flags and language target")
-Reported-by: KernelCI bot <bot@kernelci.org>
-Closes: https://lore.kernel.org/CACo-S-1qbCX4WAVFA63dWfHtrRHZBTyyr2js8Lx=Az03XHTTHg@mail.gmail.com/
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
+Fixes: 81256a50aa0f ("x86/mm: Make memremap(MEMREMAP_WB) map memory as encrypted by default")
+Signed-off-by: Marko Kiiskila <marko.kiiskila@broadcom.com>
+Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/Makefile | 2 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 4808d3ed98e4..e31e95ffd33f 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -149,7 +149,7 @@ endif
- # Need -Uarm for gcc < 3.x
- KBUILD_CPPFLAGS	+=$(cpp-y)
- KBUILD_CFLAGS	+=$(CFLAGS_ABI) $(CFLAGS_ISA) $(arch-y) $(tune-y) $(call cc-option,-mshort-load-bytes,$(call cc-option,-malignment-traps,)) -msoft-float -Uarm
--KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) -Wa,$(arch-y) $(tune-y) -include asm/unified.h -msoft-float
-+KBUILD_AFLAGS	+=$(CFLAGS_ABI) $(AFLAGS_ISA) -Wa,$(arch-y) $(tune-y) -include $(srctree)/arch/arm/include/asm/unified.h -msoft-float
- KBUILD_RUSTFLAGS += --target=arm-unknown-linux-gnueabi
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+index bc0342c58b4b..8ff958d119be 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -750,7 +750,7 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
+ 		dev->fifo_mem = devm_memremap(dev->drm.dev,
+ 					      fifo_start,
+ 					      fifo_size,
+-					      MEMREMAP_WB);
++					      MEMREMAP_WB | MEMREMAP_DEC);
  
- CHECKFLAGS	+= -D__arm__
-
----
-base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-change-id: 20250618-arm-expand-include-unified-h-path-60e65adcda1e
-
-Best regards,
---  
-Nathan Chancellor <nathan@kernel.org>
+ 		if (IS_ERR(dev->fifo_mem)) {
+ 			drm_err(&dev->drm,
+-- 
+2.48.1
 
