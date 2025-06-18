@@ -1,116 +1,154 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E14295510
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:01:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28E4A2EE5FD
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258869; cv=none; b=gMLHfPwVIYh0xSNi1K69ceoyM3J9Rv2rYJGqYoaT1j70aO+dOTHLA9s8g9A1/OYh8euG0wAkn7rVdr8C6i133Is2CdsshHO9CQEqFHeaCCsEV5BcqFiYo4aS1/Q7VQdDKJQ9Tfmt3NXoTvQkPI6csc1s2NHQfqeZeKje6LaBXJc=
+	t=1750258968; cv=none; b=mG70EyeZsXDC4IhGLmlXn4/B2x7jB3ackhgjVCNaQG3Cn1oBw2Q2RZuIydXbfNbSD3vTOu2kSHZqWDJHj3YmlGP3cXwnNoKsts75oFxIK6XD3gHzTyEADwscDkg+m+O4KdFg8AQ1DiNB1NOa6zwZ9s+TnHDlZ2jFmRQIfNr0cYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258869; c=relaxed/simple;
-	bh=In9SpzZLvVCFKT0ns4hBMmiaQCbATnsS0vtsR+xsVqQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QUtaeOuEYkPvzXD0bOxC61baOj0GN2aDOdz08WKRJD+IMP61YZp4bdi0SZfqRHHQCq0F9UAA6LAs5z3iT4X6Gr28pmEVuA1ht+MqPgSv18wk8RRxWx9n+D6rPFxzpY7Fz/W4g8T0v2B2JrpoSWobMndbJG1TsQfwJX/jGU4rZXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J8zBYzXp; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J8zBYzXp"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f438523d6fso9381a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750258865; x=1750863665; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=K+TWg80sQlK9VKZi48Hr3ND154+UsDClJZ6mA6GdvrE=;
-        b=J8zBYzXpoKberVmnGbZZPGFYtIYmg1MisrVWnlur/sQ4l5OprKXLSMQX81jswp5VXA
-         enNuPLknJHvsU+OVLBvpfFGvY0AdS2ZPRaAM9ydW3//XgCFyF6uMinZZ/YxNurOUCWzP
-         up3G4Z/RWO2UZY/xzmfJttrovQCV1SWARNnobJSJsyDRznYzqSq4bpSh8hPUvi+KFrte
-         4ymrKwX3KWaLbr5Dig6+oNvS88BCHeZYijyiQsDH3SqJlUEHiL/VgwtcvXnq+bYmY6Q0
-         6n2IvWE3xB6USpIzMEEpVlwue56oi8ZQI44xX84k71dj5wRKaDytCy68mPuCn6UT9APq
-         nI1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750258865; x=1750863665;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K+TWg80sQlK9VKZi48Hr3ND154+UsDClJZ6mA6GdvrE=;
-        b=KHpNsFf/hkxgfCun+6PXWekgLPtXarzTP0uXtMpkRH9Ed/Fsiv7wd8eN3Dq/IulGKf
-         LZK8f4ZuvzvYLt2aaTnZThhVPirAgbIOlPqHCCFGv4D10Ok1bv/AjX7d25joJ9BIS/A8
-         nietzOdK7UQ4IAOYks1HZtSs0KclRLmVY3Gp0M85mNZMUe1ywvPvlEckAsY1cb7d6ymN
-         4i6A2fLOLC7+AufW9e8PwQIfESrSeK96weWNeQAjt+D1hF60WiPdd1dafbPPORIeH/k4
-         r10+ByMN+MZQI8IYcze2UY8GWuBK1QsEuIYdkWDXNuCKkfJPw9AfaXij7+XIMkT+Jmzk
-         OAyw==
-X-Forwarded-Encrypted: i=1; AJvYcCXP86gBLeP441IiEdHvujF3xkipM6DgzlB5D13gI1wVmtpt62zvVqETkg3QqgTWugs5DBWulOHB5dSxti4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwO2880n/cJpvinew7seOY+2lUJM7sBx4pmbO+T1/vI9V/WPojH
-	7U/B/5GGRgrynR2bk7jwszZlcO7ILZurxBDTemxd/luOPxo356rjaP1mUu/YVCApasOvINS+wHI
-	LVnsPhbkxFGvqEaVVbTkPMTxGb3i8Q5MNGzwo8Vpv
-X-Gm-Gg: ASbGncuyCgaTPWQcML9hO/54gfilLdS7CmuQze/KhNokGpcWf+qoVlSCEGjHZQ9Zuw4
-	Mq8++6enEqN+Z8eisb1NsrcrGG3bHCk1zjZDE5i33SPgEeRdTjJ9lRK6vmzV2C7pUCOjlg33GuN
-	ODjgzwUgTLtrnc9mZc4LttwhiYH1AxM4DE7bIYrVRDhZ9cm634yxQduyvlhXJ1TwzNs3lUu0kz/
-	3AU599dKUe+gco=
-X-Google-Smtp-Source: AGHT+IFAgEi2YZlblsUl4v6UMeK05nP5o7l+saBCTqWQv2WXDiTvH7dfg3lu9TfWBrUWL3UD2/KG3DHDZUTYNdxFICg=
-X-Received: by 2002:a05:6402:1d22:b0:607:1323:9c2c with SMTP id
- 4fb4d7f45d1cf-608da34eabbmr379396a12.7.1750258863342; Wed, 18 Jun 2025
- 08:01:03 -0700 (PDT)
+	s=arc-20240116; t=1750258968; c=relaxed/simple;
+	bh=rshmYQO8djGbcdz7XOtr0FWW1XOSMW9B+A2ioLN25tg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qbH11y71MWt2VV1ZNKSCxfr51UKfdgxUkfvndUQLkmgvFwpnKVXBpaUxUD1hwAxbjM9EUxK1IyFIf70MpvF/VQxcBbzuWkAiduD2H3MR9kA7xd1U92qS3YyF48Xhnd2VHHyXwFzlEtXDidZJmK3j0LEQN/mx1FH+iHYANqfT/eM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D60014BF;
+	Wed, 18 Jun 2025 08:02:25 -0700 (PDT)
+Received: from [10.57.28.112] (unknown [10.57.28.112])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EBC2F3F58B;
+	Wed, 18 Jun 2025 08:02:43 -0700 (PDT)
+Message-ID: <bc8a73d2-ba85-4431-a8e9-3692cc1e402a@arm.com>
+Date: Wed, 18 Jun 2025 16:02:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618-debugfs-rust-v6-0-72cae211b133@google.com>
- <20250618-debugfs-rust-v6-3-72cae211b133@google.com> <aFJ2fJ_pX8mWCQo6@google.com>
-In-Reply-To: <aFJ2fJ_pX8mWCQo6@google.com>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Wed, 18 Jun 2025 08:00:51 -0700
-X-Gm-Features: AX0GCFsfqIEzORIqVfIvRL7BBfVutr64EJTViTS26O53ORqcZg3zwyF6cJssv9A
-Message-ID: <CAGSQo00fwu-UEi9D+Q4F5WpfUUuz562odhaDhp=F99cJyd9WyQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/5] rust: debugfs: Support arbitrary owned backing for File
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] arm64: realm: ioremap: Allow mapping memory as
+ encrypted
+To: Suzuki K Poulose <suzuki.poulose@arm.com>,
+ linux-arm-kernel@lists.infradead.org
+Cc: will@kernel.org, catalin.marinas@arm.com, sami.mujawar@arm.com,
+ aneesh.kumar@kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com
+References: <20250613111153.1548928-1-suzuki.poulose@arm.com>
+ <20250613111153.1548928-2-suzuki.poulose@arm.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250613111153.1548928-2-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> We may want to consider using the ForeignOwnable trait here instead. The
+On 13/06/2025 12:11, Suzuki K Poulose wrote:
+> For ioremap(), so far we only checked if it was a device (RIPAS_DEV) to choose
+> an encrypted vs decrypted mapping. However, we may have firmware reserved memory
+> regions exposed to the OS (e.g., EFI Coco Secret Securityfs, ACPI CCEL).
+> We need to make sure that anything that is RIPAS_RAM (i.e., Guest
+> protected memory with RMM guarantees) are also mapped as encrypted.
+> 
+> Rephrasing the above, anything that is not RIPAS_EMPTY is guaranteed to be
+> protected by the RMM. Thus we choose encrypted mapping for anything that is not
+> RIPAS_EMPTY. While at it, rename the helper function
+> 
+>   __arm64_is_protected_mmio => arm64_rsi_is_protected
+> 
+> to clearly indicate that this not an arm64 generic helper, but something to do
+> with Realms.
+> 
+> Cc: Sami Mujawar <sami.mujawar@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+> Cc: Steven Price <steven.price@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-I was considering trying to switch over to `StableDeref`-like trait
-[1] in a follow-up patchset. The core property I need is that moving
-the `D` cannot result in the pointer it would `deref` to changing.
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-The problem with `ForeignOwnable` is that it forbids the user from
-passing in a `Box<dyn Foo>`, because that doesn't fit in a `void*` A
-`StableDeref` version would not have this issue. I agree that
-`ForeignOwnable` would be a strict upgrade to what I have now, since a
-user can still pass in a `Box<Box<dyn Foo>>` and have it work with
-`ForeignOwnable`, and if we ever added `StableDeref`, then
-`ForeignOwnable` would have a blanket impl for it.
+> ---
+>  arch/arm64/include/asm/io.h  |  2 +-
+>  arch/arm64/include/asm/rsi.h |  2 +-
+>  arch/arm64/kernel/rsi.c      | 26 ++++++++++++++++++++++----
+>  3 files changed, 24 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
+> index 9b96840fb979..82276282a3c7 100644
+> --- a/arch/arm64/include/asm/io.h
+> +++ b/arch/arm64/include/asm/io.h
+> @@ -311,7 +311,7 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset, size_t size,
+>  static inline bool arm64_is_protected_mmio(phys_addr_t phys_addr, size_t size)
+>  {
+>  	if (unlikely(is_realm_world()))
+> -		return __arm64_is_protected_mmio(phys_addr, size);
+> +		return arm64_rsi_is_protected(phys_addr, size);
+>  	return false;
+>  }
+>  
+> diff --git a/arch/arm64/include/asm/rsi.h b/arch/arm64/include/asm/rsi.h
+> index b42aeac05340..88b50d660e85 100644
+> --- a/arch/arm64/include/asm/rsi.h
+> +++ b/arch/arm64/include/asm/rsi.h
+> @@ -16,7 +16,7 @@ DECLARE_STATIC_KEY_FALSE(rsi_present);
+>  
+>  void __init arm64_rsi_init(void);
+>  
+> -bool __arm64_is_protected_mmio(phys_addr_t base, size_t size);
+> +bool arm64_rsi_is_protected(phys_addr_t base, size_t size);
+>  
+>  static inline bool is_realm_world(void)
+>  {
+> diff --git a/arch/arm64/kernel/rsi.c b/arch/arm64/kernel/rsi.c
+> index ce4778141ec7..c64a06f58c0b 100644
+> --- a/arch/arm64/kernel/rsi.c
+> +++ b/arch/arm64/kernel/rsi.c
+> @@ -84,7 +84,25 @@ static void __init arm64_rsi_setup_memory(void)
+>  	}
+>  }
+>  
+> -bool __arm64_is_protected_mmio(phys_addr_t base, size_t size)
+> +/*
+> + * Check if a given PA range is Trusted (e.g., Protected memory, a Trusted Device
+> + * mapping, or an MMIO emulated in the Realm world).
+> + *
+> + * We can rely on the RIPAS value of the region to detect if a given region is
+> + * protected.
+> + *
+> + *  RIPAS_DEV - A trusted device memory or a trusted emulated MMIO (in the Realm
+> + *		world
+> + *  RIPAS_RAM - Memory (RAM), protected by the RMM guarantees. (e.g., Firmware
+> + *		reserved regions for data sharing).
+> + *
+> + *  RIPAS_DESTROYED is a special case of one of the above, where the host did
+> + *  something without our permission and as such we can't do anything about it.
+> + *
+> + * The only case where something is emulated by the untrusted hypervisor or is
+> + * backed by shared memory is indicated by RSI_RIPAS_EMPTY.
+> + */
+> +bool arm64_rsi_is_protected(phys_addr_t base, size_t size)
+>  {
+>  	enum ripas ripas;
+>  	phys_addr_t end, top;
+> @@ -101,18 +119,18 @@ bool __arm64_is_protected_mmio(phys_addr_t base, size_t size)
+>  			break;
+>  		if (WARN_ON(top <= base))
+>  			break;
+> -		if (ripas != RSI_RIPAS_DEV)
+> +		if (ripas == RSI_RIPAS_EMPTY)
+>  			break;
+>  		base = top;
+>  	}
+>  
+>  	return base >= end;
+>  }
+> -EXPORT_SYMBOL(__arm64_is_protected_mmio);
+> +EXPORT_SYMBOL(arm64_rsi_is_protected);
+>  
+>  static int realm_ioremap_hook(phys_addr_t phys, size_t size, pgprot_t *prot)
+>  {
+> -	if (__arm64_is_protected_mmio(phys, size))
+> +	if (arm64_rsi_is_protected(phys, size))
+>  		*prot = pgprot_encrypted(*prot);
+>  	else
+>  		*prot = pgprot_decrypted(*prot);
 
-I'll send a new version using `ForeignOwnable`, and we can consider
-the `StableDeref` version in the future.
-
-[1]: https://docs.rs/gimli/latest/gimli/trait.StableDeref.html
-
-
-> trait is implemented by anything that can be converted to/from a void
-> pointer, so you can:
->
-> * When creating the file, convert it to a void pointer that you store in
->   File and pass to debugfs_create_file_full.
-> * When displaying the file, create a borrowed version of the void
->   pointer and display that.
-> * When freeing the File, convert the void pointer back into an owned
->   value and drop it.
->
-> For cases where a box really is necessary, the user can create a box and
-> pass it themselves. But if the user already has a pointer type (e.g. and
-> Arc<T> or &'static T) then they can pass that pointer directly and the
-> pointer is stored as a void pointer without the Box indirection.
->
-> Alice
