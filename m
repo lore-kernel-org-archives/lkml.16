@@ -1,112 +1,73 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B96D2EAB87
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:14:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8232EAB8F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256050; cv=none; b=dzPKqjub48W5pXUgShcA9n+hP6SUQKdahxjjM3tVA4+gmGfTVrmBv1WG7gKdDpaKAGHNuobIsjV8aJrrk+pNAsk+jAD9Qpts6AsRb6SP55m4KiaBtwoxrkFABWkTRGkh4eicU/JSYUYInDcMN+5a9HMYkHab5xfrh5ZV1eo0Il4=
+	t=1750256058; cv=none; b=A/ZenIrpOui7k9wuBJIFXUJzokP0fCnOWNQNH9EAb4lQGOL2rQ2f4nMM04EI/c+igujJ6DB4ykwRcAA0pPv8aFpkWakSsbRcZX7rz6Fr3h6wI0Hk51AXcIfVt9y86uT6ZWTkcCTUv7b6qj01T4IwH5fl++iokiY0ae8xoolwgOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256050; c=relaxed/simple;
-	bh=YgtPxwKPTeZEZYoIXt8HkosylZM3S9CVqdbZuAkboEA=;
+	s=arc-20240116; t=1750256058; c=relaxed/simple;
+	bh=jgVt/SVczRVLibj05dhADNEqt5586mqdr4CTTYtoNFQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mxVkL2Wxmb3+41cq9VTmlOTVM32m/zd+qjfBQkCo/bqJX9tbnBTAkAuuqXJ42d0i9zl9BbIkOdKgGU+x3kmZmPXET2syPas9uDZj9vks6gw8Y0pNoeknnrfrat+XuaxPXZfojlHPI7VNdZniKOR1dIjLgccHWWnmwGNl8QqtHUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Qtap48RD; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=CyHA520eepvKIteyEkyAUK/BtatWCNJ2s43aFgf75OaAka0zmHX71vx4KW3VLlG9TCf0U7GPkQnvOoCsD8JOji6xJsYSryB7Kmg6ftCZpq8IC1fD66L2Esr5hOhKL0t/ZKSsyB327mZ0MDV8xkpVDl+pYH25mM43ac1Jn8kiN/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu; spf=fail smtp.mailfrom=g.harvard.edu; dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b=LgFvDucW; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rowland.harvard.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=g.harvard.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Qtap48RD"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso12875626a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:14:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rowland.harvard.edu header.i=@rowland.harvard.edu header.b="LgFvDucW"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4a58c2430edso9194691cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:14:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1750256047; x=1750860847; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JWbyA4a1n1aVjvP6ctgBaCKRdhrm2Tmki3ui2GQz4OQ=;
-        b=Qtap48RDtlou7u57wrEbxaKIQaHVB850hPqUAlo0J22KUrSipuKf0kySHhniNMicHl
-         5QjwC8KBWNIBl75ECRIpIpZbEHrrZ7sZOOrasSCicxabzTnFfeIPjjm16SEkwuIWpFO2
-         1pqVtk1juSAPxDcVNqz/C8ZPHLDxiN533HWLQ=
+        d=rowland.harvard.edu; s=google; t=1750256055; x=1750860855; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=445YfBoLgx6LDox/kScDprx/fKxzHTT51XDkZHjyT1M=;
+        b=LgFvDucWNS3hJwus3xKWv1vyBS2/bpGk+hvBZfypu13o26CumgRQLROc62ZgmTE59J
+         zAxPgVQFv+/RK9DKqWieW55hlhTBLcrjDCmNnBbSKfT6wj63vT1iL1Xprh7U+V0q751l
+         +sD3hlDmOpLA/UuGAAYo6NOUAHhWPTv8lraH47p3HEyO1sdnkreKQAH7IvkIWt/FLuWJ
+         Yj+JP6p18ynBHb7K+1GHzu4WN7RBtszYatiVYfysa+HFjibqM/07u3i8vlg3npDYUPab
+         c7fhflzuq0tejFNUX56pZ/+L7B1UwPyMx6gTp6eIcIYuFSX4WFASXwptcURkY23Or18v
+         24Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750256047; x=1750860847;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JWbyA4a1n1aVjvP6ctgBaCKRdhrm2Tmki3ui2GQz4OQ=;
-        b=DBV4+BftmT2wzxKfVxl3vPdEN/HcQD5L9YoNgaSxCgXGjMLSyc2x+OxYloR7eN1hPD
-         2XjP9hdWIkb4nEQguNh9iGFB5r4UmL2N5x9nZT9wFNMnuYrLp/vAfSsZDHwRK5VTf2N9
-         xdxtAV0m6qgYZCumcmqLI7yzWrfteB8gLxEDQikSknwhGvR9zeYnARwoQSZacwPs5CF5
-         5L+5iAvr3MTX0manzpmqhBD/stlcxw8bFJa1GO1bndgHL68hgiHSbB1elG4ch392/WHM
-         H5nelxQeAfxBTRJP0LaW9wJQPG/QpjztICLZr8wQTVrX+caaaVQHGMViNoc92oZtwlG2
-         hPpg==
-X-Forwarded-Encrypted: i=1; AJvYcCU+3jsxZM5VYbc1pYo7hpBq1nM9yxFWrtjiUyLaVyBeYLS3VDnX15JcEotYls5cp5Thhh8LXi/ybnEJl/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5/vTdDPTpB+rwwTgkIbDx0+3ekx1qUPM1i2apIZs9itqCHrUf
-	pNhmQ32FKkIyODnF1TmT1JMNyAUbvZ0oBnFipvleDcPAoI9HMzavkiA9zOMPuHSMK44=
-X-Gm-Gg: ASbGnctziIhcZAq29cQdoHKBK6wpE6alvo9UDd40iPNvLO72DLExHwHWToSUxZsLjv7
-	zbd/7LtrlSGFVrmTWoQq9T6DRhVOMZ+TNC0rUvksExogTwuLzwko5ATSM4y26hxgRXHlUB7tZr5
-	O8e8Bup1VONNS6nIfZ2SGhK1PrdPhb4zwKCzU20xX+irBndQFW1ZLsU+jafEs/A8kfJJJDcM5K1
-	J1Ymv7np7cGQH6Xa/9/2pEAEWHqV2D28Wimm1b6n+DX9oMWKjRElmLZqEnKTxvHgwZjLAf6/egp
-	wfG+T4ojw4DwVu2s1Cn6tACzrT/01n3l2GANo+WBnLII88dLVtN8k0dmf3asE8XmxsgEO+6iHg=
-	=
-X-Google-Smtp-Source: AGHT+IGsqCmrJXzMwPM+oH1kv5sMlk4UVUkN2dXKJGBUjRXie2yVHLpK2+aze7LyMOOgssnqt0k33w==
-X-Received: by 2002:a05:6402:274c:b0:607:f63b:aa31 with SMTP id 4fb4d7f45d1cf-608d0853447mr14785409a12.6.1750256046873;
-        Wed, 18 Jun 2025 07:14:06 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4ae68a2sm9640327a12.79.2025.06.18.07.14.05
+        d=1e100.net; s=20230601; t=1750256055; x=1750860855;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=445YfBoLgx6LDox/kScDprx/fKxzHTT51XDkZHjyT1M=;
+        b=TVBt+vvhA6BdRZejoGW7mxUy+tOokjZE9e3eVfTJMhYONuS8utrNQzGVTkd7VUuAIc
+         LAF6r85g9T1k/+oU5Ybp+9ZD4pqtgCEkqCOUXL1mdez0qJY1YbhNFsNQiSrppjnuqNHd
+         dnK34kFiJ6IsEwf5gortnTOlw9UVtX9GHgMTQQQuTdaAIPjVFXox49ARqj2fRsuhFoGN
+         Ugm54GBTAHYOqRdh5We9/4aE+RjY7JXIrMtO1/n0j8x4nwbZmosFam1siSnMz2wZwyhi
+         M/I2nEghZ+uG73yvZV0EvW0VGKsMvhMalRGoVDlLAkQsGDalTHGkpBRFCeS79f9ZUzIp
+         wB5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWRHJe4YjflAQBBia0XpI9m04yWfrrNcm52sIY48XGmZYus5XoMcmagderEN/FrppVUOmeJMkexm3YiIbM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOuU/YwOhujzCblyK1LUIlUCtOj6Cvye63MHnSwUU32a03tV6/
+	RfV4Emtcvw26FnXx8ENu9p73tbGB67Y/3ILcKLSdSBabz7YliNxrYFFOpwhpmGbreQ==
+X-Gm-Gg: ASbGncv19FYYKmJPX6/jXcICJaQq7Oi3/zU4AlTTfW9kTqdjP9npIbRD8gzLrG5mO3A
+	I/VCxpv+oXGKIURM+7pxr1GpFpZr5Jgw08nPxL/wi1zuZW7CvcvC73gzOjbdDaOVgtmKzoMABEW
+	qHFnFObKI1+yUdpvPfnY/6/izco4uX6USAGDQHk9RD2VzcnxowC0WgiBBjHDIddNRsEhzbB2Ds2
+	AL/WvifXqQ5ylsRkypeMHIwRKCSC274svZ52rBGL5VrELYPCTl6KaDVbYkQG7kYq5WwPWHL7y8a
+	KeJHIIVmP3ydCpLrSxLn7cTMbbSdNP6GGZzd9V7wBvt1dYFbleRZcj2Wgp6GOf5JhGOOyNN3oUS
+	upwmW
+X-Google-Smtp-Source: AGHT+IHon8Mt+YsDs98sHoA4ASN+0uvnNj4bHx3zdDrXtra2R2s63h6+oRbtKgKxWOhcIXxSFRCvgg==
+X-Received: by 2002:a05:622a:28e:b0:4a5:8387:8b8d with SMTP id d75a77b69052e-4a76458bc51mr42956371cf.21.1750256054965;
+        Wed, 18 Jun 2025 07:14:14 -0700 (PDT)
+Received: from rowland.harvard.edu ([140.247.181.15])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4cfe51sm70916891cf.58.2025.06.18.07.14.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 07:14:06 -0700 (PDT)
-Date: Wed, 18 Jun 2025 16:14:04 +0200
-From: Simona Vetter <simona.vetter@ffwll.ch>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	"open list:SOUND" <linux-sound@vger.kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 5/6] ALSA: hda: Use pci_is_display()
-Message-ID: <aFLJrHdfrTmoyhin@phenom.ffwll.local>
-Mail-Followup-To: Mario Limonciello <superm1@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Lukas Wunner <lukas@wunner.de>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
-	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
-	"open list:SOUND" <linux-sound@vger.kernel.org>,
-	Daniel Dadap <ddadap@nvidia.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Bjorn Helgaas <helgaas@kernel.org>
-References: <20250617175910.1640546-1-superm1@kernel.org>
- <20250617175910.1640546-6-superm1@kernel.org>
+        Wed, 18 Jun 2025 07:14:14 -0700 (PDT)
+Date: Wed, 18 Jun 2025 10:14:12 -0400
+From: Alan Stern <stern@rowland.harvard.edu>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: gregkh@linuxfoundation.org, tglx@linutronix.de, andreyknvl@gmail.com,
+	sylv@sylv.io, u.kleine-koenig@baylibre.com, yanzhen@vivo.com,
+	namcao@linutronix.de, krzysztof.kozlowski@linaro.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: gadget: dummy_hcd: Use USB API functions rather
+ than constants
+Message-ID: <aec873ff-5d0a-4071-8043-fb901ece9141@rowland.harvard.edu>
+References: <20250618065750.816965-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -115,71 +76,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250617175910.1640546-6-superm1@kernel.org>
-X-Operating-System: Linux phenom 6.12.30-amd64 
+In-Reply-To: <20250618065750.816965-1-nichen@iscas.ac.cn>
 
-On Tue, Jun 17, 2025 at 12:59:09PM -0500, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
+On Wed, Jun 18, 2025 at 02:57:50PM +0800, Chen Ni wrote:
+> Use the function usb_endpoint_num() rather than constants.
 > 
-> The inline pci_is_display() helper does the same thing.  Use it.
+> The Coccinelle semantic patch is as follows:
 > 
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> @@ struct usb_endpoint_descriptor *epd; @@
+> 
+> - (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
+> + usb_endpoint_num(epd)
 
-I think the helper here is still neat, so for patches 1-5:
+You could make a similar change for usb_endpoint_dir_in() or 
+usb_endpoint_dir_out().
 
-Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+Alan Stern
 
-And a-b for the vgaswitcheroo patch for merging through the pci tree or a
-dedicated pr to Linus, since I guess that's the simplest way to get that
-done.
-
-Cheers, Sima
+> 
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 > ---
->  sound/hda/hdac_i915.c     | 2 +-
->  sound/pci/hda/hda_intel.c | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  drivers/usb/gadget/udc/dummy_hcd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/sound/hda/hdac_i915.c b/sound/hda/hdac_i915.c
-> index e9425213320ea..44438c799f957 100644
-> --- a/sound/hda/hdac_i915.c
-> +++ b/sound/hda/hdac_i915.c
-> @@ -155,7 +155,7 @@ static int i915_gfx_present(struct pci_dev *hdac_pci)
+> diff --git a/drivers/usb/gadget/udc/dummy_hcd.c b/drivers/usb/gadget/udc/dummy_hcd.c
+> index 27c9699365ab..21dbfb0b3bac 100644
+> --- a/drivers/usb/gadget/udc/dummy_hcd.c
+> +++ b/drivers/usb/gadget/udc/dummy_hcd.c
+> @@ -623,7 +623,7 @@ static int dummy_enable(struct usb_ep *_ep,
 >  
->  	for_each_pci_dev(display_dev) {
->  		if (display_dev->vendor != PCI_VENDOR_ID_INTEL ||
-> -		    (display_dev->class >> 16) != PCI_BASE_CLASS_DISPLAY)
-> +		    !pci_is_display(display_dev))
->  			continue;
->  
->  		if (pci_match_id(denylist, display_dev))
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index e5210ed48ddf1..a165c44b43940 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1465,7 +1465,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
->  				 * the dGPU is the one who is involved in
->  				 * vgaswitcheroo.
->  				 */
-> -				if (((p->class >> 16) == PCI_BASE_CLASS_DISPLAY) &&
-> +				if (pci_is_display(p) &&
->  				    (atpx_present() || apple_gmux_detect(NULL, NULL)))
->  					return p;
->  				pci_dev_put(p);
-> @@ -1477,7 +1477,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
->  			p = pci_get_domain_bus_and_slot(pci_domain_nr(pci->bus),
->  							pci->bus->number, 0);
->  			if (p) {
-> -				if ((p->class >> 16) == PCI_BASE_CLASS_DISPLAY)
-> +				if (pci_is_display(p))
->  					return p;
->  				pci_dev_put(p);
->  			}
+>  	dev_dbg(udc_dev(dum), "enabled %s (ep%d%s-%s) maxpacket %d stream %s\n",
+>  		_ep->name,
+> -		desc->bEndpointAddress & 0x0f,
+> +		usb_endpoint_num(desc),
+>  		(desc->bEndpointAddress & USB_DIR_IN) ? "in" : "out",
+>  		usb_ep_type_string(usb_endpoint_type(desc)),
+>  		max, str_enabled_disabled(ep->stream_en));
 > -- 
-> 2.43.0
+> 2.25.1
 > 
-
--- 
-Simona Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
