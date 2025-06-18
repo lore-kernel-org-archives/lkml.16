@@ -1,125 +1,130 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9313085A6;
-	Wed, 18 Jun 2025 17:57:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0083D3085AC;
+	Wed, 18 Jun 2025 17:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750269470; cv=none; b=h+i+wzCrhzH2HFTk8vgvCT+PPccWfzz7MUNTQGXE0dG0jP7W8S+cY6JI3id4bScmsjCEG9yWoT/AAHA63bqh8faNOtsD0jDWRVMN+Ea5llCEsdwx14N8olmgpM+KLHQ0Oc29BF4Bjd8jY5gu38ww3FKDvTX7tEeAx8d0+CWA+70=
+	t=1750269471; cv=none; b=uIM7+pAfFflFjAbwyV3NCPeYYgmhEKX3YgIoKjewdltY5AA6Pbosj4Oa4To81EF4EWCgkvpTh0wPanUpypPsCElIW/baYi2Kfbmge0P9fqy/4JDbKSwlMSxgiCKfAOkiSMforlqgBhhBqWto007cUNYnlKul6jqeAoJqRmOxmEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750269470; c=relaxed/simple;
-	bh=VHWpHqNeE+SKQMKcWuOQRBsppipjRfLdmgldY+Vp3lc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j5DAiM0kjZPh4pdStiwj81GOZCx2oRiRWqvf82WsjeO3oH0/SOZdDsgIke5KXuyw+h7dApmNjOrva4XtYHbJ1tto3wnOVZsPbJDNoK7dLls5OrLXy2jpcpOstAH0n3yck7YMnjbnXpb24DXRD48cX+m8mSlsqMVYB5S7enCgrAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YNMZ1E/N; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1750269471; c=relaxed/simple;
+	bh=X6XFf8IdJRgq64/sNAX2ri3Q7ZGbdF1/uOpdG54+E2M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R5SUbFgNCFoRHp4DCDaFy5EHEEgfJQ5Ayg9cnE1VApsjq5JUEzOuXtIwGym6xvvl+5TUYf80W7lcKZlvXd7RQObHRFG6/6w/7dh2om05f9Pm/pMQN1hWtw2CuaIxprFwLpoKVEWIFO3bORC0/CUk6Tfq3xs7fOc4Gn+ml+paYaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIpUa/PK; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YNMZ1E/N"
-Received: from [10.137.184.60] (unknown [131.107.160.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 0919D201C77F;
-	Wed, 18 Jun 2025 10:57:48 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0919D201C77F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750269468;
-	bh=r0yXO5WKMtf/RbA0D78yHpcsjqHvAhoAVEOtzAC/jPY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YNMZ1E/Nk9DTKlQqpD5ZXxizjzYI42bYzR8A11MDi46jt5unNsGa46e2K6dxCZMXz
-	 vn5GTQr067Iv+0A6vVey0uWLO0JXRxoUJUVBvTSE6dD2kDSZS9yy6ojZiw4U5Gwobu
-	 3n/8ggSZ85M/0bzIBFTOxHFHUWWm187SV28xKxHo=
-Message-ID: <bf0575c7-f78a-458c-b905-7baa7347c03f@linux.microsoft.com>
-Date: Wed, 18 Jun 2025 10:57:47 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIpUa/PK"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234eaea2e4eso6821085ad.0;
+        Wed, 18 Jun 2025 10:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750269469; x=1750874269; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X6XFf8IdJRgq64/sNAX2ri3Q7ZGbdF1/uOpdG54+E2M=;
+        b=QIpUa/PKaWqIJ1PAmwf1rOYqk9U4VqnIoJZvoSejrdqjYrLP3QO5mGuQ9ejPzZIXqu
+         60XpLXJSYLPDUPDNVkWC2FVdVr9PoFV2wM5A8gcidSgUbCogSUVOz5kIru9gy/Sq+EWa
+         bjYK93nwdG8Q7u055P/9HxkH5TKtI68KFAeU05MQ/+Isows4NtgwxL6xiF63Z5hoXg6f
+         26iTrk4cE+2uzUfBt1jX2rNoDRGHMK+W27PfVdNNfG+esvGqdBpLQVVHdKhMl/loSrZj
+         niUTki2ifeCIdU9WEDE+q1c2br2cvkMpa1GeQlTkeQvZUsiw1A5YISTlVsozheJ1n1nG
+         AH9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750269469; x=1750874269;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X6XFf8IdJRgq64/sNAX2ri3Q7ZGbdF1/uOpdG54+E2M=;
+        b=hwbw5KUx1i9EV6gSrwxUrhAHrWe3mVUmtMMBHntpkHbtLoiGlMOLW9Yesd2VdkKr+a
+         7ABAtmPd8IPea3fp36uRqDQykKl6itMM0343K+B1EZOTKUwMMucRGxqCkPxXpbp03wEk
+         aftrBtRaCMgVkMcoLHJQ5eI2X33wE/AlsWh39ryFs3arW9ZAEG2txPmNdWUaeM1Up3mp
+         d0XVZiw1UI3qQkKjEZdp/bOU2LGeGjDwvgFqGOJV1uQ9+ZABQJjbxWhr4I89tqROr0w8
+         XBorrCyCp4y86fkUjOyl/PatS9BC7wl/BhwQVo4jGMjUwqU84WjD9uue7Bs0j0DAb5VL
+         DG2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUTMas0hNRvm6zJl3v1eJyzN26rN8yJurOU/xvW+ApoVO68UwH/hlvrlqWjQHwmy3KQHqxtnz1Q0vDZrj1W5Xas@vger.kernel.org, AJvYcCUTtsYuk8HQpd0W7ejbVrRRUBY5c0azYeNxd2SPEGFYMojUOFolc4cdnlXHJ8y82zpJSjGNZ4vGmeA=@vger.kernel.org, AJvYcCUb736O/kHW3oMVluSejXmi3QgV7XJM9zZ1D7z3+ZYAbv+StWOdbg9IDjC9JX8QDB8SQSfinlaglIljcpHB@vger.kernel.org, AJvYcCVFhPgowQ8vMaGkXmRcHtGMid47yioqGr677mf14je7Yb1oD8HzWChObZNhh1T7J/YmGVYt/QoIIjQjjQs=@vger.kernel.org, AJvYcCVLpzT+tNqcVsQVYD+0AZ8agDwS/xJqwJy12F9EYq29ENLP0NOc7Mww0uigLZ1nb5/Bgl/PxOANIC/osL6g@vger.kernel.org, AJvYcCVxBodqak2xOOGbo9tUIyQ4j6epZ91hIrXFbJKqePN0icOfm2I46iE8yIyGsGjgYvLYFApSJ+SYenn+@vger.kernel.org, AJvYcCW6Wz3tRSk9NQBN8fMT1cKbSfjQTiD+7k/WvgN2014vau3g1Uwii9DYQyQscg1AAE2byaeOT5W8@vger.kernel.org, AJvYcCWffXjwAI/AdmVAm+TOySicM/12EkKTzeBQLU3u0IOcUo+mnIoUZDI5wwnooNpBuUEPewPMDip01VDI@vger.kernel.org, AJvYcCXojTEJsPiYMFaACqTRL8rMc3ZOzhSFJr2eDiPRbNRbR/QS7erfNm6WSmkJBnGrey/9rbpAsgeIfsL1vc33+To=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/kK4pabfM6i/TEoZXaQ145iX/qlzdI+VjKwZoAhN+zpluT+X7
+	7fLi1gKfOlQFJy7Ar5tbQy5WdLiMyN43l16ish95bhFkIhcuRYaohskYmE5Uj4VhgqwjkhS2OHx
+	q0XKb2oweuu7xOqm9i8PvO7V2mFm7qr0=
+X-Gm-Gg: ASbGncslGDQtM3Z1qJkQJR6+L4aalJqFbj1p7ngjGKIIGoKsqQwv1779ygGlLo/vYIG
+	z+9suqpCOLkFVougsK/OUkj71I4BWPkrzr7cYUggx2vJ5ToGZWHy72DfysohoX5003ZAKJfLLof
+	w9uiItP+fpuxZRbjFia3zgbFE+DYnTeEzRRVLFean/5AI=
+X-Google-Smtp-Source: AGHT+IEVtT/3f0vGFFzsBMs3GOlT0P6QvR0Bn0p1lko9fCNW+9HJclQmxYU6vH8Ok8iI/KHslbJ7BSrFR23F0qaUQxU=
+X-Received: by 2002:a17:90b:5251:b0:312:e9d:4001 with SMTP id
+ 98e67ed59e1d1-3158c10362dmr113240a91.8.1750269468961; Wed, 18 Jun 2025
+ 10:57:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] firmware: smccc: support both conduits for getting hyp
- UUID
-To: Anirudh Rayabharam <anirudh@anirudhrb.com>
-Cc: sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- lpieralisi@kernel.org, mark.rutland@arm.com
-References: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
- <20250610160656.11984-1-romank@linux.microsoft.com>
- <aFKu9TFA6oj1N2cR@anirudh-surface.localdomain>
-Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <aFKu9TFA6oj1N2cR@anirudh-surface.localdomain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com>
+ <20250615-ptr-as-ptr-v12-1-f43b024581e8@gmail.com> <CAJ-ks9=6RSaLmNmDBv-TzJfGF8WzEi9Vd-s=1wyqBcF7_f7qQQ@mail.gmail.com>
+ <CANiq72kgnKH2SSp76EdPeysExBWasqhTyf1JyReR65g6FMsidA@mail.gmail.com> <ccbc2a76-20fe-4f70-b69b-9d05b59f24b8@kernel.org>
+In-Reply-To: <ccbc2a76-20fe-4f70-b69b-9d05b59f24b8@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 18 Jun 2025 19:57:35 +0200
+X-Gm-Features: Ac12FXxqyN47ZI8vqKVbteA5mz5j0mgRRC1KtP63MHI54ZnGo4ZP4CLfw3Of01s
+Message-ID: <CANiq72mboC5iz0Z0ZnAAMNr70aQT1vddZ=cXFSO-5_CveVTCng@mail.gmail.com>
+Subject: Re: [PATCH v12 1/6] rust: enable `clippy::ptr_as_ptr` lint
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Tamir Duberstein <tamird@gmail.com>, Christian Brauner <brauner@kernel.org>, 
+	David Gow <davidgow@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Tejun Heo <tj@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Breno Leitao <leitao@debian.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 18, 2025 at 7:44=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
+wrote:
+>
+> Independent from that, won't this potentially leave us with a lot of warn=
+ings
+> from code that goes through other trees in the upcoming merge window? How=
+ do we
+> deal with that?
 
+Yeah, good question.
 
-On 6/18/2025 5:20 AM, Anirudh Rayabharam wrote:
-> On Tue, Jun 10, 2025 at 09:06:48AM -0700, Roman Kisel wrote:
->>> (sorry for the delay, found the patch in the spam 🙁)
->>
->> "b4" shows the the mail server used for the patch submission
->> doesn't pass the DKIM check, so finding the patch in the spam seems
-> 
-> How do you check this? I mean, what b4 command do you run?
-> 
-> I think it should be fix now. Let's see...
+Since they are Clippy ones, it should not be a big deal (e.g. we
+already had a case of a lint Clippy lingering for a long time due to
+timing of merge window etc. in the QR code).
 
+In this case, I didn't see new ones in -next yet when I looked, so it
+should be mostly fine I think. It is also why I asked Tamir to re-send
+it at the beginning of the cycle, and then a v12 to include a few
+newer parts that were missed that landed lately.
 
-"b4 am" was showing the failed DKIM check, and all good now!
+So, worst case, they get fixed during the -rcs.
 
-| $ b4 am 20250521094049.960056-1-anirudh@anirudhrb.com
-|
-| Grabbing thread from 
-lore.kernel.org/all/20250521094049.960056-1-anirudh@anirudhrb.com/t.mbox.gz
-| Analyzing 7 messages in the thread
-| Looking for additional code-review trailers on lore.kernel.org
-| Checking attestation on all messages, may take a moment...
-| ---
-|   ✓ [PATCH] firmware: smccc: support both conduits for getting hyp UUID
-|     + Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-|     + Tested-by: Roman Kisel <romank@linux.microsoft.com> (✓ 
-DKIM/linux.microsoft.com)
-|     + Reviewed-by: Roman Kisel <romank@linux.microsoft.com> (✓ 
-DKIM/linux.microsoft.com)
-|   ---
-|   ✓ Signed: DKIM/anirudhrb.com
-| ---
-| Total patches: 1
-| ---
-|  Link: 
-https://lore.kernel.org/r/20250521094049.960056-1-anirudh@anirudhrb.com
-|  Base: applies clean to current tree
-|        git checkout -b 20250521_anirudh_anirudhrb_com HEAD
-|        git am 
-./20250521_anirudh_firmware_smccc_support_both_conduits_for_getting_hyp_uuid.mbx
-|
+But, yeah, a while ago I proposed to have -rc1 to -rc2 as "treewide
+cleanups time" -- it would make this sort of things (that is not fully
+automated, but close) easy.
 
-
-[...]
->> Anirudh had been OOF for some time and would be for another
->> week iiuc so I thought I'd reply.
-> 
-> Thanks Roman!
-
-My pleasure :)
-
-> 
-> Regards,
-> Anirudh
-> 
->>
->> The patch this depends on is 13423063c7cb
->> ("arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID"),
->> and this patch has already been pulled into the Linus'es tree.
->>
->> As for routing, (arm-)soc should be good it appears as the change
->> is contained within the firmware drivers path. Although I'd trust more to your,
->> Arnd's or Wei's opinion than mine!
->>
->>>
->>> --
->>> Regards,
->>> Sudeep
-
--- 
-Thank you,
-Roman
-
+Cheers,
+Miguel
