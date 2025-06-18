@@ -1,116 +1,122 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C32920E70F;
-	Wed, 18 Jun 2025 20:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07C621ABB0;
+	Wed, 18 Jun 2025 20:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750277661; cv=none; b=nZx85ifkrvgsV4RguN6FqGu3XA7ccblCbVGdCRwleuzkxy+FzWdra7q4vNkRls7YazZ/8hhQR5F0QRGM5BkowAEt17hiZFgQ682jADBtOJJ8H2T4IAn54dhmRYdOE3rGkOSg5l/V+Hik4XRAsZ6bFElCP3OlsrjasDKv39vbo6k=
+	t=1750277677; cv=none; b=JpAjTUDf+WJ1S+C8zouUocfI2d9LlIjDJUnCgjccBaLklvQbAC6uymeefA/BN0rfwV8aCj7TXCq6i/V4V2NyJbL8COH6qt6IBI4WHPLl4FI5C31+/WA+SWDmscLj6GqqEQ3SpQza6thm4af9exZKnv/QLrLFAuBC8Rpm7sriPXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750277661; c=relaxed/simple;
-	bh=1E9Kl4wxQ8nz4CVnnFmaNtGd4pj7WRmztCJrxJOssoM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jf6kiAZOC9RD/HSrnyK3rW2NM5Kq0qyjAsU5g/QZeCYCdU8z6iP8Z7NoD3/pbJxZZdfSBvmdf8oDFn90tJuu9aFHSOWuc+SwMgwsUtirzRVenW8OXj/Hgar0yUTpwRWtoMKsE/QSdL6AWfmyygA8VheyqeetYPCuuFDmZcdYzek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TntHOHKR; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750277677; c=relaxed/simple;
+	bh=sw9XPuoboz5Zyke7ap1VbtdqXBQ7MhGyKF3T4RxE9i8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gNQ/udMbJ+bC+qAXOOzOu8d9s8g3ZbEkexUUR3MNwk6VwOVNPfT1jBCDKtADmtdR5NfBTTW8rz2gn1tfFXYi1ByMm17ChTJPIcXWIfEeYYjNZr2oHDdFhHUQx9JIidNmPhCV0mLzPxKxBNPW2VKbanXLwkDplYpD3Mud0xdcwh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i8eTqS6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TntHOHKR"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a375e72473so50264f8f.0;
-        Wed, 18 Jun 2025 13:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750277658; x=1750882458; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VblNPo1guxJ4nHzsvrQqdryJtW7RA9yK1k2HgAbcIm4=;
-        b=TntHOHKRFYVnhMOV8+tqz7lOxHFvI/jgXE1PU8njp7osSpImtjs+gTE1jDlBwwL6pY
-         4M2ySOSH3Ry4kyFGa9wCzCVzK34Q5khT7fxE9MTs3OFNFnVtUx+otMPtgPnAUoN93YiY
-         zXkpFpZ0RgORQV5GY3X3NAW6A2Qsu6AljuCQj0813/c+0wQwGXkxhsU/JTTl1EHz1ERw
-         byv9bCWYMWerfTiPcx4YHZQ7RdM53c9EnIPUX5ACuJMwFWRMTsuypt4sJvnL7Lk3DNQu
-         Y2DCzMbtc0ZhrE+b1bj6s+BrSFFezCZwjXW6aySLIeXaQ2EB0zACnExxtqGb4sjG4lvq
-         YyzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750277658; x=1750882458;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VblNPo1guxJ4nHzsvrQqdryJtW7RA9yK1k2HgAbcIm4=;
-        b=G4oHGYUNvNnIh0lOgwGnQbkLCFIM5yn12+2nfrI5UGb7/4i5Nznn7vEgHgpbwVFwK5
-         sdjsJ+83l2XZ+WPzzlxFmsTtAOecKFZjNxHhOTIK4UVavNpvDYTkZRez8Kyn9GByrbSF
-         UKQPYEP/PkI11MGJ53Rj90H9rVg7u1wWF86D7D6DQrh+yYBPMxIv1kffpQi8Jxvgda5r
-         slJ8Ldwn6vvqZ1jotBJTQzaIM4nDA6EqRJ0h9ncOKx3h5mjp7UA+TRvo338dmZDU82ba
-         9i4PF2E7qFSBe7qV40Nn6w3+pX5PgMpT7HmLR1K154/nq1696BEU21ENlWSkT7yihSU+
-         FC7A==
-X-Forwarded-Encrypted: i=1; AJvYcCWmsrZgpUynN50uaMMd/XDVJxE0VYjonE6GyP/UNuglrrIZ2A85jFH/n5FOAkJ2KVJYq7wFlW4thOoZ@vger.kernel.org, AJvYcCXlF4X4LEfMmWoJJxUjLe6bPjv7Qo1bR0VO80d6bj9+NHX1w8wvQznQp+Z9Nzd6tk+dESSbzk0EQE9wfIPW@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPBRQGej5JkmpkRjprHvyMLbbQMngnm+Ajtppd4otBb/M9FVmB
-	uDcggB3ETNiYH7UDycf/3ouEQw7I+Dv6K5PSITl5H+gGsJtmx5UVIvwqDir7qg==
-X-Gm-Gg: ASbGnctevPoAbcsvaEQmSi59F3NOyx+MYVgo6s3wmYHwUEN0lKiqwQL/WtynJbckUl1
-	7URCMEKckse1N8W9HSNmx7dLhlnuu0/T7qKPAPgU3inUDycsiCRNO1USj3Kb8hQGgDc1yFdyKGa
-	cS/3dxnBBx+tfMCO9dUPixowz9chc2lll0lx0jKdGozuajunYq/6idtWpNdY575tHivdyNRb0Dp
-	1eJxMj2ZHJBgp3QV/5ozUKOBwZlVyuWoejiRwEqJodbyW8gauWydoei/uPLUayvGoMrF34UMlao
-	IhJZoFMnVQ+KxyppaQ00UnmetThap6ibeRDizLLbMiTP62UJwyaMIg6UcaaQ7h3sHLFISJ8Wpvz
-	FChSmg9HOUUbyNoU=
-X-Google-Smtp-Source: AGHT+IFJClKdMTkSaxoreSQInmfkuGmWzvsXBbKDgFdDGxOyg0dhDMD2DbxEemQO+6juz+ShTX8Mwg==
-X-Received: by 2002:a05:6000:71c:b0:3a4:dc80:b932 with SMTP id ffacd0b85a97d-3a572367dd8mr13087576f8f.8.1750277657675;
-        Wed, 18 Jun 2025 13:14:17 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4535e97a795sm7124715e9.5.2025.06.18.13.14.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 13:14:17 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Wed, 18 Jun 2025 22:14:09 +0200
-Subject: [PATCH] arm64: dts: qcom: ipq9574: use 'pcie' as node name for
- 'pcie0'
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i8eTqS6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61985C4CEE7;
+	Wed, 18 Jun 2025 20:14:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750277677;
+	bh=sw9XPuoboz5Zyke7ap1VbtdqXBQ7MhGyKF3T4RxE9i8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i8eTqS6WvGvFBZrIQPLraPRlTbl0S0z0BTl8mIebLfLJ3O+wHSv8NCUXxLEHFxgik
+	 6K1Wcto63lQ6YY1UAs6jphHEWg4f7ddLy1Mj86GI9kD26KJjL1Vo/vdXoyGJw6T6rm
+	 BNY8PN34EBJfqGsDjVmQ5qm4zWEeQlIEU21C0wlAIsluCpOMusX849rt8HIVsCbvDa
+	 U6Fd0u+8peyGlw6eZgJ3K7AhKX8HrnB9boAXpvPlIZC67NVDkwRlFogpaSh5CZI/Pl
+	 /TaooLWSainf8sDgGY3D4plh+nzj823JCKWeRM6FYMZXeOsDVHpsDIgF4ES9fxh6Vl
+	 8x4/tjGvjPhAQ==
+Date: Wed, 18 Jun 2025 22:14:29 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Benno Lossin <lossin@kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	Lyude Paul <lyude@redhat.com>,
+	Shirish Baskaran <sbaskaran@nvidia.com>
+Subject: Re: [PATCH v5 00/23] nova-core: run FWSEC-FRTS to perform first
+ stage of GSP initialization
+Message-ID: <aFMeJZuXsBRhUxJC@cassiopeiae>
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-ipq9574-pcie0-name-v1-1-f0a8016ea504@gmail.com>
-X-B4-Tracking: v=1; b=H4sIABAeU2gC/x3MQQ5AMBBA0avIrE0ySglXEYuqKbNQ1SYiEXfXW
- L7F/w8kjsIJhuKByJckOXxGVRZgN+NXRlmyQZHS1FKNEs5edw0GK0zozc5oezc7pauGWgM5DJG
- d3P90nN73A5xmnZ1kAAAA
-X-Change-ID: 20250603-ipq9574-pcie0-name-c9fbf251406a
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
- devi priya <quic_devipriy@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
 
-The PCI controller at address 28000000 supports PCIe only, so use 'pcie'
-as node name for that. This ensures that all PCIe controller instance
-nodes are using the same name.
+On Thu, Jun 12, 2025 at 11:01:28PM +0900, Alexandre Courbot wrote:
+> Hi everyone,
+> 
+> The feedback on v4 has been (hopefully) addressed. I guess the main
+> remaining unknown is the direction of the `num` module ; for this
+> iteration, following the received feedback I have eschewed the extension
+> trait and implemented the alignment functions as methods of the new
+> `PowerOfTwo` type. This has the benefit of making it impossible to call
+> them with undesirable (i.e. non-power of two) values. The `fls` function
+> is now provided as a series of const functions for each supported type,
+> generated by a macro.
+> 
+> It feels like the `num` module could be its own series though, so if
+> there is still discussion about it, I can also extract it and implement
+> the functionality we need in nova-core as local helper functions until
+> it gets merged at its own pace.
+> 
+> As previously, this series only successfully probes Ampere GPUs, but
+> support for other generations is on the way.
+> 
+> Upon successful probe, the driver will display the range of the WPR2
+> region constructed by FWSEC-FRTS with debug priority:
+> 
+>   [   95.436000] NovaCore 0000:01:00.0: WPR2: 0xffc00000-0xffce0000
+>   [   95.436002] NovaCore 0000:01:00.0: GPU instance built
+> 
+> This series is based on v6.16-rc1 with no other dependencies.
 
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
----
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If compiled with rustc 1.78 there are missing imports of size_of() and
+align_of() which break the build.
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 815b5f9540b80e91e81e02a97b20c0426f40b003..8ae4b165c315394532006665235592add112d266 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -1161,7 +1161,7 @@ pcie2: pcie@20000000 {
- 			status = "disabled";
- 		};
- 
--		pcie0: pci@28000000 {
-+		pcie0: pcie@28000000 {
- 			compatible = "qcom,pcie-ipq9574";
- 			reg = <0x28000000 0xf1d>,
- 			      <0x28000f20 0xa8>,
+There are also a few warnings still:
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250603-ipq9574-pcie0-name-c9fbf251406a
+warning: unreachable `pub` field
+  --> drivers/gpu/nova-core/fb.rs:79:5
+   |
+79 |     pub fb: Range<u64>,
+   |     ---^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `pub(crate)`
+   |
+   = note: requested on the command line with `-W unreachable-pub`
 
-Best regards,
--- 
-Gabor Juhos <j4g8y7@gmail.com>
+warning: unreachable `pub` field
+  --> drivers/gpu/nova-core/fb.rs:80:5
+   |
+80 |     pub vga_workspace: Range<u64>,
+   |     ---^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `pub(crate)`
 
+warning: unreachable `pub` field
+  --> drivers/gpu/nova-core/fb.rs:81:5
+   |
+81 |     pub frts: Range<u64>,
+   |     ---^^^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `pub(crate)`
+
+warning: 3 warnings emitted
