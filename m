@@ -1,72 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD1D27E071;
-	Wed, 18 Jun 2025 08:36:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7B9D191F66;
+	Wed, 18 Jun 2025 08:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235792; cv=none; b=Wrg9uiAy2t8ByAMJZ7ydsyQNcnO9ETAnYakh646U3mUrQd7bvYxVs/3chbUY6e5v9HB+yu00jDZjVzlmSVQuHTbr8jVW192fZ7euB+UVlsq1aT8qCtAmidY2Zc+9uPUSOs7kPQ9/A49dpRFtSgwrVgBYFbRrS5CwtQq0U3f+zi8=
+	t=1750235836; cv=none; b=LU/9g6F56rarkjdXhe0ppGtwGBOtqEKbwjuJKqmUJJtFRXOjvalQP9WT7X7PK6s49fVCQ8QkzXEsmJg989av6lXZmULgH7eHYwjCQ60oqjSgJRddnRHls8JyV9UAcCczqlrJuQCT4XzPYPr8PDo3Z/W+7VNxBlokd7lAp5CQtzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235792; c=relaxed/simple;
-	bh=nahXIBYo1sCV4ReXtP1+gdc5KP6p3q+h/ETOVZK3jA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oFN0aFqzRL3mSnh/kJVJnbIcnkT21k93v/U9359j6PH9Hhar9CobtOtiQlPX6U75dVH2nfTWAywPjbNTdcT6mAU7Z8c5lYDuHEcQRSrpVvUSqmApk9+z8QPnnVGZZtiwcBQJZhctJ9ZrMZzcrMZvJeFAi4DSu1NkNR8/UBPHf+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWR0Y2ch; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWR0Y2ch"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82042C4CEE7;
-	Wed, 18 Jun 2025 08:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750235790;
-	bh=nahXIBYo1sCV4ReXtP1+gdc5KP6p3q+h/ETOVZK3jA0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NWR0Y2chSoauafo/D020vd9PcFIQk2KPUhySCWzzrY0qqFJzMJNb0S22sUCd6Dn2D
-	 xlxoEI4SQVjMjdoynxjv/bhEzmGHwXdEsOtVBRtvCwTBq3xBosBSDd6yN+eiyLV/NQ
-	 yirZ/mho+2/amSFCwPHi+8ZiWdBGZ4mNWOCOP0bzIFLtA1YdJ+KBuBP0GV9QkmL3wL
-	 rZ/2cSTNR8F7TNoWFAmL8zKufh08OrZgZDavg+8qTOtT1tCsXzaAw1rJMFRr6A+X1/
-	 IQMkWf1pSbSbdmnnkWZ5GeYHtY0cf00ebU8xbtpioTd8K4BSa44MnnY3ZzduSnjU0N
-	 giRG0v0vCb4MQ==
-Date: Wed, 18 Jun 2025 09:36:23 +0100
-From: Simon Horman <horms@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Daniel Golle <daniel@makrotopia.org>, arinc.unal@arinc9.com
-Subject: Re: [net-next v4 2/3] net: ethernet: mtk_eth_soc: add consts for irq
- index
-Message-ID: <20250618083623.GF2545@horms.kernel.org>
-References: <20250616080738.117993-1-linux@fw-web.de>
- <20250616080738.117993-3-linux@fw-web.de>
+	s=arc-20240116; t=1750235836; c=relaxed/simple;
+	bh=/8BEmg97Zy4Wt/2DfeBqRy6k3PmRgxtoVX2GcbOXTXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EwCbajAZZ8R2ApAYolb4dzy1pTzghUSzCA+K2391YsnYXS6WgDRTLqv98V5C0VEM3UHiBXQIhIABuHLKrIHIZPprU7Le3PxadYHjg9jXLQidKdJlWKuorRSXeWa+jSU2i/scOoh870W+WvTCIDeF2zqgX6EjuMblA7ROL2yedF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67E2B14BF;
+	Wed, 18 Jun 2025 01:36:52 -0700 (PDT)
+Received: from [10.163.35.185] (unknown [10.163.35.185])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D31E3F66E;
+	Wed, 18 Jun 2025 01:37:09 -0700 (PDT)
+Message-ID: <5d037cb6-91a7-47b7-a902-c3e36f2adefb@arm.com>
+Date: Wed, 18 Jun 2025 14:07:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250616080738.117993-3-linux@fw-web.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+To: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek
+ <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
+ Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <b589b96f-a771-42f1-b14a-0f90db9fb55e@redhat.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <b589b96f-a771-42f1-b14a-0f90db9fb55e@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 16, 2025 at 10:07:35AM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
+
+
+On 18/06/25 1:48 PM, David Hildenbrand wrote:
+> On 18.06.25 06:12, Anshuman Khandual wrote:
+>> Add a new format for printing page table entries.
+>>
+>> Cc: Petr Mladek <pmladek@suse.com>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>> Cc: Jonathan Corbet <corbet@lwn.net>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: linux-doc@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Cc: linux-mm@kvack.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   Documentation/core-api/printk-formats.rst | 14 ++++++++++++++
+>>   lib/vsprintf.c                            | 20 ++++++++++++++++++++
+>>   mm/memory.c                               |  5 ++---
+>>   scripts/checkpatch.pl                     |  2 +-
+>>   4 files changed, 37 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+>> index 4b7f3646ec6ce..75a110b059ee1 100644
+>> --- a/Documentation/core-api/printk-formats.rst
+>> +++ b/Documentation/core-api/printk-formats.rst
+>> @@ -689,6 +689,20 @@ Rust
+>>   Only intended to be used from Rust code to format ``core::fmt::Arguments``.
+>>   Do *not* use it from C.
+>>   +Page Table Entry
+>> +----------------
+>> +
+>> +::
+>> +        %ppte
+>> +
+>> +Print standard page table entry pte_t.
+>> +
+>> +Passed by reference.
 > 
-> Use consts instead of fixed integers for accessing IRQ array.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
-> v4:
-> - calculate max from last (rx) irq index and use it for array size too
+> Curious, why the decision to pass by reference?
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-
-
-
+Just to make this via %p<> based address mechanism. But wondering
+will it be better for the pte to be represented via value instead
+of reference ?
