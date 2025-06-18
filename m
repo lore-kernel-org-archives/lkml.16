@@ -1,219 +1,269 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1AA12874FB
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:00:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750244415; cv=fail; b=DQkL1+PSu5w3PoYpKn9NJ9BHUytzSCehNEs6GBO5+dWeP1peIoYYQDfnaIPYnmcAEvS9RpmmQRLFKAdVfwCKe6ORjsARZXP6Lpwfd/ym9FJtXEHP1PiVsCLOEO8FkKV0WwKApeOxpETvlHCSwUQCMSMxWn//SJhGwCwgfRH4ePw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750244415; c=relaxed/simple;
-	bh=0elafbuYBEPlrI9/rPPi1/HYfoUpsI8srxAZLducj8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nrl/yYOmk3/KFuaqFJY7ghhykeCveOqwarFhwDVnB4Eo82SK4ZSY8qwik026WtoWVjfI8OkldTPet+fZsZbsFx5iM9FQqN9NXZOL+Yx59eFnPNaxVQxWUrMGF6Zk5iTUSja9FAOHL+A1ReUCU7e4PDcNOpN7ABdGpQFEv+UAljo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ao7rvtTZ; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=KgLMdcXM; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6B7A219E8;
+	Wed, 18 Jun 2025 11:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750244519; cv=none; b=l5PjHaK+bzSqfMOCZtnFh5aNkCwn3nKqFA/N6NiEJKQRYqfX1ExQ1p/P/gbQsHkjNcoZcEixpD/WWsnpshoiDD0ZlHCZMnKpFsdm+OJPPEgzXqusUx7MAflBwInxkOCePxoMsKsIRD1qFDB6p5QWAE+u+rb7+1bP7ww1lWV/BSE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750244519; c=relaxed/simple;
+	bh=h9/I3nrlPQariwUZfrtnu7LpZAl5DngQgOr++CUKMxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XJj4VLSIH8cqIp5z9XVF04pgzP5OaEDIeBjBVW1jif0dmmLK4DmVSK05he1TxZwU5mqDjLovTV0REUFCmFnvEjrjENxGAlF4/36HHfGZJ8T7iBfEKBYdQW6YY3ruyygfUj6U5M7bqeP/aY6/r7/LE7cwnInyN5wo7/p7bt4uhL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IAvdfn88; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ao7rvtTZ";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="KgLMdcXM"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I8fqQR024437;
-	Wed, 18 Jun 2025 11:00:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2025-04-25; bh=+hvt+uw+SwrO7mGl
-	j+rzAufPHVeYrQFN/TxwYWyz+EE=; b=ao7rvtTZy0Xc387DU64jetilHU+6t65s
-	del5rY8d4as17GxvuKXDHGcXV0KO7lUNBuylknZTy4mq7zRTua0AVSozLdk4URNn
-	kevIcO1ALNZJMDzkxJnc52ezMRDyJZRG59iptznF0Sa3DEDUbaydlSA1BskIAvED
-	O5Y91/Cbnu+f2GYI2oMQuA6+Xl6qDfej79CLhY4fB/S8ute9UvYAyThCmZ02Ckxw
-	9Nf6F8O7RgTB/i2+Jd6GGz+CeNR2mM6C6Jowxv4XrsMjAODrXXebqPTj038BQJsN
-	8D+Xy0iqDH6StqCH5MycC+Zl0oR2isMwLVyywaQtquds1+9jNsHPjw==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479q8r6jr5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 11:00:01 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55IAhOGC032102;
-	Wed, 18 Jun 2025 11:00:00 GMT
-Received: from dm5pr21cu001.outbound.protection.outlook.com (mail-centralusazon11011046.outbound.protection.outlook.com [52.101.62.46])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 478yhage89-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 11:00:00 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uvl7kPswqWnFI1YKCcbHyCfSVLrcIxE53tTzoLBAiNaIgYGFA3F3gt6W24nUPp1mgjVbKXi2gCVQLiv40k2oekGjQLWdUlcdsPYbYpoJq9ZSJlIESj8XX7IG6PnjOB3PSghH5KajFZ6LYyjItH1YJ6FDETJvU1f8C4M9yKEPUYBR1seMbO8aKOkkZGcInZVGdzdKAkk/KaEtb4XlOdHXc3dyWeTfRxOxKorS1YGL2yAzq8rEHmYKl2DjZ/LUPzPHil0rkSArSN1AlXKXZajSNxgc4l06iSnOOOgTv2+rFF41/+tgoOOCEJkRcwWXTrFm2G4jpy8eHSMolyE2h4ptLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+hvt+uw+SwrO7mGlj+rzAufPHVeYrQFN/TxwYWyz+EE=;
- b=KrRZd7J+vvVIBahL4bBxNRRq7v3emmWYLcQQ89D6xwyE7EqdGSRuYfIGzfy5lg7nyi8fwmjAZZkNdaMp8qF/XHVVe5u7+q/V3G341mOIQ3Os2NK2ZRRoXgN/rd/Ma31oiDOdFiqw39Uz6TrthxKP5CNmJIXGp1Zye5u70oCG+gWcJPJDS+XwlBio4yly8hLcl929NL1zRn0vKsbOh1lsKc7OwPbMCqzHOPwplewONe8hpq6hqSeOwYyadccIF9asXC9BhogE/rJUaA91MrYN/WXvcntdG4HsjJlr1092Jsb/Rqqc1eiK0u0JuTL/WoSBUljUkfVn/ZLBjBaAf4qJTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IAvdfn88"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade76b8356cso1357952066b.2;
+        Wed, 18 Jun 2025 04:01:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+hvt+uw+SwrO7mGlj+rzAufPHVeYrQFN/TxwYWyz+EE=;
- b=KgLMdcXMhso0G1cAYKKMip1cBkiLH8qFfPZcijmWtcQjXqU355JAwg/wCN4H3VRRGyNGZcRU/8HE4D8QR7r0WtoAgqPpEFYUAAz1uJCXHaemo9CL8vBuzS1ChQqIYVm6FNAU5+p/U6am5X8t8BE0ZrXQJ9eomgYF+LYuKC27KJA=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CH0PR10MB5195.namprd10.prod.outlook.com (2603:10b6:610:c1::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Wed, 18 Jun
- 2025 10:59:58 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8857.019; Wed, 18 Jun 2025
- 10:59:58 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
-        Zi Yan <ziy@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Brendan Jackman <jackmanb@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: add missing files to mm page alloc section
-Date: Wed, 18 Jun 2025 11:59:53 +0100
-Message-ID: <20250618105953.67630-1-lorenzo.stoakes@oracle.com>
-X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P302CA0017.GBRP302.PROD.OUTLOOK.COM
- (2603:10a6:600:2c1::8) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=gmail.com; s=20230601; t=1750244516; x=1750849316; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h9/I3nrlPQariwUZfrtnu7LpZAl5DngQgOr++CUKMxU=;
+        b=IAvdfn8881IcNH5RB2stUywhK62rh/Wj3Lo78SVCl7g1gebusNQSsDg5hSUlhth43s
+         oQadaXlpwzHEVq+6Z8ulXtEmX3zhmZyGuqzRn9wUWafWPM+fFWE4RO8ljzHxRRNZYGi3
+         K6Wn+LGOPdAyWrmvI32TGzyqL11/uP73lfQpGQA0MsqQKjw2uDlRzAmASWMtREyThHlt
+         m+yC0h960ijT9fopTgIfcK1yVxIPtpHXVOfaa3wseczNkQat5Z9TkHnMBVu+eo9soR1n
+         M1XAousAUjUucezcGZzwHjIUSdeyQ2FFzUn8DFjDwJ1QhAGsxLOpzoqtiYz6WrviVk+b
+         B0QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750244516; x=1750849316;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h9/I3nrlPQariwUZfrtnu7LpZAl5DngQgOr++CUKMxU=;
+        b=DZT5wdjCClLmYBWbkLcOjLfvNX0B21A2HwgTK6bqb3lJnDlJlZPxapLMwfOIvn74MY
+         rq4cutpofpTBx9/nArYdqjqGenBTuagpDAj0Md71HpT4+47zmz3x/d2ccznR9HPO10wM
+         7TfA0yl1QDR/1Ffz8uOuJzAIO1zplL6eYKtJcBcIwQ8Y3i6+3lHarcj1X4Ib4Jys25CI
+         m3qfGNu++6yqpg17CG66ME6KHvgprQDRn9u8Kj+fgGqVBtqyYNdayC0l1ZW/Mb+zj0NB
+         lukWP8gkY1QHoUqIw1JuVkxYKy6RM8Gqn7fPSyRCrH+kM/Iy69zmFuSMNsSAy3cUEFCd
+         LfXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVzVhPX6D8+sNA1KPdgXjZijci+9ZIVRjThovFYMN+6dHcTaqZ75Q9j6Wj1e2uqWgF94d5mdNN4aQ9s9iGZ@vger.kernel.org, AJvYcCWyqs+XkrPvvXOxeWlxRRW93S7m/NPSAb3SDRmYwK74zIyRSFLvNofTD9bJLOD7/UQyji+kwg/WSaxE/1rt@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhxORcoHVp+QTQjpVHli2NjRvk3/yRB1SbX7KjFzLycLJ7iMJR
+	2E4h+0xy4B878IjM/fyycXGV1irHfho5NUDdlfqu3DFccskiBkRMMzxcu1sqZzcO4Azb34ylNNA
+	kh3TTEviJWTKXM02ogZ4l2F6PNRfWnAswZmA8DCU=
+X-Gm-Gg: ASbGncsTQbtyJluDtmtVM0KfTcOSj24Bdrtp9O6Vzwf5erIi/s9HU0i72NUpCYfC/Pq
+	6SWQ8boOmGIPYUDw0fPR6PoUA44hIc6lG67M4swPgDqQwDYPkNzecGQgNqqwYXNXGgtWpQpZ6ib
+	5mOU8C7Dlx9R/OoW5a2H8/K79spqnxTEuINEJTFAySdZY=
+X-Google-Smtp-Source: AGHT+IEKtI8PcX1D79v67vC2jjYuHIlb9UuMWX/KVtnLMUKgldVeIFpe3vkjUwHvA96wjf7M+o1/kuCtqOd5E0aJzO0=
+X-Received: by 2002:a17:907:d1b:b0:ade:17b0:9f48 with SMTP id
+ a640c23a62f3a-adfad438459mr1688124366b.23.1750244515256; Wed, 18 Jun 2025
+ 04:01:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH0PR10MB5195:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9c209e21-b740-4050-6bad-08ddae57440a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?W5eoBjp6FSksLS9tVTZ3MAEKjXUHQP2OCVsPvX1m2SkJuY7T1MfIHz9XOvWA?=
- =?us-ascii?Q?G5yhR4KgzshHpY6weqAzWQnrJObBcsBCzIcJoqOkxf9ldX9Ihrc1ge9YN8CJ?=
- =?us-ascii?Q?M28KeQqtTFY7T9WwwT1LliyauWsg68F41ttVUe+QFnOfDJPA9dSlIsgkgAGQ?=
- =?us-ascii?Q?4pKQteDGHZNdByHvf/EaKupwjQKfbxyYOPCA8WhnH0j/99bR4anWUETBZ946?=
- =?us-ascii?Q?5o1a33HC3gjNWYlUTpUdh3Jlzcc/yAjSlKuQ4b6VIi+uLWD3m5YQo3p6tsmC?=
- =?us-ascii?Q?sFLfaVE9o20iBiq+v0xG13MCgNfPqbN6ozozii2Izyd7B1BvaPRBD+N2bGgp?=
- =?us-ascii?Q?Ydah4NFIC25eI40bpah4E3SVx28/LB2EY/XCqX6S4ch2NcmaajD8EVPh0TrL?=
- =?us-ascii?Q?nu67wISZudkjaA210t93vq539ENflFUZcKSXC8fWh8uWeS4I1HAuGUylfGJF?=
- =?us-ascii?Q?f4M5i9I1nLnJQuDe0EI6f4YfPNepzdTZUHo0EnKGIlRLL9R48LSwjFmFUSL4?=
- =?us-ascii?Q?C/XO+Qh8CvfblGpGycY8vCIi/9zf0DIv0XEpkDsnKgrHkwSQlAuaw8L1z/zR?=
- =?us-ascii?Q?WoAR9flN/EKzO/wjnkGBgBTMR/Sq3DChM0Z/pEpon5kWD8iCTUTdWavaRhit?=
- =?us-ascii?Q?EUktq9ApekIFIZ2GUOYZIfBS9j3s0gGyHhaZAZrUQKNESf18/GwNBtSFSJaC?=
- =?us-ascii?Q?rcJj1wapQjQZZ2FnXqAWj+652RUItQUtUb7VQ5kT1ZBY23sX572IeGnhLEHy?=
- =?us-ascii?Q?UZFLK//pbPFngEarAYzfhrzrX7GsW2XhTdj3TN10CYm2GYT9GkKe+v+A3Is7?=
- =?us-ascii?Q?oYvllYt3BWbxcBO1/T7dmoI+BygnMgN42iQXhT00VF+7fgIua3aG4KCrYC1G?=
- =?us-ascii?Q?PRVm5jQ+VqYcxKf5z9FVOEIHPPOhYwvZSJjQMDQp9QtS0a5nCHmBCKmIcE6u?=
- =?us-ascii?Q?68WgKSik0q7KKKKbaQqUVlO8WTD76Zvba5Ed4j9yQVeLezAi3g+VURaAvXfw?=
- =?us-ascii?Q?GE7dB/MepCmQzDbXoV2vR1SNx945RGKosYmIh8ZY+IIzHaobjxoxm5sjVHB4?=
- =?us-ascii?Q?CJF9RfU8BrLvVROkNLXj8nm4InPt33Q8ULmYO/XtGef7iT3ngvgpUTNR2xfy?=
- =?us-ascii?Q?q1MjHSYkGs4hs1wNqu04FWCFsEGyrVUdkfGXym804Wi0X74MAP2W3Pv1atAP?=
- =?us-ascii?Q?4BEbMjjEGFhnDM5gtnsEnZVF82O9RiqZjB6M3s7O23JhwP7tn69sIZH3BFPH?=
- =?us-ascii?Q?yylVaYoLnrqCFy/FEi6sC4h5brTS/BRaLmDUehGJO/FU9DpFyNeH6ts+gJ3M?=
- =?us-ascii?Q?mp8DvL5guQPTnWbHWmGLMUATIXMSkVkQvwdWLWt73N1OMS4MixX7kU2+Ebx+?=
- =?us-ascii?Q?c0YkUReM1j/3tBwk0pYBqdnIR4kb4B8xBEFn1GFn/0IrhGR6Kn3reNFB29FO?=
- =?us-ascii?Q?AW4cf339fEs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QFO8/pRx8GXhQqLbpe6gHXvVSTFVvnSjc4YpNF+25zLpzpLu/uK68c9ej8yA?=
- =?us-ascii?Q?9UUdARG+G6tpWfaveipG1thtnPGgMyni5M5SeimdJHfnXprLdE2ZI7N+XYw1?=
- =?us-ascii?Q?aye2UhF4e5tHDtKF19Izqpg0gsW7P6GsE+Brfg+l62rEwedWKaJON4PPONII?=
- =?us-ascii?Q?3y/JStdZGlAnyX4xfsGpnduE9iPBOPvVPqVqol4eG5WLDCojg1dvBgL11a4R?=
- =?us-ascii?Q?5iChcIC1XDP0TyzVDf7ruRgao1t8OFQDru1vCsUgavr/PkSpzIhyHZC6/JXU?=
- =?us-ascii?Q?8PlOQgYEx067LLz13KajCx9eAmIDCYnSxyWF7ot7iPm7Y7Bbkd45QM34jTwN?=
- =?us-ascii?Q?IZi6jk0pm1qw04k3Qa6zgCqwhxBLnLkrkjycrYckrCZVXaDIV1BlbCwq40RW?=
- =?us-ascii?Q?DwOaSQWrNuuZ8E8Fp0uiZV2csICQpNW3DlNNaxTlqP6WZxZzY//78aulyDSQ?=
- =?us-ascii?Q?SigQx5pFnudOUVaZYeKoqVXqzaSm1D8oWVfsh91svBLZh5+7YVjaLFQCxHVa?=
- =?us-ascii?Q?j0UyE+SDocjXxMr9CBhJjsTZKgeWOB5hAHV3YAevRM3zHTkE6detFXV8+qSm?=
- =?us-ascii?Q?7hw4R0yEMKq2iJKIwcn4+VXr78oadPEbPqhsiCqOrHKXCETFC0mbx2QFQnpg?=
- =?us-ascii?Q?0IWPzCQnZpcSj4tvJPXovTFzPjSnsF7y6eHok1JWgFg9eWFQklvMQ/JilTom?=
- =?us-ascii?Q?h1Wojq4oNpWgreM2ZzMKoFTox1626V6hLO1zyHQ87AwU2yi7AUuZh03XWtmA?=
- =?us-ascii?Q?A7Ayw6V45L2A/iIacN6ILEQBNG58LyrCJ9KhBEWefhI+VeZSi4mrUtSZhXvu?=
- =?us-ascii?Q?y9tHbj85QoJTPHOmqJP26RyqYqtHir8aOKPf1k+XPdQO53NJ0rylPyGdKGzu?=
- =?us-ascii?Q?YTDue8SSJbImpA2rQZ1iweRBmLTpFVxI89xiM3s809VxLlH5xoa41ahHY+tf?=
- =?us-ascii?Q?6y4D7Ah8+s3QNXW87isSv6GCDkcHR8NoRwxlEOsC87zin+aqSPZnYjqN3W9N?=
- =?us-ascii?Q?LK38Inc6lcLzhQybF1n2fpX3+fQYUctwhJoCJ2lydXWVFXhbKv+93vBQtqAc?=
- =?us-ascii?Q?zVtGYlt3/S/fTje0HRuWqwvqeMMLam7wVwMGtScb0TWvWNx+zc+5UwN31GTd?=
- =?us-ascii?Q?ePlI686xXURVZ13vdT+psipTIahyUCo8z45bNTXwgqO2TiTMy6shXu6J3tnq?=
- =?us-ascii?Q?YcpRz+MTYnvwtyMmulw/PC11JCrUoS5Lr2A8Epd2Oakos87xiC+fF7Z0vgjL?=
- =?us-ascii?Q?Q4MMIm29khN6WoskZS1oTZu/0+0A9RRQMZ+9+3g0tLEiilFP05fITZSkQAjY?=
- =?us-ascii?Q?QQyx2WOjvKyWRiTGM3Ui+qVKhLPiLXPtenT1zPe+iWcTr/fTz0TgDYTRs/gH?=
- =?us-ascii?Q?DF76ytgvKBvpJNAUCDSyFVjHt3jpUQweRDPvTC0X6DV6lLia3Z68jWzoyPcu?=
- =?us-ascii?Q?qWA7vHHTKAhPTG01HWLdzEX26S/SCEjBwH7nGdwm3tv8AuN+DI58AvR3/3L/?=
- =?us-ascii?Q?qVBbdfJSqH9dKInNPSHXIOTUTRHZVEBvZdYz1J7rvwca7bCTStWe3WcB/aXd?=
- =?us-ascii?Q?EdBQMPCXbKKpOaHIEkAoU7ssK8sYh+65TmNB5w2lmuupoiRB9CNFvVSiKp+Q?=
- =?us-ascii?Q?Xw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	RD71OSsL4kRSMQ6nwtBdbx+LqY7zTn26HcreUEs5BDZ8KNYTR0HqYsu3LuSSxy4YAqg4siAW4eoZcjTzoAi2JVDZLImO0QfU29CFPzIthbSwB8Yownra9Iz5o/UVc3F0clizVnX9DZ7cP66c/3QHitfNd5hOviquvVktjhFpf35/Ed1a5KZkjVSFPIMK74EyvnyY+9yeh3F4E9W2iqPUj4KxIc6JY+2VAWTusc8ympzpJHfmq5onDYnQ3Rx2Kvjmm63fCwZmomFbYXiukbpfh8TepqnqigjPrrOK05lpFUO62xl0Z9PPL10mvd8pT2FudMQxBFPcWyvWKnK64nusxwke9XyBchJEiayrSk+0mcgAgdCJMFcMT61ZZ4pBJ5BaUDMta+8MI5/qP5JlRGkl0Gk3K610M9ttUrkfirTwvWmspMQAXx3v1o8BIfO4YZEOqV/CTwMgQ+JV+j4IRl3rmB8rbvkxx/UXIeEYYe8d5Og5+Zb+39/hrB3oJnSgjLchtyaHywNfdk/gVtmC7sGOORqPyQ/0uDKq4GEeoKCjIFxYMM8bwbsKdvc5AJT7ZplCZa6IDBk/U7+dEZ/Cjiyrm0sNAyw6T+TyM2HaG+riufo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c209e21-b740-4050-6bad-08ddae57440a
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 10:59:58.4024
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bUlfRKFspFliWUFxjH3i5CunspjGC8Lu5p04gBwVwuFULIDHuj1x6a99QpeX+UnvOQPo2nh8DHY7BYXCfrTCpMK0VwmTgg6ZJMn60Z+KrKQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5195
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_04,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2505160000
- definitions=main-2506180093
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA5MyBTYWx0ZWRfXxTZ7uZ4VwmyJ rxYdUtgDg7M0Cc4IwFRUUC3ZdQr08IwM+ORNYPkf9ib/Z7FmjbXM0ztEZEH1LrAxDyjix/96iEi uIgxOlE0qhXFgYWQ823sRRxp17dY/18fywRlPMOfV948uk8ySeiThhTAk2Pp6n80K1cElYskxQ/
- UKs/stwMb6KGIS6YOxpe8hOQj5XsUoG4bMkJLlWhsPDej5BWG2NEE3CllW41erb75E0b9cq06F5 g6gYwKXvLpPiLvI+LdT0bw48dP1RpaLIjYX8XwE8cMQwBB/tIE4khgo+A5ERKN81VIAUeIJJmkR JUe4wE8Vwje4fXqAVBGN+l/rOii4vkQ5urol63x/mR3xPJ1FAp9ZD9qUvxOQkbld8YGS2bX1IeY
- dsAf720u1fPG4svMm7dviIjg5YwBsQSokARvWZ+36tT/YqiOixgGw9W4fyY2WgTh+HmvXybr
-X-Proofpoint-GUID: bJLotw5ETKZaZLY7Vo6T39CHnBw48tvh
-X-Proofpoint-ORIG-GUID: bJLotw5ETKZaZLY7Vo6T39CHnBw48tvh
-X-Authority-Analysis: v=2.4 cv=dvLbC0g4 c=1 sm=1 tr=0 ts=68529c31 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=1XWaLZrsAAAA:8 a=Z4Rwk6OoAAAA:8 a=s2hSWIIl5NW7w4-vmdMA:9 a=HkZW87K1Qel5hWWM3VKY:22
+References: <20250617221456.888231-1-paullawrence@google.com>
+In-Reply-To: <20250617221456.888231-1-paullawrence@google.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Wed, 18 Jun 2025 13:01:44 +0200
+X-Gm-Features: Ac12FXyYCn87um9zhV37U1p8liEd8GGdJB5TEHyQUKyQt08jYyzk84L90hwTdhA
+Message-ID: <CAOQ4uxgaxkJexvUFOFDEAbm+vW4A1qkmvqZJEYkZGR5Mp=gtrg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] RFC: Extend fuse-passthrough to directories
+To: Paul Lawrence <paullawrence@google.com>
+Cc: Miklos Szeredi <miklos@szeredi.hu>, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, Bernd Schubert <bernd.schubert@fastmail.fm>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-There are a number of files within memory management which appear to be
-most suitably placed within the page allocation section of MAINTAINERS and
-are otherwise unassigned, so place these there.
+Hi Paul,
 
-Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Acked-by: Brendan Jackman <jackmanb@google.com>
----
+I am very happy that you are getting back to this task
+as I find myself never getting to it.
 
-RFC:
-https://lore.kernel.org/all/20250616202425.563581-1-lorenzo.stoakes@oracle.com/
+I would like to ask you to try to build on the code that was already
+merged to the upstream kernel rather than trying to go back to
+the out of tree version concepts.
 
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I've added libfuse maintainer in CC, please remember to CC him
+in future emails about proposed FUSE UAPI changes.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bbabcb161572..40ff84e1dcd1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15875,8 +15875,17 @@ F:	include/linux/compaction.h
- F:	include/linux/gfp.h
- F:	include/linux/page-isolation.h
- F:	mm/compaction.c
-+F:	mm/debug_page_alloc.c
-+F:	mm/fail_page_alloc.c
- F:	mm/page_alloc.c
-+F:	mm/page_ext.c
-+F:	mm/page_frag_cache.c
- F:	mm/page_isolation.c
-+F:	mm/page_owner.c
-+F:	mm/page_poison.c
-+F:	mm/page_reporting.c
-+F:	mm/show_mem.c
-+F:	mm/shuffle.c
+On Wed, Jun 18, 2025 at 12:15=E2=80=AFAM Paul Lawrence <paullawrence@google=
+.com> wrote:
+>
+> This is the first part of a much larger patch set that would allow a dire=
+ctory
+> to be marked =E2=80=98passthrough=E2=80=99. At a high level, the fuse dae=
+mon can return an
+> optional extra argument to FUSE_LOOKUP that contains an fd.
 
- MEMORY MANAGEMENT - RECLAIM
- M:	Andrew Morton <akpm@linux-foundation.org>
---
-2.49.0
+What's wrong with returning a backing_id?
+Why "reinvent" the pre-release wheel?
+
+> Extra fields are
+> added to the fuse_dentry, fuse_inode and fuse_file structs to have a back=
+ing
+> path, inode and file respectively. When fuse is performing an operation, =
+it will
+> check for the existence of a backing object and if it exists forward the
+> operation to the backing object.
+
+I read your patches and I have no idea why you needed to add fields to
+fuse_dentry and why you needed to duplicate the backing file fields in
+fuse_inode and fuse_file. Please explain yourself.
+
+>
+> These two patches add the core infrastructure, handling of the extra argu=
+ment
+> response to lookup, and forwarding open, flush and close to the backing f=
+ile.
+> This is sufficient to validate the concept.
+
+What I am reading between the lines is that open/close are examples
+of passthrough ops that are expected to be extended to more ops later.
+Please see my WIP branch [1] for a suggestion to use an ops_mask API
+for declaring which inode operations are passthrough.
+
+[1] https://github.com/amir73il/linux/commits/fuse-backing-inode-wip/
+
+>
+> The questions I have:
+>
+> * Is this something that interests the fuse maintainers and community?
+
+Definitely interested in inode ops passthrough.
+I am willing to help with review and implementation if needed.
+
+> * Is this approach the correct one?
+
+Which approach?
+
+Miklos and I have been discussing setting up a backing file on
+FUSE_LOOKUP for a while.
+The same concept was discussed also for returning an iomap
+description on FUSE_LOOKUP request [2]
+
+[2] https://lore.kernel.org/linux-fsdevel/20250529164503.GB8282@frogsfrogsf=
+rogs/
+
+So yes, the concept of setting up passthough on lookup is the correct one.
+
+One thing that you need to be aware of is that FUSE_LOOKUP is only one
+of several ways to instantiate a fuse dentry/inode.
+
+The commands FUSE_CREATE, FUSE_TMPFILE and FUSE_READDIRPLUS
+also instantiate dentries and need to be dealt with as well.
+
+Therefore, I was looking at the direction of extending struct fuse_entry_ou=
+t
+rather than adding a new argument to FUSE_LOOKUP.
+
+> * (if we agree yes to 1 & 2) Detailed analysis of the patches for errors.
+>
+> A few observations:
+>
+> I have matched backing objects to their fuse objects. Currently fuse pass=
+through
+> puts a backing file into the fuse inode. I=E2=80=99m not quite sure why t=
+his was done -
+> it seems to have been a very late change in the passthrough patch sets wh=
+ich
+> happened without comment.
+
+It was done to be able to have sane support for mmap passthrough among
+other things and be able to have a sane story about inode attributes.
+
+> It does not really make sense for full directory
+> passthrough since unopened inodes still need to have backing inodes.
+
+I do not understand this statement.
+Why doesn't it make sense?
+Why does it make sense to have a backing path per dentry?
+Are you expecting to map different hardlink aliases to different backing in=
+odes?
+It might have helped if you had a design document explaining the reasoning
+behind the implementation choices.
+
+> The one
+> advantage I can see is that it reduces the number of opens/closes of the =
+backing
+> file. However, this may also be a disadvantage - it moves closes, in part=
+icular,
+> to an arbitrary point when the inode is flushed from cache.
+>
+
+Rather than when? when dentry is flushed from cache?
+I do not follow.
+
+> Backing operations need to happen in the context of the daemon, not the c=
+aller.
+
+Correct.
+
+> (I am a firm believer of this principle.) This is not yet implemented, an=
+d is
+> not (currently, and unfortunately) the way Android uses passthough. It is=
+ not
+> hard to do, and if these patches are otherwise acceptable, will be added.
+>
+
+Note that many of the passthrough method implementations were moved
+to common "library" code for handling backing_file, which may or may not
+be sharable with overlayfs.
+
+I don't think that we need to have all passthough methods implemented in th=
+e
+generic backing_file "library" and share code with overlayfs, but we
+should consider
+it for new methods to see if it makes sense.
+
+> There was a long discussion about the security issues of using an fd retu=
+rned
+> from the fuse daemon in the context of fuse passthrough, and the end solu=
+tion
+> was to use an ioctl to set the backing file. I have used the previously-r=
+ejected
+> approach of passing the fd in a struct in the fuse_daemon response. My de=
+fense
+> of this approach is
+>
+> * The fd is simply used to pull out the path and inode
+> * All operations are revalidated
+> * Thus there is no risk even if a privileged process with a protected fd =
+is
+> tricked into passing that fd back in this structure.
+
+Not convinced.
+Are you saying that passing an O_PATH fd of /etc/passwd is ok?
+when that O_PATH is used to do passthrough open?
+I do not follow and I also do not see the problem with sticking with
+the already established backing_id and ioctl solution.
+
+I would add that if you make your solution dependent on io_uring
+then the security concern goes away, but you did not give a strong
+enough reason to have this limitation IMO.
+
+>
+> I=E2=80=99m sure we will discuss this at length if this patch set is othe=
+rwise deemed
+> valuable, and I am certainly not wedded to this approach.
+>
+> I have written tests to validate this approach using tools/testing/selfte=
+sts. I
+> don=E2=80=99t want this patch set to get derailed by a discussion of the =
+way I wrote the
+> tests, so I have not included them. I am very open to any and every sugge=
+stion
+> as to how (and where) tests should be written for these patches.
+>
+
+Apart from specific function tests for passthrough, FUSE_PASSTHROUGH
+was tested with fstests, using the scripts included in libfuse to run the
+passthrough_hp examples in fstests.
+
+So a basic sanity test for your code is that it does not regress fstests th=
+at
+are currently passing with passthrough_hp.
+
+Please let me know if anything I wrote is not clear and if there is anythin=
+g
+else that I can help with.
+
+Thanks,
+Amir.
