@@ -1,84 +1,161 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9412EF2A2;
-	Wed, 18 Jun 2025 14:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64AFD2EF288
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258642; cv=none; b=NyXSaX/++2uQvs6gsAy8x/bfGPugVD5S38y5BgIRrjOA3OO6Gf8USWdrmaSgjqIEvHzBJl1znI36WdfYIiiM3Jg2QXPCAE/7B8+4kkOgmFAron2U0Gjw5tapBsKD45/N8ootdxg1exnldFSwAYTsahsOFW6vfIEXwCE0wOl81xU=
+	t=1750258650; cv=none; b=JGtkdw7DcFurk4fYTz77otmewCJUGaeetS306fHntDxkY21R37QJS5dPQCpx4f7AbcKAG6B68larwPAPCyehzSmV0OYIA20PcL59J8t/7bDK3sstqf7MpxVkExWpIi81QWuBqtDAPtNzJDocHdDYX6Hz+IVeTJE4L918x7uQuNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258642; c=relaxed/simple;
-	bh=MyH+iNLN68kJuVQh2e9J8E7zeuT3U91XuHIwrgcbNus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AIrl35FCBFBjL8COml2tu68mOc4ngcazF8A6Wi6pytkUBNbAebevJgjtTuEwwR2ZWqofaP4FzBYNENoLH72jlVRvKjGGH2FSAcwnKQnDucKdxU+Yoah6URpxVg9J+EgXFGTbaF3V4os0b+9785lyCkQWFsnntpP/6OSdIDCOD6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4781B1D31;
-	Wed, 18 Jun 2025 07:56:57 -0700 (PDT)
-Received: from [10.1.35.75] (e127648.arm.com [10.1.35.75])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58473F58B;
-	Wed, 18 Jun 2025 07:57:16 -0700 (PDT)
-Message-ID: <1458e4f8-bd76-4d75-acb9-87f7064ea40c@arm.com>
-Date: Wed, 18 Jun 2025 15:57:15 +0100
+	s=arc-20240116; t=1750258650; c=relaxed/simple;
+	bh=OPezsAgE4NKsy9v1Mr0Ip+bSrXVKO25UcHNhgGBFSFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iepBTJIU6hwEYVqh9XmYDiVzYWJFzroOgGOmgxvIVcXuLoLe8CiWXK6L5gup4PQ5LBkW3/eolUp1RAr8ByPsVinlkjhwWkaHW5dK5OkSBe09frUguu3Jt54VR4aNbEW4WFyAUeOrvqFwzESkr586K77iWCvZBZSgJVZ8/aFV/qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=nUFvbGz2; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="nUFvbGz2"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7d20451c016so405734285a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750258648; x=1750863448; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nWuA5n/7XV52piKpzEtlj4+eRvGXTp7zsvMDV3q1c/g=;
+        b=nUFvbGz2PF97qcnM5g2vHhj7mlDOqnkMDXDg/83hzbBTTwrKsZUVrDt25jQxU569lo
+         kFy/tls0Bq+Y0hzK4M+0HzHLJQB84P3aVYX2l0uM6skO5c4t/zd74yYdJYFgQB0IoRxg
+         PH3nTpmDGQ/BH26lPyqtKz4m96WaLMiJJIB/Kc8hOim1zK1vA517DisQ0cVoQF/GQs6Q
+         guW8v2OZ5msk7mezEKqcexOzEKD4l8utNEKkKqJCXvZNZYDoC4kUrhUFElnoX7idONYL
+         N1zmpp5UmxGq5B9Me9/HZaLaDW8VBDWLP/cbpLd6gJS/PdFyZ2F0LT1rUiHetNPgFHxx
+         1TYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750258648; x=1750863448;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nWuA5n/7XV52piKpzEtlj4+eRvGXTp7zsvMDV3q1c/g=;
+        b=I6QJtq/RgnfDE3da2Ood9463nwo08oIPwCr/Oj5ON7AstAtWLhBKEMuygaEVttciZ7
+         ksx+z3H91UxPs4GOfV99E6vlQHQqsT4Lmqf8v/en6a7YBp0UR+ZUkNJVAQ0aNr1FlLMf
+         qFb+/HVdCSHcHBD0c9ea+zOf6/0+znQ/+i40SzzMlMWuoJMNQViDLBG5KCT4wpqVFhNA
+         O5hkjmfAh/r0vKg5p4Kqp/KY4VQIiBkNM3WkR0mp7E3iPgQsiQMSYTPLtoQF9PYA095q
+         8lJvsK9Dv+yoTDgOZMhZOKWIOvsLoqnKQlomx3Eb4HlktYOzX5cRVodJlpoOk5BVl/8m
+         syyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+LMAQvNXb29snEF62uf3hNhw8TPm9fOzmn2nyIhFkiTKKMYloqGC27P23d/A1qn38XZdm4akpRNbO1dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywQbO08F5uqMegYA9AXyALeCZTLTetX3B4n0g6u4QfculduZda
+	2qmON7j5cFBT13N+ggqvDuHx+Hx/KWwfDLyoe8IRWezt6HhcZF1cQ8b2Q/DV/tRMbtA=
+X-Gm-Gg: ASbGncsmr0gDgc/3erDZNuUKB0yg/yuB1WZlmqLuJjPZWbhvBz8mboI1Jqs7of3+l/F
+	d6PiPoVuri9CDbdOdL8o25Dho9eFuvADPlrrjcaUa8Cdo/AEwy7kHz+CUowyyQfAZcsEp2qUTDu
+	aiOEIsdTQL7S57NlYGxlWh5tyYc0ZgfZdviS4Eg0smCgnHbkStMcsoQaMxPuakN6JfXdZbjN3ZO
+	kfDrgL0GtROi1BF3czz0bBAVEIy5toc+Izp6q9pjD8lg4Rm4LXrZQCgHdLGn+VqzBpKnbWxSHon
+	cLP1tKYa71lJIzeBqI2eySjk+nxgNexMVRGR4MOnCVWOQswuWQFZyMAFU9VxOvZGLycyRoHPSoj
+	1PZACR1IyqBdFMnYxHd8wR2KvpXPQyR8JFW+9og==
+X-Google-Smtp-Source: AGHT+IEqAm8w07CYn9jssi0u9N9oTKmQEBd4zXaVvYiKXP4kVC2Pg2ZszP/NIklhkByTPLh6hrPUVw==
+X-Received: by 2002:a05:620a:2720:b0:7d3:8fd2:c0cd with SMTP id af79cd13be357-7d3c6d0c5e6mr2844239185a.56.1750258645240;
+        Wed, 18 Jun 2025 07:57:25 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8edf51fsm771719285a.93.2025.06.18.07.57.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 07:57:24 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uRuE7-00000006osS-460H;
+	Wed, 18 Jun 2025 11:57:23 -0300
+Date: Wed, 18 Jun 2025 11:57:23 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
+	nicolas.dufresne@collabora.com, iommu@lists.linux.dev,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, kernel@collabora.com
+Subject: Re: [PATCH v2 3/5] iommu: Add verisilicon IOMMU driver
+Message-ID: <20250618145723.GR1376515@ziepe.ca>
+References: <20250618140923.97693-1-benjamin.gaignard@collabora.com>
+ <20250618140923.97693-4-benjamin.gaignard@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- linux-pm <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Robin Murphy <robin.murphy@arm.com>, zhenglifeng1@huawei.com
-References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
- <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618140923.97693-4-benjamin.gaignard@collabora.com>
 
-On 6/18/25 15:32, Rafael J. Wysocki wrote:
-> On Mon, Jun 16, 2025 at 7:25 PM Christian Loehle
-> <christian.loehle@arm.com> wrote:
->>
->> The boost_enabled early return in policy_set_boost() caused
->> the boost disabled at initialization to not actually set the
->> initial policy->max, therefore effectively enabling boost while
->> it should have been enabled.
-> 
-> Did you mean "disabled"?
+On Wed, Jun 18, 2025 at 04:09:12PM +0200, Benjamin Gaignard wrote:
+> +config VSI_IOMMU
+> +	bool "Verisilicon IOMMU Support"
+> +	depends on ARM64
+> +	select IOMMU_API
+> +	select ARM_DMA_USE_IOMMU
 
-Yup, the latter 'enabled' should be disabled.
+ARM_DMA_USE_IOMMU is only used by ARM32, you don't need it if you
+depends on ARM64
 
-> 
-> It would be good to mention the failure scenario here too.
-> 
+> +static void vsi_iommu_release_device(struct device *dev)
+> +{
+> +	struct vsi_iommu *iommu = dev_iommu_priv_get(dev);
+> +
+> +	device_link_remove(dev, iommu->dev);
+> +}
 
-Absolutely, let me respin this in a series that provides some context, too.
+This does not seem right, release is supposed to reprogram the HW to
+stop walking any page table.
 
->> Fixes: 27241c8b63bd ("cpufreq: Introduce policy_set_boost()")
->> Reported-by: Robin Murphy <robin.murphy@arm.com>
->> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
->> ---
->>  drivers/cpufreq/cpufreq.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
->> index d7426e1d8bdd..e85139bd0436 100644
->> --- a/drivers/cpufreq/cpufreq.c
->> +++ b/drivers/cpufreq/cpufreq.c
->> @@ -1630,7 +1630,7 @@ static int cpufreq_online(unsigned int cpu)
->>          */
->>         if (cpufreq_driver->set_boost && policy->boost_supported &&
->>             (new_policy || !cpufreq_boost_enabled())) {
->> -               ret = policy_set_boost(policy, cpufreq_boost_enabled());
->> +               ret = cpufreq_driver->set_boost(policy, cpufreq_boost_enabled());
->>                 if (ret) {
->>                         /* If the set_boost fails, the online operation is not affected */
->>                         pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
->> --
->> 2.34.1
+You should implement a static blocked (or identity?) domain that idles
+the hardware and use that as the blocked and release_domain in the
+ops.
 
+The logic around vsi_iommu_detach_device() and
+vsi_iommu_attach_device() is also not quite right. The attach can
+happen while iommu->domain is already set and doesn't deal with
+removing the iommu from the old domain's list.
+
+I would probably change vsi_iommu_enable() into vsi_iommu_set_paging()
+and then presumably vsi_iommu_disable() is vsi_iommu_set_blocking() ?
+
+vsi_iommu_detach_device() should be deleted and integrated into the
+blocked domain and attach error unwind.
+
+> +static int vsi_iommu_of_xlate(struct device *dev,
+> +			      const struct of_phandle_args *args)
+> +{
+> +	struct platform_device *iommu_dev;
+> +
+> +	if (!dev_iommu_priv_get(dev)) {
+> +		iommu_dev = of_find_device_by_node(args->np);
+> +		if (WARN_ON(!iommu_dev))
+> +			return -EINVAL;
+> +
+> +		dev_iommu_priv_set(dev, platform_get_drvdata(iommu_dev));
+> +	}
+
+The driver should ideally not be calling dev_iommu_priv_set/get here,
+and this leads the reference doesn't it? Do what ARM did to locate
+the iommu_dev.
+
+I would also add a comment here:
+
+> +static int vsi_iommu_map(struct iommu_domain *domain, unsigned long _iova,
+> +                        phys_addr_t paddr, size_t size, size_t count,
+> +                        int prot, gfp_t gfp, size_t *mapped)
+> +{
+> +       struct vsi_iommu_domain *vsi_domain = to_vsi_domain(domain);
+> +       unsigned long flags;
+> +       dma_addr_t pte_dma, iova = (dma_addr_t)_iova;
+> +       u32 *page_table, *pte_addr;
+> +       u32 dte, pte_index;
+> +       int ret;
+
+/*
+ * IOMMU drivers are not supposed to lock the page table, however this
+ * driver does not safely handle the cache flushing or table
+ * installation across concurrent threads so locking is used as a simple
+ * solution.
+ */
+
+> +       spin_lock_irqsave(&vsi_domain->dt_lock, flags);
+
+Jason
