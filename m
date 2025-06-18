@@ -1,110 +1,113 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F95277CB8;
-	Wed, 18 Jun 2025 07:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9632E27816E;
+	Wed, 18 Jun 2025 07:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750230499; cv=none; b=SwW9ZOa3eQsh8z5Ag8I5CgLFQTtwnEpUTRecRYNd5SEpvSIrnNpEleqk/tiX6UUixrfbqdLDz9ys5RA/Duy9f7tuad96lnVKApGuOsfdlFwNluCrx56bMW26ko2ZV7WT5NWxzyNt9KgGMJH0JWxrL2jX4aPbmHTTACmc2+HTDfY=
+	t=1750230500; cv=none; b=ekNVla0Zo7NcqlIKiZYLJ9FQAijI5gh7bxej/MA15XfAs5w94qBaOgTj6YG2nVRuWEQtLVeBbMLyHDIesnYmdVovTRWGyENylRGKTi0b2YHQgr2CkAJopkuLgjt7OLXVfMxRB18+EX6ag87dZf0surpZV9UimSd3zDESySE4IEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750230499; c=relaxed/simple;
-	bh=o5QQSAfAdXW8i8puQ8G/ITt2bMNgriuyCE0HZH+Rqlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aX3B186r+aQJAfbx6Zud2a6XPDj65oJpY4lk+g7NFdgez12vxQD23F3sJVpDn1EV+G/kk6pEd0u2TSWifHM7LJCiKI26Ibu9ygJ8xZd6E1amPrSz7oM59HUCXLJ5r/34/8n1uDxxWRjuXK7YQnwJffkw0Ia7JcYj81v+bDy4osA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAB3x0_ZZVJoQ1lPBw--.9486S2;
-	Wed, 18 Jun 2025 15:08:09 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: gregkh@linuxfoundation.org,
-	tglx@linutronix.de,
-	u.kleine-koenig@baylibre.com,
-	mingo@kernel.org
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] usb: gadget: m66592-udc: Use USB API functions rather than constants
-Date: Wed, 18 Jun 2025 15:07:14 +0800
-Message-Id: <20250618070714.817146-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750230500; c=relaxed/simple;
+	bh=HQUhUUMz1hwkIw0H+WnoEWZYfkvGVKwDKzojTFzI74U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UdjKcgBirfvUfRmRS4w32XIcPJhtWW5X3X41jZeAPVnFPP1S7R9TCBVFWSOxUEwBHhvNVFWfp3feF7lVyY/BaYH/qKTiMf5B3jRmXEYySm3mqy0kUqzUo7AdOi9u5uQWvK11OuuVhOT2jBb8nfI3Wj39J3vpzuHfeSh8d0n2Wmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I2EZxJXs; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BbgFDKDY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I2EZxJXs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BbgFDKDY"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750230496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AthrdE03eMT6iyFsW/vA3bdClID4lHYN+YmePk1prAg=;
+	b=I2EZxJXsMG2CTO7g5gZZf1qltdHNLqFjmsBKmGggS50/UZiRsCFPdz5DhOb9RGxWls8eHc
+	bYP7KbbfUGQmtJ+Ee8tXBgYXe1lQVNuX15Uf2dX3uS+JM41tqXajUfALR7RqZvU689ESES
+	sma/nVhg/68/CO3nsc42B36La6pHvxaHub9NC5pkh/nwRcUhvxnuZFRwECywBr0I2pCYb6
+	Em7GDPpRqTjKla2tOiCnr1m3gzHky/MkqTz6qqck8DKGjyEffqZvt6pNnhzAIOYKM4MbKy
+	icNyrZ3X8jBpzLnamNQ3388eI438j5sNT0JP7DL31r166XhFFWFTGy4iKB3x7Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750230496;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AthrdE03eMT6iyFsW/vA3bdClID4lHYN+YmePk1prAg=;
+	b=BbgFDKDY3M2uyykrupOKp2zK1iwQwdxSS5saBGNgSDiVEZPEd+V2WAEzhndjPyjbxNOD1t
+	ipt47VuIseiY7GDA==
+Subject: [PATCH net-next v3 0/2] net: Don't use %pK through printk
+Date: Wed, 18 Jun 2025 09:08:05 +0200
+Message-Id: <20250618-restricted-pointers-net-v3-0-3b7a531e58bb@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAB3x0_ZZVJoQ1lPBw--.9486S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF43KFyxJw47Cr17Ar4fXwb_yoW8CFWxpa
-	n5JaykXrWjyrWUCa98JFn8ZFy5Ca90vryUCa4aga4a9F13tw4SqF1UAw1rKrWDCFWfZan0
-	qw1Yyan2qanxGrUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Wrv_ZF1lYx0Ex4A2jsIE14v26rkl6F8dMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
-	JF0_Jw1lc2xSY4AK67AK6r4xMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
-	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
-	z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
-	UI43ZEXa7sREEfO5UUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+X-B4-Tracking: v=1; b=H4sIANVlUmgC/3XNTQ7CIBAF4Ks0rMUApT+68h7GBYHBTmKgASQ1T
+ e8u4saYdPnyZr63kggBIZJzs5IAGSN6V0J7aIielLsDRVMyEUx0TDJJA8QUUCcwdPboEoRIHSS
+ qRm2MYS10hpPyPQewuFT5Sj4HDpZEbqWZMCYfXnUy89p/db6vZ04Z5UJZpkH2ZenyQPdMwTtcj
+ gaqm8WvNexbolgnqe0AdoRewb+1bdsbHhNJuxgBAAA=
+X-Change-ID: 20250404-restricted-pointers-net-a8cddd03e5d1
+To: Tony Nguyen <anthony.l.nguyen@intel.com>, 
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
+ Tariq Toukan <tariqt@nvidia.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
+ Aleksandr Loktionov <aleksandr.loktionov@intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750230493; l=1640;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=HQUhUUMz1hwkIw0H+WnoEWZYfkvGVKwDKzojTFzI74U=;
+ b=QlTPnkpsoB7IxMXFtb6EQuaKpoYFy/ecQsJwnFfe1wgZEQyKZKKJ6NznpDduSF+m9engtl6GI
+ i8njRl6iDk7CynbKVDiatPcDnpR0+yna592iCmay7YDBYaG/O14khee
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Use the function usb_endpoint_num() and usb_endpoint_type()
-rather than constants.
+In the past %pK was preferable to %p as it would not leak raw pointer
+values into the kernel log.
+Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+the regular %p has been improved to avoid this issue.
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping locks in atomic contexts.
 
-The Coccinelle semantic patch is as follows:
+Switch to the regular pointer formatting which is safer and
+easier to reason about.
+There are still a few users of %pK left, but these use it through seq_file,
+for which its usage is safe.
 
-@@ struct usb_endpoint_descriptor *epd; @@
-
-- (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
-+ usb_endpoint_num(epd)
-
-@@ struct usb_endpoint_descriptor *epd; @@
-
-- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
-+ usb_endpoint_type(epd)
-
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- drivers/usb/gadget/udc/m66592-udc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Changes in v3:
+- Fix typo in commit messages
+- Link to v2: https://lore.kernel.org/r/20250417-restricted-pointers-net-v2-0-94cf7ef8e6ae@linutronix.de
 
-diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
-index 715791737499..54885175b8a4 100644
---- a/drivers/usb/gadget/udc/m66592-udc.c
-+++ b/drivers/usb/gadget/udc/m66592-udc.c
-@@ -359,7 +359,7 @@ static void m66592_ep_setting(struct m66592 *m66592, struct m66592_ep *ep,
- 	ep->pipenum = pipenum;
- 	ep->ep.maxpacket = usb_endpoint_maxp(desc);
- 	m66592->pipenum2ep[pipenum] = ep;
--	m66592->epaddr2ep[desc->bEndpointAddress&USB_ENDPOINT_NUMBER_MASK] = ep;
-+	m66592->epaddr2ep[usb_endpoint_num(desc)] = ep;
- 	INIT_LIST_HEAD(&ep->queue);
- }
- 
-@@ -391,7 +391,7 @@ static int alloc_pipe_config(struct m66592_ep *ep,
- 
- 	BUG_ON(ep->pipenum);
- 
--	switch (desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) {
-+	switch (usb_endpoint_type(desc)) {
- 	case USB_ENDPOINT_XFER_BULK:
- 		if (m66592->bulk >= M66592_MAX_NUM_BULK) {
- 			if (m66592->isochronous >= M66592_MAX_NUM_ISOC) {
-@@ -433,7 +433,7 @@ static int alloc_pipe_config(struct m66592_ep *ep,
- 	}
- 	ep->type = info.type;
- 
--	info.epnum = desc->bEndpointAddress & USB_ENDPOINT_NUMBER_MASK;
-+	info.epnum = usb_endpoint_num(desc);
- 	info.maxpacket = usb_endpoint_maxp(desc);
- 	info.interval = desc->bInterval;
- 	if (desc->bEndpointAddress & USB_ENDPOINT_DIR_MASK)
+Changes in v2:
+- Drop wifi/ath patches, they are submitted on their own now
+- Link to v1: https://lore.kernel.org/r/20250414-restricted-pointers-net-v1-0-12af0ce46cdd@linutronix.de
+
+---
+Thomas Weißschuh (2):
+      ice: Don't use %pK through printk or tracepoints
+      net/mlx5: Don't use %pK through printk or tracepoints
+
+ drivers/net/ethernet/intel/ice/ice_main.c                      |  2 +-
+ drivers/net/ethernet/intel/ice/ice_trace.h                     | 10 +++++-----
+ .../ethernet/mellanox/mlx5/core/sf/dev/diag/dev_tracepoint.h   |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250404-restricted-pointers-net-a8cddd03e5d1
+
+Best regards,
 -- 
-2.25.1
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
