@@ -1,81 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94975522F;
-	Wed, 18 Jun 2025 06:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0305F522F;
+	Wed, 18 Jun 2025 06:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750229566; cv=none; b=IhKvkn7f7NmlsohBUNhjGFUuv19e2BHsoB2XyLKzDup8R2X/bNGlcKGheSP2RUmfkwde5MJuizCak311Qg9cyib4Md6+z91Uu0WRCO/eTXUSl2m2TfuNTrdGvfCfbR198Ui51c0yVVgoU06LrI8wnNZqTX5+ASgRiUyP+Jy2yME=
+	t=1750229602; cv=none; b=I2sMCfJ3z1p7v/KVLeHZml//yNftVyQXPAxHtEFX213PtfG8pAl9TCQS0Dsm2dX0PelqQD5mZxOpsFQC8L9ZbgCNp/NXXgClxJIlcRkmbDVeDOYtmg5ZRtxKn5SwwrRwTAwVPFRk32uEux/ttBc/UE+ec5gp3D8qVQeZIWqZajw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750229566; c=relaxed/simple;
-	bh=prDfa/5Zbm9GA9G4tD7ZSeyJ1W+Dn9Epp1t6A1MMNwo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m4JcscSf7ENVZ2T0xMFd6wlUA2tD7k1ZUD6rjuFuQLSe7nQg/WwbmwVA5ENw5nfBfMdgX111kPkV5qNqgLWyw9COtmGfg6R9RbsDD2okLN5ygdidEcWbGDn9KZuBFIARb2u8FKSYssTlrniVSK74UuNYYtmGE0Ctyd7b57pEvOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsJipWcl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsJipWcl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D2EC4CEED;
-	Wed, 18 Jun 2025 06:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750229566;
-	bh=prDfa/5Zbm9GA9G4tD7ZSeyJ1W+Dn9Epp1t6A1MMNwo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RsJipWcl/kmAXaotjhAwkqCBWa3T3L278I5zdgKs353dwP6Pw1KBECYhtGKFoGoyo
-	 kjYOjf4CO3+uh9PD6LnwOkrCHFpIa934p57BAYaoRHZmhaecX6gY4yo+QTLlUGX60S
-	 78+5Y0prt7mFWQuheeCvMFq5pzbhFGiTozTnlF0FSCNnIi4JEtVhJx2mx/ouhXc+aY
-	 ADgg1pM42jEaoixslcLQSk/627KR9slA79+QE61RUHPasGNDOqgT3BQzo/5i4wNnSh
-	 87Gvz5FMhVvl5/LKo02uiNfy9TIstoZzFlIucs59Bz5YzZFqao5Sa8JTcoN2vdii+0
-	 HDAnNtmPGyhtg==
-From: Michael Walle <mwalle@kernel.org>
-To: Nishanth Menon <nm@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bryan Brattlof <bb@ti.com>,
-	Dhruva Gole <d-gole@ti.com>,
-	Andrew Davis <afd@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Michael Walle <mwalle@kernel.org>
-Subject: [PATCH] arm64: dts: ti: k3-am62p-j722s: fix pinctrl-single size
-Date: Wed, 18 Jun 2025 08:52:39 +0200
-Message-Id: <20250618065239.1904953-1-mwalle@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1750229602; c=relaxed/simple;
+	bh=z6Zh6LHr9HQDygJksnzqsETbW3lKHUK6tVBn3W13Zl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=gmOvFi/rHI8YUJChG1Txf/6znvBwmdIrHf1L1qcoHtH9yeuYNMYMxmsX82NONHYiTxFz6845Kplk3IVfPgzCvC+Gsi7n02WYmgy5ppT8vNTL8vUS9U3wuGUhS5qsRSubbeeYQ7kTEENiZ7DAxuuvcildTDaB4JZyHKdz87xsYc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bMYn174Hcz27g2B;
+	Wed, 18 Jun 2025 14:32:05 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id CB5901A0171;
+	Wed, 18 Jun 2025 14:33:34 +0800 (CST)
+Received: from [10.67.112.40] (10.67.112.40) by dggpemf200006.china.huawei.com
+ (7.185.36.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
+ 2025 14:33:34 +0800
+Message-ID: <825fe267-0925-4b91-98ef-82dfb768f916@huawei.com>
+Date: Wed, 18 Jun 2025 14:33:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
+To: Mina Almasry <almasrymina@google.com>
+CC: Ratheesh Kannoth <rkannoth@marvell.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>
+References: <20250616080530.GA279797@maili.marvell.com>
+ <d152d5fa-e846-48ba-96f4-77493996d099@huawei.com>
+ <CAHS8izNBNoMfheMbW5_FS1zMHW61BZVzDLHgv0+E0Zn6U=jD-g@mail.gmail.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <CAHS8izNBNoMfheMbW5_FS1zMHW61BZVzDLHgv0+E0Zn6U=jD-g@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-Pinmux registers ends at 0x000f42ac (including). Thus, the size argument
-of the pinctrl-single node has to be 0x2b0. Fix it.
+On 2025/6/18 5:02, Mina Almasry wrote:
+> On Mon, Jun 16, 2025 at 11:34 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
+>>
+>> On 2025/6/16 16:05, Ratheesh Kannoth wrote:
+>>> Hi,
+>>>
+>>> Recently customer faced a page pool leak issue And keeps on gettting following message in
+>>> console.
+>>> "page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
+>>>
+>>> Customer runs "ping" process in background and then does a interface down/up thru "ip" command.
+>>>
+>>> Marvell octeotx2 driver does destroy all resources (including page pool allocated for each queue of
+>>> net device) during interface down event. This page pool destruction will wait for all page pool buffers
+>>> allocated by that instance to return to the pool, hence the above message (if some buffers
+>>> are stuck).
+>>>
+>>> In the customer scenario, ping App opens both RAW and RAW6 sockets. Even though Customer ping
+>>> only ipv4 address, this RAW6 socket receives some IPV6 Router Advertisement messages which gets generated
+>>> in their network.
+>>>
+>>> [   41.643448]  raw6_local_deliver+0xc0/0x1d8
+>>> [   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
+>>> [   41.652149]  ip6_input_finish+0x48/0x70
+>>> [   41.655976]  ip6_input+0x44/0xcc
+>>> [   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
+>>> [   41.663546]  ip6_sublist_rcv+0x16c/0x22c
+>>> [   41.667460]  ipv6_list_rcv+0xf4/0x12c
+>>>
+>>> Those packets will never gets processed. And if customer does a interface down/up, page pool
+>>> warnings will be shown in the console.
+>>>
+>>> Customer was asking us for a mechanism to drain these sockets, as they dont want to kill their Apps.
+>>> The proposal is to have debugfs which shows "pid  last_processed_skb_time  number_of_packets  socket_fd/inode_number"
+>>> for each raw6/raw4 sockets created in the system. and
+>>> any write to the debugfs (any specific command) will drain the socket.
+>>>
+>>> 1. Could you please comment on the proposal ?
+>>
+>> I would say the above is kind of working around the problem.
+>> It would be good to fix the Apps or fix the page_pool.
+>>
+>>> 2. Could you suggest a better way ?
+>>
+>> For fixing the page_pool part, I would be suggesting to keep track
+>> of all the inflight pages and detach those pages from page_pool when
+>> page_pool_destroy() is called, the tracking part was [1], unfortunately
+>> the maintainers seemed to choose an easy way instead of a long term
+>> direction, see [2].
+> 
+> This is not that accurate IMO. Your patch series and the merged patch
+> series from Toke does the same thing: both keep track of dma-mapped
 
-This will fix the following error:
-pinctrl-single f4000.pinctrl: mux offset out of range: 0x2ac (0x2ac)
+The main difference is the above 'dma-mapped'.
 
-Fixes: 29075cc09f43 ("arm64: dts: ti: Introduce AM62P5 family of SoCs")
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> pages, so that they can be unmapped at page_pool_destroy time. Toke
+> just did the tracking in a simpler way that people were willing to
+> review.
+> 
+> So, if you had a plan to detach pages on page_pool_destroy on top of
+> your tracking, the exact same plan should work on top of Toke's
+> tracking. It may be useful to code that and send an RFC if you have
+> time. It would indeed fix this periodic warning issue.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-index 17471501df24..17c0949ac1d7 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
-@@ -264,7 +264,7 @@ secure_proxy_sa3: mailbox@43600000 {
- 
- 	main_pmx0: pinctrl@f4000 {
- 		compatible = "pinctrl-single";
--		reg = <0x00 0xf4000 0x00 0x2ac>;
-+		reg = <0x00 0xf4000 0x00 0x2b0>;
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
- 		pinctrl-single,function-mask = <0xffffffff>;
--- 
-2.39.5
-
+As above, when page_pool_create() is called without PP_FLAG_DMA_MAP, the
+dma-mapped pages tracking is not enough.
