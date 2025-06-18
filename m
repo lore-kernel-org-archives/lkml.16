@@ -1,164 +1,177 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazolkn19010011.outbound.protection.outlook.com [52.103.43.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AF42EAB68
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:53:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258421; cv=none; b=Uk3NJCSMR/95h2mgqHbrvCRNMx6+NmjLzH/kyNP8mnnDHo0zSX70NACMKJwm0PQ6BwO/HUhTo8y/vNC9w6Wtv4+4OqvibfM6sVe2+C7yAgyUry8/GYrDSFXq2RTqfBuU4A0hP+xt4M4ORYDwBI1Z+UEXfwNIQpRcho4YXwqEk14=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258421; c=relaxed/simple;
-	bh=d1bTMcMzxYwoA+D7FedJtqCDcbroa+Mc/37/DE2ipe8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CPmmEw+fLmY8vriCDHzLKMQ8UIBsROyrZEpCM0Io1YkdQ0al2mzCstaYjmIG/9tVR88cG2rfz9E3xkzHlZISEiU5VtmXv3ni7OKNwhDGbRkqKH8ULsg9nn0DNAiLxxAPc7gzkIWsltelcw24t8pJY19h8tXbCduaEb6xmlij/kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=V5RWvryj; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC3BB3B1AB;
+	Wed, 18 Jun 2025 14:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.43.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750258442; cv=fail; b=fW2RgKbkQWyg/o8QoaW/y8oQU6pWiQGGpMTmOChl5tNJWccAeS2H5nXabZtfaEbq0AYguZdshHDpiqDsaxu5fX2cN3R80rZaYoTOkX40a2Kp4hBboMDGMsOQOKojzUSiZzQtqRtvQSEh/HIVA0GQJ9NgDOTitCTswdM6AqQfYT4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750258442; c=relaxed/simple;
+	bh=bp5vYSvuDWn5fKWYSI9sJ8Ompgf1feBYHqweFaKmFZw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nYGwkHFjOGH6U2hY1XlJHa20+BHvwDyannuUlFyDfyp08aeSTuON6vIsVklUEd/1OcaDl1NVvcZ6dwh0eeVG9i/mmGRrkD0YOFfoF8Gx64VjbCRzXmwWnEDA0pi5FXe5K00FDFEpGtMxOxvPdxf45nCZgqw77V5G3H2KPhrgVtE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=vCaB4zbT; arc=fail smtp.client-ip=52.103.43.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="V5RWvryj"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-54e98f73850so6620388e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:53:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750258417; x=1750863217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QILoQ0cg9dCm9DSe1PZh99lLZifnpwxayvJF2llOsWw=;
-        b=V5RWvryjKoVyvKHsAXD/uO7JeR1qYTCtKWPezfMlGA+LLwyN2NBVjsygv7V76Lg9vE
-         ZLDkj0K0Okgk/qq2pLtVBrncrXmhds1l9mMaZTZLk0PynuZvvZrphCzp4kQQB3chZ2o1
-         +W+/RomCET7vFeGZkJoP6toOI5Y///Lc/oRsr//dwlD/MKaYV0wODRRRtgui3g2v5HbG
-         zaoCTJtaEgva+aiximCDFF+C9jzinv7N+8EJRFGAoUU/vW++uvbtNEcD7nlxujtnjdxb
-         5+iC3lXf11U5KlJ5rPZ9Zl4UNhCHKPqChhRxqE8HVL2WY7tr8L0gcOnmospuW1eaM3LW
-         iWBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750258417; x=1750863217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QILoQ0cg9dCm9DSe1PZh99lLZifnpwxayvJF2llOsWw=;
-        b=ZZqoA4RGp3T09jTjHnL8snRIlSeFTFOcUJx1XzDRWv0U5SI+lX9MOSU/YqSbrMXogX
-         5tFRe/lAeJzT45H6ioDNwJ58PBrnLG9CcmyiPHvtY/e0yUD2OtBih0wzGLse5BmkZFJR
-         8VH2Ei6wHY1rb20vgJ2GPPIC3NHplTrsgPREMNMBuv7VAOeAwXACj2eFGD7zlv3BOfZw
-         h04QuAVSEeyStXMHIaTe5sb9DJa51ai4ZtIakmGxV27VzuU5yqyUiYv6GRdkR761+aDE
-         Enlxp6UaiLQIMruHDCw3AwhKHUHW65G00ei55mT9jRIG1Ks8iK2DTd2U7dsWvUmE1aLx
-         rMvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU69bGl984TvnHNT4b5EfRO4H1BFRQkuNNx+mlcGfq8Dcvn7k4BS+Bs2+VXkrKdLYsr5RFNucHHt0Igd2s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqBSK97jiQM+44Y72d9NhykHjApEmZD/hzK4X+X7gBUMy1DQ0y
-	Kw+2YavjhvbA16CnC+3Zic1iMZeEua8KyfhZKM4a+6J1QooPG3Fe31g0ZZAOTaIJpjG3hQa6tHm
-	frdOIJCxbSAghlqIfXpdL99GwpzBsxs1tyPAR183B4Q==
-X-Gm-Gg: ASbGnctkLUzTBEb0FUXHhmIsIVzgRd1/EAzu9ofYJkw0T62rkgtnKmWUPr9JByKBUuK
-	I401L1WNZGrAQPVsDtsWVXvJ7UWVG+MqSCBkcnulJDHDAJsAm5FXmqJacnrU2p7lSsKQqivfcGi
-	qtmTmxIpUwH0IKuRs3TI+lNnEQHKDRsNo8AY8wNJd8fU+q1rhAmAb8fcVi9JzFFfSJRFjK1kpz0
-	A==
-X-Google-Smtp-Source: AGHT+IGiCcrgYRMbum6nuXJpOo6iTxGGvz1fmMPK+AhjjIqJxDaE2WGG9FQliOn9F9chuEGZlOPblHk5QtCZaRkBmoU=
-X-Received: by 2002:a05:6512:b97:b0:553:241d:4e7d with SMTP id
- 2adb3069b0e04-553b6f25d30mr4824208e87.42.1750258417343; Wed, 18 Jun 2025
- 07:53:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="vCaB4zbT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=O462cSq80YLreBmshXiLDzfUgByMyNAAl0DkJdIl8mOrJ7Hsl9UDvv6/Up2/s95ippTTX69/+CNozdgF2UFzKEwdoxcjpZ70oDfsgUgI5H3b2XOcFvTDbKMoe52od5LS72OGphvJLf7EWBF8Kos7dfc9ZblIAtRYYWCPX2kF6enbvaMEcrBsTBiVcQ+TOuRFSQyESrZL2Enof9gRW70KpoXaa44y6DfdocIORfYPak8oIUKwHEeI6ksfIbcdbc9zJccgY86NwcoDvXcBNREd62DPq5x6+aylprfkeOFad6pHKBRYISp6zG+xD2YO/4Cw2Vdoosj8u7NcPOcpcmvb0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N91sa5eiQeI4AGnCvPU9o1rP748hBiHE7kHr8btmKJQ=;
+ b=IUh8gjzy1rhB/yXUKayFARLCP7y9a3Vp1UlEU1NR+nBbrmYzfAITDC+v5bT3oc3Bb7hZhatQYGSAtzVx8eTK3jEKYr/GE955lZTFhrCX0tBLIiW1XprIfv3yVUQzJzdidFASCjHAgwsK8jX0hGh8cmr9sy8SqrPsOBFi1mHLkHza1mvJZ0R5Ll0Jiiy/y0O6uaGuJGZmyOr8XI4Gptaf7VF9/8abj2ynbbjtz+Zzw9KNoO3fNqGte02qXGmXWWq6rFXZzKRTDpMxRtzr1QKq60fGjy55nGG6RyOLr8wTFmbqkuKyl+jlzgbIXIIdmiO0IV9Y5LWPKielj3Po/HDPsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N91sa5eiQeI4AGnCvPU9o1rP748hBiHE7kHr8btmKJQ=;
+ b=vCaB4zbTxHxuV9AdnhMjH1M2i0vMk5fMXUEdNWgPUfiWube0/tRht9K+2w5/RWQ55jyOKjKkCGJEjXhVTF1CohPa92kOLzaia4m2MG5E9dEApZ6aP26BxQgMDvfFhvbnoPe0uctjdnIT+nAGdp/RBibKUWVO8VMJ7VSWmZwX22XgKr0oIGqZI6R4Q3iA/hfRmphm053SpvTcBRKApWJoTkfyts2/u6Gfc/Hp42X/PXXdJAsNi7jsQYQ1vXVsmlp3sZLr9qC9HqEcADbsc3BnD4ZOIM7o4h2OjaNKlifEYb325+rKcTO3cEojrMhBjQcfZsb4supD5m/izyj8UXADZg==
+Received: from OSBPR01MB1670.jpnprd01.prod.outlook.com (2603:1096:603:2::18)
+ by TYYPR01MB10545.jpnprd01.prod.outlook.com (2603:1096:400:30e::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
+ 2025 14:53:57 +0000
+Received: from OSBPR01MB1670.jpnprd01.prod.outlook.com
+ ([fe80::c00:ec4e:ee7e:9b7f]) by OSBPR01MB1670.jpnprd01.prod.outlook.com
+ ([fe80::c00:ec4e:ee7e:9b7f%7]) with mapi id 15.20.8857.016; Wed, 18 Jun 2025
+ 14:53:56 +0000
+From: Shiji Yang <yangshiji66@outlook.com>
+To: linux-mips@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	John Crispin <john@phrozen.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Shiji Yang <yangshiji66@outlook.com>
+Subject: [PATCH 00/16] MIPS: some compilation fixes for the Lantiq platform
+Date: Wed, 18 Jun 2025 22:53:13 +0800
+Message-ID:
+ <OSBPR01MB1670163BDCA60924B3671D45BC72A@OSBPR01MB1670.jpnprd01.prod.outlook.com>
+X-Mailer: git-send-email 2.50.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0054.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:193::22) To OSBPR01MB1670.jpnprd01.prod.outlook.com
+ (2603:1096:603:2::18)
+X-Microsoft-Original-Message-ID:
+ <20250618145329.25517-1-yangshiji66@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org> <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
-In-Reply-To: <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 16:53:26 +0200
-X-Gm-Features: AX0GCFv-EtuLfkkAl-rHEpXj6Jbb19BXN6r2Zc9P3RRMCwt_-SJ6mmJG2IaqrXo
-Message-ID: <CAMRc=MdgYqk3RuM7vVUJPdtPH8zSCmr8fuDvV++7UE9F10WVzg@mail.gmail.com>
-Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip export/unexport
- attribute pair
-To: =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>
-Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
-	Marek Vasut <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSBPR01MB1670:EE_|TYYPR01MB10545:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3aea34fe-af07-4784-09d0-08ddae77f2bc
+X-MS-Exchange-SLBlob-MailProps:
+	Cq7lScuPrnodj9mcbuBOlkXQjsuE+OXdCmvDk8U2Wh299Qc43Cv9xd/upbv0tDihjyMFJP1PaLj76NFBMF5lEXpyZHZttv/+TiSV0vF+3A//NXDyoVVXmAAgySEuXXaezVTFSwCgxG4PChYwHObLA1eU8E+BnsC/BbrzykXGFfuJHui7BPTHx8WeF5raZnwcKgi/tdyoyjVFyNwyclNHHS3yZNGiXjKhDJjVcC01q5jhFcF7BK4YD21Zn0jddr1ql+s69619jNMapl4DjOFYNd5WLQca6Zt5Jq209tJxxOmBmGTw9KXXTK6YJoynziYu2AeL2ehO4AgbvxW7kZn1AfjofOO8qwwluoe7Dg61dWrOpJp8dxzeF2FJEz6clbj0QafVwYemcHBFScy5mW3tVLTQ/u+jcNDXn7HlSkaw7p59alwnenyGjuwwYI2s2U5K3e9RmdsGF0YPnsl7wr496wm/wm+YQDfYT+JHZZY11J4MnSXw6FDXDWm4bvbix1klya110La6ILH5JtKodDX/Dsykt//0aRL/SSxB5s6rtoUnVoQAaCEiUNo7/qP67YsgsLAfme35s9XYGFoRu0wMEFIzop++2riZdPVQ21WAbE1XI6AeqPGk1lg0sL7F2PYueHUXJBFNNBLZAZe0frxNfpxWL7LM+9Kj7FPuWX1ioyz40TkqBeCpLlmOu925/TY8v8FrgZr80m0R/TMr77lPokfOOArH/9FUQTSCOilE69D1KgVPMmG4rUKc6ONdgrg3GcoYiWnuMf0=
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|7092599006|8060799009|19110799006|15080799009|5072599009|461199028|3412199025|440099028|40105399003|39105399003|12091999003|10035399007|1710799026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Vt9/M3CepYedCl4UKjSd20lRkcJm2wzir+aH12nmkV2R7IduUvdwSQ9EbT+1?=
+ =?us-ascii?Q?EJf3gYWy47qECTtWbTkM3Vhin0IT+N5QYMAzMiJ2d9012AKmjen/FDnLQ70K?=
+ =?us-ascii?Q?CjUtMl9Nl5k14dEQC+OH1lHnQ86dRqY3E7Y2rsYgQ3qo4N//NrnmeZzrgoYm?=
+ =?us-ascii?Q?zqUOfs6h1bBbEv+YaDWoDLr8EDRd6UR3JlabSsgFYD22o4RRFJ8G2srBDyjX?=
+ =?us-ascii?Q?TtsZyIzPJ+oQvN5LYur28ouvEF3wq+pbxwVBCx+jehcaH6jH2qV8CZpWJsOa?=
+ =?us-ascii?Q?m7ubbHtt0eO5n69xcK9AuC9q8rw7oORWCrmzlTrCQDJpH9apggZuroTrk2m7?=
+ =?us-ascii?Q?Ng+xrhU9Lp0h6dmgjq+8OHph+lHbm8qPNqvyAqCxOVV+sQbYkPhncEGNoHSF?=
+ =?us-ascii?Q?IVdjbmZW+mq6LQx2TiZ62E0FtyLCPivaNi2aOTo+zam4+xR3Xf7aM6MV/CCH?=
+ =?us-ascii?Q?fNorOxnCM+/Liqd40lvc/Oz6kx0DbKzTRfoyryvU6vtGcd41VMD8TVd3Cr6f?=
+ =?us-ascii?Q?Cj+597zfeT7O5S1FMvoZirZ9ASmCR9ojepoz8Effbs4yIT43Zs1/LIewS+5i?=
+ =?us-ascii?Q?/ggMSZBzZqI0X1S8DIt77DHp/OcW/eNCCnfYPL0CuCw/yMbxm6auOfixV7Do?=
+ =?us-ascii?Q?RTtMCxq/PBXNZ4LvQSJjgtyVO7xvDGHuolwzsDsg1PwK8O3Z9n8wOnzmys+c?=
+ =?us-ascii?Q?r1Vdy3gazvybV3/Jt+UGwtwAksZGQhW87EAq8boIJZNxpkB1g7dSTwYJ9UKk?=
+ =?us-ascii?Q?IoDse9ec21PSZA5e4UoqF5iBu38NWzre5fQxYYwGdYsC01O7xgFQQ9zzkkhz?=
+ =?us-ascii?Q?ZM0cRdLoVDHeldC1m2ewvjTcfmaUuhR2hP2ulF0WfNdBWrz4bw/5wplNjWHv?=
+ =?us-ascii?Q?OTFWNLiKxedg4HqT86GORR8tYDAs5Sa3j+yetuqY1RwBcLP72oN6evKWFOlX?=
+ =?us-ascii?Q?ny+xpnwDNT7YbGxtqWCTrXSOwiUtriRuIghY34KBJZH437IoZpwEOnQBBCrU?=
+ =?us-ascii?Q?/bfa4qDAvAxLUvDstfIRVZNxelA1V5zU9h+WX0auYzdGcARHHUTgpd2P6WDs?=
+ =?us-ascii?Q?TtyN4ov055mYuGzRM/4X38ihNWKDcdPecLLHrPD7Q6tB1O7RH0Z73oCjwJmw?=
+ =?us-ascii?Q?2rsi9r5XOoy/gJZvbkFL5wXkQHCXktOtkryzZH92vOY0jFHYK8pML3ucFo0X?=
+ =?us-ascii?Q?8cRaR0mYyiCTrKA+DhEk0vymumJUYH24SfZt9rqli0nasWVyASkEeEhTXH1A?=
+ =?us-ascii?Q?f9y+p1TWakir6APkW8eQkzN2FaIr9PM3hpS6ltfpRrXTFCGL7Bbz9A9tXH+z?=
+ =?us-ascii?Q?/WdM1v/IyePMDsA+94Mi/GSlwGjjZCoZn+1NDXuDCX+inA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oPu7OtTico74cEgir3LYN6+SvNQRQbSi/mr9SRTQBKfMQpDhUBau7kumq7ZR?=
+ =?us-ascii?Q?thPhxiIzJi7PTco/BAoKMMZxIiSkywdBNm/LTL2zzAh+NmTrVMPUbLzcBm2I?=
+ =?us-ascii?Q?nZQ166wtqZbnUHs7cIP1/xjmcyRuAYKVj3h3MtzgzZsEpzooKdIncW5YYhLf?=
+ =?us-ascii?Q?cZVUnabm7FZhTpdvad0sAF8daanxQRaTzdJ4bKUt7gKPS7PbZZ7JG7laQAst?=
+ =?us-ascii?Q?SvNmahVzY6LvJwE1ch9RzqWGYDOo98mfdEn3WqvHOUbaP/gqDRAQKQGujDIG?=
+ =?us-ascii?Q?C5nbQ1/psGS/JiC9SoqDAqV1G4F9LbVC07ea/iurA2sKW9poBb2N8IQrc1H+?=
+ =?us-ascii?Q?b6gSGCykD+oFClRhKEbEdI4drSq7VzmO1yLno9mMTPX+eDXD9R5FhNuNBkvM?=
+ =?us-ascii?Q?r9zY7WRkPF7D/48ltqNNcQnlT29gLdOOFh533LmbRVyJnUHJv29Pj+kwcKe9?=
+ =?us-ascii?Q?xy+Scx5Dmo6Ya4JBfu35sWWMs+KLCuduj/q+/yp5dm6T4KUV7RDctaPx+W3b?=
+ =?us-ascii?Q?9R+cVtlSHn9M8b4zIaRsOuMF8/0VK0fYEaVGogoOiR+mK59RhUNPOwD5y4G0?=
+ =?us-ascii?Q?V3CyLZ7teE9v8W38lW6Ogjxv7lqPCZIvrm5AGwSewzr0JFsJCUgFgcryjuHp?=
+ =?us-ascii?Q?1OkFd2H3HR8Kn2NXXBhjoY7QUAWo0InvAabtCUJ4WCNjtuC6ZmB0u72AqoiD?=
+ =?us-ascii?Q?PKwhLBFol8OXNhCn+T6OFWfMxOuVTVS2fXxgV/lxZeZAlsqIKU1ZU301yvox?=
+ =?us-ascii?Q?/72P6WGfjqekoq9EEtKIwImUEiLiKI50M0641PayfkQuqIUbghGv3Jv/LsTG?=
+ =?us-ascii?Q?AIwzRWHJmwTMi3i42eRxWjtZciKzDpeTLONRtD3nRhZieD4sTczBjug4V/RY?=
+ =?us-ascii?Q?/sMiaigRzlZvBxfPqjzWOzNX+ySLbFcucnltyPX1p7kt+wGQlYNPjt+fTzQ4?=
+ =?us-ascii?Q?lNXgEkQLlPV2vrttlm7Bxi2LrIKPMuCTGF4Ul1J+vcobjS1DvKlKElLU9xjT?=
+ =?us-ascii?Q?hl72htdMTl2Jlv1Bevp7M0ayJt+x0ePdU7ejxd1Pp38nSBJJ/C+f4egticum?=
+ =?us-ascii?Q?s1LYc1VwwINKUDOn9QKKOs1eJi79wkWC2SvKGopF2rkPBwoexrbTSq8slyQV?=
+ =?us-ascii?Q?XHaIxu44hiztjTAjjpXx+p/g1odmrJ87HPgQPa46KrJxAbajOdU/7qProJge?=
+ =?us-ascii?Q?iKpP2mh/O2iY+n0eVV/cJbIOOJWJwDdpiHqtWzuE+o4CpOO/jfJCUmI1eqVG?=
+ =?us-ascii?Q?2sBhFhSk5iy5E86vH28h?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3aea34fe-af07-4784-09d0-08ddae77f2bc
+X-MS-Exchange-CrossTenant-AuthSource: OSBPR01MB1670.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 14:53:56.5700
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYYPR01MB10545
 
-On Wed, Jun 18, 2025 at 3:38=E2=80=AFPM Jan L=C3=BCbbe <jlu@pengutronix.de>=
- wrote:
->
-> Hi Bartosz,
->
-> On Tue, 2025-06-10 at 16:38 +0200, Bartosz Golaszewski wrote:
-> > Following our discussion[1], here's a proposal for extending the sysfs
-> > interface with attributes not referring to GPIO lines by their global
-> > numbers in a backward compatible way.
-> >
-> > Long story short: there is now a new class device for each GPIO chip.
-> > It's called chipX where X is the ID of the device as per the driver
-> > model and it lives next to the old gpiochipABC where ABC is the GPIO
-> > base. Each new chip class device has a pair of export/unexport
-> > attributes which work similarly to the global ones under /sys/class/gpi=
-o
-> > but take hardware offsets within the chip as input, instead of the
-> > global numbers. Finally, each exported line appears at the same time as
-> > the global /sys/class/gpio/gpioABC as well as per-chip
-> > /sys/class/gpio/chipX/gpioY sysfs group.
-> >
-> > First, there are some documentation updates, followed by a set of
-> > updates to the sysfs code that's useful even without the new
-> > functionality. Then the actual implementation of a parallel GPIO chip
-> > entry not containing the base GPIO number in the name and the
-> > corresponding sysfs attribute group for each exported line that lives
-> > under the new chip class device. Finally: also allow to compile out the
-> > legacy parts leaving only the new elements of the sysfs ABI.
-> >
-> > This series passes the compatibility tests I wrote while working on the
-> > user-space compatibility layer for sysfs[2].
-> >
-> > [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu=
-4iKQ5npwXk6GXA@mail.gmail.com/
-> > [2] https://github.com/brgl/gpio-sysfs-compat-tests
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> thanks for implementing this! I tried it on one of our boards and noticed=
- a few
-> things.
->
-> After unexporting a GPIO from the chipX dir, the subdirectory is not remo=
-ved:
->  root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > export
->  root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > unexport
->  root@lxatac-00006:/sys/class/gpio/chip9# ls -l gpio1/
->  total 0
->  -rw-r--r-- 1 root root 4096 Jun 18 12:52 active_low
->  -rw-r--r-- 1 root root 4096 Jun 18 12:52 direction
->  -rw-r--r-- 1 root root 4096 Jun 18 12:52 edge
->  -rw-r--r-- 1 root root 4096 Jun 18 12:52 value
-> Subsequent attempts to export it again fail.
->
+This patch series fixes some MIPS Lantiq platform compilation issues
+found on the 6.12 kernel[1].
 
-Ah, seems like one of the last-minute rebases made me drop the
-relevant sysfs_remove_groups(). Thanks for catching it.
+[1] https://github.com/openwrt/openwrt/pull/18751
 
-> The contents of /sys/kernel/debug/gpio don't really fit any more:
->  gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
->   gpio-660 (DUT_PWR_EN          |tacd                ) out hi
->   gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo
->   gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo
-> The header is inconsistent: it uses the 'gpiochip' prefix, but not the ba=
-se as
-> the old class devices in /sys/class/gpio/. Perhaps something like this?
->  chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, can=
- sleep:
->   gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi
->   gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo
->   gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo
-> If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
->
+Shiji Yang (16):
+  MIPS: lantiq: xway: mark ltq_ar9_sys_hz() as static
+  MIPS: lantiq: xway: mark dma_init() as static
+  MIPS: lantiq: xway: mark dcdc_init() as static
+  MIPS: lantiq: irq: fix misc missing-prototypes warnings
+  MIPS: lantiq: xway: add prototype for ltq_get_cp1_base()
+  MIPS: pci: lantiq: marks pcibios_init() as static
+  MIPS: lantiq: falcon: fix misc missing-prototypes warnings
+  MIPS: lantiq: falcon: sysctrl: remove unused falcon_trigger_hrst()
+  MIPS: lantiq: falcon: sysctrl: add missing header prom.h
+  MIPS: lantiq: falcon: sysctrl: fix request memory check logic
+  MIPS: lantiq: xway: gptu: mark gptu_init() as static
+  MIPS: vpe-mt: mark vpe_free() and vpe_stop() as static
+  MIPS: vpe-mt: drop unused functions vpe_alloc() and vpe_start()
+  pinctrl: xway: mark xway_pinconf_group_set() as static
+  pinctrl: falcon: mark pinctrl_falcon_init() as static
+  spi: falcon: mark falcon_sflash_xfer() as static
 
-I have not paid attention to the debugfs output TBH. Let me check it in v2.
+ .../include/asm/mach-lantiq/xway/lantiq_soc.h |  3 ++
+ arch/mips/kernel/vpe-mt.c                     | 35 ++-----------------
+ arch/mips/lantiq/falcon/prom.c                |  4 +--
+ arch/mips/lantiq/falcon/sysctrl.c             | 29 ++++++---------
+ arch/mips/lantiq/irq.c                        |  3 +-
+ arch/mips/lantiq/xway/clk.c                   |  2 +-
+ arch/mips/lantiq/xway/dcdc.c                  |  2 +-
+ arch/mips/lantiq/xway/dma.c                   |  2 +-
+ arch/mips/lantiq/xway/gptu.c                  |  2 +-
+ arch/mips/pci/pci-lantiq.c                    |  2 +-
+ drivers/pinctrl/pinctrl-falcon.c              |  2 +-
+ drivers/pinctrl/pinctrl-xway.c                |  2 +-
+ drivers/spi/spi-falcon.c                      |  2 +-
+ 13 files changed, 28 insertions(+), 62 deletions(-)
 
-> Unix permissions/ownership just works.
->
->
-> As far as I can see, this is basically everything I need to replace the o=
-ld
-> global ID based GPIO access in labgrid. Thanks again! :)
->
+-- 
+2.50.0
 
-Bart
