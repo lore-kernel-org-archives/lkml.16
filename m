@@ -1,63 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531C13085A2;
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F11562F4301;
 	Wed, 18 Jun 2025 18:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270061; cv=none; b=nBOtBpcLLt0M4GO7wrfNafqeMPd+IY0IFjArPq4uernzKA4bB4vdCYzTn05rSFA7kS/XD6XloDqWIfh9CZfbVd2jiV1IPr12SDFllGpfSUEAkbWCinm7h9rsZsxKzwFgU9FvccGmjWp+qH5UCY+QymAf0Lzy/h0pUfVQ7/8L9So=
+	t=1750270062; cv=none; b=P+3U/ZSod8jqlsWElHA0S9Pq8gPpIGhulFZJqEymgpKya6t5IwxDPA6wlYynM2cHSEMrHdbbKlgmgSzp6n1ZSEUWAXTxFN9EqfXW86J3GgYpAepgNmB1QJ1Q2Pwp5x5nL1aoNVQnULCHGXf32Jl6OR4pghNP5eIFJDmlpUFUDTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270061; c=relaxed/simple;
-	bh=4q4qpoJwHTapwByRbld5mh0ke/Y4FP53Oj70AUCa5bE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Y5mtO8NUbQX1MlDxtihxbcmzY1sH4TdLzERsEouwIYNE6RVkvlGJpdebsYwND++LvwdW1OtU6sueMaB2HapMWYCvlcNHGrQFHUu/MVljMgi8SX8gOYf5MCExxv5NCutbffI3JyUN0CQGOW5Dn//Fg6OZomnzzcBOOQACa7OFbfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxYqy/vi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750270062; c=relaxed/simple;
+	bh=woULyHaUBk5zuuRaY2CQ2JQCVQW5NVgM6t6CJOPuINI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=jF8dXtj3ZM1F79jnI9MfZ8befdzwr3PzIZJX9qpFU7THAIBrJP0zpK7jvn4knAJYqadM4zz+XFlez3ed6fvu4rjXb7hknuDnzCpOxBuvNqbKDDytjjeYy7Zlj2sWZ59A+W9WtGcl2gA0UdklHUwRo32qXirLvfhcEuV67GqYw5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GssJRV0i; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxYqy/vi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6651C4CEE7;
-	Wed, 18 Jun 2025 18:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750270060;
-	bh=4q4qpoJwHTapwByRbld5mh0ke/Y4FP53Oj70AUCa5bE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jxYqy/viZfy3xwvGXU4ldDaa4IBExQ0CiGle7DTeOPf7gOk/nMY+T2QYGC7pNR2jg
-	 L89hD+6Yw2oyySwv4/J/DmuVfj3BeGxhk4N1cbIwOxolsI/ov8phlcZt3G1h6fnCXE
-	 aLpeE7mubarw+tgwQhvNt3KyBqAmzdbopVRFdU0fUYeleIs6Ccnf37ZmCi1e3Nn2sy
-	 YDuHzLk5tXx2Rei39stVHEFAAuo2hGZKv2wQUFuVBD/YQpnfFfKIlWCvpmAV/iPgEU
-	 +P8TZ40nEMiUS5DN2D/CNcmcKeHtogwa+tDMXArDWlIVwwkqr8Sf6c5IMVETsTYp5E
-	 t2dh0X9wNKB7Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D803806649;
-	Wed, 18 Jun 2025 18:08:10 +0000 (UTC)
-Subject: Re: [GIT PULL] selinux/selinux-pr-20250618
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
-References: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
-X-PR-Tracked-List-Id: <linux-security-module.vger.kernel.org>
-X-PR-Tracked-Message-Id: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20250618
-X-PR-Tracked-Commit-Id: 86c8db86af43f52f682e53a0f2f0828683be1e52
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5adb635077d1b4bd65b183022775a59a378a9c00
-Message-Id: <175027008888.206233.13361756418006863178.pr-tracker-bot@kernel.org>
-Date: Wed, 18 Jun 2025 18:08:08 +0000
-To: Paul Moore <paul@paul-moore.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, selinux@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GssJRV0i"
+Received: by linux.microsoft.com (Postfix, from userid 1158)
+	id 6CDD5211518E; Wed, 18 Jun 2025 11:07:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6CDD5211518E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750270060;
+	bh=JpOtiov0jWkZ4Ezie/yIIYnf/xBCV9YHpokW0wLWHR4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GssJRV0ipsTYxJZOD41cXvU2NfTdHc8LR5ua5qRUGq3YHu6wVaEUmSPDaOHr38o1G
+	 XQl4eysvoeRqm6I4yvDhHes2gfw32eSx01ZcOWeAEnpMOqYE43Ih0FsPNZb09ayPW5
+	 iFpD0pKUQgLwhHu39BITJMbFdu1liV3tCOrThhmA=
+From: Hardik Garg <hargar@linux.microsoft.com>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+Date: Wed, 18 Jun 2025 11:07:40 -0700
+Message-Id: <1750270060-30222-1-git-send-email-hargar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+References: <20250617152451.485330293@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 18 Jun 2025 12:34:38 -0400:
+The kernel, bpf tool, and perf tool builds fine for v6.15.3-rc1 on x86 and arm64 Azure VM.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20250618
+Kernel binary size for x86 build:
+text      data      bss      dec       hex      filename
+31998596  14275846  6250496  52524938  321778a  vmlinux
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5adb635077d1b4bd65b183022775a59a378a9c00
+Kernel binary size for arm64 build:
+text      data      bss      dec       hex      filename
+37335273  15435305  1038736  53809314  33510a2  vmlinux
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Tested-by: Hardik Garg <hargar@linux.microsoft.com>
+
+
+
+
+Thanks,
+Hardik
