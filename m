@@ -1,159 +1,100 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FFC1B4121
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A0A1B4121;
+	Wed, 18 Jun 2025 15:32:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260694; cv=none; b=LpqVKfkrp3v+nh9I4mRAItnBqaiK14tQE53ps7nnSdiGK+SNt9Fl9W9x+ZzExlmt5uAEWPvL/vuA+I+D2rOJ4NfDFUnzOZ8j/8LaXzHLloBi5DiqcLiUX/TySpy4ZCW7DgbOLzZQ31MpNTW7AYwqeBl0zC1P+dxOqch2iKZif+I=
+	t=1750260732; cv=none; b=AJZUcqCsP/oy1EZLoGgukybKFEermjGsV9keUy0g8HfB0yaP1QR95zlH1nmm6q2ft+7chUp8gpeX6BL5qbduMhfQ50MR0msGOij4gduXr3CrajHGVD7GRFeU1NPHh3ARyVqVhcfE57RZPutoHVoUBoG6aAZbaPjxLHnvETqKKJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260694; c=relaxed/simple;
-	bh=aWGF2JbuOH4++9EpJGoeAzXMpX7P3SqWckIH/4SBNkw=;
+	s=arc-20240116; t=1750260732; c=relaxed/simple;
+	bh=9fyrUDii4EsU5ZWomQRcPWSUxRdw4RrXECeKD8bewZ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pcieCM/uM1JEIQEgtMXxkwgJfrodkgpqRD+yweozHWL0283MmDFhoww0hitksW7IMv063cfvQ9dO1fcA6V80XOcWHNFJsbVAZigxjuBKUNKkPAGN8FtyztF7GLews3N7Ff9q9FpPKPmczYxxMPs6NKAW8F/vFsID+LwF5dEWTZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z6lA4HUe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LTHX0T3+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z6lA4HUe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LTHX0T3+; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=eLmHP7HxI0mtPytOYQ7W8i0WzsFsQuCry842A7doU/5DTwpEuJWUT5F2XV7iQtfpspg6x8rkmDcIWGmq17XDc3ngICeOWjJ4/Tn2B1YC3umv/25rSUu4GyTF0pzJ9THa5+122r4L1e1tKHydvmpX9/OC4FCv/RXTagvBr/yCC20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2DgnRIS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z6lA4HUe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LTHX0T3+";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z6lA4HUe";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LTHX0T3+"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 332891F7BD;
-	Wed, 18 Jun 2025 15:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750260691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
-	b=z6lA4HUemsyrQw0IbqDayHnqZjeult3eFtaeY3eLf+oBuEaQDPw6IOYz734scHqJtOyeXi
-	0ohy4FOQK1XEFTVZgLzZ2VEvRshkW546ji6YOmSju+r7lAWWipPwRSkW5hA/sdO8czyhh8
-	IvQiKV68dbALYwg6U7m+verk60cUJ44=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750260691;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
-	b=LTHX0T3+QHDosod7b6W0OS7VWeFSlSlTSO+bx3ylHy6HDjET9NK6BOSGpbjK0iE7NpGTaB
-	CAhY8mZsoL7lanAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750260691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
-	b=z6lA4HUemsyrQw0IbqDayHnqZjeult3eFtaeY3eLf+oBuEaQDPw6IOYz734scHqJtOyeXi
-	0ohy4FOQK1XEFTVZgLzZ2VEvRshkW546ji6YOmSju+r7lAWWipPwRSkW5hA/sdO8czyhh8
-	IvQiKV68dbALYwg6U7m+verk60cUJ44=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750260691;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
-	b=LTHX0T3+QHDosod7b6W0OS7VWeFSlSlTSO+bx3ylHy6HDjET9NK6BOSGpbjK0iE7NpGTaB
-	CAhY8mZsoL7lanAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 298F813A3F;
-	Wed, 18 Jun 2025 15:31:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id K04cCtPbUmirEwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 18 Jun 2025 15:31:31 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id A49C9A09DC; Wed, 18 Jun 2025 17:31:30 +0200 (CEST)
-Date: Wed, 18 Jun 2025 17:31:30 +0200
-From: Jan Kara <jack@suse.cz>
-To: RubenKelevra <rubenkelevra@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs_context: fix parameter name in infofc() macro
-Message-ID: <w2mvyptwkgmtpz5whnv4svsqkrmsepxrhug5fcfpdcvozbzilb@goimb6s56trb>
-References: <20250617230927.1790401-1-rubenkelevra@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2DgnRIS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D2FFC4CEE7;
+	Wed, 18 Jun 2025 15:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750260730;
+	bh=9fyrUDii4EsU5ZWomQRcPWSUxRdw4RrXECeKD8bewZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N2DgnRISxj2lHw5r7scLZ4hQ7KP60wvoxXDN518bbJw3/tNLUfFfGnWeyAey9mXFB
+	 zHquRdU+LvUTXNRM4zsiD1yLBjxtksXBI9T3UTVkIlpp1oS2e06CxPDXfePCxBg22q
+	 sY6Bw0yuNe1R2uFB/sNg4lJGcsPCBDYugt+OXReXZtGJRc8dn+T0ZJStTwhx3gyyw7
+	 v2YxqaotyZ+pe4DWWQDSjHa/Q5GVPwuVJ596KX+nG8f1gXl1OoPa0MupSueHjt1O1D
+	 wv3rwBLi354hz9VhJKov0Sjiu2jZPjRe3aTYGXTq4k92Jl7z+y9TMskwVPrX9V3x2p
+	 Rtv1xR2OPNoKQ==
+Date: Wed, 18 Jun 2025 17:32:04 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, Benno Lossin <lossin@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] rust: debugfs: Support arbitrary owned backing
+ for File
+Message-ID: <aFLb9CcL5W-y_TBl@pollux>
+References: <20250618-debugfs-rust-v6-0-72cae211b133@google.com>
+ <20250618-debugfs-rust-v6-3-72cae211b133@google.com>
+ <aFJ2fJ_pX8mWCQo6@google.com>
+ <CAGSQo00fwu-UEi9D+Q4F5WpfUUuz562odhaDhp=F99cJyd9WyQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250617230927.1790401-1-rubenkelevra@gmail.com>
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -3.80
+In-Reply-To: <CAGSQo00fwu-UEi9D+Q4F5WpfUUuz562odhaDhp=F99cJyd9WyQ@mail.gmail.com>
 
-On Wed 18-06-25 01:09:27, RubenKelevra wrote:
-> The macro takes a parameter called "p" but references "fc" internally.
-> This happens to compile as long as callers pass a variable named fc,
-> but breaks otherwise. Rename the first parameter to “fc” to match the
-> usage and to be consistent with warnfc() / errorfc().
+On Wed, Jun 18, 2025 at 08:00:51AM -0700, Matthew Maurer wrote:
+> > We may want to consider using the ForeignOwnable trait here instead. The
 > 
-> Fixes: a3ff937b33d9 ("prefix-handling analogues of errorf() and friends")
-> Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
-
-Good catch. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  include/linux/fs_context.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I was considering trying to switch over to `StableDeref`-like trait
+> [1] in a follow-up patchset. The core property I need is that moving
+> the `D` cannot result in the pointer it would `deref` to changing.
 > 
-> diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
-> index a19e4bd32e4d..7773eb870039 100644
-> --- a/include/linux/fs_context.h
-> +++ b/include/linux/fs_context.h
-> @@ -200,7 +200,7 @@ void logfc(struct fc_log *log, const char *prefix, char level, const char *fmt,
->   */
->  #define infof(fc, fmt, ...) __logfc(fc, 'i', fmt, ## __VA_ARGS__)
->  #define info_plog(p, fmt, ...) __plog(p, 'i', fmt, ## __VA_ARGS__)
-> -#define infofc(p, fmt, ...) __plog((&(fc)->log), 'i', fmt, ## __VA_ARGS__)
-> +#define infofc(fc, fmt, ...) __plog((&(fc)->log), 'i', fmt, ## __VA_ARGS__)
->  
->  /**
->   * warnf - Store supplementary warning message
-> -- 
-> 2.49.0
+> The problem with `ForeignOwnable` is that it forbids the user from
+> passing in a `Box<dyn Foo>`, because that doesn't fit in a `void*` A
+> `StableDeref` version would not have this issue. I agree that
+> `ForeignOwnable` would be a strict upgrade to what I have now, since a
+> user can still pass in a `Box<Box<dyn Foo>>` and have it work with
+> `ForeignOwnable`, and if we ever added `StableDeref`, then
+> `ForeignOwnable` would have a blanket impl for it.
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> I'll send a new version using `ForeignOwnable`, and we can consider
+> the `StableDeref` version in the future.
+
+Yes, please do that for now. It's rather common case that drivers want to expose
+reference counted data, i.e. an Arc, through debugfs and having to go through
+the indirection with an additional Box isn't quite nice.
+
+> [1]: https://docs.rs/gimli/latest/gimli/trait.StableDeref.html
+> 
+> 
+> > trait is implemented by anything that can be converted to/from a void
+> > pointer, so you can:
+> >
+> > * When creating the file, convert it to a void pointer that you store in
+> >   File and pass to debugfs_create_file_full.
+> > * When displaying the file, create a borrowed version of the void
+> >   pointer and display that.
+> > * When freeing the File, convert the void pointer back into an owned
+> >   value and drop it.
+> >
+> > For cases where a box really is necessary, the user can create a box and
+> > pass it themselves. But if the user already has a pointer type (e.g. and
+> > Arc<T> or &'static T) then they can pass that pointer directly and the
+> > pointer is stored as a void pointer without the Box indirection.
+> >
+> > Alice
