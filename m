@@ -1,47 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA192EBB96;
-	Wed, 18 Jun 2025 14:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F27F9CB
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257918; cv=none; b=otsEKpjV6EFOuMZeEbxDkqCU0k/5Kw5baT3dvG2E1+exi1bQ0uXBDBDp6/8k6Fe7vo6D9C5kzM+pVj3n9v27y8Uj+/oTJxXvz25gbFSTM7GULpGMFviFQ7iIrwHx9ZGKR2wRAuMdVkMiPEJYGfTilMIxriIjbVgl+P+gefFTseQ=
+	t=1750257953; cv=none; b=R76Dzv8Uo0sp8EHajrrS9VhnpdLkfG63nSAKCvTRFYQKxa0mYAOWzz2waqVhRKS9Sv5G/a1IelF0IozyFnwgcZjcoCdbl8nby4NfRLMA9rJO0sqbE54pLB4/29ih50VTjW1i5wFPaX+O1O9GZB1vUwXzotu7/AJWW1P1eFe4O4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257918; c=relaxed/simple;
-	bh=V32Lxoh+JWBZUtGJvr4ddA6AvsipGh9FWI2K8eeI8/s=;
+	s=arc-20240116; t=1750257953; c=relaxed/simple;
+	bh=3PMenXLIAleTQFLPxN1TrTm7bTq0JqnHSJ2681Ke1qA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OxVaIOKHOG168v4PHIfJlHZABk8eW5+ijL/Mw+j2baa0copoEfXhk8D4sjKg3dpCBCEP7Fc7bqtglBOvAJQFB7xT4D597JJ62cfSxKREWnPFeSsYOELAzZHAoERqxWlJEip7VYRKK2C5qsJSQ+JkrUSVADLmbQKOOoF10T9kGxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijl85kXx; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=f5mqTrFMFJJYEvo4hBfNI/hkAot1UNczYmqOA2ShC2RSLTPbQihx8GjgZDPbQ+Wo0v3TGeaCli+BnZYrHWuWYWQoLlZIFz46t3TSFbnZMsKiwmx0WUHt3DirSqS97nfgUtURMGfHhAxrz55yhogwzKyTG7tDBab+ihdYQEz0K/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LpqQRJKG; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijl85kXx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2298EC4CEE7;
-	Wed, 18 Jun 2025 14:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750257917;
-	bh=V32Lxoh+JWBZUtGJvr4ddA6AvsipGh9FWI2K8eeI8/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ijl85kXx5K3iAg46xVHFDAG/f1yyfGNLk+aeiggM+PUA3YmAkN8giMBDRRQ/N48Bv
-	 LAO/252JYcE/vM+fkcdL739enNH+00FWYHRD3EPLwAYB1Pt4tDIQZdXoI5ajMNMhuW
-	 XmCvEknPyFylshhTmC38x84xYg42YfM/zzRm25PL4prBpkbdwY8qheDZkf+sOV8k9i
-	 eY7oE4KQZZll+LytWGhfk423/5+Jkjo7tCKXli6NieqsNHw/UZgvFGuyyXXvko5n0n
-	 3lsAPWmqTvJjhBxVAhco2QVMZsufTTQ/8hUl0in7tVQruy4cOBJh+I/KbtCbQpacP7
-	 ci8x4OqEfrZPA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRu2O-000000005IN-2icM;
-	Wed, 18 Jun 2025 16:45:16 +0200
-Date: Wed, 18 Jun 2025 16:45:16 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] USB: serial: cp210x: use new GPIO line value setter
- callbacks
-Message-ID: <aFLQ_G0HnGWVSE12@hovoldconsulting.com>
-References: <20250610-gpiochip-set-rv-usb-serial-v1-0-a9343ca109e8@linaro.org>
- <20250610-gpiochip-set-rv-usb-serial-v1-2-a9343ca109e8@linaro.org>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LpqQRJKG"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=CdQZ8qypEmHTOwhRReMpAgIHTzFIKXyL9o3uWNhSCCU=; b=LpqQRJKGBoLwjSMFGCA8rPt5aW
+	d8zcyC8x70cdN/JYOAFDxAlXt8/T9t7ovVM3ymgWRCwohFVSalyPbAKL8sGqM/mfP6mGw2g444cmS
+	ubHzQnpzEYeEGAFWlVSkcScgdU/noM5e4CuYoYQTxTZ4y+iOtlrvqWlAgvjtimfdFFWXDwlMd+wbo
+	0WEvCvx5fhm3mgyIFCoBCW2rUw/JRGCfkP58yohn8MEg0FTyn5cWRkDj5pph2LzadQVRY1VmFAsTL
+	U2MV81oafVwz6YNTDdwDhwdM9NjhkhY1jCZjCnI65BZHTJnsObJfEasxXz1tuHg0q6kAVnuni+FeK
+	UvIVJnsg==;
+Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRu2t-0000000473U-09ke;
+	Wed, 18 Jun 2025 14:45:47 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1F75E307FB7; Wed, 18 Jun 2025 16:45:45 +0200 (CEST)
+Date: Wed, 18 Jun 2025 16:45:45 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+	dave.hansen@linux.intel.com, irogers@google.com,
+	adrian.hunter@intel.com, jolsa@kernel.org,
+	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+	ak@linux.intel.com, zide.chen@intel.com, broonie@kernel.org
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+Message-ID: <20250618144545.GD1613200@noisy.programming.kicks-ass.net>
+References: <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
+ <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+ <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
+ <20250618093500.GH1613376@noisy.programming.kicks-ass.net>
+ <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
+ <20250618133003.GC1613200@noisy.programming.kicks-ass.net>
+ <99087e26-192f-4fa6-b43b-0c6a39c45b38@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,63 +62,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250610-gpiochip-set-rv-usb-serial-v1-2-a9343ca109e8@linaro.org>
+In-Reply-To: <99087e26-192f-4fa6-b43b-0c6a39c45b38@linux.intel.com>
 
-On Tue, Jun 10, 2025 at 02:43:47PM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Jun 18, 2025 at 09:52:12AM -0400, Liang, Kan wrote:
+
+> I didn't know we have the alignment requirement for the output.
+
+Perf buffer is in u64 units.
+
+> If so,
 > 
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/usb/serial/cp210x.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
-> index 9960ac2b10b719192dfbab0a6e81b2cf80f40d36..caeb2873a60451fb7a9a5b5d25071547b5401d52 100644
-> --- a/drivers/usb/serial/cp210x.c
-> +++ b/drivers/usb/serial/cp210x.c
-> @@ -1504,7 +1504,7 @@ static int cp210x_gpio_get(struct gpio_chip *gc, unsigned int gpio)
->  	return !!(mask & BIT(gpio));
->  }
->  
-> -static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
-> +static int cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
->  {
->  	struct usb_serial *serial = gpiochip_get_data(gc);
->  	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
-> @@ -1522,8 +1522,8 @@ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
->  	mask = BIT(gpio);
->  
->  	result = usb_autopm_get_interface(serial->interface);
-> -	if (result)
-> -		goto out;
-> +	if (result < 0)
-> +		return result;
+> PERF_SAMPLE_SIMD_REGS := {
+> 	u64 vectors_mask;
+> 	u64 pred_mask;
+> 	u64 vector_length:16,
+> 	    pred_length:16,
+> 	    reserved:32;
+> 	u64 data[];
+> }
 
-This is arguably an unrelated change, please keep it as is.
+I really don't think we need this complication; XSAVE is a real pain in
+the arse, but I think we have enough bits in XSTATE_BV to tell what is
+what.
 
->  	switch (priv->partnum) {
->  	case CP210X_PARTNUM_CP2105:
-> @@ -1555,11 +1555,8 @@ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
->  	}
->  
->  	usb_autopm_put_interface(serial->interface);
-> -out:
-> -	if (result < 0) {
-> -		dev_err(&serial->interface->dev, "failed to set GPIO value: %d\n",
-> -				result);
-> -	}
-
-And keep this in place too, and just result if negative.
-
-> +
-> +	return result < 0 ? result : 0;
-
-And return 0 explicitly here to avoid using the ternary operator.
-
->  }
-
-Johan
