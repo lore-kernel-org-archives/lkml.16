@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987611A76DA;
-	Wed, 18 Jun 2025 01:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D7E1D5154;
+	Wed, 18 Jun 2025 01:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750210845; cv=none; b=eJDCImzaY+1cT87Wpr+0dhJnQXTFirIb5w2l0Ci/sDVcHaoxEH38xXOrbmQC+HIhULQNIKVnUxVBDriE0bjybyQAMp17K9+pFHtqDSWx9vTNB1kjw3D6/jeliQRosVL85vsimjM17V/caLrLkK9yB7X+rxKjR+zAtGyJdnuwwGE=
+	t=1750210848; cv=none; b=it1lPFYslZgOCdX/kHs7C5vbzWb02K8MwGeoOeMOctAb/0QCu5RRa8n8CuMhZo1b9cVF7+f1NHWnIvbht1LXVgYR/ZX1ugkWdyToL1ycmJFs3DtK83kY3J7Y46QHSWx1Ye6RCntBMR8TUCA3wB49lm1Apw2/X81J/Fm1qjabQcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750210845; c=relaxed/simple;
-	bh=CPDNdYSNL6xVNSl76c7r/hPSIQ5IB5Yq4jCfuT2xYgk=;
+	s=arc-20240116; t=1750210848; c=relaxed/simple;
+	bh=NPx5pq4IMTD/sxfK/tl1p7YJ4Ofiro4gEBB5gNKVvuE=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=S8na8tAro3+dsPvckOB49WKkHF821C0p6skrxjAufnwFsT/VXNpKR91XDdZTQMNwNBd1Ud9qVFFL5nxIzuZ/L8KvF8EAjLMaVBPfVu0A6LZxCry0k6LdtfeD0Rf7DuCHBabYNCZIcdQLsIKUytfFzH9cV4k3axL1Tz4B9G0DSy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1L3nMpP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=mS7hI4m60pmYEsMSqD4mxxgUPE7cbKwRTg8Ylv4GBtOxFhEK3lvMjap50yGVczxW3OwfDZG74S1mOpkUvlVrC/M2d0Vn/kNwILAXHqORUAqA8A2z2l56zEO0+BdxDy/LukQnf6gmvIDhi4gcX0GFAHD0C2ch36emsFtLxDcOvLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dru0PcH6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1L3nMpP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76741C4CEE7;
-	Wed, 18 Jun 2025 01:40:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dru0PcH6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9638C4CEE7;
+	Wed, 18 Jun 2025 01:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750210845;
-	bh=CPDNdYSNL6xVNSl76c7r/hPSIQ5IB5Yq4jCfuT2xYgk=;
+	s=k20201202; t=1750210847;
+	bh=NPx5pq4IMTD/sxfK/tl1p7YJ4Ofiro4gEBB5gNKVvuE=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=h1L3nMpPhuRC2UGUtItuZYwnT3ikdBj1OHsIzrxq2nlqRcqUiihgCkxg6q+jPfeiA
-	 BOBujCzAOdG8e0nbR5vpPcV4XfhBjZA7cKajGlywl4j39yIWhJjJvzjlV2UGbJf62L
-	 7tW2BwE88mReVqUYqdictoH0PanzJlrITykHpU45obXjFGjzAhQr97nADE/jIk/SYs
-	 rXmAfW9A41qFFmW+S0QGy2oWDzm7RZDCwONoxVJw9cxWm3uk4Two0/w9yG9racllpG
-	 y57GzzN04QARqMASKNWN1AOsaRur1thZGPmEph8V/QfGX2ERyBXPEpeN2T6zrK80yA
-	 oD3yDFZglgmvA==
+	b=Dru0PcH6HUso/po2qh++NNgNwK1rr1DrW/fwXsd+k/wPNxTwtcLiX1luCl3Ynjqqm
+	 ig4+8ZTKibmebxtgEjrcYY4bv5KqW+qiD+dhe2nQE6tthjpsnwkVnSSJjgMp4muf3k
+	 mgTyoiuH2TTrxSEPK1p/jfpbRAlx9wz5rI3SKBEiVlY57JIpFHJUsGySGNuaGHJohg
+	 fED7v0YwhZuz6vkzBZAn540bupMSdU02OBvXfNNc6/ukes7LJ9K1B9Vy92d1HIlMyC
+	 a3ESz/wwx/H6CY7+XMg2xUwGNoGabL+Wn2esdGe+HgerR/ABVSPxIe1NrFqSy3jpvI
+	 ohQC/Kl2ffAAw==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33B6239FEB6F;
-	Wed, 18 Jun 2025 01:41:15 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 89E3C38111DD;
+	Wed, 18 Jun 2025 01:41:17 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,41 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 1/3] netmem: fix netmem comments
+Subject: Re: [PATCH v3 net-next] net: tcp: tsq: Convert from tasklet to BH
+ workqueue
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175021087398.3761578.7087583906945747084.git-patchwork-notify@kernel.org>
-Date: Wed, 18 Jun 2025 01:41:13 +0000
-References: <20250615203511.591438-1-almasrymina@google.com>
-In-Reply-To: <20250615203511.591438-1-almasrymina@google.com>
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, andrew+netdev@lunn.ch,
- shuah@kernel.org, sdf@fomichev.me, jdamato@fastly.com
+ <175021087649.3761578.7417279027374931577.git-patchwork-notify@kernel.org>
+Date: Wed, 18 Jun 2025 01:41:16 +0000
+References: <aFBeJ38AS1ZF3Dq5@slm.duckdns.org>
+In-Reply-To: <aFBeJ38AS1ZF3Dq5@slm.duckdns.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: davem@davemloft.net, kuba@kernel.org, edumazet@google.com,
+ dsahern@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kerneljasonxing@gmail.com
 
 Hello:
 
-This series was applied to netdev/net-next.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Sun, 15 Jun 2025 20:35:09 +0000 you wrote:
-> Trivial fix to a couple of outdated netmem comments. No code changes,
-> just more accurately describing current code.
+On Mon, 16 Jun 2025 08:10:47 -1000 you wrote:
+> The only generic interface to execute asynchronously in the BH context is
+> tasklet; however, it's marked deprecated and has some design flaws. To
+> replace tasklets, BH workqueue support was recently added. A BH workqueue
+> behaves similarly to regular workqueues except that the queued work items
+> are executed in the BH context.
 > 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> 
-> ---
+> This patch converts TCP Small Queues implementation from tasklet to BH
+> workqueue.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net-next,v2,1/3] netmem: fix netmem comments
-    https://git.kernel.org/netdev/net-next/c/0f66b616b87c
-  - [net-next,v2,2/3] selftests: devmem: remove unused variable
-    https://git.kernel.org/netdev/net-next/c/46cbaef5d816
-  - [net-next,v2,3/3] selftests: devmem: add ipv4 support to chunks test
-    https://git.kernel.org/netdev/net-next/c/fb7612b6c44b
+  - [v3,net-next] net: tcp: tsq: Convert from tasklet to BH workqueue
+    https://git.kernel.org/netdev/net-next/c/fd0406e5ca53
 
 You are awesome, thank you!
 -- 
