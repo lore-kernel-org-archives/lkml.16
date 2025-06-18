@@ -1,76 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983DB2FCE1B;
-	Wed, 18 Jun 2025 18:57:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A692F948D
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750273020; cv=none; b=FP6TCaGtT988q/9PxdPMRotWgM915IuOk1YXc8hLbSaSzxqZ+N5kx7TYp+zoI8Yj/S0nuy+UGJrS8ZKZTHapFJHGTJKQE5Xr+/OksYtED/S6wxgH4bNIqhOQ2O6Wi1ltOdYjJg6puV+oypEnuS/l/7b7zXSSfO1PDIsMw8/jkTE=
+	t=1750273021; cv=none; b=onNsbr1zFNrUzRDKIgt9hAy04AKrOlBTIGGYz5D+gRDsoaI6QpXMKdTidHzBpNurSpy8aufmfSQl3wUK6xKpKqauMl8sP8b97z2pVHTRvJHzGqH+q2cWrjwr9QYTauxp1GIBHz+e2QJ6bHSZu7zUVExBwmpp34U8BxsRHBBH/mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750273020; c=relaxed/simple;
-	bh=J1oaDCl0btmib2TF2x64Gp/aTFdcwOsZmN0AYQsV/aA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CbMPA098H3yDuN+vp7A9lVM7pCHw/yJvuB6EQ9r/viCEKdsZIyQA4RsGpyr0Dwo1yA6txvyvzBm0fCezgXA74e2ovvQH2q0hC1wX8Td9b+DTUYP0owISP6TbJPh13hgE6HJI6s5QDmqwy1z8+VoaoVcrXf9Pf9i4DFd57fSn0jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwjKnCm+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750273021; c=relaxed/simple;
+	bh=wBhqdHFT6q92MdaZKb3oeHHxeJu1lqs/E+7CU/KnemU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=J5BYijtEgtzwySM0mvvj4zsuJQ4aTsBcQsF2uWfZNkPJQmiFx2CiGl9fbrMNo2w4vBTj9zFk2Gi0TT9VQzE6zFfaL/n21cPDb4Eepho5+Gk9xqOBkJamK93UOznBKvwNAJUTTk1STdbXCA1omy2GVQrMnagUwTrmVglUoVAJR2c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VPGDRFxz; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwjKnCm+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BCEC4CEE7;
-	Wed, 18 Jun 2025 18:56:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750273020;
-	bh=J1oaDCl0btmib2TF2x64Gp/aTFdcwOsZmN0AYQsV/aA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KwjKnCm+IEuYL9+7rJDCrbBlbOWtuzx82HjCb9oODKRV8t2NoQ1ZU08JftBj6MEOJ
-	 JlXHEJopBynPhzGjNQq80f46e7lSPfNtAwvZqYL+IQMKYcekQ2dds9p+6RdE9lHvlr
-	 CFWwqWNuHYJvZxLBxfoNoxXzz+Exq+AHIQzXhSFxJoKk14/ZTCTnjNyMgwNJM5Ob4g
-	 GfLp6oD3H/OL66MI5rWb795gZ1vC1lGUOyWbbAmPfAcDR1+CxkbljeCZoNs/onhHx+
-	 sWm4LCWVwZH1jHikm5SSSwoDhhLjZzK4kY4tJfIQRv0xTwqikN5pnIaE7Vd8SNvs4O
-	 oK7dB3JlBCWVQ==
-Date: Wed, 18 Jun 2025 19:56:56 +0100
-From: Simon Horman <horms@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] net: gianfar: Use
- device_get_named_child_node_count()
-Message-ID: <20250618185656.GZ1699@horms.kernel.org>
-References: <3a33988fc042588cb00a0bfc5ad64e749cb0eb1f.1750248902.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VPGDRFxz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750273020; x=1781809020;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=wBhqdHFT6q92MdaZKb3oeHHxeJu1lqs/E+7CU/KnemU=;
+  b=VPGDRFxziDKV2sDWaupmmUN8JNMPaN7LZoYRJvHwAorbT4pkWNkX+ozi
+   Cdouf9Q7jI4DwAq3/cMCF/aTb5ByhLkuiOSH9K2tP6uL0YHLwoEsZVwRv
+   JHsUvhXpwozZfqTDLkFEJvvOixhLsvEv6J+vpeoDmtM6EYMC9nxaVQ2kU
+   tJJ3GsnXE2heQV+sBdlQtfbHfDcaDnuH2g8nGcFQs9jh40Hy9Q9NUL+b0
+   2mEywGYFqqJ28Lw4tXdN7JJjrYz5bvHL1f3X8YaISiV/5ZHnM0PefWH2O
+   PfKdq5QXprCZBsOmPKgj54o5jeY0N2S3Afn602dDu4QyhEzHDVLJNkwWX
+   g==;
+X-CSE-ConnectionGUID: 3BbSVN7OQmqNGap+8JcUYg==
+X-CSE-MsgGUID: j3vU0LqiQdKDXdKj9ZAyIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52210231"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="52210231"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:57:00 -0700
+X-CSE-ConnectionGUID: YA/pEJfJSCm3aBMB9JG+MQ==
+X-CSE-MsgGUID: y8jRlaalRlyeXScKPUB1Zg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="153952160"
+Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:57 -0700
+From: Badal Nilawar <badal.nilawar@intel.com>
+To: intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: anshuman.gupta@intel.com,
+	rodrigo.vivi@intel.com,
+	alexander.usyskin@intel.com,
+	gregkh@linuxfoundation.org,
+	daniele.ceraolospurio@intel.com,
+	jgg@nvidia.com
+Subject: [PATCH v3 10/10] [CI]drm/xe/xe_late_bind_fw: Select INTEL_MEI_LATE_BIND for CI
+Date: Thu, 19 Jun 2025 00:30:07 +0530
+Message-Id: <20250618190007.2932322-11-badal.nilawar@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250618190007.2932322-1-badal.nilawar@intel.com>
+References: <20250618190007.2932322-1-badal.nilawar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3a33988fc042588cb00a0bfc5ad64e749cb0eb1f.1750248902.git.mazziesaccount@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 03:22:02PM +0300, Matti Vaittinen wrote:
-> We can avoid open-coding the loop construct which counts firmware child
-> nodes with a specific name by using the newly added
-> device_get_named_child_node_count().
-> 
-> The gianfar driver has such open-coded loop. Replace it with the
-> device_get_child_node_count_named().
-> 
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> Previously sent as part of the BD79124 ADC series:
-> https://lore.kernel.org/all/95b6015cd5f6fcce535982118543d47504ed609f.1742225817.git.mazziesaccount@gmail.com/
-> 
-> All dependencies should be in net-next now.
-> 
-> Compile tested only!
+Do not review
 
-Thanks for resending.
+Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+---
+ drivers/gpu/drm/xe/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+index 30ed74ad29ab..b161e1156c73 100644
+--- a/drivers/gpu/drm/xe/Kconfig
++++ b/drivers/gpu/drm/xe/Kconfig
+@@ -44,6 +44,7 @@ config DRM_XE
+ 	select WANT_DEV_COREDUMP
+ 	select AUXILIARY_BUS
+ 	select HMM_MIRROR
++	select INTEL_MEI_LATE_BIND
+ 	help
+ 	  Driver for Intel Xe2 series GPUs and later. Experimental support
+ 	  for Xe series is also available.
+-- 
+2.34.1
 
