@@ -1,125 +1,177 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485B1F1311;
-	Wed, 18 Jun 2025 07:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9402F533A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231307; cv=none; b=aWqgUmsoBQsZ/kstIn4RziuwIaajzOa2wIPAOX6fN5zYpnMcmRS+LxuUvB6nVEK8F5MYWDn1YNce6pMWdXH7UMhV5biW8/Hpv2ihRzvF3ASQ7fSA3TlePMXO9NL3JQSG2ztxQwBJST5T+uwrQcGgyiyEz3Ms14dKyTCFPVanIoc=
+	t=1750231340; cv=none; b=ra3fJVHrIfjXc6l8Sz+iUp871EfSK0PLAaKc5SoID3e7O8ct67AQu0NKApTtxZBQbbwE49flZJe931VQJaCmkQAKJ4NWKIFTtwdQFH0evu0daecyhSOhI9WUYEdKMym7dslx3Blu+9mrww3W31LIcN6pVLEAAWN8Kgo4/QbIu7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231307; c=relaxed/simple;
-	bh=DMaB0EHiDpQuMdteGAVlGxafPWBqSdMDnpiM9/ZjDhA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BkAwRiAHyk21cpkHpc3vnFICcNP7cBWphZBSIAT3NFmS4bPtKdbMKJS2cKkWKg5X852RG8LC9WhNG+z4awv11McCVDck6rAXk5+EimvBkgjQkzALGYcrDQw004oZFb+9CtevtDgKupAh4DT1Sev6/8POKRf2Ha5+gumobpociok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so5609963a91.3;
-        Wed, 18 Jun 2025 00:21:43 -0700 (PDT)
+	s=arc-20240116; t=1750231340; c=relaxed/simple;
+	bh=FlYIp1GSWXgA47DrwMIkay6HroV1XLb7hc3gExSwoE4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KdtGrSx5K0ooaxjTaW9FXi481t02PsnEisJ0gpeIkPjgpYm+eIK76+RkhJ9d0Rwn/LlY++t/Z9ZCWdG4xTFUfEy5nilxSdcuLGMWUBE9Wne37WykoKCw15jM1YisAZJtx61e0MHs45AkdXTSacZIsp2DmMUDbi3STZ/qHbmKBjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Zh+qr4gD; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Zh+qr4gD"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313910f392dso5827891a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750231338; x=1750836138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g90eoEwOIpMaTkn+dJ7Xpv9ylWdjlRNbMVrS8tF+CzE=;
+        b=Zh+qr4gDieiiDIq+0sFz5aljgNoxhu28li3qFs8ishAvrRVrzZmM7f/ebQlsHhvKe7
+         f1CEtJkOHnPqn0rAo6uc3Owqar2bIBBaWQb/IjKfN7W0YzuvIxGFp8JaP25g2e2kyziE
+         vzA4AkKjFFuKarY0aTbxjkcbmqNM/B7qEhxKAmzsTkJazARznFZhqObcObN6W4DvRwyC
+         jRfOZHavXYB5k3Jqeyumc4bqho+nk8t41Ynh5olFHzZTXmrbPeoi5UwxP5wpggHCZgyo
+         kj7TGsE3zXOy/cIxolHYug8FvhpurEvBgczf5V3gXh/ZQKJG5VzzdCi9WeWo80jkDDSI
+         bZCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750231303; x=1750836103;
-        h=content-transfer-encoding:fcc:content-language:user-agent
-         :mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o7silFJzIQOSJ2p48fGBWjoys8hVPbth2sPLOSzgJX8=;
-        b=EYdyieHCpHWkeaFjsRkHL98jYvtw6oumb4I0KxhrGqf3IioxAlytcbHKnW1eZgbMLn
-         EiyjV+yFtLERVfx9yzcAxc2v3Ov4xAM/ih8dvlpAnC8E4f8SPRppbteR3qFnXl6SHAel
-         4U3Y8MOFBq/W/RXlYhQN4wrnyl/FGgiJen8cgguITQznTUiRS6FYD0s/ZOAu+/xuAAJr
-         tgIhHK9UED7yhEfUWbbwsSSMg3en8b3jNpMsbHjDh7NqB8LD5uDdXJEAp7gRBJD7aBsF
-         uHhnKr3Qmfx+RU7BEJEcc/jVXrC0UYr8G+N8wXl8rAb3ZQri0S9tGO9jDN1ps80sg32s
-         Fg+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXtWE313fHsMm6rY6JKlC7s3qj/ca3XU0Ya9qXc3KRbxNH72ZOCZep/Ra1FJNwiQFS2+u0WFR4izj0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYMCvANOrzJO7paGSpW+bL+UnGjo2JBJaE866gKgxIoYQBIcGr
-	zfYfvnNDD4yUo942DJmH5i5l0lOWRxDBWspyjEbAOndZQvctju/TD88HGxlnDfrW
-X-Gm-Gg: ASbGncu2rzO85/bPfTwN3tgmjrTW76iog7hy1RwdwneauxPj9ZqnqjVm9QtCys2dTg8
-	5yRcDxa5vsl8XLumEMI1zPDsuXQXr50vnbUrPzx4/dJdTmJa+0XkVOd2cKsv6AlbLSpQ64QlLfQ
-	DUxmmx0U56ZAwyE5R4vq0NOoKmyDXzZhQ1JjnDrdSX10Ecn1XgyNElryTOMVncrU0ul7ADYQTMF
-	JnJ+dRfgyFZFtctMorHQpbNcSkieat8LBFplVoEZGnvrrqlmRqfVqlQ939pndIapJ/BB5ms+z89
-	voJcLgFoGoM1oZn1agpQCeEZ0fT+jkjpNlTcsB4hNTfiC+B+WWme48M2XvoABWfNeM6YswNXNeq
-	443c=
-X-Google-Smtp-Source: AGHT+IH5gzaTw/dLw9epqMSHijmnw8AGlszrvq51ErM/AmUob6WJX2tI5qO299c/fYYL6byJTxV2KQ==
-X-Received: by 2002:a17:90b:4cce:b0:312:639:a058 with SMTP id 98e67ed59e1d1-313f1d96ee5mr25133456a91.27.1750231303190;
-        Wed, 18 Jun 2025 00:21:43 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1bd9a31sm11959305a91.13.2025.06.18.00.21.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 00:21:42 -0700 (PDT)
-From: xiehongyu1@kylinos.cn
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mathias.nyman@intel.com,
-	xiehongyu1@kylinos.cn
-Subject: Re: [PATCH v1] xhci: Disable stream for xHC controller with
- XHCI_BROKEN_STREAMS
-Date: Wed, 18 Jun 2025 15:21:36 +0800
-Message-Id: <6708fa25-2cfe-42e7-ae24-2d7e943b093a@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <2025061801-gosling-urchin-c2cb@gregkh>
-References: <20250618055133.62638-1-xiehongyu1@kylinos.cn>
- <2025061801-gosling-urchin-c2cb@gregkh>
+        d=1e100.net; s=20230601; t=1750231338; x=1750836138;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g90eoEwOIpMaTkn+dJ7Xpv9ylWdjlRNbMVrS8tF+CzE=;
+        b=ots1wexy7fSwou6Vr3nULSJUrCz7dTewFSyTyI984h9w1R40gIiS5pNEcOmM+HxQyA
+         kPEcD/1fj29oz2TGfJhuuoeM6oga2RJbYbOKjAWNCxAdMNLwgpXP2TIOxg11twQP/Y4G
+         jHUBifUWfI8TZGQ3BmlXKnl976bZjId1U+rqMEK/5Aq1NUPPlVWNf4WwTbYp0JuNqJm3
+         ia1rqlzy5t9bhJ1Voy85CNtnbDR01OkIaXpCru9r4JWht/XRm8rAt/mppbnh9lTBPjGf
+         S5/WDusLcp0PDcsu29M36/1cVv1yifLm5ouLeYY5+HwIQgwlYctn7NpnJ9UP+F6euqbZ
+         7s/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWHgZ+VPxevIjtVAuz94Ka3DAcGVoc77xRQdqszQnDAfhqkTRAKPDxpqu4wOZ2P/O5ZQhZxwGWT2De2DL8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN3SGArEX2dK95HZTG3SEx219e5R6af5zQHJJgYbSljKfNLqjA
+	l+cBl8yB0smk7RFPly0nib9BQoyuYnW+9tsBVj3tD5Z6vKxxEYmk/CwUyAWaah4ym9E=
+X-Gm-Gg: ASbGncuYvJVbSeYFjSPcrlcOi7x0zD4oCiVdu4k0pRUEOh1rQqO91E2VcY0ohavlR48
+	36wnqYUOX4vzMD9DNPJkKGp1OW7aLEtuPbp1yOll5fou+srSMOpMfvIx+2zoCyYBnQ/B+8cmIzr
+	8vF8yJUvjjxZqujMlKfB2T7F6P3rb3luA3HvHIR46ithgNq7OJ74dsyWA//NoStcWXnbofGWOAG
+	xfTvsX+K1Ihh0keYYZZy0M87NZrJQAQZxWUY/FQDWEt9ZdM9jrDv2g9kDhKeruwWESqBut1y8+F
+	cNEkU0geFBvalH+GsYcaoT0HP3eyordA1QN3m79VxtxOJbUry5dBGAh84JlWybLrd+YEF0I2/sO
+	Mhm9KBDtTxFbirw==
+X-Google-Smtp-Source: AGHT+IEIlF9MTo6BXhNVepXYf6WgSUfQhwoHcEgxpRuHCE9CuMWp3AFMHSQtgSDSihKLhGjH6gjAVQ==
+X-Received: by 2002:a17:90b:350c:b0:312:f0d0:bb0 with SMTP id 98e67ed59e1d1-313f1ca0fbfmr30726786a91.12.1750231338007;
+        Wed, 18 Jun 2025 00:22:18 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.12])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dfc6990sm92909995ad.224.2025.06.18.00.22.14
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 18 Jun 2025 00:22:17 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	peterx@redhat.com,
+	lizhe.67@bytedance.com
+Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
+Date: Wed, 18 Jun 2025 15:22:11 +0800
+Message-ID: <20250618072211.12867-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250618061143.6470-1-lizhe.67@bytedance.com>
+References: <20250618061143.6470-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-X-Mozilla-Draft-Info: internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0;
- attachmentreminder=0; deliveryformat=1
-X-Identity-Key: id1
-Fcc: imap://xiehongyu1%40kylinos.cn@imap.kylinos.cn/Sent
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-From: Hongyu Xie <xiehongyu1@kylinos.cn>=0D
+On Wed, 18 Jun 2025 14:11:43 +0800, lizhe.67@bytedance.com wrote:
+ 
+> > > How do you think of this implementation?
+> > > 
+> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > index 242b05671502..eb91f99ea973 100644
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -2165,6 +2165,23 @@ static inline long folio_nr_pages(const struct folio *folio)
+> > >          return folio_large_nr_pages(folio);
+> > >   }
+> > >   
+> > > +/*
+> > > + * folio_remaining_pages - Counts the number of pages from a given
+> > > + * start page to the end of the folio.
+> > > + *
+> > > + * @folio: Pointer to folio
+> > > + * @start_page: The starting page from which to begin counting.
+> > > + *
+> > > + * Returned number includes the provided start page.
+> > > + *
+> > > + * The caller must ensure that @start_page belongs to @folio.
+> > > + */
+> > > +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> > > +               struct page *start_page)
+> > > +{
+> > > +       return folio_nr_pages(folio) - folio_page_idx(folio, start_page);
+> > > +}
+> > > +
+> > >   /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
+> > >   #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+> > >   #define MAX_FOLIO_NR_PAGES     (1UL << PUD_ORDER)
+> > > diff --git a/mm/gup.c b/mm/gup.c
+> > > index 15debead5f5b..14ae2e3088b4 100644
+> > > --- a/mm/gup.c
+> > > +++ b/mm/gup.c
+> > > @@ -242,7 +242,7 @@ static inline struct folio *gup_folio_range_next(struct page *start,
+> > >   
+> > >          if (folio_test_large(folio))
+> > >                  nr = min_t(unsigned int, npages - i,
+> > > -                          folio_nr_pages(folio) - folio_page_idx(folio, next));
+> > > +                          folio_remaining_pages(folio, next));
+> > >   
+> > >          *ntails = nr;
+> > >          return folio;
+> > > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> > > index b2fc5266e3d2..34e85258060c 100644
+> > > --- a/mm/page_isolation.c
+> > > +++ b/mm/page_isolation.c
+> > > @@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+> > >                                  return page;
+> > >                          }
+> > >   
+> > > -                       skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
+> > > +                       skip_pages = folio_remaining_pages(folio, page);
+> > >                          pfn += skip_pages - 1;
+> > >                          continue;
+> > >                  }
+> > > ---
+> > 
+> > Guess I would have pulled the "min" in there, but passing something like 
+> > ULONG_MAX for the page_isolation case also looks rather ugly.
+> 
+> Yes, the page_isolation case does not require the 'min' logic. Since
+> there are already places in the current kernel code where
+> folio_remaining_pages() is used without needing min, we could simply
+> create a custom wrapper function based on folio_remaining_pages() only
+> in those specific scenarios where min is necessary.
+> 
+> Following this line of thinking, the wrapper function in vfio would
+> look something like this.
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -801,16 +801,40 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+>         return pinned;
+>  }
+>  
+> +static inline unsigned long vfio_folio_remaining_pages(
+> +               struct folio *folio, struct page *start_page,
+> +               unsigned long max_pages)
+> +{
+> +       if (!folio_test_large(folio))
+> +               return 1;
 
-Hi greg=0D
-=0D
-=E5=9C=A8 2025/6/18 14:03, Greg KH =E5=86=99=E9=81=93:=0D
-> On Wed, Jun 18, 2025 at 01:51:33PM +0800,xiehongyu1@kylinos.cn wrote:=0D
->> From: Hongyu Xie<xiehongyu1@kylinos.cn>=0D
->>=0D
->> Disable stream for platform xHC controller with broken stream.=0D
->>=0D
->> Signed-off-by: Hongyu Xie<xiehongyu1@kylinos.cn>=0D
->> ---=0D
->>   drivers/usb/host/xhci-plat.c | 3 ++-=0D
->>   1 file changed, 2 insertions(+), 1 deletion(-)=0D
->>=0D
->> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c=
-=0D
->> index 6dab142e72789..c79d5ed48a08b 100644=0D
->> --- a/drivers/usb/host/xhci-plat.c=0D
->> +++ b/drivers/usb/host/xhci-plat.c=0D
->> @@ -328,7 +328,8 @@ int xhci_plat_probe(struct platform_device *pdev, st=
-ruct device *sysdev, const s=0D
->>   	}=0D
->>   =0D
->>   	usb3_hcd =3D xhci_get_usb3_hcd(xhci);=0D
->> -	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >=3D 4)=0D
->> +	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >=3D 4 &&=0D
->> +	    !(xhci->quirks & XHCI_BROKEN_STREAMS))=0D
->>   		usb3_hcd->can_do_streams =3D 1;=0D
->>   =0D
->>   	if (xhci->shared_hcd) {=0D
->> -- =0D
->> 2.25.1=0D
->>=0D
->>=0D
-> Should this be backported to stable kernels?  if so, how far back?=0D
-At least 5.4 lts.=0D
-> What commit id does this fix?  Or what hardware does this fix?=0D
-=0D
-I'm not sure. can_do_streams was introduced by 14aec589327a6 ("storage: =0D
-accept some UAS devices if streams are unavailable") in Feb 11 20:36:04 =0D
-2014 before=0D
-=0D
-XHCI_BROKEN_STREAMS was introduced by 8f873c1ff4ca0 ("xhci: Blacklist =0D
-using streams on the Etron EJ168 controller") in Fri Jul 25 22:01:18 2014.=
-=0D
-=0D
-> thanks,=0D
->=0D
-> greg k-h=0D
+The above two lines may no longer be necessary.
+
+> +       return min(max_pages,
+> +                  folio_remaining_pages(folio, start_page));
+> +}
+
+Thanks,
+Zhe
