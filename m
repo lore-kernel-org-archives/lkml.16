@@ -1,95 +1,78 @@
-Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AC21F790F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7353220C480;
+	Wed, 18 Jun 2025 06:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228996; cv=none; b=QBPZEd8qZzcVLsrmW5eWexxFc08UbXDImzVsPp7zzXieYVZEGPs6hGt8RpERdI5WDSrUSQCEKrXv3ki27FJPdfvXy6lWNKoBgjmQ2dTsRdZAK3C6HlPI3YTAalopGvezLgin5FACLfMPnDW1nTflCL/GJwyWFMUq3KPjAzEZWrA=
+	t=1750228998; cv=none; b=YsFayTfmG7CoDGuWXVT3wfImsuleRA7+s1aJYfW0ShL2AN3/yvgMh2dbbxIiJFbpWI6PfJ5PBIjXykvFQ8QRcsrTT5BnMHIW0mxkDvA4dG5G9hcFzR13D7P6PQ/fZJz9U04eu0rO2f/q4BGMUWI7gVd/Nqil6yy7RFOnl9A15HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228996; c=relaxed/simple;
-	bh=7H7lIzQyryQptNjz9auBgCyOg9O7JeZqMLenl/x54pM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KAr/Y08/nqbvj7ESAzXY+2SyzgN6GBNKxtUFaKXp9+gwjQJh0Im351dBmxSzxqWq2CtgHLhlL3GEJisYN1j9A9zKkTBk/s7n/7ExmlS0+B6shN96yPGxQ5KOw2nqQYtgWJV9Clyfhi4cwEjJ6HADWwRQXL4xPYBCjlOmW4V+ln0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Received: from w002.hihonor.com (unknown [10.68.28.120])
-	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bMYz86s4DzYlqL6;
-	Wed, 18 Jun 2025 14:40:52 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w002.hihonor.com
- (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 14:43:05 +0800
-Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
- (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 14:43:05 +0800
-From: wangzijie <wangzijie1@honor.com>
-To: <jaegeuk@kernel.org>, <chao@kernel.org>
-CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
-	<bintian.wang@honor.com>, <feng.han@honor.com>, <niuzhiguo84@gmail.com>,
-	wangzijie <wangzijie1@honor.com>
-Subject: [f2fs-dev] [PATCH v3 1/2] f2fs: don't allow unaligned truncation to smaller/equal size on pinned file
-Date: Wed, 18 Jun 2025 14:43:02 +0800
-Message-ID: <20250618064303.2477852-1-wangzijie1@honor.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750228998; c=relaxed/simple;
+	bh=fd+2ts9YZSqCMtTtB+KJGnMfppJyTCgdswl9cDa/m24=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ET4BI1W0S/2OxowQ02DgznDUdPcgzfp5uMgIaddcAJDQh3loyPoCviTt6YuZhF4DRwzI1OW2jQXmBQ0vYcth94YO8i1bgBTqVrnau9cRgQ/5pW28sbg0KwZQiS0YrX1KgbU8e5GU1r2U/sS+NECkqATsLCzoZHOwbdYYd/tnfMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDL7wT/0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDL7wT/0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC384C4CEE7;
+	Wed, 18 Jun 2025 06:43:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750228998;
+	bh=fd+2ts9YZSqCMtTtB+KJGnMfppJyTCgdswl9cDa/m24=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gDL7wT/0CxbYwfzBUEP+pw7diIEWwhOuEIhAUeQfknVUdSTLNLx01GTqe8zmew6ds
+	 AqpS0DmT395GVjVuE2qVIbcKLupHH+KFruP8FnIMVErWIaoZwUOChOwwjhhvkgf1AH
+	 PSq7l93fucwtm63T6jTwOEg0wnVCE7FCfX1taLcRnLozhev0fDWQBrHHr+HDBOLdmj
+	 Y/bG4xsKFQbYNFwp6bRwIPSciv+HehhabjCfertganPAQmrz/nSZiX+xQFcOc/EYaR
+	 Nl/5E1g0Ev90jBl0+Wl6qq1+rNa+woV0tESFZdud1phcMpjYGwfPN8iwf6DCkxt9h9
+	 w38qqNl8hakew==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRmVv-0000000022u-2Juh;
+	Wed, 18 Jun 2025 08:43:16 +0200
+Date: Wed, 18 Jun 2025 08:43:15 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Cc: lpieralisi@kernel.org, kwilczynski@kernel.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	bhelgaas@google.com, krzk+dt@kernel.org, neil.armstrong@linaro.org,
+	abel.vesa@linaro.org, kw@linux.com, conor+dt@kernel.org,
+	vkoul@kernel.org, kishon@kernel.org, andersson@kernel.org,
+	konradybcio@kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	quic_qianyu@quicinc.com, quic_krichai@quicinc.com,
+	quic_vbadigan@quicinc.com
+Subject: Re: [PATCH v6 1/6] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy:
+ Update pcie phy bindings for qcs8300
+Message-ID: <aFJgA2NmHzBI4hF_@hovoldconsulting.com>
+References: <20250529035635.4162149-1-quic_ziyuzhan@quicinc.com>
+ <20250529035635.4162149-2-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a011.hihonor.com
- (10.68.31.243)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250529035635.4162149-2-quic_ziyuzhan@quicinc.com>
 
-To prevent scattered pin block generation, don't allow non-section aligned truncation
-to smaller or equal size on pinned file. But for truncation to larger size, after
-commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
-we only support overwrite IO to pinned file, so we don't need to consider
-attr->ia_size > i_size case.
+On Thu, May 29, 2025 at 11:56:30AM +0800, Ziyue Zhang wrote:
+> The gcc_aux_clk is not required by the PCIe PHY on qcs8300 and is not
+> specified in the device tree node. Hence, move the qcs8300 phy
+> compatibility entry into the list of PHYs that require six clocks.
 
-Signed-off-by: wangzijie <wangzijie1@honor.com>
----
-v3:
-- cover attr->ia_size == i_size case
-v2:
-- add comments and change a proper subject
----
- fs/f2fs/file.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 6bd3de64f..9e0f1c98f 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	int err;
+Ok, so here you fix also qcs8300, good.
  
- 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
-@@ -1047,6 +1048,17 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 			!IS_ALIGNED(attr->ia_size,
- 			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
- 			return -EINVAL;
-+		/*
-+		 * To prevent scattered pin block generation, we don't allow
-+		 * smaller/equal size unaligned truncation for pinned file.
-+		 * We only support overwrite IO to pinned file, so don't
-+		 * care about larger size truncation.
-+		 */
-+		if (f2fs_is_pinned_file(inode) &&
-+			attr->ia_size <= i_size_read(inode) &&
-+			!IS_ALIGNED(attr->ia_size,
-+			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
-+			return -EINVAL;
- 	}
- 
- 	err = setattr_prepare(idmap, dentry, attr);
--- 
-2.25.1
+> As no compatible need the entry which require seven clocks, delete it.
 
+You still leave the bogus "phy_aux" clock under clock-names, that one
+should also be dropped. And you should update clocks maxItems as well.
+
+And please include a Fixes tag pointing out the commits that added this:
+
+Fixes: e46e59b77a9e ("dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Document the QCS8300 QMP PCIe PHY Gen4 x2")
+Fixes: Fixes: fd2d4e4c1986 ("dt-bindings: phy: qcom,qmp: Add sa8775p QMP PCIe PHY")
+
+Johan
