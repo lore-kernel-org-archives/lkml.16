@@ -1,73 +1,98 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D072556E;
-	Wed, 18 Jun 2025 12:14:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7844B2E267E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248875; cv=none; b=oIOOHr8qHV3AhzAkI5kEnsXUJD7jJusBO+78mJAQ2/FVLatzTp59V+j/yio0apwtag7V8Prs1wl5e/qloD3D+4keI9OlHVdcv9pLTesFCVX/pEZnlA9Ocj6SMO0R5T2/ONWwdm8vdMCVgF3bTjr9HEUnNS4aA2lsQK5rP4VfQKQ=
+	t=1750248884; cv=none; b=a4jrAthRWgmNiwfGZUkfPk6ZnazVK+DlTR3HvoydMEuRvpS3q1yVwW2ohjJENwBNIgIaJcMKp7KUojzK4Mi+g8ZT1pC0e3DGKbtoNfsEdFD5v3nh87cMESwtrYOcx0jw7Tt27uNBrnVV69wKE7O+vRWJNkglw0lvR5hp+acRaOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248875; c=relaxed/simple;
-	bh=UXuER4/rBN6wrX7f+s4UJRoHXUB8UAEoia+k8w0FVHM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o30GKbUmicBSCYh9zuwocwvgD0t5/OBx0ounHCqT8lCeh2XDI4WY1QxbIUJScnBUowvPsEHnxtvB0wHIMODqmB9wkoLR3fgvxifnNeJlDexnosB5NMh3cB5TBaE+t4rYu0e1AbE3hjVOLPp2aSwwFJOrs2ylLVVulJ5D9L6ijTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UX0a02Sq; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750248884; c=relaxed/simple;
+	bh=eDNnGBkTf0Y5fws6LhOepKDma0EWdw+271uEbOW9qV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=qEPVN9XCG5ywl6lTuHgqCkSg/u1G64TmZjPvsNX1JntZDtbHMnD4nZA17NjLku4Pupcqd7z5QXZYP2M6r8L6ipCiGjL4y4iDMlj3ecpxut5rgEvc6dSQnjbhUJjdPeMOR5uTUCT3Jp2zgC3r/aN4fh3Act7of+/GqkzLWF32EKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=XHhA7NPF; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UX0a02Sq"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234b440afa7so68372645ad.0;
-        Wed, 18 Jun 2025 05:14:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="XHhA7NPF"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b271f3ae786so5020094a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750248873; x=1750853673; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5YWwTPNhC8S5jicfmYKheC+H1AbftgEz+KM7Kz0AjTw=;
-        b=UX0a02SqTEtwZ0lep7cMO7exwdfg8tVwGk0xneEX9YZ9YWpVDjnAp/IO9GUll/rngo
-         tP5qFT1LHSR5D5B8MwptHcudB2WV50oQlYheMvUtLFOHEGfUwngcDmbeSVt6v7mSv1uS
-         DBGuKR4FMB1aRiKiZFwACujuUevLkkslMWpe8BmByrkOPs6Dr/2A9InejjB6kv+6NBLH
-         PQ+FPNpoQzkMzbvfHv0D55E1Waczt/TdGAA/asbrOnklefLzcFg3x37JyvGoOfug1n/D
-         G2tPrkBoHvcIwzgf/FxH8/W6aaB1vjKKUTL5GgViDYhs26BmCXOJmciee5OCaX80YgnW
-         PeMA==
+        d=ventanamicro.com; s=google; t=1750248882; x=1750853682; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nXsaU5bufMYm3XYxPsa+imfe1GGPBzMdyNVNNOxnCRU=;
+        b=XHhA7NPFwpehY5KaKM3HO/EUpWL+R/IGCGYL4o4faWaHJGEnlqDptK7pbUIE71MA2g
+         UB2qEJuoppIvgXjbl8520YQGeMWh1Xr83z/CR/H/sBXt5GuCAOD6tto3xzKkDUlowV0w
+         JDgqNmGsLeys+1w8+q3kVb80r0ed7G2ysoQriIsskztuZAGf40pE/Iz+Y0LNIZ14zQxc
+         DeHeyYCJvQGzLWpfyqJ31kXOJMmdzPSXDshSOw+jd2ye+URsue+RHNBM9Ih9mjFR8IbO
+         iTNWcQt2zUzNJQWe29sDkb/raiTCOEHRzUUrDJ3mxhJaupjVUTxCtrTowZFMOXERH0fr
+         gjrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750248873; x=1750853673;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5YWwTPNhC8S5jicfmYKheC+H1AbftgEz+KM7Kz0AjTw=;
-        b=CiB3qLuTKyU+d/EHReOtO0H1XmUUErYHVwawjeFjhDuqPt55eEQu2T17FGwgpbgWkC
-         Yquof+1MhBThyjy3InLFGdEOGCoaHACh8jsckv+th20hQ6d9aY/WmrU/tIzNN5u4EHnK
-         MsL8/K/jy0mpIFe/9+IHnfLYrC8IvLnpgQqlt8I84jkfGgCjBfiPGPDfLhC6Yn1Rjg/U
-         BCJuF7E9jKEpTqHh8QRkTIfie5lsVsXtt9czxivNOxspcp7sjuQu/TFi+c/P+MiNCBMM
-         Ce+FZxWK/0PAq/ZACn6MdwZ3guFuaAfGQGh0GinKN+TImWZFm4KRFWo4JRYGadwy/VMd
-         JDsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOSe/gMWoXvTU8CTOq258rUhxKg4jiJFzbaWIbeD6PCxtZyg4tGctN+QlkSEWW5x+cp9BXSLTOo1lEH04=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxlz0PEe7S+5r662fLsvWm4VF9UqGGAcso+om/Ta9YLaxtW0EkY
-	f9/Vc/85N+fw/HTxp9dsNVf0Ra/lfmAjMy33WBjMi8izqtvsX+6cO92eFqGCaQ==
-X-Gm-Gg: ASbGncvQn7Ndv7TMxQzTRxheO5ME/Ics9HP/9OcsAal+Yu5uJD/Kava34m2xPFts8wX
-	Z2M+XYyjHH3nC9Jkmq9VHoIHAuhMBGjcGeDVjPXZxLKiGCWVUcKOyQg5zFAhpCqgLMO1tTLPsyD
-	/rrDPrlQA8qlQPvKpcDwpBV//+OXvOVRYVf+XgLTPMzrwEu/Siu8YXjLmWWCFU76Fl0uKCs5MnZ
-	GZ4wIFaxigBFTdOe9vEOURbLLjEOp7qG6i8N0K/Bc4r4MUcvsWMEnGH431wGUlWsNlckiIyOTZj
-	lNjIIxqfWcB8XHu0GzC5BsbzZ6j/wSvHyhHyGphFp3fPEUpVDsbpTYv1cJqhmYCRasDfH3gUzg=
-	=
-X-Google-Smtp-Source: AGHT+IEgEpsABEmvaXoUngLUPNeRtFBJ40NcjW0HUiclHgoNV8nD2SkoJe17VGpcgcQMtK7tOG9WEA==
-X-Received: by 2002:a17:902:ccc8:b0:234:a992:96d8 with SMTP id d9443c01a7336-2366b34e98fmr298466135ad.19.1750248873483;
-        Wed, 18 Jun 2025 05:14:33 -0700 (PDT)
-Received: from VM-16-38-fedora.. ([43.135.149.86])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de78176sm98751285ad.96.2025.06.18.05.14.32
+        d=1e100.net; s=20230601; t=1750248882; x=1750853682;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nXsaU5bufMYm3XYxPsa+imfe1GGPBzMdyNVNNOxnCRU=;
+        b=Bs6ktuve7nxoydhBQtTGmHOOha30QSZCc1BsZ62eJgXsyCnhl8s7aEcKAwsOWinmzL
+         TUHYOLUGegE4b3poP41HrHfRDC2bUo1o2pveswYNd4/f713ENBJa1mV+bg43JfneJNKG
+         +8F0QaZ5tLFaHnbdgN1ZVkUcXG+NyWkozMgY2RrDAQuHIe3rxJ/OiyLUS72SHsYRfPy+
+         CoTqVtwe0R0savvd4rRFpN8gew8kbn4GRFEElRvIfXOzvn2RlL/VbxLPcjCE1WsmHLfJ
+         zM3jKjaAi4HJy5635T4rnGS+2U80tb2YTPd5Dc6GHD8aFsMP5RlDQKaM5KL1+MPXtEXA
+         BkcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUDMyEPZLTGd8gAclB3xIFIt+Z0pY+KeZCNP57BCgGdBy5uRy9M1tZE1vhxpo1Sgqcmlk8paCiFiiveHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPEAXr81pFwXAjAxbF2l3JNPssm/kJl0xWQnIQRPXzvsGXynUP
+	pIH42+Tyiq5VuXqIH53nOADrXy0OZqnvuvzr5QWmYeTXhvCgaA49iKeSSM5dp7eA4m4=
+X-Gm-Gg: ASbGncuxN6LMy3j+Z/TrIKq/FvV021kPvZvC59dKPv385jQunudaUv7XC+kifhWA7NE
+	5/C6aFLo2jOMbQ7PbBv3Ddwj9c9oZ6nQi9YrgvU+Q5kAtyKaWD/tJ8j4/OesF4mUa4m5JTR84vD
+	4yQUI6Lt0U+R8dqW5YLcy13IRymundNBImXIQZj95ACa+6evoAcpwU+Dca/DefbFcdGnFXWY6sp
+	EKohICfKNNa3/d7jG1FR16BDvG5UaJhD9enIHCMyIR4iLLk6DgpBwBsEDJrCLzGrpbNSX+iNDMf
+	i4WkmHsZxTil81oScuDK5PB5OJp9wZ4iT45iV/cRCK5q2l9gw9Dk/7X7BdwH+5JtAcaNTAVHZ8X
+	eoTIlr9nm250ZvODpEBXOPdfdbzR/
+X-Google-Smtp-Source: AGHT+IHDAt6S+LCqNlP/AcoJd0DtxuOspyynusq6LumWUM8AG0KDy5DjUm6vNvbZrBQI2+c48YQfNA==
+X-Received: by 2002:a05:6a21:9006:b0:21c:fa68:b47c with SMTP id adf61e73a8af0-21fbd4d5478mr26347574637.18.1750248881659;
+        Wed, 18 Jun 2025 05:14:41 -0700 (PDT)
+Received: from localhost.localdomain ([122.171.23.44])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d7e0asm11201177b3a.174.2025.06.18.05.14.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 05:14:33 -0700 (PDT)
-From: alexjlzheng@gmail.com
-X-Google-Original-From: alexjlzheng@tencent.com
-To: viro@zeniv.linux.org.uk,
-	brauner@kernel.org,
-	jack@suse.cz
-Cc: linux-fsdevel@vger.kernel.org,
+        Wed, 18 Jun 2025 05:14:41 -0700 (PDT)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Len Brown <lenb@kernel.org>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Rahul Pathak <rpathak@ventanamicro.com>,
+	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+	Atish Patra <atish.patra@linux.dev>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Jinliang Zheng <alexjlzheng@tencent.com>
-Subject: [PATCH] fs: fix the missing export of vfs_statx() and vfs_fstatat()
-Date: Wed, 18 Jun 2025 20:14:29 +0800
-Message-ID: <20250618121429.188696-1-alexjlzheng@tencent.com>
-X-Mailer: git-send-email 2.49.0
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v6 03/23] RISC-V: Add defines for the SBI message proxy extension
+Date: Wed, 18 Jun 2025 17:43:38 +0530
+Message-ID: <20250618121358.503781-4-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618121358.503781-1-apatel@ventanamicro.com>
+References: <20250618121358.503781-1-apatel@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,73 +101,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jinliang Zheng <alexjlzheng@tencent.com>
+Add defines for the new SBI message proxy extension which is part
+of the SBI v3.0 specification.
 
-After commit 09f1bde4017e ("fs: move vfs_fstatat out of line"), the two
-symbols vfs_statx() and vfs_fstatat() are no longer visible to the kernel
-module.
-
-The above patches does not explain why the export of these two symbols is
-stopped, and exporting these two kernel symbols does not affect the
-functionality of the above patch.
-
-In fact, getting the length of a file in a kernel module is a useful
-operation. For example, some kernel modules used for security hardening may
-need to know the length of a file in order to read it into memory for
-verification.
-
-There is no reason to prohibit kernel module developers from doing this.
-So this patch fixes that by reexporting vfs_statx() and vfs_fstatat().
-
-Fixes: 09f1bde4017e ("fs: move vfs_fstatat out of line")
-Signed-off-by: Jinliang Zheng <alexjlzheng@tencent.com>
+Co-developed-by: Rahul Pathak <rpathak@ventanamicro.com>
+Signed-off-by: Rahul Pathak <rpathak@ventanamicro.com>
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- fs/stat.c          | 4 +++-
- include/linux/fs.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ arch/riscv/include/asm/sbi.h | 63 ++++++++++++++++++++++++++++++++++++
+ include/linux/wordpart.h     |  8 +++++
+ 2 files changed, 71 insertions(+)
 
-diff --git a/fs/stat.c b/fs/stat.c
-index f95c1dc3eaa4..e844a1a076d7 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -338,7 +338,7 @@ static int vfs_statx_fd(int fd, int flags, struct kstat *stat,
-  *
-  * 0 will be returned on success, and a -ve error code if unsuccessful.
+diff --git a/arch/riscv/include/asm/sbi.h b/arch/riscv/include/asm/sbi.h
+index 341e74238aa0..59a7285ff956 100644
+--- a/arch/riscv/include/asm/sbi.h
++++ b/arch/riscv/include/asm/sbi.h
+@@ -10,6 +10,7 @@
+ #include <linux/types.h>
+ #include <linux/cpumask.h>
+ #include <linux/jump_label.h>
++#include <linux/wordpart.h>
+ 
+ #ifdef CONFIG_RISCV_SBI
+ enum sbi_ext_id {
+@@ -36,6 +37,7 @@ enum sbi_ext_id {
+ 	SBI_EXT_STA = 0x535441,
+ 	SBI_EXT_NACL = 0x4E41434C,
+ 	SBI_EXT_FWFT = 0x46574654,
++	SBI_EXT_MPXY = 0x4D505859,
+ 
+ 	/* Experimentals extensions must lie within this range */
+ 	SBI_EXT_EXPERIMENTAL_START = 0x08000000,
+@@ -430,6 +432,67 @@ enum sbi_fwft_feature_t {
+ 
+ #define SBI_FWFT_SET_FLAG_LOCK			BIT(0)
+ 
++enum sbi_ext_mpxy_fid {
++	SBI_EXT_MPXY_GET_SHMEM_SIZE,
++	SBI_EXT_MPXY_SET_SHMEM,
++	SBI_EXT_MPXY_GET_CHANNEL_IDS,
++	SBI_EXT_MPXY_READ_ATTRS,
++	SBI_EXT_MPXY_WRITE_ATTRS,
++	SBI_EXT_MPXY_SEND_MSG_WITH_RESP,
++	SBI_EXT_MPXY_SEND_MSG_WITHOUT_RESP,
++	SBI_EXT_MPXY_GET_NOTIFICATION_EVENTS
++};
++
++enum sbi_mpxy_attribute_id {
++	/* Standard channel attributes managed by MPXY framework */
++	SBI_MPXY_ATTR_MSG_PROT_ID		= 0x00000000,
++	SBI_MPXY_ATTR_MSG_PROT_VER		= 0x00000001,
++	SBI_MPXY_ATTR_MSG_MAX_LEN		= 0x00000002,
++	SBI_MPXY_ATTR_MSG_SEND_TIMEOUT		= 0x00000003,
++	SBI_MPXY_ATTR_MSG_COMPLETION_TIMEOUT	= 0x00000004,
++	SBI_MPXY_ATTR_CHANNEL_CAPABILITY	= 0x00000005,
++	SBI_MPXY_ATTR_SSE_EVENT_ID		= 0x00000006,
++	SBI_MPXY_ATTR_MSI_CONTROL		= 0x00000007,
++	SBI_MPXY_ATTR_MSI_ADDR_LO		= 0x00000008,
++	SBI_MPXY_ATTR_MSI_ADDR_HI		= 0x00000009,
++	SBI_MPXY_ATTR_MSI_DATA			= 0x0000000A,
++	SBI_MPXY_ATTR_EVENTS_STATE_CONTROL	= 0x0000000B,
++	SBI_MPXY_ATTR_STD_ATTR_MAX_IDX,
++	/*
++	 * Message protocol specific attributes, managed by
++	 * the message protocol specification.
++	 */
++	SBI_MPXY_ATTR_MSGPROTO_ATTR_START	= 0x80000000,
++	SBI_MPXY_ATTR_MSGPROTO_ATTR_END		= 0xffffffff
++};
++
++/* Possible values of MSG_PROT_ID attribute */
++enum sbi_mpxy_msgproto_id {
++	SBI_MPXY_MSGPROTO_RPMI_ID = 0x0
++};
++
++/* RPMI message protocol specific MPXY attributes */
++enum sbi_mpxy_rpmi_attribute_id {
++	SBI_MPXY_RPMI_ATTR_SERVICEGROUP_ID = SBI_MPXY_ATTR_MSGPROTO_ATTR_START,
++	SBI_MPXY_RPMI_ATTR_SERVICEGROUP_VERSION,
++	SBI_MPXY_RPMI_ATTR_IMPL_ID,
++	SBI_MPXY_RPMI_ATTR_IMPL_VERSION,
++	SBI_MPXY_RPMI_ATTR_MAX_ID
++};
++
++/* Encoding of MSG_PROT_VER attribute */
++#define SBI_MPXY_MSG_PROT_VER_MAJOR(__ver)	upper_16_bits(__ver)
++#define SBI_MPXY_MSG_PROT_VER_MINOR(__ver)	lower_16_bits(__ver)
++#define SBI_MPXY_MSG_PROT_MKVER(__maj, __min)	make_u32_from_two_u16(__maj, __min)
++
++/* Capabilities available through CHANNEL_CAPABILITY attribute */
++#define SBI_MPXY_CHAN_CAP_MSI			BIT(0)
++#define SBI_MPXY_CHAN_CAP_SSE			BIT(1)
++#define SBI_MPXY_CHAN_CAP_EVENTS_STATE		BIT(2)
++#define SBI_MPXY_CHAN_CAP_SEND_WITH_RESP	BIT(3)
++#define SBI_MPXY_CHAN_CAP_SEND_WITHOUT_RESP	BIT(4)
++#define SBI_MPXY_CHAN_CAP_GET_NOTIFICATIONS	BIT(5)
++
+ /* SBI spec version fields */
+ #define SBI_SPEC_VERSION_DEFAULT	0x1
+ #define SBI_SPEC_VERSION_MAJOR_SHIFT	24
+diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
+index 5a7b97bb7c95..ed8717730037 100644
+--- a/include/linux/wordpart.h
++++ b/include/linux/wordpart.h
+@@ -31,6 +31,14 @@
   */
--static int vfs_statx(int dfd, struct filename *filename, int flags,
-+int vfs_statx(int dfd, struct filename *filename, int flags,
- 	      struct kstat *stat, u32 request_mask)
- {
- 	struct path path;
-@@ -361,6 +361,7 @@ static int vfs_statx(int dfd, struct filename *filename, int flags,
- 	}
- 	return error;
- }
-+EXPORT_SYMBOL(vfs_statx);
+ #define lower_16_bits(n) ((u16)((n) & 0xffff))
  
- int vfs_fstatat(int dfd, const char __user *filename,
- 			      struct kstat *stat, int flags)
-@@ -377,6 +378,7 @@ int vfs_fstatat(int dfd, const char __user *filename,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL(vfs_fstatat);
- 
- #ifdef __ARCH_WANT_OLD_STAT
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index b085f161ed22..c9497da6b459 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3550,6 +3550,8 @@ extern const struct inode_operations simple_symlink_inode_operations;
- 
- extern int iterate_dir(struct file *, struct dir_context *);
- 
-+int vfs_statx(int dfd, struct filename *filename, int flags,
-+		struct kstat *stat, u32 request_mask);
- int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
- 		int flags);
- int vfs_fstat(int fd, struct kstat *stat);
++/**
++ * make_u32_from_two_u16 - return u32 number by combining
++ * two u16 numbers.
++ * @hi: upper 16 bit number
++ * @lo: lower 16 bit number
++ */
++#define make_u32_from_two_u16(hi, lo)	(((u32)(hi) << 16) | (u32)(lo))
++
+ /**
+  * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
+  * @x: value to repeat
 -- 
-2.49.0
+2.43.0
 
