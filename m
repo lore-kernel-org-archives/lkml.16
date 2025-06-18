@@ -1,28 +1,28 @@
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A329C3A8F7
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7CA2853EA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242779; cv=none; b=YjgqH25lLS8HE9O/JzB1JUhSoLmKS1F5uIAhM1BsngrDk/upcTHfK1Cw84wU14qZyVYLfy1X2Ss5ecSKM/Tbf61EOXkTGf5LBEqJ+rJ3CSCqsMn+WPAKePmmwOJMPNidLD+iaGB8JxgOIoMcHMOm1N5WnExwn3WYkmKuDIGc4us=
+	t=1750242784; cv=none; b=oqJcrQ7PU8HuvKL+PwUoLyNnf394VBSmpWtw95cjVnTuM+gTY54AxKyAQic//EVdnq+obQBwm1ukWu7tFJPUj3jynUkGwQvk4VRhz1uh3jcyrT24JAlZBtTVwkeQz7/MGeMEJWQLU7aHje4JxKGJAIARWcZNdUNbWGUisgwT8v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242779; c=relaxed/simple;
-	bh=RoUxprTWYp6bt8a6NhcyoQF0P4UOPKXOfvfhvUMjDrM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uRQ6DejtK0TE0HQhxKLuLzqv0s2hsWu1qqXrGwxKh2hkDvy+sqrQfe2guijgv2qxayK9uCW6OZYf9+yr8Qq9PHWJTT5WXZ6ssUgnqvVdgCC90yoRlki9NsR6MfH7vfztZpTzoCcUu3E8Fkl38kIiybqAOhIQ5PwOd7yN2KRlfcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.175
+	s=arc-20240116; t=1750242784; c=relaxed/simple;
+	bh=JBkpxoyT5v1IbA+uLv9HPXauX+GuC5wmK9X1e4m0jJU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cL6iY9vZyR4SF59PpeQq6h2B+QG/14zfQ6j3KQypgDLv8FQEPVenyXko+Ln1Uq/MOn1TZfFFiITyVYuniK9iOTIMUXUoQKnQnoUnp1nhmuMUqIeKsV8ZeANOsmyC3bAbGZCJDF4mLhaQgEfVkrpBF+0g1PNl+nEodWq4njMdTBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bMg6t0WC0zW6F;
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bMg6v3B7xzS5N;
+	Wed, 18 Jun 2025 12:32:55 +0200 (CEST)
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bMg6t5YZpzCTr;
 	Wed, 18 Jun 2025 12:32:54 +0200 (CEST)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bMg6r6KLZzD9N;
-	Wed, 18 Jun 2025 12:32:52 +0200 (CEST)
 From: Quentin Schulz <foss+kernel@0leil.net>
-Subject: [PATCH v3 0/5] rockchip: rk8xx: allow to customize PMIC reset mode
- on RK806
-Date: Wed, 18 Jun 2025 12:32:39 +0200
-Message-Id: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
+Date: Wed, 18 Jun 2025 12:32:41 +0200
+Subject: [PATCH v3 2/5] mfd: rk8xx-core: allow to customize RK806 reset
+ mode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,11 +31,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMeVUmgC/3XMQQ6CMBCF4auQrq2ZlrZSV97DuMB2kMYEyBQbC
- OHuFjYaE5fvJd+/sIgUMLJzsTDCFGLouzzKQ8FcW3cP5MHnzSRIDVoaTs9qmjjFkTevjjfSCKf
- gbjw4ls1A2IRp711vebchjj3Nez6J7f1XSoIDx7qyylt1UggX1yLRfPTItlKSH21A/2qZtVClF
- xa0Nd5/63Vd3yy6hw3oAAAA
-X-Change-ID: 20250526-rk8xx-rst-fun-f261c40b6d0c
+Message-Id: <20250618-rk8xx-rst-fun-v3-2-081f02d3d348@cherry.de>
+References: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
+In-Reply-To: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
@@ -49,70 +47,92 @@ Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>,
 X-Mailer: b4 0.14.2
 X-Infomaniak-Routing: alpha
 
-This allows to customize the PMIC reset method (also called RST_FUN) on
-RK806 PMIC from Rockchip, mainly found on RK3588 devices but also on
-RK3576.
+From: Quentin Schulz <quentin.schulz@cherry.de>
 
-Finally, this is required on the two RK3588 devices from Theobroma as
-U-Boot changes the silicon-default (which is suitable for us) to
-something that breaks our companion microcontroller's reboot detection
-which breaks a bunch of assumptions in the MCU FW code.
+The RK806 PMIC has a bitfield for configuring the restart/reset behavior
+(which I assume Rockchip calls "function") whenever the PMIC is reset
+either programmatically (c.f. DEV_RST in the datasheet) or via PWRCTRL
+or RESETB pins.
 
-To validate this works on those devices do the following:
+For RK806, the following values are possible for RST_FUN:
 
-On Tiger:
-i2cset -y -f 6 0x6f 0x9 0x62
-On Jaguar:
-i2cset -y -f 0 0x6f 0x9 0x62
+0b00 means "restart PMU"
+0b01 means "Reset all the power off reset registers, forcing
+	the state to switch to ACTIVE mode"
+0b10 means "Reset all the power off reset registers, forcing
+	the state to switch to ACTIVE mode, and simultaneously
+	pull down the RESETB PIN for 5mS before releasing"
+0b11 means the same as for 0b10 just above.
 
-You hear a nice (loud :) ) beep, then reboot and it should stop right
-before entering U-Boot TPL again.
+This adds the appropriate logic in the driver to parse the new
+rockchip,reset-mode DT property to pass this information. It just
+happens that the values in the binding match the values to write in the
+bitfield so no mapping is necessary.
+
+If it is missing, the register is left untouched and relies either on
+the silicon default or on whatever was set earlier in the boot stages
+(e.g. the bootloader).
 
 Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
-Changes in v3:
-- (hopefully) fixed missing bitfield.h include in driver as reported by
-  Intel's kernel test robot,
-- removed dt-binding header file,
-- removed mentions to constants that used to be in dt-binding header
-  file since they aren't anymore,
-- added (patch 3) header file in arch/arm64/boot/dts/rockchip to make
-  the value of rockchip,reset-mode easier to understand when reading the
-  device tree,
-- Link to v2: https://lore.kernel.org/r/20250605-rk8xx-rst-fun-v2-0-143d190596dd@cherry.de
+ drivers/mfd/rk8xx-core.c  | 15 +++++++++++++++
+ include/linux/mfd/rk808.h |  2 ++
+ 2 files changed, 17 insertions(+)
 
-Changes in v2:
-- moved rst_fun variable declaration out of the switch-case,
-- initialized rst_fun variable to make kernel test robot happy even
-  though the variable wouldn't be used uninitialized due to breaking
-  before using it,
-- renamed rockchip,rst-fun to rockchip,reset-mode
-- rewrote rockchip,reset-mode binding description to not mention the
-  relation to registers or register values,
-- added binding header file to make it easier to understand what the
-  mode is when reading a Device Tree without having to read the binding,
-- Link to v1: https://lore.kernel.org/r/20250526-rk8xx-rst-fun-v1-0-ea894d9474e0@cherry.de
+diff --git a/drivers/mfd/rk8xx-core.c b/drivers/mfd/rk8xx-core.c
+index 71c2b80a4678d627e86cfbec8135f08e262559d3..23ff92f89f3357e3f47c5dd0e9f80cca453f22c0 100644
+--- a/drivers/mfd/rk8xx-core.c
++++ b/drivers/mfd/rk8xx-core.c
+@@ -10,6 +10,7 @@
+  * Author: Wadim Egorov <w.egorov@phytec.de>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/interrupt.h>
+ #include <linux/mfd/rk808.h>
+ #include <linux/mfd/core.h>
+@@ -699,6 +700,7 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
+ 	const struct mfd_cell *cells;
+ 	int dual_support = 0;
+ 	int nr_pre_init_regs;
++	u32 rst_fun = 0;
+ 	int nr_cells;
+ 	int ret;
+ 	int i;
+@@ -726,6 +728,19 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
+ 		cells = rk806s;
+ 		nr_cells = ARRAY_SIZE(rk806s);
+ 		dual_support = IRQF_SHARED;
++
++		ret = device_property_read_u32(dev, "rockchip,reset-mode", &rst_fun);
++		if (ret) {
++			dev_dbg(dev,
++				"rockchip,reset-mode property missing, not setting RST_FUN\n");
++			break;
++		}
++
++		ret = regmap_update_bits(rk808->regmap, RK806_SYS_CFG3,
++					 RK806_RST_FUN_MSK,
++					 FIELD_PREP(RK806_RST_FUN_MSK, rst_fun));
++		if (ret)
++			return dev_err_probe(dev, ret, "RST_FUN write err\n");
+ 		break;
+ 	case RK808_ID:
+ 		rk808->regmap_irq_chip = &rk808_irq_chip;
+diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+index 69cbea78b430b562a23d995263369d475daa6287..28170ee08898ca59c76a741a1d42763a42b72380 100644
+--- a/include/linux/mfd/rk808.h
++++ b/include/linux/mfd/rk808.h
+@@ -812,6 +812,8 @@ enum rk806_pin_dr_sel {
+ #define RK806_INT_POL_H			BIT(1)
+ #define RK806_INT_POL_L			0
+ 
++/* SYS_CFG3 */
++#define RK806_RST_FUN_MSK		GENMASK(7, 6)
+ #define RK806_SLAVE_RESTART_FUN_MSK	BIT(1)
+ #define RK806_SLAVE_RESTART_FUN_EN	BIT(1)
+ #define RK806_SLAVE_RESTART_FUN_OFF	0
 
----
-Quentin Schulz (5):
-      dt-bindings: mfd: rk806: allow to customize PMIC reset mode
-      mfd: rk8xx-core: allow to customize RK806 reset mode
-      arm64: dts: rockchip: add header for RK8XX PMIC constants
-      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Jaguar
-      arm64: dts: rockchip: force PMIC reset behavior to restart PMU on RK3588 Tiger
-
- .../devicetree/bindings/mfd/rockchip,rk806.yaml     | 21 +++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts      |  2 ++
- arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi      |  2 ++
- arch/arm64/boot/dts/rockchip/rk8xx.h                | 18 ++++++++++++++++++
- drivers/mfd/rk8xx-core.c                            | 15 +++++++++++++++
- include/linux/mfd/rk808.h                           |  2 ++
- 6 files changed, 60 insertions(+)
----
-base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-change-id: 20250526-rk8xx-rst-fun-f261c40b6d0c
-
-Best regards,
 -- 
-Quentin Schulz <quentin.schulz@cherry.de>
+2.49.0
 
