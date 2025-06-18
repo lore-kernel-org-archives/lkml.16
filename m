@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D396E27E041;
-	Wed, 18 Jun 2025 21:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E07327E069;
+	Wed, 18 Jun 2025 21:29:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750282178; cv=none; b=HzDPR3UGnKvsSmO0RLwj3nyXAb2wcxHCweTYgfYdm8djMXiOjKmKFdAUcQKehba/RtDRvzEzkPhkcZYfwVjmHLTkMjweIdUma2j5IcJLyl8v2rjtMJF4R4jmVzIktvOtmDEpM3/dbKdN616Kje9Vh2uH/BrpLkFd3HM7p5Q8eqY=
+	t=1750282180; cv=none; b=W4sKV+93ITSxTVC6v9Jb+lydD+1iOGJrdgMaQNepaP/2lT19rFCSL9ch2DckB59IlXR5zOcafgowN4Z552vjzT2Htfq7tuSyPhCYrs9iEniWjXg0MGWnWBGBLsQIDaWHYFkYoVzofmbtaduu+C5X4l6zm4GUrai3VRgocsQfsS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750282178; c=relaxed/simple;
-	bh=aMEbEW+IeHhujQGTuZEocOXaM+WKUzqlMtYJd8Rdhok=;
+	s=arc-20240116; t=1750282180; c=relaxed/simple;
+	bh=xhs7MTW33JCkEZr7vVn8yERLej8cPivMXeX6c7w9jxI=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=bpG1+05u3f8oJlxk1gm9qYJVC3z4p1jEk50xS+appoQoO0cL7gGNFcm7qEb+H/gdaf9cofvnJ0WJIdUgRVOc0PYYwJ9uZTvJNdIKtp2piei5JnzOTkvvtNLQYHRfO0xx64VJHfeXWuAzeH9hSy2USUq+KvhWkLLI089AvaNL7Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3vIzdKA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=U75qLe/7W1Fg6lG0zNH/a6zguH+Wf6nZ8ieGk1R+npjcWQcNJPIVl8RtATY9itOLkA1KBB9gHq/JIhkFIJDuJgGVVL1MsrE2kE9INBTgW+J4EYqqWrtFiH4QkLntRslu5FiGP2QTLRRgzhP9OSOrv/lqxhucqbKOGXQPwktCHII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pKhik2ib; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3vIzdKA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF13C4CEF0;
-	Wed, 18 Jun 2025 21:29:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pKhik2ib"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 959CAC4CEE7;
+	Wed, 18 Jun 2025 21:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750282178;
-	bh=aMEbEW+IeHhujQGTuZEocOXaM+WKUzqlMtYJd8Rdhok=;
+	s=k20201202; t=1750282179;
+	bh=xhs7MTW33JCkEZr7vVn8yERLej8cPivMXeX6c7w9jxI=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=C3vIzdKARteWUzv4tIZshMl183ZRMEK5hxrLaRLfDtAtAK6MFLgVzbuh9fBJuDo+Q
-	 CV2G9pYXe9OnSvZzIweMApFKYd3be0BqQAdNnmq0RH7aOruLKKoQ9Lx07p5lU3B6M2
-	 fPQyQ3Rb42O2SSbD+XN15NvVyVSOo3qmJiUeuN8wiRQKYJqeC2QlLNxBwHumjnbwz5
-	 Z18Vz5JPJnT5/3pAjQFXAVz01AgXrEzsx9XzFxClbi4ENV4j0bD3nExWuNZwnzIqWO
-	 Imeq1k6XZnRsObF3gO3YmbngHS9jXrRsOwgOq8OGPnPeTg4D8HCOIvZlXUd5L3H9zS
-	 41reZ8QZysIaw==
+	b=pKhik2ibkJj0A9493k6dUP/AC1DuG+JBU/QEztO9kI0T8Itu8bWkubxV5w/RCneR+
+	 lcDBxGWdJxwX7UOm1AkyH3fbmB+Q9ntmD1cZfz3sdoK22w6npC17paeB28IeVk8NPq
+	 2++FH62wXlqR8O9YcUVBbcjNUoKjRFi60+nbEZA0fZkSMMTMDNoxxotflRj9dL4tWF
+	 FVY6R0anckQFd8+/8ofVcVXhZKDXhy9s2UDrWLTh3LE6MtgTGEspWwYOU0Jto8qXxK
+	 +xqegOdrdIU0zWaykkxKfpbogj4vuY9lN8NIk7vwNtL0ShUpeee2jUbcuGNLNfYTi4
+	 zT4GYpgPgx56g==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD7E3806649;
-	Wed, 18 Jun 2025 21:30:07 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 1AFDE3806649;
+	Wed, 18 Jun 2025 21:30:09 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,45 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 net] tipc: fix null-ptr-deref when acquiring remote ip
- of
- ethernet bearer
+Subject: Re: [net] Octeontx2-pf: Fix Backpresure configuration
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175028220675.262925.8913605552414579923.git-patchwork-notify@kernel.org>
-Date: Wed, 18 Jun 2025 21:30:06 +0000
-References: <20250617055624.2680-1-hxqu@hillstonenet.com>
-In-Reply-To: <20250617055624.2680-1-hxqu@hillstonenet.com>
-To: Haixia Qu <hxqu@hillstonenet.com>
-Cc: jmaloy@redhat.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
- tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
+ <175028220799.262925.2720863706360822624.git-patchwork-notify@kernel.org>
+Date: Wed, 18 Jun 2025 21:30:07 +0000
+References: <20250617063403.3582210-1-hkelam@marvell.com>
+In-Reply-To: <20250617063403.3582210-1-hkelam@marvell.com>
+To: Hariprasad Kelam <hkelam@marvell.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
+ bbhushan2@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 17 Jun 2025 05:56:24 +0000 you wrote:
-> The reproduction steps:
-> 1. create a tun interface
-> 2. enable l2 bearer
-> 3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
+On Tue, 17 Jun 2025 12:04:02 +0530 you wrote:
+> NIX block can receive packets from multiple links such as
+> MAC (RPM), LBK and CPT.
 > 
-> tipc: Started in network mode
-> tipc: Node identity 8af312d38a21, cluster identity 4711
-> tipc: Enabled bearer <eth:syz_tun>, priority 1
-> Oops: general protection fault
-> KASAN: null-ptr-deref in range
-> CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
-> Hardware name: QEMU Ubuntu 24.04 PC
-> RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
+>        -----------------
+>  RPM --|     NIX       |
+>        -----------------
+>              |
+>              |
+>             LBK
 > 
 > [...]
 
 Here is the summary with links:
-  - [v4,net] tipc: fix null-ptr-deref when acquiring remote ip of ethernet bearer
-    https://git.kernel.org/netdev/net/c/f82727adcf29
+  - [net] Octeontx2-pf: Fix Backpresure configuration
+    https://git.kernel.org/netdev/net/c/9ac8d0c640a1
 
 You are awesome, thank you!
 -- 
