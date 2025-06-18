@@ -1,157 +1,148 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE5C2EAD1A
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9792EACFA;
+	Wed, 18 Jun 2025 14:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256208; cv=none; b=ltANDcUuVxnnQRkHBpbk56X5KQqvuYp8KY/1Msltzy05rBwW2PqcrjqHmVBamBVESCGaidCIh2Eal6nIX4XtEfYUCob7IoCsQddljQYvbZj/NcaU98+/YR8UhX72kRpC4MTfd3hJkPBd/dQx5rqZwqRrzwMvscEwXSUbxeWrqTE=
+	t=1750256217; cv=none; b=I6Xm6y+TPZxHfM0sG+9IwhrS0V8T+Z1aQsYU3A7v+aO4+qcknkI08+5hGq60qVbDJui6CNwsGGxdl5pfrG1sohLPoZooLg/93GGyofmpydvQnFUIwgdmkfQUNoHh8zXpb2cIp49IJ7mhmIhGVVnYKA+fbo6y9q3tmX3sxlzM0sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256208; c=relaxed/simple;
-	bh=SZDsANUEYc3VEP7ESBzjA/Sa7ufHOwvO4id/mlmSuoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PMcONDSZCTKIcVFnp9awxBItTQ9Wwy7u9v7Y/jdgDTxZzj15kYP+DgkdjlwXt7pLdv4PHeMXsSAIfXe/Ysi1Q53d9Keb5gQzfsqNNs1W9wGpm1oI+JrbiVO9vrzuQvmGz10Tzq9sjjUySadBT3hNW3x2QoFxWvSkZphPj+bmGU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jz5AU4Id; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750256217; c=relaxed/simple;
+	bh=QA7GC8UaqMR+DmjCanUIIF2mklJ/OXH3NqlsEaz9NGU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=CBz7Y+tlXQ4+eAMniXbj3XSLtdjgiMALW8FXmb6f2/jYXRKHgc/cBa00+VSMrp+KBsvpzjxsMrsG2Js7NZ+6dfkvFnhirzl2p56XVKoGKbWCSddBXHPOsaS500huwkJdlRFV/TlgFzp18EV1Zb6hV+aWDGLvZu7tbWCX66pvNCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtIj8DyN; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jz5AU4Id"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750256205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pnakAuqpVv27gL/eIRgTWHQ86Cmzoypd6ut3J9M5fpg=;
-	b=Jz5AU4IdUSuTCjWOC+w17s+gK/lIFXzJrd4WsInCEwofyn4MOzqYGwRTaQSo6BD4G2PXb2
-	O/eR3Ksv/BTlDDBdfGC/EAY+PqU73nbX6+hOmgpSXKWyq6ayAmsc/9ximLRo8uBt8eKkL2
-	SzzwYX2DXUottlYlFWXWt05fRFInOV0=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-178-OExi4vkGMPOusGgKTNj0Qg-1; Wed, 18 Jun 2025 10:16:44 -0400
-X-MC-Unique: OExi4vkGMPOusGgKTNj0Qg-1
-X-Mimecast-MFC-AGG-ID: OExi4vkGMPOusGgKTNj0Qg_1750256203
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-452ff9e054eso36552485e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:16:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtIj8DyN"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-235f9ea8d08so68290315ad.1;
+        Wed, 18 Jun 2025 07:16:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750256214; x=1750861014; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HKX0AOzd2NDOwL71Cx1dKnfTtO0KV9uKaanDux8gwfE=;
+        b=DtIj8DyNlMmUqFlxjO1dqT/Sb+l3RDoeUn8v4fsSjcW57bdWqDEzzuMGbPgI5/zfYI
+         N97H8lCg8cSgnWR66hpyoNg/Sbh3KHQK/Z7N69W2IOo4SybttZ/YU1ULoKfb64dFTAWT
+         FBFZ/787+Drdc1s1VpI8YB7In+ZVRgB8MQqnU8bRpIVI+M6lJZOS40lS3YqLDbkSy8ki
+         87aB4khD4sU5cnMCFHav+URG7CJlY+eY/sYUkQMYw//+iXaIR8RjM4EHFiFXmWiGQOFr
+         rCjHhk9Bh/Xostz4c68FJd6d9AU20EaB8SWJi4bGJS7jNUcz3KSfaj+ATACUsM6tuZ45
+         jjiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750256203; x=1750861003;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pnakAuqpVv27gL/eIRgTWHQ86Cmzoypd6ut3J9M5fpg=;
-        b=RaWQXhTJy1qYAUNmx7zbulw97zr1L+Xnr7RoVGjbRz9TyPrIChjMrznfAHqBzaj1Gt
-         YgcsbODcGSHg+mAnJ9fP6FS9MY30+qO2vr+jolOUyme0yTCI1+JFsCO8QXLF8JnzQapA
-         FhPWRTvQ804uY27jEPwrugaem5jpco/jxcmiOCZZvJCDGOtDG8jPmbEEm/Kv3fhhOMbK
-         p3WVkH8/WXVFreXPE6RsY2v0uScwxyQxd/lIz5oXrLZBuA/VFUc3hsN2UvPW0NdevOnH
-         x/bwRrX2INNw+J43x/eB2K82V/SR/EcMCKSf7EdiUEIKVlSqGCLZZo+RszjE/93X8LFf
-         1OUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVga4JEwN2gXGOFIMGXtU6znT91jhMgosF3XWqIijT4yFv8NYc/i2RmsR2rrUCl4X1KFD/c+oBnFfYOxe4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZhzC5oavFFiTtJuN5KAvqO+1YHNkR8VsA9hYxz9MgruLKRe8u
-	EdKutPiMQDI6XGjinPkKRRKmkqZgwTiE0tLLoUZdjZRuUHG8phq1KedcFaMyzzJYdB9H7aOdeka
-	3SWOXZShdXibGGWnyBkS4bjcUVYf0u/06kt+MHY8MzHUHITzfVUd68dmuQfrTq3NJBQ==
-X-Gm-Gg: ASbGncv/TzStDZUOp4VFZKr5pMznlx5dedipvhhlFj8Xb/yHeuCETyYBwWAUd6pjHLm
-	Afbk/beW7o2U7LhgiFQkcZ/1SXJ1U57V72yzvtE4/4C3VMv9ry0TLp11GkuweBPPATBxq4Xjbai
-	/CzMPke2bBAy6ddLGi+JSxmwK8fTmplnNdP/Ny0jBTuvWdRFoB5hdcLj6fJNqNNONQ3ANIlACrn
-	GMv79mX+sIllC9E8Mb/3R32Xqo+itnT6YfPdi7VPPeEe29zQtr6dIoF4ZUBgVEcn5nAqibhaDpb
-	XKis8lDxuZ95DUrHtG13gFXz/hA+j3tNMwx8IUmacdJV4HLJbN2IPcZPVyc9VLPWSKZs+OBJfjC
-	F+N92Irc5RlnIkHHXCvA1MMsyDgmdT6wPAbaswfzeW6uOP1E=
-X-Received: by 2002:a05:600c:528f:b0:450:d3b9:a5fc with SMTP id 5b1f17b1804b1-4533cab1b53mr150306135e9.27.1750256202660;
-        Wed, 18 Jun 2025 07:16:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH/v9PZpGSZVIsOYlGFsJLgfp6SxTdjtuIyU5QFN7m91Aku2o1fdMeD+2hrNFzALMqWrkamYw==
-X-Received: by 2002:a05:600c:528f:b0:450:d3b9:a5fc with SMTP id 5b1f17b1804b1-4533cab1b53mr150305725e9.27.1750256202270;
-        Wed, 18 Jun 2025 07:16:42 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e14fc98sm215582455e9.29.2025.06.18.07.16.41
+        d=1e100.net; s=20230601; t=1750256214; x=1750861014;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HKX0AOzd2NDOwL71Cx1dKnfTtO0KV9uKaanDux8gwfE=;
+        b=ezooVqjpj/lPjzv7FM6Ei+7u0OqITu4DTz+aBpxTojngVytJxI9zQlA+fXcQyCxECn
+         4HTQXh0BU/I6+O0M0kXELPK/OoYuM6e03ttgZIWnWCiKTcmxkf0KZVFMsnZMCfJCONQL
+         QL4pzpXGqrRfy0E7Xzc/tE+53tD/ZmnYl+Ww1H58GGMAO43hZ369usDUkiymE2yFCcvG
+         Z+HDO3lkQhgmzVcroYp6bizaWsw6rnEK55T7pPyfNgZRoSlG9ktDxx2lyxZc47TsgxY9
+         9Q7MtmLbrASus8Zm1O7CykPG2fnQ7mJgTl1o9dKYYVAtATz4uDsByXRrMuTl1B3aKwsN
+         VhBw==
+X-Forwarded-Encrypted: i=1; AJvYcCU6tF3ZLrLvVMPH8rgBEKQjhWPhJNr58hMJBuEObJPaUgyrlnOqNGuoQNVxdhJpjilTwuLSilgEXMwnLtc=@vger.kernel.org, AJvYcCVG2ShyeG4cWshKDgq2sKt1cTp7eKn8gUXKuvheS4rB3YK9QlJSzW8ldLttrb8+M63wabT6mdkj3fVxM/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/mWjd3dpsOsX100CvEhoAYTH167JWW8HOGvqxmT9WqTxanVh6
+	jx9B9vIokx+oMEMJGAFPJ9gj5GO5Hny0P6zGiXgGO0oAE72GMnE4z8qE7iMBplDt
+X-Gm-Gg: ASbGncsCFELWSCmJBrPu/nqmeAi1zKo5nqueRd2kKFGGNyDy/eBbSs4sZevoUhpoYOO
+	gwEQsQUMtg5c+HHIIbfJyWFyUkD+sYebALA0rGo+oLeM/paT6ib7XBZjxJV7Xv2zJV4H8iyWL6j
+	OZ5UtPxMp4F5GAXPhqlC8NQ5hNHbn3K4SiSxfeMhhDMqcdWNrMqzUiOTtpkJS7pS512VeEVYk9S
+	YMh6dpUkHpKFcEOxiymqoOEvSHQ/VRz7Z/XpAeTa0SuI84Z2TwUd61W8xmd2bFOwj+t8uQtOVks
+	mY2OLoTPt+xSxvpQaqi+VRRGeGsutLb0Cf9f4bd0C4ISqciRFsg20Q==
+X-Google-Smtp-Source: AGHT+IF65hISwSEsLg+/JJakfukqAPLuMOAOm3U0RdzrzA6kt6koNJHlRbGNsw6NteDLVbOEk1jMCg==
+X-Received: by 2002:a17:903:1b64:b0:226:38ff:1d6a with SMTP id d9443c01a7336-2366afbd7ffmr222679705ad.7.1750256213517;
+        Wed, 18 Jun 2025 07:16:53 -0700 (PDT)
+Received: from localhost ([240d:1a:f76:b500:4431:46e3:c76b:79bc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88c200sm100652135ad.51.2025.06.18.07.16.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 07:16:41 -0700 (PDT)
-Message-ID: <b9446db0-0aa2-478d-b5e4-a4eaf2c53e90@redhat.com>
-Date: Wed, 18 Jun 2025 16:16:40 +0200
+        Wed, 18 Jun 2025 07:16:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: add missing files to mm page alloc section
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Zi Yan <ziy@nvidia.com>, Vlastimil Babka <vbabka@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, Brendan Jackman
- <jackmanb@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250618105953.67630-1-lorenzo.stoakes@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250618105953.67630-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 23:16:47 +0900
+Message-Id: <DAPQ1LPH05P4.HLIMQEJCRHLX@gmail.com>
+Cc: "Albert Esteve" <aesteve@redhat.com>, "Michael S. Tsirkin"
+ <mst@redhat.com>, "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Hans
+ Verkuil" <hverkuil@xs4all.nl>, "Jason Wang" <jasowang@redhat.com>, "Xuan
+ Zhuo" <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, <gurchetansingh@google.com>,
+ <daniel.almeida@collabora.com>, <adelva@google.com>,
+ <changyeon@google.com>, <nicolas.dufresne@collabora.com>,
+ <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
+ <virtualization@lists.linux.dev>
+Subject: Re: [PATCH v3] media: add virtio-media driver
+From: "Alexandre Courbot" <gnurou@gmail.com>
+To: "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
+ <20250526141316.7e907032@foz.lan> <DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
+ <20250527111311.105246f2@sal.lan>
+ <CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
+ <20250527153547.6603eaf4@sal.lan>
+ <CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
+ <20250617104938.09d21b7c@foz.lan>
+In-Reply-To: <20250617104938.09d21b7c@foz.lan>
 
-On 18.06.25 12:59, Lorenzo Stoakes wrote:
-> There are a number of files within memory management which appear to be
-> most suitably placed within the page allocation section of MAINTAINERS and
-> are otherwise unassigned, so place these there.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> Acked-by: Brendan Jackman <jackmanb@google.com>
-> ---
-> 
-> RFC:
-> https://lore.kernel.org/all/20250616202425.563581-1-lorenzo.stoakes@oracle.com/
-> 
+Hi Mauro,
 
-Acked-by: David Hildenbrand <david@redhat.com>
+On Tue Jun 17, 2025 at 5:49 PM JST, Mauro Carvalho Chehab wrote:
+> Hi Alex,
+>
+> Em Tue, 27 May 2025 23:03:39 +0900
+> Alexandre Courbot <gnurou@gmail.com> escreveu:
+>
+>> > > > Btw, I was looking at:
+>> > > >
+>> > > >         https://github.com/chromeos/virtio-media
+>> > > >
+>> > > > (I'm assuming that this is the QEMU counterpart, right?) =20
+>> > >
+>> > > crosvm actually, but QEMU support is also being worked on. =20
+>> >
+>> > Do you have already QEMU patches? The best is to have the Kernel drive=
+r
+>> > submitted altogether with QEMU, as Kernel developers need it to do the
+>> > tests. In my case, I never use crosvm, and I don't have any Chromebook
+>> > anymore. =20
+>>=20
+>> IIRC Albert Esteve was working on this, maybe he can share the current s=
+tatus.
+>
+> Any news regards to it?
 
--- 
+Albert shared the latest status. There is one in-flight patch series
+required in qemu [1], and then this branch of vhost-device should
+contain the necessary support [2]. Albert is waiting for the virtio spec
+to get merged before sending a pull request IIUC.
+
+[1] https://patchew.org/QEMU/20250217164012.246727-1-aesteve@redhat.com/
+[2] https://github.com/aesteve-rh/vhost-device/tree/virtio-media
+
+>
+>> Note that crosvm does not require a Chromebook, you can build and run
+>> it pretty easily on a regular PC. I have put together a document to
+>> help with that:
+>>=20
+>> https://github.com/chromeos/virtio-media/blob/main/TRY_IT_OUT.md
+>
+> I started looking on it today. Already installed crossvm (I had to
+> install libcap-devel to build it). Still, I'm not familiar with
+> crossvm, which is a little be painful. In particular, how can I
+> enable network on it and speedup it?
+
+There is a "./tools/examples/setup_network" in the crosvm repository that
+will setup a TAP device. Once this is done, you can pass the "--net
+tap-name=3Dcrosvm_tap" argument to crosvm, and the network device should
+be visible and usable.
+
+Let me reply to the rest of your questions in your latest mail, with the
+most recent logs.
+
 Cheers,
-
-David / dhildenb
-
+Alex.
