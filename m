@@ -1,142 +1,116 @@
-Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EAF319E96D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:12:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C32920E70F;
+	Wed, 18 Jun 2025 20:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750277574; cv=none; b=k79nJrvfgYUDkDTHw9D//qpacscfiOr5gZDnEm9lY8z8qm9s9kfyZhcnf8EWY7Eh7iXQgLwe/umvCiePtpQdhFkztX0WXQsjwYWmEz55ydyba73vuRN9s0LZEAfXTiXUanFXH41ufAfgiWFPWYaubSvgtHHYE85idoLrIN0UGQQ=
+	t=1750277661; cv=none; b=nZx85ifkrvgsV4RguN6FqGu3XA7ccblCbVGdCRwleuzkxy+FzWdra7q4vNkRls7YazZ/8hhQR5F0QRGM5BkowAEt17hiZFgQ682jADBtOJJ8H2T4IAn54dhmRYdOE3rGkOSg5l/V+Hik4XRAsZ6bFElCP3OlsrjasDKv39vbo6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750277574; c=relaxed/simple;
-	bh=Togvj70vVgkE8isnYaLN/63MfgSnZcJx9ObaihViXbU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=N3BBK7U4cyWZPeGYxrhruoytx7AhlRDAVW63LIZD+JaEvy1YlL5+LOSJH3UF7MoUoiQMBh3Bzk9o+zcZvb3UWoCdG4EixdmEXnNeuUcJ6q7xVPE1ZoTKePh/S9pr/xkUze1woJFIZNJqsJAi4zle1UuCPGNGa+LNnARDZzIy6Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=DHTaxjcV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=h+yNvMmq; arc=none smtp.client-ip=202.12.124.146
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1750277661; c=relaxed/simple;
+	bh=1E9Kl4wxQ8nz4CVnnFmaNtGd4pj7WRmztCJrxJOssoM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Jf6kiAZOC9RD/HSrnyK3rW2NM5Kq0qyjAsU5g/QZeCYCdU8z6iP8Z7NoD3/pbJxZZdfSBvmdf8oDFn90tJuu9aFHSOWuc+SwMgwsUtirzRVenW8OXj/Hgar0yUTpwRWtoMKsE/QSdL6AWfmyygA8VheyqeetYPCuuFDmZcdYzek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TntHOHKR; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="DHTaxjcV";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h+yNvMmq"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfout.stl.internal (Postfix) with ESMTP id 9CD251140190;
-	Wed, 18 Jun 2025 16:12:51 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Wed, 18 Jun 2025 16:12:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1750277571; x=1750363971; bh=HLp/v9LWGN
-	wJ+imbIVUELb6rW/0l10DcuVUkrmkSfJg=; b=DHTaxjcVncybfVniLALTNm7Jtw
-	GAsAwei6M7P7M4CyoYufdLK4QGak55pcMibZhKtvxX4qTFAsm5R6ciHJ2rIzrWQs
-	y/PBDuzfgtklBMCLc6iCIeKwtSl1UbOR4Clfhug/bjXVil7xzM5pigYi4GeOc4ab
-	uGo96tCwKXVwhhh9eUfguHbiQMmqS7PJ3HyiBSbWWLDM9gedkx4Sl0lY0dVOY86g
-	vnIqxkh7DOL0iZLxgiDJ7JWc8s6DRJjjG+4czzi0J02YsIHZfJKlo1VXdXd43WPI
-	VVNfytZTerTb3f0+mclmMY2mEDTKr6qnx0b118gM2y9qz58VRX8gblphrNuA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750277571; x=1750363971; bh=HLp/v9LWGNwJ+imbIVUELb6rW/0l10DcuVU
-	krmkSfJg=; b=h+yNvMmqxd0NSQ9XhuActT4iSksfoaYIQRi6mNsh4XxYR64wuhP
-	Hum9ngAAnmSF4DYCgfqJ787lhA93/VMahQnH9EXadtbvjEZ7ujSfP8cepdRumkJF
-	MZrDFjpZzA+DCHgW1ak+XYpE4gKVC+g76UUwdqLZAWkSgpbaNf1ewEp3pbZSY2Hg
-	sZcTBPQ8J4FbNPeVHYyRjINIlDOSKP7fiZGmmiTsGx+LBtp5RbltP8EvOWHl6vV9
-	6BQ8QtrMD11Yt0v7ot2tFyZBMo9AwWg1AYPRbw0OP8Ak7/86nrr2dBaZDddwM0Bc
-	KWYbDhDoXAbUMf6ROQfRu58taNGfsmTu5sQ==
-X-ME-Sender: <xms:wh1TaAiJcOP9wY-Hu4C-Ci9UgHHlyPeIu3rQ716nDVqyYywdGfQpIw>
-    <xme:wh1TaJCkXX039k-OrMjemaTzKAFsMZuRtnuNiSa-2M_USvNB15I_Pmb_F8Hql2Zzr
-    GdNYstHkVnxBARqmKU>
-X-ME-Received: <xmr:wh1TaIHJ2A5Wqc8dcFbUykNkklSdZMFvM-I2K-KWk-jubbpyZnQMvUFcoMllv_YETWtGoPmdcIXzW04JRORBUQM0uL3cKbkHCkd_j4y87ywdSYhSQg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdefheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecu
-    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
-    htqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdehffdu
-    heduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthhtohep
-    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnh
-    highessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepsghijhhurdgurghsrdhjiies
-    sghprdhrvghnvghsrghsrdgtohhmpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrd
-    hlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgr
-    uggvrggurdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtih
-    honhdrohhrghdprhgtphhtthhopeholhgvghesrhgvughhrghtrdgtohhmpdhrtghpthht
-    oheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:wh1TaBQeJ_3d_AWEMB9Bkh-BaTfi-es8FiW-yee_Se6eyy1IbpQ9LA>
-    <xmx:wh1TaNyKYT03TI0sJi-vWilH512i6uwGiWHEYjkKW-on9Fn4AiRQYQ>
-    <xmx:wh1TaP5jABFUj9p_kO-WTa8thIb8FPhasFn-tMmAuUdogDxNrvXZAQ>
-    <xmx:wh1TaKxYxnu914R9X90DEuOI_1IDCnNZ7dq5J37SDoZOtzujPLy4bQ>
-    <xmx:wx1TaIAC4ETEZ1wKZe84W6rRvZljapPVc1-78T0qATdlC5KZlstfY0qS>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 18 Jun 2025 16:12:50 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 6C12511FB964;
-	Wed, 18 Jun 2025 16:12:49 -0400 (EDT)
-Date: Wed, 18 Jun 2025 16:12:49 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 next 09/10] lib: mul_u64_u64_div_u64() Optimise the
- divide code
-In-Reply-To: <20250618185432.5ce80e0d@pumpkin>
-Message-ID: <0143891q-ssp6-83on-4o61-nrp2qn3678o1@syhkavp.arg>
-References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-10-david.laight.linux@gmail.com> <os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg> <7r88r006-o704-7q1q-21o2-6n62o864oo79@syhkavp.arg> <20250618101620.26533aca@pumpkin>
- <s919qno2-782s-ooqq-0p19-sr754osn8n02@syhkavp.arg> <20250618185432.5ce80e0d@pumpkin>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TntHOHKR"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a375e72473so50264f8f.0;
+        Wed, 18 Jun 2025 13:14:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750277658; x=1750882458; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VblNPo1guxJ4nHzsvrQqdryJtW7RA9yK1k2HgAbcIm4=;
+        b=TntHOHKRFYVnhMOV8+tqz7lOxHFvI/jgXE1PU8njp7osSpImtjs+gTE1jDlBwwL6pY
+         4M2ySOSH3Ry4kyFGa9wCzCVzK34Q5khT7fxE9MTs3OFNFnVtUx+otMPtgPnAUoN93YiY
+         zXkpFpZ0RgORQV5GY3X3NAW6A2Qsu6AljuCQj0813/c+0wQwGXkxhsU/JTTl1EHz1ERw
+         byv9bCWYMWerfTiPcx4YHZQ7RdM53c9EnIPUX5ACuJMwFWRMTsuypt4sJvnL7Lk3DNQu
+         Y2DCzMbtc0ZhrE+b1bj6s+BrSFFezCZwjXW6aySLIeXaQ2EB0zACnExxtqGb4sjG4lvq
+         YyzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750277658; x=1750882458;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VblNPo1guxJ4nHzsvrQqdryJtW7RA9yK1k2HgAbcIm4=;
+        b=G4oHGYUNvNnIh0lOgwGnQbkLCFIM5yn12+2nfrI5UGb7/4i5Nznn7vEgHgpbwVFwK5
+         sdjsJ+83l2XZ+WPzzlxFmsTtAOecKFZjNxHhOTIK4UVavNpvDYTkZRez8Kyn9GByrbSF
+         UKQPYEP/PkI11MGJ53Rj90H9rVg7u1wWF86D7D6DQrh+yYBPMxIv1kffpQi8Jxvgda5r
+         slJ8Ldwn6vvqZ1jotBJTQzaIM4nDA6EqRJ0h9ncOKx3h5mjp7UA+TRvo338dmZDU82ba
+         9i4PF2E7qFSBe7qV40Nn6w3+pX5PgMpT7HmLR1K154/nq1696BEU21ENlWSkT7yihSU+
+         FC7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWmsrZgpUynN50uaMMd/XDVJxE0VYjonE6GyP/UNuglrrIZ2A85jFH/n5FOAkJ2KVJYq7wFlW4thOoZ@vger.kernel.org, AJvYcCXlF4X4LEfMmWoJJxUjLe6bPjv7Qo1bR0VO80d6bj9+NHX1w8wvQznQp+Z9Nzd6tk+dESSbzk0EQE9wfIPW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPBRQGej5JkmpkRjprHvyMLbbQMngnm+Ajtppd4otBb/M9FVmB
+	uDcggB3ETNiYH7UDycf/3ouEQw7I+Dv6K5PSITl5H+gGsJtmx5UVIvwqDir7qg==
+X-Gm-Gg: ASbGnctevPoAbcsvaEQmSi59F3NOyx+MYVgo6s3wmYHwUEN0lKiqwQL/WtynJbckUl1
+	7URCMEKckse1N8W9HSNmx7dLhlnuu0/T7qKPAPgU3inUDycsiCRNO1USj3Kb8hQGgDc1yFdyKGa
+	cS/3dxnBBx+tfMCO9dUPixowz9chc2lll0lx0jKdGozuajunYq/6idtWpNdY575tHivdyNRb0Dp
+	1eJxMj2ZHJBgp3QV/5ozUKOBwZlVyuWoejiRwEqJodbyW8gauWydoei/uPLUayvGoMrF34UMlao
+	IhJZoFMnVQ+KxyppaQ00UnmetThap6ibeRDizLLbMiTP62UJwyaMIg6UcaaQ7h3sHLFISJ8Wpvz
+	FChSmg9HOUUbyNoU=
+X-Google-Smtp-Source: AGHT+IFJClKdMTkSaxoreSQInmfkuGmWzvsXBbKDgFdDGxOyg0dhDMD2DbxEemQO+6juz+ShTX8Mwg==
+X-Received: by 2002:a05:6000:71c:b0:3a4:dc80:b932 with SMTP id ffacd0b85a97d-3a572367dd8mr13087576f8f.8.1750277657675;
+        Wed, 18 Jun 2025 13:14:17 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4535e97a795sm7124715e9.5.2025.06.18.13.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 13:14:17 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Wed, 18 Jun 2025 22:14:09 +0200
+Subject: [PATCH] arm64: dts: qcom: ipq9574: use 'pcie' as node name for
+ 'pcie0'
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-ipq9574-pcie0-name-v1-1-f0a8016ea504@gmail.com>
+X-B4-Tracking: v=1; b=H4sIABAeU2gC/x3MQQ5AMBBA0avIrE0ySglXEYuqKbNQ1SYiEXfXW
+ L7F/w8kjsIJhuKByJckOXxGVRZgN+NXRlmyQZHS1FKNEs5edw0GK0zozc5oezc7pauGWgM5DJG
+ d3P90nN73A5xmnZ1kAAAA
+X-Change-ID: 20250603-ipq9574-pcie0-name-c9fbf251406a
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ devi priya <quic_devipriy@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.14.2
 
-On Wed, 18 Jun 2025, David Laight wrote:
+The PCI controller at address 28000000 supports PCIe only, so use 'pcie'
+as node name for that. This ensures that all PCIe controller instance
+nodes are using the same name.
 
-> On Wed, 18 Jun 2025 11:39:20 -0400 (EDT)
-> Nicolas Pitre <nico@fluxnic.net> wrote:
-> 
-> > > > +		q_digit = n_long / d_msig;  
-> > > 
-> > > I think you want to do the divide right at the top - maybe even if the
-> > > result isn't used!
-> > > All the shifts then happen while the divide instruction is in progress
-> > > (even without out-of-order execution).  
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Well.... testing on my old Intel Core i7-4770R doesn't show a gain.
+diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+index 815b5f9540b80e91e81e02a97b20c0426f40b003..8ae4b165c315394532006665235592add112d266 100644
+--- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+@@ -1161,7 +1161,7 @@ pcie2: pcie@20000000 {
+ 			status = "disabled";
+ 		};
+ 
+-		pcie0: pci@28000000 {
++		pcie0: pcie@28000000 {
+ 			compatible = "qcom,pcie-ipq9574";
+ 			reg = <0x28000000 0xf1d>,
+ 			      <0x28000f20 0xa8>,
 
-With your proposed patch as is: ~34ns per call
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250603-ipq9574-pcie0-name-c9fbf251406a
 
-With my proposed changes: ~31ns per call
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
 
-With my changes but leaving the divide at the top of the loop: ~32ns per call
-
-> Can you do accurate timings for arm64 or arm32?
-
-On a Broadcom BCM2712 (ARM Cortex-A76):
-
-With your proposed patch as is: ~20 ns per call
-
-With my proposed changes: ~19 ns per call
-
-With my changes but leaving the divide at the top of the loop: ~19 ns per call
-
-Both CPUs have the same max CPU clock rate (2.4 GHz). These are obtained 
-with clock_gettime(CLOCK_MONOTONIC) over 56000 calls. There is some 
-noise in the results over multiple runs though but still.
-
-I could get cycle measurements on the RPi5 but that requires a kernel 
-recompile.
-
-> I've found a 2004 Arm book that includes several I-cache busting
-> divide algorithms.
-> But I'm sure this pi-5 has hardware divide.
-
-It does.
-
-
-Nicolas
