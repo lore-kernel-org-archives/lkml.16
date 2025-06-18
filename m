@@ -1,78 +1,91 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0660A2EA75A;
-	Wed, 18 Jun 2025 15:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D92E9ECB;
+	Wed, 18 Jun 2025 15:29:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260391; cv=none; b=rqy3iD6M2H+BrQRxqTrp3DaL8itvc25Zmm3N+mRT8LFQn8OhadgLPhkMF/CJ135OQtQZrWQpYVysrAK70Vr2W3xgqpGgyfR3RumA1ZD+oogu2DdiT01Z+oW9B6Xq8GF/IgOL7UsJDzfi1sye5T0rpg00gVtYyrSpLocCkSOATKI=
+	t=1750260581; cv=none; b=VJdqR/5BTcTHv5VbNs4Fw6hM0BUln7FvnEwAr0l1RVEJpOQujrI9Ci3op4D+TkJYQrKKxyfKJEHNLDG5nQtdgIvf876GEh8F/0pEp+PN/jBO587W2KgV+NnrAHAr8OZz1RYw7X3RxbZCGHffkelu+YLPcMo6m46901GCdx9rt24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260391; c=relaxed/simple;
-	bh=gXBtCZJn+/0MDXSt3IL6zfF19ZAzvlVfoaqXyMbqu68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZYBZaEGJLFOtXGzgJ79OyOsKNVBe8nCORDywi5FJk37Db0uzPIH/Z1SJa36cGMppwstwsOun2IIVt1/CZrqBEC8bYeBn00yPE6ECl8Al9i1bVlJkmA8vxZsVrk0PA7yJsBp/aZhOkuXtkWBypwLGeX+1v9wkIbvImrEa68vVvLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=vK10M2Cw; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="vK10M2Cw"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4bMndW4RVVzlgqy3;
-	Wed, 18 Jun 2025 15:26:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1750260382; x=1752852383; bh=WCxYkDwQ1Z+2e4N8cfHv6foo
-	BWEtwioWQeVmv2+6sWE=; b=vK10M2CwI6EJlu8wqqL6jPa64dfK9a0egT3xLcpX
-	62qA+BxZLn36QFBCFIK5C2RPgn8TjiniJ6kshzItX/TOJqAFjRVEqHMOy/5bqmal
-	fLDfI6xLehrcMPqwchthxT+2GIntKgCAIZ68BWL0dp5n5JmWEJQgDGO3hFpcgoUC
-	dyV3NE1oKgARbmRZfy0GSk2Dvrzj0S3ruNU2rD7CvHWW7jwNT1VcBQh1iGKIbwkT
-	qbBuiW+An63Vz7xBhBhjxxCKfOYxp0Qhw1jZTcgvx6yHKkvrZxknmrudJxLp8SpP
-	5e7LGUdFWwLe2J0M/4TZZ8duuuVHq8+Kqj68ftvnbehvFQ==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id m5_91iT8yPGn; Wed, 18 Jun 2025 15:26:22 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4bMndP5zqdzlgqVk;
-	Wed, 18 Jun 2025 15:26:16 +0000 (UTC)
-Message-ID: <dc972e6f-b846-4445-a347-c6fbf72ba429@acm.org>
-Date: Wed, 18 Jun 2025 08:26:14 -0700
+	s=arc-20240116; t=1750260581; c=relaxed/simple;
+	bh=lW4X2/j0mHA1tNFg9bYU+FZz+tPT0wmbAyYt+FoNbkA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o9Hyxx9SKlPe56FI6cEQal68cv/vG5xcld/YI7eNq+Pbqc6p44bVN8hwLHAeNA2YO819bHad0H8EdQR/VRYewSFTj0rNd12EeJrR+JTqRPX+VyeMX/522rzQt3m7vocP+2kFa2+K4w3Txyrk9tnKdRHxLxR/8tO/jcGiakiuKUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id DF163C02B9;
+	Wed, 18 Jun 2025 15:29:35 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 1DF0C20;
+	Wed, 18 Jun 2025 15:29:32 +0000 (UTC)
+Date: Wed, 18 Jun 2025 11:29:39 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
+ unwind_deferred_trace()
+Message-ID: <20250618112939.76f4bb87@gandalf.local.home>
+In-Reply-To: <20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.433111891@goodmis.org>
+	<20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scsi: fix out of bounds error in /drivers/scsi
-To: jackysliu <1972843537@qq.com>
-Cc: James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.org,
- linux-scsi@vger.kernel.org, martin.petersen@oracle.com
-References: <07c4c84d-0c52-4843-b32d-6806e58892fe@acm.org>
- <tencent_D9A0F9052526AD09F7FF76DD5F2529FDDD05@qq.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <tencent_D9A0F9052526AD09F7FF76DD5F2529FDDD05@qq.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 1DF0C20
+X-Stat-Signature: tsa5f6hsoe9t4jumybf5yux1amccjmzj
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18ezSxyACc6GRwHDFQgKNfyshvjstQIJbs=
+X-HE-Tag: 1750260572-758865
+X-HE-Meta: U2FsdGVkX1+Whxt1YjVRFQvEKsQMCy9zG2QwWy029AeidKVH9+toGcDXMZj8vlnlbKg4bRAYkDEWJZJ3BlnpVFJCZfLHu9gOsWVs2MPYcB7VluSY9kVBMf3BDjLLXCAPOqCINfYDJQShbdoIOK/NWnU/xBvCopScba2ktXD1eqUlebES9UbMRxF/XGcxwcoJk161avURclnzXwo7nk590Q8+maVlST30WYNfjW+qx9ISH1/REGHsV1g1dU9SH24cRwM7tB2heJz2Avqy8ydHqxAwpw0FJT4SeSfUUBdwN+dDNChy8hAMzewIJEmTx4NqH70FwetUvUEEFnqZ9Z9iVXMYTSdCjwLW0jOe3Q5ICG26FSzHg3I8D340vipkZXA3
 
-On 6/17/25 11:31 PM, jackysliu wrote:
-> Can I know what kind of impact this vulnerability will have?
+On Wed, 18 Jun 2025 16:02:47 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-The worst possible impact I see is that the Linux kernel would decide 
-that RSCS is supported although the device doesn't support it. This
-could cause sd_read_io_hints() to print incorrect information. The
-following message could be printed when it should not be printed:
-"Unexpected: RSCS has been set and the permanent stream count is %u\n"
+> On Tue, Jun 10, 2025 at 08:54:25PM -0400, Steven Rostedt wrote:
+> > +/**
+> > + * unwind_deferred_trace - Produce a user stacktrace in faultable context
+> > + * @trace: The descriptor that will store the user stacktrace
+> > + *
+> > + * This must be called in a known faultable context (usually when entering
+> > + * or exiting user space). Depending on the available implementations
+> > + * the @trace will be loaded with the addresses of the user space stacktrace
+> > + * if it can be found.  
+> 
+> I am confused -- why would we ever want to call this on exiting
+> user-space, or rather kernel entry?
+> 
+> I thought the whole point was to request a user trace while in-kernel,
+> and defer that to return-to-user.
 
-> And is it possible to get a cve number?
+This code was broken out of the unwind deferred trace to be more stand
+alone. Actually, it should be renamed to unwind_faultable_trace() or
+something to denote that it must be called from a faultable context.
 
-You are asking the wrong person. I don't know how to get a CVE number.
+When Josh made perf use the task_work directly, it used this function to do
+the trace as it handled the deferring.
 
-Bart.
+Note, a request from the gcc folks is to add a system call that gives the
+user space application a backtrace from its current location. This can be
+handy for debugging as it would be similar to how we use dump_stack().
+
+This function would be used for that.
+
+-- Steve
