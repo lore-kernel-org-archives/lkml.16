@@ -1,83 +1,110 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC1327E1C3
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B691941A8F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253413; cv=none; b=Qf23gY/xm4gvhlDxFuSrIb/kyocJGVU51QvSTI5w9IVW+ARVJtAhKSb+UYeDcR3SSn44IwCVlRryUgTls6pD4yJmlImWqYUd/6wtU5uscN6zZ96NUgMK9UGc3yxuP2vwGEz20BtKEN0ZoJkjiFMB7KLFafqY+ARJlFJWo72hHhg=
+	t=1750253494; cv=none; b=CuI/lYRZGtl13FOH2oDtZ62qktD6ba/qrHBGObfqI/MOKNEMQtg8eBJuWH8M+VcutWjjfP0ZLojrRm+G/4cF7IjA3DrO/jZ5qnaAZOppHrzZRj8h6XrSL6AoRl9ALuteRnaO7CoCl4leIkmz5mTxQ7zR4wYWinytY+RsPWwMJ5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253413; c=relaxed/simple;
-	bh=CUdYwHjpfN9yqk7ew7xfu2PvyAnQygAStPl6RmQaPHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CtgJ5ae/4Dt1mFmtg8AKChIePUHpbX3YFhETlOW09G70ewOaLqetozJZuKNeyyZnoEjkY033RrOH3Taxu27Ne+bfSyJM5LO6vjvNXCoEtPWdCyDsKZ8O0SWHeu7/V5v4XRqtz+PSe1Ovz1c0Yk3sV0zljnd8ZpezeDFESTwVmI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CpOZJr9m; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750253494; c=relaxed/simple;
+	bh=YCQ7piH8NOmfQoO2LfFOIy6orTmJbXOFq0+UiqDQBl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ebSKpUZJw2B+TGhPIF8L/7SyyXr8cABYhufT4cdpCxPelfmcgeIXJGIX/M9ehcyrAAilCFnD2hpV/D/dg6QK0taHHHkgA9NzqW739OHolCxktqew5lb5kK5vWWEtDfr3jXsfCyp9NyK+k3gryorW2POnOi6kZJNX9Oy89CazxLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=temperror (0-bit key) header.d=ciq.com header.i=@ciq.com header.b=hUv70jtS; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpOZJr9m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=LnEHQ0EYQw6B1hzi83rKPaI4LXCQaqQAumElzeZ06OY=; b=CpOZJr9mLxavdXNrRcOwjSM4Y6
-	h7bIKxZOEkdEqzrCC+zZSB502jy7HFBtBMUguZMaq8jKvuqEdcZTw7UcJa6qN5cxSPP2wnwgJfEg6
-	rvtHolg2hcveYeuBig8S9gfqGFjShM8zD9G2Ye03VVbcJlfYMApIpoYSGZbY4FFxs4g17Wdnk0xdB
-	QQYVstYKivogPRG9OLS2Z7V7Su5UgmLb1h9Q5AJaBpK6y/tosQ6pw74nCyZDbPmX7Lc1Cw9VKYBCg
-	+0CHUiVCGwP3onVjZP70KanN0G3aduT1z7x1PNckwqLSsCYCD5lM/yLxdSy2Jn7VUE0DBZNoI0MNM
-	ohVFWHqw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRsrd-00000003ZxJ-0WW5;
-	Wed, 18 Jun 2025 13:30:05 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E58DC307FB7; Wed, 18 Jun 2025 15:30:03 +0200 (CEST)
-Date: Wed, 18 Jun 2025 15:30:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-	dave.hansen@linux.intel.com, irogers@google.com,
-	adrian.hunter@intel.com, jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-	ak@linux.intel.com, zide.chen@intel.com, broonie@kernel.org
-Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
-Message-ID: <20250618133003.GC1613200@noisy.programming.kicks-ass.net>
-References: <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
- <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
- <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
- <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
- <aFF6gdxVyp36ADOi@J2N7QTR9R3>
- <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
- <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
- <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
- <20250618093500.GH1613376@noisy.programming.kicks-ass.net>
- <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
+	dkim=temperror (0-bit key) header.d=ciq.com header.i=@ciq.com header.b="hUv70jtS"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476a720e806so61326411cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ciq.com; s=s1; t=1750253491; x=1750858291; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3JFwYA/jkfd0hXA7i1wxMI97JhwL3szT+ZlmJ7XxF+0=;
+        b=hUv70jtSizaibLqajRGnQHHY1fGo08CZrn7vjQHiP+hx83GB4y5XqUUArm2T0TOShB
+         Pqziatzr5rfhXFbv16LDFzBkKviVMIlGDJ6+afJ86WiOo13BxRnrFCnmISSGX09LNcLZ
+         rb+44cDrOFeOUFBejwly+H12Sgzjq9bL7MbDhze1L7bjiDnvwz8PesunmNmQjITkBbw7
+         bfZdwztzUcXprLBj14+5G7bIfFrz62dTtxtoL6Z2wjWdpK5Vb8t7oYfqq3N5Zv/EHRZY
+         8R1hk0yX79d0iYbEKJTh/sx+9vGuUHEFQwdttbeSNGU48BkdI9OrZOFUcdyPUxyCaQUg
+         uFrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750253491; x=1750858291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3JFwYA/jkfd0hXA7i1wxMI97JhwL3szT+ZlmJ7XxF+0=;
+        b=bENhPPhrKZsKEAaRf3/QkZmo0C7pHbaYLDS5qxG4/ZF0qhEaURgnLMHwPTuC7aKLEU
+         UeA3mlfEm/rQ9S4rS94J41bBO1xRVWG/LYgV0Vyqo6c9mgWANdkfaLQTN2uw5rtBKc0n
+         t+F2A2z9WfAL/PIYigYoLso9XXL2d/WtZ9RBXrnPOun6Vk4loI9M3laxsdvrdSXOAoDe
+         xva1I/aiOzpQwyAGQAFT18S2FfAEHFu31DJLLmSQ768zd0Jgm749L0G9HKxO9DDZrok7
+         lhjoyiBM0uRNLlBhnh8c7Fpv4Orj45ulxEV2mYdvO3+8hxMy2e+APrHDOWA9GJPtS/Fo
+         5xTw==
+X-Forwarded-Encrypted: i=1; AJvYcCW0h5OgKrbJ94Toy5Qu8kD/YU3TPuHO/6voQlfejiC8RXJcbWolkrIHH6wC/ZpdW2ZawtBXNxwC4nc18Us=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJ/oqyP9SFnxZMA/eglsjseE9KdBQdd1JSo0jYgZ8M5G26LlGj
+	RU1d8FAguQ9FAkA2+bFvqf0Zl2IYo3+r+uj6xM/aKBaU15AIaGDgDWPIULn10noBXzoycfj9MPj
+	fhLWLQudLsotoDAFkFwDNMB3hAqYGfFvigGgXe9pvjA==
+X-Gm-Gg: ASbGncvz0l6jytiQ50Y/KEh3Ah0Q7kVqZOcmogKXerEqUMpO1/jCq0UvZXZn8sv1N03
+	+aaoRDnrF9nJcm58LiT+uolGbKWk2E0b/9QhvO2lMRGCeWbfAutKVvKZT3YPlgPQKLBjjBO0Rvi
+	5gx6fl7KRsLuRsieObjd56+ipZFob/jfE5a8umriljYeo=
+X-Google-Smtp-Source: AGHT+IHvAF384ulG7jeOei9YKbmf1P/jGQ+JufAKN3h671aUCTcCBeKSI6jZkZThCcEJk1d+3d3EccMlv8QdHJnDkdo=
+X-Received: by 2002:a05:622a:14cb:b0:494:a23a:cadf with SMTP id
+ d75a77b69052e-4a73c5f7c47mr288361601cf.32.1750253491442; Wed, 18 Jun 2025
+ 06:31:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
+References: <20250617152419.512865572@linuxfoundation.org>
+In-Reply-To: <20250617152419.512865572@linuxfoundation.org>
+From: Brett Mastbergen <bmastbergen@ciq.com>
+Date: Wed, 18 Jun 2025 09:31:20 -0400
+X-Gm-Features: AX0GCFv04DSE_cj8v9V11RrtCpU0sN-9SM6zbziDuzIH9xcjNf1-z2uiuZtMRnU
+Message-ID: <CAOBMUvie6B4eMPB1fD7jxM8SpL0-oVnQWt4wCHxBHRiFBZWXTw@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/512] 6.12.34-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 06:10:20AM -0400, Liang, Kan wrote:
+On Tue, Jun 17, 2025 at 11:28=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.34 release.
+> There are 512 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 19 Jun 2025 15:22:45 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.34-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-> Maybe we should use a mask to replace the nr_vectors.
-> Because Dave mentioned that the XSAVES may fail.
+Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
+Intel Core i7-12600H
 
-XSAVE is a pain in the arse :/
+Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
 
-> PERF_SAMPLE_SIMD_REGS := {
-> 	u64 vectors_mask;
-> 	u16 vector_length;
-> 	u64 pred_mask;
-> 	u16 pred_length;
-
-That is not u64 aligned...
-
-> 	u64 data[];
-> }
+Thanks,
+Brett
