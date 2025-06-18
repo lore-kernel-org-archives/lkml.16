@@ -1,110 +1,74 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2302EE617;
-	Wed, 18 Jun 2025 15:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0750B2ED150;
+	Wed, 18 Jun 2025 15:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750262353; cv=none; b=jn2ljTdt6fMsaiuJCqqQmqCUDCG7OnK1dQ5LmcSnnvw0wMVoIrygIa6fvWFPbCL67Kp/dnztJllpmS9btTXxTwY+bw3KHcxDfBMQ4fITmwxI7fmbra8J/vy5NFaLvYcmed9tOnf4HHWxWzI2HgnbykOXesVtuedwfMI5h0p1fwI=
+	t=1750262370; cv=none; b=dnRKIMxomEigc75nW3JorG7XoZuxWexoWKj6r6vmFp4bGFU2QpRXXtsiiuVJSatRkETMZgJpDrR5pinFwOooPW1HHWCwIT2SYUje1zfDBqtEsYIYEF6BKZVMC++27Zn3MY1svRSba+4D944j0ZVD0tnMD+EnbPwDW8yDKqhGCmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750262353; c=relaxed/simple;
-	bh=fCqVENc9CZO81zr//o/oiav5RoS2SRTDMugbmxl0dz0=;
+	s=arc-20240116; t=1750262370; c=relaxed/simple;
+	bh=Wtb8tXk3Nd9IYbRIl8BcSYz5FJ+EhtSHNfMIyCzbAz4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JecLD810hketKarMUk+Py6bnvwbBL3zI7Efi9998INlWes67nOJRQte2joX4TE2tnc+0hGpwnzm1u5/bMJJiVDfDEa62Ca1PCm7qRuayBEmB66nGn/vaUs69KXsFi3ncd2wY24X1apP+UkNS0N2ccAOpQGWgYGTLFC1vide0ETg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Uegyf41u; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YDeO3R22K50r2TLT1NSWYD2RcRIdnuy5vXg46eQA0GIjtR+Q9fLtQZI6emYWymqIs3aT/S/rQX8w6c0RyAm3nnlvrivunQKS9n76oMyV5v5PEw9+S9oaeKPCOaLo4P0d5LmJYz1lnl3xgIXA/z8UxPR3rVNf49viCVDZDbo1u5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzrhKUIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Uegyf41u"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id D8C7B2B3;
-	Wed, 18 Jun 2025 17:58:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750262335;
-	bh=fCqVENc9CZO81zr//o/oiav5RoS2SRTDMugbmxl0dz0=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzrhKUIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91689C4CEE7;
+	Wed, 18 Jun 2025 15:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750262369;
+	bh=Wtb8tXk3Nd9IYbRIl8BcSYz5FJ+EhtSHNfMIyCzbAz4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Uegyf41u42ocjfi/GtLPISMxFPKc1Qw72qSZ4heQWO8OfbdbCxPKRizK7aEPuEcf3
-	 Ytr+BH7fSd4YDP0nxzzse9yAKLp5Wy+O+4Tl3LrfIFxOAAf9isfqOUyh1HSQw7gD+5
-	 CX9GizDZC8iDvAOXzXmAAqkPLLykmriYj/Z6scpc=
-Date: Wed, 18 Jun 2025 18:58:51 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] media: vsp1: Add missing export.h
-Message-ID: <20250618155851.GA31351@pendragon.ideasonboard.com>
-References: <20250618-vspx-include-export-v1-1-95a2da4ec465@ideasonboard.com>
+	b=HzrhKUIFDPECt7gIRMmvqCTDKzg/kngQ+xraRJ1Mu3OefcR18v8gJ7uYGHr0pgOiF
+	 7EMh0xflezt0LLQ63WQnpPaS1ZfKPsMQGVfxFgbxrT0YGYqzeGmCcpwp+eGUze4MQ/
+	 910UsRP+2RdyhooqomAJaniuwOsl/SVin8DdynGFitYBSd8lf0fUfM/PMJYHUvzTAE
+	 jTD0La3e6CEviozKybSMEZJZC24QJj3pREtWvx8Lvmp53njD7TEHt3uxjpXsptOAZ0
+	 D+NLgEqxMbhVq2qCQCviVMhVM5plnItMju6FfW7G/cFBxFApmq0sxtBLTzXygoTnmR
+	 EpJfQJJzzUTQQ==
+Date: Wed, 18 Jun 2025 16:59:25 +0100
+From: Conor Dooley <conor@kernel.org>
+To: xianwei.zhao@amlogic.com
+Cc: Sunny Luo <sunny.luo@amlogic.com>, Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-amlogic@lists.infradead.org, linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: spi: Add binding document of Amlogic
+ SPISG controller
+Message-ID: <20250618-sermon-unluckily-364512d7ee05@spud>
+References: <20250617-spisg-v2-0-51a605a84bd5@amlogic.com>
+ <20250617-spisg-v2-1-51a605a84bd5@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j3A6DDGHly87vWDS"
 Content-Disposition: inline
-In-Reply-To: <20250618-vspx-include-export-v1-1-95a2da4ec465@ideasonboard.com>
+In-Reply-To: <20250617-spisg-v2-1-51a605a84bd5@amlogic.com>
 
-Hi Jacopo,
 
-On Wed, Jun 18, 2025 at 05:42:47PM +0200, Jacopo Mondi wrote:
-> As reported by the Kernel Test Robot, the newly merged vspx driver
-> exports a few symbols but doesn't include the export.h header.
-> 
-> While at it, include the header file in vsp1_drm.c which exports
-> symbols as well.
-> 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506181950.r9PRdV59-lkp@intel.com/
-> Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+--j3A6DDGHly87vWDS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-> ---
-> Add missing export.h header as reported by kernel test robot <lkp@intel.com>
-> 
-> Can this patch be fast-tracked to ensure it lands with the one that
-> introduces the vspx driver ?
 
-I'll include it in my next pull request for Renesas media drivers,
-either this week or the next.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> ---
->  drivers/media/platform/renesas/vsp1/vsp1_drm.c  | 1 +
->  drivers/media/platform/renesas/vsp1/vsp1_vspx.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_drm.c b/drivers/media/platform/renesas/vsp1/vsp1_drm.c
-> index fe55e8747b05aa351c1547469f9cbbe2b6d25408..15d266439564e2317dbc380ef04d2b15ae899852 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_drm.c
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_drm.c
-> @@ -9,6 +9,7 @@
->  
->  #include <linux/device.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/export.h>
->  #include <linux/slab.h>
->  
->  #include <media/media-entity.h>
-> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_vspx.c b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
-> index 6551d63ba387a05c932d2e557bd0ae5f8810acc7..a754b92232bd57f1b4cd3f9e7903f0b5da5c5c57 100644
-> --- a/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
-> +++ b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
-> @@ -13,6 +13,7 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/export.h>
->  #include <linux/list.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
-> 
-> ---
-> base-commit: 642b70d526ab8daa8f256dfc1eb6bf27c3290cc6
-> change-id: 20250618-vspx-include-export-84379a99bf59
+--j3A6DDGHly87vWDS
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Regards,
+-----BEGIN PGP SIGNATURE-----
 
-Laurent Pinchart
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFLiXQAKCRB4tDGHoIJi
+0vFbAQDkAoiyjJWHA9/lV1bpTRiJToatKdq34ZG1aRKkIaWyugEAwan+KTlmc37u
+Db0V7HH6rDbsJ8C4rkutrGQxo2xVpA4=
+=gh78
+-----END PGP SIGNATURE-----
+
+--j3A6DDGHly87vWDS--
