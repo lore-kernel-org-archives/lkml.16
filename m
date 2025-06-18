@@ -1,92 +1,89 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965FD1DC9B5;
-	Wed, 18 Jun 2025 06:18:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F29F1B0437;
+	Wed, 18 Jun 2025 06:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750227502; cv=none; b=f3sI2eAQ9CDzOFcIPUe7L3yFKnByvJN4wfJczoMhDJMwruatNdWbZ3DDD1twlwWWuD9I1kOXCqL2eKXlcZ3kw2a9BOm/pPwLNlx7iruODulPAAdaaF82DT+wiPlibJM1qJ/9HrwzCzfPj3PsI49jLd4TJydX93IHS7vUzIwqzzM=
+	t=1750227594; cv=none; b=MUHFo3AaT9x2ySgqusb+LnvduOlFkN434KepqpCyOh30vx5KQP2WIOuTouBZ1Y6156zfOROSyiDGjvQMN3Wy451Gl+r6YX+pVtGkWYtNUUdIYgEC1G/yIFSIeRZC5xDQq27e9qyJCPm3kGT+JZV5IQpuUfY00wCAst6ImxSjOU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750227502; c=relaxed/simple;
-	bh=DsN3Y1NEObF13uTLnQxZH332yoT2Jif15MR4umC2F7M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tVQWDdhUa+qqcvJosqhUxZPAakfSCPJWpy36WdRrLiW5xUVNvfohdzd2u2PHMzc5EaqXmCxdaobs3IAC3QsOJa98Pf8uwjwXkqOk/xvpA8Ac4AYfRyte3MlHShZmOmogWPOwiHpU4pwMRMbftT8ZXQIC8Go5G9ac9W++PH4VJT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=gU6ejNv1; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1750227594; c=relaxed/simple;
+	bh=ptnwGTzj6YMKatvrZaLaa4y9ij+xS18u0yM5DI6DxQY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eF7SupjfD6JJ51zfnZT24nL0lHwGKJtDfjvPkJiTNETmrTasvi4VXTtXfkmgktZpm6ikk/W1O0H3mT6XATDX+QM8onZYku+BACWgMcVmn36qoGvxdcYolo9cpVGF9q/qbzx0JH645oszqKAs2nzyKBHpPAdwAA14Bdtm9DA/avM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAI+v5uI; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="gU6ejNv1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=vE//73FluqQHJWQMwgupyqLu7SUx6i860ffNcOAxUhQ=; b=gU6ejNv1Lm9FggFx9oweTn3x6m
-	KC3CgCh0N5Ehe0Amk7bkq2EJk5pOnKtFKsVC47WdVDo7t4wIoUEMig/nvGtVEQk4/ihfq4sgKhktg
-	GrmSgCX9OlYq7E2cucM2ZugXUb1ORrfcpMvpoofhzVgQnUtGG7LlY73Jos0x7xKZ7ewl5C49mN//4
-	ToiJE8tY7Vrrf283uK7odF4UO5BrhCAiSrqI3LWG5MYmunJGdxJIAFlg5e0/wc+LdOE0cD5obBzSH
-	LSLmt7WGpLtD4Jeqi0aWlgbKHzEXu6mn+C4WBbFkOZUBhOBe1ubGM5Tf7lzd5NIXls8P/2HfxMKh/
-	0Ae/COQg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRm7j-00000006OSy-1ASP;
-	Wed, 18 Jun 2025 06:18:15 +0000
-Date: Wed, 18 Jun 2025 07:18:15 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: almaz.alexandrovich@paragon-software.com, brauner@kernel.org,
-	jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
-	syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs: Prevent non-symlinks from entering pick link
-Message-ID: <20250618061815.GR1880847@ZenIV>
-References: <20250618052747.GQ1880847@ZenIV>
- <tencent_9DDC9378E363A961A3BEA440376237718605@qq.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAI+v5uI"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2355360ea88so8361345ad.2;
+        Tue, 17 Jun 2025 23:19:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750227592; x=1750832392; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ptnwGTzj6YMKatvrZaLaa4y9ij+xS18u0yM5DI6DxQY=;
+        b=EAI+v5uI7Gc0leeysixCbGtzLB51TjG5weGbK8DgkJv/jzOSIooM4sj/LJJn7gLFQx
+         v6/WekQRqwQ6cxLys98UnfzQKi3g/ji3BM0DPFkZJ2iQBjR0d1+hhg87l5aGpZq3aL/7
+         47OQEiyS4+sUPPvJFI6xWkktkIFZqsWtuTNZIVYtea5nWn8waivLPN+0vxxEHkuTfu7b
+         RJbtZy3+UsTmvicZbFu5HvE1wh2q8RjoUQFUxwvjDdKWORKUnuC+BWcinck0WDIasF34
+         tfRTG75RuHqdM8JDLhvIQA1stin0mdPc3X4CQ6n9F/EpK6XRkqAEqQ4XT9sMYTcbHqCf
+         /EnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750227592; x=1750832392;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ptnwGTzj6YMKatvrZaLaa4y9ij+xS18u0yM5DI6DxQY=;
+        b=jqzx4idd8sANWLzmqU3w3yRYuOA/NmoGhvj7UHhCzYfDoulUvsBFKyivmi0ok4cMHb
+         ryczP8hqL0busj+tyaJontFuCRNXZEFzjNXtrURSHpZf4SlXO5Mk0lg7B/nwHPCfW3cn
+         JRpCEUZ/5arIo0Va+enV3sP0Y2kHCENGau+60k+EhoT/rjNVRRQJySLXNUVEx0cBDMK3
+         ueb58aWL1pSbbvnA159ZrTwqB5e8ePhHA9ffnjiNKUwabzwZ+nK3soqjJ1zu4LIQqy3t
+         dxSufLsEdJNyNsPwxAwo3d/CaxHA0K62O5LgK1uaUk5vjPmIpyIvnKvyp6wDbtM9Vl2d
+         qzYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXYregCExWBO3ph0MNtkRC4L3wbP9M6Ir2P2ay/5lSZYA+K6FlKpqlF0YWaUsBUJgLc8hP9y31R4n+mmbKxGU=@vger.kernel.org, AJvYcCXEKO7UpRXeDFbflk52Yprc9yzgsQLII9Pk4N6A/9coqYuppEEFw9YMtq7XwI2SFfnfZ373UsdJRFehBI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2PZXX0YPjh95uYf7YdKSpis+QvxqjkECz+xA8lsDT2nilVmei
+	RyFxvz1INVffNR2UvIu1cbqLIT9nLqWMSwLVtAOzra5OtgXrqNhgZcORnWuXm2nzOoAAKQIQwpU
+	Z8qP+SgtnRD9yDBVbn7AYTkbCdbQYruI=
+X-Gm-Gg: ASbGncufvYgrHMbOKzDZM4ibTQ6Rmwd+ipY38nJmqpraoM91crtMTAL7xLtlUyI2482
+	rwIBzZJOtp7WklgNms62Vy34N0WMjBfVCMmBpVeZ3rR+uQac9J01xX3pDkjYZa8NXnGWtb6jxob
+	0r1OEGCxjPIsY/aN9Bb2cR80mz1Uo6JgIPAMwOsRGOmgc=
+X-Google-Smtp-Source: AGHT+IFtnzX76bEKEbc2BXmLJccO2YsNEFGrLZRb7gLGYgWEKWunrctKo3sA+VxN8wWlXqDc4/YJ4oKSqaG76xV8EU4=
+X-Received: by 2002:a17:902:c404:b0:234:f4a3:f73e with SMTP id
+ d9443c01a7336-2366b1489fbmr84870505ad.9.1750227592465; Tue, 17 Jun 2025
+ 23:19:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <tencent_9DDC9378E363A961A3BEA440376237718605@qq.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+References: <20250617140032.1133337-2-guillaume1.gomez@gmail.com> <202506181334.f0STx6ta-lkp@intel.com>
+In-Reply-To: <202506181334.f0STx6ta-lkp@intel.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 18 Jun 2025 08:19:40 +0200
+X-Gm-Features: Ac12FXzEAYg6BwKSfXUGSw7sGa50QSsZn7SaLIMHw1acT4CRUVbCTxzzVjN85hc
+Message-ID: <CANiq72ksZwH7GZKAjk=7FN2npWou+T-0pkbOF+fm6hVHdQtNZA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] Use new `--output-format=doctest` rustdoc command
+ line flag to improve doctest handling
+To: kernel test robot <lkp@intel.com>
+Cc: Guillaume Gomez <guillaume1.gomez@gmail.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, ojeda@kernel.org, 
+	oe-kbuild-all@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 01:34:18PM +0800, Edward Adam Davis wrote:
-> On Wed, 18 Jun 2025 06:27:47 +0100, Al Viro wrote:
-> > Note that anything that calls __d_add(dentry, inode) with is_bad_inode(inode)
-> > (or d_add(), or d_instantiate(), or d_splice_alias() under the same conditions)
-> > is also FUBAR.
-> > 
-> > So's anything that calls make_bad_inode() on a struct inode that might be
-> > in process of being passed to one of those functions by another thread.
-> > 
-> > This is fundamentally wrong; bad inodes are not supposed to end up attached
-> > to dentries.
-> As far as I know, pick_link() is used to resolve the target path of a
-> symbolic link (symlink). Can you explain why pick_link() is executed on
-> a directory or a regular file?
+On Wed, Jun 18, 2025 at 7:51=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
+>
+> kernel test robot noticed the following build errors:
 
-Because the inode_operations of that thing contains ->get_link().  Which means
-"symlink" to dcache.  Again, there is code all over the place written in
-assumption that no dentry will ever have ->d_inode pointing to any of those.
+It is just `rustfmt`, so no need to send a new version just for this.
 
-No, we are not going to paper over that in __d_add() or __d_instantiate() either;
-it's fundamentally a losing game.  _Maybe_ a couple of WARN_ON() when built with
-CONFIG_DEBUG_VFS or something similar, but that would only make for slightly
-more specific diagnostics; not all that useful, since you can literally grep for
-_ntfs_bad_inode to pick the location of actual underlying bugs.
+By the way, from a quick look, it indeed looks like with this now we
+can finally avoid relying on implementation details on the kernel
+side, so this is great, thanks!
 
-Again, the underlying bug is that make_bad_inode() is called on a live inode.
-In some cases it's "icache lookup finds a normal inode, d_splice_alias() is called
-to attach it to dentry, while another thread decides to call make_bad_inode() on
-it - that would evict it from icache, but we'd already found it there earlier".
-In some it's outright "we have an inode attached to dentry - that's how we got
-it in the first place; let's call make_bad_inode() on it just for shits and giggles".
-Either is a bug.
-
-_ntfs_bad_inode() uses are completely broken.  Matter of fact, we probably ought to
-retire make_bad_inode() - there are few callers and most of them don't actually
-need anything other than remove_inode_hash() (e.g. iget_failed()).  In any case,
-whether there is a case for several new helpers or not, the kind of use
-_ntfs_bad_inode() gets is right out.
+Cheers,
+Miguel
