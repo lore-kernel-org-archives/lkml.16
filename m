@@ -1,85 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D422E3AE5;
-	Wed, 18 Jun 2025 12:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF85285C8B;
+	Wed, 18 Jun 2025 12:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249829; cv=none; b=Fo5BOdNdcNuIYQy5YdbA7Tv8xNRmw1OVV6lOhjZHHq67xqtEZ4/mH2fN1bZKsbsdBzMD+afabaxMwZ+drqP2adL8HURHJvrN0uUKno7acA8mViLwmBygpU6qg9RZBdqEXizafXLweTwaEtNT+QARLD4uCMYYWjZG6A7RBLHxmcY=
+	t=1750249895; cv=none; b=QXg3Ummf9kpN+YzTAPu/SEGRU73V/R0FhqkfLhpGU3pN13H2kjJXx1TMDy/1BLf8ITsMlcKBQPtb2Is+XsJ6b8kY9o3APIYJ3qSE3nlkYgihv1AMyDVKEIqW8Q2gu1vPOQA8Z81v12lL8/gD4U8NgR4H5Z5PhEkubL+xuu1oJmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249829; c=relaxed/simple;
-	bh=D4rfI/dgpwr4p8/1Ep8pqKrbCEmpB4WZJuBHlVP4Le4=;
+	s=arc-20240116; t=1750249895; c=relaxed/simple;
+	bh=3ZrI052V23T+mNrFLFPPcK3CIF/YjYSdxgqZH0iO2d0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MOGLAAOFSx8SB+w5lYj+haEABVs4aZ954+7uQ1+xR1CCdLoTt71mwLsd/AUvD90Y7nlwk3vFrQAudf2f0joyxFOOl9DAM3G/KtdJKTE/RbK2z+0PBoQVSL06ablTxguvRMQgTsRERr1TM37nqtb2NY+ciL5Yie5YKsjYd+h9M1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMzFDvsP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xsq9zPZq23KjhwKK+THSw8yX8UyUpxA8jJRYuIWUCxJ+WU40ZS44qVpzSs1EPQ/2KqB9AgSpa96v5YhiUrhyYoyFYQfqqCd1Mw6vrNFtIg40zP33vmoXe3MM8AoItIOA3E3DUDEkoICGfovaauFkrT3fDDDn3Nd279d33Gc2hkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DijN8Sil; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMzFDvsP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FA8C4CEE7;
-	Wed, 18 Jun 2025 12:30:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DijN8Sil"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464B3C4CEE7;
+	Wed, 18 Jun 2025 12:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750249829;
-	bh=D4rfI/dgpwr4p8/1Ep8pqKrbCEmpB4WZJuBHlVP4Le4=;
+	s=k20201202; t=1750249893;
+	bh=3ZrI052V23T+mNrFLFPPcK3CIF/YjYSdxgqZH0iO2d0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nMzFDvsPqxLn1B9i3oamFf9T0SmQ9lxFf85hW0ar7mgg/euMF6HKelkctIIKfhypP
-	 lEGHTTwlXhFmQdwLqAR1uPg0p2i9N3uRgcA+I7Ib7vhZevLLLuaJGD9FDWZfBsmrEO
-	 XqnnTzTGwQ1p5+NV0RD9k/ZlsHY/JSkVXultVPRAsf1+/VBNWO+WOreuWShujmZ9w7
-	 u2jArgUGYApvsx8TLqCj6T73EYiAlVQySCEYQOPRS8K66Y2bjxChYSjDom0STHp3hz
-	 S/YgtQw7jBxTHfqqcMxtilue9twIbYg2GseKjRtTIvy9qJBndERtLcSTpS6Ii0APPl
-	 2LQLRR/SghWtA==
-Date: Wed, 18 Jun 2025 13:30:24 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, Yogesh S <yogeshs@ti.com>,
-	Santhosh Kumar K <s-k6@ti.com>, Steam Lin <STLin2@winbond.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-mtd@lists.infradead.org
-Subject: Re: [PATCH 2/8] spi: spi-mem: Take into account the actual maximum
- frequency
-Message-ID: <89c8da9d-8e4c-4e68-b306-5645154b4d60@sirena.org.uk>
-References: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
- <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-2-513202126013@bootlin.com>
+	b=DijN8Sil7SIDh7aMjK7gKz3beUUdlrtDXsfV9XqMLHI2sWXIPtLhM9yZKqEhdLv0S
+	 16UPsbzgcQ/2ZsrzKi70rJ+Cfjy3JGmJ+KmSxJCt9z5wRq09rmY0McIDUQqnz10aW9
+	 eBy84xrynrdhhZ3XQyI7hYerF6M+z25EkcOZmpay0EwFLprTzfNBvrxFVazlqo5XTW
+	 zzt468nWONM2EYqrbOVk859JQXXPzqN9yAADNYQ5bSAUtlT1o7E5gzrTXNwc/VQcjJ
+	 KUPXZZ/qElxiFMuYaksyZwOVodEgisAenxD7DGhN6W5Q/Uq3bHXp3XJnKOXOl/AKfb
+	 +PJD2RifMK7qw==
+Date: Wed, 18 Jun 2025 13:31:30 +0100
+From: Simon Horman <horms@kernel.org>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
+	kvm@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: Re: [PATCH] vhost: Fix typos in comments and clarity on alignof
+ usage
+Message-ID: <20250618123130.GM1699@horms.kernel.org>
+References: <20250615173933.1610324-1-alok.a.tiwari@oracle.com>
+ <20250617183741.GD2545@horms.kernel.org>
+ <eb95149b-89eb-437f-813d-0045635aee8b@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="RW5FZxWRZH+m65mW"
-Content-Disposition: inline
-In-Reply-To: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-2-513202126013@bootlin.com>
-X-Cookie: This bag is recyclable.
-
-
---RW5FZxWRZH+m65mW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <eb95149b-89eb-437f-813d-0045635aee8b@oracle.com>
 
-On Wed, Jun 18, 2025 at 02:14:19PM +0200, Miquel Raynal wrote:
-> In order to pick the best variant, the duration of each typical
-> operation is derived and then compared. These durations are based on the
-> maximum capabilities of the chips, which are commonly the limiting
-> factors. However there are other possible limiting pieces, such as the
-> hardware layout, EMC considerations and in some cases, the SPI controller
-> itself.
+On Wed, Jun 18, 2025 at 01:31:09AM +0530, ALOK TIWARI wrote:
+> 
+> 
+> Thanks Simon,
+> 
+> On 6/18/2025 12:07 AM, Simon Horman wrote:
+> > On Sun, Jun 15, 2025 at 10:39:11AM -0700, Alok Tiwari wrote:
+> > > This patch fixes multiple typos and improves comment clarity across
+> > > vhost.c.
+> > > - Correct spelling errors: "thead" -> "thread", "RUNNUNG" -> "RUNNING"
+> > >    and "available".
+> > > - Improve comment by replacing informal comment ("Supersize me!")
+> > >    with a clear description.
+> > > - Use __alignof__ correctly on dereferenced pointer types for better
+> > >    readability and alignment with kernel documentation.
+> > Could you expand on the last point?
+> > I see that the patch uses __alignof__ with rather than without parentheses.
+> > But I don't follow how that corresponds with the comment above.
+> 
+> only I can say "__alignof__ *vq->avail" is valid C,
+> but it can hard to read and easy to misinterpret.
+> Without proper parentheses sometime, __alignof__ *vq->avail can be
+> misleading to reader. it may not be immediately clear whether it refers to
+> alignment of the pointer vq->avail or
+> alignment of the object it points to.
+> __alignof__(*vq->avail) adds parentheses that clarify the intention
+> explicitly.
+> I can not see very clear guide line to using parentheses or not for
+> __alignof__ in kernel document apart
+> from(https://www.kernel.org/doc/html/latest/process/coding-style.html).
+> Additionally, I have not been able to locate examples in the kernel code
+> where __alignof__ is used without parentheses.
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+Thanks, I understand now.
 
---RW5FZxWRZH+m65mW
-Content-Type: application/pgp-signature; name="signature.asc"
+Perhaps it's not important, but FWIIW I was confused by "correctly".
+And something like this seems a bit clearer to me.
 
------BEGIN PGP SIGNATURE-----
+  - Use __alignof__ with parentheses which is in keeping with kernel coding
+    style for an __attribute__ and arguably improves readability of what is
+    being aligned.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhSsWAACgkQJNaLcl1U
-h9BIRgf/ezr5jf2vKiJJqpU8isR3/C6aRXPA41Id7IowObzRPOdEL9epIfalMmCp
-YMAC1Om50TEUuBWM7CnMYiyDJV4EdXSpUpmlHlF/G4Akx8aF9Lf5K/KAWE3m99sU
-xe1rcn/TSU/RPGhFhF5IdLapcXvKsKWFoBIHY6i5kn7QvNydi3yUQEo+SQiYLSIp
-tmhnPhveSC9JxKAWuRJiGU+n9VKfh0zPSgXKgnG2ZTUIILHOYlUfEnYEG8vK/Wxg
-7cTRWmiWGf+Q3lZHycNl01PuziSPH/ZxnD5uk7dp1Kh1pcc5H+fPovTFJVDNu8s9
-ztFngOPei544anpJxOtsmFcJ69H+AA==
-=ZKto
------END PGP SIGNATURE-----
+In any case, thanks for your explanation.
+This patch now looks good to me.
 
---RW5FZxWRZH+m65mW--
+Reviewed-by: Simon Horman <horms@kernel.org>
+
