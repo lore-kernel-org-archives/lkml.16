@@ -1,119 +1,121 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+Received: from forward101d.mail.yandex.net (forward101d.mail.yandex.net [178.154.239.212])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834CE126C1E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAA18460;
+	Wed, 18 Jun 2025 09:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.212
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238073; cv=none; b=go/Frtp/Vo1ai2SFpCmllGcjJ4GRdGtMfSeML3LqVMy1qLi67osjmuRcNdoXK+yHKe+xa8PDALET4WgL5FIE+jMUt8Qvcsalz37rM/Jd2SotUD5AP808HfFAyoniyJsGt0ymCithxsCpq4uXGVhhaX2negVtLkvfNGkfk9/mwVc=
+	t=1750238162; cv=none; b=dLEFOo4EC6i46eS4crP1k1LqlHJSeuTY9LvcVBGBxUroaa2sks3sTpFahrpO6Trlxwy0vuTT9enZ3D6ekPV+r7HdGJ2AepS+7qltYjCwry3K7utefXLK+0SBDdLSMYvwcjEvU0WbHG3rvmD1Rh9DyUcwQ1w02ogxKuq0gwccAow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238073; c=relaxed/simple;
-	bh=T91jqxIQYJ1f+y066EqLmtj2U9KVbmjMQ25ttMYhgvQ=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=DfERP0w7OV1n7CA+WW4Ty+lfNfHBISP5zeS4eYMlEd2mS3aEjmCiGJ2UJv5496fKznCJb0VkofHR5WY5W1cQl7j1cBF2QdoHVVaw4w8Lhbs62BdPiQ5Ln1SVFiSU0s7e/cug0U6GqYvJ4+KZeV6tSPuHiWyaYERr8DL/3cbShrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bMdNL1MP4z8RTWX;
-	Wed, 18 Jun 2025 17:14:26 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl2.zte.com.cn with SMTP id 55I9E7Cx078308;
-	Wed, 18 Jun 2025 17:14:07 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp05[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Wed, 18 Jun 2025 17:14:09 +0800 (CST)
-Date: Wed, 18 Jun 2025 17:14:09 +0800 (CST)
-X-Zmail-TransId: 2afc68528361114-19074
-X-Mailer: Zmail v1.0
-Message-ID: <202506181714096412Nvp5B3BkFpi3-CKLQ9ep@zte.com.cn>
-In-Reply-To: <c6c628d9-5908-47f5-83f6-08d1621489fe@kylinos.cn>
-References: 20250606070314.3028593-1-xialonglong@kylinos.cn,63145e68-76f7-44a1-b3fb-1213eaa959d0@redhat.com,c6c628d9-5908-47f5-83f6-08d1621489fe@kylinos.cn
+	s=arc-20240116; t=1750238162; c=relaxed/simple;
+	bh=ZG2A4iSucAU291eWSjW71lggtPyweGYcMynvg+qYv0c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fs0Lr1glBWXQXBWbUzPyqVcLS+29vWLYJUaq5azl0iDwVNnEoogQejMCM9VgvrV7knivplFKAmqEUnXua0P1oL+UrAWEVsEogvv3WSgIwuF12pCMaUI4lgv/iyk73RTnfLZPb+NjY2COYrhDWjiyUY286UJAhf9JHIdl+GdP2Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=bJoMnF34; arc=none smtp.client-ip=178.154.239.212
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="bJoMnF34"
+Received: from mail-nwsmtp-smtp-production-main-58.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-58.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:4898:0:640:7065:0])
+	by forward101d.mail.yandex.net (Yandex) with ESMTPS id 1E367609A7;
+	Wed, 18 Jun 2025 12:15:51 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-58.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ZFJToBFLZKo0-f6wDD1so;
+	Wed, 18 Jun 2025 12:15:50 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
+	s=mail; t=1750238150;
+	bh=rKI5qWlXphdfpnYiW4pjsQe5ZK9YH76/sNIC0XCwXUI=;
+	h=Message-ID:Date:Cc:Subject:To:From;
+	b=bJoMnF34cHVioZptjl0N4Twc2WBKJNA7a5ZKvWHX4c3mRzti3hD73mmVXqca4MN5P
+	 D8UJzoHczMUPte7VaAHTgmzkj+Wv+oGNZl51djXnUbFWk+o+QbJ4ukonPyXKybqo5G
+	 p8XW/Srin3exiRLWpN/LNKiqESsp5k6w5Falq7dQ=
+Authentication-Results: mail-nwsmtp-smtp-production-main-58.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
+From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+To: rust-for-linux@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
+Subject: [PATCH] rust: make `clk::Hertz` methods const
+Date: Wed, 18 Jun 2025 12:14:42 +0300
+Message-ID: <20250618091442.29104-1-work@onurozkan.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <xialonglong@kylinos.cn>, <david@redhat.com>
-Cc: <david@redhat.com>, <akpm@linux-foundation.org>,
-        <chengming.zhou@linux.dev>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <shr@devkernel.io>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzFdIG1tL2tzbTogYWRkIGtzbV9wYWdlc19zaGFyaW5nIGZvciBlYWNoIHByb2Nlc3MgdG8gY2FsY3VsYXRlIHByb2ZpdCBtb3JlIGFjY3VyYXRlbHk=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55I9E7Cx078308
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68528372.000/4bMdNL1MP4z8RTWX
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> >
-> >> and /proc/self/ksm_stat/ to indicate the saved pages of this process.
-> >> (not including ksm_zero_pages)
-> >
-> > Curious, why is updating ksm_process_profit() insufficient and we also 
-> > have to expose ksm_pages_sharing?
-> >
-> Since ksm_process_profit() uses ksm_merging_pages(pages_sharing + 
-> pages_shared) to calculate the profit for individual processes,
-> 
-> while general_profit uses pages_sharing for profit calculation, this can 
-> lead to the total profit calculated for each process being greater than 
-> that of general_profit.
-> 
-> Additionally, exposing ksm_pages_sharing under /proc/self/ksm_stat/ may 
-> be sufficient.
-> 
+Marks `Hertz` methods as `const` to make them available
+for `const` contexts. This can be useful when defining
+static/compile-time frequency parameters in drivers/subsystems.
 
-Hi,
+Signed-off-by: Onur Özkan <work@onurozkan.dev>
+---
+ rust/kernel/clk.rs | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Althorugh it's true, however, this patch maybe not okay. It can only ensure
-that the sum of each process's profit roughly equals the system's general_profit
-, but gives totally wrong profit result for some one process. For example, when
-two pages from two different processes are merged, one process's page_shared
-increments by +1, while the other's pages_sharing increments by +1, which
-resulting in different calculated profits for the two processes, even though
-their actual profits are identical. If in more extreme cases, this could even
-render a process's profit entirely unreadable.  
+diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
+index 6041c6d07527..ef0a2edd52c3 100644
+--- a/rust/kernel/clk.rs
++++ b/rust/kernel/clk.rs
+@@ -31,37 +31,37 @@
 
-Lastly, do we really need each process’s profit sum to perfectly match the general
-profit, or we just want a rough estimate of the process’s profit from KSM ?
+ impl Hertz {
+     /// Create a new instance from kilohertz (kHz)
+-    pub fn from_khz(khz: c_ulong) -> Self {
++    pub const fn from_khz(khz: c_ulong) -> Self {
+         Self(khz * 1_000)
+     }
 
-> 
-> 
-> > Hm, I am wondering if that works. Stable nodes are not per MM, so 
-> > can't we create an accounting imbalance for one MM somehow?
-> >
-> > (did not look into all the details, just something that came to mind)
-> >
-> Indeed, using the method in this patch to calculate ksm_pages_sharing 
-> for each process to determine ksm_pages_shared
-> 
-> can sometimes result in negative values for ksm_pages_shared.
-> 
-> example for calculate mm->ksm_pages_shared：
-> 
->          if (rmap_item->hlist.next) {
->              ksm_pages_sharing--;
->              rmap_item->mm->ksm_pages_sharing--;
-> 
->          } else {
->              ksm_pages_shared--;
->               rmap_item->mm->ksm_pages_shared--; // can be negative
->          }
-> 
->          rmap_item->mm->ksm_merging_pages--;
-> 
-> 
-> Would it be possible to compare the ratio of each process's rmap_item to 
-> the total rmap_item and the ratio of the process's page_shared to the 
-> total page_shared
-> 
-> to assess this imbalance? For now, I don't have any better ideas.
+     /// Create a new instance from megahertz (MHz)
+-    pub fn from_mhz(mhz: c_ulong) -> Self {
++    pub const fn from_mhz(mhz: c_ulong) -> Self {
+         Self(mhz * 1_000_000)
+     }
 
-Although stable_node is not per-mm, if you really add ksm_shared to mm,
-it won't cause negative ksm_pages_shared, because the count of ksm_shared
-will only be attributed to the process of the first rmap_item.
+     /// Create a new instance from gigahertz (GHz)
+-    pub fn from_ghz(ghz: c_ulong) -> Self {
++    pub const fn from_ghz(ghz: c_ulong) -> Self {
+         Self(ghz * 1_000_000_000)
+     }
+
+     /// Get the frequency in hertz
+-    pub fn as_hz(&self) -> c_ulong {
++    pub const fn as_hz(&self) -> c_ulong {
+         self.0
+     }
+
+     /// Get the frequency in kilohertz
+-    pub fn as_khz(&self) -> c_ulong {
++    pub const fn as_khz(&self) -> c_ulong {
+         self.0 / 1_000
+     }
+
+     /// Get the frequency in megahertz
+-    pub fn as_mhz(&self) -> c_ulong {
++    pub const fn as_mhz(&self) -> c_ulong {
+         self.0 / 1_000_000
+     }
+
+     /// Get the frequency in gigahertz
+-    pub fn as_ghz(&self) -> c_ulong {
++    pub const fn as_ghz(&self) -> c_ulong {
+         self.0 / 1_000_000_000
+     }
+ }
+2.49.0
+
