@@ -1,83 +1,81 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF0027FD62;
-	Wed, 18 Jun 2025 09:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1C2202F70;
+	Wed, 18 Jun 2025 09:17:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238241; cv=none; b=qmjmmDJSd4mPefH3KhpFuco4hOvea6NFq+G2MfRX2N0Xt9flcofiYRgkER228Nfq3fuDTZ34iVTtapssPk7m1TNCY4HH4x+jCW4Ftj/7uqN4fIVNKMKbPTfKDeLNpEPGHwKaeYOcMgOfG4Gi/b/vTFMmdRWk/4yhKENGu8EcvLY=
+	t=1750238247; cv=none; b=Dy9/VYuGIYVqRxC8EdWsBPn6z3inTtKaNlucns71HRiGIpEKFqs1n7Zc6NdM0HAmPlKWFftEFEnhGTaNoiAJqexGKNOIeyi7NvYdfms9aZhk0px+18YmusV7oe07sr9QFQn6XW1NtrnsA9sP1EzGhoDWHWbSiq3gfRjWiA+eK3A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238241; c=relaxed/simple;
-	bh=9/y9FHBjcC0+yEMcHt+mytxyJj/uJFFXDYCq6SZ4OtY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=aPqAmB2EdG1v4T/u5Inj/9gHl3HOroBeININIL7+axRc2e6B+D9Y6viWtJw8GCllUe3JdByrAOiPbvly44Lg9K3Fzs1iglNJS+oqfr8ZaRymri2zQiBAWAz87Ejegfo94MD441bsy1wgH/AN7V9o86GmkxQzVZeX5/hMfMuPI08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IwwJeJbr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IwwJeJbr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 053624442B;
-	Wed, 18 Jun 2025 09:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750238230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=F98ijLO5pi6FUZlWFyCBwYzUs/rP2o8QKYXzxteZsmA=;
-	b=IwwJeJbrTSaW/iHFSqrVITopalqsqiuFHsmPr8fWveZMQRUKIYp0Y6JsIyzINaTKWIMUkE
-	QpQxavje7LE+TvlSs2psHa2HlNcTmDNz4Uwk7gzJn438AExYlRJX5gizS6bnJTL4bZz6d9
-	e6aJUMdvjnp+HvnbDNznUgVqrIQ1BQUCQYCmFR/7EqRYW2DaJvSPW0zAIl90OQOX58Qn5V
-	NF1CSjnJP9+OBMudRR8z+ITAW+RCHz7OlDzNwQlRDWALU+kzeQ74ze9KM0UjoP87MiIZHY
-	BCbq1jrQYtdTGA6IPxSO3b/FVUJGK/tGtzFnThzjNnl16k3IypHJPrGvwfQq+Q==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Richard Weinberger <richard@nod.at>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-mtd@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Frank Li <Frank.Li@nxp.com>
-Cc: imx@lists.linux.dev
-In-Reply-To: <20250602140946.941159-1-Frank.Li@nxp.com>
-References: <20250602140946.941159-1-Frank.Li@nxp.com>
-Subject: Re: [PATCH 1/1] dt-bindings: mtd: convert nxp-spifi.txt to yaml
- format
-Message-Id: <175023822777.1656646.5704716073431650841.b4-ty@bootlin.com>
-Date: Wed, 18 Jun 2025 11:17:07 +0200
+	s=arc-20240116; t=1750238247; c=relaxed/simple;
+	bh=4guzzl8+uPUhHITQeQqcp6+BE4ne+X0iPtJ7/i9d4V8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NMi5O6PSJtvSrzDfU8BEXo2G2dA5EJkx9y9uTk8fbzbIfCsYdW1gOcRazYC9DQ3JiH2sN/dI3Drxj9yp3Dlc23xNcKxMJdaqynqrAaZ+UT8lZMHT09R6Nvrrw5TaaTi3+Zi4HId2Rxp5azRmDE8g7aXBt0gEClIZ8V1vNymFkKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4bMdRc1fpdz9tG4;
+	Wed, 18 Jun 2025 11:17:16 +0200 (CEST)
+From: Pankaj Raghav <p.raghav@samsung.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	mcgrof@kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	gost.dev@samsung.com,
+	kernel@pankajraghav.com,
+	Pankaj Raghav <p.raghav@samsung.com>
+Subject: [PATCH] fs/buffer: use min folio order to calculate upper limit in __getblk_slow()
+Date: Wed, 18 Jun 2025 11:17:10 +0200
+Message-ID: <20250618091710.119946-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevjghfuffkffggtgfgofesthekredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehieffhfeulefgtdeltefgleevgffgheduledvheduudelgfehlefgheeivedvgeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedutddprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpr
- hgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvh
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Mon, 02 Jun 2025 10:09:45 -0400, Frank Li wrote:
-> Convert nxp-spifi.txt to yaml format.
-> 
-> Additional changes:
-> - ref /schemas/spi/spi-controller.yaml.
-> - remove label in example.
-> - change node name to spi in example.
-> - remove child node in example.
-> 
-> [...]
+The maximum IO size that a block device can read as a single block is
+based on the min folio order and not the PAGE_SIZE as we have bs > ps
+support for block devices[1].
 
-Applied to mtd/next, thanks!
+Calculate the upper limit based on the on min folio order.
 
-[1/1] dt-bindings: mtd: convert nxp-spifi.txt to yaml format
-      commit: 27b045eb3e30ce9a436b8ee5bcb4869f7e3522a6
+[1] https://lore.kernel.org/linux-block/20250221223823.1680616-1-mcgrof@kernel.org/
 
-Patche(s) should be available on mtd/linux.git and will be
-part of the next PR (provided that no robot complains by then).
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+I found this while I was adding bs > ps support to ext4. Ext4 uses this
+routine to read the superblock.
 
-Kind regards,
-Miquèl
+ fs/buffer.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/fs/buffer.c b/fs/buffer.c
+index 8cf4a1dc481e..98f90da69a0a 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1121,10 +1121,11 @@ __getblk_slow(struct block_device *bdev, sector_t block,
+ 	     unsigned size, gfp_t gfp)
+ {
+ 	bool blocking = gfpflags_allow_blocking(gfp);
++	int blocklog = PAGE_SHIFT + mapping_min_folio_order(bdev->bd_mapping);
+ 
+ 	/* Size must be multiple of hard sectorsize */
+-	if (unlikely(size & (bdev_logical_block_size(bdev)-1) ||
+-			(size < 512 || size > PAGE_SIZE))) {
++	if (unlikely(size & (bdev_logical_block_size(bdev) - 1) ||
++		     (size < 512 || size > (1U << blocklog)))) {
+ 		printk(KERN_ERR "getblk(): invalid block size %d requested\n",
+ 					size);
+ 		printk(KERN_ERR "logical block size: %d\n",
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+-- 
+2.49.0
 
