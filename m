@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94F12FA65E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:21:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378672FBFE4
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:21:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270916; cv=none; b=UeyCyGRjZM/3la5K7W5DZr7Fqbx/pXCPlXhvjgFOgYIXCDUEtBpJd57eBNDqgWvGJv8lBL+mUxf5kMWOHyA8RedaqjM+j02Jn9B78T1lChIZ2n/HcQ4ovyIdvMDIjh6GJZ0rAG3+mVxq530ReordkAU/8zkHRYpmSCOgeBTL+I4=
+	t=1750270916; cv=none; b=e05IFwV/MLqo2ClgaOGWLNSlY10NaanqCNFgdhzJHiSJKN+sh3Zlln5UdTmioRlRhRjp/nMlzDaeMob8JkL6Vnprcb7T4E++++CTqUtUCV4CFP4PSK0vw5A7hPHtk/OEkDT1g3ZfjDaU9iC9y5xW8mEtVA1goM0jAs9Hl7McPfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750270916; c=relaxed/simple;
-	bh=qCkIhL6rGvZ+dzcJ6E4keINBL3DRXFHBoE2OhjjXt84=;
+	bh=WuCB5SIKo2iM8nX5ebWteeRjxdPAXbYteS+EwA2pE0w=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HdR2Xf4V3RIfo4sN94qeqMUmpg9AvXnNLA7hey4fd0WeAkTF0T4KDeRwQToF9rBlqaacSEzIC3ldfo3gUF0PSPBuQsHrIDtfOE0rb1e2syBB9Uy0m0Pyuh26N9i8RFDaGsxHG8i9HPtFTwvfAZ4PLiBu3T6sgQXJ8rTnQ7LikE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ctebiIFc; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=oAGm3igrNrOpxMrHQQoLXScf+6Qhzs+QT0b8NDUn/Z1Lg6wRKdWBLm3Z8cBcgmvttwNrNTS1WRshJkfEt9buiwj9p9r7b5+8Pgfu5tiqdhoABS40DvzWpr6d+nOBznhgOieUV5aoD2LXxBNoP4rNF0a9Ez39F7B7HtKZvpqaKlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHLCwYLq; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ctebiIFc"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHLCwYLq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750270914; x=1781806914;
+  t=1750270915; x=1781806915;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=qCkIhL6rGvZ+dzcJ6E4keINBL3DRXFHBoE2OhjjXt84=;
-  b=ctebiIFceLs/6XgbLjwR55dJzRZbzapx502Dxi0l/NvCbPchL4pYfpTv
-   mX4fL7dCkAt2uRGyN8gw9ioXWlpiuXifnjj+0MNxYIis5NlGMWrVuELt9
-   p2k9M3g2gYolFGidjsV123j/xwGYMbxHzvGAIu7gZe6H/GBXSmGkX0BuE
-   BbuXEWcCw0iqTOGZJwjotpQh0+0BjJedRDEyx/wJT4zQv28fNmgWwOtv1
-   f4suB3nLhc82MQOzvFx7z7nB0rbHQlioxhlaZW+cZpn776eX5rSkia9jE
-   XjCTqRmxuGrPP0O3C/HkP/FgXNG323aYUO7tahFuWXcmZCHjHmALri07M
+  bh=WuCB5SIKo2iM8nX5ebWteeRjxdPAXbYteS+EwA2pE0w=;
+  b=NHLCwYLqVTRJAuEFNcV41R7MnvuS9z2QmW5K059zPETnEpDlEodn/VG8
+   IZzAuJmXE4uhiAbjaKpwaneVSv8DpipBx12ro57h14bYGeGVOnAEqtRC0
+   MYOOelRwA6HB65s8wwQlNHjKsFH8Px5CvzkVOr9zfB2+Cf3ZCiBWNjFvJ
+   ia6JfMeXbhgywU5X/aCFqFVuO0i7U1S4e/3PZ/4lISImQE5ptcYQvqsVE
+   7frWf0qbM3P8Z3xratwf4AuiFQOa5n18Y0HGvqXbmBvbVIX5w1NHG2f4g
+   7u4XdLdk1q19T6udH+vKwbKmJFB9NiWgUD4pYJZpJbmpavs+mwAM+IGJz
    Q==;
-X-CSE-ConnectionGUID: NPicx326QWy/zNraeo2kXQ==
-X-CSE-MsgGUID: V9D14qHKQa6053W/dqsxug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931566"
+X-CSE-ConnectionGUID: ABRohcKYRLuwXUvFn04ETg==
+X-CSE-MsgGUID: ajqbr60WT6mWJDBrVQIQ4w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931579"
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="63931566"
+   d="scan'208";a="63931579"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:21:53 -0700
-X-CSE-ConnectionGUID: 7bYdnBGCRGq67Ukuexzzfg==
-X-CSE-MsgGUID: bMqkNepHSg24kSctAmlfHw==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:21:54 -0700
+X-CSE-ConnectionGUID: wKSilpu8SRKhyBsxbDtmNA==
+X-CSE-MsgGUID: LTGYQY+lTBaZzmctTTPKPQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="180959924"
+   d="scan'208";a="180959948"
 Received: from b04f130c83f2.jf.intel.com ([10.165.154.98])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:21:52 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:21:53 -0700
 From: Tim Chen <tim.c.chen@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -64,9 +64,9 @@ Cc: Tim Chen <tim.c.chen@linux.intel.com>,
 	Len Brown <len.brown@intel.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC patch v3 09/20] sched: Introduce task preferred LLC field
-Date: Wed, 18 Jun 2025 11:27:57 -0700
-Message-Id: <7b9df4433d73ce415a27925ce42cec53774debaf.1750268218.git.tim.c.chen@linux.intel.com>
+Subject: [RFC patch v3 10/20] sched: Calculate the number of tasks that have LLC preference on a runqueue
+Date: Wed, 18 Jun 2025 11:27:58 -0700
+Message-Id: <0664be8a3e805ed93eb930131951b1a84cebed66.1750268218.git.tim.c.chen@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <cover.1750268218.git.tim.c.chen@linux.intel.com>
 References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
@@ -78,69 +78,159 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With cache aware scheduling enabled, each process is assigned
-a preferred LLC id, which will be used to quickly identify
-the LLC domain this thread prefers to run. This is similar to
-numa_preferred_nid for NUMA balance.
+Track for each run queue, the number of tasks that have a LLC preference
+and how many of those tasks are running in its preferred LLC.  This is
+similar to nr_numa_running and nr_preferred_running for NUMA balance,
+and will be used by the cache-aware load balancing in subsequent patches.
 
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 ---
- include/linux/sched.h | 1 +
- init/init_task.c      | 3 +++
- kernel/sched/fair.c   | 7 +++++++
- 3 files changed, 11 insertions(+)
+ kernel/sched/core.c  | 12 ++++++++++++
+ kernel/sched/fair.c  | 42 +++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/sched.h |  7 +++++++
+ 3 files changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 7ce95a32e9ff..2f1cb7445733 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1404,6 +1404,7 @@ struct task_struct {
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index d9c3e75f79d1..34056eb79ef2 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -498,6 +498,18 @@ void __trace_set_current_state(int state_value)
+ }
+ EXPORT_SYMBOL(__trace_set_current_state);
  
- #ifdef CONFIG_SCHED_CACHE
- 	struct callback_head		cache_work;
-+	int				preferred_llc;
- #endif
- 
- #ifdef CONFIG_RSEQ
-diff --git a/init/init_task.c b/init/init_task.c
-index e557f622bd90..5fffbe766f57 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -188,6 +188,9 @@ struct task_struct init_task __aligned(L1_CACHE_BYTES) = {
- 	.numa_group	= NULL,
- 	.numa_faults	= NULL,
- #endif
-+#ifdef CONFIG_SCHED_CACHE
-+	.preferred_llc  = -1,
++#ifdef CONFIG_SMP
++int task_llc(const struct task_struct *p)
++{
++	return per_cpu(sd_llc_id, task_cpu(p));
++}
++#else
++int task_llc(const struct task_struct *p)
++{
++	return 0;
++}
 +#endif
- #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
- 	.kasan_depth	= 1,
- #endif
++
+ /*
+  * Serialization rules:
+  *
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5549710d95cf..cc804a8c7061 100644
+index cc804a8c7061..88ff47194faa 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1267,6 +1267,7 @@ void account_mm_sched(struct rq *rq, struct task_struct *p, s64 delta_exec)
- 	struct mm_struct *mm = p->mm;
- 	struct mm_sched *pcpu_sched;
- 	unsigned long epoch;
-+	int mm_sched_llc = -1;
+@@ -1195,6 +1195,18 @@ static inline int llc_idx(int cpu)
+ 	return per_cpu(sd_llc_idx, cpu);
+ }
  
- 	/*
- 	 * init_task and kthreads don't be having no mm
-@@ -1293,6 +1294,12 @@ void account_mm_sched(struct rq *rq, struct task_struct *p, s64 delta_exec)
- 		mm->mm_sched_cpu = -1;
- 		pcpu_sched->occ = 0;
- 	}
++static void account_llc_enqueue(struct rq *rq, struct task_struct *p)
++{
++	rq->nr_llc_running += (p->preferred_llc != -1);
++	rq->nr_pref_llc_running += (p->preferred_llc == task_llc(p));
++}
 +
-+	if (mm->mm_sched_cpu != -1)
-+		mm_sched_llc = per_cpu(sd_llc_id, mm->mm_sched_cpu);
++static void account_llc_dequeue(struct rq *rq, struct task_struct *p)
++{
++	rq->nr_llc_running -= (p->preferred_llc != -1);
++	rq->nr_pref_llc_running -= (p->preferred_llc == task_llc(p));
++}
 +
-+	if (p->preferred_llc != mm_sched_llc)
-+		p->preferred_llc = mm_sched_llc;
+ void mm_init_sched(struct mm_struct *mm, struct mm_sched __percpu *_pcpu_sched)
+ {
+ 	unsigned long epoch;
+@@ -1298,8 +1310,11 @@ void account_mm_sched(struct rq *rq, struct task_struct *p, s64 delta_exec)
+ 	if (mm->mm_sched_cpu != -1)
+ 		mm_sched_llc = per_cpu(sd_llc_id, mm->mm_sched_cpu);
+ 
+-	if (p->preferred_llc != mm_sched_llc)
++	if (p->preferred_llc != mm_sched_llc) {
++		account_llc_dequeue(rq, p);
+ 		p->preferred_llc = mm_sched_llc;
++		account_llc_enqueue(rq, p);
++	}
  }
  
  static void task_tick_cache(struct rq *rq, struct task_struct *p)
+@@ -1400,6 +1415,14 @@ void init_sched_mm(struct task_struct *p)
+ 	work->next = work;
+ }
+ 
++void reset_llc_stats(struct rq *rq)
++{
++	if (rq->nr_llc_running)
++		rq->nr_llc_running = 0;
++
++	rq->nr_pref_llc_running = 0;
++}
++
+ #else
+ 
+ static inline void account_mm_sched(struct rq *rq, struct task_struct *p,
+@@ -1410,6 +1433,17 @@ void init_sched_mm(struct task_struct *p) { }
+ 
+ static void task_tick_cache(struct rq *rq, struct task_struct *p) { }
+ 
++static void account_llc_enqueue(struct rq *rq, struct task_struct *p)
++{
++}
++
++static void account_llc_dequeue(struct rq *rq, struct task_struct *p)
++{
++}
++
++void reset_llc_stats(struct rq *rq)
++{
++}
+ #endif
+ 
+ static inline
+@@ -3939,6 +3973,7 @@ account_entity_enqueue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ 		struct rq *rq = rq_of(cfs_rq);
+ 
+ 		account_numa_enqueue(rq, task_of(se));
++		account_llc_enqueue(rq, task_of(se));
+ 		list_add(&se->group_node, &rq->cfs_tasks);
+ 	}
+ #endif
+@@ -3952,10 +3987,15 @@ account_entity_dequeue(struct cfs_rq *cfs_rq, struct sched_entity *se)
+ #ifdef CONFIG_SMP
+ 	if (entity_is_task(se)) {
+ 		account_numa_dequeue(rq_of(cfs_rq), task_of(se));
++		account_llc_dequeue(rq_of(cfs_rq), task_of(se));
+ 		list_del_init(&se->group_node);
+ 	}
+ #endif
+ 	cfs_rq->nr_queued--;
++
++	/* safeguard? */
++	if (!parent_entity(se) && !cfs_rq->nr_queued)
++		reset_llc_stats(rq_of(cfs_rq));
+ }
+ 
+ /*
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 74eb2f3615aa..6c83a71ac8ca 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -1104,6 +1104,10 @@ struct rq {
+ 	unsigned int		nr_preferred_running;
+ 	unsigned int		numa_migrate_on;
+ #endif
++#ifdef CONFIG_SCHED_CACHE
++	unsigned int		nr_pref_llc_running;
++	unsigned int		nr_llc_running;
++#endif
+ #ifdef CONFIG_NO_HZ_COMMON
+ #ifdef CONFIG_SMP
+ 	unsigned long		last_blocked_load_update_tick;
+@@ -1948,6 +1952,9 @@ init_numa_balancing(unsigned long clone_flags, struct task_struct *p)
+ 
+ #endif /* !CONFIG_NUMA_BALANCING */
+ 
++extern void reset_llc_stats(struct rq *rq);
++extern int task_llc(const struct task_struct *p);
++
+ #ifdef CONFIG_SMP
+ 
+ static inline void
 -- 
 2.32.0
 
