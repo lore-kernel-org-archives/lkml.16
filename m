@@ -1,149 +1,110 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3140D280A5E;
-	Wed, 18 Jun 2025 08:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C735619E819;
+	Wed, 18 Jun 2025 08:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235585; cv=none; b=p1WrKmBIkHpxfWu3rQxci2gAcxvkpNQGGkse+6y1E+zjVLzR6BsxCOpmDbiVRs8euPwlE6F6bxilitxnOWS8+sf8lJRxKFqaD6axQIXVAz4CaW8w1AOTSaL/iTEPVeYQHLGik8nXo3aaDuwHgzwTNaqrU1KSbKAzDnW3hNY6Lpo=
+	t=1750235617; cv=none; b=R3M7C/CvdfD9x9+JHLysaZ0iPZXB75ucdDD9vTPi4/wj8KVzaHkCmB9L5BxJ8L5Srwv7DH4/GeCIrFfCSzkn+/67eERhekLtYVkHDdqwU9REDEoWfhq2PH8GWHdkcG994xx0Vd6mLOvIqWwxi88t5tp3fMUuxCO6X7SB/S3NIyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235585; c=relaxed/simple;
-	bh=IxDaiUHf7Z4U8Z5WO/QsWUnQL9pxC4qsiCIvomywaYY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=OKM1lblSMkXCZi1td4NMQCuXMNG7d1RXJaayClOMVztB+f8GLZW98CW+4dwqwEYSzmrNND6hCWcLb3poofnAIr6nZ4RUngZKc+l/XkGCxuqGvwHI8LrTFWv+31FdRtwckv9vLH/Eoo5OO1xXVqqKMzfty44ehDnB6AcPHHroBOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ade33027bcfso1091495066b.1;
-        Wed, 18 Jun 2025 01:33:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750235581; x=1750840381;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CDofrZxQJK7TRalX2xX6XRULh/jbQyPTf/PiTffP/g4=;
-        b=rW+YIRO88R3qVpyr4deWyC34Ew1bwhxG1Sd8SWTmEMGC1noKdnDZWGCAbouFfjQ7S1
-         uatDvaSgPR+0BrYJjFL50gnHT69nR4w2JCuYnvBw4+eH32FKeJgacTBc1boUo4LPgxad
-         qIba3RA43nWp51LinHvKcBdghHhR0VQ0htRnfIAOBMUl80IlKvvV5cGvOoHRBhr+unO3
-         JUeydSw9RjxoS4TZ9m3COpUjsYj4PByPTdxWQP3L7/mmX+eWv7Ikdh5X9VWVduX4ugVA
-         kKX9AtL2901hVLUn3JUXwjvC0jNKS96LJ1aS+3gKMme0ade0rmAcUh13+KH5PP/qZu9Y
-         j24w==
-X-Forwarded-Encrypted: i=1; AJvYcCXOqGO48mXMyI8YH04SOuXVgMDmxmqj5gyG5OPa4xMaTZ0L6lDRgW2jJ1Xceob4PcQ9BLUdhttgtodaGdo=@vger.kernel.org, AJvYcCXkeleujUefoUEVlgcKOSJsglgdclr1ljmt3Hda6sl5Sd8X2CBYUFcwQiXkiL6oZDiY+IADtPs9XzKimB/T+1Wj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK87An8+LHHy0bI8Ke/+KJgWHU1EmlngWm7Lqw93TZEyYhSdYS
-	cgGaASAXEQsuV08WUXeV6HtjUUOGKXEbCCCQ+7PLFE3vwsNH1UBaqLIS
-X-Gm-Gg: ASbGncsZ719vztFCXzhpXmRAJIJD97RPcFVwwrOOvYb6rbhve+7Zp8Uwh+liM3MJNbH
-	DipbA32eAUyRNDEF/OlNDq8CE2C/OtcY8XWFi5ZnMW4iJ3cMN8HOQirAvYUHZQL8N0soUOH84La
-	tpGgK/c2Wn0+BwF02PwMbDvYMUeYFop96hFlv/n0X1S4tlqFXO+Kv8ajj2r43S2nLZ+4avjB1pF
-	9WOWLR3KdhE9/+BxSeMRYzHjGLSiy6O0tcxLgIeQ2pAUADtD0AGZo7W/O9d5ZBbKswHNDef9psg
-	UKwabI5HpYCVBDVssqJUTRFVJhTasZ/sWKD1HU1KClinUJjkOaah
-X-Google-Smtp-Source: AGHT+IGpDAiL+bPgtttXdIS4xC1X7eTKg8ENkBlTt5BVg38XjKc2Mnk+aapAFu5GWm49xnmgY2dIVA==
-X-Received: by 2002:a17:906:9f91:b0:ad5:840c:dda7 with SMTP id a640c23a62f3a-adfad331583mr1444026266b.21.1750235581122;
-        Wed, 18 Jun 2025 01:33:01 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:8::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec81c5be2sm1008087466b.64.2025.06.18.01.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 01:33:00 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 18 Jun 2025 01:32:45 -0700
-Subject: [PATCH net-next v4 4/4] netdevsim: account dropped packet length
- in stats on queue free
+	s=arc-20240116; t=1750235617; c=relaxed/simple;
+	bh=fIu3H0X1ir+ab5DgfWZw8Zxf2egqeIQlXSOMOU+My5c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i4VIhubzAJEKUAe+BobFLMmBSY0E5svDZQc0+jTUXKt1joy07bh6JgkMFo8q7lLLbnSMTRUI/nRb1z6oCi4k0919pJGi3CPvHnt2uAzPBi6mQrxGGwPZvgk3J7DlygJi3hp4kaP18QY4RxNEWVEq+XYQyemEW7S6btFScuXMVvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TZo+Qjfz; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TZo+Qjfz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750235616; x=1781771616;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fIu3H0X1ir+ab5DgfWZw8Zxf2egqeIQlXSOMOU+My5c=;
+  b=TZo+Qjfzi4wCLHB/11wruSp9VA8QxlGISaG66w533v1WSxc0plEdsYs+
+   hkjO9HgyUl/JUZyJm3wc2EovJu+JzqMcKAhEriaMtjq67akzMNj1KIHmD
+   JkdU1/Zk3puJlDlHVqjsZgY9Ayzk1ORsS+CYrkwVbuWk0h4oqiEZ/6f0c
+   BPbxaD9Mt41TjdHdZrN5BBXjIMYvS757sd07ljxPsHwNSZx13Wury3aLx
+   LMpgMVpttEdIn61q9L4rTT8bwABNHd/zfZjr9givGPHYZX+S9VHV98hrO
+   EL0tpav7TZTcKGQoiCIVBa9ecXgQUiSwlNg7rGuD7WIXrCrQAsQyEj5Lc
+   A==;
+X-CSE-ConnectionGUID: m3aupNNSTI222TTctr1y+Q==
+X-CSE-MsgGUID: kOfACOHfRR6RwtxVlSIOCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63048642"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="63048642"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 01:32:27 -0700
+X-CSE-ConnectionGUID: XdbUQy3CRfOUfn7iOGHy+w==
+X-CSE-MsgGUID: HBtqD8F8So280xiJlFKgkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="149986926"
+Received: from mmowka-mobl.ger.corp.intel.com (HELO [10.245.101.212]) ([10.245.101.212])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 01:32:20 -0700
+Message-ID: <231e4cef-2e44-4e25-9169-f298e72e8e07@linux.intel.com>
+Date: Wed, 18 Jun 2025 10:32:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 02/19] x86: Secure Launch Kconfig
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+ x86@kernel.org, linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
+ linux-efi@vger.kernel.org, iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+ bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, ardb@kernel.org,
+ mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
+ peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+ nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
+ corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
+ baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
+ andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+ <20250421162712.77452-3-ross.philipson@oracle.com>
+Content-Language: pl
+From: "Mowka, Mateusz" <mateusz.mowka@linux.intel.com>
+In-Reply-To: <20250421162712.77452-3-ross.philipson@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-netdevsim_stat-v4-4-19fe0d35e28e@debian.org>
-References: <20250618-netdevsim_stat-v4-0-19fe0d35e28e@debian.org>
-In-Reply-To: <20250618-netdevsim_stat-v4-0-19fe0d35e28e@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Paolo Abeni <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, 
- Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
- gustavold@gmail.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2070; i=leitao@debian.org;
- h=from:subject:message-id; bh=IxDaiUHf7Z4U8Z5WO/QsWUnQL9pxC4qsiCIvomywaYY=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoUnm1xoD7CfA8U+5RhDI/AQvcPoqPt6/kNi/vi
- OeGn2HZG+qJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaFJ5tQAKCRA1o5Of/Hh3
- bUhMD/9mE93RrHPUHWx7lQIfw8olDDA7viOhnT9ubI/vy1hli7uFVHUpyc8lWPjcEui7GLYfBnC
- kt03b8v7ei2ngYIwwYHnHr5tEDuQIFLzJXs/OvcA/TTd8F8TnIN36rhpqk1mhcO92wKwwVkL2fG
- O+8cB1DviPBz1MXOsTCyb9mSpqv02ApUUGOvPv1x4f6/q+QwKUNEC1yuF0EjILu7Gn20Z7/a0k4
- 03Af1PImKdM1kR4NUfWXxBYcTBohGH7ilyaAMC0ZiG6f4/KAbXT2AljQZhscJbZpWw4ITx2r46K
- c32Pfumiwp55F6jetZT2fL+8MZxwiS3+4Gv//DtwfqBsIUeQgumFGKhQSX+p8vVrKftifeS2Dro
- h56BmFJAM9i7nEmKtMpR1/OWegrko78XdCsss/9rHZtGMHFqMx9t0Zuu7ByODrX4AtI+hqx1Y4r
- LFTZwlB6MucI7y37nyBwG63VQW0JnKg/UGjcRRkRW6GUVsooM37l96ewKsBLbOfL5h/xTIVjMV5
- mHDPhLpylLpLKuG1B7u0usRSPzXKmr4FyFBdeIDVAGLiJ/KYLTCPLE5pIOL8rkswVaps8Z4JBVw
- Lh16dtj172ac7q/CpwNf93e7FiuQUayuxiAATGyIINVGsnpZV7RaAxZpM5mj9S3Dtwz/CzLQ+//
- zh05boud7Pz8qDQ==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-Add a call to dev_dstats_rx_dropped_add() in nsim_queue_free() to
-account for the number of packets dropped when purging the skb queue.
-This improves the accuracy of RX drop statistics reported by netdevsim.
 
-local_bh_{disable, enable}() protection is used to disable preemption,
-which is necessary given that dev_dstats_rx_dropped_add() access
-this_cpu_ptr(). See discussion in [1].
+On 21-Apr-25 6:26 PM, Ross Philipson wrote:
+> Initial bits to bring in Secure Launch functionality. Add Kconfig
+> options for compiling in/out the Secure Launch code.
+>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 
-Link: https://lore.kernel.org/all/20250617055934.3fd9d322@kernel.org/ [1]
-Suggested-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- drivers/net/netdevsim/netdev.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+Acked-by: Mateusz Mowka <mateusz.mowka@linux.intel.com>
 
-diff --git a/drivers/net/netdevsim/netdev.c b/drivers/net/netdevsim/netdev.c
-index de309ff69e43e..07171cf8b07ee 100644
---- a/drivers/net/netdevsim/netdev.c
-+++ b/drivers/net/netdevsim/netdev.c
-@@ -632,9 +632,12 @@ static struct nsim_rq *nsim_queue_alloc(void)
- 	return rq;
- }
- 
--static void nsim_queue_free(struct nsim_rq *rq)
-+static void nsim_queue_free(struct net_device *dev, struct nsim_rq *rq)
- {
- 	hrtimer_cancel(&rq->napi_timer);
-+	local_bh_disable();
-+	dev_dstats_rx_dropped_add(dev, rq->skb_queue.qlen);
-+	local_bh_enable();
- 	skb_queue_purge_reason(&rq->skb_queue, SKB_DROP_REASON_QUEUE_PURGE);
- 	kfree(rq);
- }
-@@ -681,7 +684,7 @@ nsim_queue_mem_alloc(struct net_device *dev, void *per_queue_mem, int idx)
- 	return 0;
- 
- err_free:
--	nsim_queue_free(qmem->rq);
-+	nsim_queue_free(dev, qmem->rq);
- 	return err;
- }
- 
-@@ -695,7 +698,7 @@ static void nsim_queue_mem_free(struct net_device *dev, void *per_queue_mem)
- 		if (!ns->rq_reset_mode)
- 			netif_napi_del_locked(&qmem->rq->napi);
- 		page_pool_destroy(qmem->rq->page_pool);
--		nsim_queue_free(qmem->rq);
-+		nsim_queue_free(dev, qmem->rq);
- 	}
- }
- 
-@@ -913,7 +916,7 @@ static void nsim_queue_uninit(struct netdevsim *ns)
- 	int i;
- 
- 	for (i = 0; i < dev->num_rx_queues; i++)
--		nsim_queue_free(ns->rq[i]);
-+		nsim_queue_free(dev, ns->rq[i]);
- 
- 	kfree(ns->rq);
- 	ns->rq = NULL;
-
--- 
-2.47.1
-
+> ---
+>   arch/x86/Kconfig | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 4b9f378e05f6..badde1e9742e 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2001,6 +2001,17 @@ config EFI_RUNTIME_MAP
+>   
+>   	  See also Documentation/ABI/testing/sysfs-firmware-efi-runtime-map.
+>   
+> +config SECURE_LAUNCH
+> +	bool "Secure Launch support"
+> +	depends on X86_64 && X86_X2APIC && TCG_TIS && TCG_CRB && CRYPTO_LIB_SHA1 && CRYPTO_LIB_SHA256
+> +	help
+> +	   The Secure Launch feature allows a kernel to be loaded
+> +	   directly through an Intel TXT measured launch. Intel TXT
+> +	   establishes a Dynamic Root of Trust for Measurement (DRTM)
+> +	   where the CPU measures the kernel image. This feature then
+> +	   continues the measurement chain over kernel configuration
+> +	   information and init images.
+> +
+>   source "kernel/Kconfig.hz"
+>   
+>   config ARCH_SUPPORTS_KEXEC
