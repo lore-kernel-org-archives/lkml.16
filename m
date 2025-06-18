@@ -1,64 +1,66 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E104625FA06
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D93FD260576
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:08:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280937; cv=none; b=FLRkToOjZBosOdAymLY5Wt9IrnosEK8vyezTW9v3UIynyxnBt4p0zaNSp7T888Rmj+3enrFzhTB1qYktP1reSUYXLQHIFwT5kidS9d+yxe4hTFE/tGq6VOi+dHrtQ5WGN7ozyKHmQ1Wk2S99+qBIeoqm/6SDd/N8iUfKzZPjKcw=
+	t=1750280941; cv=none; b=qYnyqPF1G9YN0Abn7+sv0LOxu5Abl82ydu9sIR9p7jEI4N7cxHjMVyuiQ4ePu9lf9cmLsMOg+EP9Wro5tUbpuLA0gvxC8S1KHCC2uxn3W/0y0QMHGRseDTNo/FRATGovFhEzqRrqj+SysWhtzM5x0gqvMD9YwKR0Mnb4q398oM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280937; c=relaxed/simple;
-	bh=Lz3dQQOzBSazZRbRcgIezuMZcmy9SPEZppaICybM6wA=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=P2EQFuf+w4sjFngPwd0aQ/XYVQSXZWB/5Y3cK//1DXeBVIdR8lIERDRFY4s3W2k/jwDmC9J6hdgqy0S+LSk7Ih53k5HieR7OdZptX1FEvhD5gviYlKR9DhZkAuYLZLCQM+5mePF3zq9nQ7PUVuk48RqzwkrRX0ZYQbR0HIPm/SQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UiY8qWlQ; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1750280941; c=relaxed/simple;
+	bh=YiB0G6F8wy6l7JvT/ZZMMGcgJTsPVM5/IR5furyk19s=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LMbY5r13CA33yD4+gn9RY9x+QTEzbe36m1Nja3HuB8qDVcZi4R9XiZ1DzZYOywTd4KUiSYN7gPCCWhKCS+c9THZvF5T80Rblv5cM2ojw/f2y2yUCBQwRa/1p6TpNKJFvmBy7WpxgOBp3u1bc9oGI+wMRKJT0m+yybJ8pXFGf3/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=y8MTsWFK; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UiY8qWlQ"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747af0bf0ebso47156b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:08:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="y8MTsWFK"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2356ce66d7cso1635445ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:08:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750280935; x=1750885735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zRoaCj6hoTPJxaDDV3mKgmJ3Npn8sA7fvAWlw4tbnTU=;
-        b=UiY8qWlQa55CXbzr1vJtppcP2IjK0Ej4DrawxXKmZifsVOD4CljKo7VWqHNwl33BK1
-         tl2S2VZuJb6k27gV/FVMf9crmqWfQ0fEuC6tjbYR52xA90HeIVoa584085hClHbDBDLs
-         RWuXw5xL9iT30rHZKTPuyLLDrUA8hbUYSIQVsgcyAl/k0jeJGW6tp8KVdgCAF7oqmlv7
-         rIR8/+HERWYC+66XmCGyKo+84Mj5IMPlSrn7YoE4wkfxpRxUoHv7xT8T2vLwkztaxxnN
-         CUYQtCmJ/qQOB1zha1+4z1aPtJz1AdRdJmqumOZJQ/bKinW1e1E43rnpopaLksKldBPz
-         6+gw==
+        d=google.com; s=20230601; t=1750280939; x=1750885739; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VIV2B0fUwqK8CLLa1kWwxVC8BX5dJhCy6gXrqz6FTh0=;
+        b=y8MTsWFK4M79J5xy6e0KibV+LM/zfdFmrsi1xm5cMyGgL/rchV//vgYnQWnDKZHTav
+         wT1bHF4IgHUFxAsNjc+jbkVEifDuyEa85rgMJOpNq+R3Un5TSVljGV86+vFk6oateBr/
+         wlBahHDL2EOX3Ph+uOVcOgLbulvywiSV/Bi9XUL+FDq/dxsy/KCwefNIf9q7L3s0godJ
+         kKfWvpIw0bLnahaJjtsf0kHmb5S5NxKrr4wj5EXOux2JbT8pOUjPix5MsYOwCa4S4/TE
+         b63pMSLFEMZPkeOlRbS31Lq241/jbIV2u4BWnKQuS3brikxPvrAwIFFLoAcuxNrLqS/W
+         g/4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750280935; x=1750885735;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zRoaCj6hoTPJxaDDV3mKgmJ3Npn8sA7fvAWlw4tbnTU=;
-        b=njKc80pQvYgtW3M94RM716+8eYqr1YcErhWOHOHtFkbRZj43uuTt6AufChvaL6hcQ4
-         VuMK/hcUP192M1LylEMI3e4DYK/BEsMrPuBPFNZr3oLODm9E9fVPAczP0x0+bZK6wZEY
-         ph6aouZauu82RxlHe+m0zeshjluxnkzyo5+WRyCIt5DMwyDR0B2d5ewY9499a9A9ugiU
-         8lRt+/ioCAspXMsWdUnPDtes1WE+3l4h/bApZF6Fxr73xEvQ4b8c2j+1d6Ruxuuo2gP5
-         OVOsN6bQ/ag8t6YKk5uts+ULfb9mlgFj9IpQY8wzmAP64kj8jM+GRtoVcelDx44tYu0/
-         bIGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFdbu6KrSDA9309PybdgmeItbFlXClp0VJbHVhUarz9/CdzIBQMeSu668ddBOinxYPW9lH5TwwB4yyGYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZuQ/mL624LwWdROALn0t7oVa2FgLibJuIlAyCF1jooRrtBJW5
-	/2V/Oqoc35om8MkHiXYqu2uZTeUezfCRWbRJDRvmz6jkHdDP/HRlCKGwg0OHF2SU6SRxjG6hbmF
-	nRgIkZeM+/jzxujIXpVhLrKQ7HIihFQ==
-X-Google-Smtp-Source: AGHT+IHM4S67QrX8m1RQpKcEdli21K1Bw8q46eAiayWAixmfo6GxjxzG/TdPG1taUNLCEpzBbx7ZQPCg2BlL67kHZ7s=
-X-Received: from pfkq15.prod.google.com ([2002:a05:6a00:84f:b0:748:55b9:ffbe])
+        d=1e100.net; s=20230601; t=1750280939; x=1750885739;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VIV2B0fUwqK8CLLa1kWwxVC8BX5dJhCy6gXrqz6FTh0=;
+        b=jZiCBLla95tBUC6u5Zuw4Y+609lGNiShVWj6S93C8RP56+plu+2eV68IHpWPXsatur
+         KgCkSupxPwMHDoT/FOEVLSyaDxFwRXLGeslhA0NcklAhNV/aSVLE+mIEkdp7VVMIuTkO
+         rCngxiGHzdLhTPexkAOqPYXF+kOBPV+QKLZaj/GaMtlgzHU1bWd262Xh1ic+jL9YsuH6
+         4p8r1qTAPg8xxmO6qXSccIGt7rSon1eNPruIWJdntS+mcjmaEtZcG7LA2QzxPElLtnuJ
+         DwThnweNln/0nXr8+ZlXnCWHYFNB7SqCkuFDoim4c92bq1svfNEl6Inc/N66aYQE+2ay
+         U3sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAT0UC/UwGwqj+b8eLhm1vfESL8Cw3bn2F8teSUSc03tELAB2gsUXcC5mXacsE85JT8LslVeU4y7Wrp7U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqhydANmq2Gp2VT/B+EXty9ogaYy0PMpllBBG4mGPrN4pz45vx
+	NomjQnB/AdwyPiFq4xTwEctwfEG1QVj0MewBR/TMNkqtZgfMCvF7dInjmv9HdJUN2OdWWbwIABS
+	dcNL/ktKfRZ5nOTk22PoTTO3lHaPe0w==
+X-Google-Smtp-Source: AGHT+IGiJGT1YFIh+v5uqzvDM53cRKs7EFb+HuttlM33+6jHCYkauA26YJBxlkdTenXVFE1UD+DGINSTOc28e+IdqI4=
+X-Received: from pgbq16.prod.google.com ([2002:a63:5c10:0:b0:b2f:6290:cd48])
  (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:3d10:b0:740:aa31:fe66 with SMTP id d2e1a72fcca58-7489ce0d39fmr24849663b3a.4.1750280935227;
- Wed, 18 Jun 2025 14:08:55 -0700 (PDT)
-Date: Wed, 18 Jun 2025 14:08:37 -0700
+ 2002:a17:902:eccc:b0:235:f18f:2924 with SMTP id d9443c01a7336-2366b32a043mr308396435ad.15.1750280939235;
+ Wed, 18 Jun 2025 14:08:59 -0700 (PDT)
+Date: Wed, 18 Jun 2025 14:08:38 -0700
+In-Reply-To: <20250618210851.661527-1-willmcvicker@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250618210851.661527-1-willmcvicker@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250618210851.661527-1-willmcvicker@google.com>
-Subject: [PATCH v3 0/6] Add module support for Arm64 Exynos MCT driver
+Message-ID: <20250618210851.661527-2-willmcvicker@google.com>
+Subject: [PATCH 1/6] of/irq: Export of_irq_count for modules
 From: Will McVicker <willmcvicker@google.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
 	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
@@ -70,113 +72,36 @@ Cc: Will McVicker <willmcvicker@google.com>, Donghoon Yu <hoony.yu@samsung.com>,
 	John Stultz <jstultz@google.com>, Youngmin Nam <youngmin.nam@samsung.com>, 
 	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
 	"=?UTF-8?q?Andr=C3=A9=20Draszik?=" <andre.draszik@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, 
+	Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-This series adds support to build the Arm64 Exynos MCT driver as a module.
-This is only possible on Arm64 SoCs since they can use the Arm architected
-timer as the clocksource. Once the Exynos MCT module is loaded and the
-device probes, the MCT is used as the wakeup source for the arch_timer to
-ensure the device can wakeup from the "c2" idle state.
+Need to export `of_irq_count` in preparation for modularizing the Exynos
+MCT driver which uses this API for setting up the timer IRQs.
 
-These patches are originally from the downstream Pixel 6 (gs101) kernel
-found at [1] and have been adapted for upstream. Not only has the Exynos MC=
-T
-driver been shipping as a module in the field with Android, but I've also
-tested this series with the upstream kernel on my Pixel 6 Pro.
-
-In addition, I verified that the Exynos MCT module cannot be unloaded on my
-Pixel 6. This is due to /sys/module/exynos_mct/refcnt > 0. So if you try,
-you'll get this:
-
-  root@google-gs:~# rmmod exynos_mct
-  rmmod: ERROR: Module exynos_mct is in use
-  root@google-gs:~# cat /sys/module/exynos_mct/refcnt
-  9
-
-Thanks,
-Will
-
-Note1, instructions to build and flash a Pixel 6 device with the upstream
-kernel can be found at [2].
-
-Note2, this series is based off of krzk/for-next commit a15edf91668b ("Merg=
-e
-branch 'next/dt64' into for-next") with [3] on top.
-
-[1] https://android.googlesource.com/kernel/gs/+log/refs/heads/android-gs-r=
-aviole-5.10-android12-d1
-[2] https://git.codelinaro.org/linaro/googlelt/pixelscripts/-/blob/clo/main=
-/README.md?ref_type=3Dheads
-[3] https://lore.kernel.org/linux-arm-kernel/20250602151853.1942521-1-danie=
-l.lezcano@linaro.org/
-
-Cc: Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Donghoon Yu <hoony.yu@samsung.com>
-Cc: Hosung Kim <hosung0.kim@samsung.com>
-Cc: kernel-team@android.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: John Stultz <jstultz@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org
-
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Youngmin Nam <youngmin.nam@samsung.com>
+Tested-by: Youngmin Nam <youngmin.nam@samsung.com>
+Signed-off-by: Will McVicker <willmcvicker@google.com>
 ---
-Changes in v3:
-- Rebased on top of Daniel's timer modularization prep series [3] and
-  krzk/for-next commit a15edf91668b ("Merge branch 'next/dt64' into
-  for-next")
-- Added owner references to Exynos MCT clocksource and clockevent objects.
-- Dropped #ifdef MODULE conditional section in favor of just using
-  module_platform_driver() which will properly handle setting up the
-  of_device_id table based on if the driver is built-in or a module.
-- Update commit message for patch 2 based on John's feedback.
-- Dropped DT change from v2 as it was picked up by Krzysztof for CPU Idle.
+ drivers/of/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes in v2:
-- Re-worked patch v1 5 based on Rob Herring's review to use the compatible
-  data for retrieving the mct_init function pointer.
-- Updated the Kconfig logic to disallow building the Exynos MCT driver as
-  a module for ARM32 configurations based on Krzysztof Kozlowski's findings=
-.
-- Added comments and clarified commit messages in patches 1 and 2 based on
-  reviews from John Stultz and Youngmin Nam.
-- Fixed an issue found during testing that resulted in the device getting
-  stuck on boot. This is included in v2 as patch 5.
-- Collected *-by tags
-- Rebased to the latest linux-next/master.
----
-
-Donghoon Yu (1):
-  clocksource/drivers/exynos_mct: Add module support
-
-Hosung Kim (1):
-  clocksource/drivers/exynos_mct: Set local timer interrupts as percpu
-
-Will McVicker (4):
-  of/irq: Export of_irq_count for modules
-  clocksource/drivers/exynos_mct: Don't register as a sched_clock on
-    arm64
-  clocksource/drivers/exynos_mct: Fix uninitialized irq name warning
-  arm64: exynos: Drop select CLKSRC_EXYNOS_MCT
-
- arch/arm64/Kconfig.platforms     |  1 -
- drivers/clocksource/Kconfig      |  3 +-
- drivers/clocksource/exynos_mct.c | 75 ++++++++++++++++++++++++++------
- drivers/of/irq.c                 |  1 +
- 4 files changed, 64 insertions(+), 16 deletions(-)
-
---=20
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index f8ad79b9b1c9..5adda1dac3cf 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -519,6 +519,7 @@ int of_irq_count(struct device_node *dev)
+ 
+ 	return nr;
+ }
++EXPORT_SYMBOL_GPL(of_irq_count);
+ 
+ /**
+  * of_irq_to_resource_table - Fill in resource table with node's IRQ info
+-- 
 2.50.0.rc2.761.g2dc52ea45b-goog
 
