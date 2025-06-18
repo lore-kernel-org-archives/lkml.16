@@ -1,121 +1,106 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B14A19539F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F64219E8
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750234332; cv=none; b=Kc+D5fmQMlz2CZ9MxZ3g9eGQTC76CtPPX93Dq6ejVBC8QtI7KlKqhU7Kl1sjyFazykNG4j5oPrEJVPEWamzwsKDCdt4yztk5wFbajj5P4scLEUSYmuOyG4+Z+4zuJI5MsFf1vaY9zm23B9u/gngv3NMkie9+ORSKvqMPc7wPFS0=
+	t=1750234444; cv=none; b=bsryMMiBZFXy7VzAkwWXCRwUK6YAyGrqE1iqZOvMUYNJPGNVd2xEwTWekXI3tU4e/4VRMG7mRQahcko8Z5rMELbH0f+1WivlvJAgNfRA6htd3b8RUdZdEa6LPRBnsih/CAxajYEZUtUW8irBXetM006qincwMrk4UvElSmKEbnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750234332; c=relaxed/simple;
-	bh=0RQPUVwvAOsk5IBp82srvzdKvozlrwpTmR5FjAY3tkc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Czjrz5fqT+jlEXLDNHYVPfdF5XISvew5qoRzBihll9FQ6K7q8trX0J0ePfolPv7B2iG3gAThNFEMJuIlZkAWYmZlDRPWn9+n/C5eIntu5iFfQ8wqE4qpptloS2NprnRVT+YakCysHCWggN2wMzdMwZ9tiINlCRxnD6YQdC37nKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=EdntvusL; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1750234444; c=relaxed/simple;
+	bh=mtsVSt0IzdX5tLQJXmCaa6Z5jtb0ezGaOSsG0EvOrhc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TTOJzGEYxIT72MG8wjrz6tNcSXMRraHRmObR4Q+OdZTxb5/sHsMllNemWYPgh1DP3A9CqSrP1BaRRBX0BqJe2kvXkjZ60ysTclBgNIblgLnuDmwsqfyWJFXzqt+UE9anVIpWGU7jbfI7F95T6ECHCglyX5WhxN/SdNesEtXFrrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EYld6EDb; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="EdntvusL"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2363e973db1so3663825ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EYld6EDb"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so11275961a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:14:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1750234329; x=1750839129; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=brjF5TFgyuOObGUl0vP/36GKYjNLHFU9TL+BiTpUMpo=;
-        b=EdntvusLIWNlwvN1hiHkvQOPSq1PSmVx19x9i9cABqQIryizJOks5J1WuMJ6bb6RmU
-         LCn/vzdO6FJPgzqJyaEgfqcYCohpbYvplaI8PsRf1TlXKWyHToV+zm/zns/ZeFGHhEZd
-         IqceooA2hi6ED+Onv+qzTLsTHssHWDsFhgoWCy/43AQbRHHiL3UEeC9+NyfBS83ABKYZ
-         VPlGXBGiLcXEhU4AioSdDKzeUk/m5LOrhJAYfx0h+QxT2D65auorMmbxx6fz18zIWfV7
-         OvQSXpYqkIOlLpDedRCpDfqnov6sMHtQKydl9JU6dJbdOFzenJV2LOVm3me1zFsZC9op
-         6Gqw==
+        d=gmail.com; s=20230601; t=1750234441; x=1750839241; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6pb+HWu2OCHXrKShSkh3Mma2i4SjUsrFyP5rDVgtJMA=;
+        b=EYld6EDbRh8hzcnX1ecz6Axd+fjSydQDVnOo0cHEi0j4r+OHt+Tc4ZaMusRfERmA4m
+         R5nogQ4didHlVSaoHBiZX49kwHuTDMp73ensM1nWca1Eo/MEzUq3DPpGV7fwUrbyE4r0
+         IE0srSUwWn9fK6eGthv84KFRV8lXemr0zzuS9WRz+iNR5eJ5WZe58V0loFnGcImdkb/1
+         ubNIWGujuIlBQm5Q6PHxyzxWeKqT7owZGne50WkEf6afnM9qaKhgprAgXqxwYhtw91sS
+         mBUZ32ftA91vDo3wAebj1RMVnIT4FaF8aa6DCmeP5CyypwKZZtue+EHRZIPnMHvWspUc
+         qwGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750234329; x=1750839129;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=brjF5TFgyuOObGUl0vP/36GKYjNLHFU9TL+BiTpUMpo=;
-        b=YaaTRpyFR1umZgPh1DRV+969HI+tBkcaxPGi0Q3v5xq+qUi430KeEmmh5naUTfG3DZ
-         pnr186R+bKt1hFsyUh/m5mE3i4AwYjhs7+INtWCzrIrZy+7uqVi4wg5pbZBgNkAj1oWK
-         Y320IymD4VbOyhXLCEn0YzJ9VSHbJZaXDKPGdbkUFrgyIZKtbD9SH31DRPcVBwORH3A5
-         18TAalLkblfQdq1ycdRXKJ77CpTV95wsIwhtfD2eTkuqEt6mqS7zbKmdzNp4ka6DMJNS
-         LtyXkGTGRH4wgdgsEtNhqi49QhNg8xQmzHSJMkmcJARya9hJeDUmbOZoAJ9aQ7gUxGy4
-         Q9wQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVk2AbLaVxOteS0SvIyptXVorshMSJFHYPbswzEGE/hb4pdLiJqxQ0A2DDpOfvxJwPZGeM0QQPS3y0i1NY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFSnTLfsGl7862cUz6E6jdaM7nVyf2Zw9WDMxjTftzG08sfjGD
-	ejjqUl33tThrnItdIhh4+8Qw2hkCrlhaEBIqhBY3eQP6IXByPLU57AflGzJrmuD6hZ8jBaFYRL9
-	PCbUsuHo7oDx5NEH4mXyxJkZvoXt+yuaseEJEOUICwA==
-X-Gm-Gg: ASbGncuV+lZjHsdpQg3buXA8ansJE1e3+XlFzOjxfXkalB/YcRDY3z5j4aupZ5Z9PHB
-	ejCxhCBZhk1Qq06u4+0KhD5klkyHh/M5UWOzL5CDFVr44AWuOvc3/OZ8StwIA5VBJ3Pxcwd77S3
-	DBNolgfFL8hyM/osG4KXI/eupJgnJsLnGZCVNN+BiVf4M=
-X-Google-Smtp-Source: AGHT+IGpJLHZtnqyqQh2JhkwSxrOCuHgk1TDDY09x7fcoLDuh3vm/ooqXWD5JEagbJwkl/efavMkytyKfGh/yNK0AJQ=
-X-Received: by 2002:a17:903:228b:b0:234:11e2:f41 with SMTP id
- d9443c01a7336-237c2046e94mr26764865ad.6.1750234329638; Wed, 18 Jun 2025
- 01:12:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750234441; x=1750839241;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6pb+HWu2OCHXrKShSkh3Mma2i4SjUsrFyP5rDVgtJMA=;
+        b=M7LsPKrezDWEjCISVO2/WcnF/nDRtIv13lvljvJIsXq9tG2XjpBENY6aXLGQ0wK4A3
+         8hI31dZpjvlJGwaODxL5zrdELYg5Eq4lZTK8gdN38y1Z3ao1kkdVUfcwJkpUmTZX8+go
+         jXjh6v0S5EtWf9Ro1PxSd/pTjgojuwe/ae9k1ykXHhdedUkBEmO1bsymL0iigjkPbCgs
+         xhbO7VZrpJ9KMCWRVKAy96IFkrfPpNEjOijOpyatQh/zjJ+DtV2UDiKFMH1Yl5qt+VTF
+         K1J6BuTC7DN+c5xhsPMaU1wNtUoVt05xrHkCINVR8yCkP9U0JcJ+biH8cH0TvFBkrDi/
+         LZVA==
+X-Gm-Message-State: AOJu0YwaFnYccxQXTAXV6ZLIdD25+/y9SDx3WNalnqlrC0v/WfU3lXwe
+	d7KnrLkMpmXtsEjw0Er+5pVp3Tba/hupcPRoGRoC7d4KGtrG38l4+BVy
+X-Gm-Gg: ASbGncvT65rYrYsu/2P+BZchXVyZUd7GU9FL4g8Kgh9/wp/zM6Kt6vRqKTf/BuxDTMW
+	kJicEF1E9A+aT7ldStJ7yVTFEDfx02LsqALCU6ojOKB89oEUUEFNr02tRjbLL3dn6NvozLerkNL
+	VLA1dZFOhVo+3sLwgcnvLnj1dDVnUdIRytcMr2ule7jHclTafizMSqe3RBVbLCrIEU8NR/oWGMV
+	6yoR8oU+/1oJPKk73UyqlrRFOz5sMxnLXM8PMV+8RZYJZ2c5AkuCaya5U79IU3DLSZ3HuUB87s3
+	kVRAhM4dTdm0I8RCgcd8scU2XaK9k73QfT2NnaJbFCd1KQo+dUsGY6rivZvaWUsEBmOCF/mGDYi
+	q
+X-Google-Smtp-Source: AGHT+IEq/zc2AYk2AVF/I2Co8G9J+xprJofIWZ5/DX9uDcca5x3+/uQeUufvMbmWl2oTi5WZpPg7QA==
+X-Received: by 2002:a17:906:c145:b0:ade:3bec:ea30 with SMTP id a640c23a62f3a-adfad29cf6emr1668689066b.1.1750234441195;
+        Wed, 18 Jun 2025 01:14:01 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8156ed7sm1013823766b.37.2025.06.18.01.14.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 01:14:00 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	peterz@infradead.org,
+	luto@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH v2] entry: Update outdated comment in entry_common.h
+Date: Wed, 18 Jun 2025 08:12:46 +0000
+Message-ID: <20250618081305.1060-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617152451.485330293@linuxfoundation.org>
-In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Wed, 18 Jun 2025 17:11:53 +0900
-X-Gm-Features: AX0GCFvsu6UCDmq2tIZWb5YR-nmqe-aN02_fZ-ldFZkqfeOhcwzzccegmgganmE
-Message-ID: <CAKL4bV7fgF4uFC04rDjjAYVYG9vJHhYzfwq4yB0s7ns-kqdvXA@mail.gmail.com>
-Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Greg
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
-On Wed, Jun 18, 2025 at 12:29=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.15.3 release.
-> There are 780 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Jun 2025 15:22:30 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.15.3-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+The comment above syscall_enter_from_user_mode() refers to
+syscall_enter_from_user_mode_prepare(), which is no longer used. This can
+mislead readers trying to follow the entry path.
 
-6.15.3-rc1 tested.
+Update the comment to reflect the current implementation by replacing
+syscall_enter_from_user_mode_prepare() with enter_from_user_mode().
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ include/linux/entry-common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
+index dad1f257e3dd..49f5d99b254c 100644
+--- a/include/linux/entry-common.h
++++ b/include/linux/entry-common.h
+@@ -146,7 +146,7 @@ long syscall_trace_enter(struct pt_regs *regs, long syscall,
+  * @syscall:	The syscall number
+  *
+  * Invoked from architecture specific syscall entry code with interrupts
+- * enabled after invoking syscall_enter_from_user_mode_prepare() and extra
++ * enabled after invoking enter_from_user_mode() and extra
+  * architecture specific work.
+  *
+  * Returns: The original or a modified syscall number
+-- 
+2.49.0
 
-[    0.000000] Linux version 6.15.3-rc1rv-gd878a60be557
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
-Binutils) 2.44.0) #1 SMP PREEMPT_DYNAMIC Wed Jun 18 16:32:09 JST 2025
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
