@@ -1,66 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD171B78F3;
-	Wed, 18 Jun 2025 21:29:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D396E27E041;
+	Wed, 18 Jun 2025 21:29:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750282178; cv=none; b=VUVEKVkr9LjksL8hzEmhuMaa+UIg5fC4gYi5hw4CM9nqLrCE8f0qyHKqBH9k6BvIqjAQC04iVeNi3PmkiGFZS5kDHvwCSGthbyzGt6hsadChhkDYytLr/EfFLybEclBgUo+STpW4xO8/MX1vnjCuCldCPqd9+A88kVQuJuNVEJI=
+	t=1750282178; cv=none; b=HzDPR3UGnKvsSmO0RLwj3nyXAb2wcxHCweTYgfYdm8djMXiOjKmKFdAUcQKehba/RtDRvzEzkPhkcZYfwVjmHLTkMjweIdUma2j5IcJLyl8v2rjtMJF4R4jmVzIktvOtmDEpM3/dbKdN616Kje9Vh2uH/BrpLkFd3HM7p5Q8eqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750282178; c=relaxed/simple;
-	bh=kWtZsjCnLnaUDpRLL9iX4OQ4gVYX0SYJ72y/3tn1/Zo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fO0XlT/T5YkdL3YJdHmwdDWVqIA2F+lFyJI91lWS43x69a1YSwXPUk3J+okGN0kAQ3oZnfW9LuTvvKYY1EuExECr2vaz+NIhAoQagJx8TH0PvnPD0reABbD+ozP5fdg4couk2yHrdR64bd7j8I2gCErNKN87XkLc0iTBJaJX1O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2WXLjQh; arc=none smtp.client-ip=10.30.226.201
+	bh=aMEbEW+IeHhujQGTuZEocOXaM+WKUzqlMtYJd8Rdhok=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=bpG1+05u3f8oJlxk1gm9qYJVC3z4p1jEk50xS+appoQoO0cL7gGNFcm7qEb+H/gdaf9cofvnJ0WJIdUgRVOc0PYYwJ9uZTvJNdIKtp2piei5JnzOTkvvtNLQYHRfO0xx64VJHfeXWuAzeH9hSy2USUq+KvhWkLLI089AvaNL7Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3vIzdKA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2WXLjQh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A595C4CEEF;
-	Wed, 18 Jun 2025 21:29:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3vIzdKA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF13C4CEF0;
+	Wed, 18 Jun 2025 21:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750282177;
-	bh=kWtZsjCnLnaUDpRLL9iX4OQ4gVYX0SYJ72y/3tn1/Zo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K2WXLjQhw222zqK4ROk0UaGGcQNpEmWmV+eTa73ysBYSwFeBx7Drxnnw6tKsd8DHu
-	 isETSjNa/uKuDOlFnaqxCEEDYUUpjA+z64bLFevRdJ+WxGKiOlvdLon3SWqPxEnAGA
-	 rhrZsx+Qb5Z20SXCNEu8UPe+WNIYq5RrD8tCPTTQy7VYlkRxI+5lN6ndnduu0XqcYP
-	 pgdsVQS2cw2YA5yuDm+NsgBf1NV1/DIlt/kcFWQYHNqnRSDbSrSYpYDOO7bs+X2Mdc
-	 iK1ulfXQR12zPLsAMGMqpV6GbWr1p5SGi0RxLxYcWDV+trRhLj9us+AzWhPBNNRH1I
-	 F5g5O58vMGW9w==
-Date: Wed, 18 Jun 2025 14:29:37 -0700
-From: Kees Cook <kees@kernel.org>
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-	workflows@vger.kernel.org, tools@kernel.org
-Subject: Re: [RFC 00/19] Kernel API Specification Framework
-Message-ID: <202506181428.3D086D2@keescook>
-References: <20250614134858.790460-1-sashal@kernel.org>
+	s=k20201202; t=1750282178;
+	bh=aMEbEW+IeHhujQGTuZEocOXaM+WKUzqlMtYJd8Rdhok=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=C3vIzdKARteWUzv4tIZshMl183ZRMEK5hxrLaRLfDtAtAK6MFLgVzbuh9fBJuDo+Q
+	 CV2G9pYXe9OnSvZzIweMApFKYd3be0BqQAdNnmq0RH7aOruLKKoQ9Lx07p5lU3B6M2
+	 fPQyQ3Rb42O2SSbD+XN15NvVyVSOo3qmJiUeuN8wiRQKYJqeC2QlLNxBwHumjnbwz5
+	 Z18Vz5JPJnT5/3pAjQFXAVz01AgXrEzsx9XzFxClbi4ENV4j0bD3nExWuNZwnzIqWO
+	 Imeq1k6XZnRsObF3gO3YmbngHS9jXrRsOwgOq8OGPnPeTg4D8HCOIvZlXUd5L3H9zS
+	 41reZ8QZysIaw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD7E3806649;
+	Wed, 18 Jun 2025 21:30:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250614134858.790460-1-sashal@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 net] tipc: fix null-ptr-deref when acquiring remote ip
+ of
+ ethernet bearer
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175028220675.262925.8913605552414579923.git-patchwork-notify@kernel.org>
+Date: Wed, 18 Jun 2025 21:30:06 +0000
+References: <20250617055624.2680-1-hxqu@hillstonenet.com>
+In-Reply-To: <20250617055624.2680-1-hxqu@hillstonenet.com>
+To: Haixia Qu <hxqu@hillstonenet.com>
+Cc: jmaloy@redhat.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org,
+ tipc-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org
 
-On Sat, Jun 14, 2025 at 09:48:39AM -0400, Sasha Levin wrote:
-> This patch series introduces a framework for formally specifying kernel
-> APIs, addressing the long-standing challenge of maintaining stable
-> interfaces between the kernel and user-space programs. As outlined in
-> previous discussions about kernel ABI stability, the lack of
-> machine-readable API specifications has led to inadvertent breakages and
-> inconsistent validation across system calls and IOCTLs.
+Hello:
 
-I'd much prefer this be more attached to the code in question, otherwise
-we've go two things to update when changes happen. (Well, 3, since
-kern-doc already needs updating too.)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Can't we collect error codes programmatically through control flow
-analysis? Argument mapping is already present in the SYSCALL macros,
-etc. Let's not repeat this info.
+On Tue, 17 Jun 2025 05:56:24 +0000 you wrote:
+> The reproduction steps:
+> 1. create a tun interface
+> 2. enable l2 bearer
+> 3. TIPC_NL_UDP_GET_REMOTEIP with media name set to tun
+> 
+> tipc: Started in network mode
+> tipc: Node identity 8af312d38a21, cluster identity 4711
+> tipc: Enabled bearer <eth:syz_tun>, priority 1
+> Oops: general protection fault
+> KASAN: null-ptr-deref in range
+> CPU: 1 UID: 1000 PID: 559 Comm: poc Not tainted 6.16.0-rc1+ #117 PREEMPT
+> Hardware name: QEMU Ubuntu 24.04 PC
+> RIP: 0010:tipc_udp_nl_dump_remoteip+0x4a4/0x8f0
+> 
+> [...]
 
--Kees
+Here is the summary with links:
+  - [v4,net] tipc: fix null-ptr-deref when acquiring remote ip of ethernet bearer
+    https://git.kernel.org/netdev/net/c/f82727adcf29
 
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
