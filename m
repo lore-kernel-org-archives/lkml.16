@@ -1,101 +1,109 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C8C2DF3E8;
-	Wed, 18 Jun 2025 12:17:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD9B28A1D8
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249077; cv=none; b=dnaXWWXsgNRrtyS71k01h4T+uTDnj16Njn8N+czgZR8DUF38UhLUvheMJXGHeQL3VhL7oBVIqnkeIun6/8So+UMZ6VX9IyWxd4ytg19lvXuL4f/ih9KZQYPG0Q3Vqj5wqMUlMMvWX9hjFj5OXZQ1Kmsco6KLljpb4VrkxHfbrT4=
+	t=1750249179; cv=none; b=kJP7ZWpCxwTeGtcUkDsscZP/7VIxyRwG3c8do621c3HLB9IojWpVda4cqSwB3drPCoH/P3yt6GnZebbi3J6ofVwxOHPvSIOiqzIwHl7XgcOXtn/n6dLr69bwPsfx3gz0MerXpT3CsEnGJ1W6wss53KP2fykZwwPp3V4wEDEaCHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249077; c=relaxed/simple;
-	bh=qr3/kjwLFylG6ywry69iDYJGlppx2JuUHVeJAZ5YGck=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EGPb+7D0QmRfmG5/Pg1oPYh8+298wjFpJtT0jaS/QigwLx/Hbl8pgUDfaGWu1llyBqnFoyArQAVuxRqged4CeU6U29qMjG+l1oIH/I5V9YCSSzBHxngXulhaHfnEQJwoRtB15ZWynB13PtAuy9HswWAM5r9gaBgBg9ZGcLCwd3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=GkK37ofw; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1750249179; c=relaxed/simple;
+	bh=NzOG8U8UNN3wPSVZoMWk+hdXQQdqSuFIxJQ5ghdut+Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=K76t4C458r3NLydsU0/9QSdeHUIqCG6O9Jvgh6rvhs0xpB6cOhbgoaaU3D+HwEdgVb7qG+K0Gb21Y6w3p+aYRIxoU2o0uRm0dkh2x6vPL5IycPokRkDsGoXyN3l0TtKNmzAv7DLKxWF0Lo3A2ESu1Iu0QE1oqjNhXQxNf7HH3tA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=UxCUBE1m; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="GkK37ofw"
-Received: from kreacher.localnet (unknown [5.63.189.50])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D537466DF26;
-	Wed, 18 Jun 2025 14:17:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1750249066;
-	bh=qr3/kjwLFylG6ywry69iDYJGlppx2JuUHVeJAZ5YGck=;
-	h=From:Subject:Date;
-	b=GkK37ofwj4Eo4j/3VBAP6iJsgOTaK3/TTbEKVn71nhfhh3aN8hpk79g6wGxsQhL5i
-	 DOMOF5lO1hjucslpe8j7JJM9R3T1B0potQH8XjXhaT/wNmmQr2NgUVrww1On5+5odP
-	 iSdJHysGltv3BnaKJF+fzT3QhSRHCilq/yqpFFnKuUM5CXeRS5KIOdSpcRuvdU0Iua
-	 n0qvbx/N0X/UNaA1nh/4V14RB0mClXVLlDudsgavb6bU4H8gA+PtKGpHeZ+q2IqeTC
-	 t9qVFFWRGNPl023VeEgwPY7ejjczjF+HF78JNf3LcMUiPJgRttAKg/XoVxyChJmSHA
-	 4QnKFzrKWX8fA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux ACPI <linux-acpi@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
- Peter Williams <peter@newton.cx>, "Dumbre, Saket" <saket.dumbre@intel.com>,
- Hans de Goede <hansg@kernel.org>
-Subject:
- [PATCH v1] ACPICA: Refuse to evaluate a method if arguments are missing
-Date: Wed, 18 Jun 2025 14:17:45 +0200
-Message-ID: <5909446.DvuYhMxLoT@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="UxCUBE1m"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2349f096605so91963835ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:19:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750249175; x=1750853975; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nPxLnb07w2EJ8LEoe+9pqi7EbyUsRwD+FfXs2j0g29o=;
+        b=UxCUBE1mWIvFNPVKdXfdoZCh8mtk1FaeZyzJmkkObTjlcM7dLVvWFlV5deohWW/0+O
+         bsl3unp07DQI+lS4orFutuSym8IuRld/IqlRfepsWcHclmVeLaztfSRVvYpw/Vh7Yg2v
+         g+YQlRJSvMAv+Fnps3ygcT2Ki077trKzWzbVebYLWfasQYZ6gVxq3Zjuw2WZZZGPvEQ+
+         Tx5tbYb+C67iWpfGmuO1ybDLqXbB+f4bs9q9Ehl9CGE0Oitv9Kp4k4bDRT2M2PfvHDiT
+         VDystkZ2Lqn68tr6j/iPe9AXKtFk5E/UUl7IK3xyX5HUT15eQ4bXueUJJaAGE0AeKQmx
+         W0iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750249175; x=1750853975;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nPxLnb07w2EJ8LEoe+9pqi7EbyUsRwD+FfXs2j0g29o=;
+        b=aHTqfaPnvQf+Wd9Nq7BjTy/dx83fcVXdhMT3iUlpk0S/gFJXTElLAiXUkwdf3z4jMs
+         INw1ty3aImA+9xGe9mT9ZC7jXQsXtwxW2B+4SFc1wdlp+Cyqs4LK3JpCp058F2W3DdC2
+         2f23dZOdiqYz9yR2z871es3ZaOWOz4Q1SKuWFK4IpdxTmMryizhWsq91Gw7A6dH0NM1R
+         Q5wTDPBTbYcwTfJa8M8BowHuTko2sbsHgDV6fSgRICFDmAvs6tlno74URKv6uRi/DmoY
+         BHkbN8CJA2rYLgJlNcCUMHLuJ3bfWNUAghsVFjip5LwGin45oe8MBrP8j5E0WdjV6TAA
+         +VgA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4HLzftjO1IFzdct7QzSvlBEbOtO30fZTDJKtLYWoMQNZrI75BSCrUEJj4o916q+tNeTLJfrArmmvK9UA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YztK8xPT0dpqeHQ34L9dAJFQv2r7YEUf/ARr/MEsH9i0dmWOUvy
+	kYZuUMyj//1W62t49xUwMH4BKuU6ByhRf9xpF2qgafA7mz0oaZL7VjLVa2PmP8w0dlY=
+X-Gm-Gg: ASbGncsqdKbSmtZp+UOuvdR2x5ToTqvkKziNJo/tNkMkYZVxeCrJS/zKW92O2FIRFO0
+	hD4LhkHWSzU6ceCP5FMyFfeaBSU1zHJ2JXaQvQdbKqT8vE7jbO4Lf4zMlYyeqJezNGKO47iNeoa
+	egPg3X/kB04N4AQtUuP0H8d8HngQKhRs5C6KoxJV87gpJBw1XIWOHPq1pFJl2z08lhxPz+xwI87
+	o1Vuh51wp19eMXUDerbc2myaKlZqh9JOQBqbdMh//Svbl8g9qkhnHOPztNjh9JGrnKrkDxxOdgB
+	s+7krRis4RAl2YoSJ9uwr5BDtKr+hnMdJYQEcjug0LLi/Tj1IGbbmUP5gr3+fIpOaVdfanmeMbY
+	CC0rePqX7Ls0U
+X-Google-Smtp-Source: AGHT+IHr2BtBXka0zKs63iqb8e9v9bkQ4+Bw5VuVkckVQQXkUyrc9aYneUo5DkOGQbDxvEFfQuAk4g==
+X-Received: by 2002:a17:902:f652:b0:22e:3c2:d477 with SMTP id d9443c01a7336-2366b3ac524mr289851425ad.25.1750249175033;
+        Wed, 18 Jun 2025 05:19:35 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88bf61sm98240975ad.22.2025.06.18.05.19.31
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 18 Jun 2025 05:19:34 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: jgg@ziepe.ca,
+	david@redhat.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
+Date: Wed, 18 Jun 2025 20:19:28 +0800
+Message-ID: <20250618121928.36287-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250618115622.GM1376515@ziepe.ca>
+References: <20250618115622.GM1376515@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 5.63.189.50
-X-CLIENT-HOSTNAME: 5.63.189.50
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: dmFkZTGSdzENJcvV6kGmthZjDnKCac5iu4OOazHJo9JnKE4e7+Uye2DtxC5ELcPNg81iFw3RUc23yIxhNrNPR0Wwyyca6aie5TMoD7weryqNnQclYUHNyIQXzRjZdfd3VrWP6tc5xQa2Dh5q2eskkdnqNjmR3s5qoMjPweUydZhPgtdRd43tKixj7QV7WRmdx3k8Ir4M/6GfVSA+rtxAgZRdEvnNPSmuXpZwdyn4sGEk7cAgaloTNgIfH4/D2s2bgIHScFzouGHrCRhFY0wq8e/3MX0JzvCm+DXbJHrumKjViJUhftRb2eh6ywS/YXEa87JeScQL5KOSyeI1f3lVjQnKZFXyCqqRnwGIrQqSlkT9pEh4NqLiJmbVaNXSn6vTnn3h++A5XcnHM7PLiptvxmZCXqzwPFXCLzQeubzE1WLgm1w8KgteQ2joJrk57ZtRL15dgwZBgXUYIsU2P9teUDEu+x/dsOgWOoRINkvXLQlrKYheEvovBA7ynTcgSyP6z4tFBFPS80bIjU01+PgfpVZOJ+edXFz7WFfNBiGdLuVE8A5DwzCK5Veq8SvzV0vlU88CwoJ4WHl3HzX7K9WtiTpvpif6r3hOgB9L9X7qMayJh3/9//QrCyRG5Bi7GmWM03us296fM1SDLCgOu/IiiCC+F0N6wRaR9zN4lXJpgb9UUaqmhA
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+Content-Transfer-Encoding: 8bit
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-As reported in [1], a platform firmware update that increased the number
-of method parameters and forgot to update a least one of its callers,
-caused ACPICA to crash due to use-after-free.
-
-Since this a result of a clear AML issue that arguably cannot be fixed
-up by the interpreter (it cannot produce missing data out of thin air),
-address it by making ACPICA refuse to evaluate a method if the caller
-attempts to pass fewer arguments than expected to it.
-
-Closes: https://github.com/acpica/acpica/issues/1027 [1]
-Reported-by: Peter Williams <peter@newton.cx>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-This is an exception as it fixes a kernel crash on multiple platforms
-affected by the defective platform firmware update.
-
-I will take care of submitting an equivalent change to upstream
-ACPICA later.
-
----
- drivers/acpi/acpica/dsmethod.c |    7 +++++++
- 1 file changed, 7 insertions(+)
-
---- a/drivers/acpi/acpica/dsmethod.c
-+++ b/drivers/acpi/acpica/dsmethod.c
-@@ -483,6 +483,13 @@
- 		return_ACPI_STATUS(AE_NULL_OBJECT);
- 	}
+On Wed, 18 Jun 2025 08:56:22 -0300, jgg@ziepe.ca wrote:
  
-+	if (this_walk_state->num_operands < obj_desc->method.param_count) {
-+		ACPI_ERROR((AE_INFO, "Missing argument for method [%4.4s]",
-+			    acpi_ut_get_node_name(method_node)));
-+
-+		return_ACPI_STATUS(AE_AML_UNINITIALIZED_ARG);
-+	}
-+
- 	/* Init for new method, possibly wait on method mutex */
- 
- 	status =
+> On Wed, Jun 18, 2025 at 01:52:37PM +0200, David Hildenbrand wrote:
+> 
+> > I thought we also wanted to optimize out the
+> > is_invalid_reserved_pfn() check for each subpage of a folio.
 
+Yes, that is an important aspect of our optimization.
 
+> VFIO keeps a tracking structure for the ranges, you can record there
+> if a reserved PFN was ever placed into this range and skip the check
+> entirely.
+> 
+> It would be very rare for reserved PFNs and non reserved will to be
+> mixed within the same range, userspace could cause this but nothing
+> should.
 
+Yes, but it seems we don't have a very straightforward interface to
+obtain the reserved attribute of this large range of pfns. Moreover,
+this implies that we need to move the logic of the
+is_invalid_reserved_pfn() check to another process. I'm not sure if
+this is necessary.
+
+Thanks,
+Zhe
