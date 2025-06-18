@@ -1,60 +1,62 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0FD35963
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65BD27F008
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750234810; cv=none; b=rDcyP7Ye+MOt/l8eK1hQi0JU34XAvC4ipPRb5dy+ULzg00WVS6lZcCwFxg//9NaIAsro8IGMFvnF8AxQM8Ux+eGMWiBVF2L4hn25jyZpWW57raPRWz0B9oclYGudACKOB8cnCr6P8EtuvjzQicpHaRLfRt1jpLqvPxW1ZVZcPRI=
+	t=1750234815; cv=none; b=Z1gxIDJ5j5TrxJPi8zKZWov33Q6NILtL5M+mCPiVDfio/X6wEV6QsafsNIr9kEw5adoaBuDvilCHRZL4PRnm6lRiwewV3Znzk5vGbNWdESSNnTcJl8oN+QlzIGlSFFyZ1sf7jjy4EI2GG0+xWjWXqa1CepS1ocBA7Wk4Wa5KCg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750234810; c=relaxed/simple;
-	bh=sSzijDomvwY+BoJDSSFd73Fm/khDE+ijJB+tl0HgFAQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K7fFOAP8yfRczqfKn4yqG9cjbfRKERWBMRXFdFkjTOkwlhPtGGTNkv9BEPwzGF11eJf8IZxcZ8/QtQkTCuSBBbcMVweHkPnYf2tm4/SLScfR3hzGCMP8RyQ9OcKFwynsk33V1WYkrd3YbXAzl7cCtx2NdPPHZX8kwy47af0zLIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=hYa2XR+2; arc=none smtp.client-ip=209.85.215.171
+	s=arc-20240116; t=1750234815; c=relaxed/simple;
+	bh=n6FRq4hLBNgw5sNGtNO7D49/eL2X5zS4MeHEADLptN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XDUEUvSZvhBy1kotK7hrUOmkFoTsw5UwiM/sHE0pquULXnq0BisPPyLWeSLEeyBEY9q4gydVjFX35ppLf7MjaSlycfnTJszBoa7M7aNnDE80+QudLXNn9BBvabKpjA5qcyThZyG8bubY+1kfREhGAh+489eyutqJhTaCo/ICeP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=BvencyQN; arc=none smtp.client-ip=209.85.215.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="hYa2XR+2"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2c4476d381so390271a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:20:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="BvencyQN"
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b2f603b0ef6so4902881a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:20:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750234807; x=1750839607; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7h1a483XeBDxgXookMteKeLGCVhv2lQx7q42szKUky0=;
-        b=hYa2XR+2DQCK74rgw2OgoRj/PJKMS12iy0E1f57YlG+55XM0jMyvqGsVtogeCeyjtO
-         8rC96oqxLSKlI7m+FaLZ1pLV9fAkeO3LQoPvIyL2IuKKFpekIcmNLXlPhmjmP2K2ApHa
-         Ydpz46Xr0GQHwC84ZigGnU484DMGtTk34KnyHhkWZILvgCSLF5j+qmbGUDo1ary5dxa5
-         bbNkb9H8WFt4o2ZSKGWFh3OouNzPGpsdnU9jxkkcbw95lfTrnha2IwqROMC2OLRTq55z
-         r+nulv+5v5VnG2NwuYNE5Q9WPxJG/nBTJZ092BpJaKrKb7Nv1h6bocnll1MiaehAvLeO
-         v3Eg==
+        d=bytedance.com; s=google; t=1750234813; x=1750839613; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bWYudEDJAAvgfGWWEcIqHeRQ/IYrWVCczg2BhjdVlC8=;
+        b=BvencyQNF6PEUfMZM6czq6yJrMYbfEpo3o1KU4p+Oku0YgbkMcnTlxUGnFZFFYkSU1
+         dkHC9A0VpMu6d1exXOudNMXuZu+hGuHTF0hdl42smrRI9fya0J/7D7BvATX1Spx2giry
+         xRjapu1aa3Zko1rSfKLwjMV7mB9aVvjBxHzWr5g+K7nOHcilfTy31qI++ZGPRAEa4U3k
+         vgw6Yi0sBHJ25zwSzEbt8w71XcIeEBT5Js4pfjGlBfH8MLSB5ixsCnpN2aXDDJPWt9yJ
+         4SMVx5npdLeLWh6UyNX2bAXokjQBJ99HV8uot+Az1C93a+vm7JwCtKZKTBF/iL84YGCT
+         5tDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750234807; x=1750839607;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7h1a483XeBDxgXookMteKeLGCVhv2lQx7q42szKUky0=;
-        b=Wj5/4tYwdcGEiEQJNJKqJLHMV/nXEXc9igm47bu/Utfiv2CVxg169Op+HElcFP80ZE
-         jqUEBdCSAalhihXPlvIOh2MSxEEIpIzCTmg2m+u19UTPlHq0TOL5VVUzUCC8cM65A10T
-         ULjwm2t8gEJ1Ze6N6ROaft+sxOzruaa95catIuoL2MmNZqgc43JzB6MFfCyJHIt/kzHO
-         FmlRzfzcEZsxMbuLDce73LPkA2yEeNuR+3bo7nLGhUN5pHzB05PztepRLKEnLmgmjJvT
-         DxOi8ZWUThuiSBuBwjKXMh/MD2GWZHGJlhEvSnVdtk1G7vk38KX6KLlDoPfL+ATggM/h
-         6FnQ==
-X-Gm-Message-State: AOJu0YyoEH1jnTU56BGUufWbPBc8zjlJ+LMvnV8hFueEy+H+OgITTcrb
-	/4sgAjk7+AY7S4mpM9IYnjHuEwHSOO3ofClX6M7jbGKx2xUroqmJ2R4riRvjhuzWVw==
-X-Gm-Gg: ASbGnctoA/0o0nV/8ay2OHQXgYVnYCwfM5FkDOT3KVjyx/WzDIk9glAZGyDyY5y+Tl3
-	CUHcoDlLbAME+clWd1liPEwWPWNOA/y94XclgypcHhpZfINEzrz/+xnHG/AV3s3dDC4VbOkUk71
-	mg/OCGIJbvYkzun7pxAZ43+nM/eGvFEgDKzhdke08iFqJZqS9GAkBS+ukH6PMFWe61fNcF24/gh
-	91bvSvar4UgZwxAl4zWRZxTVWmyOePe6FPuHKBe3B0lX1SU0BanIXhfd4897hny7UnCr/i8gT+f
-	rU+t6jSetoOF4ItDlHLGM6Je39OrzwHb/ReU3Ae/Jc68BA+WlBiLdZUP/fiyBmVCfF+B/L1+Rpb
-	VvbHxSYoG7xxhvsD5bI6FDam4vnMjUk2r
-X-Google-Smtp-Source: AGHT+IGBUkNU5BHBsm54+1PSG/6lclwWff4KIv0p28uAEOpl8zGSN9+9v6feCHyEwuOCStdBSrFiDQ==
-X-Received: by 2002:a05:6a20:7d9e:b0:218:2b6e:711f with SMTP id adf61e73a8af0-220037599admr2820601637.14.1750234807233;
-        Wed, 18 Jun 2025 01:20:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750234813; x=1750839613;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bWYudEDJAAvgfGWWEcIqHeRQ/IYrWVCczg2BhjdVlC8=;
+        b=KSTMwVnCZdwuYhIjk49ky9AQSuHwUTq1T+QE+I1kuVAnkKyv/Fgj/dfkPi+SggDEGd
+         9ybpjvbB7fy6qrPKX8/Sh9ff86f7Ng5MbSMeLsqVQZ8BzqhwHTZjH1uW2e8dUy9r1Otn
+         DaJc790HYCt5gaQYV43a3tDEdrjwAmK9CsHgYU9p9ko7r460bXtgAm/Zucnd/uMEe0Zs
+         yT3Lafpwa1qSbxWduoUTevGZRILMwj0pxdd8XFOl0iyx5a3yKx6voxuihNbm/o1V0d1y
+         AYzINxTBjaX2btZQLaf5vHAaW7QFeAlCtOKYfz/2w2RlJkvaSSKFWteHly3M1UBcBfHD
+         ZOaw==
+X-Gm-Message-State: AOJu0YwPy29poZeSznpxH6z3MU80Kz0Qs5+rbtN/WBnORhN9K+f1k+DY
+	ooBPSjsT962S8LkRxqtpjqFwbxhXOTk2PH7kB80sge1MGHFdafptwu2vwafTyl4d5g==
+X-Gm-Gg: ASbGncuhcueQUeAAvN2MZEAUkIT6HKal473ut+kdEu1DV3TOh/fRu2+rlA6qQTxS10I
+	ZXrSoKKp9jcT8waIUJqVBLwjsbn5mQXMz8QdextthofFnbuzX0w+5///VOS072NCboKaqdtckKS
+	plznYqlOaD167kqhswkETA6nlT8qfdwOp/bFmKyhEwYuJY1S4Va281r2QtFI9MYnTZA59cXHAv2
+	NLYhbDbJoaZEQd31B2wIQf1CXB/5PLbCT2gz6Nk5eb5wX3cSkUYuV53DeVaBJg4n85PYyKI4jXe
+	c8t288RPSt3uERfecOGfPIbkY7KKarMUTLj10088J0//4Xay9wci7yEiCo5cUl+QLB6bHDgBq4Z
+	7Mb5a3oWgXZ5jep6I1Q5sbeaIzVDbGFfb
+X-Google-Smtp-Source: AGHT+IEGfnZMoac1TZrD0R+tvjt46YLurScQxzAmxfvwWqmkfICoBLwc3b76pZaoa4a8vAkVTTea3A==
+X-Received: by 2002:a05:6a21:2001:b0:21f:ff2a:af83 with SMTP id adf61e73a8af0-21fff2ab818mr2623220637.15.1750234813106;
+        Wed, 18 Jun 2025 01:20:13 -0700 (PDT)
 Received: from 5CG4011XCS-JQI.bytedance.net ([61.213.176.55])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1691d7fsm10432084a12.69.2025.06.18.01.20.01
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe1691d7fsm10432084a12.69.2025.06.18.01.20.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 01:20:06 -0700 (PDT)
+        Wed, 18 Jun 2025 01:20:12 -0700 (PDT)
 From: Aaron Lu <ziqianlu@bytedance.com>
 To: Valentin Schneider <vschneid@redhat.com>,
 	Ben Segall <bsegall@google.com>,
@@ -73,10 +75,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Chuyi Zhou <zhouchuyi@bytedance.com>,
 	Jan Kiszka <jan.kiszka@siemens.com>,
 	Florian Bezdeka <florian.bezdeka@siemens.com>
-Subject: [PATCH v2 0/5] Defer throttle when task exits to user
-Date: Wed, 18 Jun 2025 16:19:35 +0800
-Message-Id: <20250618081940.621-1-ziqianlu@bytedance.com>
+Subject: [PATCH v2 1/5] sched/fair: Add related data structure for task based throttle
+Date: Wed, 18 Jun 2025 16:19:36 +0800
+Message-Id: <20250618081940.621-2-ziqianlu@bytedance.com>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250618081940.621-1-ziqianlu@bytedance.com>
+References: <20250618081940.621-1-ziqianlu@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,119 +89,102 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v2:
-- Re-org the patchset to use a single patch to implement throttle
-  related changes, suggested by Chengming;
-- Use check_cfs_rq_runtime()'s return value in pick_task_fair() to
-  decide if throttle task work is needed instead of checking
-  throttled_hierarchy(), suggested by Peter;
-- Simplify throttle_count check in tg_throtthe_down() and
-  tg_unthrottle_up(), suggested by Peter;
-- Add enqueue_throttled_task() to speed up enqueuing a throttled task to
-  a throttled cfs_rq, suggested by Peter;
-- Address the missing of detach_task_cfs_rq() for throttled tasks that
-  get migrated to a new rq, pointed out by Chengming;
-- Remove cond_resched_tasks_rcu_qs() in throttle_cfs_rq_work() as
-  cond_resched*() is going away, pointed out by Peter.
-I hope I didn't miss any comments and suggestions for v1 and if I do,
-please kindly let me know, thanks!
+From: Valentin Schneider <vschneid@redhat.com>
 
-Base: tip/sched/core commit dabe1be4e84c("sched/smp: Use the SMP version
-of double_rq_clock_clear_update()")
+Add related data structures for this new throttle functionality.
 
-cover letter of v1:
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
+Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+---
+ include/linux/sched.h |  5 +++++
+ kernel/sched/core.c   |  3 +++
+ kernel/sched/fair.c   | 13 +++++++++++++
+ kernel/sched/sched.h  |  3 +++
+ 4 files changed, 24 insertions(+)
 
-This is a continuous work based on Valentin Schneider's posting here:
-Subject: [RFC PATCH v3 00/10] sched/fair: Defer CFS throttle to user entry
-https://lore.kernel.org/lkml/20240711130004.2157737-1-vschneid@redhat.com/
-
-Valentin has described the problem very well in the above link and I
-quote:
-"
-CFS tasks can end up throttled while holding locks that other,
-non-throttled tasks are blocking on.
-
-For !PREEMPT_RT, this can be a source of latency due to the throttling
-causing a resource acquisition denial.
-
-For PREEMPT_RT, this is worse and can lead to a deadlock:
-o A CFS task p0 gets throttled while holding read_lock(&lock)
-o A task p1 blocks on write_lock(&lock), making further readers enter
-the slowpath
-o A ktimers or ksoftirqd task blocks on read_lock(&lock)
-
-If the cfs_bandwidth.period_timer to replenish p0's runtime is enqueued
-on the same CPU as one where ktimers/ksoftirqd is blocked on
-read_lock(&lock), this creates a circular dependency.
-
-This has been observed to happen with:
-o fs/eventpoll.c::ep->lock
-o net/netlink/af_netlink.c::nl_table_lock (after hand-fixing the above)
-but can trigger with any rwlock that can be acquired in both process and
-softirq contexts.
-
-The linux-rt tree has had
-  1ea50f9636f0 ("softirq: Use a dedicated thread for timer wakeups.")
-which helped this scenario for non-rwlock locks by ensuring the throttled
-task would get PI'd to FIFO1 (ktimers' default priority). Unfortunately,
-rwlocks cannot sanely do PI as they allow multiple readers.
-"
-
-Jan Kiszka has posted an reproducer regarding this PREEMPT_RT problem :
-https://lore.kernel.org/r/7483d3ae-5846-4067-b9f7-390a614ba408@siemens.com/
-and K Prateek Nayak has an detailed analysis of how deadlock happened:
-https://lore.kernel.org/r/e65a32af-271b-4de6-937a-1a1049bbf511@amd.com/
-
-To fix this issue for PREEMPT_RT and improve latency situation for
-!PREEMPT_RT, change the throttle model to task based, i.e. when a cfs_rq
-is throttled, mark its throttled status but do not remove it from cpu's
-rq. Instead, for tasks that belong to this cfs_rq, when they get picked,
-add a task work to them so that when they return to user, they can be
-dequeued. In this way, tasks throttled will not hold any kernel resources.
-When cfs_rq gets unthrottled, enqueue back those throttled tasks.
-
-There are consequences because of this new throttle model, e.g. for a
-cfs_rq that has 3 tasks attached, when 2 tasks are throttled on their
-return2user path, one task still running in kernel mode, this cfs_rq is
-in a partial throttled state:
-- Should its pelt clock be frozen?
-- Should this state be accounted into throttled_time?
-
-For pelt clock, I chose to keep the current behavior to freeze it on
-cfs_rq's throttle time. The assumption is that tasks running in kernel
-mode should not last too long, freezing the cfs_rq's pelt clock can keep
-its load and its corresponding sched_entity's weight. Hopefully, this can
-result in a stable situation for the remaining running tasks to quickly
-finish their jobs in kernel mode.
-
-For throttle time accounting, according to RFC v2's feedback, rework
-throttle time accounting for a cfs_rq as follows:
-- start accounting when the first task gets throttled in its
-  hierarchy;
-- stop accounting on unthrottle.
-
-There is also the concern of increased duration of (un)throttle operations
-in RFC v1. I've done some tests and with a 2000 cgroups/20K runnable tasks
-setup on a 2sockets/384cpus AMD server, the longest duration of
-distribute_cfs_runtime() is in the 2ms-4ms range. For details, please see:
-https://lore.kernel.org/lkml/20250324085822.GA732629@bytedance/
-For throttle path, with Chengming's suggestion to move "task work setup"
-from throttle time to pick time, it's not an issue anymore.
-
-Aaron Lu (2):
-  sched/fair: Task based throttle time accounting
-  sched/fair: Get rid of throttled_lb_pair()
-
-Valentin Schneider (3):
-  sched/fair: Add related data structure for task based throttle
-  sched/fair: Implement throttle task work and related helpers
-  sched/fair: Switch to task based throttle model
-
- include/linux/sched.h |   5 +
- kernel/sched/core.c   |   3 +
- kernel/sched/fair.c   | 445 +++++++++++++++++++++++-------------------
- kernel/sched/sched.h  |   4 +
- 4 files changed, 253 insertions(+), 204 deletions(-)
-
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index eec6b225e9d14..95f2453b17222 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -874,6 +874,11 @@ struct task_struct {
+ 
+ #ifdef CONFIG_CGROUP_SCHED
+ 	struct task_group		*sched_task_group;
++#ifdef CONFIG_CFS_BANDWIDTH
++	struct callback_head		sched_throttle_work;
++	struct list_head		throttle_node;
++	bool				throttled;
++#endif
+ #endif
+ 
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index a03c3c1d7f50a..afb4da893c02f 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4446,6 +4446,9 @@ static void __sched_fork(unsigned long clone_flags, struct task_struct *p)
+ 
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	p->se.cfs_rq			= NULL;
++#ifdef CONFIG_CFS_BANDWIDTH
++	init_cfs_throttle_work(p);
++#endif
+ #endif
+ 
+ #ifdef CONFIG_SCHEDSTATS
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 6b17d3da034af..f7b8597bc95ac 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5757,6 +5757,18 @@ static inline int throttled_lb_pair(struct task_group *tg,
+ 	       throttled_hierarchy(dest_cfs_rq);
+ }
+ 
++static void throttle_cfs_rq_work(struct callback_head *work)
++{
++}
++
++void init_cfs_throttle_work(struct task_struct *p)
++{
++	init_task_work(&p->sched_throttle_work, throttle_cfs_rq_work);
++	/* Protect against double add, see throttle_cfs_rq() and throttle_cfs_rq_work() */
++	p->sched_throttle_work.next = &p->sched_throttle_work;
++	INIT_LIST_HEAD(&p->throttle_node);
++}
++
+ static int tg_unthrottle_up(struct task_group *tg, void *data)
+ {
+ 	struct rq *rq = data;
+@@ -6488,6 +6500,7 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ 	cfs_rq->runtime_enabled = 0;
+ 	INIT_LIST_HEAD(&cfs_rq->throttled_list);
+ 	INIT_LIST_HEAD(&cfs_rq->throttled_csd_list);
++	INIT_LIST_HEAD(&cfs_rq->throttled_limbo_list);
+ }
+ 
+ void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c323d015486cf..fa78c0c3efe39 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -728,6 +728,7 @@ struct cfs_rq {
+ 	int			throttle_count;
+ 	struct list_head	throttled_list;
+ 	struct list_head	throttled_csd_list;
++	struct list_head        throttled_limbo_list;
+ #endif /* CONFIG_CFS_BANDWIDTH */
+ #endif /* CONFIG_FAIR_GROUP_SCHED */
+ };
+@@ -2627,6 +2628,8 @@ extern bool sched_rt_bandwidth_account(struct rt_rq *rt_rq);
+ 
+ extern void init_dl_entity(struct sched_dl_entity *dl_se);
+ 
++extern void init_cfs_throttle_work(struct task_struct *p);
++
+ #define BW_SHIFT		20
+ #define BW_UNIT			(1 << BW_SHIFT)
+ #define RATIO_SHIFT		8
 -- 
 2.39.5
+
