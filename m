@@ -1,60 +1,70 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CD0944F;
-	Wed, 18 Jun 2025 07:46:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A364433CB
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750232819; cv=none; b=KcqUeTppNFf4kK7PbEf/xBmhNW1HlqTMsx7PV9IHMTvQolTj3PWlggOZR0v/c67vh9X6e6gh8CKWonR6ro0gZ+Igo66LTfOG0F4egmVlMS4naMa8zApMMJ6Xnepw/Hn56BSiAPDQUALc5Ur5FuY4/R9CYrBjY3Y9NBouFHYbCcs=
+	t=1750232820; cv=none; b=ilOfoDGrcwvx5OLjaJ738XjsnqEa2FnN4bHm6WYiSikb/ScrJ9f9cysLtGfcrVFsbnXsvuVU7mZa13ydNSNfDJv6q1pPrFJfXpGqa7I7zLNaFh8inzq6tlrHa4ihgqq3GKsj6uXMLEGEg2ol4ncEzeNBc5vHstozlZvJDvK8aM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750232819; c=relaxed/simple;
-	bh=fK+icWTWTS8ChRYmgJe4JInNeZdQsKKcXMzfxvFeWCA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SfnWzKhXfA8JLjMvQ2AWON8NAnsFXZJ3S6SlKksEKQAtGFA6XoUYs2k3usG7LFmMU+uTmMhpOZkAD6DEvvxYeiuF1q5apABqkEQqNrSsrIcso9K19IRik2YA4CRJ/UNWv/sMJj/2+a6wujV2/+n12vlX2nv1B5ZX1v3/HzLXtN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234fcadde3eso85267985ad.0;
-        Wed, 18 Jun 2025 00:46:56 -0700 (PDT)
+	s=arc-20240116; t=1750232820; c=relaxed/simple;
+	bh=+3BcBUZOspt4x5dN8ZzJDpBr6nC0Moim+JtvaxFS3PA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MZYRs0FdXkNHub81wOO5yStflxvfyQTOTNUnLo/FjotUGGwILOYuKfqA1P4ycNNkvHeHRBfk880TI4SNv1qHfS9daMWj5UWyho84uOJP72UAVcKMhBqGPGNmJ/8E+De9CcvGXIWOUsM1hmFTlGn/qt49KwYn10kRUN8bKzC769s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yrlygj5U; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yrlygj5U"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-450cfb6a794so39342305e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750232816; x=1750837616; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lJg4yyZdyy+SHk6YiTmAb2wt9Uti4xL3zx29Dsfyr+8=;
+        b=yrlygj5UJ/nDQUl9TNzVG+dMa2+p1u3jYDC8zlSAQU1K2/l3On75WGOYNurAKNkvm4
+         pPXSf82g0H09sgJvoCGmOeqetJ9K8+GtMxvMIz1gd4MxWrVyVMUBIQr++sqxduD5Zi6i
+         eZ6qACv9v00MLmvSfd23MixTa/dGKCKFOVYjMHL7sNUU+fs1RqIW+w6Ocnrf6FzUvs1a
+         8PBwYVfIomzuErSZJqIAIpoEpxWH1FDfvnlEBrzRP+0DI+y68kQkJoyLdH+UHXKkzlwz
+         Acf23bhsCjQ0n9dl/phBoiKNeijJFBoWTpbru+qimfRbXCyvyJ1FXfV6n7yG6T+jZhko
+         kqMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750232816; x=1750837616;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AGlUiBAoJkmRj68VLYJK0hx1In2EpfAj4z1QBRDEbfQ=;
-        b=Mf407RDfufBAVntYYuZXYzr3Mhx+rfzJPajVmFl4PlOWe7BSXy32WLajK9PydL+Sv/
-         bVenuazI6LHBxpCxwPxb78w5NvddhXDlT0gD1InJqIJ1PcR90Fipme17pPaSFNRjjt5j
-         omTz6Dodw4WajInTqpj2V5daw4gaHnrDiTjukP4Rrd9yEbvWn/uQo18VrObBF//UBvEE
-         6NIkMfrNL1/Ya7GG0ZpCLSJvP50x7bcjuLH7weMu8LOtLWrSg2EMidZQ54crAIcTsNT8
-         eYAxWosQaaVPrBUdiuWCOE6gFqi8HQ9i8cmiybHDrF45CnYeJQ+9C15hhnXx0BtIwqYH
-         iTwA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPBpUlj+zN4m3PsBwvdVroNHWghUFv8VeZaa2M0MZLR3BQJdhPbUJW+4CFRiCsQ4X5wk+6U0+Q@vger.kernel.org, AJvYcCVTuf172aujw8aAuTjuHv3mrMPuUg1nyos5GZwCSkdMY+5y/gEPhSwdVDnGSDEaKhrHWk4SwQwmPhE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL8yGxrpAXMSeIkI39w9yYhauVBZ10gonSzw7DK/T4IEihuWgX
-	ieKp46lkMJMNj/A8YJxNSAOk8Zn1f0W8obcI41/+2pOUpVkPyOXAXpbyThV27yNhJ4E=
-X-Gm-Gg: ASbGncvxqOZE071W4zlPojzGaL40K1PbyI+grFpQR83WuzyL2lFjzbiLN2He7TJ/X7i
-	GuJZIjv4mJRKt/FkLv2Z5D51en7fHCGdlSgSew8+3YlzAdsLxIEcqgHaXqgBJOMHaHaQe5yAApc
-	y8TYnCgye/gdY0JmYd23yIvzOjMX3ovcVuU0rRUoK1UR66ryjo2F5BYuwsnfqS4zvv5WTPyMt9R
-	PxStb1SqCUisOmLi1bq02IJO1p9i5Tdf8sxWeMwcKoNvgdH8hp93z62Jp7U0m7I7FsD2wUn/LfG
-	hYLcDH6mMJrHB06T45EgwwaYMzLHKbuuDEUxtY0RmGT+sYFomqDcjj3VQKT85sHZW+31KyFW36G
-	Tov4=
-X-Google-Smtp-Source: AGHT+IF9pE0v7751yHhx+AdusbJXsvyHWq3cdiW4yEx/ti/WuhWZ0f2d9Kbvw7qqmHNdONWSrTy0+g==
-X-Received: by 2002:a17:902:f790:b0:234:a033:b6f6 with SMTP id d9443c01a7336-2366b3a959dmr232406725ad.31.1750232816011;
-        Wed, 18 Jun 2025 00:46:56 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deca2b5sm94085355ad.195.2025.06.18.00.46.52
+        bh=lJg4yyZdyy+SHk6YiTmAb2wt9Uti4xL3zx29Dsfyr+8=;
+        b=Fbtt9Czrd7o1ioGDWJX1UQ1FCUuvN+sfgF/0STNvCHuebWkC6KgcMxJ8LfCdOmEsvM
+         mnCw3C3LoJlYAWFNjS+3oFCwSGC7eTQXXN5MGNvUH3+Igc+QzLqgZSqWSWIu+TfQdbGm
+         EAiwsCp5MU/+6qPjiOs1wVl+M9Go6tC/QK4NFq4vALnLFWSDeU6lKNnm8e8d+53e0U7P
+         K1vwd8bCrejFWWG8Gw5eSJmtDqqYQL/JUal5CNa0lR4w8nyJrUq8b+k3uBE9ghULV3d5
+         sYO8BSqrhrcLwZ5gf55tfXAHv7i+F24YPxY1fJaRaqh6dQhbbqQLkUW30x86KTxpfrUk
+         l5qQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWf3Ti6sYkOISzY6A9k5xxgQyLYGaPUT4Si2gWi/InfSoH82J1Vodx5maH/SMWOY+dRybjKxpyxdHK5epM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXXitnzZCpAqZ7gmwQrNwqmR12Qv4t4gs+wIqwkzuf8UIqP0C6
+	c/a7BIHqD7yMsBaPCWfLxJ3t/hdTnwHr8nKinlO3z4uheCbUXzLCln/dsJ+rNjxKQ86gfRXuVmV
+	aQV8b9Eg=
+X-Gm-Gg: ASbGncuLZ0E1HnTIY6HWP6RiFBUu6Goun3m7NKSRASCWSu8fw5T5pqibv7LaqB+y/3l
+	WMUzlbO1nD9/w2EBo56EpQHIe/9/PzS4KLP5zoRBdmWUG5wdvGC4C30bKdjH+yTR/w9oUMl0U7z
+	nKIg99H0DdP5ZJwVChIjepTfeLX8Svk55jxD7mpyzObngz3JzS4KCHNWzXj5Dc9qgQmlPEH+FCp
+	U+p1MNSxlgzAOLRH9hEy5ujcgseTviEo6f1bqijCCffHwMWVhet6wvJTLT3ha8E1vjceTi3Zpyj
+	4I9qFviSuC0dw4T9cHyNY5NrDj/2I/YtjI8oVI9oK2+Cws7Zxo3HCrMVtPoXqw==
+X-Google-Smtp-Source: AGHT+IGou4xH8VoI7WSbyUGe76dGESPFnQa358ovfW1YS2dfNymDbQsR3TYihNOw7qmu6ciZsMC1EA==
+X-Received: by 2002:a05:600c:3e0f:b0:442:d9f2:ded8 with SMTP id 5b1f17b1804b1-4533ca6e93fmr176950135e9.15.1750232815589;
+        Wed, 18 Jun 2025 00:46:55 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ad8:9ec2:efc8:7797])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4533fa7a9a8sm131384905e9.23.2025.06.18.00.46.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 18 Jun 2025 00:46:55 -0700 (PDT)
-From: xiehongyu1@kylinos.cn
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	mathias.nyman@intel.com,
-	oneukum@suse.de,
-	Hongyu Xie <xiehongyu1@kylinos.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] xhci: Disable stream for xHC controller with XHCI_BROKEN_STREAMS
-Date: Wed, 18 Jun 2025 15:46:48 +0800
-Message-Id: <20250618074648.109879-1-xiehongyu1@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: clps711x: drop unneeded platform_set_drvdata()
+Date: Wed, 18 Jun 2025 09:46:53 +0200
+Message-ID: <20250618074653.25555-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,31 +73,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Hongyu Xie <xiehongyu1@kylinos.cn>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Disable stream for platform xHC controller with broken stream.
+There's no corresponding platform_get_drvdata() used in this module or
+the higher-level gpio-mmio. Let's remove the unneeded call to
+platform_set_drvdata().
 
-Fixes: 14aec589327a6 ("storage: accept some UAS devices if streams are unavailable")
-Cc: stable@vger.kernel.org # 5.4
-Signed-off-by: Hongyu Xie <xiehongyu1@kylinos.cn>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/usb/host/xhci-plat.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-clps711x.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 6dab142e72789..c79d5ed48a08b 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -328,7 +328,8 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 	}
+diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
+index d69a24dd4828..c0c8d29d0dce 100644
+--- a/drivers/gpio/gpio-clps711x.c
++++ b/drivers/gpio/gpio-clps711x.c
+@@ -62,7 +62,6 @@ static int clps711x_gpio_probe(struct platform_device *pdev)
  
- 	usb3_hcd = xhci_get_usb3_hcd(xhci);
--	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >= 4)
-+	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >= 4 &&
-+	    !(xhci->quirks & XHCI_BROKEN_STREAMS))
- 		usb3_hcd->can_do_streams = 1;
+ 	gc->base = -1;
+ 	gc->owner = THIS_MODULE;
+-	platform_set_drvdata(pdev, gc);
  
- 	if (xhci->shared_hcd) {
+ 	return devm_gpiochip_add_data(&pdev->dev, gc, NULL);
+ }
 -- 
-2.25.1
+2.48.1
 
