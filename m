@@ -1,62 +1,58 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2FA2F0028;
-	Wed, 18 Jun 2025 16:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1DA2FEE16;
+	Wed, 18 Jun 2025 16:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265798; cv=none; b=OSuxuI6qzErXvcxf5aw4jQszg4FJdUhQ3XVwfvCmV7k00aNn8q2h5t2R49CEAnHC48sjl4ES5N2hLoVXtxkaUt1ilGasKHOQvjSP3Ui3aGoXWw9XVuzjjLEnVR881+EmHVbqyyeEajDm2Fwj3eESuS+3u8rbq9UFqABuomMXRTU=
+	t=1750265807; cv=none; b=B1JY0qw/2m0juKCpRE3Cn7U9GHmIZo+tUolWaFn+SGE3WbUnXpl+ZJq1dq7LANl790Aoi9DqBDAky8bT92rBq90n+yxq4r8RFydyNJCBuTDD5L7bOY0TsUmdgs6GvGfBcRWABhD/q0M0rv76VQ13UfvTuEU6hT48eM28YQ5mEeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265798; c=relaxed/simple;
-	bh=5v3Nyb+JZ0z7JMGCNWavJyrjZz4WWtoVrrD+w4tlVSo=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=rZp4NB24snIRsyQIqjI+6gxDlFmJFw4a7gTz+BUjDoDfwwEDnrp0n/iFuuFJfhP1alwcTrdcNWYHyV+ghajz9b7+Kq+JDJjyrDKVvCTJ3WaHlAeDxh1csTWNM7O43QbtlLK7FWF80pEAWYXwzGDE9VrhPgJ3oy62H4UkulWyLuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=cTB4k5UE; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1750265807; c=relaxed/simple;
+	bh=2zYA68B4BlR5JyqqD0exROuKpDw3lBGK6GxBpriKEq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IPRyOH63x5Os7fyTwcCfqtgNKwev+xbfikiEVqgta9bWIpVzcUs3PhZhydqY979GYoWFbdMH5Nc7n75EZ1u0PG7MNmvScXTvhFwNmWjuKdXW5HXxmcltnrvrqcMvdPBXw+12x0YNuWJAn07bMJltptDlSJdqXxTRw50kPvF36CA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bhRGpQQE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=FnLPum5K; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="cTB4k5UE"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 9EAAD8286FBD;
-	Wed, 18 Jun 2025 11:56:34 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id DoNQmYovNiVd; Wed, 18 Jun 2025 11:56:33 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 79BDE8287179;
-	Wed, 18 Jun 2025 11:56:33 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 79BDE8287179
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750265793; bh=ScUP9ReH/qFYDsUDSw3dDNroWmrhhRfY73Buoe8COh0=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=cTB4k5UEGBXzmW7cFQHNwEV5iOXGlX2h8AEEdEZaxGjOoD0DJrNNtImilu2UEfgeh
-	 sXAEv/yhd2+wcPsTNDtBukyEgxwTNhqIRRD5BH9RjHRJ/ubKmPZNhjWqDVyCfc+6fy
-	 C65gb69PGeLWdhYaCk1Ap8vq9zOjmOsWfMdPK1m4=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id jlLpS7__9g6j; Wed, 18 Jun 2025 11:56:33 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 5428E8286FBD;
-	Wed, 18 Jun 2025 11:56:33 -0500 (CDT)
-Date: Wed, 18 Jun 2025 11:56:33 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <1472752760.1310634.1750265793260.JavaMail.zimbra@raptorengineeringinc.com>
-In-Reply-To: <581463409.1310624.1750265668004.JavaMail.zimbra@raptorengineeringinc.com>
-References: <581463409.1310624.1750265668004.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v2 1/6] pci/hotplug/pnv_php: Properly clean up allocated
- IRQs on
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bhRGpQQE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="FnLPum5K"
+Date: Wed, 18 Jun 2025 18:56:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750265802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kcfkTl8JDTYZY7FxB8pLQQahX1f+flMHTDcEtprjgLw=;
+	b=bhRGpQQEaiz+bdjkTn8GYLQAEr9eORNBfGtlyUq2jO+HSGsNxTd78Pp4gi+6w0iVXkI4iv
+	KhxJYxdwy3FENwUijepXCUeRT+UyafI9YiUA4IesPsrP6CA7zC+15piWbAS0HR2Fl+hrPL
+	QJm4HxtD9Iko7KVfVnkc+Dwk0pRtGA+xpxfN6Q1x/FsiD/7cFKFXgVwqYDjwNMCpiwaxvn
+	gdTCe+tyv67b2v5vxyUuldoNaWKdYfqyyVmCcBWpdc/Q/rdzwuCCXKZGreoE/ZtxwyFUeG
+	cj9qH14glsnHjFZLi+zXyIZAGVJovyMJiQnrlwQMULYa0XYXQiMWkXU1U4L3PQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750265802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kcfkTl8JDTYZY7FxB8pLQQahX1f+flMHTDcEtprjgLw=;
+	b=FnLPum5KScg44tzTCz7hYq/fT6kdP2Nk8gtEz9KwWCGH8xKl9n8aQ/0xq6b4dPs5YZ4gjr
+	uRfakKI7LxvuWtDg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: =?utf-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Darren Hart <dvhart@infradead.org>,
+	Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, Waiman Long <longman@redhat.com>,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-api@vger.kernel.org, kernel-dev@igalia.com
+Subject: Re: [PATCH RESEND v4 0/7] futex: Create set_robust_list2
+Message-ID: <20250618165641.bKu1_p0P@linutronix.de>
+References: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
+ <20250618070833._qeCcHLx@linutronix.de>
+ <fd2b5bb2-590a-47ee-8e56-965a1d09b2fc@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,222 +60,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Topic: pci/hotplug/pnv_php: Properly clean up allocated IRQs on
-Thread-Index: 7ViWVrejj338yZQm64sXoMCfdWvE4HYiyUqA
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <fd2b5bb2-590a-47ee-8e56-965a1d09b2fc@igalia.com>
 
- unplug
+On 2025-06-18 13:39:46 [-0300], Andr=C3=A9 Almeida wrote:
+>=20
+> Ops, I forgot to address them. I will do it for v5.
+>=20
+> > - You say 64bit x86-64 does not have the problem due the compat syscall.
+> >    Arm64 has this problem. New arm64 do not provide arm32 facility. You
+> >    introduce the syscall here. Why not introduce the compat syscall
+> >    instead? I'm sorry if this has been answered somewhere below but this
+> >    was one question I had while I initially skimmed over the patches.
+> >=20
+>=20
+> The main target for this new syscall is Arm64, that can't handle 32 point=
+ers
+> in the current syscall, so this new interface allows the robust list
+> mechanism to know if it needs to do 64 or 32 bit pointer arithmetic
+> operations to walk in the list.
+>=20
+> Introducing a compat syscall won't fix this, giving that it only works in
+> x86-64. We need an entry point for Arm64 that can handle 32 bit pointers.
 
-In cases where the root of a nested PCIe bridge configuration is
-unplugged, the pnv_php driver would leak the allocated IRQ resources for
-the child bridges' hotplug event notifications, resulting in a panic.
-Fix this by walking all child buses and deallocating all it's IRQ
-resources before calling pci_hp_remove_devices.
+I would need to dig into details to figure out why it won't work for
+arm64 and works only for x86-64.=20
+There is the set_robust_list syscall as compat which sets
+::compat_robust_list. And non-compat sets ::robust_list. The 32bit
+application on 64bit kernel should set ::compat_robust_list which what
+your syscall provides.
+That is why I don't understand the need for it so far. Maybe I am
+missing a detail.
+We have other architectures with 64 bit kernel and a possible 32bit
+userland such as mips, s390 or powerpc which would have the same issue
+then. Or there is something special about arm64 in this case which makes
+it unique.
 
-Also modify the lifetime of the workqueue at struct pnv_php_slot::wq so
-that it is only destroyed in pnv_php_free_slot, instead of
-pnv_php_disable_irq. This is required since pnv_php_disable_irq will now
-be called by workers triggered by hot unplug interrupts, so the
-workqueue needs to stay allocated.
-
-The abridged kernel panic that occurs without this patch is as follows:
-
-  WARNING: CPU: 0 PID: 687 at kernel/irq/msi.c:292 msi_device_data_release+0x6c/0x9c
-  CPU: 0 UID: 0 PID: 687 Comm: bash Not tainted 6.14.0-rc5+ #2
-  Call Trace:
-   msi_device_data_release+0x34/0x9c (unreliable)
-   release_nodes+0x64/0x13c
-   devres_release_all+0xc0/0x140
-   device_del+0x2d4/0x46c
-   pci_destroy_dev+0x5c/0x194
-   pci_hp_remove_devices+0x90/0x128
-   pci_hp_remove_devices+0x44/0x128
-   pnv_php_disable_slot+0x54/0xd4
-   power_write_file+0xf8/0x18c
-   pci_slot_attr_store+0x40/0x5c
-   sysfs_kf_write+0x64/0x78
-   kernfs_fop_write_iter+0x1b0/0x290
-   vfs_write+0x3bc/0x50c
-   ksys_write+0x84/0x140
-   system_call_exception+0x124/0x230
-   system_call_vectored_common+0x15c/0x2ec
-
-Signed-off-by: Shawn Anastasio <sanastasio@raptorengineering.com>
-Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
----
- drivers/pci/hotplug/pnv_php.c | 94 ++++++++++++++++++++++++++++-------
- 1 file changed, 75 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-index 573a41869c15..aec0a6d594ac 100644
---- a/drivers/pci/hotplug/pnv_php.c
-+++ b/drivers/pci/hotplug/pnv_php.c
-@@ -3,6 +3,7 @@
-  * PCI Hotplug Driver for PowerPC PowerNV platform.
-  *
-  * Copyright Gavin Shan, IBM Corporation 2016.
-+ * Copyright (C) 2025 Raptor Engineering, LLC
-  */
- 
- #include <linux/bitfield.h>
-@@ -36,8 +37,10 @@ static void pnv_php_register(struct device_node *dn);
- static void pnv_php_unregister_one(struct device_node *dn);
- static void pnv_php_unregister(struct device_node *dn);
- 
-+static void pnv_php_enable_irq(struct pnv_php_slot *php_slot);
-+
- static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
--				bool disable_device)
-+				bool disable_device, bool disable_msi)
- {
- 	struct pci_dev *pdev = php_slot->pdev;
- 	u16 ctrl;
-@@ -53,19 +56,15 @@ static void pnv_php_disable_irq(struct pnv_php_slot *php_slot,
- 		php_slot->irq = 0;
- 	}
- 
--	if (php_slot->wq) {
--		destroy_workqueue(php_slot->wq);
--		php_slot->wq = NULL;
--	}
--
--	if (disable_device) {
-+	if (disable_device || disable_msi) {
- 		if (pdev->msix_enabled)
- 			pci_disable_msix(pdev);
- 		else if (pdev->msi_enabled)
- 			pci_disable_msi(pdev);
-+	}
- 
-+	if (disable_device)
- 		pci_disable_device(pdev);
--	}
- }
- 
- static void pnv_php_free_slot(struct kref *kref)
-@@ -74,7 +73,8 @@ static void pnv_php_free_slot(struct kref *kref)
- 					struct pnv_php_slot, kref);
- 
- 	WARN_ON(!list_empty(&php_slot->children));
--	pnv_php_disable_irq(php_slot, false);
-+	pnv_php_disable_irq(php_slot, false, false);
-+	destroy_workqueue(php_slot->wq);
- 	kfree(php_slot->name);
- 	kfree(php_slot);
- }
-@@ -561,8 +561,57 @@ static int pnv_php_reset_slot(struct hotplug_slot *slot, bool probe)
- static int pnv_php_enable_slot(struct hotplug_slot *slot)
- {
- 	struct pnv_php_slot *php_slot = to_pnv_php_slot(slot);
-+	u32 prop32;
-+	int ret;
-+
-+	ret = pnv_php_enable(php_slot, true);
-+	if (ret)
-+		return ret;
-+
-+	/* (Re-)enable interrupt if the slot supports surprise hotplug */
-+	ret = of_property_read_u32(php_slot->dn, "ibm,slot-surprise-pluggable", &prop32);
-+	if (!ret && prop32)
-+		pnv_php_enable_irq(php_slot);
-+
-+	return 0;
-+}
-+
-+/**
-+ * Disable any hotplug interrupts for all slots on the provided bus, as well as
-+ * all downstream slots in preparation for a hot unplug.
-+ */
-+static int pnv_php_disable_all_irqs(struct pci_bus *bus)
-+{
-+	struct pci_bus *child_bus;
-+	struct pci_slot *cur_slot;
-+
-+	/* First go down child busses */
-+	list_for_each_entry(child_bus, &bus->children, node)
-+		pnv_php_disable_all_irqs(child_bus);
-+
-+	/* Disable IRQs for all pnv_php slots on this bus */
-+	list_for_each_entry(cur_slot, &bus->slots, list) {
-+		struct pnv_php_slot *php_slot = to_pnv_php_slot(cur_slot->hotplug);
-+
-+		pnv_php_disable_irq(php_slot, false, true);
-+	}
- 
--	return pnv_php_enable(php_slot, true);
-+	return 0;
-+}
-+
-+/**
-+ * Disable any hotplug interrupts for all downstream slots on the provided bus in
-+ * preparation for a hot unplug.
-+ */
-+static int pnv_php_disable_all_downstream_irqs(struct pci_bus *bus)
-+{
-+	struct pci_bus *child_bus;
-+
-+	/* Go down child busses, recursively deactivating their IRQs */
-+	list_for_each_entry(child_bus, &bus->children, node)
-+		pnv_php_disable_all_irqs(child_bus);
-+
-+	return 0;
- }
- 
- static int pnv_php_disable_slot(struct hotplug_slot *slot)
-@@ -579,6 +628,12 @@ static int pnv_php_disable_slot(struct hotplug_slot *slot)
- 	    php_slot->state != PNV_PHP_STATE_REGISTERED)
- 		return 0;
- 
-+	/* Free all IRQ resources from all child slots before remove.
-+	 * Note that we do not disable the root slot IRQ here as that
-+	 * would also deactivate the slot hot (re)plug interrupt!
-+	 */
-+	pnv_php_disable_all_downstream_irqs(php_slot->bus);
-+
- 	/* Remove all devices behind the slot */
- 	pci_lock_rescan_remove();
- 	pci_hp_remove_devices(php_slot->bus);
-@@ -647,6 +702,15 @@ static struct pnv_php_slot *pnv_php_alloc_slot(struct device_node *dn)
- 		return NULL;
- 	}
- 
-+	/* Allocate workqueue for this slot's interrupt handling */
-+	php_slot->wq = alloc_workqueue("pciehp-%s", 0, 0, php_slot->name);
-+	if (!php_slot->wq) {
-+		SLOT_WARN(php_slot, "Cannot alloc workqueue\n");
-+		kfree(php_slot->name);
-+		kfree(php_slot);
-+		return NULL;
-+	}
-+
- 	if (dn->child && PCI_DN(dn->child))
- 		php_slot->slot_no = PCI_SLOT(PCI_DN(dn->child)->devfn);
- 	else
-@@ -843,14 +907,6 @@ static void pnv_php_init_irq(struct pnv_php_slot *php_slot, int irq)
- 	u16 sts, ctrl;
- 	int ret;
- 
--	/* Allocate workqueue */
--	php_slot->wq = alloc_workqueue("pciehp-%s", 0, 0, php_slot->name);
--	if (!php_slot->wq) {
--		SLOT_WARN(php_slot, "Cannot alloc workqueue\n");
--		pnv_php_disable_irq(php_slot, true);
--		return;
--	}
--
- 	/* Check PDC (Presence Detection Change) is broken or not */
- 	ret = of_property_read_u32(php_slot->dn, "ibm,slot-broken-pdc",
- 				   &broken_pdc);
-@@ -869,7 +925,7 @@ static void pnv_php_init_irq(struct pnv_php_slot *php_slot, int irq)
- 	ret = request_irq(irq, pnv_php_interrupt, IRQF_SHARED,
- 			  php_slot->name, php_slot);
- 	if (ret) {
--		pnv_php_disable_irq(php_slot, true);
-+		pnv_php_disable_irq(php_slot, true, true);
- 		SLOT_WARN(php_slot, "Error %d enabling IRQ %d\n", ret, irq);
- 		return;
- 	}
--- 
-2.39.5
-
+Sebastian
