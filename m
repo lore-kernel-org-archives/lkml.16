@@ -1,115 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926281DA5F;
-	Wed, 18 Jun 2025 12:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4572D052;
+	Wed, 18 Jun 2025 12:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750250201; cv=none; b=qg7zm2GdKccdzUKBA1lmiQGocf0FGsWkAPStAD/Fn8XYL89j9vb67v1OeJk0jZPUcu/uSzyCyggI3wqA+Q35jexcLdq6oMa2+A2oM4R+Y5CF1pgB7JB/aig/jpG5roG3ywyVSZZYr9kgLeCdNBmobMsP8wZoaywBZOwBe0l1DPI=
+	t=1750250338; cv=none; b=IlEHVzKbJIEBztC1icDsYjq60a7Yp3AqMVtbwEOBrnbDO064b+OwCQHRJZuZfaCyddOl6dAqYAnnN/Y+GIEYMMD/IeHhcivqXFYw8NChZcFZvSDGodFrWo9UXoCJGIQ4Nu+V76QDEIKayemFOwhgA4PH9ZwpG9nhEw8fQ90O8+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750250201; c=relaxed/simple;
-	bh=LnZj30mu7Xgaz2Ry38U7J1WAcWO6GtqUiXkiHEyn7o8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oClZvGghmuTIqNwYb24+KD+hDZ55SddXFDGCfiZogNjKpygVtABzQYsZkbQ9XI1B3JtGOCo0XO6aasFWbp+I/Cr4kR8Y92Zrmzkz5Z9cPPNdhsUkHn58OIxG45rAKMjA4rmlGFshgkdGYwHJhtwQBU6+pvT3suJYXskhSdQMGrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W9Owv5Dt; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750250338; c=relaxed/simple;
+	bh=kfP7CXAylEvUUUVxZ1zBTw/StB04PQhWmvq9ai1p+tg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mx3KF9PZoFPnO9Knic9pBE4n7e6OqACt82l/d1Cwzj0DVig+I1vIPtubYSfeb4qCFeU8SgpRXLA8dkBPwYHEge4/v6eGRjp7UYew1BMBCavvfQ/j7ZZShYtE3OnNyk8g7h3GIOi3cHRx0ypzRGqCIId0/fQaZOyp90BYbNG0JBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IKn06Ka/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W9Owv5Dt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750250200; x=1781786200;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LnZj30mu7Xgaz2Ry38U7J1WAcWO6GtqUiXkiHEyn7o8=;
-  b=W9Owv5Dtfng/NeVU6dPe4KVvbbWmxQbZc1TzhK9hFQIWGxGgwnO+oXtq
-   YFqkTLpdlJIKGjIaGTKPhuQUQ66cLF9jekcWoW/8PKH8Qd7wEjVwaGJQI
-   lhRc/QflpaMT21uH1WKIX0jvTtE5Tjv2MnjDyVDKmeIwjVK8ITF/FqtP5
-   GyFKTu3cKSsq5bU3FLD3l9cuobn7y/Wq2MmNV1NQ71pMD3BBYlJuoQmsh
-   F97ykiOkexijV+m06weuKqhqYgpRZRZExbNMWtzyUUPiJujlFBLBjzfLp
-   63o4hamM6JDXa/6ViCVmVWBzojr/V7n3a7giPZzwdnqeCgCgnUIs2Rw1l
-   g==;
-X-CSE-ConnectionGUID: 0hYbw/3jT7K2N+l7wi1Ptg==
-X-CSE-MsgGUID: jl2T1STfSU2RD95RQZe9ug==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63815600"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="63815600"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:36:38 -0700
-X-CSE-ConnectionGUID: 49nLlOKuRk+B2IRrlwDIhA==
-X-CSE-MsgGUID: XVu3bsCLSeaIL5x+hhY5JQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="154235571"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:36:30 -0700
-Message-ID: <eaf6343a-dbb1-453a-a258-f3bab35740a1@intel.com>
-Date: Wed, 18 Jun 2025 20:36:27 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IKn06Ka/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07100C4CEE7;
+	Wed, 18 Jun 2025 12:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750250338;
+	bh=kfP7CXAylEvUUUVxZ1zBTw/StB04PQhWmvq9ai1p+tg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IKn06Ka/W8jBpvkt7jkRk+Jr2p63w6jL935h2WwftxJNrU0NXMtDF/ON1m0u3kTDm
+	 NhEmSEtl6uAjse7HPW17x+ihOxk4+bqFjmLGNDZm+xSHciTBRZnEYjv/YnJIKrQRQH
+	 3wv2E7cxlRjVZ0brU1J2sl96zpDJ7ygcSYrVv41Gs8MUF8CsT2tzMJ/V+COvxXGnOy
+	 32U1JzoWrbWFxC2hwtexOtcgFpeouI62XGgI2+geYfpMVl3yp63wQvSM8LzA+x+CFz
+	 QWRlhTe1Fvarf7jk+JBT3fK92XCMa/gYlNVz7TAzTOuv/IArHEJ97egPGDp+0u4Mfj
+	 1T63PTmBm3s0g==
+Date: Wed, 18 Jun 2025 13:38:53 +0100
+From: Simon Horman <horms@kernel.org>
+To: Frank Wunderlich <frank-w@public-files.de>
+Cc: linux@fw-web.de, nbd@nbd.name, sean.wang@mediatek.com,
+	lorenzo@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, daniel@makrotopia.org,
+	arinc.unal@arinc9.com
+Subject: Re: Re: [net-next v4 3/3] net: ethernet: mtk_eth_soc: change code to
+ skip first IRQ completely
+Message-ID: <20250618123853.GO1699@horms.kernel.org>
+References: <20250616080738.117993-1-linux@fw-web.de>
+ <20250616080738.117993-4-linux@fw-web.de>
+ <20250618083556.GE2545@horms.kernel.org>
+ <trinity-98989ec6-5b15-49ab-b7e0-60e5e23dd82b-1750238087001@trinity-msg-rest-gmx-gmx-live-847b5f5c86-t48nw>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] x86/mce: Fix missing address mask in recovery for
- errors in TDX/SEAM non-root mode
-To: Adrian Hunter <adrian.hunter@intel.com>, Tony Luck <tony.luck@intel.com>,
- pbonzini@redhat.com, seanjc@google.com
-Cc: vannapurve@google.com, Borislav Petkov <bp@alien8.de>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- H Peter Anvin <hpa@zytor.com>, linux-edac@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
- rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
- kai.huang@intel.com, reinette.chatre@intel.com,
- tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
- isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
-References: <20250618120806.113884-1-adrian.hunter@intel.com>
- <20250618120806.113884-2-adrian.hunter@intel.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250618120806.113884-2-adrian.hunter@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <trinity-98989ec6-5b15-49ab-b7e0-60e5e23dd82b-1750238087001@trinity-msg-rest-gmx-gmx-live-847b5f5c86-t48nw>
 
-On 6/18/2025 8:08 PM, Adrian Hunter wrote:
-> Commit 8a01ec97dc066 ("x86/mce: Mask out non-address bits from machine
-> check bank") introduced a new #define MCI_ADDR_PHYSADDR for the mask of
-> valid physical address bits within the machine check bank address register.
+On Wed, Jun 18, 2025 at 09:14:47AM +0000, Frank Wunderlich wrote:
+> Hi Simon,
 > 
-> This is particularly needed in the case of errors in TDX/SEAM non-root mode
-> because the reported address contains the TDX KeyID.  Refer to TDX and
-> TME-MK documentation for more information about KeyIDs.
+> thanks for your review
 > 
-> Commit 7911f145de5fe ("x86/mce: Implement recovery for errors in TDX/SEAM
-> non-root mode") uses the address to mark the affected page as poisoned, but
-> omits to use the aforementioned mask.
+> > Gesendet: Mittwoch, 18. Juni 2025 um 10:35
+> > Von: "Simon Horman" <horms@kernel.org>
+> > Betreff: Re: [net-next v4 3/3] net: ethernet: mtk_eth_soc: change code to skip first IRQ completely
+> >
+> > On Mon, Jun 16, 2025 at 10:07:36AM +0200, Frank Wunderlich wrote:
+> > > From: Frank Wunderlich <frank-w@public-files.de>
+> > > 
+> > > On SoCs without MTK_SHARED_INT capability (mt7621 + mt7628) the first
+> > > IRQ (eth->irq[0]) was read but never used. Do not read it and reduce
+> > > the IRQ-count to 2 because of skipped index 0.
+> > 
+> > Describing the first IRQ as read seems a bit confusing to me - do we read
+> > it? And saying get or got seems hard to parse. So perhaps something like
+> > this would be clearer?
+> > 
+> > ... platform_get_irq() is called for the first IRQ (eth->irq[0]) but
+> > it is never used.
 > 
-> Mask the address with MCI_ADDR_PHYSADDR so that the page can be found.
+> ok, i change it in next version
 > 
-> Fixes: 7911f145de5fe ("x86/mce: Implement recovery for errors in TDX/SEAM non-root mode")
-> Cc: stable@vger.kernel.org
+> > > 
+> > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> > > ---
+> > > v4:
+> > > - drop >2 condition as max is already 2 and drop the else continue
+> > > - update comment to explain which IRQs are taken in legacy way
+> > > ---
+> > >  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 20 ++++++++++++++++----
+> > >  drivers/net/ethernet/mediatek/mtk_eth_soc.h |  4 ++--
+> > >  2 files changed, 18 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > > index 3ecb399dcf81..f3fcbb00822c 100644
+> > > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> > > @@ -3341,16 +3341,28 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
+> > >  {
+> > >  	int i;
+> > >  
+> > > +	/* future SoCs beginning with MT7988 should use named IRQs in dts */
+> > 
+> > Perhaps this comment belongs in the patch that adds support for named IRQs.
+> 
+> also thought that after sending it :)
+> 
+> > >  	eth->irq[MTK_ETH_IRQ_TX] = platform_get_irq_byname(pdev, "tx");
+> > >  	eth->irq[MTK_ETH_IRQ_RX] = platform_get_irq_byname(pdev, "rx");
+> > >  	if (eth->irq[MTK_ETH_IRQ_TX] >= 0 && eth->irq[MTK_ETH_IRQ_RX] >= 0)
+> > >  		return 0;
+> > >  
+> > > +	/* legacy way:
+> > > +	 * On MTK_SHARED_INT SoCs (MT7621 + MT7628) the first IRQ is taken from
+> > > +	 * devicetree and used for rx+tx.
+> > > +	 * On SoCs with non-shared IRQ the first was not used, second entry is
+> > > +	 * TX and third is RX.
+> > 
+> > Maybe I am slow. But I had a bit of trouble parsing this.
+> > Perhaps this is clearer?
+> > 
+> >         * devicetree and used for both RX and TX - it is shared.
+> > 	* On SoCs with non-shared IRQs the first entry is not used,
+> >         * the second is for TX, and the third is for RX.
+> 
+> I would also move this comment in first patch with your changes requested.
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Yes, good point.
 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->   arch/x86/kernel/cpu/mce/core.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index e9b3c5d4a52e..76c4634c6a5f 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -1665,7 +1665,8 @@ noinstr void do_machine_check(struct pt_regs *regs)
->   		 * be added to free list when the guest is terminated.
->   		 */
->   		if (mce_usable_address(m)) {
-> -			struct page *p = pfn_to_online_page(m->addr >> PAGE_SHIFT);
-> +			unsigned long pfn = (m->addr & MCI_ADDR_PHYSADDR) >> PAGE_SHIFT;
-> +			struct page *p = pfn_to_online_page(pfn);
->   
->   			if (p)
->   				SetPageHWPoison(p);
+> /* legacy way:
+>  * On MTK_SHARED_INT SoCs (MT7621 + MT7628) the first IRQ is taken from
+>  * devicetree and used for both RX and TX - it is shared.
+>  * On SoCs with non-shared IRQs the first entry is not used,
+>  * the second is for TX, and the third is for RX.
+>  */
+> 
+> i can keep your RB there?
+
+Yes, thanks for asking.
+
+> 
+> > > +	 */
+> > > +
+> > >  	for (i = 0; i < MTK_ETH_IRQ_MAX; i++) {
+> > > -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+> > > -			eth->irq[i] = eth->irq[MTK_ETH_IRQ_SHARED];
+> > > -		else
+> > > -			eth->irq[i] = platform_get_irq(pdev, i);
+> > > +		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
+> > > +			if (i == 0)
+> > > +				eth->irq[MTK_ETH_IRQ_SHARED] = platform_get_irq(pdev, i);
+> > > +			else
+> > > +				eth->irq[i] = eth->irq[MTK_ETH_IRQ_SHARED];
+> > > +		} else {
+> > > +			eth->irq[i] = platform_get_irq(pdev, i + 1);
+> > > +		}
+> > >  
+> > >  		if (eth->irq[i] < 0) {
+> > >  			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
+> 
+> code changes are OK?
+
+Yes. I did try to think of a more succinct way to express the logic.
+But I think what you have is good.
+
+In any case, let me review the next revision of this patch.
+That will be easier for me than imagining what it looks like
+with the non-code changes discussed above in place.
 
