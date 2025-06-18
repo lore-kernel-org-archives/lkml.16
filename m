@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AF22FD899
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FAE2FE315
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:22:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270924; cv=none; b=rqcnz4lr519vfb2X2M9DeLf5O+erdaRAJSoZ2E9S2odeoi76dMp/OZU1NB58Qjs+uncaH3qLdMqonjZ3kQl6htfGCrXwxMWgW2YZT8y6e/FYDEkDc76bmoSAGQbtAHi6zdd/a0QMbqOAiPFDTuQ/Av7Zd2Z3POZHWg4NK1E6gso=
+	t=1750270929; cv=none; b=onyBzk/JV7TsJ4rqzmPQxAynG5u8Uiv7NZBFqjIXX/vDeaVGTR6XM7u2t1DQFh6/8C8E442NQANkusHEp/W0G7MKp4l8bRLhTJDwy/WN6tGk0cfY5IF9GwVw8LyU0L2HDfqYL9FKb8t0ShAVnCE5wIeOC+RJNYKLspjyv345oV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270924; c=relaxed/simple;
-	bh=RBEoEDu2A+FwLyh++5jokg1I7TUhNUbkFf08/S4koCY=;
+	s=arc-20240116; t=1750270929; c=relaxed/simple;
+	bh=GCa+xOiJ3NtDwAxf3UTuM7FdSBlF1t2VJbPM88NipeI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=u++l74ct5wI88qe+ZhTxahgVxibbraZWIJUXAiGrfYKDyKJFt9lgn/tcRZtplKvjvmasXpdfWkYumF3dDOdoABJmyCFInhfV661Idkc/VE7bFkTegUBPg18Oyk856hhDCaV4uOx+JU6Wj+pkcN21wugnWmWN1myHTXggm5UEej4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OxZqIyLs; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=lTB8OKjeVhk51AV9Z+yat4UlgOV4jPlwKTO3U5BqELX9+KB8jLro3KX85VFITsktx5Jba308vcVyotxvDMbwXzp5+qGVCYSvBcIyb/4B4Tot6SKFpcXHB6THYMdfQWeqbaG5Ds7ceyhFMgv2UbsDTiF0uZ6QidbwEUWatyQKrK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IXZaT3cj; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OxZqIyLs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IXZaT3cj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750270923; x=1781806923;
+  t=1750270924; x=1781806924;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RBEoEDu2A+FwLyh++5jokg1I7TUhNUbkFf08/S4koCY=;
-  b=OxZqIyLsJSroJ2i9MdsrROxH70E3NsG6kvAKifMPTRvyyrGMmXsUYxD3
-   CPzVxg8vQa7ptoVtXf4Q8V1g+8odAq77fXL+wB1Yz3cOwa5oIFmdnB5YW
-   BortfRVvhpa+xJaYKcO1/iYGTjoGzZlBvQ4DqinF+ijFvIH3FXFHUY7Yw
-   dnqNv+RspKaZf5GkEERusnRttKQTb+Ybdex2YDNmVMcMaLi3YqDVwQEd+
-   zvko7J7nf4iHqzRFD8LqvQWYwg1aAy+yQ4qBaHEh90PM1XJHSY8jbNW6c
-   NQxsij/EBLJiRtqClKTlBCTYmaEChOOO3OgR1tIMqHZLc+QmYryVKIQJ7
-   Q==;
-X-CSE-ConnectionGUID: DbGqwajpS0SQ1kimRCqNOw==
-X-CSE-MsgGUID: IxguJ0uxQf2FmLjSrT5dxA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931707"
+  bh=GCa+xOiJ3NtDwAxf3UTuM7FdSBlF1t2VJbPM88NipeI=;
+  b=IXZaT3cj2WJHpQsa0eOY4RKLxD0XHxWtW3DBUY3jLShIsyHbPv6kV6PS
+   wBTZARncyqd81MhW2Dh6tAi77Kk2I1a86TYlMhKSh30I/NZi9Ohg6RQEG
+   B2e6bpm5YRM81JbZP0vAzdhRwJTJ6z+fezdmgGlo8EIBWlV8PKGUd4V1y
+   Q1K/xPtqmRaKI9stHeDWuocbpuMmO319jhINNuhdgtWOIH748A4vI8EIM
+   vIBaj9+wydAwFrFxiz/O6rePd8/Uv/i5oca2c3tnOmtRZT0khUyTei51V
+   l/RHQAM9KvyJRqc9LiIGKWsg+Dg76/187VJoJGXKdR6viVZo8MkXQOzWR
+   g==;
+X-CSE-ConnectionGUID: bOCOGOeLQ5mxgMbCQRgg+A==
+X-CSE-MsgGUID: LC2a0LmnQ2qip+retIyBQw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931720"
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="63931707"
+   d="scan'208";a="63931720"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:22:02 -0700
-X-CSE-ConnectionGUID: 55fSL6zAQZGOckEnYdnVsw==
-X-CSE-MsgGUID: LUEEbBOqRk6qNZaG5v1xSg==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:22:03 -0700
+X-CSE-ConnectionGUID: rby7BZr4SRm2YmXdsRLRtQ==
+X-CSE-MsgGUID: N6pda5x3S0GkUhyJrY38ZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="180960148"
+   d="scan'208";a="180960173"
 Received: from b04f130c83f2.jf.intel.com ([10.165.154.98])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:22:02 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:22:03 -0700
 From: Tim Chen <tim.c.chen@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -64,9 +64,9 @@ Cc: Tim Chen <tim.c.chen@linux.intel.com>,
 	Len Brown <len.brown@intel.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC patch v3 19/20] sched: Introduce SCHED_CACHE_LB to control cache aware load balance
-Date: Wed, 18 Jun 2025 11:28:07 -0700
-Message-Id: <ac0e58b587dcd1e3ebe7a7a97973c5763d02a5f8.1750268218.git.tim.c.chen@linux.intel.com>
+Subject: [RFC patch v3 20/20] sched: Introduce SCHED_CACHE_WAKE to control LLC aggregation on wake up
+Date: Wed, 18 Jun 2025 11:28:08 -0700
+Message-Id: <1f8e7ec2d84a94ac0a31ca6182218ffaf7e166df.1750268218.git.tim.c.chen@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <cover.1750268218.git.tim.c.chen@linux.intel.com>
 References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
@@ -78,103 +78,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the SCHED_CACHE_LB sched feature to enable or disable
-cache aware load balance in the schduler.
+Introduce SCHED_CACHE_WAKE feature to enable or disable cache-aware
+wake up. Disable this feature by default because cache-aware wakeup
+is overly aggressive in stacking wakees of the same process on the same LLC,
+if they are frequently woken up.
+
+The wake ups can be much more frequent than load balances, adding
+much overhead when load balance alone for LLC aggregation is sufficient.
 
 Co-developed-by: Chen Yu <yu.c.chen@intel.com>
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 ---
- kernel/sched/fair.c     | 18 ++++++++++--------
- kernel/sched/features.h |  1 +
- 2 files changed, 11 insertions(+), 8 deletions(-)
+ kernel/sched/fair.c     | 6 +++++-
+ kernel/sched/features.h | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index e342524481ed..af742601f2d7 100644
+index af742601f2d7..32c90fab0d63 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -9982,7 +9982,7 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
- 		return 1;
- 
- #ifdef CONFIG_SCHED_CACHE
--	if (sched_feat(SCHED_CACHE) &&
-+	if (sched_feat(SCHED_CACHE) && sched_feat(SCHED_CACHE_LB) &&
- 	    get_migrate_hint(env->src_cpu, env->dst_cpu, p) == mig_forbid)
- 		return 0;
- #endif
-@@ -10068,7 +10068,7 @@ static struct list_head
- 	LIST_HEAD(no_pref_llc);
- 	LIST_HEAD(pref_other_llc);
+@@ -9028,7 +9028,7 @@ static int select_cache_cpu(struct task_struct *p, int prev_cpu)
+ 	struct mm_struct *mm = p->mm;
+ 	int cpu;
  
 -	if (!sched_feat(SCHED_CACHE))
-+	if (!sched_feat(SCHED_CACHE) || !sched_feat(SCHED_CACHE_LB))
- 		return tasks;
++	if (!sched_feat(SCHED_CACHE) || !sched_feat(SCHED_CACHE_WAKE))
+ 		return prev_cpu;
  
- 	if (cpus_share_cache(env->dst_cpu, env->src_cpu))
-@@ -10253,7 +10253,8 @@ static int detach_tasks(struct lb_env *env)
- 		 * The tasks have already been sorted by order_tasks_by_llc(),
- 		 * they are tasks that prefer the current LLC.
- 		 */
--		if (sched_feat(SCHED_CACHE) && p->preferred_llc != -1 &&
-+		if (sched_feat(SCHED_CACHE) && sched_feat(SCHED_CACHE_LB) &&
-+		    p->preferred_llc != -1 &&
- 		    llc_id(env->src_cpu) == p->preferred_llc)
- 			break;
- #endif
-@@ -10910,7 +10911,7 @@ static inline bool llc_balance(struct lb_env *env, struct sg_lb_stats *sgs,
- 	struct sched_domain *child = env->sd->child;
- 	int llc;
+ 	if (!mm || p->nr_cpus_allowed == 1)
+@@ -9041,6 +9041,10 @@ static int select_cache_cpu(struct task_struct *p, int prev_cpu)
+ 	if (cpus_share_cache(cpu, prev_cpu))
+ 		return prev_cpu;
  
--	if (!sched_feat(SCHED_CACHE))
-+	if (!sched_feat(SCHED_CACHE) || !sched_feat(SCHED_CACHE_LB))
- 		return false;
- 
- 	if (env->sd->flags & SD_SHARE_LLC)
-@@ -11021,7 +11022,8 @@ static void update_sg_if_llc(struct lb_env *env, struct sg_lb_stats *sgs,
- 	struct sched_domain *sd = env->sd->child;
- 	struct sched_domain_shared *sd_share;
- 
--	if (!sched_feat(SCHED_CACHE) || env->idle == CPU_NEWLY_IDLE)
-+	if (!sched_feat(SCHED_CACHE) || env->idle == CPU_NEWLY_IDLE ||
-+	    !sched_feat(SCHED_CACHE_LB))
- 		return;
- 
- 	/* only care the sched domain that spans 1 LLC */
-@@ -11083,7 +11085,7 @@ static inline void update_sg_lb_stats(struct lb_env *env,
- 			*sg_overutilized = 1;
- 
- #ifdef CONFIG_SCHED_CACHE
--		if (sched_feat(SCHED_CACHE)) {
-+		if (sched_feat(SCHED_CACHE) && sched_feat(SCHED_CACHE_LB)) {
- 			int j;
- 
- 			for (j = 0; j < max_llcs; ++j)
-@@ -12368,7 +12370,7 @@ imbalanced_active_balance(struct lb_env *env)
- static inline bool
- break_llc_locality(struct lb_env *env)
- {
--	if (!sched_feat(SCHED_CACHE))
-+	if (!sched_feat(SCHED_CACHE) || !sched_feat(SCHED_CACHE_LB))
- 		return 0;
- 
- 	if (cpus_share_cache(env->src_cpu, env->dst_cpu))
-@@ -12870,7 +12872,7 @@ static int active_load_balance_cpu_stop(void *data)
- #ifdef CONFIG_SCHED_CACHE
- 		int llc = llc_idx(target_cpu);
- 
--		if (!sched_feat(SCHED_CACHE))
-+		if (!sched_feat(SCHED_CACHE) || !sched_feat(SCHED_CACHE_LB))
- 			goto out_unlock;
- 
- 		if (llc < 0)
++	if (_get_migrate_hint(prev_cpu, cpu,
++			      task_util(p), true) == mig_forbid)
++		return prev_cpu;
++
+ 	if (static_branch_likely(&sched_numa_balancing) &&
+ 	    __migrate_degrades_locality(p, prev_cpu, cpu, false) > 0) {
+ 		/*
 diff --git a/kernel/sched/features.h b/kernel/sched/features.h
-index d2af7bfd36bf..11dbd74cd365 100644
+index 11dbd74cd365..44b408cf0dd4 100644
 --- a/kernel/sched/features.h
 +++ b/kernel/sched/features.h
-@@ -88,6 +88,7 @@ SCHED_FEAT(TTWU_QUEUE, true)
- SCHED_FEAT(SIS_UTIL, true)
+@@ -89,6 +89,7 @@ SCHED_FEAT(SIS_UTIL, true)
  
  SCHED_FEAT(SCHED_CACHE, true)
-+SCHED_FEAT(SCHED_CACHE_LB, true)
+ SCHED_FEAT(SCHED_CACHE_LB, true)
++SCHED_FEAT(SCHED_CACHE_WAKE, false)
  /*
   * Issue a WARN when we do multiple update_rq_clock() calls
   * in a single rq->lock section. Default disabled because the
