@@ -1,129 +1,143 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A76286D62;
-	Wed, 18 Jun 2025 09:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5912882AC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:59:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240781; cv=none; b=oPfFUrTP6+JN0W2y24MkPF1WHt5qCdJpi91efzn601ChOMFWIhNAlmWAFgRLThyv4Xp7pF60L3Ev6AeR/9qgzbD1Mn1zAH4dyhcn10Ama71JmcOpUJlhdKg6nlKWIY5jvh0Wothx7qacCOz1Z1lxesvcaLZ/EaISZN2HHERwwWY=
+	t=1750240782; cv=none; b=AivQHNp5JJCYbPdcYKRcdkCFaJbhPM9CyFRIloBf6WQcGGaJ08ZAwgcWHrr6IpyFdPUm/X+CigqqE6lLP1LPK2XFatPjmUtbZhgFFCevJEVxy9OEvLy8oPu7UaCDjj0PF+yskDycwrDh8SM9BoP45mZDhcNd8BG7Qy07e0XXCFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750240781; c=relaxed/simple;
-	bh=LS51SAOjeVQ+DKPYqQ59vFdlIMwnoNIzslebEFvdf/0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZyR0xBENGTVZCjubdvApTFZrdtKNSJMFJvVEuCpwMv8p7otNLVH67EzlGfeFdB7AZoryM7MBJ+hTfyi7xY9XhIq/ojM4Mt/7kc3WBtbzexDEDKffauYcurj71mdw0/jJEI9qA6peOtuGjOSfQsQPhS5I/IQLtqaoVp21Prn5vPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EQYhJMtq; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750240782; c=relaxed/simple;
+	bh=FOWHSRDkQD1bUvtU+nnwl6eQjS6QhU0ViuG9LUXBNWs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UZStYcwTJ9xEVScjg/ciFekZ3cIMYzNavyuNKfm5ViApmrjpgqR29G+J+QAFJvGTbCRRBThp0g3LnRyE8VRForlciXflW/beGyvWuOuXQ4Pawd0AyY7Dji9weNQnR3gJOdW7WbLZj5P18Ghy1qjZ3f+8igUP10ffSvuubSjx1as=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=r+KUzytP; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EQYhJMtq"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-6071ac9dc3eso11691205a12.1;
-        Wed, 18 Jun 2025 02:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750240778; x=1750845578; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QyMjYlp8tiGaFTfB5olHuf8CDtVtbOO4FPZ1k0DdjyQ=;
-        b=EQYhJMtqeeEXMX0K+WT0jzJS6sqogaMjy+zNCEW4LZF03W6PQhTToIo0nY+TiW9DTj
-         M3SM+odhAm0TE/vblir3dleggcMJdZpvogsVqgM7dzvW4jfHn+pel4ym94xiuAMrwL+P
-         63Q8crJ2m1rzMmhvxASTdXQBcg+aN77e3pRb9dQzbYAHahNwRg3AFZPeS5V0287ZjHuo
-         5Fh1cjsRg6fCigecqt2P1M/CI5c6jjqlgh1YHdmZi2eZrDVWFT9NvrPXWVBEChqWyz+k
-         W0ppqlTd30ymK8X+1tK7Hm0uIATG2y7Ba/IFtgjWltHM3ZF6zSqtN1EUu1zGKmtMvfnt
-         3HiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750240778; x=1750845578;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QyMjYlp8tiGaFTfB5olHuf8CDtVtbOO4FPZ1k0DdjyQ=;
-        b=hm9nPOowQO2OgNDRugoOgIg9tS6PPC1PQAZox0hUhBJbd9bVGQar6Kh6ktul9YVBmY
-         nZv5rYH3mEQ4n4At8Nm6AHwGHqH1J+gb7nYEHiNfj94MwITaU4YiyNXdfy2NOumWVKQj
-         6XXtcKgibiHY8QjwLYV2cce3vE4jlTWKFvkJQPATKki96TVa+lEhoiU1s+dvQhAkNnr9
-         q5E31vqrNsfg0oEJiijMQrwMocqktQ7TUq7MN2SMO2baM82SmGu9hwBK0+kSaccoaFl+
-         cT0n/mB60Xe0DyD9MMMrL+0WkD7YzUSzlgtQIeBvL3VJphIVfg11o0OhTh3JnDQEL9p8
-         vS8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUuegjUSN+WnA05zEZ7LYuXiYrwG9I/YqqOxu0RJuCyrCCQth9JVocxdI3UCE9mOw4v8zBP0pXfhsGJHw==@vger.kernel.org, AJvYcCW20RLmyJh8RjFJAWDT2zzWjbgvndly9hjakhw4e/VDvdKtNsbvDxMrd2bd0ugHXvxLrZD7rfc2nF0+jwzB@vger.kernel.org, AJvYcCXu3crN/8ZjJdT4wEfc6+j2LLM3t4R111sdw7lTVcHmy9oUXszRCXP7pzIz9E7oCexGQ2wVGa7EoHIG@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5VWjgwvr1kBhG62na0U5Yo6yteIbaLLCmj6jQs5C6Vj5O0nyt
-	s0SHwF0IcT4NlvitmuM3V51lieTKqAubyzX2f+GWLUDL/9Uu/i3WRrZBSreWgA==
-X-Gm-Gg: ASbGncvru9FkLaA21TSOoV25C3okbH3R3RreJMa/oMCa/LU/q/GNnHrrPgQBWjEJoqP
-	vEtGRisjI3pNeSfUW4iXw3t0ecdeghtIKTGs/t9dJwEWoxWhEJKnlwfgH09hIRoOy8HBtuQb6AU
-	gF3tTxYj6Alh9o1jP0ZktroC0N5W3h4cKb9mdM0w3RPnZYUHtiuUKiJUGVxTLBvYBs8lFpll1S7
-	/kJ5ets6rS8UD52VAFiZsGeppaqQG3ytxOE5Eg4A4DJWr7AoNlQ9LnFsLCXs8mrvr+igJvAlJQP
-	6hlKPU7PnD4rHeSn5KedX1m6tTHDdpVrtFkjaKWvtJvBKI8M1lrf9L2iXzZV8VHMa80wmYXPcdk
-	=
-X-Google-Smtp-Source: AGHT+IG6ppb/J0j8YRmIIXmzNHSVWkRtjbVe5WTms0GTJ75Un87Lu/WGD7mS34FxQ1gJTRZ1plZKNw==
-X-Received: by 2002:a05:6402:5cd:b0:607:2469:68bb with SMTP id 4fb4d7f45d1cf-608d09a0dcfmr14594421a12.33.1750240777738;
-        Wed, 18 Jun 2025 02:59:37 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a93b03sm9384691a12.54.2025.06.18.02.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 02:59:37 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org (open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)),
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v4 05/19] dt-bindings: media: i2c: max96717: add support for MAX9295A
-Date: Wed, 18 Jun 2025 12:58:41 +0300
-Message-ID: <20250618095858.2145209-6-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250618095858.2145209-1-demonsingur@gmail.com>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="r+KUzytP"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 33ECA14B0;
+	Wed, 18 Jun 2025 11:59:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750240763;
+	bh=FOWHSRDkQD1bUvtU+nnwl6eQjS6QhU0ViuG9LUXBNWs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=r+KUzytPQCFjcpGkMO8elwLCFy0SSbOEGNPDz/hdW5PotiEV/TEKC31jSBUnjjlEr
+	 cBA51hCH3tkhI3WIffw3h9+B8iPo6KTL37+27B3eh3bkHc5Kk8ssYcZSiF9xz4upmx
+	 bnMjnTshh6OxkiBdg+MDOHXqZw4vHMWbd9jwfg10=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 18 Jun 2025 12:59:06 +0300
+Subject: [PATCH v4 03/17] drm/tidss: Use the crtc_* timings when
+ programming the HW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-cdns-dsi-impro-v4-3-862c841dbe02@ideasonboard.com>
+References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+In-Reply-To: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jayesh Choudhary <j-choudhary@ti.com>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Parth Pancholi <parth.pancholi@toradex.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2609;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=FOWHSRDkQD1bUvtU+nnwl6eQjS6QhU0ViuG9LUXBNWs=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoUo39L30SKCSptkm8rKGeMS9Q2J2xZps/0US3U
+ /i9xxNp4K6JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaFKN/QAKCRD6PaqMvJYe
+ 9XCDEACa4ZSEgxTcRCRUts/Y7mzB5h362Q/ki9mitvBpxiL5h2Mut+wgefCn0izDRzoBdLZnC5w
+ 9KV2pEuGj3yrSVbss/IC5t9eVq96oMmEynEC0cocB+Mxg/Ri/2ozOM4lsTySg+KkonEc9mL1JIT
+ CQGyRpvAcs0xkbUMqNqlKSqA631gMvozlDKTIuLDYhx1SiT+Uu6wz57OC+Kzbz5H311ECZEb97M
+ d6TOAwf6Cgyl7Smb20zCdCjJnNAcszdnW7rtPD+Y9s8GNC0fqUsNqE0HYYF54AesJ+H2YZckwNc
+ E7jGdtvcGVL8gqVGLprpTtZ4PAvywvalK5ekN8RqfbArVQ3vi0PZiRlIR3y7Jf22BD6LEYmmIv4
+ vfpdtQv+fwqlufMIH/w9CiU9/hHOR5uBLnabyGKPc613IYYabAREA0tA9cmBfzJYs33ODiZTtUN
+ 0xi5TD1I8FeDWbaaU0DnZGl3rWWHKkpE1IKDZWBWlCXUYSVpyD20do4MNcHHe5TnIrFajVLWGkB
+ ecs/UwxDtDXk8X5T+4ZAZ+EmdcHll3Z2SvXgXp3Pyu01JHNe6VOVMSacxz4zxGjQyfN7m3bA75i
+ LKXd5ignXLqoHB9XzKd7kHhM2FIZ8vE8xopmBFJwo+nc4Bcwcqpezb2+RQSaFH45DSVczf1H2I6
+ 0i3/8ae1lwyXozQ==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-MAX9295A is an older variant of the MAX96717 which does not support
-tunnel mode.
+Use the crtc_* fields from drm_display_mode, instead of the "logical"
+fields. This shouldn't change anything in practice, but afaiu the crtc_*
+fields are the correct ones to use here.
 
-Document the compatibility.
-
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
+Tested-by: Jayesh Choudhary <j-choudhary@ti.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- .../devicetree/bindings/media/i2c/maxim,max96717.yaml      | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/tidss/tidss_crtc.c  |  2 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-index 5998e2518be9..ab46a5f0bd7e 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-@@ -25,12 +25,17 @@ description:
+diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
+index a2f40a5c7703..17efd77ce7f2 100644
+--- a/drivers/gpu/drm/tidss/tidss_crtc.c
++++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+@@ -225,7 +225,7 @@ static void tidss_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	tidss_runtime_get(tidss);
  
-   The GMSL2 serial link operates at a fixed rate of 3Gbps or 6Gbps in the
-   forward direction and 187.5Mbps in the reverse direction.
-+
-   MAX96717F only supports a fixed rate of 3Gbps in the forward direction.
+ 	r = dispc_vp_set_clk_rate(tidss->dispc, tcrtc->hw_videoport,
+-				  mode->clock * 1000);
++				  mode->crtc_clock * 1000);
+ 	if (r != 0)
+ 		return;
  
-+  MAX9295A only supports pixel mode.
-+
- properties:
-   compatible:
-     oneOf:
--      - const: maxim,max96717f
-+      - enum:
-+          - maxim,max9295a
-+          - maxim,max96717f
-       - items:
-           - enum:
-               - maxim,max96717
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+index 21363ccbd763..857edd6170f8 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.c
++++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+@@ -1194,13 +1194,13 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
+ 
+ 	dispc_set_num_datalines(dispc, hw_videoport, fmt->data_width);
+ 
+-	hfp = mode->hsync_start - mode->hdisplay;
+-	hsw = mode->hsync_end - mode->hsync_start;
+-	hbp = mode->htotal - mode->hsync_end;
++	hfp = mode->crtc_hsync_start - mode->crtc_hdisplay;
++	hsw = mode->crtc_hsync_end - mode->crtc_hsync_start;
++	hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+ 
+-	vfp = mode->vsync_start - mode->vdisplay;
+-	vsw = mode->vsync_end - mode->vsync_start;
+-	vbp = mode->vtotal - mode->vsync_end;
++	vfp = mode->crtc_vsync_start - mode->crtc_vdisplay;
++	vsw = mode->crtc_vsync_end - mode->crtc_vsync_start;
++	vbp = mode->crtc_vtotal - mode->crtc_vsync_end;
+ 
+ 	dispc_vp_write(dispc, hw_videoport, DISPC_VP_TIMING_H,
+ 		       FLD_VAL(hsw - 1, 7, 0) |
+@@ -1242,8 +1242,8 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
+ 		       FLD_VAL(ivs, 12, 12));
+ 
+ 	dispc_vp_write(dispc, hw_videoport, DISPC_VP_SIZE_SCREEN,
+-		       FLD_VAL(mode->hdisplay - 1, 11, 0) |
+-		       FLD_VAL(mode->vdisplay - 1, 27, 16));
++		       FLD_VAL(mode->crtc_hdisplay - 1, 11, 0) |
++		       FLD_VAL(mode->crtc_vdisplay - 1, 27, 16));
+ 
+ 	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, 1, 0, 0);
+ }
+
 -- 
-2.49.0
+2.43.0
 
