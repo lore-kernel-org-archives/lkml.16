@@ -1,220 +1,176 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F115328151C;
-	Wed, 18 Jun 2025 09:17:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5113B277C8E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238247; cv=none; b=HhcEVkGChDB1ZxjRc+FLmILoDVfhA3r9RmMoTzuQVbnMuePknbTjbICYkMnVXjjRRRA+dG2LwVSUHFZL2Rne4sxRPeVeAy2v5vTp7v4rVmKm+OPjh7HFdgXE8WRtkFkoTypPlSR0R5CF1tZxqDbWYX3w7Rp5ZgG3R2Gvc8vL3Yo=
+	t=1750238302; cv=none; b=sfmBzkJ0fpGgS/QfuUFTsGrbb/cB/5z/oHMxiBseNfQ9Y5DyERwzOt4BS12bo7bC8elky+I6KYp2ebjYArqpWyBgvKYm9eKxsz7VID/UviNSbq06c2mYZ4s+ve+WePCI7WuZrhKSccuDU28WKGLpG4vuTbXf3pU792oh+7x+wK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238247; c=relaxed/simple;
-	bh=v0t2nXxFlkhUf2easunPGlpe9oTBFkYRqwutkwgWiyc=;
-	h=MIME-Version:Message-ID:From:To:Cc:Subject:Content-Type:Date:
-	 In-Reply-To:References; b=cKcgkINzRn98A/5V06y/nxpZrryhO08pQu8Fp8WwttFowE1Nrss7Ar/D4y3xmfzLSRXPpZS7mUf8Trh1Nx9rwKkve5PDuu8ZlOr4ZgDXB8qhy2e7jB/S8qSI939HYOy6RxlWfFncfeHMQ4Rxw2sE+OFoDRq21/EySYkDOILPo5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de; spf=pass smtp.mailfrom=public-files.de; dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b=r3sPQk27; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=public-files.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=public-files.de
+	s=arc-20240116; t=1750238302; c=relaxed/simple;
+	bh=j3yPqxVhBRubpXAnhCCuwTQ8HVzQJfgdRxMhr4pnooM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=blKowWlsgRwz+Q8g4W1DkCHZMgyyI929Z0grpxvYmUbj4whMiGkMqK5WQy374a0RqqtZRnjR4NbHH4gmbi9bJzwn63/IteaJzeN3IgWRn+OUsCHMMdF3m1gi8iU5CGc7nSHdTwc9Mj2Zsd3BdUsPc48CzAKBm82A8bbb0w+agPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RR+NqD8s; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=public-files.de header.i=frank-w@public-files.de header.b="r3sPQk27"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=public-files.de;
-	s=s31663417; t=1750238087; x=1750842887; i=frank-w@public-files.de;
-	bh=31MkZx6QLAqtW/NqnNOi+UscMDhWWhNudTK63d8OWVo=;
-	h=X-UI-Sender-Class:MIME-Version:Message-ID:From:To:Cc:Subject:
-	 Content-Type:Date:In-Reply-To:References:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=r3sPQk27on1YoyTLna09nRRPjUc6CgT1ZqBQzQLMM4LRL2IqExQN8oPpUsNWwtId
-	 1Vr9dzj1v/EpYd8JG26ihFW4tTjmCO3jkWSCqhnsg2n+7b0IwMJCHAuwV6/sD/2ca
-	 lMmBH8RHmfr1kGRtReH0OssTInLfaZvuM5R7Zl2CMV20sUfPLzfWjxzRonx4Mn6xq
-	 COH0o98B7Tbb2z7S3ZBXqsmcHi1oetso28bSV37GzE6r2WSdMwfRGyUoyR5H1JE0+
-	 g0bRK+HRMF7D+x6nXoxy5kIQwsaUY9k5OVYm2+E2kzCdo/yw+lkZaXZWyebCJc/+2
-	 sQGGP0l03OBayDjbzg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [100.65.113.165] ([100.65.113.165]) by
- trinity-msg-rest-gmx-gmx-live-847b5f5c86-t48nw (via HTTP); Wed, 18 Jun 2025
- 09:14:47 +0000
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RR+NqD8s"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I5lrbo002282
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:18:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fOJroyMKNm7vSUy+fmC7JYV71ihvrx4URxb1UJUiwg0=; b=RR+NqD8sZMb/as38
+	gD30LEbfUIlOEhRpq6nBdDvla+v6cUuAJ5NAljP7PwZX/TGq5LysHHkw0O6vrToq
+	f6VdfEAkgf6c2i6bTwqsBS+/pglxrQOU0suarFXR7zDPSsaFxG887rhYFhj7pcPh
+	AmFdqcrsQm+xSRPDeRXcTvOOStG2TkVB7RcyKdMRVqb9lGrbYvmru2HiaJczaqSf
+	WFyxidav5zESnC42tBERaWJr3QGetOLh66kJfGmegqe1UdfnPa7zLfytegT3u2lG
+	flpKLGkd4o0/X4EfUuzHQTobi1ofGGEPEtVm9Q9/a6NuveZ5esFX0jiNIFa/Oeh1
+	mS6x0w==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47akuweymy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:18:19 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6fabe7822e3so9354996d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:18:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750238298; x=1750843098;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fOJroyMKNm7vSUy+fmC7JYV71ihvrx4URxb1UJUiwg0=;
+        b=Vlv1Wafz3sP6/UzhaWwNRUuhMnbYaB/dyUxwpNoFCSvnB4sPitlyYCC9++PIk6NxAo
+         ruW+Q1VuKI3HASqnYxsNVk8WXNuIKKTUnhio5uvki2j2mDQk9uI68PPdNopVRPFgpnX7
+         XMlORQez+aEzzUC2qoJCxEJpEZFrz0zZixUwHwHZrHWpFRIoPBTlkGpcDn1z5XZ1tJKy
+         fso6CXf3bf8rIIyAvI/2kMk82wzRz9EsXvDbuqLDLgYgmDKxxKukusQNfVhzFtRaInNt
+         fhrbRs3L76pqg0aU0RjefL1v6szXqpVVDqIhsk53q3k8mYpiqN8UVgH97LAefmC2NFhT
+         vuSA==
+X-Forwarded-Encrypted: i=1; AJvYcCWXr+kE4BeozlRzk822ayYqJ7qiG0I+aKBa6CFBDNY/SSRP6+knvjGPvzrzBuzqzRbDGUGSxZBKyBM6CKU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAorOVCcX9Zrk7Cq6GCaGXaGreTqLaMtY/NrNUDdKfsiOCEO67
+	ofK0F6HuVrOYzPD4nUp9n27z7J55wvub2gDY95i/XP2u4JUfdaW4yYba7BqEfKCO7UQ9xoDckjc
+	NKW4VUH3vZwI7dHTcrBLQZeYZU556I90tfL0CYKyOoQDYYDKG3xeo3CpiMhYnDE8CX5o=
+X-Gm-Gg: ASbGncvPZEJhuW8KGFB4g3tTFNDy/7hujh+/i80537FHkbfXTgmK1Qjnb6JnaXslkDt
+	VozXuAxplS4rOzyxcgxkiOmtjQD8tyy1BKEBPGNJFxJbaCIGjqZ3+ZC0j7e5IOb+SgKJ94udrTB
+	W1lreqUO2ri/MW9fZw0ZrItY8vVkmLpGToAK4N3HcT8OT2sv64OQRPSRzsFdAUnhY2j4P6R5TDp
+	FeY+PPG3h6eS7TTlppwmIdz0IIkw7lTmgtg6imOVRfalJTGduc0cD9e8Wn/8h5S2sPctamiFDvm
+	cBIQiujLzOVnYtpTTmW3ewF/Vwzw+VqlYVoSN2dg8rtuLeoqtIRYDBXpeozeemMMjoEjRfn4T1n
+	vOxk=
+X-Received: by 2002:a05:622a:1a15:b0:474:faeb:50aa with SMTP id d75a77b69052e-4a73c55c1c7mr88059931cf.5.1750238297815;
+        Wed, 18 Jun 2025 02:18:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFroTGQ38e7nIabQthNy/Uv5H8RTwz2UgGQOdmYHCVSIwztO+5tMX7dXUQ+pcaxlMq4WUfu4Q==
+X-Received: by 2002:a05:622a:1a15:b0:474:faeb:50aa with SMTP id d75a77b69052e-4a73c55c1c7mr88059761cf.5.1750238297388;
+        Wed, 18 Jun 2025 02:18:17 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48dd68fsm9525214a12.22.2025.06.18.02.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 02:18:16 -0700 (PDT)
+Message-ID: <db65c9f0-334f-43fb-bddf-316bf883a848@oss.qualcomm.com>
+Date: Wed, 18 Jun 2025 11:18:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <trinity-98989ec6-5b15-49ab-b7e0-60e5e23dd82b-1750238087001@trinity-msg-rest-gmx-gmx-live-847b5f5c86-t48nw>
-From: Frank Wunderlich <frank-w@public-files.de>
-To: horms@kernel.org, linux@fw-web.de
-Cc: nbd@nbd.name, sean.wang@mediatek.com, lorenzo@kernel.org,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, daniel@makrotopia.org,
- arinc.unal@arinc9.com
-Subject: Aw: Re: [net-next v4 3/3] net: ethernet: mtk_eth_soc: change code
- to skip first IRQ completely
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH ath-next v3 5/6] wifi: ath11k: choose default PM policy
+ for hibernation
+To: Johan Hovold <johan@kernel.org>
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson
+ <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.de>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        Johan Hovold <johan+linaro@kernel.org>
+References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
+ <20250328-ath11k-bring-hibernation-back-v3-5-23405ae23431@quicinc.com>
+ <d0cd065c-1cd1-4e56-8c57-60777b1f3664@oss.qualcomm.com>
+ <aFJ-SwT1g500h3kC@hovoldconsulting.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <aFJ-SwT1g500h3kC@hovoldconsulting.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 18 Jun 2025 09:14:47 +0000
-In-Reply-To: <20250618083556.GE2545@horms.kernel.org>
-References: <20250616080738.117993-1-linux@fw-web.de>
- <20250616080738.117993-4-linux@fw-web.de>
- <20250618083556.GE2545@horms.kernel.org>
-X-UI-CLIENT-META-MAIL-DROP: W10=
-X-Provags-ID: V03:K1:cgeZTBzTr16R05ltfUpcloI8raW3AvLgsejsxFqfAoMHyHWNB5vkqYr3kXrTTzFVpnwCe
- dTDpwkYJXjF83EtsHZx+QCZWl0ineJYaJctMIX5cNyc+orbBsc6vWRBXVj9LYPYwpcqmuz8AwIZE
- eBEva+vW2Pf6ABpTggQqOjj1pTwlKX6GReTp0yk8xC8V2yAYZDkDB5tl3VIFyQtfU3Wstty438SX
- DQ4+lDn5ds9J9huivawUQogrcsvDjJ2RO4rp7WzqLMvGUJZ8Wkrdgs5cwsWUy3ZPPyZ98XEpqdW4
- PPe2Tuixm0kYGL7TKvgwAFrlqEMr5xP0UXQlhRi5TPdJ65g5FEyx3Vlz9nT1VPkBpk=
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:nPaP/13hdPQ=;c6rGciUDjgJwvNettvYeQyHtQ9w
- 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
- RnGwNw2N8Mh+qDBjqdf40Ll/7gsxXlQ=
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: dmBTH6KEyA4Di3EtoZemDCWE4UqaFhmy
+X-Authority-Analysis: v=2.4 cv=He0UTjE8 c=1 sm=1 tr=0 ts=6852845b cx=c_pps
+ a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=ueFis7n8dWqy784j0wMA:9
+ a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: dmBTH6KEyA4Di3EtoZemDCWE4UqaFhmy
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA3OSBTYWx0ZWRfX/j8jRY97axOH
+ XT2WdTjircyiCUtdoMuySSlZxWwK/bFrLnzFzqAt45kGfm0wGKVochCNNcMzik3gT+eJA32IJAW
+ 8O/MBD0kxvsfq+S3vzM3/RCR1oj8GPnCx+uMSjPaFgRVe1QjbV7BseNiD5KJPMCiUUVkmfPO/Jf
+ I1lRzG8uGZLFVY4hPKYVv2tIY+EsOxuCzUEao2E8jCvlefRu7MUuAwdxEmc6hwmerGgSQHbC5D6
+ sQiGPpcbwMY/BfakPn3ffPcGhxjcRgYUsjeurvxSIpwbh/iaO97EpC/qWTHvKilsOoHpL5RFNRq
+ 81s1WZJ7YCnN+kU7rvFj63mbI5nTIfdC1dnjPJi1eWtFDgNFtf25fuchCINJKxYFMY2BCF/DJZS
+ ShNsSDHRNn2amzBGx3h3lUVWwyUfA3TlpV0JARH5P+RoM69QsHT1Rp8NMdnNvhkc0ZSGzhRR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-18_03,2025-06-18_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 malwarescore=0 priorityscore=1501 suspectscore=0
+ impostorscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506180079
 
-Hi Simon,
+On 6/18/25 10:52 AM, Johan Hovold wrote:
+> On Wed, Jun 18, 2025 at 02:15:04AM +0200, Konrad Dybcio wrote:
+>> On 3/28/25 6:32 AM, Baochen Qiang wrote:
+>>> Now WoWLAN mode is chosen for those machines listed in the quirk table.
+>>> This works for suspend (S3) but breaks for hibernation (S4), because
+>>> WoWLAN mode requires WLAN power to be sustained, which is not the case
+>>> during hibernation. For hibernation, the default mode should be used.
+>>>
+>>> Register a PM notifier with which kernel can notify us of the actual PM
+>>> operation: if system is going to suspend, the original PM policy is
+>>> honored; while if it is hibernation, overwrite it with default policy.
+>>>
+>>> To summarize: for suspend (S3), WoWLAN mode is chosen for machines listed
+>>> in the quirk table, non-WoWLAN mode for others; for hibernation (S4),
+>>> non-WoWLAN mode is chosen for all.
+>>>
+>>> Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
+>>>
+>>> Tested-by: Takashi Iwai <tiwai@suse.de>
+>>> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
+>>> ---
+>>
+>> I've bisected the following splat to this patch, still happening on
+>> linux-next/master, WCN6855 + SC8280XP CRD, 100% reproducibility 
+> 
+> WFIW, I'm not seeing this with 6.16-rc2 (which has this patch) on either
+> the X13s or sc8280xp-crd (ath11k now fails to resume on the latter
+> because of missing regulatory data, but that appears to be a separate
+> regression).
 
-thanks for your review
+Do you have CONFIG_DEBUG_NOTIFIERS?
 
-> Gesendet: Mittwoch, 18. Juni 2025 um 10:35
-> Von: "Simon Horman" <horms@kernel.org>
-> Betreff: Re: [net-next v4 3/3] net: ethernet: mtk_eth_soc: change code t=
-o skip first IRQ completely
->
-> On Mon, Jun 16, 2025 at 10:07:36AM +0200, Frank Wunderlich wrote:
-> > From: Frank Wunderlich <frank-w@public-files.de>
-> >=20
-> > On SoCs without MTK_SHARED_INT capability (mt7621 + mt7628) the first
-> > IRQ (eth->irq[0]) was read but never used. Do not read it and reduce
-> > the IRQ-count to 2 because of skipped index 0.
->=20
-> Describing the first IRQ as read seems a bit confusing to me - do we rea=
-d
-> it? And saying get or got seems hard to parse. So perhaps something like
-> this would be clearer?
->=20
-> ... platform_get_irq() is called for the first IRQ (eth->irq[0]) but
-> it is never used.
 
-ok, i change it in next version
+>> [root@sc8280xp-crd ~]# echo mem > /sys/power/state 
+>> [   20.267830] fb0: Framebuffer is not in virtual address space.
+>> [   39.863070] PM: suspend entry (s2idle)
+>> [   39.908067] Filesystems sync: 0.035 seconds
+>> [   39.934453] ------------[ cut here ]------------
+>> [   39.939259] Invalid notifier called!
+>> [   39.939268] WARNING: CPU: 5 PID: 513 at kernel/notifier.c:79 notifier_call_chain+0x84/0x1a4
+>> [   39.951566] Modules linked in:
+>> [   39.954732] CPU: 5 UID: 0 PID: 513 Comm: bash Not tainted 6.14.0-rc4longbois-01215-g32d93b51bc7e #12177
+> 
+> 6.14?
 
-> >=20
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> > ---
-> > v4:
-> > - drop >2 condition as max is already 2 and drop the else continue
-> > - update comment to explain which IRQs are taken in legacy way
-> > ---
-> >  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 20 ++++++++++++++++----
-> >  drivers/net/ethernet/mediatek/mtk_eth_soc.h |  4 ++--
-> >  2 files changed, 18 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net=
-/ethernet/mediatek/mtk_eth_soc.c
-> > index 3ecb399dcf81..f3fcbb00822c 100644
-> > --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> > +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> > @@ -3341,16 +3341,28 @@ static int mtk_get_irqs(struct platform_device=
- *pdev, struct mtk_eth *eth)
-> >  {
-> >  	int i;
-> > =20
-> > +	/* future SoCs beginning with MT7988 should use named IRQs in dts */
->=20
-> Perhaps this comment belongs in the patch that adds support for named IR=
-Qs.
+g show 32d93b51bc7e2e557771abe4a88da69c609e3d52:Makefile | head
 
-also thought that after sending it :)
+# SPDX-License-Identifier: GPL-2.0
+VERSION = 6
+PATCHLEVEL = 14
+SUBLEVEL = 0
+EXTRAVERSION = -rc4
 
-> >  	eth->irq[MTK_ETH_IRQ_TX] =3D platform_get_irq_byname(pdev, "tx");
-> >  	eth->irq[MTK_ETH_IRQ_RX] =3D platform_get_irq_byname(pdev, "rx");
-> >  	if (eth->irq[MTK_ETH_IRQ_TX] >=3D 0 && eth->irq[MTK_ETH_IRQ_RX] >=3D=
- 0)
-> >  		return 0;
-> > =20
-> > +	/* legacy way:
-> > +	 * On MTK_SHARED_INT SoCs (MT7621 + MT7628) the first IRQ is taken f=
-rom
-> > +	 * devicetree and used for rx+tx.
-> > +	 * On SoCs with non-shared IRQ the first was not used, second entry =
-is
-> > +	 * TX and third is RX.
->=20
-> Maybe I am slow. But I had a bit of trouble parsing this.
-> Perhaps this is clearer?
->=20
->         * devicetree and used for both RX and TX - it is shared.
-> 	* On SoCs with non-shared IRQs the first entry is not used,
->         * the second is for TX, and the third is for RX.
+it's been in the tree for a while
 
-I would also move this comment in first patch with your changes requested.
-
-/* legacy way:
- * On MTK_SHARED_INT SoCs (MT7621 + MT7628) the first IRQ is taken from
- * devicetree and used for both RX and TX - it is shared.
- * On SoCs with non-shared IRQs the first entry is not used,
- * the second is for TX, and the third is for RX.
- */
-
-i can keep your RB there?
-
-> > +	 */
-> > +
-> >  	for (i =3D 0; i < MTK_ETH_IRQ_MAX; i++) {
-> > -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
-> > -			eth->irq[i] =3D eth->irq[MTK_ETH_IRQ_SHARED];
-> > -		else
-> > -			eth->irq[i] =3D platform_get_irq(pdev, i);
-> > +		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
-> > +			if (i =3D=3D 0)
-> > +				eth->irq[MTK_ETH_IRQ_SHARED] =3D platform_get_irq(pdev, i);
-> > +			else
-> > +				eth->irq[i] =3D eth->irq[MTK_ETH_IRQ_SHARED];
-> > +		} else {
-> > +			eth->irq[i] =3D platform_get_irq(pdev, i + 1);
-> > +		}
-> > =20
-> >  		if (eth->irq[i] < 0) {
-> >  			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
-
-code changes are OK?
-
-regards Frank
+Konrad
