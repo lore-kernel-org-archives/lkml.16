@@ -1,115 +1,380 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951842E54C9
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336132E3B1D;
+	Wed, 18 Jun 2025 09:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240799; cv=none; b=kQ4NFVsA4/nPS5+rheWW+sefFv7/A13u8rRZlxvmhWVgTXTsL6kCD1h60gNaO3MLL2XyOIT304Z2cmF15EvLOryidz0d3c+5mhG0R19nGeIgOmh5blGMgyVxpWuWZohJBDOVUym35QR4YiKS+MCzRQHYxPPIpNomd1ceFkicUCA=
+	t=1750240798; cv=none; b=qQixIuxsvpQaO2sQ6iQ8ojziXwQeqvxziZDXDlag2okaAA4ZgUKRSNBKwvxLyLExaCTS3wPD0i7XO7pDC5b7p6Q7GcJB4tbfn6h6iaxqAH94APPPKR/en1QHmsQE0Zk1rdoQKTJHSkrCWaj2krQSjUsb2mgIbyiYqBvQCoRTjrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750240799; c=relaxed/simple;
-	bh=BfOuS4S0Uv2jTTiGjUIA+jDJR/WYF9LdxpY+1sPAlnM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FPWruZTR1tvBtmTvlJoEgPrYpEQkwSZWtVk5XmYICBb58r8my8l8SaWJCw5gGhXNHnaB2cKVMIvRz1JdJP3i0o/IVmZbmJv/RgDwwkPWYVyKlMYb7lrSsaQ2GjSTkSA/79EzXNyc2D9PQbfIPopjIWjE4idH5Wjlv+8+WC0RZ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=nwkmFmBk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750240798; c=relaxed/simple;
+	bh=MCCDYaMRSRzuUF/JiK7cCNzXrPYMiVFmkitL5HL3KHU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O5mIWJkV/vJOomh3U5Dhgj118OJ6LixqsVZaTwH317y1XxriqnzvaHYXwSQFWa/lxK7X4Y1FfGE8lrk0W+/ZP4psural+WbYzgjJ1lKZhbEvyOyXoLQ9Q3gL0gMaOhUinWJzBQYo5b91dVdTE+88hcI7O3CMdbBB8ZmepiJ10FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=afWgXi57; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nwkmFmBk"
-Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C34A3527C;
-	Wed, 18 Jun 2025 11:59:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750240774;
-	bh=BfOuS4S0Uv2jTTiGjUIA+jDJR/WYF9LdxpY+1sPAlnM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nwkmFmBkOu267VY14AaxenosDVugbL+oSCyNLVTjcqA0pABqjVLAp5eRMZRT+1oZx
-	 cIwx69nUTv+/iEZXILYQyhI4Rs3h50vBXu4O/aQPqzbjw+i3Mdgez2iFFkppTHwUGb
-	 vsDfDnSAjks7e8g1WG7WqU7Fh2w02xhCUrCbWLVU=
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date: Wed, 18 Jun 2025 12:59:15 +0300
-Subject: [PATCH v4 12/17] drm/bridge: cdns-dsi: Adjust mode to negative
- syncs
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afWgXi57"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-60702d77c60so14154241a12.3;
+        Wed, 18 Jun 2025 02:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750240794; x=1750845594; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=itFlw7+tci92O6oUfcwXgDzQx9INhcSomr2YEtEf878=;
+        b=afWgXi57i0MqDlEAgHV+MVJP8p/iQWH5qNWwekOADMWum0y36PdOYtRtqBQ/pPwRb5
+         K52CbSuIuWHYOTfPn2Ja6ocwOtQXPILlpqOfgTlMB237vnyD3Xx/xEWkWl/4exaEZXte
+         8s17On7YMiF3zuZ0pz/YHJCAzyAfaPwhQW3yvvqL+PPQcDIXZbdppkE1cT4Bu6gFyThz
+         0Hwds2WPsjw5AFSczIPLnuWM+43vkvY2F3648MQ4LbijzfiF3D/g1fWsGfPHMHCuBgkW
+         f8IgG7vOlTmDQ44SDHfWzNWa9ZbYhMTUv05qM82YbORPGLfttjkg7eDWWheqA9Kmza9y
+         IA5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750240794; x=1750845594;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=itFlw7+tci92O6oUfcwXgDzQx9INhcSomr2YEtEf878=;
+        b=oMMlb/LI7sMcuUDDUno0SLWWWUYBCU72DP3wE4AT//tAM08TXPB/hiqY6iy1WRmZTu
+         zfgMpcgUXSPso0JN0wY986x9la4MRtk5gAXSlDPfsuaupJIQgv81staODTMNua7yoD38
+         esayMombagZzxmHDnBZStPZxWEj1pQGQbiEoUtwVm/YRZOtnn0bCp6kJj4wia10U11jK
+         pJiS+YWO2mwemRY/AkXsDGOJ7ZWGmhCYP+2/IIejgKwV6ABeKBQq79Qb6Ss1Mnel0NTw
+         EsZbpjj9H0g2W4e/U49eJAd8cQy/JZGmxwDux5j6TkH04z3uwE+hivy+Xbb01oY2FY0J
+         i47g==
+X-Forwarded-Encrypted: i=1; AJvYcCWhuSeyncquKXFCvShPqoEh+VTVb3E7YCKXn1E9h+8EHuQ8BGnLgeX1Du2hCCmsGP9ZvuEZSmzdr32G@vger.kernel.org, AJvYcCXX8ZMbfDUKqUREMtQIxQKtuK2MHFEZ9XdIDvDOrt8NLFdX7YBNeKqH5dCRJAz7qr8gRUgZJmlWUMZlCg==@vger.kernel.org, AJvYcCXYqJ310ILmnvfDXWLFjbDGSY+43QXSNZ41KLItWlvTMhlT9rSeM2RmmfwHBauWa2NcZnMpXdxN2LvxpsLU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwuHHl+pvGhEPrPn4+Q6glxlGtDy0edPiKO6L/TTrKv1SuBbptH
+	o7lawl294xwUWyE2LL0zqrpxGM2lapTsWELZSO5hQaxQrU7s6RSO3u3i
+X-Gm-Gg: ASbGncvfVqNwnDQEMjEZWwCW9FItW8fr/J8w0qEsmQk/zFC0ZHLhFihnVgBwQ0yfS3R
+	/SWA84SISZx3xZ4rlerPkuJuWiUfolGYTvQrEcfKXtj0cwOXT4FdY8m4ykuWNGl40h5VZf9iOM2
+	mgI3oUrrXz8Og2Mcw1XGLTweG/arecgbw5UlCfCXdFfcECwYU1itGI9JhZRVbKHnzFnJ6jtkOf/
+	8pYzbDh/K0hGyiNIqyfI8OrzXxG5AVg2sYXgwdCXSl2TUxm8Iq9ajUT6UFrocecjnUFVGKsuuQI
+	p0JqlI98JDm3zG5HL2kM4ZRPKYCrWANoITMV1g3079jZJr8X1bHc8gyEe/Kro1S2qoRUSY67/Zc
+	=
+X-Google-Smtp-Source: AGHT+IEFnbvlNZXyuvcjcNw1++Gud2xgl1uGQdOQTbPsbxAJ/p6XvDu5B4UiVxhUC+sB3Owvy/D4Pg==
+X-Received: by 2002:a17:907:9809:b0:ad8:96d2:f3a with SMTP id a640c23a62f3a-adfad365ca2mr1391292366b.8.1750240794043;
+        Wed, 18 Jun 2025 02:59:54 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a93b03sm9384691a12.54.2025.06.18.02.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 02:59:53 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Julien Massot <julien.massot@collabora.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org (open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
+	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)),
+	Cosmin Tanislav <cosmin.tanislav@analog.com>,
+	Cosmin Tanislav <demonsingur@gmail.com>
+Subject: [PATCH v4 14/19] dt-bindings: media: i2c: add MAX9296A, MAX96716A, MAX96792A
+Date: Wed, 18 Jun 2025 12:58:50 +0300
+Message-ID: <20250618095858.2145209-15-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250618095858.2145209-1-demonsingur@gmail.com>
+References: <20250618095858.2145209-1-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-cdns-dsi-impro-v4-12-862c841dbe02@ideasonboard.com>
-References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
-In-Reply-To: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
-To: Jyri Sarha <jyri.sarha@iki.fi>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Jayesh Choudhary <j-choudhary@ti.com>, Dmitry Baryshkov <lumag@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
- Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
- Devarsh Thakkar <devarsht@ti.com>, 
- Parth Pancholi <parth.pancholi@toradex.com>, 
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1608;
- i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=BfOuS4S0Uv2jTTiGjUIA+jDJR/WYF9LdxpY+1sPAlnM=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoUo4AQf/UerQXlT4K+PKstjvu6hzvb29c4HX6t
- bWWG9uEo8mJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaFKOAAAKCRD6PaqMvJYe
- 9UieD/sHr4pjZ79k5hvLqhBY2NWkzYiJGcE2M90SswRbagQHDWoV+cCVPTyD9WVAy9rsSv3poWz
- 7/70zSE6qDVj4tevy0WuLDSOUpBb/UXyTA0Ihowsb2lQknYZpwAu0u9b1c7R0g5I+iMkVP2Lw+O
- 3MbAlC2x6KfKEppkAiHO9y2fiYVZvSKGeWX19yOm/21Jyja+0vA8oGo7HjUsgbW68Lx740+R+oB
- DoA2gdHSL/p0um/6hYIH5OrcdbVrjr5LSYyl9kG9bAB2T5sWQqv9/lLL0BrFOF7qbiwcPxW6SAr
- gMPFokgoiBtTSl9mWa94N2cRRlI2qMnHwU20o0onoSNIk3XeIh/JbwhSB+wrTWkdJPhy/k9r72L
- WySwYt+Ph19iBLjvjWHifjtv3R8oHjOLZeU+hqbLqE6JYMyPCdftmrZOsse0lSdMEEaZ09agKu4
- 2khuMqP3cUzMUKKhQKJw0zZX3HZefoYp1nEWMUKLL8XNTto/EGBw1r+JKtMLZkujQjnXhcxVU1T
- 0SRcF3aJ86ud6eHbBjZp0hwDXuv71cMOGa9jy8M/rzlSDKG+Beemk3wd4O8eqjPTjcrdwJN8WI6
- +PeWc3rKzNxWijgWdNbcH89nswIPE9xFw/R61KtKV/agZwR8VTLt/kNj1YQYywsDahMdrxuBVHI
- rxJ7fpaJk54+5nQ==
-X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
- fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
+Content-Transfer-Encoding: 8bit
 
-The Cadence DSI requires negative syncs from the incoming video signal,
-but at the moment that requirement is not expressed in any way. If the
-crtc decides to use positive syncs, things break down.
+The MAX9296A deserializer converts single or dual serial inputs to MIPI
+CSI-2 outputs. The GMSL2 links operate at a fixed rate of 3Gbps or 6Gbps
+in the forward direction and 187.5Mbps in the reverse direction.
+In GMSL1 mode, each serial link can be paired with 3.12Gbps or 1.5Gbps
+GMSL1 serializers or operate up to 4.5Gbps with GMSL2 serializers with
+GMSL1 backward compatibility. The MAX9296A supports mixed GMSL2 and
+GMSL1 links. The serial inputs operate independently, allowing videos
+with different timings and resolutions to be received on each input.
 
-Use the adjusted_mode in atomic_check to set the sync flags to negative
-ones.
+MAX96716A supports both tunnel and pixel mode.
+MAX96792A supports both tunnel and pixel mode, and has two GMSL3 links.
 
-Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 ---
- drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../bindings/media/i2c/maxim,max9296a.yaml    | 242 ++++++++++++++++++
+ MAINTAINERS                                   |   6 +
+ 2 files changed, 248 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
 
-diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index f7d7d277367e..d49b4789a074 100644
---- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-+++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -908,9 +908,13 @@ static int cdns_dsi_bridge_atomic_check(struct drm_bridge *bridge,
- 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
- 	struct cdns_dsi *dsi = input_to_dsi(input);
- 	struct cdns_dsi_bridge_state *dsi_state = to_cdns_dsi_bridge_state(bridge_state);
--	const struct drm_display_mode *adjusted_mode = &crtc_state->adjusted_mode;
-+	struct drm_display_mode *adjusted_mode = &crtc_state->adjusted_mode;
- 	struct cdns_dsi_cfg *dsi_cfg = &dsi_state->dsi_cfg;
- 
-+	/* cdns-dsi requires negative syncs */
-+	adjusted_mode->flags &= ~(DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC);
-+	adjusted_mode->flags |= DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC;
+diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
+new file mode 100644
+index 000000000000..c0a8916353f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
+@@ -0,0 +1,242 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2024 Collabora Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/maxim,max9296a.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	return cdns_dsi_check_conf(dsi, adjusted_mode, dsi_cfg);
- }
++title: Maxim MAX9296A GMSL2 to CSI-2 Deserializer
++
++maintainers:
++  - Cosmin Tanislav <cosmin.tanislav@analog.com>
++
++description: >
++  The MAX9296A deserializer converts single or dual serial inputs to
++  MIPI CSI-2 outputs. The GMSL2 links operate at a fixed rate of 3Gbps
++  or 6Gbps in the forward direction and 187.5Mbps in the reverse
++  direction. In GMSL1 mode, each serial link can be paired with 3.12Gbps
++  or 1.5Gbps GMSL1 serializers or operate up to 4.5Gbps with GMSL2
++  serializers with GMSL1 backward compatibility. The MAX9296A supports
++  mixed GMSL2 and GMSL1 links. The serial inputs operate independently,
++  allowing videos with different timings and resolutions to be received
++  on each input.
++
++  MAX96716A supports both tunnel and pixel mode.
++
++  MAX96792A supports both tunnel and pixel mode, and has two GMSL3 links.
++
++properties:
++  compatible:
++    enum:
++      - maxim,max9296a
++      - maxim,max96716a
++      - maxim,max96792a
++
++  reg:
++    maxItems: 1
++
++  powerdown-gpios:
++    maxItems: 1
++    description: Specifier for the GPIO connected to the PWDNB pin.
++
++  port0-poc-supply:
++    description: Regulator providing Power over Coax for GMSL port 0
++
++  port1-poc-supply:
++    description: Regulator providing Power over Coax for GMSL port 1
++
++  i2c-alias-pool:
++    maxItems: 2
++
++  i2c-atr:
++    type: object
++    additionalProperties: false
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      '^i2c@[0-1]$':
++        $ref: /schemas/i2c/i2c-controller.yaml#
++        unevaluatedProperties: false
++        properties:
++          reg:
++            items:
++              minimum: 0
++              maximum: 1
++
++  ports:
++    $ref: /schemas/graph.yaml#/properties/ports
++
++    patternProperties:
++      '^port@[0-1]$':
++        $ref: /schemas/graph.yaml#/properties/port
++        description: GMSL Input ports 0-1
++
++      '^port@[2-3]$':
++        $ref: /schemas/graph.yaml#/$defs/port-base
++        unevaluatedProperties: false
++        description: CSI-2 Output ports 0-1
++        properties:
++          endpoint:
++            $ref: /schemas/media/video-interfaces.yaml#
++            unevaluatedProperties: false
++
++            properties:
++              data-lanes:
++                minItems: 1
++                maxItems: 4
++
++              lane-polarities:
++                minItems: 1
++                maxItems: 5
++
++              link-frequencies:
++                maxItems: 1
++
++            required:
++              - data-lanes
++
++    anyOf:
++      - required:
++          - port@2
++      - required:
++          - port@3
++
++required:
++  - compatible
++  - reg
++  - ports
++
++additionalProperties: false
++
++allOf:
++  - $ref: /schemas/i2c/i2c-atr.yaml#
++
++dependentRequired:
++  i2c-atr: [i2c-alias-pool]
++  i2c-alias-pool: [i2c-atr]
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/media/video-interfaces.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        deserializer@28 {
++            compatible = "maxim,max9296a";
++            reg = <0x28>;
++            powerdown-gpios = <&main_gpio0 37 GPIO_ACTIVE_LOW>;
++
++            i2c-alias-pool = <0x40 0x41>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    des_gmsl_in_0: endpoint {
++                        remote-endpoint = <&ser_0_gmsl_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    des_gmsl_in_1: endpoint {
++                        remote-endpoint = <&ser_1_gmsl_out>;
++                    };
++                };
++
++                port@2 {
++                    reg = <2>;
++                    des_csi_out: endpoint {
++                        data-lanes = <1 2 3 4>;
++                        link-frequencies = /bits/ 64 <400000000>;
++                        remote-endpoint = <&csi_in>;
++                    };
++                };
++            };
++
++            i2c-atr {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                i2c@0 {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    reg = <0>;
++
++                    serializer@40 {
++                        compatible = "maxim,max96717";
++                        reg = <0x40>;
++                        gpio-controller;
++                        #gpio-cells = <2>;
++                        #clock-cells = <0>;
++
++                        ports {
++                            #address-cells = <1>;
++                            #size-cells = <0>;
++
++                            port@0 {
++                                reg = <0>;
++                                ser_0_csi_in: endpoint {
++                                    data-lanes = <1 2>;
++                                    remote-endpoint = <&sensor_0_out>;
++                                };
++                            };
++
++                            port@1 {
++                                reg = <1>;
++                                ser_0_gmsl_out: endpoint {
++                                    remote-endpoint = <&des_gmsl_in_0>;
++                                };
++                            };
++                        };
++                    };
++                };
++
++                i2c@1 {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++                    reg = <1>;
++
++                    serializer@40 {
++                        compatible = "maxim,max96717";
++                        reg = <0x40>;
++                        gpio-controller;
++                        #gpio-cells = <2>;
++                        #clock-cells = <0>;
++
++                        ports {
++                            #address-cells = <1>;
++                            #size-cells = <0>;
++
++                            port@0 {
++                                reg = <0>;
++                                ser_1_csi_in: endpoint {
++                                    data-lanes = <1 2>;
++                                    remote-endpoint = <&sensor_1_out>;
++                                };
++                            };
++
++                            port@1 {
++                                reg = <1>;
++                                ser_1_gmsl_out: endpoint {
++                                    remote-endpoint = <&des_gmsl_in_1>;
++                                };
++                            };
++                        };
++                    };
++                };
++            };
++        };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 423ef18ca693..5c8fc3374179 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14764,6 +14764,12 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/iio/proximity/maxbotix,mb1232.yaml
+ F:	drivers/iio/proximity/mb1232.c
  
-
++MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS
++M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
++L:	linux-media@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/media/i2c/maxim,max9296a.yaml
++
+ MAXIM MAX11205 DRIVER
+ M:	Ramona Bolboaca <ramona.bolboaca@analog.com>
+ L:	linux-iio@vger.kernel.org
 -- 
-2.43.0
+2.49.0
 
