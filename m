@@ -1,463 +1,185 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2075.outbound.protection.outlook.com [40.107.94.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93641207A32
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228884; cv=none; b=Pu5mrN7ohIdq2TvFqcthasBB12fvMEEsxp4oEI6uxtFuYNnL+Y5yHh3M50DvlDvpif9BrAg42JhGsyRNX6P6UwLtbNniMiTsWrfCyuSX+SvMNMzaboHkKBgjtE9xa/KTuslHjbjwLLtOxmuIes0C3+Zv2FGEBqP7Of7KK7/FBRM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228884; c=relaxed/simple;
-	bh=M/l30/IRoenHGy5VzSUsqFROULvVyK5iMYOn2/mDCaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=P1/hSYLjiCe7mCGPEnkFmjDlS06JDR3pDWJFyQcOYeiPG3fdAYeO9bWyDjcBNuLFMO0x9RUAvfoFzzRDeVyhW4UKDUcGyIdd/dl9Bfql2v9PtV0cKNaRg2GXyXRl5sxK71IJEighM9h2fHd1AdDjncWwtXflEb9oFUUNBM9jR6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LSVfc6Ss; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C7E91E573F;
+	Wed, 18 Jun 2025 06:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750228925; cv=fail; b=qHQI59I0cElQR0twhLwuG5qLQWmoXyoaUtsa6VKBTyVk1bQ0xGWMoMtHYDvPUejPmFOZ5/Znkhr4ppd2roBj7XacBD05Cj03Ee7kuHXWSguDj0jexy/2jEXEDjCBbUTVNajsGHttbo8znlK4QQ4hVc8M1P70msEWU1VdExEH32o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750228925; c=relaxed/simple;
+	bh=rD+Da0+hjby30PwIDjKQAel002LtEmwMXq9HRuxBUiQ=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=S1tf9kPMZ8vxwivipJsDeeg0hDSyiopIVeDfm247L5AOu98I2jjmLMwVoZhgtepLqI88/I1riGihP0zDzZDLJA7/KyBnU02dn1kayEcD3nrutmg0pU21d7++8eKK1adyIwfd/4m5yrPjiFu7wii95a8u+R6a5e4IY3SVBaxM5lI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=elTaoz13; arc=fail smtp.client-ip=40.107.94.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LSVfc6Ss"
-Message-ID: <8c51685c-de2f-48ed-b0b6-87ac44073684@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750228874;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vx7JDHQ6srbDcbhQvBkA6hELvFYIhF9e9poQ0xOUOKU=;
-	b=LSVfc6SsSY39VUCNHIgJHBxVAduEis1okaYmqlEta/beC6pWCMHiDXb8ENn+9cgxXfbWDc
-	mq9E4uQsWEQGw70tjcMYaxay4likm+RkUbuzfA4s1apaPUs/SsGEgQXdps85zHQFD0W9DR
-	iTs3i3xvcTYC+aiGX2yUt+C6iWk6Zfs=
-Date: Tue, 17 Jun 2025 23:41:08 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="elTaoz13"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Bd8l/Y6rT5ylC07b5YaAT02B8sJQNi3GQjoYXOar0Cgezd2KzGTIGI5urNV4SSkp2EqERcq3gJzk/pREaxDk8ttBpU5RcnoEd8eTS5iq3m8Te3QNYXdu1wHFi+lBzEwBLm14bJrO6I7C29sgu0Ef1aGhtKKPYUqgjXx6nLPfb2tErYZmzrmu8PgGpJ4OJBnp3oJ1p4v+ep3OAHMIjAgAK3Af//GtTwcP3H/efiLz612H5uWe1EYznir0DjsTG91BkNKc4Do1HI97iNtANThKMbZbxOMqMO8WLXU7pZj4zwc41L7n06PDsJj2XZzwGBgpntEEBWDoGBX+RboEBSLUzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WWDmDilhmFNkZtoVxXs30vvX6UTyJs+R3+elO0Aafrg=;
+ b=CiO82cs4/ap7UZwZoapt99qPjRCIR2plvHvQmF1p1vS0lEuFRWwqWtvKdipPg5MWAZht4L809G8cdtA90nM1mPbUOtxS/U4aRAscDAyLZBNdyzxzx2tfUrFHH+yO7ciEJHFcXLsdlv/vQSbvhlXf6Uo7e7oBGwtGnmIFeG5iLGLg2DcImX6RFTIiG8PZkVcQAC5oKuUj4J/t7lwc5gOHbyUVGbWCN//Xyw8S/rvBptcmNjSvgSK2eGpmSBvlHVbvTDRYXEoLUHarxx++SdYzwAUOBnQNfixvu1rEX5JpQcatuRGzcI4ntx7shehMMoICccVX02RWLtQDQimbfR9xew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WWDmDilhmFNkZtoVxXs30vvX6UTyJs+R3+elO0Aafrg=;
+ b=elTaoz13rU6lss9V+ef7BPX/GXALKqKni0fqzAWpPpe/dRfR5zROwBLL+D4E1Y4SFtmz0TQgprNmTzNzeJ7A0BojjAyGvFddbsZBMapkx+/owVOds7i4meaJKOtZl1mN9EPQUWcV1mho3p90KSOIgVX5bvBF2XXJIuzhK67BS1yXOdgqhC1qbpyUtIWV6jvm2rv1LTPRpToireuXN4SXLqJvRTX44koP/pB4Vk6mFnfhHf/i9410zoIUoPUplRO0YgfpkPTQ1F72ilLF9yi38MKSid3lsbPu5R/wXCbAbGwXS1cEJ/5XG0zcv70fNW7bMXPlmwRtcmiXirrFCBYeyg==
+Received: from BL1PR13CA0301.namprd13.prod.outlook.com (2603:10b6:208:2c1::6)
+ by DM6PR12MB4354.namprd12.prod.outlook.com (2603:10b6:5:28f::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Wed, 18 Jun
+ 2025 06:41:59 +0000
+Received: from BL6PEPF0001AB75.namprd02.prod.outlook.com
+ (2603:10b6:208:2c1:cafe::ee) by BL1PR13CA0301.outlook.office365.com
+ (2603:10b6:208:2c1::6) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.23 via Frontend Transport; Wed,
+ 18 Jun 2025 06:41:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BL6PEPF0001AB75.mail.protection.outlook.com (10.167.242.168) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 06:41:59 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 17 Jun
+ 2025 23:41:43 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 17 Jun 2025 23:41:43 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 17 Jun 2025 23:41:43 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 6.6 000/356] 6.6.94-rc1 review
+In-Reply-To: <20250617152338.212798615@linuxfoundation.org>
+References: <20250617152338.212798615@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 08/12] RISC-V: KVM: Factor-out MMU related declarations
- into separate headers
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250613065743.737102-1-apatel@ventanamicro.com>
- <20250613065743.737102-9-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250613065743.737102-9-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Message-ID: <deb43f08-b92a-4481-845f-d8b87e052b0e@drhqmail203.nvidia.com>
+Date: Tue, 17 Jun 2025 23:41:43 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB75:EE_|DM6PR12MB4354:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9d46a8b-bbeb-4e53-072d-08ddae3339d2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|36860700013|82310400026|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VUVwR2FmS25YTEdjb2c3ZVh0RW94c1FHeDV0emF3b2RtT2tuRTk5enRyNVE3?=
+ =?utf-8?B?UkFEdkM0VTNBdmEzUTY3QWkwRUhieXRvY0tjNjd1R0g3OE5SMnUvUkVaakZl?=
+ =?utf-8?B?ZnAra3JPV1JjVEFpTWlUY1JvL0NxenY3anpGQ0NxWUljMXo5cDVtdmxwZ3F5?=
+ =?utf-8?B?RFUzU3cvd0w0K0h5bWlQY2w3REs1SHViMTEwdElhMzNRRk5QM1lwckdrbm53?=
+ =?utf-8?B?RDJDRlNnNXBjcWgveGF2OUNYN1dxb0NLQ0ZBZFZoSlVKV25WYnhIUXhsWmRS?=
+ =?utf-8?B?ODl5R3lOSzFNQVIwanpTd1BHK0tHUm15YWUyd1pTamgzaFZ2S2xUcWt2b3No?=
+ =?utf-8?B?Z0RJQUNBc09vbFA4MjdaVEJQK2x4bXlZQ1I2eVRWTGNBQXlhV3ZMT2d1YWpW?=
+ =?utf-8?B?U09jT0FlcEdIWDJQZlZJSms4Q1pSR0dJVWVYMDRVaHFyeUIxWStqajJEdnU1?=
+ =?utf-8?B?Q3pSS01sQjM5WlZMQi9mM2daY3ZQcXQvYmpCeTZDRVBTTTJIbzRBWEJ0ZVhz?=
+ =?utf-8?B?dFZoM1d4QmFxSXRFUG1UdXpOcWhQR2FCVnpCSS9IMFVvbDB0eHRJdTRGTEhT?=
+ =?utf-8?B?UmdTVGpEdGpRR2pkeGgwb3JveGxCdmlEbmYvZ29sUmdzV3lpUFJKSi8wL3RB?=
+ =?utf-8?B?enI1V0NXT21tRnAvT240azVzN0NsY05zbVJpMm8wV0hoNGtSRnBxQzVjNUJY?=
+ =?utf-8?B?YUNheTNSRzVPNzVsbU5GeVN5WTcvekN3dzZVdlFTOXJ0VG50bHdDaFJ1dlRJ?=
+ =?utf-8?B?UUhEUjBwVFdRTU1UZTVhUUx4clBvMlNlNnZBZy9UTGxoZUZxY2RlclBwUkxv?=
+ =?utf-8?B?UmRncG1ETkx2M2RlR2E3UUowTkhoRXF0WFFTL2U3Vm9tTlNtTkQzRGVkR1ZC?=
+ =?utf-8?B?bWV4WXFidHkrOXBrSVZoRm1HdzREREp5WEkyZXlaeklUZkpsOURXR3QyN2VL?=
+ =?utf-8?B?UlRsa1Zlb2U2VWtsbmVqTGhiQzNoRURWbkhYaUpPTXVFSDIwSjNPK1NNWkNp?=
+ =?utf-8?B?RGcwUjdlZ3B1QUlyeWpRZ3RxU2doVm95Wk1CTElla24vTmU2ZGpMdk9nZWFT?=
+ =?utf-8?B?WDJOQjZ6c2FtOVRsV2JadHkrSWJGc1ltd0RXekVKbzRHbTl6Z0NjT2szTDJF?=
+ =?utf-8?B?ZUZJY1lWOXgzeXIvYitGVWxjdkM0ZkcyQVUvL1pVUHJZWGVzY3hCb01jc0pL?=
+ =?utf-8?B?V3pOaWZyUWNVOWVoaDVlRS9Tbzd0L3UyRVR6bVZxNTNWVGxpcEVNclk5R2RJ?=
+ =?utf-8?B?UXNRVzFXeXlnemQxdExERmhRTGVOU0tWcE5uUzJUM25FMlJuOHJLUWtaejZw?=
+ =?utf-8?B?YkNSUFZiZVE0S2Y5eUZUSTNWMlpaaGhMS3F4dnJDN09iVzZydGltcE9FREw4?=
+ =?utf-8?B?ZVFjQjdGcVpNakZSQnZqekRORWVMd0xtZ3hsTnU0S3h5ZEZscXFCYkEwSXgx?=
+ =?utf-8?B?LzFQdEU1QWFrRFNMWFpJNW12YnpTWnR5ajJYUUlzbzRpWDB4ZWlpZnI4YVph?=
+ =?utf-8?B?TExuallnSkQ5UkhoQW1Cc1A5L1pxaGlNUENmN0FMVFRJaXRnREZneUdrYStn?=
+ =?utf-8?B?ajB6Q2FZZWhoSlk3dTBGTFVDZUE0dWtHN0YwU2NFc2lySThrQ251WG1ITlFa?=
+ =?utf-8?B?Y24xd3BIUGo2aytuMTBrekJJWDVCMFpLTE9zZ0E4T0swcnVUVUhYNWNWYjd3?=
+ =?utf-8?B?UkIxcWVJWHNjNzFHM0V5cUhacmE2a1pJSkNoVlNEVEdjWjlFU0duZVp6cWM1?=
+ =?utf-8?B?RktMTGJYdkRnRHlhVkgzT3U2WDlHUVFXRElxNDlRdGhRM2g1d2diZEFwbFI3?=
+ =?utf-8?B?WEVEOHVUNlV6TGFiUGJwUytKdlgwYmV3SVRDenpraTMvMndTZXJUSVRYZWF6?=
+ =?utf-8?B?K3Ftek1SR3FFalQ0ejBmMXFoVjZxTmk0Zi9EQnFMTmx1QXVjMkJvaWZYc3Fp?=
+ =?utf-8?B?MHh5cUhsaXV6VFV5ZHRhVHhKZnVjK0VLdEF4ZUFocWhIb25WRkdndHM1RWZ1?=
+ =?utf-8?B?YldqelM3Vzh2WXRhdUlJeitWWkpEZnJmZUZYejFxd1dHUGNOOGtUOEJHbHdW?=
+ =?utf-8?B?NTZVbEJvMzJNWTRLeEI0d01ScmpFM2tUVlFXUT09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 06:41:59.1148
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9d46a8b-bbeb-4e53-072d-08ddae3339d2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB75.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4354
 
+On Tue, 17 Jun 2025 17:21:55 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.94 release.
+> There are 356 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 19 Jun 2025 15:22:33 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.94-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-On 6/12/25 11:57 PM, Anup Patel wrote:
-> The MMU, TLB, and VMID management for KVM RISC-V already exists as
-> seprate sources so create separate headers along these lines. This
-> further simplifies asm/kvm_host.h header.
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/include/asm/kvm_host.h | 100 +-----------------------------
->   arch/riscv/include/asm/kvm_mmu.h  |  26 ++++++++
->   arch/riscv/include/asm/kvm_tlb.h  |  78 +++++++++++++++++++++++
->   arch/riscv/include/asm/kvm_vmid.h |  27 ++++++++
->   arch/riscv/kvm/aia_imsic.c        |   1 +
->   arch/riscv/kvm/main.c             |   1 +
->   arch/riscv/kvm/mmu.c              |   1 +
->   arch/riscv/kvm/tlb.c              |   2 +
->   arch/riscv/kvm/vcpu.c             |   1 +
->   arch/riscv/kvm/vcpu_exit.c        |   1 +
->   arch/riscv/kvm/vm.c               |   1 +
->   arch/riscv/kvm/vmid.c             |   2 +
->   12 files changed, 143 insertions(+), 98 deletions(-)
->   create mode 100644 arch/riscv/include/asm/kvm_mmu.h
->   create mode 100644 arch/riscv/include/asm/kvm_tlb.h
->   create mode 100644 arch/riscv/include/asm/kvm_vmid.h
->
-> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-> index 6162575e2177..bd5341efa127 100644
-> --- a/arch/riscv/include/asm/kvm_host.h
-> +++ b/arch/riscv/include/asm/kvm_host.h
-> @@ -16,6 +16,8 @@
->   #include <asm/hwcap.h>
->   #include <asm/kvm_aia.h>
->   #include <asm/ptrace.h>
-> +#include <asm/kvm_tlb.h>
-> +#include <asm/kvm_vmid.h>
->   #include <asm/kvm_vcpu_fp.h>
->   #include <asm/kvm_vcpu_insn.h>
->   #include <asm/kvm_vcpu_sbi.h>
-> @@ -56,24 +58,6 @@
->   					 BIT(IRQ_VS_TIMER) | \
->   					 BIT(IRQ_VS_EXT))
->   
-> -enum kvm_riscv_hfence_type {
-> -	KVM_RISCV_HFENCE_UNKNOWN = 0,
-> -	KVM_RISCV_HFENCE_GVMA_VMID_GPA,
-> -	KVM_RISCV_HFENCE_VVMA_ASID_GVA,
-> -	KVM_RISCV_HFENCE_VVMA_ASID_ALL,
-> -	KVM_RISCV_HFENCE_VVMA_GVA,
-> -};
-> -
-> -struct kvm_riscv_hfence {
-> -	enum kvm_riscv_hfence_type type;
-> -	unsigned long asid;
-> -	unsigned long order;
-> -	gpa_t addr;
-> -	gpa_t size;
-> -};
-> -
-> -#define KVM_RISCV_VCPU_MAX_HFENCE	64
-> -
->   struct kvm_vm_stat {
->   	struct kvm_vm_stat_generic generic;
->   };
-> @@ -99,15 +83,6 @@ struct kvm_vcpu_stat {
->   struct kvm_arch_memory_slot {
->   };
->   
-> -struct kvm_vmid {
-> -	/*
-> -	 * Writes to vmid_version and vmid happen with vmid_lock held
-> -	 * whereas reads happen without any lock held.
-> -	 */
-> -	unsigned long vmid_version;
-> -	unsigned long vmid;
-> -};
-> -
->   struct kvm_arch {
->   	/* G-stage vmid */
->   	struct kvm_vmid vmid;
-> @@ -311,77 +286,6 @@ static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
->   	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
->   }
->   
-> -#define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
-> -
-> -void kvm_riscv_local_hfence_gvma_vmid_gpa(unsigned long vmid,
-> -					  gpa_t gpa, gpa_t gpsz,
-> -					  unsigned long order);
-> -void kvm_riscv_local_hfence_gvma_vmid_all(unsigned long vmid);
-> -void kvm_riscv_local_hfence_gvma_gpa(gpa_t gpa, gpa_t gpsz,
-> -				     unsigned long order);
-> -void kvm_riscv_local_hfence_gvma_all(void);
-> -void kvm_riscv_local_hfence_vvma_asid_gva(unsigned long vmid,
-> -					  unsigned long asid,
-> -					  unsigned long gva,
-> -					  unsigned long gvsz,
-> -					  unsigned long order);
-> -void kvm_riscv_local_hfence_vvma_asid_all(unsigned long vmid,
-> -					  unsigned long asid);
-> -void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
-> -				     unsigned long gva, unsigned long gvsz,
-> -				     unsigned long order);
-> -void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
-> -
-> -void kvm_riscv_tlb_flush_process(struct kvm_vcpu *vcpu);
-> -
-> -void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
-> -void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
-> -void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu);
-> -
-> -void kvm_riscv_fence_i(struct kvm *kvm,
-> -		       unsigned long hbase, unsigned long hmask);
-> -void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
-> -				    unsigned long hbase, unsigned long hmask,
-> -				    gpa_t gpa, gpa_t gpsz,
-> -				    unsigned long order);
-> -void kvm_riscv_hfence_gvma_vmid_all(struct kvm *kvm,
-> -				    unsigned long hbase, unsigned long hmask);
-> -void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
-> -				    unsigned long hbase, unsigned long hmask,
-> -				    unsigned long gva, unsigned long gvsz,
-> -				    unsigned long order, unsigned long asid);
-> -void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
-> -				    unsigned long hbase, unsigned long hmask,
-> -				    unsigned long asid);
-> -void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
-> -			       unsigned long hbase, unsigned long hmask,
-> -			       unsigned long gva, unsigned long gvsz,
-> -			       unsigned long order);
-> -void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
-> -			       unsigned long hbase, unsigned long hmask);
-> -
-> -int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
-> -			     phys_addr_t hpa, unsigned long size,
-> -			     bool writable, bool in_atomic);
-> -void kvm_riscv_gstage_iounmap(struct kvm *kvm, gpa_t gpa,
-> -			      unsigned long size);
-> -int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
-> -			 struct kvm_memory_slot *memslot,
-> -			 gpa_t gpa, unsigned long hva, bool is_write);
-> -int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
-> -void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
-> -void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
-> -void __init kvm_riscv_gstage_mode_detect(void);
-> -unsigned long __init kvm_riscv_gstage_mode(void);
-> -int kvm_riscv_gstage_gpa_bits(void);
-> -
-> -void __init kvm_riscv_gstage_vmid_detect(void);
-> -unsigned long kvm_riscv_gstage_vmid_bits(void);
-> -int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
-> -bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
-> -void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu);
-> -void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu);
-> -
->   int kvm_riscv_setup_default_irq_routing(struct kvm *kvm, u32 lines);
->   
->   void __kvm_riscv_unpriv_trap(void);
-> diff --git a/arch/riscv/include/asm/kvm_mmu.h b/arch/riscv/include/asm/kvm_mmu.h
-> new file mode 100644
-> index 000000000000..4e1654282ee4
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/kvm_mmu.h
-> @@ -0,0 +1,26 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2025 Ventana Micro Systems Inc.
-> + */
-> +
-> +#ifndef __RISCV_KVM_MMU_H_
-> +#define __RISCV_KVM_MMU_H_
-> +
-> +#include <linux/kvm_types.h>
-> +
-> +int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
-> +			     phys_addr_t hpa, unsigned long size,
-> +			     bool writable, bool in_atomic);
-> +void kvm_riscv_gstage_iounmap(struct kvm *kvm, gpa_t gpa,
-> +			      unsigned long size);
-> +int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
-> +			 struct kvm_memory_slot *memslot,
-> +			 gpa_t gpa, unsigned long hva, bool is_write);
-> +int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
-> +void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
-> +void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
-> +void kvm_riscv_gstage_mode_detect(void);
-> +unsigned long kvm_riscv_gstage_mode(void);
-> +int kvm_riscv_gstage_gpa_bits(void);
-> +
-> +#endif
-> diff --git a/arch/riscv/include/asm/kvm_tlb.h b/arch/riscv/include/asm/kvm_tlb.h
-> new file mode 100644
-> index 000000000000..cd00c9a46cb1
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/kvm_tlb.h
-> @@ -0,0 +1,78 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2025 Ventana Micro Systems Inc.
-> + */
-> +
-> +#ifndef __RISCV_KVM_TLB_H_
-> +#define __RISCV_KVM_TLB_H_
-> +
-> +#include <linux/kvm_types.h>
-> +
-> +enum kvm_riscv_hfence_type {
-> +	KVM_RISCV_HFENCE_UNKNOWN = 0,
-> +	KVM_RISCV_HFENCE_GVMA_VMID_GPA,
-> +	KVM_RISCV_HFENCE_VVMA_ASID_GVA,
-> +	KVM_RISCV_HFENCE_VVMA_ASID_ALL,
-> +	KVM_RISCV_HFENCE_VVMA_GVA,
-> +};
-> +
-> +struct kvm_riscv_hfence {
-> +	enum kvm_riscv_hfence_type type;
-> +	unsigned long asid;
-> +	unsigned long order;
-> +	gpa_t addr;
-> +	gpa_t size;
-> +};
-> +
-> +#define KVM_RISCV_VCPU_MAX_HFENCE	64
-> +
-> +#define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
-> +
-> +void kvm_riscv_local_hfence_gvma_vmid_gpa(unsigned long vmid,
-> +					  gpa_t gpa, gpa_t gpsz,
-> +					  unsigned long order);
-> +void kvm_riscv_local_hfence_gvma_vmid_all(unsigned long vmid);
-> +void kvm_riscv_local_hfence_gvma_gpa(gpa_t gpa, gpa_t gpsz,
-> +				     unsigned long order);
-> +void kvm_riscv_local_hfence_gvma_all(void);
-> +void kvm_riscv_local_hfence_vvma_asid_gva(unsigned long vmid,
-> +					  unsigned long asid,
-> +					  unsigned long gva,
-> +					  unsigned long gvsz,
-> +					  unsigned long order);
-> +void kvm_riscv_local_hfence_vvma_asid_all(unsigned long vmid,
-> +					  unsigned long asid);
-> +void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
-> +				     unsigned long gva, unsigned long gvsz,
-> +				     unsigned long order);
-> +void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
-> +
-> +void kvm_riscv_tlb_flush_process(struct kvm_vcpu *vcpu);
-> +
-> +void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
-> +void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
-> +void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu);
-> +
-> +void kvm_riscv_fence_i(struct kvm *kvm,
-> +		       unsigned long hbase, unsigned long hmask);
-> +void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
-> +				    unsigned long hbase, unsigned long hmask,
-> +				    gpa_t gpa, gpa_t gpsz,
-> +				    unsigned long order);
-> +void kvm_riscv_hfence_gvma_vmid_all(struct kvm *kvm,
-> +				    unsigned long hbase, unsigned long hmask);
-> +void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
-> +				    unsigned long hbase, unsigned long hmask,
-> +				    unsigned long gva, unsigned long gvsz,
-> +				    unsigned long order, unsigned long asid);
-> +void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
-> +				    unsigned long hbase, unsigned long hmask,
-> +				    unsigned long asid);
-> +void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
-> +			       unsigned long hbase, unsigned long hmask,
-> +			       unsigned long gva, unsigned long gvsz,
-> +			       unsigned long order);
-> +void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
-> +			       unsigned long hbase, unsigned long hmask);
-> +
-> +#endif
-> diff --git a/arch/riscv/include/asm/kvm_vmid.h b/arch/riscv/include/asm/kvm_vmid.h
-> new file mode 100644
-> index 000000000000..ab98e1434fb7
-> --- /dev/null
-> +++ b/arch/riscv/include/asm/kvm_vmid.h
-> @@ -0,0 +1,27 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2025 Ventana Micro Systems Inc.
-> + */
-> +
-> +#ifndef __RISCV_KVM_VMID_H_
-> +#define __RISCV_KVM_VMID_H_
-> +
-> +#include <linux/kvm_types.h>
-> +
-> +struct kvm_vmid {
-> +	/*
-> +	 * Writes to vmid_version and vmid happen with vmid_lock held
-> +	 * whereas reads happen without any lock held.
-> +	 */
-> +	unsigned long vmid_version;
-> +	unsigned long vmid;
-> +};
-> +
-> +void __init kvm_riscv_gstage_vmid_detect(void);
-> +unsigned long kvm_riscv_gstage_vmid_bits(void);
-> +int kvm_riscv_gstage_vmid_init(struct kvm *kvm);
-> +bool kvm_riscv_gstage_vmid_ver_changed(struct kvm_vmid *vmid);
-> +void kvm_riscv_gstage_vmid_update(struct kvm_vcpu *vcpu);
-> +void kvm_riscv_gstage_vmid_sanitize(struct kvm_vcpu *vcpu);
-> +
-> +#endif
-> diff --git a/arch/riscv/kvm/aia_imsic.c b/arch/riscv/kvm/aia_imsic.c
-> index 29ef9c2133a9..40b469c0a01f 100644
-> --- a/arch/riscv/kvm/aia_imsic.c
-> +++ b/arch/riscv/kvm/aia_imsic.c
-> @@ -16,6 +16,7 @@
->   #include <linux/swab.h>
->   #include <kvm/iodev.h>
->   #include <asm/csr.h>
-> +#include <asm/kvm_mmu.h>
->   
->   #define IMSIC_MAX_EIX	(IMSIC_MAX_ID / BITS_PER_TYPE(u64))
->   
-> diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-> index 4b24705dc63a..b861a5dd7bd9 100644
-> --- a/arch/riscv/kvm/main.c
-> +++ b/arch/riscv/kvm/main.c
-> @@ -11,6 +11,7 @@
->   #include <linux/module.h>
->   #include <linux/kvm_host.h>
->   #include <asm/cpufeature.h>
-> +#include <asm/kvm_mmu.h>
->   #include <asm/kvm_nacl.h>
->   #include <asm/sbi.h>
->   
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index a5387927a1c1..c1a3eb076df3 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -15,6 +15,7 @@
->   #include <linux/vmalloc.h>
->   #include <linux/kvm_host.h>
->   #include <linux/sched/signal.h>
-> +#include <asm/kvm_mmu.h>
->   #include <asm/kvm_nacl.h>
->   #include <asm/page.h>
->   #include <asm/pgtable.h>
-> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
-> index f46a27658c2e..6fc4361c3d75 100644
-> --- a/arch/riscv/kvm/tlb.c
-> +++ b/arch/riscv/kvm/tlb.c
-> @@ -15,6 +15,8 @@
->   #include <asm/cpufeature.h>
->   #include <asm/insn-def.h>
->   #include <asm/kvm_nacl.h>
-> +#include <asm/kvm_tlb.h>
-> +#include <asm/kvm_vmid.h>
->   
->   #define has_svinval()	riscv_has_extension_unlikely(RISCV_ISA_EXT_SVINVAL)
->   
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index 6eb11c913b13..8ad7b31f5939 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -18,6 +18,7 @@
->   #include <linux/fs.h>
->   #include <linux/kvm_host.h>
->   #include <asm/cacheflush.h>
-> +#include <asm/kvm_mmu.h>
->   #include <asm/kvm_nacl.h>
->   #include <asm/kvm_vcpu_vector.h>
->   
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index 85c43c83e3b9..965df528de90 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -9,6 +9,7 @@
->   #include <linux/kvm_host.h>
->   #include <asm/csr.h>
->   #include <asm/insn-def.h>
-> +#include <asm/kvm_mmu.h>
->   #include <asm/kvm_nacl.h>
->   
->   static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
-> diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
-> index b27ec8f96697..8601cf29e5f8 100644
-> --- a/arch/riscv/kvm/vm.c
-> +++ b/arch/riscv/kvm/vm.c
-> @@ -11,6 +11,7 @@
->   #include <linux/module.h>
->   #include <linux/uaccess.h>
->   #include <linux/kvm_host.h>
-> +#include <asm/kvm_mmu.h>
->   
->   const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
->   	KVM_GENERIC_VM_STATS()
-> diff --git a/arch/riscv/kvm/vmid.c b/arch/riscv/kvm/vmid.c
-> index 92c01255f86f..3b426c800480 100644
-> --- a/arch/riscv/kvm/vmid.c
-> +++ b/arch/riscv/kvm/vmid.c
-> @@ -14,6 +14,8 @@
->   #include <linux/smp.h>
->   #include <linux/kvm_host.h>
->   #include <asm/csr.h>
-> +#include <asm/kvm_tlb.h>
-> +#include <asm/kvm_vmid.h>
->   
->   static unsigned long vmid_version = 1;
->   static unsigned long vmid_next;
+All tests passing for Tegra ...
 
+Test results for stable-v6.6:
+    10 builds:	10 pass, 0 fail
+    28 boots:	28 pass, 0 fail
+    120 tests:	120 pass, 0 fail
 
-LGTM.
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+Linux version:	6.6.94-rc1-g7ef12da06319
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
+                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
+
+Jon
