@@ -1,159 +1,135 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE77ABA27;
-	Wed, 18 Jun 2025 09:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB93283FDE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239893; cv=none; b=U9BCC5lpf8VE8AoAFo9XLqB12fB1qvgEkMztMV1AA0CEbFKGDgflbUvZX1pfeDzVj5mKwFirJQoRupeJXPCIs50Ha5IIY21ABiaVwN5vqMejoCHxQqxU7LEjGSj7APWmYimTqJbjTKRMGBR85Q2CBXKCTPojCjQ7ZaECKAlMoWw=
+	t=1750239941; cv=none; b=WoD3brUvzA1+Nr+vFPDXy6Oc12g5Tb4ETObBlUOpkqlADBSSfyIVJWHI8uqpX1172BY9a3Wgtg6vXJqM9Pjt6puaODY/Vqr+T8JiKuwDDMu5f4xOpIS6GwdhSicIJitsoa1Wgb7/vlQZCz2TPJx4YaVL+G5PE9lTj07MVpNNuTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239893; c=relaxed/simple;
-	bh=sFpOWYXshkQpPlzSxedcoc/wnEsD43hfCXIO/sJKvrQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=e7GTIB4thLkn9lyLbB1buKtSAf6eRl/KBKRaFQfpzOm4WHdic9JEccvzA7gp08zBSo7iy614ctRJlky+clcaXG+YFwgLayVDYBeMb6YIT0C9HetBoijp9xr4Qx5WTW3gZ4Nln6MIalmvinflO9TD5odcJ6jGPJm9wa4YERmWrpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XpDDpXPn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1750239941; c=relaxed/simple;
+	bh=iAjLoMsszcwu/0Vb0KghUOteF+dXhpPUULmxrg+YQxU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VRychlL6/eXR962p8keFoINU+QO+6QoeEURopqVbzKofD24ArDQb07Rx/j6g4ERSRC3/X6OYuj1PIYG4BVYqVVl9OBlxV69j88/uRV+40N2YP6cDkUyFxNvcYDcRIZgVTcuCt6ngYhbWCSR/yzEiv+4DhevplTjcWHzMRGCFVa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Qupafl0c; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XpDDpXPn"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I8CvgP031861;
-	Wed, 18 Jun 2025 09:44:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=dGHxe/4dO5PqPpeX1XcV1iTak41bwpepmqG
-	4zojzuHo=; b=XpDDpXPnhbzlBJ69q1kzeybNKo4if+pf2WDJHl42YjpAu82oSYW
-	Qn1fXo8zzqbhGzg5VXpVBsQVCRs26+OnPLtGM+aNiMFBM6Zjk6EiMKYZrlqO8m8S
-	3BeX8e2mgjrXlxadYlRHGk1RskeahuT0avbKVjbPJdK++hlhT+XcTnfzq4HZnS5I
-	MNpokneOGTi0sW7RmmZ/CsJOwy3/NIaRsnpSR/gWYMj3SC6t2d9qr5ykna5TO7cI
-	5NM2Wh/rHREBgGjpHIM7k8S2rM0I7JTr90/CogHh3wSOPCYiC7o+zNpQYoMNGX0Y
-	dcLgIkNtJ2w1+YVpzaL2AdAwxj3BNm9rRbg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791enkhn1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 09:44:47 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55I9ihUd001024;
-	Wed, 18 Jun 2025 09:44:43 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 479jy55q4r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 09:44:43 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55I9ihIU001016;
-	Wed, 18 Jun 2025 09:44:43 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-schowdhu-hyd.qualcomm.com [10.213.97.56])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 55I9ihuS001013
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 09:44:43 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 2365959)
-	id 99D655A8; Wed, 18 Jun 2025 15:14:42 +0530 (+0530)
-From: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
-        Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
-Subject: [PATCH v6] remoteproc: Add device awake calls in rproc boot and shutdown path
-Date: Wed, 18 Jun 2025 15:14:41 +0530
-Message-Id: <20250618094441.1994965-1-quic_schowdhu@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Qupafl0c"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade76b8356cso1342925166b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750239938; x=1750844738; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UYnRFTZ45S0BZCYHJEL9/estxYeR2eD0JqS9fCRB9Zg=;
+        b=Qupafl0c5CMMKlHN7UvUZrt/02ySqRGQpRAnC5qKjbRYjkqTLAMniB2gGJwOWDcYYA
+         RAG4LIIOepVqdNxJJ5QtX5Zizs/sZ4ef7KQzgDot1F3FYYZIGWR70raM5X/d855K4Ile
+         QtSHCO85ZvwhZSvehGiplrMrkwezuYMQvYC0cd+xheUti/NVFcQnVXSI/J45jPYicrga
+         zVoEcyLbUiokXNk0wmuI+3eoa16RUoBfy8jg0hmuGJSVtOeGtRIbelVF4hyTgjgi+Ixa
+         dnM7scfcH9aph4NEjaaonb4apI8T/MgDa9qmaIsEOplGxlEO/JaQFJSPIiRDAY+ZR0s1
+         IDPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750239938; x=1750844738;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UYnRFTZ45S0BZCYHJEL9/estxYeR2eD0JqS9fCRB9Zg=;
+        b=WoeV04fgs00OBmm7ZPWw/MhZG2Hif46+x7/78fUpGHifzeJs14s9naUspr2MI82fnf
+         exPsJMbOTvxj9UEsxaA6a5EeqpB0qHw0MpXdDu2tv8ua/BRXMtfgiHGTStXLFn4LLX16
+         KTiLRNDCLzaquu8mnVb//bL/s6IUzW6EuuglaFuqfk2q7XcxaHl3CJimTdo/kj/eJCjq
+         sAT3vuWhVQiEURhGfCxLTRPhhifOTjTFurPBWwY/rgB0pykJalVkh8omW9F3sv827xgT
+         YKTyiGsI/ESlsV+S2kZukj3RWhPA732ehxq1bkcMpS9PMlwkhoUNrpLqg4BgciWddvhN
+         sMbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXWRxQzLruI80t8uixzQQ/Mp9Odjmy3kNexUu9b7YKYUehsxeLJP0Z5B4s6sKYRglPYLtyFiHQUKJRbG1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNXfGSvd4DpPkbf1+YNfwkVB5jgHpRdE5yaUhFNdkA/cSuvjk5
+	osrMlsamN6tZDN7ZduOQJDyxDPWYOLkpRu1X/K8tGXEQPlN153lzhXrog3dUVmVzYCI=
+X-Gm-Gg: ASbGncuLmAuGw+XfC+SjvAfPfVBO7NV3yIV45iMB4Gqc9ODxZxzBYhoSYexA4BV6DFo
+	oix9WxdSBPzkZWYJcNjsx85yhLp7ROy0BDed66XcK+ljUhDVkXCILHyiuRriWRCcZr7OV6wmJQH
+	4okTzUrExipEAM2ahYTYyQGVKwy39NaJagKqOjI4pwmiuLNPPpD/6+tFbdPysIQwnwuZeglymHn
+	Cr5NErVTTGQDk6q0vFgC37AYMAKjwJPB1s4nKhG23z/5/KepSd07tY9A81LxsVHcFGHowMSz3Y2
+	/gTtJxzbEzcqI6Wc/Jss0lJKBj+TRd4KugYLPvZDZ92gJEgtEtwfU2HdpDzMGGcyCL9fePhZHoX
+	mAmIy9guf17YzESvrFGN8+bBWYafXFickANhyEizt3k8=
+X-Google-Smtp-Source: AGHT+IHVR01GWZaWv7baTcjU5O0kFwotFGhrlpvKdhdubFxB0wxEVad57csE1YDZMPi3+Mm5z4P0Fw==
+X-Received: by 2002:a17:907:3c90:b0:adb:2577:c0c5 with SMTP id a640c23a62f3a-adfad5c74fdmr1544262766b.38.1750239938008;
+        Wed, 18 Jun 2025 02:45:38 -0700 (PDT)
+Received: from localhost (host-79-23-237-223.retail.telecomitalia.it. [79.23.237.223])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8158d4dsm1015674366b.28.2025.06.18.02.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 02:45:37 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 18 Jun 2025 11:47:16 +0200
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+Subject: Re: [PATCH stblinux/next 2/2] clk: rp1: Implement ramaining clock
+ tree
+Message-ID: <aFKLJELw3JuFI9GR@apocalypse>
+References: <b70b9f2d50e3155509c2672e6779c0840f38ad5e.1750165398.git.andrea.porta@suse.com>
+ <20250617145144.GA1135520@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: N38TyoJN50llmAZPtTHIt4KhnsxuMaKi
-X-Authority-Analysis: v=2.4 cv=D6RHKuRj c=1 sm=1 tr=0 ts=68528a8f cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=XxzzxGOHeBMF7Ba7Dy4A:9
- a=Lht6sO32AvJXS5sg:21 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: N38TyoJN50llmAZPtTHIt4KhnsxuMaKi
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA4NCBTYWx0ZWRfX4zkBQR5OJMYT
- J5U5/ifb0TL+84cXOihf975b3MuJ1ItPPWuwnV6FDdu79ROmslKXKcvek3eac4Eu9unoSTR+TFZ
- ybQ/GzWY1yR0MWxnbokxudkvXBqoyTZU3J2MFx77Das7litmmriLLWcP//lZdErLBqSreQNRvOV
- CTOaMCBxj4qkBQClsitWFiC6ccS8Dw4j+mGnQ0TEjRZnJxD7bBkOOnvN6w0s/r2MhVYz4xi08+O
- CDEeAaeMqEpEpP8B6Z/+xyea3px1/ab7iFdBew9c9iFZpBeDs0I4CBFa0SSvjbKeN3iI4E6kmXz
- eX17mAN1QGsqdS5vdiDDu06zcJ1MrFfwvaXd5YzBO71RSA9OcD7AyYhpkSFNou0lSCkG7XSXkZL
- Izw4fNNr2BftIm4dhiuCe9VWJn9idLUDMwo9ECXp5YTu2cAOGrJ7AffSlje6wFVprzgPS9WQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_03,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 impostorscore=0 phishscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 clxscore=1011 mlxscore=0 lowpriorityscore=0
- spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506180084
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617145144.GA1135520@bhelgaas>
 
-Device awake calls are only present in the recovery path of remoteproc.
-If an user stops and starts rproc by using the sysfs interface, then on
-pm suspension the firmware fails to load as the request_firmware call
-under adsp_load relies on usermodehelper process which gets freezed on
-pm suspension. Add device awake calls in the rproc boot and shutdown path
-to fix this.
+Hi Bjorn,
 
-Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Reviewed-by: Mukesh Ojha <mukesh.ojha@oss.qualcomm.com>
----
-Changes in v6
+On 09:51 Tue 17 Jun     , Bjorn Helgaas wrote:
+> On Tue, Jun 17, 2025 at 03:10:27PM +0200, Andrea della Porta wrote:
+> > The RP1 clock generator driver currently defines only the fundamental
+> > clocks such as the front PLLs for system, audio and video subsystems
+> > and the ethernet clock.
+> > 
+> > Add the remaining clocks to the tree so as to be completed.
+> 
+> In subject, s/ramaining/remaining/
 
-*Add some correction to commit message
+Ack.
 
-Changes in v5
+> 
+> I guess we actually get some functional benefit here (something that
+> previously did not work, will start working after this patch)?  It
+> would be good to mention that here.  "Completing the tree" sounds
+> nice, but if I were being asked to merge this, I'd like to know what
+> benefit it brings.
 
-*Added more details to commit description
+Sure, I will add details in the next revision.
 
-Changes in v4
+Many thanks,
+Andrea
 
-*Remove stability from mailing list
-*Remove the extra tab in v3
-*Change the commit description
-
- drivers/remoteproc/remoteproc_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-index c2cf0d277729..5d6c4e694b4c 100644
---- a/drivers/remoteproc/remoteproc_core.c
-+++ b/drivers/remoteproc/remoteproc_core.c
-@@ -1917,6 +1917,7 @@ int rproc_boot(struct rproc *rproc)
- 		return -EINVAL;
- 	}
- 
-+	pm_stay_awake(rproc->dev.parent);
- 	dev = &rproc->dev;
- 
- 	ret = mutex_lock_interruptible(&rproc->lock);
-@@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
- 		atomic_dec(&rproc->power);
- unlock_mutex:
- 	mutex_unlock(&rproc->lock);
-+	pm_relax(rproc->dev.parent);
- 	return ret;
- }
- EXPORT_SYMBOL(rproc_boot);
-@@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
- 	struct device *dev = &rproc->dev;
- 	int ret = 0;
- 
-+	pm_stay_awake(rproc->dev.parent);
- 	ret = mutex_lock_interruptible(&rproc->lock);
- 	if (ret) {
- 		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
-@@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
- 	rproc->table_ptr = NULL;
- out:
- 	mutex_unlock(&rproc->lock);
-+	pm_relax(rproc->dev.parent);
- 	return ret;
- }
- EXPORT_SYMBOL(rproc_shutdown);
--- 
-2.34.1
-
+> 
+> Bjorn
