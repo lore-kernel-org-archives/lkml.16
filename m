@@ -1,168 +1,81 @@
-Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778F343ABC;
-	Wed, 18 Jun 2025 10:43:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BDA2F5305
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:46:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243392; cv=none; b=MzO6dQkw++XduhwffR+OkAXo7IRCpM4FTtKMoaiRbHn/DONaX1u5AlG1TOYNRSgrdwvmolsWxav72mZKcBOa6XNe8z5oTHp2teIzpZRD1WdhRHzcM4ilZufvPoimHBO7RpRJNtZPDJwiHu1+Hn2jcqLoDCLuVZrRgmPWXHKACFo=
+	t=1750243587; cv=none; b=t2Wqdq6RRDB18nErLg68b8lM/MB46jO9w3ogevHbIg8UbjD2ho2xJRjCBDyEvOkFLog2LbAkx/CypN3qRCPboe7enKyO+oipawzXqDfPonz+/Yjcf2sfHFz8Nk5XkJAuWfMau493Ky+B2WL3YZxjvpYUbMX8Wbbo0VFez9zgEiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243392; c=relaxed/simple;
-	bh=HQNzCf9W+TvtTlIVbFrZdcvENFHgVOktxsslslOxWZM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SgxhRH9Sccwz1v3z1QafDoYDixLSJ3JOtMeuNGSfWeFKXdFLEA45m9k53Wheoe0habicnJz7IXivtT7eYsJO6V4w08Xv6RRGXseAz+vyG+DwkmNmNS9hfW8J8loNcnis0Op+0E8H9iaLHTXFSAyuqH8odK2Akc6w1B2LWM5jILk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.207.19.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
-X-QQ-mid: zesmtpsz5t1750243302tc8a57417
-X-QQ-Originating-IP: keGGq+YFE8tuNqfk6RF7BzZPicjKU8gJijQIAgqUiEM=
-Received: from localhost.localdomain ( [116.128.244.171])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 18 Jun 2025 18:41:40 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 7749049518741644067
-From: chenxiaosong@chenxiaosong.com
-To: chuck.lever@oracle.com,
-	jlayton@kernel.org,
-	neilb@suse.de,
-	okorniev@redhat.com,
-	Dai.Ngo@oracle.com,
-	tom@talpey.com
-Cc: linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	huhai@kylinos.cn,
-	ChenXiaoSong <chenxiaosong@kylinos.cn>
-Subject: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
-Date: Wed, 18 Jun 2025 18:41:23 +0800
-Message-Id: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750243587; c=relaxed/simple;
+	bh=es9BfANLseL9NpqC6prshZ5Xa9uFnJPtegUrbFEagU0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g4UmGk91Fmv3gUbkWL34A9suwGhPb8bphfniKw5vXDFe9mtKaiSAo0EBsGiiiSo5M4rY7pMwpI13wMQ9i8TuyJfZZUqxGtIMz0IgMyS/D6LJP2nr+gpIqWe6dUIO3oqJq2DjFplUzUPZcpSCrt3opIYO9HS0PtACuYAmi5EED78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=AX8Rv5jd; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="AX8Rv5jd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750243583;
+	bh=es9BfANLseL9NpqC6prshZ5Xa9uFnJPtegUrbFEagU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AX8Rv5jdep0Ua0r3qidzhP5/uPgvEnoqKfxjXea2Ws+q42WBcX9EHN1safYPrWx6U
+	 ZBlXkoRI+LddB/EYsH2hmJmqH2+dagvSOIKww/JCFUH1mKxrFeploYuGvJg6TM9C8f
+	 Z833g5OJMFo+s9DrnI5QOr1WqGF//qb2DbPkCrK8=
+Date: Wed, 18 Jun 2025 12:46:23 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] sysfs: finalize the constification of 'struct
+ bin_attribute'
+Message-ID: <c1a71cd1-3922-4f73-b441-eb9a7bc7771c@t-8ch.de>
+References: <20250530-sysfs-const-bin_attr-final-v3-0-724bfcf05b99@weissschuh.net>
+ <fa9b1cb8-28a7-4ae0-89c8-8e3f9f149c56@t-8ch.de>
+ <2025061702-retention-lion-48c3@gregkh>
+ <9797efed-0ece-4817-9a37-9ff225a5df6d@t-8ch.de>
+ <2025061841-vixen-smuggler-9cc4@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
-X-QQ-XMAILINFO: NDxI9psdf3YVkghZd/8w03o1VRbUTcYZexEEkgrJykEbCTHmo6Zqi28h
-	xuocd2vZcuWl6GpMJRntzueYp2Lao35zevNIj8liiHlgLfEEtjxaZx5oVe+qANtupf20KfI
-	FYFgpXi3Qh/nRgHppEp9lPgl7s0bhwKv6njgbdtTD9XFqoXisQF9kcIqZG0YFcTXz64b27u
-	fgrXiCfNNAHwTCp9AnLXJFOxyoGyZkcIukAcPvVjkJ37iJy+4MDMA75yb++NdV/SJKTK4+B
-	wsV9+/wiXcixPldFEmfK+YlHnKh5+uxNPZ/V5awMfYOXL6/y/4SyWhNYrg4f5nH/NlsQooD
-	YLnfnNsPslTMYSYx+u/T4IE+y3/KD+0zvuguDn1wmMkh33OblixlFK1wuIb2vW0Dl2KSCD8
-	Tv7mc9zZhgje+mRkbL2P6EiLR4cbAbuWoXwjctda51zECDxPWJO7z9etInlwL3zfTztyuqt
-	P+v3xW4ZsbgKxbsinqG+PyD9qOj04I5WkdOFvdAltp/goqUXMxjDy29EsZrgMTLLDZ6zWow
-	CypOsVWLVxs1ykdEJf4SML/S/dVtVy04HEg76KEf1/ogyvG+00Zp5F6WRTBNC2wl/c3srrr
-	efzURwKcj+rOHPIY+MWrXdPYk73D2dBvcAeqHb92CIHzFjYwGRqFp1XsRy0dN3mWbj78Wq5
-	qaADzNTuscaPKf4g8qpkoGVwoPftlYWO5IObRb6Gqj3QjOuLtxHstmpyfYp1VydsN17VwJd
-	QkUbIZMRSSKuAuq3scy+6xI8nCKi60WQ8madN+LLEYTsQmNULxZl72voLnL4WX+atg1vvoi
-	BJf+xUHAZBTHKndFWxm5Z90xRhkxTJYe3UJJfuwjkaoucdIHf2fv1goqjeyWm4Aq8gwZgqW
-	5/ggdzhDkRK/xnX/EDzOjWERCkCtlMET6u2Atgy3xvNueYa4OrdJMIJC9a2kgCD2ZAIcyrW
-	XFtaY/JtQK6aW5TIlUKmVRWUhRCafYC6rXFiSFGnf3evEkBeFp29WHUOpYJJSyF/DyL0=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <2025061841-vixen-smuggler-9cc4@gregkh>
 
-From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+On 2025-06-18 09:50:07+0200, Greg Kroah-Hartman wrote:
+> On Tue, Jun 17, 2025 at 04:06:48PM +0200, Thomas Weißschuh wrote:
+> > On 2025-06-17 10:48:00+0200, Greg Kroah-Hartman wrote:
+> > > On Sat, Jun 14, 2025 at 08:23:24AM +0200, Thomas Weißschuh wrote:
+> > > > friendly ping. You wanted to send this to Linux at around -rc1.
+> > > > The changes should now apply cleanly to mainline.
+> > > 
+> > > I've taken the first 4 patches into driver-core-testing at the moment
+> > > (will move to driver-core-next if it passes 0-day testing).  The last 2
+> > > I'll hold off of for the next -rc1 as I was way too late here, sorry, my
+> > > fault.  I blame travel, which I had to do a bunch of the past few weeks :(
+> > 
+> > Works for me.
+> > 
+> > On the other hand it should be possible to take all patches through the
+> > normal -next process right now. This is not a flag-day conversion. The final
+> > const variants are already in v6.16-rc1, so everybody can just use those.
+> 
+> There is a flag-day in that new patches could be using the old types,
+> right?
 
-Before commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client"),
-we had a null-ptr-deref in nfsd4_probe_callback() (Link[1]):
+They could; but this should always the case, no?
 
- nfsd: last server has exited, flushing export cache
- NFSD: starting 90-second grace period (net f0000030)
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
- ...
- Call trace:
-  __queue_work+0xb4/0x558
-  queue_work_on+0x88/0x90
-  nfsd4_probe_callback+0x4c/0x58 [nfsd]
- NFSD: starting 90-second grace period (net f0000030)
-  nfsd4_probe_callback_sync+0x20/0x38 [nfsd]
-  nfsd4_init_conn.isra.57+0x8c/0xa8 [nfsd]
-  nfsd4_create_session+0x5b8/0x718 [nfsd]
-  nfsd4_proc_compound+0x4c0/0x710 [nfsd]
-  nfsd_dispatch+0x104/0x248 [nfsd]
-  svc_process_common+0x348/0x808 [sunrpc]
-  svc_process+0xb0/0xc8 [sunrpc]
-  nfsd+0xf0/0x160 [nfsd]
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
- Code: aa1c03e0 97ffffba aa0003e2 b5000780 (f9400262)
- SMP: stopping secondary CPUs
- Starting crashdump kernel...
- Bye!
+For me a flag-day conversion means that there is no way for users to
+be compatible with the old and new API at the same time.
+So everything needs to happen at once.
 
-One of the cases is:
+But here users of the old API can adapt their code to be compatible
+with both the old and new APIs at the same time.
+Not that there are any users of the old API in -next anyways.
 
-    task A (cpu 1)    |   task B (cpu 2)     |   task C (cpu 3)
- ---------------------|----------------------|---------------------------------
- nfsd_startup_generic | nfsd_startup_generic |
-   nfsd_users == 0    |  nfsd_users == 0     |
-   nfsd_users++       |  nfsd_users++        |
-   nfsd_users == 1    |                      |
-   ...                |                      |
-   callback_wq == xxx |                      |
- ---------------------|----------------------|---------------------------------
-                      |                      | nfsd_shutdown_generic
-                      |                      |   nfsd_users == 1
-                      |                      |   --nfsd_users
-                      |                      |   nfsd_users == 0
-                      |                      |   ...
-                      |                      |   callback_wq == xxx
-                      |                      |   destroy_workqueue(callback_wq)
- ---------------------|----------------------|---------------------------------
-                      |  nfsd_users == 1     |
-                      |  ...                 |
-                      |  callback_wq == yyy  |
-
-After commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client"),
-this issue no longer occurs, but we should still convert the nfsd_users
-to atomic_t to prevent other similar issues.
-
-Link[1]: https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
-Co-developed-by: huhai <huhai@kylinos.cn>
-Signed-off-by: huhai <huhai@kylinos.cn>
-Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
----
- fs/nfsd/nfssvc.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 9b3d6cff0e1e..08b1f9ebdc2a 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -270,13 +270,13 @@ static int nfsd_init_socks(struct net *net, const struct cred *cred)
- 	return 0;
- }
- 
--static int nfsd_users = 0;
-+static atomic_t nfsd_users = ATOMIC_INIT(0);
- 
- static int nfsd_startup_generic(void)
- {
- 	int ret;
- 
--	if (nfsd_users++)
-+	if (atomic_fetch_inc(&nfsd_users))
- 		return 0;
- 
- 	ret = nfsd_file_cache_init();
-@@ -291,13 +291,13 @@ static int nfsd_startup_generic(void)
- out_file_cache:
- 	nfsd_file_cache_shutdown();
- dec_users:
--	nfsd_users--;
-+	atomic_dec(&nfsd_users);
- 	return ret;
- }
- 
- static void nfsd_shutdown_generic(void)
- {
--	if (--nfsd_users)
-+	if (atomic_dec_return(&nfsd_users))
- 		return;
- 
- 	nfs4_state_shutdown();
--- 
-2.34.1
-
+However if you want to stick to a out-of-cycle patch, that works for me, too.
