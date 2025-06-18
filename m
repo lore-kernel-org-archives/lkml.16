@@ -1,57 +1,57 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1B7280334;
-	Wed, 18 Jun 2025 10:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A03286429;
+	Wed, 18 Jun 2025 10:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243199; cv=none; b=J8YFJhHAj647QY1m14Cu5/gQV/7BvPwi+KPxG/WzOat7frX09G9BroRBBRaSlZOyPcisK9hlvZ9ZdsaWjwR3VAbszacoEnLw/NfG/TpnLBVBKMozWH8+vjxheNYvR0MmVnfRNKoItFMkdMNdSpELmTYkzuN7Rkis71jTdxkPSWk=
+	t=1750243203; cv=none; b=IjUT+DRkVhshSRZzxrvqT2SPUOOPs3GeS8e4TMnjilnDGtnc2ZzU2BzT481J8ilRin6qNnPzEzB3jVqJg1JEN2Oge6t2SXayXiCOXyHh7XnaW7VIkko+Dhpyr6DJZk7mevz6drEALurr2aS1A50uhVnq5hDsWFexEYGaSeyYEqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243199; c=relaxed/simple;
-	bh=t51JzSN9nadmrvg70cFMDoZAbxQwS0CqONWeM5DnWpo=;
+	s=arc-20240116; t=1750243203; c=relaxed/simple;
+	bh=22QQErwPxlBAJ0KnPlU2RXCt44GQ9my/mq7QEIY/+/4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TGvAkeuIZbwRJMP9GDkcscfI37O4m9kOgEb0FclKkX/9JoiAguNqXiHvn+h1qaBJqK0rDBc89FxbjCXLgD/CSTC7Mzqq/NuBCRq/TIRUCodYV//TfSylmu5ENjkJm04c8tBsMAcOpmHNIU/ER8NnoEfSbISkdwd0ImqJJpqdZic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=JLlv294l; arc=none smtp.client-ip=68.232.153.233
+	 MIME-Version:Content-Type; b=WGhR9Q5/cx33vZdJpT/Wur4h8kvJUQ2ySO13flIaK5RqZn0hgMApLzqNqoRe1ypJlbUZaLuqPPV7/vyx7Gm7t5k14ffT1MOUA11djmIukcMm1eWM22DWQRU1SqV8sM2sE99T8PxI+wJSKHWjDzwL+2ILO2IoF1bcSBoHsNCD90k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=kXyzDwqV; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="JLlv294l"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="kXyzDwqV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750243198; x=1781779198;
+  t=1750243201; x=1781779201;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=t51JzSN9nadmrvg70cFMDoZAbxQwS0CqONWeM5DnWpo=;
-  b=JLlv294lv9xhcryh2sBDxBkUsJFz6PrdHxvuDyhlaYnzU9hRgKVEe8M2
-   faxPJShvOY6tasjcZd03BggHpBoW6HcnFJIicNAYbFTGbcuRLItMQyznE
-   +J2yJf8rJMY7dOEXsQsnWShcGLLE+wVjCnhu6er3TCuIEtowzGS9Yf2bY
-   ZppMv0SFZc3xWXRcHS2hvdAc2gCrqVQHKX1nz7d+bGAANZBcbLd/P4War
-   HG6ek2pxIuP9t0N6OW1STuYFw77tGo0PALyK7RhZ0YMaN57e9gp1GR1Oi
-   A5ZkaImTdQvyU9dKnLeCucrCBQ6wHJIsRbUr6oJDqptf0pUmHLqsYpIvW
-   w==;
-X-CSE-ConnectionGUID: 4uH6+ir5SsWi7jPBO6gg/A==
-X-CSE-MsgGUID: KZF84mskQl2lpJhI0kjZ9Q==
+  bh=22QQErwPxlBAJ0KnPlU2RXCt44GQ9my/mq7QEIY/+/4=;
+  b=kXyzDwqV5I0QVl4gpLoSBJ8Sm5NTblmcmBBv5bcpbES5vm6yFs8Ivfgk
+   w091BLrzt5Mk4ORpZJcBh6vCRcDWjpbB6R8b5FZF6HNBEfthV0TrKuPzG
+   uBAz80Cr1feYhlehtvYUhXzPdkMOwE0FvJVl4+dP51R121JCDFdIzELrp
+   1Dr4DqN9/RQ9QIowEe8N/0Hme1OgSjfFBpdG8f/aLL6pryycvBqZ2+e6x
+   sbNaZYpewKWb92IZUY2tVcBYP09Q/Ctm4imp/ZguSnjsr7gCwjMaUYSEv
+   ljlfmSYHJv1ko+XFXQ6gFZLz0Dl6ckekDlth2xJT3wqXXJtCpfjuNVxeF
+   Q==;
+X-CSE-ConnectionGUID: 7wtXBdA6TE+fk4S1pxqqTQ==
+X-CSE-MsgGUID: 4zCq3BxjQdmbuXuDHew4Mw==
 X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="274330071"
+   d="scan'208";a="42469512"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jun 2025 03:39:55 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 18 Jun 2025 03:40:00 -0700
 Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 18 Jun 2025 03:39:27 -0700
+ 15.1.2507.44; Wed, 18 Jun 2025 03:39:29 -0700
 Received: from archlinux.mchp-main.com (10.10.85.11) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Wed, 18 Jun 2025 03:39:25 -0700
+ 15.1.2507.44 via Frontend Transport; Wed, 18 Jun 2025 03:39:27 -0700
 From: Mihai Sain <mihai.sain@microchip.com>
 To: <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
 	<claudiu.beznea@tuxon.dev>, <robh@kernel.org>, <krzk+dt@kernel.org>,
 	<conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
 	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: Mihai Sain <mihai.sain@microchip.com>
-Subject: [PATCH v2 1/2] ARM: dts: microchip: sama7d65: Add cache configuration for cpu node
-Date: Wed, 18 Jun 2025 13:39:13 +0300
-Message-ID: <20250618103914.2712-2-mihai.sain@microchip.com>
+Subject: [PATCH v2 2/2] ARM: dts: microchip: sama7g5: Add cache configuration for cpu node
+Date: Wed, 18 Jun 2025 13:39:14 +0300
+Message-ID: <20250618103914.2712-3-mihai.sain@microchip.com>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250618103914.2712-1-mihai.sain@microchip.com>
 References: <20250618103914.2712-1-mihai.sain@microchip.com>
@@ -69,39 +69,39 @@ Describe the cache memories according with datasheet chapter 15.2:
 - L2 cache configuration with 256KB unified cache.
 
 Before this patch:
-[    0.161955] cacheinfo: Unable to detect cache hierarchy for CPU 0
+[    0.171425] cacheinfo: Unable to detect cache hierarchy for CPU 0
 
 After this patch:
-[root@sama7d65eb ~]$ ll -h /sys/bus/cpu/devices/cpu0/of_node/l1-cache
--r--r--r-- 1 root root 4 Jun 18 12:16 cache-level
--r--r--r-- 1 root root 6 Jun 18 12:16 compatible
--r--r--r-- 1 root root 4 Jun 18 12:16 d-cache-size
--r--r--r-- 1 root root 4 Jun 18 12:16 i-cache-size
--r--r--r-- 1 root root 9 Jun 18 12:16 name
--r--r--r-- 1 root root 4 Jun 18 12:16 next-level-cache
--r--r--r-- 1 root root 4 Jun 18 12:16 phandle
+[root@sama7g54eb ~]$ ll -h /sys/bus/cpu/devices/cpu0/of_node/l1-cache
+-r--r--r-- 1 root root 4 Jun 18 12:39 cache-level
+-r--r--r-- 1 root root 6 Jun 18 12:39 compatible
+-r--r--r-- 1 root root 4 Jun 18 12:39 d-cache-size
+-r--r--r-- 1 root root 4 Jun 18 12:39 i-cache-size
+-r--r--r-- 1 root root 9 Jun 18 12:39 name
+-r--r--r-- 1 root root 4 Jun 18 12:39 next-level-cache
+-r--r--r-- 1 root root 4 Jun 18 12:39 phandle
 
-[root@sama7d65eb ~]$ ll -h /sys/bus/cpu/devices/cpu0/of_node/l2-cache
--r--r--r-- 1 root root 4 Jun 18 12:27 cache-level
--r--r--r-- 1 root root 4 Jun 18 12:27 cache-size
--r--r--r-- 1 root root 0 Jun 18 12:27 cache-unified
--r--r--r-- 1 root root 6 Jun 18 12:27 compatible
--r--r--r-- 1 root root 9 Jun 18 12:27 name
--r--r--r-- 1 root root 4 Jun 18 12:27 phandle
+[root@sama7g54eb ~]$ ll -h /sys/bus/cpu/devices/cpu0/of_node/l2-cache
+-r--r--r-- 1 root root 4 Jun 18 12:39 cache-level
+-r--r--r-- 1 root root 4 Jun 18 12:39 cache-size
+-r--r--r-- 1 root root 0 Jun 18 12:39 cache-unified
+-r--r--r-- 1 root root 6 Jun 18 12:39 compatible
+-r--r--r-- 1 root root 9 Jun 18 12:39 name
+-r--r--r-- 1 root root 4 Jun 18 12:39 phandle
 
 Signed-off-by: Mihai Sain <mihai.sain@microchip.com>
 ---
- arch/arm/boot/dts/microchip/sama7d65.dtsi | 16 ++++++++++++++++
+ arch/arm/boot/dts/microchip/sama7g5.dtsi | 16 ++++++++++++++++
  1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/microchip/sama7d65.dtsi b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-index d08d773b1cc5..06a5aae93101 100644
---- a/arch/arm/boot/dts/microchip/sama7d65.dtsi
-+++ b/arch/arm/boot/dts/microchip/sama7d65.dtsi
-@@ -32,6 +32,22 @@ cpu0: cpu@0 {
- 			device_type = "cpu";
- 			clocks = <&pmc PMC_TYPE_CORE PMC_CPUPLL>;
+diff --git a/arch/arm/boot/dts/microchip/sama7g5.dtsi b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+index 17bcdcf0cf4a..a3c8bbf5d1d8 100644
+--- a/arch/arm/boot/dts/microchip/sama7g5.dtsi
++++ b/arch/arm/boot/dts/microchip/sama7g5.dtsi
+@@ -38,6 +38,22 @@ cpu0: cpu@0 {
  			clock-names = "cpu";
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>; /* min followed by max */
 +			next-level-cache = <&L1>;
 +
 +			L1: l1-cache {
