@@ -1,132 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7904F2C08B8;
-	Wed, 18 Jun 2025 13:12:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B4F2DFF3C
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252322; cv=none; b=R9aekwHTlBQ2X22CJHGxLW+QSsQgQiotCXUS7ygBCVM6h/VtWsmTApSn+6I3luCewBwCQphUOb3mcGsp4H7xtvQ2HOx7GJk5DuOpU0dXELtqZrtaOWkm/c7HVKc2hhBu/auu7pl0oms4HuFlnm+Plv3lUfOeotSkT5eUOuYy958=
+	t=1750252328; cv=none; b=j1Ch0xXUiO93+/posTigbrJclQPIQysVc8cXewC0bq+djgpUGD0+ltgzLNrXVwTqeSL9jVXVXugrRTMD/xj0gsvP69ukRlrG4rOOL/LN06MXgQdNlsYJns0VXB9hp2Gn1o1fAuh94fTXrGF16oNBsdyi+JN+bk7dbYeejmYJdqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252322; c=relaxed/simple;
-	bh=s5qyzz/qBQpZoUuL9l+81lOuO/S3Lo8ObQXBuGDJkMo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XbqOUIVgzHdqlSmaV1LITRsJxKGuhYnpm5kKuUSSGiF7+ubxV58iAhDxTJY6E6ikBQMDfMcjj09sOYKU0gZTm0zPrPZQ8FKp5eDo4HFtERYdKXm/G5XnU7bj4CVfZeiC0rkc3ehFImd7fUW62I27nCrXxHUw1KbHOI8WLG8mVEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GozqKuXy; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GozqKuXy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CA03C4CEE7;
-	Wed, 18 Jun 2025 13:11:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750252322;
-	bh=s5qyzz/qBQpZoUuL9l+81lOuO/S3Lo8ObQXBuGDJkMo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=GozqKuXyxjUgmHEhOYXLuI/y4m8rpsuTDKgLStZR7yoSnii9/Rf/S6+YbwlUnjzeJ
-	 r21kcjcCLL7SGOmlJ1y1lzExbZBJHW3sOgcdEsIQjMxHlC2hefQ7m5EmeksGYUnC3I
-	 1iC0MFOnA7XEfodJTxoBdRjz18ca+DPjNXh7cdswd8lEqxYFc7Gylhr8xhOg2q24KO
-	 JFBIdww/zFK+lik5vw5TJO8cJHTBvRxLlggrRF/hccLVTvRLLwuayDWtGfNTo3NEcr
-	 VS7Phta3ho4Ph9cLqBRV/TVbThOaueLHdz+GJfVD9hktZqBlyJQgR+FHfQTxHld7aX
-	 GxNpyxYYXQg4A==
-From: Pratyush Yadav <pratyush@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>,  Pratyush Yadav <pratyush@kernel.org>,
-  jasonmiu@google.com,  graf@amazon.com,  changyuanl@google.com,
-  rppt@kernel.org,  dmatlack@google.com,  rientjes@google.com,
-  corbet@lwn.net,  rdunlap@infradead.org,  ilpo.jarvinen@linux.intel.com,
-  kanie@linux.alibaba.com,  ojeda@kernel.org,  aliceryhl@google.com,
-  masahiroy@kernel.org,  akpm@linux-foundation.org,  tj@kernel.org,
-  yoann.congal@smile.fr,  mmaurer@google.com,  roman.gushchin@linux.dev,
-  chenridong@huawei.com,  axboe@kernel.dk,  mark.rutland@arm.com,
-  jannh@google.com,  vincent.guittot@linaro.org,  hannes@cmpxchg.org,
-  dan.j.williams@intel.com,  david@redhat.com,  joel.granados@kernel.org,
-  rostedt@goodmis.org,  anna.schumaker@oracle.com,  song@kernel.org,
-  zhangguopeng@kylinos.cn,  linux@weissschuh.net,
-  linux-kernel@vger.kernel.org,  linux-doc@vger.kernel.org,
-  linux-mm@kvack.org,  gregkh@linuxfoundation.org,  tglx@linutronix.de,
-  mingo@redhat.com,  bp@alien8.de,  dave.hansen@linux.intel.com,
-  x86@kernel.org,  hpa@zytor.com,  rafael@kernel.org,  dakr@kernel.org,
-  bartosz.golaszewski@linaro.org,  cw00.choi@samsung.com,
-  myungjoo.ham@samsung.com,  yesanishhere@gmail.com,
-  Jonathan.Cameron@huawei.com,  quic_zijuhu@quicinc.com,
-  aleksander.lobakin@intel.com,  ira.weiny@intel.com,
-  andriy.shevchenko@linux.intel.com,  leon@kernel.org,  lukas@wunner.de,
-  bhelgaas@google.com,  wagi@kernel.org,  djeffery@redhat.com,
-  stuart.w.hayes@gmail.com
-Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
-In-Reply-To: <CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
-	<20250515182322.117840-6-pasha.tatashin@soleen.com>
-	<mafs0sekfts2i.fsf@kernel.org>
-	<CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
-	<mafs0sek3n0x8.fsf@kernel.org> <20250617152357.GB1376515@ziepe.ca>
-	<CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com>
-Date: Wed, 18 Jun 2025 15:11:52 +0200
-Message-ID: <mafs05xgtw5wn.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1750252328; c=relaxed/simple;
+	bh=tgC4nmRXi4zcdcc1QRmEL30wObl5ZmPG+uUMqEukGOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L39E9iV/3uJ5T33HOK33ti90LiA+aFl2iqg0wolfZwQ25tQdglGZuzO8jHTg4u05gMLGwdlTkFjTR2+0BmT9u04q5nDHfMYTJWahVWk1+4OJYnIYVNRscGeWLvKy/GgeEpAiikIfvqD0PsIONhwzlpcple7ALyzB3BY6Rx8BWm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1uRsZs-0003ce-3M; Wed, 18 Jun 2025 15:11:44 +0200
+Message-ID: <7b863418-1554-4948-a863-e71991ef6442@pengutronix.de>
+Date: Wed, 18 Jun 2025 15:11:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v4 PATCH 2/2] arch: arm64: dts: add big-endian property back
+ into watchdog node
+To: Meng Li <Meng.Li@windriver.com>, krzk+dt@kernel.org, linux@roeck-us.net,
+ s.hauer@pengutronix.de, kernel@pengutronix.de,
+ linux-watchdog@vger.kernel.org, imx@lists.linux.dev, shawnguo@kernel.org,
+ robh@kernel.org, conor+dt@kernel.org, Frank.Li@nxp.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250608030616.3874517-1-Meng.Li@windriver.com>
+ <20250608030616.3874517-3-Meng.Li@windriver.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Content-Language: en-US, de-DE, de-BE
+In-Reply-To: <20250608030616.3874517-3-Meng.Li@windriver.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Jun 17 2025, Pasha Tatashin wrote:
+On 6/8/25 05:06, Meng Li wrote:
+> Watchdog doesn't work on NXP ls1046ardb board because in commit
+> 7c8ffc5555cb("arm64: dts: layerscape: remove big-endian for mmc nodes"),
+> it intended to remove the big-endian from mmc node, but the big-endian of
+> watchdog node is also removed by accident. So, add watchdog big-endian
+> property back.
+> 
+> In addition, add compatible string fsl,ls1046a-wdt, which allow big-endian
+> property.
+> 
+> Fixes: 7c8ffc5555cb ("arm64: dts: layerscape: remove big-endian for mmc nodes")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Meng Li <Meng.Li@windriver.com>
 
-> On Tue, Jun 17, 2025 at 11:24=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> w=
-rote:
->>
->> On Fri, Jun 13, 2025 at 04:58:27PM +0200, Pratyush Yadav wrote:
->> > On Sat, Jun 07 2025, Pasha Tatashin wrote:
->> > [...]
->> > >>
->> > >> This weirdness happens because luo_prepare() and luo_cancel() contr=
-ol
->> > >> the KHO state machine, but then also get controlled by it via the
->> > >> notifier callbacks. So the relationship between then is not clear.
->> > >> __luo_prepare() at least needs access to struct kho_serialization, =
-so it
->> > >> needs to come from the callback. So I don't have a clear way to cle=
-an
->> > >> this all up off the top of my head.
->> > >
->> > > On production machine, without KHO_DEBUGFS, only LUO can control KHO
->> > > state, but if debugfs is enabled, KHO can be finalized manually, and
->> > > in this case LUO transitions to prepared state. In both cases, the
->> > > path is identical. The KHO debugfs path is only for
->> > > developers/debugging purposes.
->> >
->> > What I meant is that even without KHO_DEBUGFS, LUO drives KHO, but then
->> > KHO calls into LUO from the notifier, which makes the control flow
->> > somewhat convoluted. If LUO is supposed to be the only thing that
->> > interacts directly with KHO, maybe we should get rid of the notifier a=
-nd
->> > only let LUO drive things.
->>
->> Yes, we should. I think we should consider the KHO notifiers and self
->> orchestration as obsoleted by LUO. That's why it was in debugfs
->> because we were not ready to commit to it.
->
-> We could do that, however, there is one example KHO user
-> `reserve_mem`, that is also not liveupdate related. So, it should
-> either be removed or modified to be handled by LUO.
+Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-It still depends on kho_finalize() being called, so it still needs
-something to trigger its serialization. It is not automatic. And with
-your proposed patch to make debugfs interface optional, it can't even be
-used with the config disabled.
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 0baf256b4400..983b2f0e8797 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -687,11 +687,12 @@ lpuart5: serial@29a0000 {
+>  		};
+>  
+>  		wdog0: watchdog@2ad0000 {
+> -			compatible = "fsl,imx21-wdt";
+> +			compatible = "fsl,ls1046a-wdt", "fsl,imx21-wdt";
+>  			reg = <0x0 0x2ad0000 0x0 0x10000>;
+>  			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clockgen QORIQ_CLK_PLATFORM_PLL
+>  					    QORIQ_CLK_PLL_DIV(2)>;
+> +			big-endian;
+>  		};
+>  
+>  		edma0: dma-controller@2c00000 {
 
-So if it must be explicitly triggered to be preserved, why not let the
-trigger point be LUO instead of KHO? You can make reservemem a LUO
-subsystem instead.
+-- 
+Pengutronix e.K.                  |                             |
+Steuerwalder Str. 21              | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
 
-Although to be honest, things like reservemem (or IMA perhaps?) don't
-really fit well with the explicit trigger mechanism. They can be carried
-across kexec without needing userspace explicitly driving it. Maybe we
-allow LUO subsystems to mark themselves as auto-preservable and LUO will
-preserve them regardless of state being prepared? Something to think
-about later down the line I suppose.
-
---=20
-Regards,
-Pratyush Yadav
