@@ -1,128 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDFE2F5469;
-	Wed, 18 Jun 2025 17:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C923085A0;
+	Wed, 18 Jun 2025 17:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750269316; cv=none; b=new4lKTfSzol/cGUGB7fzxm1lK9nRIplXd//RBoR2y7I41uECNWvQhMfmjDYDjcs2w2oFj2EfDckxTzSMs6mmO7ajxhsRRRHBpfH2yPJk9bfklwBXsUHk3nzes1qMhZcfpopw8lgo2PubkGkmqvjPwGKMshUhUMlMtUcAbAqzDw=
+	t=1750269358; cv=none; b=hSiQMlpisVV/u8VZLvKT34xkYBY6/kz01HkOmfEXUowaVVTqE8ThZByQBFyPkImIqtXATgdtwzll0RWb9BtFuDvyCHn7NsBsyzbQOA2K54+1TYNHg7Y6Pwl6C3es5r7gR+85qvk82yDNj96x54//3XJnZvBZslp7FabQ1ySHCAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750269316; c=relaxed/simple;
-	bh=5wT0aIrsAha0PXMViQ6wIobYxSVAr6a7EIn8WbcB6Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t65YbicfJxsmS2al+B+j2+rRIMqHne2N+K72vuBHDjWPIocDhDhaVuG0dZd7d7VpDEu85QqFS1px0b1d6YblbdhHVkXA+1yradD3a8rVo0dLplp0NRb6BBxiAmB7skGTY2bhakw/KQqhXHQH26PLzQfxTRkisg1anqfcH+7SeIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V9SDhn13; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750269358; c=relaxed/simple;
+	bh=ALn2j9Qo4vXynfn53zWqfw0fXJmWqmfzwyAt/KCwrF4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qsB4hPVa+uH0AfIX1VhxggaDuvMnOgZXofKmNeIzN2Uws3yD1IIbwG93p+7H82KVDJFvdHGJYDgotj/G0KFCXslj5PENgDtz04E0s8cK5+N7543QZVgFueIxYS9PKPtfFYWdVEtp78zB8Vgu4OCV0l4bcSiDh3Ml28N0VkwFaYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PPkJYQSW; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V9SDhn13"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41642C4CEE7;
-	Wed, 18 Jun 2025 17:55:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750269314;
-	bh=5wT0aIrsAha0PXMViQ6wIobYxSVAr6a7EIn8WbcB6Uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V9SDhn13c0JD2tjlibEUADU/2YTadF28roMpREO+NiAgnQ9xC2FmjSnyGkCpIkQxI
-	 aj4ltT+dQVGJhd/slgNsY4huMq/s9VuWI0iCVJkjQaIVhmA43ZlQCdI36eY9jZbxU8
-	 S5sB5uipNgGj1dkuWSg4+WmAYz1tyS3SG/0it1nGZH/5ftfmneJKpl1lsL62Bb1zOE
-	 gNKYcOZ2R3Z8mF4IUUc7M5aD2cWvO0/XKLyBNtRLkn6NP1Mz8WF5eSnnnhr5KDfYHs
-	 Gy4lSXenkcd4etvjBxXJFBz4i16317pfiN0GkhY1/+tumtO9rgewoi9KYYNMVPxAuD
-	 f6rREnUPhqvvA==
-Date: Wed, 18 Jun 2025 19:55:12 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, David Lechner <dlechner@baylibre.com>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
-Message-ID: <ie44wrnocvisv2ilgds76owbk4u423rr2htpsc5pobykj37zeg@ga5y25gcdjv3>
-References: <20250610-iio-driver-ad4052-v3-0-cf1e44c516d4@analog.com>
- <20250610-iio-driver-ad4052-v3-4-cf1e44c516d4@analog.com>
- <yw3n2csu4x4mfed33dtvl75zc5scgkjvkzruqilpw64n7esmdn@3fj77ufzm3c2>
- <oqibdd7spdxvlimrwcabqo2xryfplk4q6lnwav5grtl5juud5x@vqfego523x7a>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PPkJYQSW"
+Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55IHtdbj377578;
+	Wed, 18 Jun 2025 12:55:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750269339;
+	bh=PTqXkeWdOJ01dOchQdWmJ3HLZ+mY40AHiSRqSHI6bU0=;
+	h=From:To:CC:Subject:Date;
+	b=PPkJYQSWjbFPhgazjQrIQRkzaC1OjJ98bocYItjZV3UX6eLWosLsjPbOPuy0LQRnk
+	 pZAYqvSjy2kvvTRiwXw5m7h/bOxoi6GX9Cq9WZZYCiIyuN8iFNYNNSnuznrZPx0llX
+	 KyLSaCDF2FXhFto91xin+Mw5d1v6HI75evfAi7QI=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55IHtdY6591755
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 18 Jun 2025 12:55:39 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
+ Jun 2025 12:55:38 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 18 Jun 2025 12:55:38 -0500
+Received: from localhost (akira.dhcp.ti.com [10.24.69.4])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55IHtbFZ4143062;
+	Wed, 18 Jun 2025 12:55:38 -0500
+From: Himanshu Mittal <h-mittal1@ti.com>
+To: <h-mittal1@ti.com>, <pabeni@redhat.com>, <kuba@kernel.org>,
+        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Roger Quadros <rogerq@kernel.org>, <danishanwar@ti.com>,
+        <m-malladi@ti.com>, <pratheesh@ti.com>, <prajith@ti.com>
+Subject: [PATCH net-next v3] net: ti: icssg-prueth: Add prp offload support to ICSSG driver
+Date: Wed, 18 Jun 2025 23:25:36 +0530
+Message-ID: <20250618175536.430568-1-h-mittal1@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6n56agevkbvsdqk4"
-Content-Disposition: inline
-In-Reply-To: <oqibdd7spdxvlimrwcabqo2xryfplk4q6lnwav5grtl5juud5x@vqfego523x7a>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
+Add support for ICSSG PRP mode which supports offloading of:
+ - Packet duplication and PRP trailer insertion
+ - Packet duplicate discard and PRP trailer removal
 
---6n56agevkbvsdqk4
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 4/8] iio: adc: Add support for ad4052
-MIME-Version: 1.0
+Signed-off-by: Himanshu Mittal <h-mittal1@ti.com>
+---
+v3-v2:
+- Addresses comment to fix structure documentation
 
-Hello,
+v2: https://lore.kernel.org/all/20250618102907.GA1699@horms.kernel.org/
 
-On Tue, Jun 17, 2025 at 05:34:56PM +0200, Jorge Marques wrote:
-> On Tue, Jun 17, 2025 at 04:59:48PM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Jun 10, 2025 at 09:34:37AM +0200, Jorge Marques wrote:
-> > > +static int ad4052_get_samp_freq(struct iio_dev *indio_dev,
-> > > +				struct iio_chan_spec const *chan,
-> > > +				int *val,
-> > > +				int *val2)
-> > > +{
-> > > +	struct ad4052_state *st =3D iio_priv(indio_dev);
-> > > +
-> > > +	*val =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, st->pwm_st.period);
-> > > +	return IIO_VAL_INT;
-> >=20
-> > st->pwm_st.period is the period that was requested before. If you want
-> > the real period that is currently emitted, check pwm_get_state_hw().
->=20
-> I believe only ad4695.c uses this method and the reason for that is if
-> the pwm is disabled we still want to obtain the requested value.
->=20
-> Reverting slightly to v2, the semantic to allow fetching from hw when
-> enabled, and using the managed state when disabled, would be:
->=20
-> 	struct pwm_state pwm_st;
-> 	int ret
->=20
-> 	ret =3D pwm_get_state_hw(st->cnv_pwm, &pwm_st);
-> 	if (ret)
-> 		goto out_release;
->=20
-> 	if (!pwm_st.enabled)
-> 		pwm_st =3D st->pwm_st;
->=20
-> 	*val =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, pwm_st.period);
->=20
-> Is this ok?
+ drivers/net/ethernet/ti/icssg/icssg_prueth.c | 12 +++++++++++-
+ drivers/net/ethernet/ti/icssg/icssg_prueth.h |  5 +++++
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-Looks fine to me. I didn't object the original suggested code, just
-wanted to highlight the semantics.
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+index a1e013b0a0eb..2aa812cbab92 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+@@ -148,8 +148,10 @@ static int prueth_emac_start(struct prueth *prueth)
+ 
+ 	if (prueth->is_switch_mode)
+ 		firmwares = prueth->icssg_switch_firmwares;
+-	else if (prueth->is_hsr_offload_mode)
++	else if (prueth->is_hsr_offload_mode && HSR_V1 == prueth->hsr_prp_version)
+ 		firmwares = prueth->icssg_hsr_firmwares;
++	else if (prueth->is_hsr_offload_mode && PRP_V1 == prueth->hsr_prp_version)
++		firmwares = prueth->icssg_prp_firmwares;
+ 	else
+ 		firmwares = prueth->icssg_emac_firmwares;
+ 
+@@ -1527,6 +1529,7 @@ static int prueth_netdevice_event(struct notifier_block *unused,
+ 	struct netdev_notifier_changeupper_info *info;
+ 	struct prueth_emac *emac = netdev_priv(ndev);
+ 	struct prueth *prueth = emac->prueth;
++	enum hsr_version hsr_ndev_version;
+ 	int ret = NOTIFY_DONE;
+ 
+ 	if (ndev->netdev_ops != &emac_netdev_ops)
+@@ -1538,6 +1541,11 @@ static int prueth_netdevice_event(struct notifier_block *unused,
+ 
+ 		if ((ndev->features & NETIF_PRUETH_HSR_OFFLOAD_FEATURES) &&
+ 		    is_hsr_master(info->upper_dev)) {
++			hsr_get_version(info->upper_dev, &hsr_ndev_version);
++			if (hsr_ndev_version != HSR_V1 && hsr_ndev_version != PRP_V1)
++				return -EOPNOTSUPP;
++			prueth->hsr_prp_version = hsr_ndev_version;
++
+ 			if (info->linking) {
+ 				if (!prueth->hsr_dev) {
+ 					prueth->hsr_dev = info->upper_dev;
+@@ -1858,6 +1866,8 @@ static int prueth_probe(struct platform_device *pdev)
+ 				  prueth->icssg_switch_firmwares, "eth", "sw");
+ 	icssg_mode_firmware_names(dev, prueth->icssg_emac_firmwares,
+ 				  prueth->icssg_hsr_firmwares, "eth", "hsr");
++	icssg_mode_firmware_names(dev, prueth->icssg_emac_firmwares,
++				  prueth->icssg_prp_firmwares, "eth", "prp");
+ 
+ 	spin_lock_init(&prueth->vtbl_lock);
+ 	spin_lock_init(&prueth->stats_lock);
+diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.h b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+index c03e3b3626c1..9ca2e7fdefbd 100644
+--- a/drivers/net/ethernet/ti/icssg/icssg_prueth.h
++++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.h
+@@ -13,6 +13,7 @@
+ #include <linux/etherdevice.h>
+ #include <linux/genalloc.h>
+ #include <linux/if_vlan.h>
++#include <linux/if_hsr.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+@@ -290,6 +291,7 @@ struct icssg_firmwares {
+  * @vlan_tbl: VLAN-FID table pointer
+  * @hw_bridge_dev: pointer to HW bridge net device
+  * @hsr_dev: pointer to the HSR net device
++ * @hsr_prp_version: enum to store the protocol version of hsr master
+  * @br_members: bitmask of bridge member ports
+  * @hsr_members: bitmask of hsr member ports
+  * @prueth_netdevice_nb: netdevice notifier block
+@@ -303,6 +305,7 @@ struct icssg_firmwares {
+  * @icssg_emac_firmwares: Firmware names for EMAC mode, indexed per MAC
+  * @icssg_switch_firmwares: Firmware names for SWITCH mode, indexed per MAC
+  * @icssg_hsr_firmwares: Firmware names for HSR mode, indexed per MAC
++ * @icssg_prp_firmwares: Firmware names for PRP mode, indexed per MAC
+  */
+ struct prueth {
+ 	struct device *dev;
+@@ -332,6 +335,7 @@ struct prueth {
+ 
+ 	struct net_device *hw_bridge_dev;
+ 	struct net_device *hsr_dev;
++	enum hsr_version hsr_prp_version;
+ 	u8 br_members;
+ 	u8 hsr_members;
+ 	struct notifier_block prueth_netdevice_nb;
+@@ -349,6 +353,7 @@ struct prueth {
+ 	struct icssg_firmwares icssg_emac_firmwares[PRUETH_NUM_MACS];
+ 	struct icssg_firmwares icssg_switch_firmwares[PRUETH_NUM_MACS];
+ 	struct icssg_firmwares icssg_hsr_firmwares[PRUETH_NUM_MACS];
++	struct icssg_firmwares icssg_prp_firmwares[PRUETH_NUM_MACS];
+ };
+ 
+ struct emac_tx_ts_response {
+-- 
+2.34.1
 
-I would expect that the compiler optimizes out the unnecessary
-assignments done in pwm_st =3D st->pwm_st, as only pwm_st.period is used
-later on.
-
-Best regards
-Uwe
-
---6n56agevkbvsdqk4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhS/X0ACgkQj4D7WH0S
-/k6uOggAutqfRasKnyDG4NPZagUBSr3nqLLjatsZLuA3uLLglPffPSkWn906uKQL
-s+GFWFqirMgxqPyT6wi37NJL5Sv0nYvqgN02HBa8uDnSOip3wVtD14B+FI1wC2+A
-puYwXaPwG/0eSZOi+XmtqO5M3bwgsnVb3ev8oH1dF1bkJKaDFnh8b73o2mqPZ2cn
-hSkHzrRTW0tWN6x9T+wUH2CfnTsgGZe/M5twgwYoLUbbPmmvca0lpOS5bxAbKjo+
-735f9Yg65sp7HDsCR8JgVjE/Yr+5No2TkWpIx8JpAMdsbq8lZKEugWPHHs16tu+8
-PWQ+2XLnIVDnEBYpBRenpgEMHFZ2+w==
-=oKT8
------END PGP SIGNATURE-----
-
---6n56agevkbvsdqk4--
