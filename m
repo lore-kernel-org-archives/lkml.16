@@ -1,88 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926502BEFF3;
-	Wed, 18 Jun 2025 14:26:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B0D285417;
+	Wed, 18 Jun 2025 14:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256774; cv=none; b=HMmK8de99eVgnDAHiLpj8wZmpHLnXCt1iDFgPRuXhRrqZtYFufSE+rqcJwmGXqTEoWSn7eE5Mf00I1kPF4jbV2z3QRTXEYotJaWLyEcwIpAfGdvx/FfHmKlmjmKFzP8vwXZfdGHbZuPjg3u9kw7HwJrUSD3CmDaccdpbIPHchyI=
+	t=1750256841; cv=none; b=VKMXoKl+vfbknB6hLmOzyEKcGYY64pKKI51sBPmSZqVzLfLaCHnJuBlrCns440UCEergX9Xa7n89C6w2C1Q8eJDBsdhdVZbeno2YKDNtUNWDqMyNuxGpI8oavxgSsRVt8tZNLAlmTHHU0U7mb7AHZmfKw4B4MTjz2pPTmSMzQgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256774; c=relaxed/simple;
-	bh=/blhL2akKmMq36380T/ib5fiIDzcnN30f9c4OMQ7E7U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lKpqHkfSteOA96C7eP7S41ZDrMP00frJWSfjjS9pvgC+JHEjmuAcGrUeZZ1Nq92cHrNJdmlwM300wHGML5/SdudPsPV5VOu8UgHDun026iQnY28e0qUbc8/OZKUJXSTa8H7oXhkHpaUmVWeRmkiVuGfFMAMtLts+FKvL7rYv5xQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1HirzRfM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750256841; c=relaxed/simple;
+	bh=UN4+r4XZNFrvRooGsjjEHC4utAW+tfGxUnWe7E/kEZg=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=ufna0Hn9EP5US8r7dg3DZQCE34gQsBpFBxnunz75SXTdAmN2iYQ9Pti33jZbdKVXdaPkbsZmpYrBJT1hOmnLFLOsrjUQEUnBWyA8ImDC3CsGjuui1YWqOuXs9UpOPYnLz2x0II3rRawpOGQhZ6ECxaLXZNh9JPg9kdDlvmVUsZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=RYxBhjev; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1HirzRfM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A93A0C4CEE7;
-	Wed, 18 Jun 2025 14:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750256773;
-	bh=/blhL2akKmMq36380T/ib5fiIDzcnN30f9c4OMQ7E7U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=1HirzRfM7d3RMRSdE7eIMCKQJRWtEzOGGCW4r5ghcS9W1oaE0x9efow4ehPqvFO4n
-	 MbOevEkhQdFl4tOCS5J2tZinzJ4VCG5+7vtIx0eylP5f1mX9fGmxmPvwHEdzfdWjiw
-	 1QXYejMFPzenjFC93SsN/itPU0EgwTOB9kL9r6JI=
-Date: Wed, 18 Jun 2025 16:26:10 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Kisub Choe <kisub.choe.0x1@gmail.com>
-Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
-	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: sm750fb: rename 'proc_setBLANK'
-Message-ID: <2025061817-jacket-nacho-50d6@gregkh>
-References: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="RYxBhjev"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id CDC8925F7A;
+	Wed, 18 Jun 2025 16:27:18 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id UXPabypd1lfz; Wed, 18 Jun 2025 16:27:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750256837; bh=UN4+r4XZNFrvRooGsjjEHC4utAW+tfGxUnWe7E/kEZg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=RYxBhjevfThdOLUFRzhLqaoSxQrAAJJX10YFzY/7DTzTuSQuDgSDAGeL5MqVoDyop
+	 yZKq3Z+ZQoZWeKSOTFlvOindsxL74TAJWqexbnZF7H5/f23C2c9dNCU3D3i1O1ueFQ
+	 AadAn1wP5JOAYtODFq4KaqZrsI4ykYywXaAgQnT+VOJLZONOh/jfxygQ1nKb6ZL7kO
+	 XzASPMLAxr+hlektYmjrN6iy0iXhKgUlpqEvOqhiOvpnA4bNCoy59iizB5WhKomoJ4
+	 VwtwaiqCqkR2rMWNJzxXZNHsu12JRz3WNalpMi3Ny/GZO5RUYt+y3DRnKYxQ+3w4gr
+	 92vQACA6z9Eng==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
+Date: Wed, 18 Jun 2025 14:27:17 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>, Jagan Teki
+ <jagan@amarulasolutions.com>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park
+ <kyungmin.park@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 10/12] dt-bindings: samsung,mipi-dsim: document exynos7870
+ DSIM compatible
+In-Reply-To: <5672e2ee-a828-4555-bf78-9d75c58840bd@kernel.org>
+References: <20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org>
+ <20250612-exynos7870-dsim-v1-10-1a330bca89df@disroot.org>
+ <5672e2ee-a828-4555-bf78-9d75c58840bd@kernel.org>
+Message-ID: <9e2f29d3763ea50b30e5a493551627cd@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 11:15:55PM +0900, Kisub Choe wrote:
-> Rename 'proc_setBLANK' to 'proc_setBLANK' to
-
-That doesn't rename anything :(
-
-
-
-> conform with kernel style guidelines as reported by checkpatch.pl
+On 2025-06-18 10:00, Krzysztof Kozlowski wrote:
+> On 12/06/2025 17:18, Kaustabh Chakraborty wrote:
+>> Add compatible string for Exynos7870 DSIM bridge controller. The
+>> devicetree node requires four clock sources, named:
+>> - bus_clk
+>> - phyclk_mipidphy0_bitclkdiv8
+>> - phyclk_mipidphy0_rxclkesc0
+>> - sclk_mipi
+>> 
+>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>> ---
+>>  .../bindings/display/bridge/samsung,mipi-dsim.yaml | 26 ++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml b/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml
+>> index 1acad99f396527192b6853f0096cfb8ae5669e6b..887f3ba1edd24a177a766b1b523d0c197ff1123a 100644
+>> --- a/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml
+>> +++ b/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml
+>> @@ -24,6 +24,7 @@ properties:
+>>            - samsung,exynos5410-mipi-dsi
+>>            - samsung,exynos5422-mipi-dsi
+>>            - samsung,exynos5433-mipi-dsi
+>> +          - samsung,exynos7870-mipi-dsi
+>>            - fsl,imx8mm-mipi-dsim
+>>            - fsl,imx8mp-mipi-dsim
+>>        - items:
+>> @@ -144,6 +145,31 @@ required:
+>>  
+>>  allOf:
+>>    - $ref: ../dsi-controller.yaml#
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            const: samsung,exynos7870-mipi-dsi
+>> +
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          minItems: 4
 > 
-> CHECK: Avoid CamelCase: <proc_setBLANK>
+> maxItems: 4
+
+Will replace. maxItems == minItems implicit if maxItems present and
+minItems absent.
+
 > 
-> Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
-> ---
->  drivers/staging/sm750fb/sm750.c | 4 ++--
->  drivers/staging/sm750fb/sm750.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>> +
+>> +        clock-names:
+>> +          items:
+>> +            - const: bus_clk
+>> +            - const: phyclk_mipidphy0_bitclkdiv8
+>> +            - const: phyclk_mipidphy0_rxclkesc0
+>> +            - const: sclk_mipi
 > 
-> diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-> index 1d929aca399c..bb2ade6030c2 100644
-> --- a/drivers/staging/sm750fb/sm750.c
-> +++ b/drivers/staging/sm750fb/sm750.c
-> @@ -577,7 +577,7 @@ static int lynxfb_ops_blank(int blank, struct fb_info *info)
->  	pr_debug("blank = %d.\n", blank);
->  	par = info->par;
->  	output = &par->output;
-> -	return output->proc_setBLANK(output, blank);
-> +	return output->proc_set_blank(output, blank);
->  }
->  
->  static int sm750fb_set_drv(struct lynxfb_par *par)
-> @@ -605,7 +605,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
->  	crtc->ypanstep = 1;
->  	crtc->ywrapstep = 0;
->  
-> -	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
-> +	output->proc_set_blank = (sm750_dev->revid == SM750LE_REVISION_ID) ?
->  				 hw_sm750le_set_blank : hw_sm750_set_blank;
+> Does any existing driver code actually depends on the names? If not, we
+> switched in Samsung in general to names matching the input or the
+> function, not the name of provider. bus, bit (or bitdiv?), rx or esc0, sclk 
 
-Why do we even need this function pointer?  Why not just do the check
-above when it is called instead of this indirection?
+Yeah, Exynos5433 uses it. Code is here [1].
 
-thanks,
+Though, I could get around this if you would like to. Would need to add
+a few more patches.
 
-greg k-h
+PS: bitdiv8 should actually be byte. bit clock frequency used in data
+transmission divided by 8 covers a byte.
+
+[1] https://elixir.bootlin.com/linux/v6.16-rc2/source/drivers/gpu/drm/bridge/samsung-dsim.c#L227
+
+> 
+> 
+> Best regards,
+> Krzysztof
