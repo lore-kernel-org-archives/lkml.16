@@ -1,206 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF6E70830;
-	Wed, 18 Jun 2025 18:19:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3216A224FA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270761; cv=none; b=DDbrHWoQ5sPK3xbln3kQgKm1x57v+xWQGqwWdrgl5WKEMUBYihKDDSG2TSodhTz0XfFdKUFd7hYqJor6G+o0E+CVKkBoOYfmEed82A3pZFxy12ayeectUBWGVk1pPSDbpGCbRWokIG8rzGH/RVw23bD8ZFaJ4JT3FGeGukoCF/U=
+	t=1750270775; cv=none; b=X3zb8d3672LKO4lGbkNzJb/hFK5djIpiifPi0wMpaL9lLuA4cDuAMLv1Ut6O+zc48XLxuQUlYd3stoP8eNKZ6rf0SedDGQExwwiOxJajkJZ4dktOHRBQxvxqX4Quf12p67WEwdC86ZkFfZvpOAFvEdAko4EIe5hPVViwL9vDN0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270761; c=relaxed/simple;
-	bh=a50wlknDlpagNq9jT3Q/IWSLUrXmeXKtizwXZ65RjX0=;
+	s=arc-20240116; t=1750270775; c=relaxed/simple;
+	bh=MlZoJdg+22hzILIY5pkXr+G/amOejs9cl3kSiFMmC3A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JtY0/Oy3t6VVByjww8SbTUsdy5nrH8y3xYx9S5CKHq1ANnsDs/IKoqx2CFm5tqFKxOFZspogO+m8Kyq2q9TZWteGToJdErp1Lmpj4E/0cP07dMdlxOI06uSmLUoTjoXiTVpSzbokFLKmserO2lLVdvgQdVT7O5ebaIoMdApqJDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lzKZWqwH; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qhrhL2EGU5MC8BfbO7SpAeEsifg1RXBA/aLWMRVLUSzRIrdq5sRSvOQ5zhfQx5Exz641kBkBPLSlTZlHJu+cUA3Md89z4T9seFcqeOF13RvFdXAO9WRZ3CHLldWDzb8y5PXPkZT84nbXk3X+A0QjDnAWxio6q5QL6mfmQZRSqdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sBCB2ETU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bUpHZ2GX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sBCB2ETU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bUpHZ2GX; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lzKZWqwH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28080C4CEE7;
-	Wed, 18 Jun 2025 18:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750270760;
-	bh=a50wlknDlpagNq9jT3Q/IWSLUrXmeXKtizwXZ65RjX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lzKZWqwHZj3IpGzO5PE2PMzFEc9y+To0ksq9WMfVFHMABL5TvgULiuHVEv1Q3sICd
-	 IvcBuy+9JdRDH9jmtmYKfEGU4DmKUfgoiKms+0R8YUpDXkRf3B0WH60WlDjuJTD6S4
-	 2RCswt7B+ik4mQwGkHA7obrN/2VGwQqRxPAXnAplqAx0PVQsRdI+UECPKAIBaAkBKL
-	 b0o1Um6RqawIVq36Xc0ZG/mgZFaifAE55ARqxI11lANsh5gjgdy4lJGu6smC7kBtZn
-	 CooEN3OuhxDOkP1Efqj2P6vx3bjkzTm2RZJcPdIZShHV0Ng8rm7gXcz/ml3vlKwCN5
-	 ZV200A33o5DPQ==
-Date: Wed, 18 Jun 2025 20:19:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: =?utf-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCo0YPQsdC40L0=?= <privatesub2@gmail.com>, 
-	linux-kernel@vger.kernel.org, Brandon Cheo Fusi <fusibrandon13@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-Message-ID: <daopyy24kta2myimufkf2v6c6igdplco6b2kxohm47j6cez5mb@34ccs3wbtkop>
-References: <20250427142500.151925-1-privatesub2@gmail.com>
- <20250427142500.151925-3-privatesub2@gmail.com>
- <20250512233944.06bc1cb7@minigeek.lan>
- <CAF4idN=Kwp8bDYVyjM52eUwVEEZcPM9YyK9KiqUzyf8Dm=cXTQ@mail.gmail.com>
- <hetih6ul7hdj3kflhy2s2zkkh3r7pcupgwde3xnwmjzs6cujp3@vcw4pde76bdb>
- <20250528132902.70f634cd@donnerap.manchester.arm.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sBCB2ETU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bUpHZ2GX";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sBCB2ETU";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bUpHZ2GX"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 13C361F7BD;
+	Wed, 18 Jun 2025 18:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750270771; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qoAqe6Tz+Ixn12xTbWlPEovX8xRcRkaG3QnFbPGW38=;
+	b=sBCB2ETUtaw34+DuQPPHpSrGBsVJpQUu8owr5sMTKIIGGUOXXrNOlkDWI/hq72SkdUQfRA
+	8NsnjfxmFkPYgfFtvaGN2v8LAXksKV71M7w7Ch8mRU2ytNyrpI/wPBUxWhrsyanD4rV1MO
+	08bsGxJYBAiQNTIh1YLM9sZpJsS0AUM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750270771;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qoAqe6Tz+Ixn12xTbWlPEovX8xRcRkaG3QnFbPGW38=;
+	b=bUpHZ2GXCUtxX5l5Yyz+YWiwGQxe4ldWuSVUM3CLZdoiRquylArkeXwho32B2YoCZCXeuG
+	AaE3RSbrgMiEHkCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=sBCB2ETU;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=bUpHZ2GX
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750270771; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qoAqe6Tz+Ixn12xTbWlPEovX8xRcRkaG3QnFbPGW38=;
+	b=sBCB2ETUtaw34+DuQPPHpSrGBsVJpQUu8owr5sMTKIIGGUOXXrNOlkDWI/hq72SkdUQfRA
+	8NsnjfxmFkPYgfFtvaGN2v8LAXksKV71M7w7Ch8mRU2ytNyrpI/wPBUxWhrsyanD4rV1MO
+	08bsGxJYBAiQNTIh1YLM9sZpJsS0AUM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750270771;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2qoAqe6Tz+Ixn12xTbWlPEovX8xRcRkaG3QnFbPGW38=;
+	b=bUpHZ2GXCUtxX5l5Yyz+YWiwGQxe4ldWuSVUM3CLZdoiRquylArkeXwho32B2YoCZCXeuG
+	AaE3RSbrgMiEHkCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4758113A3F;
+	Wed, 18 Jun 2025 18:19:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xXVlDjIDU2gyRwAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Wed, 18 Jun 2025 18:19:30 +0000
+Date: Wed, 18 Jun 2025 19:19:28 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-mm@kvack.org, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+Message-ID: <zsfblk4nfi6nigfnv7umruhewmg7fqhhtz6fiigezzk2wtn2n7@agpzorfpaywq>
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zqgmvr7sp22wp6bu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250528132902.70f634cd@donnerap.manchester.arm.com>
+In-Reply-To: <20250618041235.1716143-2-anshuman.khandual@arm.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 13C361F7BD
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,lwn.net:email,linux-foundation.org:email,goodmis.org:email,arm.com:email,suse.de:dkim,kvack.org:email];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.01
+X-Spam-Level: 
 
+On Wed, Jun 18, 2025 at 09:42:34AM +0530, Anshuman Khandual wrote:
+> Add a new format for printing page table entries.
+> 
+> Cc: Petr Mladek <pmladek@suse.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  Documentation/core-api/printk-formats.rst | 14 ++++++++++++++
+>  lib/vsprintf.c                            | 20 ++++++++++++++++++++
+>  mm/memory.c                               |  5 ++---
+>  scripts/checkpatch.pl                     |  2 +-
+>  4 files changed, 37 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index 4b7f3646ec6ce..75a110b059ee1 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -689,6 +689,20 @@ Rust
+>  Only intended to be used from Rust code to format ``core::fmt::Arguments``.
+>  Do *not* use it from C.
+>  
+> +Page Table Entry
+> +----------------
+> +
+> +::
+> +        %ppte
+> +
+> +Print standard page table entry pte_t.
+> +
+> +Passed by reference.
+> +
+> +Examples for a 64 bit page table entry, given &(u64)0xc0ffee::
+> +
+> +        %ppte   0x00c0ffee
 
---zqgmvr7sp22wp6bu
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v12 2/3] pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM
- support
-MIME-Version: 1.0
+Ok, so what's the point of this if you're just printing the number?
 
-Hello Andre,
+Could at least do something like:
 
-On Wed, May 28, 2025 at 01:29:02PM +0100, Andre Przywara wrote:
-> On Wed, 28 May 2025 13:08:40 +0200
-> Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org> wrote:
-> > On Sat, May 24, 2025 at 12:07:28PM +0300, =D0=90=D0=BB=D0=B5=D0=BA=D1=
-=81=D0=B0=D0=BD=D0=B4=D1=80 =D0=A8=D1=83=D0=B1=D0=B8=D0=BD wrote:
-> > > =D0=B2=D1=82, 13 =D0=BC=D0=B0=D1=8F 2025=E2=80=AF=D0=B3. =D0=B2 01:39=
-, Andre Przywara <andre.przywara@arm.com>: =20
-> > > >
-> > > > On Sun, 27 Apr 2025 17:24:54 +0300
-> > > > Aleksandr Shubin <privatesub2@gmail.com> wrote: =20
-> > > > > +              */
-> > > > > +             use_bus_clk =3D false;
-> > > > > +             val =3D mul_u64_u64_div_u64(state->period, hosc_rat=
-e, NSEC_PER_SEC);
-> > > > > +             /*
-> > > > > +              * If the calculated value is =E2=89=A4 1, the peri=
-od is too short
-> > > > > +              * for proper PWM operation
-> > > > > +              */
-> > > > > +             if (val <=3D 1) { =20
-> > > >
-> > > > So if I get the code correctly, it prefers HOSC over APB? Is that
-> > > > really the best way? Shouldn't it be the other way around: we use t=
-he
-> > > > faster clock, since this will not limit the sibling channel?
-> > > >
-> > > > And another thing to consider are rounding errors due to integer
-> > > > division: certain period rates might be better achievable with one =
-or
-> > > > the other source clock: 3 MHz works best as 24MHz/8, 3.125MHz as
-> > > > 100MHz/32.
-> > > > So shall we calculate the values and compare the errors instead?
-> > > > Oh, and also we need to consider bypassing, I feel like this should=
- be
-> > > > checked first.
-> > > >
-> > > > In any case I think there should be a comment describing the strate=
-gy
-> > > > and give some rationale, I think. =20
-> > >=20
-> > > I like the idea of comparing the quantization error for each clock so=
-urce
-> > > (i.e. computing the actual period for both APB and HOSC and choosing
-> > > whichever is closer to the requested period).
-> > > I can try to implement that error-minimization approach in the next
-> > > series of patches and add a comment explaining the strategy. =20
-> >=20
-> > Consumers have different needs. Some might prefer a better match for
-> > period, but in my experience most would go for a fine-grained selection
-> > of duty_cycle, so prefering the faster clock sounds sane.
-> >=20
-> > I don't say minimizing the error is wrong, but if it's unclear that
-> > this matches what a consumer wants I object to make the procedure to
-> > select the hardware settings considerably more complicated and run-time
-> > intensive.
->=20
-> Yes, I agree. There seems to be another use case here, which is to provide
-> clocks on output pins. The PWM IP has a bypass switch (per channel, after
-> the divider), and this feature is already required to supply the
-> "internal" (co-packaged) Ethernet PHY on the Allwinner H616 with its cloc=
-k.
-> With the two possible input clocks and those pre-dividers there is actual=
-ly
-> quite a number of possible frequencies to deliver on output pins.
->=20
-> Since we need some algorithm to decide when we need to use the bypass
-> mode, should we check for that if the duty cycle is 50%, to see if we can
-> reach the frequency with just the pre-dividers?
-> Chances are we need this anyway, since for instance the 24MHz required for
-> the PHY cannot be achieved otherwise.
+%ppte 0xc0ff000|WRITE|DIRTY|PRESENT
 
-And the clk output is the output after the predividers I assume? I would
-prefer to make the driver create a clk_provider instead of guessing
-which requests are supposed to have a meaning for the clk output.
+no? Otherwise it's a not super useful wrapper around printing pte_val(*pte).
 
-> > > > > +static int sun20i_pwm_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +     struct pwm_chip *chip;
-> > > > > +     struct sun20i_pwm_chip *sun20i_chip;
-> > > > > +     struct clk *clk_bus;
-> > > > > +     struct reset_control *rst;
-> > > > > +     u32 npwm;
-> > > > > +     int ret;
-> > > > > +
-> > > > > +     ret =3D of_property_read_u32(pdev->dev.of_node, "allwinner,=
-npwms", &npwm);
-> > > > > +     if (ret < 0)
-> > > > > +             npwm =3D 8; /* Default value */
-> > > > > +
-> > > > > +     if (npwm > 16) {
-> > > > > +             dev_info(&pdev->dev, "Limiting number of PWM lines =
-=66rom %u to 16", npwm); =20
-> > > >
-> > > > I don't think we should proceed if the firmware information is clea=
-rly
-> > > > wrong. Just bail out with -EINVAL or so here, so that gets fixed in=
- the
-> > > > DT. =20
-> >=20
-> > To me it's not obvious that the "firmware information is clearly wrong".
-> > Maybe the next Allwinner SoC will have 24 outputs and the problem is
-> > only that this driver isn't prepared to cope for that number of outputs?
->=20
-> But then it would be an error, regardless?
-> The MMIO register frame of this IP here has a hard limit on 16 channels,
-> both by the bit assignments in each register (2 bits per channel in a
-> 32-bit register), but also by the layout of the registers (max 8
-> registers, each for a pair of 2 PWM channels). So anything with more than
-> 16 channels cannot be compatible with what this driver supports.
-> So as this driver here stands right now, more than 16 channels is an
-> error, simple as that. If we extend the driver later on, to cover more
-> advanced IP, we would naturally amend this check, of course.
+> +
+>  Thanks
+>  ======
+>  
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 3d85800757aa5..005490202ffb5 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2433,6 +2433,9 @@ early_param("no_hash_pointers", no_hash_pointers_enable);
+>   *		Without an option prints the full name of the node
+>   *		f full name
+>   *		P node name, including a possible unit address
+> + * - 'pte'	For a 64 bit page table entry, this prints its contents in
+> + *              a hexa decimal format
+> + *
+>   * - 'x' For printing the address unmodified. Equivalent to "%lx".
+>   *       Please read the documentation (path below) before using!
+>   * - '[ku]s' For a BPF/tracing related format specifier, e.g. used out of
+> @@ -2542,6 +2545,23 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		default:
+>  			return error_string(buf, end, "(einval)", spec);
+>  		}
+> +	case 'p':
+> +		if (fmt[1] == 't' && fmt[2] == 'e') {
+> +			pte_t *pte = (pte_t *)ptr;
+> +
+> +			spec.field_width = 10;
+> +			spec.precision = 8;
+> +			spec.base = 16;
+> +			spec.flags = SPECIAL | SMALL | ZEROPAD;
+> +			if (sizeof(pte_t) == sizeof(u64)) {
+> +				u64 val = pte_val(*pte);
+> +
+> +				return number(buf, end, val, spec);
+> +			}
 
-Agreed. In that case I don't care much if .probe() fails or just limits
-the number of PWMs to 16.
+As mentioned elsewhere in the thread, this obviously doesn't work for everything
+32-bit, and 64-bit PAE, and all of the weird page table formats we have around.
 
-Best regards
-Uwe
-
---zqgmvr7sp22wp6bu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhTAyMACgkQj4D7WH0S
-/k5TXQf/WQifjbmW7D5efouTLo5vO4iUok97pK1+s3+HHamdmm23IWg0PAFmFQBB
-UNd0buVhud3TtGtJeSPa57FUEzriGdGzJ2CFN+qDdUY7L7VGACE6S7mGsnLLYQuN
-UsGMB0G7qVL5h3zhySTgXtgMF+D9QZHZq/LwR00/PpXVDAG6vES7AwdQlsG0PS+4
-so3ravkEOTsVKRYzFLC6dNZoGeGWaz3X0Iedjl4Y8NXs+HKpp2qyh1x8FPJYIy9V
-GBtDzx8E4s8SwuJeTJSdcfs/PlIyCWCa51El8AExmHaB0oE8JEB3dqdrKRHxLc0Z
-Ie0GiCpIKi3W7ApbehC3rBcHxbwj9g==
-=USjg
------END PGP SIGNATURE-----
-
---zqgmvr7sp22wp6bu--
+-- 
+Pedro
