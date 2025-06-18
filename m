@@ -1,108 +1,104 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E35A2882D1;
-	Wed, 18 Jun 2025 15:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166791DF738
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750261661; cv=none; b=r8Auov85xB7sm+FH8NpnpkMqwJyM5dDq0pSYTmPuAAB3GprvucLeIjDmz2XKNg+LVhOY5RVBZGF3l5a0r3iJzTe31rpk0g5URZLbW5nNlSGtKX+lHKO/Rkt+z+k6UafY2G1vID9KcFyveOTwd6b9jkQgR+lWV+Y5cA5mB8WTg3A=
+	t=1750261745; cv=none; b=nqnSjwyG7MPT+g8x8O4UnZf7W9pQ8gwwGwm+zRlAvmHNIlDMWQGnpK4ocbsmiYREe4/0JkA0qoYQF0LBccijJVqV5NRv/DvCHkHcIQn2n2+NfSMTfFk3RfTEKJoMPiTnVZX9jOLE/KFG9MZ9OrRKMC8mo3vvX+lPeKQrlz2po+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750261661; c=relaxed/simple;
-	bh=1NWRcvqyk1HC6IXC66tM06YKT2T2SuTaEg9Je/zWpNY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ihLni4Z4awC0IwZTLGkABMhfvISePR1qffXXUhfsxE1Uou2ScO5xfR7/+4Gu2eoAoJuUIXG9cj5mlUOfypq9owXg35V3eyCNLw2y5N7o//cYp1a+A0pKel47uWVDJQbYPnho66eYUAu5jw38rEOv0koCr3Lhe0sDP3xFOEsucBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j6809X7b; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6809X7b"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-312f53d0609so1123010a91.1;
-        Wed, 18 Jun 2025 08:47:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750261660; x=1750866460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1NWRcvqyk1HC6IXC66tM06YKT2T2SuTaEg9Je/zWpNY=;
-        b=j6809X7bM6B2H/kHeEtt9peeQVuy1mv2YtNvH+7g/EI41ymDpvScDzVRFOPUoqRX4n
-         w18Z8WrWpBduI9Ku7Yaa1orDhEbqZ5LHtpAHXYV4nNhDHg1nspzJejmQsNbOOhGSFkRQ
-         m4cyBuEFBqZtxQfgU/OXXp1a1MnRMP58asBjfKFMF3PSVjeh+8BnbuCdc8/HJHuE1jIf
-         App6BwrnSMkoQrmQrhJz2McbYD/830fXIl6eLEFfb+uq4cNNGAHW7NQuu7233qNTfYHS
-         m28L9b4FsD6CjYfk1vHmtGpBlOx/HGcJaMk8H+2tat+DJC2a0ivOG/ZBKC5wt/ZFNS5o
-         aSAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750261660; x=1750866460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1NWRcvqyk1HC6IXC66tM06YKT2T2SuTaEg9Je/zWpNY=;
-        b=M5foFr4todsjkd2ziYK1G/uXojLBoMVj9Fs00pDJNlduUfPOm7CV7I1y1Hf/uaImac
-         J5afkXxh2cm7WVxG71KZuKGEH4Gj6LXZ2bCf7eOZ/8BAGRRPmbeO1g2TDltH+q9i7iMt
-         cR7EmqCiT7YC5psyCLssZf5xAq73vNBIiDxDPrvM+vHG8ByBxuCziwL3r9bEDYoZEbxc
-         7oDL1PXsHB5tLx33esZHDEC1dPPleLb4rb62BV7GjauY7bfKhbO7jEg6Pw7I9kuZIlfX
-         i7Rhut7mGXD7GzZB7TFIerYqluCTCiYZ5AcXRwsncpRyUY5IwKlrgS6/goXLSvsBq61O
-         6xFg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSXf4Zcrv7DijCwuFtThGMralp1uYHF76JrVTQ/MXONq8NdFfdJXK2FfrzsdbE6X4Y/BPVlO+rh5NLbd8=@vger.kernel.org, AJvYcCXHIuJGL1RaO++fSCg/x++ILHcwU7wbFTGCJ32hxfaF4yDC8la6JgBK9pkgMo0taSWzG13gpJm3W0Pns5T16cU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsp2zTV4C6oHs4lGK8kkENbu6wffaiC7UFchVDcv9CEAy+l29+
-	HKbTzvazpoyeT63/V9GMjjT0yVyaoq9XMiW+3LAI5a6X9g0EHF+gyHTVau/GCym5p6Gu1YEJ2i1
-	v2e+pkebeFCDZiDI/GRiPY1x8Z96dUIg=
-X-Gm-Gg: ASbGncu2qj1J/p6ZTEazrm/X7pE+2b8g3DOhw5RH0cMfhUaASP5ZBMqix4DefRgoYEU
-	RxdvBWqxzMMXfQPvl2PJPsLd3xxMoAINQfi50KeGyulVjvGpuEDrjKcFWM/Y8Q9QeHaftuCw7kg
-	qh5BUWbEG9FKxVL5DpjR5ejJMNdjOVQsqLaALkBofjxdA=
-X-Google-Smtp-Source: AGHT+IFyYd+JxjMJtiuVxmSQK2fVe0FWUd5QPg4Vb9q9Xd73zFxOWEv5UEHwCCyXhu2Hq4ae7/DFdcxsuKfVrTQ+lEw=
-X-Received: by 2002:a17:90b:1ccc:b0:311:c939:c842 with SMTP id
- 98e67ed59e1d1-313f1de6397mr9265526a91.7.1750261659682; Wed, 18 Jun 2025
- 08:47:39 -0700 (PDT)
+	s=arc-20240116; t=1750261745; c=relaxed/simple;
+	bh=1FMcgHBGRpcgdJqz7L1cKQG6vvzTapgyrwXuW+aN4Bo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=aplDMkJGA677bcRSkkV2NBc1HQBAyJd2O86HbOJi84UCD1jpq8/mpbEbllzitnmken1t4UyDoLG7V5tLhlQeLCGlXSnYRDN29OZtrafjluaTixZGF5zXfhj+2dUfV5RNwbha7XD7tZariyojc0X7fZ8Kou1bh+J8xsY+lj7Isnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf16.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay07.hostedemail.com (Postfix) with ESMTP id 8B07316038D;
+	Wed, 18 Jun 2025 15:49:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf16.hostedemail.com (Postfix) with ESMTPA id A91FA2001F;
+	Wed, 18 Jun 2025 15:48:59 +0000 (UTC)
+Date: Wed, 18 Jun 2025 11:49:07 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Mark Rutland <mark.rutland@arm.com>, Changbin Du <changbin.du@huawei.com>
+Subject: [GIT PULL] ftrace: Fix accounting error in updating funcgraph-args
+Message-ID: <20250618114907.23b824df@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617144155.3903431-1-fujita.tomonori@gmail.com>
- <20250617144155.3903431-2-fujita.tomonori@gmail.com> <aFJzNCCERjKHIVty@google.com>
- <CANiq72nP+dKugMv3KXdJJsFE0oD01+zYgWbjz3e04kmhj_5MbQ@mail.gmail.com>
- <aFKMXqak-mHraxU_@google.com> <CANiq72kSfHTPeRQjhHKhdw8zuozvNy50CJjTuEbUnW_3j9x8tw@mail.gmail.com>
- <CAH5fLgggDKUwmU3oCTMS1dQGzA5Whp2fnXoLmbGmNF1W89Ar_A@mail.gmail.com>
-In-Reply-To: <CAH5fLgggDKUwmU3oCTMS1dQGzA5Whp2fnXoLmbGmNF1W89Ar_A@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 18 Jun 2025 17:47:27 +0200
-X-Gm-Features: Ac12FXzvwz1JJyMgqNMj3Z9BJKGqVyQdYLECpyT70444q_vEtLig1KxU8dwcXLg
-Message-ID: <CANiq72mBfTr0cdj_4Cpdk62h2k+Y5K3NSs54_1-9jiszMZ6AuA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods as_micros_ceil
- and as_millis
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
-	ojeda@kernel.org, anna-maria@linutronix.de, bjorn3_gh@protonmail.com, 
-	boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org, gary@garyguo.net, 
-	jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org, 
-	lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org, 
-	tglx@linutronix.de, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: A91FA2001F
+X-Stat-Signature: 7p4xcn7n78cyta89uwruy8qa3usgbuwo
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1+n7DdzAcAkfKOELSa83XKHE550hxLaGPg=
+X-HE-Tag: 1750261739-932939
+X-HE-Meta: U2FsdGVkX1+/JsCSPy8xOk/q3BujfAu2OYry/JYgSwSjx6VOjJ9skaor6gmkozhz+S2hBrz0dQnrkaJM6JHQASt/wpPfVzQEW08cPSOeJmXfjiPBFuTb28Va/Zy0Tv3geCUpjMXG/O7tiuaMJeMcvqnSOGiAtwLar57DkAUOIxWOU8+RPyxz05VMSVWj0mNLm5HC1ZfTyGHnCivXc5BqzhXWTJgwmXu27TnnnEHoZgzUlPlbwSrRDFL8yfMxNYDZGZNkVRSq8MgJoIhYc68s8bkaqDEG3UXkKHMg3VnuQuT+2yi9BINlionbOSTdo+BV9M33GpN8be0ZNR6rSjh2hqf0rGSFxBnw
 
-On Wed, Jun 18, 2025 at 3:17=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> There are also methods such as Duration::as_millis(). Yes, those take
-> &self but &self is equivalent to self for Copy types, so there is no
-> difference. And even if we did treat them differently,
-> Duration::as_millis() is actually borrowed->owned as the return type
-> is not a reference, so ...
 
-In most cases it may not matter, but even if taking either was exactly
-the same, the point of the discussion(s) was what is more idiomatic,
-i.e. how to spell those signatures.
 
-I understand you are saying that `Duration::as_millis()` is already a
-stable example from the standard library of something that is not
-borrowed -> borrowed, and thus the guidelines should be understood as
-implying it is fine either way. It is still confusing, as shown by
-these repeated discussions, and on the parameter's side of things,
-they still seem to prefer `&self`, including in the equivalent methods
-of this patch.
+Linus,
 
-Personally, I would use `self`, and clarify the guidelines.
+ftrace fix for 6.16:
 
-Cheers,
-Miguel
+- Do not blindly enable function_graph tracer when updating funcgraph-args
+
+  When the option to trace function arguments in the function graph trace
+  is updated, it requires the function graph tracer to switch its
+  callback routine. It disables function graph tracing, updates the
+  callback and then re-enables function graph tracing.
+
+  The issue is that it doesn't check if function graph tracing is
+  currently enabled or not. If it is not enabled, it will try to
+  disable it and re-enable it (which will actually enable it even though
+  it is not the current tracer). This causes an issue in the accounting
+  and will trigger a WARN_ON() if the function tracer is enabled after
+  that.
+
+
+Please pull the latest ftrace-v6.16-rc2 tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ftrace-v6.16-rc2
+
+Tag SHA1: 858ffefa15e822fdffe18bdfc34bf634ea8afd2a
+Head SHA1: 327e28664307d49ce3fa71ba30dcc0007c270974
+
+
+Steven Rostedt (1):
+      fgraph: Do not enable function_graph tracer when setting funcgraph-args
+
+----
+ kernel/trace/trace_functions_graph.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+---------------------------
+diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
+index 9234e2c39abf..14d74a7491b8 100644
+--- a/kernel/trace/trace_functions_graph.c
++++ b/kernel/trace/trace_functions_graph.c
+@@ -455,10 +455,16 @@ static int graph_trace_init(struct trace_array *tr)
+ 	return 0;
+ }
+ 
++static struct tracer graph_trace;
++
+ static int ftrace_graph_trace_args(struct trace_array *tr, int set)
+ {
+ 	trace_func_graph_ent_t entry;
+ 
++	/* Do nothing if the current tracer is not this tracer */
++	if (tr->current_trace != &graph_trace)
++		return 0;
++
+ 	if (set)
+ 		entry = trace_graph_entry_args;
+ 	else
