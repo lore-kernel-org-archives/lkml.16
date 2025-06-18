@@ -1,278 +1,194 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9643A28B503;
-	Wed, 18 Jun 2025 11:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69E828312D
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750245511; cv=none; b=UY/8uwpQeVSw+cOQyBXoqCUNWl257vsibF00aIzTfL5lvTUIie4f9WpFdQvZql/vO8OiTilpKQrraVrCp7pzCKqqPKDbpkZwuyxVd2PjZ9/f0oxPk9nxhzv4tAxjfXalQokad5DsYGAu8YxX9cxB88Bz8FGEQvv3KwQZV+HX5Tw=
+	t=1750245574; cv=none; b=qh113HyR3zBk+/Ge3UQ5DVdBKA1h2/pQOxyKqQ3JBNB4y4fa12Lz0n2fI2gQRrzoX6mseXHCGo7/y/+4I65CaCze2RMgwBTk4W5XhpvjTW2GShYYL+sf8o767mLyaTe75qlOuPwlB3ZAmTlq7MQIrvtnJ2sVsOyzgT0JloZcj7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750245511; c=relaxed/simple;
-	bh=q/UKtqSzP/EsB4/fYo8kcyOaPDvWb2CMF4Flj4CIB7E=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rJP4gTpisccfhygm4KVhpjMxOInWXoAL/2LkjOklNUrqtrGjNzC1I4aKS+kWXqjGhUowsZXtyQS++4sG5gPj2B7DFD77x7B6zGIu0eEq/+bSywPO8Ce2aOAFdswGhdJ2nNT2hNSx+l5wIBT+N+WJnzkBwjKubKMsVQHvJ+s+Uvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=brA+zQqS; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1750245574; c=relaxed/simple;
+	bh=6IFcJecWPDxzwpqbsp+nq1q0GXSZzkq028xZi1epNuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dz0FPEIb/wqcRb5nsEu2QOm/pkQGnoXvDkfu+EvzxHjwgGGLk49WucUAMfwpJh2LyfUU7y0oey/uUOhCBvr539dPmeTE9+JQxUIC6xdHRf3UPJXE6vic+LqdUXiV2YTTrmWU3Qq91OZr80nOmvjEtseKgropjBtInRooBmGuo2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=CcP4WB3C; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="brA+zQqS"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I8xnc1025707;
-	Wed, 18 Jun 2025 04:18:13 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=GPufhOiEHKlWyx42+26tPyGee
-	PcA5wQzpXISYdEx5kI=; b=brA+zQqS1YwSuz7qk1FswJRF0rrsYv/cwPUPqJct4
-	D8C62JnN39ZYNyJMgqugM5dDUfy1XF1ctwBmHJcmapEZmn4XNaiSaIBphhsKTbRA
-	kKBK3p/UVVTqnnqSAKvLhHFU8neSmgnwC6r0pIQHF7bEPnWllNbmjGHa0kFybYJG
-	b0D+qJ2mwEbIOCVGfMNpUOxK9xPluSU7onWMsf9A9yAscvjbf4TRMwVPw8ciOLxJ
-	5X+K2g47Dt1vPyB0svad+6BPg1PER0gD1iPFNQ8WqOpmcVZWe7ifm0mxw3Uux0Hz
-	nNjwCYzScC+ei4MuSZO+uRQ44o53OJE+NoRQgIA8iJ9ww==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 47bj4xs8a1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 04:18:13 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Wed, 18 Jun 2025 04:18:12 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Wed, 18 Jun 2025 04:18:12 -0700
-Received: from de6bfc3b068f (HY-LT91368.marvell.com [10.29.24.116])
-	by maili.marvell.com (Postfix) with SMTP id E5C063F7044;
-	Wed, 18 Jun 2025 04:18:09 -0700 (PDT)
-Date: Wed, 18 Jun 2025 11:18:07 +0000
-From: Subbaraya Sundeep <sbhatta@marvell.com>
-To: Jun Miao <jun.miao@intel.com>
-CC: <kuba@kernel.org>, <oneukum@suse.com>, <netdev@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <qiang.zhang@linux.dev>
-Subject: Re: [PATCH v5] net: usb: Convert tasklet API to new bottom half
- workqueue mechanism
-Message-ID: <aFKgb-Stl-rIJH6g@de6bfc3b068f>
-References: <20250618050559.64974-1-jun.miao@intel.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="CcP4WB3C"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-3122368d7cfso5211968a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:19:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750245572; x=1750850372; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+hMNUK2IravDH/g4o6YvfyEM4Lj/JnxKb4gaeFAPp8w=;
+        b=CcP4WB3C2MCNSAnhQ6Shd2VDP6hsM2SbbbjHO56iOSt0yCfSdHNm2HvWjOoQ8vcZoL
+         7h0jT2ChHxtPsQEm7AcLFE2EJiQTln3+518nR6P+GtcEAqtW+LGH9vc2NhzFi3Smbxgy
+         fNY6Fp1dv+SWjs6KM3p4cruKz5P9egrBXxwCSWeUh/0fyqY98/k7qbEwb+tGoL2TAtqA
+         iPo8lB9JclDerb1lc3D/mL+szFahH5EMFQB+ZsFVySpv8fo5snfBSah14iSOomC/eOQ8
+         CpAZcoazn+AuqAJZ/tohEazb6FrhfwGmWm3RtGbcusBPRjqQMxpOwHGi5oT0PYX4zeG7
+         RpVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750245572; x=1750850372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+hMNUK2IravDH/g4o6YvfyEM4Lj/JnxKb4gaeFAPp8w=;
+        b=eY2kE1iedpC6XGrH62JzeDFCn//C0ZuLGI1peQEkdYRfgXVOyd+4JrsRJNt38Su2gk
+         AjunRPtGPINyEo9+21Qm3axuFzY3EK5HCDQzgSNvbBpuAUS3c1Q5fgRgtzsYeQdLaurK
+         PUWJHx3uJLb6Eni6lyotzaw/TgZAUTeYKTIb/dtaVdwpzQ+F/Ypy12GJbL8pOi/R9KA4
+         RmSi+USHemdRC7Z5gT98sIvK7v5b6cz+TbYDw99Es2Z52cU+Mi3PGF8zhvxgT5azypjo
+         /X274eeqsPdG62cfzgQQ9Cga1viWIl1XRTBx4aCF9IKs0/mKvpDimqtPJAhl/YWi+g32
+         yuVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh05Y/T7yJ/gMGu/roRac+J/Ek7Pb8w+2YQz8D8eUBOA1Y4Tw9gshQqCdJqKNAqFXqdDaycb0BrtDA90E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZdDcfIkbrRqSP8mGI4AdatqTcM+ZD5sy6kQmz6tgFvfgQQ7RT
+	rkUDToxhIA62FSs9vbKdPpICVf1lUytadmi7OJ9m4eq+HtUyYy1VuCwuFmrEif6/gA==
+X-Gm-Gg: ASbGncsftvOnR+wfihtsHVgkSaAmdIyfnubvUVhrXPmJ/oBas+Htka+BgNOupiVVCgz
+	kvOU+nwFWy+kP9PEIlCNweFcFwW/bQuw16FYfWlNhItikv1hP0pnXfsK2s4sgOFwC4bLVafEGet
+	BtRDM2MUX/jxQEXVwyB5Lb2QAW3k+Xuha+hje3EEX4/LZi+pMqPdCO5y39aLFmGsx0IXCxMReVF
+	49W6eY6Ni75Hfb3YtELbJQOwIV8vZPQ4By2V/gWLtsRQ37eE9Cqf5qwS0/yYIdN/P5UPF/O/Xu0
+	EX0byfKzE9i8oVLD062qd2uAylWhDzKD+VXNbGqQ5Anzu/lYsdUylpyMF7pk4Tj5G8ZHV2XO9yc
+	2+oZZaxM=
+X-Google-Smtp-Source: AGHT+IFCEJnoApMHKSZQinvZ0JT9cxEOIqNL2O8ad+UmRU93rOEFMgXIJN4G15nmXk7zFuo2AQyx8A==
+X-Received: by 2002:a17:90a:da86:b0:313:480f:ee72 with SMTP id 98e67ed59e1d1-313f1daf632mr21821640a91.23.1750245571610;
+        Wed, 18 Jun 2025 04:19:31 -0700 (PDT)
+Received: from bytedance ([61.213.176.57])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3157a615170sm887358a91.0.2025.06.18.04.19.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 04:19:31 -0700 (PDT)
+Date: Wed, 18 Jun 2025 19:19:13 +0800
+From: Aaron Lu <ziqianlu@bytedance.com>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Valentin Schneider <vschneid@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Don <joshdon@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Xi Wang <xii@google.com>, linux-kernel@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Chuyi Zhou <zhouchuyi@bytedance.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Florian Bezdeka <florian.bezdeka@siemens.com>
+Subject: Re: [PATCH v2 3/5] sched/fair: Switch to task based throttle model
+Message-ID: <20250618111913.GA646@bytedance>
+References: <20250618081940.621-1-ziqianlu@bytedance.com>
+ <20250618081940.621-4-ziqianlu@bytedance.com>
+ <ddca03a3-14d2-4d71-8070-8f9b8de9b7eb@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618050559.64974-1-jun.miao@intel.com>
-X-Authority-Analysis: v=2.4 cv=ULrdHDfy c=1 sm=1 tr=0 ts=6852a075 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=QyXUC8HyAAAA:8 a=5IwCtlCqhDlfZ9k7iu4A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA5NiBTYWx0ZWRfX+YAnxTvj/Sse txfFk7mo5mNmqaasCJk5niBCMinjyDNur77AKkh7zwMKD9/iYMY1o7s+yYJcFFeu21aRNVp4qVz SwsbS/Jm+aZegYNSbgYvfujVDBziL+bVnRVaZe2tiLgNJlj+6VmDaiwlolBQIDN8ot0VgAJtm9L
- k8RvgevaHqfxTj5czWYrxeVzMNJNN+oZfKGT+V6I0pGPD2/3QvLuqGDWZ5abMh+84gFrhT/kiod F49d1yASekE75HybDGfTDnNbixueX+/qdTNArD+dNTJHGAWe2O2m9QlZNPEHwT+LeN7F4ly5GdA XafqnfcKXWDKf2p021OeaSsmaQOvbdl7NJqNCwpFdDeCdzoY9+GH3BD0f9OJYGNUa4v+4NqmDNu
- QJyNr5hj0G/GLbEyqGHH9MODAH/4n1g5rMmkktQJ4SloB1U1Pq5LPXjMkXX/iK+2ZbQV9ySz
-X-Proofpoint-GUID: xIqRVgh_aZMgYnds_lRp3vrJa68HyLWT
-X-Proofpoint-ORIG-GUID: xIqRVgh_aZMgYnds_lRp3vrJa68HyLWT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_04,2025-06-18_02,2025-03-28_01
+In-Reply-To: <ddca03a3-14d2-4d71-8070-8f9b8de9b7eb@linux.dev>
 
-On 2025-06-18 at 05:05:59, Jun Miao (jun.miao@intel.com) wrote:
-> Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-> replaces all occurrences of tasklet usage with the appropriate workqueue
-> APIs throughout the usbnet driver. This transition ensures compatibility
-> with the latest design and enhances performance.
+Hi Chengming,
+
+Thanks for your review.
+
+On Wed, Jun 18, 2025 at 05:55:08PM +0800, Chengming Zhou wrote:
+> On 2025/6/18 16:19, Aaron Lu wrote:
+> > From: Valentin Schneider <vschneid@redhat.com>
+> > 
+> > In current throttle model, when a cfs_rq is throttled, its entity will
+> > be dequeued from cpu's rq, making tasks attached to it not able to run,
+> > thus achiveing the throttle target.
+> > 
+> > This has a drawback though: assume a task is a reader of percpu_rwsem
+> > and is waiting. When it gets woken, it can not run till its task group's
+> > next period comes, which can be a relatively long time. Waiting writer
+> > will have to wait longer due to this and it also makes further reader
+> > build up and eventually trigger task hung.
+> > 
+> > To improve this situation, change the throttle model to task based, i.e.
+> > when a cfs_rq is throttled, record its throttled status but do not remove
+> > it from cpu's rq. Instead, for tasks that belong to this cfs_rq, when
+> > they get picked, add a task work to them so that when they return
+> > to user, they can be dequeued there. In this way, tasks throttled will
+> > not hold any kernel resources. And on unthrottle, enqueue back those
+> > tasks so they can continue to run.
+> > 
+> > Throttled cfs_rq's leaf_cfs_rq_list is handled differently now: since a
+> > task can be enqueued to a throttled cfs_rq and gets to run, to not break
+> > the assert_list_leaf_cfs_rq() in enqueue_task_fair(), always add it to
+> > leaf cfs_rq list when it has its first entity enqueued and delete it
+> > from leaf cfs_rq list when it has no tasks enqueued.
+> > 
+> > Suggested-by: Chengming Zhou <chengming.zhou@linux.dev> # tag on pick
+> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> > Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
+> > ---
+> >   kernel/sched/fair.c | 325 +++++++++++++++++++++-----------------------
+> >   1 file changed, 153 insertions(+), 172 deletions(-)
+> > 
+> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > index 8226120b8771a..59b372ffae18c 100644
+> > --- a/kernel/sched/fair.c
+> > +++ b/kernel/sched/fair.c
+> > @@ -5291,18 +5291,17 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> >   	if (cfs_rq->nr_queued == 1) {
+> >   		check_enqueue_throttle(cfs_rq);
+> > -		if (!throttled_hierarchy(cfs_rq)) {
+> > -			list_add_leaf_cfs_rq(cfs_rq);
+> > -		} else {
+> > +		list_add_leaf_cfs_rq(cfs_rq);
+> >   #ifdef CONFIG_CFS_BANDWIDTH
+> > +		if (throttled_hierarchy(cfs_rq)) {
+> >   			struct rq *rq = rq_of(cfs_rq);
+> >   			if (cfs_rq_throttled(cfs_rq) && !cfs_rq->throttled_clock)
+> >   				cfs_rq->throttled_clock = rq_clock(rq);
+> >   			if (!cfs_rq->throttled_clock_self)
+> >   				cfs_rq->throttled_clock_self = rq_clock(rq);
+> > -#endif
+> >   		}
+> > +#endif
+> >   	}
+> >   }
+> > @@ -5341,8 +5340,6 @@ static void set_delayed(struct sched_entity *se)
+> >   		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+> >   		cfs_rq->h_nr_runnable--;
+> > -		if (cfs_rq_throttled(cfs_rq))
+> > -			break;
+> >   	}
+> >   }
+> > @@ -5363,8 +5360,6 @@ static void clear_delayed(struct sched_entity *se)
+> >   		struct cfs_rq *cfs_rq = cfs_rq_of(se);
+> >   		cfs_rq->h_nr_runnable++;
+> > -		if (cfs_rq_throttled(cfs_rq))
+> > -			break;
+> >   	}
+> >   }
+> > @@ -5450,8 +5445,11 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> >   	if (flags & DEQUEUE_DELAYED)
+> >   		finish_delayed_dequeue_entity(se);
+> > -	if (cfs_rq->nr_queued == 0)
+> > +	if (cfs_rq->nr_queued == 0) {
+> >   		update_idle_cfs_rq_clock_pelt(cfs_rq);
+> > +		if (throttled_hierarchy(cfs_rq))
+> > +			list_del_leaf_cfs_rq(cfs_rq);
 > 
-> As suggested by Jakub, we have used the system workqueue to schedule on
-> (system_bh_wq), so the action performed is usbnet_bh_work() instead of
-> usbnet_bh_workqueue() to replace the usbnet_bh_tasklet().
+> The cfs_rq should be removed from leaf list only after
+> it has been fully decayed, not here.
 
-No need to write review comments in commit message.
-Patch LGTM.
+For a throttled cfs_rq, the intent is to preserve its load while it's
+throttled. Its pelt clock is stopped in tg_throttle_down(), there will
+be no decay for it if left on leaf list.
+
+I've also described why I chose this behaviour in cover letter:
+"
+For pelt clock, I chose to keep the current behavior to freeze it on
+cfs_rq's throttle time. The assumption is that tasks running in kernel
+mode should not last too long, freezing the cfs_rq's pelt clock can keep
+its load and its corresponding sched_entity's weight. Hopefully, this can
+result in a stable situation for the remaining running tasks to quickly
+finish their jobs in kernel mode.
+"
 
 Thanks,
-Sundeep
-> 
-> Signed-off-by: Jun Miao <jun.miao@intel.com>
-> ---
-> v1->v2:
->     Check patch warning, delete the more spaces.
-> v2->v3:
->     Fix the kernel test robot noticed the following build errors:
->     >> drivers/net/usb/usbnet.c:1974:47: error: 'struct usbnet' has no member named 'bh'
-> v3->v4:
-> 	Keep "GFP_ATOMIC" flag as it is.
-> 	If someone want to change the flags (which Im not sure is correct) it should be a separate commit.
-> 
-> v4->v5:
-> 	As suggested by Jakub, we have used the system workqueue to schedule on(system_bh_wq), 
-> 	replace the workqueue with work in usbnet_bh_workqueue() and the comments.
-> ---
->  drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
->  include/linux/usb/usbnet.h |  2 +-
->  2 files changed, 19 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-> index c39dfa17813a..234d47bbfec8 100644
-> --- a/drivers/net/usb/usbnet.c
-> +++ b/drivers/net/usb/usbnet.c
-> @@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
->  
->  	__skb_queue_tail(&dev->done, skb);
->  	if (dev->done.qlen == 1)
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	spin_unlock(&dev->done.lock);
->  	spin_unlock_irqrestore(&list->lock, flags);
->  	return old_state;
-> @@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
->  		default:
->  			netif_dbg(dev, rx_err, dev->net,
->  				  "rx submit, %d\n", retval);
-> -			tasklet_schedule (&dev->bh);
-> +			queue_work(system_bh_wq, &dev->bh_work);
->  			break;
->  		case 0:
->  			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-> @@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
->  		num++;
->  	}
->  
-> -	tasklet_schedule(&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  
->  	netif_dbg(dev, rx_status, dev->net,
->  		  "paused rx queue disabled, %d skbs requeued\n", num);
-> @@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
->  {
->  	if (netif_running(dev->net)) {
->  		(void) unlink_urbs (dev, &dev->rxq);
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	}
->  }
->  EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-> @@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
->  	/* deferred work (timer, softirq, task) must also stop */
->  	dev->flags = 0;
->  	timer_delete_sync(&dev->delay);
-> -	tasklet_kill(&dev->bh);
-> +	disable_work_sync(&dev->bh_work);
->  	cancel_work_sync(&dev->kevent);
->  
->  	/* We have cyclic dependencies. Those calls are needed
->  	 * to break a cycle. We cannot fall into the gaps because
->  	 * we have a flag
->  	 */
-> -	tasklet_kill(&dev->bh);
-> +	disable_work_sync(&dev->bh_work);
->  	timer_delete_sync(&dev->delay);
->  	cancel_work_sync(&dev->kevent);
->  
-> @@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
->  	clear_bit(EVENT_RX_KILL, &dev->flags);
->  
->  	// delay posting reads until we're fully open
-> -	tasklet_schedule (&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  	if (info->manage_power) {
->  		retval = info->manage_power(dev, 1);
->  		if (retval < 0) {
-> @@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
->  		 */
->  	} else {
->  		/* submitting URBs for reading packets */
-> -		tasklet_schedule(&dev->bh);
-> +		queue_work(system_bh_wq, &dev->bh_work);
->  	}
->  
->  	/* hard_mtu or rx_urb_size may change during link change */
-> @@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
->  		} else {
->  			clear_bit (EVENT_RX_HALT, &dev->flags);
->  			if (!usbnet_going_away(dev))
-> -				tasklet_schedule(&dev->bh);
-> +				queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
->  
-> -	/* tasklet could resubmit itself forever if memory is tight */
-> +	/* work could resubmit itself forever if memory is tight */
->  	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
->  		struct urb	*urb = NULL;
->  		int resched = 1;
-> @@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
->  fail_lowmem:
->  			if (resched)
->  				if (!usbnet_going_away(dev))
-> -					tasklet_schedule(&dev->bh);
-> +					queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
->  
-> @@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
->  	struct usbnet		*dev = netdev_priv(net);
->  
->  	unlink_urbs (dev, &dev->txq);
-> -	tasklet_schedule (&dev->bh);
-> +	queue_work(system_bh_wq, &dev->bh_work);
->  	/* this needs to be handled individually because the generic layer
->  	 * doesn't know what is sufficient and could not restore private
->  	 * information if a remedy of an unconditional reset were used.
-> @@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
->  
->  /*-------------------------------------------------------------------------*/
->  
-> -// tasklet (work deferred from completions, in_irq) or timer
-> +// work (work deferred from completions, in_irq) or timer
->  
->  static void usbnet_bh (struct timer_list *t)
->  {
-> @@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
->  					  "rxqlen %d --> %d\n",
->  					  temp, dev->rxq.qlen);
->  			if (dev->rxq.qlen < RX_QLEN(dev))
-> -				tasklet_schedule (&dev->bh);
-> +				queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  		if (dev->txq.qlen < TX_QLEN (dev))
->  			netif_wake_queue (dev->net);
->  	}
->  }
->  
-> -static void usbnet_bh_tasklet(struct tasklet_struct *t)
-> +static void usbnet_bh_work(struct work_struct *work)
->  {
-> -	struct usbnet *dev = from_tasklet(dev, t, bh);
-> +	struct usbnet *dev = from_work(dev, work, bh_work);
->  
->  	usbnet_bh(&dev->delay);
->  }
-> @@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
->  	skb_queue_head_init (&dev->txq);
->  	skb_queue_head_init (&dev->done);
->  	skb_queue_head_init(&dev->rxq_pause);
-> -	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-> +	INIT_WORK(&dev->bh_work, usbnet_bh_work);
->  	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
->  	init_usb_anchor(&dev->deferred);
->  	timer_setup(&dev->delay, usbnet_bh, 0);
-> @@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
->  
->  			if (!(dev->txq.qlen >= TX_QLEN(dev)))
->  				netif_tx_wake_all_queues(dev->net);
-> -			tasklet_schedule (&dev->bh);
-> +			queue_work(system_bh_wq, &dev->bh_work);
->  		}
->  	}
->  
-> diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-> index 0b9f1e598e3a..208682f77179 100644
-> --- a/include/linux/usb/usbnet.h
-> +++ b/include/linux/usb/usbnet.h
-> @@ -58,7 +58,7 @@ struct usbnet {
->  	unsigned		interrupt_count;
->  	struct mutex		interrupt_mutex;
->  	struct usb_anchor	deferred;
-> -	struct tasklet_struct	bh;
-> +	struct work_struct	bh_work;
->  
->  	struct work_struct	kevent;
->  	unsigned long		flags;
-> -- 
-> 2.43.0
-> 
+Aaron
