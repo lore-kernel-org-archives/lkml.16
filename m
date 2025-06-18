@@ -1,96 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D107212D97;
-	Wed, 18 Jun 2025 06:51:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94975522F;
+	Wed, 18 Jun 2025 06:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750229517; cv=none; b=FCO/blGQDEBAB1a/wNguRT5JBUgQkg+kPmZKeCap3hV7F6ntX6jJ923D8a//SSDeSJvwn+8KFxbQJ0j1lRsyGockU5U9VqvOS08ywDtL9g1tSy87nmqzUTl1Smjh2yYO8y6XdgB2Z2r0oj7mFBas1dj9mzzMzGzihA+x2apMQ9E=
+	t=1750229566; cv=none; b=IhKvkn7f7NmlsohBUNhjGFUuv19e2BHsoB2XyLKzDup8R2X/bNGlcKGheSP2RUmfkwde5MJuizCak311Qg9cyib4Md6+z91Uu0WRCO/eTXUSl2m2TfuNTrdGvfCfbR198Ui51c0yVVgoU06LrI8wnNZqTX5+ASgRiUyP+Jy2yME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750229517; c=relaxed/simple;
-	bh=WvwQCHstGsP4NHsM2WggCpU1wppw6aSP0CoxaTIrbUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUaDcEiB9uDxDIb+OZaefMVtmjxVjaV2X6zydFoix20SjBWo+y3rC2EU/GQGrJlIUN9I3wgZN5lBSZSPzznzKgey/8YocHcamalgO3f3Sogc3UUtqS2wLi+k/IR0cGH8xlS9MBGcNg8UGtpBaiIdcYAY5auF2nM+M0023W32Pco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yz+NyiyX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750229566; c=relaxed/simple;
+	bh=prDfa/5Zbm9GA9G4tD7ZSeyJ1W+Dn9Epp1t6A1MMNwo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=m4JcscSf7ENVZ2T0xMFd6wlUA2tD7k1ZUD6rjuFuQLSe7nQg/WwbmwVA5ENw5nfBfMdgX111kPkV5qNqgLWyw9COtmGfg6R9RbsDD2okLN5ygdidEcWbGDn9KZuBFIARb2u8FKSYssTlrniVSK74UuNYYtmGE0Ctyd7b57pEvOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RsJipWcl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yz+NyiyX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C28C4CEE7;
-	Wed, 18 Jun 2025 06:51:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RsJipWcl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93D2EC4CEED;
+	Wed, 18 Jun 2025 06:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750229516;
-	bh=WvwQCHstGsP4NHsM2WggCpU1wppw6aSP0CoxaTIrbUU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Yz+NyiyXoCPo0nGbuEbFKAV9ZKH28VF+Vjvsmm70ndiBhecdB9x2/8FlCdb9v0O/f
-	 1hiAUzygX0yiikOIbjbRb4ufZW+A0eHCQE/JQbtpBJ8MoSsp7FZflJPs30xWbM5utp
-	 HcxWa9Qy9oWlQYJjf94Mksu/N6Pw/kyLbq5K5RhCoIATQ4YA42+z3vd0zupWbY8gaw
-	 ZSzMarEFv9VQME8vx3/SuGvBv/5MGje5gQ1EQ0k0yHJWfM2jG1y5ug8QP6N0Hg32PE
-	 JjqomlygSuXtG/O6MJ8bsd5xJR7fYtM0zlpIOOLMH+2HZUkQY82TEMR7OrIcRLd5bg
-	 XfMlRgV69R6XQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 90E50CE0A33; Tue, 17 Jun 2025 23:51:49 -0700 (PDT)
-Date: Tue, 17 Jun 2025 23:51:49 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Haas <t.haas@tu-bs.de>, Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	lkmm@lists.linux.dev, hernan.poncedeleon@huaweicloud.com,
-	jonas.oberhauser@huaweicloud.com,
-	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
-Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
-Message-ID: <0b20c5e8-ef01-4527-9122-8722f96972ae@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
- <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
+	s=k20201202; t=1750229566;
+	bh=prDfa/5Zbm9GA9G4tD7ZSeyJ1W+Dn9Epp1t6A1MMNwo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RsJipWcl/kmAXaotjhAwkqCBWa3T3L278I5zdgKs353dwP6Pw1KBECYhtGKFoGoyo
+	 kjYOjf4CO3+uh9PD6LnwOkrCHFpIa934p57BAYaoRHZmhaecX6gY4yo+QTLlUGX60S
+	 78+5Y0prt7mFWQuheeCvMFq5pzbhFGiTozTnlF0FSCNnIi4JEtVhJx2mx/ouhXc+aY
+	 ADgg1pM42jEaoixslcLQSk/627KR9slA79+QE61RUHPasGNDOqgT3BQzo/5i4wNnSh
+	 87Gvz5FMhVvl5/LKo02uiNfy9TIstoZzFlIucs59Bz5YzZFqao5Sa8JTcoN2vdii+0
+	 HDAnNtmPGyhtg==
+From: Michael Walle <mwalle@kernel.org>
+To: Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bryan Brattlof <bb@ti.com>,
+	Dhruva Gole <d-gole@ti.com>,
+	Andrew Davis <afd@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Michael Walle <mwalle@kernel.org>
+Subject: [PATCH] arm64: dts: ti: k3-am62p-j722s: fix pinctrl-single size
+Date: Wed, 18 Jun 2025 08:52:39 +0200
+Message-Id: <20250618065239.1904953-1-mwalle@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
 
-On Fri, Jun 13, 2025 at 09:55:01AM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 12, 2025 at 04:55:28PM +0200, Thomas Haas wrote:
+Pinmux registers ends at 0x000f42ac (including). Thus, the size argument
+of the pinctrl-single node has to be 0x2b0. Fix it.
 
-[ . . . ]
+This will fix the following error:
+pinctrl-single f4000.pinctrl: mux offset out of range: 0x2ac (0x2ac)
 
-> >     - put some other read-read barrier between the xchg_tail and the load.
-> > 
-> > 
-> > ### Implications for qspinlock executed on non-ARM architectures.
-> > 
-> > Unfortunately, there are no MSA extensions for other hardware memory models,
-> > so we have to speculate based on whether the problematic reordering is
-> > permitted if the problematic load was treated as two individual
-> > instructions.
-> > It seems Power and RISCV would have no problem reordering the instructions,
-> > so qspinlock might also break on those architectures.
-> 
-> Power (and RiscV without ZABHA) 'emulate' the short XCHG using a full
-> word LL/SC and should be good.
-> 
-> But yes, ZABHA might be equally broken.
+Fixes: 29075cc09f43 ("arm64: dts: ti: Introduce AM62P5 family of SoCs")
+Signed-off-by: Michael Walle <mwalle@kernel.org>
+---
+ arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-All architectures handle eight-bit atomics and stores, but last I checked,
-there were a few systems still around that failed to support 16-bit
-atomics and stores.  I will check again.
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+index 17471501df24..17c0949ac1d7 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
+@@ -264,7 +264,7 @@ secure_proxy_sa3: mailbox@43600000 {
+ 
+ 	main_pmx0: pinctrl@f4000 {
+ 		compatible = "pinctrl-single";
+-		reg = <0x00 0xf4000 0x00 0x2ac>;
++		reg = <0x00 0xf4000 0x00 0x2b0>;
+ 		#pinctrl-cells = <1>;
+ 		pinctrl-single,register-width = <32>;
+ 		pinctrl-single,function-mask = <0xffffffff>;
+-- 
+2.39.5
 
-(But those systems's architectures can simply avoid supporting kernel
-features requiring these 16-bit operations.)
-
-It would be good to add multiple sizes to LKMM, and even moreso once we
-have 16-bit support across the board.
-
-							Thanx, Paul
