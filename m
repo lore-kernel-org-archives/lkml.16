@@ -1,92 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CD1207A0B;
-	Wed, 18 Jun 2025 19:35:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8668E20296A;
+	Wed, 18 Jun 2025 19:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750275336; cv=none; b=pnrsbg+VIiotBKb+oQfb/DRtgdxeICUbtI3u8nOYohEyinUoBpDSyQ4EdTV0IioVg+sQW3QcUHTlfM/EPIKq19y33YK966mukvV4h4iILckAr9jm9AgmYAbvGz6Ab6Ri2PUty2UZVBN5h/mFUc4BANIFRVvMlOSWq3OZZeXw62Y=
+	t=1750275394; cv=none; b=lBg9b9kMKrOQfdIyI5NclSTD9kzhB6/8I9xQzZZv5Tpd6YW1wWBCFDcevj37b5n966sKWEeM8gl+l6A62sZdGpaEc+99eXyS2DFwJ32ZRq6Lc/ozuBbCltpLLBtNCIueu/jPALRmnLwum2UJINJUfhNBr7NtT7XPE18x5lTFAcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750275336; c=relaxed/simple;
-	bh=ibZCNLRyeEMp+DU8vDaNixDMjljfDwBaUO2seybxd2U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MNHjZDkGiEpvmhjFDt94pvh3LcDlISWH5iC6Qg5ykzcupxv6WmbjYS1tBbc0zR9ngnYBWN2dpSAOvMtf2wqMHwo9GXcGvYoMOscX8RGVPaQkqmAI/cNBEKWSA2S3VtztvcbnKsjhAaM9YEDzhrv5IilPgpFF1DglXvQE9MlwstQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpTAXfyG; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpTAXfyG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDF59C4AF0B;
-	Wed, 18 Jun 2025 19:35:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750275336;
-	bh=ibZCNLRyeEMp+DU8vDaNixDMjljfDwBaUO2seybxd2U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=NpTAXfyGXdCjS6PWbYMCZTjgtd1G0PkHgIQD2pOfWdw9wmflp32cDCM/dx3itLwhH
-	 0qvAfD18XtMUyyba6lnZZxue+QnMfxUbs2/YHv4AAjZeRH+RZegPGqaXM3LHY+UMZ5
-	 s332Xude62F911i+uyGA7+znyEKySDsMIlRr1EjQKM7BhtoQnQdoZSUP1gYPCoNNkZ
-	 nQcDSy22cwKfDTYKZHQ28RaoEQPZHkwwTLOQ7lNZsMKq5CsTCVJ8uGwHuvApdGe9xU
-	 XFc4ap8CGEiUnY40t5i1v4nWCE8a7OmtdXVjXiq9dJp4GtUKPd9dk3yYoo3vdliYel
-	 5h5j2ltn1hPNQ==
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-6114114daddso11425eaf.2;
-        Wed, 18 Jun 2025 12:35:35 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvH6swtq6QsD0N1YRVH8eJqJO1ye5lkueiVPiqTCceH2TfpdiYXrXesdm+nGNKfbfWgkkhEYiS854=@vger.kernel.org, AJvYcCVpMSpaxHSnf14JjKuaKhIY9HOAWtXKdPLhjZmKp1Hy7dp5kqGF7B0Iz1i2DyCAOkTufG2GzFChVp4WM5mg@vger.kernel.org, AJvYcCXXPNKBFiO66+cKDhT/tjpCssAPRHOR71fLWjLFbZJyOsRP5k/O/66sPlzj9QIQx0jQcD1UY4slgLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSmLMEZrHQCPlSjE4Y7PpwAEp6s6pAQxkLy0VOyvnZxm3kFH8M
-	fUD78QvX9qK9qEWnjAsn4sDGO89lq9Sbv91kHGftHncZe1QhyySbd0hrf1/3uQK83/6YJjcX31v
-	xhyp4lhxKbbpA4gIl/QXvIWqjJOB6Et8=
-X-Google-Smtp-Source: AGHT+IHDWpKnlspa0o+43owsaQjOcACO5glECALOewcb8dOxPPJptp3Q1tEf7PrM3unhD/hjfgTMkjT3X4sR0vRZSvQ=
-X-Received: by 2002:a05:6820:160a:b0:60d:66ff:fd44 with SMTP id
- 006d021491bc7-61110ff376cmr10689322eaf.8.1750275335287; Wed, 18 Jun 2025
- 12:35:35 -0700 (PDT)
+	s=arc-20240116; t=1750275394; c=relaxed/simple;
+	bh=hpvx7+LNMHy5wJjUVF4JNZfUWjLNo09d2jPgigPF3g8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kHN87XyiwMkYxdHiwXd46NPWwMx0cqLgEpupy3qg88R1UCZ9oNNinWiiX4FeGvzbYwvM85VpT0pcGhcKm8q1i+xRvZN4yP+oAUXnoaj90K1rkJIFxtYETPCZnMt/DpeVNk1xOW1aAam8qs1ljpT8fZQ0JBGEiko9FfC6W4/iOf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay10.hostedemail.com (Postfix) with ESMTP id 8FBB0C0AF3;
+	Wed, 18 Jun 2025 19:36:23 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id 7FA1840;
+	Wed, 18 Jun 2025 19:36:19 +0000 (UTC)
+Date: Wed, 18 Jun 2025 15:36:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250618153627.784e1e8c@gandalf.local.home>
+In-Reply-To: <20250618150915.3e811f4b@gandalf.local.home>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.770214773@goodmis.org>
+	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+	<20250618150915.3e811f4b@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250527-userspace-governor-doc-v2-0-0e22c69920f2@sony.com>
-In-Reply-To: <20250527-userspace-governor-doc-v2-0-0e22c69920f2@sony.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 18 Jun 2025 21:35:23 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0ipapmw==9rePsnsdUt_Ks1duLfFKs+qU8s4q44XAfuGA@mail.gmail.com>
-X-Gm-Features: AX0GCFviGfa9ZO3aB4JfHcU-SqMz9qMQ0GhpaAIntMXfAPC_uU4vedN7Zx3F7ns
-Message-ID: <CAJZ5v0ipapmw==9rePsnsdUt_Ks1duLfFKs+qU8s4q44XAfuGA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] cpufreq: userspace: add CPUFREQ_GOV_STRICT_TARGET flag
-To: Shashank Balaji <shashank.mahadasyam@sony.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Shinya Takumi <shinya.takumi@sony.com>, 
-	20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: 54yemurb44o3up7c4wrehg3xi818qg4f
+X-Rspamd-Server: rspamout02
+X-Rspamd-Queue-Id: 7FA1840
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1++f89SUhUbPsoAOou37tqKis5ND88YHDY=
+X-HE-Tag: 1750275379-92755
+X-HE-Meta: U2FsdGVkX1/va5w3Fr4pDtYj0fm4bYsG4SLFMjipM4vqyQRXWNf/Jhi/O+UdEuBAWBPrProTQpHyiOlTa9WfT66YRS7ekg+KLYNhzIgXVjbH8qYci/g1A8ojwNY1n6zT3sKnN8wHEBnHLT79yT58ZohWo0eB4JDhYwwc1VpuoKPo1v35wbjbYvJG/at5ekPbfM7t0Wi+F+O9M0fAAgGnix7HndAQMBsneNplO++g3LyYJAi0wQaXzPTCKuNavyIb7W59m1WkApB9qzreIwIuJtQ73BsE2kENeqx8fyucELlsFZuuw+aLTds3etlsZAhU8Y9ZIsmDy6qBoHI8XYOy8Yvs5vCIchEsY3CCz0FJnnjl0BklY60hgVhMitPP47CM
 
-On Tue, May 27, 2025 at 3:00=E2=80=AFPM Shashank Balaji
-<shashank.mahadasyam@sony.com> wrote:
->
-> In-Reply-To: 20250522-userspace-governor-doc-v1-1-c8a038e39084@sony.com
-> Signed-off-by: Shashank Balaji <shashank.mahadasyam@sony.com>
-> ---
-> Changes in v2:
-> - Instead of modifying the documentation to say that variation in frequen=
-cy is
-> possible despite setting scaling_setspeed, add the CPUFREQ_GOV_STRICT_TAR=
-GET
-> flag to the userspace governor to make its behaviour match the expectatio=
-n when
-> used with the intel_pstate driver with HWP enabled
-> - Mention in the documentation that variation in frequency due to hardwar=
-e
-> factors is possible
-> - Link to v1: https://lore.kernel.org/r/20250522-userspace-governor-doc-v=
-1-1-c8a038e39084@sony.com
->
-> ---
-> Shashank Balaji (2):
->       cpufreq: userspace: set CPUFREQ_GOV_STRICT_TARGET flag
->       cpufreq, docs: userspace: mention variation in freq due to hw coord=
-ination
->
->  Documentation/admin-guide/pm/cpufreq.rst | 4 +++-
->  drivers/cpufreq/cpufreq_userspace.c      | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
-> ---
+On Wed, 18 Jun 2025 15:09:15 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Both patches applied as 6.17 material, thanks!
+> > So now you're globally serializing all return-to-user instances. How is
+> > that not a problem?  
+> 
+> It was the original way we did things. The next patch changes this to SRCU.
+> But it requires a bit more care. For breaking up the series, I preferred
+> not to add that logic and make it a separate patch.
+
+It's not the next patch but patch 9 (three away).
+
+-- Steve
