@@ -1,202 +1,189 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BBD522F;
-	Wed, 18 Jun 2025 14:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750255606; cv=pass; b=mqZB1xpB+OIcflVNN7BRdxqEhCrMEZMvDSXLikHDac4ob64jR9pkL/BtyxPExC/bHgqAMzbG0wtDJMM36m4GA1oJzYl2Jth+JKzw0KXugPBmVX3hCbnnKnoEqAwP51PBkaXbuWjijIufQkAb6o1lxOhF6eED/+D+krubdFsJPeU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750255606; c=relaxed/simple;
-	bh=hj3srasRo+5ur5rSqELAw8wT5z+tkgumudGWFKX2P2I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KIVbUV4vDuYySsqn/Q3CeX+gpzco9mQM4b2DB4q3gnvm3cLT+/d/BM06yXXyb0HBgWsFc/p2BgFjEEFt9ZK69zwLhgkz2zIs+O4diQu9aLZtv7rYlPNnG6IFMNt3XKvj+Sfppn7BBIAew0dVBRgYxg2Q7/7g4TZ3bqUicJwU1ZY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=KWKb9dyT; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8764827F01C
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750255608; cv=none; b=TkuLemt1uk47tnJOxQPwOkxsl3r3hbZnX/9+6bw82T5N37FIkAwZVp17ASxjUqmtQ1qNwlU/zZ2HWqNSRl7/gnhEbbD6m7uKqho0o6GSSzA4E8Wo0qUQ6T0IOp4BfgO3PhPO/Xz89iwyh88rEJIbgqzH1YGr+Er+Wvuya6bA7dc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750255608; c=relaxed/simple;
+	bh=4SpJtulDxgkwHamMuWPzZtOvXwcuwEKwW+CpJ01OLJE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kmj6TziXaHMdmvFXMfCslvoIG2HXVqk7eTVSz6ZIM+W4rDGMxBuHWnH1kkyC6j+C1Y/YvJG+l5uMdIi0fM84hRujleSiRH4lJ7eMzBRCPYUWVsFoHjey5j8oRDWVO0pY2QGTsXA7SbKhPpmxlOZFZvjgdwpiSZ0gcEj6vhYA9WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=g3+rQmxC; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="KWKb9dyT"
-ARC-Seal: i=1; a=rsa-sha256; t=1750255583; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=UJT88ereqHexP126cH3BC60Ftrjp3MqaeRhOmqhcCwuQnxgVIIJAhsOQ1++RlHCmrnLJDj/lhBtBkjpJFTpZGKVnPq/ZG3SQqKEbqPbpXhRK3o2ym1wkv5s0rlaph8qAzRi7Y4y269Scq+BUlZTZcNVkQCql3r07e1qGoWADdWU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750255583; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=sjpDqdUdnROUzOr37FSSwpzItdKuL53Ug5lBdtcujlI=; 
-	b=JII/6iHx9yKHuGNiWQYYxDWPsmXw2P8ma8rlDb+hPXjBdxY5tYLNZoRN11EvF+2l53WIxzSX+7/zpwHvt7r8ix5cvHZ+qHDwsObCKtP+T1aM6qXAUF2uT+IPCAWDX4Qa3AQkQ6ZFODJ5oOCvW7EclKrc7cuvGr42dgCuhlgyMvc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750255583;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=sjpDqdUdnROUzOr37FSSwpzItdKuL53Ug5lBdtcujlI=;
-	b=KWKb9dyTTnE8TqT/+lG8I+cGzN4Z+SU2LVX/YPXnJA3oYWZzFxosbiZ7Mp2hPTwM
-	2Y1wICXd9BawbTKCnENdQkVfLx27cEEsXOnvUrRWQlVkjnmgbqv51XXzr11PgIcqFvU
-	7QLRs7lRFhhaKjUpPGZhAisMQIF8c3LDsBMZgL8g=
-Received: by mx.zohomail.com with SMTPS id 1750255580611190.85093936823102;
-	Wed, 18 Jun 2025 07:06:20 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
- Alexey Charkov <alchark@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Jonas Karlman <jonas@kwiboo.se>
-Subject:
- Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-Date: Wed, 18 Jun 2025 16:06:16 +0200
-Message-ID: <3286422.5fSG56mABF@workhorse>
-In-Reply-To:
- <CABjd4YyVJv0NmF9LsGWQ-O44MGjT5=FFeUjbg5rJ6XkNgjxb+g@mail.gmail.com>
-References:
- <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <80ACAAAE-F522-4199-9048-ADE69F6E1128@gmail.com>
- <CABjd4YyVJv0NmF9LsGWQ-O44MGjT5=FFeUjbg5rJ6XkNgjxb+g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="g3+rQmxC"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a507e88b0aso6688644f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:06:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1750255605; x=1750860405; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BCz4xhVEuMZq7I5JmKa8hUWG+eHQFPySS2ntysLkYhI=;
+        b=g3+rQmxCXItl4YNt0eQr7slxy0YzsIzJo6PJPx9DcbcxkVUEay6NJqGDlyHhxIXfUh
+         35eI6cKPtizOlvRDYYXdqAR5ot2pwFpLw/2mEYsMN7qANfeADn7vIP+QF7CTn+eNA5kN
+         TrCgPLdWU19HKaBlkg1eHHnyd119bUkzY6ue8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750255605; x=1750860405;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BCz4xhVEuMZq7I5JmKa8hUWG+eHQFPySS2ntysLkYhI=;
+        b=NpaWSlfIj8mjSXjbvf3SVJD9eP4NwipDfsGI+FVL/hnzXGUufPzIxUu+beTbuabh29
+         B6p1QJyJvwKP4kiipHdzp9NkPnykqhVhrUMRp4LvDn5UHIzjp6YKQCKStgojRSt+Uvkn
+         qqHphOaCLKKIV427bAVbZIDU5pwGAPbGl4YMYU4/wRTTSFgaIifYj6d/RsLCs6YNhgcH
+         Owe9Atz7B7Jx4wtiW5BibSxNcqI6gTdGg1gfAwEn5wsxOPMH0N42y1OKFC7DPl4e5N3B
+         Gob6QzGMYjm5yXsexkRy5DyivJcwWpyL34PX68fYsklT2XPh1mGtgek3dFW/YJ6leWs1
+         nzxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUccKLNZo+nxZHgcZXPE+x7sbXcT1LCe6ywg88HXP7esaBFuyGcOloeVzmbDTe9M3yc5u3bWx5C/OAJUSs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxykA7rhpKBV4bBV2ox12pN+rF1ly8nCwuCUJqHmmh2Att8FnJO
+	nB3JT/J3Svy3fArsPK6h6tEO1lEluTGxELgXBu5g1hd15FxdLl8ZDuSXQm6Vyj9FSO8=
+X-Gm-Gg: ASbGncscqM6i9n1w0GzszC5Gg1Yahp0zLOV56yVgq+dNQCHbPwLrHBtn044ElmZ8rcy
+	N53HqNc8Km1A08TObPfkHZWtz1dipUWhEk/TrRWDBsNgkT32ldq9XlzoMGlRWXKY2zxUNjHRXFl
+	zVsPO8sFdm8r992DIjx3if5nZwWB92Bi7o66II3qVyeMJnt6udfHoRLomhTKnYaTSGIBHZi1BTv
+	eIthn5tACYu1/r5Iz5TSH77zPmz1+7j2erv03kQ+IEe3HIi38a8bqgRYNabRn6LmJw7RfxRBmha
+	5GXSaPIvwzLG1+MUK3cI1wsEyet1NZvYLtpdxbbsRy+JAzAgioZfws4fUmpZYUFyCP3FIncsiw=
+	=
+X-Google-Smtp-Source: AGHT+IHBs3duxJoTqq/WKMIDJsARyVHA9luTU8eetiw/0sqRdC35N2eZTCPFDaMYdyL/wiDxrA95lA==
+X-Received: by 2002:a05:6000:4282:b0:3a4:e60a:c409 with SMTP id ffacd0b85a97d-3a5723aecd1mr12354467f8f.41.1750255604366;
+        Wed, 18 Jun 2025 07:06:44 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e268de2sm209233415e9.40.2025.06.18.07.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 07:06:43 -0700 (PDT)
+Date: Wed, 18 Jun 2025 16:06:41 +0200
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Philipp Stanner <phasta@kernel.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+Subject: Re: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
+Message-ID: <aFLH8Us_e_U6gNHV@phenom.ffwll.local>
+Mail-Followup-To: Danilo Krummrich <dakr@kernel.org>,
+	Philipp Stanner <phasta@kernel.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org
+References: <20250612144953.111829-2-phasta@kernel.org>
+ <aFFy5aG1eOeMU44S@phenom.ffwll.local>
+ <aFF3YIAFkgsAKvQV@pollux>
+ <aFF6xeu78cXTGFH0@phenom.ffwll.local>
+ <aFGFCc7eiZJM8RKM@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFGFCc7eiZJM8RKM@pollux>
+X-Operating-System: Linux phenom 6.12.30-amd64 
 
-Hello,
+On Tue, Jun 17, 2025 at 05:08:57PM +0200, Danilo Krummrich wrote:
+> On Tue, Jun 17, 2025 at 04:25:09PM +0200, Simona Vetter wrote:
+> > On Tue, Jun 17, 2025 at 04:10:40PM +0200, Danilo Krummrich wrote:
+> > > On Tue, Jun 17, 2025 at 03:51:33PM +0200, Simona Vetter wrote:
+> > > > On Thu, Jun 12, 2025 at 04:49:54PM +0200, Philipp Stanner wrote:
+> > > > > + * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
+> > > > > + * theoretically can deadlock. It must be guaranteed that submit_wq never has
+> > > > > + * more than max_active - 1 active tasks, or if max_active tasks are reached at
+> > > > > + * least one of them does not execute operations that may block on dma_fences
+> > > > > + * that potentially make progress through this scheduler instance. Otherwise,
+> > > > > + * it is possible that all max_active tasks end up waiting on a dma_fence (that
+> > > > > + * can only make progress through this schduler instance), while the
+> > > > > + * scheduler's queued work waits for at least one of the max_active tasks to
+> > > > > + * finish. Thus, this can result in a deadlock.
+> > > > 
+> > > > Uh if you have an ordered wq you deadlock with just one misuse. I'd just
+> > > > explain that the wq must provide sufficient forward-progress guarantees
+> > > > for the scheduler, specifically that it's on the dma_fence signalling
+> > > > critical path and leave the concrete examples for people to figure out
+> > > > when the design a specific locking scheme.
+> > > 
+> > > This isn't a concrete example, is it? It's exactly what you say in slightly
+> > > different words, with the addition of highlighting the impact of the workqueue's
+> > > max_active configuration.
+> > > 
+> > > I think that's relevant, because N - 1 active tasks can be on the dma_fence
+> > > signalling critical path without issues.
+> > > 
+> > > We could change
+> > > 
+> > > 	"if max_active tasks are reached at least one of them must not execute
+> > > 	 operations that may block on dma_fences that potentially make progress
+> > > 	 through this scheduler instance"
+> > > 
+> > > to 
+> > > 
+> > > 	"if max_active tasks are reached at least one of them must not be on the
+> > > 	 dma_fence signalling critical path"
+> > > 
+> > > which is a bit more to the point I think.
+> > 
+> > My point was to more state that the wq must be suitable for the scheduler
+> > jobs as the general issue, and specifically then also highlight the
+> > dma_fence concurrency issue.
+> 
+> Sure, there are more guarantees the driver has to uphold, but this is one of
+> them, so I think we should explain it.
+> 
+> > But it's not the only one, you can have driver locks and other fun involved
+> > here too.
+> 
+> Yeah, but it boils down to the same issue, e.g. if a driver takes a lock in
+> active work, and this lock is taken elsewhere for activities that violate the
+> dma_fence signalling critical path.
+> 
+> All the cases I have in mind boil down to that we potentially, either directly
+> or indirectly (through some synchronization primitive), wait for things we are
+> not allowed to wait for in the dma_fence signalling critical path.
+> 
+> Or do you mean something different?
 
-+Cc Jonas Karlman as he is intimately familiar with RK3576 clock shenanigan=
-s by now,
+You could also grab a mutex in those driver work items that is held while
+waiting for a dma_fence somewhere. The dma_fence annotations should catch
+that, but at least in my reading of the text here it's not covered.
 
-On Wednesday, 18 June 2025 15:51:45 Central European Summer Time Alexey Cha=
-rkov wrote:
-> On Sun, Jun 15, 2025 at 8:00=E2=80=AFPM Piotr Oniszczuk
-> <piotr.oniszczuk@gmail.com> wrote:
-> >
-> >
-> >
-> > > Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.com>=
- w dniu 9 cze 2025, o godz. 16:05:
-> > >
-> > > On Sun, Jun 8, 2025 at 11:24=E2=80=AFAM Piotr Oniszczuk
-> > > <piotr.oniszczuk@gmail.com> wrote:
-> > >>> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.co=
-m> w dniu 5 cze 2025, o godz. 15:42:
-> > >>>> Alexey,
-> > >>>> I see you are using rk3576 board like me (nanopi-m5)
-> > >>>> Have you on your board correctly working cpu dvfs?
-> > >>>> I mean: [1][desired clocks reported by kernel sysfs are in pair wi=
-th [2[]cur clocks?
-> > >>>> In my case i see mine cpu lives totally on it=E2=80=99s own with d=
-vfs:
-> > >>>
-> > >>> Hi Piotr,
-> > >>>
-> > >>> I haven't tried to validate actual running frequencies vs. requested
-> > >>> frequencies, but subjective performance and power consumption seem =
-to
-> > >>> be in line with what I expect.
-> > >>
-> > >> well - my subjective l&f is that  - currently - my rk3576 seems =E2=
-=80=9Eslower" than i.e. 4xA53 h618.
-> > >
-> > > In my experience, native compilation of GCC 14 using 8 threads on
-> > > RK3576 (mainline with passive cooling and throttling enabled): 2 hours
-> > > 6 minutes, on RK3588 (mainline with passive cooling via Radxa Rock 5B
-> > > case and throttling enabled but never kicking in): 1 hour 10 minutes
-> >
-> > by curiosity i looked randomly on 3576 vs 3588:
-> > multithread passmark: 3675 (https://www.cpubenchmark.net/cpu.php?cpu=3D=
-Rockchip+RK3576&id=3D6213)
-> > multithread passmark: 4530 (https://www.cpubenchmark.net/cpu.php?cpu=3D=
-Rockchip+RK3588&id=3D4906)
-> >
-> > assuming 3588 as baseline, 3576 is approx 20% slower on multithread pas=
-smark (has ~0,8 comp power of 3588)
-> > 70 min compile on 3588 should take something like ~86min on 3576.
-> > In your case 126min compile on 3576 shows 3576 offers 0,55 comp power o=
-f 3588.
-> > Roughly 3576 should do this task in 40min less than you currently see i=
- think
-> >
-> >
-> > > Can't see how u-boot would affect CPU speed in Linux, as long as you
-> > > use comparable ATF images. Do you use the same kernel and dtb in all
-> > > these cases? Also, what's your thermal setup?
-> >
-> > yes. in all cases only change was: uboot & atf
-> > thermal is based on recent collabora series (+ recent pooling fix for c=
-locks return from throttling)
-> >
-> > >
-> > >
-> > > Not sure UX is a particularly good measure of CPU performance, as long
-> > > as you've got a properly accelerated DRM graphics pipeline. More
-> > > likely 2D/3D and memory.
-> >
-> > indeed.
-> > For quantified look i=E2=80=99m looking on v.simple approach to estimat=
-e real clock is http://uob-hpc.github.io/2017/11/22/arm-clock-freq.html
-> > by curiosity i looked what it reports on a53/a55/a72/a76 and it is surp=
-risingly accurate :-)
-> > on mine 3576 with collabora uboot+mainline atf is hows 800MHz (and in p=
-erf. gov it seems to be constant)
-> >
-> > >
-> > > There might be some difference in how PVTPLL behaves on RK3576 vs.
-> > > RK3588. But frankly first I would check if you are using comparable
-> > > ATF implementations (e.g. upstream TF-A in both cases), kernels and
-> > > thermal environment :)
-> >
-> > all tests: the same 6.15.2 mainline + some collabora patches
-> >
-> > diffs were:
-> > 1.collabora uboot[1] + mainline atf 2.13
-> > 2.collabora uboot[1] + rockchip rkbin bl31 blob
-> > 3.vendor uboot (bin dump from friendlyelec ubuntu image)
-> >
-> > on 1/2 i see kind of issue with clock values (i.e. perf gov gives const=
-ant 800MHz on mainline atf).
-> > 3 seems to perform better - (i.e. perf gov gives constant 1500MHz so al=
-l is snappier/faster)
->=20
-> There is indeed something weird going on. I've tried running sbc-bench
-> [1], and even though I observe dynamically varying CPU frequencies
-> after boot with schedutil governor, once sbc-bench switches the
-> governor to "performance" and goes through the OPPs in descending
-> frequency order, the CPUs seem to get stuck at the last applied low
-> frequency. Even after max frequency gets reverted from 408 MHz to
-> something higher, even after I switch the governor to something else -
-> no matter what. Only a reboot gets the higher frequencies 'unstuck'
-> for me.
->=20
-> These are all observed at around 55C SoC temperature, so throttling is
-> not an issue. Regulators are stuck at 950000 uV - way above 700000 uV
-> that the 408 MHz OPP requires (and power readings seem to match: I'm
-> getting about 2.3W consumption at 408 MHz in idle vs. normal idle
-> reading of 1.4W at around 1 GHz).
->=20
-> Not sure what's going on here, and I don't remember seeing anything
-> similar on RK3588. Thoughts welcome.
+But my main point is what I explain below, the text fails to clearly
+address the issues that all current drivers (maybe all reasonable drivers,
+but sometimes I lack imagination) can encounter, so to me it's too generic
+and not that directly applicable in practice. And then on the other hand
+dma_fence is definitely the big thing, but fundamtentally you tie anything
+you schedule on those wq to the drm/scheduler design in it's entirety. So
+for the general rule, it's not generic enough for my taste.
 
-This may once again be a "accidentally uses wrong clock IDs" type
-situation. The other possibility is that we're getting confused
-between what we think the clock rate is and what SCMI actually set
-the clock rate to.
+> > Also since all the paragraphs above talk about ordered wq as the example
+> > where specifying your own wq makes sense, it's a bit confusing to now
+> > suddenly only talk about the concurrent wq case without again mentioned
+> > that the ordered wq case is really limited.
+> 
+> I mean, it talks about both cases in a generic way, i.e. if you set
+> max_active == 1 in the text it covers the ordered case.
+> 
+> Or do you mean to say that we should *only* allow ordered workqueues to be
+> shared with the driver?
 
-Things to check is whether the right clock controller (scmi vs cru)
-and the right clock id (check ATF source for this) is used.
+Both examples talk about ordered wq, they don't make any sense with
+max_active > 1, and I can't come up with any example that would. So yeah
+I'm leaning in that direction, at least in the docs. Only discussing
+max_active > 1 for this specific issue is imo very confusing and not
+helping much. I guess we could even WARN_ON if a provided wq is not
+ordered, because that does smell funky for sure.
 
-Kind regards,
-Nicolas Frattaroli
-
->=20
-> Best regards,
-> Alexey
->=20
-> [1] https://github.com/ThomasKaiser/sbc-bench
->=20
-
-
-
-
+Cheers, Sima
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
