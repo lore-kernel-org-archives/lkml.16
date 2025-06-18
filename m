@@ -1,152 +1,142 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB022F5323;
-	Wed, 18 Jun 2025 11:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C50C3594C
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247151; cv=none; b=eHNr88SSAIb1TtbBqYSvphYZVP8koRvGhIzazDLKEc1jHJjjYNhiqv9FYzQcNbA7aDrVwV1zZ8v2hjwnCc4wgsD8HI0p+u1+UWBt7GLt/FVc1DQv/iG/jVJ4cVwisLo2FuHhYgYTDri6vZ05rpx5TLYOhBm2cZxQ4K78mA+qOZ4=
+	t=1750247194; cv=none; b=pDBl0AKb+LYRt2WfoWxT0bLHH5rmhKXP34HS5am+HsLAPBYYTv1ncozExlzPGtAlwYS3GUV7T2T70ogQy7fCS294yv311hJbXlypTMl2OHDVo18YCX5k1eMU1tyqf3yiA0Q/bRgKt6LEItPsCif1qVMRe75HKoy5EFkNZMi5Ug4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247151; c=relaxed/simple;
-	bh=WYJ16Alk09q6fIdfKWEBzJa6GAWM1uSoSPLuY7xDDcI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=q1GN5sUk+K6xivIRVbIyfMvHLBxRv6o/YhcdnDNiCkbeETFpzYtEWg+4uU1dQTJ8OlcYpxl1nNTbh2UBebwLnb6TSQgjxlXcBT1mndFYY0tJX1Bq7XlSl/g6gUoYlUISLPAE33MAbu6agdm1jNoMgURYbwf5EIlmoti7xQiRD+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from localhost.localdomain (188.234.0.8) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 18 Jun
- 2025 14:45:30 +0300
-From: d.privalov <d.privalov@omp.ru>
-To: <stable@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, "David S. Miller" <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, <linux-bluetooth@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lvc-project@linuxtesting.org>, Miklos Szeredi <mszeredi@redhat.com>, Dmitriy
- Privalov <d.privalov@omp.ru>
-Subject: [PATCH 5.10/5.15 1/1] fuse: don't increment nlink in link()
-Date: Wed, 18 Jun 2025 14:44:09 +0300
-Message-ID: <20250618114409.179601-1-d.privalov@omp.ru>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750247194; c=relaxed/simple;
+	bh=BQPuT5fv8iLkb6eIPg3WGtds6HKhuEhOQB+fBvWc7VM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLbdqv1Tu2Lk+KHUo8EwjQHU4jocEuLMtnejj7p49h/1jrS3SFQeiU2zygvQexbwwGDXqLVy50FeMORjrLe34y1LLwJTkMY/0c2k0YjaeBTK012MmNe5JSzFA2mEzbgbrIJ2bGMPerQDn5YZW5x37oraSGVgSLClOx7BUytZtAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=QGUzTAdI; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="QGUzTAdI"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c5f720c717so68346785a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750247191; x=1750851991; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+wxDAXtg4Qo50atD2TXEt4R3fx9+/jlU++z8cat2peU=;
+        b=QGUzTAdI694LBdh1Ms/xu3bgW4MI3f7zx6lpx09zu5EcDpyR3HZdQvGe8E1W5Q5or+
+         IrIrH8Q8C6llD4p+LeNNmm3iDa74WtKHwNq1hFNo/EL1Z+gH7EiZn9mTsWtjcBgtFhl7
+         5MTdrD+WQ1nczjRs2CzRxM6CIG3w3xZ+igJHuRkYFgSlZsqnzTOGUSLZ0fTy8KiWQzdM
+         81SLxaha1fYT9i2Fz95sO/EK2oYncpT4mqKiRzWeI6RiItHq7+0T9XDA0HsBVG8VPZ/d
+         Fb9UjrwAJ1WwNF8ypcfLFfgld7sf53s3MEldKOtk+qziOeOxk+xkMHUWd4144FrRR74b
+         C1VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750247191; x=1750851991;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+wxDAXtg4Qo50atD2TXEt4R3fx9+/jlU++z8cat2peU=;
+        b=xLaRhZxCILv8l9//n0JZpcAVyXDNwVR5qbK7wzzURbCtZ6eEaObaqCvAa6MiVPdwRD
+         Hxk2269DCSjrHhADji9MYPZSQRdar3zfLHpTlf74C0tlV9KKEzarOYqlrbYDWfX4S8js
+         R7v5cH/RYxYk4jpjiR7T1Y6s0QMy5sI/ZaVulJ6Gd3ZGxtD7bj1b4Gj/lFXauk3seFpF
+         MEEVmBGPmVFDwAMVibZhHXGAGknJn+RFx3MLnuq7CH5qj5IReoiudlnmS6wgKVcc8gnV
+         ZlztlnwU6KdOrAHub54lT1NVudxfdcYAEjLxHY8bwbvohQPDzsMzeIKAWZXFoRrTGE0U
+         ZY7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWMle67wG2JArE4wJSjfUtCW2al4mDSmDYvcmbJGCpaNTX5fVAHwbegmAUco+/Nj/lFXqv1Xqy7bX+MsZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOVjchAqlQ/nRUkNCuwbKA+hnQf6SjDFat/XlUu57xqUiZvfjt
+	RM7ReMHpYduxSrCFVcxWZsczlevQ+tk3QPwH0HcrPVWQSiPCWRwUbHKRZcl78AkXsu8=
+X-Gm-Gg: ASbGncsT+sZSGrBYnqXRJZPZmg/TG8nn+fFUPPhe2KZXG+O0OngV6YaaEe9uDpCJF+2
+	bDU0ffovZ0Dm0DoRaAsGvl5Cy6CMjBuddeKCHmn2S17RrSsmNtXTmLJSLHBIHYNdPWznbzs1Fca
+	8trvgITWs8YSOrAlgsi/ppGPRbtHTxoDqj0lrZzYM0ZKGJGB+llBpInz9IXAROr/blt4sNhDcDQ
+	s8f29WJATpwauUy8jqu77QVAz50XvHSARoODWV0k+rGI3Cb8Mdl6EJGxBRnxmhFV0PvrhIBnAvO
+	YinJCF55fTgt3Oz3a+cWpOL2XJtYrVhIrFy1FbX7t+H2nTxIHaF0DjylXG64CSV8oEsO74mvIf/
+	mbVuaI4H+sxlA6r83sTy/c5GI6QSL7MfCfn95aA==
+X-Google-Smtp-Source: AGHT+IH9ampaEvML5kl4q5XP1ejBHxic8pQJ9EplcrH4aE8+2qiZ3Q+h0D+ADETOd0AZ5S0xxE/VJQ==
+X-Received: by 2002:ac8:7d4f:0:b0:4a6:f6e6:7696 with SMTP id d75a77b69052e-4a7645dd6bamr37752941cf.26.1750247190820;
+        Wed, 18 Jun 2025 04:46:30 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a4b148esm72211971cf.40.2025.06.18.04.46.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 04:46:30 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uRrFN-00000006l9d-25JO;
+	Wed, 18 Jun 2025 08:46:29 -0300
+Date: Wed, 18 Jun 2025 08:46:29 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: David Hildenbrand <david@redhat.com>
+Cc: lizhe.67@bytedance.com, akpm@linux-foundation.org,
+	alex.williamson@redhat.com, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, peterx@redhat.com
+Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
+Message-ID: <20250618114629.GL1376515@ziepe.ca>
+References: <20250617152210.GA1552699@ziepe.ca>
+ <20250618062820.8477-1-lizhe.67@bytedance.com>
+ <20250618113626.GK1376515@ziepe.ca>
+ <9c31da33-8579-414a-9b2a-21d7d8049050@redhat.com>
+ <a1d62bf1-59e5-4dd5-926a-d6cdddf3deb5@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 06/18/2025 11:27:56
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 0
-X-KSE-AntiSpam-Info: Lua profiles 194137 [Jun 18 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: d.privalov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 62 0.3.62
- e2af3448995f5f8a7fe71abf21bb23519d0f38c3
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_uf_ne_domains}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info:
-	d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 188.234.0.8
-X-KSE-AntiSpam-Info: Rate: 0
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 06/18/2025 11:29:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 6/18/2025 9:13:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1d62bf1-59e5-4dd5-926a-d6cdddf3deb5@redhat.com>
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+On Wed, Jun 18, 2025 at 01:42:09PM +0200, David Hildenbrand wrote:
+> On 18.06.25 13:40, David Hildenbrand wrote:
+> > On 18.06.25 13:36, Jason Gunthorpe wrote:
+> > > On Wed, Jun 18, 2025 at 02:28:20PM +0800, lizhe.67@bytedance.com wrote:
+> > > > On Tue, 17 Jun 2025 12:22:10 -0300, jgg@ziepe.ca wrote:
+> > > > > +	while (npage) {
+> > > > > +		long nr_pages = 1;
+> > > > > +
+> > > > > +		if (!is_invalid_reserved_pfn(pfn)) {
+> > > > > +			struct page *page = pfn_to_page(pfn);
+> > > > > +			struct folio *folio = page_folio(page);
+> > > > > +			long folio_pages_num = folio_nr_pages(folio);
+> > > > > +
+> > > > > +			/*
+> > > > > +			 * For a folio, it represents a physically
+> > > > > +			 * contiguous set of bytes, and all of its pages
+> > > > > +			 * share the same invalid/reserved state.
+> > > > > +			 *
+> > > > > +			 * Here, our PFNs are contiguous. Therefore, if we
+> > > > > +			 * detect that the current PFN belongs to a large
+> > > > > +			 * folio, we can batch the operations for the next
+> > > > > +			 * nr_pages PFNs.
+> > > > > +			 */
+> > > > > +			if (folio_pages_num > 1)
+> > > > > +				nr_pages = min_t(long, npage,
+> > > > > +					folio_pages_num -
+> > > > > +					folio_page_idx(folio, page));
+> > > > > +
+> > > > > +			unpin_user_folio_dirty_locked(folio, nr_pages,
+> > > > > +					dma->prot & IOMMU_WRITE);
+> > > > 
+> > > > Are you suggesting that we should directly call
+> > > > unpin_user_page_range_dirty_lock() here (patch 3/3) instead?
+> > > 
+> > > I'm saying you should not have the word 'folio' inside the VFIO. You
+> > > accumulate a contiguous range of pfns, by only checking the pfn, and
+> > > then call
+> > > 
+> > > unpin_user_page_range_dirty_lock(pfn_to_page(first_pfn)...);
+> > > 
+> > > No need for any of this. vfio should never look at the struct page
+> > > except as the last moment to pass the range.
+> > 
+> > Hah, agreed, that's actually simpler and there is no need to factor
+> > anything out.
+> 
+> Ah, no, wait, the problem is that we don't know how many pages we can
+> supply, because there might be is_invalid_reserved_pfn() in the range ...
 
-commit 97f044f690bac2b094bfb7fb2d177ef946c85880 upstream.
+You stop batching when you hit any invalid_reserved_pfn and flush it.
 
-The fuse_iget() call in create_new_entry() already updated the inode with
-all the new attributes and incremented the attribute version.
+It still has to check read back and check every PFN to make sure it is
+contiguous, checking reserved too is not a problemm.
 
-Incrementing the nlink will result in the wrong count.  This wasn't noticed
-because the attributes were invalidated right after this.
-
-Updating ctime is still needed for the writeback case when the ctime is not
-refreshed.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Signed-off-by: Dmitriy Privalov <d.privalov@omp.ru>
----
- fs/fuse/dir.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
-
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 4488a53a192d..7055fdc1b8ce 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -807,7 +807,7 @@ void fuse_flush_time_update(struct inode *inode)
- 	mapping_set_error(inode->i_mapping, err);
- }
- 
--void fuse_update_ctime(struct inode *inode)
-+static void fuse_update_ctime_in_cache(struct inode *inode)
- {
- 	if (!IS_NOCMTIME(inode)) {
- 		inode->i_ctime = current_time(inode);
-@@ -816,6 +816,12 @@ void fuse_update_ctime(struct inode *inode)
- 	}
- }
- 
-+void fuse_update_ctime(struct inode *inode)
-+{
-+	fuse_invalidate_attr(inode);
-+	fuse_update_ctime_in_cache(inode);
-+}
-+
- static int fuse_unlink(struct inode *dir, struct dentry *entry)
- {
- 	int err;
-@@ -986,25 +992,10 @@ static int fuse_link(struct dentry *entry, struct inode *newdir,
- 	args.in_args[1].size = newent->d_name.len + 1;
- 	args.in_args[1].value = newent->d_name.name;
- 	err = create_new_entry(fm, &args, newdir, newent, inode->i_mode);
--	/* Contrary to "normal" filesystems it can happen that link
--	   makes two "logical" inodes point to the same "physical"
--	   inode.  We invalidate the attributes of the old one, so it
--	   will reflect changes in the backing inode (link count,
--	   etc.)
--	*/
--	if (!err) {
--		struct fuse_inode *fi = get_fuse_inode(inode);
--
--		spin_lock(&fi->lock);
--		fi->attr_version = atomic64_inc_return(&fm->fc->attr_version);
--		if (likely(inode->i_nlink < UINT_MAX))
--			inc_nlink(inode);
--		spin_unlock(&fi->lock);
--		fuse_invalidate_attr(inode);
--		fuse_update_ctime(inode);
--	} else if (err == -EINTR) {
-+	if (!err)
-+		fuse_update_ctime_in_cache(inode);
-+	else if (err == -EINTR)
- 		fuse_invalidate_attr(inode);
--	}
- 	return err;
- }
- 
--- 
-2.34.1
+Jason 
 
