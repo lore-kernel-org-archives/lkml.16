@@ -1,353 +1,128 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF7F22EE981;
-	Wed, 18 Jun 2025 15:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4722EF2AE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260123; cv=none; b=LXneU2zpO2SQ3fmC+8F68bkV9IjVDhb08/4Y/k9bb6pBiSICwIfdrPMmLmwZPia0lMn775Z8e4PwUjbiUynxHfJ7JjFsQe0q5OQWsr4LinoKCYQXvucu3Uh83GYeP1Z14Vh1BjbbpTzz57wlw3dPqc/zNeARsUWUgtqUuAB2c5A=
+	t=1750260176; cv=none; b=h9Bla78Sd4jWWvFqv+jwQ0ITvqxo5XfvIvqE1pKy+w+ktsWL2HfQ+gkGRNGhh3KmqgSlSplgnXRhF7ZBpKP9CF/IyVUMB47N9s4JrfgZxu/e4/Ouwq6kf4vjY/+Ne4Ihn1QJZ+3NsC2PveF7wpBPb+abnTORwDrpoBJBDouPNwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260123; c=relaxed/simple;
-	bh=faM7ArohF9ySz3He9yNCX6OKTYTs+8Y3O0FLFiCc2vc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eePz/B9J/Ks5SB9JjIAKJM0P4cDpSXiChYdtKBMA1jvu4o4vMYf/6tGctxShch5d9uNi6krTua6+OA8U1IhPv7d81FytYobMjKuKcFVmGPr7tVtvXdaquKhM+DQqJVU++RKEMEcYkM2sAhK4PJpqvgevf+QBhtoiTm0UuoIDp+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=AXZHDQVb; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750260176; c=relaxed/simple;
+	bh=s7Q/jo6lw2NXu3jvqDEp4oeMIpbrrPjBrhRL9F76kbg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VF3zb/fAGk5k0b3s2DVClctvgc1Q6t0qLYKTA1NrBPXcnldlfZ5t+h+OVfsy5xRaYbd7zTa19buwJIUOLSs7nJPD0dqMOnyZmbUc6rqfPjfAh0GTDoPMnw+3+v2Yp2MkJObKoM8rDy4NQNw4koCaCiO1ZL4cvFqG2TIULOaQfkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XeTZJ0SQ; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="AXZHDQVb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=5q
-	XqETQd2PNkfZLHj4KgigghIhxiyg3po4s7tKNm+fg=; b=AXZHDQVb7EALDQv7P1
-	GIzHOVUAEUEAcnDFdlCGvpzMpoQeR7e1MPi0/Hl/q+T7JhWyW0O/7hQEOcOZLms2
-	GZ1si6oddwGtYXONdAn0SN9zWhDSZ/ACCcgAzfME+KwPul3Wi+f6J3GeT9RH8JKV
-	165sZMGzP7CgfUKyMdHeT932Y=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp5 (Coremail) with SMTP id QCgvCgBnr96E2VJo_+eqAA--.17078S5;
-	Wed, 18 Jun 2025 23:21:43 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	bhelgaas@google.com,
-	mani@kernel.org,
-	kwilczynski@kernel.org
-Cc: robh@kernel.org,
-	jingoohan1@gmail.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 13/13] PCI: tegra194: Refactor code by using dw_pcie_clear_and_set_dword()
-Date: Wed, 18 Jun 2025 23:21:12 +0800
-Message-Id: <20250618152112.1010147-14-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250618152112.1010147-1-18255117159@163.com>
-References: <20250618152112.1010147-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XeTZJ0SQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750260175; x=1781796175;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s7Q/jo6lw2NXu3jvqDEp4oeMIpbrrPjBrhRL9F76kbg=;
+  b=XeTZJ0SQEbghjIodAJG+wdcP3zgRHYKnzoKV9EB1hKewh82qHQnq6HXd
+   a78A6XIBILYgfpPEZ0vUtLH484X4ZjF1HKtHrzdcKaZPW9/RxdIht+Y3z
+   cHfY0bJWGHRP+nJ+xGjPMm8cik5JxH/3KGWqiq88PGOla13ii6xWNHsx/
+   V948iUTN5IZGRJpFw9wKNiM4G8GmIzcVoR3qi3++OKY3SXsX/K3PIQdsu
+   81E6OgYkd027hQTixFDYfUGkalEwFLHWxmTW3a2ASgOhA7Zyz2/HC9CgB
+   RdYT80nv/lR9j7GP26SpqcrqNcaggqZehJWRef96bToJjQqjgYrdwBxrn
+   g==;
+X-CSE-ConnectionGUID: CnIwILYNROOG2C8sq8HZ4Q==
+X-CSE-MsgGUID: isTmDR/bR/2PxK/mUWHDSA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52407067"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="52407067"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:22:54 -0700
+X-CSE-ConnectionGUID: s+21155eQhKgTz1GWKayTQ==
+X-CSE-MsgGUID: 6VrcT5KZTCqXiBAkJZrjRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="150371729"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:22:53 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id C029C20B5736;
+	Wed, 18 Jun 2025 08:21:00 -0700 (PDT)
+Message-ID: <0d131415-4921-45ac-bcd9-cedff17f34f5@linux.intel.com>
+Date: Wed, 18 Jun 2025 11:22:50 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:QCgvCgBnr96E2VJo_+eqAA--.17078S5
-X-Coremail-Antispam: 1Uf129KBjvAXoW3ur47Xw15Gr1xXry3AFy5urg_yoW8JF4UZo
-	ZrJ3WkW3W7Jr1xta4YyFn3Kry7Jr4YvayrArZ2y3yj9as7KF15A393Kas8Aw12kr4fC34f
-	Xw4kG3W3AFW7XryUn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvj4RA739UUUUU
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxVwo2hS1QJtrwABsz
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
+ jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+ linux-kernel@vger.kernel.org, ak@linux.intel.com, zide.chen@intel.com,
+ broonie@kernel.org
+References: <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
+ <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+ <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
+ <20250618093500.GH1613376@noisy.programming.kicks-ass.net>
+ <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
+ <20250618133003.GC1613200@noisy.programming.kicks-ass.net>
+ <99087e26-192f-4fa6-b43b-0c6a39c45b38@linux.intel.com>
+ <20250618144545.GD1613200@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250618144545.GD1613200@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Tegra194 PCIe driver contains extensive manual bit manipulation across
-interrupt handling, ASPM configuration, and controller initialization.
-The driver implements complex read-modify-write sequences with explicit
-bit masking, leading to verbose and hard-to-maintain code.
 
-Refactor interrupt handling, ASPM setup, capability configuration, and
-controller initialization using dw_pcie_clear_and_set_dword(). Replace
-multi-step register modifications with single helper calls, eliminating
-intermediate variables and reducing code size by ~100 lines. For CDMA
-error handling, initialize the value variable to zero before setting
-status bits.
 
-This comprehensive refactoring significantly improves code readability
-and maintainability. Standardizing on the helper ensures consistent
-register access patterns across all driver components and reduces the
-risk of bit manipulation errors in this complex controller driver.
+On 2025-06-18 10:45 a.m., Peter Zijlstra wrote:
+> On Wed, Jun 18, 2025 at 09:52:12AM -0400, Liang, Kan wrote:
+> 
+>> I didn't know we have the alignment requirement for the output.
+> 
+> Perf buffer is in u64 units.
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 155 +++++++++------------
- 1 file changed, 64 insertions(+), 91 deletions(-)
+Sure.
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 4f26086f25da..c6f5c35a4be4 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -378,9 +378,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
- 			val |= APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N;
- 			appl_writel(pcie, val, APPL_CAR_RESET_OVRD);
- 
--			val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
--			val |= PORT_LOGIC_SPEED_CHANGE;
--			dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
-+			dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
-+						    0, PORT_LOGIC_SPEED_CHANGE);
- 		}
- 	}
- 
-@@ -412,7 +411,7 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
- 
- 	if (status_l0 & APPL_INTR_STATUS_L0_CDM_REG_CHK_INT) {
- 		status_l1 = appl_readl(pcie, APPL_INTR_STATUS_L1_18);
--		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-+		val = 0;
- 		if (status_l1 & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMPLT) {
- 			dev_info(pci->dev, "CDM check complete\n");
- 			val |= PCIE_PL_CHK_REG_CHK_REG_COMPLETE;
-@@ -425,7 +424,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
- 			dev_err(pci->dev, "CDM Logic error\n");
- 			val |= PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR;
- 		}
--		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
-+		dw_pcie_clear_and_set_dword(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
-+					    PORT_LOGIC_SPEED_CHANGE, val);
- 		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_ERR_ADDR);
- 		dev_err(pci->dev, "CDM Error Address Offset = 0x%08X\n", val);
- 	}
-@@ -610,34 +610,27 @@ static struct pci_ops tegra_pci_ops = {
- #if defined(CONFIG_PCIEASPM)
- static void disable_aspm_l11(struct tegra_pcie_dw *pcie)
- {
--	u32 val;
--
--	val = dw_pcie_readl_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub);
--	val &= ~PCI_L1SS_CAP_ASPM_L1_1;
--	dw_pcie_writel_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub, val);
-+	dw_pcie_clear_and_set_dword(&pcie->pci, pcie->cfg_link_cap_l1sub,
-+				    PCI_L1SS_CAP_ASPM_L1_1, 0);
- }
- 
- static void disable_aspm_l12(struct tegra_pcie_dw *pcie)
- {
--	u32 val;
--
--	val = dw_pcie_readl_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub);
--	val &= ~PCI_L1SS_CAP_ASPM_L1_2;
--	dw_pcie_writel_dbi(&pcie->pci, pcie->cfg_link_cap_l1sub, val);
-+	dw_pcie_clear_and_set_dword(&pcie->pci, pcie->cfg_link_cap_l1sub,
-+				    PCI_L1SS_CAP_ASPM_L1_2, 0);
- }
- 
- static inline u32 event_counter_prog(struct tegra_pcie_dw *pcie, u32 event)
- {
--	u32 val;
-+	u32 val = 0;
- 
--	val = dw_pcie_readl_dbi(&pcie->pci, pcie->ras_des_cap +
--				PCIE_RAS_DES_EVENT_COUNTER_CONTROL);
--	val &= ~(EVENT_COUNTER_EVENT_SEL_MASK << EVENT_COUNTER_EVENT_SEL_SHIFT);
- 	val |= EVENT_COUNTER_GROUP_5 << EVENT_COUNTER_GROUP_SEL_SHIFT;
- 	val |= event << EVENT_COUNTER_EVENT_SEL_SHIFT;
- 	val |= EVENT_COUNTER_ENABLE_ALL << EVENT_COUNTER_ENABLE_SHIFT;
--	dw_pcie_writel_dbi(&pcie->pci, pcie->ras_des_cap +
--			   PCIE_RAS_DES_EVENT_COUNTER_CONTROL, val);
-+	dw_pcie_clear_and_set_dword(&pcie->pci, pcie->ras_des_cap +
-+				    PCIE_RAS_DES_EVENT_COUNTER_CONTROL,
-+				    EVENT_COUNTER_EVENT_SEL_MASK << EVENT_COUNTER_EVENT_SEL_SHIFT,
-+				    val);
- 	val = dw_pcie_readl_dbi(&pcie->pci, pcie->ras_des_cap +
- 				PCIE_RAS_DES_EVENT_COUNTER_DATA);
- 
-@@ -697,18 +690,20 @@ static void init_host_aspm(struct tegra_pcie_dw *pcie)
- 			   PCIE_RAS_DES_EVENT_COUNTER_CONTROL, val);
- 
- 	/* Program T_cmrt and T_pwr_on values */
--	val = dw_pcie_readl_dbi(pci, pcie->cfg_link_cap_l1sub);
--	val &= ~(PCI_L1SS_CAP_CM_RESTORE_TIME | PCI_L1SS_CAP_P_PWR_ON_VALUE);
-+	val = 0;
- 	val |= (pcie->aspm_cmrt << 8);
- 	val |= (pcie->aspm_pwr_on_t << 19);
--	dw_pcie_writel_dbi(pci, pcie->cfg_link_cap_l1sub, val);
-+	dw_pcie_clear_and_set_dword(pci, pcie->cfg_link_cap_l1sub,
-+				    PCI_L1SS_CAP_CM_RESTORE_TIME |
-+				    PCI_L1SS_CAP_P_PWR_ON_VALUE,
-+				    val);
- 
- 	/* Program L0s and L1 entrance latencies */
--	val = dw_pcie_readl_dbi(pci, PCIE_PORT_AFR);
--	val &= ~PORT_AFR_L0S_ENTRANCE_LAT_MASK;
-+	val = 0;
- 	val |= (pcie->aspm_l0s_enter_lat << PORT_AFR_L0S_ENTRANCE_LAT_SHIFT);
- 	val |= PORT_AFR_ENTER_ASPM;
--	dw_pcie_writel_dbi(pci, PCIE_PORT_AFR, val);
-+	dw_pcie_clear_and_set_dword(pci, PCIE_PORT_AFR,
-+				    PORT_AFR_L0S_ENTRANCE_LAT_MASK, val);
- }
- 
- static void init_debugfs(struct tegra_pcie_dw *pcie)
-@@ -860,31 +855,26 @@ static void config_gen3_gen4_eq_presets(struct tegra_pcie_dw *pcie)
- 		dw_pcie_writeb_dbi(pci, offset + i, val);
- 	}
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0);
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
--	val &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC;
--	val |= FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC, 0x3ff);
--	val &= ~GEN3_EQ_CONTROL_OFF_FB_MODE;
--	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_EQ_CONTROL_OFF,
-+				    GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC |
-+				    GEN3_EQ_CONTROL_OFF_FB_MODE,
-+				    FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC, 0x3ff));
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
--	val |= (0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK,
-+				    0x1 << GEN3_RELATED_OFF_RATE_SHADOW_SEL_SHIFT);
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
--	val &= ~GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC;
--	val |= FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC,
--			  pcie->of_data->gen4_preset_vec);
--	val &= ~GEN3_EQ_CONTROL_OFF_FB_MODE;
--	dw_pcie_writel_dbi(pci, GEN3_EQ_CONTROL_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_EQ_CONTROL_OFF,
-+				    GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC |
-+				    GEN3_EQ_CONTROL_OFF_FB_MODE,
-+				    FIELD_PREP(GEN3_EQ_CONTROL_OFF_PSET_REQ_VEC,
-+					       pcie->of_data->gen4_preset_vec));
- 
--	val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--	val &= ~GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK;
--	dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
-+	dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+				    GEN3_RELATED_OFF_RATE_SHADOW_SEL_MASK, 0);
- }
- 
- static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
-@@ -892,7 +882,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
- 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
- 	u32 val;
--	u16 val_16;
- 
- 	pp->bridge->ops = &tegra_pci_ops;
- 
-@@ -900,32 +889,25 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 		pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
- 							      PCI_CAP_ID_EXP);
- 
--	val = dw_pcie_readl_dbi(pci, PCI_IO_BASE);
--	val &= ~(IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8);
--	dw_pcie_writel_dbi(pci, PCI_IO_BASE, val);
-+	dw_pcie_clear_and_set_dword(pci, PCI_IO_BASE,
-+				    IO_BASE_IO_DECODE | IO_BASE_IO_DECODE_BIT8, 0);
- 
--	val = dw_pcie_readl_dbi(pci, PCI_PREF_MEMORY_BASE);
--	val |= CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE;
--	val |= CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE;
--	dw_pcie_writel_dbi(pci, PCI_PREF_MEMORY_BASE, val);
-+	dw_pcie_clear_and_set_dword(pci, PCI_PREF_MEMORY_BASE, 0,
-+				    CFG_PREF_MEM_LIMIT_BASE_MEM_DECODE |
-+				    CFG_PREF_MEM_LIMIT_BASE_MEM_LIMIT_DECODE);
- 
- 	dw_pcie_writel_dbi(pci, PCI_BASE_ADDRESS_0, 0);
- 
- 	/* Enable as 0xFFFF0001 response for RRS */
--	val = dw_pcie_readl_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT);
--	val &= ~(AMBA_ERROR_RESPONSE_RRS_MASK << AMBA_ERROR_RESPONSE_RRS_SHIFT);
--	val |= (AMBA_ERROR_RESPONSE_RRS_OKAY_FFFF0001 <<
--		AMBA_ERROR_RESPONSE_RRS_SHIFT);
--	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
-+	dw_pcie_clear_and_set_dword(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT,
-+				    AMBA_ERROR_RESPONSE_RRS_MASK << AMBA_ERROR_RESPONSE_RRS_SHIFT,
-+				    AMBA_ERROR_RESPONSE_RRS_OKAY_FFFF0001 <<
-+				    AMBA_ERROR_RESPONSE_RRS_SHIFT);
- 
- 	/* Clear Slot Clock Configuration bit if SRNS configuration */
--	if (pcie->enable_srns) {
--		val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
--					   PCI_EXP_LNKSTA);
--		val_16 &= ~PCI_EXP_LNKSTA_SLC;
--		dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
--				   val_16);
--	}
-+	if (pcie->enable_srns)
-+		dw_pcie_clear_and_set_dword(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA,
-+					    PCI_EXP_LNKSTA_SLC, 0);
- 
- 	config_gen3_gen4_eq_presets(pcie);
- 
-@@ -937,17 +919,13 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 		disable_aspm_l12(pcie);
- 	}
- 
--	if (!pcie->of_data->has_l1ss_exit_fix) {
--		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
--	}
-+	if (!pcie->of_data->has_l1ss_exit_fix)
-+		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
- 
--	if (pcie->update_fc_fixup) {
--		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
--		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
--		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
--	}
-+	if (pcie->update_fc_fixup)
-+		dw_pcie_clear_and_set_dword(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-+					    0, 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT);
- 
- 	clk_set_rate(pcie->core_clk, GEN4_CORE_CLK_FREQ);
- 
-@@ -1018,9 +996,8 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
- 		reset_control_deassert(pcie->core_rst);
- 
- 		offset = dw_pcie_find_ext_capability(pci, PCI_EXT_CAP_ID_DLF);
--		val = dw_pcie_readl_dbi(pci, offset + PCI_DLF_CAP);
--		val &= ~PCI_DLF_EXCHANGE_ENABLE;
--		dw_pcie_writel_dbi(pci, offset + PCI_DLF_CAP, val);
-+		dw_pcie_clear_and_set_dword(pci, offset + PCI_DLF_CAP,
-+					    PCI_DLF_EXCHANGE_ENABLE, 0);
- 
- 		tegra_pcie_dw_host_init(pp);
- 		dw_pcie_setup_rc(pp);
-@@ -1847,11 +1824,9 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
- 
- 	reset_control_deassert(pcie->core_rst);
- 
--	if (pcie->update_fc_fixup) {
--		val = dw_pcie_readl_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF);
--		val |= 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT;
--		dw_pcie_writel_dbi(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF, val);
--	}
-+	if (pcie->update_fc_fixup)
-+		dw_pcie_clear_and_set_dword(pci, CFG_TIMER_CTRL_MAX_FUNC_NUM_OFF,
-+					    0, 0x1 << CFG_TIMER_CTRL_ACK_NAK_SHIFT);
- 
- 	config_gen3_gen4_eq_presets(pcie);
- 
-@@ -1863,11 +1838,9 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
- 		disable_aspm_l12(pcie);
- 	}
- 
--	if (!pcie->of_data->has_l1ss_exit_fix) {
--		val = dw_pcie_readl_dbi(pci, GEN3_RELATED_OFF);
--		val &= ~GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL;
--		dw_pcie_writel_dbi(pci, GEN3_RELATED_OFF, val);
--	}
-+	if (!pcie->of_data->has_l1ss_exit_fix)
-+		dw_pcie_clear_and_set_dword(pci, GEN3_RELATED_OFF,
-+					    GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL, 0);
- 
- 	pcie->pcie_cap_base = dw_pcie_find_capability(&pcie->pci,
- 						      PCI_CAP_ID_EXP);
--- 
-2.25.1
+> 
+>> If so,
+>>
+>> PERF_SAMPLE_SIMD_REGS := {
+>> 	u64 vectors_mask;
+>> 	u64 pred_mask;
+>> 	u64 vector_length:16,
+>> 	    pred_length:16,
+>> 	    reserved:32;
+>> 	u64 data[];
+>> }
+> 
+> I really don't think we need this complication; XSAVE is a real pain in
+> the arse, but I think we have enough bits in XSTATE_BV to tell what is
+> what.
+
+I just realized that XSAVE takes the vector as a whole.
+It's impossible that XMM0 can be retrieved but XMM1 fails via XSAVE.
+I will use the suggested output format.
+
+PERF_SAMPLE_SIMD_REGS := {
+	u16 nr_vectors;
+	u16 vector_length;
+	u16 nr_pred;
+	u16 pred_length;
+	u64 data[];
+}
+
+Thanks,
+Kan
 
