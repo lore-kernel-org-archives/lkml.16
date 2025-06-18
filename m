@@ -1,112 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45352144304;
-	Wed, 18 Jun 2025 17:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868A0186E40
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750267041; cv=none; b=Hfa5pixa2HZUGOVuMdFIdETxNaDmUo0dzPa5YKS8NJ3tlTfZzewluSYUKI2PI1fECdplEJwhWgWkiJFuliDPUF4iXAj5IXIEgQ5yVD/lvJG9jFhUCoKedtJUJ4a620qPnGNaEAg2iIU7esucUHzMjOF+w4WiivbTNcIL9AHtva4=
+	t=1750267045; cv=none; b=XnD2zS2dBJtrCytNzkSQDCNS4L6ogN27SRtUORywMRTC6Nf/XNPDxhmYk5xfs8UlH348KLbtKHkH67xqJ3W3UdVE4PQ6ZMa2YBEJM1+O89OZl6ZShyxdmpA4o3mx973dlCdHF0pzVo/OSvEiH9bdBUR+OQ8b5UwxDR2FfztFr1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750267041; c=relaxed/simple;
-	bh=7N2qedqfmm2wSBE+X0xRUvrNeOitpNABVy0dpLK4z5Q=;
+	s=arc-20240116; t=1750267045; c=relaxed/simple;
+	bh=X1C92uROOo3sK56Kzjyle9jmoOKdo3deN3qrLlEjFQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAg6vnPIB0mCh1F9ntZhGoDX1agrFW2PIKrtfx3zJPCkRNCAa6A1AhytNr7DB2tkMAMPNbT6OtiA8xwO73ySnftwwL0AuYolRMeToUy7rWQ0wmmnNjGsJQPdr7xbBfH1qVAKcc3fEcs+AbGpJ/5UszDo6Wp/zOmKUMO3YktQXR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6oWJFp0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8FNNLMzBUKdpW9WdVifV1WrgTYy4iUk2VbcQ46muFuElu6jGT1R3lYbIBwLxP0/oApOhGpZsx6VRyKa2ToioFUdnj3S8hH7A65LPnbna4t1gxlZvvqn4zF8bmHJOfA1ALLAnWc6Pw1uLaeDZRyqegFdQ2rhWJ+UQYVaSRoajrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ah8H35Mx; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6oWJFp0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D50CC4CEF0;
-	Wed, 18 Jun 2025 17:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750267040;
-	bh=7N2qedqfmm2wSBE+X0xRUvrNeOitpNABVy0dpLK4z5Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h6oWJFp0fiMQrE1E5+fibmlM2jCeT2KZxH+a6iMOr+JJAnOUGSKQSP7kXS0H5H3Nu
-	 mBWOsyUE42uLIwTS3uWFi7MN0WpZIXNkIUDuAY3zPSiC7r2FozFALhUw2UsKsDYpYv
-	 O0WAXLDXJcCCFawSHxSIv5dZANuNpR96I/TUSYOWQAS6Jt8BzTXhQeW8EzHc+uptwS
-	 /77M5B6EBvyXZz447YneeE6jj58S+lPZGrJ8qdDaa3DdueRpK4NX3pXlZfEby1mrYj
-	 F+dLHAHgoYV/buxAedHuY+/YFLMyWlRT6SiemUYklWEZFk/R0ixstw2GZuorkoV0X7
-	 npiOADLxMx9kQ==
-Date: Wed, 18 Jun 2025 07:17:19 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Tamir Duberstein <tamird@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, David Gow <davidgow@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Brendan Higgins <brendan.higgins@linux.dev>,
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Lyude Paul <lyude@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Benno Lossin <lossin@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Breno Leitao <leitao@debian.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org,
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org,
-	linux-mm@kvack.org, linux-pm@vger.kernel.org,
-	nouveau@lists.freedesktop.org
-Subject: Re: [PATCH v12 1/6] rust: enable `clippy::ptr_as_ptr` lint
-Message-ID: <aFL0n0KxQUbxjWdT@slm.duckdns.org>
-References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com>
- <20250615-ptr-as-ptr-v12-1-f43b024581e8@gmail.com>
- <CAJ-ks9=6RSaLmNmDBv-TzJfGF8WzEi9Vd-s=1wyqBcF7_f7qQQ@mail.gmail.com>
- <CANiq72kgnKH2SSp76EdPeysExBWasqhTyf1JyReR65g6FMsidA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ah8H35Mx"
+Date: Wed, 18 Jun 2025 10:17:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750267035;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=08M7aDoaYxn4VXVn2UWYGWVYxCC7c2fUSA97sd4G05k=;
+	b=Ah8H35Mx+aglBVh5NgE2r4kqC6+emr0vNzSZUD8wm1PrJqvn9YYEbQf+2qrGbZIh7PmoZB
+	vVFpEjE4TTSHnBYE0C2Go+HJ13exmW2/d5o+VzegRQK0T75VzkQfvw0pBAFvO1Wl4jENXE
+	NjCl7hBVBUaJEvwtO+JP5AG1l8foBpU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: "Wlodarczyk, Bertrand" <bertrand.wlodarczyk@intel.com>
+Cc: JP Kobryn <inwardvessel@gmail.com>, "tj@kernel.org" <tj@kernel.org>, 
+	"hannes@cmpxchg.org" <hannes@cmpxchg.org>, "mkoutny@suse.com" <mkoutny@suse.com>, 
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] cgroup/rstat: change cgroup_base_stat to atomic
+Message-ID: <z6twrrv53dzqfpytydpdgjg23dvbxyod6zi2fyeebzduyf4pzi@jqyatn34wi2a>
+References: <20250617102644.752201-2-bertrand.wlodarczyk@intel.com>
+ <5f055416-9c49-42c0-9ba0-e45f6aaeac04@gmail.com>
+ <CH3PR11MB78947E610456E1EDE1EE8B21F172A@CH3PR11MB7894.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANiq72kgnKH2SSp76EdPeysExBWasqhTyf1JyReR65g6FMsidA@mail.gmail.com>
+In-Reply-To: <CH3PR11MB78947E610456E1EDE1EE8B21F172A@CH3PR11MB7894.namprd11.prod.outlook.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 18, 2025 at 06:45:56PM +0200, Miguel Ojeda wrote:
-> On Wed, Jun 18, 2025 at 3:54 PM Tamir Duberstein <tamird@gmail.com> wrote:
-> >
-> > @Andreas Hindborg could you please have a look for configfs?
-> >
-> > @Rafael J. Wysocki @Viresh Kumar could you please have a look for cpufreq?
+On Wed, Jun 18, 2025 at 04:05:45PM +0000, Wlodarczyk, Bertrand wrote:
+> Thank you for your time and review. 
 > 
-> Thanks Tamir.
+> > The kernel currently faces scalability issues when multiple userspace 
+> > programs attempt to read cgroup statistics concurrently.
+> > 
+> > The primary bottleneck is the css_cgroup_lock in cgroup_rstat_flush, 
+> > which prevents access and updates to the statistics of the css from 
+> > multiple CPUs in parallel.
+> > 
+> > Given that rstat operates on a per-CPU basis and only aggregates 
+> > statistics in the parent cgroup, there is no compelling reason why 
+> > these statistics cannot be atomic.
 > 
-> Christian, Danilo, David, Greg, Tejun: It would also be nice to get
-> Acked-by's for your bits. Thanks!
+> > Have you considered the "tearing" that will occur when writes and reads are happening in parallel?
+> > The existing state is more of a snapshot approach. Changing the fields involved to atomic and lockless reading/writing can result in inconsistent values, i.e. fieldA might be more current than fieldB.
+> 
+> Yes, I considered it. In our scenario, "tearing" means that we have the newer data then the last "snapshot" and the output doesn't sum up in
+> sum_exec_runtime. The "snapshot" suggests that these stats not need to be super precise because we're accepting outdated state.
+> I'm not considering "tearing" issue as very bad here. 
+> Additionally, I'm sure that the "tearing" can happen but I didn't observe them during the benchmark runs.
+> That suggests that's a rare occurrence or I didn't trigger the right condition to expose the issue.
+> 
+> When multiple cpus tries to access the rstat the slowdown caused by css_base_lock is so massive that atomic change is preferable.
+>  It's better to get even "teared" result than spinlock cpus and disable irq for such long time. 
+>  
+> 
+> > By eliminating the lock, each CPU can traverse its rstat hierarchy 
+> > independently, without blocking. Synchronization is achieved during 
+> > parent propagation through atomic operations.
+> 
+> > Even if the tearing scenario mentioned above is acceptable, removing the lock will break synchronization of flushing non-base stat subsystems.
+> 
+> > -static spinlock_t *ss_rstat_lock(struct cgroup_subsys *ss) -{
+> > -	if (ss)
+> > -		return &ss->rstat_ss_lock;
+> 
+> > This was needed for non-base stat subsystems like memory and io.
+> 
+> From what I could find in code the flush with css and cpu arguments is implemented only in two subsystems: memory and io.
+> Both memory and io have its own locks for them.
+> I tested the benchmark (provided in gist) with memory.stat and io.stat hierarchies.
+> In both cases the KCSAN doesn't have any issues, and performance is unchanged in comparison to the commit
+> e04c78d86a9699d1 (Linux 6.16-rc2).
+> For cpu stats the performance is much better after patch. 
+> 
+> I can't find a scenario when lack of this locks triggering some kind of issues.
+> Maybe you can help me with that?
 
-For wq part:
-
-Acked-by: Tejun Heo <tj@kernel.org>
-
-Thanks.
-
--- 
-tejun
+Please look at *_local and *_pending fields in
+mem_cgroup_css_rstat_flush().
