@@ -1,138 +1,142 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2A82165E9
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07202165E9;
+	Wed, 18 Jun 2025 13:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253940; cv=none; b=e8ZeEBcrTgRujF8KGWXEfYd/YcRgCzfJrrCKwhbfs4qq+XodFapHsTx79G7bPB5RMidcmtu0bbnp5tFmwcvCkilGW9eF03dR9y6CJPNIOASgJ3tG24uBAX5u9hrAWw62/7iqgxA4BfMqplk7Ec4FB/fQFR2lmtJ42g9NoIjUaS4=
+	t=1750253952; cv=none; b=PmvwpxgBoHo+00D1vGiKn2LoyUoQQtgpnXRIH01Vlnaw2CTfvPZbauTjJoiiewCtQI9taDlxrBPR4+qLnruuKsbGUwlyMzk8Z2TV5BCtAyGMqlRCdoNkhlbzWeEIUTnKvWACgsxuCZg9qzlTSmWkv0XhWPvhGhq70NVxLymfdU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253940; c=relaxed/simple;
-	bh=Je0tGAOTAzvEt2AtG6g843V3mh+EJS9RuHYgCeIxE/s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QFa1m8UJ8iGTlU0bnfV3aOu773nr07rIr0DW8/WvM9OFLpEMUBIrE7mWI0ht6tleejvNlVUtWwYAuUkq8sEug4qLqvQyqksrkuMeMPi90KWfqVPHS94VXubZTf9PJjeGi6i/wrmZKpo0Y3rBFXYsQ2mwz+5Z19ClROJs80Z+hKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1uRt08-0003BG-M3; Wed, 18 Jun 2025 15:38:52 +0200
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1uRt08-00499l-0f;
-	Wed, 18 Jun 2025 15:38:52 +0200
-Received: from localhost ([127.0.0.1] helo=[IPv6:::1])
-	by ptz.office.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <jlu@pengutronix.de>)
-	id 1uRt08-002lkJ-03;
-	Wed, 18 Jun 2025 15:38:52 +0200
-Message-ID: <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
-Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip
- export/unexport attribute pair
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Ahmad Fatoum
- <a.fatoum@pengutronix.de>,  Kent Gibson <warthog618@gmail.com>, Marek Vasut
- <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus
- Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
-	Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Wed, 18 Jun 2025 15:38:51 +0200
-In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1750253952; c=relaxed/simple;
+	bh=kZNt/+SoLtE8mbNdVJEgvI/PD3uE96lLdcdgRRVPBj0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=roDq7VBw78WtjwIACem8p1yOAW6vDWdbVOPaMKCPhYp4SiInv9JGB7eD4Xxq73QXWTgYiTw4Ss+/qB2EXTA1bu+/k4pyG8CeCmC4FDE4q0asNi1b9buBs2cPPmndAvJlcxoygjgsNYV2T50g1Boriqxar/zEheyUrlL+IQtZDeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SOetsZYA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+e7qUvtH; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SOetsZYA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+e7qUvtH"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750253948;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Uy/zoObKSkIlcQFqFxyzoY+zrIRXL01SRXNK5uTNq0w=;
+	b=SOetsZYAdnvpwkJBClzih9mQmqkd4FPbTWhc8R2uq/t/Xsm3dYGYMNjT+CI5bWW1/U2UzQ
+	WKoGTxl/Ggx3y9uHLLb+F+WRfQZ/clLkBvXoypQj2YCt1TJjzpPJXjvEageRzHEy5DSLth
+	DUVwb6WSuOgqAnlS18QaROTGrfUU9RnoNsvao/PoURTFKqu1ewyL9Y+Wc0w6ZHEfMNrs/S
+	DyPKgznSs/FqHgSv8VJcuyyy+YYs0rFEJlZweJvKiy4AYoqpN+NhIbuT42MxfqBjQbW9GJ
+	3gQZKB+3tKMMQbPThZBIozcVSuJqu3f7Ms+KjR0uk0O3RGLjyHX2ynRrpfKANg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750253948;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Uy/zoObKSkIlcQFqFxyzoY+zrIRXL01SRXNK5uTNq0w=;
+	b=+e7qUvtHU7bYh9SzFdYKVEPD00iccsL1hnRhYDjVxsvxZvMIhJj1ZHhl+q+N+/kbWAUD9B
+	jD20gkAKJaaLSXDw==
+Date: Wed, 18 Jun 2025 15:39:03 +0200
+Subject: [PATCH] selftests: vDSO: fix -Wunitialized in powerpc VDSO_CALL()
+ wrapper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: jlu@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250618-vdso-vdso_call-uninit-v1-1-aff2735b6c10@linutronix.de>
+X-B4-Tracking: v=1; b=H4sIAHbBUmgC/x2MQQqAIBAAvxJ7TrBEib4SEbVutRAWWhJIf0+8D
+ MxhJkEgzxSgrxJ4ihz4dFmaugLcZ7eRYJsdWtlqaZpORBvOggnn4xCPY8e3QESlFpJSmw5ye3l
+ a+S3fYfy+H6SKP/9nAAAA
+X-Change-ID: 20250618-vdso-vdso_call-uninit-ccc33be00568
+To: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, 
+ Shuah Khan <shuah@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ "Jason A. Donenfeld" <Jason@zx2c4.com>, 
+ Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Shuah Khan <skhan@linuxfoundation.org>, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, llvm@lists.linux.dev, 
+ kernel test robot <lkp@intel.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750253947; l=2997;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=kZNt/+SoLtE8mbNdVJEgvI/PD3uE96lLdcdgRRVPBj0=;
+ b=aPctxPJBORdm/AThaEYQ9zYw32DX6Ah5J2ID0YMeyw8dIKi7iOKPW5lkxWHwH3Ea0MWYP9MYL
+ OmP5tDzCW5PDmLZbD2dDuMkejJl5WAB7clmuf82B8ZK4lnvVYquq3u6
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Hi Bartosz,
+The _rval register variable is meant to be an output operand of the asm
+statement but is instead used as input operand.
+clang 20.1 notices this and triggers -Wuninitialized warnings:
 
-On Tue, 2025-06-10 at 16:38 +0200, Bartosz Golaszewski wrote:
-> Following our discussion[1], here's a proposal for extending the sysfs
-> interface with attributes not referring to GPIO lines by their global
-> numbers in a backward compatible way.
->=20
-> Long story short: there is now a new class device for each GPIO chip.
-> It's called chipX where X is the ID of the device as per the driver
-> model and it lives next to the old gpiochipABC where ABC is the GPIO
-> base. Each new chip class device has a pair of export/unexport
-> attributes which work similarly to the global ones under /sys/class/gpio
-> but take hardware offsets within the chip as input, instead of the
-> global numbers. Finally, each exported line appears at the same time as
-> the global /sys/class/gpio/gpioABC as well as per-chip
-> /sys/class/gpio/chipX/gpioY sysfs group.
->=20
-> First, there are some documentation updates, followed by a set of
-> updates to the sysfs code that's useful even without the new
-> functionality. Then the actual implementation of a parallel GPIO chip
-> entry not containing the base GPIO number in the name and the
-> corresponding sysfs attribute group for each exported line that lives
-> under the new chip class device. Finally: also allow to compile out the
-> legacy parts leaving only the new elements of the sysfs ABI.
->=20
-> This series passes the compatibility tests I wrote while working on the
-> user-space compatibility layer for sysfs[2].
->=20
-> [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu4i=
-KQ5npwXk6GXA@mail.gmail.com/
-> [2] https://github.com/brgl/gpio-sysfs-compat-tests
->=20
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+tools/testing/selftests/timers/auxclock.c:154:10: error: variable '_rval' is uninitialized when used here [-Werror,-Wuninitialized]
+  154 |                 return VDSO_CALL(self->vdso_clock_gettime64, 2, clockid, ts);
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+tools/testing/selftests/timers/../vDSO/vdso_call.h:59:10: note: expanded from macro 'VDSO_CALL'
+   59 |                 : "r" (_rval)                                           \
+      |                        ^~~~~
+tools/testing/selftests/timers/auxclock.c:154:10: note: variable '_rval' is declared here
+tools/testing/selftests/timers/../vDSO/vdso_call.h:47:2: note: expanded from macro 'VDSO_CALL'
+   47 |         register long _rval asm ("r3");                                 \
+      |         ^
 
-thanks for implementing this! I tried it on one of our boards and noticed a=
- few
-things.
+It seems the list of input and output operands have been switched around.
+However as the argument registers are not always initialized they can not
+be marked as pure inputs as that would trigger -Wuninitialized warnings.
+Adding _rval as another input and output operand does also not work as it
+would collide with the existing _r3 variable.
 
-After unexporting a GPIO from the chipX dir, the subdirectory is not remove=
-d:
- root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > export=20
- root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > unexport=20
- root@lxatac-00006:/sys/class/gpio/chip9# ls -l gpio1/
- total 0
- -rw-r--r-- 1 root root 4096 Jun 18 12:52 active_low
- -rw-r--r-- 1 root root 4096 Jun 18 12:52 direction
- -rw-r--r-- 1 root root 4096 Jun 18 12:52 edge
- -rw-r--r-- 1 root root 4096 Jun 18 12:52 value
-Subsequent attempts to export it again fail.
+Instead reuse _r3 for both the argument and the return value.
 
-The contents of /sys/kernel/debug/gpio don't really fit any more:
- gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
-  gpio-660 (DUT_PWR_EN          |tacd                ) out hi=20
-  gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo=20
-  gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo=20
-The header is inconsistent: it uses the 'gpiochip' prefix, but not the base=
- as
-the old class devices in /sys/class/gpio/. Perhaps something like this?
- chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, can s=
-leep:
-  gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi=20
-  gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo=20
-  gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo  =20
-If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506180223.BOOk5jDK-lkp@intel.com/
+Fixes: 6eda706a535c ("selftests: vDSO: fix the way vDSO functions are called for powerpc")
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ tools/testing/selftests/vDSO/vdso_call.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-Unix permissions/ownership just works.
+diff --git a/tools/testing/selftests/vDSO/vdso_call.h b/tools/testing/selftests/vDSO/vdso_call.h
+index bb237d771051bd4103367fc60b54b505b7586965..e7205584cbdca5e10c13c1e9425d2023b02cda7f 100644
+--- a/tools/testing/selftests/vDSO/vdso_call.h
++++ b/tools/testing/selftests/vDSO/vdso_call.h
+@@ -44,7 +44,6 @@
+ 	register long _r6 asm ("r6");					\
+ 	register long _r7 asm ("r7");					\
+ 	register long _r8 asm ("r8");					\
+-	register long _rval asm ("r3");					\
+ 									\
+ 	LOADARGS_##nr(fn, args);					\
+ 									\
+@@ -54,13 +53,13 @@
+ 		"	bns+	1f\n"					\
+ 		"	neg	3, 3\n"					\
+ 		"1:"							\
+-		: "+r" (_r0), "=r" (_r3), "+r" (_r4), "+r" (_r5),	\
++		: "+r" (_r0), "+r" (_r3), "+r" (_r4), "+r" (_r5),	\
+ 		  "+r" (_r6), "+r" (_r7), "+r" (_r8)			\
+-		: "r" (_rval)						\
++		:							\
+ 		: "r9", "r10", "r11", "r12", "cr0", "cr1", "cr5",	\
+ 		  "cr6", "cr7", "xer", "lr", "ctr", "memory"		\
+ 	);								\
+-	_rval;								\
++	_r3;								\
+ })
+ 
+ #else
 
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250618-vdso-vdso_call-uninit-ccc33be00568
 
-As far as I can see, this is basically everything I need to replace the old
-global ID based GPIO access in labgrid. Thanks again! :)
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-
-Regards,
-Jan
---=20
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
