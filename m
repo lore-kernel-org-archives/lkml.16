@@ -1,93 +1,108 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF28288534
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A6CD287503
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247545; cv=none; b=maFpX8yFXYxtx/yJXwpzeOshtgczxKo7/613QIC84Z4K0RdfABbJ04UMF+gfqWkpsvc2T8TQUMRapBc19O0B2th++l9ZGs11WezGtUC3cBEbKKC7a2daKLvn+FT191tLIv1ZKi7IABnWibqF3V2LZd3p99iWc2UFbelE7KDTOU0=
+	t=1750247545; cv=none; b=TZtOIrnecez7eAVYmm0hAEJCVs/QOz5uBLdIn0cOOR+wrIq6fBhtT4T3hVfuUchb7HAjCUQ5e1puG8zS4ejv7nMTMvDAeMulCLk8oIVGDKiBBNc2g8DqQAY4OBxiAIWtrrMHuRVGWFgH6QCTDER2bj9i67xUzFEUAzL5MWliOEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750247545; c=relaxed/simple;
-	bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=n2fP5dft0TVVy32FyxkGZXFDaKBve65yMWO9as7lm/+0hVTWoP/ABRrlmPKwwN2MGTj+/2EzooYwxfBZ5ltv3BKCJF/MPZxMoEuVUiJ+KxMkQguOwgD0FqurqM3dkfCdRh3Flh7VAT74lo2S+bPfRtipzvignREyRwWKr4VNKDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aiB6xGUZ; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=S9pnGPpEopS2ae2vMlJNmzVk/y9G0wooLQGCC/s9bSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
+	 Content-Type:References; b=IsSCwsXBXyb+XDqaIR5MdPtgkDGtJCyW9Pry7Zwz8O4ZdILQBhym4cwzYalkGZPNx/MG0d9cBN4Uh7Vp05Pml34cZway2ZxpPR5RcKDqwUqDZOgsolZE58SNP9TOWYDLqKw5U3UBMQwzi2R8mZnezw8D1ZQ1SEPVwfE8H8zphtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Llo+EfXz; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aiB6xGUZ"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5534edc6493so7326991e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750247542; x=1750852342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
-        b=aiB6xGUZOykjxsf3HYlkaHplMNq57ST94UOJs+JYv9XKSphRWgYNkKAXLIuWfg44QP
-         HqUwoknbkVAZFbCL7yUBwqrBuH7aVlEIea3beXfbXwXtJP9js+eswPzqsTUHqF+9v0fl
-         8UGr/Kp7i7Vr8PxUsoBUA2aQO5fPIx9tUqMDrgn56A8knewnIchmCT7r2dGcv4gJpmpm
-         7C9ibt6wNoiw6ECW7rrwrvyzHRjhBxOZkv307erGff9QCYgxOBBf49PtxXwjuYRsjRmC
-         Gk/fQ7YBf1v/oL1byEkjEqVzpGm2xLDuzr47OmJPmIfXWsGvos4ivhwdkBYXMyuYfP5j
-         az7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750247542; x=1750852342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
-        b=hmVuU7hQZ6ADQ5W2YNQ0yS328507/ShgB24NmXWultYXjE5yqf98CBJGwshlWEUMmC
-         lw8dzyxUFT+13hfouxNaU9ZlPD1b99ZQQ19IHnw1SmwfaVhHMcDuzD6cnNPvJZDJuDFq
-         4dsDw56AmjjNjWZ0MEPB+KWPhMjW6EzsNWGCEEtbE9hfhIvaKMBELLF4TCfwlNW7xGQB
-         tMexAoMy+oeFXjpuRG2QJP+w0bHCNEK0YVezk2jCKfRlXUD7CBD+nZwPJmIMlT+eOEHU
-         RUR7XMBHv07xVbeM+voex8mGlBS6rdD70B/AsItJUoBUXSVuGO952thfsKUScF3Trnca
-         yqZg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlbbFgd55g13iGZDc6u6CC6YTicEaPjBwUHDAID2FSP2QinZXXMmKumBGZsyaXkVKJ+QZioMh9yfdKvFo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLnxgNh2sTcBri3zx9Q0/mDG8OGZ39g8reiE2HZRhtuYkzpyOn
-	4TNogd63yKvMw3d3TgOIepOuhKpAb8a1RsHZcAuXVgA6g3GhkxG9dMiRLq08ri3i2gO+mjxYIzj
-	sXJku/F1+WGfPDs3MBOVqPM9ar34r+IFHve/hULIXdA==
-X-Gm-Gg: ASbGncvFNN0Yu++N0ofJ4NKHJChCKPZLrfpPwQEGNdBXkld2El8EorAQyr6OMiLzKQW
-	jj2McQu3cVpSgeWvs/XH/6/TBTfyyair6J6JDVm7x2M/6vYqt/VNtbF2iyvz4sOI/Bf6iq1Zw5u
-	xtrvQT3QzULe9/Bo1MIRfmx2GqWRzXwncZP3ZThp9/zBE=
-X-Google-Smtp-Source: AGHT+IHjWdSTmS4aDTVqDd7NBp2OPbykUx652+t/IZOVkWWGf64J/RLFbhbxDCwVOIM7rfV41BeoBeUWfyaPxf5hCjU=
-X-Received: by 2002:a05:6512:3092:b0:549:8675:c388 with SMTP id
- 2adb3069b0e04-553b6f5fa33mr4843249e87.52.1750247541573; Wed, 18 Jun 2025
- 04:52:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Llo+EfXz"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250618115220euoutp024b07ddd9907ec3290174b53edd06b74f~KIN11_buP3263032630euoutp02a
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:52:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250618115220euoutp024b07ddd9907ec3290174b53edd06b74f~KIN11_buP3263032630euoutp02a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750247540;
+	bh=m79J0HkRILX18o9YHg3zwFo1BQ7buYBrq3hUc2UmA0Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Llo+EfXzP1oOgMXB4bWM18AUmwsFEtwyMYVLGKRTfVpf1E13mpK5MD3seMzN4ImiC
+	 3UER7TFNfBcA1ghElrDeQIj5A+udaRkJnHoh1Iys8bco0T0CQ4OBeCmlFB/zjoPcJB
+	 dSLPq592DzDWzpMEF5NjhjnIi7MxtFSQJes5gzF4=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250618115220eucas1p2b9d37e8cdd1997fa010f51cecdea5e4f~KIN1bTnxw1996919969eucas1p2k;
+	Wed, 18 Jun 2025 11:52:20 +0000 (GMT)
+Received: from AMDC4515.digital.local (unknown [106.120.51.28]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250618115219eusmtip18897b4f23ab32963bdf77ba1539d4e47~KIN01wgHH0059000590eusmtip1T;
+	Wed, 18 Jun 2025 11:52:19 +0000 (GMT)
+From: Mateusz Majewski <m.majewski2@samsung.com>
+To: linux.amoon@gmail.com
+Cc: alim.akhtar@samsung.com, bzolnier@gmail.com, daniel.lezcano@linaro.org,
+	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, lukasz.luba@arm.com, rafael@kernel.org,
+	rui.zhang@intel.com, Mateusz Majewski <m.majewski2@samsung.com>
+Subject: Re: [RRC v1 2/3] thermal/drivers/exynos: Handle temperature
+ threshold interrupts and clear corresponding IRQs
+Date: Wed, 18 Jun 2025 13:52:11 +0200
+Message-ID: <20250618115211.2239335-1-m.majewski2@samsung.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250616163831.8138-3-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613114518.1772109-1-mwalle@kernel.org> <20250613114518.1772109-4-mwalle@kernel.org>
-In-Reply-To: <20250613114518.1772109-4-mwalle@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 13:52:10 +0200
-X-Gm-Features: AX0GCFvi_Kw1gkeOTQZNsLTIvoCnOqNgSVyelJU-92RYyRLKgU7_lLqQN3HGdew
-Message-ID: <CACRpkdabkT4cGLVVrAfSk_ehiiY9HLzpfsvUOEXH4wH0bXxPuQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] pinctrl: pinctrl-tps6594: Add TPS652G1 PMIC
- pinctrl and GPIO
-To: Michael Walle <mwalle@kernel.org>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250618115220eucas1p2b9d37e8cdd1997fa010f51cecdea5e4f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250618115220eucas1p2b9d37e8cdd1997fa010f51cecdea5e4f
+X-EPHeader: CA
+X-CMS-RootMailID: 20250618115220eucas1p2b9d37e8cdd1997fa010f51cecdea5e4f
+References: <20250616163831.8138-3-linux.amoon@gmail.com>
+	<CGME20250618115220eucas1p2b9d37e8cdd1997fa010f51cecdea5e4f@eucas1p2.samsung.com>
 
-On Fri, Jun 13, 2025 at 1:45=E2=80=AFPM Michael Walle <mwalle@kernel.org> w=
-rote:
+Hello :)
 
-> The TPS652G1 is a stripped down version of the TPS65224. Compared to the
-> TPS65224 it lacks some pin mux functions, like the ADC, voltage
-> monitoring and the second I2C bus.
->
-> Signed-off-by: Michael Walle <mwalle@kernel.org>
+> +#define INTSTAT_FALL2	BIT(24)
+> +#define INTSTAT_FALL1	BIT(20)
+> +#define INTSTAT_FALL0	BIT(16)
+> +#define INTSTAT_RISE2	BIT(8)
+> +#define INTSTAT_RISE1	BIT(4)
+> +#define INTSTAT_RISE0	BIT(0)
+> +
+> +#define INTCLEAR_FALL2	BIT(24)
+> +#define INTCLEAR_FALL1	BIT(20)
+> +#define INTCLEAR_FALL0	BIT(16)
+> +#define INTCLEAR_RISE2	BIT(8)
+> +#define INTCLEAR_RISE1	BIT(4)
+> +#define INTCLEAR_RISE0	BIT(0)
 
-I guess the #defines for this to work are in other patches so it all needs
-to go in at the same time, so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> +	/* Map INTSTAT bits to INTCLEAR bits */
+> +	if (val_irq & INTSTAT_FALL2)
+> +		clearirq |= INTCLEAR_FALL2;
+> +	else if (val_irq & INTSTAT_FALL1)
+> +		clearirq |= INTCLEAR_FALL1;
+> +	else if (val_irq & INTSTAT_FALL0)
+> +		clearirq |= INTCLEAR_FALL0;
+> +	else if (val_irq & INTSTAT_RISE2)
+> +		clearirq |= INTCLEAR_RISE2;
+> +	else if (val_irq & INTSTAT_RISE1)
+> +		clearirq |= INTCLEAR_RISE1;
+> +	else if (val_irq & INTSTAT_RISE0)
+> +		clearirq |= INTCLEAR_RISE0;
 
-Yours,
-Linus Walleij
+This implies that only these 6 bits are used. Is this true for all SoCs
+supported by this driver? My understanding is that Exynos 5433 in particular
+uses bits 7:0 for rise interrupts and 23:16 for fall interrupts. When I tested
+this patch (both alone and the whole series) on 5433 by running some CPU load,
+the interrupt seemed to not fire consistently:
+/sys/class/thermal/cooling_device1/cur_state would never go above 1 (which is
+consistent with the interrupt firing once, not getting cleared and never firing
+again; without this patch, it consistently went up to 6) and I got a quick
+reboot every time.
+
+Thank you,
+Mateusz Majewski
