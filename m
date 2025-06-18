@@ -1,104 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4259E21CC7F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB06E21D3EE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750281123; cv=none; b=b3teAPVApKSDwGIEb1AWJSJnkCYo7sNQjJJx1rwifonCfTxxok2lPFa/mlXnUE0HhvEazCinW7rt4pMIQu8uo2vJC/U+L/VbnMncqcfYza3K/FREP77jCt021im98oIaJ7ClrssQTvjy3ik7U/m/xmd5UEzqUDTYzEWo5KyE/3c=
+	t=1750281323; cv=none; b=O90LR8OuCpi48FWfZbuh3fx/3ZaSRGaMP+5pc4WMoUqKYBTrNWJEbSl56o0reyoEb5UITboo4RuaqetlMi8m3A9ZGWow49sLE6QQGK7XnvAFA6Crg4mfcNbO+cdPltQoLjqZiNdKvxrQqC/dBF6vJA2U5m+tQ1J6RZL3PC4v8fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750281123; c=relaxed/simple;
-	bh=hU6LrB4u6zHdEtjzLO2tMhBFuBmhLxFRILKm9QhJrOA=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tizSEBWR1xr/ohEymj+OOuCwvS8Z5FaLfbVGWrLaUY2gXYbSxS04wWtQJX6Of4tNPDM8SQtn0cfBd4e2TeGcx5ti1xWt2P5EC2HXOdG8dlmYJZbWVOsUxjxqjMlU4Qaq+swG3ya+2QgRnh9c3L9iQ0oc+Ph3aT/anXEQWwGWJwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YUbdTcmX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750281323; c=relaxed/simple;
+	bh=AGPmAlAQR0g0Mmcs/uRlA5H54exkEzkBJEzy8rKw04U=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=IVM/Pfbengagq3keQc8xPMG+CArLezWq9lqYLqq1fziTGCHBSENPhKfCqDxl6cNx3NlnOEeiUmM3zd6CWbfopQ8PS9BIdNjoPMUIs1hhDgYbQMR7d0PxFjgP0c5n+7Mjn5LIfiY520qB6zA0kBnMjlwNaGH2nn8fvLrfSv0jftg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=abDxen4y; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YUbdTcmX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750281120;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type;
-	bh=si2yMjR7q7rjBdseCBAaci15mleBdg607YB98sx0/R0=;
-	b=YUbdTcmXoLSyhGsmGnGdviL9IIJ8RJgtlwXD42Vt1rh3uXBZF+OfT03qOgehtJ2DOCrCHI
-	A1ilQcpuW21Z50ahH80dKCbc6RcDKxyDa44iZPobY559joUSFp0uMD79L/V7VfrKk7aKQc
-	1QNkHx6n53nTZJ3NZVmcyopEb2XBNCg=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-398-MWzXy6CtO96X_crPo8LXfw-1; Wed,
- 18 Jun 2025 17:11:54 -0400
-X-MC-Unique: MWzXy6CtO96X_crPo8LXfw-1
-X-Mimecast-MFC-AGG-ID: MWzXy6CtO96X_crPo8LXfw_1750281112
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2ABDB180028C;
-	Wed, 18 Jun 2025 21:11:52 +0000 (UTC)
-Received: from localhost (unknown [10.22.89.94])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 021611956094;
-	Wed, 18 Jun 2025 21:11:50 +0000 (UTC)
-Date: Wed, 18 Jun 2025 18:11:49 -0300
-From: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-To: LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>,
-	stable-rt <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Carsten Emde <C.Emde@osadl.org>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Daniel Wagner <daniel.wagner@suse.com>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Clark Williams <williams@redhat.com>,
-	Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@denx.de>,
-	Jeff Brady <jeffreyjbrady@gmail.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Luis Goncalves <lgoncalv@redhat.com>
-Subject: [ANNOUNCE] 5.10.238-rt132
-Message-ID: <aFMrlTjdVnfGJBEI@uudg.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abDxen4y"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2eb60594e8so86880a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:15:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750281321; x=1750886121; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kugD/a6Oq01nl8GXZYoQNqMpzVqYE6IP/zMN/oH7VXg=;
+        b=abDxen4y2dF9+RPkPxSjkmi4NZEnxIjmWg2sJO7As/wctNLexTqTm4WPYECqOJPY+E
+         WmWyyDM8opUiLmvwQxJUhWSc8EByYhhHnu/nBE9VJF+DS8bilfMVvSVMEG8pNm5zuqXw
+         DtFF6h9Zy+fHWMRMIMLRmO3xdAuBvUh90GCrLuTl3MiBZdjHoCpdxUnKXiy1esFK/J9u
+         6d4/DGEEPRJB4QjfHCsssbZhHtzXxvHAhkV1mYHhHWUaqNCsTp2MXboaQlZrvxBqfu7G
+         7kZlytJz32aTx8ooDOX4d/iUWzHmXDSuNezI4hVpZOmbxBKn+XP63rjlk93u6tu//AaN
+         aDrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750281321; x=1750886121;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kugD/a6Oq01nl8GXZYoQNqMpzVqYE6IP/zMN/oH7VXg=;
+        b=G2OLE31XnngRkt23kySEEnupeINH9xjSR/JquGI7KZNEP1d9V9HzU6QCdj97eeC2ht
+         A3YLVcBByis/dfgFNZIsRY5yy1YfDoBSJag2gH3L42/CZQDY/3Mw+q9/cuHZBdHAJAnc
+         RtJftE08eMKM2g3eSLLwAQBpBH76Vah7UxHVLQlUHn6bY9UwruqsBE1cbrzIhQ47fVrp
+         mKz+uaCWLtwyklCNg51g8rqrbMWPkjV+dQVO93VZ5Z/epo4XJctBCqUXVeJvr8D8u5Ao
+         s6AjFqn3GjiVhcYq/UgnVFI5wpvJNerdcUaGMXk5qchNma5aBIqj7Cs9kAQbzRGa69ay
+         USJA==
+X-Forwarded-Encrypted: i=1; AJvYcCWq6fF+/LOD1HcDBR6bACq5ytoA0+/fM88ppIjAWSnekwXe/qpvgzDCIPcSnPt8s2mCbqHLMP7MX8oIG/I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ2qlKUWZQXsphd6j07JVQi8Ku4cIhonF3Kghwpob8tbqnCMjl
+	QcVEJwTJYcaEuomB3WxslGCh8ogvFKYalwUWzoyOytJJMPTH5u4psEYzKp+5pqRmtldPdhwx9JQ
+	rynn9uurQRw==
+X-Google-Smtp-Source: AGHT+IHklB2h/YWXJUEjk47SGrDIP4HwXRROJ0w/r5CagrJNn+dueEakf3gzfgt+ISbJZxBPMjRlUdCylAf+
+X-Received: from pge23.prod.google.com ([2002:a05:6a02:2d17:b0:b2f:5023:640d])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:6a0e:b0:220:bb2:6074
+ with SMTP id adf61e73a8af0-2200bb2608fmr2512209637.11.1750281321071; Wed, 18
+ Jun 2025 14:15:21 -0700 (PDT)
+Date: Wed, 18 Jun 2025 14:15:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250618211514.3084483-1-irogers@google.com>
+Subject: [PATCH v1 1/2] perf test workload noploop: Name the noploop process
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hello RT-list!
+Name the noploop process "perf-noploop" so that tests can easily check
+for its existence.
 
-I'm pleased to announce the 5.10.238-rt132 stable release.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/workloads/noploop.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-This release is just an update to the new stable 5.10.238 version and
-no RT specific changes have been made.
-
-You can get this release via the git tree at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-  branch: v5.10-rt
-  Head SHA1: e14e2866718ae8b8a52ebcc0ed567a0964001c55
-
-Or to build 5.10.238-rt132 directly, the following patches should be applied:
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.10.tar.xz
-
-  https://www.kernel.org/pub/linux/kernel/v5.x/patch-5.10.238.xz
-
-  https://www.kernel.org/pub/linux/kernel/projects/rt/5.10/older/patch-5.10.238-rt132.patch.xz
-
-Signing key fingerprint:
-
-  9354 0649 9972 8D31 D464  D140 F394 A423 F8E6 7C26
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Luis
+diff --git a/tools/perf/tests/workloads/noploop.c b/tools/perf/tests/workloads/noploop.c
+index 940ea5910a84..8b954d466083 100644
+--- a/tools/perf/tests/workloads/noploop.c
++++ b/tools/perf/tests/workloads/noploop.c
+@@ -2,6 +2,8 @@
+ #include <stdlib.h>
+ #include <signal.h>
+ #include <unistd.h>
++#include <linux/prctl.h>
++#include <sys/prctl.h>
+ #include <linux/compiler.h>
+ #include "../tests.h"
+ 
+@@ -16,6 +18,7 @@ static int noploop(int argc, const char **argv)
+ {
+ 	int sec = 1;
+ 
++	prctl(PR_SET_NAME, "perf-noploop");
+ 	if (argc > 0)
+ 		sec = atoi(argv[0]);
+ 
+-- 
+2.50.0.rc2.701.gf1e915cc24-goog
 
