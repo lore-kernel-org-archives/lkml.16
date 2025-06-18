@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6EE2F5476
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB802F5473
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270922; cv=none; b=MFTVX6qRlvnmcnypqJAnNUvjVFnCj+BYWehMpFkjTBU+YkJWvxgKrAJGcPlOnWFlULsIE0HJF5adxlSs+4NcBPZqPwLUEpp3DyzPS31YqqskBVjcvxtKVfWLg48hqUzzgp9v2j0fKtLs13VTywRh7Dh2csNg/XDFtX5FiqAZvbY=
+	t=1750270924; cv=none; b=UcUwkmFrXm1QZiHhRd9nLRLaJcXdFq15Quaiz8ZBN1nnL9SrnbVlLxUTqIyE9whgxAiEKu2+OgsC5VVcnjsA8wMU0p6jVlFPPQ7qmeBTzB6VM8FM85LAnq7ENrafpJvlDPCDIM9KyyIse0EZlGPKURu465AkRFJXtSxWwqh6Huo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270922; c=relaxed/simple;
-	bh=UQoBqN95xnQudsJ44o6C5oD7PSQHCIXgA6EcclP4fcc=;
+	s=arc-20240116; t=1750270924; c=relaxed/simple;
+	bh=LvkJ+My0UyW3xwEVx+qylSLEWrcmxbixkOEWZ10FTps=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nDrGI2/xX7+VWoIaZPAxSQ62lLIbd2FIobNRajXdY8S5xE+UkDaqRZV9oSWRZyNefE1ch1lBYfvNcBa+4ghO/kDKZP04UYkGh8gv4TzDurIYTenC4Ns0bIWzJq0lXhvHvCBGCuNffM2eKs5JKCc2O0pb2ptRCWrh8hgx0OzEDJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gwPPS4Py; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=OB9jn7VvZ/rPmdAtTnDXoDgCyo72RKBXKCzeOdkrfLO6e85bK8hUMUUUOJEZalXFcdLxjZn/HiIycPeaDEtK0UPQwahP6NKXPIqG2XHiIkz2fC4a83E4onHZ8UGT50ZPOtl9Nzhvr5GlVAWllkK6TCvxOkmzUawTYoseeve+8+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GlYX1oli; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gwPPS4Py"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GlYX1oli"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750270921; x=1781806921;
+  t=1750270922; x=1781806922;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=UQoBqN95xnQudsJ44o6C5oD7PSQHCIXgA6EcclP4fcc=;
-  b=gwPPS4PyJxuWZjpqppzzQNy6oNFS2apouvtFBoztM3FRMsIZNoXOCYZS
-   4ZGsvXZ1GBKYWiosJJLy3Afvyz6rPjZGp6kTCMd3SEk6QElyc++ZHbpeH
-   U+87HjtVKO3MPeHlo5eycdT091abyiOHsWsk02bh++KLCXtrZChonH3SN
-   EXN9QhBQhTsKkKvGvzRjZJXx+5ylM+EmAu0SlP86VdBwSp8bjkVa10OXt
-   tZ/lEtGqbQUS8nYQOIluXmFXapZZs3teRfaTMOdaD+49KrQPZjXrq2Ex4
-   mkaL045bqiOr9hiagrNO4Meh5T5RKF9itXcTr61PJGxchTt1XfKGFw5XC
-   g==;
-X-CSE-ConnectionGUID: Yl7CRBbAQ5iJFKjFcNyJkw==
-X-CSE-MsgGUID: JmWjpB8BQ8SyduLVhShd6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931677"
+  bh=LvkJ+My0UyW3xwEVx+qylSLEWrcmxbixkOEWZ10FTps=;
+  b=GlYX1olin1BGUE11MHHJj9SNVdaVYXouh/gB+4N21ppPm9OJp1+kXEIW
+   jYKsD82DRpSUkmfbSWF6qlHl4i9BpZM+/sHr7a8DHXRrYaxO/Rj5jbXOw
+   +J6epKBAznqSQbDha14UPGm8Z7tWVAxbi3VVbxuqnoizc+7JuMcPHjd8u
+   wYx2yGauKvj0wQL3aVlaHP9Wp4NxgHk3BFgHplWMZc9XEc1wUSkwxQzqV
+   T9whL5z31EzCyXebtiORr7A5MGjv8KhiLdLGBw82yyfUiT62ZER6bvm4y
+   FqiKWIa9GZLlg4Z0hqOBSzlk3RseQZUvCgYBNujCvQGV07FE+Rdzvhqlv
+   Q==;
+X-CSE-ConnectionGUID: 4oIUGMDbTxGXwK/Erd3pww==
+X-CSE-MsgGUID: tbl/Cv7HTzy00jIWW42WkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931694"
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="63931677"
+   d="scan'208";a="63931694"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:22:00 -0700
-X-CSE-ConnectionGUID: PriWcHtzQ+CMXjb98vjSvg==
-X-CSE-MsgGUID: 4FJAHvYoQNmNJWCnl/pw1g==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:22:02 -0700
+X-CSE-ConnectionGUID: dreUdLK/Snq9Tth5AMDo9w==
+X-CSE-MsgGUID: FI0VhmRdTFe0V4qTkbZ9qg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="180960102"
+   d="scan'208";a="180960127"
 Received: from b04f130c83f2.jf.intel.com ([10.165.154.98])
   by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:22:00 -0700
 From: Tim Chen <tim.c.chen@linux.intel.com>
@@ -64,9 +64,9 @@ Cc: Tim Chen <tim.c.chen@linux.intel.com>,
 	Len Brown <len.brown@intel.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC patch v3 17/20] sched: Consider LLC preference when picking tasks from busiest queue
-Date: Wed, 18 Jun 2025 11:28:05 -0700
-Message-Id: <9d28a5a892f0413a96498bbf711eaa9b354ca895.1750268218.git.tim.c.chen@linux.intel.com>
+Subject: [RFC patch v3 18/20] sched: Do not migrate task if it is moving out of its preferred LLC
+Date: Wed, 18 Jun 2025 11:28:06 -0700
+Message-Id: <cfd95c4e502c5987141afcabc38566de9a5a34e1.1750268218.git.tim.c.chen@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <cover.1750268218.git.tim.c.chen@linux.intel.com>
 References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
@@ -78,114 +78,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When picking tasks from busiest queue for load balance, we currently
-do not consider LLC preference.
+In the final step of task migration during load balancing,
+can_migrate_task() is used to determine whether a task can
+be moved to the destination. If the task has an LLC preference,
+consider this preference when moving it out of its preferred LLC.
+With this check in place, there is no need to retain the task's
+cache-hot CPU check in task_hot(); remove it accordingly.
 
-Order the task in the busiest queue such that we picked the tasks in the
-following order:
-	1. tasks that prefer dst cpu's LLC
-	2. tasks that have no preference in LLC
-	3. tasks that prefer LLC other than the ones they are on
-	4. tasks that prefer the LLC that they are currently on
+Besides, add more checks in detach_tasks() to avoid choosing
+tasks that prefer their current LLC.
 
-This will allow tasks better chances to wind up in its preferred LLC.
-
+Co-developed-by: Chen Yu <yu.c.chen@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 ---
- kernel/sched/fair.c | 66 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
+ kernel/sched/fair.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 3a8f6fc52055..c9db32c2df63 100644
+index c9db32c2df63..e342524481ed 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -10056,6 +10056,68 @@ static struct task_struct *detach_one_task(struct lb_env *env)
- 	return NULL;
- }
- 
-+#ifdef CONFIG_SCHED_CACHE
-+/*
-+ * Prepare lists to detach tasks in the following order:
-+ * 1. tasks that prefer dst cpu's LLC
-+ * 2. tasks that have no preference in LLC
-+ * 3. tasks that prefer LLC other than the ones they are on
-+ * 4. tasks that prefer the LLC that they are currently on.
-+ */
-+static struct list_head
-+*order_tasks_by_llc(struct lb_env *env, struct list_head *tasks)
-+{
-+	struct task_struct *p;
-+	LIST_HEAD(pref_old_llc);
-+	LIST_HEAD(pref_new_llc);
-+	LIST_HEAD(no_pref_llc);
-+	LIST_HEAD(pref_other_llc);
-+
-+	if (!sched_feat(SCHED_CACHE))
-+		return tasks;
-+
-+	if (cpus_share_cache(env->dst_cpu, env->src_cpu))
-+		return tasks;
-+
-+	while (!list_empty(tasks)) {
-+		p = list_last_entry(tasks, struct task_struct, se.group_node);
-+
-+		if (p->preferred_llc == llc_id(env->dst_cpu)) {
-+			list_move(&p->se.group_node, &pref_new_llc);
-+			continue;
-+		}
-+
-+		if (p->preferred_llc == llc_id(env->src_cpu)) {
-+			list_move(&p->se.group_node, &pref_old_llc);
-+			continue;
-+		}
-+
-+		if (p->preferred_llc == -1) {
-+			list_move(&p->se.group_node, &no_pref_llc);
-+			continue;
-+		}
-+
-+		list_move(&p->se.group_node, &pref_other_llc);
-+	}
-+
-+	/*
-+	 * We detach tasks from list tail in detach tasks.  Put tasks
-+	 * to be chosen first at end of list.
-+	 */
-+	list_splice(&pref_new_llc, tasks);
-+	list_splice(&no_pref_llc, tasks);
-+	list_splice(&pref_other_llc, tasks);
-+	list_splice(&pref_old_llc, tasks);
-+	return tasks;
-+}
-+#else
-+static inline struct list_head
-+*order_tasks_by_llc(struct lb_env *env, struct list_head *tasks)
-+{
-+	return tasks;
-+}
-+#endif
-+
- /*
-  * detach_tasks() -- tries to detach up to imbalance load/util/tasks from
-  * busiest_rq, as part of a balancing operation within domain "sd".
-@@ -10064,7 +10126,7 @@ static struct task_struct *detach_one_task(struct lb_env *env)
-  */
- static int detach_tasks(struct lb_env *env)
- {
--	struct list_head *tasks = &env->src_rq->cfs_tasks;
-+	struct list_head *tasks;
- 	unsigned long util, load;
- 	struct task_struct *p;
- 	int detached = 0;
-@@ -10083,6 +10145,8 @@ static int detach_tasks(struct lb_env *env)
- 	if (env->imbalance <= 0)
+@@ -9787,17 +9787,6 @@ static int task_hot(struct task_struct *p, struct lb_env *env)
+ 	if (sysctl_sched_migration_cost == 0)
  		return 0;
  
-+	tasks = order_tasks_by_llc(env, &env->src_rq->cfs_tasks);
+-#ifdef CONFIG_SCHED_CACHE
+-	if (sched_feat(SCHED_CACHE) && p->mm && p->mm->pcpu_sched) {
+-		/*
+-		 * XXX things like Skylake have non-inclusive L3 and might not
+-		 * like this L3 centric view. What to do about L2 stickyness ?
+-		 */
+-		return per_cpu_ptr(p->mm->pcpu_sched, env->src_cpu)->occ >
+-		       per_cpu_ptr(p->mm->pcpu_sched, env->dst_cpu)->occ;
+-	}
+-#endif
+-
+ 	delta = rq_clock_task(env->src_rq) - p->se.exec_start;
+ 
+ 	return delta < (s64)sysctl_sched_migration_cost;
+@@ -9992,6 +9981,12 @@ int can_migrate_task(struct task_struct *p, struct lb_env *env)
+ 	if (env->flags & LBF_ACTIVE_LB)
+ 		return 1;
+ 
++#ifdef CONFIG_SCHED_CACHE
++	if (sched_feat(SCHED_CACHE) &&
++	    get_migrate_hint(env->src_cpu, env->dst_cpu, p) == mig_forbid)
++		return 0;
++#endif
 +
- 	while (!list_empty(tasks)) {
- 		/*
- 		 * We don't want to steal all, otherwise we may be treated likewise,
+ 	degrades = migrate_degrades_locality(p, env);
+ 	if (!degrades)
+ 		hot = task_hot(p, env);
+@@ -10252,6 +10247,17 @@ static int detach_tasks(struct lb_env *env)
+ 		if (env->imbalance <= 0)
+ 			break;
+ 
++#ifdef CONFIG_SCHED_CACHE
++		/*
++		 * Don't detach more tasks if remaining tasks want to stay:
++		 * The tasks have already been sorted by order_tasks_by_llc(),
++		 * they are tasks that prefer the current LLC.
++		 */
++		if (sched_feat(SCHED_CACHE) && p->preferred_llc != -1 &&
++		    llc_id(env->src_cpu) == p->preferred_llc)
++			break;
++#endif
++
+ 		continue;
+ next:
+ 		if (p->sched_task_hot)
 -- 
 2.32.0
 
