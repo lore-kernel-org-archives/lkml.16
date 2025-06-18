@@ -1,140 +1,184 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FDC287511;
-	Wed, 18 Jun 2025 10:40:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150D728505F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243217; cv=none; b=E4655D7N1lvVZZPSpVYgr49vqorDEuYYHE4dENJt88IaZHzgLTXTFXqBfs37nTDy9KR1OgyiBYwmmtf6/A7bCzDRl83M4ysyqth/HM7Dri1okBjYJq8eVq1GAGLyGDbLJzHZ8BpcMNh1yAClIi+LrnwgMYvm3vN375lgqKQ3cBc=
+	t=1750243240; cv=none; b=eZ12FfCNpIOmUwEis0Ue/r9eZ1y12jw0e8YkxtOG6wsKZyHF9ikbllAMnqPUkE3SwvLd/GceJomg8GJ45Llw1mbdAJCkn6Fn2CMk5QmzBLsBSGRpYfiZceXzNIn3WDBIGyzZuG7wRsH7LwY0LPb+jwJ2Qoi16d4x971bZ/nDiWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243217; c=relaxed/simple;
-	bh=51wCRu03wox33FTIXViaidWRudb0sMds0JcAe+JfauA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UNu8vURWnBW8zCwYMUxI+rE+eAQ+1MF1KYddFGy8cQ18zqPhFncyG3qCf8XTMOo6x8soqIrF9wgd74TN/IG3fX5K3OliIdA2UdHwKfis1b9yp8tjSPou4Tqm4XLGL5ItiqlhbMhlzX4L/l9rPaRIHkStvAHwL1pho/hNs75XwiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=SKYkjvFa; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1750243240; c=relaxed/simple;
+	bh=IFrk+Wt+3IOL5c/d/oA9s1HjP/eu3QahRP+hmKMQO48=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MwWJ0ofnB+w9jSaL/AeyUIqa6XFekM0cv6SMGR4LLpSBHo4nCUFD7KlO4Ph8+XGZf8ihC1nYy96uFQs2TM+pxe8cmMbiac1P+7yQERcI34bcgvv9XZ/P5Cg/oIm06qUP3R9RKd68Av2FMCnGQPXpYERtxaqFwCtufpMvvYTTOjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WK2kvWoY; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yuyanghuang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="SKYkjvFa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1750243204;
-	bh=51wCRu03wox33FTIXViaidWRudb0sMds0JcAe+JfauA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SKYkjvFabhz5v3eotyH+VR33rDo8Vn6qp1HQO9AA9JrLi0WHj7nvZDXYrgE6LXftK
-	 70KV5PoR5LINvJhOmMhRHxHEUqmMaYG/xizWBNR2bpgRdf862Z2Wi5ekUOCPGeBEbP
-	 BHnSv0SLZTUYqb3DZBCF37EAevVXAwhzLjwp73ko=
-Date: Wed, 18 Jun 2025 12:40:04 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Sung-Chi Li <lschyi@chromium.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] hwmon: (cros_ec) add PWM control over fans
-Message-ID: <179a21f9-c578-46e9-89dd-1b9e32889015@t-8ch.de>
-References: <20250512-cros_ec_fan-v3-0-a9f2b255f0cd@chromium.org>
- <20250512-cros_ec_fan-v3-2-a9f2b255f0cd@chromium.org>
- <ca2c10be-3dc4-45e1-b7fc-f8db29a1b6a0@t-8ch.de>
- <aFJqLkkdI86V3fM9@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WK2kvWoY"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748475d2a79so5052730b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:40:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750243236; x=1750848036; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O5ZRzpxuw236Qa1RlkQYMr8Acq5Mq2S5Ae5QLL/5mzs=;
+        b=WK2kvWoYfJaQgF++P5iaPDbW/BY0ytQCs+vhdngpQSGRgg2xfiHcRSzqRA/4m0mPD0
+         Km+mTIrtuN4GVPFfqgxj8S9iEJoSscsxfUEsDX9MG1w4Phf2jNfcH9WcHK6D1BoIB60y
+         J+zg4Z6e+uYDhRuhVW9gibl14kJ74l2UYqzL0yYIBVNaXw09WjN1asXicGKtNllqEVNp
+         ryD+i4aSTKtMHvakEjAWKpdkYRDWxfmGfIeMYtoCKFZ55IUr2zVvwUcWW6qQRrmVWgq1
+         b4QtiMcZZyKK1PSuvQDeN5pZJM9n3yKQFlKGbJn+4tiUOb5v2JA/Biauq7kYF3QX2d4H
+         T2xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750243236; x=1750848036;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O5ZRzpxuw236Qa1RlkQYMr8Acq5Mq2S5Ae5QLL/5mzs=;
+        b=P3oPJfKIT9ZGT0LEtO6aeMbw+v7wNqGxGAzft46WZbVLyVXB1nR33dVqGzTZprQA/b
+         Kfij0eAuOQDMAsk3FFi1g9zGaK0pVzHXjrfUfX6hTQW26KrcsXNfBLR99dOgzF53k1t9
+         8SBifesXFA5KJHiVKb33gYi5u2EKNuV1SAhXjcGr04DAPA9CznfiyGs38zMdQxpCTKIT
+         02boJ/nHCRhBkUSBgZwYdVyFFldHtk7PzudnUjuB0d5tJwBBz0mKKyFjIdX+2ChRNQCl
+         5uTdNXO8EzgblUF5Kscn5TrijwIdJi2U4BSuZov+SHe5kulkfJKdy68ZOZFLO8EA94xW
+         ypHw==
+X-Forwarded-Encrypted: i=1; AJvYcCX9j/5roo7qU2EU9fYRVLm8ZOr041j8oF3GNJNYUAW0Fz4Cvyo5y6i0n+skgYus0uZKvBA2BE56Yr3PTXk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3JdCEFD8KRAHuN6kMscVeV9CE/TPZ26vVH5C2kb5FmVLRHSeF
+	QRAaU0K9uf/2FzCFYK3WY9PBIyGiNzpmveQU47XyTZTZKSHplmDqc+j3eRdFcAqAtq28ayRpL5Q
+	s3zO880zIQgL2HEanSttyAeoh/w==
+X-Google-Smtp-Source: AGHT+IFm6jRnVgcFeMCAYW1rUtQm4z9LOhLiOCwsAqf3bSFUHFjg6zoWoywY8kEyAIzz78G43yBDi8e2+p1zScjWFw==
+X-Received: from pfbgd14.prod.google.com ([2002:a05:6a00:830e:b0:740:5196:b63a])
+ (user=yuyanghuang job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:4b4c:b0:740:9d7c:8f5c with SMTP id d2e1a72fcca58-7489cfde7a6mr23990572b3a.18.1750243236415;
+ Wed, 18 Jun 2025 03:40:36 -0700 (PDT)
+Date: Wed, 18 Jun 2025 19:40:25 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFJqLkkdI86V3fM9@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250618104025.3463656-1-yuyanghuang@google.com>
+Subject: [PATCH net-next] selftest: add selftest for anycast notifications
+From: Yuyang Huang <yuyanghuang@google.com>
+To: Yuyang Huang <yuyanghuang@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-06-18 15:26:38+0800, Sung-Chi Li wrote:
-> On Mon, May 12, 2025 at 09:30:39AM +0200, Thomas Weißschuh wrote:
-> 
-> Sorry for the late reply, I missed mails for this series.
-> 
-> > On 2025-05-12 15:11:56+0800, Sung-Chi Li via B4 Relay wrote:
-> > > From: Sung-Chi Li <lschyi@chromium.org>
-> > >  static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
-> > >  {
-> > >  	unsigned int offset;
-> > > @@ -73,7 +117,9 @@ static long cros_ec_hwmon_temp_to_millicelsius(u8 temp)
-> > >  static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> > >  			      u32 attr, int channel, long *val)
-> > >  {
-> > > +	u8 control_method;
-> > >  	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> > > +	u8 pwm_value;
-> > >  	int ret = -EOPNOTSUPP;
-> > >  	u16 speed;
-> > >  	u8 temp;
-> > 
-> > Ordering again.
-> > 
-> > This should be:
-> > 
-> > struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> > int ret = -EOPNOTSUPP;
-> > u8 control_method;
-> > u8 pwm_value;
-> > u16 speed;
-> > u8 temp;
-> > 
-> > or:
-> > 
-> > struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> > u8 control_method, pwm_value, temp;
-> > int ret = -EOPNOTSUPP;
-> > u16 speed;
-> > 
-> > <snip>
-> > 
-> 
-> Would you mind to share the sorting logic, so I do not bother you with checking
-> these styling issue? Initially, I thought the sorting is based on the variable
-> name, but after seeing your example (which I am appreciated), I am not sure how
-> the sorting works. Is it sorted along with the variable types (
-> "u8 control_method", "u16 speed", etc)? If that is the case, why "u16 speed" is
-> in the middle of the u8 group variables?
+This commit adds a new kernel selftest to verify RTNLGRP_IPV6_ACADDR
+notifications. The test works by adding/removing a dummy interface,
+enabling packet forwarding, and then confirming that user space can
+correctly receive anycast notifications.
 
-Welp, I really should have explained this, instead of assuming it to be
-obvious, sorry. The sorting is based on the length of the line, AKA
-the "reverse christmas tree".
+The test relies on the iproute2 version to be 6.13+.
 
-While this is not a strict rule, the driver is already using it, so I'd
-like to stick to it. "Bonus points" for preserving preserving
-semantically useful ordering within the line-length based one.
+Tested by the following command:
+$ vng -v --user root --cpus 16 -- \
+make -C tools/testing/selftests TARGETS=net
+TEST_PROGS=rtnetlink_notification.sh \
+TEST_GEN_PROGS="" run_tests
 
-> > > +static inline bool is_cros_ec_cmd_fulfilled(struct cros_ec_device *cros_ec,
-> > > +					    u16 cmd, u8 version)
-> > 
-> > "fulfilled" -> "available" or "present"
-> > 
-> > > +{
-> > > +	int ret;
-> > > +
-> > > +	ret = cros_ec_get_cmd_versions(cros_ec, cmd);
-> > > +	return ret >= 0 && (ret & EC_VER_MASK(version));
-> > > +}
-> > > +
-> > > +static bool cros_ec_hwmon_probe_fan_control_supported(struct cros_ec_device *cros_ec)
-> > > +{
-> > > +	if (!IS_ENABLED(CONFIG_PM))
-> > > +		return false;
-> > 
-> > Why? This should generally work fine without CONFIG_PM.
-> > Only the suspend/resume callbacks are unnecessary in that case.
-> > 
-> 
-> I treat fan control should include restoring the fan setting after resume, so
-> I think if no CONFIG_PM, the fan control is not complete. I am good with
-> removing this check, and if you have any thoughts after this explanation, please
-> share with me, otherwise I will remove it in the next series.
+Signed-off-by: Yuyang Huang <yuyanghuang@google.com>
+---
+ .../selftests/net/rtnetlink_notification.sh   | 52 +++++++++++++++++--
+ 1 file changed, 47 insertions(+), 5 deletions(-)
 
-As far as I understand, with CONFIG_PM=n the kernel won't be able to do
-any suspend/resume. So cros_ec_hwmon won't need to handle the
-suspend/resume case. However even then the regular UAPI for fan duty
-management is useful for users.
+diff --git a/tools/testing/selftests/net/rtnetlink_notification.sh b/tools/testing/selftests/net/rtnetlink_notification.sh
+index 39c1b815bbe4..2d938861197c 100755
+--- a/tools/testing/selftests/net/rtnetlink_notification.sh
++++ b/tools/testing/selftests/net/rtnetlink_notification.sh
+@@ -8,9 +8,11 @@
+ 
+ ALL_TESTS="
+ 	kci_test_mcast_addr_notification
++	kci_test_anycast_addr_notification
+ "
+ 
+ source lib.sh
++test_dev="test-dummy1"
+ 
+ kci_test_mcast_addr_notification()
+ {
+@@ -18,12 +20,11 @@ kci_test_mcast_addr_notification()
+ 	local tmpfile
+ 	local monitor_pid
+ 	local match_result
+-	local test_dev="test-dummy1"
+ 
+ 	tmpfile=$(mktemp)
+ 	defer rm "$tmpfile"
+ 
+-	ip monitor maddr > $tmpfile &
++	ip monitor maddr > "$tmpfile" &
+ 	monitor_pid=$!
+ 	defer kill_process "$monitor_pid"
+ 
+@@ -32,7 +33,7 @@ kci_test_mcast_addr_notification()
+ 	if [ ! -e "/proc/$monitor_pid" ]; then
+ 		RET=$ksft_skip
+ 		log_test "mcast addr notification: iproute2 too old"
+-		return $RET
++		return "$RET"
+ 	fi
+ 
+ 	ip link add name "$test_dev" type dummy
+@@ -53,7 +54,48 @@ kci_test_mcast_addr_notification()
+ 		RET=$ksft_fail
+ 	fi
+ 	log_test "mcast addr notification: Expected 4 matches, got $match_result"
+-	return $RET
++	return "$RET"
++}
++
++kci_test_anycast_addr_notification()
++{
++	RET=0
++	local tmpfile
++	local monitor_pid
++	local match_result
++
++	tmpfile=$(mktemp)
++	defer rm "$tmpfile"
++
++	ip monitor acaddress > "$tmpfile" &
++	monitor_pid=$!
++	defer kill_process "$monitor_pid"
++	sleep 1
++
++	if [ ! -e "/proc/$monitor_pid" ]; then
++		RET=$ksft_skip
++		log_test "anycast addr notification: iproute2 too old"
++		return "$RET"
++	fi
++
++	ip link add name "$test_dev" type dummy
++	check_err $? "failed to add dummy interface"
++	ip link set "$test_dev" up
++	check_err $? "failed to set dummy interface up"
++	sysctl -qw net.ipv6.conf."$test_dev".forwarding=1
++	ip link del dev "$test_dev"
++	check_err $? "Failed to delete dummy interface"
++	sleep 1
++
++	# There should be 2 line matches as follows.
++	# 9: dummy2    inet6 any fe80:: scope global
++	# Deleted 9: dummy2    inet6 any fe80:: scope global
++	match_result=$(grep -cE "$test_dev.*(fe80::)" "$tmpfile")
++	if [ "$match_result" -ne 2 ]; then
++		RET=$ksft_fail
++	fi
++	log_test "anycast addr notification: Expected 2 matches, got $match_result"
++	return "$RET"
+ }
+ 
+ #check for needed privileges
+@@ -67,4 +109,4 @@ require_command ip
+ 
+ tests_run
+ 
+-exit $EXIT_STATUS
++exit "$EXIT_STATUS"
+-- 
+2.50.0.rc2.761.g2dc52ea45b-goog
 
-
-Thomas
