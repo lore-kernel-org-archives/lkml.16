@@ -1,279 +1,144 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5FE627EFF3;
-	Wed, 18 Jun 2025 10:07:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C54828505C;
+	Wed, 18 Jun 2025 10:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241225; cv=none; b=SrDRGtkuo0aARuaoDeIJUwdDq6+Dm1d8EkEeINllfc/stZCgC39jB25Mq+RFueJGLjbeWyqMI2VeKTEUpgWb9Ef7EGR1DFav3P7YD5KR/AHX6RKZSYBBzMQuU8bmh+6MC0Br6W0/OdnvHl7EaEJcvTkcO2XwuygZN7gfPf66UQE=
+	t=1750241322; cv=none; b=H0sCxEQKcw8kz0aajojchxBmvzUjuBs8iS07zXpzIVPLYFvAwjMe2jPHfCD4b5MPyJ4mpzqgOmo1DVKrT05oTn53gOsTJ5Fib4e/o0AkY5lCOcLSMC3hBn/e2Is4Lnx+tW244XZghtg0POmI0fP9M+DKY0J6MqKsBjzhT24495Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241225; c=relaxed/simple;
-	bh=rwTZAlZrOCLSXn0KrNJuf6Su0xxM+KA2OW+7t9UVHA0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lsMiqPSTb1FAjLrje6iRuzuYvGFO31aIKhHu5lyUNne7DJWwxmTNWPv3yrWg4FAEI8EPfvSO46BqKuPvKp+Gd76y7msaA4GJ/n2H9RXxyLwtyiQMcaLIgbpOg77wZpCNJ5Ptp3HE70SVn8JpznYv0+I5O9moSQTNC2w/Hy68Z8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GQwTeFzw; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750241322; c=relaxed/simple;
+	bh=PM3oiMkCf1SkhOWKY+/gl8R1ZWVyQafTba/3XCv24As=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pK2ooislCw6M/LgfIntunMzPAU3zF0RAe+/8G6BbiJCssmBPEN5UuIxR+BUWRLqMd7EdZPGLtsNhViAeqrfQBZoq9dBzkmKhd9g+cXan1dNSMWiWq9Sz9gCgXYqAvLl+ixjklaO2wkfkjk2BCP93WioQOi8abtsHaecezC0iOkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ffhvQe2w; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GQwTeFzw"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IA6hoK012683;
-	Wed, 18 Jun 2025 10:06:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=qYMhSF
-	SIcurRQ5/kwmGEyzUvu1YebB8hyIiHimGszrY=; b=GQwTeFzwPJt9BIQDIwZbIQ
-	8pPs4pQKw+y71tOAxAsd2bFGHeVdRdXnmiXJXfI4Ry33VYdLe3KskI/D3Kk2qcqN
-	3SrCJ/kMxFGvYd6HL+eJ8VVyaXxCwcePpVlDy2/c3CueWvWf4f4gweQuYcei4B2s
-	3nbXozSEPQqIE+mW4NxvKF6x1Wd50eBx7ck9I/zS77Hh8BxTZ55PBz2MMGsE8ji8
-	wIubS7PHqtBTqHTnrzVDDpm0n4hLWdIK8WPNMkIdnw4QesgW+w0ica8lCHI0ZGBP
-	JH0AUUcnnqDuBUh4XThlj+hSoJdE7vjAEB0l+LmyzGGWH0PnrbDgM1XneVn1n3nw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4794qpcwdx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 10:06:49 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55IA6mDd019616;
-	Wed, 18 Jun 2025 10:06:48 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4794qpcwdt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 10:06:48 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55I8Uqm4005492;
-	Wed, 18 Jun 2025 10:06:47 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 479mwm89he-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 10:06:47 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55IA6jOC57016598
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 10:06:45 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9F8D82004E;
-	Wed, 18 Jun 2025 10:06:45 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AE9CD2005A;
-	Wed, 18 Jun 2025 10:06:41 +0000 (GMT)
-Received: from li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com (unknown [9.109.245.113])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 18 Jun 2025 10:06:41 +0000 (GMT)
-Date: Wed, 18 Jun 2025 15:36:36 +0530
-From: Donet Tom <donettom@linux.ibm.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
-        Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, shuah@kernel.org,
-        pfalcato@suse.de, david@redhat.com, ziy@nvidia.com,
-        baolin.wang@linux.alibaba.com, npache@redhat.com, ryan.roberts@arm.com,
-        baohua@kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ritesh.list@gmail.com
-Subject: Re: [PATCH 1/6] mm/selftests: Fix virtual_address_range test issues.
-Message-ID: <aFKPrN4w_ynPA038@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
-References: <20250616160632.35250-1-aboorvad@linux.ibm.com>
- <20250616160632.35250-2-aboorvad@linux.ibm.com>
- <0665a8d3-7094-4732-9518-01ac313959e1@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffhvQe2w"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450dd065828so54694125e9.2;
+        Wed, 18 Jun 2025 03:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750241319; x=1750846119; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vMzjEshtuGmJcwDym84s/UXUgcbvyW1pPiIeK/zCXQs=;
+        b=ffhvQe2wJ9YoDFfQQA0LnRZCSUe7iK+p/36wYmE9rVphu5JVa3HfNcK0T2N2EPhjNU
+         ZtX/20xskYB+lLyWAX7qQP+vBFx2PYpYMbC4f6YT7xB2bIcxCTPq1SoY8C7Aijpl7Lvq
+         t2GpPv3QloVQd/bihtl8zJ5BeUqJUq2Kq+3vu/gR7s6oSQAoyFNXnbum/ZYaoONlXrUM
+         YKSjM+j3aFL1k54T5ghqiBhPwghjpSta/J8v3BkA3NDaIl8v27PT5O6pg4259dkGe/FD
+         q247rdFhegBZeqCiXx67gtV0qiVHJevFcRN+zYB+j53yZvHP9peaHd3EH8llDPWvnszf
+         jmBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750241319; x=1750846119;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=vMzjEshtuGmJcwDym84s/UXUgcbvyW1pPiIeK/zCXQs=;
+        b=V+kUZa5bfj5+cD7aN4xTT9KeZLX3qDDUghIP/gZNzN+0YC1neQK61ISBkdVqxQNkyS
+         6SEORzw47GxuNle5SsAEJGwJwHiCLe8P2vHcsPRjFrTV/lMJywUq8DpPlBRSrX0RofyA
+         d4W5HgI665zW0HP2LDihTAEvS9QKU69h0Q8/NG/i/A1ioCIMPnXEJlVl8cNvo9Nu/QsB
+         +uTWMXy/FY/MWGfpOOBc1JXZCPAKJdvbUyG55AykdAg82zt3XxXTBtaH50xduXjJWO7x
+         3R2ctWnr/+w8wsAe98vCBMVzaJtn5Fx1v3z1gklcRkR2AkqL40WA37hFyWNgRCSxICcm
+         liBA==
+X-Forwarded-Encrypted: i=1; AJvYcCUua5NeqVnGhWnEjXETTv1yeaENrJ2KYeuc/h8SrQg7xE0/0eihv7FgbZDeCXIfxz3pu8lZCakmYKCi57H9@vger.kernel.org, AJvYcCV3bQndGoR+la2Guryh85DMQpJlpOEU/9BE7zZqP6yzM1r4YYBS6zdmmsQnO9BOfUpezvO3L/6QtFL7bH6HWXM=@vger.kernel.org, AJvYcCV6gM2AfVT75s+VEogOwEJgq/1uQZ253Yuty7QL3LK8DPZnLvrOJDjq1otzzj23dSY5PN6X3dCdS3BA@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB/Y4JnqaJpOVfDFrS9FsVmEMZ+Zcj1qMrmmrTUxgaNjKrq/4F
+	of9u/lYfUpbE/s63m/XUcU94P3lsW7AWEQ+0wfI7hSXH80A3P+n+ypwx
+X-Gm-Gg: ASbGnctuegGePUPf7NKyq6uLUf0LFIHreiW40OJHolw64p/mYYbee01LaRicpyh+lOp
+	KfZF9iAjFrEbe/VWNEImm9kiq2V6M8JGzmdX+zFBa33gYFsNbyUicaipKfRNc9loHwaH/iQfr+x
+	afoFurfTkMfyHR5UMQLDRiCvJ8CXWhVM92AjvGY/Vz4Lfxyza/IbP0F0shkd+pPDJKpr0wWNSTf
+	NNkyEfIvKWdqileWVAmcoQ6Whxd6CZWNvQwYi7Fp27lA+YOAWg+/K/9eym8sfrbS5JA/mp89w+p
+	k0AYApxWLA01aaDM/asvJOwotncCoC55CyCpHnnIKBK6ZWdTQgqt6K+eRtpbxkDgPpaL1Nbkft+
+	l16r9iaJrTCIa0F/TsgHNSE7DRvRHwx9iqa/BL/E=
+X-Google-Smtp-Source: AGHT+IFWAjJNlkTSbKEj9ag9dCZUDRbFRfhT9FkaMsOUOcM/aGYq0xGr+w8AlC8AZoF7lkcJyJxlbQ==
+X-Received: by 2002:a05:6000:40ca:b0:3a5:3b15:ef52 with SMTP id ffacd0b85a97d-3a57239776dmr12332294f8f.8.1750241318499;
+        Wed, 18 Jun 2025 03:08:38 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a54b7asm16689305f8f.16.2025.06.18.03.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 03:08:38 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v7 1/9] rust: device: implement FwNode::is_compatible()
+Date: Wed, 18 Jun 2025 11:06:35 +0100
+Message-ID: <20250618100636.3047585-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <0665a8d3-7094-4732-9518-01ac313959e1@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: UYGbt7kKFqt3P0dA_zb5zO92gbHO7IEN
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA4NCBTYWx0ZWRfX7OlJlVTK2lAZ Brz2fuNKtHVh/z27HCxfPebcHXyes8GCEChlB0vvnINbyrNLH6TzoaUvHE9Y/i+iku4Dm0hFiqC MLGG5jMf5YSF4IzAhFHaD1qE2xU1JPIbHALBj7fZezoPOOq9u1i+LhysYzlFwrAj+m8sRWZRRE5
- LTxAnFk2jde4DRT+rV/R6+pU0X+A/7Uqi1aWSBiVYauQ8CinnZT3ZLYbDlnQ8Uxf+58Nn4xkME1 QCywziv+qrF1N4UrVeRYxheK/hsSZVkfTnNgq6fg9TBPIFi76ksxmxaUlbnOI7hHb39ZidBkkez MwBUINmIvYqvCog/ApP2TEma1pXiyMkKjwxljOGXePKnu9eATnJv9d8DXSwTQXyJV+6LABSr+uu
- On58b7lE+eVXE6YNGt3cX1uFri+79ftK8JquhfIWbQhbQVkkfZJhDHajeqjPyNo+NgKbjKZH
-X-Authority-Analysis: v=2.4 cv=NYfm13D4 c=1 sm=1 tr=0 ts=68528fb9 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=0sDYKrj5Twn3_edcOV8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: SjqPB70G2LfhDLKvXppKo6gZSJg96_S8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_03,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506180084
 
-On Mon, Jun 16, 2025 at 09:57:10PM +0530, Dev Jain wrote:
-> 
+From: Danilo Krummrich <dakr@kernel.org>
 
-Hi Dev
+Implement FwNode::is_compatible() to check whether a given match string
+is compatible with a FwNode.
 
-> On 16/06/25 9:36 pm, Aboorva Devarajan wrote:
-> > From: Donet Tom <donettom@linux.ibm.com>
-> > 
-> > In this patch, we are fixing three issues in the virtual_address_range
-> > test.
-> > 
-> > 1. validate_addr() checks if the allocated address is within the range.
-> > In the current implementation, if addr is greater than HIGH_ADDR_MARK,
-> > the test fails. However, addr will be greater than HIGH_ADDR_MARK if
-> > high_addr is set. Therefore, if high_addr is set, we should not check
-> > the (addr > HIGH_ADDR_MARK) condition.
-> > 
-> > 2.In main(), the high address is stored in hptr, but for mark_range(),
-> > the address passed is ptr, not hptr. Fixed this by changing ptr[i] to
-> > hptr[i] in mark_range() function call.
-> > 
-> > 3./proc/self/maps may not always have gaps smaller than MAP_CHUNK_SIZE.
-> > The gap between the first high address mapping and the previous mapping
-> > is not smaller than MAP_CHUNK_SIZE.
-> 
-> For this, can't we just elide the check when we cross the high boundary?
-> As I see it you are essentially nullifying the purpose of validate_complete_va_space;
-> I had written that function so as to have an alternate way of checking VA exhaustion
-> without relying on mmap correctness in a circular way.
->
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ rust/helpers/property.c        | 6 ++++++
+ rust/kernel/device/property.rs | 9 +++++++++
+ 2 files changed, 15 insertions(+)
 
-In this test, we first allocate 128TB of low memory and verify that
-the allocated area falls within the expected range.
-
-Next, we allocate memory at high addresses and check whether the
-returned addresses are within the specified limits. To allocate
-memory at a high address, we pass a hint address. This hint address
-is derived using HIGH_ADDR_SHIFT, which is set to 48 — corresponding
-to 256TB. So, we are requesting allocation at the 256TB address, and
-the memory is successfully allocated there. Since the low address
-region is allocated up to 128TB, there is a gap between the low address
-VMA and the high address VMA .
-
-Additionally, we use a random number to generate the hint address, so
-the actual allocated address will vary but will always be above 256TB.
-
-
-10000000-10010000 r-xp 00000000 fd:05 134255559                       
-10010000-10020000 r--p 00000000 fd:05 134255559                         
-10020000-10030000 rw-p 00010000 fd:05 134255559                       
-10022b80000-10022bb0000 rw-p 00000000 00:00 0                            
-7fff5c000000-7fff9c000000 r--p 00000000 00:00 0                          
-7fff9cb30000-7fff9ce40000 rw-p 00000000 00:00 0 
-7fff9ce40000-7fff9d070000 r-xp 00000000 fd:00 792355                   
-7fff9d070000-7fff9d080000 r--p 00230000 fd:00 792355                  
-7fff9d080000-7fff9d090000 rw-p 00240000 fd:00 792355                    
-7fff9d090000-7fff9d170000 r-xp 00000000 fd:00 792358                    
-7fff9d170000-7fff9d180000 r--p 000d0000 fd:00 792358                     
-7fff9d180000-7fff9d190000 rw-p 000e0000 fd:00 792358                    
-7fff9d1a0000-7fff9d1e0000 r--p 00000000 00:00 0                          
-7fff9d1e0000-7fff9d1f0000 r-xp 00000000 00:00 0                      
-7fff9d1f0000-7fff9d240000 r-xp 00000000 fd:00 792351                   
-7fff9d240000-7fff9d250000 r--p 00040000 fd:00 792351                     
-7fff9d250000-7fff9d260000 rw-p 00050000 fd:00 792351                    
-7fffecfa0000-7fffecfd0000 rw-p 00000000 00:00 0                         
-1000000000000-1000040000000 r--p 00000000 00:00 0           -> High address           
-2000000000000-2000040000000 r--p 00000000 00:00 0                       
-4000000000000-4000040000000 r--p 00000000 00:00 0                        
-8000000000000-8000040000000 r--p 00000000 00:00 0                        
-e80009d260000-fffff9d260000 r--p 00000000 00:00 0                       
-                    
-
-The high address we are getting is at 256TB because we are explicitly
-requesting it. The gap between the high address VMA and the previous VMA
-is large because the low memory allocation goes up to 128TB.
-
-If I understand correctly, this test is verifying whether the allocated
-address falls within the expected range, and validate_complete_va_space()
-is validating the allocated virtual address space.
-
-Why do we need to check whether the gap between two VMAs is within
-MAP_CHUNK_SIZE? Should it validate only the allocated VMAs?
-
-Thanks
-Donet
+diff --git a/rust/helpers/property.c b/rust/helpers/property.c
+index 08f68e2dac4a..177b9ffd7ba4 100644
+--- a/rust/helpers/property.c
++++ b/rust/helpers/property.c
+@@ -6,3 +6,9 @@ void rust_helper_fwnode_handle_put(struct fwnode_handle *fwnode)
+ {
+ 	fwnode_handle_put(fwnode);
+ }
++
++bool rust_helper_fwnode_device_is_compatible(const struct fwnode_handle *fwnode,
++					     const char *match)
++{
++	return fwnode_device_is_compatible(fwnode, match);
++}
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index 838509111e57..a946bf8d5571 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -93,6 +93,15 @@ pub fn property_present(&self, name: &CStr) -> bool {
+         unsafe { bindings::fwnode_property_present(self.as_raw().cast_const(), name.as_char_ptr()) }
+     }
  
-> Btw @Lorenzo, validate_complete_va_space was written by me as my first patch ever for
-> the Linux kernel : ) from the limited knowledge I have of VMA stuff, I guess the
-> only requirement for VMA alignment is PAGE_SIZE in this test, therefore, the only
-> check required is that the gap between two VMAs should be at least MAP_CHUNK_SIZE?
-> Or can such a gap still exist even when the VA has been exhausted?
-> 
-> > 
-> > $cat /proc/3713/maps
-> > 10000000-10010000 r-xp 00000000 fd:00 36140094
-> > 10010000-10020000 r--p 00000000 fd:00 36140094
-> > 10020000-10030000 rw-p 00010000 fd:00 36140094
-> > 4ee80000-4eeb0000 rw-p 00000000 00:00 0
-> > 578f0000-57c00000 rw-p 00000000 00:00 0
-> > 57c00000-7fff97c00000 r--p 00000000 00:00 0
-> > 7fff97c00000-7fff97e20000 r-xp 00000000 fd:00 33558923
-> > 7fff97e20000-7fff97e30000 r--p 00220000 fd:00 33558923
-> > 7fff97e30000-7fff97e40000 rw-p 00230000 fd:00 33558923
-> > 7fff97f40000-7fff98020000 r-xp 00000000 fd:00 33558924
-> > 7fff98020000-7fff98030000 r--p 000d0000 fd:00 33558924
-> > 7fff98030000-7fff98040000 rw-p 000e0000 fd:00 33558924
-> > 7fff98050000-7fff98090000 r--p 00000000 00:00 0
-> > 7fff98090000-7fff980a0000 r-xp 00000000 00:00 0
-> > 7fff980a0000-7fff980f0000 r-xp 00000000 fd:00 2634
-> > 7fff980f0000-7fff98100000 r--p 00040000 fd:00 2634
-> > 7fff98100000-7fff98110000 rw-p 00050000 fd:00 2634
-> > 7fffcf8a0000-7fffcf9b0000 rw-p 00000000 00:00 0
-> > 1000000000000-1000040000000 r--p 00000000 00:00 0   --> High Addr
-> > 2000000000000-2000040000000 r--p 00000000 00:00 0
-> > 4000000000000-4000040000000 r--p 00000000 00:00 0
-> > 8000000000000-8000040000000 r--p 00000000 00:00 0
-> > e800098110000-fffff98110000 r--p 00000000 00:00 0
-> > $
-> > 
-> > In this patch, the condition that checks for gaps smaller than MAP_CHUNK_SIZE has been removed.
-> > 
-> > Fixes: d1d86ce28d0f ("selftests/mm: virtual_address_range: conform to TAP format output")
-> > Fixes: b2a79f62133a ("selftests/mm: virtual_address_range: unmap chunks after validation")
-> > Fixes: 010409649885 ("selftests/mm: confirm VA exhaustion without reliance on correctness of mmap()")
-> > Signed-off-by: Donet Tom <donettom@linux.ibm.com>
-> > Signed-off-by: Aboorva Devarajan <aboorvad@linux.ibm.com>
-> > ---
-> >   tools/testing/selftests/mm/virtual_address_range.c | 14 +++-----------
-> >   1 file changed, 3 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
-> > index b380e102b22f..606e601a8984 100644
-> > --- a/tools/testing/selftests/mm/virtual_address_range.c
-> > +++ b/tools/testing/selftests/mm/virtual_address_range.c
-> > @@ -80,7 +80,7 @@ static void validate_addr(char *ptr, int high_addr)
-> >   	if (high_addr && addr < HIGH_ADDR_MARK)
-> >   		ksft_exit_fail_msg("Bad address %lx\n", addr);
-> > -	if (addr > HIGH_ADDR_MARK)
-> > +	if (!high_addr && addr > HIGH_ADDR_MARK)
-> >   		ksft_exit_fail_msg("Bad address %lx\n", addr);
-> >   }
-> > @@ -117,7 +117,7 @@ static int validate_lower_address_hint(void)
-> >   static int validate_complete_va_space(void)
-> >   {
-> > -	unsigned long start_addr, end_addr, prev_end_addr;
-> > +	unsigned long start_addr, end_addr;
-> >   	char line[400];
-> >   	char prot[6];
-> >   	FILE *file;
-> > @@ -134,7 +134,6 @@ static int validate_complete_va_space(void)
-> >   	if (file == NULL)
-> >   		ksft_exit_fail_msg("cannot open /proc/self/maps\n");
-> > -	prev_end_addr = 0;
-> >   	while (fgets(line, sizeof(line), file)) {
-> >   		const char *vma_name = NULL;
-> >   		int vma_name_start = 0;
-> > @@ -151,12 +150,6 @@ static int validate_complete_va_space(void)
-> >   		if (start_addr & (1UL << 63))
-> >   			return 0;
-> > -		/* /proc/self/maps must have gaps less than MAP_CHUNK_SIZE */
-> > -		if (start_addr - prev_end_addr >= MAP_CHUNK_SIZE)
-> > -			return 1;
-> > -
-> > -		prev_end_addr = end_addr;
-> > -
-> >   		if (prot[0] != 'r')
-> >   			continue;
-> > @@ -223,8 +216,7 @@ int main(int argc, char *argv[])
-> >   		if (hptr[i] == MAP_FAILED)
-> >   			break;
-> > -
-> > -		mark_range(ptr[i], MAP_CHUNK_SIZE);
-> > +		mark_range(hptr[i], MAP_CHUNK_SIZE);
-> >   		validate_addr(hptr[i], 1);
-> >   	}
-> >   	hchunks = i;
++    /// Return `true` if this [`FwNode`] is compatible with `match_str`, `false` otherwise.
++    pub fn is_compatible(&self, match_str: &CStr) -> bool {
++        // SAFETY:
++        // - By the invariant of `CStr`, `name.as_char_ptr()` is valid and null-terminated.
++        // - The type invariant of `Self` guarantees that `self.as_raw() is a pointer to a valid
++        //   `struct fwnode_handle`.
++        unsafe { bindings::fwnode_device_is_compatible(self.as_raw(), match_str.as_char_ptr()) }
++    }
++
+     /// Returns firmware property `name` boolean value.
+     pub fn property_read_bool(&self, name: &CStr) -> bool {
+         // SAFETY:
+-- 
+2.43.0
+
