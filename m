@@ -1,155 +1,128 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F532F533D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:36:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F341A2F533D;
+	Wed, 18 Jun 2025 07:41:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750232220; cv=none; b=YLsHIeFy7MXCu3QgG2S2+M38OMYKTOhL9r2bLtGC9GgfuYbN375ovLNCnZ8ctRU5FPd0mgNNQ3uJFJf3J4g75UctDmpkN4Oe0RtNjA0fVD/ocqKJjNP8SEw9foqdCQ0IhwbWuIpKPC4OL1zaz7W8sw4o+j7mc7SjB0CLo5VsfPs=
+	t=1750232478; cv=none; b=Xvg2iV5QjfudpeaGFT1SALjmg6iMep0fZgwlsANUdCCxUgvs844rIAE9uRoxHKPyTQVElKFudfk2VwmGaMZw3g1cy60mBEfbrqWyyhDaxFY6DNrRqjVcYITRjzyiySiJdIa3vW2+t049ftKpVQOZ8TcnWoYkmIoHlLvPbbbM+k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750232220; c=relaxed/simple;
-	bh=WkRs/TboFDX8xfzfGINehv8lcvkeaBoDHGvUNBlrxXw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JfF8KU2wUe89K38e9kXP+TDuS3iJmBr3Fogxtms1guAeZPomso+oSb44PSHj32+p4fwgGgKKFd2ZK1pcCbiGKB7vA7X0onS7Ixul6iXo+1iu+x+FLwZPOMLWqrJFRzGyF72Wa4FJFJvzqVsgfA4YBw2mgBHy7lwvRGV6CfJAWBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LTAl8TCO; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750232478; c=relaxed/simple;
+	bh=CdPMvchl8dnc7QUmYU8r5xuZIWjA8tIt/ATWmwQh5GI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F6na8Di4qmDp9hWomQGocLm+JtH3Ni/iXnVbI5sKzlUef4zZZdIf3Rq0HbI8EnePInk3y0R5Yu04dncNgYj7scNj2y79/atL8O891yHQw9W3U87MCZ/3lz8/y1nMqWL2W/x9tE625rdnxRvWwIysf7TN9wMiWAqefUNOsVzh3l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gM6907eA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTAl8TCO"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52878d37aso1215253f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:36:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750232217; x=1750837017; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZXBxt0cc6L0naAoZJZAGNT6TJUcn+mtDHZVLEqs+No=;
-        b=LTAl8TCOxh1uOwiGrB8LrimzoI0hpWdZKIcoOk/sdaTPZ0m/KK4oTpy9EpyCWySKaO
-         rVguNPBlRlEtticcaia4kU44Szw1+PNwbceUGu41zmDdX92XKLgqneouNgIZuk/9W4zw
-         NTMM57h7Sxi7GLnoAhaEKEzoFykIglwEYCWzxDa/z6R6PuoDHd2WUOLW2i0WZEPwI9cY
-         wst0pI0mBX52ouJd0klX+SEJbZQ7WouC+oq4sp1HKqP+VBmKNkyQgDhIxT9NxiGTsAeA
-         bUVoxDpNRUSALO5U0AWUUIJ+oYFwjhsUsUY2pJoZJja+sW1b52vCUvEEUl6vXT9ue0xe
-         IkJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750232217; x=1750837017;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XZXBxt0cc6L0naAoZJZAGNT6TJUcn+mtDHZVLEqs+No=;
-        b=CVy2zWk3Ji/pYyd73nXlEMGj0D75ErhHXqDGISV1i3575fp9O7m0cp5ZPmkE6aHkg9
-         +hTGxL5AOHDwHgmgyDI4zo5Ws9tTc3erFEbw1g3te72IkqV1VV/lY2bgVTABoMQxNq5Q
-         lw6Bm5v5i27kyVItPU6StqJrwlk7rAfWcPCFqrIXGlSrzRzrg0zgIu2gKELWhRzCvqHF
-         YPuSn1n2Y0B5wGnk9u6gJVYMr6KdezR+VNPVm/qT+suUwHk+/RQAPT3rjj2B6mVKVWl+
-         YT8belOLKi4ESofN/bi0bsPL0SG1WoskxQZo2bPuqVBpOwdnadAH/W/zaPTMb9Dd9GIy
-         Gb7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUHq9JEdR74SYT4fJ6FkZr3kA7zu6Vuf58LFTlJXdMkoUstSRzS4rTH5GhdcAlDVEqlmNdUwjPniK8cJpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfhnwNxBK0HGfZmU9OLuUeNmX4HzA3E/UC+ZEG+AsDJqjP/+6f
-	zIyb2LeXPgWOnjma/gNuuM9PHxm09/JyBJnGAQkfDyHGZb+l5ebc9XP/o1qzY2Adsm4=
-X-Gm-Gg: ASbGncsK0KPZ1ZSXAmb9VUbhZY7+WSX/tkCvYOoykdemylSzykQPK7sSGHzCtR58Won
-	cJ77XaOkfn3kWC0VjblIPKd15drAW/PyO5hDM/MCmBcWu6ObJnRFbxmhO9O9c/qa/cEnZOoHuC4
-	trrzHZorDv6n9SBYj4hjKEfK06rYSLWuhOxWBePl0/9SXGZjZrG7g2EZ+iRiiVEeP7rkWpRzv23
-	E/0EQpcTHnux8dqK9S7cHAlmbefsVh1s1vEXp0lHeQwwEd2PTNKBNfPjuuwfM+ieXAos0HsyHDt
-	vh8u8ymQBz/W05zAVNabQ8/ACcrV3Jz3i/8GyUBuMZfD/jKoIY06i78dGecR/Cat/Alj+Qg0iHn
-	4fhli0T+A
-X-Google-Smtp-Source: AGHT+IGzdx4bFzKCr1o8dRWdVSdkAmLcmC90spjSihYQwSyc0weZmyPLolTCTmYgiIecY8zC3ErPWA==
-X-Received: by 2002:a05:600c:1d0d:b0:43b:ca39:a9b8 with SMTP id 5b1f17b1804b1-4533ca48dffmr58906925e9.2.1750232216922;
-        Wed, 18 Jun 2025 00:36:56 -0700 (PDT)
-Received: from kuoka.. ([178.197.223.125])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8f2e0sm195792835e9.8.2025.06.18.00.36.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 00:36:56 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Vincent Cuissard <cuissard@marvell.com>,
-	Samuel Ortiz <sameo@linux.intel.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linuxfoundation.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] NFC: nci: uart: Set tty->disc_data only in success path
-Date: Wed, 18 Jun 2025 09:36:50 +0200
-Message-ID: <20250618073649.25049-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gM6907eA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2930EC4CEE7;
+	Wed, 18 Jun 2025 07:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750232477;
+	bh=CdPMvchl8dnc7QUmYU8r5xuZIWjA8tIt/ATWmwQh5GI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gM6907eAy3tIYyMB7pAHz6sLkUDqVpOv+rCLiSDCihkqDYg8JEpn0BzdWyhGxOa2t
+	 sisH5fwruFBywa9NfyAjMPZe4MGNNDTOwlQdy2aGcnAEenFbzb67EcoGi9f8YTAViC
+	 2rpPdet9uTilHEn6GTKVLtg1lsFdr68v6zULkTjdq4lABfVQILxTV2QLGDuX9GebUY
+	 hP3QzERqjRLZqAQHJT4nROstcjHNigKhWa4V2nV8pJOIfNiHCF4/6YQrtVAXxNuwSz
+	 iYpsmhFUYeZ3EnsJ4L2o0DuItKgnWanBECOaiRieGDi3Ik7gvROTb2J+BLUnWO5l6d
+	 jJ7nVgb7YedFA==
+Message-ID: <5336c00d-3b80-423a-bb52-4e1ec35bc7ed@kernel.org>
+Date: Wed, 18 Jun 2025 09:41:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1821; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=WkRs/TboFDX8xfzfGINehv8lcvkeaBoDHGvUNBlrxXw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoUmyR9Sy/6+NxZF35Vz8mGEq+q31qkerrdCl1S
- kIPLmllOdKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaFJskQAKCRDBN2bmhouD
- 13omD/4zhyiDc3yVsBfIujWpgDnnQ/l3ePHvdbts5xY9N05fFjRhLNIv9Z/PMQfCL5sWiYJxZZo
- 9X1IAcKsu7TItxoN+Kx8Ah6IruEbidB02Nyt/C9TxaWVzETWDWvDCUQzwpM1H1lVNmQPojXIwgU
- wZaoSbr66Qlgyygzsh8npVA48SkBzSucYhEpPfGVP2+5MIMEJthHwGaoUyss0tfJAGD0XA6VMl7
- Ad8vdIwkI0ZCY3kkpnHxYMsWSYFzJAZmRRvrJC4B2+rQHdctXwwfSvjBrlTWMV9r6tt5c3EBk/P
- xnmPGhzHSXp11rasBPlmwmubeC4879dQdbewqlIVj5ymyfSVLqOdvzoXrqBwoXajhxUDS78SN/y
- iEs/8phFmc98F5kLrJ2cB9zI5hoSD/VmM50fHfgjuVpSjF+fQqnRl4D+wuj6rgvmpmL5otgI50O
- eUC1qmE30Almsx/ey2bbBlVsHeSvC41jwzdMK+Y93qjIoZdqaqVc4AztnwPFk3pCw3f/dnpCn8Y
- YYleGNGUgPIcPC5sKa/McvfOHO7VHEHTXkOfuTdqk5d+pqc6XesjhE3YKNTYLyO0rWb70akwz4c
- l9Ey/IYMak4UQ0W6IgEV1JIL/PHA6xqIs2jbjimYqngW79+VBvS77zkrz4B4ZtSNvuzp2a59Ej7 bsaAbyuHHDH8vfQ==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/4] arm64: dts: qcom: sm8550: Remove SDR104/SDR50
+ broken capabilities
+To: Sarthak Garg <quic_sartgarg@quicinc.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
+ quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
+ quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com
+References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
+ <20250618072818.1667097-5-quic_sartgarg@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250618072818.1667097-5-quic_sartgarg@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Setting tty->disc_data before opening the NCI device means we need to
-clean it up on error paths.  This also opens some short window if device
-starts sending data, even before NCIUARTSETDRIVER IOCTL succeeded
-(broken hardware?).  Close the window by exposing tty->disc_data only on
-the success path, when opening of the NCI device and try_module_get()
-succeeds.
+On 18/06/2025 09:28, Sarthak Garg wrote:
+> Kernel now handles all level shifter limitations related to SD card
+> modes.
+> As a result, the broken hardware capabilities for SDR104 and SDR50 modes
+> can be removed from the device tree.
+> Additionally, due to level shifter constraints, set the maximum
+> frequency for High Speed (HS) mode to 37.5 MHz using the
+> max-sd-hs-frequency property for sm8550.
+> 
+> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8550.dtsi | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> index 82cabf777cd2..2c770c979d39 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+> @@ -3180,6 +3180,7 @@ sdhc_2: mmc@8804000 {
+>  			iommus = <&apps_smmu 0x540 0>;
+>  			qcom,dll-config = <0x0007642c>;
+>  			qcom,ddr-config = <0x80040868>;
+> +			max-sd-hs-frequency = <37500000>;
+So my previous comments stay... This is SoC thus deducible from compatible.
 
-The code differs in error path in one aspect: tty->disc_data won't be
-ever assigned thus NULL-ified.  This however should not be relevant
-difference, because of "tty->disc_data=NULL" in nci_uart_tty_open().
-
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linuxfoundation.org>
-Cc: Paolo Abeni <pabeni@redhat.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Fixes: 9961127d4bce ("NFC: nci: add generic uart support")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- net/nfc/nci/uart.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/net/nfc/nci/uart.c b/net/nfc/nci/uart.c
-index ed1508a9e093..aab107727f18 100644
---- a/net/nfc/nci/uart.c
-+++ b/net/nfc/nci/uart.c
-@@ -119,22 +119,22 @@ static int nci_uart_set_driver(struct tty_struct *tty, unsigned int driver)
- 
- 	memcpy(nu, nci_uart_drivers[driver], sizeof(struct nci_uart));
- 	nu->tty = tty;
--	tty->disc_data = nu;
- 	skb_queue_head_init(&nu->tx_q);
- 	INIT_WORK(&nu->write_work, nci_uart_write_work);
- 	spin_lock_init(&nu->rx_lock);
- 
- 	ret = nu->ops.open(nu);
- 	if (ret) {
--		tty->disc_data = NULL;
- 		kfree(nu);
-+		return ret;
- 	} else if (!try_module_get(nu->owner)) {
- 		nu->ops.close(nu);
--		tty->disc_data = NULL;
- 		kfree(nu);
- 		return -ENOENT;
- 	}
--	return ret;
-+	tty->disc_data = nu;
-+
-+	return 0;
- }
- 
- /* ------ LDISC part ------ */
--- 
-2.45.2
-
+Best regards,
+Krzysztof
