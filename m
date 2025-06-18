@@ -1,39 +1,38 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7364D2E8DE3;
-	Wed, 18 Jun 2025 12:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF41F9CB;
+	Wed, 18 Jun 2025 12:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248940; cv=none; b=W9gfNE0BUs3DVYtN45peMu2iYRor1hqWvRGitUhd3kOiNeoaK7deUGa/E71EYy1fnd45mCytckgfQbAQryb/WIBhfBDQldzyYXyOMFAdZv8y+JE++IU40uvq1gVO/AdHXMf0ykLn7ho1uXPwdfWu/FYZJX6tcZzEojYYrLXOsQU=
+	t=1750248942; cv=none; b=G2HZFuRMhSRH9JxpDt368WFpHKijVh7tIJMek0lBQKuAxLljxMkNu/1EkLtcafejjSxQaPqL6aJwjJZabOJF2B3uElbT4eRz7hT4dGZ+0sa3g/TxdcOFgbOdOVz+Qe9YqbMAivFzHFOZxSuhJevdDYwF/lqvFO5w2jVabm2/0fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248940; c=relaxed/simple;
-	bh=c4eQp1jpNaHTJFYnkNcsmV8UPwxGMhGSuf7or7yikzY=;
+	s=arc-20240116; t=1750248942; c=relaxed/simple;
+	bh=af7Z/duDzqnUeURCtyDG7bN9lfh0Hcfu3PPcPijVCIk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Epwy50Ihb8M448yLM8pSLeDVb9YJFN+77zvLWL5LwDVY2pymrdk14Wd+1+Nzv+19okzPb0v0vWvVuHWgRHo9ab2gh0a/eMS7v5HKMhPtrBAaMq2XHFHuh1HDpbE4fs4+im9I1gCUEHU2Pn/qD0D4F9KeAcXuitfh10YfocNiLbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mtqTnIpY; arc=none smtp.client-ip=217.70.183.194
+	 In-Reply-To:To:Cc; b=j9RUPuUFGiCx1Z8pN7mSHnFyroNr9rmbosfi7fN4bLu/QyUP5e5biOwfnHh4zjLmHn9xan2Ll2IoOopyVBnQpD1RyLTl8QXAWh0z3IdjW+O7n4wAUJYBkLDSix1pRL4BjdudSifx9m7oJL1sHlKz0dKPD4tmJwgpS74TTfTOIZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Qxu7bz+v; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mtqTnIpY"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1CA3643860;
-	Wed, 18 Jun 2025 12:15:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Qxu7bz+v"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0551A4385B;
+	Wed, 18 Jun 2025 12:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750248936;
+	t=1750248938;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=GQ6sSa3qqRKNyhsxZmga10RJnCjtGjq37nBcPbQIfTQ=;
-	b=mtqTnIpYfFXAOBrU3xmBw40hiHYyu9z2ligQjwfVEvrbaNetxhXy6+FoA2QFRXo49CvtyP
-	zeWK78f95pvv3HbqrOTGI4EfUu4qcCkAWojlUcAKyTKa6Pos3lCDXRGuA+aRRu8VvV+Tlj
-	3bfXMlhgS2dDiPmvfHLQPlKmSaCoFTFzOH9PB1z/zz4KjO25CHR5ebtClA4gFzX9DTBUq7
-	a6kMVqrSpQAH8olv7btwJWErWWBIoYYuAC5yUYDSm+4Nec64QpnDUfFb+685SUvbjVL3bg
-	e+FXi3/b4ilhORoSGHayNRRMFE6Rlhwz8JjO6bV9uaJEovto580rkMeFN1nZEg==
+	bh=IhGRtRrllEn9wwjuD72VvaIn4CmLcG96rNB7IF0e98w=;
+	b=Qxu7bz+vAQMMU0BHXeDOS9WMVpT9vLHhozBMXRjPrPNpISFPFV4JCda+4Dl0cGxmz0GWLO
+	YDtZMExLiK1dTCVNW3isAni6OzVDZVFqalOIwj+3I231RS/5EJnVXipTP6X0Ovyjmo8pqh
+	VcwhdibXAsFLo1sCWDRuvZIVYmMPKuqsCE06DceF2ET/pkbuLMZfOq1PaXMYJ5BqbZmL8w
+	oqgm8pJjZU40W0Rq24scmVcZLztV9JWW5OXwqYAtjXvsQ/sYtJKaCgNOd5htnWc3s8utcf
+	1NAuZSMeyKsnltqUfNahoAYDt7t7aud7gAHxOu8rAhO1y75Y5glR0LmNy/Zz3g==
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Wed, 18 Jun 2025 14:14:19 +0200
-Subject: [PATCH 2/8] spi: spi-mem: Take into account the actual maximum
- frequency
+Date: Wed, 18 Jun 2025 14:14:22 +0200
+Subject: [PATCH 5/8] mtd: spinand: Add a ->configure_chip() hook
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-2-513202126013@bootlin.com>
+Message-Id: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-5-513202126013@bootlin.com>
 References: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
 In-Reply-To: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
 To: Mark Brown <broonie@kernel.org>, Richard Weinberger <richard@nod.at>, 
@@ -59,84 +58,97 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvieduucetufdoteggodetrfd
  hhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuffvnfhinhdvseifihhnsghonhgurdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrgh
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-In order to pick the best variant, the duration of each typical
-operation is derived and then compared. These durations are based on the
-maximum capabilities of the chips, which are commonly the limiting
-factors. However there are other possible limiting pieces, such as the
-hardware layout, EMC considerations and in some cases, the SPI controller
-itself.
-
-We need to take this into account to further refine our variant choice,
-so let's use the actual frequency that will be used for the operation
-instead of the theoretical maximum.
+There is already a manufacturer hook, which is manufacturer specific but
+not chip specific. We no longer have access to the actual NAND identity
+at this stage so let's add a per-chip configuration hook to align the
+chip configuration (if any) with the core's setting.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/nand/spi/core.c |  2 +-
- drivers/spi/spi-mem.c       | 18 ++++++++++++++----
- include/linux/spi/spi-mem.h |  2 +-
- 3 files changed, 16 insertions(+), 6 deletions(-)
+ drivers/mtd/nand/spi/core.c | 16 ++++++++++++++--
+ include/linux/mtd/spinand.h |  7 +++++++
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 942a33b8d2ed9530f5fa9228fe298ec1653a795e..03b4b0cda815a2ecc456ea25e802c60e32ee2bae 100644
+index 03b4b0cda815a2ecc456ea25e802c60e32ee2bae..d3c7f7fdfd40469f9d4c16da6215775a8e06fe98 100644
 --- a/drivers/mtd/nand/spi/core.c
 +++ b/drivers/mtd/nand/spi/core.c
-@@ -1298,7 +1298,7 @@ spinand_select_op_variant(struct spinand_device *spinand,
+@@ -1250,8 +1250,19 @@ static int spinand_id_detect(struct spinand_device *spinand)
  
- 			nbytes -= op.data.nbytes;
- 
--			op_duration_ns += spi_mem_calc_op_duration(&op);
-+			op_duration_ns += spi_mem_calc_op_duration(spinand->spimem, &op);
- 		}
- 
- 		printk("%s [%d] variant %d duration: %lld)\n", __func__, __LINE__, i, op_duration_ns);
-diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
-index c42c227eb2a29ccd291bdced6b9d188c3b0bfb67..d3b7e857b3776e16310d3afc9acb7c315e3ea039 100644
---- a/drivers/spi/spi-mem.c
-+++ b/drivers/spi/spi-mem.c
-@@ -586,15 +586,25 @@ EXPORT_SYMBOL_GPL(spi_mem_adjust_op_freq);
-  * accurate, all these combinations should be rated (eg. with a time estimate)
-  * and the best pick should be taken based on these calculations.
-  *
-- * Returns a ns estimate for the time this op would take.
-+ * Returns a ns estimate for the time this op would take, except if no
-+ * frequency limit has been set, in this case we return the number of
-+ * cycles nevertheless to allow callers to distinguish which operation
-+ * would be the fastest at iso-frequency.
-  */
--u64 spi_mem_calc_op_duration(struct spi_mem_op *op)
-+u64 spi_mem_calc_op_duration(struct spi_mem *mem, struct spi_mem_op *op)
+ static int spinand_manufacturer_init(struct spinand_device *spinand)
  {
- 	u64 ncycles = 0;
- 	u64 ps_per_cycles, duration;
- 
--	ps_per_cycles = 1000000000000ULL;
--	do_div(ps_per_cycles, op->max_freq);
-+	spi_mem_adjust_op_freq(mem, op);
+-	if (spinand->manufacturer->ops->init)
+-		return spinand->manufacturer->ops->init(spinand);
++	int ret;
 +
-+	if (op->max_freq) {
-+		ps_per_cycles = 1000000000000ULL;
-+		do_div(ps_per_cycles, op->max_freq);
-+	} else {
-+		/* In this case, the unit is no longer a time unit */
-+		ps_per_cycles = 1;
++	if (spinand->manufacturer->ops->init) {
++		ret = spinand->manufacturer->ops->init(spinand);
++		if (ret)
++			return ret;
++	}
++
++	if (spinand->configure_chip) {
++		ret = spinand->configure_chip(spinand);
++		if (ret)
++			return ret;
 +	}
  
- 	ncycles += ((op->cmd.nbytes * 8) / op->cmd.buswidth) / (op->cmd.dtr ? 2 : 1);
- 	ncycles += ((op->addr.nbytes * 8) / op->addr.buswidth) / (op->addr.dtr ? 2 : 1);
-diff --git a/include/linux/spi/spi-mem.h b/include/linux/spi/spi-mem.h
-index c4830dfaff3db5549c45bb7a9c4bf5110fa2e338..82390712794c5a4dcef1319c19d74b77b6e1e724 100644
---- a/include/linux/spi/spi-mem.h
-+++ b/include/linux/spi/spi-mem.h
-@@ -424,7 +424,7 @@ bool spi_mem_default_supports_op(struct spi_mem *mem,
+ 	return 0;
+ }
+@@ -1353,6 +1364,7 @@ int spinand_match_and_init(struct spinand_device *spinand,
+ 		spinand->flags = table[i].flags;
+ 		spinand->id.len = 1 + table[i].devid.len;
+ 		spinand->select_target = table[i].select_target;
++		spinand->configure_chip = table[i].configure_chip;
+ 		spinand->set_cont_read = table[i].set_cont_read;
+ 		spinand->fact_otp = &table[i].fact_otp;
+ 		spinand->user_otp = &table[i].user_otp;
+diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+index 61a4571cec7ea86bcc5cb439b76964ba778c0f89..69674fd191d9d0753a867334dae2012d8260a02c 100644
+--- a/include/linux/mtd/spinand.h
++++ b/include/linux/mtd/spinand.h
+@@ -493,6 +493,7 @@ struct spinand_user_otp {
+  * @op_variants.update_cache: variants of the update-cache operation
+  * @select_target: function used to select a target/die. Required only for
+  *		   multi-die chips
++ * @configure_chip: Align the chip configuration with the core settings
+  * @set_cont_read: enable/disable continuous cached reads
+  * @fact_otp: SPI NAND factory OTP info.
+  * @user_otp: SPI NAND user OTP info.
+@@ -516,6 +517,7 @@ struct spinand_info {
+ 	} op_variants;
+ 	int (*select_target)(struct spinand_device *spinand,
+ 			     unsigned int target);
++	int (*configure_chip)(struct spinand_device *spinand);
+ 	int (*set_cont_read)(struct spinand_device *spinand,
+ 			     bool enable);
+ 	struct spinand_fact_otp fact_otp;
+@@ -548,6 +550,9 @@ struct spinand_info {
+ #define SPINAND_SELECT_TARGET(__func)					\
+ 	.select_target = __func
  
- int spi_mem_adjust_op_size(struct spi_mem *mem, struct spi_mem_op *op);
- void spi_mem_adjust_op_freq(struct spi_mem *mem, struct spi_mem_op *op);
--u64 spi_mem_calc_op_duration(struct spi_mem_op *op);
-+u64 spi_mem_calc_op_duration(struct spi_mem *mem, struct spi_mem_op *op);
++#define SPINAND_CONFIGURE_CHIP(__configure_chip)			\
++	.configure_chip = __configure_chip
++
+ #define SPINAND_CONT_READ(__set_cont_read)				\
+ 	.set_cont_read = __set_cont_read
  
- bool spi_mem_supports_op(struct spi_mem *mem,
- 			 const struct spi_mem_op *op);
+@@ -616,6 +621,7 @@ struct spinand_dirmap {
+  *		passed in spi_mem_op be DMA-able, so we can't based the bufs on
+  *		the stack
+  * @manufacturer: SPI NAND manufacturer information
++ * @configure_chip: Align the chip configuration with the core settings
+  * @cont_read_possible: Field filled by the core once the whole system
+  *		configuration is known to tell whether continuous reads are
+  *		suitable to use or not in general with this chip/configuration.
+@@ -656,6 +662,7 @@ struct spinand_device {
+ 	const struct spinand_manufacturer *manufacturer;
+ 	void *priv;
+ 
++	int (*configure_chip)(struct spinand_device *spinand);
+ 	bool cont_read_possible;
+ 	int (*set_cont_read)(struct spinand_device *spinand,
+ 			     bool enable);
 
 -- 
 2.48.1
