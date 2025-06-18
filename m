@@ -1,113 +1,141 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA331224FA
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA2E2F49E2
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750271169; cv=none; b=rMI4vMzEqHNv83Rqaa4DJmOkSt9PzCBpaDxGf+aZ6Oh9SEmHf+YLn/kDrsnRh0Vox27pkZ/7Q5jqdf+QF2+YuqqqVzWq8qXGCka37bBUY0QusWS8gUiJbOeuYbOPVkyPT5XYQ0SyX5HFvXyGSaOk83sf1UPryNV5dB0SrAPLOtA=
+	t=1750271259; cv=none; b=K0ymHLYnWEpDQ3pi32FutYRZgp4XTPePr12dAAKvLfx4LQJVvWXyZI9kbn4UHotQa6oOQoTtTvRvJL+npOjbUv15q+hqdxQLN7673UH7MC7DfNQX254o2HpYE1lHKUyMOPsU8UCz3TUVNyJ5zwktWSKQfCPzGRSqbTs+FefwPkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750271169; c=relaxed/simple;
-	bh=IXK+S4uXxPqEnY9h1bAL/eP3qq5ugrshNaDE7HOMvwU=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=quBTiH/7td+aSwTzzrjLiDQs55lhbXo5MPamcrDDXbZkyMkFjwBs4+6CI4iORDbqBgI/yzgr1njNj7ytnqKESSECUHEq0g3UWD5NFZx0HIin7IJXGZz3u+hWvLEkXjq7AjAMRjaixWlOJ1Rz7cKFtHIWS7jJwObBrmDInIVzyJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=MXbFu3+d; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
+	s=arc-20240116; t=1750271259; c=relaxed/simple;
+	bh=8erTa4lex0kgWaCiz++yqQTutSRNZ0et/sDqzyR34Rw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gSrJVPqIaRuyzCjLTZmRnMEwzVaPsA398goe8sVEBa6TSfXHr3kyWSqfuW4fM5khDWi1YojvKJavnerj0Z/F6BZB1wvtsAGbI0BedoDVnew7XN4Y6la725s78cl6IKQqaTj7tYM3q9tQ0XgSPyuNEmrfmbqiWfwFPZiHnlYUkZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Vd2WvKgj; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="MXbFu3+d"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476a720e806so64478211cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Vd2WvKgj"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-73a43d327d6so2719979a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:27:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=maine.edu; s=google; t=1750271166; x=1750875966; darn=vger.kernel.org;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQyolkiMyjAckIG3knda/ZNUyqwRYUv8nQKXIT9FUXc=;
-        b=MXbFu3+dVazDfmtXOEyOG5eg8CClDAsJObR7p1ywAUtjLOf4XN6+Gbg5FgdhU8RbDh
-         0bEWLLQzhEcxR0NkZmEaY7OBpoLBEUpmqxb1ygqJpgbC71AbIXx4/kuw/ZwOwVOQuzZ+
-         JItUquAV9jGnAsnCWNiRLlTgYbtUDC9R3bg70=
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750271256; x=1750876056; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/YBYuQYbzLC80oZvh7S2m5LwCzlb8lJZIkclLoGPtU8=;
+        b=Vd2WvKgjICOoIyD3DUGFwVR0jICN8GM8IOCFL1VOC93a/lKI/F+L4qLfEiWuUTxAbU
+         FMfHcGhW5FnTbgPSspLrz/nDVHrVXjvXxrQofbX9HqUTpPpDR4jgMRmDY4YUAFRjN0Hy
+         AMHKmhzmsYckUnfZnuoc9aY/wLJ0q8gkoSgs6F122yoA70VAAFdmjJKWtfe0o8hQORE2
+         PxRYzuL+8lrRjovbhLgtZ8rzsPntfp6AaRxBQbn6yo7CRlSviky46p/Bxl26gFKyJ/A5
+         oKy96jDoIeE1v5EoFTuqZFEiL8y8pdvtv/JaOh83Tx1c24RCwYCj8WAwhiBEO0AfobZD
+         Tb+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750271166; x=1750875966;
-        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQyolkiMyjAckIG3knda/ZNUyqwRYUv8nQKXIT9FUXc=;
-        b=QsT/jx6lpBBAfk7aAq4YTudhzUWVJ8MQuZ6/rG4MEU1eplGCtne35oG8L7VuVDgQpq
-         W7hW6QTWRJ92k/s0cUhF5cRx54lrkc+e+nnaLgSj6Irn3QvZPU9IuARqQC7lvFiPdGVP
-         eVQ8UgfZX++DorGCIEcunco73Z508jXzfX6elcRi9MJEe3sChFAczgom17wepseVFWz7
-         9AZXHeBNvf6wYO90z4WPgt5XdKxb2bzIUok9uFusIuC4NHZ7wJ1V3XdDM3HDASfGlDB3
-         QaQaLGB2KjZuIeZeOgYKqAoS/VxDStmKekoREp4NoCKvGD/beCEKDLGNzgRc4VyKS5SW
-         YE9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXzm+Dld8bX4iF+bHpWUrRaIiwm6FRD8OOtQwN9lqo1IC25XRlYcVoyAiNMPR9rBLxbtCQphJcLv1J6INo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJvGPDhY7PEv49vuwIm/bhXmhXroMvEBPGTk8radWppncpDeUf
-	6NNdoE0xl8zuI/rs9YEOs3yGLiDEwHitWfv/BpmmaQhvUzn168WUAoyRJ1aCVL+aeQ==
-X-Gm-Gg: ASbGncu0doO67qs/8aBh8+Bgw+VJ7+dG9ODQASsR63E8cYcEuwZcW0r2FJSF8KEEvTP
-	+otPfeJnJhPQmClMJ+txNN47OWc4EWg0f++PYb02b+vU5stnrQqzjUfDlzaa/X1S/pYJ+uiG6eX
-	twfl4LDJqE6e8oxCQGa1QTIc1Bbr8zsu0cI/87tjpW7BmnWVqD5RAypfkBT9DnL9gTqST5tfR5P
-	hjj7p4/rtkwfdFzEJojVHLtq6R5gMVwGUGBAdMu30fNmY+8O3l1S8aB8g3U55JHM+qaoVueClc8
-	BGbuZuuyxi0+XAqhzPx2iZzR6vMXMp/4JlttE0LG0xK4zW1fHuMJafuIPnI5N8ZWG4Y2bqOAdr6
-	PBhvuUw==
-X-Google-Smtp-Source: AGHT+IEOSRhUOkMxVT34ymUQgwCslbypVaUotjLJ3GfRwJWwd0EJHpVqBJVQyle3azFTQ1TTYRMmbQ==
-X-Received: by 2002:ac8:5813:0:b0:4a6:f5a8:3832 with SMTP id d75a77b69052e-4a73c617171mr254000481cf.42.1750271166573;
-        Wed, 18 Jun 2025 11:26:06 -0700 (PDT)
-Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a52a1ddsm74868321cf.81.2025.06.18.11.26.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 11:26:05 -0700 (PDT)
-From: Vince Weaver <vincent.weaver@maine.edu>
-X-Google-Original-From: Vince Weaver <vince@maine.edu>
-Date: Wed, 18 Jun 2025 14:26:04 -0400 (EDT)
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
-    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
-    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-    Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
-In-Reply-To: <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
-Message-ID: <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
-References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
+        d=1e100.net; s=20230601; t=1750271256; x=1750876056;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/YBYuQYbzLC80oZvh7S2m5LwCzlb8lJZIkclLoGPtU8=;
+        b=b0uLymQ+UwAJsif3KFeJRyKVTYzyLshPq2xHAdVwJg8XgBYXlPcrzWzZ6V/r4zBoFV
+         zzdul23NyLBAd2MB4w50GqYDpSx3o+fBr3wsbw2EE3Bz2UI5PSXvVGXp7YdJlyhK05Cn
+         dHMqdPpGgsP8bYS/o4MEit1qsRbg1yf03pxd/ZJrB3k8mK7Sp3SPr66fKlTPWPvvE/62
+         dgX4g2oQNwqmweIGcP7unN/tnTcM8TNvFZWuv2hNZYjjLBisG92ROOnurzhDbDFkyvWP
+         KN9RE2kWY6N4kNICtVIG+w6+CXMWu6UmObFv3P+nArGcGdfKuADgv8v7p3e75r0286kZ
+         nCHA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgmnxuDFHN9JEfERn/+yKE1an9EZf7WlB6DKnqEjazcuo4UbDXy0Kz18XGBRayh4ABnduyfycJBUnU4k8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrCVfd9+nKNp+RLHFpksad0UCvMI++ueE99dm72/dA+rY8NAPV
+	5sC1OwU1zdOKYRPFagioXQ4Vk2raYWs9+h7u+D44H+CWqrjXt77bRyv6YOBNYnZHUaE=
+X-Gm-Gg: ASbGncvHWiutM4Ih0494WV78/s/PmDf8RoPuHRzGr1FiF5ZLrLbXnAaEhEuHRSL50GB
+	YP+mZ3k2mbWgIaJ8sumWNgyFeNt9XJoWjPct9OCUohPx4Tco178ZtX1zoECJAub+kTaGIxKSyz4
+	1KZi3emmpeV7GyBWHW5dD0A6MLRfo/sTnQRPn9RVNVVXV1QUZ8fdV4JeEZQ1oECkDm1i1eiq0xn
+	ZpJA5IvFW1kMxUEn5QbMh/wRwPA5aGc/r6pxdTi5x5kASelULUQAJAOyJ3ta4tbpCTibyl2ijl2
+	6ZLVVcTxv5T4OztspMCAzBuJzGyR5y0s0XK7jw5NS5TUdpKf1Qy2nm+1O311gJrGDLOlmEE94ym
+	DG9kqtn9eqV9ZwA7ZTOMDDSl1IeQzITmu5UNJBEU=
+X-Google-Smtp-Source: AGHT+IGfYT6pTX84G34dN1v1rA2QrNVoZ5Qci8skHuTcu6xXSLE5XMAg/YdsULkFqRm5674RrJMxag==
+X-Received: by 2002:a05:6808:13c7:b0:403:3fb7:3870 with SMTP id 5614622812f47-40a7c1cbe28mr10969858b6e.10.1750271256246;
+        Wed, 18 Jun 2025 11:27:36 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:9583:1e37:58ed:10ae? ([2600:8803:e7e4:1d00:9583:1e37:58ed:10ae])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a740c2748sm2437844b6e.18.2025.06.18.11.27.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 11:27:35 -0700 (PDT)
+Message-ID: <2588bb7f-2a3a-4001-ab1b-6d9bd57b545b@baylibre.com>
+Date: Wed, 18 Jun 2025 13:27:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/9] dt-bindings: spi: zynqmp-qspi: Add example dual
+ upper/lower bus
+To: Sean Anderson <sean.anderson@linux.dev>, Mark Brown <broonie@kernel.org>,
+ Michal Simek <michal.simek@amd.com>, linux-spi@vger.kernel.org
+Cc: Jinjie Ruan <ruanjinjie@huawei.com>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+ Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ devicetree@vger.kernel.org
+References: <20250616220054.3968946-1-sean.anderson@linux.dev>
+ <20250616220054.3968946-3-sean.anderson@linux.dev>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20250616220054.3968946-3-sean.anderson@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 18 Jun 2025, Liang, Kan wrote:
-
-> No, the error message doesn't say it. Just want to check if you have
-> extra information. Because the Topdown perf metrics is only supported on
-> p-core. I want to understand whether the code messes up with e-core.
-
-I can't easily tell from the fuzzer as it intentionally switches cores 
-often.  I guess I could patch the kernel to report CPU when the WRMSR 
-error triggers.
-
-> > I was running just before -rc1.  I've updated to current git but didn't 
-> > realize the throttle fix hadn't made it upstream yet so managed to lock up 
-> > the machine and not sure when I'll be able to get over to reboot it.
-> >
+On 6/16/25 5:00 PM, Sean Anderson wrote:
+> Add an example of the spi-buses property showcasing how to have devices
+> on both the upper and lower buses.
 > 
-> They are not in rc2 as well. I guess it should be included in rc3.
+> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+> ---
+> 
+> Changes in v2:
+> - New
+> 
+>  .../bindings/spi/spi-zynqmp-qspi.yaml         | 22 ++++++++++++++++++-
+>  1 file changed, 21 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+> index 02cf1314367b..c6a57fbb9dcf 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml
 
-OK I am running rc2 now (Well, whatever current git is) with the throttle 
-fix applied.  The throttle crash is something else, it crashes my test 
-machine so hard that even the power button doesn't work, I have to 
-physically unplug the machine to reboot it.
 
+In addition to changing the example, we could also extend the
+spi-buses property for this controller since we know this controller
+has 2 buses.
 
-> >> - Can this be easily reproduced?
-> > 
-> > probably.  It's another thing that's a pain to check because it's a 
-> > WARN_ONCE I think so I have to reboot in order to see.  Even if it's not 
-> > reproducible the fuzzer usually hits it within a few hours.
+  properties:
+    ...
 
-I am able to reproduce the error on -rc2 using a specific fuzzer random 
-seed.  I can possibly try to create a simpler test case but that would be 
-a bit of effort.
+    spi-buses:
+      description: 0 is the "lower" bus, 1 is the "upper" bus
+      maxItems: 2
+      items:
+        enum: [0, 1]
 
-Vince Weaver
-vincent.weaver@maine.edu
+Not sure what to do about the default though since as discussed elsewhere,
+this controller needs the default bus number to be the CS number for
+backwards compatibility rather than `default: [0]` as is specified in the
+previous patch.
+
+I suppose we could leave default out of the generic binding and leave it
+up to each individual controller to decide how to handle that.
+
+> @@ -69,7 +69,7 @@ examples:
+>        #address-cells = <2>;
+>        #size-cells = <2>;
+>  
+> -      qspi: spi@ff0f0000 {
+> +      qspi: spi-controller@ff0f0000 {
+
+It seems more common to have spi@ rather than spi-controller@.
+Is there a push to change this in general?
+
+>          compatible = "xlnx,zynqmp-qspi-1.0";
+>          clocks = <&zynqmp_clk 53>, <&zynqmp_clk 82>;
+>          clock-names = "ref_clk", "pclk";
