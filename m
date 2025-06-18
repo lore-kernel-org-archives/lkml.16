@@ -1,74 +1,74 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5092165E9
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:42:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E1F2E9EC2
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750254176; cv=none; b=HU6mq5IplYLOjGimQIEgtHn6jbMaIBgsN1n8fs2Bd87q71yDWY0CVoiGc5xFLGOzAWL1p4LUWYq32o7j1wZBPjkePBsFjQ+ANETb2J2+fTVMjZlG2oIG8/lyx0z4TkrV+6rw8DWo1fnwQXySmrZ5bAFustmPXMRyz1404Q+SxKc=
+	t=1750254198; cv=none; b=Or8ElUN6KKaTji22yFxIwq4gqlUQTn87eKfpvMUgk63YOU4IdO9h59IGVVs02Ah+E6ri9Ri57aJhP/KqefAQ+TrAt+61qkwXAmTbnCdBZ8eQWEXeJJGwfc9OrqB1idmHvsDSMjElyA3X787F2D4BKw9GXmSlDYQ7oPsmlC9MFUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750254176; c=relaxed/simple;
-	bh=tz0a9+M5C7nElDvvHd2ysFpCEWklRNzZpChi88lTTGs=;
+	s=arc-20240116; t=1750254198; c=relaxed/simple;
+	bh=lHq8LwJCpZsYnYoF7lpMvKsBXva+7QpieDXG+mexd9k=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aJh0JkqnV1JR+YKLaBFuqjpM5gHk1PkVb0GTvNI8A5yAD+jBjMJVj90gKsH3JhzjHVhiki2oHiCXNebsGfaUymSz+nj/QiwucoEkW7d3gTlsg7/IW9Jo6UNlaazNNOWs9scbUgD2+EZ6tRzljgzPMqPBpir4bfno+vNr+39X7F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Mw3JERWu; arc=none smtp.client-ip=209.85.214.172
+	 To:Cc:Content-Type; b=UKiWYOogE+0s5irDKiAkmLAu88/iHHS/mwp1rXg59LfBAykYOA3RzRxJRJXKY1eGXDrvbSWV1BFqR1y17pcDaxcJQB1dSZR/+6qMMcsKEKg9ntMwWdjt4sK+tP5aoWNkiUoqnuaeg2kVsEf3qfsk4//saqE1sHMREvdkUlcyeeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xS6FK0x2; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Mw3JERWu"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234bfe37cccso89770985ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:42:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xS6FK0x2"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b51f5218so5305022e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254174; x=1750858974; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254194; x=1750858994; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tz0a9+M5C7nElDvvHd2ysFpCEWklRNzZpChi88lTTGs=;
-        b=Mw3JERWuIGJ5V5wrNWkTEkUYjZ2E9KOnEGxrQc3b84q0QNLUUrNZqdFwrGvSCuLQhA
-         z2JYfsOBqgnWAJq8ao7Dg9P5xH4zcJ8Ti7zIfd5muHFBp1f2sEJQrF71UcInDMTDbvrO
-         tBfNdHjHE9yXuA0s/ATWvoYrjnxYnEJJ2rI2kK54nBsXZhsRjQMBL+44Bad+aO5aOp/1
-         HwZyj3cOJYoMVIWwzBZdXds0wknG/WJ5PYCpdITBgTCtrSK2HGBB5fhUtj+SaxvLUTpB
-         Tuuhzpv0UDnJ9YGbPJBpSROKm01hcmkMCZN1zAClHmIgtAFzeiWMohR4bfrTGFOeAR0A
-         pXww==
+        bh=9XesD6Pa6NIjfeeecwOLBDGIW61X59xU1PHMFDOzpvY=;
+        b=xS6FK0x2ckjJRDCOfYEqAjbObtuf7BegqO73WTslIpKQ4g2eYqv8ZhDYliLd466ZSc
+         o39UBW+sczuzV42sNtiXn7balALacAz9Lc5Eu2hSo7zDC90FVasK6S5Emck63GNORAai
+         UBbAOV4jt+ZzGCgtYBRgEGrQNDgYkl97ipxpK9vss5Ky0IqWkt2IZ4wSqNpAkP3aXoD/
+         /APpDjU43hxKKFb2Z7HTJDX13f3lqxOCUvQSmoZAFDWzMArLBxDAKbDR01tLJEgJmck0
+         XLDZ+u5UtcsdQtVKXSwMbHjPr+Z3DCG4GJmobsJYd4TgEZSEKGsR+8FRpACsTIusO3c4
+         cw6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750254174; x=1750858974;
+        d=1e100.net; s=20230601; t=1750254194; x=1750858994;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tz0a9+M5C7nElDvvHd2ysFpCEWklRNzZpChi88lTTGs=;
-        b=AB7BdTkXYAs33t5BIVRcFPSaeRecvLDjpivlekUCwI1b6OkpB5g1d1e61w77pTrK8V
-         o4Zrgt1RXmWC2HiKkD84V+YVH8Q+gcTVfasnOeiou6ki4wVh5XyyROyGbKa5+qnlKtcV
-         lgGJox31VUSLaGantPl/6dkZohaTpp3n0zCmFS/2/WiGP3ksSb2nnFZ8piyGqX3Mml2+
-         8RUg0ckc4Aq1G3jE1ioPifXGiQ4shHF6S7Kojc7qF0nOyaqAiVfoqVC/NZvH9qtlrFU9
-         Wh0/8wKrC0nUFm6JTPnBK2h2Cw+OkKxyBEBSRWFnC3j6Vjhd5oBUbNTVKD/JtSAwriE4
-         Ps0g==
-X-Forwarded-Encrypted: i=1; AJvYcCWjvX+ELm5Yrql6mAHwhRVR2yNfdRyzcefLhqDRdeBMUMLe9huycOIh4NWd2hkmcRL9imJxdP2YUTAfCxk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzVnGs9hl3J6pnvmCHxG3nSAUKxq51RyScHPZ2zroWhUEjVyk9
-	nDK0rhUuoJH6iaguJpUHHYIJdZwrB2pbsns7qSQj3LRi8zF9qKNDde4ShEditLLf6NiS4psVCEM
-	eBatrJ5fikOd2CIJtY+5GJnNdb0xMTJz8yCd/oWrEKg==
-X-Gm-Gg: ASbGncvi7J9OSuS09IZYGLkZ9YLvkRQon7MEp7uNQQv+ILMBFvrkSjpegIkK1CrJgO4
-	uUkkXQRdn5bsBZctbAVceqkIbQzDLsdK+rDbFT1MMeH9rMdKiR/+r+uPC4tjH8dg+z46E+32O8c
-	dfU3T9j0Xjtxu/MgFBZLGfawGi3IxgSaIQmKYNwDqU+gB/ePZWKYtX3Up67WzEJymFGUP7eQeIr
-	g==
-X-Google-Smtp-Source: AGHT+IElrVhMfyL96c9QVT6DbL+Lc21boXjlquqgqsoD4fhNOqUmdIoDw1JXTFKsvyhQJ4W4uPfVUPd6XCcj78sx+6c=
-X-Received: by 2002:a17:903:46c8:b0:234:c22:c612 with SMTP id
- d9443c01a7336-2366b17b6d8mr272722965ad.43.1750254174423; Wed, 18 Jun 2025
- 06:42:54 -0700 (PDT)
+        bh=9XesD6Pa6NIjfeeecwOLBDGIW61X59xU1PHMFDOzpvY=;
+        b=qt26G/bM5MLkwF6Y7DN8H2qdfjoNEj8DmfNOqf20esDhN5j/XMYhC8gL/wQGCuWJOp
+         Siyeu8I9w56YAsC8FW1xHxOXryE/MiIO1Fc7QGGGRS9lsq5bEyDHt6qTwK8esLf0P6Pg
+         GoWBSj19KjCVsahpdV21l6yICEi4MfId12/i7+Mg5G4fjJ9kDXc9z8SoPx7IOdOmsR3V
+         bVPBdHxEWXb4WueRB4QD65XNf8+f2uvWFu5e2XdvYBH9o9XmcbRRI3Hx9UVqfyqgCjTe
+         89WX6RTobKqsrS5tpHtRFG0uJ7RAjyPIuopvQf6HKwagKdSZl9BP/WrpnxqUeA1MBaR6
+         MlEw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMV2zZURjV1ATrsIJKPg8LFoXlFcp0gAi2WKtYNYIcjwvJ/znTPXZTXmyYPppwUefYuuivOzOh5JBGiNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl5jl7GbExVZYuoAa8bQSsFBvUUZvyqbknKPJJ0yHgQfPalSiQ
+	n65ABRyZtUkYoIJo8f9PC1MxPvjmo+Ft1sTCyfTvy/Eqf6VIDakfr5vpQVlkJWaCgqAX9GhwP5F
+	EBPPfN3v03S4tGsS7JaLqk/BdPLDR3GDYF1VGS4ea4g==
+X-Gm-Gg: ASbGncuLoEHEIihk6guUSrulH1QmKeiRI5XxojpM+bR0PA7POy+yTTx123K1dcS3Clw
+	jeBJwC8OTV57S+0TtlkXzyvNEqP+wW36nDULjnMAfKL4g2t2gTjOG/QdTGJvjnW8S3UQuDRd4fh
+	oQ8KlwcEpBWgDR9jlQhFs7QbjyZDA/Hyd2LFDwudU2pUhF2g0Zh6QLDNRpMe354O/Gw/3B0IQ5C
+	Q==
+X-Google-Smtp-Source: AGHT+IEECYD65Et/LmSBnvEiKApYIkAD1brUDvo7BBfhvnXlFl9/WYj3FARtHuaHKB5NARXPoTCzd7KIs42A0Z1Qt14=
+X-Received: by 2002:a05:6512:2351:b0:553:24b7:2f61 with SMTP id
+ 2adb3069b0e04-553b6f5a056mr4801515e87.57.1750254193987; Wed, 18 Jun 2025
+ 06:43:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250618102230eucas1p2573610db9d4a9f3543d0048c30b2df9e@eucas1p2.samsung.com>
- <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-5-27ed33ea5c6f@samsung.com>
-In-Reply-To: <20250618-apr_14_for_sending-v5-5-27ed33ea5c6f@samsung.com>
+References: <CGME20250618102231eucas1p1ec99058179825cb1250a1f189313b3eb@eucas1p1.samsung.com>
+ <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-6-27ed33ea5c6f@samsung.com>
+In-Reply-To: <20250618-apr_14_for_sending-v5-6-27ed33ea5c6f@samsung.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 15:42:40 +0200
-X-Gm-Features: AX0GCFuzTphnup-dhM3gVd1jGswJjfqrqmNVH_fP0A_YpAvwshbZGGJ4zdPhw5k
-Message-ID: <CAMRc=MfKx+S-8yYpab1YO0XsGN6a9-ybJpyRoyN6wCrKcm=j2w@mail.gmail.com>
-Subject: Re: [PATCH v5 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
- GPU compatible
+Date: Wed, 18 Jun 2025 15:43:02 +0200
+X-Gm-Features: AX0GCFv-psDNb6_Ffk6XjHdwrMsid_b9idm2knOXcGXYQtnqAYke8L-CxfsFZ0k
+Message-ID: <CAMRc=MeiCT2f902h4viFbue1tejv7EGBvEjdQhOTuqDqEViwRg@mail.gmail.com>
+Subject: Re: [PATCH v5 6/8] riscv: dts: thead: th1520: Add GPU clkgen reset to
+ AON node
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -81,27 +81,57 @@ Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redh
 	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
 	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+	dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, Jun 18, 2025 at 12:22=E2=80=AFPM Michal Wilczynski
 <m.wilczynski@samsung.com> wrote:
 >
-> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
-> specific GPU compatible string.
+> Add the "gpu-clkgen" reset property to the AON device tree node. This
+> allows the AON power domain driver to detect the capability to power
+> sequence the GPU and spawn the necessary pwrseq-thead-gpu auxiliary
+> driver for managing the GPU's complex power sequence.
 >
-> The thead,th1520-gpu compatible, along with its full chain
-> img,img-bxm-4-64, and img,img-rogue, is added to the
-> list of recognized GPU types.
+> This commit also adds the prerequisite
+> dt-bindings/reset/thead,th1520-reset.h include to make the
+> TH1520_RESET_ID_GPU_CLKGEN available. This include was previously
+> dropped during a conflict resolution [1].
 >
-> The power-domains property requirement for img,img-bxm-4-64 is also
-> ensured by adding it to the relevant allOf condition.
+> Link: https://lore.kernel.org/all/aAvfn2mq0Ksi8DF2@x1/ [1]
 >
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
+>  arch/riscv/boot/dts/thead/th1520.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/=
+thead/th1520.dtsi
+> index 1db0054c4e093400e9dbebcee5fcfa5b5cae6e32..f3f5db0201ab8c0306d4d6307=
+2a1573431e51893 100644
+> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> @@ -7,6 +7,7 @@
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/clock/thead,th1520-clk-ap.h>
+>  #include <dt-bindings/power/thead,th1520-power.h>
+> +#include <dt-bindings/reset/thead,th1520-reset.h>
+>
+>  / {
+>         compatible =3D "thead,th1520";
+> @@ -234,6 +235,8 @@ aon: aon {
+>                 compatible =3D "thead,th1520-aon";
+>                 mboxes =3D <&mbox_910t 1>;
+>                 mbox-names =3D "aon";
+> +               resets =3D <&rst TH1520_RESET_ID_GPU_CLKGEN>;
+> +               reset-names =3D "gpu-clkgen";
+>                 #power-domain-cells =3D <1>;
+>         };
+>
+>
+> --
+> 2.34.1
+>
 
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
