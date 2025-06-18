@@ -1,87 +1,88 @@
-Received: from h5.fbrelay.privateemail.com (h5.fbrelay.privateemail.com [162.0.218.228])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689D1B66E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.0.218.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211361F4CAE;
+	Wed, 18 Jun 2025 19:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750274487; cv=none; b=StxRnd4Jhs0RH8uO/8AJVxEl2UXN/F/vBdzNG3bFiCLzFUw9yy6sHxlg0UoHxaY1S9m6uAQPAcOU+lM9gdKCev82yii7+Wh7jsskTHOGvdxFnTMYCADTf1UMnkbRYc9d5hhEO/f7NomfCSIpJLNp+k2oNVOJJMAtofwJF6b/Ezs=
+	t=1750274655; cv=none; b=B3oeph3Iryc/sco2aEmW7yBy9K8TyWKbj4pyQs8tOHwubq7ZC1D8vHtdKU+UnmAbxJGAmZUveqSQWObZVcKTEN7CPI+wkeQt8LHJjNlvNgy2oIf6sNMlAWZWujNS8Q3VieZtxAvnI9dBqrc/8Uyknz8j2ozHNGvesJNTDdVE0Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750274487; c=relaxed/simple;
-	bh=DFlzBN6Hy8IQDtq7SwHhf/gSQS1u/Xwyz0tmdH1t/AQ=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=ZSWZ9LPLu8lCNEoIhAHPKFLx2zp10TdUXqIjz4b4Hts6MQVo5txhcSXD7Cz5V/hv/DGb3jOfSTz9XV+y0kUTr+FJzyW5o2DIqr6AX64yzzcGU5k0x2GaJ+WX3I5gqo6nZMtZhOzeNesk0qNVTPlwZhd1tB907MQO5Tl3usftuqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net; spf=pass smtp.mailfrom=mebeim.net; dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b=U9Rz56z+; arc=none smtp.client-ip=162.0.218.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mebeim.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mebeim.net
+	s=arc-20240116; t=1750274655; c=relaxed/simple;
+	bh=0B1AqIh7XaT96Qz7mgiF/9cixkNlDiA1iViFQK2gYs4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=aRaOWVuKrB/70EuAwPAqabGSJIriWMJm5pVM/1AXxpBONprGMej8gIiCiBn8iunHFYUotFkEmDtTNIOgWOt5o5DBxwnKH3B0VT6mkf03ia8uIe7xkaDN8n0N72R8qsTdDC78iRtAV+WsC8JNiDOd1FlfvUF/CgSHNldGt4lTL3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnkT9RJz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mebeim.net header.i=@mebeim.net header.b="U9Rz56z+"
-Received: from MTA-15-3.privateemail.com (MTA-15.privateemail.com [198.54.118.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by h5.fbrelay.privateemail.com (Postfix) with ESMTPSA id 4bMtrd0mPYz2xl0
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:21:21 +0000 (UTC)
-Received: from mta-15.privateemail.com (localhost [127.0.0.1])
-	by mta-15.privateemail.com (Postfix) with ESMTP id 4bMtrT0hBWz3hhS5;
-	Wed, 18 Jun 2025 15:21:13 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mebeim.net; s=default;
-	t=1750274473; bh=DFlzBN6Hy8IQDtq7SwHhf/gSQS1u/Xwyz0tmdH1t/AQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=U9Rz56z+mvIXFc9m6cWqQNfz2KB5w0ZAjMkMU87FtA0g+O/z0pWEai24T3AhaAOiL
-	 6Oew8A27ZD4cssGJanOZwgbb6u1/eSI6g9qhP0yTAnKhIe31QkV/7fHgfV+blhCOtw
-	 pfaORQrOgeJhzqNZqskbbFJDpzGsequBPUAVhy1XRkEA3jIB+5NzOo0VFyqTAgdEf+
-	 Sh+2Uy24TohQc1PVH9Zdf0DqSzNuw/18AsAJFpCxQ9wR2U7hrGZWrwXNF9EqeWHSmv
-	 hiANQH7G59eupvqb6elzbYzDVuzhA6nBvutxNv9V49QqP7kH5+7fFrPanHKxtmYaX9
-	 q/+Lm4zeVnoAg==
-Received: from APP-14 (unknown [10.50.14.214])
-	by mta-15.privateemail.com (Postfix) with ESMTPA;
-	Wed, 18 Jun 2025 15:21:12 -0400 (EDT)
-Date: Wed, 18 Jun 2025 21:21:11 +0200 (CEST)
-From: Marco Bonelli <marco@mebeim.net>
-To: Abhigyan ghosh <zscript.team.zs@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Message-ID: <619015812.381816.1750274471992@privateemail.com>
-In-Reply-To: <5BB59D35-BFA0-43AC-939E-213925DD4869@gmail.com>
-References: <1714337938.319508.1750244108368@privateemail.com>
- <5BB59D35-BFA0-43AC-939E-213925DD4869@gmail.com>
-Subject: Re: RISC-V 32-bit debug builds reaching breaking point: too many
- symbols
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnkT9RJz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE6CC4CEEF;
+	Wed, 18 Jun 2025 19:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750274654;
+	bh=0B1AqIh7XaT96Qz7mgiF/9cixkNlDiA1iViFQK2gYs4=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=nnkT9RJza11P1108ZFZQQbR60kDdssVI6SRGhuBkp1onGLyJ+27ShAiQPWjyM5aHN
+	 BSIlZVu+gs57RAtjxyWwmB/velvo4q0R6H2FD8eaXQOUIRxEH15bNc0XBi26Dy80P5
+	 4vhf5pOHx82Fz37X0MboY5pV68Y/YI3EHj/GBtRujwU/wJ0LEsMEnCmSkzR3RwhoXj
+	 Ppa1DhWdv7ro07e5u8zdRyVeFmke3NumBy8EfdRlWnn4wrKXUlNdSNblMStJtEcGwv
+	 up3wnPlQp1GqCUy22Pco8yokKs7ThNq4ULn/0ZjWRhOHORk1ZXEPM3rGPMScr0NkRQ
+	 8NyIWaYc1K0mw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Priority: 3
-Importance: Normal
-X-Mailer: Open-Xchange Mailer v7.10.6-Rev78
-X-Originating-Client: open-xchange-appsuite
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 21:24:08 +0200
+Message-Id: <DAPWKX9V8T26.315LG5OZLLL2M@kernel.org>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH v5 05/23] rust: num: add the `fls` operation
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>
+X-Mailer: aerc 0.20.1
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
+ <DAMHWN6ML8A1.2AUE4UWR58KR2@kernel.org>
+ <DANR43CR8X87.1YWHJK7P75TPQ@nvidia.com>
+In-Reply-To: <DANR43CR8X87.1YWHJK7P75TPQ@nvidia.com>
 
-(sorry for the dupe mail, forgot to hit "reply all")
+On Mon Jun 16, 2025 at 8:41 AM CEST, Alexandre Courbot wrote:
+> On Sun Jun 15, 2025 at 4:16 AM JST, Benno Lossin wrote:
+>> On Thu Jun 12, 2025 at 4:01 PM CEST, Alexandre Courbot wrote:
+>>> +            #[inline(always)]
+>>> +            pub const fn [<fls_ $t>](v: $t) -> u32 {
+>>
+>> Can we name this `find_last_set_bit_ $t`? When the upstream function
+>> lands, we should also rename this one.
+>
+> We can - but as for `align_up`/`next_multiple_of`, I am not sure which
+> naming scheme (kernel-like or closer to Rust conventions) is favored in
+> such cases, and so far it seems to come down to personal preference. I
+> tend to think that staying close to kernel conventions make it easier to
+> understand when a function is the equivalent of a C one, but whichever
+> policy we adopt it would be nice to codify it somewhere (apologies if it
+> is already and I missed it).
 
-> Would using split debug info earlier in the build (e.g. extracting `.debu=
-g_*` before `vmlinux.o` grows too large) help mitigate the symbol table ove=
-rflow =E2=80=94 or is the linker still forced to carry them through regardl=
-ess due to reloc dependencies?
+I don't think we have it written down anywhere. I don't think that we
+should have a global rule for this. Certain things are more in the
+purview of the kernel and others are more on the Rust side.
 
-Wish I knew honestly, not sure. That is essentially what I was asking in my=
- mail.
-If I had to take a guess, I think it wouldn't matter and just move the prob=
-lem
-because you would still have a huge split .dwo file, but I am not 100% sure=
-. More
-smaller files could be generated (e.g. one per compilation unit) but those =
-would
-be painful to carry around.
+My opinion is that this, since it will hopefully be in `core` at some
+point, should go with the Rust naming.
 
-> Also, does this behavior differ between GNU ld and LLD in your tests?
-
-I have tested a LLVM build and while it does produce less of those annoying
-symbols, the same problem persists.
-
---
-Marco Bonelli
+---
+Cheers,
+Benno
