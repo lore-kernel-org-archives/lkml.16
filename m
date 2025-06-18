@@ -1,154 +1,127 @@
-Received: from fhigh-a5-smtp.messagingengine.com (fhigh-a5-smtp.messagingengine.com [103.168.172.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77E72FEE1F;
-	Wed, 18 Jun 2025 17:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A23B285CAC;
+	Wed, 18 Jun 2025 17:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750266244; cv=none; b=kSYax4I3AECbL51WdwSrfyUOKTUYnCuok0GIrG5xVWE/LqrTolgWFk49SQd2Rpzbwg0AnW1RsLvhz8vI72Pg1HnxwoiKr43lfEW0sINbV3roUxD/B+0qM4OjbCbbM7rBlkRdAaCs5dUmoSH6KY8wDWqhuxZJ+peWnrU3fc/b2Bo=
+	t=1750266263; cv=none; b=RQDuzTW8X7D0eWRzMJyqqb2oUOAp+y+Ur9mrPCoiHbSja2NG/UaINMTllXUMM02fK5qmoUAxqiWodU3Pociu2zb6PCHgJxg7YTPfKj6WK7QFUjyvyHMKA7CTd4Il5yNHXXihs2gWwiTlbDCeV09jkau3xM3NCNSseYSx8/Saudk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750266244; c=relaxed/simple;
-	bh=69QQN32zF37TgZP6aMrcACJGz2RahWkvz+IbbNqkeAo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=Fy+6Pb4R1khZV7cbq+ZgBWR+F3smkekscjx2+FwqFaU+v+FLlRNYzC26sgy1Qu3QAh8v1U8veIt7OPQcpzkKLBbwFVeS2e0CGw44KdfQ9vTg3fu4uWuJJQxOIH5rXi+HX+gqktIYNPMmgpQGYmPj449D0cD8UytCX2vgRffl/Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=A11OmPem; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UUZNCOrL; arc=none smtp.client-ip=103.168.172.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1750266263; c=relaxed/simple;
+	bh=Ypa9nVjCfR8sFxcmmQL7ktbIc+Kj3T4zssOI+MEeCKw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KFNQRVquyVwndz2b3jHJvlVkXPfcjPDPi3JQuFq7I5knfYgw9VxNabjOmOJf+p7X8fuUrLNmVroSeoiSySpk5EYhNvITaz89qNtl6peApsUHGst38jFkagNvniLL6DjAJy0X8S6TGIflHx7bCDNAzlWYN8Sha+tkX7t8yG4qDzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmPUEkiS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="A11OmPem";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UUZNCOrL"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id E252911401E4;
-	Wed, 18 Jun 2025 13:04:00 -0400 (EDT)
-Received: from phl-imap-02 ([10.202.2.81])
-  by phl-compute-01.internal (MEProxy); Wed, 18 Jun 2025 13:04:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750266240;
-	 x=1750352640; bh=uJboEt4dLgTrZ+sXs/YyjFsL4mKqHkn79Fj83ukQdZY=; b=
-	A11OmPemhdFP0tCj3UvMPAzrZRvxcxxbVynbNzjIt6whM2g4TJ6ICm5EiSZ22J7i
-	U2G+BVlaXJsCHG/V2nMIAHdMvln7lBPLPAYIx/vMRSwXv4IsnY5uKgFpUZ21f9+l
-	iQzmJw862f+JNxXbhCvxDyw/DOHomdBwZvTQov3pzNRlJkhHfuxvxFgUIE4H8wwg
-	pp80cpyG01ZcB8bL8THMNlRb+RRsqqNmsxFkFijTAzq8NZXJqyW90CsuCTMaOjxJ
-	X1m12pggkZFlQlR2kJIyi8jhyuKpFLIG+USRQNMWyBaTolimHBjpGHJ4vlhU88J6
-	r2USS/HoyIBxsw8p1pADnA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1750266240; x=
-	1750352640; bh=uJboEt4dLgTrZ+sXs/YyjFsL4mKqHkn79Fj83ukQdZY=; b=U
-	UZNCOrL5km/DXmf/IoZFtpac1kMa/KQ98mfMu5Er44xUk4c6yYUlPzMgwpbjtIMf
-	rmWLZrlgHZVRlN0koI9n5Fz2nmxTEyk5fpDEGU0iuXSK4SNccYMMuEL/PHS9fsml
-	FcAt0ckrZicjfaI5IkL6Tl58y4jRIeLQbqrkwVEeVHUsZVmnHlMRAmAWH6W+NrZK
-	hx+t1YTl9Bf0n3gUN6BBoUQkIUOYcLe2qWNUK16TUF43K5RqXD5c8BmK74Xyo/wn
-	yFsHXAVD1D8McW+gxrW2hxIae/J+jKy9rQyq2wOG0Z7M6PT3iiiMQV+9IhJaKJqd
-	2I2HcA+1No6P6N8gtn64w==
-X-ME-Sender: <xms:gPFSaCwfsSmVb5005cOv0tZ51LYKn4smcUIOaFVZkdGPgNtpKgR6oQ>
-    <xme:gPFSaOZOjdFfkUwsbz-8-9gyfprWK9Jtu6DpCy2T77NIuMjFohTXc2uujxxFUKW_d
-    2WJksA_o6cLW31aQnE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdefudekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertdertdej
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedvvdeg
-    jedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudef
-    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhgurhgvrghlmhgvihgusehigh
-    grlhhirgdrtghomhdprhgtphhtthhopehkvghrnhgvlhdquggvvhesihhgrghlihgrrdgt
-    ohhmpdhrtghpthhtohepughvhhgrrhhtsehinhhfrhgruggvrggurdhorhhgpdhrtghpth
-    htohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepshhhuhgr
-    hheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghighgvrghshieslhhinhhuthhroh
-    hnihigrdguvgdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgt
-    phhtthhopehlohhnghhmrghnsehrvgguhhgrthdrtghomhdprhgtphhtthhopehmihhngh
-    hosehrvgguhhgrthdrtghomh
-X-ME-Proxy: <xmx:gPFSaMRF6MukXibteMlIRSsnM5OaJD63pom5JghAjMttaqkH-_DLww>
-    <xmx:gPFSaAyNcix4ILbrR39-mwqB1FCitRP1Acj0li2772a7GlJ1s-59Rw>
-    <xmx:gPFSaO3jeLRsIFpQI4Y7-kq8hhkco6tK6hZVoy3jkRgvkxy1ILD1Jg>
-    <xmx:gPFSaO4H3PE6IFsNUl7x_2cB_e8JM0Qjar29yOziaBlbK_X0V37SKQ>
-    <xmx:gPFSaI38-TYXMMnPxg3ouRk-R2nPaSbUA0xVfRFjuP27K8UxwreF-StL>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 2DA5F700064; Wed, 18 Jun 2025 13:04:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmPUEkiS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3293FC4CEE7;
+	Wed, 18 Jun 2025 17:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750266263;
+	bh=Ypa9nVjCfR8sFxcmmQL7ktbIc+Kj3T4zssOI+MEeCKw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=pmPUEkiS0zzUQ4vB90YERSrSlA8aXa/7N9mvpbOrgmu8p3KxaWBKr0be4yh1RXqd/
+	 OPtmUb2bp/Rut9ZbE204gDZlBkwPYhdj1pq/12QR+9Pz430tPLu7tiG7XvIMVNptIH
+	 JB8j59E9BXFdnUAstjLDkXRM2wejwpwb9mnIHVyY7ueSt3A1XArY8Ht4+lSYM2r8md
+	 ZjK1fmL00NFGhBn+wm0+7XNewl13u+L1gan4Pw2bc9ui9c6stO/43r3z1DVYINVdbL
+	 XJwIhehGdPzvM01NigFzBNNtciidHJRkyz07yzBMovN52A7GR8HDNJxh6tlRChhPOT
+	 bMUTNeusgwwDg==
+Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-404a5f4cdedso1855586b6e.0;
+        Wed, 18 Jun 2025 10:04:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsliSpJZ52Z3iq6Lg7c7zbugfy0BR2RObQZKvPlGIM0M5K+VfBa0apsx1jR7p+yoKLwh1VXfeL79E=@vger.kernel.org, AJvYcCW8odEs4GpybgugjY6hIirFTLWbT2icW7ZcIZwjy/gnbTmsWzQ35fNkKWb6NDhn8lGtnuZ/VhpoXg3ogAk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZEF33ZpABOXkES4PQ4vTIBuRsu2a+NWP05Y+8ot4on/RSBGSN
+	wHGPBqg+uMihFUCU+YPLIHUl+eb+EqyOiH8UXNMJbDp1Nwvq51NlyUfqdER53HrveNZvCeh7wkx
+	XNjS/S4l9OCk0ZXVgPFCiv89R2DRCejI=
+X-Google-Smtp-Source: AGHT+IE12ZLGrHLWweS0eNyUCqVVO1yNtfh2NFQQPVPSHgxx4DFygcG82d5jk4gcHao0pqFoS6PwMuJfaiEHvzOgpV8=
+X-Received: by 2002:a05:6808:11c7:b0:40a:557e:cd8 with SMTP id
+ 5614622812f47-40a7c18bf8amr10317748b6e.33.1750266261646; Wed, 18 Jun 2025
+ 10:04:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T3c57378c8624ec39
-Date: Wed, 18 Jun 2025 19:03:39 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Sebastian Andrzej Siewior" <bigeasy@linutronix.de>,
- =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>,
- "Peter Zijlstra" <peterz@infradead.org>,
- "Darren Hart" <dvhart@infradead.org>, "Davidlohr Bueso" <dave@stgolabs.net>,
- shuah <shuah@kernel.org>, "Waiman Long" <longman@redhat.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-api@vger.kernel.org, kernel-dev@igalia.com
-Message-Id: <e79698f8-c428-44dc-afac-8d918968d11d@app.fastmail.com>
-In-Reply-To: <20250618165641.bKu1_p0P@linutronix.de>
-References: <20250617-tonyk-robust_futex-v4-0-6586f5fb9d33@igalia.com>
- <20250618070833._qeCcHLx@linutronix.de>
- <fd2b5bb2-590a-47ee-8e56-965a1d09b2fc@igalia.com>
- <20250618165641.bKu1_p0P@linutronix.de>
-Subject: Re: [PATCH RESEND v4 0/7] futex: Create set_robust_list2
-Content-Type: text/plain; charset=utf-8
+References: <20250618030330.279410-1-rui.zhang@intel.com>
+In-Reply-To: <20250618030330.279410-1-rui.zhang@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 18 Jun 2025 19:04:10 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gY7Rp8C8AFzgRzMs+Gq-1rcgKmrG4+nJWB=bGpcKkU2A@mail.gmail.com>
+X-Gm-Features: AX0GCFsH011RolEPzGDwyRcryBdBS2AIzPybZjn9NhYa19DB14Z0OmFDrscKWKM
+Message-ID: <CAJZ5v0gY7Rp8C8AFzgRzMs+Gq-1rcgKmrG4+nJWB=bGpcKkU2A@mail.gmail.com>
+Subject: Re: [PATCH] powercap: intel_rapl: Do not change CLAMPING bit if
+ ENABLE bit cannot be changed
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, srinivas.pandruvada@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025, at 18:56, Sebastian Andrzej Siewior wrote:
-> On 2025-06-18 13:39:46 [-0300], Andr=C3=A9 Almeida wrote:
->>=20
->> Ops, I forgot to address them. I will do it for v5.
->>=20
->> > - You say 64bit x86-64 does not have the problem due the compat sys=
-call.
->> >    Arm64 has this problem. New arm64 do not provide arm32 facility.=
- You
->> >    introduce the syscall here. Why not introduce the compat syscall
->> >    instead? I'm sorry if this has been answered somewhere below but=
- this
->> >    was one question I had while I initially skimmed over the patche=
-s.
->> >=20
->>=20
->> The main target for this new syscall is Arm64, that can't handle 32 p=
-ointers
->> in the current syscall, so this new interface allows the robust list
->> mechanism to know if it needs to do 64 or 32 bit pointer arithmetic
->> operations to walk in the list.
->>=20
->> Introducing a compat syscall won't fix this, giving that it only work=
-s in
->> x86-64. We need an entry point for Arm64 that can handle 32 bit point=
-ers.
+On Wed, Jun 18, 2025 at 5:03=E2=80=AFAM Zhang Rui <rui.zhang@intel.com> wro=
+te:
 >
-> I would need to dig into details to figure out why it won't work for
-> arm64 and works only for x86-64.=20
-> There is the set_robust_list syscall as compat which sets
-> ::compat_robust_list. And non-compat sets ::robust_list. The 32bit
-> application on 64bit kernel should set ::compat_robust_list which what
-> your syscall provides.
-> That is why I don't understand the need for it so far. Maybe I am
-> missing a detail.
-> We have other architectures with 64 bit kernel and a possible 32bit
-> userland such as mips, s390 or powerpc which would have the same issue
-> then. Or there is something special about arm64 in this case which mak=
-es
-> it unique.
+> PL1 cannot be disabled on some platforms. The ENABLE bit is still set
+> after software clears it. This behavior leads to a scenario where, upon
+> user request to disable the Power Limit through the powercap sysfs, the
+> ENABLE bit remains set while the CLAMPING bit is inadvertently cleared.
+>
+> According to the Intel Software Developer's Manual, the CLAMPING bit,
+> "When set, allows the processor to go below the OS requested P states in
+> order to maintain the power below specified Platform Power Limit value."
+>
+> Thus this means the system may operate at higher power levels than
+> intended on such platforms.
+>
+> Enhance the code to check ENABLE bit after writing to it, and stop
+> further processing if ENABLE bit cannot be changed.
+>
+> Reported-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-x86 is the special case here, since it allows applications to
-call both the 32-bit (compat) and 64-bit syscalls directly on
-a 64-bit kernel. I think MIPS may do that as well, but the other
-architectures only allow a process to call syscalls for its native
-ABI, so the only way to call a compat syscall is from a 32-bit
-task. On Arm and RISC-V it's also common to have CPUs that cannot
-run 32-bit tasks at all, so even running your x86-32 emulator as
-an arm32 or rv32 task won't work.
+If this is a fix, I would appreciate a Fixes: tag.
 
-      Arnd
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+>  drivers/powercap/intel_rapl_common.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
+l_rapl_common.c
+> index e3be40adc0d7..602f540cbe15 100644
+> --- a/drivers/powercap/intel_rapl_common.c
+> +++ b/drivers/powercap/intel_rapl_common.c
+> @@ -341,12 +341,27 @@ static int set_domain_enable(struct powercap_zone *=
+power_zone, bool mode)
+>  {
+>         struct rapl_domain *rd =3D power_zone_to_rapl_domain(power_zone);
+>         struct rapl_defaults *defaults =3D get_defaults(rd->rp);
+> +       u64 val;
+>         int ret;
+>
+>         cpus_read_lock();
+>         ret =3D rapl_write_pl_data(rd, POWER_LIMIT1, PL_ENABLE, mode);
+> -       if (!ret && defaults->set_floor_freq)
+> +       if (ret)
+> +               goto end;
+> +
+> +       ret =3D rapl_read_pl_data(rd, POWER_LIMIT1, PL_ENABLE, false, &va=
+l);
+> +       if (ret)
+> +               goto end;
+> +
+> +       if (mode !=3D val) {
+> +               pr_debug("%s cannot be %s\n", power_zone->name, mode ? "e=
+nabled" : "disabled");
+> +               goto end;
+> +       }
+> +
+> +       if (defaults->set_floor_freq)
+>                 defaults->set_floor_freq(rd, mode);
+> +
+> +end:
+>         cpus_read_unlock();
+>
+>         return ret;
+> --
+> 2.43.0
+>
+>
