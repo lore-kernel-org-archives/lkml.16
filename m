@@ -1,147 +1,237 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2075.outbound.protection.outlook.com [40.107.223.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605C135963;
-	Wed, 18 Jun 2025 08:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235127; cv=none; b=JFNvCPVRbwXogIfdPIisKmZphcc6T7AtvAlHLwxmY9wYUNsU99Rdxxe/teu+JBjA81FKKW+H4Ie2YkCDtE09d35Mrkh9uscqczDsiBfH/YGsdvqK0Rf34b1lFtmHq4FrSlpyA7Fni5aB8JNd7Mt8YDF/QrhcIFBnmcwKLErlH+E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235127; c=relaxed/simple;
-	bh=CfnRxmufD9BFa5b8W1bL5FF2qtdnavYecQUsRTtCjJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VOIgPPKVdNjQuEG6Ln1gOgScVX/5JmITod08eHlNRFQ0TNego9jo5kDZA7IjEx6cxQ42d9cVmLIw1fMnRpTXOGRDYKy7pHn6+nxm8uUmkEQ6lJ4sGJvqim4WdqQ0BULRsk6WKns8F18GmQs68aNo3rjJG9tidgArLjioIN+z+IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNrGdRwL; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97AB35963;
+	Wed, 18 Jun 2025 08:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750235142; cv=fail; b=bW7xh4SIeJMXwIo9gM5ha1jAETWGNexX3aOVWKYNtsZbdmQ0pWxepH/B9WwgQR6kIAI5UMJf5Chu84uSrp89NYd1WOkpJZw8BhpBOuRvU7CnkqSh/MFoGK6g+PdWhMoabtUDOWaSjJwulHTe17DFkR0Mhr1hk9GpeBOwA+d+Zo0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750235142; c=relaxed/simple;
+	bh=5/SK/zNQRY2jEum4isNBn6oRZf54DA9NMCE1acoVGtk=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=sBoVGtSH0oGV/jRji3qMaPUl5/qUdUBjEdsdFv8Cz9Dohiv2C0cQ5YJ77tGM7e0PWPYSYRJ5quQFuO8kwvrzARf1vBe5pFjYzpxy7QpQW4bbkrwK0h1tRopkmr4zB1il+6V3RcNQrPF3HBDtBs/SqICt8t+dpqK5abiDQe+8sFU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SWmhF//Y; arc=fail smtp.client-ip=40.107.223.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNrGdRwL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDF5EC4CEE7;
-	Wed, 18 Jun 2025 08:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750235126;
-	bh=CfnRxmufD9BFa5b8W1bL5FF2qtdnavYecQUsRTtCjJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nNrGdRwLhZ7NP0P6VyZegnph1FkmFymqeTegErJcd+OoajPMd/mZfGF07/mEir47S
-	 +M4+0S5SJAih9ojrKXszbdqmHYJvFveMJPfx9CcA0dYNJt9GrVl1fQnGhV8XS3w1D5
-	 DhXdcJI8NMWKG+cj/6ekw4l5Lwk5tSHaJ74EM3FbgMoL9qv5eab3ISECnU8JzEUS8P
-	 Y0NIQyLxOtJsC0GlZcXIcDrIFfGUPkvf8tUDHclnMOYb33O7avMkkCDZjnGghLpObV
-	 B6Z0fBjFuQRr8DHI/RdwKyRkmg4n3LhpRH+H47fkQTzKIblTgwFmvQ1VB9zpRT+dwo
-	 E/5hB09Ftoymw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRo6n-000000007yV-2JUI;
-	Wed, 18 Jun 2025 10:25:25 +0200
-Date: Wed, 18 Jun 2025 10:25:25 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Chris Lew <chris.lew@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Hemant Kumar <quic_hemantk@quicinc.com>,
-	Maxim Kochetkov <fido_max@inbox.ru>,
-	Loic Poulain <loic.poulain@oss.qualcomm.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: qrtr: mhi: synchronize qrtr and mhi preparation
-Message-ID: <aFJ39fpIkEpqtZiM@hovoldconsulting.com>
-References: <20250604-qrtr_mhi_auto-v2-1-a143433ddaad@oss.qualcomm.com>
- <aFJwfXsnxiCEWL1u@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SWmhF//Y"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=a4VEoObp4SAXJUr2ojFMEEH1jQeWzT9yx0DiuwhAWlGuDfpqA3SvHcx9odMYGa1gwx4W8dGuTq9Hjx9wTqb7CpdpWiMLC5k4k5uAhf2qUAEMdcl+5Nc3JbckucUS9m1u8DRQpyvJ0q2QTu37iPndgjzuhrUZpzIL8gwk4T6gedxyacSbhZkMfgqc8HfpjjnOtRIH3qBdEbsnQqPTNk4m/nqaWRNAHtClp49VWoh8nzvOGGap/zDS3g97vgD//ENBWnahV3e27Q6P+qBLaDR3T2HK6lTEKe7/qq7CdTtp2fVaUbGuzb2Hhp5p7jc1DgvlCrjwiO7VuXLrEUCawIzo9w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PoFX5UpFHdxMBMVswKL04cydLsueXynRyd8tZkPcNWQ=;
+ b=AVJOj8y/ANc5NJawlGPI5V+VVBwhyFwUvJxwDhN8U8eDOMLAli8S3T78JzSKH1uz94dbSwdAznWzPPr4tZK9vv6LIKnuBGjUMoS7lo61P4xV1AwmPxhndSR53VOo4z3FPhSA5Zidtx2efXFpM/9UY5UhgBVUiLpjJto8HGgCRRzdsDMB4b+/tqb7TtqmQyJfoxzICKeuVy0VSGhT406f8HsB75sjVXxbHymNEfF48Oi6iThWelBzja/7zeSGV8eMZJtQCsCn2NRaAqS7yFtKMMScfjIDvjQByMa6hW70msPTfIVZOGil0L8OPyImnioz0yCtsLgGvopHz7vG5ol8GA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PoFX5UpFHdxMBMVswKL04cydLsueXynRyd8tZkPcNWQ=;
+ b=SWmhF//YWf2/RL7HEo6mRPucvbZw50mqV6EEoIA7EjDDtJs+GuKp2+ZpwP8BAGkwspLMg0O6hT5uh3zVOQPUBGphm2jU7tCjbuDBil9YbnhTy3WSmV2sjSLH4d+WRbcBSaX3R9noNRpI2aTBPMN5a5rIxvAuI7LwgR6+Wreo5379znn8DYFg+Sjd7CeZ+H92w7EI56pQluNlsNN6/sV7OTkmMU5ZMQoAAlcwaiAOgbOiCl2h2f2gWuQj/QRT+L1thutdKNmwFAYQNpjP3hCjn8PFXNZ8adfG7dTvbJXzBJwQrbuDPUwdVHPrl9rq12x6d1FMcCoJ2YueuBg/1mJKkQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB3997.namprd12.prod.outlook.com (2603:10b6:208:161::11)
+ by SJ2PR12MB9088.namprd12.prod.outlook.com (2603:10b6:a03:565::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
+ 2025 08:25:37 +0000
+Received: from MN2PR12MB3997.namprd12.prod.outlook.com
+ ([fe80::d161:329:fdd3:e316]) by MN2PR12MB3997.namprd12.prod.outlook.com
+ ([fe80::d161:329:fdd3:e316%6]) with mapi id 15.20.8857.016; Wed, 18 Jun 2025
+ 08:25:36 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 17:25:25 +0900
+Message-Id: <DAPIKKLD8T6M.1I9DCC7WNFZDF@nvidia.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
+ "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "Benno
+ Lossin" <lossin@kernel.org>, "John Hubbard" <jhubbard@nvidia.com>, "Ben
+ Skeggs" <bskeggs@nvidia.com>, "Joel Fernandes" <joelagnelf@nvidia.com>,
+ "Timur Tabi" <ttabi@nvidia.com>, "Alistair Popple" <apopple@nvidia.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <nouveau@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>, "Lyude
+ Paul" <lyude@redhat.com>, "Shirish Baskaran" <sbaskaran@nvidia.com>
+Subject: Re: [PATCH v5 00/23] nova-core: run FWSEC-FRTS to perform first
+ stage of GSP initialization
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Danilo Krummrich" <dakr@kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
+ <aFHMjEt7KrjClom_@pollux>
+In-Reply-To: <aFHMjEt7KrjClom_@pollux>
+X-ClientProxiedBy: TYCP286CA0364.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:79::8) To BY5PR12MB3986.namprd12.prod.outlook.com
+ (2603:10b6:a03:195::27)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFJwfXsnxiCEWL1u@hovoldconsulting.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3997:EE_|SJ2PR12MB9088:EE_
+X-MS-Office365-Filtering-Correlation-Id: 324fe4d6-1294-4305-22c7-08ddae41b243
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?N0pEWmlkSUNETEJxSGNrUmU0UDMxNnUvYkFOcWU3RGgvZmZMV0hwZDFDaC9Q?=
+ =?utf-8?B?NnErWFVsZmRCZFVndVgxajF1UVZOcTlkaHEwY0lVOHFhQVdGakRvczl3QVVT?=
+ =?utf-8?B?SEw4NHUxN0hJU1RXblczYlhyaTJWdk4wM0dyU2VhZGtwdUVwQlJrUDF5dWN0?=
+ =?utf-8?B?NlFJdkljdmIwQThVWnBRSmRMMG13VzlnVU9HUERmelFsTEJLL1FvdkhlNEYy?=
+ =?utf-8?B?UWdMOFN2cUtYQVI2ODJiMXFhREJHSXFwZFBuMjhBN1Q3YkNoZUxnOHY0STQr?=
+ =?utf-8?B?OFhmdnJZckpGRjJJOVByKy9UOUl1NDFYWU5SdGdvZlVkSzJIMStmWGNoYnlw?=
+ =?utf-8?B?cDYxTk1zZjQ2WURkQUNMRzZlK3pXc2pPNkVIUnJ0V2tTc0oyRTVaVy92VTlv?=
+ =?utf-8?B?ZzV3VFp2WU14STQ3NFl0OFYxZ09RQ092MURORHlpTXZVM0JHaENYZmxLRmtq?=
+ =?utf-8?B?bDQ5ZkhJY2F6WjBvNTN1STI0OGhQajVYUW9jaVNlREZnMGpkbVVLMUtydkhV?=
+ =?utf-8?B?ZU1hR0cvZ2dvUmtVZjFTN2Z2MTFXVHhURkFZL2FKMUUzRGJSMk9Ud05iVnht?=
+ =?utf-8?B?NnBWZ2NvekRlWUp2MmNWeGk0N2FNaUY0cGUwUFRwNGFGSS9qTXNxRFJKd005?=
+ =?utf-8?B?VGo5NDYwdGVDOFdKRG1CRGtPbk1ZcG9yMlBMbWl2Zk5MbUM1b0RYUldnWFg0?=
+ =?utf-8?B?b3EwS1FvY1RSZWM5TEhOMjlzZHo1c2piSmdkelRnN0srMGhmU0tQNzY0a0V6?=
+ =?utf-8?B?YWsyZ3pJWllHN0JWcWNEZjF6d3l3emYvZ2FoNGY2U1V3UHc3V2lMajZ0UHR4?=
+ =?utf-8?B?SGpRb29zQmwrM09lUng3SWtHd0pORXllUUQ2WmV4NFdEL0QzS00zU3NuK1gw?=
+ =?utf-8?B?T0dsaHNKNUJOdTlIUzd6QUdQL2YvZlBwblF2eTZRM2tOaDdJQ3Z3SE1oR3l1?=
+ =?utf-8?B?Y3NDdTB5TWY4aUZrQi9FdVRmNzZNNUlXaEVUUFAvd3lUMGM3UFljVm56VklF?=
+ =?utf-8?B?S1g1UWNBWUJwZ29aQ3FNVmtHVlJQWXEzMFBSNFhFcmVOdDVoYnJkQVc4SGdY?=
+ =?utf-8?B?S0JtR3d1WnJMV0VROFJmdlFROHYyNnNBeHFXOGM2V0hQOFFyZW51MTJPajJ0?=
+ =?utf-8?B?cXJpVTF0UXBCQ0tHVEhCQVIrdEk4d2VtTmw3NzYrOFhIL25QRFl6VmxyU29w?=
+ =?utf-8?B?SWhtVnM4ZWxvY1BJVjZ5YkdrenhEYktyYnQvaHFUNDUwRzBPWmhCdHgwZEhO?=
+ =?utf-8?B?ZlV2eUgrc3dvelZZSElZY3Z5ZDFub3oweUlOVnFEbzUxc1dIL2djY01FR0dp?=
+ =?utf-8?B?aEZrS2pPS1NjOE1YWmlNT3RWelkwTTNIQW1WU2tHdEVMRHV4SUllbndqSGhs?=
+ =?utf-8?B?R0tIT1BFdkh3QVBuQmFPVUlISGw4ZWh5V3lrMXEzeDhJTDk1QmliQ1RmWlJo?=
+ =?utf-8?B?RE5rM09oa3BvSmdIdjE5YWR3TjhCSU5ETXVLU0xjN083Vlhtc3YwUU94b3B1?=
+ =?utf-8?B?QUd5bWRXb3htNlB1VU92R2ZZRU5JaEdva3A0L2IwK0k0U0x0UFM2YWpLT2pz?=
+ =?utf-8?B?VFMzejg3TVNwME5neGtLenNJMTJHQWV6RmdxZmI1VEk1YkdPUmdHdmpjb2xl?=
+ =?utf-8?B?b1BCRUVLVFU3SG13bTIvdUJWQ2drTkYwcWVNMTI4M0dqc0JUWDRJRjNFdDVy?=
+ =?utf-8?B?RnJvbko3K3RBNjVwcW5yWkI3VnB2WDI4MVRkLzlLTzRZTVZERGducHI1WnIy?=
+ =?utf-8?B?RE10WXk0TXJ3OVZTZmhpeUd4b0E5RU1GeGtZR3U2M3k4MWpQT3ljcXM0UTdH?=
+ =?utf-8?B?OTNRN0thWmVzTGt6TUt3RUVxcS9DSjFtRlFvNmoyb1oxR1Jxc3VDQy9xa3da?=
+ =?utf-8?B?b2RPNm5NU2NmaWhCWGZlSVVmZmVUUitnUU03dENncnpsTDVrendzYkt5dTE5?=
+ =?utf-8?Q?S14pCCKFXOM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3997.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UW0zUlhUYUxZNEdDQTZjTHlCdEtyMVpUbW11MzlQejk3b05hSlZTZklrWFdh?=
+ =?utf-8?B?SlBRRExNMVo2TWNWMzVncE1ldlNhVXpRWXI4bnMzMDAwWlN3QzVlcUVueEtn?=
+ =?utf-8?B?SEdsZjhtdXhEak1NdTFqQm1IWEp4ZW5zdVVjWmpOeEVxY0ZRZi9qWDM2SDc1?=
+ =?utf-8?B?RTRUbWN0UEw4UkJRMzZGeW9TNWZLcmc3S3h0Z0FxNVVZY2ZPTEk3TDZ0Y1VI?=
+ =?utf-8?B?ZVVrbDFWNXVyUzFyWnVpWnZQQlE1ZlhFY0VvK1l1WmNBZlRPQW44TmxkSFZz?=
+ =?utf-8?B?YWhrYzZ4OHFINUV4ZDY2N2VBdjBKWWZEbm50THlzSHk0TGVSNHF1dklJQlJE?=
+ =?utf-8?B?OG92eFdRQnBHWmZ5aUl3MDVmbmxhUXRuaEVGbUNUSk1lc0JQUDcrNms5Z0VL?=
+ =?utf-8?B?Tm90V2hEZDNhbkxOVnd1QS9BMXQ0WTBUOGZvT1E2ci9mTDM5TjVyUndxYkR4?=
+ =?utf-8?B?ZHJJWWtPTUpSOVplYm9abmRpMnN4NzJ3Tis1Q3g3dHNsaTZwUVkyMG1Md2ZO?=
+ =?utf-8?B?SXVVRTFLV1FGZjhwWElSRjJtRHcxc3JHSzdpZTJIMWdFZXRJTy9DbFBqUmQw?=
+ =?utf-8?B?YmhqUVNuTW1wb0d1aDhha0NzNFJqSjFLRVBYUmI5VFlmbXNQMmp6SSszNTNu?=
+ =?utf-8?B?N0JIUExveFNDamNGa1FrYmk1N0dzQnZzVTJLQ2FlK1I0a2tvYjZXNEZCcVZj?=
+ =?utf-8?B?ODQ1VHM1cVVuRURtbldGUkJhUytpQVk1dlQzT214SWljMVhjRk9DeG1CWXJW?=
+ =?utf-8?B?eGN5MzI4MVdUamxFalFQa0hGcjJYZVVMVU4yN1JtUVVWWUFtNnBSajRFOXlM?=
+ =?utf-8?B?c3JCTWZJamk2SWk4R2RSSVc0RHFCN2FLTEh5ci9uZ0pER2tMSGxZUmZPU0wy?=
+ =?utf-8?B?ZjBSZ1RRcXBHZ2E1ODRWUzF3d1F0eHZsK25PZlR5NExsL3ZYdjVNa1A5dHl5?=
+ =?utf-8?B?Y1hFbGgwYXpHc2lJQVgxY0pEUkc3YzZXS21RK0pMUC90emdzUWtNU0RhTXR1?=
+ =?utf-8?B?OEdjWTNId0NyVGlNRmRjREZyMGxzTnlpcjFNSU80Uko5Ym5NQW54ZlA4eE1J?=
+ =?utf-8?B?ZFkvbXdiWVpLMXNHeFZiUkh3dzdxblh0cnBsTEpaNnBuNmZuamxLWW84dUl2?=
+ =?utf-8?B?ZWNXVWNmUkhOQTR5c2xsRFA3NlFNM1NEdHNyYzY5T2hxOUhxelIxd29iRm1p?=
+ =?utf-8?B?V1FtZ2J3ZzRuZUNtWkFTbkt0RUpDc0tSaFY4Sy9jSHY2dXBqZnBBbmxjakFS?=
+ =?utf-8?B?YjdqSmdpTDVhbExTVEJZakMwSUN5QmE3RVYwT2M4MjRBUGZrcHFRMlhycEYv?=
+ =?utf-8?B?SFZ0ZjVSTUFrTTBTOTNWYnl4ajBRVmErdlljWXRXL0dac0NJT21CbnQ1Q1d3?=
+ =?utf-8?B?Vi93dXo4Q3AyYmZISmx0aG9GbXl3TW9yYWoxSWVYQVhoUE9HbFFWUk5uVHdl?=
+ =?utf-8?B?UkJldnIrZm1hRVUxWjZCcE9TVnViVHQ2VU41NXJlVVZmRjNGeUZkb3UwRlFC?=
+ =?utf-8?B?dmZqVUI0dy90UGVNeklhS0h6WVd3QnBPaTQ1bXluZTY4REZZZ29qTDNkS1Zv?=
+ =?utf-8?B?cVB1b2srMThSSGZwa050c1RPS1c5YzFJSWhOcldiWEVxWU90RzdkYWdZVmZp?=
+ =?utf-8?B?Z0tVWHFCUFRwSDBvMmdLUGk5TXB1VWY2aXlkeXV0bVFBaGgzcmI4ZnI3UUNQ?=
+ =?utf-8?B?TjhhNlI4VjZiT25PckJUSnZaRjI1R3A4WnlqMHJrOWpTaFlxNDhJTlE0U0xE?=
+ =?utf-8?B?aXdwNGkrOVJPUlBUV2pOcCt2SlZoRFlVM1IrVUVFc2Mzck9RUlloTkdpS1N4?=
+ =?utf-8?B?ZUMxMEdDbFNIMk9RUUZsekdNdE95K1U4UU54Ymc5TldLYlFoWUdWakZvUDBx?=
+ =?utf-8?B?SVdnbDFBb1lYajZJUmVlT3MvOHdWOFh4aDdWZVhvNFJJMm9ITmtIaEczbEEr?=
+ =?utf-8?B?RUxJSmdGQ0wva1M1Q0hGbDJDVEVFSjVjeVFNKzVNRjNaYm5BUmZCaExoWS9H?=
+ =?utf-8?B?NzJwM0lBOHc3V2Z0VGtkbHhHazlhM2hZOXVoY2QxQjhYYk4vY3ByanN3NWxp?=
+ =?utf-8?B?Nll3N0pKRjd0eWNSVTdPbGE5UVl4bEwreDcwOE0yY3hzQXNWTnhHTVJnc0Qz?=
+ =?utf-8?B?MHZ3Rms4M3pKd1FvdkZSNG8xcG1jNmd3RG0wZ1dmdGFSVXF4ODBuaWpWR3BQ?=
+ =?utf-8?Q?GOoGxjMJGNxYFKtHfLKnxC/KvVovtAe27XGX9pikVA9B?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 324fe4d6-1294-4305-22c7-08ddae41b243
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB3986.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 08:25:36.7363
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2vd/9LcuZKDWxvme3VfBh6+UpKzDDsDvkt0nTN/iYN3vQER7aXl21nrbNlNamPxA7vgn3mrM6BGNZ7FyUlrB+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9088
 
-On Wed, Jun 18, 2025 at 09:53:34AM +0200, Johan Hovold wrote:
-> On Wed, Jun 04, 2025 at 02:05:42PM -0700, Chris Lew wrote:
-> > The call to qrtr_endpoint_register() was moved before
-> > mhi_prepare_for_transfer_autoqueue() to prevent a case where a dl
-> > callback can occur before the qrtr endpoint is registered.
-> > 
-> > Now the reverse can happen where qrtr will try to send a packet
-> > before the channels are prepared. The correct sequence needs to be
-> > prepare the mhi channel, register the qrtr endpoint, queue buffers for
-> > receiving dl transfers.
-> > 
-> > Since qrtr will not use mhi_prepare_for_transfer_autoqueue(), qrtr must
-> > do the buffer management and requeue the buffers in the dl_callback.
-> > Sizing of the buffers will be inherited from the mhi controller
-> > settings.
-> > 
-> > Fixes: 68a838b84eff ("net: qrtr: start MHI channel after endpoit creation")
-> > Reported-by: Johan Hovold <johan@kernel.org>
-> > Closes: https://lore.kernel.org/linux-arm-msm/ZyTtVdkCCES0lkl4@hovoldconsulting.com/
-> > Signed-off-by: Chris Lew <chris.lew@oss.qualcomm.com>
-> 
-> Thanks for the update. I believe this one should have a stable tag as
-> well as it fixes a critical boot failure on Qualcomm platforms that we
-> hit frequently with the in-kernel pd-mapper.
-> 
-> And it indeed fixes the crash:
-> 
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+On Wed Jun 18, 2025 at 5:14 AM JST, Danilo Krummrich wrote:
+> On Thu, Jun 12, 2025 at 11:01:28PM +0900, Alexandre Courbot wrote:
+>> Hi everyone,
+>>=20
+>> The feedback on v4 has been (hopefully) addressed. I guess the main
+>> remaining unknown is the direction of the `num` module ; for this
+>> iteration, following the received feedback I have eschewed the extension
+>> trait and implemented the alignment functions as methods of the new
+>> `PowerOfTwo` type. This has the benefit of making it impossible to call
+>> them with undesirable (i.e. non-power of two) values. The `fls` function
+>> is now provided as a series of const functions for each supported type,
+>> generated by a macro.
+>>=20
+>> It feels like the `num` module could be its own series though, so if
+>> there is still discussion about it, I can also extract it and implement
+>> the functionality we need in nova-core as local helper functions until
+>> it gets merged at its own pace.
+>>=20
+>> As previously, this series only successfully probes Ampere GPUs, but
+>> support for other generations is on the way.
+>>=20
+>> Upon successful probe, the driver will display the range of the WPR2
+>> region constructed by FWSEC-FRTS with debug priority:
+>>=20
+>>   [   95.436000] NovaCore 0000:01:00.0: WPR2: 0xffc00000-0xffce0000
+>>   [   95.436002] NovaCore 0000:01:00.0: GPU instance built
+>>=20
+>> This series is based on v6.16-rc1 with no other dependencies.
+>>=20
+>> There are bits of documentation still missing, these are addressed by
+>> Joel in his own documentation patch series [1]. I'll also double-check
+>> and send follow-up patches if anything is still missing after that.
+>>=20
+>> [1] https://lore.kernel.org/rust-for-linux/20250503040802.1411285-1-joel=
+agnelf@nvidia.com/
+>
+> I think this series collected quite a few TODOs to follow up on once the
+> corresponding abstractions are in place, etc. This is fine and expected.
+>
+> However, I think we should list those things in a central place, e.g. our=
+ TODO
+> list, in order to make it easier to follow up.
+>
+> Additionally, it might get us more contributors who might be interested i=
+n
+> following up on those things.
+>
+> @Alex: Can you please add such a list?
 
-While it fixes the registration race and NULL-deref, something else is
-not right with the patch.
+I went through every TODO in the code and found the following could be
+done:
 
-On resume from suspend I now get a bunch of mhi errors for the ath12k
-wifi:
+- Update the entry about the registers macro with remaining sub-tasks
+  before it can "graduate" from Nova (notably register arrays, which are
+  several TODOs by themselves),
+- Mention the missing `FromBytes::from_bytes` that will allow us to
+  remove some unsafe code,
+- Mention the missing features of `CoherentAllocation` (write() and
+  as_slice()) that require us to use unsafe code,
+- I wanted to mention the missing xarray but noticed it has been merged,
+  so we can just use it and remove the corresponding TODO. :)
 
-[   25.843963] mhi mhi1: Requested to power ON
-[   25.848766] mhi mhi1: Power on setup success
-[   25.939124] mhi mhi1: Wait for device to enter SBL or Mission mode
-[   26.325393] mhi mhi1: Error recycling buffer for chan:21
-[   26.331193] mhi mhi1: Error recycling buffer for chan:21
-[   26.336798] mhi mhi1: Error recycling buffer for chan:21
-[   26.342390] mhi mhi1: Error recycling buffer for chan:21
-[   26.347994] mhi mhi1: Error recycling buffer for chan:21
-[   26.353609] mhi mhi1: Error recycling buffer for chan:21
-[   26.359207] mhi mhi1: Error recycling buffer for chan:21
-...
-
-and after that there's a warning at shutdown when tearing down mhi:
-
-[   36.384573] WARNING: CPU: 5 PID: 109 at mm/slub.c:4753 free_large_kmalloc+0x13c/0x160
-[   36.552152] CPU: 5 UID: 0 PID: 109 Comm: kworker/u52:0 Not tainted 6.16.0-rc2 #10 PREEMPT
-[   36.560724] Hardware name: Qualcomm CRD, BIOS 6.0.241007.BOOT.MXF.2.4-00534.1-HAMOA-1 10/ 7/2024
-[   36.569835] Workqueue: mhi_hiprio_wq mhi_pm_st_worker [mhi]
-[   36.575648] pstate: 21400005 (nzCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-[   36.582882] pc : free_large_kmalloc+0x13c/0x160
-[   36.587610] lr : kfree+0x208/0x32c
-[   36.591166] sp : ffff80008107b900
-[   36.594636] x29: ffff80008107b900 x28: 0000000000000000 x27: ffff800082b9d690
-[   36.602045] x26: ffff800082f681e0 x25: ffff800082f681e8 x24: 00000000ffffffff
-[   36.609454] x23: ffff00080406cd80 x22: 0000000000000001 x21: ffff0008023f2000
-[   36.616863] x20: 05a2dd88f4602478 x19: fffffdffe008fc80 x18: 00000000000c8dc0
-[   36.624272] x17: 0000000000000028 x16: ffffdd893588f02c x15: ffffdd8936a28928
-[   36.631681] x14: ffffdd8936af16e8 x13: 0000000000008000 x12: 0000000000000000
-[   36.639097] x11: ffffdd893709c968 x10: 0000000000000001 x9 : ffff0008099c95c0
-[   36.646505] x8 : 0000001000000000 x7 : ffff0008099c95c0 x6 : 00000008823f2000
-[   36.653915] x5 : ffffdd8937417f60 x4 : 0000000000000020 x3 : ffff000801c2d7e0
-[   36.661324] x2 : 0bfffe0000000000 x1 : ffff0008023f2000 x0 : 00000000000000ff
-[   36.668733] Call trace:
-[   36.671307]  free_large_kmalloc+0x13c/0x160 (P)
-[   36.676036]  kfree+0x208/0x32c
-[   36.679241]  mhi_reset_chan+0x1d4/0x2e4 [mhi]
-[   36.683786]  mhi_driver_remove+0x1bc/0x1fc [mhi]
-[   36.688597]  device_remove+0x70/0x80
-[   36.692341]  device_release_driver_internal+0x1e4/0x240
-[   36.697778]  device_release_driver+0x18/0x24
-[   36.702233]  bus_remove_device+0xd0/0x148
-[   36.706424]  device_del+0x148/0x374
-[   36.710077]  mhi_destroy_device+0xb0/0x13c [mhi]
-[   36.714888]  device_for_each_child+0x60/0xbc
-[   36.719344]  mhi_pm_disable_transition+0x154/0x510 [mhi]
-[   36.724875]  mhi_pm_st_worker+0x2dc/0xb18 [mhi]
-[   36.729594]  process_one_work+0x20c/0x610
-[   36.733788]  worker_thread+0x244/0x388
-[   36.737711]  kthread+0x150/0x220
-[   36.741093]  ret_from_fork+0x10/0x20
-
-Johan
+... and that's all I noticed, but please let me know if I missed
+something.
