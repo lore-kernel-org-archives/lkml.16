@@ -1,86 +1,173 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C3FD2DFF3C
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:21:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB22E8DF7
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:22:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252906; cv=none; b=eyQRTsOSwn0LknsvenJVfjA/Ld+C/WoB05Dq+mL4j0hPwDkGOToDl0LyVrb1pFuz71oR1kq1f25/1CDWKoa/kEJylSC3OCrAII/BhbQuoLT3sJ5EaDydvFWVSzALE9j72QN92LxfDz5Vnw2xzV1+pTip3GJ9ugCgN42OPx7dcyA=
+	t=1750252978; cv=none; b=HKfrQoD/+04j2zZ3D7oSF8lrdB+C0E/44pO04SWIt5xmSJ9x7N++D24FG1F6zvamQ06tYLqpV9/MvFJpA+YZCcqe5PdpMhg3kWNUPTvvYURbncJTD09hjsvSb+QMylpCXzjZYY13YCE23s6aMyzbse5iNyCjGExBIJbc/w5IxdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252906; c=relaxed/simple;
-	bh=LJOl3iVxdLqWTnYrqhGFjB6SUJ0Pn6WjK3KpdQZOJyc=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=BbSOZEqqBu5pcPyM4IqyKmRp62ECrES+iHLK31u+zK8hNXRQyOGI9U11houwTm9iRuyXu9V02dEc18Fl+8hHr6R7OsR/0M7StJmE+aBsv331sr35c/UZpOkHFCfhLfqkbeDoCTx+OwNo/cetz3aQ/7gRiMgnKNjgUewyWtJrqv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=IbgubzVf; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1750252978; c=relaxed/simple;
+	bh=4sVzlxLP/bZsoszLk8hSFb5vyq2fZ6rK+rSFQACgZ6o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L4WuBwuAE+ToYS+vY/HslwNEfEhPKsKhltozGLJHzkB3NGx0aNqLGUgdtLrXM2D62qH04eFvmZ+pzYiSYY/9P3lz70xH3rkiiwQc1MuwzR+/QyWkS2f+bqymB3C09rHP7zNidZMuLLrWOhR1GT95ioslTwIMbb+L6Ls18YQavh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=WHsGPgKP; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="IbgubzVf"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uRrzq-00CJdb-IV; Wed, 18 Jun 2025 14:34:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-	Message-Id:Date:Subject:From; bh=ihyBf5E+gzJ5kBv9T40XlfDhBl6X2+hvJwoX0tSQLr4=
-	; b=IbgubzVf8XhgT+sxWhHIoah/74KWgJuJNYwuM0mpFf0YPd17h51NwO8YUaWBnwaw3CTzUyCkw
-	cRrT7Zp+1KgVxyRj5Se5xYiK6sSKcD7TgZ3opaztdoYJJ8ypJ9DTdLhsoaiXiJLDpNCNhauWcyCjv
-	lkYBrIz0+zcFS1yQzWOWMsbD2b2hUSKfj4ZAG+XvfdcETEN+RCb7HD41xETAxnGoXyIKMpjq3zMC6
-	/5AR0ZHUpTX579YrYby+N8Ubh+FDvgaOPtrQVDciz8rkfyR/o2l1b03h3pHSzcO0QS/Eg+kQedpMe
-	1s86jzK2n4arb175Hj6clqGXGh0AddF826hSpg==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uRrzp-0001Wj-FF; Wed, 18 Jun 2025 14:34:29 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uRrzo-00DbRZ-7G; Wed, 18 Jun 2025 14:34:28 +0200
-From: Michal Luczaj <mhal@rbox.co>
-Subject: [PATCH net 0/3] vsock: Fix transport_{h2g,g2h,dgram,local} TOCTOU
- issues
-Date: Wed, 18 Jun 2025 14:33:59 +0200
-Message-Id: <20250618-vsock-transports-toctou-v1-0-dd2d2ede9052@rbox.co>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="WHsGPgKP"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e733a6ff491so6515692276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1750252976; x=1750857776; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=drH9Y3tf+LSgM8baU4lopr0u6fbWMBKIJnj055I6/lU=;
+        b=WHsGPgKP83yGRVorGfwYv1+xh46BH7m1aqr3q2CotAV5L1BlEs8TLfljYdqtWVW0j8
+         Z9cRRhNMpkUkir1p/hcsDAMFr1ubfQt/OSxubNuEuphTANt/Lh7LL073i1MBg4prbQbD
+         kJmaC16NKl9xno6b/Y6G1M7seD00zcbWn9uuvOU2nnbIYUj5kA0HTnUM14/Tf2EzC1CM
+         8rTPdotul1+TJg5qHz2G7b0XDG36MIkF6lqqzfVHtUf6ldrYgD4qLvmvxC6UsQBtkmzB
+         Dsq1vb/aHW8kINdA1z4TQ/G39ODjrb0yn7PNKmHY+f3LrQ97rqvmI4rVU8KMZozBdeN5
+         mRnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750252976; x=1750857776;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=drH9Y3tf+LSgM8baU4lopr0u6fbWMBKIJnj055I6/lU=;
+        b=FQ6nOYvbyJbyAxngOY+xs4IluZr9HAHXY4h/U0rp8rZCw/C7UCLoo7NMwUl1G6vcIC
+         w8d0rdRXCiRWpR2rD0wYLs87bEIVcJ6ttvaMlclJ3aEILwnn9OyGDbraMdar4Nn38h6P
+         7gZAp21/LKzRZTP4Jc37KIiQZ3JHE0gWLeNfn+s/xPuvUoQIgfLev0tX8a2WqBd2Qc48
+         GvP4w+scsLFE9ZWxxMoFwunMoT+vLH42ybmixnn+W1P9A+pZmevn+0oS+xJMBjphHCq7
+         +DHUJtYkRqJaqwh2dTtsN5EAOPo2WiJulnrETh+bF/Xxjlg3lsNde1RuDbcKPtyVfiH5
+         iRQQ==
+X-Gm-Message-State: AOJu0YxPjARyTc+XZbJsClwB4GOnKYVKQixdiwTJFMb2a/aVk1rhvebc
+	yhxJiWpkaTKqmvEmp0gXKqdRcE2muHBxvnixnBn23ttdQsALsZahgg6OgBIAUH3bL/3SkXLCx9l
+	Pa1mkTq5RXo437yh+Nt73UUj2a9tGk2Me/WWIgFiV
+X-Gm-Gg: ASbGncsB9jMYtAue3KZJE3zyPFn5YOrwMGqUdOBsm8FyojQK4ZNSF/rdkg40uf3GK2i
+	z2CJ0+oxDaz5Q+vBDep+FEpSg0EeSYYcVwNMJTNX8st9mxp/CDgT4TKCVPyF28ePofwvZj8nkjX
+	T7ND2w49lCQgwBdUQ5BmYbqed2EW9jMSsXtvHkDO90LAk=
+X-Google-Smtp-Source: AGHT+IFWMDFKDX7dwlLZnZslT/HeiGzOiWLxP7AZc3vtTIuwY8RU4GWriaQhueJM9cH+gEP6Tkk1JYfe/Zw4NbYkAnE=
+X-Received: by 2002:a05:6902:220e:b0:e81:9581:4caa with SMTP id
+ 3f1490d57ef6-e822ad8bc0fmr23404196276.34.1750252975769; Wed, 18 Jun 2025
+ 06:22:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADeyUmgC/x3MwQrCMAyA4VcZORuo1eL0VWSH2kUXhGYk2RiMv
- bvF43f4/x2MlMng0e2gtLKx1IbzqYMy5foh5LEZYogppHjB1aR80TVXm0Xd0KW4LHh93dJ4LzH
- 3IUGrZ6U3b//zEyo5DMfxA1tHnrluAAAA
-X-Change-ID: 20250523-vsock-transports-toctou-4b75d9c2a805
-To: Stefano Garzarella <sgarzare@redhat.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Michal Luczaj <mhal@rbox.co>
-X-Mailer: b4 0.14.2
+References: <6852ba08.050a0220.216029.0011.GAE@google.com>
+In-Reply-To: <6852ba08.050a0220.216029.0011.GAE@google.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 18 Jun 2025 09:22:44 -0400
+X-Gm-Features: Ac12FXxWXV5uy9kVJZxQnEU5kbkQBKDzOV7ISTVS6wOzhQkP9lyOkueHtfwc60Y
+Message-ID: <CAHC9VhRSwtds1kJgreLOsvV0V5XXBS1jJ+UCsuAnXcgsEnPivg@mail.gmail.com>
+Subject: Re: [syzbot] [selinux?] WARNING in hashtab_init
+To: syzbot <syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, omosnace@redhat.com, selinux@vger.kernel.org, 
+	stephen.smalley.work@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-transport_{h2g,g2h,dgram,local} may become NULL on vsock_core_unregister().
-Make sure a poorly timed `rmmod transport` won't lead to a NULL/stale
-pointer dereference.
+On Wed, Jun 18, 2025 at 9:07=E2=80=AFAM syzbot
+<syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    52da431bf03b Merge tag 'libnvdimm-fixes-6.16-rc3' of git:=
+/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D144635d458000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D4130f4d8a06c3=
+e71
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dbc2c99c2929c3d2=
+19fb3
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D12a1f50c580=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1094050c58000=
+0
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d=
+900f083ada3/non_bootable_disk-52da431b.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/0ebc79a3dea1/vmlinu=
+x-52da431b.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/2b1157e117a2/b=
+zImage-52da431b.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com
+>
+> WARNING: CPU: 3 PID: 5931 at mm/page_alloc.c:4935 __alloc_frozen_pages_no=
+prof+0x30b/0x23f0 mm/page_alloc.c:4935
+> Modules linked in:
+> CPU: 3 UID: 0 PID: 5931 Comm: syz-executor128 Not tainted 6.16.0-rc2-syzk=
+aller-00047-g52da431bf03b #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
+16.3-2~bpo12+1 04/01/2014
+> RIP: 0010:__alloc_frozen_pages_noprof+0x30b/0x23f0 mm/page_alloc.c:4935
+> Code: f0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 83 fe 0a 0f 86 0a f=
+e ff ff 80 3d 83 6e 7a 0e 00 75 0b c6 05 7a 6e 7a 0e 01 90 <0f> 0b 90 45 31=
+ f6 eb 81 4d 85 f6 74 22 44 89 fa 89 ee 4c 89 f7 e8
+> RSP: 0018:ffffc90003d87438 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000015 RDI: 0000000000040dc0
+> RBP: 0000000200000000 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000040000000 R11: 0000000000000001 R12: 0000000000000015
+> R13: 1ffff920007b0e9c R14: 0000000200000000 R15: 0000000000000015
+> FS:  0000555574b0f380(0000) GS:ffff8880d6a53000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000200000001000 CR3: 000000002a80f000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:4993
 
-Note that these oopses are pretty unlikely to happen in the wild. Splats
-were collected after sprinkling kernel with mdelay()s.
+Looks like another case where we should probably add GFP_NOWARN.
 
-Signed-off-by: Michal Luczaj <mhal@rbox.co>
----
-Michal Luczaj (3):
-      vsock: Fix transport_{h2g,g2h} TOCTOU
-      vsock: Fix transport_g2h TOCTOU
-      vsock: Fix transport_* TOCTOU
+>  __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
+>  alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
+>  ___kmalloc_large_node+0x84/0x1e0 mm/slub.c:4272
+>  __kmalloc_large_node_noprof+0x1c/0x70 mm/slub.c:4300
+>  __do_kmalloc_node mm/slub.c:4316 [inline]
+>  __kmalloc_noprof.cold+0xc/0x61 mm/slub.c:4340
+>  kmalloc_noprof include/linux/slab.h:909 [inline]
+>  kmalloc_array_noprof include/linux/slab.h:948 [inline]
+>  hashtab_init+0x1b1/0x290 security/selinux/ss/hashtab.c:43
 
- net/vmw_vsock/af_vsock.c | 34 +++++++++++++++++++++++++++-------
- 1 file changed, 27 insertions(+), 7 deletions(-)
----
-base-commit: d0fa59897e049e84432600e86df82aab3dce7aa5
-change-id: 20250523-vsock-transports-toctou-4b75d9c2a805
+This would be the right spot, in the kcalloc() call.  I'll throw
+together a quick patch in a little bit.
 
-Best regards,
--- 
-Michal Luczaj <mhal@rbox.co>
+>  common_read+0x1c2/0x3d0 security/selinux/ss/policydb.c:1172
+>  policydb_read+0x874/0x3220 security/selinux/ss/policydb.c:2578
+>  security_load_policy+0x15c/0x12c0 security/selinux/ss/services.c:2299
+>  sel_write_load+0x332/0x1bd0 security/selinux/selinuxfs.c:603
+>  vfs_write+0x2a0/0x1150 fs/read_write.c:684
+>  ksys_write+0x12a/0x250 fs/read_write.c:738
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f0fd65a5d79
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffc49f31638 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 0000200000000300 RCX: 00007f0fd65a5d79
+> RDX: 0000000000002000 RSI: 0000200000000000 RDI: 0000000000000003
+> RBP: 0000200000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 000000000000008f R11: 0000000000000246 R12: 00007f0fd65f419c
+> R13: 00007f0fd65ef082 R14: 0000000000000001 R15: 0000000000000001
+>  </TASK>
 
+--=20
+paul-moore.com
