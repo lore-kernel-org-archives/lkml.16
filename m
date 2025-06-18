@@ -1,167 +1,216 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9802874E2;
-	Wed, 18 Jun 2025 10:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C41C289837
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241910; cv=none; b=X5QHPKgEBgBt+8HweT16vpB6llXAO3c/dWVdqd6vgA/VuLa7Bce4b0PVpxqINJT7HHtlM2cIrcYPMFe74o1M9YZqFfbkvimV5/PZB8arRq052IjHGNZQ3tqotPEXlcc7+tVQkmkb+MMB2Z6wv18Wh+HHLy7gwpGc7pl0qA6jaSU=
+	t=1750241910; cv=none; b=uZiAFmGB4WZnQzg1rQ+0vdXiyanBtpgTcBW2W9j5ZxTKkoJpGIaXchPfip15YXwaywGmiVKA5HwCJRwY568KUCymokdDVRjzPm7HBFME7StL+nkDtFqxtMcWLXW1jm90YrxbDHSMePcC1wfI1l7zpEI3BqLTEQRkH73RuSsC8Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750241910; c=relaxed/simple;
-	bh=S2l0YFAo3c+hXigjqX+JLCeY8JmSN+GlekAbKtYA8Uc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a+wtTvrlaauuiDDy9e+RYEZMTpADWSeQPjoSFeHZn/8cc6ytoNmUIM5bv1pxN8d1rBV/WMAywy6e94xXt6DB+JbtW821BEZGnsf2/oUgNUoGIcc2JJkmrLNinEWgLSSHQh03+BrgNXbbcEng+lxCJ33wdKj3RpUcye3tcbQh4/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TWzs6gRD; arc=none smtp.client-ip=10.30.226.201
+	bh=y3obSHiaS/mtm9fWkKPp+6t0FX+yF8OGeYGh2q9HQpg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r0fYwP4+M1velLZSZFTUvuaBR27s7PCa5rhlP4y4PfVQwDFs6SAnZcdyQE/aFP8o1ftLVYIGl0Gn2t08097991L/dhoTQEfoTofmgiQ0GqquJNhllJWVxjnvKidDZ1w9SK2QHvu+ngKnjXQkuogkj4yTuYskENt7jkoCAYcHC/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RcePDtKd; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TWzs6gRD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC3FC4CEF0;
-	Wed, 18 Jun 2025 10:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750241910;
-	bh=S2l0YFAo3c+hXigjqX+JLCeY8JmSN+GlekAbKtYA8Uc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TWzs6gRD+wARiYZyjAXvMruOfKMWREEmRVULXcIVdPB4WCqAEL/Sqw0GovMidGU32
-	 P1B8prLUoDuSubTfHVhHbZI/tf2zFENmcvDlSV9zfc3+WVZKnlRY+hrqajBLzu5Owt
-	 uViG6OnEq/bifg16va+ylNy6Lbv15WUb/7vJlHPN2rJc3awMBYJ71YUc2437+As77Y
-	 1uBLrmE48+KzcVzmNBFs6O+WM/dTbvJHHC4E/UP9AqjTXXEtSG5aG4ZMt98hXQpsz/
-	 U63/r6pVdTSxn8zVapCE4iYC7F2O9EyUDIncYj1PODaavh38B/q5hZUqCmusAle4O5
-	 Z1DIbGyRF6XoQ==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Date: Wed, 18 Jun 2025 12:17:23 +0200
-Subject: [PATCH v5 08/27] arm64/sysreg: Add ICC_PPI_{C/S}PENDR<n>_EL1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RcePDtKd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750241907;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=xE9hcE8VWWU+fZcKkGZrNh9Vbm1NLv7ru7W76wyemew=;
+	b=RcePDtKdvC2FfMWH3yfXCmoBPfOmWyuga0MxE5tXZoxUmIQ8aFbAh8APu7g1aa8yxfYfym
+	ldpqGjKaN9cbesdYehPqODBAvb1axFLn+wxTJTcjaioaYB2ZoFiCXgmWDxVhHg1Qq2k+iK
+	990zT9rracnkE/JkIebXILYTcvqSDvU=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-435-B6WLUPWOMcuxyWw8nszDGA-1; Wed, 18 Jun 2025 06:18:25 -0400
+X-MC-Unique: B6WLUPWOMcuxyWw8nszDGA-1
+X-Mimecast-MFC-AGG-ID: B6WLUPWOMcuxyWw8nszDGA_1750241904
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451ecc3be97so33445695e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:18:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750241904; x=1750846704;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xE9hcE8VWWU+fZcKkGZrNh9Vbm1NLv7ru7W76wyemew=;
+        b=FbeoMO9omPLxSVnNJvAz/hgZMBr982vJNB6IQhOrYbXbHVlS7ORqDgVe9rR7xIESL/
+         S9UlHlDDLy57vhRz0z4sLT0wa//ydsyGDFTGUmUiFp0Zt9wSlP+xEC5Bd0Eh1Vgzf62A
+         qwlEl8Alnawn66OCZtWKvEM2hon4LcwRSq9UdvI0KoaNktWKULq/T/00k2vaxtKyZhOX
+         cI0fAUtFXupuBfomgN+/tZci9RcBCBlbYBrZzPCngZ1bGEvjDaaAWyjBGRI4ObrFUYYX
+         sqxDr3LVOVWCk2OEeaJ53zslp23+eYQsQ8KSF37evHfECfZZ0XTKa2C5tuYOenPkZmn7
+         P4lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzyK/CVCNtVyzrcyvxT+sD0clUdXDWev3S8lVvycTNLiSwV6beXAkoXmJ53UJBIhTlaSUdAEhjtndabhs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmCFiSRL9kbdwDX3SjiSidnvEMnNFXKEhxwrT5VvLSlWAGBipq
+	+M4+i41L5UMGdIMi5YyzgI89C7hqMn/DkVkoqR/Xs5T0AdZmAuXfgPxrNhKyF4k5aHVltxIRqFZ
+	ypQaj7pq5OMNdGQH/lkVQo4cpeF6q0DbgcoM3S3QgK64znPRSqC/PWR6k05JDSmu1SQ==
+X-Gm-Gg: ASbGnctMsl09nWyCAo+yYCUL/90939BaAB9ZPVsIiIIn18i94D13v/j+ufMGnzEdBUX
+	5J5POwtitwrnLgsvIEfTCifS8/RI/9pzTiwTJzAYMWvZP5ii/RZ5w2ELzAIUnL2jBeCuTtUPu1/
+	p52F7MEy0TzycK/jpSQBYtjblDzgFOQcHl+sCDH/IFjs7vM6VSz/ahzUArOsPpk2gwsjWqTX/1A
+	RfoBJfJAKbYEGkjEcyv/y/ACq58jhjFJs1G9GEgOCq3qvnqw7S/OGlR34Z3VpkKv1cfM6gljhNr
+	nz44eXM9qL+Efvo3VWxWunxN88ZwDuDa7dokBDgx1STVS6D/+qDjB+3Zuda64GNS0hM6mQZ71AB
+	5WN1Dh48QgFGsQqraAjz+Dtm+8/bOL8ZeWbC7T02xYKFu/qs=
+X-Received: by 2002:a05:600c:540e:b0:450:d00d:cc with SMTP id 5b1f17b1804b1-4533ca40f80mr143369975e9.2.1750241904205;
+        Wed, 18 Jun 2025 03:18:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGaJO1klicgtCzDe/YgKgiUBgihGIy6m9Iow/yTELtSUG89fig6gOZ3ZBpPSkhgjw8jytxMtA==
+X-Received: by 2002:a05:600c:540e:b0:450:d00d:cc with SMTP id 5b1f17b1804b1-4533ca40f80mr143369605e9.2.1750241903810;
+        Wed, 18 Jun 2025 03:18:23 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8c229sm201693605e9.6.2025.06.18.03.18.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 03:18:23 -0700 (PDT)
+Message-ID: <deb5ecd0-d57b-4a04-85b7-e6d11207aa8f@redhat.com>
+Date: Wed, 18 Jun 2025 12:18:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-gicv5-host-v5-8-d9e622ac5539@kernel.org>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
-In-Reply-To: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
- Sascha Bischoff <sascha.bischoff@arm.com>, 
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Peter Maydell <peter.maydell@linaro.org>, 
- Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.15-dev-6f78e
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+To: Barry Song <21cnbao@gmail.com>, Lance Yang <lance.yang@linux.dev>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
+ <lokeshgidra@google.com>, Tangquan Zheng <zhengtangquan@oppo.com>,
+ Qi Zheng <zhengqi.arch@bytedance.com>, Lance Yang <ioworker0@gmail.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Li <zi.li@linux.dev>
+References: <20250607220150.2980-1-21cnbao@gmail.com>
+ <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+ <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
+ <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Add ICC_PPI_{C/S}PENDR<n>_EL1 registers description.
+On 18.06.25 11:52, Barry Song wrote:
+> On Wed, Jun 18, 2025 at 10:25 AM Lance Yang <lance.yang@linux.dev> wrote:
+>>
+>> Hi all,
+>>
+>> Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
+>>
+>> On 2025/6/17 21:38, Lorenzo Stoakes wrote:
+>> [...]
+>>>
+>>> On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
+>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>
+>>>> Certain madvise operations, especially MADV_DONTNEED, occur far more
+>>>> frequently than other madvise options, particularly in native and Java
+>>>> heaps for dynamic memory management.
+>>>>
+>>>> Currently, the mmap_lock is always held during these operations, even when
+>>>> unnecessary. This causes lock contention and can lead to severe priority
+>>>> inversion, where low-priority threads—such as Android's HeapTaskDaemon—
+>>>> hold the lock and block higher-priority threads.
+>>>>
+>>>> This patch enables the use of per-VMA locks when the advised range lies
+>>>> entirely within a single VMA, avoiding the need for full VMA traversal. In
+>>>> practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
+>>>>
+>>>> Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
+>>>> benefits from this per-VMA lock optimization. After extended runtime,
+>>>> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+>>>> only 1,231 fell back to mmap_lock.
+>>>>
+>>>> To simplify handling, the implementation falls back to the standard
+>>>> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
+>>>> userfaultfd_remove().
+>>>>
+>>>> Many thanks to Lorenzo's work[1] on:
+>>>> "Refactor the madvise() code to retain state about the locking mode
+>>>> utilised for traversing VMAs.
+>>>>
+>>>> Then use this mechanism to permit VMA locking to be done later in the
+>>>> madvise() logic and also to allow altering of the locking mode to permit
+>>>> falling back to an mmap read lock if required."
+>>>>
+>>>> One important point, as pointed out by Jann[2], is that
+>>>> untagged_addr_remote() requires holding mmap_lock. This is because
+>>>> address tagging on x86 and RISC-V is quite complex.
+>>>>
+>>>> Until untagged_addr_remote() becomes atomic—which seems unlikely in
+>>>> the near future—we cannot support per-VMA locks for remote processes.
+>>>> So for now, only local processes are supported.
+>>
+>> Just to put some numbers on it, I ran a micro-benchmark with 100
+>> parallel threads, where each thread calls madvise() on its own 1GiB
+>> chunk of 64KiB mTHP-backed memory. The performance gain is huge:
+>>
+>> 1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~47%
+>> faster)
+>> 2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~64%
+>> faster)
+> 
+> Thanks for the report, Lance. I assume your micro-benchmark includes some
+> explicit or implicit operations that may require mmap_write_lock().
+> As  mmap_read_lock() only waits for writers and does not block other
+> mmap_read_lock() calls.
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>
----
- arch/arm64/tools/sysreg | 83 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
-
-diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index f1650034e348..78a51fbf3a99 100644
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -3271,6 +3271,89 @@ Sysreg	ICC_PPI_SACTIVER1_EL1	3	0	12	13	3
- Fields ICC_PPI_ACTIVERx_EL1
- EndSysreg
- 
-+SysregFields	ICC_PPI_PENDRx_EL1
-+Field	63	Pend63
-+Field	62	Pend62
-+Field	61	Pend61
-+Field	60	Pend60
-+Field	59	Pend59
-+Field	58	Pend58
-+Field	57	Pend57
-+Field	56	Pend56
-+Field	55	Pend55
-+Field	54	Pend54
-+Field	53	Pend53
-+Field	52	Pend52
-+Field	51	Pend51
-+Field	50	Pend50
-+Field	49	Pend49
-+Field	48	Pend48
-+Field	47	Pend47
-+Field	46	Pend46
-+Field	45	Pend45
-+Field	44	Pend44
-+Field	43	Pend43
-+Field	42	Pend42
-+Field	41	Pend41
-+Field	40	Pend40
-+Field	39	Pend39
-+Field	38	Pend38
-+Field	37	Pend37
-+Field	36	Pend36
-+Field	35	Pend35
-+Field	34	Pend34
-+Field	33	Pend33
-+Field	32	Pend32
-+Field	31	Pend31
-+Field	30	Pend30
-+Field	29	Pend29
-+Field	28	Pend28
-+Field	27	Pend27
-+Field	26	Pend26
-+Field	25	Pend25
-+Field	24	Pend24
-+Field	23	Pend23
-+Field	22	Pend22
-+Field	21	Pend21
-+Field	20	Pend20
-+Field	19	Pend19
-+Field	18	Pend18
-+Field	17	Pend17
-+Field	16	Pend16
-+Field	15	Pend15
-+Field	14	Pend14
-+Field	13	Pend13
-+Field	12	Pend12
-+Field	11	Pend11
-+Field	10	Pend10
-+Field	9	Pend9
-+Field	8	Pend8
-+Field	7	Pend7
-+Field	6	Pend6
-+Field	5	Pend5
-+Field	4	Pend4
-+Field	3	Pend3
-+Field	2	Pend2
-+Field	1	Pend1
-+Field	0	Pend0
-+EndSysregFields
-+
-+Sysreg	ICC_PPI_CPENDR0_EL1	3	0	12	13	4
-+Fields ICC_PPI_PENDRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_CPENDR1_EL1	3	0	12	13	5
-+Fields ICC_PPI_PENDRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_SPENDR0_EL1	3	0	12	13	6
-+Fields ICC_PPI_PENDRx_EL1
-+EndSysreg
-+
-+Sysreg	ICC_PPI_SPENDR1_EL1	3	0	12	13	7
-+Fields ICC_PPI_PENDRx_EL1
-+EndSysreg
-+
- SysregFields	ICC_PPI_PRIORITYRx_EL1
- Res0	63:61
- Field	60:56	Priority7
+The number rather indicate that one test was run with (m)THPs enabled 
+and the other not? Just a thought. The locking overhead from my 
+experience is not that significant.
 
 -- 
-2.48.0
+Cheers,
+
+David / dhildenb
 
