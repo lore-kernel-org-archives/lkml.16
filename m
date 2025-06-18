@@ -1,73 +1,73 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12232F5323
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1971027EFE3
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247564; cv=none; b=uD3+I5Xiz5mv/lHcxk5ndyFdRlsJ2F/xlTNzTEFm5fWczmtxCxMZc3m3IVgF9nI3FgwYvttaEbrD2oiOfvC53Afi66Vxx86acYVPgNsAohbvUBtjSPWiZr8BVr91NXEuVAelL96Xs/fNei8hTMI7sRSbOcp0ew3XysaoliQPAo4=
+	t=1750247668; cv=none; b=RKsB03Ad8O8zO5TQxnGd4h04pU5r8PbqspsbsKF4w8We4UKRV9M/Nn7Fgv0s/oh2wKYrQd42sPwVWpzShEao+TwzK8sDC2xHhTkCPkjvKPWQ5yrS2Wnx2UZlW+FWXnLVXRkRNqXmlgOGAtK+mEeaSSfdhVv7JAbv0KMEgl2FSaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247564; c=relaxed/simple;
-	bh=/LLPH+A8vAe7oov7g+qQGZnQO+y9OMWaiWO8p5B3c7I=;
+	s=arc-20240116; t=1750247668; c=relaxed/simple;
+	bh=PsGsoQX1+7+uBNf2AE0d24qnM7gwvSE1vZ824x13C2s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TWDDuZkkdBsK4XBTog1Ia88RK9wck1Ll4wZU4eEv8YeqYLZcacT0fWf5hsIfD7fOvHNcLRBrT7s1WeVHdWVFTTPUxBXpTQTmfIzOm24jJ3e+/7ITJNZuYfeSo+aJ+bkojBEkhoLYEmF04T9YcKh79mXGFPX5FEw/teWiZt4gkzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Br/h2jzX; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=FKd30j0tZur1uiRwt7FNt0T94fwhuBbF6H8LaV2MR2wIh8gk6+8jdKZhmeg1aRbJPldcphIr8TmUSEbdw2RTq2OqSMU3Gd9xicjO6xQc+9kT/EHFpaRFD3r1dzaCLVBn2PHIgBXJGwtlsHCvA9SZZdNubFVllycYmE3QSYZCLSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VaNvWuyx; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Br/h2jzX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VaNvWuyx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750247561;
+	s=mimecast20190719; t=1750247665;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=oPPoWZCcWRwUF819SYaXsiBVPEFt9ywvAF4/WUhA2HY=;
-	b=Br/h2jzXskZHnydcnwPeDlor0owB5Ba/ixGrNTlJE8s+brY0dvTsZJa8y42OO4yTlwiOVw
-	JIyNnrW9fuwZ9S+l1qAVJYTaulQCKdUCg5BFNKSBz7ZucN8SEdeKzzzRJmjBGnbcxmYKvk
-	gMTkXZESmzm8KeL2X9g3bPuckcFkvm0=
+	bh=DOpGfej+wKG1VgbU16FOUc0UnKXyUIhgPDNTdOtNZD0=;
+	b=VaNvWuyxwlNgKqKklY/YSK7ER+cdhK00Axb22L/qAuQOVtEHJsOrNtULXU+Q3wogb+HSaO
+	4O7h+13HF0syy979iknPtWylKXDzLcQkJ4E0MtQY6nqp17rd2Jhw01XxoxclpHyMWzx17d
+	dgXraKv+d7ruzpvdzhmNqp6JX/YEF8c=
 Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
  [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-424-fBh-7SllNVyJkpAcCrHPkg-1; Wed, 18 Jun 2025 07:52:40 -0400
-X-MC-Unique: fBh-7SllNVyJkpAcCrHPkg-1
-X-Mimecast-MFC-AGG-ID: fBh-7SllNVyJkpAcCrHPkg_1750247559
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a58939191eso770625f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:52:40 -0700 (PDT)
+ us-mta-280-CNHq1s_-PACBedJBfSjcdA-1; Wed, 18 Jun 2025 07:54:24 -0400
+X-MC-Unique: CNHq1s_-PACBedJBfSjcdA-1
+X-Mimecast-MFC-AGG-ID: CNHq1s_-PACBedJBfSjcdA_1750247663
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a5780e8137so343769f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:54:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750247559; x=1750852359;
+        d=1e100.net; s=20230601; t=1750247663; x=1750852463;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=oPPoWZCcWRwUF819SYaXsiBVPEFt9ywvAF4/WUhA2HY=;
-        b=DbuGtiZDq2fA35zXo2AMSmLVqQfyGL96qvdz95nBubUdPbDBW96lmIaAYOwrgNDaLz
-         bOoM4ivbn8EbvMjCcHe7frRE4dOwyqwJOz3ncJOn/+zLTi5fA8SIjhT4Pu3nvNBEbubH
-         XuYYx2aR1xvaAYMhP0Jnu2BMI7LjgX+FoykuvZ9jQ2KBDHIaDSteKjnHcBNvj5FLQGD/
-         R8/L/QmjhIymKeauWPiqGA+jgLcODXYwzMGXiQWytJCVhfDcKcWOhiaxK/qR5DX6OSGN
-         9tZ2Y3izch7ZW8EmJwNXRZNwQAej18lJpCT7160A2lbRH6qXY5oNUMylHohXpyRFhEWf
-         FB2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX5zrx8x5vB0apIVRR2KL6wue6jAm83lYHIc9FK8bUASe6cofXCacs1D7tgQRtc/Q7pnF8oA5EoCJi3K3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOZN0JkEldJ6dz6ApUGButWgf+tfNInTOx9Q5qj700O85Jb9HF
-	gpeEfC8ABZX8SGP+OWWLkq1xF+9F10Of/KPkSUofL1r42AYZk7SnCSPNIh6Bv4zJjwzwSzbfG0f
-	Ou6bBKMZ0YZ9RBicX5kMDSBCFbduW+EUd8r6BhnUFwVQTZcegF9b39/ctku8CjEJmhQ==
-X-Gm-Gg: ASbGncuqgM63nDG7Hhn1tswSmk7K7PmD2WjxAbgZWfUjTpALCyA6+M2RrFY3Dosr/hJ
-	rf2JRKG18DxNA4+B/57ShtoEWi4fQs+0Q30H9TNM5xOytTO8ldOVKSJVW8AfghYbodBKMowLRg2
-	oWfdeetJH2EOq1s3h5abjeKE4KyXA8vTVwD6WVysh1jbhNhDQWUiMuwYiRIKpNQRupZ89TImWFr
-	yabLUR/VyFky/CpKkLbgxQrTFXKuBgu9oZwtDpw1QmvYinAV9068btXGPyu8iTn92Kv/CMkvoC/
-	+EBRtQxRHDgNcj9PqVgeeiQBEfcUDKCfZi+w5Nu2OeCy4QcjJBCiVyTIbfs/WLthXEWgOFdS25I
-	eU0HreP4boxpXkFF2sKbn7k0ZSwXSyQT1skjEtujZgxNzy1k=
-X-Received: by 2002:a05:6000:4618:b0:3a5:3b93:be4b with SMTP id ffacd0b85a97d-3a5723aebd7mr13614987f8f.25.1750247559063;
-        Wed, 18 Jun 2025 04:52:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFHA3iQr6Mkqge8qCrokSRLO4JkSqk8c0s6IDMXiHbXRzG5SxxtTAHjHvomBBWjhnRDOE6jzQ==
-X-Received: by 2002:a05:6000:4618:b0:3a5:3b93:be4b with SMTP id ffacd0b85a97d-3a5723aebd7mr13614968f8f.25.1750247558692;
-        Wed, 18 Jun 2025 04:52:38 -0700 (PDT)
+        bh=DOpGfej+wKG1VgbU16FOUc0UnKXyUIhgPDNTdOtNZD0=;
+        b=UEbzveurRi/Oaqn3a4D4v2LwPzmLR/K0PlOUS3QtuLUT5DQo0f3jTkRTD0YIwX+OP8
+         SQxzukDaynOXMXE1ZRamZ014CEO7d4vcIu3W/mLZ5kXGDtoNzvG8z3pyIYfPhQD3vZ0t
+         YYjTrqLAPPeLxMcOKEFj54A0fCDTMVexptlhWRcW6CuNWraun+kwB8wZN8gnEWr5pihj
+         SSZeZsFuSwnUs4UcWqvKaAJrzuwterQ4zYVLDQ0WbqBAzvIQdOmMsMmedbm8sUpWeZiS
+         5VrcwKATJ3+rxGmY93Yyclik+tl5igeHRBEvM/jluxqk+9LOtBByyCbRVDct/cPGQK+G
+         F/fQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPgx8bNEbhwt99AONHgNWfZxwLJO/YSDGHeIKVy7MlZNCbepm+8Bk3w28s7u+ZfY18xBQx5el9VNueDHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaXMaNlvasquuJ5Hi3SvXhiX1cqyP28kPXOfTMlFGN584FzS8q
+	W1neyPLfsPlJgsMbBdvA+Nxew4dsEM6im9Can0oj3mH+rPS9WZbKpNYCD+GSC3be4bFVMX1W/jU
+	8lE4eDwFNmztmKRGJ8PhFC9prmcFUfKxH/gvok6IZ1i47mCNb1cr+vnZTU93ZjkfbiQ==
+X-Gm-Gg: ASbGncs/vwhNKzfxRLX/KhuXCPv8M0UMFwYEy9ljpd3UpFjiCu3NuZwsFIspM/vHIqR
+	HKSKqmOLM4YmicSjfR/oiFa55l1u8nu1Irru04Uz/OKbpF+Xt2dPrzFrjxurZe58ibs+6/aeXMw
+	C3HCgQ6WyW8ZEu91i3Bn3o4/dt0LJPy2c0032ghA3zK9iCfN53YIe8bBHcToB/cM7pQk5WyYF3x
+	tHqWG87OXWT+LpqhESMoXFPnlnrIiMt+byuolfQzuHYf+0g0sbMkzj+814V2QgYvu/tP1BhJWLF
+	FFlapTlr73pjLnkRpTXqr9PKi27KKuoDzrhz4/hypzzByRkteGoX48yOwmgftSwM5CQFJMfEP0E
+	deJ0mgiLv5oCa8qjaq9dQozj1r6xOIDx6DEuWc/7ITRRaQdI=
+X-Received: by 2002:a05:6000:2912:b0:3a4:f70e:bc25 with SMTP id ffacd0b85a97d-3a58e27010emr2270305f8f.27.1750247663135;
+        Wed, 18 Jun 2025 04:54:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFuRFbotFuND835d6U8YkfRTmqYzSB0JPy+NFDmJbKVME80bESVN6r6F3K7HXj+5H5asC46Dg==
+X-Received: by 2002:a05:6000:2912:b0:3a4:f70e:bc25 with SMTP id ffacd0b85a97d-3a58e27010emr2270258f8f.27.1750247662637;
+        Wed, 18 Jun 2025 04:54:22 -0700 (PDT)
 Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b087a9sm17020666f8f.55.2025.06.18.04.52.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b5c372sm16341652f8f.89.2025.06.18.04.54.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 04:52:38 -0700 (PDT)
-Message-ID: <cb926401-6bfd-44cc-b126-28204225b820@redhat.com>
-Date: Wed, 18 Jun 2025 13:52:37 +0200
+        Wed, 18 Jun 2025 04:54:22 -0700 (PDT)
+Message-ID: <345a04ad-cf25-4af5-802a-bc8826d37b19@redhat.com>
+Date: Wed, 18 Jun 2025 13:54:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,17 +75,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: lizhe.67@bytedance.com, akpm@linux-foundation.org,
- alex.williamson@redhat.com, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org, peterx@redhat.com
-References: <20250617152210.GA1552699@ziepe.ca>
- <20250618062820.8477-1-lizhe.67@bytedance.com>
- <20250618113626.GK1376515@ziepe.ca>
- <9c31da33-8579-414a-9b2a-21d7d8049050@redhat.com>
- <a1d62bf1-59e5-4dd5-926a-d6cdddf3deb5@redhat.com>
- <20250618114629.GL1376515@ziepe.ca>
+Subject: Re: [RFC PATCH] PM: Optionally block user fork during freeze to
+ improve performance
+To: Zihuan Zhang <zhangzihuan@kylinos.cn>, Michal Hocko <mhocko@suse.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, rafael@kernel.org,
+ len.brown@intel.com, pavel@kernel.org, kees@kernel.org, mingo@redhat.com,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, akpm@linux-foundation.org, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org, surenb@google.com,
+ linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20250606062502.19607-1-zhangzihuan@kylinos.cn>
+ <20250606082244.GL30486@noisy.programming.kicks-ass.net>
+ <83513599-e007-4d07-ac28-386bc5c7552d@kylinos.cn>
+ <cd548b13-620e-4df5-9901-1702f904d470@redhat.com>
+ <a4370ebc-b1ce-46ba-b3a4-cb628125d7d0@kylinos.cn>
+ <aEvNqY5piB02l20T@tiehlicka>
+ <ee1de994-e59f-4c6c-96f3-66056b002889@kylinos.cn>
+ <775aaf10-3d19-4d5a-bf2b-703211166be4@redhat.com>
+ <7d70334a-2e0a-4d1e-b4d0-64d0e3aa5439@kylinos.cn>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -133,71 +141,63 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250618114629.GL1376515@ziepe.ca>
+In-Reply-To: <7d70334a-2e0a-4d1e-b4d0-64d0e3aa5439@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 18.06.25 13:46, Jason Gunthorpe wrote:
-> On Wed, Jun 18, 2025 at 01:42:09PM +0200, David Hildenbrand wrote:
->> On 18.06.25 13:40, David Hildenbrand wrote:
->>> On 18.06.25 13:36, Jason Gunthorpe wrote:
->>>> On Wed, Jun 18, 2025 at 02:28:20PM +0800, lizhe.67@bytedance.com wrote:
->>>>> On Tue, 17 Jun 2025 12:22:10 -0300, jgg@ziepe.ca wrote:
->>>>>> +	while (npage) {
->>>>>> +		long nr_pages = 1;
->>>>>> +
->>>>>> +		if (!is_invalid_reserved_pfn(pfn)) {
->>>>>> +			struct page *page = pfn_to_page(pfn);
->>>>>> +			struct folio *folio = page_folio(page);
->>>>>> +			long folio_pages_num = folio_nr_pages(folio);
->>>>>> +
->>>>>> +			/*
->>>>>> +			 * For a folio, it represents a physically
->>>>>> +			 * contiguous set of bytes, and all of its pages
->>>>>> +			 * share the same invalid/reserved state.
->>>>>> +			 *
->>>>>> +			 * Here, our PFNs are contiguous. Therefore, if we
->>>>>> +			 * detect that the current PFN belongs to a large
->>>>>> +			 * folio, we can batch the operations for the next
->>>>>> +			 * nr_pages PFNs.
->>>>>> +			 */
->>>>>> +			if (folio_pages_num > 1)
->>>>>> +				nr_pages = min_t(long, npage,
->>>>>> +					folio_pages_num -
->>>>>> +					folio_page_idx(folio, page));
->>>>>> +
->>>>>> +			unpin_user_folio_dirty_locked(folio, nr_pages,
->>>>>> +					dma->prot & IOMMU_WRITE);
->>>>>
->>>>> Are you suggesting that we should directly call
->>>>> unpin_user_page_range_dirty_lock() here (patch 3/3) instead?
->>>>
->>>> I'm saying you should not have the word 'folio' inside the VFIO. You
->>>> accumulate a contiguous range of pfns, by only checking the pfn, and
->>>> then call
->>>>
->>>> unpin_user_page_range_dirty_lock(pfn_to_page(first_pfn)...);
->>>>
->>>> No need for any of this. vfio should never look at the struct page
->>>> except as the last moment to pass the range.
->>>
->>> Hah, agreed, that's actually simpler and there is no need to factor
->>> anything out.
+On 18.06.25 13:30, Zihuan Zhang wrote:
+> Hi David,
+> 
+> 在 2025/6/16 15:45, David Hildenbrand 写道:
 >>
->> Ah, no, wait, the problem is that we don't know how many pages we can
->> supply, because there might be is_invalid_reserved_pfn() in the range ...
+>>>> [...]
+>>> In our test scenario, although new processes can indeed be created
+>>> during the usleep_range() intervals between freeze iterations, it’s
+>>> actually difficult to make the freezer fail outright. This is because
+>>> user processes are forcibly frozen: when they return to user space and
+>>> check for pending signals, they enter try_to_freeze() and transition
+>>> into the refrigerator.
+>>>
+>>> However, since the scheduler is fair by design, it gives both newly
+>>> forked tasks and yet-to-be-frozen tasks a chance to run. This
+>>> competition for CPU time can slightly delay the overall freeze process.
+>>> While this typically doesn’t lead to failure, it does cause more retries
+>>> than necessary, especially under CPU pressure.
+>>
+>> I think that goes back to my original comment: why are we even
+>> allowing fork children to run at all when we are currently freezing
+>> all tasks?
+>>
+>> I would imagine that try_to_freeze_tasks() should force any new
+>> processes (forked children) to start in the frozen state directly and
+>> not get scheduled in the first place.
+>>
+> Thanks again for your comments and suggestion.
 > 
-> You stop batching when you hit any invalid_reserved_pfn and flush it.
+> We understand the motivation behind your idea: ideally, newly forked
+> tasks during freezing should either be immediately frozen or prevented
+> from running at all, to avoid unnecessary retries and delays. That makes
+> perfect sense.
 > 
-> It still has to check read back and check every PFN to make sure it is
-> contiguous, checking reserved too is not a problemm.
+> However, implementing this seems non-trivial under the current freezer
+> model, as it relies on voluntary transitions and lacks a mechanism to
+> block forked children from being scheduled.
+> 
+> Any insights or pointers would be greatly appreciated.
 
-I thought we also wanted to optimize out the is_invalid_reserved_pfn() 
-check for each subpage of a folio.
+I'm afraid I can't provide too much guidance on scheduler logic.
 
-pfn_valid() + pfn_to_page() are not super cheap in some relevant configs 
-IIRC.
+Apparently we have this freezer_active global that forces existing 
+frozen pages to enter the freezing_slow_path().
 
+There, we perform multiple checks, including "pm_freezing && !(p->flags 
+& PF_KTHREAD)".
+
+I would have thought that we would want to make fork()/clone() children 
+while freezing also result in freezing_slow_path()==true, and stop them 
+from getting scheduled in the first place.
+
+Again, no scheduler expert, but that's something I would look into.
 
 -- 
 Cheers,
