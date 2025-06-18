@@ -1,175 +1,117 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242131C2324
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:06:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B714B1C2324
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750287976; cv=none; b=eOjJ4Nkxz5iNHBgNfHKQvHSdElydqr0aK0BvmquMh/wgBGsO3SIf822rUkddRsZTVil2FWKcJC1/zaCxbl+cHhUGR2nNohZfMVk7K/sQCPUdSe2YsvBrkgntZOarf/ZYHIxI1+h5nE3TPoY+XegqR4MyyEVe9uso13mWP0XFG8U=
+	t=1750288086; cv=none; b=t9h7MrXM7bu36fiBegy9U0X6FoHA/TzbXCnk64IiunIKboAiqHB/+mnvlavu6VgOGz/oEZIpV1yU7JOegykBeBru6THERyRWg3n/hiHVM25G9/zXk/K3PgSR8J0DDl9kJXjamTVUc1KmF8YIVha5fDkv5jPu/AkCfMZBcn1jspA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750287976; c=relaxed/simple;
-	bh=BxNRELJCv8xh2C7UZi+0KHsQjfF46eSQoB3JSyofgFg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=flY518tsh1o17DC34yOuIpX69mVTcqkfdeR0MZO9MnEZb6lIG9dPtR82+zTc4NSPMgCQHCdnzxNQHMKm0h13gl0ss8IOc1cFLNnGoPfwDU8+PlOgXY4Pg0vdVInuLFK4YanGHmHK0SNyQmXyc91plUNhxZ6FMI3UKkMt13yCX8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WENfoz9k; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
+	s=arc-20240116; t=1750288086; c=relaxed/simple;
+	bh=N6vkA6XyZvytlKbYFVtn5MMNpiaj7TIFAGlgh/pbydM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eE+pfm1dxXtIDiZKR6hG7fFGbeV1L4HT0tL9V5wmUq+lhO79h3tLl7/FW81b2X7cU0+N6f6+dIKyNNaecD95KzJtw39aaF8gD4SSN8AOk/1Kx89WYvZAgizHhmuqMMmJUsKc9sUA/BCJwMtN3i+mNBofOlSihIhQr3w/EBBYSxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=CVpuZUbS; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WENfoz9k"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3139c0001b5so76777a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:06:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750287974; x=1750892774; darn=vger.kernel.org;
-        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=/kW3pEgv8ky25+r9zWrjkXPocA0BbZz1zBitqJN6Zf4=;
-        b=WENfoz9k3H4SGRVXkgesIT+nldqxHrZzx8Y8zwRz71tKvpPy65WjLYFeAhWgUSj0hM
-         O1vcNpFg9qhJF8KWhJowfoF9ArjYXuQl7w/L61wBOMa0U3CWNb3/XG3Fnf0wRrEMA4Qp
-         v+xF9TIN+m0Jw0IaE0809KeeSmG23xFTKaJJdqF0ytbw5IP/TOHtR8IFKIpRec2mVqtb
-         Xu2WkAlWMq6zJLNSt5V4hbQP5dryTrfiXu2kWtNjV21jW71OT4cQxbmMSrIssR+aITog
-         hygXP2uxW+/aKQ57OG9waoypFl7qUZxWkYKQ39PP6g12T+5QwS1/dpi1NSF6axXdvxQ8
-         rgSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750287974; x=1750892774;
-        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/kW3pEgv8ky25+r9zWrjkXPocA0BbZz1zBitqJN6Zf4=;
-        b=wh7Apu5Hc2R4Iw18fxiK+DY2WS/4zmSPCOLBlhm/Ct4ypJaemxcJRsXzaw3BtYQ1TI
-         VAb0YX31nnA5zNZwU+POVjlmBN3vBZslWC5gfJJ0EnqS7hOD1w0jFHkYXb7y/84/Qn0f
-         KvNbueZHi3G2tW9nt8xbsfGm6zK1Gc61R9VF8HUupxbVsoT6gIenmvv4VOWT7ik9TdUo
-         VqKQtv7u7pzpSwcbq+IiY2qcikv4NchYdAM/BQ+vF9RF7T0ygxVko9oJiFWXdW06HVrR
-         tZl0D/KZFwEhO+RK3Vid2oCpipK4ipR7Rq9levsVganWM5XNdO3urEh8VU51KecDkY9U
-         1izg==
-X-Forwarded-Encrypted: i=1; AJvYcCUwJH6DH7dxkKJweD7GqLmDvqdMYG9ZpdhHwCJ1GuqqR7jrRgi+Hy3N6lauYkBX1KrBnE+OOiqEv5DQpVo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkvT1ebqlZ4NIpykuHmkoksjt0TGA8LBnosaASugy1JI1NcB+9
-	XVjLIkI458AWMS8+aQKKjMgBi094ebdH7RuS4JzwRCZYRbFgCC9ub9MAH1LkEy+UY08kvogbzQp
-	egTRng0AtEiO//xzFmQ==
-X-Google-Smtp-Source: AGHT+IH9de6l1eYgbMosfCN8sNQR1ZI031trCbqUp2lURLBgeAQzLCKb9JHE5vSnNS8crOtiNcZ97pQ3VHVcxpw=
-X-Received: from pjbsn16.prod.google.com ([2002:a17:90b:2e90:b0:30e:5bd5:880d])
- (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:3c49:b0:312:1ae9:1525 with SMTP id 98e67ed59e1d1-313f1cc2ae9mr29093451a91.8.1750287974478;
- Wed, 18 Jun 2025 16:06:14 -0700 (PDT)
-Date: Wed, 18 Jun 2025 23:06:04 +0000
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="CVpuZUbS"
+Received: from DESKTOP-0403QTC. (unknown [40.65.108.177])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 11B6F2119373;
+	Wed, 18 Jun 2025 16:08:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 11B6F2119373
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750288083;
+	bh=fXneXgh6kwJBiXWbwt1qYNjG2yxkkWpVOm1C4PjW2lY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
+	b=CVpuZUbS+XKxNffVoN5T6pyOADeRhaynfFbesjSb3O0f3k0ED9p5s1o3SRwk2O0SP
+	 VQomVESe7xOZXkOG9KmwcbxSwfwTZog6lpUVE3fAU90lulAurvtXL8AfB9dsniCs7m
+	 gY5ZjV7/dhWF1YjFi3aYktDEShDpszwL58G8lE3k=
+Date: Wed, 18 Jun 2025 16:08:01 -0700
+From: Jacob Pan <jacob.pan@linux.microsoft.com>
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jason Gunthorpe <jgg@nvidia.com>, linux-kernel@vger.kernel.org,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "Liu, Yi L"
+ <yi.l.liu@intel.com>, Zhang Yu <zhangyu1@microsoft.com>, Easwar Hariharan
+ <eahariha@linux.microsoft.com>, Saurabh Sengar
+ <ssengar@linux.microsoft.com>, jacob.pan@linux.microsoft.com
+Subject: Re: [PATCH v2 1/2] vfio: Prevent open_count decrement to negative
+Message-ID: <20250618160801.6ccec26e@DESKTOP-0403QTC.>
+In-Reply-To: <20250616084001.20ed53aa.alex.williamson@redhat.com>
+References: <20250603152343.1104-1-jacob.pan@linux.microsoft.com>
+	<20250613163100.7efa6528.alex.williamson@redhat.com>
+	<20250614000926.GQ1174925@nvidia.com>
+	<20250616084001.20ed53aa.alex.williamson@redhat.com>
+Reply-To: jacob.pan@linux.microsoft.com
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3109; i=rdbabiera@google.com;
- h=from:subject; bh=BxNRELJCv8xh2C7UZi+0KHsQjfF46eSQoB3JSyofgFg=;
- b=owGbwMvMwCFW0bfok0KS4TbG02pJDBnBbnFM53c/E2r2OLxw2b7ZqVv4lgdOsj7IFe+bKpuQ2
- PD31mKVjlIWBjEOBlkxRRZd/zyDG1dSt8zhrDGGmcPKBDKEgYtTACaidYrhf+n3hCNh3zxWVUz5
- 6GRw5alIhx/H7SPhFRklKnsk5A+xfmRk2Pfx3LMWZ0EBhWALScVFYWf1e3f7lgTOyj5VVZHzOWI rKwA=
-X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
-Message-ID: <20250618230606.3272497-2-rdbabiera@google.com>
-Subject: [PATCH v3] usb: typec: tcpm: apply vbus before data bringup in tcpm_src_attach
-From: RD Babiera <rdbabiera@google.com>
-Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
-	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-This patch fixes Type-C compliance test TD 4.7.6 - Try.SNK DRP Connect
-SNKAS.
+Hi Alex,
 
-tVbusON has a limit of 275ms when entering SRC_ATTACHED. Compliance
-testers can interpret the TryWait.Src to Attached.Src transition after
-Try.Snk as being in Attached.Src the entire time, so ~170ms is lost
-to the debounce timer.
+On Mon, 16 Jun 2025 08:40:01 -0600
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-Setting the data role can be a costly operation in host mode, and when
-completed after 100ms can cause Type-C compliance test check TD 4.7.5.V.4
-to fail.
+> On Fri, 13 Jun 2025 21:09:26 -0300
+> Jason Gunthorpe <jgg@nvidia.com> wrote:
+> 
+> > On Fri, Jun 13, 2025 at 04:31:00PM -0600, Alex Williamson wrote:  
+> > > Hi Jacob,
+> > > 
+> > > On Tue,  3 Jun 2025 08:23:42 -0700
+> > > Jacob Pan <jacob.pan@linux.microsoft.com> wrote:
+> > >     
+> > > > When vfio_df_close() is called with open_count=0, it triggers a
+> > > > warning in vfio_assert_device_open() but still decrements
+> > > > open_count to -1. This allows a subsequent open to incorrectly
+> > > > pass the open_count == 0 check, leading to unintended behavior,
+> > > > such as setting df->access_granted = true.
+> > > > 
+> > > > For example, running an IOMMUFD compat no-IOMMU device with
+> > > > VFIO tests
+> > > > (https://github.com/awilliam/tests/blob/master/vfio-noiommu-pci-device-open.c)
+> > > > results in a warning and a failed VFIO_GROUP_GET_DEVICE_FD
+> > > > ioctl on the first run, but the second run succeeds incorrectly.
+> > > > 
+> > > > Add checks to avoid decrementing open_count below zero.    
+> > > 
+> > > The example above suggests to me that this is a means by which we
+> > > could see this, but in reality it seems it is the only means by
+> > > which we can create this scenario, right?    
+> > 
+> > I understood this as an assertion hit because of the bug fixed in
+> > patch 2 and thus the missed assertion error handling flow was
+> > noticed.
+> > 
+> > Obviously the assertion should never happen, but if it does we
+> > should try to recover better than we currently do.  
+> 
+> Certainly.  My statement is trying to determine the scope of the issue
+> from a stable perspective.  Maybe I'm interpreting "[f]or example" too
+> broadly, but I think this is unreachable outside of the specific
+> described scenario, ie. using iommufd in compatibility mode with
+> no-iommu.  Further, it only became reachable with 6086efe73498.
+> 
+> In any case, it fixes something and we should attribute that
+> something, whether it's 6086efe73498 or we want to reach back to when
+> the assert was introduced and claim it should have had a return even
+> if it was unreachable.
+> 
+> It seems these patches should also be re-ordered if not rolled into
+> one.  Fixing the issue in 2/ makes this once again unreachable, so I
+> don't mind it coming along as a "also handle this error case better."
+> This alone doesn't really do much.  Thanks,
+> 
+IMHO, this is an independent exception handling fix, perhaps I just add
+the missing tag below?
 
-Turn VBUS on before tcpm_set_roles to meet timing requirement.
+Fixes: 05f37e1c03b6 ("vfio: Pass struct vfio_device_file * to
+vfio_device_open/close()")
 
-Fixes: f0690a25a140 ("staging: typec: USB Type-C Port Manager (tcpm)")
-Cc: stable@vger.kernel.org
-Signed-off-by: RD Babiera <rdbabiera@google.com>
-Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
----
-Changes since v1:
-* Rebased on top of usb-linus for v6.15
+Thanks,
 
-Changes since v2:
-* Restored to v1, usb-next and usb-linus are both synced to v6.16
-so there is no longer a version mismatch possibility.
----
- drivers/usb/typec/tcpm/tcpm.c | 34 +++++++++++++++++-----------------
- 1 file changed, 17 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
-index 1a1f9e1f8e4e..1f6fdfaa34bf 100644
---- a/drivers/usb/typec/tcpm/tcpm.c
-+++ b/drivers/usb/typec/tcpm/tcpm.c
-@@ -4410,17 +4410,6 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 
- 	tcpm_enable_auto_vbus_discharge(port, true);
- 
--	ret = tcpm_set_roles(port, true, TYPEC_STATE_USB,
--			     TYPEC_SOURCE, tcpm_data_role_for_source(port));
--	if (ret < 0)
--		return ret;
--
--	if (port->pd_supported) {
--		ret = port->tcpc->set_pd_rx(port->tcpc, true);
--		if (ret < 0)
--			goto out_disable_mux;
--	}
--
- 	/*
- 	 * USB Type-C specification, version 1.2,
- 	 * chapter 4.5.2.2.8.1 (Attached.SRC Requirements)
-@@ -4430,13 +4419,24 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 	    (polarity == TYPEC_POLARITY_CC2 && port->cc1 == TYPEC_CC_RA)) {
- 		ret = tcpm_set_vconn(port, true);
- 		if (ret < 0)
--			goto out_disable_pd;
-+			return ret;
- 	}
- 
- 	ret = tcpm_set_vbus(port, true);
- 	if (ret < 0)
- 		goto out_disable_vconn;
- 
-+	ret = tcpm_set_roles(port, true, TYPEC_STATE_USB, TYPEC_SOURCE,
-+			     tcpm_data_role_for_source(port));
-+	if (ret < 0)
-+		goto out_disable_vbus;
-+
-+	if (port->pd_supported) {
-+		ret = port->tcpc->set_pd_rx(port->tcpc, true);
-+		if (ret < 0)
-+			goto out_disable_mux;
-+	}
-+
- 	port->pd_capable = false;
- 
- 	port->partner = NULL;
-@@ -4447,14 +4447,14 @@ static int tcpm_src_attach(struct tcpm_port *port)
- 
- 	return 0;
- 
--out_disable_vconn:
--	tcpm_set_vconn(port, false);
--out_disable_pd:
--	if (port->pd_supported)
--		port->tcpc->set_pd_rx(port->tcpc, false);
- out_disable_mux:
- 	tcpm_mux_set(port, TYPEC_STATE_SAFE, USB_ROLE_NONE,
- 		     TYPEC_ORIENTATION_NONE);
-+out_disable_vbus:
-+	tcpm_set_vbus(port, false);
-+out_disable_vconn:
-+	tcpm_set_vconn(port, false);
-+
- 	return ret;
- }
- 
-
-base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
--- 
-2.50.0.rc2.701.gf1e915cc24-goog
-
+Jacob
