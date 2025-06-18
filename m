@@ -1,116 +1,105 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AF92192FC
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:43:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2F525F7B2
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750286615; cv=none; b=IpUSilrh55sRQPxGTrHwqMPHbT6FHp98PHZ/oyMiFVnXVeAKouNgoZ7lKHq9Bcr8LmGJqXQymjauBUApenYBOHHz+8nh2THhghejmAEXtVuoNfalUtObvMOUKMOdu+Fa++jJtOh3wnTDuMFrBiqqZXoK/Vs6V+T5/jrQMKFDcYc=
+	t=1750286629; cv=none; b=tLL9iv5HbTe8QXLjB7UDu48uGE9YiZpaKdt4Z8dv0cpx9JL/fO8f3WIt1LhM5aBzDaddgmHH5KR6uwHy8Z26M2q3ts33vrJv0WVwVKwbmxzWIRkswtg0F7TMjHdv1X7zLopEq3MCD4HfaYV7BiUtx5TtvYIyaBjHXYH+OmYTWQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750286615; c=relaxed/simple;
-	bh=Iy+Ox/bH+mj99voHVuFYFLezAqT1Ea3TUU/gpHbZh4M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qVgdOrD+kbLLxsDuy4jBazKPgnVbZ9+GkFWhYun0yhgoqqCbdrFGubEHZ7xQG5GZf+GkwwHFM9i9uENtOkAU61Ok8DRYRuXDW3zQhL0YBVmBNB+iMFNZH4MrqTPulh6O24/anQy3yyjoAk+cb3XYAK/cziQvI2e/huiNkmt3fm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EpbLDF+7; arc=none smtp.client-ip=91.218.175.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750286629; c=relaxed/simple;
+	bh=7C29pda3Os4hXi9P50dJ+HkdgVgdm4Pec7nJ3piopZw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qob2nzpBvo91jYgH6QQdHdDYLrOkG6FqFsKJH9hwpwUj5+IoeKox7iZogL7dg/EMzJVhB5MQJmRYD5gBXn1lTH5TKMy2ngEVQ/Wyh51a4mwpt+TsOw9THoq/7DXtLOaGCD6TVruQdaLZQeEH51OOXLRTgAmtRHKVu71F0V6bDLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NTD9eQn1; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EpbLDF+7"
-Date: Wed, 18 Jun 2025 15:43:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750286611;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iabUtXH2S5hgnNxipXhGWLLQltCqncktdrGikSQJGv8=;
-	b=EpbLDF+7NjqZog0McGJwo+5HvohOHNAQ8BaL7lZ03J7iJoDBrg8lFG2S6I9VFIMY3Gd8yJ
-	kTLle8vGIij2bB5f/LXeRE9tYV0K5nhLvNCmRGtvD2HcKQJ6cqzHDwB2+zkiC1Sgge9yZn
-	6Pp85WKy351lqpG6lvz+IzpntWkiNOc=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Sean Christopherson <seanjc@google.com>
-Cc: James Houghton <jthoughton@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Nikita Kalyazin <kalyazin@amazon.com>,
-	Anish Moorthy <amoorthy@google.com>,
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>,
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com,
-	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v3 04/15] KVM: Add common infrastructure for KVM
- Userfaults
-Message-ID: <aFNBCaLEdABfybmd@linux.dev>
-References: <20250618042424.330664-1-jthoughton@google.com>
- <20250618042424.330664-5-jthoughton@google.com>
- <aFMWQ5_zMXGTCE98@linux.dev>
- <aFMh51vXbTNCf9mv@google.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NTD9eQn1"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3ddd78f7c91so478645ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1750286626; x=1750891426; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G3vMQgaSAr8pHAxdoofscIYDx1FiHrooeZ+m1KEAAQI=;
+        b=NTD9eQn1N8AlJ6nXia8gu+neLP6b4QruLMJ2hCZRPPyS0jB/jpFlSU8Vv0JeavkBgA
+         4DqC0fLD3728bF2ZuNcH5CSzrDQkqK1/MTUZMaKhp6KdwUQXp1eJzvmuCuCLV1a5OakV
+         j8qpF5V5sSgyjS/ND4ylSff+eEE26v6aHyfpE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750286626; x=1750891426;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G3vMQgaSAr8pHAxdoofscIYDx1FiHrooeZ+m1KEAAQI=;
+        b=cqTKD2qOJxgPddDb9JYtPXftyXKMGT4+mZe+82Cs2XWjQqSPVyUjEj4zSe5uJZygf9
+         1AzlkTNHPhP8y7g1vSJWGN80N7iu4jADeB/FjCmN9F3+RkupBEx/Uk0sOzxOUKKNnqQB
+         8DfWx4UgozGqP5XINx6vEyUfIShMGIsA+Ci5ZJUTVKG+pxtU3mkpJgbjbNHiiZqlQSqR
+         c7PU5s13ZA2taazhgm1CFQJViaYOvnHmbh5VguY42Z14qhT/7Gm/Dhw4qDklNyMmswOs
+         ogvraTH1QZs/tOEQnjVa7hY57c+jFza4E5Lb3ZdyMoUcfoxfteplJge0KRlsYZgvOblB
+         /bPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXHAnwp06WQ95NjbjP07PbXXGuH35Jd5SBNQ42jYKfjB4pSSMD/MuXrcrjn14nXKQIzpMg/pe6uDFOB4Xw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVOw/YkWQGL7QkpEzwSS1l8UVaRuYHd+zZ6jkeV17h6+71xYL1
+	AnmMX2oOqJ/QoX8xgSqP5E2vei0gLKUaOxTwLIIl7OUDj85sTh5V/aoCF58M7ZkgsZc=
+X-Gm-Gg: ASbGnctm9UNuMkz/jNoWkuuykwiRnSR1aPGT0Z7djUrU++8EuUiKhpnaC+hZ0BWCm9h
+	TYmMoaG7Yq507GcwAKXnG9ujniWRfcG5KVYvXUvx9fKa23W0m+Eg9rW+upJcv3xoQ9qO4UGQjvz
+	QXV0c3pu8HiC2q588AIvdqD6p6RpGj9t1Pm7EXZSc6F0hgNTBcO0E7/0bNqQIHC7uUCxEhFrcuH
+	/mfFIGtavlnFpVSRr2P0FbdfGQA2/GOrwMi0gFEDJj1DCWK16TMoErmgiivKo3kJxVPgWWr8j6x
+	7AzOWLJ2ly1zO15UJB4H9py8ZsYyY1f+sJet2vDxA4A7utKHWzgU7zdmT08tW6A3B6pkkWeJtA=
+	=
+X-Google-Smtp-Source: AGHT+IEMut0sjA/9CDO/vrij1jeyFo8AI2L7cAgeng3Ed7laLSRLtq3UWRU1AmzOiPi0tBvNRQ9u6g==
+X-Received: by 2002:a05:6e02:2784:b0:3dc:879b:be95 with SMTP id e9e14a558f8ab-3de301f83f4mr16768425ab.5.1750286626342;
+        Wed, 18 Jun 2025 15:43:46 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de019c6411sm34321835ab.21.2025.06.18.15.43.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 15:43:45 -0700 (PDT)
+Message-ID: <d3e1b43a-48f6-46eb-be53-4731e5eb5681@linuxfoundation.org>
+Date: Wed, 18 Jun 2025 16:43:44 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFMh51vXbTNCf9mv@google.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] pm: cpupower: Couple of fixes to the cpupower monitor
+To: "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+ Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
+ "John B . Wyatt IV" <jwyatt@redhat.com>, John Kacur <jkacur@redhat.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250612122355.19629-1-gautham.shenoy@amd.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250612122355.19629-1-gautham.shenoy@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 01:33:17PM -0700, Sean Christopherson wrote:
-> On Wed, Jun 18, 2025, Oliver Upton wrote:
-> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
+On 6/12/25 06:23, Gautham R. Shenoy wrote:
+> Hello!
 > 
-> No need for my SoB.
+> This patch-series contains a couple of fixes to the cpupower monitor.
 > 
-> > > +#ifdef CONFIG_KVM_GENERIC_PAGE_FAULT
-> > > +bool kvm_do_userfault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
-> > 
-> > The polarity of the return here feels weird. If we want a value of 0 to
-> > indicate success then int is a better return type.
+> * The first patch ensures that the C0% printed by the mperf-monitor is
+>    100% when the core is fully busy.
 > 
-> The boolean is my fault/suggestion.  My thinking is that it would make the callers
-> more intuitive, e.g. so that this reads "if do userfault, then exit to userspace
-> with -EFAULT".
+> * The second patch ensure that the CORE and CPU fields are printed in
+>    the cpupower-monitor output for multi-socket systems. This has been
+>    broken since 6.15.
 > 
-> 	if (kvm_do_userfault(vcpu, fault))
-> 		return -EFAULT;
-
-Agreed, this reads correctly. My only issue is that when I read the
-function signature, "bool" is usually wired the other way around.
-
-> > > +{
-> > > +	struct kvm_memory_slot *slot = fault->slot;
-> > > +	unsigned long __user *user_chunk;
-> > > +	unsigned long chunk;
-> > > +	gfn_t offset;
-> > > +
-> > > +	if (!kvm_is_userfault_memslot(slot))
-> > > +		return false;
-> > > +
-> > > +	offset = fault->gfn - slot->base_gfn;
-> > > +	user_chunk = slot->userfault_bitmap + (offset / BITS_PER_LONG);
-> > > +
-> > > +	if (__get_user(chunk, user_chunk))
-> > > +		return true;
+> Gautham R. Shenoy (2):
+>    pm: cpupower: Fix the snapshot-order of tsc,mperf, clock in mperf_stop()
+>    pm: cpupower: Fix printing of CORE, CPU fields in cpupower-monitor
 > 
-> And this path is other motiviation for returning a boolean.  To me, return "success"
-> when a uaccess fails looks all kinds of wrong:
+>   tools/power/cpupower/utils/idle_monitor/cpupower-monitor.c | 4 ----
+>   tools/power/cpupower/utils/idle_monitor/mperf_monitor.c    | 4 ++--
+>   2 files changed, 2 insertions(+), 6 deletions(-)
 > 
-> 	if (__get_user(chunk, user_chunk))
-> 		return 0;
 
-Yeah, that's gross. Although I would imagine we want to express
-"failure" here, game over, out to userspace for resolution. So maybe:
+Applied - will include in my fixes PR to Rafael
+https://web.git.kernel.org/pub/scm/linux/kernel/git/shuah/linux.git/?h=cpupower
 
-	if (__get_user(chunk, user_chunk))
-		return -EFAULT;
-
-> That said, I don't have a super strong preference; normally I'm fanatical about
-> not returning booleans.  :-D
-
-+1, it isn't _that_ big of a deal, just noticed it as part of review.
-
-Thanks,
-Oliver
+thanks,
+-- Shuah
