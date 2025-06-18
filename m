@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00092F49EA
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1247F2F4314
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:56:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750272994; cv=none; b=ARfjgVNMkFA288QRXZgQIlSZEQRZYDhYzFlwzB5X7uYrnFEf8U8Ne+r1GaS2xwt/3iB26Ef8SfG0BfNVHUggyAPX/5eqt79y9fQUWamVe6Zi65vQ1gZCU/JB0asF9KEInkHnOwCbtwuys0IonDX6totoXvKweerRSCEIblTuciA=
+	t=1750272996; cv=none; b=fFMlbF8YE0xGDFmWGUJkEKGPU8c+tF73O9MPWxXMcklU3+KYjgprKCrx/oE+UT/vkNeEdRjaBQfgosTVZ1zaHehzAdaHRZnlYONsSzUtASrcBYrwccDH7WNGpsbhh2+sf+olsxS1RFX9q1VKqiCYQxcxGGtr1XVWlgmyz5Nu11E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750272994; c=relaxed/simple;
-	bh=z9br5LrInIVljMQihGbbAUPVThEIeJYu70LptYg3ObQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JeTvXtJpsbVPjYhyRAfuWXETrMWk0rAgvzHIPQWswu4agvBaC7KzmwfHlCMNideMQuF4ih03UnDuz/92jfLYjyPclf7n4ClnuxqZp4TiirptrNCcpNIj1cJmq88h0eGQWihhOBqGvcchAS6OGG0pHkiibIbljb0J3cwpqGsNgXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TOmgV6Xu; arc=none smtp.client-ip=198.175.65.20
+	s=arc-20240116; t=1750272996; c=relaxed/simple;
+	bh=u16CpbdUihPkyI+FiM2IX3TbeuU1zDLWDn5AwsQR/6k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EyEyPJ1uEknL/4b12VQhCW1pxDN3VZMS86OIrTIdCxnVfmRlEbUZLglhubmKlTfUzlntuoRst8e0UijvF3zwptnwR4SCsB1bixwlLiEZQopQQjmR/7qyd+bTVWv5YQkmTy7dZc/pVseEUMycXrpHsdcpNGkYHb6G1leRKU4hgpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hZ3D7c+o; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TOmgV6Xu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hZ3D7c+o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750272993; x=1781808993;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=z9br5LrInIVljMQihGbbAUPVThEIeJYu70LptYg3ObQ=;
-  b=TOmgV6Xu97MDo5y2L3Qjuj9KvDhCpaVwdqiMmltI1F7kpaRlO0pvxcZx
-   A7JBHy/LbEb5UHI+u60IZkLNRRu7ALK8hlgL/YQ/V+pZWkfNCFZZy4D4G
-   ANilnTgOYN1vvDh3HR71dGfWjADHUtbtAi0TLctHIrfwA+nycTzvweXOS
-   kPjpahPOk+QPZBJSAN9+2VHFIlNADVJ9vOhrNCDwAZc3V9J7bk9TQN8yf
-   tNopGA91Do/+DtvDs5mDsjNdm59xAu2jO/n5K/tuhpid6taDBSGo6czRe
-   nUbwT8v5nhR0CV6NCg7W4Fv+WDrXiRkLEZUQlnmQbRDn5xa0IkRs28B1l
+  t=1750272995; x=1781808995;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=u16CpbdUihPkyI+FiM2IX3TbeuU1zDLWDn5AwsQR/6k=;
+  b=hZ3D7c+ob4cfFBexFyla9MwMjThUzzoSr/TJrD/71/KwiMOVcqU4MwLU
+   f1L0KUFxuoNw0ey4qGozywDIzVRXirQ2E2V5ym8qHOGlTEkJY2A06zR3Y
+   Dvzvg5cbFkJfCjFo5T/UlPPUW/y613EY9iJ47fvmoybESCgqNIlAS8/q9
+   ai3iRlcIH7trv7BnO9ARGWgRKMoWkk1JBhBLO7Ki0F702clumICnW7xxV
+   Mn5eh6M2z4OcN4FnSFDQZ/HmnEfsBUovqx45N6wDjL++8T7tNuH6a3rqE
+   HumOW3UfllSDBRElh0MQYGSw/twEQ9oEArMI9i7ajN0/BYuKZIA/5HoVp
    A==;
-X-CSE-ConnectionGUID: oaFoDPMJSV28kcC+1iNFQQ==
-X-CSE-MsgGUID: pzr0cvKFTTOy2f6zJIaemw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52210174"
+X-CSE-ConnectionGUID: GaBEwAeITeWbdquyWEGUvw==
+X-CSE-MsgGUID: 3Y2CbsEfTtK0FCta5tgRvA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52210178"
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="52210174"
+   d="scan'208";a="52210178"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:32 -0700
-X-CSE-ConnectionGUID: Whx/jbtDT3C3oKcL/+ChwQ==
-X-CSE-MsgGUID: smFV4sgQTjaDsuQ175NdyQ==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:34 -0700
+X-CSE-ConnectionGUID: ZUW7eUecT9SOJ6zvb+6VbQ==
+X-CSE-MsgGUID: qWtzsz77ROiLCoditM3w/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="153951384"
+   d="scan'208";a="153951464"
 Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:29 -0700
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:32 -0700
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
@@ -52,10 +53,12 @@ Cc: anshuman.gupta@intel.com,
 	gregkh@linuxfoundation.org,
 	daniele.ceraolospurio@intel.com,
 	jgg@nvidia.com
-Subject: [PATCH v3 00/10] Introducing firmware late binding
-Date: Thu, 19 Jun 2025 00:29:57 +0530
-Message-Id: <20250618190007.2932322-1-badal.nilawar@intel.com>
+Subject: [PATCH v3 01/10] mei: bus: add mei_cldev_mtu interface
+Date: Thu, 19 Jun 2025 00:29:58 +0530
+Message-Id: <20250618190007.2932322-2-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250618190007.2932322-1-badal.nilawar@intel.com>
+References: <20250618190007.2932322-1-badal.nilawar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,65 +67,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introducing firmware late binding feature to enable firmware loading
-for the devices, such as the fan controller and voltage regulator,
-during the driver probe.
-Typically, firmware for these devices are part of IFWI flash image but
-can be replaced at probe after OEM tuning.
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
-v2:
- - Dropped voltage regulator specific code as binaries for it will not
-   be available for upstreaming as of now.
- - Address review comments
-v3:
- - Dropped fwctl patch for now
- - Added new patch to extract binary version
- - Address v2 review comments
+Allow to bus client to obtain client mtu.
 
-Alexander Usyskin (2):
-  mei: bus: add mei_cldev_mtu interface
-  mei: late_bind: add late binding component driver
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+Reviewed-by: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
+---
+ drivers/misc/mei/bus.c     | 13 +++++++++++++
+ include/linux/mei_cl_bus.h |  1 +
+ 2 files changed, 14 insertions(+)
 
-Badal Nilawar (8):
-  drm/xe/xe_late_bind_fw: Introducing xe_late_bind_fw
-  drm/xe/xe_late_bind_fw: Initialize late binding firmware
-  drm/xe/xe_late_bind_fw: Load late binding firmware
-  drm/xe/xe_late_bind_fw: Reload late binding fw in rpm resume
-  drm/xe/xe_late_bind_fw: Reload late binding fw in S2Idle/S3 resume
-  drm/xe/xe_late_bind_fw: Introduce debug fs node to disable late
-    binding
-  drm/xe/xe_late_bind_fw: Extract and print version info
-  [CI]drm/xe/xe_late_bind_fw: Select INTEL_MEI_LATE_BIND for CI
-
- drivers/gpu/drm/xe/Kconfig                  |   1 +
- drivers/gpu/drm/xe/Makefile                 |   1 +
- drivers/gpu/drm/xe/xe_debugfs.c             |  41 ++
- drivers/gpu/drm/xe/xe_device.c              |   5 +
- drivers/gpu/drm/xe/xe_device_types.h        |   6 +
- drivers/gpu/drm/xe/xe_late_bind_fw.c        | 432 ++++++++++++++++++++
- drivers/gpu/drm/xe/xe_late_bind_fw.h        |  17 +
- drivers/gpu/drm/xe/xe_late_bind_fw_types.h  |  82 ++++
- drivers/gpu/drm/xe/xe_pci.c                 |   3 +
- drivers/gpu/drm/xe/xe_pm.c                  |   9 +
- drivers/gpu/drm/xe/xe_uc_fw_abi.h           |  69 ++++
- drivers/misc/mei/Kconfig                    |   1 +
- drivers/misc/mei/Makefile                   |   1 +
- drivers/misc/mei/bus.c                      |  13 +
- drivers/misc/mei/late_bind/Kconfig          |  13 +
- drivers/misc/mei/late_bind/Makefile         |   9 +
- drivers/misc/mei/late_bind/mei_late_bind.c  | 263 ++++++++++++
- include/drm/intel/i915_component.h          |   1 +
- include/drm/intel/late_bind_mei_interface.h |  50 +++
- include/linux/mei_cl_bus.h                  |   1 +
- 20 files changed, 1018 insertions(+)
- create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.c
- create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw.h
- create mode 100644 drivers/gpu/drm/xe/xe_late_bind_fw_types.h
- create mode 100644 drivers/misc/mei/late_bind/Kconfig
- create mode 100644 drivers/misc/mei/late_bind/Makefile
- create mode 100644 drivers/misc/mei/late_bind/mei_late_bind.c
- create mode 100644 include/drm/intel/late_bind_mei_interface.h
-
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index 67176caf5416..f860b1b6eda0 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -614,6 +614,19 @@ u8 mei_cldev_ver(const struct mei_cl_device *cldev)
+ }
+ EXPORT_SYMBOL_GPL(mei_cldev_ver);
+ 
++/**
++ * mei_cldev_mtu - max message that client can send and receive
++ *
++ * @cldev: mei client device
++ *
++ * Return: mtu or 0 if client is not connected
++ */
++size_t mei_cldev_mtu(const struct mei_cl_device *cldev)
++{
++	return mei_cl_mtu(cldev->cl);
++}
++EXPORT_SYMBOL_GPL(mei_cldev_mtu);
++
+ /**
+  * mei_cldev_enabled - check whether the device is enabled
+  *
+diff --git a/include/linux/mei_cl_bus.h b/include/linux/mei_cl_bus.h
+index 725fd7727422..a82755e1fc40 100644
+--- a/include/linux/mei_cl_bus.h
++++ b/include/linux/mei_cl_bus.h
+@@ -113,6 +113,7 @@ int mei_cldev_register_notif_cb(struct mei_cl_device *cldev,
+ 				mei_cldev_cb_t notif_cb);
+ 
+ u8 mei_cldev_ver(const struct mei_cl_device *cldev);
++size_t mei_cldev_mtu(const struct mei_cl_device *cldev);
+ 
+ void *mei_cldev_get_drvdata(const struct mei_cl_device *cldev);
+ void mei_cldev_set_drvdata(struct mei_cl_device *cldev, void *data);
 -- 
 2.34.1
 
