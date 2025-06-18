@@ -1,238 +1,222 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2059.outbound.protection.outlook.com [40.107.223.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48A013234
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750212943; cv=none; b=K9gSCFpu/IbsSa/822Z/N0osJVAd/YYFcXZGqMIkeUp98Lkdv7yUwdA00egFsunaHIsAywnNKY5H4r41jHs0D9Y5NvRN0h8uaAbBFW8BAyv6Hy4gCm2bjEQdNOp76HhfURnb74qDQKTjOAqvhe0ZK+uMoqjSHZ/ka5vwwsOva0o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750212943; c=relaxed/simple;
-	bh=fll4eP4/0sS75ZUVKzIVmGaI7cS6KJtulVxT4q65/0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BwJ0XxCUpC1H+N/ovgoXhIDpHOIb8lgvjq2jdC5NxFe6YkhrVc+kzh0W93iARBLDQLqw3M+BBI1q7O6/6YxDYpuwZRGrR1wbdo6pj66eLxQ7JZvIcGsJwqZXCqqQxVP9eI/SQ5XobEg6xTiECMqLD28DiwfiWCEiXvChycBdkkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=M692b6qQ; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F322940D;
+	Wed, 18 Jun 2025 02:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750212979; cv=fail; b=ap0yZYezP6mXh5niSoG7fXS4VEO+puTnjSh0ufwkpdl8sAR7RS6d6zyOMyVfSTj2Z26r7GP2OIk8BRWC0z/OKCBLs6eOdlO7NYD5tqRchmTzZUiU7xPwLEIyXZBwewyzhSjsg2kMaT/Zu3CL4MbML6j4L2XHRKxVc2xjqDVPxCk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750212979; c=relaxed/simple;
+	bh=3/l8BEjgImSPWRbHINx0x1hzgN7j5F50qwhdXFaFJyw=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=igLoodbe9HacTpyO7wdmV9mZmMsrVvlsyBRNFs+yuMAjas8yJooGRWt+4A6vinC/h+MS9TV61xVzX+9FxPnuJz5mUtyN1tnG+Twm1q69WDLf5mL/FnM9LW9s7pCIUEQLKE4Rv4pbVgGsc5uvyu9We94e8uXDJB/+80vAUfJRe9U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=FONAj70v; arc=fail smtp.client-ip=40.107.223.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="M692b6qQ"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-313eeb77b1fso3788359a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1750212940; x=1750817740; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Y/OHYy1LHwJcqeYx0FiYaHNJhYOzxygt0eaqklk9VPI=;
-        b=M692b6qQuUCgbfdXZMj63e3v6P6sheYOE9SD9IjjQJYwf5qVGVXjn5G1/eqtFEV7hH
-         83ttMRHMldfyX7hMed98G3E+/FC0I0IAv2v+K/pV4cizjZZXhsdxccOvCJwQUraZsrlq
-         sme/2aN1/s3LS5oQiKlQ3ajh2Z7XHKBJSNqqPVXNyZKbX+mVXeVjRY8xI8YYGB5qZYfR
-         u2Nj81X5hVt9ErSPDcwzoooXcDOWFCDm831+zipCz/Hl/MW0NiZBj9XmdUwsBXSP1rwG
-         RoYpgxh7aw/zY0jvkS2NQHZSoEwDgyGaJsrq1tS33bwpeDOvso3NQ/igCy+rs2GQMdxJ
-         FgIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750212940; x=1750817740;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y/OHYy1LHwJcqeYx0FiYaHNJhYOzxygt0eaqklk9VPI=;
-        b=Haj11dQZxlGOy2Xg0svKsQTCp8pKwG1SCV7cTSjfyCBjCr6l+Cj/Sju4FVXx58yJql
-         NddhfGUzGptmfFEbhmdx+G7P4fSU3WJAYLjklEAcCUjflb2aB+zRerTN2CHIOj+ZUxR5
-         j10W8y+J3R+bckJNvCphItwlfUPcln8F5/Zh5dJWQD2ts6kLZ5DGNKol3vnozjMeitHm
-         X0P7gn5jfxvviQ3Y0oDp7gNO5+mZ4vuuYBsJVFyjzar+huVLPcYwKgA++SnHXmY255Bx
-         KjEiXJFwX495z2g8zyb9efuW8vJ+ABl8quXAtkqX38iUFRy5sHZMxvmSGvXzBpS5zRmc
-         f9kw==
-X-Gm-Message-State: AOJu0Yw3dmLZBFPwbAH2OSUFFVisuhfVvy9exW9CgVFnSgVXOq/sfuC9
-	NkpnUUdNamdk/0OEnPVJM7CxVi/BaHm9+qhjyud0TeBrqyNRaAwGPmaAdDCaBqjsOBA=
-X-Gm-Gg: ASbGncs9RTZfJ7a28AEqiyH6wXGOG5Ne2jbY3hdTgw4GGaknJ5H2wpgTUNzkDT85YLu
-	s1OnkKA46OeRcoR09UvpxHvOjhz6mpkF58DCokJHFZRJAaBjmfAYsVshmNoWorKdKo0qzcs000P
-	INdPye13KF6yQ1FIeVLCL/DWX4zNPF3/S4vnoOsx0hgo6Vx7iE1xUKc0m6hn8+wWIGw+D80kJIh
-	PmIdgSU7BfH9QoMbRxNGcVZqItuNR72mVWWmFYMA8s3AUxo/LgyPX9seqtkXrbiyxAwRZwm63s5
-	IYg2FowVbfcDXgQb/2LGWekHxnXbs8dSgohiH9l7kW2iLjuDLv+5jFbWBow5D9xsNN4PakHNvkm
-	Bl5RXiklfRfXwN/fTvzmOyxkDqQNwxE4=
-X-Google-Smtp-Source: AGHT+IFsADDsPfxGsuMTviokNgZsf7zLDPfKHMAMp+d66wOLYdiQe5qzj1pWp/iVG0CTEr6+NBbSVA==
-X-Received: by 2002:a17:90b:528f:b0:312:2bb:aa89 with SMTP id 98e67ed59e1d1-313f1d50e08mr21871887a91.20.1750212940010;
-        Tue, 17 Jun 2025 19:15:40 -0700 (PDT)
-Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb4f85sm88342865ad.183.2025.06.17.19.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 19:15:39 -0700 (PDT)
-Date: Tue, 17 Jun 2025 19:15:37 -0700
-From: Calvin Owens <calvin@wbinvd.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
- hash
-Message-ID: <aFIhSYmDvzRgShIy@mozart.vkv.me>
-References: <20250602110027.wfqbHgzb@linutronix.de>
- <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
- <aFBQ8CBKmRzEqIfS@mozart.vkv.me>
- <20250617071628.lXtqjG7C@linutronix.de>
- <aFEz_Fzr-_-nGAHV@mozart.vkv.me>
- <20250617095037.sOnrJlPX@linutronix.de>
- <aFGTmn_CFkuTbP4i@mozart.vkv.me>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="FONAj70v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vsJEo1m7cUG8sMY1jwygLKbqyLloarE61s7cdwUeLFayF5Pcqh/zcEvc/kTpO7jYGj8o/1vhMyeWFiDRv/eg5rSYQedhCV6+jXTSTCe/sZV4hwy1fOHVq2DCghGFbC9BjPIh5tx4DKcSsWPTjVPOofhKScFwV/EjYfdbyoc7neUUxaD1twLIPgQglb7ejizwylBmhcEICecp8ZA8lww7EEQnfaP1qz1KuiVM74kuXz+Y9dGoNSSLHlnNpdVRluWCFjOJLm23m6c6tgse1b7SyGa00CxSYPUVZjwQtOdiF8Vb+BhpKqSGurFFauHxGset1708OIEmUJkIuTVU7p0E+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bTpgnVzEdivgeqnxqiQHzgiLM5bPJQ57M9TbUBKQECo=;
+ b=IsCG4zbnl0FuctxpLPA2V2RxTr500KlSUtLnnotqGzvmAMAibZOhuGBx3Z8j4XNjj2V+phLqYvV26H3VoIYU7nhlJ2P5AuEPsXA22SmguFrpnhQWUMQ0RIp6pCb17eoAKl1Xh67MvboJIJTTrOyG+w5+RmT05ooC62jSeCPNaFkgZC6VCLjwLM8KlJG1dECSe6xbQq6ggvjqX1//KVgsime+cHJpDtIHqpI3eLxO0f4iuX54VBDs2S8JYZAr+wVLtymlT3zeXMiDuSTDtsC0UAR2JDni7Nqq1wssSZDhjGy0DcVFBHy1eXultG9pM6RzjfxJGGuxWk0GjRd79J7HQQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bTpgnVzEdivgeqnxqiQHzgiLM5bPJQ57M9TbUBKQECo=;
+ b=FONAj70v0dT9uswXAcZD6XYK5SU5IbywDoDGrqdcShL65/ob0TOl7Ms2TThxrJgEmhfnsz4EDIDnfqEqIslp90fN62QBtzJcbNEnk0N4r260Zm/NCyP9UG/SGrzT/ILV9xnRNjQDWRQzKghmipT9aQCCoWl9KuZECDqOJm8QUYs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by IA1PR12MB6043.namprd12.prod.outlook.com (2603:10b6:208:3d5::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 02:16:13 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8835.026; Wed, 18 Jun 2025
+ 02:16:11 +0000
+Message-ID: <3271e5d7-9b2a-4378-9ed2-825507202c16@amd.com>
+Date: Tue, 17 Jun 2025 21:16:09 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] drm/amd/display: Radeon 840M/860M: bisected suspend
+ crash
+To: Alex Hung <alex.hung@amd.com>, ggo@tuxedocomputers.com,
+ stable@vger.kernel.org, regressions@lists.linux.dev,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: amd-gfx@lists.freedesktop.org, David Airlie <airlied@gmail.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Hamza Mahfooz <hamza.mahfooz@amd.com>,
+ Werner Sembach <wse@tuxedocomputers.com>,
+ Christoffer Sandberg <cs@tuxedocomputers.com>
+References: <fd10cda4-cd9b-487e-b7c6-83c98c9db3f8@tuxedocomputers.com>
+ <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <3002633a-5c9e-4baa-b16a-91fdec994e02@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BL1PR13CA0078.namprd13.prod.outlook.com
+ (2603:10b6:208:2b8::23) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFGTmn_CFkuTbP4i@mozart.vkv.me>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB6043:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36df62ed-33fc-4bcf-dbb9-08ddae0e1842
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QTZzV0lUaDA1Ymt1WVRlNXhjNEhHRSt0dEkvYWF3cDBmUXd3bWptc05VTG1h?=
+ =?utf-8?B?Znh5T3NRNU9USG1nN2g4clNKanl0YStQQnVkdlJyNEo0TktaSDhsMzF5MnNr?=
+ =?utf-8?B?RldmYzNKVFJ2amdwdElnbkJOV1gzYThrZTBHa0R3VEIreTFKUUhIMGNjc001?=
+ =?utf-8?B?eHVVRXhSeGhtTllEbXZjNDdjRHdsL1VCd0ZNU0xFQUJpODdkMWEvclRvOEFG?=
+ =?utf-8?B?R3ZSK2RadEdCem1DaXhvRGx3dUdXWFBicm9yQXg2bFhQYTNQZXVLVWdsZlBM?=
+ =?utf-8?B?a01SVkg4Uy8wRWVwelpDdFpCQ0w0Umt5UW10RnN5c3dEWC83M29iYVloT0tm?=
+ =?utf-8?B?U1NkSFlXUkcwM083NU9kRnlweHFjSVdZSloxYkRsRU5pQVZBalRlVG40aGZV?=
+ =?utf-8?B?VmltRlAwMlNWWUQxYklrYXNVUTljRm9XWDFxNlRpRDRYL0V5b0E1YmJPT3d4?=
+ =?utf-8?B?L09LaUgrM1RtMXJ0OUlnTmR2TEo0QVpEVE1pdFlqWnByK0VzalNNeEJuYWpD?=
+ =?utf-8?B?S2ZnY3J2dWVnVXp3YlZXamhQaHBEaWE0T3NmQUQyb0dnVXRNQVdZQmhjSGs1?=
+ =?utf-8?B?VzVCVUpCa2h4eG0rQi9qVjNHZUluL0tVOUVYRzlPbTArOXJXTXk5YVhhakdL?=
+ =?utf-8?B?dTl0bmV0WVhKV3pLdlAxQTBCY3ZrT1ZuMDhtTDExNHk3dkdkdkMzOWtlQlFl?=
+ =?utf-8?B?cnI0ZEFWK3JGU3lOVlZXRERSRDY5bmFZT2JySWdLemFhcENBcmREWE9xd1Ax?=
+ =?utf-8?B?TUoybGdjZkRMdWJibjE3aTcxM2V1Yk53WDYrMjNwamFmcFoyeEo0RFVMTzN0?=
+ =?utf-8?B?Wmh2RGlSakpWYUs3TXpnQjZWK29EQmxOdUpSZVVxbXhpTGJIQkcvbWg2N2pi?=
+ =?utf-8?B?aUZvRlB0eGFaaDF4dU5nay8rVzNDeHVKZ0NQd3lLZGF1VVlyc281WThEMkdj?=
+ =?utf-8?B?VGc1TjNPaVljTUtHd0FSRThrazNBam9ZYlV4YUtheUU4Q0VpWU5YMVI1MlJS?=
+ =?utf-8?B?dnZCdTNHWTl4V2h6dFU0OFpsbFJLamdiSEhVNWZPZkFtYzZuRkJBNGo5T0Ez?=
+ =?utf-8?B?M3ZuMTRmWnkrNnh0QlhudVIyc2pLaWtVTkYrR1VQdE56Z0plL3YvUXdCZ2Q0?=
+ =?utf-8?B?ZVFnWlV0WG16ek1SM2I3OEErOG1BRFFwMndZS1NzUEZRYTdrQVEyQXBWZ0NE?=
+ =?utf-8?B?YVpoN2JISndLYXNsK0h2OEROc0RIbHl3bGxZbUJVTExVS21xeU05SFRCanU2?=
+ =?utf-8?B?SVRUaC8zWXh4clFhYVVyMlViclZLQk5YYW1uVHMyNUFyS2ZRM0dnV1JVMEQy?=
+ =?utf-8?B?ZVhWNjZMYjlrRWhKVUxVU25aQjVoRjVJMHQraXEyTXU1cmhPRXFVU2ZwV3dC?=
+ =?utf-8?B?SDRsOGtlckhwekQxVG4rdnNET1JWSzgxbGhPaWk5VVRNZ0NSK08xeHRiMDJE?=
+ =?utf-8?B?VGFQRkxlU0o3TzhLY3ZPSEMvOXBRY285azdwK0hHUUMyVDB1UnhiSS9BeklI?=
+ =?utf-8?B?QVBQYjFaSUlGKzRHckhGMkpRMW5ObkpvNVBsT1JvR01nOUc5OERQR1hrdk5u?=
+ =?utf-8?B?My9OYzBERmZBY1JYTGN5NHllRmRYdlFzRGVDN01UNWRHVzhnbExsdkE5NzB4?=
+ =?utf-8?B?ZWtsTDV2S3l4cGR4MURzY0NMT3ZVL09aM05naVNFV0NXQUh4RTIrYnBlSy9y?=
+ =?utf-8?B?K2RYM2tTbXZCNDhqL3JmaSs0eFBLUytoM0hycU5KbGJQN2IzUnN2TDZ5Q3p6?=
+ =?utf-8?B?aCt0cEg4alk4bFYyNlkyUy9zTmRrbWwxcEROWGx4T3dZMmxpNld6eEhvVjB4?=
+ =?utf-8?Q?G/Z22kUiJGbl9DahNj4/bgPT4bqyLcOu0RSnM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?STdaWWFaWU5uUFZhMTkyYllYckFDOGdMSitLVnNTL3d4dERlZDJoT3VGQWV5?=
+ =?utf-8?B?ZXBuYkFWTDBmK3FNUGgrTHRHMmpsb2t2cHpyS2tGbDZGL0N4T2s0STRkU2hr?=
+ =?utf-8?B?SjZoeHgyMk9EWVN6Z2lwUng2NTBZVnhWY0d0c3pmbzQvZG1yRVlFczJ2UE1y?=
+ =?utf-8?B?RUtneUdvZHp4NW9JdUd0enNlZTFUUGd3TE5mRW9HYTNGRktmdDZIaW9lb285?=
+ =?utf-8?B?RFBacnE5WXhGVEhKdGMvS1RicjZFdGpnVURaWWVjc3hQdXpqcnh5Qk5MWVNJ?=
+ =?utf-8?B?MjlVSnZUa0V4VDFOQlBoU3p4bnlOWmxFOVJNWXU1MkhuWW9MTVNHNlY4cHUw?=
+ =?utf-8?B?ai9CTzZMZFhlazVOQVpTZ2Q4cDgzYk9ML3I3N1krOURqZHYyNnJ1QkpZMStO?=
+ =?utf-8?B?RS9XZEZGZHVkYUQ3Vk9KSU9yWXpsRGk4WHA4Njl6V3QrR1F1R0g0bFBjRUR6?=
+ =?utf-8?B?TERlbEpOU1ZLRmxVWDJtT1lvMUllZmVkSHJRVkU4MGpCNUptZ0NieUk5cnVo?=
+ =?utf-8?B?MUNkMWxITklBZWNBK2diRDcrUWh1cmx0Tm1lYTdQSmVMZmIrYUJ3OHNwM3JX?=
+ =?utf-8?B?Vk9jYzRuc2tWOXc1WUJhaHl1dzNVaExwRmJkVVZUZjNCOUhZZFJIZUtuRUFJ?=
+ =?utf-8?B?d3M2c2JsT2dYc3RHcTd5eGlwcis2S1RPS3NEZUw1ZnlZK0FzZ2xvY2dielJx?=
+ =?utf-8?B?VUVyTy9pK0JzS2NSakU1Y1NIMHA4di92V1pjSThJUi9VL2Ywd2xmOEVrSHNN?=
+ =?utf-8?B?T0NFcTR2dFZ5K00xSThWVkp5UjdDRWVtRUJXb2doR1FqV1c0eGZTQ29Gd21z?=
+ =?utf-8?B?eXBlOERYR0grTjJpa1NoemZTTW1Bd2FoRGV3QlpwRm5kMkd1YlcrVFJvMWg0?=
+ =?utf-8?B?RythUGxsclNPaURuYVVGc3V1TkF2MVZDWGt1ZXJkNzdadkI2U25xekNETk8r?=
+ =?utf-8?B?TzI5QzQ3amM2OTEwaWhOQ3lnb3Z4bkNOb25YbmJNSXUzb0owaldzRE9ONzFB?=
+ =?utf-8?B?cXUvUDg1Rm41L1hzTnFPOG95bXFsUWdEQ0FyNFdjZndsVElMRkc1aHdZVGFO?=
+ =?utf-8?B?MXdLbk4zYTF5U2FaMXR3SFFQdmZLTUs1T0NhMkdqV1I0WEF6TXZxd0tSNzVK?=
+ =?utf-8?B?QXVxMHBDZWZ6cStGQzB4MkF1NXJLeGJKd1F0emw0RlpSdmYySjFsRGJ6ZjF0?=
+ =?utf-8?B?NGZZTTE1L2FZVVNIUldlMVJ0NjJCdVBFanF4VXgrZU1BcU9VV2dPRkRzWVJF?=
+ =?utf-8?B?Y0F5OEN3WFdPU0FmSDJqN2JTZmZTYk9nY1JuM3p6QW9Tdm9IVVVhbDhvdlFl?=
+ =?utf-8?B?SHBmYnlIN3dKMWgycmlCYjFNc2ZNWUxoY2FDZ3JMMG5BTVdmZHJOOE9ydUU5?=
+ =?utf-8?B?d1BTS2xNNVpZWERzTGZjd2UzTXdsdHo1SXBnUDJjR1M1TWkzT2ZiYW0xSjhq?=
+ =?utf-8?B?dkxIcS9ONkxWNm9SRXhsYUhaN004RGFEV3ZtbEpsc0FoUmhVTUJJbkh6NHNq?=
+ =?utf-8?B?cWdKWkU2Qk9YSnNJSkxRNitHTW1rU1YrR216S2Z3U2IrYThWbDM1ZFg1RVZq?=
+ =?utf-8?B?WDA1UFE4eGhmT0Q3a25LL0tGZEcwMnJUVE5MY0k2SSsyOGQ2U05icTRNZG14?=
+ =?utf-8?B?M3JWU05SajcxKzNLMlNyWDJQS25XT0pwUXFCZGUzWFJXTUNNVzVwZmdzY2pD?=
+ =?utf-8?B?ekl0T1E3ajRDeDhkaUZLbitrMDVGYmhpSXo4akV0QUV6OWhSZHpRMkNVTVdw?=
+ =?utf-8?B?OC9MOXVhWXV0SzFib0lUalp6K0Zualk2aGVTZ05lcjZoNXBCNUo5d0hBb2t0?=
+ =?utf-8?B?MStxMmtncXp1cnArNXVSakxDVFg3eVlVSFVkdVFaR3p0dzJTeStaNHFTTXBR?=
+ =?utf-8?B?VjZkQkVodEI5TyszWVRhT1p5Z2lZWEFoa0xNbGtqKzJaYXp0anhFVkdTNkRk?=
+ =?utf-8?B?RFZaeGhKaHhJUVNmNUNCYVRrTXhYT0c1RDNiZ0dZeE5VZGxuYVhxYnhZQ05z?=
+ =?utf-8?B?cGdhWTVqWGY5S2YyMzA1NUJLcW1uQi8wVWhObUlvb1JlQW16TDZacXlxWllk?=
+ =?utf-8?B?Z2RqWnJKQVc4K1RjcFVlR3d3WWlrQkpzTTEzOVVwSDVxVTNkVlJKUm9ScFAx?=
+ =?utf-8?Q?SBzrqY6LPb1lV05P3ODVwyhFn?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36df62ed-33fc-4bcf-dbb9-08ddae0e1842
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 02:16:11.8454
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: heHilvDs50vphycPXRTtH2YZXdbAf7qpsdsms6GMN0PXA1u9qMzjMQfmXUi/LnpAvc2XhTWeZvTKVv+KX1mgHg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6043
 
-On Tuesday 06/17 at 09:11 -0700, Calvin Owens wrote:
-> On Tuesday 06/17 at 11:50 +0200, Sebastian Andrzej Siewior wrote:
-> > On 2025-06-17 02:23:08 [-0700], Calvin Owens wrote:
-> > > Ugh, I'm sorry, I was in too much of a hurry this morning... cargo is
-> > > obviously not calling PR_FUTEX_HASH which is new in 6.16 :/
-> > No worries.
-> >
-> > > > This is with LTO enabled.
-> > >
-> > > Full lto with llvm-20.1.7.
-> > >
-> > …
-> > > Nothing showed up in the logs but the RCU stalls on CPU16, always in
-> > > queued_spin_lock_slowpath().
-> > >
-> > > I'll run the build it was doing when it happened in a loop overnight and
-> > > see if I can trigger it again.
->
-> Actually got an oops this time:
->
-> <snip>
->
-> This is a giant Yocto build, but the comm is always cargo, so hopefully
-> I can run those bits in isolation and hit it more quickly.
->
-> > Please check if you can reproduce it and if so if it also happens
-> > without lto.
-
-It takes longer with LTO disabled, but I'm still seeing some crashes.
-
-First this WARN:
-
-    ------------[ cut here ]------------
-    WARNING: CPU: 2 PID: 1866190 at mm/slub.c:4753 free_large_kmalloc+0xa5/0xc0
-    CPU: 2 UID: 1000 PID: 1866190 Comm: python3 Not tainted 6.16.0-rc2-nolto-00024-g9afe652958c3 #1 PREEMPT 
-    Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
-    RIP: 0010:free_large_kmalloc+0xa5/0xc0
-    Code: 02 00 00 74 01 fb 83 7b 30 ff 74 07 c7 43 30 ff ff ff ff f0 ff 4b 34 75 08 48 89 df e8 84 dd f9 ff 48 83 c4 08 5b 41 5e 5d c3 <0f> 0b 48 89 df 48 c7 c6 46 92 f5 82 48 83 c4 08 5b 41 5e 5d e9 42
-    RSP: 0018:ffffc90024d67ce8 EFLAGS: 00010206
-    RAX: 00000000ff000000 RBX: ffffea00051d5700 RCX: ffffea00042f2208
-    RDX: 0000000000053a55 RSI: ffff88814755c000 RDI: ffffea00051d5700
-    RBP: 0000000000000000 R08: fffffffffffdfce5 R09: ffffffff83d52928
-    R10: ffffea00047ae080 R11: 0000000000000003 R12: ffff8882cae5cd00
-    R13: ffff88819bb19c08 R14: ffff88819bb194c0 R15: ffff8883a24df900
-    FS:  0000000000000000(0000) GS:ffff88909bf54000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 000055842ea1e3f0 CR3: 0000000d82b9d000 CR4: 0000000000750ef0
-    PKRU: 55555554
-    Call Trace:
-     <TASK>
-     futex_hash_free+0x10/0x40
-     __mmput+0xb4/0xd0
-     exec_mmap+0x1e2/0x210
-     begin_new_exec+0x491/0x6c0
-     load_elf_binary+0x25d/0x1050
-     ? load_misc_binary+0x19a/0x2d0
-     bprm_execve+0x1d5/0x370
-     do_execveat_common+0x29e/0x300
-     __x64_sys_execve+0x33/0x40
-     do_syscall_64+0x48/0xfb0
-     entry_SYSCALL_64_after_hwframe+0x4b/0x53
-    RIP: 0033:0x7fd8ec8e7dd7
-    Code: Unable to access opcode bytes at 0x7fd8ec8e7dad.
-    RSP: 002b:00007fd8adff9e88 EFLAGS: 00000206 ORIG_RAX: 000000000000003b
-    RAX: ffffffffffffffda RBX: 00007fd8adffb6c0 RCX: 00007fd8ec8e7dd7
-    RDX: 000055842ed3ce60 RSI: 00007fd8eaea3870 RDI: 00007fd8eae87940
-    RBP: 00007fd8adff9e90 R08: 00000000ffffffff R09: 0000000000000000
-    R10: 0000000000000008 R11: 0000000000000206 R12: 00007fd8ed12da28
-    R13: 00007fd8eae87940 R14: 00007fd8eaea3870 R15: 0000000000000001
-     </TASK>
-    ---[ end trace 0000000000000000 ]---
-    page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x13d1507b pfn:0x14755c
-    flags: 0x2000000000000000(node=0|zone=1)
-    raw: 2000000000000000 ffffea00042f2208 ffff88901fd66b00 0000000000000000
-    raw: 0000000013d1507b 0000000000000000 00000000ffffffff 0000000000000000
-    page dumped because: Not a kmalloc allocation
-    page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x13d1507b pfn:0x14755c
-    flags: 0x2000000000000000(node=0|zone=1)
-    raw: 2000000000000000 ffffea00042f2208 ffff88901fd66b00 0000000000000000
-    raw: 0000000013d1507b 0000000000000000 00000000ffffffff 0000000000000000
-    page dumped because: Not a kmalloc allocation
-
-...and then it oopsed (same stack as my last mail) about twenty minutes
-later when I hit Ctrl+C to stop the build:
-
-    BUG: unable to handle page fault for address: 00000008849281a9
-    #PF: supervisor write access in kernel mode
-    #PF: error_code(0x0002) - not-present page
-    PGD 0 P4D 0 
-    Oops: Oops: 0002 [#1] SMP
-    CPU: 13 UID: 1000 PID: 1864338 Comm: python3 Tainted: G        W           6.16.0-rc2-nolto-00024-g9afe652958c3 #1 PREEMPT 
-    Tainted: [W]=WARN
-    Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
-    RIP: 0010:queued_spin_lock_slowpath+0x112/0x1a0
-    Code: c8 c1 e8 10 66 87 47 02 66 85 c0 74 40 0f b7 c0 49 c7 c0 f8 ff ff ff 89 c6 c1 ee 02 83 e0 03 49 8b b4 f0 40 8b 06 83 c1 e0 04 <48> 89 94 30 00 12 d5 83 83 7a 08 00 75 08 f3 90 83 7a 08 00 74 f8
-    RSP: 0018:ffffc9002b35fd20 EFLAGS: 00010212
-    RAX: 0000000000000020 RBX: ffffc9002b35fd50 RCX: 0000000000380000
-    RDX: ffff88901fde5200 RSI: 0000000900bd6f89 RDI: ffff88814755d204
-    RBP: 0000000000000000 R08: fffffffffffffff8 R09: 00000000002ab900
-    R10: 0000000000000065 R11: 0000000000001000 R12: ffff88906c343e40
-    R13: ffffc9002b35fd50 R14: ffff88814755d204 R15: 00007fd8eb6feac0
-    FS:  00007fd8eb6ff6c0(0000) GS:ffff88909c094000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 00000008849281a9 CR3: 0000001fcf611000 CR4: 0000000000750ef0
-    PKRU: 55555554
-    Call Trace:
-     <TASK>
-     futex_unqueue+0x21/0x90
-     __futex_wait+0xb7/0x120
-     ? __futex_wake_mark+0x40/0x40
-     futex_wait+0x5b/0xd0
-     do_futex+0x86/0x120
-     __se_sys_futex+0x10d/0x180
-     do_syscall_64+0x48/0xfb0
-     entry_SYSCALL_64_after_hwframe+0x4b/0x53
-    RIP: 0033:0x7fd8ec8a49ee
-    Code: 08 0f 85 f5 4b ff ff 49 89 fb 48 89 f0 48 89 d7 48 89 ce 4c 89 c2 4d 89 ca 4c 8b 44 24 08 4c 8b 4c 24 10 4c 89 5c 24 08 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 80 00 00 00 00 48 83 ec 08
-    RSP: 002b:00007fd8eb6fe9b8 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-    RAX: ffffffffffffffda RBX: 00007fd8eb6ff6c0 RCX: 00007fd8ec8a49ee
-    RDX: 0000000000000000 RSI: 0000000000000189 RDI: 00007fd8eb6feac0
-    RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000ffffffff
-    R10: 0000000000000000 R11: 0000000000000246 R12: 00007fd8eb6fea00
-    R13: 0000000000001de0 R14: 00007fd8ececa240 R15: 00000000000000ef
-     </TASK>
-    CR2: 00000008849281a9
-    ---[ end trace 0000000000000000 ]---
-
-I enabled lockdep and I've got it running again.
-
-I set up a little git repo with a copy of all the traces so far, and the
-kconfigs I'm running:
-
-    https://github.com/jcalvinowens/lkml-debug-616
-
-...and I pushed the actual vmlinux binaries here:
-
-    https://github.com/jcalvinowens/lkml-debug-616/releases/tag/20250617
-
-There were some block warnings on another machine running the same
-workload, but of course they aren't necessarily related.
-
-> > I have no idea why one spinlock_t remains locked. It is either locked or
-> > some stray memory.
-> > Oh. Lockdep adds quite some overhead but it should complain that a
-> > spinlock_t is still locked while returning to userland.
+On 6/17/2025 6:42 PM, Alex Hung wrote:
+> Hi,
 > 
-> I'll report back when I've tried :)
+> Thanks for reporting. Can you please create a bug at https:// 
+> gitlab.freedesktop.org/drm/amd/-/issues/ for issue tracking and log 
+> collection.
 > 
-> I'll also try some of the mm debug configs.
+> On 6/12/25 08:08, ggo@tuxedocomputers.com wrote:
+>> Hi,
+>>
+>> I have discovered that two small form factor desktops with Ryzen AI 7
+>> 350 and Ryzen AI 5 340 crash when woken up from suspend. I can see how
+>> the LED on the USB mouse is switched on when I trigger a resume via
+>> keyboard button, but the display remains black. The kernel also no
+>> longer responds to Magic SysRq keys in this state.
+>>
+>> The problem affects all kernels after merge b50753547453 (v6.11.0). But
+>> this merge only adds PCI_DEVICE_ID_AMD_1AH_M60H_ROOT with commit
+>> 59c34008d (necessary to trigger this bug with Ryzen AI CPU).
+>> I cherry-picked this commit and continued searching. Which finally led
+>> me to commit f6098641d3e - drm/amd/display: fix s2idle entry for DCN3.5+
+>>
+>> If I remove the code, which has changed somewhat in the meantime, then
+>> the suspend works without any problems. See the following patch.
+>>
+>> Regards,
+>> Georg
+>>
+>>
+>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> index d3100f641ac6..76204ae70acc 100644
+>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>> @@ -3121,9 +3121,6 @@ static int dm_suspend(struct amdgpu_ip_block
+>> *ip_block)
+>>
+>>       dc_set_power_state(dm->dc, DC_ACPI_CM_POWER_STATE_D3);
+>>
+>> -    if (dm->dc->caps.ips_support && adev->in_s0ix)
+>> -        dc_allow_idle_optimizations(dm->dc, true);
+>> -
+>>       dc_dmub_srv_set_power_state(dm->dc->ctx->dmub_srv,
+>> DC_ACPI_CM_POWER_STATE_D3);
+>>
+>>       return 0;
+>>
 > 
-> Thanks,
-> Calvin
+> 
+
+That patch you did is basically blocking hardware sleep.  I wouldn't 
+call it a solution.
+
+If you haven't already; please use 
+https://git.kernel.org/pub/scm/linux/kernel/git/superm1/amd-debug-tools.git/about/ 
+to triage this issue.  It will flag the most common things that are hard 
+to diagnose without knowledge.
+
+If that doesn't flag anything, please reproduce on a mainline kernel 
+(6.15.y or 6.16-rcX) and then file a bug as Alex suggested.  Attach the 
+report you generated from the tool there.
