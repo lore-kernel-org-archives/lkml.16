@@ -1,133 +1,126 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DEFB2DE1E2;
-	Wed, 18 Jun 2025 10:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B0827E7C0;
+	Wed, 18 Jun 2025 10:24:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242191; cv=none; b=dICquCAR06qiU3T5DxjCa6Fqe1g2TnCsZlcFhFvJjL+CEeNFcSt0l038aT189ml4lAMAh8CTEsqo01MgHClWFbb8d7L1DUPWNK5FJVFmE4UldPomlk7KGRPXQbm3Mojacs81TsnWHvKDld7T7UULHbAKXb9ETKUUcmaKxCvy9A4=
+	t=1750242262; cv=none; b=njANGiKaLSkj0B63C/gN6hcOOoTQm9lh55K+4vg8jzKVEATeXWLD4IzcBWaXOK23ARAqOFoMT1X3H4rqXv3MQgaV/thoG5h04jmGrj1voeUzNMPMR0tozSaKD8lyA2b7XxJxMrlk1wIYzuTIKo2jcXD90YZOZv7WVHiPak4roX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242191; c=relaxed/simple;
-	bh=MTXa6A8nQtm2Tlld5BzWdCXG3mqQlWzGBq3MLCLaa50=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gPsW/oAZEmkTfavMFoYXDJTLSpYAf+wpUEiSQSer0nNYkF1mxmL4jghNsz68/kdGkx/pn7f6M6D1MZ45k6Cm7Zw7ZhIeFf7l5g/QMqxzwNu41oky6qC/InEhETKYIgzt15H6hkn/YNjnCE0hlllqMN31yMzmjN5jN2652PX+IGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E16731D13;
-	Wed, 18 Jun 2025 03:22:48 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 24DD93F66E;
-	Wed, 18 Jun 2025 03:23:08 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: jarkko@kernel.org,
-	sudeep.holla@arm.com,
-	peterhuewe@gmx.de,
-	jgg@ziepe.ca,
-	stuart.yoder@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1750242262; c=relaxed/simple;
+	bh=X3GP0rFGQWYb7D9EofmWO4CkjJb3nRBnJ4sS25K5GGQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UFXAy223eERRqJC/Jzy1GK7i/B/sOXg1WEh+SavnJs3aEfZ9FlNd1st+xUPCrgE7ZZ+ICPhXrJ3+VNYUouz8WssXbAo6+dFNUAX446FWICbw3LW9JDrvtBU7ZHpELuvHpXBOqlp+kdU4gOO7RhbqQYAB6v38zmHeS09znpyBkkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fLXrOwT1; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLXrOwT1"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a51481a598so3907860f8f.3;
+        Wed, 18 Jun 2025 03:24:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750242259; x=1750847059; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
+        b=fLXrOwT1J5Y8bdFyDn/70qn+YD5ESDAh50Ptgk8VAKKuaPGParp0fHlgNvJGj99tsp
+         adOuC0cVcgBgwb8JeitA1HmvYQGB2QqTMJgkdFRaO/+fvQC/gGZuK4kGfnUl6H2Twakf
+         wxVc4ENtBJSAWQKxb7DpRWfJISXxCbdGg3i+68qs4sF+1HmwoPx2tuoPB1ahgermF58P
+         SgeL3mY1R9BIl7MV1KRwFf4iC0h5DJSwi+rQ+I6lPfZDzKGo9kVInQ8I0UORSGFjtvkD
+         97Di5So1LSpReZ5+417M0mDGWW0umuUv1EsqzRUsMg4iXqwW+03Hb++neEv+G0+z4Tum
+         sGxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750242259; x=1750847059;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
+        b=qswKrS4ZM+jR+8YskIDB5WzpY4OZ9Xx9fDqVPoCX7/hO06Y2K7S7J9COyk63pXsU9D
+         i3C79FrH/BydSguNIauZ/FUiTo9KL18/bTfuJoZ5Y5xQZq45Svlv3vy5l1wtb68SANds
+         2f0nqh2vr1LBysl/fJhr97Y6/bh6ypncbBbCy1gfuv3GolcZhnp15mmt+fdSs3ifA1H6
+         4QMIKu2Mt0TjtJSFzOwzKcNo+bP8xbI19PPFx87W8tmmPjfOBJXI+A5i6IVDXypjTC2A
+         VAphdnlIxByHyLiLyRZfnbAJodO3RmO3KDrTuHHzWouZjwljbRLco20xaP2l55EtH703
+         H77w==
+X-Forwarded-Encrypted: i=1; AJvYcCUSLsu9g2mcKtCl3zcUTaiWZ2F4KkO0fCL6HzUneKfeY/YzNTOEfifmJrhzn94cbNSiZvG3S0gUQZPU@vger.kernel.org, AJvYcCUZjuScDyQPe9SNHyBOlGWccMXHq8ETjBFr4lVWbodbcxTfn1aQPnI2Y1+/BS/15GBwCCfyRrEyHuHkGtMVxvY=@vger.kernel.org, AJvYcCW9dvT5Ni2bc454p+VkuVCx3ueWuH9KubxYdGnokKJI9tCo18WpdckG7DU8Y33ZtxekaYuGV3OY7NK5b7mQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdO76FCbTc0H/A9IABUzGX57ZMV5HzpPpc67rdPZuC8jvBXyfv
+	H5t2JSR9wubZ4/YTSJURXYQs4BV5FJWzkgwTCnwlc+dtTxWIQTUm5iVwp0Kd4OWuJ68=
+X-Gm-Gg: ASbGncuLKk1SPM6vwr9/XuWnthz1NIppkU7Mt9HISwwAWsD4dAekSczOquKqqC5H83t
+	LJTp9yCb1tjfi/IpYGNbcNi6XjcByLB81v0vDuuFdRZsOaLvsI6jDYTFURvP2j2AmQpJ/wShgF7
+	VwKsCQnX8+7CHWTkiTQ81vcbJmbrOjF8QD0+ad+Hpi16QmkshbSDgo89he10rttw/8Ubk1/Fsec
+	tTIWHJqtyzVB+TdeF2h0oK5Wk3hVqtmgoPm7SIaXE0mtYnudtPkKM6mAQpsGjT4CCpDEeXhyr8J
+	S3CXLmiLd6+5UzGCW1VCeJzDyv/io9M+R5mIayKcO5iD/4l5aavANmuNHb7KrhRLacYxLCYa2r1
+	jNx0s7PwPnXRDQnFkoiyqh9M0fomoDELwOJEC
+X-Google-Smtp-Source: AGHT+IEWJFosgYtVST8+ChR8BDeP/SmvQxlvk4F/BE7rA8OuYv9evRFDiLtSxCZZLKuCzhAMhcHWNw==
+X-Received: by 2002:a05:6000:144e:b0:3a4:f975:30f7 with SMTP id ffacd0b85a97d-3a572e58f6fmr13346541f8f.56.1750242258788;
+        Wed, 18 Jun 2025 03:24:18 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08c7csm16769840f8f.50.2025.06.18.03.24.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 03:24:18 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v4 2/2] tpm: tpm_crb_ffa: try to probe tpm_crb_ffa when it's built-in
-Date: Wed, 18 Jun 2025 11:23:02 +0100
-Message-Id: <20250618102302.2379029-3-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250618102302.2379029-1-yeoreum.yun@arm.com>
-References: <20250618102302.2379029-1-yeoreum.yun@arm.com>
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v7 7/9] rust: platform: Set `OF_ID_TABLE` default to `None` in `Driver` trait
+Date: Wed, 18 Jun 2025 11:22:16 +0100
+Message-ID: <20250618102216.3049450-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-To generate the boot_aggregate log in the IMA subsystem using TPM PCR values,
-the TPM driver must be built as built-in and must be probed before
-the IMA subsystem is initialized.
+Provide a default value of `None` for `Driver::OF_ID_TABLE` to simplify
+driver implementations.
 
-However, when the TPM device operates over the FF-A protocol using the CRB interface,
-probing fails and returns -EPROBE_DEFER
-if the tpm_crb_ffa device — an FF-A device that provides
-the communication interface to the tpm_crb driver — has not yet been probed.
+Drivers that do not require OpenFirmware matching no longer need to
+import the `of` module or define the constant explicitly.
 
-This issue occurs because both crb_acpi_driver_init() and
-tpm_crb_ffa_driver_init() are registered with device_initcall.
-As a result, crb_acpi_driver_init() may be invoked before
-tpm_crb_ffa_driver_init(), which is responsible for probing the tpm_crb_ffa device.
+This reduces unnecessary boilerplate and avoids pulling in unused
+dependencies.
 
-When this happens, IMA fails to detect the TPM device and
-logs the following message:
-
-  | ima: No TPM chip found, activating TPM-bypass!
-
-Consequently, it cannot generate the boot_aggregate log with
-the PCR values provided by the TPM.
-
-To resolve this issue, the tpm_crb_ffa_init() function explicitly attempts to
-probe the tpm_crb_ffa by register tpm_crb_ffa driver so that
-when tpm_crb_ffa device is created before tpm_crb_ffa_init(),
-probe the tpm_crb_ffa device in tpm_crb_ffa_init() to finish probe the
-TPM device completely.
-
-This ensures that the TPM device using CRB over FF-A
-can be successfully probed, even if crb_acpi_driver_init() is called first.
-
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
 ---
- drivers/char/tpm/tpm_crb_ffa.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ rust/kernel/platform.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-index 4ead61f01299..462fcf610020 100644
---- a/drivers/char/tpm/tpm_crb_ffa.c
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -115,6 +115,7 @@ struct tpm_crb_ffa {
- };
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 5923d29a0511..2436f55b579b 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -162,7 +162,7 @@ pub trait Driver: Send {
+     type IdInfo: 'static;
  
- static struct tpm_crb_ffa *tpm_crb_ffa;
-+static struct ffa_driver tpm_crb_ffa_driver;
+     /// The table of OF device ids supported by the driver.
+-    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>>;
++    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
  
- static int tpm_crb_ffa_to_linux_errno(int errno)
- {
-@@ -168,13 +169,23 @@ static int tpm_crb_ffa_to_linux_errno(int errno)
-  */
- int tpm_crb_ffa_init(void)
- {
-+	int ret = 0;
-+
-+	if (!IS_MODULE(CONFIG_TCG_ARM_CRB_FFA)) {
-+		ret = ffa_register(&tpm_crb_ffa_driver);
-+		if (ret) {
-+			tpm_crb_ffa = ERR_PTR(-ENODEV);
-+			return ret;
-+		}
-+	}
-+
- 	if (!tpm_crb_ffa)
--		return -ENOENT;
-+		ret = -ENOENT;
- 
- 	if (IS_ERR_VALUE(tpm_crb_ffa))
--		return -ENODEV;
-+		ret = -ENODEV;
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
- 
-@@ -369,7 +380,9 @@ static struct ffa_driver tpm_crb_ffa_driver = {
- 	.id_table = tpm_crb_ffa_device_id,
- };
- 
-+#ifdef MODULE
- module_ffa_driver(tpm_crb_ffa_driver);
-+#endif
- 
- MODULE_AUTHOR("Arm");
- MODULE_DESCRIPTION("TPM CRB FFA driver");
+     /// Platform driver probe.
+     ///
 -- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+2.43.0
 
