@@ -1,144 +1,60 @@
-Received: from finn.localdomain (finn.gateworks.com [108.161.129.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56A927F00E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=108.161.129.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2354628682;
+	Wed, 18 Jun 2025 21:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750283411; cv=none; b=ANxgqd/Pxt7fJ0B3mIHRuR3b63y3Wsn5Ux69a1HY+1FxkgAAy3BZqeKAsrthpne83WQbqLxLPZ4ZPuvDoFTVoOf9ndwl0l9PkcigaKsTAAK0F8e7M6BTtAE2CpYS6gPYA8hdeQ0sSAKX9IAPf/5Ah6FtxH+4TdvwnWbQN3T5srI=
+	t=1750283612; cv=none; b=YCIj3idweE4fIv+ss3pMYN3OYgUQ1oa9CACzTg+2GBSqlrTlqUGdNJTg2PUKv+uWZLL0jXLaP1KyNctVSEZIR18CmgTD/YQY8iG2qv8ODZlEuqqr0GBplgSRH34cV+Pcdb4+WVyvQE5wqJM9vpahIykMIyHVA63R+J9PTN0P+k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750283411; c=relaxed/simple;
-	bh=dtSUcDXA9gLdrVobI3l+4mncrd5DHqbn5H1MnslcNw4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TNVKZ4R96YW+ohmcRaHQIM8GnDRt2KDGaxxyHhl0SOEG6uBo1KGHcL4uXhUz/urgPjb9NARplxWWVhVnM8xuo4hZ4y5O96roqEXYiK87n/eN1dhbOBwWdnFNYygqtJLognWgn4XGi2G0P2AzCq7OpEUxVMepQ1oM2nPwTWWNjU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com; spf=pass smtp.mailfrom=gateworks.com; arc=none smtp.client-ip=108.161.129.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gateworks.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gateworks.com
-Received: from syn-068-189-091-139.biz.spectrum.com ([68.189.91.139] helo=tharvey.pdc.gateworks.com)
-	by finn.localdomain with esmtp (Exim 4.95)
-	(envelope-from <tharvey@gateworks.com>)
-	id 1uS0Do-007yeJ-UB;
-	Wed, 18 Jun 2025 21:21:29 +0000
-From: Tim Harvey <tharvey@gateworks.com>
-To: Stefano Babic <sbabic@denx.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"NXP i.MX U-Boot Team" <uboot-imx@nxp.com>,
-	Tim Harvey <tharvey@gateworks.com>,
-	Tom Rini <trini@konsulko.com>,
-	Marek Vasut <marex@denx.de>,
-	u-boot@lists.denx.de
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] imx8mp-venice: enable USB device mode
-Date: Wed, 18 Jun 2025 14:21:20 -0700
-Message-Id: <20250618212120.1548575-3-tharvey@gateworks.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250618212120.1548575-1-tharvey@gateworks.com>
-References: <20250618212120.1548575-1-tharvey@gateworks.com>
+	s=arc-20240116; t=1750283612; c=relaxed/simple;
+	bh=wXtVusAp3+QiMEIYqRg9Vl6bCRKV2LLfzhRzLsjob9w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AeDxsfA8rn3f11fWYlzszYl2ftda2FF6d7lmnMJaMLD850lB82WFJd/Nt6vPdG9sLfIf7mBP+0H0LJYsadpZ8ewrA3i91lsMeqLLHaI11c618HJ/WdFReKvC3CJCFW+SnuD2EoKdaBmYe0BvPnKbP96Dk9zhSLlX1WuOZaN+lKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DhJO2H3G; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DhJO2H3G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6193EC4CEE7;
+	Wed, 18 Jun 2025 21:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750283611;
+	bh=wXtVusAp3+QiMEIYqRg9Vl6bCRKV2LLfzhRzLsjob9w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DhJO2H3GZYNsUHx0LMLE5Fls0eTyfMNnoQLmwYviESb1WWJPdRitbjF36PFQeByn2
+	 BnRngd3AQhxuqE+ApR0C96PpCF0e+BaSnAIK/KVyyzbjwEnMzXMpfiAt+27sRMEXS/
+	 x8+ByI0b6GGuUqpt6Modf6UOJhryCcPwcUXqcdflsnTEGqV60IRlUmu+mGT9YcTyjk
+	 ueSHH1vs65tGjZVCbZ2cI4c0aUcg6dEoeyHaLxeGI6tmCovJL9PTTie3NQjyzkwjAl
+	 bJGvrZS8lkNSvLrmzBx2HSO0Z01Z9BzYW8ZinnO4avwQ9MGCi9zZSeSowc19OL3S1N
+	 +d/1qQHQ8y+9Q==
+Date: Wed, 18 Jun 2025 14:53:30 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, ap420073@gmail.com
+Subject: Re: [PATCH net v1] netmem: fix skb_frag_address_safe with
+ unreadable skbs
+Message-ID: <20250618145330.2584636e@kernel.org>
+In-Reply-To: <20250617210950.1338107-1-almasrymina@google.com>
+References: <20250617210950.1338107-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Now that we can determine device role via a usb-connector ID pin,
-remove the host-only mode dt override and enable additional USB
-device mode support.
+On Tue, 17 Jun 2025 21:09:50 +0000 Mina Almasry wrote:
+> +	void *ptr;
+> +
+> +	if (!skb_frag_page(frag))
+> +		return NULL;
+> +
+> +	ptr = page_address(skb_frag_page(frag));
 
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
----
- arch/arm/dts/imx8mp-venice-gw71xx-2x-u-boot.dtsi | 5 -----
- arch/arm/dts/imx8mp-venice-gw72xx-2x-u-boot.dtsi | 5 -----
- arch/arm/dts/imx8mp-venice-gw73xx-2x-u-boot.dtsi | 5 -----
- arch/arm/dts/imx8mp-venice-gw74xx-u-boot.dtsi    | 5 -----
- configs/imx8mp_venice_defconfig                  | 7 +++++++
- 5 files changed, 7 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm/dts/imx8mp-venice-gw71xx-2x-u-boot.dtsi b/arch/arm/dts/imx8mp-venice-gw71xx-2x-u-boot.dtsi
-index a291b7abab62..c1d21e51c4e6 100644
---- a/arch/arm/dts/imx8mp-venice-gw71xx-2x-u-boot.dtsi
-+++ b/arch/arm/dts/imx8mp-venice-gw71xx-2x-u-boot.dtsi
-@@ -54,8 +54,3 @@
- 		line-name = "pci_wdis#";
- 	};
- };
--
--/* gpio-usb-con not supported yet in U-Boot so make this a host for now */
--&usb_dwc3_0 {
--	dr_mode = "host";
--};
-diff --git a/arch/arm/dts/imx8mp-venice-gw72xx-2x-u-boot.dtsi b/arch/arm/dts/imx8mp-venice-gw72xx-2x-u-boot.dtsi
-index bdf5370fcdf6..9f6d05fdae0c 100644
---- a/arch/arm/dts/imx8mp-venice-gw72xx-2x-u-boot.dtsi
-+++ b/arch/arm/dts/imx8mp-venice-gw72xx-2x-u-boot.dtsi
-@@ -89,8 +89,3 @@
- 		line-name = "pci_wdis#";
- 	};
- };
--
--/* gpio-usb-con not supported yet in U-Boot so make this a host for now */
--&usb_dwc3_0 {
--	dr_mode = "host";
--};
-diff --git a/arch/arm/dts/imx8mp-venice-gw73xx-2x-u-boot.dtsi b/arch/arm/dts/imx8mp-venice-gw73xx-2x-u-boot.dtsi
-index 7e6f66bd9dd9..3b23802e9a7d 100644
---- a/arch/arm/dts/imx8mp-venice-gw73xx-2x-u-boot.dtsi
-+++ b/arch/arm/dts/imx8mp-venice-gw73xx-2x-u-boot.dtsi
-@@ -95,8 +95,3 @@
- 		line-name = "pci_wdis#";
- 	};
- };
--
--/* gpio-usb-con not supported yet in U-Boot so make this a host for now */
--&usb_dwc3_0 {
--	dr_mode = "host";
--};
-diff --git a/arch/arm/dts/imx8mp-venice-gw74xx-u-boot.dtsi b/arch/arm/dts/imx8mp-venice-gw74xx-u-boot.dtsi
-index 95f5f15e742a..a82ce5a19788 100644
---- a/arch/arm/dts/imx8mp-venice-gw74xx-u-boot.dtsi
-+++ b/arch/arm/dts/imx8mp-venice-gw74xx-u-boot.dtsi
-@@ -250,8 +250,3 @@
- &wdog1 {
- 	bootph-pre-ram;
- };
--
--/* gpio-usb-con not supported yet in U-Boot so make this a host for now */
--&usb_dwc3_0 {
--	dr_mode = "host";
--};
-diff --git a/configs/imx8mp_venice_defconfig b/configs/imx8mp_venice_defconfig
-index 158ce4327488..2c9c6e5564fc 100644
---- a/configs/imx8mp_venice_defconfig
-+++ b/configs/imx8mp_venice_defconfig
-@@ -70,6 +70,7 @@ CONFIG_CMD_I2C=y
- CONFIG_CMD_MMC=y
- CONFIG_CMD_PCI=y
- CONFIG_CMD_USB=y
-+CONFIG_CMD_USB_MASS_STORAGE=y
- CONFIG_CMD_CAT=y
- CONFIG_CMD_SETEXPR_FMT=y
- CONFIG_CMD_XXD=y
-@@ -163,6 +164,7 @@ CONFIG_IMX_TMU=y
- # CONFIG_TPM_V1 is not set
- CONFIG_TPM2_TIS_SPI=y
- CONFIG_USB=y
-+CONFIG_DM_USB_GADGET=y
- CONFIG_USB_XHCI_HCD=y
- CONFIG_USB_XHCI_DWC3=y
- CONFIG_USB_XHCI_DWC3_OF_SIMPLE=y
-@@ -178,6 +180,11 @@ CONFIG_USB_ETHER_LAN78XX=y
- CONFIG_USB_ETHER_MCS7830=y
- CONFIG_USB_ETHER_RTL8152=y
- CONFIG_USB_ETHER_SMSC95XX=y
-+CONFIG_USB_GADGET=y
-+CONFIG_USB_GADGET_MANUFACTURER="Gateworks"
-+CONFIG_USB_GADGET_VENDOR_NUM=0x0525
-+CONFIG_USB_GADGET_PRODUCT_NUM=0xa4a5
-+CONFIG_USB_GADGET_DOWNLOAD=y
- CONFIG_IMX_WATCHDOG=y
- CONFIG_TPM=y
- # CONFIG_SPL_SHA512 is not set
+Sorry, noticed mid-push that we're calling skb_frag_page() twice.
+Let's save the return value and pass it to page_address?
 -- 
-2.25.1
-
+pw-bot: cr
