@@ -1,82 +1,179 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5892EAB6D;
-	Wed, 18 Jun 2025 14:02:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F1427F01C;
+	Wed, 18 Jun 2025 14:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750255381; cv=none; b=tj4UI1KZWJ/73yTfa5ml0REJ+epPbMdxbn5JZ7K+xLsooCkL+5Fwfgpp8+8LCYgl3On+SZ9TZ56fltihuWmVzDgUW8HpLML2HRur9QXxHZZ6jyNyujMH0adDt04XMu/heHzeapMeBU6otvGhRQgRNt42alAJOKEFXqKRe8c76rY=
+	t=1750255553; cv=none; b=GAWoQezIVAOnpEo4EkjzytLThS+++s+jENvEGAXEEJSOJwqyRyN2Ccagy3uB6RE4++/mmM1p+Otm6TDvAPnadqlkyj9KL9PC1Ti6JUJn1qq9DMgbOH8otbYlLivD4phDlYp6qkaC1yBjp7st/YxO69ENolY3WCygigERZp0Z2NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750255381; c=relaxed/simple;
-	bh=cJj1tsRvy78ZJVUYsUkI1JGZL+hPM6U3daoh+CuWnN0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ViO5q5GDtfTFNTfoMKYbSTAR9VEu56fiDq4LTLXt90rBJiAsxtGaHUyrSJ/dSDyQ1o7pbk5n1EyK5dJzdCborCySTeDpYW8o9vrUAE/nv7L1CiC17VgK9Xy7M4l5EgIlu/Jf76HZGIxMN0y9y8021Wu0uO5nZ4pliMKGplQ7aNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=FjacVzhQ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750255553; c=relaxed/simple;
+	bh=W59sWljTo31n0OteBWneyzCr/mv5go6jVJu0eiSWH4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VWUrG2MflArMZMZOko5lTtGSwAVRwFANzQc1+ZA0+FzRzH4pEAVMIPy7wXPr3GSLHmu0RgBhnXQ/TTWQTrjNC4iRf2iCns7xf0djUNwz4zZrxHBgE/4NAbDhHMrBxx7bKb48A45bDhxl19LkAuVjDt78S6RsNQF2re5mHMVUlq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C7n0slu3; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FjacVzhQ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cJj1tsRvy78ZJVUYsUkI1JGZL+hPM6U3daoh+CuWnN0=; b=FjacVzhQwHkrarX3E4VsjTz6K0
-	RHvaCoNeZoy9g8+AD4rtZogqcM2kMy3/VJBkvwV8I7qynAW5Ur5T10OlUNR5AVPRKovry4niErQk4
-	4+ZYl3OLQzoUFJgvkEvHkGjIyQeAMnMWrdeJF/TSfUwzHaSWWQ9LikVvnWNdCqXR8mH9yTGOp3vCP
-	8mg1AuPjRHmKn/g6f2VBvv8KbafBB+JEqtymggCQmzzBE/KNM+mohRQO13Ya+7otTwYJ0ey2DnoQ+
-	FTqFJs0tWltKVfhhoEc/UlvwC46p/qqqfZi+gSui73FRpYvTVVxD6STpw32hziZSBXcR02m6Rc6yN
-	n+4YF4Dw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRtNI-00000003p3Q-2Qb8;
-	Wed, 18 Jun 2025 14:02:49 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 87901307FB7; Wed, 18 Jun 2025 16:02:47 +0200 (CEST)
-Date: Wed, 18 Jun 2025 16:02:47 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
- unwind_deferred_trace()
-Message-ID: <20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.433111891@goodmis.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C7n0slu3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750255549; x=1781791549;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=W59sWljTo31n0OteBWneyzCr/mv5go6jVJu0eiSWH4k=;
+  b=C7n0slu3fT5k1E9wsO15CdNpOAYo9+KnqR30xTpMHFYfrAfD5thhvUTY
+   quA7kVgdVzEpiTRuWxcM4pG5lK/C9K6dUxn3O6gu1dcvvPeayHnCDvGNo
+   Gl2NPI3apJLbYgtgRKbzDhzVPa5Xb1rkLsah9zmGHIn306qNlSSIDO7JL
+   avJ4xTK17iKZCzB2a9/WUyjW6YhoAsZejFG/45YaLs3UJA1qGNBxTWDq+
+   4/vKyFRpbfwl40DD27xCSXLJD9HDQcBXr5Ur5S4NFLI5c7S3jRIlmDmxo
+   2mNGX21w8w3VyTnI5yNRwyuVbSgn+xl4WYjBBhQ5GTWujkkbLfzO2rgQq
+   w==;
+X-CSE-ConnectionGUID: h5BS2rRcRo+ZzrkRqT/Hyw==
+X-CSE-MsgGUID: 1QVZw8N1QUmut5nIkV2vFA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="40082830"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="40082830"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 07:05:48 -0700
+X-CSE-ConnectionGUID: w3Z7ccvaTDWPakvQ4a/4xw==
+X-CSE-MsgGUID: iPpkbhTtSeeaZTW+ams0lw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="150075214"
+Received: from linux-pnp-server-11.sh.intel.com ([10.239.176.178])
+  by fmviesa008.fm.intel.com with ESMTP; 18 Jun 2025 07:05:45 -0700
+From: Wangyang Guo <wangyang.guo@intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: wangyang.guo@intel.com,
+	Tianyou Li <tianyou.li@intel.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>
+Subject: [PATCH] x86/paravirt: add backoff mechanism to virt_spin_lock
+Date: Wed, 18 Jun 2025 22:04:24 +0800
+Message-ID: <20250618140424.3873939-1-wangyang.guo@intel.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611010428.433111891@goodmis.org>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 08:54:25PM -0400, Steven Rostedt wrote:
-> +/**
-> + * unwind_deferred_trace - Produce a user stacktrace in faultable context
-> + * @trace: The descriptor that will store the user stacktrace
-> + *
-> + * This must be called in a known faultable context (usually when entering
-> + * or exiting user space). Depending on the available implementations
-> + * the @trace will be loaded with the addresses of the user space stacktrace
-> + * if it can be found.
+When multiple threads waiting for lock at the same time, once lock owner
+releases the lock, waiters will see lock available and all try to lock,
+which may cause an expensive CAS storm.
 
-I am confused -- why would we ever want to call this on exiting
-user-space, or rather kernel entry?
+Binary exponential backoff is introduced. As try-lock attempt increases,
+there is more likely that a larger number threads compete for the same
+lock, so increase wait time in exponential.
 
-I thought the whole point was to request a user trace while in-kernel,
-and defer that to return-to-user.
+The optimization can improves SpecCPU2017 502.gcc_r benchmark by ~4% for
+288 cores VM on Intel Xeon 6 E-cores platform.
+
+For micro benchmark, the patch can have significant performance gain
+in high contention case. Slight regression is found in some of mid-
+conetented cases because the last waiter might take longer to check
+unlocked. No changes to low contented scenario as expected.
+
+Micro Bench: https://github.com/guowangy/kernel-lock-bench
+Test Platform: Xeon 8380L
+First Row: critical section length
+First Col: CPU core number
+Values: backoff vs linux-6.15, throughput based, higher is better
+
+non-critical-length: 1
+       0     1     2     4     8    16    32    64   128
+1   1.01  1.00  1.00  1.00  1.01  1.01  1.01  1.01  1.00
+2   1.02  1.01  1.02  0.97  1.02  1.05  1.01  1.00  1.01
+4   1.15  1.20  1.14  1.11  1.34  1.26  0.99  0.93  0.98
+8   1.59  1.71  1.18  1.80  1.95  1.45  1.05  0.99  1.17
+16  1.04  1.37  1.08  1.31  1.85  1.50  1.24  0.99  1.24
+32  1.24  1.36  1.23  1.40  1.50  1.86  1.45  1.18  1.48
+64  1.12  1.24  1.11  1.31  1.34  1.37  2.01  1.60  1.43
+
+non-critical-length: 32
+       0     1     2     4     8    16    32    64   128
+1   1.00  1.00  1.00  1.00  1.00  0.99  1.00  1.00  1.01
+2   1.00  1.00  1.00  1.00  1.00  1.00  1.00  0.99  1.00
+4   1.12  1.25  1.09  1.07  1.12  1.16  1.13  1.16  1.09
+8   1.02  1.16  1.03  1.02  1.04  1.07  1.04  0.99  0.98
+16  0.97  0.95  0.84  0.96  0.99  0.98  0.98  1.01  1.03
+32  1.05  1.03  0.87  1.05  1.25  1.16  1.25  1.30  1.27
+64  1.83  1.10  1.07  1.02  1.19  1.18  1.21  1.14  1.13
+
+non-critical-length: 128
+       0     1     2     4     8    16    32    64   128
+1   1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00  1.00
+2   0.99  1.02  1.00  1.00  1.00  1.00  1.00  1.00  1.00
+4   0.98  0.99  1.00  1.00  0.99  1.04  0.99  0.99  1.02
+8   1.08  1.08  1.08  1.07  1.15  1.12  1.03  0.94  1.00
+16  1.00  1.00  1.00  1.01  1.01  1.01  1.36  1.06  1.02
+32  1.07  1.08  1.07  1.07  1.09  1.10  1.22  1.36  1.25
+64  1.03  1.04  1.04  1.06  1.13  1.18  0.82  1.02  1.14
+
+Reviewed-by: Tianyou Li <tianyou.li@intel.com>
+Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Wangyang Guo <wangyang.guo@intel.com>
+---
+ arch/x86/include/asm/qspinlock.h | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/include/asm/qspinlock.h b/arch/x86/include/asm/qspinlock.h
+index 68da67df304d..ac6e1bbd9ba4 100644
+--- a/arch/x86/include/asm/qspinlock.h
++++ b/arch/x86/include/asm/qspinlock.h
+@@ -87,7 +87,7 @@ DECLARE_STATIC_KEY_FALSE(virt_spin_lock_key);
+ #define virt_spin_lock virt_spin_lock
+ static inline bool virt_spin_lock(struct qspinlock *lock)
+ {
+-	int val;
++	int val, locked;
+ 
+ 	if (!static_branch_likely(&virt_spin_lock_key))
+ 		return false;
+@@ -98,11 +98,33 @@ static inline bool virt_spin_lock(struct qspinlock *lock)
+ 	 * horrible lock 'holder' preemption issues.
+ 	 */
+ 
++#define MAX_BACKOFF 64
++	int backoff = 1;
++
+  __retry:
+ 	val = atomic_read(&lock->val);
++	locked = val;
++
++	if (locked || !atomic_try_cmpxchg(&lock->val, &val, _Q_LOCKED_VAL)) {
++		int spin_count = backoff;
++
++		while (spin_count--)
++			cpu_relax();
++
++		/*
++		 * Here not locked means lock tried, but fails.
++		 *
++		 * When multiple threads waiting for lock at the same time,
++		 * once lock owner releases the lock, waiters will see lock available
++		 * and all try to lock, which may cause an expensive CAS storm.
++		 *
++		 * Binary exponential backoff is introduced. As try-lock attempt
++		 * increases, there is more likely that a larger number threads
++		 * compete for the same lock, so increase wait time in exponential.
++		 */
++		if (!locked)
++			backoff = (backoff < MAX_BACKOFF) ? backoff << 1 : backoff;
+ 
+-	if (val || !atomic_try_cmpxchg(&lock->val, &val, _Q_LOCKED_VAL)) {
+-		cpu_relax();
+ 		goto __retry;
+ 	}
+ 
+-- 
+2.43.5
+
