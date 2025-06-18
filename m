@@ -1,112 +1,275 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4EFE2222C0
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:04:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280666; cv=none; b=kZq5IbfZ0ecPQFn/pzCnxxvkAMKwyrzNIkfskAc4LBkFKswVzi/XE2Lh/LvcZbadZuWE5iojkCvTfSHivT+ew9Aqlf8SVFZYij7XRzvyVGgBZb/rQ3yHESxPbgqPD0Wp9wyGRvCbXFuYamoMDF8qBq5fF431XM0jjTc9LJDgnHY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280666; c=relaxed/simple;
-	bh=eAveYdp+CJSbttksgnLzBcG/CL/sLj/02iudO8gRfds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c+Fpxgv5Qgw1HTYyvfIwAnPYrtzKSnSMiUMOtByDD8gMvOqdG+6F8BDiM+PX0Kn+QlsgZGQ5Pf692rQtTtlTXS4g6+cnFPuWab+8u/js8PI0UuccubiT+MDM8bcGqGywqj4akkhpz8csbVCV4E37d9bT66Fj2Wcd0cOUZdLm1tU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Xy3wAJsP; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECE325EF8B
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750280726; cv=fail; b=imeW9E8IFKNFggRMH/V0mx7YVgVUPcLMLG5pC3JyImFOYTsW9A4dcR93fxIBo+THNn/R1Edk8QeXZPWPXiLz0b47rrt+z39kiZqwMqTjiShZ6EQ2TOStEnMqjixitpwOD/5oymS8ermDyJDq5/25RgNljiHegefLdZekRE+upG8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750280726; c=relaxed/simple;
+	bh=Xp5MaqtbmQWsCTw6+rJZmPI0T4+mcXXG+8QB+KPyDoI=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cS3gEf39rl2gbOaWPWguKiCltg5GBM2/TLxDPhyOzXCeq8Ld0FpvRJg6iJcD7YG+6YtjhZSSfM7IT5tUG8KlMD0Icm29jmPFfu6kSBDS27Tvq+6i1qjGHOydafBEVUS1WuuT6v/Hvv399TTIR9tjcXfLfTHx9XeFlrNSXixc8ME=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxgMQx4l; arc=fail smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Xy3wAJsP"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3ddda0a8ba2so1290195ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:04:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750280664; x=1750885464; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0fHWE80S/oA8e+zf9vFMy+doBrDeO1v+Go45/dwU7Dk=;
-        b=Xy3wAJsP4soi8r6S3/pqUFbnpFnUgiY8ydVqM5iSi3hjPoN3/x9v1/Ohu1FJ3yf5Rt
-         5qwCTQySUTHjmEIa3Hn1eVj4qxA0BXEYrk3EE/TpXH725bHuvwB+7y1qQHkmBTFKvc8p
-         v0bhvouTppaAMgEe53UfecpjRgfVW8g3H/PDU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750280664; x=1750885464;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0fHWE80S/oA8e+zf9vFMy+doBrDeO1v+Go45/dwU7Dk=;
-        b=bpx7ac7+Bxqlp53pyGJAtHtxFUlr3VeVOA7HfN00K77W5YkizhyVSYWLvVFTOIPLVY
-         G7+CqiAwVepw7YrCu3E/XP96j/xWw4Mm6TqreDXVTsIwXHGOSdbbb3SQy/Iza+/zmQar
-         T2w2ahW0yTcgTpiQcfplUVzK9EBfhPqR5n7/xnlLQSFeo3dzemzdoM7gezveYlS0cR0F
-         mXjkV67EfdOZgse9tIdzzva7cG3dY+BfzOqUVBgJcbNyWjbQOae/IHTnk6E8pIreQK2X
-         WO9CZcFJ2gVNFHDIYqr4vGGN1aFvCvP2TQK28XqGV4T0ykfSpUQ7Ak5UIkzCRBuctbFo
-         Sxyg==
-X-Forwarded-Encrypted: i=1; AJvYcCW53Mv6zgzw63Q7hkcEXg5r8ZCWf5ltigGv5vZLZYqcy11wrfjdaj51rZhGLYtRdz5dDnTYZntCZdsO84g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3vwS5CqGrf5z7KAX/AieVqomjlwUmvnl+eMC65LXn01TId9Zw
-	2qDE07TjW5xSNkHY05hGng8Te3WQvBwENJXdy9HD9MC35QpIn6Tl72AxbiIi5IbXnu4=
-X-Gm-Gg: ASbGncuRY42iBf08KrttASVDoG3/6vrztKOmkjS8n5eSDuXgM0nkt7YuG+kX8IASkmB
-	Fw1/nCApAyb4dTZzkC3PMwU821Ln2RbSRB+xsJZcI2fQzqq2RU/N1/5UsUHxQR4heVS2sCF9vxq
-	szCZkLJr4ESAH6xeu7wI/cxV2sAVnSoNHnUMNxX0nz9GrpD/qUl/uLkEJ/6VbRopTzywhcA/rnx
-	Yj4dz6irY2RydAWl8u4OCjeAncGhRgGVS/6pmNORbGWX+JCIcUjgeaJRHMB2RTT12stskgP4smv
-	EyhQKlARkN1mAIQi+Oxxj4gm+RFUj8E/M9d6dIlt8Zbw7lIua1a43k0Ivj/sjMecUC4QvrvyNg=
-	=
-X-Google-Smtp-Source: AGHT+IHbdu1P2zp30ZzI8fTvGWQbg/H+WwVpblhCbHcKPoROPCuCUpcjOU9o7/bfiqBZJuL/oPTtaQ==
-X-Received: by 2002:a05:6e02:2482:b0:3dc:79e5:e6a8 with SMTP id e9e14a558f8ab-3de07ccd64amr249549455ab.15.1750280663962;
-        Wed, 18 Jun 2025 14:04:23 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149b7accbsm2973662173.17.2025.06.18.14.04.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 14:04:23 -0700 (PDT)
-Message-ID: <2606da6a-3a13-4db6-855e-8dcc61c45b45@linuxfoundation.org>
-Date: Wed, 18 Jun 2025 15:04:22 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxgMQx4l"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750280724; x=1781816724;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Xp5MaqtbmQWsCTw6+rJZmPI0T4+mcXXG+8QB+KPyDoI=;
+  b=TxgMQx4lyEwPl6SWyFI6jnqAANurNKb7wE0gYZxx0vF4wMGdurLMvZL6
+   TsDeAdMOnCx7pO+d36Kiy7JqSahf2/1tKswCYEXK8rUwlA5P5V0jqdlfy
+   +iZbwcjC1cU54avY58bBXM7a8bSHJSZ18QO0p13/yYzJr/e0AEqB6osOD
+   oYTM9GNul6xj7CxGDDmoUw5A/H8ob6rgSEUe8Qugoqc0yCnD22MrekXGD
+   AeVxSU/blk+/pWlEofof73iZMnsxjwqTnY5K/Jz4yslX06ucYk1gfBAeI
+   HsiiQxc1p+XQmDjgBDoPo0rwFV12e1x/OyUtm4OFSUbCsb8kkoJ3Uw1if
+   g==;
+X-CSE-ConnectionGUID: pa4QU+C4S42OFfkajfZtMQ==
+X-CSE-MsgGUID: YLUTEPSdST2vwzuO12S3Nw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52668615"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="52668615"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 14:05:23 -0700
+X-CSE-ConnectionGUID: vY2Ej+diQnGYHH8nC5cqUw==
+X-CSE-MsgGUID: Lrep3UjcSl20PGlMtZCk0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="154554303"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 14:05:23 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 18 Jun 2025 14:05:22 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 18 Jun 2025 14:05:22 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (40.107.93.46) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 18 Jun 2025 14:05:22 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gR47qFN2fJUN95+h/+nQpePKwpILjFnhRRQcDwBRThCr5ARgXbOrWEvmDaFwFa68KqH6xyTp476oBBiLyFa9107ol0BeZH5vaFvN9D5RKU+KxQmu09QC1sfvTKJuNacHYVxFmDpWaTfENcIDvEMafcFKTX8v+UzTZ2N/7RDzd2HH22EU8RMSto4o9IPAU6wKRV5ql0uitceOFgxH2MBb6vqN5bIA3Y2o5pQ3WkGm/w1dBl18k73sOhIbRxFJzbKtxWsUvTlrkISH1TqOhLY7nyGvNJ3Ta6VIHH0fEsmexqd66+2a9EqhWaQrDu4GdAugA9g8SCkXQeHXbm2SAjHMbw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yD+a6b/y7yvwfldGjfZYQGlqwS2bO6BuIaqVmgTkAgw=;
+ b=dYETXOD+E0HRXDEN7gYcaQ5NHx9Y1ETlqD0GemnHVF1/ecvSD7DmhpjlOQVfeHkJBlZJAOYVp34/PeUutVkNOhztQWjQec3UhTnrNFmcqkEBvsLtcF/p76Jj8YQUrPOjBnsY2h8/xbwFJ1mOWE17n4RgS/LeZy6nAGmblF+BZyiwhCkLlqmtvAPjCZIzkVGVcC9zvw2kWMZ8RgZ1FmlOtHDQL/BmM/Y1WxK08HVWLNZl27o9yU56PrdXJtMnmK0RtG7rZ/+0Yk+UsDC+BD+6I/T07WdtdqbXS/65wdI8xoYSnGuDBKWpd9wve9+GcZL1PztqYo8Ugr3XcjOVWFvRKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB7605.namprd11.prod.outlook.com (2603:10b6:510:277::5)
+ by DS0PR11MB7903.namprd11.prod.outlook.com (2603:10b6:8:f7::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 21:05:07 +0000
+Received: from PH7PR11MB7605.namprd11.prod.outlook.com
+ ([fe80::d720:25db:67bb:6f50]) by PH7PR11MB7605.namprd11.prod.outlook.com
+ ([fe80::d720:25db:67bb:6f50%4]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
+ 21:05:06 +0000
+Message-ID: <2c4f410a-3abd-4abc-84c8-13e7e3b40a73@intel.com>
+Date: Wed, 18 Jun 2025 14:05:05 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 06/10] drm/xe/xe_late_bind_fw: Reload late binding fw
+ in rpm resume
+To: Badal Nilawar <badal.nilawar@intel.com>, <intel-xe@lists.freedesktop.org>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC: <anshuman.gupta@intel.com>, <rodrigo.vivi@intel.com>,
+	<alexander.usyskin@intel.com>, <gregkh@linuxfoundation.org>, <jgg@nvidia.com>
+References: <20250618190007.2932322-1-badal.nilawar@intel.com>
+ <20250618190007.2932322-7-badal.nilawar@intel.com>
+Content-Language: en-US
+From: Daniele Ceraolo Spurio <daniele.ceraolospurio@intel.com>
+In-Reply-To: <20250618190007.2932322-7-badal.nilawar@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0219.namprd03.prod.outlook.com
+ (2603:10b6:a03:39f::14) To PH7PR11MB7605.namprd11.prod.outlook.com
+ (2603:10b6:510:277::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v13 3/3] selftests/rseq: Add test for mm_cid
- compaction
-To: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, Shuah Khan <shuah@kernel.org>,
- linux-kselftest@vger.kernel.org
-Cc: Ingo Molnar <mingo@redhat.org>, Shuah Khan <skhan@linuxfoundation.org>
-References: <20250613091229.21500-1-gmonaco@redhat.com>
- <20250613091229.21500-4-gmonaco@redhat.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250613091229.21500-4-gmonaco@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB7605:EE_|DS0PR11MB7903:EE_
+X-MS-Office365-Filtering-Correlation-Id: f63ada2f-b627-4c35-56d2-08ddaeabcd30
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?TnFQazZGSTBjS1IzTjVWTFVWeHovOGRoUy9wU1Y1eExON0dPNEdUVW94VEVu?=
+ =?utf-8?B?d2RETDlUcjRzTjA0Rm5MdUZiTDRqd2ZCYXZmZ1lDYmduZkxsRldNQnZqSHZ5?=
+ =?utf-8?B?VW5TS3ExUGNUQURxTzNWS1lmTUJiZmZZSU1nUWVRL2hNZitJZWdubS8zTTVx?=
+ =?utf-8?B?REY5bmNaY1ZyNER2SGEwWFJ0b2dNTXg0YlN4a2pHOWhUSU5zckdwbFdZa3Mx?=
+ =?utf-8?B?RXFyRTFVMVJXZWt1dGdpVE9MSVpidmV0bU1MZFhONG5MSjdjaVVhZXJ0RHBR?=
+ =?utf-8?B?WGxuK01VNmNzd2h3cWhoVzhlaHMwa0E1cW03WUk2SjNIMzlYb1A2WU11OWFO?=
+ =?utf-8?B?Y1FtMVl6bU8vODEyTEMzbmM2U2JwbzlmWlgyMFFyR1J6Z1BsTzhBOXZoR2tL?=
+ =?utf-8?B?NHNmM2J3ckpwd0d4QTFwcXlwT3UvclJzbjYzYnNGb1ZUV21yWUNBbWFqOXpl?=
+ =?utf-8?B?aXhHdTFtUXJvdUE5VUNndGJiTHo3VkxrT3l3Z2RQdUNaNHNVUjdRem5STllC?=
+ =?utf-8?B?OHNPR0VwdVNPM0xqK3BCamE4eVRnSVRVNVB0bFgwWDNIZlRyYWpFYkNQUUxh?=
+ =?utf-8?B?cEtnZnlRTEh3TUFyN1RBMkdhTnZPZWpCL1lqSWF3bTlWcDNNaFhnTzF2RnAz?=
+ =?utf-8?B?bm0zYWxVeG1CZzE4bmVubVhEdVlWZER2MWYrNkVacFBmYkxZWGhGcHFIZk9E?=
+ =?utf-8?B?bmhwWWFKNHFrbGpPSWtBT0EwK1F5S1AvWlZicHljZU9CQzFnL2VzN3VOY3lz?=
+ =?utf-8?B?L1V0cEVyV0pCN0F3SmRnQ21NSmRjRmprVDhrUnQ3U09Ubk5FeDFHU3cra2Ft?=
+ =?utf-8?B?dmVKNHBhNDd0MEtyZHRNelZkRUNnK1QxbW1lRUFwb3NIL2kyUFNBZU1Hdng0?=
+ =?utf-8?B?aGpNR0NxNjlKSE1hOStiRTQ1RTB4OGw3NGd3aVkzWVA4bVpwamJGZldUSEQ0?=
+ =?utf-8?B?UFVOUEo4d09wam9XaU4wcEtNTzNub2N0MFczLzgxcEVMZHRIc3VHeFhnZGtu?=
+ =?utf-8?B?MkdnbzU0ZEFCZEJMU1pkRzZhK3QzOW1aRmhINnhxRFpJeXkwUU00SUwvcEJt?=
+ =?utf-8?B?ZWlwSHp0MGhzTFh4TjRlVEJwVGFXYWFwaEJGbjBqQ1FnUWJyeW1qWGYyZkQy?=
+ =?utf-8?B?TDFjRGpOOUxpSUJvYk5NWlp2Um9zK0I4bmxyMGdsbEwzUGw0TFhqZG42V2l2?=
+ =?utf-8?B?MitZVUhqYXB1WUsraHZzamExZTFrUVBUblJST1E1Zmlha1JISU5obTlJRGIz?=
+ =?utf-8?B?M3lqaWkrUTVDcno3NUNpcnhheEVuL1VGakJvQVZXL2k0UER0aDY2Rnp1TmlG?=
+ =?utf-8?B?bDRlbG9RbjBoNXI5VFF0MmtvcDRtcktKb3diVEcyeHNkZnd6UFhlK2swMHJl?=
+ =?utf-8?B?Rm1PLzB2R1VPWllQYml0YjI4dlp2SUpMazNyekxYT3Mza1ZUaFBMbDZ0bld2?=
+ =?utf-8?B?YnVSR1d0akd0dHl0RjBhYTVlQmU2TlBuWnRCd3hDUk1uN0E3RXN1cG5sYnRh?=
+ =?utf-8?B?anRjWi9CK3VIZklNZzd3ck5zOFdvU3lMMEgzKzlmUktpSC9wcE10Z2VCYzVJ?=
+ =?utf-8?B?bFpsbEFFdVdvS2xpRmZjd1BKL3lXWVFJeUUvMFpGRkpMNmpLamxkN3dBQ0hG?=
+ =?utf-8?B?QTZneEp4QW1xclBiUXdyb1lMVEd6TUpQaWNkV2FKTi9Wc1YxK3pBandFNzNY?=
+ =?utf-8?B?cmI4K1NQd3BRS3dkVElsTWRMdDRwNGlBalNndkpTelQ5aGtyLzZWdlJXbFZu?=
+ =?utf-8?B?U1RieHFOVTlrdjlKZ0hzd25YV3d1TjVhLzA1OFFhNUQ5VUwxeFJ0NEdxbnZG?=
+ =?utf-8?B?VUN3TXZ5TGlycnYvNmlxOWU5UWxJY21iRWtKeUJqcmVrNzJ4NVh5eUQ2d3I1?=
+ =?utf-8?B?VE94a0dHcXdRSFl2YVE4aFVYbXRSRzg1WitGTEhuVnFLUU8zbUpvdDUxZmo1?=
+ =?utf-8?Q?V6LYQImppsA=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB7605.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UFBtUitSbTVZdEE3SW45dXI4UUdJd1ZTRVN6cnZjUzZnWjMvcFFxd09mQkZq?=
+ =?utf-8?B?eUdOTlJpMlljVFd0c00xdWhSOWtRN0UxaXlUWVRXcjltUVhEQVZ1Wlo0VHpG?=
+ =?utf-8?B?T3RMWGNQditCQ1c4QjJoSGpqVWlNemJ5NHl4WHBNMjgwaUxDZXRieTAzOWx2?=
+ =?utf-8?B?b3VSZmo2Vy8welRLRVlNSGRpdE9kZ2V0dFA3aVB1ZzF6bHF2T0xYZktPeUI3?=
+ =?utf-8?B?MHp5c2MxcEZZRDFpNlNSRHhjcmVkQUEzb1VkdDMvWXJ3RDd2UCs1czdFdVE5?=
+ =?utf-8?B?V05QMWZLdWk0N2RiMms0UW14bDlsMzFSZVFrMjV4OHBHYVdYTXJZVzVKaDl0?=
+ =?utf-8?B?V2d5dklvMndlMnpzYzc2NUMvdUlVZ0V2ZnB5U0xDN0ptM0NORGMrQ0pVcWxC?=
+ =?utf-8?B?bjVTNWc3RUZBMWs4ZGtwUmdmTE1sdVFQNzJ1TmNRMkd6TEhWdTM2M2ZwelZ2?=
+ =?utf-8?B?Ny9mR1d5UFhTMEgybDNweFp4VGNod25DMytmR0pkRkY3Wm53R0J6SGUrQ1R3?=
+ =?utf-8?B?eHdPeXE1Tmthb3cxTGtGMFpXRzBvVzZueFF2NG8vaVhZSUttb0E5eG9ZTExP?=
+ =?utf-8?B?OG5NcmRZK3hMMGh1YU1ZaVJBS1MzU2xCSzV3V3RpdUppZU1SL0tFeTBIejJI?=
+ =?utf-8?B?N2hLOXJYcEdRMnFzdDB1bFRVVXozdHZFVHd0UnRaZEg0L2YxcGVkRmlJaHcy?=
+ =?utf-8?B?aktsdW5aVGVrc0QzdlhLbkpjWFYxbmZaMjljaWRPWWF5UGkzc0F1UGNBb2lu?=
+ =?utf-8?B?NmYzUjhIVHFxRS91MnNZWEFRR2pUTFBRejNtNVVlMG9GeUlLcENKQ0crNUNB?=
+ =?utf-8?B?QmlqNS9pR3JCVHptUHZKaEh6ekM5emlXeEs3bDZTYVZnNkRNZEdHNm5OL3R5?=
+ =?utf-8?B?N0xHNy9FQWlMdmdHa01oTnc2dHJsUjFoWWc1Y08vMkRuS0ZwYjRJL2hkQTN2?=
+ =?utf-8?B?bFlaaUhtOTJpb0tUei8vZDE2a21CdjlCZjVYRXNrbVFpTU1VVGlEeXlnN3hx?=
+ =?utf-8?B?aTArNHVRTlhSR0IrcnJDVThpUmQ5azJkc0FEWTlVajJuUWx0TFFRUXNkQ3Mx?=
+ =?utf-8?B?NFdIN2c4YzAzTkYxY1BGRmkxY091Z2xmeEluTmRDVlNFakorQzdPLzFPODFD?=
+ =?utf-8?B?OVF5amFjMVZ1WVRPV2NseXU0UVdPd2VobnpEYTAvZk5MeTI2dTFHSGJXQmI4?=
+ =?utf-8?B?NU43R2p4M1E2ZDlEK2QyZndOam5HVWxCbXpsSVNwTkYySjQxRTRISjFENVNL?=
+ =?utf-8?B?c0R5K0xFQzZWdkNCeWRyMm14cGE1VitOY1JHK2swdUNGRVdEMXlmMm5OVWht?=
+ =?utf-8?B?bzlpbDZyYTJqSlZyejhXMzduOWdxeTBqNXBOT0liR0d2Vytra0VFV21tRzN5?=
+ =?utf-8?B?QmF1V0M1RjNQbE10VzlES3U1bzB4ZzhZQlFZa2RWbHVsY0hKZ1pjREFDQnRW?=
+ =?utf-8?B?OUhBcHNLWGxpVldUdjV1T2IvbEw5aWFQYVROMFNYdnZ3d2k5ZHRkU2h6dmlX?=
+ =?utf-8?B?T0F6YkdmRFppNXpjOVl5N2cwcDJWd1JiVmU3ckxMVFU5azNJVncxaURYRFhV?=
+ =?utf-8?B?MHdvR2FFYTBJRkFYUktvekk4ZE9rdXUrT2RCdWluVy9CY1RWaEM2ZVVOam1J?=
+ =?utf-8?B?ZmZnL0o5QW1mY0wvMG9scnZZTFRuQlJXWGw0WjFFSXNJUWJzeDQ5Q1hHUmVV?=
+ =?utf-8?B?c0pwUG9hZ0ZZUERpY2w0dFpCVFFTWVdNVTlKcUppZTl5Vm1GajBoeDAvWWNu?=
+ =?utf-8?B?QVJIWnIyRGUwNmh3U2pLOURUUTVTSlJ3aGJuWVlvSktXcS9HNXdFMW5MZjVj?=
+ =?utf-8?B?bDNDSDBOaHQrYUlRV21pbUlnZkxNbDl4NzJudHA4TVVtYUtWZjFJdXFUbGNV?=
+ =?utf-8?B?dGNPeEdXU0piS2VjTHUvQ2toYmUwT24xWTFZTy9reDZwTHI2dHZ1WkxTdFIv?=
+ =?utf-8?B?aFVtQ3ZPd2xtL0M3S2Mrb1NaWThROFlyM1plR1RoNDVnSURJdlowRS9GQmF2?=
+ =?utf-8?B?UnVBSW53djVOQmwrZCtvRFJyWm0xU1RwNzdTak1QSlN2T0RraGhTUk9RcG04?=
+ =?utf-8?B?TktrVm56YUNPelBGaFdaN3NEWCs1cHlEaUs1Qi9IallGamNGVTErYkljVCtQ?=
+ =?utf-8?B?Y1owc2dzMzlTRU9QWDlvS1MrT2pNcHlkRUsxeXN6RjZpcCtMV1UzVEhaeFRM?=
+ =?utf-8?Q?wNEGAw2URTe9zHkMXVI+zEU=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f63ada2f-b627-4c35-56d2-08ddaeabcd30
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB7605.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 21:05:06.3272
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LGW8hUwUuaCjR6tZE+b7DN12iZMJ+DOmG5za6upLDl5swz+qGjFm3teS9caAofdSD5aBnxckuoKfzhz8yVYyL7PoE/QUguGQelNnYcz5r/A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7903
+X-OriginatorOrg: intel.com
 
-On 6/13/25 03:12, Gabriele Monaco wrote:
-> A task in the kernel (task_mm_cid_work) runs somewhat periodically to
-> compact the mm_cid for each process. Add a test to validate that it runs
-> correctly and timely.
-> 
-> The test spawns 1 thread pinned to each CPU, then each thread, including
-> the main one, runs in short bursts for some time. During this period, the
-> mm_cids should be spanning all numbers between 0 and nproc.
-> 
-> At the end of this phase, a thread with high enough mm_cid (>= nproc/2)
-> is selected to be the new leader, all other threads terminate.
-> 
-> After some time, the only running thread should see 0 as mm_cid, if that
-> doesn't happen, the compaction mechanism didn't work and the test fails.
-> 
-> The test never fails if only 1 core is available, in which case, we
-> cannot test anything as the only available mm_cid is 0.
-> 
-> Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
 
-Mathieu,
 
-Let me know if you would like me to take this through my tree.
+On 6/18/2025 12:00 PM, Badal Nilawar wrote:
+> Reload late binding fw during runtime resume.
+>
+> v2: Flush worker during runtime suspend
+>
+> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+> ---
+>   drivers/gpu/drm/xe/xe_late_bind_fw.c | 2 +-
+>   drivers/gpu/drm/xe/xe_late_bind_fw.h | 1 +
+>   drivers/gpu/drm/xe/xe_pm.c           | 6 ++++++
+>   3 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> index 54aa08c6bdfd..c0be9611c73b 100644
+> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
+> @@ -58,7 +58,7 @@ static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
+>   		return 0;
+>   }
+>   
+> -static void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
+> +void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
+>   {
+>   	struct xe_device *xe = late_bind_to_xe(late_bind);
+>   	struct xe_late_bind_fw *lbfw;
+> diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
+> index 28d56ed2bfdc..07e437390539 100644
+> --- a/drivers/gpu/drm/xe/xe_late_bind_fw.h
+> +++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
+> @@ -12,5 +12,6 @@ struct xe_late_bind;
+>   
+>   int xe_late_bind_init(struct xe_late_bind *late_bind);
+>   int xe_late_bind_fw_load(struct xe_late_bind *late_bind);
+> +void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind);
+>   
+>   #endif
+> diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
+> index ff749edc005b..91923fd4af80 100644
+> --- a/drivers/gpu/drm/xe/xe_pm.c
+> +++ b/drivers/gpu/drm/xe/xe_pm.c
+> @@ -20,6 +20,7 @@
+>   #include "xe_gt.h"
+>   #include "xe_guc.h"
+>   #include "xe_irq.h"
+> +#include "xe_late_bind_fw.h"
+>   #include "xe_pcode.h"
+>   #include "xe_pxp.h"
+>   #include "xe_trace.h"
+> @@ -460,6 +461,8 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
+>   	if (err)
+>   		goto out;
+>   
+> +	xe_late_bind_wait_for_worker_completion(&xe->late_bind);
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+I thing this can deadlock, because you do an rpm_put from within the 
+worker and if that's the last put it'll end up here and wait for the 
+worker to complete.
+We could probably just skip this wait, because the worker can handle rpm 
+itself. What we might want to be careful about is to nor re-queue it 
+(from xe_late_bind_fw_load below) if it's currently being executed; we 
+could also just let the fw be loaded twice if we hit that race 
+condition, that shouldn't be an issue apart from doing something not needed.
 
-thanks,
--- Shuah
+Daniele
+
+> +
+>   	/*
+>   	 * Applying lock for entire list op as xe_ttm_bo_destroy and xe_bo_move_notify
+>   	 * also checks and deletes bo entry from user fault list.
+> @@ -550,6 +553,9 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+>   
+>   	xe_pxp_pm_resume(xe->pxp);
+>   
+> +	if (xe->d3cold.allowed)
+> +		xe_late_bind_fw_load(&xe->late_bind);
+> +
+>   out:
+>   	xe_rpm_lockmap_release(xe);
+>   	xe_pm_write_callback_task(xe, NULL);
 
