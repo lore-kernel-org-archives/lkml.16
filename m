@@ -1,101 +1,133 @@
-Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [207.226.244.123])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09543275845
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.226.244.123
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897ED35963
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750234638; cv=none; b=YizQ9on/7G3kBbvrbb0BkS64ILJkDQ54uNgC99BDFy9kLCInUGgcsv/+mcpznzC9wK135nF+IGaKFhiXVcFtVC6mAq+9P3xLfpjEQ3jr46asmZInpaCNqASYPegBwnQlXxMJ2NOkVqjhn0z1q6fLRTmfIzBVYBZ35rJ8UJ67x1g=
+	t=1750234698; cv=none; b=BRcK42wgqHAEbFfUn7S655TrF5WO3YoxYNKq5uoGY96cfy/51GJkfykquEnmzaGT2/0cqiLF7jezZu5C5SWgPQLNNAuoVXvAAGVHtTXSqy0xsfjo7kiTTU1w+DY2g15DT3NkO9KMY8dhJjbT+jdZ/+ZD0C0qb5oYCUlIqUEHNLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750234638; c=relaxed/simple;
-	bh=EBnCU2zN1GbWQLHQD+wTE1l4uOCXyOUFHwg6wJDuMlo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hO5DDzqdLS3qwNst4/AFNSFlYLEBUX2HZM4/veCEqd0oRUIEH29Q1hx2I3RrfnbbTaAG0khG83qtaic7GBNwJnCqD0fxTxVeEQURK2hwrCam/afYwfA+EDEcM70DR1OQ4xdk+1cB/l3B6IYB4sKroH8VRbz6dFMY+bH1Kle4g6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass smtp.mailfrom=xiaomi.com; arc=none smtp.client-ip=207.226.244.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xiaomi.com
-X-CSE-ConnectionGUID: 4R/02tS0QtCl8GseCaL78w==
-X-CSE-MsgGUID: 5UFOyZgdShC6js6sQsxUPA==
-X-IronPort-AV: E=Sophos;i="6.16,245,1744041600"; 
-   d="scan'208";a="143507967"
-From: Jianan Huang <huangjianan@xiaomi.com>
-To: <linux-f2fs-devel@lists.sourceforge.net>, <chao@kernel.org>,
-	<jaegeuk@kernel.org>
-CC: <wanghui33@xiaomi.com>, <linux-kernel@vger.kernel.org>, Jianan Huang
-	<huangjianan@xiaomi.com>, Sheng Yong <shengyong1@xiaomi.com>
-Subject: [PATCH v2] f2fs: avoid splitting bio when reading multiple pages
-Date: Wed, 18 Jun 2025 16:17:05 +0800
-Message-ID: <20250618081705.260239-1-huangjianan@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250617055542.218681-1-huangjianan@xiaomi.com>
-References: <20250617055542.218681-1-huangjianan@xiaomi.com>
+	s=arc-20240116; t=1750234698; c=relaxed/simple;
+	bh=wBTCEohqcCZDp6DCp8WEGgwcV3lIYN0T3Bf7JFzpw2g=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Up/yLVG9DX1DnlWxS2jQCbQP+vN6k6KYant/EPrROjfhF0hBqajbnuYYFQLvlu6qle28ThzOLQi9790nEFO0QOGd2ItvhRFwOY81rkSonLHOnuS2oE1HLdcCMKMbcZuYQ6YMbLr+FqpV4a16w7Rhwc00mH8mybUopkyD2UtQ+jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lvNCcDuZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6l8aTBes; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=lvNCcDuZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6l8aTBes; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lvNCcDuZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6l8aTBes";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="lvNCcDuZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6l8aTBes"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7253A211A0;
+	Wed, 18 Jun 2025 08:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750234693; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+79qAmMyL5KTQBYuGU9+72mClK6xwDGJMdd6tFcpDc=;
+	b=lvNCcDuZyPpwud7LLz49EqFjWEaMWFwBSzpqFmT5P8oawjW3d0Kgyf3omlGm2Bi7jrq48g
+	WJKwf3HwnLZv+9VfzV9hL2J84jnbNpketG4kCl07+mTaZ1BygW6h2jCUbdnzkfnuNs7ArY
+	oSDHxEhU5xJVUUzF2doCm1n7y1yy8Ok=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750234693;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+79qAmMyL5KTQBYuGU9+72mClK6xwDGJMdd6tFcpDc=;
+	b=6l8aTBesBb5QubYuxPC9jMdhzLDUPxO0IqYxXfWZrWgi8j/jWJl/Oxzdw2wv9iXY3kxhtl
+	knZk+6cqH/IcQ5AQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750234693; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+79qAmMyL5KTQBYuGU9+72mClK6xwDGJMdd6tFcpDc=;
+	b=lvNCcDuZyPpwud7LLz49EqFjWEaMWFwBSzpqFmT5P8oawjW3d0Kgyf3omlGm2Bi7jrq48g
+	WJKwf3HwnLZv+9VfzV9hL2J84jnbNpketG4kCl07+mTaZ1BygW6h2jCUbdnzkfnuNs7ArY
+	oSDHxEhU5xJVUUzF2doCm1n7y1yy8Ok=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750234693;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/+79qAmMyL5KTQBYuGU9+72mClK6xwDGJMdd6tFcpDc=;
+	b=6l8aTBesBb5QubYuxPC9jMdhzLDUPxO0IqYxXfWZrWgi8j/jWJl/Oxzdw2wv9iXY3kxhtl
+	knZk+6cqH/IcQ5AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2CA7B13721;
+	Wed, 18 Jun 2025 08:18:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id CHuPCUV2UmiiBgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 18 Jun 2025 08:18:13 +0000
+Date: Wed, 18 Jun 2025 10:18:12 +0200
+Message-ID: <87bjqlzcmz.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: wangdicheng <wangdich9700@163.com>
+Cc: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	linux-kernel@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	linux-arm-kernel@lists.infradead.org,
+	wangdicheng <wangdicheng@kylinos.cn>
+Subject: Re: [PATCH v2] ALSA: hda/conexant: Renaming the codec with device ID 0x1f86 and 0x1f87
+In-Reply-To: <20250616074331.581309-1-wangdich9700@163.com>
+References: <20250616074331.581309-1-wangdich9700@163.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJ-MBX06.mioffice.cn (10.237.8.126) To YZ-MBX05.mioffice.cn
- (10.237.88.125)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[163.com];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[163.com,gmail.com];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,perex.cz,suse.com,vger.kernel.org,alsa-project.org,lists.infradead.org,kylinos.cn];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.30
 
-When fewer pages are read, nr_pages may be smaller than nr_cpages. Due
-to the nr_vecs limit, the compressed pages will be split into multiple
-bios and then merged at the block level. In this case, nr_cpages should
-be used to pre-allocate bvecs.
-To handle this case, align max_nr_pages to cluster_size, which should be
-enough for all compressed pages.
+On Mon, 16 Jun 2025 09:43:31 +0200,
+wangdicheng wrote:
+> 
+> From: wangdicheng <wangdicheng@kylinos.cn>
+> 
+> Due to changes in the manufacturer's plan, all 0x14f11f86 will be named CX11880, and 0x14f11f87 will be named SN6140
+> 
+> Signed-off-by: wangdicheng <wangdicheng@kylinos.cn>
 
-Signed-off-by: Jianan Huang <huangjianan@xiaomi.com>
-Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
----
-Changes since v1:
-- Use aligned nr_pages instead of nr_cpages to pre-allocate bvecs.
+Applied now.  Thanks.
 
- fs/f2fs/data.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 31e892842625..2d948586fea0 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -2303,7 +2303,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
- 		}
- 
- 		if (!bio) {
--			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages,
-+			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages - i,
- 					f2fs_ra_op_flags(rac),
- 					folio->index, for_write);
- 			if (IS_ERR(bio)) {
-@@ -2370,12 +2370,18 @@ static int f2fs_mpage_readpages(struct inode *inode,
- 		.nr_cpages = 0,
- 	};
- 	pgoff_t nc_cluster_idx = NULL_CLUSTER;
--	pgoff_t index;
-+	pgoff_t index = rac ? readahead_index(rac) : folio->index;
- #endif
- 	unsigned nr_pages = rac ? readahead_count(rac) : 1;
- 	unsigned max_nr_pages = nr_pages;
- 	int ret = 0;
- 
-+#ifdef CONFIG_F2FS_FS_COMPRESSION
-+	if (f2fs_compressed_file(inode))
-+		max_nr_pages = round_up(index + nr_pages, cc.cluster_size) -
-+				round_down(index, cc.cluster_size);
-+#endif
-+
- 	map.m_pblk = 0;
- 	map.m_lblk = 0;
- 	map.m_len = 0;
-@@ -2385,7 +2391,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
- 	map.m_seg_type = NO_CHECK_TYPE;
- 	map.m_may_create = false;
- 
--	for (; nr_pages; nr_pages--) {
-+	for (; nr_pages; nr_pages--, max_nr_pages--) {
- 		if (rac) {
- 			folio = readahead_folio(rac);
- 			prefetchw(&folio->flags);
--- 
-2.43.0
-
+Takashi
