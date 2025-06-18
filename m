@@ -1,77 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A04D1B78F3;
-	Wed, 18 Jun 2025 21:27:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD171B78F3;
+	Wed, 18 Jun 2025 21:29:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750282062; cv=none; b=Ydh1eWrd6pTYK4s0NbB5TMAB9LhnAvkEaDGJOzkBSvQ90VdSvAhGSYOtuTe3IYf2zLVLbqW/tzfub07wW9K904nrESht+ZOKoehR+/tvCq41K3JQ4JAk8t1NBKUnh49Ol1xj69Wafermv9IxZGwI51aeXUDtqSFe4RIj4Dfkbkk=
+	t=1750282178; cv=none; b=VUVEKVkr9LjksL8hzEmhuMaa+UIg5fC4gYi5hw4CM9nqLrCE8f0qyHKqBH9k6BvIqjAQC04iVeNi3PmkiGFZS5kDHvwCSGthbyzGt6hsadChhkDYytLr/EfFLybEclBgUo+STpW4xO8/MX1vnjCuCldCPqd9+A88kVQuJuNVEJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750282062; c=relaxed/simple;
-	bh=oPxq0nX9YaRrg5ryLM85TKzyoC0Q/WSIiKqdSGONZE0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OXP9EELEm3iJk7l1Y0GG4JIBh/XnLKnLXYzZ+eVH0Q2mJi+VcMgJHLqDOnIEN8KA5d5iKYt2DZqXfvuaNi3Y4d/mQ4TzVBMsTKOppXqjW1gBdhuvdektu16pk/Y8+GQE4CqgK6Ci2RBfJGJitez5rEHeN8SvF9hBBErUg50mKTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvqJjFEF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750282178; c=relaxed/simple;
+	bh=kWtZsjCnLnaUDpRLL9iX4OQ4gVYX0SYJ72y/3tn1/Zo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fO0XlT/T5YkdL3YJdHmwdDWVqIA2F+lFyJI91lWS43x69a1YSwXPUk3J+okGN0kAQ3oZnfW9LuTvvKYY1EuExECr2vaz+NIhAoQagJx8TH0PvnPD0reABbD+ozP5fdg4couk2yHrdR64bd7j8I2gCErNKN87XkLc0iTBJaJX1O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2WXLjQh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvqJjFEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95919C4CEE7;
-	Wed, 18 Jun 2025 21:27:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2WXLjQh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A595C4CEEF;
+	Wed, 18 Jun 2025 21:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750282061;
-	bh=oPxq0nX9YaRrg5ryLM85TKzyoC0Q/WSIiKqdSGONZE0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XvqJjFEF3slokQpe5oESAULdrxwFBepSGJk8qBsx66ZNL9rP96u0oV9EXrb8X2Oe+
-	 SAd5PUAo88TZiwqfPl03m7vresQzPLtSb86tdTWy6r4jHzPdxDdnmc7mUoxo5QIVI/
-	 JF0HdO+AseVqM+U84yCm2tGTPWj0BdLMc1JCvg3vHruNKbAtH+GUbtdx/0d3ZWRe1z
-	 7+0pV9PMYqwPwEpDH4MnLbnK2kLb0GG6BP683kJd+GoPGwJjgBjffQbXFVeF5Nq9iq
-	 Ceb12pXZh+ZoGt7VLfEa9ZHSgtNra5wxAqAsOyg81uj0GX3ka5fcy7S2bfMVpvgmSe
-	 uO0IpFkW3jNKg==
-Date: Wed, 18 Jun 2025 14:27:40 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mina Almasry <almasrymina@google.com>, Stanislav Fomichev
- <stfomichev@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, ap420073@gmail.com
-Subject: Re: [PATCH net v1] netmem: fix skb_frag_address_safe with
- unreadable skbs
-Message-ID: <20250618142740.65203c69@kernel.org>
-In-Reply-To: <CAHS8izOMfmj6R8OReNqvoasb_b0M=gsnrCOv3budBRXrYjO67g@mail.gmail.com>
-References: <20250617210950.1338107-1-almasrymina@google.com>
-	<CAHS8izMWiiHbfnHY=r5uCjHmDSDbWgsOOrctyuxJF3Q3+XLxWw@mail.gmail.com>
-	<aFHeYuMf_LCv6Yng@mini-arch>
-	<CAHS8izOMfmj6R8OReNqvoasb_b0M=gsnrCOv3budBRXrYjO67g@mail.gmail.com>
+	s=k20201202; t=1750282177;
+	bh=kWtZsjCnLnaUDpRLL9iX4OQ4gVYX0SYJ72y/3tn1/Zo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K2WXLjQhw222zqK4ROk0UaGGcQNpEmWmV+eTa73ysBYSwFeBx7Drxnnw6tKsd8DHu
+	 isETSjNa/uKuDOlFnaqxCEEDYUUpjA+z64bLFevRdJ+WxGKiOlvdLon3SWqPxEnAGA
+	 rhrZsx+Qb5Z20SXCNEu8UPe+WNIYq5RrD8tCPTTQy7VYlkRxI+5lN6ndnduu0XqcYP
+	 pgdsVQS2cw2YA5yuDm+NsgBf1NV1/DIlt/kcFWQYHNqnRSDbSrSYpYDOO7bs+X2Mdc
+	 iK1ulfXQR12zPLsAMGMqpV6GbWr1p5SGi0RxLxYcWDV+trRhLj9us+AzWhPBNNRH1I
+	 F5g5O58vMGW9w==
+Date: Wed, 18 Jun 2025 14:29:37 -0700
+From: Kees Cook <kees@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	workflows@vger.kernel.org, tools@kernel.org
+Subject: Re: [RFC 00/19] Kernel API Specification Framework
+Message-ID: <202506181428.3D086D2@keescook>
+References: <20250614134858.790460-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250614134858.790460-1-sashal@kernel.org>
 
-On Tue, 17 Jun 2025 14:52:17 -0700 Mina Almasry wrote:
-> > > Sorry, I realized right after hitting send, I'm missing:
-> > >
-> > > Fixes: 9f6b619edf2e ("net: support non paged skb frags")
-> > >
-> > > I can respin after the 24hr cooldown.  
-> >
-> > The function is used in five drivers, none of which support devmem tx,
-> > does not look like there is a reason to route it via net.
-> >
-> > The change it self looks good, but not really sure it's needed.
-> > skb_frag_address_safe is used in some pass-data-via-descriptor-ring mode,
-> > I don't see 'modern' drivers (besides bnxt which added this support in 2015)
-> > use it.  
-> 
-> Meh, a judgement call could be made here.  I've generally tried to
-> make sure skb helpers are (unreadable) netmem compatible without a
-> thorough analysis of all the callers to make sure they do or will one
-> day use (unreadable) netmem. Seems better to me to fix this before
-> some code path that plumbs unreadable memory to the helper is actually
-> merged and that code starts crashing.
+On Sat, Jun 14, 2025 at 09:48:39AM -0400, Sasha Levin wrote:
+> This patch series introduces a framework for formally specifying kernel
+> APIs, addressing the long-standing challenge of maintaining stable
+> interfaces between the kernel and user-space programs. As outlined in
+> previous discussions about kernel ABI stability, the lack of
+> machine-readable API specifications has led to inadvertent breakages and
+> inconsistent validation across system calls and IOCTLs.
 
-Fair points, tho I prefer the simple heuristic of "can it trigger on
-net", otherwise it's really easy to waste time pondering each single
-patch. I'll apply to net-next as is. Stanislav, do you want to ack?
+I'd much prefer this be more attached to the code in question, otherwise
+we've go two things to update when changes happen. (Well, 3, since
+kern-doc already needs updating too.)
+
+Can't we collect error codes programmatically through control flow
+analysis? Argument mapping is already present in the SYSCALL macros,
+etc. Let's not repeat this info.
+
+-Kees
+
+-- 
+Kees Cook
