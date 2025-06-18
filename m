@@ -1,150 +1,105 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571CD2FEE19;
-	Wed, 18 Jun 2025 16:54:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5202D2FEE30;
+	Wed, 18 Jun 2025 16:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265649; cv=none; b=UK45MSlfPhShLdHoz5QbaTv4YR0Ptj6I+6r6lBDkrmFSSucfr9X/iOLa6mMD5di3l7n5/q38NxAfCCPALN8B2/3vQs5etqlHIiOcbM1cS0AUwnudzFu5E90w4WsniYS13hWOroC+l5G1YLHeuEUfpTRQc2wemFUAswu6CKW7p7o=
+	t=1750265654; cv=none; b=VYIK409iRbqVfpkptYaljEITys3N+gYRxtD8aLG5NoUc00k/L17rynumn/6qBQ1DFhIUgJR+8YUlYI7oQ9FPlB0kkBF65VS9Pli8ghOeslqO9eXf+PozVcHsQekTetkCJQTqIAzDukColqE0OZ1tGhRu/N29RXcpqTHtOTlEyZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265649; c=relaxed/simple;
-	bh=kBiRr8MyVCDx2IHSe1QbON+d3OAAkqPRo1XDBFOzGA4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JqN9btaDNcQxKaOjl0WglIO/xsAq7x9op1RMWV8mFEEEbyimvKkZWcwHog0VNd0sEzTvczcL2T4d5BqaxNmeS/6MsFDxX7Y38onRwrzu6fO/OUofRbWgb9iIrQ5XUfAr+IrL/Qs7RbEF7onhC0e1qdIJJfvv1sdeK1DdqRKdFoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AJfsT/wk; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750265654; c=relaxed/simple;
+	bh=fLxaZl4fUsD/kUCYbiqh9qHAbpI8sHC7anX6i5OIkCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QpHbn/wPk1zYoHqENvJbeYuHYSD5dQ8qVNrVJIJeDSWi1SQ8Kkd3lAvKxesobRdgA/Z1Kfq7L265KygROmxS6yj492YbwTD8of6+oKa0Z50Z2Aw6BW93gHi+wJKnGW92q2/nyYCVOJW8BAuSOl+0OUnHPWR9b/VR0C9t82stNOs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CR8Py3et; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AJfsT/wk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750265645;
-	bh=kBiRr8MyVCDx2IHSe1QbON+d3OAAkqPRo1XDBFOzGA4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AJfsT/wk398JAIgFfr5V6YyaDGkK8LzNxoxZts9xXcxdB8Gy2wod6/9/NvZ/LzwH+
-	 YhYF1FGUI6l/uuoiYVfR5uVLkigBmJFAnD7z1MVG0Ke0St9/ZOyxwe2TDZ0CR3cQXb
-	 2c7H1Z5zmy5LfpuVQ6sSqSRGgoJyyzcTGCwUr5axQ66KkvD7xm/88GhocP8cKQNM5b
-	 Huly3QLWcM5hsJ9Bp/6aknCsKYhf41oEn2SoSXXOkT3UnUERs+C2DdYBQ17ajjU+Se
-	 tHABZWkj+HeMuMa20MkSqiC10pNLswp5hXlA6/Q8l2EAfnGCCYWtCu+iJB+z2wcgLw
-	 FMxIs4rbA+w8Q==
-Received: from [IPv6:2606:6d00:17:b699::5ac] (unknown [IPv6:2606:6d00:17:b699::5ac])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9C48D17E06BF;
-	Wed, 18 Jun 2025 18:54:03 +0200 (CEST)
-Message-ID: <2f63c39a3b9f16c47dfe7f62338ef17839d1b286.camel@collabora.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: iommu: verisilicon: Add binding for
- VSI IOMMU
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Conor Dooley <conor@kernel.org>, Benjamin Gaignard
-	 <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
- 	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de, jgg@ziepe.ca, 
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, 	kernel@collabora.com
-Date: Wed, 18 Jun 2025 12:54:01 -0400
-In-Reply-To: <20250618-tighten-morphing-47953075b131@spud>
-References: <20250618140923.97693-1-benjamin.gaignard@collabora.com>
-	 <20250618140923.97693-3-benjamin.gaignard@collabora.com>
-	 <20250618-tighten-morphing-47953075b131@spud>
-Organization: Collabora Canada
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-H4420/eJuZI3vRrv3ALH"
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CR8Py3et"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750265651; x=1781801651;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fLxaZl4fUsD/kUCYbiqh9qHAbpI8sHC7anX6i5OIkCU=;
+  b=CR8Py3et4CMqZBXIieAmH39c532lFLM8yUuZ727HlWddg3JsF/qIRP3v
+   1EUijONNArdEOnCIS8mpgpZNfN3BgzULBOKTE4MqmzQSlnbhmrxm5FmYw
+   7cfboRS2WRpHF8RGtD5QQ14JBRu7ZvT7NefOqVOhGh7GYEOxnhxAmkFST
+   KPSLd6k03q8uWSguLUbV6aRl1WIMPp1o2xy+KjeoyvCspLMCfcY8FHoMT
+   FtR+5MtIPHZAuI8tt4sfWnnyV0coyqHAn6axAcSKAudWk2cP8ob6wEQUZ
+   HmmrZbZOdj56TB061UkDVeDCJKhplQfxJUUEKg11Z2QejQBUbI5UsXwiy
+   w==;
+X-CSE-ConnectionGUID: DcVGGFHmSwukhuFWvCnmkQ==
+X-CSE-MsgGUID: FLovYuVhS2+Y3iMvKtPXIw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="56314752"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="56314752"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 09:54:10 -0700
+X-CSE-ConnectionGUID: APum73ZBR9mRC8sJtLUPbA==
+X-CSE-MsgGUID: udQ5ZeYFSWGuMe9lD+HUoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="154613930"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 18 Jun 2025 09:54:08 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRw33-000Jzq-1W;
+	Wed, 18 Jun 2025 16:54:05 +0000
+Date: Thu, 19 Jun 2025 00:53:06 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bagas Sanjaya <bagasdotme@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux ext4 <linux-ext4@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: [PATCH 3/4] Documentation: ext4: Slurp included subdocs in
+ dynamic structures docs
+Message-ID: <202506190011.J5FYoooF-lkp@intel.com>
+References: <20250618111544.22602-4-bagasdotme@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618111544.22602-4-bagasdotme@gmail.com>
 
+Hi Bagas,
 
---=-H4420/eJuZI3vRrv3ALH
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+kernel test robot noticed the following build warnings:
 
-Le mercredi 18 juin 2025 =C3=A0 16:55 +0100, Conor Dooley a =C3=A9crit=C2=
-=A0:
-> On Wed, Jun 18, 2025 at 04:09:11PM +0200, Benjamin Gaignard wrote:
-> > Add a device tree binding for the Verisilicon (VSI) IOMMU.
-> > This IOMMU sits in front of hardware encoder and decoder
-> > blocks on SoCs using Verisilicon IP, such as the Rockchip RK3588.
-> >=20
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> > ---
-> > changes in version 2:
-> > - Add a compatible "rockchip,rk3588-av1-iommu"
-> > - Fix clock-names in binding=20
-> > - Remove "vsi_mmu" label in binding example.
-> >=20
-> > =C2=A0.../bindings/iommu/verisilicon,iommu.yaml=C2=A0=C2=A0=C2=A0=C2=A0=
- | 72 +++++++++++++++++++
-> > =C2=A01 file changed, 72 insertions(+)
-> > =C2=A0create mode 100644 Documentation/devicetree/bindings/iommu/verisi=
-licon,iommu.yaml
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/iommu/verisilicon,iommu.=
-yaml
-> > b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
-> > new file mode 100644
-> > index 000000000000..9ae4a45d76f4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iommu/verisilicon,iommu.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Verisilicon IOMMU
-> > +
-> > +maintainers:
-> > +=C2=A0 - Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> > +
-> > +description: |+
-> > +=C2=A0 A Versilicon iommu translates io virtual addresses to physical =
-addresses for
-> > +=C2=A0 its associated video decoder.
-> > +
-> > +properties:
-> > +=C2=A0 compatible:
-> > +=C2=A0=C2=A0=C2=A0 oneOf:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - enum:
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - verisilicon,i=
-ommu
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - rockchip,rk35=
-88-av1-iommu
->=20
-> This isn't right. Firstly, the "oneOf: - enum" construct doesn't do
-> anything. oneOf one item is just the item. Secondly this still allows
-> verisilicon,iommu in isolation which is not okay. What you actually want
-> here is
-> items:
-> =C2=A0 - const: a
-> =C2=A0 - const: b
->=20
-> Thirdly, Nicolas mentioned that the version of this iommu is 1.2.0,
-> which I would like to see reflected in the compatible.
+[auto build test WARNING on d3f825032091fc14c7d5e34bcd54317ae4246903]
 
-I believe just 1.2 will be sufficient, the last number is the build number,
-the IP is interface is unchanged.
+url:    https://github.com/intel-lab-lkp/linux/commits/Bagas-Sanjaya/Documentation-ext4-Slurp-included-subdocs-in-high-level-overview-docs/20250618-191724
+base:   d3f825032091fc14c7d5e34bcd54317ae4246903
+patch link:    https://lore.kernel.org/r/20250618111544.22602-4-bagasdotme%40gmail.com
+patch subject: [PATCH 3/4] Documentation: ext4: Slurp included subdocs in dynamic structures docs
+reproduce: (https://download.01.org/0day-ci/archive/20250619/202506190011.J5FYoooF-lkp@intel.com/reproduce)
 
-Nicolas
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506190011.J5FYoooF-lkp@intel.com/
 
+All warnings (new ones prefixed by >>):
 
---=-H4420/eJuZI3vRrv3ALH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/firmware/intel,stratix10-svc.txt
+   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/ti,tps6131x.yaml
+   Warning: arch/riscv/kernel/kexec_image.c references a file that doesn't exist: Documentation/riscv/boot-image-header.rst
+   Warning: drivers/clocksource/timer-armada-370-xp.c references a file that doesn't exist: Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+>> Warning: fs/ext4/inode-test.c references a file that doesn't exist: Documentation/filesystems/ext4/inodes.rst
+   Using alabaster theme
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCaFLvKQAKCRBxUwItrAao
-HEIBAJ4+fNWvctsbsGY2hG9WzLfQYcW51QCg2j4bOqlf9fdEsgEh4zPtrR8oLqc=
-=SlrU
------END PGP SIGNATURE-----
-
---=-H4420/eJuZI3vRrv3ALH--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
