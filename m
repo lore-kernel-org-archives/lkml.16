@@ -1,76 +1,113 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32CCC1F9A8B;
-	Wed, 18 Jun 2025 15:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B0B2EE99E;
+	Wed, 18 Jun 2025 15:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260017; cv=none; b=iQ3gvsPV+jL/HdR+wu7saawK7IGNw2Ozsv9QJtrWeKmFxPDcNmYlwAw60yBy6Li5uFCp/aW0NZt6UQOYzpEs9ZQOSEKesHVjtZofeahZTjh3OasZ8+S8h0E9Vwkt0p/NK6eVRaUroC1AHto8deNlGOM0NCsW5/LroLpdIsEwgbo=
+	t=1750260032; cv=none; b=iXg9vGBqM1u5d4U7JY3kfikOFrGfVLBdcZBWCWg7TJJiHI0fqM7EILOOZQ+81ST/VOdppnxTOXoLKR6CEP1Q3/+q5X55z6xD6QKE3KBOgRNDkBJRxvv5HfIt+eedIWZ1zcqD6UI3T4dBU/L67PNEOZnrzBL0duPJmLhjuu0PITE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260017; c=relaxed/simple;
-	bh=M5lnijI13V/qYoxT9osq8y5e8Gbr0yn0hqjpvJdZJ7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lv+1cunUjEPrQkA1lMMNxqrNfjFOaMC1/qr1CDAul69tbWAFmysLfY/tFTADaZFBbO6wgzUQ+l0AdoGzqTOuVZkZR00dWLeT8YFh1Tx3kRbJ4N3nuzTLRC29OmEB5J0VXyK8Jcarih4FMKxV4BJWQdSOpvkFoyyVF8Slvl78VIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id A85711601A2;
-	Wed, 18 Jun 2025 15:20:11 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id A28892F;
-	Wed, 18 Jun 2025 15:20:07 +0000 (UTC)
-Date: Wed, 18 Jun 2025 11:20:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
- unwind_deferred_trace()
-Message-ID: <20250618112015.56507e6f@gandalf.local.home>
-In-Reply-To: <20250618135907.GO1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.433111891@goodmis.org>
-	<20250618135907.GO1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750260032; c=relaxed/simple;
+	bh=dBMetiDqRwuA7EYSG1BxFLtDf2bO5RsAThvIYbtXxoU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kQPSK16OkKgY2aj72H/EiZ77kUXn1cM+LBl3XLuhlY5fQEbOdDOu5OT22AvhSlX6vHSlh19E+3VifgSCgzKAqvaxOvCtZmca8TKJirXcHz4yZy/YXhJK6AiHIid8bdtFewhFnGeviCiVdyZV+zb2CQhsqX4Er2e3jXQeKeT7Kyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qJOXrnFW; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qJOXrnFW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=eZXPwb9W2kal/+I9MYTP/YSPhsVDBv6emckwljPlJ/g=;
+	b=qJOXrnFW88lIR1+4/5aE//cQL5bJBvIeY0OkeSwSsC/soyYMWhZdNXghqZnTPv
+	ipJFgM13II3OATtyQxGgHvT+rdM/EdmJCIvrYuRw/uzXsAQYSGOwiDvewqgAvga6
+	hlFwHrYIC7TfAvEwx9QGfNmGoGvRZuyg13dvKQnnZcsZM=
+Received: from [IPV6:240e:b8f:919b:3100:8440:da7c:be7e:927f] (unknown [])
+	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnT_IR2VJooCEIAQ--.14627S2;
+	Wed, 18 Jun 2025 23:19:46 +0800 (CST)
+Message-ID: <927e3030-756c-4b1b-a797-5f556ba2b101@163.com>
+Date: Wed, 18 Jun 2025 23:19:45 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
+ dw_pcie_clear_and_set_dword helper
+To: Niklas Cassel <cassel@kernel.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org,
+ bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250611204011.GA868320@bhelgaas>
+ <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com> <aFLTwWG5lOTunEq3@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aFLTwWG5lOTunEq3@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Stat-Signature: r7eq6e89kmdqg5zdnibfs9qjqfqw8xno
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: A28892F
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/v39Vor/fXhiByYy9BWsvEhl9lM6az1FQ=
-X-HE-Tag: 1750260007-255307
-X-HE-Meta: U2FsdGVkX19ieS+6nHd0Bg4L7pE7eBCmTgEZV/wJWkDKBF698hzLF/yVfqQwTRtLew6nDayy7fTN8lnz5JqAcKAGrxI+x+7sAm9F2/X1ppk4XivKFTUR3fp8q1/tI/IV8186HaFmEVAgVc34GFleedu03Lsw6i/zi2tLF0kHlJd/qiKfdTHwt1Q7sahaFw9+pFrnjc2oI0oaKioCBVkFzkablL30WOlj6qcA31PBDTzuLqI9uPoI8WW0h79kqCBiuqfHykEup6t3USNqT3MgzHenfE5B26pbpS13rvK8a09MFqdBvX1WAvqlm2GDXN2/lMBKrE3KZB2yrFzN6PeEgoDO03Gh7nal9YkO5AE66V0tOTw3Wdun5vHFKKgSavec
+X-CM-TRANSID:_____wDnT_IR2VJooCEIAQ--.14627S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFy7Ar1rKw4xXrWrJw1DJrb_yoW8Zry5pa
+	yYqa1Yka1DJFWUKF4Iyw15ZFyjq3s3t3sIqrn8J34Utrn8ZrWYgr9ayF4jkr97GrnI9w4a
+	v3yYqas5Ca4YyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UrnYwUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwlwo2hS1QJYCQAFs4
 
-On Wed, 18 Jun 2025 15:59:07 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Tue, Jun 10, 2025 at 08:54:25PM -0400, Steven Rostedt wrote:
-> > diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
-> > index 349ce3677526..6752ac96d7e2 100644
-> > --- a/kernel/unwind/Makefile
-> > +++ b/kernel/unwind/Makefile
-> > @@ -1 +1 @@
-> > - obj-$(CONFIG_UNWIND_USER) += user.o
-> > + obj-$(CONFIG_UNWIND_USER)		+= user.o deferred.o  
+
+On 2025/6/18 22:57, Niklas Cassel wrote:
+> Hello Hans,
 > 
-> We really needed that extra whitespace? :-)
+> On Thu, Jun 12, 2025 at 09:07:40AM +0800, Hans Zhang wrote:
+>>
+>>
+>> On 2025/6/12 04:40, Bjorn Helgaas wrote:
+>>> On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
+>>>> Register bit manipulation in DesignWare PCIe controllers currently
+>>>> uses repetitive read-modify-write sequences across multiple drivers.
+>>>> This pattern leads to code duplication and increases maintenance
+>>>> complexity as each driver implements similar logic with minor variations.
+>>>
+>>> When you repost this, can you fix whatever is keeping this series from
+>>> being threaded?  All the patches should be responses to the 00/13
+>>> cover letter.  Don't repost until at least a couple of days have
+>>> elapsed and you make non-trivial changes.
+>>>
+>>
+>> Dear Bjorn,
+>>
+>> Every time I send an email to the PCI main list, I will send it to myself
+>> first, but I have encountered the following problems:
+>> Whether I send my personal 163 email, Outlook email, or my company's cixtech
+>> email, only 10 patches can be sent. So in the end, I sent each patch
+>> separately.
+>>
+>> This is the first time I have sent an email with a series of more than 10
+>> patches. My configuration is as follows:
+>> smtpserver = smtp.163.com
+>> smtpserverport = 25
+>> smtpenablestarttlsauto = true
+>> smtpuser = 18255117159@163.com
+>> smtppass = xxx
+>>
+>> I suspect it's a problem with China's 163 email. Next, I will try to send it
+>> using the company's environment. Or when I send this series of patches next
+>> time, I will paste the web link address of each patch in by replying
+>> 0000-cover-letter.patch.
+> 
+> Perhaps the git-send-email options --batch-size and --relogin-delay can be
+> of help to you:
+> https://git-scm.com/docs/git-send-email#Documentation/git-send-email.txt---batch-sizenum
+> 
+> 
 
-Oops, I have no idea how that happened. Especially since emacs doesn't do
-tabs well.
+Dear Niklas,
 
--- Steve
+Wow! Thank you very much for your help. My local test is normal.
+
+Best regards,
+Hans
+
+> Kind regards,
+> Niklas
+
