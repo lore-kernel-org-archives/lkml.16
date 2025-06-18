@@ -1,94 +1,107 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7372E8E0A
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 21171BA3D
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:02:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251746; cv=none; b=FWDnENQjCPbPXBX57yWGg6TgC4JhdHJF9BcR7lcX2P2ZL3aijSsKcMBVPqcQ6A6hzzpIWyrSApZ2xIlZ5ZjVjT1cBvP014IUrgSEK1yIu0Q76KqLSkOKmVB9qX3GAO6swGDwvOk8WfzUxzMgKatpy2IQRwTixvN5FIfHcLS4wp4=
+	t=1750251778; cv=none; b=Nr90fgZcMKwj5WSx1rvsw07F3HUWtL+M0hR8ZVXHsnIXCQRC920GnBv46Wl8yjda/SnT7Ayo013MYVbHfcNWcDzdFezHhwgtk51u+ngM4QBTQAQ03I2XkKgP/KeuZ4IhDFxPpV42tFwPxkDUvZIpR2lB4gBjZqBrDBNuwZ1JPRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750251746; c=relaxed/simple;
-	bh=DZrItFbknpDI8Un2NH1UDZrniGfqOG2TVQADV98m+2M=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=RQazly6dgmTXvBUJpS+LWaLNVeNOuOnsb8i5DjvWEjuDUupYMncutT2tmN4tdk2qPEtTnOyQs6Cp2QVQSmrv1t+rzSSaCh3LK2YHf8twdOAooKPWrQ+Yg9m3g/8MUxt8+kY7/MlB11zAPH4IlOT0Fcnk5Nl99h2Bn9ZEER6Jio8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddbb34fc1cso82420935ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:02:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750251744; x=1750856544;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JHoM2hc0ODan9OanCJjAUYd3bM093eFl/sY6DRIpWVw=;
-        b=vKoIfgRIOfJDpwy4nQbZT6sPuwq06KWp0Z+NZHWMlpRJoeUyyzuHvrFxq1TyGNq+6r
-         U5mroc7Z5FHL1uGhP896adRpI0odBGIC7XadloN1cs926xtt1cYPH53+DQUUYeTx3rJ/
-         QKYxUXBWn1GrlwULyORiTx/APKpK+MfMKNIDnr+QXir1qlB30qKmyS2y0h6aCYNIgV5c
-         G0lVYZDBpVLKg4Ow33oypC3Lb0tPCtDk6OfhoiWI9w/R5EYxEn0CZsLGxnJ5tqBT3KNb
-         GuZ7oQ2dJInr7JWyDyEI5He8zvumDq7dJcxfnpBkU14Vgrgm67kCpBb3uQAwksQzjoJ1
-         /kyw==
-X-Gm-Message-State: AOJu0Yx+jkpU4RrGHfoa4fjIXVFTGCv8DAUJ0CJZyLe+H6agaxTHjPpT
-	M++SJsySC2G0Btiq603rwjnI8nh1tecIGD3YLgwjPn0wo3BjiZ3PA3xUnj86Wk/BnQj75l0nqL8
-	6n7mB1EiIyMc1Y2J8mPjyYe/ejJsP3w8VG32KILCq/aozT/TWjKU9yyVBIvs=
-X-Google-Smtp-Source: AGHT+IFZy5E14MM+IwBcGR58yUK6AtH4Lh6pEooLzYU75zu4OARXSaSJbJxCnwzvUpM3s6pBl8Dy2yWCKWo0/hVacfu3CZFSmkim
+	s=arc-20240116; t=1750251778; c=relaxed/simple;
+	bh=D2kxht+0JextLA7O/SiY0pt8oOXgrxy1p3wycyeO01A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FS8Y111KLIc1Hq/08cZ1f9WVURGUJLL2pRZWGD43EehvUa2m7EZJZG+oqcxFfR/K2v/IFcEn7UPeBY4Rx1oSgD0aSv3dnhuHsfRYwDPeT+JX8x6GzbfXnCsL5ja5sWrPlDPWtlHYVPz1U6FLMOJRozhYGXrmFdATLMLvQV1AX4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BEF4614BF;
+	Wed, 18 Jun 2025 06:02:35 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D72BF3F58B;
+	Wed, 18 Jun 2025 06:02:55 -0700 (PDT)
+Date: Wed, 18 Jun 2025 14:02:54 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, yangyicong@hisilicon.com,
+	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	yangjinqian <yangjinqian1@huawei.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
+Message-ID: <20250618130254.GD794930@e132581.arm.com>
+References: <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
+ <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
+ <20250616130736.GA788469@e132581.arm.com>
+ <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
+ <20250616160811.GA794930@e132581.arm.com>
+ <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
+ <20250617141810.GB794930@e132581.arm.com>
+ <aFJ-Za6oRGKKASN1@J2N7QTR9R3>
+ <20250618112440.GC794930@e132581.arm.com>
+ <3dbc1f1b-a325-1525-f9f0-8172033438ec@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:b70e:0:b0:3dd:bfba:ff9c with SMTP id
- e9e14a558f8ab-3de07d686f0mr132141475ab.11.1750251744235; Wed, 18 Jun 2025
- 06:02:24 -0700 (PDT)
-Date: Wed, 18 Jun 2025 06:02:24 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6852b8e0.050a0220.a0d10.0009.GAE@google.com>
-Subject: [syzbot] Monthly trace report (Jun 2025)
-From: syzbot <syzbot+list1e42a46dc3c6fe5776d5@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mhiramat@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3dbc1f1b-a325-1525-f9f0-8172033438ec@huawei.com>
 
-Hello trace maintainers/developers,
+On Wed, Jun 18, 2025 at 07:51:03PM +0800, Yicong Yang wrote:
 
-This is a 31-day syzbot report for the trace subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/trace
+[...]
 
-During the period, 0 new issues were detected and 1 were fixed.
-In total, 14 issues are still open and 47 have already been fixed.
+> >> Directly including the kernel header introduces the very fragility that
+> >> having a copy was intended to avoid. NAK to that.
+> > 
+> > My suggestion is not to include the kernel header, nor to modify the
+> > copy header. :)
+> > 
+> > Instead, I suggested creating a new header within the perf tool (under
+> > perf's arm64 folder) and then include the copy header in tools:
+> > 
+> >   tools/arch/arm64/include/asm/cputype.h
+> > 
+> 
+> sorry for the misunderstood.:(
+> in this way we still have the divergency in the long term and as a workaround
+> this works same if we partly update the tools/arch/arm64/include/asm/cputype.h
+> with only necessary MIDR updates and keep is_midr_in_range_list() unchanged.
 
-Some of the still happening issues:
+Yes. So Mark's suggestion is reasonable that we can do refactoring first
+to avoid syncing header.
 
-Ref Crashes Repro Title
-<1> 1994    Yes   WARNING in format_decode (3)
-                  https://syzkaller.appspot.com/bug?extid=e2c932aec5c8a6e1d31c
-<2> 149     Yes   WARNING in tracing_buffers_mmap_close
-                  https://syzkaller.appspot.com/bug?extid=ddc001b92c083dbf2b97
-<3> 56      Yes   WARNING in blk_register_tracepoints
-                  https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
-<4> 44      Yes   INFO: task hung in blk_trace_ioctl (4)
-                  https://syzkaller.appspot.com/bug?extid=ed812ed461471ab17a0c
-<5> 33      Yes   WARNING in tracepoint_probe_unregister (3)
-                  https://syzkaller.appspot.com/bug?extid=a1d25e53cd4a10f7f2d3
-<6> 30      Yes   INFO: task hung in blk_trace_remove (2)
-                  https://syzkaller.appspot.com/bug?extid=2373f6be3e6de4f92562
-<7> 18      Yes   WARNING in get_probe_ref
-                  https://syzkaller.appspot.com/bug?extid=8672dcb9d10011c0a160
-<8> 12      No    BUG: soft lockup in hsr_announce (3)
-                  https://syzkaller.appspot.com/bug?extid=6c68a0400c33951a023c
-<9> 6       No    WARNING in tracing_start_tr
-                  https://syzkaller.appspot.com/bug?extid=ccdec3bfe0beec58a38d
+[...]
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > @Yicong, could you confirm if you proceed to refactor the MIDR? thanks!
+> 
+> please feel free to take this over.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+Thanks a lot for confirmation!  And thanks for working on the reported
+issue.
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
+> > Just note, I searched tools folder and found kselftest also uses the
+> > cputype.h header. The refactoring should not break the files below.
+> > 
+> 
+> they shouldn't affected. I did a kselftest build test with my latest patch
+> and they were not affected.
 
-You may send multiple commands in a single email message.
+I expect tools/arch/arm64/include/asm/cputype.h will be removed, and
+a generated header (something like sys-midr.h) for MIDR refactoring.
+If this is true, then we need to take care kselftest.
+
+Thanks,
+Leo
