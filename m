@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AED5025C6EE;
-	Wed, 18 Jun 2025 07:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E203E27EFE6;
+	Wed, 18 Jun 2025 07:53:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750233236; cv=none; b=qN2gLwGVxanrcj9wwoRDfwuHKlckXYyoLrEy6nQAl2xeJKHz+7BAkX3CBLZ5Z4HQAP4VgIzoI+Xu4pyTyTBumvLbbY1hc2wJcP+6VZKk8b49OGKuFgaxDhJhM6mDHWbr2JigcmU2g1dY0n14ay800pOIx4RPkBSQepBDn5onsVc=
+	t=1750233237; cv=none; b=Q5icAO28k3SYqgJMc7ItSViBJeOWPSmGnX95K3Aw7kXE2zvs6koLdXT1gJO70kOqpOfS0dJNCynkcExglIP6to7C1Xo5atVET0bSO6appKFo0T3skYR+Ikmq9gQkRj5IKhKtDMadU4dQyMODbVohtT3fOL+6VT+ommADCCdEytE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750233236; c=relaxed/simple;
-	bh=sxPniixtv78HeENSdQLWPrFdDqTbAf0XLGgHM3Oyj5Y=;
+	s=arc-20240116; t=1750233237; c=relaxed/simple;
+	bh=+2X4ysqtRsTHUcY7E66k0quE5SROmLVa6c2NEYuHLu8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TD4QuPArBCx098P9My+s/sH9mnLhtCTo+viAc58httkD8G4hCRY/ifjP3CTtzX0/xNBOIU3BRuuMbb1ZPuNrDJprLQ/31hZKfhwlPBMGzMo+z9oPPHYP5dot1O/wg1gRvY4QqtOnbumpzF1jJJYEPNSgQBYrnue8hfdH+ArL5BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ihC9xD2Y; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xnUmmzXV; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=DJ60e4acW+tqbM0UsLIpY0iZP6sWaWCItXHrjCxLHNjSMOKPY2xeEoUY1GuQb3bNuSoUhJdgrXh5m8UVnWdUpduWVpymmPSUgU4xIWq7OCi+29h49MPr4tDIaCWwPYDBP7OGBRNgIfRW7WbHHtqWs0GPXN+fqwE8KjMFxpUvT9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H//lwHnr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P5G7mtx1; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ihC9xD2Y";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xnUmmzXV"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H//lwHnr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P5G7mtx1"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750233232;
+	s=2020; t=1750233234;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ea8FKYQ5V9ExQA/zTt267Zd86SEpISgQvnKJKRVI550=;
-	b=ihC9xD2YnV/u3tQk3G9UxLCeNQZZI9UEWueLGrqzdz4a+Fo+ibeY0I6tXh8ISteNqGuTnp
-	d5f6rk9g3WLLeB0ZLU6/jm0CFVPFYmkIvkNZ8vm9aV9fp3iCCCRDIftIeI4t+03iLAJmrp
-	JzWUziFhICj6JWcxKgnpccxPeFhJNjLgQm34E1Abh+LN45pMjaRcZ3txY9az2S90ideB72
-	dYf3OgidbX4I06BPmCnZtE1Ra3Q2YzIs8wX6rL3aHP4+bc4yofrpt2KjXihDeWqbAFsjn2
-	R33eRfu+NgjKjJbeCENctYbhbSHh+vuRwwXTj7xxv8p6T9iAMir3+IKWDAWbuA==
+	bh=hRSi6LPnJlewbz9+M2YF21yD0hWG5s8j8Ev4VekeCS4=;
+	b=H//lwHnrCxwgr5Qyne1dSebZ0C/TyDzHnxgNkRFUbl7V9Foo1dPQAUyndYYFRSCve24JFX
+	+U9gITtVlgE+7icVecD1ruTrs8B1ggford7mBnDhhcfkXaKQiOenSTkKfdHtKErvXHr2XB
+	w+45928VjRAOcQlJZdr2j+y20Pm2ghWlXG84ccC/DWt+8bQnmtnMSX9IFOoYsK0lVnfxi+
+	uJFCp42Jf5r3Qo9P9YIiNofXWn736P+O17Rcmzy7GVZD8tPg7ZvVVgnKsUxm9bqTHw8XKs
+	wHH6f/WEy/TK+k7+qfG6YVagctnRjA7zvJ9rVAMlmv/yAxA1v1Tps/lDHa1xlg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750233232;
+	s=2020e; t=1750233234;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ea8FKYQ5V9ExQA/zTt267Zd86SEpISgQvnKJKRVI550=;
-	b=xnUmmzXVhHriwZoRSoBFDkHECYYOaT9HlTRjdtzDIh7/w7nYBZZqGX6gxdbZc6NkrndBzU
-	Bx48dXmlRpD2s1CA==
-Date: Wed, 18 Jun 2025 09:52:20 +0200
-Subject: [PATCH 1/3] drm/bridge: samsung-dsim: Don't use %pK through printk
+	bh=hRSi6LPnJlewbz9+M2YF21yD0hWG5s8j8Ev4VekeCS4=;
+	b=P5G7mtx1ZaQLqKuTMGNxDi36WMAI+1JfQ/MuzORfSpbSJ49TWx3v/9mFK4n2WTbB6gO3fC
+	Zm2GV+ALFLNk5bDQ==
+Date: Wed, 18 Jun 2025 09:52:22 +0200
+Subject: [PATCH 3/3] drm/msm: Don't use %pK through printk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250618-restricted-pointers-drm-v1-1-781e0d88cd92@linutronix.de>
+Message-Id: <20250618-restricted-pointers-drm-v1-3-781e0d88cd92@linutronix.de>
 References: <20250618-restricted-pointers-drm-v1-0-781e0d88cd92@linutronix.de>
 In-Reply-To: <20250618-restricted-pointers-drm-v1-0-781e0d88cd92@linutronix.de>
 To: Inki Dae <inki.dae@samsung.com>, 
@@ -75,11 +75,11 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750233231; l=1738;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750233231; l=3885;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=sxPniixtv78HeENSdQLWPrFdDqTbAf0XLGgHM3Oyj5Y=;
- b=RmDVzVHrOK1/SRUIDkyh36blgd1I1AzXaNihza4YNvCLRnV1ypxUVsnr+7ZnFeqfJyKQjBlaR
- swO4I8KwM5eAqqFfdOZbGNwyvmlyZBFYBpQxTDAHDI02JzdhKDJuzIY
+ bh=+2X4ysqtRsTHUcY7E66k0quE5SROmLVa6c2NEYuHLu8=;
+ b=MeeQzXgwzNU70goRi3hW4b0ZRIX5paYKudW6CbBEdnXyP3jia+DNmdrTI96uSVghsbe/qLu+G
+ rR+U5ckgaEMAZhybeZ7KstPqWrBTAGqWMDI8Grel1fif13GmYkJa2OT
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -96,31 +96,81 @@ easier to reason about.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- drivers/gpu/drm/bridge/samsung-dsim.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    | 2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c | 4 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     | 4 ++--
+ drivers/gpu/drm/msm/msm_mdss.c              | 2 +-
+ 4 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/bridge/samsung-dsim.c
-index 0014c497e3fe7d8349a119dbdda30d65d816cccf..bccc88d2594840647d7107c13d69104912087384 100644
---- a/drivers/gpu/drm/bridge/samsung-dsim.c
-+++ b/drivers/gpu/drm/bridge/samsung-dsim.c
-@@ -1095,7 +1095,7 @@ static void samsung_dsim_send_to_fifo(struct samsung_dsim *dsi,
- 	bool first = !xfer->tx_done;
- 	u32 reg;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index a4b0fe0d9899b32141928f0b6a16503a49b3c27a..9aa635f9462df6e496635e3316217f0245e03157 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -565,7 +565,7 @@ static void _dpu_crtc_complete_flip(struct drm_crtc *crtc)
  
--	dev_dbg(dev, "< xfer %pK: tx len %u, done %u, rx len %u, done %u\n",
-+	dev_dbg(dev, "< xfer %p: tx len %u, done %u, rx len %u, done %u\n",
- 		xfer, length, xfer->tx_done, xfer->rx_len, xfer->rx_done);
+ 	spin_lock_irqsave(&dev->event_lock, flags);
+ 	if (dpu_crtc->event) {
+-		DRM_DEBUG_VBL("%s: send event: %pK\n", dpu_crtc->name,
++		DRM_DEBUG_VBL("%s: send event: %p\n", dpu_crtc->name,
+ 			      dpu_crtc->event);
+ 		trace_dpu_crtc_complete_flip(DRMID(crtc));
+ 		drm_crtc_send_vblank_event(crtc, dpu_crtc->event);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
+index 829ca272873e45b122c04bea7da22dc569732e10..08cb1014299bcc9ce146b564721a6058df824cf0 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
+@@ -31,14 +31,14 @@ static void dpu_setup_dspp_pcc(struct dpu_hw_dspp *ctx,
+ 	u32 base;
  
- 	if (length > DSI_TX_FIFO_SIZE)
-@@ -1293,7 +1293,7 @@ static bool samsung_dsim_transfer_finish(struct samsung_dsim *dsi)
- 	spin_unlock_irqrestore(&dsi->transfer_lock, flags);
+ 	if (!ctx) {
+-		DRM_ERROR("invalid ctx %pK\n", ctx);
++		DRM_ERROR("invalid ctx %p\n", ctx);
+ 		return;
+ 	}
  
- 	dev_dbg(dsi->dev,
--		"> xfer %pK, tx_len %zu, tx_done %u, rx_len %u, rx_done %u\n",
-+		"> xfer %p, tx_len %zu, tx_done %u, rx_len %u, rx_done %u\n",
- 		xfer, xfer->packet.payload_length, xfer->tx_done, xfer->rx_len,
- 		xfer->rx_done);
+ 	base = ctx->cap->sblk->pcc.base;
  
+ 	if (!base) {
+-		DRM_ERROR("invalid ctx %pK pcc base 0x%x\n", ctx, base);
++		DRM_ERROR("invalid ctx %p pcc base 0x%x\n", ctx, base);
+ 		return;
+ 	}
+ 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index 1fd82b6747e9058ce11dc2620729921492d5ebdd..4290ef3004985376ebd13afd1f014265cf887490 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -1345,7 +1345,7 @@ static int dpu_kms_mmap_mdp5(struct dpu_kms *dpu_kms)
+ 		dpu_kms->mmio = NULL;
+ 		return ret;
+ 	}
+-	DRM_DEBUG("mapped dpu address space @%pK\n", dpu_kms->mmio);
++	DRM_DEBUG("mapped dpu address space @%p\n", dpu_kms->mmio);
+ 
+ 	dpu_kms->vbif[VBIF_RT] = msm_ioremap_mdss(mdss_dev,
+ 						  dpu_kms->pdev,
+@@ -1380,7 +1380,7 @@ static int dpu_kms_mmap_dpu(struct dpu_kms *dpu_kms)
+ 		dpu_kms->mmio = NULL;
+ 		return ret;
+ 	}
+-	DRM_DEBUG("mapped dpu address space @%pK\n", dpu_kms->mmio);
++	DRM_DEBUG("mapped dpu address space @%p\n", dpu_kms->mmio);
+ 
+ 	dpu_kms->vbif[VBIF_RT] = msm_ioremap(pdev, "vbif");
+ 	if (IS_ERR(dpu_kms->vbif[VBIF_RT])) {
+diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mdss.c
+index 709979fcfab6062c0f316f7655823e888638bfea..c5e6e98e0ced3adae9086b220fc9d5d026ac3fd1 100644
+--- a/drivers/gpu/drm/msm/msm_mdss.c
++++ b/drivers/gpu/drm/msm/msm_mdss.c
+@@ -456,7 +456,7 @@ static struct msm_mdss *msm_mdss_init(struct platform_device *pdev, bool is_mdp5
+ 	if (IS_ERR(msm_mdss->mmio))
+ 		return ERR_CAST(msm_mdss->mmio);
+ 
+-	dev_dbg(&pdev->dev, "mapped mdss address space @%pK\n", msm_mdss->mmio);
++	dev_dbg(&pdev->dev, "mapped mdss address space @%p\n", msm_mdss->mmio);
+ 
+ 	ret = msm_mdss_parse_data_bus_icc_path(&pdev->dev, msm_mdss);
+ 	if (ret)
 
 -- 
 2.49.0
