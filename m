@@ -1,98 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03AC214814;
-	Wed, 18 Jun 2025 08:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C442F20D509
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750234873; cv=none; b=E/jTnzzbieG2QqC2OoPEskDoiTIYlRleJ+/GtnXFJPgQtCxw7xR4l7lromXdjNCpBNZkrKNWQeP6sbiXof77Q2IYqMptp5PeJh3hDJ/v5dxjopv+rhv3vI20OlaWMkxFKBHquahZiz+fACJPZ2n5HBKCRmksNVIJiqxS+3KDdtk=
+	t=1750234889; cv=none; b=M2hhhYsVetS/3mGWSBjoTax8prAOHwB6S5qTw423DHaYP42fVh0A3IJ1MVhw1sx8HYBxf8z9VWGzn+fOUwcXEln0leata9wdImsDjpuFiPQ6dnrED614dn8w8JsUU1rML6YMmN4Kfxjt48UTjDr8X8JyM1in+KroS2mSZSL9mMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750234873; c=relaxed/simple;
-	bh=2jmRDv6D0zcNdU19DqnV2thTGn3pGjWksLXvn5+PggA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WIxG1mCQFyYEjQRcfPTg/Dmsa6RMHyVdBKGBdLqQA34ds6IiHpeXVLlbnWJ2JWIRfoHng1StG3vwyqhdIvAe0mYaGfG52b+CNbfL+ZjkWllvNTJn4VnhMtKZ1nrCZsRRGEhPMOJ/EVdOnF/FecOKI8iL2MC49eA2nyshcEWu+pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/8DVKLk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750234889; c=relaxed/simple;
+	bh=BoIWg++c+gaXFI+EoWnKgSHte0WWbA8yMuwRuOldCbA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SKNI032n3c4hNf8PP4zfdVFxrjKtAhcyW7mJiOStpQmofha2PtQaniRUHb6nZ//VjkKltC4bQ8Hj6jSqneUXiZVtNKxZn+YqfOmen8sVoRumh/H2AyVmPD1VGqMEjzpEZ7qvt5Ckv6HF2xjt/790etlelkdY/yNDoG4nSk78zKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Mtolg+jX; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/8DVKLk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0C3DC4CEE7;
-	Wed, 18 Jun 2025 08:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750234872;
-	bh=2jmRDv6D0zcNdU19DqnV2thTGn3pGjWksLXvn5+PggA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=k/8DVKLk1jQCHbK1h5bINp41EjysKV48pO7nmzXin8chccf5giyGW2oCA3VuU0giN
-	 GE+ZhpHpRgFhdmQb4oW+ZEPGWmcXzooJXo5+M75ZzRQGSsGWJkUyByTJvgA8tZn4uu
-	 QJmGRRd9Z6dJkj2jAaSkiKF++lcEPaaucfGzCiCuD6md9NQIVlmtEt2eg7D+vSkO20
-	 QEUu9jve94s9HsY7VtopXIwUmkP8mmoF8Fq4Qf39ztPsBUWr8VEWcr9T9yvtz6VLoq
-	 MEXwkiwKj+ODQh0UIlUd033KTyYFAlpqcenVq8DQ3meW7GKSE+FC68bVBqqhECR/e2
-	 jI1ND8WMXcbsA==
-Date: Wed, 18 Jun 2025 10:21:05 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>, Breno Leitao
- <leitao@debian.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Ignacio Encinas Rubio <ignacio@iencinas.com>, Jan
- Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>, Shuah Khan
- <skhan@linuxfoundation.org>, joel@joelfernandes.org,
- linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
- lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
- stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 10/15] docs: sphinx: add a parser for yaml files for
- Netlink specs
-Message-ID: <20250618102105.66ce01f0@foz.lan>
-In-Reply-To: <CAD4GDZzWMoxnatNXYbKOphzVZ4NyedD5FtjxF7cgB1ad-wDFWg@mail.gmail.com>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
-	<c407d769c9f47083e8f411c13989522e32262562.1750146719.git.mchehab+huawei@kernel.org>
-	<m27c1ak0k9.fsf@gmail.com>
-	<20250617154049.104ef6ff@sal.lan>
-	<20250617180001.46931ba9@sal.lan>
-	<CAD4GDZzWMoxnatNXYbKOphzVZ4NyedD5FtjxF7cgB1ad-wDFWg@mail.gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Mtolg+jX"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a54700a46eso4191496f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750234886; x=1750839686; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IZ5scaCVp5KEqpX+ht0jMpyjJqTR7FlxiD0v3xWbRwM=;
+        b=Mtolg+jXhPFYgGGvBFrpw3pPt9ZLAdbVofjFJNql8ADmuzwH0cQQe4/MNe7bM3VMHk
+         im/GEZgPGrbCu2BPFLvniP/Q7D3aGFdL1ChXzNtOjfcXyUnSKh7Scm2ZhvWDpeGagyHt
+         acLW42tsDpQBV24/WiriHPRUCyD1xQJm83qFSlccssjUa+KN3DIwMPINqnV9u927X+Ff
+         AA79pvZPmuO7CVERKQ6fAEGSvNWJg7qAGxfTzemn59NIJ684QyAatqYs/NRoL84jYmpQ
+         4Yhrp3LjE7T13mTu8Yf/o8eFBxLCdMpUkoYmfLuJThCEqGAmWFJ8egVKxa0jnssDtkIz
+         L/Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750234886; x=1750839686;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IZ5scaCVp5KEqpX+ht0jMpyjJqTR7FlxiD0v3xWbRwM=;
+        b=MjSTj7Fi0Q7boo+uvd1b3bKiFV6TtK5utWbC2kFrT3yG/DvnGOZQ6SzXkPqy2p6HaA
+         ZmRoMLmc6JRM+6DyuYAPn+t33s00DL8+Qsd7andHO45A7piV/kdbFXA0WzRaMFDAAv6H
+         J++Nh9G19pTXZES8qUbCNUmAHowbxYx/EAehrhhYyMkhKYi0srBsGropThQn+ue0dxnS
+         YikQe8N310kA4t+uC5uqIp4jAk8SwuacV5HyWcHFMAQvQ8/v4+MK0b5fODr8npw3QDFs
+         /B8rIdggsazJkDOROwNfRdAviM6N4MAH1op7+TwJR75EdQ1hXGnZ/ES8aiwFTXV9wJuO
+         aTpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXxIipy8xt9t/J9gkeFY8lc/FtA8Qjd74/707ZFDp9QgWPKC8ea9+HpAC6ffS3NUvJ/pL8ubD+9ivHVwU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzkhv+oLKHqulMO+Nkg07lVU5arY3ehkX80fzG6jle6CT82sA0j
+	mK7VmLMEg6qXMdnbWRTOqy2xHWDIUDyNFVJQ+H+2cUfojuQgKstcCZS+zW7k7M5sYkk=
+X-Gm-Gg: ASbGncstDu9z3pXPMKYt1leIKZp1f4Zg2iNPG9tQBBT1crCVIa91ThsWHQKIH7/0sQg
+	4Kthj23Kmv6AtVFohonFDBq7vc28u9pK/L3PhK1Cp12BNx8D4mg4y+ycDdeEOezqH76ZkO56Y2J
+	ubicQSbdJJweF0k274oAeUlYCynrxQpInpeisEG3MflqhCRF+xA4A06KtJi/7REsY0cZHPwa9Qv
+	gSBCWHlp6hKfqKFA+TopdoJZUbHxfXPL0payBCpV/jvJcTTlvsh8s7o66EYBs+dWQUs/S4S2eoA
+	mt2RB47s1VXj1DWdOqs9e4KHOJOJYff70Qum4Pw20CVPzvuYuN1lJmvIM/2vkg==
+X-Google-Smtp-Source: AGHT+IFPk9BFd/vAWuocXcPkSq7/gvcXxQNi7IAayr4dvxQB0rDp+2lbpNZPuSLuXz9prs46BK1xLg==
+X-Received: by 2002:a05:6000:4025:b0:3a4:e844:745d with SMTP id ffacd0b85a97d-3a572e6a1e9mr12817093f8f.56.1750234886010;
+        Wed, 18 Jun 2025 01:21:26 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ad8:9ec2:efc8:7797])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08c7csm16437260f8f.50.2025.06.18.01.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 01:21:25 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Ayush Singh <ayushdevel1325@gmail.com>,
+	Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: greybus-dev@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] greybus: gb-beagleplay: remove unneeded calls to devm_gpiod_put()
+Date: Wed, 18 Jun 2025 10:20:00 +0200
+Message-ID: <20250618082000.36039-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Em Tue, 17 Jun 2025 18:23:22 +0100
-Donald Hunter <donald.hunter@gmail.com> escreveu:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> On Tue, 17 Jun 2025 at 17:00, Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> > >
-> > > (2) is cleaner and faster, but (1) is easier to implement on an
-> > > already-existing code.  
-> >
-> > The logic below implements (1). This seems to be the easiest way for
-> > pyyaml. I will submit as 2 separate patches at the end of the next
-> > version.
-> >
-> > Please notice that I didn't check yet for the "quality" of the
-> > line numbers. Some tweaks could be needed later on.  
-> 
-> Thanks for working on this. I suppose we might be able to work on an
-> evolution from (1) to (2) in a followup piece of work?
+gb_fw_init() is only called in this driver's probe() and we abort the
+probing if it fails. This means that calling devm_gpiod_put() in error
+path is not required as devres will already manage the releasing of the
+resources when the device is detached.
 
-Yes, it shouldn't be hard for you to migrate to (2) in the future. 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/greybus/gb-beagleplay.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-Currently, the parser is stateless, but, as there's now a class,
-IMO the best would be to store the lines as an array of tuples
-inside the YnlDocGenerator class, like this:
+diff --git a/drivers/greybus/gb-beagleplay.c b/drivers/greybus/gb-beagleplay.c
+index da31f1131afc..1ea48b71a030 100644
+--- a/drivers/greybus/gb-beagleplay.c
++++ b/drivers/greybus/gb-beagleplay.c
+@@ -1041,7 +1041,6 @@ static const struct fw_upload_ops cc1352_bootloader_ops = {
+ 
+ static int gb_fw_init(struct gb_beagleplay *bg)
+ {
+-	int ret;
+ 	struct fw_upload *fwl;
+ 	struct gpio_desc *desc;
+ 
+@@ -1060,29 +1059,17 @@ static int gb_fw_init(struct gb_beagleplay *bg)
+ 	bg->bootloader_backdoor_gpio = desc;
+ 
+ 	desc = devm_gpiod_get(&bg->sd->dev, "reset", GPIOD_IN);
+-	if (IS_ERR(desc)) {
+-		ret = PTR_ERR(desc);
+-		goto free_boot;
+-	}
++	if (IS_ERR(desc))
++		return PTR_ERR(desc);
+ 	bg->rst_gpio = desc;
+ 
+ 	fwl = firmware_upload_register(THIS_MODULE, &bg->sd->dev, "cc1352p7",
+ 				       &cc1352_bootloader_ops, bg);
+-	if (IS_ERR(fwl)) {
+-		ret = PTR_ERR(fwl);
+-		goto free_reset;
+-	}
++	if (IS_ERR(fwl))
++		return PTR_ERR(fwl);
+ 	bg->fwl = fwl;
+ 
+ 	return 0;
+-
+-free_reset:
+-	devm_gpiod_put(&bg->sd->dev, bg->rst_gpio);
+-	bg->rst_gpio = NULL;
+-free_boot:
+-	devm_gpiod_put(&bg->sd->dev, bg->bootloader_backdoor_gpio);
+-	bg->bootloader_backdoor_gpio = NULL;
+-	return ret;
+ }
+ 
+ static void gb_fw_deinit(struct gb_beagleplay *bg)
+-- 
+2.48.1
 
-	self.lines = [
-		(line_number1, message_string1),
-		(line_number2, message_string2),
-		(line_number3, message_string3),
-		(line_number4, message_string4),
-		...
-	]
-
-This way, the parse_yaml_file() method would just return self.lines.
-
-Thanks,
-Mauro
