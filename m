@@ -1,114 +1,233 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DC3B2E8E00;
-	Wed, 18 Jun 2025 14:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCDC280027;
+	Wed, 18 Jun 2025 14:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256597; cv=none; b=j1poCJ1KWLK9Bm6MI6ciIpwsbmnHcj2Y0DApRne/yIlTxWxLx4DHZj3TX8DElN5b78UZnqYoOo5RF15EH089zljBp1dXADj+cxYJdbOTdjZedQ46j++MUVNRd9107WKdq7Cn2dXKzc13FnkWOHnKp3o7FLlA+PgrYhfc07l0DME=
+	t=1750256614; cv=none; b=LzMbMWEJ182+UeZfq1fOLZXhwtZVsgOTWlIFAVgTbLlTUT7CEFHoZK01yjy5Xq0pWj0rFyVwG7+VR1cyUIKgLYcPxYkuFryaXOIkYx6n8lBOKaNP5JxgQuXrSMCo2QSIBrWNcZ7SxiW825jYcd9gF6Rd+h/3uYYessPWU9XwZeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256597; c=relaxed/simple;
-	bh=/kCZED307PxRlzLUByha5TboyLgGFMQyb8rQaxCxbi8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fANY8Tw80BdPuVH6/nPgYiw+YsdyHShQ3y4GSA8/f9Ej+6J2Idpy1lD0Hc4L4t6IbqinTIHQNj4aHS+jA/tWFQvq6gYS/Sm0A8qe5Bj2djB6R+csWvOiKYvBtmyeWWnBITmVsSO4fqhbD+1PW/rCS/msDXyDIUz7s5HestC0+qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=czIhzIDv; arc=none smtp.client-ip=220.197.31.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750256614; c=relaxed/simple;
+	bh=rrYKoMv7Uk4ch1aZuKLh5PjZvex15SXOuAtOym4MjiI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=giGCEI6Ahl9vpyRahWtCKp2/isuSCZ7SaWiZfusG21HxrQ1k1VmzWvCtNWGHBkHy7l+PU0eSpoCjJaFviFAPWCz+OCcZTKNmlHzbOEZ14oOLnKmMkZfm+8hKO/XCSFCgrNiATC1j3i5U9Ilf0x5XVZecuUTwTDwdPe01q4a3l+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F5InniY9; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="czIhzIDv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=aKN5Xb4pqwecPj9X55VM7S0C9aEQ1Y9s1xKnCpxeegI=;
-	b=czIhzIDv0vExDetuwquUJKrYUO53fjMO4UCjAlc9rWtkNKUKWDmbGcZxmkhrGh
-	pnVWLb7puWTNmuknm9dqGRZtgrsybZ+88DaATFV0/JRgcx8iCPy7iUUimCAGkcHN
-	lGHrmbBJ2B4ybopt7h8vv/1qloEhAX9KLlMwIyFMJb5T8=
-Received: from [IPV6:240e:b8f:919b:3100:8440:da7c:be7e:927f] (unknown [])
-	by gzsmtp4 (Coremail) with SMTP id PygvCgAn_qq1y1JonKCoAA--.5729S2;
-	Wed, 18 Jun 2025 22:22:46 +0800 (CST)
-Message-ID: <9203cf6e-ca59-416a-9c98-a2d6a5c6ce6f@163.com>
-Date: Wed, 18 Jun 2025 22:22:45 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F5InniY9"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a4e57d018cso986586f8f.1;
+        Wed, 18 Jun 2025 07:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750256611; x=1750861411; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YPK0mkTHcO8NLt38PWjFw4lbg65xpQlmO3zLhw4rqDw=;
+        b=F5InniY9T7786T4sb5xzV1WNiL8hv1Wspb75EzZiNS25U+87rW08hHh8qOn1tWFCZV
+         bEBAXK9VVPuka4ywQnaC0v3XQInjuPrpDnJWpvzPnhCKd3FvbF2rfxASpUrBIFh+JOd2
+         o/KjxUu/9JyCCHK/bERNsGiEq/hvgB688P4S6+9rPZ2WfJpDSEqH9mudL1clTO3rBvgz
+         5fC+SPg6X91zLdMtzj0NcJPF3PhcjA/lYGLyefo/M8Ro/vOqoSNaW/9LUuyQC5dniAFG
+         Et3f1ohuQQa4JSuYIm+QDkgfWyyr//EBgiJ/L0nZqtT+uwO+hvz4zhvGIfSs95eSnIVw
+         xP9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750256611; x=1750861411;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YPK0mkTHcO8NLt38PWjFw4lbg65xpQlmO3zLhw4rqDw=;
+        b=OnMcPhq1A6cngztTM9qBEPeuyysceVoa4YabjciInBzd7IkLlXB15XepnIllN/iZD4
+         LoeoBwSZmgpaXtlfevonQ1OMYGA1Diea3/T/fu9zJKpBOf94ik3nCZ7QmezShmuVAlAt
+         3Df/+aK8+RUyGWvWqWmR/dfy1kjgX5M56B+EpiFMtgfs0b+JULc0WiT3Kxg+Il3kbwEd
+         SVYK/8Zsa+Fgf6MfdOaY+dHTfN/qicf58GIrRU44VqfcDnIwzFyfG+NeDzWLvLFz3VSe
+         60xG7Ka9HgK2Wl+KulDeCe6jE3I5LdbXt6WqGoFyZB0p00nOQ8+/qsNnlqM7RmFgEKKV
+         vp8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVt/u+AGlPk52lQ23H6IUAYacEB2DA+5ejwxqzy/Dq7H/dDytZjEb3yfhpF7mxCCGjrxhIEH1GqveJDbgc=@vger.kernel.org, AJvYcCVypn1yf8gY6cg71kdUuZSEDvIT9umQFb/iPoB+xmfQdo9wktJR3QhjiZPMkMnbPhnvRHTR7OSw@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPkv+rBjj0jmVxTRc6wzMquriodRJG2Zjh2iCHPccAA+BvEvHb
+	rhy/jGQVQjNF0e+7o7N9kbNCICjLHhZ8R3V+MvPvFzqOja1AH53trhuy
+X-Gm-Gg: ASbGnctRBB6bpjwtrbcWvkwb0KhXgCRIAV9mC3uX9E7Moqgw079rmJq7p/hOfryp3fO
+	u3EXxZYqTpLfxd2RBjL3nzzDDFY25wkCgktm+A9IFY40Fnc4kVMV/8DQCK56gACLPFzCJD5J8LU
+	Civnx5s1MFDTKZYxQdw9l4TqzRWC9sZzc73GhaUssOMYpYckTgw1qhy7xIwR8b/heE95zlLP7Mn
+	22tg+ICEwVa3QpdUGv6hu8cBK328J8Nd81uQ+Al179KSK599bWYW66NV62GHRRmoc3iN90aAWIt
+	uKbde0E8m2YjLfNQbrjAa6jLNXehMNmw9lOjXJtG3URiPx5iLwapWLP7dd0/M9aVvNmKdxhReAK
+	EXtMA5tXNz7sBhhzH27KF1Tqse3v8w/DDyG4eBb4TKgRhES5odzmLqz1gZrCZPNxnKfBF9tbQBs
+	c=
+X-Google-Smtp-Source: AGHT+IG7GmVSnOGPPkPDurjvfOGF9vV6K0D4X+LTwcXkzNj+v10cCf/8xwwAPYWXD0cqTToIEYGwog==
+X-Received: by 2002:a5d:5849:0:b0:3a3:6a3d:163a with SMTP id ffacd0b85a97d-3a5723adb10mr5201477f8f.12.1750256610510;
+        Wed, 18 Jun 2025 07:23:30 -0700 (PDT)
+Received: from thomas-precision3591.home (2a01cb00014ec30077ebd188a5e29661.ipv6.abo.wanadoo.fr. [2a01:cb00:14e:c300:77eb:d188:a5e2:9661])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4532de8c229sm207823045e9.6.2025.06.18.07.23.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 07:23:30 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Chris Snook <chris.snook@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jeff Garzik <jeff@garzik.org>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] ethernet: atl1: Add missing DMA mapping error checks
+Date: Wed, 18 Jun 2025 16:22:16 +0200
+Message-ID: <20250618142220.75936-2-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: Extend max-link-speed to support
- PCIe Gen5/Gen6
-To: Manivannan Sadhasivam <mani@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250529021026.475861-1-18255117159@163.com>
- <20250529021026.475861-2-18255117159@163.com>
- <q5ltnilbdhfxwh6ucjnm3wichrmu5wyjsx6eheiazqypveu3sm@euuvpjwu77h4>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <q5ltnilbdhfxwh6ucjnm3wichrmu5wyjsx6eheiazqypveu3sm@euuvpjwu77h4>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:PygvCgAn_qq1y1JonKCoAA--.5729S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxJF1rJFW5ur48Zr4fuF4rZrb_yoW8CFWDpa
-	y5Ja1xKFyrZFySqrZ7Wr1F9r45AanrJ3y0yr45Gry7A3sxXF1rJFZaga1rWr17trZ5AFyx
-	uF1UZwnxGa15AFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRepBDUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx9wo2hSygcmiQAAsP
+Content-Transfer-Encoding: 8bit
 
+The `dma_map_XXX()` functions can fail and must be checked using
+`dma_mapping_error()`.  This patch adds proper error handling for all
+DMA mapping calls.
 
+In `atl1_alloc_rx_buffers()`, if DMA mapping fails, the buffer is
+deallocated and marked accordingly.
 
-On 2025/6/18 00:45, Manivannan Sadhasivam wrote:
-> On Thu, May 29, 2025 at 10:10:24AM +0800, Hans Zhang wrote:
->> Update the device tree binding documentation for PCI to include
->> PCIe Gen5 and Gen6 support in the `max-link-speed` property.
->> The original documentation limited the value to 1~4 (Gen1~Gen4),
->> but the kernel now supports up to Gen6. This change ensures the
->> documentation aligns with the actual code implementation.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   dtschema/schemas/pci/pci-bus-common.yaml | 2 +-
-> 
-> As Rob commented in v1, this file lives in dtschema project. So update it there:
-> https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/pci/pci-bus-common.yaml
-> 
+In `atl1_tx_map()`, previously mapped buffers are unmapped and the
+packet is dropped on failure.
 
-Dear Mani,
+Fixes: f3cc28c79760 ("Add Attansic L1 ethernet driver.")
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/net/ethernet/atheros/atlx/atl1.c | 50 +++++++++++++++++++++---
+ 1 file changed, 44 insertions(+), 6 deletions(-)
 
-I made the patch based on the latest dtschema code pulled from github.
-
-Also, I saw similar submissions as follows:
-https://lore.kernel.org/linux-pci/advhonmqnxm4s6r3cl7ll5y3jfc566fcjvetvlzvy7bztzetev@t75xmo5fktde/
-
-I don't know if Rob obtained this patch from here and then applied it to 
-the dtschema project? Is there still a special process to submit this patch?
-
-
-Dear Rob,
-
-Can you apply this patch directly to the dtschema project?
-
-Best regards,
-Hans
-
-> - Mani
-> 
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/dtschema/schemas/pci/pci-bus-common.yaml b/dtschema/schemas/pci/pci-bus-common.yaml
->> index ca97a00..413ef05 100644
->> --- a/dtschema/schemas/pci/pci-bus-common.yaml
->> +++ b/dtschema/schemas/pci/pci-bus-common.yaml
->> @@ -121,7 +121,7 @@ properties:
->>         unnecessary operation for unsupported link speed, for instance, trying to
->>         do training for unsupported link speed, etc.
->>       $ref: /schemas/types.yaml#/definitions/uint32
->> -    enum: [ 1, 2, 3, 4 ]
->> +    enum: [ 1, 2, 3, 4, 5, 6 ]
->>   
->>     num-lanes:
->>       description: The number of PCIe lanes
->> -- 
->> 2.25.1
->>
-> 
+diff --git a/drivers/net/ethernet/atheros/atlx/atl1.c b/drivers/net/ethernet/atheros/atlx/atl1.c
+index cfdb546a09e7..9b53d87bf6ab 100644
+--- a/drivers/net/ethernet/atheros/atlx/atl1.c
++++ b/drivers/net/ethernet/atheros/atlx/atl1.c
+@@ -1861,14 +1861,21 @@ static u16 atl1_alloc_rx_buffers(struct atl1_adapter *adapter)
+ 			break;
+ 		}
+ 
+-		buffer_info->alloced = 1;
+-		buffer_info->skb = skb;
+-		buffer_info->length = (u16) adapter->rx_buffer_len;
+ 		page = virt_to_page(skb->data);
+ 		offset = offset_in_page(skb->data);
+ 		buffer_info->dma = dma_map_page(&pdev->dev, page, offset,
+ 						adapter->rx_buffer_len,
+ 						DMA_FROM_DEVICE);
++		if (dma_mapping_error(&pdev->dev, buffer_info->dma)) {
++			kfree_skb(skb);
++			adapter->soft_stats.rx_dropped++;
++			break;
++		}
++
++		buffer_info->alloced = 1;
++		buffer_info->skb = skb;
++		buffer_info->length = (u16)adapter->rx_buffer_len;
++
+ 		rfd_desc->buffer_addr = cpu_to_le64(buffer_info->dma);
+ 		rfd_desc->buf_len = cpu_to_le16(adapter->rx_buffer_len);
+ 		rfd_desc->coalese = 0;
+@@ -2183,8 +2190,8 @@ static int atl1_tx_csum(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 	return 0;
+ }
+ 
+-static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+-	struct tx_packet_desc *ptpd)
++static int atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
++		       struct tx_packet_desc *ptpd)
+ {
+ 	struct atl1_tpd_ring *tpd_ring = &adapter->tpd_ring;
+ 	struct atl1_buffer *buffer_info;
+@@ -2194,6 +2201,7 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 	unsigned int nr_frags;
+ 	unsigned int f;
+ 	int retval;
++	u16 first_mapped;
+ 	u16 next_to_use;
+ 	u16 data_len;
+ 	u8 hdr_len;
+@@ -2201,6 +2209,7 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 	buf_len -= skb->data_len;
+ 	nr_frags = skb_shinfo(skb)->nr_frags;
+ 	next_to_use = atomic_read(&tpd_ring->next_to_use);
++	first_mapped = next_to_use;
+ 	buffer_info = &tpd_ring->buffer_info[next_to_use];
+ 	BUG_ON(buffer_info->skb);
+ 	/* put skb in last TPD */
+@@ -2216,6 +2225,8 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 		buffer_info->dma = dma_map_page(&adapter->pdev->dev, page,
+ 						offset, hdr_len,
+ 						DMA_TO_DEVICE);
++		if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma))
++			goto dma_err;
+ 
+ 		if (++next_to_use == tpd_ring->count)
+ 			next_to_use = 0;
+@@ -2242,6 +2253,9 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 								page, offset,
+ 								buffer_info->length,
+ 								DMA_TO_DEVICE);
++				if (dma_mapping_error(&adapter->pdev->dev,
++						      buffer_info->dma))
++					goto dma_err;
+ 				if (++next_to_use == tpd_ring->count)
+ 					next_to_use = 0;
+ 			}
+@@ -2254,6 +2268,8 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 		buffer_info->dma = dma_map_page(&adapter->pdev->dev, page,
+ 						offset, buf_len,
+ 						DMA_TO_DEVICE);
++		if (dma_mapping_error(&adapter->pdev->dev, buffer_info->dma))
++			goto dma_err;
+ 		if (++next_to_use == tpd_ring->count)
+ 			next_to_use = 0;
+ 	}
+@@ -2277,6 +2293,9 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 			buffer_info->dma = skb_frag_dma_map(&adapter->pdev->dev,
+ 				frag, i * ATL1_MAX_TX_BUF_LEN,
+ 				buffer_info->length, DMA_TO_DEVICE);
++			if (dma_mapping_error(&adapter->pdev->dev,
++					      buffer_info->dma))
++				goto dma_err;
+ 
+ 			if (++next_to_use == tpd_ring->count)
+ 				next_to_use = 0;
+@@ -2285,6 +2304,22 @@ static void atl1_tx_map(struct atl1_adapter *adapter, struct sk_buff *skb,
+ 
+ 	/* last tpd's buffer-info */
+ 	buffer_info->skb = skb;
++
++	return 0;
++
++ dma_err:
++	while (first_mapped != next_to_use) {
++		buffer_info = &tpd_ring->buffer_info[first_mapped];
++		dma_unmap_page(&adapter->pdev->dev,
++			       buffer_info->dma,
++			       buffer_info->length,
++			       DMA_TO_DEVICE);
++		buffer_info->dma = 0;
++
++		if (++first_mapped == tpd_ring->count)
++			first_mapped = 0;
++	}
++	return -ENOMEM;
+ }
+ 
+ static void atl1_tx_queue(struct atl1_adapter *adapter, u16 count,
+@@ -2419,7 +2454,10 @@ static netdev_tx_t atl1_xmit_frame(struct sk_buff *skb,
+ 		}
+ 	}
+ 
+-	atl1_tx_map(adapter, skb, ptpd);
++	if (atl1_tx_map(adapter, skb, ptpd)) {
++		dev_kfree_skb_any(skb);
++		return NETDEV_TX_OK;
++	}
+ 	atl1_tx_queue(adapter, count, ptpd);
+ 	atl1_update_mailbox(adapter);
+ 	return NETDEV_TX_OK;
+-- 
+2.43.0
 
