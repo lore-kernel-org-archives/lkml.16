@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546862F948D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D922E2F94BC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270915; cv=none; b=gCit7OdxmL/z+sHqvOYlmAu0jpeZwqhZeORAcAbKfGEmC7Cut1d8DS6/6wZGZvCrl4vEp3HCh8qjH6ozHZZ6tcNiYj+z1Y0m+CEOlg676Q1clxzwBbJ2P+CbCmGGNeEg3rwixeD6+R0v81UsIKJXJfMsf8UU4IJzxCienwRrWeA=
+	t=1750270914; cv=none; b=qo1W6boom/FPcJM6aUbqBPYFsJsbF683DNq+T76orD1BhUuPT/cDgxLm/IdIt7lsAwwvhls6rRgrRp3wVI2a2orhxiRxH4pzTcUnStzKQ94lhDbiQkmwAnBP+Oe6i31HfDZbyBWWJXZl9duCrd/52c4F5rx8/huBgPpKES9g+o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270915; c=relaxed/simple;
-	bh=GRt1KcpJc3uX3j1lW75IjTwwtuVzCFPIjuwEQmJ7o0c=;
+	s=arc-20240116; t=1750270914; c=relaxed/simple;
+	bh=cQUCpe4LZfLrzrqrRvhJ4zn32opdkosRxPW3YpSdQpw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FBJTd0ukxWRW+/MIo7zsf0SmGsGIBox8sqZYavmOM5fv6LOEqVyOr4wp2ndfb2WlEQFkw2Pp36oF0gqWn9mhyDwfdEsnpnqdcv1XeDKQshvz9ZWQHVjdtgZQp4BkNGTp0CFAVo9mAHC/VnVDZvOjoYt4QE/rqzevU8YFJ+7bEko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MSgKa/Xs; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=k8VqwMymU4J6e9GkRGLqFZapA+h/KmaiCqV6pWjSVsWwmgnsiVhiYCMQUYaIYCuRy8xdvkKxXLmpnnj81wxXCZFpX6tgVD+1igdqcNGnsw+8Dd7OREe7hmOl9DpLac08ZCVRrBBzXbfElsFBTfBsioIq0k6loXV4uYpQZrYBrMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FUltCdk8; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MSgKa/Xs"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FUltCdk8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750270911; x=1781806911;
+  t=1750270912; x=1781806912;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=GRt1KcpJc3uX3j1lW75IjTwwtuVzCFPIjuwEQmJ7o0c=;
-  b=MSgKa/Xs8zOJ4H2lqLt5AoI5bQ2Z5hgnpUup28q98ByliGPYLMtTuVoT
-   +lSE1UHq2qbmWe+CGFnXXNN0O11daPjgIRfzwTIAXeYYAwWhWm/SJOst4
-   2yClxpLCWgokA1/yxRHLW2J/20uBhmoIokqluLvohhQNoEZU8oeZgagEC
-   Urji0g1zMpdionTkeyTJrvrZh+ExyPjKEjVPQFLk6s+JnHq/wiwVKWRjm
-   iKAY3vicJCdgEZaqexyIOwSVKYAdj5Ds+qaro+e1pYLQIVMXZfJCil89W
-   2TwNI95OlQaBFc3aLSCKuvjf4TUtpWBzOnftomqkcPANu/uLnxs7/ZZJ5
-   Q==;
-X-CSE-ConnectionGUID: OsOzpi1fQVmQCEIlEJnnaA==
-X-CSE-MsgGUID: b5N1VeS7R72ao2jICSSBCQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931510"
+  bh=cQUCpe4LZfLrzrqrRvhJ4zn32opdkosRxPW3YpSdQpw=;
+  b=FUltCdk86P1n8b/xtaRLXyRNaWFyT3up5/DOjijJa7AptKtTq7F17sT9
+   +qgOnAsLS4hrBcE0M3b/NgTR2SCnVrsRwXJKozVz4N9t01io3n/dvVQKq
+   38gbrgGuDv4YYXh0s0Tdj8hQgPW825VDrCKW2iASUc/Zz+VmPLgQmKiPp
+   FyR41eBRrDbzEAAwNxvUiMbjT740rIgIieuCoK8C/tv7tcqrUHNVi1T/k
+   b/vnTpMgt+sYhmf2tlLBsLIZRkLEKBWUqEj3rUfk1D31j6gtYWu/kqjBU
+   asxz7novbH7ygWHnG2F/F9OvSjwzEc0+3fkEynQRMLwKacbHoHNVa0CrB
+   w==;
+X-CSE-ConnectionGUID: pkqYpBEfS3upf7WK/GoLIw==
+X-CSE-MsgGUID: paR/450tR6eOwDodmnSOag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63931550"
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="63931510"
+   d="scan'208";a="63931550"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:21:49 -0700
-X-CSE-ConnectionGUID: 03mrFPsdTSSv8opMC44BDA==
-X-CSE-MsgGUID: vBS5/z1NSra3RrHanVjnzw==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:21:52 -0700
+X-CSE-ConnectionGUID: uNM5F0vKRkCxQO9WvZjBoQ==
+X-CSE-MsgGUID: qccG1toMTWyEIVjk+nl3kg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="180959835"
+   d="scan'208";a="180959901"
 Received: from b04f130c83f2.jf.intel.com ([10.165.154.98])
-  by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:21:49 -0700
+  by fmviesa001.fm.intel.com with ESMTP; 18 Jun 2025 11:21:51 -0700
 From: Tim Chen <tim.c.chen@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -64,9 +64,9 @@ Cc: Tim Chen <tim.c.chen@linux.intel.com>,
 	Len Brown <len.brown@intel.com>,
 	linux-kernel@vger.kernel.org,
 	Chen Yu <yu.c.chen@intel.com>
-Subject: [RFC patch v3 05/20] sched: Add hysteresis to switch a task's preferred LLC
-Date: Wed, 18 Jun 2025 11:27:53 -0700
-Message-Id: <7371f30196b317c0c5a0ae3fa463ec76a4dc69ef.1750268218.git.tim.c.chen@linux.intel.com>
+Subject: [RFC patch v3 08/20] sched: Set up LLC indexing
+Date: Wed, 18 Jun 2025 11:27:56 -0700
+Message-Id: <71e251a086be786fb2a0480bbab69142d14bd22d.1750268218.git.tim.c.chen@linux.intel.com>
 X-Mailer: git-send-email 2.32.0
 In-Reply-To: <cover.1750268218.git.tim.c.chen@linux.intel.com>
 References: <cover.1750268218.git.tim.c.chen@linux.intel.com>
@@ -78,78 +78,145 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switching a process's preferred LLC generates lots of task
-migrations across LLCs. To avoid frequent switches
-of home LLC, implement the following policy:
+Prepare for indexing arrays that track in each run queue: the number
+of tasks preferring current LLC and each of the other LLC.
 
-1. Require a 2x occ change threshold to switch preferred LLC
-2. Don't discard preferred LLC for a task
+The reason to introduce LLC index is because the per LLC-scope data
+is needed to do cache aware load balancing. However, the native lld_id
+is usually the first CPU of that LLC domain, which is not continuous,
+which might waste the space if the per LLC-scope data is stored
+in an array (in current implementation).
+
+In the future, this LLC index could be removed after
+the native llc_id is used as the key to search into xarray based
+array.
 
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 ---
- kernel/sched/fair.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ include/linux/sched.h   |  3 +++
+ kernel/sched/fair.c     | 12 ++++++++++++
+ kernel/sched/sched.h    |  2 ++
+ kernel/sched/topology.c | 29 +++++++++++++++++++++++++++++
+ 4 files changed, 46 insertions(+)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index d0e4cda2b3cd..7ce95a32e9ff 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -810,6 +810,9 @@ struct kmap_ctrl {
+ #endif
+ };
+ 
++/* XXX need fix to not use magic number */
++#define MAX_LLC 64
++
+ struct task_struct {
+ #ifdef CONFIG_THREAD_INFO_IN_TASK
+ 	/*
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 6a2678f9d44a..7fb2322c5d9e 100644
+index 10ea408d0e40..5549710d95cf 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -1175,6 +1175,14 @@ static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
- #define EPOCH_PERIOD	(HZ/100)	/* 10 ms */
- #define EPOCH_OLD	5		/* 50 ms */
+@@ -1183,6 +1183,18 @@ static int llc_id(int cpu)
+ 	return per_cpu(sd_llc_id, cpu);
+ }
  
-+static int llc_id(int cpu)
++/*
++ * continous index.
++ * TBD: replace by xarray with key llc_id()
++ */
++static inline int llc_idx(int cpu)
 +{
 +	if (cpu < 0)
 +		return -1;
 +
-+	return per_cpu(sd_llc_id, cpu);
++	return per_cpu(sd_llc_idx, cpu);
 +}
 +
  void mm_init_sched(struct mm_struct *mm, struct mm_sched __percpu *_pcpu_sched)
  {
  	unsigned long epoch;
-@@ -1299,6 +1307,7 @@ static void task_cache_work(struct callback_head *work)
- 	struct task_struct *p = current;
- 	struct mm_struct *mm = p->mm;
- 	unsigned long m_a_occ = 0;
-+	unsigned long last_m_a_occ = 0;
- 	int cpu, m_a_cpu = -1;
- 	cpumask_var_t cpus;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 1c6fd45c7f62..74eb2f3615aa 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2037,6 +2037,7 @@ static inline struct sched_domain *lowest_flag_domain(int cpu, int flag)
+ DECLARE_PER_CPU(struct sched_domain __rcu *, sd_llc);
+ DECLARE_PER_CPU(int, sd_llc_size);
+ DECLARE_PER_CPU(int, sd_llc_id);
++DECLARE_PER_CPU(int, sd_llc_idx);
+ DECLARE_PER_CPU(int, sd_share_id);
+ DECLARE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
+ DECLARE_PER_CPU(struct sched_domain __rcu *, sd_numa);
+@@ -2045,6 +2046,7 @@ DECLARE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
  
-@@ -1337,11 +1346,13 @@ static void task_cache_work(struct callback_head *work)
- 					     per_cpu(sd_llc_id, i), occ, m_occ, m_cpu, nr);
- 			}
+ extern struct static_key_false sched_asym_cpucapacity;
+ extern struct static_key_false sched_cluster_active;
++extern int max_llcs;
  
--			a_occ /= nr;
-+			// a_occ /= nr;
- 			if (a_occ > m_a_occ) {
- 				m_a_occ = a_occ;
- 				m_a_cpu = m_cpu;
- 			}
-+			if (llc_id(cpu) == llc_id(mm->mm_sched_cpu))
-+				last_m_a_occ = a_occ;
+ static __always_inline bool sched_asym_cpucap_active(void)
+ {
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f1ebc60d967f..b7bb13045dd8 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -672,6 +672,7 @@ static void destroy_sched_domains(struct sched_domain *sd)
+ DEFINE_PER_CPU(struct sched_domain __rcu *, sd_llc);
+ DEFINE_PER_CPU(int, sd_llc_size);
+ DEFINE_PER_CPU(int, sd_llc_id);
++DEFINE_PER_CPU(int, sd_llc_idx);
+ DEFINE_PER_CPU(int, sd_share_id);
+ DEFINE_PER_CPU(struct sched_domain_shared __rcu *, sd_llc_shared);
+ DEFINE_PER_CPU(struct sched_domain __rcu *, sd_numa);
+@@ -681,6 +682,25 @@ DEFINE_PER_CPU(struct sched_domain __rcu *, sd_asym_cpucapacity);
+ DEFINE_STATIC_KEY_FALSE(sched_asym_cpucapacity);
+ DEFINE_STATIC_KEY_FALSE(sched_cluster_active);
  
- 			trace_printk("(%d) a_occ: %ld m_a_occ: %ld\n",
- 				     per_cpu(sd_llc_id, cpu), a_occ, m_a_occ);
-@@ -1355,13 +1366,10 @@ static void task_cache_work(struct callback_head *work)
- 		}
- 	}
- 
--	/*
--	 * If the max average cache occupancy is 'small' we don't care.
--	 */
--	if (m_a_occ < (NICE_0_LOAD >> EPOCH_OLD))
--		m_a_cpu = -1;
--
--	mm->mm_sched_cpu = m_a_cpu;
-+	if (m_a_occ > (2 * last_m_a_occ)) {
-+		/* avoid the bouncing of mm_sched_cpu */
-+		mm->mm_sched_cpu = m_a_cpu;
++int max_llcs = -1;
++
++static void update_llc_idx(int cpu)
++{
++#ifdef CONFIG_SCHED_CACHE
++	int idx = -1, llc_id = -1;
++
++	llc_id = per_cpu(sd_llc_id, cpu);
++	idx = per_cpu(sd_llc_idx, llc_id);
++
++	if (idx < 0) {
++		idx = max_llcs++;
++		BUG_ON(idx > MAX_LLC);
++		per_cpu(sd_llc_idx, llc_id) = idx;
 +	}
++	per_cpu(sd_llc_idx, cpu) = idx;
++#endif
++}
++
+ static void update_top_cache_domain(int cpu)
+ {
+ 	struct sched_domain_shared *sds = NULL;
+@@ -699,6 +719,7 @@ static void update_top_cache_domain(int cpu)
+ 	per_cpu(sd_llc_size, cpu) = size;
+ 	per_cpu(sd_llc_id, cpu) = id;
+ 	rcu_assign_pointer(per_cpu(sd_llc_shared, cpu), sds);
++	update_llc_idx(cpu);
  
- 	free_cpumask_var(cpus);
- }
+ 	sd = lowest_flag_domain(cpu, SD_CLUSTER);
+ 	if (sd)
+@@ -2394,6 +2415,14 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
+ 	bool has_asym = false;
+ 	bool has_cluster = false;
+ 
++#ifdef CONFIG_SCHED_CACHE
++	if (max_llcs < 0) {
++		for_each_possible_cpu(i)
++			per_cpu(sd_llc_idx, i) = -1;
++		max_llcs = 0;
++	}
++#endif
++
+ 	if (WARN_ON(cpumask_empty(cpu_map)))
+ 		goto error;
+ 
 -- 
 2.32.0
 
