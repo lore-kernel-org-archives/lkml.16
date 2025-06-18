@@ -1,110 +1,82 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BEC2F5469;
-	Wed, 18 Jun 2025 18:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280F83085B3;
+	Wed, 18 Jun 2025 18:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750271966; cv=none; b=hc9NbiJ4YVOjwyDuolIWLc3jtFlCbq9SN6cItUKg+8hIwW0XSPfBFUNUNIVuiAfMvgymP2bY1E11c0ln+1RKBZdnryThamUiuaMoM4SP9Q3JUpemhNj/+sMmRrZmXnqgWNnRjBVit8Y0JJ+zrzoZRJOKcXBpKTWZLSlX90rxwK4=
+	t=1750272140; cv=none; b=YR05NvcvjsBbfFpPkSP8Y5HOXz/216bzMD6rndap1m116uLgtWA+lUldVXK8/EMjtIKt3C2eJNGWdm0Aj9SzxXw84ikPsg2kiyi5O5yusBuKx8YsTJB5ZwkG6kQW5wmjN3w7vNGBgBUpr1RKql3n9/p5ovyLnOiQ5naOPmCmFsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750271966; c=relaxed/simple;
-	bh=7a1PjeCpxWtk3iPqJuzL9cRDMGgzZs+7R/WwL76nTz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UnJYgqs5imAaCovyRfolg5+zkCXjtHa2nnihPRVFvLiMM8a3Th3zd5bCRHJ1nXnYAkhiL7SI43Kz7zoKF4RGWmhWQ5r0bgRYwX11utoPJCi1OuyiVm9Pq29BOLgMI1w8BZl+4OWjAiCGnDj/z1iAdTlk7LEW1XEsh/m4ldpEI8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DsxNna+m; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750272140; c=relaxed/simple;
+	bh=wE4/WPYWtqDJfV1HOrNScBw/vhgUfaSiNNDqKJCoR/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m/BogYzep7vXukUYRA1eyJJHBbryU6g1b7bb8T/ck71IB0u6Rti1eGcm9siCXgusG/kpzboGXxogosSQBf65GdTMtlTwIYYb8gnq9QfviM/x47LxvCQ1GkwxpAwhmwEuL41zLXEab62+E5Q3oC24fEDaJslObsBmCZcZn0Wdivw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mws7jMY6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DsxNna+m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=v5tYhFD1j+yv3Iu8PpEhj2ETO0QbZsDAEopsQ/A9bAk=; b=DsxNna+mqd14Y1R+bYWGnLXAQZ
-	KD6LPHyGeHF0KI/3kpZdMUU/dhkMhaL8WEah3c3V+49Ysvqs6Bu1vdm9Vpq/S7pzTkPI7eJtMEYxU
-	uBoRjKpFcj6CN3GQQtP1DGIdK3sIxGUq5tAbQdEdFNW6f1UST3AvhDLuU1qvMN21EAerKLDVmvRmF
-	Bz18Agad3kUCnPAoloNaQzMvUnGOBL6wdnqo4xVUjT0N58jBE6K3YMI7r0d/dCaUiT95wlFWeD+R/
-	7Mj3cTV1CtHQkWAw/n5cxdS/2TVEKUTcA+WwGRREV4fUaL5WvVYXbK9HuC1rY3t6P+y7zHGbMhwx9
-	5BjmFRZw==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRxgn-00000004Z0Q-0yr0;
-	Wed, 18 Jun 2025 18:39:13 +0000
-Date: Wed, 18 Jun 2025 19:39:13 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 07/29] mm/migrate: rename isolate_movable_page() to
- isolate_movable_ops_page()
-Message-ID: <aFMH0TmoPylhkSjZ@casper.infradead.org>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-8-david@redhat.com>
- <9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mws7jMY6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05344C4CEE7;
+	Wed, 18 Jun 2025 18:42:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750272139;
+	bh=wE4/WPYWtqDJfV1HOrNScBw/vhgUfaSiNNDqKJCoR/s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Mws7jMY6McrOeNlVES1yw/4TjUstaMsYnOWWhQI3AF8uY80dHcujBFzqjI100tnDW
+	 SN+64mEcUssHZ2xJsgFh3UAH37idYQjkuZA0wL8aB1rhOYs1rlWD2unHA0ZXbbFaca
+	 MFE+Ug9Ghyso7OAI9lwyrURkKrjpO9N2Nox/eQs/tLibl67g+h/5D7jXE2CCyFwq3A
+	 nJ/KUmyzfBVrXS3E+CbNVIaZbwXOLGg1AyziluV7NdhHBuSP1hCj7Z4IdDnBtKapgQ
+	 7mBEjMT5f38m95JSDzzWnGEcc/yYK2tW1BuuhEVixfuD4foQ2okGbJOcrTTrXJFSXt
+	 Kody0JO+P3QQg==
+Date: Wed, 18 Jun 2025 11:42:18 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: George Moussalem via B4 Relay
+ <devnull+george.moussalem.outlook.com@kernel.org>,
+ george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit
+ <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, Florian Fainelli <f.fainelli@gmail.com>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Konrad Dybcio <konradybcio@kernel.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org
+Subject: Re: [PATCH RESEND net-next v5 1/2] dt-bindings: net: qca,ar803x:
+ Add IPQ5018 Internal GE PHY support
+Message-ID: <20250618114218.6add7fa3@kernel.org>
+In-Reply-To: <20250613-ipq5018-ge-phy-v5-1-9af06e34ea6b@outlook.com>
+References: <20250613-ipq5018-ge-phy-v5-0-9af06e34ea6b@outlook.com>
+	<20250613-ipq5018-ge-phy-v5-1-9af06e34ea6b@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 02:14:15PM -0400, Zi Yan wrote:
-> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+On Fri, 13 Jun 2025 05:55:07 +0400 George Moussalem via B4 Relay wrote:
+> From: George Moussalem <george.moussalem@outlook.com>
 > 
-> > ... and start moving back to per-page things that will absolutely not be
-> > folio things in the future. Add documentation and a comment that the
-> > remaining folio stuff (lock, refcount) will have to be reworked as well.
-> >
-> > While at it, convert the VM_BUG_ON() into a WARN_ON_ONCE() and handle
-> > it gracefully (relevant with further changes), and convert a
-> > WARN_ON_ONCE() into a VM_WARN_ON_ONCE_PAGE().
+> Document the IPQ5018 Internal Gigabit Ethernet PHY found in the IPQ5018
+> SoC. Its output pins provide an MDI interface to either an external
+> switch in a PHY to PHY link scenario or is directly attached to an RJ45
+> connector.
 > 
-> The reason is that there is no upstream code, which use movable_ops for
-> folios? Is there any fundamental reason preventing movable_ops from
-> being used on folios?
+> The PHY supports 10/100/1000 mbps link modes, CDT, auto-negotiation and
+> 802.3az EEE.
+> 
+> For operation, the LDO controller found in the IPQ5018 SoC for which
+> there is provision in the mdio-4019 driver.
+> 
+> Two common archictures across IPQ5018 boards are:
+> 1. IPQ5018 PHY --> MDI --> RJ45 connector
+> 2. IPQ5018 PHY --> MDI --> External PHY
+> In a phy to phy architecture, the DAC needs to be configured to
+> accommodate for the short cable length. As such, add an optional boolean
+> property so the driver sets preset DAC register values accordingly.
 
-folios either belong to a filesystem or they are anonymous memory, and
-so either the filesystem knows how to migrate them (through its a_ops)
-or the migration code knows how to handle anon folios directly.
+Hi DT Maintainers!  Is this in anyone's review queue?
+I see some comments from Rob on v2 but no reviews since.
