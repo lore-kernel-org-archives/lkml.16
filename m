@@ -1,132 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEDE3F9C5;
-	Wed, 18 Jun 2025 12:08:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229F62D12F6
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248529; cv=none; b=qIpEUoadphjd1X15yirXrReayVcpE7CJ+7RWRLtinmWfIJ2EL/CSLvV2GzqfIAjrs3zhRorVj6F7o7FOgP+E3THc2UNk/PYi4jK1yEXPrF/h4Z31W0oEeJgioev27alLouuwhjq9+N50o+x3tc1YVrwlXyBWtp0nzAF9sJJUiMg=
+	t=1750248559; cv=none; b=dyOkFoMmI5UPDim9wQCu9AoVOb5bgGgbvmC7+0Z4UDckr6Hv+bbu+A383CHbWX1YwYOMyhEhsPoCDVBwSNF/Cl3rCNYqVYGoyhccSjHbZHbZQ/ZSizKOP6l5PTVSiSzbQdgnd1je74xatCqxLjtHlJ4UkGLTMma12LDKf8AUAcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248529; c=relaxed/simple;
-	bh=9PvWQIN2DOiS+eGDpdKz3WgqnQceFcRO174Ih2hRwLI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uOvy3u1D6sdn6H4N9Xq6Fvo7x/kR03ngykLg9BV3luZfqgvf6Akn56TVC4qA4YTGB9pWFJ5vnu9sbFxtPRlHF1espGMiWTIRbs6oWS52OI11f3gkbPLDiM4cR2TiMttPBpwq6jiDhw+175Op0vlGcHNPIpqMsJeflZfr4r69ct4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdxKBZ1v; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750248559; c=relaxed/simple;
+	bh=eus1GwfPuFQtn6OQ9v3rF0J21GjEHtkdFtWAPZQVNsA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nT24GRBYwwDV8Q84AvStm0impVXpVp1EL5ZWPafJN7S96OMBi1BK2zGzCE7EN/t+kcC4seCaJ35EtJKvOEZd66KDFu8XJ1boV9ES/HKsVKodTis574x/N4cJvJuDM4HAFZBDrqVRW2MjoHgB3uzIbrctZi/XvY1uVnrB00QRUtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fcNaYx9o; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdxKBZ1v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750248527; x=1781784527;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=9PvWQIN2DOiS+eGDpdKz3WgqnQceFcRO174Ih2hRwLI=;
-  b=fdxKBZ1vEtPU149VgO+pr2p0Z20FozbKZ2v9uF4dvWkRxotbYsRIpc5M
-   WLaoZG2iLFiofj1VAwttblw5YMJeMmciGmJPcIPUvcqmjGFyZjckVBNFQ
-   gBSfyWAOhixKswoBMi24MBBEnU/Rkoem1PtRWg5MKVp8BVc9CVzP9Y5Ka
-   2/F0N63poVP3sZA+Q1wQzmFIuBV1sF6dhGxMflqXU3yuIQEaBEwkqFXVd
-   TMHc46rlUBmyrIEAG2J8t+xUjVCJu8230nZMIzkmMOgY1IrBMm65BDCQP
-   7W7z1LzdbT471+zasY+/OsBOhIUiNCNUbjhnUA1/vYBP/Pb17kY+oFCUm
-   g==;
-X-CSE-ConnectionGUID: 51U2Xs1xSFawIURNWLH/Aw==
-X-CSE-MsgGUID: 13aPbU5ZRi2P5DrfRxJk7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="77869043"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="77869043"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:08:46 -0700
-X-CSE-ConnectionGUID: 8svx1IzZSXisrWdvIDRz7A==
-X-CSE-MsgGUID: HxAOmSDzQhC4iTG0+KT5Uw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="154213206"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.245.234])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:08:39 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Tony Luck <tony.luck@intel.com>,
-	pbonzini@redhat.com,
-	seanjc@google.com
-Cc: vannapurve@google.com,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	H Peter Anvin <hpa@zytor.com>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	rick.p.edgecombe@intel.com,
-	kirill.shutemov@linux.intel.com,
-	kai.huang@intel.com,
-	reinette.chatre@intel.com,
-	xiaoyao.li@intel.com,
-	tony.lindgren@linux.intel.com,
-	binbin.wu@linux.intel.com,
-	isaku.yamahata@intel.com,
-	yan.y.zhao@intel.com,
-	chao.gao@intel.com
-Subject: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
-Date: Wed, 18 Jun 2025 15:08:06 +0300
-Message-ID: <20250618120806.113884-3-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250618120806.113884-1-adrian.hunter@intel.com>
-References: <20250618120806.113884-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fcNaYx9o"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55220699ba8so8498219e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:09:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750248554; x=1750853354; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eus1GwfPuFQtn6OQ9v3rF0J21GjEHtkdFtWAPZQVNsA=;
+        b=fcNaYx9ocTR/+8hYqOW8FhFboXUL+/OQgeECOYXbcA53Qi8IqsOXoSpOo+6oDzPrP0
+         pCLE+4yrCBHChGIen5vnic+pvfxEB9pE+5T3hw+6AhG5x1eDl655GTt0SRnBfVvQ2gmf
+         b7h6Xe2GOTTf8OtPz3n28Odx5zfYI6xWqZYos037aFunRWgxxZsshgI/Gnq55H1rn5WR
+         zpsCZBue4eKlZ9yh4qSopKRVUp8Zc62GyDmMqXjQgNvMyrK8+huzk6upXdzPab2cZvcP
+         fFYHb45+yFbYmaejUBnaCUhVi8BpIfdD0netIFmOnhZgsqOovX5Y01sORd8rjq7csFfj
+         GOkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750248554; x=1750853354;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eus1GwfPuFQtn6OQ9v3rF0J21GjEHtkdFtWAPZQVNsA=;
+        b=GxkdF+3aoStuR5Ae+RyskyjBG0TZKwg5SSAH6Pe7w2ZNycnjCiYuziRsiyF8RCJK5Y
+         g4ltqXdgmRSI2xQVjIkTx9iGazgI4TrQceydDCe3ijPQB12I4VHPxBVoaFUXvzDhLZ+s
+         4Tht5DEbC2cRzYrqNAL/pcdldujhdWOq193tHnyap+geIEPfiyrYLWdyHGQtRQAJKIOy
+         N5ztoW1NlPvrBuJ1sXn7pj6mBYZ1WjaUYBQvhlrV+Mau14CpvzarkKeKMvamjcv3yRz7
+         I42NPn73ThpMvLeUveIlyzyc3Sc4rz4HCCxH0MSDp8tSra3bf+VuKgNLNqCiRFOoU+7M
+         Y0ug==
+X-Forwarded-Encrypted: i=1; AJvYcCW/MzgaohySfd5B1u3LK41SDXI2gDw4exuUF2dIMMOIPznqcyx9RfZvJq0sUF/zpyMifydYsGP8sj1ZWg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyZvQ9+cy9O3YiB8GTJ+uBoJmEQAI7+/gO4zHT9MnsHMdQ3q91
+	rO+4j4Y//5EeAo60BCXjxjiSe0kIbdvXdKukVM7SZSYSpitmaYr7EAM+Da4D8ofeq7XBhExO3Gf
+	pnjRftU0GUaLwM0kfN1lU1x3tYdO55V9sqahA8pfUQVbkOpNEe46S
+X-Gm-Gg: ASbGncuupUuY9Qs+opIw/AZDbh803mFpR1IJdiluAOic8skYl5NFmYBo+/Q25VyQBBP
+	GsHhEDiP/T61MaOYF8S6JkXbPbi3XQ6tKSnLFHDcwRv6FMWGWDO6LjDSHdCYyrf7y7fnfcs6Znp
+	e5XZGjagFHnRTSoVRneM/ko72fJzj1h/vIgZnzeUlDmpY=
+X-Google-Smtp-Source: AGHT+IGC0m4FXYYQm+k0AXFCSy3bx6F7/2cTaiKhBBnuAbB+6N8ybTZnHZCukOOueaHxtyfLbUpPRBURy2oO4IVfhl0=
+X-Received: by 2002:a19:5f17:0:b0:553:ca33:46f with SMTP id
+ 2adb3069b0e04-553ca330808mr1234493e87.29.1750248554215; Wed, 18 Jun 2025
+ 05:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
+In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 18 Jun 2025 14:09:03 +0200
+X-Gm-Features: AX0GCFtzAwHH-ht5UUznh81aEY-DCCdnUYFURG79_8pBHXv4vb2M7QItIyT5tQE
+Message-ID: <CACRpkdb3+uQ=PG+ne48hyvdTFeEQBxXtq3CwxpqEmd1m9o9fNA@mail.gmail.com>
+Subject: Re: [PATCH 00/16] pinctrl: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
+	Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Support Opensource <support.opensource@diasemi.com>, Baruch Siach <baruch@tkos.co.il>, 
+	Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>, 
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev, 
+	linux-sunxi@lists.linux.dev, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Skip clearing a private page if it is marked as poisoned.
+On Thu, Jun 12, 2025 at 3:15=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-The machine check architecture may have the capability to recover from
-memory corruption in SEAM non-root (i.e. TDX VM guest) mode.  In that
-case the page is marked as poisoned, and the TDX Module puts the TDX VM
-into a FATAL error state where the only operation permitted is to tear it
-down.
+> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+> values") added new line setter callbacks to struct gpio_chip. They allow
+> to indicate failures to callers. We're in the process of converting all
+> GPIO controllers to using them before removing the old ones. This series
+> converts remaining pinctrl drivers that still use old APIs.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-During tear down, reclaimed pages are cleared which, in some cases,  helps
-to avoid integrity violation or TD bit mismatch detection when later being
-read using a shared HKID.
+Patches applied!
 
-However a poisoned page will never be allocated again, so clearing is not
-necessary, and in any case poisoned pages should not be touched.
-
-Note that while it is possible that memory corruption arises from integrity
-violation which could be cleared by MOVDIR64B, that is not necessarily the
-cause of the machine check.
-
-Suggested-by: Kai Huang <kai.huang@intel.com>
-Fixes: 8d032b683c299 ("KVM: TDX: create/destroy VM structure")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- arch/x86/kvm/vmx/tdx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 457f91b95147..f4263f7a3924 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -282,10 +282,10 @@ static void tdx_clear_page(struct page *page)
- 	void *dest = page_to_virt(page);
- 	unsigned long i;
- 
--	/*
--	 * The page could have been poisoned.  MOVDIR64B also clears
--	 * the poison bit so the kernel can safely use the page again.
--	 */
-+	/* Machine check handler may have poisoned the page */
-+	if (PageHWPoison(page))
-+		return;
-+
- 	for (i = 0; i < PAGE_SIZE; i += 64)
- 		movdir64b(dest + i, zero_page);
- 	/*
--- 
-2.48.1
-
+Yours,
+Linus Walleij
