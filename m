@@ -1,207 +1,83 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 442711E0DFE
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1731E0DFE;
+	Wed, 18 Jun 2025 04:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750219742; cv=none; b=kixQdIIYF3fWAZ9tXGxxH2doKvEGuaH9WMcDviJK8O2fhhnhAlRiip2dkWco4GHm8rF5F9SEe7bzBkAE8CGaTH3uxIVNHWRAFw53zmerTOcavke0x//QZ4kr1+o7Q45x3M9l2tLAAPomxTDf8BSCjtkhWNVq3ubOO9P1IBGQy/M=
+	t=1750219771; cv=none; b=H3Bj556levA+ajcuUkpXTDdb42y2KohYbI/OOGl7wH1K78QECoW22jcC3UJA+gIqojrxembChVGQKmSRMS3VRla1TBt/dUsDSW5ydPDapUcJ3ZT0RYkUFXw2JjteDx4QWvb46+rV8qwM/n2UavFa1CU/fsJvWIpyrOZuh0S8vk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750219742; c=relaxed/simple;
-	bh=Rc7QRQavRmVFyB9IhxdzFHRfSkThkI3xPrEYilcz6ao=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RLR+0U60UOz2q+BNQWyholD7nTTejr8Ppkd9IvEO7RFCeePfyKFxw8uwLHVW0KF6fkRhqrJEL0uZH1KpSatZ1E5ZLptsX8d3H8+gMMTyLEZ+Xo72GOcWGFww6S2RAzaQKoBTVkDRs6TVy2jK1WRxnKcSRdEjoXdq3raCr37/lHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=A+RsD6GW; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="A+RsD6GW"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-553cf020383so1279714e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:08:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750219738; x=1750824538; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hV+4GdLIPduWvDvm4cyTBr7zE4Nr+cAmACWAXvYhmEQ=;
-        b=A+RsD6GWOfrrfvbu/18Nxgkut5GandJnIFIRJLjfLD43GYf4I1L539jn+Y8ouXwBKH
-         6Sfj39qmJxEIHSbqaryuvh8a8Tmm1cZkGy7WFV/lqOP17/K68i420x77fUskDXzQcWbT
-         F/JvBAbeItsVkpyv/A46m9OXuluPHYZ2cXuy+ZbDnG7sEaNMSZJbUnTijrfEjVa+Ph+L
-         fBcuMRLUYjP2YHjm/D4OfTkNBSwJ03BBOawOfDEeobrx/TH3RP1EXicMuYRY4yuqXmp5
-         zkRTDCLiMRV1HCAG7IO4FOv16t++bmaR0Hkfx0lEssIwsyAQyuoQpZVNMLAkn2IgSatz
-         d71w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750219738; x=1750824538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hV+4GdLIPduWvDvm4cyTBr7zE4Nr+cAmACWAXvYhmEQ=;
-        b=SW768CJnalsUQmjBX70saEvZPRucNIre+cyKtM3cGWm6dGAGNPMf1u+7shU+frHtVo
-         xc1cLidwlglDGdkIsluvGVVvX3+2HcquuLrztkwr4qGRfi7AvNfnTJ2nyVQbmBSutivV
-         yQkuo1dU3Yvn1Gbi6nuxD/BkBSFh44Xec9Ca3PQsDqy1Z9TnqaY6Qk/wcs4l461MQ92M
-         5huz4PNCVDXgoCN4gmdsTeuYRN7/kDr6Sd0UVb8hUaKDzaaSduvng8PF2jeuopHlyyNR
-         iRyX2TTK9lJFEp4j8WRkGyI1UaRabm2cSjtJFQEB/MxyqMfrtQobqEZmfwbeuuvXOgjG
-         w7Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCXPC3rTM6nbcJEdjAI6GO7kr9KfFmF8ZpoU1SccDGxzO9YRqakiYbXVufAKCQCCyByFMbMvXpclFPZrr8U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxMxYL/rX+2YEEtyAQ3IF1zWr0QUpJezgZEl96tLVbqBAZR0Zy
-	8d7osbalDCPhkO4yvtVqilkBHNeOiTLE0mkd/EnHBFpfGc4BtfeXKYiWtsbWHVxLFIkcqfSpaTb
-	KcOAS101Abk12lUJzYi3/f6VOvimpvn1wSktra+xziA==
-X-Gm-Gg: ASbGncsu+ijuxw2VEAjhZ0UC/7JWe/+uQDVl0WbfqThtDXd8NWgb5jsTiLf3BpVgdJO
-	k/A3Uipu843JE0VBlsfgftrjH/xBg/IcZSE/tiDIy15fUfdDeQ4vp49+1VyuIEDTF7CGUNQrBP3
-	D2RW0TEBzIFexqVKD+YU5/OJOGHTcRzxbF8QxeYMO1vA==
-X-Google-Smtp-Source: AGHT+IFnL3eHkaa0AaGa2260XzL4VnwU/UtF89FsaS0XOFT0LH12cqs0j3TtvsOBW7k3zdEpBSYUjjpFngr0GSrWEx8=
-X-Received: by 2002:a05:6512:1192:b0:553:addb:ef51 with SMTP id
- 2adb3069b0e04-553b6e8c2f5mr3946779e87.18.1750219738106; Tue, 17 Jun 2025
- 21:08:58 -0700 (PDT)
+	s=arc-20240116; t=1750219771; c=relaxed/simple;
+	bh=XGXyQipLSI3HWelm0GjXm8r9d5GScQ/BlKqOzWAR8I4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LnOFepqI4mWom2NCzE5XYneMsZj5eRu3ONKf3pSshd9Bhc9l/+Q0JD3fnoDUyPnduFGNZyOci7RmEytdSNzhwRRuYnyEoHh37Ka0deY/2w/MCYwt2w+bAEOB07DzNmxJFQYw8mainK2vdMTC0xb7Qw5edH3nPqrWzLvfH1vn2Rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowADn_FT2O1JoYYdHBw--.8219S2;
+	Wed, 18 Jun 2025 12:09:26 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: gregkh@linuxfoundation.org
+Cc: linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] usb: gadget: pch_udc: Use USB API functions rather than constants
+Date: Wed, 18 Jun 2025 12:09:08 +0800
+Message-Id: <20250618040908.408309-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611062238.636753-1-apatel@ventanamicro.com>
- <20250611062238.636753-6-apatel@ventanamicro.com> <aEmiOFwofEJyXm4R@smile.fi.intel.com>
-In-Reply-To: <aEmiOFwofEJyXm4R@smile.fi.intel.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Wed, 18 Jun 2025 09:38:46 +0530
-X-Gm-Features: AX0GCFuSAGiDE5-KiEpx1v8HnSXue_LepxDvBagpnGvUmEgx8W2v2dqjbNj1zB0
-Message-ID: <CAK9=C2Xhkfk4WZeD2gVCoJxeRHAuYjSfwx_zUHvVBqOQPLV7Lg@mail.gmail.com>
-Subject: Re: [PATCH v5 05/23] mailbox: Allow controller specific mapping using fwnode
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Len Brown <lenb@kernel.org>, Sunil V L <sunilvl@ventanamicro.com>, 
-	Rahul Pathak <rpathak@ventanamicro.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	Atish Patra <atish.patra@linux.dev>, Andrew Jones <ajones@ventanamicro.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, Anup Patel <anup@brainfault.org>, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowADn_FT2O1JoYYdHBw--.8219S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JFWkKry8XFy3AF17uF1Dtrb_yoWDtrc_C3
+	yUWrW3Kw17XayUGr4xC3yfJrW29asYqwna9F1vqasxAa45KayUXr1UJr4DAa1xZrW7ZFnr
+	CwsrtF98tF4IvjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_GcC_XcWlOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCY02Avz4vE14v_Gryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjTRZNVkUUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Wed, Jun 11, 2025 at 9:05=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Jun 11, 2025 at 11:52:20AM +0530, Anup Patel wrote:
-> > Introduce optional fw_node() callback which allows a mailbox controller
-> > driver to provide controller specific mapping using fwnode.
-> >
-> > The Linux OF framework already implements fwnode operations for the
-> > Linux DD framework so the fw_xlate() callback works fine with device
-> > tree as well.
->
-> ...
->
-> >  struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int ind=
-ex)
-> >  {
-> > +     struct fwnode_reference_args fwspec;
->
-> Define
->
->         struct fwnode_handle *fwnode;
->
->
-> >       struct device *dev =3D cl->dev;
->
-> This better to be just a declaration.
->
-> >       struct mbox_controller *mbox;
-> >       struct of_phandle_args spec;
-> >       struct mbox_chan *chan;
-> > +     unsigned int i;
-> >       int ret;
->
-> With the above the below will look like...
->
-> > -     if (!dev || !dev->of_node) {
-> > -             pr_debug("%s: No owner device node\n", __func__);
-> > +     if (!dev || !dev_fwnode(dev)) {
-> > +             pr_debug("No owner %s\n", dev ? "fwnode" : "device");
-> >               return ERR_PTR(-ENODEV);
-> >       }
-> >
-> > -     ret =3D of_parse_phandle_with_args(dev->of_node, "mboxes", "#mbox=
--cells",
-> > -                                      index, &spec);
-> > +     ret =3D fwnode_property_get_reference_args(dev_fwnode(dev), "mbox=
-es",
-> > +                                              "#mbox-cells", 0, index,=
- &fwspec);
-> >       if (ret) {
-> >               dev_err(dev, "%s: can't parse \"mboxes\" property\n", __f=
-unc__);
-> >               return ERR_PTR(ret);
-> >       }
->
-> ...this
->
->         dev =3D cl->dev;
->         if (!dev) {
->                 pr_debug("No owner device\n");
->                 return ERR_PTR(-ENODEV);
->         }
->
->         fwnode =3D dev_fwnode(dev);
->         if (!fwnode) {
->                 dev_dbg(dev, "No owner fwnode\n");
->                 return ERR_PTR(-ENODEV);
->         }
->
->         ret =3D fwnode_property_get_reference_args(fwnode, "mboxes",
->                                                  "#mbox-cells", 0, index,=
- &fwspec);
->         if (ret) {
->                 dev_err(dev, "%s: can't parse \"mboxes\" property\n", __f=
-unc__);
->
-> You may save a few bytes by doing it as
->
->                 dev_err(dev, "%s: can't parse \"%s\" property\n", __func_=
-_, "mboxes");
->
->                 return ERR_PTR(ret);
->         }
->
-> > +     spec.np =3D to_of_node(fwspec.fwnode);
-> > +     spec.args_count =3D fwspec.nargs;
-> > +     for (i =3D 0; i < spec.args_count; i++)
-> > +             spec.args[i] =3D fwspec.args[i];
-> > +
-> >       scoped_guard(mutex, &con_mutex) {
-> >               chan =3D ERR_PTR(-EPROBE_DEFER);
-> > -             list_for_each_entry(mbox, &mbox_cons, node)
-> > -                     if (mbox->dev->of_node =3D=3D spec.np) {
-> > +             list_for_each_entry(mbox, &mbox_cons, node) {
->
-> > +                     if (mbox->fw_xlate && dev_fwnode(mbox->dev) =3D=
-=3D fwspec.fwnode) {
->
-> We have a helper device_match_fwnode()
->
-> > +                             chan =3D mbox->fw_xlate(mbox, &fwspec);
-> > +                             if (!IS_ERR(chan))
-> > +                                     break;
-> > +                     } else if (mbox->of_xlate && mbox->dev->of_node =
-=3D=3D spec.np) {
->
-> No need to check OF node (again). Instead refactor as
->
->                         if (device_match_fwnode(...)) {
->                                 if (fw_xlate) {
->                                         ...
->                                 } else if (of_xlate) {
->                                         ...
->                                 }
->                         }
->
+Use the function usb_endpoint_type() rather than constants.
 
-Okay, I will update like you suggested.
+The Coccinelle semantic patch is as follows:
 
-Regards,
-Anup
+@@ struct usb_endpoint_descriptor *epd; @@
+
+- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
++ usb_endpoint_type(epd)
+
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/usb/gadget/udc/pch_udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
+index 169f72665739..0b20ecbe64f9 100644
+--- a/drivers/usb/gadget/udc/pch_udc.c
++++ b/drivers/usb/gadget/udc/pch_udc.c
+@@ -988,7 +988,7 @@ static void pch_udc_ep_enable(struct pch_udc_ep *ep,
+ 	pch_udc_ep_fifo_flush(ep, ep->in);
+ 	/* Configure the endpoint */
+ 	val = ep->num << UDC_CSR_NE_NUM_SHIFT | ep->in << UDC_CSR_NE_DIR_SHIFT |
+-	      ((desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) <<
++	      (usb_endpoint_type(desc) <<
+ 		UDC_CSR_NE_TYPE_SHIFT) |
+ 	      (cfg->cur_cfg << UDC_CSR_NE_CFG_SHIFT) |
+ 	      (cfg->cur_intf << UDC_CSR_NE_INTF_SHIFT) |
+-- 
+2.25.1
+
