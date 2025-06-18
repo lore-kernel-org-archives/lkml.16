@@ -1,108 +1,85 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5EA2820C5
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D422E3AE5;
+	Wed, 18 Jun 2025 12:30:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249755; cv=none; b=DMI06y+zMrn7aUqqbbYaYtaFmqZ/BE7LnWQ8YRKOi3OAIYZcZeg92he7TLY42gl+MB+Q/aK9491fEQmgp7B3K8SmsSQR/6ZS8jMLV0wnC3H/dlcHqM7EKL9w1HSS3XzuHyMO0a2kkP6X1F5XQ72zK2UkTo+/lxXDJGrAinmjLOg=
+	t=1750249829; cv=none; b=Fo5BOdNdcNuIYQy5YdbA7Tv8xNRmw1OVV6lOhjZHHq67xqtEZ4/mH2fN1bZKsbsdBzMD+afabaxMwZ+drqP2adL8HURHJvrN0uUKno7acA8mViLwmBygpU6qg9RZBdqEXizafXLweTwaEtNT+QARLD4uCMYYWjZG6A7RBLHxmcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249755; c=relaxed/simple;
-	bh=k1ToMvPhb2nfK3xpZ0YNG/kZh4jrPc+viBe0YLqGLi0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dVG1/CKmXodMd1PQ3b/z4mXw0oBuSwQEau+Nhfk28dLWeiXlREuVTxpFJquREl+ooKxVHftKHWyLVWBWRBitTIdTmy6NpOSTgtRU9MEbcCnry+xEQtdb9WISR7Ohw0vdylo5cc5yaiBoGVWS8Vv+IUX6SW+Lcb74LHKcAQGHtDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=j4k3kesd; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
+	s=arc-20240116; t=1750249829; c=relaxed/simple;
+	bh=D4rfI/dgpwr4p8/1Ep8pqKrbCEmpB4WZJuBHlVP4Le4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MOGLAAOFSx8SB+w5lYj+haEABVs4aZ954+7uQ1+xR1CCdLoTt71mwLsd/AUvD90Y7nlwk3vFrQAudf2f0joyxFOOl9DAM3G/KtdJKTE/RbK2z+0PBoQVSL06ablTxguvRMQgTsRERr1TM37nqtb2NY+ciL5Yie5YKsjYd+h9M1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMzFDvsP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="j4k3kesd"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2352400344aso64635665ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1750249753; x=1750854553; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k1ToMvPhb2nfK3xpZ0YNG/kZh4jrPc+viBe0YLqGLi0=;
-        b=j4k3kesdSClYAEDTF1DrfW8oVmVSSlyKRkPBDTOiPzZRDdv4rsIPaBWMj9aVtH0qtZ
-         r5EnU1CiQ9RwrgOkarxNc/XWtmmJqpdOzIkJThdpTZuIRVjGqMfey+REZ62EcKmxIohM
-         cd0QDbhS/ijuqIpDfF92OFED10MjaBKO8cqDGbtyCR0sh22lrqi0g8lunxTKMZvpaGRX
-         z6B0SxbF8A0y+ErPfT5FygfD93EfIYQcGLZ3mWaCQCMvVjKKVnelS79ri2Yeas85/J/B
-         21THAQEYjvCmo5WDbEWow+KQx7g7QoUOpmNcUMoyMN5hl0x/XhsbTmoHhjwfXYM2+NDP
-         Jzxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249753; x=1750854553;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k1ToMvPhb2nfK3xpZ0YNG/kZh4jrPc+viBe0YLqGLi0=;
-        b=P4Su7GLXUI/iGGXV6oSd+4Q3DGsLLvI469eY0oLKqIAoDXpPkzrmA4j/FdUs8Vv3nt
-         m8q1dsOGLXELSs5EBFqDKptranc5zSPMaIpvrpFC2xxwPGUv7FoPtrSnNdNNGzfOmnPG
-         m+Ggy8FzD4TdB7xq4f7/svrTxdovubnP+hbS8rsraSx7pSkrvlKPwFSiyFF82O9loDH3
-         DG2jwLuuxclYaofdW5G0rUSdQGq4fttSUXCkeAWiW90/GhqiLI7zDEWox/i4fLmkzZvT
-         kNMPaH/3XGLr5REme5rBZSuZy6oypvPnB5zYiCBCTKNwPclQ1Yx9jxhpJt/qtSp8Q/iA
-         4Clg==
-X-Forwarded-Encrypted: i=1; AJvYcCVsHH7PoxwKk88ZM/qiWcmwODs2F100llLalEDoMOzdoPuLqXHfPJujdQqWyY06AokNc3lUpLilnq/Lbfk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBHaXsYsiPWESWcTn3DodsepD5qiBXXzb1D+BF+JJnoDsLWt10
-	9OzrVQ+FfgcdiMxXBc616V5dtS3cvy+B4kjnXpU2Jn/4PzXE15jzTVa+Cqwh+QZRtgnV/yRNmQl
-	Pp065cNV3S/0ROsLl8ESw7CC8ooPhCkllCzSzHo7bbA==
-X-Gm-Gg: ASbGnct62Pky3BKdA4vj02sV1E04Z7rlOjB5VUuuiRB6K3gQh/Is92NES7WMsAPb6U1
-	MHjCkqbSAYf9BfAX3hn2+9oiBueErA1EjS4NZ3UQnE6+sAb4pEEZj7ppTG61WU0edZQULHNCSoC
-	KqswEKIJeeQjnnuD9laVfpHvzDmyi4DPzVqd0k0rl0cEw9bZgLJZhbc69/41Yy
-X-Google-Smtp-Source: AGHT+IGORnWPn6X8jkI2B9VRfShbK7BW0yz2jVJzmG/TWFTGuZgHTvmgv5OkoiBfEfZxZHJS/HUcsPVug4C43uBDSvY=
-X-Received: by 2002:a17:90b:2dd2:b0:312:f88d:25f9 with SMTP id
- 98e67ed59e1d1-313f1c7dacfmr27688759a91.7.1750249752875; Wed, 18 Jun 2025
- 05:29:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMzFDvsP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74FA8C4CEE7;
+	Wed, 18 Jun 2025 12:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750249829;
+	bh=D4rfI/dgpwr4p8/1Ep8pqKrbCEmpB4WZJuBHlVP4Le4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nMzFDvsPqxLn1B9i3oamFf9T0SmQ9lxFf85hW0ar7mgg/euMF6HKelkctIIKfhypP
+	 lEGHTTwlXhFmQdwLqAR1uPg0p2i9N3uRgcA+I7Ib7vhZevLLLuaJGD9FDWZfBsmrEO
+	 XqnnTzTGwQ1p5+NV0RD9k/ZlsHY/JSkVXultVPRAsf1+/VBNWO+WOreuWShujmZ9w7
+	 u2jArgUGYApvsx8TLqCj6T73EYiAlVQySCEYQOPRS8K66Y2bjxChYSjDom0STHp3hz
+	 S/YgtQw7jBxTHfqqcMxtilue9twIbYg2GseKjRtTIvy9qJBndERtLcSTpS6Ii0APPl
+	 2LQLRR/SghWtA==
+Date: Wed, 18 Jun 2025 13:30:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, Yogesh S <yogeshs@ti.com>,
+	Santhosh Kumar K <s-k6@ti.com>, Steam Lin <STLin2@winbond.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 2/8] spi: spi-mem: Take into account the actual maximum
+ frequency
+Message-ID: <89c8da9d-8e4c-4e68-b306-5645154b4d60@sirena.org.uk>
+References: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
+ <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-2-513202126013@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
- <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com> <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
-In-Reply-To: <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
-From: Matt Fleming <matt@readmodwrite.com>
-Date: Wed, 18 Jun 2025 13:29:01 +0100
-X-Gm-Features: Ac12FXwDEAhDzTRAN0K4xbEQuq2S3-I5MeDpvbC5scQ0X-LXzuvGn8MnFsuiUhA
-Message-ID: <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
-	Matt Fleming <mfleming@cloudflare.com>, hawk@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RW5FZxWRZH+m65mW"
+Content-Disposition: inline
+In-Reply-To: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-2-513202126013@bootlin.com>
+X-Cookie: This bag is recyclable.
 
-On Tue, Jun 17, 2025 at 4:55=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, Jun 17, 2025 at 2:43=E2=80=AFAM Matt Fleming <matt@readmodwrite.c=
-om> wrote:
-> >
->
-> > soft lockup - CPU#41 stuck for 76s
->
-> How many elements are in the trie that it takes 76 seconds??
 
-We run our maps with potentially millions of entries, so it's the size
-of the map plus the fact that kfree() does more work with KASAN that
-triggers this for us.
+--RW5FZxWRZH+m65mW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I feel the issue is different.
-> It seems the trie_free() algorithm doesn't scale.
-> Pls share a full reproducer.
+On Wed, Jun 18, 2025 at 02:14:19PM +0200, Miquel Raynal wrote:
+> In order to pick the best variant, the duration of each typical
+> operation is derived and then compared. These durations are based on the
+> maximum capabilities of the chips, which are commonly the limiting
+> factors. However there are other possible limiting pieces, such as the
+> hardware layout, EMC considerations and in some cases, the SPI controller
+> itself.
 
-Yes, the scalability of the algorithm is also an issue. Jesper (CC'd)
-had some thoughts on this.
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-But regardless, it seems like a bad idea to have an unbounded loop
-inside the kernel that processes user-controlled data.
+--RW5FZxWRZH+m65mW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
-Matt
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhSsWAACgkQJNaLcl1U
+h9BIRgf/ezr5jf2vKiJJqpU8isR3/C6aRXPA41Id7IowObzRPOdEL9epIfalMmCp
+YMAC1Om50TEUuBWM7CnMYiyDJV4EdXSpUpmlHlF/G4Akx8aF9Lf5K/KAWE3m99sU
+xe1rcn/TSU/RPGhFhF5IdLapcXvKsKWFoBIHY6i5kn7QvNydi3yUQEo+SQiYLSIp
+tmhnPhveSC9JxKAWuRJiGU+n9VKfh0zPSgXKgnG2ZTUIILHOYlUfEnYEG8vK/Wxg
+7cTRWmiWGf+Q3lZHycNl01PuziSPH/ZxnD5uk7dp1Kh1pcc5H+fPovTFJVDNu8s9
+ztFngOPei544anpJxOtsmFcJ69H+AA==
+=ZKto
+-----END PGP SIGNATURE-----
+
+--RW5FZxWRZH+m65mW--
