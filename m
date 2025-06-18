@@ -1,210 +1,249 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1478E20409A;
-	Wed, 18 Jun 2025 19:09:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750273748; cv=pass; b=TVHmXiABDKtPldFIlOTezEwvUW0aGN/uClJJzkdVZ4kG8aygPpKXn1uQq8MStH9sR3l1IoPDUm5GUNC1uLQgRnWSgNX9gFhqqx6pu6DJV5TMq5PLXMnTQF8fWtLnKWZYd5Qt1pS08hrjYMAjaf2fG3+ro3wKdDEZRD0LIXZWrDI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750273748; c=relaxed/simple;
-	bh=4Z3AXktjTBKSymA4SqIUqydcN+VFCyRWZKF5DyykVwU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CDHTFN40TuxghYWZed3nx28XEe+FNXl3hob35oAe7fMS+WwNwNEY/wfw0xFjXb1CW2ZUUfNWNVYrjVCHKSpb3gmSRJFPXNAUSkBv293NKl9RJrekndcA1zXPE+kKBK+xYUpB4lTrKm8m/9zMHPXg6Gkx/GhWLXsXURcymQWgo2I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=XsW+M7t2; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="XsW+M7t2"
-ARC-Seal: i=1; a=rsa-sha256; t=1750273722; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=QJPnh45OETapjN4qF3xo8Lme5+vlpwWQSeXqDM9GDw0qwvNpHfKsv5siT+1nIxdMu3y3guASFweEovPANRautPbVdV+qIG9WxrX+K/e6Z7r0gtOgrTDCwA8EtaESOEvbrJxnVy/z9zjOmJHlmBfLAGe9+TpbTemM/i9Ks8/u0wQ=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750273722; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=LgnFWrFFRwO1u4DsMfUjudDNydgl3mR9TjdmxuLGWNk=; 
-	b=NChDot1uIg8fj/Wch7R9W9GZOZQV4qA/rcGlP5MOItU7UKcGdEWfR0MhOVNSFJe7R38mtCMlGPowDngMTcMrrOCx6dcD70xn+fpFbJ0KbDUR78z+Hfu8S2oOo5IPy56qppnOlH/34RTmQdhNQxdnY7ZWh9+ElRHHuvWxwu1G7Mg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750273722;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=LgnFWrFFRwO1u4DsMfUjudDNydgl3mR9TjdmxuLGWNk=;
-	b=XsW+M7t2tDN2fz13xr0OMW8iXLyTCmFYRAmlfw+/LpMF184rGKtooK9E6SLgBfiZ
-	OnqaE1IIhQaJ+Q8yuxRPukSaEy6765Cch4H/GJrEyVB5jM+vdmfA3ITbZ+4DNsryoH5
-	9J8tF3DHTq8rIs3VTjSxMClEaT/+JQwrA8KnM6N4=
-Received: by mx.zohomail.com with SMTPS id 1750273720909890.1724588959887;
-	Wed, 18 Jun 2025 12:08:40 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Wed, 18 Jun 2025 21:08:34 +0200
-Subject: [PATCH] perf/headers: Document PERF_PMU_CAP capability flags
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C8020A5EA;
+	Wed, 18 Jun 2025 19:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750273761; cv=none; b=iDEnVNhUmLbGrKPOgL+8116xVZYz+mUykTtGk71TdZhf6DLVtfkRWeb3wMK83UyZ6A4E3AU5Af7WrnkDcR9q+drKlU2WFyfIXZI8XMpOEvdbD3+HaidKv+0DPjP5eKn2r0ePD8zsI1GdIP4WAUxcuIy25ukGkZpdztzYG2Aqu/M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750273761; c=relaxed/simple;
+	bh=YJ8mz+ikgW8nKvjldFD7MTl5HffyMooPfVfI4mhvw+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bgjutJ/TvZ6/2+nibgj1GFV7w20IyQ6RiQIrXMxfpAPZgU3tgCrRRfv5baDFxP9KKSS/YjV/vEWnl6sN2aoQU4mDvImjRpa0zVqeIITgXg5kKxeca1s/reXXJfYOFnJrKw/nYb6N4rakbn+22E6jAJ+k28cBH60GsRNu/aQQ8u4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay03.hostedemail.com (Postfix) with ESMTP id 934CBBD597;
+	Wed, 18 Jun 2025 19:09:10 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id CFEC42002B;
+	Wed, 18 Jun 2025 19:09:06 +0000 (UTC)
+Date: Wed, 18 Jun 2025 15:09:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250618150915.3e811f4b@gandalf.local.home>
+In-Reply-To: <20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.770214773@goodmis.org>
+	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-perf-pmu-cap-docs-v1-1-0d34387d6e47@collabora.com>
-X-B4-Tracking: v=1; b=H4sIALEOU2gC/zXMywrCMBCF4VcJs3agaVVsX0W6GNOpziIXM6kUS
- t/dYHH5HzjfBspZWGEwG2T+iEoMNezJgHtReDLKVBvapr00V3vDxHnG5Bd0lHCKTpFsx2fivuv
- JQf2lzLOsP/M+Hp35vVS6HCM8SBld9F7KYAKvBf88jPv+BeYMMl6UAAAA
-X-Change-ID: 20250618-perf-pmu-cap-docs-a13e4ae939ac
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: kernel@collabora.com, Jonathan Corbet <corbet@lwn.net>, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+X-Rspamd-Queue-Id: CFEC42002B
+X-Stat-Signature: xymxfyhx6nz85eykkyyk75a7pf5icotc
+X-Rspamd-Server: rspamout06
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1//gPL2Am6Um4rgqXE7/zsuJupVWU7zvUY=
+X-HE-Tag: 1750273746-299713
+X-HE-Meta: U2FsdGVkX1/iuUT1wS6HmN8aOXA0jTCnMH9pqx9YO3LcwcuOu+qWjJNY0zT2xtV4bVBwjGBx/xiA626GfvLBedmWrblKFf4y6nwNfCLeovh58OkMRMw/Wn8m4D+tAue55WxAhmtJ4o1ULeZ4/z5TDHFdhNitF6wm46IMTFkAgIjjS3+LJ12shSs9VawFev8YYTB3rGX+vyMArQ3PO3IgWY32CY4iD/2Sx/bgXLGsZcB5iMxlDH+4qI78n7+K0Lw6imh6VesOOQoWu1mfGBad0ie7FDq1ku2arPNrViuxfjOo7T/RpKW1fQEbS7CfV+rMAEVnNC4bPpsEsLzXR/3IJ/Mbu1e5f9Y3F63SvnCIk3APvNopf2jhSlNRSdDO40iB
 
-Over the years, capability flags for perf PMUs were introduced in a
-piecemeal fashion whenever a new driver needed to signal to the perf
-core some limitation or special feature.
+On Wed, 18 Jun 2025 20:46:20 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Since one more undocumented flag that can have its meaning inferred from
-the commit message and implementation never seems that bad, it's
-understandable that this resulted in a total of 11 undocumented
-capability flags, which authors of new perf PMU drivers are expected to
-set correctly for their particular device.
+> > +struct unwind_work;
+> > +
+> > +typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stacktrace *trace, u64 timestamp);
+> > +
+> > +struct unwind_work {
+> > +	struct list_head		list;  
+> 
+> Does this really need to be a list? Single linked list like
+> callback_head not good enough?
 
-Since I am in the process of becoming such an author of a new perf
-driver, it feels proper to pay it forward by documenting all
-PERF_PMU_CAP_ constants, so that no future person has to go through an
-hour or two of git blame + reading perf core code to figure out which
-capability flags are right for them.
+Doesn't a list head make it easier to remove without having to iterate the
+list?
 
-Add comments in kernel-doc format that describes each flag. This follows
-the somewhat verbose "Object-like macro documentation" format, and can
-be verified with
+> 
+> > +	unwind_callback_t		func;
+> > +};
+> > +
+> >  #ifdef CONFIG_UNWIND_USER
+> >  
+> >  void unwind_task_init(struct task_struct *task);
+> > @@ -12,10 +22,15 @@ void unwind_task_free(struct task_struct *task);
+> >  
+> >  int unwind_deferred_trace(struct unwind_stacktrace *trace);
+> >  
+> > +int unwind_deferred_init(struct unwind_work *work, unwind_callback_t
+> > func); +int unwind_deferred_request(struct unwind_work *work, u64
+> > *timestamp); +void unwind_deferred_cancel(struct unwind_work *work);
+> > +
+> >  static __always_inline void unwind_exit_to_user_mode(void)
+> >  {
+> >  	if (unlikely(current->unwind_info.cache))
+> >  		current->unwind_info.cache->nr_entries = 0;
+> > +	current->unwind_info.timestamp = 0;  
+> 
+> Surely clearing that timestamp is only relevant when there is a cache
+> around? Better to not add this unconditional write to the exit path.
 
-	./scripts/kernel-doc -v -none include/linux/perf_event.h
+That's actually not quite true. If the allocation fails, we still want to
+clear the timestamp. But later patches add more data to check and it does
+exit out if there's been no requests:
 
-The current in-tree kernel documentation does not include a page on the
-perf subsystem, but once it does, these comments should render as proper
-documentation annotation. Until then, they'll also be quite useful for
-anyone looking at the header file.
+{
+        struct unwind_task_info *info = &current->unwind_info;
+        unsigned long bits;
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
----
-There may be more perf documentation patches in the future, but right
-now I'm focused on getting a minimally viable driver for the hardware
-I'm working on going. Documenting these seemed to have a fairly good
-effort-to-future-payoff ratio though.
+        /* Was there any unwinding? */
+        if (likely(!info->unwind_mask))
+                return;
 
-I Cc'd Corbet in case he has any input on the verbosity of the
-kernel-doc syntax here, maybe I'm missing something and all of these
-could be in a single /* comment */, but as it is in this patch doesn't
-seem too awful to me either.
----
- include/linux/perf_event.h | 74 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+        bits = info->unwind_mask;
+        do {
+                /* Is a task_work going to run again before going back */
+                if (bits & UNWIND_PENDING)
+                        return;
+        } while (!try_cmpxchg(&info->unwind_mask, &bits, 0UL));
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index ec9d96025683958e909bb2463439dc69634f4ceb..7d749fd5225be12543df6e475277563bf16c05b1 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -294,16 +294,90 @@ struct perf_event_pmu_context;
- /**
-  * pmu::capabilities flags
-  */
-+
-+/**
-+ * define PERF_PMU_CAP_NO_INTERRUPT - \
-+ *    PMU is incapable of generating hardware interrupts
-+ */
- #define PERF_PMU_CAP_NO_INTERRUPT	0x0001
-+/**
-+ * define PERF_PMU_CAP_NO_NMI - \
-+ *    PMU is guaranteed to not generate non-maskable interrupts
-+ */
- #define PERF_PMU_CAP_NO_NMI		0x0002
-+/**
-+ * define PERF_PMU_CAP_AUX_NO_SG - \
-+ *    PMU does not support using scatter-gather as the output
-+ *
-+ * The PERF_PMU_CAP_AUX_NO_SG flag indicates that the PMU does not support
-+ * scatter-gather for its output buffer, and needs a larger contiguous buffer
-+ * to output to.
-+ */
- #define PERF_PMU_CAP_AUX_NO_SG		0x0004
-+/**
-+ * define PERF_PMU_CAP_EXTENDED_REGS - \
-+ *    PMU is capable of sampling extended registers
-+ *
-+ * Some architectures have a concept of extended registers, e.g. XMM0 on x86
-+ * or VG on arm64. If the PMU is capable of sampling these registers, then the
-+ * flag PERF_PMU_CAP_EXTENDED_REGS should be set.
-+ */
- #define PERF_PMU_CAP_EXTENDED_REGS	0x0008
-+/**
-+ * define PERF_PMU_CAP_EXCLUSIVE - \
-+ *    PMU can only have one scheduled event at a time
-+ *
-+ * Certain PMU hardware cannot track several events at the same time. Such
-+ * hardware must set PERF_PMU_CAP_EXCLUSIVE in order to avoid conflicts.
-+ */
- #define PERF_PMU_CAP_EXCLUSIVE		0x0010
-+/**
-+ * define PERF_PMU_CAP_ITRACE - PMU traces instructions
-+ *
-+ * Some PMU hardware does instruction tracing, in that it traces execution of
-+ * each instruction. Setting this capability flag makes the perf core generate
-+ * a %PERF_RECORD_ITRACE_START event, recording the profiled task's PID and TID,
-+ * to allow tools to properly decode such traces.
-+ */
- #define PERF_PMU_CAP_ITRACE		0x0020
-+/**
-+ * define PERF_PMU_CAP_NO_EXCLUDE - \
-+ *    PMU is incapable of excluding events based on context
-+ *
-+ * Some PMU hardware will count events regardless of context, including e.g.
-+ * idle, kernel and guest. Drivers for such hardware should set the
-+ * PERF_PMU_CAP_NO_EXCLUDE flag to explicitly advertise that they're unable to
-+ * help themselves, so that the perf core can reject requests to exclude events
-+ * based on context.
-+ */
- #define PERF_PMU_CAP_NO_EXCLUDE		0x0040
-+/**
-+ * define PERF_PMU_CAP_AUX_OUTPUT - PMU non-AUX events generate AUX data
-+ *
-+ * Drivers for PMU hardware that supports non-AUX events which generate data for
-+ * AUX events should set PERF_PMU_CAP_AUX_OUTPUT. This flag tells the perf core
-+ * to schedule non-AUX events together with AUX events, so that this data isn't
-+ * lost.
-+ */
- #define PERF_PMU_CAP_AUX_OUTPUT		0x0080
-+/**
-+ * define PERF_PMU_CAP_EXTENDED_HW_TYPE - \
-+ *    PMU supports PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
-+ */
- #define PERF_PMU_CAP_EXTENDED_HW_TYPE	0x0100
-+/**
-+ * define PERF_PMU_CAP_AUX_PAUSE - \
-+ *    PMU can pause and resume AUX area traces based on events
-+ */
- #define PERF_PMU_CAP_AUX_PAUSE		0x0200
-+/**
-+ * define PERF_PMU_CAP_AUX_PREFER_LARGE - PMU prefers contiguous output buffers
-+ *
-+ * The PERF_PMU_CAP_AUX_PREFER_LARGE capability flag is a less strict variant of
-+ * %PERF_PMU_CAP_AUX_NO_SG. PMU drivers for hardware that doesn't strictly
-+ * require contiguous output buffers, but find the benefits outweigh the
-+ * downside of increased memory fragmentation, may set this capability flag.
-+ */
- #define PERF_PMU_CAP_AUX_PREFER_LARGE	0x0400
- 
- /**
+        if (likely(info->cache))
+                info->cache->nr_entries = 0;
+        info->timestamp = 0;
+}
 
----
-base-commit: 31d56636e10e92ced06ead14b7541867f955e41d
-change-id: 20250618-perf-pmu-cap-docs-a13e4ae939ac
+But for better reviewing, I could add a comment in this patch that states
+that this will eventually exit out early when it does more work.
 
-Best regards,
--- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
+> 
+> >  }
+> >  
+> >  #else /* !CONFIG_UNWIND_USER */
+> > @@ -24,6 +39,9 @@ static inline void unwind_task_init(struct
+> > task_struct *task) {} static inline void unwind_task_free(struct
+> > task_struct *task) {} 
+> >  static inline int unwind_deferred_trace(struct unwind_stacktrace
+> > *trace) { return -ENOSYS; } +static inline int
+> > unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+> > { return -ENOSYS; } +static inline int unwind_deferred_request(struct
+> > unwind_work *work, u64 *timestamp) { return -ENOSYS; } +static inline
+> > void unwind_deferred_cancel(struct unwind_work *work) {} static inline
+> > void unwind_exit_to_user_mode(void) {} 
+> > diff --git a/include/linux/unwind_deferred_types.h
+> > b/include/linux/unwind_deferred_types.h index
+> > db5b54b18828..5df264cf81ad 100644 ---
+> > a/include/linux/unwind_deferred_types.h +++
+> > b/include/linux/unwind_deferred_types.h @@ -9,6 +9,9 @@ struct
+> > unwind_cache { 
+> >  struct unwind_task_info {
+> >  	struct unwind_cache	*cache;
+> > +	struct callback_head	work;
+> > +	u64			timestamp;
+> > +	int			pending;
+> >  };
+> >  
+> >  #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
+> > diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+> > index e3913781c8c6..b76c704ddc6d 100644
+> > --- a/kernel/unwind/deferred.c
+> > +++ b/kernel/unwind/deferred.c
+> > @@ -2,13 +2,35 @@
+> >  /*
+> >   * Deferred user space unwinding
+> >   */
+> > +#include <linux/sched/task_stack.h>
+> > +#include <linux/unwind_deferred.h>
+> > +#include <linux/sched/clock.h>
+> > +#include <linux/task_work.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/sched.h>
+> >  #include <linux/slab.h>
+> > -#include <linux/unwind_deferred.h>
+> > +#include <linux/mm.h>
+> >  
+> >  #define UNWIND_MAX_ENTRIES 512
+> >  
+> > +/* Guards adding to and reading the list of callbacks */
+> > +static DEFINE_MUTEX(callback_mutex);
+> > +static LIST_HEAD(callbacks);  
+> 
+> Global state.. smells like failure.
+
+Yes, the unwind infrastructure is global, as it is the way tasks know what
+tracer's callbacks to call.
+
+> 
+> > +/*
+> > + * Read the task context timestamp, if this is the first caller then
+> > + * it will set the timestamp.
+> > + */
+> > +static u64 get_timestamp(struct unwind_task_info *info)
+> > +{
+> > +	lockdep_assert_irqs_disabled();
+> > +
+> > +	if (!info->timestamp)
+> > +		info->timestamp = local_clock();
+> > +
+> > +	return info->timestamp;
+> > +}
+> > +
+> >  /**
+> >   * unwind_deferred_trace - Produce a user stacktrace in faultable
+> > context
+> >   * @trace: The descriptor that will store the user stacktrace
+> > @@ -59,11 +81,117 @@ int unwind_deferred_trace(struct unwind_stacktrace
+> > *trace) return 0;
+> >  }
+> >  
+> > +static void unwind_deferred_task_work(struct callback_head *head)
+> > +{
+> > +	struct unwind_task_info *info = container_of(head, struct
+> > unwind_task_info, work);
+> > +	struct unwind_stacktrace trace;
+> > +	struct unwind_work *work;
+> > +	u64 timestamp;
+> > +
+> > +	if (WARN_ON_ONCE(!info->pending))
+> > +		return;
+> > +
+> > +	/* Allow work to come in again */
+> > +	WRITE_ONCE(info->pending, 0);
+> > +
+> > +	/*
+> > +	 * From here on out, the callback must always be called, even
+> > if it's
+> > +	 * just an empty trace.
+> > +	 */
+> > +	trace.nr = 0;
+> > +	trace.entries = NULL;
+> > +
+> > +	unwind_deferred_trace(&trace);
+> > +
+> > +	timestamp = info->timestamp;
+> > +
+> > +	guard(mutex)(&callback_mutex);
+> > +	list_for_each_entry(work, &callbacks, list) {
+> > +		work->func(work, &trace, timestamp);
+> > +	}  
+> 
+> So now you're globally serializing all return-to-user instances. How is
+> that not a problem?
+
+It was the original way we did things. The next patch changes this to SRCU.
+But it requires a bit more care. For breaking up the series, I preferred
+not to add that logic and make it a separate patch.
+
+For better reviewing, I'll add a comment here that says:
+
+	/* TODO switch this global lock to SRCU */
+
+-- Steve
