@@ -1,146 +1,126 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66BE227AC36;
-	Wed, 18 Jun 2025 21:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F74269CE5
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:24:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750281844; cv=none; b=nd1s+D7yo7oB4fZ9vsuqiCUHOZ0PJoqCChz/5SGzg9i9ljMbYAETNUsHHblVBELMnMC4IRYCU4GxPoJIWq6LAoi/lDyF70DdcQOwE9aAqfsWXVcETZ/zyTT5GuYtd5FfReM+wv+TWA1mC9yIPg/lRLvanX+sdgvoja6BHGCRig0=
+	t=1750281850; cv=none; b=kZxlQFuE90JJ2CrTE7UuonNa8x4RL1Z6Zf6m++5tSVDM31O/fbGvavhVdZF1OgMn+PG5249o1DL/uLtBVKE/kUiukcuGfRqozBjeIBjduUQWd3ot50Fmg/73Wgo/tVtjDDYD3queRsCuXJQTqCD7PsJZVwfoevNK735mSvg/Y+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750281844; c=relaxed/simple;
-	bh=kG/TdxqXza87NikUED3oRNhmG2OPOh1dSLm0/nHDB9g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DDs2n07UZGGdU/QQ6Sy066ZyOgaJyepHhg4cHE3CJkdUMQpOr6medObfZ7V+UY2KeyLcLtb1+FRHwaaFe+jqCTEpOVcgiyIs1iqRGvp3BQdJEtSBvkvpQXFSljSo7Pgwdq5iM83+/29nh/GdbBiWd46koZJvDsAbSch5FzStRM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=BsQ6rpq5; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1750281850; c=relaxed/simple;
+	bh=daJuqZ6CPc2F4BEIINq8WQRI1vxk2F7eTh7TD4lJ1IM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Cht9pKTVCHMK6qsq14s/shihxSSMX+YfK4+sT5yNbW+r4QeZe+iLQQlZ5MDySDPyl5BeA5AbLvbeS57GPnuYq7atB6FfXbgLPzMBRwzJsWrzFABTFaitetJbMATd+SSCbiIzvZXDnI7hOy3mnf/T8ofPUDBhp8mwnxKPUy6s/RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpfQHxvS; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="BsQ6rpq5"
-Received: from [100.64.233.194] (unknown [52.148.171.5])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 7A11E21176C3;
-	Wed, 18 Jun 2025 14:24:02 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7A11E21176C3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750281842;
-	bh=ls5BhwV/rXow5UxJyhbSVTcsRSnSZDxBt+jSrPUpWXk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BsQ6rpq5kP82jTrCwdbhbGuuE2B9f7rgUAO9bg5QMw5TFudEPZjoyRZyye2Mr4m1L
-	 isVGO11zm+0YSekIiKGN8p7n4I+JDViI0j3P97NKDR6nH2StHlReyabY6WWK+uBDZW
-	 j7vTkhOfSnBGfEJWqqFsXJUMAj8fse6LnoXq+mio=
-Message-ID: <5dbd2057-6b0d-45f0-8cf7-935509d4fb03@linux.microsoft.com>
-Date: Wed, 18 Jun 2025 14:24:01 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpfQHxvS"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23689228a7fso2121235ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:24:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750281849; x=1750886649; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gmjcv+c3SYJdbUPkQIE63QBOpY1Ll5uaHYh2Mm3xcqk=;
+        b=KpfQHxvS2KWBwwQGxvVwN91DcOQnTcce2kjHFgDZFN5Q7xbRGtmJbkxiqYqxcOzgNO
+         ZkPjqdEgeK+qwGVPrqnlXo8VgAoaORtVHmsB9ZFx5qUpWVOwGoxdm3jai0Op1sZ6WK4a
+         yrVuWnnle3ZcGsqQUPWKw2/52jSK3yLjkqOkX6z3Qv/aEIwy1+wkGZNkP1kfSs0VARU5
+         4xKbKC4Rw289ZZW/61RwoOIZkWm2xwY4ZLdeeu6uGryCGeJ+fDBZCdAWsT5wxZsPX7+Y
+         PivyautqylevIFmfYjFLhyi3piTUuv+XRVu/E9lOsi3kd9PAYgj5n9FTCMxrqoMTVxyw
+         42XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750281849; x=1750886649;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gmjcv+c3SYJdbUPkQIE63QBOpY1Ll5uaHYh2Mm3xcqk=;
+        b=mb+4Nm0Ex/UjQi8avgvccJU+rBH+U5Wj1qbcIGyhLVY1HuOLCfQ93tCwkXAKaJrIYo
+         h0PSbtdkB9Odgg6OF3440i5pDJ1QXxufg6tSThSnvVf6gBheXMEBEXKV0N8WDFezlxPu
+         UDL5bp3ClfVI3m/WyuUsFTEM0Pk6lqxiN8IAUP9ozPPjJvZOX+npruqZkQxAlAQkicCq
+         BXyJcaPIfldlpMCKHek7I1YmI6DT9dD46F6J9x9tRZW1hxCtPvXXYXVPLp/3ve5+MZ73
+         qoF5281M87sTlQm4DTMJUKb1FZJbLkmTTDr0XpHphRskV+bnbjYuDSsELYvpVg/SmyEq
+         ScHA==
+X-Forwarded-Encrypted: i=1; AJvYcCW71JDnAaNEekrL8KUsv2WQXwF+DrQuhFHCn7nwm0RyH2g1ZJbGArdNVJZQMQMyz+j1Vpue19d3OfCVM9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNMuIoopfFdGYLOGJEnCoeMHUAhvjy9ekOBYhnM6BuHW8lTPp6
+	0uzlfxk5WYsq29BPpNNYuFdYWLWE+KZHEoVk6eM0b7fX60BhbKuF445Iq/p5kGujcGLr+g3c96l
+	Nja2hkQ==
+X-Google-Smtp-Source: AGHT+IHYIRVe1M5MEtH4NPGJJPhQYabXBPFOaU9D4Tvr+HcI9dmkyP50P9RhAXSp4MSHU2XdPzmLxQcHX2E=
+X-Received: from plgk10.prod.google.com ([2002:a17:902:ce0a:b0:234:8c63:ac2b])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:708a:b0:236:6f43:7051
+ with SMTP id d9443c01a7336-2366f4372d9mr206207245ad.23.1750281848728; Wed, 18
+ Jun 2025 14:24:08 -0700 (PDT)
+Date: Wed, 18 Jun 2025 14:24:07 -0700
+In-Reply-To: <25896236-de8d-4bd9-8a27-da407c0e5a38@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] PCI: hv: Use the correct hypercall for unmasking
- interrupts on nested
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
- <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "x86@kernel.org" <x86@kernel.org>
-References: <1749599526-19963-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1749599526-19963-5-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157BAE54D3BBD4CD8065722D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157BAE54D3BBD4CD8065722D475A@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250617073234.1020644-1-xin@zytor.com> <20250617073234.1020644-2-xin@zytor.com>
+ <fa32b6e9-b087-495a-acf1-a28cfed7e28a@intel.com> <aFHUZh6koJyVi3p-@google.com>
+ <25896236-de8d-4bd9-8a27-da407c0e5a38@zytor.com>
+Message-ID: <aFMudwy2uO5V8vM5@google.com>
+Subject: Re: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its
+ architectural reset value
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin@zytor.com>
+Cc: Sohil Mehta <sohil.mehta@intel.com>, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	pbonzini@redhat.com, peterz@infradead.org, brgerst@gmail.com, 
+	tony.luck@intel.com, fenghuay@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
 
-On 6/11/2025 4:07 PM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Tuesday, June 10, 2025 4:52 PM
->>
->> From: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->>
->> Running as nested root on MSHV imposes a different requirement
->> for the pci-hyperv controller.
->>
->> In this setup, the interrupt will first come to the L1 (nested) hypervisor,
->> which will deliver it to the appropriate root CPU. Instead of issuing the
->> RETARGET hypercall, we should issue the MAP_DEVICE_INTERRUPT
->> hypercall to L1 to complete the setup.
->>
->> Rename hv_arch_irq_unmask() to hv_irq_retarget_interrupt().
->>
->> Co-developed-by: Jinank Jain <jinankjain@linux.microsoft.com>
->> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
->> Signed-off-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> ---
->>  drivers/pci/controller/pci-hyperv.c | 18 ++++++++++++++++--
->>  1 file changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
->> index 4d25754dfe2f..0f491c802fb9 100644
->> --- a/drivers/pci/controller/pci-hyperv.c
->> +++ b/drivers/pci/controller/pci-hyperv.c
->> @@ -600,7 +600,7 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
->>  #define hv_msi_prepare		pci_msi_prepare
->>
->>  /**
->> - * hv_arch_irq_unmask() - "Unmask" the IRQ by setting its current
->> + * hv_irq_retarget_interrupt() - "Unmask" the IRQ by setting its current
->>   * affinity.
->>   * @data:	Describes the IRQ
->>   *
->> @@ -609,7 +609,7 @@ static unsigned int hv_msi_get_int_vector(struct irq_data *data)
->>   * is built out of this PCI bus's instance GUID and the function
->>   * number of the device.
->>   */
->> -static void hv_arch_irq_unmask(struct irq_data *data)
->> +static void hv_irq_retarget_interrupt(struct irq_data *data)
->>  {
->>  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
->>  	struct hv_retarget_device_interrupt *params;
->> @@ -714,6 +714,20 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->>  		dev_err(&hbus->hdev->device,
->>  			"%s() failed: %#llx", __func__, res);
->>  }
->> +
->> +static void hv_arch_irq_unmask(struct irq_data *data)
->> +{
->> +	if (hv_nested && hv_root_partition())
+On Tue, Jun 17, 2025, Xin Li wrote:
+> On 6/17/2025 1:47 PM, Sean Christopherson wrote:
+> > On Tue, Jun 17, 2025, Sohil Mehta wrote:
+> > Note, DR6_VOLATILE and DR6_FIXED_1 aren't necessarily aligned with the current
+> > architectural definitions (I haven't actually checked),
 > 
-> Based on Patch 1 of this series, this driver is not loaded for the root
-> partition in the non-nested case. So testing hv_nested is redundant.
+> I'm not sure what do you mean by "architectural definitions" here.
+
+I was trying to say that there may be bits that have been defined in the SDM,
+but are not yet makred as "supported" in DR6_VOLATILE, i.e. that are "incorrectly"
+marked as DR6_FIXED_1 (in quotes, because from KVM's perspective, the bits *are*
+fixed-1, for the guest).
+ 
+> However because zeroing DR6 leads to different DR6 values depending on
+> whether the CPU supports BLD:
 > 
+>   1) On CPUs with BLD support, DR6 becomes 0xFFFF07F0 (bit 11, DR6.BLD,
+>      is cleared).
+> 
+>   2) On CPUs without BLD, DR6 becomes 0xFFFF0FF0.
+> 
+> DR6_FIXED_1, if it is still defined to include all bits that can't be
+> cleared, is a constant value only on a *specific* CPU architecture,
+> i.e., it is not a constant value on all CPU implementations.
+> 
+> 
+> > rather they are KVM's
+> > view of the world, i.e. what KVM supports from a virtualization perspective.
+> 
+> So KVM probably should expose the fixed 1s in DR6 to the guest depending on
+> which features, such as BLD or RTM, are enabled and visible to the
+> guest or not?
+> 
+> (Sorry I haven't looked into how the macro DR6_FIXED_1 is used in KVM,
+> maybe it's already used in such a way)
 
-Good point, I'll change it to just check for hv_root_partition() here.
+Yep, that's exactly what KVM does.  DR6_FIXED_1 is the set of bits that KVM
+doesn't yet support for *any* guest.  The per-vCPU set of a fixed-1 bits starts
+with DR6_FIXED_1, and adds in bits for features that aren't supported/exposed
+to the guest. 
 
->> +		/*
->> +		 * In case of the nested root partition, the nested hypervisor
->> +		 * is taking care of interrupt remapping and thus the
->> +		 * MAP_DEVICE_INTERRUPT hypercall is required instead of
->> +		 * RETARGET_INTERRUPT.
->> +		 */
->> +		(void)hv_map_msi_interrupt(data, NULL);
->> +	else
->> +		hv_irq_retarget_interrupt(data);
->> +}
->>  #elif defined(CONFIG_ARM64)
->>  /*
->>   * SPI vectors to use for vPCI; arch SPIs range is [32, 1019], but leaving a bit
->> --
->> 2.34.1
+static u64 kvm_dr6_fixed(struct kvm_vcpu *vcpu)
+{
+	u64 fixed = DR6_FIXED_1;
 
+	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_RTM))
+		fixed |= DR6_RTM;
+
+	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_BUS_LOCK_DETECT))
+		fixed |= DR6_BUS_LOCK;
+	return fixed;
+}
