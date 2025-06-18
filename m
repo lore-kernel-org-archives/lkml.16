@@ -1,125 +1,114 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E8721A424
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14CEB21639B
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750276814; cv=none; b=RmJL7WKKD6/e6ln8RvnjGg36vWYRbyG1krPdPWrsoBPu4jJLXmwovMemHUsHSTSEMsxHxB42YZCD3BQXk71i4ImRT7cp9/KE5mC6LgFgMW8rV+lxNNqtSwCojYVc6k/zBm9d0rn0dCDybb3LiCX0phFCQrtJ/7PHns+vK75+xp4=
+	t=1750276832; cv=none; b=Y01s0lWUSqnl8Y6xR1nx9orAZNKNGTJq8CIJqg3OHTCR5eKzgXvK16dx1FkNdM4/ez+OZp/MklbV9HZMKEiBPLsluFPhQGBTqQHevPgosSOevft4hqkMANODe+y/gmnSCUa0yQo8ugDxgizpILGdA3P2jf1k5tP2fDifLmC29f4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750276814; c=relaxed/simple;
-	bh=Thq4Q06cdpVu9pDEN+/3JBZrpgyjUXOgoUe0gvNvhSk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=kLS+dFogbzYwvepLTJlXuoln3mxh32Y30CiCoNSj6GdvpGFOWZ5Tv8TixU9WRBG2ximrUAR3smeTtNXXoqiwKdOvT+wDixT7hkT1Dl/PZemAnDCVMBtEXvuNTWTec4TXaHtZ3r25GWirhXwhE9mvMTNJQiD2dYqMTc8uPgJp3HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f+HQw1a8; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750276832; c=relaxed/simple;
+	bh=nL6yW4jkRLM9ujb92vCw/h/BiAWER2Zgw78Ihcoel3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLgemtMnNSKLo+tGhGtXdOYeiAjo4Ec/urBqWQDSIxtA2CGucwzLVeLgCDSSaxQeq1Ecdgtu5+mhfUvYspjZslDUzp3B4XdUytyc1+EqouqMLWziALYVqgysZm9DmXM82ucE0XATHw7/hJlvixgB8FI3YI7s7xbR92v7f8wsuj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JiYBbEb2; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f+HQw1a8"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-b271f3ae786so81927a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:00:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750276812; x=1750881612; darn=vger.kernel.org;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KiOzVfjBcF1fRtJg0Y1H//g4cNADDmQDLTn0mBy9kzo=;
-        b=f+HQw1a8sMcwX9xo2U1ygWT+QWYLU0F4HBcOvrIkAhCmztVGuDaq3zoVf/NAP0kpfw
-         b//W5zthQDGjYjyaDRMyN+Vcnbe3zV5Nr6eA5NBgoD21zoiEIKj5XGz8UmEKhmkhSSjP
-         5UIZtEbw8qUOmBAgLNSxnqYCIRQKGVfkxQQ+5PAhVTqCJspZmoDvMZLberAIxHiWb9+8
-         E17c2hE79UE6tIXmsD2oGjxPt9ffdno7l/yYSpPPiVPQf6+bZWgsejQCwpSAiGcirihs
-         6odCbGg5ExPNl15Tr/DCA2ExS8YbnMOl0bMF1ygsFr+6j1t2ZuD4YEvoosB6mIduVVnD
-         +Giw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750276812; x=1750881612;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KiOzVfjBcF1fRtJg0Y1H//g4cNADDmQDLTn0mBy9kzo=;
-        b=ijqWDvL6Hnn84XD6O4//lVtvuCNgf76Ft6EKJQU6gpzJWIFD2+Gt5ZiCLSKAt1I2Nc
-         kQjG36ZlVkduCSpz1Cu9dnyX0agybpvGdoqmlY8Swljx3u+ypG/MVIi0SiZKbjDyGdW4
-         DCyfR7IcDmZYv03dOeyxCHY4iLgS1FrikeMyGEXgTvvp4vBO+AVprrvR3glrKF3SyIEB
-         ABfyJIBggVNdp9Pw8fiOb2rvi8Rqzj20JbykNql/LLK7oZsVkrb/cuGnKu38/xz985zT
-         pfPy/r58n53d4KtRVyL7ryCMNdhf4JFF84TZKQs+mE6MuuuQSLIDaIBMpkzAU22fbrtb
-         aMdA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0GSLUM/5RGC6tbaFt+oKBo+ypCTzNtGVtr79lda44WdzqM34yfFOIoLpV1dvzIhNi3O38thJDCUDoAG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaTGuZ6kQgrhNL6JpVGh8exKZK4jb21zNHUq8QFX8uCbXGC107
-	CTt0n8WRD1owx7toaiDOt6xPjO5FvpNXDLwD73G4Nt8WRAnAkW/aT6ZsGeUQqfZFKSw=
-X-Gm-Gg: ASbGncsfZcmxeQdMLd2SiRzksLtEWaWxoos1YZfuVeLk7yFdv+p0h7N6bT4gKJhJ1k8
-	iBowln2KaPcNUpyIdMk1lY0JF9hlIfI4ijRFzcL72kcG5GVLumVK51KF70Y6+z6MGq4HE4JIj2Y
-	eJmD41J8edwwgZ0zR6Dfb9xswr0nSpBYQ6aVeepYBJ31OP1JDPZlArWh2BEvMkBeBVmnDu6ovrt
-	uUr5/S1yGTKbZ+t9wKohk/IgJL4C8/yWAiOUnvrk2MEX0FS2Hki2eLIRkrkQ0pQzzm/BwtTRJsm
-	P422Pzxwsct30+fqwopUzsZbMrLXZ3ShCnZzoQNLIrBbKHgHYe48LccW2nqi
-X-Google-Smtp-Source: AGHT+IH3xjpyQ4ebVaMo9DbY1gh/tZqYj3qhoffl3icr75QW+zCNKAPlpcq7GyNn9O1WQp4oMM2scw==
-X-Received: by 2002:a17:90b:2dd2:b0:312:f88d:25f9 with SMTP id 98e67ed59e1d1-313f1c7dacfmr29693399a91.7.1750276811912;
-        Wed, 18 Jun 2025 13:00:11 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3157a605f21sm1629583a91.0.2025.06.18.13.00.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 13:00:11 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
- linux-pm@vger.kernel.org, arm-scmi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v3 2/2] pmdomain: core: add support for subdomains
- using power-domain-map
-In-Reply-To: <e463a278-7e6e-4287-9093-42d0a0d365d2@suswa.mountain>
-References: <20250613-pmdomain-hierarchy-onecell-v3-0-5c770676fce7@baylibre.com>
- <20250613-pmdomain-hierarchy-onecell-v3-2-5c770676fce7@baylibre.com>
- <CAPDyKFrO9rb0eDb2qO+EGaVjOFG=7emgca8511XACDhWY=dt5g@mail.gmail.com>
- <7hsejzp4xg.fsf@baylibre.com>
- <CAPDyKFo-iPBPgkM43q+5cGR2sptkLk4E6TAERCQbCu24o1RfFQ@mail.gmail.com>
- <7hcyb1os9y.fsf@baylibre.com>
- <e463a278-7e6e-4287-9093-42d0a0d365d2@suswa.mountain>
-Date: Wed, 18 Jun 2025 13:00:10 -0700
-Message-ID: <7h5xgsq0qd.fsf@baylibre.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JiYBbEb2"
+Date: Wed, 18 Jun 2025 13:00:06 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750276815;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=A+Dm5oYqWDH4EBRKuoUENfY0iH02fdrPbML4KrtAoQ0=;
+	b=JiYBbEb2aglrXadwd8672PZMcInYhyXyrnzula6TGfNJSEFIyKtU038Tqyb8BobbBBu9qh
+	B5ndenDDZwJjqoM1lUiF8Mw3SOuJf5QdA7kZDOgvvmF34OQGBa5ZKIUxhB0Vj7eMRJ+8Zf
+	tXAdy9DLItnEhRcHHn0AGW2v8RxKayI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: James Houghton <jthoughton@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Yan Zhao <yan.y.zhao@intel.com>,
+	Nikita Kalyazin <kalyazin@amazon.com>,
+	Anish Moorthy <amoorthy@google.com>,
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>,
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com,
+	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v3 03/15] KVM: arm64: x86: Require "struct
+ kvm_page_fault" for memory fault exits
+Message-ID: <aFMaxi5LDr4HHbMR@linux.dev>
+References: <20250618042424.330664-1-jthoughton@google.com>
+ <20250618042424.330664-4-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618042424.330664-4-jthoughton@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Dan,
+On Wed, Jun 18, 2025 at 04:24:12AM +0000, James Houghton wrote:
+> +#ifdef CONFIG_KVM_GENERIC_PAGE_FAULT
+> +
+> +#define KVM_ASSERT_TYPE_IS(type_t, x)					\
+> +do {									\
+> +	type_t __maybe_unused tmp;					\
+> +									\
+> +	BUILD_BUG_ON(!__types_ok(tmp, x) || !__typecheck(tmp, x));	\
+> +} while (0)
+> +
+>  static inline void kvm_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
+> -						 gpa_t gpa, gpa_t size,
+> -						 bool is_write, bool is_exec,
+> -						 bool is_private)
+> +						 struct kvm_page_fault *fault)
+>  {
+> +	KVM_ASSERT_TYPE_IS(gfn_t, fault->gfn);
+> +	KVM_ASSERT_TYPE_IS(bool, fault->exec);
+> +	KVM_ASSERT_TYPE_IS(bool, fault->write);
+> +	KVM_ASSERT_TYPE_IS(bool, fault->is_private);
+> +	KVM_ASSERT_TYPE_IS(struct kvm_memory_slot *, fault->slot);
+> +
+>  	vcpu->run->exit_reason = KVM_EXIT_MEMORY_FAULT;
+> -	vcpu->run->memory_fault.gpa = gpa;
+> -	vcpu->run->memory_fault.size = size;
+> +	vcpu->run->memory_fault.gpa = fault->gfn << PAGE_SHIFT;
+> +	vcpu->run->memory_fault.size = PAGE_SIZE;
+>  
+>  	/* RWX flags are not (yet) defined or communicated to userspace. */
+>  	vcpu->run->memory_fault.flags = 0;
+> -	if (is_private)
+> +	if (fault->is_private)
+>  		vcpu->run->memory_fault.flags |= KVM_MEMORY_EXIT_FLAG_PRIVATE;
+>  }
+> +#endif
 
-Dan Carpenter <dan.carpenter@linaro.org> writes:
+This *is not* the right direction of travel for arm64. Stage-2 aborts /
+EPT violations / etc. are extremely architecture-specific events.
 
-> On Wed, Jun 18, 2025 at 10:48:09AM -0700, Kevin Hilman wrote:
->> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
->> index 88819659df83..3ede4baa4bee 100644
->> --- a/drivers/pmdomain/core.c
->> +++ b/drivers/pmdomain/core.c
->> @@ -3220,6 +3220,40 @@ int of_genpd_parse_idle_states(struct device_node *dn,
->>  }
->>  EXPORT_SYMBOL_GPL(of_genpd_parse_idle_states);
->>  
->> +int of_genpd_add_subdomain_map(struct device_node *np,
->> +			       struct generic_pm_domain *domain,
->> +			       int index)
->> +{
->> +	struct of_phandle_args parent_args;
->> +	struct generic_pm_domain *parent_pd;
->> +	struct device *dev = &domain->dev;
->> +	int ret;
->> +
->> +	if (!domain)
->> +		return -ENODEV;
->> +
->> +	/*
->> +	 * Check for power-domain-map, which implies the primary
->> +	 * power-doamin is a subdomain of the parent found in the map.
->> +	 */
->> +	ret = of_parse_phandle_with_args_map(np, NULL, "power-domain",
->> +					     index, &parent_args);
->> +	if (!ret && parent_args.np) {
->
-> Sorry for the pedanticry but could we flip this around?
+What I would like to see on arm64 is that for every "KVM_EXIT_MEMORY_FAULT"
+we provide as much syndrome information as possible. That could imply
+some combination of a sanitised view of ESR_EL2 and, where it is
+unambiguous, common fault flags that have shared definitions with x86.
+This could incur some minor code duplication, but even then we can share
+helpers for the software bits (like userfault).
 
-Sure.  This is early prototype code for discsussing the big-picture
-approach, but I appreciate the review.  I'll clean that up when I get
-past the RFC phase.
+FEAT_MTE_PERM is a very good example for this. There exists a "Tag"
+permission at stage-2 which is unrelated to any of the 'normal'
+read/write permissions. There's also the MostlyReadOnly permission from
+FEAT_THE which grants write permission to a specific set of instructions.
 
-Thanks!
+I don't want to paper over these nuances and will happily maintain an
+arm64-specific flavor of "kvm_prepare_memory_fault_exit()"/
 
-Kevin
+Thanks,
+Oliver
