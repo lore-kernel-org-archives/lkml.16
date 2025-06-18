@@ -1,144 +1,120 @@
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D652EE98F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDCE2EF650;
 	Wed, 18 Jun 2025 15:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750261378; cv=none; b=o+AYRD0XJzlUXTUVq55HctnMqQf3yptDJIL+EUhxO11M7O1M41GRF9x/u8fa2fOyqhHQtdFKtBgqNN1EkNE15ZOlyJd2lG+uOYWzwbjANffGVZhtw/0Hl4MeGuLGtA8vssCyP6t9fuq5v+jZC0lHrvDYaURh3/7Dff5y5GKWYOU=
+	t=1750261379; cv=none; b=C1fhVw37XfuE/ddltBlwDGGS77AV1m6aTRpCQeotbGs8aCLKR57Vg4YbMVzPdPjZKM22t882N36Zlj3aztxTPUxrtNIO7soYchI2RmEtAWBaidw+ETMcvgZMz0W7J7ATKmMGfeVMLce0YyCu36syOPCWTvr2hYTZhqxHAoyJdfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750261378; c=relaxed/simple;
-	bh=ZAdHHI1Qa6a7uSzz9G6krYI8Sdg7y2V5dKsM4QZVgG0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jc7xdly/EMjtfFCQZuPtNAWKpj8pJRfT3+XGPLMx74CG0dmCQi+2EYkZ2NGhBQJXqpAaAMX7CggdX/awImTyym6jLV7ebqGDXgYvdjtdsVsCQr6/3YeNQAyoYzCGGqTNL0QMA/x1mQW8ll96C1Ekkm99cGnFLo1HF3xVH3Hb1c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so12001989a12.2;
-        Wed, 18 Jun 2025 08:42:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750261375; x=1750866175;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LWYHbpP051s3adQYzbRj7oJpUnu9maWKCI8y343Rnlo=;
-        b=akWtb8QeMhEfFBUq4Sjj4I18D/DjTjv9pIbZwBvgFEHHkZqNKsP1VO5xMyzrFv8riJ
-         7gvN4GDnQkSBFcwibLBE8r3G0hwaRM88PxyqdND4hCM78JCjD6wDmPehHbi6silLDxDO
-         FjeyMCxkL/j04ZKjMHbBZ1CM3J8HQ7SRsX5N/4mDWLBbqeKb/vZ7VOjuxTqKHzQXkMHR
-         Bz8rQtmY3nHOO9C9/yT01IqlhNNj71KYBMzVyad3R7rTyYE7dnlArJ09E20upYJ3kHdt
-         FnrX/XSm67qDHgkYPjM856u5J/axRwUaj+KUayUNAWZGedGojHb4pGxkBM+iDX9jStPM
-         3XQw==
-X-Forwarded-Encrypted: i=1; AJvYcCWCP1XJt4u+iCs3OQEgQSfD7LlLU3zHfNPFTsiXxoX8btb+5t+zQp3lBdJL0uCmAhbN86LEDsm7TkLM+NQ=@vger.kernel.org, AJvYcCWg9gVPpDnbnCRxuodH9bJ5lwlAMib/9/jXR46u1h1qZzFgYaBzSHkIiJbv3LlmFSptMQoLdSmI@vger.kernel.org
-X-Gm-Message-State: AOJu0YydZP58XwjECssjK3GjPkkaxfpglqPJP9kaf2IvBrIbHdX8gogG
-	XfguySoOOODtNqsLsDV8sQ1kCaCcW0KmR9eZFZDQuBTTDqJMsEJzOvxG
-X-Gm-Gg: ASbGncsWLI6ufmuaFs6SuyFzN0lGYGVYQdktLN4+vm3jYj9Cb8YP/pjf++SbEPr1SWW
-	/3OXFWYmrUNwt0kXV2HNmnsky2WTHL5b46hcrt8OEjAzPwDNQrGSHzRQwVndWcDEO2Q2vb4WhKH
-	atWcTyJPAyTxzcVDos2kaoc/ohYUjyYYCiQ4lLEoC3hIt0YXZAqhrtTOK2pY7QezLNyXe1kK4kN
-	hrX5ZraZM3EekfvztJ25dH2P7w87VX7/VB1pxgNxJy5d+EQMAonsNKCi8tXWjqYOA0z0Arh/pOh
-	fkLZ3G/d5ie2pC/U9w0cAOJ3Fa8tFW+4qt0zElpYodPfOdla7nC3
-X-Google-Smtp-Source: AGHT+IEZeb5BUZBwW+3X3Mghevtyvvv3qa+6/WQujzPyWQjQVnuNccvQjc/vqxVtBIzGQN0UTopzuA==
-X-Received: by 2002:a17:907:3f07:b0:adb:2db9:b0b0 with SMTP id a640c23a62f3a-adfad415cafmr1729558966b.35.1750261374664;
-        Wed, 18 Jun 2025 08:42:54 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:4::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88ff5d3sm1104154566b.101.2025.06.18.08.42.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 08:42:54 -0700 (PDT)
-Date: Wed, 18 Jun 2025 08:42:51 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: Re: [PATCH v6 01/15] docs: conf.py: properly handle include and
- exclude patterns
-Message-ID: <aFLee2PdbK+6SiA8@gmail.com>
-References: <cover.1750246291.git.mchehab+huawei@kernel.org>
- <737b08e891765dc10bd944d4d42f8b1e37b80275.1750246291.git.mchehab+huawei@kernel.org>
+	s=arc-20240116; t=1750261379; c=relaxed/simple;
+	bh=53DlZlEjAMjLFC6m7EwUfHPP/jGL50LGvoZPwQn5Jmg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=H+21ODh0+IDXw4Xe5F0b41ESeUWeYEl0UGhy/60MhthJlHpthUsHq0L4M7RScEWNZNiKRnX/5QsEmXm9d9ZoluTqcfk+XcbuUSo3HnoqdwGefjMA4gvN4bHGqaZGnAVJYY22Ju6SSK7wX9ybCfalx9RkBwVTXO2vKc0iAdfA6Ng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=PEnjB6we; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="PEnjB6we"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id C9C33107;
+	Wed, 18 Jun 2025 17:42:40 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750261361;
+	bh=53DlZlEjAMjLFC6m7EwUfHPP/jGL50LGvoZPwQn5Jmg=;
+	h=From:Date:Subject:To:Cc:From;
+	b=PEnjB6weIuk2ewlOWkpzF1h20tN+4Gz7HEOGa4Sf1u9Wf/aNxf4jBUxcMicpzFESb
+	 ALmwAztczcilweqSSagSFZMyYmI9IRRNsYH2TZcqPkDoF+x/VZiBnJon1rW7lU5oJF
+	 +In621Zaq5pdlZUosxUFH3VaZYWxJ9AtaLGFSWKk=
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Date: Wed, 18 Jun 2025 17:42:47 +0200
+Subject: [PATCH] media: vsp1: Add missing export.h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <737b08e891765dc10bd944d4d42f8b1e37b80275.1750246291.git.mchehab+huawei@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-vspx-include-export-v1-1-95a2da4ec465@ideasonboard.com>
+X-B4-Tracking: v=1; b=H4sIAHbeUmgC/x3MTQqAIBBA4avErBuwf+0q0aJsrIEw0QohunvS8
+ lu890AgzxSgzx7wdHPgwyYUeQZ6m+xKyEsylKJsRFtIvIOLyFbv10JI0R3+RFlXnZqUmk2jIJX
+ Ok+H4X4fxfT92ICOGZQAAAA==
+X-Change-ID: 20250618-vspx-include-export-84379a99bf59
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1958;
+ i=jacopo.mondi@ideasonboard.com; h=from:subject:message-id;
+ bh=53DlZlEjAMjLFC6m7EwUfHPP/jGL50LGvoZPwQn5Jmg=;
+ b=owEBbQKS/ZANAwAKAXI0Bo8WoVY8AcsmYgBoUt59rYSi0GmeoF/IP1xDfvABUUqhhVe00ZPZn
+ LG/7+NCg7GJAjMEAAEKAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCaFLefQAKCRByNAaPFqFW
+ PJ3MEACdHDouY541qUZ5c1bFmlogf771gv1sdxLYuv6M/rHvh9x60Kz0M9tfxaWhSLs1qyxy+Mx
+ f0ogu7RI7hERHu0aXUEOyC4x7Oc615P2YIqeiTuRi4CC28LwuvZBqRz3ix+57NvH275yADF0sR8
+ iiStTDTEdXoTaFs38aB5DGhGi6/8ByJ1IRaWWk590juJoGpi5D9jsYDUB8BwnyipJ7jG3RkYy2D
+ 0rAKjqcDc6Zzm2LLUSGCDlSiqb7KRjRtqTcgGHaZWCnFHTiC3NEXhz+BL3k84KXlSKoYa0RvRUN
+ 2pXv8sZECQvZA99bVhgvNujV79I30d2sniUg1W8j4mIFHpzLI0AlOnNf2dM4ncO/IbSTW51lFGB
+ gnn2puaItaQGwXjvjsIK9gIx92q2Y00PrloWT+UheYkdPO15IBoWc0/+1mQpwlxq2E2s5+lO2Na
+ sVMY8IzuIPyGd53tc/NDc5nA/3IOCdsfUEMhwsQswXka4QgFKfskr17SacxRXes4tAlhJ0aGbii
+ +Sp8mBv/h9A+4jj25fyycTya1FICAowUg0L7xL9Uqew2mAVFu69sVQslMWKFjj0OgAdPq/3MZHL
+ d4KscB+TDZ18cmVUkz3mwm+owtZkDMSmce+7DBGIXiiEwnZVB3rqLVeYruRZf5BGoJObAOAA5rE
+ 2mvVtJxsMueHR+A==
+X-Developer-Key: i=jacopo.mondi@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-On Wed, Jun 18, 2025 at 01:46:28PM +0200, Mauro Carvalho Chehab wrote:
-> When one does:
-> 	make SPHINXDIRS="foo" htmldocs
-> 
-> All patterns would be relative to Documentation/foo, which
-> causes the include/exclude patterns like:
-> 
-> 	include_patterns = [
-> 		...
-> 		f'foo/*.{ext}',
-> 	]
-> 
-> to break. This is not what it is expected. Address it by
-> adding a logic to dynamically adjust the pattern when
-> SPHINXDIRS is used.
-> 
-> That allows adding parsers for other file types.
-> 
-> It should be noticed that include_patterns was added on
-> Sphinx 5.1:
-> 	https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-include_patterns
-> 
-> So, a backward-compatible code is needed when we start
-> using it for real.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
-> ---
->  Documentation/conf.py | 67 ++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 63 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/conf.py b/Documentation/conf.py
-> index 12de52a2b17e..4ba4ee45e599 100644
-> --- a/Documentation/conf.py
-> +++ b/Documentation/conf.py
-> @@ -17,6 +17,66 @@ import os
->  import sphinx
->  import shutil
->  
-> +# Get Sphinx version
-> +major, minor, patch = sphinx.version_info[:3]
-> +
-> +# Include_patterns were added on Sphinx 5.1
-> +if (major < 5) or (major == 5 and minor < 1):
-> +    has_include_patterns = False
-> +else:
-> +    has_include_patterns = True
-> +    # Include patterns that don't contain directory names, in glob format
-> +    include_patterns = ['**.rst']
-> +
-> +# Location of Documentation/ directory
-> +doctree = os.path.abspath('.')
-> +
-> +# Exclude of patterns that don't contain directory names, in glob format.
-> +exclude_patterns = []
-> +
-> +# List of patterns that contain directory names in glob format.
-> +dyn_include_patterns = []
-> +dyn_exclude_patterns = ['output']
-> +
-> +# Properly handle include/exclude patterns
-> +# ----------------------------------------
-> +
-> +def update_patterns(app):
-> +
+As reported by the Kernel Test Robot, the newly merged vspx driver
+exports a few symbols but doesn't include the export.h header.
 
-PEP-257 says we don't want a line before docstring:
+While at it, include the header file in vsp1_drm.c which exports
+symbols as well.
 
-https://peps.python.org/pep-0257/#multi-line-docstrings
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202506181950.r9PRdV59-lkp@intel.com/
+Signed-off-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+---
+Add missing export.h header as reported by kernel test robot <lkp@intel.com>
+
+Can this patch be fast-tracked to ensure it lands with the one that
+introduces the vspx driver ?
+---
+ drivers/media/platform/renesas/vsp1/vsp1_drm.c  | 1 +
+ drivers/media/platform/renesas/vsp1/vsp1_vspx.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/media/platform/renesas/vsp1/vsp1_drm.c b/drivers/media/platform/renesas/vsp1/vsp1_drm.c
+index fe55e8747b05aa351c1547469f9cbbe2b6d25408..15d266439564e2317dbc380ef04d2b15ae899852 100644
+--- a/drivers/media/platform/renesas/vsp1/vsp1_drm.c
++++ b/drivers/media/platform/renesas/vsp1/vsp1_drm.c
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
++#include <linux/export.h>
+ #include <linux/slab.h>
+ 
+ #include <media/media-entity.h>
+diff --git a/drivers/media/platform/renesas/vsp1/vsp1_vspx.c b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
+index 6551d63ba387a05c932d2e557bd0ae5f8810acc7..a754b92232bd57f1b4cd3f9e7903f0b5da5c5c57 100644
+--- a/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
++++ b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
+@@ -13,6 +13,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/dma-mapping.h>
++#include <linux/export.h>
+ #include <linux/list.h>
+ #include <linux/slab.h>
+ #include <linux/spinlock.h>
+
+---
+base-commit: 642b70d526ab8daa8f256dfc1eb6bf27c3290cc6
+change-id: 20250618-vspx-include-export-84379a99bf59
+
+Best regards,
+-- 
+Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+
