@@ -1,99 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AFF2F5462;
-	Wed, 18 Jun 2025 18:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C90A2BF013;
+	Wed, 18 Jun 2025 18:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750269622; cv=none; b=D/UH15QqNUB2HRyefAPvEHMqdzU5IaPQ71VUuc3r2IPLvGOEOxC3YMZbF0B9GGdnSlCkd9TjK+uqL1izZQv0toQn/3chhswcj+gKVyGELabG599RQkqerlIAHlSGWLgHxztcP8hDxrfh8Y2W5NtxK/l1O6yNJRR1Sd6pwINf3Qc=
+	t=1750269738; cv=none; b=PeX/jbavFj9Xcp7cNKFVuw3+HBCFRd8Dc/Vus0cDHTd9k7orDARyE0m5wommf0liXwDBTrMfucirq8H7Kx5miej3sVZ5cW99D0b22C75d9+DvXMiVIHmBcgwp+7mkMhsQqEjCNIDTw+T49JiNtZNG+Upv/ya467IEpV5UMynrmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750269622; c=relaxed/simple;
-	bh=LhEj38rRhsBxe6pQJHF9Dl1nDOxenh+zjC8EQWuOjs4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=movrr1+svOTH4GotQErV02tCmZJsYkQQG45j3ONURptIhi0jMtf7R8OmCy3qP8OwyTbIy784ngdgS+hyjqCvWuueshev4pOvAOtvAmHXwx6PNr0EjTTdMcBQ3jVXx4KamsoKXrNMqj413W8qCQnS7vIRGLoH70rIlqowgjMA1X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k662VMFN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750269738; c=relaxed/simple;
+	bh=J8qm0KIxvDABeFAbOTa/JmNQ+sdVdGPfkXdpFFrTCSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Z1pcF7eLbrump+dZ63YmXhQyB9JdLDk19mrkoaiWPc+izS8mW6qVYP+/tYWi8kBNuakwluX5yVG3RdnI9M3G21JmA8lKP++z5vS9MZuUk6bWjR2E20x0MspnfgPPmfI2/bzeEmwI1unBXqoh0G939bBGB0aG0V2XmqBHJkpz6CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=iDcLV6/O; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k662VMFN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDB6C4CEE7;
-	Wed, 18 Jun 2025 18:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750269622;
-	bh=LhEj38rRhsBxe6pQJHF9Dl1nDOxenh+zjC8EQWuOjs4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k662VMFNxuOdwQCan2sRcPTNgDJWSiVM+Vy5CNlWeaqZ3hhUGQ1GrxQtymqzAcIcD
-	 lMoK5xUUlzvGlXcbk8poCE7GPGYNDN1nl7wZLS71I/kyE35KucwKh1JJvl6/HkDP2A
-	 +xxvc5VseW1SQElQz8+jwMqsAtRG/kQEsrQam2noQE3fcGshcGaeAAFqLl1WpAtoSD
-	 LnPRUqy9a4x8dS7WW7BJJcjeqb+q6lYbQ+v7KxBaYzwhVfDxJigeSArSQuBZROBa7o
-	 6j2YBR81ElsxJKP88VLz8mO97oG4Bbd/voUKbyaydsq7IooC6lnT4IlcW5wr064Kfu
-	 MP9aGgEXti58Q==
-Date: Wed, 18 Jun 2025 20:00:19 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>, 
-	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-Message-ID: <2m5el6kh4sjmopbnvovzzb7gefvbuvjphnzdz7hy2vnbcbstaw@g5gjndrfb4e5>
-References: <20250515-mc33xs2410-hwmon-v2-1-8d2e78f7e30d@liebherr.com>
- <mjmrgvw7dg6wlipvku4yzaazbxomsfpr42hdvh37c3r5zybjyh@4olym5bwde45>
- <20250519124028.GA423953@legfed1>
- <kvckrtgbdxlzezxzn5xe6owmbaxa5rygknsv3hne32awfc7y5s@k2akbs6u7tkr>
- <20250519141223.GA668288@legfed1>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iDcLV6/O"
+Received: by linux.microsoft.com (Postfix, from userid 1158)
+	id 0610121176FA; Wed, 18 Jun 2025 11:02:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0610121176FA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750269737;
+	bh=rDfd80+cYWJKoaG2bdjZmVVVUOstotsIHopxHl0Sj7s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=iDcLV6/OXfTwiOotVSGp4N8AG/KR/W1MlD4d0ojyOJtcT5YW2ZlDBt4CZvAfQ1te5
+	 SvnkJQH7xrQM8ZWY21norqL+edXNp8+EoDhBjleG6WnmgPksektoCWB2RSepWAg6bW
+	 ESG4U/kLrM2Iip8FXtH0/HL2lftQZshU9gAtpkS4=
+From: Hardik Garg <hargar@linux.microsoft.com>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 6.12 000/512] 6.12.34-rc1 review
+Date: Wed, 18 Jun 2025 11:02:16 -0700
+Message-Id: <1750269736-29190-1-git-send-email-hargar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <20250617152419.512865572@linuxfoundation.org>
+References: <20250617152419.512865572@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="avmjyzvfmxfgbrwt"
-Content-Disposition: inline
-In-Reply-To: <20250519141223.GA668288@legfed1>
+
+The kernel, bpf tool, and perf tool builds fine for v6.12.34-rc1 on x86 and arm64 Azure VM.
+
+Kernel binary size for x86 build:
+text      data      bss      dec       hex      filename
+29860466  17729102  6385664  53975232  33798c0  vmlinux
+
+Kernel binary size for arm64 build:
+text      data      bss      dec       hex      filename
+36428814  15006645  1052880  52488339  320e893  vmlinux
 
 
---avmjyzvfmxfgbrwt
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: mc33xs2410: add support for temperature sensors
-MIME-Version: 1.0
+Tested-by: Hardik Garg <hargar@linux.microsoft.com>
 
-Hello,
 
-On Mon, May 19, 2025 at 04:12:23PM +0200, Dimitri Fedrau wrote:
-> Am Mon, May 19, 2025 at 03:47:26PM +0200 schrieb Uwe Kleine-K=F6nig:
-> > Hello Dimitri,
-> >=20
-> > On Mon, May 19, 2025 at 02:40:28PM +0200, Dimitri Fedrau wrote:
-> > > Perfering IS_REACHABLE over IS_ENABLED is fine for me. Is there a rea=
-son
-> > > why you just didn't replace IS_ENABLED with IS_REACHABLE ?
-> >=20
-> > Because if (IS_REACHABLE(...)) is nicer than #if IS_REACHABLE(...). It
-> > has better compile coverage and is easier to parse for a human.
-> >=20
-> Sorry, my question was not precise. Diff below is about the replacement
-> of IS_ENABLED.
 
-FTR: We resolved that question in a private conversation. I'm waiting
-for a v3 now (but not holding my breath :-)
 
-Best regards
-Uwe
-
---avmjyzvfmxfgbrwt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhS/rAACgkQj4D7WH0S
-/k7e/wf+LTAo7AHQOGrKtpUs3QCNbqNHMXj80XAzungqPRA6mqYOjVaYXpsfmR5Q
-ydGQd6Yn6i+/nkluw57qgGgt/4EjsjoFAQMbk3o4ckxPdw6wxWDwbyfH2iywV6ia
-D6zHHQ8OMPa9BYNu515uSgHiYywaYK5P/b5i3RDe1edu+dEUV//N4nLSdvDBtZcZ
-zppIhyyCgwZBsrH0hoVBBVmLtGb87ONWrI/vuBTJEUXrd25Tem2ewXTF55oxKOl+
-/RX0iIicUltfrY/TqKgQC+gs+ZLM7oIhqb9QX4XdgLl5VIl9FxgihneNE0j1/rhf
-dQbhNWQf0/SjGCqhAXHRJXpfU3E9wA==
-=ekbF
------END PGP SIGNATURE-----
-
---avmjyzvfmxfgbrwt--
+Thanks,
+Hardik
