@@ -1,102 +1,84 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6101C13E02D;
-	Wed, 18 Jun 2025 04:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D576C2F5335;
+	Wed, 18 Jun 2025 04:50:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750222079; cv=none; b=jXHDc6bVInBas1p+lLMIhSAE9DETr+qQc+Jm83VYJ75+HD4+JUf3kfYeUCQsk26+0mm2JGud5uqnxVYW5H/n8pfd6U501JoTPocLfvemYRKI2slG9ysa3oONW4219okpThI9VnD9H1vBf1Wnp+Pugxa87uakN2LMnUDBpL3MZYA=
+	t=1750222224; cv=none; b=adfQtik/w0OQG0+yjSLZF2/7VDWYGC3dsgPdiwhTtWBUW9IhDJoqbOX1Erv3i79H3K9HxxIB6qOfB+OV5xz6vA2luxPDPfX0Bjjlhjw7uLtWYtkZyt19es88TiQl0pLZxiHRmynEa//1ZENsC4nUieO8dLm21XA6tcvsk+GR4mA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750222079; c=relaxed/simple;
-	bh=wPr7Uc2Oh8NzamXL10SEcRpC+weFB8VxIXdkTIntRjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=UM2a5CGO2JKP/MrmPAPP2Kghumz/ycwzN9l6KeMSdCcIwCed9cFEmg6m011FFr5Cpfub/HgVeuQVaHq1TzWAg/Gt0ONGvDnhcMwiZhJSkeKOtPIQvAZYzyAeX/oGpKJnMgnk/RI1934oaWCg2eZyBMFjGFrxbk4qP0KUh8Umpe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Tt/PYyQm; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750222224; c=relaxed/simple;
+	bh=AmTtiMD6yE0jPOyHVPqZAQTx2+YEgvOS4EFS37eI394=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnRThTRA5vcNfHdHrlDmm/t5MTiDrQh89gPQWQ7uU2x2d0NdlTBMFiRDwix8+y6gb97unN8GYHlxjFNs8DA+3wtXavq7mMRs4hwWWBzAXAIRMeZULHrUAAfJHmC8cjr2CHQ3Iu6YnzgZFasr12pU/xpWUjr/JpLYs8ZoaVBdVag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=aJtT/tv7; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Tt/PYyQm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750222071;
-	bh=Ea0r7e3rb/JuhP/1c7g8mD/C88HYhR9CAZzLq89zg38=;
-	h=Date:From:To:Cc:Subject:From;
-	b=Tt/PYyQmv3EcF+bhla60OYtWUAFeX6vL6OX804nRWSTshOiqXtqoS8dl4rMEaZL4X
-	 xddBbX3kzls8NBYdWnvwtyI+749sRah4liUDK/pbrrsNihGLFRDnIUDBon2i+LRQvV
-	 UoAes45XyRMlgHSrxVU+GvMv8lG4hYheWqL0B2av2lAnVgzrrEBvjMEGDp1/JdEYL7
-	 2/o5jhQBjq52ONakP1Z5yzcHBwhW0WC2Y+Sh0ITb6OE8y9jgR01bgVMoDYKCMHYMn8
-	 MpB/K/prxKhoxIF1Fg82O/R/sR8DQ25SMPPOc7Rwm9Hbml0UnkCkygdCj+e1+LHAWL
-	 q32tAhRjjERww==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bMWSl393kz4wcy;
-	Wed, 18 Jun 2025 14:47:51 +1000 (AEST)
-Date: Wed, 18 Jun 2025 14:47:50 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Eric Biggers <ebiggers@kernel.org>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger
- <borntraeger@de.ibm.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, Eric Biggers
- <ebiggers@google.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the crc tree with the s390 tree
-Message-ID: <20250618144750.092d01b8@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="aJtT/tv7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ODPOLUlvf2qURExlUHFoxGYf/GepaVDBWLemGB5KzQg=; b=aJtT/tv7JViZp52Rwv4a57kxhj
+	IZhAE0UDRokQSHEsrfFxw80TXhXU41gT5fbCw8fzsyJhE/k+BvJ7JKS0gwVhj/wimJtgLOTgzyH8Y
+	xkPp/UXn+gGnpG9/R/dLka+cptbC/PDB7mBKyE7oWZFV1a84SfeO1mVNG8CmWewW3LITjxbr9URWC
+	1kRR+uFxL76xsnLa4vZ+OksgUN+e2yIJo+hIcFXOjPKIYK7H3HmPBzxYoePxd1KGjjyTztGpNh2xP
+	N/dBpN/4OF1ThQ/3jldFPSxnqPlPvmkBUBroCngQqmZ9g2ujc/JTw/HGEGHq9IQW4yPs3KZB47Slu
+	j9xe7o1w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRkka-00000005YCh-39gs;
+	Wed, 18 Jun 2025 04:50:16 +0000
+Date: Wed, 18 Jun 2025 05:50:16 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com,
+	almaz.alexandrovich@paragon-software.com, brauner@kernel.org,
+	jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] fs: Prevent non-symlinks from entering pick link
+Message-ID: <20250618045016.GO1880847@ZenIV>
+References: <685120d8.a70a0220.395abc.0204.GAE@google.com>
+ <tencent_7FB38DB725848DA99213DDB35DBF195FCF07@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/t_05p3FfZs.BlvYR6Y8Ah=s";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_7FB38DB725848DA99213DDB35DBF195FCF07@qq.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
---Sig_/t_05p3FfZs.BlvYR6Y8Ah=s
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jun 18, 2025 at 11:30:48AM +0800, Edward Adam Davis wrote:
+> The reproducer uses a file0 on a ntfs3 file system with a corrupted i_link.
+> When renaming, the file0's inode is marked as a bad inode because the file
+> name cannot be deleted. However, before renaming, file0 is a directory.
+> After the renaming fails, it is marked as a bad inode, which makes it a
+> regular file. In any case, when opening it after creating a hard link,
+> pick_link() should not be entered because it is not a symbolic link from
+> beginning to end.
+> 
+> Add a check on the symbolic link before entering pick_link() to avoid
+> triggering unknown exceptions when performing the i_link acquisition
+> operation on other types of files.
+> 
+> Reported-by: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=1aa90f0eb1fc3e77d969
+> Tested-by: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 
-Hi all,
+NAK.  This is not the first time that garbage is suggested and no,
+we are not going to paper over that shite in fs/namei.c.
 
-Today's linux-next merge of the crc tree got a conflict in:
+Not going to happen.
 
-  lib/crc/s390/crc32.h
+You ARE NOT ALLOWED to call make_bad_inode() on a live inode, period.
+Never, ever to be done.
 
-between commit:
+There's a lot of assertions it violates and there's no chance in
+hell to plaster each with that kind of checks.
 
-  65c9a9f92502 ("s390: Explicitly include <linux/export.h>")
-
-from the s390 tree and commit:
-
-  47e6269f497a ("lib/crc/s390: migrate s390-optimized CRC code into lib/crc=
-/")
-
-from the crc tree.
-
-I fixed it up (I just used the latter version) and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/t_05p3FfZs.BlvYR6Y8Ah=s
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhSRPYACgkQAVBC80lX
-0Gxigwf+NVszkluI11AffXGDRcwIDTl2f4W7Zh9qvN3XgPQX+HQjdrDAVdo51TaV
-VMXyEK3S67SZQXDc/LmqtAeYDlQwwNMQd3bsBVv3R1t1mYTJg99AstPTywtPlORC
-I0GJsuHZrrpiWrSOYIvTuPRZdCI5mkqmOilj0RdczCGZDPKX4JiS705560qWi4uE
-feA0TENUsed4kZ14PvvJ0PWgJ0AQiKBBwLTiDJ6P9AG4a0jSqwTQskIg9BXpolNG
-aw1z3lauyBsbrF1PwU3gjp19kdKbo8OmzDV+2EdsQYFqUSOTZHx0N1auk/8tvNl5
-IenaRH5SWhWat43C7uyNmkVEalhpDA==
-=Tpem
------END PGP SIGNATURE-----
-
---Sig_/t_05p3FfZs.BlvYR6Y8Ah=s--
+Fix NTFS.  End of story.
