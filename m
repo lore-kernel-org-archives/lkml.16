@@ -1,146 +1,82 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E583926157D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5EE260576
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280945; cv=none; b=mdAol3XY4x4yxSf+dLl93HZ5zrEvZMhz+n7CZLOT5UazXmrMGJTEPATqloibvunS4S312/QdrSpHAx0BpRdwduYxYI17TNiyRnSE2ShWxuUJ9A4WryZIT+5FqkUvFmTSG+1iQgk1rIXY5wODInuuxWqHaYx/daD7lCqs29jkNOo=
+	t=1750280946; cv=none; b=R37oNsh0RJMhnmUfKpAxWFpurK5evjamiZDW8wuhhFq+/r0pP3Qx6yEh6BbXTTUNlyCFqB1gAFj1Erxyzz82JGtNhjG7YdIaBHgPZTCCVZTotmzM09xlPFK22AfnYp+EwCFBN9PdUsicUfDJkeORcKbJYkx9PH+dA9SX9J4HaAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280945; c=relaxed/simple;
-	bh=E5gNelm91XMJ+AZCHJOExXs098uttzq+1BtKy9LZWyY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=QoOl7T/iQ26srFsxTgms0sf/CFx3heGy9hGmkhHEahFiKrZknhpyZRRNXgZjRSO4dEgxjLh1AcFis8jMdEbHEl9FDU7FysLAD9XkHxKnb3gqGJyFZ7cBoeEomC7MBjf/4A41uo9wZDpssmVpZDCtJ36v9Ak79Qj4/LdwRT6vwq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bkux9VcM; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
+	s=arc-20240116; t=1750280946; c=relaxed/simple;
+	bh=Sz6aQbaQwZIG9liuFsaksla45UWFZygI4wPqJGpKwFw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tFsmI8GG92fVjKlgnSJhMc+2ImZFupaCQdSky18ZBDJ4LSetz1ud4xoBrp+TW21OJFmozyNx490pK+ObluMCvIwZnqCnXbxTEFtEzDI7JEdZoUBO7iBq4UT/mR6TBmgD8V940QogC6IhMPsCqpXjUJwvyiXVOJOT/45ZLEQQ52o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=XEMaxdj7; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bkux9VcM"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b31c8104e84so86588a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750280943; x=1750885743; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CMP7Kl6yow8Faa+m4ttvJDoB9/AivqWlJaRr2H7xdgs=;
-        b=bkux9VcMpWx4IPdmPoZnB1XWwjlQ1OW893wHPo6hSlMLWV1nMBGwv/mQuAz08vw768
-         y5sptY7lx99KYADS1uo/Ld3OpqSYcnjNEWR6du2Mjy3Dh/0hV+rQBi8CfwFwW5dVe1pi
-         SzS2LkNyAPF8Jtjgz9KZ0x6HDrteflfwlvGEqV0qFL1PHwkEr7gfAfLKadWnp0xDRXo8
-         tP95ZT8ZqwZII5p8+WGuUICThpeHvrtp6hd6HzOnIb77jix6Dh0j2mjEn0BLErHlGv1z
-         PT3e/oT2vDba7ZfbsXlql7Qf1XMsv/lBBd3bf6cyFWlH0nlVpHBTPqhSCFV+Pm7zjCcZ
-         8SnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750280943; x=1750885743;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CMP7Kl6yow8Faa+m4ttvJDoB9/AivqWlJaRr2H7xdgs=;
-        b=HFHoAIDAEZCUOi/G2S25enD/280+A7gsIYEbDK/dteElr7haQ0FHNYLxX/1TRlAQQZ
-         PaVgAreZbEYbxQbFB6AuzAWsVo0+/bEY07I+M7+t7qO7MWwZtuiTM9/gy5+FZcEScoLM
-         FK11+LXUIozfsAk4loc/YyT10cNLnk2dSivRAmgRpEFEUhUb+5LLAXRCSiTlRdqr/N61
-         dnNpHr9i3VZQtPmj/UsqxwVKAPNuyCtBYedOLNesbAmTjU6MFrUT2Mg6aAq5qsgym68C
-         eLzHlYQbQ+PYuXHZ/i3Zl8k7nHfYow5m3ThR4yc3SSlnFkJwCmVbnklsDHWKr3pho5py
-         aFsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXcinELfTpPcpsqIjE0/ESzPhmSPG2MzOREjnKD8BGuJqsfr4+6H1iIuNKI+DN8EZ5x9Pn+ySaVjeGHptE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywVekfN59yt3PVhIsii/SyJGNEJMYTUte5gPyNfLnWxtpr3hRs
-	bi6nhAdTX4NgaDvajjQxmQaWZZXhXSfq/NXFBZ7VwFnOF+tgDykiRHuq48MX7HRKppoj5h8jecX
-	XJCvsmLqFNNgfvGMvqeFHKp29wGa0xw==
-X-Google-Smtp-Source: AGHT+IHnN4KQrdCKJ7jBLwoS1jPThBVW4hDHqpvXB6q54bqABdZTJVdZXZ6NaNfXR5nGBhyVR/ay/ByQfgGq2xiOFrA=
-X-Received: from pjbpb15.prod.google.com ([2002:a17:90b:3c0f:b0:2ef:d283:5089])
- (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90a:dfc6:b0:311:b413:f5e1 with SMTP id 98e67ed59e1d1-313f1e22ec0mr22222585a91.32.1750280943259;
- Wed, 18 Jun 2025 14:09:03 -0700 (PDT)
-Date: Wed, 18 Jun 2025 14:08:39 -0700
-In-Reply-To: <20250618210851.661527-1-willmcvicker@google.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="XEMaxdj7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Sz6aQbaQwZIG9liuFsaksla45UWFZygI4wPqJGpKwFw=;
+	t=1750280944; x=1751490544; b=XEMaxdj7ehLh7VfQYEOLQl84rpJ1P8StYXlylo76JOtjKiC
+	r8ePWBcd+UU51CVgeB2t/AbeNPOlqZUvWIUgatCjMKm8odvEjbD/PyKyjqzldVREGqZ1ppeTW/Box
+	Fq+4kVM++pNJX4uANeKlmwz3dEJ8BHPVwqS+uCt8pRIeM4Ql8u2Xb/gPwTLriHh5qiBwggzYIohxv
+	ZNtG/moiLwXvDmAvdysL6CfVLervLzbgCCldbwToc2RIk1JwzevkuH081nRiYR2l9mNgGJaYSuGVb
+	fTr+/5SqI9U8aG/x816kUkmUHWLybOOiCiL7HxmdFoRJKVQgPsTbRiMwZ5hJRvZw==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uS01j-0000000GyqB-3MMy;
+	Wed, 18 Jun 2025 23:09:01 +0200
+Message-ID: <8bdd635e6b8ba42b16f355f9d4ee67d5c2f8b47e.camel@sipsolutions.net>
+Subject: Re: [PATCH] scripts: gdb: move MNT_* constants to gdb-parsed
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Stephen Brennan <stephen.s.brennan@oracle.com>, 
+	linux-kernel@vger.kernel.org
+Cc: Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham
+ <kbingham@kernel.org>,  Andrew Morton <akpm@linux-foundation.org>, Benjamin
+ Berg <benjamin.berg@intel.com>
+Date: Wed, 18 Jun 2025 23:08:58 +0200
+In-Reply-To: <a01d8c8e-21b7-488d-8fa2-0a8710bc1e9a@oracle.com>
+References: <20250618134629.25700-2-johannes@sipsolutions.net>
+	 <a01d8c8e-21b7-488d-8fa2-0a8710bc1e9a@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250618210851.661527-1-willmcvicker@google.com>
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250618210851.661527-3-willmcvicker@google.com>
-Subject: [PATCH 2/6] clocksource/drivers/exynos_mct: Don't register as a
- sched_clock on arm64
-From: Will McVicker <willmcvicker@google.com>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>
-Cc: Will McVicker <willmcvicker@google.com>, Donghoon Yu <hoony.yu@samsung.com>, 
-	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	John Stultz <jstultz@google.com>, Youngmin Nam <youngmin.nam@samsung.com>, 
-	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	"=?UTF-8?q?Andr=C3=A9=20Draszik?=" <andre.draszik@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-malware-bazaar: not-scanned
 
-The MCT register is unfortunately very slow to access, but importantly
-does not halt in the c2 idle state. So for ARM64, we can improve
-performance by not registering the MCT for sched_clock, allowing the
-system to use the faster ARM architected timer for sched_clock instead.
+On Wed, 2025-06-18 at 14:06 -0700, Stephen Brennan wrote:
+> On 6/18/25 06:46, Johannes Berg wrote:
+> > From: Johannes Berg <johannes.berg@intel.com>
+> >=20
+> > Since these are now no longer defines, but in an enum.
+> >=20
+> > Fixes: 101f2bbab541 ("fs: convert mount flags to enum")
+> > Reviewed-by: Benjamin Berg <benjamin.berg@intel.com>
+> > Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+>=20
+> The exact same change was already submitted and discussed here:
+>=20
+> https://lore.kernel.org/all/20250601055027.3661480-1-tony.ambardar@gmail.=
+com/
 
-The MCT is still registered as a clocksource, and a clockevent in order
-to be a wakeup source for the arch_timer to exit the "c2" idle state.
+Oh, I missed that, sorry.
 
-Since ARM32 SoCs don't have an architected timer, the MCT must continue
-to be used for sched_clock. Detailed discussion on this topic can be
-found at [1].
+> I don't know what tree this would go through, so I can't tell whether it
+> was picked up or not. But I think there's consensus that it's a good
+> fix, and several folks have written or reviewed the change.
 
-[1] https://lore.kernel.org/linux-samsung-soc/1400188079-21832-1-git-send-email-chirantan@chromium.org/
+It looks like previously Andrew picked up patches to this which is why I
+Cc'ed him, but I'm perfectly happy for that other patch (or mine) to
+take any path available :)
 
-[Original commit from https://android.googlesource.com/kernel/gs/+/630817f7080e92c5e0216095ff52f6eb8dd00727
-
-Signed-off-by: Donghoon Yu <hoony.yu@samsung.com>
-Signed-off-by: Youngmin Nam <youngmin.nam@samsung.com>
-Reviewed-by: Youngmin Nam <youngmin.nam@samsung.com>
-Acked-by: John Stultz <jstultz@google.com>
-Tested-by: Youngmin Nam <youngmin.nam@samsung.com>
-Signed-off-by: Will McVicker <willmcvicker@google.com>
----
- drivers/clocksource/exynos_mct.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
-index da09f467a6bb..96361d5dc57d 100644
---- a/drivers/clocksource/exynos_mct.c
-+++ b/drivers/clocksource/exynos_mct.c
-@@ -219,12 +219,18 @@ static struct clocksource mct_frc = {
- 	.resume		= exynos4_frc_resume,
- };
- 
-+/*
-+ * Since ARM devices do not have an architected timer, they need to continue
-+ * using the MCT as the main clocksource for timekeeping, sched_clock, and the
-+ * delay timer. For AARCH64 SoCs, the architected timer is the preferred
-+ * clocksource due to it's superior performance.
-+ */
-+#if defined(CONFIG_ARM)
- static u64 notrace exynos4_read_sched_clock(void)
- {
- 	return exynos4_read_count_32();
- }
- 
--#if defined(CONFIG_ARM)
- static struct delay_timer exynos4_delay_timer;
- 
- static cycles_t exynos4_read_current_timer(void)
-@@ -250,12 +256,13 @@ static int __init exynos4_clocksource_init(bool frc_shared)
- 	exynos4_delay_timer.read_current_timer = &exynos4_read_current_timer;
- 	exynos4_delay_timer.freq = clk_rate;
- 	register_current_timer_delay(&exynos4_delay_timer);
-+
-+	sched_clock_register(exynos4_read_sched_clock, 32, clk_rate);
- #endif
- 
- 	if (clocksource_register_hz(&mct_frc, clk_rate))
- 		panic("%s: can't register clocksource\n", mct_frc.name);
- 
--	sched_clock_register(exynos4_read_sched_clock, 32, clk_rate);
- 
- 	return 0;
- }
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
-
+johannes
