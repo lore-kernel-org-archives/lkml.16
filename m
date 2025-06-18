@@ -1,201 +1,179 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0078C18FC86
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC421EB195
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750226843; cv=none; b=oqXvSWeiHoHhGy6mk2YNFbYKViT6fPnYwm9JkL4Q8+nrsK+Lucn+IDYUb4IoRgu7TpFwG9Z7zyx67eSxh5XH+hw31LGZa8ih/sKsBNuqs/L8dIX7inMNKeiq2ICnjQXTKKrbx6teCrrFhPixmug3Oo4nReqe262xRH4b5vGCC5Y=
+	t=1750227114; cv=none; b=A/kejeXiBlECRlxnQQLGnCQCxLlfYDdQ8jZbzMnshz6y2qat5NNFSXR0jMnbOs+id/5JHFKr9rcaIWWZHzvTh/qCMX/Z9IU6+DpmGyHzfnoGzqDwP0MwmTlsMUNsOHN24VXfaG27ro4W2L+xt86Ll9JGJOJpJdWqsu5gOZImwcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750226843; c=relaxed/simple;
-	bh=gVpRGpWbvK2l2EgWkUdriQt0Z8wJ5SQFwm0/UlJCZCQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q+WiJ/+/sNZ3H2kLOw//4ar1VUMl162YIcPnqiofI3euPYGzv67kvJnWXLnV4ZeQcIsryJ0W4CljlEBwVnBFBXwJZN03sj31fjzNYw3Bf2ho1ehJ6DZnub0BNZrKRX7URyKiVXiYqIl46OuAEkEsIRFPoG14nctHG3NUOawmgcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aw9b2FQ7; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750227114; c=relaxed/simple;
+	bh=PV3RfHpZjCKWdH+IzxbEBNpRgM9p9sr1JimZBDuNOZk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NV5CRAJtF45CcmH/dZlmmEsnUtu0fTqJ6yVC7YTkLckJ0H5BXximdkJG5eXkH//kkX/YnPSosRtWn2iR5ggheuLUeuI2HxPL1wVubK/IsEiQxP6S13E0qoLJ7kVsNOdHNVfERsFHYo0fxgBwnRB1kS1RHwcordTScjzTRGZFl5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=T6denvIw; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aw9b2FQ7"
-Message-ID: <325ab9a0-44d1-44a2-aefe-9cd49dcd12f5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750226827;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NkuFePhrx7gFmJOrw5AAMhKELjMHQfD+AdCkLnFiRGI=;
-	b=aw9b2FQ7pNugXJV0VcM6mLYbw5VWRu7wvN+6UUWbwbPdlWLsDYLiwI6KgDtMGuzIpy8nW3
-	2NBbXpHvUFxO9U7iE2frkLEYATSmZ6ODBNCYhLpOUIlXQmYLj2uJ34QHWIA4wSucCXacT0
-	nZWvDmjbsLGMme3pBGyRInNwmZuxNTk=
-Date: Tue, 17 Jun 2025 23:06:52 -0700
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="T6denvIw"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23694cec0feso13304415ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750227111; x=1750831911; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xn7q+LZ4zA2xL1SK3J/9rIfQd9cYihtR+w0HeyZNGvc=;
+        b=T6denvIwaeieRz615Z90emzHCojhU5ZGPTOZOCYbeTIX3Cnwej8X7GLaVbt8CTg32S
+         K+cbnnoirDrMk0eCao/ON58dYAdfu7s+VMA7NovymV8hJB/Rh5+vb1xOKhHle7Stm0NX
+         6YvBLvlzZdYbzoFFOSArNB3wDiDKKvTyR7Z0eipMNnCM5MltYTzJl7Fhx/eJXoDZzaWW
+         CuwhifO5PWm85OdhgBLfCY82waT4dpOetze/f5KpEuNjtRxnAkLDcGjfFkAPtbs+oOB9
+         tq13UyDs5gdkElaIGc3qOSCp+b5nnhuyRV6TsgLgiGRLaBUjkKXb5zIdIUdyL+ixSjiu
+         6/5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750227111; x=1750831911;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xn7q+LZ4zA2xL1SK3J/9rIfQd9cYihtR+w0HeyZNGvc=;
+        b=fuAcjdfgbZ5PERdnb/RnCOoLtnQm9odtjvLGk+KuX+Q/OwwHZ7S4B3Fj8W8cR26mPy
+         AyTePRHBHSPO9C2oVtVdCk3xwevjh+FUyRHLQ0hMXtHpTN38Bq9ufcQXkk05gUg0cqSy
+         dn1skIEB+cNGjg58DF7rk74Fa6SS2LEApWNNcZvllrJp+mStLgQBCaUZCGZ1jMpL0cOP
+         gZzZ0JzWoE4Q8RyQF+QMvZ1hKrpExj2IqAOMqXyD0s+wqd9yN6nmvZB5xkwrA1dBvlmF
+         S03p2CH7cD/B5R5DWdq7skc+DSJzcHQH+va5oHCCYtANgIOzXyY8QjSu5fno8/vST7+o
+         KlWg==
+X-Forwarded-Encrypted: i=1; AJvYcCVona2MHKc9hEhUMtEodDZckCwuWxubozcPRhPUhxHT+JyjB3ilViz57hp9EEjz0i/GHnviCu8RhUDj6+M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynM3CK99kYECSnefHAjkoPOtYHGmMbCav1kqhFTjjz2qfCCxf0
+	r09GFzdazfk/ioD2d29hZRz4ijiqk0IIOqD6EEIp++xsinC0vKUVEmK92RSmYShuItg=
+X-Gm-Gg: ASbGncsoKjj5fCPv+Z05DHAhRXJ2xCjHFWWJ8VZrLJ6SVp4QbWEu+WFpEcAmXbfa0/g
+	IeTBU4+9VlnY6VQVkXZr2ayVfnBNaB8fX1auhBMQeM9TeVQiicLLm21zOEeGFCqCDNpe8SD7FEC
+	GgGCSu89Ci8/s87ksjV4H3E+E8/T5c+DrUeaQ5xCCusP17Wm+ATVkrx+iOREdoWHDpl6823/+Cg
+	s5vL2Lcm8JZkhww0/C+1m5ZkbAmzoINwQ5ZyQK3v5ab7NswopuecUOSEFQQ/rxClyo91Ux2J0B4
+	SVPYbayod0S6tmeh+yeo0cCjdEJkidkzPD/WovTh9jnpFRNjIJT/Lq1+i/RCehzOcwcvGHQpImH
+	Ycnyk17BPsfFIQQ==
+X-Google-Smtp-Source: AGHT+IE6QHqF5cRG4JjJmwec3MCxJQBktPbBLGT04dKoF50/oeGUlWRe2hxM1IPr9OMe35BOwAM1yw==
+X-Received: by 2002:a17:903:24f:b0:234:bca7:292e with SMTP id d9443c01a7336-2366afe6223mr256773915ad.14.1750227110691;
+        Tue, 17 Jun 2025 23:11:50 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.13])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d8a4d3fsm91393555ad.64.2025.06.17.23.11.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 17 Jun 2025 23:11:50 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: david@redhat.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v4 3/3] vfio/type1: optimize vfio_unpin_pages_remote() for large folio
+Date: Wed, 18 Jun 2025 14:11:43 +0800
+Message-ID: <20250618061143.6470-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <ce2af146-499b-4fce-8095-6c5471fdf288@redhat.com>
+References: <ce2af146-499b-4fce-8095-6c5471fdf288@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next v6 10/12] net/mlx5e: Implement queue mgmt ops and
- single channel swap
-To: Mark Bloch <mbloch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Simon Horman <horms@kernel.org>
-Cc: saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
- Leon Romanovsky <leon@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Richard Cochran <richardcochran@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- John Fastabend <john.fastabend@gmail.com>,
- Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Dragos Tatulea <dtatulea@nvidia.com>
-References: <20250616141441.1243044-1-mbloch@nvidia.com>
- <20250616141441.1243044-11-mbloch@nvidia.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Zhu Yanjun <yanjun.zhu@linux.dev>
-In-Reply-To: <20250616141441.1243044-11-mbloch@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-在 2025/6/16 7:14, Mark Bloch 写道:
-> From: Saeed Mahameed <saeedm@nvidia.com>
+On Tue, 17 Jun 2025 15:47:09 +0200, david@redhat.com wrote:
+ 
+> > How do you think of this implementation?
+> > 
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 242b05671502..eb91f99ea973 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -2165,6 +2165,23 @@ static inline long folio_nr_pages(const struct folio *folio)
+> >          return folio_large_nr_pages(folio);
+> >   }
+> >   
+> > +/*
+> > + * folio_remaining_pages - Counts the number of pages from a given
+> > + * start page to the end of the folio.
+> > + *
+> > + * @folio: Pointer to folio
+> > + * @start_page: The starting page from which to begin counting.
+> > + *
+> > + * Returned number includes the provided start page.
+> > + *
+> > + * The caller must ensure that @start_page belongs to @folio.
+> > + */
+> > +static inline unsigned long folio_remaining_pages(struct folio *folio,
+> > +               struct page *start_page)
+> > +{
+> > +       return folio_nr_pages(folio) - folio_page_idx(folio, start_page);
+> > +}
+> > +
+> >   /* Only hugetlbfs can allocate folios larger than MAX_ORDER */
+> >   #ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
+> >   #define MAX_FOLIO_NR_PAGES     (1UL << PUD_ORDER)
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 15debead5f5b..14ae2e3088b4 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -242,7 +242,7 @@ static inline struct folio *gup_folio_range_next(struct page *start,
+> >   
+> >          if (folio_test_large(folio))
+> >                  nr = min_t(unsigned int, npages - i,
+> > -                          folio_nr_pages(folio) - folio_page_idx(folio, next));
+> > +                          folio_remaining_pages(folio, next));
+> >   
+> >          *ntails = nr;
+> >          return folio;
+> > diff --git a/mm/page_isolation.c b/mm/page_isolation.c
+> > index b2fc5266e3d2..34e85258060c 100644
+> > --- a/mm/page_isolation.c
+> > +++ b/mm/page_isolation.c
+> > @@ -96,7 +96,7 @@ static struct page *has_unmovable_pages(unsigned long start_pfn, unsigned long e
+> >                                  return page;
+> >                          }
+> >   
+> > -                       skip_pages = folio_nr_pages(folio) - folio_page_idx(folio, page);
+> > +                       skip_pages = folio_remaining_pages(folio, page);
+> >                          pfn += skip_pages - 1;
+> >                          continue;
+> >                  }
+> > ---
 > 
-> The bulk of the work is done in mlx5e_queue_mem_alloc, where we allocate
-> and create the new channel resources, similar to
-> mlx5e_safe_switch_params, but here we do it for a single channel using
-> existing params, sort of a clone channel.
-> To swap the old channel with the new one, we deactivate and close the
-> old channel then replace it with the new one, since the swap procedure
-> doesn't fail in mlx5, we do it all in one place (mlx5e_queue_start).
-> 
-> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
-> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
-> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-> ---
->   .../net/ethernet/mellanox/mlx5/core/en_main.c | 98 +++++++++++++++++++
->   1 file changed, 98 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> index a51e204bd364..873a42b4a82d 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-> @@ -5494,6 +5494,103 @@ static const struct netdev_stat_ops mlx5e_stat_ops = {
->   	.get_base_stats      = mlx5e_get_base_stats,
->   };
->   
-> +struct mlx5_qmgmt_data {
-> +	struct mlx5e_channel *c;
-> +	struct mlx5e_channel_param cparam;
-> +};
-> +
-> +static int mlx5e_queue_mem_alloc(struct net_device *dev, void *newq,
-> +				 int queue_index)
-> +{
-> +	struct mlx5_qmgmt_data *new = (struct mlx5_qmgmt_data *)newq;
-> +	struct mlx5e_priv *priv = netdev_priv(dev);
-> +	struct mlx5e_channels *chs = &priv->channels;
-> +	struct mlx5e_params params = chs->params;
+> Guess I would have pulled the "min" in there, but passing something like 
+> ULONG_MAX for the page_isolation case also looks rather ugly.
 
-RCT (Reverse Christmas Tree) ?
+Yes, the page_isolation case does not require the 'min' logic. Since
+there are already places in the current kernel code where
+folio_remaining_pages() is used without needing min, we could simply
+create a custom wrapper function based on folio_remaining_pages() only
+in those specific scenarios where min is necessary.
 
-Yanjun.Zhu
+Following this line of thinking, the wrapper function in vfio would
+look something like this.
 
-> +	struct mlx5_core_dev *mdev;
-> +	int err;
-> +
-> +	mutex_lock(&priv->state_lock);
-> +	if (!test_bit(MLX5E_STATE_OPENED, &priv->state)) {
-> +		err = -ENODEV;
-> +		goto unlock;
-> +	}
-> +
-> +	if (queue_index >= chs->num) {
-> +		err = -ERANGE;
-> +		goto unlock;
-> +	}
-> +
-> +	if (MLX5E_GET_PFLAG(&chs->params, MLX5E_PFLAG_TX_PORT_TS) ||
-> +	    chs->params.ptp_rx   ||
-> +	    chs->params.xdp_prog ||
-> +	    priv->htb) {
-> +		netdev_err(priv->netdev,
-> +			   "Cloning channels with Port/rx PTP, XDP or HTB is not supported\n");
-> +		err = -EOPNOTSUPP;
-> +		goto unlock;
-> +	}
-> +
-> +	mdev = mlx5_sd_ch_ix_get_dev(priv->mdev, queue_index);
-> +	err = mlx5e_build_channel_param(mdev, &params, &new->cparam);
-> +	if (err)
-> +		goto unlock;
-> +
-> +	err = mlx5e_open_channel(priv, queue_index, &params, NULL, &new->c);
-> +unlock:
-> +	mutex_unlock(&priv->state_lock);
-> +	return err;
-> +}
-> +
-> +static void mlx5e_queue_mem_free(struct net_device *dev, void *mem)
-> +{
-> +	struct mlx5_qmgmt_data *data = (struct mlx5_qmgmt_data *)mem;
-> +
-> +	/* not supposed to happen since mlx5e_queue_start never fails
-> +	 * but this is how this should be implemented just in case
-> +	 */
-> +	if (data->c)
-> +		mlx5e_close_channel(data->c);
-> +}
-> +
-> +static int mlx5e_queue_stop(struct net_device *dev, void *oldq, int queue_index)
-> +{
-> +	/* In mlx5 a txq cannot be simply stopped in isolation, only restarted.
-> +	 * mlx5e_queue_start does not fail, we stop the old queue there.
-> +	 * TODO: Improve this.
-> +	 */
-> +	return 0;
-> +}
-> +
-> +static int mlx5e_queue_start(struct net_device *dev, void *newq,
-> +			     int queue_index)
-> +{
-> +	struct mlx5_qmgmt_data *new = (struct mlx5_qmgmt_data *)newq;
-> +	struct mlx5e_priv *priv = netdev_priv(dev);
-> +	struct mlx5e_channel *old;
-> +
-> +	mutex_lock(&priv->state_lock);
-> +
-> +	/* stop and close the old */
-> +	old = priv->channels.c[queue_index];
-> +	mlx5e_deactivate_priv_channels(priv);
-> +	/* close old before activating new, to avoid napi conflict */
-> +	mlx5e_close_channel(old);
-> +
-> +	/* start the new */
-> +	priv->channels.c[queue_index] = new->c;
-> +	mlx5e_activate_priv_channels(priv);
-> +	mutex_unlock(&priv->state_lock);
-> +	return 0;
-> +}
-> +
-> +static const struct netdev_queue_mgmt_ops mlx5e_queue_mgmt_ops = {
-> +	.ndo_queue_mem_size	=	sizeof(struct mlx5_qmgmt_data),
-> +	.ndo_queue_mem_alloc	=	mlx5e_queue_mem_alloc,
-> +	.ndo_queue_mem_free	=	mlx5e_queue_mem_free,
-> +	.ndo_queue_start	=	mlx5e_queue_start,
-> +	.ndo_queue_stop		=	mlx5e_queue_stop,
-> +};
-> +
->   static void mlx5e_build_nic_netdev(struct net_device *netdev)
->   {
->   	struct mlx5e_priv *priv = netdev_priv(netdev);
-> @@ -5504,6 +5601,7 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
->   	SET_NETDEV_DEV(netdev, mdev->device);
->   
->   	netdev->netdev_ops = &mlx5e_netdev_ops;
-> +	netdev->queue_mgmt_ops = &mlx5e_queue_mgmt_ops;
->   	netdev->xdp_metadata_ops = &mlx5e_xdp_metadata_ops;
->   	netdev->xsk_tx_metadata_ops = &mlx5e_xsk_tx_metadata_ops;
->   	netdev->request_ops_lock = true;
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -801,16 +801,40 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
+        return pinned;
+ }
+ 
++static inline unsigned long vfio_folio_remaining_pages(
++               struct folio *folio, struct page *start_page,
++               unsigned long max_pages)
++{
++       if (!folio_test_large(folio))
++               return 1;
++       return min(max_pages,
++                  folio_remaining_pages(folio, start_page));
++}
++
 
+---
+
+Does this approach seem acceptable to you?
+
+Thanks,
+Zhe
