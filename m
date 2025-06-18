@@ -1,219 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9276285C8E;
-	Wed, 18 Jun 2025 14:40:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37BE2EA46E;
+	Wed, 18 Jun 2025 14:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257611; cv=none; b=MMTRkXoZ9axzi/AbTsUafHvLov+qKC1McFhv+3EkmOzAzVQdGR7Xp3FISXKAbBRkH7ixFDUvrZ9GJ5WBdyUSSUxjN0uxU7Jws2hIU99fPIs1jpJRm7CiZTBgbGU7ipt+2EBTTHguCGMIU4QmjjCv6fFM7IGoWUZ1En1ishobxoA=
+	t=1750257658; cv=none; b=tYYUXM3hJ01K7CasCx62Y6ef+sIMa+zlA79iC6DNyzagalPESMiLHC9Xm+FjPyalJYVG7Djllz+PKK6cUw14eS8/kyG/eLbnYKAZexk9V6u7imm7grLLZ72Hl2NkQ/6teODGQyCtJL19vqVpoU0Ab40jNw5cQIqf/bigAK4KXx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257611; c=relaxed/simple;
-	bh=Hvjt5mvmBXT7F/XR96SVx2NWm++TIC0IAHqhT8Dl+DU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u8HLzRkJa94LmhSJhd5gOPUfzNyN3jo7Bz+JAsVZnkGqbSgbWSaFC8Aawp1/8eUvjVe+Hkfkj2vpUGlME7OgOuBgcgvZcDTv6rLhIRc5/C0a0HNF+7VYGLk6CNlOgpk2ffJ2KF7uEKuReLQj9QxDNizTHWb7lZLgaWCMOnp9NIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a+4tQe71; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750257658; c=relaxed/simple;
+	bh=MtBYd0YqvCToULpVWPvQ6YQNEEYqx1BJQAEVFsIlfCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=biW9w2A/iHTwZL/vns2v/+mGGx/+UtJ65LjUkH3v2C4ZTMi4NKHASEMoFlKGjLnhRZwoMXKGbFAQ1VA8yfVSkbGOk6mZ2eTo/FUG59SojhOOwUoo4Zoifm0dad5bWCKeyiI7GLFMLXXE0cxF7Sx9/eR5HGwSgcZQj5bu+pZTODs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXYqYQow; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a+4tQe71"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF497C4CEE7;
-	Wed, 18 Jun 2025 14:40:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXYqYQow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B44C4CEE7;
+	Wed, 18 Jun 2025 14:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750257610;
-	bh=Hvjt5mvmBXT7F/XR96SVx2NWm++TIC0IAHqhT8Dl+DU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=a+4tQe71pzIVfYwLGd/4H7AlntOQ3YgtfA3mtG/ffElIWzdvfR1Pfl20EgsW0ewjD
-	 bfAoS9+/xZgP23hFLRu82thEbLjC/p/Vh5Nm03knKRjv6SLOHhcgri3Y2DKhdvOH/S
-	 eRIepCF8P5HwdZFISKsyiQ1YVB6b7733nGnKFB3i2O5aBRzRUmZCwBUesmtqJZ/5/W
-	 6vyZbJeA1By88Zx6pt1Yiz3EXIvNq+L25kQvRp1QbxbCJIchbKw1YFVlAG2zwgW+Lq
-	 h6me0sUSklS4XyBNwiBiMVeTGmigxl+rIeDouLYX+ZAoSLmbXRyf9adG3r+Ba3/VM3
-	 Tg9yK1F2stvfA==
-Date: Wed, 18 Jun 2025 16:40:02 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: "Alexandre Courbot" <gnurou@gmail.com>
-Cc: "Albert Esteve" <aesteve@redhat.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Hans
- Verkuil" <hverkuil@xs4all.nl>, "Jason Wang" <jasowang@redhat.com>, "Xuan
- Zhuo" <xuanzhuo@linux.alibaba.com>, Eugenio =?UTF-8?B?UMOpcmV6?=
- <eperezma@redhat.com>, <gurchetansingh@google.com>,
- <daniel.almeida@collabora.com>, <adelva@google.com>,
- <changyeon@google.com>, <nicolas.dufresne@collabora.com>,
- <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
- <virtualization@lists.linux.dev>
-Subject: Re: [PATCH v3] media: add virtio-media driver
-Message-ID: <20250618164002.10220d81@sal.lan>
-In-Reply-To: <DAPQ1LPH05P4.HLIMQEJCRHLX@gmail.com>
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
-	<20250526141316.7e907032@foz.lan>
-	<DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
-	<20250527111311.105246f2@sal.lan>
-	<CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
-	<20250527153547.6603eaf4@sal.lan>
-	<CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
-	<20250617104938.09d21b7c@foz.lan>
-	<DAPQ1LPH05P4.HLIMQEJCRHLX@gmail.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1750257657;
+	bh=MtBYd0YqvCToULpVWPvQ6YQNEEYqx1BJQAEVFsIlfCY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DXYqYQowBIk5OsSUlcIaYr9pUiMvHEBs3Pqac0Eb7Xk1iz4A/Locx3gCanl44crW2
+	 rLgFpvRMDRfmJlIDB9uK3eaDi9SHsGULMwVKw2InKZmXbDzY36iyh2/4LurVAR0jBB
+	 CL8duK28vZwzncDGaHzUXENGo1wyxTjtv4KUabC47CBxGe+ma9OCChFr5c24oTuWbw
+	 m5k6kuEOWCHZ2HA62OXgJncqbqU+VCtiEyC5Z5xQC57tySqEK6rFOzcksQdxxBf6V3
+	 IaZsSZ7H0WhgKZw3ULGDeQGhHVhpNheXj4z/8M7UYbbk+QGPtBldKmlhzMNrXsSE37
+	 qhFvjzwarPnKg==
+Message-ID: <c3eb842a-61ee-4884-9394-856bcee1a476@kernel.org>
+Date: Wed, 18 Jun 2025 16:40:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/12] dt-bindings: samsung,mipi-dsim: document exynos7870
+ DSIM compatible
+To: Kaustabh Chakraborty <kauschluss@disroot.org>
+Cc: Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>,
+ Kyungmin Park <kyungmin.park@samsung.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+References: <20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org>
+ <20250612-exynos7870-dsim-v1-10-1a330bca89df@disroot.org>
+ <5672e2ee-a828-4555-bf78-9d75c58840bd@kernel.org>
+ <9e2f29d3763ea50b30e5a493551627cd@disroot.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <9e2f29d3763ea50b30e5a493551627cd@disroot.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Em Wed, 18 Jun 2025 23:16:47 +0900
-"Alexandre Courbot" <gnurou@gmail.com> escreveu:
-
-> Hi Mauro,
+On 18/06/2025 16:27, Kaustabh Chakraborty wrote:
+> On 2025-06-18 10:00, Krzysztof Kozlowski wrote:
+>> On 12/06/2025 17:18, Kaustabh Chakraborty wrote:
+>>> Add compatible string for Exynos7870 DSIM bridge controller. The
+>>> devicetree node requires four clock sources, named:
+>>> - bus_clk
+>>> - phyclk_mipidphy0_bitclkdiv8
+>>> - phyclk_mipidphy0_rxclkesc0
+>>> - sclk_mipi
+>>>
+>>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>>> ---
+>>>  .../bindings/display/bridge/samsung,mipi-dsim.yaml | 26 ++++++++++++++++++++++
+>>>  1 file changed, 26 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml b/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml
+>>> index 1acad99f396527192b6853f0096cfb8ae5669e6b..887f3ba1edd24a177a766b1b523d0c197ff1123a 100644
+>>> --- a/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/samsung,mipi-dsim.yaml
+>>> @@ -24,6 +24,7 @@ properties:
+>>>            - samsung,exynos5410-mipi-dsi
+>>>            - samsung,exynos5422-mipi-dsi
+>>>            - samsung,exynos5433-mipi-dsi
+>>> +          - samsung,exynos7870-mipi-dsi
+>>>            - fsl,imx8mm-mipi-dsim
+>>>            - fsl,imx8mp-mipi-dsim
+>>>        - items:
+>>> @@ -144,6 +145,31 @@ required:
+>>>  
+>>>  allOf:
+>>>    - $ref: ../dsi-controller.yaml#
+>>> +  - if:
+>>> +      properties:
+>>> +        compatible:
+>>> +          contains:
+>>> +            const: samsung,exynos7870-mipi-dsi
+>>> +
+>>> +    then:
+>>> +      properties:
+>>> +        clocks:
+>>> +          minItems: 4
+>>
+>> maxItems: 4
 > 
-> On Tue Jun 17, 2025 at 5:49 PM JST, Mauro Carvalho Chehab wrote:
-> > Hi Alex,
-> >
-> > Em Tue, 27 May 2025 23:03:39 +0900
-> > Alexandre Courbot <gnurou@gmail.com> escreveu:
-> >  
-> >> > > > Btw, I was looking at:
-> >> > > >
-> >> > > >         https://github.com/chromeos/virtio-media
-> >> > > >
-> >> > > > (I'm assuming that this is the QEMU counterpart, right?)    
-> >> > >
-> >> > > crosvm actually, but QEMU support is also being worked on.    
-> >> >
-> >> > Do you have already QEMU patches? The best is to have the Kernel driver
-> >> > submitted altogether with QEMU, as Kernel developers need it to do the
-> >> > tests. In my case, I never use crosvm, and I don't have any Chromebook
-> >> > anymore.    
-> >> 
-> >> IIRC Albert Esteve was working on this, maybe he can share the current status.  
-> >
-> > Any news regards to it?  
+> Will replace. maxItems == minItems implicit if maxItems present and
+> minItems absent.
+
+No, you need both. Add maxItemsd. Look at all or most of Exynos bindings.
+
 > 
-> Albert shared the latest status. There is one in-flight patch series
-> required in qemu [1], and then this branch of vhost-device should
-> contain the necessary support [2]. Albert is waiting for the virtio spec
-> to get merged before sending a pull request IIUC.
+>>
+>>> +
+>>> +        clock-names:
+>>> +          items:
+>>> +            - const: bus_clk
+>>> +            - const: phyclk_mipidphy0_bitclkdiv8
+>>> +            - const: phyclk_mipidphy0_rxclkesc0
+>>> +            - const: sclk_mipi
+>>
+>> Does any existing driver code actually depends on the names? If not, we
+>> switched in Samsung in general to names matching the input or the
+>> function, not the name of provider. bus, bit (or bitdiv?), rx or esc0, sclk 
 > 
-> [1] https://patchew.org/QEMU/20250217164012.246727-1-aesteve@redhat.com/
-> [2] https://github.com/aesteve-rh/vhost-device/tree/virtio-media
+> Yeah, Exynos5433 uses it. Code is here [1].
+
+It is fine then.
+
 > 
-> >  
-> >> Note that crosvm does not require a Chromebook, you can build and run
-> >> it pretty easily on a regular PC. I have put together a document to
-> >> help with that:
-> >> 
-> >> https://github.com/chromeos/virtio-media/blob/main/TRY_IT_OUT.md  
-> >
-> > I started looking on it today. Already installed crossvm (I had to
-> > install libcap-devel to build it). Still, I'm not familiar with
-> > crossvm, which is a little be painful. In particular, how can I
-> > enable network on it and speedup it?  
-> 
-> There is a "./tools/examples/setup_network" in the crosvm repository that
-> will setup a TAP device. Once this is done, you can pass the "--net
-> tap-name=crosvm_tap" argument to crosvm, and the network device should
-> be visible and usable.
-> 
-> Let me reply to the rest of your questions in your latest mail, with the
-> most recent logs.
+> Though, I could get around this if you would like to. Would need to add
+> a few more patches.
 
-Heh, I just managed to get it work maybe 10 minutes before your e-mail...
+If you want to work on this, then it would be useful - add clock names
+per variant/device and just clk_get_bulk() on supplied array. Up to you.
 
-I'm building crossvm with:
 
-	cargo build --release --features  "gpu,media,virgl_renderer,x"
-
-To also have GPU working.
-
-Network setup required a rather complex script to set it up without
-breaking my ssh section with the machine where I'm running crossvm.
-
-In case you need, I'm enclosing it.
-
-Now, I need to allocate another time slot for tests and review.
-
----
-
-#!/bin/bash
-
-PHY=enp0s25
-BRIDGE=crossvm_br
-TAP=crossvm_tap
-
-IP_MASK=$(ip -br addr show $PHY | awk '{print $3}' | grep -oE '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/[0-9]+')
-if [ -z "$IP_MASK" ]; then
-  echo "Failed to detect IP address on $PHY. Exiting."
-  exit 1
-fi
-
-GW=$(ip -br route show default dev $PHY | awk '{print $3}')
-if [ -z "$GW" ]; then
-  echo "Failed to detect default gateway on $PHY. Exiting."
-  exit 1
-fi
-
-restore_network() {
-  echo "Restoring original network config on $PHY..."
-  sudo ip link set dev $BRIDGE down || true
-  sudo ip link del $BRIDGE || true
-  sudo ip link set dev $TAP down || true
-  sudo ip tuntap del dev $TAP mode tap || true
-
-  sudo ip addr flush dev $PHY
-  sudo ip addr add ${IP_MASK} dev $PHY
-  sudo ip link set dev $PHY up
-  sudo ip route add default via $GW
-}
-
-if ! lsmod | grep -q '^bridge'; then
-    sudo modprobe bridge
-fi
-
-trap 'catch $LINENO "$BASH_COMMAND"' ERR
-
-catch() {
-    echo "Error on line $1: $2"
-    restore_network
-    exit 1
-}
-
-if ip link show $TAP &>/dev/null; then
-  echo "Removing existing tap $TAP"
-  sudo ip link set dev $TAP down
-  sudo ip tuntap del dev $TAP mode tap
-fi
-
-if ip link show $BRIDGE &>/dev/null; then
-  echo "Removing existing bridge $BRIDGE"
-  sudo ip link set dev $BRIDGE down
-  sudo ip link del $BRIDGE
-fi
-
-# Create bridge device
-sudo ip link add name $BRIDGE type bridge
-sudo ip link set dev $BRIDGE up
-sudo ip link set dev $BRIDGE type bridge forward_delay 0
-
-# Add physical interface to bridge
-sudo ip link set dev $PHY master $BRIDGE
-
-# Create tap device
-sudo ip tuntap add dev $TAP mode tap
-sudo ip link set dev $TAP up
-
-# Add tap to bridge
-sudo ip link set dev $TAP master $BRIDGE
-
-# Get an address to the bridge
-sudo dhclient $BRIDGE
-
-# Start crossvm
-
-sudo ./crosvm/target/release/crosvm run \
-  linux/arch/x86/boot/bzImage \
-  -c 4 -m size=4096 \
-  --disable-sandbox \
-  --block debian-12.img \
-  -p "root=/dev/vda1" \
-  --v4l2-proxy /dev/video0 \
-  --gpu backend=virglrenderer \
-  --net tap-name=crossvm_tap,vhost-net
+Best regards,
+Krzysztof
