@@ -1,124 +1,183 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F421A5BAF;
-	Wed, 18 Jun 2025 09:57:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBE02836A3;
+	Wed, 18 Jun 2025 09:59:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240679; cv=none; b=aFEqFlEZjww9p1kgWFIjsj8DVRFe9osh/vZ3nePAA4Rh5NPPnWxNeBrZ1Trt3j5dh2kf7KnZ5zPpSSbywvVKRo0gcx0kyFTHVE9og5VnmNSNOX9maCJQY8sT2gbm+I7Tu5dvw47TmYfM2TEnGBa7wPcWDZVSJdTE4NYw3MpCg5I=
+	t=1750240774; cv=none; b=mX18MvcdBI1ipCZA7yxPgfGd9VnMKcAeRiMnaZJmyV9VlNn/Lan8ddpR0rYsycjAKQSKoIrJKJA+SWqKqFpASdiyhRYLJ+e9NEKQD95zicsJ84usqkmKkSQbiQh4VTDFwiEqKudCu1nKn58KxLxiONxaRgkmBR82MY7AOPCRIno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750240679; c=relaxed/simple;
-	bh=sJZp6Cty2kULs3H72Uqi/r8D1dZGtmrOYsu2JE7gUsw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ftg+R2jnIlEVqZAQrgGwOHSH2AJBxWf3aYf0yjuzaJC9sqI7zpu3+I0sv/JthLRSYNkiExpnFnc2t2JIPjKiUGoRp5K8oQ5Lr6iuYrwdclUVwhaRmEz4AzMic/lhqMnvOzk5MpMHA5ceveP5M1sTB7TywcOxSqbZfGt6RkaX3kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/gp2DTB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750240774; c=relaxed/simple;
+	bh=467CR6klSO/rABH5qwhEowl4H/h3tmem9X+4qwHlQvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PpUNKXd7lIKmJ8PumO7w4nQNOxJOeK5+OkA2zJeMYcCSVvIyyneOtYUWgXpPdthS9IqMa4O7v7MfL3pjrC/89gj7A6j0coz4FKPeGeyyXVulx5yLgGAUOqpBRYGI7SvpB+TngIJu8Z522gACsJ/bcw0Nk7fI0EErMCF16kGxs+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FkGPvADh; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/gp2DTB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7274C4CEED;
-	Wed, 18 Jun 2025 09:57:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750240679;
-	bh=sJZp6Cty2kULs3H72Uqi/r8D1dZGtmrOYsu2JE7gUsw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c/gp2DTBC521GSxX7SVZvNrT3kgliij0pmAbrvFV0I9l47OXf6OCD9cP12jCkVX2V
-	 amc4h0macNXFTFm1nS7La04OBKCZDvjfbj1qprBY3Z06nRcSjaPFfRglk3TDIIATeY
-	 xjPuiLNptl72owwbeySXRa1NmzpSenle0nueKa5km6uIjai32GivwIYiJ07z3nwi5W
-	 Pd/+Kt9eaS+ldM30tAAFnTJSnXhQYZt2Xy4liv5CZv6FeAbILAo3goIN5NqxY+w2LI
-	 PLal01E4wKJGe4GaCuWiN0/P2gqmqrYUoP6J7iO7WXk2UI6ST7U78MmgVlFBrWpW9B
-	 EKRBR2vLaWWcQ==
-Message-ID: <99e31fd7-e0b6-406f-bf4c-ceee8a0db93b@kernel.org>
-Date: Wed, 18 Jun 2025 11:57:54 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FkGPvADh"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-60794c43101so10586339a12.1;
+        Wed, 18 Jun 2025 02:59:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750240771; x=1750845571; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eaZUxZfR4LVFlXZ9G/sKKJWMQAC209gl7LEnCa9qfYw=;
+        b=FkGPvADhAX8Rd2/W3pgohWwtTrppe332M/TaU12D6ZMY2o4AgZcwExYyMAP/Gp1Eet
+         f3NE3qcDcoBKfKd9isCccv1jELK7Kc/hoEJV8X7Qy/yLoZeS6UAGxqZ2xX5Ewn19krax
+         VR8G9RYGIPCz/MdQVI6QTkGsitKygIfxEbbRKDnaOvOVKehN9U7THg9hCD9IH2uuRu9G
+         mH6mjqlZlCyfY77s5wlNpBSbBAwZaqa/izEYFscWTJYWVtk+ceSrseg1TOwJuLNjUdb8
+         n/hektjt0z5F0CQoehcRIg4BwyQu29F64vS4IN/tgeaXUI+/dPp1oI1/tKehS7hAqHfs
+         ydLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750240771; x=1750845571;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eaZUxZfR4LVFlXZ9G/sKKJWMQAC209gl7LEnCa9qfYw=;
+        b=EuVpnnEMj7rJm8wiFBfIrQyUlO+5OopJyNg9bjDvxDT73ClM3NDGZGXBucM2DPzhhf
+         E7u02Mq8OVV7ZPLjQdywgCY3Dw0UCCDTnt8SE4/YL9yFFKuHDO3DPzsc4RlCpdcgYX2e
+         4VPwAGzvKiM9jgXggIHC3BQhqyqMPydCqZgY8szpFRnMQmMyKCZI6/NUz5cJAcsmBdhF
+         u/Un7qXJli4KgRGJP83L9rz7efM41wQ3EvHDtIZlAf1iiqfirn1zsk+52GiHvbJWBanr
+         J1XoBWq4NeHrynVhTFdEyN8SQ2t/lOCZpk/xNjAtyAViFghF2PcMU5Ksbp96eee8kiIz
+         zMQw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2rjo8O1A7AFsp3LxtNRT5iGHuYxyl+YR4Nm7Wt5pLPeZ6wFbVqW811EBkjnRpBwMWQrEIiKVK+5kTAg==@vger.kernel.org, AJvYcCVqnXs2W8NHppaq4/SoR3k8M9wF4gcKAUxfD+MuhBXeQn4wx9Y7Bk26Tq4xAj5MVV3858+OW6w78SgxHyVM@vger.kernel.org, AJvYcCXXqUCChCqqOqP1NZzjzO/dlJ5uCsXgTdmh+MvvWSg86pFZZ3yGR1dnYimDE3lSMjeJpX32qIL5EsCD@vger.kernel.org
+X-Gm-Message-State: AOJu0YysIp5tYlwnTIcV0Umc8IrjRSGW77lOGgJ2E77qkjMEqOBbZXBD
+	r7deXXIOTPFzs3l1wnDURg5J/lD/x921Ld2vQ9FMIjX+0cwQaPRw2lyr
+X-Gm-Gg: ASbGnctBrNxgOIpxGni48iCZenIeTcS9SuLrZeSTq7CCEmrsj0y4MSAE1SguSRJcJn1
+	tWO4cYCA3w9qVP2o5j/Gs4ppP1a/eNJJLy0ePUsI2gjoEO4tyljk8v8Fa+0CskQ53FOBdonERpE
+	3+yk3ymva+ATHkV8OKfcpO2Ay0FOQjv9axymIr/CdSyIK/14oSzwRdL1SssorxICci5SF3dVRvt
+	rh/ZcUSZL6qPQEkfBonk3AsBOMXXF7n+yonPw6gT5yLKouAiZzMFkEqqhwC+pxuPFeCdTGT7RI1
+	NHDWI8kMCbuyX+ROWHfb0tasTLekxx/ig2tOwOMRmoCT3YmKkvtRcGxbfs0QFPAwZYZ8RIF4b8c
+	=
+X-Google-Smtp-Source: AGHT+IHfnf3VtoJ26EFASDqtQTxgpRHeuZi+Y25r3DCIec5bB40siKeSLecbTcKf5YnOXIgJqGFk+w==
+X-Received: by 2002:a05:6402:350e:b0:607:1c07:727d with SMTP id 4fb4d7f45d1cf-608d09b8ec8mr13802281a12.23.1750240770954;
+        Wed, 18 Jun 2025 02:59:30 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.27.131.45])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a93b03sm9384691a12.54.2025.06.18.02.59.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 02:59:30 -0700 (PDT)
+From: Cosmin Tanislav <demonsingur@gmail.com>
+To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	Julien Massot <julien.massot@collabora.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-media@vger.kernel.org (open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
+	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
+	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)),
+	Cosmin Tanislav <cosmin.tanislav@analog.com>
+Subject: [PATCH v4 01/19] media: mc: Add INTERNAL pad flag
+Date: Wed, 18 Jun 2025 12:58:37 +0300
+Message-ID: <20250618095858.2145209-2-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250618095858.2145209-1-demonsingur@gmail.com>
+References: <20250618095858.2145209-1-demonsingur@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] arch: arm64: dts: exynos7870-on7xelte: enable display
- panel support
-To: Kaustabh Chakraborty <kauschluss@disroot.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250612-exynos7870-drm-dts-v1-0-88c0779af6cb@disroot.org>
- <20250612-exynos7870-drm-dts-v1-3-88c0779af6cb@disroot.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250612-exynos7870-drm-dts-v1-3-88c0779af6cb@disroot.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 12/06/2025 17:23, Kaustabh Chakraborty wrote:
-> Enable DECON and DSI nodes, and add the compatible display panel and
-> appropriate panel timings for this device. Also, disable the
-> simple-framebuffer node in favor of the panel.
-> 
-> This device has a 1080x1920 Synaptics TD4300 display panel.
-> 
-> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts b/arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts
-> index eb97dcc415423f405d7df9b9869b2db3432fb483..86a7fc2554a137752862c37d27cf9813b3ac5514 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos7870-on7xelte.dts
-> @@ -40,6 +40,8 @@ framebuffer@67000000 {
->  			height = <1920>;
->  			stride = <(1080 * 4)>;
->  			format = "a8r8g8b8";
-> +
-> +			status = "disabled";
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-This should be rather removed. What is the idea behind keeping disabled
-node?
+Internal source pads will be used as routing endpoints in V4L2
+[GS]_ROUTING IOCTLs, to indicate that the stream begins in the entity.
+Internal source pads are pads that have both SINK and INTERNAL flags set.
 
+Also prevent creating links to pads that have been flagged as internal and
+initialising SOURCE pads with INTERNAL flag set.
 
-Best regards,
-Krzysztof
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ .../userspace-api/media/mediactl/media-types.rst       |  8 ++++++++
+ drivers/media/mc/mc-entity.c                           | 10 ++++++++--
+ include/uapi/linux/media.h                             |  1 +
+ 3 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/userspace-api/media/mediactl/media-types.rst b/Documentation/userspace-api/media/mediactl/media-types.rst
+index 6332e8395263..f55ef055bcf8 100644
+--- a/Documentation/userspace-api/media/mediactl/media-types.rst
++++ b/Documentation/userspace-api/media/mediactl/media-types.rst
+@@ -361,6 +361,7 @@ Types and flags used to represent the media graph elements
+ .. _MEDIA-PAD-FL-SINK:
+ .. _MEDIA-PAD-FL-SOURCE:
+ .. _MEDIA-PAD-FL-MUST-CONNECT:
++.. _MEDIA-PAD-FL-INTERNAL:
+ 
+ .. flat-table:: Media pad flags
+     :header-rows:  0
+@@ -381,6 +382,13 @@ Types and flags used to represent the media graph elements
+ 	  enabled links even when this flag isn't set; the absence of the flag
+ 	  doesn't imply there is none.
+ 
++    *  -  ``MEDIA_PAD_FL_INTERNAL``
++       -  The internal flag indicates an internal pad that has no external
++	  connections. Such a pad shall not be connected with a link.
++
++	  The internal flag may currently be present only in a source pad where
++	  it indicates that the :ref:``stream <media-glossary-stream>``
++	  originates from within the entity.
+ 
+ One and only one of ``MEDIA_PAD_FL_SINK`` and ``MEDIA_PAD_FL_SOURCE``
+ must be set for every pad.
+diff --git a/drivers/media/mc/mc-entity.c b/drivers/media/mc/mc-entity.c
+index 045590905582..d1feacc60807 100644
+--- a/drivers/media/mc/mc-entity.c
++++ b/drivers/media/mc/mc-entity.c
+@@ -213,7 +213,9 @@ int media_entity_pads_init(struct media_entity *entity, u16 num_pads,
+ 		iter->index = i++;
+ 
+ 		if (hweight32(iter->flags & (MEDIA_PAD_FL_SINK |
+-					     MEDIA_PAD_FL_SOURCE)) != 1) {
++					     MEDIA_PAD_FL_SOURCE)) != 1 ||
++		    (iter->flags & MEDIA_PAD_FL_INTERNAL &&
++		     !(iter->flags & MEDIA_PAD_FL_SINK))) {
+ 			ret = -EINVAL;
+ 			break;
+ 		}
+@@ -1118,7 +1120,8 @@ int media_get_pad_index(struct media_entity *entity, u32 pad_type,
+ 
+ 	for (i = 0; i < entity->num_pads; i++) {
+ 		if ((entity->pads[i].flags &
+-		     (MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_SOURCE)) != pad_type)
++		     (MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_SOURCE |
++		      MEDIA_PAD_FL_INTERNAL)) != pad_type)
+ 			continue;
+ 
+ 		if (entity->pads[i].sig_type == sig_type)
+@@ -1148,6 +1151,9 @@ media_create_pad_link(struct media_entity *source, u16 source_pad,
+ 		return -EINVAL;
+ 	if (WARN_ON(!(sink->pads[sink_pad].flags & MEDIA_PAD_FL_SINK)))
+ 		return -EINVAL;
++	if (WARN_ON(source->pads[source_pad].flags & MEDIA_PAD_FL_INTERNAL) ||
++	    WARN_ON(sink->pads[sink_pad].flags & MEDIA_PAD_FL_INTERNAL))
++		return -EINVAL;
+ 
+ 	link = media_add_link(&source->links);
+ 	if (link == NULL)
+diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+index 1c80b1d6bbaf..80cfd12a43fc 100644
+--- a/include/uapi/linux/media.h
++++ b/include/uapi/linux/media.h
+@@ -208,6 +208,7 @@ struct media_entity_desc {
+ #define MEDIA_PAD_FL_SINK			(1U << 0)
+ #define MEDIA_PAD_FL_SOURCE			(1U << 1)
+ #define MEDIA_PAD_FL_MUST_CONNECT		(1U << 2)
++#define MEDIA_PAD_FL_INTERNAL			(1U << 3)
+ 
+ struct media_pad_desc {
+ 	__u32 entity;		/* entity ID */
+-- 
+2.49.0
+
