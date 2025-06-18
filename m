@@ -1,116 +1,122 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FEA2FEE0F;
-	Wed, 18 Jun 2025 17:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDA32EE981;
+	Wed, 18 Jun 2025 17:28:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750267670; cv=none; b=kZY8RTy9iFGxFB0lW2Fv/hEn84+XAbtjSz/pgPZGg8WjA1Sqlz5lpcC9DBv4hTq3U+cboV1mZ79UpMIEW3j1w3SapR3T4yxTVWxDtFoR9TTAerJjzgxG/wW5MD9ZWN7Z7JFGlFYnns6mI2P3Ei0B1ZMxwL9J7b+MrnOwGlEiShc=
+	t=1750267715; cv=none; b=ge6bZ5c6ROfJEGlN97wQoGNZvupAWsPjCWrvON/1PMmMtWo7GTzO5l8ZjHVtyVQUxoPxnlufFMBdIaDi9mRIKvX8VJm/K5C+sMTwjj9u1vAbgMb1A9Mi/9SIIpw7efvtRD1/OtBQqQRW1NnN4JV0iheTmA23CQCOeuA9bCn7s1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750267670; c=relaxed/simple;
-	bh=i6qGqcOLeZ+C33Fl0SoQO/hHSNceE95rDLEGVJmh26g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L8b+k0folKRPYdH3gsYtJYixHDcyzII5BzJqjLG7iPDU51HP72MRN0aS4vW8YfEMPbVJshYfcBWuckHTHQYq7cdD9sGCK/xEe9FqaS6C4oCyDLgdrCA7NLEzrHXNGfAkgWLlkgnJ4CF/M3Yj5pakLv6otVllPLHq+2AH5tl6+No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J0GMLe5i; arc=none smtp.client-ip=209.85.216.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750267715; c=relaxed/simple;
+	bh=MRtTDb6zKFq7acUaXRScDjvIeNIyaBRw7I6QThZzBzI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B9i7JZ0QCru8+qRmdIgj3wz9OeZ3EL+CRma8gD6nloPCSfSVhC4DtEzzSe/V+EEtC9JOfYKykRO7jzW8hDjZN6WnzEzTegelBMBcUyVL5ZHosOfTvzwmFmBUFIL0N0JcKBvO9+PB5417SYboihYkNprgQvgujcih/qy9BtjoJ9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=WcnvFg8E; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J0GMLe5i"
-Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-313336f8438so1414779a91.0;
-        Wed, 18 Jun 2025 10:27:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750267664; x=1750872464; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=u+q5GpQ2p91YPUwXGOT+L4Iu/3q5RIn50B6DUy0Q7so=;
-        b=J0GMLe5ibmi6acJy4t+xOstgKNyU4Ls6us72KXQ/ONM5Z1FEQgrzcGvQHbksMtFs/l
-         kecjHxqdi1zygRrJckNCsdGZDv5uTEYQo4oCDoSSki8vtVVYcfylbGkpJ5Y6r05WQEhO
-         Si9nO+/MyTcMKO4oP/4XmMCnNkeoTcal2m60Wq9PWl/hK2BO4P3ZvxcWUp26el0hCXks
-         EYIdakmgblUw3V5UqkRXaWCz5ukwyBJGfibzG/wyCjFVOSRuZ/6pDid+Z0C6KGmPOVyw
-         fla95oFxGmaXgEzkLVyp+RQB9agXe5jXSnqZzy1trF9EBAypwnGWoNu1Um3WQPHFDZjt
-         WbOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750267664; x=1750872464;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u+q5GpQ2p91YPUwXGOT+L4Iu/3q5RIn50B6DUy0Q7so=;
-        b=sYg7F97dikc/oI2gxa2BZ3BduzdcKR0uDWK4RpuNCCiFTpRPDUaw3Rzcms5CufSDVn
-         CSbFjjLl7AtSUBFgf+yMEnkCmrm7wScCHMikdZDqsldOpP4RvDt/v7ezXCtsgR7j1Oev
-         /b1Jls9sIAgkuk6os7DQxweEY58VXlGZqKLSznU9PMvidfoZZKGv/z4oIEQSUL7zT324
-         4D+et2hgp4rrz0bfflDcqSgCORrDdEsOYagQ8Mp1/Sp/l2bmdRgKp5WlUTTRqx76ZDsS
-         5atM4MoyCdGR84s72ZGKshCoOqNI8j6XTHT8rlFTwsg5JjY+j9tDFRHTYI3oozFfHLV0
-         RRIA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSkrLgRQhhCPfzi2KOapUzOwlZs3ptDbYc2g3rzJYoKm4xZDk+bmYkR4cv3IGKbI2xC+muSS2CklRD470/@vger.kernel.org, AJvYcCV70Fe/5OQXRj4NOKBDa3u/EZj2pjCLPP3F3P5Dnv6Y4Sa8wRldoiDJ+JWDrmu6z5ZPAhBB6JdH@vger.kernel.org, AJvYcCVZjfBKj4ZRVgEVhO6lwSqeF+H4F4dldTBGWrHkAd+tongmAuLIa+qZGM7+BShimplFIGc4KNy4zWyTcGh8u5w=@vger.kernel.org, AJvYcCViwPS3fxjYgoSlB+fWixMJSTXIkZw9zyl1gmkpwPGgIUEPmhPcprkU8/J1Qvk31vNtAXUE/iF8rzIWwdX8jkwi@vger.kernel.org, AJvYcCWEZ3gwZm9n2G+yPkZkq6KELxYzYv8DX7QUliNtlUbIebYXt66+AmVHXNOiDZaAW/Vdu2ergFQMYSs=@vger.kernel.org, AJvYcCWtnU7mPMIfHJaYYpWluXCIPO7Ok3zcpjRZRnCIOiVc+eBz3HSNwhFvv1ei/TpeAA/oUXLDqH6D0LSZ@vger.kernel.org, AJvYcCX83+XdGwZNRoGoa34UrUd7s8zoE4lnji8B1LvVyxTfVjbb+H8O6pnN7R1BNvJUwUkR/ws6bOitZ8bZq7Xc@vger.kernel.org, AJvYcCX9uariTuA4YFF35kFD9fohASw22CU+dwSr657npxYyWzi56b/z2eY12EWoRG2C8JO/15i9fFFOcEJfTNw=@vger.kernel.org, AJvYcCXMuKdOSk8RTrOIquyA9BaN6w4Na6hKzPT+9jx5h0A/1AIATGlC4vM+0NABKq77xod97AGUoJJEHkEb@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGCUTYA8MoG0WWyRm3wEsFaWG5muvWq4PcQdBwJED/i7pMdqZ6
-	VTh4tNKP1r7eFcNy0fjT1NDu3NlEJlB2r8oK+Zt551KgaQ9/ycmh7lSMIue1zCeC04EN5bYw0ov
-	VbAe9f6OMYO1hT01yJh9YPU5sWY83f2E=
-X-Gm-Gg: ASbGncsw8GCC5Gk0+8PGYz7Za69uyjTZi2SK9KICaByvy8vdpXZZ2W+iJDIc1VGTqkX
-	WokitcMFEVaO+yijF0ftOA+UPEnsGyOMbVV0KXZ/872tAoCXOcuyo0Z83DIQ0bD7+EaAvbhW0ww
-	vBwq00cl4ZFUXTulEar//+Q5S/mgnA5Y0IhlH5Gspd73g=
-X-Google-Smtp-Source: AGHT+IHgojIF7ZtAWL01BJX9X9RDL/KOffVgqU2TBitLwLXw3+WIYaOCUYiiv/uPX3E3RPRNcpmmIUzrPPvpRfNOxow=
-X-Received: by 2002:a17:90b:53ce:b0:311:fde5:c4ae with SMTP id
- 98e67ed59e1d1-3158bfee2a1mr70211a91.6.1750267664414; Wed, 18 Jun 2025
- 10:27:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="WcnvFg8E"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55IHRNLI1651479
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Wed, 18 Jun 2025 10:27:26 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55IHRNLI1651479
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750267647;
+	bh=m63C6JOQ1fUlADYONnZmhuti6E+3IB05tG2sue8SRrU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WcnvFg8EaZgck009HwjjfyIazOav6KvoJ+2tkDpyqJU+4kIHtClFIodSEKm3Segrg
+	 cyX5qDw6jSTG6aFzUsxGTsEIEB9eku40eX9ZWkOsMrbQgPNrXdbT4f/nm9SHBFWRfw
+	 55j9DxurEPHvzwopxRH747SXjx/pzcyBG7n99YGojFup8GlsFlaRD1UTDsY4ZptsN8
+	 O0e2uZ7uwS3YjbSd8HVXF6XftnOENksE2pWnHzHHKRPI8usbEB9rPQgNBH/ShdEIUo
+	 DT/tjVXGBBPCRFjzLrPrq4Oj9voYuAKOf8glk/vAoIUnAKUO8tnCVPLkNyIQuJLNC9
+	 rpuiZgvLLjmXQ==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, stable@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, peterz@infradead.org,
+        sohil.mehta@intel.com, brgerst@gmail.com, tony.luck@intel.com,
+        fenghuay@nvidia.com
+Subject: [PATCH v3 0/2] x86/traps: Fix DR6/DR7 initialization
+Date: Wed, 18 Jun 2025 10:27:21 -0700
+Message-ID: <20250618172723.1651465-1-xin@zytor.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com> <20250615-ptr-as-ptr-v12-6-f43b024581e8@gmail.com>
-In-Reply-To: <20250615-ptr-as-ptr-v12-6-f43b024581e8@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 18 Jun 2025 19:27:32 +0200
-X-Gm-Features: Ac12FXyjLr8F_PeGOXgNiD3lzcYVOjPw7Oy7KTgQZIrIWl7ZUXuM1dkxLpsBDQ8
-Message-ID: <CANiq72nji33-=cLnEkpsXyovctshNZ5-pheBBxQdNscWdReO_A@mail.gmail.com>
-Subject: Re: [PATCH v12 6/6] rust: enable `clippy::ref_as_ptr` lint
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
-	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Breno Leitao <leitao@debian.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 15, 2025 at 10:55=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
-> wrote:
->
->  rust/kernel/configfs.rs  | 20 ++++++--------------
->  rust/kernel/device_id.rs |  2 +-
->  rust/kernel/fs/file.rs   |  2 +-
+Sohil reported seeing a split lock warning when running a test that
+generates userspace #DB:
 
-Andreas, Christian, Danilo, Greg: it would be nice to get Acked-by's
-for your bits.
+  x86/split lock detection: #DB: sigtrap_loop_64/4614 took a bus_lock trap at address: 0x4011ae
 
-(This particular one can be tricky in other cases due to lifetime extension=
-.)
 
-Thanks!
+We investigated the issue and figured out:
 
-Cheers,
-Miguel
+  1) The warning is a false positive.
+
+  2) It is not caused by the test itself.
+
+  3) It occurs even when Bus Lock Detection (BLD) is disabled.
+
+  4) It only happens on the first #DB on a CPU.
+
+
+And the root cause is, at boot time, Linux zeros DR6.  This leads to
+different DR6 values depending on whether the CPU supports BLD:
+
+  1) On CPUs with BLD support, DR6 becomes 0xFFFF07F0 (bit 11, DR6.BLD,
+     is cleared).
+
+  2) On CPUs without BLD, DR6 becomes 0xFFFF0FF0.
+
+Since only BLD-induced #DB exceptions clear DR6.BLD and other debug
+exceptions leave it unchanged, even if the first #DB is unrelated to
+BLD, DR6.BLD is still cleared.  As a result, such a first #DB is
+misinterpreted as a BLD #DB, and a false warning is triggerred.
+
+
+Fix the bug by initializing DR6 by writing its architectural reset
+value at boot time.
+
+DR7 suffers from a similar issue, apply the same fix.
+
+
+This patch set is based on tip/x86/urgent branch as of today.
+
+Link to the previous patch set v2:
+https://lore.kernel.org/lkml/20250617073234.1020644-1-xin@zytor.com/
+
+Changes in v3:
+*) Polish initialize_debug_regs() (PeterZ).
+*) Rewrite the comment for DR6_RESERVED definition (Sohil and Sean).
+*) Reword the patch 2's changelog using Sean's description.
+*) Explain the definition of DR7_FIXED_1 (Sohil).
+*) Collect TB, RB, AB (PeterZ, Sohil and Sean).
+
+
+Xin Li (Intel) (2):
+  x86/traps: Initialize DR6 by writing its architectural reset value
+  x86/traps: Initialize DR7 by writing its architectural reset value
+
+ arch/x86/include/asm/debugreg.h      | 19 ++++++++++++----
+ arch/x86/include/asm/kvm_host.h      |  2 +-
+ arch/x86/include/uapi/asm/debugreg.h | 21 ++++++++++++++++-
+ arch/x86/kernel/cpu/common.c         | 24 ++++++++------------
+ arch/x86/kernel/kgdb.c               |  2 +-
+ arch/x86/kernel/process_32.c         |  2 +-
+ arch/x86/kernel/process_64.c         |  2 +-
+ arch/x86/kernel/traps.c              | 34 +++++++++++++++++-----------
+ arch/x86/kvm/x86.c                   |  4 ++--
+ 9 files changed, 72 insertions(+), 38 deletions(-)
+
+
+base-commit: 2aebf5ee43bf0ed225a09a30cf515d9f2813b759
+-- 
+2.49.0
+
