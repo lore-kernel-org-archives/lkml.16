@@ -1,116 +1,127 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652B52F364A;
-	Wed, 18 Jun 2025 16:47:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7761D5AB7;
+	Wed, 18 Jun 2025 16:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265280; cv=none; b=D6q8OY1cNTlVxdureny93LkfICNpaOOgJUFH1crNRvPcLK9A8TUZ4UliihuTGXUnvNJX3kjHIXPYhgnY9ltOgN1rR89lasmiuAcoFTyPqpbz8jN7kP6niQskkUcZvNgbVuOxJtUEWINcfBHzP01RHBUhhad7M8XkkteeyBT7OoE=
+	t=1750265303; cv=none; b=ju3BIYdeRr1ATXJXy5u0UUIuag2F3bWmcetEoa9lk6775jMjJlVeoOPNk1La+0J+KpWAvJhLUyWAsmVWwMJ3sJrz+y0PxUOuwdibA6/0Wue55jmiCeGOHarvQLX7pY7NPFyJn4NTGkdp/2LYqPT60NRdNZZt83OIs/3YjStq16s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265280; c=relaxed/simple;
-	bh=F/RVluyB9gnjvw7OXVFevuaIVS4h51tiTmrRF0NLT9k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kh9AOpggOkD9ZXobIeco1g5gkxHJ6WdpFXwDz+VDAZR4+mSRMjv/orb2ytqB3AW8wjfY7X9VVhEQkVuqyi3qcXAM4s+/0QRhuPcqsky21AKREARmB7Bh1eCO9MQzlFXGyeCqN0GcwS0B2sqd91mkSP31phXhCp+wujjNCnrm/6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s4Ey753k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mNGwdAN1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750265303; c=relaxed/simple;
+	bh=QycIY7NfqMtlDVCZpA26roUZJ6kC4SKuXb/WNtrRUQM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cKFOymZ15tOvD9G/mbi9VJHr3K+F8wNUlqKmzAXN9gFHMZQpHQlA44OOt/GUCafOC10FM3znvjySW/ZnWzCuZs+e97yBqfPAyGScZ2cJJnO0uuscCj+DT+rgWiHVu1lD7honcryyYQcemPXvTpbuUkHUXWQTXcUzJPOQb2uTaE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eSN70s40; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s4Ey753k";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mNGwdAN1"
-Date: Wed, 18 Jun 2025 18:47:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750265277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yhZT/XIdpaQC+/asQhhXC9885wUsFZcLhTwY9gLnL9Q=;
-	b=s4Ey753kPGRp8tZ6qkW4IkoAWK5XmT4V9M4txoh5ZjSDeFZo+STdJ14sIKsUWvTo3vOxfm
-	oj0tB4bstxuAWdrxwSiC6/c5HjfyAlQPGqiEKL3QnxiI5N9fxGks/gSUanKtSW5tRdn3Sw
-	D1iAwY8Oo5qgat1We5MeUuUgiEufWXqkPoroIe9GZ7i0xzkVe2Moye4XNGpmsB1hweyGk6
-	QngvKrqj3/XlhtrBX1vK/vRmss/QADpbDqwIJM957v/qJY8xHl9pPrWI4YY2SXaYbSCs6v
-	/PY+ZKVBYQB9mbtiHWpTeIV4JTIl9boIOTfec3xzuOXzHSG2Qmh1/S8Z5fwzEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750265277;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yhZT/XIdpaQC+/asQhhXC9885wUsFZcLhTwY9gLnL9Q=;
-	b=mNGwdAN1SiRoQILU+NDXkzk2vHgUWCecG6khQaSuoyvvxCqADqHALUO9G/hQSJAwgW+bAf
-	dzAprM0oizLsnYBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Calvin Owens <calvin@wbinvd.org>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
- hash
-Message-ID: <20250618164756.9CeqXYlG@linutronix.de>
-References: <20250602110027.wfqbHgzb@linutronix.de>
- <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
- <aFBQ8CBKmRzEqIfS@mozart.vkv.me>
- <20250617071628.lXtqjG7C@linutronix.de>
- <aFEz_Fzr-_-nGAHV@mozart.vkv.me>
- <20250617095037.sOnrJlPX@linutronix.de>
- <aFGTmn_CFkuTbP4i@mozart.vkv.me>
- <aFIhSYmDvzRgShIy@mozart.vkv.me>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSN70s40"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-313fab41fd5so910784a91.1;
+        Wed, 18 Jun 2025 09:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750265301; x=1750870101; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AW9mBOCDobrkScz6UXkBCPboXEmZQ8/FnXiXbPclB4M=;
+        b=eSN70s40qpq7jnkX+oy9DJbYbnuh2yvstI4JCzutMEL8/l+ZERcyWFULmj7Ox04Cyn
+         2D+TOCYPnc2AW17PuFKd931+NX4lGAVlQlmlzVKz6nD2sNpU5NR5shtIlDnbUMMuMIi4
+         IlbY8WUMgHNxL1c4frZeXsx10nYDbxz9yXs30UJp1Zs/tv9mob+TB1uX3W/+CjYlBnC6
+         cPLD3TQPkJBkeQd80Ub8BCdMNz/m9t9sEIPkC2BZ49ilm5kiD28bvROiRhM5Jnzla6ts
+         PTnqBV4xI4cof+wA0VsL/htv1d68XJzJSuwKbAxgnsK3uERKd1JtHgSWSzkRushpST8G
+         kIPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750265301; x=1750870101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AW9mBOCDobrkScz6UXkBCPboXEmZQ8/FnXiXbPclB4M=;
+        b=txgNJZ16L5HZf4XAYhvrJwr1CBjIDGiKG0JvEcSquNeTREObqgK/Nw5xogix8ebMhM
+         PQBd0xtxHLpkj6gxuhidvlC8cMUw406FWW+6bA4VR2IXONmE2DDLF0l7FfpcVOE5Ypk+
+         EvNimnzLkr5uXz3FXZof2eng0lGb1wenSxiA1dYZSL1Xg8grk06dyAhPXGESqH1tBOe0
+         umDP0HIr5NLxivtF7YtPSnbkdPHxeAA/Kqz4qLWVCcMGPtLX8XvO5/svgql39iO/0h7u
+         u38Nl9hv9BtJ2lOhP/D1bTAU5VJpo4wn3oKdV1Iy4e+2howGCqfdQUwx6Eyb8l/om5nP
+         kn2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUS1twIx4zM0kIUdlSaYFJPppDicW29q+DWyRKpKZwhvDFvJzigVrfFpRSo0Eye7dq1rC4FRw//pcrXf0NF@vger.kernel.org, AJvYcCUgR7TZUvAixNccqH+QQ6MDp89JCqXpHibI5WHmUyLR9rvCbwjYbuVuAx0gKwB0D/qUatUfNPtv0CxAXHgH/5o=@vger.kernel.org, AJvYcCVf+UWMu74r6A8YgWbtwMQPNDrY5IFbJc50lzRtisOp5Vro3SvsssvTqAbJR/krT0/RR/qr4WOj9R5P+2qu75kr@vger.kernel.org, AJvYcCW0FEho++f/s0vjVDOOz8eWWO9kNi9abotd8uJnEw6ZhQAARoAJG+1oKpib686hOZVM2V1ZSPNY3go9@vger.kernel.org, AJvYcCW0n3L3rBkKP07SIUj2EkJbXo2zA8qv3FqoJ0ldwbQiOJSlyCwbhn/NoON35Uoi9G0ID1uWdPEQA50=@vger.kernel.org, AJvYcCX/VSWQCRoa3TDibxvoGS/PuWu0CnCweSXLkimURE3sLaFj3SbeFAotwZXHLLIclyyLCtLBPsYt9doff/A=@vger.kernel.org, AJvYcCXC6rqSwhKJz/UnK2XPW61btCv7DIZUb2qTGOf2SZYv7SORhBh2M4Kk/x58x5v3lc/0bwUgVC75W6GtEeGn@vger.kernel.org, AJvYcCXFO1dpz3RkMW8uBiLLhO0WSnXn/TeLS+QgloUlN/bm9xVdS7W+nLFJf2i6PCfXSygYt9TQJBGC@vger.kernel.org, AJvYcCXJn2Tjr7pG1tGq2TmojsvR+btpGazMV32zKMnkjMlzZVrUq5UaBbQIIKKQPcq6UxYfZIsMBhys+aj9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5LorzkeLySDEATXmw3X1EqHD8gruSLbA6vK90uiyawzCQUyKL
+	FCaSHF+ySVfRPQfy0f6KxCFGCbxfGfIiJzd/4MCwy7wrKkfya74IGCbXW8lXDSOd5wgqgheJ2K+
+	Gw4OdmpOgrrVc1+vxQrjDHiiLL/WfLk8=
+X-Gm-Gg: ASbGncufnTPvqxr0Fa+2M23++5xjOaQz9+61RfTIL0mo4TeY1f98P7OPmojvg4dF4EA
+	xqocYsR4OGzU0GJADp7xrcb8ROkl2ZugIxywSMdMB/5vMi1KeYszzp4NLvHOJRs2vvw2TX7stSn
+	ZPx/zPxfBBhrL6C2RxY9TnWI9JcZSaY1Ync7aHgZOoeUU=
+X-Google-Smtp-Source: AGHT+IHbZPpDlzhGTWnV2PLbhxK3FWVyrT693fd1mp3Na/PixMVTH2mNNXQ1lkOox0fBpQYU583IqtWRcabC98kzYIs=
+X-Received: by 2002:a17:90b:53ce:b0:311:fde5:c4ae with SMTP id
+ 98e67ed59e1d1-3158bfee2a1mr6435a91.6.1750265300581; Wed, 18 Jun 2025 09:48:20
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com> <20250615-ptr-as-ptr-v12-1-f43b024581e8@gmail.com>
+In-Reply-To: <20250615-ptr-as-ptr-v12-1-f43b024581e8@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 18 Jun 2025 18:48:07 +0200
+X-Gm-Features: Ac12FXwww27fRmxpneEil4Z01A67o6MlxDze4sqqmIR4CifNVxQNGBiXiJdR-J0
+Message-ID: <CANiq72mfjzXj0f4PKPKg7QgbOrhay4CF_+TBgScecKWO6acmyQ@mail.gmail.com>
+Subject: Re: [PATCH v12 1/6] rust: enable `clippy::ptr_as_ptr` lint
+To: Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <vireshk@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Breno Leitao <leitao@debian.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <aFIhSYmDvzRgShIy@mozart.vkv.me>
 
-On 2025-06-17 19:15:37 [-0700], Calvin Owens wrote:
-> It takes longer with LTO disabled, but I'm still seeing some crashes.
->=20
-> First this WARN:
->=20
->     ------------[ cut here ]------------
->     WARNING: CPU: 2 PID: 1866190 at mm/slub.c:4753 free_large_kmalloc+0xa=
-5/0xc0
->     CPU: 2 UID: 1000 PID: 1866190 Comm: python3 Not tainted 6.16.0-rc2-no=
-lto-00024-g9afe652958c3 #1 PREEMPT=20
-=E2=80=A6
->     RIP: 0010:free_large_kmalloc+0xa5/0xc0
-=E2=80=A6
->     Call Trace:
->      <TASK>
->      futex_hash_free+0x10/0x40
-This points me to kernel/futex/core.c:1535, which is futex_phash_new.
-Thanks for the provided vmlinux.
-This is odd. The assignment happens only under &mm->futex_hash_lock and
-it a bad pointer. The kvmalloc() pointer is stored there and only
-remains there if a rehash did not happen before the task ended.
+On Sun, Jun 15, 2025 at 10:55=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
+>
+> Apply these changes and enable the lint -- no functional change
+> intended.
 
->      __mmput+0xb4/0xd0
->      exec_mmap+0x1e2/0x210
->      begin_new_exec+0x491/0x6c0
->      load_elf_binary+0x25d/0x1050
-=E2=80=A6
-> ...and then it oopsed (same stack as my last mail) about twenty minutes
-> later when I hit Ctrl+C to stop the build:
->=20
-=E2=80=A6
-> I enabled lockdep and I've got it running again.
->=20
-> I set up a little git repo with a copy of all the traces so far, and the
-> kconfigs I'm running:
->=20
->     https://github.com/jcalvinowens/lkml-debug-616
->=20
-> ...and I pushed the actual vmlinux binaries here:
->=20
->     https://github.com/jcalvinowens/lkml-debug-616/releases/tag/20250617
->=20
-> There were some block warnings on another machine running the same
-> workload, but of course they aren't necessarily related.
+We need one more for `opp` [1] -- Viresh: I can do it on apply, unless
+you disagree.
 
-I have no explanation so far.
+Cheers,
+Miguel
 
-Sebastian
+[1]
+
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index a566fc3e7dcb..bc82a85ca883 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -92,7 +92,7 @@ fn to_c_str_array(names: &[CString]) ->
+Result<KVec<*const u8>> {
+     let mut list =3D KVec::with_capacity(names.len() + 1, GFP_KERNEL)?;
+
+     for name in names.iter() {
+-        list.push(name.as_ptr() as _, GFP_KERNEL)?;
++        list.push(name.as_ptr().cast(), GFP_KERNEL)?;
+     }
+
+     list.push(ptr::null(), GFP_KERNEL)?;
