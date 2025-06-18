@@ -1,130 +1,125 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66CFB2DBF53;
-	Wed, 18 Jun 2025 09:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351FA2DE215
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240793; cv=none; b=fax3UQfZdxlAMD3ulZnDX3afOILjIYw6i7rcuN3sWayz54gzW2icXqQqnXg+5RdB34hI/1GeIpqjeB2DmSIDg7ya1yHaDZxv5DeKwurnw5Wsny4vwA7RD3Pv+tvB6iEYYlwKJekQyLUCJRrX0s49MQn1Fw3/Ub4tLnqbUvpFXlY=
+	t=1750240793; cv=none; b=MOSIYxDh3MBn37h4NG1x+rwf4flPXYNaDzx5PxFDZt25gogrg6QEH7kiAMaGSlvr6hTYIdUqmSQIMO8kg/IU888DsDDaOhhwi5cJorPQcvYfGCyWNU9xe5L3K3ujsGD9Hn4aQiptj1NDhWOVYlh4U08rr+/yQAiy8UdEa4ix8jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750240793; c=relaxed/simple;
-	bh=gIyaOL/GH2nwn0BYIMfsTgulPERxN4X2Ld4ChyXRgKM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XWXyYRyD1Bd9VDgF98ZgpBsAAyYhCnXVX+EEoaUv5u6P6aUKFejE26NV0pAOpSVG60GFXH17xuskcD7uNlDD9pKsCRSgn91mvXgR975gJNEM5GuqczFNwxKaZHlm9jbh0fK5us/BF5encHKjE4xxgZBCTlXU15/BtH6mpxeZTjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ferq98+c; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=k9MwYoc1zOwO3F/NDWi15b97VWDuRARPG5PckYENJ90=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RpLyJTRRzhGOLhRFfd7YfhEyO5OO6FReRShdGT+Kc/GpUGXcAdp2ycIKxJC9uQxvjSyhfTfIRJ48u1qbJn2V3TgGxSSnYKs50FPgDjazgZ8TpOGQKxz1TTWeo9j60s7BYpr8P4TxalRWmXD/j4rlehJBNgsp53J4a7HiFo8tFeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=FdyO0djb; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ferq98+c"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-607ea238c37so14134092a12.2;
-        Wed, 18 Jun 2025 02:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750240790; x=1750845590; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sX2+2gdHzfIqMHzK0HUE6rBPOILvK+9cIYaOod1fnc8=;
-        b=ferq98+c9LSpHDeqE/eyGUTAXC6ZvBU/rgpw/0iUUhcTLzfaHLLYh3KAVaG2o+Cc4j
-         X1l8Vwr6sS1jVjU+h4Asxi3Ou7nhGqtLtDpxt9B4j4ZaisULoYu3j00RY0WulTqWYGW0
-         nc1QFqHdNrp9tgf7MDXDlzQWGvFmieKsP4CobYfAKEOcbxdDx8gMtPxg76MsD2Z/19SO
-         GB+DqutRbWAFGBi1WsaFrqV79JVt0nOB/Da083BoOG+vwgkmqltVVmOkJ9NXqVvG5RGj
-         tWmwbLEIn3MDBlZXgjZzggftHYeWrMe82DH2n7sCbSX3CfplZTGcK1dpFX4cAoyK8qDc
-         spDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750240790; x=1750845590;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sX2+2gdHzfIqMHzK0HUE6rBPOILvK+9cIYaOod1fnc8=;
-        b=fUzkspbZscK5DSRxxmYZeY2CDoQt4zZfy4u/jtux2evEiPRCvJxz9Cbqq+P+NxCDDg
-         +yJ9d+tgyjW1vEN2lpkqQNfmUIam8f8jbxy9jYGIadNQBxSjgKlrzuFafikHkpEvp7PB
-         0EmeWRKCEWTgw62c4Z45FVfN4uDNdGrqKOJSnIL6ASfQKN8mbgZoqSJxNnjSs7B2ICe4
-         KZNLJ58Ucd4D1RoyD/wgiPoCq5mbrzu/BQIImviXHt2Y8s24P/TeEWVCQAy9O1dR2nYn
-         zXPGzZ0xrS/D10FBWBpe121dY+5OWT9ErUQNiUmufPei3PUGi0sRZTjfLOyQehIG+IT9
-         20vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFSsshdMYtLJstyJDM8ULxXCFBMurY/yN6crXZ9f4+wAbdCACaNFmnl6RFbF2/Bd59c4zbCowOeHLf@vger.kernel.org, AJvYcCX6pUUEmx6bYs1HDOgaqmVCEoiuGLAyYUzCzPjT/rbrec3sRodfs0ZJTyhnMMEQuxQwSOJ/EmEnWgNIpA==@vger.kernel.org, AJvYcCXokUMzxBAMMTmHvJXlFvG6xUptsochVcmEjQrRAdzvxTsmS4YgxEVZoRY0AVKLPxWYLBZAmj3vuVwXzCz8@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDa88E11iidt+swNpGmTaByELZqQBwFbYLdLBv/1mZESULL4CS
-	gpcFyO5keeDv0cFWl3jg+d/dNQ8iSg9iRi+5iLshRaBM1kWh642nr9qx
-X-Gm-Gg: ASbGncunIuK8I+T80I+qkLAlfQerR+1X5pikaJi8Lr3+1dsXGmoEvsJ0ZkM2ahuNtsu
-	WhGZepSmTAb1W06NFTC0qCDjKl3zQxKLFDE5BdWw+lowmS0BC0yF5oOFunZBelshuyhHs5e0ruJ
-	QbM+Lzt/GRkmirbvfY63Z98Q6DIe6CIvA/SvMIO+XXhTj84E5M/lAr3Q8MF7WVW1oqoCsMi62+W
-	6MwbacPEQzxRQAL/gVL/tB/WA/27of+WTxIGbW0ZWlycQJQHp3M98zrbOdDi9LHstQI6urhmRfh
-	flIEUBLeXJm5atCWMEi0ocZEWpUEAhtpz5McA17PonEBhTOEUnNhF5UdaDAUKBjgrNoVkM1mDqM
-	=
-X-Google-Smtp-Source: AGHT+IG9Ltz8OOKzg18kmieWDJZRnteyY4BMf39tj5nKgAg4iI35WEGx6FggKsNK/B/tndtnp7aXlA==
-X-Received: by 2002:a05:6402:3552:b0:608:4945:ca47 with SMTP id 4fb4d7f45d1cf-608d09486c4mr16001513a12.17.1750240789542;
-        Wed, 18 Jun 2025 02:59:49 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a93b03sm9384691a12.54.2025.06.18.02.59.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 02:59:49 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org (open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)),
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v4 12/19] dt-bindings: media: i2c: max96714: add myself as maintainer
-Date: Wed, 18 Jun 2025 12:58:48 +0300
-Message-ID: <20250618095858.2145209-13-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250618095858.2145209-1-demonsingur@gmail.com>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="FdyO0djb"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCDDC5254;
+	Wed, 18 Jun 2025 11:59:29 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750240771;
+	bh=k9MwYoc1zOwO3F/NDWi15b97VWDuRARPG5PckYENJ90=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=FdyO0djbuQFtdmZJ0G89bwh3E0Ym6ZCAuv3bVyuWA0SDCLeQp/zTrCMdq0yXoeNUv
+	 ZYwNMMc3nl2hX5lwHWQzUMauTw0vu+JAnIymxAKqOzrpZLT0GB9ZV4FC9N+YaeGeAr
+	 cWMaMAFl8USq7GuhOdfz52px7X6DZSssrLGJQBY8=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 18 Jun 2025 12:59:12 +0300
+Subject: [PATCH v4 09/17] drm/bridge: cdns-dsi: Drop checks that shouldn't
+ be in .mode_valid()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-cdns-dsi-impro-v4-9-862c841dbe02@ideasonboard.com>
+References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+In-Reply-To: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jayesh Choudhary <j-choudhary@ti.com>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Parth Pancholi <parth.pancholi@toradex.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1636;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=k9MwYoc1zOwO3F/NDWi15b97VWDuRARPG5PckYENJ90=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoUo3/RBQ6cJvoLv5Vc8R66K8shy6mBvMy4mrKQ
+ rwEpxU6I9iJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaFKN/wAKCRD6PaqMvJYe
+ 9Rg3D/sE98W4rwobQCN8OYphUfVKya9wQtI+BpJwNCJV+05doVEOPyxvb920HjO5wrj5O9iBWyi
+ MIUqfk9eXZsg7e6edGJZCejFLOdfIQ1GqWKqhwAUcS0adfUaeHzFawyhQ5F5qv385XeiYmFUH4W
+ qiOtVKAUldHhghNjyHSSl37DSGaO+F5kjZ66pWz7VoYq1Fv1uJRBZk2cK7OypRHiLE+MbEIezQW
+ vTig7Z/we3q3FsZSu/vcCV6txe7KynWlS3c+jfUdLyHdMR3vFIRYgrnbZK5oFBGk5Ccu07HYNSR
+ 8ULDw78RUYtTnc2ViyUl5NInq9O7LKDHE8pBg5Mk440+2IwI+Qyzb5DSvVCo0YqYUfBgTUSoeFC
+ 3l3iqvRnBvkpDJZ73JM2B8iqu6iHHo6naKmyLYI5+YX40ecQ9/qZwdmTU+J485NOWpSXH3w3Ibb
+ o59B3WVm7qa/Bdjk/ys5O2tegAUNEvJqrpZzp/b/p1dwO//hiIVEkaUWHFYvvHZYqQoaMX9SFli
+ Gp56rlZZbvyY7adrzOKd1xutPBERpxW3uIaLew6ZKds+xnIt6QsD3aF0iVr6RyIvQ6r+Im4BMYz
+ aI7KCV8CObrzqa9EFxKDRr7DMqG9WyGAaKXoUwDfVghmzaaXUwmNrJwGflT6QjWlvdPwcO2Uprc
+ c8S9BCPfHX825Ew==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Analog Devices is taking responsability for the maintenance of the Maxim
-GMSL2/3 devices.
-Add myself to the maintainers list and to the device tree bindings.
+The docs say about mode_valid():
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+"it is not allowed to look at anything else but the passed-in mode, and
+validate it against configuration-invariant hardware constraints"
+
+We're doing a lot more than just looking at the mode. The main issue
+here is that we're doing checks based on the pixel clock, before we know
+what the pixel clock from the crtc actually is.
+
+So, drop the cdns_dsi_check_conf() call from .mode_valid().
+
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml | 1 +
- MAINTAINERS                                                     | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-index 3ace50e11921..f53c72e5c572 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
-@@ -8,6 +8,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Maxim MAX96714 GMSL2 to CSI-2 Deserializer
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index 000c5a2367fe..b2b6529b1c70 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -603,8 +603,7 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+ 	struct cdns_dsi_input *input = bridge_to_cdns_dsi_input(bridge);
+ 	struct cdns_dsi *dsi = input_to_dsi(input);
+ 	struct cdns_dsi_output *output = &dsi->output;
+-	struct cdns_dsi_cfg dsi_cfg;
+-	int bpp, ret;
++	int bpp;
  
- maintainers:
-+  - Cosmin Tanislav <cosmin.tanislav@analog.com>
-   - Julien Massot <julien.massot@collabora.com>
+ 	/*
+ 	 * VFP_DSI should be less than VFP_DPI and VFP_DSI should be at
+@@ -622,10 +621,6 @@ cdns_dsi_bridge_mode_valid(struct drm_bridge *bridge,
+ 	if ((mode->hdisplay * bpp) % 32)
+ 		return MODE_H_ILLEGAL;
  
- description:
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 77adb1f7ac9c..423ef18ca693 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14736,6 +14736,7 @@ F:	drivers/staging/media/max96712/max96712.c
+-	ret = cdns_dsi_check_conf(dsi, mode, &dsi_cfg);
+-	if (ret)
+-		return MODE_BAD;
+-
+ 	return MODE_OK;
+ }
  
- MAX96714 GMSL2 DESERIALIZER DRIVER
- M:	Julien Massot <julien.massot@collabora.com>
-+M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/i2c/maxim,max96714.yaml
+
 -- 
-2.49.0
+2.43.0
 
