@@ -1,153 +1,88 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934C62E265D;
-	Wed, 18 Jun 2025 12:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38701285C87
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:22:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249318; cv=none; b=LXm6QiqkoGdxdAiwpyu10l9V3u8XKBVKxxlRZ3TRjaW6UQz/RBM9NtWLnV1+WaeuJalfvSlkwWpRqcZ53MSdb7W0YiPHRcftV4YQFw5NwcwUsPkRMgVYe09eTR8WqSNFiRDu436/CHWFhweL4bq9AyywO3j7RsA+lfK+lML1iVI=
+	t=1750249334; cv=none; b=gXJrqblSr4Kk1YJQaTpvgv3rdFh7WxUJeA42jux7G0qNdGtirLFItJESZ8yGKfn3u6Y91ETIjd+eJWYY7EDstZgx08WsSrbEm3H/MwVzx5Q67HV6evX3ThJHyf0sMX9xL3471rKNlkATi6/aCSuGjM501OS9zMGjueX7msoJvmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249318; c=relaxed/simple;
-	bh=Ih5zjiRGwMAvZQPX9KEr/plji2ng+jsO/q4Yt/O5IRU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pfqryyDbWKdww6oCfoz8LEn3OAnyDHmNmHbcwHIGGZIK6WeGl2/D9pywX0zN2bD832wIe8jOS0fD9TV0WGZRjqpiveZbzOtmHVb4KqcLUu8rypaK6nZDJEetfp8Hh8GUC90Sk/z7N+f74B49YV4lQgKoKtR+oStsjUcYILazg/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ohlgtAWT; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750249334; c=relaxed/simple;
+	bh=JVE/+3sgH3e9JCWN+l4e4TPxHLMo4/QTyRIKzNqrJBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=igsAWb66hWK6APuuu/lqkU1H1bCV6faQ/qZC0caPHHykvLb6CvgiwW94LRDOsU2ZGcC03tEPxhl4khJjmd2DhlHdz23JDmFm3cnYySUB6dXfuI9DU0N73l3ZM27PYmjBBKf9Q3shQB4y9/XjmnR8uiTYmaQATgq3zcsPJ8aaThs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaJnwTE7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ohlgtAWT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750249313;
-	bh=Ih5zjiRGwMAvZQPX9KEr/plji2ng+jsO/q4Yt/O5IRU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ohlgtAWT7yjpPcE/xEv1XBO2m6bmo3mg0DJxG6HAaeNer6gFJzTrUtR24807KK1L9
-	 RGxCKVMFvq+n8MX8gL+l/JQjRrsco0O1EuykFJ6hnvegjFKVcGzTBnucvh4p+w5Tj6
-	 LLw2EUydJU/Mu0tdsHjfRUcujDaGZk7L39eit/oeNYZDqDWkqy39t3qzuoj5Y507yL
-	 6VHI6/U44lBH0Vh5YmmqbBsBzRTbZ+8YLLXmaY6Ll7K/12zENr0WcM2yHOqP6HeE5R
-	 6Las4LiVbTzVkZzTZ3lvuB9kFCQRKppNfNcXFwKtngTRXlqAVkEMS2qUHqNSj1ftxY
-	 w9GQZiHKvbvHQ==
-Received: from [10.40.0.100] (185-251-200-162.lampert.tv [185.251.200.162])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mriesch)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3C17D17E0CEE;
-	Wed, 18 Jun 2025 14:21:52 +0200 (CEST)
-Message-ID: <5d3418a3-70f5-46d8-a538-72e6958d5d02@collabora.com>
-Date: Wed, 18 Jun 2025 14:21:51 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaJnwTE7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3F8BC4CEED;
+	Wed, 18 Jun 2025 12:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750249334;
+	bh=JVE/+3sgH3e9JCWN+l4e4TPxHLMo4/QTyRIKzNqrJBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eaJnwTE73J31a7yBaU3MBP7RB9KhCQVL2ec+avCaSzaS/Fnh4UI/IUi7NWpGfz6KW
+	 RfJ07Y0et+SYSCHXM1GpASH93CvmDFXkE4fPFj23BGHKfu5KqDe8ijCwgvjYTNYUdn
+	 5pr+rr/UEtkykAxWD0k8AnMWmdxG7mAgyjeXrDsvUEL6DwWGXKmdvBUFWGYc0sVwH7
+	 HDKfHKUKHbi1HvigG14lJA6JVWeMDOWefd3CQ+6LgpFJyrIrwVaozXrZ4DJVN9GRo3
+	 hf+//19mFW6bzaTl5flZODKEo3xy45Y6JrugLc+tSbDoLInwRWhejO9W6tPhO3YwJn
+	 C7ap3xyDPu5Wg==
+Date: Wed, 18 Jun 2025 14:22:11 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v6 0/6] timers: Exclude isolated cpus from timer migation
+Message-ID: <aFKvc6FK9CH5BsNH@localhost.localdomain>
+References: <20250530142031.215594-1-gmonaco@redhat.com>
+ <d9e3238e78a0384a6ba0651574522f44c6f2fb76.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/13] media: rockchip: add a driver for the rockchip
- camera interface
-To: Mehdi Djait <mehdi.djait@linux.intel.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
- =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Gerald Loacker <gerald.loacker@wolfvision.net>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Markus Elfring <Markus.Elfring@web.de>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Kever Yang <kever.yang@rock-chips.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Collabora Kernel Team <kernel@collabora.com>,
- Paul Kocialkowski <paulk@sys-base.io>,
- Alexander Shiyan <eagle.alexander923@gmail.com>,
- Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- Mehdi Djait <mehdi.djait@bootlin.com>
-References: <20240220-rk3568-vicap-v8-0-9d9cbc4b524d@collabora.com>
- <20240220-rk3568-vicap-v8-6-9d9cbc4b524d@collabora.com>
- <656zxutvwytnd5i5l3nknni47r3wofmmwtxycleekjtrkbgfeo@xm7xbzirh3ce>
-Content-Language: en-US
-From: Michael Riesch <michael.riesch@collabora.com>
-In-Reply-To: <656zxutvwytnd5i5l3nknni47r3wofmmwtxycleekjtrkbgfeo@xm7xbzirh3ce>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d9e3238e78a0384a6ba0651574522f44c6f2fb76.camel@redhat.com>
 
-Hi Mehdi,
+Hi Gabriele,
 
-On 6/13/25 14:33, Mehdi Djait wrote:
-> Hi Michael,
+Le Wed, Jun 18, 2025 at 02:17:29PM +0200, Gabriele Monaco a écrit :
+> On Fri, 2025-05-30 at 16:20 +0200, Gabriele Monaco wrote:
+> > The timer migration mechanism allows active CPUs to pull timers from
+> > idle ones to improve the overall idle time. This is however undesired
+> > when CPU intensive workloads run on isolated cores, as the algorithm
+> > would move the timers from housekeeping to isolated cores, negatively
+> > affecting the isolation.
+> > 
+> > [...]
+> > 
+> > Exclude isolated cores from the timer migration algorithm, extend the
+> > concept of unavailable cores, currently used for offline ones, to
+> > isolated ones:
+> > * A core is unavailable if isolated or offline;
+> > * A core is available if isolated and offline;
+> > 
+> > A core is considered unavailable as isolated if it belongs to:
+> > * the isolcpus (domain) list
+> > * an isolated cpuset
+> > Except if it is:
+> > * in the nohz_full list (already idle for the hierarchy)
+> > * the nohz timekeeper core (must be available to handle global
+> > timers)
 > 
-> [...]
+> Frederic, Thomas, Waiman, would you have time to review this series?
+> Thanks,
+> Gabriele
 
-Let's cut the long story short, shall we :-)
+Yes, sorry I got distracted with other things (although quite related).
+I will give it a priority soonish!
 
->> +static void rkcif_stream_fill_format(struct rkcif_stream *stream,
->> +				     struct v4l2_pix_format_mplane *pix)
->> +{
->> +	const struct rkcif_output_fmt *fmt;
->> +	u32 height, width;
->> +
->> +	fmt = rkcif_stream_find_output_fmt(stream, true, pix->pixelformat);
->> +	height = clamp_t(u32, pix->height, CIF_MIN_HEIGHT, CIF_MAX_HEIGHT);
->> +	width = clamp_t(u32, pix->width, CIF_MIN_WIDTH, CIF_MAX_WIDTH);
->> +	v4l2_fill_pixfmt_mp(pix, fmt->fourcc, width, height);
-> 
-> The rkcif supports the SRGGB10P: the packed version of the SRGGB10.
-> 
-> When you try to capture with SRGGB10P, the following fails in
-> v4l2_fill_pixfmt_mp()
-> 
-> 	info = v4l2_format_info(pixelformat);
-> 	if (!info)
-> 		return -EINVAL;
-> 
-> The return value is not checked in rkcif_stream_fill_format() resulting
-> in a call to queue_setup returning with sizes[0] = 0
+Thanks.
 
-Thanks for pointing that out. I failed to realize that this helper
-function may return an error. What I can do is to implement the error
-propagation correctly. Of course this will only avoid the kernel
-warning, you still won't be able to stream.
-
-> This will cause a kernel Warning in the vb2_core_reqbufs() because
-> plane_size = 0
-> 
-> Exactly here:
-> 
-> 	for (i = 0; i < num_planes; i++)
-> 		if (WARN_ON(!plane_sizes[i])) {
-> 			ret = -EINVAL;
-> 			goto error;
-> 		}
-> 
-> I still don't have the solution here but wanted to let you know about
-> it.
-
-I only had a quick look at it, but apparently the compact formats are
-missing in the format list here:
-https://elixir.bootlin.com/linux/v6.16-rc2/source/drivers/media/v4l2-core/v4l2-common.c#L244
-for whatever reason.
-
-Have you by chance tried adding a line like
-{
-	.format = V4L2_PIX_FMT_SRGGB10P,
-	.pixel_enc = V4L2_PIXEL_ENC_BAYER,
-	.mem_planes = 1,
-	.comp_planes = 1,
-	.bpp = { 5, 0, 0, 0 },
-	.bpp_div = { 4, 1, 1, 1 },
-	.hdiv = 1,
-	.vdiv = 1,
-}
-?
-
-
-Maybe we can fix this, but please note that this issue should not block
-merging this patch series.
-
-Best regards,
-Michael
+-- 
+Frederic Weisbecker
+SUSE Labs
