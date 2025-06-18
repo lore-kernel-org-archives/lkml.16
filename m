@@ -1,139 +1,207 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6012E9EB9
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C009296160
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249057; cv=none; b=u+I5ERI7p5WI+4/l7IbIwKpQDoJ7eJsoL4eGb0fVa6yPJp62b9s6tOm7pcLQBy2k2KOu9V/URJCUp7VSWwmTti5chZKN/O4gfJ8c/XX3THvLa9I+IEE6zm2O3MSlmwCHJWnpkhl4z3WIXMn0FQsHf44cwMu+XS4X8XWmiOae0TE=
+	t=1750249057; cv=none; b=iH5t8XftrxHWjeR6d/UvIXa6NxokoP05L3vaNoN1NPUXDwZklq+4th1C250RWRdBju60Ma33d4qR+qgysPnTj1JXD49faE2TpFx3hMuzs4WaH9Mt9xDZbfwArMwx/x0QvcCyRlk9oTn9ovleG8rHc+Sd//Y1V19EHpFfyH6uwFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750249057; c=relaxed/simple;
-	bh=9kK418IxmIiVXeyQBBKgdXjSPQQoBgr3AO66/gZokjM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a0ObG/9z8ZYw+RISBx9cgxur+G32Zvr7AbIrLaFHAlIhmgO+6ntY8nYsYPSCMoH/2J7gB6tJyEu4xmj5KmO+G78uMHSFFWijuGUNoq6F3pwoyE+/HXc0rE5YDZPIRdFKATArDOhOetexAbAcwgc2ul1yTohS4VIP8MHPbj4JS60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=iAt/AJPp; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	bh=GbNLi+EZjPkYRvt7zqESy62VDQOUsYYsEM6aI2Vw3Ac=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=owXlFYg9OxZXqBfdRt/BDEB1mx1AcST/zX5cS80sZV/TbQ7F/NzXLoBykjgcZHAY5xLLyVFfcRGk9C7p996XzUjxJ2mevLuBSlBgJQxh/GPnP9hYsi6ORAkdIQIfVAc1dUsrlKq/QAzhOQ4Oa2WDTahfHYnFrjMfEsK606FxdwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkjT2qfZ; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="iAt/AJPp"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-7406c6dd2b1so587014b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750249053; x=1750853853; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r8tBKVX30NLoa4br+Bk4w/D/MRgyFgU//5djHLJDdbc=;
-        b=iAt/AJPpdBD8nRGQOJCDUSNggD3pG0XlCzXE6qe0lMj8Epvq4J83PgWbY9tArEMlth
-         jzE34FRDPygtFCT2hgmEre9getN/lTjKheMdMfOgaqGCXuoROjd04HTogOzzCgSd4xR9
-         4hTleJo9x5RebMiJfNN4GCm8aerxWQGjjKYa/4vwp0bv/lPxH3rSyhIiPnQlMX40QzKJ
-         NhOVM4NHTLhFDkm1kwtTS3Rotn+BMwwg9K5nNHdxjN6FKV7TWxWC2ZRqkuhE9BXKUYBh
-         nwrvG2NytoWaFtenTPHjyk1u3Fyuj+Bi0GHEUS6ZEouPV0AdCvu+wnQB5lNVKH0ci3mE
-         KJCw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkjT2qfZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750249054;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GbNLi+EZjPkYRvt7zqESy62VDQOUsYYsEM6aI2Vw3Ac=;
+	b=CkjT2qfZ55WneZ4ULfkb8/PDorUkKjbqsG/oRuRKf8Tq5Ks3JY84Kbu9nYCg0EUPRJ0qCS
+	quGVP6rSJLVlhAWCFuQu5EtchQhRgYjA65UbJiasw/3QBsRzMXcQXz9C9JC7jflyH8WzJm
+	Q8UBjqAS+eVNT57olM4CPMjh0aVsfoo=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-417-wUSajpV8NemIW039hb5uUA-1; Wed, 18 Jun 2025 08:17:32 -0400
+X-MC-Unique: wUSajpV8NemIW039hb5uUA-1
+X-Mimecast-MFC-AGG-ID: wUSajpV8NemIW039hb5uUA_1750249051
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ade6db50b98so659492466b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:17:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249053; x=1750853853;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r8tBKVX30NLoa4br+Bk4w/D/MRgyFgU//5djHLJDdbc=;
-        b=ruYUGWNmCs/Kve3okQhmjp8VZGcmaZVGiHWYyStoCubEyp1kl4BXvRPXPj5zasqwYI
-         8VHW1SSjSGOeduqBVH8eXhdohk7y4YauXaiM9L9emUCakvutaQy/Rgb8t/4NSYydqSLe
-         J+YtMVQkfBHb163/YtYdJqGIdpXhFLRZ4oWCqgk+3adnT6XMFyr/U5nqjWmbNSn1ZGXD
-         PiZblXAMYD8r/GXcRuYsLYBdMNb0n3zylpPUDkLcaKx5XVKLGov1LOH6RAV7n/Z8QQYq
-         e+e5xcEhUPfFjia3lM8+idQUCoilgogEV7b17Jt61rpj2H9BJCz023on9kuGTdTgAkMF
-         lNyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWmGXY+M8qjzk6o6B69W6t0UOwGS9kb66k/tdYOsCG4FyE9crn8OGohAZ6N8N8l6gfqywrNZbne8gZxIRM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0f2JPw09gVlBK875eFJ+/jFomvdxkzjORNvpfpGP8emOdzXsa
-	hK+0dFSgKSCXgSLY3CptisIJ0492JEgN3kt5ve8qoR+LdqoenA4pQxm7R+D4EgnBnkI=
-X-Gm-Gg: ASbGncvZ4Q7LwsAfFp5gkJfBLsKXqnVsahpqC4WSrb/cUHgq1TiAPkco/y+qqTp3HRD
-	FjzKqcikCd0VAzKfjtKXh3ujBoZ4PIu5XRrUU/rM23H851DVGxhh+5kKhq3NVPQKiZwuZDLYz74
-	L9x6GDbocsPXhmKCUX15KRj3J0dduigm45+/rQ1stnLsnf77UuZBjlbx9E3ASIARqh+qra3mYXg
-	2vrCoZTX/LDh42YfM5hby6tbU9hXjyg6zEab7B4OOYTCW41o9hfIfs9l7dK3gxZZVSPlC1VoZnr
-	yWnSKpxhKNucLzQH2iiBTmfWcjiaze7jmqtaUWf9zfXzp8t23VD0t7RT7tHnjmrsN+ilkzfe35h
-	y/zVyPDCjiFtF8EaWNg==
-X-Google-Smtp-Source: AGHT+IEWGi/cAL/pfhnuBa+HjvvoDBVM4CSi/muR85WOt2UwTAsiTGP0+QbukmJ4eBCotN/31dgHnQ==
-X-Received: by 2002:a05:6a20:2d12:b0:21f:53e4:1919 with SMTP id adf61e73a8af0-22003652154mr4644799637.3.1750249053381;
-        Wed, 18 Jun 2025 05:17:33 -0700 (PDT)
-Received: from localhost.localdomain ([122.171.23.44])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900d7e0asm11201177b3a.174.2025.06.18.05.17.25
+        d=1e100.net; s=20230601; t=1750249051; x=1750853851;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GbNLi+EZjPkYRvt7zqESy62VDQOUsYYsEM6aI2Vw3Ac=;
+        b=fi1TTpw0DmQXzhEwwiBRq/Y9MW9YBBit4DP9N9PQvCqodsTz1I7QP2mUS0weFgPCZM
+         aA2Zlm+dlPe5OPkDVg2uSGD4gHbwqe/CwI0qTKCJEU7ApwEdnZyaRKbfnCJVak+0pvYt
+         KSO0Ny+GLlJVceIWi+snjFl0Wy6lx1ZWEzJ3Ymufxv9oZ/eNyvqAUegfTP6bRplXg3Ge
+         RLPUPN9RfZb4e8NWDEVJPs3Tew0wXwQ7d594JT8AW4ANwdLQqnLElisPlQ5+hsv56pPt
+         PPaXpXcccbQnCMW+A7XOlwc3N3ix7JKGVcKXWs67ViYfeKf7cw7yaUNsr/RM4dyKyCah
+         Jotg==
+X-Gm-Message-State: AOJu0YzccqOBgHe1E3ndux5qtnNi7UPL3g6YbI3JhDfmkPNw42YyCozf
+	H+Fm5VScILR8c29rdXF1B1eS6bdYcy7IXFnZTa/vgSPfzM/bdBTWdP70ucMgJZ+QJu9Y1/3fMoV
+	i165F5Tc9e1Rw1jQaqH4Ejhod+OY26UyUcDPb3CVnnR6UQjH1+l43AnY1Ms0RXm86W/7iffZyER
+	TfB4tyW9Gl9Hy7ovbpmtIBvAuxPaEcaYWVUGURo0Wm2A2L4KtGnIs=
+X-Gm-Gg: ASbGncs0fZwiH9+7wXDwA8qZIXozLb58IpAdAJVgxtZJFDdz5L2UMJEyTBGNyeBwWAJ
+	/IvThzmVSAorFKpiXjF7kKebc6GEOJqQJGlQyqnKndioQQd6lxe41RH/YbLMRc5Es5wZvFqJhqp
+	I/8ggw+WoonADUxOHn3O2KS629xh3bP3w3/KVUFR5V+xrVB6nC0mG1v2CbuJbrEGZnbeDbrgkvD
+	y20gIOcHcUoSCrhSP9GzJTdZE9dly8OyKz53DOuMcGP+b9jo9Jxth1HNaO6NSp634SMRSHZiiq1
+	IT6+Eb9HbfOxhRHj+mtU7yat4HvCOP4BM5O0O/cq+DuBo0k9+ps=
+X-Received: by 2002:a17:906:7310:b0:ad8:a41a:3cd2 with SMTP id a640c23a62f3a-adfad434544mr1659008266b.16.1750249051406;
+        Wed, 18 Jun 2025 05:17:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEBCx2aY3FI7wEWRK+AkPspj3Fa7PpXhGxZQMiPGrmFIF7fP4FDlwLVBKWh2P7l6zVQkCIXJA==
+X-Received: by 2002:a17:906:7310:b0:ad8:a41a:3cd2 with SMTP id a640c23a62f3a-adfad434544mr1659004966b.16.1750249050953;
+        Wed, 18 Jun 2025 05:17:30 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.132.161])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8159e24sm1039424866b.34.2025.06.18.05.17.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 05:17:32 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Len Brown <lenb@kernel.org>,
-	Sunil V L <sunilvl@ventanamicro.com>,
-	Rahul Pathak <rpathak@ventanamicro.com>,
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Atish Patra <atish.patra@linux.dev>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Anup Patel <anup@brainfault.org>,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v6 23/23] MAINTAINERS: Add entry for RISC-V RPMI and MPXY drivers
-Date: Wed, 18 Jun 2025 17:43:58 +0530
-Message-ID: <20250618121358.503781-24-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250618121358.503781-1-apatel@ventanamicro.com>
-References: <20250618121358.503781-1-apatel@ventanamicro.com>
+        Wed, 18 Jun 2025 05:17:30 -0700 (PDT)
+Message-ID: <d9e3238e78a0384a6ba0651574522f44c6f2fb76.camel@redhat.com>
+Subject: Re: [PATCH v6 0/6] timers: Exclude isolated cpus from timer migation
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org, Anna-Maria Behnsen
+ <anna-maria@linutronix.de>,  Frederic Weisbecker	 <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Waiman Long	 <longman@redhat.com>
+Date: Wed, 18 Jun 2025 14:17:29 +0200
+In-Reply-To: <20250530142031.215594-1-gmonaco@redhat.com>
+References: <20250530142031.215594-1-gmonaco@redhat.com>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Add Rahul and myself as maintainers for RISC-V RPMI and MPXY drivers.
+On Fri, 2025-05-30 at 16:20 +0200, Gabriele Monaco wrote:
+> The timer migration mechanism allows active CPUs to pull timers from
+> idle ones to improve the overall idle time. This is however undesired
+> when CPU intensive workloads run on isolated cores, as the algorithm
+> would move the timers from housekeeping to isolated cores, negatively
+> affecting the isolation.
+>=20
+> [...]
+>=20
+> Exclude isolated cores from the timer migration algorithm, extend the
+> concept of unavailable cores, currently used for offline ones, to
+> isolated ones:
+> * A core is unavailable if isolated or offline;
+> * A core is available if isolated and offline;
+>=20
+> A core is considered unavailable as isolated if it belongs to:
+> * the isolcpus (domain) list
+> * an isolated cpuset
+> Except if it is:
+> * in the nohz_full list (already idle for the hierarchy)
+> * the nohz timekeeper core (must be available to handle global
+> timers)
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
----
- MAINTAINERS | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Frederic, Thomas, Waiman, would you have time to review this series?
+Thanks,
+Gabriele
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c1d245bf7b8..688bdaff566a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -21364,6 +21364,21 @@ F:	drivers/perf/riscv_pmu.c
- F:	drivers/perf/riscv_pmu_legacy.c
- F:	drivers/perf/riscv_pmu_sbi.c
- 
-+RISC-V RPMI AND MPXY DRIVERS
-+M:	Rahul Pathak <rahul@summations.net>
-+M:	Anup Patel <anup@brainfault.org>
-+L:	linux-riscv@lists.infradead.org
-+F:	Documentation/devicetree/bindings/clock/riscv,rpmi-clock.yaml
-+F:	Documentation/devicetree/bindings/clock/riscv,rpmi-mpxy-clock.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-mpxy-system-msi.yaml
-+F:	Documentation/devicetree/bindings/interrupt-controller/riscv,rpmi-system-msi.yaml
-+F:	Documentation/devicetree/bindings/mailbox/riscv,rpmi-shmem-mbox.yaml
-+F:	Documentation/devicetree/bindings/mailbox/riscv,sbi-mpxy-mbox.yaml
-+F:	drivers/clk/clk-rpmi.c
-+F:	drivers/irqchip/irq-riscv-rpmi-sysmsi.c
-+F:	drivers/mailbox/riscv-sbi-mpxy-mbox.c
-+F:	include/linux/mailbox/riscv-rpmi-message.h
-+
- RISC-V SPACEMIT SoC Support
- M:	Yixun Lan <dlan@gentoo.org>
- L:	linux-riscv@lists.infradead.org
--- 
-2.43.0
+>=20
+> Due to how the timer migration algorithm works, any CPU part of the
+> hierarchy can have their global timers pulled by remote CPUs and have
+> to
+> pull remote timers, only skipping pulling remote timers would break
+> the
+> logic.
+> For this reason, we prevent isolated CPUs from pulling remote global
+> timers, but also the other way around: any global timer started on an
+> isolated CPU will run there. This does not break the concept of
+> isolation (global timers don't come from outside the CPU) and, if
+> considered inappropriate, can usually be mitigated with other
+> isolation
+> techniques (e.g. IRQ pinning).
+>=20
+> The first 3 patches are preparatory work to change the concept of
+> online/offline to available/unavailable, keep track of those in a
+> separate cpumask and change a function name in cpuset code.
+>=20
+> Patch 4 and 5 adapt isolation and cpuset to prevent domain isolated
+> and
+> nohz_full from covering all CPUs not leaving any housekeeping one.
+> This
+> can lead to problems with the changes introduced in this series
+> because
+> no CPU would remain to handle global timers.
+>=20
+> Patch 6 extends the unavailable status to domain isolated CPUs, which
+> is the main contribution of the series.
+>=20
+> Changes since v5:
+> * Remove fallback if no housekeeping is left by isolcpus and
+> nohz_full
+> * Adjust condition not to activate CPUs in the migration hierarchy
+> * Always force the nohz tick CPU active in the hierarchy
+>=20
+> Changes since v4 [1]:
+> * use on_each_cpu_mask() with changes on isolated CPUs to avoid races
+> * keep nohz_full CPUs included in the timer migration hierarchy
+> * prevent domain isolated and nohz_full to cover all CPUs
+>=20
+> Changes since v3:
+> * add parameter to function documentation
+> * split into multiple straightforward patches
+>=20
+> Changes since v2:
+> * improve comments about handling CPUs isolated at boot
+> * minor cleanup
+>=20
+> Changes since v1 [2]:
+> * split into smaller patches
+> * use available mask instead of unavailable
+> * simplification and cleanup
+>=20
+> [1] -
+> https://lore.kernel.org/lkml/20250506091534.42117-7-gmonaco@redhat.com
+> [2] -
+> https://lore.kernel.org/lkml/20250410065446.57304-2-gmonaco@redhat.com
+>=20
+> Gabriele Monaco (6):
+> =C2=A0 timers: Rename tmigr 'online' bit to 'available'
+> =C2=A0 timers: Add the available mask in timer migration
+> =C2=A0 cgroup/cpuset: Rename update_unbound_workqueue_cpumask() to
+> =C2=A0=C2=A0=C2=A0 update_exclusion_cpumasks()
+> =C2=A0 sched/isolation: Force housekeeping if isolcpus and nohz_full don'=
+t
+> =C2=A0=C2=A0=C2=A0 leave any
+> =C2=A0 cgroup/cpuset: Fail if isolated and nohz_full don't leave any
+> =C2=A0=C2=A0=C2=A0 housekeeping
+> =C2=A0 timers: Exclude isolated cpus from timer migation
+>=20
+> =C2=A0include/linux/timer.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++
+> =C2=A0include/trace/events/timer_migration.h |=C2=A0 4 +-
+> =C2=A0kernel/cgroup/cpuset.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 71 ++++++++++++++++++=
++--
+> =C2=A0kernel/sched/isolation.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 12 ++++
+> =C2=A0kernel/time/timer_migration.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 88 ++++++++++++++++++++++--
+> --
+> =C2=A0kernel/time/timer_migration.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
+> =C2=A06 files changed, 165 insertions(+), 21 deletions(-)
+>=20
+>=20
+> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
 
