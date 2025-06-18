@@ -1,134 +1,125 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E3F3085A8;
-	Wed, 18 Jun 2025 17:57:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9313085A6;
+	Wed, 18 Jun 2025 17:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750269469; cv=none; b=BIwV7L3xQ0xO6l3Lmdpq7tykPD2H3PuXShJ8dujX50LD3GoIhEPiJk1jMKfee4KaHBsBmBTdF+p/LAXN3rH+SFeZl+qma+YsX90odJvwy7xWg4D7Z3s24w4kU+g941Jm1yZWwj8TnlELYlljiH+6LMV96L6yFzXTteqiRtNP3Hc=
+	t=1750269470; cv=none; b=h+i+wzCrhzH2HFTk8vgvCT+PPccWfzz7MUNTQGXE0dG0jP7W8S+cY6JI3id4bScmsjCEG9yWoT/AAHA63bqh8faNOtsD0jDWRVMN+Ea5llCEsdwx14N8olmgpM+KLHQ0Oc29BF4Bjd8jY5gu38ww3FKDvTX7tEeAx8d0+CWA+70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750269469; c=relaxed/simple;
-	bh=xvbpCHoh061DVA2zXXba49YyPXgWLFHdq9S5LqMpTVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CI9GMf5KRTMYtyI5nCfQWiW4RqBII+MYRHRESd/QKdUr0KI3dd5XqQlD3BG4llieifG+B2BVubuWcd0iSYM8AqsgxhLpS8sAFL9EUXbW/QFBNIUcoi0WerbeNuTS3EwoNFO6m2UKDNtRN4WO91mL6lPCnf2ZqOqsyuPYEb043hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=etEYw0G5; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750269470; c=relaxed/simple;
+	bh=VHWpHqNeE+SKQMKcWuOQRBsppipjRfLdmgldY+Vp3lc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j5DAiM0kjZPh4pdStiwj81GOZCx2oRiRWqvf82WsjeO3oH0/SOZdDsgIke5KXuyw+h7dApmNjOrva4XtYHbJ1tto3wnOVZsPbJDNoK7dLls5OrLXy2jpcpOstAH0n3yck7YMnjbnXpb24DXRD48cX+m8mSlsqMVYB5S7enCgrAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=YNMZ1E/N; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etEYw0G5"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30f30200b51so80308091fa.3;
-        Wed, 18 Jun 2025 10:57:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750269465; x=1750874265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xvbpCHoh061DVA2zXXba49YyPXgWLFHdq9S5LqMpTVY=;
-        b=etEYw0G577ly5SNH3rtJjZvvmKXQekICL8HvahtNfQhC/MwFY+570ji1ZPAy0hmjgF
-         o9JWL6/kF5vKBL+IOjT09kH/KPku9pXgd4q4I1n19EpSAqCy8lWKVzeNdF6LpCsL3Giy
-         oO+TUuJmwlKjb6LFteFQxyX8jcj6rD7QcxIVv49ieu47jIDHMilC6NejrF7Yh6DxevEp
-         bIuZsuDivYy7dO+3NDIK4E4D7E9Q4s3ODTQfkkkKqjPpp3ksJrbdCntpf0t6DLRnM3YT
-         rfWmkZtVR0LL/UntfkVnrRbz1qf33vpkH+Y5t5WMrLLpF0jBL9aJVW7VbvXtJUPadrGn
-         P+4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750269465; x=1750874265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xvbpCHoh061DVA2zXXba49YyPXgWLFHdq9S5LqMpTVY=;
-        b=pOEro0jL2qdpuv7D2zz6gRuOrXw+JB0J74lKbUEv9jS9Fjs4G8XQBtuLldOdlnHJ83
-         ibHlX0gqNFI8WzbNt/ZBp94yBEwUyuW95AqKP0oh2OL+/RDeNhuE9PP6bSsFbAV7MUYY
-         fh8KMPngDWYGvaiRRq0YjUiEHAxyPGWaxyiMCh3TWcvFLk2JWFT5T/waj1Myvgw9Kd5V
-         7C2BO/p8fsaSxOBAJLQlV0FMWQ+vHKCv8lkf5OQl6G8V48+sUokdAOmxU5WAcEzbn1KM
-         T/K6k7mrWNVzdL0VV5l7JLyrshQxMHOK8jBQ+Ek0Rd1kmYm/ZWqDtR23HSfaEGBAz1ry
-         efeA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGE0O5CzwcqwcaJOPwDrHWbHH3W6Nz7ynolXro1QPqEH37PPiPsqZcBXfETEw29zFczk6gLlnjKfOyNRM8PRk=@vger.kernel.org, AJvYcCVYvzGCZhSsm/MLJyvqcPrDNaTIFWzgQP9O5TFTFckKRmsL8c+ZW1TzJV6iHQFiBbVvsS2yjf2JFBhTBTY=@vger.kernel.org, AJvYcCVoa+j6uWQ+CSQxfuCrR/GSNPy34Ly6WTt9XmijAmp8u9QqT0Zfz399tMGEntqeCHfaw4QalXoNeCRD@vger.kernel.org, AJvYcCW/i8kXyAYyaM1gcVBmokE1wz9fDS4WST7DRKtGIERR2r4kb+VMTAw8/+O+RY4lBLqQd+6Ril+4dU6yu1vS@vger.kernel.org, AJvYcCW3cX1Fh3YDoTTbDVYkQTMkWAtLiLuOzrjz3VYwhJcnRN+QrlfLeMLZtZyKDzjrlxOF30nC1g/ux4o=@vger.kernel.org, AJvYcCWUzFdkD2yLnxiMBxTA/FA/K86ztEldhZa4EEnzM2zIPRTbjLn5DdBuQue6bfkO8qNxF0+JEMhey5CN1JHe@vger.kernel.org, AJvYcCWsdSK517a33Vnrqi+bXA3xW0qGtv6e+sxmGXJGFhel+i/mS6eYvOOk039207iCj810PFgU+V5mUfAH@vger.kernel.org, AJvYcCXV1L09CtXED3HLpmjloF0Hp1k3lMmrdERLEUa0VW10zuvwEaL8CyEDaE1H+8EUATR6unh+2PPv@vger.kernel.org, AJvYcCXdL3X2u8A12WLR+ukxs1wG/fJUamPQT2jgALZ+9+3NOwuVmXh2YpLQcjuWASZtV2VJ3BkGW2cUbgsfM9oo6tdX@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnzdpDRWHyh/AP6Q2kGbPKdtO77mEbP5NUsPrqSIZ14w4SP1Kn
-	Mxlgvw38C9cBVS7cOTnbENeVRpp+i1CRV8Ho1A6R3g7mR8kVAsw/vNyZX7INTMnlVuVJibC7zKG
-	iX9mjSk8RJ6Tg+3u+0svXey35xTOAi20=
-X-Gm-Gg: ASbGncs6u6xAl6rSKuBQbjdnjz28fRHL1Yq+gPAdTKI3/FdSvQPKsn8z+xF3Kq68cCv
-	PZAWZpHBLpkVewuzwE0At9QO8dYyw9H5FPi3Tk4Q2EV+gvr6HrU1YBD/SHfzzjokxfO2IMwJmCV
-	xkqSErNS6dAa4ql5FeFXBYTQ5jg5oxTGbP3DPqkaacxxC6OWfKs0NVZ22Dz4M=
-X-Google-Smtp-Source: AGHT+IFGH5gYRz7HzyAkXc6xFQTZHx1HyKujaRGU1VWJSVoGv01/xHq7AkSOADDbcwptpLJI4NKBOCX7lc78OHe1zqc=
-X-Received: by 2002:a05:651c:a0b:b0:32a:8591:6689 with SMTP id
- 38308e7fff4ca-32b4a2d830bmr47463571fa.7.1750269465105; Wed, 18 Jun 2025
- 10:57:45 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="YNMZ1E/N"
+Received: from [10.137.184.60] (unknown [131.107.160.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0919D201C77F;
+	Wed, 18 Jun 2025 10:57:48 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0919D201C77F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1750269468;
+	bh=r0yXO5WKMtf/RbA0D78yHpcsjqHvAhoAVEOtzAC/jPY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YNMZ1E/Nk9DTKlQqpD5ZXxizjzYI42bYzR8A11MDi46jt5unNsGa46e2K6dxCZMXz
+	 vn5GTQr067Iv+0A6vVey0uWLO0JXRxoUJUVBvTSE6dD2kDSZS9yy6ojZiw4U5Gwobu
+	 3n/8ggSZ85M/0bzIBFTOxHFHUWWm187SV28xKxHo=
+Message-ID: <bf0575c7-f78a-458c-b905-7baa7347c03f@linux.microsoft.com>
+Date: Wed, 18 Jun 2025 10:57:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com>
- <20250615-ptr-as-ptr-v12-1-f43b024581e8@gmail.com> <CAJ-ks9=6RSaLmNmDBv-TzJfGF8WzEi9Vd-s=1wyqBcF7_f7qQQ@mail.gmail.com>
- <CANiq72kgnKH2SSp76EdPeysExBWasqhTyf1JyReR65g6FMsidA@mail.gmail.com> <ccbc2a76-20fe-4f70-b69b-9d05b59f24b8@kernel.org>
-In-Reply-To: <ccbc2a76-20fe-4f70-b69b-9d05b59f24b8@kernel.org>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 18 Jun 2025 13:57:08 -0400
-X-Gm-Features: AX0GCFshtGegkfZ_3VnmKgAk7O_-RQpc08IGr2vNv8IcZdaPQIit0uo4DnD-Ozw
-Message-ID: <CAJ-ks9kkmmHtMz0rubwEqGLu_08+gSzsG09gphVZ5e8Ccc77SQ@mail.gmail.com>
-Subject: Re: [PATCH v12 1/6] rust: enable `clippy::ptr_as_ptr` lint
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Christian Brauner <brauner@kernel.org>, 
-	David Gow <davidgow@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Tejun Heo <tj@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Breno Leitao <leitao@debian.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] firmware: smccc: support both conduits for getting hyp
+ UUID
+To: Anirudh Rayabharam <anirudh@anirudhrb.com>
+Cc: sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lpieralisi@kernel.org, mark.rutland@arm.com
+References: <20250605-kickass-cerulean-honeybee-aa0cba@sudeepholla>
+ <20250610160656.11984-1-romank@linux.microsoft.com>
+ <aFKu9TFA6oj1N2cR@anirudh-surface.localdomain>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <aFKu9TFA6oj1N2cR@anirudh-surface.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 1:44=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On 6/18/25 6:45 PM, Miguel Ojeda wrote:
-> > On Wed, Jun 18, 2025 at 3:54=E2=80=AFPM Tamir Duberstein <tamird@gmail.=
-com> wrote:
-> >>
-> >> @Andreas Hindborg could you please have a look for configfs?
-> >>
-> >> @Rafael J. Wysocki @Viresh Kumar could you please have a look for cpuf=
-req?
-> >
-> > Thanks Tamir.
-> >
-> > Christian, Danilo, David, Greg, Tejun: It would also be nice to get
-> > Acked-by's for your bits. Thanks!
->
-> For the whole series and the bits I maintain:
->
-> Acked-by: Danilo Krummrich <dakr@kernel.org>
->
-> --
->
-> Independent from that, won't this potentially leave us with a lot of warn=
-ings
-> from code that goes through other trees in the upcoming merge window? How=
- do we
-> deal with that?
 
-I think the idea was to take this during rc so that all trees have it
-by the start of the next merge window. I'm not 100% clear on the
-kernel mechanics here, but that's my understanding.
+
+On 6/18/2025 5:20 AM, Anirudh Rayabharam wrote:
+> On Tue, Jun 10, 2025 at 09:06:48AM -0700, Roman Kisel wrote:
+>>> (sorry for the delay, found the patch in the spam 🙁)
+>>
+>> "b4" shows the the mail server used for the patch submission
+>> doesn't pass the DKIM check, so finding the patch in the spam seems
+> 
+> How do you check this? I mean, what b4 command do you run?
+> 
+> I think it should be fix now. Let's see...
+
+
+"b4 am" was showing the failed DKIM check, and all good now!
+
+| $ b4 am 20250521094049.960056-1-anirudh@anirudhrb.com
+|
+| Grabbing thread from 
+lore.kernel.org/all/20250521094049.960056-1-anirudh@anirudhrb.com/t.mbox.gz
+| Analyzing 7 messages in the thread
+| Looking for additional code-review trailers on lore.kernel.org
+| Checking attestation on all messages, may take a moment...
+| ---
+|   ✓ [PATCH] firmware: smccc: support both conduits for getting hyp UUID
+|     + Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+|     + Tested-by: Roman Kisel <romank@linux.microsoft.com> (✓ 
+DKIM/linux.microsoft.com)
+|     + Reviewed-by: Roman Kisel <romank@linux.microsoft.com> (✓ 
+DKIM/linux.microsoft.com)
+|   ---
+|   ✓ Signed: DKIM/anirudhrb.com
+| ---
+| Total patches: 1
+| ---
+|  Link: 
+https://lore.kernel.org/r/20250521094049.960056-1-anirudh@anirudhrb.com
+|  Base: applies clean to current tree
+|        git checkout -b 20250521_anirudh_anirudhrb_com HEAD
+|        git am 
+./20250521_anirudh_firmware_smccc_support_both_conduits_for_getting_hyp_uuid.mbx
+|
+
+
+[...]
+>> Anirudh had been OOF for some time and would be for another
+>> week iiuc so I thought I'd reply.
+> 
+> Thanks Roman!
+
+My pleasure :)
+
+> 
+> Regards,
+> Anirudh
+> 
+>>
+>> The patch this depends on is 13423063c7cb
+>> ("arm64: kvm, smccc: Introduce and use API for getting hypervisor UUID"),
+>> and this patch has already been pulled into the Linus'es tree.
+>>
+>> As for routing, (arm-)soc should be good it appears as the change
+>> is contained within the firmware drivers path. Although I'd trust more to your,
+>> Arnd's or Wei's opinion than mine!
+>>
+>>>
+>>> --
+>>> Regards,
+>>> Sudeep
+
+-- 
+Thank you,
+Roman
+
