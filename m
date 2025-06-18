@@ -1,102 +1,105 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ABE1946A0
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917832F5318
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750210951; cv=none; b=WWJ/QnI1vqld/tito35LB/D1VQrJjAO1A4UihX1XaEN3yi15Dcacs+bBTdBvnPFwKmXoPPq3FJydznrverz8ijnwWpHogyGvByXJTUXwmYivOFNTnaIoSkePBjEYGOMDq6sVWJWG2ku35JFCk/SJ/fJ/6KxnODk/nSTvHBsFi4M=
+	t=1750211221; cv=none; b=rC+DS7LYXtUr8fRE5aCGFUoPuaW7gP5ZKxh5jtZgg++KFSmcRYTFzYMYaqpFvcCOWraWPINL+SKyGYaLgFGDNiLB3LfFdae6pw2IWXKVKTooAgG5AiqvAJjRXZDmH9zWCjxm0dbgO0Xnbv9+iajBGO/BQx9fMQpJsH5E5DK2W8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750210951; c=relaxed/simple;
-	bh=/X3qnG89234nHayoEZuUoAvqhTyOwJjAY3T0EusUN0o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Kdc8zPKztZCK6fVe2YWUrd1gGVs/eZgfePO6DIF9hw0/XaXIy6Gme0OA+DIb6VhNViklNb9O6ett+1KO6cSP0FjmJztTZ30dvkSbOxFFisMD338Sy0tmAyMWZyaiZrlNYWTqornO+qyp6On49w6lx//rnDZZU+1KDqQL9AUSYE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 7626f4dc4be511f0b29709d653e92f7d-20250618
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:5a4eb028-ca1d-486a-868c-0e7b966aa42d,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:037b4d222d62ec063d42457b7b860325,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:nil,UR
-	L:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,S
-	PR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 7626f4dc4be511f0b29709d653e92f7d-20250618
-Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
-	(envelope-from <jiangyunshui@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 478954252; Wed, 18 Jun 2025 09:42:15 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id CB251E00891C;
-	Wed, 18 Jun 2025 09:42:14 +0800 (CST)
-X-ns-mid: postfix-68521976-658634177
-Received: from kylin-pc.. (unknown [172.25.130.133])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 497DFE008900;
-	Wed, 18 Jun 2025 09:42:13 +0800 (CST)
-From: Yunshui Jiang <jiangyunshui@kylinos.cn>
-To: linux-kernel@vger.kernel.org,
-	linux-mm@vack.org
-Cc: akpm@linux-foundation.org,
-	david@redhat.com,
-	lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com,
-	vbabka@suse.cz,
-	jiangyunshui <jiangyunshui@kylinos.cn>
-Subject: [PATCH] mm: Inline vma_needs_copy
-Date: Wed, 18 Jun 2025 09:42:09 +0800
-Message-ID: <20250618014209.1195734-1-jiangyunshui@kylinos.cn>
-X-Mailer: git-send-email 2.47.1
+	s=arc-20240116; t=1750211221; c=relaxed/simple;
+	bh=IkbfYb/RF0ZIP6sNS/KjbcqAQD2zZbXRas7o6VH2RRs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=fdl2ScOSyKkUayhbyHYKZTUdcQBOinbqbAbhZ7QMOJ1a77YiUXCpJG7EIcVqYlH0a8if17I2dSbcQ15nSYRHDxlUBxlPHCJShMRoLlm+S4jnXTQQaR3wi8F23gN77osKtFTEr6F+xH3S6G5AO5838zbyylhUTbbF15GJusiYV+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bMRPC1mJKz1W3TX;
+	Wed, 18 Jun 2025 09:44:31 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id CC1B018005F;
+	Wed, 18 Jun 2025 09:46:55 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 18 Jun 2025 09:46:55 +0800
+Message-ID: <68eb3c3b-b67c-46e7-a6a5-044d4415e2b7@huawei.com>
+Date: Wed, 18 Jun 2025 09:46:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: impersonate the opener's credentials when
+ accessing backing file
+To: Tatsuyuki Ishi <ishitatsuyuki@google.com>, Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, Jeffle Xu
+	<jefflexu@linux.alibaba.com>, Sandeep Dhavale <dhavale@google.com>
+CC: <linux-erofs@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<shengyong1@xiaomi.com>, <wangshuai12@xiaomi.com>
+References: <20250612-b4-erofs-impersonate-v1-1-8ea7d6f65171@google.com>
+Content-Language: en-US
+From: Hongbo Li <lihongbo22@huawei.com>
+In-Reply-To: <20250612-b4-erofs-impersonate-v1-1-8ea7d6f65171@google.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-From: jiangyunshui <jiangyunshui@kylinos.cn>
 
-Since commit bcd51a3c679d ("hugetlb: lazy page table copies
-in fork()"), the logic about judging whether to copy
-page table inside func copy_page_range has been extracted
-into a separate func vma_needs_copy. While this change
-improves code readability, it also incurs more function call
-overhead, especially where fork() were frequently called.
 
-Inline func vma_needs_copy to optimize the copy_page_range
-performance. Given that func vma_needs_copy is only called
-by copy_page_range, inlining it would not cause unacceptable
-code bloat.
+On 2025/6/12 18:18, Tatsuyuki Ishi wrote:
+> Previously, file operations on a file-backed mount used the current
+> process' credentials to access the backing FD. Attempting to do so on
+> Android lead to SELinux denials, as ACL rules on the backing file (e.g.
+> /system/apex/foo.apex) is restricted to a small set of process.
+> Arguably, this error is redundant and leaking implementation details, as
+> access to files on a mount is already ACL'ed by path.
+> 
+> Instead, override to use the opener's cred when accessing the backing
+> file. This makes the behavior similar to a loop-backed mount, which
+> uses kworker cred when accessing the backing file and does not cause
+> SELinux denials.
+> 
+> Signed-off-by: Tatsuyuki Ishi <ishitatsuyuki@google.com>
+> ---
+>   fs/erofs/fileio.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/fs/erofs/fileio.c b/fs/erofs/fileio.c
+> index 7d81f504bff08f3d5c5d44d131460df5c3e7847d..df5cc63f2c01eb5e7ec4afab9e054ea12cea7175 100644
+> --- a/fs/erofs/fileio.c
+> +++ b/fs/erofs/fileio.c
+> @@ -47,6 +47,7 @@ static void erofs_fileio_ki_complete(struct kiocb *iocb, long ret)
+>   
+>   static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
+>   {
+> +	const struct cred *old_cred;
+>   	struct iov_iter iter;
+>   	int ret;
+>   
+> @@ -60,7 +61,9 @@ static void erofs_fileio_rq_submit(struct erofs_fileio_rq *rq)
+>   		rq->iocb.ki_flags = IOCB_DIRECT;
+>   	iov_iter_bvec(&iter, ITER_DEST, rq->bvecs, rq->bio.bi_vcnt,
+>   		      rq->bio.bi_iter.bi_size);
+> +	old_cred = override_creds(rq->iocb.ki_filp->f_cred);Yeah, rq->iocb.ki_filp keep the opener's cred, so:
 
-Testing was done with the byte-unixbench spawn benchmark
-(which frequently calls fork). I measured 1.7% improvement
-on x86 and 1.8% improvement on arm64.
+Reviewed-by: Hongbo Li <lihongbo22@huawei.com>
 
-Signed-off-by: jiangyunshui <jiangyunshui@kylinos.cn>
----
- mm/memory.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Hongbo
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 8eba595056fe..d15b07f96ab1 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1337,7 +1337,7 @@ copy_p4d_range(struct vm_area_struct *dst_vma, stru=
-ct vm_area_struct *src_vma,
-  * false when we can speed up fork() by allowing lazy page faults later =
-until
-  * when the child accesses the memory range.
-  */
--static bool
-+static __always_inline bool
- vma_needs_copy(struct vm_area_struct *dst_vma, struct vm_area_struct *sr=
-c_vma)
- {
- 	/*
---=20
-2.47.1
-
+>   	ret = vfs_iocb_iter_read(rq->iocb.ki_filp, &rq->iocb, &iter);
+> +	revert_creds(old_cred);
+>   	if (ret != -EIOCBQUEUED)
+>   		erofs_fileio_ki_complete(&rq->iocb, ret);
+>   }
+> 
+> ---
+> base-commit: cd2e103d57e5615f9bb027d772f93b9efd567224
+> change-id: 20250612-b4-erofs-impersonate-d6c2926c56ca
+> 
+> Best regards,
