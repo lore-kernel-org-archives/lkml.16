@@ -1,271 +1,159 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E439610FD
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:33:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B9C1EB9F2
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750221193; cv=none; b=YrnXXezVRJy+rE2q71OJSPbvL2BI5fYxdStrj9Zm6whcQo1u96tB6T87jQFneQ44CrczOGWweZrIBXCdCBijFoYcRZd8ui5AgcJ47Y2KJKa4UmjZLnnGRZH3buIp4mcJ1JhMnR8SAqiRoef9z+mesgmT+78V0j6Du9NsM1FQ3Is=
+	t=1750221197; cv=none; b=IKyHGjAZh5ZBlNTSNYqf33YX0WOKMBlmRaKA6hFLRC461LIrxBJdVx6elbriUd3Uq8erHlAo5AIVPbjG8Fx/urdeS4DVmEt/JK4aH0xuNsFx5/YNsWvJob0xJ2KUC4p9lgTb7FobHTcRa73lx4IB9UDVySIQpX0jygfgGhSJ9Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750221193; c=relaxed/simple;
-	bh=3XYEgvLrx2fs4/fZLwqyes7VHOCqIj1MAnN3kZklhwU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=jWy5UYLHv9i1lrAfqlxgulA1LcSCd1vp1c1MXRnFjEtjECSs1nxRaand6eAuJkrTn9p/LsL81/B2DW40aaTC4m6lbJRDwQ2a1h53NFgpNtcn0BNYMyACHDS/EkYMwmLta/rtlzl/LxBbuhoq6g6A/ZjU1rmLyqonOxjiuylIQwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=bvI0xKsG; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750221197; c=relaxed/simple;
+	bh=ebfzSblDd2Lney01spMGoUSSQfIA+CZSVyZnsdJadNE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jnUDhQP5Cg7ZzJF4CXaqbxHPXdoWVNcdlY9tjS+Y2lv+8QYjKeKrwC2FH3FKVV7JuYnkTa1ExNFtz0IHq4F6QVaDVaNY/U7BzE8/rFsbHjCOkgntAbPSoYdUpIBXwUFUtf0haa9IYkhf/x457nSWrVJJBy1fq1pQlFrpbYSysS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DykWTnyZ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="bvI0xKsG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750221191; x=1781757191;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=3XYEgvLrx2fs4/fZLwqyes7VHOCqIj1MAnN3kZklhwU=;
-  b=bvI0xKsGi5EigQXSPGNoVM3EEwxCPTRioEYsC1nVv/LucBfHjyTcNbny
-   6ozUVLt3/57B5hU/1gQJI15m0qbpiSO6MS3pCY2f6F8ipHjPTMvmwDuM9
-   v7u/kOGG6qS9d0MlMiCu96vNr2Yb4D7PGYjzkzqcOFrf8KloRbV+dG7Un
-   6FFb1xacbQMmILG9YBw7rJ1r+YIzF5VC7pM+P8iqrDfCKfguwtbgxxNPU
-   Vvy/HGf6wKUqzQVjaIrzcoarw9vUZ4sx57CTak5r30uMEsP+g78rarpx6
-   CpoYMi8xehhO2Y0tazcfev3a+BCOh7meRBOw4ybNlrMZKQ+Enc0tmOavF
-   g==;
-X-CSE-ConnectionGUID: 09LArsffQ+mfyqjH8UxHOA==
-X-CSE-MsgGUID: IZPORRVkQYOcQq4Svk2/Aw==
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="42456777"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 17 Jun 2025 21:33:10 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 17 Jun 2025 21:32:50 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Tue, 17 Jun 2025 21:32:44 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 18 Jun 2025 10:02:42 +0530
-Subject: [PATCH] drm/bridge: fix LVDS controller bus format
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DykWTnyZ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2348ac8e0b4so61045ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:33:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750221195; x=1750825995; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ebfzSblDd2Lney01spMGoUSSQfIA+CZSVyZnsdJadNE=;
+        b=DykWTnyZnHBdv73Vb1Ow3drf69YlCm6fSxKeneUFdnZaY/FW+bc6iIeYhNJT1rEr2F
+         VebcQVTWKKo7jqel3AwS+puYf6QmcZY7VvQkcMqUa6SvP7l7UsMxQzBfDOYF8UE8+1hQ
+         xbO9NuaIKEIoJQ8qYMboAxF5czKu8ey4biG/3M8wNyXZ/qhbDrRzHqBP3DAuniz3wMiF
+         jgGMg9qBRzTOHCUAKLo/IOM0Zf3+B8O6oXhZwxzh1+qZ6OL8uS/jnHnYDz4YPH64p8vm
+         60CTY2yozakEmhQ0h9ZNXCD12Vapcf8c0XhJLbp5C9ETn8+xBjWEfqxSQqi4JQVvegn/
+         5cSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750221195; x=1750825995;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ebfzSblDd2Lney01spMGoUSSQfIA+CZSVyZnsdJadNE=;
+        b=ayVkMDvzTiEgR/HzgX2DhjBgVHl190A1c7bOvLXCuJi9IDOhsRNDC0QEBAfMi2c8EP
+         UyZxgRaJWV+MdwvvgZuxQ+nX9pJN27iP5dztF+L6zkSwYV8eoZR8Q/uS4injksRSbB7H
+         wsaxVQux8G1LtFsn3S7xNv0PIJ1T9GEh/9eEWFiInK+jKUPsG3T+kgUvsKoQlkk5Qfs+
+         lMPz9UF1uk19vDgpjI6SvUqKOFY77xa6bn3mzpLen7NoDlyORzVEClqT0I7MJOmoLNWD
+         FLYD6pPo8LvyuBBH/q60aXQ7S2em5wzBTW6OvfTQbVQ7HPV9vGFnW9OpxC7w9c7m4MlV
+         vaIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWhbfO77o02YAi2RBp6b2f7YAnXS6Navu9qt8g5M+WFWc2y09VN2577Vl9X6eVg5Drn+9xwAMAIuWmQwnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk0CIlctKXMrV3bNWHv7mAeIjMVT3Qaln+dQu1cdTm3G99iHrC
+	M4ICfaXy0kN5UoRd1UcbBqDSTtOhw1wGpOpkZpb8d6ezOpeWH3tkoXstT2a2QphRNlAM6WzzEgA
+	QtS7YA00rVohKDeaUI/n/n+zR1a4/mcT4HhUGCHbX
+X-Gm-Gg: ASbGncvNMVQJ0x89BV3TUIJhdjwiYcvbdwHUDw4nR0izzH1kE5S6OdNfUWe9uw6u8VB
+	eVSOkmWxKLZhDasAsiJyvYdlKifGyPwpiyYpbe0hnviPJCySGNk5froOcbXLQ2EfFVfIlyV7jqf
+	PsFKkXN2m5Ak7qPUyAOPlBjrnj07i+vuv1UESu4ByRVA==
+X-Google-Smtp-Source: AGHT+IFKeAWQBuzaMSnC6mysNbtOjppLjuQArsLUzA4dlHLHSRqUjBPLMShGNPjFjvO18z6DuP9yuEGuuR8YpzTmskI=
+X-Received: by 2002:a17:902:e88c:b0:234:bcd0:3d6f with SMTP id
+ d9443c01a7336-2366ed968a9mr10548455ad.1.1750221194853; Tue, 17 Jun 2025
+ 21:33:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com>
-X-B4-Tracking: v=1; b=H4sIAGlBUmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDM0ML3dzM5KL85IzMAt2cspRi3SRzQ1PDFEszA0uTRCWgpoKi1LTMCrC
- B0bG1tQADmCpjYAAAAA==
-To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
-	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
-	"Robert Foss" <rfoss@kernel.org>, Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, "Jernej
- Skrabec" <jernej.skrabec@gmail.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	"Sandeep Sheriker M" <sandeep.sheriker@microchip.com>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750221165; l=6120;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=wFIOy/BbQ21F+4ARZL9GilNTH/zm3W0MIAOZBTA2FNw=;
- b=zUc37lYQjydKNH2Lx3Buaqalv1DxlrVCdywIE22mvbXyZwGPlLil3Sp7OVnb0Mz5z7ZQ2mUFz
- V7L4k4SzHz4BxXG4n+zOYKBVn3rQN5q40gNSYZfJOtE4frGCbev16yr
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+References: <aCVZIuBHx51o7Pbl@yzhao56-desk.sh.intel.com> <diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com>
+ <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com> <CAGtprH_Vj=KS0BmiX=P6nUTdYeAZhNEyjrRFXVK0sG=k4gbBMg@mail.gmail.com>
+ <aE/q9VKkmaCcuwpU@yzhao56-desk.sh.intel.com> <CAGtprH_SKJ4hbQ4aSxxybcsD=eSQraP7a4AkQ3SKuMm2=Oyp+A@mail.gmail.com>
+ <aFEQy4g4Y2Rod5GV@yzhao56-desk.sh.intel.com> <CAGtprH_ypohFy9TOJ8Emm_roT4XbQUtLKZNFcM6Fr+fhTFkE0Q@mail.gmail.com>
+ <8f686932b23ccdf34888db3dc5a8874666f1f89f.camel@intel.com> <aFIMbt7ZwrJmPs4y@yzhao56-desk.sh.intel.com>
+In-Reply-To: <aFIMbt7ZwrJmPs4y@yzhao56-desk.sh.intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Tue, 17 Jun 2025 21:33:02 -0700
+X-Gm-Features: AX0GCFtLT2FkMcS_JKQW47xDGN1m_HAdgYfNG0jsWh4JqpK5QckAdFnigfWxYvQ
+Message-ID: <CAGtprH9Wj7YW-_sfGQfwKHRXL-7fFStXiHn2O32ptXAFbFB8Tw@mail.gmail.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, "Du, Fan" <fan.du@intel.com>, 
+	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com" <seanjc@google.com>, 
+	"Weiny, Ira" <ira.weiny@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"ackerleytng@google.com" <ackerleytng@google.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "jroedel@suse.de" <jroedel@suse.de>, 
+	"Miao, Jun" <jun.miao@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+On Tue, Jun 17, 2025 at 5:49=E2=80=AFPM Yan Zhao <yan.y.zhao@intel.com> wro=
+te:
+>
+> On Wed, Jun 18, 2025 at 08:34:24AM +0800, Edgecombe, Rick P wrote:
+> > On Tue, 2025-06-17 at 01:09 -0700, Vishal Annapurve wrote:
+> > > Sorry I quoted Ackerley's response wrongly. Here is the correct refer=
+ence [1].
+> >
+> > I'm confused...
+> >
+> > >
+> > > Speculative/transient refcounts came up a few times In the context of
+> > > guest_memfd discussions, some examples include: pagetable walkers,
+> > > page migration, speculative pagecache lookups, GUP-fast etc. David H
+> > > can provide more context here as needed.
+> > >
+> > > Effectively some core-mm features that are present today or might lan=
+d
+> > > in the future can cause folio refcounts to be grabbed for short
+> > > durations without actual access to underlying physical memory. These
+> > > scenarios are unlikely to happen for private memory but can't be
+> > > discounted completely.
+> >
+> > This means the refcount could be increased for other reasons, and so gu=
+estmemfd
+> > shouldn't rely on refcounts for it's purposes? So, it is not a problem =
+for other
+> > components handling the page elevate the refcount?
+> Besides that, in [3], when kvm_gmem_convert_should_proceed() determines w=
+hether
+> to convert to private, why is it allowed to just invoke
+> kvm_gmem_has_safe_refcount() without taking speculative/transient refcoun=
+ts into
+> account? Isn't it more easier for shared pages to have speculative/transi=
+ent
+> refcounts?
 
-The current LVDS controller driver is hardcoded to map LVDS lanes to the
-JEIDA format. Consequently, connecting an LVDS display that supports the
-VESA format results in a distorted display due to the format mismatch.
+These speculative refcounts are taken into account, in case of unsafe
+refcounts, conversion operation immediately exits to userspace with
+EAGAIN and userspace is supposed to retry conversion.
 
-Query the panel driver and set the appropriate format to resolve the issue.
+Yes, it's more easier for shared pages to have speculative/transient refcou=
+nts.
 
-Signed-off-by: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
----
- drivers/gpu/drm/bridge/microchip-lvds.c | 108 ++++++++++++++++++++++++++++++--
- 1 file changed, 102 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/bridge/microchip-lvds.c
-index 9f4ff82bc6b4..5e99c01033bb 100644
---- a/drivers/gpu/drm/bridge/microchip-lvds.c
-+++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-@@ -11,6 +11,7 @@
- #include <linux/component.h>
- #include <linux/delay.h>
- #include <linux/jiffies.h>
-+#include <linux/media-bus-format.h>
- #include <linux/mfd/syscon.h>
- #include <linux/of_graph.h>
- #include <linux/pinctrl/devinfo.h>
-@@ -41,9 +42,11 @@
- 
- /* Bitfields in LVDSC_CFGR (Configuration Register) */
- #define LVDSC_CFGR_PIXSIZE_24BITS	0
-+#define LVDSC_CFGR_PIXSIZE_18BITS	1
- #define LVDSC_CFGR_DEN_POL_HIGH		0
- #define LVDSC_CFGR_DC_UNBALANCED	0
- #define LVDSC_CFGR_MAPPING_JEIDA	BIT(6)
-+#define LVDSC_CFGR_MAPPING_VESA		0
- 
- /*Bitfields in LVDSC_SR */
- #define LVDSC_SR_CS	BIT(0)
-@@ -58,6 +61,7 @@ struct mchp_lvds {
- 	struct clk *pclk;
- 	struct drm_panel *panel;
- 	struct drm_bridge bridge;
-+	struct drm_connector connector;
- 	struct drm_bridge *panel_bridge;
- };
- 
-@@ -66,6 +70,11 @@ static inline struct mchp_lvds *bridge_to_lvds(struct drm_bridge *bridge)
- 	return container_of(bridge, struct mchp_lvds, bridge);
- }
- 
-+static inline struct mchp_lvds *drm_connector_to_mchp_lvds(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct mchp_lvds, connector);
-+}
-+
- static inline u32 lvds_readl(struct mchp_lvds *lvds, u32 offset)
- {
- 	return readl_relaxed(lvds->regs + offset);
-@@ -79,6 +88,11 @@ static inline void lvds_writel(struct mchp_lvds *lvds, u32 offset, u32 val)
- static void lvds_serialiser_on(struct mchp_lvds *lvds)
- {
- 	unsigned long timeout = jiffies + msecs_to_jiffies(LVDS_POLL_TIMEOUT_MS);
-+	struct drm_connector *connector = &lvds->connector;
-+
-+	/* default to jeida-24 */
-+	u32 bus_formats = MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-+	u8 map, pix_size;
- 
- 	/* The LVDSC registers can only be written if WPEN is cleared */
- 	lvds_writel(lvds, LVDSC_WPMR, (LVDSC_WPMR_WPKEY_PSSWD &
-@@ -93,24 +107,106 @@ static void lvds_serialiser_on(struct mchp_lvds *lvds)
- 		usleep_range(1000, 2000);
- 	}
- 
-+	if (connector && connector->display_info.num_bus_formats)
-+		bus_formats = connector->display_info.bus_formats[0];
-+
- 	/* Configure the LVDSC */
--	lvds_writel(lvds, LVDSC_CFGR, (LVDSC_CFGR_MAPPING_JEIDA |
--				LVDSC_CFGR_DC_UNBALANCED |
--				LVDSC_CFGR_DEN_POL_HIGH |
--				LVDSC_CFGR_PIXSIZE_24BITS));
-+	switch (bus_formats) {
-+	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
-+		map = LVDSC_CFGR_MAPPING_JEIDA;
-+		pix_size = LVDSC_CFGR_PIXSIZE_18BITS;
-+		break;
-+	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
-+		map = LVDSC_CFGR_MAPPING_VESA;
-+		pix_size = LVDSC_CFGR_PIXSIZE_24BITS;
-+		break;
-+	default:
-+		map = LVDSC_CFGR_MAPPING_JEIDA;
-+		pix_size = LVDSC_CFGR_PIXSIZE_24BITS;
-+		break;
-+	}
-+
-+	lvds_writel(lvds, LVDSC_CFGR, (map | LVDSC_CFGR_DC_UNBALANCED |
-+		    LVDSC_CFGR_DEN_POL_HIGH | pix_size));
- 
- 	/* Enable the LVDS serializer */
- 	lvds_writel(lvds, LVDSC_CR, LVDSC_CR_SER_EN);
- }
- 
-+static int mchp_lvds_connector_get_modes(struct drm_connector *connector)
-+{
-+	struct mchp_lvds *lvds = drm_connector_to_mchp_lvds(connector);
-+
-+	return drm_panel_get_modes(lvds->panel, connector);
-+}
-+
-+static const struct drm_connector_helper_funcs mchp_lvds_connector_helper_funcs = {
-+	.get_modes = mchp_lvds_connector_get_modes,
-+};
-+
-+static const struct drm_connector_funcs panel_bridge_connector_funcs = {
-+	.reset = drm_atomic_helper_connector_reset,
-+	.fill_modes = drm_helper_probe_single_connector_modes,
-+	.destroy = drm_connector_cleanup,
-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-+};
-+
- static int mchp_lvds_attach(struct drm_bridge *bridge,
- 			    struct drm_encoder *encoder,
- 			    enum drm_bridge_attach_flags flags)
- {
- 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
-+	struct drm_connector *connector = &lvds->connector;
-+	int ret;
-+
-+	ret = drm_bridge_attach(encoder, lvds->panel_bridge,
-+				bridge, flags);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
-+		return 0;
-+
-+	if (!encoder) {
-+		dev_err(lvds->dev, "Missing encoder\n");
-+		return -ENODEV;
-+	}
-+
-+	drm_connector_helper_add(connector,
-+				 &mchp_lvds_connector_helper_funcs);
-+
-+	ret = drm_connector_init(bridge->dev, connector,
-+				 &panel_bridge_connector_funcs,
-+				 DRM_MODE_CONNECTOR_LVDS);
-+	if (ret) {
-+		dev_err(lvds->dev, "Failed to initialize connector %d\n", ret);
-+		return ret;
-+	}
- 
--	return drm_bridge_attach(encoder, lvds->panel_bridge,
--				 bridge, flags);
-+	drm_panel_bridge_set_orientation(connector, bridge);
-+
-+	ret = drm_connector_attach_encoder(&lvds->connector, encoder);
-+	if (ret) {
-+		dev_err(lvds->dev, "Failed to attach connector to encoder %d\n", ret);
-+		drm_connector_cleanup(connector);
-+		return ret;
-+	}
-+
-+	if (bridge->dev->registered) {
-+		if (connector->funcs->reset)
-+			connector->funcs->reset(connector);
-+
-+		ret = drm_connector_register(connector);
-+		if (ret) {
-+			dev_err(lvds->dev, "Failed to attach connector to register %d\n", ret);
-+			drm_connector_cleanup(connector);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
- }
- 
- static void mchp_lvds_enable(struct drm_bridge *bridge)
-
----
-base-commit: 4325743c7e209ae7845293679a4de94b969f2bef
-change-id: 20250618-microchip-lvds-b7151d96094a
-
-Best regards,
--- 
-Dharma Balasubiramani <dharma.b@microchip.com>
-
+>
+> [3] https://lore.kernel.org/lkml/d3832fd95a03aad562705872cbda5b3d248ca321=
+.1747264138.git.ackerleytng@google.com/
+>
+> > >
+> > > Another reason to avoid relying on refcounts is to not block usage of
+> > > raw physical memory unmanaged by kernel (without page structs) to bac=
+k
+> > > guest private memory as we had discussed previously. This will help
+> > > simplify merge/split operations during conversions and help usecases
+> > > like guest memory persistence [2] and non-confidential VMs.
+> >
+> > If this becomes a thing for private memory (which it isn't yet), then c=
+ouldn't
+> > we just change things at that point?
+> >
+> > Is the only issue with TDX taking refcounts that it won't work with fut=
+ure code
+> > changes?
+> >
+> > >
+> > > [1] https://lore.kernel.org/lkml/diqz7c2lr6wg.fsf@ackerleytng-ctop.c.=
+googlers.com/
+> > > [2] https://lore.kernel.org/lkml/20240805093245.889357-1-jgowans@amaz=
+on.com/
+> >
