@@ -1,180 +1,114 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24251891AB
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574BC1891AB;
+	Wed, 18 Jun 2025 06:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228248; cv=none; b=YsRdleWcQyHcRLD4rkAHaXT9KoBbwX4dwRNLkxtC2dPSBthU1q9ggmBIrYSYUkqnS019y9PjSg7DdDr+Wz7naS3FsbDb2zgZGjqeJwwTFqdbW9+YhSAN0J9qKijO7KrbD4Xd2dSd2jTw5E0aCeWXRWd40K1oEUkST5P+oJE5sGU=
+	t=1750228330; cv=none; b=cjZtq0xd9WW4z3zt2emQu7ky57cwB1ZIne3ll8MiQduOweRhtW3TiTVtvl6WqYAAiOS8HEnE/2JIlz1jMMwAPfwSKxFrU72Sa1bifxZz71EfgPDoZ7c24Q69Dv8HFcTR02KqE08QgB/QaNpJmobCNJ2+c0fsA8M/U81n322Z+/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228248; c=relaxed/simple;
-	bh=GwxwPzeSyyAMO2qqwM+2BWp6xmKTlF3oELAECR7B3Bg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=IdTCWrBvAs9xTHbYBkDtMZSqtRmD/M1KGKhPR9Kd7acti/pvvm+w4E5bFAR6UHcTu4VlAlWk5ES1LqIEYGuybPYaEAkHZ3BQXoH00Olai773JSzmQ7NFlY5gi//2qixXMssGlXw9CVgjfuCF5XUi9b7o2dZdvj8ENOhL4GZ7smQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hcsD/gx9; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750228330; c=relaxed/simple;
+	bh=E7YKjrRDmlenARAqAx807YrnbV8LmJeT4G+LU7Mtm4M=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=XCgrcyCszly8fZbzBdnz2DUjsoUB0MpIKP19FAUlE+ac9u9+o9sHlmHejs9LPovDz+KbWpQhLzwx7BM8qQqq/cls8ylcnptqs4/UJY8eAv5WodO5g5SBwiLLN/BbOwlEQLWO7dYaFNZK2gJeTldPqQdUVPZR99aV/8K/4FOtkjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=cOk0JA4N; arc=none smtp.client-ip=203.205.221.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hcsD/gx9"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250618063042euoutp02cfa3559d99288628f62e51686e1475cf~KD1A_tS3V1669216692euoutp02i
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:30:42 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250618063042euoutp02cfa3559d99288628f62e51686e1475cf~KD1A_tS3V1669216692euoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750228242;
-	bh=1MbaT0M7X+CNTBBnoBOvgEnKdguYyI7xZByqq7AW85k=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=hcsD/gx9V+csWpPcpEEp5NayqibX3OEVerbVqTihwEcZCdKVtFrTGWI6N7YKV3Tyv
-	 5okxdGJBjsWtOapQ1pR2x8+8iq2akDl8IG8MHtP+WmR0zep0ZkQ9HNV2sE+oAcD9Tx
-	 1a2SlFRc0EorrYRUBHsuCjpHRUpJzcAB9kS3b+/w=
-Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250618063041eucas1p18f188e6ec774c7e773f54cb8c1df5a64~KD1Aez1Bm2197421974eucas1p1l;
-	Wed, 18 Jun 2025 06:30:41 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250618063040eusmtip13b23ecaefd4dc334c29cce63c7b33ae2~KD0-cfd6C2880328803eusmtip1F;
-	Wed, 18 Jun 2025 06:30:40 +0000 (GMT)
-Message-ID: <d005ad5c-aded-4dea-b6eb-a9ce78c04728@samsung.com>
-Date: Wed, 18 Jun 2025 08:30:39 +0200
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="cOk0JA4N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750228322; bh=zZ5/lyBSnElje+Zi301ZoNFtaRtKmYgn2B2hHpqvEdk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=cOk0JA4N4MAjzTZeseiKdlXOPDOApxbqCv2ICGj9clM1pj3iywIHX26gCYqoGBeWp
+	 xPo4rxba+71TyGhGCtkxmN6/EmYWGxjNS1JocH1eQDxGPRICTRQzhV7QjZa1qN/Av/
+	 AoUDb0OvO3BraXSIyoBgc3RFq1N230WJwOc7e/GE=
+Received: from VM-222-126-tencentos.localdomain ([14.116.239.36])
+	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
+	id 8009BA73; Wed, 18 Jun 2025 14:32:00 +0800
+X-QQ-mid: xmsmtpt1750228320thwxg1sn2
+Message-ID: <tencent_D9A0F9052526AD09F7FF76DD5F2529FDDD05@qq.com>
+X-QQ-XMAILINFO: NT7dO8ok7FP2+4Q/xwnZNFiFZxVOuXHuhWGwf3ofos1US7wUs82qDUAuZkn8dx
+	 SQGs04yti257mOgOhjEHx9Ou705M0tVpUrvilc3Yym7lex//A4JPN/6JiCAS60W+ORsmEBuNXA3P
+	 ruOHZsYZVor0xeTHOPLPh/C2k2jE72OpIkInKo6GMIeddunP0xkPQ+MqbloX83YC8jFse0yD8ARl
+	 s8joZQ+6qPrvuqDNZ60Tq/zEfUW+wEIZKnwwrvjZYDU7pCL73XYH+CA/dSL/2gTx8jBJulx+aY9s
+	 MG0IuZlqmCWYFzeWqI4/KhlQVHAK4m8HnNJW+PfMBnoJJnDw1BlPWP7LWgxLtsIgIeVnULhGWpto
+	 /t0aocJD1+z0+S8BHyIpDz0Oc0lNYpOW+rxopaYPoHP0X2YRYOCxpvr09sfYnmF6GrwGIasqbUzD
+	 xRpl6NBTsS3barEuL5CP5qtyySQH/1obxifL2LQMir1E0rcsLGReBlrLqfZoX+CHqKr6PRDh4q9J
+	 TtQC9i4MoZWiLDTfz04WJL8OvmmDvcDlqT6MfBd+kAlLSfHRvMmwS0ks6u752zpJb4HNblFLhb1B
+	 eAYfXP2ZakgnarZGHSHWfAn+au1CRU0n73/UdSPGEgCKmxaC8Dva7sQexi8OpARV/2S1BwAMUEVn
+	 +NN99xfwLpFhq2jLjPRDw7s1+PIPIprcQZfrPoUAe6vPr5VkLK0cVAgTeP3U7UOBNaox8dwVuH/4
+	 Dyer7gsYrjsXuQoanrWzkT7eH2XZqDvmjgxvGRRYB9+/4Jz/LhsN+UAYFqVZqTQ3TIPeW+ARCBvm
+	 uqtj1QYHIBbd0p2ErzIbKNekDTtMsA3RdGUwuma2bAM3ABYZ679cRnbTCeO3OSu8GmgycHLv9Wni
+	 iEbNT1F0SL9NzRxsW6WVfdNpV8bdRXNcjuDmaTMZ+BmNOpzH2/hfEL+lpvcNxloyz26xF4Nx5hv0
+	 pI9a/0Cvd6K2KlP3J9777eyZ6rul1SlyzjyiAMa7gCuyHrkGZUzwsEtj/u+aGLZC1Yvd52C3fCzZ
+	 xCsk0OBY27xOgAQAPC+2AA1ow82cGlqBywA76spGx1ZmMCuT52
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: jackysliu <1972843537@qq.com>
+To: bvanassche@acm.org
+Cc: 1972843537@qq.com,
+	James.Bottomley@HansenPartnership.com,
+	linux-kernel@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	martin.petersen@oracle.com
+Subject: RE:[PATCH] scsi: fix out of bounds error in /drivers/scsi
+Date: Wed, 18 Jun 2025 14:31:55 +0800
+X-OQ-MSGID: <20250618063155.1587242-1-1972843537@qq.com>
+X-Mailer: git-send-email 2.43.5
+In-Reply-To: <07c4c84d-0c52-4843-b32d-6806e58892fe@acm.org>
+References: <07c4c84d-0c52-4843-b32d-6806e58892fe@acm.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Aradhya Bhatia
-	<aradhya.bhatia@linux.dev>
-Cc: DRI Development List <dri-devel@lists.freedesktop.org>, Linux Kernel
-	List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Vignesh
-	Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>, Jayesh
-	Choudhary <j-choudhary@ti.com>, Alexander Sverdlin
-	<alexander.sverdlin@siemens.com>, Dmitry Baryshkov <lumag@kernel.org>,
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
-	Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
-	<jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten
-	Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
-	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <3adb1d12-7cd5-4beb-9978-c3cae702f338@ideasonboard.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250618063041eucas1p18f188e6ec774c7e773f54cb8c1df5a64
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19
-X-EPHeader: CA
-X-CMS-RootMailID: 20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19
-References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
-	<20250605171524.27222-4-aradhya.bhatia@linux.dev>
-	<CGME20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19@eucas1p2.samsung.com>
-	<2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
-	<306f142f-f9c9-44ab-a5b9-c71db76b2b80@ideasonboard.com>
-	<b4d8c5b2-3ad7-4327-9985-d097d095ccb5@samsung.com>
-	<3adb1d12-7cd5-4beb-9978-c3cae702f338@ideasonboard.com>
+Content-Transfer-Encoding: 8bit
 
-On 16.06.2025 17:40, Tomi Valkeinen wrote:
-> On 12/06/2025 09:31, Marek Szyprowski wrote:
->> On 12.06.2025 07:49, Tomi Valkeinen wrote:
->>> On 11/06/2025 13:45, Marek Szyprowski wrote:
->>>> On 05.06.2025 19:15, Aradhya Bhatia wrote:
->>>>> From: Aradhya Bhatia <a-bhatia1@ti.com>
->>>>>
->>>>> Move the bridge pre_enable call before crtc enable, and the bridge
->>>>> post_disable call after the crtc disable.
->>>>>
->>>>> The sequence of enable after this patch will look like:
->>>>>
->>>>> 	bridge[n]_pre_enable
->>>>> 	...
->>>>> 	bridge[1]_pre_enable
->>>>>
->>>>> 	crtc_enable
->>>>> 	encoder_enable
->>>>>
->>>>> 	bridge[1]_enable
->>>>> 	...
->>>>> 	bridge[n]_enable
->>>>>
->>>>> And, the disable sequence for the display pipeline will look like:
->>>>>
->>>>> 	bridge[n]_disable
->>>>> 	...
->>>>> 	bridge[1]_disable
->>>>>
->>>>> 	encoder_disable
->>>>> 	crtc_disable
->>>>>
->>>>> 	bridge[1]_post_disable
->>>>> 	...
->>>>> 	bridge[n]_post_disable
->>>>>
->>>>> The definition of bridge pre_enable hook says that,
->>>>> "The display pipe (i.e. clocks and timing signals) feeding this bridge
->>>>> will not yet be running when this callback is called".
->>>>>
->>>>> Since CRTC is also a source feeding the bridge, it should not be enabled
->>>>> before the bridges in the pipeline are pre_enabled. Fix that by
->>>>> re-ordering the sequence of bridge pre_enable and bridge post_disable.
->>>>>
->>>>> While at it, update the drm bridge API documentation as well.
->>>>>
->>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>>> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>>> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
->>>>> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
->>>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
->>>>> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
->>>> This patch landed in today's linux-next as commit c9b1150a68d9
->>>> ("drm/atomic-helper: Re-order bridge chain pre-enable and
->>>> post-disable"). In my tests I found that it breaks booting of Samsung
->>>> Exynos 5420/5800 based Chromebooks (Peach-Pit and Peach-Pi). Both of
->>>> them use Exynos DRM with Exynos_DP sub-driver (Analogix DP) and EDP
->>>> panel. Booting stops at '[drm] Initialized exynos 1.1.0 for exynos-drm
->>>> on minor 0' message. On the other hand, the Samsung Exynos5250 based
->>>> Snow Chromebook boots fine, but it uses dp-lvds nxp,ptn3460 bridge and
->>>> lvds panel instead of edp panels. This looks like some sort of deadlock,
->>>> because if I disable FBDEV emulation, those boards boots fine and I'm
->>>> able to run modetest and enable the display. Also the DRM kernel logger
->>>> seems to be working fine, although I didn't check the screen output yet,
->>>> as I only have a remote access to those boards. I will investigate it
->>>> further and let You know.
->>> Thanks for the report. I was trying to understand the pipeline, but I'm
->>> a bit confused. Above you say Peach-Pit uses DP and EDP panel, but if I
->>> look at arch/arm/boot/dts/samsung/exynos5420-peach-pit.dts, it connects
->>> a dp->lvds bridge (parade,ps8625). Peach-Pi seems to connect to an eDP
->>> panel.
->>>
->>> Is the above correct? Do both Peach-Pi and Peach-Pit fail?
->> Yes, sorry, my fault. I much have checked the same (peach-pi) dts 2
->> times. Both Peach-Pi and Peach-Pit fails, while Snow works fine. All
->> three use the same Exynos DP (based on analogix dp) driver. I will try
->> to play a bit more with those boards in the afternoon, hopefully getting
->> some more hints where the issue is.
-> Did you get a chance to test this more? Any hints what happens will help =)
+On 6/17/25 2:03 AM, jackysliu wrote:
+> Out-of-bounds vulnerability found in ./drivers/scsi/sd.c,
+> sd_read_block_limits_ext Function Due to Unreasonable boundary checks.
+> Out-of-bounds read vulnerability exists in the
+> Linux kernel's SCSI disk driver (./drivers/scsi/sd.c).
+> The flaw occurs in the sd_read_block_limits_ext function
+>   when processing Vital Product Data (VPD) page B7 (Block Limits Extension)
+>   responses from storage devices
+> 
+> Signed-off-by: jackysliu <1972843537@qq.com>
+> ---
+>   drivers/scsi/sd.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+> index 3f6e87705b62..eeaa6af294b8 100644
+> --- a/drivers/scsi/sd.c
+> +++ b/drivers/scsi/sd.c
+> @@ -3384,7 +3384,7 @@ static void sd_read_block_limits_ext(struct scsi_disk *sdkp)
+>   
+>   	rcu_read_lock();
+>   	vpd = rcu_dereference(sdkp->device->vpd_pgb7);
+> -	if (vpd && vpd->len >= 2)
+> +	if (vpd && vpd->len >= 6)
+>   		sdkp->rscs = vpd->data[5] & 1;
+>   	rcu_read_unlock();
+>   }
 
-I've spent some time debugging this issue, but so far I only got 
-something I don't really understand. This issue is somehow related with 
-the DP clock enabling and disabling, what is being done from 
-exynos_dp_poweron() and exynos_dp_poweroff() functions, which are called 
-from analogix_dp_resume() and analogix_dp_suspend(). The lockup happens 
-somewhere while registering the fbdev console, with console lock held, 
-what makes debugging much harder.
+On 6/17/25 13:44 PM , Bart Van Assche wrote:
+>Fixes: and Cc: stable tags are missing. Please add these.
+>
+>How has this been detected? Please mention this in the patch
+>description. When I wrote the above code I was assuming that vpd->len
+>represents the contents of the PAGE LENGTH field (bytes 2 and 3).
+>Apparently vpd->len is the length in bytes of the entire VPD page.
+>
+>Thanks,
+>
+>Bart.
 
-I've did some experiments with pm runtime of the analogix_dp_core driver 
-and increased autosuspend delay to 200 msec. This magically fixed the 
-issue, but I still see no direct calls to analogix_dp without proper pm 
-runtime guards.
+Sure,I'll explain in the patch later.
+Can I know what kind of impact this vulnerability will have?
+And is it possible to get a cve number?
 
+Thanks,
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Jackysliu
 
