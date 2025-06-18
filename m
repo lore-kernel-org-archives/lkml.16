@@ -1,140 +1,160 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAE01D63D8
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479451A23AC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:01:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750266033; cv=none; b=kGwO6uPepVjRNeRZuPmj6STsBVcUcZ1tF/E6toBa0gk8R+BPeYmV3nCQ3dkga1OJwj0Rfgpj3LUZl2K8mSHIavgbGbMwBPr0bY273GsEqXI4Izgl4HkHX6HhA96b7m1xY02sNEZy8zYUXgacdqtm9xcBnn/5+PNS6ZB4+ao2uJQ=
+	t=1750266093; cv=none; b=OloTRAd/tUC2w+55VgrE8PeORCUP0AJMwBmePmMa9iOUzmxhQE4k77jvEv/ShItcjMjhszV5fypaNeJpnPESB2jNcBUa9cTFkadJo6AdbAKliC/M7GV6a0XzOoMIwW7LUDaikc9gyykxzbkeVeRKwXQ1tDoI0Yfc+7xV7EpYU8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750266033; c=relaxed/simple;
-	bh=+8Xdqwb6MvOa9JgOjMPmutzEepHU6LBWPxhoVAtdHHk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EREAorp2q0eojDsP2Wokt75yjEp1uiNENI2A3b9LHWprg2nzi1gT1PN1LCLqNq+IA9jJb2Cq1PEEijDZ9hKhKkjlC3YqWRI52/C5gZ5O4j2SygFWHp5oBFW556fhT/+7reAlrJk1MGfBWVaQQGq6pIDT4yA0T/DRYxJG0OPKX60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gLlzbqTP; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750266093; c=relaxed/simple;
+	bh=PpFbNTj2nj7ppVdhf/dyRdlBwTjUyxClqGpq43MQ/hU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HU14MEW9aPnpgzTlZX5PWMRmo3T+He9Eh88Pl2LLKhP+M6LT+hXMDbl0R5v6aCm1xvX1E36914BpEPycGmLXXRyS8rThunpY94Zna7mvpJpo9grIbzGGTeal4x5WM2j8uRO9Eal1qHsCo6O4Z6UEUNwV1N3CyAVSoNPY27ScYOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UawI4Nhr; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gLlzbqTP"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5533303070cso6911683e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:00:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UawI4Nhr"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-453079c1e2eso3677845e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:01:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750266029; x=1750870829; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=suse.com; s=google; t=1750266089; x=1750870889; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OxTtuzusVWGqXpGsGysxbx2Frn0OYva/hDBE1FUWIBE=;
-        b=gLlzbqTPf/GdtLrDXOO1UxqicEoY8LKaUh1Hck/2/j6M7gHgMw14kX/GildZRh/9zf
-         nAC51FFNJkA8qY4KcDgA+zaz+8rJPC9W30WytThRwAP3Fv6k4mwK4yMqaSMlKw0AeNtk
-         4sFqa0liiR0XrECqxPTxvefJ6+fui69u4huVAriuIiu+SggLO16eG7RU9WiJnJToWT/E
-         JqdtyRKPA1mCVXBN7PaSD0euGTSP0jQ4MF4/AgU196BoF7ew7D3DC8B2ZbNW7p1r9u2d
-         q5q2g0ibe/4zcOc81a0kCFjMhNyggezAx4wzvqbfk8Ae/iz5pYkeIlveRaqeGwSLX7MD
-         9HrA==
+        bh=Jbnv5pg3BvERqXuKSCApfgJwP3ByC0KS1+2LO+hBU+Q=;
+        b=UawI4NhrWTVG1UwO3wxz6ou7HEfPyI93qXYvhwvLnsfkp2++PbG++9zol8X5RP+nxg
+         adBeeEyaQrV4oWmTrcs+wUcZStjREkwLRZ/9dn3eS7ZY5ylOoYyUezPUgZyF/V6sVS5h
+         NmjQVuIyYED1ptmQtMTBnxCUpzCOysOU6a+ci7C/s7wKOjNDddrUVCsLZ11LbO+XTXzW
+         0BbByMMCx630k8YB39Mu3MEw82plX99YEIuZZncb2CIE8UQ9Hwi2gDxKSVp/hYuxLBaP
+         kur/Oo97WJpITbeoHq15cr81ZAgFjaXo7yc5I97ubpukGS/B7KbnpSFHw3b91iK2j56Z
+         kIOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750266029; x=1750870829;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750266089; x=1750870889;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OxTtuzusVWGqXpGsGysxbx2Frn0OYva/hDBE1FUWIBE=;
-        b=qCnr+dyPTvkz6hjHp0Gs0VX8QRlkm02L1ly0YdGvW1shUAbh/HITJKf3ywbUi7XUK6
-         wjZqqygN+UPfYZHFqKaTQQuoSYPbf/6kqJZQDD1UnkpKFxidKAE5JtoSnYqapvV86t+Z
-         Wgvv2bM2Q8N481gOR4ML2XA87B+QZGnxislhgc1gQ9uYy14WbhlUlB49mEuqmET6WRJg
-         TGFA9lWIl8f/qHz5196kCOb34iVIcjZTTOpJaLsM8lbD3ObiNpqdoIrO3pCYLo8tNpUf
-         7LUFCurm9iFNbTcr+3puWS5t/gndXsk5LzUia88U/f08b1GRhL+3qKez5MZVSS87iSxP
-         zKHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjtMiLeQZ8ajjRiXRZx5l+zdYdEEmn3peaeB190U2aj0+LpyCk/kzI0s28dzVpY2Yp39Mg4d5YlV6wezU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIaMq+lHLV15gUe4Jc5xD7F0emDzAgnsuv+g6GNSjfi9LlWcDr
-	7J2vBJ69uzBHb8m6IZxw5ds6uVkhjYROufzK6KtleFVskveoXSZnTrHNPqnydhcxWXWQLjwJW+t
-	Xd5WDh9ytLAuj2qWVvp5tyBV//GhrT/A0QaubZ7v7wg==
-X-Gm-Gg: ASbGncuF3zXZgMztTLUO3eRPQzJfQl7pl1YpDebwS8K445ULx61Nz/0/tPYq9gw2VzP
-	pFnjXM0uOt+kVF7K1uMsFHb4/kw53Xo5AwikPfZCIGzp29/z6ODwkH1ijx1m1tKDEvESALyEJbo
-	oNQ7Dk+l3kbUOOnR32Wt2Bn/ARMuBiikqTFjcIIYNOD4RAdAAK8UxcSTTn+CbQXLyL1ElREQ5D7
-	g==
-X-Google-Smtp-Source: AGHT+IFrk7wjLo0FScAaHSeULurkvYIZ6q3poIqbDoop4mdMvyFf4GdTA027YlkMWkLw9hocI1+ULYkfCsJCJgw5Ht4=
-X-Received: by 2002:a05:6512:6ca:b0:553:25b2:fd2d with SMTP id
- 2adb3069b0e04-553b6f16e9cmr4855031e87.30.1750266029272; Wed, 18 Jun 2025
- 10:00:29 -0700 (PDT)
+        bh=Jbnv5pg3BvERqXuKSCApfgJwP3ByC0KS1+2LO+hBU+Q=;
+        b=MMosYUuWXjMWvACcqqJed2D/FgnnntMN8EWwIvlmLJUfqv3xsz2eGjNaoZ/Uc3VNAu
+         guQvd7kfSFNoOu8Z9ky4Q0p1ex9/G5PE+PyPzVbPuA8arrVSG4Cu8a70aWT/54uYpMnY
+         RGGDbzLqNdlZbtzvYr08Ov90rg6g4ukvRdEqTCr4xi+i3k51SgLvgE8vqG85fg0Bm7fL
+         a7Zs3Dx7SzJ/lLHyrIHNcRulebKAn5tmd930uJQS6nQgaRlIcjSwO1IZbaslOIFUCsmQ
+         qFTBpSBsUZNDjdA13ivnWhbF2Vc2VHwa7ZF/n70xNRTqN7Ge1/nwX3pV1WRgT+INY0TB
+         4VYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRcF9fuJ7oS2osNgkihUnztz1Cpb3kS0yimDrJ+/XYQwOI/qIC/u1rS8doV1df//7N2UiSFwZqNN2+R4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY1DOi8sNJwKhR0ii6mHgRN/AI92HWoiNRQkjRKj7v89aEwvnm
+	x/oSdSKtmYin7TlAr5R5NZJAKvUuf/cHgqeUzfw37RltjOSkIzPzVKhjudSGcb9rgnM=
+X-Gm-Gg: ASbGncuwwqkrbd0r8PWzR2NwCqbiQNpkpmZXFgt1KqB1C8a45L+TY3Z/9ekl1jYBbwC
+	5x0LiymnECEPu1D4Kn65XbVj1mjK7RJkkWghNf27AtkpSSjINyfYOK0qH5kvLr3UUg1MAsCSeHf
+	TV03JUodGLjsYvlQ+juCAb2GFgMxrOAxJzqrHeFV+PjsgctEsC+QT1UZdUqayGlaeyACtVNvdyP
+	4QN/GpIfErv9fSe2jjdbvoMOhXkAQimIZFzLfIGqycUzU6FjZm62oLuIY97SJ8TvEMcxgIxf6He
+	MDw6C9yKPBs+AeQM5hxkaMqUc1xhgVNBIJjcZxJP1ax+v0dy3ID5wzXkYYenyLmqfUgS4GUvYpR
+	ephWKv0kyE9Ioqsi8EU9Vw+tXVZWQ5GYvBGvA3FBF19pJ/FT9hAkff/pt6rW4STbkLaY=
+X-Google-Smtp-Source: AGHT+IFpbEMylk7d/l42fxjvE8B2fzo2xN2COCA7HEbClpmNiZwUfboRPlSNKp4uI1hk1Vieez8OSg==
+X-Received: by 2002:a05:600c:3b0a:b0:450:d5ed:3c20 with SMTP id 5b1f17b1804b1-4533cac31dbmr60700295e9.6.1750266089247;
+        Wed, 18 Jun 2025 10:01:29 -0700 (PDT)
+Received: from mordecai.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eac8c16sm2599915e9.19.2025.06.18.10.01.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 10:01:28 -0700 (PDT)
+Date: Wed, 18 Jun 2025 19:01:24 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Neal Cardwell <ncardwell@google.com>, Kuniyuki
+ Iwashima <kuniyu@google.com>, "open list:NETWORKING [TCP]"
+ <netdev@vger.kernel.org>, David Ahern <dsahern@kernel.org>, Jakub Kicinski
+ <kuba@kernel.org>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net 1/2] tcp_metrics: set maximum cwnd from the dst
+ entry
+Message-ID: <20250618190124.04b7a2c3@mordecai.tesarici.cz>
+In-Reply-To: <20250617133935.60f621db@mordecai.tesarici.cz>
+References: <20250613102012.724405-1-ptesarik@suse.com>
+	<20250613102012.724405-2-ptesarik@suse.com>
+	<da990565-b8ec-4d34-9739-cf13a2a7d2b3@redhat.com>
+	<20250617133935.60f621db@mordecai.tesarici.cz>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.50; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
- <CGME20250618164320eucas1p28174732f38fd279fbba72f07887e5da5@eucas1p2.samsung.com>
- <20250610-gpiochip-set-rv-gpio-v1-1-3a9a3c1472ff@linaro.org> <06e7a1dc-e58f-4cff-b962-5eb087dc4c1a@samsung.com>
-In-Reply-To: <06e7a1dc-e58f-4cff-b962-5eb087dc4c1a@samsung.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 19:00:17 +0200
-X-Gm-Features: AX0GCFsZ9BzqvDbhrAHxtqvk55yr6p1JWPmW5O8GtAIoAiziZFdZwWCX10LDhDU
-Message-ID: <CAMRc=MfWD7XGuuiLd5_Sh1vODfE-v6suM3w=qdufxXPtkW+HVg@mail.gmail.com>
-Subject: Re: [PATCH 01/12] gpio: mmio: use new GPIO line value setter callbacks
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
-	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
-	Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
-	Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
-	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
-	Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, 
-	linux-omap@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 6:43=E2=80=AFPM Marek Szyprowski
-<m.szyprowski@samsung.com> wrote:
->
-> A few more changes are needed to avoid NULL pointer dereference
-> (observed on RasbperrryPi5), because this driver calls ->set method
-> internally:
->
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index 9169eccadb23..57622f45d33e 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -362,7 +362,7 @@ static int bgpio_dir_out_err(struct gpio_chip *gc,
-> unsigned int gpio,
->   static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio=
-,
->                                  int val)
->   {
-> -       gc->set(gc, gpio, val);
-> +       gc->set_rv(gc, gpio, val);
->
->          return bgpio_dir_return(gc, gpio, true);
->   }
-> @@ -427,14 +427,14 @@ static int bgpio_dir_out_dir_first(struct
-> gpio_chip *gc, unsigned int gpio,
->                                     int val)
->   {
->          bgpio_dir_out(gc, gpio, val);
-> -       gc->set(gc, gpio, val);
-> +       gc->set_rv(gc, gpio, val);
->          return bgpio_dir_return(gc, gpio, true);
->   }
->
->   static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int
-> gpio,
->                                     int val)
->   {
-> -       gc->set(gc, gpio, val);
-> +       gc->set_rv(gc, gpio, val);
->          bgpio_dir_out(gc, gpio, val);
->          return bgpio_dir_return(gc, gpio, true);
->   }
->
-> Do You want a formal patch with the above changes, or will You just
-> amend them to the updated patch?
->
+On Tue, 17 Jun 2025 13:39:35 +0200
+Petr Tesarik <ptesarik@suse.com> wrote:
 
-Thanks, a patch[1] is already up for review. Please give it a try and
-leave your Tested-by: if you can.
+> On Tue, 17 Jun 2025 13:00:53 +0200
+> Paolo Abeni <pabeni@redhat.com> wrote:
+>=20
+> > On 6/13/25 12:20 PM, Petr Tesarik wrote: =20
+> > > diff --git a/net/ipv4/tcp_metrics.c b/net/ipv4/tcp_metrics.c
+> > > index 4251670e328c8..dd8f3457bd72e 100644
+> > > --- a/net/ipv4/tcp_metrics.c
+> > > +++ b/net/ipv4/tcp_metrics.c
+> > > @@ -477,6 +477,9 @@ void tcp_init_metrics(struct sock *sk)
+> > >  	if (!dst)
+> > >  		goto reset;
+> > > =20
+> > > +	if (dst_metric_locked(dst, RTAX_CWND))
+> > > +		tp->snd_cwnd_clamp =3D dst_metric(dst, RTAX_CWND);
+> > > +
+> > >  	rcu_read_lock();
+> > >  	tm =3D tcp_get_metrics(sk, dst, false);
+> > >  	if (!tm) {
+> > > @@ -484,9 +487,6 @@ void tcp_init_metrics(struct sock *sk)
+> > >  		goto reset;
+> > >  	}
+> > > =20
+> > > -	if (tcp_metric_locked(tm, TCP_METRIC_CWND))
+> > > -		tp->snd_cwnd_clamp =3D tcp_metric_get(tm, TCP_METRIC_CWND);
+> > > -
+> > >  	val =3D READ_ONCE(net->ipv4.sysctl_tcp_no_ssthresh_metrics_save) ?
+> > >  	      0 : tcp_metric_get(tm, TCP_METRIC_SSTHRESH);
+> > >  	if (val) {   =20
+> >=20
+> > It's unclear to me why you drop the tcp_metric_get() here. It looks like
+> > the above will cause a functional regression, with unlocked cached
+> > metrics no longer taking effects? =20
+>=20
+> Unlocked cached TCP_METRIC_CWND has never taken effects. As you can
+> see, tcp_metric_get() was executed only if the metric was locked.=20
+>=20
+> In fact, the cwnd parameter in the route does not have any effect
+> either. It's even documented in the manual page of ip-route(8):
+>=20
+>               cwnd NUMBER (Linux 2.3.15+ only)
+>                      the clamp for congestion window. It is ignored if
+>                      the lock flag is not used.
+>=20
+> Note that here is also an initcwnd parameter, and I'm not changing
+> anything about the handling of that one.
+>=20
+> Now, if you think that this TCP_METRIC_CWND is quite useless, then I
+> wholeheartedly agree with you, but we cannot simply remove it, as it
+> has become part of uapi, defined in include/uapi/linux/tcp_metrics.h.
 
-Bartosz
+As an afterthought, I'm not quite sure about the semantics of this
+metric. The value calculated in tcp_update_metrics() has never been
+used for anything since it was introduced in 2.3.15. So there is:
 
-[1] https://lore.kernel.org/all/20250618-gpio-mmio-fix-setter-v1-2-2578ffb7=
-7019@linaro.org/
+- either a locked cwnd value, which is used to clamp cwnd on a
+  route and never updated,
+- or an unlocked cwnd value, which is updated upon connection
+  termination but never used for anything by the kernel.
+
+OK, the unlocked value can be read by userspace, but what is it
+supposed to mean? The manual page for route-tcp_metrics(8) says: =E2=80=9CC=
+WND
+metric value=E2=80=9D, which sounds like the author did not have a clue eit=
+her.
+
+Unless someone here _has_ a clue, I'll just leave it as is, except the
+clamp value will be taken from the routing table, as it makes no sense
+to wait until the very same value propagates to a tcp_metrics_block
+(where it is then never updated).
+
+Petr T
