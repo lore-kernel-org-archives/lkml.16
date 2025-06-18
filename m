@@ -1,234 +1,253 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CC125B1DA;
-	Wed, 18 Jun 2025 11:23:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750245827; cv=fail; b=tDm8gUPuKG3hb4EqWHf6s040nvUDyukWHOQqe62abmAYeHcjOisNkS+jbN3OzuDMhO3RWtCWMkom2i17W2ChONey/5aVw8oXnXV2JuSFoYL2gdhf9/kyflyA/0MQtT+ShOVVDU4bjAQdeziLHKDcMOKviyj6EHksYMZotA0704A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750245827; c=relaxed/simple;
-	bh=BUIqbUmr5vbf0UrJrSmuDjWYTj+L+lqIkGkj/KkvSaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=k2Ba99bSm4ftObLS6nvLpiIHp/t0gIkc736/Kto09T/7x2OrHxkZVz5YAabzxolfjPiaYs/StquC0oov8hfJeppdLBSHmbaNxX4kOTPJ8vzvnnDRuvONQEiJNcDqtFVhY4nzbJGRiZZQQq4rjI7J5dIx5aRmmcvclMGW8D4GkV0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=GbNBJWue; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=qCN8l5jf; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3606128000E;
+	Wed, 18 Jun 2025 11:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750245880; cv=none; b=Ep+UMlFSwHoMOs2Z1S/vJI4PeggoXpcMXEVa0hAgnjoTRs/Y3Bq0PF6JatV095qiqsUe5Uii2g78UVjnwXEXFA7A6goR/PnhEvePvf5wrId1HHVY0YuJ9qX4/s5akguAcG+X9YeWxiPMmafFUrUQ5IMR3rSYku9d3eXWXmX7d1M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750245880; c=relaxed/simple;
+	bh=7ACZf7bBeGAcZRWIxVGihw+TZKw06M2AlWWMsxJonvM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlazsFU8H3/qIVmMrWlxfObfQkHxqZEf8cJJjotIn0rIXesOCO8F7lK+4fjA4TJ4ajVIF9fCJBWSw1HuSs4JExTzCn1XhPuAvh+i9IZFq7sU+d/LNinquDJxr7oSKO9/JLv/V2X+414Pzh7k8t/687r5t5EgBWdMSUVCHVWwGec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQtJ8PqX; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GbNBJWue";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="qCN8l5jf"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IBMbL0010737;
-	Wed, 18 Jun 2025 11:23:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=corp-2025-04-25; bh=BUIqbUmr5vbf0UrJrS
-	muDjWYTj+L+lqIkGkj/KkvSaE=; b=GbNBJWueNnGy5WFqaEmgtCj6+zKR91xqGY
-	AoXYd0liwSOiKwibF20/MAbHj/g87Gb43e5yjOzkeLqZ282HGrNPQYIKsFcV+jgD
-	GSZLjFMNjrZiR4eYaO/HJz2AvWt0KG0b6KICiVaIRchwwPn6mhmCpNUb+jyi7wxg
-	vUzdYf6N1WgO/t85BpzpHADUftRCTN4xuQCp3EM5uNgWcY9qKy1Ytddg8J+0ZpW6
-	e4Wtl08FriRpxLa5hR3OgTCAZoBVU7xVkaUI1LjZ+2OJKjBsCi49qvXt/9zq3DFa
-	rA0UJEIN3kU7Sykqgmx5jNOB4RnXmtXCe8TU43AuAUtsDK0cmcbA==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 4790yd7hvp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 11:23:09 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55IB2JOU000869;
-	Wed, 18 Jun 2025 11:22:50 GMT
-Received: from dm1pr04cu001.outbound.protection.outlook.com (mail-centralusazon11010020.outbound.protection.outlook.com [52.101.61.20])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhah8tp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 11:22:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TAEkTeRH7H0v6ES+t0C87INuxLh1/WaYIHGFkMlKDL9ef487mtvNR+4AgONoHyikeXqMz2g202HFC4G6FNg5Y5ozHG5S53rfdp1+96wtC6yAck2ic2OQOJpqhVZrEw7OJYgRKJmYYJ99vIwgdrK/fDhTqsGUNR0jvSLyuMlv+m5nOr1mYkK17OnwS0RdLPutv13MLzqc7wNnKeLMTOYusgmhg+2DtWbiQ6pLCERiPpthIuviEVuP3wPDLs2Sc16lkIzQhlpyEo09J69UfbgYxwxYkXkbdIBYOjcOlaqBcXuCYVj3l4UbNyCrZEkVUGIzVc5TTqlFOY+ngVi2D6ROMQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BUIqbUmr5vbf0UrJrSmuDjWYTj+L+lqIkGkj/KkvSaE=;
- b=EmfZC3akPGBN6wJW6KsQ7k3sESaVIhW9jvP48k32SN6xgNOr2wAvOHdJFIRWj9i0j0TAAzpw1QbX3P3bYNWdjpPNJ0YUUWasaZXk+LxFP2uEMffpAb3yHobEwEAjjudppHayf0xeWsJL4ns6s+NyKSsxr4ybUi+ppq+4IM20DHhdd0lltaJgWa9K5Mpvm5tmjG2upqahAivQAh7lNAH7tRelj9F1S19sjwFP64BJJyhLPPSMluwAuAznEQewGw4s/stcNBvtqRNVlHItvclj0mZKg+UXKM/79nSNoFcj+RLa1E3uYLMIXkYN88b1b0qo/Qv0r97wsbs8Lpp4st5dYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQtJ8PqX"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a582e09144so1953425f8f.1;
+        Wed, 18 Jun 2025 04:24:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BUIqbUmr5vbf0UrJrSmuDjWYTj+L+lqIkGkj/KkvSaE=;
- b=qCN8l5jf1vXuQS483iMofB/QQOiu37FV8f1hMz9/lSA+tO0My+9xS55ut5T5RlJJaFObB92CXe/UYtSBgl1gKmM0aRUhaKIm+qyZK582uOczezfhRS5lfeBsiAle9+N3BZMLQwd3C06s/DjS6B6x4OhbjTqUgflIS00RttCdRdE=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by IA4PR10MB8352.namprd10.prod.outlook.com (2603:10b6:208:568::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
- 2025 11:22:48 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8857.019; Wed, 18 Jun 2025
- 11:22:48 +0000
-Date: Wed, 18 Jun 2025 12:22:46 +0100
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
-        Liam.Howlett@oracle.com, shuah@kernel.org, pfalcato@suse.de,
-        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
-        npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, donettom@linux.ibm.com,
-        ritesh.list@gmail.com
-Subject: Re: [PATCH 1/6] mm/selftests: Fix virtual_address_range test issues.
-Message-ID: <159f6939-e7c8-492c-8195-b7e8787a08f1@lucifer.local>
-References: <20250616160632.35250-1-aboorvad@linux.ibm.com>
- <20250616160632.35250-2-aboorvad@linux.ibm.com>
- <0665a8d3-7094-4732-9518-01ac313959e1@arm.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0665a8d3-7094-4732-9518-01ac313959e1@arm.com>
-X-ClientProxiedBy: LO4P265CA0140.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c4::13) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+        d=gmail.com; s=20230601; t=1750245876; x=1750850676; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fPWMD5GnnTJDibzdh+mzKkJMnzYLCpJuUgnOjbrn81Q=;
+        b=OQtJ8PqXCRDyVK8z+dzYklh3a3ekeYxnYSgS8VhjFvHo56hp4S5lo7P1dQcdKqqy6r
+         LXaHfEm/tc7q5hob1xCpnpFP5t/YrQGDzYhgGqr7aUhWruksHjltfJcxwDo7LmkLEhV6
+         zJ4gSyg0swpkhQ1gLE6egcm0AmqlHd8hrp2o6Pq2Oja5bQim2zr0REO4DF2mtcuW4LPR
+         F7Y0ErRvIiq5BICmD3e4BiPW9BtMelxLDojzy7bo51kPwwmpuudL8DUadH/lbR/coVpf
+         hfL9Gbp/l9R0FAeUi+djfnhIHf16Ls8Y4mXXgfqkSl9iHLwRXDF2+5Epnx/dsGvuufks
+         uxaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750245876; x=1750850676;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:mail-followup-to:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fPWMD5GnnTJDibzdh+mzKkJMnzYLCpJuUgnOjbrn81Q=;
+        b=c2XBlD4wpgzebc2gX55oUXm2BQZWW5AOba/7ZvtGxgR/IT74isdPcCt5HHksYbsej+
+         CZIQe9hq1g2d/EfVbNzwnOhKtOFQt9+qsFDZM6vS3GacWccnib6dTnFhnihWAwJIV1Lw
+         K0x87GBdJEVw7TP5eDc1iGxK/yoCi2Crd57SNSmJgdBqPfjk4v3othDkdHpFw2+2kMr4
+         0qVonrq2iv8X4U4VcHdgKvc38gefyhUHBTBxOI/I1amTmcX1yR7S+K2ojg63S7KGL8Q6
+         j9eeOR1soKosKx/80mLDuhNtiPT1OezomSGqpTX7vGsVwitjcmKTzq0dPvmCPaTrKhdn
+         pYEg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOzEf6dnea1cV5ypskNmdf3ZIBZfdr4KMyg4SNzDkLZ/ElmlLsRrC3ljsUqcA/nuoJAQg=@vger.kernel.org, AJvYcCXUrPUuGyZ/1We2mTkJ4DnXyXh9HYae5Zry6bzAyMDD5vkDXkXyR3Xlg8k1E/JqRXLjTKLGYF5TE/6ttFvo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFOQhOlo9U7bEgOAJgabGPhYMPRguiF/cmetKHJlaxtj79OO5N
+	cjrtQZ1YYy1RrzM2j1zehZvI/OZhYc6yGRv7o+xdeCYd5dkgrIQ9ECY=
+X-Gm-Gg: ASbGncsdanD93tmpkRvFvkz7yPrZykfP4Z2BBLP47V6uS9z1NwjE5xiQWnwDv7x/qfZ
+	6jWN+rWyKLS4rrmEa9LWzpphepSIxxj3tPdZ8KIS6QW68UYWHjkQNzHAlahh24PZDoGn9StUWDF
+	u3MZXcbCKbkaeWyM/Aa1oZxnZEaYrWKz6LxaPvUTGMOyH3CGTGf3ec/gZUjJs4s1tMGCgQkmExB
+	w6n0kWWk+YJWQ+WnDSvqiXaNXd3iwpSv3TGIsWHQHROhjqJzu1EvriV2LM+wu+YyWvoi2l9e2Zi
+	f31mCDBdcEFA849Yc+dNaG1gtI8g0JK8zUkejSmTSN6xQ57+ZvLd9X8WM3Adf08TlMQC5phwMo2
+	GniHPUWAtVSuWfpU2cYBh6pYdWg==
+X-Google-Smtp-Source: AGHT+IFr9nIlOeyDXs/NnvoTCm2pWEILjPkDMo4Gn/hyt9XzDRoeC8fpAgei+rZyezV9G+4iEDrVNQ==
+X-Received: by 2002:a05:6000:2010:b0:3a4:f70d:8673 with SMTP id ffacd0b85a97d-3a57237dc6cmr14609605f8f.25.1750245876169;
+        Wed, 18 Jun 2025 04:24:36 -0700 (PDT)
+Received: from localhost (ast-epyc5.inf.ethz.ch. [129.132.161.180])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a7ddefsm16701542f8f.39.2025.06.18.04.24.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 04:24:35 -0700 (PDT)
+Date: Wed, 18 Jun 2025 13:24:34 +0200
+From: Hao Sun <sunhao.th@gmail.com>
+To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>
+Cc: ast@kernel.org, m.shachnai@rutgers.edu, srinivas.narayana@rutgers.edu,
+	santosh.nagarakatte@rutgers.edu,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] bpf, verifier: Improve precision for BPF_ADD and
+ BPF_SUB
+Message-ID: <20250618112339.ezhjt25lnztck6ye@ast-epyc5.inf.ethz.ch>
+Mail-Followup-To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>,
+	ast@kernel.org, m.shachnai@rutgers.edu,
+	srinivas.narayana@rutgers.edu, santosh.nagarakatte@rutgers.edu,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250617231733.181797-1-harishankar.vishwanathan@gmail.com>
+ <20250617231733.181797-2-harishankar.vishwanathan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|IA4PR10MB8352:EE_
-X-MS-Office365-Filtering-Correlation-Id: 11a44f80-6f9a-462e-058b-08ddae5a746b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?+UyTjckNQlH4IjSNyJgOhoAWZpP6/g6B6FckCNM1Mb/HTYT1NEQPcjJTha3Q?=
- =?us-ascii?Q?bA0yDAl88WIRgmpCxIrgKMuJYJfUSzTh14lYwEhXDMYxf8m2H4cUtoe9grvw?=
- =?us-ascii?Q?sZKtMLXZKlv/nBOnPpE9R0+1W4LS+TJxWgPAUiKUM5/WjCgqhlYr73MuNzkV?=
- =?us-ascii?Q?TAiz5vxM+4/zkXTYaCyRu5N7hwjZz+e/p+pp8npYwqLlKbYSQ9fis+AbxFMW?=
- =?us-ascii?Q?GL61gqKUwlIZtBzk1xzatWxhJYNEZjU9AINepJDLaquvUkeO5bLBEzw+NhjV?=
- =?us-ascii?Q?pGp9hIGmM6kbaRI5oAnyVJve6RqKAaR+HSi19zDl1Ebfd6UI4uN/tSvcvOMC?=
- =?us-ascii?Q?J1fep7W4GcqSVi5qpgUl0Vx6OuAWW6OLFYPNr3anDW8o8+BrRqD2841Jq7DB?=
- =?us-ascii?Q?bYt2Oqf3P8LA2N5XLnAH2+OdUCTqUh7ENsfoDJuMfZ4ty3wYZTj8q67vei68?=
- =?us-ascii?Q?yF6tXQE8QW5NJrZgdsxkKmhp79fm6mEfYly+zQStHSJToWgE4QnRjSYYsG5F?=
- =?us-ascii?Q?o6Q03ue1IL6hW1Egh3VDxEGzpTifr+57Vf8tIQYw1/IPiF/j7UfSInCjfq+R?=
- =?us-ascii?Q?n7NaVSoi0QTqZxkiz9Mg39WkEUVEwml53v2jg39kf9C7ohRvR3B9U1Rydg4p?=
- =?us-ascii?Q?Nram06wWBOCnHey9tIRZ0+1HKHYYPXLkjAO47I8DtZPFs02wkMRxUnWwW5wg?=
- =?us-ascii?Q?MuCSwcWEkTh1ByFKY5lpP9eyd0Q/hLZWZ3qj8fXWwhSRZu2cU2ezRUv83MRp?=
- =?us-ascii?Q?0hUgo4M6q/8u3bOZESZn0FlVwuJevjhFRMnzFtk7e0DDBLvpFAB3H17KRWZB?=
- =?us-ascii?Q?/tu1Z5kGrbjq9J66R8mr7WfjVQojj9EQ5A1AEbbhC7mMJk+PhVmX4mh1fcW9?=
- =?us-ascii?Q?sEwKqrZA/9hwTIj+9j6a722EbbJna+90HXAbJIaon3BzyPNOon6O6VXLwEQz?=
- =?us-ascii?Q?iEbVEG5MuBR0Vee6FPCqXWUpf8x229u3tstgabBbp7x+eOo153Tw1fJjeexq?=
- =?us-ascii?Q?Gw4NHZH9kT3eICT+Zuzi+E9Ml1Fea6XsK6ud945OqhMUx40IBplI0LThnE2e?=
- =?us-ascii?Q?IxRHPJKP4Y/OBSt9yzcSsbV7LNXrhqb553AKtUJ/SXLT7TR6umRrk9LZie3h?=
- =?us-ascii?Q?BsVfZmFQ89UW8hKhJPWL84Jf5M3r+TA/6Wtp+zAaJiMG1T57jHLdbTF2zmO5?=
- =?us-ascii?Q?LS4NY3EhsKNbd22WFM0HsoOdOBUD/52A6s6xVhRX2L91E3gKvbj0h58o5rG9?=
- =?us-ascii?Q?mGImcWfOCa1QXkIPFXPfIQK0nO8P8QKaZetYl6J3T4GDrT8gpp7imiCkQbby?=
- =?us-ascii?Q?lTNo1VoOml22o8h4wrTpxX0dqCNp8sZjG1xfdSk73ADG3OpnDsPZAvKIIfiF?=
- =?us-ascii?Q?E9j9E9B/RJZn25lJtxf/Dn/KHQ/twy7V2tfsD9RjMSU2446pQVZPxKsveWak?=
- =?us-ascii?Q?F+WeSmrbQNw=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?PteQI/m982kd94Lh014r5BYl5oKrrVXsEtClolahkxrtAZpD5xbbOeMmq9jW?=
- =?us-ascii?Q?WviXUmsu9sF9B7w/sYyYqe6Iflcwq4xRirKrrxKJiRvHqGZh7uv8zjVzQvdB?=
- =?us-ascii?Q?wF4p4y+1htMvnCwywVBG9Pdq0jIbhIsgjFs74URHVKpoUmvCIc/pZdQAForb?=
- =?us-ascii?Q?dyM2TbXjkcNnlc1BmcAYuYw4UrNPTGo8t98VCrvNbVUW5KXYzkmCD/MnDXE5?=
- =?us-ascii?Q?dFv7DrOLg2doJb5/0ijqxmrzTOJCqStwTvM0wvKClhZ7ZJfeaHR8WujIVpbQ?=
- =?us-ascii?Q?07EmUqaMQOkHCI2yCLiEI8BH5JQy/0DyddgwOc5QfEnVxQHi3NdjPQZxrzMM?=
- =?us-ascii?Q?wGYW3fqHEKti63mhMzI/mqgdBWEAl3aiWjgjzwsTX3n+n3BdC1ag0Up2kTF/?=
- =?us-ascii?Q?NAUP7gL3rX6veMug6ww5MwcYCcF6stE411NHis8+XFBWz6FG3BeM72vE83Kt?=
- =?us-ascii?Q?qiZ+2qe/KRk4Gx45ye+XghJ6Jdg+TFtNIAvt/UiVNRC42duT3R5y7HEaSoA5?=
- =?us-ascii?Q?AA5Sd0MvcMDUDqW4Jc2oC5n717YlxOBbMCnQjt1fUiwmiZafjg1OLwRi+KIU?=
- =?us-ascii?Q?mwkzXs2xXlYoZKPW8rkEWnhPKJj6W0SJArno+TVB1lE027V1PenLBwt6p3fV?=
- =?us-ascii?Q?5OYzrxLQGUhNGJXeA4V9mT4eXcLQ2wgN9Kn6dllEJz/a/TuXr/+WkAh+mW+j?=
- =?us-ascii?Q?O+VJYFPY+vhxGvrFybCTKUP2msHw5qnX0+e96NYP2sHVxEmB3kXccklBz9ds?=
- =?us-ascii?Q?P+rLPk/gByybh4tDrumIUItBAhIWoWlfl5j+Ar6QH9nVKXXGVQ/nOmDW4RbR?=
- =?us-ascii?Q?bpYK40pYLtuBa713jrEi7iRlv7KDEVchH3TRWvy6OEIBMRJ9SgWGkGhYfFEK?=
- =?us-ascii?Q?7tPvxGJV3jpyBJ6qY98JLQy1A8gJPP8qyb+bc6oULsMA10DFsGPne83KYP6l?=
- =?us-ascii?Q?xUENSQBbJIAekGbXgYI2HQz3OOGN763XktwdIlgfAanSdZpYN9dYgChZw24A?=
- =?us-ascii?Q?k1i93xIdbacS/AYbmPbLBe6vGv80fAvAmx9+egDTpCxM+yV+GAr4ybwVtu6s?=
- =?us-ascii?Q?FRP0+g6Lnp7qrv4oOgTr6Nuhapglk3KiSVzd/C1OnWRW2Nb/TYZioyApHlUt?=
- =?us-ascii?Q?c4Iww2LoONAOEBzmTS5BYwoAwbz6qDc6LAMB0xcndbN/U+qpyHjAZbnSliCV?=
- =?us-ascii?Q?GOOmHhGWMmk6EpURGFZEbxL7dYGbPdCyE+KDDfrZMA7BqE+tr2Ist+KFBJYM?=
- =?us-ascii?Q?UK1AYE0yzlTAhWOnPZkEbD/dQPDFVK66BtcyRSwNdIMkguxz+VHEzMuarYYA?=
- =?us-ascii?Q?+rNzaLhPCB0hfGgMh55X89MaPjjddFg9VXtUeGYKcsLkLoJ4YuCCKqyA3TUW?=
- =?us-ascii?Q?+IteqhwlsfH1gxbS9ozcrHdRcntLgdlkA3nrOt3mv3XxaLmaKgjvStF6lTjF?=
- =?us-ascii?Q?hseEgDbvWUEneohuI824WVemp2FeDQ+Tt3jvClUNqknYXu+2QKR9OL1+5TzD?=
- =?us-ascii?Q?z7xw11o1tCX4WiFOqk5qQWrFcXlpDKNPCn3wsYpHFlR7Cb+n69AMMHxY3p7k?=
- =?us-ascii?Q?N1yiPZBQ9AWlMytP3HcVxxAjxhNYz/NLT/km0O4WemfmeTU5ak5E2bRk5fyc?=
- =?us-ascii?Q?8g=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	ee8nml9AKjP9qSesgr9MLO+OFt/BlMH3L//f/sOevJl55Lkv+VOJmIF9XLvZKfM8MOoP/fHoekNUNj0bElj3ib6OkFJRoAUtdjVMElx+d62Co1xCdFsxs2nGCui6kkjjG685kx2JFIi0vcolycvar+q+E1lPl4u/O+gXT33WUU7ztXrYwlBGBkWXOotqL8chhgNdp8O4ai4qWCS/xEuQyJcwHcRu4JLUDOSfnoXvcGXO/6jTckSlrxPZGYUz5sfzgi4FBOh5q0DQDR7a7i0lIIt0Un9fVZulwfKMAOzBK0ebUegxy+upxq94UW1me707wDgo+egBeJ/dw99jJWJOR5UXR/zYAas3D4f4hk2190PdYEgewyysgAPOsGr7kRCeQ/3PHpWBirq9Wa2MLbxLtVIsrK+Kjb+w5PjgwYxMOfS8JWMLA5KnIztlW7I6oMOQqtg49mMcMG60l6RZzpoQK3nAHAk2arfGFfMXPstlVfjCVlqo3RiIrbg6sWV7hSFCKFMRRMs8Uuf7D0RYaOf/joqGcF5G/tv8KAstrNTXIY+mbZeGBaasgsix6wMwGc7hUU1JEXpd5Si+8YUbePqn3ztsRGKOwPn7dnx7cN19Bn8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11a44f80-6f9a-462e-058b-08ddae5a746b
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 11:22:48.0732
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fMd+N49c/XKqFjKYwSSKTR2IYpuoefSWQKz3WLS8nfjCv9f3wCdTcQ/DQAkVYkbjnAQcF/Ve8wmxNIvhBBAZ5TTtZm68BdB79CMh91wOkyc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR10MB8352
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_04,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506180096
-X-Proofpoint-GUID: UEvD92TWZ33BcA9TtRA1avmrg0Wh-kqJ
-X-Proofpoint-ORIG-GUID: UEvD92TWZ33BcA9TtRA1avmrg0Wh-kqJ
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA5NyBTYWx0ZWRfXwPp2Peg455nf claC5VqcG/Zbm8rsq9OqxZgA93lk0SspG9eTxRzAEabi0pqe2X2z+Uk0iYt5Ccauht4CLfvaWCi keeus3s9PzC/Ygb7BL6geTDBfp+hwMmv52eyyCASiOKgUJRjtcwDj5uRQz8SOkGRBRtGRVIr2uA
- 7vnxqZe7JMe8QQBgTUsZqwVWGW/ZhyMCDbDP+pMtyyRi7ii6Zd4axfvpMOL/f6HHZovAn6z6KnR AMrXzjDny80JOHUKiE5+pgypku6aEWjdUhlziT/Q/zeXrsCqVmTAO5KqXJBW094HN6z2EcMFE0+ UPiKfLNSi8ylzCLk0AZ/BkXsBRSN2On7FFrPMeWekyDxL0paBZCGy2aRmBY3++hW5QavV29Vemm
- WeFWFYHAGjP9bij88SN2Q/Ryc3fJhw9vD14fdL+7hR2FrQ8SW24foXsGsfIEhOCf56v5T9dx
-X-Authority-Analysis: v=2.4 cv=XZGJzJ55 c=1 sm=1 tr=0 ts=6852a19d b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=DERMO5hcqVLuv7IdAn8A:9 a=CjuIK1q_8ugA:10 cc=ntf awl=host:13206
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250617231733.181797-2-harishankar.vishwanathan@gmail.com>
 
-On Mon, Jun 16, 2025 at 09:57:10PM +0530, Dev Jain wrote:
->
-> On 16/06/25 9:36 pm, Aboorva Devarajan wrote:
-> > From: Donet Tom <donettom@linux.ibm.com>
-> > 3./proc/self/maps may not always have gaps smaller than MAP_CHUNK_SIZE.
-> > The gap between the first high address mapping and the previous mapping
-> > is not smaller than MAP_CHUNK_SIZE.
->
-> For this, can't we just elide the check when we cross the high boundary?
-> As I see it you are essentially nullifying the purpose of validate_complete_va_space;
-> I had written that function so as to have an alternate way of checking VA exhaustion
-> without relying on mmap correctness in a circular way.
->
-> Btw @Lorenzo, validate_complete_va_space was written by me as my first patch ever for
-> the Linux kernel : ) from the limited knowledge I have of VMA stuff, I guess the
+On Tue, Jun 17, 2025 at 07:17:31PM -0400, Harishankar Vishwanathan wrote:
+[...]
+> 
+> There are three cases to consider when adding two u64 ranges [dst_umin,
+> dst_umax] and [src_umin, src_umax]. Consider a value x in the range
+> [dst_umin, dst_umax] and another value y in the range [src_umin,
+> src_umax].
+> 
+> (a) No overflow: No addition x + y overflows. This occurs when even the
+> largest possible sum, i.e., dst_umax + src_umax <= U64_MAX.
+> 
+> (b) Partial overflow: Some additions x + y overflow. This occurs when
+> the largest possible sum overflows (dst_umax + src_umax > U64_MAX), but
+> the smallest possible sum does not overflow (dst_umin + src_umin <=
+> U64_MAX).
+> 
+> (c) Full overflow: All additions x + y overflow. This occurs when both
+> the smallest possible sum and the largest possible sum overflow, i.e.,
+> both (dst_umin + src_umin) and (dst_umax + src_umax) are > U64_MAX.
+> 
+> The current implementation conservatively sets the output bounds to
+> unbounded, i.e, [umin=0, umax=U64_MAX], whenever there is *any*
+> possibility of overflow, i.e, in cases (b) and (c). Otherwise it
+> computes tight bounds as [dst_umin + src_umin, dst_umax + src_umax]:
+> 
+> if (check_add_overflow(*dst_umin, src_reg->umin_value, dst_umin) ||
+>     check_add_overflow(*dst_umax, src_reg->umax_value, dst_umax)) {
+> 	*dst_umin = 0;
+> 	*dst_umax = U64_MAX;
+> }
+> 
+> Our synthesis-based technique discovered a more precise operator.
+> Particularly, in case (c), all possible additions x + y overflow and
+> wrap around according to eBPF semantics, and the computation of the
+> output range as [dst_umin + src_umin, dst_umax + src_umax] continues to
+> work. Only in case (b), do we need to set the output bounds to
+> unbounded, i.e., [0, U64_MAX].
+> 
+ 
+In case anyone is interested, the above (case c) can also be proved by
+the following SMT formula directly, which may ease the reasoning here:
 
-:)
+```
+; ================================================================
+;  Unsigned 32- and 64-bit interval addition & subtraction
+;  with wrap-around semantics and endpoint overflow / underflow.
+; ================================================================
+(set-logic ALL)
 
-Mine was this utter triviality, but got me started :>)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ----------  u32  (32-bit)  ----------
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(declare-const l0_32 (_ BitVec 32))
+(declare-const h0_32 (_ BitVec 32))
+(declare-const l1_32 (_ BitVec 32))
+(declare-const h1_32 (_ BitVec 32))
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e1da1d573f67d11c2f80ffaf38d3cdd3fee97d4b
+; Well-formed input ranges
+(assert (bvule l0_32 h0_32))
+(assert (bvule l1_32 h1_32))
 
-> only requirement for VMA alignment is PAGE_SIZE in this test, therefore, the only
-> check required is that the gap between two VMAs should be at least MAP_CHUNK_SIZE?
-> Or can such a gap still exist even when the VA has been exhausted?
+; ----- Addition -----
+(define-fun lowSum32  () (_ BitVec 32) (bvadd l0_32 l1_32))
+(define-fun highSum32 () (_ BitVec 32) (bvadd h0_32 h1_32))
 
-VMAs are mapped at page granularity, the logic as to placement is determined by
-the get unmapped area logic, for instance mm_get_unmapped_area_vmflags().
+; Both endpoint sums overflow (wrap) ⇒ result < first addend
+(assert (bvult lowSum32  l0_32))
+(assert (bvult highSum32 h0_32))
 
-Unless a compatibility flag is set it'll be determined top-down.
+; Soundness of addition
+(assert
+  (forall ((x (_ BitVec 32)) (y (_ BitVec 32)))
+    (=> (and (bvule l0_32 x) (bvule x h0_32)
+             (bvule l1_32 y) (bvule y h1_32))
+        (and (bvule lowSum32  (bvadd x y))
+             (bvule (bvadd x y) highSum32)))))
 
-I try to avoid thinking about 32-bit kernels at all so meh to all that :)
+; ----- Subtraction -----
+(define-fun lowDiff32  () (_ BitVec 32) (bvsub l0_32 h1_32))
+(define-fun highDiff32 () (_ BitVec 32) (bvsub h0_32 l1_32))
 
-You get arch-specific stuff in arch_get_unmapped_area_topdown().
+; Both endpoint differences underflow ⇒ result > minuend
+(assert (bvugt lowDiff32  l0_32))
+(assert (bvugt highDiff32 h0_32))
 
-But the generic shared stuff is in vm_unmapped_area(), typically,
-unmapped_area_topdown().
+; Soundness of subtraction
+(assert
+  (forall ((x (_ BitVec 32)) (y (_ BitVec 32)))
+    (=> (and (bvule l0_32 x) (bvule x h0_32)
+             (bvule l1_32 y) (bvule y h1_32))
+        (and (bvule lowDiff32  (bvsub x y))
+             (bvule (bvsub x y) highDiff32)))))
 
-TL;DR, aside from arch stuff, the stack guard gap is the main additional
-requirement, which puts (by default) 256 pages between an expanding stack and
-the start of a new mapping. Which is 1 GB :) which maybe is why you chose this
-value for MAP_CHUNK_SIZE?
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ----------  u64  (64-bit)  ----------
+;; Basically the same as above but for u64
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(declare-const l0_64 (_ BitVec 64))
+(declare-const h0_64 (_ BitVec 64))
+(declare-const l1_64 (_ BitVec 64))
+(declare-const h1_64 (_ BitVec 64))
 
-For shadow stack we also have a 4 KB requirement. But only on x86-64 :)
+; Well-formed input ranges
+(assert (bvule l0_64 h0_64))
+(assert (bvule l1_64 h1_64))
 
-Anyway I'm not sure there's huge value in sort of writing a test that too
-closely mimics the code it is testing. Setting broad expections (which I presume
-this test does) is better.
+; ----- Addition -----
+(define-fun lowSum64  () (_ BitVec 64) (bvadd l0_64 l1_64))
+(define-fun highSum64 () (_ BitVec 64) (bvadd h0_64 h1_64))
+
+(assert (bvult lowSum64  l0_64))
+(assert (bvult highSum64 h0_64))
+
+(assert
+  (forall ((x (_ BitVec 64)) (y (_ BitVec 64)))
+    (=> (and (bvule l0_64 x) (bvule x h0_64)
+             (bvule l1_64 y) (bvule y h1_64))
+        (and (bvule lowSum64  (bvadd x y))
+             (bvule (bvadd x y) highSum64)))))
+
+; ----- Subtraction -----
+(define-fun lowDiff64  () (_ BitVec 64) (bvsub l0_64 h1_64))
+(define-fun highDiff64 () (_ BitVec 64) (bvsub h0_64 l1_64))
+
+(assert (bvugt lowDiff64  l0_64))
+(assert (bvugt highDiff64 h0_64))
+
+(assert
+  (forall ((x (_ BitVec 64)) (y (_ BitVec 64)))
+    (=> (and (bvule l0_64 x) (bvule x h0_64)
+             (bvule l1_64 y) (bvule y h1_64))
+        (and (bvule lowDiff64  (bvsub x y))
+             (bvule (bvsub x y) highDiff64)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(check-sat)
+(exit)
+```
+
+Both cvc5 and z3 can prove the above, and one can try this and expect
+it producing SAT on:
+https://cvc5.github.io/app/#temp_a95e25c4-88c5-4257-96c8-0bd74125b179
+
+In addition, the unsoundness of partial case-b can also be proved by
+the following formula, and the counter examples generated may be used
+as test cases if needed:
+https://pastebin.com/raw/qrT7rC1P
+
+Regards
+Hao
