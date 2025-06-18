@@ -1,64 +1,64 @@
 Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D512DE1E6
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776C12DE1FE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750246552; cv=none; b=lSmjjc51lXN5zuk713T73uuKSu4BFnfuyvC4GWywYkBGUj7SI1iz34sXDHOlVdP0uc2AZulTbjj8QEgF1cHhYaAM3otnWMXjc0jMc+nR/xAvXuB9Qmaw3XNs77h1x+AHbN4NSdgGTWgM4lPAemRw/zfeYGV+ak9O1BwCFXNSnGw=
+	t=1750246557; cv=none; b=OxIWpuLDG5viS8OICR1UQQFRgpXqRJ4Z+O0fRy/3yk6H1vqEZLuaU46EoS83MfV80LOz+SvWGIaoH3fdqF/GalyQxL8PRLe8juIg62dP91Wq1uTDb2wRe5JLR5X3MrLWviFHLfoYI/VgoHl6ZIULEYwcf8PU+hcey16dqZbdtFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750246552; c=relaxed/simple;
-	bh=staaIYNl2k7avfOSLFZ5XPO76ZWP6t7i2gV9awbxnvo=;
+	s=arc-20240116; t=1750246557; c=relaxed/simple;
+	bh=S4GPuCe590xZl2EuRNnIMDQ2EGVo96MnzdBawsw3VME=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lDtkU6MkjCXtEIvQpahOp4RlN+yYXWGgyY7FJ0CePso0cjygKF4vkOG3ujVvbuSCL09OV+FzmzV5IjBkbjcGhCunv115H8DWlTVMyR6J7PwdaelMYtv+b9fEKl/F24Lcl+lhdKunexKZClOcUoX5H2IPhzQOHCPDijCqTn25m7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=B/0Cs2pQ; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=oy2UgsxVZL3DIUADru6QuK2sV4bB+CaJrr+wys65VwLfiyfEb5XXYQW6JMKieQlftYE5GzifM2O89ahHRhUSfFvuF8TjwV4ZmngZ7zIgeaCr1lrbguVLx51xrzIMXfJ+YrxJfI0auE2xsThL6ZoR1Q5bXm62i0J4w/vST6xpqyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=bBytFe2Q; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="B/0Cs2pQ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234fcadde3eso87660755ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:35:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="bBytFe2Q"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23633a6ac50so98644025ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750246550; x=1750851350; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1750246555; x=1750851355; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ymMx2/Jj5SWc9oh0oJCNF6LPBe8+NWhSuF7K3lIaf9M=;
-        b=B/0Cs2pQL/xg7UU5kTHz3eysHAgz89vxcqTZAIbV7QnddES35CnPkfx5ZwcvJdGPj3
-         ZZPVyCWkSvLxr5I6IMPgqBoPFgvUrqDKN5tbktZxu/txfCRmX+foGbt6WRsfWuRAL3oO
-         CD0c00c6PhqUmqAfixBfoFez96qvltgR2FUuukilwt8Cs88lYFuKXB/+dVPi0eFxXjGb
-         CFKhanAwTC0dtBOVRmwyTH+hOhNsshX/9miaO25MSGw8CZku5uRF4vWU6ntzbBa6FZlG
-         r2fYJCKnBjzdEy0AyZdZcU/8MRGzpw9aZdPNRA1DaOdH1xw2zJNbB8+pIklOGy/DwdlY
-         eshQ==
+        bh=bKQfZHKenjLPRqEIi0Ln2Cx1EmVsnnUE8sKaMZB78eg=;
+        b=bBytFe2QjfFEFI4RZpfNa1cQd2QllB2l8bXWjggpC7IFo69TPBg+RGNwzRHQ2bG8r+
+         2DJPj21rpI0D74uaHqWG1oNTsg33x5XV0WutyNnLmm6Q33eiiQQohAi2iM8FlTHAoJS4
+         REW3sn4Bx7jb+37sZlGZJ605wxAYzbPOvwJKrMAHkAzURlZYxsR0poB86d/wScPgBy+u
+         ILqJo70Mhohjiw0wJVNcUHH84k0Rn8vRSpGRKjiC28d8Pd/3E4Jo6CGI6qTH8I6hgDc9
+         gchsyh6GizHIEYuiEfUZP/tWZCE/tuR74A41aRAhiRevoVVMas5FuQtpdgFRNzb9ABPq
+         nXzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750246550; x=1750851350;
+        d=1e100.net; s=20230601; t=1750246555; x=1750851355;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ymMx2/Jj5SWc9oh0oJCNF6LPBe8+NWhSuF7K3lIaf9M=;
-        b=h7qJqsXfzUuWM+yiCpkXw/JznJHqA9QXkZbFzO8ISJSX1wsJxOsC3AYaUwybzLszUz
-         yvhboJlpIM6fY3aBTHInai59hct8N+1fEgbHjA4YtFEH6V6Trsempr0u1+6C80/F9v8l
-         ZoyL5pgAIdC3d628JInhM0ciyGn0FIb88kGg6plRpXqjqQOj0RJbaLVojzZRYXi4hQJ7
-         Tg50E38fR5/bGDM98ny+FiC6tWBmxeINRm7v31r/LkBnLjlgDjy0glm/Hb4LcR6ruVFP
-         54kCTaFTOboMk6n606N//3jWpsa5EpgLkESWApEPnU0X11QYTxNfsyOH/O+tX+dIabUk
-         vXXg==
-X-Forwarded-Encrypted: i=1; AJvYcCUH0YuRP5mQ4U2+GemtaSyaDw2Qa4zeZVdfho5au+cH0kL7NBFBoyRXQK1aIyQJt4ysN/FmfhHigaUp1Is=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyFAY/WWt18lv79NmI3EHn0sMrTDgk7O9tOoUSTmSLKlpCLawBL
-	CmCmtp5fsOXiHQxTuO+qDa2WRt8ZBX9Vdj9TUatftYNvCxdbGAOiQSlVhacphI+cz2a2Ml0YGog
-	yyt2r
-X-Gm-Gg: ASbGncsuSwGOPGnDKORp36cja0XAKX/0KhG77maeajlSE5jX7ZRwrwvGr0ti9xdp450
-	TJSNB4FB8tYKV5S1jZZoizyWwfii9u0+R2YKahv6qfEyLnQxBYXGGhQjU3psVYs2OaQUdll+ElI
-	Mh7D7v8Y+LRc1ZS/xkl6f/Dhi4r/Wmjy5tYjc9imbWdX807CZnLT/2j2sLPCG/7dKTsrAaxAcWR
-	ERymWePlV56MAT30muEv2SkyyzwHISEe1eEzOEQW+UtgDm2yth7fi5EGhMS4w0y8BcqCNkheRni
-	yVIYDu883XMngv1E8HtvNOEzTtEhIbZ1017Ub6xaYUDKG1JYsuSl7uNywJdxDwUTTlpjfbVuiPu
-	UoqkKxfi/brVUjBeKpw==
-X-Google-Smtp-Source: AGHT+IHpQurN4dARXEVEkELnBd1/eFKHOQXO7K5ZeHZVbZ7n3gcsWaLN1FmavIalixJDtUnrPtlsSQ==
-X-Received: by 2002:a17:903:b8f:b0:234:a44c:ff8c with SMTP id d9443c01a7336-2366b329f71mr223770515ad.18.1750246549511;
-        Wed, 18 Jun 2025 04:35:49 -0700 (PDT)
+        bh=bKQfZHKenjLPRqEIi0Ln2Cx1EmVsnnUE8sKaMZB78eg=;
+        b=CTD6uK4UItmeiT1LV7KMg65HyQTGp7gkeOnTraNybd7eZv6Hy9+uWxOYEAiyQ5aF5P
+         phitp2qvBxK1lWTJpaSd6snkRvooAea+oUOKEtmEcjtYYb1s7l/MAwwwu2afZOkLLJHd
+         +7+kDPmJ83wbaehmNgOqUJsr2foFgHTx7hn0sbbnhUhIeZow+gyY4dKLMxrsl/h1fbST
+         P+wMiqxca+FaWzPF6HmsrXRFAaySIdklRqUh4ZD2tAPovH9he3HdCfB1OMmXbWx/ZDd3
+         3qu21cGcpbOlXqOxpg159JAmaWHG1BryBpDNJtugtH6jJkvogLtOZXtB/Gqoiak2GEJX
+         3c0A==
+X-Forwarded-Encrypted: i=1; AJvYcCVcJ8pQUWNF675NeeCctgLCJY9UO5s6dSS2KOWMVk67cTYjaIDamCU7PAi7iboTIFdXmvRcQmdyuRcFpvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/4ITX5dk9/rtkc/aO0GXe6PbddK/5uZY5fhA2QUTDElqhWcGp
+	RAs58FEBKL9/krIUsuia8fyqSwgHGUHojI/qiIt9q30PZEfn6iKQXOrrstmtCz1Hcq912rbRQRK
+	QiIGm
+X-Gm-Gg: ASbGncsIrmpGYxW5Rsoc/Mj8FNTT98jA37cLkWinjWvKsHGhwn0UQZRiSJOWrLh67sK
+	z0nX51IT1lK2T2tlc+wu+Ottapdz9E7MKJaa5Bdf6V7RQv31zFH5QU2ZTeart+3F4IxlLB++cQT
+	69CMYJLzeLd0JFlbHX5mZjW6whvP8Akx5oNhEa8aIv/7SqRHtI2i3udoTHnaLaS0jLa0HCyILv3
+	V6mhhxzX/chMFKisdmuaRH3bSzwv+VZ4LrJ0Lu/DfB6Ez8h4r7Z3gTKOloy5NA0/1tviG0JW38y
+	7NS/e9aQVptqqVBRbvlIGo3tWlkQpzaJ87CSg+ro/ahj90GgJuNIiEbkbVa5JYT8ehvycTmGYBm
+	XA1P8c8exU3q3s4fHpQ==
+X-Google-Smtp-Source: AGHT+IGDxSM7ATGEf8luR6FsHBoP9Rz03O76JFYYcytYYgv6CqHzBB2u3MegIdGDixYFe2vIN2X5yg==
+X-Received: by 2002:a17:902:dad1:b0:235:e9fe:83c0 with SMTP id d9443c01a7336-2366b3de5damr236240735ad.27.1750246554649;
+        Wed, 18 Jun 2025 04:35:54 -0700 (PDT)
 Received: from localhost.localdomain ([122.171.23.44])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237c57c63efsm9112475ad.172.2025.06.18.04.35.45
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237c57c63efsm9112475ad.172.2025.06.18.04.35.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 04:35:49 -0700 (PDT)
+        Wed, 18 Jun 2025 04:35:53 -0700 (PDT)
 From: Anup Patel <apatel@ventanamicro.com>
 To: Atish Patra <atish.patra@linux.dev>
 Cc: Palmer Dabbelt <palmer@dabbelt.com>,
@@ -70,10 +70,11 @@ Cc: Palmer Dabbelt <palmer@dabbelt.com>,
 	kvm-riscv@lists.infradead.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH v3 01/12] RISC-V: KVM: Check kvm_riscv_vcpu_alloc_vector_context() return value
-Date: Wed, 18 Jun 2025 17:05:21 +0530
-Message-ID: <20250618113532.471448-2-apatel@ventanamicro.com>
+	Anup Patel <apatel@ventanamicro.com>,
+	Nutty Liu <liujingqi@lanxincomputing.com>
+Subject: [PATCH v3 02/12] RISC-V: KVM: Drop the return value of kvm_riscv_vcpu_aia_init()
+Date: Wed, 18 Jun 2025 17:05:22 +0530
+Message-ID: <20250618113532.471448-3-apatel@ventanamicro.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250618113532.471448-1-apatel@ventanamicro.com>
 References: <20250618113532.471448-1-apatel@ventanamicro.com>
@@ -85,30 +86,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The kvm_riscv_vcpu_alloc_vector_context() does return an error code
-upon failure so don't ignore this in kvm_arch_vcpu_create().
+The kvm_riscv_vcpu_aia_init() does not return any failure so drop
+the return value which is always zero.
 
+Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
 Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- arch/riscv/kvm/vcpu.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/riscv/include/asm/kvm_aia.h | 2 +-
+ arch/riscv/kvm/aia_device.c      | 6 ++----
+ arch/riscv/kvm/vcpu.c            | 4 +---
+ 3 files changed, 4 insertions(+), 8 deletions(-)
 
+diff --git a/arch/riscv/include/asm/kvm_aia.h b/arch/riscv/include/asm/kvm_aia.h
+index 3b643b9efc07..0a0f12496f00 100644
+--- a/arch/riscv/include/asm/kvm_aia.h
++++ b/arch/riscv/include/asm/kvm_aia.h
+@@ -147,7 +147,7 @@ int kvm_riscv_vcpu_aia_rmw_ireg(struct kvm_vcpu *vcpu, unsigned int csr_num,
+ 
+ int kvm_riscv_vcpu_aia_update(struct kvm_vcpu *vcpu);
+ void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu);
+-int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu);
++void kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu);
+ void kvm_riscv_vcpu_aia_deinit(struct kvm_vcpu *vcpu);
+ 
+ int kvm_riscv_aia_inject_msi_by_id(struct kvm *kvm, u32 hart_index,
+diff --git a/arch/riscv/kvm/aia_device.c b/arch/riscv/kvm/aia_device.c
+index 806c41931cde..b195a93add1c 100644
+--- a/arch/riscv/kvm/aia_device.c
++++ b/arch/riscv/kvm/aia_device.c
+@@ -509,12 +509,12 @@ void kvm_riscv_vcpu_aia_reset(struct kvm_vcpu *vcpu)
+ 	kvm_riscv_vcpu_aia_imsic_reset(vcpu);
+ }
+ 
+-int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
++void kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_vcpu_aia *vaia = &vcpu->arch.aia_context;
+ 
+ 	if (!kvm_riscv_aia_available())
+-		return 0;
++		return;
+ 
+ 	/*
+ 	 * We don't do any memory allocations over here because these
+@@ -526,8 +526,6 @@ int kvm_riscv_vcpu_aia_init(struct kvm_vcpu *vcpu)
+ 	/* Initialize default values in AIA vcpu context */
+ 	vaia->imsic_addr = KVM_RISCV_AIA_UNDEF_ADDR;
+ 	vaia->hart_index = vcpu->vcpu_idx;
+-
+-	return 0;
+ }
+ 
+ void kvm_riscv_vcpu_aia_deinit(struct kvm_vcpu *vcpu)
 diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 303aa0a8a5a1..b467dc1f4c7f 100644
+index b467dc1f4c7f..f9fb3dbbe0c3 100644
 --- a/arch/riscv/kvm/vcpu.c
 +++ b/arch/riscv/kvm/vcpu.c
-@@ -148,8 +148,9 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+@@ -159,9 +159,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
+ 	kvm_riscv_vcpu_pmu_init(vcpu);
  
- 	spin_lock_init(&vcpu->arch.reset_state.lock);
+ 	/* Setup VCPU AIA */
+-	rc = kvm_riscv_vcpu_aia_init(vcpu);
+-	if (rc)
+-		return rc;
++	kvm_riscv_vcpu_aia_init(vcpu);
  
--	if (kvm_riscv_vcpu_alloc_vector_context(vcpu))
--		return -ENOMEM;
-+	rc = kvm_riscv_vcpu_alloc_vector_context(vcpu);
-+	if (rc)
-+		return rc;
- 
- 	/* Setup VCPU timer */
- 	kvm_riscv_vcpu_timer_init(vcpu);
+ 	/*
+ 	 * Setup SBI extensions
 -- 
 2.43.0
 
