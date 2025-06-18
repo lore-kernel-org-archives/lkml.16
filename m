@@ -1,97 +1,201 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 726D31A9B3D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0078C18FC86
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750226680; cv=none; b=ZiAnpXzXDZOmC5KH3vDCoxxrjlLIwvtxv7e2xmMbv0sH4/zo4B7grQYvlUMQVtfo69Dwm1TihEK+eF6kiLb4EJnQsL8yt71KFamfr/iRgSnMIKh2qIa8ub/4Wo4/l6rzRl69WefX+f71NRkHghhsRcQcxlI7uPx1prg+nRt4HC8=
+	t=1750226843; cv=none; b=oqXvSWeiHoHhGy6mk2YNFbYKViT6fPnYwm9JkL4Q8+nrsK+Lucn+IDYUb4IoRgu7TpFwG9Z7zyx67eSxh5XH+hw31LGZa8ih/sKsBNuqs/L8dIX7inMNKeiq2ICnjQXTKKrbx6teCrrFhPixmug3Oo4nReqe262xRH4b5vGCC5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750226680; c=relaxed/simple;
-	bh=f5TXy+fk3l9QPCAnfXY5KdIf6x2Vyvo8oQ8dtsUQwiA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m+JFAPWduzKEOr5NShdIUuvA3aBi5p+qWr6uFBJvWu7SccEk6c7g5GbAFtU01P0Y+5kVtDSb9a8eCiFROfmKl5cdbW1i7S9t4OTmgtW7qQRp31haruuwQMCuAA0JIx+JLxmjkUEG78PQxgrCmj3f9i9fP3QXVKgu0fN0Rez5nMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-057ff7000000aab6-51-685256e95ae4
-From: "yohan.joung" <yohan.joung@sk.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	pilhyun.kim@sk.com,
-	"yohan.joung" <yohan.joung@sk.com>
-Subject: [PATCH v3] f2fs: enable tuning of boost_zoned_gc_percent via sysfs
-Date: Wed, 18 Jun 2025 15:04:13 +0900
-Message-ID: <20250618060414.97-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
+	s=arc-20240116; t=1750226843; c=relaxed/simple;
+	bh=gVpRGpWbvK2l2EgWkUdriQt0Z8wJ5SQFwm0/UlJCZCQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q+WiJ/+/sNZ3H2kLOw//4ar1VUMl162YIcPnqiofI3euPYGzv67kvJnWXLnV4ZeQcIsryJ0W4CljlEBwVnBFBXwJZN03sj31fjzNYw3Bf2ho1ehJ6DZnub0BNZrKRX7URyKiVXiYqIl46OuAEkEsIRFPoG14nctHG3NUOawmgcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aw9b2FQ7; arc=none smtp.client-ip=91.218.175.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aw9b2FQ7"
+Message-ID: <325ab9a0-44d1-44a2-aefe-9cd49dcd12f5@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750226827;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NkuFePhrx7gFmJOrw5AAMhKELjMHQfD+AdCkLnFiRGI=;
+	b=aw9b2FQ7pNugXJV0VcM6mLYbw5VWRu7wvN+6UUWbwbPdlWLsDYLiwI6KgDtMGuzIpy8nW3
+	2NBbXpHvUFxO9U7iE2frkLEYATSmZ6ODBNCYhLpOUIlXQmYLj2uJ34QHWIA4wSucCXacT0
+	nZWvDmjbsLGMme3pBGyRInNwmZuxNTk=
+Date: Tue, 17 Jun 2025 23:06:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH net-next v6 10/12] net/mlx5e: Implement queue mgmt ops and
+ single channel swap
+To: Mark Bloch <mbloch@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>
+Cc: saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
+ Leon Romanovsky <leon@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Richard Cochran <richardcochran@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>,
+ Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, Dragos Tatulea <dtatulea@nvidia.com>
+References: <20250616141441.1243044-1-mbloch@nvidia.com>
+ <20250616141441.1243044-11-mbloch@nvidia.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <20250616141441.1243044-11-mbloch@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnluLIzCtJLcpLzFFi42LhesuzUPdlWFCGwetOVYvTU88yWTxZP4vZ
-	4tIid4vLu+awObB4bFrVyeaxe8FnJo/Pm+QCmKO4bFJSczLLUov07RK4Mh5NeMJa8IKz4uCC
-	5AbGqRxdjJwcEgImEq9XNrDD2EtWfGcCsdkENCT+9PYyg9giApoSRzpnAtVwcTALtDFKtB9t
-	YgVJCAt4S/Sv3QJUxMHBIqAqsX6iOUiYF2jOypZTUDM1JXZ8Oc8EEReUODnzCQuIzSwgL9G8
-	dTYzyEwJgYesEjObdjJDNEhKHFxxg2UCI+8sJD2zkPQsYGRaxSiSmVeWm5iZY6xXnJ1RmZdZ
-	oZecn7uJERhMy2r/RO5g/HYh+BCjAAejEg/vBq/ADCHWxLLiytxDjBIczEoivItP+GUI8aYk
-	VlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYOxc/3vmEk8/i99l
-	Mg/vtFj9ntCRuWHnnMCU2oLzD8S0uHbdVL5/ZqIw1xoG8YuWlnJfg4SM1WztbW77z1wkIba1
-	c5KwU4TQ7LW75rEem8HyxVVx/uQNX2abrvLsKvt34JHm7+1mL9rNWy/eueT54LHLq5mfuY6b
-	zNkaPzPes5rhbueNGZ8vW+YosRRnJBpqMRcVJwIAM2ejqSICAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBJMWRmVeSWpSXmKPExsXCNUNlju7LsKAMgzs/pSxOTz3LZPFk/Sxm
-	i0uL3C0u75rDZjFh7lUmi/db7zE6sHlsWtXJ5rF7wWcmj2+3PTw+b5ILYInisklJzcksSy3S
-	t0vgyng04QlrwQvOioMLkhsYp3J0MXJySAiYSCxZ8Z0JxGYT0JD409vLDGKLCGhKHOmcyd7F
-	yMXBLNDGKNF+tIkVJCEs4C3Rv3YLUBEHB4uAqsT6ieYgYV6gOStbTrFDzNSU2PHlPBNEXFDi
-	5MwnLCA2s4C8RPPW2cwTGLlmIUnNQpJawMi0ilEkM68sNzEzx0yvODujMi+zQi85P3cTIzA8
-	ltX+mbSD8dtl90OMAhyMSjy8G7wCM4RYE8uKK3MPMUpwMCuJ8C4+4ZchxJuSWFmVWpQfX1Sa
-	k1p8iFGag0VJnNcrPDVBSCA9sSQ1OzW1ILUIJsvEwSnVwNj8X0pjxmcl+9fvGqZfCd7EOfFP
-	lSLvtYY/ChO/u9gFdVfZ9lkemV33+yp3ktnDF9/U15jc2Ri4YZ/G27obcZfTyo7OCeVIy1nG
-	Y2MxS+rFwZqpUxllNt9bcLml28CBQVVQ9MqN2EPrf9qwFk5f/8qXO6VGXUpTTVHg7599Uwr8
-	Ds1SSZ1Ww6TEUpyRaKjFXFScCABKlo6eCwIAAA==
-X-CFilter-Loop: Reflected
+X-Migadu-Flow: FLOW_OUT
 
-to allow users to dynamically tune
-the boost_zoned_gc_percent parameter
+在 2025/6/16 7:14, Mark Bloch 写道:
+> From: Saeed Mahameed <saeedm@nvidia.com>
+> 
+> The bulk of the work is done in mlx5e_queue_mem_alloc, where we allocate
+> and create the new channel resources, similar to
+> mlx5e_safe_switch_params, but here we do it for a single channel using
+> existing params, sort of a clone channel.
+> To swap the old channel with the new one, we deactivate and close the
+> old channel then replace it with the new one, since the swap procedure
+> doesn't fail in mlx5, we do it all in one place (mlx5e_queue_start).
+> 
+> Signed-off-by: Saeed Mahameed <saeedm@nvidia.com>
+> Reviewed-by: Dragos Tatulea <dtatulea@nvidia.com>
+> Reviewed-by: Tariq Toukan <tariqt@nvidia.com>
+> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+> ---
+>   .../net/ethernet/mellanox/mlx5/core/en_main.c | 98 +++++++++++++++++++
+>   1 file changed, 98 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> index a51e204bd364..873a42b4a82d 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+> @@ -5494,6 +5494,103 @@ static const struct netdev_stat_ops mlx5e_stat_ops = {
+>   	.get_base_stats      = mlx5e_get_base_stats,
+>   };
+>   
+> +struct mlx5_qmgmt_data {
+> +	struct mlx5e_channel *c;
+> +	struct mlx5e_channel_param cparam;
+> +};
+> +
+> +static int mlx5e_queue_mem_alloc(struct net_device *dev, void *newq,
+> +				 int queue_index)
+> +{
+> +	struct mlx5_qmgmt_data *new = (struct mlx5_qmgmt_data *)newq;
+> +	struct mlx5e_priv *priv = netdev_priv(dev);
+> +	struct mlx5e_channels *chs = &priv->channels;
+> +	struct mlx5e_params params = chs->params;
 
-Signed-off-by: yohan.joung <yohan.joung@sk.com>
----
- fs/f2fs/gc.h    | 3 ++-
- fs/f2fs/sysfs.c | 7 +++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+RCT (Reverse Christmas Tree) ?
 
-diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
-index 5c1eaf55e127..11fba7636af7 100644
---- a/fs/f2fs/gc.h
-+++ b/fs/f2fs/gc.h
-@@ -194,6 +194,7 @@ static inline bool has_enough_invalid_blocks(struct f2fs_sb_info *sbi)
- static inline bool need_to_boost_gc(struct f2fs_sb_info *sbi)
- {
- 	if (f2fs_sb_has_blkzoned(sbi))
--		return !has_enough_free_blocks(sbi, LIMIT_BOOST_ZONED_GC);
-+		return !has_enough_free_blocks(sbi,
-+				sbi->gc_thread->boost_zoned_gc_percent);
- 	return has_enough_invalid_blocks(sbi);
- }
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 75134d69a0bd..d0ec9963ff1b 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -628,6 +628,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
- 		return count;
- 	}
- 
-+	if (!strcmp(a->attr.name, "gc_boost_zoned_gc_percent")) {
-+		if (t > 100)
-+			return -EINVAL;
-+		*ui = (unsigned int)t;
-+		return count;
-+	}
-+
- #ifdef CONFIG_F2FS_IOSTAT
- 	if (!strcmp(a->attr.name, "iostat_enable")) {
- 		sbi->iostat_enable = !!t;
--- 
-2.33.0
+Yanjun.Zhu
+
+> +	struct mlx5_core_dev *mdev;
+> +	int err;
+> +
+> +	mutex_lock(&priv->state_lock);
+> +	if (!test_bit(MLX5E_STATE_OPENED, &priv->state)) {
+> +		err = -ENODEV;
+> +		goto unlock;
+> +	}
+> +
+> +	if (queue_index >= chs->num) {
+> +		err = -ERANGE;
+> +		goto unlock;
+> +	}
+> +
+> +	if (MLX5E_GET_PFLAG(&chs->params, MLX5E_PFLAG_TX_PORT_TS) ||
+> +	    chs->params.ptp_rx   ||
+> +	    chs->params.xdp_prog ||
+> +	    priv->htb) {
+> +		netdev_err(priv->netdev,
+> +			   "Cloning channels with Port/rx PTP, XDP or HTB is not supported\n");
+> +		err = -EOPNOTSUPP;
+> +		goto unlock;
+> +	}
+> +
+> +	mdev = mlx5_sd_ch_ix_get_dev(priv->mdev, queue_index);
+> +	err = mlx5e_build_channel_param(mdev, &params, &new->cparam);
+> +	if (err)
+> +		goto unlock;
+> +
+> +	err = mlx5e_open_channel(priv, queue_index, &params, NULL, &new->c);
+> +unlock:
+> +	mutex_unlock(&priv->state_lock);
+> +	return err;
+> +}
+> +
+> +static void mlx5e_queue_mem_free(struct net_device *dev, void *mem)
+> +{
+> +	struct mlx5_qmgmt_data *data = (struct mlx5_qmgmt_data *)mem;
+> +
+> +	/* not supposed to happen since mlx5e_queue_start never fails
+> +	 * but this is how this should be implemented just in case
+> +	 */
+> +	if (data->c)
+> +		mlx5e_close_channel(data->c);
+> +}
+> +
+> +static int mlx5e_queue_stop(struct net_device *dev, void *oldq, int queue_index)
+> +{
+> +	/* In mlx5 a txq cannot be simply stopped in isolation, only restarted.
+> +	 * mlx5e_queue_start does not fail, we stop the old queue there.
+> +	 * TODO: Improve this.
+> +	 */
+> +	return 0;
+> +}
+> +
+> +static int mlx5e_queue_start(struct net_device *dev, void *newq,
+> +			     int queue_index)
+> +{
+> +	struct mlx5_qmgmt_data *new = (struct mlx5_qmgmt_data *)newq;
+> +	struct mlx5e_priv *priv = netdev_priv(dev);
+> +	struct mlx5e_channel *old;
+> +
+> +	mutex_lock(&priv->state_lock);
+> +
+> +	/* stop and close the old */
+> +	old = priv->channels.c[queue_index];
+> +	mlx5e_deactivate_priv_channels(priv);
+> +	/* close old before activating new, to avoid napi conflict */
+> +	mlx5e_close_channel(old);
+> +
+> +	/* start the new */
+> +	priv->channels.c[queue_index] = new->c;
+> +	mlx5e_activate_priv_channels(priv);
+> +	mutex_unlock(&priv->state_lock);
+> +	return 0;
+> +}
+> +
+> +static const struct netdev_queue_mgmt_ops mlx5e_queue_mgmt_ops = {
+> +	.ndo_queue_mem_size	=	sizeof(struct mlx5_qmgmt_data),
+> +	.ndo_queue_mem_alloc	=	mlx5e_queue_mem_alloc,
+> +	.ndo_queue_mem_free	=	mlx5e_queue_mem_free,
+> +	.ndo_queue_start	=	mlx5e_queue_start,
+> +	.ndo_queue_stop		=	mlx5e_queue_stop,
+> +};
+> +
+>   static void mlx5e_build_nic_netdev(struct net_device *netdev)
+>   {
+>   	struct mlx5e_priv *priv = netdev_priv(netdev);
+> @@ -5504,6 +5601,7 @@ static void mlx5e_build_nic_netdev(struct net_device *netdev)
+>   	SET_NETDEV_DEV(netdev, mdev->device);
+>   
+>   	netdev->netdev_ops = &mlx5e_netdev_ops;
+> +	netdev->queue_mgmt_ops = &mlx5e_queue_mgmt_ops;
+>   	netdev->xdp_metadata_ops = &mlx5e_xdp_metadata_ops;
+>   	netdev->xsk_tx_metadata_ops = &mlx5e_xsk_tx_metadata_ops;
+>   	netdev->request_ops_lock = true;
 
