@@ -1,172 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f65.google.com (mail-wr1-f65.google.com [209.85.221.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8869A2BF013;
-	Wed, 18 Jun 2025 12:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013122E54AB
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251052; cv=none; b=GRKh7aQ1givEabDAJDn5BCygtsdb/xs5rAYgPYrgyjxvPT7JlLD3aC0x1StI5mYQK2toTu3kE5fYyQ0uau78vCHuSh8F0GQmDTYKstSmCAhd/NcHBiYRLT2bFDtxFfs6KFq/IMwx17Bpd9VeUBfTQDgtuUFG/OwhyfsSu7SqdAw=
+	t=1750251058; cv=none; b=Xw9F9TOPV5AUPhDz3A/BwjIeuA+rDwt+nz/Rz8o+Z3kkDIxSGHlIR69uYzzUf+OHPc9kA6BLSoCY2nmnNvNrglaaEFBKzj6WLGyV/VXsQzoI9uDkkKFAw6WLapwoxgAr98rNyFncyZ5EVw2FFQplrS64ZaUb8o3TVKqfcSsyuFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750251052; c=relaxed/simple;
-	bh=ZSj/R+8J8mVMWAp2q9IOUy7kGCsK8aMkmayHlgXuTVc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rlz9lUg24L2jLE0tNxWjtSoM2QxvmVmFiKt29qOR7PI3UOvcbhNL+DGr18MUH67+nEAe4hPGxXUDh0hMyqccS25nYuUj+NpcD2/kpPN2BNNlZtCbkSizOaXgUBVO3ShHBTySPg4oBjk5uxPO1XUK2LjI0fqIUmWijHrpqsxK4c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJ8E1Hv5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750251058; c=relaxed/simple;
+	bh=tYOMqDbBl4oLeXidO5nb93lks+dyLJ+aBvItgw9rtgQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=deKwBBy/4dGe2ycKxMDeD63BjQQ0iEmVcwLXlaUszwRFtIGnw7eVViCaoxuRm8/Y3+1WYtH4OK9N3KGcKwoZwGugR2Ydf8NmYuPbKVUVbyYzVcvZNk05VIIuXGUuPO4mhLlY63Og1MDKla7gyNVIiR5QP17iTlDQq1GkuCDLj18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UPe9HjW+; arc=none smtp.client-ip=209.85.221.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJ8E1Hv5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14FF8C4CEE7;
-	Wed, 18 Jun 2025 12:50:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750251052;
-	bh=ZSj/R+8J8mVMWAp2q9IOUy7kGCsK8aMkmayHlgXuTVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GJ8E1Hv5F2GJ3Fl04RIvng2/6uT131VeCqskRFOop+D/1W+M9QmguFt1Ae8jJnK5y
-	 FZr+NZAIOBKrkut6LeGGrWa/EYvkXqQ6/evWVZSFT2n8rVzJyGs3BqUPZYPjM2ya8e
-	 ZASqEcT7q/0quA90fnWNkAhyA+s0eN1fNBnNgOxOCcuuLZtSm0k07vt+5zSyr00/4/
-	 le4genhxBKoNV3EVHXXXvPNXfwFamvf+JbPNuziusBasIwPlDNjKt7d4QXJTAeoDUb
-	 G2Exb7o0A6HwtLXCqqNoDwFnaXd2zHPOViUnM74dapk3DV1xc4Wcy2ffGeiDDmFw2E
-	 Q26dwp89nSlbw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRsFe-000000002SW-2uxe;
-	Wed, 18 Jun 2025 14:50:51 +0200
-Date: Wed, 18 Jun 2025 14:50:50 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Bryan O'Donoghue <bod.linux@nxsw.ie>,
-	Rob Clark <rob.clark@oss.qualcomm.com>
-Cc: Gabor Juhos <j4g8y7@gmail.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Georgi Djakov <djakov@kernel.org>,
-	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock'
- is held
-Message-ID: <aFK2Kl2I46dTYBI1@hovoldconsulting.com>
-References: <TIkPOGVjPeCjPzjVtlSb6V5CIcpaXf2-6WG6HjAyaOW59Hj01-9VK7Z8DKadakOKr6fJeQICi6h0Z8mft9DQyg==@protonmail.internalid>
- <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
- <ca9f7308-4b92-4d23-bfe7-f8d18d20de10@linaro.org>
- <75a46897-040f-4608-88f5-22c99c8bed97@gmail.com>
- <04ab699e-b344-4ba1-9ca1-04b6e50beefe@nxsw.ie>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UPe9HjW+"
+Received: by mail-wr1-f65.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so4215330f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750251054; x=1750855854; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/NbQn0+rtk9R9UQB3ZjUl1RmfRkgy76SQGVXPRmwvTI=;
+        b=UPe9HjW+MI5cyVjjpsICuwdZ2B5jBGdvbqYjo4twPlv6+X6SoV2cBale59/gdLYETv
+         FnVxCS2nBlDCPMPcZGRkVhfScnQ2yynWP5pSEyOLWVQbz4Kj/Dtb2IHmswwSa+X+7ZYz
+         5ImjUD0lWFXU16l/co3EqkpoDwrJDdLwEOiJ/8dVCkS2gpgQureiVNGls/WqfaNIbVHF
+         Q8KblZ+uIIDKwZs0LtG1sDgnk2BzTtA6V4GF7s8vVFXqRyLEHm8+goArXxuEiSRBsxS2
+         cil4qfKe+Z5kYcq2+jrhRbZotmdf/tIRUE/iYjaKfswyRUIfZ9LxNN6q1+j9cKDQB69P
+         bnaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750251054; x=1750855854;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/NbQn0+rtk9R9UQB3ZjUl1RmfRkgy76SQGVXPRmwvTI=;
+        b=ivG9IeK0YKDyvbj3KXDNTu3YxluSMJVtebu/CmZd9rxOfHoyUWr58ogLwYl9QuxUZj
+         IJO9m7gHjsQmTAwhEQgNYXSrBDguslCPKnKDlOw24sfQagCu0Ky2HqOfTYd9UiPZH7RU
+         crZqPq6D8O9tAZMd4BGufBPuc3u/eQYAF5O4fBR8xd+IFD7enZKyvrde1YEWC8xxStRT
+         GBXLkss7Gf3Pfa/QaKF8lODShWJ4UkNwnI+uX48skmJdisKYiuQsKaRzIZxvSL86ZypO
+         BVNZpBJTxMh9g2nm0r4RvI1vaP1GFdc+Hs38lp1zPV7f3PgH3lCAhcy4FV9sZcmBFhCQ
+         vwpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXcDN6wdrOAYVsZUPrHGgumIJb1C2BdZ09AEqzBHpr0GbNJ5kG7KjdB7yNyjYbR0F6vKkmjizibg+VpZaY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzSnSeb8FGuTjKeXiNaEftV46dEQIs4I7cqGxFgSAePJY7Z+2B
+	LqmPp410Fis1LEzEiKO4O/Zd6M0GdL7ZFuoPE4mEIQnRo9POF/OmEf1rGKkSGTuN8VM=
+X-Gm-Gg: ASbGncv+cCIy75osqALtIMDrLwMJE3OlAmTHFaSdURyQEaDP0XlRRI9pdt9BxvxjK6C
+	x7SnIH8NIrjPWLavnWt3Ia2iqXwSd//DHCfpUKBG0uTMKoz7mHbLtXRDCVkzT8gXQSYKuiQrPpA
+	sezSYhGe2wx0/AI3pL8tkDYCqiBdGikK1aXKIc2v6nOPqBRmusgoYSDLPMXSiJxYye84OOBU+df
+	AuIm28+Q8SCUApWqjl40E+kyKJtdbbAI0YT74Mw2THoilejeeHxzI8ub3JHclAhUt7Bq3IfFD4J
+	Vz0/+goTESs99r6ieP95TxGZqSNNZ0Z20usgOgcUfPCgFKEEOZyx+knK8T2pRA==
+X-Google-Smtp-Source: AGHT+IFEWHAu8VwBRrGTbvGEGcd39Os4PAnx0WLvaMN2iQm+8pQRf6KkKity1k65/583ahjCju2ddw==
+X-Received: by 2002:a05:6000:1a88:b0:3a5:2182:bce2 with SMTP id ffacd0b85a97d-3a5723a2928mr14371409f8f.17.1750251054051;
+        Wed, 18 Jun 2025 05:50:54 -0700 (PDT)
+Received: from zovi.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453599c9854sm13143435e9.1.2025.06.18.05.50.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 05:50:53 -0700 (PDT)
+From: Petr Pavlu <petr.pavlu@suse.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Suren Baghdasaryan <surenb@google.com>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Casey Chen <cachen@purestorage.com>,
+	linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>
+Subject: [PATCH v2] codetag: Avoid unused alloc_tags sections/symbols
+Date: Wed, 18 Jun 2025 14:50:35 +0200
+Message-ID: <20250618125037.53182-1-petr.pavlu@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <04ab699e-b344-4ba1-9ca1-04b6e50beefe@nxsw.ie>
 
-[ +CC: Rob ]
+With CONFIG_MEM_ALLOC_PROFILING=n, vmlinux and all modules unnecessarily
+contain the symbols __start_alloc_tags and __stop_alloc_tags, which define
+an empty range. In the case of modules, the presence of these symbols also
+forces the linker to create an empty .codetag.alloc_tags section.
 
-On Tue, Jun 03, 2025 at 10:01:31AM +0000, Bryan O'Donoghue wrote:
-> On 03/06/2025 10:15, Gabor Juhos wrote:
+Update codetag.lds.h to make the data conditional on
+CONFIG_MEM_ALLOC_PROFILING.
 
-> > 2025. 05. 30. 11:16 keltezéssel, Bryan O'Donoghue írta:
-> >> On 29/05/2025 15:46, Gabor Juhos wrote:
-> >>> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
-> >>> ("interconnect: Fix locking for runpm vs reclaim") in order
-> >>> to decouple serialization of bw aggregation from codepaths
-> >>> that require memory allocation.
-> >>>
-> >>> However commit d30f83d278a9 ("interconnect: core: Add dynamic
-> >>> id allocation support") added a devm_kasprintf() call into a
-> >>> path protected by the 'icc_bw_lock' which causes this lockdep
-> >>> warning (at least on the IPQ9574 platform):
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+Reviewed-by: Kent Overstreet <kent.overstreet@linux.dev>
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+---
 
-> >>> Move the memory allocation part of the code outside of the protected
-> >>> path to eliminate the warning. Also add a note about why it is moved
-> >>> to there,
+Changes since v1 [1]:
+- Trivially rebased the patch on top of "alloc_tag: remove empty module tag
+  section" [2].
 
-> >>> @@ -1023,6 +1023,16 @@ void icc_node_add(struct icc_node *node, struct
-> >>> icc_provider *provider)
-> >>>            return;
-> >>>
-> >>>        mutex_lock(&icc_lock);
-> >>> +
-> >>> +    if (node->id >= ICC_DYN_ID_START) {
-> >>> +        /*
-> >>> +         * Memory allocation must be done outside of codepaths
-> >>> +         * protected by icc_bw_lock.
-> >>> +         */
-> >>> +        node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
-> >>> +                        node->name, dev_name(provider->dev));
-> >>> +    }
-> >>> +
-> >>>        mutex_lock(&icc_bw_lock);
-> >>>
-> >>>        node->provider = provider;
-> >>> @@ -1038,10 +1048,6 @@ void icc_node_add(struct icc_node *node, struct
-> >>> icc_provider *provider)
-> >>>        node->avg_bw = node->init_avg;
-> >>>        node->peak_bw = node->init_peak;
-> >>>
-> >>> -    if (node->id >= ICC_DYN_ID_START)
-> >>> -        node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
-> >>> -                        node->name, dev_name(provider->dev));
-> >>> -
-> >>>        if (node->avg_bw || node->peak_bw) {
-> >>>            if (provider->pre_aggregate)
-> >>>                provider->pre_aggregate(node);
+[1] https://lore.kernel.org/all/20250313143002.9118-1-petr.pavlu@suse.com/
+[2] https://lore.kernel.org/all/20250610162258.324645-1-cachen@purestorage.com/
 
-> >> The locking in this code is a mess.
-> >>
-> >> Which data-structures does icc_lock protect node* pointers I think and which
-> >> data-structures does icc_bw_lock protect - "bw" data structures ?
-> >>
-> >> Hmm.
-> >>
-> >> Looking at this code I'm not sure at all what icc_lock was introduced to do.
-> > 
-> > Initially, only the 'icc_lock' mutex was here, and that protected 'everything'.
-> > The 'icc_bw_lock' has been introduced later by commit af42269c3523
-> > ("interconnect: Fix locking for runpm vs reclaim") as part of the
-> > "drm/msm+PM+icc: Make job_run() reclaim-safe" series [1].
-> > 
-> > Here is the reason copied from the original commit message:
-> > 
-> >      "For cases where icc_bw_set() can be called in callbaths that could
-> >      deadlock against shrinker/reclaim, such as runpm resume, we need to
-> >      decouple the icc locking.  Introduce a new icc_bw_lock for cases where
-> >      we need to serialize bw aggregation and update to decouple that from
-> >      paths that require memory allocation such as node/link creation/
-> >      destruction."
-> 
-> Right but reading this code.
-> 
-> icc_set_bw();
-> icc_lock_bw - protects struct icc_node *
-> 
-> icc_put();
-> icc_lock - locks
-> icc_lock_bw -locks directly after protects struct icc_node *
-> 
-> icc_node_add current:
-> icc_lock - locks
-> icc_lock_bw - locks
->      node->name = devm_kasprintf();
-> 
-> After your change
-> 
-> icc_node_add current:
-> icc_lock - locks
->      node->name = devm_kasprintf();
-> icc_lock_bw - locks
->      owns node->provider - or whatever
-> 
-> And this is what is prompting my question. Which locks own which data here ?
-> 
-> I think we should sort that out, either by removing one of the locks or 
-> by at the very least documenting beside the mutex declarations which 
-> locks protect what.
+ include/asm-generic/codetag.lds.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Feel free to discuss that with Rob who added the icc_lock_bw, but it's
-unrelated to the regression at hand (and should not block fixing it).
+diff --git a/include/asm-generic/codetag.lds.h b/include/asm-generic/codetag.lds.h
+index a45fe3d141a1..a14f4bdafdda 100644
+--- a/include/asm-generic/codetag.lds.h
++++ b/include/asm-generic/codetag.lds.h
+@@ -2,6 +2,12 @@
+ #ifndef __ASM_GENERIC_CODETAG_LDS_H
+ #define __ASM_GENERIC_CODETAG_LDS_H
+ 
++#ifdef CONFIG_MEM_ALLOC_PROFILING
++#define IF_MEM_ALLOC_PROFILING(...) __VA_ARGS__
++#else
++#define IF_MEM_ALLOC_PROFILING(...)
++#endif
++
+ #define SECTION_WITH_BOUNDARIES(_name)	\
+ 	. = ALIGN(8);			\
+ 	__start_##_name = .;		\
+@@ -9,7 +15,7 @@
+ 	__stop_##_name = .;
+ 
+ #define CODETAG_SECTIONS()		\
+-	SECTION_WITH_BOUNDARIES(alloc_tags)
++	IF_MEM_ALLOC_PROFILING(SECTION_WITH_BOUNDARIES(alloc_tags))
+ 
+ #define MOD_SEPARATE_CODETAG_SECTION(_name)	\
+ 	.codetag.##_name : {			\
+@@ -22,6 +28,6 @@
+  * unload them individually once unused.
+  */
+ #define MOD_SEPARATE_CODETAG_SECTIONS()		\
+-	MOD_SEPARATE_CODETAG_SECTION(alloc_tags)
++	IF_MEM_ALLOC_PROFILING(MOD_SEPARATE_CODETAG_SECTION(alloc_tags))
+ 
+ #endif /* __ASM_GENERIC_CODETAG_LDS_H */
 
-Allocations cannot be done while holding the icc_lock_bw, and this fix
-is correct in moving the allocation (also note that the node has not
-been added yet).
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+prerequisite-patch-id: acb6e2f6708cd75488806308bfecf682b2367dc9
+-- 
+2.49.0
 
-Johan
