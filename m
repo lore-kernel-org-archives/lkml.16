@@ -1,156 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFBD280037;
-	Wed, 18 Jun 2025 09:26:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD18281353
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238776; cv=none; b=DmBlF/U1UsvbxM1XsbsP7orfAc3aiKhDJG8lI7C9a1Q8ba1LSel9kmTNSq6Dq97/mfhf64/4V6H1//+emtvR/DfEwygy8g7f/RrSXTUSJ3+jXT8deX6UGBvSZmWnOzfwU5Sqw8UfUXtDWnGbvy2P5uEM+wKgyolWqCZoIOZKzhY=
+	t=1750238786; cv=none; b=YQVGJbSIt/u+jBNXSLYLPw7El/ezO04ZFshlkNrBWowAt/5lDHRlbz6AU2LhvP4jZdwFuIl/DS8NpjqLJkL+mUGLX6pMk/6IEoe0NJ3cOHswgD/bCV/Nb+iZno5P/ebFxPidSpVPOaXmHhEw/JRJIV9VOSVPYuNO0NiX1YSlBvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238776; c=relaxed/simple;
-	bh=4a36yfaVxjel1bSdzn14/ug9XsRUK4qd0+2wlh7dnFs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f9yMX0mFvdVuMkNsnpeKXWk14sF0ACMGLXjWfPLtdkBbjTaPsjXz3DsRKTU5dTaNZvyTtjLuONJ4xwJYZG0vJVnuNLlV1oXu0r79+a98pETNcTWATLHcxA9xYkvZAsaaWnn+xVrlUV1aFV7QUAQfPMo/xAtePdywiAfaxzQRAa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WVQOrJJj; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750238786; c=relaxed/simple;
+	bh=nAixNKedNDaYjMoDbFJJWtykzraK5wtml5m9AKWJpzY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ByfT/q12w8nbfKbYF/bd3kHdzwoeLOhPZkJp1vvYlfaAAS1RWXdAli8i76UMB/kesj6wqfYgaZlFTdhpedain393iRZ+CvoBPUeNcipVtYQDzdrSWE8P7WSJuWSLboBqyAHfnFxY5didNBHP8Y0wYvhrqZr7Q+Qt5HPNxICS9YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yAeeIEfz; arc=none smtp.client-ip=209.85.167.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WVQOrJJj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750238775; x=1781774775;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=4a36yfaVxjel1bSdzn14/ug9XsRUK4qd0+2wlh7dnFs=;
-  b=WVQOrJJjhxopaFYOD7FrKMC+MmRf4dqopK9kJvbtZZwgi2DufJmAvxdo
-   a686Dld4Ab/TESCNkn+8ZqarN2B862OoDgt2HqIeursWdH6edoGneJk4i
-   H8hSbHZiKmWIl3GV2CAM3mBXpTE3Jx+KV+Dz5hwDkIofvwTOFvSETSLOW
-   da8OFAGVSnnqOBpf2kgLBuNfYRCbmg1X5Z+LRfqqKpoHldU5Fx6aJICce
-   0jo34lyRLvfontZjGdcdf0/B+lzKB4LJWvA5CNV2JaCbTLXLHVbS+0edd
-   IQSsAdGiYRpIfnL+ZprTenMDot7RYeBwQA7sdO7BBwEvxiGf3PvVIe1Ob
-   g==;
-X-CSE-ConnectionGUID: 6nQi78CvTICtBDhm8x1BXA==
-X-CSE-MsgGUID: nX0ubiUkRWSPzF9Tj5M4Ag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56122619"
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="56122619"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 02:25:07 -0700
-X-CSE-ConnectionGUID: i+jrtZyrSdKfB197CboOpA==
-X-CSE-MsgGUID: A4AbLTM6SMi037T+x57/pA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="150189629"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.62])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 02:25:05 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 18 Jun 2025 12:25:01 +0300 (EEST)
-To: Shravan Kumar Ramani <shravankr@nvidia.com>
-cc: Vadim Pasternak <vadimp@nvidia.com>, 
-    David Thompson <davthompson@nvidia.com>, 
-    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/1] platform/mellanox: mlxbf-pmc: Check validity of
- event/enable input
-In-Reply-To: <20250618071713.8595-1-shravankr@nvidia.com>
-Message-ID: <7d5d6ca9-0078-dec1-d889-4407f8867abd@linux.intel.com>
-References: <20250618071713.8595-1-shravankr@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAeeIEfz"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so584844e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750238783; x=1750843583; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QWFR3lJZvy4GZXmA1xUeMKYw+5FpI0OcmJNgyVyXgIw=;
+        b=yAeeIEfzr7L+oZZxhNiqA2bDIsKcUw9vfMsxJy3A8Li+vwxW7MT0ewaxRF7X3wUwe2
+         /100WBwO6ZoaskvMXg2kNHVFa/OUULZs1XfArhRJI3aNJYjesKZNlYeSW89ts8Noenmg
+         DoOVyZGCOOwYvVpYebqS6YoQDwPGwNzyC6KD6ggOGNkIy1gUdSu8wiVcEh6t44ZSa2Ir
+         YbWh3Wwnq23AKhVLjP79qaCAl3IAQAKBQ8g5d1W+XMUXt9O6MuJTUHr3IG6gDACJIV1R
+         83yqgpsSeJ9xCrJjNdcStL0HgynCSL2zFA9QMWYjON+jELo+VUZUJTmerK/neFL3xCn3
+         VfyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750238783; x=1750843583;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QWFR3lJZvy4GZXmA1xUeMKYw+5FpI0OcmJNgyVyXgIw=;
+        b=tAb3El2ufWqVVSiQ1f8c0x90Q1rD1FeSHPFlwlQMf+rrUl1/te8cG2rHeIjQjaa29n
+         sJbcaVHwMzuGCfYfLIWQXZkkrVNZQSJ1mOqn0gbym1gNBl8FFL2hc+hL7bhD3L37k8Ts
+         WfnrA8pP30Y9hEcjY+GCxvO87WjToUe7h0fzMtp6evJfU8uivaRSKDjXqVS28sK2lKvh
+         r/tojxN8VvXuLX1MRFgDxS27r7/3XrvE3GozO0jzjZ7//xcvprn4K5leisjtOBt4uSN4
+         i6Z2ORPD4bI1Ug3SgtL4nFfhOw6U8OvkFXFO6NhfjPdbqqes8AnrZovYaOb4QgIDb4EV
+         eu/A==
+X-Forwarded-Encrypted: i=1; AJvYcCXNvIVRWXzYUF4rHsYlUGavQAKVHPHt6SKfhQ3JgpwP31rNGdbx5Gpl/GSJEmm/pWR8cNUPs9PpxPUiaKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyA+6LwQ5bDxqo64QAa5FF/l3GVNhjp/bscECS5y19Tv8ZED72Q
+	6E5Zelh+FyoZYaVXX+SudXS2l6jj+xrubdmW+pjmTYw+hSkfJdrtIPDywCHZuQ+Pvf3SacARjD9
+	5o5aed4x2AzVHjw1YxBLhdAGTMBXmEkNttdfNg2gblg==
+X-Gm-Gg: ASbGncsErOpyHnrglM1T7zxxgw5bREdhvd4d6WEG9T+OwGgr7iSPwfTQ0hka7RlAc1G
+	WPu9L9T1w6mXWtU/yRsiH5nQ2PRcT7vbxgVFwszJRbJhd+zcnZDIhHQFa+ur3sXsgJEFNQbu76G
+	WZ8lXZTvnyMYUL62K46mNBhFpBO4A9OH+LuKrXINNRclo0RZHjCH4Amw==
+X-Google-Smtp-Source: AGHT+IGZulR1H9+iCIC55gEsLEoE0oqDCjkL5Fd28aQJZaej+7J7V66hn4S2QtWJZn/tk65wm8JptBmvBC8HG7edLQ4=
+X-Received: by 2002:a05:6512:4023:b0:553:2375:c6e8 with SMTP id
+ 2adb3069b0e04-553d38bc9edmr644722e87.1.1750238782845; Wed, 18 Jun 2025
+ 02:26:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250610152309.299438-1-antonio.borneo@foss.st.com>
+In-Reply-To: <20250610152309.299438-1-antonio.borneo@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 18 Jun 2025 11:26:11 +0200
+X-Gm-Features: AX0GCFudSA6Ai2Ztyy99YXMMTippK2eV4K98kdxAH7hr-WIHL4mRq5_nr4kVdg8
+Message-ID: <CACRpkdYy+sVQAdntEWMfJGqEzw+eexLGG6pXt8QVYD47rVzjdw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v2 0/5] STM32 pinctrl: Add mux function RSVD
+To: Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Fabien Dessenne <fabien.dessenne@foss.st.com>, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 18 Jun 2025, Shravan Kumar Ramani wrote:
+On Tue, Jun 10, 2025 at 5:24=E2=80=AFPM Antonio Borneo
+<antonio.borneo@foss.st.com> wrote:
 
-> For eventN input, check if the event is part of the event list
-> supported by the block.
-> For enable input, do not accept values other than 0 or 1.
-> Also replace sprintf instance with snprintf.
+> Antonio Borneo (3):
+>   ARM: dts: stm32: Add pinmux for CM4 leds pins
+>   ARM: dts: stm32: Add leds for CM4 on stm32mp15xx-ed1 and
+>     stm32mp15xx-dkx
 
-The code changes in the patch barely match some of what is described 
-here, there are major gaps in the description.
+Please apply these two through the SoC tree.
 
-Please don't try to put multiple independent changes into the same patch 
-but create a patch series, each patch having focused changelog explaining 
-reasoning clearly.
+>   dt-bindings: pinctrl: stm32: Add missing blank lines
 
-Unless the change is trivial (e.g., a comment typo fix) my general 
-suggestion is to first state the problem, then explain the solution (on 
-general level, no need to spell out what can be trivially read from the 
-patch). Even for that comment change below, I'd want it mentioned that the 
-comment does not match the code, it would be not enough to say e.g. "fix 
-a wrong comment" but explain why it is wrong.
+Waiting for a DT binding maintainer review on this one.
 
-Some of these changes below may need Fixes tag but given the general 
-vagueness and lack of description for some of the changes, I cannot decide 
-(nor will accept the patches which do not have enough explanation). Put 
-any fix patch at the head of the series.
+> Fabien Dessenne (2):
+>   pinctrl: stm32: Handle RSVD pin configuration
+>   dt-bindings: pinctrl: stm32: Add RSVD mux function
 
-Please don't leave lines "short" in the changelog (lines cut abruptly at 
-stop "."). Write real paragraphs with full length and if you want have 
-more than one paragraph, leave an empty line in between.
+I applied these tow because I have a DT binding ACK on 2/5.
 
-> Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
-> Reviewed-by: David Thompson <davthompson@nvidia.com>
-> ---
->  drivers/platform/mellanox/mlxbf-pmc.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
-> index 900069eb186e..fcc3392ff150 100644
-> --- a/drivers/platform/mellanox/mlxbf-pmc.c
-> +++ b/drivers/platform/mellanox/mlxbf-pmc.c
-> @@ -1215,14 +1215,14 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
->  		return -EINVAL;
->  
->  	for (i = 0; i < size; ++i) {
-> -		if (!strcmp(evt, events[i].evt_name))
-> +		if (!strncmp(evt, events[i].evt_name, strlen(events[i].evt_name)))
->  			return events[i].evt_num;
->  	}
->  
->  	return -ENODEV;
->  }
->  
-> -/* Get the event number given the name */
-> +/* Get the event name given the number */
->  static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
->  {
->  	const struct mlxbf_pmc_events *events;
-> @@ -1799,6 +1799,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
->  		err = kstrtouint(buf, 0, &evt_num);
->  		if (err < 0)
->  			return err;
-> +
-> +		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
-> +			return -EINVAL;
->  	}
->  
->  	if (strstr(pmc->block_name[blk_num], "l3cache"))
-> @@ -1889,6 +1892,9 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
->  	if (err < 0)
->  		return err;
->  
-> +	if (en != 0 && en != 1)
-> +		return -EINVAL;
-> +
->  	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
->  		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
->  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
-> @@ -1905,9 +1911,6 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
->  			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
->  			MLXBF_PMC_WRITE_REG_32, word);
->  	} else {
-> -		if (en && en != 1)
-> -			return -EINVAL;
-> -
->  		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
->  		if (err)
->  			return err;
-> 
-
--- 
- i.
-
+Yours,
+Linus Walleij
