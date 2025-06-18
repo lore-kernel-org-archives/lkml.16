@@ -1,183 +1,153 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A81AC28000E;
-	Wed, 18 Jun 2025 08:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0327FD59;
+	Wed, 18 Jun 2025 08:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236325; cv=none; b=DQryQ/nKzIPBrMT8W+DNIm04WFhTSWOwHmJWB/hsuDCHxK1rX6k2uSRlzW+GsCt74US1zNEHSQMkw1W69iy7Wq/THJkU8KMt/kz1inyN2gD5Xz10qoFHgF8LMZBi4DBHGwmapXGhmV8TuuaLuZtk3ZA/Vk0ni3thxXTrVJ++5z0=
+	t=1750236324; cv=none; b=U+mTBV4b+1yM6SS8ze/Yo/Bsrt/sjY8y5DZOtERsY0ptoX2E4+aUq3qxGCa1LBSu60bAxAzo+iIswiU22OfG0NaNN5pVq92U2bezuoHiM//ZluI2Vg67GSajydevuspXlWUGJtaHm71Gg5AtHdjHTiFXLijJl0D9XKxevDl2dy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236325; c=relaxed/simple;
-	bh=85tOdC7OURh2ZbL/F08AO0a0Wwl27m6CoU9i/qdIXU4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KxBGBzW1pB+/cNyW6+IV0Ps5+IU5UrGVQt5oGAR/APXZVYq9mCxCVeWFVHc9gBNo5mLKgr2lhZA3gzVnQnsJ+AVUEGbjBA/pEWbyN7aQYCbbIwtagUbtKXmye+l0DWyx1kYjJwvr7dy6T9WMY+tq2fgu4epWnVcdEVMP8NLjemI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 688B914BF;
-	Wed, 18 Jun 2025 01:45:02 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C36A83F66E;
-	Wed, 18 Jun 2025 01:45:20 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	pcc@google.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	joey.gouly@arm.com,
-	yury.khrustalev@arm.com,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	frederic@kernel.org,
-	akpm@linux-foundation.org,
-	surenb@google.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v9 02/10] arm64: report address tag when FEAT_MTE_TAGGED_FAR is supported
-Date: Wed, 18 Jun 2025 09:45:05 +0100
-Message-Id: <20250618084513.1761345-3-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250618084513.1761345-1-yeoreum.yun@arm.com>
-References: <20250618084513.1761345-1-yeoreum.yun@arm.com>
+	s=arc-20240116; t=1750236324; c=relaxed/simple;
+	bh=w/B3ULPRO43iVORfrD0IVd+TTNhb2F4jumYGZIWZYcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rrzXfkmUl5K4COTXEcb3KTr8yJLx3i4PLHKNcSZcS1Q2T+9vHIxGchmeBfMZrP5s+Jhz92b4J6ZGdJc6SlT3Z9aL/HL5kp3LrK0ASXdjePopJuiQHgMaMx+B4m9AsnJiX4s++Y1vjq2b5ZTSELAGvr0Q0kpg1aukwSuDqFcYlZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BAlAZiA7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BAlAZiA7"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1Q69x015543;
+	Wed, 18 Jun 2025 08:45:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	TxFcQYGI+vyq/lI0MsXdc6yW67GePE33nsF775PKsvw=; b=BAlAZiA7K3vmHl3g
+	XU2HNgaDf1NZsCDtZqZtCtqA6KnlgBZZrDRc29+Ci/xdnA7ZaIzkbF3qb8pLJh1v
+	NFu3JgddTkBS2q9beOpaLyljH/Wtyj4M8S+QAvoWziSsg5Zx5vWciIULDwf1vIt5
+	scT49vNUxQ/e+9CV/JEWxzd143oKERIOK4fvgM+qnoSY2BYg6HEstGWZVZu75ym4
+	FowqmrFvGxwGrsRiutqlPx+u9tzBAJ3V4hrXYlnL8dNon9HJnVNql43tcXNGtIga
+	QC6crXVevlj9tmgnzdhGL1od1p9NlBVBu42MtkUcnvP0xaL0szDbaEWI4cbSFtrP
+	1VAEHg==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfkgdx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 08:45:17 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55I8j6h3016215
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 08:45:06 GMT
+Received: from [10.217.216.168] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Jun
+ 2025 01:45:01 -0700
+Message-ID: <86ad5ddb-1a43-45c3-af35-9eb863c66f63@quicinc.com>
+Date: Wed, 18 Jun 2025 14:14:58 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/4] arm64: dts: qcom: sm8550: Remove SDR104/SDR50
+ broken capabilities
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+        Ulf Hansson
+	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Adrian Hunter
+	<adrian.hunter@intel.com>
+CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
+        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
+        <quic_bhaskarv@quicinc.com>, <kernel@oss.qualcomm.com>
+References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
+ <20250618072818.1667097-5-quic_sartgarg@quicinc.com>
+ <5336c00d-3b80-423a-bb52-4e1ec35bc7ed@kernel.org>
+From: Sarthak Garg <quic_sartgarg@quicinc.com>
+In-Reply-To: <5336c00d-3b80-423a-bb52-4e1ec35bc7ed@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA3NSBTYWx0ZWRfX5uhfxfurFsX8
+ D2K/JQbmvUyAG00/zGl94ouSX0vROXSDNE3vjeDJgoMgxVg+fphh7Fq88p6BaKGRqakPMMdStyB
+ qccxnB5pe0Rpz9dvLu6FhGt3xqtrg6ElWrLVxeB0oVUsLi5BR7jinw/44Aql8lJQvHTbw6MuMr6
+ Zvyezn0mhGE6erTL2dvWU0+FkfnV6YzWFCDDln1JG7CkFb2zWbN0aD12Hg28CDHfY3zkdZJtQFf
+ J56+OU0uD9rycbh1EWds2uvFkYY9fTnmVNljzU25GjBVLlBxNSTrG3v05QT4LdFXMu29urVIv1A
+ GCRStw73F/3rFiNiOULrg0Gp7qO9Oq7cSSYZNzXQpfjm94LxFofoJkp26Dd546yn2OXQxCus4pt
+ 7JBk6BNusSIknlm9jahOqUVKm8LyGBWYBucEcs5dA1AjMJYwltt2EZ8PEvMglds+UlM9Wy5E
+X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68527c9d cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=h1owDyanI7SH9Gdp24gA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: iMWtXg2TRElK0lcE9mO5U60Dlh1RCuh1
+X-Proofpoint-ORIG-GUID: iMWtXg2TRElK0lcE9mO5U60Dlh1RCuh1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-18_03,2025-06-18_02,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506180075
 
-If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault address
-are preserved in response to synchronous tag check faults (SEGV_MTESERR).
 
-This patch modifies below to support this feature:
-  - Use the original FAR_EL1 value when an MTE tag check fault occurs,
-    if ARM64_MTE_FAR is supported so that not only logical tag
-    (bits 59:56) but also address tag (bits 63:60] being reported too.
 
-  - Add HWCAP for mtefar to let user know bits 63:60 includes
-    address tag information when when FEAT_MTE_TAGGED_FAR is supported.
+On 6/18/2025 1:11 PM, Krzysztof Kozlowski wrote:
+> On 18/06/2025 09:28, Sarthak Garg wrote:
+>> Kernel now handles all level shifter limitations related to SD card
+>> modes.
+>> As a result, the broken hardware capabilities for SDR104 and SDR50 modes
+>> can be removed from the device tree.
+>> Additionally, due to level shifter constraints, set the maximum
+>> frequency for High Speed (HS) mode to 37.5 MHz using the
+>> max-sd-hs-frequency property for sm8550.
+>>
+>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 4 +---
+>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> index 82cabf777cd2..2c770c979d39 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>> @@ -3180,6 +3180,7 @@ sdhc_2: mmc@8804000 {
+>>   			iommus = <&apps_smmu 0x540 0>;
+>>   			qcom,dll-config = <0x0007642c>;
+>>   			qcom,ddr-config = <0x80040868>;
+>> +			max-sd-hs-frequency = <37500000>;
+> So my previous comments stay... This is SoC thus deducible from compatible.
+> 
+> Best regards,
+> Krzysztof
 
-Applications that require this information should install
-a signal handler with the SA_EXPOSE_TAGBITS flag.
-While this introduces a minor ABI change,
-most applications do not set this flag and therefore will not be affected.
+" I agree that a DT property for the mmc controller would make sense.
 
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
- Documentation/arch/arm64/elf_hwcaps.rst      |  3 +++
- Documentation/arch/arm64/tagged-pointers.rst | 11 ++++++-----
- arch/arm64/include/asm/hwcap.h               |  1 +
- arch/arm64/include/uapi/asm/hwcap.h          |  1 +
- arch/arm64/kernel/cpufeature.c               |  1 +
- arch/arm64/kernel/cpuinfo.c                  |  1 +
- arch/arm64/mm/fault.c                        |  7 +++++--
- 7 files changed, 18 insertions(+), 7 deletions(-)
+Although, this seems limited to SD UHS-I speed modes, so perhaps
+"max-sd-uhs-frequency" would be a better name for it?
 
-diff --git a/Documentation/arch/arm64/elf_hwcaps.rst b/Documentation/arch/arm64/elf_hwcaps.rst
-index 69d7afe56853..358f5af035ff 100644
---- a/Documentation/arch/arm64/elf_hwcaps.rst
-+++ b/Documentation/arch/arm64/elf_hwcaps.rst
-@@ -435,6 +435,9 @@ HWCAP2_SME_SF8DP4
- HWCAP2_POE
-     Functionality implied by ID_AA64MMFR3_EL1.S1POE == 0b0001.
- 
-+HWCAP3_MTE_FAR
-+    Functionality implied by ID_AA64PFR2_EL1.MTEFAR == 0b0001.
-+
- 4. Unused AT_HWCAP bits
- -----------------------
- 
-diff --git a/Documentation/arch/arm64/tagged-pointers.rst b/Documentation/arch/arm64/tagged-pointers.rst
-index 81b6c2a770dd..f87a925ca9a5 100644
---- a/Documentation/arch/arm64/tagged-pointers.rst
-+++ b/Documentation/arch/arm64/tagged-pointers.rst
-@@ -60,11 +60,12 @@ that signal handlers in applications making use of tags cannot rely
- on the tag information for user virtual addresses being maintained
- in these fields unless the flag was set.
- 
--Due to architecture limitations, bits 63:60 of the fault address
--are not preserved in response to synchronous tag check faults
--(SEGV_MTESERR) even if SA_EXPOSE_TAGBITS was set. Applications should
--treat the values of these bits as undefined in order to accommodate
--future architecture revisions which may preserve the bits.
-+If FEAT_MTE_TAGGED_FAR (Armv8.9) is supported, bits 63:60 of the fault address
-+are preserved in response to synchronous tag check faults (SEGV_MTESERR)
-+otherwise not preserved even if SA_EXPOSE_TAGBITS was set.
-+Applications should interpret the values of these bits based on
-+the support for the HWCAP3_MTE_FAR. If the support is not present,
-+the values of these bits should be considered as undefined otherwise valid.
- 
- For signals raised in response to watchpoint debug exceptions, the
- tag information will be preserved regardless of the SA_EXPOSE_TAGBITS
-diff --git a/arch/arm64/include/asm/hwcap.h b/arch/arm64/include/asm/hwcap.h
-index 1c3f9617d54f..28dd1ac29ecc 100644
---- a/arch/arm64/include/asm/hwcap.h
-+++ b/arch/arm64/include/asm/hwcap.h
-@@ -176,6 +176,7 @@
- #define KERNEL_HWCAP_POE		__khwcap2_feature(POE)
- 
- #define __khwcap3_feature(x)		(const_ilog2(HWCAP3_ ## x) + 128)
-+#define KERNEL_HWCAP_MTE_FAR		__khwcap3_feature(MTE_FAR)
- 
- /*
-  * This yields a mask that user programs can use to figure out what
-diff --git a/arch/arm64/include/uapi/asm/hwcap.h b/arch/arm64/include/uapi/asm/hwcap.h
-index 705a7afa8e58..7d22527a7975 100644
---- a/arch/arm64/include/uapi/asm/hwcap.h
-+++ b/arch/arm64/include/uapi/asm/hwcap.h
-@@ -143,5 +143,6 @@
- /*
-  * HWCAP3 flags - for AT_HWCAP3
-  */
-+#define HWCAP3_MTE_FAR		(1UL << 0)
- 
- #endif /* _UAPI__ASM_HWCAP_H */
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index af6a6924a3e8..8a5284c733b7 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -3219,6 +3219,7 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
- #ifdef CONFIG_ARM64_MTE
- 	HWCAP_CAP(ID_AA64PFR1_EL1, MTE, MTE2, CAP_HWCAP, KERNEL_HWCAP_MTE),
- 	HWCAP_CAP(ID_AA64PFR1_EL1, MTE, MTE3, CAP_HWCAP, KERNEL_HWCAP_MTE3),
-+	HWCAP_CAP(ID_AA64PFR2_EL1, MTEFAR, IMP, CAP_HWCAP, KERNEL_HWCAP_MTE_FAR),
- #endif /* CONFIG_ARM64_MTE */
- 	HWCAP_CAP(ID_AA64MMFR0_EL1, ECV, IMP, CAP_HWCAP, KERNEL_HWCAP_ECV),
- 	HWCAP_CAP(ID_AA64MMFR1_EL1, AFP, IMP, CAP_HWCAP, KERNEL_HWCAP_AFP),
-diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-index c1f2b6b04b41..e552cb305641 100644
---- a/arch/arm64/kernel/cpuinfo.c
-+++ b/arch/arm64/kernel/cpuinfo.c
-@@ -160,6 +160,7 @@ static const char *const hwcap_str[] = {
- 	[KERNEL_HWCAP_SME_SFEXPA]	= "smesfexpa",
- 	[KERNEL_HWCAP_SME_STMOP]	= "smestmop",
- 	[KERNEL_HWCAP_SME_SMOP4]	= "smesmop4",
-+	[KERNEL_HWCAP_MTE_FAR]		= "mtefar",
- };
- 
- #ifdef CONFIG_COMPAT
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index ec0a337891dd..832d8540e13b 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -837,9 +837,12 @@ static int do_tag_check_fault(unsigned long far, unsigned long esr,
- 	/*
- 	 * The architecture specifies that bits 63:60 of FAR_EL1 are UNKNOWN
- 	 * for tag check faults. Set them to corresponding bits in the untagged
--	 * address.
-+	 * address if ARM64_MTE_FAR isn't supported.
-+	 * Otherwise, bits 63:60 of FAR_EL1 are not UNKNOWN.
- 	 */
--	far = (__untagged_addr(far) & ~MTE_TAG_MASK) | (far & MTE_TAG_MASK);
-+	if (!cpus_have_cap(ARM64_MTE_FAR))
-+		far = (__untagged_addr(far) & ~MTE_TAG_MASK) | (far & MTE_TAG_MASK);
-+
- 	do_bad_area(far, esr, regs);
- 	return 0;
- }
--- 
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+Kind regards
+Uffe "
 
+https://patchwork.kernel.org/project/linux-mmc/cover/20250523105745.6210-1-quic_sartgarg@quicinc.com/
+
+This was the comment given on V2 to introduce a generic dt
+property.
+
+Best regards,
+Sarthak
