@@ -1,157 +1,95 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D4B2E54AA;
-	Wed, 18 Jun 2025 14:14:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495962EAB93;
+	Wed, 18 Jun 2025 14:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256097; cv=none; b=dD/4jZGtqezJoZ1kxW/z7E9yRMr+LTNhFoTPigOi75V2gJ2OFxQeWt/H2noUSiF7CIuzHJkIHsEX2xTUYJdfyKNtvq/nZ2DwqJpIRLcOaeuVDCkAxdq/MiO4x4K6LtcXyOPoaNYyAqSHOF1fj9S2MLTj2CLW5lRyRouNW2ysoLc=
+	t=1750256113; cv=none; b=aQeuiRJxR4nZU+A1Clg58rX0SQv1wDY1ieN2Hs3p1o+vfsWvztlIhBkqtLFH6+6+XI6Nq1/wLfIO5u+a3behQ8BQfuNmPTm/J8Ejzq52u8+RhBJ9EVISLYbPW6+pdLkjZPtoDMT0zvxrgttZ3lErnpRg5wqqn19OgunnuB8pbj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256097; c=relaxed/simple;
-	bh=7joRVJmJSVqkdNthqW2fkY4i9Jk1mXkGvpIDShV3Pdk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fdadVgbc1lYs9gg+fdYJ1djoM4p4B5dTgjE4oDTyYt2Ag2/keNmx4IKWId/6d8b6K231syv3+vVLXLoXafXPJCq9C5Yrhopj38bEdInKqKg8x7fYUWSwHlDFQjlR0ecP80N+eAM8/OjFmELVBmd3u1oojmnqDlAjNWkjZFWcFPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M3GMdsgx; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750256113; c=relaxed/simple;
+	bh=EKTviWYqLv1yK2WFaMCAtqpkvPv1cokIZ4A5bpwZ5C8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M9opGkORw1NsNdA+wzJ4GA+Fj8viKnInOlXpoMr6bbTpuEVPCUoE1Ix5NGaO/H/SL71sHYAS6txqk83RXEgVqQGw1s2K1xbIzgl+M2wioqGPhroEno5kxNDPfVuf6c6zb3fLTdXXQ8CW1ikkQaJbvwU2GvF/XamIxXd4/D/W/AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=R6eKWMt0; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M3GMdsgx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 44DE743A29;
-	Wed, 18 Jun 2025 14:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750256086;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BR2Js8AYTA3uqJ+dhjRGvYCUNC9Z3XvtFngEWfHaNL4=;
-	b=M3GMdsgxD6lk12yug3GZIA8tEeyFYbrlJgFxgmCaHKFUrC5JJagMIGi3UonPF93IgRsa0e
-	91VmMYNOWFqFjkgDwrtJCBNw0kqYZ78J7y/0GcpTTb5w9PScz8COG1ISoU+ymvY6deqwHU
-	eFa8aDov6g1X5Z0U7XvCaG3a2TC3vJx8Q58k96AcZsZcGLy0o+/s8AiHhvL/XRjHZQ57V+
-	t+oMgkfbyWN6LIZZE350GAwt4swQwwMRB8EIuQKKPAygPkzZQX4XpN0jddH+BhU7S55K1X
-	9XFLQ7bAdz5CemKbwN+ahVr+YigNdMg5BZoI32c8u593JeheOJHk+9jqWIv2BA==
-Message-ID: <3acaaf1c-b4ed-47ff-8de5-195a9cfc5338@bootlin.com>
-Date: Wed, 18 Jun 2025 16:14:44 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="R6eKWMt0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750256110;
+	bh=EKTviWYqLv1yK2WFaMCAtqpkvPv1cokIZ4A5bpwZ5C8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R6eKWMt09qQIp/guJ1Mv/MBoou/bNRlTC0Lve0JDxB6N5E0UwBMbi+Pe5dh+f2M/L
+	 jWaYyw/CYzgBkoIR6RbxWHvYRcxulhlOxqEKWGoJisPuCKy1ihDx3Irgiu8I6ahhEo
+	 qSNV6LJ/pHB4/jTC+lW5200F4EXJgZKZb+sk6pnA=
+Date: Wed, 18 Jun 2025 16:15:09 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Brown <broonie@kernel.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
+	hargar@microsoft.com, Willy Tarreau <w@1wt.eu>
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+Message-ID: <1081af30-1273-4a9a-a864-f59f1cb54fd1@t-8ch.de>
+References: <20250617152451.485330293@linuxfoundation.org>
+ <cc048abb-fbc0-4a79-b78a-90bfa3f8446d@sirena.org.uk>
+ <2025061858-reproduce-revolving-cae0@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] arm64: dts: rockchip: Fix the mipi port definition
- for RK3399
-To: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com>
- <20250618-dtb_fixes-v1-2-e54797ad2eba@bootlin.com>
- <DAPPHL6RPWWM.94C7P26AUCCN@cknow.org>
-Content-Language: en-US
-From: Olivier Benjamin <olivier.benjamin@bootlin.com>
-In-Reply-To: <DAPPHL6RPWWM.94C7P26AUCCN@cknow.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvkeehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomhepqfhlihhvihgvrhcuuegvnhhjrghmihhnuceoohhlihhvihgvrhdrsggvnhhjrghmihhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedvheejtdeifeejvedvffdtuddtheehtdelvdehvefgjeetveejfeeiveduvdejteenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeipdhhvghloheplgfkrfggieemvdgrtddumegvfeegmegvtgefkeemvdegvgdtmehfhegtvgemfhefgedvmeeiheekjeemfheiheeingdpmhgrihhlfhhrohhmpeholhhivhhivghrrdgsvghnjhgrmhhinhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepughiughirdguvggsihgrnhestghknhhofidrohhrghdprhgtphhtthhop
- ehrohgshheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghikhhosehsnhhtvggthhdruggvpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
-X-GND-Sasl: olivier.benjamin@bootlin.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2025061858-reproduce-revolving-cae0@gregkh>
+
+On 2025-06-18 15:19:11+0200, Greg Kroah-Hartman wrote:
+> On Wed, Jun 18, 2025 at 12:58:00PM +0100, Mark Brown wrote:
+> > On Tue, Jun 17, 2025 at 05:15:08PM +0200, Greg Kroah-Hartman wrote:
+> > > This is the start of the stable review cycle for the 6.15.3 release.
+> > > There are 780 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > 
+> > This breaks the build of the arm64 selftests due to a change in nolibc,
+> > it appears that "tools/nolibc: properly align dirent buffer" is missing
+> > some dependency:
+> > 
+> > aarch64-linux-gnu-gcc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib \
+> > 	-include ../../../../include/nolibc/nolibc.h -I../..\
+> > 	-static -ffreestanding -Wall za-fork.c /build/stage/build-work/kselftest/arm64/fp/za-fork-asm.o -o /build/stage/build-work/kselftest/arm64/fp/za-fork
+> > In file included from ./../../../../include/nolibc/nolibc.h:107,
+> >                  from <command-line>:
+> > ./../../../../include/nolibc/dirent.h: In function ‘readdir_r’:
+> > ./../../../../include/nolibc/dirent.h:62:64: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘__nolibc_aligned_as’
+> >    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
+> >       |                                                                ^~~~~~~~~~~~~~~~~~~
+> > ./../../../../include/nolibc/dirent.h:62:64: error: implicit declaration of function ‘__nolibc_aligned_as’ [-Wimplicit-function-declaration]
+> > ./../../../../include/nolibc/dirent.h:62:84: error: expected expression before ‘struct’
+> >    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
+> >       |                                                                                    ^~~~~~
+> > ./../../../../include/nolibc/dirent.h:63:47: error: ‘buf’ undeclared (first use in this function)
+> >    63 |         struct linux_dirent64 *ldir = (void *)buf;
+> >       |                                               ^~~
+> > ./../../../../include/nolibc/dirent.h:63:47: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> Thanks for the report, I'll go drop all nolibc patches from the queues
+> for now.
+
+Thanks.
+
+Shouldn't the bots apply prerequisite patches from the series automatically?
+This patch comes from [0] and the prerequisite is in there.
+
+Also all nolibc patches which should go to stable are tagged as such.
+Can you configure the bots not to pick up any nolibc patches automatically?
+
+[0] https://lore.kernel.org/lkml/20250419-nolibc-ubsan-v2-0-060b8a016917@weissschuh.net/
 
 
-
-On 6/18/25 15:50, Diederik de Haas wrote:
-> Hi (again),
-> 
-Hello again, I appreciate you taking the time!
-> On Wed Jun 18, 2025 at 12:32 AM CEST, Olivier Benjamin wrote:
->> The RK3399's MIPI DSI has 2 ports: in an out. The definition of
->> the port property necessitates the value of #address-cells to be 1.
->>
->> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
->> index 5ebc380a24df86ba7172b0950b89cac56b61c507..5a7341fb6bcb0613af6f3ac31d99355a0f890e89 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
->> @@ -468,7 +468,7 @@ &mipi_dsi {
->>   
->>   	ports {
->>   		mipi_out: port@1 {
->> -			#address-cells = <0>;
->> +			#address-cells = <1>;
->>   			#size-cells = <0>;
->>   			reg = <1>;
->>   
-> 
-> In rk3399-base.dtsi there is already a definition for mipi-in and
-> mipi-out. AFAICT what this change does is require a reg property on the
-> endpoint and I don't think that's correct.
-> 
-Those definitions do indeed exist in the base DTSI.
-> It seems to me that all you need is a mipi_out_panel definition.
-> So what I came up with is this:
-> 
-> ```sh
-> $ git diff
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-> index 04ba4c4565d0..b175aeed99e2 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
-> @@ -466,18 +466,6 @@ &mipi_dsi {
->   	status = "okay";
->   	clock-master;
-> 
-> -	ports {
-> -		mipi_out: port@1 {
-> -			#address-cells = <0>;
-> -			#size-cells = <0>;
-> -			reg = <1>;
-> -
-> -			mipi_out_panel: endpoint {
-> -				remote-endpoint = <&mipi_in_panel>;
-> -			};
-> -		};
-> -	};
-> -
->   	panel@0 {
->   		compatible = "hannstar,hsd060bhw4";
->   		reg = <0>;
-> @@ -495,6 +483,12 @@ mipi_in_panel: endpoint {
->   	};
->   };
-> 
-> +&mipi_out {
-> +	mipi_out_panel: endpoint {
-> +		remote-endpoint = <&mipi_in_panel>;
-> +	};
-> +};
-> +
->   &pmu_io_domains {
->   	pmu1830-supply = <&vcc_1v8>;
->   	status = "okay";
-> ```
-> 
-Thanks for the suggestion, that looks like it might actually solve the 
-issue.
-> I don't have a PPP so I can't verify it, but ``make CHECK_DTBS=y W=1
-> rockchip/rk3399-pinephone-pro.dtb`` no longer reports issues wrt
-> dsi@ff960000 (after I also fixed the panel compatible like in patch 1
-> and added a LCD1_RST pinctrl definition as indicated in my reply to
-> patch 3).
-> 
-I'll test on my PPP and report back in v2.
-> Cheers,
->    Diederik
-
--- 
-Olivier Benjamin, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Thomas
