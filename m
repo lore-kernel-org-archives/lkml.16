@@ -1,153 +1,100 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0327FD59;
-	Wed, 18 Jun 2025 08:45:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDD815D1;
+	Wed, 18 Jun 2025 08:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236324; cv=none; b=U+mTBV4b+1yM6SS8ze/Yo/Bsrt/sjY8y5DZOtERsY0ptoX2E4+aUq3qxGCa1LBSu60bAxAzo+iIswiU22OfG0NaNN5pVq92U2bezuoHiM//ZluI2Vg67GSajydevuspXlWUGJtaHm71Gg5AtHdjHTiFXLijJl0D9XKxevDl2dy0=
+	t=1750236327; cv=none; b=cb8AmvPzmjcSfmhg/ui3JoZRxqRr3dhHkIFwuu53HWtt/BbHTab1IQqZ+YV9Zcflj8p8D2CsSxPvaukn05FfwyYmxF9jNgJDXTRh62WSsdmnyV0w+OVWHAvMvYZg0T+73khJG5fFtLDppnUZK5Z6EpEQKh0FBp1bQaq2CbK5nsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236324; c=relaxed/simple;
-	bh=w/B3ULPRO43iVORfrD0IVd+TTNhb2F4jumYGZIWZYcU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rrzXfkmUl5K4COTXEcb3KTr8yJLx3i4PLHKNcSZcS1Q2T+9vHIxGchmeBfMZrP5s+Jhz92b4J6ZGdJc6SlT3Z9aL/HL5kp3LrK0ASXdjePopJuiQHgMaMx+B4m9AsnJiX4s++Y1vjq2b5ZTSELAGvr0Q0kpg1aukwSuDqFcYlZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BAlAZiA7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BAlAZiA7"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1Q69x015543;
-	Wed, 18 Jun 2025 08:45:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	TxFcQYGI+vyq/lI0MsXdc6yW67GePE33nsF775PKsvw=; b=BAlAZiA7K3vmHl3g
-	XU2HNgaDf1NZsCDtZqZtCtqA6KnlgBZZrDRc29+Ci/xdnA7ZaIzkbF3qb8pLJh1v
-	NFu3JgddTkBS2q9beOpaLyljH/Wtyj4M8S+QAvoWziSsg5Zx5vWciIULDwf1vIt5
-	scT49vNUxQ/e+9CV/JEWxzd143oKERIOK4fvgM+qnoSY2BYg6HEstGWZVZu75ym4
-	FowqmrFvGxwGrsRiutqlPx+u9tzBAJ3V4hrXYlnL8dNon9HJnVNql43tcXNGtIga
-	QC6crXVevlj9tmgnzdhGL1od1p9NlBVBu42MtkUcnvP0xaL0szDbaEWI4cbSFtrP
-	1VAEHg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfkgdx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 08:45:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55I8j6h3016215
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 08:45:06 GMT
-Received: from [10.217.216.168] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Jun
- 2025 01:45:01 -0700
-Message-ID: <86ad5ddb-1a43-45c3-af35-9eb863c66f63@quicinc.com>
-Date: Wed, 18 Jun 2025 14:14:58 +0530
+	s=arc-20240116; t=1750236327; c=relaxed/simple;
+	bh=cmsvfv56amC5Sa8cFhMOnu4EsHj1UIUNeVTlNt1rxag=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EB/KAdQ23qoHYeRHsKThSsnI7fc6bHhLbsFlMtOVRi9WgFSLYfmDLmX3claPRWVCe2N0/2uW3zzC3Xj0oXzfga4jnw9/hDYEJgdCxt4G2a8zIGMFWW0e0gLlFNtcBvDteNCEK5o/gGqZI1LJxnM6zcjkcJ6UgDl/Q/ej1RLml4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC3C014BF;
+	Wed, 18 Jun 2025 01:45:04 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5329E3F66E;
+	Wed, 18 Jun 2025 01:45:23 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	akpm@linux-foundation.org,
+	surenb@google.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Yeoreum Yun <yeoreum.yun@arm.com>
+Subject: [PATCH v9 03/10] arm64/kvm: expose FEAT_MTE_TAGGED_FAR feature to guest
+Date: Wed, 18 Jun 2025 09:45:06 +0100
+Message-Id: <20250618084513.1761345-4-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250618084513.1761345-1-yeoreum.yun@arm.com>
+References: <20250618084513.1761345-1-yeoreum.yun@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 4/4] arm64: dts: qcom: sm8550: Remove SDR104/SDR50
- broken capabilities
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <kernel@oss.qualcomm.com>
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
- <20250618072818.1667097-5-quic_sartgarg@quicinc.com>
- <5336c00d-3b80-423a-bb52-4e1ec35bc7ed@kernel.org>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <5336c00d-3b80-423a-bb52-4e1ec35bc7ed@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA3NSBTYWx0ZWRfX5uhfxfurFsX8
- D2K/JQbmvUyAG00/zGl94ouSX0vROXSDNE3vjeDJgoMgxVg+fphh7Fq88p6BaKGRqakPMMdStyB
- qccxnB5pe0Rpz9dvLu6FhGt3xqtrg6ElWrLVxeB0oVUsLi5BR7jinw/44Aql8lJQvHTbw6MuMr6
- Zvyezn0mhGE6erTL2dvWU0+FkfnV6YzWFCDDln1JG7CkFb2zWbN0aD12Hg28CDHfY3zkdZJtQFf
- J56+OU0uD9rycbh1EWds2uvFkYY9fTnmVNljzU25GjBVLlBxNSTrG3v05QT4LdFXMu29urVIv1A
- GCRStw73F/3rFiNiOULrg0Gp7qO9Oq7cSSYZNzXQpfjm94LxFofoJkp26Dd546yn2OXQxCus4pt
- 7JBk6BNusSIknlm9jahOqUVKm8LyGBWYBucEcs5dA1AjMJYwltt2EZ8PEvMglds+UlM9Wy5E
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68527c9d cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=h1owDyanI7SH9Gdp24gA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: iMWtXg2TRElK0lcE9mO5U60Dlh1RCuh1
-X-Proofpoint-ORIG-GUID: iMWtXg2TRElK0lcE9mO5U60Dlh1RCuh1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_03,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180075
+Content-Transfer-Encoding: 8bit
 
+expose FEAT_MTE_TAGGED_FAR feature to guest.
 
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+ arch/arm64/kvm/sys_regs.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-On 6/18/2025 1:11 PM, Krzysztof Kozlowski wrote:
-> On 18/06/2025 09:28, Sarthak Garg wrote:
->> Kernel now handles all level shifter limitations related to SD card
->> modes.
->> As a result, the broken hardware capabilities for SDR104 and SDR50 modes
->> can be removed from the device tree.
->> Additionally, due to level shifter constraints, set the maximum
->> frequency for High Speed (HS) mode to 37.5 MHz using the
->> max-sd-hs-frequency property for sm8550.
->>
->> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 4 +---
->>   1 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
->> index 82cabf777cd2..2c770c979d39 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
->> @@ -3180,6 +3180,7 @@ sdhc_2: mmc@8804000 {
->>   			iommus = <&apps_smmu 0x540 0>;
->>   			qcom,dll-config = <0x0007642c>;
->>   			qcom,ddr-config = <0x80040868>;
->> +			max-sd-hs-frequency = <37500000>;
-> So my previous comments stay... This is SoC thus deducible from compatible.
-> 
-> Best regards,
-> Krzysztof
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index 76c2f0da821f..c8c92cb9da01 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -1586,7 +1586,7 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+ 				       const struct sys_reg_desc *r)
+ {
+ 	u32 id = reg_to_encoding(r);
+-	u64 val;
++	u64 val, mask;
+ 
+ 	if (sysreg_visible_as_raz(vcpu, r))
+ 		return 0;
+@@ -1617,8 +1617,12 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+ 		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_MPAM_frac);
+ 		break;
+ 	case SYS_ID_AA64PFR2_EL1:
+-		/* We only expose FPMR */
+-		val &= ID_AA64PFR2_EL1_FPMR;
++		mask = ID_AA64PFR2_EL1_FPMR;
++
++		if (kvm_has_mte(vcpu->kvm))
++			mask |= ID_AA64PFR2_EL1_MTEFAR;
++
++		val &= mask;
+ 		break;
+ 	case SYS_ID_AA64ISAR1_EL1:
+ 		if (!vcpu_has_ptrauth(vcpu))
+@@ -2878,7 +2882,9 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+ 				       ID_AA64PFR1_EL1_MPAM_frac |
+ 				       ID_AA64PFR1_EL1_RAS_frac |
+ 				       ID_AA64PFR1_EL1_MTE)),
+-	ID_WRITABLE(ID_AA64PFR2_EL1, ID_AA64PFR2_EL1_FPMR),
++	ID_WRITABLE(ID_AA64PFR2_EL1,
++		    ID_AA64PFR2_EL1_FPMR |
++		    ID_AA64PFR2_EL1_MTEFAR),
+ 	ID_UNALLOCATED(4,3),
+ 	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
+ 	ID_HIDDEN(ID_AA64SMFR0_EL1),
+-- 
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
-" I agree that a DT property for the mmc controller would make sense.
-
-Although, this seems limited to SD UHS-I speed modes, so perhaps
-"max-sd-uhs-frequency" would be a better name for it?
-
-Kind regards
-Uffe "
-
-https://patchwork.kernel.org/project/linux-mmc/cover/20250523105745.6210-1-quic_sartgarg@quicinc.com/
-
-This was the comment given on V2 to introduce a generic dt
-property.
-
-Best regards,
-Sarthak
