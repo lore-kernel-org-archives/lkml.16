@@ -1,198 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFE023B61B
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B2527E071
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235259; cv=none; b=gnPTaXL+oFmXe7eDHNXHn25D9hDP70I5licWb02bDzWF4nnOD3QGktEf1AbPyelc6C4sBhZR9n5k2tDyU2FMRekLnpGplvXiw+Wl8lMChxbX1/ALEFaqiXyS5CPrip71hxecxXVFj87t/VEODjBHrafri/mwyPiJSrml2Y/A4wM=
+	t=1750235288; cv=none; b=S7ORGkOENzQK9HwkwTiCgL5MQz7IZetyG63X185F3X7nmlknercRxroHgPZ/HvGYTNqJGAp/AI/E43tTV4g21PlSbNLwZVVikFRP3L8J2rb6yjpV/Z1OnA96qY6mOBxFvnSja3Z6AFgSY9wz9WOcHLM1HpegpYKsQ/4mrxqG6ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235259; c=relaxed/simple;
-	bh=kpbFuyronYx4WqaCOXcmArGTDXwxpcw1dFYS6oUoq2s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqNnU2aPxwAZXEej2c85wIffsbkJK7IqOz/kCt0L9O55719pUOGYuAOCHuR0uewDXBXqmuCx1UKvMqPQsrLRnOU5y223t7ZoZZ1weTb/Z6hJslZY2UARL1dXVqMNmrSS4O2X3vovk8agopz/RN8ag+9d32zmSG++u5lgLPDGbiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ET/cBAI/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750235288; c=relaxed/simple;
+	bh=gGBUKK2bGctYiYhiGRujH/YL9B1xckj1cMsjW9vYehw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WHG3E/bI28hDqFnxDpe+lgDwdIQm5GJjtW35KEizlT3Tn1BrbHLQRZyGNFr1ih9263VPC9KY+dH/rFdI7YBf4io14fbQw5wOXFA5HDDL5JMvDBv9cs5CJ9NyAnhdWbQ0LZ0e5cdcwz6eOqxpWPE72OuhkWR07drtOdY/hM5xC5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KDvu1NeC; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ET/cBAI/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DADC4CEE7;
-	Wed, 18 Jun 2025 08:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750235258;
-	bh=kpbFuyronYx4WqaCOXcmArGTDXwxpcw1dFYS6oUoq2s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ET/cBAI/4PdmQXgKUdpf7Aq+7hduBZsquH8BDMKkNSsRNEtntVOT0NGgbqEbaY7nP
-	 wad/A36DuBIaQMEM7AlyoWegvBZsRcY30//yAlPreT+tDW2/gIKD3bHooGfq7CYUJU
-	 AIcGa00OfjgxeZy9nsn5JLxAq1+9see65gZanUtAr32CeM7+h1NE3AmotJ77w/iPuT
-	 j+NTKXiJtvmFxxkToyba9HhqDfaBdqFM/dWEjaDNZQFImdtqLMMseUHb47tVG8GnPI
-	 cqpVZQXewGwGGZtrWWH3QHrx+/SJ3zo5TK+u0utMX1wSOPwTYXdsJ7oznu43D12D7l
-	 2rgDvPTaO9y2w==
-Date: Wed, 18 Jun 2025 10:27:34 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Aradhya Bhatia <aradhya.bhatia@linux.dev>, DRI Development List <dri-devel@lists.freedesktop.org>, 
-	Linux Kernel List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Devarsh Thakkar <devarsht@ti.com>, 
-	Jayesh Choudhary <j-choudhary@ti.com>, Alexander Sverdlin <alexander.sverdlin@siemens.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>
-Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-Message-ID: <20250618-silent-oriole-of-fertility-3cbbd6@houat>
-References: <20250605171524.27222-1-aradhya.bhatia@linux.dev>
- <20250605171524.27222-4-aradhya.bhatia@linux.dev>
- <CGME20250611104512eucas1p22450fccf3bb7521760bd2d9a2a56ba19@eucas1p2.samsung.com>
- <2c51cf39-13cb-413f-8dd5-53bc1c11467a@samsung.com>
- <306f142f-f9c9-44ab-a5b9-c71db76b2b80@ideasonboard.com>
- <b4d8c5b2-3ad7-4327-9985-d097d095ccb5@samsung.com>
- <3adb1d12-7cd5-4beb-9978-c3cae702f338@ideasonboard.com>
- <d005ad5c-aded-4dea-b6eb-a9ce78c04728@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KDvu1NeC"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4f71831abso5928097f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750235285; x=1750840085; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7sBltaN88VTY0He+60hiRFLZfZBtquu1S5ICXZnuVmk=;
+        b=KDvu1NeCPR4xbImt1s/lBZV223y/Gd6gsgx6edK420ApQQOsHh4sn623kyAcwnzcGn
+         dELDbnytMgnpnUmBc8eAPd+5mQuC0NA2Y2ySw8XCAcAsUifyZkAkWq6tGbugQq0u1uKH
+         7d2d9BjPHmq0b+ovlN35tTiSR+5NxTq2V2tppDs0zgKa4zyAFnfUMbtojPEkEyp7grF0
+         MpxiCRXIE8ZLEXPkPPXnk2yGhCTvQ4X87kCuzmXBRqaFLXOoQifj20bu4XUZaLKRuSk4
+         I7v1RRV6pveRBMgw4Lzf6Q8V9SdsaBlBkIvIbdFCvw62Fv2FBe0Hz02sMrN3l5bOcH4u
+         Wm0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750235285; x=1750840085;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7sBltaN88VTY0He+60hiRFLZfZBtquu1S5ICXZnuVmk=;
+        b=AJFfB/u0AsYmG3WU0MY15V4VwwK3S3S8CFWeIGHtewnasHxf74zIVc7vnLsMYNo+0/
+         pbwn/hkxZIH7oLYNRcu23vRDk2sK4QOJZe+1I58FnnvRVxlXp/EO17/OV0Ai7EArOYdF
+         4UloSD53aO4b9xEErvz+kcrboyjx6nEOa6/0dbrJsKAP7ZTBrVelmvRw0UIOpg7O3IHd
+         B7vUZF/3C7KY8/i0ZBdhHkQAojdsEhKlwQleHYX4yv6Bjhy8BhXG6724ekgrfQwI2APA
+         PH2Y+6hRimkeo4QcYKC2MarHltv/8AefC+Z/IJZYJwDwGJHEvDaSXJ7fO7O8Ds6Q5UG7
+         RZew==
+X-Forwarded-Encrypted: i=1; AJvYcCVFHxfyJH0RhuKujCx+4DJc+enVYVAfdbulxVsAZw0pkOh3MA8x8YLlMDhjGF8ZCY0a/NxWKaQK5wzLGbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAlEsYSEDPLEkqJqT2jz6oPukNfeGNkHTRXkRaCcQY97urES2+
+	Rc90EuO3YSvVupMHdq2nJm2w97NElsY0QtAXmnIDxKuad2Z/HznFx1St
+X-Gm-Gg: ASbGncveKE2H9uFKO1Z5dzWBB0mDmC+HJrQ7mDvdsuPgJZZjPvucK6z146p5gKizgeT
+	qKFGNMuHCPNjracQKr9ircPKZKGneKl8hIjiYiJmbGTnV/ks0JTGxd/HY6+H+RksSjYXl/GLzhl
+	/k5AE2p1cbNzwai3wwixhDnq38lSuTiiNrZRSB8/jWZOz+WUuBTnmBBYiA4oR1B5Fx7jyA3dZb4
+	x+BWrMpr4162IwVueNyEsOP7KlBLWYsieMb4/GSQAlVACrNUtdnkNL6SPd0poZecb+0Uzo2mzXw
+	S1klhAOec1OZ7vhPHbQcjQ5a5WD0diVFIG7Wv79uTPAuLBHV7KwnLmrgun4S+hdcRxI+S4dyNoj
+	o
+X-Google-Smtp-Source: AGHT+IFckVzEGoyzAOyEt0UBC4wbSOwJWUKREX4Btf2yi/rU57GSXzyerV4ISS6aJkqhF02TmRD9YQ==
+X-Received: by 2002:a05:6000:2c0d:b0:3a4:bfda:1e9 with SMTP id ffacd0b85a97d-3a5723af27bmr14919929f8f.46.1750235284619;
+        Wed, 18 Jun 2025 01:28:04 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.22])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e13c192sm200076045e9.26.2025.06.18.01.28.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 01:28:04 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org
+Cc: hpa@zytor.com,
+	linux-kernel@vger.kernel.org,
+	Khalid Ali <khaliidcaliy@gmail.com>
+Subject: [PATCH] x86/boot: Avoid writing to cr4 twice in startup_64()
+Date: Wed, 18 Jun 2025 08:26:33 +0000
+Message-ID: <20250618082717.1098-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="srkvtn4pcvx6dzsz"
-Content-Disposition: inline
-In-Reply-To: <d005ad5c-aded-4dea-b6eb-a9ce78c04728@samsung.com>
+Content-Transfer-Encoding: 8bit
 
+From: Khalid Ali <khaliidcaliy@gmail.com>
 
---srkvtn4pcvx6dzsz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v13 3/4] drm/atomic-helper: Re-order bridge chain
- pre-enable and post-disable
-MIME-Version: 1.0
+When Initializing cr4 bit PSE and PGE, cr4 is written twice for	
+each bit.
 
-On Wed, Jun 18, 2025 at 08:30:39AM +0200, Marek Szyprowski wrote:
-> On 16.06.2025 17:40, Tomi Valkeinen wrote:
-> > On 12/06/2025 09:31, Marek Szyprowski wrote:
-> >> On 12.06.2025 07:49, Tomi Valkeinen wrote:
-> >>> On 11/06/2025 13:45, Marek Szyprowski wrote:
-> >>>> On 05.06.2025 19:15, Aradhya Bhatia wrote:
-> >>>>> From: Aradhya Bhatia <a-bhatia1@ti.com>
-> >>>>>
-> >>>>> Move the bridge pre_enable call before crtc enable, and the bridge
-> >>>>> post_disable call after the crtc disable.
-> >>>>>
-> >>>>> The sequence of enable after this patch will look like:
-> >>>>>
-> >>>>> 	bridge[n]_pre_enable
-> >>>>> 	...
-> >>>>> 	bridge[1]_pre_enable
-> >>>>>
-> >>>>> 	crtc_enable
-> >>>>> 	encoder_enable
-> >>>>>
-> >>>>> 	bridge[1]_enable
-> >>>>> 	...
-> >>>>> 	bridge[n]_enable
-> >>>>>
-> >>>>> And, the disable sequence for the display pipeline will look like:
-> >>>>>
-> >>>>> 	bridge[n]_disable
-> >>>>> 	...
-> >>>>> 	bridge[1]_disable
-> >>>>>
-> >>>>> 	encoder_disable
-> >>>>> 	crtc_disable
-> >>>>>
-> >>>>> 	bridge[1]_post_disable
-> >>>>> 	...
-> >>>>> 	bridge[n]_post_disable
-> >>>>>
-> >>>>> The definition of bridge pre_enable hook says that,
-> >>>>> "The display pipe (i.e. clocks and timing signals) feeding this bri=
-dge
-> >>>>> will not yet be running when this callback is called".
-> >>>>>
-> >>>>> Since CRTC is also a source feeding the bridge, it should not be en=
-abled
-> >>>>> before the bridges in the pipeline are pre_enabled. Fix that by
-> >>>>> re-ordering the sequence of bridge pre_enable and bridge post_disab=
-le.
-> >>>>>
-> >>>>> While at it, update the drm bridge API documentation as well.
-> >>>>>
-> >>>>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> >>>>> Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> >>>>> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
-> >>>>> Tested-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-> >>>>> Tested-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
-> >>>>> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
-> >>>>> Signed-off-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-> >>>> This patch landed in today's linux-next as commit c9b1150a68d9
-> >>>> ("drm/atomic-helper: Re-order bridge chain pre-enable and
-> >>>> post-disable"). In my tests I found that it breaks booting of Samsung
-> >>>> Exynos 5420/5800 based Chromebooks (Peach-Pit and Peach-Pi). Both of
-> >>>> them use Exynos DRM with Exynos_DP sub-driver (Analogix DP) and EDP
-> >>>> panel. Booting stops at '[drm] Initialized exynos 1.1.0 for exynos-d=
-rm
-> >>>> on minor 0' message. On the other hand, the Samsung Exynos5250 based
-> >>>> Snow Chromebook boots fine, but it uses dp-lvds nxp,ptn3460 bridge a=
-nd
-> >>>> lvds panel instead of edp panels. This looks like some sort of deadl=
-ock,
-> >>>> because if I disable FBDEV emulation, those boards boots fine and I'm
-> >>>> able to run modetest and enable the display. Also the DRM kernel log=
-ger
-> >>>> seems to be working fine, although I didn't check the screen output =
-yet,
-> >>>> as I only have a remote access to those boards. I will investigate it
-> >>>> further and let You know.
-> >>> Thanks for the report. I was trying to understand the pipeline, but I=
-'m
-> >>> a bit confused. Above you say Peach-Pit uses DP and EDP panel, but if=
- I
-> >>> look at arch/arm/boot/dts/samsung/exynos5420-peach-pit.dts, it connec=
-ts
-> >>> a dp->lvds bridge (parade,ps8625). Peach-Pi seems to connect to an eDP
-> >>> panel.
-> >>>
-> >>> Is the above correct? Do both Peach-Pi and Peach-Pit fail?
-> >> Yes, sorry, my fault. I much have checked the same (peach-pi) dts 2
-> >> times. Both Peach-Pi and Peach-Pit fails, while Snow works fine. All
-> >> three use the same Exynos DP (based on analogix dp) driver. I will try
-> >> to play a bit more with those boards in the afternoon, hopefully getti=
-ng
-> >> some more hints where the issue is.
-> > Did you get a chance to test this more? Any hints what happens will hel=
-p =3D)
->=20
-> I've spent some time debugging this issue, but so far I only got=20
-> something I don't really understand. This issue is somehow related with=
-=20
-> the DP clock enabling and disabling, what is being done from=20
-> exynos_dp_poweron() and exynos_dp_poweroff() functions, which are called=
-=20
-> from analogix_dp_resume() and analogix_dp_suspend(). The lockup happens=
-=20
-> somewhere while registering the fbdev console, with console lock held,=20
-> what makes debugging much harder.
+Instead, set both bits first and write CR4 once, avoiding redundant
+writes.
 
-You can skip the locking part with the fb.lockless_register_fb=3D1 kernel
-parameter. It's of course not meant for anything but debugging, but it's
-useful :)
+Signed-off-by: Khalid Ali <khaliidcaliy@gmail.com>
+---
+ arch/x86/kernel/head_64.S | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-Maxime
+diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
+index 4390a28f7dad..dfb5390e5c9a 100644
+--- a/arch/x86/kernel/head_64.S
++++ b/arch/x86/kernel/head_64.S
+@@ -222,12 +222,9 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
+ 
+ 	/* Even if ignored in long mode, set PSE uniformly on all logical CPUs. */
+ 	btsl	$X86_CR4_PSE_BIT, %ecx
+-	movq	%rcx, %cr4
+-
+-	/*
+-	 * Set CR4.PGE to re-enable global translations.
+-	 */
++	/* Set CR4.PGE to re-enable global translations. */
+ 	btsl	$X86_CR4_PGE_BIT, %ecx
++	
+ 	movq	%rcx, %cr4
+ 
+ #ifdef CONFIG_SMP
+-- 
+2.49.0
 
---srkvtn4pcvx6dzsz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFJ4cgAKCRAnX84Zoj2+
-duP5AYC+rLDwkCpwsUlhFRbv4bnc/8Ppp+L8VIchHfy/uPiLFcUaxqhFy2HIGYHh
-Ie/wRgcBgNhFkUByyHFT4QHOXTgIEnQcqZ5nhHjnkEmcqMkrpkU2udUPFG6JYAmJ
-ZAS3kP2Wbg==
-=hKdL
------END PGP SIGNATURE-----
-
---srkvtn4pcvx6dzsz--
