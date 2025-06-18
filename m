@@ -1,82 +1,82 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4388C27FD7F;
-	Wed, 18 Jun 2025 10:16:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D937643ABC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241766; cv=none; b=WnBWXYrKsOAzmAaJRmKTSKRtfqrztDVBOdHDRzKB6C1AuzYt5RZA7KxjmwXMoxNx4hox9iqCml908KuN+MLsdF72ZkgOqUtDgl0rhZStWfsXi6SQXdTwxt4Egr5IIbls/EkwAbwaqrSagvX7VGzmLj6+/IcmZfvF975ehdz5gfI=
+	t=1750241840; cv=none; b=TkKIuAKUQvoPwVHsr7jG0vapuDzAyyle/xgzVG/Fj5cwR2Fi6E5OEwEbtjpagKIx40YNCu4LDkODpvtXRdUj7P8dl+8Dg3ku8GF5fW5d24cX13a8tDcUl4teOEEeoFoZ5q16Wq+YL9wd07kYg4YVMTlwvODsCDIE55CeXY/Yr0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241766; c=relaxed/simple;
-	bh=63P/YM6AlzgZ9xMkMXKv9TnQwwkHN8E+6brIEKb3snA=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W+f0DSoNXmMwRcmWDBgMLt3hJl795fhbQYkPU8itLklwf9zAFxayXPP9cTLhGt+bhiw7VMwZFDBZ/FFd3yeTfk/bUr4diTGxYsp63Zsv20p5xJna/JsxjcSPYjpvbnYoTsH2ZDA8gTWU5CVdZNa6IdDqbRKAV6kFd7K/iXmyXX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bMfhb5DjNz28fQ1;
-	Wed, 18 Jun 2025 18:13:35 +0800 (CST)
-Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7A02718005F;
-	Wed, 18 Jun 2025 18:16:00 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by dggpemf500016.china.huawei.com
- (7.185.36.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 18:15:59 +0800
-From: Wang Liang <wangliang74@huawei.com>
-To: <wenjia@linux.ibm.com>, <jaka@linux.ibm.com>, <alibuda@linux.alibaba.com>,
-	<tonylu@linux.alibaba.com>, <guwen@linux.alibaba.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<horms@kernel.org>
-CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
-	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net/smc: remove unused input parameters in smc_buf_get_slot
-Date: Wed, 18 Jun 2025 18:33:42 +0800
-Message-ID: <20250618103342.1423913-1-wangliang74@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750241840; c=relaxed/simple;
+	bh=Iu7+hNKCCdjztLeX2eFEdJH31jIEHBTI0oNl1UH89RM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QpeJwX1uHdtZ+p3rRkPXVKQcoIFEJp28JYDCsuVBsG9ysCpsNLAcBCrmzNO/jI25bspYc1DqzcUPo5m3pb4wWAPBzlt1LeH+Trul15M5BxakOTIwqzLP3zuqPuxfRY8AsgKBrxjlJTbAAG3RLJQFf1ra6xP04Lvv8dCilFPxclg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PFvhWztn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PFvhWztn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57D4CC4CEE7;
+	Wed, 18 Jun 2025 10:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750241839;
+	bh=Iu7+hNKCCdjztLeX2eFEdJH31jIEHBTI0oNl1UH89RM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PFvhWztncz7lytujppxlwwpUcpRZYxQdisgd43U3Eln7DMTD8Ltn9YLjwgehd14Ky
+	 H8Z8b4Aub3b2BFkn/DasBCUPPxXS4KiZUwF0KcYkvoBxipF8QU0ABk9bvh0q4EarRm
+	 wDBwXso7qP8uxH0x9REjDEkQwNYW8FNkGRPONDS38RdTvTUZEUYblbPKumWc+jpn0o
+	 dYNDKF2vOfRBFVzUEY645WpaK7qabyLejDmjYqR7+NJG0jR/IDpXsLSvb/zLJEa/4+
+	 9lsAIMeIDwnf2bd94DSty6QqaUUxLqCDrGEJLnwRQK+IjTQ+c/mSSnCGnLemWYk8WV
+	 n1iJA3I/rMa2A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRpr3-000000006Pc-37D3;
+	Wed, 18 Jun 2025 12:17:18 +0200
+Date: Wed, 18 Jun 2025 12:17:17 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Tsai Sung-Fu <danielsftsai@google.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] genirq: Retain depth for managed IRQs across CPU
+ hotplug
+Message-ID: <aFKSLblsjXoMxK2W@hovoldconsulting.com>
+References: <20250514201353.3481400-1-briannorris@chromium.org>
+ <20250514201353.3481400-2-briannorris@chromium.org>
+ <24ec4adc-7c80-49e9-93ee-19908a97ab84@gmail.com>
+ <aEcWTM3Y1roOf4Ph@google.com>
+ <CAMcHhXqq9DHgip3rr0=24Y-LEBq5n4rDrE6AsWyjyBmsS7s+-A@mail.gmail.com>
+ <aEiQitCsXq9XSBcZ@google.com>
+ <CAMcHhXrT-y3EotxrcCZ0Pj8Sic6wsPSmRiW7NSzdG=9iH8xqKg@mail.gmail.com>
+ <aEnUHv8xMTDYgps9@google.com>
+ <aEsfJj35W7HQlTOH@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
- dggpemf500016.china.huawei.com (7.185.36.197)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aEsfJj35W7HQlTOH@google.com>
 
-The input parameter "compressed_bufsize" of smc_buf_get_slot is unused,
-remove it.
+On Thu, Jun 12, 2025 at 11:40:38AM -0700, Brian Norris wrote:
+> On Wed, Jun 11, 2025 at 12:08:16PM -0700, Brian Norris wrote:
+> > On Wed, Jun 11, 2025 at 08:56:40AM +0200, Aleksandrs Vinarskis wrote:
+> > > Yes. Dell XPS 9345 is arch/arm64/boot/dts/qcom/x1e80100.dtsi based,
+> > > and Asus Zenbook A14 is arch/arm64/boot/dts/qcom/x1p42100.dtsi based,
+> > > which is a derivative but has a slightly different PCIe setup. So far
+> > > both laptops would behave in the same ways.
+> > 
+> > Thanks. So that's what I suspected, a DWC/pcie-qcom PCIe driver, and
+> > seemingly standard NVMe on top. pcie-qcom doesn't seem to do anything
+> > weird regarding MSIs or affinity, [...]
+> 
+> For the record, I was reminded that DWC/pcie-qcom does not, in fact,
+> support irq_chip::irq_set_affinity(), which could perhaps be a unique
+> factor in his systems' behavior.
 
-Signed-off-by: Wang Liang <wangliang74@huawei.com>
----
- net/smc/smc_core.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+No, we use the GIC ITS for the NVMe interrupts on X1E so that should
+not be involved here.
 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index ac07b963aede..262746e304dd 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -2100,8 +2100,7 @@ int smc_uncompress_bufsize(u8 compressed)
- /* try to reuse a sndbuf or rmb description slot for a certain
-  * buffer size; if not available, return NULL
-  */
--static struct smc_buf_desc *smc_buf_get_slot(int compressed_bufsize,
--					     struct rw_semaphore *lock,
-+static struct smc_buf_desc *smc_buf_get_slot(struct rw_semaphore *lock,
- 					     struct list_head *buf_list)
- {
- 	struct smc_buf_desc *buf_slot;
-@@ -2442,7 +2441,7 @@ static int __smc_buf_create(struct smc_sock *smc, bool is_smcd, bool is_rmb)
- 		bufsize = smc_uncompress_bufsize(bufsize_comp);
- 
- 		/* check for reusable slot in the link group */
--		buf_desc = smc_buf_get_slot(bufsize_comp, lock, buf_list);
-+		buf_desc = smc_buf_get_slot(lock, buf_list);
- 		if (buf_desc) {
- 			buf_desc->is_dma_need_sync = 0;
- 			SMC_STAT_RMB_SIZE(smc, is_smcd, is_rmb, true, bufsize);
--- 
-2.34.1
-
+Johan
