@@ -1,95 +1,131 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B36136A;
-	Wed, 18 Jun 2025 12:24:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A971A5BAF
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249474; cv=none; b=A6TLIfYtd4i8ijXQO0//Jk1xRHm3Wy6j3s+hzMa7ykD80xmEmzLxPLE8CCeeR9Tn27USoEdP0cF9NYe/pkMaGixLMH0H0sALW7/3yJaxfuYeKj2lWeLpqEVoTn+cPZF02XmTm571JbidxRYTqPgdKL6Gk4K+2sasR1DT57Hja3k=
+	t=1750249571; cv=none; b=pzNPgoAPXIw43msTqt9HYkuukwo1cbJp72wAITyf68SX8wP7l0N0nJ+/BAA8HVhDwSKxd2fpYbGh+3+glZdF8cPC4/ANndR0a5nV1LCNZnLa+RZg0wK3bVlfZru3RV69/LNQpK+9CERvrna8xkLrxl30H033fhLB/KGhSSVbbXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249474; c=relaxed/simple;
-	bh=/NYsxYefGuFZoFcbmNjG74D/3sWLBSAsPK2AYHstAwg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KJN17FdLcFC2xwKfpdpQ+2uW5sGrbeJjEHQPSbkJPSRxFkuxri22kp7npE/AR2vIMSCwn4kj5cylSKRz4c9C5OLxkGjH7I4lDBGD5BMuTjDZjkXMC8lEylCm03VqBga2VbYE+dmqIb65y8KAJkivbB91fVNNkpte4F2WokDdXNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aCzebccJ; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCzebccJ"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4e7f4adaedaso1406901137.3;
-        Wed, 18 Jun 2025 05:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750249471; x=1750854271; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/NYsxYefGuFZoFcbmNjG74D/3sWLBSAsPK2AYHstAwg=;
-        b=aCzebccJo6k6U+FpDLeWVUVPLi8neOzP0laB2xNSG40/9PXOdDjxullR2mrxTmqCNw
-         xzb3xGb6VAXWuQB9ujTGyDFRHoy8UPc9U9P7lqlgIyEcZrmosSqQeYvhk7K5ZoLca9GG
-         6Oc4QLSEU1VKLzQiGPT1naWaMVN7uYv+VFCNMguUCgJ3Lio6ys+IQSwl/Qqio8HF7kk3
-         r4sY680mxeYKT71tLQ0qniT+E5MRGjtqKbfgYE490kJucxHyLyIiALvvGyWpxea4D1qg
-         U7OvQwA+nq+ZETexelM1MzvgOBO+wE1wyaGUUhQoKjDBU7cjaqRiEke8hQg7+KpCFEYt
-         2Bmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249471; x=1750854271;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/NYsxYefGuFZoFcbmNjG74D/3sWLBSAsPK2AYHstAwg=;
-        b=l8lJyTr01xrY95duf+cq1qXEL81uJNE/KdpgQNLtb/ZPaQrCXQFNdQdZtFlkUi+vW7
-         j4mEZ3CUGOtXCvCN0cRZPLSz7VWUvXjEvgIXkchbz/ZmrrZUJKp1SYjBBKA4O8283f2d
-         X55p4jqMbrgXeNTcRdtStYDUB8XnufFbCDRYo+p/yNxF9M2oCSUkcCdvoFuX6Li4hb+j
-         tPpqC88TLPyeRY9sFT2GwOOPkmJA6Pa2WcrS4/xrI1BC/ZmUCXJuszfKnVCKnv/owg8P
-         bUMHrYYmH/HSu2lHzNZoS8PV43lP9YJTqozAdnErCaa4fEFwriZ5TIv9KcLwqYQVikXs
-         JoZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVgNzk95jhxPYDEU5K1U9RktQFSOLpjFK/CgPFGyoR2oqHjNzPj6dpBeV3/cnunC46Vc/Q3wDZr+GXyuv8H@vger.kernel.org, AJvYcCWdvZCBjGILh73Xemf7//qAAeSty2mbrKESjxYvZotYG8hxrmMzDtTZp7NQfz1K3aLGY/74cL+Ibqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeP1QfXtfwQczYkYEm9jp8Yr/oqJJS2VsB5wx33nnjx5MmcWt4
-	fnen+dVVcAoT5clbvCVI50mJmU85MtdHVpabLPUq2PYi4wpqxkL1iJAXsJXRCTjzN543okqi4tX
-	/AdSuhd5YNNxnfCRYDOCfYyegFACs3tA=
-X-Gm-Gg: ASbGncsRZ67tmHrfLfgyu4k0O+zPj0kXA5NOSgvzSvT15rKojYF66Og2Drc5VLTPm2F
-	updlaiRZPHwqCVcwKxnVH0KRRDreO/U6+SdHZAZraDy1xG8khyr7gUXRsoh1sZlkd/Nl8MZvr0t
-	YAxYrnti5MSoQ9+Tsv8SZNZ8x700MsHaXE9eTUjd18vis=
-X-Google-Smtp-Source: AGHT+IFKxo5jOdQO8g9bmHrmLYV3o3dtgYq9weUpw6k+6iarraD/Y0etRIlEYIlAgmm4WMsUniD8eUPR7KBarX0bwMk=
-X-Received: by 2002:a05:6102:580e:b0:4e5:9323:d2b9 with SMTP id
- ada2fe7eead31-4e7f60edf76mr14115895137.2.1750249470695; Wed, 18 Jun 2025
- 05:24:30 -0700 (PDT)
+	s=arc-20240116; t=1750249571; c=relaxed/simple;
+	bh=IDD9v6cYS1E9fCQrM9ecA0zZ84fSUhOa0K+YmkkRkZw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ezRJSYgSHKRaw4tQrToK+GnQCFIQfxz85cmldRkbcWtbkKMdAUHat72V79lyuW7N6VprR5pWClW+QqaTGtLusVWOdOkOuX8qWHXeoscyI+qrCltL33bFAuHVKRPNDoKaPb5P/XygbitACFcsVJqqlKUJsbumt/8bRJZNL2cL49k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uRrrg-00007i-UW; Wed, 18 Jun 2025 14:26:04 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uRrrf-0048Uq-1r;
+	Wed, 18 Jun 2025 14:26:03 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uRrrf-00DFCy-1R;
+	Wed, 18 Jun 2025 14:26:03 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	Phil Elwell <phil@raspberrypi.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	Simon Horman <horms@kernel.org>
+Subject: [PATCH net-next v8 2/6] net: usb: lan78xx: Rename EVENT_LINK_RESET to EVENT_PHY_INT_ACK
+Date: Wed, 18 Jun 2025 14:25:58 +0200
+Message-Id: <20250618122602.3156678-3-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250618122602.3156678-1-o.rempel@pengutronix.de>
+References: <20250618122602.3156678-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br> <CAHp75Ve4yAp6sViUWZY+0abRoNZ0W+rQLCmsbijEcrh8kguVOA@mail.gmail.com>
-In-Reply-To: <CAHp75Ve4yAp6sViUWZY+0abRoNZ0W+rQLCmsbijEcrh8kguVOA@mail.gmail.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Wed, 18 Jun 2025 09:24:19 -0300
-X-Gm-Features: Ac12FXwGVXWrLr13WRwfmpLhpRnPU-8Xv8LlkIM0z-WiaWBJ6g-XsgAvMY0wBbw
-Message-ID: <CANZih_S9_8OdY=oKyVPBCTSTqYm_z_rkE=xbPym3uHOSsHMv6A@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] iio: accel: sca3000: simplify by using newer infrastructure
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
-	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Jun 18, 2025 at 2:56=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Jun 18, 2025 at 6:17=E2=80=AFAM Andrew Ijano <andrew.ijano@gmail.=
-com> wrote:
-> >
-> > The sca3000 driver is old and could be simplified by using newer
-> > infrastructure.
->
-> I haven't found any reference to a base commit here. Have you
-> forgotten to use --base when preparing the series?
-> In any case, please clarify what this series is based on.
+The EVENT_LINK_RESET macro currently triggers deferred work after a PHY
+interrupt. Prior to PHYLINK conversion, this work included reconfiguring
+the MAC and PHY, effectively performing a 'link reset'.
 
-Thank you for pointing this out! I think I forgot to use --base for
-it. In this case, should I submit a new version of the whole patchset
-with this information or is there a better way to do it?
+However, after porting the driver to the PHYLINK framework, the logic
+associated with this event now solely handles the acknowledgment of
+the PHY interrupt. The MAC and PHY reconfiguration is now managed by
+PHYLINK's dedicated callbacks.
 
-Thanks,
-Andrew
+To accurately reflect its current, narrowed functionality, rename
+EVENT_LINK_RESET to EVENT_PHY_INT_ACK.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/usb/lan78xx.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 61b2a7c26f60..18402a3922a6 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -385,7 +385,7 @@ struct skb_data {		/* skb->cb is one of these */
+ #define EVENT_RX_HALT			1
+ #define EVENT_RX_MEMORY			2
+ #define EVENT_STS_SPLIT			3
+-#define EVENT_LINK_RESET		4
++#define EVENT_PHY_INT_ACK		4
+ #define EVENT_RX_PAUSED			5
+ #define EVENT_DEV_WAKING		6
+ #define EVENT_DEV_ASLEEP		7
+@@ -1642,7 +1642,7 @@ static void lan78xx_status(struct lan78xx_net *dev, struct urb *urb)
+ 
+ 	if (intdata & INT_ENP_PHY_INT) {
+ 		netif_dbg(dev, link, dev->net, "PHY INTR: 0x%08x\n", intdata);
+-		lan78xx_defer_kevent(dev, EVENT_LINK_RESET);
++		lan78xx_defer_kevent(dev, EVENT_PHY_INT_ACK);
+ 
+ 		if (dev->domain_data.phyirq > 0)
+ 			generic_handle_irq_safe(dev->domain_data.phyirq);
+@@ -3524,7 +3524,7 @@ static int lan78xx_stop(struct net_device *net)
+ 	 */
+ 	clear_bit(EVENT_TX_HALT, &dev->flags);
+ 	clear_bit(EVENT_RX_HALT, &dev->flags);
+-	clear_bit(EVENT_LINK_RESET, &dev->flags);
++	clear_bit(EVENT_PHY_INT_ACK, &dev->flags);
+ 	clear_bit(EVENT_STAT_UPDATE, &dev->flags);
+ 
+ 	cancel_delayed_work_sync(&dev->wq);
+@@ -4448,10 +4448,10 @@ static void lan78xx_delayedwork(struct work_struct *work)
+ 		}
+ 	}
+ 
+-	if (test_bit(EVENT_LINK_RESET, &dev->flags)) {
++	if (test_bit(EVENT_PHY_INT_ACK, &dev->flags)) {
+ 		int ret = 0;
+ 
+-		clear_bit(EVENT_LINK_RESET, &dev->flags);
++		clear_bit(EVENT_PHY_INT_ACK, &dev->flags);
+ 		ret = lan78xx_phy_int_ack(dev);
+ 		if (ret)
+ 			netdev_info(dev->net, "PHY INT ack failed (%pe)\n",
+-- 
+2.39.5
+
