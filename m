@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6ECE28541B
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2235628541B
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239008; cv=none; b=n/HdjmHDY0KfFb7TTcCkz+gWR0Fsk/DeDNFAgFq/6CKGNOKjjcRsyBymq9UrcZUQjduYJkQAWT0bbDY9LSRAM2rffxxBcKMBsOWIAL1GhsnfG9e+bv9l9zcyNSHgGqbsnPAxjfivJlGqHmtYVq/nOaANrdHAJd1FZhsa1YIBM34=
+	t=1750239011; cv=none; b=lDhhlNNwwXKyIxujx4IbEky216A6v4dB+Oi+/GmXYRKT8b+j9YHdb4RZrJ5I+VrQuyPrP4OKQodWpT1tCvmShdIxvjrKEHtiJkhRQZgDsufMKeyHaRoEaOA1jSGfTJphHKdzLrtzgksaSIgwz59ip8jZWOSWtITAOwG8osUqJ8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239008; c=relaxed/simple;
-	bh=qMejaXAfIC9Z7sPH8SsEMoMJooInN9ADYgwuly+55io=;
+	s=arc-20240116; t=1750239011; c=relaxed/simple;
+	bh=qWDgYU9GjYEy2tejugw8ZczCVa9XsBOTxffWoLLYfZk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LC/83F05VIXWWB81SuZYI5VP5BdLEXhhhLPJ6riidGT+eOGlvIYPyDcjclG36IWyHArpAdXauHYIdrTyiYUEIOOuYt6ol9S3iBrYwgr17RLgqxQRQTyZWaPm4tylQYbGQJNkjUDn5/bY4q8BoV02faS9ktG5xQlR36OCQc7yFKc=
+	 MIME-Version; b=nh+7UBGifNXc/iR/7BqIdnzAYLBVmmcv4NaRAaYoGx1wwtOYA6USjpCogJnzbTqkDHfEtkxD9vkbUPW2Dx6iD5khfTVjbZqKK1huHIhL/tpeTqTLbJRymh+9q6ouD/6xoieDwsoQIrU/nQ9Juf9XvhZrilwTWlRoZHAEINlqzyw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 539881BC0;
-	Wed, 18 Jun 2025 02:29:45 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E57441D13;
+	Wed, 18 Jun 2025 02:29:48 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A68CE3F58B;
-	Wed, 18 Jun 2025 02:30:02 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B2513F58B;
+	Wed, 18 Jun 2025 02:30:06 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	pcc@google.com,
@@ -43,9 +43,9 @@ To: catalin.marinas@arm.com,
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v7 1/8] arm64/cpufeature: add MTE_STORE_ONLY feature
-Date: Wed, 18 Jun 2025 10:29:50 +0100
-Message-Id: <20250618092957.2069907-2-yeoreum.yun@arm.com>
+Subject: [PATCH v7 2/8] prctl: introduce PR_MTE_STORE_ONLY
+Date: Wed, 18 Jun 2025 10:29:51 +0100
+Message-Id: <20250618092957.2069907-3-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250618092957.2069907-1-yeoreum.yun@arm.com>
 References: <20250618092957.2069907-1-yeoreum.yun@arm.com>
@@ -57,56 +57,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Since ARMv8.9, FEAT_MTE_STORE_ONLY can be used to restrict raise of tag
-check fault on store operation only.
-
-add MTE_STORE_ONLY feature.
+PR_MTE_STORE_ONLY is used to restrict the MTE tag check for store
+opeartion only.
 
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Reviewed-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kernel/cpufeature.c | 8 ++++++++
- arch/arm64/tools/cpucaps       | 1 +
- 2 files changed, 9 insertions(+)
+ include/uapi/linux/prctl.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 8a5284c733b7..fdc48aa1f0e2 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -321,6 +321,7 @@ static const struct arm64_ftr_bits ftr_id_aa64pfr1[] = {
- static const struct arm64_ftr_bits ftr_id_aa64pfr2[] = {
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64PFR2_EL1_FPMR_SHIFT, 4, 0),
- 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR2_EL1_MTEFAR_SHIFT, 4, ID_AA64PFR2_EL1_MTEFAR_NI),
-+	ARM64_FTR_BITS(FTR_VISIBLE, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64PFR2_EL1_MTESTOREONLY_SHIFT, 4, ID_AA64PFR2_EL1_MTESTOREONLY_NI),
- 	ARM64_FTR_END,
- };
- 
-@@ -2882,6 +2883,13 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
- 		.matches = has_cpuid_feature,
- 		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, MTEFAR, IMP)
- 	},
-+	{
-+		.desc = "Store Only MTE Tag Check",
-+		.capability = ARM64_MTE_STORE_ONLY,
-+		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
-+		.matches = has_cpuid_feature,
-+		ARM64_CPUID_FIELDS(ID_AA64PFR2_EL1, MTESTOREONLY, IMP)
-+	},
- #endif /* CONFIG_ARM64_MTE */
- 	{
- 		.desc = "RCpc load-acquire (LDAPR)",
-diff --git a/arch/arm64/tools/cpucaps b/arch/arm64/tools/cpucaps
-index fe8f4f8ce95c..b96cb6d6bcaa 100644
---- a/arch/arm64/tools/cpucaps
-+++ b/arch/arm64/tools/cpucaps
-@@ -69,6 +69,7 @@ MPAM_HCR
- MTE
- MTE_ASYMM
- MTE_FAR
-+MTE_STORE_ONLY
- SME
- SME_FA64
- SME2
+diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+index 43dec6eed559..f6fb137c407f 100644
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -244,6 +244,8 @@ struct prctl_mm_map {
+ # define PR_MTE_TAG_MASK		(0xffffUL << PR_MTE_TAG_SHIFT)
+ /* Unused; kept only for source compatibility */
+ # define PR_MTE_TCF_SHIFT		1
++/* MTE tag check store only */
++# define PR_MTE_STORE_ONLY		(1UL << 19)
+ /* RISC-V pointer masking tag length */
+ # define PR_PMLEN_SHIFT			24
+ # define PR_PMLEN_MASK			(0x7fUL << PR_PMLEN_SHIFT)
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
