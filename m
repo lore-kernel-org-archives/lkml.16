@@ -1,86 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0045D1EDA26;
-	Wed, 18 Jun 2025 13:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9156274FC2;
+	Wed, 18 Jun 2025 13:19:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252760; cv=none; b=gSisdOyOmwlVwiUU8Ae8KpLW8JNaGi0rtDtKIJpYxY4XW5zli462rDCxqJkhLJyKoOlfNYgAr6sU0a0oCt7Qadi0Gi7vxhKy6k+gp5m30h4XEAMk5QvwWTZGyFlFjBKLNy1fho9IKCaOf8ouBaRdMNZUwh7x8dGpw+5M6Jq31Uo=
+	t=1750252773; cv=none; b=azD8e7yIATg5exetnXYJ1kuPc6jLMwBW6Gc7rTDIegYevB8AqBC/VJfHx8kHQCTwFulDzoGbObI51OrAX2Di7NnlnjQGHeizOLCgGF+JnEnrVXXbxEzNzBMBk8/HLYMRZWjD6nQASRGcQbm+jGjuOit0OS6iODHRYAIrb+C+lEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252760; c=relaxed/simple;
-	bh=yazIh7NKfaZXE4pU90+4eALmFMirOeimrbYE23sXx+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ure7NzVdXMG/FwCVJyZeQifHTfXG3lLctF30FSl0bZI0qszf/qoi2fpFiljL6vQ8QZVrvINspELEFvZLIirHSlHkyrUNXzxPwzpOQtgyxeOhywkpazBrL+NLXseHIBO3lsHUCyQoUlfb+Y2pBTO83+rE6XDNO6Ysj/lAAefy30A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jEZmVs+F; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750252773; c=relaxed/simple;
+	bh=DZyzzIc3AGQ3W0P72z/SHMNeWzh8U1DkI0gzYBE68FM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Lm253tOc4Q0Bv4aer0q+eADvdq2OGjDwGRQVP5MiVJco33kqNQMfvKGiiqvVUJu5mZ/QlLQM3wbPK5jEb3FULvbM1ElWxp9fbfke+oy99qBkIEtPmZT/u+5jCjtjyUCR2shNXFDIINjit3c2eccnxd/WIEFra0tBiagkyBf5JnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGI2Ezai; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jEZmVs+F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B761C4CEE7;
-	Wed, 18 Jun 2025 13:19:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750252759;
-	bh=yazIh7NKfaZXE4pU90+4eALmFMirOeimrbYE23sXx+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jEZmVs+FdSqcpXlWWnIGHErQ0wEcRACsKMEnd3vOjr0/P9S7o7NIYUrkM1l1BRoen
-	 HOrzZLfN4a/75e98Axi628ZwCTHiWGFhOBlmH6VeDGHX9mWpqy6he1qyiVuK8zEKFi
-	 0cwlrQoufnhr5N9qCbAnXYBZNq7UE4hbD9gfpaDw=
-Date: Wed, 18 Jun 2025 15:19:11 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Willy Tarreau <w@1wt.eu>
-Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
-Message-ID: <2025061858-reproduce-revolving-cae0@gregkh>
-References: <20250617152451.485330293@linuxfoundation.org>
- <cc048abb-fbc0-4a79-b78a-90bfa3f8446d@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGI2Ezai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF725C4CEEE;
+	Wed, 18 Jun 2025 13:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750252773;
+	bh=DZyzzIc3AGQ3W0P72z/SHMNeWzh8U1DkI0gzYBE68FM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=KGI2EzaiyDhZ6TXOYHLiGTz+HphoILHn5gq3yoJ6CONMf2iISLYN5Qt39Eu8/jlBF
+	 pCEel/dGqwy+bSvC2ZwhVb4I5P6FjyColxIziWk3tNFwpNOHRTt8cYC7IMI4M96ygZ
+	 eD18E3DksisvGtemRuy1v0aOIzTHHLOtM7kTmls9Avj/bM7Ma5qPO3l3rU/3trEXKG
+	 0QlO4fP9Ch9PK/WAE88mWS+ojaOFl/WB0Ej2WOTLstZTAqSLBWo1Rsv6HwPE+QY28Z
+	 s9HbTPwAjCAAriM/vb58OpGBp76pInoqLUCwNk245HBq2rUk1RxmjdM3XD+7ko5Gxl
+	 nvhNSNQTdRs3Q==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH v2 0/4] nfs: client-side tracepoints for delegations and
+ cache coherency
+Date: Wed, 18 Jun 2025 09:19:11 -0400
+Message-Id: <20250618-nfs-tracepoints-v2-0-540c9fb48da2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cc048abb-fbc0-4a79-b78a-90bfa3f8446d@sirena.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM+8UmgC/3WNywqDMBBFf0Vm3ZQ8NEJX/Y/iQuOoQ0sikxBaJ
+ P/e1H2X58A994CITBjh1hzAmClS8BX0pQG3jX5FQXNl0FJ30koj/BJF4tHhHsinKKRp267tlVW
+ mh7raGRd6n8XHUHmjmAJ/zoOsfvZ/Kyshxayt6hYzTWjd/Yns8XUNvMJQSvkCDKA+mq8AAAA=
+X-Change-ID: 20250603-nfs-tracepoints-034454716137
+To: Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Benjamin Coddington <bcodding@redhat.com>, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1151; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=DZyzzIc3AGQ3W0P72z/SHMNeWzh8U1DkI0gzYBE68FM=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoUrzcOSPkc3kqAWGyzOJGbJV/blLFtSVtm0psp
+ 11Ocz5xsqyJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFK83AAKCRAADmhBGVaC
+ Fe1QEACeNncHAPcf8lDSo+C3WKpBbbGfg3J4saljQjwhijELFzIJnU/8i9zrnqfxKHDcN8lEwtL
+ y9yjyiPt9eOvOOILNPRATvHrcsfvaid1k0Dy5WPA7bM6k/iZcBtUTvIIH21KyjBWHFeyC+dEiIT
+ c4dL7ae+RFwzMfQxphLVC3ZOrL9vVHiXYZLlbbFGg2rzR4FZhcg8ksCCpWsK05Lj4Jy6aKVuLdU
+ vJeqRJIdusTb08+p/ROoV80Uc6HOV1mlMySLL0Mqi3Ie3454O5adcLQtTvjXHpufQ+kAhZOfBew
+ uhjLJtCQwSj4q6/hF3WzREfuOD1LRgyZWaCfreZhbH4v05+oBEQWoy5bjRUlCOEzkuxfCJzpb/f
+ E7anOm/CcgAlNZXKuKgn18VsUk/61Ff0VNHtQfX+335Kci1DIZwaij9q+rjZz2lciHfWf6Fc2U/
+ U3d9MulnF3VdDN7fuQpIaHhGW504Oe4zcCV+GLzG43ACQBuRdS8Mu7VvZOrz53A/p10lSOBgz80
+ uanb3kkeozLhMMFm71aypDTNTLyYk4f1YqocOHH1U7Hz1gFsarCdqXzGOlbuwk+v4jvmqyd2WVp
+ eLjiol+Z3uSuYNP6gcDhu7O/xllHwO77+yLpc91FwoCQlbM5FLdlIdFpm0TjRHh25VZS2L9IMo5
+ ICMD+RmVLY5ikhw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On Wed, Jun 18, 2025 at 12:58:00PM +0100, Mark Brown wrote:
-> On Tue, Jun 17, 2025 at 05:15:08PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 6.15.3 release.
-> > There are 780 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> 
-> This breaks the build of the arm64 selftests due to a change in nolibc,
-> it appears that "tools/nolibc: properly align dirent buffer" is missing
-> some dependency:
-> 
-> aarch64-linux-gnu-gcc -fno-asynchronous-unwind-tables -fno-ident -s -Os -nostdlib \
-> 	-include ../../../../include/nolibc/nolibc.h -I../..\
-> 	-static -ffreestanding -Wall za-fork.c /build/stage/build-work/kselftest/arm64/fp/za-fork-asm.o -o /build/stage/build-work/kselftest/arm64/fp/za-fork
-> In file included from ./../../../../include/nolibc/nolibc.h:107,
->                  from <command-line>:
-> ./../../../../include/nolibc/dirent.h: In function ‘readdir_r’:
-> ./../../../../include/nolibc/dirent.h:62:64: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘__nolibc_aligned_as’
->    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
->       |                                                                ^~~~~~~~~~~~~~~~~~~
-> ./../../../../include/nolibc/dirent.h:62:64: error: implicit declaration of function ‘__nolibc_aligned_as’ [-Wimplicit-function-declaration]
-> ./../../../../include/nolibc/dirent.h:62:84: error: expected expression before ‘struct’
->    62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __nolibc_aligned_as(struct linux_dirent64);
->       |                                                                                    ^~~~~~
-> ./../../../../include/nolibc/dirent.h:63:47: error: ‘buf’ undeclared (first use in this function)
->    63 |         struct linux_dirent64 *ldir = (void *)buf;
->       |                                               ^~~
-> ./../../../../include/nolibc/dirent.h:63:47: note: each undeclared identifier is reported only once for each function it appears in
+These patches add some tracepoints that I rolled a while back when
+working on the client-side pieces of the directory delegation patchset.
+I think that these are useful in their own right, even without dir
+delegations.
 
-Thanks for the report, I'll go drop all nolibc patches from the queues
-for now.
+Please consider these for v6.17.
 
-greg k-h
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- add NFS4_FREED_STATEID_TYPE to match_stateid tracepoint
+- Link to v1: https://lore.kernel.org/r/20250603-nfs-tracepoints-v1-0-d2615f3bbe6c@kernel.org
+
+---
+Jeff Layton (4):
+      nfs: add cache_validity to the nfs_inode_event tracepoints
+      nfs: add a tracepoint to nfs_inode_detach_delegation_locked
+      nfs: new tracepoint in nfs_delegation_need_return
+      nfs: new tracepoint in match_stateid operation
+
+ fs/nfs/delegation.c |   4 ++
+ fs/nfs/nfs4proc.c   |   4 ++
+ fs/nfs/nfs4trace.h  | 105 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfs/nfstrace.h   |   8 +++-
+ 4 files changed, 119 insertions(+), 2 deletions(-)
+---
+base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
+change-id: 20250603-nfs-tracepoints-034454716137
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
