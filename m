@@ -1,133 +1,120 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDD116EB42
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7AB1E47A5;
+	Wed, 18 Jun 2025 16:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750262551; cv=none; b=fdOsAZocLRhfpYtb1/Hw+42VPdLhqbLhfNyKhYP5j51ybbQwWggVp1ASDX+lT1u3IyNKqqX9YUeidHcq4zH2QHUTQYUwO69T7yzK9oN+j1ivP5UG9e4HhayzLK3VSQ0Hs1XXpIl9jZeHx3TOB3U5yyVMRWVVCMZVxx/Pri8Lvpc=
+	t=1750262619; cv=none; b=ZSo1nYevMa1zixH0XPAliYuSJh+JForsvzqRqOA7eZvqP6y9si+JwnFM3SkuQPPdiW5kySNZpNrzk/bHVeccSoUdrNV3eT3NgBT1bApi2SZieroF53ahYpKZLgjJ/jFZUHd0XjhF5oWEfdBfo8CCuJpD403B9VRPnwpQm3DJJhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750262551; c=relaxed/simple;
-	bh=szpCxpm/j2ZbcXcfCS9kCbBVMGO+lYR+TOvNQfWht2Q=;
+	s=arc-20240116; t=1750262619; c=relaxed/simple;
+	bh=FrvU7rTVLfuUd4UWXW66itIxwUTuBoL1ExoIob/XHVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtp/MClrQsMcsk//Z+0GiJf1f9nf9xkHao93UUEiKDMU6Fpp+wHxIUH+U1CMD6eHnSRbJ/+JuChdQWtS8Yuir9sdm6xqIw+2D8oZm4ZTRH8wHWlkUbPhrRYGvMWZzQrH6LwqZOurmyTEbHwRQNhuwMqMOWNyF78qihZgi5SsYs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LijKba0L; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mljBBMil2a8i2l7u9BbE20HkF2wDOjYU1P2Q5r7kYPnZmz8JDVejI043lfJUfLyUel9HKY1fArrd+SDt67ro7FrLsWjwIZ7l0uSrEM6jplpZ2ZyyXW0+JHD4wb/TnVfLBZQ/bkyWGSX38pE2W9AJj1nDKoZN6uOFefnb0MyEuEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nfv6D4Vh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Sjf8sSd6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LijKba0L"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-401f6513cb2so511911b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:02:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750262549; x=1750867349; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yHWHgwA/STLjiBuexUHGmnhpSwfTae10x6GG0C7Yl58=;
-        b=LijKba0LwOio5PKcfPJHGJj8p/7ATCv3EVfcxwvX1Swv95zZWG3k/ayHqEZOm8YnNc
-         XQkrxq/6pjXIEnq6PTtgBHTVS8y1sYGJNqhJQBwsyNjwAPblhm2iRrVxU62FxCRMY6rZ
-         D2g8Y1RLT3KtJrp66E9ORS+efui1VtIhjo8upE6jqyRBivRli42hRJ6eDhzNfcLeAN7U
-         K9PtSXtWT5mGya8OFt0dIZ/XdSemPHNhBz7WDHsx8JHm5VJl22mwph7ESUccg2I0Uk5V
-         7Hn243BsD/HZI//gcF9Eo/MqAhtYQXUU51EYCNZTLSx+WW0yX5KbSEabwud28+cRqiEB
-         sqDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750262549; x=1750867349;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHWHgwA/STLjiBuexUHGmnhpSwfTae10x6GG0C7Yl58=;
-        b=WfoR3Evj8vRdqnrikig59Tkz3qOWCEtB4UY5F1PYVhNLE6pbEOJOG052besfFZviZF
-         a4nDw1SYSrW2TTfTq+oT8Wt5N2RHB2h/CxKzTkr4up4wYHP6EbhKXVLSxzxecqOLpFi6
-         Mvj+vabuZmJbN7DXSi2dEAGpt4RyEXSuE+VjD0ulfZg5VWKlP4pUUu2xpmfFoRBwdNwP
-         MEdmIi3+3pmZgSOMbMIB5nrAB68DSQr89CN8OISo1dtQGVximFW5XLgt576gZvT/j73F
-         Jt+HpcZOWHIyBX2lEQTOdgPulIf6RefjTvMY0t+CwOb51ViSE2atcYuNwCHC7Pc1RAx/
-         dH8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVSh2peXbl+2U00cRAsK+nJ80gyWQgRZEH6f+xxxaP3yGjo8H60pfoOm+Plg8ss4nFFzmJK+/KVCGhAxiA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUhSMvBT5kb6YCmCZvKsubu0mrnyDeKEKnlR3DA2J95LAm5/wy
-	atnCIHK/rZY/UL1XE+uDXeaIu5+PXXVTz9wF0PQm/mM3a1FITX99nVN+FimkIitPM7k=
-X-Gm-Gg: ASbGncvMDlrsVxhl+8d6BuFpe8PXJMNu9E8EnYjNIxRFiPN1kT4Pdjlk4Le13D+855k
-	olH756IS4wkxwbBbgomlGJdqGQScu7HBsnyRjUYq4GSUPhoTc2kviK7z0F5OAEispIiI8kAJQGW
-	VazxtMJV3gr4cj+REcQuexr23sQtQM8snsFgej7E8Uukq42sxxe/zxmn5Vo4sm8SZFnREpJtfGn
-	sea5t6/Yukj3EeMJJvRfn9oAE2IYu/fK22p7xnpQSwtc4k5tTO+b6NErwA2auAo32MU8aY+ucSR
-	BDGXAsaHBjzyeOUbxq3g5KCQV+rR3hGjZy+msNg1NBa12/CwLT/TRrFDU3s4bH299BHDqg==
-X-Google-Smtp-Source: AGHT+IFdKAGH3Dc73tUBzIIxeMD+asyvvqOBafuZVazwZnURkN8zz0IH1vKpB9D7wWwudeN/TRUMfQ==
-X-Received: by 2002:a05:6808:4f26:b0:40a:5380:b8d1 with SMTP id 5614622812f47-40ab510f58emr105690b6e.3.1750262549102;
-        Wed, 18 Jun 2025 09:02:29 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:1b3b:c162:aefa:da1b])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a283dc98asm2012193a34.11.2025.06.18.09.02.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 09:02:28 -0700 (PDT)
-Date: Wed, 18 Jun 2025 19:02:27 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Zhe Qiao <qiaozhe@iscas.ac.cn>
-Cc: rafael@kernel.org, bhelgaas@google.com, lenb@kernel.org,
-	kwilczynski@kernel.org, sashal@kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/ACPI: Fix double free bug in pci_acpi_scan_root()
- function
-Message-ID: <f04d01a7-28f5-41ea-85f6-ba0e67c80428@suswa.mountain>
-References: <20250617023738.779081-1-qiaozhe@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nfv6D4Vh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Sjf8sSd6"
+Date: Wed, 18 Jun 2025 18:03:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750262615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wZNP7oX8mM/NEsrz1E1S/ZOqDmecinOGRR99KvBIFpk=;
+	b=nfv6D4VhYhXxEtYnAnjhKDHTzERUgYVaEBvDvuHVGGmjlYeD8zDa/1z9zDJfgVcfDMYdn6
+	fZfnG1OnbRJ1ozr7sJ+s35BH5yf2jFCmaQ80gT2R0ZSQ64vl+RA2vVL0pbaXqC21QCdDyi
+	Is2dyiTy5fWwhB8elzCwPsuDZmEKYbzlyI9WBxSbgM64SZPoa15e1RWQQ0CqvAWxVxCic+
+	jBP2qn639kCwVMmnL+o2+1HGVIzT3G0UFEyPdxRWz0ySSjcoi6uYakxl4k7S/Vg8xRyN2m
+	Q7+Y4bptIXHQebGsQjF/XcxZ+8ycdJ7Lzt5+hNkWd+F14PGxmvbh81ZEhReduA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750262615;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wZNP7oX8mM/NEsrz1E1S/ZOqDmecinOGRR99KvBIFpk=;
+	b=Sjf8sSd6IwzMakWH9zW8wfgs+IJlrdr2y5ypBEp0ShZgM1RzLJIfyJgShT9IS33a25c32U
+	IzqtV3cYgtnYEzCQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Calvin Owens <calvin@wbinvd.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	"Lai, Yi" <yi1.lai@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
+ hash
+Message-ID: <20250618160333.PdGB89yt@linutronix.de>
+References: <20250602110027.wfqbHgzb@linutronix.de>
+ <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
+ <aFBQ8CBKmRzEqIfS@mozart.vkv.me>
+ <20250617071628.lXtqjG7C@linutronix.de>
+ <aFEz_Fzr-_-nGAHV@mozart.vkv.me>
+ <20250617095037.sOnrJlPX@linutronix.de>
+ <aFGTmn_CFkuTbP4i@mozart.vkv.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250617023738.779081-1-qiaozhe@iscas.ac.cn>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aFGTmn_CFkuTbP4i@mozart.vkv.me>
 
-Wait, what?  We can't just delete pci_acpi_generic_release_info().
-What's going to free all those things on the success path?  I
-don't understand.
+On 2025-06-17 09:11:06 [-0700], Calvin Owens wrote:
+> Actually got an oops this time:
+>=20
+>     Oops: general protection fault, probably for non-canonical address 0x=
+fdd92c90843cf111: 0000 [#1] SMP
+>     CPU: 3 UID: 1000 PID: 323127 Comm: cargo Not tainted 6.16.0-rc2-lto-0=
+0024-g9afe652958c3 #1 PREEMPT=20
+>     Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
+>     RIP: 0010:queued_spin_lock_slowpath+0x12a/0x1d0
+=E2=80=A6
+>     Call Trace:
+>      <TASK>
+>      futex_unqueue+0x2e/0x110
+>      __futex_wait+0xc5/0x130
+>      futex_wait+0xee/0x180
+>      do_futex+0x86/0x120
+>      __se_sys_futex+0x16d/0x1e0
+>      do_syscall_64+0x47/0x170
+>      entry_SYSCALL_64_after_hwframe+0x4b/0x53
+>     RIP: 0033:0x7f086e918779
 
-I had suggested you do something like this:
+The lock_ptr is pointing to invalid memory. It explodes within
+queued_spin_lock_slowpath() which looks like decode_tail() returned a
+wrong pointer/ offset.
 
-diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-index 74ade4160314..ff5799b696d6 100644
---- a/drivers/acpi/pci_root.c
-+++ b/drivers/acpi/pci_root.c
-@@ -1012,20 +1012,20 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		 root->segment, busnum);
- 
- 	if (ops->init_info && ops->init_info(info))
--		goto out_release_info;
-+		return NULL;
- 	if (ops->prepare_resources)
- 		ret = ops->prepare_resources(info);
- 	else
- 		ret = acpi_pci_probe_root_resources(info);
- 	if (ret < 0)
--		goto out_release_info;
-+		goto cleanup_init_info;
- 
- 	pci_acpi_root_add_resources(info);
- 	pci_add_resource(&info->resources, &root->secondary);
- 	bus = pci_create_root_bus(NULL, busnum, ops->pci_ops,
- 				  sysdata, &info->resources);
- 	if (!bus)
--		goto out_release_info;
-+		goto cleanup_acpi_pci_probe_root_resources;
- 
- 	host_bridge = to_pci_host_bridge(bus->bridge);
- 	if (!(root->osc_control_set & OSC_PCI_EXPRESS_NATIVE_HP_CONTROL))
-@@ -1053,8 +1053,10 @@ struct pci_bus *acpi_pci_root_create(struct acpi_pci_root *root,
- 		dev_printk(KERN_DEBUG, &bus->dev, "on NUMA node %d\n", node);
- 	return bus;
- 
-+cleanup_acpi_pci_probe_root_resources:
-+	free_something_with_probe();
- out_release_info:
--	__acpi_pci_root_release_info(info);
-+	free_something_info();
- 	return NULL;
- }
- 
+futex_queue() adds a local futex_q to the list and its lock_ptr points
+to the hb lock. Then we do schedule() and after the wakeup the lock_ptr
+is NULL after a successful wake.  Otherwise it still points to the
+futex_hash_bucket::lock.
 
-But you'd need to replace the dummy code with actual code and
-change the callers etc.  And I haven't looked at the actual
-code to verify it's a good idea.
+Since futex_unqueue() attempts to acquire the lock, then there was no
+wakeup but a timeout or a signal that ended the wait. The lock_ptr can
+change during resize.
+During the resize futex_rehash_private() moves the futex_q members from
+the old queue to the new one. The lock is accessed within RCU and the
+lock_ptr value is compared against the old value after locking. That
+means it is accessed either before the rehash moved it the new hash
+bucket or afterwards.
+I don't see how this pointer can become invalid. RCU protects against
+cleanup and the pointer compare ensures that it is the "current"
+pointer.
+I've been looking at clang's assembly of futex_unqueue() and it looks
+correct. And futex_rehash_private() iterates over all slots.
 
-regards,
-dan carpenter
+> This is a giant Yocto build, but the comm is always cargo, so hopefully
+> I can run those bits in isolation and hit it more quickly.
 
+If it still explodes without LTO, would you mind trying gcc?
+
+> Thanks,
+> Calvin
+
+Sebastian
