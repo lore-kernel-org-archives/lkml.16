@@ -1,73 +1,71 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7093B27FB2E;
-	Wed, 18 Jun 2025 07:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A5727E7EF;
+	Wed, 18 Jun 2025 07:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231721; cv=none; b=hyx4xMwcHN0cBTXEJsmDP/t/RfNLxR5/vAszLJcrJnwGFIfIeGVjn8b3JLdgpWrj5BjKc0vqY5q4o43SFHPsUOpaSqbmAZ9B9swVQpxblGV9E8jn3viiOlNAOEtscUIqPa/4HTuFCRdrV7yDcsryQfKJeowpr0WhOVPfwdUvpDg=
+	t=1750231733; cv=none; b=UiFNYZ+sDUxQID3htyUeZVCZ45K7Lr7WUEi6aiDgr4kJd6CtfUeX9QV7JxZa27LuCQmZrVmM4zvndMx5yspE92ClgBIGt5M237V4Pp5Er6mwJLEQlnEurn+zLzzosDo4aj4YXlJrAXO0ijekLVk6WChEE+IuQvbL2abaWaTJdq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231721; c=relaxed/simple;
-	bh=b+HMcj2ek0nB7t/THuyAIn1KCdSizhm44JgQ4PKMQ+8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KSAh1EB/4UiH5OZqhLwRlbe8LTz9YRRMfE/J3wsD/NGo6lHY/V9D5S9fODkW2C1efI7mwlZ5/NwUxtOxIY1XpGNx8ewfa6epqpJuK40+Dh8DNezoVb3BPa+9ddHdGeVrnRS/ORLKee0dNRx1c1MVoXwx9/MxHY47hZWKwZMyaA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TNNr0NEp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1750231733; c=relaxed/simple;
+	bh=PRE6FGSN1BjPHjBVI17kEB92rC2rRHP8mT7w0OsphZs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hdNnFjmJbnO5lfb29GIPi4BZg2Oo+jo7r+MSYFCVqTMbP59t1itb8MheyOEyFfMdQjcVPC8PsD95wyJsIFKQzERGSwNnNj9UmdSOELLT3bMWSATyvZy0ij5ZWItzkCx6Yu+9kc5QZRCbJkY/Tz2C8Z0HGQE9AFFl+XG8RCIoM6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MiDFZHaT; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TNNr0NEp"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1Q6vU015543;
-	Wed, 18 Jun 2025 07:28:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=I9W+fzRJ4P7
-	Z+rK1AuztPn1ghFhOvkRoQaGwG5maVq4=; b=TNNr0NEpUjNXm4UK0U8/rKCJPSL
-	t7BqYAJa2JJgWysOadBFkaBFoKnMMa818AxaW9uTuzTVswTz5jOA8+gx31JQMg6+
-	Hx68n0iauLv6a/QMLjEcST0zWaPQb2c4D3XM0KSNVTcf0lG5kZU/FSTxlf6uzSMt
-	0fcKKAtJh7opwwXh7TIW3+pcLi5/VckvS6CjLMF/enBAwumsUkvytbYvhLxP8g8T
-	2HTG+6Wp9I+jaxhVYSRIxZ3END7rEmkZD6+zC7gm94LuVVFKjGiHpZKf9XLYICZq
-	iXFBmDWIvN8YiRL54uMBcwf93gfr24jOlUakCvg212cFsYxNfyNriBbapVA==
-Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791hfk7ub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 07:28:37 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55I7SNjp024603;
-	Wed, 18 Jun 2025 07:28:33 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 479k1gnd99-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 07:28:33 +0000
-Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55I7SXP3025018;
-	Wed, 18 Jun 2025 07:28:33 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-sartgarg-hyd.qualcomm.com [10.147.242.251])
-	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 55I7SWnh025007
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 07:28:33 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 2339771)
-	id C88205C1; Wed, 18 Jun 2025 12:58:31 +0530 (+0530)
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
-        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
-        quic_sayalil@quicinc.com, quic_nitirawa@quicinc.com,
-        quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com,
-        Sarthak Garg <quic_sartgarg@quicinc.com>
-Subject: [PATCH V3 4/4] arm64: dts: qcom: sm8550: Remove SDR104/SDR50 broken capabilities
-Date: Wed, 18 Jun 2025 12:58:18 +0530
-Message-Id: <20250618072818.1667097-5-quic_sartgarg@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MiDFZHaT"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2360ff7ac1bso46317725ad.3;
+        Wed, 18 Jun 2025 00:28:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750231731; x=1750836531; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X1MuiMHWsnV5QufWLYV35SMTTVf4gaMpZv1rpKrIrTw=;
+        b=MiDFZHaTcMeQyzbCU46k1mGBVUnbzSKCChbmoqPLO7olV9PTXnxNKBJNhj+NfThChQ
+         HVUeA0xWMvUye4oZqQ3ND68JGr4TEetmHKj3Fi6eWNJbgiDAaUZ/i/AyyMvk3iPoC+B4
+         +B1pF7mcRj8iq25JzCeqe07b6vnMGiqqi1dLDPMoCKCjQW+Kh5whpPXa4kKXcUICYNjr
+         SanJW8Bj1+ohR20XTicsurePKpB3tDoj2Zmc5JVb0LpbROLJqnPAv/kq+2LMqT6VvQjL
+         Q2k2lL9ygOzHTtl0AixMslwlbsw+dgT9y+bsYUv7CKPn/w96QcFELOzRWs0ZlNZk+Spj
+         SPew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750231731; x=1750836531;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=X1MuiMHWsnV5QufWLYV35SMTTVf4gaMpZv1rpKrIrTw=;
+        b=o5fpi2TL8HnjPPLta1QdImpyTmU55xG0aR0XRV1lVfqdX8kQ1u2qrUh3zvz6uUnYDi
+         ISh9QcQD6iRBDgZuSmUNU9r38VfxjhWkrlgZxhWLe1D857GGdMjBR2aiqdPSKZma07LO
+         tIf77DjJO5csQ2+MqPI0GwRGd077zB+2tEo4VLsXOCcAEQI4jwcL3xAM537aip2BAH2I
+         mEs+80OKTNQWsDpNmt6MpYL/YO83jfs1DDF4L75LOKvt7Hm63pdxsdB0zFjXEVWgHYcx
+         qGUYEy0s+K5R+AZE8dFimnQUsX4pBXu44Uk5NaWTTX5DyQRb5BY65Xu0acgmxzkWG1QN
+         F4hg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/ABIp5uAwib98Zl81dkX1PCIFnYlHFhz+i+QOgpT/sO4jxv0urSLyNGwgNyc2MrCE5NP/jgcZiImCJWM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5/ODiWljC0Bj3viP17QQ+6UL/jOZO+mhvJz3mJFdvWvevTxwG
+	QN2aBbHC/vFXfG/3vtwMPD1QHO4Yb+7erOn4HHT8D4DoQI8gGzhX6s3XwEYM4i+L4Pwj4g==
+X-Gm-Gg: ASbGncuD/XGebW4TgRAudzcfJt5jkicc5yglQfaDrvF7/mkhEo6yl8tUMT/6CCrB7sJ
+	/DM4ONZuYoep+Bobd+UD+oE/d287zMZ7z6zfCY2xSowECQp6GFyMMZEQBZ/fnIUrF6naiHFErhL
+	FPR6k6dHFOnZ5wN2wGzP/MyHbel+1HVubVFXlg0vQZaXqHW+yJmvToG8X81hJQzBhVB/Y7XGqGv
+	xkGaYx0yxX468/UXMeHvceGV6L5fQVyrmaWyb0L1ugIhFhC8A9785T/agnSYMS4JxpdoYrbPcZy
+	nmtJaFzPR1SBwEkYQQA8Ea2hIyy2WFGPi2U4xF7NeXr8ggTO2fTOPciRTV9wMqDWDwjEpmowYsj
+	q
+X-Google-Smtp-Source: AGHT+IEZqPp646+YAn+PQWp2CWdcGvqah4RLQRfACStnYbm3Uare7jzimo3ZkmAr0nB7Fi9GnVCzew==
+X-Received: by 2002:a17:903:228b:b0:234:a139:11ee with SMTP id d9443c01a7336-2366b144e21mr238950505ad.37.1750231731326;
+        Wed, 18 Jun 2025 00:28:51 -0700 (PDT)
+Received: from archlinux.lan ([2409:8a20:7f41:bed8:eed6:9106:2c6d:6a36])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb87ddsm93173025ad.177.2025.06.18.00.28.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 00:28:50 -0700 (PDT)
+From: dongfengweixiao@gmail.com
+To: jdelvare@suse.com,
+	linux@roeck-us.ne
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dee.H.Y" <dongfengweixiao@gmail.com>
+Subject: [PATCH] hwmon: (corsair-cpro) Change dependency from HID to HIDRAW
+Date: Wed, 18 Jun 2025 15:28:45 +0800
+Message-ID: <20250618072845.233204-1-dongfengweixiao@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,68 +73,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA2MiBTYWx0ZWRfX+4UU0eZ9eK4s
- tBWftHeN6PBwDB19U1o23yWARs38rs8zAMmUyMejPbo9sJ/YV3wBJ8MmpZQyksKE8rmwpml2avb
- p2W+KQW7sR70wKMyykuOefT1UFdkASTHQSxVmxU7NvovUwH+BgIrK47jSoz5mIPHsy6bi3pTIHT
- 4ehS6kC/i4cQ+Er0XtYdtAnRQJP+3FzUsxtALPr72Lq8qewJvX88k7BRQkwNZmTO9vwn+GV2HMi
- rdwPfuUlktoiklt2hViYXjEEwLcYG2iRSawOVmI20lCRXpg73FUmxaJDPRxzpTHBAzsutVLxAzn
- 4W4h01yZb1zH4j8mqZNx7gi+BL69u+J00DhnYobYRx7JwAY7qksDhvsmiD7GNj/nlnUcE2SpyLv
- P3DlRCNIJHV/EmahoYuU6qGzi4FsijS7jdzf85YaOdXjsgUEUNnDvFhzcaPj9lCa5WXUIfl8
-X-Authority-Analysis: v=2.4 cv=VvEjA/2n c=1 sm=1 tr=0 ts=68526aa5 cx=c_pps
- a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=V56PYd9v_U8fUFI648UA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Y9Jjw3IIg1SBr2fvQobulZGXaqIkjZ9r
-X-Proofpoint-ORIG-GUID: Y9Jjw3IIg1SBr2fvQobulZGXaqIkjZ9r
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 clxscore=1015 bulkscore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180062
 
-Kernel now handles all level shifter limitations related to SD card
-modes.
-As a result, the broken hardware capabilities for SDR104 and SDR50 modes
-can be removed from the device tree.
-Additionally, due to level shifter constraints, set the maximum
-frequency for High Speed (HS) mode to 37.5 MHz using the
-max-sd-hs-frequency property for sm8550.
+From: "Dee.H.Y" <dongfengweixiao@gmail.com>
 
-Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+This patch updates the dependency of the CORSAIR_CPRO driver in the
+hwmon subsystem. Previously, the driver relied on HID, but now it
+depends on HIDRAW. This change is aligned with the implementation
+in the `ccp_probe()` function, where `HID_CONNECT_HIDRAW` is used,
+indicating that the HID raw interface is required for proper operation.
+
+Signed-off-by: Dee.H.Y <dongfengweixiao@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/sm8550.dtsi | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/hwmon/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index 82cabf777cd2..2c770c979d39 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -3180,6 +3180,7 @@ sdhc_2: mmc@8804000 {
- 			iommus = <&apps_smmu 0x540 0>;
- 			qcom,dll-config = <0x0007642c>;
- 			qcom,ddr-config = <0x80040868>;
-+			max-sd-hs-frequency = <37500000>;
- 			power-domains = <&rpmhpd RPMHPD_CX>;
- 			operating-points-v2 = <&sdhc2_opp_table>;
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 08a3c863f80a..3f128cacb486 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -475,7 +475,7 @@ config SENSORS_CHIPCAP2
  
-@@ -3191,9 +3192,6 @@ &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>,
- 			bus-width = <4>;
- 			dma-coherent;
- 
--			/* Forbid SDR104/SDR50 - broken hw! */
--			sdhci-caps-mask = <0x3 0>;
--
- 			status = "disabled";
- 
- 			sdhc2_opp_table: opp-table {
+ config SENSORS_CORSAIR_CPRO
+ 	tristate "Corsair Commander Pro controller"
+-	depends on HID
++	depends on HIDRAW
+ 	help
+ 	  If you say yes here you get support for the Corsair Commander Pro
+ 	  controller.
 -- 
-2.34.1
+2.49.0
 
