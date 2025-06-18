@@ -1,119 +1,130 @@
-Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CDAF9CB;
-	Wed, 18 Jun 2025 14:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F3C2ED85A;
+	Wed, 18 Jun 2025 14:50:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258224; cv=none; b=PlKglEolCdQFpgZBSkjPWx6cCrlOkA+cuOezxJJRall9xuE2JdotQ7neSQg9gMzpocooqLGdtZ4AqdvI3eKqV31M1QYCKlxNlQ5JpNRx7eogebF/64GKhaQxl6Q1DVfo6GtQt55I42z5cKUK9fVg3+pVPCbmPokfOHOQc9gf1lA=
+	t=1750258252; cv=none; b=LFFBkOcxi7vitNW9w/oBM8DAa/WtmvxVK0XjK4cRl+BvfE/7b5zktk6LRK9kImA9T45qpX47soC1bFs5IfzwCNziM+yqPp95smb4XqD5B7cwUcdTIdVW+zJNunL/Lu8PMLJG58noSmUEx6h3YnAd003GefX1GeWXTFUupjBbAqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258224; c=relaxed/simple;
-	bh=fB7KyoRN2gpN9HFgeI9W3VaZODcts6RtL/092DIdZ7o=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=dnHhWXbs1AJKIFzNCnObYx3/XIPbPa8jklieErT2x1JJR9l/FVh3WXS/yuZJBUKRb1Mpq83iUjsxTY95QeDCI4Dam+mZ/Ry0tHiNvMmi94xVu0NdH0o3/cRic8a5u7XfwlaK7nnWfdcOAURxIqiCwJZk714FjEqRNdOfpQR4Mj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=Nbknur+1; arc=none smtp.client-ip=134.0.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1750258252; c=relaxed/simple;
+	bh=9HaC2NQTM7GTNJbd33+8vU8wC2Lh0yO+Z0sFSNhpIhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gBHv8Dus9vWUcVboaecBt8e1ydtLQJnVebZyTd6vYaksyWxYwZ1qlev6v6Lb9OdAevcmbsnxLj4GljASxsFUtQM3iIx10k411qzxk6CWgvOebFso4vb6MJIvlpYkbd5hmCzcxmIwv1yAkVVKCnHwU+esENeDV7kzjhQ7aFfH8J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=brdIY/DW; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Nbknur+1"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout1.routing.net (Postfix) with ESMTP id 3474E41ADE;
-	Wed, 18 Jun 2025 14:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1750258214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N7tr9vCzas4Dcx7c2Tgeu4LP6gHZKQuy1GdaO/TFlr4=;
-	b=Nbknur+18KqPDja5RX/s65/bE/pPe42K7+j6BqbbBZ2lfnz1+IlheE52B92cm6xDpE+eM3
-	+1J2JXUED1AfYvVCBLE/WbHiocrItKJfci05mR4apGeGPAdDixOTM5mR2MMA0ap8wmz/zh
-	dXnO3+qaeB8OGQJndQ74liL4RhdsOEM=
-Received: from [127.0.0.1] (fttx-pool-80.245.76.73.bambit.de [80.245.76.73])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 0453F360048;
-	Wed, 18 Jun 2025 14:50:12 +0000 (UTC)
-Date: Wed, 18 Jun 2025 16:50:13 +0200
-From: Frank Wunderlich <linux@fw-web.de>
-To: Daniel Golle <daniel@makrotopia.org>
-CC: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>,
- arinc.unal@arinc9.com
-Subject: Re: [net-next v5 1/3] net: ethernet: mtk_eth_soc: support named IRQs
-User-Agent: K-9 Mail for Android
-In-Reply-To: <aFLFYe8mq4tbLfdf@pidgin.makrotopia.org>
-References: <20250618130717.75839-1-linux@fw-web.de> <20250618130717.75839-2-linux@fw-web.de> <aFLFYe8mq4tbLfdf@pidgin.makrotopia.org>
-Message-ID: <601853CD-F47A-452A-87AC-668E73A3E971@fw-web.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brdIY/DW"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-451e2f0d9c2so8000145e9.1;
+        Wed, 18 Jun 2025 07:50:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750258249; x=1750863049; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9HaC2NQTM7GTNJbd33+8vU8wC2Lh0yO+Z0sFSNhpIhI=;
+        b=brdIY/DW9Ub0AA9v+JsRbCzGCrVkTaEmuT5TUX5qyOJToMFDiJEu8lWospfw49BOtg
+         IQS7ngMBU03nSBKdf14Wb/4ggHJFS1Uh2hKo4xAwnL3roRFXELF0YQ4otXcEcB+FpsS3
+         zFtceXCApFrhdyN/Q9pzYbhq5uIuY2fZG8zxSJOarnMao9DLSdIXl3I0HC5JlAKe9JSP
+         tOKxz0fCzCtQ/4m/tbeqzQy/nwZYhxyliFm8wHjdHe7EKyDiQB09MRBbNJHy9jw8QuYF
+         NPPf9myCc0gqGdtrUN2I8Dp0T1x9V26Hvw+04Rbny1HvPINpmsdwZ61s+Ti561cGbGSx
+         mf/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750258249; x=1750863049;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9HaC2NQTM7GTNJbd33+8vU8wC2Lh0yO+Z0sFSNhpIhI=;
+        b=I/9SbkjYTAnbo2qqU4IHLfNuZ9Lglsoo6MdZXsnFkjidzge2w1DdqRNBwZam3aV1yV
+         RDnaJz0h6rp3z7zz/0dYypGpKkNp7vISImFcmYyyZClJt5XjVHYi6d9T/f66Xk6eigTb
+         zuJlqIRH6EsTANiwFFnf+o+X5TD2vLThfFxGTkkNHZDvoXkmvdM6SxnhlSeEeCcGv2V+
+         /ZRj/fPyxfzvyfzIU4HgGPyC7xhw7b9O0hXBWajbqpL8J+kQmDjpsNlKfWxUTPFNaO0O
+         V75Kb7UT4kxzbflLXL6ZXa6IEYElC+PuJpoteJNpozMoVnfXxtugUwult++EqZ6AyuXc
+         Oa2g==
+X-Forwarded-Encrypted: i=1; AJvYcCUj9QbW9jL87tNkRA5DzopfFISWP+ByUKZa/ANpP5jacchR0loTD4CB6L0W3Vzn9VxvUCc=@vger.kernel.org, AJvYcCVlDAY5b3QpTWFzbrqDt6ERRyayhn7ZwMdnyQdC3qgLcw4m3zR83CfpatMciPlc4tynypZldkEMkr2sMpBr@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYShtuGkU6jQDZQtbSxmqPeqq5dyRHwLPvNziYt3+wBgRbF69M
+	r2kkOQlp56xz4pgt2+Q8cJKjayMAGh1BHbd/BbJkDbwOuC+OIbOVspjumJYnID5Y7dEOdSgvYTd
+	906ScqLYMfsdOPARaVoIJgoJRYeHxZJk=
+X-Gm-Gg: ASbGnctJ8ZUTJqIuhoYUfTAyIaRczPqLYDM+pBzxdVprATjKWp0EAsMWVp8fqXh5GC3
+	y1CoR24y/Oi85jXKb79Fbovq3vICNtJu1+v2eCtIcawvOuEjMXWUNc3UNZFSxKKxQgJJ44aYo71
+	m67blC/NefSa8Y+HZ8XkMYbi7zK+d11rw0aJiJjNBuyX/ItwUsx2qHTHZsWLNjSpU76MJBTb5/
+X-Google-Smtp-Source: AGHT+IFoPZ0DAlnH34Pa6n3MttNWFK7c0HXdjpa4JHfhHwi/OEjHcpriuqUIfeqMsgjdw+xh9YvN7blgShmDwgfPKYo=
+X-Received: by 2002:a05:600c:8287:b0:43c:f509:2bbf with SMTP id
+ 5b1f17b1804b1-453599a109dmr29795215e9.15.1750258248845; Wed, 18 Jun 2025
+ 07:50:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
+ <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
+ <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
+ <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
+ <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com> <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
+In-Reply-To: <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 18 Jun 2025 07:50:37 -0700
+X-Gm-Features: Ac12FXwobw6UXl7yYxUqScon6Dyrzab3N1zaSVWH6cugusbksfKMWLjtdWBXyYM
+Message-ID: <CAADnVQLC44+D-FAW=k=iw+RQA057_ohTdwTYePm5PVMY-BEyqw@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
+To: Ignat Korchagin <ignat@cloudflare.com>
+Cc: Matt Fleming <matt@readmodwrite.com>, Song Liu <song@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	kernel-team <kernel-team@cloudflare.com>, Matt Fleming <mfleming@cloudflare.com>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Mail-ID: e609ebad-906a-455e-bb64-4bc71f18ceb5
 
-Am 18=2E Juni 2025 15:55:45 MESZ schrieb Daniel Golle <daniel@makrotopia=2E=
-org>:
->On Wed, Jun 18, 2025 at 03:07:12PM +0200, Frank Wunderlich wrote:
->> From: Frank Wunderlich <frank-w@public-files=2Ede>
->>=20
->> Add named interrupts and keep index based fallback for existing
->> devicetrees=2E
->>=20
->> Currently only rx and tx IRQs are defined to be used with mt7988, but
->> later extended with RSS/LRO support=2E
->>=20
->> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> Reviewed-by: Simon Horman <horms@kernel=2Eorg>
->> =20
->> +static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *=
-eth)
->> +{
->> +	int i;
->> +
->> +	/* future SoCs beginning with MT7988 should use named IRQs in dts */
->> +	eth->irq[1] =3D platform_get_irq_byname(pdev, "tx");
->> +	eth->irq[2] =3D platform_get_irq_byname(pdev, "rx");
->> +	if (eth->irq[1] >=3D 0 && eth->irq[2] >=3D 0)
->> +		return 0;
+On Wed, Jun 18, 2025 at 7:27=E2=80=AFAM Ignat Korchagin <ignat@cloudflare.c=
+om> wrote:
 >
->I'd rather extend that logic and fall back to the legacy way only in case
->of -ENXIO=2E Ie=2E add here:
+> On Wed, Jun 18, 2025 at 3:01=E2=80=AFPM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Wed, Jun 18, 2025 at 5:29=E2=80=AFAM Matt Fleming <matt@readmodwrite=
+.com> wrote:
+> > >
+> > > On Tue, Jun 17, 2025 at 4:55=E2=80=AFPM Alexei Starovoitov
+> > > <alexei.starovoitov@gmail.com> wrote:
+> > > >
+> > > > On Tue, Jun 17, 2025 at 2:43=E2=80=AFAM Matt Fleming <matt@readmodw=
+rite.com> wrote:
+> > > > >
+> > > >
+> > > > > soft lockup - CPU#41 stuck for 76s
+> > > >
+> > > > How many elements are in the trie that it takes 76 seconds??
+> > >
+> > > We run our maps with potentially millions of entries, so it's the siz=
+e
+> > > of the map plus the fact that kfree() does more work with KASAN that
+> > > triggers this for us.
+> > >
+> > > > I feel the issue is different.
+> > > > It seems the trie_free() algorithm doesn't scale.
+> > > > Pls share a full reproducer.
+> > >
+> > > Yes, the scalability of the algorithm is also an issue. Jesper (CC'd)
+> > > had some thoughts on this.
+> > >
+> > > But regardless, it seems like a bad idea to have an unbounded loop
+> > > inside the kernel that processes user-controlled data.
+> >
+> > 1M kfree should still be very fast even with kasan, lockdep, etc.
+> > 76 seconds is an algorithm problem. Address the root cause.
 >
->if (eth->irq[1] !=3D -ENXIO)
->	return eth->irq[1];
->
->if (eth->irq[2] !=3D -ENXIO)
->	return eth->irq[2];
+> What if later we have 1G? 100G? Apart from the root cause we still
+> have "scalability concerns" unless we can somehow reimplement this as
+> O(1)
 
-I would do this later after the consts are used
- instead of index numbers,just to not add lines
- that are changed later again=2EBetter adding the
- lines already with the consts=2E
-
->Maybe also output a warning at this point in case MTK_SHARED_INT is no
->set, to recommend users to update their device tree to named interrupts=
-=2E
-
-I understand the reason behind (documentation
- which irq is used for which purpose),but
- previous devicetrees of non-shared SoCs using
- at least the reserved irq 0=2E Mt7986 has 0 and 3
- defined in dts=2E That could be tricky in binding,
- so my way was starting with irq names now for
- new additions and leaving existing dts as they
- are=2E
-
-Maybe i should add the mt7988 ethernet binding change from my dts series h=
-ere=2E=2E=2E
-
-regards Frank
+Do your homework pls.
+Set max_entries to 100G and report back.
+Then set max_entries to 1G _with_ cond_rescehd() hack and report back.
