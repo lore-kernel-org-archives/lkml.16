@@ -1,207 +1,155 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6520B204866
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840341A316E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:28:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228066; cv=none; b=Eyih9lgd2aHFXu0bA4wcVRc4oPWuyUgAbcZUU2Po8xgmRQKsGnDbshYH9NgB6q7Sz4kNE81pYg/Px6OcEhQPfyYMzAWXRrt6h8IHytXGmz3bc0TnvofD39dIQYpSq4HQTPNS9tZYK3ow/XUZH+2efStzu2ISwzrN57Mtt5ewGsY=
+	t=1750228109; cv=none; b=FnABeo3mIM52kJVyEPI5pCSbgXXZ5CR2xOgzdKN1OXWGvxpvguEIjAitKUgCXAE7lHxNfQVCj1v6LR3HpuDNp1/cw8JIHfZstY1By/kGYYMAZEeVyhdOrNGwjXmWCd1S6NTyM7Kl9m6RyXVeRqWiY/OUict04UxDbhuHzkettfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228066; c=relaxed/simple;
-	bh=24JbFpK4Q6COoTNi1FMttPX5eqGw28gxzN4SKfcTTcs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J0JiF4iQixwkvXQK+4fGyigECbQkkO1zu84kur/tFFZzUVUbtA/XwS8l+vCFtVxKfE6sRacA2si4wMebDcGdvUbGb1MevrBa4yIQQ4AQe4nihwI+MmUHCQyDXZS0lAhKJfCVArbQtPTmHp/lcOTl4NbbTbDvYHUVj5lh0LaYpvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4Op/yL4; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750228109; c=relaxed/simple;
+	bh=W1l7UdPX58azGa/bEcJUEXuiZ0Q01OETBuhRIHPsOFM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=L28Z5SsuNZu7mhBlZVBS5CYIv5Ok8YIfjrUKz3AQqs1IAP+VZIQUWUrTNjaMIpssB37nMWVGOAI3SalidNYvdheDvL8szP91xI4jAO4AYvh5K/k+xByuj5qkF2Xp8Wxl34BvrwNw3HQx5MHDSRL8s4I+4IFOGP2pOVipvKP7Ri4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SKxtc28g; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4Op/yL4"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b6a349ccso4160399e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:27:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SKxtc28g"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2c4e46a89fso5240950a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750228062; x=1750832862; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1750228107; x=1750832907; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UK3zIT17fxpiOCoUtOLwH3cyUrlx/S+uNQT2nYw/j7Q=;
-        b=a4Op/yL4OxsscdtwzcKPf0dFGPO9g2ECpNZ/U9rYTkvbJhpkmgKAY5pss8za44hScR
-         o+hKqu5ZaNhGee9ddlsqXPw7LNb/u9/k6OlvFTZ3DHeICzlCAujmSOBu0DTfAMt37h62
-         qWlGiq3fN68+ZntzdGvHlrUajDCI+u2Y0BpigpzmBZhi9c+Rr5EQx6u/cPW1mCf9hJlS
-         CTqhnq1Mv1uEj+8npVJpeRaPMj/ISz40cJMI3fG68f+dLtLZ+5g9Nvzb9q9864LdxaL0
-         N3YeTjdveqpmxGOPWxJ1YLnQvQ07XJMzNN7xW3FEJYNjUAeJRRYTLBI0qHG32vl02L2C
-         b8Jw==
+        bh=mI57uaSGABNj0PlhCXhnWj7DOQSN5+fWjT4KpZNdSHY=;
+        b=SKxtc28grEnzVD1GPFFKu3HtBjYJNVNByptNoifLJ51sPeSlkRGll+VF2u0HyJN2lQ
+         qER4xCFByWm6Bn7XroeFwHFyCc644QJhWIR8U6J7CseqqElDsUpCoeuDZtOQ7bK7deCA
+         4pEysTk0GM75BoGjajB102XhI8/927y7sygGvJNaY56XbUSGa5X6ItyRtr9ZFkBSOtD/
+         GkXDh2O/aBqjZoOEGRtmkGwR6PvphMVwd0OrUJD53qCOdkC3k/sP+ipANINseW7LA8rb
+         9B0cFQexcWUCrKoO9RTax0rHQN/lWWEMGjtz8nMPWAa2fCyCRGOnOTXBGjw/CrfA8M+l
+         z1sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750228062; x=1750832862;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750228107; x=1750832907;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UK3zIT17fxpiOCoUtOLwH3cyUrlx/S+uNQT2nYw/j7Q=;
-        b=WUvn4HP3OY7SltIv9SLv5UNE/XkxNtINbTD4uO/taomg+XuULLhyVB3vUMPe67CHCT
-         QhNXWjUOnRVwu2ClHXxpPN2C19jiCEUjlF+4WMlDmyqrDeXQovmgGVyEXQ8MTm5kPzGc
-         ZDxT3yoCr0mwDllaBBOcUQ2oaGXtKg/O3n5+GJNUS7FrYd5YJKpEgvv8pySE+1PCKyR1
-         X+r2dR75qmWPz9ym1UXQfDpKoMWHrRIA2wMgZlpjVJ7Fup6pSYNNIxXbRQC0d1wz5i7u
-         j34tVGwEYLmnM3Y4lsaHHbrTb5gazEdi12DG5jhEJ40qsP4XTW5gAEW4KXd+H7J4+FHx
-         1wlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVJHiMrGMVj2Rk2+kVsYuzfBUqkDccSC5s9zAEKXbMb8l06JnLX1l+8sd2OAaFcpf/d8G3pp4830xbUlI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YziFTGmbBkFuKgZu5gAA5JOEUmxIRHMWKo3zHCOMtMT6/29o8Am
-	p8A1ipRFnXeCeaIIuLTOF5lBvEQ+zhCuJh2FFUyQeSl79uR3/Ej7qyacYyAmvS3IwFLLeGUgdvw
-	fsOx1qT8mmzSOGS3stGC6pSI0Tt9LYTI=
-X-Gm-Gg: ASbGncsH12qdT609MVL7Pj8O+mO3FMASwZljKW+8luVe3FTBM16SZDhDqWY+J9nZjZ8
-	o/lkyEOWss8NSJXPzTfqocLpKtdB2bRjM32FDQvWHiMYmDxFDqs/sLM39wD91zPAdv1/InBQg5m
-	HBGVQYmqlMxb/N29V/uB3kFRj3D2YTv1PNaSt4BaUUA9kWDg5uUQft8wZv2IoUTXgE0E2CQ8vwc
-	igflw==
-X-Google-Smtp-Source: AGHT+IFzclqmdVYnh9bn5OftmS6r65aUYN8NNKEj6r9Iyg5dqC68jtjtrYT2lTnS+3l/ASSE53QIq5/5axxl6L75mvY=
-X-Received: by 2002:a05:6512:6ca:b0:553:6488:fa56 with SMTP id
- 2adb3069b0e04-553b6f42225mr4348650e87.43.1750228062258; Tue, 17 Jun 2025
- 23:27:42 -0700 (PDT)
+        bh=mI57uaSGABNj0PlhCXhnWj7DOQSN5+fWjT4KpZNdSHY=;
+        b=UPoYaKRROv4SmVRbHjr9ruYAXD5tMl9HRA4Rhctr97aGjPqHpSKjTMU+hUoRuCW9C6
+         oVJwtfcDXHdyeFe0T/MGrN0/SO03qdZt8NvcJghn+3xVZJhdvgEwiETFb0uxSCdhK8lL
+         WocN7jK57GGCIeWAukDAgmycv+1eqMJbTflFeAH5gmjKbsakZAQReEOZ8U0jLH1kjODG
+         7eJ3mXIjZ4NTpCwgNEvvkpGmSRimVaf3868VCXOm/TtYG6+bvoSje1kleX0TODRNHFqp
+         u6xn0X4E0upbU5C8HMoeFoKCtWfGB6XkWLoMwh2JnVMdqp/qYxso/dXHQOrT7MEpisqI
+         pntg==
+X-Forwarded-Encrypted: i=1; AJvYcCXzRZYW/nC3R7EArhUsD8YW1PP87aGTc6hAf2LYf6AyusreUSSCiLmevu6tsq9iUfIQFgXS7JIUZvLGpYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf9NpXXAzIl0Su5S/dlbRGlDAHXj8oL3QJLvZ4z1yUT0vBTJQ8
+	aRmNoKCEOQn9vMVDJ3r5wHeLd2/26BNtZPvA8UsUqs3AaBkpD2Strp5KaVoP/oWXMUo=
+X-Gm-Gg: ASbGncuUht8FTZGujVNx8K4s0t49yqMu2QFxSOxp3qIXxggDwrNGpHdowk4dneGyaDe
+	5jjTaCvcB+u7z0/jVYwGCgUHz7ua1AYmgSNqYTjPNGzmajC705J+nuT1cY4E1MBL9ReaKyi1kmi
+	fj8D3GWLmwPDL9OzKvVy9/oSmzegYzFGJPm5laEEHd6xfqTe3A3xuw5wTuuL6Wg9HrtwHi/eOWf
+	tyccJwd7BqkJSyObUaud7wuV6OqdIMgWRUumb1Pq8mhLUb0DwHLN7PEnVzYGQ7F0TQTpQYeNNVS
+	dWwKYg31YIKFUpZTpvloXAGAGeqvj8qdNW0TdqzcLdJ3mjbWwe84R/u7cD2s0LWSJ4C7n6idGwd
+	UN7Iu09dk4OcJ
+X-Google-Smtp-Source: AGHT+IE+2M9MkPtRgZNvLkNSyl6vr4XBqYCNAnKxfe0Vg46VcdclkjFTQaKK865r2eMg2Tgra0VrYw==
+X-Received: by 2002:a05:6a21:1512:b0:21e:eb3a:dc04 with SMTP id adf61e73a8af0-21fbd495d28mr24231233637.3.1750228106695;
+        Tue, 17 Jun 2025 23:28:26 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe168b971sm10044933a12.58.2025.06.17.23.28.23
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 17 Jun 2025 23:28:26 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: jgg@ziepe.ca,
+	david@redhat.com
+Cc: akpm@linux-foundation.org,
+	alex.williamson@redhat.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lizhe.67@bytedance.com,
+	peterx@redhat.com
+Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
+Date: Wed, 18 Jun 2025 14:28:20 +0800
+Message-ID: <20250618062820.8477-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250617152210.GA1552699@ziepe.ca>
+References: <20250617152210.GA1552699@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617125137.24503-1-pranav.tyagi03@gmail.com> <2025061743-surging-legwarmer-b3a9@gregkh>
-In-Reply-To: <2025061743-surging-legwarmer-b3a9@gregkh>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Wed, 18 Jun 2025 11:57:30 +0530
-X-Gm-Features: Ac12FXxz57hTn__qDBfgtwWqrWJFimTpv9FC7DveT5JsGtxfM3_WuWsO6gHWEyQ
-Message-ID: <CAH4c4jJZ_CNwPpYVx1pMU2U26PDOFzsjcd+qr2-PHfgF47ywAg@mail.gmail.com>
-Subject: Re: [PATCH] greybus: firmware: use strscpy, fix tag size
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: johan@kernel.org, elder@kernel.org, vireshk@kernel.org, 
-	greybus-dev@lists.linaro.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, skhan@linuxfoundation.org, 
-	linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 17, 2025 at 6:46=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Tue, Jun 17, 2025 at 06:21:37PM +0530, Pranav Tyagi wrote:
-> > Increase the size of firmware_tag arrays in the following structs from
-> > GB_FIRMWARE_U_TAG_MAX_SIZE to GB_FIRMWARE_U_TAG_MAX_SIZE + 1 to
-> > accommodate null termination:
-> >       - fw_mgmt_ioc_intf_load_and_validate
-> >       - fw_mgmt_ioc_get_backend_version
-> >       - fw_mgmt_ioc_backend_fw_update
-> >       - fw_mgmt_ioc_get_intf_version
-> >
-> > Replace strncpy() with strscpy() to ensure proper null termination as
-> > firmware_tag is interpreted as a null-terminated string
-> > and printed with %s.
-> >
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > ---
-> >  .../greybus/Documentation/firmware/firmware.c        | 12 ++++++------
-> >  drivers/staging/greybus/greybus_firmware.h           |  8 ++++----
-> >  2 files changed, 10 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/staging/greybus/Documentation/firmware/firmware.c =
-b/drivers/staging/greybus/Documentation/firmware/firmware.c
-> > index 765d69faa9cc..3b4061f4b34a 100644
-> > --- a/drivers/staging/greybus/Documentation/firmware/firmware.c
-> > +++ b/drivers/staging/greybus/Documentation/firmware/firmware.c
-> > @@ -63,8 +63,8 @@ static int update_intf_firmware(int fd)
-> >       intf_load.major =3D 0;
-> >       intf_load.minor =3D 0;
-> >
-> > -     strncpy((char *)&intf_load.firmware_tag, firmware_tag,
-> > -             GB_FIRMWARE_U_TAG_MAX_SIZE);
-> > +     strscpy((char *)&intf_load.firmware_tag, firmware_tag,
-> > +             GB_FIRMWARE_U_TAG_MAX_SIZE + 1);
-> >
-> >       ret =3D ioctl(fd, FW_MGMT_IOC_INTF_LOAD_AND_VALIDATE, &intf_load)=
-;
-> >       if (ret < 0) {
-> > @@ -101,8 +101,8 @@ static int update_backend_firmware(int fd)
-> >       /* Get Backend Firmware Version */
-> >       printf("Getting Backend Firmware Version\n");
-> >
-> > -     strncpy((char *)&backend_fw_info.firmware_tag, firmware_tag,
-> > -             GB_FIRMWARE_U_TAG_MAX_SIZE);
-> > +     strscpy((char *)&backend_fw_info.firmware_tag, firmware_tag,
-> > +             GB_FIRMWARE_U_TAG_MAX_SIZE + 1);
-> >
-> >  retry_fw_version:
-> >       ret =3D ioctl(fd, FW_MGMT_IOC_GET_BACKEND_FW, &backend_fw_info);
-> > @@ -129,8 +129,8 @@ static int update_backend_firmware(int fd)
-> >       /* Try Backend Firmware Update over Unipro */
-> >       printf("Updating Backend Firmware\n");
-> >
-> > -     strncpy((char *)&backend_update.firmware_tag, firmware_tag,
-> > -             GB_FIRMWARE_U_TAG_MAX_SIZE);
-> > +     strscpy((char *)&backend_update.firmware_tag, firmware_tag,
-> > +             GB_FIRMWARE_U_TAG_MAX_SIZE + 1);
-> >
-> >  retry_fw_update:
-> >       backend_update.status =3D 0;
-> > diff --git a/drivers/staging/greybus/greybus_firmware.h b/drivers/stagi=
-ng/greybus/greybus_firmware.h
-> > index b6042a82ada4..ad5b2c8a6461 100644
-> > --- a/drivers/staging/greybus/greybus_firmware.h
-> > +++ b/drivers/staging/greybus/greybus_firmware.h
-> > @@ -38,20 +38,20 @@
-> >
-> >  /* IOCTL support */
-> >  struct fw_mgmt_ioc_get_intf_version {
-> > -     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
-> > +     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
-> >       __u16 major;
-> >       __u16 minor;
-> >  } __packed;
-> >
-> >  struct fw_mgmt_ioc_get_backend_version {
-> > -     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
-> > +     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
-> >       __u16 major;
-> >       __u16 minor;
-> >       __u8 status;
-> >  } __packed;
-> >
-> >  struct fw_mgmt_ioc_intf_load_and_validate {
-> > -     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
-> > +     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
-> >       __u8 load_method;
-> >       __u8 status;
-> >       __u16 major;
-> > @@ -59,7 +59,7 @@ struct fw_mgmt_ioc_intf_load_and_validate {
-> >  } __packed;
-> >
-> >  struct fw_mgmt_ioc_backend_fw_update {
-> > -     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE];
-> > +     __u8 firmware_tag[GB_FIRMWARE_U_TAG_MAX_SIZE + 1];
-> >       __u8 status;
-> >  } __packed;
-> >
->
-> You are changing the size of a userspace structure here, are you SURE
-> this is allowed?
->
-> How was this tested?
->
-> thanks,
->
-> greg k-h
+On Tue, 17 Jun 2025 12:22:10 -0300, jgg@ziepe.ca wrote:
+ 
+> Weird, but I would not expect this as a general rule, not sure we
+> should rely on it.
+> 
+> I would say exported function should not get automatically
+> inlined. That throws all the kprobes into chaos :\
+> 
+> BTW, why can't the other patches in this series just use
+> unpin_user_page_range_dirty_lock? The way this stuff is supposed to
+> work is to combine adjacent physical addresses and then invoke
+> unpin_user_page_range_dirty_lock() on the start page of the physical
+> range. This is why we have the gup_folio_range_next() which does the
+> segmentation in an efficient way.
+> 
+> Combining adjacent physical is basically free math.
+> 
+> Segmenting to folios in the vfio side doesn't make a lot of sense,
+> IMHO.
+> 
+>  drivers/vfio/vfio_iommu_type1.c | 35 +++++++++++++++++++++++++++++----
+>  1 file changed, 31 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index e952bf8bdfab..159ba80082a8 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -806,11 +806,38 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
+>  				    bool do_accounting)
+>  {
+>  	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
+> -	long i;
+>  
+> -	for (i = 0; i < npage; i++)
+> -		if (put_pfn(pfn++, dma->prot))
+> -			unlocked++;
+> +	while (npage) {
+> +		long nr_pages = 1;
+> +
+> +		if (!is_invalid_reserved_pfn(pfn)) {
+> +			struct page *page = pfn_to_page(pfn);
+> +			struct folio *folio = page_folio(page);
+> +			long folio_pages_num = folio_nr_pages(folio);
+> +
+> +			/*
+> +			 * For a folio, it represents a physically
+> +			 * contiguous set of bytes, and all of its pages
+> +			 * share the same invalid/reserved state.
+> +			 *
+> +			 * Here, our PFNs are contiguous. Therefore, if we
+> +			 * detect that the current PFN belongs to a large
+> +			 * folio, we can batch the operations for the next
+> +			 * nr_pages PFNs.
+> +			 */
+> +			if (folio_pages_num > 1)
+> +				nr_pages = min_t(long, npage,
+> +					folio_pages_num -
+> +					folio_page_idx(folio, page));
+> +
+> +			unpin_user_folio_dirty_locked(folio, nr_pages,
+> +					dma->prot & IOMMU_WRITE);
 
-Hi,
+Are you suggesting that we should directly call
+unpin_user_page_range_dirty_lock() here (patch 3/3) instead?
 
-You're absolutely right =E2=80=94 changing the size of a userspace-visible
-structure like this is not allowed and I apologize for the oversight.
+BTW, it appears that implementing unpin_user_folio_dirty_locked()
+as an inline function may not be viable for vfio, given that
+gup_put_folio() is not exported.
 
-I did compile and boot the kernel with the patch applied, but I now
-realize that I should have also tested it against the actual userspace
-tooling to validate ABI compatibility =E2=80=94 which I didn=E2=80=99t do. =
-That was a
-miss on my part.
-
-Thanks for the review and the guidance. I=E2=80=99ll fix the patch to prese=
-rve
-structure sizes and ensure safe null termination without breaking the
-ABI =E2=80=94 likely by using strscpy() with size - 1 and setting the last
-byte explicitly if needed.
-
-Apologies for the oversight.
-
-Regards
-Pranav Tyagi
+Thanks,
+Zhe
