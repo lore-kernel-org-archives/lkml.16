@@ -1,109 +1,110 @@
-Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6681C2FEE11;
-	Wed, 18 Jun 2025 16:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BC52FEE39
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265676; cv=none; b=IPIOYgyISdRGxuzTKFNYPSph4JvZyK2T4oyUVP8AkPlR6mH8lAj/xwZQxax/7pJ3vVjEsyUWhiJzKLTh4A8gTHtOoUAJWJHPCNFrbbeQdk+VJR5KrjYZchhdAtNZiqNcR67C7ihAkOeIv7Qdr16dE7GAKs4zUtOBpW0dxw5hAx4=
+	t=1750265682; cv=none; b=kRJJqp9zIdoT7sTY61rFyTH9PWOCbFGldzkVElgD+VtmSBAUqo8zMsiUwPAQMkkx4Zr1wh5Yc/kn0nLe35zUXnxXckhDiD4RptTgphQcEi7eK2a5RdIifPVuuuzDvU9oEHKoLIXKPfcrGBaPKUTFRXCLu+DAcgGeYW8KnR5Anqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265676; c=relaxed/simple;
-	bh=ttUWxnOPsj1wH58g8SY5eUP5jJTbSwomk5rwycGlWw8=;
-	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=EGN2+WZk4pv3+HoD7+pEFKDMTT62clTtHQSCEbui354gZWE5qPunm6sQh/Dk7RsyHzQkQLMQpbDj6rRsGcBizFSjrpkKMhy6gnNaA3sm2MdO0sZBblTB45Vp/DQ31DmVpePOaCsgZkZoVtACOktSZNV6eUd1yM1MzOTH7qblPHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=B0EFl+B5; arc=none smtp.client-ip=23.155.224.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+	s=arc-20240116; t=1750265682; c=relaxed/simple;
+	bh=sXlM/5b6UbLkhX3RwTHPV6FZAK/HSY1yU+UtlGN4JQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WSy01Uu27jCOlTHBguTzSz9P/zqFpi1u27Z2Bb3PGdPo3hR21Tbw+oqgx6c1oT6cbEZ7wRNIrEE7U1yiZZIj7SsCOimWz5OSDlkFAWgHH1EAcCVOxHEOhepPLJQxmYG9GTstdFq3wDlCwnY+nOn6NYDzQtluWhl4lkKo6gmXQ4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZZ48aJb1; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="B0EFl+B5"
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id 0AE7282879F3;
-	Wed, 18 Jun 2025 11:54:33 -0500 (CDT)
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id ueuYGyDCQRzD; Wed, 18 Jun 2025 11:54:31 -0500 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id F0DEF8286F81;
-	Wed, 18 Jun 2025 11:54:30 -0500 (CDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com F0DEF8286F81
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZ48aJb1"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-408d7e2b040so4370329b6e.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:54:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
-	t=1750265671; bh=TXK4nvk3hVRfTyVxrU16zW6M8nI8oDPJzdJIGj8kYsc=;
-	h=Date:From:To:Message-ID:MIME-Version;
-	b=B0EFl+B5U0qK16MIf1a72t4z5arjFFgr3ibazQtLKE8gz+ZjP6wwrA/8vIGSqI4UP
-	 mZCG4AypeO9Wf+/6bCjH9n4uNcUxoWWLVwzwXXl1AKJjeRkR6miLLoBO2HDO6Biki7
-	 tc1l1CTz7SIzYj7E9r78PlC6LjhfcgP8N3f4BC6k=
-X-Virus-Scanned: amavisd-new at rptsys.com
-Received: from mail.rptsys.com ([127.0.0.1])
-	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id sxi47ZWzGdik; Wed, 18 Jun 2025 11:54:30 -0500 (CDT)
-Received: from vali.starlink.edu (localhost [127.0.0.1])
-	by mail.rptsys.com (Postfix) with ESMTP id A84778286AE2;
-	Wed, 18 Jun 2025 11:54:30 -0500 (CDT)
-Date: Wed, 18 Jun 2025 11:54:28 -0500 (CDT)
-From: Timothy Pearson <tpearson@raptorengineering.com>
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	linux-pci <linux-pci@vger.kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, 
-	christophe leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, 
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Message-ID: <581463409.1310624.1750265668004.JavaMail.zimbra@raptorengineeringinc.com>
-Subject: [PATCH v2 0/6] PowerNV PCIe Hotplug Driver Fixes
+        d=linaro.org; s=google; t=1750265678; x=1750870478; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OJ2gcooOP07f9omnCEawJUw60wsToiKqAdT6b09wVWg=;
+        b=ZZ48aJb1dMdpytzm74junYZ8Q+Zxr0HKOLUY8GU7LcZGT8KsJW4bRX8oDXCB9MQfGW
+         doigudOaVfs3errm7BS6qWAuRyZ8WEjMHQDdjOJle7J306Xg7Wi8AhKnwN1EMpj7ovHN
+         ueToXRxF2mFKjYgjL+iuYfMuyDBmM4eu/bswkBD4elxJlJu5sD/zSzIBKM8Yij4LfT78
+         kOVgBpol8j24TrrGtLlMzflYQHig+eHy/TfaWnhgOZiodNi7SwD7ODGxl0DRRlVoDob2
+         UfQwmo9lSm+7dT2f8UF4InJqBa/vA1iS0W5h2IgCpLmy3RaTTPbZHf/WBJzRAuBqBi0o
+         lwSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750265678; x=1750870478;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OJ2gcooOP07f9omnCEawJUw60wsToiKqAdT6b09wVWg=;
+        b=g+EtcRTsTgmFuZYbyAkovVaCYzy6oJ/49r4xYfNZmBtZuY0yWhDa89JLzFTYjaqJOT
+         yzV79kWCBOGhbIMcdbma2GkzCZvm15+CbIeLzfnH6Xq6LY9ULfJdX0xNTIsGX5Dm2Zd1
+         RDGZji+ZvArGZ95DXdwCaTWlZH9Pf84JaWR4hIPd2JekZ9sUYrUowIPcx5BxjdQk4+o/
+         RNQ6gSg+q1qW3o2yRcASoHBPq00J/aZcC/IV5Ys9NABt4szPzFqnFbGJvv2fJnUaLtCZ
+         aUFSzB4TLY8SZGWsD8COmKtAFfBaq0GkPBOunfeKp3hageH55OHGlTIuIMMAL3I1RdBa
+         4UkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKbi8n46XsqGXW9YEXg1PCvumdlm5fRagGqzbvatp7UGEShTtiOKgjecbzMxq4beYgrQp+eobTpypxM4g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2lyNYdHH4LIcAHwaFWHG2zppgTRwRXKVQwbzHbEFP47DawZ0A
+	28UtK3TByLEPfY6UlAPuI+Z+2bDaxXfF2XEpW2YOwswCpmIhcD2PNma7VhUe3/HyEl4=
+X-Gm-Gg: ASbGncsg+pD5UDm9yjV6pM+IVYwIny5DLHF/E7mcgRuG/8sQfPNa/UmaVZ3HhNI1m2p
+	DkfynTBUPVMYuzD49X9/PW4bMpBW4hrN8RpEVQMSoctfimKkzZipEFEGGLO6sJeNbPbP0pqGhKm
+	8jAs7f9vgqLMCxNTLRVJXVmzDfpE77PV9Fu1i4by6nQZfR8LuRz3R+hWWJYFXjxi1T3nc6PKLnI
+	2L0q5oIRDjcIqw7diEJfpANWwE+qButg4CoIzFUxghZu2hHX5+mquRW9LHLV0q8qzIsA9KncBqH
+	iGSOjveRMc0MoBvkAxnKKbOdaSNjwngLL3Zw5oBN3FUju04It/BIUKnS+yrGrX7NEM5ZZg==
+X-Google-Smtp-Source: AGHT+IGZt/Sr44zCZuiDpdUzJJJDzC8/TeAfQmItZfKDDSRquAFIHhPkjBQpw4diPA+6hMtv0/zkrA==
+X-Received: by 2002:a05:6808:3083:b0:40a:54f8:2cac with SMTP id 5614622812f47-40a7c196bf8mr13387419b6e.37.1750265678596;
+        Wed, 18 Jun 2025 09:54:38 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:1b3b:c162:aefa:da1b])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40a740b2808sm2399744b6e.6.2025.06.18.09.54.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 09:54:37 -0700 (PDT)
+Date: Wed, 18 Jun 2025 19:54:36 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Chris Wilson <chris@chris-wilson.co.uk>,
+	Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] drm/i915/selftests: Fix error pointer vs NULL in
+ __mock_request_alloc()
+Message-ID: <419d4155-af68-4264-81df-f882c481534f@suswa.mountain>
+References: <aEKvMfJ63V7i-6xU@stanley.mountain>
+ <aFAxtBT7z4XphADq@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
-Thread-Index: 7ViWVrejj338yZQm64sXoMCfdWvE4A==
-Thread-Topic: PowerNV PCIe Hotplug Driver Fixes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFAxtBT7z4XphADq@intel.com>
 
-Hello all,
+On Mon, Jun 16, 2025 at 11:01:08AM -0400, Rodrigo Vivi wrote:
+> On Fri, Jun 06, 2025 at 12:04:49PM +0300, Dan Carpenter wrote:
+> > --- a/drivers/gpu/drm/i915/selftests/i915_request.c
+> > +++ b/drivers/gpu/drm/i915/selftests/i915_request.c
+> > @@ -290,7 +290,12 @@ struct smoketest {
+> >  static struct i915_request *
+> >  __mock_request_alloc(struct intel_context *ce)
+> >  {
+> > -	return mock_request(ce, 0);
+> > +	struct i915_request *rq;
+> > +
+> > +	rq = mock_request(ce, 0);
+> > +	if (!rq)
+> > +		return ERR_PTR(-ENOMEM);
+> 
+> I believe we should fix mock_request and make it to stop replacing the
+> error per NULL, and make the callers to check for IS_ERR instead of is not NULL.
+> 
+> Then don't need to make up an error here.
+> 
 
-This series includes several fixes for bugs in the PowerNV PCIe hotplug
-driver that were discovered in testing with a Microsemi Switchtec PM8533
-PFX 48xG3 PCIe switch on a PowerNV system, as well as one workaround for
-PCIe switches that don't correctly implement slot presence detection
-such as the aforementioned one. Without the workaround, the switch works
-and downstream devices can be hot-unplugged, but the devices never come
-back online after being plugged in again until the system is rebooted.
-Other hotplug drivers (like pciehp_hpc) use a similar workaround.
+Sure, can do.
 
-Also included are fixes for the EEH driver to make it hotplug safe,
-and a small patch to enable all three attention indicator states per
-the PCIe specification.
+regards,
+dan carpenter
 
-Thanks,
-
-Shawn Anastasio (2):
-  pci/hotplug/pnv_php: Properly clean up allocated IRQs on unplug
-  pci/hotplug/pnv_php: Work around switches with broken presence
-    detection
-
-Timothy Pearson (5):
-  powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
-  powerpc/eeh: Make EEH driver device hotplug safe
-  pci/hotplug/pnv_php: Fix surprise plug detection and recovery
-  pci/hotplug/pnv_php: Enable third atetntion indicator state
-
- arch/powerpc/kernel/eeh.c                    |   2 +
- arch/powerpc/kernel/eeh_driver.c             |  48 ++++--
- arch/powerpc/kernel/eeh_pe.c                 |  10 +-
- arch/powerpc/kernel/pci-hotplug.c            |   3 +
- arch/powerpc/platforms/powernv/eeh-powernv.c |   1 +
- drivers/pci/hotplug/pciehp.h                 |   1 -
- drivers/pci/hotplug/pciehp_ctrl.c            |   2 +-
- drivers/pci/hotplug/pciehp_hpc.c             |  33 +---
- drivers/pci/hotplug/pnv_php.c                | 172 ++++++++++++++++---
- drivers/pci/pci.c                            |  31 +++-
- drivers/pci/pci.h                            |   1 +
- 11 files changed, 228 insertions(+), 76 deletions(-)
-
--- 
-2.39.5
