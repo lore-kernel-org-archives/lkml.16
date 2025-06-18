@@ -1,198 +1,90 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-10630.protonmail.ch (mail-10630.protonmail.ch [79.135.106.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12823285CA7;
-	Wed, 18 Jun 2025 09:32:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8447920110B;
+	Wed, 18 Jun 2025 09:34:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239177; cv=none; b=qtwPNTHyzvsKmy92YGafXATb7Bbbl3tbqyOuDwtDKyeXFSVhEtUiaP58Ai7p6v/ogfHghCDBE6zK6OYFjpqATj3tXDoEAPkrTAzVJn7IPAgANum2DWp/2SZZ6uSr+TybBzChjx7UnINHXPjPwmALd7JFChGe1EstMgVvgmMysGE=
+	t=1750239260; cv=none; b=kVjn7UbFdQ685deqziVa5QBNJZ6CPMhdhpVeFGczR7AarRL5KhIU4BQqZ2Gc7ZJ2JdFoleH6fJo8sSb8I3AeHk8gRBKDPGu+9zrbrXYJ/2arERlFfFAOBAho5H3laGFle6vIPVvlGUdv5d3UtdzoJXs9X2lddXTweSpQUppaTv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239177; c=relaxed/simple;
-	bh=xsT5+BNApZ6jnctTLrkNgwcX9E+gvGWHHUk/Qw1k1RU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tOIle8WaT6y6YsGJBO1LORR0OJs4l+Bnl2VOIz94d8FeOv5h6ysnBJnjigMH0vwNc62stxEic+NdEuSLooqyrvPs3GNQAqvmWXO4i5LMX76lwJpULH3TbIWUNQiHwybRq9+TXuIq9vt+sd5DR0qF2bZYlfbbmQlKF5gFe3CVSBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so1228406a12.1;
-        Wed, 18 Jun 2025 02:32:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750239173; x=1750843973;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x6p6CJREvtO1XNGAKGo8PsXvP3/MHGJcajliyymJsnY=;
-        b=MTRRyK1MlLkD9DSPKSQCuIyURd8e+XGBENZvy1b7aOFTjwSetZ3Zx2TnNi/ktQTlCK
-         KrBTJhhaXdYgWGtV2btfEc6t3JQIL28XplxK+8uClpQowCAUSwMz1kguI/9YejDDxUdP
-         FDjIRmxV1s7+VJSLPj8B23jDKJRdJMfnKAkirUpfCtQzLz9lTDEh7IzfjLb10U87bGGR
-         bzSBlQDpCE9wGIdw6p7W+ityITVPWL66qFxRe1Do47JEsMdBGWMeCayb73qAOBo9d/5q
-         +AJ2BsGEnGarKUE7prCTSjleir3YZ9tqN+bcN0lajI4ZZ+OmMQwTtuEsVUd2dLf0Ogjj
-         b8vA==
-X-Forwarded-Encrypted: i=1; AJvYcCVfILZQIgQmRTessC1JcsK8IP8BjR23Hxlwz66cjMJATzXBWMiTkHT9kunHKYmmKJRExOO2eaUG5qRSkd4=@vger.kernel.org, AJvYcCX1l5J+WpdXmhP0OSEHrau0ei9AeMR2tFZjR8foYSnzmDs56B11B/sNp+6H844wrg4cLfLVcY2N@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK5npGxoskYuHkOA67Vz8r6YP84ttB80By8tJBfyO1RfOhNEWb
-	cxUu3n/8xHJX0UQ/3s2/T59L3WUsbpcT756ZvQTvaolgsQMHfdadn++u
-X-Gm-Gg: ASbGnctsdu7UeUfbEtQ+yhiklbnCkm/QXPsa4nadWgtE9F/9dRIeQunko6HahsepfM/
-	Riwiv25hqI5s3d1XjS5i0r7XDfKl61i2aV2qIg4mqdDhViCdZ5vL6v5XqGn/MNRqcdJiHrBkfAl
-	mXo3PljB2xmfW2rHEQ67sEmFPorC/Ot/f74lwLVVk6gMypiF7Vp6zomdPIqaf+tz2LWy0I0vUtx
-	EP4hhC5u4gAkIS6FhthA43PmmebUGvXZkQfLKrWeX4YpPf58QP2E52DfMEKCe7CeZcFQSrvq8ru
-	D1umeqTMXYuwbeiVah4dT6/ybmodGLgYIgv5FkouptudIQeRmv8o
-X-Google-Smtp-Source: AGHT+IGgFOXfHVZAMfP0pQLGkzzAuYN0D3m3K6HvSVU+5WMjrp8oQ75diCPCWqY8eQveNZ5fnrtFJA==
-X-Received: by 2002:a05:6402:50d0:b0:607:f42f:d58e with SMTP id 4fb4d7f45d1cf-609c1b3613cmr1421871a12.12.1750239173166;
-        Wed, 18 Jun 2025 02:32:53 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:1::])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608cfadeb92sm7951571a12.13.2025.06.18.02.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 02:32:52 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Wed, 18 Jun 2025 02:32:47 -0700
-Subject: [PATCH 3/3] netpoll: Extract IPv6 address retrieval function
+	s=arc-20240116; t=1750239260; c=relaxed/simple;
+	bh=oTtc1ObCWJ5Rf4FdLubGqI0QjQIdQaMVE4bNw7nV1Z4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Sp64nHC8U5Dum5cjgy4LmrZcn5UXyr8LdbOPgsAFOLXq97t3V6619NrQdMGkhLIEQ/6aF8SwXjRA1J+pqAB74qvXltepjUXXU0tq83L60OEDYJq64Ke3qn3eWIiG1jfJtVu4mohma4R/ckWH8dhopAnvLyDsgli14mq3jfnAkG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=REyQQUig; arc=none smtp.client-ip=79.135.106.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="REyQQUig"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1750239249; x=1750498449;
+	bh=04FIQsMJHpGad0nMAfq6tToHsZZgyH/fBrj2gAyNaTE=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=REyQQUig0wpwld4wytrDGt8P8TQhCbFL4/B8rZ9zr49cEF3f+2F56yX+ck8sNGTPY
+	 ZLF4BH7+wzuXMy7fItK9VrIyBQSdIsaLUktXkXP9NXQjkAKmi0bHu2RXdc3AVWSbsf
+	 yAlNgn0H9QPi7QzDjTq9Sw+TQvT+SOs2neby3aRWsiyvF54998oDuOtLE9RiQP1wCv
+	 SEdugpm7ux/Mby5cj+bJGKxbRBhy9UUexz12JxyhWMYzKVGxcdVUNaTpX53+vrBDnY
+	 vozRrvmJW00xuCrBLlkCyl4LHHOeQWOzYL1wu/eAnCh4PC73SsNW5351ftau+wrPzq
+	 q9GhYKLpfCLWg==
+Date: Wed, 18 Jun 2025 09:34:03 +0000
+To: Benno Lossin <lossin@kernel.org>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+Message-ID: <aFKICIo8L958iFbz@mango>
+In-Reply-To: <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org>
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me> <20250502-unique-ref-v10-1-25de64c0307f@pm.me> <D9VS2Q4IX7LH.3JLXQUMWYJ2FP@kernel.org>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 5a2d2a96da1452a1de1dc613523b40c2380f4125
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-netpoll_ip_ref-v1-3-c2ac00fe558f@debian.org>
-References: <20250618-netpoll_ip_ref-v1-0-c2ac00fe558f@debian.org>
-In-Reply-To: <20250618-netpoll_ip_ref-v1-0-c2ac00fe558f@debian.org>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: jv@jvosburgh.ne, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Breno Leitao <leitao@debian.org>, gustavold@gmail.com
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3278; i=leitao@debian.org;
- h=from:subject:message-id; bh=xsT5+BNApZ6jnctTLrkNgwcX9E+gvGWHHUk/Qw1k1RU=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoUoe/oxEWlCEvp9syhQzSeHRmj67NB36R9BhC/
- yptggTPNimJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaFKHvwAKCRA1o5Of/Hh3
- bQvKD/48+af5LplbvaZV0RbJCddg63q0nCsr+tAgUJW/rwuv92kotqZ+vOUDZ6fOpocJK3s22UM
- Cf/wMVd//LPfEm1KU6aPjg/IBI8Kbkr3Er+aPZmOzVM2r280X8OUWSwLTya3uTyVnfSC8ZZ5yWZ
- d0QwDxECUxfPN6v7taE3TkJr6oQKeHSvhQlgjzDT9faSMb5JiRux4IO2bJ840I9hJo1vJGxGFUp
- bqecYT71ARu8FF2vTNDfSglygywACCNWuw8W1efExy6uWrpMlmnmNX2rTJsBFi2LJacJL4qMF/D
- MMr52xyEviiRJ45XiknM3gdCfUiyNPX84MMRpXSUtq8eI8H6/K7t0pqV4YAzohYQg3bOUHUyvL1
- KKcmog/w3kPxSLX7trIjtDGlPmn4RScmIwsrWx2NT78xmM1Bc1rzj3FSx25h+B8cqt2TRbimyUx
- MRvBanVbdPnlXwihzVSzcGIoCMu+0DOXtdAGzup+5yja4ju72xtSAbbpiaFLwrb2vdm6Bwom09Y
- hccUtb8pug1Q07knZ2r3ICEhg8qaix6Bdvo7Mw5aRocPaS9IMUyC3UoHnnnieWfEdb9eZw94/oH
- 9WquLJ9wrO8wEwodU/hAS3pxucz4V+l37Hj8tdOJIh0PLfxJk41yYMr73DeuX/f9msGH6rq1QLH
- bfTQjfg5tCdniQA==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Extract the IPv6 address retrieval logic from netpoll_setup() into
-a dedicated helper function netpoll_take_ipv6() to improve code
-organization and readability.
+On 250514 1132, Benno Lossin wrote:
+> On Fri May 2, 2025 at 11:02 AM CEST, Oliver Mangold wrote:
+>=20
+> > +/// - That the C code follows the usual mutable reference requirements=
+. That is, the kernel will
+> > +///   never mutate the [`Ownable`] (excluding internal mutability that=
+ follows the usual rules)
+> > +///   while Rust owns it.
+>=20
+> I feel like this requirement is better put on the `Owned::from_raw`
+> function.
 
-The function handles obtaining the local IPv6 address from the
-network device, including proper address type matching between
-local and remote addresses (link-local vs global), and includes
-appropriate error handling when IPv6 is not supported or no
-suitable address is available.
+Thinking about it some more, the problem I see here is that if the type
+implements `OwnableMut` this requirement changes from "never mutate" to
+"never access at all".
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- net/core/netpoll.c | 76 +++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 44 insertions(+), 32 deletions(-)
+The safety requirements between `Ownable`, `OwnableMut`, `RefCounted`,
+`OwnableRefCounted` and `AlwaysRefCounted` are interacting, but I agree
+that, when looking at it a certain way, `Owned::from_raw()` is the place
+where one would expect these to be. I'm not sure anymore what is best here
+:/
 
-diff --git a/net/core/netpoll.c b/net/core/netpoll.c
-index 6ab494559b5c6..7021ea45a0539 100644
---- a/net/core/netpoll.c
-+++ b/net/core/netpoll.c
-@@ -598,6 +598,47 @@ static void netpoll_wait_carrier(struct netpoll *np, struct net_device *ndev,
- 	}
- }
- 
-+/*
-+ * Take the IPv6 from ndev and populate local_ip structure in netpoll
-+ */
-+static int netpoll_take_ipv6(struct netpoll *np, struct net_device *ndev)
-+{
-+	char buf[MAC_ADDR_STR_LEN + 1];
-+	int err = -EDESTADDRREQ;
-+	struct inet6_dev *idev;
-+
-+	if (!IS_ENABLED(CONFIG_IPV6)) {
-+		np_err(np, "IPv6 is not supported %s, aborting\n",
-+		       egress_dev(np, buf));
-+		return -EINVAL;
-+	}
-+
-+	idev = __in6_dev_get(ndev);
-+	if (idev) {
-+		struct inet6_ifaddr *ifp;
-+
-+		read_lock_bh(&idev->lock);
-+		list_for_each_entry(ifp, &idev->addr_list, if_list) {
-+			if (!!(ipv6_addr_type(&ifp->addr) & IPV6_ADDR_LINKLOCAL) !=
-+				!!(ipv6_addr_type(&np->remote_ip.in6) & IPV6_ADDR_LINKLOCAL))
-+				continue;
-+			/* Got the IP, let's return */
-+			np->local_ip.in6 = ifp->addr;
-+			err = 0;
-+			break;
-+		}
-+		read_unlock_bh(&idev->lock);
-+	}
-+	if (err) {
-+		np_err(np, "no IPv6 address for %s, aborting\n",
-+		       egress_dev(np, buf));
-+		return err;
-+	}
-+
-+	np_info(np, "local IPv6 %pI6c\n", &np->local_ip.in6);
-+	return 0;
-+}
-+
- /*
-  * Take the IPv4 from ndev and populate local_ip structure in netpoll
-  */
-@@ -675,41 +716,12 @@ int netpoll_setup(struct netpoll *np)
- 			err = netpoll_take_ipv4(np, ndev);
- 			if (err)
- 				goto put;
--			ip_overwritten = true;
- 		} else {
--#if IS_ENABLED(CONFIG_IPV6)
--			struct inet6_dev *idev;
--
--			err = -EDESTADDRREQ;
--			idev = __in6_dev_get(ndev);
--			if (idev) {
--				struct inet6_ifaddr *ifp;
--
--				read_lock_bh(&idev->lock);
--				list_for_each_entry(ifp, &idev->addr_list, if_list) {
--					if (!!(ipv6_addr_type(&ifp->addr) & IPV6_ADDR_LINKLOCAL) !=
--					    !!(ipv6_addr_type(&np->remote_ip.in6) & IPV6_ADDR_LINKLOCAL))
--						continue;
--					np->local_ip.in6 = ifp->addr;
--					ip_overwritten = true;
--					err = 0;
--					break;
--				}
--				read_unlock_bh(&idev->lock);
--			}
--			if (err) {
--				np_err(np, "no IPv6 address for %s, aborting\n",
--				       egress_dev(np, buf));
-+			err = netpoll_take_ipv6(np, ndev);
-+			if (err)
- 				goto put;
--			} else
--				np_info(np, "local IPv6 %pI6c\n", &np->local_ip.in6);
--#else
--			np_err(np, "IPv6 is not supported %s, aborting\n",
--			       egress_dev(np, buf));
--			err = -EINVAL;
--			goto put;
--#endif
- 		}
-+		ip_overwritten = true;
- 	}
- 
- 	err = __netpoll_setup(np, ndev);
+> > +pub unsafe trait OwnableMut: Ownable {}
+>=20
+> I don't like the name, but at the same time I also have no good
+> suggestion :( I'll think some more about it.
 
--- 
-2.47.1
+There was already a bit of discussion about it. I had my own implementation=
+ of this
+where I used the names `UniqueRefCounted` and `UniqueRef`, but after discov=
+ering
+this version from Asahi Lina, I took it as it was, keeping the name.
+
+No one else came up with different suggestions so far, so maybe we should j=
+ust leave it
+at `Owned`/`Ownable`?
+
+Best,
+
+Oliver
 
