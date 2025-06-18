@@ -1,124 +1,269 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884C82EAB84;
-	Wed, 18 Jun 2025 16:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7962EAB84
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750264991; cv=none; b=V8FzjW6FuTYhw5DKnr5SAjKJ6jf9vqE5Rn/WQGbv7oH9TZumD/vPaQW43WnrC0V0LXYMu8aUnIbyQHRQ0QRCqJvAdGDje57sCDjKAaPmlpisFlCZqT6dcOQxTvrzhO/AWvF5JeTW7r6l/K08WPyh2MUGPjNyJH2rkZgcWkD3RZA=
+	t=1750265005; cv=none; b=lqAUDsWnOuCXteNVJ2kouZgxMkwPsNTsYlQhEDACfPZlEB6Teth74pYLhvKqsdMKp3bD332qzlp50hAnITpXTfaGANQmhAX4obyRMtp+Y8dIA9tTtLF4CLWF8jmAzRGUjXaVb4DokXf2mOvnX7gewoZG9c2gIj+99hYwxxaODQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750264991; c=relaxed/simple;
-	bh=Y2gd51D/BVFx6eKV+gJtQH2NJBTOAm9v65zoDB4v+hw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U7Uwoon6RidBfrN5chA5bllQnGJjRP7V8HAiApaT8u/kOBuAzpDZ4gusrTovQhCZngFsT3MbFZ5HSrKeDTTzx+fRVXDdE3XE5ceiDnWtECLplO6xvNtBPQX+uL4s3ekEQaazcbr8JqgSPHHPU7z/S5/acW1WnGp6jG5PgN/WO68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdL1rTTv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750265005; c=relaxed/simple;
+	bh=0LdJL+y/rOZeUEYIIOhCBErur5uufbz7XArWM+mqnt4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=M/26/R0QmdkhFkJHUydspxffcbMzYAqrsDfjtV5LmaxorMXdzW7vg/IqVI+obXWhqHz3r8qkCHL350DFSw+1HBhACZ9lXbiFrCIW9p+1Ra1T1Rk+cuFoK7jL+rxNB6Gjss5kUT7Ccyw63FMJ7IUb6pCU/YYbFBfUgt7VmjcPhHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=kcLgfZXM; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdL1rTTv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBBBC4CEE7;
-	Wed, 18 Jun 2025 16:43:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750264991;
-	bh=Y2gd51D/BVFx6eKV+gJtQH2NJBTOAm9v65zoDB4v+hw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XdL1rTTvXn2f2C5znx1nHKrTEI6L05kv4a7bQuckbbMajfmxn9IYpHw6mkrdPEoph
-	 X0Y/ZOYGOBM1V6Cxyf+m4RdBWa8QmLDiBO6lKzC4EWIKi7fa/MjOxsb+yjl+cjaLEQ
-	 7GjxTqk8n7gv3hLlySnaEe7iX4baZDsRgVD5yRpG9iaK8N82fJ+gf+BkOUXm2zydB+
-	 rPEcL9TEuRt/kSuEPp0reRmnipBEjTn34ikcy4IMRbba6D0g09hkDefIuyAZrknhWW
-	 BhCbnVxVCKRSbKFZv6DQm6GJd5xmiJNwSTq3KbHFLj7RYNXY92E3nwBLPy4ykDODm4
-	 cw9DTzZzVtAzg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uRvsR-007ywr-NA;
-	Wed, 18 Jun 2025 17:43:08 +0100
-Date: Wed, 18 Jun 2025 17:43:07 +0100
-Message-ID: <86ldppc86c.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: catalin.marinas@arm.com,
-	pcc@google.com,
-	will@kernel.org,
-	broonie@kernel.org,
-	anshuman.khandual@arm.com,
-	joey.gouly@arm.com,
-	yury.khrustalev@arm.com,
-	oliver.upton@linux.dev,
-	frederic@kernel.org,
-	akpm@linux-foundation.org,
-	surenb@google.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 03/10] arm64/kvm: expose FEAT_MTE_TAGGED_FAR feature to guest
-In-Reply-To: <20250618084513.1761345-4-yeoreum.yun@arm.com>
-References: <20250618084513.1761345-1-yeoreum.yun@arm.com>
-	<20250618084513.1761345-4-yeoreum.yun@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="kcLgfZXM"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250618164321euoutp02a86af1eb8ead8c90840420777ab3f5e6~KML7LHUb53243732437euoutp02-
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:43:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250618164321euoutp02a86af1eb8ead8c90840420777ab3f5e6~KML7LHUb53243732437euoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750265001;
+	bh=UDfJotcIpWIKY+QmO8fvKHc439D+osARVOJJ3r+0Ufg=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=kcLgfZXMu1OXO6rHUKWk2PHT23diE2bNM4j1nIuztL7CaqFYiQ1QkO/Aq5mDaIRcO
+	 JeeosfjgQckCFrDTgHoz2/5cdHPLn91Dt39chRhRFJ3m6+uXqJ0MDxmpKYEyMBy9w9
+	 JBNPgknEHprdanrVY06pMchfWLL7pJTnS51eMFbk=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250618164320eucas1p28174732f38fd279fbba72f07887e5da5~KML6PRps61894318943eucas1p2H;
+	Wed, 18 Jun 2025 16:43:20 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250618164318eusmtip29415a14e64deb8a38a5078dfd40afd78~KML45IQjO0062800628eusmtip2E;
+	Wed, 18 Jun 2025 16:43:18 +0000 (GMT)
+Message-ID: <06e7a1dc-e58f-4cff-b962-5eb087dc4c1a@samsung.com>
+Date: Wed, 18 Jun 2025 18:43:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, pcc@google.com, will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com, joey.gouly@arm.com, yury.khrustalev@arm.com, oliver.upton@linux.dev, frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/12] gpio: mmio: use new GPIO line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
+	<linus.walleij@linaro.org>, =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara
+	<daire.mcnamara@microchip.com>, Daniel Palmer <daniel@thingy.jp>, Romain
+	Perier <romain.perier@gmail.com>, Avi Fishman <avifishman70@gmail.com>,
+	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>,
+	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>,
+	Benjamin Fair <benjaminfair@google.com>, Grygorii Strashko
+	<grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Kevin
+	Hilman <khilman@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-omap@vger.kernel.org, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>
+Content-Language: en-US
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250610-gpiochip-set-rv-gpio-v1-1-3a9a3c1472ff@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250618164320eucas1p28174732f38fd279fbba72f07887e5da5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250618164320eucas1p28174732f38fd279fbba72f07887e5da5
+X-EPHeader: CA
+X-CMS-RootMailID: 20250618164320eucas1p28174732f38fd279fbba72f07887e5da5
+References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
+	<20250610-gpiochip-set-rv-gpio-v1-1-3a9a3c1472ff@linaro.org>
+	<CGME20250618164320eucas1p28174732f38fd279fbba72f07887e5da5@eucas1p2.samsung.com>
 
-In general, please use a patch title format that matches the one used
-for the subsystem. For KVM, that'd be "KVM: arm64: Expose ..."/
-
-On Wed, 18 Jun 2025 09:45:06 +0100,
-Yeoreum Yun <yeoreum.yun@arm.com> wrote:
-> 
-> expose FEAT_MTE_TAGGED_FAR feature to guest.
-> 
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+On 10.06.2025 14:33, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  arch/arm64/kvm/sys_regs.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index 76c2f0da821f..c8c92cb9da01 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -1586,7 +1586,7 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
->  				       const struct sys_reg_desc *r)
->  {
->  	u32 id = reg_to_encoding(r);
-> -	u64 val;
-> +	u64 val, mask;
->  
->  	if (sysreg_visible_as_raz(vcpu, r))
->  		return 0;
-> @@ -1617,8 +1617,12 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
->  		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_MPAM_frac);
->  		break;
->  	case SYS_ID_AA64PFR2_EL1:
-> -		/* We only expose FPMR */
-> -		val &= ID_AA64PFR2_EL1_FPMR;
-> +		mask = ID_AA64PFR2_EL1_FPMR;
+>   drivers/gpio/gpio-mmio.c | 53 ++++++++++++++++++++++++++++++------------------
+>   1 file changed, 33 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+> index 4841e4ebe7a67d0f954e9a6f995ec5758f124edd..9169eccadb238efe944d494054b1e009f16eee7f 100644
+> --- a/drivers/gpio/gpio-mmio.c
+> +++ b/drivers/gpio/gpio-mmio.c
+> @@ -211,11 +211,12 @@ static int bgpio_get_multiple_be(struct gpio_chip *gc, unsigned long *mask,
+>   	return 0;
+>   }
+>   
+> -static void bgpio_set_none(struct gpio_chip *gc, unsigned int gpio, int val)
+> +static int bgpio_set_none(struct gpio_chip *gc, unsigned int gpio, int val)
+>   {
+> +	return 0;
+>   }
+>   
+> -static void bgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +static int bgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   {
+>   	unsigned long mask = bgpio_line2mask(gc, gpio);
+>   	unsigned long flags;
+> @@ -230,10 +231,12 @@ static void bgpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   	gc->write_reg(gc->reg_dat, gc->bgpio_data);
+>   
+>   	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
 > +
-> +		if (kvm_has_mte(vcpu->kvm))
-> +			mask |= ID_AA64PFR2_EL1_MTEFAR;
+> +	return 0;
+>   }
+>   
+> -static void bgpio_set_with_clear(struct gpio_chip *gc, unsigned int gpio,
+> -				 int val)
+> +static int bgpio_set_with_clear(struct gpio_chip *gc, unsigned int gpio,
+> +				int val)
+>   {
+>   	unsigned long mask = bgpio_line2mask(gc, gpio);
+>   
+> @@ -241,9 +244,11 @@ static void bgpio_set_with_clear(struct gpio_chip *gc, unsigned int gpio,
+>   		gc->write_reg(gc->reg_set, mask);
+>   	else
+>   		gc->write_reg(gc->reg_clr, mask);
 > +
-> +		val &= mask;
+> +	return 0;
+>   }
+>   
+> -static void bgpio_set_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +static int bgpio_set_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   {
+>   	unsigned long mask = bgpio_line2mask(gc, gpio);
+>   	unsigned long flags;
+> @@ -258,6 +263,8 @@ static void bgpio_set_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>   	gc->write_reg(gc->reg_set, gc->bgpio_data);
+>   
+>   	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+> +
+> +	return 0;
+>   }
+>   
+>   static void bgpio_multiple_get_masks(struct gpio_chip *gc,
+> @@ -298,21 +305,25 @@ static void bgpio_set_multiple_single_reg(struct gpio_chip *gc,
+>   	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>   }
+>   
+> -static void bgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+> +static int bgpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+>   			       unsigned long *bits)
+>   {
+>   	bgpio_set_multiple_single_reg(gc, mask, bits, gc->reg_dat);
+> +
+> +	return 0;
+>   }
+>   
+> -static void bgpio_set_multiple_set(struct gpio_chip *gc, unsigned long *mask,
+> -				   unsigned long *bits)
+> +static int bgpio_set_multiple_set(struct gpio_chip *gc, unsigned long *mask,
+> +				  unsigned long *bits)
+>   {
+>   	bgpio_set_multiple_single_reg(gc, mask, bits, gc->reg_set);
+> +
+> +	return 0;
+>   }
+>   
+> -static void bgpio_set_multiple_with_clear(struct gpio_chip *gc,
+> -					  unsigned long *mask,
+> -					  unsigned long *bits)
+> +static int bgpio_set_multiple_with_clear(struct gpio_chip *gc,
+> +					 unsigned long *mask,
+> +					 unsigned long *bits)
+>   {
+>   	unsigned long set_mask, clear_mask;
+>   
+> @@ -322,6 +333,8 @@ static void bgpio_set_multiple_with_clear(struct gpio_chip *gc,
+>   		gc->write_reg(gc->reg_set, set_mask);
+>   	if (clear_mask)
+>   		gc->write_reg(gc->reg_clr, clear_mask);
+> +
+> +	return 0;
+>   }
+>   
+>   static int bgpio_dir_return(struct gpio_chip *gc, unsigned int gpio, bool dir_out)
+> @@ -510,18 +523,18 @@ static int bgpio_setup_io(struct gpio_chip *gc,
+>   	if (set && clr) {
+>   		gc->reg_set = set;
+>   		gc->reg_clr = clr;
+> -		gc->set = bgpio_set_with_clear;
+> -		gc->set_multiple = bgpio_set_multiple_with_clear;
+> +		gc->set_rv = bgpio_set_with_clear;
+> +		gc->set_multiple_rv = bgpio_set_multiple_with_clear;
+>   	} else if (set && !clr) {
+>   		gc->reg_set = set;
+> -		gc->set = bgpio_set_set;
+> -		gc->set_multiple = bgpio_set_multiple_set;
+> +		gc->set_rv = bgpio_set_set;
+> +		gc->set_multiple_rv = bgpio_set_multiple_set;
+>   	} else if (flags & BGPIOF_NO_OUTPUT) {
+> -		gc->set = bgpio_set_none;
+> -		gc->set_multiple = NULL;
+> +		gc->set_rv = bgpio_set_none;
+> +		gc->set_multiple_rv = NULL;
+>   	} else {
+> -		gc->set = bgpio_set;
+> -		gc->set_multiple = bgpio_set_multiple;
+> +		gc->set_rv = bgpio_set;
+> +		gc->set_multiple_rv = bgpio_set_multiple;
+>   	}
+>   
+>   	if (!(flags & BGPIOF_UNREADABLE_REG_SET) &&
+> @@ -654,7 +667,7 @@ int bgpio_init(struct gpio_chip *gc, struct device *dev,
+>   	}
+>   
+>   	gc->bgpio_data = gc->read_reg(gc->reg_dat);
+> -	if (gc->set == bgpio_set_set &&
+> +	if (gc->set_rv == bgpio_set_set &&
+>   			!(flags & BGPIOF_UNREADABLE_REG_SET))
+>   		gc->bgpio_data = gc->read_reg(gc->reg_set);
+>   
 
-I don't think there is a need for an extra variable, and you could
-follow the pattern established in this file by writing this as:
 
-	val &= (ID_AA64PFR2_EL1_FPMR |
-		(kvm_has_mte(vcpu->kvm) ? ID_AA64PFR2_EL1_MTEFAR : 0));
+A few more changes are needed to avoid NULL pointer dereference 
+(observed on RasbperrryPi5), because this driver calls ->set method 
+internally:
 
-Not a big deal though.
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index 9169eccadb23..57622f45d33e 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -362,7 +362,7 @@ static int bgpio_dir_out_err(struct gpio_chip *gc, 
+unsigned int gpio,
+  static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio,
+                                 int val)
+  {
+-       gc->set(gc, gpio, val);
++       gc->set_rv(gc, gpio, val);
 
-Thanks,
+         return bgpio_dir_return(gc, gpio, true);
+  }
+@@ -427,14 +427,14 @@ static int bgpio_dir_out_dir_first(struct 
+gpio_chip *gc, unsigned int gpio,
+                                    int val)
+  {
+         bgpio_dir_out(gc, gpio, val);
+-       gc->set(gc, gpio, val);
++       gc->set_rv(gc, gpio, val);
+         return bgpio_dir_return(gc, gpio, true);
+  }
 
-	M.
+  static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int 
+gpio,
+                                    int val)
+  {
+-       gc->set(gc, gpio, val);
++       gc->set_rv(gc, gpio, val);
+         bgpio_dir_out(gc, gpio, val);
+         return bgpio_dir_return(gc, gpio, true);
+  }
 
+Do You want a formal patch with the above changes, or will You just 
+amend them to the updated patch?
+
+Best regards
 -- 
-Without deviation from the norm, progress is not possible.
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
