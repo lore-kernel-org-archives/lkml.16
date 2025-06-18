@@ -1,77 +1,35 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0274289E24
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7AC289E3C;
+	Wed, 18 Jun 2025 10:20:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242006; cv=none; b=lgYNyn0qhIPqegiJeFCnEHIBykXCgyTsXBL/l74ezyNmoGvRK6qfaxvX1CohklrNkI9leK9nG/MrXaj6FXD/r4t/4Ds5JuKTi0gvS76M2R9XHZkcBUxa3J8kRB7Kfcq09d5dxPIojK2eeGe6iS6i9e0Ru1ene4w4NUdK6kG1x5E=
+	t=1750242009; cv=none; b=fXDqXHvPGfyTkRtpRGoAN5SWzQInLtH+Kcs0NLHzhIot+57y3e+SXIn14iHj5Js/GrEUvEqm/6o0OVHDMvJtBiJXaM/kF4hVC0HciuWDlx9DO1QNEsxiAP6ebvNwqwA+gvrf9h9lHbhUnJ0WMA9n7TV+kbd+6yG8FuafLGmZ8Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242006; c=relaxed/simple;
-	bh=2apbo1VAjiKk1lNm+FMr3VaBOc2YRMO+4YX9+P2Qv+k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iU8zJrXyusKTRzoywF8zQIFC4jLIthxsnswxNU6PXFpfOeVLwCzH3CYP/drZpySQxYG/fDb98vgW7KCdZtRxjfiT7LmnF699YEaR8w3t0X/9IvCgBdLOpymq8WRuyrYIVI6JnIyoAwIOrch4QCyo2lHZcNuSz8Hg0+EThUMQfl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0eeadOwM; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750242009; c=relaxed/simple;
+	bh=NxD1GAupdFUe2UjdbUAMvLXm1bj4jITeGOSzkPUL8FI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LW+I856TQs5E9O0VfHNHDRaD/xl2ulNu48w1FfWtVH37mUAn5dhA7yj89sEFvQ51CHKqqN2flGVw26uByYLi4oqTTtFphwWXmSBJqFAYK2SP7mx48/+b3HgPJKcg/xPFWi1P/mAR0K1yk3/oY0MyXo2ff0Leep4ufEPv86B3CMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GcroIcuB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0eeadOwM"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a54700a46eso4280972f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:20:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750242003; x=1750846803; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aW67+sc6Zc76DZ5vgY+8wp/a5y2xGeEA86576Qt6UlY=;
-        b=0eeadOwMGhXqh8JDeagBhUi/Ig0wJ9DEQab98BCOQo+EJvdwzTy3AYXEH6fAszsRit
-         AV6MN3wTx+j/l5v7Toon51oAVQQRQ6a1dPAktOr/7zKHliVvl69DN6bpNpTR9TOrXRnR
-         D4VIpWADqHGya3c/RtL1XNN52Hub/AXyzO3XDBm4zNX6MZgLOn9dokPWMJleNZzUvGst
-         lWZBzcvgg1SQX2NyzfM/bNcQ4s8tnMNPiqrFq8Dfaox6FokWpKvR1xLVETxBzIszWIlP
-         uAJcmXhIBY6azfV+ujbYDEHHSuDw5CzhdIcGrUowsIgysSLhuOBFVy3djmUP7jJRy5Dz
-         PaPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750242003; x=1750846803;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aW67+sc6Zc76DZ5vgY+8wp/a5y2xGeEA86576Qt6UlY=;
-        b=LK80fyQ0002KVeqjE6VI6tsZixYL0dOqE7VgUhztgpXa+W1NWn5atVfJfxLWa+B9MU
-         L0wolVGbV30pna1sXjlS2iFfxFNlDeEpFYQNma5eOvWYg0V/5Y2QKVW7m87xmJ6yySbH
-         /Ws/P5BW0zg3nVKpyc7ZN1BAO3UQQjMCCaIhODcH9A81EI7hOtgsxeycre09aXQfgONq
-         6LWvrhxMbPZyXF/x7khT25gG52cqHIwhKgro3Tjr7jBSCfxivHwdn5CzEfLJPNm4pbj8
-         8VncWnEq0mCof+cxxUeQlz+0JADaGOSAwksx5bYDV+psMbI//Z/PTvVOLQhfjdTA4d6A
-         SDqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVf/3H1NqiQWmae0sMOJLGEVjXwtPtYDA4Fk4cptymmP+a84WHC75ZYKX5RexWxQRrWDhyEE1wt4shpFBc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMEdfgKB4pjhyB+9rk+IeIna/eZslhf5Nd/rYpcDy2lH+iPv9L
-	g6EiXmvbggRytUgBSMliWtn/f+HHbGxWPIAgjW5zR+Oft7/e4VlobACDRq4qYngGMhLiahsHqBU
-	Ks1zp/PQ=
-X-Gm-Gg: ASbGnctWyMQ9+2SlLOygQDO0l2zM2LHwUu/Zq3aE4BOExAWmFkUAbaecIuMfeuxXbJ2
-	Z4JRpFca0Ma+xcCqz1xjQedvypXXk5ZexjicbZqKzYtYifMsGFZASk+upz/JiTURb5sgrQCzivA
-	sgZTZnoX6HnXrSVZXIbKz0hiI/utGuEySQSSI56yfKg0u6qbQxCaW/TqRx3mtBMABbL8y5lP+CW
-	+z7BuVyvOQukLafxa8jituB+CPQbICegBXTQqw4tvEIBzpuW5yvillSFsWettk5KSPOfORQpTIx
-	CA4lLpt6rwm3GQ6DwsrSIYbskh0LikU7GpEIq4vlSiuCwHrG6fwXXZNrBfgJFQ==
-X-Google-Smtp-Source: AGHT+IEqdm4+loHM0UpDpWUhxyzO7ABlLJ762PkFX8cWeo6PhmgbjvhCeqB1tPa2BFUHXqGRfJTlzQ==
-X-Received: by 2002:a05:6000:4028:b0:3a5:39d8:57e4 with SMTP id ffacd0b85a97d-3a5723afc0dmr11313825f8f.41.1750242002938;
-        Wed, 18 Jun 2025 03:20:02 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ad8:9ec2:efc8:7797])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08a2bsm16776524f8f.62.2025.06.18.03.20.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:20:02 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	David Thompson <davthompson@nvidia.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Shravan Kumar Ramani <shravankr@nvidia.com>
-Subject: Re: [PATCH v1] gpio: mlxbf3: only get IRQ for device instance 0
-Date: Wed, 18 Jun 2025 12:20:01 +0200
-Message-ID: <175024199528.53110.13398795487748744879.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250613163443.1065217-1-davthompson@nvidia.com>
-References: <20250613163443.1065217-1-davthompson@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GcroIcuB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85669C4CEF1;
+	Wed, 18 Jun 2025 10:20:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750242008;
+	bh=NxD1GAupdFUe2UjdbUAMvLXm1bj4jITeGOSzkPUL8FI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=GcroIcuB+z/8xMOqeUYC4Nzh6sc1fXQA8z7eMr8uaMkNV5NPm3VyqQBqsm8cLrzym
+	 nIbcom/UPtDQ9TwfjFC8zEhcEtfYEPMlZdu+aNQcXO/Re1mgVYsBIOyeJLZ2b+iaFo
+	 gzqm0I1vRbhTG6M+5DyltiugMfYyg9z0t34hVGdREtBuR81uEyE0nnwWdde9/+QvUa
+	 UZOiP/NvzKPCt2sUuq7M1hlF/e/UmdHWB9IHBd72FV7cfJkLD3k7I/o8AmBsYYffmt
+	 dW9n3eB4YPaiUP8zI3y+EL2Wdkl3/yjwJb0+LLJ52AuLCV39VmU6diB02B4AtMycB6
+	 H0LdOUESjiL+Q==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Wed, 18 Jun 2025 12:17:41 +0200
+Subject: [PATCH v5 26/27] docs: arm64: gic-v5: Document booting
+ requirements for GICv5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,27 +37,94 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-gicv5-host-v5-26-d9e622ac5539@kernel.org>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+In-Reply-To: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Document the requirements for booting a kernel on a system implementing
+a GICv5 interrupt controller.
 
+Specifically, other than DT/ACPI providing the required firmware
+representation, define what traps must be disabled if the kernel is
+booted at EL1 on a system where EL2 is implemented.
 
-On Fri, 13 Jun 2025 16:34:43 +0000, David Thompson wrote:
-> The gpio-mlxbf3 driver interfaces with two GPIO controllers,
-> device instance 0 and 1. There is a single IRQ resource shared
-> between the two controllers, and it is found in the ACPI table for
-> device instance 0.  The driver should not attempt to get an IRQ
-> resource when probing device instance 1, otherwise the following
-> error is logged:
->   mlxbf3_gpio MLNXBF33:01: error -ENXIO: IRQ index 0 not found
-> 
-> [...]
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
+---
+ Documentation/arch/arm64/booting.rst | 41 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-Applied, thanks!
+diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+index dee7b6de864f..4b1d416c6016 100644
+--- a/Documentation/arch/arm64/booting.rst
++++ b/Documentation/arch/arm64/booting.rst
+@@ -223,6 +223,47 @@ Before jumping into the kernel, the following conditions must be met:
+ 
+     - SCR_EL3.HCE (bit 8) must be initialised to 0b1.
+ 
++  For systems with a GICv5 interrupt controller to be used in v5 mode:
++
++  - If the kernel is entered at EL1 and EL2 is present:
++
++      - ICH_HFGRTR_EL2.ICC_PPI_ACTIVERn_EL1 (bit 20) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_PRIORITYRn_EL1 (bit 19) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_PENDRn_EL1 (bit 18) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_ENABLERn_EL1 (bit 17) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PPI_HMRn_EL1 (bit 16) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_IAFFIDR_EL1 (bit 7) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_ICSR_EL1 (bit 6) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_PCR_EL1 (bit 5) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_HPPIR_EL1 (bit 4) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_HAPR_EL1 (bit 3) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_CR0_EL1 (bit 2) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_IDRn_EL1 (bit 1) must be initialised to 0b1.
++      - ICH_HFGRTR_EL2.ICC_APR_EL1 (bit 0) must be initialised to 0b1.
++
++      - ICH_HFGWTR_EL2.ICC_PPI_ACTIVERn_EL1 (bit 20) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PPI_PRIORITYRn_EL1 (bit 19) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PPI_PENDRn_EL1 (bit 18) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PPI_ENABLERn_EL1 (bit 17) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_ICSR_EL1 (bit 6) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_PCR_EL1 (bit 5) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_CR0_EL1 (bit 2) must be initialised to 0b1.
++      - ICH_HFGWTR_EL2.ICC_APR_EL1 (bit 0) must be initialised to 0b1.
++
++      - ICH_HFGITR_EL2.GICRCDNMIA (bit 10) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICRCDIA (bit 9) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDDI (bit 8) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDEOI (bit 7) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDHM (bit 6) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDRCFG (bit 5) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDPEND (bit 4) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDAFF (bit 3) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDPRI (bit 2) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDDIS (bit 1) must be initialised to 0b1.
++      - ICH_HFGITR_EL2.GICCDEN (bit 0) must be initialised to 0b1.
++
++  - The DT or ACPI tables must describe a GICv5 interrupt controller.
++
+   For systems with a GICv3 interrupt controller to be used in v3 mode:
+   - If EL3 is present:
+ 
 
-[1/1] gpio: mlxbf3: only get IRQ for device instance 0
-      https://git.kernel.org/brgl/linux/c/10af0273a35ab4513ca1546644b8c853044da134
-
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.48.0
+
