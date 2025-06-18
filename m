@@ -1,179 +1,241 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A321C8604
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295442E54AA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252389; cv=none; b=Sjhw4yA1pdrQJy6Ca52pyVu3sugwg7mhxYRXYQERxwR/iC4SfKcsFetCKrTfpvX2mwVGHnKnB1heXKrf8n1suEpIY+esPAhGIe+YjTks9TaWI4/C7DnXqHxUtpJAtBN9SgQL1aHA5CksAI0Wq6Cer4DDm90jl+zLulimD2NiC6o=
+	t=1750252441; cv=none; b=BEjN7UVZd6kd8OkcAj1GtMPa1CyuTppKAOliEnr4INCQtJQfgS5BmBTrvB62SpfuDusygjaGuFt8Px1gGoIDe+63zqvWv3oB0zu9gY4cCsSI4XhwBrND+8u9cKyWQKfGlnMIOKuJO1aPu5DU+Pd5Fgy4RByEnzjTvobJ3cvTMu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252389; c=relaxed/simple;
-	bh=xQfxH+J7si2Jx+1rL1OLwZA58hEdu+osP61mQ2g/iyc=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lQvT84QXtIiWZbQwL1pOaJ9MlIJEaAuubzVuSJAJjYKA79xjiY5arL92fJndILCwCW7ptwnytpc+3YUVNnoVQuGWSC3mjg1ecOZ8kORQLPMncef5N9iNee59+hKo9/ng4kwOBgHo505dxC3h0trN5ZC1g4/pmIXRuTLEmvI4QpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MG7VsznX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750252441; c=relaxed/simple;
+	bh=IabZINxrW1gHaLOPWpilxAwlHMTonNVvVgAu8E8ZG0Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BkC4Fpw+WK6O6tVh6OYEKHEshABvfIevPKiG/5OUz9lHVsD/5xgN47tNeJsLYrCu6mayhDh+fJZVyD0Gvb/xk8JQ0lzbIB44nKBCv+/pCCk49XwplHWEFSwWgttjV7cV51xR05GDG6qy/KBzmyvcNAPwMBsJutgOVR9fZkmkxZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WzEHYYTn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MG7VsznX"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I97XTl029581
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:13:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=uOCr5QjdkY5jetSDiwM7myto
-	B++DKJWhFOYd4AnCVW4=; b=MG7VsznXxry5HmQKa8E+jEZlOMlU+YvAQTXIg81v
-	1M32ivImqWOBWQJUBFoEZMVDrrFjcy7TeDEGtXLD13ejTW0X1DRDZqXVUpqtaClP
-	gCz2tcFk4yKihafDhdWx/jkjuEOAXbsnBqbG/FGB0zUidVEvzPtk61OgqOE8lrPk
-	ovsiCvshRGC4CAjfzP23Q1Lxowyex8D8HIwFXcUODwVMmqLAfrf0DJslNhtM96y8
-	cqmHa8iFZ8vCEkQg+5P4WU0Hu8YR92BaTCx1MZWPFQRJck0BA9uS0BzpzEOX4DPL
-	/UY466jhzCrqGof9Zt1stQZZGP+C6cUzPc7q7MvDL/+fUA==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h9c5kq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:13:06 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d399065d55so923907085a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:13:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WzEHYYTn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750252437;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Ef97kz76Yw9Jt5ZZFpKUT1V1+HqkUXj4ehQiBa13hww=;
+	b=WzEHYYTnHKwXZvZtp5/FSEzs181zl9wncN1GmAlo7mYxiXhnkbtCnhDH+3kwMGx73AJ8Lf
+	0ZK/82oH1Yo1OTU1cfP/FpUj6JR5Bc2WjR5hi1YZgUJeD+s4PIAZcxRJRABUN7jA8OYKT0
+	uenjEViWsMuI5FdwSeh9jGR8/YhE7xo=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-663-kB0oBgraMDaMkMDxLCrfcA-1; Wed, 18 Jun 2025 09:13:56 -0400
+X-MC-Unique: kB0oBgraMDaMkMDxLCrfcA-1
+X-Mimecast-MFC-AGG-ID: kB0oBgraMDaMkMDxLCrfcA_1750252435
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f55ea44dso2810435f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:13:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750252386; x=1750857186;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uOCr5QjdkY5jetSDiwM7mytoB++DKJWhFOYd4AnCVW4=;
-        b=RTvx9oZvbRrgAqjpg0+ub1crSP7at8y0NmNUH/s0r2Dp2g42XDZoUhR69Cb+LLNMGh
-         EgnSOtJes0xTRqRZrCSh6OwT1pMvdHouYcOujbxC5y1MhT8PJOzXB7O+lQNKbWeBEQL1
-         LfjhFGtgoIohC6EpVzKOsDivYQQVzo8n9jgk7fHn1WPf4zyym7Tzj8DWrz1S6kl6lVne
-         dgQJgSV85mztCz/3Lh2lc+SAGDJw3sgcp9eBi8ysM4VDRdKmT4VjgypR6BA43vdJT1lL
-         t2tsQfgX0Ohe+iYC8RFHxq4egpDpixI475u2zr5I1AqRtQilx7emMYIxppZd9xejrfet
-         Q+tA==
-X-Forwarded-Encrypted: i=1; AJvYcCUV/uxjR+yAuAe1SopIe22MljRQWNg1tmBmb2wiUBR5vt2VpdFjn5ZkykIarxl2ZBmgKmem3WXzthPK3oI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4XqNDYJABZKpPnfqaPgj+JMydgSXKJiviQXb0T52OEIXPI68s
-	MTjGnzMQpNoJ65JbJpLZ4Qhg2E94KcLFyB1bpeafXUWvPBxAwbxCUA/sATuIJZdsnNfrs4VxqTM
-	v+nQaLOh9ut7rifMurY5O+THgJCFWAKwqXLKaUbLFX/DyzlqxhgyRVZk/YAdIa2jz7k0=
-X-Gm-Gg: ASbGncsU4ZHhVF1b4UBGSYw/bXLJ0zA+56GyuqI0F8+ZWIEyIwtyeuWgt0/tjwyE38w
-	yCuhjyIFSxXEckIY3DHFr8Vpce61SnAQmK3hYcHZKZNxD2K7kLm46SJdQ33Gtzx1Ytc0Xg4IqWY
-	PVUJ6r+lgMERoHS4b+Kl7oRZFHFUnTc30HidlcjNS2AAiSCq5zkeHHGIiFR/vzAu0EESd7eBwUs
-	dcHBoSHry2TijSFVl+No/2p0ntMvykM5RsewYAxtP5dI5UqCJpeEfK/8B/f4VnEBJ3n8txn9j94
-	fmIS7fpzbY4Zsia3na6nlmnQVhNUrQd7uZDF8FB2gXvwGOt8wzIc32XtxA==
-X-Received: by 2002:a05:620a:28d1:b0:7c5:95e6:ce1d with SMTP id af79cd13be357-7d3c6b813f9mr2372976585a.0.1750252385806;
-        Wed, 18 Jun 2025 06:13:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHjJue89Rmli2K6Y2pcfc+hi4K9H56GD3PAu9OTXQAnTMz/vuG4sPfRjvsoylnL7i4Da5na3Q==
-X-Received: by 2002:a05:620a:28d1:b0:7c5:95e6:ce1d with SMTP id af79cd13be357-7d3c6b813f9mr2372972985a.0.1750252385360;
-        Wed, 18 Jun 2025 06:13:05 -0700 (PDT)
-Received: from trex (132.red-79-144-190.dynamicip.rima-tde.net. [79.144.190.132])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a60f5asm16671499f8f.25.2025.06.18.06.13.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 06:13:04 -0700 (PDT)
-From: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>
-X-Google-Original-From: Jorge Ramirez <JorgeRamirez-Ortiz>
-Date: Wed, 18 Jun 2025 15:13:02 +0200
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Jorge Ramirez <jorge.ramirez@oss.qualcomm.com>,
-        Vikash Garodia <quic_vgarodia@quicinc.com>, quic_dikshita@quicinc.com,
-        loic.poulain@oss.qualcomm.com, mchehab@kernel.org,
-        hans.verkuil@cisco.com, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: venus: hfi: explicitly release IRQ during teardown
-Message-ID: <aFK7Xo9xgQ2gfo6u@trex>
-References: <20250612082943.2753676-1-jorge.ramirez@oss.qualcomm.com>
- <54157ce5-8a6b-75ae-0a21-a8df59242c40@quicinc.com>
- <aFAVTvsDc8xvwBme@trex>
- <1bdf289b-5eec-d5de-a08b-6c7a772e15a3@quicinc.com>
- <aFA5FpJPRmJ/ltI9@trex>
- <aFJlqGFPrO9Hw4f1@trex>
- <ec3defcc-f19d-4224-9029-14c1e95399b7@linaro.org>
+        d=1e100.net; s=20230601; t=1750252435; x=1750857235;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ef97kz76Yw9Jt5ZZFpKUT1V1+HqkUXj4ehQiBa13hww=;
+        b=Vu4XLwovb1pvLaByg8iE2OZn4O0J1bP2cMyP20rqEXNx6JV4ShBUWdP+pYMEzMsJo3
+         ZR7++1U82LIr0PHMAW70hBX/DoHR19dGF2CyY+p1/JWbhxyqLP7OqY/uQaLcpToQcWu3
+         U3YMlcrrIlFyDU50ba8dEiA+AyoV3RIBCCx6AJm56p5O47236rED25vVTOEgaphuEaQB
+         9OuY0DI355PUUFA0M6HvvDdnJUwb8tqoF3kNkcd8Suj5+t03yuVmRVlNrzL3A+Sl0m4R
+         2qNE7mnmxbxRUs1J00yQj0V8bR0TGeZMmMPKjdn8cdKlaGRhwvQ4gAdD7BMI5SYxtnwa
+         Pa4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXPs/cpJYve7V9o2kn0mjJKDJrnRy3YsMV6z5LF/Gc8htMRgmjihPVWicj+qxHSODr5qFG7hWfcnM1sRdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykGM/IrchjkzWEhMkJxfWGlb91VwR2bdrIerLVTgpD5IDasvsC
+	wCsl50+wv2jd65XJWp2ABwKZFrw+o5DmKcIFCE9RDzQVSsryw+mQZ9Gib1gmfe4kDpph30gERVp
+	wPptGAFIVK/HugiRGUkUDkB2NjZ+3/K2JHmuRbviA3MyC3+rJLb3bW/jwgqiUMGXfeA==
+X-Gm-Gg: ASbGncvRyG5bIGIcNWCweGVURwZ/imZDBgs7Qb8nb6qPTKTCcEyMhNuuMobL0cOvNwa
+	zFHpoCatnNMwAOhxccgSFR3nsBk9tUODBvhLyPNs2nGwp7GMeWNXfrI+ItfXGvRio/vfliWdVPB
+	F6M6ti1ggL4w+WjSHoMRr8RC9JvKRNo5+0Y49W93No1wmd4h9i6piDmVBqJGJuvoDxVw3+tMIZr
+	VEF5jGtitAIq/XZ4MAw2dsPNmZ1lzjPSKGXAArHfYaULwCXiaQ9DL2mlBqNBYjgTILSoNFo6eQq
+	jG+Vx+9kIdI35S9o+XspkfOkGagh+Fsl0EsjXp2PIbLT0G5oYbuOxUHUHw8j6MGYF4EgnSIdMPx
+	t6pezw1ukjYKN01xSKsafx0wAhWAP1x+hFziGeKC9o5pchNo=
+X-Received: by 2002:a5d:5c84:0:b0:3a4:f7db:6ff7 with SMTP id ffacd0b85a97d-3a572e58792mr15395022f8f.52.1750252435427;
+        Wed, 18 Jun 2025 06:13:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFyPOqWC+fIYY0jjSKYxhMePrlWdjpx8vPXshA1FnDDeRFHER8ChNGxHVBBmp44RK9t8q39ug==
+X-Received: by 2002:a5d:5c84:0:b0:3a4:f7db:6ff7 with SMTP id ffacd0b85a97d-3a572e58792mr15394981f8f.52.1750252434857;
+        Wed, 18 Jun 2025 06:13:54 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b79f45sm16872576f8f.101.2025.06.18.06.13.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 06:13:54 -0700 (PDT)
+Message-ID: <b00e97d4-304f-4ede-b6e3-6efaecbeb11e@redhat.com>
+Date: Wed, 18 Jun 2025 15:13:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec3defcc-f19d-4224-9029-14c1e95399b7@linaro.org>
-X-Proofpoint-ORIG-GUID: vxgneCB06fJlte2jLjvx1JjeBoUR27FL
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDExMiBTYWx0ZWRfX4eaAkMlRU3wo
- bwR4u2XnX9T53dC6HrrjRziCcYdqSrMmyrMJkqjiquSPbMzSHg3bVN42ZfGr0p5tqujYd4Yagrw
- x+vBpMQx5ydae6NlZXa7wDpSiJgI4U/vp1YJdGVrFm5zLRyW0uoMBC7IZxtOL1D7ni/yuKmfCa+
- uDp70HRgsnfwG/FsSp2B5puGBWsPvGb0OqSfSBYwGBEH3fa1h13xoHYYonu7IMi5R9MKlhNLsLB
- BksBxpR6sHkhyTbIX+USfkSXvZuyhQ7SIued7n6wBlL9BFVg4yOdYb00yWGgPhpRnS60NV07I27
- /a/N00BR7ttdsEpn0muAbmfERW66pfqYOFwHil5mpyeJWe3CdfbPlge4Hc+gyRRuXO/VD8MnTaJ
- 6R0TCNlfG9mb+hOjIX1uMK99sKFQQY6Vswee5XBIdf0eLv1V1xtfiSvHLo4ubY3OUuV+Fvq6
-X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=6852bb62 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=wjE3nLva0YkvARyJ+Gfmxg==:17
- a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8 a=EUspDBNiAAAA:8
- a=8tBtA4GtQrU4Ei1tFs4A:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22
- a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-GUID: vxgneCB06fJlte2jLjvx1JjeBoUR27FL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_05,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506180112
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+To: Lance Yang <lance.yang@linux.dev>, Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
+ <lokeshgidra@google.com>, Tangquan Zheng <zhengtangquan@oppo.com>,
+ Qi Zheng <zhengqi.arch@bytedance.com>, Lance Yang <ioworker0@gmail.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Li <zi.li@linux.dev>
+References: <20250607220150.2980-1-21cnbao@gmail.com>
+ <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+ <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
+ <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
+ <deb5ecd0-d57b-4a04-85b7-e6d11207aa8f@redhat.com>
+ <ec77f310-6ded-4f7b-a15b-07855b0bbafb@linux.dev>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <ec77f310-6ded-4f7b-a15b-07855b0bbafb@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 18/06/25 12:08:28, Bryan O'Donoghue wrote:
-> On 18/06/2025 08:07, Jorge Ramirez wrote:
-> > On 16/06/25 17:32:38, Jorge Ramirez wrote:
-> > > On 16/06/25 20:14:36, Vikash Garodia wrote:
-> > > > Hi Jorge,
-> > > > 
-> > > > On 6/16/2025 6:29 PM, Jorge Ramirez wrote:
-> > > > > On 16/06/25 17:26:24, Vikash Garodia wrote:
-> > > > > > 
-> > > > > > On 6/12/2025 1:59 PM, Jorge Ramirez-Ortiz wrote:
-> > > > > > > Ensure the IRQ is released before dismantling the ISR handler and
-> > > > > > > clearing related pointers.
-> > > > > > > 
-> > > > > > > This prevents any possibility of the interrupt triggering after the
-> > > > > > > handler context has been invalidated.
-> > > > > > > 
-> > > > > > > Fixes: d96d3f30c0f2 ("[media] media: venus: hfi: add Venus HFI files")
-> > > > > > > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez@oss.qualcomm.com>
-> > > > > > > ---
-> > > > > > >   drivers/media/platform/qcom/venus/hfi_venus.c | 1 +
-> > > > > > >   1 file changed, 1 insertion(+)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/media/platform/qcom/venus/hfi_venus.c b/drivers/media/platform/qcom/venus/hfi_venus.c
-> > > > > > > index b5f2ea879950..d9d62d965bcf 100644
-> > > > > > > --- a/drivers/media/platform/qcom/venus/hfi_venus.c
-> > > > > > > +++ b/drivers/media/platform/qcom/venus/hfi_venus.c
-> > > > > > > @@ -1678,6 +1678,7 @@ void venus_hfi_destroy(struct venus_core *core)
-> > > > > > >   	venus_interface_queues_release(hdev);
-> > > > > > >   	mutex_destroy(&hdev->lock);
-> > > > > > >   	kfree(hdev);
-> > > > > > > +	devm_free_irq(core->dev, core->irq, core);
-> > > > > > Could you please check and add the handling here [1] as well ?
-> > > > > > 
-> > > > > > [1]
-> > > > > > https://elixir.bootlin.com/linux/v6.16-rc1/source/drivers/media/platform/qcom/venus/core.c#L427
-> > > > > 
-> > > > > hi Vikash, sorry I dont get your point - what do you mean?
-> > > > IRQ need to be freed even for error cases during venus_probe().
-> > > > 
-> > > 
-> > > but  this is what the current patch does (venus_hfi_destroy is called at
-> > > the end of probe error handling as well).
-> > > 
-> > 
-> > for background, this fixes a null derreference in the Venus driver -
-> > reproduceable in RB3Gen2 on a particular error condition during probe.
-> Shouldn't it be the case that devm removes the handler for us anyway ?
+On 18.06.25 15:05, Lance Yang wrote:
 > 
-> Why not ->         disable_irq_nosync(core->irq);
-
-I agree, this seems better to me too.
-
-I guess disable_irq() is the safer/more meaningfull choice since we are
-calling from non irq context.
-
-will fix - thanks for the suggestion!
-
 > 
-> i.e. disable the IRQ until the normal/expected exit path removes it.
+> On 2025/6/18 18:18, David Hildenbrand wrote:
+>> On 18.06.25 11:52, Barry Song wrote:
+>>> On Wed, Jun 18, 2025 at 10:25 AM Lance Yang <lance.yang@linux.dev> wrote:
+>>>>
+>>>> Hi all,
+>>>>
+>>>> Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
+>>>>
+>>>> On 2025/6/17 21:38, Lorenzo Stoakes wrote:
+>>>> [...]
+>>>>>
+>>>>> On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
+>>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>>
+>>>>>> Certain madvise operations, especially MADV_DONTNEED, occur far more
+>>>>>> frequently than other madvise options, particularly in native and Java
+>>>>>> heaps for dynamic memory management.
+>>>>>>
+>>>>>> Currently, the mmap_lock is always held during these operations,
+>>>>>> even when
+>>>>>> unnecessary. This causes lock contention and can lead to severe
+>>>>>> priority
+>>>>>> inversion, where low-priority threads—such as Android's
+>>>>>> HeapTaskDaemon—
+>>>>>> hold the lock and block higher-priority threads.
+>>>>>>
+>>>>>> This patch enables the use of per-VMA locks when the advised range
+>>>>>> lies
+>>>>>> entirely within a single VMA, avoiding the need for full VMA
+>>>>>> traversal. In
+>>>>>> practice, userspace heaps rarely issue MADV_DONTNEED across
+>>>>>> multiple VMAs.
+>>>>>>
+>>>>>> Tangquan’s testing shows that over 99.5% of memory reclaimed by
+>>>>>> Android
+>>>>>> benefits from this per-VMA lock optimization. After extended runtime,
+>>>>>> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+>>>>>> only 1,231 fell back to mmap_lock.
+>>>>>>
+>>>>>> To simplify handling, the implementation falls back to the standard
+>>>>>> mmap_lock if userfaultfd is enabled on the VMA, avoiding the
+>>>>>> complexity of
+>>>>>> userfaultfd_remove().
+>>>>>>
+>>>>>> Many thanks to Lorenzo's work[1] on:
+>>>>>> "Refactor the madvise() code to retain state about the locking mode
+>>>>>> utilised for traversing VMAs.
+>>>>>>
+>>>>>> Then use this mechanism to permit VMA locking to be done later in the
+>>>>>> madvise() logic and also to allow altering of the locking mode to
+>>>>>> permit
+>>>>>> falling back to an mmap read lock if required."
+>>>>>>
+>>>>>> One important point, as pointed out by Jann[2], is that
+>>>>>> untagged_addr_remote() requires holding mmap_lock. This is because
+>>>>>> address tagging on x86 and RISC-V is quite complex.
+>>>>>>
+>>>>>> Until untagged_addr_remote() becomes atomic—which seems unlikely in
+>>>>>> the near future—we cannot support per-VMA locks for remote processes.
+>>>>>> So for now, only local processes are supported.
+>>>>
+>>>> Just to put some numbers on it, I ran a micro-benchmark with 100
+>>>> parallel threads, where each thread calls madvise() on its own 1GiB
 > 
-> ---
-> bod
+> Correction: it uses 256MiB chunks per thread, not 1GiB ...
+> 
+>>>> chunk of 64KiB mTHP-backed memory. The performance gain is huge:
+>>>>
+>>>> 1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~47%
+>>>> faster)
+>>>> 2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~64%
+>>>> faster)
+>>>
+>>> Thanks for the report, Lance. I assume your micro-benchmark includes some
+>>> explicit or implicit operations that may require mmap_write_lock().
+>>> As  mmap_read_lock() only waits for writers and does not block other
+>>> mmap_read_lock() calls.
+>>
+>> The number rather indicate that one test was run with (m)THPs enabled
+>> and the other not? Just a thought. The locking overhead from my
+>> experience is not that significant.
+>>
+> 
+> Both tests were run with 64KiB mTHP enabled on an Intel(R) Xeon(R)
+> Silver 4314 CPU. The micro-benchmark code is following:
+
+Ah, I missed the "100 threads" above. Yeah, there should be plenty of 
+locking contention with all the mprotect() in there.
+
+-- 
+Cheers,
+
+David / dhildenb
+
