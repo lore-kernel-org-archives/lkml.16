@@ -1,122 +1,256 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3444238F80;
-	Wed, 18 Jun 2025 13:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADA72F5305
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251890; cv=none; b=KlgbeGSc62AE0IXjvm6+CgGqicwjqIng0Il2wRqP4sp/iujTL5M3fiWavBDWquA46Ryiq04NB3haOPm9Hmbtx3TPcWwCn77xTKif5UyGeru2NmiaYioIFvcfBjxhmS3o3ogUH63XWJOMMg4bQYcsYss9OouwcW3geJ+wP/HGPY0=
+	t=1750251956; cv=none; b=py6orQ3oU4910PqVD2F2OCtiJhGu8yumBTkXs6aCeFGXkNq7v096lxEY4norMqXYGkmthneept5YzzG/B+N7RYh/x0zFzJz+xLaiTN31JVY1ZXbHx5f2e7F5dFSNtAwzv2+VawHi1C3mpHBhJf5XN0WQuzMSpvUxo7r29sknbMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750251890; c=relaxed/simple;
-	bh=/tCzdXt+ockM6LlaMEgh7Zi7SPYptgyb1ZQQMfoYVN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GYGPOFCKTCBZ7+2jFthNzhkoiyj/lKbKZVfBLZ/yM/tq69wHpF5uay3z4V7OQXXLuCkjP+NAIwZ0ollrfVCEzfSP+X1I5DRcrYmzsVskzUOuylYYhWdEilyW7+sXDtncvUEYG4H7gCyRrHWC5ow/BfP2kyPL65wiZjjlNTgl88E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Md8qN3R1; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750251956; c=relaxed/simple;
+	bh=F8ZxHJuXpP/ytiKVy+Xk8yLKNEHQXQPYLN7cb+OD2XM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pYlh688VR3VKBPDQ9aS2/He/qEQdux0Ce6XIWoatosSaGc18X614AMTLwtlsZJ2/UnW6KAvzY2gVWYJyI813rU5Z72a5RfgaDc0fue88w+WHnYr6DoYlwx80eS1skUy80TWjNbLtIkN69YhYJml0l0nHfGkIzLjPosN4s8MmuP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=U7QLjMw1; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Md8qN3R1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750251889; x=1781787889;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/tCzdXt+ockM6LlaMEgh7Zi7SPYptgyb1ZQQMfoYVN4=;
-  b=Md8qN3R1Nsf6Ubr9WHEmKHZNZw8QgpE5uVRxWzrHQv0V62/sGJ7m4QZ1
-   2NyHvMFQCMwhdfl3Al2uGSYo0iFTuU5Z1Jy/oKCVR7GC0GvZYKrsPDSDY
-   drxG4semjO626yFPbzH5hP4gKgEmQ63TaKKs6agz8L60v2o/I+3AGFmyh
-   Ztas5lsufYOlJR1YkE+KpGe/h+cZ9+rZdtOiujoXHkxk99TrjHDxi/wgM
-   gjUiKaceWiszSz4cJLEjggfjqBuoTm2M9QPwF00w2/G3AmsPo07I6YzI1
-   bFruV9oaHWRSSStWDZc5FSRqclNEWh+IhY/BO2C3sLywMZWWLgNjXNz8V
-   Q==;
-X-CSE-ConnectionGUID: YPPuRKxAQRqccgtOYjsTUA==
-X-CSE-MsgGUID: /PvKVT3DR6S6bYCkxfnDkQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52554864"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="52554864"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 06:04:48 -0700
-X-CSE-ConnectionGUID: kxWTrLjFSFierB10b+exMQ==
-X-CSE-MsgGUID: DRv0dJ4vTUipwe25GWQOqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="173094405"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 18 Jun 2025 06:04:44 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uRsT4-000Jna-28;
-	Wed, 18 Jun 2025 13:04:42 +0000
-Date: Wed, 18 Jun 2025 21:04:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: Richard Leitner <richard.leitner@linux.dev>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	Richard Leitner <richard.leitner@linux.dev>
-Subject: Re: [PATCH v5 09/10] media: i2c: ov9282: implement try_ctrl for
- strobe_duration
-Message-ID: <202506182043.reVJKofN-lkp@intel.com>
-References: <20250617-ov9282-flash-strobe-v5-9-9762da74d065@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="U7QLjMw1"
+Message-ID: <ec77f310-6ded-4f7b-a15b-07855b0bbafb@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750251950;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qjE/HZ9yBukz5rd7dZg8Lj4y2PBMtnPQc/ZMBh/aZeQ=;
+	b=U7QLjMw16E3d4j/9tU2l8vV/TEBUrfppUtfnyQyFpODyD9X035A/i3DJZBjWsIXY0zEDHO
+	rGP/4XI183zBgjabbIuo+GcQDyxzdLgy6m2mqPe5f7k61/SHp8QrTpkP1FRVjzl1InD1D7
+	UgOsiA0hCzcMs/9FRvEHIKh6PUK37fI=
+Date: Wed, 18 Jun 2025 21:05:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka
+ <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+ Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra
+ <lokeshgidra@google.com>, Tangquan Zheng <zhengtangquan@oppo.com>,
+ Qi Zheng <zhengqi.arch@bytedance.com>, Lance Yang <ioworker0@gmail.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Li <zi.li@linux.dev>
+References: <20250607220150.2980-1-21cnbao@gmail.com>
+ <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+ <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
+ <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
+ <deb5ecd0-d57b-4a04-85b7-e6d11207aa8f@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <deb5ecd0-d57b-4a04-85b7-e6d11207aa8f@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250617-ov9282-flash-strobe-v5-9-9762da74d065@linux.dev>
-
-Hi Richard,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on d9946fe286439c2aeaa7953b8c316efe5b83d515]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Leitner/media-v4l-ctrls-add-a-control-for-flash-strobe-duration/20250617-153657
-base:   d9946fe286439c2aeaa7953b8c316efe5b83d515
-patch link:    https://lore.kernel.org/r/20250617-ov9282-flash-strobe-v5-9-9762da74d065%40linux.dev
-patch subject: [PATCH v5 09/10] media: i2c: ov9282: implement try_ctrl for strobe_duration
-config: i386-randconfig-051-20250618 (https://download.01.org/0day-ci/archive/20250618/202506182043.reVJKofN-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250618/202506182043.reVJKofN-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506182043.reVJKofN-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: drivers/media/i2c/ov9282.o: in function `ov9282_flash_duration_to_us':
->> drivers/media/i2c/ov9282.c:722: undefined reference to `__udivdi3'
->> ld: drivers/media/i2c/ov9282.c:722: undefined reference to `__udivdi3'
+X-Migadu-Flow: FLOW_OUT
 
 
-vim +722 drivers/media/i2c/ov9282.c
 
-   711	
-   712	static u32 ov9282_flash_duration_to_us(struct ov9282 *ov9282, u32 value)
-   713	{
-   714		/*
-   715		 * As the calculation in ov9282_us_to_flash_duration uses an integer
-   716		 * divison calculate in ns here to get more precision. Then check if
-   717		 * we need to compensate that divison by incrementing the �s result.
-   718		 */
-   719		u32 frame_width = ov9282->cur_mode->width + ov9282->hblank_ctrl->val;
-   720		u64 ns = value * 1000 * frame_width / OV9282_STROBE_SPAN_FACTOR;
-   721	
- > 722		return DIV_ROUND_UP(ns, 1000);
-   723	}
-   724	
+On 2025/6/18 18:18, David Hildenbrand wrote:
+> On 18.06.25 11:52, Barry Song wrote:
+>> On Wed, Jun 18, 2025 at 10:25 AM Lance Yang <lance.yang@linux.dev> wrote:
+>>>
+>>> Hi all,
+>>>
+>>> Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
+>>>
+>>> On 2025/6/17 21:38, Lorenzo Stoakes wrote:
+>>> [...]
+>>>>
+>>>> On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
+>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>>>
+>>>>> Certain madvise operations, especially MADV_DONTNEED, occur far more
+>>>>> frequently than other madvise options, particularly in native and Java
+>>>>> heaps for dynamic memory management.
+>>>>>
+>>>>> Currently, the mmap_lock is always held during these operations, 
+>>>>> even when
+>>>>> unnecessary. This causes lock contention and can lead to severe 
+>>>>> priority
+>>>>> inversion, where low-priority threads—such as Android's 
+>>>>> HeapTaskDaemon—
+>>>>> hold the lock and block higher-priority threads.
+>>>>>
+>>>>> This patch enables the use of per-VMA locks when the advised range 
+>>>>> lies
+>>>>> entirely within a single VMA, avoiding the need for full VMA 
+>>>>> traversal. In
+>>>>> practice, userspace heaps rarely issue MADV_DONTNEED across 
+>>>>> multiple VMAs.
+>>>>>
+>>>>> Tangquan’s testing shows that over 99.5% of memory reclaimed by 
+>>>>> Android
+>>>>> benefits from this per-VMA lock optimization. After extended runtime,
+>>>>> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+>>>>> only 1,231 fell back to mmap_lock.
+>>>>>
+>>>>> To simplify handling, the implementation falls back to the standard
+>>>>> mmap_lock if userfaultfd is enabled on the VMA, avoiding the 
+>>>>> complexity of
+>>>>> userfaultfd_remove().
+>>>>>
+>>>>> Many thanks to Lorenzo's work[1] on:
+>>>>> "Refactor the madvise() code to retain state about the locking mode
+>>>>> utilised for traversing VMAs.
+>>>>>
+>>>>> Then use this mechanism to permit VMA locking to be done later in the
+>>>>> madvise() logic and also to allow altering of the locking mode to 
+>>>>> permit
+>>>>> falling back to an mmap read lock if required."
+>>>>>
+>>>>> One important point, as pointed out by Jann[2], is that
+>>>>> untagged_addr_remote() requires holding mmap_lock. This is because
+>>>>> address tagging on x86 and RISC-V is quite complex.
+>>>>>
+>>>>> Until untagged_addr_remote() becomes atomic—which seems unlikely in
+>>>>> the near future—we cannot support per-VMA locks for remote processes.
+>>>>> So for now, only local processes are supported.
+>>>
+>>> Just to put some numbers on it, I ran a micro-benchmark with 100
+>>> parallel threads, where each thread calls madvise() on its own 1GiB
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Correction: it uses 256MiB chunks per thread, not 1GiB ...
+
+>>> chunk of 64KiB mTHP-backed memory. The performance gain is huge:
+>>>
+>>> 1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~47%
+>>> faster)
+>>> 2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~64%
+>>> faster)
+>>
+>> Thanks for the report, Lance. I assume your micro-benchmark includes some
+>> explicit or implicit operations that may require mmap_write_lock().
+>> As  mmap_read_lock() only waits for writers and does not block other
+>> mmap_read_lock() calls.
+> 
+> The number rather indicate that one test was run with (m)THPs enabled 
+> and the other not? Just a thought. The locking overhead from my 
+> experience is not that significant.
+> 
+
+Both tests were run with 64KiB mTHP enabled on an Intel(R) Xeon(R)
+Silver 4314 CPU. The micro-benchmark code is following:
+
+```
+#define _GNU_SOURCE
+#include <pthread.h>
+#include <sys/mman.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+
+#define NUM_THREADS 100
+#define MMAP_SIZE (512L * 1024 * 1024)
+#define WRITE_START (128L * 1024 * 1024)
+#define WRITE_SIZE (256L * 1024 * 1024)
+#define MADV_HUGEPAGE 14
+#define MADV_DONTNEED 4
+#define MADV_FREE 8
+
+typedef struct {
+     int id;
+     int madvise_option;
+} thread_data_t;
+
+void *thread_function(void *arg) {
+     thread_data_t *data = (thread_data_t *)arg;
+
+     uint8_t *mmap_area = mmap(NULL, MMAP_SIZE, PROT_NONE, MAP_PRIVATE | 
+MAP_ANONYMOUS, -1, 0);
+     if (mmap_area == MAP_FAILED) {
+         perror("mmap");
+         return NULL;
+     }
+
+     if (mprotect(mmap_area + WRITE_START, WRITE_SIZE, PROT_READ | 
+PROT_WRITE) != 0) {
+         perror("mprotect");
+         munmap(mmap_area, MMAP_SIZE);
+         return NULL;
+     }
+
+     if (madvise(mmap_area + WRITE_START, WRITE_SIZE, MADV_HUGEPAGE) != 0) {
+         perror("madvise hugepage");
+         munmap(mmap_area, MMAP_SIZE);
+         return NULL;
+     }
+
+     for (size_t i = 0; i < WRITE_SIZE; i++) {
+         mmap_area[WRITE_START + i] = 255;
+     }
+
+     struct timespec start_time, end_time;
+     clock_gettime(CLOCK_MONOTONIC, &start_time);
+
+     if (madvise(mmap_area + WRITE_START, WRITE_SIZE, 
+data->madvise_option) != 0) {
+         perror("madvise");
+     }
+
+     clock_gettime(CLOCK_MONOTONIC, &end_time);
+     double elapsed_time = (end_time.tv_sec - start_time.tv_sec) +
+                           (end_time.tv_nsec - start_time.tv_nsec) / 1e9;
+     printf("Thread %d elapsed time: %.6f seconds\n", data->id, 
+elapsed_time);
+
+     munmap(mmap_area, MMAP_SIZE);
+     return NULL;
+}
+
+int main(int argc, char *argv[]) {
+     if (argc != 2) {
+         fprintf(stderr, "Usage: %s <madvise_option>\n", argv[0]);
+         fprintf(stderr, "  1: MADV_DONTNEED\n");
+         fprintf(stderr, "  2: MADV_FREE\n");
+         return EXIT_FAILURE;
+     }
+
+     int madvise_option;
+     if (atoi(argv[1]) == 1) {
+         madvise_option = MADV_DONTNEED;
+     } else if (atoi(argv[1]) == 2) {
+         madvise_option = MADV_FREE;
+     } else {
+         fprintf(stderr, "Invalid madvise_option. Use 1 for 
+MADV_DONTNEED or 2 for MADV_FREE.\n");
+         return EXIT_FAILURE;
+     }
+
+     pthread_t threads[NUM_THREADS];
+     thread_data_t thread_data[NUM_THREADS];
+     int i;
+
+     for (i = 0; i < NUM_THREADS; i++) {
+         thread_data[i].id = i;
+         thread_data[i].madvise_option = madvise_option;
+         pthread_create(&threads[i], NULL, thread_function, 
+&thread_data[i]);
+     }
+     for (i = 0; i < NUM_THREADS; i++) {
+         pthread_join(threads[i], NULL);
+     }
+
+     sleep(10);
+     return 0;
+}
+```
+
+Thanks,
+Lance
+
