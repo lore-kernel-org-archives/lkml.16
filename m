@@ -1,121 +1,219 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4B6217F2E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CEB1B78F3;
+	Wed, 18 Jun 2025 20:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750279934; cv=none; b=rY4cend38uamLaBg7CT0cDAadmD/DNl1B1zibhNSxcPBlTYGv8WfO2GKfOMEOtBRMKsI9tIAtnMte1SM6qOC6J3CpvhGe6EjTEwB+okg26zQosWohsbZQjpB6CQzyGgm5oycI7MvMCId5+4u+RKBWnM8da9CcV6dSqKtB2O2jEY=
+	t=1750280041; cv=none; b=XHsC+ag/OziD7T8axSBdBpA0DRLfkLSgo+oHzJBJXpmIyfDr3d3wXKU5b3LMIngnQ7/XZoSVlGG6shX6m3Hpzm/WF4Pv9qa5wCNbSo9RO4W61OIMqpFovPNe/PH9LCb3dt5j3eEnprpB+h+BcyTx6Lkhq9CtVZUMutxh1QK2O2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750279934; c=relaxed/simple;
-	bh=udfxxBUYqOxwF4CpJe01eYlAvRjWcIPtTrlrYNAkw1Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cw4WfvoTvHcGvN2K5BiE0ImGzw9Vv9cZ3zVzAcTUh0yuyvDGAMY2WuNKX/o2ZVUrEwNFMO0oGO9fH93f24ZTZ+mwFMNPAxddl60fJFpcC/rikr2CbDaG9vIJsLLvpesoHo9fnlATpfQlMLnY+4OD/EIyGqs+chrYv0ZzmeSKJBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Tx6xHE3d; arc=none smtp.client-ip=209.85.166.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1750280041; c=relaxed/simple;
+	bh=gOBEu0owOjNUHUDsjIYfOnYi7HEIw5Ru6SOhY+uVNR4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=M28iZvm5pvgt0ChsMm+0bHTZCdW5h8BN1bKJGTw7qYXiwtEybqy+TLQGlR23GlM0vBRQ5SFj2DdVrFG5zC5fomVBaAhDFH4K4cG1NgW0j45b9h+Qr8TTzErqycwmHpTo9vwYvNhNBVkEokZexf8/8G744eACAhzRfFC1/t0Q4u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mC9OSZ/k; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Tx6xHE3d"
-Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-86d0c5981b3so867439f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:52:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mC9OSZ/k"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-234bfe37cccso2347845ad.0;
+        Wed, 18 Jun 2025 13:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750279930; x=1750884730; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0Y7/EqwIOfu/4i0R5S1fQpdZTumyIs1zK/W1iPvlsMg=;
-        b=Tx6xHE3dr5yHfhCSAYw1ZM8boLJLe1tjT8s2V04jHLarNX5n7+d76DtwBP9aFpH0oq
-         YzFwthNCK3gTvz0Ga+1dCmfwAqUCenpM0o+vUkQwZtgpp2frSKFQixUM+Iv3zQszVXbg
-         ndyWdXNwPHKHhEvnGY0EdcrNhl+zdloqEA9II=
+        d=gmail.com; s=20230601; t=1750280039; x=1750884839; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yneCXip3zq3daJc5WpbKw9LJ/ijlzmPle+nf8zBnMkw=;
+        b=mC9OSZ/krh+pN0HK2VaLwizc3w/G+M/UHPapV7MU5PRBGHyZP7Y58unpE2feBJWGZT
+         uNNdvoMpdOm7qNhjvE2XfbR1bV3SlW4KwvKLleSPafqbZtzIZnDYKLN3ylCskewfjl4F
+         EDnF4wTLxy8TgEkcaqMyhsiG2tKrpaSWsFeFopOKTcgmy1BgrxzjMTaTK3d1G2gZnxy7
+         qeFylZf8/SjYeqyM67AZY51LPY2hA0+78EF6085QEoGSD9o2phBmidiT7Y1CYe2hHXwX
+         BKZzFKXgIfNq+8W6/Y4KQr/gF3cUF4Oy3ncwGrv+DryDDSd/gNYyKGMfVBc5ZjJesNlP
+         9Eog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750279930; x=1750884730;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Y7/EqwIOfu/4i0R5S1fQpdZTumyIs1zK/W1iPvlsMg=;
-        b=YmR01D+TYHmOhqyLb8vKjj5QOyn2Faj8UzI5duNxO+ieJ9cSYeH3B4kkTP1vvJW7IX
-         46jrQDuGqmh6leDHIApNDBA2n4+qNsSUVLuaelt3FHoV7KST5DxZGonPOQXmOkExT5o5
-         2Ob0L7PsN6MNLMrOYo+PP0CUeTEPdKmg6fyRKXxgPWCZKDCh39TBmcKSarberENxctof
-         IqFNkwEZGKP5kw63HTRekBTi3cLmN1hVqojatqxgX6jv80nf1xHhiIfxoTUCVsT1fguO
-         gHY7jJZCrfICpnce0DGHzR6nCW15e9PKEN05id+LFC4LilrT5AurCkgmRGu9+KyvJh+7
-         Z2Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJQD03hki/IM3JHsCCidBPftBh16ZvvmcLxcsi3PtiRvPph84D7D/kWFjvQeHXmR3Q6ORgmDVYK24Ybms=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzlx5Yp1KPreSIuqZg/UkdMCXI0OqyRwM65/de+S/0gT2Ei0x7n
-	tAFzM9WAZcK+pYNXqt7be0Brf4c3I63POxouD2Vf0Jxh2WcKbjJM4G5W7WUlINdskgo=
-X-Gm-Gg: ASbGncs9dWr4CswGuVqnVh7QZbQcgG6qca2n1usaV4diyQ/qMWTHA+V50Qu2am5FrM1
-	Hf2a4/sdeOuJz04bwh810PbdXykYu0J9rwabTGSIhkBfG9uLCd0SzJJEJo49u/oZojmkakAuHJR
-	6BrL2DO2MnoWlLtVZj+r9UsxmoeFZMEbl+dx08GQI9uScq2MPBKTufw+4FlGpLEoEsD9TWxSzCy
-	XhC0ZjkzVbbfmk/BTVuASeTYNC0FdCfDIGL0zjfqevHSjbXXrtZwn9NxasDiG9Eppbl4o/wCc1b
-	ZGlG0MQsrwtmKmwZHpSn4kQaR1LKV1MWSbQ5nAmSTOvJ60cMKtN4PtzK/CzS79eZ1cTalAanOA=
-	=
-X-Google-Smtp-Source: AGHT+IFPfu2uaM1NocL4Z4iAcYmQ75ftw0wdya9PlU93jjCX0lxXWAzQlA6uFQLDr/7/ZZFP1+EZow==
-X-Received: by 2002:a05:6602:3fc3:b0:875:acf6:21a with SMTP id ca18e2360f4ac-875dedc39afmr2110106839f.11.1750279930245;
-        Wed, 18 Jun 2025 13:52:10 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-50149ca31b4sm2952500173.132.2025.06.18.13.52.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 13:52:09 -0700 (PDT)
-Message-ID: <9940a310-5a39-4489-a1bf-0809e5914c08@linuxfoundation.org>
-Date: Wed, 18 Jun 2025 14:52:08 -0600
+        d=1e100.net; s=20230601; t=1750280039; x=1750884839;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yneCXip3zq3daJc5WpbKw9LJ/ijlzmPle+nf8zBnMkw=;
+        b=VnIbnegovVrF63ZE0IuyVtoymcZ2irSdRt115nPBEykrHXXLCRkdqbNxZLFPkC2UpU
+         w7eT1yWWUVf9w4jFOlzO3m62P0/KTDxpf0rpwCItIskNjfEBX8mktYY6CXjZSE1b9+e6
+         PYwP77Sts2is22UoMbJY0l26yx4FHagks92bgzD9dxLMHTXE5SS+dXDsIO7njgCQ1jFH
+         CzdQiHvPJalFE8u7ZlK6kJSQIlV0srn6NKDkA2uQgNguJPtnz814NQATEu/w0aqgAjjF
+         uZbNIZKo832PgTdz6ZbasegLZ2pZhD9JcuxkW5YsmXDR/8XMwNhbF9Hv3yPOl30BlRv3
+         9jew==
+X-Forwarded-Encrypted: i=1; AJvYcCU7L5JkNnS7AFE23mnfKwpZYU9W0MSLlg6fuGU2Faj+DcbcW2k78djDS9hhKHK4Tm97iqs=@vger.kernel.org, AJvYcCVg1cb99qHk2d1KnbLVSla+gUzttu2bsZZGCHBlDUuM3GEZpZlFrpBNP78mId5AK7bUUETrjNpnBGVdnbvN@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxbOVbDek2hFbyvW/ECYgtWvir96joROzsLowEiLhOAnIi5S1V
+	5zE2HUBfI29epyEXYvgcN3rQ+ioof6UDABOU6Ri+t8mpcZaI5U1rV3/H
+X-Gm-Gg: ASbGncvuIxstHEwRkmAa9baWqqLDJ/XW+2sX2CPPmS7PlrcaBdNiSd6aOZ91PJySYTy
+	Vbotq2QLZn2FhGGx3czSS1U+er/OuitxPatBGPSAFZTU8pUyY/uT7OEuQmPokLKaP11pkeCABll
+	mWk64Kbsq8YPvLY1TGPaGEQuOAM4ni4Q91dAjLIojCsTmH39Vyx4jWiMc+q6NxYe2AnBu665CRl
+	o1j2+C82EFDwr+/AFv21AYjvVvPylQ/poMJCEmADsqwX/ilydApfv3QCTsGlThk9Dvjeg9Zn1ds
+	AQiRtD/DwvQL2RH4qqxptequpjyHkJ/TVdDmVZbzpV6/dD/FKhU6rulW7dBe8zMB67az
+X-Google-Smtp-Source: AGHT+IE0BKqOcD1U+E6xed/AmC3x8XuRzt9YWTPtRevws0xEiGoGykgp2QHUI2aE8ULg7Wd9Gc7TiQ==
+X-Received: by 2002:a17:903:1ac8:b0:234:8f5d:e3c0 with SMTP id d9443c01a7336-2366affc3f0mr222417685ad.6.1750280039081;
+        Wed, 18 Jun 2025 13:53:59 -0700 (PDT)
+Received: from [192.168.0.56] ([38.34.87.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365de782d3sm105599005ad.115.2025.06.18.13.53.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 13:53:58 -0700 (PDT)
+Message-ID: <25d3c6762681b583165b1afe6b1837b22d20b818.camel@gmail.com>
+Subject: Re: [PATCH v2 1/2] bpf, verifier: Improve precision for BPF_ADD and
+ BPF_SUB
+From: Eduard Zingerman <eddyz87@gmail.com>
+To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>, 
+	ast@kernel.org
+Cc: m.shachnai@rutgers.edu, srinivas.narayana@rutgers.edu, 
+	santosh.nagarakatte@rutgers.edu, Daniel Borkmann <daniel@iogearbox.net>,
+ John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko
+ <andrii@kernel.org>, Martin KaFai Lau	 <martin.lau@linux.dev>, Song Liu
+ <song@kernel.org>, Yonghong Song	 <yonghong.song@linux.dev>, KP Singh
+ <kpsingh@kernel.org>, Stanislav Fomichev	 <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 	bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Date: Wed, 18 Jun 2025 13:53:56 -0700
+In-Reply-To: <20250617231733.181797-2-harishankar.vishwanathan@gmail.com>
+References: <20250617231733.181797-1-harishankar.vishwanathan@gmail.com>
+	 <20250617231733.181797-2-harishankar.vishwanathan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] selftests: filesystems: Add functional test for the
- abort file in fusectl
-To: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>,
- Miklos Szeredi <miklos@szeredi.hu>, Christian Brauner <brauner@kernel.org>
-Cc: zhanjun@uniontech.com, niecheng1@uniontech.com,
- Amir Goldstein <amir73il@gmail.com>, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250612094033.2538122-2-chenlinxuan@uniontech.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250612094033.2538122-2-chenlinxuan@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 6/12/25 03:40, Chen Linxuan wrote:
-> This patch add a simple functional test for the "abort" file
-> in fusectlfs (/sys/fs/fuse/connections/ID/about).
-> 
-> A simple fuse daemon is added for testing.
-> 
-> Related discussion can be found in the link below.
-> 
-> Link: https://lore.kernel.org/all/CAOQ4uxjKFXOKQxPpxtS6G_nR0tpw95w0GiO68UcWg_OBhmSY=Q@mail.gmail.com/
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> Co-developed-by: Miklos Szeredi <miklos@szeredi.hu>
-> Reviewed-by: Miklos Szeredi <miklos@szeredi.hu>
+On Tue, 2025-06-17 at 19:17 -0400, Harishankar Vishwanathan wrote:
+> This patch improves the precison of the scalar(32)_min_max_add and
+> scalar(32)_min_max_sub functions, which update the u(32)min/u(32)_max
+> ranges for the BPF_ADD and BPF_SUB instructions. We discovered this more
+> precise operator using a technique we are developing for automatically
+> synthesizing functions for updating tnums and ranges.
+>=20
+> According to the BPF ISA [1], "Underflow and overflow are allowed during
+> arithmetic operations, meaning the 64-bit or 32-bit value will wrap".
+> Our patch leverages the wrap-around semantics of unsigned overflow and
+> underflow to improve precision.
+>=20
+> Below is an example of our patch for scalar_min_max_add; the idea is
+> analogous for all four functions.
+>=20
+> There are three cases to consider when adding two u64 ranges [dst_umin,
+> dst_umax] and [src_umin, src_umax]. Consider a value x in the range
+> [dst_umin, dst_umax] and another value y in the range [src_umin,
+> src_umax].
+>=20
+> (a) No overflow: No addition x + y overflows. This occurs when even the
+> largest possible sum, i.e., dst_umax + src_umax <=3D U64_MAX.
+>=20
+> (b) Partial overflow: Some additions x + y overflow. This occurs when
+> the largest possible sum overflows (dst_umax + src_umax > U64_MAX), but
+> the smallest possible sum does not overflow (dst_umin + src_umin <=3D
+> U64_MAX).
+>=20
+> (c) Full overflow: All additions x + y overflow. This occurs when both
+> the smallest possible sum and the largest possible sum overflow, i.e.,
+> both (dst_umin + src_umin) and (dst_umax + src_umax) are > U64_MAX.
+>=20
+> The current implementation conservatively sets the output bounds to
+> unbounded, i.e, [umin=3D0, umax=3DU64_MAX], whenever there is *any*
+> possibility of overflow, i.e, in cases (b) and (c). Otherwise it
+> computes tight bounds as [dst_umin + src_umin, dst_umax + src_umax]:
+>=20
+> if (check_add_overflow(*dst_umin, src_reg->umin_value, dst_umin) ||
+>     check_add_overflow(*dst_umax, src_reg->umax_value, dst_umax)) {
+> 	*dst_umin =3D 0;
+> 	*dst_umax =3D U64_MAX;
+> }
+>=20
+> Our synthesis-based technique discovered a more precise operator.
+> Particularly, in case (c), all possible additions x + y overflow and
+> wrap around according to eBPF semantics, and the computation of the
+> output range as [dst_umin + src_umin, dst_umax + src_umax] continues to
+> work. Only in case (b), do we need to set the output bounds to
+> unbounded, i.e., [0, U64_MAX].
+>=20
+> Case (b) can be checked by seeing if the minimum possible sum does *not*
+> overflow and the maximum possible sum *does* overflow, and when that
+> happens, we set the output to unbounded:
+>=20
+> min_overflow =3D check_add_overflow(*dst_umin, src_reg->umin_value, dst_u=
+min);
+> max_overflow =3D check_add_overflow(*dst_umax, src_reg->umax_value, dst_u=
+max);
+>=20
+> if (!min_overflow && max_overflow) {
+> 	*dst_umin =3D 0;
+> 	*dst_umax =3D U64_MAX;
+> }
+>=20
+> Below is an example eBPF program and the corresponding log from the
+> verifier. At instruction 7: (0f) r5 +=3D r3, due to conservative overflow
+> handling, the current implementation of scalar_min_max_add() sets r5's
+> bounds to [0, U64_MAX], which is then updated by reg_bounds_sync() to
+> [0x3d67e960f7d, U64_MAX].
+>=20
+> 0: R1=3Dctx() R10=3Dfp0
+> 0: (85) call bpf_get_prandom_u32#7    ; R0_w=3Dscalar()
+> 1: (bf) r3 =3D r0                       ; R0_w=3Dscalar(id=3D1) R3_w=3Dsc=
+alar(id=3D1)
+> 2: (18) r4 =3D 0x950a43d67e960f7d       ; R4_w=3D0x950a43d67e960f7d
+> 4: (4f) r3 |=3D r4                      ; R3_w=3Dscalar(smin=3D0x950a43d6=
+7e960f7d,smax=3D-1,umin=3D0x950a43d67e960f7d,smin32=3D0xfe960f7d,umin32=3D0=
+x7e960f7d,var_off=3D(0x950a43d67e960f7d; 0x6af5bc298169f082)) R4_w=3D0x950a=
+43d67e960f7d
+> 5: (18) r5 =3D 0xc014a00000000000       ; R5_w=3D0xc014a00000000000
+> 7: (0f) r5 +=3D r3                      ; R3_w=3Dscalar(smin=3D0x950a43d6=
+7e960f7d,smax=3D-1,umin=3D0x950a43d67e960f7d,smin32=3D0xfe960f7d,umin32=3D0=
+x7e960f7d,var_off=3D(0x950a43d67e960f7d; 0x6af5bc298169f082)) R5_w=3Dscalar=
+(smin=3D0x800003d67e960f7d,umin=3D0x3d67e960f7d,smin32=3D0xfe960f7d,umin32=
+=3D0x7e960f7d,var_off=3D(0x3d67e960f7d; 0xfffffc298169f082))
+> 8: (b7) r0 =3D 0                        ; R0_w=3D0
+> 9: (95) exit
+>=20
+> With our patch, r5's bounds after instruction 7 are set to a much more
+> precise [0x551ee3d67e960f7d, 0xc0149fffffffffff] by
+> scalar_min_max_add().
+>=20
+> ...
+> 7: (0f) r5 +=3D r3                      ; R3_w=3Dscalar(smin=3D0x950a43d6=
+7e960f7d,smax=3D-1,umin=3D0x950a43d67e960f7d,smin32=3D0xfe960f7d,umin32=3D0=
+x7e960f7d,var_off=3D(0x950a43d67e960f7d; 0x6af5bc298169f082)) R5_w=3Dscalar=
+(smin=3D0x800003d67e960f7d,umin=3D0x551ee3d67e960f7d,umax=3D0xc0149ffffffff=
+fff,smin32=3D0xfe960f7d,umin32=3D0x7e960f7d,var_off=3D(0x3d67e960f7d; 0xfff=
+ffc298169f082))
+> 8: (b7) r0 =3D 0                        ; R0_w=3D0
+> 9: (95) exit
+>=20
+> The logic for scalar32_min_max_add is analogous. For the
+> scalar(32)_min_max_sub functions, the reasoning is similar but applied
+> to detecting underflow instead of overflow.
+>=20
+> We verified the correctness of the new implementations using Agni [3,4].
+>=20
+> We since also discovered that a similar technique has been used to
+> calculate output ranges for unsigned interval addition and subtraction
+> in Hacker's Delight [2].
+>=20
+> [1] https://docs.kernel.org/bpf/standardization/instruction-set.html
+> [2] Hacker's Delight Ch.4-2, Propagating Bounds through Add=E2=80=99s and=
+ Subtract=E2=80=99s
+> [3] https://github.com/bpfverif/agni
+> [4] https://people.cs.rutgers.edu/~sn349/papers/sas24-preprint.pdf
+>=20
+> Co-developed-by: Matan Shachnai <m.shachnai@rutgers.edu>
+> Signed-off-by: Matan Shachnai <m.shachnai@rutgers.edu>
+> Co-developed-by: Srinivas Narayana <srinivas.narayana@rutgers.edu>
+> Signed-off-by: Srinivas Narayana <srinivas.narayana@rutgers.edu>
+> Co-developed-by: Santosh Nagarakatte <santosh.nagarakatte@rutgers.edu>
+> Signed-off-by: Santosh Nagarakatte <santosh.nagarakatte@rutgers.edu>
+> Signed-off-by: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.c=
+om>
 > ---
-> Changes in v4:
-> - Apply patch suggested by Miklos Szeredi
->    - Setting up a userns environment for testing
->    - Fix a EBUSY on umount/rmdir
-> - Link to v3: https://lore.kernel.org/all/20250610021007.2800329-2-chenlinxuan@uniontech.com/
-> Changes in v3:
-> - Apply changes suggested by Amir Goldstein
->    - Rename the test subdir to filesystems/fuse
->    - Verify errno when connection is aborted
-> - Apply changes suggested by Shuah Khan
->    - Update commit message
-> - Link to v2: https://lore.kernel.org/all/20250517012350.10317-2-chenlinxuan@uniontech.com/
-> Changes in v2:
-> - Apply changes suggested by Amir Goldstein
->     - Check errno
-> - Link to v1: https://lore.kernel.org/all/20250515073449.346774-2-chenlinxuan@uniontech.com/
 
-+ adding Christian to the thread
+Acked-by: Eduard Zingerman <eddyz87@gmail.com>
 
-Hi Christian,
+[...]
 
-Would you like me to take this patch through my tree?
-
-thanks,
--- Shuah
