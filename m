@@ -1,100 +1,130 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03651D63FC
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:15:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBC71D63FC;
+	Wed, 18 Jun 2025 10:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241726; cv=none; b=CGsBiLkKinGoVS4lUelAnYlwNNk8R5wQLGAgnIBsY4j5B51exNYIR8Bn2xLn0JGy52wjA2LUYCa0+ODEhiLwbf2wYhfM6NKYSYJuwTWZ/jzp42DQpnhuPLto7J9Jf2jj5i39Bu40nX/t0CCODJ+fX0AlRzv2N+Bjs7wrUJrgKmI=
+	t=1750241731; cv=none; b=pZzcBoh5AHFmxEIeCO/H0cO4Spo4hR/A9694iweLB4XMcXjDPeCj0OOJuR3tTnvNcnLOeR/HXJHZa2Qkb4Lp7FnK83JI7ms0yT64ZP3kr1tlBKaVtV6nLdl7XOp2cQphNKwB7TyC4vtmyAGaCudYEhYk6/RGN+Fm4t7OQBJzLbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241726; c=relaxed/simple;
-	bh=jD921DQHaDQ1ESWyrhW1JyQ7YkUvB798UiZzCJTny/I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oc9hL5O+pCI9tRFjTdUKQ6+Qhcv8uyVTvzHi8noIN1ImyNyykCMMNmEiQsUVxzEuldGvo5/gRGITJ8CxBW4/oocBTbC8Bs0FIcmah68cN6HwgbQ/8xt9oWkLapDy+YvR6n4Jcftw6sp6MkLyMo3hJgjluopHvocg95YFF2xkkvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lJgl9yHq; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750241731; c=relaxed/simple;
+	bh=ltwb9DIv2KJ/ugDKG09NyjxtUjK7KgzzXwT+rpLfPek=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WSs3k/yyTy8iL+ORyD88n+3dCIKrVbVU4posefJf9oVBa/e6yc03daJoQ9FanJ22qJkvbEV8bQh2LmIaLpv6K4Nb2w0c9nh4AwOOTN0u6amZjkhhx4KTU1IT4dlyLRzygagGicEjAUFspAcGj8ng6GRMuUXIEwt6F7/Llgdsuzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RAHCGE2M; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lJgl9yHq"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-32ac52f78c1so67551471fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:15:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAHCGE2M"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so5354572f8f.1;
+        Wed, 18 Jun 2025 03:15:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750241723; x=1750846523; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750241728; x=1750846528; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jD921DQHaDQ1ESWyrhW1JyQ7YkUvB798UiZzCJTny/I=;
-        b=lJgl9yHqBu8jryFDFVQ4GSv9B+Z8KJq/GKGTBxW9xGW/sWdtlDPr4FwVt/Ms4tYBw/
-         wzKjkA7uMQt+M5fRcqW4WnnYuVrzDu19CLbuYJZvJGxdHdD8c7HYr8xidqWaTZ/zprWv
-         MsND+kOgGtUfAzW/gPhbA1wgOZyiaEpAZjLL5+Q4lpMQA2Bh76RDvXRokkIoFpBEKbpQ
-         UvWFJq2eYm7A2Lxa3BRZHaRQ5+ZmKPLgoNsLi8DVBuTUPf/xFJXj8i4XN+soFPB+pF04
-         9T2MGXBT2y96bDhfzrSXSwi6qq38wufY8ertY9hZt2o4k2UXrSmqvqtOjX90BoKutrph
-         QabA==
+        bh=jJsvhinXAz/28vXCLsDhFRnAr3ugS1hgCI0FXeRg2Pw=;
+        b=RAHCGE2MlP3J8zFKH8GZFkN5y+BVE3oCfCN8coAqpMan2fFEN9mhD7Wgoi3/zr9mEK
+         F9t2OGHvVwDx2cOLsYhNnWRkdDQb5yuNXiAiSAqnMnaikfEONlqmuhBGE1cY/unuzaxZ
+         SFXiZdT3vO9fiV3HsxsQ9N2fLMCXba8UJBdrKjDURZAEydhuNe1w3hZfZIkFNWzi8Uwe
+         195lNKxrF+8Eo6K6MgQmQibuUBoe9OaE78vnq4UmOlZ5V0xO6oDbajh3LTERNZfZ9yHI
+         hIXy7aF8I/2OAOtn2oIXSMwmqimOI1qLM/Hmx/D1N5L6eapqgzvSH+9zBxchQv5xEJi+
+         EY/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750241723; x=1750846523;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jD921DQHaDQ1ESWyrhW1JyQ7YkUvB798UiZzCJTny/I=;
-        b=abSiCjavCpJPUDbtUo/bXIY7Ous+lyHpFV65N5W3P/IpfShRqa2Ve3GjvtI7xRXGBu
-         C/hSOsxCkJHmZHkc2wSlaLcnaWL2c65MdgEYb+wd60piNGSvgXY73fY2LwJtVFerXR09
-         paDReYKGYIZ266H2v12YkGFyIfsgxwHix5auwyxC26DrvoUxVN1EdeqQrr/kViLW8kW4
-         51zkfGt68nckYBDhTRep34RjyK5B7wW3k5a6r01nv/Ji94hliNjU1pD2M+3DI5Vt3Ap1
-         55A9vAJI9C2Ueubv1YRyRUq3QidBTfi5v9+3rmxFN+Iy28/drhYF71BD5zMR2wfXKVWw
-         gqtw==
-X-Forwarded-Encrypted: i=1; AJvYcCUL5mCtSQEF02kX0cfNocPXSLvuP6+HoUUd9PEb2GPGVrGcGhExCdGkFUW1rBTiof2x8Lo3xhBDDCNyZVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yytu2aqFbe5LlU3LpYmp/k9RecV4zxH6CHXPOlIX1TGI+lqDlGj
-	A65wGiis7wHWQo9p4X8/orEGFKicFlaoKvxvL4vRjmvxt8zl0Jq2G5RAK99X6u+a8OI3llo4a/b
-	59InizpGlsQzdRy9XQk5Nk+sTVoQpxW2vrN3h9Mtf8A==
-X-Gm-Gg: ASbGncvb7vo7eQdVl14juk9ULb96un3eu6eeQPXmR/tijtndPRxTmI8HehUtYXfEWDv
-	eHzMqvVPYOo9Hw5f2iZ3rlwVDFkJiFDzKQdYzPBVzEhNLffWjufCtkitK7+BjoEPs9joilIeme2
-	oQlmmP17rbrQl5Y4ErnIbvZRnrJ16n8bJoE24Ob89lAbM=
-X-Google-Smtp-Source: AGHT+IFgJoTNO+BsB4HVVc11Iwmn03x/+8pEoCMR5VEUoD09rS2tyjDc5RccGdUlZPyD0CvACF53jo8rK9pUhRXX4xI=
-X-Received: by 2002:a2e:a546:0:b0:32a:648e:7ee3 with SMTP id
- 38308e7fff4ca-32b4a6dbc53mr60545701fa.25.1750241723005; Wed, 18 Jun 2025
- 03:15:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750241728; x=1750846528;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jJsvhinXAz/28vXCLsDhFRnAr3ugS1hgCI0FXeRg2Pw=;
+        b=mvuUiJPFetY50g+8N5HwKGRvh7ozDXSzX/Eh/v/hcx7k6KiZIeqIY4qE/jVcXpzzpU
+         J4apFdRcQK4YmA4oqBN9bh2OsQGvSZzkQjvUN3DuBFWHhrxSlxenYZ9ybcBa0Is/ulw+
+         10i4Vd+5zX8nBsFoGjJiPZfsPCmlM3TadzT1rLgSw9nzR9h7r9mIk6P7CRSfJUJ7/K+z
+         ElJqGYl5R9GyL2Dvo7cUXKKtOKwozRpsn9qytr4KoV0so/c9Hz6omhmHvFU46jHrYJte
+         6FiEljlcK5azpLGkj3sSUwteoYQQeu7x2I0NwoWWoVzrmqVVVjly2uDKrvb11Fovbggi
+         cWdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVxXMx/UH6wMg3Vo9rBXki+Zij0naUbfjQoMx2/ET4Z721xO6yMksn3N41oFITvGCOt+VKqwD6DGSL@vger.kernel.org, AJvYcCVV/FsqoehO74Ql8q5gtKNUtCGqLEReOTl/c95bTZZLIgao8hINC5p+6RW/Np60fXj3tHhdosr2PjvJCsry@vger.kernel.org, AJvYcCWkQwYkeiyqJk0+mCBZlhZfE91Iq+XU4DoTrNWnq3khrjcIb2IH//59EWphyRC6S0cfDS+2bA8zJ3V1epd/Q1E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yziiphl/qNRgo8v/NO0bslYnkyIX0b+Z8tnRpjQAFxF9aMD4bEc
+	pDYcNNspTE/oXp6Bk/Jy2WdXCifOHa2PeF1KXL0EVtogNdZ0jQoq59XB
+X-Gm-Gg: ASbGnctw/kdwyQtRwDAig7F1+XRsRs0bhkTmeoJw5WtTFbwwZapt/9VZVYX70NnZO98
+	KmU22YjgRNk+L94wwGpKD5jjk7F9dD1zMg8LX295oBml10h07xIDP7Y4jKBSJg+iN5GlUsbAfYA
+	Q9xZfLxPLc4RS0uf5oNhHal7tOm0SBADRbWFg45or/nJYjDNNWvhng3aDHlaCKR9J3VMkBr3eer
+	MDQ8FBLrO6N6q+kuybl6RvEexPZGlfNgzc60Dbc1MIPCyWMsPX5AQbjQlT30/umxxpLLPi3ovCp
+	aHJYhzSfhtYWZp3MHZD2v6oxbNgC/TsHX4CYsSkmG31zXOAOBJWtjnVQeTEYX2h7GgCJWVmqzAb
+	djah0R5lFzUOLO3KxKCn5O8Y5TjYAlP9dgWJY
+X-Google-Smtp-Source: AGHT+IHMgSwhUqWfJPYacZImHH+hqT1pGDyJydFaYgDyOIKYQNzn0o0KZQVvbpbNHsGoX4rc88bs5Q==
+X-Received: by 2002:a05:6000:1a88:b0:3a4:eeb5:58c0 with SMTP id ffacd0b85a97d-3a5723a43b5mr15751243f8f.20.1750241728005;
+        Wed, 18 Jun 2025 03:15:28 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25e89fsm197453115e9.33.2025.06.18.03.15.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 03:15:27 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	rafael@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Cc: boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	lenb@kernel.org,
+	wedsonaf@gmail.com,
+	viresh.kumar@linaro.org,
+	alex.hung@amd.com,
+	dingxiangfei2009@gmail.com
+Subject: [PATCH v7 3/9] samples: rust: platform: conditionally call Self::properties_parse()
+Date: Wed, 18 Jun 2025 11:13:25 +0100
+Message-ID: <20250618101325.3048187-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1749582679.git.marcelo.schmitt@analog.com> <834e630a45f8b3ffe93f5663b356046d6c6fdd95.1749582679.git.marcelo.schmitt@analog.com>
-In-Reply-To: <834e630a45f8b3ffe93f5663b356046d6c6fdd95.1749582679.git.marcelo.schmitt@analog.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 12:15:12 +0200
-X-Gm-Features: AX0GCFu0MlYcjSENoy5QcqrOme-qHw-2bn5oP7jO7v4dKtoPQUQWh1af-rRa5E8
-Message-ID: <CACRpkdax5amh2ei9QJDzT12FQwg33Mnnv5iJphzM31gL1mupMw@mail.gmail.com>
-Subject: Re: [PATCH v5 08/11] iio: adc: ad4170: Add GPIO controller support
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org, 
-	lars@metafoo.de, Michael.Hennerich@analog.com, dlechner@baylibre.com, 
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, brgl@bgdev.pl, marcelo.schmitt1@gmail.com, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 10, 2025 at 10:33=E2=80=AFPM Marcelo Schmitt
-<marcelo.schmitt@analog.com> wrote:
+From: Danilo Krummrich <dakr@kernel.org>
 
-> The AD4170 has four multifunctional pins that can be used as GPIOs. The
-> GPIO functionality can be accessed when the AD4170 chip is not busy
-> performing continuous data capture or handling any other register
-> read/write request. Also, the AD4170 does not provide any interrupt based
-> on GPIO pin states so AD4170 GPIOs can't be used as interrupt sources.
->
-> Implement gpio_chip callbacks to make AD4170 GPIO pins controllable throu=
-gh
-> the gpiochip interface.
->
-> Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+Only call Self::properties_parse() when the device is compatible with
+"test,rust-device".
 
-Looks good to me!
+Once we add ACPI support, we don't want the ACPI device to fail probing
+in Self::properties_parse().
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+---
+ samples/rust/rust_driver_platform.rs | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Yours,
-Linus Walleij
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+index 000bb915af60..036dd0b899b0 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -40,7 +40,12 @@ fn probe(
+             dev_info!(dev, "Probed with info: '{}'.\n", info.0);
+         }
+ 
+-        Self::properties_parse(dev)?;
++        if dev
++            .fwnode()
++            .is_some_and(|node| node.is_compatible(c_str!("test,rust-device")))
++        {
++            Self::properties_parse(dev)?;
++        }
+ 
+         let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
+ 
+-- 
+2.43.0
+
