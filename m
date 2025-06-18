@@ -1,83 +1,63 @@
-Received: from out162-62-57-137.mail.qq.com (out162-62-57-137.mail.qq.com [162.62.57.137])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C423C155382;
-	Wed, 18 Jun 2025 05:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.137
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61230155382;
+	Wed, 18 Jun 2025 05:42:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750225245; cv=none; b=Rsvkj9vtISoawpvxomQlKIK/nqKDk6i/OWTVRSOIX0Ekm4zMBBqA8xs4Ocr0Asbuzu2RLYEpQZgmMxj/KarUflPOh1uwgZe4PDupCT5sI0gslXCckZBsm3TYnJMWzX0L+aZ4zu9d7tTV3LYGCIRg1WQ6Y3QwbZgfVwUC/p3mXZ8=
+	t=1750225333; cv=none; b=nJVKM9tmGOx4G6AwU+Ww3XvZwspLlcclsixz3ylI55z5VYbsJKXPKPrazzCnBpklb95/AzZWEbtlRrqQ7QfTLdAC63ldMMoUsRrT3gOsk/P3kGvyGqHeEr3+7xOXGzGYZu0tY4+AP5trmslIKJcb6tTUrwsZfvdcg0Ep1KDWlvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750225245; c=relaxed/simple;
-	bh=drwRVsq1D9HCEgfVG2exmBXKfcTJ78pOWC0Q/ERY1NM=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=n+hpSll1Hmf3y6hQTikgG8NtVrl0YZrZHRH2WWmcyI4oU/Jh8N5yzkpmryXabjXawy/NcjM4oqyHERyMW+YvNmgbZy0q21VaqfFzb+cUxvmU98os2IqDi8QSws2iiPyeTZT4Y68tCSTe7MoErrV95Wt/5BKmo51Mf9C9UayumLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=d+HtGLNk; arc=none smtp.client-ip=162.62.57.137
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750225333; c=relaxed/simple;
+	bh=OtuSUIPkuDfD+m/LFZSpCE5C0F4fUZi6lEJGSacNoEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VSVyQnDTNc9pElbr004VBJ9B5P5YQohH27K6QsvN2CI0n+obOuTUJCj70S+F/wZxevzcABdo9dYpmlyOKPLE11hL/Wbs9EeG6S9NFHiIooBdJLQPi4+EuiRaRfuNYTJL/7xLJKO7W34uZDPQpjgVkQpFbuQq9LGfiGDhASez4fE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=uq/SPm2q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="d+HtGLNk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750225230; bh=iONSASwJQ5J5Bw7IaUISLLS33rv+vLFEwjuOkUKF1lQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=d+HtGLNkAG2R0nVTJUWX1Z+VGDzPj3EuNxPxHmvXXhzZGgVRJ0rt7Bdk3BQC/CZk0
-	 3QSOQarK+sgFhiLH3Trclbn+uqw4rpKXz+sz/OPGSByZw9tE3Qokq1hhhYWOYgphqE
-	 gBbvwJa/d6hKuyJFLdFIlbEKf4SAmkWSFchClA4Q=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 89132049; Wed, 18 Jun 2025 13:34:17 +0800
-X-QQ-mid: xmsmtpt1750224857t3app1r4s
-Message-ID: <tencent_9DDC9378E363A961A3BEA440376237718605@qq.com>
-X-QQ-XMAILINFO: MyirvGjpKb1j68GC9Fp5X6/vCJwOlXaYoJW1t3bF4LU/BETGZiWftbGA9sH6IB
-	 Hm1sd2ZTFxklv7ofJkATHEeYa7Dsx8CtJ9RmG6SC1qb9g9+fy4yFXv39BCMI0cENFJ0dP8weAggY
-	 XbBSfpq0NJuTH8wUzbXUdaMpza6QciTZflWb/5eyFnvRt3cFAqu6vCOsNgQ7g0Qm4kHWbJbcyUwL
-	 XIutEiNeqmEBVKA8Xq3lykR9T4pIPYcg8d237AazvOlYdYCO/V+CqsrkyXqm/IBC3DfjeGKNvoJ/
-	 96EdkRwLTa7mwdEd47H1S4v/hvKvtNd7pFC58Zev7vqsp4mLpAbSBX/YbjeJlui4OrT2HF/AZRqj
-	 GjUD6XMAsCKqdCdJgcShq3Ahs7ScuN6WfWCrKa9cGX0ionFAN7OdUf7ZmpFEwchG0VhNK8W4+Wxz
-	 V9ujivp5R+EHl+ESeCscNmilhPvPFL3UENnzSLQrElFR/QHfmUOZpd5+lho5Mc5FbxNmtGpiYon4
-	 I8G6dCrUDFg16msRtrCBadlZ+CFCLsB8+I4zNCOvq5Tv3sHE2CViWoDEyqIjOw2lmCMoO5uHQSMB
-	 QzyAA9ywPeGdC33YcW+NCkrS27pVCfUsCycOG19IjmQwioi9Q6YDROCg3mkuTFtfQtisfPMYb/BI
-	 RcyEWcY4YSMjAZZv5HHW3b0r3Qyut7Vglp766oH3ochBwyHQqSek3zFRZP93tEx5Sq3/Iy1i3mUK
-	 skpOQDMlD4OigAG10re9i/oLcd9q/RMZQ6Gcyk4QToBPfVecyZ/VQPafJgNabUYZhqsX+jntCR33
-	 FHwHjLFsLJCdCuOdTq92IR5mK5rNiyIatoKTIEUtkeB82Mgxram5I7pzIH/4FUv4Nxm8iVXwph/q
-	 vOegtQW2gSeO82djukWyZ0I7hsQ0pzbXq4RdOB4LnnOYVKwl7uJL5eXphvQl/yhYADfC3hlFeLad
-	 FYMJlCix+0L90kGib/t+wtUD7AO4dRdWP7/HBeQXs=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: viro@zeniv.linux.org.uk
-Cc: almaz.alexandrovich@paragon-software.com,
-	brauner@kernel.org,
-	eadavis@qq.com,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ntfs3@lists.linux.dev,
-	syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs: Prevent non-symlinks from entering pick link
-Date: Wed, 18 Jun 2025 13:34:18 +0800
-X-OQ-MSGID: <20250618053417.1250534-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250618052747.GQ1880847@ZenIV>
-References: <20250618052747.GQ1880847@ZenIV>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="uq/SPm2q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69479C4CEE7;
+	Wed, 18 Jun 2025 05:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750225332;
+	bh=OtuSUIPkuDfD+m/LFZSpCE5C0F4fUZi6lEJGSacNoEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uq/SPm2qjo+ZZi2ErBZ0be/ltUASToUVv/GOVUmbaJd1z5pIxao/j+QYwbO8zbADT
+	 sI9xZAPee2wef6mHyWWImgJ6pkOLyclopmrKn1uc27Fqy5p/hkdCDL9sj7OMzQwHPu
+	 /T1z262dWNLzeIBBn5zIB2Iz+8vYrybrzTrPmHzo=
+Date: Wed, 18 Jun 2025 07:42:08 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Ronald Warsow <rwarsow@gmx.de>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+Message-ID: <2025061848-clinic-revered-e216@gregkh>
+References: <20250617152451.485330293@linuxfoundation.org>
+ <f2b87714-0ef6-4210-9b30-86b4c79d1ed8@gmx.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2b87714-0ef6-4210-9b30-86b4c79d1ed8@gmx.de>
 
-On Wed, 18 Jun 2025 06:27:47 +0100, Al Viro wrote:
-> Note that anything that calls __d_add(dentry, inode) with is_bad_inode(inode)
-> (or d_add(), or d_instantiate(), or d_splice_alias() under the same conditions)
-> is also FUBAR.
+On Tue, Jun 17, 2025 at 08:27:03PM +0200, Ronald Warsow wrote:
+> Hi Greg
 > 
-> So's anything that calls make_bad_inode() on a struct inode that might be
-> in process of being passed to one of those functions by another thread.
+> Kernel panic here on x86_64 (RKL, Intel 11th Gen. CPU)
 > 
-> This is fundamentally wrong; bad inodes are not supposed to end up attached
-> to dentries.
-As far as I know, pick_link() is used to resolve the target path of a
-symbolic link (symlink). Can you explain why pick_link() is executed on
-a directory or a regular file?
+> all others kernels were okay. nothing was changed in my compile config.
+> 
+> Tested-by: Ronald Warsow <rwarsow@gmx.de>
 
+Any chance you can use 'git bisect' to find the offending commit?
+
+thanks,
+
+greg k-h
