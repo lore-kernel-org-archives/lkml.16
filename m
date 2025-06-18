@@ -1,55 +1,55 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF71219307
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C941F21CC6C
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750220684; cv=none; b=ZyZVrejoH1NrPiJ8ckfU9f/R6VuuzIu3myhkiEz7hGlCRkabkVvZVr3y3OSMyy9fWsMM2ozXN3JYSkFnWuuoJOHzLeItbTQ5TjwoOoiIojqaHCzv3oxNRxvwGzW28LBPUQenX9sJRroIEZD5eXP2SRDa4gLuFdNoceURUat16aM=
+	t=1750220688; cv=none; b=c1ge6NEprXx94kQoTMIGh0zXpRzBctPNNADqm9Dl3YKpQCL0VqHvxOdzAcHxNxpFuiEsX70xlwkFU/xEVIepuWqMGOEKbjJa/UX0reP9vXd/wN5w0D5Fwc/us22JhT9D34uHC9rcx4fvTy6hH1Z0KY9yDeo9cgDlJVC3ogUz1ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750220684; c=relaxed/simple;
-	bh=Xd+l4yVTMF6sIq+heJRlqv5EUOVaKyXfY1hn736d6Rs=;
+	s=arc-20240116; t=1750220688; c=relaxed/simple;
+	bh=jSiCen/C1Tdc2UB541LJK2epQTbdnnCbieLg8I8XSIE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NQOjuVKqGNda29u5UrGnZJzkx0dIUN+5nBYDRJns/+WapxbMaNIJAiTLqSPoQMfAcQuSF1Jgb3Ock3k68GQWCIoyd/GiSXljGwGJ10jmwKJICx1MrLaarwQ7iSfGwDyThiA8Hk+kri8D2FoLQ2WDCvovMO+k1luvmtNRxhsVZQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YYW6d+9e; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=dPoMwMrfxUcAwHL6NYM5D17XReDUfYE8qshOiv4Plnm6UPk41HSjYQ3QA3doFtNDDgxVrGY10LhG1FTpXTHTcJyMmPkurgKASMMWJRUDr37VcYsnriqSiE7429OWr5dnXNZJj0ttrmelz4L9hT80onZioiXxeqN0b3u8354m1r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Wzund+6I; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YYW6d+9e"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235842baba4so53968015ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:24:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wzund+6I"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b2fb347b3e6so6389145a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:24:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750220682; x=1750825482; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750220685; x=1750825485; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TiynHwWK8Tuc2ZhwblhQo9IFn5bKLScHdC3X2XmCKdY=;
-        b=YYW6d+9eImKQAgLAFa/YIPUW9l+Xnlyp9slQjm2pzdPCEQLi93rzOOvBqXGZUU9SgW
-         Kx4TgKxRyrpWYXeBsu+SDbIrr5q9Dq+nLG9l7BQWOleypkPY5DGYpA7YTi69dI5hSaTI
-         DLbsDfTLnc+smRLv2OLzFSiRMwNKk6DEPjA6X9N76dKa1fXG31J79/SYhXI74Xh7Ssd3
-         f4uOQdm9kJgaMu579duK7o3kAJyZco8dsuw7cw2HO8IPM+8g3J5ks8wHP8tRmSbUiMSo
-         8AkoiK1X7g/85jz8shIIVKZCWrBaqyilUMJcvS6UfaOOih3xtahjJGBoRT0Q1Fg1NrEU
-         5USA==
+        bh=lJmtzreapar7RYm6csfZXNlZpVROzgpN0suNPttjN9U=;
+        b=Wzund+6Icwa5O3/0juL0BZb2/v/gcv/vvLwv+IGtYkiBSz3VkaqxW91RgcihHfLgKP
+         hMogqClv5btqfQiCSNhaC3siOaNNFbaMRlZ4z7NStt5WHlQDdMgW3DhAjjpJQBXuImEI
+         zo2gmp8JwJY24+5oxAzWNMEwLAhtQB18by9XZeKq3YDNQJjJWNl5nnZcOmdYaTdfG39s
+         Uo5vO0r+HvPJYQAewKf1hjSETfHBeC4Z1TLEyEXaoq3Hxe2r0Tn4qZTYPemi8zfYWrNT
+         k0FtyB7fRys1xt2gAxiKDF3ciYUQwr7XEbNdFigzuMO3UnL04G2SzoyD9F1pOehoLucD
+         64Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750220682; x=1750825482;
+        d=1e100.net; s=20230601; t=1750220685; x=1750825485;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TiynHwWK8Tuc2ZhwblhQo9IFn5bKLScHdC3X2XmCKdY=;
-        b=q8x7EAOanGoK1YG7sFbn5WNht1ekQ01lgF+cXJSKVNqUkAbGXJAoSi/HvBLhwpJK0u
-         PRGDM/8e2DnEDh6ZAefzjkeqAcXY5Nbag98ZuJD1AXxvMqJJXFdMzD87S3hWpha5CDkv
-         C5AFz9TlmBQXiDa4zJeeYcAR9OTqH74nRUyBwwtPSqrVnzuSfAqHCooO6FqOWM8+JTlk
-         N8+Y7HJCFqfXQwAytzFGMXrVndN5uCCqTsoNbdudbMv1lZ1a4xb2+ioV+ODKVs6ARhuV
-         WKc4vPMgUHOK7o9Can05O2KsCQtJ733a2STg4JMMGmWW+UsN8yAvAQIy3QOJDFMtrl2M
-         QM7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXX2eBHrpm/tpKcZKwePmAs9gWVHge2jBVK2gtPKgSpqkN1OmzQh+oCOKyvVGJ8/LWE9xXHBY4ZE5u0LM0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhKarA+YN0wpWUGQwPAluQf3Nb7J06eZPsjb6dwyhTe8YpN3cn
-	LNj/gXM9ubY91dkqlpNeu4X0H/lHT0RDwgcgIfeSkmWzgRXkKXdu2FKpxSun+2+TA0wmlBAvTa3
-	CdORBrtUt0ig60n1lJ6lf0g==
-X-Google-Smtp-Source: AGHT+IGRuVATub0VagSwSO594ph7F/RA6BsWrOduHNPJT0NSOVEpTFRu1SVjCYkpWfQ84SvEpdSv99cmJKRK2o6P
-X-Received: from plbka7.prod.google.com ([2002:a17:903:3347:b0:22e:4bf7:1cb7])
+        bh=lJmtzreapar7RYm6csfZXNlZpVROzgpN0suNPttjN9U=;
+        b=StrlhrPe97HwYYIs4hztFZ/SO58J5HwcZ5+la3nn7neWp6xBZTkdcMDzbqR75CsjIJ
+         EEqTmh7Ej4j2uptpexDpyDRT5PlValg2VVmcs2rmwF0yt9o5Me9ksS0CBYvFlNOfzLWi
+         o6pWyntBvkX3TIQVEie/6NY+V1Msx3eToskp/3S1UdGGaXfzUhoGbb+v0x70/+I0PshO
+         0FgWMgfxcADsgJQFAe0OXHuYk/BchvSvjm8gdJgrvuSbScjzqxjgPRhj0ykZly9E6lCp
+         3nHEtWUQV0Rlxilau39BdNVdVbf0LeSwx4lNQdmbhkuhmiDhznaBmUtpexD0qsB44sQu
+         BQvw==
+X-Forwarded-Encrypted: i=1; AJvYcCWeyWfkvUPSDqRqtAT82QXSgWc0VrxfkM2LvqX99sIUPi8OPYYr2pGskKt6FAr5ZImP1IDsoTWcdOJVJm8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWGp0CWod+jJ3avSRl3XoO9Jk9KTO6YG3xl+twzbi9gG4L37J7
+	ifms36xyh9lxcjQKeqj976IPPUSa3Wj6DgCeDUSOlbHY3hzXrznJNVbGpBNKfAp+h2eG0eM5lAT
+	7qJsr/Eqky1MDR7NCuPiv5Q==
+X-Google-Smtp-Source: AGHT+IEYBcC2cDsFrgiMsyVhS97ys7BmjM02OsUOLrECd3uh2HcwoI2YZYxPTZFJmgzjhVgSJXNOQSUyK0OIbxzF
+X-Received: from pfus9.prod.google.com ([2002:a05:6a00:8c9:b0:747:a4c0:983d])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:902:cf0e:b0:234:d7b2:2aa9 with SMTP id d9443c01a7336-2366b1221femr249131655ad.29.1750220682173;
- Tue, 17 Jun 2025 21:24:42 -0700 (PDT)
-Date: Wed, 18 Jun 2025 04:24:19 +0000
+ 2002:a05:6a20:a115:b0:218:c01:ddce with SMTP id adf61e73a8af0-21fbd5d90aemr27193918637.40.1750220685258;
+ Tue, 17 Jun 2025 21:24:45 -0700 (PDT)
+Date: Wed, 18 Jun 2025 04:24:21 +0000
 In-Reply-To: <20250618042424.330664-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250618042424.330664-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250618042424.330664-11-jthoughton@google.com>
-Subject: [PATCH v3 10/15] KVM: selftests: Add va_start/end into uffd_desc
+Message-ID: <20250618042424.330664-13-jthoughton@google.com>
+Subject: [PATCH v3 12/15] KVM: selftests: Inform set_memory_region_test of KVM_MEM_USERFAULT
 From: James Houghton <jthoughton@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
 	Oliver Upton <oliver.upton@linux.dev>
@@ -72,42 +72,28 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <y
 	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-This will be used for the selftest to look up which userfaultfd we
-should be using when handling a KVM Userfault (in the event KVM
-Userfault and userfaultfd are being used together).
+The KVM_MEM_USERFAULT flag is supported iff KVM_CAP_USERFAULT is
+available.
 
 Signed-off-by: James Houghton <jthoughton@google.com>
 ---
- tools/testing/selftests/kvm/include/userfaultfd_util.h | 2 ++
- tools/testing/selftests/kvm/lib/userfaultfd_util.c     | 2 ++
- 2 files changed, 4 insertions(+)
+ tools/testing/selftests/kvm/set_memory_region_test.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/include/userfaultfd_util.h b/tools/testing/selftests/kvm/include/userfaultfd_util.h
-index 60f7f9d435dc2..b62fecdfe745c 100644
---- a/tools/testing/selftests/kvm/include/userfaultfd_util.h
-+++ b/tools/testing/selftests/kvm/include/userfaultfd_util.h
-@@ -30,6 +30,8 @@ struct uffd_desc {
- 	int *pipefds;
- 	pthread_t *readers;
- 	struct uffd_reader_args *reader_args;
-+	void *va_start;
-+	void *va_end;
- };
+diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+index ce3ac0fd6dfb4..ba3fe8a53b33e 100644
+--- a/tools/testing/selftests/kvm/set_memory_region_test.c
++++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+@@ -364,6 +364,9 @@ static void test_invalid_memory_region_flags(void)
+ 	if (kvm_check_cap(KVM_CAP_MEMORY_ATTRIBUTES) & KVM_MEMORY_ATTRIBUTE_PRIVATE)
+ 		supported_flags |= KVM_MEM_GUEST_MEMFD;
  
- struct uffd_desc *uffd_setup_demand_paging(int uffd_mode, useconds_t delay,
-diff --git a/tools/testing/selftests/kvm/lib/userfaultfd_util.c b/tools/testing/selftests/kvm/lib/userfaultfd_util.c
-index 5bde176cedd59..31d38b3a9d127 100644
---- a/tools/testing/selftests/kvm/lib/userfaultfd_util.c
-+++ b/tools/testing/selftests/kvm/lib/userfaultfd_util.c
-@@ -152,6 +152,8 @@ struct uffd_desc *uffd_setup_demand_paging(int uffd_mode, useconds_t delay,
- 		    expected_ioctls, "missing userfaultfd ioctls");
- 
- 	uffd_desc->uffd = uffd;
-+	uffd_desc->va_start = hva;
-+	uffd_desc->va_end = (char *)hva + len;
- 	for (i = 0; i < uffd_desc->num_readers; ++i) {
- 		int pipes[2];
- 
++	if (kvm_check_cap(KVM_CAP_USERFAULT))
++		supported_flags |= KVM_MEM_USERFAULT;
++
+ 	for (i = 0; i < 32; i++) {
+ 		if ((supported_flags & BIT(i)) && !(v2_only_flags & BIT(i)))
+ 			continue;
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
