@@ -1,116 +1,109 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB411D5AB7;
-	Wed, 18 Jun 2025 16:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C249E2EFDA7;
+	Wed, 18 Jun 2025 16:47:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265172; cv=none; b=DOUyzvRD1vFAybnZ04lcEAwlkzIBkK36SgenJC3Eh2pta0/Hm5kL3+m7Rx9QoQQHTnlMIIkomYMsWBFYJis43bMRktleOaDkb/wlcS6b2ljDOjhfcLCrXxrUktf44T2P/FMNzUeYoXwM0XNQn3s8PCeCBOxL0Ku+oeYKPkx/qTo=
+	t=1750265277; cv=none; b=kh4doGkOqJEddPjG8BUl92JEtCmpU21E0feEy6xe6vcjUdRLlVbCySeDhannWFJT9u2RIVj9eznXFskinjzYZR1CRmPvf59nU0cgjvuasI5FNwjSFAaLnRa51N4I7Eq7GTy+dpOSD2a629b08xggzYKHdkVLfXbimlZwo3LTyDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265172; c=relaxed/simple;
-	bh=TWzALV9LPqlus+Az62QmQW8i9ILqyK/dHFh5EdSLL0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bb/xzrlYRQ4DUEt41mvacgWKDnYCoZWR+P6E1PmEbdm+uF738QOJaefylC+t2xiEo4OUMQx+ORTafhfcikt77QNTd8ttOHbO1Pt8lLPlEsgrCZIZI82fOdF8DUthHe5RGRisznrftFznoBdfUSfflsoVe09XYYCZ3+rwC7d05OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aGCZuuqi; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1750265277; c=relaxed/simple;
+	bh=hIUF1W2kQbNBkJA9y0/7IYXS/DTzn2iOQBfMawanAnQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VbMuemFowYGYjnpG+vLEMETrWaSc7GVOGSMe8vCYzN5hWAGp6+G+ePy8XQBxlywWjy1tCDnSuGm60awFspoHJCEwz9Hb5C0ImQnX26GqgLqoxr6cLXkKHDApD97Ty095YINwTfB9qUfyOotWeLpHIVzUsrK9VSgHrS+TR4BlqsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LaqDvgaf; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aGCZuuqi"
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-313dc7be67aso951739a91.0;
-        Wed, 18 Jun 2025 09:46:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaqDvgaf"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad891bb0957so1306715466b.3;
+        Wed, 18 Jun 2025 09:47:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750265170; x=1750869970; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TWzALV9LPqlus+Az62QmQW8i9ILqyK/dHFh5EdSLL0k=;
-        b=aGCZuuqipaBcL3m1lLCsYwzFJD+5VHQvR2GZ7WB/eGF1g9StLSoP8elXIXbm+z9uJ3
-         kTmlzZY6pTZH4iUczsD5VNbHhx1UvY+h4Chgo6KdimwupPPAOUO8OaZE0Kv5qcd5mHj3
-         rRFHR8Dsg/yAtKs3J1BNATgQmli9oUp8dssE63fx3J96JKViACTFj7g253RZTnUqR4yX
-         s8ar4y8VwQ3IUJV9bRiUQRgZeaDmdx4tJql2zwvWNPIhj/xVfGCceRaYYxw1dziMpzPf
-         tp/DYKB+xo+UH+JnifYUoWZARd2bRgi2guTFOUEt8Ldw9PmpySyF6KeCUuih/iXa4sx/
-         y6Qg==
+        d=gmail.com; s=20230601; t=1750265274; x=1750870074; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N+qv1GHOU/ShU2OJAJa6dB0bDSAG6lFZVxU0lASK27k=;
+        b=LaqDvgafzN72UzGjWTX4hGDsuTBPEAkBQ+tpA9TAjYBODp5811u4lmjwOAr0zAMsZC
+         FSR1Ydmg/K2k6SSPxfWGJ68iJYyWUPiEdMttj96jaXM07rWdQtRYkH7iqdEsk9CyMrhS
+         W/l6pG896cag0vLyTgD6unx/jQ8cXRqwOJLpUYVAQelfdTi5pyNFlfXaPncCdxsvTgbz
+         pdt2rO8PHoUWt2UoNzuU03j+i7l2pO7XPPWZX04aaHQOFR9SpjTH68npFq2oG4D9spJs
+         lYPyWdJG0n9MUj18vHbD9ioALFYPNwVZfHgyCKh2ojXFRt+AmpmPlA9V1R9szC8N7HdA
+         y5/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750265170; x=1750869970;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TWzALV9LPqlus+Az62QmQW8i9ILqyK/dHFh5EdSLL0k=;
-        b=jrZswja+t/bCK8WUS4aTh6/eOOQm90CJds9j/HJsVgJsBdy0DDlED5LinTC1AYiq+K
-         +wdEV4R2Q9SlSMt6Y+tlP6Ghos3/LLz+BCwfFKb17e5MXxS5JscwyI8DLqmOcu5v5DkF
-         HS994zY+OnEK+G3suuILEDWRSHqX/KY4SFJeIMmFrhwIacNegtPrl5nfeDye+EiGwcAp
-         YRGqJAZFjb67fxuCQJ9G385zc8yXJrSgZXxQs2440pkkX5RV8nxU+nPbdBqAkMtCZu70
-         uauqeeXA8Isc+PQk+jIKgS2nfBNm7vJrr+mTibgaheESnOz5BY5zJyGe5ObNUZjjSYlt
-         P75Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Bmd6euUAqB+vISlGDriKVjpl08iq+SIoAz0iF6lWd17Qu1RRnUAPRa3bc3n89cQ8NNtxhAQE6Kb8Cxo=@vger.kernel.org, AJvYcCUW+vFFtyCWMNx2h2ZUboiwRCLeEVB5AgaQ3yHaIvlXrgooTRS/uDHwmexajhdRsC/Y7D+swm1d47M=@vger.kernel.org, AJvYcCUv0SMyo+0bc58606Wy+V6lVa1eoxMyp1DQB2E+KVN7vV8XvSKcgMaED1bWsfnXwRYx37ikmKseB36Z@vger.kernel.org, AJvYcCV9vnWtAXQUuEcHaqnTINav6myGZWGKc3WvdkXaQIbBet9iO+EYEAYo1G0uF8wWbUiPqXn0e5WlmDc8+wfn@vger.kernel.org, AJvYcCVPEJmoybRkd5IiwJMWuGBS9234MPYlsaF07d2ExfBM3ctoJg2G5s3yAkZ+pKwId/vEwUJhhtBFmPw7eHVi@vger.kernel.org, AJvYcCVevuNZzRC1k4WLJEZPiROzOIwk2Yg1hGiQcd6KYuE81CjAZjjxjsvpnHV3qRSgs0SAdsjjzHudWln5KNsf4Rg=@vger.kernel.org, AJvYcCVv1XT1vWGqNxruaHtfPbKZGiJl3beFyfGK7f/bYf7A12UFgKUuSSR41joEZGUJvd2y7EnqvsJr@vger.kernel.org, AJvYcCX6prJ6pnc8fxIPUYXaucbOLimk/j76q8InFNZo3HXhGHDmFpiLPcoKzqxEdbvDSn7O3eM9XASPmtzt@vger.kernel.org, AJvYcCXvKpZ8uYoMyZV6rEldKHpLnWsvZwdyS8fRlUrHkpGepf3SujeCs2xcx5fJhRaACMRAxkthtr5DstyN0FcFz1A4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0QJpKFciLn8qcO2evtXRhmvVIPyLbxVThy6vkVS0kpWiLHo7k
-	ValFjAfXj+2j9WpqqK/uBjIN2tPcoGP22et7TUais/DKZhZqjVj9Rye6TzClqVHlMpRF1fnp5nY
-	GhB+KZtfjl+Kh1ThuTgUeHd4zjbOmMzc=
-X-Gm-Gg: ASbGncsj878HpFmROhLOj07Bj+vU3zavbYtwOOIxw9psaOKO29EKNB/YTBTtwIx0Efq
-	Q07KWd8SHjTAaNyZ4EOzksuYgYrV9BAQGGrhh/Tf5M1vFbSfz2NJnfVIqDfIamPkCDnnpsC6RIy
-	D/DAvlOd5tpBXzB7kUa++hbh20oEcHoF1djvrS9dH5u6I=
-X-Google-Smtp-Source: AGHT+IH4x/Zjj/Cn6AIOjbJXWQhaDWLSiy8g/xgpU0nYUpfFSqLNbZ8aoqW6DTm7BekXvLqQRHOksCgncGYgycyl5qg=
-X-Received: by 2002:a17:90b:2dcd:b0:312:e9d:3fff with SMTP id
- 98e67ed59e1d1-3158bb43769mr25041a91.1.1750265170069; Wed, 18 Jun 2025
- 09:46:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750265274; x=1750870074;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N+qv1GHOU/ShU2OJAJa6dB0bDSAG6lFZVxU0lASK27k=;
+        b=bXbVUC6HmSGe6eyQzqd8WMEWOzqcZpTe/lUd1aKJV2TrNOxq7d/1Jvg3FqhNAa7OLi
+         99T9/lX1bJc0JAkb9QhWQ36YhLqL1LC5Efp8GyC51xTstTYCI1J9DwhhnBcjP/HbcYrk
+         lJ15Ml82Qon4/dFOm5hDGqdSKRYZOBnzbhPQWUWb8XMr6wPvdj/uJ+t5mD8np6rlxOwp
+         ZBx+XZwSuz5YkvJrfaX4d941QaEOvfN+04/yEbYey9G8WaVAYrYiLrijQDQjHecJohMn
+         LJwOOUFBWCxm761vzzTLHVxhPvLzgHOH2wjy/ykN3I3Ks/mFm9s8ELyAEUbX21xowHy6
+         Njhg==
+X-Forwarded-Encrypted: i=1; AJvYcCXei5A9xV3z1axoXjNQdrNspvVrPHS9IpQukCR8MPyyipFi2+EEonYeHw2prKAqeCYWtvfwvTNeYStI8+c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGYzZxmnRbjxRshfXAd4yFzwaqikb8G9/d8+ODDliREp0lwY0d
+	nQmvgS+gJInIPtNvXIGlqGHyYOQVcdlvotDEWPHrkFula5Vm3ehEmP9F3NsWuKvN
+X-Gm-Gg: ASbGncvjrFy0dnGL2pkZwOQ6meLFdUcSAdifEeSNMmZSgnjVITeisdAjMtwnAtHluIw
+	yVYHXP7tOecOovI5XLi6hY2AjH+SBQIqXZMngrckYqA7Kaegcxy9L6OsG8OPaKdfvqCBx5BZR3F
+	51iDv4dtl30szNieCTPIo0SM5Tl/TbjtOCMyz2SNQ7TbZnASkBGw2rpWqiBOdlA+41sumtl39lg
+	1EJbMrzBvrgvl5qvOaniswaJKdqMUG6SlEf39mlBv1DfkHcxgetteCql6zk/dpRvCTxAe5MaN4i
+	wGhv7jqax+GEnF+H9vi/IrE3k3QTy9N8ohb2Q09CbVy2428cyh4koNvY5En1Pd9I4iz3JD9u/Dj
+	6FWVxhvo=
+X-Google-Smtp-Source: AGHT+IF7CCKVAgk6WUozUwLRY/+4SzLJ63FajrazwZc0+Ifd6OQCqqeNXYovSAUeenIgd24XLetrcA==
+X-Received: by 2002:a17:907:1c08:b0:add:f62e:a300 with SMTP id a640c23a62f3a-adfad29f4e2mr1862867166b.2.1750265273477;
+        Wed, 18 Jun 2025 09:47:53 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:3030:ae0:5873:67f3:9dc3:7778:59f4])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adf9ad8a155sm935481566b.84.2025.06.18.09.47.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 09:47:53 -0700 (PDT)
+From: RubenKelevra <rubenkelevra@gmail.com>
+To: linux-usb@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org,
+	shawnguo@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-imx@nxp.com,
+	linux-kernel@vger.kernel.org,
+	galak@kernel.crashing.org,
+	RubenKelevra <rubenkelevra@gmail.com>
+Subject: [PATCH] include: fsl_devices.h: drop unused, misspelled FLS_USB2_WORKAROUND_ENGCM09152
+Date: Wed, 18 Jun 2025 18:47:43 +0200
+Message-ID: <20250618164743.1916838-1-rubenkelevra@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com>
- <20250615-ptr-as-ptr-v12-1-f43b024581e8@gmail.com> <CAJ-ks9=6RSaLmNmDBv-TzJfGF8WzEi9Vd-s=1wyqBcF7_f7qQQ@mail.gmail.com>
-In-Reply-To: <CAJ-ks9=6RSaLmNmDBv-TzJfGF8WzEi9Vd-s=1wyqBcF7_f7qQQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 18 Jun 2025 18:45:56 +0200
-X-Gm-Features: Ac12FXwfspeQ5n1WfjhtITwDVCEc5U5DXhUfzAvB1x6rILKw_9XGVLNl3gdX3Es
-Message-ID: <CANiq72kgnKH2SSp76EdPeysExBWasqhTyf1JyReR65g6FMsidA@mail.gmail.com>
-Subject: Re: [PATCH v12 1/6] rust: enable `clippy::ptr_as_ptr` lint
-To: Tamir Duberstein <tamird@gmail.com>, Christian Brauner <brauner@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, David Gow <davidgow@google.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tejun Heo <tj@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Breno Leitao <leitao@debian.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
-	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
-	linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 3:54=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> @Andreas Hindborg could you please have a look for configfs?
->
-> @Rafael J. Wysocki @Viresh Kumar could you please have a look for cpufreq=
-?
+The macro was introduced in commit 69cb1ec4ce4d ("mxc_udc: add
+workaround for ENGcm09152 for i.MX35") on 2010-10-15, but its prefix was
+misspelled as **FLS_** instead of the usual **FSL_**.
 
-Thanks Tamir.
+Its last in-tree user disappeared with commit a390bef7db1f ("usb:
+gadget: fsl_mxc_udc: Remove the driver") on 2020-12-10, so the macro has
+been completely unused since then.
 
-Christian, Danilo, David, Greg, Tejun: It would also be nice to get
-Acked-by's for your bits. Thanks!
+Remove the dead and wrongly named definition.
 
-Cheers,
-Miguel
+Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
+---
+ include/linux/fsl_devices.h | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/include/linux/fsl_devices.h b/include/linux/fsl_devices.h
+index 5d231ce8709be..49f20c2f99bf0 100644
+--- a/include/linux/fsl_devices.h
++++ b/include/linux/fsl_devices.h
+@@ -118,7 +118,6 @@ struct fsl_usb2_platform_data {
+ #define FSL_USB2_PORT0_ENABLED	0x00000001
+ #define FSL_USB2_PORT1_ENABLED	0x00000002
+ 
+-#define FLS_USB2_WORKAROUND_ENGCM09152	(1 << 0)
+ 
+ struct spi_device;
+ 
+-- 
+2.49.0
+
