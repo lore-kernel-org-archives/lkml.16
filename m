@@ -1,61 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6D4195FE8;
-	Wed, 18 Jun 2025 14:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E3615855E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:48:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258058; cv=none; b=bQvXKfHK0HVHeify9dRTvxyeiTx4+pRFq1Lp2L3cUvYYqw30cyHmwGdASAh2gk0BCjKLKHoPEMEXaLLkxEg5bPZBvzGVUujl/WJJCiVIQcs4BxQ3oQbE+RStWQ9vNrl6ZyN8YMO8p2mz4DCgB1du4rLCgb1SwRMBMwLlZUF5XsI=
+	t=1750258090; cv=none; b=BySk7b6Cjzgfzbxa4OtiahPf4IxtIxChLW1dxvdOPJC6mEaONs91czhZE+atzk7WfIER5t2DYbVKfIV8CkpRBZOedanQSKoW5IBtBj1XM/dkFeadFhSgii2oRdf/E0YdWPMHqq5GbklDzl4D5zdg8lbas8lTl6ACTzkC9rzxusw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258058; c=relaxed/simple;
-	bh=P5bDzDbpwAt4NzAkEKVnGnsXVMLfR/Knkyugf6sSzUk=;
+	s=arc-20240116; t=1750258090; c=relaxed/simple;
+	bh=CFD7EM1B7dveB/n1oenEJQ7ZJyE6MkhdXklOKaK1FTQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bDnYUK8pmQ1RGg5VTQvudzMssD9+wNfNbdlQbykJtYC3eDm6VBJa407zVxl+Wn9/lnswjU+54S9szWG3vVQ+FCtLnG8/N+EHKfJqDNgoYlpn1h0QtfytBBePRUNKqZhK/xJJPHmp+CgXKzPzJmiV+pqbMbNGpZoSd0dOTXXLCHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kn2wm8rU; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=ajQnmGHPVclyqcC3Dcme8e/WZ9aYKWOsytXkksaLfI2sRRsP5s4NwFSPKgFijWMNof0CW0dJ/9BCmUxe+2S3VrqljSeePdEePlWZz8100AxvYnX3dFMsD2VC8Ug1Dd8OX+reZ9CNJoNGJXUb93d7PH4iY1Pw8DrJKciVaqBWisM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=D9xxQpHI; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kn2wm8rU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19305C4CEE7;
-	Wed, 18 Jun 2025 14:47:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750258056;
-	bh=P5bDzDbpwAt4NzAkEKVnGnsXVMLfR/Knkyugf6sSzUk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=kn2wm8rU+zYzOQFC3GPi8vOMZLlkcy3dQSrtT/k62GlC7Km+X00/m/imzVq7kwzyt
-	 YCsAE52wLR6+AMSxzkC5oOUDTg2wVJrBzWxx+LWr5i6zyQJpkbAscZz+GLu7rhRf9j
-	 Z7s0fW4uQbRXYb/c9zX475Wv1ZXwNkjNSuO467W8STZPTRVNfmNcH0nxpBpMnKFLkM
-	 6VNjB8C7FXdlMZEY6sbm02XcqxvFLHIdiHZPnYIcIu5aQUvBDtR191jhYgJ1tFFOvT
-	 BoKFjL6e28RacnkU1Z1Gfi4h3f6LmSaIVBzDUFUHBo3QoX71d5n0TdfUez0GLtopT4
-	 dHOfLvT5drktQ==
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-40aa971550aso418806b6e.3;
-        Wed, 18 Jun 2025 07:47:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXiOuuNcOsDpJ/B2C498+S16nj+GT7H1sCSpcabFbvvCsvmLPJNe+YeKs8YCCgStMTEUuImANj07Jc=@vger.kernel.org, AJvYcCXuF7wL4NS4LdLP5P8292UPkgzXZbQ/Ti5sOrCNXhcmWqR4T8tYCepFIPAI8McHond5vJaMEqFl6PwkILA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLdhu4K4ABbLj4h382Pg52GPR6GnPtSCPOKdgK3+/VIUGlzgFe
-	aAgYx9DBY4PDx85/0+g8j9ojBCIZtWVzzqRFE74GGp4CO7robIA/GLsvUqavf4vUYVY5wkhy0qw
-	G+p72eiLdjQhs60BwBk/ZW+oW+rVeimc=
-X-Google-Smtp-Source: AGHT+IG0KvkrWiC9/BMAK+ZcE0na5dkQbBL+doJY3+FOLWYOAeu112Tto95wPCxnsBx0AhjSVQP/qcAZcap8GwiU6nw=
-X-Received: by 2002:a05:6871:5b20:b0:2c2:4090:9e8 with SMTP id
- 586e51a60fabf-2eaf0a1d13dmr9762977fac.22.1750258055473; Wed, 18 Jun 2025
- 07:47:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="D9xxQpHI"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70f147b5a52so51704477b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:48:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1750258087; x=1750862887; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0nqmcz+C/uLT2LCqx4O5qi3rcAIoDvN2x0WB8gFKA/s=;
+        b=D9xxQpHIGuFEq7ToaXP9LgQxK2KZb1MIwMHJzg9wT18LBFsg/Ul5aKGw8INkmx5Z8t
+         Wj2aIRtq2QnUmtZkA8i5W3tczx76o7O5TGeiyvvcyrzb3TmQ+0WTnErmYbNQIAceFMSz
+         Ag2etIbM2DuRbpamIUkyz0Zf7d3paVM37M7HXUanYq/DeIsdjefONfoweXNc7A4BpN38
+         k+b8jRNtcWyDFz9KSdSau1/r+D3ChvrRsQNbLKswYkCbiCoRHx2HgtHkHNSsIWFAepqy
+         9xblG89A66krxMM8Z4Hhq0aim/jwYmgRoWQVE0ShaoLsxQFvkKt26WlBycvS65Tesi1I
+         icgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750258087; x=1750862887;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0nqmcz+C/uLT2LCqx4O5qi3rcAIoDvN2x0WB8gFKA/s=;
+        b=Snlx7s2KzDbYyPJucAYxcIKI535HrJekqSV10nvjcQH5VQZN56aNpP+Y0cG4oVUGE1
+         LcGFKK40IyTAjYuOzwEKIbPmzQNBTRRGZGQIt6BPdB37TUaTt8u3F1tihoSuevvHtn6p
+         9vAKKkOyz7XamFCrCtRTNS96YhIyZ2RSecTPVxIH6yci4CrBIAkMA1aodNDBr0J1Dvnf
+         cETMm7tFNOsLjXNrQZBBTH+oHx9Wh7sC1RUFuaVRjdT+ehNhl/k6MJ0CjbLr0qZoNpmK
+         bz7Irvd5RyjSyABGt0jmqlVpVkGajZ7R8hrmn8di5qWd3TiXWF/L1wjhV58+wNGL9vmV
+         Q9Gg==
+X-Gm-Message-State: AOJu0YzTXpLMxOqerbMzXRYtSnU9mufJf4weYeC/GCQ99EGqFlC+fBVg
+	aZ00T68S/d5p3F7NK3M36PElw36H+JPuNAb0Un3HWgIAt/e3PRtQsLKI9MNdIxeyI86d706XNv5
+	T7hUNAA1awdxWpsde20VzDrrwhT5A8ixQyHayn2AZ
+X-Gm-Gg: ASbGncsym1gyArL16Esh/dp3xmWPTkYR61q4YXisJc4zk15mcvZ4aUwpRoxO3vijpvf
+	DkAk/hobHk04d1yaLBhDm35BrXYHJAXixBpjv5aJGxVjfv2AhX8hPIGK9FD1+l9dEflQF8kvwM7
+	ceJyT8UXyhlTPdmukaYAlqw/bmY6CmZgQhYbK4rE6ptvg=
+X-Google-Smtp-Source: AGHT+IFGjaMfuFyrioLFPLZq08soyqzY+bST42DECvYrqoAALSyrF8BC8JV/KZtqJz9LrXkObOrzesr8ksF2R/H8FyA=
+X-Received: by 2002:a05:690c:3808:b0:70f:83ef:ddff with SMTP id
+ 00721157ae682-7117544368dmr269137437b3.30.1750258087575; Wed, 18 Jun 2025
+ 07:48:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617124900.186591-1-rui.zhang@intel.com>
-In-Reply-To: <20250617124900.186591-1-rui.zhang@intel.com>
-From: Len Brown <lenb@kernel.org>
-Date: Wed, 18 Jun 2025 10:47:24 -0400
-X-Gmail-Original-Message-ID: <CAJvTdKmnz6=ixNNYy2-h9P1=Vyr6pDPz_0d0eHGLU912ozkekg@mail.gmail.com>
-X-Gm-Features: AX0GCFtO7pIu6ihX4dGg1XHKzL3Y34AHRQgcdC4TK03zajTXI1Av07JcwCcV8hg
-Message-ID: <CAJvTdKmnz6=ixNNYy2-h9P1=Vyr6pDPz_0d0eHGLU912ozkekg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] tools/power turbostat: Fix bogus SysWatt for forked program
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
+References: <6852ba08.050a0220.216029.0011.GAE@google.com>
+In-Reply-To: <6852ba08.050a0220.216029.0011.GAE@google.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Wed, 18 Jun 2025 10:47:56 -0400
+X-Gm-Features: Ac12FXwM7ESYUG2Yj4RCDi85hG52oMXHOwbJt5vNBlSML3pPT9Ay9jgQ23PubUg
+Message-ID: <CAHC9VhQkpNAsxy4rDf=qjwBrtCx5sXc74w5A=NU4R+8=FPa3Sw@mail.gmail.com>
+Subject: Re: [syzbot] [selinux?] WARNING in hashtab_init
+To: syzbot <syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org, omosnace@redhat.com, selinux@vger.kernel.org, 
+	stephen.smalley.work@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: multipart/mixed; boundary="000000000000939fd30637d9b715"
+
+--000000000000939fd30637d9b715
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Applied
+#syz test
 
-thanks!
--Len
+On Wed, Jun 18, 2025 at 9:07=E2=80=AFAM syzbot
+<syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    52da431bf03b Merge tag 'libnvdimm-fixes-6.16-rc3' of git:=
+/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=3D144635d458000=
+0
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D4130f4d8a06c3=
+e71
+> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dbc2c99c2929c3d2=
+19fb3
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
+ebian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D12a1f50c580=
+000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1094050c58000=
+0
+>
+> Downloadable assets:
+> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d=
+900f083ada3/non_bootable_disk-52da431b.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/0ebc79a3dea1/vmlinu=
+x-52da431b.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/2b1157e117a2/b=
+zImage-52da431b.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the comm=
+it:
+> Reported-by: syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com
+>
+> WARNING: CPU: 3 PID: 5931 at mm/page_alloc.c:4935 __alloc_frozen_pages_no=
+prof+0x30b/0x23f0 mm/page_alloc.c:4935
+> Modules linked in:
+> CPU: 3 UID: 0 PID: 5931 Comm: syz-executor128 Not tainted 6.16.0-rc2-syzk=
+aller-00047-g52da431bf03b #0 PREEMPT(full)
+> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
+16.3-2~bpo12+1 04/01/2014
+> RIP: 0010:__alloc_frozen_pages_noprof+0x30b/0x23f0 mm/page_alloc.c:4935
+> Code: f0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 83 fe 0a 0f 86 0a f=
+e ff ff 80 3d 83 6e 7a 0e 00 75 0b c6 05 7a 6e 7a 0e 01 90 <0f> 0b 90 45 31=
+ f6 eb 81 4d 85 f6 74 22 44 89 fa 89 ee 4c 89 f7 e8
+> RSP: 0018:ffffc90003d87438 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000015 RDI: 0000000000040dc0
+> RBP: 0000000200000000 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000040000000 R11: 0000000000000001 R12: 0000000000000015
+> R13: 1ffff920007b0e9c R14: 0000000200000000 R15: 0000000000000015
+> FS:  0000555574b0f380(0000) GS:ffff8880d6a53000(0000) knlGS:0000000000000=
+000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000200000001000 CR3: 000000002a80f000 CR4: 0000000000352ef0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:4993
+>  __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
+>  alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
+>  ___kmalloc_large_node+0x84/0x1e0 mm/slub.c:4272
+>  __kmalloc_large_node_noprof+0x1c/0x70 mm/slub.c:4300
+>  __do_kmalloc_node mm/slub.c:4316 [inline]
+>  __kmalloc_noprof.cold+0xc/0x61 mm/slub.c:4340
+>  kmalloc_noprof include/linux/slab.h:909 [inline]
+>  kmalloc_array_noprof include/linux/slab.h:948 [inline]
+>  hashtab_init+0x1b1/0x290 security/selinux/ss/hashtab.c:43
+>  common_read+0x1c2/0x3d0 security/selinux/ss/policydb.c:1172
+>  policydb_read+0x874/0x3220 security/selinux/ss/policydb.c:2578
+>  security_load_policy+0x15c/0x12c0 security/selinux/ss/services.c:2299
+>  sel_write_load+0x332/0x1bd0 security/selinux/selinuxfs.c:603
+>  vfs_write+0x2a0/0x1150 fs/read_write.c:684
+>  ksys_write+0x12a/0x250 fs/read_write.c:738
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f0fd65a5d79
+> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f=
+7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
+ ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ffc49f31638 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+> RAX: ffffffffffffffda RBX: 0000200000000300 RCX: 00007f0fd65a5d79
+> RDX: 0000000000002000 RSI: 0000200000000000 RDI: 0000000000000003
+> RBP: 0000200000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 000000000000008f R11: 0000000000000246 R12: 00007f0fd65f419c
+> R13: 00007f0fd65ef082 R14: 0000000000000001 R15: 0000000000000001
+>  </TASK>
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+
+--=20
+paul-moore.com
+
+--000000000000939fd30637d9b715
+Content-Type: text/x-patch; charset="US-ASCII"; name="01-selinux-hashtab_gfpnowarn.patch"
+Content-Disposition: attachment; 
+	filename="01-selinux-hashtab_gfpnowarn.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_mc22gbev0>
+X-Attachment-Id: f_mc22gbev0
+
+c2VsaW51eDogYWRkIF9fR0ZQX05PV0FSTiB0byBoYXNodGFiX2luaXQoKSBhbGxvY2F0aW9ucwoK
+RnJvbTogUGF1bCBNb29yZSA8cGF1bEBwYXVsLW1vb3JlLmNvbT4KCkFzIHJlcG9ydGVkIGJ5IHN5
+emJvdCwgaGFzaHRhYl9pbml0KCkgY2FuIGJlIGFmZmVjdGVkIGJ5IGFibm9ybWFsbHkKbGFyZ2Ug
+cG9saWN5IGxvYWRzIHdoaWNoIHdvdWxkIGNhdXNlIHRoZSBrZXJuZWwncyBhbGxvY2F0b3IgdG8g
+ZW1pdAphIHdhcm5pbmcgaW4gc29tZSBjb25maWd1cmF0aW9ucy4gIFNpbmNlIHRoZSBTRUxpbnV4
+IGhhc2h0YWJfaW5pdCgpCmNvZGUgaGFuZGxlcyB0aGUgY2FzZSB3aGVyZSB0aGUgYWxsb2NhdGlv
+biBmYWlscywgZHVlIHRvIGEgbGFyZ2UKcmVxdWVzdCBvciBzb21lIG90aGVyIHJlYXNvbiwgd2Ug
+Y2FuIHNhZmVseSBhZGQgdGhlIF9fR0ZQX05PV0FSTiBmbGFnCnRvIHNxdWVsY2ggdGhlc2UgYWJu
+b3JtYWxseSBsYXJnZSBhbGxvY2F0aW9uIHdhcm5pbmdzLgoKUmVwb3J0ZWQtYnk6IHN5emJvdCti
+YzJjOTljMjkyOWMzZDIxOWZiM0BzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tClNpZ25lZC1vZmYt
+Ynk6IFBhdWwgTW9vcmUgPHBhdWxAcGF1bC1tb29yZS5jb20+Ci0tLQogc2VjdXJpdHkvc2VsaW51
+eC9zcy9oYXNodGFiLmMgfCAgICAzICsrLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
+KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL3NlY3VyaXR5L3NlbGludXgvc3MvaGFzaHRh
+Yi5jIGIvc2VjdXJpdHkvc2VsaW51eC9zcy9oYXNodGFiLmMKaW5kZXggMzgzZmQyZDcwODc4Li4x
+MzgyZWIzYmZkZTEgMTAwNjQ0Ci0tLSBhL3NlY3VyaXR5L3NlbGludXgvc3MvaGFzaHRhYi5jCisr
+KyBiL3NlY3VyaXR5L3NlbGludXgvc3MvaGFzaHRhYi5jCkBAIC00MCw3ICs0MCw4IEBAIGludCBo
+YXNodGFiX2luaXQoc3RydWN0IGhhc2h0YWIgKmgsIHUzMiBuZWxfaGludCkKIAloLT5odGFibGUg
+PSBOVUxMOwogCiAJaWYgKHNpemUpIHsKLQkJaC0+aHRhYmxlID0ga2NhbGxvYyhzaXplLCBzaXpl
+b2YoKmgtPmh0YWJsZSksIEdGUF9LRVJORUwpOworCQloLT5odGFibGUgPSBrY2FsbG9jKHNpemUs
+IHNpemVvZigqaC0+aHRhYmxlKSwKKwkJCQkgICAgR0ZQX0tFUk5FTCB8IF9fR0ZQX05PV0FSTik7
+CiAJCWlmICghaC0+aHRhYmxlKQogCQkJcmV0dXJuIC1FTk9NRU07CiAJCWgtPnNpemUgPSBzaXpl
+Owo=
+--000000000000939fd30637d9b715--
