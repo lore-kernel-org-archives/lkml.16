@@ -1,219 +1,190 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA04C276059;
-	Wed, 18 Jun 2025 11:41:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E300A2DA753
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:42:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750246890; cv=none; b=H/PjE3VRZBTTvUpXmW0jULf2UTguWNISZ+5GxWs9W4oqXtDRxX7rtIWKIr7WNecdBQ9qjLtLTsoQ3cLbnhyXDpjtVdAuYMH1VqYyxaMcAW/SRj4idt9BpX76tRTeQAjHOt3fq4BxTPuSr5qo8pYs1eJVPmDGNu5xmzHs2/JdO4E=
+	t=1750246936; cv=none; b=e4oi5phBVLauhFpmaSVegD/gwnQAvX72qPL8lb7fhwm5/lpWJf6hDH/CiFSX6tT9ydFZUx2/m0sQH9/yuK5TMBQq/Es8c3uUrKVuVRK/rH/DHYJy1Cii+CIeH35eFi+fce60LvXEQvVMnQIatGDeuFamtnVbvcTJBcGksNCr/5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750246890; c=relaxed/simple;
-	bh=tPKwCKLsH/uUR7qtKCo4ij9SiSEcvRPx3aqpnWQnJys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cIsVN+abAAbYljyOz+djesckj3LtC5waFRaauRtfEUPQYsn4y3ZPVEZnlexxzrGBgDoM1YA4+F0HsIGwPC5OpSes5gPnBw4BrpPZKR8i/yVjAI5V0iB5rFiGkOwK5Nf9Xe86A/wZA8jOB/B5wQTpcSFj3BwZZvtNw+VM//42oo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjLvooZo; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750246936; c=relaxed/simple;
+	bh=E1giQX77ba02sWSwCkkARDMrzYpmUpAr3+wQ3d5rEew=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iDExG5QCS9bJEQHgEYaJpTqr/5CXShOpBUszg1zrSTbP/9+nbBC/ub0CBsq2tfp5h5xSXCUCw9em/3G1dLF0gkstRDA2bUussbVFE/exETfQKfCqimbeat0Atpra7gueaclogZZal04WWprHEaEXP4tO4vZCwyuB5negv+0+8U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=B5tyc3Ed; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjLvooZo"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-235e1d4cba0so61969355ad.2;
-        Wed, 18 Jun 2025 04:41:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750246887; x=1750851687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHO/1ZrcSY8MzfWKm46uPjtYme/ycb9AH5YOiYbzy04=;
-        b=kjLvooZohSs1XWThcxg2jmMR/68DuShsQlZgFhOc5hqxOhTjLjoM4bM/uzr/RRo/bp
-         a3DsZYqtArxRWWfOdZX+x+m7oKii4x/u2Fw9F3UQHkOAzvukerCNF8Zu9iD9kR78F2ze
-         dTep7WC1ohxpnFV8InFQTaZexl1Zv9ugSVcnZgPBkhjLjQPpt2ORtO+B7r80JvUKmRG4
-         clvIfXokpKYTfT8b979v8Fc1nSZ4jNNwrTUdLwS04ek6CLcZOHOqDUTVruMFJ6nycl0z
-         BzwEf4m/Y6er7fUM4XAplPp8DX+VyTK9jXIlm5i+zS5ViTD4XlLG8lepDiR7/ZCAeBHy
-         jqRQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B5tyc3Ed"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750246933;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=HcMpr3Clw+S+n70QqzmCOKA4fXzf7c01Cd7kiaYINh4=;
+	b=B5tyc3EdQgZ4IWskqOmrg+zuODAUt+xwPb6dei4VQo/xmm1TJ8g4L9XpCMS3rNp4IdGNaW
+	kJ5qxpR+2C1nVT0Dn05BYLkd6u6LQaNEWN1PWFIEKIc7fz9w/mh3AMranGSjqeBlCtjh0/
+	5Bbxet60oUjVTT0Zh1ySNDsp8KgeuoQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-275-UxSuseG5MJqUCTm0saBF3w-1; Wed, 18 Jun 2025 07:42:12 -0400
+X-MC-Unique: UxSuseG5MJqUCTm0saBF3w-1
+X-Mimecast-MFC-AGG-ID: UxSuseG5MJqUCTm0saBF3w_1750246931
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f8fd1847so2492954f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:42:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750246887; x=1750851687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WHO/1ZrcSY8MzfWKm46uPjtYme/ycb9AH5YOiYbzy04=;
-        b=NKuvkaBCzNrebuMHnjc0VZ6bUt/1X17hQSrLBo7KE7D6OMVZ0kEGAOUPubIJJ0U3aK
-         JTm+eMtPdhTQ21Vl5g8Tnx/U8pUvKNFbVBZ/GFPsA0cRWM4PsTCVSxtx6sfg3vshI9iQ
-         Q5mViePxWLLK8u3EpFHtuwOtN0JHs6hqkWyMDe69ki3qCdiIyB4+cnsR38CWuLRGGRGX
-         Hs4dz22ci9KFwKjEfr3ePcziOd/4iZxWMe7a6Ll+ftoKNv6OqtscUZKi3X6q1uZd43P5
-         Uw939cY9xQV5oOK1dYVJqM5eas8tKvDO2RBocfTkGXb3fHWq0mIRuNI0M+wJarWQLKaK
-         TCYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU85kdA5h8EXiD8KiNUzTSMSf+VL60cjeJfdFH9Dt6SDBAPHaBTbWIMo7JizNcd+D8PgRCbTT0Of1Zc2g==@vger.kernel.org, AJvYcCUx3H7F6ND1d4tEpoe6HJ78KWbVfJOUglP2/x47F8W5q3ecXl1NKgRSk16TXOM0mO8jyFRvWuZ0wu+/deE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqQMK0BaeTGVZgAJ4p1LvcCzIvC2zYAtIdpOqzgXDwukrhV3o7
-	vVt4l4UleJSeO4jBtEZFO1u6p0L/5f4+tpao0IWm5EFumBpcGENErUfs
-X-Gm-Gg: ASbGncuPDuv5j+jhT/6Zrfl0rt1Ufr5gv9uTCYGYs1weMgL2wZdcPWheDwAi4TqP0v8
-	zNobjmnadFddLa5invwgQ4iJ8637oLlf8XvN94jlgf3OgRJRktUXXNbAiwoQyWclQPJ6LGHq+sc
-	je29/FoeIYHfASV2dFTs9zju1dEYj3CG9RaQRQCDHUHzYOzE+W1fwccIFDKCdN2m9KLA0zrOuvQ
-	xxc+BUCIitwpaafR/0Knu1pMp4uQD0YWb0KHRuY7kp6fc+j5KQqJ5wk8bmIaza9RpGL8gf0q1LI
-	p2nSNFQ0QqYRzVFICZbjvCKN1r1TKfe534t+PfkvJRQzskMdAbNj0cg8ea6pztplVAOvojTy2Wa
-	KHe3V8Bg=
-X-Google-Smtp-Source: AGHT+IHmvDU9mvjECIrfRIhGA0Lasf+p4c/hD1IDAv3zQPehBQksk9qIcZr8pMJYOZI/tovdU5bgMg==
-X-Received: by 2002:a17:903:94c:b0:235:f70:fd37 with SMTP id d9443c01a7336-2366b006110mr258304005ad.19.1750246887029;
-        Wed, 18 Jun 2025 04:41:27 -0700 (PDT)
-Received: from localhost.localdomain ([123.113.104.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365deb0fc2sm97209045ad.180.2025.06.18.04.41.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 04:41:26 -0700 (PDT)
-From: Wang Jinchao <wangjinchao600@gmail.com>
-To: Song Liu <song@kernel.org>,
-	Yu Kuai <yukuai3@huawei.com>
-Cc: Wang Jinchao <wangjinchao600@gmail.com>,
-	linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] md/raid1: change r1conf->r1bio_pool to a pointer type
-Date: Wed, 18 Jun 2025 19:41:15 +0800
-Message-ID: <20250618114120.130584-1-wangjinchao600@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1750246931; x=1750851731;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:from:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HcMpr3Clw+S+n70QqzmCOKA4fXzf7c01Cd7kiaYINh4=;
+        b=xBqBGUj5s/Hx2Cao/++9ERHP9himbE5K578O8lC4WaDmtum3R1QBRVd3ATD16SpkdY
+         XuHmwDtVInosGs4MDlX7FclLP8HK6lhNeQkrbRHVkOt7mp22dTf/Og4WDDUAF89YpFEl
+         TXH/9nL6Q3+F0eU7QFL/e1r+7adE/PQQb+ursoQYmRYp2ivBShrP3b/6bdhie2Kn5wWf
+         ciRiurdyr0wSBE/EX5e5rInObsyRHKIMwylv9my4kVpzY1Pt22K7JiMYFEDIa/6PXjjR
+         mbOfyF/oru33tigPISYWGDmWqLhCPA3KpL+AUwEJ5LuKVFi4jglwriO6uV8/H9vAki2j
+         pnVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWRP9kz1q80R4ZKwUNIM+JL8tHCM5O0t4ooCzu+q7X06w81GALK8Pl+XwcEO8xCd5Wfd7Dz56UN9h+8dmQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlejLvfVy9rBC8H79dGVvh47y0nPdUOgRAeSXGg60YKKQGbxCc
+	TVVvdUo3ZDSenipcN8xvI1JMvxuluzoTiVjVpTsJSxc/XdT+FrhDtL0A77MGTFtbNr5Ls4Ezr3j
+	SZBt7ZD0OKvnG9zPAquNcuozB4ku+tRiXYU4bgVaDTTIHXyDpvWRUWeOBUZUtYgizgQ==
+X-Gm-Gg: ASbGnctx75pdAmPYmWkfdxBLpcraFgpjO8Ir8K4A0josRPXGtx2BP/NRB1YTQhI9l65
+	s5AfOHWu3mcZs3QD8ksMRgk7BD6fUbQsrIt/oEfTMF1qJOe3a7t6q6Gf1IWrq0HmFOKWi5bkT4I
+	DTOve9wbmo+7N5OIcQAPKg0vLv4jCyb4Egq6fplaSTUfz5k/X7wkLq2Ft058cfy5CHsqcM6wbwj
+	hI4O2nHASv55YL0tWUYioJi4v43ylW0QIUBRyNjobbiXsLB0RGJRmsk63R0YJ1GQGsgZtXBDl/t
+	KC0XbotPbtXISIwGlIgmGolzZgVFQN9+ZcdoUFo7wCLZUY+96uG6zwjjqzK7rtEicU86/FeyrUH
+	X3lL3XlhgySyOV2x/ok9IRTLnRKh+kKNZ+Yw+76etKFETO7w=
+X-Received: by 2002:a05:6000:4387:b0:3a5:2d42:aa23 with SMTP id ffacd0b85a97d-3a5723720aamr11943775f8f.22.1750246931310;
+        Wed, 18 Jun 2025 04:42:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFJ0iaVW+p+ARhd57eIQcZrYtRK4jtysJExYXd7VW0dHvY8EIJAcZSkukTfU1LzsnuL7unx5Q==
+X-Received: by 2002:a05:6000:4387:b0:3a5:2d42:aa23 with SMTP id ffacd0b85a97d-3a5723720aamr11943745f8f.22.1750246930779;
+        Wed, 18 Jun 2025 04:42:10 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f2d:2400:4052:3b5:fff9:4ed0? (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b1bc97sm16813645f8f.68.2025.06.18.04.42.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 04:42:10 -0700 (PDT)
+Message-ID: <a1d62bf1-59e5-4dd5-926a-d6cdddf3deb5@redhat.com>
+Date: Wed, 18 Jun 2025 13:42:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
+From: David Hildenbrand <david@redhat.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>, lizhe.67@bytedance.com
+Cc: akpm@linux-foundation.org, alex.williamson@redhat.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ peterx@redhat.com
+References: <20250617152210.GA1552699@ziepe.ca>
+ <20250618062820.8477-1-lizhe.67@bytedance.com>
+ <20250618113626.GK1376515@ziepe.ca>
+ <9c31da33-8579-414a-9b2a-21d7d8049050@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <9c31da33-8579-414a-9b2a-21d7d8049050@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In raid1_reshape(), newpool is a stack variable.
-mempool_init() initializes newpool->wait with the stack address.
-After assigning newpool to conf->r1bio_pool, the wait queue
-need to be reinitialized, which is not ideal.
+On 18.06.25 13:40, David Hildenbrand wrote:
+> On 18.06.25 13:36, Jason Gunthorpe wrote:
+>> On Wed, Jun 18, 2025 at 02:28:20PM +0800, lizhe.67@bytedance.com wrote:
+>>> On Tue, 17 Jun 2025 12:22:10 -0300, jgg@ziepe.ca wrote:
+>>>> +	while (npage) {
+>>>> +		long nr_pages = 1;
+>>>> +
+>>>> +		if (!is_invalid_reserved_pfn(pfn)) {
+>>>> +			struct page *page = pfn_to_page(pfn);
+>>>> +			struct folio *folio = page_folio(page);
+>>>> +			long folio_pages_num = folio_nr_pages(folio);
+>>>> +
+>>>> +			/*
+>>>> +			 * For a folio, it represents a physically
+>>>> +			 * contiguous set of bytes, and all of its pages
+>>>> +			 * share the same invalid/reserved state.
+>>>> +			 *
+>>>> +			 * Here, our PFNs are contiguous. Therefore, if we
+>>>> +			 * detect that the current PFN belongs to a large
+>>>> +			 * folio, we can batch the operations for the next
+>>>> +			 * nr_pages PFNs.
+>>>> +			 */
+>>>> +			if (folio_pages_num > 1)
+>>>> +				nr_pages = min_t(long, npage,
+>>>> +					folio_pages_num -
+>>>> +					folio_page_idx(folio, page));
+>>>> +
+>>>> +			unpin_user_folio_dirty_locked(folio, nr_pages,
+>>>> +					dma->prot & IOMMU_WRITE);
+>>>
+>>> Are you suggesting that we should directly call
+>>> unpin_user_page_range_dirty_lock() here (patch 3/3) instead?
+>>
+>> I'm saying you should not have the word 'folio' inside the VFIO. You
+>> accumulate a contiguous range of pfns, by only checking the pfn, and
+>> then call
+>>
+>> unpin_user_page_range_dirty_lock(pfn_to_page(first_pfn)...);
+>>
+>> No need for any of this. vfio should never look at the struct page
+>> except as the last moment to pass the range.
+> 
+> Hah, agreed, that's actually simpler and there is no need to factor
+> anything out.
 
-Change raid1_conf->r1bio_pool to a pointer type and
-replace mempool_init() with mempool_create() to
-avoid referencing a stack-based wait queue.
+Ah, no, wait, the problem is that we don't know how many pages we can 
+supply, because there might be is_invalid_reserved_pfn() in the range ...
 
-Signed-off-by: Wang Jinchao <wangjinchao600@gmail.com>
----
- drivers/md/raid1.c | 31 +++++++++++++------------------
- drivers/md/raid1.h |  2 +-
- 2 files changed, 14 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-index fd4ce2a4136f..4d4833915b5f 100644
---- a/drivers/md/raid1.c
-+++ b/drivers/md/raid1.c
-@@ -255,7 +255,7 @@ static void free_r1bio(struct r1bio *r1_bio)
- 	struct r1conf *conf = r1_bio->mddev->private;
- 
- 	put_all_bios(conf, r1_bio);
--	mempool_free(r1_bio, &conf->r1bio_pool);
-+	mempool_free(r1_bio, conf->r1bio_pool);
- }
- 
- static void put_buf(struct r1bio *r1_bio)
-@@ -1305,7 +1305,7 @@ alloc_r1bio(struct mddev *mddev, struct bio *bio)
- 	struct r1conf *conf = mddev->private;
- 	struct r1bio *r1_bio;
- 
--	r1_bio = mempool_alloc(&conf->r1bio_pool, GFP_NOIO);
-+	r1_bio = mempool_alloc(conf->r1bio_pool, GFP_NOIO);
- 	/* Ensure no bio records IO_BLOCKED */
- 	memset(r1_bio->bios, 0, conf->raid_disks * sizeof(r1_bio->bios[0]));
- 	init_r1bio(r1_bio, mddev, bio);
-@@ -3124,9 +3124,9 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 	if (!conf->poolinfo)
- 		goto abort;
- 	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
--	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
--			   rbio_pool_free, conf->poolinfo);
--	if (err)
-+	conf->r1bio_pool = mempool_create(NR_RAID_BIOS, r1bio_pool_alloc,
-+					  rbio_pool_free, conf->poolinfo);
-+	if (!conf->r1bio_pool)
- 		goto abort;
- 
- 	err = bioset_init(&conf->bio_split, BIO_POOL_SIZE, 0, 0);
-@@ -3197,7 +3197,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
- 
-  abort:
- 	if (conf) {
--		mempool_exit(&conf->r1bio_pool);
-+		mempool_destroy(conf->r1bio_pool);
- 		kfree(conf->mirrors);
- 		safe_put_page(conf->tmppage);
- 		kfree(conf->poolinfo);
-@@ -3310,7 +3310,7 @@ static void raid1_free(struct mddev *mddev, void *priv)
- {
- 	struct r1conf *conf = priv;
- 
--	mempool_exit(&conf->r1bio_pool);
-+	mempool_destroy(conf->r1bio_pool);
- 	kfree(conf->mirrors);
- 	safe_put_page(conf->tmppage);
- 	kfree(conf->poolinfo);
-@@ -3366,17 +3366,13 @@ static int raid1_reshape(struct mddev *mddev)
- 	 * At the same time, we "pack" the devices so that all the missing
- 	 * devices have the higher raid_disk numbers.
- 	 */
--	mempool_t newpool, oldpool;
-+	mempool_t *newpool, *oldpool;
- 	struct pool_info *newpoolinfo;
- 	struct raid1_info *newmirrors;
- 	struct r1conf *conf = mddev->private;
- 	int cnt, raid_disks;
- 	unsigned long flags;
- 	int d, d2;
--	int ret;
--
--	memset(&newpool, 0, sizeof(newpool));
--	memset(&oldpool, 0, sizeof(oldpool));
- 
- 	/* Cannot change chunk_size, layout, or level */
- 	if (mddev->chunk_sectors != mddev->new_chunk_sectors ||
-@@ -3408,18 +3404,18 @@ static int raid1_reshape(struct mddev *mddev)
- 	newpoolinfo->mddev = mddev;
- 	newpoolinfo->raid_disks = raid_disks * 2;
- 
--	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
-+	newpool = mempool_create(NR_RAID_BIOS, r1bio_pool_alloc,
- 			   rbio_pool_free, newpoolinfo);
--	if (ret) {
-+	if (!newpool) {
- 		kfree(newpoolinfo);
--		return ret;
-+		return -ENOMEM;
- 	}
- 	newmirrors = kzalloc(array3_size(sizeof(struct raid1_info),
- 					 raid_disks, 2),
- 			     GFP_KERNEL);
- 	if (!newmirrors) {
- 		kfree(newpoolinfo);
--		mempool_exit(&newpool);
-+		mempool_destroy(newpool);
- 		return -ENOMEM;
- 	}
- 
-@@ -3428,7 +3424,6 @@ static int raid1_reshape(struct mddev *mddev)
- 	/* ok, everything is stopped */
- 	oldpool = conf->r1bio_pool;
- 	conf->r1bio_pool = newpool;
--	init_waitqueue_head(&conf->r1bio_pool.wait);
- 
- 	for (d = d2 = 0; d < conf->raid_disks; d++) {
- 		struct md_rdev *rdev = conf->mirrors[d].rdev;
-@@ -3460,7 +3455,7 @@ static int raid1_reshape(struct mddev *mddev)
- 	set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 	md_wakeup_thread(mddev->thread);
- 
--	mempool_exit(&oldpool);
-+	mempool_destroy(oldpool);
- 	return 0;
- }
- 
-diff --git a/drivers/md/raid1.h b/drivers/md/raid1.h
-index 33f318fcc268..652c347b1a70 100644
---- a/drivers/md/raid1.h
-+++ b/drivers/md/raid1.h
-@@ -118,7 +118,7 @@ struct r1conf {
- 	 * mempools - it changes when the array grows or shrinks
- 	 */
- 	struct pool_info	*poolinfo;
--	mempool_t		r1bio_pool;
-+	mempool_t		*r1bio_pool;
- 	mempool_t		r1buf_pool;
- 
- 	struct bio_set		bio_split;
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
