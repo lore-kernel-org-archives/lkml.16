@@ -1,88 +1,101 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DEC2F530F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2568A2F530F;
+	Wed, 18 Jun 2025 12:11:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248675; cv=none; b=SeY2uhT89Q5lSOSuhNDhb2DQI5NHftwleWkJlMhH2gpll7j16BoIOm1Gu5X3xoR6dZEi1RCPJZIZhQHumtWcZ4Ydnq5IUB1AJ5omQkbuT/RuVnChD9VqEdsP4bDltFMaC216nnBCQ3HVP7vus6SrtFRGN0MIDeK0yeV8Tkp/tKI=
+	t=1750248720; cv=none; b=owKc3dwSvVigy83Dh4kFsn2/AFwzBfG7yxFfT/Yrs34kNgOiafYYWzMKq0YqcpfzcFWmpNqUZHHc/wEUyhq609c3skdCE4w3VYWv2JaxacjeDs7JZiLGclBahQDeifoKo+uMdsxSghIrpnrXn1uJ2JDJPscSuEMT4j+TSIXqvtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248675; c=relaxed/simple;
-	bh=FWYpaVtWFt/wV0NEpD4ub0aYCg9BYIjeEtG50lAMb7s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oXLER+1LMEd8ZLdysNuB4VMuYlokOpAGKzISA8cXuMOnqwUB0GlK7A7lZBGDuAgq9QLWfttugRxM1YDw2TiM4HQ2jk8Zz5pJVHa43qG4ZayJEYlvAAGLoyQ3Q3MkhjWwPyJUv84q7IkrFMdYdLDrsTsZytTBg7arYgZPZYNxF5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jIZRrFet; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750248720; c=relaxed/simple;
+	bh=Bm6AlVdy7rJk76AcQQbQ/HxwJZrHOdNInWoHVKdb28A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kE3pUqZSCkD2lqMwYgwkDefKupi0sX9UPMj7sAdnRYw75umoy2YaObEQX2KksSnSLe5j0iEaFqeD2xi6vFjdhJ6EDKjK/3gGBotHc2WM1z3silFHBd6+lZ+9atMOX/WvdGsicL+ZS0YMZrpbjFiGJR0GOSFT7EuUaflny5TJNLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5vAuRht; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jIZRrFet"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-553b5165cf5so5788025e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:11:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750248669; x=1750853469; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FWYpaVtWFt/wV0NEpD4ub0aYCg9BYIjeEtG50lAMb7s=;
-        b=jIZRrFetpuq974/tt4EOn4W+sxEgg8ZIfQS6EqpPaXOGAhcHpQUpb89CwDZA4x7Nww
-         WyKgh+9hysXI/CkDoJMXdEFexYw0x7FV7AWNzuSE2BA9f7VZeE2sOIXG8jsLwJJm/w7u
-         aSpOIsfTsVs09Ke7NBhxwM74qzH45U1fLpMrThc1+FCp3qSe0MrWUg59y3GVj4Fw3sNF
-         2znbJEHL327AlLNQiIXEC13WR2htGcTN3l2iiSBXMiwazeI1mgcHu9XT/XUr6DzdnwyO
-         6ZmuaJBlfj8g4E0NxN/jiRHY8om24YyGDZIndUxQOReboGUCtTP+bTePNOOFlXYDDAn5
-         Obdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750248669; x=1750853469;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FWYpaVtWFt/wV0NEpD4ub0aYCg9BYIjeEtG50lAMb7s=;
-        b=v9qK70IBAhApL3FEHtxllo7stzEGUQBzu/XRgDvOnHw9tmPIIekmxmRg1G8QsPWypU
-         b11kfCI9hW3Ek3t1NMQMDnFKbVmDd4pzeyYWX9xPuH3bKZzSYqL/nUrqwr25RJ41YRDe
-         Aa59rsQJMvr6/9EAHbKrCp8Uv5ndhbwu1F5K52rxPw1e1z7AVbYiNCK7amolcHKEA7aI
-         QfUpwjgXktrYXLfRFsUGr4Hui3ZTudSJ3EPkwccljGHPmHTyaI2syuy9iLjNk0+m92jx
-         Fs9ocLYpPwCDmNnJSXU7+Qc+1re3D4F2PtrTojQC4nVa1YBd4pQEmK8cllv6hDKn5JqO
-         DX5g==
-X-Forwarded-Encrypted: i=1; AJvYcCW/m4a/FiKR2SVqTihFfWDX1CBTarkoMS0h5JpC3AtORBln4SJjvgB525EaiAIDovEgYhCCS8Dx39qPfZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQy9uMxbRJkyFbZJeFopCqhzanpoW4K+W0lrCS+KpChrXEO7bW
-	ujN8nNmn3e8oOVu+OmuJzFLXm4NAQvZhhFoO7H3u60e8C+dWCBaoEgKqklcntAMjcKTHlbmi6nf
-	HLCgKRXxHizexCs5uD0zU0OMUJnIVRTUpvKUCTeWbBw==
-X-Gm-Gg: ASbGnctqRdaVIJWLx4HJyw/57rVi2v/z2rU4xlpHDFIMDR4Be5DWzjMlB9q0kiCgaNR
-	ayxm63fiaBTwERv+AEy3ol+S933yYM13kMr1YZuznt6lJnCgvSs/Cvxh+m7VsKVkjdad3GYlUm+
-	ESefc8x/h4yVkk41ku6l36Hk43q4JhnvZEk/ge1wZsZsCENqWz+nYEgw==
-X-Google-Smtp-Source: AGHT+IHqsFCtGz1gD38G6LZ5IHUVK4whWi9KUJsP4gSMoD7URfEaquUbgGET6oucxiZq/QgbCfiFUxgCyfeo8UdA5Eg=
-X-Received: by 2002:a05:6512:3b0f:b0:553:b005:d0e7 with SMTP id
- 2adb3069b0e04-553b6f46bc3mr4368865e87.53.1750248668764; Wed, 18 Jun 2025
- 05:11:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5vAuRht"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 758B8C4CEE7;
+	Wed, 18 Jun 2025 12:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750248719;
+	bh=Bm6AlVdy7rJk76AcQQbQ/HxwJZrHOdNInWoHVKdb28A=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=b5vAuRht8JNoykjTL9HCcNJWeOUIAw3LL1/SFi1TpjB7UzJNy6Usv07+Cfd7M8D2e
+	 C4SyOrRGrce4ttdohUxsIT22OXaYqAHAI0v8VzFfgcUmGfalRSBXZdYNrWx41XXEK8
+	 qu44zfOOiodyYjcQdKqbxk1zbKFeRCLS4O4N589CJ069I0sa60sSE5DlDhVuwQQb7N
+	 KCxtXlQ/RiOiFPbb+OXQsD+ZZJ89uYfb1OX4IGxjqq/BknyjI0AUfthQcMNLltEQhX
+	 T0O4gAjKMFhTyjNFAceqNr23GR0F9bw/pGNL1Wm0D0diakiwVpt+J9Krgj4JFJJtvP
+	 M/ZAyziH+cRjQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id B3F84CE0C98; Wed, 18 Jun 2025 05:11:56 -0700 (PDT)
+Date: Wed, 18 Jun 2025 05:11:56 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Haas <t.haas@tu-bs.de>, Alan Stern <stern@rowland.harvard.edu>,
+	Andrea Parri <parri.andrea@gmail.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	David Howells <dhowells@redhat.com>,
+	Jade Alglave <j.alglave@ucl.ac.uk>,
+	Luc Maranget <luc.maranget@inria.fr>,
+	Akira Yokosawa <akiyks@gmail.com>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	lkmm@lists.linux.dev, hernan.poncedeleon@huaweicloud.com,
+	jonas.oberhauser@huaweicloud.com,
+	"r.maseli@tu-bs.de" <r.maseli@tu-bs.de>
+Subject: Re: [RFC] Potential problem in qspinlock due to mixed-size accesses
+Message-ID: <84e8e3c1-fc7e-4f6b-9c71-39bf7522a498@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <cb83e3e4-9e22-4457-bf61-5614cc4396ad@tu-bs.de>
+ <20250613075501.GI2273038@noisy.programming.kicks-ass.net>
+ <0b20c5e8-ef01-4527-9122-8722f96972ae@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612131927.127733-1-brgl@bgdev.pl>
-In-Reply-To: <20250612131927.127733-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 14:10:57 +0200
-X-Gm-Features: AX0GCFsm_8tRNBwlHeLFuDjmRbmAAT7xZjeqBj0vWNkAImbXF58tnQYSK1McFCE
-Message-ID: <CACRpkdZ2uvw-r3SXHGkf7P+Wc-77itG0Rzn6Yc_2UUif37h3pw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: drop bouncing Lakshmi Sowjanya D
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0b20c5e8-ef01-4527-9122-8722f96972ae@paulmck-laptop>
 
-On Thu, Jun 12, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Tue, Jun 17, 2025 at 11:51:49PM -0700, Paul E. McKenney wrote:
+> On Fri, Jun 13, 2025 at 09:55:01AM +0200, Peter Zijlstra wrote:
+> > On Thu, Jun 12, 2025 at 04:55:28PM +0200, Thomas Haas wrote:
+> 
+> [ . . . ]
+> 
+> > >     - put some other read-read barrier between the xchg_tail and the load.
+> > > 
+> > > 
+> > > ### Implications for qspinlock executed on non-ARM architectures.
+> > > 
+> > > Unfortunately, there are no MSA extensions for other hardware memory models,
+> > > so we have to speculate based on whether the problematic reordering is
+> > > permitted if the problematic load was treated as two individual
+> > > instructions.
+> > > It seems Power and RISCV would have no problem reordering the instructions,
+> > > so qspinlock might also break on those architectures.
+> > 
+> > Power (and RiscV without ZABHA) 'emulate' the short XCHG using a full
+> > word LL/SC and should be good.
+> > 
+> > But yes, ZABHA might be equally broken.
+> 
+> All architectures handle eight-bit atomics and stores, but last I checked,
+> there were a few systems still around that failed to support 16-bit
+> atomics and stores.  I will check again.
+> 
+> (But those systems's architectures can simply avoid supporting kernel
+> features requiring these 16-bit operations.)
+> 
+> It would be good to add multiple sizes to LKMM, and even moreso once we
+> have 16-bit support across the board.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The address for Lakshmi Sowjanya D: lakshmi.sowjanya.d@intel.com is
-> bouncing. Drop it and mark the driver as orphaned.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+And Arnd tells me that the Linux kernel might be safe for 16-bit stores
+in core code perhaps as early as the end of this year.  ;-)
 
-Patch applied for fixes.
-
-Yours,
-Linus Walleij
+							Thanx, Paul
