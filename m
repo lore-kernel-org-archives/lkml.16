@@ -1,39 +1,50 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D23B28A1EB
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD7F28B503;
+	Wed, 18 Jun 2025 12:40:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750250383; cv=none; b=d1+0zGLpYXvJazGU5pSV4S0o4wp0km3D3/U0GsNvtsGA8buuNARXytUbI/RuuhBEir4T01Anwmoc+ywO780jNErmzh3iR86cReZLlc7EnhrqpCp2G1UCUg9/JPJumKJF1qiR+Sopqlj9sR2+NuMxmjmWd8atZ+5QGdVZZRx11Lo=
+	t=1750250403; cv=none; b=FcJnSAA6mdZayYs5IXzqv3vWwNum3w9ZQ6A8/wVUyG0L6easi66/EU7QtiRH5bH6x6BnhqZYkfs3pjThAEyW5noUjaDZCD8MCCtd6fziBcQSVp7i+Y3XxGlRfybOE/j7H6EaDRyR772wsNO6dIsSQGt8La6Q7LqHAsJx3Hziuxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750250383; c=relaxed/simple;
-	bh=u7aTogsM2QtHhE/8X71etJ+Hr3Bgjbdk6kDnkJG5yqI=;
+	s=arc-20240116; t=1750250403; c=relaxed/simple;
+	bh=gtPi66+hfTTTDE0soYLd3r6RNixK6xtDDPTsnM7s8AI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d5H+a8tilZ+/g5HgwXo4BbIe6lh2EOeVd2cARcLFZaUfqQi1UwxmseOdb0wX/3yF9way4klBe5Lv5EQUmIC3lZ+2+5zlOeSfn+GR+T7VMUUvCfa8/oY80QqFX8jvOl1qJqVBjVL7b2BQVgMnJQjsjrJ09nnsyf5pImTeP9zbCfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=fheX8NLd; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=pLVub+NWSnVH+ybUNqqywbHW80gtjY2APuxyodM1XFOokLrhjUDtT2lWekq989wu7I9Q+p1rYXzqUUI3Qejbn9wEI6/tsfO+OUnOPgquhjzcyeja/3kKGciiz4zZAJzA8TAe2hLpthUaeXBmGrhqpGnURHTUyIAyCfB+EOCfrf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KsTR72qF; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="fheX8NLd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=llImzjIbhjZJrpdOHyErF1aaIt3Spa/yRg33TxcGabE=; b=fheX8NLdVkqkIqxe97nkmLdrFM
-	lbcNCNW+ClOA5yZo3mKOr60il84d7TwCZm7Tluk+9xQ0029jpCSZ92MxM92PmQIUu4QpBZOYW8UZ6
-	AS5/gjcWMmUVY2qToLuyGgDwNm9N5lNexQhHIlfzx5Os+rC+LqMhu+m6e/NCxVBQcMTu42vR8ds4l
-	R3cLO5pvkCmQ7xjTkidRLakqbPneVuLdpT9q/BRzj902dmn3KXGlObf143mv9OPhrR5v43fJ1KW7F
-	bZcQsOBfgSaipj45CqazW1cpkQLYI4uHL/IPAbW1RJmCe66gWk8BhayTie9k1f9dYpuAMzwx38iHH
-	dw0Jxf2g==;
-Received: from [191.204.192.64] (helo=[192.168.15.100])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1uRs4Y-00543t-61; Wed, 18 Jun 2025 14:39:22 +0200
-Message-ID: <c62c2994-19e3-4599-9ac9-d49c37845011@igalia.com>
-Date: Wed, 18 Jun 2025 09:39:16 -0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KsTR72qF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750250402; x=1781786402;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gtPi66+hfTTTDE0soYLd3r6RNixK6xtDDPTsnM7s8AI=;
+  b=KsTR72qFfNWvN2A7jU/fDRFJEgUkNcdaOI+rd9dr9Fv0ehyjk2rxgBwR
+   WgOkP1lu38JxZuwjwDYRAc19bMdGzUtR72YNV33S7vLR24kJlK4vXoZYY
+   xExR1sP6TAV7OuSVrHcmXwXtv5LPwQ1U0T73dxfq8tQx/nd0vmGji+ErS
+   ZOQ5IYgGkAlVumG6hdXLpfz1NCgIH5la7eJB5zdxsWXwVJ2fdYO4q+wwN
+   bmTHQeZ9P+t2JZYfwKyeWKhkNTHTnsVMGKcGNQAYWP7BCb3c91epInDX7
+   p4YLCGmcEaxFU6wb+YNmbaMO42qKN78+9EWTD3GvHBq/yk41h7jjPDdCK
+   g==;
+X-CSE-ConnectionGUID: 9bJXNDKMTd+RvM01ZtThag==
+X-CSE-MsgGUID: oF6zxxobRoufNIAB+wLCtw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="51690100"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="51690100"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:40:01 -0700
+X-CSE-ConnectionGUID: Aj2E/VTBRu++q7aFtIp7iQ==
+X-CSE-MsgGUID: nCSKsEt0RXaxnLgpFD+xMA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="150262264"
+Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:39:53 -0700
+Message-ID: <27b983f2-a6da-4b2c-a5d4-c84e2c80f193@intel.com>
+Date: Wed, 18 Jun 2025 20:39:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,50 +52,78 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/6] drm/amdgpu: Make use of drm_wedge_task_info
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>, siqueira@igalia.com,
- airlied@gmail.com, simona@ffwll.ch, Raag Jadav <raag.jadav@intel.com>,
- rodrigo.vivi@intel.com, jani.nikula@linux.intel.com,
- Xaver Hugl <xaver.hugl@gmail.com>,
- Krzysztof Karas <krzysztof.karas@intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-dev@igalia.com, amd-gfx@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, intel-gfx@lists.freedesktop.org
-References: <20250617124949.2151549-1-andrealmeid@igalia.com>
- <20250617124949.2151549-7-andrealmeid@igalia.com>
- <5db1dda6-0cd7-4fc7-9a22-8ed57b12ada1@amd.com>
- <63b4fb79-8132-4c05-bcac-3238366899d9@igalia.com>
- <a0f508fd-3277-4839-a4b6-e6bc56546f6c@amd.com>
+Subject: Re: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
+To: Adrian Hunter <adrian.hunter@intel.com>, Tony Luck <tony.luck@intel.com>,
+ pbonzini@redhat.com, seanjc@google.com
+Cc: vannapurve@google.com, Borislav Petkov <bp@alien8.de>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ H Peter Anvin <hpa@zytor.com>, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ kai.huang@intel.com, reinette.chatre@intel.com,
+ tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
+References: <20250618120806.113884-1-adrian.hunter@intel.com>
+ <20250618120806.113884-3-adrian.hunter@intel.com>
 Content-Language: en-US
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <a0f508fd-3277-4839-a4b6-e6bc56546f6c@amd.com>
+From: Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20250618120806.113884-3-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Christian,
-
-Em 18/06/2025 04:29, Christian König escreveu:
-> On 6/17/25 15:22, André Almeida wrote:
->> Em 17/06/2025 10:07, Christian König escreveu:
->>> On 6/17/25 14:49, André Almeida wrote:
->>>> To notify userspace about which task (if any) made the device get in a
->>>> wedge state, make use of drm_wedge_task_info parameter, filling it with
->>>> the task PID and name.
->>>>
->>>> Signed-off-by: André Almeida <andrealmeid@igalia.com>
->>>
->>> Reviewed-by: Christian König <christian.koenig@amd.com>
->>>
->>> Do you have commit right for drm-misc-next?
->>>
->>
->> Thanks for the reviews!
->>
->> I do have access, but if you don't mind, can you push this one?
+On 6/18/2025 8:08 PM, Adrian Hunter wrote:
+> Skip clearing a private page if it is marked as poisoned.
 > 
-> Sure, but give me till the end of today.
+> The machine check architecture may have the capability to recover from
+> memory corruption in SEAM non-root (i.e. TDX VM guest) mode.  In that
+> case the page is marked as poisoned, and the TDX Module puts the TDX VM
+> into a FATAL error state where the only operation permitted is to tear it
+> down.
 > 
+> During tear down, reclaimed pages are cleared which, in some cases,  helps
+> to avoid integrity violation or TD bit mismatch detection when later being
+> read using a shared HKID.
+> 
+> However a poisoned page will never be allocated again, so clearing is not
+> necessary, and in any case poisoned pages should not be touched.
+> 
+> Note that while it is possible that memory corruption arises from integrity
+> violation which could be cleared by MOVDIR64B, that is not necessarily the
+> cause of the machine check.
+> 
+> Suggested-by: Kai Huang <kai.huang@intel.com>
+> Fixes: 8d032b683c299 ("KVM: TDX: create/destroy VM structure")
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>   arch/x86/kvm/vmx/tdx.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 457f91b95147..f4263f7a3924 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -282,10 +282,10 @@ static void tdx_clear_page(struct page *page)
+>   	void *dest = page_to_virt(page);
+>   	unsigned long i;
+>   
+> -	/*
+> -	 * The page could have been poisoned.  MOVDIR64B also clears
+> -	 * the poison bit so the kernel can safely use the page again.
+> -	 */
+> +	/* Machine check handler may have poisoned the page */
 
-It was already merged, no worries!
+This doesn't read correct. The page is not poisoned by the machine check 
+handler. Machine check handler just marks the page as poisoned.
+
+With it fixed,
+
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+
+> +	if (PageHWPoison(page))
+> +		return;
+> +
+>   	for (i = 0; i < PAGE_SIZE; i += 64)
+>   		movdir64b(dest + i, zero_page);
+>   	/*
 
