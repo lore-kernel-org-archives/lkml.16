@@ -1,126 +1,121 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D082B3085CE
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0764E2153D8
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750286985; cv=none; b=D2YMOWjkXrYeevSef5WT7KKAWBHKK/V/BYyvhuDZPKN8GPS0NSJCcAwtbZpbjIk3VZOpzf0hr5/5ADUA2k7+afeJ53NvOeH9kB+JLd9Bx91LWBnCttR2eUbeISD7XNIm0/Ddawddv0O3qDJwvTiDrVIkQNY/ehKHGzaV62IfC1s=
+	t=1750286996; cv=none; b=KgzoYO6O9IDCqJGq9yrh3f9CFFpPTNOFlrOReOPsIEYeQjC3NltmF/RtFmIh1v+xvMIYEOO/myS1D1cqi+4RlxXAZO0YqvFLQ55y1Roz5JBpVmVXKf7Lyq82A+QCSNXyWvpgBnjJwXxQMcpbIObR1AeUkHbDTUoHk9ZnsMsOPbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750286985; c=relaxed/simple;
-	bh=X0d4s7HeTNVWovwAH74ZIIwggrMKixXtckbV2OWRu24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gD9+3NpezUxdypcxdbZmxDBC35J7OYyD1k59r39l34jbZthlhLKrh6dA2EOQ4SCtPL185KwvlOZiY6tHXOBuJX6NZ1INx8hJ6XMPsK7F2dOG1FHlNiA8GzM/KxwLYh36dHD5iIUvGTw2QSLBWr+gljr2iL1TZ25r5sS2q95tLgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Lo3upfFv; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1750286996; c=relaxed/simple;
+	bh=vR1hDO6HkeWPDLUa5nkH6iq8NsHnUdWRXAnQvHPkV58=;
+	h=Date:Mime-Version:Message-ID:Subject:From:Cc:Content-Type; b=nDpaPvCDt5E1Drv0Iwa8on/z/xzGYseycKjpvirnQJMY65XFvJf2VO2NjDxesDL5ZctoB/D4z1QJVfVOsv06TWa7Y2lIBV8VktiPQ+LzaF92FcujrjdjvcJDd8mujvKIgXxkC1O6yn+OycmFYWxoAbjp9aV9VBKaQxeTN92HA2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=n5AqRyCP; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--rdbabiera.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Lo3upfFv"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3de1875bfd4so743395ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:49:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n5AqRyCP"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-31327b2f8e4so72048a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750286981; x=1750891781; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lminZQPPyj9Xyk5IUElSQsXv7Gj2x9Gg1S0ldpt+LEw=;
-        b=Lo3upfFv8VCnJAbOIDRr5BuV1QGCQBqYOAvsI61utd9nbO0fLtgTO+w/bWszio+NJi
-         IJXFC6HK5jHr5fBdQwaYva/3Z9UTdq969mRt5pjAuozSrk6rYm+nraiDizd8bExW/YUy
-         dnrSvcXhyJKdCJPAnr2FSzHjECCLXxI4WyWYXTLlyuu+9fG/bj0J6ebkA3+n2QtsMyjX
-         jqKjU0m7jMA+iHZngyVYwbMnC9gmME6KFQ9E0SqawpQMy4eOK2IrR48xvL22fmZywaoA
-         LiUDgyyR7RdmZUqxmnN4b8hYWT6WM05yZu5WFE7n3kzgQbQT/+hrxe+HaRTw8vVkA44O
-         oUaA==
+        d=google.com; s=20230601; t=1750286994; x=1750891794; darn=vger.kernel.org;
+        h=cc:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Ayl3My5WkFPC4pHPZB0vUsI7Z8MvSCFfFwq+uySbSpk=;
+        b=n5AqRyCP2z/0VwcyMbMpDozv0H227k8e79EzlBQtP2QibgqqDWy4BZ48ZY1o1DYf6D
+         zCV8LqQbmqxna0Za0hCgiCcmwky+yez86swTrvs1ZF91Ll97BK01Rvf4QYjQtfqQfaeH
+         wQtbSkEZUteWy3O3bUMve+05QsFiIm+A55C9ohSkxo2cxHP25kw43jYANqw3Y6aH0WbQ
+         /nRRm3weTY99shvqNBGUrVqtKkcXOJWUPpN08Tmw9Y2DEPGKIOD1GUNxH85DLMsV+Ytp
+         ytpb7jkC7DT3D+cQ5/n9KOw1wY3vynUBk4FnB1PmyH8E+5q1jLRkZPszQhv1wZDRjSa9
+         J1CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750286981; x=1750891781;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lminZQPPyj9Xyk5IUElSQsXv7Gj2x9Gg1S0ldpt+LEw=;
-        b=QD3wakMqV18PBhzt+aDZ0tmknSyKjlzSDDeI/ro7hceaVvlbVVdIsncmNczErfIK7g
-         2xu0vCneBy5gEpfT6uHRMPM1dRLsU+mVghSzZvueO/XEMEncEMg1EAL2u/EAYZ3HG2Kw
-         B5iHJGVaOEGfxUWd8ddI7JOF62ShjH9TADNI8NW9biUju0udBlkxjKUz6yLN9NmUJvs3
-         xMyyBbYRF+8He2qRGgNt6k2hVznO+CdTRnSH0f1lUuyDvNqzg1M350k99r9yBIEbhdaQ
-         x+8Vho+0an2egY6A8MDZyeM9SGHZxJtdtWI7IHJmUwd83BnosexMI/PGvXnhCyLOzpfE
-         gATg==
-X-Forwarded-Encrypted: i=1; AJvYcCWACgLnZJy0Uim8cjmAoY0TeaUDmB29sDVFP0mJmiJ1FLxwdNVNxNH1a5L5QLoYs6UJpqTe53VjUOiP+m4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb9iIIsSNuaZBQeelZU2QScvQNsVovfGrbb3QXFW2lzr3ko4Je
-	abbfCrqc8gid/bokBZKiNf3ZScN57f7zzM6HWhI/32XT5UP+lmC9LNNa7omy4aAsq98=
-X-Gm-Gg: ASbGncvCy3FqErmg1Kd7q0AGIHsLYboIZbw3Kfldvy3hR/pRwxWB34DucWbbr1iv0li
-	Mryg7nouRUCbBcLYU6Txznf+8cT5RKU4KotDug1xvHIGpjRRy41wS/GrYEXuHK2YzEpJNEMm8Al
-	HkftPOaMqGcd34PhvF8i4CHXikjCVSYcJSwZ+2/p6xfyJxMKNgk4cxWgt3lR9XX6FaB1YfoJWRx
-	FCfvjfu8Cv/p9f6bR85fjXVyKXOLSMadz5+KJBd8rUOxAG+3iA4qQHIqcRZdg4bS7UohudSwgAd
-	/iNqcGj327l6WQuQc7idwbbiplGADUK7SiDqvuSERxvAolZeC0NQVmH2s08=
-X-Google-Smtp-Source: AGHT+IEk94LemLuvdIphpLLJdMeaxHU7cEYtMO/z4TzslSUxGTcVr4jLjtqKgTJbF2lyHpLwEOYZnw==
-X-Received: by 2002:a05:6e02:2196:b0:3dc:87c7:a5a8 with SMTP id e9e14a558f8ab-3de07d01922mr235146575ab.2.1750286981652;
-        Wed, 18 Jun 2025 15:49:41 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de019c5dd2sm33873355ab.19.2025.06.18.15.49.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 15:49:41 -0700 (PDT)
-Message-ID: <32a733e9-935b-44bc-b507-f06b62ce5ce8@kernel.dk>
-Date: Wed, 18 Jun 2025 16:49:39 -0600
+        d=1e100.net; s=20230601; t=1750286994; x=1750891794;
+        h=cc:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ayl3My5WkFPC4pHPZB0vUsI7Z8MvSCFfFwq+uySbSpk=;
+        b=ukmqFSncEP84oeepNamfFW6WqZqNtFZdDGNZGbl/x63Ra8HvBcUQMkRKWuRjEg+IKk
+         Tv0CIuJDDQ2GWsz9o0ALh3wJtA/upbubx7537SDTwY0V0QelIQRWXSn3se+QCidcaLBj
+         UUBv93Sbum1B2/mHTu/cR23cF1iVJrk5c1tw4y7AbEtW2HbMGFD3D5QstkqfZtgr8HtL
+         ZvY1bC+ZcksqquaG+XIaoTpMP/w6Wvqsm8wru4Gu+XVnv3ne34DJd7P9LIl6Xn03s10z
+         ZX1C0a/bdAopifGMEw6EHCFL8epye3JjIVFLJQAPK9qdu80dvdvyFM/tDAawJQiwPAQg
+         g7Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCXoZeI+I8aEbO7N0qEDFolqEM6r3MUDhmtgJXXEQ20AG6tqMdzijsFS1uOSSH/1YlKK/23NAd2JftMkLOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytNbVf0/1jHa2QuSvJHKmKx5kiJKV/IvD+B73B26dg6Vz132kU
+	2trxr5SOyjGu1D07XRq+s5a4VYdjnMP6aQqPDqwR05JYpeKmTgUtaHvlAq5JNLdW2pfuS2YCUOG
+	AoZKiKogWGQJfvVtXbg==
+X-Google-Smtp-Source: AGHT+IHr9qOVgKGEtI7EYFQwlsRPK9+nzjmac/ouiSvqH8RgqHomihH3zCg0rOGkHhU0lCmTZ2jW4kJpj+/YoOM=
+X-Received: from pjee7.prod.google.com ([2002:a17:90b:5787:b0:311:b3fb:9f74])
+ (user=rdbabiera job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90a:dfc6:b0:311:b413:f5e1 with SMTP id 98e67ed59e1d1-313f1e22ec0mr22543572a91.32.1750286994389;
+ Wed, 18 Jun 2025 15:49:54 -0700 (PDT)
+Date: Wed, 18 Jun 2025 22:49:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [mm?] WARNING in __put_task_struct (5)
-To: Andrew Morton <akpm@linux-foundation.org>,
- syzbot <syzbot+ca15a081ac6b8357d82c@syzkaller.appspotmail.com>
-Cc: Liam.Howlett@oracle.com, bsegall@google.com, david@redhat.com,
- dietmar.eggemann@arm.com, juri.lelli@redhat.com, kees@kernel.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- lorenzo.stoakes@oracle.com, mgorman@suse.de, mhocko@suse.com,
- mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
- rppt@kernel.org, surenb@google.com, syzkaller-bugs@googlegroups.com,
- vbabka@suse.cz, vincent.guittot@linaro.org, vschneid@redhat.com
-References: <6852b77e.a70a0220.79d0a.0216.GAE@google.com>
- <20250618153137.a8f3937e86816cd9b7a3ab0d@linux-foundation.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250618153137.a8f3937e86816cd9b7a3ab0d@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Developer-Key: i=rdbabiera@google.com; a=openpgp; fpr=639A331F1A21D691815CE090416E17CA2BBBD5C8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1902; i=rdbabiera@google.com;
+ h=from:subject; bh=vR1hDO6HkeWPDLUa5nkH6iq8NsHnUdWRXAnQvHPkV58=;
+ b=owGbwMvMwCFW0bfok0KS4TbG02pJDBnBTu0XepbJf6oVF8wvVOrTc2RJfymzxCbgaVlv5bnGk
+ /e1Dyl0lLIwiHEwyIopsuj65xncuJK6ZQ5njTHMHFYmkCEMXJwCMJHWZoY//Le7z5V/ilyluIbZ
+ abrOnoaLIs0ZjxiW/GXd5nm6r+vLckaG3voXkSzmcw88TZm6LeTyLLmbbp86Xvn+7r19/JmQecx 3DgA=
+X-Mailer: git-send-email 2.50.0.rc2.701.gf1e915cc24-goog
+Message-ID: <20250618224943.3263103-2-rdbabiera@google.com>
+Subject: [PATCH v1] usb: typec: altmodes/displayport: do not index invalid pin_assignments
+From: RD Babiera <rdbabiera@google.com>
+Cc: heikki.krogerus@linux.intel.com, badhri@google.com, 
+	gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, RD Babiera <rdbabiera@google.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/18/25 4:31 PM, Andrew Morton wrote:
-> On Wed, 18 Jun 2025 05:56:30 -0700 syzbot <syzbot+ca15a081ac6b8357d82c@syzkaller.appspotmail.com> wrote:
-> 
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    4663747812d1 Merge tag 'platform-drivers-x86-v6.16-2' of g..
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=1626f90c580000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=d6f01a06a8393850
->> dashboard link: https://syzkaller.appspot.com/bug?extid=ca15a081ac6b8357d82c
->> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c9d5d4580000
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/ef27ce1c74bb/disk-46637478.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/2962783b1956/vmlinux-46637478.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/faa841f27097/bzImage-46637478.xz
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+ca15a081ac6b8357d82c@syzkaller.appspotmail.com
->>
->> RBP: 00007ff5f3810b39 R08: 0000000000000000 R09: 0000000000000000
->> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
->> R13: 0000000000000000 R14: 00007ff5f39b5fa0 R15: 00007ffd192cb478
->>  </TASK>
->> ------------[ cut here ]------------
->> WARNING: CPU: 1 PID: 6071 at kernel/fork.c:731 __put_task_struct+0x340/0x530 kernel/fork.c:731
-> 
-> It doesn't look MM related.  Perhaps there's something wonky in the
-> io_sq_offload_create() error path.
+A poorly implemented DisplayPort Alt Mode port partner can indicate
+that its pin assignment capabilities are greater than the maximum
+value, DP_PIN_ASSIGN_F. In this case, calls to pin_assignment_show
+will cause a BRK exception due to an out of bounds array access.
 
-Yeah it's a bug added in this release, already fixed and going upstream
-later this week.
+Prevent for loop in pin_assignment_show from accessing
+invalid values in pin_assignments by adding DP_PIN_ASSIGN_MAX
+value in typec_dp.h and using i < DP_PIN_ASSIGN_MAX as a loop
+condition.
 
-#syz dup: [syzbot] [io-uring?] WARNING: ODEBUG bug in io_sq_offload_create
+Fixes: 0e3bb7d6894d ("usb: typec: Add driver for DisplayPort alternate mode")
+Cc: stable@vger.kernel.org
+Signed-off-by: RD Babiera <rdbabiera@google.com>
+Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+ drivers/usb/typec/altmodes/displayport.c | 2 +-
+ include/linux/usb/typec_dp.h             | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
+index b09b58d7311d..773786129dfb 100644
+--- a/drivers/usb/typec/altmodes/displayport.c
++++ b/drivers/usb/typec/altmodes/displayport.c
+@@ -677,7 +677,7 @@ static ssize_t pin_assignment_show(struct device *dev,
+ 
+ 	assignments = get_current_pin_assignments(dp);
+ 
+-	for (i = 0; assignments; assignments >>= 1, i++) {
++	for (i = 0; assignments && i < DP_PIN_ASSIGN_MAX; assignments >>= 1, i++) {
+ 		if (assignments & 1) {
+ 			if (i == cur)
+ 				len += sprintf(buf + len, "[%s] ",
+diff --git a/include/linux/usb/typec_dp.h b/include/linux/usb/typec_dp.h
+index f2da264d9c14..acb0ad03bdac 100644
+--- a/include/linux/usb/typec_dp.h
++++ b/include/linux/usb/typec_dp.h
+@@ -57,6 +57,7 @@ enum {
+ 	DP_PIN_ASSIGN_D,
+ 	DP_PIN_ASSIGN_E,
+ 	DP_PIN_ASSIGN_F, /* Not supported after v1.0b */
++	DP_PIN_ASSIGN_MAX,
+ };
+ 
+ /* DisplayPort alt mode specific commands */
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
 -- 
-Jens Axboe
+2.50.0.rc2.701.gf1e915cc24-goog
+
