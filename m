@@ -1,104 +1,88 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 249D42EE983;
-	Wed, 18 Jun 2025 14:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926502BEFF3;
+	Wed, 18 Jun 2025 14:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256692; cv=none; b=eNtNuE10GEIpoHjb86t6c8N78VuXtrjspzbl0Hbt6ge4rQaBQVn4rEDn9QodYdkghVyuSxb6HZCM2fuwiMzGJ7nMgtcpFlc6prUyZYJgC9ohVh6/1B/Fc+ACsHXN+vRbSB/ddPWqZww317Y+tZUDdVhJ6Y58GWz5GdVuGzf//lM=
+	t=1750256774; cv=none; b=HMmK8de99eVgnDAHiLpj8wZmpHLnXCt1iDFgPRuXhRrqZtYFufSE+rqcJwmGXqTEoWSn7eE5Mf00I1kPF4jbV2z3QRTXEYotJaWLyEcwIpAfGdvx/FfHmKlmjmKFzP8vwXZfdGHbZuPjg3u9kw7HwJrUSD3CmDaccdpbIPHchyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256692; c=relaxed/simple;
-	bh=2DJvhQxFzEg6ADcIM1XmAmUVjvyMbKPZgoLzfUZ0cxM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q1fGxYanE1FjEolkmp8ElZbqfanCmdq8aRYwWmQCMqYmHp4lkh3ryvKHYZ1GsDPQgBLAK6+AND+O4FQX/dSPOwh1lTJ0ysXDhdb5e56V6WOevNY9XivWWihNjXdaxVSjS2HBPxq9NSgpW8UiQx4mxQ8XcjFsvBXlI7fSWowPywM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=U67lLJ8g; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750256774; c=relaxed/simple;
+	bh=/blhL2akKmMq36380T/ib5fiIDzcnN30f9c4OMQ7E7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lKpqHkfSteOA96C7eP7S41ZDrMP00frJWSfjjS9pvgC+JHEjmuAcGrUeZZ1Nq92cHrNJdmlwM300wHGML5/SdudPsPV5VOu8UgHDun026iQnY28e0qUbc8/OZKUJXSTa8H7oXhkHpaUmVWeRmkiVuGfFMAMtLts+FKvL7rYv5xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=1HirzRfM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="U67lLJ8g"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=+pGl/jrl761RiW9nxGM87f6KLL0RhF44OQat3XVOQyI=;
-	b=U67lLJ8gK2NC55sPi4QCQlSCWlz8xjhXGxNKAuNWd8vKXnxyrYSaofFIdqJQQ1
-	t/q54Qt9VJGVxI6dCeQlGPlZIOjol5peYgxyrBUikw1Klso9I1L4sw9Wcp5Xpb2q
-	UJls5cVEbHgwfCMcIKPoL4l18krsWk9DB4NGC8Hzjuj/Y=
-Received: from [IPV6:240e:b8f:919b:3100:8440:da7c:be7e:927f] (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id PSgvCgBHMBgNzFJovnUQAA--.2192S2;
-	Wed, 18 Jun 2025 22:24:13 +0800 (CST)
-Message-ID: <145c8616-d595-4caf-980d-20eadc39d0bd@163.com>
-Date: Wed, 18 Jun 2025 22:24:12 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="1HirzRfM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A93A0C4CEE7;
+	Wed, 18 Jun 2025 14:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750256773;
+	bh=/blhL2akKmMq36380T/ib5fiIDzcnN30f9c4OMQ7E7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1HirzRfM7d3RMRSdE7eIMCKQJRWtEzOGGCW4r5ghcS9W1oaE0x9efow4ehPqvFO4n
+	 MbOevEkhQdFl4tOCS5J2tZinzJ4VCG5+7vtIx0eylP5f1mX9fGmxmPvwHEdzfdWjiw
+	 1QXYejMFPzenjFC93SsN/itPU0EgwTOB9kL9r6JI=
+Date: Wed, 18 Jun 2025 16:26:10 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Kisub Choe <kisub.choe.0x1@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: sm750fb: rename 'proc_setBLANK'
+Message-ID: <2025061817-jacket-nacho-50d6@gregkh>
+References: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] PCI: of: Relax max-link-speed check to support
- PCIe Gen5/Gen6
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
- krzk+dt@kernel.org, manivannan.sadhasivam@linaro.org, conor+dt@kernel.org,
- robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org
-References: <20250529021026.475861-1-18255117159@163.com>
- <20250529021026.475861-4-18255117159@163.com>
- <5baxv7vnmm46ye6egf6i54letsl6c6zcsle4aoaigxnve33pfk@qn33xy5wfghv>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <5baxv7vnmm46ye6egf6i54letsl6c6zcsle4aoaigxnve33pfk@qn33xy5wfghv>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PSgvCgBHMBgNzFJovnUQAA--.2192S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7AFWUAr1kJr1DCr4xAr45Awb_yoW8JFyUpa
-	y7AryruF48XF43XF4UW3WrZa4jgas5WrZ7JryrW3WDuFnxJFsxta42vFWfuFn29FnrZr1S
-	q3W2qr47Jr45JaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UenQUUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOgBwo2hSykUnrgAAsV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618141555.5434-1-kisub.choe.0x1@gmail.com>
+
+On Wed, Jun 18, 2025 at 11:15:55PM +0900, Kisub Choe wrote:
+> Rename 'proc_setBLANK' to 'proc_setBLANK' to
+
+That doesn't rename anything :(
 
 
 
-On 2025/6/18 00:50, Manivannan Sadhasivam wrote:
-> On Thu, May 29, 2025 at 10:10:26AM +0800, Hans Zhang wrote:
->> The existing code restricted `max-link-speed` to values 1~4 (Gen1~Gen4),
->> but current SOCs using Synopsys/Cadence IP may require Gen5/Gen6 support.
->> This patch updates the validation in `of_pci_get_max_link_speed` to allow
->> values up to 6, ensuring compatibility with newer PCIe generations.
->>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
+> conform with kernel style guidelines as reported by checkpatch.pl
 > 
-> DT binding validation should be sufficient. But still...
+> CHECK: Avoid CamelCase: <proc_setBLANK>
 > 
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> Signed-off-by: Kisub Choe <kisub.choe.0x1@gmail.com>
+> ---
+>  drivers/staging/sm750fb/sm750.c | 4 ++--
+>  drivers/staging/sm750fb/sm750.h | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
+> diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+> index 1d929aca399c..bb2ade6030c2 100644
+> --- a/drivers/staging/sm750fb/sm750.c
+> +++ b/drivers/staging/sm750fb/sm750.c
+> @@ -577,7 +577,7 @@ static int lynxfb_ops_blank(int blank, struct fb_info *info)
+>  	pr_debug("blank = %d.\n", blank);
+>  	par = info->par;
+>  	output = &par->output;
+> -	return output->proc_setBLANK(output, blank);
+> +	return output->proc_set_blank(output, blank);
+>  }
+>  
+>  static int sm750fb_set_drv(struct lynxfb_par *par)
+> @@ -605,7 +605,7 @@ static int sm750fb_set_drv(struct lynxfb_par *par)
+>  	crtc->ypanstep = 1;
+>  	crtc->ywrapstep = 0;
+>  
+> -	output->proc_setBLANK = (sm750_dev->revid == SM750LE_REVISION_ID) ?
+> +	output->proc_set_blank = (sm750_dev->revid == SM750LE_REVISION_ID) ?
+>  				 hw_sm750le_set_blank : hw_sm750_set_blank;
 
-Dear Mani，
+Why do we even need this function pointer?  Why not just do the check
+above when it is called instead of this indirection?
 
-Thank you very much for your review.
+thanks,
 
-Best regards,
-Hans
-
-
-> - Mani
-> 
->> ---
->>   drivers/pci/of.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index ab7a8252bf41..379d90913937 100644
->> --- a/drivers/pci/of.c
->> +++ b/drivers/pci/of.c
->> @@ -890,7 +890,7 @@ int of_pci_get_max_link_speed(struct device_node *node)
->>   	u32 max_link_speed;
->>   
->>   	if (of_property_read_u32(node, "max-link-speed", &max_link_speed) ||
->> -	    max_link_speed == 0 || max_link_speed > 4)
->> +	    max_link_speed == 0 || max_link_speed > 6)
->>   		return -EINVAL;
->>   
->>   	return max_link_speed;
->> -- 
->> 2.25.1
->>
-> 
-
+greg k-h
