@@ -1,108 +1,92 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770E11EB5E3;
-	Wed, 18 Jun 2025 05:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A813A93D;
+	Wed, 18 Jun 2025 05:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750225396; cv=none; b=rkzEIpV/quIfj0ipT2Bzprk8iKj+aunMN3qQjLwHk40L6coxVEXUh4Lj1lwegb2tWqZ6/epTrFt9yG3Gzhwsjv7Z/9nB7G962raeFoq5r5/BgdmikhDgTJdauuy5g+qnjGXfQm8D4c1gptlGSfSIwk2L2n8xEbIPqeOSUCApvNM=
+	t=1750225542; cv=none; b=gV3mRYXeuJ7hGrv3AnnKxPDnnZhm2Er7fpySOqAFjI2LKLULo7iX3iaUIHSJDyutOF4VT80NZosESEjEaJAhyLBQyZnmnqLLt9w3rLSM9c3KX1/RHG0sN31d5fxXWTPXWHp4H6CHApdOHngUBBVJIvax3IVrYaf8nd9Q+Gp6img=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750225396; c=relaxed/simple;
-	bh=1ET92XTHxvEo/gWuliIs6WzTWqg2s89wG7XwD4w0q8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rji8oiLDGzL0ZjX925kxwhLnBWUA+BgWYBVFBgQQEQV+NzsFh9U+ijotXIDpz87EV+HfsHuwGefOuQDvkuIQgvCGGfZdVRPoPinqn5Sno4VlWH6xK82Y4uaqKQ09w0DciBAqNycnGmwprMHg04yNwjyCBFHSIqZXEnSj90eZSq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=gtUcuf/h; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1750225542; c=relaxed/simple;
+	bh=PACc4hXvVgZJX33h5x/67CNeMX9qDdrkcUhytfm53YE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfwvZeiUSYvZ56r8nXB0J+7PVT8xjvMzlll2GjIAHMOIzPVlyH0nrUAvml1Q+Vq0zyKpWytLk4qzra//+T2hb74VamEqPYa8zghZSZT0n6hDirDf72j4r3yTCEQmbvDMCj4V9pXlo87BDoG7f5QWKVtA0+Zp7UFP24f8NZkoueI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxM/3Zb6; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gtUcuf/h"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so5523893f8f.2;
-        Tue, 17 Jun 2025 22:43:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1750225393; x=1750830193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EDPyxhrKqnB3wYWa9STwkUgXZUbdCHyqxl5kFElQAQ0=;
-        b=gtUcuf/hK7Tl21GB+WO55HLzj0DhPSK11uIJDdPBit6/scu+4OXhMfw3II9+akVNun
-         8GjSwlewBX8mJsmTBKQPjvTTYZbEPqKnMVMu5S/5BfYBu5QvcFg5Q9xwAQYTwis212mG
-         GMtJ4oFJoo2osAhTb5SQEVLa5D77vSLbW+l2wQx2RK5w88yrWg2+5GsgfNSxPbwfZEu3
-         dRXDXtbGK2wgGjJgdU0roaCpoWMcHx7Z7zOPOlPH3DF1bL3vGdLVNYkP2PBUWdwSGlAu
-         dSkNxaQKCBlqu1Nl+3doOljNHDV4ME5CEB6kUX27fDq3x/EejZ3X4IGdztTtvci4no3H
-         iiPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750225393; x=1750830193;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EDPyxhrKqnB3wYWa9STwkUgXZUbdCHyqxl5kFElQAQ0=;
-        b=jbgDuo2MFedQu26l61uZTBrvwWjL+9rc5gGA4P+sWIxJsIQF+v/2Z1h+g1HzVnNpvK
-         H3QBSqSD843cmTGDxt6IxscbgldLwfz7/loQ4gvnqfgZXTooJmgEgW7sdoK2mK4jog6+
-         7zy3+jvb73pRCKiwF1fIM/JLoK6nlzjyJM2nnumefsFCrbpo1Vq+PVWQl72o4jk9pLZS
-         mtFyRw8yEltxOchJB8nTX9Q8NO3tVArLZF2KYDcfAuCr+7SagQj20LOHzH7h9sbBGAQZ
-         9Z8s2SpDtZ6lOIe4L5n2AXrTPRLoHfxfWgBPyMassHFfQ2CcK7Q+dcdUrbl6vLVf7x5B
-         Awag==
-X-Forwarded-Encrypted: i=1; AJvYcCUBrwVp8mlsQw7HqLqs2vreBZZb3PUC1DBoH8/vR1HiGnXk2AddrQX4wu5yCi1rYTwYh60OJ2s9@vger.kernel.org, AJvYcCVi/f+sCUStUMpGunsEu8yCFkueQT6Cbd02gWrUaLPK7VslasI2r8I7MsI0yqMLyHalW13szYbbILB1JHQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysqD9FpRt+XQKZkglPhEOCHwMgtqkqI3NWuNCHyR6H5SgbaEyE
-	BN0KnTZ6GdTtuIXOrNdjvqb6D+Kof+rwzYbFmT55y8qGHHl1H3CKwC0=
-X-Gm-Gg: ASbGncua+7RsyqTuUNTjAfO6Q1X1baHNMxVq8n+ZFVABvY17HttWYD1jA3gsnqfk+am
-	AVGmcN5L2PTgwn2sOSQTWvffSQzNna6TUyWN3J3V7oquXTKPhRD63+2d/BCvbtXNaG9Fy1ed+Ix
-	ZN/I5GNy+NfmYju/xR4Gw73Vs+YOzJP3FWALsRbPTnzgR61baAn9ZQ0EDh4FooQsdmAlYUicOo2
-	NshgggSQtvmht1+2UIeoik0celjHxNKIczu1oK3IAM1kOueJTo+h1Fgk4bSs+hRrXlW1cCC9mjh
-	Rlg2cQ8qOozBGPiV0GzwHqP9Z37M+qY+EX2BpL1+lKhr3GotAq51Y/9AXNLJxPodrcirv38zq0N
-	XXBEqT9mfVYx2XhPFlX+kWbNVi/fwGzCgH8MhGw==
-X-Google-Smtp-Source: AGHT+IE30ICEI4K5qmZV1bFKxegSqORhVi3QZC60MchHttexvFAoRwIQBR3B2RVwnsbHDgVpn+z6PQ==
-X-Received: by 2002:a5d:64ce:0:b0:3a4:f513:7f03 with SMTP id ffacd0b85a97d-3a572e8bfb1mr11845311f8f.44.1750225392513;
-        Tue, 17 Jun 2025 22:43:12 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057357.dip0.t-ipconnect.de. [91.5.115.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4534172d2b0sm127511775e9.35.2025.06.17.22.43.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jun 2025 22:43:11 -0700 (PDT)
-Message-ID: <3bfe25fc-f5d3-447a-9381-27b712b60f77@googlemail.com>
-Date: Wed, 18 Jun 2025 07:43:10 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxM/3Zb6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750225541; x=1781761541;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=PACc4hXvVgZJX33h5x/67CNeMX9qDdrkcUhytfm53YE=;
+  b=TxM/3Zb6NS8NnzyAkO/bCOAjJ5OizgnLd6+yoR+hxc+6pi5zSVMf4E9X
+   CBZWbmMdk/TutenNdBrNGO/CE2LcEhkclXCYjOSFWaxJgQ8Tnme54MTF3
+   v6DIq4mh0dfz/Xc8CURtJqkN9rL0tIvByNGGp7SXD8fgDmcxZghfsErBn
+   tUORKP6jd28ZTzBHm0w7h3uS1jaheUxXgDlQc5edUpEtEbOT/qSROObgP
+   ZSuD0vEoZ28G4Zt5H/l6GmAyht36vFaLf6MaO7ZgPeSxMwxExc0dzsb+i
+   cTwWYewfawd23l6K6bYma387WanCOXaw3nOlZUVzKsMUHTaeMUJvIXs+5
+   Q==;
+X-CSE-ConnectionGUID: LhUIoVguTQCKfA7E3Ozjcw==
+X-CSE-MsgGUID: x/+GwMBHRo+A+mhmWQzaUg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63846708"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="63846708"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 22:45:41 -0700
+X-CSE-ConnectionGUID: brZPEcg+S9apzLw1U49EDA==
+X-CSE-MsgGUID: hZhAsm2dTdWEvpG5AnmwUg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="150030509"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 17 Jun 2025 22:45:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 31BAC12D; Wed, 18 Jun 2025 08:45:37 +0300 (EEST)
+Date: Wed, 18 Jun 2025 08:45:37 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 31/33] serial: 8250: invert condition to avoid a goto
+ label
+Message-ID: <aFJSgfTrP0VTZ423@black.fi.intel.com>
+References: <20250611100319.186924-1-jirislaby@kernel.org>
+ <20250611100319.186924-32-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 000/356] 6.6.94-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250617152338.212798615@linuxfoundation.org>
-Content-Language: de-DE
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250617152338.212798615@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250611100319.186924-32-jirislaby@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Am 17.06.2025 um 17:21 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.94 release.
-> There are 356 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Jun 11, 2025 at 12:03:17PM +0200, Jiri Slaby (SUSE) wrote:
+> Use of "goto" in this code is frowned upon:
+>  +-------
+>  |if (port->type == PORT_UNKNOWN)
+>  |  goto out_unlock;
+>  |CODE;
+>  |out_unlock:
+>  +-------
+> 
+> Instead, simply do:
+>  +-------
+>  |if (port->type != PORT_UNKNOWN)
+>  |  CODE;
+>  +-------
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
-
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
-
-
-Beste Grüße,
-Peter Schneider
+Wouldn't this patch be a churn since you mentioned a guard()() conversion?
+Basically with guard() in place the code would be better to change if it's
+left as is.
 
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+With Best Regards,
+Andy Shevchenko
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+
