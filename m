@@ -1,96 +1,231 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD0221624FE;
-	Wed, 18 Jun 2025 19:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EDD3085D8;
+	Wed, 18 Jun 2025 19:15:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750274005; cv=none; b=M+rqnbuCQlVJ8112JH8jooDBrDyvMGvuAx0Gp0JuvQCQtf8ieyGQescJ37af+DU4QsyX+2zN6HpgjOnezL/4D9oSdL7TDSz9ig2kCyvZzHDapMur/6NmlnWXL7lNCD400w/GWirQ1B88ukHKSeCXz4t1EsukhZVaLa7lSm6w8lk=
+	t=1750274132; cv=none; b=paQX/C301iC4g4iHwJ8bSfGtvYaJzbLHRzLRe1hRzKbhfUZJeC5ZCqeo1iWcWRO/zuaSToLkaIKMp5g4E/gj8ph6KJfPr+CPJA6ewCKtezFenUSZdkqwUhLcuW22IwarML9NUR2pL5gj6tknG4Pq7tPCqJHe/wpjZ9vKRzw7jEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750274005; c=relaxed/simple;
-	bh=1KuC67Si5OZY9eok+6PD3Us52FjaM5Tmcx6laLxuqZo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Yceo+nv3yyjGhUf5+2cXYmWWuta6qCZg8zGE1wMzE+E6BnosebqyXE/9Uvoa56wD0Ph/SauHQDJi3+MhJaEwACmCCKOP7lrQT5NcqADbTRstWVSJQHSnY2dbicoqJN8hblTiwIjo8LYlHFoKyC4rHGcEVxud3C1E187JVRrUZZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AC6xVQoT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750274132; c=relaxed/simple;
+	bh=UYVy08HUm2ENzo6dO1lRm0Hr8jUddaKso3eWn0L8gWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=p2xQjHEQbo2+3x2uPYYpxvZfXOicztqI5fg6k4nZ7vUBgsxjfmlhBf1dL6iN1hovPMSUkTJTggsH8e4Qf74h/bwK0PeBYqvnPVlhydgju5gpAx+sGAXaiMYnaWBbnguCR739W/AWft5K5C9EZFufYnMqbADDSJpRk4oz82r36CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBmKH3RL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AC6xVQoT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1EBC4CEE7;
-	Wed, 18 Jun 2025 19:13:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBmKH3RL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AFCC4CEE7;
+	Wed, 18 Jun 2025 19:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750274005;
-	bh=1KuC67Si5OZY9eok+6PD3Us52FjaM5Tmcx6laLxuqZo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=AC6xVQoTvoCEL86ei0aUY1fb7EB35wweKCF70YT1TVOu16K2RgTzsIOUJ+C6CIElN
-	 vor3dIMBJJOREeKDjansurCJAAJOLOWfGvFv0uI7vWKhKLTfzy/TAFkR74lbeLo5hX
-	 ZoU9bPmgBBrgez8i18u1hljH7uXedw5wrWrLADQcFmWHAE0yIvOHNCGQRon17Wyzob
-	 q/1D/t+YEReiZ0K5S5CdUEgIyFeVP+O680xQc1T1lBsSfNqtlsZX+eRbf9y6zDLvKu
-	 AyWh5ZT8oy5/FNbhoondIWMoLw4lAUD7+IvDKGUIfXS4nbttTZOuDoDR11jGSrLp5U
-	 LaPIodefR9XRQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Boqun Feng" <boqun.feng@gmail.com>
-Cc: "FUJITA Tomonori" <fujita.tomonori@gmail.com>,  <alex.gaynor@gmail.com>,
-  <ojeda@kernel.org>,  <aliceryhl@google.com>,  <anna-maria@linutronix.de>,
-  <bjorn3_gh@protonmail.com>,  <dakr@kernel.org>,  <frederic@kernel.org>,
-  <gary@garyguo.net>,  <jstultz@google.com>,
-  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
-  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
-  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
-Subject: Re: [PATCH] rust: time: Seal the ClockSource trait
-In-Reply-To: <aFJINI8ImfxMnvrx@Mac.home> (Boqun Feng's message of "Tue, 17 Jun
-	2025 22:01:40 -0700")
-References: <20250617232053.3927525-1-fujita.tomonori@gmail.com>
-	<aFIEAiDKnxsZQ8s4@tardis.local>
-	<aFENRtYZixePYn0XFOGCbNOkSV9338iV4jWk8XJYKI0crpf4QniT_GyZCmFuqmsKs5Cl64z8qlIK6aVfdTBjbA==@protonmail.internalid>
-	<aFJINI8ImfxMnvrx@Mac.home>
-User-Agent: mu4e 1.12.9; emacs 30.1
-Date: Wed, 18 Jun 2025 21:13:07 +0200
-Message-ID: <87tt4c983g.fsf@kernel.org>
+	s=k20201202; t=1750274131;
+	bh=UYVy08HUm2ENzo6dO1lRm0Hr8jUddaKso3eWn0L8gWw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=bBmKH3RLpSiDsdGZoWslrBVQqFtW5wn1liZcQl0wgQ4Wrsw9h2EE1gifVg9SGsad3
+	 XudLGzfY3mFKleZKgRJ80kTQKwAdUAmSPQ71gOf+Vog5BUbQwlnJQqivuDG1Qwiawh
+	 hnth86LO1yRbxLRBaDT8m609q5A+q0o9/v23YAN2Et2s7wCwXu1UrGF+DCMjxwIzKY
+	 19/DF5Et8rLtBflwG2GJXFiuPADe+DKSCcBwjHEPIqNCpI3OT79zD8eCOd11xoCNC+
+	 ks+TJ7kea2Asr9gVMhaky/Xv6+vf5YGqhLl3eY5Y9VZ/PfbPyvwxXsUN6Z1aB7InTi
+	 TNgbITOJ9AUEA==
+Date: Wed, 18 Jun 2025 14:15:30 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Timothy Pearson <tpearson@raptorengineering.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-pci <linux-pci@vger.kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	christophe leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Subject: Re: [PATCH v2 5/6] pci/hotplug/pnv_php: Fix surprise plug detection
+ and
+Message-ID: <20250618191530.GA1218109@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <317515920.1310655.1750265903281.JavaMail.zimbra@raptorengineeringinc.com>
 
-"Boqun Feng" <boqun.feng@gmail.com> writes:
+On Wed, Jun 18, 2025 at 11:58:23AM -0500, Timothy Pearson wrote:
+>  recovery
 
-> On Tue, Jun 17, 2025 at 05:10:42PM -0700, Boqun Feng wrote:
->> On Wed, Jun 18, 2025 at 08:20:53AM +0900, FUJITA Tomonori wrote:
->> > Prevent downstream crates or drivers from implementing `ClockSource`
->> > for arbitrary types, which could otherwise leads to unsupported
->> > behavior.
->> >
->>
->> Hmm.. I don't think other impl of `ClockSource` is a problem, IIUC, as
->> long as the ktime_get() can return a value in [0, i64::MAX). Also this
->> means ClockSource should be an `unsafe` trait, because the correct
->> implementaion relies on ktime_get() returns the correct value. This is
->> needed even if you sealed ClockSource trait.
->>
->> Could you drop this and fix that the ClockSource trait instead? Thanks!
->>
->
-> For example:
->
->     /// Trait for clock sources.
->     ///
->     /// ...
->     /// # Safety
->     ///
->     /// Implementers must ensure `ktime_get()` return a value in [0,
->     //  KTIME_MAX (i.e. i64::MAX)).
->     pub unsafe trait ClockSource {
->         ...
->     }
+Same weird subject/commit wrapping.
 
-Nice catch, it definitely needs to be unsafe. We should also require
-correlation between ID and the value fetched by `ktime_get`.
+> The existing PowerNV hotplug code did not handle suprise plug events
+> correctly, leading to a complete failure of the hotplug system after
+> device removal and a required reboot to detect new devices.
 
-But I still think it is fine to seal the trait, why not?
+s/suprise/surprise/ (also below)
 
+> This comes down to two issues:
+> 1.) When a device is suprise removed, oftentimes the bridge upstream
+>     port will cause a PE freeze on the PHB.  If this freeze is not
+>     cleared, the MSI interrupts from the bridge hotplug notification
+>     logic will not be received by the kernel, stalling all plug events
+>     on all slots associated with the PE.
 
-Best regards,
-Andreas Hindborg
+I guess you mean the bridge *downstream* port that leads to the slot?
 
+> 2.) When a device is removed from a slot, regardless of suprise or
+>     programmatic removal, the associated PHB/PE ls left frozen.
+>     If this freeze is not cleared via a fundamental reset, skiboot
+>     is unable to clear the freeze and cannot retrain / rescan the
+>     slot.  This also requires a reboot to clear the freeze and redetect
+>     the device in the slot.
+> 
+> Issue the appropriate unfreeze and rescan commands on hotplug events,
+> and don't oops on hotplug if pci_bus_to_OF_node() returns NULL.
+> 
+> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
+> ---
+>  arch/powerpc/kernel/pci-hotplug.c |  3 ++
+>  drivers/pci/hotplug/pnv_php.c     | 53 ++++++++++++++++++++++++++++++-
+>  2 files changed, 55 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
+> index 9ea74973d78d..6f444d0822d8 100644
+> --- a/arch/powerpc/kernel/pci-hotplug.c
+> +++ b/arch/powerpc/kernel/pci-hotplug.c
+> @@ -141,6 +141,9 @@ void pci_hp_add_devices(struct pci_bus *bus)
+>  	struct pci_controller *phb;
+>  	struct device_node *dn = pci_bus_to_OF_node(bus);
+>  
+> +	if (!dn)
+> +		return;
+> +
+>  	phb = pci_bus_to_host(bus);
+>  
+>  	mode = PCI_PROBE_NORMAL;
+> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
+> index bac8af3df41a..0ceb4a2c3c79 100644
+> --- a/drivers/pci/hotplug/pnv_php.c
+> +++ b/drivers/pci/hotplug/pnv_php.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/libfdt.h>
+>  #include <linux/module.h>
+>  #include <linux/pci.h>
+> +#include <linux/delay.h>
+>  #include <linux/pci_hotplug.h>
+>  #include <linux/of_fdt.h>
+>  
+> @@ -474,7 +475,7 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot, bool rescan)
+>  	struct hotplug_slot *slot = &php_slot->slot;
+>  	uint8_t presence = OPAL_PCI_SLOT_EMPTY;
+>  	uint8_t power_status = OPAL_PCI_SLOT_POWER_ON;
+> -	int ret;
+> +	int ret, i;
+>  
+>  	/* Check if the slot has been configured */
+>  	if (php_slot->state != PNV_PHP_STATE_REGISTERED)
+> @@ -532,6 +533,27 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot, bool rescan)
+>  
+>  	/* Power is off, turn it on and then scan the slot */
+>  	ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+> +	if (ret) {
+> +		SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible frozen PHB", ret);
+> +		SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot activation\n");
+> +		for (i = 0; i < 3; i++) {
+> +			/* Slot activation failed, PHB may be fenced from a prior device failure
+> +			 * Use the OPAL fundamental reset call to both try a device reset and clear
+> +			 * any potentially active PHB fence / freeze
+> +			 */
+> +			SLOT_WARN(php_slot, "Try %d...\n", i + 1);
+> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
+> +			msleep(250);
 
+What is the source of the 250 value?  Is there a spec you can cite for
+this?  Maybe add a #define if it makes sense?
+
+> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
+> +
+> +			ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+
+Wrap the comment and non-printk lines to fit in 80 columns like the
+rest of the file.  Preserve the messages as-is so grep finds them
+easily.
+
+Usual multi-line comment style is:
+
+  /*
+   * Text ...
+   */
+
+Possibly factor this warn/reset code into a helper function to
+unclutter pnv_php_enable()?
+
+> +			if (!ret)
+> +				break;
+> +		}
+> +
+> +		if (i >= 3)
+> +			SLOT_WARN(php_slot, "Failed to bring slot online, aborting!\n");
+> +	}
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -841,12 +863,41 @@ static void pnv_php_event_handler(struct work_struct *work)
+>  	struct pnv_php_event *event =
+>  		container_of(work, struct pnv_php_event, work);
+>  	struct pnv_php_slot *php_slot = event->php_slot;
+> +	struct pci_dev *pdev = php_slot->pdev;
+> +	struct eeh_dev *edev;
+> +	struct eeh_pe *pe;
+> +	int i, rc;
+>  
+>  	if (event->added)
+>  		pnv_php_enable_slot(&php_slot->slot);
+>  	else
+>  		pnv_php_disable_slot(&php_slot->slot);
+>  
+> +	if (!event->added) {
+> +		/* When a device is surprise removed from a downstream bridge slot, the upstream bridge port
+> +		 * can still end up frozen due to related EEH events, which will in turn block the MSI interrupts
+> +		 * for slot hotplug detection.  Detect and thaw any frozen upstream PE after slot deactivation...
+> +		 */
+
+Restyle and wrap comment.
+
+s/upstream bridge port/bridge downstream port/ to avoid confusion.
+
+> +		edev = pci_dev_to_eeh_dev(pdev);
+> +		pe = edev ? edev->pe : NULL;
+> +		rc = eeh_pe_get_state(pe);
+> +		if ((rc == -ENODEV) || (rc == -ENOENT)) {
+> +			SLOT_WARN(php_slot, "Upstream bridge PE state unknown, hotplug detect may fail\n");
+> +		}
+> +		else {
+> +			if (pe->state & EEH_PE_ISOLATED) {
+> +				SLOT_WARN(php_slot, "Upstream bridge PE %02x frozen, thawing...\n", pe->addr);
+> +				for (i = 0; i < 3; i++)
+> +					if (!eeh_unfreeze_pe(pe))
+> +						break;
+> +				if (i >= 3)
+> +					SLOT_WARN(php_slot, "Unable to thaw PE %02x, hotplug detect will fail!\n", pe->addr);
+> +				else
+> +					SLOT_WARN(php_slot, "PE %02x thawed successfully\n", pe->addr);
+> +			}
+> +		}
+> +	}
+
+Possibly factor this out, too.  Then pnv_php_event_handler() could
+look simpler:
+
+  if (event->added) {
+    pnv_php_enable_slot(&php_slot->slot);
+  } else {
+    pnv_php_disable_slot(&php_slot->slot);
+    <new helper to check for surprise removal>
+  }
+
+  kfree(event);
+
+>  	kfree(event);
+>  }
+>  
+> -- 
+> 2.39.5
