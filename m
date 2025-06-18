@@ -1,138 +1,93 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39D82E8E03
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7226D2BEC2F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249935; cv=none; b=cUUoma0YHepTIyN6axG8pri9xfYwO7tMNSRuzmGkCuydB2k9ZYUdbPoSx6zR/Nk0xdfqT5XwQaUVTnW+nYZPqFOCEZ9dmBQjAIzAPwQ6lDcm60XIHQMeATACPKvZsmgLmTBi2l3oP5T1EmUUF5M06vycvRwxmjrocoS0LxSdG8o=
+	t=1750249984; cv=none; b=ZGnKw/2w/nUsVa/0xE7SKnyjtGMV0ld94KR/KhSVlogWVWUEul3mH+xfEudZzFaBrvo8pe7uzZm4hf9msKIzFdPJp/LW9JQtgF0Y5ydwvZJBdt4bPEqQqStwwXV1yVoW2IS+qoQ9W+IWBQYy/Ouy+0uiHTgvcwbDUFcQVHQb47Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249935; c=relaxed/simple;
-	bh=8ru3S13YY2r1BLkrgNMzlGHZsDqoJyg0hmYDr1Azgpc=;
+	s=arc-20240116; t=1750249984; c=relaxed/simple;
+	bh=er9GV70+n6drdF5uljPxPj0kVCu/2tf7ro4DCkzk2hA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UT01SenHmqDAix/N43+cDISBfOHC7ZSewY6FLB3UkKnbWPtBPAw/wJSMq5LZ8Ou5cjF5HRyko9qICumO83ONftkY6K0ki8xrehRe5qo5dRPZOr044pSunTo98yQ22+od0R6hhd6/PxfkwfIixpG6eENoLjFkCU1g7g15MaxfFU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qsA8uOJb; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	 To:Cc:Content-Type; b=bTt2Yr+fJiTr73f9eUr0ZH8JKQDk0yHUUVqra5pweUmVV8KiVZ+Hut5lfQZsFj3jRbAg4pv2Zh7YSwp3PRyNQ7YDRj24I0D7FbcIIPABYS5u8oJrOVERR5EHTDiWjOACQcnfgpvoREFXu1xPwpZiAzJw1Y6FxU+0mq0k24N8fd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LLCARptI; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qsA8uOJb"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553644b8f56so7053630e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:32:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LLCARptI"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553b165c80cso5878530e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:33:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750249932; x=1750854732; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750249981; x=1750854781; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1MHrtaWQYxYQbOY1jXBZbhCbwYlDmgnWya6qmbQvgdY=;
-        b=qsA8uOJb3eyJllgNyKrz1nZYhJJfGVRdEZS2Kex7KUTyK1DGSB12Q2Ks2bEeyWIw52
-         Z4/NcJFZFHHuHJdlf9y3PuAQ2OQkbpEmWHGFIKYJddv3+35diKVddm9gL28h+O+4hJ7O
-         DuFr72FcuJLwtfeVUMRrvL8yE13b8tNoq+S8L4+71aO9VAJg9dsjpU3K5vsxhNKaGFzz
-         oNetZfEn95q21gsKGeNTHe8SWIy9T/a4ReI22qPg9e5TBz0/zTvh92PGjzF0Nx5tj+Uz
-         LGXt1iI4LxgPAQSz4ZF6k9xRda0S54DLhE4QGnx7B0Fg5OdlTl1BH8actiwT/m3pWLhJ
-         fSag==
+        bh=er9GV70+n6drdF5uljPxPj0kVCu/2tf7ro4DCkzk2hA=;
+        b=LLCARptIersXCToPoA6P9kUhFEBGRn/tLy5hR9gXwal/nj3Ij6YoUjCxIBQR/nXq6k
+         Rh4ANHZCGShUxlpm39HznVrnsUaIOU8bcQf/7rn80t4XEMHMEDaZqwvcW1/De8t+EjYp
+         RoBTtz0zIh4rfChR7boxvQOcmMdVuaPOFVp5O0I4ZacwrdIyyDp3FPM4LsW9I7yk2yU4
+         9OsP0EoUgGy2suC+lNTqx9qc5D4et1lYi45TpjYJfFm71lOmrYw5WdR9RnS9Jr7O9naO
+         cuc6U7fO6sXu8NO7aJ78bhow/X6OblyEtEkJlp4IgOpMKnpuz8JUtmQQ8h3YeIGjxupp
+         9jZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249932; x=1750854732;
+        d=1e100.net; s=20230601; t=1750249981; x=1750854781;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1MHrtaWQYxYQbOY1jXBZbhCbwYlDmgnWya6qmbQvgdY=;
-        b=hFBwF88JaYJ/h68u7CWdPiRJwVL0WcH3lt5V0EhmjNJ1Cc1Nf+6UCdx6Vxc2q52Nbg
-         PbdQir17rPqfI7Qj8NQj5H5rcbgPF4fmMFjTA7xHWZFVDjb4zHJofHmTF7125C9QV+K5
-         AoVsiyoiM9newi5orYEVBXsv43VDHn5oGCnrc2REql/45YZBYKTrTa6dcLHzXjs7gPoz
-         2B4jR7SnOqBFsoFhX/J6Ps7s50MNiW7dFU8yABg9N882X9xa5CkIXXIoSoWmyqQvY6JC
-         BZAkYutXFWnwsxTkg2CcAZcouPHB5SpAPUgz6+dRYw6o9dTjEoKxXtvzeIXx7kgVEgg2
-         RvlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUE3dZJqobrN3zi2jiYrAwGjftEj0kqs5JtLFLEyFkRt+LeBVnxNX/DVKadMWZpZlxOBokLb+9wDneEuxc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOZUv5yRStSVTcsoptnRsTNtuUaPgKCqg4puTl+GhUex15LuRd
-	QdjN8xneyeDCcehAVVrhg8Er7Kt8NSBRnEX+OclATObRd8IQzY6YHF1CPu2DRHZyOsBlU9/W/40
-	JAlollcMiEuo0k0zyQBbisTFA2wUA+HR7e9cLXmJ4zg==
-X-Gm-Gg: ASbGncuMgTZ4ZxRDaZg5Ir+5xMph+Nna6FXXItRqWZUMHJjknAr6Xwg0Q3GZlbzJg3A
-	jJ80CADwaeTx4XrtzO9zkF4ytGqSDn1fWLGiGU4+hm7rHZGHTok4aoP5+dUo2fV5ncY05rvUC29
-	KZbw8myM/qi7FiMhBUKUcULLQMBGx9pEDriJapj7mH2Xir4Pzh+jbj23XTJB6gNuqgoxrzi44x4
-	Q==
-X-Google-Smtp-Source: AGHT+IFAMnM7CSQpA77g/OMbt8IoqXvkUX7g9VLTQkGZp3kx9iir6pjz35t/vnj3pTtA5gMi1QAzjji43YJ6cOMM12U=
-X-Received: by 2002:ac2:58f1:0:b0:553:ceed:c859 with SMTP id
- 2adb3069b0e04-553ceedca11mr1249211e87.21.1750249931831; Wed, 18 Jun 2025
- 05:32:11 -0700 (PDT)
+        bh=er9GV70+n6drdF5uljPxPj0kVCu/2tf7ro4DCkzk2hA=;
+        b=D1x8y0zaX32d8pJIHfIWmj7ibNDX3MGnsLYQrakERDXs+vJVr6W1Qx7a/EUKK1x7nM
+         VT5LWZSf1RgnUv/A/amJ0RKkEmv4RCu7L+V0C/jYzD90uW+iIxtQVjEaII91ebh+HNwi
+         YGtLjrF5VzlPQafHuKpWY5K7A+bDIadDp4vLqbgckiewdaSB9d8tq4XXVPfQKCaAPGZa
+         ShexhuXHv6tKeZH8tHWZf5dxLgB45GerYb72cq6q+pUL+cMhbfniPqwjQX90xtD+25ME
+         mPqTtPFVikd5qraUU9aLan6n+lxmRMGB3/U4F5FVFH6HeHawOzx9/GAOlB8elupfTbpl
+         3KfA==
+X-Forwarded-Encrypted: i=1; AJvYcCVVVBcmXuYSlEmfxaVaCWIVDSy0XlGOvMfdUqig2e6Cp+Z3qstiiL0btFvYlBc9IBNbISd7HVduo5wDNAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCVdomPM6QSBF8xQdsPHBOzXgg/IrMrRT4QYGNgtua204DFJCO
+	UH6M6nixeuZWwUPCNW81/w+Hqcvfd4vSz6WB6uXJDye13UI1vBJAnbnhYRc1qgFui9PWTxLkzzR
+	zU76oCEzyWvC6BlkI/qd+NDxcpQahVfcrzETypaUinpJWQ0LcjbbuIpo=
+X-Gm-Gg: ASbGncsvKqlxsvGvs2teYvdrvCbev8a5bZkRgn2EaO5unMIWEmc0SRf8otPLKUFztaC
+	rVjPeFwv3qWgDJPUs8zwZXhEQXrXQV4sBzLqo71auCjw23NRi0mp0fTI18BSLcxMvqaxZQ9xiLa
+	MNtgQKXEauUHKSKbUAS0oyahtHBfsYn3mxisdAUdnxl6I=
+X-Google-Smtp-Source: AGHT+IHq8x+MK2Q+KzO0wn+EOPqwTKlQ89Mryv/yfukFFFcWkFHUwXTR4wa+yfRd5KaBrFwNGubCyPjw0k/OwXSOfLY=
+X-Received: by 2002:a05:6512:3055:b0:549:8b24:989d with SMTP id
+ 2adb3069b0e04-553b6da8081mr4547256e87.0.1750249980579; Wed, 18 Jun 2025
+ 05:33:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
- <CAMRc=MeTmwgbHv9R_=GFmjkAV4Nvc-SeSCOz1k6pnGUrF+R9Mg@mail.gmail.com> <CACRpkdax9ojguF1SAfiN9iZi=x3VFpCea6KnhzL3JBD9EXZepw@mail.gmail.com>
-In-Reply-To: <CACRpkdax9ojguF1SAfiN9iZi=x3VFpCea6KnhzL3JBD9EXZepw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 14:32:00 +0200
-X-Gm-Features: AX0GCFsVjqlM3hFZShUrbzkpCsjw98BAff7JIDMVgVQXijZgm6doHKA1YxG22Rc
-Message-ID: <CAMRc=Me8KZPU_KbbifL-j74GMPSuDgmmacw9g1UEfy=zeGyZcw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Introduce HDP support for STM32MP platforms
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
+References: <20250617-gpiochip-set-rv-gpio-v1-0-903703881fa2@linaro.org> <20250617-gpiochip-set-rv-gpio-v1-4-903703881fa2@linaro.org>
+In-Reply-To: <20250617-gpiochip-set-rv-gpio-v1-4-903703881fa2@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 18 Jun 2025 14:32:49 +0200
+X-Gm-Features: AX0GCFsjhUtynB_l1wpCuP4ZMWcDzuGMXSliazPojtQjqWcgC-p_VmDP2UNLCdM
+Message-ID: <CACRpkdZPPh4zjL2+2e1_2nsU13TyyDCcAhOok2cF4PGwnqA5pw@mail.gmail.com>
+Subject: Re: [PATCH 04/12] gpio: pl061: use new GPIO line value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	Robert Jarzmik <robert.jarzmik@free.fr>, Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rockchip@lists.infradead.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 2:21=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Mon, Jun 16, 2025 at 10:05=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
-pl> wrote:
-> > On Fri, Jun 13, 2025 at 12:16=E2=80=AFPM Cl=C3=A9ment Le Goffic
-> > <clement.legoffic@foss.st.com> wrote:
-> > >
-> > > This patch series introduces the Hardware Debug Port (HDP) support fo=
-r
-> > > STM32MP platforms.
-> > >
-> > > It includes updates to the mmio gpio driver, the addition of device t=
-ree
-> > > bindings, the HDP driver, and updates to the device tree files for
-> > > STM32MP13, STM32MP15,
-> > > and STM32MP25 SoCs.
-> > > The series also updates the MAINTAINERS file to include myself as the
-> > > maintainer for the STM32 HDP driver and adds the necessary
-> > > pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
-> > >
-> > > Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
-> > > ---
-> >
-> > [snip]
-> >
-> > > ---
-> > > Cl=C3=A9ment Le Goffic (9):
-> > >       gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
-> > >       dt-bindings: pinctrl: stm32: Introduce HDP
-> > >       pinctrl: stm32: Introduce HDP driver
-> > >       MAINTAINERS: add Cl=C3=A9ment Le Goffic as STM32 HDP maintainer
-> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
-> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
-> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
-> > >       ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP p=
-inctrl node
-> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-d=
-k2 board
-> > >
-> >
-> > Patches 1-4 and 5-9 can go upstream independently. I suggest taking
-> > patch 1/9 through the GPIO tree and providing an immutable tag to
-> > Linus to take patches 2-4 through the pinctrl tree. Linus: are you OK
-> > with that?
->
-> Yes go ahead if you want, an immutable branch based on v6.16-rc1
-> is the best for me, then I pull that in.
->
-> I could also just apply it and hope for the best... it usually works.
->
+On Tue, Jun 17, 2025 at 2:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-I have a rework of gpio-mmio in progress that removes the bgpio
-specific fields from struct gpio_chip. This includes moving the flags
-into a separate gpio/generic.h header. I really need to either apply
-it myself or get an immutable tag from you with this change.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Bartosz
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
