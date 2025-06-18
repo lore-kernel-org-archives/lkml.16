@@ -1,128 +1,418 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2089.outbound.protection.outlook.com [40.107.92.89])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4921191F91
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:25:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750278315; cv=none; b=isftOt/kg+8meQduKivJ7LQDH2Y8foIyXXnbWUYFMHvB+0yuyXvEF3ZLs4Qut42490XBerzCqV9SCbwtZTTX3hFkVCiZZJ1MpcyDsXZdBweK2evLdZTFRwi8fZrP1pjRTLv+wByQOvBprC93It8HcNQa/KFGSSEOXCUcs53DeWM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750278315; c=relaxed/simple;
-	bh=Xp9l/tJ2kja1jz8SU88/Ddj1PCPORUiv+hAOLS2xETg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZn+luSOtt80/cASLVWPcFFcywxFjlRu3nDU4fPwZ4FqqlHfaVLySp3P9wrw0/eInAro8PSEl0VX/wl2lWdosJXZVUZGJeP3G99afgLBs+eJ2YsIBQYB55KBefklFb6+aOVnCl8vwzUM6+lWn8HDDY5g/VK8WykfeMFnTpXUw4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=GujBmtGE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF12221A421;
+	Wed, 18 Jun 2025 20:30:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.89
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750278621; cv=fail; b=IIuI+rW8hxUv2DXLlnmhMKBZUS6Z7QWvIeZdc4VEFL52aXzVS5Cfj29etcgyQ0bDiYfLOLSMhaZTx+YRALbJ8A26IGGj03PzdNWNgS2G6V3v/WD7ifXfXrGXfmy7cWDDiXp9MmQTWVasidnTR9j1MRIYTRxmVVHyYRFNnZuIgsM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750278621; c=relaxed/simple;
+	bh=x5xexNG0d/wKNOByWwXBkpHSYV4kjwPJUItt5prYzYg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WJ82sc9t/uo5K4U8YtvDBsfyLFyEc+bwAg/8e4jhSR9I487YIsQXKJFZLLY2TkHLdZ31KTA8cpxlUd1ie4DdXH7wTces3bP8niLLPGToFUNkyR5bpLNlG8M6my9u2PNTta70DUpr00OIhKahjcWQUz7l504slAfQJCLBN6mXxaM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E9RHsQLq; arc=fail smtp.client-ip=40.107.92.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="GujBmtGE"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IGsUlj008215
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:25:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	X5rdETK0CGMbwpmdwX2di0zfwSYlupuJsv/QKawqVmQ=; b=GujBmtGE3/ZZdY4X
-	/V+zSQYHNbjUEjEMOJ5QFC9C3PcT1adjcW8xc4IzwIWfJ0zAhaSKHpsFv6Fg92MK
-	Nzl2fHEGqy491AtxAiuzWMizebpsNSRF1dAtsrdagBBcAUdblpLJl8xCNj1kXyRW
-	Adt3ApCAB6pyG/gyjf0tcKLcGdWDh8PGzVhFzevSfdin5fmpx9e42t/9EaKW6YRT
-	iR+j0y2Oo1rFp5D/9xqLDaGq6EZjwiZsRXr8PBHgUPAck9tZqheGhLDQii+qM5TJ
-	hpvIsq3zHmnGBoY6ylaaL6NXZhgwcZwGYxVOnX1GMjrTavulWQ80sUQyNKMYwTvV
-	JAHu1A==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4792ca5n4b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:25:12 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d3ba561898so1466285a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:25:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750278300; x=1750883100;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=X5rdETK0CGMbwpmdwX2di0zfwSYlupuJsv/QKawqVmQ=;
-        b=JJE94+KRtURCo3BBU/WKvyTorFVkaqPEr+xbjQviEBBA+iCSgGsOMdxp3fMYVTkmFP
-         0T8oleNg68dPDNAJJ6tBeXo2su+LlHTxVP2+bgOJVI2Qe5/iYE3jrqtwhbOI5/EE5GqL
-         GPW3Pov25ilRsCMDAlaSztSEuiV/OfNYcVbvFIEIi1o28wGfDBMrGVLFHKRWcCLaMhdI
-         N9KbJWfSQkrXrE4ehRGJeqYy/3gpRcOYPR2l6ki5apO/Eh4IZtS+38dpjYMNSwcoECWZ
-         L1HMVpQmrmQ9MXZ6L0y2f05dOM/OZNAyp68I504SZtgzqUXVOcD/wjOZ3+0OYsRzfYEm
-         ZZuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUarEsvgy8HxOLSII3Fi1dGLPFZaGG+8qGRtGA6CKiGpRa8kn58/KxxF3GiiJNe4o90Jb17qNjbqoB9G8o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwkWSFOvwoCW3W4PV2iFig1yRNH1Vl1oI3YSL/Yg5R+aM/0jUe7
-	0VsZirnShb58epGGGnOJlXR4OWCglnKa9cFNaKN4iQlKxgwQ2hbLAp9+239dbGam5JSgILucwJn
-	Mbe8R2JzrNUqq6q7Zw4/PJxSq2CwvfJ6J8d72mnW9C7WZWIgURwYfbQKdHPFcoCFUe5Q=
-X-Gm-Gg: ASbGnctUWZD7wjaRRRRMbRMqgZoMRx8YsK7iulLrivWBaLMO4krPN+G46Pz6I2EpGUg
-	7wBg6iDVZ9q328uqnjzfmqjLAjr9KEL4ETBH3BpOJvKkjRE0rmaRtiqJdI6bE7/jCokjol7g7D1
-	zcHJ67YDYwIvihGi4NHHtjBNfM0fqjVltOpoXTHDpWQeH1gP4ys/04GT3a+NlnzQCCRPRi+yprk
-	RR1l9LZNVWwm+3tjdQCm/RlkUZNGHL+S0tZnRWZTL+noUI4OVJs2jN+T2F73zzXkOnn3PGhhkqK
-	vDfVe6BycB/eQMSx9//x4dayTyYi8JQAJmMbv1Vi2JDck9Ao4eYL8hidA+Aq8/dqS76Rc3dVmU/
-	An8E=
-X-Received: by 2002:a05:620a:1a1f:b0:7d3:ab3b:e477 with SMTP id af79cd13be357-7d3ddfd8928mr518302285a.15.1750278300529;
-        Wed, 18 Jun 2025 13:25:00 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEk1TvaW+rFRP6NHspvxWymzXPy+5exCsFRUxs4VaLgedmuLlQ9Pbjj5RZryxTjrMp4+BQcAw==
-X-Received: by 2002:a05:620a:1a1f:b0:7d3:ab3b:e477 with SMTP id af79cd13be357-7d3ddfd8928mr518300785a.15.1750278300142;
-        Wed, 18 Jun 2025 13:25:00 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec89299c2sm1111742366b.119.2025.06.18.13.24.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 13:24:59 -0700 (PDT)
-Message-ID: <7d96ab73-ea00-4817-a8e5-5b15ddda3107@oss.qualcomm.com>
-Date: Wed, 18 Jun 2025 22:24:57 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E9RHsQLq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MdJk70QN8kHmBSaqPcCFIrfa/0K5u1/CF8ogPI4/ZDt+dEhQsA0K17CHGt86TICj5oeuFvawG4M6jdLiFs1drL2ycxJzEvv5stOvCS8k5Jwo6/eU3C8ZTRgXYckNwwy+MA4YfE2B3SPZuN/Nrx+GUBvFVzlW2mwnMsnjyImUOlcJx+dmKx6iTBnkBUph+xwJ1vTpqwtVSd+r0o9wlxzP+ZrQQVLn/DFVhqh0Kc7oi80doRelS0Bq8czKMX5pLSen31PD+1gUAjMHDZL7Kb/nHHlnARW0F3lZb9K/JPA0OZrJxesQtAvmbRfwaLs6pYneBNBlVZiFQCrcGjO/sXHZEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mpdNInu9Ro0W50p9pE3eCebP68wNlwTosXM6jlNM7U8=;
+ b=pqtGkH6b47aGF+IAzV5dhhOdAAQYswisr2wTrYVrVokzgfWcFCK+VBbUtLAIIHLVRw9XGnx8dbvg5uYhE/qW8ZP6gQ35B0e79pTpxRoPiFjdLfnjuPWpVIXAJ5bCTlnzLnE5niYIax/yxTrKu12vs9ej3VlHrL9TRGL6FxUKZ1JJJRyij0ehVKO21wNMM0Y0Ycr5TKkU3mg8lsdlZk7OXIys/IQWK8osNjqG12lqNGvNbFYxlWu2P2VtAwWorr6ZaPpjuQvnuupoNEBHClqMjOCgYmvf2FGTBBlPJSmhdRI0g7CsUL+lgnyNaIslC+1c+Dg9W6+yGI9z3ivFx6AHCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mpdNInu9Ro0W50p9pE3eCebP68wNlwTosXM6jlNM7U8=;
+ b=E9RHsQLq6Wme9giAyp+m8be4B8yPQ0dbS9Nz7GOwt9oKuGDX++Qlkac/45u5YEvJm/PAbahEG54SiiQSYJixKTiBq1p0R2aNiKgxvFNDnWFP9jfRnHeyGvCIzK7Rskcte1PrzQKdkiCeZGG5GLbd1/Yr+ppVmLnlKdZG/ZfNiCI=
+Received: from PH7PR03CA0007.namprd03.prod.outlook.com (2603:10b6:510:339::9)
+ by IA1PR12MB6388.namprd12.prod.outlook.com (2603:10b6:208:388::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 20:30:14 +0000
+Received: from CY4PEPF0000E9D3.namprd03.prod.outlook.com
+ (2603:10b6:510:339:cafe::3b) by PH7PR03CA0007.outlook.office365.com
+ (2603:10b6:510:339::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.34 via Frontend Transport; Wed,
+ 18 Jun 2025 20:30:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D3.mail.protection.outlook.com (10.167.241.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 20:30:13 +0000
+Received: from maple-stxh-linux-10.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Wed, 18 Jun 2025 15:30:12 -0500
+From: Pratap Nirujogi <pratap.nirujogi@amd.com>
+To: <ilpo.jarvinen@linux.intel.com>, <hdegoede@redhat.com>, <W_Armin@gmx.de>,
+	<mario.limonciello@amd.com>
+CC: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<benjamin.chan@amd.com>, <bin.du@amd.com>, <gjorgji.rosikopulos@amd.com>,
+	<king.li@amd.com>, <Dominic.Antony@amd.com>, <Phil.Jawich@amd.com>, "Pratap
+ Nirujogi" <pratap.nirujogi@amd.com>
+Subject: [PATCH] platform/x86: Update swnode graph for amd isp4
+Date: Wed, 18 Jun 2025 16:29:48 -0400
+Message-ID: <20250618202958.3934822-1-pratap.nirujogi@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: rename qcs615.dtsi to sm6150.dtsi
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250604-qcs615-sm6150-v1-0-2f01fd46c365@oss.qualcomm.com>
- <20250604-qcs615-sm6150-v1-2-2f01fd46c365@oss.qualcomm.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250604-qcs615-sm6150-v1-2-2f01fd46c365@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: J1BaUj-tvx5APnaoenwjRtezDBvLs1vY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE3NCBTYWx0ZWRfX8TfLLD4bDW2E
- a0UNq+khcl/iMS+IR0i/K9rT24XkCc5mHM8285eTaVwb7zchXZJVTMp0iVn8ED7XS0NyTuHdPx8
- QbWAOmfvCIAc+HFSHhPf2trAbYW80Vhh3b1MfI1Y8dso2svgzoGJ/RCNb6aElY25CspgK/g9YDt
- 8q/sK2UY2L+kyyfXPKZRn6KaCtz0wdYxTd/8XtmNwGw6E59sykx5IX1BHFl508WT8lD04eqdU8/
- N6HClpuLEkStWNAbDsI0IYrWMEEZc0goJ7cFYYoqW5/MWEJj/pc4KkIsPHNfTu+nQZizxR1btbP
- X9Eme1t18joKTgG2C346vTt9nJbJG6f8DxFg785pjFP2wDkX2VbETSH4jtf7hSvErgU09xoQpqp
- xEXgIoNl5hpUtXQ/riW3xe3Pt/NpB/FIACu2H6jFXSWBYtuzKPXM1YnAwYd4mh2RI3gLQZmz
-X-Proofpoint-ORIG-GUID: J1BaUj-tvx5APnaoenwjRtezDBvLs1vY
-X-Authority-Analysis: v=2.4 cv=etffzppX c=1 sm=1 tr=0 ts=685320a8 cx=c_pps
- a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=1anRd3zWmIIzkk0cLioA:9
- a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 impostorscore=0 adultscore=0 spamscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 phishscore=0 mlxlogscore=765
- lowpriorityscore=0 bulkscore=0 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180174
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D3:EE_|IA1PR12MB6388:EE_
+X-MS-Office365-Filtering-Correlation-Id: 63bbf313-dc9b-48db-766b-08ddaea6edaa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?gkwheo4BiJqrt+tKtxT391EyqM8Hwmd1xJxD+cwibQCIsYpJNx0Yqp2DCK2N?=
+ =?us-ascii?Q?JIzXn0L0vLsvIdbmTFFjDCTltwuj9pasELPJGqo6LEJleFjtD2sOFZx1Pxgs?=
+ =?us-ascii?Q?AtKhDgbUz7M6e8QKARVkgo7TV8vpwj08aRnZOCPv+VhINpdg37QPzd/EhpBL?=
+ =?us-ascii?Q?S0ZjRTObWkqCk8M/PFkom2Hc5EqfZKdUk+1xx2pEW0E5IBuEh4fwGAik1uB/?=
+ =?us-ascii?Q?TXJhnsjt+ELvmYVkBIZ9At/ILeyxdp5fXsPpcj58oeIFGO1y6tdqdQjYG5qW?=
+ =?us-ascii?Q?szEO/UJ6qwEuup8GaQGgbJhAxZujMzzTeyZAzYZwyiV/vN7jvWPvtHMGZcPD?=
+ =?us-ascii?Q?5UqekLo4iqSygsu9kZpvMzhjO2fJStPEvO7BRi9mnTaunPIyNU7FBzz9s+NQ?=
+ =?us-ascii?Q?M8nSMn9oXncnb/8kPuY1Q8qtRgeJAh049sGUzpf+vKrcDuHDJoipbfDma8iz?=
+ =?us-ascii?Q?tYqwYhaL90VduxzfWJBvRxli1JJ7sv3ljq9J/GkXGn8saYr0WDGCA+Q9g5vz?=
+ =?us-ascii?Q?+flW5Y1XpL8fUzl+UXsxDe7cVWVJvsXch+XH4P1nOJJALRizEpVZDM3I4Pxk?=
+ =?us-ascii?Q?Ok5jgt8NwDX1m0ePX5KqBC4ZgdvNuy1oGYMwlzvsXD9GnVgNoxrdffSB8Xb3?=
+ =?us-ascii?Q?mqRA8hBdFcr4Irc9fhFqP+eDMtx8mM71uyOntrZY2iBzV5FVb8B7eG85msg/?=
+ =?us-ascii?Q?agjFqJp+KS83KRPShW0WYTIdvnE5I/ZwUubYv7pQqgDkjzQ0zB5hUZrtT4lf?=
+ =?us-ascii?Q?ZZyzrUpZvyBf4Xe5tYJkDqhfBaFmnTPIDYnwYSEgDIRf5ak52iCq4+VLeCkQ?=
+ =?us-ascii?Q?h+NZSHgUzNt4gMROuMWpy4LstoufqmBvj5ReKd63eJnufMKqaHZNNcLY7suF?=
+ =?us-ascii?Q?HpOXa2nyAKqQeXu7k888ErazTh7MmHWc68fxosvYoVxL4dw01+OmrePL06EQ?=
+ =?us-ascii?Q?vxXN4B4k7XYgpGuFxVvt0pwRF9g2BIpo0elko/6/TjzzZOvOj0YM95ETWNbC?=
+ =?us-ascii?Q?gqCMwHuPMkaUNNA/J9fznMFFMPMtmBAbqTj046CZOaTRsxIcFyH8z5iYueuV?=
+ =?us-ascii?Q?nJUMciGqIJ+whNqFtEmOO0yFY7c5EWYpxuYIk2yoo1x+kVqw8cMonjvyxym4?=
+ =?us-ascii?Q?++gYV6qaFVM5hPmNUyskL+pUmcRnqgV+uUhNTwdi5Z7z09GsX+vpg3fRMHBo?=
+ =?us-ascii?Q?FHSDA3eJmAlCEpWOPGJ/yZLlk6O8zWahGLu45BL0x+HeGSJ/Ar1f1W5zzM2C?=
+ =?us-ascii?Q?0zqaj3z1IRzhY+g9GFptzGOPi6OUNMNfsfkI9dc8WEub0MmpNMMlsDb0LdaI?=
+ =?us-ascii?Q?0B+rLw2MoD+E2w6DtHK4zOTJ2v9ilrfeWHR+IF84TLSHmeaIM3GySVpY0/fI?=
+ =?us-ascii?Q?O1vczh0GstoEHE56DsvzYq34Cz3WeCn48GYhi6Y35WyKZ9CH47dbY3stm9VP?=
+ =?us-ascii?Q?3dge31ie3/GXafRVuCT9WNOMlMpGZ0fn49m7qiV0suZbuSL0krRLJPSnf8K+?=
+ =?us-ascii?Q?E82J7XV0OR7cCAbn9j9ozNgQfzUuYabzu6nO?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 20:30:13.0780
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63bbf313-dc9b-48db-766b-08ddaea6edaa
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D3.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6388
 
-On 6/4/25 3:40 PM, Dmitry Baryshkov wrote:
-> The established practice is to have the base DTSI file named after the
-> base SoC name (see examples of qrb5165-rb5.dts vs sm8250.dtsi,
-> qrb2210-rb1.dts vs qcm2290.dtsi, qrb4210-rb2.dts vs sm4250.dtsi vs
-> sm6115.dtsi). Rename the SoC dtsi file accordingly and add "qcom,sm6150"
-> as a fallback compat string.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
+Existing swnode graph format is specific to sensor device
+and is causing conflicts when accessing standard property
+variables outside the sensor driver.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+To address this issue, enhanced swnode graph format with
+dedicated nodes for i2c and isp devices, with sensor node
+added as child to i2c node. This approach allows to have
+standard property variables (ex: 'clock-frequency') with
+values applicable for each of the devices (sensor, i2c and
+isp).
 
-Konrad
+ACPI device driver_data handle is also initialized with root
+camera swnode to access the property variables in the graph
+in isp and i2c drivers.
+
+Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
+---
+ drivers/platform/x86/amd/amd_isp4.c | 181 ++++++++++++++++++++++------
+ 1 file changed, 144 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86/amd/amd_isp4.c
+index 0cc01441bcbb..c440a7dfed27 100644
+--- a/drivers/platform/x86/amd/amd_isp4.c
++++ b/drivers/platform/x86/amd/amd_isp4.c
+@@ -20,6 +20,9 @@
+ #define AMDISP_OV05C10_REMOTE_EP_NAME	"ov05c10_isp_4_1_1"
+ #define AMD_ISP_PLAT_DRV_NAME		"amd-isp4"
+ 
++static const struct software_node isp4_mipi1_endpoint_node;
++static const struct software_node ov05c10_endpoint_node;
++
+ /*
+  * AMD ISP platform info definition to initialize sensor
+  * specific platform configuration to prepare the amdisp
+@@ -42,55 +45,116 @@ struct amdisp_platform {
+ 	struct mutex lock;	/* protects i2c client creation */
+ };
+ 
+-/* Top-level OV05C10 camera node property table */
++/* Root AMD CAMERA SWNODE */
++
++/* Root amd camera node definition */
++static const struct software_node amd_camera_node = {
++	.name = "amd_camera",
++};
++
++/* ISP4 SWNODE */
++
++/* ISP4 OV05C10 camera node definition */
++static const struct software_node isp4_node = {
++	.name = "isp4",
++	.parent = &amd_camera_node,
++};
++
++/*
++ * ISP4 Ports node definition. No properties defined for
++ * ports node.
++ */
++static const struct software_node isp4_ports = {
++	.name = "ports",
++	.parent = &isp4_node,
++};
++
++/*
++ * ISP4 Port node definition. No properties defined for
++ * port node.
++ */
++static const struct software_node isp4_port_node = {
++	.name = "port@0",
++	.parent = &isp4_ports,
++};
++
++/*
++ * ISP4 MIPI1 remote endpoint points to OV05C10 endpoint
++ * node.
++ */
++static const struct software_node_ref_args isp4_refs[] = {
++	SOFTWARE_NODE_REFERENCE(&ov05c10_endpoint_node),
++};
++
++/* ISP4 MIPI1 endpoint node properties table */
++static const struct property_entry isp4_mipi1_endpoint_props[] = {
++	PROPERTY_ENTRY_REF_ARRAY("remote-endpoint", isp4_refs),
++	{ }
++};
++
++/* ISP4 MIPI1 endpoint node definition */
++static const struct software_node isp4_mipi1_endpoint_node = {
++	.name = "endpoint",
++	.parent = &isp4_port_node,
++	.properties = isp4_mipi1_endpoint_props,
++};
++
++/* I2C1 SWNODE */
++
++/* I2C1 camera node property table */
++static const struct property_entry i2c1_camera_props[] = {
++	PROPERTY_ENTRY_U32("clock-frequency", 1 * HZ_PER_MHZ),
++	{ }
++};
++
++/* I2C1 camera node definition */
++static const struct software_node i2c1_node = {
++	.name = "i2c1",
++	.parent = &amd_camera_node,
++	.properties = i2c1_camera_props,
++};
++
++/* I2C1 camera node property table */
+ static const struct property_entry ov05c10_camera_props[] = {
+ 	PROPERTY_ENTRY_U32("clock-frequency", 24 * HZ_PER_MHZ),
+ 	{ }
+ };
+ 
+-/* Root AMD ISP OV05C10 camera node definition */
+-static const struct software_node camera_node = {
++/* OV05C10 camera node definition */
++static const struct software_node ov05c10_camera_node = {
+ 	.name = AMDISP_OV05C10_HID,
++	.parent = &i2c1_node,
+ 	.properties = ov05c10_camera_props,
+ };
+ 
+ /*
+- * AMD ISP OV05C10 Ports node definition. No properties defined for
++ * OV05C10 Ports node definition. No properties defined for
+  * ports node for OV05C10.
+  */
+-static const struct software_node ports = {
++static const struct software_node ov05c10_ports = {
+ 	.name = "ports",
+-	.parent = &camera_node,
+-};
+-
+-/*
+- * AMD ISP OV05C10 Port node definition. No properties defined for
+- * port node for OV05C10.
+- */
+-static const struct software_node port_node = {
+-	.name = "port@",
+-	.parent = &ports,
++	.parent = &ov05c10_camera_node,
+ };
+ 
+ /*
+- * Remote endpoint AMD ISP node definition. No properties defined for
+- * remote endpoint node for OV05C10.
++ * OV05C10 Port node definition.
+  */
+-static const struct software_node remote_ep_isp_node = {
+-	.name = AMDISP_OV05C10_REMOTE_EP_NAME,
++static const struct software_node ov05c10_port_node = {
++	.name = "port@0",
++	.parent = &ov05c10_ports,
+ };
+ 
+ /*
+- * Remote endpoint reference for isp node included in the
+- * OV05C10 endpoint.
++ * OV05C10 remote endpoint points to ISP4 MIPI1 endpoint
++ * node.
+  */
+ static const struct software_node_ref_args ov05c10_refs[] = {
+-	SOFTWARE_NODE_REFERENCE(&remote_ep_isp_node),
++	SOFTWARE_NODE_REFERENCE(&isp4_mipi1_endpoint_node),
+ };
+ 
+ /* OV05C10 supports one single link frequency */
+ static const u64 ov05c10_link_freqs[] = {
+-	925 * HZ_PER_MHZ,
++	900 * HZ_PER_MHZ,
+ };
+ 
+ /* OV05C10 supports only 2-lane configuration */
+@@ -110,27 +174,64 @@ static const struct property_entry ov05c10_endpoint_props[] = {
+ 	{ }
+ };
+ 
+-/* AMD ISP endpoint node definition */
+-static const struct software_node endpoint_node = {
++/* OV05C10 endpoint node definition */
++static const struct software_node ov05c10_endpoint_node = {
+ 	.name = "endpoint",
+-	.parent = &port_node,
++	.parent = &ov05c10_port_node,
+ 	.properties = ov05c10_endpoint_props,
+ };
+ 
+ /*
+- * AMD ISP swnode graph uses 5 nodes and also its relationship is
+- * fixed to align with the structure that v4l2 expects for successful
+- * endpoint fwnode parsing.
++ * AMD Camera swnode graph uses 10 nodes and also its relationship is
++ * fixed to align with the structure that v4l2 and i2c frameworks expects
++ * for successful parsing of fwnodes and its properties with standard names.
+  *
+  * It is only the node property_entries that will vary for each platform
+  * supporting different sensor modules.
++ *
++ * AMD ISP4 SWNODE GRAPH Structure
++ *
++ * amd_camera {
++ *  isp4 {
++ *	  ports {
++ *		  port@0 {
++ *			  isp4_mipi1_ep: endpoint {
++ *					  remote-endpoint = &OMNI5C10_ep;
++ *			  };
++ *		  };
++ *	  };
++ *  };
++ *
++ *  i2c1 {
++ *	  clock-frequency = 1 MHz;
++ *	  OMNI5C10 {
++ *		  clock-frequency = 24MHz;
++ *		  ports {
++ *			  port@0 {
++ *				  OMNI5C10_ep: endpoint {
++ *					  bus-type = 4;
++ *					  data-lanes = <1 2>;
++ *					  link-frequencies = 900MHz;
++ *					  remote-endpoint = &isp4_mipi1;
++ *				  };
++ *			  };
++ *		  };
++ *	  };
++ *	};
++ * };
++ *
+  */
+-static const struct software_node *ov05c10_nodes[] = {
+-	&camera_node,
+-	&ports,
+-	&port_node,
+-	&endpoint_node,
+-	&remote_ep_isp_node,
++static const struct software_node *amd_isp4_nodes[] = {
++	&amd_camera_node,
++	&isp4_node,
++	&isp4_ports,
++	&isp4_port_node,
++	&isp4_mipi1_endpoint_node,
++	&i2c1_node,
++	&ov05c10_camera_node,
++	&ov05c10_ports,
++	&ov05c10_port_node,
++	&ov05c10_endpoint_node,
+ 	NULL
+ };
+ 
+@@ -140,7 +241,7 @@ static const struct amdisp_platform_info ov05c10_platform_config = {
+ 		.dev_name = "ov05c10",
+ 		I2C_BOARD_INFO("ov05c10", AMDISP_OV05C10_I2C_ADDR),
+ 	},
+-	.swnodes = ov05c10_nodes,
++	.swnodes = amd_isp4_nodes,
+ };
+ 
+ static const struct acpi_device_id amdisp_sensor_ids[] = {
+@@ -232,7 +333,8 @@ static struct amdisp_platform *prepare_amdisp_platform(struct device *dev,
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+-	isp4_platform->board_info.swnode = src->swnodes[0];
++	/* initialize ov05c10_camera_node */
++	isp4_platform->board_info.swnode = src->swnodes[6];
+ 
+ 	return isp4_platform;
+ }
+@@ -257,6 +359,7 @@ static int amd_isp_probe(struct platform_device *pdev)
+ {
+ 	const struct amdisp_platform_info *pinfo;
+ 	struct amdisp_platform *isp4_platform;
++	struct acpi_device *adev;
+ 	int ret;
+ 
+ 	pinfo = device_get_match_data(&pdev->dev);
+@@ -274,6 +377,10 @@ static int amd_isp_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto error_unregister_sw_node;
+ 
++	adev = ACPI_COMPANION(&pdev->dev);
++	/* initialize root amd_camera_node */
++	adev->driver_data = (void *)pinfo->swnodes[0];
++
+ 	/* check if adapter is already registered and create i2c client instance */
+ 	i2c_for_each_dev(isp4_platform, try_to_instantiate_i2c_client);
+ 
+-- 
+2.43.0
+
