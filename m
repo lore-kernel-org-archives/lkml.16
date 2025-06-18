@@ -1,127 +1,118 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E6972EA736
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:17:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC932EA724;
+	Wed, 18 Jun 2025 15:18:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750259875; cv=none; b=hW09rCdbaC6IsWY1znO78TMMQikqisdkIRg3liTAUQKccsiwvOpGmUnk8YP8hTvZscthZ/kh4MJ4lwfEtyxUY0onCGdbuxw8mynVTwqB+W6F7EgjgFmb9KSXdks5+LpeSRivi0CEZ2k++dr407OocxYGey/mY21WgT9blox0AeM=
+	t=1750259932; cv=none; b=WifL6HUBw4rpMBGUJUfF7DS6QynG9jTkC8FcdElbdEsKLc/InBcj0MRrKmeijmQ9ddTkGfHfOBZLsL0d8/2fSNUqiUTVbEXlLbYeNUy9uj8DpYhb6C4lQize93hWtW7CXWxrzG++UyI2bAnr7BNAAtO5O9fYKJu8wdgu1WhFXMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750259875; c=relaxed/simple;
-	bh=wCEXTVWKezWRe3+kvueBmdTlFjLcqbpodEztZ3pmC0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AgaMqrvWSZ+TZueCvfcud/zPSrwL/UnocwdBJaf6UxZ+TTifEOz4h4gT/OUVCzupkw0+/4DGVI/f6++TIQtCroJa/MP5eyhiB1vFE6/A1AHmlOOFLD7VQnxco3a/Ty1/MAXiVZL8U/mMMwDe73gK8lYx/irVRkorYrae3LiEtg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=ckYva8Ce; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ionos.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="ckYva8Ce"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad8990ad0a3so104732666b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:17:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1750259871; x=1750864671; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GqtCpc28xpA4VZWWsqjDW7hxuFsc37md0v7DTHRyNBY=;
-        b=ckYva8Ce01oU5cO9EQ5nWRo5GxR+5/Oq7wS//pyMASo+ikIT+chHPRD5eu4dIo9Khf
-         UTyZgusQnyBfDnz2bYoSOZkzOGtvJ9Ioqj5iG/srMgWtX1hxiMsj0q9kXHDeMvytbpzi
-         /06e+UE8N6U+mJZ4/sp+r+H4SpyorkB57EUgnyoUwqpJcV50YW8YAT++qeR/3nLHeOqz
-         8mMfCbq76IA7XbEGZjGcnBLWGxgNhYRbf//BgTS4ZHMzWQzBNlqmeHSztRtOUEtbQ5It
-         9252KR8VmI7NR6mOba7Cyi+ng2YWdzZQ0/jfiOUYqSL/IwTXNjp5mto92/5nIOk3ku+7
-         giyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750259871; x=1750864671;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GqtCpc28xpA4VZWWsqjDW7hxuFsc37md0v7DTHRyNBY=;
-        b=voSE1k2KFJ+WyGmmhco/5UPwpu2cx1P7U7guj4QEFSom08z/IEzAlvlVqoko5++E7Z
-         fshPHeDjgxaNoaqElU2WlylGjoZ8YC22WjyORc5WX7inMzT8HiIqp48qA4vkf8qaxqcX
-         tapzpTVrdFcKP7aXnETF2RKCjR2xO1CSVhyeyabZaS67yy0ADMbc9zlZZz9aNYPLXiEm
-         9+3AjTkHXmk/f3rC0Gv+CKlOwoCt2gS2fb1fiaaSdMXgAYaagbLUDQZ9Cl6D2dhnGks0
-         NrRvCX0D62OTfQocRzoygLNQOuzDq7AMWYmMF/zwhvzZMaepchcWePKZVadrk2aFO/QX
-         OKvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUnZHXTYBL0Wognd/UXyAKjzAkevNzK3ncywWLWgUMjo1LBNYKr9snJaxwpDb6tfLBOYsKwwvRI3njnYfI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTQeNaI7xnpB50/yu4dgXtJluNTKCzDMjS3wCrpCbB9AGLto1k
-	vMiemiGvy5sBTOBiC7ubBaiz+EGFFelwtldyVwIt019i1KCW9nFxic9lSHD7PLyzOpnyL7zV5HU
-	SlpzzgSN0qkbl5MPO5x5ADNcKvnK+G7w8mY1qQU5kqw==
-X-Gm-Gg: ASbGncv7I1ulb1u6qOlnRBcP2Vh14DXasj+TV4VlZHeUTduqPnGX2TOpS9d38kcSza1
-	RXZO0pWyhwOfn1/zQrCxIP+76Ezbe/atw5/MapTK1ob6wNTfsd61QtuyrP40BarHfLmQS9/HOEN
-	aq5wZ0O47B7ASy7S6fHdypBI3oeZU9ypQimIDggbpKc3RAiUTp57Y59DI/B6WyDESTR+N0ERl8t
-	6zfX9EIhYU+wyU=
-X-Google-Smtp-Source: AGHT+IGL55qHTnc/YF0chjzSE+oRyofOafjvA8Omq0cOKVVelFnONtLs6G4uzE4r7qfErywKZs3NDgaXyI3JhSekK1A=
-X-Received: by 2002:a17:907:7f89:b0:ad8:9b93:8579 with SMTP id
- a640c23a62f3a-adfad01eb84mr574368966b.0.1750259870793; Wed, 18 Jun 2025
- 08:17:50 -0700 (PDT)
+	s=arc-20240116; t=1750259932; c=relaxed/simple;
+	bh=Gh0v9Sq6hmQCc+/tG7k5ip84sNa2fop55rBiVVgpsjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MT3Ja6yRfjzQgORfLo+V9NMOjV0rd115GM7/vw7Zp5rz1Q6E43bbLS4BYAX3jwIyI3/utC7VQNcGNEHeVXJlZtEKOXSiSyi1aKceaXBxGVPp+BuRYHr2cI0ytKY4hRG+WW75YFsxlCUgzkQqPyGffdec2BvHI4LGwvjezC1bI28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 43FEC80274;
+	Wed, 18 Jun 2025 15:18:37 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 4F9602002D;
+	Wed, 18 Jun 2025 15:18:33 +0000 (UTC)
+Date: Wed, 18 Jun 2025 11:18:40 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 03/14] unwind_user: Add compat mode frame pointer
+ support
+Message-ID: <20250618111840.24a940f6@gandalf.local.home>
+In-Reply-To: <20250618134758.GK1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.261095906@goodmis.org>
+	<20250618134758.GK1613376@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617210443.989058-1-frankramirez@google.com>
-In-Reply-To: <20250617210443.989058-1-frankramirez@google.com>
-From: Jinpu Wang <jinpu.wang@ionos.com>
-Date: Wed, 18 Jun 2025 17:17:40 +0200
-X-Gm-Features: AX0GCFtFmbz6rbvhamkWddwvHsnhfjVvpjmxiqJOa-d9vJV2Nx-qOPfFoMBpFt0
-Message-ID: <CAMGffEnbCe1y78O69GpT-gUqY5m5jNLsHbBue8EBMFc-wgcoYw@mail.gmail.com>
-Subject: Re: [PATCH] scsi: pm80xx: Free allocated tags after failure
-To: Francisco Gutierrez <frankramirez@google.com>
-Cc: Jack Wang <jinpu.wang@cloud.ionos.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, linux-scsi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 4F9602002D
+X-Stat-Signature: iafc33sogu1x5ojhjxzjmzhkj3hpyfpf
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/VEB1AvzoDBoRkcbB9Zv/Ta/DbqKl+qYw=
+X-HE-Tag: 1750259913-886977
+X-HE-Meta: U2FsdGVkX19EpqP1YJ80kg0CNMkxNA/Kh9qLyQ7T+tbirmYKyY0vcIrQ4tgy/RKET6sH6Vxc/H8/xdX/JnWYFdZ3P2HwQBnG5I3959ejJ7pM45pAo1qaIBek1rhoGosa+i3eKhLXlvIB//R1OUnMwqM32JvzzSDXO9PC6nCU51WERdLNiitNzjR+zZ042s0iKvueltSqNCmQBHFmHBpvBuFLx87wvyOi1HAUVfNMe+8D4w2/kvbwkwdJLLjC3qASe/D01mM/NsIpFOmrjd0RIVeoRtB7m2a/u27yoG0B/L5TUszvo1+Enx2FQeKWGXBJx83Ss2Xe6Ex2hMC1I1qxVGMACpZRrdhHhpMfPuPRdtbtZi4JhbYlxG98wr5lRaZrCJk06NIqi67xdM1BgDppD6cuC+sjKejiwMamyY//NgU=
 
-On Tue, Jun 17, 2025 at 11:05=E2=80=AFPM Francisco Gutierrez
-<frankramirez@google.com> wrote:
->
-> This change frees resources after an error is detected.
->
-> Signed-off-by: Francisco Gutierrez <frankramirez@google.com>
-lgtm.
-Acked-by: Jack Wang <jinpu.wang@ionos.com>
-> ---
->  drivers/scsi/pm8001/pm80xx_hwi.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/pm8001/pm80xx_hwi.c b/drivers/scsi/pm8001/pm80x=
-x_hwi.c
-> index 5b373c53c0369..c4074f062d931 100644
-> --- a/drivers/scsi/pm8001/pm80xx_hwi.c
-> +++ b/drivers/scsi/pm8001/pm80xx_hwi.c
-> @@ -4677,8 +4677,12 @@ pm80xx_chip_phy_start_req(struct pm8001_hba_info *=
-pm8001_ha, u8 phy_id)
->                 &pm8001_ha->phy[phy_id].dev_sas_addr, SAS_ADDR_SIZE);
->         payload.sas_identify.phy_id =3D phy_id;
->
-> -       return pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
-> +       ret =3D pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
->                                     sizeof(payload), 0);
-> +       if (ret < 0)
-> +               pm8001_tag_free(pm8001_ha, tag);
-> +
-> +       return ret;
->  }
->
->  /**
-> @@ -4704,8 +4708,12 @@ static int pm80xx_chip_phy_stop_req(struct pm8001_=
-hba_info *pm8001_ha,
->         payload.tag =3D cpu_to_le32(tag);
->         payload.phy_id =3D cpu_to_le32(phy_id);
->
-> -       return pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
-> +       ret =3D pm8001_mpi_build_cmd(pm8001_ha, 0, opcode, &payload,
->                                     sizeof(payload), 0);
-> +       if (ret < 0)
-> +               pm8001_tag_free(pm8001_ha, tag);
-> +
-> +       return ret;
->  }
->
->  /*
-> --
-> 2.50.0.rc2.696.g1fc2a0284f-goog
->
+On Wed, 18 Jun 2025 15:47:58 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> On Tue, Jun 10, 2025 at 08:54:24PM -0400, Steven Rostedt wrote:
+>=20
+> > +#ifndef arch_unwind_user_init
+> > +static inline void arch_unwind_user_init(struct unwind_user_state *sta=
+te, struct pt_regs *reg) {}
+> > +#endif
+> > +
+> > +#ifndef arch_unwind_user_next
+> > +static inline void arch_unwind_user_next(struct unwind_user_state *sta=
+te) {}
+> > +#endif =20
+>=20
+> The purpose of these arch hooks is so far mysterious. No comments, no
+> changelog, no nothing.
+
+I'll add comments.
+
+It's used later in the x86 compat code to allow the architecture to do any
+special initialization or to handling moving to the next frame.
+
+=46rom patch 14:
+
++#define in_compat_mode(regs) !user_64bit_mode(regs)
++
++static inline void arch_unwind_user_init(struct unwind_user_state *state,
++					 struct pt_regs *regs)
++{
++	unsigned long cs_base, ss_base;
++
++	if (state->type !=3D UNWIND_USER_TYPE_COMPAT_FP)
++		return;
++
++	scoped_guard(irqsave) {
++		cs_base =3D segment_base_address(regs->cs);
++		ss_base =3D segment_base_address(regs->ss);
++	}
++
++	state->arch.cs_base =3D cs_base;
++	state->arch.ss_base =3D ss_base;
++
++	state->ip +=3D cs_base;
++	state->sp +=3D ss_base;
++	state->fp +=3D ss_base;
++}
++#define arch_unwind_user_init arch_unwind_user_init
++
++static inline void arch_unwind_user_next(struct unwind_user_state *state)
++{
++	if (state->type !=3D UNWIND_USER_TYPE_COMPAT_FP)
++		return;
++
++	state->ip +=3D state->arch.cs_base;
++	state->fp +=3D state->arch.ss_base;
++}
++#define arch_unwind_user_next arch_unwind_user_next
+
+-- Steve
