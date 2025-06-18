@@ -1,76 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1353B2E8E0A
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B202E8E0A;
+	Wed, 18 Jun 2025 14:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257859; cv=none; b=ijwpvbyf/i4VgTBVJq8F1KbMPVUtqn6YW3riFE+3+Yrmf/UdO2u4pAcNlA6gP3Jipz7VA61OWTiPADsYmTTgIOyk9VgILzztXf71jNQTmROo7e4TcPxwD+nrk00STP37XsmBwpFnjakf769oWhq4OYi+OLCb90HLYZ1jtH31rKs=
+	t=1750257882; cv=none; b=LZnTjCzp0MU0yJqBnJ4hbzqQYX0oSWdvn572epVnItar1RNrBoolYXTCIu/0YPDLjHUFFFy++SVm8Y4hvv56PawldfmPESOVtmwTCXR6Ej3sRSouRFR2TRg5EkI5zO5U9Q0P4cOR2rWkPtuLG7/Ul+8OwWtTAqpootxpGryuskc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257859; c=relaxed/simple;
-	bh=qx0sdTwlL1JYZvGGiTxucxdX+oO1ASmMYNh7nvFE5yM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hTi71BLK1Yncc2wC40o/qHHZPilSBt0y3F2oytekgOuCrQWWD6vLIAIrVzkstgG9lNr8eeRRjIO0BbphmSZNspydQo0RV3D/btnpnTdM5nUScvHS0jaaEp7kxnIjd5m+7Q7t/9EiEFQCvejj1hmRyMcD9Fxi435EPv+y18jf8NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6A1514BF;
-	Wed, 18 Jun 2025 07:43:55 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E88D53F66E;
-	Wed, 18 Jun 2025 07:44:15 -0700 (PDT)
-Date: Wed, 18 Jun 2025 15:44:14 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Yicong Yang <yangyicong@huawei.com>,
-	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
-	yangyicong@hisilicon.com, James Clark <james.clark@linaro.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
-	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	yangjinqian <yangjinqian1@huawei.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
-Message-ID: <20250618144414.GF794930@e132581.arm.com>
-References: <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
- <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
- <20250616130736.GA788469@e132581.arm.com>
- <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
- <20250616160811.GA794930@e132581.arm.com>
- <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
- <20250617141810.GB794930@e132581.arm.com>
- <aFJ-Za6oRGKKASN1@J2N7QTR9R3>
- <20250618112440.GC794930@e132581.arm.com>
- <aFK72GUlT-EStfU2@x1>
+	s=arc-20240116; t=1750257882; c=relaxed/simple;
+	bh=RaTSkFpWiiBo3+PG2gYlJYjf9802oCl6fMHRXphKPuA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B+hni6IsIsBfPvxnD/0F3W3isKEHb0WK3TiWLO8F5c5oqGtU/MndrDK/DgMfH0/adTWD6pR/0Nt8MDbly8RDUomJb2izPkRlQK0yKFFDzh0qEz/ndDHrkkDiE1Hm+WqX3Q43aaVHhF64ke9WL9ey+cvyJJHcykPqiJoNZRhYnbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [141.14.220.36] (g36.guest.molgen.mpg.de [141.14.220.36])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 99D0C6028825F;
+	Wed, 18 Jun 2025 16:44:18 +0200 (CEST)
+Message-ID: <3fb36656-5aeb-45f4-9460-acc8a2bc3c61@molgen.mpg.de>
+Date: Wed, 18 Jun 2025 16:44:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFK72GUlT-EStfU2@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] dt-bindings: net: bluetooth: nxp: Add support for
+ 4M baudrate
+To: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+Cc: marcel@holtmann.org, luiz.dentz@gmail.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ amitkumar.karwar@nxp.com, sherry.sun@nxp.com, manjeet.gupta@nxp.com
+References: <20250618142012.25153-1-neeraj.sanjaykale@nxp.com>
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20250618142012.25153-1-neeraj.sanjaykale@nxp.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 10:15:04AM -0300, Arnaldo Carvalho de Melo wrote:
+Dear Neeraj,
 
-[...]
 
-> > @Arnaldo, as Mark suggested, do you want me to send a patch to remove
-> > cputype.h checking in check-headers.sh or it is fine to keep the warning
-> > until finish the header refactoring?
+Thank you for the patch.
+
+Am 18.06.25 um 16:20 schrieb Neeraj Sanjay Kale:
+> Add support for 4000000 as secondary baudrate.
+
+Could you specify how you tested this, that means, how did you set the 
+speed, and then do the test, that it actually works at that speed.
+
+> Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
+> ---
+> v2: Use the available 'max-speed' device tree property. (Krzysztof)
+> ---
+>   .../devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml  | 7 +++++++
+>   1 file changed, 7 insertions(+)
 > 
-> It is ok to have the warning, its just this one at this point and it is
-> serving its purpose.
-> 
-> When the refactoring gets done, it will go away. Think of it as a
-> reminder :-)
+> diff --git a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> index 3ab60c70286f..4a1b6ea48a2f 100644
+> --- a/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> +++ b/Documentation/devicetree/bindings/net/bluetooth/nxp,88w8987-bt.yaml
+> @@ -34,6 +34,12 @@ properties:
+>         This property depends on the module vendor's
+>         configuration.
+>   
+> +  max-speed:
+> +    enum:
+> +      - 3000000
+> +      - 4000000
+> +    default: 3000000
+> +
+>     firmware-name:
+>       maxItems: 1
+>   
+> @@ -78,6 +84,7 @@ examples:
+>           bluetooth {
+>               compatible = "nxp,88w8987-bt";
+>               fw-init-baudrate = <3000000>;
+> +            max-speed = <4000000>;
+>               firmware-name = "uartuart8987_bt_v0.bin";
+>               device-wakeup-gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+>               nxp,wakein-pin = /bits/ 8 <18>;
 
-Fair point. Thanks for confirmation!
+
+Kind regards,
+
+Paul
