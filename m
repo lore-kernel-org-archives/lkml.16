@@ -1,155 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68709212FBE;
-	Wed, 18 Jun 2025 20:38:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12AE220689
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750279087; cv=none; b=awAi4GpVHyPSKgAUSNARXv0wSM3XAHzBPfs3rtRogj3VcB9tmucIJlKz1mzKT4KT2zaq7LkepNPmkSQbWi9WttcET4+AzoioWtUvlPsNfNzYiezLo1HdNWUbV9lH0arNoB/znGHiDfWkBklF+m0oevmoDu26UffNKPc1oPQjFkM=
+	t=1750279153; cv=none; b=r+Q7Vq35r/XLDGPCnn+PI7o+ai1Fahzu7I2mR7Hs8koAXFd0gYg3c7YH2cFQy2Tnf96eOoxGXhvvv8ijCneHgXwZH5iLp+Kj16BczgwT+ixFPJMYSzJZIhYYQCNa3CLgvrVDICciKk//BhMPgjezW6lcp7m6Ke/yJH1UlfmJuTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750279087; c=relaxed/simple;
-	bh=pKUkHadBq2GOHWoFc3UCNIk7hiTpzfRtUTfl17mqQvk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
-	 References:In-Reply-To; b=dpK0JoaHvx81kQlwXnXARs6pOcW6qH2CEO5DY5/kRiiI0vOoX0XNcGn3wIqZPD+WD8yWnHSLqCjZxG9vJS5pjSfAemrKA+sesF0i0Igw+NAj4V5/sGBJvnCbBmvI4Apc1Xb9wHd8TljBA5fmsBaR82QYkbM+C3sx/xv5cXaEC0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GeI1mB3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750279153; c=relaxed/simple;
+	bh=/NM+ak0rLMjlCOg7dWPSQwADmJXEiX9mllS2HtmWndM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mT6iOMJFUJjBJjrRe/q4lIZAIfOZ93F+TKjKvNJrPhRTeHVuykIFUZN+xIChkRk0sIKqLDWskNEVDSqU5HGPGxms0Lw/zsomQ4tl/U9SX4xQLlUCz/YjerYiOnMgwmIp0i859SAnnRofOtNIrLpubzAg9yW7FUzfECy8oa8BsIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZsrSHb5o; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GeI1mB3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE90C4CEEF;
-	Wed, 18 Jun 2025 20:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750279086;
-	bh=pKUkHadBq2GOHWoFc3UCNIk7hiTpzfRtUTfl17mqQvk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=GeI1mB3UxgkQibtMZ3fLSYot4ww/OlooSxYPE5xVw2U8ZCKDQAD2qGvr0lW9BGJYJ
-	 mQBAWoj0ux9BaLj3GRGSPS98N1mmGDxvc9vNXrSyXLMQOFNBugMEu7py6+0qnPti3G
-	 yrVJLpwdn+sYyb+jnoHwSWwrTVnTMd9AH205IpE+pOCONJtd7ae8mFGbTt+hAF8Jzi
-	 Io5UWTFqSD8mefaRiAzOF52nthmpBPD/UDDxGrXzPYrXWEhRZjZPcCdBED9+Yct8tv
-	 Y3cC+9FhR55cJMx/okfaQ+0iooy9fBUPMda/PUQNl5kzf1JnogEuvA6ewDRgrrqaG4
-	 Qd8jYvVJ2Jajw==
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZsrSHb5o"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-710e344bbf9so986527b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750279151; x=1750883951; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xd7fVESQIYURer+XcfloCFqoNH9nVlZcYjsVdYV2DsQ=;
+        b=ZsrSHb5o7CPm7jkVJW1Wk+lrgdJb2t9toHvCpfvJuWlkNDXG/QIw60s/sCTxIaVal7
+         UoZba6KvbXw5PwQb2xmpwpsd9ns8DKg6vr/YthpORgHjnD7ZT3givznH1bUKACI+dL6n
+         Q1tgGSDz3iZEvw3B64uVTk1LgX532xL4s9TcwXDXuPPa4PW5S3qjwA1ls9baArnqaXQX
+         faazgQWe9bYJYiBBWq3goh+abKjXqybClAyjz0vFs84MFrnrmPZBDBZaalVc35y93wKK
+         Bs9+rHRMLsd/0afLdRa4Y50ekhTyJqfV7HaHhtAlhm2uGzIZEcvuv1Sv42ehiTGwIlD0
+         +9kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750279151; x=1750883951;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xd7fVESQIYURer+XcfloCFqoNH9nVlZcYjsVdYV2DsQ=;
+        b=fqYeBQahLzGpMxis2KEWXbTQlN9/5PoyspcTsAK8VORCjsbF8Kzs/ZKv16q8fhrEBb
+         Jai0slcIHMiUGMcz6U302n++nT9QdrLNOnYl6PXzxt29tEM3yPLX0cHR4eOuWVKnW00B
+         IS6huGY2nZe4CA/ybXmL3a+uCayBkR4l1n8+r9eom/myd3MhqAbZQ0nDdtavkvrhz1E4
+         IptiAZmwD+6H3aQ1nxyJmCe51KYeYvWZt77aKrtPUZQlwXnV8SPKga8I/uqEjacYRrO9
+         mKCuxaBU7YgF6G2MnLZr71+MokK52+NJxeUF6kYilbqiM5h439bG1JRPtue0kifJd/4w
+         9Rag==
+X-Forwarded-Encrypted: i=1; AJvYcCUaawR2Co5G8IkWOq+LvJppqya3SLlLsy/eVmHL0fzN+LnRH4z6YF+Z+hkFRxgxHd1uQwLzzPsHmgJmn/Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGXIPNWt2ChpAOAG8n7sUfYyBMFEoXVHIqCQnt4BXT4yaIUEl4
+	maLgmUGcpymNnqAK8Cq/Z6nkqbF+tH2kFZN6XEsZwkDUItmbPJtHbKh92ZNmLqSUP3Ige0+/SVy
+	rQjl3B9yEXfPzv2lD31uktcUM97CWtwi3RPo9oVA4
+X-Gm-Gg: ASbGnctIP2t9M/o/fFRallRrD6FH820xZJrH1u8eZNbKY2oQgvbNs0FGu3+K9XPB/pv
+	IhUoNEfZsAb46ZvjKdCGsgvsEWuP/qLjh9mtCCd7BvWntvWw0/CAtskcNJQ4dbDUJNxk1CqvRV0
+	tHrEuLbnevHJ0j+Hb1VdQcCzWpFQVaDxJFJ4ohxULK+SI4Ja96XZCjqKaWvshXYuBfy3v0LiUUU
+	zW5F/efI3k=
+X-Google-Smtp-Source: AGHT+IH1NWNvanAK0XOjMJEe/GTsQrjRFVmMnXkKiISsTuc+7lPoCeqCpycNb+zFFUr9NjVAP8ZmiqXZcDijHwWFKtA=
+X-Received: by 2002:a05:690c:7241:b0:70e:2d17:84b5 with SMTP id
+ 00721157ae682-71175203681mr284981287b3.0.1750279150493; Wed, 18 Jun 2025
+ 13:39:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250618042424.330664-1-jthoughton@google.com>
+ <20250618042424.330664-5-jthoughton@google.com> <aFMWQ5_zMXGTCE98@linux.dev>
+In-Reply-To: <aFMWQ5_zMXGTCE98@linux.dev>
+From: James Houghton <jthoughton@google.com>
+Date: Wed, 18 Jun 2025 13:38:34 -0700
+X-Gm-Features: Ac12FXxtgm7oIFvlTJaEkpAlCqjTucv9lNobWhug7G4AqcUM4fEMOn24B5rvNUA
+Message-ID: <CADrL8HXdBY-sxPJrKEKOzdyZ5C82dE3qUobQuh+LABgatCfgdw@mail.gmail.com>
+Subject: Re: [PATCH v3 04/15] KVM: Add common infrastructure for KVM Userfaults
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <yan.y.zhao@intel.com>, 
+	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 18 Jun 2025 22:38:00 +0200
-Message-Id: <DAPY5HF9HGXC.FCEKAMLPFY1H@kernel.org>
-Subject: Re: [PATCH v13 1/6] rust: str: add radix prefixed integer parsing
- functions
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>
-Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
- <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
-In-Reply-To: <20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
 
-On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
-> +pub trait ParseInt: private::FromStrRadix + TryFrom<u64> {
-> +    /// Parse a string according to the description in [`Self`].
-> +    fn from_str(src: &BStr) -> Result<Self> {
-> +        match src.deref() {
-> +            [b'-', rest @ ..] =3D> {
-> +                let (radix, digits) =3D strip_radix(rest.as_ref());
-> +                // 2's complement values range from -2^(b-1) to 2^(b-1)-=
-1.
-> +                // So if we want to parse negative numbers as positive a=
-nd
-> +                // later multiply by -1, we have to parse into a larger
-> +                // integer. We choose `u64` as sufficiently large.
-> +                //
-> +                // NOTE: 128 bit integers are not available on all
-> +                // platforms, hence the choice of 64 bits.
-> +                let val =3D
-> +                    u64::from_str_radix(core::str::from_utf8(digits).map=
-_err(|_| EINVAL)?, radix)
-> +                        .map_err(|_| EINVAL)?;
-> +
-> +                if val > Self::abs_min() {
-> +                    return Err(EINVAL);
-> +                }
-> +
-> +                if val =3D=3D Self::abs_min() {
-> +                    return Ok(Self::MIN);
-> +                }
-> +
-> +                // SAFETY: We checked that `val` will fit in `Self` abov=
-e.
+On Wed, Jun 18, 2025 at 12:41=E2=80=AFPM Oliver Upton <oliver.upton@linux.d=
+ev> wrote:
+>
+> On Wed, Jun 18, 2025 at 04:24:13AM +0000, James Houghton wrote:
+> > KVM Userfault consists of a bitmap in userspace that describes which
+> > pages the user wants exits on (when KVM_MEM_USERFAULT is enabled). To
+> > get those exits, the memslot where KVM_MEM_USERFAULT is being enabled
+> > must drop (at least) all of the translations that the bitmap says shoul=
+d
+> > generate faults. Today, simply drop all translations for the memslot. D=
+o
+> > so with a new arch interface, kvm_arch_userfault_enabled(), which can b=
+e
+> > specialized in the future by any architecture for which optimizations
+> > make sense.
+> >
+> > Make some changes to kvm_set_memory_region() to support setting
+> > KVM_MEM_USERFAULT on KVM_MEM_GUEST_MEMFD memslots, including relaxing
+> > the retrictions on guest_memfd memslots from only deletion to no moving=
+.
+> >
+> > Signed-off-by: James Houghton <jthoughton@google.com>
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+>
+> > +#ifdef CONFIG_KVM_GENERIC_PAGE_FAULT
+> > +bool kvm_do_userfault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fa=
+ult)
+>
+> The polarity of the return here feels weird. If we want a value of 0 to
+> indicate success then int is a better return type.
 
-Sorry that it took me this long to realize, but this seems pretty weird.
-I guess this is why the `FromStrRadix` is `unsafe`.
+The way it's written now feels fine to me. I'm happy to change it to
+an int (where we return -EFAULT instead of 'true' and 0 instead of
+'false').
 
-Can we just move this part of the code to `FromStrRadix` and make that
-trait safe?
+> > +{
+> > +     struct kvm_memory_slot *slot =3D fault->slot;
+> > +     unsigned long __user *user_chunk;
+> > +     unsigned long chunk;
+> > +     gfn_t offset;
+> > +
+> > +     if (!kvm_is_userfault_memslot(slot))
+> > +             return false;
+> > +
+> > +     offset =3D fault->gfn - slot->base_gfn;
+> > +     user_chunk =3D slot->userfault_bitmap + (offset / BITS_PER_LONG);
+> > +
+> > +     if (__get_user(chunk, user_chunk))
+> > +             return true;
+> > +
+>
+> I see that the documentation suggests userspace perform a store-release
+> to update the bitmap. That's the right idea but we need a load-acquire
+> on the consumer side for that to do something meaningful.
 
-So essentially have:
+Indeed, the below test_bit() should be test_bit_acquire(), thank you!
 
-    fn from_u64(value: u64) -> Result<Self>;
+(N.B. I don't think the current code could result in an observable
+bug, given that the later write of the PTE has a control dependency
+here. But it is certainly written incorrectly.)
 
-in `FromStrRadix` and remove `MIN`, `abs_min` and `complement`. Then
-implement it like this in the macro below:
-
-    const ABS_MIN =3D /* existing abs_min impl */;
-    if value > ABS_MIN {
-        return Err(EINVAL);
-    }
-    if val =3D=3D ABS_MIN {
-        return Ok(<$ty>::MIN);
-    }
-    // SAFETY: We checked that `val` will fit in `Self` above.
-    let val: $ty =3D unsafe { val.try_into().unwrap_unchecked() };
-    (!val).wrapping_add(1)
-
-The reason that this is fine and the above is "weird" is the following:
-The current version only has `Self: FromStrRadix` which gives it access
-to the following guarantee from the `unsafe` trait:
-
-    /// The member functions of this trait must be implemented according to
-    /// their documentation.
-    ///
-    /// [`&BStr`]: kernel::str::BStr
-
-This doesn't mention `TryFrom<u64>` and thus the comment "We checked
-that `val` will fit in `Self` above" doesn't really apply: how does
-checking with the bounds given in `FromStrRadix` make `TryFrom` return
-`Ok`?
-
-If we move this code into the implementation of `FromStrRadix`, then we
-are locally in a context where we *know* the concrete type of `Self` and
-can thus rely on "checking" being the correct thing for `TryFrom`.
-
-With this adjustment, I can give my RB, but please let me take a look
-before you send it again :)
-
----
-Cheers,
-Benno
-
-> +                let val: Self =3D unsafe { val.try_into().unwrap_uncheck=
-ed() };
-> +
-> +                Ok(val.complement())
-> +            }
-> +            _ =3D> {
-> +                let (radix, digits) =3D strip_radix(src);
-> +                Self::from_str_radix(digits, radix).map_err(|_| EINVAL)
-> +            }
-> +        }
-> +    }
-> +}
+> > +     if (!test_bit(offset % BITS_PER_LONG, &chunk))
+> > +             return false;
+> > +
+> > +     kvm_prepare_memory_fault_exit(vcpu, fault);
+> > +     vcpu->run->memory_fault.flags |=3D KVM_MEMORY_EXIT_FLAG_USERFAULT=
+;
+> > +     return true;
+> > +}
+> > +#endif
+> > +
+> >  int __attribute__((weak)) kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+> >                                                 struct kvm_enable_cap *=
+cap)
+> >  {
+> > --
+> > 2.50.0.rc2.692.g299adb8693-goog
+> >
+>
+> Thanks,
+> Oliver
