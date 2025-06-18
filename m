@@ -1,79 +1,109 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BAA1854
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:34:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB1E78F36;
+	Wed, 18 Jun 2025 02:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750214086; cv=none; b=MkAsPvI3sxed0WiJLqj4ZpIs5AaXdGSfhhL2QcxHvr4UCgiiLB3jleU39NwFeO1F9p7j/OkBdfOeWUm9TTOZZ50rdujXhTov8wS6kAYV6Kot6pWU2i9QBU6W7Epj9VYiBCAicSc4c8K8lSKylW9JuDLHJjt6xAv9gqeD93cPKC4=
+	t=1750214198; cv=none; b=Qhdt72PJi3ot0jygql1UfDDbDthUmtzO1F1bPGRmtHjqQ8d0StT8zq6wCxREojdmRT2afRsARekbGq+4AEKoRCGIGzavLBDjeis+E3nxK8RW95r3NyqEz8U7gtavdWCV4GUSgUa/u5BkzCjhc+BdgJF66IqdX8DPl2DaL2Hro+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750214086; c=relaxed/simple;
-	bh=ONgsSjcf0Ph7NvUL/sFpUXeF9RhPxG1ddOiPgnS3bbU=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=hCeZ1zzT1ncijU0hOVniPIxldIoK/SsaK2opixXfzJYD/nmEBnq6YR088v6+GLH/mVnzzrGtg15ClVQeGSzazDiY73uHzEOpIzflkGObVZCfbpLBSbVoHiZsu025sUIXaerc7q7+kJZYH78BNjkJb933Rd7USEdGXjB2u2RgUdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=n5WH8/0G; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750214198; c=relaxed/simple;
+	bh=npu/fabxBxzJiWBHD/Ed+Cf2wdSb2RdM4A4PgIZsFqw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rmcXi+OETZupV/L6y/LJOaA7DUZUjgFgxefXdFhekv3k8wEb+xmodX1tQCB4vl30fQZYfTBakUDPlSwFizEBgOcU7Yzjd6Ji4UVZzjW2U7HBbPj+j+0Hw7SmsJmJVE4nNdbcWFYUoe7Tt2TiZLGlAAIjwlJNz+9L9HUVrQ45U/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iacWneBg; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="n5WH8/0G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750214071; bh=qVRWt0bjnSRHcquObKyeG8x10x+1fVWd4QKTrfLo0lo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=n5WH8/0GDGtp+0mS2QSiLlhlfRuoknFhFXP6c9BLMPJEX4IGoR06hZmPhpMfcP2r3
-	 gahOsf6zpIDmtHGByO+UzyKsrMErhlR+T8/FQF9gTue3gTpqBRIRDNlLCWNA0oNZVa
-	 gPozghNesAEClcIScmoo7Q2SiUDhY9nvZhqT6Jh4=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 8502345A; Wed, 18 Jun 2025 10:33:16 +0800
-X-QQ-mid: xmsmtpt1750213996t4qgbhg8y
-Message-ID: <tencent_FC196E4F848DEF25B88DCB12125D96DD9307@qq.com>
-X-QQ-XMAILINFO: NY3HYYTs4gYS34szix4HX+Eq0s93HCcaXAs3XuSPWyacaRgsl6DErZThJpqk/5
-	 UeDyUoom58ZUELDFB2wIc/smUCDiAZiGdOidSlqm5CC4QppXr8IyM2D1gAIYHEmrhDyUqPybWEnB
-	 BjS1ojh+0USi7PqiGxHNFcR0i5jZvQtche7I0nZ2c6wWjspcpr4Pz88eKySLR0JIeU/snczOP01D
-	 Ro5pTRz/Xen0ZCqS1CTFTxU9ocVZRqWIkx14cfoKdUFsSdtIljRA4cVzyZ+aXEYpiZWZdRlNY/Vo
-	 he50SjK1v6dAzstkt33muRQ/gmx8IPuGx3eTY+vftKF958TSTU0ke44ajdIKnuWaU7GbRK6Yci3A
-	 tehQGw83gNUII7S0UjjCB5U4VomvaLVQoEI7V1COV7/UbL7dUrKFp+gzKwu6ktYU7ukONGnR6M7X
-	 UWl5GFHvJvgCRaTw12EHtj3F8guYj/wK4FBxMMJvO3akzeCyELakbqlzqyOZ9goya/tYauJTSSm4
-	 sBO8NoHKfZiYdkoafnVV/2V+dSCa3zAebyVa8WBziYFlPy1Vlt7xioAOu52Q4u6QN75k+s67HYOO
-	 TN/eMah/AX38PWH8XkVGUm+eP44yr7Vw2rCY1KHAw1VCPSp49Zdk7+yAppCso35TLWsb4810t3NY
-	 e+2oD3UUqVOCv7TuP3X/+mfmU72vwsZO0KsTMD5fHAAwWMdSjIe7T8svnc8sMMocjjcQVKMYiViE
-	 OcCpFFgKPpq7FnPkwwLWsZIOpXD1jV44v3v0r4NExVGOtpjVdMKNUBtfYrfxOR1isjl9tNPnV82n
-	 LsOLaU9OQIUbyUdrAeMg5xTZs5/Bh/eTgg1VskecmolQYByoBg6p8EL4CgQdopqstEznAoSDa6ER
-	 I6BC1FYbm3sffVuFFhl1n3QmJQ04g97DISxfTpbGzXTISO43H+c/ah5ds6dqlfQwhLd4xQU03t
-X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] general protection fault in pick_link (2)
-Date: Wed, 18 Jun 2025 10:33:16 +0800
-X-OQ-MSGID: <20250618023315.1082693-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <685120d8.a70a0220.395abc.0204.GAE@google.com>
-References: <685120d8.a70a0220.395abc.0204.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iacWneBg"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5308b451df0so1780000e0c.2;
+        Tue, 17 Jun 2025 19:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750214196; x=1750818996; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=npu/fabxBxzJiWBHD/Ed+Cf2wdSb2RdM4A4PgIZsFqw=;
+        b=iacWneBguICJ5JXCo4D0LGp+eDO7ElMmgITzo+pQW8ik/mM+VOBQKDJGi4qshIT7Gx
+         qicbjhsIUOoyELxaTjt0wzSDgR700P2IxDe346UcjrJRQIlDSkJII5fWYEkO61pHWopo
+         N5VSRth/O4ag+kNnfUIdY9BmJTGH5SKtkOyqulQVry8+mFx4ZqjkOBnPmsFwvJGy6fY6
+         lPQpk0RHbJ9SdX51IQeDPcpY+3AHdjPo4frgrOHeOb/b2AbRgY3DYC3gmbTOz4GEe6hF
+         IzJyhlNHOS93RuTcieNIls/VPdTvBZt2koOODnT+Lk3ZnEJJCB1/7gBYY/i9HS/QzObv
+         KcOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750214196; x=1750818996;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=npu/fabxBxzJiWBHD/Ed+Cf2wdSb2RdM4A4PgIZsFqw=;
+        b=EIXqP7oo6dKpHBB93qEm3U79A1ozxKePNR/K2FJC1EF2Mymc1kiqxYlQ0p1cgnlPVs
+         OYgjBnt0v9LuPdmr13vu5rzjHEiVJ7vDDUf+jrg4nJbe9IOCh9T8M6N36mWlUwGoxDqI
+         4LjxImrssNU8j+LREWOHbnEp5nXCzlQQrpkEa2DoFTaREPRPqTffc8iiGdkY/upxoev+
+         JJMl+MaKTYa741qsozwNXKv0WBuAyCKQaLdAToKtL6WQ7sTlefPZeKNp5fFPIvE5Aafx
+         GkbTAxM+jPq79SwkV1h8Ms7SQTdTQPYilm3fJl8zMIXfrR8Ti8sZGDHatgWVZOr2c2pJ
+         15Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCVmA5ZxYI3BKn/W2FuTIrqhw63LSI7XEGpE9TdlkeoZ07VbRd2mmYCsprcuw0ECCS9MWP1MnYjsFALEizog@vger.kernel.org, AJvYcCW8PyJ8NmatWaWVp/6ItG9SIo5qWjFbLVFlOwanvqVPUuDkJxEJAXSY9mW280EJaFYfvS1NJWgvQwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6a4V/35vPjCKDdZXtA/GyRRiF8x5QnxI5mBTylxtPUVOVW6lv
+	sIyTFWpxavtY1Mso3dhkvRiilxUpYdYFIm8pXzk481N9k6Bh5QwWMhOVMXoW2dcQJ0/tWVFItnh
+	bwkfZxnQ0JXvt2QnRyz2OrSPPlT0jEDY=
+X-Gm-Gg: ASbGncsGvp+J0/9E4xmHVwzj4HYyMF40/ljzFVXEpMApeYl9n0FILpsS7wtyWgXQftk
+	HPQkyToII6l8oahkbAHuGaIebQbed+coIDJVmyBwXKNCHzqWr6q2OJNVmZ/LLdEoGcgvFDC4B6b
+	QBc2UOWSdAR4jt6aA/mIYrCTCzAmTBFmt2e/FYs1P4HSL4Pvv0J9OC5gu9ZbAJr3rf3w==
+X-Google-Smtp-Source: AGHT+IGMhHksFaRRKZn2VFJKvUR68+o2Ry+zTlj8NdOU4DwnlZJ71DRAwYiqAcL5+3N5Pous79DA6y7fgV4HnFFO2oE=
+X-Received: by 2002:a05:6122:547:b0:529:2644:8c with SMTP id
+ 71dfb90a1353d-531497d3ee3mr10569887e0c.8.1750214195693; Tue, 17 Jun 2025
+ 19:36:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250611194648.18133-1-andrew.lopes@alumni.usp.br>
+ <20250611194648.18133-3-andrew.lopes@alumni.usp.br> <84643f3fc87425e8c5019eede275791a20872b6b.camel@gmail.com>
+ <CANZih_QY5ki3nCGDitE-6FAmDi_dgc04WE_QqvOFwJeu912SVQ@mail.gmail.com>
+In-Reply-To: <CANZih_QY5ki3nCGDitE-6FAmDi_dgc04WE_QqvOFwJeu912SVQ@mail.gmail.com>
+From: Andrew Ijano <andrew.ijano@gmail.com>
+Date: Tue, 17 Jun 2025 23:36:24 -0300
+X-Gm-Features: Ac12FXw0P2s8Am2opBQUoL6Fk0eoBXG0dDVBrC2yoBrw_qflbwog0PEKpUZA83I
+Message-ID: <CANZih_SsnjGq+DYsbPE54OV=E6W4bkUH3a+29LnW+hYMF+Bobg@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] iio: accel: sca3000: replace usages of internal
+ read data helpers by spi helpers
+To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test
+On Sat, Jun 14, 2025 at 4:33=E2=80=AFPM Andrew Ijano <andrew.ijano@gmail.co=
+m> wrote:
+>
+> On Thu, Jun 12, 2025 at 4:29=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.c=
+om> wrote:
+...
+> >
+> > Unless I'm missing something, the above seems unrelated to the rest of =
+the patch.
+> >
+> Oh, I can see why that might feel unrelated. Actually, this was
+> related to the first version of the patch which was focused on
+> removing the duplicated behavior of sca3000_read_data() and
+> sca3000_read_data_short(), unifying it in only one function. Also,
+> with Andy's suggestions we cleaned up the function as you're seeing
+> here. However, we later replaced all usages of
+> sca3000_read_data_short() by spi helpers, leaving just one place
+> calling sca3000_read_data(), so this change isn't as necessary as
+> before.
+>
+> Do you think it's still a valid cleanup for this patch or would you
+> prefer moving it to a separated one?
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 4bb889fc980b..291f29a04e09 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2005,6 +2005,10 @@ static const char *step_into(struct nameidata *nd, int flags,
- 		if (path.mnt == nd->path.mnt)
- 			mntget(path.mnt);
- 	}
-+
-+	if (inode && !S_ISLINK(inode->mode))
-+		return NULL;
-+
- 	return pick_link(nd, &path, inode, flags);
- }
- 
+Looking back to this, I think we really could benefit from having two
+separate patches to handle these different changes.
+I'll try to make a new version that addresses all the comments for the
+current patchset.
 
+Thanks,
+Andrew
