@@ -1,63 +1,63 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C372E54CA
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B8542E7192
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750246818; cv=none; b=X16+v7MgZ+K6xA6UFiWfXCsPUv7GdHbjdzps5Nfl9DVxM+dL1AMK952EeAwlqFcGLoYyQYug9XgFHYhIldLQi28tmT3ZOOFRHnuwvjvA93fdhRjBKm/SeP1elFQ9oPaBDQAppm5/T9wT14thhWy2fcYJV+ogBcRN1YDxsHJ3OyE=
+	t=1750246822; cv=none; b=HO4EWDzg7QLUnOEsvLe0DrY9gz60pLc6Ma8+HxAA7+n1MqnTvRXMHp3aEVzhPbvCj+2y7RPIlSWKBA0XAASrFCtEOLxoMvN25wfAd4X3kooVffR+kk36qk2cEUNuzUYcpXyjSq6536WxBugtd8JrZ1QVW5yJnwOuP403vp04uOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750246818; c=relaxed/simple;
-	bh=Xb9FRJ1k9/RgyNy96wCFBU7lT5iVvfOPQD9LIgtzIs8=;
+	s=arc-20240116; t=1750246822; c=relaxed/simple;
+	bh=Rm2a5l12BGJE4dDocrWPzywUMfLSXKw948jSbHOTcSE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KEU1MJbzAfEEc3l+lzPGI9ias/FIMgIUgzPbYNGMdpKxz722PdP7EYpBeEA364BERMcdi5RTbNSg/tUsNwG5Hm4lQ0Q0mDMwgxOJrfgTbp4lnlUFzmzF17upAs1ty1NBINF9cU0gVWtuaQUb2Fkq+xFWcwqvPbZFJVnfb6cEWFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=LJZrP7pI; arc=none smtp.client-ip=209.85.210.178
+	 MIME-Version; b=qrUUOQmLPuQ7qIRhfkEl9gXV5TRMNLDL+FyIByF9dX9IaPXa3r5kY8ZIy6HYxPZe3h5949saLCQuu+/z4bnGhBrGFaqoN5BrF6Qt3oTot0PyA0M7LWeXI9ITIox4w8bQZfIQHRrPKyZ7VDZm1BTdEES/FlW/uYOPHs6nZHhGUgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=g5cBbILV; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="LJZrP7pI"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-747ef5996edso5520639b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:40:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="g5cBbILV"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so5149954b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:40:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750246815; x=1750851615; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1750246820; x=1750851620; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dkTX8VbuGGj597vY5glMjecPEtow6yPHbqWGQcHvVXM=;
-        b=LJZrP7pI9QjZ4RduBK4aJ8z3DDwZrFx9oZV05/98JybONsYWtAEuhhfbK4JhUbYF1w
-         sJB28b53ULUYNFmQ9b3ITvAY980yblMvtAq3I91othL5My1+iBQbFht1Ymjne2z970HP
-         j8LfO6ZfuTnktN03uYBVGqTkuh35Z1/OIf8izdtXX1OPvwDd+PdHoftWrAl8ozBoqMez
-         7lRiBIN9dtEbK2XQTLFEuoeMqeBRqMRyJyh9A/v+vpqdiwFpWZgdnjb5QCiD/29PAV34
-         hBeh+zSaiyoLVkFNEXKdqRUKpXVMwP0Su/tqusz4AzMKM8PdO6Gl8C0ynlP+XiuNsJAT
-         zHrQ==
+        bh=Vg9KlwIz1mnZGI4kokyeGTdkzv1z3OHfndjs6itg7OE=;
+        b=g5cBbILVdq3kyB+XG58R0GD+io14/UUnUzEJ9JnUPH8N5YI/jcV2XTpyzfOxlbX+Dy
+         30fBLFNOER/HpZkLMZct9/010rgVzI+WtM0mUs+g9quDP5TFEwbZSd/hAupMDvZyeFWl
+         O2uJOtCr+VFhYfpHVfpqIcL9GDE5MoPxXD5y+Oi168C/pIJSC4zyvagctqfISozdalUE
+         +c/Q71Txt7HsBZPsbYD2bDHs7hIQAOmEefsTomuXqU0UFGolkh/UZZ0iRZjksXWJwlT4
+         RvRQMbn8b1whID6ZY2Eg+dIhHCIBpGGiN9Zpwfrlt+77H/3hZDMzPYQx2SvzerazswUp
+         fxGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750246815; x=1750851615;
+        d=1e100.net; s=20230601; t=1750246820; x=1750851620;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dkTX8VbuGGj597vY5glMjecPEtow6yPHbqWGQcHvVXM=;
-        b=wu7lUxlilOB0Jmkp0jgFB9kJrVCSEo/4myJQO059sw5U4ixugf/FtvIW/m36rvx5XF
-         r5LCPaL1GRyViQAopcg5IHWeXAqOruUeYxchKMIUQd66ic4Gp213QqznduNrP/obRbUh
-         ZsnXSbgQNBAkvpM8yrK4hRWZD8zbr4x30ISigHzkiDWaucORBY7wLqC2Lxv4armi4fkM
-         1Y4K14Ot826/6kCDFrOKgHOjP7oCnC8KEnzJaw/QbxobOnQiDtlGF3/ptXtH2S6ulCr5
-         jmdpAJmfqdd2Ui4YvbtV7o0xsKCNJPyIUbVLm1Y+1RNRWZ2USobmn0QNFaJilgY6oZi/
-         hwIg==
-X-Forwarded-Encrypted: i=1; AJvYcCVZt+4CyV+2GiesYGbmvWf9H2IlIdURgb8Wm/v84dPNM1kftWP/m51dGC2EZpxJdErAYt03HSmJ9yQBp0g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCS72IoRjrdTSHq0GSKdpxIUVuPOYQTDx7yam62JwNcG2kI2Cd
-	zaGIaUGGy/YIvVF5Y2Tkxrq7qzQGMweRCW/3KtH+bLVQZ9SIHNCKdsoGioBEkeKqQug=
-X-Gm-Gg: ASbGnct9A4sR9cOhAS5MlNoEyKpi2rz9nuN8swwpuHjn5DLiF/6AFGDm3t6tOQAalKj
-	aJ5nG3IP+s1oUcbpJhsLEjodas7ZApWhUqFvGlKdawxv/CRQOrF5e5Z/b2jFQDOUrJ2aYG52NPm
-	JeZUOjCRO+xbpjJSbhko7A58VstqPC/sD64le3nHhKPMUZpybDkSqyO7c/ICW0KWJCoJ0OjgnvG
-	T/6iikKqBhstbiMWJAn3sHPa+h1yyZZHPAf8jxBzWm4K6j3Qk/hl+KihCyKfV3dvfi1kasB11CD
-	kQQj5+xXy4NoAg5GkDhWTc84k0EMjzaDZKzGqYQ95HSyGTIsNu6YD1ELIs8WGgVGcZgypDnz4qx
-	qattQmjX1toA=
-X-Google-Smtp-Source: AGHT+IHx+f2uetLjHgLndzyr0DIrDMXBz9wsvE8F730aaCeLlsGyoMf6MjcYSfWfha0j1fHQJ33mWQ==
-X-Received: by 2002:a05:6a00:9087:b0:748:e5a0:aa77 with SMTP id d2e1a72fcca58-748e5a0b2c2mr3471714b3a.13.1750246814598;
-        Wed, 18 Jun 2025 04:40:14 -0700 (PDT)
+        bh=Vg9KlwIz1mnZGI4kokyeGTdkzv1z3OHfndjs6itg7OE=;
+        b=G9nEh0qb2Ptr1QpJ2kh0ocC20DXTzBTCkbOVY4aOnhGO8vytE/pdpaLncGWLFMhpvy
+         dGRoIvUpPyq7T7Z0NExgFnTT5DsF4L/vt8S6Nh6hjIHenimDuX4YE7ch0wJsYepjfaZe
+         Rksfjui0DsHD5ZdBAEVfyoj6Os8akpzb0vjVTRWFCPhav285B8cGaVn/a9dUIGArfk0Q
+         NblXZkFNwTE8bxfZSTSrFjkQIB+ay/I/MzgUbQUfOSSAzOfHSl7sogAwVXKePj1w4L9K
+         35mwC0AKK7I5csKOq6TBBG6atSHVZ0/3ZkdLCBN5PTc41vynth7w2Qov0xpa6vONcGRw
+         +qRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpQHkOuvwIiEyCXdvjnMpR6WIsRk9Q7QzUQX6ciJZTXZ+S68y58A9YZ7/69xocjU/ojbunnB/3HhzIFnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/EVhKd21WR0dRuBXIZalxnLE4ioDhiUrFV/+P6dbpB64scJGe
+	lCnIOw3rcCFPt4SKaZMdtnLRuS1yKfqaZmUtFoDY7aDdUFD7hYhCrhWIKVvSaJImSjQ=
+X-Gm-Gg: ASbGncsikw6Pk7tJ11LNaa7aBWdIrIKnai30WC/FyyBHPePtF3/+jA2Yv1YGtF2F5GQ
+	ZVq/pNHb6VGGg+2izoh+kF9NObH55HL38p1WpsbteM7en9Lu2VQ8A+PofvpKXLhAON8E1SfYHUD
+	Gle3AF66C5GdV+BXRhUXS46vF8iDyHuohFo8CpV6XfQbHVGnJD4pUUDnrkXS402ELYtWg/3yATG
+	KvnO7ACQCvSeRABP1LL9wivLFEqLberbB170UvXsaF/gAkhVBQxTm4Zfj06rSWK3NUlKkvc+ef+
+	BujDc4sq2iEWG4hdOvqcnPue9qy55gQS+D9SvO9POhzPqCBQmb4J0yijBDa8SCLgxDR0g0kLOu8
+	MNqgFgW99YOI=
+X-Google-Smtp-Source: AGHT+IFjiNLAtj905GCE7Fre41c5uh14WoSaN+/SDx34U3YOO1Dp0kn5NqBhaBmjWveoEpoBhRI3Og==
+X-Received: by 2002:a05:6a00:852:b0:736:a540:c9ad with SMTP id d2e1a72fcca58-7489cfca938mr25785015b3a.20.1750246819747;
+        Wed, 18 Jun 2025 04:40:19 -0700 (PDT)
 Received: from n37-069-081.byted.org ([115.190.40.12])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900e3a09sm10683148b3a.180.2025.06.18.04.40.10
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748900e3a09sm10683148b3a.180.2025.06.18.04.40.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 04:40:13 -0700 (PDT)
+        Wed, 18 Jun 2025 04:40:19 -0700 (PDT)
 From: Zhongkun He <hezhongkun.hzk@bytedance.com>
 To: akpm@linux-foundation.org,
 	tytso@mit.edu,
@@ -71,9 +71,9 @@ Cc: muchun.song@linux.dev,
 	cgroups@vger.kernel.org,
 	Zhongkun He <hezhongkun.hzk@bytedance.com>,
 	Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH 1/2] mm: memcg: introduce PF_MEMALLOC_ACCOUNTFORCE to postpone reclaim to return-to-userland path
-Date: Wed, 18 Jun 2025 19:39:57 +0800
-Message-Id: <71a4bbc284048ceb38eaac53dfa1031f92ac52b7.1750234270.git.hezhongkun.hzk@bytedance.com>
+Subject: [PATCH 2/2] jbd2: mark the transaction context with the scope PF_MEMALLOC_ACFORCE context
+Date: Wed, 18 Jun 2025 19:39:58 +0800
+Message-Id: <81b1f3df0379b0e34bdf239d36d4d9aeb4bee9cf.1750234270.git.hezhongkun.hzk@bytedance.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <cover.1750234270.git.hezhongkun.hzk@bytedance.com>
 References: <cover.1750234270.git.hezhongkun.hzk@bytedance.com>
@@ -85,367 +85,84 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The PF_MEMALLOC_ACCOUNTFORCE ensures that memory allocations are forced
-to be accounted to the memory cgroup, even if they exceed the cgroup's
-maximum limit. In such cases, the reclaim process is postponed until
-the task returns to userland. This is beneficial for users who perform
-over-max reclaim while holding multiple locks or other resources
-(Especially resources related to file system writeback). If a task
-needs any of these resources, it would otherwise have to wait until
-the other task completes reclaim and releases the resources. Postponing
-reclaim to the return-to-userland path helps avoid this issue.
+The jbd2 handle, associated with filesystem metadata,
+can be held during direct reclaim when a memcg limit is hit.
+This prevents other tasks from writing pages, resulting
+in shrink failures due to dirty pages that cannot be written
+back. These shrink failures may leave many tasks stuck in
+the uninterruptible (D) state. The OOM killer may select a
+victim and return success, allowing the current thread to
+retry the memory charge. However, the selected task cannot
+respond to the SIGKILL because it is also stuck in the
+uninterruptible state. As a result, the charging task resets
+nr_retries and attempts reclaim again, but the victim never
+exits. This leads to a prolonged retry loop in direct reclaim
+with the jbd2 handle held, significantly extending its hold
+time and potentially causing a system-wide block.
 
-We have long been experiencing an issue where, if a task
-holds the jbd2 handler and then enters direct reclaim due
-to hitting the hard limit in a memory cgroup, the system
-can become blocked for an extended period of time.
-The stack trace is as follows:
+We found that a related issue has been reported and
+partially addressed in previous fixes [1][2].
+However, those fixes only skip direct reclaim and
+return a failure for some cases like readahead
+requests. Since sb_getblk() is called multiple
+times in __ext4_get_inode_loc() with the NOFAIL flag,
+the problem still persists.
 
-0 [] __schedule at
-1 [] preempt_schedule_common at
-2 [] __cond_resched at
-3 [] shrink_active_list at
-4 [] shrink_lruvec at
-5 [] shrink_node at
-6 [] do_try_to_free_pages at
-7 [] try_to_free_mem_cgroup_pages at
-8 [] try_charge_memcg at
-9 [] charge_memcg at
-10 [] __mem_cgroup_charge at
-11 [] __add_to_page_cache_locked at
-12 [] add_to_page_cache_lru at
-13 [] pagecache_get_page at
-14 [] __getblk_gfp at
-15 [] __ext4_get_inode_loc at  [ext4]
-16 [] ext4_get_inode_loc at  [ext4]
-17 [] ext4_reserve_inode_write at  [ext4]
-18 [] __ext4_mark_inode_dirty at  [ext4]
-19 [] __ext4_new_inode at  [ext4]
-20 [] ext4_create at  [ext4]
-
-struct scan_control {
-  nr_to_reclaim = 32,
-  order = 0 '\000',
-  priority = 1 '\001',
-  reclaim_idx = 4 '\004',
-  gfp_mask = 17861706,
-  nr_scanned = 27810,
-  nr_reclaimed = 0,
-  nr = {
-    dirty = 27797,
-    unqueued_dirty = 27797,
-    congested = 0,
-    writeback = 0,
-    immediate = 0,
-    file_taken = 27810,
-    taken = 27810
-  },
-}
-The direct reclaim in memcg is unable to flush dirty pages
-and ends up looping with the jbd2 handler. As a result,
-other tasks are blocked from writing pages that require
-the jbd2 handler.
-
-Furthermore, we observed that the memory usage far exceeds
-the configured memory max, reaching around 38GB.
-Max  : 134896020    514 GB
-usage: 144747169    552 GB
-We investigated this issue and identified the root cause:
-
-try_charge_memcg:
-    retry charge
-        charge failed
-          -> direct reclaim  nr_retries--
-           -> memcg_oom   true-> reset the nr_retries
-            -> retry charge
-In this cases, the OOM killer selects a task and returns
-success, and retry charge. but that task does not acknowledge
-the SIGKILL signal because it is stuck in an uninterruptible
-state. As a result, the current task gets stuck in a long
-retry loop inside direct reclaim.
-
-Why are there so many uninterruptible (D) state tasks?
-Check the most common stack.
-
- __state = 2
-PID: 992582   TASK: ffff8c53a15b3080  CPU: 40   COMMAND: "xx"
-0 [] __schedule at ffffffff97abc6c9
-1 [] schedule at ffffffff97abcd01
-2 [] schedule_preempt_disabled at ffffffff97abdf1a
-3 [] rwsem_down_read_slowpath at ffffffff97ac05bf
-4 [] down_read at ffffffff97ac06b1
-5 [] do_user_addr_fault at ffffffff9727f1e7
-6 [] exc_page_fault at ffffffff97ab286e
-7 [] asm_exc_page_fault at ffffffff97c00d42
-
-Check the owner of mm_struct.mmap_lock; the current task is
-waiting on lruvec->lru_lock. There are 68 tasks in this group,
-with 23 of them in the shrink page context.
-
-5 [] native_queued_spin_lock_slowpath at ffffffff972fce02
-6 [] _raw_spin_lock_irq at ffffffff97ac3bb1
-7 [] shrink_active_list at ffffffff9744dd46
-8 [] shrink_lruvec at ffffffff97451407
-9 [] shrink_node at ffffffff974517c9
-10 [] do_try_to_free_pages at ffffffff97451dae
-11 [] try_to_free_mem_cgroup_pages at ffffffff974542b8
-12 [] try_charge_memcg at ffffffff974f0ede
-13 [] obj_cgroup_charge_pages at ffffffff974f1dae
-14 [] obj_cgroup_charge at ffffffff974f2fc2
-15 [] kmem_cache_alloc at ffffffff974d054c
-16 [] vm_area_dup at ffffffff972923f1
-17 [] __split_vma at ffffffff97486c16
-
-Many tasks enter a memory shrinking loop in UN state, other threads
-blocked on mmap_lock. Although the OOM killer selects a victim,
-it cannot terminate it. The task holding the jbd2 handle retries
-memory charge, which fails, and reclaim continues with the handle
-held. write_pages also fails waiting for jbd2, causing repeated
-shrink failures and potentially leading to a system-wide block.
-
-ps | grep UN | wc -l
-1463
-While the system has 1463 UN state tasks, so the way to break
-this akin to "deadlock" is to let the thread holding jbd2 handler
-quickly exit the memory reclamation process.
-
-We found that a related issue has been reported and partially
-addressed in previous fixes [1][2]. However, those fixes only
-skip direct reclaim and return a failure for some cases like
-readahead requests. Since sb_getblk() is called multiple times
-in __ext4_get_inode_loc() with the NOFAIL flag, the problem
-still persists.
-
-With this patch, we can force the memory charge and defer
-direct reclaim until the task returns to user space. By doing
-so, all global resources such as the jbd2 handler will be
-released, provided that if __GFP_ACCOUNT_FORCE flag is set.
-
-Why not combine  __GFP_NOFAIL and ~__GFP_DIRECT_RECLAIM to bypass
-direct reclaim and force charge success?
-
-Because we don't support __GFP_NOFAIL without __GFP_DIRECT_RECLAIM,
-otherwise, we may result in lockup.[3], Besides, the flag
-__GFP_DIRECT_RECLAIM is useful in global memory reclaim in
-__alloc_pages_slowpath().
+So call the memalloc_account_force_save() to charge
+the pages and delay the direct reclaim util return to
+userland, to release the global resource jbd2 handle.
 
 [1]:https://lore.kernel.org/linux-fsdevel/20230811071519.1094-1-teawaterz@linux.alibaba.com/
 [2]:https://lore.kernel.org/all/20230914150011.843330-1-willy@infradead.org/T/#u
-[3]:https://lore.kernel.org/all/20240830202823.21478-4-21cnbao@gmail.com/T/#u
 
 Co-developed-by: Muchun Song <songmuchun@bytedance.com>
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
 ---
- include/linux/memcontrol.h       |  6 +++
- include/linux/resume_user_mode.h |  1 +
- include/linux/sched.h            | 11 ++++-
- include/linux/sched/mm.h         | 35 ++++++++++++++++
- mm/memcontrol.c                  | 71 ++++++++++++++++++++++++++++++++
- 5 files changed, 122 insertions(+), 2 deletions(-)
+ fs/jbd2/transaction.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 87b6688f124a..3b4393de553e 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -900,6 +900,8 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
- 
- void mem_cgroup_handle_over_high(gfp_t gfp_mask);
- 
-+void mem_cgroup_handle_over_max(gfp_t gfp_mask);
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index c7867139af69..d05847301a8f 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -448,6 +448,13 @@ static int start_this_handle(journal_t *journal, handle_t *handle,
+ 	 * going to recurse back to the fs layer.
+ 	 */
+ 	handle->saved_alloc_context = memalloc_nofs_save();
 +
- unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg);
- 
- unsigned long mem_cgroup_size(struct mem_cgroup *memcg);
-@@ -1354,6 +1356,10 @@ static inline void mem_cgroup_handle_over_high(gfp_t gfp_mask)
- {
- }
- 
-+static inline void mem_cgroup_handle_over_max(gfp_t gfp_mask)
-+{
-+}
-+
- static inline struct mem_cgroup *mem_cgroup_get_oom_group(
- 	struct task_struct *victim, struct mem_cgroup *oom_domain)
- {
-diff --git a/include/linux/resume_user_mode.h b/include/linux/resume_user_mode.h
-index e0135e0adae0..6189ebb8795b 100644
---- a/include/linux/resume_user_mode.h
-+++ b/include/linux/resume_user_mode.h
-@@ -56,6 +56,7 @@ static inline void resume_user_mode_work(struct pt_regs *regs)
- 	}
- #endif
- 
-+	mem_cgroup_handle_over_max(GFP_KERNEL);
- 	mem_cgroup_handle_over_high(GFP_KERNEL);
- 	blkcg_maybe_throttle_current();
- 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4f78a64beb52..6eadd7be6810 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1549,9 +1549,12 @@ struct task_struct {
- #endif
- 
- #ifdef CONFIG_MEMCG
--	/* Number of pages to reclaim on returning to userland: */
-+	/* Number of pages over high to reclaim on returning to userland: */
- 	unsigned int			memcg_nr_pages_over_high;
- 
-+	/* Number of pages over max to reclaim on returning to userland: */
-+	unsigned int			memcg_nr_pages_over_max;
-+
- 	/* Used by memcontrol for targeted memcg charge: */
- 	struct mem_cgroup		*active_memcg;
- 
-@@ -1745,7 +1748,11 @@ extern struct pid *cad_pid;
- #define PF_MEMALLOC_PIN		0x10000000	/* Allocations constrained to zones which allow long term pinning.
- 						 * See memalloc_pin_save() */
- #define PF_BLOCK_TS		0x20000000	/* plug has ts that needs updating */
--#define PF__HOLE__40000000	0x40000000
-+#ifdef CONFIG_MEMCG
-+#define PF_MEMALLOC_ACCOUNTFORCE 0x40000000 /* See memalloc_account_force_save() */
-+#else
-+#define PF_MEMALLOC_ACCOUNTFORCE 0
-+#endif
- #define PF_SUSPEND_TASK		0x80000000      /* This thread called freeze_processes() and should not be frozen */
- 
- /*
-diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
-index b13474825130..648c03b6250c 100644
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -468,6 +468,41 @@ static inline void memalloc_pin_restore(unsigned int flags)
- 	memalloc_flags_restore(flags);
- }
- 
-+/**
-+ * memalloc_account_force_save - Marks implicit PF_MEMALLOC_ACCOUNTFORCE
-+ * allocation scope.
-+ *
-+ * The PF_MEMALLOC_ACCOUNTFORCE ensures that memory allocations are forced
-+ * to be accounted to the memory cgroup, even if they exceed the cgroup's
-+ * maximum limit. In such cases, the reclaim process is postponed until
-+ * the task returns to userland. This is beneficial for users who perform
-+ * over-max reclaim while holding multiple locks or other resources
-+ * (especially resources related to file system writeback). If a task
-+ * needs any of these resources, it would otherwise have to wait until
-+ * the other task completes reclaim and releases the resources. Postponing
-+ * reclaim to the return-to-userland path helps avoid this issue.
-+ *
-+ * Context: This function is safe to be used from any context.
-+ * Return: The saved flags to be passed to memalloc_account_force_restore.
-+ */
-+static inline unsigned int memalloc_account_force_save(void)
-+{
-+	return memalloc_flags_save(PF_MEMALLOC_ACCOUNTFORCE);
-+}
-+
-+/**
-+ * memalloc_account_force_restore - Ends the implicit PF_MEMALLOC_ACCOUNTFORCE.
-+ * @flags: Flags to restore.
-+ *
-+ * Ends the implicit PF_MEMALLOC_ACCOUNTFORCE scope started by memalloc_account_force_save
-+ * function. Always make sure that the given flags is the return value from the pairing
-+ * memalloc_account_force_save call.
-+ */
-+static inline void memalloc_account_force_restore(void)
-+{
-+	return memalloc_flags_restore(PF_MEMALLOC_ACCOUNTFORCE);
-+}
-+
- #ifdef CONFIG_MEMCG
- DECLARE_PER_CPU(struct mem_cgroup *, int_active_memcg);
- /**
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 902da8a9c643..8484c3a15151 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2301,6 +2301,67 @@ void mem_cgroup_handle_over_high(gfp_t gfp_mask)
- 	css_put(&memcg->css);
- }
- 
-+static inline struct mem_cgroup *get_over_limit_memcg(struct mem_cgroup *memcg)
-+{
-+	struct mem_cgroup *mem_over_limit = NULL;
-+
-+	do {
-+		if (page_counter_read(&memcg->memory) <=
-+		    READ_ONCE(memcg->memory.max))
-+			continue;
-+
-+		mem_over_limit = memcg;
-+		break;
-+	} while ((memcg = parent_mem_cgroup(memcg)));
-+
-+	return mem_over_limit;
-+}
-+
-+void mem_cgroup_handle_over_max(gfp_t gfp_mask)
-+{
-+	unsigned long nr_reclaimed = 0;
-+	unsigned int nr_pages = current->memcg_nr_pages_over_max;
-+	int nr_retries = MAX_RECLAIM_RETRIES;
-+	struct mem_cgroup *memcg, *mem_over_limit;
-+
-+	if (likely(!nr_pages))
-+		return;
-+
-+	memcg = get_mem_cgroup_from_mm(current->mm);
-+	current->memcg_nr_pages_over_max = 0;
-+
-+retry:
-+	mem_over_limit = get_over_limit_memcg(memcg);
-+	if (!mem_over_limit)
-+		goto out;
-+
-+	while (nr_reclaimed < nr_pages) {
-+		unsigned long reclaimed;
-+
-+		reclaimed = try_to_free_mem_cgroup_pages(mem_over_limit,
-+					nr_pages, GFP_KERNEL,
-+					MEMCG_RECLAIM_MAY_SWAP,
-+					NULL);
-+
-+		if (!reclaimed && !nr_retries--)
-+			break;
-+
-+		nr_reclaimed += reclaimed;
-+	}
-+
-+	if ((nr_reclaimed < nr_pages) &&
-+	    (page_counter_read(&mem_over_limit->memory) >
-+	    READ_ONCE(mem_over_limit->memory.max)) &&
-+	    mem_cgroup_oom(mem_over_limit, gfp_mask,
-+			  get_order((nr_pages - nr_reclaimed)  * PAGE_SIZE))) {
-+		nr_retries = MAX_RECLAIM_RETRIES;
-+		goto retry;
-+	}
-+
-+out:
-+	css_put(&memcg->css);
-+}
-+
- static int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 			    unsigned int nr_pages)
- {
-@@ -2349,6 +2410,16 @@ static int try_charge_memcg(struct mem_cgroup *memcg, gfp_t gfp_mask,
- 	if (unlikely(current->flags & PF_MEMALLOC))
- 		goto force;
- 
 +	/*
-+	 * Avoid blocking on heavyweight resources (e.g., jbd2 handle)
++	 * Avoid blocking on jbd2 handler in memcg direct reclaim
 +	 * which may otherwise lead to system-wide stalls.
 +	 */
-+	if (current->flags & PF_MEMALLOC_ACCOUNTFORCE) {
-+		current->memcg_nr_pages_over_max += nr_pages;
-+		set_notify_resume(current);
-+		goto force;
-+	}
++	handle->saved_alloc_context |= memalloc_account_force_save();
 +
- 	if (unlikely(task_in_memcg_oom(current)))
- 		goto nomem;
+ 	return 0;
+ }
  
+@@ -733,10 +740,10 @@ static void stop_this_handle(handle_t *handle)
+ 
+ 	rwsem_release(&journal->j_trans_commit_map, _THIS_IP_);
+ 	/*
+-	 * Scope of the GFP_NOFS context is over here and so we can restore the
+-	 * original alloc context.
++	 * Scope of the GFP_NOFS and PF_MEMALLOC_ACCOUNTFORCE context
++	 * is over here and so we can restore the original alloc context.
+ 	 */
+-	memalloc_nofs_restore(handle->saved_alloc_context);
++	memalloc_flags_restore(handle->saved_alloc_context);
+ }
+ 
+ /**
+@@ -1838,7 +1845,7 @@ int jbd2_journal_stop(handle_t *handle)
+ 		 * Handle is already detached from the transaction so there is
+ 		 * nothing to do other than free the handle.
+ 		 */
+-		memalloc_nofs_restore(handle->saved_alloc_context);
++		memalloc_flags_restore(handle->saved_alloc_context);
+ 		goto free_and_exit;
+ 	}
+ 	journal = transaction->t_journal;
 -- 
 2.39.5
 
