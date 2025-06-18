@@ -1,131 +1,159 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213DA28153D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:24:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952F0280A56
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238643; cv=none; b=azL3THnsaHpgqINVT1mFlh0LL3ONX6RzE35/ubG5ncc6mO1rm8uvERSN09taZlHDu1clfrM/IFuN++Dm0SoZGlvk3bjTFVA3dvM4b077c3zKQmMM1loicDczp0bxT6AGnw3Qy2FQp2Prn7co8ZR+dlkg87LX0VE1vB1W29jP6E4=
+	t=1750238666; cv=none; b=uaroLBFTgzPiQbUDRZ025cnLkuiZoBYGu1qPYJEl6wn5Ua0UtSOc1NlIzzl+qvXEmL+CGQ7CblCxEE3TznAuDnUQd2CrzJDXcahVL6r8rw81l5tdT+m4sNllK+nnWnx/FW8NTmc0Ck9nI36EEzfLEi8YHwXLJmShpQ60+NBkhVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238643; c=relaxed/simple;
-	bh=aEgKfrPrrjMj6t/ipZa1xavX/WMJ6M7ayyrMUoR/xrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Nag2uA+2DbtFeYDCAPM4sArhZAeEWmeHgCifX/ZTe7CeRtGWTn8RXxm6CXkK9hbfj5uwFXWDHHWqRlmxsMCgqfsRHnLJoO5FYLAyAv5DedtD8GVZeFmG4o0EVRmvjx0Iiy+JU3lYD4D6D+vpFKA3y/Qs9ZTrvmTW0LA5IHwLGCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N07rdsTS; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750238666; c=relaxed/simple;
+	bh=stlKD8TMt2RHQpIMrF+XfM/1DcDXWqKH+tWALVeME38=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=E2chQeX3gSrYTdnoA6qQtX3ZS38BUM2YZR0wKs7XfAI2xVJXLuNwTR2vcvC5Qlefi9llBp0VrNKvCSfGhPT9CgxQRLV6WY9tjZjISxQG1rrUkXur37GRCLMlKki3vyfSEe6Wa2uNk3dXY6A5WFjVyqEwMhcEdZf2JddGhpQUy0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=WoLFDR8i; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N07rdsTS"
-Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I9MEfN198307;
-	Wed, 18 Jun 2025 04:22:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750238534;
-	bh=1LSfhMfagWSAA2dImG8G5AnPQY89RbViRu826F453ak=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=N07rdsTSUsg6iBtvzWLHjvurhXqdQbAQHghXSB/YUKrJni01F6UGOuwEy9k1eiUtn
-	 /iz3+62tz8jTcX9UP+/3DhLz2e6SF+/Vi6Z3jl+7GeI6knAbmnFQcG8+fdnV1sUJXb
-	 KXzBqgYDnLZbjfGnP4txOeoOOEAh37FpB+gzA+ZY=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I9MDfD2619355
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 18 Jun 2025 04:22:13 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
- Jun 2025 04:22:13 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 18 Jun 2025 04:22:13 -0500
-Received: from [172.24.227.143] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I9M90f3235850;
-	Wed, 18 Jun 2025 04:22:10 -0500
-Message-ID: <d0854272-fe5e-4977-8526-03a980b348f3@ti.com>
-Date: Wed, 18 Jun 2025 14:52:09 +0530
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="WoLFDR8i"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso5141826b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1750238664; x=1750843464; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=POgVgQOHyY5JFhC7ZUirzBX59J0Bo8DjMxk+7VX8j3Y=;
+        b=WoLFDR8iJLt1OL5SDXnzr2iMaObNxbXNHST8XWvSxMZvSZ7KOVIWCZdPzmP0f5/swM
+         oMZCPGoUz2u+KnapF+Rrt+h0Pb+L60SiTxgvNU1KngrrVeFm+/KhoGa2aDPQm0cFaXXh
+         JWT1JOH0nCbVcPOX/NP2d5/tw18XSDEZgeE9s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750238664; x=1750843464;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=POgVgQOHyY5JFhC7ZUirzBX59J0Bo8DjMxk+7VX8j3Y=;
+        b=MUYcnwX+sH43u8/yQCpwkQ1EJGCEjja/09yMh27gVZ7VbnWNuZC9J2eyPWfw0v7qIk
+         A2C/xxfv0Ces6f8mcA5nkPc8A19xB3uuCfyjDAVs+q4ElBFihVQhxetCRpSbcZE4zzBa
+         +Z+7yEkX8u+1O1LBSZij2xqdfvI5UF2i0cSr+i9i/rCVsIL2YVPgW9EZX+Nsbt97fAwE
+         FYlQQnZtXLaRPlnqM85PG+N3BhUcBiUmq31pZZvxhZVaDWX1Ja/211T+rRLfIeHl8aPu
+         xvK7ZFFKCfhXlN1ChBVivXeP1cyE3F7SuzYbJroSr83Tj8cb2LTovNbo/wPWhaQiFt9m
+         ++MQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXIIIhfu710tySx/w6Q3j4GgxYQ7VQSoK+d1kH4Ltuu9Bo0qN6G3/A/OQw4banYyy4Er46lYWKEi7O7dUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytlGaGtxRC+v0o2pANZCxkptO2oY5lO2Q2+qY8RSoDoGxjLFMv
+	EChi4aMq6Be7Vr7pliuPpHjTnZz7DwESB6ZgenIPHh8NKC/lKZJVXwdIPJ1jGZyvQQ==
+X-Gm-Gg: ASbGncvhCP8crYBQ8udFGOAjSRkl0WOwk9QjSlGCNx69cNha5O5VgMHqDbe9PRNPUv6
+	p8nFslAusuy9r+esZTVMcCxqiidF6OS24QMwhBEBeJN8m0Fh40YdBQNemnVsHT8IS2ZGrbhh/jC
+	nwtWe1PoWr0+dRSS6NGuiuJ1lHkDkEq8PrqT5nVit5Xv8R5eGoVLF/qXetF7MOQ845l4yoRaGVb
+	XxbfqqKGY6P3eO9QxL3eWyX3qD+SsA0gO87MmMXtRHQ3IsygUGWQDaHRl0sqgAVgFu675Z8qKhJ
+	C/RS8M7DhAFEdR+bbOYc5aiXuRreq1XukdSToO2u1m969kvoRtKb0AEBaNywlaZJeYk/fVOINhX
+	QwusyuF1SdOWRtjP9VEiO5mfCR6mtzI2slkUek3M=
+X-Google-Smtp-Source: AGHT+IEEXCf9tYsKSdb5r4gM4NhS9cCtxK0XcjZ6Yra6MbUTOtw6mZPoZlZe+86e1KbOYl4Ew/DSEw==
+X-Received: by 2002:a05:6a00:2181:b0:746:2ae9:fc42 with SMTP id d2e1a72fcca58-7489cfc37a3mr22044526b3a.19.1750238663731;
+        Wed, 18 Jun 2025 02:24:23 -0700 (PDT)
+Received: from localhost.localdomain ([192.19.203.250])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffecd08sm10408993b3a.27.2025.06.18.02.24.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 02:24:23 -0700 (PDT)
+From: Vikas Gupta <vikas.gupta@broadcom.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	andrew+netdev@lunn.ch,
+	horms@kernel.org
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	michael.chan@broadcom.com,
+	pavan.chebbi@broadcom.com,
+	vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>
+Subject: [net-next, 00/10] Introducing Broadcom BNGE Ethernet Driver
+Date: Wed, 18 Jun 2025 14:47:30 +0000
+Message-ID: <20250618144743.843815-1-vikas.gupta@broadcom.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/tidss: Decouple max_pclk from tidss feats to remove
- clock dependency
-To: <jyri.sarha@iki.fi>, <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
-        <tomi.valkeinen@ideasonboard.com>
-CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>
-References: <20250618075804.139844-1-j-choudhary@ti.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <20250618075804.139844-1-j-choudhary@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Hi,
+
+This patch series introduces the Ethernet driver for Broadcom’s
+BCM5770X chip family, which supports 50/100/200/400/800 Gbps
+link speeds. The driver is built as the bng_en.ko kernel module.
+
+To keep the series within a reviewable size (~5K lines of code), this initial
+submission focuses on the core infrastructure and initialization, including:
+1) PCIe support (device IDs, probe/remove)
+2) Devlink support
+3) Firmware communication mechanism
+4) Creation of network device
+5) PF Resource management (rings, IRQs, etc. for netdev & aux dev)
+
+Support for Tx/Rx datapaths, link management, ethtool/devlink operations and
+additional features will be introduced in the subsequent patch series.
+
+The bng_en driver shares the bnxt_hsi.h file with the bnxt_en driver, as the bng_en
+driver leverages the hardware communication protocol used by the bnxt_en driver.
+
+Thanks,
+Vikas
 
 
+Vikas Gupta (10):
+  bng_en: Add PCI interface
+  bng_en: Add devlink interface
+  bng_en: Add firmware communication mechanism
+  bng_en: Add initial interaction with firmware
+  bng_en: Add ring memory allocation support
+  bng_en: Add backing store support
+  bng_en: Add resource management support
+  bng_en: Add irq allocation support
+  bng_en: Initialize default configuration
+  bng_en: Add a network device
 
-On 18/06/25 13:28, Jayesh Choudhary wrote:
-> TIDSS hardware by itself does not have variable max_pclk for each VP.
-> Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
-> devices uses "ultra-light" version where each VP supports a max of
-> 300MHz whereas J7* devices uses TIDSS where all VP can support a
-> max pclk of 600MHz.
-> The limitation that has been modeled till now comes from the clock
-> (PLL can only be programmed to a particular max value). Due to this
-> we end up using different compatible for each SoC when the clocking
-> architecture changes for VPs, even when the hardware is essentially
-> the same.
-> max_pclk cannot be entirely removed since the display controller
-> should tell if a particular mode clock can be supported or not in crtc's
-> "mode_valid()" call. So remove "max_pclk_khz" from the static display
-> feat and add it to "tidss_device" structure which would be modified in
-> runtime. In mode_valid() call, check if a best frequency match for mode
-> clock can be found or not using "clk_round_rate()". Based on that,
-> propagate "max_pclk" and check max_clk again only if the requested mode
-> clock is greater than saved value. (As the preferred display mode is
-> usually the max resolution, driver ends up checking the maximum clock
-> the first time itself which is used in subsequent checks)
-> Since TIDSS display controller provides clock tolerance of 5%, we use
-> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
-> before it is called.
-> 
-> This will make the existing compatibles reusable.
-> 
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> ---
-> 
-> Test log on TI's J784S4 SoC with a couple of downstream patches
-> to integrate DSI support on one of the video ports:
-> <https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
-> 
+ MAINTAINERS                                   |   6 +
+ drivers/net/ethernet/broadcom/Kconfig         |   9 +
+ drivers/net/ethernet/broadcom/Makefile        |   1 +
+ drivers/net/ethernet/broadcom/bnge/Makefile   |  12 +
+ drivers/net/ethernet/broadcom/bnge/bnge.h     | 218 ++++++
+ .../net/ethernet/broadcom/bnge/bnge_core.c    | 395 ++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_devlink.c | 267 +++++++
+ .../net/ethernet/broadcom/bnge/bnge_devlink.h |  18 +
+ .../net/ethernet/broadcom/bnge/bnge_ethtool.c |  33 +
+ .../net/ethernet/broadcom/bnge/bnge_ethtool.h |   9 +
+ .../net/ethernet/broadcom/bnge/bnge_hwrm.c    | 503 +++++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_hwrm.h    | 117 +++
+ .../ethernet/broadcom/bnge/bnge_hwrm_lib.c    | 703 ++++++++++++++++++
+ .../ethernet/broadcom/bnge/bnge_hwrm_lib.h    |  27 +
+ .../net/ethernet/broadcom/bnge/bnge_netdev.c  | 266 +++++++
+ .../net/ethernet/broadcom/bnge/bnge_netdev.h  | 206 +++++
+ .../net/ethernet/broadcom/bnge/bnge_resc.c    | 604 +++++++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_resc.h    |  94 +++
+ .../net/ethernet/broadcom/bnge/bnge_rmem.c    | 438 +++++++++++
+ .../net/ethernet/broadcom/bnge/bnge_rmem.h    | 188 +++++
+ 20 files changed, 4114 insertions(+)
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/Makefile
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_core.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_devlink.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_devlink.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_ethtool.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_netdev.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_resc.h
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.c
+ create mode 100644 drivers/net/ethernet/broadcom/bnge/bnge_rmem.h
 
-Hello All,
+-- 
+2.47.1
 
-Just noticed that the downstream patches that I used for DSI for testing
-were applied before this patch in my tree due to which this patch does
-not apply cleanly on the linux-next tree.
-
-Apologies for that. I am rolling v2 ASAP.
-
-Jayesh
-
->  From the logs, we can see that for CLK ID 218 (DSS), we do not have to
-> call sci_clk_determine_rate() multiple times. So there is very little
-> overhead of this call even with multiple mode_valid() called during
-> display run.
->  From weston-simple-egl application, I have seen that there is no frame
-> drop or performance impact.
-> 
-> Once this patch gets in, I will send patches for AM62P and J722S DSS
-> support.
-> 
->   drivers/gpu/drm/tidss/tidss_dispc.c | 76 ++++++++++++-----------------
->   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
->   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
->   3 files changed, 34 insertions(+), 45 deletions(-)
-> 
-
-[...]
