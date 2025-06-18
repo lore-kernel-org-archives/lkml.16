@@ -1,30 +1,48 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83B0B2EE99E;
-	Wed, 18 Jun 2025 15:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE11A2EF28A;
+	Wed, 18 Jun 2025 15:20:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260032; cv=none; b=iXg9vGBqM1u5d4U7JY3kfikOFrGfVLBdcZBWCWg7TJJiHI0fqM7EILOOZQ+81ST/VOdppnxTOXoLKR6CEP1Q3/+q5X55z6xD6QKE3KBOgRNDkBJRxvv5HfIt+eedIWZ1zcqD6UI3T4dBU/L67PNEOZnrzBL0duPJmLhjuu0PITE=
+	t=1750260050; cv=none; b=uHc4VvWcMgFjA7zy0YNgDjKA9kWa94wrZ374tswetyFW5wkvkA1w6MqLdR9ijFjiacO2OoNdibuy5KptK47UgOUPXr3R/Tp0sxkC+K6wSJTXhYoNBruAGwMug+0HIF0E1caZpOrpkAHPKJplcQBlMCNWYbSyfO5qmBdlOhmfKLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260032; c=relaxed/simple;
-	bh=dBMetiDqRwuA7EYSG1BxFLtDf2bO5RsAThvIYbtXxoU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kQPSK16OkKgY2aj72H/EiZ77kUXn1cM+LBl3XLuhlY5fQEbOdDOu5OT22AvhSlX6vHSlh19E+3VifgSCgzKAqvaxOvCtZmca8TKJirXcHz4yZy/YXhJK6AiHIid8bdtFewhFnGeviCiVdyZV+zb2CQhsqX4Er2e3jXQeKeT7Kyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=qJOXrnFW; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750260050; c=relaxed/simple;
+	bh=qPwi2JfQCu4n2PS79SmzYcP++oGPtpOHOINnWSZXAuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=k0UHxzZ9Uvy0tnmOhEbrfIulhJ1q3xLU7hTLdSzwvGhPq5XxXnmoE1uwami4iH+MviYdjrJxXaKyS8CWAbHwdg83ptM/IhZmF1ovBDdoBJ9LBemOhk7U8thOR6KfzSS+dsu88/6X5K0Cv2sRMwDQxDmJKaUpJkL3JgSo0JUQiAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jvfsGTs3; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="qJOXrnFW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
-	Content-Type; bh=eZXPwb9W2kal/+I9MYTP/YSPhsVDBv6emckwljPlJ/g=;
-	b=qJOXrnFW88lIR1+4/5aE//cQL5bJBvIeY0OkeSwSsC/soyYMWhZdNXghqZnTPv
-	ipJFgM13II3OATtyQxGgHvT+rdM/EdmJCIvrYuRw/uzXsAQYSGOwiDvewqgAvga6
-	hlFwHrYIC7TfAvEwx9QGfNmGoGvRZuyg13dvKQnnZcsZM=
-Received: from [IPV6:240e:b8f:919b:3100:8440:da7c:be7e:927f] (unknown [])
-	by gzga-smtp-mtada-g0-0 (Coremail) with SMTP id _____wDnT_IR2VJooCEIAQ--.14627S2;
-	Wed, 18 Jun 2025 23:19:46 +0800 (CST)
-Message-ID: <927e3030-756c-4b1b-a797-5f556ba2b101@163.com>
-Date: Wed, 18 Jun 2025 23:19:45 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jvfsGTs3"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I9JLJ5031604;
+	Wed, 18 Jun 2025 15:20:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4JxJhlTKaWLHxrr2sQ6HBb0cbTYMQOvF9DeXN1OYDf4=; b=jvfsGTs3Pe+noeRu
+	CNcRfaYnT0EIyyjDpznzPO6MZB4P2ow3qOhR8sP96QIyVsY12zwBS8mCsrbW/qqF
+	p8v/Ljq+pUIfI2u7pKJuWxQ18gIFDzTcM+woEltfhlU59xsMRXz1T+ijjJYtVX9d
+	CH3m4YExE7+qtSPafp8uYWU9GKzRDV0nV9wVncJbNaHI1aqwL6fAULx1/arSues8
+	IQ8gDT0owQQ21HBIZy4PnkiSD2xL2Jvm5XtAkuB2AujOoOcSxzhLOKNYIKwHx6KG
+	dXSs9b2XZp60Wb7fRZTifKCBDZ+r+ZmPV9kWZuOgDfxAwU456/4xWldmiRatwTkK
+	nuc/OA==
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4791h9cjgk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 15:20:34 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55IFKXq3032498
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 15:20:33 GMT
+Received: from [10.253.36.28] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Jun
+ 2025 08:20:28 -0700
+Message-ID: <817d069a-5e0e-41a7-95bb-e3c3ac964346@quicinc.com>
+Date: Wed, 18 Jun 2025 23:20:25 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,82 +50,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
- dw_pcie_clear_and_set_dword helper
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org,
- bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org,
- robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250611204011.GA868320@bhelgaas>
- <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com> <aFLTwWG5lOTunEq3@ryzen>
+Subject: Re: [PATCH 8/8] arm64: defconfig: Build NSS clock controller driver
+ for IPQ5424
+To: Krzysztof Kozlowski <krzk@kernel.org>, Georgi Djakov <djakov@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anusha Rao <quic_anusha@quicinc.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will
+ Deacon" <will@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <quic_kkumarcs@quicinc.com>,
+        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
+        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>
+References: <20250617-qcom_ipq5424_nsscc-v1-0-4dc2d6b3cdfc@quicinc.com>
+ <20250617-qcom_ipq5424_nsscc-v1-8-4dc2d6b3cdfc@quicinc.com>
+ <cf07ac73-9908-4d96-bf44-1f40186df189@kernel.org>
 Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aFLTwWG5lOTunEq3@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <cf07ac73-9908-4d96-bf44-1f40186df189@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnT_IR2VJooCEIAQ--.14627S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WFy7Ar1rKw4xXrWrJw1DJrb_yoW8Zry5pa
-	yYqa1Yka1DJFWUKF4Iyw15ZFyjq3s3t3sIqrn8J34Utrn8ZrWYgr9ayF4jkr97GrnI9w4a
-	v3yYqas5Ca4YyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UrnYwUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwlwo2hS1QJYCQAFs4
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Omg8Eqdm4Mb3wLpwZXdkBmZmrsUHJ3YG
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDEyOSBTYWx0ZWRfX+/IZ9J8TT/Td
+ G8mYy/+/6x+v7Ha825s4bs5VEljbG3WJNFdYKLMUTFymiBpGY+o4aF9BS5EzMWJADvf4FqPb22O
+ wRGHvrFzhJWd2z8zDES+qaoYrWNMrdvDolh0N7VU2CJyimEzb+ZXXXb1ASEF4YMzdrKeUTkJMbk
+ PuiUQWOlTRGd9ZMJWUbqp+W4K6hGvDolyJpLkh96d3YVT4fveab8KjM4KHhvyTdt+bWqBINnsZY
+ KiSssFXGyLExhX2E8H72re4CyR1IAdQBPgCJ/H63s7fTd2HUzEcy7OpSNRVxdmGGPa50znNaerX
+ e580Emrf85HFxRnHxG+0o5wPfL8Zmqzvl2RAt+nuVC7EwkI1ZQq6Pmey64zEjsGqla6iIjaS6Jt
+ LFNOmm7/Xzm+8WZkAwNHU7WK61RwiXZUk4BbqE//hdFBWded90wkh8L98yW5Yf6H4m+w+EYa
+X-Authority-Analysis: v=2.4 cv=UL/dHDfy c=1 sm=1 tr=0 ts=6852d942 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=U-iYb9-RqBH3_7pkrJoA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: Omg8Eqdm4Mb3wLpwZXdkBmZmrsUHJ3YG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 clxscore=1015 suspectscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 mlxlogscore=857
+ malwarescore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506180129
 
 
 
-On 2025/6/18 22:57, Niklas Cassel wrote:
-> Hello Hans,
+On 6/17/2025 10:49 PM, Krzysztof Kozlowski wrote:
+> On 17/06/2025 14:06, Luo Jie wrote:
+>> NSS clock controller is needed for supplying clocks and resets
+>> to the networking blocks for the Ethernet functions on the
+>> IPQ5424 platforms.
 > 
-> On Thu, Jun 12, 2025 at 09:07:40AM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/6/12 04:40, Bjorn Helgaas wrote:
->>> On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
->>>> Register bit manipulation in DesignWare PCIe controllers currently
->>>> uses repetitive read-modify-write sequences across multiple drivers.
->>>> This pattern leads to code duplication and increases maintenance
->>>> complexity as each driver implements similar logic with minor variations.
->>>
->>> When you repost this, can you fix whatever is keeping this series from
->>> being threaded?  All the patches should be responses to the 00/13
->>> cover letter.  Don't repost until at least a couple of days have
->>> elapsed and you make non-trivial changes.
->>>
->>
->> Dear Bjorn,
->>
->> Every time I send an email to the PCI main list, I will send it to myself
->> first, but I have encountered the following problems:
->> Whether I send my personal 163 email, Outlook email, or my company's cixtech
->> email, only 10 patches can be sent. So in the end, I sent each patch
->> separately.
->>
->> This is the first time I have sent an email with a series of more than 10
->> patches. My configuration is as follows:
->> smtpserver = smtp.163.com
->> smtpserverport = 25
->> smtpenablestarttlsauto = true
->> smtpuser = 18255117159@163.com
->> smtppass = xxx
->>
->> I suspect it's a problem with China's 163 email. Next, I will try to send it
->> using the company's environment. Or when I send this series of patches next
->> time, I will paste the web link address of each patch in by replying
->> 0000-cover-letter.patch.
+> Which boards need it?
+
+All boards based on the IPQ5424 SoC require this driver to be
+included in the build. I will update the commit message to
+clarify this requirement.
+
 > 
-> Perhaps the git-send-email options --batch-size and --relogin-delay can be
-> of help to you:
-> https://git-scm.com/docs/git-send-email#Documentation/git-send-email.txt---batch-sizenum
+> Also here not really proper wrapping.
+
+I will correct the line wrapping in the next revision.
+
 > 
-> 
-
-Dear Niklas,
-
-Wow! Thank you very much for your help. My local test is normal.
-
-Best regards,
-Hans
-
-> Kind regards,
-> Niklas
+> Best regards,
+> Krzysztof
 
