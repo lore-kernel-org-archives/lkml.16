@@ -1,331 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8878A2FC01F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 983DB2FCE1B;
+	Wed, 18 Jun 2025 18:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750273019; cv=none; b=C+Q+gION4TxOR/jP+Kp/oUS+ja3tMj2+K38nKwbJQe088UEF6iIfFkUBWt2Mk/Lty1xT2e8yed25HRqVKyUDo2NuBtekgq14r625Yw8gmfOAP2zxs8A75eu5EVZJDGq10x5HKAVLVZGhxAxCtQ6TAe9wfG5LJLWDU5l6DozoVTE=
+	t=1750273020; cv=none; b=FP6TCaGtT988q/9PxdPMRotWgM915IuOk1YXc8hLbSaSzxqZ+N5kx7TYp+zoI8Yj/S0nuy+UGJrS8ZKZTHapFJHGTJKQE5Xr+/OksYtED/S6wxgH4bNIqhOQ2O6Wi1ltOdYjJg6puV+oypEnuS/l/7b7zXSSfO1PDIsMw8/jkTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750273019; c=relaxed/simple;
-	bh=cqOKYY53B9eHRrXZlOhenLfZBd1gdd6WStIFOilJbjk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=srOXlojtiyXOyu8rcHi/W+HwlbgAnPsoxTCpK5XdcuRuiBVa91xfUb/M39Vabx5a6UOsL7os9W9K0pgPmSKjzp5dtIwpLYzkwNzswSZI9RCKWziMfKszqp/VCVBvuqHah7OuGVHdWYtK/N6fmwrxOKJqQ1BcakPa8F0/Niri0II=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bRL9TDrC; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750273020; c=relaxed/simple;
+	bh=J1oaDCl0btmib2TF2x64Gp/aTFdcwOsZmN0AYQsV/aA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CbMPA098H3yDuN+vp7A9lVM7pCHw/yJvuB6EQ9r/viCEKdsZIyQA4RsGpyr0Dwo1yA6txvyvzBm0fCezgXA74e2ovvQH2q0hC1wX8Td9b+DTUYP0owISP6TbJPh13hgE6HJI6s5QDmqwy1z8+VoaoVcrXf9Pf9i4DFd57fSn0jw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwjKnCm+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bRL9TDrC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750273017; x=1781809017;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=cqOKYY53B9eHRrXZlOhenLfZBd1gdd6WStIFOilJbjk=;
-  b=bRL9TDrCsYsAKdp4gE4OSp8RlYnSMQ78xSZtEK6Q+NJJpxcYxFDRtxb5
-   pPkWqblvFHk7MZYk8W4f727KkqNbOARroHya2IG/KV4NUmyEywfTvd4dE
-   G5zaSmv27yB61wY55vrXyCc1L9Ql4mQR9niyJiEO1HaEEhmIAlxhvej2I
-   SKRv3vvPnCZ9HyhJfrVm0T5s6fS/Ifb+Q4PFfJN7SaUEs1nCiU4ALgl41
-   xCskeTjgsY02nYJGoGpbISqIySqMVICZccv1pvEp4OxiznvGt8JFlRyQU
-   LQ/UYh/NetHrdV31idbpGJnDNQrAzyFsAaBwIuO+FLR+5ZofpwhStnpk7
-   Q==;
-X-CSE-ConnectionGUID: Ie+9sOlfTiqhcgjXUNYdMg==
-X-CSE-MsgGUID: 5OeD/2omRQi3kDGECrRNPg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52210225"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="52210225"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:57 -0700
-X-CSE-ConnectionGUID: Ht0xyuPQSLqqiUjhTlYwrA==
-X-CSE-MsgGUID: 9bEMaxA1Sq2iE1N27MIjbg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="153952086"
-Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 11:56:54 -0700
-From: Badal Nilawar <badal.nilawar@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com,
-	alexander.usyskin@intel.com,
-	gregkh@linuxfoundation.org,
-	daniele.ceraolospurio@intel.com,
-	jgg@nvidia.com
-Subject: [PATCH v3 09/10] drm/xe/xe_late_bind_fw: Extract and print version info
-Date: Thu, 19 Jun 2025 00:30:06 +0530
-Message-Id: <20250618190007.2932322-10-badal.nilawar@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250618190007.2932322-1-badal.nilawar@intel.com>
-References: <20250618190007.2932322-1-badal.nilawar@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwjKnCm+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30BCEC4CEE7;
+	Wed, 18 Jun 2025 18:56:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750273020;
+	bh=J1oaDCl0btmib2TF2x64Gp/aTFdcwOsZmN0AYQsV/aA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KwjKnCm+IEuYL9+7rJDCrbBlbOWtuzx82HjCb9oODKRV8t2NoQ1ZU08JftBj6MEOJ
+	 JlXHEJopBynPhzGjNQq80f46e7lSPfNtAwvZqYL+IQMKYcekQ2dds9p+6RdE9lHvlr
+	 CFWwqWNuHYJvZxLBxfoNoxXzz+Exq+AHIQzXhSFxJoKk14/ZTCTnjNyMgwNJM5Ob4g
+	 GfLp6oD3H/OL66MI5rWb795gZ1vC1lGUOyWbbAmPfAcDR1+CxkbljeCZoNs/onhHx+
+	 sWm4LCWVwZH1jHikm5SSSwoDhhLjZzK4kY4tJfIQRv0xTwqikN5pnIaE7Vd8SNvs4O
+	 oK7dB3JlBCWVQ==
+Date: Wed, 18 Jun 2025 19:56:56 +0100
+From: Simon Horman <horms@kernel.org>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: gianfar: Use
+ device_get_named_child_node_count()
+Message-ID: <20250618185656.GZ1699@horms.kernel.org>
+References: <3a33988fc042588cb00a0bfc5ad64e749cb0eb1f.1750248902.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a33988fc042588cb00a0bfc5ad64e749cb0eb1f.1750248902.git.mazziesaccount@gmail.com>
 
-Extract and print version info of the late binding binary.
+On Wed, Jun 18, 2025 at 03:22:02PM +0300, Matti Vaittinen wrote:
+> We can avoid open-coding the loop construct which counts firmware child
+> nodes with a specific name by using the newly added
+> device_get_named_child_node_count().
+> 
+> The gianfar driver has such open-coded loop. Replace it with the
+> device_get_child_node_count_named().
+> 
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> Previously sent as part of the BD79124 ADC series:
+> https://lore.kernel.org/all/95b6015cd5f6fcce535982118543d47504ed609f.1742225817.git.mazziesaccount@gmail.com/
+> 
+> All dependencies should be in net-next now.
+> 
+> Compile tested only!
 
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
----
- drivers/gpu/drm/xe/xe_late_bind_fw.c       | 132 ++++++++++++++++++++-
- drivers/gpu/drm/xe/xe_late_bind_fw_types.h |   3 +
- drivers/gpu/drm/xe/xe_uc_fw_abi.h          |  69 +++++++++++
- 3 files changed, 203 insertions(+), 1 deletion(-)
+Thanks for resending.
 
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-index 001e526e569a..f71d5825ac5b 100644
---- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-@@ -45,6 +45,129 @@ late_bind_to_xe(struct xe_late_bind *late_bind)
- 	return container_of(late_bind, struct xe_device, late_bind);
- }
- 
-+/* Refer to the "Late Bind based Firmware Layout" documentation entry for details */
-+static int parse_cpd_header(struct xe_late_bind *late_bind, u32 fw_id,
-+			    const void *data, size_t size, const char *manifest_entry)
-+{
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+	const struct gsc_cpd_header_v2 *header = data;
-+	const struct gsc_manifest_header *manifest;
-+	const struct gsc_cpd_entry *entry;
-+	size_t min_size = sizeof(*header);
-+	struct xe_late_bind_fw *lb_fw;
-+	u32 offset;
-+	int i;
-+
-+	if (fw_id >= MAX_FW_ID)
-+		return -EINVAL;
-+	lb_fw = &late_bind->late_bind_fw[fw_id];
-+
-+	/* manifest_entry is mandatory */
-+	xe_assert(xe, manifest_entry);
-+
-+	if (size < min_size || header->header_marker != GSC_CPD_HEADER_MARKER)
-+		return -ENOENT;
-+
-+	if (header->header_length < sizeof(struct gsc_cpd_header_v2)) {
-+		drm_err(&xe->drm, "%s late binding fw: Invalid CPD header length %u!\n",
-+			fw_id_to_name[lb_fw->id], header->header_length);
-+		return -EINVAL;
-+	}
-+
-+	min_size = header->header_length + sizeof(struct gsc_cpd_entry) * header->num_of_entries;
-+	if (size < min_size) {
-+		drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
-+			fw_id_to_name[lb_fw->id], size, min_size);
-+		return -ENODATA;
-+	}
-+
-+	/* Look for the manifest first */
-+	entry = (void *)header + header->header_length;
-+	for (i = 0; i < header->num_of_entries; i++, entry++)
-+		if (strcmp(entry->name, manifest_entry) == 0)
-+			offset = entry->offset & GSC_CPD_ENTRY_OFFSET_MASK;
-+
-+	if (!offset) {
-+		drm_err(&xe->drm, "%s late binding fw: Failed to find manifest_entry\n",
-+			fw_id_to_name[lb_fw->id]);
-+		return -ENODATA;
-+	}
-+
-+	min_size = offset + sizeof(struct gsc_manifest_header);
-+	if (size < min_size) {
-+		drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
-+			fw_id_to_name[lb_fw->id], size, min_size);
-+		return -ENODATA;
-+	}
-+
-+	manifest = data + offset;
-+
-+	lb_fw->version.major = manifest->fw_version.major;
-+	lb_fw->version.minor = manifest->fw_version.minor;
-+	lb_fw->version.hotfix = manifest->fw_version.hotfix;
-+	lb_fw->version.build = manifest->fw_version.build;
-+
-+	return 0;
-+}
-+
-+/* Refer to the "Late Bind based Firmware Layout" documentation entry for details */
-+static int parse_lb_layout(struct xe_late_bind *late_bind, u32 fw_id,
-+			   const void *data, size_t size, const char *fpt_entry)
-+{
-+	struct xe_device *xe = late_bind_to_xe(late_bind);
-+	const struct csc_fpt_header *header = data;
-+	const struct csc_fpt_entry *entry;
-+	size_t min_size = sizeof(*header);
-+	struct xe_late_bind_fw *lb_fw;
-+	u32 offset;
-+	int i;
-+
-+	if (fw_id >= MAX_FW_ID)
-+		return -EINVAL;
-+
-+	lb_fw = &late_bind->late_bind_fw[fw_id];
-+
-+	/* fpt_entry is mandatory */
-+	xe_assert(xe, fpt_entry);
-+
-+	if (size < min_size || header->header_marker != CSC_FPT_HEADER_MARKER)
-+		return -ENOENT;
-+
-+	if (header->header_length < sizeof(struct csc_fpt_header)) {
-+		drm_err(&xe->drm, "%s late binding fw: Invalid FPT header length %u!\n",
-+			fw_id_to_name[lb_fw->id], header->header_length);
-+		return -EINVAL;
-+	}
-+
-+	min_size = header->header_length + sizeof(struct csc_fpt_entry) * header->num_of_entries;
-+	if (size < min_size) {
-+		drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
-+			fw_id_to_name[lb_fw->id], size, min_size);
-+		return -ENODATA;
-+	}
-+
-+	/* Look for the manifest first */
-+	entry = (void *)header + header->header_length;
-+	for (i = 0; i < header->num_of_entries; i++, entry++)
-+		if (strcmp(entry->name, fpt_entry) == 0)
-+			offset = entry->offset;
-+
-+	if (!offset) {
-+		drm_err(&xe->drm, "%s late binding fw: Failed to find fpt_entry\n",
-+			fw_id_to_name[lb_fw->id]);
-+		return -ENODATA;
-+	}
-+
-+	min_size = offset + sizeof(struct gsc_cpd_header_v2);
-+	if (size < min_size) {
-+		drm_err(&xe->drm, "%s late binding fw: too small! %zu < %zu\n",
-+			fw_id_to_name[lb_fw->id], size, min_size);
-+		return -ENODATA;
-+	}
-+
-+	return parse_cpd_header(late_bind, fw_id, data + offset, size - offset, "LTES.man");
-+}
-+
- static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
- {
- 	struct xe_device *xe = late_bind_to_xe(late_bind);
-@@ -185,8 +308,15 @@ static int __xe_late_bind_fw_init(struct xe_late_bind *late_bind, u32 fw_id)
- 		return -ENODATA;
- 	}
- 
--	lb_fw->payload_size = fw->size;
-+	ret = parse_lb_layout(late_bind, fw_id, fw->data, fw->size, "LTES");
-+	if (ret)
-+		return ret;
-+
-+	drm_info(&xe->drm, "Using %s firmware from %s version %d.%d.%d\n",
-+		 fw_id_to_name[lb_fw->id], lb_fw->blob_path,
-+		 lb_fw->version.major, lb_fw->version.minor, lb_fw->version.hotfix);
- 
-+	lb_fw->payload_size = fw->size;
- 	memcpy(lb_fw->payload, fw->data, lb_fw->payload_size);
- 	release_firmware(fw);
- 	INIT_WORK(&lb_fw->work, late_bind_work);
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-index f79f0c0b2c4a..3fc4f350c81f 100644
---- a/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw_types.h
-@@ -10,6 +10,7 @@
- #include <linux/mutex.h>
- #include <linux/types.h>
- #include <linux/workqueue.h>
-+#include "xe_uc_fw_abi.h"
- 
- #define MAX_PAYLOAD_SIZE (1024 * 4)
- 
-@@ -41,6 +42,8 @@ struct xe_late_bind_fw {
- 	size_t payload_size;
- 	/** @late_bind_fw.work: worker to upload latebind blob */
- 	struct work_struct work;
-+	/** @late_bind_fw.version: late binding blob manifest version */
-+	struct gsc_version version;
- };
- 
- /**
-diff --git a/drivers/gpu/drm/xe/xe_uc_fw_abi.h b/drivers/gpu/drm/xe/xe_uc_fw_abi.h
-index 87ade41209d0..13da2ca96817 100644
---- a/drivers/gpu/drm/xe/xe_uc_fw_abi.h
-+++ b/drivers/gpu/drm/xe/xe_uc_fw_abi.h
-@@ -318,4 +318,73 @@ struct gsc_manifest_header {
- 	u32 exponent_size; /* in dwords */
- } __packed;
- 
-+/**
-+ * DOC: Late binding Firmware Layout
-+ *
-+ * The Late binding binary starts with FPT header, which contains locations
-+ * of various partitions of the binary. Here we're interested in finding out
-+ * manifest version. To the manifest version, we need to locate CPD header
-+ * one of the entry in CPD header points to manifest header. Manifest header
-+ * contains the version.
-+ *
-+ *      +================================================+
-+ *      |  FPT Header                                    |
-+ *      +================================================+
-+ *      |  FPT entries[]                                 |
-+ *      |      entry1                                    |
-+ *      |      ...                                       |
-+ *      |      entryX                                    |
-+ *      |          "LTES"                                |
-+ *      |          ...                                   |
-+ *      |          offset  >-----------------------------|------o
-+ *      +================================================+      |
-+ *                                                              |
-+ *      +================================================+      |
-+ *      |  CPD Header                                    |<-----o
-+ *      +================================================+
-+ *      |  CPD entries[]                                 |
-+ *      |      entry1                                    |
-+ *      |      ...                                       |
-+ *      |      entryX                                    |
-+ *      |          "LTES.man"                            |
-+ *      |           ...                                  |
-+ *      |           offset  >----------------------------|------o
-+ *      +================================================+      |
-+ *                                                              |
-+ *      +================================================+      |
-+ *      |  Manifest Header                               |<-----o
-+ *      |      ...                                       |
-+ *      |      FW version                                |
-+ *      |      ...                                       |
-+ *      +================================================+
-+ */
-+
-+/* FPT Headers */
-+struct csc_fpt_header {
-+	u32 header_marker;
-+#define CSC_FPT_HEADER_MARKER 0x54504624
-+	u32 num_of_entries;
-+	u8 header_version;
-+	u8 entry_version;
-+	u8 header_length; /* in bytes */
-+	u8 flags;
-+	u16 ticks_to_add;
-+	u16 tokens_to_add;
-+	u32 uma_size;
-+	u32 crc32;
-+	u16 fitc_major;
-+	u16 fitc_minor;
-+	u16 fitc_hotfix;
-+	u16 fitc_build;
-+} __packed;
-+
-+struct csc_fpt_entry {
-+	u8 name[4]; /* partition name */
-+	u32 reserved1;
-+	u32 offset; /* offset from beginning of CSE region */
-+	u32 length; /* partition length in bytes */
-+	u32 reserved2[3];
-+	u32 partition_flags;
-+} __packed;
-+
- #endif
--- 
-2.34.1
+Reviewed-by: Simon Horman <horms@kernel.org>
+
 
