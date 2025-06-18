@@ -1,100 +1,163 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8D42E54AE
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A211DA5F;
+	Wed, 18 Jun 2025 12:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249670; cv=none; b=S5HoaKG1tE8hV2kcHtp2iyvEQAKR7cVjAj7+/N7p20KvrrXR4yVUysJWQqRZ3p1xEB7o/DnsLzaN33TqolxgDtlo84a+yoPkoC0EUIluQK8N+TQSNwfzQPqRBL1Ak4ubc79lAx6MVj43mPBeujXcYi+fkKvkDji976JIIiWyrLY=
+	t=1750249669; cv=none; b=Dpyv2P3qR179GmGhILZkQxPsFgUYFtUQX2PXWdcxyBHtBUb0MEldjKB1nFbO2FG/G0Y9usO9E3cEqB4Ra48jQDZUnSNNNWb8ajfhS0Amtt1PsZqm9vkhW5ki4YcoThLOK/zrBMuyA1I4yG2HsoD/5yAlpp9fHttgEkwXS69RUFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249670; c=relaxed/simple;
-	bh=lvDeYY1tyHLW44AqHwWF82BKnD0o1q8Cao4PGtdqJcc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B0+xZGF6uC2uuhlExvjcketbc8NW5Cm6ENAIgYeETYxC8uBH/OBmWJq2HgM0N9zPfswh1mTHZSot7rRYeTdh8mFCQwa2NNX4Ve2TI0lS4gWjfBM9nsWgROC3WykxtqiOLJi3W9tvCwce3l4Uima5383GWnK4cPm/OdW1Kl5qTk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q62LiJ4a; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750249669; c=relaxed/simple;
+	bh=bG1IsS6hMOeZLmXSaRSFPWeiiJE2wDS2Me7R6e5Xbsg=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=BXugzgbhjDgjv7ktYsil0qGniAsHM/M5CUA2GH0TaTfBNsvEWCZLv3DB7EXhJmtl2CtmIejaSH6NLUcL3UGEsjOSD3FvSR3WyKEYx2Qf44lbxhImKuKFGXCdCJtWRKxUFc5hhe8KM40B9PEGzD+5gNYaPiVE0xT/qRiitGKNLaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=gSfgqVKq; arc=none smtp.client-ip=185.70.43.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q62LiJ4a"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so4917121fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:27:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750249666; x=1750854466; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lvDeYY1tyHLW44AqHwWF82BKnD0o1q8Cao4PGtdqJcc=;
-        b=Q62LiJ4anBM9mCtPO1s1wPQafnXMiY44Wb6sed9JH7B+3kqfcj6OlRn0afcRWdxW2T
-         GbRcS2/PDp9OME8vCM6aCKmKaSnRlRkd59Vywk+e0f+LJKKgmpr0IkbPHWiFpdeQJTed
-         Ki1UZKrjGbTKc3php1hkcjQXclqOj8kH4nvJPUbCkJ64BuXCSjNYt7EpEJ9H8YK6/UAt
-         hYlkTo3J5CwzbkEY7LCkAbhwCYvxdwlCVBsecB6OxorgUdahP0dPqdIUTSpYbRS0VW0b
-         jmNktZZFxYS4UhcC6SxCXM/VnJgbSDqrjF/aSDVzedYhZLiOR6sWKcwvIHp7m1Ky8hvt
-         U3wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249666; x=1750854466;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lvDeYY1tyHLW44AqHwWF82BKnD0o1q8Cao4PGtdqJcc=;
-        b=qlNvc4SgXUHGbNO72SLd6OuJ/rTelGnOaGFz6qvC4FMZ0hoU1ZHHMOc5fs8TGUNg4g
-         6jnLc8j0pI+CeNcTf9Tjsc3NAJtwOvFwKIPSji/OLT/RQ+5pRUpvCbD3IH03plO73/jR
-         qlvF6FCT/IovkeFHgu0wRSr3rl4RAPa1/lKJQ0hwga9t+kMdonxfLrKkdASuUP/THJ33
-         7pE1NsmpMczELHGfCOvr9RqGHJ1u/L1XacqIwjltoWJdMQWp4N/4cRKNrUwbKFp8Cjxl
-         PcuKVd/riKoydQ/UeLvdny1iFWrsyOcPwxL8Uy63eXkcNP469jE/t3FDEuXiemmMXR+Y
-         hOvA==
-X-Forwarded-Encrypted: i=1; AJvYcCXtYcxFL62dFvE14aOIkY7FR9hnABmEpKsH3e+VEJgZV9Q5LXMUT17ryuh7MUJrZz1LHk4OOZj/tnkj6Co=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxib+fBN6JnXmIRyDep044o10Q0FJyXXVibtW8MHxsm31CzytCX
-	GBC+UkH6+2Va+VSJWmaJ3qJan2zJHFJGqlCHyN49Z+3nyZgIa+rfa/mQjQXlNjwX+8ARl6/Ma7b
-	C+S0V8j90ySKQ46jlxeNYwPpRjVz7H4qggcBUzNNUJw==
-X-Gm-Gg: ASbGncssRuxkr/GhfwdrJNLSUcHOBU/uoGZi6VDSxDkbyugcgsU3bDVUcKSbertwIpl
-	VXTnms01oDAXX+Y7ovMHCk2k5S2UVebWEQfVxNpc3jSNZzl22Ds20nJRmq19naBkntACXz7i/Na
-	3SpgfcZht3juo9yeWat0AEvzaDvtuX1WpNJK9aI0igXVA=
-X-Google-Smtp-Source: AGHT+IEO41Nyhls6z+tYoLHnOV+DOmxEURxkPhjx4goE9pZdzx8ZYG8pWoqgfu9hnvxH3hdYq4NmpJCLdC/k/NenFbc=
-X-Received: by 2002:a05:651c:169c:b0:32b:4441:e1a6 with SMTP id
- 38308e7fff4ca-32b7cece005mr6055841fa.1.1750249666214; Wed, 18 Jun 2025
- 05:27:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="gSfgqVKq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
+	s=protonmail3; t=1750249658; x=1750508858;
+	bh=j+X3ySHMY7CDB2I3Akroj+bloW3A9Lb14cdZC0C3wDE=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=gSfgqVKqoJPCZumVgMdPg7bpSzC4eQkRHENw2Z2klOelhylmjCtUY3sPV8fp8OaB2
+	 NxRg0zWgQrufjp12x64f6wWhyZYIB4oAIP4X2x1rytwlcjWINpLdIADIZrwQ1nrsni
+	 lK9qwYnSSArcp6uFWxGcLwlb7KXTsoig93nIEK7wS88FB+SdYcJQLkIHSqLX1xLtHt
+	 HMYHha0ptT581ckS00fY53zlIL5dEb30ag0adFEkcOfvuWJq8RQIApFpKKQUVTS+1j
+	 E+ara4ZyYkIdIceTQxlbwLeijuVJslTEjQA6rTnt5QhyDKwTE/zKTONFDEKo2wZAx7
+	 i3wM5WF+O7WRw==
+Date: Wed, 18 Jun 2025 12:27:33 +0000
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Benno Lossin <lossin@kernel.org>, Asahi Lina <lina+kernel@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, Oliver Mangold <oliver.mangold@pm.me>
+Subject: [PATCH v11 0/4] New trait OwnableRefCounted for ARef<->Owned conversion.
+Message-ID: <20250618-unique-ref-v11-0-49eadcdc0aa6@pm.me>
+Feedback-ID: 31808448:user:proton
+X-Pm-Message-ID: 589d1348d116c1a40231fbf6c34596ed6e757e98
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616-gpiochip-set-rv-net-v2-0-cae0b182a552@linaro.org> <20250616-gpiochip-set-rv-net-v2-1-cae0b182a552@linaro.org>
-In-Reply-To: <20250616-gpiochip-set-rv-net-v2-1-cae0b182a552@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 14:27:32 +0200
-X-Gm-Features: AX0GCFudNOYMyXLJ7vMaeO2dSvhoaQWQJroQG17p-nXTR5Iec4T0QKmapC2D9eA
-Message-ID: <CACRpkdYJ9O_y9TGTOw8mzf1=LvaxYCE463MPf12YaXUQCKaLzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] net: dsa: vsc73xx: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	"Chester A. Unal" <chester.a.unal@arinc9.com>, Daniel Golle <daniel@makrotopia.org>, 
-	DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-can@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 9:24=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+This allows to convert between ARef<T> and Owned<T> by
+implementing the new trait OwnedRefCounted.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+This way we will have a shared/unique reference counting scheme
+for types with built-in refcounts in analogy to Arc/UniqueArc.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+---
+Changes in v11:
+- Rework of documentation. I tried to honor all requests for changes "in
+  spirit" plus some clearifications and corrections of my own.
+- Dropping `SimpleOwnedRefCounted` by request from Alice, as it creates a
+  potentially problematic blanket implementation (which a derive macro that
+  could be created later would not have).
+- Dropping Miguel's "kbuild: provide `RUSTC_HAS_DO_NOT_RECOMMEND` symbol"
+  patch, as it is not needed anymore after dropping `SimpleOwnedRefCounted`=
+.
+  (I can add it again, if it is considered useful anyway).
+- Link to v10: https://lore.kernel.org/r/20250502-unique-ref-v10-0-25de64c0=
+307f@pm.me
 
-Yours,
-Linus Walleij
+Changes in v10:
+- Moved kernel/ownable.rs to kernel/types/ownable.rs
+- Fixes in documentation / comments as suggested by Andreas Hindborg
+- Added Reviewed-by comment for Andreas Hindborg
+- Fix rustfmt of pid_namespace.rs
+- Link to v9: https://lore.kernel.org/r/20250325-unique-ref-v9-0-e91618c1de=
+26@pm.me
+
+Changes in v9:
+- Rebase onto v6.14-rc7
+- Move Ownable/OwnedRefCounted/Ownable, etc., into separate module
+- Documentation fixes to Ownable/OwnableMut/OwnableRefCounted
+- Add missing SAFETY documentation to ARef example
+- Link to v8: https://lore.kernel.org/r/20250313-unique-ref-v8-0-3082ffc67a=
+31@pm.me
+
+Changes in v8:
+- Fix Co-developed-by and Suggested-by tags as suggested by Miguel and Boqu=
+n
+- Some small documentation fixes in Owned/Ownable patch
+- removing redundant trait constraint on DerefMut for Owned as suggested by=
+ Boqun Feng
+- make SimpleOwnedRefCounted no longer implement RefCounted as suggested by=
+ Boqun Feng
+- documentation for RefCounted as suggested by Boqun Feng
+- Link to v7: https://lore.kernel.org/r/20250310-unique-ref-v7-0-4caddb78aa=
+05@pm.me
+
+Changes in v7:
+- Squash patch to make Owned::from_raw/into_raw public into parent
+- Added Signed-off-by to other people's commits
+- Link to v6: https://lore.kernel.org/r/20250310-unique-ref-v6-0-1ff5355861=
+7e@pm.me
+
+Changes in v6:
+- Changed comments/formatting as suggested by Miguel Ojeda
+- Included and used new config flag RUSTC_HAS_DO_NOT_RECOMMEND,
+  thus no changes to types.rs will be needed when the attribute
+  becomes available.
+- Fixed commit message for Owned patch.
+- Link to v5: https://lore.kernel.org/r/20250307-unique-ref-v5-0-bffeb63327=
+7e@pm.me
+
+Changes in v5:
+- Rebase the whole thing on top of the Ownable/Owned traits by Asahi Lina.
+- Rename AlwaysRefCounted to RefCounted and make AlwaysRefCounted a
+  marker trait instead to allow to obtain an ARef<T> from an &T,
+  which (as Alice pointed out) is unsound when combined with UniqueRef/Owne=
+d.
+- Change the Trait design and naming to implement this feature,
+  UniqueRef/UniqueRefCounted is dropped in favor of Ownable/Owned and
+  OwnableRefCounted is used to provide the functions to convert
+  between Owned and ARef.
+- Link to v4: https://lore.kernel.org/r/20250305-unique-ref-v4-1-a8fdef7b1c=
+2c@pm.me
+
+Changes in v4:
+- Just a minor change in naming by request from Andreas Hindborg,
+  try_shared_to_unique() -> try_from_shared(),
+  unique_to_shared() -> into_shared(),
+  which is more in line with standard Rust naming conventions.
+- Link to v3: https://lore.kernel.org/r/Z8Wuud2UQX6Yukyr@mango
+
+---
+Asahi Lina (1):
+      rust: types: Add Ownable/Owned types
+
+Oliver Mangold (3):
+      rust: Split `AlwaysRefCounted` into two traits
+      rust: Add missing SAFETY documentation for `ARef` example
+      rust: Add `OwnableRefCounted`
+
+ rust/kernel/block/mq/request.rs |  15 ++-
+ rust/kernel/cred.rs             |   8 +-
+ rust/kernel/device.rs           |   8 +-
+ rust/kernel/fs/file.rs          |  10 +-
+ rust/kernel/mm.rs               |  13 +-
+ rust/kernel/mm/mmput_async.rs   |   9 +-
+ rust/kernel/opp.rs              |   8 +-
+ rust/kernel/pci.rs              |   6 +-
+ rust/kernel/pid_namespace.rs    |   8 +-
+ rust/kernel/platform.rs         |   6 +-
+ rust/kernel/task.rs             |   6 +-
+ rust/kernel/types.rs            |  62 +++++++---
+ rust/kernel/types/ownable.rs    | 257 ++++++++++++++++++++++++++++++++++++=
+++++
+ 13 files changed, 372 insertions(+), 44 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250305-unique-ref-29fcd675f9e9
+
+Best regards,
+--=20
+Oliver Mangold <oliver.mangold@pm.me>
+
+
