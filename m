@@ -1,97 +1,139 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB301EB9E1
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695A62DFF38;
+	Wed, 18 Jun 2025 12:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248938; cv=none; b=HSHcSVHh53wk9TFo/n10wJoty2aVqlt7W9pAAlp9fWIhFOAviehPdjcg023qU7g348+P4JOQBvfKDK8NMntvx5UaMW0eco87HJ2ygC8gZmpVMhidZIS5jm4t35Y90bhROnYwwMBmskcYWB7UBhM4IflWwB3AbajF0PB+DuSf5sA=
+	t=1750248940; cv=none; b=IcWMMn6S2RmqbhklmDLpEt180fxEH5zuGDqPAVfoi5ng4xzJpx2I8XH5DnZmYv7d5o24tcuNr08PmPvwK4r1f+OY1gNnYThbwbSyUb2K6DLqZpd9x0V+gOnPVFG7jXGV6JIZBZZP1lvK+fR0d43mBXnW73hkWJ5ekK/gyLxvWG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248938; c=relaxed/simple;
-	bh=lbSUV7iMOG8RNQJT3FC35YbqTkiHR5cFo6h4VEVJFKM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fHQc9w4FMQjWHr8GO7nSRH3I++y6l9mpgf4viRLp/HUW2NKpV4WerxAdSP41eitAQnpYKW2iT7QWVTUzAhzg9J7JyzbJfzolB81LZtLwbpuXnfbo3gux0DZITF1DBAYS+L2kg77B1fLO7vBzc3Iro0F1x2ybdXJ7DTF2pI9Rc/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Bi5SETsX; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750248940; c=relaxed/simple;
+	bh=GFufJpqJ0Ix6bVrqA6ceJslfkj3EMcpE3IDWXBToN5k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=phXcAmR8LhaZuU+LhJcer+nAdf+axxXlNyy2BB1PxO1GXAYpTFC+0m/Jyut3ftw5jHL36Q33Fiknq6BojXCAd/rINwHmIdAAj7FSUlzcoZfo4Km2gp2P5UTtPaZGRA0igFBkJGvcNdFFkXqxzbskQ2n2F4zzaHqsz3kin8D1YBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ReCysK3e; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bi5SETsX"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553b584ac96so5307298e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750248935; x=1750853735; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p7jZQ+YS+lWYeVwEC8VFaNnmqDYcJYXkLsLKJpyV1y0=;
-        b=Bi5SETsXaZyYbDmid0EWLlL3xktYeHJlZSMiHdCtPPNPtebLdK1+42xog67UGixoC0
-         +I/LtbApMJ36ENhn69yR7jNiKKPIt3AtorDwu7wvj/8ral4ZZcXx88LDQ5Nk5TDy5ZfT
-         J0Tv4J20P92OhVyD7B6TZB3DkBkbZa4P0MVyRyFs9D0SLPDV5rlteylJhvxTHOGQOWnD
-         I/8EFHi+sVhlFkZ2WwEYDwEhKXV2tvzHZEyZmTqla4ALbrvgGEnl4pF9jUFFI7OpoihX
-         2N/l2mnFpIdIhp4+kiWcPU9oWSW2IPPQOkRggoVITHWVswIHF4xKgO7wiKIaxFH7ytHB
-         kkJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750248935; x=1750853735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p7jZQ+YS+lWYeVwEC8VFaNnmqDYcJYXkLsLKJpyV1y0=;
-        b=xTxXZ226GAPT/DUeFXpiiE+I/CwUN2CkWJTe0n8+QzfejKBvlArVhr+0VoNXbp23Im
-         JSJCDzqVbg1g2GxA6kaaeP7i8JWFNFVpOHPdl1/4Mth3Rsb418/HVf2gtWgY8ENNl/gX
-         xLq9RbNef+BMSKIb+dyZe89tjGg3g3gDUhYxv7ECR6umWZMpV+8o3vtA+sDSNai7lNVk
-         IurPeGJfFe+hJg5yd8aHxTjP0NOuIr2oRYv3sta/K7SX56RGsGaVp4eTYhN/AHdRHDi4
-         xYATUG9+cY/xn9L5Fn3hG5E9IyPjIsuxjlt0nHW8yVOvVCpVskt1oacMk/OTh2LaYgQ8
-         WTUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWDhOvfIZPSGzqaAHn3rdu7PVhZGqYwoqQ0YMq+YzyiQ7QxNkCSpQfuOrol8+ybcxGvF0bFgT1E+d0DGTs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdl74bbw6qRHwKlMjVC9ICOY1TEQsrIuME+sq+3zlD+JlHy1gi
-	wsohs3Ph5of/B/FSmwWottgBRYLQUmExCwLuliXkVZpiF7vnw/mrH+EAK6OjcHvu2h47GRqTeF+
-	K8fSDbcJQp8VGSNNlj2V7K7B80S7OFhftsIMaKWLsaA==
-X-Gm-Gg: ASbGncuUktehgIExdxjGarj+0b3moYgspuWeFFT23wMyqGKhcvQsZeShrmRevxZ5MCl
-	y37TZtwYn11tg2Dqt6szZl0zNBkwJ/SI1BUR5AH1lH/q7BPj4u37v/6WWpz+4PQ8UpL55yx+YV0
-	6kw7CbPCGy3/vuk7wcCeEKz4rZFnbrmfncHs3pk7cWqUc=
-X-Google-Smtp-Source: AGHT+IGBMbnQS8CZK59QUADw6V+D/mLT8w6YMYDnxWivA5Amu6Cgv0XDSbL6jWX7zdVZfzp8QG5Ih8L/ToZVwFJNik0=
-X-Received: by 2002:a05:6512:1285:b0:545:6fa:bf5f with SMTP id
- 2adb3069b0e04-553b6e732b1mr4223465e87.2.1750248934811; Wed, 18 Jun 2025
- 05:15:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ReCysK3e"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6DBF143137;
+	Wed, 18 Jun 2025 12:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750248935;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lMS/pXtR5fwL/ucwouvgnFv8lBxKiYbXC7dEbGzUabk=;
+	b=ReCysK3eNS/98qQKJ59qIiZ2mDTh/7ctALlXb4OB3bqeSABHuNY/s/17JpKvhVUr+jq9co
+	MM4ArA1+5u7Fe46sPfCFL87o3cUl2qa4bQwNolsGeXVbOHgFJ2ooot0iGyyfWUTn39nojq
+	EBOFg9MxnhYYHlFSMDFCfBaAULLqOeGUHYLGnYgLgR/aw1oGJLUNMiNU0SGNfGo8Xnuegf
+	ulVR7z9FZb1Ml41e9sVUuLmlbUej1irMuzVBhHFf/dAp9/1Kp74rTQq3A2iRgWquUTNBuO
+	30Ix0CVJBC/tvOlzaUPiVeWzxKZXEHIqUbmwZTKNhYIeK/K/JJ3oF6317yRYNw==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 0/8] Enhance Winbond SPI NAND support
+Date: Wed, 18 Jun 2025 14:14:17 +0200
+Message-Id: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com> <20250613033001.3153637-7-jacky_chou@aspeedtech.com>
-In-Reply-To: <20250613033001.3153637-7-jacky_chou@aspeedtech.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 14:15:23 +0200
-X-Gm-Features: AX0GCFscY4ky5ebft20JokFvuO1y3hVcQ04FGalsWAeschf7cTa_SUmnKoC4ETU
-Message-ID: <CACRpkdaX24z5YsfcrB2oqbZpdexZJNREGkWiYgq1ar0c8O0QBA@mail.gmail.com>
-Subject: Re: [PATCH 6/7] pinctrl: aspeed-g6: Add PCIe RC PERST pin group
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kwilczynski@kernel.org, 
-	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	joel@jms.id.au, andrew@codeconstruct.com.au, vkoul@kernel.org, 
-	kishon@kernel.org, p.zabel@pengutronix.de, linux-aspeed@lists.ozlabs.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-phy@lists.infradead.org, openbmc@lists.ozlabs.org, 
-	linux-gpio@vger.kernel.org, elbadrym@google.com, romlem@google.com, 
-	anhphan@google.com, wak@google.com, yuxiaozhang@google.com, 
-	BMC-SW@aspeedtech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJqtUmgC/x3NSw7CMAwA0atUXmOpNhC1XAV1ERJDLUESOeWnq
+ ncnYvk2MytUMZUKp24Fk5dWzamBdh2E2aeboMZm4J6PvaM9vjVdcorokBxaIMxh8Xcs8xefpS4
+ m/oFhGHkcDiyRCVqpmFz187+cp237AbHezPd1AAAA
+X-Change-ID: 20250613-winbond-6-16-rc1-octal-phy-upstream-c8929842ed21
+To: Mark Brown <broonie@kernel.org>, Richard Weinberger <richard@nod.at>, 
+ Vignesh Raghavendra <vigneshr@ti.com>
+Cc: Yogesh S <yogeshs@ti.com>, Santhosh Kumar K <s-k6@ti.com>, 
+ Steam Lin <STLin2@winbond.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-spi@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ Miquel Raynal <miquel.raynal@bootlin.com>
+X-Mailer: b4 0.15-dev
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvieduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeghfffiedvfeffheehgfevgeelueeihfeiudfgkeffuedtjefhudeglefhgfeuteenucffohhmrghinhepghhithhhuhgsrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrgedvrdegiegnpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtohepsghrohhonhhivgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohephihoghgvshhhshesthhirdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepr
+ hhitghhrghrugesnhhougdrrghtpdhrtghpthhtohepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdprhgtphhtthhopefuvffnihhnvdesfihinhgsohhnugdrtghomhdprhgtphhtthhopehlihhnuhigqdhmthgusehlihhsthhsrdhinhhfrhgruggvrggurdhorhhg
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On Fri, Jun 13, 2025 at 5:30=E2=80=AFAM Jacky Chou <jacky_chou@aspeedtech.c=
-om> wrote:
+Both w25n**jw and w35n**jw chips have a "normal" and a "high speed"
+mode. In order to use the high speed modes, we need to configure
+internal registers and adapt the number of dummy cycles. The benefits
+are too interesting for not paying attention to this little extra
+configuration. In particular, it is an important building block for the
+introduction of PHY calibration on TI SPI controllers. With these
+changes combined, the frequency used on these chips can be bumped from
+~25MHz up to 166MHz.
 
-> The PCIe RC PERST uses SSPRST# as PERST#  and enable this pin
-> to output.
->
-> Signed-off-by: Jacky Chou <jacky_chou@aspeedtech.com>
+This series was tested on TI AM62A SK with a W35N01JW and on Nuvoton
+MA35D with a W25N01JW. At low speeds, this series does not bring any
+improvement. However when enabling high speed modes (on TI's platform),
+the difference is outstanding:
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+W35N*JW running in 1S-8S-8S @ 25MHz:
 
-Can I just apply this patch 6/7 in isolation from the others, to
-the pin control tree?
+	 eraseblock read speed is 9552 KiB/s
+	 page read speed is 9516 KiB/s
+	 2 page read speed is 9552 KiB/s
 
-Yours,
-Linus Walleij
+W35N*JW running in 1S-8S-8S @ 166MHz:
+
+	eraseblock read speed is 35555 KiB/s
+	page read speed is 33684 KiB/s
+	2 page read speed is 35068 KiB/s
+
+Enabling high speeds currently requires applying extra patches from TI
+to enable PHY calibration. They are currently in the upstreaming process.
+
+Link: https://github.com/miquelraynal/linux/tree/winbond/6.16-rc1/octal-phy
+
+In order to introduce all these variants and derive the quickest one, I
+had to improve a bit the helper deriving the time an ops would
+take. These changes can go through the spi tree, the other patches do
+not depend on them and the performance hit is rather acceptable without.
+
+While at adding maximum operation frequencies, I realized I got myself
+confused with the macro parameters due to some of them being
+optional (with variable arguments in macros). I decided it was too error
+prone so I propose to add these values on all READ_FROM_CACHE
+variants (where they are often relevant).
+
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+Miquel Raynal (8):
+      spi: spi-mem: Use picoseconds for calculating the op durations
+      spi: spi-mem: Take into account the actual maximum frequency
+      mtd: spinand: Fix macro alignment
+      mtd: spinand: Add a frequency field to all READ_FROM_CACHE variants
+      mtd: spinand: Add a ->configure_chip() hook
+      mtd: spinand: winbond: Enable high-speed modes on w25n0xjw
+      mtd: spinand: winbond: Enable high-speed modes on w35n0xjw
+      mtd: spinand: winbond: Add comment about the maximum frequency
+
+ drivers/mtd/nand/spi/alliancememory.c |  12 +--
+ drivers/mtd/nand/spi/ato.c            |   6 +-
+ drivers/mtd/nand/spi/core.c           |  22 +++--
+ drivers/mtd/nand/spi/esmt.c           |   8 +-
+ drivers/mtd/nand/spi/foresee.c        |   8 +-
+ drivers/mtd/nand/spi/gigadevice.c     |  48 +++++-----
+ drivers/mtd/nand/spi/macronix.c       |   8 +-
+ drivers/mtd/nand/spi/micron.c         |  20 ++---
+ drivers/mtd/nand/spi/paragon.c        |  12 +--
+ drivers/mtd/nand/spi/skyhigh.c        |  12 +--
+ drivers/mtd/nand/spi/toshiba.c        |   8 +-
+ drivers/mtd/nand/spi/winbond.c        | 163 ++++++++++++++++++++++++++++++----
+ drivers/mtd/nand/spi/xtx.c            |  12 +--
+ drivers/spi/spi-mem.c                 |  27 ++++--
+ include/linux/mtd/spinand.h           |  70 +++++++++------
+ include/linux/spi/spi-mem.h           |   2 +-
+ 16 files changed, 308 insertions(+), 130 deletions(-)
+---
+base-commit: 065b897a1044b1c67ba4d1066ee090097bae1499
+change-id: 20250613-winbond-6-16-rc1-octal-phy-upstream-c8929842ed21
+
+Best regards,
+-- 
+Miquel Raynal <miquel.raynal@bootlin.com>
+
