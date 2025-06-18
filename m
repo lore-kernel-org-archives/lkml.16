@@ -1,249 +1,367 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from rcdn-iport-2.cisco.com (rcdn-iport-2.cisco.com [173.37.86.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C775A932;
-	Wed, 18 Jun 2025 00:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750206873; cv=fail; b=eugO+sbm0+CdpcjTdN6fYgVKXuBibkJsGTGvyOlC5Wk4rilDVULFPfHvnnMNqUqsx5sc0ZNUjCKRl/gX9A33B6cLtu2U5jlSwYHvYdT1/F4Ju0LfsVUaHJ3NMcVEqoCZ9+jqAcSzwM0ys8+GPKt28cONEKoFjNry6t/FP6CvuKg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750206873; c=relaxed/simple;
-	bh=cGL9o7oXks0yXVe+tiel51yIrvFW/VmCbVbLh/joGuA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OoBbnPqCAEndiBiCJAk3oUH810BdvAr+VJMV6Gb2zjIMKiAPfWU3gclqAq8DJ046ipWNss9QDKiRY2atfwcBo7IZywKW2Xzodkorb9TFwxkHJoofX1rfIGA2EN327WvHneGzgBbWHfOYyc54Wlj/pUvMwgIWkxMRkfxHygeFkes=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a6jOLLxD; arc=fail smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02702F5319;
+	Wed, 18 Jun 2025 00:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=173.37.86.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750206890; cv=none; b=ZC7tENqNnx9M6+hvRUL4gHTrK5wzfjC0QFvvZql9iPblUcgv10UBXGFpy7uUXZq8CamnE1/Q9AYuR7ljBpIrLnrpg9s5unwyObuFlGw4PHqIALt/PM59iqJF1Axmj10i6r4X/WcGvI8Eee7cXRMYuj99/oXogoFfBrRVcCxaH9Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750206890; c=relaxed/simple;
+	bh=WiZUoyoFY3AScDyboS+zTxUIRU70l9n0/wjCuApaxPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=i5n5N670/1uX5arukpx+WkDlbmTC7HcWnEFW2yf+MI0cIb/nVejlq/3mqlNs71Tko1KLJAnVLSY6cfs+SCXll7u6OTm2pmIQTMM3CBl96r8OEvfE6gWbzZ50n/PAg2RYz1FnjceBC6lIvRlnGPuCc2hJHbC6xSw9uxLCTk+pp/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com; spf=pass smtp.mailfrom=cisco.com; dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b=blAtLrCQ; arc=none smtp.client-ip=173.37.86.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cisco.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cisco.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a6jOLLxD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750206872; x=1781742872;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=cGL9o7oXks0yXVe+tiel51yIrvFW/VmCbVbLh/joGuA=;
-  b=a6jOLLxDnrSyES8ICKgl/CH/CHTUaoB6kvDynspJHab3J6AuEqPirCxx
-   HDL56yVuGMjvkCN7OEftZVYoVQdmivQLr3SDXUQ717V/ZO8m9ih/EgTb4
-   IQ1FGgSPS0mRzOc546xFYcg7/YFHXlo5UWaKYg+NmQohErTTAWC9hs3r1
-   G33Cp3UopPGjS3klT1A5ErS0R+Kg5EuzBNCjhjVDIt9XA6g8Xq+pt5faK
-   m2R0RR8CvRhmpzLIUdv8JDqwZWKXaKHHmMebTlyLIDfrr1eJd6ZUqu1Ba
-   cm0qMp9sr4t+6d75dQVrZN0GNClPi5L71fVwfw5GNxJWhUEuL+8KU5arc
-   Q==;
-X-CSE-ConnectionGUID: mnf4v8VfR3+WmQIGZz/ATA==
-X-CSE-MsgGUID: dqOJOpNxTk2RrkclIgubvQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="62683887"
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="62683887"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:34:31 -0700
-X-CSE-ConnectionGUID: sunHvRWqQFu5YUhcsbw0Pw==
-X-CSE-MsgGUID: fzzgTtXIRvK8Cqu6+Ou9zA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
-   d="scan'208";a="148885839"
-Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:34:31 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 17 Jun 2025 17:34:29 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 17 Jun 2025 17:34:29 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (40.107.101.68)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 17 Jun 2025 17:34:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QSIYAgm/L3GgmTph3tY/02oKbzXGQGwd/fgldTzJcW/tw4fPKyeiDxxWXVCjIZjPrMfX8jsDDrTb2kcuNoKnFucnygPKteWk3HSuRehJgVliO/XamSDgOYQSxlg7HClJhYzvGE1NA9qlYXGK0tV4IFVsjhw9OwXgQDu8aFsH3yU5xKJvz6CDpEq0AT66mBh6EKgK3S9FFgrcQduVgfCBS+PbFgBAA2GR0Hw9Oh8GXnCV9dJTNVA3sH1V3wrV4+5U9ZzPYQnvNY6cLr6jus4k4h4nMfhZNq1yvQDs9YISPDyrU01BvQqs68ZHLGovlefWkOLoR0uWZLgNGVaN8T1xow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cGL9o7oXks0yXVe+tiel51yIrvFW/VmCbVbLh/joGuA=;
- b=ZFNmwSbddL3ioi0m70LANQOawwKoOi95Hhmi9QsWjRjSaPkDoe3olFdUMKxtMvXv2oQ7IElnSM4Y2oDpEZZubDP2B66OzzP59Aw3Bn+S8sknJSn5F1jeGsCzDL0r3lM0S182MOGJKj5oWNsGnax8tBLLWWHQkqvdoCQehFQ62l28U82Ou0M1jMbqyq2ERaYeRWTv+QO/G5nVwCZPsk06wPOEp+vlXiWSBCZTM/13KpFuBjCXfCYR2PQMtZcSaczJYAyl1KyCdQ1Ge4kjHlKZVkGvh9Fa5m2C0WrGLuoBP8M9izqb7yyFOVSC3RnyFCJ2Wy50Ln+ZxghqoZjTNe3s+g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com (2603:10b6:208:372::10)
- by BL4PR11MB8800.namprd11.prod.outlook.com (2603:10b6:208:5a7::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
- 2025 00:34:25 +0000
-Received: from MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9]) by MN0PR11MB5963.namprd11.prod.outlook.com
- ([fe80::edb2:a242:e0b8:5ac9%4]) with mapi id 15.20.8835.018; Wed, 18 Jun 2025
- 00:34:24 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "Annapurve, Vishal" <vannapurve@google.com>, "Zhao, Yan Y"
-	<yan.y.zhao@intel.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "quic_eberman@quicinc.com"
-	<quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, "Shutemov,
- Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>,
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com"
-	<thomas.lendacky@amd.com>, "tabba@google.com" <tabba@google.com>,
-	"vbabka@suse.cz" <vbabka@suse.cz>, "Du, Fan" <fan.du@intel.com>,
-	"michael.roth@amd.com" <michael.roth@amd.com>, "seanjc@google.com"
-	<seanjc@google.com>, "Weiny, Ira" <ira.weiny@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, "ackerleytng@google.com"
-	<ackerleytng@google.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>,
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Peng, Chao P"
-	<chao.p.peng@intel.com>, "Li, Zhiquan1" <zhiquan1.li@intel.com>,
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>,
-	"pgonda@google.com" <pgonda@google.com>, "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Thread-Topic: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge
- pages
-Thread-Index: AQHb1Yuw8TDhKPA9uUiYAoJtWQa0+LPz2/CAgAozpACAB4/5gIABK6CAgAAyp4CAABVEgIABE0sA
-Date: Wed, 18 Jun 2025 00:34:24 +0000
-Message-ID: <8f686932b23ccdf34888db3dc5a8874666f1f89f.camel@intel.com>
-References: <aCVZIuBHx51o7Pbl@yzhao56-desk.sh.intel.com>
-	 <diqzfrgfp95d.fsf@ackerleytng-ctop.c.googlers.com>
-	 <aEEEJbTzlncbRaRA@yzhao56-desk.sh.intel.com>
-	 <CAGtprH_Vj=KS0BmiX=P6nUTdYeAZhNEyjrRFXVK0sG=k4gbBMg@mail.gmail.com>
-	 <aE/q9VKkmaCcuwpU@yzhao56-desk.sh.intel.com>
-	 <CAGtprH_SKJ4hbQ4aSxxybcsD=eSQraP7a4AkQ3SKuMm2=Oyp+A@mail.gmail.com>
-	 <aFEQy4g4Y2Rod5GV@yzhao56-desk.sh.intel.com>
-	 <CAGtprH_ypohFy9TOJ8Emm_roT4XbQUtLKZNFcM6Fr+fhTFkE0Q@mail.gmail.com>
-In-Reply-To: <CAGtprH_ypohFy9TOJ8Emm_roT4XbQUtLKZNFcM6Fr+fhTFkE0Q@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.44.4-0ubuntu2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR11MB5963:EE_|BL4PR11MB8800:EE_
-x-ms-office365-filtering-correlation-id: 760c100f-d7f8-41f9-1a51-08ddadffe063
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?SUJ6c2dIL0Q3NzZJdGVlQ2c2VmV0Z2tEK0F4bDl5RDY2cTRxbHJiOWlYRUFp?=
- =?utf-8?B?RHdwcDBjdWpzK2VETnRxNEExWDV1WkMzUjlsRlJyazlwWlRaMGs3cnJicjd0?=
- =?utf-8?B?TzdqRzRPaFMzc0svcTNCQXo3WEZ5Ti9BZDBhdkNWQUYrOXNDaXcxS3VpaThR?=
- =?utf-8?B?VEJOOGtGNmNycFZyYzdLNXlMS2dlcGZBUVU4NXE3dnRUR2MzWjNnYWMzVisx?=
- =?utf-8?B?ZmhHTUVQMGNvMmUxY21UR25KV3MzYjdhOTdYdkU2R0FPbFV0Z1NQYTkwbXJj?=
- =?utf-8?B?cURobDd4T0NyWlBrU1BUb1BqMDAvVmg3eCtETWNMYTJJVW50V3BXUW4zWG5a?=
- =?utf-8?B?TGRWY01NL2ZHOTFuK0FycnRIR01zUnFWNFBqWFlJUGZEWmw5bkVsTjdVVC9l?=
- =?utf-8?B?bTlldVhJOGVacnl2dXlFMHUxNzhncVpHTGJ1cThkTk9vQWJxemlDZnc1M0FJ?=
- =?utf-8?B?cFlwWkI3REw3T1ZYUjNCLzFWOG5Pa3JSV2hsU1ZjOEtlQ3VTakhQVDd5ckJS?=
- =?utf-8?B?elkxcnVaaXBzY3g5S2M0aXpKUklIaTVnN2xVOWRXU2ZNU280MnRTaXNiZWhN?=
- =?utf-8?B?cWpwZ0tXS0RlMEExVTcvNllSOVpDVjAyZHlDUmg5Vmt0Q1RlWUdER25ydHU4?=
- =?utf-8?B?RzNDVjlqKzJYV3cvTlpYdXlHc1kydkpqbzUrTFEvOUo2MG9tcjRMOWMvM29X?=
- =?utf-8?B?aklrSmtIVnQ5dkR4NDBXYlVyTFBlV0d2U3dIZU9ZeksxZUp3K3cvRmo5TFBG?=
- =?utf-8?B?R0QzN01POGZhVWMzVkl2aEkwc3A0MGh2d2NINHVNbk1MOC9KemI2SXBUZ1Ft?=
- =?utf-8?B?ZmNLdjZSdkJ3L2tFanhNbElmMzg0cm4yTFBMRTdtbkdBdVkzZ05CRFB2RCtS?=
- =?utf-8?B?QVpTbldJbHZob2FpZHZLWlNmRkVUa3ZBeEh5RXBKc3lNbDk0V1hUdStCR3FF?=
- =?utf-8?B?eFpkR0QwSkFqMkNRcm0zUlVTVjBoMjVrU3RKaHJBK2ZFbldNazFsbEl0R1Yw?=
- =?utf-8?B?YzBsNHpqRHRTR2tyOWpxZWJPem5GMTRTTjhwRzJoVGU3dVBabkVMaWE0eitD?=
- =?utf-8?B?bUIycG52bmVFVVlNaCtFSE85V3RzNmJYeGRoTjlVd0dRNDFOWDVXRlZLdUdJ?=
- =?utf-8?B?ZmUvWGErdTRsWXZtaUJ0elFPMlFZaUJudlNxUXFwNUJlOGZIRnNUeVJkdFpN?=
- =?utf-8?B?UFdxenRtSVFtM1VlQk1xS2Y2TDQxVnU1OGdGODZ6SzRFQjRXbjVwMnEybHhY?=
- =?utf-8?B?NzY3U0NCd2l3M3dMdXFRWCtZOXMrY2lOU1Nydm9mTTdoNzF2R2dndU9HTnZh?=
- =?utf-8?B?OVQ3b0REUGhJbTdSdDd0YzlLL21UZ09xUWlMcXdOK2lvMjloQ016RUw3enVz?=
- =?utf-8?B?aytkUU00SkhjR3plcHNwVHE4eVU4amttTkF2ZkQxNXUyODFhV2orTC80aldH?=
- =?utf-8?B?aFkyV01vN01XTmp5akpIVFVaTHhLanQxZWkyMm4vajNKellqOXc1RFRucThx?=
- =?utf-8?B?dkx1Y3NRSWd3R2ZYOGU3NE1sMExEMFdPQjFjalB3MytCTWNnRnR2d3phS2d4?=
- =?utf-8?B?TWx3THVVZXBBK3NYVmJKOWFxMFJTUktHbHMrN3h0TjZTTCtiWit0Zjg5MzNJ?=
- =?utf-8?B?eERWVFFlOEtSZUdoc1Y1MEVWT2UzdnNPSVVTbjhjT0h2a1RTZmErKzNZWTAy?=
- =?utf-8?B?c29wUU5kcHptOERkRzloUlMveDY3bWt6UmViWlljNXV3dTZBSm15dkJtMnpj?=
- =?utf-8?B?NDBBYUJ0TzJDUzBndytrU1V5NVl2dFk2bUhqWEdnMXpCa2N4Mzg4cVVFVUJR?=
- =?utf-8?B?K3NnVGgyM2VQNGY3ME9iZ25LS2IvaDJvRW9oTmxrQUpGc2JwditOdklkSjRW?=
- =?utf-8?B?cXFlNys0WXJTUzdsRlRSMDJxK2lqb2JLYjJ2U2YvekFQV1A1Sm5HK21GNC9u?=
- =?utf-8?B?aXNyaER5NnoxaXNZanlVRDNoNXpnbkh6UmlVTFJld3l3ZGRLelhqenpHcFYy?=
- =?utf-8?Q?6rAAiAP1mkpguc3iveMKBwoBu+1Auc=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR11MB5963.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Rmw5VndFbFp6d1hHQzJMQkRlaWJ1VEMyTFJKTmpST1l6dDkxYnBYL2FjNHR3?=
- =?utf-8?B?TUZDSlFOalpqdWtnSjdvOVB4UVcyT0lKeU5qZlkrVDlxTDYxckdMQkRqNXhI?=
- =?utf-8?B?NzVaaGhZaHg1M1FPZkUvbFY4dTlsRmlUNVZqWGdvcVJObDRQRWpqeTlhd1FL?=
- =?utf-8?B?RTFLVVlvV0J1ZFlpQnQ5ZW05MER5d0RJOTZwUWp3L1Zlcng5SERSK0VVWVI3?=
- =?utf-8?B?ZG5mTDdHQ2MreFlMN0ovbFpFSTBXbFIybENnNTl0R0s2WHlhdkVjWnV4aTd0?=
- =?utf-8?B?WWw1WFVsZFd5L01uNWs4LzJvc09FZ2RaMjl5di9sZ1QzZjAwYVdRYXA3c0gx?=
- =?utf-8?B?VDlvUG53dERwc3Nxay81WThlTnpHQzYvVm5nNzRJSXJaakhoTS9uUEdYeEs3?=
- =?utf-8?B?djRVN0hXNmVkSzFZK1pZR1hidGZIWnVpWlRXOWtDUmJkZ2dMejNJaDM4aEVr?=
- =?utf-8?B?akJsSDg0bG03NjVROHBwOWJnN2M5UDk1bmh4UG8yWFkwSXJrMitrSkFOMXhz?=
- =?utf-8?B?UEF4YUZSM3FzV2pFS09VdDI3V09pNms5L3gxbEdKWURDcmV5aVB0M1FXbVJw?=
- =?utf-8?B?WGh6eDlaZkdjUEJzeHAzWnp0by9IYW5WL0RTM2c2WktxdVpYdnU3K0JJVUFi?=
- =?utf-8?B?VWdITHlORUdEUXNITVo5aldWUCtCaHhYVDV3TXNvcnJidG9NdlQrNVFHRkRV?=
- =?utf-8?B?bXFPazQzZ2k1c0xEUG5VMkZqWHdZelJnRXkzRGQvY1Q5eVZDclVYNjBRNlo1?=
- =?utf-8?B?SngzL2phcTlYUDJtdmFWVWxySGRpdWx3bEg5dXJBdTYvRnB4OGRnc1V1RGhQ?=
- =?utf-8?B?bEs1WWsvVHVGTnFCdGxJOERENTlITG9jdE1yODlEM0xLazRiT3oyU0xQVkFx?=
- =?utf-8?B?U04wcXJZbzI0ejVUbndWQmU1Tit4L2RkaFpjaDFUZ0NZb1BUa0FJSGhzbGFC?=
- =?utf-8?B?SGV1QXdONVhqaTFRNU9JdktmT2pEclVaUXl5aWFRKzd3d3BmbWl3azBKUXZu?=
- =?utf-8?B?enArYkJHQmJwQkRTUDRaeWozSUpRV2w4YzlFS0FpcTlnY1lxZjY4RGlTb212?=
- =?utf-8?B?VVdjQzRzSVkzWWhBRjZwc09iTHhKcFAwVkpZbVUySCtaSkxuQTN6amc2T3F1?=
- =?utf-8?B?Z0xxeksybTRHQ1NCbWNCVThKaGtuK2lYWFMrdStaOUgzSFJIR3QvT2RoYmhy?=
- =?utf-8?B?TEE5bWduVXRPUWdOMzc1cE9KbFdkMlhPUTBLMDFoVkFaeVBRVVB1OFJvbU1H?=
- =?utf-8?B?Vml4bmNyVEVQRGFNQm1TZlJoZEtrMy8raUxZdjdaZmNrMXdUekNVcFZ5dldM?=
- =?utf-8?B?Mk1wa3hFZC90blFFNXFMNXJad1JQRytLb041ZjQ2VmsyRG50dFQ2RWVJcnVa?=
- =?utf-8?B?VC9pNWFrRzZsZWJLYldsK01jMWpHMlBBYjVqSG5xdkY1NzJZdmx1STB4WG8r?=
- =?utf-8?B?R0pFVGY0YW9RRFdzSmoxUWlkT0ptcFdNTG1SV2g1S2ZxK2hjdFB0elRKTEpL?=
- =?utf-8?B?cXo5dlpRREdSTk0zSEkyY0tDQzJhNG1Ma21vRk1wMlV5c3gyN2o2dnl3Ui91?=
- =?utf-8?B?T29pR3N0UmEzNFRnV3M0Z0lKQ25FeXcvM0xBVWNZTVZRK2dPU2pvT1dsWi9E?=
- =?utf-8?B?ekJ6enlYMS9ZZXBKbVNkN0VuNlFROHF2c0pndGtzL080SFh1UmFFV05TT0pF?=
- =?utf-8?B?SFdIcVQxWkJoUkIrNE5VelBIZkZwQ2M5WVk0Mlh2Z0RQcGhMNzFYMWN4dkpH?=
- =?utf-8?B?eERVWktCclNxR20zMjAzeFpKZUNuOWNoYitsNDNUc3dJdHRvTmJpNldiMW9l?=
- =?utf-8?B?VkRHYWd3dVZIRnZnNWlZeFF4OSs0Rm9vYXNUZkM1V214RVhxY0ZVZjVhejJE?=
- =?utf-8?B?YVBpTjJXb0VjQ3RlRnhWclpvVmNndER2UFhwY3ROMTViS0d4OVJmQlkwa1ZN?=
- =?utf-8?B?dElhUWlvQmdVcTkvMER6VDFBbFo2eTBsdmtsUVUyZ3FmY29lZy9yak9OdmZq?=
- =?utf-8?B?UUk2cHlsU0p6NEFIeWx5aTl1eXBOenE5bHJYcnUyam81aHNLaXpPRlZQZXlY?=
- =?utf-8?B?Y3lrZmVWV0dJVmRRaWlvNENpdFNwSTFWWE5mM0RZaFR0NWVpb3hnRWtwZC9U?=
- =?utf-8?B?SzcybGQwVk5IWVN5Mi9QY2F5TllxS09wTXNaQ1BydWVrMXhpdnQ0d2xLakwr?=
- =?utf-8?B?cEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ED48E9EFD9E37D49934A461F31E4B25C@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=cisco.com header.i=@cisco.com header.b="blAtLrCQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=cisco.com; i=@cisco.com; l=8981; q=dns/txt;
+  s=iport01; t=1750206889; x=1751416489;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hlri3zQLHj9NGS7y9ZyRm5BsYSUPYki2EWvITOrmbtI=;
+  b=blAtLrCQ4SYBxM3leYHQy901OBkfyG5/Thlv3YQsf1kKGt8egqOC2uQ/
+   kEdwJskIS88WrnmVlfKfcb/VXeUNTC8i3mB5BD24d1hitP5HS8BC0csLU
+   JAk0hUSegB63ek2Er1HxHlU0KR8yVlSHhnva4YcxXWWlVVN29x1Cvyu8l
+   AiwF3d5wAG/EdTIjRDxp3vNOHBSMDWkzAzL9KrzuQwkU0BUOjBy9xSnpx
+   WuXafbFrJ/rcqhg0CBmO3JyU8QWjQRa9r2wScLe/+jNZ1NxLcvU6bnKAC
+   kOSBpSNMzY/IisM9g+7Jv63BeH4OA9hgZ9/OB/ZJwVwe9oZKUxYQXO22P
+   A==;
+X-CSE-ConnectionGUID: rORXCQb4RJiTW+VHGrm0NQ==
+X-CSE-MsgGUID: cdPheT1uQROiG5eVhHq3XQ==
+X-IPAS-Result: =?us-ascii?q?A0AnAACDCFJo/5AQJK1aHAEBAQEBAQcBARIBAQQEAQGBf?=
+ =?us-ascii?q?wcBAQsBgkqBUkMZMIxwhzSCIZg9hVyBJQNXDwEBAQ9RBAEBhQeLaAImNAkOA?=
+ =?us-ascii?q?QIEAQEBAQMCAwEBAQEBAQEBAQEBCwEBBQEBAQIBBwWBDhOGCIZdKwsBRoFQg?=
+ =?us-ascii?q?wKCbwOvCoF5M4EB3jeBboFJAY1NcIR3JxUGgUlEgRWDaIFSiTUEgzqQHoQgJ?=
+ =?us-ascii?q?lCMFEiBHgNZLAFVEw0KCwcFgWMDNQwLLhUyPDIdgg2FGYISiwWERytPhSGFB?=
+ =?us-ascii?q?SRxDwaBC0ADCxgNSBEsNxQbBj5uB5gwgnZ1B4EPE4IVFgEeC5MbkjyBNZ9Wh?=
+ =?us-ascii?q?CWhUxozqmEuh2WQcak4gWg8gVkzGggbFYMiUhkPji0Wu1UmMjwCBwsBAQMJk?=
+ =?us-ascii?q?gUBAQ?=
+IronPort-Data: A9a23:/xSNc6Jf0I92onaMFE+ROZQlxSXFcZb7ZxGr2PjKsXjdYENSgjQGz
+ GIdXWuGaP+OM2ryLopyYY7k9koC68TUz9NjT1Ad+CA2RRqmiyZq6fd1j6vUF3nPRiEWZBs/t
+ 63yUvGZcoZsCCWa/073WlTYhSEU/bmSQbbhA/LzNCl0RAt1IA8skhsLd9QR2uaEuvDnRVrT0
+ T/Oi5eHYgL9hWcrajl8B5+r8XuDgtyj4Fv0gXRmDRx7lAe2v2UYCpsZOZawIxPQKqFIHvS3T
+ vr017qw+GXU5X8FUrtJRZ6iLyXm6paLVeS/oiI+t5qK23CulQRuukoPD8fwXG8M49m/c3+d/
+ /0W3XC4YV9B0qQhA43xWTEAe811FfUuFLMqvRFTvOTLp3AqfUcAzN10K3sGFrQSptxVAF1xt
+ sI4ByoINja60rfeLLKTEoGAh+wqKM3teYdasXZ6wHSBUrAtQIvIROPB4towMDUY358VW62AI
+ ZNHL2MzMHwsYDUXUrsTIJE3hvupgnD8WzZZs1mS46Ew5gA/ySQqgOC8aYqLJIDiqcN9lUqgp
+ m/6pnnAODYbG4GS9zql6ymcv7qa9c/8cMdIfFGizdZmiVvVzWUJEBAQSVahif24jEekXJRYM
+ UN80igjr6Ia8E2tU8m7Xhe95nWDu3Y0XtNKD+w8rhmA1qfO+AufLm8eRzVFZZots8pebT4v2
+ 1mEkNPoLSZivL2cVTSW8bL8hSm/JyUPNkcYaCMERBdD6N7myKk3jxTSXpNgHbSzg9ndBz792
+ XaJoTI4irFVitQEv42//Fbak3e3rYPIZhA66x+RXW+/6A59Iom/aOSA8kTS5/JNBJiWQ0PHv
+ 3UencWaqucUAvmweDelSeEJGvStov2CKjCZ2QEpFJg6/DPr8HmmFWxN3AxDyI5SGp5sUVfUj
+ IX74mu9OLc70KOWUJJK
+IronPort-HdrOrdr: A9a23:1Gp2paluisX2t3P0dZ6MV3s1Q/jpDfIf3DAbv31ZSRFFG/FwWf
+ rDoB19726XtN9/Yh8dcLy7UpVoIkmslqKdg7NxAV7KZmCP01dAR7sM0WKN+VDdMhy73vJB1K
+ tmbqh1AMD9ABxHl8rgiTPIdurIuOPmzEht7t2uqEuEimpRGsVd0zs=
+X-Talos-CUID: 9a23:2Vm4U27Zh7JzsaPisNss7mkuKusceCHn7nbsHAyGKUlzTeWzcArF
+X-Talos-MUID: 9a23:g2qG/goPsFedVf4V2d8ezzpuDMdl3/2zMXoqkLpbtveEFTUrCw7I2Q==
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.16,244,1744070400"; 
+   d="scan'208";a="380918664"
+Received: from alln-l-core-07.cisco.com ([173.36.16.144])
+  by rcdn-iport-2.cisco.com with ESMTP/TLS/TLS_AES_256_GCM_SHA384; 18 Jun 2025 00:34:42 +0000
+Received: from fedora.lan?044cisco.com (unknown [10.188.123.35])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kartilak@cisco.com)
+	by alln-l-core-07.cisco.com (Postfix) with ESMTPSA id B2CD8180001E1;
+	Wed, 18 Jun 2025 00:34:40 +0000 (GMT)
+From: Karan Tilak Kumar <kartilak@cisco.com>
+To: sebaddel@cisco.com
+Cc: arulponn@cisco.com,
+	djhawar@cisco.com,
+	gcboffa@cisco.com,
+	mkai2@cisco.com,
+	satishkh@cisco.com,
+	aeasi@cisco.com,
+	jejb@linux.ibm.com,
+	martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jmeneghi@redhat.com,
+	revers@redhat.com,
+	dan.carpenter@linaro.org,
+	Karan Tilak Kumar <kartilak@cisco.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v6 1/4] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when FDMI times out
+Date: Tue, 17 Jun 2025 17:34:28 -0700
+Message-ID: <20250618003431.6314-1-kartilak@cisco.com>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR11MB5963.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 760c100f-d7f8-41f9-1a51-08ddadffe063
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 00:34:24.9033
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mg2eylrkxgnNWwJ0/Op2Iopc/1mEAFXqcLaXv0Zy5Xgl3kj5g8P0pIgxZvnM5DVgVUrlRnr9yrEbs9VELKr2kXgvgg818RDm8wizDx+vrN4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR11MB8800
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
+X-Authenticated-User: kartilak@cisco.com
+X-Outbound-SMTP-Client: 10.188.123.35, [10.188.123.35]
+X-Outbound-Node: alln-l-core-07.cisco.com
 
-T24gVHVlLCAyMDI1LTA2LTE3IGF0IDAxOjA5IC0wNzAwLCBWaXNoYWwgQW5uYXB1cnZlIHdyb3Rl
-Og0KPiBTb3JyeSBJIHF1b3RlZCBBY2tlcmxleSdzIHJlc3BvbnNlIHdyb25nbHkuIEhlcmUgaXMg
-dGhlIGNvcnJlY3QgcmVmZXJlbmNlIFsxXS4NCg0KSSdtIGNvbmZ1c2VkLi4uDQoNCj4gDQo+IFNw
-ZWN1bGF0aXZlL3RyYW5zaWVudCByZWZjb3VudHMgY2FtZSB1cCBhIGZldyB0aW1lcyBJbiB0aGUg
-Y29udGV4dCBvZg0KPiBndWVzdF9tZW1mZCBkaXNjdXNzaW9ucywgc29tZSBleGFtcGxlcyBpbmNs
-dWRlOiBwYWdldGFibGUgd2Fsa2VycywNCj4gcGFnZSBtaWdyYXRpb24sIHNwZWN1bGF0aXZlIHBh
-Z2VjYWNoZSBsb29rdXBzLCBHVVAtZmFzdCBldGMuIERhdmlkIEgNCj4gY2FuIHByb3ZpZGUgbW9y
-ZSBjb250ZXh0IGhlcmUgYXMgbmVlZGVkLg0KPiANCj4gRWZmZWN0aXZlbHkgc29tZSBjb3JlLW1t
-IGZlYXR1cmVzIHRoYXQgYXJlIHByZXNlbnQgdG9kYXkgb3IgbWlnaHQgbGFuZA0KPiBpbiB0aGUg
-ZnV0dXJlIGNhbiBjYXVzZSBmb2xpbyByZWZjb3VudHMgdG8gYmUgZ3JhYmJlZCBmb3Igc2hvcnQN
-Cj4gZHVyYXRpb25zIHdpdGhvdXQgYWN0dWFsIGFjY2VzcyB0byB1bmRlcmx5aW5nIHBoeXNpY2Fs
-IG1lbW9yeS4gVGhlc2UNCj4gc2NlbmFyaW9zIGFyZSB1bmxpa2VseSB0byBoYXBwZW4gZm9yIHBy
-aXZhdGUgbWVtb3J5IGJ1dCBjYW4ndCBiZQ0KPiBkaXNjb3VudGVkIGNvbXBsZXRlbHkuDQoNClRo
-aXMgbWVhbnMgdGhlIHJlZmNvdW50IGNvdWxkIGJlIGluY3JlYXNlZCBmb3Igb3RoZXIgcmVhc29u
-cywgYW5kIHNvIGd1ZXN0bWVtZmQNCnNob3VsZG4ndCByZWx5IG9uIHJlZmNvdW50cyBmb3IgaXQn
-cyBwdXJwb3Nlcz8gU28sIGl0IGlzIG5vdCBhIHByb2JsZW0gZm9yIG90aGVyDQpjb21wb25lbnRz
-IGhhbmRsaW5nIHRoZSBwYWdlIGVsZXZhdGUgdGhlIHJlZmNvdW50Pw0KDQo+IA0KPiBBbm90aGVy
-IHJlYXNvbiB0byBhdm9pZCByZWx5aW5nIG9uIHJlZmNvdW50cyBpcyB0byBub3QgYmxvY2sgdXNh
-Z2Ugb2YNCj4gcmF3IHBoeXNpY2FsIG1lbW9yeSB1bm1hbmFnZWQgYnkga2VybmVsICh3aXRob3V0
-IHBhZ2Ugc3RydWN0cykgdG8gYmFjaw0KPiBndWVzdCBwcml2YXRlIG1lbW9yeSBhcyB3ZSBoYWQg
-ZGlzY3Vzc2VkIHByZXZpb3VzbHkuIFRoaXMgd2lsbCBoZWxwDQo+IHNpbXBsaWZ5IG1lcmdlL3Nw
-bGl0IG9wZXJhdGlvbnMgZHVyaW5nIGNvbnZlcnNpb25zIGFuZCBoZWxwIHVzZWNhc2VzDQo+IGxp
-a2UgZ3Vlc3QgbWVtb3J5IHBlcnNpc3RlbmNlIFsyXSBhbmQgbm9uLWNvbmZpZGVudGlhbCBWTXMu
-DQoNCklmIHRoaXMgYmVjb21lcyBhIHRoaW5nIGZvciBwcml2YXRlIG1lbW9yeSAod2hpY2ggaXQg
-aXNuJ3QgeWV0KSwgdGhlbiBjb3VsZG4ndA0Kd2UganVzdCBjaGFuZ2UgdGhpbmdzIGF0IHRoYXQg
-cG9pbnQ/DQoNCklzIHRoZSBvbmx5IGlzc3VlIHdpdGggVERYIHRha2luZyByZWZjb3VudHMgdGhh
-dCBpdCB3b24ndCB3b3JrIHdpdGggZnV0dXJlIGNvZGUNCmNoYW5nZXM/DQoNCj4gDQo+IFsxXSBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sL2RpcXo3YzJscjZ3Zy5mc2ZAYWNrZXJsZXl0bmct
-Y3RvcC5jLmdvb2dsZXJzLmNvbS8NCj4gWzJdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwv
-MjAyNDA4MDUwOTMyNDUuODg5MzU3LTEtamdvd2Fuc0BhbWF6b24uY29tLw0KDQo=
+When both the RHBA and RPA FDMI requests time out, fnic reuses a frame
+to send ABTS for each of them. On send completion, this causes an
+attempt to free the same frame twice that leads to a crash.
+
+Fix crash by allocating separate frames for RHBA and RPA,
+and modify ABTS logic accordingly.
+
+Tested by checking MDS for FDMI information.
+Tested by using instrumented driver to:
+Drop PLOGI response
+Drop RHBA response
+Drop RPA response
+Drop RHBA and RPA response
+Drop PLOGI response + ABTS response
+Drop RHBA response + ABTS response
+Drop RPA response + ABTS response
+Drop RHBA and RPA response + ABTS response for both of them
+
+Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
+Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
+Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
+Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
+Tested-by: Arun Easi <aeasi@cisco.com>
+Co-developed-by: Arun Easi <aeasi@cisco.com>
+Signed-off-by: Arun Easi <aeasi@cisco.com>
+Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
+---
+Changes between v5 and v6:
+    - Incorporate review comments from John:
+	- Rebase patches on 6.17/scsi-queue
+
+Changes between v4 and v5:
+    - Incorporate review comments from John:
+	- Refactor patches
+
+Changes between v3 and v4:
+    - Incorporate review comments from Dan:
+	- Remove comments from Cc tag
+
+Changes between v2 and v3:
+    - Incorporate review comments from Dan:
+	- Add Cc to stable
+
+Changes between v1 and v2:
+    - Incorporate review comments from Dan:
+        - Add Fixes tag
+---
+ drivers/scsi/fnic/fdls_disc.c | 113 +++++++++++++++++++++++++---------
+ drivers/scsi/fnic/fnic.h      |   2 +-
+ drivers/scsi/fnic/fnic_fdls.h |   1 +
+ 3 files changed, 87 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
+index f8ab69c51dab..36b498ad55b4 100644
+--- a/drivers/scsi/fnic/fdls_disc.c
++++ b/drivers/scsi/fnic/fdls_disc.c
+@@ -763,47 +763,69 @@ static void fdls_send_fabric_abts(struct fnic_iport_s *iport)
+ 	iport->fabric.timer_pending = 1;
+ }
+ 
+-static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
++static uint8_t *fdls_alloc_init_fdmi_abts_frame(struct fnic_iport_s *iport,
++		uint16_t oxid)
+ {
+-	uint8_t *frame;
++	struct fc_frame_header *pfdmi_abts;
+ 	uint8_t d_id[3];
++	uint8_t *frame;
+ 	struct fnic *fnic = iport->fnic;
+-	struct fc_frame_header *pfabric_abts;
+-	unsigned long fdmi_tov;
+-	uint16_t oxid;
+-	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
+-			sizeof(struct fc_frame_header);
+ 
+ 	frame = fdls_alloc_frame(iport);
+ 	if (frame == NULL) {
+ 		FNIC_FCS_DBG(KERN_ERR, fnic->host, fnic->fnic_num,
+ 				"Failed to allocate frame to send FDMI ABTS");
+-		return;
++		return NULL;
+ 	}
+ 
+-	pfabric_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
++	pfdmi_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
+ 	fdls_init_fabric_abts_frame(frame, iport);
+ 
+ 	hton24(d_id, FC_FID_MGMT_SERV);
+-	FNIC_STD_SET_D_ID(*pfabric_abts, d_id);
++	FNIC_STD_SET_D_ID(*pfdmi_abts, d_id);
++	FNIC_STD_SET_OX_ID(*pfdmi_abts, oxid);
++
++	return frame;
++}
++
++static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
++{
++	uint8_t *frame;
++	unsigned long fdmi_tov;
++	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
++			sizeof(struct fc_frame_header);
+ 
+ 	if (iport->fabric.fdmi_pending & FDLS_FDMI_PLOGI_PENDING) {
+-		oxid = iport->active_oxid_fdmi_plogi;
+-		FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++		frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_plogi);
++		if (frame == NULL)
++			return;
++
+ 		fnic_send_fcoe_frame(iport, frame, frame_size);
+ 	} else {
+ 		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
+-			oxid = iport->active_oxid_fdmi_rhba;
+-			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++			frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_rhba);
++			if (frame == NULL)
++				return;
++
+ 			fnic_send_fcoe_frame(iport, frame, frame_size);
+ 		}
+ 		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
+-			oxid = iport->active_oxid_fdmi_rpa;
+-			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
++			frame = fdls_alloc_init_fdmi_abts_frame(iport,
++						iport->active_oxid_fdmi_rpa);
++			if (frame == NULL) {
++				if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING)
++					goto arm_timer;
++				else
++					return;
++			}
++
+ 			fnic_send_fcoe_frame(iport, frame, frame_size);
+ 		}
+ 	}
+ 
++arm_timer:
+ 	fdmi_tov = jiffies + msecs_to_jiffies(2 * iport->e_d_tov);
+ 	mod_timer(&iport->fabric.fdmi_timer, round_jiffies(fdmi_tov));
+ 	iport->fabric.fdmi_pending |= FDLS_FDMI_ABORT_PENDING;
+@@ -2245,6 +2267,21 @@ void fdls_fabric_timer_callback(struct timer_list *t)
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+ }
+ 
++void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport)
++{
++	struct fnic *fnic = iport->fnic;
++
++	iport->fabric.fdmi_pending = 0;
++	/* If max retries not exhausted, start over from fdmi plogi */
++	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
++		iport->fabric.fdmi_retry++;
++		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
++					 "Retry FDMI PLOGI. FDMI retry: %d",
++					 iport->fabric.fdmi_retry);
++		fdls_send_fdmi_plogi(iport);
++	}
++}
++
+ void fdls_fdmi_timer_callback(struct timer_list *t)
+ {
+ 	struct fnic_fdls_fabric_s *fabric = timer_container_of(fabric, t,
+@@ -2291,14 +2328,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
+ 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+ 		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
+ 
+-	iport->fabric.fdmi_pending = 0;
+-	/* If max retries not exhaused, start over from fdmi plogi */
+-	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
+-		iport->fabric.fdmi_retry++;
+-		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+-					 "retry fdmi timer %d", iport->fabric.fdmi_retry);
+-		fdls_send_fdmi_plogi(iport);
+-	}
++	fdls_fdmi_retry_plogi(iport);
+ 	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
+ 		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
+ 	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
+@@ -3716,11 +3746,32 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
+ 	switch (FNIC_FRAME_TYPE(oxid)) {
+ 	case FNIC_FRAME_TYPE_FDMI_PLOGI:
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_plogi);
++
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_PLOGI_PENDING;
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
+ 		break;
+ 	case FNIC_FRAME_TYPE_FDMI_RHBA:
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_REG_HBA_PENDING;
++
++		/* If RPA is still pending, don't turn off ABORT PENDING.
++		 * We count on the timer to detect the ABTS timeout and take
++		 * corrective action.
++		 */
++		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING))
++			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
++
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rhba);
+ 		break;
+ 	case FNIC_FRAME_TYPE_FDMI_RPA:
++		iport->fabric.fdmi_pending &= ~FDLS_FDMI_RPA_PENDING;
++
++		/* If RHBA is still pending, don't turn off ABORT PENDING.
++		 * We count on the timer to detect the ABTS timeout and take
++		 * corrective action.
++		 */
++		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING))
++			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
++
+ 		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rpa);
+ 		break;
+ 	default:
+@@ -3730,10 +3781,16 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
+ 		break;
+ 	}
+ 
+-	timer_delete_sync(&iport->fabric.fdmi_timer);
+-	iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
+-
+-	fdls_send_fdmi_plogi(iport);
++	/*
++	 * Only if ABORT PENDING is off, delete the timer, and if no other
++	 * operations are pending, retry FDMI.
++	 * Otherwise, let the timer pop and take the appropriate action.
++	 */
++	if (!(iport->fabric.fdmi_pending & FDLS_FDMI_ABORT_PENDING)) {
++		timer_delete_sync(&iport->fabric.fdmi_timer);
++		if (!iport->fabric.fdmi_pending)
++			fdls_fdmi_retry_plogi(iport);
++	}
+ }
+ 
+ static void
+diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
+index 6c5f6046b1f5..86e293ce530d 100644
+--- a/drivers/scsi/fnic/fnic.h
++++ b/drivers/scsi/fnic/fnic.h
+@@ -30,7 +30,7 @@
+ 
+ #define DRV_NAME		"fnic"
+ #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
+-#define DRV_VERSION		"1.8.0.0"
++#define DRV_VERSION		"1.8.0.1"
+ #define PFX			DRV_NAME ": "
+ #define DFX                     DRV_NAME "%d: "
+ 
+diff --git a/drivers/scsi/fnic/fnic_fdls.h b/drivers/scsi/fnic/fnic_fdls.h
+index 8e610b65ad57..531d0b37e450 100644
+--- a/drivers/scsi/fnic/fnic_fdls.h
++++ b/drivers/scsi/fnic/fnic_fdls.h
+@@ -394,6 +394,7 @@ void fdls_send_tport_abts(struct fnic_iport_s *iport,
+ bool fdls_delete_tport(struct fnic_iport_s *iport,
+ 		       struct fnic_tport_s *tport);
+ void fdls_fdmi_timer_callback(struct timer_list *t);
++void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport);
+ 
+ /* fnic_fcs.c */
+ void fnic_fdls_init(struct fnic *fnic, int usefip);
+-- 
+2.47.1
+
