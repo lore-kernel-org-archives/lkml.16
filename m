@@ -1,42 +1,46 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8528E29826D;
-	Wed, 18 Jun 2025 11:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBC42857C2;
+	Wed, 18 Jun 2025 11:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750245582; cv=none; b=EQ2JPmnTLYWhPfeKCS5UG/2iCmEDJLlyOaacG8gsUHl/zBiLRLFiT7noJ261XBZutauDI1HWsvfRBX9cVuK0BON7r5442odNAEoR26iFMOy4KN1SmJzDpu+uuV6wKxqa+tMnt9D1w62EXDUN8PT+0iaHLsiLiTtUNBFoPHJd0RQ=
+	t=1750245640; cv=none; b=n8q0khMyPs9rDrEoT9LnW2zbeTUh0M8o88xpZt4DOEffSXqHhgYr/GKIMRBy9DaEQkTLOTYel/mfGVL8UQo8Ujs6tptOZsAq8fIEP+B4/+RVxIKWRRav/CZKZCs9WKQ4lrZeBfM+BWmHmZDQ0lasU1sezw8Y+awj+OMCu4ibOg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750245582; c=relaxed/simple;
-	bh=FOUMGdHHOgcLeytTyG2OuhWCGLuIINlkO6OEBRsNBsI=;
+	s=arc-20240116; t=1750245640; c=relaxed/simple;
+	bh=oyl2TlLtbM84WquwhiDpUOOTBxx8O4A2cwquy+FB9Lw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OQwRUkPJ++hC/Oncdg9dfy4KEZg5cVoj3i9PVk+geri/c3Ala907c91vqFFGnpfIQ5RdZ2GGwL5SOmNJRHecC+QmZU9O4bZG+wDs1iFE8qb9TwdKiED1YjSzM8DtN1LekG8OdK3J6Bs+SAHQptVsIk/Kt95lT+BuoBEnHM09tb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from localhost (unknown [116.232.48.232])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 624F1341E61;
-	Wed, 18 Jun 2025 11:19:40 +0000 (UTC)
-Date: Wed, 18 Jun 2025 11:19:35 +0000
-From: Yixun Lan <dlan@gentoo.org>
-To: Alex Elder <elder@riscstar.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	alex@ghiti.fr, heylenay@4d2.org, inochiama@outlook.com,
-	guodong@riscstar.com, devicetree@vger.kernel.org,
-	linux-clk@vger.kernel.org, spacemit@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 5/6] reset: spacemit: add support for SpacemiT CCU
- resets
-Message-ID: <20250618111935-GYA156140@gentoo>
-References: <20250613011139.1201702-1-elder@riscstar.com>
- <20250613011139.1201702-6-elder@riscstar.com>
- <528522d9-0467-428c-820a-9e9c8a6166e7@riscstar.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ejl08eKkpUc+S6n3B3Dr+koNB225QFNTIXhuDfcT+hWswimkfpLHrxDh2fHde1i+/q4OOzmqVkgLYKdV2OQOTA2F2lx22lOWxHtyDxwfSYD5F/Nq0+PqLhp4GoLwDR8HGkivvMH0M+1kYdfsJdQab621dJl6GlwOjKefuIQPKko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvVYQCcK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvVYQCcK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3345C4CEE7;
+	Wed, 18 Jun 2025 11:20:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750245639;
+	bh=oyl2TlLtbM84WquwhiDpUOOTBxx8O4A2cwquy+FB9Lw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HvVYQCcKCjy+1AcrJIcDYtCax67JJ7KB1wwwCSscnJaEusKrLQUIF0yDrJwE8Rqd9
+	 hPyMAmMe4ual+fCXnHFzSWMV02j92zmQ+dRRXdbf61tYXfouvL60BgYsuaqQQUibkY
+	 7ICa7aFAy5ycM94CvKz7WnGMDZy8tzTdUymlWsGE1cW3KveoJEqT4uZ7zJShAulMtt
+	 ydCnkNVkBbByP0fP0FpJ4vPGtme6JJ2gs6a9RrYfhCk3W7f4HG+LWdM1XYwvOVjQP9
+	 Sj2noYFHIR1Fz7HwkV3zWRfza7DBO8hWpUMurBv6KvMt1xgD9/6hwM/yZ15SViut6t
+	 ZLSIIkAE3+8Rg==
+Date: Wed, 18 Jun 2025 12:20:34 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, andrew+netdev@lunn.ch, shenjian15@huawei.com,
+	wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+	chenhao418@huawei.com, jonathan.cameron@huawei.com,
+	shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.swiatkowski@linux.intel.com
+Subject: Re: [PATCH V2 net-next 6/8] net: hns3: delete redundant address
+ before the array
+Message-ID: <20250618112034.GJ1699@horms.kernel.org>
+References: <20250617010255.1183069-1-shaojijie@huawei.com>
+ <20250617010255.1183069-7-shaojijie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,42 +49,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <528522d9-0467-428c-820a-9e9c8a6166e7@riscstar.com>
+In-Reply-To: <20250617010255.1183069-7-shaojijie@huawei.com>
 
-Hi Alex,
+On Tue, Jun 17, 2025 at 09:02:53AM +0800, Jijie Shao wrote:
+> From: Yonglong Liu <liuyonglong@huawei.com>
+> 
+> Address before the array is redundant, this patch delete it.
+> 
+> Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+> Signed-off-by: Jijie Shao <shaojijie@huawei.com>
 
-On 21:44 Sat 14 Jun     , Alex Elder wrote:
-> On 6/12/25 8:11 PM, Alex Elder wrote:
-> > Implement reset support for SpacemiT CCUs.  A SpacemiT reset controller
-> > device is an auxiliary device associated with a clock controller (CCU).
-> > 
-> > This patch defines the reset controllers for the MPMU, APBC, and MPMU
-> > CCUs, which already define clock controllers.  It also adds RCPU, RCPU2,
-> > and ACPB2 CCUs, which only define resets.
-> > 
-> > Signed-off-by: Alex Elder <elder@riscstar.com>
-> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Yixun Lan <dlan@gentoo.org>
-> > ---
-> > v11: Redefined combined reset definitions into individual ones
-> 
-> After I sent this, I realized the clocks use a different
-> naming convention for two of the PCIe symbols.  I think
-> reset should follow the same convention.
-> 
-> Yixun if you accept this series, would you mind updating
-> these?
-> 
->    RESET_PCIE0_SLV -> RESET_PCIE0_SLAVE
->    RESET_PCIE0_MSTR -> RESET_PCIE_MASTER
-> 
-> (And similar changes for PCIE1 and PCIE2.)
-> 
-sure, done, check here (let me know if I did wrong)
- https://github.com/spacemit-com/linux/releases/tag/spacemit-reset-drv-for-6.17
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-> Thank you.
-> 
-> 					-Alex
--- 
-Yixun Lan (dlan)
