@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156F1221F13;
-	Wed, 18 Jun 2025 21:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4543F221F13;
+	Wed, 18 Jun 2025 21:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280857; cv=none; b=kPzREyPSpcipxrTthWq29skhKaDBOCUcRekZhMLOsXOrIGyi0zSBq/wlOWSleafBDA/naFLbO+hx38vPnwPEK4h4FeZy+dvBSx2U5GazvjjI2xvdq0+SUHDXwMEL4I6XDnuPAgsOIKALxxgNBWZTRZEMwJhligVTU0RWnS+XZXQ=
+	t=1750280897; cv=none; b=G+Ao8DMPTJHXQYjIN1SYmI7vzCRX7OxCveijUV/RGSTTtiMH9ZWP9c5fvE5q9R4S3yuP3qtN3WtT1YIJ602Abvdq4bLZ6PnwyvjCOjaxK/bDg0SQ0G5ZyBfGtELaflXMatrFqwxPQXlwbFfI+ju/X0v9YtcxJ2wynx0tX46tHhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280857; c=relaxed/simple;
-	bh=2Fa+CiaEKDG/45664bJOrW49zdOHbkEpkERvvIlutq0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=gyE5FU2ckIz3C75LMFpamV4xrLW0bu74asUiC9pzjCBRUM83Lf0sw3vuR7gK1iVwkzWFSkl6VbqeVlIg+KLn9XUUshn6p0Q6Y10/KZ4J7FUw4z4SMUR2+jwPh+7Dbc2Jl/y9ThiBNbB/FrjgdB+F1cZZpWB2vGSqPhVMdWSNIdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=skniixjL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750280897; c=relaxed/simple;
+	bh=Q8YNz0u5UMmaGNWoguD3QZNfFQWgLplMWIX1k6YCLeQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=bAht9mznr4lF2cRzH87VpXmw0muiFh17TlXgXXttesTTf0RxidU78QbB8hBZka0DyiIWKR0YVVdPSRxv/o52MXwTth8boXVFDqGk2BzpwSmmauDpGoYtcxxDaodBVFh9EPVI0A2MUk6T8T56LWT9sXmkuPB4QW/3WLo0+/Zu9nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pe/UR+6Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="skniixjL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4782DC4CEE7;
-	Wed, 18 Jun 2025 21:07:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pe/UR+6Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3FCC4CEE7;
+	Wed, 18 Jun 2025 21:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750280856;
-	bh=2Fa+CiaEKDG/45664bJOrW49zdOHbkEpkERvvIlutq0=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=skniixjLc6Xk7NhihFRDAoeHa5UgkQsF7Z6/21kBw+4kyjEN8dtQS5OXz1p12yGeH
-	 OpzL+ucZQU/eywKTHzoBJ8qW3760+VcpII5vACym3HP6v0qRGKaiyUZP41XCd1wPQR
-	 U6djoCblprKp58Td6qROaMhD784yWsAfBeOg02XiU1acA9GmdYwNU+v3kgkQleHGe9
-	 OWKpE3pWuSUEvFl3/wIM9RootP39i6udLWiRqkjSXY15+/NvszXn8P/XCb2UzrLEx9
-	 0CMKkHxsMKVkHMFVk3TQDl0WhVYKpnTpYtsQ52+K3j8TS7BkhxM8yRSKRO657iA9Tx
-	 iexYksS+fQjog==
+	s=k20201202; t=1750280896;
+	bh=Q8YNz0u5UMmaGNWoguD3QZNfFQWgLplMWIX1k6YCLeQ=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=pe/UR+6QLyZNNcX5/R5QKfJfftYHb7rRgVMYvoUbbntESDcoomfI6wgVi+vaIjFni
+	 caFGmiAsQXpO+T7Bx48C7YNaJSGLmIyssA2/loenfDuxktnQonSi8NpgBCNySpEdmI
+	 VDEp8qgY/dSpxPaziXWxn6GgvWwXzv9wKr6QDVS8JIO2ox5KgOWUm622HgG2xKcicP
+	 eVDcSYWqtHoehb1Rx/HXGFHFHAMjYeZNmA93s21IsbypTLZ7aWMr7xSxEKb6/foFKm
+	 qvh/BAYo9BegqDeNs2nu2I6lK4nUHFJARFB7eYyv18igyAka1ohl0zUGDe9Jgi4yVJ
+	 OJhZvCSWWwa9A==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,126 +34,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 18 Jun 2025 23:07:30 +0200
-Message-Id: <DAPYS2D9HNBT.1ZTN1VHCPN4XA@kernel.org>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
- <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
- Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
- "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
- <nicolas.schier@linux.dev>
-Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
- <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
- Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
- "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
- <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
- Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
- <linux-modules@vger.kernel.org>
-Subject: Re: [PATCH v13 4/6] rust: module: update the module macro with
- module parameter support
+Date: Wed, 18 Jun 2025 23:08:12 +0200
+Message-Id: <DAPYSLVCFJ81.HP8134AQOMEX@kernel.org>
+Cc: <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/7] rust: str: make
+ `from_bytes_with_nul_unchecked_mut` const
 From: "Benno Lossin" <lossin@kernel.org>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Danilo Krummrich"
+ <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>
 X-Mailer: aerc 0.20.1
-References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
- <20250612-module-params-v3-v13-4-bc219cd1a3f8@kernel.org>
-In-Reply-To: <20250612-module-params-v3-v13-4-bc219cd1a3f8@kernel.org>
+References: <20250616-borrow_impls-v4-0-36f9beb3fe6a@nvidia.com>
+ <20250616-borrow_impls-v4-4-36f9beb3fe6a@nvidia.com>
+In-Reply-To: <20250616-borrow_impls-v4-4-36f9beb3fe6a@nvidia.com>
 
-On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
-> +
-> +    fn emit_params(&mut self, info: &ModuleInfo) {
-> +        let Some(params) =3D &info.params else {
-> +            return;
-> +        };
-> +
-> +        for param in params {
-> +            let ops =3D param_ops_path(&param.ptype);
-> +
-> +            // Note: The spelling of these fields is dictated by the use=
-r space
-> +            // tool `modinfo`.
-> +            self.emit_param("parmtype", &param.name, &param.ptype);
-> +            self.emit_param("parm", &param.name, &param.description);
+On Mon Jun 16, 2025 at 5:34 AM CEST, Alexandre Courbot wrote:
+> This method was probably kept non-const due to the absence of the
+> `const_mut_refs` feature, but it has been enabled since the introduction
+> of this code (and stabilized with Rust 1.83). Thus, make it const to
+> match its non-const counterpart.
+>
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
 
-I just read this part again and I want to voice my dissatisfaction with
-these key names. (not that you can do anything about that :)
-
-> +
-> +            write!(
-> +                self.param_buffer,
-> +                "
-> +                    pub(crate) static {param_name}:
-
-Does this need to be accessed by anything else except the static below?
-If no, then can we move it inside of that static? So
-
-    #[link_section =3D \"__param\"]
-    #[used]
-    static __{module_name}_{param_name}_struct: ::kernel::module_param::Rac=
-yKernelParam =3D {
-        static {param_name}:
-            ::kernel::module_param::ModuleParamAccess<{param_type}> =3D
-                ::kernel::module_param::ModuleParamAccess::new({param_defau=
-lt});
-        // ...
-    };
+Reviewed-by: Benno Lossin <lossin@kernel.org>
 
 ---
 Cheers,
 Benno
 
-> +                        ::kernel::module_param::ModuleParamAccess<{param=
-_type}> =3D
-> +                            ::kernel::module_param::ModuleParamAccess::n=
-ew({param_default});
-> +
-> +                    #[link_section =3D \"__param\"]
-> +                    #[used]
-> +                    static __{module_name}_{param_name}_struct:
-> +                        ::kernel::module_param::RacyKernelParam =3D
-> +                        ::kernel::module_param::RacyKernelParam(::kernel=
-::bindings::kernel_param {{
-> +                            name: if cfg!(MODULE) {{
-> +                                ::kernel::c_str!(\"{param_name}\").as_by=
-tes_with_nul()
-> +                            }} else {{
-> +                                ::kernel::c_str!(\"{module_name}.{param_=
-name}\").as_bytes_with_nul()
-> +                            }}.as_ptr(),
-> +                            // SAFETY: `__this_module` is constructed by=
- the kernel at load time
-> +                            // and will not be freed until the module is=
- unloaded.
-> +                            #[cfg(MODULE)]
-> +                            mod_: unsafe {{
-> +                                (&::kernel::bindings::__this_module
-> +                                    as *const ::kernel::bindings::module=
-)
-> +                                    .cast_mut()
-> +                            }},
-> +                            #[cfg(not(MODULE))]
-> +                            mod_: ::core::ptr::null_mut(),
-> +                            ops: &{ops} as *const ::kernel::bindings::ke=
-rnel_param_ops,
-> +                            perm: 0, // Will not appear in sysfs
-> +                            level: -1,
-> +                            flags: 0,
-> +                            __bindgen_anon_1:
-> +                                ::kernel::bindings::kernel_param__bindge=
-n_ty_1 {{
-> +                                    arg: {param_name}.as_mut_ptr().cast(=
-)
-> +                                }},
-> +                        }});
-> +                ",
-> +                module_name =3D info.name,
-> +                param_type =3D param.ptype,
-> +                param_default =3D param.default,
-> +                param_name =3D param.name,
-> +                ops =3D ops,
-> +            )
-> +            .unwrap();
-> +        }
-> +    }
-> +}
+> ---
+>  rust/kernel/str.rs | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
