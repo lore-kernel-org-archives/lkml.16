@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2235628541B
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9B522874FD
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:30:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239011; cv=none; b=lDhhlNNwwXKyIxujx4IbEky216A6v4dB+Oi+/GmXYRKT8b+j9YHdb4RZrJ5I+VrQuyPrP4OKQodWpT1tCvmShdIxvjrKEHtiJkhRQZgDsufMKeyHaRoEaOA1jSGfTJphHKdzLrtzgksaSIgwz59ip8jZWOSWtITAOwG8osUqJ8s=
+	t=1750239015; cv=none; b=ne2kTnLUtGo/W7HDNKFlJFwAZiQNRHGUSajVDu/rvl6seC3H+8aRkPZr4MmYnni3M0Z7NS0KX/FJfb2et6/BCnnke4e9AJ7RuP6BVnbrM9jGhRxp5usEcA28nxG9gX5/K+1853ESqMXTfKdAFjgUAngv6wXJKSNZ0M2J2vmqJWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239011; c=relaxed/simple;
-	bh=qWDgYU9GjYEy2tejugw8ZczCVa9XsBOTxffWoLLYfZk=;
+	s=arc-20240116; t=1750239015; c=relaxed/simple;
+	bh=OvoYifwEu2fBfkD0FjsApyBqsUv2Po5f7uUa/yrPNr8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nh+7UBGifNXc/iR/7BqIdnzAYLBVmmcv4NaRAaYoGx1wwtOYA6USjpCogJnzbTqkDHfEtkxD9vkbUPW2Dx6iD5khfTVjbZqKK1huHIhL/tpeTqTLbJRymh+9q6ouD/6xoieDwsoQIrU/nQ9Juf9XvhZrilwTWlRoZHAEINlqzyw=
+	 MIME-Version; b=Cww0bbz1jZinTtQsSoo/M6O+fxt88nzuDtSz7ykI0XX2BMVrFXxlX95bxlVcaUL+hbycEVLkf+Q00RYYT7AAC5AlLgBHAkomvJsbxMSXWplDRvAbKN3fz6Hk3VX67fQe1ufLWv91kFnODeIsytHpTeurAQgGs24S7EUuIZ5lpQI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E57441D13;
-	Wed, 18 Jun 2025 02:29:48 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79D161D15;
+	Wed, 18 Jun 2025 02:29:52 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B2513F58B;
-	Wed, 18 Jun 2025 02:30:06 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CCF123F58B;
+	Wed, 18 Jun 2025 02:30:09 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	pcc@google.com,
@@ -43,9 +43,9 @@ To: catalin.marinas@arm.com,
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v7 2/8] prctl: introduce PR_MTE_STORE_ONLY
-Date: Wed, 18 Jun 2025 10:29:51 +0100
-Message-Id: <20250618092957.2069907-3-yeoreum.yun@arm.com>
+Subject: [PATCH v7 3/8] arm64/kernel: support store-only mte tag check
+Date: Wed, 18 Jun 2025 10:29:52 +0100
+Message-Id: <20250618092957.2069907-4-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250618092957.2069907-1-yeoreum.yun@arm.com>
 References: <20250618092957.2069907-1-yeoreum.yun@arm.com>
@@ -57,28 +57,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PR_MTE_STORE_ONLY is used to restrict the MTE tag check for store
-opeartion only.
+Introduce new flag -- MTE_CTRL_STORE_ONLY used to set store-only tag check.
+This flag isn't overridden by prefered tcf flag setting but set together
+with prefered setting of way to report tag check fault.
 
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
 Reviewed-by: Mark Brown <broonie@kernel.org>
 ---
- include/uapi/linux/prctl.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/include/asm/processor.h |  2 ++
+ arch/arm64/kernel/mte.c            | 11 ++++++++++-
+ arch/arm64/kernel/process.c        |  6 +++++-
+ 3 files changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 43dec6eed559..f6fb137c407f 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -244,6 +244,8 @@ struct prctl_mm_map {
- # define PR_MTE_TAG_MASK		(0xffffUL << PR_MTE_TAG_SHIFT)
- /* Unused; kept only for source compatibility */
- # define PR_MTE_TCF_SHIFT		1
-+/* MTE tag check store only */
-+# define PR_MTE_STORE_ONLY		(1UL << 19)
- /* RISC-V pointer masking tag length */
- # define PR_PMLEN_SHIFT			24
- # define PR_PMLEN_MASK			(0x7fUL << PR_PMLEN_SHIFT)
+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
+index 1bf1a3b16e88..61d62bfd5a7b 100644
+--- a/arch/arm64/include/asm/processor.h
++++ b/arch/arm64/include/asm/processor.h
+@@ -23,6 +23,8 @@
+ #define MTE_CTRL_TCF_ASYNC		(1UL << 17)
+ #define MTE_CTRL_TCF_ASYMM		(1UL << 18)
+ 
++#define MTE_CTRL_STORE_ONLY		(1UL << 19)
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/build_bug.h>
+diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+index 2fbfd27ff5f2..e5e773844889 100644
+--- a/arch/arm64/kernel/mte.c
++++ b/arch/arm64/kernel/mte.c
+@@ -200,7 +200,7 @@ static void mte_update_sctlr_user(struct task_struct *task)
+ 	 * program requested values go with what was requested.
+ 	 */
+ 	resolved_mte_tcf = (mte_ctrl & pref) ? pref : mte_ctrl;
+-	sctlr &= ~SCTLR_EL1_TCF0_MASK;
++	sctlr &= ~(SCTLR_EL1_TCF0_MASK | SCTLR_EL1_TCSO0_MASK);
+ 	/*
+ 	 * Pick an actual setting. The order in which we check for
+ 	 * set bits and map into register values determines our
+@@ -212,6 +212,10 @@ static void mte_update_sctlr_user(struct task_struct *task)
+ 		sctlr |= SYS_FIELD_PREP_ENUM(SCTLR_EL1, TCF0, ASYNC);
+ 	else if (resolved_mte_tcf & MTE_CTRL_TCF_SYNC)
+ 		sctlr |= SYS_FIELD_PREP_ENUM(SCTLR_EL1, TCF0, SYNC);
++
++	if (mte_ctrl & MTE_CTRL_STORE_ONLY)
++		sctlr |= SYS_FIELD_PREP(SCTLR_EL1, TCSO0, 1);
++
+ 	task->thread.sctlr_user = sctlr;
+ }
+ 
+@@ -371,6 +375,9 @@ long set_mte_ctrl(struct task_struct *task, unsigned long arg)
+ 	    (arg & PR_MTE_TCF_SYNC))
+ 		mte_ctrl |= MTE_CTRL_TCF_ASYMM;
+ 
++	if (arg & PR_MTE_STORE_ONLY)
++		mte_ctrl |= MTE_CTRL_STORE_ONLY;
++
+ 	task->thread.mte_ctrl = mte_ctrl;
+ 	if (task == current) {
+ 		preempt_disable();
+@@ -398,6 +405,8 @@ long get_mte_ctrl(struct task_struct *task)
+ 		ret |= PR_MTE_TCF_ASYNC;
+ 	if (mte_ctrl & MTE_CTRL_TCF_SYNC)
+ 		ret |= PR_MTE_TCF_SYNC;
++	if (mte_ctrl & MTE_CTRL_STORE_ONLY)
++		ret |= PR_MTE_STORE_ONLY;
+ 
+ 	return ret;
+ }
+diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
+index a5ca15daeb8a..fc49f2b3ded1 100644
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -849,10 +849,14 @@ long set_tagged_addr_ctrl(struct task_struct *task, unsigned long arg)
+ 	if (is_compat_thread(ti))
+ 		return -EINVAL;
+ 
+-	if (system_supports_mte())
++	if (system_supports_mte()) {
+ 		valid_mask |= PR_MTE_TCF_SYNC | PR_MTE_TCF_ASYNC \
+ 			| PR_MTE_TAG_MASK;
+ 
++		if (cpus_have_cap(ARM64_MTE_STORE_ONLY))
++			valid_mask |= PR_MTE_STORE_ONLY;
++	}
++
+ 	if (arg & ~valid_mask)
+ 		return -EINVAL;
+ 
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
