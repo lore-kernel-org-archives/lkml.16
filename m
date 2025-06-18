@@ -1,91 +1,106 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D92E9ECB;
-	Wed, 18 Jun 2025 15:29:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1232B2EE5FA;
+	Wed, 18 Jun 2025 15:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260581; cv=none; b=VJdqR/5BTcTHv5VbNs4Fw6hM0BUln7FvnEwAr0l1RVEJpOQujrI9Ci3op4D+TkJYQrKKxyfKJEHNLDG5nQtdgIvf876GEh8F/0pEp+PN/jBO587W2KgV+NnrAHAr8OZz1RYw7X3RxbZCGHffkelu+YLPcMo6m46901GCdx9rt24=
+	t=1750260615; cv=none; b=uTNAsyokG8mzUKPbqKQ0DRwVBiming8gmoCD4zGcFal/wf0h06KBzujPQIJ1hnNcXnN8EQ06GlK2X3L5QM0Y+DYCw6VEs6IoIIXR7RNP/rkInc/Bob5XxjslhlP3pMmpZ8eusx9SYPoXcAp/KU77t0veiGNlTU3d52a3YGXePrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260581; c=relaxed/simple;
-	bh=lW4X2/j0mHA1tNFg9bYU+FZz+tPT0wmbAyYt+FoNbkA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o9Hyxx9SKlPe56FI6cEQal68cv/vG5xcld/YI7eNq+Pbqc6p44bVN8hwLHAeNA2YO819bHad0H8EdQR/VRYewSFTj0rNd12EeJrR+JTqRPX+VyeMX/522rzQt3m7vocP+2kFa2+K4w3Txyrk9tnKdRHxLxR/8tO/jcGiakiuKUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf12.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay10.hostedemail.com (Postfix) with ESMTP id DF163C02B9;
-	Wed, 18 Jun 2025 15:29:35 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id 1DF0C20;
-	Wed, 18 Jun 2025 15:29:32 +0000 (UTC)
-Date: Wed, 18 Jun 2025 11:29:39 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 04/14] unwind_user/deferred: Add
- unwind_deferred_trace()
-Message-ID: <20250618112939.76f4bb87@gandalf.local.home>
-In-Reply-To: <20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.433111891@goodmis.org>
-	<20250618140247.GQ1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750260615; c=relaxed/simple;
+	bh=uao6iLRPS+RTJHDF89A0xuDY5D9OIKEScQYTHr7q75E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GVSHyhj8RDl1XQwWl+PMsmWTAkXwb7nl6SoHPn76gpVZsYGbTQGQCCQq5X0bYHaWcixnBdLitw3337+yyJFfy5Z0xaTe58T8O6XKM57x9vW9z503WBqLuSy7sKRQXV6tJEu3B252KBnlwPIv/PiRZbgbSacxAJvAJ17JDOuX7RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cauo37mP; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cauo37mP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750260615; x=1781796615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uao6iLRPS+RTJHDF89A0xuDY5D9OIKEScQYTHr7q75E=;
+  b=Cauo37mPmfnhltCQReygwvYaMqbaKHZM7GSFyVi3b76KUVvl31E45ZkR
+   bjpGAF245Xj/jixbc0wTMndG8xWZSwdNA/tCNVwuOgqoG4Wgcp92lZlAP
+   1LYlhptF6vfBN5kKHmL1qIyQs1uCQaCs+XWtF9MIhVXAqY1olmAy7JQzZ
+   Sj/SKuq8ifp2WFYyx9NH85X5NGPTFuIJ4zUESR97h4rgmv256ysUALopA
+   QoNjQc51H8utYSl95FI+m5k7L7DDn2yl+3IeKHeT+UC92WsWG3srwQ0ob
+   pTRxS9l6skC6qW1FasoSByj7TV0gAX8W5oZaWHYRHRrAvKCQLmiUBaS6N
+   A==;
+X-CSE-ConnectionGUID: 2YMvwS7sTGSmOmhI92JXfQ==
+X-CSE-MsgGUID: 6IZ1fGxxSdSVkAopi1XA/A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="56165192"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="56165192"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:30:14 -0700
+X-CSE-ConnectionGUID: jODERCniRByzQhhkPOAnww==
+X-CSE-MsgGUID: rczAkcBSQmazkneLo4/xcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="150180111"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:30:12 -0700
+Date: Wed, 18 Jun 2025 08:30:10 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
+	lenb@kernel.org, james.morse@arm.com, bp@alien8.de, kees@kernel.org,
+	gustavoars@kernel.org, Jonathan.Cameron@huawei.com,
+	sudeep.holla@arm.com, jonathanh@nvidia.com,
+	u.kleine-koenig@baylibre.com, viro@zeniv.linux.org.uk,
+	ira.weiny@intel.com, alison.schofield@intel.com,
+	dan.j.williams@intel.com, gregkh@linuxfoundation.org,
+	peterz@infradead.org, dave.jiang@intel.com,
+	Benjamin.Cheatham@amd.com, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v9 5/7] ACPI: APEI: EINJ: Create debugfs files to enter
+ device id and syndrome
+Message-ID: <aFLbgkhB5Q4ZbAZl@agluck-desk3>
+References: <20250612231327.84360-1-zaidal@os.amperecomputing.com>
+ <20250612231327.84360-6-zaidal@os.amperecomputing.com>
+ <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1DF0C20
-X-Stat-Signature: tsa5f6hsoe9t4jumybf5yux1amccjmzj
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18ezSxyACc6GRwHDFQgKNfyshvjstQIJbs=
-X-HE-Tag: 1750260572-758865
-X-HE-Meta: U2FsdGVkX1+Whxt1YjVRFQvEKsQMCy9zG2QwWy029AeidKVH9+toGcDXMZj8vlnlbKg4bRAYkDEWJZJ3BlnpVFJCZfLHu9gOsWVs2MPYcB7VluSY9kVBMf3BDjLLXCAPOqCINfYDJQShbdoIOK/NWnU/xBvCopScba2ktXD1eqUlebES9UbMRxF/XGcxwcoJk161avURclnzXwo7nk590Q8+maVlST30WYNfjW+qx9ISH1/REGHsV1g1dU9SH24cRwM7tB2heJz2Avqy8ydHqxAwpw0FJT4SeSfUUBdwN+dDNChy8hAMzewIJEmTx4NqH70FwetUvUEEFnqZ9Z9iVXMYTSdCjwLW0jOe3Q5ICG26FSzHg3I8D340vipkZXA3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
 
-On Wed, 18 Jun 2025 16:02:47 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
-
-> On Tue, Jun 10, 2025 at 08:54:25PM -0400, Steven Rostedt wrote:
-> > +/**
-> > + * unwind_deferred_trace - Produce a user stacktrace in faultable context
-> > + * @trace: The descriptor that will store the user stacktrace
-> > + *
-> > + * This must be called in a known faultable context (usually when entering
-> > + * or exiting user space). Depending on the available implementations
-> > + * the @trace will be loaded with the addresses of the user space stacktrace
-> > + * if it can be found.  
+On Wed, Jun 18, 2025 at 06:21:39PM +0300, Dan Carpenter wrote:
+> On Thu, Jun 12, 2025 at 04:13:25PM -0700, Zaid Alali wrote:
+> > +static ssize_t u128_read(struct file *f, char __user *buf, size_t count, loff_t *off)
+> > +{
+> > +	char output[2 * COMPONENT_LEN + 1];
+> > +	u8 *data = f->f_inode->i_private;
+> > +	int i;
+> > +
+> > +	if (*off >= sizeof(output))
+> > +		return 0;
 > 
-> I am confused -- why would we ever want to call this on exiting
-> user-space, or rather kernel entry?
+> No need for this check.  simple_read_from_buffer() will do the
+> right thing.
+
+True. But why waste cycles populating the output buffer
+when it will be ignored? The normal flow here is that
+a user will likely try to read a <stdio.h> sized buffer
+and get back 33 bytes. Then read again to find EOF. That
+second read doesn't need to do all the "sprintf()"s.
+
+> regards,
+> dan carpenter
 > 
-> I thought the whole point was to request a user trace while in-kernel,
-> and defer that to return-to-user.
+> > +
+> > +	for (i = 0; i < COMPONENT_LEN; i++)
+> > +		sprintf(output + 2 * i, "%.02x", data[COMPONENT_LEN - i - 1]);
+> > +	output[2 * COMPONENT_LEN] = '\n';
+> > +
+> > +	return simple_read_from_buffer(buf, count, off, output, sizeof(output));
+> > +}
 
-This code was broken out of the unwind deferred trace to be more stand
-alone. Actually, it should be renamed to unwind_faultable_trace() or
-something to denote that it must be called from a faultable context.
-
-When Josh made perf use the task_work directly, it used this function to do
-the trace as it handled the deferring.
-
-Note, a request from the gcc folks is to add a system call that gives the
-user space application a backtrace from its current location. This can be
-handy for debugging as it would be similar to how we use dump_stack().
-
-This function would be used for that.
-
--- Steve
+-Tony
