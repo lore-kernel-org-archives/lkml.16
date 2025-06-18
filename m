@@ -1,213 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52EDB188006
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68709212FBE;
+	Wed, 18 Jun 2025 20:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750279076; cv=none; b=tDqjTrOADlKMgKFpISo+vNpySJfI8rZ/ALT1ncc+EKRle5QjAGA0BU6tXO8qnt3tybrTIkeuACp/z9AYsDM4yzVv38sJ9+I40pyhgfGh1tMOvAFW2AA3tym0i6QZEkxaSeDvqeJJYuZPiNJNgRLfHxmNCdmchn6Yz9ZSL7wIGMc=
+	t=1750279087; cv=none; b=awAi4GpVHyPSKgAUSNARXv0wSM3XAHzBPfs3rtRogj3VcB9tmucIJlKz1mzKT4KT2zaq7LkepNPmkSQbWi9WttcET4+AzoioWtUvlPsNfNzYiezLo1HdNWUbV9lH0arNoB/znGHiDfWkBklF+m0oevmoDu26UffNKPc1oPQjFkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750279076; c=relaxed/simple;
-	bh=ThWDIJUcnjIcGO2orH+Z275Dtmkr0zasv/AY8MYDvuw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lXoRmPlKac0oDs1Tsi1rTYunrV/YskGRi/dBwpLNmjRTMqG2vpJaVeMvjGFtxe3gmz1I8tp0mW+BiX3F/8u5v9ewKXk4XqYqOahCKFNj0FwFBNbJaFro0f4y2IvqXu/l1t+ZiXKz0Twx7ahfJTakQkSvylmXf688NHHrKC1dlgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZprP57u4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750279087; c=relaxed/simple;
+	bh=pKUkHadBq2GOHWoFc3UCNIk7hiTpzfRtUTfl17mqQvk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=dpK0JoaHvx81kQlwXnXARs6pOcW6qH2CEO5DY5/kRiiI0vOoX0XNcGn3wIqZPD+WD8yWnHSLqCjZxG9vJS5pjSfAemrKA+sesF0i0Igw+NAj4V5/sGBJvnCbBmvI4Apc1Xb9wHd8TljBA5fmsBaR82QYkbM+C3sx/xv5cXaEC0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GeI1mB3U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZprP57u4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750279073;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zNT9iz5HBFLrbqV+hQa0TNtoL5i74hf59IkxgJEcfQQ=;
-	b=ZprP57u4OkuEW2DzjzmbbsWfOVZNCJinoVzbXBhJtUKqXieNXvtayIUvikWFuBNAKT7Brk
-	kR2Xl0BJxJA+yOTWc+NV4BVuDZRxODlgUuSsoUZUd5ogPp4JuY0zdFN2TrW2IE4W7uWvY6
-	ZRXFdhR/Skj3zON0sNMdgsHC8bTjfKs=
-Received: from mail-lj1-f200.google.com (mail-lj1-f200.google.com
- [209.85.208.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-481-ZM7l28AZMZSX9EpOkT9xBQ-1; Wed, 18 Jun 2025 16:37:46 -0400
-X-MC-Unique: ZM7l28AZMZSX9EpOkT9xBQ-1
-X-Mimecast-MFC-AGG-ID: ZM7l28AZMZSX9EpOkT9xBQ_1750279065
-Received: by mail-lj1-f200.google.com with SMTP id 38308e7fff4ca-32b6e039023so158441fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:37:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750279064; x=1750883864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zNT9iz5HBFLrbqV+hQa0TNtoL5i74hf59IkxgJEcfQQ=;
-        b=da3ippcKKuoJPS8bGq/7G51RNslfQqYBIMd1AEL/S4F9OSshCmR0JZxXpgFdzzAaYx
-         CWDSVyltz5NmLbNY4ke2Tk9BCGzjyFdOS8GnmsKJBlVmagmRtWbBS0Rb34v2cZxjCiy7
-         OpAJxZhpDMUxs6JUPB7kYfSRsf1EpwZwL2DTkjRquBgsTTzYI6LTRlEa+xh67LmY4AsQ
-         MDl/ujR2bOa2ylnDo826J50OoPF0s94KkoKdsuaSdFuL8jshpc0e82FhAP3VB8xM2MaH
-         WkkNl/TxXP6QkJ/xHBamyd9/USMU9876pUedi2fk4iS4eiVYBwGDf7RZhgt6HnLl2701
-         BTjA==
-X-Gm-Message-State: AOJu0YzjgY7IJ4z295XTXkBmatNvl4F8UVv58N5CivT7s0cpfq74q4df
-	PFlRF4Z54VQlTHwO7jFFso7BKKdKIrxJAih3BI9/deBcBvSJaA9zU+Q/yCNwdlZxb/e/N2bb7cC
-	dfox+4V3ZrPk2ylhBQEcukO3cPEN3UGeoLl/hh7oiCE+wUTa8KPD4OAgu2XVMF1aiD8vi8qSSV5
-	hGnKJf6aJO65F8GE3/ekm5zDnRCMwXaJREN+t1i/9gpY6nWEn0hao=
-X-Gm-Gg: ASbGncv3LDn0uAn/UX9jFlhzxZF/z8I7gjK7vgNVKQNdO21ah3jQp2gkijpFaPkkQiC
-	5fu5tIM6fT57gY+iYKqgcsfGO1GlpAcYsllxcI6dXcwxf1EVHx3M3+e2z3/b+0bP6Dv48kYOhEP
-	vZR1I=
-X-Received: by 2002:a05:651c:2203:b0:32a:7baf:9dcf with SMTP id 38308e7fff4ca-32b4a6855d8mr68118521fa.28.1750279063929;
-        Wed, 18 Jun 2025 13:37:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGLMY7siBNrdS608WDliBgn2z0Bx62jhstDrNwt5U2Hc2fiN7JQv7xXW+H5SIAw5pAb6GH0czraodQFnWRuqxk=
-X-Received: by 2002:a05:651c:2203:b0:32a:7baf:9dcf with SMTP id
- 38308e7fff4ca-32b4a6855d8mr68118421fa.28.1750279063448; Wed, 18 Jun 2025
- 13:37:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GeI1mB3U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AE90C4CEEF;
+	Wed, 18 Jun 2025 20:38:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750279086;
+	bh=pKUkHadBq2GOHWoFc3UCNIk7hiTpzfRtUTfl17mqQvk=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=GeI1mB3UxgkQibtMZ3fLSYot4ww/OlooSxYPE5xVw2U8ZCKDQAD2qGvr0lW9BGJYJ
+	 mQBAWoj0ux9BaLj3GRGSPS98N1mmGDxvc9vNXrSyXLMQOFNBugMEu7py6+0qnPti3G
+	 yrVJLpwdn+sYyb+jnoHwSWwrTVnTMd9AH205IpE+pOCONJtd7ae8mFGbTt+hAF8Jzi
+	 Io5UWTFqSD8mefaRiAzOF52nthmpBPD/UDDxGrXzPYrXWEhRZjZPcCdBED9+Yct8tv
+	 Y3cC+9FhR55cJMx/okfaQ+0iooy9fBUPMda/PUQNl5kzf1JnogEuvA6ewDRgrrqaG4
+	 Qd8jYvVJ2Jajw==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <1BDE6C83-889C-4E9A-9F92-C43BC50C529E@gmail.com>
-In-Reply-To: <1BDE6C83-889C-4E9A-9F92-C43BC50C529E@gmail.com>
-From: Jirka Hladky <jhladky@redhat.com>
-Date: Wed, 18 Jun 2025 22:37:31 +0200
-X-Gm-Features: AX0GCFsCo3Z6cZxV_o9H_dgZPRIn-xd9iJ-M-3of-K-AlINt7Pbx0tEUL1o1FTg
-Message-ID: <CAE4VaGAaPjczTYZh8sG47KmAL361cO6dtzfi+F7mufbj5Q+5ag@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IEtlcm5lbCBwYW5pYyBpbiBfX21pZ3JhdGVfc3dhcF90YXNrKCkg4oCTIG1vcmUgcQ==?=
-	=?UTF-8?B?dWVzdGlvbnM=?=
-To: Abhigyan ghosh <zscript.team.zs@gmail.com>
-Cc: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 22:38:00 +0200
+Message-Id: <DAPY5HF9HGXC.FCEKAMLPFY1H@kernel.org>
+Subject: Re: [PATCH v13 1/6] rust: str: add radix prefixed integer parsing
+ functions
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
+ <nicolas.schier@linux.dev>
+Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
+ <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
+ "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
+ Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
+ <linux-modules@vger.kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+ <20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
+In-Reply-To: <20250612-module-params-v3-v13-1-bc219cd1a3f8@kernel.org>
 
-Hi Abhigyan,
+On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
+> +pub trait ParseInt: private::FromStrRadix + TryFrom<u64> {
+> +    /// Parse a string according to the description in [`Self`].
+> +    fn from_str(src: &BStr) -> Result<Self> {
+> +        match src.deref() {
+> +            [b'-', rest @ ..] =3D> {
+> +                let (radix, digits) =3D strip_radix(rest.as_ref());
+> +                // 2's complement values range from -2^(b-1) to 2^(b-1)-=
+1.
+> +                // So if we want to parse negative numbers as positive a=
+nd
+> +                // later multiply by -1, we have to parse into a larger
+> +                // integer. We choose `u64` as sufficiently large.
+> +                //
+> +                // NOTE: 128 bit integers are not available on all
+> +                // platforms, hence the choice of 64 bits.
+> +                let val =3D
+> +                    u64::from_str_radix(core::str::from_utf8(digits).map=
+_err(|_| EINVAL)?, radix)
+> +                        .map_err(|_| EINVAL)?;
+> +
+> +                if val > Self::abs_min() {
+> +                    return Err(EINVAL);
+> +                }
+> +
+> +                if val =3D=3D Self::abs_min() {
+> +                    return Ok(Self::MIN);
+> +                }
+> +
+> +                // SAFETY: We checked that `val` will fit in `Self` abov=
+e.
 
-thank you for looking into this!
+Sorry that it took me this long to realize, but this seems pretty weird.
+I guess this is why the `FromStrRadix` is `unsafe`.
 
-> 1. Were you using Fedora's debug kernels (CONFIG_DEBUG_*, CONFIG_KASAN, e=
-tc.), or are these closer to production-style stripped builds?
+Can we just move this part of the code to `FromStrRadix` and make that
+trait safe?
 
-$grep CONFIG_DEBUG_ kernel-6.16.0-0.rc2.24.eln149.x86_64.config | grep =3Dy
-CONFIG_DEBUG_BUGVERBOSE=3Dy
-CONFIG_DEBUG_KERNEL=3Dy
-CONFIG_DEBUG_MISC=3Dy
-CONFIG_DEBUG_INFO=3Dy
-CONFIG_DEBUG_INFO_DWARF_TOOLCHAIN_DEFAULT=3Dy
-CONFIG_DEBUG_INFO_COMPRESSED_NONE=3Dy
-CONFIG_DEBUG_INFO_BTF=3Dy
-CONFIG_DEBUG_INFO_BTF_MODULES=3Dy
-CONFIG_DEBUG_SECTION_MISMATCH=3Dy
-CONFIG_DEBUG_FS=3Dy
-CONFIG_DEBUG_FS_ALLOW_ALL=3Dy
-CONFIG_DEBUG_WX=3Dy
-CONFIG_DEBUG_MEMORY_INIT=3Dy
-CONFIG_DEBUG_SHIRQ=3Dy
-CONFIG_DEBUG_LIST=3Dy
-CONFIG_DEBUG_BOOT_PARAMS=3Dy
-$grep CONFIG_KASAN kernel-6.16.0-0.rc2.24.eln149.x86_64.config
-# CONFIG_KASAN is not set
+So essentially have:
 
-Kernel build is here:
-https://koji.fedoraproject.org/koji/buildinfo?buildID=3D2732950
+    fn from_u64(value: u64) -> Result<Self>;
 
-To get kernel config, download
-https://kojipkgs.fedoraproject.org//packages/kernel/6.16.0/0.rc2.24.eln149/=
-x86_64/kernel-core-6.16.0-0.rc2.24.eln149.x86_64.rpm,
-unpack it and check /lib/modules/6.16.0-0.rc2.24.eln149.x86_64/config
+in `FromStrRadix` and remove `MIN`, `abs_min` and `complement`. Then
+implement it like this in the macro below:
 
-> 2. For the crashing systems (especially the EPYC ones), did you observe a=
-ny particular NUMA layout or memory pressure signs prior to the crash?
+    const ABS_MIN =3D /* existing abs_min impl */;
+    if value > ABS_MIN {
+        return Err(EINVAL);
+    }
+    if val =3D=3D ABS_MIN {
+        return Ok(<$ty>::MIN);
+    }
+    // SAFETY: We checked that `val` will fit in `Self` above.
+    let val: $ty =3D unsafe { val.try_into().unwrap_unchecked() };
+    (!val).wrapping_add(1)
 
-No, not really. The tests are running fully automatically, and I don't
-see anything unusual in the logs before the kernel panic. Example:
+The reason that this is fine and the above is "weird" is the following:
+The current version only has `Self: FromStrRadix` which gives it access
+to the following guarantee from the `unsafe` trait:
 
-[58447.906402] Tue Jun 17 23:49:12 CEST 2025 Completed in 23s
-[58447.930818] sockfd: 1038050.164394 bogo-ops-per-second-real-time
-[58448.473983] runtest.sh (545855): drop_caches: 3
-[58448.489326] Tue Jun 17 23:49:12 CEST 2025 Starting test 'mmapmany'
-(#27 out of 41), number of threads 24, iteration 2 out of 5
-[58473.589610] Tue Jun 17 23:49:38 CEST 2025 Completed in 26s
-[58473.613499] mmapmany: 904046.369461 bogo-ops-per-second-real-time
-[58474.158233] runtest.sh (545855): drop_caches: 3
-[58474.173944] Tue Jun 17 23:49:38 CEST 2025 Starting test 'mmap' (#28
-out of 41), number of threads 24, iteration 2 out of 5
-[58493.524125] restraintd[1960]: *** Current Time: Tue Jun 17 23:49:59
-2025  Localwatchdog at: Thu Jun 19 20:49:00 2025
-[-- MARK -- Tue Jun 17 21:50:00 2025]
-[58497.412206] Tue Jun 17 23:50:01 CEST 2025 Completed in 23s
-[58497.459789] mmap: 196.528701 bogo-ops-per-second-real-time
-[58498.003368] runtest.sh (545855): drop_caches: 3
-[58498.018847] Tue Jun 17 23:50:02 CEST 2025 Starting test 'fork' (#29
-out of 41), number of threads 24, iteration 2 out of 5
-[58521.139714] Tue Jun 17 23:50:25 CEST 2025 Completed in 23s
-[58521.164051] fork: 34719.527382 bogo-ops-per-second-real-time
-[58521.717218] runtest.sh (545855): drop_caches: 3
-[58521.732624] Tue Jun 17 23:50:26 CEST 2025 Starting test 'sem' (#30
-out of 41), number of threads 24, iteration 2 out of 5
-[58544.844994] BUG: kernel NULL pointer dereference, address: 0000000000000=
-4c8
+    /// The member functions of this trait must be implemented according to
+    /// their documentation.
+    ///
+    /// [`&BStr`]: kernel::str::BStr
 
-> 3. You mentioned repetition often triggered it =E2=80=94 did you happen t=
-o try pinning stress-ng using --taskset or restricting cpusets to see if th=
-at changes the outcome?
-We are not pinning stress-ng. We run approximately 40 different
-stress-ng subtests, each lasting 23 seconds and with a varying number
-of threads. The entire setup is iterated 5 times to collect reliable
-statistics and to determine the noise in the results.
+This doesn't mention `TryFrom<u64>` and thus the comment "We checked
+that `val` will fit in `Self` above" doesn't really apply: how does
+checking with the bounds given in `FromStrRadix` make `TryFrom` return
+`Ok`?
 
-For example, take this test, which leads to a kernel panic:
-Starting test 'sem' (#30 out of 41), number of threads 64, iteration 4 out =
-of 5
+If we move this code into the implementation of `FromStrRadix`, then we
+are locally in a context where we *know* the concrete type of `Self` and
+can thus rely on "checking" being the correct thing for `TryFrom`.
 
-It was running fine 3 times, and only on the 4th iteration, a kernel
-panic occurred. This was 16 hours after tests started. Before
-Stress_ng, the following tests completed fine on this server:
-NAS, Linpack, SPECjbb2005
+With this adjustment, I can give my RB, but please let me take a look
+before you send it again :)
 
-On other servers, crashes appeared sooner, for example, while running
-NAS or SPECjbb2005.
+---
+Cheers,
+Benno
 
-The kernel panic occurs quite rarely, around once in 20 hours. I know
-it might not be easy to reproduce this.
-
-Keeping my fingers crossed!
-Jirka
-
-
-On Wed, Jun 18, 2025 at 6:42=E2=80=AFPM Abhigyan ghosh
-<zscript.team.zs@gmail.com> wrote:
->
-> Hello Jirka!,
->
-> Thank you so much for the detailed breakdown =E2=80=94 this helps a lot.
->
-> Just a couple of quick follow-ups to better understand the environment:
->
-> 1. Were you using Fedora's debug kernels (CONFIG_DEBUG_*, CONFIG_KASAN, e=
-tc.), or are these closer to production-style stripped builds?
->
->
-> 2. For the crashing systems (especially the EPYC ones), did you observe a=
-ny particular NUMA layout or memory pressure signs prior to the crash?
->
->
-> 3. You mentioned repetition often triggered it =E2=80=94 did you happen t=
-o try pinning stress-ng using --taskset or restricting cpusets to see if th=
-at changes the outcome?
->
->
->
-> I'll try reproducing locally by looping stress-ng --sem under perf to tra=
-ce any irregularities.
->
-> Appreciate your time!
->
-> Best regards,
-> Abhigyan Ghosh
-> zscript.team.zs@gmail.com
-> zsml.zscript.org
-> aghosh
->
-
-
---
--Jirka
-
+> +                let val: Self =3D unsafe { val.try_into().unwrap_uncheck=
+ed() };
+> +
+> +                Ok(val.complement())
+> +            }
+> +            _ =3D> {
+> +                let (radix, digits) =3D strip_radix(src);
+> +                Self::from_str_radix(digits, radix).map_err(|_| EINVAL)
+> +            }
+> +        }
+> +    }
+> +}
