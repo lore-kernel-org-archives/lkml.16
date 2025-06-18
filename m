@@ -1,96 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF19EACD;
-	Wed, 18 Jun 2025 07:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485B1F1311;
+	Wed, 18 Jun 2025 07:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231273; cv=none; b=mSUCoYsWJhdHmHHqGKcDPRRFzK9dGdomFmGJtkfxPJxGud9i1MSjGqQm1lZx9iXx2rRX7suYASqYghXU+BpxwsSnRHqpAyhpr/FzAXosLPokKeJEkhPHMdcY8hsWTqX7oed8zIQAcqpRgUMBf58zgYmQN9dXs7MqbJLHgZciahU=
+	t=1750231307; cv=none; b=aWqgUmsoBQsZ/kstIn4RziuwIaajzOa2wIPAOX6fN5zYpnMcmRS+LxuUvB6nVEK8F5MYWDn1YNce6pMWdXH7UMhV5biW8/Hpv2ihRzvF3ASQ7fSA3TlePMXO9NL3JQSG2ztxQwBJST5T+uwrQcGgyiyEz3Ms14dKyTCFPVanIoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231273; c=relaxed/simple;
-	bh=sjB703QluQSzTWrHVjgzDeTwIWV7HZPKCRAuLcbrQa0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NBQKq/J9aa/5REhD6kFxrLtmVzi7ygXxehjZIRlF0hphwS7zebzei+3d8gW9xWFXryQMVbX9UZ6N2F+V8SM+dhOCXFf602eV9JMDWWyVBUddJYJTnFpEKEYA4V85NEn2ZVQIosCC515SJiTHOaWZQ4gKdLazqfnxc4nK74eThMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sQw0JLpq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=45KHpBZ2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sQw0JLpq";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="45KHpBZ2"
-Date: Wed, 18 Jun 2025 09:21:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750231264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NT1J6AneAG1SMoBsBfoH2toLt+/AIuOF2DLmmnrK1bw=;
-	b=sQw0JLpqvksf4cTGH335uBk2nD4g604O0lLqs0rASlu9+/b5UTy3bvBhIu4vpbnrt8mVho
-	oMuVC3DpoF3LLpQ51Jt34Xd2TmUrqT5IzAZ2DaHonpY6uSqOSH9PwBoevb3bJxdR7ijr+B
-	SgElNrbL3e5DlTBwmjxLlWn7s67Gh8lso8hRMnA1WH4Ci49jaZkBLD0ugb0NZYUGu2OI4J
-	hIyhMPmKTJusHxjMIHDMqupAsO2NOPWkGj21YXWupZl/IKeML6gbd7UBK8Mvv1LDDVq5G8
-	+GY2E30Tp81me0vx4Xv6EFTCgg4nHtddrdZcJmD4yPDiPoXJaDIZCJXDHUQ4XA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750231264;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NT1J6AneAG1SMoBsBfoH2toLt+/AIuOF2DLmmnrK1bw=;
-	b=45KHpBZ2vHDd6wdSx+eK84JDbGs5YjJI83py47O0xA+3d/7aXVNE1k1R+DrL4ZeqLjqC7e
-	GWzBrA7l1aGmQ2Dg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-	"linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Frederic Weisbecker <fweisbec@gmail.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
-Message-ID: <20250618072102.1fnuVt8d@linutronix.de>
-References: <20250617133614.24e2ba7f@gandalf.local.home>
- <20250617174107.GB1613376@noisy.programming.kicks-ass.net>
- <3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org>
- <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1750231307; c=relaxed/simple;
+	bh=DMaB0EHiDpQuMdteGAVlGxafPWBqSdMDnpiM9/ZjDhA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BkAwRiAHyk21cpkHpc3vnFICcNP7cBWphZBSIAT3NFmS4bPtKdbMKJS2cKkWKg5X852RG8LC9WhNG+z4awv11McCVDck6rAXk5+EimvBkgjQkzALGYcrDQw004oZFb+9CtevtDgKupAh4DT1Sev6/8POKRf2Ha5+gumobpociok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so5609963a91.3;
+        Wed, 18 Jun 2025 00:21:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750231303; x=1750836103;
+        h=content-transfer-encoding:fcc:content-language:user-agent
+         :mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o7silFJzIQOSJ2p48fGBWjoys8hVPbth2sPLOSzgJX8=;
+        b=EYdyieHCpHWkeaFjsRkHL98jYvtw6oumb4I0KxhrGqf3IioxAlytcbHKnW1eZgbMLn
+         EiyjV+yFtLERVfx9yzcAxc2v3Ov4xAM/ih8dvlpAnC8E4f8SPRppbteR3qFnXl6SHAel
+         4U3Y8MOFBq/W/RXlYhQN4wrnyl/FGgiJen8cgguITQznTUiRS6FYD0s/ZOAu+/xuAAJr
+         tgIhHK9UED7yhEfUWbbwsSSMg3en8b3jNpMsbHjDh7NqB8LD5uDdXJEAp7gRBJD7aBsF
+         uHhnKr3Qmfx+RU7BEJEcc/jVXrC0UYr8G+N8wXl8rAb3ZQri0S9tGO9jDN1ps80sg32s
+         Fg+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXtWE313fHsMm6rY6JKlC7s3qj/ca3XU0Ya9qXc3KRbxNH72ZOCZep/Ra1FJNwiQFS2+u0WFR4izj0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYMCvANOrzJO7paGSpW+bL+UnGjo2JBJaE866gKgxIoYQBIcGr
+	zfYfvnNDD4yUo942DJmH5i5l0lOWRxDBWspyjEbAOndZQvctju/TD88HGxlnDfrW
+X-Gm-Gg: ASbGncu2rzO85/bPfTwN3tgmjrTW76iog7hy1RwdwneauxPj9ZqnqjVm9QtCys2dTg8
+	5yRcDxa5vsl8XLumEMI1zPDsuXQXr50vnbUrPzx4/dJdTmJa+0XkVOd2cKsv6AlbLSpQ64QlLfQ
+	DUxmmx0U56ZAwyE5R4vq0NOoKmyDXzZhQ1JjnDrdSX10Ecn1XgyNElryTOMVncrU0ul7ADYQTMF
+	JnJ+dRfgyFZFtctMorHQpbNcSkieat8LBFplVoEZGnvrrqlmRqfVqlQ939pndIapJ/BB5ms+z89
+	voJcLgFoGoM1oZn1agpQCeEZ0fT+jkjpNlTcsB4hNTfiC+B+WWme48M2XvoABWfNeM6YswNXNeq
+	443c=
+X-Google-Smtp-Source: AGHT+IH5gzaTw/dLw9epqMSHijmnw8AGlszrvq51ErM/AmUob6WJX2tI5qO299c/fYYL6byJTxV2KQ==
+X-Received: by 2002:a17:90b:4cce:b0:312:639:a058 with SMTP id 98e67ed59e1d1-313f1d96ee5mr25133456a91.27.1750231303190;
+        Wed, 18 Jun 2025 00:21:43 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-313c1bd9a31sm11959305a91.13.2025.06.18.00.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 00:21:42 -0700 (PDT)
+From: xiehongyu1@kylinos.cn
+To: gregkh@linuxfoundation.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	mathias.nyman@intel.com,
+	xiehongyu1@kylinos.cn
+Subject: Re: [PATCH v1] xhci: Disable stream for xHC controller with
+ XHCI_BROKEN_STREAMS
+Date: Wed, 18 Jun 2025 15:21:36 +0800
+Message-Id: <6708fa25-2cfe-42e7-ae24-2d7e943b093a@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <2025061801-gosling-urchin-c2cb@gregkh>
+References: <20250618055133.62638-1-xiehongyu1@kylinos.cn>
+ <2025061801-gosling-urchin-c2cb@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+X-Mozilla-Draft-Info: internal/draft; vcard=0; receipt=0; DSN=0; uuencode=0;
+ attachmentreminder=0; deliveryformat=1
+X-Identity-Key: id1
+Fcc: imap://xiehongyu1%40kylinos.cn@imap.kylinos.cn/Sent
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-06-17 20:00:23 [+0200], Peter Zijlstra wrote:
-> If I have to edit the mount table, I'll just keep it at /debug/tracing/.
-> Tracing is very much debug stuff anyway. While I knew there was tracefs,
-> I never knew there was another mount point.
-> 
-> Just annoying I now have to add two entries to every new machine.. Oh
-> well.
+From: Hongyu Xie <xiehongyu1@kylinos.cn>=0D
 
-I don't know what you run but since Debian 11/ Bullseye (v5.10) this happens
-more or less on its own. systemd has the proper mount units:
-| # mount | grep trace
-| tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
-| # ls -lh /sys/kernel/debug/tracing/ > /dev/null
-| # mount | grep trace
-| tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
-| tracefs on /sys/kernel/debug/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
-
-This of course doesn't work if you manually mount it to /debug. While a
-symlink would work, you still have to touch the boxes.
-
-Sebastian
+Hi greg=0D
+=0D
+=E5=9C=A8 2025/6/18 14:03, Greg KH =E5=86=99=E9=81=93:=0D
+> On Wed, Jun 18, 2025 at 01:51:33PM +0800,xiehongyu1@kylinos.cn wrote:=0D
+>> From: Hongyu Xie<xiehongyu1@kylinos.cn>=0D
+>>=0D
+>> Disable stream for platform xHC controller with broken stream.=0D
+>>=0D
+>> Signed-off-by: Hongyu Xie<xiehongyu1@kylinos.cn>=0D
+>> ---=0D
+>>   drivers/usb/host/xhci-plat.c | 3 ++-=0D
+>>   1 file changed, 2 insertions(+), 1 deletion(-)=0D
+>>=0D
+>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c=
+=0D
+>> index 6dab142e72789..c79d5ed48a08b 100644=0D
+>> --- a/drivers/usb/host/xhci-plat.c=0D
+>> +++ b/drivers/usb/host/xhci-plat.c=0D
+>> @@ -328,7 +328,8 @@ int xhci_plat_probe(struct platform_device *pdev, st=
+ruct device *sysdev, const s=0D
+>>   	}=0D
+>>   =0D
+>>   	usb3_hcd =3D xhci_get_usb3_hcd(xhci);=0D
+>> -	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >=3D 4)=0D
+>> +	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >=3D 4 &&=0D
+>> +	    !(xhci->quirks & XHCI_BROKEN_STREAMS))=0D
+>>   		usb3_hcd->can_do_streams =3D 1;=0D
+>>   =0D
+>>   	if (xhci->shared_hcd) {=0D
+>> -- =0D
+>> 2.25.1=0D
+>>=0D
+>>=0D
+> Should this be backported to stable kernels?  if so, how far back?=0D
+At least 5.4 lts.=0D
+> What commit id does this fix?  Or what hardware does this fix?=0D
+=0D
+I'm not sure. can_do_streams was introduced by 14aec589327a6 ("storage: =0D
+accept some UAS devices if streams are unavailable") in Feb 11 20:36:04 =0D
+2014 before=0D
+=0D
+XHCI_BROKEN_STREAMS was introduced by 8f873c1ff4ca0 ("xhci: Blacklist =0D
+using streams on the Etron EJ168 controller") in Fri Jul 25 22:01:18 2014.=
+=0D
+=0D
+> thanks,=0D
+>=0D
+> greg k-h=0D
