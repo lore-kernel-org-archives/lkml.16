@@ -1,91 +1,40 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBC71D63FC;
-	Wed, 18 Jun 2025 10:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4388C27FD7F;
+	Wed, 18 Jun 2025 10:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241731; cv=none; b=pZzcBoh5AHFmxEIeCO/H0cO4Spo4hR/A9694iweLB4XMcXjDPeCj0OOJuR3tTnvNcnLOeR/HXJHZa2Qkb4Lp7FnK83JI7ms0yT64ZP3kr1tlBKaVtV6nLdl7XOp2cQphNKwB7TyC4vtmyAGaCudYEhYk6/RGN+Fm4t7OQBJzLbw=
+	t=1750241766; cv=none; b=WnBWXYrKsOAzmAaJRmKTSKRtfqrztDVBOdHDRzKB6C1AuzYt5RZA7KxjmwXMoxNx4hox9iqCml908KuN+MLsdF72ZkgOqUtDgl0rhZStWfsXi6SQXdTwxt4Egr5IIbls/EkwAbwaqrSagvX7VGzmLj6+/IcmZfvF975ehdz5gfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241731; c=relaxed/simple;
-	bh=ltwb9DIv2KJ/ugDKG09NyjxtUjK7KgzzXwT+rpLfPek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WSs3k/yyTy8iL+ORyD88n+3dCIKrVbVU4posefJf9oVBa/e6yc03daJoQ9FanJ22qJkvbEV8bQh2LmIaLpv6K4Nb2w0c9nh4AwOOTN0u6amZjkhhx4KTU1IT4dlyLRzygagGicEjAUFspAcGj8ng6GRMuUXIEwt6F7/Llgdsuzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RAHCGE2M; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RAHCGE2M"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so5354572f8f.1;
-        Wed, 18 Jun 2025 03:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750241728; x=1750846528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jJsvhinXAz/28vXCLsDhFRnAr3ugS1hgCI0FXeRg2Pw=;
-        b=RAHCGE2MlP3J8zFKH8GZFkN5y+BVE3oCfCN8coAqpMan2fFEN9mhD7Wgoi3/zr9mEK
-         F9t2OGHvVwDx2cOLsYhNnWRkdDQb5yuNXiAiSAqnMnaikfEONlqmuhBGE1cY/unuzaxZ
-         SFXiZdT3vO9fiV3HsxsQ9N2fLMCXba8UJBdrKjDURZAEydhuNe1w3hZfZIkFNWzi8Uwe
-         195lNKxrF+8Eo6K6MgQmQibuUBoe9OaE78vnq4UmOlZ5V0xO6oDbajh3LTERNZfZ9yHI
-         hIXy7aF8I/2OAOtn2oIXSMwmqimOI1qLM/Hmx/D1N5L6eapqgzvSH+9zBxchQv5xEJi+
-         EY/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750241728; x=1750846528;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=jJsvhinXAz/28vXCLsDhFRnAr3ugS1hgCI0FXeRg2Pw=;
-        b=mvuUiJPFetY50g+8N5HwKGRvh7ozDXSzX/Eh/v/hcx7k6KiZIeqIY4qE/jVcXpzzpU
-         J4apFdRcQK4YmA4oqBN9bh2OsQGvSZzkQjvUN3DuBFWHhrxSlxenYZ9ybcBa0Is/ulw+
-         10i4Vd+5zX8nBsFoGjJiPZfsPCmlM3TadzT1rLgSw9nzR9h7r9mIk6P7CRSfJUJ7/K+z
-         ElJqGYl5R9GyL2Dvo7cUXKKtOKwozRpsn9qytr4KoV0so/c9Hz6omhmHvFU46jHrYJte
-         6FiEljlcK5azpLGkj3sSUwteoYQQeu7x2I0NwoWWoVzrmqVVVjly2uDKrvb11Fovbggi
-         cWdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUVxXMx/UH6wMg3Vo9rBXki+Zij0naUbfjQoMx2/ET4Z721xO6yMksn3N41oFITvGCOt+VKqwD6DGSL@vger.kernel.org, AJvYcCVV/FsqoehO74Ql8q5gtKNUtCGqLEReOTl/c95bTZZLIgao8hINC5p+6RW/Np60fXj3tHhdosr2PjvJCsry@vger.kernel.org, AJvYcCWkQwYkeiyqJk0+mCBZlhZfE91Iq+XU4DoTrNWnq3khrjcIb2IH//59EWphyRC6S0cfDS+2bA8zJ3V1epd/Q1E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yziiphl/qNRgo8v/NO0bslYnkyIX0b+Z8tnRpjQAFxF9aMD4bEc
-	pDYcNNspTE/oXp6Bk/Jy2WdXCifOHa2PeF1KXL0EVtogNdZ0jQoq59XB
-X-Gm-Gg: ASbGnctw/kdwyQtRwDAig7F1+XRsRs0bhkTmeoJw5WtTFbwwZapt/9VZVYX70NnZO98
-	KmU22YjgRNk+L94wwGpKD5jjk7F9dD1zMg8LX295oBml10h07xIDP7Y4jKBSJg+iN5GlUsbAfYA
-	Q9xZfLxPLc4RS0uf5oNhHal7tOm0SBADRbWFg45or/nJYjDNNWvhng3aDHlaCKR9J3VMkBr3eer
-	MDQ8FBLrO6N6q+kuybl6RvEexPZGlfNgzc60Dbc1MIPCyWMsPX5AQbjQlT30/umxxpLLPi3ovCp
-	aHJYhzSfhtYWZp3MHZD2v6oxbNgC/TsHX4CYsSkmG31zXOAOBJWtjnVQeTEYX2h7GgCJWVmqzAb
-	djah0R5lFzUOLO3KxKCn5O8Y5TjYAlP9dgWJY
-X-Google-Smtp-Source: AGHT+IHMgSwhUqWfJPYacZImHH+hqT1pGDyJydFaYgDyOIKYQNzn0o0KZQVvbpbNHsGoX4rc88bs5Q==
-X-Received: by 2002:a05:6000:1a88:b0:3a4:eeb5:58c0 with SMTP id ffacd0b85a97d-3a5723a43b5mr15751243f8f.20.1750241728005;
-        Wed, 18 Jun 2025 03:15:28 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25e89fsm197453115e9.33.2025.06.18.03.15.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:15:27 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v7 3/9] samples: rust: platform: conditionally call Self::properties_parse()
-Date: Wed, 18 Jun 2025 11:13:25 +0100
-Message-ID: <20250618101325.3048187-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
-References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+	s=arc-20240116; t=1750241766; c=relaxed/simple;
+	bh=63P/YM6AlzgZ9xMkMXKv9TnQwwkHN8E+6brIEKb3snA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=W+f0DSoNXmMwRcmWDBgMLt3hJl795fhbQYkPU8itLklwf9zAFxayXPP9cTLhGt+bhiw7VMwZFDBZ/FFd3yeTfk/bUr4diTGxYsp63Zsv20p5xJna/JsxjcSPYjpvbnYoTsH2ZDA8gTWU5CVdZNa6IdDqbRKAV6kFd7K/iXmyXX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4bMfhb5DjNz28fQ1;
+	Wed, 18 Jun 2025 18:13:35 +0800 (CST)
+Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7A02718005F;
+	Wed, 18 Jun 2025 18:16:00 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by dggpemf500016.china.huawei.com
+ (7.185.36.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
+ 2025 18:15:59 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <wenjia@linux.ibm.com>, <jaka@linux.ibm.com>, <alibuda@linux.alibaba.com>,
+	<tonylu@linux.alibaba.com>, <guwen@linux.alibaba.com>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<horms@kernel.org>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net/smc: remove unused input parameters in smc_buf_get_slot
+Date: Wed, 18 Jun 2025 18:33:42 +0800
+Message-ID: <20250618103342.1423913-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,38 +42,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500016.china.huawei.com (7.185.36.197)
 
-From: Danilo Krummrich <dakr@kernel.org>
+The input parameter "compressed_bufsize" of smc_buf_get_slot is unused,
+remove it.
 
-Only call Self::properties_parse() when the device is compatible with
-"test,rust-device".
-
-Once we add ACPI support, we don't want the ACPI device to fail probing
-in Self::properties_parse().
-
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
 ---
- samples/rust/rust_driver_platform.rs | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/smc/smc_core.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-index 000bb915af60..036dd0b899b0 100644
---- a/samples/rust/rust_driver_platform.rs
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -40,7 +40,12 @@ fn probe(
-             dev_info!(dev, "Probed with info: '{}'.\n", info.0);
-         }
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index ac07b963aede..262746e304dd 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -2100,8 +2100,7 @@ int smc_uncompress_bufsize(u8 compressed)
+ /* try to reuse a sndbuf or rmb description slot for a certain
+  * buffer size; if not available, return NULL
+  */
+-static struct smc_buf_desc *smc_buf_get_slot(int compressed_bufsize,
+-					     struct rw_semaphore *lock,
++static struct smc_buf_desc *smc_buf_get_slot(struct rw_semaphore *lock,
+ 					     struct list_head *buf_list)
+ {
+ 	struct smc_buf_desc *buf_slot;
+@@ -2442,7 +2441,7 @@ static int __smc_buf_create(struct smc_sock *smc, bool is_smcd, bool is_rmb)
+ 		bufsize = smc_uncompress_bufsize(bufsize_comp);
  
--        Self::properties_parse(dev)?;
-+        if dev
-+            .fwnode()
-+            .is_some_and(|node| node.is_compatible(c_str!("test,rust-device")))
-+        {
-+            Self::properties_parse(dev)?;
-+        }
- 
-         let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
- 
+ 		/* check for reusable slot in the link group */
+-		buf_desc = smc_buf_get_slot(bufsize_comp, lock, buf_list);
++		buf_desc = smc_buf_get_slot(lock, buf_list);
+ 		if (buf_desc) {
+ 			buf_desc->is_dma_need_sync = 0;
+ 			SMC_STAT_RMB_SIZE(smc, is_smcd, is_rmb, true, bufsize);
 -- 
-2.43.0
+2.34.1
 
