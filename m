@@ -1,142 +1,132 @@
-Received: from lgeamrelo07.lge.com (lgeamrelo07.lge.com [156.147.51.103])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153C2BF01F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.103
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEDE3F9C5;
+	Wed, 18 Jun 2025 12:08:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248477; cv=none; b=BSMOeb4WY0o13UDH0YSwPJy9aQzLRzdZpx2dpRzN0VPhWvP/iSvqGkFDZOn9I1WDejrww+isKqeOl3bLQ3lCT7bF8e3+IKNkI9SBli/ePLc2b61mA1tTvdTgHjCfBk7Z3vK0Y6mGeSuQiPP8YLnHZS+1IcrCLTx9SF6qlHqn5Hs=
+	t=1750248529; cv=none; b=qIpEUoadphjd1X15yirXrReayVcpE7CJ+7RWRLtinmWfIJ2EL/CSLvV2GzqfIAjrs3zhRorVj6F7o7FOgP+E3THc2UNk/PYi4jK1yEXPrF/h4Z31W0oEeJgioev27alLouuwhjq9+N50o+x3tc1YVrwlXyBWtp0nzAF9sJJUiMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248477; c=relaxed/simple;
-	bh=5E1cCuT6tbhbu1mMp4hHXWSFXwrZ703PlzIaNow0uJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SfM6W0bUtn3IoEhi4i+5zClwYX6uhNyaCLJJPkvcswiBUfY+2LBQqDl/+OK+isn6qt4PigTGvNFkIwYCsIHRF0htR1J0D5RPJs+WE64t3YBl4W8l227O5dohbbclr8Cq+u5MQhRAzXPFzbjxY4wtHbpwWOpgangHIg618Ip3Ft4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.103
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
-Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
-	by 156.147.51.103 with ESMTP; 18 Jun 2025 21:07:51 +0900
-X-Original-SENDERIP: 10.177.112.156
-X-Original-MAILFROM: youngjun.park@lge.com
-Date: Wed, 18 Jun 2025 21:07:51 +0900
-From: YoungJun Park <youngjun.park@lge.com>
-To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
-	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-	shikemeng@huaweicloud.com, kasong@tencent.com, nphamcs@gmail.com,
-	bhe@redhat.com, baohua@kernel.org, chrisl@kernel.org,
-	muchun.song@linux.dev, iamjoonsoo.kim@lge.com, taejoon.song@lge.com,
-	gunho.lee@lge.com
-Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
- per cgroup swap priority control
-Message-ID: <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
-References: <20250612103743.3385842-1-youngjun.park@lge.com>
- <20250612103743.3385842-2-youngjun.park@lge.com>
- <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
- <aFIJDQeHmTPJrK57@yjaykim-PowerEdge-T330>
- <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
+	s=arc-20240116; t=1750248529; c=relaxed/simple;
+	bh=9PvWQIN2DOiS+eGDpdKz3WgqnQceFcRO174Ih2hRwLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uOvy3u1D6sdn6H4N9Xq6Fvo7x/kR03ngykLg9BV3luZfqgvf6Akn56TVC4qA4YTGB9pWFJ5vnu9sbFxtPRlHF1espGMiWTIRbs6oWS52OI11f3gkbPLDiM4cR2TiMttPBpwq6jiDhw+175Op0vlGcHNPIpqMsJeflZfr4r69ct4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fdxKBZ1v; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fdxKBZ1v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750248527; x=1781784527;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9PvWQIN2DOiS+eGDpdKz3WgqnQceFcRO174Ih2hRwLI=;
+  b=fdxKBZ1vEtPU149VgO+pr2p0Z20FozbKZ2v9uF4dvWkRxotbYsRIpc5M
+   WLaoZG2iLFiofj1VAwttblw5YMJeMmciGmJPcIPUvcqmjGFyZjckVBNFQ
+   gBSfyWAOhixKswoBMi24MBBEnU/Rkoem1PtRWg5MKVp8BVc9CVzP9Y5Ka
+   2/F0N63poVP3sZA+Q1wQzmFIuBV1sF6dhGxMflqXU3yuIQEaBEwkqFXVd
+   TMHc46rlUBmyrIEAG2J8t+xUjVCJu8230nZMIzkmMOgY1IrBMm65BDCQP
+   7W7z1LzdbT471+zasY+/OsBOhIUiNCNUbjhnUA1/vYBP/Pb17kY+oFCUm
+   g==;
+X-CSE-ConnectionGUID: 51U2Xs1xSFawIURNWLH/Aw==
+X-CSE-MsgGUID: 13aPbU5ZRi2P5DrfRxJk7g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="77869043"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="77869043"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:08:46 -0700
+X-CSE-ConnectionGUID: 8svx1IzZSXisrWdvIDRz7A==
+X-CSE-MsgGUID: HxAOmSDzQhC4iTG0+KT5Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="154213206"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.245.234])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:08:39 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Tony Luck <tony.luck@intel.com>,
+	pbonzini@redhat.com,
+	seanjc@google.com
+Cc: vannapurve@google.com,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	H Peter Anvin <hpa@zytor.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	rick.p.edgecombe@intel.com,
+	kirill.shutemov@linux.intel.com,
+	kai.huang@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@linux.intel.com,
+	binbin.wu@linux.intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com
+Subject: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
+Date: Wed, 18 Jun 2025 15:08:06 +0300
+Message-ID: <20250618120806.113884-3-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250618120806.113884-1-adrian.hunter@intel.com>
+References: <20250618120806.113884-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
 
-On Wed, Jun 18, 2025 at 11:11:32AM +0200, Michal Koutný wrote:
-> On Wed, Jun 18, 2025 at 09:32:13AM +0900, YoungJun Park <youngjun.park@lge.com> wrote:
-> > What issue is the question assuming the existence of competitors in two
-> > cgroups trying to address? Could you explain it a bit more specifically?
-> 
-> I'm after how this mechanism is supposed to honor hierarchical
-> structure. (I thought the numeric example was the most specific.)
-> 
-> > 
-> > To answer your question for now,
-> > Each cgroup just prefers devices according to their priority values.
-> > until swap device is exhausted.
-> > 
-> > cg1 prefer /dev/sda than /dev/sdb.
-> > cg2 prefer /dev/sdb than /dev/sda.
-> > cg3 prefer /dev/sdb than /dev/sda.
-> > cg4 prefer /dev/sda than /dev/sdb.
-> 
-> Hm, than means the settigs from cg1 (or cg2) don't apply to descendant
-> cg3 (or cg4) :-/
+Skip clearing a private page if it is marked as poisoned.
 
-I've been thinking about whether the use case I suggested aligns with the
-philosophy of cgroups, and I believe there are two feasible directions
-could take (This still needs some detailed refinement.)
+The machine check architecture may have the capability to recover from
+memory corruption in SEAM non-root (i.e. TDX VM guest) mode.  In that
+case the page is marked as poisoned, and the TDX Module puts the TDX VM
+into a FATAL error state where the only operation permitted is to tear it
+down.
 
-Bascially on two strategies, child inherits parent setting.
+During tear down, reclaimed pages are cleared which, in some cases,  helps
+to avoid integrity violation or TD bit mismatch detection when later being
+read using a shared HKID.
 
-1. Preserve the order of priorities and type of swap devices
-when a child cgroup inherits values from 
-its parent. the inherited order must be strictly maintained
+However a poisoned page will never be allocated again, so clearing is not
+necessary, and in any case poisoned pages should not be touched.
 
-e.g 
+Note that while it is possible that memory corruption arises from integrity
+violation which could be cleared by MOVDIR64B, that is not necessarily the
+cause of the machine check.
 
-1.1 possible case.
-1.1.1
-cgroupA (swapA-swapB-swapC)
-	' cgroupB (swapA-swapC)
+Suggested-by: Kai Huang <kai.huang@intel.com>
+Fixes: 8d032b683c299 ("KVM: TDX: create/destroy VM structure")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ arch/x86/kvm/vmx/tdx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-1.1.2 
-cgroupA (swapA-swapB-swapC)
-	' cgroupB (swapA-swapC)
-
-after time, modify it (swapD add on cgroupA)
-
-cgroupA (swapA-swapB-swapC-swapD)
-	' cgroupB (swapA-swapC)
-
-1.2.impossible case.
-
-1.2.1 violate the order of priorities rule.
-cgroupA (swapA-swapB-swapC)
-	' cgroupB  (swapC-swapA-swapB)
-
-1.2.2 violate the type of swap devices rule.
-cgroupA (swapA-swapB-swapC)
-	' cgroupB  (swapD)
-
-2. Restrict child cgroups to only use values inherited from the parent,
-without allowing them to define their own setting.
-
-e.g
-cgroupA (swapA-swapB-swapC)
-	' cgroupB (swapA-swapB-swapC)
-
-after time, modify it (swapD add on cgroupA)
-
-cgroupA (swapA-swapB-swapC-swapD)
-	' cgroupB (swapA-swapB-swapC-swapD)
-
-it is different from 1.1.2 case swapD propagated. 
-(because child and parent must be same)
-
-> When referring to that document
-> (Documentation/admin-guide/cgroup-v2.rst) again, which of the "Resource
-> Distribution Models" do you find the most fitting for this scenario?
-
-I initially submitted the RFC from the perspective that each in-use
-swap device must explicitly have a priority assigned, including propagation
-at swapon time. (for avoiding swap-fail by using this mechanism)
-
-However, condisering the resource distribution model you mentioned, 
-I now see that not requiring all swap devices to have an explicitly defined 
-priority aligns better with the broader cgroup "limit distribution" philosophy,
-particularly in terms of limiting and distributing resources.
-
-This is because cgroups can still restrict swap device usage and control 
-device order without requiring explicit priorities for all devices.
-In this view, the cgroup interface serves more as a limit or preference 
-mechanism across the full set of available swap devices, rather than
-requiring full enumeration and configuration.
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 457f91b95147..f4263f7a3924 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -282,10 +282,10 @@ static void tdx_clear_page(struct page *page)
+ 	void *dest = page_to_virt(page);
+ 	unsigned long i;
  
-Regards,
-Youngjun Park
+-	/*
+-	 * The page could have been poisoned.  MOVDIR64B also clears
+-	 * the poison bit so the kernel can safely use the page again.
+-	 */
++	/* Machine check handler may have poisoned the page */
++	if (PageHWPoison(page))
++		return;
++
+ 	for (i = 0; i < PAGE_SIZE; i += 64)
+ 		movdir64b(dest + i, zero_page);
+ 	/*
+-- 
+2.48.1
+
