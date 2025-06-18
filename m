@@ -1,74 +1,74 @@
 Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD78D2E9748
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:40:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384102E9748
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750254020; cv=none; b=FfJmcy+nkLxbTz0jZUaU33+VNEAHwYJz8ZMiadzk6PznnXFcDMgEoE1KbfEW3tP2hsNNn2iogKUi05BK0LRkIlnpUC90pZJ81ZvoaMjGPS1IPIUUta2HO5MQ4yl3ROyVH1ss9CqDRuRNGtIQFb7rDJTjBioZPFrO6BCtDVurw9U=
+	t=1750254064; cv=none; b=R1NKz11AtPlHo06MmaTbmebjzcmvrlzPlIgCCc9fYgr52OvMPRm+sbvpXJGtB+2RSogVZodKGO3HWjq90XFpkMHhZoghIQpRHhzSY4fZr4nNMGXS49oEI3ZT1IqQ7BF1CHElBFZ4SbE8sRwSEQtdaDBY3nJ3QQkU2EOqDzLjzG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750254020; c=relaxed/simple;
-	bh=bmDghLFg8ZJsphJJZXo1mQNw9t8W1huDMi5X5ELk+9I=;
+	s=arc-20240116; t=1750254064; c=relaxed/simple;
+	bh=mF4mVKSNr32bBZcSBmpXcngYOZ/LgBHUibToT5Tssxg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I+d2HDlJpB34Q6GMpLEjgW0TZ22Xl9PM3PGsDZ6T3A7uI+t+VKy8hUUqWuILnoZS6r4N0PEUH5IxdAWbephpUGmbW6lx6mTA33WYLGl+M/A7rvbIqcOEwstZTu1rIP1ffGoErlQiuThO25Z0pdj0sFi+EICUApTR4mYCVIq07Hs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KNXt1BLK; arc=none smtp.client-ip=209.85.167.45
+	 To:Cc:Content-Type; b=E+jFAYvwQidXMDHjwgdRg7twKmTe2+h0zarPXH/KSRuhP3rsVBXhrnc4riOqdc2UXtB6vFyE2g67uiIZa64jWoTFYrF0ytflPhjld9ad5LOVpW5y7bThqC7MVaKINxenzlKj52W8z5G5Ylcq4yxH6k0vCjjMRfEaXzV/aZjCwcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nHEB9hOW; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KNXt1BLK"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54e7967cf67so7126031e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:40:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nHEB9hOW"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553b9eb2299so756824e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254016; x=1750858816; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254061; x=1750858861; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=crYKm76o7xrNY+G6KV9/tF3PVZHJnWgwFllJxx/P2sc=;
-        b=KNXt1BLKLuYXyF2X80TZdh9D9LFFnMLG8jmbvoE/MsLhHTCO8rbHuKBG8PSyNXRsH7
-         krTpY4B7v8Z35HdXu6JtDSA5WzZedX1knAl0iuqPd+H3OEjdELGtM81W6P9BDBOgZuhA
-         2eod1FoW6oTs9AxNCAal6wq1cJpemY8DUnQpQe7avPzoydQ54uxVzVZzB25VwAKbHrl/
-         Y/wNCATLAYxQ4h7AIdlIPU0MSjuWEM3kUa8Ko3BCqB5rOgkgyv3Nh+ins2sK2sUzXMkI
-         Qh62xMwuHgbTRU1KpR+98preLpppPbuZ9wlxaS5NQjeOK+jmkLejJN2aiJY8lRicVJyr
-         IaIA==
+        bh=GrPSIGFdDvH/sqDpr0dCl/uxSDMMDHtGVw2V0lw2wqI=;
+        b=nHEB9hOWURE+jc8l40SJEp6hEaoOhX2l3skJoM11cUj6/kG4XFrGh/8ei8bjjfwdrv
+         PQEEJ4nKAuaTjH1gPZ2w3Tqrg0NjeoIGZGpXY8muFXJxGpPdmXxsWuRwqSRQ9juuBeOa
+         vSc9+fvacB0U2rpK5avxeGI5oCcsNGFXjsyxpdT05bXp1/XhJsIpfMvubZYynpRDiZ49
+         APDtdaWnchWXj99KH5kKPCwL789bz5cjCOql9Th405ajbEVJb6c1CL1RtyTBJS1qT2uY
+         Qp1mS9ZCbNB7UrwMTm81ttSHL2zH5HdORbDZxW5FHtZTq7zHuYYf6jLJty8hKIYT3y9/
+         FFKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750254016; x=1750858816;
+        d=1e100.net; s=20230601; t=1750254061; x=1750858861;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=crYKm76o7xrNY+G6KV9/tF3PVZHJnWgwFllJxx/P2sc=;
-        b=npKUfZAtKtBQi2rd/Ge/S14NmBBf4IOI6CKRIEJO01riKtRqwOU9TpKCpHl1detNoH
-         4imh6IWKgZThr+9WcKpy3bLpx0R58Ej9dWxT/a9/rDitXGioXLApHOMz5XQjoqFAyePH
-         SFNNH9GQviVLhC04g+dpnNnBKUxK+vqpP37raEcTsiAqaktzoxi4YGVguybQxl8edU20
-         HQadxKeqhR/j83l7RryNXQ/jigYLP5C/bk5/GWn+LegtQqF7hKPvh8Mx1O8pEc/Q68Kp
-         VPXcSUSpls3nSwGYq8/IGG7J4DhDwRSIeJuUc3rkR3N1+cA1huLe/Qdgg7otiPZKQOyz
-         fcUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+kAqaS3qqgJ+YT33ZUibXPjd/liiZOkBM33PLe3TTrMvzA6MYVtWCue4FmYBoNuIPxDpHTrPAFBB0+pw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj9j8tB2qNafAxaMlkvbyJRFk2ZT94VAjff5kPZVE3pXfZL4Tu
-	wvu3GykPlfNiryRLy7exFFTwJH+SvKBcxkXkfx3uLlzSMhqo6JrOJU3kVbHzXZLbD4Iv09WZ3jy
-	O67iK0yzzCf379gtXQjuvCjtlBsSorkfzAKCh2cIW/w==
-X-Gm-Gg: ASbGncuNeXiNalAE2f1cJeOTh7NuGz/sYbm65Q94ptsTZiJ3+EpzwqQ8vAET+XYJYbB
-	UmFk2HAXMlHJTnn8rSxDOuK1MgO5SFn0v4QdS0mhGfry6rlQFJkVTpRTfhjcwWN1t9/wduXJhSK
-	dCwe6mcpPvA4ZjUormo8yDNFzebIhuqaXNV6L75PDSBkCKvCZpZmOYjNtmXLot5YQ4/n9/XXpdq
+        bh=GrPSIGFdDvH/sqDpr0dCl/uxSDMMDHtGVw2V0lw2wqI=;
+        b=B2IDBsO30vgiGkI12pBN98N0nuKLHhTO/RXZgCMVExYfWIRbeq6s7Wlmz6n9JWgpyF
+         EQhT0VUFoOTs4RD09B1WnzM4Lf+z/FeIhxadq7I5VE1/g6mdMtJtwmYHe7+yGHorEELb
+         ays/qpYe/3dY9NnUCTMh8vG+2sxPAxrQyuhLtK83sXSKhJcwyxk6c+E3ztFWrL+LK8il
+         S3U3omemh5XgR0hYCIY20ceq6sikyUfVtdkypqNQZ51lR91lEX6HtFU8zLSpxih8iLyI
+         kIaNBqahIaN25pl2RrYbW5GuAGLlqsX334+yQtq/0O+xhQ3Z83njKXuzyybZxvSCvT0I
+         PRAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXGAyu6x8z/35gT/hQgpEse8jfOfNuP2Du74dou35dHpryQclF+pbsFofKS+U6pfyBxnAjOk/g79xekPkw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcSFk5lIV0XR0zi+jXkynfhecG1OOWdlp0m4hQ3tbtYIaXLuit
+	e5JxG2KsIajsc2FWD26e3jXuYzRs7+d+jbI+WADra5WyEm0vgUWsVTztmadgrXZmJeGcSxoa55r
+	zYHKeIp2T2Hb4vusiR77RdzE1QD24YIHuK7u5tq8yAg==
+X-Gm-Gg: ASbGncvuuiWfZUdq/BH6prxDgmq2xPEwyXVKuJKMpt17Y0Avohmgy9kQcqvDfGWyea4
+	JhkS/G/A/up45B0yeno52+K8YTE+GvKLiPNPXKD9b5ir9avMh+XVNaqVKtztql+dwqAQUFl3R/H
+	qR+QVZLiCp+ZhlRnP+CQ3xMDZBwrfgzm29n++VZLE3wvfbYUup6/GoGImMBO0lQhs6AJEqziUiQ
 	Q==
-X-Google-Smtp-Source: AGHT+IFad5ToM6J1+d0O4ioF2H0SvuVc8QUlMms8kkOXzKAtFkNQ7udNNIL4/h4trNzifK85LwmlcE1SddV80i2GLLM=
-X-Received: by 2002:a05:6512:23a7:b0:540:2fd2:6c87 with SMTP id
- 2adb3069b0e04-553b6e74f1bmr5037069e87.16.1750254015903; Wed, 18 Jun 2025
- 06:40:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaBv4NoyscEiYMrPy3nG50l45WGg0pb5gyw3nSvWsy9OTHWeanUensQSBBIwLRpHNCc71NZbTtG782jD+L4SY=
+X-Received: by 2002:a05:6512:150b:10b0:553:d884:7933 with SMTP id
+ 2adb3069b0e04-553d8847a54mr20662e87.6.1750254061265; Wed, 18 Jun 2025
+ 06:41:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250618102226eucas1p112dacf9670f68b4a8581aa1a8b5ced9d@eucas1p1.samsung.com>
- <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-1-27ed33ea5c6f@samsung.com>
-In-Reply-To: <20250618-apr_14_for_sending-v5-1-27ed33ea5c6f@samsung.com>
+References: <CGME20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2@eucas1p2.samsung.com>
+ <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-2-27ed33ea5c6f@samsung.com>
+In-Reply-To: <20250618-apr_14_for_sending-v5-2-27ed33ea5c6f@samsung.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 15:40:04 +0200
-X-Gm-Features: AX0GCFtjm4Gei3EGyvZSnf2L-ltMUqIESaL5jfPbh7xGonqWZX6d4yY2Lh7mu5E
-Message-ID: <CAMRc=MfQFc=MvGHpu1M4HO1-2RJh34UAXXCvVBZ2jU0rFDANJQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/8] power: sequencing: Add T-HEAD TH1520 GPU power
- sequencer driver
+Date: Wed, 18 Jun 2025 15:40:50 +0200
+X-Gm-Features: AX0GCFv9aAVOTlnyOx9_bS0PZ0O5sUFY83rUOThbfDgpmQkEdj-PgI3MnYHtNsE
+Message-ID: <CAMRc=Mdv24kKJRKMyp2zpNtumZLV5QN=KvvENr8GXfORAC9Cpw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/8] dt-bindings: firmware: thead,th1520: Add resets
+ for GPU clkgen
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -88,102 +88,56 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jun 18, 2025 at 12:22=E2=80=AFPM Michal Wilczynski
 <m.wilczynski@samsung.com> wrote:
 >
-> Introduce the pwrseq-thead-gpu driver, a power sequencer provider for
-> the Imagination BXM-4-64 GPU on the T-HEAD TH1520 SoC. This driver
-> controls an auxiliary device instantiated by the AON power domain.
+> Extend the TH1520 AON to describe the GPU clkgen reset line, required
+> for proper GPU clock and reset sequencing.
 >
-> The TH1520 GPU requires a specific sequence to correctly initialize and
-> power down its resources:
->  - Enable GPU clocks (core and sys).
->  - De-assert the GPU clock generator reset (clkgen_reset).
->  - Introduce a short hardware-required delay.
->  - De-assert the GPU core reset. The power-down sequence performs these
->    steps in reverse.
+> The T-HEAD TH1520 GPU requires coordinated management of two clocks
+> (core and sys) and two resets (GPU core reset and GPU clkgen reset).
+> Only the clkgen reset is exposed at the AON level, to support SoC
+> specific initialization handled through a dedicated auxiliary power
+> sequencing driver. The GPU core reset remains described in the GPU
+> device node, as from the GPU driver's perspective, there is only a
+> single reset line [1].
 >
-> Implement this sequence via the pwrseq_power_on and pwrseq_power_off
-> callbacks.
+> This follows upstream maintainers' recommendations [2] to abstract SoC
+> specific details into the PM domain layer rather than exposing them to
+> drivers directly.
 >
-> Crucially, the driver's match function is called when a consumer (the
-> Imagination GPU driver) requests the "gpu-power" target. During this
-> match, the sequencer uses clk_bulk_get() and
-> reset_control_get_exclusive() on the consumer's device to obtain handles
-> to the GPU's "core" and "sys" clocks, and the GPU core reset.  These,
-> along with clkgen_reset obtained from parent aon node, allow it to
-> perform the complete sequence.
+> Link: https://lore.kernel.org/all/816db99d-7088-4c1a-af03-b9a825ac09dc@im=
+gtec.com/ - [1]
+> Link: https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel=
+.org/ - [2]
 >
 > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
+>  Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml | 7 +++=
+++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.=
+yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> index bbc183200400de7aadbb21fea21911f6f4227b09..3365124c7fd4736922717bd31=
+caa13272f4a4ea6 100644
+> --- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+> @@ -32,6 +32,13 @@ properties:
+>      items:
+>        - const: aon
+>
+> +  resets:
+> +    maxItems: 1
+> +
+> +  reset-names:
+> +    items:
+> +      - const: gpu-clkgen
+> +
+>    "#power-domain-cells":
+>      const: 1
+>
+>
+> --
+> 2.34.1
+>
 
-Thanks, this looks much better now.
-
-[snip]
-
-> +
-> +static int pwrseq_thead_gpu_disable(struct pwrseq_device *pwrseq)
-> +{
-> +       struct pwrseq_thead_gpu_ctx *ctx =3D pwrseq_device_get_drvdata(pw=
-rseq);
-> +
-> +       if (!ctx->clks || !ctx->gpu_reset)
-> +               return -ENODEV;
-> +
-> +       reset_control_assert(ctx->gpu_reset);
-> +       reset_control_assert(ctx->clkgen_reset);
-
-These can still fail, I suggest checking and propagating the return values.
-
-> +       clk_bulk_disable_unprepare(ctx->num_clks, ctx->clks);
-> +
-> +       return 0;
-> +}
-> +
-
-[snip]
-
-> +
-> +static int pwrseq_thead_gpu_match(struct pwrseq_device *pwrseq,
-> +                                 struct device *dev)
-> +{
-> +       struct pwrseq_thead_gpu_ctx *ctx =3D pwrseq_device_get_drvdata(pw=
-rseq);
-> +       static const char *const clk_names[] =3D { "core", "sys" };
-> +       struct of_phandle_args pwr_spec;
-> +       int i, ret;
-> +
-> +       /* We only match the specific T-HEAD TH1520 GPU compatible */
-> +       if (!of_device_is_compatible(dev->of_node, "thead,th1520-gpu"))
-> +               return 0;
-> +
-> +       ret =3D of_parse_phandle_with_args(dev->of_node, "power-domains",
-> +                                        "#power-domain-cells", 0, &pwr_s=
-pec);
-> +       if (ret)
-> +               return 0;
-> +
-> +       /* Additionally verify consumer device has AON as power-domain */
-> +       if (pwr_spec.np !=3D ctx->aon_node || pwr_spec.args[0] !=3D TH152=
-0_GPU_PD) {
-> +               of_node_put(pwr_spec.np);
-> +               return 0;
-> +       }
-> +
-> +       of_node_put(pwr_spec.np);
-> +
-> +       if (ctx->gpu_reset || ctx->clks)
-> +               return 1;
-> +
-
-One thing that bothers me is that this is still a fragile construct. I
-know this cannot happen in this particular design but in theory, this
-would not work if there were multiple simultaneous consumers of the
-AON power domain. Maybe just to be sure: store the address of the
-of_node of the consumer (preferably bumping its reference count) and
-check it to make sure that once a consumer associated with this node
-is connected, we no longer allow any other nodes? This way you could
-also just drop this if replacing it with checking the existence of the
-of_node.
-
-[snip]
-
-Bartosz
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
