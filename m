@@ -1,115 +1,87 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5481C2324;
-	Wed, 18 Jun 2025 21:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BCB35963
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:39:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750282691; cv=none; b=gqoyqQNoVK4H6+LYekkBc8SOSDaihCkqI6bh1OBUv9nyzfB0/SzYURoAqhGtYXXgG5SKF7kso5rCpDHogiTpgIF1wJRUqy38NUegWJK0jwh1IqaXYTqQxcdzyuExhOHpCtCJT2zw/PKQGzpZElxaoFT3aMkZxT7FB3kdZkkHhfw=
+	t=1750282777; cv=none; b=SAN8kPyeq7wFIG4HWe4LvjGGoWpPD8706cL5v1lX/xYBGhqKMdp+HIojgVkQA6kP/xPCoSd6PszxBneAVs87JuXcVOzfiwnA0Fr2N5/RHLHv/FMm4gwtZJBUc4urp3E+bi4+RuUxN88S5qnRAfOqPsNGWqgKYHEUWdlqFyr4Zjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750282691; c=relaxed/simple;
-	bh=tptnQIOvMYZikWloAg8JV19y8q5ul7YfyV9QYWL90vY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mmzfUH1VYF0liFPmCLFnkglj4eD9hc6ovZeHhdkIT9S0Xq5eS7AfHSCw96N+yLlg97Dt7Jt+CLac1KKAHiIWwx3Napx5mU/akca9zkTaRTFaCjAP89Cjvfq96fs4u4ZjIX7vlQi0aeEvPhDrqPI3LblMNFdyq4bXuHhZXVRHoDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X6jNJKav; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750282777; c=relaxed/simple;
+	bh=HCAM12Fe5DXcRBQegk/n8DQ9rGaqr48kn3TlT7cARz0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=d7n5TFu+IOmXC5vh4b7PUM8YQ3jUtaUBfdKeIpzhxg+c7vGJT2Q/ytrlGWZe8L/RaXGfNiWlKhCi0tVH0RQtVuaHbqFqfn8Al5SJrQaOvup4LgCiUZ3c6J4+ZbCM9rY80jNq4Uae59yvgNdggGyVWMzUzf+eTxrBkcIjU49rhHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pB6en+2c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X6jNJKav"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-747fc7506d4so86224b3a.0;
-        Wed, 18 Jun 2025 14:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750282689; x=1750887489; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WKvQDtw80vc5AVYxX0/sWoYBJcAOnr5z7g0ZsQrh91Q=;
-        b=X6jNJKavgAj8MJLPhbPleoVPDfil3/BC/ZuClZkF8CjS9TH/rhoeZvHlkHtnlwnNeH
-         FQQcVCsvbbb8ZeTpjLASZEG487jcfWRwU92JEKcp6SPDdLgl/XJBZvou3Tou93ivVVeO
-         TOTyGDlw/2+lAgzaCsQbDR94cMnzvatL8mhH6inCDt1pNqB+JIFThCfAloV5+YLdgMhq
-         +fvtpSeCgdSwyQpz8mQCYrQ+b4ro38r8YMs4cn/eLiXvO3usTk0mAtWVLNUFgXyMfIIN
-         gXxeHYHio9iCp/jieGaeTESu46wvbhkUoh5ro3qzqWA5FQo1g12ZN8aGf2AJrp49G8zA
-         iuPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750282689; x=1750887489;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WKvQDtw80vc5AVYxX0/sWoYBJcAOnr5z7g0ZsQrh91Q=;
-        b=iQ3OOoKVpIaghxMZmoCJRgL2y3izgfumcRN+Uv77VIEUVq76puxERrQSV6n0xCi73N
-         Pn7sJ0eeILjkTrc9uv+ptJHgyzNCzD/XigHIQYqJ8Z4LFeThhvEa8GSq8/pMOhJAw3QX
-         dkRSbPrt3awYmJeWJWF8V1fAvt0/4tnNFkAZdjjEkYcaubNjrytQROBKu0DgzH+A9+Ec
-         XUr6CHPCCFUQgcomIlmWOZg771VMfeABaacyyE5K9B/Tq0IJcrdN3zhzxWxo7QQ/OETW
-         c1/9XGebA1IDMYGrtfmZO95JbA/PfBos5iksPSPOxYY7YI+vWCgjU3ulVHGJs8d3o7G0
-         0NBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUBprNjWST42kLC4N213dPgHBbWzvfQ3pwTnrn3GgRmkTiagc2+35Zk3F+rHXMq0caCGloMa2vg@vger.kernel.org, AJvYcCXCJXQEIF9mHtxo32EnZs8hBLnDt/MxUZp4YUeztQfeEnTT/vdkZgIM851bAoEYscBLrSAQQprWrT1oO6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIcXfCIZATi9goRwh7UAG241z1b0BTkPm+e2cZQptvPhjHMGI4
-	XFhiQvZLNdF8KJd9/76t/JONgZbiJbvCoe0A+08kJz8vaTX1qsRolME0nR77
-X-Gm-Gg: ASbGncvzyu1i/yQLtIgr3GYM21/B/SIwNnsUGFO4/GbUW/QfsrLCFFLMoYy2mFQMEOl
-	KolD3I1Y+hDiJb3UV+p6H7Ump1GEvyBO5arPQOcGJ192kbiBGDL0MpEImcq3pLwhAp5RFZnvXpE
-	7ocaZU8Fv1KFqRr3v1GEz7NXKGxckUn8BGpSgvr07V8R8pOpAU9PmvOruhEj2L++mzvuFeAf/Bb
-	EIqlTEpPHbTbvw2tdTssQVWQn8Qru86sfm6lzTeFMFjM6IqO5U95WW0r7dpsmjMZKpt+Dhi4FmR
-	/3sMaLa6YF9nHxz3+gLp5J3qPgoJ4t9B75MrjTvs5aCN0GiCEtk8DxyMPXaN8Uj+CGf6tk+3a3M
-	W2IE2426J/7J/oyuHpQOWML4=
-X-Google-Smtp-Source: AGHT+IFHMR1qCXEFbrKEi4yRHr5IWlLH6FXfncqVxfGQGIOkk0+ORHY+K4/LSuN6/LNPJV8YN+sL4w==
-X-Received: by 2002:a05:6a00:4f95:b0:736:339b:8296 with SMTP id d2e1a72fcca58-7489d03aa58mr27542836b3a.18.1750282689459;
-        Wed, 18 Jun 2025 14:38:09 -0700 (PDT)
-Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-748e61679c5sm2327505b3a.84.2025.06.18.14.38.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 14:38:09 -0700 (PDT)
-Date: Wed, 18 Jun 2025 14:38:08 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, ap420073@gmail.com
-Subject: Re: [PATCH net v1] netmem: fix skb_frag_address_safe with unreadable
- skbs
-Message-ID: <aFMxwIB2O35yfQT6@mini-arch>
-References: <20250617210950.1338107-1-almasrymina@google.com>
- <CAHS8izMWiiHbfnHY=r5uCjHmDSDbWgsOOrctyuxJF3Q3+XLxWw@mail.gmail.com>
- <aFHeYuMf_LCv6Yng@mini-arch>
- <CAHS8izOMfmj6R8OReNqvoasb_b0M=gsnrCOv3budBRXrYjO67g@mail.gmail.com>
- <20250618142740.65203c69@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pB6en+2c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5FBC4CEE7;
+	Wed, 18 Jun 2025 21:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750282776;
+	bh=HCAM12Fe5DXcRBQegk/n8DQ9rGaqr48kn3TlT7cARz0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=pB6en+2cjScKzWpspCIDSmEsXTjk9ujyDZwq5Jjzrtmh2naZttLu+CitYTR5ROG4V
+	 0Nj30en/CTs6Esojp9Aajfz/nK9BfJT4ZVfsf+Y7ZqhYZmpraKRkEFgeEZT17PY20U
+	 SOc1MIbnQNCsYLyK2gpBSZqzNVGMB8x+95ZfaqmDqrqIrzGEC+U40A6ILrfpJEH1Z1
+	 ElBIELDwSLbj7nyPl3kDb1WdgTXeUHh6ckzWDwmGYMj+FDjADvQKj29MRxPB2NhgMY
+	 Y5bzmxda77v04K4IJXPu8KMgxzgpPbzidMtdiA4W7TVciSj6w88Ios47KvK9mqHBaB
+	 SHUC0aqLf2TYQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE503806649;
+	Wed, 18 Jun 2025 21:40:05 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250618142740.65203c69@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: fix to zero post-eof page
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <175028280475.266369.5996296776480428957.git-patchwork-notify@kernel.org>
+Date: Wed, 18 Jun 2025 21:40:04 +0000
+References: <20250605032633.2744434-1-chao@kernel.org>
+In-Reply-To: <20250605032633.2744434-1-chao@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, stable@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
-On 06/18, Jakub Kicinski wrote:
-> On Tue, 17 Jun 2025 14:52:17 -0700 Mina Almasry wrote:
-> > > > Sorry, I realized right after hitting send, I'm missing:
-> > > >
-> > > > Fixes: 9f6b619edf2e ("net: support non paged skb frags")
-> > > >
-> > > > I can respin after the 24hr cooldown.  
-> > >
-> > > The function is used in five drivers, none of which support devmem tx,
-> > > does not look like there is a reason to route it via net.
-> > >
-> > > The change it self looks good, but not really sure it's needed.
-> > > skb_frag_address_safe is used in some pass-data-via-descriptor-ring mode,
-> > > I don't see 'modern' drivers (besides bnxt which added this support in 2015)
-> > > use it.  
-> > 
-> > Meh, a judgement call could be made here.  I've generally tried to
-> > make sure skb helpers are (unreadable) netmem compatible without a
-> > thorough analysis of all the callers to make sure they do or will one
-> > day use (unreadable) netmem. Seems better to me to fix this before
-> > some code path that plumbs unreadable memory to the helper is actually
-> > merged and that code starts crashing.
+Hello:
+
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
+
+On Thu,  5 Jun 2025 11:26:33 +0800 you wrote:
+> fstest reports a f2fs bug:
 > 
-> Fair points, tho I prefer the simple heuristic of "can it trigger on
-> net", otherwise it's really easy to waste time pondering each single
-> patch. I'll apply to net-next as is. Stanislav, do you want to ack?
+> generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/git/fstests/results//generic/363.out.bad)
+>     --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
+>     +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:58.000000000 +0800
+>     @@ -1,2 +1,78 @@
+>      QA output created by 363
+>      fsx -q -S 0 -e 1 -N 100000
+>     +READ BAD DATA: offset = 0xd6fb, size = 0xf044, fname = /mnt/f2fs/junk
+>     +OFFSET      GOOD    BAD     RANGE
+>     +0x1540d     0x0000  0x2a25  0x0
+>     +operation# (mod 256) for the bad data may be 37
+>     +0x1540e     0x0000  0x2527  0x1
+>     ...
+>     (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fstests/results//generic/363.out.bad'  to see the entire diff)
+> Ran: generic/363
+> Failures: generic/363
+> Failed 1 of 1 tests
+> 
+> [...]
 
-Sure, SG!
+Here is the summary with links:
+  - [f2fs-dev,v3] f2fs: fix to zero post-eof page
+    https://git.kernel.org/jaegeuk/f2fs/c/ba8dac350faf
 
-Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
