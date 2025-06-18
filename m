@@ -1,231 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EDD3085D8;
-	Wed, 18 Jun 2025 19:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A753085D8
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750274132; cv=none; b=paQX/C301iC4g4iHwJ8bSfGtvYaJzbLHRzLRe1hRzKbhfUZJeC5ZCqeo1iWcWRO/zuaSToLkaIKMp5g4E/gj8ph6KJfPr+CPJA6ewCKtezFenUSZdkqwUhLcuW22IwarML9NUR2pL5gj6tknG4Pq7tPCqJHe/wpjZ9vKRzw7jEw=
+	t=1750274161; cv=none; b=pYXjecchh9plnmeGXSUAuALA/Pf6DRTyCoFfRJogDEDS11TMEKITmN/ySv2WL+aM5kJJeLKgIAhOTO+OlIltIWS5cIWagFI4j/Cckv9y8VTqaVpTSVfLQxKqqkQ1YW1Z5XW/0PwW7xXZB/vubpRHCgUnO4n8GnOit9MCZsSYia0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750274132; c=relaxed/simple;
-	bh=UYVy08HUm2ENzo6dO1lRm0Hr8jUddaKso3eWn0L8gWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=p2xQjHEQbo2+3x2uPYYpxvZfXOicztqI5fg6k4nZ7vUBgsxjfmlhBf1dL6iN1hovPMSUkTJTggsH8e4Qf74h/bwK0PeBYqvnPVlhydgju5gpAx+sGAXaiMYnaWBbnguCR739W/AWft5K5C9EZFufYnMqbADDSJpRk4oz82r36CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bBmKH3RL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750274161; c=relaxed/simple;
+	bh=MSuWLjtitgIj5nAn+GX/fn5LHc8A7Qn1F3MvYg2EG1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bF3pxiI0Og9GwuoMtoIrzhTa+w56ClFly68pfliuThirnsbI+NRFCd+M7vIoNdFtrOKn0tRc3WLcMra1tKPYkCYddCgw+YgxtS32UhdzaczI+4p9fBRWD0jHyX8WN00WQLuYhr0+v4KxC5dd171K7lkXE4w7hMbrsipYh9Q7svs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K6Z8Lbrl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bBmKH3RL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AFCC4CEE7;
-	Wed, 18 Jun 2025 19:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750274131;
-	bh=UYVy08HUm2ENzo6dO1lRm0Hr8jUddaKso3eWn0L8gWw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=bBmKH3RLpSiDsdGZoWslrBVQqFtW5wn1liZcQl0wgQ4Wrsw9h2EE1gifVg9SGsad3
-	 XudLGzfY3mFKleZKgRJ80kTQKwAdUAmSPQ71gOf+Vog5BUbQwlnJQqivuDG1Qwiawh
-	 hnth86LO1yRbxLRBaDT8m609q5A+q0o9/v23YAN2Et2s7wCwXu1UrGF+DCMjxwIzKY
-	 19/DF5Et8rLtBflwG2GJXFiuPADe+DKSCcBwjHEPIqNCpI3OT79zD8eCOd11xoCNC+
-	 ks+TJ7kea2Asr9gVMhaky/Xv6+vf5YGqhLl3eY5Y9VZ/PfbPyvwxXsUN6Z1aB7InTi
-	 TNgbITOJ9AUEA==
-Date: Wed, 18 Jun 2025 14:15:30 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	christophe leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>
-Subject: Re: [PATCH v2 5/6] pci/hotplug/pnv_php: Fix surprise plug detection
- and
-Message-ID: <20250618191530.GA1218109@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K6Z8Lbrl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750274158;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kc0dVjUcpt5gqxs6qiFWYkQnsos+yMT/xtO6WjX53Bw=;
+	b=K6Z8LbrlH+QbX70ZYNPKvWy1gZQaMZg5D2ZW0eYpx6MqUxfNj5ye8YLyJTE0A1ij5jcoli
+	Hxt17276SsoxAJDRDqibJwhLSRyOWK0UOrpGnL2u45DpTNc9ffqecwJI6BrmI9tqx5576j
+	To1icEnRIXWOEeStaVNcUrpy17Q+uRs=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-287-Y9ksjwJRN_q8vrdxJj1Lkw-1; Wed, 18 Jun 2025 15:15:57 -0400
+X-MC-Unique: Y9ksjwJRN_q8vrdxJj1Lkw-1
+X-Mimecast-MFC-AGG-ID: Y9ksjwJRN_q8vrdxJj1Lkw_1750274156
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso33716a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:15:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750274156; x=1750878956;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kc0dVjUcpt5gqxs6qiFWYkQnsos+yMT/xtO6WjX53Bw=;
+        b=xEtc9AUzomO8Q+Vo9s7dqqfBwoLBuxEOkna0tjpzsrXYDs0c+ks+NgVr5IKdFUf/By
+         JrYfLkfp5GJZCMfDDyaWbwuwHuXrd8ADJWLaThOn6gmycGHquB5ldKzN85ZILLdfEo57
+         5CvgljEPvLSpeFWSMbovBIk7j6ad/IcfPRH5BQF/7YRdDHc9r+JfX62Y243E2BeY7Pit
+         0qLFS7wYQDj/8gYya3eilIDtd/W24XBkfsSjTpYqo3oZ0YHdSfK56bsj5pbIfTz7U+3g
+         Y4UGy+NawrSwVqz19moRH9SoT/ngKYNeoCn4MsNo5c7bfjawDekINjNTyrz6jbsaqlKJ
+         qIIw==
+X-Forwarded-Encrypted: i=1; AJvYcCWF/lxEgFegy8e6FpkmNo5+ZoVbp3Tr1gk2f9KVefJ7dzAG3ZXHbL7QjKUoCiu+xkVDnpfDXToxtUNmEn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN/5pXwfm1K7cs4G0ZEF8j05AvYAqJv8VmidRsBZpiAV90TPBW
+	EM1roy6Pea+rKaolMRGBBfi2h8zZnxhC+FBSY5/vw95BVwU65F8dumhqXZ7TkM3uCfh9NubRbKc
+	gf2faGydvmqK3k8mcdrcRp1X3+uKNcXdPerxe37UiPXGEwUNLdeFjH5gTA+R4hnzt2Q==
+X-Gm-Gg: ASbGncv0aHZplGvEAalx9RDiMMmfkpzIGrXq6Z8yEZIB2staraMAjloFVgpnUUWb392
+	qYxP+kcv01s6aG9QUDquFIwPeuHW0RPozAkBr5H1kfc0AM2JuTnf5SEeOhdOK8wxW8OneANhVnk
+	ObAun/OlB4eTxwl/lAGP1W3FJ+x5YG2wJZ9K21Xnm2PgwAe+sj6luCaHgcI2VYB4WlF3nw9s0pK
+	ls/6BzwoQNMW40FWL3UrMtCxdLxdUwNHkCM2SEXkNlEpd3kwU/XEVDDuJqvaSt6nwFKgONB6B69
+	WPfVDaLVIUShLQ==
+X-Received: by 2002:a05:6a21:3283:b0:21c:fea4:60e2 with SMTP id adf61e73a8af0-21fbd50703amr31919631637.3.1750274156187;
+        Wed, 18 Jun 2025 12:15:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGkUR7lr6JS/+B3qk3OAHsRiYcnhO1km+mxn8h2hyzqyJAbV+OPjD7TSfxxaVIoV5qwzJHRrQ==
+X-Received: by 2002:a05:6a21:3283:b0:21c:fea4:60e2 with SMTP id adf61e73a8af0-21fbd50703amr31919582637.3.1750274155792;
+        Wed, 18 Jun 2025 12:15:55 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748f649d15bsm487986b3a.65.2025.06.18.12.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 12:15:55 -0700 (PDT)
+Date: Wed, 18 Jun 2025 15:15:50 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+Message-ID: <aFMQZru7l2aKVsZm@x1.local>
+References: <20250613160956.GN1174925@nvidia.com>
+ <aEx4x_tvXzgrIanl@x1.local>
+ <20250613231657.GO1174925@nvidia.com>
+ <aFCVX6ubmyCxyrNF@x1.local>
+ <20250616230011.GS1174925@nvidia.com>
+ <aFHWbX_LTjcRveVm@x1.local>
+ <20250617231807.GD1575786@nvidia.com>
+ <aFH76GjnWfeHI5fA@x1.local>
+ <aFLvodROFN9QwvPp@x1.local>
+ <20250618174641.GB1629589@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <317515920.1310655.1750265903281.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <20250618174641.GB1629589@nvidia.com>
 
-On Wed, Jun 18, 2025 at 11:58:23AM -0500, Timothy Pearson wrote:
->  recovery
-
-Same weird subject/commit wrapping.
-
-> The existing PowerNV hotplug code did not handle suprise plug events
-> correctly, leading to a complete failure of the hotplug system after
-> device removal and a required reboot to detect new devices.
-
-s/suprise/surprise/ (also below)
-
-> This comes down to two issues:
-> 1.) When a device is suprise removed, oftentimes the bridge upstream
->     port will cause a PE freeze on the PHB.  If this freeze is not
->     cleared, the MSI interrupts from the bridge hotplug notification
->     logic will not be received by the kernel, stalling all plug events
->     on all slots associated with the PE.
-
-I guess you mean the bridge *downstream* port that leads to the slot?
-
-> 2.) When a device is removed from a slot, regardless of suprise or
->     programmatic removal, the associated PHB/PE ls left frozen.
->     If this freeze is not cleared via a fundamental reset, skiboot
->     is unable to clear the freeze and cannot retrain / rescan the
->     slot.  This also requires a reboot to clear the freeze and redetect
->     the device in the slot.
+On Wed, Jun 18, 2025 at 02:46:41PM -0300, Jason Gunthorpe wrote:
+> On Wed, Jun 18, 2025 at 12:56:01PM -0400, Peter Xu wrote:
+> > So I changed my mind, slightly.  I can still have the "order" parameter to
+> > make the API cleaner (even if it'll be a pure overhead.. because all
+> > existing caller will pass in PUD_SIZE as of now), 
 > 
-> Issue the appropriate unfreeze and rescan commands on hotplug events,
-> and don't oops on hotplug if pci_bus_to_OF_node() returns NULL.
+> That doesn't seem right, the callers should report the real value not
+> artifically cap it.. Like ARM does have page sizes greater than PUD
+> that might be interesting to enable someday for PFN users.
+
+It needs to pass in PUD_SIZE to match what vfio-pci currently supports in
+its huge_fault().
+
 > 
-> Signed-off-by: Timothy Pearson <tpearson@raptorengineering.com>
-> ---
->  arch/powerpc/kernel/pci-hotplug.c |  3 ++
->  drivers/pci/hotplug/pnv_php.c     | 53 ++++++++++++++++++++++++++++++-
->  2 files changed, 55 insertions(+), 1 deletion(-)
+> > but I think I'll still
+> > stick with the ifdef in patch 4, as I mentioned here:
 > 
-> diff --git a/arch/powerpc/kernel/pci-hotplug.c b/arch/powerpc/kernel/pci-hotplug.c
-> index 9ea74973d78d..6f444d0822d8 100644
-> --- a/arch/powerpc/kernel/pci-hotplug.c
-> +++ b/arch/powerpc/kernel/pci-hotplug.c
-> @@ -141,6 +141,9 @@ void pci_hp_add_devices(struct pci_bus *bus)
->  	struct pci_controller *phb;
->  	struct device_node *dn = pci_bus_to_OF_node(bus);
->  
-> +	if (!dn)
-> +		return;
-> +
->  	phb = pci_bus_to_host(bus);
->  
->  	mode = PCI_PROBE_NORMAL;
-> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-> index bac8af3df41a..0ceb4a2c3c79 100644
-> --- a/drivers/pci/hotplug/pnv_php.c
-> +++ b/drivers/pci/hotplug/pnv_php.c
-> @@ -10,6 +10,7 @@
->  #include <linux/libfdt.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
-> +#include <linux/delay.h>
->  #include <linux/pci_hotplug.h>
->  #include <linux/of_fdt.h>
->  
-> @@ -474,7 +475,7 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot, bool rescan)
->  	struct hotplug_slot *slot = &php_slot->slot;
->  	uint8_t presence = OPAL_PCI_SLOT_EMPTY;
->  	uint8_t power_status = OPAL_PCI_SLOT_POWER_ON;
-> -	int ret;
-> +	int ret, i;
->  
->  	/* Check if the slot has been configured */
->  	if (php_slot->state != PNV_PHP_STATE_REGISTERED)
-> @@ -532,6 +533,27 @@ static int pnv_php_enable(struct pnv_php_slot *php_slot, bool rescan)
->  
->  	/* Power is off, turn it on and then scan the slot */
->  	ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
-> +	if (ret) {
-> +		SLOT_WARN(php_slot, "PCI slot activation failed with error code %d, possible frozen PHB", ret);
-> +		SLOT_WARN(php_slot, "Attempting complete PHB reset before retrying slot activation\n");
-> +		for (i = 0; i < 3; i++) {
-> +			/* Slot activation failed, PHB may be fenced from a prior device failure
-> +			 * Use the OPAL fundamental reset call to both try a device reset and clear
-> +			 * any potentially active PHB fence / freeze
-> +			 */
-> +			SLOT_WARN(php_slot, "Try %d...\n", i + 1);
-> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_warm_reset);
-> +			msleep(250);
+> > https://lore.kernel.org/all/aFGMG3763eSv9l8b@x1.local/
+> > 
+> > The problem is I just noticed yet again that exporting
+> > huge_mapping_get_va_aligned() for all configs doesn't make sense.  At least
+> > it'll need something like this to make !MMU compile for VFIO, while this is
+> > definitely some ugliness I also want to avoid..
+> 
+> IMHO this uglyness should certainly be contained to the mm code and not
+> leak into drivers.
+> 
+> > There's just no way to provide a sane default value for !MMU.
+> 
+> So all this mess seems to say that get_unmapped_area() is just the
+> wrong fop to have here. It can't be implemented sanely for !MMU and
+> has these weird conditions, like can't fail.
+> 
+> I again suggest to just simplify and add an new fop 
+> 
+> size_t get_best_mapping_order(struct file *filp, pgoff_t pgoff,
+>                               size_t length);
+> 
+> Which will return the largest pgoff aligned order within pgoff/length
+> that the FD could try to install. Very simple for the driver
+> side. vfio pci will just return ilog2(bar_size).
+> 
+> PAGE_SHIFT can be a safe default.
 
-What is the source of the 250 value?  Is there a spec you can cite for
-this?  Maybe add a #define if it makes sense?
+I agree this is a better way.  We can make the PAGE_SHIFT by default or
+just 0, because it doesn't sound necessary to me to support anything
+smaller than PAGE_SIZE.. maybe a "int" retval would suffice to also cover
+errors.
 
-> +			pci_set_pcie_reset_state(php_slot->pdev, pcie_deassert_reset);
-> +
-> +			ret = pnv_php_set_slot_power_state(slot, OPAL_PCI_SLOT_POWER_ON);
+So this will introduce a new file operation that will only be used so far
+in VFIO, playing similar role until we start to convert many
+get_unmapped_area() to this one.
 
-Wrap the comment and non-printk lines to fit in 80 columns like the
-rest of the file.  Preserve the messages as-is so grep finds them
-easily.
+> 
+> Then put all this maze of conditionals in the mm side replacing the
+> call to fops->get_unmapped_area() and don't export anything new. The
+> mm will automaticall cap the alignment based on what the architecture
+> can do and what 
+> 
+> !MMU would simply entirely ignore this new stuff.
 
-Usual multi-line comment style is:
+For the long term, we should move all get_unmapped_area() users to the new
+API.  For old !MMU users, we should rename get_unmapped_area() to something
+better, like get_mmap_addr().  For those cases it's really not about
+looking for something not mapped, but normally exactly what is requested.
 
-  /*
-   * Text ...
-   */
+> 
+> > So going one step back: huge_mapping_get_va_aligned() (or whatever name we
+> > prefer) doesn't make sense to be exported always, but only when CONFIG_MMU.
+> > It should follow the same way we treat mm_get_unmapped_area().
+> 
+> We just deleted !SMP, I really wonder if it is time for !MMU to go
+> away too..
 
-Possibly factor this warn/reset code into a helper function to
-unclutter pnv_php_enable()?
+Yes, if this comes earlier, we can completely drop get_unmapped_area()
+after all existing MMU users converted to the new one.
 
-> +			if (!ret)
-> +				break;
-> +		}
-> +
-> +		if (i >= 3)
-> +			SLOT_WARN(php_slot, "Failed to bring slot online, aborting!\n");
-> +	}
->  	if (ret)
->  		return ret;
->  
-> @@ -841,12 +863,41 @@ static void pnv_php_event_handler(struct work_struct *work)
->  	struct pnv_php_event *event =
->  		container_of(work, struct pnv_php_event, work);
->  	struct pnv_php_slot *php_slot = event->php_slot;
-> +	struct pci_dev *pdev = php_slot->pdev;
-> +	struct eeh_dev *edev;
-> +	struct eeh_pe *pe;
-> +	int i, rc;
->  
->  	if (event->added)
->  		pnv_php_enable_slot(&php_slot->slot);
->  	else
->  		pnv_php_disable_slot(&php_slot->slot);
->  
-> +	if (!event->added) {
-> +		/* When a device is surprise removed from a downstream bridge slot, the upstream bridge port
-> +		 * can still end up frozen due to related EEH events, which will in turn block the MSI interrupts
-> +		 * for slot hotplug detection.  Detect and thaw any frozen upstream PE after slot deactivation...
-> +		 */
+Any early objections / concerns / comments from anyone else, before I go
+and introduce it?
 
-Restyle and wrap comment.
+-- 
+Peter Xu
 
-s/upstream bridge port/bridge downstream port/ to avoid confusion.
-
-> +		edev = pci_dev_to_eeh_dev(pdev);
-> +		pe = edev ? edev->pe : NULL;
-> +		rc = eeh_pe_get_state(pe);
-> +		if ((rc == -ENODEV) || (rc == -ENOENT)) {
-> +			SLOT_WARN(php_slot, "Upstream bridge PE state unknown, hotplug detect may fail\n");
-> +		}
-> +		else {
-> +			if (pe->state & EEH_PE_ISOLATED) {
-> +				SLOT_WARN(php_slot, "Upstream bridge PE %02x frozen, thawing...\n", pe->addr);
-> +				for (i = 0; i < 3; i++)
-> +					if (!eeh_unfreeze_pe(pe))
-> +						break;
-> +				if (i >= 3)
-> +					SLOT_WARN(php_slot, "Unable to thaw PE %02x, hotplug detect will fail!\n", pe->addr);
-> +				else
-> +					SLOT_WARN(php_slot, "PE %02x thawed successfully\n", pe->addr);
-> +			}
-> +		}
-> +	}
-
-Possibly factor this out, too.  Then pnv_php_event_handler() could
-look simpler:
-
-  if (event->added) {
-    pnv_php_enable_slot(&php_slot->slot);
-  } else {
-    pnv_php_disable_slot(&php_slot->slot);
-    <new helper to check for surprise removal>
-  }
-
-  kfree(event);
-
->  	kfree(event);
->  }
->  
-> -- 
-> 2.39.5
