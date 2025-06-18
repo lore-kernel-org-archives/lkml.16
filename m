@@ -1,176 +1,149 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010009.outbound.protection.outlook.com [52.101.84.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09171DDA24
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243022; cv=none; b=N0FbvAYG6Hk3Hlil4w8IA5lNBSalNH2OMwX00eV+xc1YcpCYALLwwnl2lP6C8Y64+rZjTcAmjmDt4NLhr4oDoA1fFzb9+isKuaRop4S3Kdmg9EV1YXFG1rKnWSi1zunkEaKg26eMuWqeqjb++gbe2/1erqfC8rbAaMmBymNDwuQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243022; c=relaxed/simple;
-	bh=9mU1IbjCwGrA6T2HroQuXJB/zERDHNnkDsrlmdviP74=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NwZoZWDbHVfpYgEYBod9N78qn9ytJs/Jkb72axWClDIgJF715Q2utOogzgVoi93PN0qEeotBuBih4imVyoLfxj/r/E61y3L2y1AJU4uMXleNwySw/pNlyMsstZrU+FzXFu6habc22732SW8kAr25Yi+VZtGryrnq/gp6DHn+RsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JYPxz84r; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAFD5BA27;
+	Wed, 18 Jun 2025 10:37:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750243038; cv=fail; b=u+KBX2OKmJ4nEL/bwQJEpXTbuWoCwez99jXBrh7IR2XuUCwOJHheZkBb16t78VCNKUM0fJqRU53Q7vmzh/disl7SPm8HhhdkNiMNv1UPWRcmfjb6z/XQDTPcIsOXZ8aJirqMedxsj+3UGa4k5MT/Evq1/XKG8btg7rNYWRUG4uE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750243038; c=relaxed/simple;
+	bh=HOwg0XLBkaaW073sMF2Q7R8lj3pBaUmmVjnYYsw4hmc=;
+	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YnOgz3YuUUvVZnMw/XXQtKmroIeoo1NN80lqR0LR8R2LHgsxrGgvRgG8pIdrEcFIFHBgmluBR0Nr4fo1tfR9oUatR3GA7nxJlW34CNDgheYqzUEIaNU+kc3P0v24g/rMDIKitCBwumB/8r6H1qtJind4qfTHtwVOm1SGEu5nIXE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=Qa+s9/si; arc=fail smtp.client-ip=52.101.84.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JYPxz84r"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so398535241.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:37:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750243019; x=1750847819; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l6qb0UH+1O/3k3BaasSuo+Now7ZqMn2I9gUQF913qFs=;
-        b=JYPxz84r5sv/q/NX5U8bMO4RPtp3Au7TzqrjQfs/VZ6Ut0QtpLyRY7jEGWt5z6n8In
-         H/piz6GckWqST/RH83m5X7zi+OwIPSmQFoJdObDgdA0tI48KcAlAU58Jsp6EKvhhOF+Q
-         UjDUWtqHQzExQH6xDK8LQm2+Nt4T3VdTDrbGKZlxmW4Bzb8FAVlBaXoI4z+PCt1dRSpj
-         iLDGCaFJcbwSGUyWMfaYDD38GpwQioxihDcviK1I303dLgbsgSmCKG8cJsZB4GcGN3x1
-         di4iuukkpI4a/YWR4rKVPoLt/Rw/kFQELkCGCYu3H1rATiE/ZRJZVxCfEaWc3Vl1YWi+
-         2dhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750243019; x=1750847819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l6qb0UH+1O/3k3BaasSuo+Now7ZqMn2I9gUQF913qFs=;
-        b=Oha5HGVuWbywaoq1ZwuLv/hlNiy0Ep4twuZcfqbQ5PpcLzP3kt0HBG4J6JVFGM5ICd
-         q6So9meyG0AFsZotxScoHorq7kssCH3DU6ZaOzCT8B9XYwgX8+bK09xeJnP86plf7ToK
-         2LgcFMHf4pOlsoPrD7p4pijfq/clLZUEG7ZCsJlvIUIlFGmzHaP4evxtyY9C8mzI//KB
-         Kt4SMwyhfq85wQTc5Vg8GXTQ+lvQQJOmoZI7NVa7P9FgGnes/uZHJRwASzOblwwHAw2a
-         BLfliRIOPQR1uSSkdps8PgHCDvtphNnjRmu6tW7d6y+4IGk/ZFglvzr96ojgBWqCiq5y
-         8SIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOIU0l0rxF0X9CcSxD1OZPJCPV8efV1/nZ94YnPL8iUtzlWLMFPmY+b2BH7VwV7kbe9LQU9+G/p1Aopsk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzgbbB3ol1sY1Z5zy9JyuKfN4aWp7lwtDIwpJWQ6kIiXM15aAFt
-	D6mOIgDBYRh5wP/ENl8qHhTgUxQnvJtTZfPzZiAN9aLCgnLQS13ZMOGBtYpB1vyefvecfKJdX99
-	J+LhEvIVIiZJkNCLCPo43XeRaOO+lPVNuQQMR
-X-Gm-Gg: ASbGncss8ueE06GjoWvoL8RKJTKgOmLiLJocWrtdxuf+8ropgk0zaOVwsA9K2J0qAvs
-	Ueks8t92ohrz30jGhaLbfwqsz7Yg5BGrfLBxDWEXqdnAnpmPhNpzj4+QHFhWxXY9mL1Lp+0qDp5
-	sWXRJPZ4VFWXHM2L9wMbPtA/4YEhA6GnSeP53OahCllxo=
-X-Google-Smtp-Source: AGHT+IGrQTi1dFQKKC+4Tva42Wjpw/WTHK3Uw+fY6TyPSlSCJM6XkQXHvYhRRxeMSBv55713BrZWXfpy7EhrkPvU4x8=
-X-Received: by 2002:a05:6102:2924:b0:4e7:b77d:7fe1 with SMTP id
- ada2fe7eead31-4e99729dffdmr918481137.0.1750243019526; Wed, 18 Jun 2025
- 03:36:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="Qa+s9/si"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dlHeRZN67D4e7WSPUP/CeNXQZ/zEBoGQMSAt/cRGVcW3EhhDiryt6FULx0FWUtoevGWiapjUHH0Sr/wpMwgVR1xWQDiryYtCaejJsyZVkZH5cpsrZs/RpqFvyB5aeU22etui02MoNnG6Pa5UkXYFnV1yRHPgDOuUe4D4pZEEffS8EoY7JTkGG8tLGa5jeAhiUk+0YoupvAm7V2besrCNbCDZOVxMyKb6DdGiSkueQTwKFw9l7PPemPydQ6/qyBvOLI6v8VrsT/4/MsK7SGJKdYI1t54msr84zeZj/NRwkf8uOcjNxWNotZJ2wHKDntcBf61CkbKNQ2bG9nb1/UoFdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ikMPal/2gFl9Ddwj8q20srfYKEvCqE2XA5zoCe9m9C4=;
+ b=H02y8/g0VSzpLA33tr76ndnSlzbv7W9qdaSgGw087GJeN2MsuGUXo2s3rlNnIOAcMYB9dgOf8bcaSi2tL+g4ODcsjNwcSEBJNxZ6zl1rdr2gef8j79Z2JlwdYvgN/mnklTfn6xBXnIWmO0w1O7/k3JABznYIJ4m1mwfdUDmphYZFSXgovFnDsmejqaUS0B364pHTe3axW2BNmV2l98CWPY1ZwoqMLvs9c2hq8UFMbW3diSVV2waGqPz0+wE5KtCskeAF24uBl+z8LkVyQxUZAkmXOcyB+zg9CwZpTkgEVRoZ/E8DLN8IyhfS/HiS8CWKq1yg8FKzlyG5DXC6avko/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ikMPal/2gFl9Ddwj8q20srfYKEvCqE2XA5zoCe9m9C4=;
+ b=Qa+s9/siP9uNu4Xn28CiI3lMQCBV5bvqcSwdWJmk3VAjIhX0j1SrJVhqROdBAUiq3U3KsKnad4/E9aH6XMDeKjuSS0HvnrJhHNKjR/HcnwaATPEuSkN6xk/+muXaxhWxRPw0LV9rk/PhoCguPknSYzpwSLGseUhuheoYUhSsKPo=
+Received: from CWLP265CA0306.GBRP265.PROD.OUTLOOK.COM (2603:10a6:401:5d::30)
+ by DU4PR02MB11310.eurprd02.prod.outlook.com (2603:10a6:10:5d7::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Wed, 18 Jun
+ 2025 10:37:13 +0000
+Received: from AMS0EPF00000199.eurprd05.prod.outlook.com
+ (2603:10a6:401:5d:cafe::80) by CWLP265CA0306.outlook.office365.com
+ (2603:10a6:401:5d::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.30 via Frontend Transport; Wed,
+ 18 Jun 2025 10:37:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
+ smtp.mailfrom=axis.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=axis.com;
+Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
+ 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=195.60.68.100; helo=mail.axis.com; pr=C
+Received: from mail.axis.com (195.60.68.100) by
+ AMS0EPF00000199.mail.protection.outlook.com (10.167.16.245) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 10:37:12 +0000
+Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Wed, 18 Jun
+ 2025 12:37:11 +0200
+From: Waqar Hameed <waqar.hameed@axis.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, <kernel@axis.com>,
+	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: iio: proximity: Add Nicera
+ D3-323-AA PIR sensor
+In-Reply-To: <20250617-vagabond-fulmar-of-penetration-dbe048@kuoka> (Krzysztof
+	Kozlowski's message of "Tue, 17 Jun 2025 11:06:08 +0200")
+References: <cover.1749938844.git.waqar.hameed@axis.com>
+	<e2b1b56fbee07047f3fb549f17257dc3764af395.1749938844.git.waqar.hameed@axis.com>
+	<20250617-vagabond-fulmar-of-penetration-dbe048@kuoka>
+User-Agent: a.out
+Date: Wed, 18 Jun 2025 12:37:11 +0200
+Message-ID: <pndjz59l4iw.fsf@axis.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607220150.2980-1-21cnbao@gmail.com> <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
- <CAGsJ_4yPg2AOxjorD3RPyu=Ko+7gpU1=-XWqQohvLWgGrzAEDQ@mail.gmail.com> <05d38430-3512-49b0-90da-1ae7a617a377@lucifer.local>
-In-Reply-To: <05d38430-3512-49b0-90da-1ae7a617a377@lucifer.local>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 18 Jun 2025 18:36:48 +0800
-X-Gm-Features: Ac12FXzIhZQUu9QnNEnKJxKSW7chiutKLCuzqNt1W6Lvw2Zz1bxp0MqK3U7Qeh8
-Message-ID: <CAGsJ_4xKmXO1LigxrG7RQG4EUzZyPwiYsYnQXNnJpvF=PEoDfw@mail.gmail.com>
-Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
-	Tangquan Zheng <zhengtangquan@oppo.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Lance Yang <ioworker0@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: se-mail01w.axis.com (10.20.40.7) To se-mail01w.axis.com
+ (10.20.40.7)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF00000199:EE_|DU4PR02MB11310:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed68a6d1-cb36-458a-0ecf-08ddae54163a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PwmvuF8hF/9+Vcj8SX/zHwHNYzGIzUQw0UPzTf7HF1uSPrqpi5mH3fGy/svD?=
+ =?us-ascii?Q?SSlQyKAw0tcXnEHFHnnwzYX6aRCEeIrd7Y6e29nauM5if0dv90ya5rzZ+iS7?=
+ =?us-ascii?Q?W5H2C3qguV3wwRBfOal9cCTmwCCiJ26kIbnCvvjkt2TgL183KxldB1yXUgHl?=
+ =?us-ascii?Q?aFFBKqBKzlnTARBL3ZiZ2ui3gNcafakxB8GH/HLXSIGH0aTrmEobDjiw2yXj?=
+ =?us-ascii?Q?M4fCmCJtg54QpEqxHvXVVVo/9iEGqX5J4G62tDzUT+STBcP8rdYWft3s1aVS?=
+ =?us-ascii?Q?WBsrTETAg3Pcf6rnsC/azMeZ42P693b7eSakuPOFGoo9T7ROLmAbvb8Hd8tn?=
+ =?us-ascii?Q?RAKfojkcD1RTK9DZDf0vq+FPFks8Mzawmr0ra3HDYxB4Kahr68mx+S3WdcQo?=
+ =?us-ascii?Q?E+Qv/m9BfbCrYPuUC9HQfWVBQ5D0Ijd6rg3XvST7uAKbi8vvNwYPwJekRJvE?=
+ =?us-ascii?Q?+GaRF/QmFNRP2OF9hDXMHUA8rbUCRLpXaouxrKI+x4J9MtE4D352T+wJkzJC?=
+ =?us-ascii?Q?WYJ7ONoiVKltvjTUI/i6XhfXJw1aWY+d10htLoQpXB4JIIXoWlcTma+2Lleb?=
+ =?us-ascii?Q?PT7d14U256fOmiAvYv8Hrc5PfPVpd+v11W/7xUGMSkHquC56hX6/cr7tS+3n?=
+ =?us-ascii?Q?crUQu9UySdKkrY7uWjrSiS6U8Wkk4ztlyvENyBU907w4aBEMIQTy4XHpSWF3?=
+ =?us-ascii?Q?1PrMd4OW0LTleqFpSFXeWYZTOXvUT2T0Zfg0Zh+cpRmGo6r8IW0mbcHQC5Mn?=
+ =?us-ascii?Q?IKIAvrGX15nWSu0YhqYwTPxIQunT8C22dKpPBXSKDl4GKIoRYnJTDr/0MS8T?=
+ =?us-ascii?Q?4pbFaWGfl3HjyBVK+kYM/gzoLVRTKJUfR73c4Cg+eV3zPdzxs238LoJUARzE?=
+ =?us-ascii?Q?zaP2zFqwFuKGc5Q25A1bE7dxxlsakdKLhuXaWh7yyHWX68nPY383ae+5GGdO?=
+ =?us-ascii?Q?yq7rpINytMF3n+j2N9+XSNMZf8Q52u/MKQx0FTqJhbs6/4oTAWY4+0wXS6Vi?=
+ =?us-ascii?Q?yk4hcWzpaJEerWmU/0b0lQrdkRRw6CYC1Oh9SwZJzq9lL6JxnFWJ9bizP7OD?=
+ =?us-ascii?Q?Wy6vJSfnfHKz4+4ChzgF7z3zWbuDrvMdJXrJDPdXxfi+0s9XoVry0vvQPJ3B?=
+ =?us-ascii?Q?+h+8GIOP6AASl3zr4RkGuNOlQ9V3Rsfe9o/QK/5LNJ8OVeAG+7MKzE1q1ttt?=
+ =?us-ascii?Q?IIePpi6PG8mRZG7CCzmsxL78X/XrmCNB7bGJp9ljBY5Y+0xdQz6MrwvEehjW?=
+ =?us-ascii?Q?H30WzHFQfgLKGvpmrQuM5hrLzfSgykwShlhXujYUsqZv4ssfe3ogGfNzF9AI?=
+ =?us-ascii?Q?laGKNneGgp4ZMnVm0shi/BD+413rGRrp+6AU/MCX97Jwdz1PYKoKFSqdIyRI?=
+ =?us-ascii?Q?wdkXKh+jLf1D9ofA7zHaxicBFSjbX99dgFNhikYSBBHVnrf0AWg+qTR0K4mc?=
+ =?us-ascii?Q?e6UQHwUc90UT+qURktUUQY5CP30DhauXqKtdnql1mNzUagkedBAVLwneprUY?=
+ =?us-ascii?Q?TJTvlRigpMG3aXVQx9c8C64izCGCtpNtUwxa?=
+X-Forefront-Antispam-Report:
+	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: axis.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 10:37:12.9432
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed68a6d1-cb36-458a-0ecf-08ddae54163a
+X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF00000199.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR02MB11310
 
-On Wed, Jun 18, 2025 at 6:33=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Wed, Jun 18, 2025 at 06:11:26PM +0800, Barry Song wrote:
-> [sip]
-> > > ----8<----
-> > > From 1ffcaea75ebdaffe15805386f6d7733883d265a5 Mon Sep 17 00:00:00 200=
-1
-> > > From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > Date: Tue, 17 Jun 2025 14:35:13 +0100
-> > > Subject: [PATCH] mm/madvise: avoid any chance of uninitialised pointe=
-r deref
-> > >
-> > > If we were to extend madvise() to support more operations under VMA l=
-ock,
-> > > we could potentially dereference prev to uninitialised state in
-> > > madvise_update_vma().
-> > >
-> > > Avoid this by explicitly setting prev to vma before invoking the visi=
-t()
-> > > function.
-> > >
-> > > This has no impact on behaviour, as all visitors compatible with a VM=
-A lock
-> > > do not require prev to be set to the previous VMA and at any rate we =
-only
-> > > examine a single VMA in VMA lock mode.
-> > >
-> > > Reported-by: Lance Yang <ioworker0@gmail.com>
-> > > Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> > > ---
-> > >  mm/madvise.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/mm/madvise.c b/mm/madvise.c
-> > > index efe5d64e1175..0970623a0e98 100644
-> > > --- a/mm/madvise.c
-> > > +++ b/mm/madvise.c
-> > > @@ -1333,6 +1333,8 @@ static int madvise_vma_behavior(struct vm_area_=
-struct *vma,
-> > >                 return madvise_guard_remove(vma, prev, start, end);
-> > >         }
-> > >
-> > > +       /* We cannot provide prev in this lock mode. */
-> > > +       VM_WARN_ON_ONCE(arg->lock_mode =3D=3D MADVISE_VMA_READ_LOCK);
-> >
-> > Thanks, Lorenzo.
-> > Do we even reach this point for MADVISE_MMAP_READ_LOCK cases?
-> > madvise_update_vma() attempts to merge or split VMAs=E2=80=94wouldn't t=
-hat be
-> > a scenario that requires a write lock?
->
-> Well we're relying on happening to reach here with the correct lock afaic=
-t.
->
-> I'm going to be doing some follow-up series to clean all this up!
->
-> I'd rather keep this in here for now just to ensure we don't miss some st=
-upidity
-> here.
+On Tue, Jun 17, 2025 at 11:06 +0200 Krzysztof Kozlowski <krzk@kernel.org> wrote:
 
-I have no objection to keeping this as-is=E2=80=94just curious if using
-VM_WARN_ON_ONCE(arg->lock_mode !=3D MADVISE_MMAP_WRITE_LOCK)
-would be more accurate.
-
-In any case, your cleanup series will address this, so it's probably
-not something we need to handle right now.
-
+> On Sun, Jun 15, 2025 at 12:14:02AM GMT, Waqar Hameed wrote:
+>> +examples:
+>> +  - |
+>> +    proximity {
+>> +        compatible = "nicera,d3323aa";
+>> +        vdd-supply = <&regulator_3v3>;
+>> +        vout-clk-gpios = <&gpio 78 0>;
+>> +        data-gpios = <&gpio 76 0>;
 >
-> Thanks!
->
-> >
-> > The prerequisite for using a VMA read lock is that the operation must
-> > be safe under an mmap read lock as well.
-> >
-> > >         anon_name =3D anon_vma_name(vma);
-> > >         anon_vma_name_get(anon_name);
-> > >         error =3D madvise_update_vma(vma, prev, start, end, new_flags=
-,
-> > > @@ -1549,6 +1551,7 @@ int madvise_walk_vmas(struct mm_struct *mm, uns=
-igned long start,
-> > >         if (madv_behavior && madv_behavior->lock_mode =3D=3D MADVISE_=
-VMA_READ_LOCK) {
-> > >                 vma =3D try_vma_read_lock(mm, madv_behavior, start, e=
-nd);
-> > >                 if (vma) {
-> > > +                       prev =3D vma;
-> > >                         error =3D visit(vma, &prev, start, end, arg);
-> > >                         vma_end_read(vma);
-> > >                         return error;
-> > > --
-> > > 2.49.0
-> >
+> Same comment as before.
 
-Thanks
-Barry
+I removed the include header thinking that would be fine, since there
+were already a bunch of other examples just using `0` as the GPIO flag
+(without the include). I'll re-add the include header in next version
+then and use `GPIO_ACTIVE_HIGH` on both `-gpios`.
