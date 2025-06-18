@@ -1,68 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431B229A5;
-	Wed, 18 Jun 2025 00:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AAB29A5
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:57:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750208196; cv=none; b=OR/ZNmFoGYo+n5XToL90OXxXcFeKgZQIZTwjfzxjv8+XW9os0LXGcVmeQQzKIf+TQtpIyrb0zFEzkxrIpi6Z/lHagdrqFoKiOyh2W8k03CY4LXh9n8Ih1dNtXI3JYUm7dfuSSyyTUoO9e4T135+LfoWX9R9kxBrkNQnJdQv3qrk=
+	t=1750208243; cv=none; b=FZ/MVwZCCZWyCHF/0uCQdsmhC3N05PQ/vbP99VOSF2khhMzpjfPZVy+4IXLzLg8mhifOwiP6uLUjCR8d8no6oYSt83ftMp/ijxv0w2rflUgbPvx8849G4g0/p/Ch0SSKM6Iaeq4iezvrGcu7CXqLhRAXLN/MpozSIpemoiG9z/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750208196; c=relaxed/simple;
-	bh=jf0PfUJI2wJjcwG+5ifpaB1FC4hkqfOWN/t2FhiaSW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=meGkjFIsa3/pk8NxnDJJxoYAkSLaEbC7Ov2kJRW+a5k9Hit4LU6wFjguvMfcXk6j9hSj5y/KrlQd1TccXkJTdKAzyMo43u+PHA2xkcXrsxkSj6/OMC/5ndTo03HFt0FjIwkVxiiqQpf9Ey9pyogj5gdBiI+KbBYWHeaweWs+BzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXtJaDtS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750208243; c=relaxed/simple;
+	bh=/U983oidABPBKid+50MSlmLfbJYindpPjJ9Zn9q7y6w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TY3zsO8wovsbNH8/xc9YFCQzLkwYoM7L3D4lzIX65fnHqV795pMO0kZF/ULVwcwpuNhXHssZHs5zCLYIRxnii8vkIdkL6cfypG3psShYrUbocvn/i3e8PLwZJAhQtvCsWZkcRRRQxeYtcL4C/Yy64tu3kSlWoKdSMiOnd2JAlL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I3dTvJ8b; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXtJaDtS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B779C4CEEE;
-	Wed, 18 Jun 2025 00:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750208195;
-	bh=jf0PfUJI2wJjcwG+5ifpaB1FC4hkqfOWN/t2FhiaSW8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VXtJaDtSao0XAs3sY0reVQeBGgmLFDQncc3RAtkxD1JfR7lI9jpLk1hWD88War5dy
-	 GDEhR0p/kxBnspAGDW0u7hxhMHqK8ClMwaB6xrKayQpGWAynC8GCYgM869Q4OK7/sY
-	 9CnFvhb2hW+fuhZtjo9vM+xhYbcofh6jl4x5ynL3j33hLWrz+Z44F8FGaShWp+FfEb
-	 vRGhHd0r+LNoFFDdNYtxc76+AoNAafNIw6C3/40IYhciUugFATdzXa+1FXRjsJfleH
-	 0abLaA+OSduu92co2HVjl+Un5PRv0G5KPE624MV/gvbNmwD28xa/e6Hqbt7fg1y8GD
-	 7bS89z/pFaaCg==
-Date: Tue, 17 Jun 2025 17:56:34 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: =?UTF-8?B?w4FsdmFybyBGZXJuw6FuZGV6?= Rojas <noltari@gmail.com>
-Cc: jonas.gorski@gmail.com, florian.fainelli@broadcom.com, andrew@lunn.ch,
- olteanv@gmail.com, davem@davemloft.net, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, vivien.didelot@gmail.com,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, dgcbueu@gmail.com
-Subject: Re: [PATCH net-next v4 00/14] net: dsa: b53: fix BCM5325 support
-Message-ID: <20250617175634.73ce12c9@kernel.org>
-In-Reply-To: <20250614080000.1884236-1-noltari@gmail.com>
-References: <20250614080000.1884236-1-noltari@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I3dTvJ8b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750208242; x=1781744242;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/U983oidABPBKid+50MSlmLfbJYindpPjJ9Zn9q7y6w=;
+  b=I3dTvJ8bJ8I9+S39lDuCrqVUaY+QWM08OCLc4A6F7EfuB10OCCGSkjJA
+   D5Al9qCshV5xz8s+ais5c8kWXMdw1sG4KvaVPya+ICc9TvmWWwf52ShGE
+   8fEpVaQhUejYWk7fa3FlTaMb3klnQ8vCnoNVvnyyMMBSN/Ldfn9Ubvm+o
+   EnH8ill1JLBIFK+xcqVWhs22OHZaGtEqJi/aR/LiOd87b3dg3mq0KqMue
+   LADmuUraIIs3fzB7BnNiC7FOGxNval+jlCPU0HxS5HR5wAij+G4vHtjOH
+   DJK2stnbv+Y4z9FaeOVy0jnPRmCHOvQxmyrtcvGEsLViEp7ePzj9ztuR0
+   Q==;
+X-CSE-ConnectionGUID: paaDtOE0Rrq+9wB2+UX7OA==
+X-CSE-MsgGUID: rPY0IkH3RSqgBdwzkpjUKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63446910"
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="63446910"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:57:22 -0700
+X-CSE-ConnectionGUID: LKk0lz66SeSbvbDn4w5amw==
+X-CSE-MsgGUID: SBmqepk7SEqbcvqynfphFg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,244,1744095600"; 
+   d="scan'208";a="186345646"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.144]) ([10.124.245.144])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 17:57:18 -0700
+Message-ID: <1121293d-777e-4c21-b1ad-d34516d2cd3a@linux.intel.com>
+Date: Wed, 18 Jun 2025 08:57:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/12] Support vector and more extended registers in
+ perf
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ tglx@linutronix.de, dave.hansen@linux.intel.com, irogers@google.com,
+ adrian.hunter@intel.com, jolsa@kernel.org,
+ alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
+ ak@linux.intel.com, zide.chen@intel.com
+References: <20250613134943.3186517-1-kan.liang@linux.intel.com>
+ <20250617082423.GK1613376@noisy.programming.kicks-ass.net>
+ <60c18595-c6a8-4c39-98fe-0822755fbdb7@linux.intel.com>
+ <20250617142952.GX1613376@noisy.programming.kicks-ass.net>
+ <893f1888-b8cb-4976-a0d6-606460438d73@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <893f1888-b8cb-4976-a0d6-606460438d73@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, 14 Jun 2025 09:59:46 +0200 =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> These patches get the BCM5325 switch working with b53.
->=20
-> The existing brcm legacy tag only works with BCM63xx switches.
-> We need to add a new legacy tag for BCM5325 and BCM5365 switches, which
-> require including the FCS and length.
->=20
-> I'm not really sure that everything here is correct since I don't work for
-> Broadcom and all this is based on the public datasheet available for the
-> BCM5325 and my own experiments with a Huawei HG556a (BCM6358).
->=20
-> Both sets of patches have been merged due to the change requested by Jonas
-> about BRCM_HDR register access depending on legacy tags.
 
-=46rom the commit messages sounds like the support for these switches
-never really worked properly. So I'll drop the Fixes tag when applying.
-No objection if you'd like to argue with stable folks for stable
-inclusion once these reach Linus, given what lands in stable these days.
-But I don't want to implicitly support that by applying with the Fixes
-tags.
+On 6/17/2025 11:23 PM, Liang, Kan wrote:
+>
+> On 2025-06-17 10:29 a.m., Peter Zijlstra wrote:
+>> On Tue, Jun 17, 2025 at 09:52:12AM -0400, Liang, Kan wrote:
+>>
+>>> OK. So the sample_simd_reg_words actually has another meaning now.
+>> Well, any simd field being non-zero means userspace knows about it. Sort
+>> of an implicit flag.
+> Yes, but the tool probably wouldn't to touch any simd fields if user
+> doesn't ask for simd registers
+>
+>>> It's used as a flag to tell whether utilizing the old format.
+>>>
+>>> If so, I think it may be better to have a dedicate sample_simd_reg_flag
+>>> field.
+>>>
+>>> For example,
+>>>
+>>> #define SAMPLE_SIMD_FLAGS_FORMAT_LEGACY		0x0
+>>> #define SAMPLE_SIMD_FLAGS_FORMAT_WORDS		0x1
+>>>
+>>> 	__u8 sample_simd_reg_flags;
+>>> 	__u8 sample_simd_reg_words;
+>>> 	__u64 sample_simd_reg_intr;
+>>> 	__u64 sample_simd_reg_user;
+>>>
+>>> If (sample_simd_reg_flags != 0) reclaims the XMM space for APX and SPP.
+>>>
+>>> Does it make sense?
+
+Not sure if I missed some discussion, but are these fields only intended
+for SIMD regs? What about the APX extended GPRs? Suppose APX eGPRs can
+reuse the legacy XMM bitmaps in sample_regs_user/intr[47:32], but we need
+an extra flag to distinguish it's XMM regs or APX eGPRs, maybe add an extra
+bit sample_egpr_reg : 1 in sample_simd_reg_words, but the *simd* word in
+the name would become ambiguous.
+
+
+>> Not sure, it eats up a whole byte. Dapeng seemed to favour separate
+>> intr/user vector width (although I'm not quite sure what the use would
+>> be).
+
+The reason that I prefer to add 2 separate "words" item is that user could
+sample interrupt and user space SIMD regs (but with different bit-width)
+simultaneously in theory, like "--intr-regs=YMM0, --user-regs=XMM0". 
+
+
+>>
+>> If you want an explicit bit, we might as well use one from __reserved_1,
+>> we still have some left.
+> OK. I may add a sample_simd_reg : 1 to explicitly tell kernel to utilize
+> the sample_simd_reg_XXX.
+>
+> Thanks,
+> Kan
