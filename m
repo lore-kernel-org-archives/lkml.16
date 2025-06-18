@@ -1,93 +1,137 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CC21D5CF2;
-	Wed, 18 Jun 2025 05:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D0A1DD9AD;
+	Wed, 18 Jun 2025 05:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750223021; cv=none; b=PLRXIjwVSyEwWG4t6nbLzQtN7AbVX+7OClBiq4NNuVe9JCR0xB8oyLy6BEtN22UqWAWen3la9DgOnp4UhSBScSDx251jvUEN5g/Z3AqWzn22FmocO9+XVSSWIA27K6RzSnFDic92mPfJUNEEB8murv5BB/oAsCkBZF3epputuNE=
+	t=1750223149; cv=none; b=g7lVN7+YGpH0xLkVCGRJvIMLRXjTGfd2v4Nwv5/TW1v9TKLPsFb3r9V/eCNxtMVpxC4xCJ6DgWmjtRXW4nhtMRV+PgBWZOCpIYI9TVBLEneNyGhd/KAYaZvV9Fxi7IkNcT+nYNC7qD2WKsREhYQZzoIhMt7cHZL2iWB9vhuTghQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750223021; c=relaxed/simple;
-	bh=6WWqv5KZodAzssHpAA2qUQTaq3L93hjGmBCz1ojQp8Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=n/F+x7dqQOUez0JeFdUcnUww70JZunw1Z2QGccakW4R8FK0idkhP3mIcj4Ym78EaHElFp1RUMwPgsu5QFR1ql6eioZBTIpu0PZQ6j+qHPoHsoiMri4xyhwYmtneLYBZ2MnswFhPUw9n3cxkv5l1gIKKZDDEAKrhBatH35Jjks0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=laKLAJ69; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750223149; c=relaxed/simple;
+	bh=pEYlweHTyd1FF6qYfyKbLz6rjLTrLgq8nUDmZK7/uEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CBXFnQZ8zHNvwJkqHVSNJ/qrDqVeXUNaDyuGAYG8ISVQYbNZ1eXDmJG5CDwif4jz7HXTz0Pg6f4TDXj8BWUiU6bn9dz7sbpu/aJvh8/aK1BetMm84fdp6cv6RRy5p4XS2KYjBFyRkVjHeK4cHaI4srvofsHZuT86612DwGlIvGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr0RUQVX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="laKLAJ69"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750223015;
-	bh=kqKSRJ/guIUFt5BzI3NN6IQBXj+pHJejH9za0Jf/xPE=;
-	h=Date:From:To:Cc:Subject:From;
-	b=laKLAJ69vBRPhMQY02vaJAO+FL9FAYvlRZ9Vjpoix9Nhi02Wes9sQi/ANAKqA7qcN
-	 AkszBzFYEj7OdophJ8ckxbC73yxBALgwr/HGxh+2kuZli8CvidF1Kaow3UnfnMLtoH
-	 vtINK4n8pl/RNks8O2QlB1FIwkBGSTTkM0TmyKiJTRqfXZHck+N0dByxkGJfKIErxe
-	 4NRdNckiAeeFbo6kVLDfAx8IOKkFCJA9fVJpZGM5+b4nMjlyn8jvcxgtaFvwaMRB0b
-	 JNi1UcbruGHr0NfpLc4DAiQ3oZ8BVg4qAZ5xegjeqymPcNqvLNUzhusgu6Cge7wJrt
-	 qrjk4iZ2tI0NQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bMWpt3Srrz4wb0;
-	Wed, 18 Jun 2025 15:03:33 +1000 (AEST)
-Date: Wed, 18 Jun 2025 15:03:33 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Simona Vetter <simona.vetter@ffwll.ch>
-Cc: =?UTF-8?B?QW5kcsOp?= Almeida <andrealmeid@igalia.com>, Krzysztof Karas
- <krzysztof.karas@intel.com>, Raag Jadav <raag.jadav@intel.com>, Christian
- =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>, Intel Graphics
- <intel-gfx@lists.freedesktop.org>, DRI <dri-devel@lists.freedesktop.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the drm-misc tree
-Message-ID: <20250618150333.5ded99a0@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr0RUQVX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88BD7C4CEE7;
+	Wed, 18 Jun 2025 05:05:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750223148;
+	bh=pEYlweHTyd1FF6qYfyKbLz6rjLTrLgq8nUDmZK7/uEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rr0RUQVXs/qqfleg+3zkvpDQnGf8lbTC58heGkjSx2oNZMfE0YFI2OoRiMTpcWzU7
+	 ZGuJggGNLEItjr8mDRmfafGebv5CkT4txl3jqjxemO/aO/eE8c90LToSrFtXpd9OOH
+	 4/c2dcs5Xz0SZR+ezFLD+Nu6DRAZ4+GlF03D/CDBLnqmUn3mmIrq2UiW3ZqTBQl9Yj
+	 uRaw0H6SvXoyKPbneCJ03Lq7KBS+n1k5fpYOM3Oaei60znCA9z8yEbk4b2wijdmhCi
+	 LocVgBS4zA3O8axwy32I3RzoPPU2kCtjtTb6KCVOlmPpDIFwXcoqq/TDoXjwuHNS5c
+	 1v8RvVbJ58S2g==
+Date: Wed, 18 Jun 2025 10:35:41 +0530
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lukas Wunner <lukas@wunner.de>, 
+	kernel test robot <lkp@intel.com>, bhelgaas@google.com, oe-kbuild-all@lists.linux.dev, 
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jim Quinlan <james.quinlan@broadcom.com>
+Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
+ definition to drivers/pci/pwrctrl/
+Message-ID: <f5qfkb543al3ihonj7n7fi4pcd3kopavweyo5ixdgv7o3lct4u@r73fkstrcl62>
+References: <pwb4g7worzsnryimt3ymdfsxu7bxvhlr74rqodmiof5auolhrc@vpi7wzrp7osh>
+ <20250617204406.GA1151053@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/trREsfRjxJARIWUtxbQwCwy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250617204406.GA1151053@bhelgaas>
 
---Sig_/trREsfRjxJARIWUtxbQwCwy
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 17, 2025 at 03:44:06PM -0500, Bjorn Helgaas wrote:
+> On Mon, Jun 16, 2025 at 07:14:50PM +0530, Manivannan Sadhasivam wrote:
+> > On Mon, Jun 16, 2025 at 03:30:27PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Jun 16, 2025 at 3:16 PM Lukas Wunner <lukas@wunner.de> wrote:
+> > > >
+> > > > On Mon, Jun 16, 2025 at 06:07:48PM +0530, Manivannan Sadhasivam wrote:
+> > > > > On Mon, Jun 16, 2025 at 08:21:20PM +0800, kernel test robot wrote:
+> > > > > >    ld: drivers/pci/probe.o: in function `pci_scan_single_device':
+> > > > > > >> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create_device'
+> > > > >
+> > > > > Hmm, so we cannot have a built-in driver depend on a module...
+> > > > >
+> > > > > Bartosz, should we make CONFIG_PCI_PWRCTRL bool then? We can
+> > > > > still allow the individual pwrctrl drivers be tristate.
+> 
+> I think I'm OK with making CONFIG_PCI_PWRCTRL bool.  What is the
+> argument for making it a module?
+> 
 
-Hi all,
+Only to avoid making the kernel image bigger.
 
-After merging the drm-misc tree, today's linux-next build (htmldocs)
-produced this warning:
+> When pwrctrl is a module, it seems like we have no way to even
+> indicate to the user that "there might be PCI devices here that could
+> be powered on and enumerated."  That feels like information users
+> ought to be able to get.
+> 
+> I do wonder if we're building a structure parallel to ACPI
+> functionality and whether there could/should be some approach that
+> unifies both.  But that's a tangent to this current issue.
+> 
 
-Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
+Well, pwrctrl is for non-ACPI platforms (mostly OF) and yes, it is parallel to
+ACPI in some form, but that is inevitable since OF is just a hardware
+description and ACPI is much more than that.
 
-Task information
---------------- [docutils]
+> > > > I guess the alternative is to just leave it in probe.c.  The
+> > > > function is optimized away in the CONFIG_OF=n case because
+> > > > of_pci_find_child_device() returns NULL.  It's unpleasant that
+> > > > it lives outside of pwrctrl/core.c, but it doesn't occupy any
+> > > > space in the compiled kernel at least on non-OF (e.g. ACPI)
+> > > > platforms.
+> 
+> I don't like having pci_pwrctrl_create_device() in drivers/pci/probe.c
+> and relying on the compiler to optimize it out when
+> of_pci_find_child_device() returns NULL.  This is in the fundamental
+> device enumeration path, and I think it's unnecessary confusion for
+> every non-OF reader.
+> 
 
-Introduced by commit
+Okay.
 
-  cd37124b4093 ("drm/doc: Add a section about "Task information" for the we=
-dge API")
+> > > And there's a third option of having this function live in a
+> > > separate .c file under drivers/pci/pwrctl/ that would be always
+> > > built-in even if PWRCTL itself is a module. The best/worst of two
+> > > worlds? :)
+> > 
+> > I would try to avoid the third option at any cost ;) Because the
+> > pwrctrl/core.c would no longer be the 'core' and the code structure
+> > would look distorted.
+> 
+> I don't really see adding problem with a file in drivers/pci/pwrctrl/.
+> 
+> Whether it should be "core.c" or not, I dunno.  I think "core.c" could
+> make sense for things that must be present always, e.g.,
+> pci_pwrctrl_create_device(), and the driver itself could be
+> "pwrctrl.c"
+> 
 
---=20
-Cheers,
-Stephen Rothwell
+Then it will always end up in confusion of where to place the functions and
+such. For sure the Kconfig can define what each file stands for, but IMO it
+feels weird to have 2 files for the same purpose.
 
---Sig_/trREsfRjxJARIWUtxbQwCwy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+But if you insist, I can go for it.
 
------BEGIN PGP SIGNATURE-----
+> If pwrctrl is built as a module, what is the module name?  I assume it
+> must be "pwrctrl", though Kconfig doesn't mention it and I don't grok
+> enough Makefile to figure it out.  "core" would be useless in the
+> print_modules() output.
+> 
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhSSKUACgkQAVBC80lX
-0Gz1gQf/fuPRHjtEJ9udvL2k+NPjFWGeST3ipVD1JZujraPfXxA79hMBUog64gM/
-8V9knscyoYfQQ129RZ69XHnOKOBK64wIDxEU010j5toVfx+C5ofQLQswE+SXorIY
-TYkM+Ztm1prkIq4mepvOP4oA/UX/hJp0WzX6JdsMN/HEbIOWDmqVGKp1Hp148qI8
-21eG9LufC0FhhjSKLBqIgzPYaegNxvnCTFKT8MMkFGAT/NQSP9L7FxRWfMZTBFzh
-KYFG6njPydzCSzcxMyJy2fC4RbnOstZx2bKJoaA+j73vm+U0v5aP9BbbYB+Hn1wX
-RL2oqxWORxL6Xfg0ZKi1WaRP0Pc2vQ==
-=m8hK
------END PGP SIGNATURE-----
+It is 'pci-pwrctrl-core.ko'.
 
---Sig_/trREsfRjxJARIWUtxbQwCwy--
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
