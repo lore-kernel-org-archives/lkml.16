@@ -1,112 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB29EDF59
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5683225B1DA;
+	Wed, 18 Jun 2025 08:32:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235564; cv=none; b=F8nclv6wUNsuRNCCTDmVdBuBV87jzmvNzTUtd440jxtZrxucLItlj7SH6mi8vUxbBJAFJJdcf11sz7S83UVja0nFC17OA/t1lHW1nm49RgPr5cV/xEag2zMhLS6Yj9c5HVauV8359014NgIxWhPJhdONqIP8bVVIx2Fl8MVRhxw=
+	t=1750235579; cv=none; b=p1LHfoMtcprZI40JTlXKdmR7Qg+ClUUF1HjJ6dQRwRRqg30yvD9Awvy+93dM+f3oMIaCyZUlHL47BCIZcLkCKq9Bi0VqVbqdc36H3JhDayjhTHjgG4EB/cijzKldDpEZNKrQ5O5Q9RINHTjLzi2v97TAcDEB6PBtjqDHTA4EQgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235564; c=relaxed/simple;
-	bh=PJ6j+8ZdYsZHp7QWIcTY310+ctKE6geptGnMh8L2Mt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lx7Kz1nF3uHX36cAz5r/n42vHqLCmFH5dX75CPGXX5RpMJ4Bx3rRk7lxrOYtO8R9kkxfI3F2UCmqVgRMHHqn+0ba/ma3H91zLlRbkOeBrXEtHFH7PvQ0BY4g9FxJwr3HpE01YXppeI7HDGGsEPr7D6ectUBx45D8+q0X+RWCi0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XhylNVb1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XhylNVb1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA55DC4CEE7;
-	Wed, 18 Jun 2025 08:32:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750235564;
-	bh=PJ6j+8ZdYsZHp7QWIcTY310+ctKE6geptGnMh8L2Mt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XhylNVb1gqxkx5X7CHQ6fLstVuEo4fA9mTr19b0NQb22/UDJ9XGvasSa8bePDJhJq
-	 XhBXPknvjUaH2PVrGjKxy3yT60SeiFw5IoBWNTOAsSbSCvqnQncmgTA05FjTkntHWa
-	 qIgR3qU0vWk9RsVdGGA0rvsvWb4CLK8SM6A4BXusrkJS8r899nOft2/QDmDYs1H37m
-	 BXyqPkJ+U0xVmrTam/RGWmU4pOU7YsBX2gChrwTdU0RQeW5QmRV+Szh4QtDw/CXZwz
-	 3dE9DuHqS2hBjcFIk2U5SjPLKtADkMUjaVaz2G9NLAvJISPz+GvHgmvm4m3t6xiOX/
-	 /Lq8QSIXegA6Q==
-Date: Wed, 18 Jun 2025 10:32:41 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Jayesh Choudhary <j-choudhary@ti.com>
-Cc: jyri.sarha@iki.fi, dri-devel@lists.freedesktop.org, devarsht@ti.com, 
-	tomi.valkeinen@ideasonboard.com, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de, 
-	airlied@gmail.com, simona@ffwll.ch, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/tidss: Decouple max_pclk from tidss feats to remove
- clock dependency
-Message-ID: <20250618-groovy-stereotyped-aardwolf-27bb40@houat>
-References: <20250618075804.139844-1-j-choudhary@ti.com>
+	s=arc-20240116; t=1750235579; c=relaxed/simple;
+	bh=YZ2owkYi3X0AEVs+LYgxowjgbXXIYv8otbPc+FFdDh0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=P9H/r4EneNDzj3e2AiciBmYoKzdDP1GLRUezOWPIT/TdRE7tVNScT686ixjeDxbNfqLVsKlyoyVaFm8kJvZGU6xSL+Z9u0ukd9RVEurMfUBfRpoBmj3jn1PoCmRbaKL1ZCVl6K168qgGcDIzD/RziH9PXUEPiqIsEaasF8Jb6qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60780d74bbaso871409a12.0;
+        Wed, 18 Jun 2025 01:32:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750235576; x=1750840376;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QidkYVW37CmwUswBeJDb096IVxANRzd4ryyxmJfoTyo=;
+        b=D27H/1feTYIRVKTLQRM0PZKfnGVxfwhBwHnjtTiAMkTpmRXTeEAjcJtvCbgCviuGEf
+         jnSxFbeM72RjrJmqUWCX0X4tL9wvrO2o5+4SFVwvNuBrpxHKg0NgBp96zI/AblAgaS1c
+         TWU894hU7mPMTgyXhBQNgxdE2w5zOQ8yzYFPdERDXdoJam1sqFl8289OtTNzGakLx3wu
+         NGilTfmd+tvhddtafJ2o/cO4Sc76wMnSjzVAF6vXzkm7d4VvZBZd2F/MFJDJwEFu1t25
+         uzjDxsbc5nGmQV6qLwA2B/d7bHdXgY8p9DTCkwqrNEp8XOTGXINjaBgO25XbTV8R2bh8
+         Nexg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6YGVdB7kX6mqVv3Y39lfi/hLgtea5bslYANOjObc/4nf2qzjRlnfsM1CPaolaG1Cim/t1bJAJdQrMcgM=@vger.kernel.org, AJvYcCXJglWyQXUpNTQrx4lANE61wD3zxjECNR5UWn9Ea37T/1C2cW1iZy5bptLdDZK4ZEuyNCErJFMQqhnvGtAyw3Pv@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxOTlqCGCAG4LAl0cZ+KjXzzQTIpB0xwYV4NEMWZrrbQYBsiL2
+	nr5qt6CpT6PHq2/BtfMWfoyyPXw6JLLSY6vQTuX92CPeoeQjbBwjCQvP
+X-Gm-Gg: ASbGncukliT9gISE+29efMkQvQDeNzv2MzhssbkGOXtshGQA2JikiHoaJxgyg58wKHz
+	qFW1o5juiCQULcHyXzUaThH1iKDJrzVRhWnKlwyKSFUMnrTIAI8/98nhJ7eOlfKsgqlXaLBFoS3
+	cInOpaiRMMSqqtJMKvg6bVxZanuwKNgAV2b2jO/ZeW2hnXm+0ohsJIl46RA8EYFEJxqs9YcaV06
+	o8bE/fJo9Gbu5iEQDx3zDniN6xKhfoBGLhMheqFSNeFTodpYD3cUoNCArblCrB1C+6wz8NEyBim
+	oPQC8nXP5rdMMmlGLcxlEo7mqWi4MuMn9P2TW4t+MPA/Yfw2O10y
+X-Google-Smtp-Source: AGHT+IESnlhzm6JY29BbKFKb++BCw4CagU+L4+qKbE73XqGEAhecsxPXDKaJUwi1i/vSUvnQf0x7Qw==
+X-Received: by 2002:a05:6402:5187:b0:604:b87f:88b4 with SMTP id 4fb4d7f45d1cf-609c1873e6cmr1420416a12.2.1750235575356;
+        Wed, 18 Jun 2025 01:32:55 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:2::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608cfadeb92sm7855479a12.13.2025.06.18.01.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 01:32:54 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Subject: [PATCH net-next v4 0/4] netdevsim: implement RX statistics using
+ NETDEV_PCPU_STAT_DSTATS
+Date: Wed, 18 Jun 2025 01:32:41 -0700
+Message-Id: <20250618-netdevsim_stat-v4-0-19fe0d35e28e@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="o3iuasowtw5fgira"
-Content-Disposition: inline
-In-Reply-To: <20250618075804.139844-1-j-choudhary@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKl5UmgC/2XNy2rDMBCF4VcRs/YUXXyTV32PEIJkjRItKhdJi
+ ATjdw+YLNx6ffj+s0KmFCjDxFZIVEMOS4SJtQ2D+WHinTA4mBhILjveC46RiqOaw88tF1NQd1p
+ 3WgriiqBh8JvIh+cevECkgpGeBa4Ng0fIZUmv/amKff9Exf9oFchxFsL23eB0b/23IxtM/FrSf
+ W9VefTq5CVy1KM3ahxVP7fjyaujH05eIUfjqbVutl6q4Y/ftu0NwyG/2jcBAAA=
+X-Change-ID: 20250610-netdevsim_stat-95995921e03e
+To: Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Paolo Abeni <pabeni@redhat.com>, David Wei <dw@davidwei.uk>, 
+ Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, Breno Leitao <leitao@debian.org>, 
+ gustavold@gmail.com, Joe Damato <joe@dama.to>
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1862; i=leitao@debian.org;
+ h=from:subject:message-id; bh=YZ2owkYi3X0AEVs+LYgxowjgbXXIYv8otbPc+FFdDh0=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBoUnm10E7EUYsctvXTS2FPSCQTDuhoSvHsC2dps
+ aVTjGWR8NWJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCaFJ5tQAKCRA1o5Of/Hh3
+ bVoqD/9vZcfM9dVn9HZvGuvP/wNGVEqBTTG0cOA56gJginOOtdgS9KWgya72Svaro3jAfZyMLRC
+ AkhXS1LaAOhOHCmhDSJZDS5SFZnbKX0DoOZAYPtE3Gks98w4Ro7FN9cZxioCh3NWoMjztXeNXCn
+ ovnmvz8pnmwCYj4GxY4wyTyiwZiV0Zb7VP9uDhjVqpcsFy1Vk5zxDegn/7HB01+T5TPxSesGsWY
+ fGdWdi0uyKT8aaP+yB3BhX4X4eq5xBgzJAYyI7phKLye/ZENLM678yknZQ0FRU8JXWitvWTZR0e
+ YIp5zXfbfqPZceNG6B2jArfCp11O1rND/5IDjaYmlh34OCk9CoJ17wJcOq/86Il+eYrdS6DIUxG
+ 7+ovCftIAistr0zg6/VNj+dwwM3OHNe/zP5R2rdMGrtssnWYhb9cTmEU8eWYSA7mQXasHCCQict
+ +1bA6r4CdczAeOix0mpPBi4+spKrP52LOJHBa8eyO8/hHXPv8ZByrVnGzJgDlBzrCvhiZPTi5yy
+ Jryf4ZYOrvGKLxyIlfmjLV7/+mCXUEV6ldQwG/Abr6GzDuLiAGUP0OUMmAqWOUXoehQ/+5o93Zv
+ tJmIKk1L59ipBqjVdRpHY/2rcbvFlW0XkE45zaseJ0AE7Eej39hVCurE9k7OSJ/npWb+sgSdQ2l
+ Dq14Z3/Z9qt41Zg==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
+The netdevsim driver previously lacked RX statistics support, which
+prevented its use with the GenerateTraffic() test framework, as this
+framework verifies traffic flow by checking RX byte counts.
 
---o3iuasowtw5fgira
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/tidss: Decouple max_pclk from tidss feats to remove
- clock dependency
-MIME-Version: 1.0
+This patch migrates netdevsim from its custom statistics collection to
+the NETDEV_PCPU_STAT_DSTATS framework, as suggested by Jakub. This
+change not only standardizes the statistics handling but also adds the
+necessary RX statistics support required by the test framework.
 
-Hi,
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changes in v4:
+- Protect dev_dstats_rx_dropped_add() by disabling BH (Jakub)
+- Link to v3: https://lore.kernel.org/r/20250617-netdevsim_stat-v3-0-afe4bdcbf237@debian.org
 
-On Wed, Jun 18, 2025 at 01:28:04PM +0530, Jayesh Choudhary wrote:
-> TIDSS hardware by itself does not have variable max_pclk for each VP.
-> Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
-> devices uses "ultra-light" version where each VP supports a max of
-> 300MHz whereas J7* devices uses TIDSS where all VP can support a
-> max pclk of 600MHz.
-> The limitation that has been modeled till now comes from the clock
-> (PLL can only be programmed to a particular max value). Due to this
-> we end up using different compatible for each SoC when the clocking
-> architecture changes for VPs, even when the hardware is essentially
-> the same.
-> max_pclk cannot be entirely removed since the display controller
-> should tell if a particular mode clock can be supported or not in crtc's
-> "mode_valid()" call. So remove "max_pclk_khz" from the static display
-> feat and add it to "tidss_device" structure which would be modified in
-> runtime. In mode_valid() call, check if a best frequency match for mode
-> clock can be found or not using "clk_round_rate()". Based on that,
-> propagate "max_pclk" and check max_clk again only if the requested mode
-> clock is greater than saved value. (As the preferred display mode is
-> usually the max resolution, driver ends up checking the maximum clock
-> the first time itself which is used in subsequent checks)
-> Since TIDSS display controller provides clock tolerance of 5%, we use
-> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
-> before it is called.
->=20
-> This will make the existing compatibles reusable.
->=20
-> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Changes in v3:
+- Rely on netdev from caller instead of napi->dev in nsim_queue_free().
+- Link to v2: https://lore.kernel.org/r/20250613-netdevsim_stat-v2-0-98fa38836c48@debian.org
 
-We've generally used 0.5% in drivers with similar requirements, because
-that's what VESA requires for some mode generation techniques (and
-what's required by HDMI too iirc).
+Changes in v2:
+- Changed the RX collection place from nsim_napi_rx() to nsim_rcv (Joe Damato)
+- Collect RX dropped packets statistic in nsim_queue_free() (Jakub)
+- Added a helper in dstat to add values to RX dropped packets
+- Link to v1: https://lore.kernel.org/r/20250611-netdevsim_stat-v1-0-c11b657d96bf@debian.org
 
-We've never had to revisit it on any driver afaik, so unless you have a
-specific reason to do so, I'd really prefer if you stuck with that as
-well.
+---
+Breno Leitao (4):
+      netdevsim: migrate to dstats stats collection
+      netdevsim: collect statistics at RX side
+      net: add dev_dstats_rx_dropped_add() helper
+      netdevsim: account dropped packet length in stats on queue free
 
-Maxime
+ drivers/net/netdevsim/netdev.c    | 56 ++++++++++++++++-----------------------
+ drivers/net/netdevsim/netdevsim.h |  5 ----
+ include/linux/netdevice.h         | 10 +++++++
+ 3 files changed, 33 insertions(+), 38 deletions(-)
+---
+base-commit: 3b5b1c428260152e47c9584bc176f358b87ca82d
+change-id: 20250610-netdevsim_stat-95995921e03e
 
---o3iuasowtw5fgira
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+-- 
+Breno Leitao <leitao@debian.org>
 
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFJ5qAAKCRAnX84Zoj2+
-dgJFAYDGvW6I2k43jc31wGvUwVP7jxtWW8ARqty16W/rDRc+402Bx5u70qFJCLzp
-fN7Lu+wBf0R+rjsLdxyS1sSix3d7Jr7xFSWRfcpHZT4JUOF/0VnYa8ISb0/up2xT
-p1JUhFoifg==
-=NPEJ
------END PGP SIGNATURE-----
-
---o3iuasowtw5fgira--
