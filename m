@@ -1,314 +1,283 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2075.outbound.protection.outlook.com [40.107.243.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37AA27F01B
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:56:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750283814; cv=none; b=IcIvBGCjNnO6gjmn2J6PU0WsWPSWno59OOZnW63cnY9eQRapHLWJYdSQHQDYRd8HH1Mrib0lVQ97/3RvmZ5b4wg7JSa7q/Dk+/OurjThos9EfhduIq0FowhfBsh0auqHkVOn1phuCQTXYJvJ+c2p2hO2Y9UDEILDVvmCOzcjvzQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750283814; c=relaxed/simple;
-	bh=PKDhBnVRIk9eKwlkV9nCTmNg4BcpCOdgDa2yyBD3kto=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KlTx5AuZ9UbqnwC+PVPEuacwoO4BK2br5cdn1S1gtqw/hTtUC1qD+u5Pb5WBkAHbmmC2QjhgDokEz6ZG92qRisQIV0Xm79rWmCDXwl0J7kZ2m95ez1Z0JMRcHGEg5V0G8Qp4suAE27kxZ4Kx+aEzinXUaUxZ1Fha9xYSjEFRFCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=RWimqCUK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30721CC48;
+	Wed, 18 Jun 2025 21:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750283851; cv=fail; b=bCrHJNzPY4mmwte+iqqLKsywZSxd1enY6+rJTRVLqyviAF5koDfCYXf1UofKsOHhYL5cJG5S4XIuxMhxd8Ry6oEFIkzfuBEmruwxQgfgtEuTiS9KKUHtMXAuTvEMXkK1TKtWhGR0CQeq0L+QZF2ZyqPMpF+LL/ReGQBYrjRCAvM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750283851; c=relaxed/simple;
+	bh=JDy+DMPw20RiL7HJjXxVtQ1k2QA9dombUGEHmmmfvf0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=fr+qJs3lKB0CO+r4DBohCrfRdhKLqdDIgMsvKoluU5l7k7kT0qjrdFq0tPH4NiTTN267ioL+AmKcstOMvwPgsrvSOhbZ0BGTfiyp7D5iTGtqvlgQwXDg48HCuVQmR0t4aKUpILk8v4sqYSMOp1F3qeLYGC+F71WNUiHQ0byVqDc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=K0kISPpG; arc=fail smtp.client-ip=40.107.243.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="RWimqCUK"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IIsDYX008236
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:56:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=
-	qcppdkim1; bh=yhi2gUMJI0GE6nkozrV+9GIwcZZGzNlNIqUIg0Ii+H0=; b=RW
-	imqCUKuFGFflkZYP4qCHeriH/9TLGe/K4aDUHOQNRu8GjS0eib6V26+M4zsBoop0
-	S385uPczv6cabfmOlL1rZnajQ2sjxvPou9g6AvwJZlo8ir0O/huOGVozrUtOD6iw
-	d9QWfP06oN1nt7ZijwDrueEC3oeDKM1QFDqE9WOuMRO+U8iLLyU6RogCjSsKDYWH
-	WS4ovx4USd8sZchLL3Fhy2n1QLHqUpUchiwlsIBuT9dqtOUviKOSrbZRCPynuWxB
-	Iw01CyrlqtxYa8ow9KVGv5FEGv2W2EX4CPjCSNZQXZEFE1yI4uL2ULwxdJ8dCMwi
-	0wiUaUmzC0kylWUhcrNQ==
-Received: from mail-oo1-f70.google.com (mail-oo1-f70.google.com [209.85.161.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47928mnnrw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:56:50 +0000 (GMT)
-Received: by mail-oo1-f70.google.com with SMTP id 006d021491bc7-6114cffd99cso188486eaf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:56:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750283810; x=1750888610;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yhi2gUMJI0GE6nkozrV+9GIwcZZGzNlNIqUIg0Ii+H0=;
-        b=aG2SK4/5N9B3msY8k7m65AtsW3hWEb2L03s3teb5Rbts6mUyljfcgOGAlMXBmmYGe0
-         XwC1+aJJ3E+9Jr+VAsFdIszva7NqYaqTngbYsaJ5ye/B5vi7s1EIQ/RLmm1vspXTwCtc
-         yzd6lerjeGpwZcCzt8T4L/rBsPNoF0COhDpMFgxErWXiNoQltIKjD6IZcZnZMDMBpqLQ
-         ZPEbE3C2K8GYB/kH1d49Mr+onGmhcTjOmEZIajv/OfeXnHWyZ7eA6Jp6f2041Np3rX9u
-         SjBg8j5Qn5sXPS5vnUAeX64+gfWkfiB4xd0tY7DRaQGlWOm4Zm9duLZ6xoWoOhqa1zpK
-         QFEQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1JJL8O0OmZxnypN8jQlKIpH5WLD7HvyKI1cPY6k5a7VmYXnVEppWchxChcVhCuhKWrBCjRkzDlRKPLmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwudBbWwkLk6twSQq1MTQJOFhWz/7dPlG2XJ9DGfwDqESjN5hxt
-	QRn8EFxDa7AdFaE9wTgco2vEXqzTyRyvgv6S5KcBjnRAYP0RpdGKlcFpJ5d8TIApKdMKa8uXH4k
-	G0p251RwJ8weAh5Hv4qFK8tzrKN6wQoO+wOiYaXzeEGt2qjMLKUkuJw+Ppzra/HuDXU1l+Sc6Dv
-	dD07qno97aBZbmU1Y2GAXuMiJW+3dqS16UrMbao+KIyQ==
-X-Gm-Gg: ASbGnctTh3j0OtzMxNy2UCrCzZhMn+Ln5CuqTnlDEXj5EDFDerfC+eG0NPLvlFNNLES
-	oseMD6lXK7+Ke/i4NweplIhmBQXWoFoqOikn/QwICKwJ69N8IW9UKQ9rqjFafF3xDWri73uKmYY
-	a3rUcjj9f+QDPPsrlnPzO9qnmW+BETCO7Y4Os=
-X-Received: by 2002:a05:6870:b413:b0:2d6:7266:a8d8 with SMTP id 586e51a60fabf-2eaf07f45edmr11310580fac.3.1750283809643;
-        Wed, 18 Jun 2025 14:56:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUI4eoCFyxm0AQjdCzb9oYhfBUJv5zftI1me8lyA42OhvAvHVS0Y5LoZkIu8ti01QiSTWjmhk5JnrDmlBbqq4=
-X-Received: by 2002:a05:6870:b413:b0:2d6:7266:a8d8 with SMTP id
- 586e51a60fabf-2eaf07f45edmr11310569fac.3.1750283809238; Wed, 18 Jun 2025
- 14:56:49 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="K0kISPpG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Jvo5VabwGiWxMZh/IDQieYkl8Cf3vaOkiUjKg/WzynvJZ7NKz7jMEtHHRAxIWnlS3b3wh/PGgqp1mDbFLytFXeJqQxh+lnDBHDz1OqKxKa8566ZITYMfASpD7EulvShBD0OP8Z7WvZ/5vpKbaofTkarf/ZmRx6ZXRYdsS/eBwA4mtgp0OOGQvOLBONzLX61cjpMi7M4745hAH8jlaovDudBb7K28bPM1WfF+iX4Ey+T2dyR7f0z35QUq7kGE2D/2l26GUVwJDEGlrxvkhFNq++BD32K63/tUPkUXoqSH348HMyCdVX2sf4qhkPTXDWXlVa/fXBgjcJm3zZ8WbK2vgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7k+EAyJS32FgedkTvGWaAOJkXuVbIeHXXoPMU0x+7Cg=;
+ b=Lt3+HMvIOTnYNoTUFvNofLl3KSH497UilG5Q2AxiGZGuWn57ThKFqnvC4G/jSyj1stYWBStql/9wUNDFe/3WQHNBsP8lEv3edhkrqiOOLjgB01RqpmO7n01bMQCDJefyxkAZyMnOEnDI97SmD9AjH2GrmSYSU7KhUFxulPd9vn7bhYHxoOBsPnidz+Jc0Y7zoZPxrT13WIH5LL/b+zVWxyTyt8FPP1rKuwYFAur7jwkfeklvXysh0VQpK1L4atydrXNONyqpWgIWGilxz8PmfW0K+tJXOGcWF64Sk8W01nplUy+m4rO5AtNI96n0MVJdDQqdRTZSgjSBYImSjgihTA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7k+EAyJS32FgedkTvGWaAOJkXuVbIeHXXoPMU0x+7Cg=;
+ b=K0kISPpGvdYctXQpIPsMOnzlcoH/1MQ03xRRKBNcmmwcoDVppShFqtXgeWwGG63eLO3fJRh+gN87iQjujS03JZ4/qYyJ9UOzEQkN74TQHKiHtXBSQNXPoW7fHrvKnB5xlsCM+q0yyXso/H1HhrkF/GO4xdfGYE2yhNKVOtMq6AA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by MN2PR12MB4302.namprd12.prod.outlook.com (2603:10b6:208:1de::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
+ 2025 21:57:25 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8835.026; Wed, 18 Jun 2025
+ 21:57:25 +0000
+Message-ID: <f5e679bc-ac84-426b-987e-ade14229f7b0@amd.com>
+Date: Wed, 18 Jun 2025 16:57:16 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/8] x86/resctrl: Implement "io_alloc" enable/disable
+ handlers
+To: Reinette Chatre <reinette.chatre@intel.com>, babu.moger@amd.com,
+ corbet@lwn.net, tony.luck@intel.com, Dave.Martin@arm.com,
+ james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org,
+ paulmck@kernel.org, rostedt@goodmis.org, thuth@redhat.com, ardb@kernel.org,
+ gregkh@linuxfoundation.org, seanjc@google.com, thomas.lendacky@amd.com,
+ pawan.kumar.gupta@linux.intel.com, perry.yuan@amd.com,
+ yosry.ahmed@linux.dev, kai.huang@intel.com, xiaoyao.li@intel.com,
+ peterz@infradead.org, kan.liang@linux.intel.com, mario.limonciello@amd.com,
+ xin3.li@intel.com, sohil.mehta@intel.com, chang.seok.bae@intel.com,
+ andrew.cooper3@citrix.com, ebiggers@google.com, ak@linux.intel.com,
+ xin@zytor.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1749677012.git.babu.moger@amd.com>
+ <548b542ff537936cc8a20f721f6f2472189c536d.1749677012.git.babu.moger@amd.com>
+ <7521ab39-73c8-4d11-b12f-bf67a7031d7f@intel.com>
+ <d7e64ce3-e27a-4fdc-911f-bc33df743696@amd.com>
+ <9927b988-47b0-4937-9d6e-5dca767504fd@intel.com>
+Content-Language: en-US
+From: "Moger, Babu" <bmoger@amd.com>
+In-Reply-To: <9927b988-47b0-4937-9d6e-5dca767504fd@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA0PR11CA0155.namprd11.prod.outlook.com
+ (2603:10b6:806:1bb::10) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613235705.28006-1-robin.clark@oss.qualcomm.com>
- <20250613235705.28006-3-robin.clark@oss.qualcomm.com> <aE1RPZ_-oFyM4COy@pollux>
- <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
- <aFCO7_RHuAaGyq1Q@pollux> <CACSVV03WboQp_A1bzQ+xpX5DDkfaoXmbTuo9RfZ9bMaVTqdU+A@mail.gmail.com>
- <aFE6pq8l33NXfFdT@pollux> <CACSVV00VzOfTDh2sKst+POzkZ-5MH+0BDY-GVB2WKTyONRrHjw@mail.gmail.com>
- <CACSVV00cng4PzHzqydGw_L34_f+6KiZTyCRdggNfHaDePGzFOA@mail.gmail.com> <aFMuV7PNfSZVWb-b@pollux>
-In-Reply-To: <aFMuV7PNfSZVWb-b@pollux>
-Reply-To: rob.clark@oss.qualcomm.com
-From: Rob Clark <rob.clark@oss.qualcomm.com>
-Date: Wed, 18 Jun 2025 14:56:37 -0700
-X-Gm-Features: Ac12FXz1hvs2DatuE2Jl92AC0Ic67ojrFvzA6PneWV9sFClqIYfa-8ye6_PjtCE
-Message-ID: <CACSVV00MJDTXk-qVB3FZV36CPuJ4LLtCDPFpF07EQXBfyqncuQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE4OCBTYWx0ZWRfX8YvYh2igdApY
- 8TJ26T1WdOmzqvSsZ2gKTMdgqEy0b75Zci5N57xT9pO04xeNMZOUTd4D0THfrdjN+8+40b7yQik
- 0OcXK7SO+DEJceC8p19K0q6IrkbVnlgKaX1vVTuTNxtEkvF0pMMY7968VhJZb1FB+3h7WJruKZk
- 5fQY7z42XyV1j0oxufzGX4oNYIkII0lIfX7EqRbAbKExFyCPfTUvpi3WHHxR63Fjzd9VplgrTUS
- E+np/2U4LovRl/VyRtTufPMXNeKir2ev/qHHN1RU/wZLx+PBis08/YgOZsX4Dr9Ih0cUMK9YV8K
- zcY/N7ItcXTFPpX/G1VxFKTzkYTOkW8RIoutLEzdCb1mJnw7MilZvatWL1HtZ+ZGqyVrWeXmwKt
- hVzwgRypAUojU11W2N160xnTr426JeV4MNuW08vDV/lstzL/DAzAQR1CDrhmcBaWyJGH+bde
-X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=68533622 cx=c_pps
- a=lkkFf9KBb43tY3aOjL++dA==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=20KFwNOVAAAA:8 a=EUspDBNiAAAA:8 a=OZCDo3Bp5fOm185c5pAA:9 a=QEXdDO2ut3YA:10
- a=k4UEASGLJojhI9HsvVT1:22
-X-Proofpoint-GUID: Dt_gFM2D8MLpSAmBAXwg3wpGI5q39ilA
-X-Proofpoint-ORIG-GUID: Dt_gFM2D8MLpSAmBAXwg3wpGI5q39ilA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_06,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 clxscore=1015 mlxscore=0 impostorscore=0
- adultscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180188
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|MN2PR12MB4302:EE_
+X-MS-Office365-Filtering-Correlation-Id: eeba0885-dbd6-4054-1be7-08ddaeb31bf5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?bDV6d1JhYU0xYURQMTFLd0NVU2dHd2tTMlFTVTBGTXE1S090akI3bktKbHZ5?=
+ =?utf-8?B?djlXVEVIN3RvRDE2UW92VWpkbi9yNmZsUTk4S3hqS1I0MXE2V0Vzc1VBVnZO?=
+ =?utf-8?B?VjhGRFdhWExMRitPbzdYcFdXSWViZjh5RXhCbjJ5clNFRDhHVEt0U3NZTy9Y?=
+ =?utf-8?B?bmxLMzhLNTA3eVhBcUdGZTI5UVhVVm1HS2JzYUltRDFwczFSMSs1TTJkZUFk?=
+ =?utf-8?B?Z25RUUs1RlcwZXpSUnZ0ZWxnV0lQNW1nT2I5YUZZdmczSGgvMEZkNFBTZ2NS?=
+ =?utf-8?B?aHRMTFZzTndWK0dRMXJXbVNkcnk5WldiOHVXUlo0a3pyL0VNUmxsNzV0YitS?=
+ =?utf-8?B?eDk3K3RMODlTSEhZM24vMlhVNXJvNHdaQnkvSENvWnlRbVVwc29IVWhCdVVM?=
+ =?utf-8?B?ZnZjdVZsakh4anJCUktWZXg3S0VWeU1iT3JtY0FaSDM1aXZXOXB1WDBhdUh5?=
+ =?utf-8?B?R3Z6Z1ByNmxQTjJNaGV1MEhnbUYyZ3NyaVRkMG81OUk3U2NqbFVrczc4ZTRR?=
+ =?utf-8?B?cjFLSnFKY1gycXV6RDZkUG45TGlubE8yL2ZWZDZaMHhCZ1JWOXptUUI1K2t3?=
+ =?utf-8?B?ZUdIVk5XVmt4dDRac0dvbXltUG9hUldJQU5wZVRyYlU0TnF6Qlp3UXZwY0I4?=
+ =?utf-8?B?MmlwcFdZYlBNWlkvL2ltd1RHejh3clMxZmhEZlBLTVBKSys2NENyaFNvSkk3?=
+ =?utf-8?B?YVQ0Y3Q0ZmZrcWt4UTYraDFUdVcxV0ZPWEJ0V3Fib1NoRDBEeG81U1VOcjRr?=
+ =?utf-8?B?ZEtUSjE1QUUvenBndGJZZGJUamt6UlBkQ2dFVnRCaHJna3IvMVRVM3cvbHFO?=
+ =?utf-8?B?amVpUUYzWEppaWVSQVAxOTYzM0JZNmxYc3F6ZHFsR2w3Z2JFMUdDdFRjcERu?=
+ =?utf-8?B?MkIvTVF6WTJjVEZMV01ZKzNtby9MeGNkN0V2L0lrRlpES0FOZGFEN3VOd05r?=
+ =?utf-8?B?MDVFSzdKUTRheFp2ejdyRmNoYmdvYVFVc25hU09ISDNtMVlSdm1BQTFKczVK?=
+ =?utf-8?B?MitjeW1WdGZ4TTFZTUJZZ2NZdFFGVnh4U3ByWURYZy9DM1BUSkNraEF1YXRz?=
+ =?utf-8?B?Z05xbXJFcGZPMFZnMmhhVll0a3pZbmVwVjhlTkVGVkdwTHJWZ0pLd3I1dHRo?=
+ =?utf-8?B?Y3ZaVTEwbmx3V0h1QU14VEtLbUxTT0pFZ0g1NEdBRjhOM285dDIzREo5K3BB?=
+ =?utf-8?B?bFJxMHY5ZURZS1VkUmJwd3kyN090c1I4QnFPZWpiNGNhejJIaXpoWERqd01K?=
+ =?utf-8?B?ME5VZ2xJVUtxaDc2SHpVSXIvazF5eXFxZFA2c3RET3F0TGhYQk55SCtSWTJM?=
+ =?utf-8?B?dDYwc3ZSN3gxVmxCQnlLRVgxNndlZEVQTVVucE1yKzg4dTh3SnBsbDREM0lU?=
+ =?utf-8?B?ZjFyME5kYjdnQTBNSG1UOUpvaXgyalRVcHZOU1IydXZnMVRzMFBEM3hQTWNs?=
+ =?utf-8?B?ODFiNjVlRDN1ZTVwdVd3WDdMSWYxVklGcjdhRWZuQWNFNDVYeEYwWXFNNVZs?=
+ =?utf-8?B?VjNmQ1FOemV3YVpTNVhBd0hqVi94elhxM1hkWWZnTjFyaTlhMDRlY1ZRaGFK?=
+ =?utf-8?B?VVNmNnRnR2dvKzIydGswVnRPWTFVNEE0Mm5xTnNQVDQ1dFczWWtkMzlsTnh4?=
+ =?utf-8?B?NDJtaExkcVl0M3E2UCthZzU1RGhFN011MkQ0dzNaYVEvc3k5QmNhWWtYT3ZS?=
+ =?utf-8?B?Rk9OK1RreVpWTEhZVU9SYXFXclZPR1FBUHZBTmZ2MGEzbmFpcXU5RzRyTU9O?=
+ =?utf-8?B?bjdPbG4wZ3F4a3YxMk5Va2x3ZDFPZ0wzY2RNeWNoNnpUT092R0VEQ2RYOU84?=
+ =?utf-8?B?eXBiYmtQSlZZSW9uL2FJNmV3cXZGcEpJSlN3cDBnM1F6VWtWZ2xFV25zb0Nj?=
+ =?utf-8?B?WkMxcVZQaFFnaE9kbGdNY0F1dlhWZzJwYkxvamdFZ3UvM3BqM2c2N20xSC9W?=
+ =?utf-8?Q?2iUXM7HboLg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZkNHc0VlVDFmdU5VU21GZHVGT0lVVGp6OE9FRmxJWUZ2MXNxYkRyOG9YWWdB?=
+ =?utf-8?B?MGtkVkY3dkdQNHgvYk9vdlZqSVZBbHlOc3V2dTQ2ZnVsMThLc29qZmdhQ0VT?=
+ =?utf-8?B?SGFseHhoZXFOdk1GQmd3Q2lhUmpzelNZSHNabDJxUTMzQ0MyM1BOdlRzaGhJ?=
+ =?utf-8?B?eGpJVSsvN2kvQm9BNzBNRjIrQ2QzZE8yaXNEbnIwYVRhcVpsOUJwbE8rZUhO?=
+ =?utf-8?B?WlJ1VkE3SWZSNDcxdEk3Ny9FUHduSUsycWQ4bWNSUzlWMGZwaWFHOFBncXph?=
+ =?utf-8?B?TWVyNVhFVG1OZ0loVHpZS2RwS3gvNVBRU2ZxRlFjK0l1N1JLSUtYSFNjV1Ji?=
+ =?utf-8?B?MEpNdzNOaGZSTm4yVUJtQUJlVFdxczBEWlhVVDNXQ05NZzc3Qks0RGc3TWFl?=
+ =?utf-8?B?Z28zZERpWlVqSGJlM2g0WDB0L00ycklsbDZiL0FCeWljU2NpVWI2cEowQU9o?=
+ =?utf-8?B?MVRhQjNnYzRGRHlmNTkyWTFBYmtodUJVTXNkOVBzanpyd0wyYzRNZFNRZm5I?=
+ =?utf-8?B?bTNYODVZUTVzUWZJMkc2V3VOV1JwQmN0WVI1ZUtwY2dWRmMrWWpNenFIMGpt?=
+ =?utf-8?B?b28rMU1wK2svbWw5ZnFqQzVYcWpJa3FJNjlHZWhFdmxSRkxDTnBhcmhmZjV5?=
+ =?utf-8?B?UHZlQXYzWWZnU3J4MWY3MmhUYmtJTTdNVFVITkVpYnV0TmoxTU5Qb2RLNGt0?=
+ =?utf-8?B?TXhwRmhYRmlrRDRoQmxWV3FITCtaS2NLeFBsQVlOL1lXVng5L05jOHpnL1pU?=
+ =?utf-8?B?bzdNMDNMWkFkcHdMTXVaTHVzdEMyTllIM0tEZjViTGFtNjd5b1p0a1d1MkpZ?=
+ =?utf-8?B?alJWbldHS2R0d1pzeUlMMDdBSllxYkRNcnozY0ZscmlxUkZxQm1HQU1GdmU2?=
+ =?utf-8?B?UE9PRlUwUGU4dWpWTTNkYTBhQnpnc3JNcDRXUldicnRDSmM2endtcjJ4ZEFs?=
+ =?utf-8?B?QWNEek14dGtxeEdaSks0L3ZQUkdySXIzdk81ZUJlTGxWbXBueGcxYzBhZEJ4?=
+ =?utf-8?B?cnJSSkhDYmsrSlZPd08xQlhIVDRBWm1PQU90VEorWEFOWWNWWmQ0ZXJjeDRP?=
+ =?utf-8?B?NnpjRmlYZzZvc0RrWnowTWVIRW5JZWhnd0Z5dTRERGR6VEFXRTNpc2RVQVJq?=
+ =?utf-8?B?RnNLbXNvQ3JPSEptYnowVHJnM1ZyOVNQNk8yenYrVUMyZlFwN1poU0lYZ1VW?=
+ =?utf-8?B?S3gycXNjU05ZdGdvMkxZcW1ZNDlvaDBZeUxLcnBlNW1mbm1iMVAzMDZLSXY5?=
+ =?utf-8?B?UmhCS3lqbjB3V0lzRFNDNFhuSTNqNzZIQ0dDVTFLQVU4QmdPQ2t5NWxmTzVz?=
+ =?utf-8?B?Y2dpam0vZUkzSTBDT21ZUm9kZEsxTy9UeXp0Y1BFTWZnbUFlWEFCZmJGY1hw?=
+ =?utf-8?B?RXNoRTEvQjBGemNLR3U0UUJsOE5kdlRkL3R3QjNBa2duajdLVW1iaGNHc3Vp?=
+ =?utf-8?B?cWZQWEM2SWdlcFpaOE81SHhLQklTRHEzdE5NZkZpTzQrdkVMU05jWDFZdzUy?=
+ =?utf-8?B?VVN3cFY4bFUvcWYwaTJnaS9UTlZEUG1LbXBDbW1mL3dvdUtEbkMwL0FlTWVm?=
+ =?utf-8?B?UmFmVGZ0MTNpRDJnS2FXSzVZc3lQUE82VVpjNlV1RkFlbC9jN1diSnhKRk5R?=
+ =?utf-8?B?LzFJK3BKcWp3TXExM0ZGSm5MTkMyQzNqck5qQXVQbzBFd1Z6d2MxNnhJOGxY?=
+ =?utf-8?B?S1liNlZJUnFYZ2RHY0RpNzNYKy9ncXhjZm5UMi9ZbFVJcnk5SkpLVFdSN1VX?=
+ =?utf-8?B?eE5yTXA3a2lxbEprYWhFTXYyUGRjLzEzeWFoZEp4VVQ0ZzBQZFhjVGJIOEZ3?=
+ =?utf-8?B?KzUxRkRHRDQwT2Z5bVhzcDdzaHVHV2F6K2U4dGd5QUJsZ2dodVhveTJ1VGda?=
+ =?utf-8?B?czNkd2xtZE10SHI3TzlJTEhzelcxNFppdWJPRXEvVXkrdC9mS05zS2REbGlL?=
+ =?utf-8?B?b0RtN0s3SDFlOGY3SDBtTWtzdXJrbEtWMzBnaXdOQW9MOHlKWmJqOXpVWUVL?=
+ =?utf-8?B?TENyRzYvM1NiZVlod1hnSTBWeXNueDAxSk1Ub2oxNEYyNjlzMDF5OEdITlps?=
+ =?utf-8?B?MEZscDFvNDdoQVJvRjdoL3ZJaEViQ1Vlc1RqNXplemU0OVVpem9HU0ZkUnh0?=
+ =?utf-8?Q?Owas=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eeba0885-dbd6-4054-1be7-08ddaeb31bf5
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 21:57:25.3130
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H++RQehj0PBq5L4Jh5h9U8HAIFn7U+1gWCjzQozklZi2VGCXTlwP8TdUdWJIEnQB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4302
 
-On Wed, Jun 18, 2025 at 2:23=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
-wrote:
->
-> On Tue, Jun 17, 2025 at 06:43:21AM -0700, Rob Clark wrote:
-> > On Tue, Jun 17, 2025 at 5:48=E2=80=AFAM Rob Clark <rob.clark@oss.qualco=
-mm.com> wrote:
-> > >
-> > > On Tue, Jun 17, 2025 at 2:51=E2=80=AFAM Danilo Krummrich <dakr@redhat=
-.com> wrote:
-> > > >
-> > > > On Mon, Jun 16, 2025 at 03:25:08PM -0700, Rob Clark wrote:
-> > > > > On Mon, Jun 16, 2025 at 2:39=E2=80=AFPM Danilo Krummrich <dakr@re=
-dhat.com> wrote:
-> > > > > >
-> > > > > > On Sat, Jun 14, 2025 at 08:03:20AM -0700, Rob Clark wrote:
-> > > > > > > On Sat, Jun 14, 2025 at 3:39=E2=80=AFAM Danilo Krummrich <dak=
-r@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wrote:
-> > > > > > > > > For UNMAP/REMAP steps we could be needing to lock objects=
- that are not
-> > > > > > > > > explicitly listed in the VM_BIND ioctl in order to tear-d=
-own unmapped
-> > > > > > > > > VAs.  These helpers handle locking/preparing the needed o=
-bjects.
-> > > > > > > >
-> > > > > > > > Yes, that's a common use-case. I think drivers typically it=
-erate through their
-> > > > > > > > drm_gpuva_ops to lock those objects.
-> > > > > > > >
-> > > > > > > > I had a look at you link [1] and it seems that you keep a l=
-ist of ops as well by
-> > > > > > > > calling vm_op_enqueue() with a new struct msm_vm_op from th=
-e callbacks.
-> > > > > > > >
-> > > > > > > > Please note that for exactly this case there is the op_allo=
-c callback in
-> > > > > > > > struct drm_gpuvm_ops, such that you can allocate a custom o=
-p type (i.e. struct
-> > > > > > > > msm_vm_op) that embedds a struct drm_gpuva_op.
-> > > > > > >
-> > > > > > > I did use drm_gpuvm_sm_xyz_ops_create() in an earlier iterati=
-on of my
-> > > > > > > VM_BIND series, but it wasn't quite what I was after.  I want=
-ed to
-> > > > > > > apply the VM updates immediately to avoid issues with a later
-> > > > > > > map/unmap overlapping an earlier map, which
-> > > > > > > drm_gpuvm_sm_xyz_ops_create() doesn't really handle.  I'm not=
- even
-> > > > > > > sure why this isn't a problem for other drivers unless usersp=
-ace is
-> > > > > > > providing some guarantees.
-> > > > > >
-> > > > > > The drm_gpuva_ops are usually used in a pattern like this.
-> > > > > >
-> > > > > >         vm_bind {
-> > > > > >                 for_each_vm_bind_operation {
-> > > >                             drm_gpuvm_sm_xyz_ops_create();
-> > > > > >                         drm_gpuva_for_each_op {
-> > > > > >                                 // modify drm_gpuvm's interval =
-tree
-> > > > > >                                 // pre-allocate memory
-> > > > > >                                 // lock and prepare objects
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >
-> > > > > >                 drm_sched_entity_push_job();
-> > > > > >         }
-> > > > > >
-> > > > > >         run_job {
-> > > > > >                 for_each_vm_bind_operation {
-> > > > > >                         drm_gpuva_for_each_op {
-> > > > > >                                 // modify page tables
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >         }
-> > > > > >
-> > > > > >         run_job {
-> > > > > >                 for_each_vm_bind_operation {
-> > > > > >                         drm_gpuva_for_each_op {
-> > > > > >                                 // free page table structures, =
-if any
-> > > > > >                                 // free unused pre-allocated me=
-mory
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >         }
-> > > > > >
-> > > > > > What did you do instead to get map/unmap overlapping? Even more=
- interesting,
-> > > > > > what are you doing now?
-> > > > >
-> > > > > From what I can tell, the drivers using drm_gpva_for_each_op()/et=
-c are
-> > > > > doing drm_gpuva_remove() while iterating the ops list..
-> > > > > drm_gpuvm_sm_xyz_ops_create() itself does not modify the VM.  So =
-this
-> > > > > can only really work if you perform one MAP or UNMAP at a time.  =
-Or at
-> > > > > least if you process the VM modifying part of the ops list before
-> > > > > proceeding to the next op.
-> > > >
-> > > > (Added the drm_gpuvm_sm_xyz_ops_create() step above.)
-> > > >
-> > > > I went through the code you posted [1] and conceptually you're impl=
-ementing
-> > > > exactly the pattern I described above, i.e. you do:
-> > > >
-> > > >         vm_bind {
-> > > >                 for_each_vm_bind_operation {
-> > > >                         drm_gpuvm_sm_xyz_exec_lock();
-> > > >                 }
-> > > >
-> > > >                 for_each_vm_bind_operation {
-> > > >                         drm_gpuvm_sm_xyz() {
-> > > >                                 // modify drm_gpuvm's interval tree
-> > > >                                 // create custom ops
-> > > >                         }
-> > > >                 }
-> > > >
-> > > >                 drm_sched_entity_push_job();
-> > > >         }
-> > > >
-> > > >         run_job {
-> > > >                 for_each_vm_bind_operation {
-> > > >                         for_each_custom_op() {
-> > > >                                 // do stuff
-> > > >                         }
-> > > >                 }
-> > > >         }
-> > >
-> > > Close, but by the time we get to run_job there is just a single list
-> > > of ops covering all the vm_bind operations:
-> > >
-> > >         run_job {
-> > >                 for_each_custom_op() {
-> > >                         // do stuff
-> > >                 }
-> > >         }
-> > >
-> > > rather than a list of va ops per vm_bind op.
-> > >
-> > > > However, GPUVM intends to solve your use-case with the following, s=
-emantically
-> > > > identical, approach.
-> > > >
-> > > >         vm_bind {
-> > > >                 for_each_vm_bind_operation {
-> > > >                         drm_gpuvm_sm_xyz_ops_create();
-> > > >
-> > > >                         drm_gpuva_for_each_op {
-> > > >                                 // modify drm_gpuvm's interval tree
-> > > >                                 // lock and prepare objects (1)
-> > >
-> > > I currently decouple lock+pin from VM modification to avoid an error
-> > > path that leaves the VM partially modified.  Once you add this back
-> > > in, the va-ops approach isn't simpler, IMHO.
-> >
-> > Oh, actually scratch that.. using va-ops, it is not even possible to
-> > decouple locking/prepare from VM modifications.  So using
-> > DRM_EXEC_INTERRUPTIBLE_WAIT, for ex, with va-ops list would be an
-> > actively bad idea.
->
-> Well, you would need to unwind the VM modifications. I think so far this =
-hasn't
-> been an issue for drivers, since they have to unwind VM modifications for=
- other
-> reasons anyways.
+Hi Reinette,
 
-Only thing that can fail at this point are the drm_gpuvm_sm_xyz()
-calls[1].  Which should only be for small kmalloc's which should not
-fail.  But all the "usual" errors (bad params from userspace,
-interrupted locking, etc) are dealt with before we begin to modify the
-VM.  If anything does fail after we start modifying the VM we mark the
-vm as unusable, similar to a gpu fault.
+On 6/18/2025 3:32 PM, Reinette Chatre wrote:
+> Hi Babu,
+> 
+> On 6/18/25 12:27 PM, Moger, Babu wrote:
+>   
+>> On 6/17/25 22:51, Reinette Chatre wrote:
+> 
+>>> On 6/11/25 2:23 PM, Babu Moger wrote:
+> 
+>>>>   static inline struct rdt_hw_resource *resctrl_to_arch_res(struct rdt_resource *r)
+>>>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>>> index 885026468440..3bdcd53b3ce3 100644
+>>>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>>>> @@ -229,6 +229,46 @@ bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l)
+>>>>   	return rdt_resources_all[l].cdp_enabled;
+>>>>   }
+>>>>   
+>>>> +inline bool resctrl_arch_get_io_alloc_enabled(struct rdt_resource *r)
+>>>
+>>> As indicated by lkp the inline usage needs to be fixed.
+>>
+>> I am assuming that you are referring to
+>> https://www.kernel.org/doc/html/next/process/coding-style.html#the-inline-disease
+> 
+> No. I am referring to the lkp test report of an issue detected by sparse. Looks like
+> the message was not cc'd to lkml so I cannot provide link. I paste it below. You are in
+> "To:".
 
-[1] ok, I should put some drm_gpuvm_range_valid() checks earlier in
-the ioctl, while parsing out and validating args/flags/etc.  I
-overlooked this.
+Yes. I saw that report. It's strange why it was not cc'd to lkml. 
+Happened few times before.
 
-> Do you never need to unwind for other reasons than locking dma_resv and
-> preparing GEM objects? Are you really sure there's nothing else in the cr=
-itical
-> path?
->
-> If there really isn't anything, I agree that those helpers have value and=
- we
-> should add them. So, if we do so, please document in detail the condition=
-s under
-> which drm_gpuvm_sm_{map,unmap}_exec_lock() can be called for multiple VM_=
-BIND
-> ops *without* updating GPUVM's interval tree intermediately, including an
-> example.
+> 
+>>
+>> I will remove inline attribute.
+> 
+> The goal was to fix the broken usage of inline, but you are right that it may
+> not be needed here.
 
-Ok.. in the function headerdoc comment block?  Or did you have
-somewhere else in mind?
+Sure. Will remove inline.
 
-BR,
--R
+> 
+> Here is the original report:
+
+Thanks
+
+Babu
+
+> 
+>> Date: Fri, 13 Jun 2025 12:18:35 +0800
+>> From: kernel test robot <lkp@intel.com>
+>> To: Babu Moger <babu.moger@amd.com>, corbet@lwn.net, tony.luck@intel.com, reinette.chatre@intel.com, Dave.Martin@arm.com, james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com
+>> CC: oe-kbuild-all@lists.linux.dev, x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org, paulmck@kernel.org, rostedt@goodmis.org, thuth@redhat.com, ardb@kernel.org, gregkh@linuxfoundation.org, seanjc@google.com, thomas.lendacky@amd.com, pawan.kumar.gupta@linux.intel.com, perry.yuan@amd.com, yosry.ahmed@linux.dev, kai.huang@intel.com, xiaoyao.li@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, mario.limonciello@amd.com, xin3.li@intel.com, sohil.mehta@intel.com
+>> Subject: Re: [PATCH v6 5/8] fs/resctrl: Add user interface to enable/disable io_alloc feature
+>> Message-ID: <202506131104.d1oo8NWe-lkp@intel.com>
+>> In-Reply-To: <b3d8e2ccd23b295f3735fc9f5420458cfc18a896.1749677012.git.babu.moger@amd.com>
+>>
+>> Hi Babu,
+>>
+>> kernel test robot noticed the following build warnings:
+>>
+>> [auto build test WARNING on brauner-vfs/vfs.all]
+>> [also build test WARNING on linus/master v6.16-rc1 next-20250612]
+>> [cannot apply to tip/x86/core aegl/next]
+>> [If your patch is applied to the wrong git tree, kindly drop us a note.
+>> And when submitting patch, we suggest to use '--base' as documented in
+>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>>
+>> url:    https://github.com/intel-lab-lkp/linux/commits/Babu-Moger/x86-cpufeatures-Add-support-for-L3-Smart-Data-Cache-Injection-Allocation-Enforcement/20250612-053050
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs.all
+>> patch link:    https://lore.kernel.org/r/b3d8e2ccd23b295f3735fc9f5420458cfc18a896.1749677012.git.babu.moger%40amd.com
+>> patch subject: [PATCH v6 5/8] fs/resctrl: Add user interface to enable/disable io_alloc feature
+>> config: i386-randconfig-061-20250613 (https://download.01.org/0day-ci/archive/20250613/202506131104.d1oo8NWe-lkp@intel.com/config)
+>> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+>> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250613/202506131104.d1oo8NWe-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202506131104.d1oo8NWe-lkp@intel.com/
+>>
+>> sparse warnings: (new ones prefixed by >>)
+>>     fs/resctrl/rdtgroup.c: note: in included file:
+>>>> include/linux/resctrl.h:553:46: sparse: sparse: marked inline, but without a definition
+>>>> include/linux/resctrl.h:553:46: sparse: sparse: marked inline, but without a definition
+>>>> include/linux/resctrl.h:553:46: sparse: sparse: marked inline, but without a definition
+>>>> include/linux/resctrl.h:553:46: sparse: sparse: marked inline, but without a definition
+>>
+>> vim +553 include/linux/resctrl.h
+>>
+>> 48e63934badb71 Babu Moger 2025-06-11  545
+>> 48e63934badb71 Babu Moger 2025-06-11  546  /**
+>> 48e63934badb71 Babu Moger 2025-06-11  547   * resctrl_arch_get_io_alloc_enabled() - Get io_alloc feature state.
+>> 48e63934badb71 Babu Moger 2025-06-11  548   * @r:		The resctrl resource.
+>> 48e63934badb71 Babu Moger 2025-06-11  549   *
+>> 48e63934badb71 Babu Moger 2025-06-11  550   * Return:
+>> 48e63934badb71 Babu Moger 2025-06-11  551   * true if io_alloc is enabled or false if disabled.
+>> 48e63934badb71 Babu Moger 2025-06-11  552   */
+>> 48e63934badb71 Babu Moger 2025-06-11 @553  inline bool resctrl_arch_get_io_alloc_enabled(struct rdt_resource *r);
+>> 48e63934badb71 Babu Moger 2025-06-11  554
+>>
+>> -- 
+>> 0-DAY CI Kernel Test Service
+>> https://github.com/intel/lkp-tests/wiki
+> 
+> Reinette
+> 
+
