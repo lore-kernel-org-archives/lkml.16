@@ -1,312 +1,519 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2056.outbound.protection.outlook.com [40.107.236.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B943815D1
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:42:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243337; cv=fail; b=YmDqPo5UR8dhWghYBDFq2BZJRBF/b0V4K0InCdGSrDveyMLlpG1J+J0yJFtbl2HdaLLDx/jtSABBMtcd1w2y4NDR0YwO3ctHJLxu/W/wQD39DYKOmj8o46rmQz4Sfz5S3EVcJA0GKM/CUJDPT2yiYRfiWAltdii0kU2Rz3o69ZI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243337; c=relaxed/simple;
-	bh=v3nmQyJ6AebiFtVriuDqh6bSKaSzjjO+yHGUfEb9TpA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=AmuZMQWYPyi+u/NXUVRr+f2sExcDSuhCjr0NQUeTK3Jf0GRyP0p5YNOalgculdLqDQ7mGguhBqxeEPBaPRioxXB5pySJ1W7t68rKhs78iKsALLWuPQjczeeYn+PYWWZR1UC8vw18brznFVKrsbSiTGQ6AcW4+5678xlTLKmH1XA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=07TZ/s2c; arc=fail smtp.client-ip=40.107.236.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD2B283FDF
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750243349; cv=none; b=chvNqH+AEr7lwNHx2RndIXAxVIbxh5p1DDzRRZPjBzhNToOZc+iqP3hP4JRku2JGNoqZBYRgrx8gUajkD/cn9J+nYzTm9kKTecRzZxJ3B73LgQCDsiMlI7kqIxRWUYZYbsVjDqsGu1iEk6HLtXTYWkxL2NLv+5yzWKXLVYqXCds=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750243349; c=relaxed/simple;
+	bh=V4y1DqjjYhSRgJ7qNBSvdXvsny7bdB99TpkFxm4XmJs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=IioAnrXCiUEXjubjLyl4O2gLUGHW5hNFGI58RW0bcSjdIViBHT2Z22R5AkiM42gUR/JPuE1jTujSxHn/b1b/nZtPDWziyDklUNxqJgGVWf/plI1CeUoT2R9LZqWbffDS100AIw3Sw76gypR9GaISuoXN1DBKjIcBAPwKxYpleG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=ra2d7/oT; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="07TZ/s2c"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XcPUpgdOVbtCXUEyUVg5tI+XrKXOsz3VZ1POIcO4GpEsW/UIyTv4KbcFPuG1XfPmrOmeSgJanGEWRplOQgoffPRToVBbg5JsOgScUwanenE2VxoUfinYUXDlClmMpK7/clWCKvmAvLkz9A6FNmET7VVQDbCUUIWR4WbrMOKIx4sQLdlJdivTlZmW8DmZseYOJLQsbKAjcgtxCY58T9572Cnopc4+nOb/+Nxgb1eizgzG9is0u+TPZTV64MEXpwxwgswFLTRf1KFFql9T92wnyoWjKMwVi23QVZnnu0rB+bZS7oq7T25kdJ0hxv4EzJNhDLhqOYC7HAUSPdHlW/eKkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=v3nmQyJ6AebiFtVriuDqh6bSKaSzjjO+yHGUfEb9TpA=;
- b=Yr/I7El4Nnqcg1ZLKs1Pje2SEErVQJwzuxUFTBdfAmVyWLw9o7maFMkTP0j9tdP7f0TAreIDujJmx59RE/vp78xXBNgo0pDnkuv8Svu1uzaN2OazYgc2u7SrAXS6A8mJt1xDvyrivxPqYAGk3yfKWrmlAbm8ieI6QpHGBmOolcWHTTBEeAyYC/+8ZwgPyzynYFVbVz89V+EjwZ1teFvv1en9Vu0JCRa01Ehr3kt/ngp5ZcN68SoSCw0ImlHXQ6qu4eL3ra472xt60gW+07Tb8vKnOfGuLNbGuP3X2C/uGZlZY/lEynDK8WxkEClyFyjueqq810zJspgfybxPGMN5cA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=v3nmQyJ6AebiFtVriuDqh6bSKaSzjjO+yHGUfEb9TpA=;
- b=07TZ/s2c766qghpcwWPwVOfI+kI/SihLXaIaiGe8yZEj12K7vlC9CYOGCtdJSdDGzLLJ9H7DldLjzGr5wam4+e95jlU/2CES4WlQUtYxGT5KvUpeBv8+IRPi+o2mDHRK/hF49/lM4OZA4VoaJw2sSd7MhxbApGl/9D0I7lFdP5KSXAAEXDc5fEKOJ2k/AW86HiEsF4RqF9W1bUSoZk0LWYhWJsCeErpM7zNRoHmX5F2oJtnvK/1fKkn7ki9JV9VqFaLZOan+AL7A/rI3jhDUTTE3Apx42tM84gikfRaEVPSbIliVi9kRRSzd9cODm/I98oy00iTjHWg4/Q2EzlgC4A==
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
- by PH0PR11MB5926.namprd11.prod.outlook.com (2603:10b6:510:14d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
- 2025 10:42:11 +0000
-Received: from PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80a8:f388:d92e:41f8]) by PH7PR11MB6451.namprd11.prod.outlook.com
- ([fe80::80a8:f388:d92e:41f8%5]) with mapi id 15.20.8835.025; Wed, 18 Jun 2025
- 10:42:11 +0000
-From: <Dharma.B@microchip.com>
-To: <mripard@kernel.org>
-CC: <Manikandan.M@microchip.com>, <andrzej.hajda@intel.com>,
-	<neil.armstrong@linaro.org>, <rfoss@kernel.org>,
-	<Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
-	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<Sandeep.Sheriker@microchip.com>
-Subject: Re: [PATCH] drm/bridge: fix LVDS controller bus format
-Thread-Topic: [PATCH] drm/bridge: fix LVDS controller bus format
-Thread-Index: AQHb4AoQeMvVSxxlCUCDcNP5YOQOTLQImZYAgAAhoQA=
-Date: Wed, 18 Jun 2025 10:42:11 +0000
-Message-ID: <691d28ea-1362-45c4-b46e-6ff7381bb870@microchip.com>
-References: <20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com>
- <20250618-fragrant-seagull-of-tranquility-c91dfd@houat>
-In-Reply-To: <20250618-fragrant-seagull-of-tranquility-c91dfd@houat>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|PH0PR11MB5926:EE_
-x-ms-office365-filtering-correlation-id: 67610d43-d985-4339-983b-08ddae54c82f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?M2t5NTJ6THBTa1hZVUw5ZEYybHQ1SitqWmZpOW1DVnZzeS9wUWZ3Q0xYN1g0?=
- =?utf-8?B?bVZ2THZwNmV3NnZCeWVqS2JMbFVnR0pzVUtsdFgvaDRyaEM4bGVvT2RKaXpE?=
- =?utf-8?B?ZWlpZm1BSy8vYWgzc2ZqT0h0QXdhT1BhOWJFb2RvY1NGWkpMZ2t2NmNrRGc4?=
- =?utf-8?B?d2o5YlE0eXpoS3RPUDJPMXluaTMrdlBhaG1ZaVU1VXVhWnFOSmNQN2V2SE9h?=
- =?utf-8?B?ZVJJSWJaaHYrMi9yUjA1UFBEYlduazRoU1lzS296NlNTYy9tajNZWVM0b3VS?=
- =?utf-8?B?eEl5bjJxd3ZvSmxrcDhrQXBhSTBLRlg2WVJCekxGVW1FQXdQNmNIZUpQVjdL?=
- =?utf-8?B?cnNpcGFaWUpncGFRcEFYNnhkcStqMTJvRy8wMUtvNUdaZGxHUkZTWEhPbTVo?=
- =?utf-8?B?b1VldGYyNCswdmZDYkJodDhqS2gzUzlVREVpOW4yaVk0WDJ6SzFlcnZrVG84?=
- =?utf-8?B?Zm5uSXFZZGFEK0RlLzdKRi9NVzA2SXF2VGQwamU3WDVoRE1OY3FjU3NRL2tF?=
- =?utf-8?B?Rm0zT1FGRkcxbktKdGVTdjJ2K0E1dC9pSWlrbkNPcWgzeDBvZ0hsUzdwNlpO?=
- =?utf-8?B?ZjNtL05iSktBZ2E2WGVDT3VBSjlvaWVERi9RcFVzWXJjS2lzeUtWOW55UDRF?=
- =?utf-8?B?amcwdDBuc2ZSOHJqd0xXNVBLa3VDU0V1WG1FRDdFYS8rbGR0eGRVSnBiTS8r?=
- =?utf-8?B?ekdPM2ZaOVFEQ0JHYTJSYWpFZW1WRkxxanRLQ3EzUE9SZVJlN3dJZ1ZwV2cy?=
- =?utf-8?B?UnN2WjZyWHRBNy9wZDROY09Eb1NWT2J4VjJmRTZXN2dPVTkxUEl6VFd1TVB6?=
- =?utf-8?B?NFgyWjFRVFMxdzRIQm1RUzlxRlBhUDFWcWtIdDY3MDh5T1FOdGlnZ1d1Uk8y?=
- =?utf-8?B?TG01YktWYjE4cjQ2YVZwQzBTZitENy8vNGhTNmJobi9RM1ZLNDdHNXlJbE9S?=
- =?utf-8?B?UjY1WkVLVXU0WjhuNU12K0VpVXN6OWVhazB6NDF2eHozME9uMnV4U1gwdjds?=
- =?utf-8?B?U2NmMlRQSFRIR2duR2ZnaHRYdUthdjd6Nm5NOFQ1a0E5UEV0UFN0S2xOeSsw?=
- =?utf-8?B?MkhZcEtOWHdDWXJxeCt1UzF5SzNiWmgyM0VmRkdIUDFqRk5tbW1VaVZGMlE4?=
- =?utf-8?B?bElkUUp6KzVXRXJ0eXhSNnkzamltTVlNQWo4OC9UU05aamtrbWYxYlhNbkcz?=
- =?utf-8?B?SnJ3Q3lVck1taFJKOGlRQUVUYXZRYWUwUk5KU1pUYWV1RnhJLzZCK2I3K1Vw?=
- =?utf-8?B?NTh3OU5GYXdQN2l1K0ZVV3pxT3JLby9uWTJIQ0JqQ2VFNEkrT0Yvb1VQK0l4?=
- =?utf-8?B?SWV3UzJpeHUyMGFBMHRwOGtJQXpETmFNb1liMFRTL0JnaGFmdi9qd0lOV1lS?=
- =?utf-8?B?RXF0NkQxcUM5TU14YWdIb2pPR3RjSC8yTlYyTWxiU2hXcjUzVmUyaWMwNDdr?=
- =?utf-8?B?end3bHJFWXViS0xsVWpOQnFURmRBRy82Vk9ZOERyUU9XNjdoVXNZVHJKSlZZ?=
- =?utf-8?B?R2wzMm5BTUFWNXBIZWhyR0grdUo3ZzFEbXlLZldTZHVNeWxVMERLOG9tdkRv?=
- =?utf-8?B?a1EyYWVTUW1Ud0oySXFGcVJzRm1BaU9VWDEydW9LVy9raWtHbXBQNzJyUHFO?=
- =?utf-8?B?NUZpaGFVQ1k0eWNoY0F5YVd1M0NKK0NCQnNWdGRYWkpKR054Tkl0dFg1d0s1?=
- =?utf-8?B?N0txM3d1VG9Mc2oxRWozMlpoU24xbEw0dXRRSjZzSmNXdUdaazd1N3JWVHlL?=
- =?utf-8?B?WW85dHpjSjl1QlNHMVFHYkpxc3N2YnQ1eDR4TEdZdGxZbHMzUjRGUUlvS0Jr?=
- =?utf-8?B?QWcvRHFUOHFaSFFpUjFPYU83SG04bWJiUXkrVGdDdEJwUkhUUW9Ea3FRWTBU?=
- =?utf-8?B?Rzh2VU5mRktac1ltQTg1enZMRC9YVldaczdOVklEL25HMzN5SWxTTWJwUm9i?=
- =?utf-8?B?cEw5N211NlkzTmdQc3Nwc2lsMWxZL3VSUGpYcEpXTEh5UkJOYW5mWkh4SEx3?=
- =?utf-8?B?VlFrU0QxaW53PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?SDVpZTZkMXc5VHZCR2Q3Q05Qb0pIbCswU1ZaWThjcm91WjFaUVZwU3E0MWty?=
- =?utf-8?B?aEZDaHpsR0wrZFp1Q3RLODlKblVqOWJHQnJ3K0pHd3NOWlZLbEl0RGlLUS9q?=
- =?utf-8?B?bHd6QUluTE40eWxFMzJLaG9RQTBuWEpObnNIaVBCY2dhajNYcG5KV2ZkTURn?=
- =?utf-8?B?UHJNaUZJaE1tZGtFUm9zUG05R2FGbk5ObEljM0o1T3VFcHk0N3hlbkdERVA2?=
- =?utf-8?B?M21DNGFCSTVLUDlaSEEwaDhocm5wM0xGQjUwY1JCMU9WYWpaYjR0QkF1aHZ2?=
- =?utf-8?B?d1ZpUmpQWVNFbUREM1BWNjNMbkVXVExnc1laeDVrQUJna2tuRjdCNjNwby9s?=
- =?utf-8?B?RGlVRkpBTE5meWpldit3TnMzTTkrUExueVp1d3A5Yy95ZGVLcDRNdzZqakpr?=
- =?utf-8?B?OVVnbFlHMm1VdVNGM01RRGtIWkpFc29zREF1K0N4K0hSWmZKWTRpU1cxQWFw?=
- =?utf-8?B?ejFva1hTeDVvME9PVzRLKzJ3NHQzTktncC9UNWVXT3VDVnV6RWgwUXdVQ2lu?=
- =?utf-8?B?aUdOKy93dy9EMU1ZaFBiUzZpajB4YS9JMllwbFpFU1cwWTZEZDltVm93WnFL?=
- =?utf-8?B?Wm5xWDVwTDhBNVVQNzZZVjdxSzRiaHpubDVoVGF2M0cvUEltQ0FWbGwyQWFF?=
- =?utf-8?B?cUVzWjI1UHJqcEJONjFKbzBmU2xyREl3NFcvbmMwUjlwWG5pSllXRTM1NFFJ?=
- =?utf-8?B?WVNudDB5S3hnMk9sdTVOSVNlNVova2RWU04xWnJ6VWtSaUtheXlkZGZUSVF2?=
- =?utf-8?B?M2pKMVQ5YWg5RmxWczFJdnRxZWhRL1lib29tOURRZURhV0dFK1Nhd2tNMTdv?=
- =?utf-8?B?aGhHdG1IMWlWSXliR0NSdnFWTUgzUG5GbTV4QnhHbUx3cWJ4NGtIVFhxMTdh?=
- =?utf-8?B?TDNkVjJ6YjEycVBZMkJqQ0FCTWw2UUZpNHUvalYxaGtWNWlSSHBTNVZVVkJ0?=
- =?utf-8?B?QnptUURIWmFGSFgweDlXMWdyOGR6N25WektZOUludDh2QTVqWnRTS3ZmVzhn?=
- =?utf-8?B?WFhSSnlzTXlNNmZ1UWVNVHRxWTA0dlJ6UkpkU2NlcTdKMVRSU1FEa1FVWW5U?=
- =?utf-8?B?cXhINFF0ZnBiNkNEcEI0UllkcUhKVlBpa3Q1Tmllb01qS3RHaHc1RzhQdkZ1?=
- =?utf-8?B?bVJrd3FnTHdHYXhnUkJtUXRnYVRwNWp0RENzdVVjb0VBVTMwemlieE96UFV4?=
- =?utf-8?B?N3hrcnlIRlVwOTEwVkU0VHhPYWNTT3gzdG9LOXJDTXZxWGsrNm5SQnplMVZN?=
- =?utf-8?B?Tm1meGZwTDBHZWJrSE1WSjNWeU44bXZEaUgxVkEwMWxsZ0ptbmY3UXUxd2h2?=
- =?utf-8?B?RjBOS0NVYkdPd3ZXWlVHOWx2dUxCVmdRQkhJaFRGQ2c1Rk1FVkx3T2lobVdi?=
- =?utf-8?B?RStFUkI0R1N2SGdMbHlUb2xocFVUVkZjeWJUSTFyYzlONnJ4aloxZ0Nqblhm?=
- =?utf-8?B?VUU3TUVuS0MzcnZ3YW1EQllZTDVBWmZUdnR2RFVyZG54blZSK1NhZFR4cU05?=
- =?utf-8?B?cGFuOUQwSWVGUUQzcm11amQ0MHhaMGtEUFBrV2l0TS9YN1k4K25NQ0R0Y3Q5?=
- =?utf-8?B?anhxMmYrbW9jejYyTEp1d0dHNUYzVlFySzh4RGdMaFFVTStpcENsMXROdXNq?=
- =?utf-8?B?cDhPd3pwci9vaUlxQnhGYW5CTVMxbGNtZ2c3ZWhHVUo2MTlteW8zYWVUQWNq?=
- =?utf-8?B?VFBqMGZDUEVYSTgwMitGcFN5UGx3NTBQbDVkUHVDNG5hR3AzQVBkd0VNcEly?=
- =?utf-8?B?WkFrV1h6dU5xNDYvY0U2aWNkTEJrRGRHd2c5QUpJN1A2Ymp2bDdNY0JXMVAy?=
- =?utf-8?B?bGpzd0NTeXArTksvSUdkU3RFblIrQmNoOHlHc0d3Vm9aWThBSnZ5M0l5QTgy?=
- =?utf-8?B?TUhXbjdiQnRVaVp2QjZTdUdXSng0QlZpc1kyd2c4TXR1SWo4QS9tSUVkTzA1?=
- =?utf-8?B?b2E0UFdicEFpZTF4azZuZzZiS1VPZEFQYks4YnhHQXdNYlBlZFRoanh4SlU2?=
- =?utf-8?B?MnE2NkpRbTE1c2lNc3hhRnVIcUxMQldDcXR2dERHOWV3VEdpQkNLbGtreVRE?=
- =?utf-8?B?emNEOFhoRmlybndROU51NW1pSkVsam9PQU9HWTFOeHh6dmJIWTVlOWtpR1lV?=
- =?utf-8?Q?Hu0Gl8r6fbnU+PnBf2WqQpyNv?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ADD978401A5FE44D9A2F59C5FAA1E06D@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="ra2d7/oT"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6077d0b9bbeso12351817a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1750243344; x=1750848144; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wHukETbloS3taj+byKKfr4kaIRZygvwm7xKORKM1+IQ=;
+        b=ra2d7/oT3ORQGl0y20LbZSyGhorvgh8TZTGJtU7XsJGF7PxZ4HFtrh7wStHjdGUx56
+         vave92reLCuT9PR4bMPdAgvyZ+MFMg1ZxG0b+AW+MpU9eOCiK5x8bv7AIVhWs35reWXc
+         Monwsy4ZrKwpY1iZ5dZBOmyxj7jtY6nm+SHpj3aqH1uBUlTMvADsOkSKQAUheEUFxA5q
+         UcOfPtZm2yZ+Rw+JN+uY6bFedoC7bWbqv1EXFpDpBolh+eCMgdFiHrgXx7j6Sg/VoHI+
+         bkhMiPj+fc7GjXc/0Ls63mDSSw7Kh27FjPrFHSBbOLaIYkemIeMEi53+BxsmabFk/ps5
+         OUCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750243344; x=1750848144;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wHukETbloS3taj+byKKfr4kaIRZygvwm7xKORKM1+IQ=;
+        b=hsbGshhpdb48GnOy8RBkseyklwC+/cd0r3tt2Bi1Fd37gOmIj5eCB9BlYWyYz7zW8G
+         tjRBAQ5sy0x442JzUvyHoUY91nI+FAN8r7eVIHLvrl8DHJp5uakSO/HCThbvpSi9842v
+         /mW/HYdvT8yNwcIPrJi7SQUbjKSLsoLILwRPf3OnWgzfRgMEqM09UNKuhDrx0A1NMpgW
+         aRSQTfvX4U89YhwmfmYrOj7YkcEnRELW9QP27J0q9R/eRFkKFyf/IwzH4RTNlsYLdVQv
+         IcT2dwCN9UijIYl3rVJLYwTAa6o7Pe8Az1aFR4/yI2wdhIndFa+24BI1Of+tzlzeWpy6
+         Evfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVg0FT1R0zCSNwZrYyQZAQnIsf3Mg0+Pjdu3/c4pC6rpMrNhm4PZzslNDqN8E3JDKCs3gPaJ5iJn9UWHuc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyASOE+qwChMg75apr4wMcwTj6JvQyZo3QyYDM/dRr6xiaalh/K
+	EobwjBRpAyJb1xFZBBkO9R0cFJqB3saHHFkg1vLls/n8ETQxnB9DDmQao26plgh6EK8=
+X-Gm-Gg: ASbGncuFxVQorXAscm+nAXo2Z7arPUzMgI8SPP0JkPd9x5fHoI50Qgx/t0CcqRCoSzm
+	fz14ZaeKL0cmwW77Rf2CfsdfZJosGP+cnxNEWOAQYNbP9iShsFE2FEMPNa8cpaBtcC9IGvCMisq
+	R7HTPZGsLsjqvLLFRKNWTaYDi80E9WHmFgCL5ijXOtpijAqA8Zxfx6M5JrhVDR1kwrZcWKAwv9O
+	RgWRL2cSzH0yB2GSOgP6uphzh9STvnPFSuI4Eb8qQbtmyQOl0xL9QN3MMbMI47z5mSP1Pei81CW
+	K3gILF6o53WG9FTYdSkX5kWvZI4Jx6OYyi1382gUfNNHIv7vGu9O3zkcr7zXZ8EDUSHxPbA=
+X-Google-Smtp-Source: AGHT+IGFpo3an5XwUx+UUifXicu+oHy6MxcbWKYujoj3RjQCa3dywfv1orWpbvXYbymhtzzffg2TlQ==
+X-Received: by 2002:a05:6402:2348:b0:605:878:3557 with SMTP id 4fb4d7f45d1cf-608d09475f9mr15451171a12.16.1750243343967;
+        Wed, 18 Jun 2025 03:42:23 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.110])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48f33c6sm9485186a12.30.2025.06.18.03.42.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 03:42:23 -0700 (PDT)
+Message-ID: <ec58721e-0121-47d0-9226-d72bc6605680@tuxon.dev>
+Date: Wed, 18 Jun 2025 13:42:21 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microchip.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67610d43-d985-4339-983b-08ddae54c82f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 10:42:11.5179
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jUzZ0LymWJZDXk2VVQBIY5N194yBwkwqksgMETTkKUwa2rFmulDAngHzi2SZWRi9HTSQ94spSLYadWaWVOVweQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5926
+User-Agent: Mozilla Thunderbird
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Subject: Re: [PATCH v8 5/5] PCI: of: Create device-tree PCI host bridge node
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
+ Saravana Kannan <saravanak@google.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Lizhi Hou <lizhi.hou@amd.com>, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+ Allan Nielsen <allan.nielsen@microchip.com>,
+ Horatiu Vultur <horatiu.vultur@microchip.com>,
+ Steen Hegelund <steen.hegelund@microchip.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250224141356.36325-1-herve.codina@bootlin.com>
+ <20250224141356.36325-6-herve.codina@bootlin.com>
+ <594d284e-afce-446a-9fcb-a67b157ef6dc@tuxon.dev>
+ <20250611165617.641c7c09@bootlin.com>
+ <3258d453-f262-4f1c-822b-5310a8346a2d@tuxon.dev>
+ <20250617090029.03283ea6@bootlin.com>
+Content-Language: en-US
+In-Reply-To: <20250617090029.03283ea6@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-SGkgTWF4aW1lLA0KDQpPbiAxOC8wNi8yNSAyOjExIHBtLCBNYXhpbWUgUmlwYXJkIHdyb3RlOg0K
-PiBIaSwNCj4gDQo+IE9uIFdlZCwgSnVuIDE4LCAyMDI1IGF0IDEwOjAyOjQyQU0gKzA1MzAsIERo
-YXJtYSBCYWxhc3ViaXJhbWFuaSB3cm90ZToNCj4+IEZyb206IFNhbmRlZXAgU2hlcmlrZXIgTSA8
-c2FuZGVlcC5zaGVyaWtlckBtaWNyb2NoaXAuY29tPg0KPj4NCj4+IFRoZSBjdXJyZW50IExWRFMg
-Y29udHJvbGxlciBkcml2ZXIgaXMgaGFyZGNvZGVkIHRvIG1hcCBMVkRTIGxhbmVzIHRvIHRoZQ0K
-Pj4gSkVJREEgZm9ybWF0LiBDb25zZXF1ZW50bHksIGNvbm5lY3RpbmcgYW4gTFZEUyBkaXNwbGF5
-IHRoYXQgc3VwcG9ydHMgdGhlDQo+PiBWRVNBIGZvcm1hdCByZXN1bHRzIGluIGEgZGlzdG9ydGVk
-IGRpc3BsYXkgZHVlIHRvIHRoZSBmb3JtYXQgbWlzbWF0Y2guDQo+Pg0KPj4gUXVlcnkgdGhlIHBh
-bmVsIGRyaXZlciBhbmQgc2V0IHRoZSBhcHByb3ByaWF0ZSBmb3JtYXQgdG8gcmVzb2x2ZSB0aGUg
-aXNzdWUuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogU2FuZGVlcCBTaGVyaWtlciBNIDxzYW5kZWVw
-LnNoZXJpa2VyQG1pY3JvY2hpcC5jb20+DQo+PiBTaWduZWQtb2ZmLWJ5OiBEaGFybWEgQmFsYXN1
-YmlyYW1hbmkgPGRoYXJtYS5iQG1pY3JvY2hpcC5jb20+DQo+IA0KPiBJdCBsb29rcyBsaWtlIHRo
-ZXJlJ3MgYSBiaXQgb2YgY29udGV4dCBtaXNzaW5nIHRvIGV4cGxhaW4gd2h5IHlvdSBuZWVkZWQN
-Cj4gdG8gZG8gaXQgdGhhdCB3YXkuIFNlZSBiZWxvdy4NCj4gDQo+PiAtLS0NCj4+ICAgZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9taWNyb2NoaXAtbHZkcy5jIHwgMTA4ICsrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKy0tDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxMDIgaW5zZXJ0aW9ucygrKSwg
-NiBkZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRn
-ZS9taWNyb2NoaXAtbHZkcy5jIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9taWNyb2NoaXAtbHZk
-cy5jDQo+PiBpbmRleCA5ZjRmZjgyYmM2YjQuLjVlOTljMDEwMzNiYiAxMDA2NDQNCj4+IC0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbWljcm9jaGlwLWx2ZHMuYw0KPj4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9taWNyb2NoaXAtbHZkcy5jDQo+PiBAQCAtMTEsNiArMTEsNyBAQA0K
-Pj4gICAjaW5jbHVkZSA8bGludXgvY29tcG9uZW50Lmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9k
-ZWxheS5oPg0KPj4gICAjaW5jbHVkZSA8bGludXgvamlmZmllcy5oPg0KPj4gKyNpbmNsdWRlIDxs
-aW51eC9tZWRpYS1idXMtZm9ybWF0Lmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29u
-Lmg+DQo+PiAgICNpbmNsdWRlIDxsaW51eC9vZl9ncmFwaC5oPg0KPj4gICAjaW5jbHVkZSA8bGlu
-dXgvcGluY3RybC9kZXZpbmZvLmg+DQo+PiBAQCAtNDEsOSArNDIsMTEgQEANCj4+ICAgDQo+PiAg
-IC8qIEJpdGZpZWxkcyBpbiBMVkRTQ19DRkdSIChDb25maWd1cmF0aW9uIFJlZ2lzdGVyKSAqLw0K
-Pj4gICAjZGVmaW5lIExWRFNDX0NGR1JfUElYU0laRV8yNEJJVFMJMA0KPj4gKyNkZWZpbmUgTFZE
-U0NfQ0ZHUl9QSVhTSVpFXzE4QklUUwkxDQo+PiAgICNkZWZpbmUgTFZEU0NfQ0ZHUl9ERU5fUE9M
-X0hJR0gJCTANCj4+ICAgI2RlZmluZSBMVkRTQ19DRkdSX0RDX1VOQkFMQU5DRUQJMA0KPj4gICAj
-ZGVmaW5lIExWRFNDX0NGR1JfTUFQUElOR19KRUlEQQlCSVQoNikNCj4+ICsjZGVmaW5lIExWRFND
-X0NGR1JfTUFQUElOR19WRVNBCQkwDQo+PiAgIA0KPj4gICAvKkJpdGZpZWxkcyBpbiBMVkRTQ19T
-UiAqLw0KPj4gICAjZGVmaW5lIExWRFNDX1NSX0NTCUJJVCgwKQ0KPj4gQEAgLTU4LDYgKzYxLDcg
-QEAgc3RydWN0IG1jaHBfbHZkcyB7DQo+PiAgIAlzdHJ1Y3QgY2xrICpwY2xrOw0KPj4gICAJc3Ry
-dWN0IGRybV9wYW5lbCAqcGFuZWw7DQo+PiAgIAlzdHJ1Y3QgZHJtX2JyaWRnZSBicmlkZ2U7DQo+
-PiArCXN0cnVjdCBkcm1fY29ubmVjdG9yIGNvbm5lY3RvcjsNCj4+ICAgCXN0cnVjdCBkcm1fYnJp
-ZGdlICpwYW5lbF9icmlkZ2U7DQo+PiAgIH07DQo+PiAgIA0KPj4gQEAgLTY2LDYgKzcwLDExIEBA
-IHN0YXRpYyBpbmxpbmUgc3RydWN0IG1jaHBfbHZkcyAqYnJpZGdlX3RvX2x2ZHMoc3RydWN0IGRy
-bV9icmlkZ2UgKmJyaWRnZSkNCj4+ICAgCXJldHVybiBjb250YWluZXJfb2YoYnJpZGdlLCBzdHJ1
-Y3QgbWNocF9sdmRzLCBicmlkZ2UpOw0KPj4gICB9DQo+PiAgIA0KPj4gK3N0YXRpYyBpbmxpbmUg
-c3RydWN0IG1jaHBfbHZkcyAqZHJtX2Nvbm5lY3Rvcl90b19tY2hwX2x2ZHMoc3RydWN0IGRybV9j
-b25uZWN0b3IgKmNvbm5lY3RvcikNCj4+ICt7DQo+PiArCXJldHVybiBjb250YWluZXJfb2YoY29u
-bmVjdG9yLCBzdHJ1Y3QgbWNocF9sdmRzLCBjb25uZWN0b3IpOw0KPj4gK30NCj4+ICsNCj4+ICAg
-c3RhdGljIGlubGluZSB1MzIgbHZkc19yZWFkbChzdHJ1Y3QgbWNocF9sdmRzICpsdmRzLCB1MzIg
-b2Zmc2V0KQ0KPj4gICB7DQo+PiAgIAlyZXR1cm4gcmVhZGxfcmVsYXhlZChsdmRzLT5yZWdzICsg
-b2Zmc2V0KTsNCj4+IEBAIC03OSw2ICs4OCwxMSBAQCBzdGF0aWMgaW5saW5lIHZvaWQgbHZkc193
-cml0ZWwoc3RydWN0IG1jaHBfbHZkcyAqbHZkcywgdTMyIG9mZnNldCwgdTMyIHZhbCkNCj4+ICAg
-c3RhdGljIHZvaWQgbHZkc19zZXJpYWxpc2VyX29uKHN0cnVjdCBtY2hwX2x2ZHMgKmx2ZHMpDQo+
-PiAgIHsNCj4+ICAgCXVuc2lnbmVkIGxvbmcgdGltZW91dCA9IGppZmZpZXMgKyBtc2Vjc190b19q
-aWZmaWVzKExWRFNfUE9MTF9USU1FT1VUX01TKTsNCj4+ICsJc3RydWN0IGRybV9jb25uZWN0b3Ig
-KmNvbm5lY3RvciA9ICZsdmRzLT5jb25uZWN0b3I7DQo+IA0KPiBIb3cgZG9lcyB0aGF0IHdvcmsg
-aWYgdGhlIGJyaWRnZSB3YXMgYXR0YWNoZWQgd2l0aCBOT19DT05ORUNUT1I/IFdvdWxkDQo+IHRo
-ZSBzdHJ1Y3R1cmUgYmUgdW5pbml0aWFsaXplZD8NCg0KVGhhbmtzIGZvciBwb2ludGluZyBpdCBv
-dXQsIEkgd2lsbCBwZXJmb3JtIHRoZSBjaGFuZ2VzIGFzIHlvdSBzdWdnZXN0ZWQgDQpiZWxvdy4N
-Cg0KPiANCj4+ICsNCj4+ICsJLyogZGVmYXVsdCB0byBqZWlkYS0yNCAqLw0KPj4gKwl1MzIgYnVz
-X2Zvcm1hdHMgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9KRUlEQTsNCj4+ICsJdTggbWFw
-LCBwaXhfc2l6ZTsNCj4+ICAgDQo+PiAgIAkvKiBUaGUgTFZEU0MgcmVnaXN0ZXJzIGNhbiBvbmx5
-IGJlIHdyaXR0ZW4gaWYgV1BFTiBpcyBjbGVhcmVkICovDQo+PiAgIAlsdmRzX3dyaXRlbChsdmRz
-LCBMVkRTQ19XUE1SLCAoTFZEU0NfV1BNUl9XUEtFWV9QU1NXRCAmDQo+PiBAQCAtOTMsMjQgKzEw
-NywxMDYgQEAgc3RhdGljIHZvaWQgbHZkc19zZXJpYWxpc2VyX29uKHN0cnVjdCBtY2hwX2x2ZHMg
-Kmx2ZHMpDQo+PiAgIAkJdXNsZWVwX3JhbmdlKDEwMDAsIDIwMDApOw0KPj4gICAJfQ0KPj4gICAN
-Cj4+ICsJaWYgKGNvbm5lY3RvciAmJiBjb25uZWN0b3ItPmRpc3BsYXlfaW5mby5udW1fYnVzX2Zv
-cm1hdHMpDQo+PiArCQlidXNfZm9ybWF0cyA9IGNvbm5lY3Rvci0+ZGlzcGxheV9pbmZvLmJ1c19m
-b3JtYXRzWzBdOw0KPj4gKw0KPj4gICAJLyogQ29uZmlndXJlIHRoZSBMVkRTQyAqLw0KPj4gLQls
-dmRzX3dyaXRlbChsdmRzLCBMVkRTQ19DRkdSLCAoTFZEU0NfQ0ZHUl9NQVBQSU5HX0pFSURBIHwN
-Cj4+IC0JCQkJTFZEU0NfQ0ZHUl9EQ19VTkJBTEFOQ0VEIHwNCj4+IC0JCQkJTFZEU0NfQ0ZHUl9E
-RU5fUE9MX0hJR0ggfA0KPj4gLQkJCQlMVkRTQ19DRkdSX1BJWFNJWkVfMjRCSVRTKSk7DQo+PiAr
-CXN3aXRjaCAoYnVzX2Zvcm1hdHMpIHsNCj4+ICsJY2FzZSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8x
-WDdYM19TUFdHOg0KPj4gKwkJbWFwID0gTFZEU0NfQ0ZHUl9NQVBQSU5HX0pFSURBOw0KPj4gKwkJ
-cGl4X3NpemUgPSBMVkRTQ19DRkdSX1BJWFNJWkVfMThCSVRTOw0KPj4gKwkJYnJlYWs7DQo+PiAr
-CWNhc2UgTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVg3WDRfU1BXRzoNCj4+ICsJCW1hcCA9IExWRFND
-X0NGR1JfTUFQUElOR19WRVNBOw0KPj4gKwkJcGl4X3NpemUgPSBMVkRTQ19DRkdSX1BJWFNJWkVf
-MjRCSVRTOw0KPj4gKwkJYnJlYWs7DQo+PiArCWRlZmF1bHQ6DQo+PiArCQltYXAgPSBMVkRTQ19D
-RkdSX01BUFBJTkdfSkVJREE7DQo+PiArCQlwaXhfc2l6ZSA9IExWRFNDX0NGR1JfUElYU0laRV8y
-NEJJVFM7DQo+PiArCQlicmVhazsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlsdmRzX3dyaXRlbChsdmRz
-LCBMVkRTQ19DRkdSLCAobWFwIHwgTFZEU0NfQ0ZHUl9EQ19VTkJBTEFOQ0VEIHwNCj4+ICsJCSAg
-ICBMVkRTQ19DRkdSX0RFTl9QT0xfSElHSCB8IHBpeF9zaXplKSk7DQo+PiAgIA0KPj4gICAJLyog
-RW5hYmxlIHRoZSBMVkRTIHNlcmlhbGl6ZXIgKi8NCj4+ICAgCWx2ZHNfd3JpdGVsKGx2ZHMsIExW
-RFNDX0NSLCBMVkRTQ19DUl9TRVJfRU4pOw0KPj4gICB9DQo+IA0KPiBBc2lkZSBmcm9tIHRoZSBi
-aXQgYWJvdmUsIHRoYXQgcGFydCBsb29rcyBmaW5lIHRvIG1lLg0KPiANCj4+ICAgDQo+PiArc3Rh
-dGljIGludCBtY2hwX2x2ZHNfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3Rv
-ciAqY29ubmVjdG9yKQ0KPj4gK3sNCj4+ICsJc3RydWN0IG1jaHBfbHZkcyAqbHZkcyA9IGRybV9j
-b25uZWN0b3JfdG9fbWNocF9sdmRzKGNvbm5lY3Rvcik7DQo+PiArDQo+PiArCXJldHVybiBkcm1f
-cGFuZWxfZ2V0X21vZGVzKGx2ZHMtPnBhbmVsLCBjb25uZWN0b3IpOw0KPj4gK30NCj4+ICsNCj4+
-ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzIG1jaHBfbHZk
-c19jb25uZWN0b3JfaGVscGVyX2Z1bmNzID0gew0KPj4gKwkuZ2V0X21vZGVzID0gbWNocF9sdmRz
-X2Nvbm5lY3Rvcl9nZXRfbW9kZXMsDQo+PiArfTsNCj4+ICsNCj4+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGRybV9jb25uZWN0b3JfZnVuY3MgcGFuZWxfYnJpZGdlX2Nvbm5lY3Rvcl9mdW5jcyA9IHsN
-Cj4+ICsJLnJlc2V0ID0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX3Jlc2V0LA0KPj4gKwku
-ZmlsbF9tb2RlcyA9IGRybV9oZWxwZXJfcHJvYmVfc2luZ2xlX2Nvbm5lY3Rvcl9tb2RlcywNCj4+
-ICsJLmRlc3Ryb3kgPSBkcm1fY29ubmVjdG9yX2NsZWFudXAsDQo+PiArCS5hdG9taWNfZHVwbGlj
-YXRlX3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9yX2R1cGxpY2F0ZV9zdGF0ZSwN
-Cj4+ICsJLmF0b21pY19kZXN0cm95X3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfY29ubmVjdG9y
-X2Rlc3Ryb3lfc3RhdGUsDQo+PiArfTsNCj4+ICsNCj4+ICAgc3RhdGljIGludCBtY2hwX2x2ZHNf
-YXR0YWNoKHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsDQo+PiAgIAkJCSAgICBzdHJ1Y3QgZHJt
-X2VuY29kZXIgKmVuY29kZXIsDQo+PiAgIAkJCSAgICBlbnVtIGRybV9icmlkZ2VfYXR0YWNoX2Zs
-YWdzIGZsYWdzKQ0KPj4gICB7DQo+PiAgIAlzdHJ1Y3QgbWNocF9sdmRzICpsdmRzID0gYnJpZGdl
-X3RvX2x2ZHMoYnJpZGdlKTsNCj4+ICsJc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciA9
-ICZsdmRzLT5jb25uZWN0b3I7DQo+PiArCWludCByZXQ7DQo+PiArDQo+PiArCXJldCA9IGRybV9i
-cmlkZ2VfYXR0YWNoKGVuY29kZXIsIGx2ZHMtPnBhbmVsX2JyaWRnZSwNCj4+ICsJCQkJYnJpZGdl
-LCBmbGFncyk7DQo+PiArDQo+PiArCWlmIChyZXQgPCAwKQ0KPj4gKwkJcmV0dXJuIHJldDsNCj4+
-ICsNCj4+ICsJaWYgKGZsYWdzICYgRFJNX0JSSURHRV9BVFRBQ0hfTk9fQ09OTkVDVE9SKQ0KPj4g
-KwkJcmV0dXJuIDA7DQo+PiArDQo+PiArCWlmICghZW5jb2Rlcikgew0KPj4gKwkJZGV2X2Vycihs
-dmRzLT5kZXYsICJNaXNzaW5nIGVuY29kZXJcbiIpOw0KPj4gKwkJcmV0dXJuIC1FTk9ERVY7DQo+
-PiArCX0NCj4+ICsNCj4+ICsJZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfYWRkKGNvbm5lY3RvciwNCj4+
-ICsJCQkJICZtY2hwX2x2ZHNfY29ubmVjdG9yX2hlbHBlcl9mdW5jcyk7DQo+PiArDQo+PiArCXJl
-dCA9IGRybV9jb25uZWN0b3JfaW5pdChicmlkZ2UtPmRldiwgY29ubmVjdG9yLA0KPj4gKwkJCQkg
-JnBhbmVsX2JyaWRnZV9jb25uZWN0b3JfZnVuY3MsDQo+PiArCQkJCSBEUk1fTU9ERV9DT05ORUNU
-T1JfTFZEUyk7DQo+PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIobHZkcy0+ZGV2LCAiRmFp
-bGVkIHRvIGluaXRpYWxpemUgY29ubmVjdG9yICVkXG4iLCByZXQpOw0KPj4gKwkJcmV0dXJuIHJl
-dDsNCj4+ICsJfQ0KPj4gICANCj4+IC0JcmV0dXJuIGRybV9icmlkZ2VfYXR0YWNoKGVuY29kZXIs
-IGx2ZHMtPnBhbmVsX2JyaWRnZSwNCj4+IC0JCQkJIGJyaWRnZSwgZmxhZ3MpOw0KPj4gKwlkcm1f
-cGFuZWxfYnJpZGdlX3NldF9vcmllbnRhdGlvbihjb25uZWN0b3IsIGJyaWRnZSk7DQo+PiArDQo+
-PiArCXJldCA9IGRybV9jb25uZWN0b3JfYXR0YWNoX2VuY29kZXIoJmx2ZHMtPmNvbm5lY3Rvciwg
-ZW5jb2Rlcik7DQo+PiArCWlmIChyZXQpIHsNCj4+ICsJCWRldl9lcnIobHZkcy0+ZGV2LCAiRmFp
-bGVkIHRvIGF0dGFjaCBjb25uZWN0b3IgdG8gZW5jb2RlciAlZFxuIiwgcmV0KTsNCj4+ICsJCWRy
-bV9jb25uZWN0b3JfY2xlYW51cChjb25uZWN0b3IpOw0KPj4gKwkJcmV0dXJuIHJldDsNCj4+ICsJ
-fQ0KPj4gKw0KPj4gKwlpZiAoYnJpZGdlLT5kZXYtPnJlZ2lzdGVyZWQpIHsNCj4+ICsJCWlmIChj
-b25uZWN0b3ItPmZ1bmNzLT5yZXNldCkNCj4+ICsJCQljb25uZWN0b3ItPmZ1bmNzLT5yZXNldChj
-b25uZWN0b3IpOw0KPj4gKw0KPj4gKwkJcmV0ID0gZHJtX2Nvbm5lY3Rvcl9yZWdpc3Rlcihjb25u
-ZWN0b3IpOw0KPj4gKwkJaWYgKHJldCkgew0KPj4gKwkJCWRldl9lcnIobHZkcy0+ZGV2LCAiRmFp
-bGVkIHRvIGF0dGFjaCBjb25uZWN0b3IgdG8gcmVnaXN0ZXIgJWRcbiIsIHJldCk7DQo+PiArCQkJ
-ZHJtX2Nvbm5lY3Rvcl9jbGVhbnVwKGNvbm5lY3Rvcik7DQo+PiArCQkJcmV0dXJuIHJldDsNCj4+
-ICsJCX0NCj4+ICsJfQ0KPj4gKw0KPj4gKwlyZXR1cm4gMDsNCj4gDQo+IEhvd2V2ZXIsIHRoaXMg
-aXMgdGhlIHBhcnQgSSBkb24ndCByZWFsbHkgZ2V0LiBBRkFJVSwgeW91IGNyZWF0ZSBhDQo+IGNv
-bm5lY3RvciwgZm9yIHRoZSBzb2xlIHB1cnBvc2Ugb2YgY2FsbGluZyB0aGUgcGFuZWwgZ2V0X21v
-ZGVzLiBCdXQgdGhlDQo+IHBhbmVsIGJyaWRnZSB5b3UgYWxyZWFkeSB1c2luZyBpcyBjYWxsaW5n
-IHRoYXQgZnVuY3Rpb24gYWxyZWFkeS4gU28NCj4gdGhlcmUgbXVzdCBiZSBzb21ldGhpbmcgbW9y
-ZS4NCj4gDQo+IERpZCB5b3UgY3JlYXRlIHRoZSBjb25uZWN0b3Igb25seSB0byBiZSBhYmxlIHRv
-IGFjY2VzcyBpdCBpbg0KPiBsdmRzX3NlcmlhbGlzZXJfb24gYW5kIHRodXMgcmV0cmlldmUgdGhl
-IGJ1c19mb3JtYXRzPyBJZiBzbywgeW91IHNob3VsZA0KPiBjb252ZXJ0IGVuYWJsZSAvIGRpc2Fi
-bGUgdG8gYXRvbWljX2VuYWJsZSAvIGF0b21pY19kaXNhYmxlLCBwYXNzDQo+IGRybV9hdG9taWNf
-c3RhdGUgdG8gbHZkc19zZXJpYWxpc2VyX29uLCBhbmQgdGhlbiBjYWxsDQo+IGRybV9hdG9taWNf
-Z2V0X25ld19jb25uZWN0b3JfZm9yX2VuY29kZXIoYnJpZGdlLT5lbmNvZGVyKS4NCg0KU3VyZSwg
-SSB3aWxsIGRyb3AgZW5hYmxlIC8gZGlzYWJsZSBhbmQgYWRkIA0KLmF0b21pY19wcmVfZW5hYmxl
-LC5hdG9taWNfZW5hYmxlLC5hdG9taWNfZGlzYWJsZSwuYXRvbWljX3Bvc3RfZGlzYWJsZQ0KDQpJ
-IHdpbGwgZ2V0IHRoZSBidXNfZm9ybWF0IGFzIHlvdSBzdWdnZXN0ZWQNCg0KIg0KY29ubmVjdG9y
-ID0gZHJtX2F0b21pY19nZXRfbmV3X2Nvbm5lY3Rvcl9mb3JfZW5jb2RlcihzdGF0ZSwgDQpicmlk
-Z2UtPmVuY29kZXIpOw0KICAgICAgICBpZiAoY29ubmVjdG9yICYmIGNvbm5lY3Rvci0+ZGlzcGxh
-eV9pbmZvLm51bV9idXNfZm9ybWF0cykNCiAgICAgICAgICAgICAgICBidXNfZm9ybWF0ID0gY29u
-bmVjdG9yLT5kaXNwbGF5X2luZm8uYnVzX2Zvcm1hdHNbMF07DQoNCiAgICAgICAgbHZkc19zZXJp
-YWxpc2VyX29uKGx2ZHMsIGJ1c19mb3JtYXQpOw0KIg0KDQphbmQgd2lsbCBkcm9wIHRoZSByZXN0
-IGluIHYyLg0KDQpUaGFua3MuDQo+IA0KPiBNYXhpbWVlDQoNCg0KLS0gDQpXaXRoIEJlc3QgUmVn
-YXJkcywNCkRoYXJtYSBCLg0K
+Hi, Herve, Rob, Bjorn, Lizhi,
+
+On 17.06.2025 10:00, Herve Codina wrote:
+> Hi Claudiu,
+> 
+> On Fri, 13 Jun 2025 16:36:16 +0300
+> Claudiu Beznea <claudiu.beznea@tuxon.dev> wrote:
+> 
+> ...
+> 
+>> I pointed to the wrong function. It's not of_pci_make_host_bridge_node()
+>> [1] but of_pci_make_dev_node() which creates a node with a similar naming
+>> and makes things not working on my side.
+>>
+>> [1] https://elixir.bootlin.com/linux/v6.15/source/drivers/pci/of.c#L694
+> 
+> Ok, so your issue is not related patches applied from the "PCI: of: Create
+> device-tree PCI host bridge node" series.
+>   https://lore.kernel.org/all/20250224141356.36325-6-herve.codina@bootlin.com/
+
+That's true, I was wrongly pointing it.
+
+> 
+> Indeed, this series add the node creation for the host bridge with
+> of_pci_make_host_bridge_node() but you pointed now of_pci_make_dev_node()
+> which is the creation for PCI device node and this function was not modify by the
+> series.
+> 
+> of_pci_make_host_bridge_node() should not create anything. Can you confirm on your
+> side that it doesn't create any nodes.
+
+I confirm it doesn't create any node.
+
+> 
+> If so, maybe the problem comes from of_irq_parse_raw() or similar.
+> 
+> ...
+> 
+>>
+>>>
+>>> On this system, I didn't observed any issues but of course, the PCIe drivers are
+>>> different.
+>>> Also, on my system, no node were created by of_pci_make_host_bridge_node().  
+>>
+>> Sorry for the confusion, it is of_pci_make_dev_node() on my side which
+>> creates the node.
+>>
+>>>
+>>> To be honest, I didn't re-test recently to see if something has been broken.
+>>> I can do that on my side with my system.
+> 
+> I have re-tested and I confirm that I have no issue on my system.
+
+Thank you for doing this.
+
+> 
+>>>
+>>> On your side, maybe you can have look at the Armada PCIe driver and see if
+>>> something could explain your behavior. I am not sure that you need to add the
+>>> pci@0,0 node in your DT.  
+>>
+>> I can't find a driver that uses the approach I'm trying in my patches. This
+>> approach was suggested in the review process [2] by Rob who mentioned that
+>> now we should be able drop legacy interrupt controller nodes. There are
+>> some Apple device trees that points the interrupt-map to the port node (the
+>> way I tried in my workaround) [3], but I can't find more than that.
+>>
+>> The topology in my case is:
+>>
+>> root@smarc-rzg3s:~# lspci -t
+>> -[0000:00]---00.0-[01]----00.0
+>>
+>> root@smarc-rzg3s:~# lspci
+>> 00:00.0 PCI bridge: Renesas Technology Corp. Device 0033
+>> 01:00.0 Non-Volatile memory controller: Micron Technology Inc 2550 NVMe SSD
+>> (DRAM-less) (rev 01)
+>>
+>> When not working pci@0,0 is exported as follows in rootfs:
+>>
+>> root@smarc-rzg3s:~# ls /sys/firmware/devicetree/base/soc/pcie@11e40000 -l
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 #address-cells
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 #interrupt-cells
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 #size-cells
+>> -r--r--r--    1 root     root             8 Jan 12 10:28 bus-range
+>> -r--r--r--    1 root     root            13 Jan 12 10:28 clock-names
+>> -r--r--r--    1 root     root            24 Jan 12 10:28 clocks
+>> -r--r--r--    1 root     root            26 Jan 12 10:28 compatible
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 device-id
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 device_type
+>> -r--r--r--    1 root     root            28 Jan 12 10:28 dma-ranges
+>> -r--r--r--    1 root     root             0 Jan 12 10:28 interrupt-controller
+>> -r--r--r--    1 root     root           144 Jan 12 10:28 interrupt-map
+>> -r--r--r--    1 root     root            16 Jan 12 10:28 interrupt-map-mask
+>> -r--r--r--    1 root     root           164 Jan 12 10:28 interrupt-names
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 interrupt-parrent
+> 
+> Why parrent instead of parent in interrupt-parrent ?
+
+Sorry about that, I did the wrong copy-paste here. This was from my various
+experiments (and yes, it was a typo in there in my device tree). The point
+I was trying to emphasize here is about the presence of the pci@0,0 node
+and its content, along with the pci topology (considering this might give
+you some clue).
+
+> 
+>> -r--r--r--    1 root     root           192 Jan 12 10:28 interrupts
+>> -r--r--r--    1 root     root             5 Jan 12 10:28 name
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 num-lanes
+>> drwxr-xr-x    2 root     root             0 Jan 12 10:17 pci@0,0
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 phandle
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 pinctrl-0
+>> -r--r--r--    1 root     root             8 Jan 12 10:28 pinctrl-names
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 power-domains
+>> -r--r--r--    1 root     root            28 Jan 12 10:28 ranges
+>> -r--r--r--    1 root     root            16 Jan 12 10:28 reg
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 renesas,sysc
+>> -r--r--r--    1 root     root            63 Jan 12 10:28 reset-names
+>> -r--r--r--    1 root     root            56 Jan 12 10:28 resets
+>> -r--r--r--    1 root     root             5 Jan 12 10:28 status
+>> -r--r--r--    1 root     root             4 Jan 12 10:28 vendor-id
+>> root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~# ls
+>> /sys/firmware/devicetree/base/soc/pcie@11e40000/pci@0,0 -l
+>> -r--r--r--    1 root     root             4 Jan 12 10:17 #address-cells
+>> -r--r--r--    1 root     root             4 Jan 12 10:17 #interrupt-cells
+>> -r--r--r--    1 root     root             4 Jan 12 10:17 #size-cells
+>> -r--r--r--    1 root     root             8 Jan 12 10:17 bus-range
+>> -r--r--r--    1 root     root            41 Jan 12 10:17 compatible
+>> -r--r--r--    1 root     root             4 Jan 12 10:17 device_type
+>> -r--r--r--    1 root     root           144 Jan 12 10:17 interrupt-map
+>> -r--r--r--    1 root     root            16 Jan 12 10:17 interrupt-map-mask
+>> -r--r--r--    1 root     root            32 Jan 12 10:17 ranges
+>> -r--r--r--    1 root     root            20 Jan 12 10:17 reg
+>> root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~# cat
+>> /sys/firmware/devicetree/base/soc/pcie@11e40000/pci@0,0/compatible
+>> pci1912,33pciclass,060400pciclass,0604root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~#
+>> root@smarc-rzg3s:~#
+>>
+>> In case I describe a port in device tree, it works because the pci@0,0 is
+>> not created anymore when device is enumerated and thus the interrupt
+>> parsing is working.
+>>
+>> Herve: do you have some hints?
+> 
+> First interrupt-parrent in your /sys/firmware/devicetree/base/soc/pcie@11e40000
+> files.
+> 
+> If it is just a typo in this email, maybe the interrupt parsing itself.
+> 
+> Can you provide an extract for the DT with nodes created at runtime.
+> I mean can you run 'dtc -I dtb -O dts /proc/device-tree' and provide the output
+
+That was a good hint. Thank for it.
+
+> related to PCI nodes including the PCIe controller ?
+
+I continued yesterday to investigate this.
+
+To me it looks like there is an issue with interrupt-map property for the
+node created with of_pci_make_dev_node(), whose content is populated with
+data retrieved after the interrupt was checked to be a valid map.
+
+With the current linux-next and the driver I'm working on [1] the pci dts
+node obtained from /proc/device-tree is as follows:
+
+pcie@11e40000 {
+    power-domains = <0x02>;
+    dma-ranges = <0x42000000 0x00 0x48000000 0x00 0x48000000 0x00 0x38000000>;
+    pinctrl-names = "default";
+    #address-cells = <0x03>;
+    bus-range = <0x00 0xff>;
+    pinctrl-0 = <0x21>;
+    clock-names = "aclk\0pm";
+    resets = <0x02 0x53 0x02 0x54 0x02 0x55 0x02 0x56 0x02 0x57 0x02 0x58
+0x02 0x59>;
+    interrupts = <0x00 0x18b 0x04 0x00 0x18c 0x04 0x00 0x18d 0x04 0x00
+0x18e 0x04 0x00 0x18f 0x04 0x00 0x190 0x04 0x00 0x191 0x04 0x00 0x192 0x04
+0x00 0x193 0x04 0x00 0x194 0x04 0x00 0x195 0x04 0x00 0x196 0x04 0x00 0x197
+0x04 0x00 0x198 0x04 0x00 0x199 0x04 0x00 0x19a 0x04>;
+    clocks = <0x02 0x01 0x65 0x02 0x01 0x66>;
+    interrupt-map = <0x00 0x00 0x00 0x01 0x1f 0x00 0x00 0x00 0x00
+                     0x00 0x00 0x00 0x02 0x1f 0x00 0x00 0x00 0x01
+                     0x00 0x00 0x00 0x03 0x1f 0x00 0x00 0x00 0x02
+                     0x00 0x00 0x00 0x04 0x1f 0x00 0x00 0x00 0x03>;
+    #size-cells = <0x02>;
+    renesas,sysc = <0x20>;
+    device_type = "pci";
+    interrupt-map-mask = <0x00 0x00 0x00 0x07>;
+    num-lanes = <0x01>;
+    compatible = "renesas,r9a08g045s33-pcie";
+    ranges = <0x3000000 0x00 0x30000000 0x00 0x30000000 0x00 0x8000000>;
+    #interrupt-cells = <0x01>;
+    status = "okay";
+    vendor-id = <0x1912>;
+    interrupt-names =
+"serr\0serr_cor\0serr_nonfatal\0serr_fatal\0axi_err\0inta\0intb\0intc\0intd\0msi\0link_bandwidth\0pm_pme\0dma\0pcie_evt\0msg\0all";
+    reg = <0x00 0x11e40000 0x00 0x10000>;
+    phandle = <0x1f>;
+    reset-names =
+"aresetn\0rst_b\0rst_gp_b\0rst_ps_b\0rst_rsm_b\0rst_cfg_b\0rst_load_b";
+    device-id = <0x33>;
+    interrupt-controller;
+
+    pci@0,0 {
+        #address-cells = <0x03>;
+        bus-range = <0x01 0xff>;
+        interrupt-map = <0x10000 0x00 0x00 0x01 0x1f 0x00 0x11e40000 0x00 0x00
+                         0x10000 0x00 0x00 0x02 0x1f 0x00 0x11e40000 0x00 0x01
+                         0x10000 0x00 0x00 0x03 0x1f 0x00 0x11e40000 0x00 0x02
+                         0x10000 0x00 0x00 0x04 0x1f 0x00 0x11e40000 0x00
+0x03>;
+        #size-cells = <0x02>;
+        device_type = "pci";
+        interrupt-map-mask = <0xffff00 0x00 0x00 0x07>;
+        compatible = "pci1912,33\0pciclass,060400\0pciclass,0604";
+        ranges = <0x82000000 0x00 0x30000000 0x82000000 0x00 0x30000000
+0x00 0x100000>;
+        #interrupt-cells = <0x01>;
+        reg = <0x00 0x00 0x00 0x00 0x00>;
+    };
+};
+
+The pci@0,0 is created by:
+
+pci_host_probe() ->
+  pci_bus_add_devices() ->
+    pci_bus_add_device() ->
+      of_pci_make_dev_node() ->
+        of_pci_add_properties() ->
+          of_pci_prop_intr_map()
+
+for bridge->child_ops populated in rzg3s_pcie_probe() (child->ops in
+pci_bus_add_devices() is bridge->child_ops populated in rzg3s_pcie_probe()).
+
+static int rzg3s_pcie_probe(struct platform_device *dev)
+{
+	// ...
+
+        bridge->sysdata = host;
+
+        bridge->ops = &rzg3s_pcie_root_ops;
+
+        bridge->child_ops = &rzg3s_pcie_child_ops;
+
+        ret = pci_host_probe(bridge);
+
+
+	// ...
+}
+
+On my side, on child bus is connected a NVMe device.
+
+When it is enumerated pci_assign_irq() is called for it, call trace as follows:
+
+[    0.599711]  of_irq_parse_and_map_pci+0x1e4/0x284
+[    0.599727]  pci_assign_irq+0x130/0x158
+[    0.599743]  pci_device_probe+0x5c/0x234
+[    0.599757]  really_probe+0xbc/0x2a0
+[    0.599771]  __driver_probe_device+0x78/0x12c
+[    0.599786]  driver_probe_device+0x40/0x160
+[    0.599800]  __device_attach_driver+0xb8/0x134
+[    0.599815]  bus_for_each_drv+0x80/0xdc
+[    0.599835]  __device_attach+0xa8/0x1b0
+[    0.599849]  device_attach+0x14/0x20
+[    0.599863]  pci_bus_add_device+0xec/0x198
+[    0.599882]  pci_bus_add_devices+0x38/0x84
+[    0.599900]  pci_bus_add_devices+0x64/0x84
+[    0.599919]  pci_host_probe+0x90/0x108
+[    0.599932]  rzg3s_pcie_probe+0x3c8/0x4f0
+
+Activating the of_print_phandle_args("of_irq_parse_raw: ", out_irq) debug
+from of_irq_parse_raw() prints the following:
+
+of_irq_parse_raw:  /soc/pcie@11e40000/pci@0,0:00000001
+
+requesting INTA.
+
+From this I understand the interrupt is requested from the pci@0,0 node
+created by of_pci_make_dev_node() for child bus device. This matches the
+1st interrupt-map of the pci@0,0 node:
+
+interrupt-map = <0x10000 0x00 0x00 0x01 0x1f 0x00 0x11e40000 0x00 0x00>
+
+and then the of_irq_parse_raw() goes to the node with phandle 0x1f
+(pcie@11e40000) and tries to find a map for IRQ "0x00 0x11e40000 0x00 0x00"
+entry but this one is not there.
+
+Updating the interrupt-map property of pcie@11e40000 node by adding
+<0x00 0x00 0x00 0x00 0x1f 0x00 0x00 0x00 0x00> entry solves the issue I'm
+seeing:
+
+    interrupt-map = <0x00 0x00 0x00 0x00 0x1f 0x00 0x00 0x00 0x00
+                     0x00 0x00 0x00 0x01 0x1f 0x00 0x00 0x00 0x00
+                     0x00 0x00 0x00 0x02 0x1f 0x00 0x00 0x00 0x01
+                     0x00 0x00 0x00 0x03 0x1f 0x00 0x00 0x00 0x02
+                     0x00 0x00 0x00 0x04 0x1f 0x00 0x00 0x00 0x03>;
+
+The code that updates the interrupt map for the node created by
+of_pci_make_dev_node() is of_pci_prop_intr_map(). This looks in the IRQ
+mapping tree for an INTx interrupt match and looks it up to the parent node
+than can provide this interrupt. If a match is found it returns the match
+for the node that can provide the interrupt. And this information is used
+to populate the interrupt-map property of the node that can is created by
+of_pci_make_dev_node().
+
+The following diff I tried solves the problem I see:
+
+diff --git a/drivers/pci/of_property.c b/drivers/pci/of_property.c
+index 506fcd507113..7d7f469a1db6 100644
+--- a/drivers/pci/of_property.c
++++ b/drivers/pci/of_property.c
+@@ -243,6 +243,10 @@ static int of_pci_prop_intr_map(struct pci_dev *pdev,
+struct of_changeset *ocs,
+                }
+                of_property_read_u32(out_irq[i].np, "#address-cells",
+                                     &addr_sz[i]);
++               /* Restore the arguments of the next level parent if a map
+was found. */
++               out_irq[i].np = pnode;
++               out_irq[i].args_count = 1;
++               out_irq[i].args[0] = pin;
+        }
+
+        list_for_each_entry(child, &pdev->subordinate->devices, bus_list) {
+
+With this, the live pcie device tree node is as follows:
+
+pcie@11e40000 {
+    power-domains = <0x02>;
+    dma-ranges = <0x42000000 0x00 0x48000000 0x00 0x48000000 0x00 0x38000000>;
+    pinctrl-names = "default";
+    #address-cells = <0x03>;
+    bus-range = <0x00 0xff>;
+    pinctrl-0 = <0x21>;
+    clock-names = "aclk\0pm";
+    resets = <0x02 0x53 0x02 0x54 0x02 0x55 0x02 0x56 0x02 0x57 0x02 0x58
+0x02 0x59>;
+    interrupts = <0x00 0x18b 0x04 0x00 0x18c 0x04 0x00 0x18d 0x04 0x00
+0x18e 0x04 0x00 0x18f 0x04 0x00 0x190 0x04 0x00 0x191 0x04 0x00 0x192 0x04
+0x00 0x193 0x04 0x00 0x194 0x04 0x00 0x195 0x04 0x00 0x196 0x04 0x00 0x197
+0x04 0x00 0x198 0x04 0x00 0x199 0x04 0x00 0x19a 0x04>;
+    clocks = <0x02 0x01 0x65 0x02 0x01 0x66>;
+    interrupt-map = <0x00 0x00 0x00 0x01 0x1f 0x00 0x00 0x00 0x00
+                     0x00 0x00 0x00 0x02 0x1f 0x00 0x00 0x00 0x01
+                     0x00 0x00 0x00 0x03 0x1f 0x00 0x00 0x00 0x02
+                     0x00 0x00 0x00 0x04 0x1f 0x00 0x00 0x00 0x03>;
+    #size-cells = <0x02>;
+    renesas,sysc = <0x20>;
+    device_type = "pci";
+    interrupt-map-mask = <0x00 0x00 0x00 0x07>;
+    num-lanes = <0x01>;
+    compatible = "renesas,r9a08g045s33-pcie";
+    ranges = <0x3000000 0x00 0x30000000 0x00 0x30000000 0x00 0x8000000>;
+    #interrupt-cells = <0x01>;
+    status = "okay";
+    vendor-id = <0x1912>;
+    interrupt-names =
+"serr\0serr_cor\0serr_nonfatal\0serr_fatal\0axi_err\0inta\0intb\0intc\0intd\0msi\0link_bandwidth\0pm_pme\0dma\0pcie_evt\0msg\0all";
+    reg = <0x00 0x11e40000 0x00 0x10000>;
+    phandle = <0x1f>;
+    reset-names =
+"aresetn\0rst_b\0rst_gp_b\0rst_ps_b\0rst_rsm_b\0rst_cfg_b\0rst_load_b";
+    device-id = <0x33>;
+    interrupt-controller;
+
+    pci@0,0 {
+        #address-cells = <0x03>;
+        bus-range = <0x01 0xff>;
+        interrupt-map = <0x10000 0x00 0x00 0x01 0x1f 0x00 0x11e40000 0x00 0x01
+                         0x10000 0x00 0x00 0x02 0x1f 0x00 0x11e40000 0x00 0x02
+                         0x10000 0x00 0x00 0x03 0x1f 0x00 0x11e40000 0x00 0x03
+                         0x10000 0x00 0x00 0x04 0x1f 0x00 0x11e40000 0x00
+0x04>;
+        #size-cells = <0x02>;
+        device_type = "pci";
+        interrupt-map-mask = <0xffff00 0x00 0x00 0x07>;
+        compatible = "pci1912,33\0pciclass,060400\0pciclass,0604";
+        ranges = <0x82000000 0x00 0x30000000 0x82000000 0x00 0x30000000
+0x00 0x100000>;
+        #interrupt-cells = <0x01>;
+        reg = <0x00 0x00 0x00 0x00 0x00>;
+    };
+};
+
+Note the interrupt-map property of pci@0,0 changes.
+
+This started to reproduce on my side after the CONFIG_PCI_DYNAMIC_OF_NODES
+was enabled in ARM64 defconfig through commits:
+
+b8e22cf599d1 ("arm64: defconfig: Enable OF_OVERLAY option")
+10c68f40b86e ("arm64: defconfig: Enable RP1 misc/clock/gpio drivers")
+
+Rob, Bjorn, Lizhi, PCI experts,
+
+Can you please let me know your input on this?
+
+Do you consider there is something wrong with the driver I'm working on
+(series [1])?
+
+Thank you for your support,
+Claudiu
+
+[1]
+https://lore.kernel.org/all/20250530111917.1495023-1-claudiu.beznea.uj@bp.renesas.com
+
+>>
+>> Rob: do you know some device trees where the interrupt-map points to the
+>> node itself as suggested in [2] so that I can check is something is missing
+>> on my side?
+>>
+>> Thank you,
+>> Claudiu
+>>
+>> [2] https://lore.kernel.org/all/20250509210800.GB4080349-robh@kernel.org/
+>> [3]
+>> https://elixir.bootlin.com/linux/v6.15/source/arch/arm64/boot/dts/apple/t8112.dtsi#L951
+>>
+> 
+> Best regards,
+> Hervé
+> 
+
