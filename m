@@ -1,106 +1,269 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2937B277804;
-	Wed, 18 Jun 2025 07:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472DE2F533D
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:36:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231953; cv=none; b=jMYaMtNvEavgvyswJmghqNE5qHmKvjO/OnqHEOgLOCrEO6GD9H98meGnf5yLFVwtcC0mdf4Xa8KV+xfgpyYj2HNvNtqvPkY1sKxx1hQixhMIO0oqgpENOWFAHODJCBLyyyFfEX8xIRSNKoXszPP8J/DDyurdwWoGin053oJ5YTY=
+	t=1750232185; cv=none; b=ARMqgg/pZ2MDrEOXtTF6LM7/QPNoKs+F7kGUyl7UjKZhAB9ZxHEdyDB1eRUDkyUyKYpuEHwe08CmlC8ejAJnypXjoElbd4hNhRbwSh0vLd9W9ASm4jj6f2uzT0W52DPLnALbNtvp69yxxfIE3tcwf6WLFZBJLJsgqQe3gLsmXIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231953; c=relaxed/simple;
-	bh=LVwGURChkwBiY5Cp8D81sB5+JCpkpaZuIaeZH9YkgHk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lRascUizKidCdAtTY55v9tBbfS8kNmPOwwGB6dlQoFFZDxj/ZDwxUxhSOlzg1H8pGYdt3LopNH4eI6M17/ZtmpSfamO4itJn6atCIOKCwx76Yc8Dp3KvdMbZvEd3DCCt0rUvgTYieM//RgvL2G2GtCxzdtWXFTr6UMFdBDu46j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=DW+0m7jR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750232185; c=relaxed/simple;
+	bh=fFFF4dxwGMNmW8OffYmfQMv312sXB2ojGR5vgt3qPPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iiB9pFSOHzr6LVxe+HIOFcqNvUqTXEBZuaWhExoDguUaUzHedvrux6jqazLpiiL5zmyRzRbIkBu8wTKEmi2/VM0hjjnYPfR1Qgh3/GKigL8IR/BpzOJaEvm0bQwx/SSlRMnFlD6xqLDGDRqnry4rSqQPVIhv0fAIUGmXadBciOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qre4+a4d; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="DW+0m7jR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515DBC4CEE7;
-	Wed, 18 Jun 2025 07:32:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750231952;
-	bh=LVwGURChkwBiY5Cp8D81sB5+JCpkpaZuIaeZH9YkgHk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DW+0m7jRs/ZwWQqb9KQfAt2SnRbzJ1aNs3noi5fYOAV7sLyIBY7seJdnXx5EhFXoZ
-	 GERSSH9N4LL0CmXRnhimezKbLk0cvKY/tN3/4CLcM3q5/Q9bzMmjkd1xtCPhE0rTKb
-	 PkedKCSa3CYpS32YUBRIADUXaB+wVbmP7rqqA568=
-Date: Wed, 18 Jun 2025 09:32:29 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: xiehongyu1@kylinos.cn
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	mathias.nyman@intel.com
-Subject: Re: [PATCH v1] xhci: Disable stream for xHC controller with
- XHCI_BROKEN_STREAMS
-Message-ID: <2025061838-grumbly-basically-d01e@gregkh>
-References: <20250618055133.62638-1-xiehongyu1@kylinos.cn>
- <2025061801-gosling-urchin-c2cb@gregkh>
- <b623ea20-84cd-414d-9b5a-f94d972f819f@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qre4+a4d"
+Message-ID: <77225fc9-845f-446a-9014-060b5cc73ba2@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750232179;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zdvl+pAO+bUqhZRChbu03wIqYl7v9j98HDmfPpTf/2g=;
+	b=Qre4+a4dbN6G6Iy3F6FbPzM/ia5gqX926MBxqQQCHJ6admzrUdUlTwZG0CBjOUuRy+T9oH
+	CVhP/OE1QFVMOTlZ7Ny6cXYYFAdsFcdvAL/9l0756dMgbj0Jyujm4NpLjKpuMZvYzFy8vT
+	EksZYi/NnYfwr7XxdlD0VWYuiUT4VNw=
+Date: Wed, 18 Jun 2025 00:36:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b623ea20-84cd-414d-9b5a-f94d972f819f@kylinos.cn>
+Subject: Re: [PATCH v2 09/12] RISC-V: KVM: Introduce struct kvm_gstage_mapping
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250613065743.737102-1-apatel@ventanamicro.com>
+ <20250613065743.737102-10-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250613065743.737102-10-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Jun 18, 2025 at 03:08:09PM +0800, xiehongyu1@kylinos.cn wrote:
-> From: Hongyu Xie
-> 
-> Hi Greg
 
-Please do not sent html email, the mailing lists reject it :(
-
-> 在 2025/6/18 14:03, Greg KH 写道:
-> 
->     On Wed, Jun 18, 2025 at 01:51:33PM +0800, xiehongyu1@kylinos.cn wrote:
-> 
->         From: Hongyu Xie <xiehongyu1@kylinos.cn>
-> 
->         Disable stream for platform xHC controller with broken stream.
-> 
->         Signed-off-by: Hongyu Xie
->         ---
->          drivers/usb/host/xhci-plat.c | 3 ++-
->          1 file changed, 2 insertions(+), 1 deletion(-)
-> 
->         diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
->         index 6dab142e72789..c79d5ed48a08b 100644
->         --- a/drivers/usb/host/xhci-plat.c
->         +++ b/drivers/usb/host/xhci-plat.c
->         @@ -328,7 +328,8 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
->                 }
-> 
->                 usb3_hcd = xhci_get_usb3_hcd(xhci);
->         -       if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >= 4)
->         +       if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >= 4 &&
->         +           !(xhci->quirks & XHCI_BROKEN_STREAMS))
->                         usb3_hcd->can_do_streams = 1;
-> 
->                 if (xhci->shared_hcd) {
->         --
->         2.25.1
-> 
-> 
-> 
->     Should this be backported to stable kernels?  if so, how far back?
-> 
-> At least 5.4 lts.
-
-Great, please mark it properly.
-
->     What commit id does this fix?  Or what hardware does this fix?
-> 
-> I'm not sure. can_do_streams was introduced by 14aec589327a6 ("storage: accept
-> some UAS devices if streams are unavailable") in Feb 11 20:36:04 2014
-> 
-> before XHCI_BROKEN_STREAMS was introduced by 8f873c1ff4ca0 ("xhci: Blacklist
-> using streams on the Etron EJ168 controller") in Fri Jul 25 22:01:18 2014.
-
-Pick the proper one as you obviously have hardware here that you have
-tested that needs this change, right?  :)
-
-thanks,
-
-greg k-h
+On 6/12/25 11:57 PM, Anup Patel wrote:
+> Introduce struct kvm_gstage_mapping which represents a g-stage
+> mapping at a particular g-stage page table level. Also, update
+> the kvm_riscv_gstage_map() to return the g-stage mapping upon
+> success.
+>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_mmu.h |  9 ++++-
+>   arch/riscv/kvm/mmu.c             | 58 ++++++++++++++++++--------------
+>   arch/riscv/kvm/vcpu_exit.c       |  3 +-
+>   3 files changed, 43 insertions(+), 27 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/kvm_mmu.h b/arch/riscv/include/asm/kvm_mmu.h
+> index 4e1654282ee4..91c11e692dc7 100644
+> --- a/arch/riscv/include/asm/kvm_mmu.h
+> +++ b/arch/riscv/include/asm/kvm_mmu.h
+> @@ -8,6 +8,12 @@
+>   
+>   #include <linux/kvm_types.h>
+>   
+> +struct kvm_gstage_mapping {
+> +	gpa_t addr;
+> +	pte_t pte;
+> +	u32 level;
+> +};
+> +
+>   int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
+>   			     phys_addr_t hpa, unsigned long size,
+>   			     bool writable, bool in_atomic);
+> @@ -15,7 +21,8 @@ void kvm_riscv_gstage_iounmap(struct kvm *kvm, gpa_t gpa,
+>   			      unsigned long size);
+>   int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
+>   			 struct kvm_memory_slot *memslot,
+> -			 gpa_t gpa, unsigned long hva, bool is_write);
+> +			 gpa_t gpa, unsigned long hva, bool is_write,
+> +			 struct kvm_gstage_mapping *out_map);
+>   int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
+>   void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
+>   void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
+> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+> index c1a3eb076df3..806614b3e46d 100644
+> --- a/arch/riscv/kvm/mmu.c
+> +++ b/arch/riscv/kvm/mmu.c
+> @@ -135,18 +135,18 @@ static void gstage_remote_tlb_flush(struct kvm *kvm, u32 level, gpa_t addr)
+>   	kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0, addr, BIT(order), order);
+>   }
+>   
+> -static int gstage_set_pte(struct kvm *kvm, u32 level,
+> -			   struct kvm_mmu_memory_cache *pcache,
+> -			   gpa_t addr, const pte_t *new_pte)
+> +static int gstage_set_pte(struct kvm *kvm,
+> +			  struct kvm_mmu_memory_cache *pcache,
+> +			  const struct kvm_gstage_mapping *map)
+>   {
+>   	u32 current_level = gstage_pgd_levels - 1;
+>   	pte_t *next_ptep = (pte_t *)kvm->arch.pgd;
+> -	pte_t *ptep = &next_ptep[gstage_pte_index(addr, current_level)];
+> +	pte_t *ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
+>   
+> -	if (current_level < level)
+> +	if (current_level < map->level)
+>   		return -EINVAL;
+>   
+> -	while (current_level != level) {
+> +	while (current_level != map->level) {
+>   		if (gstage_pte_leaf(ptep))
+>   			return -EEXIST;
+>   
+> @@ -165,13 +165,13 @@ static int gstage_set_pte(struct kvm *kvm, u32 level,
+>   		}
+>   
+>   		current_level--;
+> -		ptep = &next_ptep[gstage_pte_index(addr, current_level)];
+> +		ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
+>   	}
+>   
+> -	if (pte_val(*ptep) != pte_val(*new_pte)) {
+> -		set_pte(ptep, *new_pte);
+> +	if (pte_val(*ptep) != pte_val(map->pte)) {
+> +		set_pte(ptep, map->pte);
+>   		if (gstage_pte_leaf(ptep))
+> -			gstage_remote_tlb_flush(kvm, current_level, addr);
+> +			gstage_remote_tlb_flush(kvm, current_level, map->addr);
+>   	}
+>   
+>   	return 0;
+> @@ -181,14 +181,16 @@ static int gstage_map_page(struct kvm *kvm,
+>   			   struct kvm_mmu_memory_cache *pcache,
+>   			   gpa_t gpa, phys_addr_t hpa,
+>   			   unsigned long page_size,
+> -			   bool page_rdonly, bool page_exec)
+> +			   bool page_rdonly, bool page_exec,
+> +			   struct kvm_gstage_mapping *out_map)
+>   {
+> -	int ret;
+> -	u32 level = 0;
+> -	pte_t new_pte;
+>   	pgprot_t prot;
+> +	int ret;
+>   
+> -	ret = gstage_page_size_to_level(page_size, &level);
+> +	out_map->addr = gpa;
+> +	out_map->level = 0;
+> +
+> +	ret = gstage_page_size_to_level(page_size, &out_map->level);
+>   	if (ret)
+>   		return ret;
+>   
+> @@ -216,10 +218,10 @@ static int gstage_map_page(struct kvm *kvm,
+>   		else
+>   			prot = PAGE_WRITE;
+>   	}
+> -	new_pte = pfn_pte(PFN_DOWN(hpa), prot);
+> -	new_pte = pte_mkdirty(new_pte);
+> +	out_map->pte = pfn_pte(PFN_DOWN(hpa), prot);
+> +	out_map->pte = pte_mkdirty(out_map->pte);
+>   
+> -	return gstage_set_pte(kvm, level, pcache, gpa, &new_pte);
+> +	return gstage_set_pte(kvm, pcache, out_map);
+>   }
+>   
+>   enum gstage_op {
+> @@ -352,7 +354,6 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
+>   			     phys_addr_t hpa, unsigned long size,
+>   			     bool writable, bool in_atomic)
+>   {
+> -	pte_t pte;
+>   	int ret = 0;
+>   	unsigned long pfn;
+>   	phys_addr_t addr, end;
+> @@ -360,22 +361,25 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
+>   		.gfp_custom = (in_atomic) ? GFP_ATOMIC | __GFP_ACCOUNT : 0,
+>   		.gfp_zero = __GFP_ZERO,
+>   	};
+> +	struct kvm_gstage_mapping map;
+>   
+>   	end = (gpa + size + PAGE_SIZE - 1) & PAGE_MASK;
+>   	pfn = __phys_to_pfn(hpa);
+>   
+>   	for (addr = gpa; addr < end; addr += PAGE_SIZE) {
+> -		pte = pfn_pte(pfn, PAGE_KERNEL_IO);
+> +		map.addr = addr;
+> +		map.pte = pfn_pte(pfn, PAGE_KERNEL_IO);
+> +		map.level = 0;
+>   
+>   		if (!writable)
+> -			pte = pte_wrprotect(pte);
+> +			map.pte = pte_wrprotect(map.pte);
+>   
+>   		ret = kvm_mmu_topup_memory_cache(&pcache, gstage_pgd_levels);
+>   		if (ret)
+>   			goto out;
+>   
+>   		spin_lock(&kvm->mmu_lock);
+> -		ret = gstage_set_pte(kvm, 0, &pcache, addr, &pte);
+> +		ret = gstage_set_pte(kvm, &pcache, &map);
+>   		spin_unlock(&kvm->mmu_lock);
+>   		if (ret)
+>   			goto out;
+> @@ -593,7 +597,8 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>   
+>   int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
+>   			 struct kvm_memory_slot *memslot,
+> -			 gpa_t gpa, unsigned long hva, bool is_write)
+> +			 gpa_t gpa, unsigned long hva, bool is_write,
+> +			 struct kvm_gstage_mapping *out_map)
+>   {
+>   	int ret;
+>   	kvm_pfn_t hfn;
+> @@ -608,6 +613,9 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
+>   	unsigned long vma_pagesize, mmu_seq;
+>   	struct page *page;
+>   
+> +	/* Setup initial state of output mapping */
+> +	memset(out_map, 0, sizeof(*out_map));
+> +
+>   	/* We need minimum second+third level pages */
+>   	ret = kvm_mmu_topup_memory_cache(pcache, gstage_pgd_levels);
+>   	if (ret) {
+> @@ -677,10 +685,10 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
+>   	if (writable) {
+>   		mark_page_dirty(kvm, gfn);
+>   		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
+> -				      vma_pagesize, false, true);
+> +				      vma_pagesize, false, true, out_map);
+>   	} else {
+>   		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
+> -				      vma_pagesize, true, true);
+> +				      vma_pagesize, true, true, out_map);
+>   	}
+>   
+>   	if (ret)
+> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
+> index 965df528de90..6b4694bc07ea 100644
+> --- a/arch/riscv/kvm/vcpu_exit.c
+> +++ b/arch/riscv/kvm/vcpu_exit.c
+> @@ -15,6 +15,7 @@
+>   static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
+>   			     struct kvm_cpu_trap *trap)
+>   {
+> +	struct kvm_gstage_mapping host_map;
+>   	struct kvm_memory_slot *memslot;
+>   	unsigned long hva, fault_addr;
+>   	bool writable;
+> @@ -43,7 +44,7 @@ static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
+>   	}
+>   
+>   	ret = kvm_riscv_gstage_map(vcpu, memslot, fault_addr, hva,
+> -		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false);
+> +		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false, &host_map);
+>   	if (ret < 0)
+>   		return ret;
+>   
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
