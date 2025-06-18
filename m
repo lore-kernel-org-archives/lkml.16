@@ -1,241 +1,107 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D0D27E7EF;
-	Wed, 18 Jun 2025 07:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C8C1EF389;
+	Wed, 18 Jun 2025 07:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750232628; cv=none; b=bGI9QvjKwLKKiJBkKinujeNElArmr41dKDNO9SB2ndCcZ2jwuNIKqlD3ofPPAHlixaBDQ3fwV/Jz1Vc6QqNUOTbThLgICmfMh6fSzRO/f9WMhrq/BNyTW6KpDKb4cI8wxWNBiC7wP0QNKhG7aRH56CmMH6aGgRoe35JxL+cIBrA=
+	t=1750232699; cv=none; b=KEnptIqutrsflHhQKs8OLk+dMZJ+yx6v7GMQVaXS6pcjhFY11xJP1UqLOhcbm1C2cF0pxQBYEzGvV4k/AP3s+TqdL+yGuoxE2BSU6a1er9aXNu5YI9jY7QGwYntLZxKLa0NJ7+/VBokg15upbIj580VvIZN9T8sJuwiUJuio6z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750232628; c=relaxed/simple;
-	bh=+tSB1MfVCA6a4XIVYMAt8jv2Wa57wse7PxlEPUqmfsA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Uz7LtTO2hl710vMInvqBm25Ffl5Iv3wYSz+uwGtMXtXfa8z1HEuIRwI7ZUrdRXqzsf/LZ17ELDOppOIssMSdHmeVdA92dIvgXTKiuO3tx/Q3esEprXoQLbqnP5lQkdy9VBHL2m6ieYEgRRdBuZQ0uxYJZ9VEHn+9/6zb6FLDPUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ByvjSmHr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hBn4E7OK; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750232699; c=relaxed/simple;
+	bh=FFNidNQVJhVMPvZDCBwpffmyOW0CnVZwvZqZUZahEbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mpHYQ9rVYF4z4I5oQnkl2wtKItedi+2vSCRIQrM1EPhu8VTdEozXNZaT2i+6Y+AVbNv1inQy5MNuZlTkLhAb83NQKwy4V+ECb3dIOGn2hCJCxzchKwSLqC3X8XietRfVnwsdgH0/bwUkmg84QiWicqLxJKY1RVK3PoW6KG/9qSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ygjFBizO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ByvjSmHr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hBn4E7OK"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750232625;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=N6HHsAcHH91WesaqxftqeEGzD1inildG7/10cPoKGig=;
-	b=ByvjSmHrKk4dfqsi3VrV69fsQVRYKp3ff39Pj8B1VIEgaNGjDIomPutvBZn5V0gVRfGzqZ
-	36jtwKb0c5dMcLMIAKxjgHACt/TzJDnOT7F8s+RZMzdgKAqMKcdqeklGPQM/ccF9GTzxac
-	C9MLIeN4rqKfyJXNJ5/l8fAeU9zxUzJmtI568xFQKtRAKKEJZqxn7qKPXcGURYKN124C4s
-	4UW0a2vlMZtvn/I/NU8sfilfN7lMoPsESQgQUlrXbV16jMk4vAHbb9Ynaev2YoXLonNDGD
-	xnxBQ2Mnv5EJWUqleB5vLxUM1A/xIuly9SayUoltJT36Z6q5ntAuzMZf80E9LA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750232625;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=N6HHsAcHH91WesaqxftqeEGzD1inildG7/10cPoKGig=;
-	b=hBn4E7OKpJFa3DMnsx2hN8c1xNBYCRz1A9VA0/7Ng6oj00HFbbloEGN6hd6JpWaXbgMcEc
-	8L1SnLbyhHfEi+BA==
-Date: Wed, 18 Jun 2025 09:43:34 +0200
-Subject: [PATCH v2] dmaengine: stm32: Don't use %pK through printk
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ygjFBizO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A623CC4CEE7;
+	Wed, 18 Jun 2025 07:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750232699;
+	bh=FFNidNQVJhVMPvZDCBwpffmyOW0CnVZwvZqZUZahEbc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ygjFBizOCM1fgb9sj+yJSWW2zJ1e7Z4lQU3fMQjVZne+1nYCdeD4dfHmBD5b9lN1H
+	 Ld/WnlAt6sSO6i/HaxMIHPu21h8/t7Zn8jU45pkTl3CMFML+o/pplBptXsjRMS+qO1
+	 1mDvLWLSeIJ0NA0ok9J7U3TalsTn+zTDDBAD0LEk=
+Date: Wed, 18 Jun 2025 09:44:56 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Vincent Cuissard <cuissard@marvell.com>,
+	Samuel Ortiz <sameo@linux.intel.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] NFC: nci: uart: Set tty->disc_data only in success path
+Message-ID: <2025061838-frustrate-operative-bd34@gregkh>
+References: <20250618073649.25049-2-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250618-restricted-pointers-dma-v2-1-bc39dafc201d@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIACVuUmgC/3WNQQ6CMBBFr2Jm7Zi2oIgr72FYFDrIJNqSaSUYw
- t2tJC5dvpf89xeIJEwRLrsFhCaOHHwGs99BN1h/J2SXGYwyR1WqEoViEu4SORwD+0QS0T0tmrr
- rz0VttVUt5PUo1PO8lW9N5oFjCvLejib9tb9m9bc5adTYnnTlnCJTF/b6YP9KEjzPB0fQrOv6A
- WwgUFXCAAAA
-X-Change-ID: 20250404-restricted-pointers-dma-29cf839a1a0b
-To: =?utf-8?q?Am=C3=A9lie_Delaunay?= <amelie.delaunay@foss.st.com>, 
- Vinod Koul <vkoul@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: dmaengine@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750232624; l=6716;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=+tSB1MfVCA6a4XIVYMAt8jv2Wa57wse7PxlEPUqmfsA=;
- b=NPDQ8uznn3EHmpX3pZM6dfETaJzaZ9d7n8ZEZ9bpmZkiXdMKi+1oomrRNLsXOfBv6QMAdcA8W
- Yvk8zhChFSjD5FAVSWc5hfgQ0L+fQXZOSrBqibhvpzqSBpkoqgGJG3F
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618073649.25049-2-krzysztof.kozlowski@linaro.org>
 
-In the past %pK was preferable to %p as it would not leak raw pointer
-values into the kernel log.
-Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
-the regular %p has been improved to avoid this issue.
-Furthermore, restricted pointers ("%pK") were never meant to be used
-through printk(). They can still unintentionally leak raw pointers or
-acquire sleeping locks in atomic contexts.
+On Wed, Jun 18, 2025 at 09:36:50AM +0200, Krzysztof Kozlowski wrote:
+> Setting tty->disc_data before opening the NCI device means we need to
+> clean it up on error paths.  This also opens some short window if device
+> starts sending data, even before NCIUARTSETDRIVER IOCTL succeeded
+> (broken hardware?).  Close the window by exposing tty->disc_data only on
+> the success path, when opening of the NCI device and try_module_get()
+> succeeds.
+> 
+> The code differs in error path in one aspect: tty->disc_data won't be
+> ever assigned thus NULL-ified.  This however should not be relevant
+> difference, because of "tty->disc_data=NULL" in nci_uart_tty_open().
+> 
+> Cc: Greg KH <gregkh@linuxfoundation.org>
+> Cc: Linus Torvalds <torvalds@linuxfoundation.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Fixes: 9961127d4bce ("NFC: nci: add generic uart support")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  net/nfc/nci/uart.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/nfc/nci/uart.c b/net/nfc/nci/uart.c
+> index ed1508a9e093..aab107727f18 100644
+> --- a/net/nfc/nci/uart.c
+> +++ b/net/nfc/nci/uart.c
+> @@ -119,22 +119,22 @@ static int nci_uart_set_driver(struct tty_struct *tty, unsigned int driver)
+>  
+>  	memcpy(nu, nci_uart_drivers[driver], sizeof(struct nci_uart));
+>  	nu->tty = tty;
+> -	tty->disc_data = nu;
+>  	skb_queue_head_init(&nu->tx_q);
+>  	INIT_WORK(&nu->write_work, nci_uart_write_work);
+>  	spin_lock_init(&nu->rx_lock);
+>  
+>  	ret = nu->ops.open(nu);
+>  	if (ret) {
+> -		tty->disc_data = NULL;
+>  		kfree(nu);
+> +		return ret;
+>  	} else if (!try_module_get(nu->owner)) {
+>  		nu->ops.close(nu);
+> -		tty->disc_data = NULL;
+>  		kfree(nu);
+>  		return -ENOENT;
+>  	}
+> -	return ret;
+> +	tty->disc_data = nu;
+> +
+> +	return 0;
+>  }
 
-Switch to the regular pointer formatting which is safer and
-easier to reason about.
+Looks good, thanks for cleaning this up:
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
----
-Changes in v2:
-- Rebase onto 6.16-rc
-- Pick up review from Amelie
-- Fix typo in commit message
-- Drop inapplicable mention of seq_file from commit message
-- Link to v1: https://lore.kernel.org/r/20250407-restricted-pointers-dma-v1-1-b617dd0e293a@linutronix.de
----
- drivers/dma/stm32/stm32-dma.c  | 10 +++++-----
- drivers/dma/stm32/stm32-dma3.c | 10 +++++-----
- drivers/dma/stm32/stm32-mdma.c |  8 ++++----
- 3 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/dma/stm32/stm32-dma.c b/drivers/dma/stm32/stm32-dma.c
-index 917f8e9223739af853e492d97cecac0e95e0aea3..ee9246c6888ffde2d416270f25890c04c72daff7 100644
---- a/drivers/dma/stm32/stm32-dma.c
-+++ b/drivers/dma/stm32/stm32-dma.c
-@@ -613,7 +613,7 @@ static void stm32_dma_start_transfer(struct stm32_dma_chan *chan)
- 	reg->dma_scr |= STM32_DMA_SCR_EN;
- 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), reg->dma_scr);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static void stm32_dma_configure_next_sg(struct stm32_dma_chan *chan)
-@@ -676,7 +676,7 @@ static void stm32_dma_handle_chan_paused(struct stm32_dma_chan *chan)
- 
- 	chan->status = DMA_PAUSED;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
- }
- 
- static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
-@@ -728,7 +728,7 @@ static void stm32_dma_post_resume_reconfigure(struct stm32_dma_chan *chan)
- 	dma_scr |= STM32_DMA_SCR_EN;
- 	stm32_dma_write(dmadev, STM32_DMA_SCR(chan->id), dma_scr);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: reconfigured after pause/resume\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: reconfigured after pause/resume\n", &chan->vchan);
- }
- 
- static void stm32_dma_handle_chan_done(struct stm32_dma_chan *chan, u32 scr)
-@@ -820,7 +820,7 @@ static void stm32_dma_issue_pending(struct dma_chan *c)
- 
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 	if (vchan_issue_pending(&chan->vchan) && !chan->desc && !chan->busy) {
--		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-+		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
- 		stm32_dma_start_transfer(chan);
- 
- 	}
-@@ -922,7 +922,7 @@ static int stm32_dma_resume(struct dma_chan *c)
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
- 
- 	return 0;
- }
-diff --git a/drivers/dma/stm32/stm32-dma3.c b/drivers/dma/stm32/stm32-dma3.c
-index 0c6c4258b19561c94f1c68f26ade16b82660ebe6..50e7106c5cb73394c1de52ad5f571f6db63750e6 100644
---- a/drivers/dma/stm32/stm32-dma3.c
-+++ b/drivers/dma/stm32/stm32-dma3.c
-@@ -801,7 +801,7 @@ static void stm32_dma3_chan_start(struct stm32_dma3_chan *chan)
- 
- 	chan->dma_status = DMA_IN_PROGRESS;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static int stm32_dma3_chan_suspend(struct stm32_dma3_chan *chan, bool susp)
-@@ -1452,7 +1452,7 @@ static int stm32_dma3_pause(struct dma_chan *c)
- 
- 	chan->dma_status = DMA_PAUSED;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: paused\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: paused\n", &chan->vchan);
- 
- 	return 0;
- }
-@@ -1465,7 +1465,7 @@ static int stm32_dma3_resume(struct dma_chan *c)
- 
- 	chan->dma_status = DMA_IN_PROGRESS;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: resumed\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: resumed\n", &chan->vchan);
- 
- 	return 0;
- }
-@@ -1490,7 +1490,7 @@ static int stm32_dma3_terminate_all(struct dma_chan *c)
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 	vchan_dma_desc_free_list(&chan->vchan, &head);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: terminated\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: terminated\n", &chan->vchan);
- 
- 	return 0;
- }
-@@ -1543,7 +1543,7 @@ static void stm32_dma3_issue_pending(struct dma_chan *c)
- 	spin_lock_irqsave(&chan->vchan.lock, flags);
- 
- 	if (vchan_issue_pending(&chan->vchan) && !chan->swdesc) {
--		dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-+		dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
- 		stm32_dma3_chan_start(chan);
- 	}
- 
-diff --git a/drivers/dma/stm32/stm32-mdma.c b/drivers/dma/stm32/stm32-mdma.c
-index e6d525901de7ecf822d218b87b95aba6bbf0a3ef..080c1c725216cb627675c372591b4c0c227c3cea 100644
---- a/drivers/dma/stm32/stm32-mdma.c
-+++ b/drivers/dma/stm32/stm32-mdma.c
-@@ -1187,7 +1187,7 @@ static void stm32_mdma_start_transfer(struct stm32_mdma_chan *chan)
- 
- 	chan->busy = true;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: started\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: started\n", &chan->vchan);
- }
- 
- static void stm32_mdma_issue_pending(struct dma_chan *c)
-@@ -1200,7 +1200,7 @@ static void stm32_mdma_issue_pending(struct dma_chan *c)
- 	if (!vchan_issue_pending(&chan->vchan))
- 		goto end;
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: issued\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: issued\n", &chan->vchan);
- 
- 	if (!chan->desc && !chan->busy)
- 		stm32_mdma_start_transfer(chan);
-@@ -1220,7 +1220,7 @@ static int stm32_mdma_pause(struct dma_chan *c)
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
- 	if (!ret)
--		dev_dbg(chan2dev(chan), "vchan %pK: pause\n", &chan->vchan);
-+		dev_dbg(chan2dev(chan), "vchan %p: pause\n", &chan->vchan);
- 
- 	return ret;
- }
-@@ -1261,7 +1261,7 @@ static int stm32_mdma_resume(struct dma_chan *c)
- 
- 	spin_unlock_irqrestore(&chan->vchan.lock, flags);
- 
--	dev_dbg(chan2dev(chan), "vchan %pK: resume\n", &chan->vchan);
-+	dev_dbg(chan2dev(chan), "vchan %p: resume\n", &chan->vchan);
- 
- 	return 0;
- }
-
----
-base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-change-id: 20250404-restricted-pointers-dma-29cf839a1a0b
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
