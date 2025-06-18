@@ -1,118 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D653335963;
-	Wed, 18 Jun 2025 08:48:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC99C277804
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236530; cv=none; b=VR8z7SeSj8Bk4Srob+ffpcoys7SUB78s5gkGUlMwl8eMwCn8ohm4T5R2oAiKZqSmuWlsVzbk+XkER2P3KsmLqgPwu5zvyFTIp+HKHRJYxvtsX7LZ8qWAGoujr184lArl52wsvAfLAo6xWEiNachX2J0dweJpb2IdgMDCWsdcI6M=
+	t=1750236602; cv=none; b=A9TaDn8k/FRwmsMgA09HZr1YSnSA6WPktiWZU1YOQZ78MsJ3ntllsN9djagExC4xcuaaU/TXvOFfOrLgGOPh1KKGSmGtI4GiytwJmn7uyU6CbpjpIHzpADuKIxXY0Gq2ajfg6sOl0HF7+EEf+vOm7f8Fy/CaQvqvDWkrsfXRKM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236530; c=relaxed/simple;
-	bh=UQjSzVtLoaHKumyxqYKbKMDxrqyDdXy7ILPUN8aigtU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ka6ELEc+LwHiYq6OkWglYYlIvZkBooZE3h9zYPdXil9atXvhn/Pgnk7l08LeTNW169gcNb/neB9/ODqRCn2RSsr34FfCczAv5yD+Jx4N1wXInhgP4ECk9uE8AxIvm4y5tPo0PL0aeFHuFwyDqb6XGLZx8TKTRfEueSnS2qBvTCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kgh05gcO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750236602; c=relaxed/simple;
+	bh=xJn9zrKHfDjWUf9jAgV97tN+LsTvZhwwZYeupEv4f3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TLSbnLvaO2b16M6NP0J8DN9iSMj6AyQ59gHqsaEoIXO73k050evdFHPGz4slVXilbZ9eEW+DB1EXuuD43cZdUU5vrI72y/GS9T0d4eQWZxNRZXwxJP3zhzc/eOFdddTsAhbu6VuKRn3DrF4CAdGUgtHQmZXJd++nY8lXERj0sLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=niWXb23o; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kgh05gcO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9D66C4CEE7;
-	Wed, 18 Jun 2025 08:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750236530;
-	bh=UQjSzVtLoaHKumyxqYKbKMDxrqyDdXy7ILPUN8aigtU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kgh05gcOApBTVoxIo/EK/tZfUCo0TL+wtYxCMWvxdxxAIowTuuY49AauX1wDXC0rU
-	 0VG0mHMxOmqpyIU8ffAQwbtbebP0Opxwqi2fvSu7qfINpEAMXQRpK9a3yGRasKv6Z6
-	 bATuduzRAbu6WGz584Cyb1NI/ldGM0s31bufpB1soY54q6rUJ0vWMGWYF2wxhnvx/5
-	 agxPPfJ9NaBMnZh4ZLARO/wxQXxC5jUqKawqwJeIv9YKkm7zN1Zjz+0elHWBKHTfEB
-	 B5B5GYNsE6O2QdVhWn0qnhETnsrgV62S0XVNoYz55oK2ZuY8nIG1gt4Py8GCM7u495
-	 Tal6pTDxGFR2A==
-Date: Wed, 18 Jun 2025 10:48:47 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Hans Verkuil <hans@jjverkuil.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Hans Verkuil <hverkuil@xs4all.nl>, Mats Randgaard <matrandg@cisco.com>, 
-	Alain Volmat <alain.volmat@foss.st.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Dave Stevenson <dave.stevenson@raspberrypi.com>
-Subject: Re: [PATCH 0/4] media: Fix CSI2 RGB vs BGR pixel order
-Message-ID: <20250618-qualified-moth-of-infinity-cc6b0c@houat>
-References: <20250612-csi-bgr-rgb-v1-0-dc8a309118f8@kernel.org>
- <2f0028ac-e94f-4f35-afda-8b53ce231b3f@jjverkuil.nl>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="niWXb23o"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I8niJH252504;
+	Wed, 18 Jun 2025 03:49:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750236584;
+	bh=Q2xB7ywuamf1tnr/sOCDBvt3pfiU9lnIYo04w0xjJr8=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=niWXb23orKAWNy+o4VK/GEIv/nVDqnPL7kcW0H9VyEl6GbPYdxPTa3zNiqIXbh6zm
+	 GZN+LqIF6hdkKiluMOP1srCqv1ggKX69ZkvYPp1340bg6zqTTUQjJaMze4wAtXfxiF
+	 XJp2qAKUrCUInAfh7LFuJtOio1eanjjS5hP/trqY=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I8nhr12769042
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 18 Jun 2025 03:49:43 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
+ Jun 2025 03:49:42 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 18 Jun 2025 03:49:42 -0500
+Received: from [172.24.227.143] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I8ndJ43422402;
+	Wed, 18 Jun 2025 03:49:40 -0500
+Message-ID: <0d72844f-fdc3-4fcb-8590-ee8512179d8f@ti.com>
+Date: Wed, 18 Jun 2025 14:19:39 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="rblgwjjfdwfp2nij"
-Content-Disposition: inline
-In-Reply-To: <2f0028ac-e94f-4f35-afda-8b53ce231b3f@jjverkuil.nl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/tidss: Decouple max_pclk from tidss feats to remove
+ clock dependency
+To: Maxime Ripard <mripard@kernel.org>
+CC: <jyri.sarha@iki.fi>, <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
+        <tomi.valkeinen@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>
+References: <20250618075804.139844-1-j-choudhary@ti.com>
+ <20250618-groovy-stereotyped-aardwolf-27bb40@houat>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <20250618-groovy-stereotyped-aardwolf-27bb40@houat>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+
+Hello Maxime,
+
+On 18/06/25 14:02, Maxime Ripard wrote:
+> Hi,
+> 
+> On Wed, Jun 18, 2025 at 01:28:04PM +0530, Jayesh Choudhary wrote:
+>> TIDSS hardware by itself does not have variable max_pclk for each VP.
+>> Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
+>> devices uses "ultra-light" version where each VP supports a max of
+>> 300MHz whereas J7* devices uses TIDSS where all VP can support a
+>> max pclk of 600MHz.
+>> The limitation that has been modeled till now comes from the clock
+>> (PLL can only be programmed to a particular max value). Due to this
+>> we end up using different compatible for each SoC when the clocking
+>> architecture changes for VPs, even when the hardware is essentially
+>> the same.
+>> max_pclk cannot be entirely removed since the display controller
+>> should tell if a particular mode clock can be supported or not in crtc's
+>> "mode_valid()" call. So remove "max_pclk_khz" from the static display
+>> feat and add it to "tidss_device" structure which would be modified in
+>> runtime. In mode_valid() call, check if a best frequency match for mode
+>> clock can be found or not using "clk_round_rate()". Based on that,
+>> propagate "max_pclk" and check max_clk again only if the requested mode
+>> clock is greater than saved value. (As the preferred display mode is
+>> usually the max resolution, driver ends up checking the maximum clock
+>> the first time itself which is used in subsequent checks)
+>> Since TIDSS display controller provides clock tolerance of 5%, we use
+>> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
+>> before it is called.
+>>
+>> This will make the existing compatibles reusable.
+>>
+>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> 
+> We've generally used 0.5% in drivers with similar requirements, because
+> that's what VESA requires for some mode generation techniques (and
+> what's required by HDMI too iirc).
+> 
+> We've never had to revisit it on any driver afaik, so unless you have a
+> specific reason to do so, I'd really prefer if you stuck with that as
+> well.
+
+I agree with 0.5% but I was just trying to keep it in sync with existing
+tidss tolerance.
+
+In tidss_crtc.c when we set the clk rate in crtc_atomic_enable() using
+dispc_vp_set_clk_rate(), we are giving it 5% tolerance:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/gpu/drm/tidss/tidss_dispc.c#n1446
+
+So I kept it 5%.
+
+Warm Regards,
+Jayesh
 
 
---rblgwjjfdwfp2nij
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 0/4] media: Fix CSI2 RGB vs BGR pixel order
-MIME-Version: 1.0
-
-Hi Hans,
-
-On Mon, Jun 16, 2025 at 10:02:57AM +0200, Hans Verkuil wrote:
-> On 12/06/2025 14:53, Maxime Ripard wrote:
-> > Here's an(other [1]) attempt at fixing the current mess due to the
-> > opposite meaning of what v4l2 and the MIPI-CSI2 spec call "RGB". By v4l2
-> > nomenclature, the format CSI calls RGB is actually BGR.
-> >=20
-> > Unfortunately, a handful of CSI transceivers report through RGB media
-> > bus pixel code, which is then understood as V4L2_PIX_FMT_RGB24 by CSI
-> > receivers.
-> >=20
-> > This is made somewhat worse the fact that media bus codes have been made
-> > mostly with parallel busses in mind, and thus the order of pixels wasn't
-> > clearly defined anywhere.
-> >=20
-> > So the v4l2 vs CSI mismatch was confusing (but there's nothing we can do
-> > about it), but the doc didn't really make an attempt at clearing it up
-> > either.
-> >=20
-> > We did have a convention so far though, that about half the affected
-> > drivers were following.=20
-> >=20
-> > This series improves the doc, adds the missing media bus codes, and
-> > converts the transceiver drivers to the rightful media bus format.
-> >=20
-> > We'll also need that series [2] from Laurent to fix all the affected
-> > transceivers.=20
-> >=20
-> > Let me know what you think,
-> > Maxime
-> >=20
-> > 1: https://lore.kernel.org/r/20250606-rpi-unicam-rgb-bgr-fix-v1-1-9930b=
-963f3eb@kernel.org
-> > 2: https://lore.kernel.org/r/20250611181528.19542-1-laurent.pinchart@id=
-easonboard.com
->=20
-> This link seems to be wrong. Can you give the correct URL?
-
-Yeah, sorry about that. Laurent sent a series to a bunch of us after
-discussing it in private, but I assumed it was public.
-
-Hopefully he'll post it soon :)
-
-Maxime
-
---rblgwjjfdwfp2nij
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFJ9bgAKCRAnX84Zoj2+
-doZhAYC7fDzn6bWtwK8cC/heltloOVPu6JB+CeFa7QrnvQ76kwkPNhUbnIKmpNTQ
-daQtT0cBfjMhlm0valtlWf/CaTo0b1wQ7mPmfrt407r7jVuCWOnBd7mpx8Wkuo/g
-GTQoVzAisQ==
-=Fj+o
------END PGP SIGNATURE-----
-
---rblgwjjfdwfp2nij--
+> 
+> Maxime
