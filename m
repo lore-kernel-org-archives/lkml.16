@@ -1,112 +1,82 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4112EAB93;
-	Wed, 18 Jun 2025 14:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4231C284662;
+	Wed, 18 Jun 2025 14:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750255289; cv=none; b=T4BelQy/KP15ruFxEgxyEf7dRY6ioXI5HgAd69CYcqERqyHC201FKEg5+n3A5EIS0lAG3gKqs/sgAfMp7vLGOQBlnLD74EXbyaNE15QiZbmt+Q/Js8vKaDef3zd0mJl5CJ1YcFrhyMvj6ouX/jxtWlLFU54cA1IwrI9CGI5AiGk=
+	t=1750255348; cv=none; b=uqhIHLYjLKdYulY7YN/kfUlKOYKhgNOD6qibzje4e2+C8gr8+mvQNLPbRipv3ozNXAI2yyyBuP1so/xfyTfIbWH6OfJrMZNhOTug2F+PhaKTBqWGU0UmP0q7dlX8qkiZlg8Stjnu/DP+rr/MOlJIGIJ70mK2TLjtprH6rkLsbt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750255289; c=relaxed/simple;
-	bh=Z8+uBazMTiqM7163DoyZQ8O/lT8MkVC1n+uVh4mn4fU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZzmTPSze9yzLzaWiUa0rHB81acngKNBMzd915C49gMScXye14/l4ToHyNR+6NKUhYqpi1cyLZ2j+b0wUryi/3Gu3h/0ah5HMLf4MqnPD0yIh9TJY6NHM4Ja74gnNUe5NHacveytmWoNxJcIHjmQGL2RgCmwuDW1UqfNRqT104Yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TOv45vri; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750255348; c=relaxed/simple;
+	bh=asOR/3iEfhau6MrfKDoTqszE6kJktjHuGUyDhZZYKR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rXm86d8VFVyTu9e6D94U6qFTGfKgr1Ai7hb1zfmErWMx+/Li2I7nRvmQy9wPJndM5jupxdleQnYoBrR4hWhnzQHN1PTC9jucK7gU3ZA1LG9MzPuKtSfdVa1hSTC0GI8HQR2zRgyT8Vdg1ZoYalJzV7JO77T1gt8/AgcsGyMfPik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtasbFNe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TOv45vri"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a35c894313so7809312f8f.2;
-        Wed, 18 Jun 2025 07:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750255286; x=1750860086; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z8+uBazMTiqM7163DoyZQ8O/lT8MkVC1n+uVh4mn4fU=;
-        b=TOv45vriWRuZ1xc69rEoxsyctFzAdWUHHbG8SsovZwzu41nRHowzCLO8DUYqL7ljbU
-         xQXXcJJG4YsRVbTg6wok1/0IxIAXNVjCERIqhw5VDBMsy1JozGuMPgI13P1IKekv1x/P
-         PlQqG0TxEoZgsTBFqVEXsc0ByI6OVZ+8yBAZgw1yeEQfbhynoRnLlrS/8fELtlcSV0+3
-         dv9CFez+kOf6RAYrEVzB646fy7mn4HX4vFd+dQW1CDv//k5N0rUzyHlRN4i7Gu4hr9CW
-         cLEEXdFHDJk5i3MjcaJ2jcZY68/oQmbArSUUO9MyqsbAPFvGjCi83GkzJps8Ar0M0/uO
-         Axqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750255286; x=1750860086;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z8+uBazMTiqM7163DoyZQ8O/lT8MkVC1n+uVh4mn4fU=;
-        b=mHtO5bHau3HuBEfbiQAW2LivyMliSxVcuxAXDR3mvrUKMj2vKemMZvncMznP0NXiMU
-         IQRY/HP+Wjd3TeuXErAvWkFzFCKpmX+dIgZsuepU0YxcvKdVxl0DzE90PtDMP+Zc2gyN
-         4+i/9oy99ZH46A4X6JIjiKa41Dk4Dlob0qx9JCM3PmsEEX/T/R1YGnhSlxZvY4jsxgiI
-         9NjKkLOikW3OaaXIRuOgcU9CGV+g4U0RyW3i8NIOzKsv9IH1yFMT6K+JS2Z6Bl5yERYf
-         5weiwhU6NHclHLyfCG3UfJcwHp6AuxBmGh/FxElNt7AaTny1omgR7yQIxmq5MlC4LmLf
-         HP3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVKc/7Gp7OshgrdX5+7coDlMO2F0KInYQxL7SwpvaWdWKr/cAmPHiIzAZ61VsaHufrT/Hs=@vger.kernel.org, AJvYcCVhIf7A/LxAsnn4BKZiMu0P+s1YHK9CFD1q9uGWTYjhcTjtqFtIiZqav1pOPCaSkOlNgvHK90xAujkI5/du@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYIGqdsmPE3OK8yRvgKmQA7CcbptrF58YqyuD5SWusc9BC1A73
-	830F0HsQNZGsSTpDXya3ykwMl6V6lbdWOBkj9vCKF/Gwj0C//NTPheVEuELvckq1c6kH4iGC8P6
-	368/cEGgQjshl71dwrcnWrtWkdYrb/RI6QA==
-X-Gm-Gg: ASbGncskSx6+67agdiBA7k8OkMxSgV86hSfG8bbuVpIrgsqH/bJbHljX/RoeoIQXaJq
-	Z9EU4Tud8AyAiinzjTvog2xcWyEdHuGesyfHPTG3wk0l0yUaswcg72dpR+rvi9XSZ6/CnvWJBAj
-	ly1Zi21k/ArS3pEkP7LVmIF3/VPaCeo79Lw3cg+7OgEi2nfMhTALVMAHCWpVfxHrW6uXiLTs7z
-X-Google-Smtp-Source: AGHT+IHDwJaTOJLspimMxjYpEaHaJDm13WmxfBmjnnwM+3kK2gKQwkuJWmgeVRSP53PAPrwR0SkhxpNBbqngMUrNyBk=
-X-Received: by 2002:a05:6000:4611:b0:3a4:edf6:566b with SMTP id
- ffacd0b85a97d-3a57238bb49mr11226092f8f.6.1750255285115; Wed, 18 Jun 2025
- 07:01:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtasbFNe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C9AC4CEEE;
+	Wed, 18 Jun 2025 14:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750255347;
+	bh=asOR/3iEfhau6MrfKDoTqszE6kJktjHuGUyDhZZYKR0=;
+	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=YtasbFNevI1ocnwsRxNWApoxe5yX7kFaq752PbGzjS5LTaNwK/L5ofbDhAOv+Pfi/
+	 OpjkSwHwoosHM5UDIQXEiH7CR7AFWbRFP2ZvO5gdj33REzjbX/bc5l3I8FtQnnWrCu
+	 6EvuTh7qkB/0N4HAgsgitwSneySV+9gYiAunVmQH2Zq0EAOyOSHjoqGvTlBYuKIuzG
+	 v+t8wYRisf36MAiuziLzth/ZlGCzCLSRt3jMG34EBZfYPUqV3aW7j3JM7dHq5D8xg0
+	 jSx9IA3fi9fU8CxnmVzMOfUFq7byjdpPHLxxDYQiU1qwHa0BJLlJWf4yIRMOL+yoJ8
+	 dRDrABXw6X5Ig==
+Message-ID: <ea71cdda-32ab-43c1-8135-25856e76dcf0@kernel.org>
+Date: Wed, 18 Jun 2025 16:02:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
- <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
- <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com> <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
-In-Reply-To: <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 18 Jun 2025 07:01:13 -0700
-X-Gm-Features: Ac12FXxXhvf_V7kl11PZ94uSwcYDO_Vrxg0ADofSFPu5IU8vm1Ap6Wuv8y5gCGQ
-Message-ID: <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
-Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
-To: Matt Fleming <matt@readmodwrite.com>
-Cc: Song Liu <song@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf <bpf@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
-	Matt Fleming <mfleming@cloudflare.com>, Jesper Dangaard Brouer <hawk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH v2 2/2] module: Avoid unnecessary return value
+ initialization in move_module()
+To: Petr Pavlu <petr.pavlu@suse.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>
+Cc: linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250618122730.51324-1-petr.pavlu@suse.com>
+ <20250618122730.51324-3-petr.pavlu@suse.com>
+Content-Language: en-US
+From: Daniel Gomez <da.gomez@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20250618122730.51324-3-petr.pavlu@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 5:29=E2=80=AFAM Matt Fleming <matt@readmodwrite.com=
-> wrote:
->
-> On Tue, Jun 17, 2025 at 4:55=E2=80=AFPM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Tue, Jun 17, 2025 at 2:43=E2=80=AFAM Matt Fleming <matt@readmodwrite=
-.com> wrote:
-> > >
-> >
-> > > soft lockup - CPU#41 stuck for 76s
-> >
-> > How many elements are in the trie that it takes 76 seconds??
->
-> We run our maps with potentially millions of entries, so it's the size
-> of the map plus the fact that kfree() does more work with KASAN that
-> triggers this for us.
->
-> > I feel the issue is different.
-> > It seems the trie_free() algorithm doesn't scale.
-> > Pls share a full reproducer.
->
-> Yes, the scalability of the algorithm is also an issue. Jesper (CC'd)
-> had some thoughts on this.
->
-> But regardless, it seems like a bad idea to have an unbounded loop
-> inside the kernel that processes user-controlled data.
+On 18/06/2025 14.26, Petr Pavlu wrote:
+> All error conditions in move_module() set the return value by updating the
+> ret variable. Therefore, it is not necessary to the initialize the variable
+> when declaring it.
+> 
+> Remove the unnecessary initialization.
+> 
+> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+> Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+> ---
+>  kernel/module/main.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 9ac994b2f354..7822b91fca6b 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -2696,9 +2696,8 @@ static int find_module_sections(struct module *mod, struct load_info *info)
+>  
+>  static int move_module(struct module *mod, struct load_info *info)
+>  {
+> -	int i;
+> +	int i, ret;
+>  	enum mod_mem_type t = MOD_MEM_NUM_TYPES;
+> -	int ret = -ENOMEM;
+>  	bool codetag_section_found = false;
+>  
+>  	for_each_mod_mem_type(type) {
 
-1M kfree should still be very fast even with kasan, lockdep, etc.
-76 seconds is an algorithm problem. Address the root cause.
+Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
