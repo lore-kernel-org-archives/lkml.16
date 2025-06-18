@@ -1,101 +1,97 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7752827FB30;
-	Wed, 18 Jun 2025 14:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BED2BD580;
+	Wed, 18 Jun 2025 14:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257131; cv=none; b=FBAfkKVMy8iqYtHtX2UdS3cw8UQ4pBL5osqghRWdVYNbCtWNK4Tp8BHIePYLALuy2BOzcrG7UIkq1D/n+Dd5hXGLM2BSzkryGYK84QACcoANuP84kL/YKbnCT7SijAF+VwYFMwlULaCbpHjdxa/M5V4uIXVfp6t5Tow7aqhJEv4=
+	t=1750257142; cv=none; b=ZYmgxnfq91bwAJae0/bmpCuBBDYY8P8EjZ57D64tdlzBjYNY3ob4te9lXysaAKDaF/JMdNLO47d3OXXI21v1rh7htWZVHA4wvm6j43O+W2I0mRKrbQmxy6Skq7qi9q2H4xlF9gFga0ct7xEWSo77hV4Pl8vUCr8ow0ZFjvUY7bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257131; c=relaxed/simple;
-	bh=cicdrtZh663PWbSEKE4hOM5LhEMjv/zDMK4ao90EPD4=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=BN3t894vEy+zDMcPx0GdSvWH5qHYUpRrYzBfYezEqDhCm7RfgffJQ2ydb4+LmO7Ux7/T/AEMNy7HYPJxNt+CxT4X6Gn3u/IE+cTISd11iLLenuqxvQEG9mo2JG87Ou1oPSg2fW4M6UJNxfRFe2ioXyah/G5tXHL9r2PGb6qPU6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=bfogrMgv; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750257142; c=relaxed/simple;
+	bh=V8eaORNjnFPC22A0/d3yLomnU28tvdggdXeDDIXrCKc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nMnLmKswrXKWGBgXq/TYGKVtLUbfBBQbBJ97seAO/YIOGKVBqja9jO8HYrtgGxsYBqbIE9LKRET+ixkwOKpYVBVW7OFl19CQ+rG0bssdRGxFUhhc0f0+Y1QJYLxlpRzmc3Isf3NIVOSa/BaSPBsGzKmNNniO+bLUWAIpOgurnTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YEGS72Q2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="bfogrMgv"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 1C8A325C7E;
-	Wed, 18 Jun 2025 16:32:08 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 47V5HVKOwdqE; Wed, 18 Jun 2025 16:32:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750257127; bh=cicdrtZh663PWbSEKE4hOM5LhEMjv/zDMK4ao90EPD4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=bfogrMgv7T1arQVWMn++RUlfeiHxF+VbYu+NGxeeHjNrZFMhUPNPgdxmExzqmxjps
-	 qguKkX+78TMTVDLiwMlg8YCtKV37LwBXZ29sjqAkTR6jyQpS92LfueOPPLKZBeUZp5
-	 +mhlnF+XkEqzwoIcqr4P1GkcMVYVhzl0hyFwmDZc/q7EQhgKkXCjljg6LifbEgLZLu
-	 wSSJOEmv2DctErS6/FY3ZDC8un0MLoF/yyE3xPGUFqhuDy+z3NJ2go6GLvFXqOVBo9
-	 Bbs8fyKx/DqU3jTpvwYVbo+Kx/da/ZOwZEdElCde/LRYHaxlNxe5IdCNM8aadeuABQ
-	 RGEAwDVjn+3/g==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YEGS72Q2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9B6BC4CEE7;
+	Wed, 18 Jun 2025 14:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750257141;
+	bh=V8eaORNjnFPC22A0/d3yLomnU28tvdggdXeDDIXrCKc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YEGS72Q2ZJzBOUIyajwfjpAIMWK/tyAVBLDjfrEllriKYZ6S4VKWDI4FB5Xc5OnIG
+	 Wm+U7ciGJk7nzNSRYWw90xmDkCln8Rw9r8fa1639pxhKb88b3KgBrL/pnycYEJW7f5
+	 mGZTkA4xGt1znr9lyeDCI/zUNJnd3YiTuuzFUyiLB4EjFtyebRJi2wL7Cd0FGMl9+p
+	 AaWcyzUSHIP17lPIetr9i/OMlpMYGNGYabYtyIMt4lglTrH9vFWNvCsXWLjqjEAgtr
+	 Ki0IJfvJazEEyUSJ+M80gc3Dd3bwf4EFrIZ1TTraOxWi1jUiqDgUfPVMRqtCqDx1mB
+	 JwAYteBlT8znA==
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-401c43671ecso432292b6e.0;
+        Wed, 18 Jun 2025 07:32:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVX5U94BMtTyOPgMxb1QbqcWSJtsBFviqQTsT+GsSZYKzLb2i7mTUeahS9Z2lXvy37iawI/DBwS0w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBhZtWlAAK5cJvEAV/gjRGohtYgs8/TP7tj0Ez8bX9MpgGiUv9
+	PyQIg4C1sMAjbAg9r6EniGCX5nY+u6TuMwoJt9C0U7Bt74zh6ZqoK1uQtm4t5y9XGkhQKSSnJSS
+	anDXTQHRWSlH/YvnJpfAVNFlTam1eRU0=
+X-Google-Smtp-Source: AGHT+IEMWQzU4qSxFGgnXR1oAO890etvB+SwwceD3DtIK7Rz0Kbb9cuKlsziJPU77G00CBYvKhFqYV9MGlTNLgJyvkI=
+X-Received: by 2002:a05:6808:219d:b0:408:fe75:419f with SMTP id
+ 5614622812f47-40aa50a1914mr1946169b6e.13.1750257141152; Wed, 18 Jun 2025
+ 07:32:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 18 Jun 2025 14:32:07 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: samsung: exynos-sysreg: add exynos7870
- sysregs
-In-Reply-To: <7bb375c8-1a43-40e2-891c-8815c9cc94ff@kernel.org>
-References: <20250612-exynos7870-drm-dts-v1-0-88c0779af6cb@disroot.org>
- <20250612-exynos7870-drm-dts-v1-1-88c0779af6cb@disroot.org>
- <7bb375c8-1a43-40e2-891c-8815c9cc94ff@kernel.org>
-Message-ID: <76df5b2d6b2c8de73519e1862e105c67@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
+In-Reply-To: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 18 Jun 2025 16:32:09 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
+X-Gm-Features: AX0GCFub_XQB-Nx6VCmcYgV4QdnK-y_zYRigJUBid2VEBPcrD3AXPutY_721zm8
+Message-ID: <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
+Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm <linux-pm@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, zhenglifeng1@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-06-18 09:46, Krzysztof Kozlowski wrote:
-> On 12/06/2025 17:23, Kaustabh Chakraborty wrote:
->> Add sysreg compatible strings for the Exynos7870 SoC. Two sysregs are
->> added, used for the SoC MIPI PHY's CSIS and DSIM blocks.
->> 
->> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
->> ---
->>  .../devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml      | 6 ++++++
->>  1 file changed, 6 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
->> index d27ed6c9d61ea9db77229eca60b6b9a0abc5d305..174bdb8ee932ff965de6fc17aef004a3cedffeb3 100644
->> --- a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
->> +++ b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
->> @@ -52,6 +52,12 @@ properties:
->>                - samsung,exynosautov9-sysreg
->>            - const: syscon
->>          deprecated: true
->> +      - items:
->> +          - enum:
->> +              - samsung,exynos7870-cam-sysreg
->> +              - samsung,exynos7870-disp-sysreg
->> +          - const: samsung,exynos7870-sysreg
-> 
-> 
-> Drop. These are not really compatible or your commit msg is incomplete.
-> Don't use deprecated syntax and backwards compatible solutions for new
-> hardware.
+On Mon, Jun 16, 2025 at 7:25=E2=80=AFPM Christian Loehle
+<christian.loehle@arm.com> wrote:
+>
+> The boost_enabled early return in policy_set_boost() caused
+> the boost disabled at initialization to not actually set the
+> initial policy->max, therefore effectively enabling boost while
+> it should have been enabled.
 
-Are you sure? The deprecated one is actually the item above. From what I
-understand, those are generic sysregs and don't mention their functions.
+Did you mean "disabled"?
 
-      - items:
-          - enum:
-              - samsung,exynos5433-sysreg
-              - samsung,exynos850-sysreg
-              - samsung,exynosautov9-sysreg
-          - const: syscon
-        deprecated: true
+It would be good to mention the failure scenario here too.
 
-> 
-> Best regards,
-> Krzysztof
+> Fixes: 27241c8b63bd ("cpufreq: Introduce policy_set_boost()")
+> Reported-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+> ---
+>  drivers/cpufreq/cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index d7426e1d8bdd..e85139bd0436 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -1630,7 +1630,7 @@ static int cpufreq_online(unsigned int cpu)
+>          */
+>         if (cpufreq_driver->set_boost && policy->boost_supported &&
+>             (new_policy || !cpufreq_boost_enabled())) {
+> -               ret =3D policy_set_boost(policy, cpufreq_boost_enabled())=
+;
+> +               ret =3D cpufreq_driver->set_boost(policy, cpufreq_boost_e=
+nabled());
+>                 if (ret) {
+>                         /* If the set_boost fails, the online operation i=
+s not affected */
+>                         pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__,=
+ policy->cpu,
+> --
+> 2.34.1
