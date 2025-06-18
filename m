@@ -1,160 +1,214 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6941E570B;
-	Wed, 18 Jun 2025 03:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6527B2F5335;
+	Wed, 18 Jun 2025 03:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750216659; cv=none; b=FmUgZ+NEja2PJhU5F1YZWlkalz67oY2IIebTr4u/gXD/4hVGRq1jRilDNsHj/Pmx+8fCa8dd5i7nUGlOkCIoaoiQCMuLLvgchDsKsqBCuFzc//DaUOMpk0hYvZzDbtUfdpoPzrBJUhudSXrsKaOahr0kCdIcKp0OhbOEC6w+rTk=
+	t=1750216832; cv=none; b=cmTGaH/VVBP6AIqrmR3IuWQLH+EYzU6gfmMpCuNPS750RRBLZkiD3k9VKpNI3Ol9W2Eors1GrVCWoI9hQSGvA+41983yoaWxxwhmce77y1oxT+vCWT0jW4uZVbeLmIvFZbtj9fhLfmRjsmR6/CBeXn8UBbwTb3zFw4GmEQrzixM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750216659; c=relaxed/simple;
-	bh=frXSwGyAwc4d5PustjEWkRKMKwS0wTKpGhI/9vpq8RY=;
+	s=arc-20240116; t=1750216832; c=relaxed/simple;
+	bh=6rJgoWt4G083fL/1cCEzBQ3/Id2/n618wiLRJIcRY+A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nU6d8uJZWfIyFDwxLqpqohxc1TN3wkBas/xwHdl4xGaOq1S7T+Ji5EH13gvBWeiqPgpPnaUFkDfjsKMfac4GSabDsCu3h2mhRi+vGDD58SeLb9l0yKagA7QCQMZf345MHh9bkIyv6jgz5zmN6btomHQlx3V0bA0hytfQdSag7Lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U6y93rDz; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version:Content-Type; b=Dwbe++TlZxTNxtgPIr7uFv0pqLg83ebYlvOO8znXrZEad02moq/199Oj31vBceA9JHLEDQER/sGHlK2yRjqLM98p0QOeV1Ep/lyFb+1GLYjwYy7ns1+MgKKfNkOsY5/4e9aLezEZSWg4z4DBx+PDJ80yt3Y8hBxAkSHAi3mB/9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eZ4+L12+; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6y93rDz"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-23602481460so63371835ad.0;
-        Tue, 17 Jun 2025 20:17:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750216657; x=1750821457; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AmGxDv3sNPfFZwxb3O8lpt0uVGYhHyGdSY0M4odFR0E=;
-        b=U6y93rDzn46lNezgRat+FonPqT7/eN7UIQ/0kehPUgsw0zoEJ+Gmb1BfBmN1NU32rA
-         cCDap6WxTFxX8wjE6gBGdoyZtILjJpmxlus3NUyxNXtPNByrl0Htw/cYpyaAReY8Muqv
-         F1kceEzpCPJuZxr93vvUKHosJj7bD+1cb+2lF1DALVeLkQBCZ8S/uBIBIBDpxPeF8QCd
-         Kt91k11DRsIeb33966iLbcla6k2OYnMJSaxCUpwUHdNpyZdTD3aLW41YN8PkbvvD+h5n
-         8Q4iv7pUvtF4jNofGYUlVwTlHInuXjbwoNP23X1cNKcryzDCr+rMyCItuAXe2D5CbV45
-         ef8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750216657; x=1750821457;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AmGxDv3sNPfFZwxb3O8lpt0uVGYhHyGdSY0M4odFR0E=;
-        b=SGCeFWLXwu4n+HnuCM1oVrSDEKkk1wNQ/k7YaWLNevJ8sx+F/SJnpAtgOopktpJgtv
-         LpfSeJiCj7SP3lxYZ3sI0z533h0jN6JiPuIxyTBvEn5aqV92ELe3ZB8l3UcNkiqLG65p
-         F7Z1RHO9bTnIGPUc1gnJgJOnOw+GjqZTjI6kNvUdWuUqJgsY5QCik0H/luFqq3VHsll0
-         6SBh0kVK74NYcGL//4pTm0ylA/buVEsagiORAr6MyMQp+i9QCtsIHwlDEvNtIhAZ/0s7
-         OJB7MxikNOtjLrbXjDYa9A2axRR1ok5efA8CdR97M4hEgphftXsp55EeP95VnE/Lvr5Q
-         K7HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW/AHwEgCmYqM1NuExrY50uieGWWHkykPJoG9zqGjHweuTwhSHg0j42FVruNXx/hx75k9LLLYBwIns=@vger.kernel.org, AJvYcCWG+yrNYsVUtTQhcg2QmIvnrO1NXHUGISlzx9+Kil7N7AjfR09XbKraNMLXA04Va2VBNGq3A+1zqTFyXgJd@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUH/I3kz864h9mLpCVVDuC3K0WeCn0basHsMuElyUa96nV423X
-	vyh2Qgbe6ka91bdkZZMFf1IUlRS24UW0yh+aq0Cf7GCvsCaPrJ83HyEH
-X-Gm-Gg: ASbGncuwMYy9Fmm+2875Gf9NAFBDsx35jpVZ9z6A8fRZuYv/cpkhv0gmYULLcBbQZjF
-	T8o+bz5D0YVLjy+r/8ECUhNbdTm+Qyjsqrit2M+W725rKZAFWTmnTGdUDRa/qIDN2m7JLkDZcAx
-	4KyKml6HfFS1kqpOMPAPx0BB2QbgKq4qJADPEFNiQVSp1h/NrbULlzO66Q49ujkwXbnxX9QQncW
-	h3hFKWS9tdAGfa8oZQ8Xtfy9ds5bGqlV+xNyHhakSyxZv3wmXSxWJ72SErVqV8Dcj8PQ9bN7SYo
-	uKLfuWjJZg7uPduEZjDX8J902gyjnVA8XduwIH8qZKYNlkLqm1hnzFqa1LNodOUi2Q==
-X-Google-Smtp-Source: AGHT+IEnOivJGUDWqVyOIV9MXtZf3Bc3o1rhJEC9EwSqChNJtE1AmlhKQp6mD4GytzYsZ/GtITfOGg==
-X-Received: by 2002:a17:902:f68e:b0:234:cf24:3be8 with SMTP id d9443c01a7336-2366b12f541mr264432915ad.28.1750216657570;
-        Tue, 17 Jun 2025 20:17:37 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:31:2ce1::1005])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dfdb9a0sm89179545ad.239.2025.06.17.20.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 20:17:37 -0700 (PDT)
-From: Andrew Ijano <andrew.ijano@gmail.com>
-X-Google-Original-From: Andrew Ijano <andrew.lopes@alumni.usp.br>
-To: jic23@kernel.org
-Cc: andrew.lopes@alumni.usp.br,
-	gustavobastos@usp.br,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	jstephan@baylibre.com,
-	linux-iio@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eZ4+L12+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750216830; x=1781752830;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6rJgoWt4G083fL/1cCEzBQ3/Id2/n618wiLRJIcRY+A=;
+  b=eZ4+L12+FdCQ3N/m4iptlBkJGRcRvryQt5AFBm7ZQxLQZaB9knjTidb1
+   aKlqCt8Dk66CS/MDia00JhqwNnaTOOiG42XL1F5TgQD5UV1Fc/jG+V5rs
+   d/d7Vk9mgbCILuPHL+z44HQvbX5ji4vR5nLiGmSMWFMY+6GQfwRlktYrz
+   h1DEo1YIq1pFVOc0xT82wG0CAQV7zKYj3qyFCDKkO2MuDxjpET7CiYH98
+   dqVWIXYFb1dA4JFxBHb7KgYerKd8gsTQaSZzLADGS3Tl7oPEOs2QQO16j
+   ibqqdzmJtm2Yv6gqN07ScLAKSCZj384SYcchpFxIH372nmR+TJCj8dHH6
+   w==;
+X-CSE-ConnectionGUID: q6AEZrOXS5eqiCs77N76VQ==
+X-CSE-MsgGUID: lAilvnXEQAKvf8RzKhiU4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="74952987"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="74952987"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 20:20:30 -0700
+X-CSE-ConnectionGUID: O0b0B8FeRCCGghPzu7iCzg==
+X-CSE-MsgGUID: pSKz7skZR7WsagQ62p3GKQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="148985309"
+Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 20:20:27 -0700
+From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+To: Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	marmarek@invisiblethingslab.com
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	linux-edac@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/4] iio: accel: sca3000: use sysfs_emit_at() instead of sprintf()
-Date: Wed, 18 Jun 2025 00:12:19 -0300
-Message-ID: <20250618031638.26477-5-andrew.lopes@alumni.usp.br>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
-References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
+Subject: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
+Date: Wed, 18 Jun 2025 11:18:55 +0800
+Message-ID: <20250618031855.1435420-1-qiuxu.zhuo@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aFFN7RlXkaK_loQb@mail-itl>
+References: <aFFN7RlXkaK_loQb@mail-itl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Use sysfs_emit_at() instead of sprintf() for sysfs operations as
-suggested in the documentation, since it is aware of PAGE_SIZE buffer.
+A kernel panic was reported with the following kernel log:
 
-Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+  EDAC igen6: Expected 2 mcs, but only 1 detected.
+  BUG: unable to handle page fault for address: 000000000000d570
+  ...
+  Hardware name: Notebook V54x_6x_TU/V54x_6x_TU, BIOS Dasharo (coreboot+UEFI) v0.9.0 07/17/2024
+  RIP: e030:ecclog_handler+0x7e/0xf0 [igen6_edac]
+  ...
+  igen6_probe+0x2a0/0x343 [igen6_edac]
+  ...
+  igen6_init+0xc5/0xff0 [igen6_edac]
+  ...
+
+This issue occurred because one memory controller was fused off by
+the BIOS but the igen6_edac driver still checked all the memory
+controllers, including this absent one, to identify the source of
+the error. Accessing the null MMIO for the absent memory controller
+resulted in the oops above.
+
+Fix this issue by reverting the configuration structure to non-const
+and updating the field 'res_cfg->num_imc' to reflect the number of
+detected memory controllers.
+
+Fixes: 20e190b1c1fd ("EDAC/igen6: Skip absent memory controllers")
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Closes: https://lore.kernel.org/all/aFFN7RlXkaK_loQb@mail-itl/
+Suggested-by: Borislav Petkov <bp@alien8.de>
+Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 ---
- drivers/iio/accel/sca3000.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ drivers/edac/igen6_edac.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-index 058a2d67c91c..bc0046b19511 100644
---- a/drivers/iio/accel/sca3000.c
-+++ b/drivers/iio/accel/sca3000.c
-@@ -423,16 +423,16 @@ sca3000_show_available_3db_freqs(struct device *dev,
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
- 	struct sca3000_state *st = iio_priv(indio_dev);
--	int len;
-+	unsigned int len = 0;
+diff --git a/drivers/edac/igen6_edac.c b/drivers/edac/igen6_edac.c
+index 1930dc00c791..1cb5c67e78ae 100644
+--- a/drivers/edac/igen6_edac.c
++++ b/drivers/edac/igen6_edac.c
+@@ -125,7 +125,7 @@
+ #define MEM_SLICE_HASH_MASK(v)		(GET_BITFIELD(v, 6, 19) << 6)
+ #define MEM_SLICE_HASH_LSB_MASK_BIT(v)	GET_BITFIELD(v, 24, 26)
  
--	len = sprintf(buf, "%d", st->info->measurement_mode_3db_freq);
-+	len = sysfs_emit_at(buf, len, "%d", st->info->measurement_mode_3db_freq);
- 	if (st->info->option_mode_1)
--		len += sprintf(buf + len, " %d",
-+		len += sysfs_emit_at(buf, len, " %d",
- 			       st->info->option_mode_1_3db_freq);
- 	if (st->info->option_mode_2)
--		len += sprintf(buf + len, " %d",
-+		len += sysfs_emit_at(buf, len, " %d",
- 			       st->info->option_mode_2_3db_freq);
--	len += sprintf(buf + len, "\n");
-+	len += sysfs_emit_at(buf, len, "\n");
- 
- 	return len;
+-static const struct res_config {
++static struct res_config {
+ 	bool machine_check;
+ 	/* The number of present memory controllers. */
+ 	int num_imc;
+@@ -479,7 +479,7 @@ static u64 rpl_p_err_addr(u64 ecclog)
+ 	return ECC_ERROR_LOG_ADDR45(ecclog);
  }
-@@ -783,7 +783,6 @@ static ssize_t sca3000_read_av_freq(struct device *dev,
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(dev);
- 	struct sca3000_state *st = iio_priv(indio_dev);
--	unsigned int len = 0;
- 	int ret;
  
- 	scoped_guard(mutex, &st->lock) {
-@@ -794,25 +793,22 @@ static ssize_t sca3000_read_av_freq(struct device *dev,
+-static const struct res_config ehl_cfg = {
++static struct res_config ehl_cfg = {
+ 	.num_imc		= 1,
+ 	.imc_base		= 0x5000,
+ 	.ibecc_base		= 0xdc00,
+@@ -489,7 +489,7 @@ static const struct res_config ehl_cfg = {
+ 	.err_addr_to_imc_addr	= ehl_err_addr_to_imc_addr,
+ };
  
- 	switch (ret & SCA3000_REG_MODE_MODE_MASK) {
- 	case SCA3000_REG_MODE_MEAS_MODE_NORMAL:
--		len += sprintf(buf + len, "%d %d %d\n",
-+		return sysfs_emit(buf, "%d %d %d\n",
- 			       st->info->measurement_mode_freq,
- 			       st->info->measurement_mode_freq / 2,
- 			       st->info->measurement_mode_freq / 4);
--		break;
- 	case SCA3000_REG_MODE_MEAS_MODE_OP_1:
--		len += sprintf(buf + len, "%d %d %d\n",
-+		return sysfs_emit(buf, "%d %d %d\n",
- 			       st->info->option_mode_1_freq,
- 			       st->info->option_mode_1_freq / 2,
- 			       st->info->option_mode_1_freq / 4);
--		break;
- 	case SCA3000_REG_MODE_MEAS_MODE_OP_2:
--		len += sprintf(buf + len, "%d %d %d\n",
-+		return sysfs_emit(buf, "%d %d %d\n",
- 			       st->info->option_mode_2_freq,
- 			       st->info->option_mode_2_freq / 2,
- 			       st->info->option_mode_2_freq / 4);
--		break;
+-static const struct res_config icl_cfg = {
++static struct res_config icl_cfg = {
+ 	.num_imc		= 1,
+ 	.imc_base		= 0x5000,
+ 	.ibecc_base		= 0xd800,
+@@ -499,7 +499,7 @@ static const struct res_config icl_cfg = {
+ 	.err_addr_to_imc_addr	= ehl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct res_config tgl_cfg = {
++static struct res_config tgl_cfg = {
+ 	.machine_check		= true,
+ 	.num_imc		= 2,
+ 	.imc_base		= 0x5000,
+@@ -513,7 +513,7 @@ static const struct res_config tgl_cfg = {
+ 	.err_addr_to_imc_addr	= tgl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct res_config adl_cfg = {
++static struct res_config adl_cfg = {
+ 	.machine_check		= true,
+ 	.num_imc		= 2,
+ 	.imc_base		= 0xd800,
+@@ -524,7 +524,7 @@ static const struct res_config adl_cfg = {
+ 	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct res_config adl_n_cfg = {
++static struct res_config adl_n_cfg = {
+ 	.machine_check		= true,
+ 	.num_imc		= 1,
+ 	.imc_base		= 0xd800,
+@@ -535,7 +535,7 @@ static const struct res_config adl_n_cfg = {
+ 	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct res_config rpl_p_cfg = {
++static struct res_config rpl_p_cfg = {
+ 	.machine_check		= true,
+ 	.num_imc		= 2,
+ 	.imc_base		= 0xd800,
+@@ -547,7 +547,7 @@ static const struct res_config rpl_p_cfg = {
+ 	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct res_config mtl_ps_cfg = {
++static struct res_config mtl_ps_cfg = {
+ 	.machine_check		= true,
+ 	.num_imc		= 2,
+ 	.imc_base		= 0xd800,
+@@ -558,7 +558,7 @@ static const struct res_config mtl_ps_cfg = {
+ 	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct res_config mtl_p_cfg = {
++static struct res_config mtl_p_cfg = {
+ 	.machine_check		= true,
+ 	.num_imc		= 2,
+ 	.imc_base		= 0xd800,
+@@ -569,7 +569,7 @@ static const struct res_config mtl_p_cfg = {
+ 	.err_addr_to_imc_addr	= adl_err_addr_to_imc_addr,
+ };
+ 
+-static const struct pci_device_id igen6_pci_tbl[] = {
++static struct pci_device_id igen6_pci_tbl[] = {
+ 	{ PCI_VDEVICE(INTEL, DID_EHL_SKU5), (kernel_ulong_t)&ehl_cfg },
+ 	{ PCI_VDEVICE(INTEL, DID_EHL_SKU6), (kernel_ulong_t)&ehl_cfg },
+ 	{ PCI_VDEVICE(INTEL, DID_EHL_SKU7), (kernel_ulong_t)&ehl_cfg },
+@@ -1350,9 +1350,11 @@ static int igen6_register_mcis(struct pci_dev *pdev, u64 mchbar)
+ 		return -ENODEV;
  	}
--	return len;
-+	return 0;
- }
  
- /*
+-	if (lmc < res_cfg->num_imc)
++	if (lmc < res_cfg->num_imc) {
+ 		igen6_printk(KERN_WARNING, "Expected %d mcs, but only %d detected.",
+ 			     res_cfg->num_imc, lmc);
++		res_cfg->num_imc = lmc;
++	}
+ 
+ 	return 0;
+ 
+
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
 -- 
-2.49.0
+2.43.0
 
