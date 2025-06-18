@@ -1,182 +1,276 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E842F363C;
-	Wed, 18 Jun 2025 17:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2845A2F3C33
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:40:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750268393; cv=none; b=HcFMVVbKxk3aMzIcp0nAvqDgpSKvMgp1ox7n6BA79bqVrJkKmuooTZr3t3XkBl5kh0Ft+yCdqEipaUo/AlF5wF+qSu89Pc1hlZRMLFhcNA6nxT8zNgMenAOklyLMSiYROoBP4xRwPM5N0WMFeNL/R+WzxwH93mwM1E9iuj6Rpa8=
+	t=1750268423; cv=none; b=QYGYWuQxuMpZucMgXgxWh1VhziAHLO6nClXxtqXiUYDUf2z3KFG+M5j+je7+rzi7w6Vsepm/E9uB6Du8b6fe0DBvN0Zv8YNA5lpe/fwYbckRmSkbOC2gpZJMRiOyyOX7fFKWYCsPPNVcC+ncR71/rHvvoVitX8h2obnjXqAKeP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750268393; c=relaxed/simple;
-	bh=/pPJSNAfLSroCKYHXJLWwJVsQr93kBLP7GVw4wmp2I4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kEFV7Wt9wzmoDn37o+dqZrACdwQol9DNFCAQo9Ds6+0hNa1ubgNZlhmZzbpuASDlqmw8LpxrmdHXk2o1vjXlnyN0pqMD4JsiGqLNXNacIe6JC5Pfy2FAg4Xh5MlQCLIralG/YMWKw7YwDI/3HhGRMRpBNIRQwVQV1jwHai/6AxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=TTJLXC1c; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1750268423; c=relaxed/simple;
+	bh=wZPj40i4K0nP1rLk9miNRYxiRA1RvKM5Mt/qKLAFa8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G/5kRfacNXdrsEilWQAzzeWhATF17wBhjtLYSe34BVApDBUlCdMADK8/5dmU3V+CkVke1QJMwQJAfDarmw6qXF3a+IjpYbZBXHH8SQX+CaxalD4B80S23qhbf8Z4piWBluGO9iscliyuUFQioiqkGKZ3Mbq8ILmSBGv5Fk/cOhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZoUPmrG+; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="TTJLXC1c"
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IG03ao031954;
-	Wed, 18 Jun 2025 13:39:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=HTMmK
-	MgAUBd8WEFA9l2xGUFLTHm+A38dMxJbz03dPNY=; b=TTJLXC1ctWFL3aQ38Qqsz
-	rEP74v9btSVWUiwaiRtVLBz3VN/tCfkQubWS3FJ08zG+XkZmNWStNlZFZxv6QbEw
-	1ufkLn6mJxwzPjZwtH+0YE1mLJ4qYfAhUzRUyXb24KTR6iEAV+l6ay6WOFzDsM64
-	QcpSZX5GCRoVfp3gLNPEl2QSW3OlVl1OtfnX1hVJ3Z+Y8P2S0bFxqxU8vtuBiCl4
-	Zdvri0lxwn+Llkkl3kkJiaaUJ1XIMEEpi2MjC7SScF3gwdfsehfzIfpqoz6VGrTw
-	VSQMaacxPIm+BdvYTtYUmc7iuLD/mgPp14AiXq5Q9LTiNMU/IGsvI6G0Ssv3Kipo
-	w==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 47bfshddpc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 13:39:32 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 55IHdVpY016246
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 18 Jun 2025 13:39:31 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 18 Jun
- 2025 13:39:31 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Wed, 18 Jun 2025 13:39:31 -0400
-Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55IHdDLx007658;
-	Wed, 18 Jun 2025 13:39:15 -0400
-From: Marcelo Schmitt <marcelo.schmitt@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <jic23@kernel.org>, <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <dlechner@baylibre.com>, <nuno.sa@analog.com>, <andy@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <marcelo.schmitt1@gmail.com>
-Subject: [PATCH v6 12/12] iio: adc: ad4170: Add timestamp channel
-Date: Wed, 18 Jun 2025 14:39:12 -0300
-Message-ID: <63ebf4408a118a749481ecb3f5ce7ad67cedfa7b.1750258776.git.marcelo.schmitt@analog.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <cover.1750258776.git.marcelo.schmitt@analog.com>
-References: <cover.1750258776.git.marcelo.schmitt@analog.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZoUPmrG+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750268420;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kAt9cuNNODAnXK/nmmtOZ1rnZLVGre0BG0UABQvpVBg=;
+	b=ZoUPmrG+/R0WOLmpIjvXJsAmpaOm3iQrbJPNfkW3qoBewGK2cBdbHILPpK5zZP3gd31+wO
+	YFKajkWJXXL+iqEMfWC96l6xB3BgHaTqtUE5ZTe6x97/RiItDhG/Z+ixAGo4jmRip3ob8f
+	WwhJHzc/tAaqQd2z3NxiBQNbo7KxZIo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-597-VBvFDOyMMLibFjQ7CzZNzA-1; Wed, 18 Jun 2025 13:40:18 -0400
+X-MC-Unique: VBvFDOyMMLibFjQ7CzZNzA-1
+X-Mimecast-MFC-AGG-ID: VBvFDOyMMLibFjQ7CzZNzA_1750268418
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450cf229025so26738505e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:40:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750268417; x=1750873217;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kAt9cuNNODAnXK/nmmtOZ1rnZLVGre0BG0UABQvpVBg=;
+        b=JUxsE1kKx+Es9sMteUzEcypguJNfqkALYs/AvmK/Uo+fLEd+YhP8pkhDKT+FF6/el9
+         wXuI14ngL1dcUHzZW6OMUT+waUud4THRivFudLMX1FlbMAlZBgGZPm9Lsf1ynRT1xH5o
+         VSyDz0HIzEOSNkJcb/Idc1Zr+IXQNFljHCE3TpiF2hoyHp/NJ7M/MK/dEjFWYzRgYaK/
+         LpTyvS+tiW9Q4KnwE2nX8WDUvKqmJh7H0IYBtLtEMxVNXmeqOZTVP7QKSiXvt3o0vNPH
+         Rrfxldip/eOLWG+TPGgEhwN4p53Jmis/nSSeyAUHkOj7qpWXoTB5g5bA0ZuKqO5SQruo
+         2zzA==
+X-Gm-Message-State: AOJu0YyhalRGsaAEliJDiUtb2gYJHuTESjSEhIlRSI83dMQVnzmqcBvm
+	i1NBtHUyvBo1QPd0oBA0NmqiiDhgAyEZQfJwCMsgAu+wVhzDkEm9vRvovojypnGmRDTXNDmAhkY
+	j6ZVxuTpktx1fsV/P2F7NHvCE+7sDY15K+Zqi5j1MMV41dTJEKQmW7/pZg5M65sax87pjDYuTQa
+	zpIv8SMg0E9ppdANN9UCGO5zfEVvK2oeqbz+20esJIrrBTBpbr
+X-Gm-Gg: ASbGncuS5UKLBdtKcQmF0hSI/RpidYmP7xn2mQb8YWCUO5aXVaekp2IKJPuggO7F1uH
+	w3/jB3Oj/AmnB/nahKQuth9/L3OSqZw9ZvsQopGI1PsJb0VSrBCMkZBwBJ6S6RhQ8+DJZ87mE77
+	4yFcA/pWT0Z8ekzmmhn5GHNSn+BwMwKhcIDlc1AqDMbHOQVwDhdnvLlnwqq/H4Sf9yq6RI0VX1L
+	BPXH73fQkrLD41aIJXJao6ghukYiOalpiOQo2KSui6QhSkI7KLatRi02W7mvye9KdXcRcjL0UUq
+	R2LFv74zTeAFIAiwmsYeV957vEcfYU1MMqIgSLo6nhM65xe9DnJiYKV58/fzWIpFpfbQ2jjaA0W
+	Sjq3bSg==
+X-Received: by 2002:a05:600c:c117:b0:450:d4ad:b7de with SMTP id 5b1f17b1804b1-4533cc69257mr159132205e9.3.1750268417567;
+        Wed, 18 Jun 2025 10:40:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEK6CJuAqwp4upaUAFmgBr8NRJjk1YOp/gZr+QzQDI0/4bBlZLAGc6Vo1CG+p/mbQiC9c5VzA==
+X-Received: by 2002:a05:600c:c117:b0:450:d4ad:b7de with SMTP id 5b1f17b1804b1-4533cc69257mr159131415e9.3.1750268417023;
+        Wed, 18 Jun 2025 10:40:17 -0700 (PDT)
+Received: from localhost (p200300d82f2d2400405203b5fff94ed0.dip0.t-ipconnect.de. [2003:d8:2f2d:2400:4052:3b5:fff9:4ed0])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4535ead2a84sm3430235e9.32.2025.06.18.10.40.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 10:40:16 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org,
+	linux-doc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	virtualization@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	David Hildenbrand <david@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	Zi Yan <ziy@nvidia.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>,
+	Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>
+Subject: [PATCH RFC 00/29] mm/migration: rework movable_ops page migration (part 1)
+Date: Wed, 18 Jun 2025 19:39:43 +0200
+Message-ID: <20250618174014.1168640-1-david@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: wbgdZ0c0wYrprg2Qn6H9Y4KcxBfgpDQV
-X-Authority-Analysis: v=2.4 cv=SKhCVPvH c=1 sm=1 tr=0 ts=6852f9d4 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=ooJTjvKFDTQpXrV7GjsA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE1MCBTYWx0ZWRfX8r2pr08BrSmd
- ftGGA6y4QdW9K/9Ig3fcG4o8Hz+N9NnwK08dYyAZ5MJ8Xpr0RRz1SjAMooWB9JUp/y3SWizUpC9
- A91KdbN1JwbNg6ZPZ9uQT9RlwNZ6jbwMp0BKzJAhU1oJXV7ensto+tnRIgkT9eB1h4B68DXpVqB
- v5UxoTeJ/k45sXZgHnS9cBlvuKAcwWqVNgIywAlUsxavwcY1WXBTtppXaRCI6NRgaM0cpqLc22g
- XmG6wJICxUxpcb2CwspgAY9BYUJY61O+8g69/TQH8NXgKCL5KPkLVg9VzTB0v48/R5N4YyKHQLm
- 6/poQI6ElkC23WnQstmm1gQi29CyOseusM0X0LLNyRLUV8S1fXgE9BT4W+v+XvVc8eilzMqqNKy
- e/wbKu6Rwhl65f/fPBjZ6Erc0v0n5ZJbN+0Cs3RKdZx6FlYahJKADd4rmdUmo/LKUYpfTI3b
-X-Proofpoint-GUID: wbgdZ0c0wYrprg2Qn6H9Y4KcxBfgpDQV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 bulkscore=0 adultscore=0 lowpriorityscore=0 spamscore=0
- suspectscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999 clxscore=1015
- phishscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180150
 
-Add timestamp channel allowing to record the moment at which ADC samples
-are captured in buffered read mode.
+Based on mm/mm-new.
 
-Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
----
-No changes in v6.
+In the future, as we decouple "struct page" from "struct folio", pages
+that support "non-lru page migration" -- movable_ops page migration
+such as memory balloons and zsmalloc -- will no longer be folios. They
+will not have ->mapping, ->lru, and likely no refcount and no
+page lock. But they will have flags :)
 
- drivers/iio/adc/ad4170.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+This is the first part (other parts not written yet) of decoupling
+movable_ops page migration from folio migration.
 
-diff --git a/drivers/iio/adc/ad4170.c b/drivers/iio/adc/ad4170.c
-index 2a2d4a05e9af..33b9a6b2255b 100644
---- a/drivers/iio/adc/ad4170.c
-+++ b/drivers/iio/adc/ad4170.c
-@@ -185,6 +185,7 @@
- #define AD4170_NUM_ANALOG_PINS				9
- #define AD4170_NUM_GPIO_PINS				4
- #define AD4170_MAX_CHANNELS				16
-+#define AD4170_MAX_IIO_CHANNELS				(AD4170_MAX_CHANNELS + 1)
- #define AD4170_MAX_ANALOG_PINS				8
- #define AD4170_MAX_SETUPS				8
- #define AD4170_INVALID_SETUP				9
-@@ -437,7 +438,7 @@ struct ad4170_state {
- 	int vrefs_uv[AD4170_MAX_SUP];
- 	u32 mclk_hz;
- 	struct ad4170_setup_info setup_infos[AD4170_MAX_SETUPS];
--	struct iio_chan_spec chans[AD4170_MAX_CHANNELS];
-+	struct iio_chan_spec chans[AD4170_MAX_IIO_CHANNELS];
- 	struct ad4170_chan_info chan_infos[AD4170_MAX_CHANNELS];
- 	struct spi_device *spi;
- 	struct regmap *regmap;
-@@ -454,6 +455,7 @@ struct ad4170_state {
- 	unsigned int clock_ctrl;
- 	int gpio_fn[AD4170_NUM_GPIO_PINS];
- 	unsigned int cur_src_pins[AD4170_NUM_CURRENT_SRC];
-+	unsigned int num_adc_chans;
- 	/*
- 	 * DMA (thus cache coherency maintenance) requires the transfer buffers
- 	 * to live in their own cache lines.
-@@ -2389,7 +2391,16 @@ static int ad4170_parse_channels(struct iio_dev *indio_dev)
- 			return dev_err_probe(dev, ret, "Invalid input config\n");
- 
- 		st->chan_infos[chan_num].input_range_uv = ret;
-+		chan_num++;
- 	}
-+	st->num_adc_chans = chan_num;
-+
-+	/* Add timestamp channel */
-+	struct iio_chan_spec ts_chan = IIO_CHAN_SOFT_TIMESTAMP(chan_num);
-+
-+	st->chans[chan_num] = ts_chan;
-+	num_channels = num_channels + 1;
-+
- 	indio_dev->num_channels = num_channels;
- 	indio_dev->channels = st->chans;
- 
-@@ -2581,7 +2592,7 @@ static int ad4170_initial_config(struct iio_dev *indio_dev)
- 		return dev_err_probe(dev, ret,
- 				     "Failed to set ADC mode to idle\n");
- 
--	for (i = 0; i < indio_dev->num_channels; i++) {
-+	for (i = 0; i < st->num_adc_chans; i++) {
- 		struct ad4170_chan_info *chan_info;
- 		struct iio_chan_spec const *chan;
- 		struct ad4170_setup *setup;
-@@ -2706,7 +2717,7 @@ static int ad4170_buffer_predisable(struct iio_dev *indio_dev)
- 	 * is done after buffer disable. Disable all channels so only requested
- 	 * channels will be read.
- 	 */
--	for (i = 0; i < indio_dev->num_channels; i++) {
-+	for (i = 0; i < st->num_adc_chans; i++) {
- 		ret = ad4170_set_channel_enable(st, i, false);
- 		if (ret)
- 			return ret;
-@@ -2758,7 +2769,9 @@ static irqreturn_t ad4170_trigger_handler(int irq, void *p)
- 		memcpy(&st->bounce_buffer[i++], st->rx_buf, ARRAY_SIZE(st->rx_buf));
- 	}
- 
--	iio_push_to_buffers(indio_dev, st->bounce_buffer);
-+	iio_push_to_buffers_with_ts(indio_dev, st->bounce_buffer,
-+				    sizeof(st->bounce_buffer),
-+				    iio_get_time_ns(indio_dev));
- err_out:
- 	iio_trigger_notify_done(indio_dev->trig);
- 	return IRQ_HANDLED;
+In this series, we get rid of the ->mapping usage, and start cleaning up
+the code + separating it from folio migration.
+
+Migration core will have to be further reworked to not treat movable_ops
+pages like folios. This is the first step into that direction.
+
+RFC because I only did some light testing with virtio-balloon + zsmalloc
+page migration, and have to polish some patch descriptions.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Jerrin Shaji George <jerrin.shaji-george@broadcom.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Cc: "Eugenio Pérez" <eperezma@redhat.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Zi Yan <ziy@nvidia.com>
+Cc: Matthew Brost <matthew.brost@intel.com>
+Cc: Joshua Hahn <joshua.hahnjy@gmail.com>
+Cc: Rakie Kim <rakie.kim@sk.com>
+Cc: Byungchul Park <byungchul@sk.com>
+Cc: Gregory Price <gourry@gourry.net>
+Cc: Ying Huang <ying.huang@linux.alibaba.com>
+Cc: Alistair Popple <apopple@nvidia.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Brendan Jackman <jackmanb@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Xu Xin <xu.xin16@zte.com.cn>
+Cc: Chengming Zhou <chengming.zhou@linux.dev>
+Cc: Miaohe Lin <linmiaohe@huawei.com>
+Cc: Naoya Horiguchi <nao.horiguchi@gmail.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Harry Yoo <harry.yoo@oracle.com>
+Cc: Qi Zheng <zhengqi.arch@bytedance.com>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>
+
+
+David Hildenbrand (29):
+  mm/balloon_compaction: we cannot have isolated pages in the balloon
+    list
+  mm/balloon_compaction: convert balloon_page_delete() to
+    balloon_page_finalize()
+  mm/zsmalloc: drop PageIsolated() related VM_BUG_ONs
+  mm/page_alloc: allow for making page types sticky until freed
+  mm/balloon_compaction: make PageOffline sticky
+  mm/zsmalloc: make PageZsmalloc() sticky
+  mm/migrate: rename isolate_movable_page() to
+    isolate_movable_ops_page()
+  mm/migrate: rename putback_movable_folio() to
+    putback_movable_ops_page()
+  mm/migrate: factor out movable_ops page handling into
+    migrate_movable_ops_page()
+  mm/migrate: remove folio_test_movable() and folio_movable_ops()
+  mm/migrate: move movable_ops page handling out of move_to_new_folio()
+  mm/zsmalloc: stop using __ClearPageMovable()
+  mm/balloon_compaction: stop using __ClearPageMovable()
+  mm/migrate: remove __ClearPageMovable()
+  mm/migration: remove PageMovable()
+  mm: rename __PageMovable() to page_has_movable_ops()
+  mm/page_isolation: drop __folio_test_movable() check for large folios
+  mm: remove __folio_test_movable()
+  mm: stop storing migration_ops in page->mapping
+  mm: convert "movable" flag in page->mapping to a page flag
+  mm: rename PG_isolated to PG_movable_ops_isolated
+  mm/page-flags: rename PAGE_MAPPING_MOVABLE to PAGE_MAPPING_ANON_KSM
+  mm/page-alloc: remove PageMappingFlags()
+  mm/page-flags: remove folio_mapping_flags()
+  mm: simplify folio_expected_ref_count()
+  mm: rename PAGE_MAPPING_* to FOLIO_MAPPING_*
+  docs/mm: convert from "Non-LRU page migration" to "movable_ops page
+    migration"
+  mm/balloon_compaction: "movable_ops" doc updates
+  mm/balloon_compaction: provide single balloon_page_insert() and
+    balloon_mapping_gfp_mask()
+
+ Documentation/mm/page_migration.rst  |  39 ++--
+ arch/powerpc/platforms/pseries/cmm.c |   2 +-
+ drivers/misc/vmw_balloon.c           |   3 +-
+ drivers/virtio/virtio_balloon.c      |   4 +-
+ fs/proc/page.c                       |   4 +-
+ include/linux/balloon_compaction.h   |  90 ++++-----
+ include/linux/fs.h                   |   2 +-
+ include/linux/migrate.h              |  42 +----
+ include/linux/mm.h                   |   4 +-
+ include/linux/mm_types.h             |   1 -
+ include/linux/page-flags.h           | 104 +++++++----
+ include/linux/pagemap.h              |   2 +-
+ include/linux/zsmalloc.h             |   2 +
+ mm/balloon_compaction.c              |  21 ++-
+ mm/compaction.c                      |  44 +----
+ mm/gup.c                             |   4 +-
+ mm/internal.h                        |   2 +-
+ mm/ksm.c                             |   4 +-
+ mm/memory-failure.c                  |   4 +-
+ mm/memory_hotplug.c                  |   8 +-
+ mm/migrate.c                         | 269 +++++++++++++++------------
+ mm/page_alloc.c                      |  12 +-
+ mm/page_isolation.c                  |  12 +-
+ mm/rmap.c                            |  16 +-
+ mm/util.c                            |   6 +-
+ mm/vmscan.c                          |   6 +-
+ mm/zpdesc.h                          |  15 +-
+ mm/zsmalloc.c                        |  29 ++-
+ 28 files changed, 361 insertions(+), 390 deletions(-)
+
+
+base-commit: 21f39cc0346ea2081a83f0469995144d75d23075
 -- 
-2.47.2
+2.49.0
 
