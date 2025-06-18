@@ -1,104 +1,149 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8C61624DF;
-	Wed, 18 Jun 2025 19:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CF71A2632;
+	Wed, 18 Jun 2025 19:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750274392; cv=none; b=r2aBLF1/Q2JCyN0Y2zwTRG1kHP0oaf6JHs/JQISPxno2kk3KPkMgpYu4qZ4K/K++v2oBcAZ7rt+GiNslvqg0/BrXeI7vAas+aF+gs9ALPyAOYxKmOu1Kmj+8UImVW1ONtm/HlodZzc15zEyyweuNDJpHJ+DoAIxadfTEjfw02Ro=
+	t=1750274393; cv=none; b=fH+8ZhcnV0GVfD8WQi75GzDVIm8vajiXVxck7NndaXbODnEZqnhGpSeKoXaaDsvSaIC26X+jGvo/di7Dl79Tts0iBwJVOt6bgtkcEXLDBlMwiQ+M64QkfsAhn0qTKrToOAA291GuaXZM1XCLyKGlStaep7JkQBihmDqc8HsFrjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750274392; c=relaxed/simple;
-	bh=c4qdY3tnTY9wWZCO2RT52Bky6b3xLh9TnGYkaIovRNg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZX7nCX25/dCzcOco8tlxKzGXRhnTgYifK/3ocPV82MYN0QUJQ6+GQZjxrUsIgSOzfdSOW2DM6LEeY0BpiweX9FbNv+wrgCw3snIuooTvwXgGVqD9J7xsAmNisQLEPSbjzvhcHOeyIz93yRGXXKbdXn1InQABXlkgiuQb2jKfwTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=HYOxmFEK; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1750274393; c=relaxed/simple;
+	bh=l+CGLaIk4eVguzrZZFsUdEtSHXK3ZjcP7ggXpAQ0o8w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BhpTFSNppSOwVAHwuS5NX1HTOP9hZQyMlLB6/7o+Keii12yK11ZlBOiJeThXksuMls4a3onv5LgKigHReTbT8cFP/vmUFaYHlwNF0w/ASNC2VyzVZTilwlXevuwVSaTTj21tsvCSgAAqEYkyuAjhOCI9S/wPQnLFNn7JnEcxwxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=a7HkDahI; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HYOxmFEK"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IHgFEI024969;
-	Wed, 18 Jun 2025 19:19:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2025-04-25; bh=+aW2YSIMxaUjDzZn1X4t6XsLFabUP
-	JcRS0G2vvx8WuU=; b=HYOxmFEKR3MgszoCdtqxpVUPdb2KIr/S5ESn1fTihHQhx
-	SSLB/2Q8qpalz26irpoVtURqyZuB0BrKDq2tLHNrm/y87H2uc4vNcNa+HjpYZSwj
-	afVKvRBGIYlK4cib4xsZbofUV0yNkp/UaRzVKIZk3E+CDtuJq6ZcnT3aSqPuJusX
-	Vqe6ermtvRuCCWRwlUoUYMkKLYA3ZBrGoV39yk1yU471SpQ6sitpoxvDa8kTrS7C
-	EOLFFMq/wHWyIGWEPBC0KDShz/JqFqS/uNHV6w3wterN6+XdzPVbxbg24hiL75/I
-	NCOMt/tY7LvOdSxDShR/8Tl9W27Q639jW5AvK0dQQ==
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 479q8r7hs8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 19:19:33 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55IHfuYM000831;
-	Wed, 18 Jun 2025 19:19:32 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhb2800-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 19:19:32 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55IJJWxG026607;
-	Wed, 18 Jun 2025 19:19:32 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 478yhb27xr-1;
-	Wed, 18 Jun 2025 19:19:32 +0000
-From: Alok Tiwari <alok.a.tiwari@oracle.com>
-To: perex@perex.cz, tiwai@suse.com, phasta@kernel.org,
-        andriy.shevchenko@linux.intel.com, linux-sound@vger.kernel.org
-Cc: alok.a.tiwari@oracle.com, linux-kernel@vger.kernel.org
-Subject: [BUG] ALSA: intel8x: Why incorrect codec index used setting ICH_DI2L SDIN
-Date: Wed, 18 Jun 2025 12:19:21 -0700
-Message-ID: <20250618191929.2382821-1-alok.a.tiwari@oracle.com>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="a7HkDahI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1750274383; bh=l+CGLaIk4eVguzrZZFsUdEtSHXK3ZjcP7ggXpAQ0o8w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=a7HkDahICdgPiRTpNg1HTPNq5u+XQyHBc8SKqAd/jak7dPWPOY0f5KQXCP0JF9LkR
+	 406IVwmhHOjhKffoYccr40dotXqjdddNrw+xg5DKmjqEvT+sp3GHYu8dTmsbf3wB8+
+	 xanZWfpue4k/l74iwyWnPFICi9MaTQYX06Oav0Oc=
+Message-ID: <ea183f5a-b4c8-4dc0-960f-dba0db5a5abb@lucaweiss.eu>
+Date: Wed, 18 Jun 2025 21:19:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506180165
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE2NCBTYWx0ZWRfXwgy3gO4DXp5n MBoW9EaGDpR0hG4cYp0j4tiFSM2Bx2mMHV01Fd6olCZzhq/B4N0XPmSmrmaP38RbtineoWXPfkX zCafCYCL8NOl7IWmS4qdq2oV4ZRdacIqC7A2+FWmX30Q8EbiFvG0xzWGds7x3mIp7DTO2t92Z5G
- fOXnvsTBchoIEpF2yQZ4ZYfBb3wOpw0A3imMik0BCevQK25m4YtZZghP3ebe+ppjC3cw4Y8I3ZJ Wjh22WQceGo6jq/8ZvRflVg0d3W4ThJY+OyD8JVPHXu5xtqV5o7NNjC+lfMdgxp4KdCcXis+uY2 bdIeQkq30wEt2Ym/1q9nUQf/9fUq4X4tm1kRzDmYO0hzqcPMsnqy90lKE3Q8UNKp2sHQzUGCOal
- 1z1qV1+xRTU0KcurX/f3ecHGcBMlEP2lmQ1/zjRoa1AS55Zo6rFhrIpjuOCaUUevmWu0YlCU
-X-Proofpoint-GUID: XRr2tr9Y1BNd17p7D-a1Lw1XW65G2oaO
-X-Proofpoint-ORIG-GUID: XRr2tr9Y1BNd17p7D-a1Lw1XW65G2oaO
-X-Authority-Analysis: v=2.4 cv=dvLbC0g4 c=1 sm=1 tr=0 ts=68531145 b=1 cx=c_pps a=zPCbziy225d3KhSqZt3L1A==:117 a=zPCbziy225d3KhSqZt3L1A==:17 a=6IFa9wvqVegA:10 a=yPCof4ZbAAAA:8 a=ajM-e9yD8c-mEGuaoXUA:9 cc=ntf awl=host:13206
+Subject: Re: [PATCH 3/3] iio: Add Qualcomm Sensor Manager drivers
+Content-Language: en-US
+To: Yassine Oudjana <y.oudjana@protonmail.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas.schier@linux.dev>,
+ Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+ Sean Nyekjaer <sean@geanix.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Antoniu Miclaus <antoniu.miclaus@analog.com>,
+ Ramona Gradinariu <ramona.gradinariu@analog.com>,
+ "Yo-Jung (Leo) Lin" <0xff07@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+ Danila Tikhonov <danila@jiaxyga.com>,
+ Antoni Pokusinski <apokusinski01@gmail.com>,
+ Vasileios Amoiridis <vassilisamir@gmail.com>,
+ Petar Stoykov <pd.pstoykov@gmail.com>,
+ shuaijie wang <wangshuaijie@awinic.com>, Yasin Lee <yasin.lee.x@gmail.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Ingo Molnar <mingo@kernel.org>
+Cc: Yassine Oudjana <yassine.oudjana@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kbuild@vger.kernel.org
+References: <20250406140706.812425-1-y.oudjana@protonmail.com>
+ <20250406140706.812425-4-y.oudjana@protonmail.com>
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <20250406140706.812425-4-y.oudjana@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Correct the index to use codec[i] to match the loop iteration, not codec[1].
+Hi Yassine!
 
-Is this a mistake or intentional?
+On 06-04-2025 4:08 p.m., Yassine Oudjana wrote:
+> Add drivers for sensors exposed by the Qualcomm Sensor Manager service,
+> which is provided by SLPI or ADSP on Qualcomm SoCs. Supported sensors
+> include accelerometers, gyroscopes, pressure sensors, proximity sensors
+> and magnetometers.
+> 
+> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
 
-Thanks,
-Alok
+<snip>
 
-propose changes
-Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
----
- sound/pci/intel8x0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +static const char *const qcom_smgr_sensor_type_platform_names[] = {
+> +	[SNS_SMGR_SENSOR_TYPE_ACCEL] = "qcom-smgr-accel",
+> +	[SNS_SMGR_SENSOR_TYPE_GYRO] = "qcom-smgr-gyro",
+> +	[SNS_SMGR_SENSOR_TYPE_MAG] = "qcom-smgr-mag",
+> +	[SNS_SMGR_SENSOR_TYPE_PROX_LIGHT] = "qcom-smgr-prox-light",
+> +	[SNS_SMGR_SENSOR_TYPE_PRESSURE] = "qcom-smgr-pressure",
+> +	[SNS_SMGR_SENSOR_TYPE_HALL_EFFECT] = "qcom-smgr-hall-effect"
+> +};
+> +
+> +static void qcom_smgr_unregister_sensor(void *data)
+> +{
+> +	struct platform_device *pdev = data;
+> +
+> +	platform_device_unregister(pdev);
+> +}
+> +
+> +static int qcom_smgr_register_sensor(struct qcom_smgr *smgr,
+> +				     struct qcom_smgr_sensor *sensor)
+> +{
+> +	struct platform_device *pdev;
+> +	const char *name = qcom_smgr_sensor_type_platform_names[sensor->type];
 
-diff --git a/sound/pci/intel8x0.c b/sound/pci/intel8x0.c
-index 51e7f1f1a48e..b521cec20333 100644
---- a/sound/pci/intel8x0.c
-+++ b/sound/pci/intel8x0.c
-@@ -2249,7 +2249,7 @@ static int snd_intel8x0_mixer(struct intel8x0 *chip, int ac97_clock,
- 			tmp |= chip->ac97_sdin[0] << ICH_DI1L_SHIFT;
- 			for (i = 1; i < 4; i++) {
- 				if (pcm->r[0].codec[i]) {
--					tmp |= chip->ac97_sdin[pcm->r[0].codec[1]->num] << ICH_DI2L_SHIFT;
-+					tmp |= chip->ac97_sdin[pcm->r[0].codec[i]->num] << ICH_DI2L_SHIFT;
- 					break;
- 				}
- 			}
--- 
-2.47.1
+On msm8226 lg-lenok I get NULL here leading to a crash with the next call.
 
+I get sensor->type=0 for some heart rate sensor on that watch. I've 
+added this patch on top to fix that (excuse the formatting):
+
+<snip>
+
+> diff --git a/drivers/iio/common/qcom_smgr/qmi/sns_smgr.h b/drivers/iio/common/qcom_smgr/qmi/sns_smgr.h
+> new file mode 100644
+> index 000000000000..a741dfd87452
+> --- /dev/null
+> +++ b/drivers/iio/common/qcom_smgr/qmi/sns_smgr.h
+> @@ -0,0 +1,163 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __SSC_SNS_SMGR_H__
+> +#define __SSC_SNS_SMGR_H__
+> +
+> +#include <linux/iio/common/qcom_smgr.h>
+> +#include <linux/soc/qcom/qmi.h>
+> +#include <linux/types.h>
+> +
+> +/*
+> + * The structures of QMI messages used by the service were determined
+> + * purely by watching transactions between proprietary Android userspace
+> + * components and SSC. along with comparing values reported by Android APIs
+> + * to values received in response messages. Due to that, the purpose or
+> + * meaning of many fields remains unknown. Such fields are named "val*",
+> + * "data*" or similar. Furthermore, the true maximum sizes of some messages
+> + * with unknown array fields may be different than defined here.
+> + */
+> +
+> +#define SNS_SMGR_QMI_SVC_ID			0x0100
+> +#define SNS_SMGR_QMI_SVC_V1			1
+> +#define SNS_SMGR_QMI_INS_ID			50
+This instance ID needs to be 0 on msm8974 and msm8226, so I assume we 
+don't want to make this a define but just add the 50 and the 0 as-is to 
+the match table?
+
+Regards
+Luca
