@@ -1,76 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41F921CC61;
-	Wed, 18 Jun 2025 04:09:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17717155757;
+	Wed, 18 Jun 2025 04:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750219788; cv=none; b=qb6ilmKPLRHV/KqSikZ2kTcHbmMXZs3yDXTFpxQCAjh46ntIlRsc14B8gQNbU9j3iWF2o8YenUqcKzNURKUPffCKyPLlXxAsaPYT5tuY7uFiXnlohvQsXOcDsCVz9k9FKyjyTRdYHFvFIdi1MwVjsFeQOHnC3gA+tx2sz//1Mqg=
+	t=1750219969; cv=none; b=Cdp7G62fND2YZqX2Q9/t6hHIZnglqF+vecpctJo4VBARx1+VK+37mxu7GU2vrZB0RfFhnvqlTgjtpv60N0TI6Kr9IhtPcX07PJCKiZLh4Z6TY+7o4XSyepinGap0EyAgsmdudBVD5qP4pKsoYDD3nXeyDBWyRHGE1gQzFH7FdOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750219788; c=relaxed/simple;
-	bh=COJTThaCK/8L2OHP7wg7N3BV+QcaGRYRwyWHYcAv0Ws=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Zz4T5s+I24Pg/qEiMnESXl45qoWGus/ZBGPY7uQCM0+CH/z5QxlZlLKaeezdweSJYw7ZNnlLpIvmCej5wRfuzvM5+4/FUAt5tffqwVyiBASRQGPaps/qJt+IILLGFK2mn62iArXp7NIb6OvVgCWekz+7vXRjTAqga09UczFSkLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uM7sMVVq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uM7sMVVq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DC8C4CEE7;
-	Wed, 18 Jun 2025 04:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750219788;
-	bh=COJTThaCK/8L2OHP7wg7N3BV+QcaGRYRwyWHYcAv0Ws=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uM7sMVVqZzieykOWf5hS4+9XAGWY4Sqco/0loK10fCj6ghc6oiGvMS23TQaXwkve5
-	 wVa/R/hDgRaTVihGQImaN50oiPW5OVmx+S89pC3r0Ftkz+aWESmrCup2n8UhOBCuhP
-	 757Kr67qx03FuD5hMzicDCOllU+xR9CX/g7ZrjAF6kTJyiKfywMOu29mDEr2aL4urP
-	 cDrZ0tZafmV1ProgWa2KeNB2SPCOHdABY8yT7knLNVt3SfNXIdcoP7Uxmro99Z/f3p
-	 Rc9tP4E9vb8ZjiMHizyqzw3foshx8ZqOcvrNa3YHE/eyO25jZugoElb4P41G64N881
-	 jfdDfec2ddFfQ==
-From: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konradybcio@kernel.org>,
-	Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	s=arc-20240116; t=1750219969; c=relaxed/simple;
+	bh=5iy3jpjdE93os/WkQGjSSWQf0eSkKBsaoPQNj+YzYP0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JuWJMtQjZbNw2UhFlRcPaP5Bj7CWRMZjLrEdOtvmH2+FDT59J+1eOOoWPAkK78aRoiz/inwQ4lNAoy7qRqlXJqRvP1wv+dZ8NbnahpKbaZtFX3a9JZlIl+R1f+Rz5Ilc9UjF3+pSRTRaENGEMElG2AxrZMpEPP7f45nduCD0rrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FAF614BF;
+	Tue, 17 Jun 2025 21:12:25 -0700 (PDT)
+Received: from a076716.blr.arm.com (a076716.blr.arm.com [10.164.21.47])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E06C3F66E;
+	Tue, 17 Jun 2025 21:12:42 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-mm@kvack.org
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>,
 	linux-kernel@vger.kernel.org,
-	Stephan Gerhold <stephan@gerhold.net>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH RESEND] arm64: dts: qcom: apq8016-sbc-d3-camera: Convert to DT overlay
-Date: Tue, 17 Jun 2025 23:09:29 -0500
-Message-ID: <175021976632.732077.15697211673221786163.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250408-apq8016-sbc-camera-dtso-v1-1-cdf1cd41bda6@linaro.org>
-References: <20250408-apq8016-sbc-camera-dtso-v1-1-cdf1cd41bda6@linaro.org>
+	linux-doc@vger.kernel.org
+Subject: [RFC 0/2] lib/vsprintf: Add support for pte_t
+Date: Wed, 18 Jun 2025 09:42:33 +0530
+Message-Id: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+Printing page table entries has been a common requirement both in generic
+and platform memory management for various purposes. Let's just create a
+dedicated printk format for such entries which will also help standardize
+printing across different platforms.
 
-On Tue, 08 Apr 2025 13:38:42 +0200, Stephan Gerhold wrote:
-> Follow the example of the recently added apq8016-sbc-usb-host.dtso and
-> convert apq8016-sbc-d3-camera-mezzanine.dts to a DT overlay that can be
-> applied on top of the apq8016-sbc.dtb. This makes it more clear that
-> this is not a special type of DB410c but just an addon board that can
-> be added on top.
-> 
-> Functionally there should not be any difference since
-> apq8016-sbc-d3-camera-mezzanine.dtb is still generated as before
-> (but now by applying the overlay on top of apq8016-sbc.dtb).
-> 
-> [...]
+Also add a test for this new print format in lib/tests/printf_kunit.c via
+CONFIG_PRINTF_KUNIT_TEST.
 
-Applied, thanks!
+This series applies on v6.16-rc2
 
-[1/1] arm64: dts: qcom: apq8016-sbc-d3-camera: Convert to DT overlay
-      commit: 3a931f4aa3982f77f32050b4869afa76a711e5c7
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-mm@kvack.org
 
-Best regards,
+Anshuman Khandual (2):
+  lib/vsprintf: Add support for pte_t
+  kunit: printf: Add test case for pte_t
+
+ Documentation/core-api/printk-formats.rst | 14 ++++++++++++
+ lib/tests/printf_kunit.c                  | 26 +++++++++++++++++++++++
+ lib/vsprintf.c                            | 20 +++++++++++++++++
+ mm/memory.c                               |  5 ++---
+ scripts/checkpatch.pl                     |  2 +-
+ 5 files changed, 63 insertions(+), 4 deletions(-)
+
 -- 
-Bjorn Andersson <andersson@kernel.org>
+2.30.2
+
