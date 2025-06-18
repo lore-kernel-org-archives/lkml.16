@@ -1,107 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149202556E;
-	Wed, 18 Jun 2025 08:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819342747B;
+	Wed, 18 Jun 2025 08:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750237081; cv=none; b=lIxOWiYcfxaGgre+nkt4adGmG8H2/OMwnGgbGjB0yRVnUoR6RfIGV9G0a6gX+TfFTjFi9LZNj/zXeH+MS8Iz5v2W1peWioUbk3GZJm2LGMgFzaJOL/lUEwhTquXCfUbDkUav4zkwAbYWQe93ZfDFpKMcDyNWA5TRB/d9JofeayI=
+	t=1750237112; cv=none; b=WWyiiYoSTwIdTGLW/s5NSdEJbe6FZJ9BasLl8QxDWSE78w3ndq5ekgAxE/IerbUffpbeGtxGtwDXLLXM8vqLoEVi9VZc3cR9PwuFaBqtwpRKKjb8byhH1VVXctbMjtAvjVgh1/0UCFaIDPvl5P76zhD9vp/pO29p0XibCz0RLgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750237081; c=relaxed/simple;
-	bh=wqrA8bKqxtN3oLYl0+ONBhmLPe1OSnjffCbLNpdz1kg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oYpiFv4AMdSfu7o3vO4dsiHAEwVQCByld9LkM86jRNhGF0xfpMsnWl7L5M4NBFFREQzkVY46GBLX6fjIWNyac74acLBDajHdio29183ou1DdlD9lVOgMAzQQssmeu2NS2vtkX5t/joBGs2OFClCOoj1fiKOlewtwdNRwXPrxBN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Th1bX929; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750237112; c=relaxed/simple;
+	bh=klImNFDVViKVjStvzRatdsVt/GzjfRZdsiS8aBAEf08=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iKaV3eMB/ebB4kqjK8ZsYufozfP8M8X2aNb7O1bXzevMR6B4q8gmEtyGgfWzuXjuHPBWm9CVILYrFhUpn9KJAUph95T7wwzOdo6oOCJWg2Bw0771zaTSO5ys+GBpPjr3ALE//8bSXW+gTcvx1XZSS1IUEwWjMGD03P+g6k1sXY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1l7Oqut; arc=none smtp.client-ip=209.85.214.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Th1bX929"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6783DC4CEE7;
-	Wed, 18 Jun 2025 08:58:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750237080;
-	bh=wqrA8bKqxtN3oLYl0+ONBhmLPe1OSnjffCbLNpdz1kg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Th1bX929khRVUWpVsv5RPOq70HqpzMbAWPN0PsLo7//IZKJRWrBq+Fe3HVWzymrwK
-	 hK9f/BQi1o15BjH9kDRRIb37zeNnkzM5o+8ONhM6EfYMXfgh647tIrhZYqoU/IG1qB
-	 dP0mL9tuETQEAx4YKjkemIc+afhaLP0HxT0YDkByN+dVXT/upjq4C9A62gjZUwK3ic
-	 n0j7st3u4XQ5KfMVaE9seunzMCMmPWWzesgCUAFf21lscBqYYMhoCuMIi9KmhmCJQi
-	 ogMKEpFQ02H+zlKYVdKw8ExRS+AVjMc6t/nGrIUPR+cg19J5mh4bMFE4G8PCW1fROb
-	 7mxTqxBNPFTuQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRocJ-000000002S6-0sc6;
-	Wed, 18 Jun 2025 10:57:59 +0200
-Date: Wed, 18 Jun 2025 10:57:59 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.de>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH ath-next v3 5/6] wifi: ath11k: choose default PM policy
- for hibernation
-Message-ID: <aFJ_l_BbjxXDBJDD@hovoldconsulting.com>
-References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
- <20250328-ath11k-bring-hibernation-back-v3-5-23405ae23431@quicinc.com>
- <d0cd065c-1cd1-4e56-8c57-60777b1f3664@oss.qualcomm.com>
- <aFJ-SwT1g500h3kC@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1l7Oqut"
+Received: by mail-pl1-f194.google.com with SMTP id d9443c01a7336-235f9ea8d08so65185835ad.1;
+        Wed, 18 Jun 2025 01:58:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750237110; x=1750841910; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eOhnJO46k2hLoOA1evvqSEhjXrTN3jrr3AHVjZDMyD4=;
+        b=K1l7OqutrAR0Mt+M2rdVSQ9mvVTjdeHB+0hMLwviueuaNUm3lSKBxqHfrKoTwmkqLN
+         VQaR6aV30oLFqx08djhyTZkusRI97o9I2g3BETfTgIrBvuUYG7qDf47UtUlEEtwpkC0a
+         62/xLY1/STNrUESPMQGXDRK7qcqz62MPma/84iRIP7HhbxqeXq7IlvRT7vyDCRc86v3r
+         KFbS4FFzsEd/0ekvO6qvum5uijZC8KC29Hm5c1oN+tkTs3wOy2j5bezGuMBOHomoYgtW
+         Q20ZhDjywoTlJZw+opjp7AgWsGfBe/iw1jqIhE78+ECRfvhmmb1wDB+w5rDvYV5/p6/G
+         Qctw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750237110; x=1750841910;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eOhnJO46k2hLoOA1evvqSEhjXrTN3jrr3AHVjZDMyD4=;
+        b=HGnvDFHxRYLTixT8/1G6mzAeXeVt40gTPp6fzn2s+xegmB6E2A2IVPZE5XNy5hJNnk
+         0uXrI7OoGPFHBE4oyEDiCr0hgFciaNyqA/ICS71Wt/6CsllzbY8/5I1//sU8EerQkE1Z
+         m63NdO1xki1hfr6/4nF49n+Yn+Llv61s23wr/BhwdVruorSL03/UwmfS5m27F8CztfBD
+         ya5Dmtsj8OEbCUw13mUa+NKYJrstWXTwf07+YE0C1l935FXeka3Z0EepjwrjquUvfWZ4
+         4cQjZticYz64NQ59QoSrzUHzOFr2krTE8/qUSpIDKszJVuKDQeVHoeybLXAylZJWsQ4t
+         YCJg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6fFO87MTk733xVGFjc5fuMtB5x0nsj84aJna6ztF02p/VqtJFmGS1VYn3KKIe1PtG9RJSR3T8itaHA3FS@vger.kernel.org, AJvYcCUtBEL4XX873FDS5NZjwi4+oHlug74r4YaHXbyEOmVvKDslIoWKlhn32AL5IBBUUl/fgVs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx875Kj7yPTQxhrwxsV+YzQqPctLzItnRcxyofuSZnu7X3lTLaO
+	CoZpn7StR8/wBbiL843V/1OXZVV8Ufd4jHrYpeeODzhUW6UbjLSRNfqIuIp4kypJcU4=
+X-Gm-Gg: ASbGncug+CiO5yg0CWDCifnYwyDCzTL0gLy7pjm6NcVMi6CCaHeXo9+CAJA1Fa3u14y
+	OwaSbUM+XtsRLEDgerWPsWcQ6+jyvnVCixTqbBArqzQH06JC+GvHbfGAewMJWuCnxzZUm0eBQXg
+	bb+GozaWqWMuapU/gIGYJ8UDGUwCmW95P1rBT9jUQHoR7XbczqQgsMIE07zavczmfUxCmSNwcnY
+	xut47ZuhjULPdYckYKzys6L9wLoV9yG1vvpCZs7VE57lPeKRyzBvwaS6e0Tt4so0NTU2x7G5Z20
+	3YSj69dJaYFFAZoC4glG50gmtn4PKxeR+XFpy1P/ooA7xQpE3PxRa5yk8+N2GqLWDZ0psSRZv+F
+	NGSEdFAQiTUqLxQ==
+X-Google-Smtp-Source: AGHT+IFs5h0U9hceINh0qwCd633ljXbi6FxxN77HV1zhafIKWrO3Zc3AdHi9WDeBMtg0lqAZoynLJw==
+X-Received: by 2002:a17:903:166e:b0:234:ed31:fc94 with SMTP id d9443c01a7336-2366b12219fmr244997935ad.26.1750237109668;
+        Wed, 18 Jun 2025 01:58:29 -0700 (PDT)
+Received: from localhost.localdomain ([43.129.244.20])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365decb846sm94652895ad.227.2025.06.18.01.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 01:58:29 -0700 (PDT)
+From: Menglong Dong <menglong8.dong@gmail.com>
+X-Google-Original-From: Menglong Dong <dongml2@chinatelecom.cn>
+To: alexei.starovoitov@gmail.com
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Menglong Dong <dongml2@chinatelecom.cn>
+Subject: [PATCH bpf-next] bpf: make update_prog_stats always_inline
+Date: Wed, 18 Jun 2025 16:56:09 +0800
+Message-Id: <20250618085609.1876111-1-dongml2@chinatelecom.cn>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFJ-SwT1g500h3kC@hovoldconsulting.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 10:52:27AM +0200, Johan Hovold wrote:
-> On Wed, Jun 18, 2025 at 02:15:04AM +0200, Konrad Dybcio wrote:
-> > On 3/28/25 6:32 AM, Baochen Qiang wrote:
-> > > Now WoWLAN mode is chosen for those machines listed in the quirk table.
-> > > This works for suspend (S3) but breaks for hibernation (S4), because
-> > > WoWLAN mode requires WLAN power to be sustained, which is not the case
-> > > during hibernation. For hibernation, the default mode should be used.
-> > > 
-> > > Register a PM notifier with which kernel can notify us of the actual PM
-> > > operation: if system is going to suspend, the original PM policy is
-> > > honored; while if it is hibernation, overwrite it with default policy.
-> > > 
-> > > To summarize: for suspend (S3), WoWLAN mode is chosen for machines listed
-> > > in the quirk table, non-WoWLAN mode for others; for hibernation (S4),
-> > > non-WoWLAN mode is chosen for all.
-> > > 
-> > > Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
-> > > 
-> > > Tested-by: Takashi Iwai <tiwai@suse.de>
-> > > Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> > > ---
-> > 
-> > I've bisected the following splat to this patch, still happening on
-> > linux-next/master, WCN6855 + SC8280XP CRD, 100% reproducibility 
-> 
-> WFIW, I'm not seeing this with 6.16-rc2 (which has this patch) on either
-> the X13s or sc8280xp-crd (ath11k now fails to resume on the latter
-> because of missing regulatory data, but that appears to be a separate
-> regression).
+The function update_prog_stats() will be called in the bpf trampoline.
+Make it always_inline to reduce the overhead.
 
-Scratch that bit about failing to resume, it's just a warning that's
-new.
+Signed-off-by: Menglong Dong <dongml2@chinatelecom.cn>
+---
+ kernel/bpf/trampoline.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > [root@sc8280xp-crd ~]# echo mem > /sys/power/state 
-> > [   20.267830] fb0: Framebuffer is not in virtual address space.
-> > [   39.863070] PM: suspend entry (s2idle)
-> > [   39.908067] Filesystems sync: 0.035 seconds
-> > [   39.934453] ------------[ cut here ]------------
-> > [   39.939259] Invalid notifier called!
-> > [   39.939268] WARNING: CPU: 5 PID: 513 at kernel/notifier.c:79 notifier_call_chain+0x84/0x1a4
-> > [   39.951566] Modules linked in:
-> > [   39.954732] CPU: 5 UID: 0 PID: 513 Comm: bash Not tainted 6.14.0-rc4longbois-01215-g32d93b51bc7e #12177
-> 
-> 6.14?
-> 
-> > [   39.964396] Hardware name: Qualcomm QRD, BIOS 6.0.230525.BOOT.MXF.1.1.c1-00114-MAKENA-1 05/25/2023
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index c4b1a98ff726..134bcfd00b15 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -911,8 +911,8 @@ static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struct bpf_tram
+ 	return bpf_prog_start_time();
+ }
+ 
+-static void notrace update_prog_stats(struct bpf_prog *prog,
+-				      u64 start)
++static __always_inline void notrace update_prog_stats(struct bpf_prog *prog,
++						      u64 start)
+ {
+ 	struct bpf_prog_stats *stats;
+ 
+-- 
+2.39.5
 
-Johan
