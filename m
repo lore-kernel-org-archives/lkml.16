@@ -1,155 +1,134 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439BF1E25F8
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1BC1C5496;
+	Wed, 18 Jun 2025 07:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231605; cv=none; b=jLdk9ytxTMJWFuo14kYlkRHvcO3tfn7MegFdBR3XDE0379ZiPo/dFAuk4iyVE9KlxoAy1/0mWOfGi8ZJQnr/fwUuPuRfKJWcCHvi5WSzDC/S+YPRNAx7+8FcHMANtmYAE5VdyHKF6izLAr2VZj73th+ctOwdZJtVtPTEFbFFa9A=
+	t=1750231712; cv=none; b=JeS7RYxizl7bcHvPBTtz+K8eyHVxgbly++HIqNYHCsl+EQCIdI9NI2DJO0ikmcKiNNffy1xUxNwcJPGSpjOuc994KsFcn9UDZ1tjSUI1ruYOgaQjAxtV6LNvs9IJJ7y2QezU+f5VLgMfhwONZFuOWGQTI1LnaAKOO7i2lZMLpLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231605; c=relaxed/simple;
-	bh=+KzNV4oOOMx38wmOYSChoYo8E3X2rejrMJIv37ZNqsk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R+wHdZXcjZyI4EZTuRvlK525jEOxFz+m9M2UAxg7Tj+DwYMDpQUDc567M8xHKaSoVCvpofsb5CY8zdlch+NS846h+7kOAJswzmVu4e3uJlQXQ0ychWwHYR6pWER5YVsIcGiJBST08q1oBgiay4r5dLqjOCcJUKefTlpakWXSRk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GDAIoRop; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750231712; c=relaxed/simple;
+	bh=wlnzKww1XZK3zyt+h02rRcrQykUtfQcTZfoxxMdiYCw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iikDSsAE2ZHHIpe0LQEo8c0OI5yT/UwXIniDG7sbp982e3KlLnQMR/Z22n9TuM1wj0QXAPBYTX033sZT+6/txlT4/CRnS5uVt8xJoSoOYlEoCKX75E65yVUTLBlcSDlae9qsDHUBbqCXoFmd/fEfl/lN+GIciwaXCucG716UVuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YsBwstYz; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GDAIoRop"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3134c67a173so7738933a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:26:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750231602; x=1750836402; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hM1UhMnYVhQUG4NEkfTsgeOJp+Ekml0puj+o8yaatbQ=;
-        b=GDAIoRopxPuU4liapuSYuXmAxZFhE+u/eQR9Kcpbz64AFGCXJFrYJoH4IWI8mOEw4X
-         0px/HVqYJ3ZgIaGOXm9rkOp5oR3SFArAKvE9IYo4zT4P3I6BwM8FwGw43TmS/PRKtQWA
-         OzE+0jB2KLmI+ZDDNS8Kf5H0mYlXuD5FCq9G4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750231602; x=1750836402;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hM1UhMnYVhQUG4NEkfTsgeOJp+Ekml0puj+o8yaatbQ=;
-        b=we9TSOc2Na3SURwrNLECPfJBozF2+HssyFJzdhSE8gNwLOnJI0oTGGxxUUuKcetb9c
-         3QxGBOMyIfgeewlngdQcaIQn2wn06qMWRlSNC0lmv4wiKEF3GbYi6OCyFYKcde7iAqPn
-         UmUF/ZDpkD3VSOYQhcPgugMTlLwunzL7hN4AmUSgpf05rskLXlqX/cRrMGQKUVWphuVz
-         CuZ3CxYS0OsCBRQ2DlY8a6eIOHzaL9sLOtKEgtoAP6ekngb+SdqvL+X1vhN91WVYOl6z
-         SAXum2YI+q6B+S18WY7OyvjNlLSeAfJ0dA0qgNo/Epy15iPNLgU/vGeRKRIAevQnDEtx
-         Qs/w==
-X-Forwarded-Encrypted: i=1; AJvYcCWhaHqIdtpBfeBXEucLxEeyv8ZAYpeLvwvR8pQnWfOdkwNyR96vcEsU78Wsh2gYoAUZg5ZvRygSvBTirJk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqzWpXg5xTAZMZ23iHPr8DoJPw5z9UDn2hvq1l/SO/du13264B
-	WghSQFYFiu7u+VC27hc271EnCJM5V6r79CSnZhlifgvjRRhEXxmsLpZguiyHcqbi3g==
-X-Gm-Gg: ASbGncuDDQDFjduRD/RqEKsxb9dvWF8yoUW0DiQFYzy/f3yb4lpzz6G/HijmOjlSjlQ
-	BIG18RkD+/5ccsKLPPs5eY13Ylx635JV0HbDb0lDnnVmOdYV4lIJQe+UpOAA/2/KU0LB6AnFiAR
-	CJLrjNGuyPV/6tG09PLxEmwuaQSYXdFoJWgLFFUU55Z8lzqM3i287G3oOAqBylWALr3e+0mC7HA
-	Rl1bPTWmg+/bDArM1pKmWyPCIqQOAI/ehNRfzv7KoKkrptqPhCHHZavnkvI5o/nN9jdlWhMCV2H
-	ZclNqTRb68+gL/Ofn7a2Gf+/WRPNulIjdHwzW0mLHqDcu/2SRXMQ0HbA/2RrihLUCUs=
-X-Google-Smtp-Source: AGHT+IGmlF2R53aG5doFh6Ww/jme75FfKP3jQE6NmFAaZ7BCSPsq9zGRmtfVZXCsvQQaCwhcGykC3g==
-X-Received: by 2002:a17:90b:38c5:b0:311:da03:3437 with SMTP id 98e67ed59e1d1-313f1d05d1bmr23596610a91.27.1750231602456;
-        Wed, 18 Jun 2025 00:26:42 -0700 (PDT)
-Received: from google.com ([2401:fa00:1:10:50f9:5771:52a9:eef9])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2369ebca745sm13850295ad.100.2025.06.18.00.26.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 00:26:42 -0700 (PDT)
-Date: Wed, 18 Jun 2025 15:26:38 +0800
-From: Sung-Chi Li <lschyi@chromium.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jonathan Corbet <corbet@lwn.net>, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] hwmon: (cros_ec) add PWM control over fans
-Message-ID: <aFJqLkkdI86V3fM9@google.com>
-References: <20250512-cros_ec_fan-v3-0-a9f2b255f0cd@chromium.org>
- <20250512-cros_ec_fan-v3-2-a9f2b255f0cd@chromium.org>
- <ca2c10be-3dc4-45e1-b7fc-f8db29a1b6a0@t-8ch.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YsBwstYz"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1SqAw026711;
+	Wed, 18 Jun 2025 07:28:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=InH2M5KENizqEntM6KrxgOu5pkbAKyCcJCo
+	U6Xisc4g=; b=YsBwstYzhri+Na4NZpcKh5y7ju8U+bble7CQRSNa1TJs/LaSaBJ
+	jeWMZ5Apa7U6zWOD963ZHscBQP7fr5EPzNGqZl14rEx7PVLoz7SJpPGTJoJ9syPB
+	syBuAdXyUeFjqI9gH3JpXmxNedn84XA9+rFwktdD/etxGTkNJ2REaoCJp/akJBWi
+	EAcxpsXdEmdKKtOj3kYn5O+1rowUH3WzmKwfv+fYL3jSwmWeBnENppdeJ+7QE/Rt
+	FQ+Clu9/ncExFNJIpbEFy1OP82ka07+cSfYcbKto0Tfa/dl4K44t7kI3cBffRNnm
+	iUm3ywSFzdkuB2pCDWa2jLYuCLiI1NxGh+g==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47928mk47f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 07:28:26 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55I7SMGR024585;
+	Wed, 18 Jun 2025 07:28:22 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 479k1gnd3t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 07:28:22 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55I7SMaw024578;
+	Wed, 18 Jun 2025 07:28:22 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-sartgarg-hyd.qualcomm.com [10.147.242.251])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 55I7SL37024562
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 18 Jun 2025 07:28:22 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 2339771)
+	id EDF455C1; Wed, 18 Jun 2025 12:58:20 +0530 (+0530)
+From: Sarthak Garg <quic_sartgarg@quicinc.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        quic_cang@quicinc.com, quic_nguyenb@quicinc.com,
+        quic_rampraka@quicinc.com, quic_pragalla@quicinc.com,
+        quic_sayalil@quicinc.com, quic_nitirawa@quicinc.com,
+        quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com,
+        Sarthak Garg <quic_sartgarg@quicinc.com>
+Subject: [PATCH V3 0/4] Add level shifter support for qualcomm SOC's
+Date: Wed, 18 Jun 2025 12:58:14 +0530
+Message-Id: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ca2c10be-3dc4-45e1-b7fc-f8db29a1b6a0@t-8ch.de>
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA2MyBTYWx0ZWRfX+UuCDz/d08qv
+ 8ZHpOiX1sLKsxEDypL6Q3n3RwRHoQXp+FHWEyBlPg/4IVx5CfM8pnAQ/Ot3LNXVX/8FZ5nbCO5a
+ 1Mdg/qPEEt45Ay4yVeo9dOJsQSv24NVqZyTXBIwfqjRdOL+QeDZ7nhSzOHMN0JA/b+NqIgmBCYU
+ fygEFJU6qe0PA6O+sLDLCfDn206NKhlrcRRGLp2HaflOOABryAQdqiqGwhCpyEQQt+VbuuJ81yV
+ JM14b8ziMGwZYs/1j+QW5CZwlaPiTlRN1F6x1zweXvAIlDZnNo1aA7Elb/BXB45+dm3pO4vovkS
+ HBI1TunFS/7p6CS0AnHEBaM5DQz6VCdBke5vHR6arBJsmm83LwMMRTd2MkD2W5Cvmq0ISKP2TcF
+ J3VY282QD7i9TQ1TroOGw+lxWdrLVEr1LjtV3vrqyd+5YGpdJB2Cm5amvwp7kfx8BG24ty0v
+X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=68526a9a cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=6IFa9wvqVegA:10 a=7dyTyeQR3BJvcbYslWQA:9
+X-Proofpoint-GUID: RCtquw9aEtO0zmWGzscjHcjKZG35RZt1
+X-Proofpoint-ORIG-GUID: RCtquw9aEtO0zmWGzscjHcjKZG35RZt1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ mlxlogscore=999 phishscore=0 clxscore=1015 mlxscore=0 impostorscore=0
+ adultscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506180063
 
-On Mon, May 12, 2025 at 09:30:39AM +0200, Thomas Weißschuh wrote:
+Add level shifter support for qualcomm SOC's.
 
-Sorry for the late reply, I missed mails for this series.
+- Changed from v2
+    - As suggested by Konrad Dybcio and Ulf Hansson redesigned logic
+      to introduce a new DT property max-sd-hs-frequency and override
+      the hs_max_dtr accordingly in sd.c file.
 
-> On 2025-05-12 15:11:56+0800, Sung-Chi Li via B4 Relay wrote:
-> > From: Sung-Chi Li <lschyi@chromium.org>
-> >  static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
-> >  {
-> >  	unsigned int offset;
-> > @@ -73,7 +117,9 @@ static long cros_ec_hwmon_temp_to_millicelsius(u8 temp)
-> >  static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-> >  			      u32 attr, int channel, long *val)
-> >  {
-> > +	u8 control_method;
-> >  	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> > +	u8 pwm_value;
-> >  	int ret = -EOPNOTSUPP;
-> >  	u16 speed;
-> >  	u8 temp;
-> 
-> Ordering again.
-> 
-> This should be:
-> 
-> struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> int ret = -EOPNOTSUPP;
-> u8 control_method;
-> u8 pwm_value;
-> u16 speed;
-> u8 temp;
-> 
-> or:
-> 
-> struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
-> u8 control_method, pwm_value, temp;
-> int ret = -EOPNOTSUPP;
-> u16 speed;
-> 
-> <snip>
-> 
+- Changed from v1
+    - As suggested by Krzysztof Kozlowski redesigned logic to use
+    compatible property for adding this level shifter support.
+    - Addressed Adrian Hunter comments on V1 with resepect to
+      checkpatch.
+    - Cleared the bits first and then set bits in
+      sdhci_msm_execute_tuning as suggested by Adrian Hunter.
+    - Upated the if condition logic in msm_set_clock_rate_for_bus_mode
+      as suggested by Adrian Hunter.
 
-Would you mind to share the sorting logic, so I do not bother you with checking
-these styling issue? Initially, I thought the sorting is based on the variable
-name, but after seeing your example (which I am appreciated), I am not sure how
-the sorting works. Is it sorted along with the variable types (
-"u8 control_method", "u16 speed", etc)? If that is the case, why "u16 speed" is
-in the middle of the u8 group variables?
+Sarthak Garg (4):
+  mmc: sdhci-msm: Enable tuning for SDR50 mode for SD card
+  dt-bindings: mmc: controller: Add max-sd-hs-frequency property
+  mmc: core: Introduce a new flag max-sd-hs-frequency
+  arm64: dts: qcom: sm8550: Remove SDR104/SDR50 broken capabilities
 
-> > +static inline bool is_cros_ec_cmd_fulfilled(struct cros_ec_device *cros_ec,
-> > +					    u16 cmd, u8 version)
-> 
-> "fulfilled" -> "available" or "present"
-> 
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = cros_ec_get_cmd_versions(cros_ec, cmd);
-> > +	return ret >= 0 && (ret & EC_VER_MASK(version));
-> > +}
-> > +
-> > +static bool cros_ec_hwmon_probe_fan_control_supported(struct cros_ec_device *cros_ec)
-> > +{
-> > +	if (!IS_ENABLED(CONFIG_PM))
-> > +		return false;
-> 
-> Why? This should generally work fine without CONFIG_PM.
-> Only the suspend/resume callbacks are unnecessary in that case.
-> 
+ .../bindings/mmc/mmc-controller-common.yaml       | 10 ++++++++++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi              |  4 +---
+ drivers/mmc/core/host.c                           |  2 ++
+ drivers/mmc/core/sd.c                             |  2 +-
+ drivers/mmc/host/sdhci-msm.c                      | 15 +++++++++++++++
+ include/linux/mmc/host.h                          |  1 +
+ 6 files changed, 30 insertions(+), 4 deletions(-)
 
-I treat fan control should include restoring the fan setting after resume, so
-I think if no CONFIG_PM, the fan control is not complete. I am good with
-removing this check, and if you have any thoughts after this explanation, please
-share with me, otherwise I will remove it in the next series.
+-- 
+2.34.1
 
