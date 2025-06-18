@@ -1,107 +1,121 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1343E28FA85
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03505296166
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242145; cv=none; b=kwNm36GqZkdWvFXx20d7K2NELcKC7dTYig3TjjyVRR2ra+MsScz5BO7fGSMhaQqTTyIu0Of2RNFy6fG66Wiz1f//vaHLNMKUPw2JRusNYIzT+7dp5ETuoM5gcGu1AR0Qoa+RKVOpF2ykOPlAHuksUBF3piHJSrxkC2OJ9+8WY5k=
+	t=1750242151; cv=none; b=YPu5rSWCDnpWHM0tqCP+5z41AHo+mqpOJ+8I9T1eQ5bSMZgRII3sdhOOVAEv7K/cR82LIaQCPbcSnpRoO+qG6+/xkhmVR0k8PJQBeE12ZUt1HCHlFcaJE5lmytlaE3cZ/stGEbdBrHY/rzQ0GjaoX8x2aeRzkbbP6lTbTFRFXEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242145; c=relaxed/simple;
-	bh=+qOQU17OoM8/KAmW2Xgq7JH5nbAjGTw3ExvQ9U5cu7w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C1REEO62sCEF0e07/FJcBY/t8qfV3pUSTQybSa5x9FzqhlTkqw26JkiBAOFKESd2y17ykP7voWNwgjvFgdhL4jTULpnXTt4WdMJn+YAhlcZVli0m+Ur8nVXVNZihCPcv5orUvy9iyaPw5AtexLhgjBZBdaz1a29qmPliGrzBdfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CoUrotv/; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750242151; c=relaxed/simple;
+	bh=WRlTrsWOi/i85ebZasssiJ4ZtiiHBTtd9LezuNSNDfQ=;
+	h=From:Date:Subject:MIME-Version:Message-Id:In-Reply-To:To:Cc:
+	 Content-Type:References; b=dTTItHhcJJUAeHOiIw0taBXOrAz2ObvwPo1lLItMAotjXTmbwGhHeuYkDUZji3OKJ9pdAgGqUkWVIO1P6vLZetw32ZWndmUuL/YDgRKuNCWQBxJhOdowZFq07Z7QzFF619YvF3joYD6WuhMOKJjDQ3bQF+OWNF2Z96JhetxHXOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=hpYusI0q; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CoUrotv/"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso60215595e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:22:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750242142; x=1750846942; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AcY0E63xRmQxwqQZ0aZVZsL1+UafBW6eRdmA8hP7p/o=;
-        b=CoUrotv/z3TvglJKc4tf/X3/DHlMUI66sYQSzgfxbU02AFZUkZmoSee/nKHJgCvIzw
-         d0I5q+9khi/TN1Z4gSQS0xWCekA8ynsY7kgZYyDm/Yrtho5i3njGJVbHUtIDQAWIkHZI
-         xujqpCINLCSgKNQT9deB/wtCq6Qis0aqE+pa+N7fyYkg3kDI1Hw1mzHwlMCPR1F101+0
-         nNelRJ3WzG+EFNxesNf/jmXo+VsNECFv+O3eRRYitGdoDMW6+aOEk1YXG9CnOm2v9Wwf
-         LBYupTbXNPYuiq2D91uCga9L/qYQXF57+3DT6Sx818ejkLprDrj4iEfPqMylagKcWqNo
-         l0wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750242142; x=1750846942;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AcY0E63xRmQxwqQZ0aZVZsL1+UafBW6eRdmA8hP7p/o=;
-        b=OWuXDHCm2HBSeaF/656XxtFeEiRU5MYD3UFsEF++MvHsO+R+lZBaukU70cW/L2qYHa
-         BtFyM6/8+yvDGbB3e02GEkseL96Dv3zUEm769oiYjy/hP84yUvJVKEDG46E1Zc5DzlLN
-         Z31WGNCFZ0EqII6DrlwOgDGh2rn3+ZEJo7K60aWJ1cZVqV/Cwg/Qy92NF300Amzl0ssG
-         /dCcKUrgLkissIHEPVEWWtWinC5PMZe19+PPM1n7WTQSjiSdQ9ehPtKigEbE3CJZFxJu
-         kVghp1s8qfBes0E4EyNHkWlcn4ldqZWFpqiwnSdUqF8o6qDrhy0/e3nPa3fYAWUOj/Q7
-         cGbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpDOqCJK7KftOmEVy7Xrzz8xZgxBb9Gb1FakMzbmJmZbT4FGPuRfHql1jd4lUZ3jVFrVUSkiZVR2Sd5IU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/MrlrffTL9uJTbb4COl2EP++IZ2tphHhFCU6y94S3GFrkq+A4
-	BFsekRHCU4VpWu+8fVdApmJRWZsRCBkT1Cya1HGVny6+ZyPmv2iq99SvRtmoHE5TxG0=
-X-Gm-Gg: ASbGncsJgOTTJvAXNHxqW2Z92f8gb+/mR8VXZPSh6kxG+uaLdold8iL0Kva3lF/95mI
-	k2vigAIb8q0mUiZmd8HqgxV2xFY065moQRAFz8K3JdOA5own8nqxCjHoHAkSuoQNqEL4r1E/3f8
-	dxzBiO4k8Po4K1ZVVWBvQoIqyVp/QjBCkorNUsRfaUkmoCBSRX/AmVaqpSdREqr3V89ZODNu/oo
-	oZKdqRAguDbtdEtjZ2HxgpDB2aHMyd3zoRmk5YU7wyBza1iCUzbTpYz19mu/M8WfFZvGOCwOhBN
-	iZnWoM05yM68tcMYDmOn6pB5iNaub0DbzpXBxq+wrZ8Nid1gh8dp/386HhqTYA==
-X-Google-Smtp-Source: AGHT+IHn0n3NmTaxbvzRw1SdIFvw3ZSwW9W0E1EQegpOOqY+iv4O0dkFwIU4AIp8rNLGr1+PEgFNrg==
-X-Received: by 2002:a05:600c:3e19:b0:439:9424:1b70 with SMTP id 5b1f17b1804b1-4533cadf928mr161514965e9.30.1750242142318;
-        Wed, 18 Jun 2025 03:22:22 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:ad8:9ec2:efc8:7797])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e13d014sm202946185e9.24.2025.06.18.03.22.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:22:22 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	"Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: gpio: arm,pl011: Drop interrupt properties as required
-Date: Wed, 18 Jun 2025 12:22:20 +0200
-Message-ID: <175024212201.53500.363665357985105443.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250609220900.3035642-1-robh@kernel.org>
-References: <20250609220900.3035642-1-robh@kernel.org>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hpYusI0q"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250618102227euoutp01d278240f6d55205e6b385bced700e76e~KG-XcIPOz1794717947euoutp01K
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:22:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250618102227euoutp01d278240f6d55205e6b385bced700e76e~KG-XcIPOz1794717947euoutp01K
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750242148;
+	bh=63b01qSumkcLmIEY0xdhZ+QcRoYutlUuGjICSf4+AW0=;
+	h=From:Date:Subject:In-Reply-To:To:Cc:References:From;
+	b=hpYusI0qCOndIuRLvKCeZBjC0dnxXjV80+FYxNTKDN6s5FU3G34pYQWlP50+2A9J3
+	 LXO+LAXkmmnEoslHpaGTdoZU3CoTg12HvhlXYMQ20mlmKKWp1+zTK8l3fe2a+/m84R
+	 3CW94IW9i3XodpoKjEDROtKk4EPDpdxb+LryZGNU=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2~KG-W6T4lR2901029010eucas1p2W;
+	Wed, 18 Jun 2025 10:22:27 +0000 (GMT)
+Received: from AMDC4942.eu.corp.samsungelectronics.net (unknown
+	[106.210.136.40]) by eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250618102226eusmtip130e43c3ee9d13c7c00906f7347907b07~KG-V8arCD1490514905eusmtip1H;
+	Wed, 18 Jun 2025 10:22:26 +0000 (GMT)
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+Date: Wed, 18 Jun 2025 12:22:08 +0200
+Subject: [PATCH v5 2/8] dt-bindings: firmware: thead,th1520: Add resets for
+ GPU clkgen
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-apr_14_for_sending-v5-2-27ed33ea5c6f@samsung.com>
+In-Reply-To: <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
+To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,  Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>,  Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,  Conor Dooley <conor+dt@kernel.org>,  Michal
+	Wilczynski <m.wilczynski@samsung.com>,  Bartosz Golaszewski <brgl@bgdev.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,  Frank Binns
+	<frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>,  Maarten
+	Lankhorst <maarten.lankhorst@linux.intel.com>,  Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,  David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,  Paul Walmsley
+	<paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+	<aou@eecs.berkeley.edu>,  Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson
+	<ulf.hansson@linaro.org>,  Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+X-Mailer: b4 0.15-dev
+X-CMS-MailID: 20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-RootMTR: 20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2
+X-EPHeader: CA
+X-CMS-RootMailID: 20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2
+References: <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
+	<CGME20250618102227eucas1p26e8968805092c3ce0ecbe84e9724a6e2@eucas1p2.samsung.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Extend the TH1520 AON to describe the GPU clkgen reset line, required
+for proper GPU clock and reset sequencing.
 
+The T-HEAD TH1520 GPU requires coordinated management of two clocks
+(core and sys) and two resets (GPU core reset and GPU clkgen reset).
+Only the clkgen reset is exposed at the AON level, to support SoC
+specific initialization handled through a dedicated auxiliary power
+sequencing driver. The GPU core reset remains described in the GPU
+device node, as from the GPU driver's perspective, there is only a
+single reset line [1].
 
-On Mon, 09 Jun 2025 17:08:59 -0500, Rob Herring (Arm) wrote:
-> It is possible that the PL011 doesn't have any interrupt connected and
-> can't be an interrupt provider, so drop the interrupt properties as
-> required.
-> 
-> The LG LG131x SoCs are one example of this.
-> 
-> 
-> [...]
+This follows upstream maintainers' recommendations [2] to abstract SoC
+specific details into the PM domain layer rather than exposing them to
+drivers directly.
 
-I changed pl011 to pl061 manually.
+Link: https://lore.kernel.org/all/816db99d-7088-4c1a-af03-b9a825ac09dc@imgtec.com/ - [1]
+Link: https://lore.kernel.org/all/38d9650fc11a674c8b689d6bab937acf@kernel.org/ - [2]
 
-Applied, thanks!
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+---
+ Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-[1/1] dt-bindings: gpio: arm,pl011: Drop interrupt properties as required
-      https://git.kernel.org/brgl/linux/c/7b20980ffc11514d8849811857d915001236bcfa
+diff --git a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+index bbc183200400de7aadbb21fea21911f6f4227b09..3365124c7fd4736922717bd31caa13272f4a4ea6 100644
+--- a/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
++++ b/Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
+@@ -32,6 +32,13 @@ properties:
+     items:
+       - const: aon
+ 
++  resets:
++    maxItems: 1
++
++  reset-names:
++    items:
++      - const: gpu-clkgen
++
+   "#power-domain-cells":
+     const: 1
+ 
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.34.1
+
