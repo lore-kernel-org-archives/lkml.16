@@ -1,133 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787D7192D8A;
-	Wed, 18 Jun 2025 03:33:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643BD28E7;
+	Wed, 18 Jun 2025 03:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750217628; cv=none; b=MVjGPe6cLoRPmvflSqo18Ay/qb9iP06xZ1IRtRY6njMVGdMGCMl3qU2Ns1XiYJo96maCnF2cdk0C2fEeVGjVMkS7y4Iaohprxd1gp7B6WDwca5NDDwq61/g1VNlpGP6WDZYuHPUOZkU4tUtqX6vMNI1rfA9M/noEb9qRPeWXKDQ=
+	t=1750217700; cv=none; b=Uwq5aIcAbfT3+5qixBfGiRYmFPk5mztaz2qVKmSGELuFiJ/ADHTVI09KfjSL9PXecEwqqQxfTkCLnsRAy3PygZPhHeNfTIGCmC3ee6fwjv1h+UQt7r0TRUmqDwfSWiTBkWoinKpTUfoLh3BcIAmlefC422HaKmsNGRTcdY72p14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750217628; c=relaxed/simple;
-	bh=3VvqmFIUqdeyjynHMuuFCh4mFv5QeHs7/Dxti4jBakM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=II48+JE1Gd8hF1sO398a3zZUqFMmAQW9sg5iE/bwLud7ymZAXtk6KSDmDBiirPPVQ6Mvnu8l0Lt6VgbzUL143tmfX+/g18aYoQhhtuP8Mgn3jlHmkHGljrSItsFByMTeLu8AgYzZCxZ/uceeFCojsEibZbstUPNcfuQhkBlfigg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ljch38BI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750217700; c=relaxed/simple;
+	bh=QADJZu+wYVE4rOxfgnFlkA3juPVE4g6tlhVku56dgKk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=XdCpPNosT1XPPAMIATSwiLMuKDAZCCh7VDWMeWkD2buVqeMRE05tTEbjSY2M5Iwt2qA8NFrONLuze7gW2ZuuoVKFWyzZdpDrrl9N89mx4fy5L1+7z+qggZwu8gajBDn3DVg0EODyfwyWTxQld9w89wX8Yll0A3UA2YvKdR2jAGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=uY/d77SC; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ljch38BI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B8FC4CEE7;
-	Wed, 18 Jun 2025 03:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750217628;
-	bh=3VvqmFIUqdeyjynHMuuFCh4mFv5QeHs7/Dxti4jBakM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ljch38BIGCwmNG61wGiFvAlskwCKR98dsG8dgjojBEopxMMpMWKn4l/ZXuvwZ+Fjw
-	 SsJnu17Li2suwRd0llS9BWYR5yvguYJsgM8DPCLwejOXuVy7gs8TDHHpCRKzlK2Yuo
-	 t6HzznIhmuKSP6wsYlAzlHChRdcghYwOhRd3qlS6aJ2Kr08TPqHfbfzIi2+rkEg7NM
-	 fSkEUED3m0pqyDCxLoDqOIyLvZu8htd45Ck4r4k3JclysCFymCYwJzijJMTAQgY3aS
-	 F1IYZ1VXCveyXZfV81jQhQaIBvvrzczZ+dpIaGzPan1sqrWdaNer45RB9Asx7zUVqr
-	 jksN+MuFJ3JQw==
-Date: Tue, 17 Jun 2025 22:33:45 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: george.moussalem@outlook.com
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Luo Jie <quic_luoj@quicinc.com>, Lee Jones <lee@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] clk: qcom: ipq5018: keep XO clock always on
-Message-ID: <wao5fe7nbupujho3ql46ctvbqhe6y2adzqrtbyxqgfja6oriwt@nekluv75lcze>
-References: <20250516-ipq5018-cmn-pll-v4-0-389a6b30e504@outlook.com>
- <20250516-ipq5018-cmn-pll-v4-1-389a6b30e504@outlook.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="uY/d77SC"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55I3YHB31384936
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 17 Jun 2025 20:34:18 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55I3YHB31384936
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025052101; t=1750217659;
+	bh=QADJZu+wYVE4rOxfgnFlkA3juPVE4g6tlhVku56dgKk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=uY/d77SCwbZHK5KwLWXdhqYYiM2E1LbziCx7+ZC+2oeozKBooOT2Bwad0UW2OlQjL
+	 6hX/j76nPeFUmSIqoUn0X7jGT3nH8w08FllI/eaz+yFivY6B6cLHG+I50Z0BSEYFKR
+	 X3kCVt/3e9rBZ6Mhs+cYSXWn2ErlFMyGU7EmijgUas1N+RGmKzuuGEmVQXuBUrbkdg
+	 W9cQvybFTRe/EfymO8M21dnCYM1ZubRsrLC1ERd3V/MbOpAK8mNYj4JtuYMGgjmHqX
+	 KIdYeyPNLpt2143beD+dlIKquzLI4rsWDZiQ1s+fGmCvye7rfRiYFWQ8yrbeM8rJlH
+	 PzImWPxTxog0Q==
+Date: Tue, 17 Jun 2025 20:34:17 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Sean Christopherson <seanjc@google.com>
+CC: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, pbonzini@redhat.com, peterz@infradead.org,
+        sohil.mehta@intel.com, brgerst@gmail.com, tony.luck@intel.com,
+        fenghuay@nvidia.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/2=5D_x86/traps=3A_Initialize_D?=
+ =?US-ASCII?Q?R7_by_writing_its_architectural_reset_value?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1b8095a8-1e65-4508-b874-fa2fce1b00ee@zytor.com>
+References: <20250617073234.1020644-1-xin@zytor.com> <20250617073234.1020644-3-xin@zytor.com> <aFFvECpO3lBCjo1l@google.com> <9720c605-c542-4969-b7f0-b4477bc2ab1e@zytor.com> <1b8095a8-1e65-4508-b874-fa2fce1b00ee@zytor.com>
+Message-ID: <3305378C-7D27-4A89-9DF8-B7F1A1582613@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250516-ipq5018-cmn-pll-v4-1-389a6b30e504@outlook.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 16, 2025 at 04:36:08PM +0400, George Moussalem via B4 Relay wrote:
-> From: George Moussalem <george.moussalem@outlook.com>
-> 
-> The XO clock must not be disabled to avoid the kernel trying to disable
-> the it. As such, keep the XO clock always on by flagging it as critical.
-> 
+On June 17, 2025 5:15:18 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
+>On 6/17/2025 4:08 PM, Xin Li wrote:
+>>=20
+>> I hope the bit will be kept reserved to 1 *forever*, because inverted
+>> polarity seems causing confusing and complicated code only=2E
+>
+>BTW, FRED flipped BLD and RTM polarities in its event data:
+>
+>The event data is not exactly the same as that which will be in DR6
+>following delivery of the #DB=2E The polarity of bit 11 (BLD) and bit 16
+>(RTM) is inverted in DR6=2E
+>
+>
+>I=2Ee=2E, BLD and RTM are active high in FRED event data=2E
 
-Is there any reason for us to model this clock in Linux, if we're not
-allowed to touch it?
-
-CLK_IS_CRITICAL has side effect on the runtime PM state of the clock
-controller, so would be nice if we can avoid that.
-
-Regards,
-Bjorn
-
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
-> The kernel will panic when parenting it under the CMN PLL reference
-> clock and the below message will appear in the kernel logs.
-> 
-> [    0.916515] ------------[ cut here ]------------
-> [    0.918890] gcc_xo_clk_src status stuck at 'on'
-> [    0.918944] WARNING: CPU: 0 PID: 8 at drivers/clk/qcom/clk-branch.c:86 clk_branch_wait+0x114/0x124
-> [    0.927926] Modules linked in:
-> [    0.936945] CPU: 0 PID: 8 Comm: kworker/0:0 Not tainted 6.6.74 #0
-> [    0.939982] Hardware name: Linksys MX2000 (DT)
-> [    0.946151] Workqueue: pm pm_runtime_work
-> [    0.950489] pstate: 604000c5 (nZCv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    0.954566] pc : clk_branch_wait+0x114/0x124
-> [    0.961335] lr : clk_branch_wait+0x114/0x124
-> [    0.965849] sp : ffffffc08181bb50
-> [    0.970101] x29: ffffffc08181bb50 x28: 0000000000000000 x27: 61c8864680b583eb
-> [    0.973317] x26: ffffff801fec2168 x25: ffffff800000abc0 x24: 0000000000000002
-> [    0.980437] x23: ffffffc0809f6fd8 x22: 0000000000000000 x21: ffffffc08044193c
-> [    0.985276] loop: module loaded
-> [    0.987554] x20: 0000000000000000 x19: ffffffc081749278 x18: 000000000000007c
-> [    0.987573] x17: 0000000091706274 x16: 000000001985c4f7 x15: ffffffc0816bbdf0
-> [    0.987587] x14: 0000000000000174 x13: 000000000000007c x12: 00000000ffffffea
-> [    0.987601] x11: 00000000ffffefff x10: ffffffc081713df0 x9 : ffffffc0816bbd98
-> [    0.987615] x8 : 0000000000017fe8 x7 : c0000000ffffefff x6 : 0000000000057fa8
-> [    1.026268] x5 : 0000000000000fff x4 : 0000000000000000 x3 : ffffffc08181b950
-> [    1.033385] x2 : ffffffc0816bbd30 x1 : ffffffc0816bbd30 x0 : 0000000000000023
-> [    1.040507] Call trace:
-> [    1.047618]  clk_branch_wait+0x114/0x124
-> [    1.049875]  clk_branch2_disable+0x2c/0x3c
-> [    1.054043]  clk_core_disable+0x60/0xac
-> [    1.057948]  clk_core_disable+0x68/0xac
-> [    1.061681]  clk_disable+0x30/0x4c
-> [    1.065499]  pm_clk_suspend+0xd4/0xfc
-> [    1.068971]  pm_generic_runtime_suspend+0x2c/0x44
-> [    1.072705]  __rpm_callback+0x40/0x1bc
-> [    1.077392]  rpm_callback+0x6c/0x78
-> [    1.081038]  rpm_suspend+0xf0/0x5c0
-> [    1.084423]  pm_runtime_work+0xf0/0xfc
-> [    1.087895]  process_one_work+0x17c/0x2f8
-> [    1.091716]  worker_thread+0x2e8/0x4d4
-> [    1.095795]  kthread+0xdc/0xe0
-> [    1.099440]  ret_from_fork+0x10/0x20
-> [    1.102480] ---[ end trace 0000000000000000 ]---
-> ---
->  drivers/clk/qcom/gcc-ipq5018.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/qcom/gcc-ipq5018.c b/drivers/clk/qcom/gcc-ipq5018.c
-> index 70f5dcb96700f55da1fb19fc893d22350a7e63bf..24eb4c40da63462077ee2e5714e838aa30ced2e3 100644
-> --- a/drivers/clk/qcom/gcc-ipq5018.c
-> +++ b/drivers/clk/qcom/gcc-ipq5018.c
-> @@ -1371,7 +1371,7 @@ static struct clk_branch gcc_xo_clk = {
->  				&gcc_xo_clk_src.clkr.hw,
->  			},
->  			.num_parents = 1,
-> -			.flags = CLK_SET_RATE_PARENT,
-> +			.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
->  			.ops = &clk_branch2_ops,
->  		},
->  	},
-> 
-> -- 
-> 2.49.0
-> 
-> 
+Yes, we designed it so FRED (and VTx) are always active high
