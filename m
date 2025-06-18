@@ -1,106 +1,83 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FD38635D;
-	Wed, 18 Jun 2025 08:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB80A239561
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750234250; cv=none; b=QTJo24i+JAmpdSc1JvqqFsfKk/JwceHcZMn/xjjlxmBRVuoWJU6p64yO3dzwtaBaeMaVzkJo6EdqBx7LIuR37L11IA4tSlwVDseDkEMToGtPm7sH/9JBS0yayfLlUTRLH6iwVViO4cpnyUPPNtUJQg91sakgRJc/8DLCI7WFf4w=
+	t=1750234286; cv=none; b=Sa2EbyHqZvh66EFRVYFJ3ha9inouR50eHqA1QL1IB83Qb/ZpeI/6BCTgLJuUN/E+gdZb4QjO0sLOgXPmgDKay3ojdDjasqPvbUtjClexs0OqtdJOTaQShIFIaGgDFmnt7COq+9ZKeaR2Ar4hapBGx4qXbVIuwN7yzcdL+VQP3MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750234250; c=relaxed/simple;
-	bh=U3t1blzXw4sX6mismk2hqJWRI6VHrorVvBaxSbHqpD0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=O4w/3ZBuulfjsN7HlnyeSim1d9DkfxA8DS4DQl0lgL9Y54OlYuUqrqbTSkToNettUaOIiKM5oJy0nKk5jcMaef5BdhEw7sJupAiB2Pgv2QeTASQT/Fa+quRM7CvQq3O+aMg/52G9IjLKcBDTnUPMN9s2nemiBcTbNI3HwPCOVUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nS+lvrQN; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750234286; c=relaxed/simple;
+	bh=h5QGTcnIWHnz3b6jsTHTkeVKOJ5MS/jLjfaOL38TiWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pgvseTRXTOwwCKp0ZBVfpRgomKLSu+eDeFJOUHsRx32zBi5tohSunlCZuUcaS6e0b4SbcJM+5c9z+xR5l+v27yX2Y6atQlFJDfasX9SJ2V9kXvA63WLeJBLw578nLCLCWRE7oAqJU5Cb50uR5m4W/kTdbwyV1LcS8U/QJoHY8Es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=cRLKLibd; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nS+lvrQN"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I8APoF246255;
-	Wed, 18 Jun 2025 03:10:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750234225;
-	bh=EkBJLXLtYiwNEWiqUOgCSgr+Gg10spFbCfTn2yX+wXY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=nS+lvrQN4jYr+FrzqSrbjVoGCjmF0iyB03C51dVp9ToWiekFX8DMi/JQdIfLwS4jk
-	 zfu4H52rEw3izfkoQn8+efyVhGiQ6abijD5/2wxQ4LjZpwzx8S9bgTz75eyXIDZ7w2
-	 jR4Tmak8pvzjWgQbPG/YY4ASBdDOsgwsRZoyr9kg=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I8AP7k3738895
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 18 Jun 2025 03:10:25 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
- Jun 2025 03:10:25 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 18 Jun 2025 03:10:25 -0500
-Received: from [172.24.227.143] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I8AM5u3139529;
-	Wed, 18 Jun 2025 03:10:23 -0500
-Message-ID: <92372da1-0417-48c3-a36d-ca20c946f07b@ti.com>
-Date: Wed, 18 Jun 2025 13:40:21 +0530
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="cRLKLibd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=SG
+	cSb4qrOG3O9MCBW38eyABjbPdzTYy8UGZPX8GL5eE=; b=cRLKLibdzKL7O6/s2W
+	oiWr984pUzdHjrV76NkRvyzUKkYBM664azoIVHvWJpfRZB+bnVvh11MeFqFq2vYA
+	5ia7nMpmX4YHYoURc8ZDEUm7J9ZUsA540PR8RtqONOwUevtxmRxwZjiLzoFZAu/S
+	WvodH5CB8VAevGADD8rabp2jU=
+Received: from ProDesk.. (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wBXuD9adFJoIEHGAA--.6009S2;
+	Wed, 18 Jun 2025 16:10:08 +0800 (CST)
+From: Andy Yan <andyshrk@163.com>
+To: neil.armstrong@linaro.org
+Cc: quic_jesszhan@quicinc.com,
+	mripard@kernel.org,
+	simona@ffwll.ch,
+	tzimmermann@suse.de,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH] drm/panel: raydium-rm67200: Add missing drm_display_mode flags
+Date: Wed, 18 Jun 2025 16:09:55 +0800
+Message-ID: <20250618080955.691048-1-andyshrk@163.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: Add clk_determine_rate function call
-To: Brian Masney <bmasney@redhat.com>
-CC: <mturquette@baylibre.com>, <sboyd@kernel.org>, <linux@armlinux.org.uk>,
-        <linux-clk@vger.kernel.org>, <devarsht@ti.com>,
-        <linux-kernel@vger.kernel.org>, <tomi.valkeinen@ideasonboard.com>,
-        Maxime
- Ripard <mripard@kernel.org>
-References: <20250616103527.509999-1-j-choudhary@ti.com> <aFHKGvHlXP-cdC7d@x1>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <aFHKGvHlXP-cdC7d@x1>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wBXuD9adFJoIEHGAA--.6009S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xr1kXFWrWw4UGw4rtr45Awb_yoWkCrg_KF
+	18uF43Xw4Uu3W3ursFva909FWxt3s5WFZ5u340ka4akrnFvr18Xan7Cry0y3Z8Gr42yas8
+	Xa4xXryjkas7WjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8FPfJUUUUU==
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gJwXmhSc6oZowAAsn
 
-Hello Brian,
+From: Andy Yan <andy.yan@rock-chips.com>
 
-On 18/06/25 01:33, Brian Masney wrote:
-> On Mon, Jun 16, 2025 at 04:05:27PM +0530, Jayesh Choudhary wrote:
->> Add a function to determine if a particular rate can be set for a clock
->> with its argument being the clock and the desired rate so that it could
->> be exposed to other peripherals.
->> For example, the display controllers typically has to perform multiple
->> checks for supported display resolutions including those related to
->> clock rates. The controller has to check this way before it actually
->> enables the clock and has to do it multiple times (typically for each
->> mode), and therefore using the clk_set_rate when its not needed, does
->> not make sense.
->>
->> The driver does have "__clk_determine_rate()" but this cannot be used
->> by other subsystems because of the function arguments used.
->> "clk_hw" is not accessible to other peripherals due to clk and clk_core
->> structure definition in driver instead of include file, so we cannot use
->> already exisiting "__clk_determine_rate()" in other drivers.
->>
->> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
-> 
-> Do you have a link to how this will be used within the DRM subsystem? If
-> not, could you post a new series to include the user of this new API so
-> that we can see specifically how it will be used.
-> 
-> Thanks,
-> 
-> Brian
-> 
+Add missing drm_display_mode DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC
+flags. Those are used by various bridges(e.g. dw-mipi-dsi) in the
+pipeline to correctly configure its sync signals polarity.
 
-Based on the conversation in [1], this patch is no longer required.
-This can be handled with preexisting functions.
+Tested on rk3568/rk3576/rk3588 EVB.
 
-[1]: 
-https://lore.kernel.org/all/f2e54128-f7c1-4193-a511-13775559e261@ti.com/
+Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+---
 
-Thanks and Warm Regards,
-Jayesh
+ drivers/gpu/drm/panel/panel-raydium-rm67200.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67200.c b/drivers/gpu/drm/panel/panel-raydium-rm67200.c
+index add6099ae8a64..92c3e20b903f0 100644
+--- a/drivers/gpu/drm/panel/panel-raydium-rm67200.c
++++ b/drivers/gpu/drm/panel/panel-raydium-rm67200.c
+@@ -478,6 +478,7 @@ static const struct raydium_rm67200_panel_info w552793baa_info = {
+ 		.vtotal = 1952,
+ 		.width_mm = 68, /* 68.04mm */
+ 		.height_mm = 121, /* 120.96mm */
++		.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
+ 		.type = DRM_MODE_TYPE_DRIVER,
+ 	},
+ 	.regulators = w552793baa_regulators,
+-- 
+2.43.0
+
+base-commit: e1070ed6f01f471547b67ee23b0cb8febaaccaca
+branch: rk356x_rk3588_rk3576_dsi
+
