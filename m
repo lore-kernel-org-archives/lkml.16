@@ -1,269 +1,155 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 472DE2F533D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F532F533D
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750232185; cv=none; b=ARMqgg/pZ2MDrEOXtTF6LM7/QPNoKs+F7kGUyl7UjKZhAB9ZxHEdyDB1eRUDkyUyKYpuEHwe08CmlC8ejAJnypXjoElbd4hNhRbwSh0vLd9W9ASm4jj6f2uzT0W52DPLnALbNtvp69yxxfIE3tcwf6WLFZBJLJsgqQe3gLsmXIU=
+	t=1750232220; cv=none; b=YLsHIeFy7MXCu3QgG2S2+M38OMYKTOhL9r2bLtGC9GgfuYbN375ovLNCnZ8ctRU5FPd0mgNNQ3uJFJf3J4g75UctDmpkN4Oe0RtNjA0fVD/ocqKJjNP8SEw9foqdCQ0IhwbWuIpKPC4OL1zaz7W8sw4o+j7mc7SjB0CLo5VsfPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750232185; c=relaxed/simple;
-	bh=fFFF4dxwGMNmW8OffYmfQMv312sXB2ojGR5vgt3qPPI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iiB9pFSOHzr6LVxe+HIOFcqNvUqTXEBZuaWhExoDguUaUzHedvrux6jqazLpiiL5zmyRzRbIkBu8wTKEmi2/VM0hjjnYPfR1Qgh3/GKigL8IR/BpzOJaEvm0bQwx/SSlRMnFlD6xqLDGDRqnry4rSqQPVIhv0fAIUGmXadBciOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Qre4+a4d; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750232220; c=relaxed/simple;
+	bh=WkRs/TboFDX8xfzfGINehv8lcvkeaBoDHGvUNBlrxXw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JfF8KU2wUe89K38e9kXP+TDuS3iJmBr3Fogxtms1guAeZPomso+oSb44PSHj32+p4fwgGgKKFd2ZK1pcCbiGKB7vA7X0onS7Ixul6iXo+1iu+x+FLwZPOMLWqrJFRzGyF72Wa4FJFJvzqVsgfA4YBw2mgBHy7lwvRGV6CfJAWBM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LTAl8TCO; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Qre4+a4d"
-Message-ID: <77225fc9-845f-446a-9014-060b5cc73ba2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750232179;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zdvl+pAO+bUqhZRChbu03wIqYl7v9j98HDmfPpTf/2g=;
-	b=Qre4+a4dbN6G6Iy3F6FbPzM/ia5gqX926MBxqQQCHJ6admzrUdUlTwZG0CBjOUuRy+T9oH
-	CVhP/OE1QFVMOTlZ7Ny6cXYYFAdsFcdvAL/9l0756dMgbj0Jyujm4NpLjKpuMZvYzFy8vT
-	EksZYi/NnYfwr7XxdlD0VWYuiUT4VNw=
-Date: Wed, 18 Jun 2025 00:36:11 -0700
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTAl8TCO"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a52878d37aso1215253f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:36:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750232217; x=1750837017; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZXBxt0cc6L0naAoZJZAGNT6TJUcn+mtDHZVLEqs+No=;
+        b=LTAl8TCOxh1uOwiGrB8LrimzoI0hpWdZKIcoOk/sdaTPZ0m/KK4oTpy9EpyCWySKaO
+         rVguNPBlRlEtticcaia4kU44Szw1+PNwbceUGu41zmDdX92XKLgqneouNgIZuk/9W4zw
+         NTMM57h7Sxi7GLnoAhaEKEzoFykIglwEYCWzxDa/z6R6PuoDHd2WUOLW2i0WZEPwI9cY
+         wst0pI0mBX52ouJd0klX+SEJbZQ7WouC+oq4sp1HKqP+VBmKNkyQgDhIxT9NxiGTsAeA
+         bUVoxDpNRUSALO5U0AWUUIJ+oYFwjhsUsUY2pJoZJja+sW1b52vCUvEEUl6vXT9ue0xe
+         IkJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750232217; x=1750837017;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XZXBxt0cc6L0naAoZJZAGNT6TJUcn+mtDHZVLEqs+No=;
+        b=CVy2zWk3Ji/pYyd73nXlEMGj0D75ErhHXqDGISV1i3575fp9O7m0cp5ZPmkE6aHkg9
+         +hTGxL5AOHDwHgmgyDI4zo5Ws9tTc3erFEbw1g3te72IkqV1VV/lY2bgVTABoMQxNq5Q
+         lw6Bm5v5i27kyVItPU6StqJrwlk7rAfWcPCFqrIXGlSrzRzrg0zgIu2gKELWhRzCvqHF
+         YPuSn1n2Y0B5wGnk9u6gJVYMr6KdezR+VNPVm/qT+suUwHk+/RQAPT3rjj2B6mVKVWl+
+         YT8belOLKi4ESofN/bi0bsPL0SG1WoskxQZo2bPuqVBpOwdnadAH/W/zaPTMb9Dd9GIy
+         Gb7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUHq9JEdR74SYT4fJ6FkZr3kA7zu6Vuf58LFTlJXdMkoUstSRzS4rTH5GhdcAlDVEqlmNdUwjPniK8cJpw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfhnwNxBK0HGfZmU9OLuUeNmX4HzA3E/UC+ZEG+AsDJqjP/+6f
+	zIyb2LeXPgWOnjma/gNuuM9PHxm09/JyBJnGAQkfDyHGZb+l5ebc9XP/o1qzY2Adsm4=
+X-Gm-Gg: ASbGncsK0KPZ1ZSXAmb9VUbhZY7+WSX/tkCvYOoykdemylSzykQPK7sSGHzCtR58Won
+	cJ77XaOkfn3kWC0VjblIPKd15drAW/PyO5hDM/MCmBcWu6ObJnRFbxmhO9O9c/qa/cEnZOoHuC4
+	trrzHZorDv6n9SBYj4hjKEfK06rYSLWuhOxWBePl0/9SXGZjZrG7g2EZ+iRiiVEeP7rkWpRzv23
+	E/0EQpcTHnux8dqK9S7cHAlmbefsVh1s1vEXp0lHeQwwEd2PTNKBNfPjuuwfM+ieXAos0HsyHDt
+	vh8u8ymQBz/W05zAVNabQ8/ACcrV3Jz3i/8GyUBuMZfD/jKoIY06i78dGecR/Cat/Alj+Qg0iHn
+	4fhli0T+A
+X-Google-Smtp-Source: AGHT+IGzdx4bFzKCr1o8dRWdVSdkAmLcmC90spjSihYQwSyc0weZmyPLolTCTmYgiIecY8zC3ErPWA==
+X-Received: by 2002:a05:600c:1d0d:b0:43b:ca39:a9b8 with SMTP id 5b1f17b1804b1-4533ca48dffmr58906925e9.2.1750232216922;
+        Wed, 18 Jun 2025 00:36:56 -0700 (PDT)
+Received: from kuoka.. ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532de8f2e0sm195792835e9.8.2025.06.18.00.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 00:36:56 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Vincent Cuissard <cuissard@marvell.com>,
+	Samuel Ortiz <sameo@linux.intel.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	stable@vger.kernel.org
+Subject: [PATCH] NFC: nci: uart: Set tty->disc_data only in success path
+Date: Wed, 18 Jun 2025 09:36:50 +0200
+Message-ID: <20250618073649.25049-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 09/12] RISC-V: KVM: Introduce struct kvm_gstage_mapping
-To: Anup Patel <apatel@ventanamicro.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
- Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250613065743.737102-1-apatel@ventanamicro.com>
- <20250613065743.737102-10-apatel@ventanamicro.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250613065743.737102-10-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1821; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=WkRs/TboFDX8xfzfGINehv8lcvkeaBoDHGvUNBlrxXw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoUmyR9Sy/6+NxZF35Vz8mGEq+q31qkerrdCl1S
+ kIPLmllOdKJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaFJskQAKCRDBN2bmhouD
+ 13omD/4zhyiDc3yVsBfIujWpgDnnQ/l3ePHvdbts5xY9N05fFjRhLNIv9Z/PMQfCL5sWiYJxZZo
+ 9X1IAcKsu7TItxoN+Kx8Ah6IruEbidB02Nyt/C9TxaWVzETWDWvDCUQzwpM1H1lVNmQPojXIwgU
+ wZaoSbr66Qlgyygzsh8npVA48SkBzSucYhEpPfGVP2+5MIMEJthHwGaoUyss0tfJAGD0XA6VMl7
+ Ad8vdIwkI0ZCY3kkpnHxYMsWSYFzJAZmRRvrJC4B2+rQHdctXwwfSvjBrlTWMV9r6tt5c3EBk/P
+ xnmPGhzHSXp11rasBPlmwmubeC4879dQdbewqlIVj5ymyfSVLqOdvzoXrqBwoXajhxUDS78SN/y
+ iEs/8phFmc98F5kLrJ2cB9zI5hoSD/VmM50fHfgjuVpSjF+fQqnRl4D+wuj6rgvmpmL5otgI50O
+ eUC1qmE30Almsx/ey2bbBlVsHeSvC41jwzdMK+Y93qjIoZdqaqVc4AztnwPFk3pCw3f/dnpCn8Y
+ YYleGNGUgPIcPC5sKa/McvfOHO7VHEHTXkOfuTdqk5d+pqc6XesjhE3YKNTYLyO0rWb70akwz4c
+ l9Ey/IYMak4UQ0W6IgEV1JIL/PHA6xqIs2jbjimYqngW79+VBvS77zkrz4B4ZtSNvuzp2a59Ej7 bsaAbyuHHDH8vfQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
+Setting tty->disc_data before opening the NCI device means we need to
+clean it up on error paths.  This also opens some short window if device
+starts sending data, even before NCIUARTSETDRIVER IOCTL succeeded
+(broken hardware?).  Close the window by exposing tty->disc_data only on
+the success path, when opening of the NCI device and try_module_get()
+succeeds.
 
-On 6/12/25 11:57 PM, Anup Patel wrote:
-> Introduce struct kvm_gstage_mapping which represents a g-stage
-> mapping at a particular g-stage page table level. Also, update
-> the kvm_riscv_gstage_map() to return the g-stage mapping upon
-> success.
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/include/asm/kvm_mmu.h |  9 ++++-
->   arch/riscv/kvm/mmu.c             | 58 ++++++++++++++++++--------------
->   arch/riscv/kvm/vcpu_exit.c       |  3 +-
->   3 files changed, 43 insertions(+), 27 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kvm_mmu.h b/arch/riscv/include/asm/kvm_mmu.h
-> index 4e1654282ee4..91c11e692dc7 100644
-> --- a/arch/riscv/include/asm/kvm_mmu.h
-> +++ b/arch/riscv/include/asm/kvm_mmu.h
-> @@ -8,6 +8,12 @@
->   
->   #include <linux/kvm_types.h>
->   
-> +struct kvm_gstage_mapping {
-> +	gpa_t addr;
-> +	pte_t pte;
-> +	u32 level;
-> +};
-> +
->   int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
->   			     phys_addr_t hpa, unsigned long size,
->   			     bool writable, bool in_atomic);
-> @@ -15,7 +21,8 @@ void kvm_riscv_gstage_iounmap(struct kvm *kvm, gpa_t gpa,
->   			      unsigned long size);
->   int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   			 struct kvm_memory_slot *memslot,
-> -			 gpa_t gpa, unsigned long hva, bool is_write);
-> +			 gpa_t gpa, unsigned long hva, bool is_write,
-> +			 struct kvm_gstage_mapping *out_map);
->   int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
->   void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
->   void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index c1a3eb076df3..806614b3e46d 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -135,18 +135,18 @@ static void gstage_remote_tlb_flush(struct kvm *kvm, u32 level, gpa_t addr)
->   	kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0, addr, BIT(order), order);
->   }
->   
-> -static int gstage_set_pte(struct kvm *kvm, u32 level,
-> -			   struct kvm_mmu_memory_cache *pcache,
-> -			   gpa_t addr, const pte_t *new_pte)
-> +static int gstage_set_pte(struct kvm *kvm,
-> +			  struct kvm_mmu_memory_cache *pcache,
-> +			  const struct kvm_gstage_mapping *map)
->   {
->   	u32 current_level = gstage_pgd_levels - 1;
->   	pte_t *next_ptep = (pte_t *)kvm->arch.pgd;
-> -	pte_t *ptep = &next_ptep[gstage_pte_index(addr, current_level)];
-> +	pte_t *ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
->   
-> -	if (current_level < level)
-> +	if (current_level < map->level)
->   		return -EINVAL;
->   
-> -	while (current_level != level) {
-> +	while (current_level != map->level) {
->   		if (gstage_pte_leaf(ptep))
->   			return -EEXIST;
->   
-> @@ -165,13 +165,13 @@ static int gstage_set_pte(struct kvm *kvm, u32 level,
->   		}
->   
->   		current_level--;
-> -		ptep = &next_ptep[gstage_pte_index(addr, current_level)];
-> +		ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
->   	}
->   
-> -	if (pte_val(*ptep) != pte_val(*new_pte)) {
-> -		set_pte(ptep, *new_pte);
-> +	if (pte_val(*ptep) != pte_val(map->pte)) {
-> +		set_pte(ptep, map->pte);
->   		if (gstage_pte_leaf(ptep))
-> -			gstage_remote_tlb_flush(kvm, current_level, addr);
-> +			gstage_remote_tlb_flush(kvm, current_level, map->addr);
->   	}
->   
->   	return 0;
-> @@ -181,14 +181,16 @@ static int gstage_map_page(struct kvm *kvm,
->   			   struct kvm_mmu_memory_cache *pcache,
->   			   gpa_t gpa, phys_addr_t hpa,
->   			   unsigned long page_size,
-> -			   bool page_rdonly, bool page_exec)
-> +			   bool page_rdonly, bool page_exec,
-> +			   struct kvm_gstage_mapping *out_map)
->   {
-> -	int ret;
-> -	u32 level = 0;
-> -	pte_t new_pte;
->   	pgprot_t prot;
-> +	int ret;
->   
-> -	ret = gstage_page_size_to_level(page_size, &level);
-> +	out_map->addr = gpa;
-> +	out_map->level = 0;
-> +
-> +	ret = gstage_page_size_to_level(page_size, &out_map->level);
->   	if (ret)
->   		return ret;
->   
-> @@ -216,10 +218,10 @@ static int gstage_map_page(struct kvm *kvm,
->   		else
->   			prot = PAGE_WRITE;
->   	}
-> -	new_pte = pfn_pte(PFN_DOWN(hpa), prot);
-> -	new_pte = pte_mkdirty(new_pte);
-> +	out_map->pte = pfn_pte(PFN_DOWN(hpa), prot);
-> +	out_map->pte = pte_mkdirty(out_map->pte);
->   
-> -	return gstage_set_pte(kvm, level, pcache, gpa, &new_pte);
-> +	return gstage_set_pte(kvm, pcache, out_map);
->   }
->   
->   enum gstage_op {
-> @@ -352,7 +354,6 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
->   			     phys_addr_t hpa, unsigned long size,
->   			     bool writable, bool in_atomic)
->   {
-> -	pte_t pte;
->   	int ret = 0;
->   	unsigned long pfn;
->   	phys_addr_t addr, end;
-> @@ -360,22 +361,25 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
->   		.gfp_custom = (in_atomic) ? GFP_ATOMIC | __GFP_ACCOUNT : 0,
->   		.gfp_zero = __GFP_ZERO,
->   	};
-> +	struct kvm_gstage_mapping map;
->   
->   	end = (gpa + size + PAGE_SIZE - 1) & PAGE_MASK;
->   	pfn = __phys_to_pfn(hpa);
->   
->   	for (addr = gpa; addr < end; addr += PAGE_SIZE) {
-> -		pte = pfn_pte(pfn, PAGE_KERNEL_IO);
-> +		map.addr = addr;
-> +		map.pte = pfn_pte(pfn, PAGE_KERNEL_IO);
-> +		map.level = 0;
->   
->   		if (!writable)
-> -			pte = pte_wrprotect(pte);
-> +			map.pte = pte_wrprotect(map.pte);
->   
->   		ret = kvm_mmu_topup_memory_cache(&pcache, gstage_pgd_levels);
->   		if (ret)
->   			goto out;
->   
->   		spin_lock(&kvm->mmu_lock);
-> -		ret = gstage_set_pte(kvm, 0, &pcache, addr, &pte);
-> +		ret = gstage_set_pte(kvm, &pcache, &map);
->   		spin_unlock(&kvm->mmu_lock);
->   		if (ret)
->   			goto out;
-> @@ -593,7 +597,8 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
->   
->   int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   			 struct kvm_memory_slot *memslot,
-> -			 gpa_t gpa, unsigned long hva, bool is_write)
-> +			 gpa_t gpa, unsigned long hva, bool is_write,
-> +			 struct kvm_gstage_mapping *out_map)
->   {
->   	int ret;
->   	kvm_pfn_t hfn;
-> @@ -608,6 +613,9 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   	unsigned long vma_pagesize, mmu_seq;
->   	struct page *page;
->   
-> +	/* Setup initial state of output mapping */
-> +	memset(out_map, 0, sizeof(*out_map));
-> +
->   	/* We need minimum second+third level pages */
->   	ret = kvm_mmu_topup_memory_cache(pcache, gstage_pgd_levels);
->   	if (ret) {
-> @@ -677,10 +685,10 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   	if (writable) {
->   		mark_page_dirty(kvm, gfn);
->   		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
-> -				      vma_pagesize, false, true);
-> +				      vma_pagesize, false, true, out_map);
->   	} else {
->   		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
-> -				      vma_pagesize, true, true);
-> +				      vma_pagesize, true, true, out_map);
->   	}
->   
->   	if (ret)
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index 965df528de90..6b4694bc07ea 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -15,6 +15,7 @@
->   static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   			     struct kvm_cpu_trap *trap)
->   {
-> +	struct kvm_gstage_mapping host_map;
->   	struct kvm_memory_slot *memslot;
->   	unsigned long hva, fault_addr;
->   	bool writable;
-> @@ -43,7 +44,7 @@ static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   	}
->   
->   	ret = kvm_riscv_gstage_map(vcpu, memslot, fault_addr, hva,
-> -		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false);
-> +		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false, &host_map);
->   	if (ret < 0)
->   		return ret;
->   
-Reviewed-by: Atish Patra <atishp@rivosinc.com>
+The code differs in error path in one aspect: tty->disc_data won't be
+ever assigned thus NULL-ified.  This however should not be relevant
+difference, because of "tty->disc_data=NULL" in nci_uart_tty_open().
+
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Fixes: 9961127d4bce ("NFC: nci: add generic uart support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ net/nfc/nci/uart.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/net/nfc/nci/uart.c b/net/nfc/nci/uart.c
+index ed1508a9e093..aab107727f18 100644
+--- a/net/nfc/nci/uart.c
++++ b/net/nfc/nci/uart.c
+@@ -119,22 +119,22 @@ static int nci_uart_set_driver(struct tty_struct *tty, unsigned int driver)
+ 
+ 	memcpy(nu, nci_uart_drivers[driver], sizeof(struct nci_uart));
+ 	nu->tty = tty;
+-	tty->disc_data = nu;
+ 	skb_queue_head_init(&nu->tx_q);
+ 	INIT_WORK(&nu->write_work, nci_uart_write_work);
+ 	spin_lock_init(&nu->rx_lock);
+ 
+ 	ret = nu->ops.open(nu);
+ 	if (ret) {
+-		tty->disc_data = NULL;
+ 		kfree(nu);
++		return ret;
+ 	} else if (!try_module_get(nu->owner)) {
+ 		nu->ops.close(nu);
+-		tty->disc_data = NULL;
+ 		kfree(nu);
+ 		return -ENOENT;
+ 	}
+-	return ret;
++	tty->disc_data = nu;
++
++	return 0;
+ }
+ 
+ /* ------ LDISC part ------ */
+-- 
+2.45.2
+
