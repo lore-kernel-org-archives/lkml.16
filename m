@@ -1,106 +1,122 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8672F49E2;
-	Wed, 18 Jun 2025 18:20:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEA12F3C37;
+	Wed, 18 Jun 2025 18:20:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270823; cv=none; b=bPtFbx5tjlIRovE+AXcsJuelprqw0//sJMCaq/7HJ9nMgCYpGf6w28hV3M/sNkGZmba+nB9H6ewG6I5M8of0bxAnYtqIMYK5jtdfkNFJYDAvwa0EvK5tRIMrAhOaqelKfI16qjeFS1Gu/SbMMwMO+DZ6F535t3z8n1Sjjrob09o=
+	t=1750270833; cv=none; b=XmZRPnK7RV4HlVWYNzxzBqJ8CLdfMPDigtOJA/AIDfkOMx/WNM+NumqmIMrMD3KZLAgc89N/kBaIr8qPe4Nn5Ez18lmZ9mXq7HDiEA+azCD5bvbxR/C2ov6IDV0C9edVdm1WqhNPs69dh1lDFsqUmW+EMX4+g1dqxNrwjqxhTgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270823; c=relaxed/simple;
-	bh=dV4QW3Qy+OGsq+8aGVg5K0nRXDR4y2yCvxMhddwqyLk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CUm/bJWTV8ZIgFtNvIkq+S+WBBFzGnrZ7uc/oA4vigJTJpJpUsD3vrQikiYEj5g86k5cW/CFq4akn16PIf6nqsQgTW1381NmWNXhRfg9mMuAahQdQIsS+aivAQl6k2mvZbqtL0DtJFVNy0lKnlipu0AWGi0yjQ2/uhRZ9jTlIv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMut1qku; arc=none smtp.client-ip=209.85.217.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750270833; c=relaxed/simple;
+	bh=MquSU51CJRO5h2hv2a+qZzy/C8JEK1lqvy35Ue6Ln+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C7WxtBXu/a6M+cpdInRuBUfMsvU8/lpueixCls4ICzVaSMM0E0HiVFzBWxYtMl2YY0SiMce4sOwSvsUHyNWohR0wv7O8H+r5esu+W6n6uNi43DezKGMQJAHKHGdvoBg/4Drx77xPjEHIYc3w2zXfklpef252ttxH2eswrTqgC68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UYNieJI0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMut1qku"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4e7fc3309f2so1190872137.2;
-        Wed, 18 Jun 2025 11:20:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750270818; x=1750875618; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dV4QW3Qy+OGsq+8aGVg5K0nRXDR4y2yCvxMhddwqyLk=;
-        b=CMut1qkuJwtYVjArlT+9nkd7mz8lrhjzAwq960CDUZ7WUq3GlmRb0twCsiESwSQzQe
-         XYU1HGzbd4ebLfDiQL/sEU02ILfFhUQd+CE9WDC1VFri9MpXFCjarusBn96kwYaDrrAb
-         strzQ5FkfdNr/KB292wLyp89pSVzzLDa4rCyhkRx4FeBfIazWOtOsVj78KzsaUFkxOY/
-         fG0RStfGjZ1tneFLMhFV9vQyxHglWiWlMy3BRtmsZMWqUBSKzvsW7h/urx9RBOKkogJv
-         ZNzXTwMI1+lM0hp+mC5slThbsQeMwKR7Nb06xfH/7NJz0AQpW+J1BpBUcrWU4OFQYTGn
-         aCbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750270818; x=1750875618;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dV4QW3Qy+OGsq+8aGVg5K0nRXDR4y2yCvxMhddwqyLk=;
-        b=WTr7M/OWs8aLklco+JPtzsnEXwm+pg3jvNccVs2EADAW6bzR5OD+aoVzyqBMKhde5C
-         J6VhEYs5fwA/IS8/P5Nar3MZG/xOwVsNgJRHaMe8B/r8FEtJTJIoG5WdLAnTeg2In3yR
-         pfBhPDqj4kveX+Efp4r5IQi4tMRGgR8zPo3+j4r1E7UoUak0HUi5NXQbCyaT/BFA1L68
-         +6vJg2GDrxecb75Sse/+vPOBNbppavyivI8hv4UwlflIK/3fEpnG9wRJOmXzhOXWdgJy
-         e2FfPkPEYRO2eO0dRF3pYHiznUwzzvEAe7K72A4P3fVUI69xoof3B9qnC1E/W2sNrBOP
-         D7OA==
-X-Forwarded-Encrypted: i=1; AJvYcCWaOZyNZ77wUinlCeGIeZKKHuJ/Dd+CKCa12PEluc7yN4MAY67ht+GYy+Cx78WThAL8rAZmvkgvJVJ87scI@vger.kernel.org, AJvYcCXmW5OzfmJimFimqHyMUKO2PHYF7IgjEvzD3bNFwrWvcixhON8+RW8vb/vEc3i2YpuSCvbvQtg6eJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzrOJyBVgfXynADOSUUso+W1Ma/e40cAOT/SVp56J10sW1pvXtC
-	yWm7QLC5gRdqCLBlCNGD+vS77sqiTutspB4Dr8uiR2DzuVUmkrg74nnMJ/C2KSnruKmvlO8lccC
-	KnIb7wfRTtpwSUrL3NC8vxGgz0aH867E=
-X-Gm-Gg: ASbGncs9aKK+FJnvIIFGjgvZ1n8LXs9oxuVlussmhfNou0ozzJ2IvXlO7p511Ci9Ify
-	ky5M6dujuxuYtcdsJK+9knjpZ9WDKGllnok9hNdoI0uGWiDlLN8o3mUjj6YXz/5Lo85Kg2D9FCk
-	w5yDh9aIqKdCrLc8gZghdjrUblZan7hnfwjNot8I3DhQ==
-X-Google-Smtp-Source: AGHT+IEr2xqcFOjJxl8R13uHHf7Xf0O/FujSmB6g56UD0DbKN/2CM1jQ03oqnfrVHd2ArdwBZ4OeKRU5BfPgS8F2mIY=
-X-Received: by 2002:a05:6102:6a91:b0:4e5:59ce:471b with SMTP id
- ada2fe7eead31-4e7f63eacdbmr15474820137.23.1750270818512; Wed, 18 Jun 2025
- 11:20:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UYNieJI0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95C38C4CEE7;
+	Wed, 18 Jun 2025 18:20:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750270833;
+	bh=MquSU51CJRO5h2hv2a+qZzy/C8JEK1lqvy35Ue6Ln+Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UYNieJI0togvx7EzqHXIVxVkFPVSKw89FVbRpaEDvwh5zGdHtGd/0K/R+WMcv4Oj0
+	 2RUSbFes4ifB7vgV3o/6ZcE8yUeYWX4sAe9ptEQDd4lr3fhs4cvNz6PKx/sPrkDByV
+	 eBVgQNAUxecWI1eiMzN/db3UkMEi0slLrvpAIUOmdqoTzkyeCR3ngtS3UcYo9+3sPY
+	 zeiPvIQg2D5anT0iF0q6DB+M++1z2n7fmSVgN8Rf8wJRXNWa9q4+vo7LHhDAkbBGru
+	 vkWclCoNsK6vTG4Ns+M0ol0B8Fh0H+doZq/kwQr62d1sVr4zlTC0J6oz+Li2bSldgq
+	 //Mbhnfi89MEg==
+Date: Wed, 18 Jun 2025 19:20:29 +0100
+From: Simon Horman <horms@kernel.org>
+To: Yuyang Huang <yuyanghuang@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] selftest: add selftest for anycast notifications
+Message-ID: <20250618182029.GV1699@horms.kernel.org>
+References: <20250618104025.3463656-1-yuyanghuang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
- <CAHp75Ve4yAp6sViUWZY+0abRoNZ0W+rQLCmsbijEcrh8kguVOA@mail.gmail.com>
- <CANZih_S9_8OdY=oKyVPBCTSTqYm_z_rkE=xbPym3uHOSsHMv6A@mail.gmail.com> <aFL6PE-8KLLKZun_@smile.fi.intel.com>
-In-Reply-To: <aFL6PE-8KLLKZun_@smile.fi.intel.com>
-From: Andrew Ijano <andrew.ijano@gmail.com>
-Date: Wed, 18 Jun 2025 15:20:06 -0300
-X-Gm-Features: Ac12FXwpg4CNYOuxa2JcTEKqX7ZLV2AYXm393GaS56j-3RyW3-9KyDOaipftXX4
-Message-ID: <CANZih_QeeA_G5mFOAb=TMNYiR4eo9SUD5iW1G-5LBGL27NpTRw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] iio: accel: sca3000: simplify by using newer infrastructure
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, jic23@kernel.org, andrew.lopes@alumni.usp.br, 
-	gustavobastos@usp.br, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, jstephan@baylibre.com, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618104025.3463656-1-yuyanghuang@google.com>
 
-On Wed, Jun 18, 2025 at 2:41=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Wed, Jun 18, 2025 at 09:24:19AM -0300, Andrew Ijano wrote:
-> > On Wed, Jun 18, 2025 at 2:56=E2=80=AFAM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Wed, Jun 18, 2025 at 6:17=E2=80=AFAM Andrew Ijano <andrew.ijano@gm=
-ail.com> wrote:
-> > > >
-> > > > The sca3000 driver is old and could be simplified by using newer
-> > > > infrastructure.
-> > >
-> > > I haven't found any reference to a base commit here. Have you
-> > > forgotten to use --base when preparing the series?
-> > > In any case, please clarify what this series is based on.
-> >
-> > Thank you for pointing this out! I think I forgot to use --base for
-> > it. In this case, should I submit a new version of the whole patchset
-> > with this information or is there a better way to do it?
->
-> For now just reply here what is the base. I asked this question above.
->
+On Wed, Jun 18, 2025 at 07:40:25PM +0900, Yuyang Huang wrote:
+> This commit adds a new kernel selftest to verify RTNLGRP_IPV6_ACADDR
+> notifications. The test works by adding/removing a dummy interface,
+> enabling packet forwarding, and then confirming that user space can
+> correctly receive anycast notifications.
+> 
+> The test relies on the iproute2 version to be 6.13+.
+> 
+> Tested by the following command:
+> $ vng -v --user root --cpus 16 -- \
+> make -C tools/testing/selftests TARGETS=net
+> TEST_PROGS=rtnetlink_notification.sh \
+> TEST_GEN_PROGS="" run_tests
+> 
+> Signed-off-by: Yuyang Huang <yuyanghuang@google.com>
+> ---
+>  .../selftests/net/rtnetlink_notification.sh   | 52 +++++++++++++++++--
+>  1 file changed, 47 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/rtnetlink_notification.sh b/tools/testing/selftests/net/rtnetlink_notification.sh
 
-Ok! No problem. So the base for this patchset is the commit
-3c23416f69f2870bea83697d7ab03c6a8497daa7.
+...
 
-Thanks,
-Andrew
+> @@ -18,12 +20,11 @@ kci_test_mcast_addr_notification()
+>  	local tmpfile
+>  	local monitor_pid
+>  	local match_result
+> -	local test_dev="test-dummy1"
+>  
+>  	tmpfile=$(mktemp)
+>  	defer rm "$tmpfile"
+>  
+> -	ip monitor maddr > $tmpfile &
+> +	ip monitor maddr > "$tmpfile" &
+>  	monitor_pid=$!
+>  	defer kill_process "$monitor_pid"
+>  
+> @@ -32,7 +33,7 @@ kci_test_mcast_addr_notification()
+>  	if [ ! -e "/proc/$monitor_pid" ]; then
+>  		RET=$ksft_skip
+>  		log_test "mcast addr notification: iproute2 too old"
+> -		return $RET
+> +		return "$RET"
+>  	fi
+>  
+>  	ip link add name "$test_dev" type dummy
+
+> @@ -53,7 +54,48 @@ kci_test_mcast_addr_notification()
+>  		RET=$ksft_fail
+>  	fi
+>  	log_test "mcast addr notification: Expected 4 matches, got $match_result"
+> -	return $RET
+> +	return "$RET"
+> +}
+
+...
+
+> @@ -67,4 +109,4 @@ require_command ip
+>  
+>  tests_run
+>  
+> -exit $EXIT_STATUS
+> +exit "$EXIT_STATUS"
+
+Hi,
+
+While I like the changes above (that I haven't trimmed-out)
+these seem to be clean-ups that aren't strictly related
+to the subject of this patch. IOW, they don't belong in this patch
+(but could be a separate patch).
+
+-- 
+pw-bot: changes-requested
