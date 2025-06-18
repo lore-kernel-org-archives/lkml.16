@@ -1,88 +1,364 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 211361F4CAE;
-	Wed, 18 Jun 2025 19:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23471F4CAE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:24:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750274655; cv=none; b=B3oeph3Iryc/sco2aEmW7yBy9K8TyWKbj4pyQs8tOHwubq7ZC1D8vHtdKU+UnmAbxJGAmZUveqSQWObZVcKTEN7CPI+wkeQt8LHJjNlvNgy2oIf6sNMlAWZWujNS8Q3VieZtxAvnI9dBqrc/8Uyknz8j2ozHNGvesJNTDdVE0Q0=
+	t=1750274686; cv=none; b=G/k5H5EvJ498IDYKGe+bTb1Hld+BGGDmIuw6t63+UUfqjvdaREh/+M1Hu2vfuEV21H6c4jN+FBXZp40iXM4R16e+YMU8eZTzlaK7BhysBcIByApgRuQMkLkp7NUsKjHbrZQNudB7AyB2mRomXQaCxBWY+9LVAoi7vWJCtKF0rV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750274655; c=relaxed/simple;
-	bh=0B1AqIh7XaT96Qz7mgiF/9cixkNlDiA1iViFQK2gYs4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=aRaOWVuKrB/70EuAwPAqabGSJIriWMJm5pVM/1AXxpBONprGMej8gIiCiBn8iunHFYUotFkEmDtTNIOgWOt5o5DBxwnKH3B0VT6mkf03ia8uIe7xkaDN8n0N72R8qsTdDC78iRtAV+WsC8JNiDOd1FlfvUF/CgSHNldGt4lTL3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnkT9RJz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750274686; c=relaxed/simple;
+	bh=/NNk+xDYkHLLPcQyn83HOi+4usToLHXcVycTLOO4Lbc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-type; b=iUeJHewGXBdJC8KGWUhp77NvMsYBG2VlGrhsPW3VtSOZnCpVLsq3eI7VuVIEMlK2rrEzzJ47Pz6fhSApf/1ChSAMkrRWWlx7tef1pUcJdSnazzFsC3h/vONEJBG2yepP9HhSqiSLEKvZv/55lNFz3v//DyoWh5rd5tvWLCTUiFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZB/EpVFe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnkT9RJz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE6CC4CEEF;
-	Wed, 18 Jun 2025 19:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750274654;
-	bh=0B1AqIh7XaT96Qz7mgiF/9cixkNlDiA1iViFQK2gYs4=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=nnkT9RJza11P1108ZFZQQbR60kDdssVI6SRGhuBkp1onGLyJ+27ShAiQPWjyM5aHN
-	 BSIlZVu+gs57RAtjxyWwmB/velvo4q0R6H2FD8eaXQOUIRxEH15bNc0XBi26Dy80P5
-	 4vhf5pOHx82Fz37X0MboY5pV68Y/YI3EHj/GBtRujwU/wJ0LEsMEnCmSkzR3RwhoXj
-	 Ppa1DhWdv7ro07e5u8zdRyVeFmke3NumBy8EfdRlWnn4wrKXUlNdSNblMStJtEcGwv
-	 up3wnPlQp1GqCUy22Pco8yokKs7ThNq4ULn/0ZjWRhOHORk1ZXEPM3rGPMScr0NkRQ
-	 8NyIWaYc1K0mw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZB/EpVFe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750274684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=SgCM0b6C1uE4ZAd4LogCpecVhPStmO4EChfm/sWzEb4=;
+	b=ZB/EpVFefAzwtkJSM/8P0AgrHNK+AprDxFLIuA8WUeKS9Knx88++9AZqX2efkKiHcehoXY
+	Yh1h9mLm0pbwOpvwEMmUfUJ7weYnAaoz48qHRzmU0WGWju3NzuuOtHGvQFjCTEJuEkjrJx
+	6W+wUvQu2Ca/Sz6jufpXsuMQVJz7ox4=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-16-Q6xFdzm0NXWSJGORpyh8vA-1; Wed,
+ 18 Jun 2025 15:24:38 -0400
+X-MC-Unique: Q6xFdzm0NXWSJGORpyh8vA-1
+X-Mimecast-MFC-AGG-ID: Q6xFdzm0NXWSJGORpyh8vA_1750274676
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 32E9A1800343;
+	Wed, 18 Jun 2025 19:24:36 +0000 (UTC)
+Received: from jmeneghi-thinkpadp1gen3.rmtusnh.csb (unknown [10.22.64.21])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2348919560B0;
+	Wed, 18 Jun 2025 19:24:32 +0000 (UTC)
+From: John Meneghini <jmeneghi@redhat.com>
+To: James.Bottomley@HansenPartnership.com,
+	martin.petersen@oracle.com,
+	linux-scsi@vger.kernel.org,
+	aacraid@microsemi.com,
+	corbet@lwn.net
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thenzl@redhat.com,
+	Scott.Benesh@microchip.com,
+	Don.Brace@microchip.com,
+	Tom.White@microchip.com,
+	Abhinav.Kuchibhotla@microchip.com,
+	sagar.biradar@microchip.com,
+	mpatalan@redhat.com
+Subject: [PATCH v3] scsi: aacraid: Fix reply queue mapping to CPUs based on IRQ affinity
+Date: Wed, 18 Jun 2025 15:24:27 -0400
+Message-ID: <20250618192427.3845724-1-jmeneghi@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 18 Jun 2025 21:24:08 +0200
-Message-Id: <DAPWKX9V8T26.315LG5OZLLL2M@kernel.org>
-Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
- "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
- "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
- <dri-devel@lists.freedesktop.org>
-Subject: Re: [PATCH v5 05/23] rust: num: add the `fls` operation
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>,
- "David Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>,
- "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
- <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>
-X-Mailer: aerc 0.20.1
-References: <20250612-nova-frts-v5-0-14ba7eaf166b@nvidia.com>
- <20250612-nova-frts-v5-5-14ba7eaf166b@nvidia.com>
- <DAMHWN6ML8A1.2AUE4UWR58KR2@kernel.org>
- <DANR43CR8X87.1YWHJK7P75TPQ@nvidia.com>
-In-Reply-To: <DANR43CR8X87.1YWHJK7P75TPQ@nvidia.com>
+MIME-Version: 1.0
+Content-type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Mon Jun 16, 2025 at 8:41 AM CEST, Alexandre Courbot wrote:
-> On Sun Jun 15, 2025 at 4:16 AM JST, Benno Lossin wrote:
->> On Thu Jun 12, 2025 at 4:01 PM CEST, Alexandre Courbot wrote:
->>> +            #[inline(always)]
->>> +            pub const fn [<fls_ $t>](v: $t) -> u32 {
->>
->> Can we name this `find_last_set_bit_ $t`? When the upstream function
->> lands, we should also rename this one.
->
-> We can - but as for `align_up`/`next_multiple_of`, I am not sure which
-> naming scheme (kernel-like or closer to Rust conventions) is favored in
-> such cases, and so far it seems to come down to personal preference. I
-> tend to think that staying close to kernel conventions make it easier to
-> understand when a function is the equivalent of a C one, but whichever
-> policy we adopt it would be nice to codify it somewhere (apologies if it
-> is already and I missed it).
+From: Sagar Biradar <sagar.biradar@microchip.com>
 
-I don't think we have it written down anywhere. I don't think that we
-should have a global rule for this. Certain things are more in the
-purview of the kernel and others are more on the Rust side.
+From: Sagar Biradar <sagar.biradar@microchip.com>
 
-My opinion is that this, since it will hopefully be in `core` at some
-point, should go with the Rust naming.
+This patch fixes a bug in the original path that caused I/O hangs. The
+I/O hangs were because of an MSIx vector not having a mapped online CPU
+upon receiving completion.
 
+This patch enables Multi-Q support in the aacriad driver. Multi-Q support
+in the driver is needed to support CPU offlining.
+
+SCSI cmds use the mq_map to get the vector_no via blk_mq_unique_tag()
+and blk_mq_unique_tag_to_hwq() - which are setup during the blk_mq init.
+For reserved cmds, or the ones before the blk_mq init, use the vector_no
+0, which is the norm since don't yet have a proper mapping to the queues.
+
+Note that this change can cause a drop in performance in some
+configurations. To address any concerns about performance the
+CONFIG_SCSI_AACRAID_MULTIQ option has been added.
+
+The CONFIG_SCSI_AACRAID_MULTIQ option is on by default to ensure that
+CPU offlining with MultiQ support is enabled. To disable MultiQ support
+compile the kernel with CONFIG_SCSI_AACRAID_MULTIQ=N. Disabling MultiQ
+support should not be done if your application uses CPU offling.
+
+Closes: https://lore.kernel.org/linux-scsi/20250130173314.608836-1-sagar.biradar@microchip.com/
+
+Fixes: c5becf57dd56 ("Revert "scsi: aacraid: Reply queue mapping to CPUs based on IRQ affinity"")
+Signed-off-by: Sagar Biradar <sagar.biradar@microchip.com>
+[jmeneghi: replace aac_cpu_offline_feature with Kconfig option]
+Co-developed-by: John Meneghini <jmeneghi@redhat.com>
+Signed-off-by: John Meneghini <jmeneghi@redhat.com>
+Reviewed-by: Gilbert Wu <gilbert.wu@microchip.com>
+Reviewed-by: Tomas Henzl <thenzl@redhat.com>
+Tested-by: Marco Patalano <mpatalan@redhat.com>
 ---
-Cheers,
-Benno
+ Documentation/scsi/aacraid.rst | 11 +++++++++++
+ MAINTAINERS                    |  1 +
+ drivers/scsi/Kconfig           |  2 +-
+ drivers/scsi/aacraid/Kconfig   | 20 ++++++++++++++++++++
+ drivers/scsi/aacraid/aachba.c  |  1 -
+ drivers/scsi/aacraid/aacraid.h |  3 +++
+ drivers/scsi/aacraid/commsup.c | 16 ++++++++++++++--
+ drivers/scsi/aacraid/linit.c   | 23 ++++++++++++++++++++++-
+ drivers/scsi/aacraid/src.c     | 28 +++++++++++++++++++++++++++-
+ 9 files changed, 99 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/scsi/aacraid/Kconfig
+
+diff --git a/Documentation/scsi/aacraid.rst b/Documentation/scsi/aacraid.rst
+index 1904674b94f3..0fc35edd0ac9 100644
+--- a/Documentation/scsi/aacraid.rst
++++ b/Documentation/scsi/aacraid.rst
+@@ -129,6 +129,17 @@ Supported Cards/Chipsets
+ People
+ ======
+ 
++Sagar Biradar <Sagar.Biradar@microchip.com>
++
++ - Added support for CPU offlining and updated the driver to support MultiQ.
++ - Introduced the option CONFIG_SCSI_AACRAID_MULTIQ to control this feature.
++
++By default, MultiQ support is disabled to provide optimal I/O performance.
++
++Enable CONFIG_SCSI_AACRAID_MULTIQ only if CPU offlining support is required,
++as enabling it may result in reduced performance in some configurations.
++Note : Disabling MultiQ while still offlining CPUs may lead to I/O hangs.
++
+ Alan Cox <alan@lxorguk.ukuu.org.uk>
+ 
+ Christoph Hellwig <hch@infradead.org>
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a92290fffa16..996c90959caa 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -184,6 +184,7 @@ L:	linux-scsi@vger.kernel.org
+ S:	Supported
+ W:	http://www.adaptec.com/
+ F:	Documentation/scsi/aacraid.rst
++F:	drivers/scsi/aacraid/Kconfig
+ F:	drivers/scsi/aacraid/
+ 
+ AAEON UPBOARD FPGA MFD DRIVER
+diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+index 5522310bab8d..a6739cd94db7 100644
+--- a/drivers/scsi/Kconfig
++++ b/drivers/scsi/Kconfig
+@@ -456,7 +456,7 @@ config SCSI_AACRAID
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called aacraid.
+ 
+-
++source "drivers/scsi/aacraid/Kconfig"
+ source "drivers/scsi/aic7xxx/Kconfig.aic7xxx"
+ source "drivers/scsi/aic7xxx/Kconfig.aic79xx"
+ source "drivers/scsi/aic94xx/Kconfig"
+diff --git a/drivers/scsi/aacraid/Kconfig b/drivers/scsi/aacraid/Kconfig
+new file mode 100644
+index 000000000000..c69e1a7a77d2
+--- /dev/null
++++ b/drivers/scsi/aacraid/Kconfig
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Kernel configuration file for the aacraid driver.
++#
++# Copyright (c) 2025 Microchip Technology Inc. and its subsidiaries
++#  (mailto:storagedev@microchip.com)
++#
++config SCSI_AACRAID_MULTIQ
++	bool "AACRAID Multiq support"
++	depends on SCSI_AACRAID
++	default n
++	help
++	  This option enables MultiQ support in the aacraid driver.
++
++	  Enabling MultiQ allows the driver to safely handle CPU offlining.
++	  However, it may cause a performance drop in certain configurations.
++
++	  Enable this option only if your system requires CPU offlining support.
++
++	  If unsure, say N.
+diff --git a/drivers/scsi/aacraid/aachba.c b/drivers/scsi/aacraid/aachba.c
+index 0be719f38377..db9bef348834 100644
+--- a/drivers/scsi/aacraid/aachba.c
++++ b/drivers/scsi/aacraid/aachba.c
+@@ -328,7 +328,6 @@ MODULE_PARM_DESC(wwn, "Select a WWN type for the arrays:\n"
+ 	"\t1 - Array Meta Data Signature (default)\n"
+ 	"\t2 - Adapter Serial Number");
+ 
+-
+ static inline int aac_valid_context(struct scsi_cmnd *scsicmd,
+ 		struct fib *fibptr) {
+ 	struct scsi_device *device;
+diff --git a/drivers/scsi/aacraid/aacraid.h b/drivers/scsi/aacraid/aacraid.h
+index 0a5888b53d6d..557f9fc50012 100644
+--- a/drivers/scsi/aacraid/aacraid.h
++++ b/drivers/scsi/aacraid/aacraid.h
+@@ -1672,6 +1672,9 @@ struct aac_dev
+ 	u32			handle_pci_error;
+ 	bool			init_reset;
+ 	u8			soft_reset_support;
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++	u8			use_map_queue;
++#endif
+ };
+ 
+ #define aac_adapter_interrupt(dev) \
+diff --git a/drivers/scsi/aacraid/commsup.c b/drivers/scsi/aacraid/commsup.c
+index 7d9a4dce236b..309a166ce6e4 100644
+--- a/drivers/scsi/aacraid/commsup.c
++++ b/drivers/scsi/aacraid/commsup.c
+@@ -215,8 +215,17 @@ int aac_fib_setup(struct aac_dev * dev)
+ struct fib *aac_fib_alloc_tag(struct aac_dev *dev, struct scsi_cmnd *scmd)
+ {
+ 	struct fib *fibptr;
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++	u32 blk_tag;
++	int i;
+ 
++	blk_tag = blk_mq_unique_tag(scsi_cmd_to_rq(scmd));
++	i = blk_mq_unique_tag_to_tag(blk_tag);
++	fibptr = &dev->fibs[i];
++#else
+ 	fibptr = &dev->fibs[scsi_cmd_to_rq(scmd)->tag];
++#endif
++
+ 	/*
+ 	 *	Null out fields that depend on being zero at the start of
+ 	 *	each I/O
+@@ -242,14 +251,17 @@ struct fib *aac_fib_alloc(struct aac_dev *dev)
+ {
+ 	struct fib * fibptr;
+ 	unsigned long flags;
++
+ 	spin_lock_irqsave(&dev->fib_lock, flags);
++	/*  Management FIB allocation: use free list within reserved range */
+ 	fibptr = dev->free_fib;
+-	if(!fibptr){
++	if (!fibptr) {
+ 		spin_unlock_irqrestore(&dev->fib_lock, flags);
+-		return fibptr;
++		return NULL;
+ 	}
+ 	dev->free_fib = fibptr->next;
+ 	spin_unlock_irqrestore(&dev->fib_lock, flags);
++
+ 	/*
+ 	 *	Set the proper node type code and node byte size
+ 	 */
+diff --git a/drivers/scsi/aacraid/linit.c b/drivers/scsi/aacraid/linit.c
+index 4b12e6dd8f07..8c56579a8efc 100644
+--- a/drivers/scsi/aacraid/linit.c
++++ b/drivers/scsi/aacraid/linit.c
+@@ -506,6 +506,17 @@ static int aac_sdev_configure(struct scsi_device *sdev,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++static void aac_map_queues(struct Scsi_Host *shost)
++{
++	struct aac_dev *aac = (struct aac_dev *)shost->hostdata;
++	struct blk_mq_queue_map *qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
++
++	blk_mq_map_hw_queues(qmap, &aac->pdev->dev, 0);
++	aac->use_map_queue = true;
++}
++#endif
++
+ /**
+  *	aac_change_queue_depth		-	alter queue depths
+  *	@sdev:	SCSI device we are considering
+@@ -1490,6 +1501,9 @@ static const struct scsi_host_template aac_driver_template = {
+ 	.bios_param			= aac_biosparm,
+ 	.shost_groups			= aac_host_groups,
+ 	.sdev_configure			= aac_sdev_configure,
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++	.map_queues			= aac_map_queues,
++#endif
+ 	.change_queue_depth		= aac_change_queue_depth,
+ 	.sdev_groups			= aac_dev_groups,
+ 	.eh_abort_handler		= aac_eh_abort,
+@@ -1777,7 +1791,11 @@ static int aac_probe_one(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	shost->max_lun = AAC_MAX_LUN;
+ 
+ 	pci_set_drvdata(pdev, shost);
+-
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++	shost->nr_hw_queues = aac->max_msix;
++	shost->can_queue = min_t(int, aac->vector_cap, shost->can_queue);
++	shost->host_tagset = 1;
++#endif
+ 	error = scsi_add_host(shost, &pdev->dev);
+ 	if (error)
+ 		goto out_deinit;
+@@ -1908,6 +1926,9 @@ static void aac_remove_one(struct pci_dev *pdev)
+ 	struct aac_dev *aac = (struct aac_dev *)shost->hostdata;
+ 
+ 	aac_cancel_rescan_worker(aac);
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++	aac->use_map_queue = false;
++#endif
+ 	scsi_remove_host(shost);
+ 
+ 	__aac_shutdown(aac);
+diff --git a/drivers/scsi/aacraid/src.c b/drivers/scsi/aacraid/src.c
+index 28115ed637e8..5881bce3ccfc 100644
+--- a/drivers/scsi/aacraid/src.c
++++ b/drivers/scsi/aacraid/src.c
+@@ -493,6 +493,12 @@ static int aac_src_deliver_message(struct fib *fib)
+ #endif
+ 
+ 	u16 vector_no;
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++	struct scsi_cmnd *scmd;
++	u32 blk_tag;
++	struct Scsi_Host *shost = dev->scsi_host_ptr;
++	struct blk_mq_queue_map *qmap;
++#endif
+ 
+ 	atomic_inc(&q->numpending);
+ 
+@@ -505,8 +511,28 @@ static int aac_src_deliver_message(struct fib *fib)
+ 		if ((dev->comm_interface == AAC_COMM_MESSAGE_TYPE3)
+ 			&& dev->sa_firmware)
+ 			vector_no = aac_get_vector(dev);
+-		else
++		else {
++#ifdef CONFIG_SCSI_AACRAID_MULTIQ
++			if (!fib->vector_no || !fib->callback_data) {
++				if (shost && dev->use_map_queue) {
++					qmap = &shost->tag_set.map[HCTX_TYPE_DEFAULT];
++					vector_no = qmap->mq_map[raw_smp_processor_id()];
++				}
++				/*
++				 *	We hardcode the vector_no for reserved commands
++				 *	as a valid shost is absent during the init.
++				 */
++				else
++					vector_no = 0;
++			} else {
++				scmd = (struct scsi_cmnd *)fib->callback_data;
++				blk_tag = blk_mq_unique_tag(scsi_cmd_to_rq(scmd));
++				vector_no = blk_mq_unique_tag_to_hwq(blk_tag);
++			}
++#else
+ 			vector_no = fib->vector_no;
++#endif
++		}
+ 
+ 		if (native_hba) {
+ 			if (fib->flags & FIB_CONTEXT_FLAG_NATIVE_HBA_TMF) {
+-- 
+2.49.0
+
