@@ -1,185 +1,116 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26236C2EF;
-	Wed, 18 Jun 2025 02:24:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D0AC2EF
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750213499; cv=none; b=RF+WISbsrj08NxqXAKJE516gnKjCZrnbWBikEp5+ijGprCVaxUOBKLPHYX8MIrT7dNFy+Jd+Hd+y5xkJFNr5h0pd+UiANhtkBZ3mtHdu8jIdhV/w2xDtHMg89LlvMe+WMVCtO0ROlzjUDeUSe1Km74ljsdt+tfsqm4kuB3x+X4M=
+	t=1750213549; cv=none; b=unBf8DsLgTfjbg9+p2hCLenjyNzKnniKFeKf5NjZJahyFdWveudl+SIJxTnWb2W4XHcrJN3gH1W+piGWRtl8syTrldsAUryWffUVQc7BlHoTvD7/h8RRjCmgwZ/wv+UGZOxuHWR2mYyj5P+YhkTBb1osTLfy4t2s2n2HuFZyjuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750213499; c=relaxed/simple;
-	bh=veGwjYAshz5wATG617MZKNzcaKLYPgMK/Du4Bkd6tkg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=g8841yUItXMWxNKr7PmTkRN6rbuWO7bIOOvVcmlhQ4uO6hv+Py46KMgnDnunPZE/PXymA51wAN0RntLsWzoj2RYm/h/Lz++lqg1pziJ6ttRdIfwb5CKdSf1rzwjYADrZEWRW4I0xlZl7m04yUOyUXSFfH2fr/AgpRIlKB+TOuwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from mail-wr1-f46.google.com (unknown [209.85.221.46])
-	by APP-03 (Coremail) with SMTP id rQCowABHXFRxI1JohnlDBw--.7428S2;
-	Wed, 18 Jun 2025 10:24:50 +0800 (CST)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a5123c1533so3619032f8f.2;
-        Tue, 17 Jun 2025 19:24:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVnetWa153F1iwRXLT/Nk+EXqCvd5g6ZFmxOvo1MkfCWD6Bs80CPcgs4h54sZzOeV4X7HXszF2hqTED@vger.kernel.org, AJvYcCWWGNPaK6nbSDLXOSYdgNn+SmJFmh2tzTXGf3oi9ewGEYckheR5+D0cg8TF05QjiHSQ8FqcC2qsxXnB@vger.kernel.org, AJvYcCXiOgVFIREQLyB7kWeFp+Df5V1xZOYwaX/Tguuf2Vx/9Cm4ue4bMwRAl06agkEwLqkXWlir06Ykuw/7v26G@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx34jyOf9jn6tGV995Pf24U1zoAlyPVnrgnjSNAjQm35qqqsJ1z
-	wePsOzLAZEjd/GcnBj8qPAKs/TkYHac4ZeKJXhPT5zC0TFLGMewaHUeMeYmv9MuDb4wvbL27hb6
-	b80JKXlHQq23hz2gSepZYT6udnG/Rhog=
-X-Google-Smtp-Source: AGHT+IFqqgCqTx3H7A2RicTOV7G+8sPyByahjukgJbjYtZInaAbuTplcRs9VJ6pS0QLur+Gg3eUy9v735bCIVegSzI4=
-X-Received: by 2002:a05:6000:2908:b0:3a3:ec58:ebf2 with SMTP id
- ffacd0b85a97d-3a572398e99mr12091890f8f.7.1750213488113; Tue, 17 Jun 2025
- 19:24:48 -0700 (PDT)
+	s=arc-20240116; t=1750213549; c=relaxed/simple;
+	bh=OaHgiZazmyc06LjxYXLe7izja8CfrKabh/GxjNs2paw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=onFa1WRPTc6m6tmiDvTWVvJ8DH+ZoPQqmdnauWnptkjQjuxWWMXlp++TH9+ixBk8hWIaUIb/mWtPywBBncCQMfsXIURHc/zywMW1gK/bmh0ajTzDl1UK2OVndeagPWQJ9QsfF71C31OD1SKem4rr+BjnwMBF5XpRDHLHHo6pN10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=olPnJ/Ft; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="olPnJ/Ft"
+Message-ID: <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750213542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WRnT8oSN8k3lo5CGyLRxRbzv9ULV2vj8IJVFOUE6h9A=;
+	b=olPnJ/FtjhUAXcFuf0XSpr3qb4c5xrdg+M22XKq4JMIybh8zteDsQ8Z2tnkY/S2cNc4ggi
+	jlX4Ytm3vMiya30fLJ8CUlcma0UMwBVeduQoArL230FvZnplmF4DfSM9RsPneAuRe/uwzW
+	EyjgsKfmraLTlrD1j/21rtXlKEvjUeg=
+Date: Wed, 18 Jun 2025 10:25:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617023738.779081-1-qiaozhe@iscas.ac.cn> <20250617144038.GA1134072@bhelgaas>
-In-Reply-To: <20250617144038.GA1134072@bhelgaas>
-From: Zhe Qiao <qiaozhe@iscas.ac.cn>
-Date: Wed, 18 Jun 2025 10:24:36 +0800
-X-Gmail-Original-Message-ID: <CALhs5=1t37kXaVNiidfK16EqP-7HT_bq_s5d=JKAuBtwhONd4w@mail.gmail.com>
-X-Gm-Features: Ac12FXwoXGIkpszpHeIr8iU0A0DVQ-_8wB0lyTMDmYvmh6yGW21L2y23GrtdZ3U
-Message-ID: <CALhs5=1t37kXaVNiidfK16EqP-7HT_bq_s5d=JKAuBtwhONd4w@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/ACPI: Fix double free bug in pci_acpi_scan_root() function
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: rafael@kernel.org, bhelgaas@google.com, lenb@kernel.org, 
-	kwilczynski@kernel.org, sashal@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-CM-TRANSID:rQCowABHXFRxI1JohnlDBw--.7428S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJF4xWFyfAF1kWFyrCF1rJFb_yoWrGw1Dpa
-	1Svw4UAr4ktr4kGr1kZ3WrZF1rZrs0krW7KrZ7t3yfAF4DWr12qFZFkrna9F98Zrs5Cw4I
-	vF4qvFyUGF4qyaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
-	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
-	I_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxG
-	rwCY02Avz4vEIxC_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-	6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-	IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf
-	9x07bVQ6JUUUUU=
-X-CM-SenderInfo: ptld061kh6x2xfdvhtffof0/
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+Content-Language: en-US
+To: Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Jann Horn <jannh@google.com>, Suren Baghdasaryan <surenb@google.com>,
+ Lokesh Gidra <lokeshgidra@google.com>,
+ Tangquan Zheng <zhengtangquan@oppo.com>,
+ Qi Zheng <zhengqi.arch@bytedance.com>, Lance Yang <ioworker0@gmail.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Zi Li <zi.li@linux.dev>
+References: <20250607220150.2980-1-21cnbao@gmail.com>
+ <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Bjorn
+Hi all,
 
-On Tue, Jun 17, 2025 at 10:40=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> [+cc Dan]
->
-> On Tue, Jun 17, 2025 at 10:37:38AM +0800, Zhe Qiao wrote:
-> > The patch "PCI/ACPI: Fix allocated memory release on error in
-> > pci_acpi_scan_root()" introduces a dual release issue. When
-> > acpi_pci_root_creat() fails, the pci_cpi_can_root() function
-> > will release 'ri ->cfg' and 'root_ops' in the error handling
-> > path.However, acpi_pci_root_creat() will also call
-> > __acpi_pci_root_release_info(), which in turn will call the
-> > release_info hook, causing the same block of memory to be
-> > released again.
->
-> These are all nits, but would have to be fixed before applying:
->
->   - 'The patch "PCI/ACPI: Fix ..."' is not the usual way to identify a
->     commit.  Use the same style as in the Fixes: tag below.
->
->   - Typo in "acpi_pci_root_creat" (twice)
->
->   - Typo in "pci_cpi_can_root"
->
->   - Add space after the period in "path.However, ..."
->
->   - Add "Reported-by: Dan Carpenter <dan.carpenter@linaro.org>" and
->     "Closes: https://lore.kernel.org/all/aEmdnuw715btq7Q5@stanley.mountai=
-n/"
->     and cc: Dan.
->
->   - 631b2af2f357 appeared in v6.16-rc1, so we should try to get the
->     fix into v6.16.  A hint after the "---" would be helpful to make
->     sure that happens.
->
-> Wait a few days before reposting in case other folks have comments.
->
+Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
 
-Thank you for your detailed review and pointing out these issues.
-I will wait a few days before resending.
+On 2025/6/17 21:38, Lorenzo Stoakes wrote:
+[...]
+> 
+> On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
+>> From: Barry Song <v-songbaohua@oppo.com>
+>>
+>> Certain madvise operations, especially MADV_DONTNEED, occur far more
+>> frequently than other madvise options, particularly in native and Java
+>> heaps for dynamic memory management.
+>>
+>> Currently, the mmap_lock is always held during these operations, even when
+>> unnecessary. This causes lock contention and can lead to severe priority
+>> inversion, where low-priority threads—such as Android's HeapTaskDaemon—
+>> hold the lock and block higher-priority threads.
+>>
+>> This patch enables the use of per-VMA locks when the advised range lies
+>> entirely within a single VMA, avoiding the need for full VMA traversal. In
+>> practice, userspace heaps rarely issue MADV_DONTNEED across multiple VMAs.
+>>
+>> Tangquan’s testing shows that over 99.5% of memory reclaimed by Android
+>> benefits from this per-VMA lock optimization. After extended runtime,
+>> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+>> only 1,231 fell back to mmap_lock.
+>>
+>> To simplify handling, the implementation falls back to the standard
+>> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexity of
+>> userfaultfd_remove().
+>>
+>> Many thanks to Lorenzo's work[1] on:
+>> "Refactor the madvise() code to retain state about the locking mode
+>> utilised for traversing VMAs.
+>>
+>> Then use this mechanism to permit VMA locking to be done later in the
+>> madvise() logic and also to allow altering of the locking mode to permit
+>> falling back to an mmap read lock if required."
+>>
+>> One important point, as pointed out by Jann[2], is that
+>> untagged_addr_remote() requires holding mmap_lock. This is because
+>> address tagging on x86 and RISC-V is quite complex.
+>>
+>> Until untagged_addr_remote() becomes atomic—which seems unlikely in
+>> the near future—we cannot support per-VMA locks for remote processes.
+>> So for now, only local processes are supported.
 
-Thanks again!
+Just to put some numbers on it, I ran a micro-benchmark with 100
+parallel threads, where each thread calls madvise() on its own 1GiB
+chunk of 64KiB mTHP-backed memory. The performance gain is huge:
 
-> > Fixes: 631b2af2f357 ("PCI/ACPI: Fix allocated memory release on error i=
-n pci_acpi_scan_root()")
-> > Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
-> > ---
-> > v1 -> v2:
-> >  - Restore all changes from the first version.
-> >  - Remove unnecessary release info hooks.
-> >  - Add a NULL check before calling info->ops->release_info().
-> >  - Delete the currently unused pci_api_geneic_delease_info () function.
-> > ---
-> >  drivers/acpi/pci_root.c |  3 ++-
-> >  drivers/pci/pci-acpi.c  | 12 ------------
-> >  2 files changed, 2 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
-> > index 74ade4160314..83628adbc56b 100644
-> > --- a/drivers/acpi/pci_root.c
-> > +++ b/drivers/acpi/pci_root.c
-> > @@ -974,7 +974,8 @@ static void __acpi_pci_root_release_info(struct acp=
-i_pci_root_info *info)
-> >               resource_list_destroy_entry(entry);
-> >       }
-> >
-> > -     info->ops->release_info(info);
-> > +     if (info->ops && info->ops->release_info)
-> > +             info->ops->release_info(info);
-> >  }
-> >
-> >  static void acpi_pci_root_release_info(struct pci_host_bridge *bridge)
-> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> > index b78e0e417324..6e85816ee1c3 100644
-> > --- a/drivers/pci/pci-acpi.c
-> > +++ b/drivers/pci/pci-acpi.c
-> > @@ -1652,17 +1652,6 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root=
- *root)
-> >       return cfg;
-> >  }
-> >
-> > -/* release_info: free resources allocated by init_info */
-> > -static void pci_acpi_generic_release_info(struct acpi_pci_root_info *c=
-i)
-> > -{
-> > -     struct acpi_pci_generic_root_info *ri;
-> > -
-> > -     ri =3D container_of(ci, struct acpi_pci_generic_root_info, common=
-);
-> > -     pci_ecam_free(ri->cfg);
-> > -     kfree(ci->ops);
-> > -     kfree(ri);
-> > -}
-> > -
-> >  /* Interface called from ACPI code to setup PCI host controller */
-> >  struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
-> >  {
-> > @@ -1683,7 +1672,6 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pc=
-i_root *root)
-> >       if (!ri->cfg)
-> >               goto free_root_ops;
-> >
-> > -     root_ops->release_info =3D pci_acpi_generic_release_info;
-> >       root_ops->prepare_resources =3D pci_acpi_root_prepare_resources;
-> >       root_ops->pci_ops =3D (struct pci_ops *)&ri->cfg->ops->pci_ops;
-> >       bus =3D acpi_pci_root_create(root, root_ops, &ri->common, ri->cfg=
-);
-> > --
-> > 2.43.0
-> >
+1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~47% 
+faster)
+2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~64% 
+faster)
 
-regards,
-Zhe
-
+Thanks,
+Lance
