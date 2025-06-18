@@ -1,99 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16FD78F36;
-	Wed, 18 Jun 2025 02:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213EC191F66
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750215164; cv=none; b=bOyTqJ/2mXkYtoGUi26P9JHL5QWOc/u8W7mS2NXKV22LKo8QCp2BzLWItWmtdYbCd8hIqfglYb1Y+PihdPlxMlHF4wvjfNvyY1EG2sj83fP2B7/DxtrMm7+JeacaZ46WwFwWHThG94sa3JiBvNHVU5JUxbuUc6F73H00DgjX1bc=
+	t=1750215306; cv=none; b=rrLR7VRl7A1nM96rTIdIqyoYab8XNDNLp3WYhlFDbA9uVaFUgVSkKyp7WELLSeh74iOD/SPuQKwym4PGuS+GTJJ7UTod2ckA86Cfcqpgd4ky/75TU3Rysw/6DWIiOzs4jqU11ilGE9nrWyxOsHkmKpz7tpsxSuD/lyw5mcJPKY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750215164; c=relaxed/simple;
-	bh=xibkBkl+LKRXep54JINrCcQx7QYwck9H1g7WJvKYXXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GvG4y2xYwf13FYd8a3xkkHQkEN/olOVLpe5hhbbppGY2rSVO/cT6ecw9MFpIBP+DxHKDVngvkO/KpOCwxQIwSL8dp9AFYLXYfz3x7isXzmm2VONhmoz2aRViWmIlb9JUeacFWguOU38mfFB4gcb668BsXBCzvUz3njqJ2uZ09aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mPFoctY2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mPFoctY2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC05EC4CEE3;
-	Wed, 18 Jun 2025 02:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750215164;
-	bh=xibkBkl+LKRXep54JINrCcQx7QYwck9H1g7WJvKYXXE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mPFoctY2b4YRp0ICParubEBIZbOSf9Vk5KK8uS5PrU68/mm+Tz8vijYy669L9yxjm
-	 Jsv6rP0LyKuxoI+O6bOEIwMiUBAvM0LFyxdmzqXTetuviDjXgL79zCa0MkNRe26UZJ
-	 nmTPEi+nsnNBnQNcZVTMorAMhKugQ20v2b7tS7R4Wg/qgU1aCe1/KxTNGbXHZNp3s2
-	 x1c6uvob6lNCYNLO/miSBxmUGAC6yCJweLgoMx1DbKIQB9lR06t0ghAy3rr9+u8lXf
-	 Xpv9Fu6WPFd657Fqb98bOrRaq1+T2zwE7IyENAPdIk0Jvy78IS8GMNY23Rlo0baNFn
-	 vSmEyoM6yt63A==
-Date: Tue, 17 Jun 2025 19:52:13 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-	x86@kernel.org
-Subject: Re: [PATCH 8/9] lib/crypto/x86: move arch/x86/lib/crypto/ to
- lib/crypto/x86/
-Message-ID: <20250618025213.GA426513@sol>
-References: <20250617222726.365148-1-ebiggers@kernel.org>
- <20250617222726.365148-9-ebiggers@kernel.org>
- <983d7906-6510-4867-978f-4f937b29224b@intel.com>
+	s=arc-20240116; t=1750215306; c=relaxed/simple;
+	bh=nu+mwKMhCBwklb5Xp29TpJ2RRwLYjv/L8eJA8Ov2LzY=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=SlGMTB5hCe30YjrcxcdD6p73fumisJG7YLI0hjkpRNEZbpKHi0JXzKJXIY1ji++nOT7U2ZU3sRruY4HCA+Ut6zB/eGn3Djwyosdlk1dkkXOv9uhkrvJpuNdNbj01Y3tLizHI+6AyI1pCt+Y3fqVppIfgXqNNO5wj5L/poVhJuW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddb4a92e80so84977595ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 19:55:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750215304; x=1750820104;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0HeUAvqtTNubWJzrUPcDBQgIgviue9U+K4gd0TwPBLQ=;
+        b=SPPDXQjLwxW8fJOUOvsR8PPOlZl7NhLecbMfG2uDc2mgMdnTCUV9ERstkWX6zqSZfq
+         dHnqUcZGkqKmeIJhQ9TAgXbPim7Nat/6GR1SrJo0hINJ2IkNkNDv2K+X6e7Sixd/Bxo2
+         gQ5spCNxTQ2xobAa6drFVloi5bMR3nRyPjt4fxlMs4UQAa06EiQyJ4gS+QC/uewVhaa5
+         v/o3Z3vAU9saXHbFcc3H61uZuNre2Ak+xQunHaFBDdccK4WtLxXUemouIBOLzCMW8Wdp
+         iZiYPLGCfTouuX/cNgOHf8O36LQVjRyCTctTsr19Z7gh4+kMlfRxD/DDx6AJ+hWo0tkd
+         Cbiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSNjJKFnZo0amAp21JVmdKeoTayVSAH/diQgmeHU5x1SuETqTgOppJmoupdQVHlE9jE8AhycnqT2hpNHk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+B1HPlrQ+Bw9Lb0sL8AmSCeq4I5xy19lh/kYy1btDcZfBbysx
+	Aqus3wytWDXJWtVeGPrgvnOAI3I8hP04mb0M3MPXgXrG3UUQiLXGiFTEQrraTHeEVyZhYMcHXtz
+	+GmNLE2b3v3faHmir6z14jjO0eWIkpEGg6AaE0N1NFs50x06P/vcLgWDFfIo=
+X-Google-Smtp-Source: AGHT+IF3mNR+cBnZinfP2wjXOOAHeHv/hSuP2N6nj+Agjju89ffZCg5Zfrol9ItbvRzgUW1mZdhZX/58t4Ouf623g795NN/1teUg
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <983d7906-6510-4867-978f-4f937b29224b@intel.com>
+X-Received: by 2002:a05:6e02:3786:b0:3dc:8423:5440 with SMTP id
+ e9e14a558f8ab-3de07c4506emr166712105ab.0.1750215304207; Tue, 17 Jun 2025
+ 19:55:04 -0700 (PDT)
+Date: Tue, 17 Jun 2025 19:55:04 -0700
+In-Reply-To: <tencent_FC196E4F848DEF25B88DCB12125D96DD9307@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68522a88.050a0220.2608ac.0028.GAE@google.com>
+Subject: Re: [syzbot] [ntfs3?] general protection fault in pick_link (2)
+From: syzbot <syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 05:41:09PM -0700, Sohil Mehta wrote:
-> On 6/17/2025 3:27 PM, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> > 
-> > Move the contents of arch/x86/lib/crypto/ into lib/crypto/x86/.
-> > 
-> > The new code organization makes a lot more sense for how this code
-> > actually works and is developed.  In particular, it makes it possible to
-> > build each algorithm as a single module, with better inlining and dead
-> > code elimination.  For a more detailed explanation, see the patchset
-> > which did this for the CRC library code:
-> > https://lore.kernel.org/r/20250607200454.73587-1-ebiggers@kernel.org/.
-> > Also see the patchset which did this for SHA-512:
-> > https://lore.kernel.org/linux-crypto/20250616014019.415791-1-ebiggers@kernel.org/
-> > 
-> > This is just a preparatory commit, which does the move to get the files
-> > into their new location but keeps them building the same way as before.
-> > Later commits will make the actual improvements to the way the
-> > arch-optimized code is integrated for each algorithm.
-> > 
-> > arch/x86/lib/crypto/.gitignore is intentionally kept for now.  See
-> > https://lore.kernel.org/r/CAHk-=whu2fb22rEy6+oKx1-+NCHuWucZepvD0H2MD38DrJVKtg@mail.gmail.com/
-> > I'll remove it later after some time has passed.
-> > 
-> 
-> After this change, arch/x86/lib/ has a lone empty directory crypto with
-> the .gitignore file.
-> 
-> Instead, would it be cleaner to get rid of the crypto directory
-> altogether and update the .gitignore of the parent?
-> 
-> As per the link above, commit 2df0c02dab82 ("x86 boot build: make git
-> ignore stale 'tools' directory") says this:
-> 
-> "So when removing directories that had special .gitignore patterns, make
-> sure to add a new gitignore entry in the parent directory for the no
-> longer existing subdirectory."
-> 
-> With that change,
-> 
-> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Hello,
 
-Yes, that makes sense.  I'll do it that way.  Thanks!
+syzbot tried to test the proposed patch but the build/boot failed:
 
-- Eric
+fs/namei.c:2009:16: error: call to undeclared function 'S_ISLINK'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+fs/namei.c:2009:32: error: no member named 'mode' in 'struct inode'
+
+
+Tested on:
+
+commit:         52da431b Merge tag 'libnvdimm-fixes-6.16-rc3' of git:/..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6a237c32900fc479
+dashboard link: https://syzkaller.appspot.com/bug?extid=1aa90f0eb1fc3e77d969
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1128750c580000
+
