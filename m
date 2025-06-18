@@ -1,126 +1,110 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F74269CE5
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C18327A935
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750281850; cv=none; b=kZxlQFuE90JJ2CrTE7UuonNa8x4RL1Z6Zf6m++5tSVDM31O/fbGvavhVdZF1OgMn+PG5249o1DL/uLtBVKE/kUiukcuGfRqozBjeIBjduUQWd3ot50Fmg/73Wgo/tVtjDDYD3queRsCuXJQTqCD7PsJZVwfoevNK735mSvg/Y+A=
+	t=1750281903; cv=none; b=bO6zsNcN4Y169SsonHFhoSze79gKRq+bCb49FgXupzP6PSPKT0xLuCZgNosWooM05OsdFaSciAiRioYXsmUemNpzBm82qkqVhgFakMQuF3dZVh7nuA6QUfcjPVzET33bWMUI0+COSTYRrotR95EBzuEfpZE9esrmY9WvtvA1gmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750281850; c=relaxed/simple;
-	bh=daJuqZ6CPc2F4BEIINq8WQRI1vxk2F7eTh7TD4lJ1IM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Cht9pKTVCHMK6qsq14s/shihxSSMX+YfK4+sT5yNbW+r4QeZe+iLQQlZ5MDySDPyl5BeA5AbLvbeS57GPnuYq7atB6FfXbgLPzMBRwzJsWrzFABTFaitetJbMATd+SSCbiIzvZXDnI7hOy3mnf/T8ofPUDBhp8mwnxKPUy6s/RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpfQHxvS; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750281903; c=relaxed/simple;
+	bh=4TnKHVuK1SxXh4SdmJti3/CTGjaeWeFbmFWbLEc5+Hk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXmgV2wEBN2iSAD6KXx7CuO3Seqp1VigVDblpSjNVqJHdQ5tYw65X0FPR3K8RV7Nd67xSQmru91/pLLstYepA5rGdBw0WAQRDQ9FoL3zSWs/+14yEmP7tndg10IxRZMcRJqGmaHQzV5OdZ4RLE1D/hpEBM2jfWUtAAYjg7ZFWv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Unydjvjz; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpfQHxvS"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-23689228a7fso2121235ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:24:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Unydjvjz"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3ddff24fdc4so1241035ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:25:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750281849; x=1750886649; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gmjcv+c3SYJdbUPkQIE63QBOpY1Ll5uaHYh2Mm3xcqk=;
-        b=KpfQHxvS2KWBwwQGxvVwN91DcOQnTcce2kjHFgDZFN5Q7xbRGtmJbkxiqYqxcOzgNO
-         ZkPjqdEgeK+qwGVPrqnlXo8VgAoaORtVHmsB9ZFx5qUpWVOwGoxdm3jai0Op1sZ6WK4a
-         yrVuWnnle3ZcGsqQUPWKw2/52jSK3yLjkqOkX6z3Qv/aEIwy1+wkGZNkP1kfSs0VARU5
-         4xKbKC4Rw289ZZW/61RwoOIZkWm2xwY4ZLdeeu6uGryCGeJ+fDBZCdAWsT5wxZsPX7+Y
-         PivyautqylevIFmfYjFLhyi3piTUuv+XRVu/E9lOsi3kd9PAYgj5n9FTCMxrqoMTVxyw
-         42XA==
+        d=linuxfoundation.org; s=google; t=1750281900; x=1750886700; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T/stNUEq4UDmKbaaw+CMdc4IVQ+kMvVtSAce9sGS+c0=;
+        b=UnydjvjzEQnaBKia9+dlVLaw20KAB8lEWPuRECdsOo/CFZHw4V6yVOKfKS2CZdMQCe
+         jKDgmAieNYGUvNVIEscVz6G3RfFkXCZb5fkGm8Y/2jhWef/lFzNPWQktGtLHOmeeqVg8
+         edOweoYcG8IDHV16CYiws9w2rQrLyAQN9by7s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750281849; x=1750886649;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gmjcv+c3SYJdbUPkQIE63QBOpY1Ll5uaHYh2Mm3xcqk=;
-        b=mb+4Nm0Ex/UjQi8avgvccJU+rBH+U5Wj1qbcIGyhLVY1HuOLCfQ93tCwkXAKaJrIYo
-         h0PSbtdkB9Odgg6OF3440i5pDJ1QXxufg6tSThSnvVf6gBheXMEBEXKV0N8WDFezlxPu
-         UDL5bp3ClfVI3m/WyuUsFTEM0Pk6lqxiN8IAUP9ozPPjJvZOX+npruqZkQxAlAQkicCq
-         BXyJcaPIfldlpMCKHek7I1YmI6DT9dD46F6J9x9tRZW1hxCtPvXXYXVPLp/3ve5+MZ73
-         qoF5281M87sTlQm4DTMJUKb1FZJbLkmTTDr0XpHphRskV+bnbjYuDSsELYvpVg/SmyEq
-         ScHA==
-X-Forwarded-Encrypted: i=1; AJvYcCW71JDnAaNEekrL8KUsv2WQXwF+DrQuhFHCn7nwm0RyH2g1ZJbGArdNVJZQMQMyz+j1Vpue19d3OfCVM9M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNMuIoopfFdGYLOGJEnCoeMHUAhvjy9ekOBYhnM6BuHW8lTPp6
-	0uzlfxk5WYsq29BPpNNYuFdYWLWE+KZHEoVk6eM0b7fX60BhbKuF445Iq/p5kGujcGLr+g3c96l
-	Nja2hkQ==
-X-Google-Smtp-Source: AGHT+IHYIRVe1M5MEtH4NPGJJPhQYabXBPFOaU9D4Tvr+HcI9dmkyP50P9RhAXSp4MSHU2XdPzmLxQcHX2E=
-X-Received: from plgk10.prod.google.com ([2002:a17:902:ce0a:b0:234:8c63:ac2b])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:708a:b0:236:6f43:7051
- with SMTP id d9443c01a7336-2366f4372d9mr206207245ad.23.1750281848728; Wed, 18
- Jun 2025 14:24:08 -0700 (PDT)
-Date: Wed, 18 Jun 2025 14:24:07 -0700
-In-Reply-To: <25896236-de8d-4bd9-8a27-da407c0e5a38@zytor.com>
+        d=1e100.net; s=20230601; t=1750281900; x=1750886700;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T/stNUEq4UDmKbaaw+CMdc4IVQ+kMvVtSAce9sGS+c0=;
+        b=ZTtLFIUlaAVCazxTvYdQkl2ePlf+0fOt4PL8fdJGhdgxhuI73uxHQB6pBM5oIHJSVM
+         b87HSx/ozg09HydRZrTWX0WEoEwiAkKAXOOP21+TBmyf6f4/bB+mULfXvhIu3MVjw5sG
+         1F3moY+D2Dco7+ppQDqypfc8oJHnVrQUplPvecO/nG46/vbGg05paEJfYTdg/M2D+n/8
+         I4dLSWtTYStHd6UzpXtQICdhaV/6y7pE4xB4so6+XH6htPtI1Ae24SiL11wYXqm1dHR5
+         H8zeaDqdmNN8ppT3HW2IGhbUfE28WkOCDLNVkP6lPoAwR4nXZGAYvKkz1RdaI/PLCRDj
+         CMwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXMBPJX68qLCwzGcbeLBzsys4RzwLPKC31C5a/5hrM8kkJhH2uzgAzy3T7U9PRz8xI9bLqAelW5ALFGW/M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2JcnW/5w8NYqmzxZR91Qrigro1/lAGpoTB454GbRhrbWJw+e5
+	BL5jdSDOj/QAqRqyrFqRlaDFWouQbismwe4sV05Je/wXEwGwCB0xSizQ6/B+Gzb/jdY=
+X-Gm-Gg: ASbGnctLVp2ar8usuQIUeqlcFt06flzjoxtPmslIQOOBOxbQ915kKTqYSf0r8fb+xsE
+	DumExlowlD+rywGs6mDqsUDoFTC78pwr0c5PgdotXZNQZXHwW2Kzgx2lq/vmLL1b6bY2u8f2UDg
+	U0k8HvrvobXR5T3tZyEoh34/VwnOyu/t5NK1NvDIsN6tmiy/0zG/hx6itjKnwFGSt5wFFKJyoke
+	ZK3kbsnKAKZsaOSobWHEcqmbmt56TRjn8kbnFUcWtEY4U12gopL+OCtea9+ZOx0heYDXJzNmfPL
+	BVGl4jv+gjVYJQ04y9mxVVi9pXp9TRl08vXArOiMWF1wAqR2Mlayrbym7tzQLFTfYYxgMXCf2dW
+	QfS2/Mqbq
+X-Google-Smtp-Source: AGHT+IHmdfovRRvTsAll6RfN5zR5l+XX4iyEE8X7FBGxM0+hSaxUSUCkMemNO4l2Dex3NydMszgq1g==
+X-Received: by 2002:a05:6e02:1c05:b0:3dd:f813:64c5 with SMTP id e9e14a558f8ab-3de07cd451emr241287485ab.22.1750281900220;
+        Wed, 18 Jun 2025 14:25:00 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de01a588d2sm33111265ab.71.2025.06.18.14.24.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 14:24:59 -0700 (PDT)
+Message-ID: <97e0eae8-954a-40dd-91ee-4a0a7cc4b9b4@linuxfoundation.org>
+Date: Wed, 18 Jun 2025 15:24:59 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250617073234.1020644-1-xin@zytor.com> <20250617073234.1020644-2-xin@zytor.com>
- <fa32b6e9-b087-495a-acf1-a28cfed7e28a@intel.com> <aFHUZh6koJyVi3p-@google.com>
- <25896236-de8d-4bd9-8a27-da407c0e5a38@zytor.com>
-Message-ID: <aFMudwy2uO5V8vM5@google.com>
-Subject: Re: [PATCH v2 1/2] x86/traps: Initialize DR6 by writing its
- architectural reset value
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin@zytor.com>
-Cc: Sohil Mehta <sohil.mehta@intel.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	pbonzini@redhat.com, peterz@infradead.org, brgerst@gmail.com, 
-	tony.luck@intel.com, fenghuay@nvidia.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND] selftests: add missing include
+To: Chen Linxuan <chenlinxuan@uniontech.com>,
+ Christian Brauner <brauner@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: zhanjun@uniontech.com, niecheng1@uniontech.com,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20250610020839.2799222-2-chenlinxuan@uniontech.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250610020839.2799222-2-chenlinxuan@uniontech.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 17, 2025, Xin Li wrote:
-> On 6/17/2025 1:47 PM, Sean Christopherson wrote:
-> > On Tue, Jun 17, 2025, Sohil Mehta wrote:
-> > Note, DR6_VOLATILE and DR6_FIXED_1 aren't necessarily aligned with the current
-> > architectural definitions (I haven't actually checked),
+On 6/9/25 20:08, Chen Linxuan wrote:
+> I failed to build this test on Ubuntu 24.04.
+> Compiler complained about undefined functions mount, umount and some
+> mount related flags.
 > 
-> I'm not sure what do you mean by "architectural definitions" here.
+> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
+> ---
+>   tools/testing/selftests/pid_namespace/pid_max.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/tools/testing/selftests/pid_namespace/pid_max.c b/tools/testing/selftests/pid_namespace/pid_max.c
+> index 96f274f0582b6..c3ee8a2eff75b 100644
+> --- a/tools/testing/selftests/pid_namespace/pid_max.c
+> +++ b/tools/testing/selftests/pid_namespace/pid_max.c
+> @@ -12,6 +12,7 @@
+>   #include <syscall.h>
+>   #include <sys/mount.h>
 
-I was trying to say that there may be bits that have been defined in the SDM,
-but are not yet makred as "supported" in DR6_VOLATILE, i.e. that are "incorrectly"
-marked as DR6_FIXED_1 (in quotes, because from KVM's perspective, the bits *are*
-fixed-1, for the guest).
- 
-> However because zeroing DR6 leads to different DR6 values depending on
-> whether the CPU supports BLD:
-> 
->   1) On CPUs with BLD support, DR6 becomes 0xFFFF07F0 (bit 11, DR6.BLD,
->      is cleared).
-> 
->   2) On CPUs without BLD, DR6 becomes 0xFFFF0FF0.
-> 
-> DR6_FIXED_1, if it is still defined to include all bits that can't be
-> cleared, is a constant value only on a *specific* CPU architecture,
-> i.e., it is not a constant value on all CPU implementations.
-> 
-> 
-> > rather they are KVM's
-> > view of the world, i.e. what KVM supports from a virtualization perspective.
-> 
-> So KVM probably should expose the fixed 1s in DR6 to the guest depending on
-> which features, such as BLD or RTM, are enabled and visible to the
-> guest or not?
-> 
-> (Sorry I haven't looked into how the macro DR6_FIXED_1 is used in KVM,
-> maybe it's already used in such a way)
+Hmm. I see mount.h included here?
 
-Yep, that's exactly what KVM does.  DR6_FIXED_1 is the set of bits that KVM
-doesn't yet support for *any* guest.  The per-vCPU set of a fixed-1 bits starts
-with DR6_FIXED_1, and adds in bits for features that aren't supported/exposed
-to the guest. 
+>   #include <sys/wait.h>
+> +#include <sys/mount.h>
 
-static u64 kvm_dr6_fixed(struct kvm_vcpu *vcpu)
-{
-	u64 fixed = DR6_FIXED_1;
+You are adding a duplicate include for the same file?
 
-	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_RTM))
-		fixed |= DR6_RTM;
+>   
+>   #include "../kselftest_harness.h"
+>   #include "../pidfd/pidfd.h"
 
-	if (!guest_cpu_cap_has(vcpu, X86_FEATURE_BUS_LOCK_DETECT))
-		fixed |= DR6_BUS_LOCK;
-	return fixed;
-}
+thanks,
+-- Shuah
