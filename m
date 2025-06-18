@@ -1,102 +1,164 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C40702980A1;
-	Wed, 18 Jun 2025 14:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBFE2EA17A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256411; cv=none; b=NlbvW+QbnamMilAXZe8JA+HazXl+k7KKRFi+9w7Q3RKZoGphPP7MqanfOPD5XqVvAONnX+zOROLvpFMTVOGnDAgdbbwjdXnzmcCRO7Ut66D5+cMrtY8iK1ndOGkJh1rprKTyG0VuJ7HCowQqplwioXG/BDIXYtXuqbmMXHf3rcM=
+	t=1750256442; cv=none; b=EMBIuMHqWanXKqWf9Vahb8n1qHIjtlNMlC/Z4YnFN2S5an3CmDCTTW7SBQxyJuFkE8AP2X1h7Qjnn2tMpz+BybMvi95refirYfbGMZPwEDzZaPB3Vdqsi21vGNV1eKzTuf2oWkHfLdCShcoaCo+KGJdUpoL3mxgOrrkDBV6AURk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256411; c=relaxed/simple;
-	bh=uRKG8lv6RJYmAqOvTk+z6wT0OMHIbCwNn7aWXPGcbUo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+KL/loHwbfXteS5/GEoVvh0fHY3BrpqZrGhMTvNNwpCVT8k6spLDtbzgpSyIVGMyd7CI22Fbx7XKmWICppncirzh2Z37HiZUu6F4ZL1kZnVMff3HmPV42wmVJimbK0mJuF0GBUVxK6avxqnCTFel2i3T5A6nsF8ST6jJM0vI6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Jg90iC/d; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750256442; c=relaxed/simple;
+	bh=bUg/Zmb/ePvz+Q4Q/JvRrQE99mqMxI5jazB+1RokVeM=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=oKfjaGu023pKtg84A8w4YrBVf+eRKstEqYS7asIf6BIjIaztGYPSd5CmhAoPLxTsp4QT1Ui7JFqUbJJphTvme6tw0EwsfmzdYMo0G/JAAtmP0O7X5wkq2Qdt4qNUV4E5fylJoWGyPyZahnP3hdeEBK7j136OJOUtmV+9axy1hN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=sDaHsAuq; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jg90iC/d"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=4zN3bC4DkftlVvPBzBVft4YUqwC0P2GY66hdLYuFJ2s=; b=Jg90iC/dQ7eO51xKL6I7LV4Ks9
-	/3fc3ZZvS6YogEPJkTsfxXXfGAe3oDHiXfJZtW3/U0pTJhnPWGdCgrjYEX0XEpjSPUdKBeWUh1kdq
-	Q4F5KEF980pOhiRoB8oNPWmfznZciSn13bgKpROljCYjjTOdaetaa35aMvXE1+G7ljCSbmdTe4dQZ
-	roONBtuKAZS1mBpWaZwKlBspZh8XzpmvFyDo2uS5zneyQRpHxdAqumhyFrRWNxDO4l6saLg180Tlp
-	z41v4IU964t0QkJMvHMMc7d6TWK2NeBqSBHpTwDSlchNakqjHAriJNf+BElCE8TVy3O0qOLtSkxs1
-	8pP0Rgzw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRtdx-000000045iT-1F7Y;
-	Wed, 18 Jun 2025 14:20:01 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 38D53307FB7; Wed, 18 Jun 2025 16:20:00 +0200 (CEST)
-Date: Wed, 18 Jun 2025 16:20:00 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250618142000.GS1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.770214773@goodmis.org>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="sDaHsAuq"
+X-UUID: 6041c5ce4c4f11f0b910cdf5d4d8066a-20250618
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=361/w2s39uIsBSkc/Vfv0lndyaZuHMALTiabihSnPGs=;
+	b=sDaHsAuqFAi5Cd4vH8mhpoAbQgBCSRaFcOwdbayC5+Ae9jw7nZYJ9WaXzX3YDggpfvY5P803+e6QX5tmXA51Zj4gTvOFJdj2+t+jvgG7cAo1glmq16ceJvgvMv+VvfhfZ/GSa3UF56r6jxs8tz+pK0vU7T+LQ+8qsk/uXGuxp/k=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.3,REQID:8a3b34ac-610f-4af5-b4a3-d7099bf7b468,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:09905cf,CLOUDID:b5859928-fdd2-4021-9c0c-83548fdcf243,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|50,
+	EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 6041c5ce4c4f11f0b910cdf5d4d8066a-20250618
+Received: from mtkmbs09n2.mediatek.inc [(172.21.101.94)] by mailgw01.mediatek.com
+	(envelope-from <kuyo.chang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1209876132; Wed, 18 Jun 2025 22:20:24 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Wed, 18 Jun 2025 22:20:22 +0800
+Received: from [10.233.130.16] (10.233.130.16) by mtkmbs13n2.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.1258.39 via Frontend
+ Transport; Wed, 18 Jun 2025 22:20:22 +0800
+Message-ID: <089882f95b1b910f7feecddd0ad9b17f38394c64.camel@mediatek.com>
+Subject: Re: [RFC PATCH 1/1] sched/deadline: Fix RT task potential
+ starvation when expiry time passed
+From: Kuyo Chang <kuyo.chang@mediatek.com>
+To: Juri Lelli <juri.lelli@redhat.com>
+CC: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann
+	<dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, "Ben
+ Segall" <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, "Valentin
+ Schneider" <vschneid@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, jstultz
+	<jstultz@google.com>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
+Date: Wed, 18 Jun 2025 22:20:23 +0800
+In-Reply-To: <aFAyN4rfssKmbUE5@jlelli-thinkpadt14gen4.remote.csb>
+References: <20250615131129.954975-1-kuyo.chang@mediatek.com>
+	 <aFAyN4rfssKmbUE5@jlelli-thinkpadt14gen4.remote.csb>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250611010428.770214773@goodmis.org>
 
-On Tue, Jun 10, 2025 at 08:54:27PM -0400, Steven Rostedt wrote:
-> From: Josh Poimboeuf <jpoimboe@kernel.org>
-> 
-> Add an interface for scheduling task work to unwind the user space stack
-> before returning to user space. This solves several problems for its
-> callers:
-> 
->   - Ensure the unwind happens in task context even if the caller may be
->     running in interrupt context.
-> 
->   - Avoid duplicate unwinds, whether called multiple times by the same
->     caller or by different callers.
-> 
->   - Take a timestamp when the first request comes in since the task
->     entered the kernel. This will be returned to the calling function
->     along with the stack trace when the task leaves the kernel. This
->     timestamp can be used to correlate kernel unwinds/traces with the user
->     unwind.
-> 
-> The timestamp is created to detect when the stacktrace is the same. It is
-> generated the first time a user space stacktrace is requested after the
-> task enters the kernel.
-> 
-> The timestamp is passed to the caller on request, and when the stacktrace is
-> generated upon returning to user space, it call the requester's callback
-> with the timestamp as well as the stacktrace.
+On Mon, 2025-06-16 at 17:03 +0200, Juri Lelli wrote:
+>=20
+> External email : Please do not click links or open attachments until
+> you have verified the sender or the content.
+>=20
+>=20
+> Hello,
+>=20
+> >=20
+> > [Proposed Solution]:
+> > ------------------
+> > Instead of immediately re-enqueuing the DL entity on timer
+> > registration
+> > failure, this change ensures the DL entity is properly replenished
+> > and
+> > the timer is restarted, preventing RT potential starvation.
+> >=20
+> > Signed-off-by: kuyo chang <kuyo.chang@mediatek.com>
+> > ---
+> > =C2=A0kernel/sched/deadline.c | 8 +++++---
+> > =C2=A01 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> > index ad45a8fea245..e50cb76c961b 100644
+> > --- a/kernel/sched/deadline.c
+> > +++ b/kernel/sched/deadline.c
+> > @@ -1556,10 +1556,12 @@ static void update_curr_dl_se(struct rq
+> > *rq, struct sched_dl_entity *dl_se, s64
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 }
+> >=20
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 if (unlikely(is_dl_boosted(dl_se) ||
+> > !start_dl_timer(dl_se))) {
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dl_server(dl_se))
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 enqueue_dl_entity(dl_se,
+> > ENQUEUE_REPLENISH);
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 else
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (dl_server(dl_se)) {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 replenish_dl_new_period(dl_se, rq);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 start_dl_timer(dl_se);
+>=20
+> But, even today, enqueue_dl_entity() is called with ENQUEUE_REPLENISH
+> flag, so I don't get why you say 're-enqueues the DL entity without
+> properly replenishing'.
+>=20
+> Also, why restarting the replenishing timer right after having
+> replenished the entity?
+>=20
 
-This whole story hinges on there being a high resolution time-stamp
-available... Good thing we killed x86 !TSC support when we did. You sure
-there's no other architectures you're interested in that lack a high res
-time source?
+When dl_defer_running =3D 1 and the running time has been exhausted,=20
+it means that the dl_server should stop at this point.
+However, if start_dl_timer() returns a failure, it indicates that the
+actual time spent consuming the running time was unexpectedly long.=20
+=20
+At this point, there are two options:
+[as-is] 1. re-enqueuing the dl entity with ENQUEUE_REPLENISH will clear
+the throttled flag=20
+and re-enqueue the dl entity to keep the fair_server running.=20
+enqueue_dl_entity(dl_se, ENQUEUE_REPLENISH);
+=3D> replenish_dl_entity
+  =3D> replenish_dl_new_period(dl_se, rq);
+  =3D> dl_se->dl_yielded =3D 0;
+  =3D> dl_se->dl_throttled =3D 0;
+=3D> __enqueue_dl_entity(dl_se);
 
-What about two CPUs managing to request an unwind at exactly the same
-time?
+[to-be] 2. To avoid RT latency, the fair_server should remain throttled
+while replenishing the dl_se.=20
+Once replenishing is complete, we can ensure that a timer is
+successfully started.=20
+When the timer is triggered, the throttled state will be cleared,
+ensuring that RT tasks can execute during this interval.
+=20
+It is a policy decision for dealing with the case of failure in
+start_dl_timer().
+The second approach is better for real-time (RT) latency in my opinion,
+as RT tasks must be prioritized.
+
+> Thanks,
+> Juri
+>=20
 
