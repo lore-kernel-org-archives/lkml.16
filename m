@@ -1,173 +1,154 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFB22E8DF7
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551301EDA26;
+	Wed, 18 Jun 2025 13:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252978; cv=none; b=HKfrQoD/+04j2zZ3D7oSF8lrdB+C0E/44pO04SWIt5xmSJ9x7N++D24FG1F6zvamQ06tYLqpV9/MvFJpA+YZCcqe5PdpMhg3kWNUPTvvYURbncJTD09hjsvSb+QMylpCXzjZYY13YCE23s6aMyzbse5iNyCjGExBIJbc/w5IxdM=
+	t=1750252989; cv=none; b=H8IyMzA7n4dugm/E4FOdtcvHgv5ncdwdbRAiWjF7A2KrACQcM1ZBDh0B3WkB7TCrtGjnZ61QY3C1lCrI/Eb3ntCDOQpOM4L+xob4fWoW994lkN8+ri6AR3ssZkMFxsENHAPmX83XNUK7iCUqts9CpgfBMMla+0G3f3w1El6Mqs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252978; c=relaxed/simple;
-	bh=4sVzlxLP/bZsoszLk8hSFb5vyq2fZ6rK+rSFQACgZ6o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L4WuBwuAE+ToYS+vY/HslwNEfEhPKsKhltozGLJHzkB3NGx0aNqLGUgdtLrXM2D62qH04eFvmZ+pzYiSYY/9P3lz70xH3rkiiwQc1MuwzR+/QyWkS2f+bqymB3C09rHP7zNidZMuLLrWOhR1GT95ioslTwIMbb+L6Ls18YQavh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=WHsGPgKP; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1750252989; c=relaxed/simple;
+	bh=5xtEzAj9y8QbOTiFWszUWHRMhkRtaTDilqBmPWoqasI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hvimRoL8bsgOD4G0BO0EXgGrWOqNKvYmio7SCjcp8JkzNimsNG30WT3JrSDOrnUGAZAEec7DKNLGSkL7ZJuxbiRvsyheZPjzcN2kLpSVhbxtK9Bj5yn1Fqq2CJaY3DaQgQwrUaWsn9sGqX5nVpGnhyqQsCxHKLiclOVmSKN/BTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=gHL5GTfN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A8besaRg; arc=none smtp.client-ip=103.168.172.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="WHsGPgKP"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e733a6ff491so6515692276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1750252976; x=1750857776; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=drH9Y3tf+LSgM8baU4lopr0u6fbWMBKIJnj055I6/lU=;
-        b=WHsGPgKP83yGRVorGfwYv1+xh46BH7m1aqr3q2CotAV5L1BlEs8TLfljYdqtWVW0j8
-         Z9cRRhNMpkUkir1p/hcsDAMFr1ubfQt/OSxubNuEuphTANt/Lh7LL073i1MBg4prbQbD
-         kJmaC16NKl9xno6b/Y6G1M7seD00zcbWn9uuvOU2nnbIYUj5kA0HTnUM14/Tf2EzC1CM
-         8rTPdotul1+TJg5qHz2G7b0XDG36MIkF6lqqzfVHtUf6ldrYgD4qLvmvxC6UsQBtkmzB
-         Dsq1vb/aHW8kINdA1z4TQ/G39ODjrb0yn7PNKmHY+f3LrQ97rqvmI4rVU8KMZozBdeN5
-         mRnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750252976; x=1750857776;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=drH9Y3tf+LSgM8baU4lopr0u6fbWMBKIJnj055I6/lU=;
-        b=FQ6nOYvbyJbyAxngOY+xs4IluZr9HAHXY4h/U0rp8rZCw/C7UCLoo7NMwUl1G6vcIC
-         w8d0rdRXCiRWpR2rD0wYLs87bEIVcJ6ttvaMlclJ3aEILwnn9OyGDbraMdar4Nn38h6P
-         7gZAp21/LKzRZTP4Jc37KIiQZ3JHE0gWLeNfn+s/xPuvUoQIgfLev0tX8a2WqBd2Qc48
-         GvP4w+scsLFE9ZWxxMoFwunMoT+vLH42ybmixnn+W1P9A+pZmevn+0oS+xJMBjphHCq7
-         +DHUJtYkRqJaqwh2dTtsN5EAOPo2WiJulnrETh+bF/Xxjlg3lsNde1RuDbcKPtyVfiH5
-         iRQQ==
-X-Gm-Message-State: AOJu0YxPjARyTc+XZbJsClwB4GOnKYVKQixdiwTJFMb2a/aVk1rhvebc
-	yhxJiWpkaTKqmvEmp0gXKqdRcE2muHBxvnixnBn23ttdQsALsZahgg6OgBIAUH3bL/3SkXLCx9l
-	Pa1mkTq5RXo437yh+Nt73UUj2a9tGk2Me/WWIgFiV
-X-Gm-Gg: ASbGncsB9jMYtAue3KZJE3zyPFn5YOrwMGqUdOBsm8FyojQK4ZNSF/rdkg40uf3GK2i
-	z2CJ0+oxDaz5Q+vBDep+FEpSg0EeSYYcVwNMJTNX8st9mxp/CDgT4TKCVPyF28ePofwvZj8nkjX
-	T7ND2w49lCQgwBdUQ5BmYbqed2EW9jMSsXtvHkDO90LAk=
-X-Google-Smtp-Source: AGHT+IFWMDFKDX7dwlLZnZslT/HeiGzOiWLxP7AZc3vtTIuwY8RU4GWriaQhueJM9cH+gEP6Tkk1JYfe/Zw4NbYkAnE=
-X-Received: by 2002:a05:6902:220e:b0:e81:9581:4caa with SMTP id
- 3f1490d57ef6-e822ad8bc0fmr23404196276.34.1750252975769; Wed, 18 Jun 2025
- 06:22:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="gHL5GTfN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A8besaRg"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.phl.internal (Postfix) with ESMTP id 807771380394;
+	Wed, 18 Jun 2025 09:23:06 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Wed, 18 Jun 2025 09:23:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750252986;
+	 x=1750339386; bh=cJqYrty+ZCMQ9sMd6DPBbLgOpbJYrAg1hXA8IjpBTWk=; b=
+	gHL5GTfNzLDptWVxtr0Y6oX56/26YLLnItwE3GvmRTaalQjxapjQczosl3/96mGF
+	blQ1b3h4yYdOfJix/c+MxR3QtcmjeohqHqYjeRBqvXS88Ce71JQbu5te5OuGqHCO
+	bWny9g6YFPL7EIFtMS+gerQpEDFe9jzZyZ0OWxmIANAkL8b+ptAEfKKzT3Qsrnup
+	6EZ9AzhPMIC/pScsmEnJtGa0/7HbthLGs40/J+FjF5NdM1yjRnd0A4tzT2pfZ/Mb
+	VIiIORmmEcdhTLEFZN9QOU3oUhQJexzxK/yrywzdX6zJ5BYGYx2ch2CGCIRfTFsD
+	VbK0mBiufyoLiTj3q0rGJw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1750252986; x=1750339386; bh=cJqYrty+ZCMQ9sMd6DPBbLgOpbJYrAg1hXA
+	8IjpBTWk=; b=A8besaRgu5Ygp0FM/TSGA32km4RdyD5eqlAmdnMBx0tyHw1s//A
+	r4txev+iTlMED9ehgGkilgSLkEC8kn4Du3vica4+xjBK5KeUbMmrSGo6VATkLdSu
+	BtiC2VVD2uSuFOykRuK2jwf5yEIWLgDY7KNh88hTpvu+ooQ/DhxbCr+M8qOOinrT
+	hJ3+DJdMyuhK7p+C/EPf17PYDl72maTQiIOGVdA7zgIuMWyTFO1fZ8QmF4IC9D0U
+	06QasTKP3IXrGfOUbCRP9L6tMzA7nDhMoDd2qI0RufCvlK+MddFvWduytyoWybeL
+	Wr4xxdZ1OwX6Rf/tmP+og0TxQBxno9by/8w==
+X-ME-Sender: <xms:ub1SaLXPb_mlJsjlZuznwT7Jmjz3kgE056QYLHo8KOpxVwhdjVJAcg>
+    <xme:ub1SaDkqCmLYk5MkEfwrBar_dfDseBe7yZYjKCGeNCJFLbrMHjfetKNkh-YVnZi9x
+    HrlV0gDOOib3A>
+X-ME-Received: <xmr:ub1SaHaILzJfgnrooryIXEaXrGu7gi53sj9iVvSsLl1YFHeMYlTNC4aUZa-LlA2wHYiz39DvBvGzbNxgglQZEmwfyz9hR46qaLE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvjeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeen
+    ucfhrhhomhepfdhmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrd
+    gtohhmfdcuoehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgt
+    ohhmqeenucggtffrrghtthgvrhhnpeekkeevieevkefhieetveehueekhedufeelgfevud
+    ejkefhffehuddtjeegteehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
+    mhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrg
+    gsrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
+    thhopehqihhugihurdiihhhuohesihhnthgvlhdrtghomhdprhgtphhtthhopegsphesrg
+    hlihgvnhekrdguvgdprhgtphhtthhopehtohhnhidrlhhutghksehinhhtvghlrdgtohhm
+    pdhrtghpthhtohepjhgrmhgvshdrmhhorhhsvgesrghrmhdrtghomhdprhgtphhtthhope
+    hmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrhhitgeskhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvggurggtsehvghgvrhdrkhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
+    vghlrdhorhhg
+X-ME-Proxy: <xmx:ub1SaGWKgngI8yYe7ScJPCXjI5SaF0r8RL8h9gvYqqTzUHHzPEm38Q>
+    <xmx:ub1SaFlvS_90qv-_WTmvxYhug3F9jngxx8XBUhpRENYgKzjQlGo6zQ>
+    <xmx:ub1SaDf7Gs5DyAxF8WRWVl6BVjhsQKNL9yh3kIh5sBk0cM02_kK2lw>
+    <xmx:ub1SaPHxgbozNZ5UrcnmmTdNZvjPf0ReG_R--jh1VwcgAFLmcRFMwA>
+    <xmx:ur1SaNDYHNfs8Mnm1Goa5m9pr8lAWDo5FDjHiyW0f-MCzY6qTpAUeSF4>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Jun 2025 09:23:04 -0400 (EDT)
+Date: Wed, 18 Jun 2025 15:23:02 +0200
+From: "marmarek@invisiblethingslab.com" <marmarek@invisiblethingslab.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
+Message-ID: <aFK9tnZOPtF2pa80@mail-itl>
+References: <aFFN7RlXkaK_loQb@mail-itl>
+ <20250618031855.1435420-1-qiuxu.zhuo@intel.com>
+ <CY8PR11MB7134FA32BC293D5E868016A18972A@CY8PR11MB7134.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <6852ba08.050a0220.216029.0011.GAE@google.com>
-In-Reply-To: <6852ba08.050a0220.216029.0011.GAE@google.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Wed, 18 Jun 2025 09:22:44 -0400
-X-Gm-Features: Ac12FXxWXV5uy9kVJZxQnEU5kbkQBKDzOV7ISTVS6wOzhQkP9lyOkueHtfwc60Y
-Message-ID: <CAHC9VhRSwtds1kJgreLOsvV0V5XXBS1jJ+UCsuAnXcgsEnPivg@mail.gmail.com>
-Subject: Re: [syzbot] [selinux?] WARNING in hashtab_init
-To: syzbot <syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com>
-Cc: linux-kernel@vger.kernel.org, omosnace@redhat.com, selinux@vger.kernel.org, 
-	stephen.smalley.work@gmail.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aTKB59D1qi71zo/d"
+Content-Disposition: inline
+In-Reply-To: <CY8PR11MB7134FA32BC293D5E868016A18972A@CY8PR11MB7134.namprd11.prod.outlook.com>
+
+
+--aTKB59D1qi71zo/d
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Date: Wed, 18 Jun 2025 15:23:02 +0200
+From: "marmarek@invisiblethingslab.com" <marmarek@invisiblethingslab.com>
+To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
+Cc: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
+	James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
 
-On Wed, Jun 18, 2025 at 9:07=E2=80=AFAM syzbot
-<syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following issue on:
->
-> HEAD commit:    52da431bf03b Merge tag 'libnvdimm-fixes-6.16-rc3' of git:=
-/..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D144635d458000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D4130f4d8a06c3=
-e71
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3Dbc2c99c2929c3d2=
-19fb3
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
-ebian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D12a1f50c580=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D1094050c58000=
-0
->
-> Downloadable assets:
-> disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d=
-900f083ada3/non_bootable_disk-52da431b.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/0ebc79a3dea1/vmlinu=
-x-52da431b.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/2b1157e117a2/b=
-zImage-52da431b.xz
->
-> IMPORTANT: if you fix the issue, please add the following tag to the comm=
-it:
-> Reported-by: syzbot+bc2c99c2929c3d219fb3@syzkaller.appspotmail.com
->
-> WARNING: CPU: 3 PID: 5931 at mm/page_alloc.c:4935 __alloc_frozen_pages_no=
-prof+0x30b/0x23f0 mm/page_alloc.c:4935
-> Modules linked in:
-> CPU: 3 UID: 0 PID: 5931 Comm: syz-executor128 Not tainted 6.16.0-rc2-syzk=
-aller-00047-g52da431bf03b #0 PREEMPT(full)
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.=
-16.3-2~bpo12+1 04/01/2014
-> RIP: 0010:__alloc_frozen_pages_noprof+0x30b/0x23f0 mm/page_alloc.c:4935
-> Code: f0 5b 5d 41 5c 41 5d 41 5e 41 5f c3 cc cc cc cc 83 fe 0a 0f 86 0a f=
-e ff ff 80 3d 83 6e 7a 0e 00 75 0b c6 05 7a 6e 7a 0e 01 90 <0f> 0b 90 45 31=
- f6 eb 81 4d 85 f6 74 22 44 89 fa 89 ee 4c 89 f7 e8
-> RSP: 0018:ffffc90003d87438 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: 0000000000000015 RDI: 0000000000040dc0
-> RBP: 0000000200000000 R08: 0000000000000005 R09: 0000000000000000
-> R10: 0000000040000000 R11: 0000000000000001 R12: 0000000000000015
-> R13: 1ffff920007b0e9c R14: 0000000200000000 R15: 0000000000000015
-> FS:  0000555574b0f380(0000) GS:ffff8880d6a53000(0000) knlGS:0000000000000=
-000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000200000001000 CR3: 000000002a80f000 CR4: 0000000000352ef0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  __alloc_pages_noprof+0xb/0x1b0 mm/page_alloc.c:4993
+On Wed, Jun 18, 2025 at 03:26:43AM +0000, Zhuo, Qiuxu wrote:
+> Hi Marek,
+>=20
+> > From: Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
+> > [...]
+> > Subject: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
+>=20
+> Thank you for reporting this issue.=20
+> Could you please test this patch on your machine to verify if it fixes th=
+e issue?
 
-Looks like another case where we should probably add GFP_NOWARN.
+I can confirm it works now, I have the "EDAC igen6: Expected 2 mcs, but only
+1 detected" message and it doesn't crash anymore. Thanks!
 
->  __alloc_pages_node_noprof include/linux/gfp.h:284 [inline]
->  alloc_pages_node_noprof include/linux/gfp.h:311 [inline]
->  ___kmalloc_large_node+0x84/0x1e0 mm/slub.c:4272
->  __kmalloc_large_node_noprof+0x1c/0x70 mm/slub.c:4300
->  __do_kmalloc_node mm/slub.c:4316 [inline]
->  __kmalloc_noprof.cold+0xc/0x61 mm/slub.c:4340
->  kmalloc_noprof include/linux/slab.h:909 [inline]
->  kmalloc_array_noprof include/linux/slab.h:948 [inline]
->  hashtab_init+0x1b1/0x290 security/selinux/ss/hashtab.c:43
-
-This would be the right spot, in the kcalloc() call.  I'll throw
-together a quick patch in a little bit.
-
->  common_read+0x1c2/0x3d0 security/selinux/ss/policydb.c:1172
->  policydb_read+0x874/0x3220 security/selinux/ss/policydb.c:2578
->  security_load_policy+0x15c/0x12c0 security/selinux/ss/services.c:2299
->  sel_write_load+0x332/0x1bd0 security/selinux/selinuxfs.c:603
->  vfs_write+0x2a0/0x1150 fs/read_write.c:684
->  ksys_write+0x12a/0x250 fs/read_write.c:738
->  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
->  do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> RIP: 0033:0x7f0fd65a5d79
-> Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f=
-7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff=
- ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-> RSP: 002b:00007ffc49f31638 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000200000000300 RCX: 00007f0fd65a5d79
-> RDX: 0000000000002000 RSI: 0000200000000000 RDI: 0000000000000003
-> RBP: 0000200000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 000000000000008f R11: 0000000000000246 R12: 00007f0fd65f419c
-> R13: 00007f0fd65ef082 R14: 0000000000000001 R15: 0000000000000001
->  </TASK>
+Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
 
 --=20
-paul-moore.com
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--aTKB59D1qi71zo/d
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhSvbYACgkQ24/THMrX
+1yzzjAf5AUXowsoMKnMQkWMIwzyoBsS5h8NCJwz3O8C93ZqTdALF2L5Dk61Z9vx5
+ugDBhHjt7Xi3SH0kRtMUuoXKwlTSvBZzAGzdNcYd58wOx7V7JMtVQZtFNQeWXyoR
+hsZBxIDxyAUqhkyEuhKUhIXx8+LD+CTk3R+M/1sv5uDMallmd6BNyMQGQ6GUwyr7
+Ui90PAA7S3QVCy+C3+jD1qUutDQ2njNGmWfeiniT9cSiyJhXJpFqw4oi1Y/dIKCW
+Vse5M3NyHYiyKD92LEeYPDX0zv1ZhsTmC1X3fbjAJDjBhj+gPrs/Nx7LxK82QivG
+EqJoSthckcao5Yn0jjFKHrni9v7mjw==
+=EQ4E
+-----END PGP SIGNATURE-----
+
+--aTKB59D1qi71zo/d--
