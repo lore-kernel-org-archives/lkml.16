@@ -1,171 +1,192 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420E3295DBD
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEFF2DE204;
+	Wed, 18 Jun 2025 13:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252043; cv=none; b=AAuu5t5c5Q8KN2mtXZu7Xkz+EAeSMkEtz5xrxeVajuycUV7W5WmM1DlWLbtTy8/jTOg4PiiEsivgEciZsBs+0qObtyizgP4q97GbdEt/Ne/A85AeRz8WuVN8o3SG3r95ZBMUws19A+2JfZ955FEsyqOexvThp8AIqc1Hhn57g2o=
+	t=1750252056; cv=none; b=DgKszBVLX6uj6r0ukoMZuMJeGnKaA4RG5N9dViWLwV+kEZcRs2wQS1/UkSD9D/bqd02niDVXMjGfUCeqf8vlyO4KPSiU3ApDifLYHNpka5lKnfJgYnbgSObLn6PCi8xyfSnDq0jiyzsXA1yndqJXRsWkp+6puTHvuR95AW8JwaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252043; c=relaxed/simple;
-	bh=aSdAfxHpoXSYqKwZBlLym7HDqDR+emh7M8PqloxM5tA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=nCe+YvY3fsYHfCpGxTpqfELqkyE9PJRYP+BAdUN6ldZ4ZkOfEtjtySUXyIpWQPx7kaakZeygi8/cFVmtpqvpE441/Y6eR4uTV2XxWrf7G2m+B9YCr1ba3JhnL289YfZZfBJ3z8qYU02UUCzwBl52rRnN5i/6X5wA/nCyxu1aqR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddbb34fc1cso82495415ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:07:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750252040; x=1750856840;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GZEYlP3cazfT0Vd6760ReqSnldFn0MXtcHWYgN+wpx8=;
-        b=NiikTIzzTuBsYHtak6kFNNE4CN+f7HYBW/Gwk3gHu+/c8EowfYl1hrynNmcei7PKRe
-         z9EYmDDgT41zX5zfC6eUNzlxwpCW+X8chsV7kJIRpnv4eQzubdrPBBIOAl7sE3kKosrD
-         lGdi9NpwjK2AHAJIjGe2nU9fUUzz16LXz7dZrwqp/MGEMUTn7crIMO8mMQ4cns2wm0t6
-         5TJmbkcT/LTAUgrdowiSKc5ohJ3KtFfgpEZtmOv4aFR8uSHJCcpOQDCxVuhaEontZJeF
-         bMzizmkb0/PV3nJ8M94xmQuRa0KotBhqeH57e4o9WmkuBwGQXTkwb9FiP8G4lqPWbcyP
-         PRAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfKIsOy1Yw36LFX9gmSDFCcflg3YnCz0ygdFjE3QLJ5nya+O54u4u6QJ4zNxeiq3nV6qRPVFd6iyhl7uM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6OXZ/HPUmHLQFpGJjY7MqJ6U/X4B0BAvRJ+KKzbaiNQKAdQLi
-	Rt7bcXAsaY6BY6X4kYYa6PsS/kO1LbXs1ebsEG7RaAw9cgm+Qm3/+JJKzBRHecox9ugWsInKFme
-	vfvA7ukVJv9YCxiYcxTS2z4pQCXkym7GLXX9TN4shbFfTHe1Bi3AhtzmfuRA=
-X-Google-Smtp-Source: AGHT+IGAPZGHXFqHyQg0bEHAbpi3Tk9lTqgH1Bnxq09IT5tBg9uO50cw79yIJOsgtccmzrcDDZbFNlcUHIZX/ZPPYEkrAnlfrIvY
+	s=arc-20240116; t=1750252056; c=relaxed/simple;
+	bh=X3UaxBcYP4A/mruQ/5jpwFPJL6OalCZdq8pydylB5pk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=F9utVv+TqsraK5OppjFa1yGgF0KkLb4LoURK0dDXL7ElDSR7gE56CNaJVmRuQkiBAGWuv6zwdF9FhLXGT0RfDx77/dL+ilvwOAeHIXs/Muk69rLU51eLWH6eb86zzUPUbZcsYDys6gbFhEumVMntUe0h9aFNL/xFNCoBTxp5aWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=dLIfRTmS; arc=none smtp.client-ip=134.0.28.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="dLIfRTmS"
+Received: from mxbulk.masterlogin.de (unknown [192.168.10.85])
+	by mxout4.routing.net (Postfix) with ESMTP id CDF6810011A;
+	Wed, 18 Jun 2025 13:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1750252051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JF6dsD+/J35CW09aAXEZctc1U7sCQNTVnRhYIx+XRfU=;
+	b=dLIfRTmSMyCO4FSfnW0PynpA0HiYqYBPRGQ/QJ3CHUV+xD9PhSb1bsf7gXrLmLuVVnN3Me
+	dcw6CV+sPEeWlCHRqYlSPzLoN/tQIPCP6QVUu1h+GJ2KOqHYUE+9CHWj0cpq+TLdcij6k8
+	f8UKlQUCnNWao1My5h+3y5NbTtNhbmQ=
+Received: from frank-u24.. (fttx-pool-80.245.76.73.bambit.de [80.245.76.73])
+	by mxbulk.masterlogin.de (Postfix) with ESMTPSA id 92BB41226D6;
+	Wed, 18 Jun 2025 13:07:30 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Felix Fietkau <nbd@nbd.name>,
+	Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Simon Horman <horms@kernel.org>,
+	Daniel Golle <daniel@makrotopia.org>,
+	arinc.unal@arinc9.com
+Subject: [net-next v5 2/3] net: ethernet: mtk_eth_soc: add consts for irq index
+Date: Wed, 18 Jun 2025 15:07:13 +0200
+Message-ID: <20250618130717.75839-3-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250618130717.75839-1-linux@fw-web.de>
+References: <20250618130717.75839-1-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c267:0:b0:3dd:d322:a0df with SMTP id
- e9e14a558f8ab-3de07d7dbd1mr190809755ab.17.1750252040150; Wed, 18 Jun 2025
- 06:07:20 -0700 (PDT)
-Date: Wed, 18 Jun 2025 06:07:20 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6852ba08.050a0220.216029.0010.GAE@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in __journal_res_get (3)
-From: syzbot <syzbot+b58cefdc75f590b71819@syzkaller.appspotmail.com>
-To: kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Frank Wunderlich <frank-w@public-files.de>
 
-syzbot found the following issue on:
+Use consts instead of fixed integers for accessing IRQ array.
 
-HEAD commit:    4774cfe3543a Merge tag 'scsi-fixes' of git://git.kernel.or..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=163ade0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb55ce02d42a1797
-dashboard link: https://syzkaller.appspot.com/bug?extid=b58cefdc75f590b71819
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14ba25d4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16e1710c580000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/97bb82d143d5/disk-4774cfe3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/705549b5d0ef/vmlinux-4774cfe3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/49a4d858182e/bzImage-4774cfe3.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/641c4a3837a4/mount_0.gz
-
-Bisection is inconclusive: the first bad commit could be any of:
-
-0e43bf5a6a8f bcachefs: Simplify logic
-58c36e6710d3 bcachefs: Initialize c->name earlier on single dev filesystems
-c02e5b57283a bcachefs: Single device mode
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1348290c580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b58cefdc75f590b71819@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/journal.c:397!
-Oops: invalid opcode: 0000 [#1] SMP KASAN PTI
-CPU: 1 UID: 0 PID: 5845 Comm: syz-executor388 Not tainted 6.16.0-rc1-syzkaller-00203-g4774cfe3543a #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:journal_entry_open fs/bcachefs/journal.c:397 [inline]
-RIP: 0010:__journal_res_get+0x25cd/0x27f0 fs/bcachefs/journal.c:639
-Code: ff ff e9 2b db ff ff e8 01 7c 7e fd 41 be eb f6 ff ff e9 1b db ff ff e8 11 58 1d 07 e8 ec 7b 7e fd 90 0f 0b e8 e4 7b 7e fd 90 <0f> 0b e8 dc 7b 7e fd 90 0f 0b e8 d4 7b 7e fd 90 0f 0b e8 cc 7b 7e
-RSP: 0018:ffffc900044af4c0 EFLAGS: 00010293
-RAX: ffffffff8441cf5c RBX: 1ffff1100dda951b RCX: ffff888011a10000
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
-RBP: ffffc900044af790 R08: ffff88806ed4a9f7 R09: 1ffff1100dda953e
-R10: dffffc0000000000 R11: ffffed100dda953f R12: ffff88806ed49800
-R13: 1ffff1100dda953e R14: 0000000000000002 R15: 00000000007ffffe
-FS:  00007f2e8034d6c0(0000) GS:ffff888125d86000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2e803ec758 CR3: 0000000074850000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- bch2_journal_res_get_slowpath+0xdc/0xaf0 fs/bcachefs/journal.c:734
- bch2_journal_res_get+0x14f/0x1f0 fs/bcachefs/journal.h:401
- __bch2_journal_meta+0x40/0x1d0 fs/bcachefs/journal.c:980
- bch2_fs_journal_stop+0x1dd/0x440 fs/bcachefs/journal.c:1462
- __bch2_fs_read_only+0x343/0x5b0 fs/bcachefs/super.c:307
- __bch2_fs_read_write+0x5cd/0x830 fs/bcachefs/super.c:554
- bch2_fs_reconfigure+0x29a/0x400 fs/bcachefs/fs.c:2675
- reconfigure_super+0x224/0x890 fs/super.c:1075
- do_remount fs/namespace.c:3369 [inline]
- path_mount+0xd18/0xfe0 fs/namespace.c:4201
- do_mount fs/namespace.c:4222 [inline]
- __do_sys_mount fs/namespace.c:4433 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4410
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2e80398c49
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f2e8034d218 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f2e804306a8 RCX: 00007f2e80398c49
-RDX: 0000000000000000 RSI: 0000200000000000 RDI: 0000000000000000
-RBP: 00007f2e804306a0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000002012024 R11: 0000000000000246 R12: 0000200000000000
-R13: 0030656c69662f2e R14: 7366656863616362 R15: 0000200000000080
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:journal_entry_open fs/bcachefs/journal.c:397 [inline]
-RIP: 0010:__journal_res_get+0x25cd/0x27f0 fs/bcachefs/journal.c:639
-Code: ff ff e9 2b db ff ff e8 01 7c 7e fd 41 be eb f6 ff ff e9 1b db ff ff e8 11 58 1d 07 e8 ec 7b 7e fd 90 0f 0b e8 e4 7b 7e fd 90 <0f> 0b e8 dc 7b 7e fd 90 0f 0b e8 d4 7b 7e fd 90 0f 0b e8 cc 7b 7e
-RSP: 0018:ffffc900044af4c0 EFLAGS: 00010293
-RAX: ffffffff8441cf5c RBX: 1ffff1100dda951b RCX: ffff888011a10000
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000000000
-RBP: ffffc900044af790 R08: ffff88806ed4a9f7 R09: 1ffff1100dda953e
-R10: dffffc0000000000 R11: ffffed100dda953f R12: ffff88806ed49800
-R13: 1ffff1100dda953e R14: 0000000000000002 R15: 00000000007ffffe
-FS:  00007f2e8034d6c0(0000) GS:ffff888125d86000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2e803ec758 CR3: 0000000074850000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Reviewed-by: Simon Horman <horms@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v5:
+- rename consts to be compatible with upcoming RSS/LRO changes
+  MTK_ETH_IRQ_SHARED => MTK_FE_IRQ_SHARED
+  MTK_ETH_IRQ_TX => MTK_FE_IRQ_TX
+  MTK_ETH_IRQ_RX => MTK_FE_IRQ_RX
+  MTK_ETH_IRQ_MAX => MTK_FE_IRQ_NUM
+v4:
+- calculate max from last (rx) irq index and use it for array size too
+---
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 22 ++++++++++-----------
+ drivers/net/ethernet/mediatek/mtk_eth_soc.h |  7 ++++++-
+ 2 files changed, 17 insertions(+), 12 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 39b673ed7495..875e477a987b 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -3342,9 +3342,9 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
+ 	int i;
+ 
+ 	/* future SoCs beginning with MT7988 should use named IRQs in dts */
+-	eth->irq[1] = platform_get_irq_byname(pdev, "tx");
+-	eth->irq[2] = platform_get_irq_byname(pdev, "rx");
+-	if (eth->irq[1] >= 0 && eth->irq[2] >= 0)
++	eth->irq[MTK_FE_IRQ_TX] = platform_get_irq_byname(pdev, "tx");
++	eth->irq[MTK_FE_IRQ_RX] = platform_get_irq_byname(pdev, "rx");
++	if (eth->irq[MTK_FE_IRQ_TX] >= 0 && eth->irq[MTK_FE_IRQ_RX] >= 0)
+ 		return 0;
+ 
+ 	/* legacy way:
+@@ -3353,9 +3353,9 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
+ 	 * On SoCs with non-shared IRQs the first entry is not used,
+ 	 * the second is for TX, and the third is for RX.
+ 	 */
+-	for (i = 0; i < 3; i++) {
++	for (i = 0; i < MTK_FE_IRQ_NUM; i++) {
+ 		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+-			eth->irq[i] = eth->irq[0];
++			eth->irq[i] = eth->irq[MTK_FE_IRQ_SHARED];
+ 		else
+ 			eth->irq[i] = platform_get_irq(pdev, i);
+ 
+@@ -3421,7 +3421,7 @@ static void mtk_poll_controller(struct net_device *dev)
+ 
+ 	mtk_tx_irq_disable(eth, MTK_TX_DONE_INT);
+ 	mtk_rx_irq_disable(eth, eth->soc->rx.irq_done_mask);
+-	mtk_handle_irq_rx(eth->irq[2], dev);
++	mtk_handle_irq_rx(eth->irq[MTK_FE_IRQ_RX], dev);
+ 	mtk_tx_irq_enable(eth, MTK_TX_DONE_INT);
+ 	mtk_rx_irq_enable(eth, eth->soc->rx.irq_done_mask);
+ }
+@@ -4907,7 +4907,7 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
+ 	eth->netdev[id]->features |= eth->soc->hw_features;
+ 	eth->netdev[id]->ethtool_ops = &mtk_ethtool_ops;
+ 
+-	eth->netdev[id]->irq = eth->irq[0];
++	eth->netdev[id]->irq = eth->irq[MTK_FE_IRQ_SHARED];
+ 	eth->netdev[id]->dev.of_node = np;
+ 
+ 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
+@@ -5184,17 +5184,17 @@ static int mtk_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
+-		err = devm_request_irq(eth->dev, eth->irq[0],
++		err = devm_request_irq(eth->dev, eth->irq[MTK_FE_IRQ_SHARED],
+ 				       mtk_handle_irq, 0,
+ 				       dev_name(eth->dev), eth);
+ 	} else {
+-		err = devm_request_irq(eth->dev, eth->irq[1],
++		err = devm_request_irq(eth->dev, eth->irq[MTK_FE_IRQ_TX],
+ 				       mtk_handle_irq_tx, 0,
+ 				       dev_name(eth->dev), eth);
+ 		if (err)
+ 			goto err_free_dev;
+ 
+-		err = devm_request_irq(eth->dev, eth->irq[2],
++		err = devm_request_irq(eth->dev, eth->irq[MTK_FE_IRQ_RX],
+ 				       mtk_handle_irq_rx, 0,
+ 				       dev_name(eth->dev), eth);
+ 	}
+@@ -5240,7 +5240,7 @@ static int mtk_probe(struct platform_device *pdev)
+ 		} else
+ 			netif_info(eth, probe, eth->netdev[i],
+ 				   "mediatek frame engine at 0x%08lx, irq %d\n",
+-				   eth->netdev[i]->base_addr, eth->irq[0]);
++				   eth->netdev[i]->base_addr, eth->irq[MTK_FE_IRQ_SHARED]);
+ 	}
+ 
+ 	/* we run 2 devices on the same DMA ring so we need a dummy device
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+index 6f72a8c8ae1e..8cdf1317dff5 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+@@ -642,6 +642,11 @@
+ 
+ #define MTK_MAC_FSM(x)		(0x1010C + ((x) * 0x100))
+ 
++#define MTK_FE_IRQ_SHARED	0
++#define MTK_FE_IRQ_TX		1
++#define MTK_FE_IRQ_RX		2
++#define MTK_FE_IRQ_NUM		(MTK_FE_IRQ_RX + 1)
++
+ struct mtk_rx_dma {
+ 	unsigned int rxd1;
+ 	unsigned int rxd2;
+@@ -1292,7 +1297,7 @@ struct mtk_eth {
+ 	struct net_device		*dummy_dev;
+ 	struct net_device		*netdev[MTK_MAX_DEVS];
+ 	struct mtk_mac			*mac[MTK_MAX_DEVS];
+-	int				irq[3];
++	int				irq[MTK_FE_IRQ_NUM];
+ 	u32				msg_enable;
+ 	unsigned long			sysclk;
+ 	struct regmap			*ethsys;
+-- 
+2.43.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
