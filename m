@@ -1,166 +1,133 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD472857CF;
-	Wed, 18 Jun 2025 10:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D0D2DFF2D;
+	Wed, 18 Jun 2025 10:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241988; cv=none; b=RL7gq/Lt0iwxcmkWiGVH4JHxyc9CsVWMmm9WW0ogduJpfBwaR2+AyJyZ6axx7rZx1jUHHeoFEsLC4prar0WD3sv0p+GjhCgyzPAD+Jl7APT4Ls3UGDPM6jxzSSMAi312fvuIHtk6l826fJb0wc1ZG2KMcVZfX2h85lbRjmomuaE=
+	t=1750241992; cv=none; b=uVRmsDB5na7YaKLQnLWvJY5r7s8B047hvt5lFEZ+7YHX4lOFuHClQIjKytX+6xQAbmQR3c7maUtpRLxHdN6t8iG8ieXqJkBUa60GESUzZHsGvx0FPiVM1KJVhpMLFm5JNO3FDcJRna9rg6840JBGbjzh+WnF6VzUp2+s35Dzi3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241988; c=relaxed/simple;
-	bh=kdiPdMh5+sRzNgtYRKj/S0sAtUte5v+zpvWVg0DO3wo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FQfo6ZSMJJ+QfcqCHKwwcIcNLM4rnwFDNE1KEo8OwW+uzM8WXMrsEypCT1P3ooJfNVrUBmEfz7eu/5BpVtwhJzlSlQjFWqzY/dzPXrJPRGTJWguPjWm/naPpUPC94zRyEBCh/FnGqnkOzPgLsUE5IBl8W5oTtzDHaaZnXtLkIX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWBZKlpA; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750241992; c=relaxed/simple;
+	bh=Va9KYuR92Ny8pbO7LbUswID7eIVCWK7Q27i68S+Wfe8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=P5CGPj4QPnFec72O45VIj9MkaYVOVXBWWnMRYl5YK03I3vRhkO8CEdAoHcvH9ajbiHn46fhlEVsFW9ZDORyzpoGmhem7zVbi0F90HNYUuvgWe5rLknfKAruKSsJ5t8j1FDs7mb13+YVeQ7wQS+IedB0ePqEF+AfSQSD0BjhUyaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlEetfEQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWBZKlpA"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a50fc7ac4dso3953114f8f.0;
-        Wed, 18 Jun 2025 03:19:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750241985; x=1750846785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=cWBZKlpA7WK6bTpiP2mJGrl1sFGOD3VQZYQZuYsIV850lUFdRZpyVBfRb3p2ZQ7Utg
-         dIPVncWiZUm8CR6Otyo0QKKwGI9AauDs2r3G0vkAaCGrYilTB9Okk5Am9tPHUVzXCepc
-         klTIGkmcb353yRYunszFMHvrkF9MPkiahDfWGwQs+BZWDmJFlhdtKeX0GiJFkc8keKQH
-         LU27u4Ve9xJDcVoS9tzvky3pj1l0p+IPIVxxcCtpUSzJjTUPJ/yFLvG0WE8B2WFY93Ba
-         3JEyseLtY6IU3DkBKx4QAc7yp89zdz/7IuaVJVR+pCFIm5NGkn8zNeY3WZ1ET+tvfe3g
-         DhgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750241985; x=1750846785;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/5X6IDTVHTHpEsUSABa7MSKK8TKkDRNQdpFJlmd5FHY=;
-        b=MVR0GhKBcWJjQ7+A0qPKIqiLk2O0IgS03Tv+Es4HAiS2vL2S4vrOedcdeL9MVxSf5I
-         gDa3gZwO8gFdup1v15nNBMo0U20Raq8Pk+C6Uoq9+nTKxnluAse5TPObZbzmiPvF8kV+
-         dHC+Bti8XTmaUQHOkDrE7DIq1v9OuaL3feYBPk7IxqORmROnwtjsx9oBYWeuDvNOvuAm
-         ZgNNY5ym5d8YA69ZkJa8zMXXVs90r0Jf27GCG7bA1zO/OhGvwptbYc4cbAMsUzTrAKVK
-         yNOLfr9nAaFoBg+EI1BDPsa5+oVGtLUNQ8LQTqqp2AMqmhd+QXjA5hfExZd+zai5agYf
-         MKVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTUHMeaD2v2sCTADS+ZN4q7+obwAVI/8HQnQhSB6KUrodQwsayESPFwqpeJ8sGF/LShu28F5z77tJvnVkk@vger.kernel.org, AJvYcCUdIHURHQnKTBHktvdas5GOOEHX1F6ExBvQh8JFdAaKZpjac3leSUjGruzGGEogOKMpAn6m4DOAQLKuzTefHss=@vger.kernel.org, AJvYcCXEEd2qp3i1P5kPyTyQp5g+CYxmrcivkKIsEpWqvuOmNJrliPiAlZ19p7fns/pdgE2T+DY5e9MxLeCk@vger.kernel.org
-X-Gm-Message-State: AOJu0YwYVz2OTXySsd3P/zCP1zakNPcq+7PhS3o3Ym6HOwaM4/YXbNKO
-	khUzMglhLKoq61pZ5CAka6gITSSSPF4py7QAMnOeKkNzmI2UpcRiF4ut
-X-Gm-Gg: ASbGnctwyFsgfHB2XBUwRO549gfHfd9wZnq/zEOTWp/otuccC4SVZuyzeXjkV5LGE7y
-	3zUCPx6bcQdISGE96+u8UB5hJxCxUKeBJAvXNfyGtvU4N2r51qLf+6E5/3IxygKze9hHd9n+AQ3
-	sdKw32wFh2E1wmRYGMRF/r9B0SLG+RNo4U+7SH6oVVAEqgWTO/0O/uKZHC8dKjmK6elJD6gkR3Q
-	4HwisRNr/UV/5+bFoLIJ/NkXOOjTC4V5+SbvMOsloaxbOLySzFhNeoMCi7/lSoliGOJObV4xSAs
-	uRNi6UsjQUe11GF00pLIp9YPD6AJpglgomIfAl+ocf/YzQihLNkkk92yc1BDa1jg4QN+Ga8C9tf
-	1KuImZohbTckiyBSi3nsygydij6qdiiqnouRE
-X-Google-Smtp-Source: AGHT+IHB+U5DjgKYH28LDRAxh/14b9t99lBDOZmzIa0ejbzDXmc50b8UhG5Om/kD1z7jYZvFiiye4g==
-X-Received: by 2002:a05:6000:4b18:b0:3a4:dcfb:3118 with SMTP id ffacd0b85a97d-3a57236795cmr14608027f8f.10.1750241984501;
-        Wed, 18 Jun 2025 03:19:44 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a68b0esm16274027f8f.29.2025.06.18.03.19.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:19:44 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v7 5/9] rust: driver: Consolidate `Adapter::of_id_info` methods using `#[cfg]`
-Date: Wed, 18 Jun 2025 11:17:42 +0100
-Message-ID: <20250618101742.3048622-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
-References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlEetfEQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 152B8C4CEF2;
+	Wed, 18 Jun 2025 10:19:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750241992;
+	bh=Va9KYuR92Ny8pbO7LbUswID7eIVCWK7Q27i68S+Wfe8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=OlEetfEQJw4aCrKp6FQzlBzn3RJaonPtqBfY91YutpTiLWGF+IUBeoYwlI1/dQ7h7
+	 ZEAlQ7Q1mlOr4kIHOnX1OoMlU7BK+0w0WmBoXrCB5n4O1iZbhhBmS3Rt2iv2psFoPT
+	 056YknfpoWrxS1hELqs24f9bA97PRS4AfEsP4B2iCj0QyT05uA+7V+qIANiQQVhxpD
+	 6wUVHMuC/zFB7og7MK00D1wV6KCOXM0CzhMQRLRK3k9HBgXLYIIkmG5EMYqR4q3OBj
+	 BjlgC13hrYjl+exXlLPNT56I+pF8/K36kedEoP8hx3ZWydxDOkAmve4gOGkEt4d67k
+	 esyLKuo+pPOPQ==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Wed, 18 Jun 2025 12:17:38 +0200
+Subject: [PATCH v5 23/27] irqchip/gic-v5: Enable GICv5 SMP booting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-gicv5-host-v5-23-d9e622ac5539@kernel.org>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+In-Reply-To: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Peter Maydell <peter.maydell@linaro.org>, 
+ Mark Rutland <mark.rutland@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-pci@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.15-dev-6f78e
 
-Refactor the `of_id_info` methods in the `Adapter` trait to reduce
-duplication. Previously, the method had two versions selected
-via `#[cfg(...)]` and `#[cfg(not(...))]`. This change merges them into a
-single method by using `#[cfg]` blocks within the method body.
+Set up IPIs by allocating IPI IRQs for all cpus and call into
+arm64 core code to initialise IPIs IRQ descriptors and
+request the related IRQ.
 
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+Implement hotplug callback to enable interrupts on a cpu
+and register the cpu with an IRS.
+
+Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Zyngier <maz@kernel.org>
 ---
- rust/kernel/driver.rs | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ drivers/irqchip/irq-gic-v5.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index ec9166cedfa7..cb62b75a0c0e 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -147,30 +147,32 @@ pub trait Adapter {
-     /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
-     ///
-     /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
--    #[cfg(CONFIG_OF)]
-     fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        let table = Self::of_id_table()?;
-+        #[cfg(not(CONFIG_OF))]
-+        {
-+            let _ = dev;
-+            return None;
-+        }
+diff --git a/drivers/irqchip/irq-gic-v5.c b/drivers/irqchip/irq-gic-v5.c
+index cee29aa750a2..c2e7ba7e38f7 100644
+--- a/drivers/irqchip/irq-gic-v5.c
++++ b/drivers/irqchip/irq-gic-v5.c
+@@ -5,6 +5,7 @@
  
--        // SAFETY:
--        // - `table` has static lifetime, hence it's valid for read,
--        // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
--        let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
-+        #[cfg(CONFIG_OF)]
-+        {
-+            let table = Self::of_id_table()?;
+ #define pr_fmt(fmt)	"GICv5: " fmt
  
--        if raw_id.is_null() {
--            None
--        } else {
--            // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
--            // does not add additional invariants, so it's safe to transmute.
--            let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
-+            // SAFETY:
-+            // - `table` has static lifetime, hence it's valid for read,
-+            // - `dev` is guaranteed to be valid while it's alive, and so is `pdev.as_ref().as_raw()`.
-+            let raw_id = unsafe { bindings::of_match_device(table.as_ptr(), dev.as_raw()) };
++#include <linux/cpuhotplug.h>
+ #include <linux/idr.h>
+ #include <linux/irqdomain.h>
+ #include <linux/slab.h>
+@@ -909,6 +910,8 @@ static void gicv5_cpu_enable_interrupts(void)
+ 	write_sysreg_s(cr0, SYS_ICC_CR0_EL1);
+ }
  
--            Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
--        }
--    }
-+            if raw_id.is_null() {
-+                None
-+            } else {
-+                // SAFETY: `DeviceId` is a `#[repr(transparent)` wrapper of `struct of_device_id` and
-+                // does not add additional invariants, so it's safe to transmute.
-+                let id = unsafe { &*raw_id.cast::<of::DeviceId>() };
++static int base_ipi_virq;
++
+ static int gicv5_starting_cpu(unsigned int cpu)
+ {
+ 	if (WARN(!gicv5_cpuif_has_gcie(),
+@@ -920,6 +923,22 @@ static int gicv5_starting_cpu(unsigned int cpu)
+ 	return gicv5_irs_register_cpu(cpu);
+ }
  
--    #[cfg(not(CONFIG_OF))]
--    #[allow(missing_docs)]
--    fn of_id_info(_dev: &device::Device) -> Option<&'static Self::IdInfo> {
--        None
-+                Some(table.info(<of::DeviceId as crate::device_id::RawDeviceId>::index(id)))
-+            }
-+        }
-     }
++static void __init gicv5_smp_init(void)
++{
++	unsigned int num_ipis = GICV5_IPIS_PER_CPU * nr_cpu_ids;
++
++	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
++				  "irqchip/arm/gicv5:starting",
++				  gicv5_starting_cpu, NULL);
++
++	base_ipi_virq = irq_domain_alloc_irqs(gicv5_global_data.ipi_domain,
++					      num_ipis, NUMA_NO_NODE, NULL);
++	if (WARN(base_ipi_virq <= 0, "IPI IRQ allocation was not successful"))
++		return;
++
++	set_smp_ipi_range_percpu(base_ipi_virq, GICV5_IPIS_PER_CPU, nr_cpu_ids);
++}
++
+ static void __init gicv5_free_domains(void)
+ {
+ 	if (gicv5_global_data.ppi_domain)
+@@ -1041,6 +1060,8 @@ static int __init gicv5_of_init(struct device_node *node, struct device_node *pa
+ 	if (ret)
+ 		goto out_int;
  
-     /// Returns the driver's private data from the matching entry of any of the ID tables, if any.
++	gicv5_smp_init();
++
+ 	return 0;
+ out_int:
+ 	gicv5_cpu_disable_interrupts();
+
 -- 
-2.43.0
+2.48.0
 
