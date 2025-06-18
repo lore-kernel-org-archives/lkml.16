@@ -1,64 +1,106 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A615155A4E;
-	Wed, 18 Jun 2025 02:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C4561854;
+	Wed, 18 Jun 2025 02:33:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750213969; cv=none; b=LY8hNeq2nSEWOFl+vU02+6A8Q3QerBoxMjBJxl2vAokv2ZqennEMMOCmu2Pw7GWOQziP6UcvhXTGljnmtTpN7j5xNTIL8MZJuI8UDScI0syVZ5CX/kAEOxC8TFUgWjYHZDv7qHBeb9NBplomRrLTO8hU+QWYB858XbM3jb9CQ+E=
+	t=1750214014; cv=none; b=XKv3OLU8lg2gtjRXVx5qaq/TIAi26UwYHRaoSOha/uO5ntQMQweJSU6WqSt1qOjyQO3FdcyN/Wt4XVUsxsZ4lstVdZzg33tgUGdcbiEr9bh1vwz69WH15wNI0oNQCa88SS6tDnzf1x8qk0UtJJixjhukj0a5zsvqWfh19klK3jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750213969; c=relaxed/simple;
-	bh=AR29u6dqmK6ehegRcbbijgUNzEMQNsv2oGLo6lBr3lU=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=U2LHd4bB9u9nb2CUCU8Ip0bnjS/t6FKvN7x5TD+KiVtdmq//X+WbtMufwCZjfnfAM9Ynb2xmvCq/VFbgKdl25sxBsHae8NCOSMD14A7XgGBmTVto8igSCcAdJ241qYtdWwrbNR66wY0CtRgeL8XWqjVoiGkJErtoXotkUH2b6vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=c8yy43Lx; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750214014; c=relaxed/simple;
+	bh=t+i4C9taSwbDZfwplbne/P71XM8K8RlhY+2k7AICaCA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GN9DGmGuHaWHNPSxjAbFiHGrsSnMbUcg87mPzl6g1GeKyLcEJAweIKDeCGLvKTOBnrkGaNJ3dR9XS/YS0zAUzaxlDtEy9xEnVdvwPjAzAQpCnmYMxSBCT4dP1+G5kmdzCM1MHyWV9fBMqRSdVBY86/ixbla/Fobl18pgVAb86N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLA2Tv3x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="c8yy43Lx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750213966;
-	bh=AR29u6dqmK6ehegRcbbijgUNzEMQNsv2oGLo6lBr3lU=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=c8yy43LxWxntWCAOlzFtJQAOwl4vSyG4RXS1nvNxQc2BzJW8ypHz9yJ/Q90//MlXV
-	 Oma6DS17CsIYdYRhl7qtRMRRNMGkjbmYg9nghh3dwVcaQRzZfuxE02c1a5bZjdhAo3
-	 Ly4x5rwRK9gQVoI+Z4+3xall0uLUpOT/BSZd5gP0dZJizBU8SYGXQ/1fxPTjpxg8ps
-	 aP63LasTIY3Wz2orNMECmD7DHxpPJhxCYsqKSZyoTA/wP9rpX3VgIZyn+mkCuw9Cj2
-	 AXoxBORWQHcrQ0M29SNwhxuMI3DwYyC1A5RRqoEODdIkV0n5ewfG0ESnqm4NN0a37C
-	 i2LWYha0Dx0Fw==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 60A1D640A0;
-	Wed, 18 Jun 2025 10:32:45 +0800 (AWST)
-Message-ID: <100bed083e9a98432888c0b1db8cbc445f96cd64.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 3/8] mmc: sdhci-of-aspeed: Patch HOST_CONTROL2 register
- missing after top reset
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Cool Lee <cool_lee@aspeedtech.com>, adrian.hunter@intel.com, 
-	ulf.hansson@linaro.org, joel@jms.id.au, p.zabel@pengutronix.de, 
-	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 18 Jun 2025 12:02:44 +0930
-In-Reply-To: <20250615035803.3752235-4-cool_lee@aspeedtech.com>
-References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
-	 <20250615035803.3752235-4-cool_lee@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLA2Tv3x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDCA0C4CEE3;
+	Wed, 18 Jun 2025 02:33:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750214013;
+	bh=t+i4C9taSwbDZfwplbne/P71XM8K8RlhY+2k7AICaCA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DLA2Tv3x4RMPWICy2wVHZWQWdTAPRvWHGbbau9fYwtcMKiJrqUkdkEm4mLEujmLW+
+	 ImGll3SRAhLT3wb9cy1UADg7Souv/tHfYUCUFAYIR+cKy7U90FrBRnLulGtyxP6oEa
+	 +BQF/5dDMyKyLJd27emcr3RvOlZJb1kJC4niCQeTzhKF8O1ejBYds+ZBqcvV7f1Mg6
+	 mgmPAZG6zaoMjc25d8KKSrwMDY3Ubr9UTGs5K7EXiN/9WtP/q+E6jjU3yaT0ldbJqv
+	 SCHa4C5OClQJkTpIbVAmXHe4gH26kBBOIJY7xVXysqJjmMBiI2Dw1kag28JZVWZSzT
+	 HYEsiLUqdz3/A==
+Date: Tue, 17 Jun 2025 21:33:31 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: add debug UART pins to reserved GPIO
+ ranges on RB2
+Message-ID: <iuqppo7k6qp7v4pm4xtllqkqdtnarlkr2ey7s3fp3g2jd5dynz@oanc7zlfod7m>
+References: <20250616143341.51944-1-brgl@bgdev.pl>
+ <713cd518-935f-4501-9753-d33c9ea6aef7@oss.qualcomm.com>
+ <CAMRc=MceV-HgyFFvqytXAiuY+y10PQbdPBxuvd57NCeSLVLXCg@mail.gmail.com>
+ <vyr6s4wzw5jc5gt7mywu4s4xob6aeca5aclbe5tdr4v3yng2tn@yb7rn2b2btb7>
+ <CAMRc=MccuJe144NcwapPPRXtQOZbPW8qmybuEA2O9EtfKzs7oQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MccuJe144NcwapPPRXtQOZbPW8qmybuEA2O9EtfKzs7oQ@mail.gmail.com>
 
-On Sun, 2025-06-15 at 11:57 +0800, Cool Lee wrote:
-> HOST_CONTROL2 register will be cleared after top reset,
-> it needs to be saved/resotred while reset.
->=20
-> Signed-off-by: Cool Lee <cool_lee@aspeedtech.com>
+On Tue, Jun 17, 2025 at 01:28:41PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Jun 17, 2025 at 5:18 AM Bjorn Andersson <andersson@kernel.org> wrote:
+> >
+> > On Mon, Jun 16, 2025 at 06:43:16PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Jun 16, 2025 at 6:20 PM Konrad Dybcio
+> > > <konrad.dybcio@oss.qualcomm.com> wrote:
+> > > >
+> > > > On 6/16/25 4:33 PM, Bartosz Golaszewski wrote:
+> > > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > >
+> > > > > GPIO12 and GPIO13 are used for the debug UART and must not be available
+> > > > > to drivers or user-space. Add them to the gpio-reserved-ranges.
+> > > > >
+> > > > > Fixes: 8d58a8c0d930c ("arm64: dts: qcom: Add base qrb4210-rb2 board dts")
+> > > > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > > > ---
+> > > >
+> > > > That also makes them unavailable to the kernel though, no?
+> > > >
+> > >
+> > > Yes. They could only be used by QUP - I2C or SPI #4 - on sm6115 but
+> > > none of these are used on RB2. I just noticed that my console froze
+> > > when I accidentally requested GPIO12 and figured that it makes sense
+> > > to make them unavailable. Let me know if this should be dropped.
+> > >
+> >
+> > I'm guessing that this would be a problem for any pin that is used for
+> > some other function. Should we instead prevent userspace from being able
+> > to request pins that are not in "gpio" pinmux state?
+> >
+> 
+> That's supported by the "strict" flag in struct pinmux_ops. However
+> the two pins in question are muxed to GPIOs as far as the msm pinctrl
+> driver is concerned so it wouldn't help.
 
-Please squash this into the first patch.
+This doesn't sound correct, the pins needs to be muxed to the qup in
+order for UART to work, so how can they show as "gpio" function?
 
-Andrew
+> Turning on the strict flag at
+> the global level of the pinctrl-msm driver would be risky though as it
+> would affect so many platforms, I'm sure it would break things. So IMO
+> it's either this change or let's drop it and leave it as is.
+> 
 
+I share your concern, but the benefit sounds desirable. I think
+protecting the UART pins would set a precedence for filling that list
+with all kinds of pins, for all platforms, so lets give this some more
+thought, 
+
+Thank you,
+Bjorn
