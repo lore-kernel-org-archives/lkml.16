@@ -1,119 +1,63 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA573085A0;
-	Wed, 18 Jun 2025 18:07:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531C13085A2;
+	Wed, 18 Jun 2025 18:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750270033; cv=none; b=f51nlG5V4Kfu8STiVupK8TdlS2XH6xGMY0GvzIIDVrNZBNYjN957EEMiMwQCQDLfpfMG8+xquhg+cvRVA0A/sH0uF/m8ISen5BtT5VesEiGNMjHKxSzpQSqw8q/qO1nRlSTAqqvVqcn9Jfe87LB6+Db4wbfsDmBO+NDsCNQMYgU=
+	t=1750270061; cv=none; b=nBOtBpcLLt0M4GO7wrfNafqeMPd+IY0IFjArPq4uernzKA4bB4vdCYzTn05rSFA7kS/XD6XloDqWIfh9CZfbVd2jiV1IPr12SDFllGpfSUEAkbWCinm7h9rsZsxKzwFgU9FvccGmjWp+qH5UCY+QymAf0Lzy/h0pUfVQ7/8L9So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750270033; c=relaxed/simple;
-	bh=KNokV8mdZiInOwdJ5eC48eeVWIPZcyZM/PsfuegyR0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tiwoSuRRePMEXM5dC458nB5eKDoC+JdDxbPT8RFFiSsWj+AxfraNenhZ8XOXz01KxHh20FJKx+tX+CxXpyEwz3dN2ailzifT/2C17N3gYEOhVuivMSxMYt3E1XoY0xhlzsmIIbzTurPvgEbuePCAvK/nM/hUGo9NB+VPyAebbcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a6vX8oca; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750270061; c=relaxed/simple;
+	bh=4q4qpoJwHTapwByRbld5mh0ke/Y4FP53Oj70AUCa5bE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=Y5mtO8NUbQX1MlDxtihxbcmzY1sH4TdLzERsEouwIYNE6RVkvlGJpdebsYwND++LvwdW1OtU6sueMaB2HapMWYCvlcNHGrQFHUu/MVljMgi8SX8gOYf5MCExxv5NCutbffI3JyUN0CQGOW5Dn//Fg6OZomnzzcBOOQACa7OFbfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxYqy/vi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a6vX8oca"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=J4aHyFboA5TYykyYa0Jlj3sw+Op0fhB4LmjH5FwOZd4=; b=a6vX8ocaJ2qS7neeTyXhBP7TAr
-	68s84eCnuZZugY9yDOtXOq+dInzY5Ri5o1cXxQPO0n8jy33xnrOkeWCEu4QW7VV+U4h64MOtP9fr4
-	0TidPl1vB3ZLyUTFgZLx8jesTt4rgniAKKkrD6SzwP6j6ysUVfvFh9sUsWlTCWgvHZVAL7ZIqIaVq
-	AsbGHPyCc+UKKfMpxx+/CBEE1jSLbt2G9bE9rKAgdRGaVt2xAqhiarAo33obYqKsLGkEwakZfOz+5
-	oyN0+y7fCwzCDk1T59eooIug+hjqFPgBzcAXivpBb2u5dmg9CY76FgERkyiExRHDtkJiXJrLseR5r
-	UFeLDxPQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRxBa-00000004U8i-3jag;
-	Wed, 18 Jun 2025 18:06:58 +0000
-Date: Wed, 18 Jun 2025 19:06:58 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, linux-doc@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Brendan Jackman <jackmanb@google.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
-	Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Qi Zheng <zhengqi.arch@bytedance.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 04/29] mm/page_alloc: allow for making page types
- sticky until freed
-Message-ID: <aFMAQs25hGnAq-hn@casper.infradead.org>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-5-david@redhat.com>
- <D80D504B-20FC-4C2B-98EB-7694E9BAD64C@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxYqy/vi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6651C4CEE7;
+	Wed, 18 Jun 2025 18:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750270060;
+	bh=4q4qpoJwHTapwByRbld5mh0ke/Y4FP53Oj70AUCa5bE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=jxYqy/viZfy3xwvGXU4ldDaa4IBExQ0CiGle7DTeOPf7gOk/nMY+T2QYGC7pNR2jg
+	 L89hD+6Yw2oyySwv4/J/DmuVfj3BeGxhk4N1cbIwOxolsI/ov8phlcZt3G1h6fnCXE
+	 aLpeE7mubarw+tgwQhvNt3KyBqAmzdbopVRFdU0fUYeleIs6Ccnf37ZmCi1e3Nn2sy
+	 YDuHzLk5tXx2Rei39stVHEFAAuo2hGZKv2wQUFuVBD/YQpnfFfKIlWCvpmAV/iPgEU
+	 +P8TZ40nEMiUS5DN2D/CNcmcKeHtogwa+tDMXArDWlIVwwkqr8Sf6c5IMVETsTYp5E
+	 t2dh0X9wNKB7Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D803806649;
+	Wed, 18 Jun 2025 18:08:10 +0000 (UTC)
+Subject: Re: [GIT PULL] selinux/selinux-pr-20250618
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
+References: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
+X-PR-Tracked-List-Id: <linux-security-module.vger.kernel.org>
+X-PR-Tracked-Message-Id: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20250618
+X-PR-Tracked-Commit-Id: 86c8db86af43f52f682e53a0f2f0828683be1e52
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 5adb635077d1b4bd65b183022775a59a378a9c00
+Message-Id: <175027008888.206233.13361756418006863178.pr-tracker-bot@kernel.org>
+Date: Wed, 18 Jun 2025 18:08:08 +0000
+To: Paul Moore <paul@paul-moore.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, selinux@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D80D504B-20FC-4C2B-98EB-7694E9BAD64C@nvidia.com>
 
-On Wed, Jun 18, 2025 at 02:04:18PM -0400, Zi Yan wrote:
-> > Let's allow for not clearing a page type before freeing a page to the
-> > buddy.
-> >
-> > We'll focus on having a type set on the first page of a larger
-> > allocation only.
-> >
-> > With this change, we can reliably identify typed folios even though
-> > they might be in the process of getting freed, which will come in handy
-> > in migration code (at least in the transition phase).
+The pull request you sent on Wed, 18 Jun 2025 12:34:38 -0400:
 
-> > +	if (unlikely(page_has_type(page)))
-> > +		page->page_type = UINT_MAX;
-> > +
-> >  	if (is_check_pages_enabled()) {
-> >  		if (free_page_is_bad(page))
-> >  			bad++;
-> > -- 
-> > 2.49.0
-> 
-> How does this preserve page type? Isn’t page->page_type = UINT_MAX clearing
-> page_type?
+> https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git tags/selinux-pr-20250618
 
-The point is that the _caller_ used to have to clear the page type.
-This patch allows the caller to free the page without clearing
-the page type first.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/5adb635077d1b4bd65b183022775a59a378a9c00
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
