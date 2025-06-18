@@ -1,181 +1,116 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 392842E8DED;
-	Wed, 18 Jun 2025 14:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D198281341
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:24:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256650; cv=none; b=N/8tA9F9nIBeuC/ICR5H1jIP7wky6wDNf7V19zv34f17mvShi+3sXxlfdL12P6Sieya8lBWoP3ChotJwJQzBK1UFsOM8MbBaGT3nYyNjYaPdwUd9M+jU88rQXrQvD9D+8KjkKKOKXAebyZ/9EXEND84v2HDquooa9lwUMQop2wQ=
+	t=1750256666; cv=none; b=bvTkLkvMgTF/D8AtULdtHEWbSb6o4oHvc/q0RwMREFNreClQPFb9N5CI3fdPzzJ0L9EJCOTtfV3ThJoy5nPfVuAOFFsGqcgPxhaWnAxdPyZLh5vRgT/FDS4hirj9hLDQ39LhEmmlq8LLzuRDYYk/+tqmwGm35eMcblLZhbR4tCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256650; c=relaxed/simple;
-	bh=bi81rDOTqtPi0s6oEwF6JDygTavaOvX9oS5mne9wc4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oIQaBvDKNKErke52aei5lsov9V4SQjfZ+0BVIKo4iJ8aSY1CeKAV5nBFN0x4XM7MYWM+HuJj0zxYpy8ulbD9cOP8DDXetdZxXKPj3Xx0YdL/OB2dSKtFZVgp4zW45C+mlGpgw505ztoos98ie5Su7ggdN3URObAMFNzdrOnubEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.98.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1uRtZL-000000003nZ-3dHt;
-	Wed, 18 Jun 2025 14:23:57 +0000
-Date: Wed, 18 Jun 2025 16:23:49 +0200
-From: Daniel Golle <daniel@makrotopia.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>,
-	arinc.unal@arinc9.com
-Subject: Re: [net-next v5 2/3] net: ethernet: mtk_eth_soc: add consts for irq
- index
-Message-ID: <aFLL9Uhu6zmovd2O@pidgin.makrotopia.org>
-References: <20250618130717.75839-1-linux@fw-web.de>
- <20250618130717.75839-3-linux@fw-web.de>
+	s=arc-20240116; t=1750256666; c=relaxed/simple;
+	bh=sr3Z5SQi/c0byycGqZoP+15+8kMGuxUIdam9NQVzQGU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gzMKGPtnFAgLelQpcJzUCUztV81ADniOJ5iDCqCGicSMqChfVecvP3YvEj66D/eEXDjL9bgMcRSeUU2mGLFCgXKkxCwmQbjEchEVE6mYlu6setpc7mIFq6cbu+uAzdiBzSZPaP6yQH1DP11LawxPQA6D6OYkx27eIRlmLbXjuVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YS/vSnvn; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YS/vSnvn"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6ecf99dd567so75584146d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:24:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750256663; x=1750861463; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yUcfR2kwkjbsjTzvnqaKQjl0q9VATkRLDawL3wYx9EM=;
+        b=YS/vSnvnoeCxpBViYKhwaAv8nFsmmLZsbwi63LV+78MDziBZJ8NPe5CoZcvF5qJCEs
+         jJXSG7Ek7CpVIIToQ13vXODbGtgqYnW33ocmkDRQTAmFDS64lhagd1WkX9h6PzsftLzS
+         oCMzZbABqu7FIrXhWyZKndUvKB99TPr2UjiZIXZAfyaDBXC3HwOC6WylFyflU2sZ/KaV
+         UDaQL3xKnL6bNN+LljugwnT6UCRL/wTsrj8i+xUfXDsa3kgZaTq+/B9OS5JaGavwUyOc
+         0MRxeZVD9oGfYYkDWZQ+HNiJH6vIUyrdSsubTHumHWfvHK+ERgxilB8kqZLz3O5R4REO
+         WcyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750256663; x=1750861463;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yUcfR2kwkjbsjTzvnqaKQjl0q9VATkRLDawL3wYx9EM=;
+        b=SRnAfTvsB16fut5V0ZNGEn2hbBPJC4Nn+DF9tBEw9BNxgpa4S+QSK2L6sb1ratomIJ
+         sGGkITZY18iDyfIOCYSZAAFkhGMD9mVTdzkrQRg6gtMgTwiivmHdTqOQ6AMrukH+6zEX
+         izaDf10+Dil2T1g2uMzk7R+mXtwycgVHRDyxu7VVi1IarCpNH8mjLFpBgubBuKCFuAw7
+         Y29VoGBzu9nCIXh0z0kO8Fk9KUKJ5g+0f8zCTkOpiWTi38WLuaVxXv9wcFGlxjIEUWzk
+         z1iwBYGKR8UIPAZDzcywY0Qp/VTNuKniVFluwZAbh+LBubeCQtE+lONAKU05HwwOMpan
+         +7+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWiOlO6B13TcaodgZ3fUNIJ7IqAmLVmILrbBFPYc6Tg9hzZfZNmXWXVTbAs2AiWfTdunq8V3PtfDrN/efQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7QzAvrOnnMY2gpSE78g7P5DcrbMuMtme+RoZOWRFZn+ozgZFT
+	h6UpJ9wuxXuz1LReJyiz+dK0w9Paa5fIrIXxYaYqBjcZTeODz8zryedqxEpbHEum67swiwHLj1i
+	tauGs4dZDmILgsQri4qM+WKtVCryZCUBeh9hV8mNQ
+X-Gm-Gg: ASbGnct4ifGnTfEax0yOTBNJhhU2rJtbg5EEYEb9kelKJPYiQRWiXXRsfu6uf+HMTsu
+	k560GoWnwl5Le8i6t9CMthi3JXbnGWDjqSjpRnR1eG2V4oTCo+ee/csfU28gqufmYbN6em1Yhpt
+	yMHoVACSEG0fXDUv8hylKI+oSSn018Gp5c/yMZ/1BiD+UejkXUUPUNhQ3YT7crlQqDN70VA18D
+X-Google-Smtp-Source: AGHT+IHdIl6hBZ14aq0nr2z6lG2ii3Kcxe/4qSRb9s4mKKYwgN/kx2q0ATe/pPHiSWFigZOI1t1Rna7e6taADfKz5Ac=
+X-Received: by 2002:a05:6214:5249:b0:6fa:c55e:86a with SMTP id
+ 6a1803df08f44-6fb47759665mr312049966d6.28.1750256663221; Wed, 18 Jun 2025
+ 07:24:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618130717.75839-3-linux@fw-web.de>
+References: <20250416085446.480069-1-glider@google.com> <20250416085446.480069-2-glider@google.com>
+ <CANpmjNPass_tPdjwguw5N+5HRn81FOJm0axLDMxwbZLrHHH8hg@mail.gmail.com>
+In-Reply-To: <CANpmjNPass_tPdjwguw5N+5HRn81FOJm0axLDMxwbZLrHHH8hg@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Wed, 18 Jun 2025 16:23:45 +0200
+X-Gm-Features: Ac12FXxlhTVNXm_co53abS-moIAJmLryjKY8L53ZBoxurLT46rDjZIdqZcqlZ5g
+Message-ID: <CAG_fn=VmddBTURnLESOQHEWYzsiUJCph9mVKS6W84TPqm3DCyw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] kcov: apply clang-format to kcov code
+To: Marco Elver <elver@google.com>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
+	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 18, 2025 at 03:07:13PM +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Use consts instead of fixed integers for accessing IRQ array.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Reviewed-by: Simon Horman <horms@kernel.org>
+> > +static inline void kcov_remote_start(u64 handle)
+> > +{
+> > +}
+> > +static inline void kcov_remote_stop(void)
+> > +{
+> > +}
+>
+> This excessive-new-line style is not an improvement over previously.
+> But nothing we can do about I guess...
 
-Reviewed-by: Daniel Golle <daniel@makrotopia.org>
+I think we'd better stick with whatever clang-format gives us.
 
-> ---
-> v5:
-> - rename consts to be compatible with upcoming RSS/LRO changes
->   MTK_ETH_IRQ_SHARED => MTK_FE_IRQ_SHARED
->   MTK_ETH_IRQ_TX => MTK_FE_IRQ_TX
->   MTK_ETH_IRQ_RX => MTK_FE_IRQ_RX
->   MTK_ETH_IRQ_MAX => MTK_FE_IRQ_NUM
-> v4:
-> - calculate max from last (rx) irq index and use it for array size too
-> ---
->  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 22 ++++++++++-----------
->  drivers/net/ethernet/mediatek/mtk_eth_soc.h |  7 ++++++-
->  2 files changed, 17 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index 39b673ed7495..875e477a987b 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -3342,9 +3342,9 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
->  	int i;
->  
->  	/* future SoCs beginning with MT7988 should use named IRQs in dts */
-> -	eth->irq[1] = platform_get_irq_byname(pdev, "tx");
-> -	eth->irq[2] = platform_get_irq_byname(pdev, "rx");
-> -	if (eth->irq[1] >= 0 && eth->irq[2] >= 0)
-> +	eth->irq[MTK_FE_IRQ_TX] = platform_get_irq_byname(pdev, "tx");
-> +	eth->irq[MTK_FE_IRQ_RX] = platform_get_irq_byname(pdev, "rx");
-> +	if (eth->irq[MTK_FE_IRQ_TX] >= 0 && eth->irq[MTK_FE_IRQ_RX] >= 0)
->  		return 0;
->  
->  	/* legacy way:
-> @@ -3353,9 +3353,9 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
->  	 * On SoCs with non-shared IRQs the first entry is not used,
->  	 * the second is for TX, and the third is for RX.
->  	 */
-> -	for (i = 0; i < 3; i++) {
-> +	for (i = 0; i < MTK_FE_IRQ_NUM; i++) {
->  		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
-> -			eth->irq[i] = eth->irq[0];
-> +			eth->irq[i] = eth->irq[MTK_FE_IRQ_SHARED];
->  		else
->  			eth->irq[i] = platform_get_irq(pdev, i);
->  
-> @@ -3421,7 +3421,7 @@ static void mtk_poll_controller(struct net_device *dev)
->  
->  	mtk_tx_irq_disable(eth, MTK_TX_DONE_INT);
->  	mtk_rx_irq_disable(eth, eth->soc->rx.irq_done_mask);
-> -	mtk_handle_irq_rx(eth->irq[2], dev);
-> +	mtk_handle_irq_rx(eth->irq[MTK_FE_IRQ_RX], dev);
->  	mtk_tx_irq_enable(eth, MTK_TX_DONE_INT);
->  	mtk_rx_irq_enable(eth, eth->soc->rx.irq_done_mask);
->  }
-> @@ -4907,7 +4907,7 @@ static int mtk_add_mac(struct mtk_eth *eth, struct device_node *np)
->  	eth->netdev[id]->features |= eth->soc->hw_features;
->  	eth->netdev[id]->ethtool_ops = &mtk_ethtool_ops;
->  
-> -	eth->netdev[id]->irq = eth->irq[0];
-> +	eth->netdev[id]->irq = eth->irq[MTK_FE_IRQ_SHARED];
->  	eth->netdev[id]->dev.of_node = np;
->  
->  	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SOC_MT7628))
-> @@ -5184,17 +5184,17 @@ static int mtk_probe(struct platform_device *pdev)
->  	}
->  
->  	if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
-> -		err = devm_request_irq(eth->dev, eth->irq[0],
-> +		err = devm_request_irq(eth->dev, eth->irq[MTK_FE_IRQ_SHARED],
->  				       mtk_handle_irq, 0,
->  				       dev_name(eth->dev), eth);
->  	} else {
-> -		err = devm_request_irq(eth->dev, eth->irq[1],
-> +		err = devm_request_irq(eth->dev, eth->irq[MTK_FE_IRQ_TX],
->  				       mtk_handle_irq_tx, 0,
->  				       dev_name(eth->dev), eth);
->  		if (err)
->  			goto err_free_dev;
->  
-> -		err = devm_request_irq(eth->dev, eth->irq[2],
-> +		err = devm_request_irq(eth->dev, eth->irq[MTK_FE_IRQ_RX],
->  				       mtk_handle_irq_rx, 0,
->  				       dev_name(eth->dev), eth);
->  	}
-> @@ -5240,7 +5240,7 @@ static int mtk_probe(struct platform_device *pdev)
->  		} else
->  			netif_info(eth, probe, eth->netdev[i],
->  				   "mediatek frame engine at 0x%08lx, irq %d\n",
-> -				   eth->netdev[i]->base_addr, eth->irq[0]);
-> +				   eth->netdev[i]->base_addr, eth->irq[MTK_FE_IRQ_SHARED]);
->  	}
->  
->  	/* we run 2 devices on the same DMA ring so we need a dummy device
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> index 6f72a8c8ae1e..8cdf1317dff5 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
-> @@ -642,6 +642,11 @@
->  
->  #define MTK_MAC_FSM(x)		(0x1010C + ((x) * 0x100))
->  
-> +#define MTK_FE_IRQ_SHARED	0
-> +#define MTK_FE_IRQ_TX		1
-> +#define MTK_FE_IRQ_RX		2
-> +#define MTK_FE_IRQ_NUM		(MTK_FE_IRQ_RX + 1)
-> +
->  struct mtk_rx_dma {
->  	unsigned int rxd1;
->  	unsigned int rxd2;
-> @@ -1292,7 +1297,7 @@ struct mtk_eth {
->  	struct net_device		*dummy_dev;
->  	struct net_device		*netdev[MTK_MAX_DEVS];
->  	struct mtk_mac			*mac[MTK_MAX_DEVS];
-> -	int				irq[3];
-> +	int				irq[MTK_FE_IRQ_NUM];
->  	u32				msg_enable;
->  	unsigned long			sysclk;
->  	struct regmap			*ethsys;
-> -- 
-> 2.43.0
-> 
+
+
+> > @@ -728,13 +730,15 @@ static long kcov_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
+> >                 spin_unlock_irqrestore(&kcov->lock, flags);
+> >                 return 0;
+> >         case KCOV_REMOTE_ENABLE:
+> > -               if (get_user(remote_num_handles, (unsigned __user *)(arg +
+> > -                               offsetof(struct kcov_remote_arg, num_handles))))
+> > +               if (get_user(remote_num_handles,
+> > +                            (unsigned __user *)(arg +
+> > +                                                offsetof(struct kcov_remote_arg,
+> > +                                                         num_handles))))
+>
+> Ouch. Maybe move the address calculation before and assign to
+> temporary to avoid this mess?
+I factored out offsetof(), because the address calculation looked all
+the same after formatting.
+
+> >         for_each_possible_cpu(cpu) {
+> >                 void *area = vmalloc_node(CONFIG_KCOV_IRQ_AREA_SIZE *
+> > -                               sizeof(unsigned long), cpu_to_node(cpu));
+> > +                                                 sizeof(unsigned long),
+> > +                                         cpu_to_node(cpu));
+>
+> Ouch.
+
+Someday we'll probably switch clang-format to 100 columns
