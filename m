@@ -1,101 +1,163 @@
-Received: from forward102d.mail.yandex.net (forward102d.mail.yandex.net [178.154.239.213])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C6B2F4A;
-	Wed, 18 Jun 2025 09:35:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.213
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5471DDC28
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239333; cv=none; b=cMWUoDGLC6LMAkpjXmcXRikZmgz3+dzH4DfnJUfkMVXChtBXZyqIFDU4vrk4Vu1P2UglE5aBORN2RrOaFBsZCk88DP1+ynnhO581mHrJ7ZaWJSAnD5+MXK9h62rr5/OqHIts3UHHJMTRPtAAiiBANTxC64T5sek15+fxkFRGO/E=
+	t=1750239489; cv=none; b=bGwhiGxqcmsFelwv2hMiC357U4aWqglrW5esHFhBXiCLFOz+33AUT58P/3Z0N3//k6V2JzfwOwFZH1wzFaxdfJK5YaR3mtzRUDA1eRmFSeISAdJGVeXCPJvMaGv9okLG6e9U1tyn+OFuLFRkm4t7wiBdcuOQUXR/umhgqN8Ns1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239333; c=relaxed/simple;
-	bh=YU3g3k0WI0TIreD0uy1PYqPC1ea+hDt2Wtn110/Qe/o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hvS8VKMpCHqUqNSj4s2m9rWPVFf3V7nTNTJTk4ebqeI+mz3hvskRwjkMTMnH2hw1DPHwzJyWa3a0S5N/267XQML6m0/HQ9VOUFyHXhdCbTfSFVBax7iMDdx+hSPFWHlM9TiqIoXwG/MKC3jjlEFzuqCbE37WA2zRsb2as2Gx2aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=i5BaFQa3; arc=none smtp.client-ip=178.154.239.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750239489; c=relaxed/simple;
+	bh=/GLIv0zCJc3UKNsBmZy3RMrTs3+c4Inr6m8eli1mI3A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lyGW+gGc4HynqswIdAWcFe9pfQCnRIFw2cOBeZ1H2k2fxyWe9tc9JMHlVE1sTg7kyI0ih21J2QK/dd7pU/0uyL69BYWleLV97M75ieePyiMdfevpUwzd5z6X4svZ7i6jSj6LsLFlUJBqQKtGVoWDxm+smaNJ2ncnrEvU9ZSQF8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=EnNlvdeE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=gKZ6sPko; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ilO2tgpH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=g8DNsxqk; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="i5BaFQa3"
-Received: from mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:c54a:0:640:3e90:0])
-	by forward102d.mail.yandex.net (Yandex) with ESMTPS id CAE4160975;
-	Wed, 18 Jun 2025 12:35:20 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 9ZJio6LLhGk0-CUnUE2OG;
-	Wed, 18 Jun 2025 12:35:19 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750239320;
-	bh=laVuCmTHwnEXq+teSL+zw/wpHFG9GlwTF+ioUX7tsiU=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=i5BaFQa3lQR5V9OzsYmEXI5GUiHGTG5vNASPSuYzypwXIKdMMtO8wL79w713DQXQ0
-	 pHBEKc4NuU28+X5b02Kg8rQiTsdz9BcxYL7OUaYMq3ttZbIYp8yHfU3faKg9+6RPxO
-	 p/XrkVGxiG2ReQtO/ymX4Va2Y4oF9GWRaUPp3aTk=
-Authentication-Results: mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-To: rust-for-linux@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: mturquette@baylibre.com,
-	sboyd@kernel.org,
-	ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-Subject: [PATCH] rust: shorten `con_id`s in `get` methods in clk module
-Date: Wed, 18 Jun 2025 12:35:08 +0300
-Message-ID: <20250618093508.16343-1-work@onurozkan.dev>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="EnNlvdeE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="gKZ6sPko";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ilO2tgpH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="g8DNsxqk"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C40182116E;
+	Wed, 18 Jun 2025 09:37:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750239480; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PkWLIggAFbYYMkCfHKFv+TTI3PWYDAMRmo1BUIYhMc=;
+	b=EnNlvdeEux/SqCm2e22a5w6PYD1PKKv7QbiZegR9+woINwCfF9gnAom3voUpfvXem9frzm
+	K6bmaOBd5NgF37HukKIJTxgIfifAOoIVG3edchGHz46GkaA4OJJmCMGKhKDNzAwMsSYcnc
+	mH2RC5/9l+zGWZvqvwbe0O1+zU3sJ14=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750239480;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PkWLIggAFbYYMkCfHKFv+TTI3PWYDAMRmo1BUIYhMc=;
+	b=gKZ6sPkoriHmLuV5jI6Wvfk0kaaitQaG+pvidxhVqJUDIxwuZ4v/OntCMp7jXN+weoHYnt
+	Eg3+8Ip/qx/ZUICg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750239478; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PkWLIggAFbYYMkCfHKFv+TTI3PWYDAMRmo1BUIYhMc=;
+	b=ilO2tgpHYrddG20QqCEbJWrPIdQiYQv9fm3XAX48S7QR8B58Qyu7Afw9UTnQzBCsmq/tZw
+	hVX+/wtzjUuvKBpgDYOxKum7hKAXq1IHsvPw648J1cx9BIgQwEpPjas91LbWWcWo65umXM
+	Qu5ACAOb4RjqLhi3X8JqW24MyzcdwBk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750239478;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+PkWLIggAFbYYMkCfHKFv+TTI3PWYDAMRmo1BUIYhMc=;
+	b=g8DNsxqkQdnml2L2a3hkrb/D+ILgZP955aBp0bO92CQgTJKAii44lRV60IHYkmEBlcCK5z
+	L/gLfs/KvF7t7XDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B44AE13A99;
+	Wed, 18 Jun 2025 09:37:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vQLUK/aIUmjqHQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 18 Jun 2025 09:37:58 +0000
+Message-ID: <f7ea4fc4-999a-490d-b221-b3b935e4b1bb@suse.cz>
+Date: Wed, 18 Jun 2025 11:39:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm: Inline vma_needs_copy
+To: Yunshui Jiang <jiangyunshui@kylinos.cn>, linux-kernel@vger.kernel.org,
+ linux-mm@vack.org
+Cc: akpm@linux-foundation.org, david@redhat.com, lorenzo.stoakes@oracle.com,
+ Liam.Howlett@oracle.com
+References: <20250618014209.1195734-1-jiangyunshui@kylinos.cn>
+From: Vlastimil Babka <vbabka@suse.cz>
+Content-Language: en-US
+In-Reply-To: <20250618014209.1195734-1-jiangyunshui@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[kylinos.cn:email,imap1.dmz-prg2.suse.org:helo,suse.cz:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-Converts `if-else` blocks into one line code using `map_or`
-for simplicity.
+On 6/18/25 3:42 AM, Yunshui Jiang wrote:
+> From: jiangyunshui <jiangyunshui@kylinos.cn>
+> 
+> Since commit bcd51a3c679d ("hugetlb: lazy page table copies
+> in fork()"), the logic about judging whether to copy
+> page table inside func copy_page_range has been extracted
+> into a separate func vma_needs_copy. While this change
+> improves code readability, it also incurs more function call
+> overhead, especially where fork() were frequently called.
+> 
+> Inline func vma_needs_copy to optimize the copy_page_range
+> performance. Given that func vma_needs_copy is only called
+> by copy_page_range, inlining it would not cause unacceptable
+> code bloat.
 
-Signed-off-by: Onur Özkan <work@onurozkan.dev>
----
- rust/kernel/clk.rs | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+I'm surprised the compiler doesn't inline it already, if there's a
+single caller. In fact, mine (gcc-14.3 on x86) already does.
 
-diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index 6041c6d07527..b09f295addce 100644
---- a/rust/kernel/clk.rs
-+++ b/rust/kernel/clk.rs
-@@ -132,11 +132,7 @@ impl Clk {
-         ///
-         /// [`clk_get`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_get
-         pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
--            let con_id = if let Some(name) = name {
--                name.as_ptr()
--            } else {
--                ptr::null()
--            };
-+            let con_id = name.map_or(ptr::null(), |n| n.as_ptr());
+So I wonder to which extent should we force override wrong compiler
+heuristics? Maybe just inline instead of __always_inline would be OK? Is
+that enough of a hint for your compiler?
 
-             // SAFETY: It is safe to call [`clk_get`] for a valid device pointer.
-             //
-@@ -304,11 +300,7 @@ impl OptionalClk {
-         /// [`clk_get_optional`]:
-         /// https://docs.kernel.org/core-api/kernel-api.html#c.clk_get_optional
-         pub fn get(dev: &Device, name: Option<&CStr>) -> Result<Self> {
--            let con_id = if let Some(name) = name {
--                name.as_ptr()
--            } else {
--                ptr::null()
--            };
-+            let con_id = name.map_or(ptr::null(), |n| n.as_ptr());
-
-             // SAFETY: It is safe to call [`clk_get_optional`] for a valid device pointer.
-             //
-2.49.0
+> Testing was done with the byte-unixbench spawn benchmark
+> (which frequently calls fork). I measured 1.7% improvement
+> on x86 and 1.8% improvement on arm64.
+> 
+> Signed-off-by: jiangyunshui <jiangyunshui@kylinos.cn>
+> ---
+>  mm/memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 8eba595056fe..d15b07f96ab1 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -1337,7 +1337,7 @@ copy_p4d_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
+>   * false when we can speed up fork() by allowing lazy page faults later until
+>   * when the child accesses the memory range.
+>   */
+> -static bool
+> +static __always_inline bool
+>  vma_needs_copy(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma)
+>  {
+>  	/*
 
