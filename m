@@ -1,90 +1,99 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC30221DA7
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F43E21C188
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750279351; cv=none; b=JFrDRzEz0TwMVa7OXMc6KULHGZvgUwA5yAtKE2PwR5RMoDIXpXouLeYGcIGGgiiVEsJR+G06DYMBlv7Lc2RwGGYnhiQL6ZEXJCKTWggiPjA8X8KI8dcco8G6vA9L68IVvi4p5kGRg75jeZcS6ZZtuwyzzpXE9kVjdhiuzof3d40=
+	t=1750279476; cv=none; b=GEhZstETuwr1ym93+DPP0lZJsv3cPTnV5E2a4hScLJgdXN77mVSVns6u8zit/2fqgGpir5thR/oeoYRyprKJbW2xaAvF5mUu2yWZIVeAoZsztq5lm+BijmNXOvZCfww5LQ/PoV9v+UigVSAXpsm4B69vG1UJtoXOaxDoqhrntSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750279351; c=relaxed/simple;
-	bh=ocgAC9TbfdSQHxFe/9Wrs8l8/UPeshbSR2dH6VLKoU4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dl4d6K5hTvvNEL7XUNxXOAuhRKWdzfFUUkPTbYSvRkMdq6hBojvhQJQLSLYaq9OcpM0z0h5+egeY/qrVGRDz3x4gn4NZrlHUnIuNPEFQFqdqXmPSeIrfhckmMPs9WBweqTXMsh7anCtOAwUaHcWmi1faQAjS7PpMrjTTJou/GCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1pA0vGZB; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750279476; c=relaxed/simple;
+	bh=A5V77MHGHxoltQ9oWQNW08wwJlpbGRsTMYBy4qGK4RU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E06Mn6M2lRvGc/L81bHIU+vlsyqdiDZHdlYbIp/+4O5V2WtK8GnCef4/SaqAsN5s5JjmFzpa3uGaEmMWcAHzgwCwv5jDKGEmsINPsdrhi2e4T7sEFeSETts4IrHyALtpViWrSpbp69KEPUyo3e2gDncy09x4aP67aL0T/HSMdFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AY1XhNaW; arc=none smtp.client-ip=209.85.166.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1pA0vGZB"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e75668006b9so138445276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:42:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AY1XhNaW"
+Received: by mail-io1-f48.google.com with SMTP id ca18e2360f4ac-8760d31bd35so754839f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750279349; x=1750884149; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ocgAC9TbfdSQHxFe/9Wrs8l8/UPeshbSR2dH6VLKoU4=;
-        b=1pA0vGZBaxa6Xp7IPRsntHX51R8AhhCExokOkTgsRl97Z7Z/nDbnBvejcqdYgGH7Ra
-         pFPb5hIgHFxuD+bZY2a3UVaxkCC+W11wAQOdlD5QEG4TpQt3cmi8U8kMWkT6saZvyiMx
-         8ih9OlRvF69x9aVLg3lKGgDd7Sfj5MYJAdz6eEkdV6/KIfK5qM6KJXxHqS4BIaFs8GmG
-         JJpjHAja3LgWr2wNEEAbTVV3gVxv+SeidVljLd6PBuKDWZomirPkRWltRMF0zmFlk4va
-         XMeEVNqdurji9yoi7q4OuN03NEMb46jfDgI1vkPQi3ixuf4p1XHdkwZer3OA3GCoyu59
-         j+TA==
+        d=linuxfoundation.org; s=google; t=1750279474; x=1750884274; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2Ako2fd6NKJ2bP6NpCy5kPqjwnh1toCTc4fAZAJEcDU=;
+        b=AY1XhNaWuQwWdpKSLvQcIueK6FNokFmknlm91FFd3DBoinj0SGleoshhpPClXqi+vS
+         XQlIYccEx3eD4V6dE/J2wxr+gjQzXEVEwELObGreW4vQphyefDA0Cu/tkrI8pdkY157b
+         A5gJvMNsttfuL0dRppQsD7aa5FJGdzorV3hR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750279349; x=1750884149;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ocgAC9TbfdSQHxFe/9Wrs8l8/UPeshbSR2dH6VLKoU4=;
-        b=gzjIZx1AUfKj2Jk6pXSD0GfQu73je85iCeoPhJ5WgOwWENqSUXPO/Nz5LGIC/6D+Uy
-         F7/2Tu6t+CNk1PHPhfzSIfT8jH8T4PP9zowDR03F7jCzQ+egOv38yjUYbAOP1rkeK5Y+
-         y+GN7cau8DuUOdzXw95fl8QjlOPwkZHGMOXVjkwljipqy7JGaABLMRXiBVxAmNrDK1af
-         DUtYkFqxA01cENMFn6BwxScxjgInFhAEKUaldmWrYm79zRsiLiIIH2gFvyM8bzyQlT4u
-         2NY1dZxQ1A+n03uG6BJ6t0TapppQWqZC3T5smhlFEqDQfPJ5MXzsFih0/WfqA3NCt8QZ
-         pyOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS+oRo/OgFeXOIpM9ya4SzKeKrpiwaYqYMTfvTac/yvWeXTMyvz3tBBnHS/WlqvFjhygBgIFfy5q44snk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySNRR1+EvGwUoGI9kTdPYrJjrsYDMRKAMMjNaJ8uh3mM5yw5Aq
-	DSN8Ub7BMh+9FRiRpEaT5k0kW61SwBKCWlCdizr42xIu2fmW+lBIlSMblp9o6lxn0NkTBHCoOc7
-	OIRRrxMbmwGqEeGnwMVj9lAJufPBeTd9eI7jSK1Al
-X-Gm-Gg: ASbGncvxWkcS2A5tZYyjCvQ8IpLtDkD+Y6MxDk4yzTfGiUGYmDBG/mZvVSMNvcdVrdT
-	7PhZry3/OqTcC0YwSfFHnGsguqAQpJI0XtYusultlgdUJWs0KwWcP7CikcZSbAQYg4ltHU0h7UC
-	HVZgat30m9QBcWLvh09cUq1D7gvjh2ZSvhEA5qD/HKo4vmZscci8fIKYSJeLean3/PcDuXqWlH
-X-Google-Smtp-Source: AGHT+IGcEUDnd4GOH82HX0lZBlNqLdPHex042iyWzP+top4zuE3jGLedRPqyTacYh4EfWqEYfTdFMF3OiZxJDn9T9t0=
-X-Received: by 2002:a05:6902:1384:b0:e81:f864:133a with SMTP id
- 3f1490d57ef6-e822acab4dcmr25869982276.7.1750279349015; Wed, 18 Jun 2025
- 13:42:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750279474; x=1750884274;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Ako2fd6NKJ2bP6NpCy5kPqjwnh1toCTc4fAZAJEcDU=;
+        b=eB17LnXDLTfj0VUUccsUi4n0XAlsVnkluU/5115IoE8GI8SUo+LK8sivMMXVPdegi8
+         8BNyjg4pue227PgzMK1hXnBi1S7XPWVMJnM8LQH8tyfX9r3woEgnfBE4cM8kegQqnOaM
+         RNFLMWKRP1A/mnTa+CnBTOcQB79lNINJNF6/8I81crJspoeucAZAChWUGi6ZvHiOiW4j
+         JE+huE6sNNV884iRBhkOTCmX4kY5ORMdWJhQ8lprsnGpj537+kPoZO3vzBNglgS43BlF
+         A/h2kIwANZIGqls3zR6CcEgP7KWTYUxwjyNbSgdue1t2E12TwQ2NiSbdogUWHqqbam46
+         9QKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUX+WYmLy8OvFYhn25UPFZgECqpX7/6IkFnOuJIE5XV5pgU8dIId2rCz5OJGyX9+fG4k/xOkJPi2bEajR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSVdfi/WzD3d0dgTB/twAeAq0t2FmqflOjIfydmdTkECHwnYsJ
+	Rd8+tNpvSCyhewVkTzRM7HPqgjnNj2o9V7fSqY8j+dAhe2BIglT2Oe4IbYo/2xn3v/c=
+X-Gm-Gg: ASbGncufncqAw1ostq637KPXajgG8Tp1njAx/x45yo6YrekrgbmRpzELujjCq8+siD7
+	pdUUWFUObRUUOKncZC6xyll0/BZugvNeZ2A9vNNNt06rqqRm6suJyeWBYWN3g8P0SKl1Fm9LZFJ
+	0kq2izKZILEcqsLmNpmlu3BAlRd6ATrepJvvR0uguwGxFtCrBwLPTW44h5mgiCuObcw5SPNOyqI
+	2jeOEOKfBcBEfF7jQe+SCLEGLs4DI8C/Iapj63cSy1xDZm3PIFpG77ylj5+0iJr8KTynyADVdlq
+	BqUPt2Dbu3jGtm+F7ze9Fs2a5CcOMLpQKBtNu3zt15gO8gJbpuhhYdj5rKKbyXvoF3P3vtJEYQ=
+	=
+X-Google-Smtp-Source: AGHT+IGBjo9SKc7leBQCMa8Hw77h+nyuKDNR2sMTMdtJdYEON8VxYPtAlm1helcS8akEtiF6cPaOoQ==
+X-Received: by 2002:a05:6602:1612:b0:861:6f49:626 with SMTP id ca18e2360f4ac-875ded13886mr2529017139f.6.1750279474117;
+        Wed, 18 Jun 2025 13:44:34 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-875d582dec6sm278667939f.33.2025.06.18.13.44.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 13:44:33 -0700 (PDT)
+Message-ID: <34f6b974-7fb1-444a-861a-4bdb458eca53@linuxfoundation.org>
+Date: Wed, 18 Jun 2025 14:44:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618042424.330664-1-jthoughton@google.com>
- <20250618042424.330664-5-jthoughton@google.com> <aFMWQ5_zMXGTCE98@linux.dev> <aFMh51vXbTNCf9mv@google.com>
-In-Reply-To: <aFMh51vXbTNCf9mv@google.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 18 Jun 2025 13:41:52 -0700
-X-Gm-Features: AX0GCFvXF0fglyYJXBw3pBR88VTwnhV-AWZMFY-OnV-bZ0m2KXl_JUKDh5V8wUI
-Message-ID: <CADrL8HUeS2HNu7ufQzq6FkgBAsruTok_rkr=ydsGBPgUNjgUUg@mail.gmail.com>
-Subject: Re: [PATCH v3 04/15] KVM: Add common infrastructure for KVM Userfaults
-To: Sean Christopherson <seanjc@google.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] docs: ABI: Fix "diasble" to "disable"
+To: Sumanth Gavini <sumanth.gavini@yahoo.com>
+Cc: arjan@linux.intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux@dominikbrodowski.net, rjw@rjwysocki.net, stern@rowland.harvard.edu
+References: <20250523220238.455718-1-sumanth.gavini@yahoo.com>
+ <20250611215306.2989590-1-sumanth.gavini@yahoo.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250611215306.2989590-1-sumanth.gavini@yahoo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 1:33=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> On Wed, Jun 18, 2025, Oliver Upton wrote:
-> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
->
-> No need for my SoB.
+On 6/11/25 15:53, Sumanth Gavini wrote:
+> Hi Shuah,
+> 
+> Just following up on my patch submitted on 2025-05-23 22:02  with subject "[[PATCH v2] docs: ABI: Fix "diasble" to "disable"]".
+> 
+> Original message: https://lore.kernel.org/all/20250523220238.455718-1-sumanth.gavini@yahoo.com/
 
-Would you like me to drop your SoB from all of the patches that are
-not From: you (patches 4-7)?
+> Would you have any feedback on this change? I'd be happy to address any comments or concerns.
+> 
+> Thank you for your time and consideration.
+> 
+
+Sumanth,
+
+I am not the maintainer for this. Hope you have the right
+people on the thread to review and accept the patch.
+
+thanks,
+-- Shuah
+
