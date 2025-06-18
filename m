@@ -1,152 +1,114 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EE11E25F8
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E30B1E3769
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750227646; cv=none; b=faiERkCPrXRzaYkWZTfB6pUpzv38dupyaNt94GxRqOAZ58P4PMV+E78xBapMqwuazHdXwYipZkLBIyzRQ+wg+zYkeD3B+Sn7jvUMLh5pbwO/umEEqwlhm0fgDr4jpsedPGSVh3NjdylWH/ShbNEp3bt17mU60+g5BUsigWX5nfE=
+	t=1750227694; cv=none; b=hRuw8AQwbIzJTRgQ6wEqKn09IAD7im8MhfpD1wPJpTC4rEnsb2QGlnMF8Aunr130TaTQ2IZjbGGHTzUMYD3BLRkFeO5hiRbdmxNG7gnHBr9xw+YHMy1Oi58sm2TrZcYHi173mElxW3fo8TG37QBUvgR7uYjGhwKbw5rTbSlnpHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750227646; c=relaxed/simple;
-	bh=r2P/jqnlG8ER5T2kcyLzbg88KxQ1hQIle5v/J/VH4RA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rvDBeWtZ/dReytx42cvFxpbLRWyxjRTM2FKkJkk0Vp1KBxQFdz7OLC4YQicSllILkVA0rfzZfBMPZGztHL+sCLtLgbR3Xyo+GdLr6GrGsOzwwnjYBr/5sPFvxNRTwJoMRTcZGxKT0ZMmaSvwZqz2Rn2PJvyEXIWBnUljGxuSdLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZjqK4vYT; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750227694; c=relaxed/simple;
+	bh=/wztygoLpBRgdvsL0AiTVhKIlMvYI46UtM4PRYaPe7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ba0Vj8YVgrMtOMXrUcQmCqio6pAHIOl4H8EzlRj5mEFgY9k7BTMuTUKDCvu+ifxCe4jell4xFUQc1ilW2ITNhVuc9LKNbBrzFcJ66irkAP4sL+mFFJgs0YQjfpnCadGr4ikCv/SA703+7p0yP38OdFo0AVugI40CQl9Daey+8gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=WKbnE0le; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjqK4vYT"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e7967cf67so6691575e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:20:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750227643; x=1750832443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dIX0DhlfHWBvvUubwltKbzItPX4eDrBzSY0SuHSHILE=;
-        b=ZjqK4vYT8yM1XCzbWqGGNSsTvL9/q5OwTnQ5pmnPzH12Dwuf9+oBSjWdeUhfiASRja
-         UA1GUTP1ofhcjj9yahz3fBGVeXFcABuY0QOD0PetijTfYJBPNX91TMY0BcPgxpxIAVNk
-         XN4XhFyXcTIaE5bEZoSRcpZtZpK4yzLdxMbCr7ja8M5jjiOE/I4prdq9IFvyAX7qIv+c
-         HvgEnHeTYEZVOpe+mUYDPQ2CZ1zpZVveK+gUJGMeOw1+82T+2KKo+/oU3NU0RpCr9W7e
-         rnCGRGEubigFpOeQ3JO0G0Ncu7Rsjp6kna5szuRYupugeQvvopxSGgwziZWRdq4TuauJ
-         7etA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750227643; x=1750832443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dIX0DhlfHWBvvUubwltKbzItPX4eDrBzSY0SuHSHILE=;
-        b=LT+J4s7ri5R5wHEQejJGaG9sR5krhwPXPNpYislaz7wc1m92OREPcESmpLz1KaFQzE
-         L7mEsVa26CMFEPnTaTt4zIVlLCkcpLvmnBiX6apJ/6fgiOVrtXTPNGr3aSsR8wNIg3mw
-         K6WH9LyawxmVTi/WhjP105d5AU1Vbj/Mh64hMYV/ZnaKT1C/qxJov7jTH0Sfezsq1aoj
-         EWjE0bQzK9yTgVjRkW+pQ0Rouo+eiwBaY7UyDaW7DsvB4m4CD4Bifibt/Ogk1WUU7G3V
-         FTXb42LebuEtZ/cUZ1FZJKSIQvkqevMUiu+5BwIg6jP9/aaXt9iw6fAcIUKKx6fMNFjS
-         j2Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCUm9AXFgOhTQ8yICWncp/OEzlVKp/zVX53GPpngb4vRIHF39aku+k/qWZiOQ4lI0P2ykkKGm4qVpyTQM64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzifNdAqtfolegxurdqfBI1FM35tqDnxg164gG86AiG8a3Z6QB
-	nVfCUYF3L+XFh3ZfLNriGWwm14LJ4EujtLhSp7LFeMTb2emkjtROByg8ywLajE1tVLjUBWMr8DU
-	Ax89/Ycbm5bIN7SKndqlVRE+gobZh8Vc=
-X-Gm-Gg: ASbGncsnCkMXFhJYxe+dY2h9nBabYkr6IkSK+OwfHvQRscCLiX3ZiJ8Zjj9An3vn0zr
-	G+HI+FeXN6HkfDaqYMIHGgeIjdGPwb2gmaN+MgF6Yj1Vy8Ec12J0ChF4UuOfUeQW0oEsIDWOKia
-	LMKWRbDGKHUaixyGbzfzMZpB6UncKGURh+yQPsl+R4cDg9u3s10UQ9XEaRFggK4NUXKi2D8RIG0
-	WDUmg==
-X-Google-Smtp-Source: AGHT+IFDwTlSZDjQACLoP7ljsYhRuDW1C2uoKdnb91cZZMLXrn21OYVXh8RXGHMFWPKcrLuKWobe5N+eLwVuZQ+7gLA=
-X-Received: by 2002:a05:6512:31c9:b0:553:28a6:4384 with SMTP id
- 2adb3069b0e04-553b6e68a2cmr4807234e87.10.1750227642416; Tue, 17 Jun 2025
- 23:20:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="WKbnE0le"
+Received: from eig-obgw-6006a.ext.cloudfilter.net ([10.0.30.182])
+	by cmsmtp with ESMTPS
+	id RdPXuqsMBf1UXRm9MuK96L; Wed, 18 Jun 2025 06:19:56 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id Rm9LuHAcY3kpNRm9Mu87er; Wed, 18 Jun 2025 06:19:56 +0000
+X-Authority-Analysis: v=2.4 cv=HLLFFJtv c=1 sm=1 tr=0 ts=68525a8c
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=TPakyfmQPUc9YFHtHfAA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=6O5bFY5lZZfH8gNd0u5vX+k9wjbquMfywNiJ7+nQpXE=; b=WKbnE0leviQGHgJ7m5nvZ0Void
+	gvCXScp9UpFSK8Zv8ltYQKPbAA9CZPEwC2l4a7CZHcpdTOsLun4/wvDCtcaAWMs2dUJKBhq5N4tbs
+	OXXpmRHzg9z1HpYFHUZWC4bfAai5RmkKcogjgCxwomwvmn6U43+1iCBZmo1II+mIIkKmWSn/fxr4C
+	M7u5pRFPaVYOTz7tLM/zBRnddkDaepOnMkOP8dCiM7W4zx5/k2UsyCUcHxAEUTNIBBChuRfJGv6kq
+	dT3n/YZPVyFnWF5KZAx3paOFg7sdPU+uZrCT9pYRalc+/WN5is/9aZiXdMjVn7wMwyIn72i8DcQFk
+	Zoe487MA==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:60758 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uRm9J-00000002ozv-1d29;
+	Wed, 18 Jun 2025 00:19:53 -0600
+Message-ID: <ce4000c9-a038-499a-9a98-0910619fd30a@w6rz.net>
+Date: Tue, 17 Jun 2025 23:19:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607064444.4310-1-pranav.tyagi03@gmail.com>
- <87cybdp7to.ffs@tglx> <CAH4c4jLjSBxbd3bqkdgcCSWqXURratANgnbq9negrSU283xHpg@mail.gmail.com>
- <87frg3ss9s.ffs@tglx>
-In-Reply-To: <87frg3ss9s.ffs@tglx>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Wed, 18 Jun 2025 11:50:31 +0530
-X-Gm-Features: Ac12FXxjciqKI82M-DbqXPNhkQ3tfmpyi86Fx9VXoSkenBP_2KlF1yVqsqV4iO0
-Message-ID: <CAH4c4j+P2MJWZWv6M2s+wOdfCF6q6Wyq3=VsB=uNCtEH1LMp-g@mail.gmail.com>
-Subject: Re: [PATCH] futex: don't leak robust_list pointer on exec race
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, 
-	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	linux-kernel@vger.kernel.org, jann@thejh.net, keescook@chromium.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250617152451.485330293@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uRm9J-00000002ozv-1d29
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:60758
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfNqbc5zqd9BMR91ff+tRkjEP9hbAa5mXRi/czhPk5cSVyOrgObIcIx5QI/2dklXhB3YyunO32Qenv0zcpCo6oYQdeFK+fKJNTpDwfpOAUTMWH3vwht9B
+ ie+o378jmuFAhMUDa1YG90ztrmXxDwb0oVzOFxC7MQg2zUI7rgHl0I/fC/f31csr/Q0AWVNqmljNjJujC3G/PKKP7YNJGxyg1vY=
 
-On Fri, Jun 13, 2025 at 6:38=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
+On 6/17/25 08:15, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.3 release.
+> There are 780 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> On Wed, Jun 11 2025 at 19:33, Pranav Tyagi wrote:
-> > On Mon, Jun 9, 2025 at 3:15=E2=80=AFPM Thomas Gleixner <tglx@linutronix=
-.de> wrote:
-> > Does the revised version below address the concerns more effectively
-> > or does it still need a bit more seasoning?
-> >
-> > "Currently, sys_get_robust_list() and compat_get_robust_list() perform =
-a
-> > ptrace_may_access() check to verify if the calling task is allowed to
-> > query another task=E2=80=99s robust_list pointer. However, this check i=
-s racy
-> > against a concurrent exec() in the target process.
-> >
-> > During exec(), a task's credentials and memory mappings can change, and
-> > the task may transition from a non-privileged binary to a privileged on=
-e
-> > (e.g., a setuid binary). If get_robust_list() performs ptrace_may_acces=
-s()
-> > before this transition, it may wrongly allow access to sensitive
-> > information after the target becomes privileged.
-> >
-> > To address this, a read lock is taken on signal->exec_update_lock prior
-> > to invoking ptrace_may_access() and accessing the robust_list. This
-> > ensures that the target task's exec state remains stable during the
-> > check, allowing for consistent and synchronized validation of
-> > credentials."
+> Responses should be made by Thu, 19 Jun 2025 15:22:30 +0000.
+> Anything received after that time might be too late.
 >
-> That's way better, but it still does not explain what the consequences
-> of the racy access are.
-
-"The racy access allows a malicious observer to exploit a window during
-which ptrace_may_access() passes before a target process transitions to
-a privileged state via exec(). For example, consider a non-privileged
-task T that is about to execute a setuid-root binary. An attacker task A
-calls get_robust_list(T) while T is still unprivileged. Since
-ptrace_may_access() checks permissions based on current credentials, it
-succeeds.
-
-However, if T begins its exec() immediately afterward, it becomes
-privileged and may change its memory mappings. Because get_robust_list()
-proceeds to access T->robust_list without synchronizing with exec(), it
-may read user-space pointers from a now-privileged process. This
-violates the intended post-exec access restrictions and could expose
-sensitive memory addresses or be used as a primitive in a larger exploit
-chain.
-
-Thus, the race can lead to unauthorized disclosure of information across
-privilege boundaries and poses a potential security risk. Taking a read
-lock on exec_update_lock ensures that the target task's exec state
-remains stable during both the permission check and the access,
-preventing this inconsistent and potentially unsafe access."
-
-I hope this explains the consequences of the race condition. If it is fine,
-I'll add it to changelog when I resubmit with the helper function.
-
-> >>
-> >> You really did not have a better idea than copying all of that logic
-> >> into the compat code?
-> >
-> > As I=E2=80=99m still learning, I wasn=E2=80=99t quite sure how to avoid
-> > duplication there. Would factoring out the common logic into a helper f=
-unction
-> > be the right direction? I=E2=80=99d be grateful for your suggestion.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> and the diffstat can be found below.
 >
-> Exactly.
+> thanks,
 >
-> Thanks,
->
->         tglx
+> greg k-h
+
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+
+Tested-by: Ron Economos <re@w6rz.net>
+
