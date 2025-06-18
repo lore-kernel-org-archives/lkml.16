@@ -1,87 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BCB35963
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ADBF27726
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750282777; cv=none; b=SAN8kPyeq7wFIG4HWe4LvjGGoWpPD8706cL5v1lX/xYBGhqKMdp+HIojgVkQA6kP/xPCoSd6PszxBneAVs87JuXcVOzfiwnA0Fr2N5/RHLHv/FMm4gwtZJBUc4urp3E+bi4+RuUxN88S5qnRAfOqPsNGWqgKYHEUWdlqFyr4Zjk=
+	t=1750282848; cv=none; b=MQyicJiKJKtUOmtwz3zp49UVhKDt5cEnQl2iWtdsiiLME2e4HKWtHGopNOVSTxg4nykcDLW8obIqsNNBYola6KpRRYJQdJpizutdVMBD3kdGtMrKU6gAbbvxh+dbAwhhi3L6VOZFnQX81t0mrdG7zBvLu4LUK0AXFdvpaxsmWuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750282777; c=relaxed/simple;
-	bh=HCAM12Fe5DXcRBQegk/n8DQ9rGaqr48kn3TlT7cARz0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=d7n5TFu+IOmXC5vh4b7PUM8YQ3jUtaUBfdKeIpzhxg+c7vGJT2Q/ytrlGWZe8L/RaXGfNiWlKhCi0tVH0RQtVuaHbqFqfn8Al5SJrQaOvup4LgCiUZ3c6J4+ZbCM9rY80jNq4Uae59yvgNdggGyVWMzUzf+eTxrBkcIjU49rhHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pB6en+2c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750282848; c=relaxed/simple;
+	bh=zZnSwWVfa3L4LcIlb9IwqQwW+8ErHGoypiCdYyko/M8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RoNtROOoHbGhEIYmsrnwO2yJpx73D+XsDUyHvIR8hxNk4C1yzd0Nu17W2/0wXasOZ/4aB5i+c40gNhT6JmAAUet5o6GZJBQ1QgEuA+wBEbXAKLqRIrkI1hhrLbkBe18xIPGIvBLxWAd1kjSKd7F1U3AUywYu9iou3lmjl8ZtrLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kmMkbujt; arc=none smtp.client-ip=95.215.58.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pB6en+2c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5FBC4CEE7;
-	Wed, 18 Jun 2025 21:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750282776;
-	bh=HCAM12Fe5DXcRBQegk/n8DQ9rGaqr48kn3TlT7cARz0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pB6en+2cjScKzWpspCIDSmEsXTjk9ujyDZwq5Jjzrtmh2naZttLu+CitYTR5ROG4V
-	 0Nj30en/CTs6Esojp9Aajfz/nK9BfJT4ZVfsf+Y7ZqhYZmpraKRkEFgeEZT17PY20U
-	 SOc1MIbnQNCsYLyK2gpBSZqzNVGMB8x+95ZfaqmDqrqIrzGEC+U40A6ILrfpJEH1Z1
-	 ElBIELDwSLbj7nyPl3kDb1WdgTXeUHh6ckzWDwmGYMj+FDjADvQKj29MRxPB2NhgMY
-	 Y5bzmxda77v04K4IJXPu8KMgxzgpPbzidMtdiA4W7TVciSj6w88Ios47KvK9mqHBaB
-	 SHUC0aqLf2TYQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE503806649;
-	Wed, 18 Jun 2025 21:40:05 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kmMkbujt"
+Date: Wed, 18 Jun 2025 17:40:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750282834;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5P7pmHdw5PVQBLtLoWp7mz+v2mTrLD1cSOToVE3C7JA=;
+	b=kmMkbujtLNOiT7kEte94MfmNU4CJYwl30ArBiRClHUOtAFceAEhT4mIfeSMIATlb8y/m0j
+	Sn0Lln/61J9Y1UTIHtrDtynL0RwKH53lKv4wkn9h+G8NMShu4L2k2xX/JB4Qpb2+pONdN5
+	FRk1OgDIAoE6n4Z9CZKZFbTYNDxknSw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>, 
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, Kees Cook <kees@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [GIT PULL] Crypto library fixes for v6.16-rc3
+Message-ID: <w3t36hsxocm3uotbhnonsioomnvkqpmazctyogmx36ehlxezyz@h4vytlcacc7k>
+References: <20250618194958.GA1312@sol>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: fix to zero post-eof page
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <175028280475.266369.5996296776480428957.git-patchwork-notify@kernel.org>
-Date: Wed, 18 Jun 2025 21:40:04 +0000
-References: <20250605032633.2744434-1-chao@kernel.org>
-In-Reply-To: <20250605032633.2744434-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, stable@kernel.org, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618194958.GA1312@sol>
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
-
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
-
-On Thu,  5 Jun 2025 11:26:33 +0800 you wrote:
-> fstest reports a f2fs bug:
+On Wed, Jun 18, 2025 at 12:49:58PM -0700, Eric Biggers wrote:
+> The following changes since commit 19272b37aa4f83ca52bdf9c16d5d81bdd1354494:
 > 
-> generic/363 42s ... [failed, exit status 1]- output mismatch (see /share/git/fstests/results//generic/363.out.bad)
->     --- tests/generic/363.out   2025-01-12 21:57:40.271440542 +0800
->     +++ /share/git/fstests/results//generic/363.out.bad 2025-05-19 19:55:58.000000000 +0800
->     @@ -1,2 +1,78 @@
->      QA output created by 363
->      fsx -q -S 0 -e 1 -N 100000
->     +READ BAD DATA: offset = 0xd6fb, size = 0xf044, fname = /mnt/f2fs/junk
->     +OFFSET      GOOD    BAD     RANGE
->     +0x1540d     0x0000  0x2a25  0x0
->     +operation# (mod 256) for the bad data may be 37
->     +0x1540e     0x0000  0x2527  0x1
->     ...
->     (Run 'diff -u /share/git/fstests/tests/generic/363.out /share/git/fstests/results//generic/363.out.bad'  to see the entire diff)
-> Ran: generic/363
-> Failures: generic/363
-> Failed 1 of 1 tests
+>   Linux 6.16-rc1 (2025-06-08 13:44:43 -0700)
 > 
-> [...]
+> are available in the Git repository at:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git tags/libcrypto-for-linus
+> 
+> for you to fetch changes up to 9d4204a8106fe7dc80e3f2e440c8f2ba1ba47319:
+> 
+>   lib/crypto/poly1305: Fix arm64's poly1305_blocks_arch() (2025-06-16 12:51:34 -0700)
+> 
+> ----------------------------------------------------------------
+> 
+> - Fix a regression in the arm64 Poly1305 code
 
-Here is the summary with links:
-  - [f2fs-dev,v3] f2fs: fix to zero post-eof page
-    https://git.kernel.org/jaegeuk/f2fs/c/ba8dac350faf
+Some more tests too, perhaps? :)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+This was a bit of a scary one, since poly1305 was returning an
+inconsistent result, not total garbage. Meaning most of the tests
+passed, but fortunately the migrate tests read data written by userspace
+with a different library.
 
-
+> - Fix a couple compiler warnings
+> 
+> ----------------------------------------------------------------
+> Eric Biggers (1):
+>       lib/crypto/poly1305: Fix arm64's poly1305_blocks_arch()
+> 
+> Kees Cook (1):
+>       lib/crypto: Annotate crypto strings with nonstring
+> 
+> Nathan Chancellor (1):
+>       lib/crypto/curve25519-hacl64: Disable KASAN with clang-17 and older
+> 
+>  arch/arm64/lib/crypto/poly1305-glue.c |  4 +--
+>  lib/crypto/Makefile                   |  4 +++
+>  lib/crypto/aescfb.c                   |  8 +++---
+>  lib/crypto/aesgcm.c                   | 46 +++++++++++++++++------------------
+>  4 files changed, 33 insertions(+), 29 deletions(-)
