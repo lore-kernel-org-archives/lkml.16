@@ -1,108 +1,102 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01FE78F36;
-	Wed, 18 Jun 2025 08:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3404A78F36;
+	Wed, 18 Jun 2025 08:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750233906; cv=none; b=vArfygyw3BDVHeRiuc3eKYRUQy4Amtlq2K/WaFBxPKiSpkvzZ+0JOwcyxAViEMEs2T0aP8wfuEshZWvvrWMYRZyXtmVBvQoFeeWFSbtF7KtYxkGx1wFsI89x5ogF8kaQpWrwfBgMjfZGv9Z3C+DXt7vsD6fTb8A+4thp3SrHX4U=
+	t=1750233910; cv=none; b=u9au9BKJ8PTV2ddcrGrxbct9g2ahqQzWX8FdF6O96aVwNkPwarDqFCgx5Yk/cRo/NQ+2h29msjTEa6Fm9VmwkJaSInaZO+CCea18UoV8ER49WS19RrJ5ZbMETNX9R0lP8n4rTN+vKlNQZqILv5wWrC1MYKlM+BhqmLWsLRY+3Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750233906; c=relaxed/simple;
-	bh=gXffrMPfgsMCgCQe73pN0NIFepYDPD11srf0ITm5lK4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uRP5ccFIXE+BNYkDkJbgTmIiIrRsxkVJfj6VPmlR5Qa10f/EooD7G8Lm25xYTVz8ABbqkLhXM3/lNWRWhny85+D7SX4mCgDRbIPkVvzIgT7R5HIm1PtXuF/V2J4oeX8WGGJiWVXsf/baK7AV5IKTStBqXcZ4lM1pnlP4l77nIco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bMblB4v1qzRkhZ;
-	Wed, 18 Jun 2025 16:00:38 +0800 (CST)
-Received: from kwepemp200004.china.huawei.com (unknown [7.202.195.99])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0895F18007F;
-	Wed, 18 Jun 2025 16:04:55 +0800 (CST)
-Received: from huawei.com (10.175.124.27) by kwepemp200004.china.huawei.com
- (7.202.195.99) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 16:04:54 +0800
-From: zhangjian <zhangjian496@huawei.com>
-To: <stfrench@microsoft.com>, <longli@microsoft.com>,
-	<wangzhaolong1@huawei.com>, <metze@samba.org>, <dhowells@redhat.com>,
-	<pc@manguebit.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-cifs@vger.kernel.org>
-Subject: [PATCH] smb: client: fix first command failure during re-negotiation
-Date: Thu, 19 Jun 2025 09:18:29 +0800
-Message-ID: <20250619011829.561614-1-zhangjian496@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	s=arc-20240116; t=1750233910; c=relaxed/simple;
+	bh=6/3qHFdiaMsBTrQbhD+mcQD74rIaA69OMemwtiFZ/+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Y9Oi8XVdGtEXhZS1bzk5I/qbB+9j5Cm2CMVIZaGy5jJVQvRFpZQb1uvx9yWOi9mxG6yTkZnfbUteGLytIeJ1heUSX46bJ2JbiozUcy3ha6Om/IEC6yAQkXnaB1282smpTHBCPQUFkFZ/VqpfUA5MJ6KbDeIhenR4tpiimm3BHYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gjrxtSt7; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gjrxtSt7"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I8509d258388;
+	Wed, 18 Jun 2025 03:05:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750233900;
+	bh=iAAvYxuuuYgZ6Udi3MqCZJcu5QStsstjQ/LkjzAIDBw=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=gjrxtSt7FvQkXkHpVC5Uo2xcKnofCv6Ehf8qWIJw5uEl06UjNterpP3Dm/Yu2K32D
+	 sQRwzyqu30rrMEdd8EJIyydxx+jNTtLYeLssmXvSUsbNRm/pYCtyaJi1mYuWRtguTz
+	 4AqqXhaC5mTbS9xBzQgTBHAMSnAurR3N6bv8RCqA=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I850so2735878
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 18 Jun 2025 03:05:00 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
+ Jun 2025 03:04:59 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 18 Jun 2025 03:04:59 -0500
+Received: from [172.24.20.171] (lt2k2yfk3.dhcp.ti.com [172.24.20.171])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I84sLG3131069;
+	Wed, 18 Jun 2025 03:04:55 -0500
+Message-ID: <fabe8565-cd27-4117-ba64-23022f1942ae@ti.com>
+Date: Wed, 18 Jun 2025 13:34:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
- kwepemp200004.china.huawei.com (7.202.195.99)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 03/17] dmaengine: ti: k3-udma: move static inline
+ helper functions to header file
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+CC: Peter Ujfalusi <peter.ujfalusi@gmail.com>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh
+ Shilimkar <ssantosh@kernel.org>, <dmaengine@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <praneeth@ti.com>,
+        <vigneshr@ti.com>, <u-kumar1@ti.com>, <a-chavda@ti.com>,
+        <p-mantena@ti.com>
+References: <20250612071521.3116831-1-s-adivi@ti.com>
+ <20250612071521.3116831-4-s-adivi@ti.com>
+ <acc1217d-50ce-4851-829d-38294b0a4d81@ti.com>
+Content-Language: en-US
+From: "Adivi, Sai Sree Kartheek" <s-adivi@ti.com>
+In-Reply-To: <acc1217d-50ce-4851-829d-38294b0a4d81@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-after fabc4ed200f9, server_unresponsive add a condition to check whether client
-need to reconnect depending on server->lstrp. When client failed to reconnect
-for some time and abort connection, server->lstrp is updated for the last time.
-In the following scene, server->lstrp is too old. This cause next command
-failure in re-negotiation rather than waiting for re-negotiation done.
+Hi Siddharth,
 
-1. mount -t cifs -o username=Everyone,echo_internal=10 //$server_ip/export /mnt
-2. ssh $server_ip "echo b > /proc/sysrq-trigger &"
-3. ls /mnt
-4. sleep 21s
-5. ssh $server_ip "service firewalld stop"
-6. ls # return EHOSTDOWN
+On 6/12/2025 4:35 PM, Siddharth Vadapalli wrote:
+> On Thu, Jun 12, 2025 at 12:45:07PM +0530, Sai Sree Kartheek Adivi wrote:
+>> Move static inline helper functions in k3-udma.c to k3-udma.h header
+>> file for better separation and re-use.
+>>
+>> Signed-off-by: Sai Sree Kartheek Adivi <s-adivi@ti.com>
+>> ---
+>>   drivers/dma/ti/k3-udma.c | 108 --------------------------------------
+>>   drivers/dma/ti/k3-udma.h | 109 +++++++++++++++++++++++++++++++++++++++
+> 
+> Since this patch and the previous two patches seem to have the same
+> objective of moving contents from "k3-udma.c" to "k3-udma.h" for the
+> purpose of re-use, could they be squashed?
 
-If the interval between 5 and 6 is too small, 6 may trigger sending negotiation
-request. Before backgrounding cifsd thread try to receive negotiation response
-from server in cifs_readv_from_socket, server_unresponsive may trigger
-cifs_reconnect which cause 6 to be failed:
+I split them up to make the changes easier to review, bisect or revert 
+if needed. They're logically distinct changes even if the overall goal 
+is similar.
 
-ls thread
-----------------
-  smb2_negotiate
-    server->tcpStatus = CifsInNegotiate
-    compound_send_recv
-      wait_for_compound_request
+If there's a strong preference to squash them, I can do that but I'd 
+prefer keeping them separate.
 
-cifsd thread
-----------------
-  cifs_readv_from_socket
-    server_unresponsive
-      server->tcpStatus == CifsInNegotiate && jiffies > server->lstrp + 20s
-        cifs_reconnect
-          cifs_abort_connection: mid_state = MID_RETRY_NEEDED
-
-ls thread
-----------------
-      cifs_sync_mid_result return EAGAIN
-  smb2_negotiate return EHOSTDOWN
-
-Though server->lstrp means last server response time, it is updated in
-cifs_abort_connection and cifs_get_tcp_session. We can also update server->lstrp
-before switching into CifsInNegotiate state to avoid failure in 6.
-
-Fixes: fabc4ed200f9 ("smb: client: fix hang in wait_for_response() for negproto")
-Signed-off-by: zhangjian <zhangjian496@huawei.com>
----
- fs/smb/client/connect.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/smb/client/connect.c b/fs/smb/client/connect.c
-index 28bc33496..f9aef60f1 100644
---- a/fs/smb/client/connect.c
-+++ b/fs/smb/client/connect.c
-@@ -4193,6 +4193,7 @@ cifs_negotiate_protocol(const unsigned int xid, struct cifs_ses *ses,
- 		return 0;
- 	}
- 
-+	server->lstrp = jiffies;
- 	server->tcpStatus = CifsInNegotiate;
- 	spin_unlock(&server->srv_lock);
- 
--- 
-2.33.0
+> 
+> Regards,
+> Siddharth.
 
