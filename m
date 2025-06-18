@@ -1,284 +1,178 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BA9719ABB6;
-	Wed, 18 Jun 2025 14:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7351922DE
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258121; cv=none; b=Rq3ylncePgEvOvFbT1ILDT7THA+rb3w4/+uzBXO3SWz2Dk0T7d68RvvgOOqX/i7fIAin+Q2ZOQ0AyCeswUvJUFHZD4K4qwTp0qyTyczF3m/DQsvRRyREtau69mIf6q1W4eeLozPl1trVNTagEaiU/4jn/7CV7ZKI5KKPuD76OGE=
+	t=1750258130; cv=none; b=qBiYWhXXY0H9K0ZXfeHibI6uoukrbn97BxN5NkDwpAhHhhGHWVD3iZxXWcc92Ah+gAoq9CK0L8STQCuYFAy+7FQZaf1ajp5QeLbg9Z4fXPDgp16x3hflSEqyhlLNvxdaG3Hig8ZTp3QctO4ga5ZzNbO7nkn0DZpaHoPx31J1zj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258121; c=relaxed/simple;
-	bh=Yno15dni2nxubrTcYPTAh7qojMkJ4hRIIIn+p4nqmM8=;
+	s=arc-20240116; t=1750258130; c=relaxed/simple;
+	bh=wg+SUdZ3bXxOZknnl2JP3G2rwY0vInxZh1GPisslBOo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C8JAfgafu60c2e3ZsvzVIi+MxhEwhWByCyL5XJ/j0y1xWtFafVOg38JB2pMEUJiv1t3DHZGyS8DF3y0KEiz/61lRWQnurGIheEqeyxYpZN5FyzV003tvUkZJloTUmfWZkIIBOx2EF+y2Ir0Sbp65Xb2+nYFgND9Z1ti2Ys+8B94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8tZY/bB; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=gJ/DOoU2C6Bd8IZcqTz3s2aks3Z+mBtm4qzMHPSthELxvI6l3uLA0P2an2V0YXloRN+TsE5We9X9XCiHGIIJaCjGQFUOS3lwUtL84YWfXfR0metufWJnFvJuVFzwQkeHV/hvpj9/SOCKgc2k6LrVJkLdViwtHF8W0R9azRlRRQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=XGTGHtjH; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8tZY/bB"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a3db0666f2so151861321cf.1;
-        Wed, 18 Jun 2025 07:48:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="XGTGHtjH"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d094ef02e5so88721785a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:48:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750258119; x=1750862919; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750258127; x=1750862927; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9E/uzw/2mWDqrPKrh3O+mIF43zjnsnolCipqhB98e+4=;
-        b=F8tZY/bBPbkNvjMRFWXx5wJXqVFb1Wq2CSw6Z+0Xt5DaX7dJPNTmO/ciPltXwR8bbH
-         pOv9b0EJrp16KfsSPXJobaCHtAT1gntRBnkbGVa8JTv29JSGV1ueOhVMD5HL1LcrqxHx
-         csl8i9FVFBGq9N4DZKsCgAh95gIlJFYHwfRvTASgUvDq7O8iXiTG9v3QZHmS212d28cF
-         EUqpqK2Ph2L6zXIQAI08RRbj8aJ0nCz2v8C3OpzOLmI/bFundShHgZp1T9SRpPi7CCOw
-         ZQr5LH69AvXzZ5/zykvdhP/yDQiC6EJpIYZdvUuo7zQaK9H/DI5KTD2JquGKbd1pRfhx
-         ug3w==
+        bh=R8VeINRsa1OxgNrKUKFRtGWzNViSlD55EzoK83kRcQg=;
+        b=XGTGHtjHlOI9OVCMLCw4R1bgKRKLw0I66vS5xr2+qsfoY4LWptNDG3q+xMOQIc/2wb
+         s/nk241AemLaromGkSrrDPu8v6VIvd+PS068wTQ1iDl46dNSdEnRhqmHkFOPKTAnYR0k
+         fRoviyRyoWCjOT/2Vn/WMXVOVeyGNVmLuWbksSVwE14rpURdkfp/Ijmu+MtVc9/RR/2w
+         nxkL3mdISgSXxO7+mfeXQRghb0sWV1owNs9Tkm5raUCrHDL2ejOQ0cI8P5yleIUYyfeE
+         VAAwORKTuKkcoElR5otv3rxb5lDOfrBF3OAYObOzQme4LBSRbNsIvGxa5giOGcHcx0+w
+         3QyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750258119; x=1750862919;
+        d=1e100.net; s=20230601; t=1750258127; x=1750862927;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9E/uzw/2mWDqrPKrh3O+mIF43zjnsnolCipqhB98e+4=;
-        b=lt5lBkKlIHR9kAKGDO+MnYxs8tByZYJXdKfswv8mAt+MKnNY7DNU+xk8oN7X11mVIz
-         nho50/yufkwhp6HQ/K9UWhW82sAP/47UWi9xDc0cAJPniPSHBKELJ38w/wS/xz+oNdJV
-         hQx6M5WmbEQ7QKOBsFMvGhQNskvyofM/eO9+SMGmQXB8F1bBX7+qdqtD8WJRejeW46v5
-         jxkmIA9erZZpIdiH4P5gUZ1flZoNgn6bzn/85hL4R+Nv/CI/w0Oan0BdaFCEYcIIGw2S
-         Uga6lgEjsGfwotRlXIA1OPx26zQbqWJJeYeT9E7ytVawgp3ySRuDpRk5wMo0UwoFpJHJ
-         wj/g==
-X-Forwarded-Encrypted: i=1; AJvYcCWZyEqPzmOaorua+vy7b1BK/p864+S+lHmLrgLeGz+9f7CnjKBS1Gsg0ceYN9GS9lRbPVJctY9/okSp@vger.kernel.org, AJvYcCXQhKRvs9lXjF5MqJgb0wyjNyojaGS9SLNXQQApZqBeh8Huk9lGdRF0zxuAvu10sPDhQTEgLGrdKVc8eQ9b@vger.kernel.org
-X-Gm-Message-State: AOJu0YxATmyHAGizZuhF0oiUsoWeL+KwOzL5z7gQTrg+yftUarCOUK+1
-	FyMnMB7cGAl3XC6XLMDm/fR1MzBMb90GY0+HlX8r5KT2g30xujKenSZCCfSwZJulIcDDcKzCa8h
-	eT2fNSvHB2t4ldih+8+cAKGtjhnycYEc=
-X-Gm-Gg: ASbGncu8Sf5OByunf1qz1W+CQHJRlflCb/PCiuCmKyEo+1UqF3VJwyP11M370EfRigL
-	voO7grqg036FHDgyDzwK4Q/qScO/0wUdFGvX0dHFyQzD/AoAI2J6UEMwFjK7/WWj5N2muHyY7MG
-	mC6GPM0zjlAPH4TSY/npiOXHrwF862WnELT1RfTlwC2fmY
-X-Google-Smtp-Source: AGHT+IEbIb82kGHtuh6ygsi/4BRy8ZstxcD/xdyUKnyNWJ/L/+rSBgep91TjG1bWb6qk0ezqJmvSXC+ZNxOtpoO/Vl0=
-X-Received: by 2002:ac8:7d0e:0:b0:4a6:c5ea:6fc with SMTP id
- d75a77b69052e-4a73c5b0a8bmr237877781cf.42.1750258118686; Wed, 18 Jun 2025
- 07:48:38 -0700 (PDT)
+        bh=R8VeINRsa1OxgNrKUKFRtGWzNViSlD55EzoK83kRcQg=;
+        b=jihQIHi5mPkXF+nCxbimCFEmmDxTa2TXWMuTJ/KTGqF5NCTcWKExeAZo/XoJ0NFfd9
+         sN3CKRr/9vv2h4VAcow3VAJUV8yUnFLL2xRXP5pA5m+LDDbEOS1tC8sAXwiXpvKSn26y
+         /jD/KgX/1uYqWf9Qi32A61U8FqXEcx9lO/RWFrW5BK0guhYzsRjJ2MJlzHpfDgkZgx0O
+         f05H1vpKDLqYuzqEmTNc4g1Fg6xQc9jKvgbkX/Td9bEXq3+BOaouDuZ4DhfUaqu4jY3w
+         QyVk6xs7ZUqVMVZ1EUe6kyFgN+U0LI2rkzwhwvlqN/a/jsK2MPnW5MoNPPcshH9mHR/c
+         2mSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXPVDGiNsrjbv1atmNWn6YHnD9y0lcr1zBKqIDhwH424OvaurlkBePLsVxkCANiU8sVqxRsrW5lwOXBw0g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKrwyHaApqLNCr695U4+UGDOBZU7MaqsnKVoeV2xIKEu5Rc9pK
+	xfJN5vQXD/6K5e8LxCWWLHhbBz3GuivkKEfM6V3mJ0KwdPIhmMdadar7LwtyPgamSIfVQn5f5BN
+	uqEAPTbNS4AfzD3gU1EHmBWnFWu1S0lchaQEGW6UK1g==
+X-Gm-Gg: ASbGncvCJ5sv3fT+cHezo/Ldy0llyyPbRbE2J4SYYnM6T/0jwE2pjthcSVDm/s+BNWB
+	X+OAbq4rJZNHF1vK3DgmWzDZ38YIvzQXAG0AwkXXmwKmhgC9ZsBx9hKuGqPQfwoNZYm16E3Ho/R
+	YNPH9nfHOOIxNYPj/zhhiOHU7hG5omJ/gmt8yuj1CV
+X-Google-Smtp-Source: AGHT+IFZ+d0LIRnvuQ/PF2vSUV7/GsXTYRq155Ys06jbKx7qhTIQJlphjp1gq8ybYgdEc5Lt1pO8pAEIGzK2HNg9BCU=
+X-Received: by 2002:a05:620a:600d:b0:7d3:e56e:4fd8 with SMTP id
+ af79cd13be357-7d3e93da631mr425634585a.12.1750258126838; Wed, 18 Jun 2025
+ 07:48:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250603-sige5-updates-v1-0-717e8ce4ab77@gmail.com>
- <80ACAAAE-F522-4199-9048-ADE69F6E1128@gmail.com> <CABjd4YyVJv0NmF9LsGWQ-O44MGjT5=FFeUjbg5rJ6XkNgjxb+g@mail.gmail.com>
- <3286422.5fSG56mABF@workhorse>
-In-Reply-To: <3286422.5fSG56mABF@workhorse>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 18 Jun 2025 18:48:27 +0400
-X-Gm-Features: AX0GCFtn17PCAtrv2cU3B3JX5Fm9l__TWgBDoQ7i4VVK1BJdOUr0X0UJ246hzQw
-Message-ID: <CABjd4Yy0rjET+TyA3pNGrzfKd1xKKG1AjWFFLsgb+mgDpu_TRg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] arm64: dts: rockchip: list all CPU supplies on ArmSoM Sige5
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
-	XiaoDong Huang <derrick.huang@rock-chips.com>
-Cc: Piotr Oniszczuk <piotr.oniszczuk@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Jonas Karlman <jonas@kwiboo.se>
+References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
+ <20250515182322.117840-6-pasha.tatashin@soleen.com> <mafs0sekfts2i.fsf@kernel.org>
+ <CA+CK2bA7eAB4PvF0RXtt2DJ+FQ4DVV3x1OZrVo4q3EvgowhvJg@mail.gmail.com>
+ <mafs0sek3n0x8.fsf@kernel.org> <20250617152357.GB1376515@ziepe.ca>
+ <CA+CK2bAtO7BA5iptRfA_oa=5sUz_t-0F3Lu8oae1STnijXrPPQ@mail.gmail.com> <mafs05xgtw5wn.fsf@kernel.org>
+In-Reply-To: <mafs05xgtw5wn.fsf@kernel.org>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Wed, 18 Jun 2025 10:48:09 -0400
+X-Gm-Features: AX0GCFtpLB0oTRuEsFuAVbaG8Bvqsh21i0UCcwFP_32oEzA5tqSbuwcLuOtmBNE
+Message-ID: <CA+CK2bDWAPSmTdnD7vw4G00nPsM8R_Zefs_G+9zvSqTJqPb9Lg@mail.gmail.com>
+Subject: Re: [RFC v2 05/16] luo: luo_core: integrate with KHO
+To: Pratyush Yadav <pratyush@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, jasonmiu@google.com, graf@amazon.com, 
+	changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, 
+	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
+	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
+	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
+	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
+	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
+	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
+	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
+	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
+	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
+	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
+	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
+	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
+	stuart.w.hayes@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 6:06=E2=80=AFPM Nicolas Frattaroli
-<nicolas.frattaroli@collabora.com> wrote:
+On Wed, Jun 18, 2025 at 9:12=E2=80=AFAM Pratyush Yadav <pratyush@kernel.org=
+> wrote:
 >
-> Hello,
+> On Tue, Jun 17 2025, Pasha Tatashin wrote:
 >
-> +Cc Jonas Karlman as he is intimately familiar with RK3576 clock shenanig=
-ans by now,
->
-> On Wednesday, 18 June 2025 15:51:45 Central European Summer Time Alexey C=
-harkov wrote:
-> > On Sun, Jun 15, 2025 at 8:00=E2=80=AFPM Piotr Oniszczuk
-> > <piotr.oniszczuk@gmail.com> wrote:
-> > >
-> > >
-> > >
-> > > > Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.co=
-m> w dniu 9 cze 2025, o godz. 16:05:
-> > > >
-> > > > On Sun, Jun 8, 2025 at 11:24=E2=80=AFAM Piotr Oniszczuk
-> > > > <piotr.oniszczuk@gmail.com> wrote:
-> > > >>> Wiadomo=C5=9B=C4=87 napisana przez Alexey Charkov <alchark@gmail.=
-com> w dniu 5 cze 2025, o godz. 15:42:
-> > > >>>> Alexey,
-> > > >>>> I see you are using rk3576 board like me (nanopi-m5)
-> > > >>>> Have you on your board correctly working cpu dvfs?
-> > > >>>> I mean: [1][desired clocks reported by kernel sysfs are in pair =
-with [2[]cur clocks?
-> > > >>>> In my case i see mine cpu lives totally on it=E2=80=99s own with=
- dvfs:
-> > > >>>
-> > > >>> Hi Piotr,
-> > > >>>
-> > > >>> I haven't tried to validate actual running frequencies vs. reques=
-ted
-> > > >>> frequencies, but subjective performance and power consumption see=
-m to
-> > > >>> be in line with what I expect.
-> > > >>
-> > > >> well - my subjective l&f is that  - currently - my rk3576 seems =
-=E2=80=9Eslower" than i.e. 4xA53 h618.
-> > > >
-> > > > In my experience, native compilation of GCC 14 using 8 threads on
-> > > > RK3576 (mainline with passive cooling and throttling enabled): 2 ho=
-urs
-> > > > 6 minutes, on RK3588 (mainline with passive cooling via Radxa Rock =
-5B
-> > > > case and throttling enabled but never kicking in): 1 hour 10 minute=
-s
-> > >
-> > > by curiosity i looked randomly on 3576 vs 3588:
-> > > multithread passmark: 3675 (https://www.cpubenchmark.net/cpu.php?cpu=
-=3DRockchip+RK3576&id=3D6213)
-> > > multithread passmark: 4530 (https://www.cpubenchmark.net/cpu.php?cpu=
-=3DRockchip+RK3588&id=3D4906)
-> > >
-> > > assuming 3588 as baseline, 3576 is approx 20% slower on multithread p=
-assmark (has ~0,8 comp power of 3588)
-> > > 70 min compile on 3588 should take something like ~86min on 3576.
-> > > In your case 126min compile on 3576 shows 3576 offers 0,55 comp power=
- of 3588.
-> > > Roughly 3576 should do this task in 40min less than you currently see=
- i think
-> > >
-> > >
-> > > > Can't see how u-boot would affect CPU speed in Linux, as long as yo=
-u
-> > > > use comparable ATF images. Do you use the same kernel and dtb in al=
-l
-> > > > these cases? Also, what's your thermal setup?
-> > >
-> > > yes. in all cases only change was: uboot & atf
-> > > thermal is based on recent collabora series (+ recent pooling fix for=
- clocks return from throttling)
-> > >
-> > > >
-> > > >
-> > > > Not sure UX is a particularly good measure of CPU performance, as l=
-ong
-> > > > as you've got a properly accelerated DRM graphics pipeline. More
-> > > > likely 2D/3D and memory.
-> > >
-> > > indeed.
-> > > For quantified look i=E2=80=99m looking on v.simple approach to estim=
-ate real clock is http://uob-hpc.github.io/2017/11/22/arm-clock-freq.html
-> > > by curiosity i looked what it reports on a53/a55/a72/a76 and it is su=
-rprisingly accurate :-)
-> > > on mine 3576 with collabora uboot+mainline atf is hows 800MHz (and in=
- perf. gov it seems to be constant)
-> > >
-> > > >
-> > > > There might be some difference in how PVTPLL behaves on RK3576 vs.
-> > > > RK3588. But frankly first I would check if you are using comparable
-> > > > ATF implementations (e.g. upstream TF-A in both cases), kernels and
-> > > > thermal environment :)
-> > >
-> > > all tests: the same 6.15.2 mainline + some collabora patches
-> > >
-> > > diffs were:
-> > > 1.collabora uboot[1] + mainline atf 2.13
-> > > 2.collabora uboot[1] + rockchip rkbin bl31 blob
-> > > 3.vendor uboot (bin dump from friendlyelec ubuntu image)
-> > >
-> > > on 1/2 i see kind of issue with clock values (i.e. perf gov gives con=
-stant 800MHz on mainline atf).
-> > > 3 seems to perform better - (i.e. perf gov gives constant 1500MHz so =
-all is snappier/faster)
+> > On Tue, Jun 17, 2025 at 11:24=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca>=
+ wrote:
+> >>
+> >> On Fri, Jun 13, 2025 at 04:58:27PM +0200, Pratyush Yadav wrote:
+> >> > On Sat, Jun 07 2025, Pasha Tatashin wrote:
+> >> > [...]
+> >> > >>
+> >> > >> This weirdness happens because luo_prepare() and luo_cancel() con=
+trol
+> >> > >> the KHO state machine, but then also get controlled by it via the
+> >> > >> notifier callbacks. So the relationship between then is not clear=
+.
+> >> > >> __luo_prepare() at least needs access to struct kho_serialization=
+, so it
+> >> > >> needs to come from the callback. So I don't have a clear way to c=
+lean
+> >> > >> this all up off the top of my head.
+> >> > >
+> >> > > On production machine, without KHO_DEBUGFS, only LUO can control K=
+HO
+> >> > > state, but if debugfs is enabled, KHO can be finalized manually, a=
+nd
+> >> > > in this case LUO transitions to prepared state. In both cases, the
+> >> > > path is identical. The KHO debugfs path is only for
+> >> > > developers/debugging purposes.
+> >> >
+> >> > What I meant is that even without KHO_DEBUGFS, LUO drives KHO, but t=
+hen
+> >> > KHO calls into LUO from the notifier, which makes the control flow
+> >> > somewhat convoluted. If LUO is supposed to be the only thing that
+> >> > interacts directly with KHO, maybe we should get rid of the notifier=
+ and
+> >> > only let LUO drive things.
+> >>
+> >> Yes, we should. I think we should consider the KHO notifiers and self
+> >> orchestration as obsoleted by LUO. That's why it was in debugfs
+> >> because we were not ready to commit to it.
 > >
-> > There is indeed something weird going on. I've tried running sbc-bench
-> > [1], and even though I observe dynamically varying CPU frequencies
-> > after boot with schedutil governor, once sbc-bench switches the
-> > governor to "performance" and goes through the OPPs in descending
-> > frequency order, the CPUs seem to get stuck at the last applied low
-> > frequency. Even after max frequency gets reverted from 408 MHz to
-> > something higher, even after I switch the governor to something else -
-> > no matter what. Only a reboot gets the higher frequencies 'unstuck'
-> > for me.
-> >
-> > These are all observed at around 55C SoC temperature, so throttling is
-> > not an issue. Regulators are stuck at 950000 uV - way above 700000 uV
-> > that the 408 MHz OPP requires (and power readings seem to match: I'm
-> > getting about 2.3W consumption at 408 MHz in idle vs. normal idle
-> > reading of 1.4W at around 1 GHz).
-> >
-> > Not sure what's going on here, and I don't remember seeing anything
-> > similar on RK3588. Thoughts welcome.
+> > We could do that, however, there is one example KHO user
+> > `reserve_mem`, that is also not liveupdate related. So, it should
+> > either be removed or modified to be handled by LUO.
 >
-> This may once again be a "accidentally uses wrong clock IDs" type
-> situation. The other possibility is that we're getting confused
-> between what we think the clock rate is and what SCMI actually set
-> the clock rate to.
->
-> Things to check is whether the right clock controller (scmi vs cru)
-> and the right clock id (check ATF source for this) is used.
+> It still depends on kho_finalize() being called, so it still needs
+> something to trigger its serialization. It is not automatic. And with
+> your proposed patch to make debugfs interface optional, it can't even be
+> used with the config disabled.
 
-Clock IDs in the kernel seem to match those in ATF, but I've noticed
-what appears to be a buffer overflow in some of the SCMI clock names
-defined in the opensource TF-A (thanks GCC 15 and its zealous
-warnings):
+At least for now, it can still be used via LUO going into prepare
+state, since LUO changes KHO into finalized state and reserve_mem is
+registered to be called back from KHO.
 
-alchark@alchark-surface ~/trusted-firmware-a $ make
-CC=3Daarch64-unknown-linux-gnu-gcc PLAT=3Drk3576 -j12
-Building rk3576
-  CC      plat/rockchip/rk3576/scmi/rk3576_clk.c
-plat/rockchip/rk3576/scmi/rk3576_clk.c:1102:154: error:
-initializer-string for array of =E2=80=98char=E2=80=99 truncates NUL termin=
-ator but
-destination lacks =E2=80=98nonstring=E2=80=99 attribute (17 chars into 16 a=
-vailable)
-[-Werror=3Dunterminated-string-initialization]
- 1102 | stimer0_root, p_100m_24m, clk_stimer0_root_info,
-&clk_scmi_ops_com_critical, rk3576_common_rates, false, true);
-      |
-                                              ^
-plat/rockchip/rk3576/scmi/rk3576_clk.c:246:18: note: in definition of
-macro =E2=80=98RK3576_SCMI_CLOCK_COM=E2=80=99
-  246 |         .name =3D #_name,
-         \
-      |                  ^~~~~
-plat/rockchip/rk3576/scmi/rk3576_clk.c:1103:154: error:
-initializer-string for array of =E2=80=98char=E2=80=99 truncates NUL termin=
-ator but
-destination lacks =E2=80=98nonstring=E2=80=99 attribute (17 chars into 16 a=
-vailable)
-[-Werror=3Dunterminated-string-initialization]
- 1103 | stimer1_root, p_100m_24m, clk_stimer1_root_info,
-&clk_scmi_ops_com_critical, rk3576_common_rates, false, true);
-      |
-                                              ^
-plat/rockchip/rk3576/scmi/rk3576_clk.c:246:18: note: in definition of
-macro =E2=80=98RK3576_SCMI_CLOCK_COM=E2=80=99
-  246 |         .name =3D #_name,
-         \
-      |                  ^~~~~
-plat/rockchip/rk3576/scmi/rk3576_clk.c:1107:155: error:
-initializer-string for array of =E2=80=98char=E2=80=99 truncates NUL termin=
-ator but
-destination lacks =E2=80=98nonstring=E2=80=99 attribute (17 chars into 16 a=
-vailable)
-[-Werror=3Dunterminated-string-initialization]
- 1107 | ka_crypto_s, p_350m_175m_116m_24m, clk_pka_crypto_s_info,
-&clk_scmi_ops_com, rk3576_common_rates, false, true);
-      |
-                                              ^
-plat/rockchip/rk3576/scmi/rk3576_clk.c:246:18: note: in definition of
-macro =E2=80=98RK3576_SCMI_CLOCK_COM=E2=80=99
-  246 |         .name =3D #_name,
-         \
-      |                  ^~~~~
-cc1: all warnings being treated as errors
-make: *** [Makefile:1644:
-/home/alchark/trusted-firmware-a/build/rk3576/release/bl31/rk3576_clk.o]
-Error 1
+> So if it must be explicitly triggered to be preserved, why not let the
+> trigger point be LUO instead of KHO? You can make reservemem a LUO
+> subsystem instead.
 
-And indeed, clock names such as "clk_stimer0_root" don't leave enough
-space in .name for the null terminator (given that .name is defined as
-char name[SCMI_CLOCK_NAME_LENGTH_MAX]; a.k.a. 16).
+Yes, LUO can do that, the only concern I raised is that  `reserve_mem`
+is not really live update related.
 
-Not sure if the binary BL31 has a similar issue and if it can lead to
-the observed weirdness in CPU frequency switching. Looping in XiaoDong
-Huang who last touched those lines in the opensource TF-A - any
-insights would be much appreciated!
+> Although to be honest, things like reservemem (or IMA perhaps?) don't
+> really fit well with the explicit trigger mechanism. They can be carried
 
-Thanks a lot,
-Alexey
+Agreed. Another example I was thinking about is "kexec telemetry":
+precise time information about kexec, including shutdown, purgatory,
+boot. We are planning to propose kexec telemetry, and it could be LUO
+subsystem. On the other hand, it could be useful even without live
+update, just to measure precise kexec reboot time.
+
+> across kexec without needing userspace explicitly driving it. Maybe we
+> allow LUO subsystems to mark themselves as auto-preservable and LUO will
+> preserve them regardless of state being prepared? Something to think
+> about later down the line I suppose.
+
+We can start with adding `reserve_mem` as regular subsystem, and make
+this auto-preserve option a future expansion, when if needed.
+Presumably, `luoctl prepare` would work for whoever plans to use just
+`reserve_mem`.
