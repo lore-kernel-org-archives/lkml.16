@@ -1,108 +1,133 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630B125B687;
-	Wed, 18 Jun 2025 08:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C26191F66;
+	Wed, 18 Jun 2025 08:36:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235741; cv=none; b=SND1mCJD5fVH4WPOMEDYRW4CjCsDmNzcTf5uqetuh1nXrrqGZ3XfLn7YaXG/RM84Tbhhju7SyYVcPGzMhWM+2+wQGZhmLIGIDJXoIb2J9JY9Yant9iQyIHGlGcUKcEC/GQLAXYzQfNwcn13a5ilbxVC1vAMd/BipOr4TLnn3c8c=
+	t=1750235765; cv=none; b=P+dVCr+5P4e+aE5ZxH0rQJ6nqcziXJP257O+xSB3sy8pCoJbnaIqO6NURjpr1e8H8epxkjl6nIo9VvQ31fvojulWEMGm47KBSDiGqmF9wLmrVwU8WKwtONHp1L8v4vwiS7SzJauQeN5GX3ie5BkhjomsEoK0o+9plRlqSxnzAlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235741; c=relaxed/simple;
-	bh=gBtljSikQ7M8mWqxVvgYGqpBr7xVjnTyFw4I/3lyR2E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Try3J7uHOB8rCF+4dMJlvloawZymHede7Lur3gfCFpQk8cz74EfOodEXpHnu5yq7eY1QIOepGpixQr/t3VYASzYnE0UeJu5Ih67o1fif3sjuRUaVNBkIg8kRczEcORhJNZwbMhxFLJ1/UOX5uf1nULkkQz27X1T51lyAxmUCpro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=af/mm8ES; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1750235765; c=relaxed/simple;
+	bh=d+shUg6FUAacuvyB+a/E5gAXYy54EFgD47YG339obCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mos09EuM9Se0YfEbDLqdt4o4bvM7siRoFQ5UbLoZz6sJM5xlauwJ8nuC2556ymI96dYcVbILRlRx9iGZAoC3AOaqmdZkZi5EyM7lMBE83jgRAtZrIzlf12z3E7DgimKB/zehTYcu5KgDLdbNfBOXi+GXeCc92xX7EFhJiHN0h0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DAACJ5VG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="af/mm8ES"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a361b8a664so6466591f8f.3;
-        Wed, 18 Jun 2025 01:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1750235735; x=1750840535; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=or8eckggWeI1vetStkkRDE0alDRrBXjfy41PRbvLl+k=;
-        b=af/mm8ESJIWrBbiUheBSKxwLSc1znS8NtavvDoxHitTQPhwHuIoeC2qZpnu4HOMDIe
-         GuJKR8NhAOnyNUDKoel3X7Y72JZPN9oOiRv/UOCXd+qq1tJIpsEtlXQ/ukzOcoysoDVR
-         07Y/Is5nGNDJp3JR1tC7Q9mswJ0/gnhPINvzIRs6oOyjndOe4PB2VubBKbLFVIVpcgYz
-         Uu5Vf/il4yKZWoOlWBGEZ8wuqFDG3McIhscX9LGLRCeQZiYMgox6nH4wyDfOw5HPGf5e
-         cM/52F/xCHacHOhW/WK7OU7fSoZgCRlQtUtA2YPFU0S8kkw7yB2qvsrjPsCx8Z60MD7f
-         ExXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750235735; x=1750840535;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=or8eckggWeI1vetStkkRDE0alDRrBXjfy41PRbvLl+k=;
-        b=uq+iGmRXKeJVGnLMrWbRViD+oxGm5V+1My9R0YwhQqPpi4TxBLPbrLLPjUZA2crs8N
-         BBMmGKekx858Dn3y3cTUrJ/CPQAqxBaxN4bqWvt5UJbaodbezXI37fhPACCQpg7TSjPO
-         R4nFVyYeJ28fyWtWKSZpOuQHRuWWY7KOAw8xC3un0E+r91824uS1wQZeFlz4egcWA3wv
-         5tvB/scg48x9l4YbiK9Lb+kOIitDeV/Xdofp2kXzjW87FXW8VJyW1yq33E8RMX3+J1rP
-         Tn2IQXRPdQee3KNzRBAEiwI8/bWNaQ5eXbXCv/jgSh0WXsmACzT3ZnlAk2tiGX8WzGuP
-         OGpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzjVbv4MJ7tl6dV2SirvgadWoC3gfYuUi3doKaUJ13yI+FqL8RJ5COadW2ZDMnA7isnenkgAR8cqaMylM=@vger.kernel.org, AJvYcCW84JoO4Ey3HhhYJxsff0X0TsIy4uZdmn3Kpgu/1+ZuDX0hUxorBLsWk1lJrIXHPwCZUEU4GMfc@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuEuzXrgcRM8Yv/R2+rY98R9arv3sOz6iocXtW7LoWurAwp53t
-	N2B8Mp+X3n60wLAcDYRNdA6s5dDFsmdyXykbJf+I0lZGs8lqgGMqseM=
-X-Gm-Gg: ASbGncvKMEmm2wUjOQCBK2ubqP61bUho2suToQDV0QnH5Mf9sgQw4mxb2PVbU+yQ4IT
-	sDvmF4hgRSbgAZchXlM3QDIFPWUj/0QX8+bZI1QZhR2cby7MDHN0hfAZXto7Tkf6InX2Oyoj8Q/
-	mprHxIil+3aArXAmcdx1jqsD3lYDxuu1ae/PQrF1DM9eruH6HGeLqA1ZRFRQgthjhgpLQrGMM3r
-	wo6EtW5AnOfMgH9emqvx1SbPq8XNjRSbb8zzwe7tDzvEM89BEEw+vT06r4Jvg207HmjVMXNG0fj
-	7gwvrnmkcDJgPwogDrpibr2Jce6eoRNbXTsU7zESMEJRIXfYtuHz3iai3zXOqkDL0VRF475WuKP
-	+Wv1QjS8akqFGDwv8GNFqdipDWKWJu0U7MjpJMA==
-X-Google-Smtp-Source: AGHT+IHK+9Vtgwvu3Uu9LRAqoRtjCRZP9zVBNDYDx6sb7yzZDk/wruWjNv3EFZExUxnqitSzI6gH2Q==
-X-Received: by 2002:a05:6000:1ac8:b0:3a5:2ef8:34f9 with SMTP id ffacd0b85a97d-3a572e7971cmr13987677f8f.27.1750235735431;
-        Wed, 18 Jun 2025 01:35:35 -0700 (PDT)
-Received: from [192.168.1.3] (p5b057357.dip0.t-ipconnect.de. [91.5.115.87])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2324c6sm196576805e9.12.2025.06.18.01.35.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 01:35:34 -0700 (PDT)
-Message-ID: <b54abb55-ac5a-422f-b819-8b893f2974d7@googlemail.com>
-Date: Wed, 18 Jun 2025 10:35:33 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DAACJ5VG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DB5BC4CEE7;
+	Wed, 18 Jun 2025 08:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750235764;
+	bh=d+shUg6FUAacuvyB+a/E5gAXYy54EFgD47YG339obCU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DAACJ5VGbewT2iH4WiWM4CRpfDLwZ//JkoBE2fWzj9QNwPi4H0FoxlbaXLXMxhJLb
+	 0SGsCz05+82z4FmUhdHw2lhX8HPOaQqTkm0IHKQbz7IVf0/quFlfCdtHex0S+iG7XR
+	 yVDrxC3RsKmU1+AwqWgGRZGxfV1ja1vKRzChyHtCWYgdVIVxon4yPxf0+eSEuhMXqs
+	 KV4aK3gWWVSW9MZEazq4MzOUTwLxdCebp4qxw982dLi9aA8zYjbw/JH5ppN/qnC0H1
+	 VaGZBjHgEaHYaWR6jTrUDbb8uVocrWfukYLOOxZwMW1YR2aXDfGklRp0M+j0HcrPe4
+	 b+qO3zIIMy3hA==
+Date: Wed, 18 Jun 2025 09:35:56 +0100
+From: Simon Horman <horms@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Daniel Golle <daniel@makrotopia.org>, arinc.unal@arinc9.com
+Subject: Re: [net-next v4 3/3] net: ethernet: mtk_eth_soc: change code to
+ skip first IRQ completely
+Message-ID: <20250618083556.GE2545@horms.kernel.org>
+References: <20250616080738.117993-1-linux@fw-web.de>
+ <20250616080738.117993-4-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250617152451.485330293@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250616080738.117993-4-linux@fw-web.de>
 
-Am 17.06.2025 um 17:15 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.15.3 release.
-> There are 780 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Jun 16, 2025 at 10:07:36AM +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> On SoCs without MTK_SHARED_INT capability (mt7621 + mt7628) the first
+> IRQ (eth->irq[0]) was read but never used. Do not read it and reduce
+> the IRQ-count to 2 because of skipped index 0.
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Describing the first IRQ as read seems a bit confusing to me - do we read
+it? And saying get or got seems hard to parse. So perhaps something like
+this would be clearer?
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+... platform_get_irq() is called for the first IRQ (eth->irq[0]) but
+it is never used.
 
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+> v4:
+> - drop >2 condition as max is already 2 and drop the else continue
+> - update comment to explain which IRQs are taken in legacy way
+> ---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 20 ++++++++++++++++----
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.h |  4 ++--
+>  2 files changed, 18 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 3ecb399dcf81..f3fcbb00822c 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -3341,16 +3341,28 @@ static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *eth)
+>  {
+>  	int i;
+>  
+> +	/* future SoCs beginning with MT7988 should use named IRQs in dts */
 
-Beste Grüße,
-Peter Schneider
+Perhaps this comment belongs in the patch that adds support for named IRQs.
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+>  	eth->irq[MTK_ETH_IRQ_TX] = platform_get_irq_byname(pdev, "tx");
+>  	eth->irq[MTK_ETH_IRQ_RX] = platform_get_irq_byname(pdev, "rx");
+>  	if (eth->irq[MTK_ETH_IRQ_TX] >= 0 && eth->irq[MTK_ETH_IRQ_RX] >= 0)
+>  		return 0;
+>  
+> +	/* legacy way:
+> +	 * On MTK_SHARED_INT SoCs (MT7621 + MT7628) the first IRQ is taken from
+> +	 * devicetree and used for rx+tx.
+> +	 * On SoCs with non-shared IRQ the first was not used, second entry is
+> +	 * TX and third is RX.
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+Maybe I am slow. But I had a bit of trouble parsing this.
+Perhaps this is clearer?
+
+        * devicetree and used for both RX and TX - it is shared.
+	* On SoCs with non-shared IRQs the first entry is not used,
+        * the second is for TX, and the third is for RX.
+
+> +	 */
+> +
+>  	for (i = 0; i < MTK_ETH_IRQ_MAX; i++) {
+> -		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT) && i > 0)
+> -			eth->irq[i] = eth->irq[MTK_ETH_IRQ_SHARED];
+> -		else
+> -			eth->irq[i] = platform_get_irq(pdev, i);
+> +		if (MTK_HAS_CAPS(eth->soc->caps, MTK_SHARED_INT)) {
+> +			if (i == 0)
+> +				eth->irq[MTK_ETH_IRQ_SHARED] = platform_get_irq(pdev, i);
+> +			else
+> +				eth->irq[i] = eth->irq[MTK_ETH_IRQ_SHARED];
+> +		} else {
+> +			eth->irq[i] = platform_get_irq(pdev, i + 1);
+> +		}
+>  
+>  		if (eth->irq[i] < 0) {
+>  			dev_err(&pdev->dev, "no IRQ%d resource found\n", i);
+
+...
