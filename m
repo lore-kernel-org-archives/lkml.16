@@ -1,95 +1,122 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426D038F80
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3444238F80;
+	Wed, 18 Jun 2025 13:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251812; cv=none; b=TWdIILAdt1S/ng+h2aX01CJQNAogMtXq44r1AiTXXVZwoirmez2W4Fw/KI3tH4WYuDaFqw+2Sm4kO6+zNATmXWIL74QZBaefNScZwlThsSFFXMoMk8J0Kh/Vr/jVD8IS/9aZIJMAe2vFi4vr+fZzQSPfjwqC8LVzHCTiQMLRL6Y=
+	t=1750251890; cv=none; b=KlgbeGSc62AE0IXjvm6+CgGqicwjqIng0Il2wRqP4sp/iujTL5M3fiWavBDWquA46Ryiq04NB3haOPm9Hmbtx3TPcWwCn77xTKif5UyGeru2NmiaYioIFvcfBjxhmS3o3ogUH63XWJOMMg4bQYcsYss9OouwcW3geJ+wP/HGPY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750251812; c=relaxed/simple;
-	bh=tFx+nAgZ8AJsRRvfdecebhXbuJcNn8oWUIIvk2cM8dg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LL8FhN9QYZPmGvuL7QkXuPXRn2AJgvH9x92a3fd8IOsAaKB8II2JCJhXIP6PpjJbhuXWESBOGjgaZ7OE0+sFGIOBg6AGCNOn3T26I68rVptjm+8EcopR+o1U/Rdf0xAiozv8WJGDXbMlNyVLw3Y8LltH43kKJSPflUhKmLHn9s0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bs6kCDY9; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750251890; c=relaxed/simple;
+	bh=/tCzdXt+ockM6LlaMEgh7Zi7SPYptgyb1ZQQMfoYVN4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GYGPOFCKTCBZ7+2jFthNzhkoiyj/lKbKZVfBLZ/yM/tq69wHpF5uay3z4V7OQXXLuCkjP+NAIwZ0ollrfVCEzfSP+X1I5DRcrYmzsVskzUOuylYYhWdEilyW7+sXDtncvUEYG4H7gCyRrHWC5ow/BfP2kyPL65wiZjjlNTgl88E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Md8qN3R1; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bs6kCDY9"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-551efd86048so6883378e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:03:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750251809; x=1750856609; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tFx+nAgZ8AJsRRvfdecebhXbuJcNn8oWUIIvk2cM8dg=;
-        b=bs6kCDY9848ignP8gnIhm+8gIZj1nf5aqm1g+Eo617UJtS0fNe2gCMk/THkMBe1Tir
-         tf+EmuhzlXH9LbmMvYACHpgTFo4DQnp27ppVbycz4DSfZlHawAlaZs/62fjAUSAk5lvb
-         S6MvjxjiVzwYoqUcwjcqx4S4Ra2m8BIGYFUxxuqf24zX6J71KlUB3j0EzOCfSmjWIlMG
-         cbDWK9+dA14Fh3FG0dmkUAIv2v3Ifjg1oC0F3hO4EwSL/ljKIpZBRMBQ6Oor4OZzAJEk
-         J8Bzjnp6Pc7KxLZs65aIt+sWEvSRneXLxQYuS0Fh+MlrH+lXuE2sJYD7ugTcS5zcqcPp
-         PYJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750251809; x=1750856609;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tFx+nAgZ8AJsRRvfdecebhXbuJcNn8oWUIIvk2cM8dg=;
-        b=R5GR7erdiNA0tt/s23qGDRJklO/0OxDPRjz/xW24a7SIhcXZxgfeanImOPiCfCEwmr
-         XQ5r27dcVUhQcB+BkcRly2EFqQKpZLaJ0I8oAXrhbaX4MYERm5dmO1sxu1ShAKfxmOAA
-         rSTmqCWSexTpg/6ofzZ3X1ndTHHC0oCcMAwCZvup2RJdg1CSQuZs7wX4ciOA9PkdLCbI
-         L0LDQn1IXYOZItIJEgNn0igpSKh+ob/hH+12Kivh5ZYjQrzxbfmomdGOJRoxI9kWcj2S
-         D6bbh2oGgiEUm/OnCDc2X4DmvdnXAC7Z4AQHIGHV9R6o4pG/qaG9G2m49N5jUDtUY52Q
-         dV7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUSw6sVFsP+Bo3G6hYZ7VnegQoIUdNgak7hm+6r6O6MLx/yPRzKKUgRoKAoowPWJS5yOL+IdC5NrzeKfNw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOkv6ZscpYxk3aJuHe276WzOtJqDa4wzd7fHbBupyERBUIVlWO
-	yqA8/fuf/Cma3WO9uLoL142S7aRS/YZRrt06Oi3akLBs2+Webv15FEnmGxyHx1UrlJS3bIiEHNq
-	9co/wpcik5V2+R7KydklhlF70i7HckBjYYFdG1yvzoQ==
-X-Gm-Gg: ASbGncuoeS2sdJtpFmAJjDWfa0xIw7gsk3TlCgagWRUNPgnjnCBhf5gQbBBME4EBXyR
-	WSn3oaaDTF/OaGPQzo57nj6zgbVIr3TKRkApIu0Ax7bBHiXYcZpzm69+p6EQJ96BKQb8ou2PqwE
-	emhw1u9iIINtUMheBD6hnCznThDEqh8oPav4tZIy1UHkBb4vWNDFK1+/fTQJxRwHYQ/Go3iC1I9
-	PXOiBfV10Jp
-X-Google-Smtp-Source: AGHT+IEq73Sz7VEMckQ6LcsKf9Ah9LwsuMzT2V+DGZ7xnubvjoAkc8Z7a8qWgDSaz5X2ovUTBOfo+akf/lut/OxE/YQ=
-X-Received: by 2002:a05:6512:3e14:b0:553:d444:d4c4 with SMTP id
- 2adb3069b0e04-553d444d84cmr738304e87.50.1750251808808; Wed, 18 Jun 2025
- 06:03:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Md8qN3R1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750251889; x=1781787889;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=/tCzdXt+ockM6LlaMEgh7Zi7SPYptgyb1ZQQMfoYVN4=;
+  b=Md8qN3R1Nsf6Ubr9WHEmKHZNZw8QgpE5uVRxWzrHQv0V62/sGJ7m4QZ1
+   2NyHvMFQCMwhdfl3Al2uGSYo0iFTuU5Z1Jy/oKCVR7GC0GvZYKrsPDSDY
+   drxG4semjO626yFPbzH5hP4gKgEmQ63TaKKs6agz8L60v2o/I+3AGFmyh
+   Ztas5lsufYOlJR1YkE+KpGe/h+cZ9+rZdtOiujoXHkxk99TrjHDxi/wgM
+   gjUiKaceWiszSz4cJLEjggfjqBuoTm2M9QPwF00w2/G3AmsPo07I6YzI1
+   bFruV9oaHWRSSStWDZc5FSRqclNEWh+IhY/BO2C3sLywMZWWLgNjXNz8V
+   Q==;
+X-CSE-ConnectionGUID: YPPuRKxAQRqccgtOYjsTUA==
+X-CSE-MsgGUID: /PvKVT3DR6S6bYCkxfnDkQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52554864"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="52554864"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 06:04:48 -0700
+X-CSE-ConnectionGUID: kxWTrLjFSFierB10b+exMQ==
+X-CSE-MsgGUID: DRv0dJ4vTUipwe25GWQOqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="173094405"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 18 Jun 2025 06:04:44 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRsT4-000Jna-28;
+	Wed, 18 Jun 2025 13:04:42 +0000
+Date: Wed, 18 Jun 2025 21:04:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Richard Leitner <richard.leitner@linux.dev>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Richard Leitner <richard.leitner@linux.dev>
+Subject: Re: [PATCH v5 09/10] media: i2c: ov9282: implement try_ctrl for
+ strobe_duration
+Message-ID: <202506182043.reVJKofN-lkp@intel.com>
+References: <20250617-ov9282-flash-strobe-v5-9-9762da74d065@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617-gpiochip-set-rv-gpio-v1-0-903703881fa2@linaro.org> <20250617-gpiochip-set-rv-gpio-v1-9-903703881fa2@linaro.org>
-In-Reply-To: <20250617-gpiochip-set-rv-gpio-v1-9-903703881fa2@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 15:03:17 +0200
-X-Gm-Features: AX0GCFt5YjdlIT0r2MYTgVPiMMrWQk90C3yKPcU3IZdAiNWl5mP9-Yr7Xyq2AcM
-Message-ID: <CAMRc=Mf-SnaY8-Azv5p3nT9z5YK0-Rtr4Gs90c6B+3+eoJnTJA@mail.gmail.com>
-Subject: Re: [PATCH 09/12] gpio: reg: use new GPIO line value setter callbacks
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	Robert Jarzmik <robert.jarzmik@free.fr>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250617-ov9282-flash-strobe-v5-9-9762da74d065@linux.dev>
 
-On Tue, Jun 17, 2025 at 2:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+Hi Richard,
 
-I missed one instance where the set() callback is called directly via
-the function pointer. Will fix in v2.
+kernel test robot noticed the following build errors:
 
-Bart
+[auto build test ERROR on d9946fe286439c2aeaa7953b8c316efe5b83d515]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Leitner/media-v4l-ctrls-add-a-control-for-flash-strobe-duration/20250617-153657
+base:   d9946fe286439c2aeaa7953b8c316efe5b83d515
+patch link:    https://lore.kernel.org/r/20250617-ov9282-flash-strobe-v5-9-9762da74d065%40linux.dev
+patch subject: [PATCH v5 09/10] media: i2c: ov9282: implement try_ctrl for strobe_duration
+config: i386-randconfig-051-20250618 (https://download.01.org/0day-ci/archive/20250618/202506182043.reVJKofN-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250618/202506182043.reVJKofN-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506182043.reVJKofN-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ld: drivers/media/i2c/ov9282.o: in function `ov9282_flash_duration_to_us':
+>> drivers/media/i2c/ov9282.c:722: undefined reference to `__udivdi3'
+>> ld: drivers/media/i2c/ov9282.c:722: undefined reference to `__udivdi3'
+
+
+vim +722 drivers/media/i2c/ov9282.c
+
+   711	
+   712	static u32 ov9282_flash_duration_to_us(struct ov9282 *ov9282, u32 value)
+   713	{
+   714		/*
+   715		 * As the calculation in ov9282_us_to_flash_duration uses an integer
+   716		 * divison calculate in ns here to get more precision. Then check if
+   717		 * we need to compensate that divison by incrementing the µs result.
+   718		 */
+   719		u32 frame_width = ov9282->cur_mode->width + ov9282->hblank_ctrl->val;
+   720		u64 ns = value * 1000 * frame_width / OV9282_STROBE_SPAN_FACTOR;
+   721	
+ > 722		return DIV_ROUND_UP(ns, 1000);
+   723	}
+   724	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
