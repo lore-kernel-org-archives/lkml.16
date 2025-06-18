@@ -1,73 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03F42F533A;
-	Wed, 18 Jun 2025 05:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462FF1FDE09;
+	Wed, 18 Jun 2025 05:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750222902; cv=none; b=HDquFgiYEyomOBhIeWHRfxL0ny4wQrOohOWTEbiSzz5tUBpdqn2Vr2E3+SuCjVHCPRxALrnQvi0l7nD9zzvWWqAbYXu2sR/Zzr551KvZ3X4Ze6HPixJ+tWxmWW5wVrcKqRIIx4wogjP4jXrhoI2aMM+F7SNMFMBBs9WqpCQBR4c=
+	t=1750222907; cv=none; b=PAguaAkuZrJBCivhCI0oFTbzhDuFYaZjTs+ydV6pctiUXrxhtwi/1kNvoXV42mBhXQd8wkARBFUnjcyi+PrUIZ+UW9bIhoSn9JKfzMJaG8b5YRNbuI6hd+wABJ+iVYcihE2fKYFH3LS7Y0LFs5APcplkXZIrLoK62OJAT2poRDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750222902; c=relaxed/simple;
-	bh=W4i8qDV6jVubz5hu6Md2H0YeWT1kUXFb3dG2JZ/Daf4=;
+	s=arc-20240116; t=1750222907; c=relaxed/simple;
+	bh=BfigIgRrToIGrLTr4lcde7vaVdFGL5utAWrI7l1J+FA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BCgyHrfNudV58i3wNxPumaR2H8TeOIurL16FY/iR7X55TjKWE1A+gCdxI0XFF1+epkYqqQU0H/lIARTGBwScxu9CNrrX2laKo+fJuXtivTfYERkv8LIfCu2G0PAIWlT4z74w1BZGV9b0bnuAI3x5xAE+B80aVDxnTKQy0gx8IZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PYbVkYCg; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Isk2RZO3mO2Ll4i6ZXlTezQgi+6lBKARctLEUm9y4pCZ1RbkGOny9Bg6Erii/CXlV4nH5Hknin50aSDfPj/kIo9RKL5IuatVyY5h4qhdVQ+YALmJVtFsbeYKvdCj8p3Yf9FFWsORpvUUKq3CZXuuVnolPGQycchTShyN9f1b7R0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E67BJwxU; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PYbVkYCg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750222901; x=1781758901;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W4i8qDV6jVubz5hu6Md2H0YeWT1kUXFb3dG2JZ/Daf4=;
-  b=PYbVkYCg6dFBa5+bJJnNKJl8UKPcsX0tJCgJlzXbKQ/AttmVWV5b8ytu
-   jayczWD0KL9y/1zxfU72iGFzjxzk4Ek+tE6iWxXcg+upe6EkpN5yxCHPH
-   kRW6ZtJW/Z5LEKAliBQxVF8PaETPPbd5Hz9Yai08s7bK1JoyfYb1FCCnq
-   3/tEBxCY8OFg+NSLVTOxnXn8em5WgAqzmlDkhC/B09QtLK2gQQmFlRpCp
-   e2G4JsW/75WWI1N8bYUyEEavxH8QGJuIYYhl3DSHA1MaE1KdLXRJCDKkK
-   kf2ofkJaapYWl7voTvo9Cc6aXmyXVAdlS8+7eQQbVJzWVU/v4ur25+Epg
-   g==;
-X-CSE-ConnectionGUID: HMpuFPQpTLqiNmOPogH6Xg==
-X-CSE-MsgGUID: jcIAY/sgTuq8gAyBL8woJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56227552"
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="56227552"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 22:01:40 -0700
-X-CSE-ConnectionGUID: Gm/9BwRlTnCzyem2RZOImg==
-X-CSE-MsgGUID: oj3tfdjmRECdvZHIuARvuQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="153976738"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 22:01:33 -0700
-Date: Wed, 18 Jun 2025 12:54:18 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: kvm@vger.kernel.org, sumit.semwal@linaro.org, christian.koenig@amd.com,
-	pbonzini@redhat.com, seanjc@google.com, alex.williamson@redhat.com,
-	jgg@nvidia.com, dan.j.williams@intel.com, aik@amd.com,
-	linux-coco@lists.linux.dev, dri-devel@lists.freedesktop.org,
-	linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-	vivek.kasireddy@intel.com, yilun.xu@intel.com,
-	linux-kernel@vger.kernel.org, lukas@wunner.de, yan.y.zhao@intel.com,
-	daniel.vetter@ffwll.ch, leon@kernel.org, baolu.lu@linux.intel.com,
-	zhenzhong.duan@intel.com, tao1.su@intel.com,
-	linux-pci@vger.kernel.org, zhiw@nvidia.com, simona.vetter@ffwll.ch,
-	shameerali.kolothum.thodi@huawei.com, iommu@lists.linux.dev,
-	kevin.tian@intel.com
-Subject: Re: [RFC PATCH 19/30] vfio/pci: Add TSM TDI bind/unbind IOCTLs for
- TEE-IO support
-Message-ID: <aFJGet5JS4ed7xfc@yilunxu-OptiPlex-7050>
-References: <20250529053513.1592088-1-yilun.xu@linux.intel.com>
- <20250529053513.1592088-20-yilun.xu@linux.intel.com>
- <yq5aplfn210z.fsf@kernel.org>
- <aD24r44v0g1NgeZs@yilunxu-OptiPlex-7050>
- <yq5ajz5r8w6p.fsf@kernel.org>
- <aEFmPaYorqaYCKBY@yilunxu-OptiPlex-7050>
- <yq5a5xgwt82d.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E67BJwxU"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fa980d05a8so60214546d6.2;
+        Tue, 17 Jun 2025 22:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750222904; x=1750827704; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/6rhOO9XqYvs+n6bpe7FIPcze+Fg/amOVJg+3P/e4+Q=;
+        b=E67BJwxUMRgIjjCidmnDYbppCKuVp1yYveDrIwQSYJzWvdK7EghYrqXbh3FnzHkdvk
+         E8CAFNgsL6lDXL0L7YQFUn7EjBFC7aVfCngfYO2dOi2VyBguInHkkT1CMl3yuUz3BhCC
+         gJ0Pmm+6uJoeC1749hQlqGbvkolIifinoQRYe8cfRhTfbZK/uPhQV7Agswrl8tV/g8pI
+         44NCIKqpCbGgiH9KwO4OMzT6gVAxbkQnU7F7hHWEnjihXcFXb95N7lh4nVyKJXOhsbqh
+         TRVIWXTmDwjOcqen1Y9LD79/HWt4btp4OWjs42lXSHolFs4nb4T2eeM06MrBb+EA9oYD
+         TSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750222904; x=1750827704;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/6rhOO9XqYvs+n6bpe7FIPcze+Fg/amOVJg+3P/e4+Q=;
+        b=GH6g1FteeVAY7zlr+UB5Egm+lAkCs+OcN+FQgdoXeTkwhuenNKOnOMSBf5kw8RAgZf
+         1MsmmRAgqf0EBp024DuGE4XtYtyRMartYK8+Hhik25Ad6UYl48HLo1LzKF/kAamo/4uR
+         n16M6jKogtHokrAq3ANQHGmEITct9G/O1mnIniPfvjaCwkA5ygxUaKaXqfZa1I2fRYVy
+         GAs7MHZiIz863UVB6k6BtP4rMFAytHGX9XySKXf/czlAO7dT5XhVdGgQx7fuOKH5MQ0V
+         qRFyEeTVg8jFEXqhYkvqvAjrVS3P4P7V37uM8rRCOTod5241eMKH/QVJOqing7B62kRP
+         zJ/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUw2n+Y1FC4Mnu/BLvGQxvg4NBAMay8qlD9bv+CviJTKgHgh7n5dccZu2R0Eifq/97PChHh7upuBYXMCfpfGS0=@vger.kernel.org, AJvYcCVYPk30J7E7s4b+f4BhDz+2FUcFsdkIoXcSb3GW3ZxqnbL8UdYZLmKUEBs+v4Z4qeo/gnHNKgfxGILNHBk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPXBanM+/B/wf/jwBmo/Nji5EaPyZ1gBzUkLqN8Pp2gvWg3wIe
+	EEaToyu14JSFpJ/T+uZ1Ib5zeKKRJBkDeUxzfGl4oEblQBAnnz05dvx+
+X-Gm-Gg: ASbGncuO5peX/tej5/jrVhJUPaU3Bn3l200m7cw1zYpqOeWEaOT1qf80+6irKCtq5fx
+	KA1ycB62ABv0TLAt+oYkEroUhQNEqh+E3XlfegZ9ZOKyDaCwsZbKLHMH88jSs7PZybJA+z0KHvy
+	yeSfPmyKud6Rp4UA0ARhvgBgmqqPNXG4WGmvrqj7zrtkpgokNPo5yOaawQDZYmz1VkH0NhUzgJg
+	6gMlmdTbmJ0UTbusf5Z5bACLN0+sKUW0VfvZ9UiQKg1gagej7tGyb4JfU+pOKQ4osGYmWOpVcFI
+	3ZhtJQ3ZFZy3Fwcs7/1pkmQF3vjmyhVGuwLr5fofbDQRS17DXxWRsIT+Au17UDW6RBP3EXTbgE/
+	E/tO9IzLSZB00AQgxLlgUIQL6HyJA964yJJ0n6EXQZU0lOORs8m5H
+X-Google-Smtp-Source: AGHT+IEHVgT0JWHxZcN6y85oBZsGRvLXlIydgmn/Tc4fH8DanmeNopCqO+Sskjc0G5jyU2oExL+tLg==
+X-Received: by 2002:ad4:5ca7:0:b0:6fa:90a2:4ec2 with SMTP id 6a1803df08f44-6fb47770191mr262543776d6.25.1750222903970;
+        Tue, 17 Jun 2025 22:01:43 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb59339378sm21596656d6.46.2025.06.17.22.01.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jun 2025 22:01:43 -0700 (PDT)
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B9FF91200043;
+	Wed, 18 Jun 2025 01:01:42 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-06.internal (MEProxy); Wed, 18 Jun 2025 01:01:42 -0400
+X-ME-Sender: <xms:NkhSaL3KxJxKJmEXMTRw989j01CYUEkhmdQYuasWnpKpXnzt9IrHRw>
+    <xme:NkhSaKE8IqKmnfPCDValjfD0HyxVfJYeWnu6qA-5EE9DIw_LfxGv6572MN3S2NbVj
+    q6D0AL3fxjXWJoq5w>
+X-ME-Received: <xmr:NkhSaL7O2ETzE6a_IU3diXWMegVXj4l14jRDB2UYycV9Es7JYVaDQQ5FoA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduleelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvden
+    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
+    gtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfelleei
+    vedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhi
+    thihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmh
+    grihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohgu
+    vgepshhmthhpohhuthdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhisehgmh
+    grihhlrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpth
+    htohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgtvghrhihh
+    lhesghhoohhglhgvrdgtohhmpdhrtghpthhtoheprghnnhgrqdhmrghrihgrsehlihhnuh
+    htrhhonhhigidruggvpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgr
+    ihhlrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopehfrhgvuggvrhhitgeskhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:NkhSaA0nGrpqP0jXeoUPle72Grs5uoPaL5VQNLfXfc_WRqJmDx0K2Q>
+    <xmx:NkhSaOESeD73FACEEq-dxYy5lG7p8ATe2JUVOiVTjFcMOtNs9VfFNw>
+    <xmx:NkhSaB_MaICBPbchMOH6MskN2nNCD50tL-RmlukcpakllPlabCqUqQ>
+    <xmx:NkhSaLlUNFV1vUOaxDAwNNFn5hCWp5phYNx9p8feo5vWcnL2_vMuhg>
+    <xmx:NkhSaKEVo9yxY4DXPSsnVxfVRN8IVSqYSNyyAgizYTk5SrMjrqyWS5BA>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Jun 2025 01:01:42 -0400 (EDT)
+Date: Tue, 17 Jun 2025 22:01:40 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, ojeda@kernel.org,
+	aliceryhl@google.com, anna-maria@linutronix.de,
+	bjorn3_gh@protonmail.com, dakr@kernel.org, frederic@kernel.org,
+	gary@garyguo.net, jstultz@google.com, linux-kernel@vger.kernel.org,
+	lossin@kernel.org, lyude@redhat.com, rust-for-linux@vger.kernel.org,
+	sboyd@kernel.org, tglx@linutronix.de, tmgross@umich.edu
+Subject: Re: [PATCH] rust: time: Seal the ClockSource trait
+Message-ID: <aFJINI8ImfxMnvrx@Mac.home>
+References: <20250617232053.3927525-1-fujita.tomonori@gmail.com>
+ <aFIEAiDKnxsZQ8s4@tardis.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,109 +114,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <yq5a5xgwt82d.fsf@kernel.org>
+In-Reply-To: <aFIEAiDKnxsZQ8s4@tardis.local>
 
-On Mon, Jun 16, 2025 at 01:46:42PM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
+On Tue, Jun 17, 2025 at 05:10:42PM -0700, Boqun Feng wrote:
+> On Wed, Jun 18, 2025 at 08:20:53AM +0900, FUJITA Tomonori wrote:
+> > Prevent downstream crates or drivers from implementing `ClockSource`
+> > for arbitrary types, which could otherwise leads to unsupported
+> > behavior.
+> > 
 > 
-> > On Wed, Jun 04, 2025 at 07:07:18PM +0530, Aneesh Kumar K.V wrote:
-> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> >> 
-> >> > On Sun, Jun 01, 2025 at 04:15:32PM +0530, Aneesh Kumar K.V wrote:
-> >> >> Xu Yilun <yilun.xu@linux.intel.com> writes:
-> >> >> 
-> >> >> > Add new IOCTLs to do TSM based TDI bind/unbind. These IOCTLs are
-> >> >> > expected to be called by userspace when CoCo VM issues TDI bind/unbind
-> >> >> > command to VMM. Specifically for TDX Connect, these commands are some
-> >> >> > secure Hypervisor call named GHCI (Guest-Hypervisor Communication
-> >> >> > Interface).
-> >> >> >
-> >> >> > The TSM TDI bind/unbind operations are expected to be initiated by a
-> >> >> > running CoCo VM, which already have the legacy assigned device in place.
-> >> >> > The TSM bind operation is to request VMM make all secure configurations
-> >> >> > to support device work as a TDI, and then issue TDISP messages to move
-> >> >> > the TDI to CONFIG_LOCKED or RUN state, waiting for guest's attestation.
-> >> >> >
-> >> >> > Do TSM Unbind before vfio_pci_core_disable(), otherwise will lead
-> >> >> > device to TDISP ERROR state.
-> >> >> >
-> >> >> 
-> >> >> Any reason these need to be a vfio ioctl instead of iommufd ioctl?
-> >> >> For ex: https://lore.kernel.org/all/20250529133757.462088-3-aneesh.kumar@kernel.org/
-> >> >
-> >> > A general reason is, the device driver - VFIO should be aware of the
-> >> > bound state, and some operations break the bound state. VFIO should also
-> >> > know some operations on bound may crash kernel because of platform TSM
-> >> > firmware's enforcement. E.g. zapping MMIO, because private MMIO mapping
-> >> > in secure page tables cannot be unmapped before TDI STOP [1].
-> >> >
-> >> > Specifically, for TDX Connect, the firmware enforces MMIO unmapping in
-> >> > S-EPT would fail if TDI is bound. For AMD there seems also some
-> >> > requirement about this but I need Alexey's confirmation.
-> >> >
-> >> > [1] https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
-> >> >
-> >> 
-> >> According to the TDISP specification (Section 11.2.6), clearing either
-> >> the Bus Master Enable (BME) or Memory Space Enable (MSE) bits will cause
-> >> the TDI to transition to an error state. To handle this gracefully, it
-> >> seems necessary to unbind the TDI before modifying the BME or MSE bits.
-> >
-> > Yes. But now the suggestion is never let VFIO do unbind, instead VFIO
-> > should block these operations when device is bound.
-> >
-> >> 
-> >> If I understand correctly, we also need to unmap the Stage-2 mapping due
-> >> to the issue described in commit
-> >> abafbc551fddede3e0a08dee1dcde08fc0eb8476. Are there any additional
-> >> reasons we would want to unmap the Stage-2 mapping for the BAR (as done
-> >> in vfio_pci_zap_and_down_write_memory_lock)?
-> >
-> > I think no more reason. 
-> >
-> >> 
-> >> Additionally, with TDX, it appears that before unmapping the Stage-2
-> >> mapping for the BAR, we should first unbind the TDI (ie, move it to the
-> >> "unlock" state?) Is this step related Section 11.2.6 of the TDISP spec,
-> >> or is it driven by a different requirement?
-> >
-> > No, this is not device side TDISP requirement. It is host side
-> > requirement to fix DMA silent drop issue. TDX enforces CPU S2 PT share
-> > with IOMMU S2 PT (does ARM do the same?), so unmap CPU S2 PT in KVM equals
-> > unmap IOMMU S2 PT.
-> >
-> > If we allow IOMMU S2 PT unmapped when TDI is running, host could fool
-> > guest by just unmap some PT entry and suppress the fault event. Guest
-> > thought a DMA writting is successful but it is not and may cause
-> > data integrity issue.
-> >
+> Hmm.. I don't think other impl of `ClockSource` is a problem, IIUC, as
+> long as the ktime_get() can return a value in [0, i64::MAX). Also this
+> means ClockSource should be an `unsafe` trait, because the correct
+> implementaion relies on ktime_get() returns the correct value. This is
+> needed even if you sealed ClockSource trait.
 > 
-> I am still trying to find more details here. How did the guest conclude
-> DMA writing is successful?
-
-Traditionally VMM is the trusted entity. If there is no IOMMU fault
-reported, guest assumes DMA writing is successful.
-
-> Guest would timeout waiting for DMA to complete
-
-There is no *generic* machanism to detect or wait for a single DMA
-write completion. They are "posted" in terms of PCIe.
-
-Thanks,
-Yilun
-
-> if the host hides the interrupt delivery of failed DMA transfer?
+> Could you drop this and fix that the ClockSource trait instead? Thanks!
 > 
-> >
-> > This is not a TDX specific problem, but different vendors has different
-> > mechanisms for this. For TDX, firmware fails the MMIO unmap for S2. For
-> > AMD, will trigger some HW protection called "ASID fence" [1]. Not sure
-> > how ARM handles this?
-> >
-> > https://lore.kernel.org/all/aDnXxk46kwrOcl0i@yilunxu-OptiPlex-7050/
-> >
-> > Thanks,
-> > Yilun
-> >
+
+For example:
+
+    /// Trait for clock sources.
+    ///
+    /// ...
+    /// # Safety
+    /// 
+    /// Implementers must ensure `ktime_get()` return a value in [0,
+    //  KTIME_MAX (i.e. i64::MAX)).
+    pub unsafe trait ClockSource {
+        ...
+    }
+
+Regards,
+Boqun
+
+> Regards,
+> Boqun
 > 
-> -aneesh
+> > Introduce a `private::Sealed` trait and implement it for all types
+> > that implement `ClockSource`.
+> > 
+> > Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+> > ---
+> >  rust/kernel/time.rs | 11 ++++++++++-
+> >  1 file changed, 10 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+> > index eaa6d9ab5737..b1961652c884 100644
+> > --- a/rust/kernel/time.rs
+> > +++ b/rust/kernel/time.rs
+> > @@ -51,6 +51,15 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
+> >      unsafe { bindings::__msecs_to_jiffies(msecs) }
+> >  }
+> >  
+> > +mod private {
+> > +    pub trait Sealed {}
+> > +
+> > +    impl Sealed for super::Monotonic {}
+> > +    impl Sealed for super::RealTime {}
+> > +    impl Sealed for super::BootTime {}
+> > +    impl Sealed for super::Tai {}
+> > +}
+> > +
+> >  /// Trait for clock sources.
+> >  ///
+> >  /// Selection of the clock source depends on the use case. In some cases the usage of a
+> > @@ -58,7 +67,7 @@ pub fn msecs_to_jiffies(msecs: Msecs) -> Jiffies {
+> >  /// cases the user of the clock has to decide which clock is best suited for the
+> >  /// purpose. In most scenarios clock [`Monotonic`] is the best choice as it
+> >  /// provides a accurate monotonic notion of time (leap second smearing ignored).
+> > -pub trait ClockSource {
+> > +pub trait ClockSource: private::Sealed {
+> >      /// The kernel clock ID associated with this clock source.
+> >      ///
+> >      /// This constant corresponds to the C side `clockid_t` value.
+> > 
+> > base-commit: 994393295c89711531583f6de8f296a30b0d944a
+> > -- 
+> > 2.43.0
+> > 
