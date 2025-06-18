@@ -1,102 +1,179 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7B6927EFE5
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A391C2324
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 23:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750288300; cv=none; b=N+MVg87uDi3e3nb1ZgOiCz7Yk1xPf8Mb0rhOQYoZbarCjGjO6fbpyw85DEalWyyGWQDsn9wggewRCDRZaqOeHIcbNKPIHJtOlajOcQ0zo30uExPbTLjz8BKtRePJU855wq0maVB02adjMh/WOI+puA0oAV1BFeCQJTW0TRasWHk=
+	t=1750288475; cv=none; b=GMrO2jvizIfnApAq5rXny9UjwbrIQjffjRV5R5OtAXMLKlKast+GPTCXQGFJH6KdsqwnoNBqfzw9zq6lJ349ouXosACN9lRd1vML/x3K3auegRJqwT1ph8s+e46hCvu8UXDeDriJAWPm+a7HYrTBBV6Y/8QerGsExkr3Zxy/26w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750288300; c=relaxed/simple;
-	bh=VftgimLnnsmlKj+0PEXR/pU3gL5kE9WGutl83BgF1R8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J/zDD7xSRn98cnTf1cCTqhgEWzjJyr4uwfQVuhwNwEZ/Zs5u51/BB5Y/rwkphJLgcmyZkXicSC+t6lVZjpGEkDepZsS771UwsjqBgv5HE5nzrbaKqJ541j7q8YilMVpsGOa19B5SO48WCt3h+h7LHq2I8f5YBR5ZawzYlb/UyV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=rMZEEwlj; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1750288475; c=relaxed/simple;
+	bh=i1l/wHmMl5v9/5hDL69xn16QG5060/zhsjh31N+rMMQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o0ZPcpyNZGRg22fermlJxiBrcuFwDDnWhVH4ujj9HpPTlxkHKnMBpJuuBRgdF0QdHURg4vLpSu1+CyvsZdoKIfagFk5d52dWUG8o+LEB1BjzJr7niy7lnWLVLa5mT7g1TjTJfyc/PqxCdo3pa2NcUTAcDhiRQzNmdNDwcKvxHug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fJj+vEfc; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rMZEEwlj"
-Received: from DESKTOP-0403QTC. (unknown [40.65.108.177])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 540072119369;
-	Wed, 18 Jun 2025 16:11:37 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 540072119369
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1750288297;
-	bh=DA/is/Ek2hBai3IoktVprxtBXAkjDgqz1K5Jp0l55wo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Reply-To:From;
-	b=rMZEEwljjBFD7PWmwg9RgQ5JGj80V9QHkG3EJK806wJ7WtLIPo2QTVubU2JnKipCr
-	 pHCXen0La9zV6fssVF74rzJMuZYuQBAEMVvDjMrlJ7u1m/Ze79p4ETHOc3o6fAndx2
-	 Sn0uNIRPHgnZHCe0iUK4EKz7FjNwyb8lEykHdxy0=
-Date: Wed, 18 Jun 2025 16:11:36 -0700
-From: Jacob Pan <jacob.pan@linux.microsoft.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Alex Williamson <alex.williamson@redhat.com>,
- linux-kernel@vger.kernel.org, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, "Liu, Yi L" <yi.l.liu@intel.com>, Zhang Yu
- <zhangyu1@microsoft.com>, Easwar Hariharan <eahariha@linux.microsoft.com>,
- Saurabh Sengar <ssengar@linux.microsoft.com>, jacob.pan@linux.microsoft.com
-Subject: Re: [PATCH v2 2/2] vfio: Fix unbalanced vfio_df_close call in
- no-iommu mode
-Message-ID: <20250618161136.39029872@DESKTOP-0403QTC.>
-In-Reply-To: <20250616200558.GR1174925@nvidia.com>
-References: <20250603152343.1104-1-jacob.pan@linux.microsoft.com>
-	<20250603152343.1104-2-jacob.pan@linux.microsoft.com>
-	<20250613163103.3bca27cd.alex.williamson@redhat.com>
-	<20250614001555.GR1174925@nvidia.com>
-	<20250616084708.5a94ead7.alex.williamson@redhat.com>
-	<20250616153455.GK1174925@nvidia.com>
-	<20250616134004.60105ad5.alex.williamson@redhat.com>
-	<20250616200558.GR1174925@nvidia.com>
-Reply-To: jacob.pan@linux.microsoft.com
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fJj+vEfc"
+Date: Wed, 18 Jun 2025 16:14:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750288461;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aVP3DiB3HvKNlxTLG6+nr+sih4i6SPT2KS137bqEj/Y=;
+	b=fJj+vEfcdZsyWbaYG30vNEKCtdWDHf3g/Ygtj0VNq6V4fzpOclefHU3KyXH2CvANdlmjNK
+	KXUHjfjWAYGVPuitRWmnlr44c7tykStb3daT7iXyVWr7i8HlcdTbOqEYIaSPjBClT5iSGs
+	GXLmADF9YQYmQOiFGcADjtlYqs4zKUs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Sean Christopherson <seanjc@google.com>
+Cc: James Houghton <jthoughton@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Yan Zhao <yan.y.zhao@intel.com>,
+	Nikita Kalyazin <kalyazin@amazon.com>,
+	Anish Moorthy <amoorthy@google.com>,
+	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>,
+	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com,
+	kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v3 03/15] KVM: arm64: x86: Require "struct
+ kvm_page_fault" for memory fault exits
+Message-ID: <aFNIPXoEb5iCjt_L@linux.dev>
+References: <20250618042424.330664-1-jthoughton@google.com>
+ <20250618042424.330664-4-jthoughton@google.com>
+ <aFMaxi5LDr4HHbMR@linux.dev>
+ <aFMl6DOcKfH6ampb@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFMl6DOcKfH6ampb@google.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Jason,
-
-On Mon, 16 Jun 2025 17:05:58 -0300
-Jason Gunthorpe <jgg@nvidia.com> wrote:
-
-> On Mon, Jun 16, 2025 at 01:40:04PM -0600, Alex Williamson wrote:
-> > --- a/drivers/vfio/group.c
-> > +++ b/drivers/vfio/group.c
-> > @@ -192,18 +192,18 @@ static int vfio_df_group_open(struct
-> > vfio_device_file *df)
-> >  		 * implies they expected translation to exist
-> >  		 */
-> >  		if (!capable(CAP_SYS_RAWIO) ||
-> > -		    vfio_iommufd_device_has_compat_ioas(device,
-> > df->iommufd))
-> > +		    vfio_iommufd_device_has_compat_ioas(device,
-> > df->iommufd)) { ret = -EPERM;
-> > -		else
-> > -			ret = 0;
-> > -		goto out_put_kvm;
-> > +			goto out_put_kvm;
-> > +		}
-> >  	}
+On Wed, Jun 18, 2025 at 01:47:36PM -0700, Sean Christopherson wrote:
+> On Wed, Jun 18, 2025, Oliver Upton wrote:
+> > On Wed, Jun 18, 2025 at 04:24:12AM +0000, James Houghton wrote:
+> > > +#ifdef CONFIG_KVM_GENERIC_PAGE_FAULT
+> > > +
+> > > +#define KVM_ASSERT_TYPE_IS(type_t, x)					\
+> > > +do {									\
+> > > +	type_t __maybe_unused tmp;					\
+> > > +									\
+> > > +	BUILD_BUG_ON(!__types_ok(tmp, x) || !__typecheck(tmp, x));	\
+> > > +} while (0)
+> > > +
+> > >  static inline void kvm_prepare_memory_fault_exit(struct kvm_vcpu *vcpu,
+> > > -						 gpa_t gpa, gpa_t size,
+> > > -						 bool is_write, bool is_exec,
+> > > -						 bool is_private)
+> > > +						 struct kvm_page_fault *fault)
+> > >  {
+> > > +	KVM_ASSERT_TYPE_IS(gfn_t, fault->gfn);
+> > > +	KVM_ASSERT_TYPE_IS(bool, fault->exec);
+> > > +	KVM_ASSERT_TYPE_IS(bool, fault->write);
+> > > +	KVM_ASSERT_TYPE_IS(bool, fault->is_private);
+> > > +	KVM_ASSERT_TYPE_IS(struct kvm_memory_slot *, fault->slot);
+> > > +
+> > >  	vcpu->run->exit_reason = KVM_EXIT_MEMORY_FAULT;
+> > > -	vcpu->run->memory_fault.gpa = gpa;
+> > > -	vcpu->run->memory_fault.size = size;
+> > > +	vcpu->run->memory_fault.gpa = fault->gfn << PAGE_SHIFT;
+> > > +	vcpu->run->memory_fault.size = PAGE_SIZE;
+> > >  
+> > >  	/* RWX flags are not (yet) defined or communicated to userspace. */
+> > >  	vcpu->run->memory_fault.flags = 0;
+> > > -	if (is_private)
+> > > +	if (fault->is_private)
+> > >  		vcpu->run->memory_fault.flags |= KVM_MEMORY_EXIT_FLAG_PRIVATE;
+> > >  }
+> > > +#endif
 > > 
+> > This *is not* the right direction of travel for arm64. Stage-2 aborts /
+> > EPT violations / etc. are extremely architecture-specific events.
+> 
+> Yes and no.  100% agreed there are arch/vendor specific aspects of stage-2 faults,
+> but there are most definitely commonalites as well.
+
+And I agree those commonalities should be expressed with the same flags
+where possible.
+
+> > What I would like to see on arm64 is that for every "KVM_EXIT_MEMORY_FAULT"
+> > we provide as much syndrome information as possible. That could imply
+> > some combination of a sanitised view of ESR_EL2 and, where it is
+> > unambiguous, common fault flags that have shared definitions with x86.
+> 
+> Me confused, this is what the above does?  "struct kvm_page_fault" is arch
+> specific, e.g. x86 has a whole pile of stuff in there beyond gfn, exec, write,
+> is_private, and slot.
+
+Right, but now I need to remember that some of the hardware syndrome
+(exec, write) is handled in the arch-neutral code and the rest belongs
+to the arch.
+
+> The approach is non-standard, but I think my justification/reasoning for having
+> the structure be arch-defined still holds:
+> 
+>  : Rather than define a common kvm_page_fault and kvm_arch_page_fault child,
+>  : simply assert that the handful of required fields are provided by the
+>  : arch-defined structure.  Unlike vCPU and VMs, the number of common fields
+>  : is expected to be small, and letting arch code fully define the structure
+>  : allows for maximum flexibility with respect to const, layout, etc.
+> 
+> If we could use anonymous struct field, i.e. could embed a kvm_arch_page_fault
+> without having to bounce through an "arch" field, I would vote for the approach.
+> Sadly, AFAIK, we can't yet use those in the kernel.
+
+The general impression is that this is an unnecessary amount of
+complexity for doing something trivial (computing flags).
+
+> > This could incur some minor code duplication, but even then we can share
+> > helpers for the software bits (like userfault).
+> 
+> Again, that is what is proposed here.
+> 
+> > FEAT_MTE_PERM is a very good example for this. There exists a "Tag"
+> > permission at stage-2 which is unrelated to any of the 'normal'
+> > read/write permissions. There's also the MostlyReadOnly permission from
+> > FEAT_THE which grants write permission to a specific set of instructions.
 > > 
-> > And add a noiommu exit branch to _iommufd_bind, symmetric to unbind.
-> > Right?  Thanks,  
+> > I don't want to paper over these nuances and will happily maintain an
+> > arm64-specific flavor of "kvm_prepare_memory_fault_exit()"
 > 
-> Just comparing to the original
-> 
-> +	if (iommufd) {
-> +		if (!vfio_device_is_noiommu(device))
-> +			ret = vfio_df_iommufd_bind(df);
-> 
-> Isn't being captured, so it needs another hunk in
-> vfio_df_iommufd_bind()
-> 
-OK, will send out v3 with this concise fix. I am also working on the
-noiommu special mode as you suggested, then we can allow bind again.
+> Nothing prevents arm64 (or any arch) from wrapping kvm_prepare_memory_fault_exit()
+> and/or taking action after it's invoked.  That's not an accident; the "prepare
+> exit" helpers (x86 has a few more) were specifically designed to not be used as
+> the "return" to userspace.  E.g. this one returns "void" instead of -EFAULT
+> specifically so that the callers isn't "required" to ignore the return if the
+> caller wants to populate (or change, but hopefully that's never the case) fields
+> after calling kvm_prepare_memory_fault_exit), and so that arch can return an
+> entirely different error code, e.g. -EHWPOISON when appropriate.
+
+IMO, this does not achieve the desired layering / ownership of memory
+fault triage. This would be better organized as the arch code computing
+all of the flags relating to the hardware syndrome (even boring ones
+like RWX) and arch-neutral code potentially lending a hand with the
+software bits.
+
+With this I either need to genericize the horrors of the Arm
+architecture in the common thing or keep track of what parts of the
+hardware flags are owned by arch v. non-arch. SW v. HW fault context is
+a cleaner split, IMO.
+
+> And it's not just kvm_prepare_memory_fault_exit() that I want to use kvm_page_fault;
+> kvm_faultin_pfn() is another case where having a common "struct kvm_page_fault"
+> would clean up some ugly/annoying boilerplate.
+
+That might be a better starting point for unifying these things, esp.
+since kvm_faultin_pfn() doesn't have UAPI implications hiding behind it
+and is already using common parameters.
 
 Thanks,
-
-Jacob
-
+Oliver
