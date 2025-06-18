@@ -1,98 +1,147 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229F62D12F6
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4ABE27F01C;
+	Wed, 18 Jun 2025 12:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248559; cv=none; b=dyOkFoMmI5UPDim9wQCu9AoVOb5bgGgbvmC7+0Z4UDckr6Hv+bbu+A383CHbWX1YwYOMyhEhsPoCDVBwSNF/Cl3rCNYqVYGoyhccSjHbZHbZQ/ZSizKOP6l5PTVSiSzbQdgnd1je74xatCqxLjtHlJ4UkGLTMma12LDKf8AUAcw=
+	t=1750248576; cv=none; b=cEkP+rX7MQAJa7qXB6Uy8CuUvJTtNjUljmDZ+zFRv8XeVgPzqVH0wMGL4r0rPD6exPNMSWxw86uzuRoqTggQCdsNWBYoLq9MYhdvxT58FEO202/kDjSJFKtUfBEjcTgdbjfqD1bi6yAes+N2uyVhyRZqWj8Lk4/GATrQ5swJCa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248559; c=relaxed/simple;
-	bh=eus1GwfPuFQtn6OQ9v3rF0J21GjEHtkdFtWAPZQVNsA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nT24GRBYwwDV8Q84AvStm0impVXpVp1EL5ZWPafJN7S96OMBi1BK2zGzCE7EN/t+kcC4seCaJ35EtJKvOEZd66KDFu8XJ1boV9ES/HKsVKodTis574x/N4cJvJuDM4HAFZBDrqVRW2MjoHgB3uzIbrctZi/XvY1uVnrB00QRUtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fcNaYx9o; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750248576; c=relaxed/simple;
+	bh=4YtwtGrx4aQCtrMsMKf0ElnO6wKaWfloCC4JdjDwj04=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=oZz4wEi5JrGpkRo/Hj277YOs50hXU+JVvOfIfuiwwBbH8IxuMCLE0yQ9hpKMLJX8Rqtxa+tBP2PNHi1agOesfvLHnwDbYT6FceXf9lG9tL4pmMWw9HVHlumIAK3e7ZhpSpLzn+Txj93wA9dv7n6n/uLlAcvmuiHrvMfdACWV0Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lxbRM+EK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dqq4Bkcx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fcNaYx9o"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-55220699ba8so8498219e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:09:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750248554; x=1750853354; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eus1GwfPuFQtn6OQ9v3rF0J21GjEHtkdFtWAPZQVNsA=;
-        b=fcNaYx9ocTR/+8hYqOW8FhFboXUL+/OQgeECOYXbcA53Qi8IqsOXoSpOo+6oDzPrP0
-         pCLE+4yrCBHChGIen5vnic+pvfxEB9pE+5T3hw+6AhG5x1eDl655GTt0SRnBfVvQ2gmf
-         b7h6Xe2GOTTf8OtPz3n28Odx5zfYI6xWqZYos037aFunRWgxxZsshgI/Gnq55H1rn5WR
-         zpsCZBue4eKlZ9yh4qSopKRVUp8Zc62GyDmMqXjQgNvMyrK8+huzk6upXdzPab2cZvcP
-         fFYHb45+yFbYmaejUBnaCUhVi8BpIfdD0netIFmOnhZgsqOovX5Y01sORd8rjq7csFfj
-         GOkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750248554; x=1750853354;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eus1GwfPuFQtn6OQ9v3rF0J21GjEHtkdFtWAPZQVNsA=;
-        b=GxkdF+3aoStuR5Ae+RyskyjBG0TZKwg5SSAH6Pe7w2ZNycnjCiYuziRsiyF8RCJK5Y
-         g4ltqXdgmRSI2xQVjIkTx9iGazgI4TrQceydDCe3ijPQB12I4VHPxBVoaFUXvzDhLZ+s
-         4Tht5DEbC2cRzYrqNAL/pcdldujhdWOq193tHnyap+geIEPfiyrYLWdyHGQtRQAJKIOy
-         N5ztoW1NlPvrBuJ1sXn7pj6mBYZ1WjaUYBQvhlrV+Mau14CpvzarkKeKMvamjcv3yRz7
-         I42NPn73ThpMvLeUveIlyzyc3Sc4rz4HCCxH0MSDp8tSra3bf+VuKgNLNqCiRFOoU+7M
-         Y0ug==
-X-Forwarded-Encrypted: i=1; AJvYcCW/MzgaohySfd5B1u3LK41SDXI2gDw4exuUF2dIMMOIPznqcyx9RfZvJq0sUF/zpyMifydYsGP8sj1ZWg4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyZvQ9+cy9O3YiB8GTJ+uBoJmEQAI7+/gO4zHT9MnsHMdQ3q91
-	rO+4j4Y//5EeAo60BCXjxjiSe0kIbdvXdKukVM7SZSYSpitmaYr7EAM+Da4D8ofeq7XBhExO3Gf
-	pnjRftU0GUaLwM0kfN1lU1x3tYdO55V9sqahA8pfUQVbkOpNEe46S
-X-Gm-Gg: ASbGncuupUuY9Qs+opIw/AZDbh803mFpR1IJdiluAOic8skYl5NFmYBo+/Q25VyQBBP
-	GsHhEDiP/T61MaOYF8S6JkXbPbi3XQ6tKSnLFHDcwRv6FMWGWDO6LjDSHdCYyrf7y7fnfcs6Znp
-	e5XZGjagFHnRTSoVRneM/ko72fJzj1h/vIgZnzeUlDmpY=
-X-Google-Smtp-Source: AGHT+IGC0m4FXYYQm+k0AXFCSy3bx6F7/2cTaiKhBBnuAbB+6N8ybTZnHZCukOOueaHxtyfLbUpPRBURy2oO4IVfhl0=
-X-Received: by 2002:a19:5f17:0:b0:553:ca33:46f with SMTP id
- 2adb3069b0e04-553ca330808mr1234493e87.29.1750248554215; Wed, 18 Jun 2025
- 05:09:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lxbRM+EK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dqq4Bkcx"
+Date: Wed, 18 Jun 2025 12:09:29 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750248570;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N9hRMefuh2yk2fVV25Hs5r4wXJc+OrGZWC+kgojVLKs=;
+	b=lxbRM+EKSNQij72uwrYP4AIDEKd99WxLEgESabNKCiVhYiaVxmTgo2M9L5SOfTqkuucKNW
+	53rnJ4mZ6zhCeRhwxgmDLLX8ojTjVy7VvBHHXpc18drvmit0Uz+CXA3caHkiM47wkIZtA6
+	TSqUqVl9316FUCOc/1XAANPLRpjA0Nvkz7WL7weSDZYBZgyP/uSxJ1hKeVsTpCdGK/5L3S
+	TWuZPvlEkjBsfFU+Vq4Nhx5wdFAJk7g68XVH/EhQ82cqnlfJvm9dc4D+K2MdXlDY82fuym
+	mFyrTek+bB1kFf085owZfhecDuhLssKOJTJdExScz1uxcrfl3XueUrC3oXMRGQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750248570;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N9hRMefuh2yk2fVV25Hs5r4wXJc+OrGZWC+kgojVLKs=;
+	b=dqq4BkcxQ5E9E1Ubb2uYKGU9arteH4OYNb/zbsE112kRpBteiEvQHe83NcmJBnyuuGrJ5i
+	AveB/BCxOHaz93Bw==
+From: "tip-bot2 for Masami Hiramatsu (Google)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/alternatives: Fix int3 handling failure from
+ broken text_poke array
+Cc: Linux Kernel Functional Testing <lkft@linaro.org>,
+ "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ "Steven Rostedt (Google)" <rostedt@goodmis.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <\
+ 175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
+References: <\
+ 175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
-In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-remaining-v1-0-556b0a530cd4@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 14:09:03 +0200
-X-Gm-Features: AX0GCFtzAwHH-ht5UUznh81aEY-DCCdnUYFURG79_8pBHXv4vb2M7QItIyT5tQE
-Message-ID: <CACRpkdb3+uQ=PG+ne48hyvdTFeEQBxXtq3CwxpqEmd1m9o9fNA@mail.gmail.com>
-Subject: Re: [PATCH 00/16] pinctrl: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Support Opensource <support.opensource@diasemi.com>, Baruch Siach <baruch@tkos.co.il>, 
-	Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
-	Neal Gompa <neal@gompa.dev>, Viresh Kumar <vireshk@kernel.org>, 
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, soc@lists.linux.dev, 
-	linux-sunxi@lists.linux.dev, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <175024856942.406.9775952372064270732.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 12, 2025 at 3:15=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+The following commit has been merged into the x86/urgent branch of tip:
 
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones. This series
-> converts remaining pinctrl drivers that still use old APIs.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Commit-ID:     2aebf5ee43bf0ed225a09a30cf515d9f2813b759
+Gitweb:        https://git.kernel.org/tip/2aebf5ee43bf0ed225a09a30cf515d9f2813b759
+Author:        Masami Hiramatsu (Google) <mhiramat@kernel.org>
+AuthorDate:    Wed, 18 Jun 2025 09:05:23 +09:00
+Committer:     Peter Zijlstra <peterz@infradead.org>
+CommitterDate: Wed, 18 Jun 2025 13:59:56 +02:00
 
-Patches applied!
+x86/alternatives: Fix int3 handling failure from broken text_poke array
 
-Yours,
-Linus Walleij
+Since smp_text_poke_single() does not expect there is another
+text_poke request is queued, it can make text_poke_array not
+sorted or cause a buffer overflow on the text_poke_array.vec[].
+This will cause an Oops in int3 because of bsearch failing;
+
+   CPU 0                        CPU 1                      CPU 2
+   -----                        -----                      -----
+
+ smp_text_poke_batch_add()
+
+			    smp_text_poke_single() <<-- Adds out of order
+
+							<int3>
+                                                	[Fails o find address
+                                                        in text_poke_array ]
+                                                        OOPS!
+
+Or unhandled page fault because of a buffer overflow;
+
+   CPU 0                        CPU 1
+   -----                        -----
+
+ smp_text_poke_batch_add() <<+
+ ...                         |
+ smp_text_poke_batch_add() <<-- Adds TEXT_POKE_ARRAY_MAX times.
+
+			     smp_text_poke_single() {
+			     	__smp_text_poke_batch_add() <<-- Adds entry at
+								TEXT_POKE_ARRAY_MAX + 1
+
+                		smp_text_poke_batch_finish()
+                        	  [Unhandled page fault because
+				   text_poke_array.nr_entries is
+				   overwritten]
+				   BUG!
+			     }
+
+Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
+so that it correctly flush the queue if needed.
+
+Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+Fixes: c8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Link: https://lkml.kernel.org/r/\ 175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com
+---
+ arch/x86/kernel/alternative.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 9ae80fa..ea1d984 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -3138,6 +3138,6 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
+  */
+ void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
+ {
+-	__smp_text_poke_batch_add(addr, opcode, len, emulate);
++	smp_text_poke_batch_add(addr, opcode, len, emulate);
+ 	smp_text_poke_batch_finish();
+ }
