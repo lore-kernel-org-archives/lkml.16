@@ -1,120 +1,147 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB0327F4CA;
-	Wed, 18 Jun 2025 10:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394CF27F4CA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:10:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241421; cv=none; b=E73kngAnO9/8xsY6N+/wLPbWmDOEz9Igsyoa4zeSzjEO+x1omTHUEBgMQpfdGS5+4OFJp2mZJx8DNROYcpkjuqnH2quy+LQEuCpiqAzBeXLLjGGEq8HAjzOXXTffZP78+s8gVIyz7cM+CqSeDO2kfnQ2EEsuT2bHtk8kDF0Q6Q4=
+	t=1750241425; cv=none; b=reLi7R7UKpgOEVuWYFVHuz3SFws3HKcC74Nm5DH29KP8n3/kHnp4BuLoIZZ0rdkJmuGhuwEpvn3HhIICf1gwmLhxywB+hyIXzTC58kOF8M6G8cg6+CvGQSevZkWrB4nK6JZpCLEHt7ZNTNy39Dt2OvDoPaICSAs2zvgU91AL/18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241421; c=relaxed/simple;
-	bh=aH95rNHRdwQXbxmyv1/Vp8rFQ+7zY8olDtZsi2hZDV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=enXE3CQbgWHiXMb+WSSAUh98k4mukXJYIzotgK5f0QJMRUgPkNarOFvsPxd/avmv3Lz8iAPsEkmbw8GHeTBB2+6vigfUDWlL0BLrcKV3bNphJvfuEtHZfr2KuHUXq5PjrdXxmegHgLO3vLc37nY+0GgZWJEvA3FuyC3z9VQybFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=WjSTLVsS; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750241425; c=relaxed/simple;
+	bh=RdXwXdWoJ1VROaERK5qk9Ae02i8ItFcaaTjGIHpluVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Pv0iVMDRT+EWYUlErxFIgjwR8jw3aGy+fXQlP6AQzvelRiiMk0X2GSKYYiYvWTVtBMSqESg0+V+2kAMW67HfDioR7BWygLjSVFatx4K103FV6y7OOjOh/uIw6swo3nDJEbfoFeIo7sDfjOqQeMuMLTlZA/HnIJlF93vZkPI39lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ea2I3wrG; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="WjSTLVsS"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 42B34593;
-	Wed, 18 Jun 2025 12:10:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750241405;
-	bh=aH95rNHRdwQXbxmyv1/Vp8rFQ+7zY8olDtZsi2hZDV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WjSTLVsSwIxqr0GVr/Hm3E4L7IUfwlxGBiGHeZXk9jvblyF9L5hO2gHy8Uyq3G2TZ
-	 wv1jM4zG6iisi3Rh9YwIn0p6r7g41prtB9p7RtmnhRyOme7piv6dWD9pU+KhPo8n7i
-	 qbIt6FGw4mhXCxWdB1bB4lO+ycVscyCictfoAgZc=
-Date: Wed, 18 Jun 2025 13:10:01 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v2 2/2] media: renesas: rzg2l-cru: Fix typo in
- rzg3e_fifo_empty name
-Message-ID: <20250618101001.GB10978@pendragon.ideasonboard.com>
-References: <20250429091609.9947-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250429091609.9947-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ea2I3wrG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750241425; x=1781777425;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RdXwXdWoJ1VROaERK5qk9Ae02i8ItFcaaTjGIHpluVE=;
+  b=ea2I3wrGoTxsddy9D7nVsATL9EauSClVjt6LZSQWWq1NrrRysiix2Sxj
+   gPEupq0k5CsRZM8PiC9GwRiQJdjJeoxXuxmNdIbfUrPfB3q7O5KRCw6Yo
+   ij1PcE3tEXgKMsPrd8k85NNolaRWzK0iY1qkhDlfAKNLN/XL26aJzMLoP
+   Y83KgCjtbJH0SyjpxOWLHz0brbCeXtwroQf0d1s1louaTuyjg5vOlXFWz
+   x6mbUtTUOJXNqFm2jWiUF4h/IA7tSeen1LNilpTMsZPzsHYjo03d7rAT1
+   oh+ABPs1bDd4Xoqwl8rUQPiIWiNUd7tqDvoyV4IOCcGkqD4a3QS3lRBzZ
+   w==;
+X-CSE-ConnectionGUID: BBZbXZS5T8WQcRFB89ZF+A==
+X-CSE-MsgGUID: qYh0T46hTEGTtRN+6RsKDw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="63875488"
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="63875488"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 03:10:24 -0700
+X-CSE-ConnectionGUID: Xm8Ce/W0TCCiSe1hZIEKDA==
+X-CSE-MsgGUID: G/kjnn2ASvOSrJgiuWAQ2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
+   d="scan'208";a="149399404"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 03:10:24 -0700
+Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id A62B220B5736;
+	Wed, 18 Jun 2025 03:10:21 -0700 (PDT)
+Message-ID: <0782de41-c8c4-4077-8498-651fb9a10ef5@linux.intel.com>
+Date: Wed, 18 Jun 2025 06:10:20 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250429091609.9947-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 06/12] perf: Support extension of sample_regs
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, mingo@redhat.com,
+ acme@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
+ dave.hansen@linux.intel.com, irogers@google.com, adrian.hunter@intel.com,
+ jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+ linux-kernel@vger.kernel.org, ak@linux.intel.com, zide.chen@intel.com,
+ broonie@kernel.org
+References: <20250617081458.GI1613376@noisy.programming.kicks-ass.net>
+ <8fbf7fc5-2e38-4882-8835-49869b6dd47f@linux.intel.com>
+ <20250617102813.GS1613376@noisy.programming.kicks-ass.net>
+ <dc084dac-170d-434e-9d8c-ba11cbc8e008@linux.intel.com>
+ <20250617133333.GU1613376@noisy.programming.kicks-ass.net>
+ <20250617140617.GC1613633@noisy.programming.kicks-ass.net>
+ <aFF6gdxVyp36ADOi@J2N7QTR9R3>
+ <20250617144416.GY1613376@noisy.programming.kicks-ass.net>
+ <aFGBxBVFLnkmg3CP@J2N7QTR9R3>
+ <be13b2ce-a8c1-4aa7-9ddf-9ae8daee0ae1@linux.intel.com>
+ <20250618093500.GH1613376@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250618093500.GH1613376@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Prabhakar,
 
-Thank you for the patch.
 
-On Tue, Apr 29, 2025 at 10:16:09AM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 2025-06-18 5:35 a.m., Peter Zijlstra wrote:
+> On Tue, Jun 17, 2025 at 04:32:24PM -0400, Liang, Kan wrote:
 > 
-> Correct the misnamed FIFO-empty helper for the RZ/G3E CRU. Rename
-> `rz3e_fifo_empty` to `rzg3e_fifo_empty` to match the intended
-> naming convention.
+>>> Yep, those options may work for us, but we'd need to think harder about
+>>> it. Our approach for ptrace and signals has been to have a header and
+>>> pack at the active vector length, so padding to a max width would be
+>>> different, but maybe it's fine.
+>>>
+>>> Having another representation feels like a recipe waiting to happen.
+>>>
+>>
+>> I'd like to make sure I understand correctly.
+>> If we'd like an explicit predicate register word, the below change in
+>> struct perf_event_attr is OK for ARM as well, right?
+>>
+>> 	__u16 sample_simd_pred_reg_words;
+>> 	__u16 sample_simd_pred_reg_intr;
+>> 	__u16 sample_simd_pred_reg_user;
+>> 	__u16 sample_simd_reg_words;
+>> 	__u64 sample_simd_reg_intr;
+>> 	__u64 sample_simd_reg_user;
+>>
+>> BTW: would that be easier for ARM if changing the _words to _type?
+>> You may define some types like, stream_sve, n_stream_sve, etc.
+>> The output will depend on the types, rather than the max length of
+>> registers.
 > 
-> Reported-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Closes: https://lore.kernel.org/all/TY3PR01MB11346E57A3DF8D8A90A405E4686812@TY3PR01MB11346.jpnprd01.prod.outlook.com/
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-
-> ---
->  drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c  | 2 +-
->  drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h   | 2 +-
->  drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+> I'm thinking what they're after is something like:
 > 
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> index 5fa73ab2db53..db27819d8200 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-core.c
-> @@ -366,7 +366,7 @@ static const struct rzg2l_cru_info rzg3e_cru_info = {
->  	.irq_handler = rzg3e_cru_irq,
->  	.enable_interrupts = rzg3e_cru_enable_interrupts,
->  	.disable_interrupts = rzg3e_cru_disable_interrupts,
-> -	.fifo_empty = rz3e_fifo_empty,
-> +	.fifo_empty = rzg3e_fifo_empty,
->  	.csi_setup = rzg3e_cru_csi2_setup,
->  };
->  
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> index c30f3b281284..56feda6e6207 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-cru.h
-> @@ -199,7 +199,7 @@ void rzg3e_cru_enable_interrupts(struct rzg2l_cru_dev *cru);
->  void rzg3e_cru_disable_interrupts(struct rzg2l_cru_dev *cru);
->  
->  bool rzg2l_fifo_empty(struct rzg2l_cru_dev *cru);
-> -bool rz3e_fifo_empty(struct rzg2l_cru_dev *cru);
-> +bool rzg3e_fifo_empty(struct rzg2l_cru_dev *cru);
->  void rzg2l_cru_csi2_setup(struct rzg2l_cru_dev *cru,
->  			  const struct rzg2l_cru_ip_format *ip_fmt,
->  			  u8 csi_vc);
-> diff --git a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> index 3d0810b3c35e..ab35caf97c51 100644
-> --- a/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> +++ b/drivers/media/platform/renesas/rzg2l-cru/rzg2l-video.c
-> @@ -323,7 +323,7 @@ static int rzg2l_cru_initialize_image_conv(struct rzg2l_cru_dev *cru,
->  	return 0;
->  }
->  
-> -bool rz3e_fifo_empty(struct rzg2l_cru_dev *cru)
-> +bool rzg3e_fifo_empty(struct rzg2l_cru_dev *cru)
->  {
->  	u32 amnfifopntr = rzg2l_cru_read(cru, AMnFIFOPNTR);
->  
+> PERF_SAMPLE_SIMD_REGS := {
+> 	u16 nr_vectors;
+> 	u16 vector_length;
+> 	u16 nr_pred;
+> 	u16 pred_length;
+> 	u64 data[];
+> }
 
--- 
-Regards,
+Maybe we should use a mask to replace the nr_vectors.
+Because Dave mentioned that the XSAVES may fail.
+Currently, perf gives all 0 for the failing case. But 0 should also be a
+valid output.
+The mask can tell the tool that some regs are failed to be collected. So
+the tool can give proper feedback to the end user.
 
-Laurent Pinchart
+PERF_SAMPLE_SIMD_REGS := {
+	u64 vectors_mask;
+	u16 vector_length;
+	u64 pred_mask;
+	u16 pred_length;
+	u64 data[];
+}
+
+Thanks,
+Kan>
+> Where the output data also has a length. Such that even if we ask for
+> 512 bit vectors, the thing is allowed to respond with say 128 bit
+> vectors if that is all the machine has at that time.
+> 
+
