@@ -1,147 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4ABE27F01C;
-	Wed, 18 Jun 2025 12:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E875E27F01C;
+	Wed, 18 Jun 2025 12:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248576; cv=none; b=cEkP+rX7MQAJa7qXB6Uy8CuUvJTtNjUljmDZ+zFRv8XeVgPzqVH0wMGL4r0rPD6exPNMSWxw86uzuRoqTggQCdsNWBYoLq9MYhdvxT58FEO202/kDjSJFKtUfBEjcTgdbjfqD1bi6yAes+N2uyVhyRZqWj8Lk4/GATrQ5swJCa8=
+	t=1750248585; cv=none; b=K4waRVLcf1nypn/GmALhkm4GrbUwI9XGTfJZcsbW9kHoXFaY8loUM9t4l8C5a4YZZwh8Oln8s3/md7kowbap93onzgvqh2banhXXP1T8TJmAXI2XvQWenwRETzcwjt4bMawRwmSYsWYDuZqt2Gs52lJyx3kWgiRf9SHm4Fd1o0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248576; c=relaxed/simple;
-	bh=4YtwtGrx4aQCtrMsMKf0ElnO6wKaWfloCC4JdjDwj04=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=oZz4wEi5JrGpkRo/Hj277YOs50hXU+JVvOfIfuiwwBbH8IxuMCLE0yQ9hpKMLJX8Rqtxa+tBP2PNHi1agOesfvLHnwDbYT6FceXf9lG9tL4pmMWw9HVHlumIAK3e7ZhpSpLzn+Txj93wA9dv7n6n/uLlAcvmuiHrvMfdACWV0Vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lxbRM+EK; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dqq4Bkcx; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750248585; c=relaxed/simple;
+	bh=ooN+5DOAbIB//yUp1QwQYQ1MPZBGCi4L/+lApGnR54c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S8nLzTEtPagcGvBuxRHCD9BzF+KKB9sfbBai6qC31H0cPBoubLQ/eLGX2W9NVN9KK9pfo5mSlJFa8w9QcXUFimnBH9UT1WurDan67SATFIWvveLRmWH5ud4SGfVHrpH26ktyYHsGjqZ16YrVVfGrDNBoDjd8GNdbMwfSjHngRok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E4WOmZNw; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lxbRM+EK";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dqq4Bkcx"
-Date: Wed, 18 Jun 2025 12:09:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750248570;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N9hRMefuh2yk2fVV25Hs5r4wXJc+OrGZWC+kgojVLKs=;
-	b=lxbRM+EKSNQij72uwrYP4AIDEKd99WxLEgESabNKCiVhYiaVxmTgo2M9L5SOfTqkuucKNW
-	53rnJ4mZ6zhCeRhwxgmDLLX8ojTjVy7VvBHHXpc18drvmit0Uz+CXA3caHkiM47wkIZtA6
-	TSqUqVl9316FUCOc/1XAANPLRpjA0Nvkz7WL7weSDZYBZgyP/uSxJ1hKeVsTpCdGK/5L3S
-	TWuZPvlEkjBsfFU+Vq4Nhx5wdFAJk7g68XVH/EhQ82cqnlfJvm9dc4D+K2MdXlDY82fuym
-	mFyrTek+bB1kFf085owZfhecDuhLssKOJTJdExScz1uxcrfl3XueUrC3oXMRGQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750248570;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=N9hRMefuh2yk2fVV25Hs5r4wXJc+OrGZWC+kgojVLKs=;
-	b=dqq4BkcxQ5E9E1Ubb2uYKGU9arteH4OYNb/zbsE112kRpBteiEvQHe83NcmJBnyuuGrJ5i
-	AveB/BCxOHaz93Bw==
-From: "tip-bot2 for Masami Hiramatsu (Google)" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/alternatives: Fix int3 handling failure from
- broken text_poke array
-Cc: Linux Kernel Functional Testing <lkft@linaro.org>,
- "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- "Steven Rostedt (Google)" <rostedt@goodmis.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <\
- 175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
-References: <\
- 175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E4WOmZNw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750248584; x=1781784584;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ooN+5DOAbIB//yUp1QwQYQ1MPZBGCi4L/+lApGnR54c=;
+  b=E4WOmZNwCJTDsLJJDlWutNBCUAuv84v9Xh1o9BL1ID3TEYIx0aS+PNQ7
+   9qFLultQs4EAEM+X2wrDnDJFgIlrYfAPUUhZ36tATWVBeslHoZL0SYNQ7
+   kaFbj64AtnJeuwoX1yr2ZCF/9j413z0XY4jJSvDQ4p9If06mMyPcy+NGW
+   A9RAhMsk+igAQPr+cMNQNCvjhFdTfhQ5woxZotlEwRw/ucv5zBy3S0UBl
+   Tv6adXlgSlTdVaUr+wls+58WM0ca+/kiAvdfnGzNwWzsCX8syXXigeTnq
+   MKSdNks/1lLLL52WxnAE/tNkWoVQEFTjtfKZgt4s2b1+BUfr9OTgi0gKp
+   w==;
+X-CSE-ConnectionGUID: BvBDFbzfQU2n6MCo9fJzfg==
+X-CSE-MsgGUID: rfcZ0EQrRvCbHWbz6gCorQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="77869033"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="77869033"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:08:34 -0700
+X-CSE-ConnectionGUID: u6VDnyBNSTWBpqy6wp9oCA==
+X-CSE-MsgGUID: /JtHlLBrQVCQnhDIwXFAQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="154213048"
+Received: from sschumil-mobl2.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.245.234])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 05:08:27 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Tony Luck <tony.luck@intel.com>,
+	pbonzini@redhat.com,
+	seanjc@google.com
+Cc: vannapurve@google.com,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	H Peter Anvin <hpa@zytor.com>,
+	linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	rick.p.edgecombe@intel.com,
+	kirill.shutemov@linux.intel.com,
+	kai.huang@intel.com,
+	reinette.chatre@intel.com,
+	xiaoyao.li@intel.com,
+	tony.lindgren@linux.intel.com,
+	binbin.wu@linux.intel.com,
+	isaku.yamahata@intel.com,
+	yan.y.zhao@intel.com,
+	chao.gao@intel.com
+Subject: [PATCH 0/2] Fixes for recovery for machine check in TDX/SEAM non-root mode
+Date: Wed, 18 Jun 2025 15:08:04 +0300
+Message-ID: <20250618120806.113884-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175024856942.406.9775952372064270732.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+Hi
 
-Commit-ID:     2aebf5ee43bf0ed225a09a30cf515d9f2813b759
-Gitweb:        https://git.kernel.org/tip/2aebf5ee43bf0ed225a09a30cf515d9f2813b759
-Author:        Masami Hiramatsu (Google) <mhiramat@kernel.org>
-AuthorDate:    Wed, 18 Jun 2025 09:05:23 +09:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 18 Jun 2025 13:59:56 +02:00
+Here are 2 small fixes related to recovery for machine check in TDX/SEAM
+non-root mode.
 
-x86/alternatives: Fix int3 handling failure from broken text_poke array
+The issues were noticed as part of work to determine the conditions under
+which TDX private memory needs to be cleared after being reclaimed.
+For guests with a large amount of memory, clearing all private pages during
+VM shutdown can take minutes, so we are looking at when that can be
+skipped.  A future patch will deal with that.
 
-Since smp_text_poke_single() does not expect there is another
-text_poke request is queued, it can make text_poke_array not
-sorted or cause a buffer overflow on the text_poke_array.vec[].
-This will cause an Oops in int3 because of bsearch failing;
+One thing that was investigated was the effect of deliberately corrupting a
+TDX guest private page by writing to it on the host, and then reading it
+on the guest, which results in a machine check as expected, but revealed
+the issue addressed in patch 1.
 
-   CPU 0                        CPU 1                      CPU 2
-   -----                        -----                      -----
+Patch 2 follows on and ensures the poisoned page is not touched.
 
- smp_text_poke_batch_add()
+There are 2 outstanding issues:
 
-			    smp_text_poke_single() <<-- Adds out of order
+1. It is assumed that once the TDX VM is shutdown that the memory is
+returned to the allocator.  That is true at present, but may not be in the
+future.  Consider, for example, patch set "New KVM ioctl to link a gmem
+inode to a new gmem file" :
 
-							<int3>
-                                                	[Fails o find address
-                                                        in text_poke_array ]
-                                                        OOPS!
+      https://lore.kernel.org/r/cover.1747368092.git.afranji@google.com/
 
-Or unhandled page fault because of a buffer overflow;
+2. Currently, KVM TDX does not cater for the TDX VM to enter a FATAL error
+state, where the only operation permitted is to tear down the VM.  KVM just
+carries on, hitting various errors, but in particular, memory reclaim fails
+because it is not following the teardown procedure, and all guest private
+memory is leaked.
 
-   CPU 0                        CPU 1
-   -----                        -----
 
- smp_text_poke_batch_add() <<+
- ...                         |
- smp_text_poke_batch_add() <<-- Adds TEXT_POKE_ARRAY_MAX times.
+Adrian Hunter (3):
+      x86/mce: Fix missing address mask in recovery for errors in TDX/SEAM non-root mode
+      KVM: TDX: Do not clear poisoned pages
 
-			     smp_text_poke_single() {
-			     	__smp_text_poke_batch_add() <<-- Adds entry at
-								TEXT_POKE_ARRAY_MAX + 1
+ arch/x86/kernel/cpu/mce/core.c | 3 ++-
+ arch/x86/kvm/vmx/tdx.c         | 8 ++++----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-                		smp_text_poke_batch_finish()
-                        	  [Unhandled page fault because
-				   text_poke_array.nr_entries is
-				   overwritten]
-				   BUG!
-			     }
 
-Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
-so that it correctly flush the queue if needed.
-
-Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
-Fixes: c8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Link: https://lkml.kernel.org/r/\ 175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com
----
- arch/x86/kernel/alternative.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 9ae80fa..ea1d984 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -3138,6 +3138,6 @@ void __ref smp_text_poke_batch_add(void *addr, const void *opcode, size_t len, c
-  */
- void __ref smp_text_poke_single(void *addr, const void *opcode, size_t len, const void *emulate)
- {
--	__smp_text_poke_batch_add(addr, opcode, len, emulate);
-+	smp_text_poke_batch_add(addr, opcode, len, emulate);
- 	smp_text_poke_batch_finish();
- }
+Regards
+Adrian
