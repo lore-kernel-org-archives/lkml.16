@@ -1,341 +1,336 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481F02FEE1F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD6A2FEE03
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750267065; cv=none; b=jjbGWwBPkKt+2tfKGDPQQsZajKooCYO56dDdPbAA+3J+S/Dwsyk9SmGRcnlykkMhxH6gUWcEdKnZuwTWUkvp0GDA6NVQkyyqCEDqK0stkv19lNCnAoMYaE6brAznLmjKwji0vfi4mNfICiaKfHaHcKsUcAPR/j2SdLDP2BOuvZs=
+	t=1750267171; cv=none; b=RCNsFIC3BzHkPj8XYErGgbAJfy4jCwkpBhHgvfrFAbMQNrmnwaq7PjQij9tdkvYdxGl18BsDN9DuKIycJ0TvjsoGtXkWAWPPZYOkIzBfAMSGhUfUHRpnibwQmhuAh/tbOwg1yQahW09uo5xtAlPlwygIM2/y9xak93Zih4YBlec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750267065; c=relaxed/simple;
-	bh=gXXR7kgyY4SeGtwSs7b49R9w5BjiKKUl9+1pd35MjNg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KNaWkDBeiXmfKpNgO+XjnCGLlEz1vEVjwo+zmlk1y7SKAKvSmdv8kx5Ua8a+tljQleE8g/G08XLRv3GLQqv9VU8cDmKzAF3NWfYwmBmNL7YN/fADsTh1T0bSRI8VSR33E3rjmu8D/x7vkbCdNapMmVNDXNQUZGPmi5aH1NMP6OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BBMXDw77; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750267171; c=relaxed/simple;
+	bh=nUGiUUynl+sNOQJCkHEjn5jGhqAKwlYMEfKw7xWAX0E=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YMD8M0i2mCKKTMIdOQ7IhCfgQdy/wIj7hJ0hhRcYfLwbp7PUAlbzQ0ymfjaP9zIj3EHZOMlRRFmMuY9qq8HzeDqfaM4NJkvWUro0+miQxoTh/1AUUxrfu+5zevnlGtXtK8bngTtYD4NyS0y9HCH6S9LdPPxbO9ac0doVcZoWR/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hLVo5ZBv; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BBMXDw77"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750267061;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u5cEFN65OmhFNR8F0AIk7bNFWAftwcBimGy3RuhXWUU=;
-	b=BBMXDw775A3ZfgfCd9igF0/wSAQzY7GbH+2SFmVS9uIxY90YqWlq+genNTL1mbiquTT3eC
-	3jXUtf8BkWeRFRZk75c6D57YVzHjqz73kcdguhaaeulZNJWqAaT9iZjj/DaDa03vmwCEfQ
-	ajMecvp6dLlWCtyLI/QAkttHLtyyUlA=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-365-P8WVlcaWPmutzaoBNlKk4Q-1; Wed,
- 18 Jun 2025 13:17:37 -0400
-X-MC-Unique: P8WVlcaWPmutzaoBNlKk4Q-1
-X-Mimecast-MFC-AGG-ID: P8WVlcaWPmutzaoBNlKk4Q_1750267055
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9479E180136B;
-	Wed, 18 Jun 2025 17:17:35 +0000 (UTC)
-Received: from [10.22.64.21] (unknown [10.22.64.21])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A3DFB180045B;
-	Wed, 18 Jun 2025 17:17:32 +0000 (UTC)
-Message-ID: <62bfa26a-822b-462d-ba8d-e0d85610e278@redhat.com>
-Date: Wed, 18 Jun 2025 13:17:31 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hLVo5ZBv"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32b2f5d91c8so57600831fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750267167; x=1750871967; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=WpR+OcTrcx45Fz6S03n2ctoKcqhnRovsqGceCO+AYd8=;
+        b=hLVo5ZBv5h45Gld/+G5Cmgiyv4eGgUtMT6K8DmEEWkQEbYJHVv320mTpJy4gNm4+dX
+         Ka/mnE1zgUJagcE3//XQupU+1VZX28Wcspcgr6QnaUgtgX9PBk19lFdleI6uaa91FjhO
+         QPzqRz/qt8EuRDDhyKP1CYppc9BM7bGO2qZSezawxD5gZCq1rT9DXkDSRQM1y8iVJKxQ
+         Gw2ZAnbQDg1Bsm2gV1Y/2EXCjUQHwFXcOnYmcaCsvEyjzaYHlynbwtPmDOjP6yQBXSkT
+         J3WTdY91KYwWtrdHLN6w3TyEksXhLNyPFx2f6B/tHN+TwwN/XL2c4w1slSl58ZNOOulK
+         LTAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750267167; x=1750871967;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WpR+OcTrcx45Fz6S03n2ctoKcqhnRovsqGceCO+AYd8=;
+        b=U/nJPafBrnrbQ3fhS7daMZtOznZGwqqbzXGhQdstse8yOHET9+hRPM8le2hsccZBCB
+         PiRuP0kwXhB+sIuzhooVD6FdvIAKPMaTFMgKWzxBk3UHKT9QrA/9qFxhxDBllMgfQI23
+         Rjr4GYOiGUChsaIUNLmeT3k9No2rAdT3QMmW1dDptRuUN55Oxl0YmukQetOhbzFa9ap+
+         kL5NcZaZjYTXcwig/SjJsDB+vYRAJl54bCyLflR4SnPxK2M46yR2Mtv0nPCTOOyt6kuO
+         ZXmhe9P7om9+GUO8rGqaaOmX10vyBVR5hFMonVGsNZ/GLCqBKlBq+PH8SksBCEmgriOj
+         CghA==
+X-Forwarded-Encrypted: i=1; AJvYcCUePEoIoQl5acls8IeWitqJVk4nQV+/6Qd28P/JxcY92oDhyTV61Q84hqWeDx61WXIRmze5hF/8jBMzFis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCWmzKGdyK3zn4+PHbT2agtfjNdqcpqImMcAEj/XmKDnqbde2h
+	tiTBPem4GDNjze+t6pMtrW5dxfu6y8t4TXMxXZ3DcxIZaoPO1M0hxOtM
+X-Gm-Gg: ASbGncvx3GpW3kesNcjj5dSSbQ8vIMV5btZs4G0N/4LlO4OXKZkbpT6uOi8kmup1vN9
+	I+8xiF34BrQCm/tJMbb0zMu5FhO37eB/6AyKoczLqWsee//lLnjxXLRP/uCZ8d9alSF1JAZFlUM
+	ezELvMmjVd1Y0Dm+/4pAzYBD1RO072CIXDQGIyHzDKLT72t4/uHKJU/BZPM/AA95oLTNmwLW6b2
+	6IYaTMntsniAtqlE4kgmT7u8t/TQpWhb5WBrk3RVtFgS7w6sUPo768763zl3zaTabOemGrJo6/R
+	EmQWEAds783v0StPMR9L+WCdJNeACItInHmkMVWPCiOQrCUZGTU7xbpGUDT5WumXLWtipGaBBN0
+	DBAEqi9Z16Wo=
+X-Google-Smtp-Source: AGHT+IExY1E59LPFVKc5mfbs10Pk0s2C7jJwO65JR1+JB9tmKwmJ0N0+EA/E0W1886bcGtXU24Ygvg==
+X-Received: by 2002:a05:651c:2203:b0:32b:47be:e1bd with SMTP id 38308e7fff4ca-32b4a2d7388mr57877351fa.6.1750267166759;
+        Wed, 18 Jun 2025 10:19:26 -0700 (PDT)
+Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b3307aebcsm23376581fa.40.2025.06.18.10.19.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 10:19:25 -0700 (PDT)
+From: Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date: Wed, 18 Jun 2025 19:19:23 +0200
+To: Dev Jain <dev.jain@arm.com>
+Cc: Uladzislau Rezki <urezki@gmail.com>,
+	Ryan Roberts <ryan.roberts@arm.com>, catalin.marinas@arm.com,
+	will@kernel.org, anshuman.khandual@arm.com,
+	quic_zhenhuah@quicinc.com, kevin.brodsky@arm.com,
+	yangyicong@hisilicon.com, joey.gouly@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	david@redhat.com
+Subject: Re: [PATCH v3] arm64: Enable vmalloc-huge with ptdump
+Message-ID: <aFL1G91dDtDtMMon@pc636>
+References: <20250616103310.17625-1-dev.jain@arm.com>
+ <d0b17ac1-32e1-4086-97ec-1d70c1ac62e6@arm.com>
+ <ed2df0cc-e02c-4376-af7a-7deac6efa9b4@arm.com>
+ <aFFWw4O2PjOScWld@pc636>
+ <910e8622-2755-4aca-b17e-0ec8a18a7f1a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/4] scsi: fnic: Fix crash in fnic_wq_cmpl_handler when
- FDMI times out
-To: martin.petersen@oracle.com
-Cc: arulponn@cisco.com, djhawar@cisco.com, gcboffa@cisco.com,
- mkai2@cisco.com, satishkh@cisco.com, aeasi@cisco.com, jejb@linux.ibm.com,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, revers@redhat.com,
- dan.carpenter@linaro.org, stable@vger.kernel.org, sebaddel@cisco.com,
- Karan Tilak Kumar <kartilak@cisco.com>
-References: <20250618003431.6314-1-kartilak@cisco.com>
-Content-Language: en-US
-From: John Meneghini <jmeneghi@redhat.com>
-Organization: RHEL Core Storge Team
-In-Reply-To: <20250618003431.6314-1-kartilak@cisco.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <910e8622-2755-4aca-b17e-0ec8a18a7f1a@arm.com>
 
-Great Job.  Thanks Karan.
+On Wed, Jun 18, 2025 at 08:41:36AM +0530, Dev Jain wrote:
+> 
+> On 17/06/25 5:21 pm, Uladzislau Rezki wrote:
+> > On Mon, Jun 16, 2025 at 10:20:29PM +0100, Ryan Roberts wrote:
+> > > On 16/06/2025 19:07, Ryan Roberts wrote:
+> > > > On 16/06/2025 11:33, Dev Jain wrote:
+> > > > > arm64 disables vmalloc-huge when kernel page table dumping is enabled,
+> > > > > because an intermediate table may be removed, potentially causing the
+> > > > > ptdump code to dereference an invalid address. We want to be able to
+> > > > > analyze block vs page mappings for kernel mappings with ptdump, so to
+> > > > > enable vmalloc-huge with ptdump, synchronize between page table removal in
+> > > > > pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
+> > > > > use mmap_read_lock and not write lock because we don't need to synchronize
+> > > > > between two different vm_structs; two vmalloc objects running this same
+> > > > > code path will point to different page tables, hence there is no race.
+> > > > > 
+> > > > > For pud_free_pmd_page(), we isolate the PMD table to avoid taking the lock
+> > > > > 512 times again via pmd_free_pte_page().
+> > > > > 
+> > > > > We implement the locking mechanism using static keys, since the chance
+> > > > > of a race is very small. Observe that the synchronization is needed
+> > > > > to avoid the following race:
+> > > > > 
+> > > > > CPU1							CPU2
+> > > > > 						take reference of PMD table
+> > > > > pud_clear()
+> > > > > pte_free_kernel()
+> > > > > 						walk freed PMD table
+> > > > > 
+> > > > > and similar race between pmd_free_pte_page and ptdump_walk_pgd.
+> > > > > 
+> > > > > Therefore, there are two cases: if ptdump sees the cleared PUD, then
+> > > > > we are safe. If not, then the patched-in read and write locks help us
+> > > > > avoid the race.
+> > > > > 
+> > > > > To implement the mechanism, we need the static key access from mmu.c and
+> > > > > ptdump.c. Note that in case !CONFIG_PTDUMP_DEBUGFS, ptdump.o won't be a
+> > > > > target in the Makefile, therefore we cannot initialize the key there, as
+> > > > > is being done, for example, in the static key implementation of
+> > > > > hugetlb-vmemmap. Therefore, include asm/cpufeature.h, which includes
+> > > > > the jump_label mechanism. Declare the key there and define the key to false
+> > > > > in mmu.c.
+> > > > > 
+> > > > > No issues were observed with mm-selftests. No issues were observed while
+> > > > > parallelly running test_vmalloc.sh and dumping the kernel pagetable through
+> > > > > sysfs in a loop.
+> > > > > 
+> > > > > v2->v3:
+> > > > >   - Use static key mechanism
+> > > > > 
+> > > > > v1->v2:
+> > > > >   - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
+> > > > >   - In case of pud_free_pmd_page(), isolate the PMD table to avoid taking
+> > > > >     the lock 512 times again via pmd_free_pte_page()
+> > > > > 
+> > > > > Signed-off-by: Dev Jain <dev.jain@arm.com>
+> > > > > ---
+> > > > >   arch/arm64/include/asm/cpufeature.h |  1 +
+> > > > >   arch/arm64/mm/mmu.c                 | 51 ++++++++++++++++++++++++++---
+> > > > >   arch/arm64/mm/ptdump.c              |  5 +++
+> > > > >   3 files changed, 53 insertions(+), 4 deletions(-)
+> > > > > 
+> > > > > diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+> > > > > index c4326f1cb917..3e386563b587 100644
+> > > > > --- a/arch/arm64/include/asm/cpufeature.h
+> > > > > +++ b/arch/arm64/include/asm/cpufeature.h
+> > > > > @@ -26,6 +26,7 @@
+> > > > >   #include <linux/kernel.h>
+> > > > >   #include <linux/cpumask.h>
+> > > > > +DECLARE_STATIC_KEY_FALSE(ptdump_lock_key);
+> > > > >   /*
+> > > > >    * CPU feature register tracking
+> > > > >    *
+> > > > > diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> > > > > index 8fcf59ba39db..e242ba428820 100644
+> > > > > --- a/arch/arm64/mm/mmu.c
+> > > > > +++ b/arch/arm64/mm/mmu.c
+> > > > > @@ -41,11 +41,14 @@
+> > > > >   #include <asm/tlbflush.h>
+> > > > >   #include <asm/pgalloc.h>
+> > > > >   #include <asm/kfence.h>
+> > > > > +#include <asm/cpufeature.h>
+> > > > >   #define NO_BLOCK_MAPPINGS	BIT(0)
+> > > > >   #define NO_CONT_MAPPINGS	BIT(1)
+> > > > >   #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
+> > > > > +DEFINE_STATIC_KEY_FALSE(ptdump_lock_key);
+> > > > > +
+> > > > >   enum pgtable_type {
+> > > > >   	TABLE_PTE,
+> > > > >   	TABLE_PMD,
+> > > > > @@ -1267,8 +1270,9 @@ int pmd_clear_huge(pmd_t *pmdp)
+> > > > >   	return 1;
+> > > > >   }
+> > > > > -int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+> > > > > +static int __pmd_free_pte_page(pmd_t *pmdp, unsigned long addr, bool lock)
+> > > > >   {
+> > > > > +	bool lock_taken = false;
+> > > > >   	pte_t *table;
+> > > > >   	pmd_t pmd;
+> > > > > @@ -1279,15 +1283,29 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+> > > > >   		return 1;
+> > > > >   	}
+> > > > > +	/* See comment in pud_free_pmd_page for static key logic */
+> > > > >   	table = pte_offset_kernel(pmdp, addr);
+> > > > >   	pmd_clear(pmdp);
+> > > > >   	__flush_tlb_kernel_pgtable(addr);
+> > > > > +	if (static_branch_unlikely(&ptdump_lock_key) && lock) {
+> > > > > +		mmap_read_lock(&init_mm);
+> > > > > +		lock_taken = true;
+> > > > > +	}
+> > > > > +	if (unlikely(lock_taken))
+> > > > > +		mmap_read_unlock(&init_mm);
+> > > > > +
+> > > > >   	pte_free_kernel(NULL, table);
+> > > > >   	return 1;
+> > > > >   }
+> > > > > +int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
+> > > > > +{
+> > > > > +	return __pmd_free_pte_page(pmdp, addr, true);
+> > > > > +}
+> > > > > +
+> > > > >   int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+> > > > >   {
+> > > > > +	bool lock_taken = false;
+> > > > >   	pmd_t *table;
+> > > > >   	pmd_t *pmdp;
+> > > > >   	pud_t pud;
+> > > > > @@ -1301,15 +1319,40 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
+> > > > >   	}
+> > > > >   	table = pmd_offset(pudp, addr);
+> > > > > +	/*
+> > > > > +	 * Isolate the PMD table; in case of race with ptdump, this helps
+> > > > > +	 * us to avoid taking the lock in __pmd_free_pte_page().
+> > > > > +	 *
+> > > > > +	 * Static key logic:
+> > > > > +	 *
+> > > > > +	 * Case 1: If ptdump does static_branch_enable(), and after that we
+> > > > > +	 * execute the if block, then this patches in the read lock, ptdump has
+> > > > > +	 * the write lock patched in, therefore ptdump will never read from
+> > > > > +	 * a potentially freed PMD table.
+> > > > > +	 *
+> > > > > +	 * Case 2: If the if block starts executing before ptdump's
+> > > > > +	 * static_branch_enable(), then no locking synchronization
+> > > > > +	 * will be done. However, pud_clear() + the dsb() in
+> > > > > +	 * __flush_tlb_kernel_pgtable will ensure that ptdump observes an
+> > > > > +	 * empty PUD. Thus, it will never walk over a potentially freed
+> > > > > +	 * PMD table.
+> > > > > +	 */
+> > > > > +	pud_clear(pudp);
+> > > > How can this possibly be correct; you're clearing the pud without any
+> > > > synchronisation. So you could have this situation:
+> > > > 
+> > > > CPU1 (vmalloc)			CPU2 (ptdump)
+> > > > 
+> > > > 				static_branch_enable()
+> > > > 				  mmap_write_lock()
+> > > > 				    pud = pudp_get()
+> > > > pud_free_pmd_page()
+> > > >    pud_clear()
+> > > > 				    access the table pointed to by pud
+> > > > 				    BANG!
+> > > > 
+> > > > Surely the logic needs to be:
+> > > > 
+> > > > 	if (static_branch_unlikely(&ptdump_lock_key)) {
+> > > > 		mmap_read_lock(&init_mm);
+> > > > 		lock_taken = true;
+> > > > 	}
+> > > > 	pud_clear(pudp);
+> > > > 	if (unlikely(lock_taken))
+> > > > 		mmap_read_unlock(&init_mm);
+> > > > 
+> > > > That fixes your first case, I think? But doesn't fix your second case. You could
+> > > > still have:
+> > > > 
+> > > > CPU1 (vmalloc)			CPU2 (ptdump)
+> > > > 
+> > > > pud_free_pmd_page()
+> > > >    <ptdump_lock_key=FALSE>
+> > > > 				static_branch_enable()
+> > > > 				  mmap_write_lock()
+> > > > 				    pud = pudp_get()
+> > > >    pud_clear()
+> > > > 				    access the table pointed to by pud
+> > > > 				    BANG!
+> > > > 
+> > > > I think what you need is some sort of RCU read-size critical section in the
+> > > > vmalloc side that you can then synchonize on in the ptdump side. But you would
+> > > > need to be in the read side critical section when you sample the static key, but
+> > > > you can't sleep waiting for the mmap lock while in the critical section. This
+> > > > feels solvable, and there is almost certainly a well-used pattern, but I'm not
+> > > > quite sure what the answer is. Perhaps others can help...
+> > > Just taking a step back here, I found the "percpu rw semaphore". From the
+> > > documentation:
+> > > 
+> > > """
+> > > Percpu rw semaphores is a new read-write semaphore design that is
+> > > optimized for locking for reading.
+> > > 
+> > > The problem with traditional read-write semaphores is that when multiple
+> > > cores take the lock for reading, the cache line containing the semaphore
+> > > is bouncing between L1 caches of the cores, causing performance
+> > > degradation.
+> > > 
+> > > Locking for reading is very fast, it uses RCU and it avoids any atomic
+> > > instruction in the lock and unlock path. On the other hand, locking for
+> > > writing is very expensive, it calls synchronize_rcu() that can take
+> > > hundreds of milliseconds.
+> > > """
+> > > 
+> > > Perhaps this provides the properties we are looking for? Could just define one
+> > > of these and lock it in read mode around pXd_clear() on the vmalloc side. Then
+> > > lock it in write mode around ptdump_walk_pgd() on the ptdump side. No need for
+> > > static key or other hoops. Given its a dedicated lock, there is no risk of
+> > > accidental contention because no other code is using it.
+> > > 
+> > Write-lock indeed is super expensive, as you noted it blocks on
+> > synchronize_rcu(). If that write-lock interferes with a critical
+> > vmalloc fast path, where a read-lock could be injected, then it
+> > is definitely a problem.
+> 
+> I have a question - is this pmd_free_pte_page/pud_free_pmd_page part of
+> a fast path?
+>
+<snip>
+vmalloc()
+__vmalloc_node_range_noprof()
+  __vmalloc_area_node()
+    vmap_pages_range();
+      vmap_pages_range_noflush()
+        __vmap_pages_range_noflush()
+          vmap_range_noflush()
+            vmap_p4d_range()
+              vmap_try_huge_p4d()
+	            if (p4d_present(*p4d) && !p4d_free_pud_page(p4d, addr))
+<snip>
 
-Reviewed-by: John Meneghini <jmeneghi@redhat.com>
+The point is, we would like to avoid any long-sleeping primitive or
+introduce any new bottle-necks which makes the vmalloc less scalable
+or slower.
 
-Martin, if possible, please include these in 6.16/scsi-fixes.  These are critical bug fixes which are holding up the release of RHEL-9.7.
+I reacted on the synchronize_rcu() and rw-semaphores because it makes
+the current context to enter into sleeping state, i.e. waiting on the
+wait_for_completion(). Also, we would like to exclude any sleeping if
+possible at all, for example GFP_ATOMIC and GFP_NOWAIT flags support,
+where i look at currently.
 
-/John
-
-On 6/17/25 8:34 PM, Karan Tilak Kumar wrote:
-> When both the RHBA and RPA FDMI requests time out, fnic reuses a frame
-> to send ABTS for each of them. On send completion, this causes an
-> attempt to free the same frame twice that leads to a crash.
-> 
-> Fix crash by allocating separate frames for RHBA and RPA,
-> and modify ABTS logic accordingly.
-> 
-> Tested by checking MDS for FDMI information.
-> Tested by using instrumented driver to:
-> Drop PLOGI response
-> Drop RHBA response
-> Drop RPA response
-> Drop RHBA and RPA response
-> Drop PLOGI response + ABTS response
-> Drop RHBA response + ABTS response
-> Drop RPA response + ABTS response
-> Drop RHBA and RPA response + ABTS response for both of them
-> 
-> Fixes: 09c1e6ab4ab2 ("scsi: fnic: Add and integrate support for FDMI")
-> Reviewed-by: Sesidhar Baddela <sebaddel@cisco.com>
-> Reviewed-by: Arulprabhu Ponnusamy <arulponn@cisco.com>
-> Reviewed-by: Gian Carlo Boffa <gcboffa@cisco.com>
-> Tested-by: Arun Easi <aeasi@cisco.com>
-> Co-developed-by: Arun Easi <aeasi@cisco.com>
-> Signed-off-by: Arun Easi <aeasi@cisco.com>
-> Tested-by: Karan Tilak Kumar <kartilak@cisco.com>
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Karan Tilak Kumar <kartilak@cisco.com>
-> ---
-> Changes between v5 and v6:
->      - Incorporate review comments from John:
-> 	- Rebase patches on 6.17/scsi-queue
-> 
-> Changes between v4 and v5:
->      - Incorporate review comments from John:
-> 	- Refactor patches
-> 
-> Changes between v3 and v4:
->      - Incorporate review comments from Dan:
-> 	- Remove comments from Cc tag
-> 
-> Changes between v2 and v3:
->      - Incorporate review comments from Dan:
-> 	- Add Cc to stable
-> 
-> Changes between v1 and v2:
->      - Incorporate review comments from Dan:
->          - Add Fixes tag
-> ---
->   drivers/scsi/fnic/fdls_disc.c | 113 +++++++++++++++++++++++++---------
->   drivers/scsi/fnic/fnic.h      |   2 +-
->   drivers/scsi/fnic/fnic_fdls.h |   1 +
->   3 files changed, 87 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/scsi/fnic/fdls_disc.c b/drivers/scsi/fnic/fdls_disc.c
-> index f8ab69c51dab..36b498ad55b4 100644
-> --- a/drivers/scsi/fnic/fdls_disc.c
-> +++ b/drivers/scsi/fnic/fdls_disc.c
-> @@ -763,47 +763,69 @@ static void fdls_send_fabric_abts(struct fnic_iport_s *iport)
->   	iport->fabric.timer_pending = 1;
->   }
->   
-> -static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
-> +static uint8_t *fdls_alloc_init_fdmi_abts_frame(struct fnic_iport_s *iport,
-> +		uint16_t oxid)
->   {
-> -	uint8_t *frame;
-> +	struct fc_frame_header *pfdmi_abts;
->   	uint8_t d_id[3];
-> +	uint8_t *frame;
->   	struct fnic *fnic = iport->fnic;
-> -	struct fc_frame_header *pfabric_abts;
-> -	unsigned long fdmi_tov;
-> -	uint16_t oxid;
-> -	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
-> -			sizeof(struct fc_frame_header);
->   
->   	frame = fdls_alloc_frame(iport);
->   	if (frame == NULL) {
->   		FNIC_FCS_DBG(KERN_ERR, fnic->host, fnic->fnic_num,
->   				"Failed to allocate frame to send FDMI ABTS");
-> -		return;
-> +		return NULL;
->   	}
->   
-> -	pfabric_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
-> +	pfdmi_abts = (struct fc_frame_header *) (frame + FNIC_ETH_FCOE_HDRS_OFFSET);
->   	fdls_init_fabric_abts_frame(frame, iport);
->   
->   	hton24(d_id, FC_FID_MGMT_SERV);
-> -	FNIC_STD_SET_D_ID(*pfabric_abts, d_id);
-> +	FNIC_STD_SET_D_ID(*pfdmi_abts, d_id);
-> +	FNIC_STD_SET_OX_ID(*pfdmi_abts, oxid);
-> +
-> +	return frame;
-> +}
-> +
-> +static void fdls_send_fdmi_abts(struct fnic_iport_s *iport)
-> +{
-> +	uint8_t *frame;
-> +	unsigned long fdmi_tov;
-> +	uint16_t frame_size = FNIC_ETH_FCOE_HDRS_OFFSET +
-> +			sizeof(struct fc_frame_header);
->   
->   	if (iport->fabric.fdmi_pending & FDLS_FDMI_PLOGI_PENDING) {
-> -		oxid = iport->active_oxid_fdmi_plogi;
-> -		FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
-> +		frame = fdls_alloc_init_fdmi_abts_frame(iport,
-> +						iport->active_oxid_fdmi_plogi);
-> +		if (frame == NULL)
-> +			return;
-> +
->   		fnic_send_fcoe_frame(iport, frame, frame_size);
->   	} else {
->   		if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING) {
-> -			oxid = iport->active_oxid_fdmi_rhba;
-> -			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
-> +			frame = fdls_alloc_init_fdmi_abts_frame(iport,
-> +						iport->active_oxid_fdmi_rhba);
-> +			if (frame == NULL)
-> +				return;
-> +
->   			fnic_send_fcoe_frame(iport, frame, frame_size);
->   		}
->   		if (iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING) {
-> -			oxid = iport->active_oxid_fdmi_rpa;
-> -			FNIC_STD_SET_OX_ID(*pfabric_abts, oxid);
-> +			frame = fdls_alloc_init_fdmi_abts_frame(iport,
-> +						iport->active_oxid_fdmi_rpa);
-> +			if (frame == NULL) {
-> +				if (iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING)
-> +					goto arm_timer;
-> +				else
-> +					return;
-> +			}
-> +
->   			fnic_send_fcoe_frame(iport, frame, frame_size);
->   		}
->   	}
->   
-> +arm_timer:
->   	fdmi_tov = jiffies + msecs_to_jiffies(2 * iport->e_d_tov);
->   	mod_timer(&iport->fabric.fdmi_timer, round_jiffies(fdmi_tov));
->   	iport->fabric.fdmi_pending |= FDLS_FDMI_ABORT_PENDING;
-> @@ -2245,6 +2267,21 @@ void fdls_fabric_timer_callback(struct timer_list *t)
->   	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
->   }
->   
-> +void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport)
-> +{
-> +	struct fnic *fnic = iport->fnic;
-> +
-> +	iport->fabric.fdmi_pending = 0;
-> +	/* If max retries not exhausted, start over from fdmi plogi */
-> +	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
-> +		iport->fabric.fdmi_retry++;
-> +		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-> +					 "Retry FDMI PLOGI. FDMI retry: %d",
-> +					 iport->fabric.fdmi_retry);
-> +		fdls_send_fdmi_plogi(iport);
-> +	}
-> +}
-> +
->   void fdls_fdmi_timer_callback(struct timer_list *t)
->   {
->   	struct fnic_fdls_fabric_s *fabric = timer_container_of(fabric, t,
-> @@ -2291,14 +2328,7 @@ void fdls_fdmi_timer_callback(struct timer_list *t)
->   	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
->   		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
->   
-> -	iport->fabric.fdmi_pending = 0;
-> -	/* If max retries not exhaused, start over from fdmi plogi */
-> -	if (iport->fabric.fdmi_retry < FDLS_FDMI_MAX_RETRY) {
-> -		iport->fabric.fdmi_retry++;
-> -		FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
-> -					 "retry fdmi timer %d", iport->fabric.fdmi_retry);
-> -		fdls_send_fdmi_plogi(iport);
-> -	}
-> +	fdls_fdmi_retry_plogi(iport);
->   	FNIC_FCS_DBG(KERN_INFO, fnic->host, fnic->fnic_num,
->   		"fdmi timer callback : 0x%x\n", iport->fabric.fdmi_pending);
->   	spin_unlock_irqrestore(&fnic->fnic_lock, flags);
-> @@ -3716,11 +3746,32 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
->   	switch (FNIC_FRAME_TYPE(oxid)) {
->   	case FNIC_FRAME_TYPE_FDMI_PLOGI:
->   		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_plogi);
-> +
-> +		iport->fabric.fdmi_pending &= ~FDLS_FDMI_PLOGI_PENDING;
-> +		iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
->   		break;
->   	case FNIC_FRAME_TYPE_FDMI_RHBA:
-> +		iport->fabric.fdmi_pending &= ~FDLS_FDMI_REG_HBA_PENDING;
-> +
-> +		/* If RPA is still pending, don't turn off ABORT PENDING.
-> +		 * We count on the timer to detect the ABTS timeout and take
-> +		 * corrective action.
-> +		 */
-> +		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_RPA_PENDING))
-> +			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
-> +
->   		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rhba);
->   		break;
->   	case FNIC_FRAME_TYPE_FDMI_RPA:
-> +		iport->fabric.fdmi_pending &= ~FDLS_FDMI_RPA_PENDING;
-> +
-> +		/* If RHBA is still pending, don't turn off ABORT PENDING.
-> +		 * We count on the timer to detect the ABTS timeout and take
-> +		 * corrective action.
-> +		 */
-> +		if (!(iport->fabric.fdmi_pending & FDLS_FDMI_REG_HBA_PENDING))
-> +			iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
-> +
->   		fdls_free_oxid(iport, oxid, &iport->active_oxid_fdmi_rpa);
->   		break;
->   	default:
-> @@ -3730,10 +3781,16 @@ static void fdls_process_fdmi_abts_rsp(struct fnic_iport_s *iport,
->   		break;
->   	}
->   
-> -	timer_delete_sync(&iport->fabric.fdmi_timer);
-> -	iport->fabric.fdmi_pending &= ~FDLS_FDMI_ABORT_PENDING;
-> -
-> -	fdls_send_fdmi_plogi(iport);
-> +	/*
-> +	 * Only if ABORT PENDING is off, delete the timer, and if no other
-> +	 * operations are pending, retry FDMI.
-> +	 * Otherwise, let the timer pop and take the appropriate action.
-> +	 */
-> +	if (!(iport->fabric.fdmi_pending & FDLS_FDMI_ABORT_PENDING)) {
-> +		timer_delete_sync(&iport->fabric.fdmi_timer);
-> +		if (!iport->fabric.fdmi_pending)
-> +			fdls_fdmi_retry_plogi(iport);
-> +	}
->   }
->   
->   static void
-> diff --git a/drivers/scsi/fnic/fnic.h b/drivers/scsi/fnic/fnic.h
-> index 6c5f6046b1f5..86e293ce530d 100644
-> --- a/drivers/scsi/fnic/fnic.h
-> +++ b/drivers/scsi/fnic/fnic.h
-> @@ -30,7 +30,7 @@
->   
->   #define DRV_NAME		"fnic"
->   #define DRV_DESCRIPTION		"Cisco FCoE HBA Driver"
-> -#define DRV_VERSION		"1.8.0.0"
-> +#define DRV_VERSION		"1.8.0.1"
->   #define PFX			DRV_NAME ": "
->   #define DFX                     DRV_NAME "%d: "
->   
-> diff --git a/drivers/scsi/fnic/fnic_fdls.h b/drivers/scsi/fnic/fnic_fdls.h
-> index 8e610b65ad57..531d0b37e450 100644
-> --- a/drivers/scsi/fnic/fnic_fdls.h
-> +++ b/drivers/scsi/fnic/fnic_fdls.h
-> @@ -394,6 +394,7 @@ void fdls_send_tport_abts(struct fnic_iport_s *iport,
->   bool fdls_delete_tport(struct fnic_iport_s *iport,
->   		       struct fnic_tport_s *tport);
->   void fdls_fdmi_timer_callback(struct timer_list *t);
-> +void fdls_fdmi_retry_plogi(struct fnic_iport_s *iport);
->   
->   /* fnic_fcs.c */
->   void fnic_fdls_init(struct fnic *fnic, int usefip);
-
+--
+Uladzislau Rezki
