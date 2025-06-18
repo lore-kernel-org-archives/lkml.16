@@ -1,78 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpbgbr1.qq.com (smtpbgbr1.qq.com [54.207.19.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A25401DDA24;
-	Wed, 18 Jun 2025 10:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778F343ABC;
+	Wed, 18 Jun 2025 10:43:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.19.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243375; cv=none; b=OVbrCbSPWm1ccwt9M6OYgaXiQkX2fJSO+o7E5bugB6HpBec8e6lEW37RzJNZeXAd41mhJTP7JWJLBgpAPrV+l8Nwm/eBLo9mEtE2FJHfIofl+jGnSw7BMTh+Vf5LHFEP4n7maK+TSQ9TwC5kc+VobYWTxa6M/tl0SiSVW0h2cM8=
+	t=1750243392; cv=none; b=MzO6dQkw++XduhwffR+OkAXo7IRCpM4FTtKMoaiRbHn/DONaX1u5AlG1TOYNRSgrdwvmolsWxav72mZKcBOa6XNe8z5oTHp2teIzpZRD1WdhRHzcM4ilZufvPoimHBO7RpRJNtZPDJwiHu1+Hn2jcqLoDCLuVZrRgmPWXHKACFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243375; c=relaxed/simple;
-	bh=d5kyxp2BL+9+TNglvdVDKaFudzh1QFaGGdvtoQ+OgXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4eNRs5W6FqCUeXOiLGQMcoeNTvQY99/xZxy95/LMnaztMTdQnzc6nHxRqnx8enfxBQPeYtpqEgE74vr0dAIUrfsbe8DFUuasPLgNiloQ1qNHbWHOzAr3A5EgCWXq/pgry0NGQabooyUtv1arZXDc0rRsLasm5D0V1/WtesUAXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZ3qRFXa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZ3qRFXa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C787C4CEE7;
-	Wed, 18 Jun 2025 10:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750243375;
-	bh=d5kyxp2BL+9+TNglvdVDKaFudzh1QFaGGdvtoQ+OgXI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lZ3qRFXapXezadzsKxiw5i62jmD/DVJVvAj2feePmAvTv443uRnBcq3K087+3SV3M
-	 //PwTF03BA0RiLTbytcHwyyffpU/ptYN+xuxsTIw9ghlAoDTuzr5bZ1q3f1C++VMEE
-	 yShHHN8YuZXF3tDfOM7t9dob3RDJRcdRbz0fdAdndQ/LxC7jmhTvb8E210YWbyUaBg
-	 bbeaHuM/qGBgv7HgolMmF3+s6dj7tmuujKR29cp9Tgn78Ud9IBCqRdp9uNzzRz0CuI
-	 OrgMyUCN2dotCSQp5HOHLySctLESnBt7Iaq+Qm7K1vYmDqn2HMOlJC/OVS83EfsXhb
-	 bdsnB0Ytvb46A==
-Date: Wed, 18 Jun 2025 11:42:51 +0100
-From: Simon Horman <horms@kernel.org>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net-next: gianfar: Use
- device_get_named_child_node_count()
-Message-ID: <20250618104251.GD1699@horms.kernel.org>
-References: <22ded703f447ecda728ec6d03e6ec5e7ae68019f.1750157720.git.mazziesaccount@gmail.com>
- <aFFVvjM4Dho863x2@black.fi.intel.com>
+	s=arc-20240116; t=1750243392; c=relaxed/simple;
+	bh=HQNzCf9W+TvtTlIVbFrZdcvENFHgVOktxsslslOxWZM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SgxhRH9Sccwz1v3z1QafDoYDixLSJ3JOtMeuNGSfWeFKXdFLEA45m9k53Wheoe0habicnJz7IXivtT7eYsJO6V4w08Xv6RRGXseAz+vyG+DwkmNmNS9hfW8J8loNcnis0Op+0E8H9iaLHTXFSAyuqH8odK2Akc6w1B2LWM5jILk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com; spf=pass smtp.mailfrom=chenxiaosong.com; arc=none smtp.client-ip=54.207.19.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chenxiaosong.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chenxiaosong.com
+X-QQ-mid: zesmtpsz5t1750243302tc8a57417
+X-QQ-Originating-IP: keGGq+YFE8tuNqfk6RF7BzZPicjKU8gJijQIAgqUiEM=
+Received: from localhost.localdomain ( [116.128.244.171])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 18 Jun 2025 18:41:40 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 7749049518741644067
+From: chenxiaosong@chenxiaosong.com
+To: chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	okorniev@redhat.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	huhai@kylinos.cn,
+	ChenXiaoSong <chenxiaosong@kylinos.cn>
+Subject: [RFC PATCH] nfsd: convert the nfsd_users to atomic_t
+Date: Wed, 18 Jun 2025 18:41:23 +0800
+Message-Id: <20250618104123.398603-1-chenxiaosong@chenxiaosong.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFFVvjM4Dho863x2@black.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:chenxiaosong.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: NDxI9psdf3YVkghZd/8w03o1VRbUTcYZexEEkgrJykEbCTHmo6Zqi28h
+	xuocd2vZcuWl6GpMJRntzueYp2Lao35zevNIj8liiHlgLfEEtjxaZx5oVe+qANtupf20KfI
+	FYFgpXi3Qh/nRgHppEp9lPgl7s0bhwKv6njgbdtTD9XFqoXisQF9kcIqZG0YFcTXz64b27u
+	fgrXiCfNNAHwTCp9AnLXJFOxyoGyZkcIukAcPvVjkJ37iJy+4MDMA75yb++NdV/SJKTK4+B
+	wsV9+/wiXcixPldFEmfK+YlHnKh5+uxNPZ/V5awMfYOXL6/y/4SyWhNYrg4f5nH/NlsQooD
+	YLnfnNsPslTMYSYx+u/T4IE+y3/KD+0zvuguDn1wmMkh33OblixlFK1wuIb2vW0Dl2KSCD8
+	Tv7mc9zZhgje+mRkbL2P6EiLR4cbAbuWoXwjctda51zECDxPWJO7z9etInlwL3zfTztyuqt
+	P+v3xW4ZsbgKxbsinqG+PyD9qOj04I5WkdOFvdAltp/goqUXMxjDy29EsZrgMTLLDZ6zWow
+	CypOsVWLVxs1ykdEJf4SML/S/dVtVy04HEg76KEf1/ogyvG+00Zp5F6WRTBNC2wl/c3srrr
+	efzURwKcj+rOHPIY+MWrXdPYk73D2dBvcAeqHb92CIHzFjYwGRqFp1XsRy0dN3mWbj78Wq5
+	qaADzNTuscaPKf4g8qpkoGVwoPftlYWO5IObRb6Gqj3QjOuLtxHstmpyfYp1VydsN17VwJd
+	QkUbIZMRSSKuAuq3scy+6xI8nCKi60WQ8madN+LLEYTsQmNULxZl72voLnL4WX+atg1vvoi
+	BJf+xUHAZBTHKndFWxm5Z90xRhkxTJYe3UJJfuwjkaoucdIHf2fv1goqjeyWm4Aq8gwZgqW
+	5/ggdzhDkRK/xnX/EDzOjWERCkCtlMET6u2Atgy3xvNueYa4OrdJMIJC9a2kgCD2ZAIcyrW
+	XFtaY/JtQK6aW5TIlUKmVRWUhRCafYC6rXFiSFGnf3evEkBeFp29WHUOpYJJSyF/DyL0=
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Jun 17, 2025 at 02:47:10PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 17, 2025 at 01:58:26PM +0300, Matti Vaittinen wrote:
-> > We can avoid open-coding the loop construct which counts firmware child
-> > nodes with a specific name by using the newly added
-> > device_get_named_child_node_count().
-> > 
-> > The gianfar driver has such open-coded loop. Replace it with the
-> > device_get_child_node_count_named().
-> 
-> Just a side note: The net-next is assumed to be in the square brackets, so when
-> you format patch, use something like
-> 
-> 	git format-patch --subject-prefix="PATCH, net-next" ...
+From: ChenXiaoSong <chenxiaosong@kylinos.cn>
 
-Hi Matti,
+Before commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client"),
+we had a null-ptr-deref in nfsd4_probe_callback() (Link[1]):
 
-It looks like this patch has been marked as Changes Requested in patchwork.
-I assume because of Andy's comment above.
+ nfsd: last server has exited, flushing export cache
+ NFSD: starting 90-second grace period (net f0000030)
+ Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+ ...
+ Call trace:
+  __queue_work+0xb4/0x558
+  queue_work_on+0x88/0x90
+  nfsd4_probe_callback+0x4c/0x58 [nfsd]
+ NFSD: starting 90-second grace period (net f0000030)
+  nfsd4_probe_callback_sync+0x20/0x38 [nfsd]
+  nfsd4_init_conn.isra.57+0x8c/0xa8 [nfsd]
+  nfsd4_create_session+0x5b8/0x718 [nfsd]
+  nfsd4_proc_compound+0x4c0/0x710 [nfsd]
+  nfsd_dispatch+0x104/0x248 [nfsd]
+  svc_process_common+0x348/0x808 [sunrpc]
+  svc_process+0xb0/0xc8 [sunrpc]
+  nfsd+0xf0/0x160 [nfsd]
+  kthread+0x134/0x138
+  ret_from_fork+0x10/0x18
+ Code: aa1c03e0 97ffffba aa0003e2 b5000780 (f9400262)
+ SMP: stopping secondary CPUs
+ Starting crashdump kernel...
+ Bye!
 
-Could you address that and submit a v2?
+One of the cases is:
 
-  Subject: [PATCH net-next v2] ...
+    task A (cpu 1)    |   task B (cpu 2)     |   task C (cpu 3)
+ ---------------------|----------------------|---------------------------------
+ nfsd_startup_generic | nfsd_startup_generic |
+   nfsd_users == 0    |  nfsd_users == 0     |
+   nfsd_users++       |  nfsd_users++        |
+   nfsd_users == 1    |                      |
+   ...                |                      |
+   callback_wq == xxx |                      |
+ ---------------------|----------------------|---------------------------------
+                      |                      | nfsd_shutdown_generic
+                      |                      |   nfsd_users == 1
+                      |                      |   --nfsd_users
+                      |                      |   nfsd_users == 0
+                      |                      |   ...
+                      |                      |   callback_wq == xxx
+                      |                      |   destroy_workqueue(callback_wq)
+ ---------------------|----------------------|---------------------------------
+                      |  nfsd_users == 1     |
+                      |  ...                 |
+                      |  callback_wq == yyy  |
 
-Otherwise, this looks good to me.
+After commit 38f080f3cd19 ("NFSD: Move callback_wq into struct nfs4_client"),
+this issue no longer occurs, but we should still convert the nfsd_users
+to atomic_t to prevent other similar issues.
+
+Link[1]: https://chenxiaosong.com/en/nfs/en-null-ptr-deref-in-nfsd4_probe_callback.html
+Co-developed-by: huhai <huhai@kylinos.cn>
+Signed-off-by: huhai <huhai@kylinos.cn>
+Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+---
+ fs/nfsd/nfssvc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 9b3d6cff0e1e..08b1f9ebdc2a 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -270,13 +270,13 @@ static int nfsd_init_socks(struct net *net, const struct cred *cred)
+ 	return 0;
+ }
+ 
+-static int nfsd_users = 0;
++static atomic_t nfsd_users = ATOMIC_INIT(0);
+ 
+ static int nfsd_startup_generic(void)
+ {
+ 	int ret;
+ 
+-	if (nfsd_users++)
++	if (atomic_fetch_inc(&nfsd_users))
+ 		return 0;
+ 
+ 	ret = nfsd_file_cache_init();
+@@ -291,13 +291,13 @@ static int nfsd_startup_generic(void)
+ out_file_cache:
+ 	nfsd_file_cache_shutdown();
+ dec_users:
+-	nfsd_users--;
++	atomic_dec(&nfsd_users);
+ 	return ret;
+ }
+ 
+ static void nfsd_shutdown_generic(void)
+ {
+-	if (--nfsd_users)
++	if (atomic_dec_return(&nfsd_users))
+ 		return;
+ 
+ 	nfs4_state_shutdown();
+-- 
+2.34.1
+
