@@ -1,94 +1,90 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261381362;
-	Wed, 18 Jun 2025 02:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805771990D9;
+	Wed, 18 Jun 2025 02:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750214998; cv=none; b=pBb10C+yazJTRQmNl/WscSIb5px5g5E+oLirb1Wr56OK4ZdDYT7uq/6mA6xXfdlXQWVAQED0Ddo0HY8mwp0soZKd8X3ZqjrB2OoiK3iwQ5mPFXGJTMec+yJY2r/dfM8vWXbI2DCkRubS3D/GdoUZcGLh/qjKCgf8oB2N8ZCun6w=
+	t=1750215041; cv=none; b=Z/xfn4gHevec1yfKuLegBGgxD06tF+2UZBc/i+m/8E+e/RkVjFP8l2twONvTLYrnsHZcQ7Hynt3/IKZyjVgUSBnXLdZfOB8ESMD1vHrNYtl7mAi4YM/nk3XChPSfOthvuZ5lcN6n7cW9iZZpBlGqKxIO8XB8fNpP90btDhtBPNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750214998; c=relaxed/simple;
-	bh=ak6kVTFoArwDV/4ozE74qsjM9VnnJ3y5qUizMDA0RPU=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XlaCZedeF+DV4tEOVJy9JdKOkq3eaQBumacIA+OMoEdy2RntqRQb3zWxACIFIO6pgZoRm8RBgkQ6WH66WCXdr6GZeifV/iXo2yiKttpwX4hfmUwcU6GZgQef2d8vdgr2+gSJimzsh5Oqs1osQgpllZCpFlUt0/naG91nZHt/17I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=V9brWjey; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1750215041; c=relaxed/simple;
+	bh=ejx7I7UTyAGVPPKElZ3HdFB2xhpKbAHNV3sEAMqZn/I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V/bYfiid8Rep1HCmzbboNzodPpCWhlFFgkID0sMvzK7ONEb+wAvTJE3YwvOIO69PrAgFSXSkkP42hBSrV0cwKaYLAR6+VrSSSNxtCwV62ovRQ0oua+pzpytLHOPE4SHuUYE/sjMcN5l81/qVNmTMwrRFxBerwH30w+DoiweA2jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQIftKpT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="V9brWjey"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1750214994;
-	bh=ak6kVTFoArwDV/4ozE74qsjM9VnnJ3y5qUizMDA0RPU=;
-	h=Subject:From:To:Date:In-Reply-To:References;
-	b=V9brWjey/MQ5R9FzjHwP+8hFRC5Mdjc/FSFzXPmZ4bW3XdyAi3jeUYRsYyelmm8Oz
-	 ay2Q8J3o0HY7OkQZ3nLmavnSPmqHsYUfVYTM3DjuLDHiyDbB8/EBsu14iI1Glum0zG
-	 qccbl7kenLfdTpkU4AftytDU3lh2KeEuA+pk+hVyGYFQtgK2u+oJmGv7EWTs7xXNv1
-	 MhL5N5AdesyHk0KhzFAKr030S/HIvLMlUk4AQYqylDX5d2Tgh4+km5byPtslY6XR6J
-	 nOfUaYl0bbKXxQBF3RXA1yOxOxnYCaPYmnSQCgjePQTmHe2AtkStmf50nANOBhCZV6
-	 M8q8+sIn2pvYg==
-Received: from [192.168.68.112] (unknown [180.150.112.166])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 00565640A0;
-	Wed, 18 Jun 2025 10:49:53 +0800 (AWST)
-Message-ID: <4e6fd85cc8ed6c4261844842bc2e5e54e5db04e6.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 5/8] mmc: sdhci-of-aspeed: Fix null pointer
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Cool Lee <cool_lee@aspeedtech.com>, adrian.hunter@intel.com, 
-	ulf.hansson@linaro.org, joel@jms.id.au, p.zabel@pengutronix.de, 
-	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
-	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 18 Jun 2025 12:19:53 +0930
-In-Reply-To: <20250615035803.3752235-6-cool_lee@aspeedtech.com>
-References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
-	 <20250615035803.3752235-6-cool_lee@aspeedtech.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQIftKpT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3676EC4CEE3;
+	Wed, 18 Jun 2025 02:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750215041;
+	bh=ejx7I7UTyAGVPPKElZ3HdFB2xhpKbAHNV3sEAMqZn/I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PQIftKpTIy1bSt9jmlonpcq4T0n2bn3RRTFUIepdNBXTba+jihH3hRaB181dpXhRp
+	 YZIbdIM8rVebD1L/8m/8EGuH2lSUKP+lmf47gM7qHillYUIUms3Hpt07WgplkEPh6K
+	 x5koAiRrCw6S5kMF65dUQOr541MZPVKfAuUQgMw8MjHyqZDyEz2LwgQ6L9B4qtS292
+	 dXueM7DtFGdO9UNF4V2keyCtiOwxHgSq0szAi8oqNKDFHeQYuSYd4ALyv+3m3VdZNN
+	 wElqr60b5Eej5iyJ62tWTEk589sAkxkfgjB5InoxUiHdQqQGL2fqVadOnf0RWLm3V3
+	 AizwkjOx8hO6g==
+Date: Tue, 17 Jun 2025 21:50:38 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Jie Gan <quic_jiegan@quicinc.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Tingwei Zhang <quic_tingweiz@quicinc.com>, Jinlong Mao <quic_jinlmao@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/2] Enable CTCU device for QCS8300
+Message-ID: <yiz7tewisidbzztbcwc7v2sac4lv2lom5kv4a4rubdfcr73flt@rcga4a6fxhdv>
+References: <20250327024943.3502313-1-jie.gan@oss.qualcomm.com>
+ <d87a6bba-eaed-4ac4-a272-3bb38b1607dc@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d87a6bba-eaed-4ac4-a272-3bb38b1607dc@quicinc.com>
 
-T24gU3VuLCAyMDI1LTA2LTE1IGF0IDExOjU4ICswODAwLCBDb29sIExlZSB3cm90ZToKPiBQbGF0
-Zm9ybSBkYXRhIG1pZ2h0IGJlIG51bGwuCgpDdXJyZW50bHkgaXQgY2FuJ3QgYmU6CgpodHRwczov
-L2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5n
-aXQvdHJlZS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWFzcGVlZC5jP2g9djYuMTYtcmMyI24z
-NzUKCkFyZSB0aGVyZSBmdXR1cmUgY2lyY3Vtc3RhbmNlcyB3aGVyZSBpdCBtYXkgYmUgTlVMTD8K
-CkknbSBhbGwgZm9yIHJlZHVjaW5nIHRoZSByZWFzb25pbmcgZnJvbSBnbG9iYWwgdG8gbG9jYWws
-IGJ1dCBJIHRoaW5rCnNvbWUgZGlzY3Vzc2lvbiBpbiB0aGUgY29tbWl0IG1lc3NhZ2Ugd291bGQg
-YmUgZ29vZC4KCj4gCj4gU2lnbmVkLW9mZi1ieTogQ29vbCBMZWUgPGNvb2xfbGVlQGFzcGVlZHRl
-Y2guY29tPgo+IC0tLQo+IMKgZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hc3BlZWQuYyB8IDcg
-KysrKystLQo+IMKgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMo
-LSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hc3BlZWQuYwo+
-IGIvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hc3BlZWQuYwo+IGluZGV4IDJiZGQ5M2EzZjkx
-Zi4uMjJkZGU5MTVlNTFiIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvbW1jL2hvc3Qvc2RoY2ktb2Yt
-YXNwZWVkLmMKPiArKysgYi9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWFzcGVlZC5jCj4gQEAg
-LTI0MSw3ICsyNDEsNyBAQCBzdGF0aWMgdm9pZCBhc3BlZWRfc2RoY2lfc2V0X2Nsb2NrKHN0cnVj
-dAo+IHNkaGNpX2hvc3QgKmhvc3QsIHVuc2lnbmVkIGludCBjbG9jaykKPiDCoMKgwqDCoMKgwqDC
-oMKgc3RydWN0IHNkaGNpX3BsdGZtX2hvc3QgKnBsdGZtX2hvc3Q7Cj4gwqDCoMKgwqDCoMKgwqDC
-oHVuc2lnbmVkIGxvbmcgcGFyZW50LCBidXM7Cj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBhc3Bl
-ZWRfc2RoY2kgKnNkaGNpOwo+IC3CoMKgwqDCoMKgwqDCoGludCBkaXY7Cj4gK8KgwqDCoMKgwqDC
-oMKgaW50IGRpdiA9IDE7Cj4gwqDCoMKgwqDCoMKgwqDCoHUxNiBjbGs7Cj4gwqAKPiDCoMKgwqDC
-oMKgwqDCoMKgcGx0Zm1faG9zdCA9IHNkaGNpX3ByaXYoaG9zdCk7Cj4gQEAgLTI1Nyw2ICsyNTcs
-OSBAQCBzdGF0aWMgdm9pZCBhc3BlZWRfc2RoY2lfc2V0X2Nsb2NrKHN0cnVjdAo+IHNkaGNpX2hv
-c3QgKmhvc3QsIHVuc2lnbmVkIGludCBjbG9jaykKPiDCoMKgwqDCoMKgwqDCoMKgaWYgKFdBUk5f
-T04oY2xvY2sgPiBob3N0LT5tYXhfY2xrKSkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoGNsb2NrID0gaG9zdC0+bWF4X2NsazsKPiDCoAo+ICvCoMKgwqDCoMKgwqDCoGlmIChzZGhj
-aS0+cGRhdGEpCgpHaXZlbiB0aGlzIHNob3VsZG4ndCBiZSB0aGUgY2FzZSwgcGVyaGFwcyBwcmVj
-ZWRlIGl0IHdpdGggYQpXQVJOX09OQ0UoIXNkaGNpLT5wZGF0YSk/CgpBbmRyZXcKCj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRpdiA9IHNkaGNpLT5wZGF0YS0+Y2xrX2Rpdl9zdGFy
-dDsKPiArCj4gwqDCoMKgwqDCoMKgwqDCoC8qCj4gwqDCoMKgwqDCoMKgwqDCoCAqIFJlZ2FyZGlu
-ZyB0aGUgQVNUMjYwMDoKPiDCoMKgwqDCoMKgwqDCoMKgICoKPiBAQCAtMjczLDcgKzI3Niw3IEBA
-IHN0YXRpYyB2b2lkIGFzcGVlZF9zZGhjaV9zZXRfY2xvY2soc3RydWN0Cj4gc2RoY2lfaG9zdCAq
-aG9zdCwgdW5zaWduZWQgaW50IGNsb2NrKQo+IMKgwqDCoMKgwqDCoMKgwqAgKiBzdXBwb3J0aW5n
-IHRoZSB2YWx1ZSAwIGluIChFTU1DMTJDWzc6Nl0sIEVNTUMxMkNbMTU6OF0pLAo+IGFuZCBjYXB0
-dXJlCj4gwqDCoMKgwqDCoMKgwqDCoCAqIHRoZSAwLXZhbHVlIGNhcGFiaWxpdHkgaW4gY2xrX2Rp
-dl9zdGFydC4KPiDCoMKgwqDCoMKgwqDCoMKgICovCj4gLcKgwqDCoMKgwqDCoMKgZm9yIChkaXYg
-PSBzZGhjaS0+cGRhdGEtPmNsa19kaXZfc3RhcnQ7IGRpdiA8IDI1NjsgZGl2ICo9IDIpCj4gewo+
-ICvCoMKgwqDCoMKgwqDCoGZvciAoOyBkaXYgPCAyNTY7IGRpdiAqPSAyKSB7Cj4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBidXMgPSBwYXJlbnQgLyBkaXY7Cj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoYnVzIDw9IGNsb2NrKQo+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJyZWFrOwoK
+On Wed, May 14, 2025 at 04:00:12PM +0800, Jie Gan wrote:
+> 
+> 
+> On 3/27/2025 10:49 AM, Jie Gan wrote:
+> > Enable CTCU device for QCS8300 platform. Add a fallback mechnasim in binding to utilize
+> > the compitable of the SA8775p platform becuase the CTCU for QCS8300 shares same
+> > configurations as SA8775p platform.
+> > 
+> 
+> Gentle ping for the series.
+> 
+> dt-binding patch has been reviewed by Krzysztof.
+> dts patch has been acked by Konrad.
+> 
 
+You don't seem to have the Coresight maintainers among the recipients of
+the binding patch, so that's probably why it hasn't been merged yet -
+and I can't merge the DTS change until the binding is accepted.
+
+Please apply Krzysztof's R-b and send the binding alone to Coresight
+maintainers, once they have accepted the binding please resubmit the dts
+change and I'd be happy to merge it. (v2 sounds good on both)
+
+PS. Please see go/upstream on how to adopt b4; "b4 prep --auto-to-cc"
+would have saved you from this mistake.
+
+Regards,
+Bjorn
+
+> Thanks,
+> Jie
+> 
+> > Jie Gan (2):
+> >    dt-bindings: arm: add CTCU device for QCS8300
+> >    arm64: dts: qcom: qcs8300: Add CTCU and ETR nodes
+> > 
+> >   .../bindings/arm/qcom,coresight-ctcu.yaml     |   9 +-
+> >   arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 153 ++++++++++++++++++
+> >   2 files changed, 160 insertions(+), 2 deletions(-)
+> > 
+> 
