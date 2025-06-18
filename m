@@ -1,304 +1,208 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E15462E06EE
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DB72F0053;
+	Wed, 18 Jun 2025 16:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265364; cv=none; b=bHUDiWu2ZyY0y8ZsMZEQMz7EffbHJ9Uidh/oFmZPaOjkOZF3fUwP8edjksrP5Js8FM5x/Z3ragpi+AAibeiiTVvlYye+1Wjjz14oGeIsQHxJZaLFghM7aHPY7tRdsTVN3m4DpjWlNMSwrVu4AGa0SiUdjdA2Cn2aouxSmy6fjWo=
+	t=1750265382; cv=none; b=GkLOd9rkNmX1iUa9LZ7cjUbz7cx3TAbA2mvXkh8e0R5IePsV6bq1AJi0fjwnOATERoRKZiLNsS2ReTrm7xyGzCX8U/CZn9FrK4fQ7bln4iJMnfeCbepUXTjprx5i5nMjE345gkxnWsvl6xhiVqOKvl9Qq1elv6jX+n8IdG2TX1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265364; c=relaxed/simple;
-	bh=V8HMeReTEG9RacYYTo724MCy4Fb1ZWP2Tta90iHMlOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ushz3Ds2XS+lu+OOH8amPOjnTnLOzCiNZCdALUvJUf/FtpCPk/PvdY9m7gMkCbQq2kl11GyD5S9Q9qwfPGVskHhbkxOoo1at0BeZsDzAFRvR23rE/HfrxrN47VmCbh/5XSmn7jWiAktmmybjF1F5w54mnL4CwUTtjMleH4kVhJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org; spf=pass smtp.mailfrom=wbinvd.org; dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b=iqP6Q8Vy; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wbinvd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wbinvd.org
+	s=arc-20240116; t=1750265382; c=relaxed/simple;
+	bh=9mP5MxUgs9RWMbl19nVAvrHbVqhzIEtGpLbygPd5vdA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EXVZpJ/AOIzGrpOxUwXd+ptIuosiOu05BxloPNn3W2uDD0pWwzd8K5JBYu5UV2Hp9fJSvvMthVCwguZXkbVQJw3cSbVZ0bHbe5WeRFAympAnQVgkVGPcbHXogQzadg3cH3He6bF8B3Z0BhPXpUdzMIYys5Tg4MRWpVqYaBLF78g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6DxLjIL; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wbinvd.org header.i=@wbinvd.org header.b="iqP6Q8Vy"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7426c44e014so6063744b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:49:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6DxLjIL"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d219896edeso800338785a.1;
+        Wed, 18 Jun 2025 09:49:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=wbinvd.org; s=wbinvd; t=1750265361; x=1750870161; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZkwTQus/2vq0jO/Sj9po/dRlM5Kjy71UyYmwsyJ1kwA=;
-        b=iqP6Q8VyQVHu+jmgNpybErCpTrse7K7/RcVw4BJCd4ivxpvzP8CoyIhU3bjQBzDAna
-         2Yk1fVux8O3oCUeqGg0sEu3CfzZ1SPylIhNkBpq2YDBjqKJpgbuLSvyXaj4zfp8cCVdd
-         9GWHRJ6U1zqguhBhYEo0FaCaw+s0GyjpB5v69vDPE9wne0KLCVw/XD4njWoCClzB5/Tq
-         9wpQjJZdHsTFnnunMqai2Lwc7kzv4AMWZAfnhu3ao/Xuh9rPgPxsBCOk8kHZsfZC768Z
-         PFFrMUKV1fpl4IB3MuXe12XIJ21Wd8Mrptlfns5qKn63mOE91XTF/P5ocncov12si9fa
-         +5NA==
+        d=gmail.com; s=20230601; t=1750265379; x=1750870179; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=0p/zYCkfYb3q7I+SyNYIQjc1L7AsOX0EyXyUuKKC30M=;
+        b=Q6DxLjILm9HtxTnQbZ8c+1iEKPLKuzV7dYafgyOwcv0CxztxpM84odl0QTNtDjuszi
+         csOW6/iB+9Zw+ZlfQ3XP1k8imrASznFOW/wnxmZAvtXuP7N7/Egw2BNzQQuz/UPkGYH4
+         UZgGiGNEGRPI3PQm/pmX3jS3a+0dhsVvBuYE41m/Mu5W4JJmwbNpC71ZPKkSee3bCDrB
+         K22lCON9SargTH6sTsZOH6WSzp5cK4/DTigQ/+P/Jx1mly1SIVeJY7cfQpp0azEfiFrY
+         VBZMjm9uY2BlU3+swdp90gCBXelAULVfPWHNoe+XRBNhKG0UC0i3FDxJPfE+sRvCS8g7
+         PS8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750265361; x=1750870161;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZkwTQus/2vq0jO/Sj9po/dRlM5Kjy71UyYmwsyJ1kwA=;
-        b=K2IL+21ZXdPa6BEUyku7GV23hyXYVf8Xb6YpRStsxLgTAodfqDGCpLlXNte3NbB3+u
-         5XQSFMk29YXvg4E+MIlxSINVu1APFm2iJD7D4je0YF8gaMRnLOkZ3SrJx29lVmC6V1F7
-         YR+ox8a/N0uq0AC/QCQfQNkmcV4RKgDrzoYmemnFq3rAvvlNmSM1N00mxwkF6wrnaIE0
-         O021bvSNyrJXXDTlqapySZg5mny2ZW1JQB/LniqWrd8wh7JYtcULQvtr/LJVhm1wP4Wd
-         s4c2qAp0h70osA1hDtvOUPHHLKq8LfkDSKmrvs0WNcxm/4kCgeKbQWRR5wrdTPO3hEQk
-         usqA==
-X-Gm-Message-State: AOJu0YxZG5bZIjIuRGEx0Xwk6TFSXg4A1nbpoj/0aViSfYUNV4vg/KLL
-	zT3hVT12tnhWk99yTlNeR3ZrmE+XIznYGCBBX9AMzJAqN2ctavZxfbU4KByPA3CidGY=
-X-Gm-Gg: ASbGnctjJLf7PpRqUBZMPbiu0n2sRkAGHFoQbK6ZMwAnoO6g8C206pJE2gSAP79l2QU
-	tYt5ZqqDM9x96hUqR95ebRDvBm7hS2i704mJnJ2j6Ce7YkGijyk+OUuIpZE46SEDsQB9mVbKz7v
-	/aoI3/ZkpDCYxSVPYpHywZ3IMHOZdKwRD2RzugGRK8PokOEf5ZtEvH+RiJlkKv8WbsTxOBbZFYr
-	iqg6dZ4pPHgFEgbycFNBTv5lNbHmLUWNgGg0fnQaAzJCERWAtKQKsaBRy6ZACn+bvZQwJp1jR6v
-	bMrlszuidapmt8swIrjb9IAN8A9x+6Brdc5FgX4qlAdiywA06MD8p3G5xX6Hu8mkDrY9pDsFiiX
-	zcwe9V69zcGzBWMgQO1+dQvlumw76Ers=
-X-Google-Smtp-Source: AGHT+IHzOk18KjGaaNZoUYmiApN/7FP0CoVoB5mhQ3n5lF+L6WcpU3LePSo4/IdJmEveqBzW7w9PlA==
-X-Received: by 2002:a05:6a00:399d:b0:736:33fd:f57d with SMTP id d2e1a72fcca58-7489cfc360dmr18545783b3a.17.1750265360858;
-        Wed, 18 Jun 2025 09:49:20 -0700 (PDT)
-Received: from mozart.vkv.me (192-184-162-253.fiber.dynamic.sonic.net. [192.184.162.253])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-748f161d714sm986971b3a.148.2025.06.18.09.49.19
+        d=1e100.net; s=20230601; t=1750265379; x=1750870179;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0p/zYCkfYb3q7I+SyNYIQjc1L7AsOX0EyXyUuKKC30M=;
+        b=r+JJd927lZ/jZwCd49zsqRXG/8Pe9IWyc7kGLHWfJYJMW30L2TxmfnmdEUouNr5KqW
+         Gpf62hrX7MyetMz/tKzcjkNIELZIyU7spw2e+AzS04BFtFOlNUMSedqn3vjbkgodn+Qq
+         km7od+1V2AYCo0hPaj2fBn+sIUvHu4lYdX1yiHf0CUAS9DeZE0uFThAnY36tGueOr6z0
+         b1uBmu7DD9sOMT+6e8DCmCCTguAptjQCGAjBAOIrGg5Ku/trMMpjtOejcXaoK9+lbVHH
+         hl145ZZ6iStzcCJWWBquMlfHaK7CHFXLqXAYyk7d6NndAWSkdgezlRiJ2DI+Jzme3jMm
+         9XQw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+xKuN5KYxxzRtcuIs4qN/73t5sWyEyzCL2oB2hYMEEEs1Qm9GoHHR8OEsFYzIDqlIxomPRipNx9gH@vger.kernel.org, AJvYcCVSdhoLw6xiKqltOBdJqbGy4ybFvu54p6MW1WJNIvBBoRMQ4/0+ar0jrTzBSMRTamUp76SRikxZJwJ1FnxGxdo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyjj+uEo6vTjDNEEOMMWb2ykepc5W/kfbfM0SGLHRWmcOc9Nxdl
+	nr8f9UT7M8Fgr4p03Whrhf9aDb8tNb4k2cTx8HxQYGwxnQroCmahE2i/
+X-Gm-Gg: ASbGncvRbaFt88DZ0opFV3Rmx8Sd/zgJECxPFtsQWlKjemflf3m8jDJk6+9KTLsYGdb
+	ZKd+vrX6VVqGGym1WBkKGlmCqP+WEEQ/2BJp0qbdLwjjsfeSwZFcubwblWWjlIXFgKsJz62tyMg
+	DSTGO5Vk4oufB9wbM25mQVybHQ6c1JKeyzAW8rpPAM0IXRABsePtbXrjJpuOafIILJ+77+ncR7v
+	hLwOnbZsBxvBl0UldVwP+pSk9kVKDc4OTYu711D4wSJPlBOLrxcxhcxef+RAa7tqVWigYiROU/B
+	jKU98ItyDMy9KgGH83PvokgTXaWunXD476wspojAruJPFyG3quww83Owk0/tS2mmrQMqakvenpJ
+	EMO3kOd/7z768u2aPXEQh9xyplzhlu3m+IDkii3Ce3RxeQBmq/J5n
+X-Google-Smtp-Source: AGHT+IEhcLGc2UeY+9z0aWySUyn/shT48csoLk6ORNprMbEKw6NLOoJme6+One3cz7IPbxiAkzP+rQ==
+X-Received: by 2002:a05:620a:31a9:b0:7ce:b9ed:24dc with SMTP id af79cd13be357-7d3c6c1f5c4mr2762499185a.23.1750265378759;
+        Wed, 18 Jun 2025 09:49:38 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eac7efsm783780085a.68.2025.06.18.09.49.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 09:49:20 -0700 (PDT)
-Date: Wed, 18 Jun 2025 09:49:18 -0700
-From: Calvin Owens <calvin@wbinvd.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	"Lai, Yi" <yi1.lai@linux.intel.com>,
-	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
-Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
- hash
-Message-ID: <aFLuDoX9BGBUC3tW@mozart.vkv.me>
-References: <20250602110027.wfqbHgzb@linutronix.de>
- <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
- <aFBQ8CBKmRzEqIfS@mozart.vkv.me>
- <20250617071628.lXtqjG7C@linutronix.de>
- <aFEz_Fzr-_-nGAHV@mozart.vkv.me>
- <20250617095037.sOnrJlPX@linutronix.de>
- <aFGTmn_CFkuTbP4i@mozart.vkv.me>
- <20250618160333.PdGB89yt@linutronix.de>
+        Wed, 18 Jun 2025 09:49:38 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9FE7B1200043;
+	Wed, 18 Jun 2025 12:49:37 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Wed, 18 Jun 2025 12:49:37 -0400
+X-ME-Sender: <xms:Ie5SaIE1noxV3i3ha4rUeYingQLbhgkuWi81CA5teNR7cqXBzXGDqw>
+    <xme:Ie5SaBXKUHysqSvFDuEA36ME5dxN9qmiXrH4GumA9FDMxQMtVVPa_wVYUHo56M9uH
+    pWwQJfPyuXBBZbzRw>
+X-ME-Received: <xmr:Ie5SaCJBsfxyqX68E0bj4_cLs6NpBzDJNbbnCnvk2FTuLeX-JFCODNXFZHcRVw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdefudeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfh
+    rhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtoh
+    hmqeenucggtffrrghtthgvrhhnpeeggeeukeeghfevudektdevjeehhfekffevueefudei
+    vdelteeltdekheejgfeiveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgv
+    shhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehhe
+    ehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+    pdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplh
+    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
+    rhhushhtqdhfohhrqdhlihhnuhigsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpth
+    htoheplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhu
+    gidqrghrtghhsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepohhjvggurg
+    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghi
+    lhdrtghomhdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprh
+    gtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhn
+    fegpghhhsehprhhothhonhhmrghilhdrtghomh
+X-ME-Proxy: <xmx:Ie5SaKGzOKTvePTyfeVuauVevdJ-DTTtPtjNkEqygnqMeC9P4QjFDg>
+    <xmx:Ie5SaOXlNlD9M2izGP9Gz_UzeBAyuu5EKa1iFB9FZBdsO5ZQPpLdiw>
+    <xmx:Ie5SaNM87n_yof_SwIdoC3urVKOVTqBq-M8B-5RLrOQ2U_7ZI26HgQ>
+    <xmx:Ie5SaF0JNwIptUT2X8gtuLv87rsgPEOa0Z64nD9zMInzeqkwpmhklw>
+    <xmx:Ie5SaHVXRbSdN7O96KA9cs9UwujNKSbt-9qndpVHZ2QcRPismPe6dccp>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Jun 2025 12:49:36 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	lkmm@lists.linux.dev,
+	linux-arch@vger.kernel.org
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Lyude Paul <lyude@redhat.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mitchell Levy <levymitchell0@gmail.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	"Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"Thomas Gleixner" <tglx@linutronix.de>
+Subject: [PATCH v5 00/10] LKMM generic atomics in Rust 
+Date: Wed, 18 Jun 2025 09:49:24 -0700
+Message-Id: <20250618164934.19817-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250618160333.PdGB89yt@linutronix.de>
 
-On Wednesday 06/18 at 18:03 +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-17 09:11:06 [-0700], Calvin Owens wrote:
-> > Actually got an oops this time:
-> > 
-> >     Oops: general protection fault, probably for non-canonical address 0xfdd92c90843cf111: 0000 [#1] SMP
-> >     CPU: 3 UID: 1000 PID: 323127 Comm: cargo Not tainted 6.16.0-rc2-lto-00024-g9afe652958c3 #1 PREEMPT 
-> >     Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
-> >     RIP: 0010:queued_spin_lock_slowpath+0x12a/0x1d0
-> …
-> >     Call Trace:
-> >      <TASK>
-> >      futex_unqueue+0x2e/0x110
-> >      __futex_wait+0xc5/0x130
-> >      futex_wait+0xee/0x180
-> >      do_futex+0x86/0x120
-> >      __se_sys_futex+0x16d/0x1e0
-> >      do_syscall_64+0x47/0x170
-> >      entry_SYSCALL_64_after_hwframe+0x4b/0x53
-> >     RIP: 0033:0x7f086e918779
-> 
-> The lock_ptr is pointing to invalid memory. It explodes within
-> queued_spin_lock_slowpath() which looks like decode_tail() returned a
-> wrong pointer/ offset.
-> 
-> futex_queue() adds a local futex_q to the list and its lock_ptr points
-> to the hb lock. Then we do schedule() and after the wakeup the lock_ptr
-> is NULL after a successful wake.  Otherwise it still points to the
-> futex_hash_bucket::lock.
-> 
-> Since futex_unqueue() attempts to acquire the lock, then there was no
-> wakeup but a timeout or a signal that ended the wait. The lock_ptr can
-> change during resize.
-> During the resize futex_rehash_private() moves the futex_q members from
-> the old queue to the new one. The lock is accessed within RCU and the
-> lock_ptr value is compared against the old value after locking. That
-> means it is accessed either before the rehash moved it the new hash
-> bucket or afterwards.
-> I don't see how this pointer can become invalid. RCU protects against
-> cleanup and the pointer compare ensures that it is the "current"
-> pointer.
-> I've been looking at clang's assembly of futex_unqueue() and it looks
-> correct. And futex_rehash_private() iterates over all slots.
+Hi,
 
-Didn't get much out of lockdep unfortunately.
+v5 for LKMM atomics in Rust, you can find the previous versions:
 
-It notices the corruption in the spinlock:
+v4: https://lore.kernel.org/rust-for-linux/20250609224615.27061-1-boqun.feng@gmail.com/
+v3: https://lore.kernel.org/rust-for-linux/20250421164221.1121805-1-boqun.feng@gmail.com/
+v2: https://lore.kernel.org/rust-for-linux/20241101060237.1185533-1-boqun.feng@gmail.com/
+v1: https://lore.kernel.org/rust-for-linux/20240612223025.1158537-1-boqun.feng@gmail.com/
+wip: https://lore.kernel.org/rust-for-linux/20240322233838.868874-1-boqun.feng@gmail.com/
 
-    BUG: spinlock bad magic on CPU#2, cargo/4129172
-     lock: 0xffff8881410ecdc8, .magic: dead4ead, .owner: <none>/-1, .owner_cpu: -1
-    CPU: 2 UID: 1000 PID: 4129172 Comm: cargo Not tainted 6.16.0-rc2-nolto-lockdep-00047-g52da431bf03b #1 PREEMPT
-    Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
-    Call Trace:
-     <TASK>
-     dump_stack_lvl+0x5a/0x80
-     do_raw_spin_lock+0x6a/0xd0
-     futex_wait_setup+0x8e/0x200
-     __futex_wait+0x63/0x120
-     ? __futex_wake_mark+0x40/0x40
-     futex_wait+0x5b/0xd0
-     ? hrtimer_dummy_timeout+0x10/0x10
-     do_futex+0x86/0x120
-     __se_sys_futex+0x10d/0x180
-     ? entry_SYSCALL_64_after_hwframe+0x4b/0x53
-     do_syscall_64+0x6a/0x1070
-     entry_SYSCALL_64_after_hwframe+0x4b/0x53
-    RIP: 0033:0x7ff7e7ffb779
-    Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4f 86 0d 00 f7 d8 64 89 01 48
-    RSP: 002b:00007fff29bee078 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-    RAX: ffffffffffffffda RBX: 00007ff7e7ffb760 RCX: 00007ff7e7ffb779
-    RDX: 00000000000000b6 RSI: 0000000000000089 RDI: 000055a5e2b9c1a0
-    RBP: 00007fff29bee0d0 R08: 0000000000000000 R09: 00007fffffffffff
-    R10: 00007fff29bee090 R11: 0000000000000246 R12: 000000001dcd6401
-    R13: 00007ff7e7f16fd0 R14: 000055a5e2b9c1a0 R15: 00000000000000b6
-     </TASK>
+The reason of providing our own LKMM atomics is because memory model
+wise Rust native memory model is not guaranteed to work with LKMM and
+having only one memory model throughout the kernel is always better for
+reasoning.
 
-That was followed by this WARN:
+Changes since v4:
 
-    ------------[ cut here ]------------
-    rcuref - imbalanced put()
-    WARNING: CPU: 2 PID: 4129172 at lib/rcuref.c:266 rcuref_put_slowpath+0x55/0x70
-    CPU: 2 UID: 1000 PID: 4129172 Comm: cargo Not tainted 6.16.0-rc2-nolto-lockdep-00047-g52da431bf03b #1 PREEMPT
-    Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
-    RIP: 0010:rcuref_put_slowpath+0x55/0x70
-    Code: 00 00 00 c0 73 2a 85 f6 79 06 c7 07 00 00 00 a0 31 c0 c3 53 48 89 fb 48 c7 c7 da 7f 32 83 c6 05 7f 9c 35 02 01 e8 1b 83 9f ff <0f> 0b 48 89 df 5b 31 c0 c7 07 00 00 00 e0 c3 cc cc cc cc cc cc cc
-    RSP: 0018:ffffc90026e7fca8 EFLAGS: 00010282
-    RAX: 0000000000000019 RBX: ffff8881410ec000 RCX: 0000000000000027
-    RDX: 00000000ffff7fff RSI: 0000000000000002 RDI: ffff88901fc9c008
-    RBP: 0000000000000000 R08: 0000000000007fff R09: ffffffff83676870
-    R10: 0000000000017ffd R11: 00000000ffff7fff R12: 00000000000000b7
-    R13: 000055a5e2b9c1a0 R14: ffff8881410ecdc0 R15: 0000000000000001
-    FS:  00007ff7e875c600(0000) GS:ffff88909b96a000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 00007fd4b8001028 CR3: 0000000fd7d31000 CR4: 0000000000750ef0
-    PKRU: 55555554
-    Call Trace:
-     <TASK>
-     futex_private_hash_put+0xa7/0xc0
-     futex_wait_setup+0x1c0/0x200
-     __futex_wait+0x63/0x120
-     ? __futex_wake_mark+0x40/0x40
-     futex_wait+0x5b/0xd0
-     ? hrtimer_dummy_timeout+0x10/0x10
-     do_futex+0x86/0x120
-     __se_sys_futex+0x10d/0x180
-     ? entry_SYSCALL_64_after_hwframe+0x4b/0x53
-     do_syscall_64+0x6a/0x1070
-     entry_SYSCALL_64_after_hwframe+0x4b/0x53
-    RIP: 0033:0x7ff7e7ffb779
-    Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 4f 86 0d 00 f7 d8 64 89 01 48
-    RSP: 002b:00007fff29bee078 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-    RAX: ffffffffffffffda RBX: 00007ff7e7ffb760 RCX: 00007ff7e7ffb779
-    RDX: 00000000000000b6 RSI: 0000000000000089 RDI: 000055a5e2b9c1a0
-    RBP: 00007fff29bee0d0 R08: 0000000000000000 R09: 00007fffffffffff
-    R10: 00007fff29bee090 R11: 0000000000000246 R12: 000000001dcd6401
-    R13: 00007ff7e7f16fd0 R14: 000055a5e2b9c1a0 R15: 00000000000000b6
-     </TASK>
-    irq event stamp: 59385407
-    hardirqs last  enabled at (59385407): [<ffffffff8274264c>] _raw_spin_unlock_irqrestore+0x2c/0x50
-    hardirqs last disabled at (59385406): [<ffffffff8274250d>] _raw_spin_lock_irqsave+0x1d/0x60
-    softirqs last  enabled at (59341786): [<ffffffff8133cc1e>] __irq_exit_rcu+0x4e/0xd0
-    softirqs last disabled at (59341781): [<ffffffff8133cc1e>] __irq_exit_rcu+0x4e/0xd0
-    ---[ end trace 0000000000000000 ]---
+* Rename the ordering enum type and corresponding constant in trait All
+  as per feedback from Benno.
 
-The oops after that is from a different task this time, but it just
-looks like slab corruption:
+* Add more tests for Atomic<{i,u}size> and Atomic<*mut T>.
 
-    BUG: unable to handle page fault for address: 0000000000001300
-    #PF: supervisor read access in kernel mode
-    #PF: error_code(0x0000) - not-present page
-    PGD 0 P4D 0
-    Oops: Oops: 0000 [#1] SMP
-    CPU: 4 UID: 1000 PID: 4170542 Comm: zstd Tainted: G        W           6.16.0-rc2-nolto-lockdep-00047-g52da431bf03b #1 PREEMPT
-    Tainted: [W]=WARN
-    Hardware name: ASRock B850 Pro-A/B850 Pro-A, BIOS 3.11 11/12/2024
-    RIP: 0010:__kvmalloc_node_noprof+0x1a2/0x4a0
-    Code: 0f 84 a3 01 00 00 41 83 f8 ff 74 10 48 8b 03 48 c1 e8 3f 41 39 c0 0f 85 8d 01 00 00 41 8b 46 28 49 8b 36 48 8d 4d 20 48 89 ea <4a> 8b 1c 20 4c 89 e0 65 48 0f c7 0e 74 4e eb 9f 41 83 f8 ff 75 b4
-    RSP: 0018:ffffc90036a87c00 EFLAGS: 00010246
-    RAX: 0000000000001000 RBX: ffffea0005043a00 RCX: 0000000000054764
-    RDX: 0000000000054744 RSI: ffffffff84347c80 RDI: 0000000000000080
-    RBP: 0000000000054744 R08: 00000000ffffffff R09: 0000000000000000
-    R10: ffffffff8140972d R11: 0000000000000000 R12: 0000000000000300
-    R13: 00000000004029c0 R14: ffff888100044800 R15: 0000000000001040
-    FS:  00007fca63240740(0000) GS:ffff88909b9ea000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 0000000000001300 CR3: 00000004fcac3000 CR4: 0000000000750ef0
-    PKRU: 55555554
-    Call Trace:
-     <TASK>
-     ? futex_hash_allocate+0x17f/0x400
-     futex_hash_allocate+0x17f/0x400
-     ? futex_hash_allocate+0x4d/0x400
-     ? futex_hash_allocate_default+0x2b/0x1e0
-     ? futex_hash_allocate_default+0x2b/0x1e0
-     ? copy_process+0x35e/0x12a0
-     ? futex_hash_allocate_default+0x2b/0x1e0
-     ? copy_process+0x35e/0x12a0
-     copy_process+0xcf3/0x12a0
-     ? entry_SYSCALL_64_after_hwframe+0x4b/0x53
-     kernel_clone+0x7f/0x310
-     ? copy_clone_args_from_user+0x93/0x1e0
-     ? entry_SYSCALL_64_after_hwframe+0x4b/0x53
-     __se_sys_clone3+0xbb/0xc0
-     ? _copy_to_user+0x1f/0x60
-     ? __se_sys_rt_sigprocmask+0xf2/0x120
-     ? trace_hardirqs_off+0x40/0xb0
-     do_syscall_64+0x6a/0x1070
-     entry_SYSCALL_64_after_hwframe+0x4b/0x53
-    RIP: 0033:0x7fca6335f7a9
-    Code: 90 b8 01 00 00 00 b9 01 00 00 00 eb ec 0f 1f 40 00 b8 ea ff ff ff 48 85 ff 74 28 48 85 d2 74 23 49 89 c8 b8 b3 01 00 00 0f 05 <48> 85 c0 7c 14 74 01 c3 31 ed 4c 89 c7 ff d2 48 89 c7 b8 3c 00 00
-    RSP: 002b:00007ffcfe17fe78 EFLAGS: 00000202 ORIG_RAX: 00000000000001b3
-    RAX: ffffffffffffffda RBX: 00007fca632e18e0 RCX: 00007fca6335f7a9
-    RDX: 00007fca632e18e0 RSI: 0000000000000058 RDI: 00007ffcfe17fed0
-    RBP: 00007fca60f666c0 R08: 00007fca60f666c0 R09: 00007ffcfe17ffc7
-    R10: 0000000000000008 R11: 0000000000000202 R12: ffffffffffffff88
-    R13: 0000000000000002 R14: 00007ffcfe17fed0 R15: 00007fca60766000
-     </TASK>
-    CR2: 0000000000001300
-    ---[ end trace 0000000000000000 ]---
-    RIP: 0010:__kvmalloc_node_noprof+0x1a2/0x4a0
-    Code: 0f 84 a3 01 00 00 41 83 f8 ff 74 10 48 8b 03 48 c1 e8 3f 41 39 c0 0f 85 8d 01 00 00 41 8b 46 28 49 8b 36 48 8d 4d 20 48 89 ea <4a> 8b 1c 20 4c 89 e0 65 48 0f c7 0e 74 4e eb 9f 41 83 f8 ff 75 b4
-    RSP: 0018:ffffc90036a87c00 EFLAGS: 00010246
-    RAX: 0000000000001000 RBX: ffffea0005043a00 RCX: 0000000000054764
-    RDX: 0000000000054744 RSI: ffffffff84347c80 RDI: 0000000000000080
-    RBP: 0000000000054744 R08: 00000000ffffffff R09: 0000000000000000
-    R10: ffffffff8140972d R11: 0000000000000000 R12: 0000000000000300
-    R13: 00000000004029c0 R14: ffff888100044800 R15: 0000000000001040
-    FS:  00007fca63240740(0000) GS:ffff88909b9ea000(0000) knlGS:0000000000000000
-    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-    CR2: 0000000000001300 CR3: 00000004fcac3000 CR4: 0000000000750ef0
-    PKRU: 55555554
-    Kernel panic - not syncing: Fatal exception
-    Kernel Offset: disabled
-    ---[ end Kernel panic - not syncing: Fatal exception ]---
+* Rebase on v6.16-rc2
 
-No lock/rcu splats at all.
 
-> > This is a giant Yocto build, but the comm is always cargo, so hopefully
-> > I can run those bits in isolation and hit it more quickly.
-> 
-> If it still explodes without LTO, would you mind trying gcc?
+Still please advise how we want to route the patches and for future
+ones:
 
-Will do.
+* Option #1: via tip, I can send a pull request to Ingo at -rc4 or -rc5.
+* Option #2: via rust, I can send a pull request to Miguel at -rc4 or -rc5.
+* Option #3: via my own tree or atomic group in kernel.org, I can send
+             a pull request to Linus at 6.17 merge window.
 
-Haven't had much luck isolating what triggers it, but if I run two copies
-of these large build jobs in a loop, it reliably triggers in 6-8 hours.
+My default option is #1, but feel free to make any suggestion.
 
-Just to be clear, I can only trigger this on the one machine. I ran it
-through memtest86+ yesterday and it passed, FWIW, but I'm a little
-suspicious of the hardware right now too. I double checked that
-everything in the BIOS related to power/perf is at factory settings.
+Regards,
+Boqun
 
-Note that READ_ONLY_THP_FOR_FS and NO_PAGE_MAPCOUNT are both off.
+Boqun Feng (10):
+  rust: Introduce atomic API helpers
+  rust: sync: Add basic atomic operation mapping framework
+  rust: sync: atomic: Add ordering annotation types
+  rust: sync: atomic: Add generic atomics
+  rust: sync: atomic: Add atomic {cmp,}xchg operations
+  rust: sync: atomic: Add the framework of arithmetic operations
+  rust: sync: atomic: Add Atomic<u{32,64}>
+  rust: sync: atomic: Add Atomic<{usize,isize}>
+  rust: sync: atomic: Add Atomic<*mut T>
+  rust: sync: Add memory barriers
 
-> > Thanks,
-> > Calvin
-> 
-> Sebastian
+ MAINTAINERS                               |    4 +-
+ rust/helpers/atomic.c                     | 1038 +++++++++++++++++++++
+ rust/helpers/barrier.c                    |   18 +
+ rust/helpers/helpers.c                    |    2 +
+ rust/kernel/sync.rs                       |    2 +
+ rust/kernel/sync/atomic.rs                |  233 +++++
+ rust/kernel/sync/atomic/generic.rs        |  523 +++++++++++
+ rust/kernel/sync/atomic/ops.rs            |  199 ++++
+ rust/kernel/sync/atomic/ordering.rs       |  106 +++
+ rust/kernel/sync/barrier.rs               |   67 ++
+ scripts/atomic/gen-atomics.sh             |    1 +
+ scripts/atomic/gen-rust-atomic-helpers.sh |   65 ++
+ 12 files changed, 2257 insertions(+), 1 deletion(-)
+ create mode 100644 rust/helpers/atomic.c
+ create mode 100644 rust/helpers/barrier.c
+ create mode 100644 rust/kernel/sync/atomic.rs
+ create mode 100644 rust/kernel/sync/atomic/generic.rs
+ create mode 100644 rust/kernel/sync/atomic/ops.rs
+ create mode 100644 rust/kernel/sync/atomic/ordering.rs
+ create mode 100644 rust/kernel/sync/barrier.rs
+ create mode 100755 scripts/atomic/gen-rust-atomic-helpers.sh
+
+-- 
+2.39.5 (Apple Git-154)
+
