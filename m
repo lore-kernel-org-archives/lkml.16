@@ -1,74 +1,73 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E1F2E9EC2
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72182E9EB4
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750254198; cv=none; b=Or8ElUN6KKaTji22yFxIwq4gqlUQTn87eKfpvMUgk63YOU4IdO9h59IGVVs02Ah+E6ri9Ri57aJhP/KqefAQ+TrAt+61qkwXAmTbnCdBZ8eQWEXeJJGwfc9OrqB1idmHvsDSMjElyA3X787F2D4BKw9GXmSlDYQ7oPsmlC9MFUs=
+	t=1750254217; cv=none; b=tlYin/9mUmc81jDJK3qRNpHEk/AczoT+aibnZJDZOWO4FxJYB4E1NBHKe8cBMJd+PXl0u1ErfbaUQRTDaDNuWtA54zVa1ZJ75nJ2sheKNkuduzXi315r/j4llBz6HW4HI66BgLiPcZ8hH/EMbgDrYUePrvv34wNV07cR+qog9Bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750254198; c=relaxed/simple;
-	bh=lHq8LwJCpZsYnYoF7lpMvKsBXva+7QpieDXG+mexd9k=;
+	s=arc-20240116; t=1750254217; c=relaxed/simple;
+	bh=DH2TdO4qlgMmdVZuOlcVSevdsjnZbtIfQYEMA25f/cg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UKiWYOogE+0s5irDKiAkmLAu88/iHHS/mwp1rXg59LfBAykYOA3RzRxJRJXKY1eGXDrvbSWV1BFqR1y17pcDaxcJQB1dSZR/+6qMMcsKEKg9ntMwWdjt4sK+tP5aoWNkiUoqnuaeg2kVsEf3qfsk4//saqE1sHMREvdkUlcyeeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xS6FK0x2; arc=none smtp.client-ip=209.85.167.51
+	 To:Cc:Content-Type; b=IyxIby4lsN3WY7td2RSwsQC/QLFBukhrZzSgXXDLjBCBvCMa9hAqWSLD+3I6Ir53tJ+q+nS1TlTRDURXo63QTsHtuKRHAYwcbo6jSUFijXB4lsjnX7p0c8cslyRI9HNigbxbFj6nSg4w2QxtDaPlObK+jHUm7nqeLLHfHLIo3Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kKh2KMHo; arc=none smtp.client-ip=209.85.167.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xS6FK0x2"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b51f5218so5305022e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:43:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kKh2KMHo"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553b51f5218so5305456e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254194; x=1750858994; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254214; x=1750859014; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9XesD6Pa6NIjfeeecwOLBDGIW61X59xU1PHMFDOzpvY=;
-        b=xS6FK0x2ckjJRDCOfYEqAjbObtuf7BegqO73WTslIpKQ4g2eYqv8ZhDYliLd466ZSc
-         o39UBW+sczuzV42sNtiXn7balALacAz9Lc5Eu2hSo7zDC90FVasK6S5Emck63GNORAai
-         UBbAOV4jt+ZzGCgtYBRgEGrQNDgYkl97ipxpK9vss5Ky0IqWkt2IZ4wSqNpAkP3aXoD/
-         /APpDjU43hxKKFb2Z7HTJDX13f3lqxOCUvQSmoZAFDWzMArLBxDAKbDR01tLJEgJmck0
-         XLDZ+u5UtcsdQtVKXSwMbHjPr+Z3DCG4GJmobsJYd4TgEZSEKGsR+8FRpACsTIusO3c4
-         cw6g==
+        bh=DH2TdO4qlgMmdVZuOlcVSevdsjnZbtIfQYEMA25f/cg=;
+        b=kKh2KMHo994rHvJocvWhAeLiVF/fGmSnZRvhA0NWsBYFYfx1GceR/YW5C7UTkojr5p
+         XlBAVToAiws+V5ge57oA21cVcb6NUtpyL9HI/RNfdMl1//ol+/3QURhaielWZI2ugGEh
+         JQp9VUezFzbbDkHzEfX7scfR5c3rDUYBIQAGbXZFYjBtk7LPiIHvr0lWGN1pbY4puv5V
+         ixT1Smfd34bS3DA8WWn1S2Q5XW9+pGLCSvN1JuHIh1bpiK8kQPwwLuKnXCYDo360GWti
+         D0teN6Z0SoGXh/XK1cVzx55XU7SVLKMYgEYgZKoxhO3TC0TffSELGA5mGeoQSgO5PZrR
+         abnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750254194; x=1750858994;
+        d=1e100.net; s=20230601; t=1750254214; x=1750859014;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9XesD6Pa6NIjfeeecwOLBDGIW61X59xU1PHMFDOzpvY=;
-        b=qt26G/bM5MLkwF6Y7DN8H2qdfjoNEj8DmfNOqf20esDhN5j/XMYhC8gL/wQGCuWJOp
-         Siyeu8I9w56YAsC8FW1xHxOXryE/MiIO1Fc7QGGGRS9lsq5bEyDHt6qTwK8esLf0P6Pg
-         GoWBSj19KjCVsahpdV21l6yICEi4MfId12/i7+Mg5G4fjJ9kDXc9z8SoPx7IOdOmsR3V
-         bVPBdHxEWXb4WueRB4QD65XNf8+f2uvWFu5e2XdvYBH9o9XmcbRRI3Hx9UVqfyqgCjTe
-         89WX6RTobKqsrS5tpHtRFG0uJ7RAjyPIuopvQf6HKwagKdSZl9BP/WrpnxqUeA1MBaR6
-         MlEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMV2zZURjV1ATrsIJKPg8LFoXlFcp0gAi2WKtYNYIcjwvJ/znTPXZTXmyYPppwUefYuuivOzOh5JBGiNU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl5jl7GbExVZYuoAa8bQSsFBvUUZvyqbknKPJJ0yHgQfPalSiQ
-	n65ABRyZtUkYoIJo8f9PC1MxPvjmo+Ft1sTCyfTvy/Eqf6VIDakfr5vpQVlkJWaCgqAX9GhwP5F
-	EBPPfN3v03S4tGsS7JaLqk/BdPLDR3GDYF1VGS4ea4g==
-X-Gm-Gg: ASbGncuLoEHEIihk6guUSrulH1QmKeiRI5XxojpM+bR0PA7POy+yTTx123K1dcS3Clw
-	jeBJwC8OTV57S+0TtlkXzyvNEqP+wW36nDULjnMAfKL4g2t2gTjOG/QdTGJvjnW8S3UQuDRd4fh
-	oQ8KlwcEpBWgDR9jlQhFs7QbjyZDA/Hyd2LFDwudU2pUhF2g0Zh6QLDNRpMe354O/Gw/3B0IQ5C
-	Q==
-X-Google-Smtp-Source: AGHT+IEECYD65Et/LmSBnvEiKApYIkAD1brUDvo7BBfhvnXlFl9/WYj3FARtHuaHKB5NARXPoTCzd7KIs42A0Z1Qt14=
-X-Received: by 2002:a05:6512:2351:b0:553:24b7:2f61 with SMTP id
- 2adb3069b0e04-553b6f5a056mr4801515e87.57.1750254193987; Wed, 18 Jun 2025
- 06:43:13 -0700 (PDT)
+        bh=DH2TdO4qlgMmdVZuOlcVSevdsjnZbtIfQYEMA25f/cg=;
+        b=Yw0D/lzdnLtlFlcq3GPKM7rapBhizN01kOxWzUiIVaLsC4DC7b4wMmuIdMN4lgwT8m
+         jJddQs/333l3Nl7qq+oaw6zJk4rrABnIBrkWumTvqMi8nA7H65Jyew0GdSseua3sVlkE
+         ZR+NoXVNOYaWTvcQJ6Q5XZfzBxwpg0ylzI9eNsDUXt9xniAe+BI5w/qM+fgDYimpuiHy
+         DvLmajsTl2rZAh5eWFvtrEtPISgFUtlnHP6KtDVOGwUrJUvaZ/0/1wwDMvZqDscF5NKg
+         98RUF6jx6htq54kn4YFzygFR8d4B9bfQv5GZ6PciJPGFsj3w90d1sm/RFa9zsB1RetiJ
+         KJUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUt7/g/ePEp2nKK9Pqgs/Jo8vLpxyXBFfHjns2b+7YkXdO66cegvbDzD9QxdiFtV1nKhdOdooOLH9mRIPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrNE2LGcU9HxaOtg+o6GmUuTjRGKfVwU+3cjfzELLUJO35liV7
+	gUn7wNqHad9TTZHEsExnR65oXx/s6S3i61+hnzipNtZ9gXRquvlr06vjI7KJ7H/GMmpACDMx9Sy
+	X3DfiGz7UQHHaUFnQoAnTk1y6v6702Vx9U2Ih30JJ8g==
+X-Gm-Gg: ASbGncuRsYRy5KgkdJWgayAG7GH1MTOO4A4apZKHOgTGrbfj6t01Zp5tJbSDbNyzUMD
+	GF2V9xmVsm5KVxPFxGgXJfZfN9InWmQA//Tff032OB2bD0Hejv68PlokHkCJV5nnnqH+cY9+pVr
+	FQq0mCSrwn3PWKixKd2W7kAqTfoxQJONMCOPvkSk5knWYKaejEGPML02jnrbzEzqZkJgBmNhtKB
+	g==
+X-Google-Smtp-Source: AGHT+IHftNw+Eih04FWqkzxlxHZa0pUq9QbEcwUOmlySQIbB01O/3QL4rt3xwi2A6yMgr8Es7P1LaWGFLlQxbE/YI0U=
+X-Received: by 2002:a05:6512:39cc:b0:553:3770:c912 with SMTP id
+ 2adb3069b0e04-553b6f42a3fmr4662087e87.47.1750254213943; Wed, 18 Jun 2025
+ 06:43:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250618102231eucas1p1ec99058179825cb1250a1f189313b3eb@eucas1p1.samsung.com>
- <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-6-27ed33ea5c6f@samsung.com>
-In-Reply-To: <20250618-apr_14_for_sending-v5-6-27ed33ea5c6f@samsung.com>
+References: <CGME20250618102233eucas1p228b24f58e4cb3d15b0f273530b582cea@eucas1p2.samsung.com>
+ <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-7-27ed33ea5c6f@samsung.com>
+In-Reply-To: <20250618-apr_14_for_sending-v5-7-27ed33ea5c6f@samsung.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 15:43:02 +0200
-X-Gm-Features: AX0GCFv-psDNb6_Ffk6XjHdwrMsid_b9idm2knOXcGXYQtnqAYke8L-CxfsFZ0k
-Message-ID: <CAMRc=MeiCT2f902h4viFbue1tejv7EGBvEjdQhOTuqDqEViwRg@mail.gmail.com>
-Subject: Re: [PATCH v5 6/8] riscv: dts: thead: th1520: Add GPU clkgen reset to
- AON node
+Date: Wed, 18 Jun 2025 15:43:23 +0200
+X-Gm-Features: AX0GCFsy7p_bfVyodl4lMK_1wlqkCV9i-ffK-YbNgbQ1QgrzZEcf4YhKpp98eDM
+Message-ID: <CAMRc=McvK2Og1kxDmN-5YW0UHxe-EEXPg88zh=oVEvSvCZ+-EA@mail.gmail.com>
+Subject: Re: [PATCH v5 7/8] riscv: dts: thead: th1520: Add IMG BXM-4-64 GPU node
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -88,50 +87,19 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Jun 18, 2025 at 12:22=E2=80=AFPM Michal Wilczynski
 <m.wilczynski@samsung.com> wrote:
 >
-> Add the "gpu-clkgen" reset property to the AON device tree node. This
-> allows the AON power domain driver to detect the capability to power
-> sequence the GPU and spawn the necessary pwrseq-thead-gpu auxiliary
-> driver for managing the GPU's complex power sequence.
+> Add a device tree node for the IMG BXM-4-64 GPU present in the T-HEAD
+> TH1520 SoC used by the Lichee Pi 4A board. This node enables support for
+> the GPU using the drm/imagination driver.
 >
-> This commit also adds the prerequisite
-> dt-bindings/reset/thead,th1520-reset.h include to make the
-> TH1520_RESET_ID_GPU_CLKGEN available. This include was previously
-> dropped during a conflict resolution [1].
+> By adding this node, the kernel can recognize and initialize the GPU,
+> providing graphics acceleration capabilities on the Lichee Pi 4A and
+> other boards based on the TH1520 SoC.
 >
-> Link: https://lore.kernel.org/all/aAvfn2mq0Ksi8DF2@x1/ [1]
+> Add fixed clock gpu_mem_clk, as the MEM clock on the T-HEAD SoC can't be
+> controlled programatically.
 >
 > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/=
-thead/th1520.dtsi
-> index 1db0054c4e093400e9dbebcee5fcfa5b5cae6e32..f3f5db0201ab8c0306d4d6307=
-2a1573431e51893 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -7,6 +7,7 @@
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/clock/thead,th1520-clk-ap.h>
->  #include <dt-bindings/power/thead,th1520-power.h>
-> +#include <dt-bindings/reset/thead,th1520-reset.h>
->
->  / {
->         compatible =3D "thead,th1520";
-> @@ -234,6 +235,8 @@ aon: aon {
->                 compatible =3D "thead,th1520-aon";
->                 mboxes =3D <&mbox_910t 1>;
->                 mbox-names =3D "aon";
-> +               resets =3D <&rst TH1520_RESET_ID_GPU_CLKGEN>;
-> +               reset-names =3D "gpu-clkgen";
->                 #power-domain-cells =3D <1>;
->         };
->
->
-> --
-> 2.34.1
->
 
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
