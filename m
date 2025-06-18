@@ -1,1197 +1,196 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2061.outbound.protection.outlook.com [40.107.96.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDC921C179;
-	Wed, 18 Jun 2025 07:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750231049; cv=none; b=GF3LZkE9Guh1vnlFlysv9S1N0q9e//CmXVFKYBV7u6J++ZCV8rQ/VGckayEwYsYkSOpLIB4Vj103+gIO2uIVPpyUJKBqf0kJRGfsIyFm2/VuP+bTaAT9AoCYNtuwea5v+nhyJK4eWzwlq1I2zQXSju0kB3f+TpFKAoX1tIBstI0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750231049; c=relaxed/simple;
-	bh=tF1Ke6kYlgMODOQHEpPFqWaDfL7pi5uDwAOQtAoRsEU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=bf8X8Ros5FG0JCBlqEaqHTuE9bH95ajHdmQqMVYv24h7NC6DfMJLT+LQEx4Ah50fmuiXvmKQGlTySZgGpdc2OZ1SUgXLc6pn7EaY3ncrzUIWtIVi0c+Ab2WnmBGEhZa7I3V0v9kffzKJtplwJRBlaJM3scQRwOxOIRj4tiyYF/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=sg9nGvWY; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE82819DFA2;
+	Wed, 18 Jun 2025 07:17:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750231080; cv=fail; b=jw/nQjwBpWGsfbw3fjvcGF1ElRYSiBYAWxpXmLRMAq/5ORIShp4mUU3zT2BAYLBQwfSd0t5uOPNpILSMi1Xx7POCopcpNgFN9gITx9iGxfUAVPMlvDFMm76QAkpQpajpzyVV+6drqhoEvE8YV2oHdxn8vCTzBWSEUaJOcuQ+pOA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750231080; c=relaxed/simple;
+	bh=LvC05DVt0puEdrIhG7INIVvrbnRxz6MsNk6reYqt7VA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jUDIVFKlAqt5UtYpwO1ftOQBiTMWsEjS51BwT7kCIIXWbAhPw80jlul91Lg7yocBXlId0xkfZcRXn/iWUMKnJbWwuygXSRtPljCCIWHLO7u6kAFIckeV57kll7OSQpIo0XA/IWS1So4USN8eMo+37k4zPaxv8J03Yt/kiC2EzkA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=Eoavw9RC; arc=fail smtp.client-ip=40.107.96.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="sg9nGvWY"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I61kxO001419;
-	Wed, 18 Jun 2025 03:17:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=G9bWe
-	W0i0cGPknY3euQ8X9EHffD8TZUOKwmYRZ9Oo3Y=; b=sg9nGvWYm4xXukCVJn+xb
-	wTYHviGgXxWsC+pjJniP89FzI7P923N6SnLFv8i2ddRc1G3droI8PhvzWDHigKFu
-	gToexgRb3iexGXli/SEEvpmt1S4qQzxml2M+sNUp9TSTeMEne5psxGXehG337aCa
-	3KoQtRPj4IrqQOCTdcbMmfGplpnvzyX7vg1XQQ4KsfXN95RrTjxCMk9cF2X7ddDf
-	HtTjvctTOLy8PWK3pFgqo3yJVRNHqr6MefvMLQx35Q6DeasFGsNO/uZ/HXOFOGY6
-	5RrrcoqM0ISL9efqqSlYRq9etJ1O/P87XBC4YCrA6lTRBJWxvG7OsEzGsQhfZoRK
-	g==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47bfsqjd1h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 03:17:03 -0400 (EDT)
-Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 55I7H2tI037091
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 18 Jun 2025 03:17:02 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 18 Jun
- 2025 03:17:02 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
- Transport; Wed, 18 Jun 2025 03:17:02 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.56] (may be forged))
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55I7GkPg027550;
-	Wed, 18 Jun 2025 03:16:57 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Date: Wed, 18 Jun 2025 09:16:44 +0200
-Subject: [PATCH v3 2/2] i3c: master: Add driver for Analog Devices I3C
- Controller IP
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="Eoavw9RC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=V7a89/9dAYAwAed/WXlyeuFy7I3Zc92YDsPElhxCAbVk986UQLqlFrj6IrLQyPuy4lRFcj0KpCwceb+omMbqXyV30GXO2TX9RaaPAQgandhhZVe1Vx49em77HMOuYhC254MWpdIKKni82geo8BV+QeZg/vRvdtHac49dlz+L8//CalMFlN45JZ0/YRPMkg+dB3eb7jW4Dt+P72Mmu6lgfmwhdskrYM6lyWEZ2//VSi9leBWhj36LWp4nZJA86u3R3EgWTbNxlg9NzBNHJ6MBhuO2mE51K02KTtq65DckJwNR6WY1kc/7EBFT5dq/7PY2nmQeDvorKAU1z//7too0WQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=F9F//+d3SI0sPoAgCiZkEuy0CObKMVucyoSrrKfwAFo=;
+ b=eggK+Fn4P+ZcCXLKKCekuuEkgSf4uXJV12/N09iqpfNcs9uO01IiOBA7Ywbn+hsM05HKzTLfywWZwSt32X/l/aMG6F2X/T/DW2Y8aBggmA6qEvBkOptVzFZWO9gWWuCmg3CjPqDb0q81pehudRA0JMxBPmxtWgNe5I/0PjLFOenoiL5PD7jV1K7dY69guSJQl/vvo8HbknEOBdC9pjIg+CjmhRWT5J0Z6SsVWyOYNzgFm60DT9zpQp6I7jokdPm8iPg0tqm1YMC/RP1+oQUJ08CC1CVn6pCsQtLIMKnsmJOBt4yQLCL0sc2LDY6tD/YLkePa2xtdSLPRhH5Cv2D/Xw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F9F//+d3SI0sPoAgCiZkEuy0CObKMVucyoSrrKfwAFo=;
+ b=Eoavw9RCH+9XIzBpZKJyykXjOLWdJBxov4v0LDtjEtMIUoDEbsJa3GhDyvoxVdp+l8D7Kb83Zr4i18dCd/99xGU0CrHgLyLLAeyyMxG5/azSeL99loP2ZKrMq7hkkIFO9Pt3/b3LAqd08VCJlN8Wa8Bb4DlVphzeNR36yIjiRL2G4XWkGedbNIUtKqyfEh5GN3082M0GMqPAU5cHul2PWbW/1QAn4qzv8noYU7SDpE2hXk8cEU3ZlPD3G8SicUq8EQ1CcNHYldpzMMajyarQeq5ErPsxQWABuLmPivH8AJ2YSAtRPwcBq1MqKLfaxE5e3XbtVAYNcSm3fY5sq1mNYg==
+Received: from CH3P221CA0030.NAMP221.PROD.OUTLOOK.COM (2603:10b6:610:1e7::31)
+ by CH0PR12MB8577.namprd12.prod.outlook.com (2603:10b6:610:18b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 07:17:55 +0000
+Received: from CH1PEPF0000AD7B.namprd04.prod.outlook.com
+ (2603:10b6:610:1e7:cafe::70) by CH3P221CA0030.outlook.office365.com
+ (2603:10b6:610:1e7::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8835.22 via Frontend Transport; Wed,
+ 18 Jun 2025 07:17:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CH1PEPF0000AD7B.mail.protection.outlook.com (10.167.244.58) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.21 via Frontend Transport; Wed, 18 Jun 2025 07:17:55 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 18 Jun
+ 2025 00:17:39 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 18 Jun 2025 00:17:39 -0700
+Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Wed, 18 Jun 2025 00:17:38 -0700
+From: Shravan Kumar Ramani <shravankr@nvidia.com>
+To: Ilpo Jarvinen <ilpo.jarvinen@linux.intel.com>, Vadim Pasternak
+	<vadimp@nvidia.com>, David Thompson <davthompson@nvidia.com>
+CC: Shravan Kumar Ramani <shravankr@nvidia.com>,
+	<platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v1 1/1] platform/mellanox: mlxbf-pmc: Check validity of event/enable input
+Date: Wed, 18 Jun 2025 03:17:13 -0400
+Message-ID: <20250618071713.8595-1-shravankr@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250618-adi-i3c-master-v3-2-e66170a6cb95@analog.com>
-References: <20250618-adi-i3c-master-v3-0-e66170a6cb95@analog.com>
-In-Reply-To: <20250618-adi-i3c-master-v3-0-e66170a6cb95@analog.com>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Frank Li
-	<Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <linux-i3c@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <gastmaier@gmail.com>,
-        Jorge Marques
-	<jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750231006; l=30982;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=tF1Ke6kYlgMODOQHEpPFqWaDfL7pi5uDwAOQtAoRsEU=;
- b=ME2ANugMMi1BCFktKKdjEgE7Xr0qN70eXdk5Qna/FRxfBZjGjSVk0YKN1fKVvnvfcoBbTOGWO
- Goix7NiyeRzB9fBXvlHE6AUY6hORf2P6WomJ9vbGwJPa6dzXDJx2d8+
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: uP0MqkS2kZl0jZT7esuXHoe_2vApsDiD
-X-Proofpoint-GUID: uP0MqkS2kZl0jZT7esuXHoe_2vApsDiD
-X-Authority-Analysis: v=2.4 cv=d9L1yQjE c=1 sm=1 tr=0 ts=685267f1 cx=c_pps
- a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=Br2UW1UjAAAA:8
- a=jPpI4jNERvfxAMYflC4A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=WmXOPjafLNExVIMTj843:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA2MSBTYWx0ZWRfXw6nishQWYUTc
- VVD31D2v7vVDef3QzH6CWdb6iS57pV5wysC+GQOnN0l1KATgp1Eu+dXolRqG5qQ14b6LAJYBZ+m
- ixqid1gHKkmf18qhvTnHecdRs4glBU1BZencXzIYrRUJSQl5jkstSmeufDZnLuZA79asSNknQmL
- /WEvfi4cOtbihxrqTH+cx7C3WDGu0OEE66mMiX0P92ZuGMA91COArDk8XfSl/bvQ1K/HCB2UfJX
- XCHZBuCMyFtTa2J2TdugN3eCt8O872CqbrmspSzV6sIEypzVlVAB1ocucwlap8+2HyQek1ufBCr
- n5dpJdvjCd0EGHPoOZqGOMPY8bqXlbdKBe0HJtmnk1J6xU7B46mgc2q4PKDuTkLM3EuKY1QQ6Kf
- /ycunRGXyDYuMdHtZ/ygZy7jx0tH4r7AkgXGWWJYe8bybw4vaVO0f7qBvta/Tzn3+zXCTRnb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 bulkscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- lowpriorityscore=0 impostorscore=0 adultscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506180061
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000AD7B:EE_|CH0PR12MB8577:EE_
+X-MS-Office365-Filtering-Correlation-Id: b18b3d23-daae-4c0f-0a43-08ddae383ef2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lBVndR8VqdPuKxzzza4sVtwk0t1nanASgmNyo7VWC6ko+FQxRdjZFk5tfw8J?=
+ =?us-ascii?Q?XPAPYmfAbmfiSTMAcUdW9ixPzQFEvz3oLgYyHmk+g5iKPzp4TBWAVsfYUkPW?=
+ =?us-ascii?Q?vB51DOcsiLF7sxqy8Rff3Rte80oKF3RiYvCISg10rjiUP3p02OIskosjNdWb?=
+ =?us-ascii?Q?pgiByzc00RJNgbahLRW4fc/sNGFNqvn9DbHQMextYF/szHylX3Ayo+x2AGuJ?=
+ =?us-ascii?Q?tUDZVgkzmjPRo6+0ULfL0F7HfUWPlVh6zRuRVd8FpDgH8zAO4jdor/cAEhJZ?=
+ =?us-ascii?Q?iaTcIFuLJbPUVq/6QOOCMzJQtoAqsRbGXJ0rlexe7omvvTQ/afkpIJip3o80?=
+ =?us-ascii?Q?OOOaZOfoMErUUmG+TbNP5RAZf5rHg3wklKiREVzgW+tctYwauUintd/3luI5?=
+ =?us-ascii?Q?4rCzwqq93k86Hi90UFFqZpz3LlbQhbu9j81aZX1pZuPCepj0gJeXFQdxAbE/?=
+ =?us-ascii?Q?K46i6Ic3F44f6gNzV9SmPLM8iXtBpTY/TejgQFb9VtxI+C5oLbj/Ub9/wfJB?=
+ =?us-ascii?Q?V72akWn5bqu1vDrSzc7Ued+AnNDLxEEys/L94JtiJScKW3Qzk6vIY+XdotVQ?=
+ =?us-ascii?Q?Rn7NyUQ+lR0QDZ2GA3vK1c9WYz1R5WLqWdTJ2VxB8fh8UfF0hUqCqdYZtWHP?=
+ =?us-ascii?Q?mvEGIRNsiOTM/ilZta5SciQRI83nBU47be3nfuTBLI8814xQzp7Qv8Yy8GQm?=
+ =?us-ascii?Q?ELcmXj3WVWEIwnkrkZ6eyNv8spp0aGbe74xbIf2xwTIdHT1CvNDGZjBrnXK/?=
+ =?us-ascii?Q?sH2kI59lX7zqBxodulftYKjpZ8vNv0Czo6fQWqn8b5R0+CnEVxuGzZd3QyKR?=
+ =?us-ascii?Q?eK23B97hHlV7mBXjTczRlbDzdHC0lSL7MQBE3TQr1+uJV1t4g9bcpieeJiHX?=
+ =?us-ascii?Q?VxwjvdmulBV+KQjY3D75NpmuK23wFjk1T2UE1VrCm48/B8YjQ48mFNqI8RmN?=
+ =?us-ascii?Q?6n3bVS5ZeOoUXzfjXXXSCiM+dat/83HWwYFy5+qKXgvW1DaRz1F0/aBQ7bPe?=
+ =?us-ascii?Q?WMNXrixdrRr081JOTAM/PHx5b0KW3ZwCpE+zrsLF/Mlow1Q/NmBdsZrT11va?=
+ =?us-ascii?Q?2LdtVFip+/plubU7nCcJmCs+UEbmtnPczYegMJeS6y1Yi2zZ3NDK36AgRGnh?=
+ =?us-ascii?Q?G6Qg/FX2Im3j7f/4adEmf1y1k6UjzGViSLBJX0SfW0c27/ObLiszvoOXsrYT?=
+ =?us-ascii?Q?hQ9+6Ycuel9WSm9eZXA+/bO02vBmE1P/jh8yiFQK/2j0BDM1qBmKsST1bgnN?=
+ =?us-ascii?Q?1ep9lqfpduSlw1PnCaJrd3a2oCG875Td6OcsKEOF3+8ou1sQm4NUMuJP5lfH?=
+ =?us-ascii?Q?OA/NSwANsDrXJ9HFKD+YTgOueyYki15Nwmnv8O97IRRMYlxKkWQ+tJHeMf0h?=
+ =?us-ascii?Q?qjoF7S1er+IrBjlByBSe+0bAyY+lM9Og6q7KQleBpkxB3wSgONnprHusFUHY?=
+ =?us-ascii?Q?te5j+j5dxZW/fhbRVo+BsVUP8smZd2SAz/WYPx7jm5XttN5aMNNrcrWHXVv3?=
+ =?us-ascii?Q?2enD1eURATThbD469jDjjsVrA2AfeJXILeGM?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 07:17:55.2438
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b18b3d23-daae-4c0f-0a43-08ddae383ef2
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000AD7B.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8577
 
-Add support for Analog Devices I3C Controller IP, an AXI-interfaced IP
-core that supports I3C and I2C devices, multiple speed-grades and
-I3C IBIs.
+For eventN input, check if the event is part of the event list
+supported by the block.
+For enable input, do not accept values other than 0 or 1.
+Also replace sprintf instance with snprintf.
 
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+Signed-off-by: Shravan Kumar Ramani <shravankr@nvidia.com>
+Reviewed-by: David Thompson <davthompson@nvidia.com>
 ---
- MAINTAINERS                         |    1 +
- drivers/i3c/master/Kconfig          |   11 +
- drivers/i3c/master/Makefile         |    1 +
- drivers/i3c/master/adi-i3c-master.c | 1026 +++++++++++++++++++++++++++++++++++
- 4 files changed, 1039 insertions(+)
+ drivers/platform/mellanox/mlxbf-pmc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6f56e17dcecf902c6812827c1ec3e067c65e9894..9eb5b6c327590725d1641fd4b73e48fc1d1a3954 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11247,6 +11247,7 @@ I3C DRIVER FOR ANALOG DEVICES I3C CONTROLLER IP
- M:	Jorge Marques <jorge.marques@analog.com>
- S:	Maintained
- F:	Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
-+F:	drivers/i3c/master/adi-i3c-master.c
+diff --git a/drivers/platform/mellanox/mlxbf-pmc.c b/drivers/platform/mellanox/mlxbf-pmc.c
+index 900069eb186e..fcc3392ff150 100644
+--- a/drivers/platform/mellanox/mlxbf-pmc.c
++++ b/drivers/platform/mellanox/mlxbf-pmc.c
+@@ -1215,14 +1215,14 @@ static int mlxbf_pmc_get_event_num(const char *blk, const char *evt)
+ 		return -EINVAL;
  
- I3C DRIVER FOR CADENCE I3C MASTER IP
- M:	Przemysław Gaj <pgaj@cadence.com>
-diff --git a/drivers/i3c/master/Kconfig b/drivers/i3c/master/Kconfig
-index 7b30db3253af9d5c6aee6544c060e491bfbeb643..328b7145cdefa20e708ebfa3383e849ce51c5a71 100644
---- a/drivers/i3c/master/Kconfig
-+++ b/drivers/i3c/master/Kconfig
-@@ -1,4 +1,15 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+config ADI_I3C_MASTER
-+	tristate "Analog Devices I3C master driver"
-+	depends on HAS_IOMEM
-+	help
-+	  Support for Analog Devices I3C Controller IP, an AXI-interfaced IP
-+	  core that supports I3C and I2C devices, multiple speed-grades and
-+	  I3C IBIs.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called adi-i3c-master.
-+
- config CDNS_I3C_MASTER
- 	tristate "Cadence I3C master driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
-index 3e97960160bc85e5eaf2966ec0c3fae458c2711e..6cc4f4b73e7bdc206b68c750390f9c3cc2ccb199 100644
---- a/drivers/i3c/master/Makefile
-+++ b/drivers/i3c/master/Makefile
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+obj-$(CONFIG_ADI_I3C_MASTER)		+= adi-i3c-master.o
- obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
- obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
- obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
-diff --git a/drivers/i3c/master/adi-i3c-master.c b/drivers/i3c/master/adi-i3c-master.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..d4e0756efec9588383ac55ca9ea9228368ce767d
---- /dev/null
-+++ b/drivers/i3c/master/adi-i3c-master.c
-@@ -0,0 +1,1026 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * I3C Controller driver
-+ * Copyright 2025 Analog Devices Inc.
-+ * Author: Jorge Marques <jorge.marques@analog.com>
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/i3c/master.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#define VERSION_MAJOR(x)		((u32)FIELD_GET(GENMASK(23, 16), (x)))
-+#define VERSION_MINOR(x)		((u32)FIELD_GET(GENMASK(15, 8), (x)))
-+#define VERSION_PATCH(x)		((u32)FIELD_GET(GENMASK(7, 0), (x)))
-+
-+#define MAX_DEVS			16
-+
-+#define REG_VERSION			0x000
-+#define REG_ENABLE			0x040
-+#define REG_IRQ_MASK			0x080
-+#define REG_IRQ_PENDING			0x084
-+#define   REG_IRQ_PENDING_CMDR		BIT(5)
-+#define   REG_IRQ_PENDING_IBI		((u32)BIT(6))
-+#define   REG_IRQ_PENDING_DAA		BIT(7)
-+#define REG_CMD_FIFO			0x0d4
-+#define	  REG_CMD_FIFO_0_IS_CCC		BIT(22)
-+#define   REG_CMD_FIFO_0_BCAST		BIT(21)
-+#define   REG_CMD_FIFO_0_SR		BIT(20)
-+#define   REG_CMD_FIFO_0_LEN(l)		FIELD_PREP(GENMASK(19, 8), (l))
-+#define   REG_CMD_FIFO_0_DEV_ADDR(a)	FIELD_PREP(GENMASK(7, 1), a)
-+#define   REG_CMD_FIFO_0_RNW		BIT(0)
-+#define   REG_CMD_FIFO_1_CCC(id)	FIELD_PREP(GENMASK(7, 0), (id))
-+#define REG_CMD_FIFO_ROOM		0x0c0
-+#define REG_CMDR_FIFO			0x0d8
-+#define   REG_CMDR_FIFO_NO_ERROR	0
-+#define   REG_CMDR_FIFO_CE0_ERROR	1
-+#define   REG_CMDR_FIFO_CE2_ERROR	4
-+#define   REG_CMDR_FIFO_NACK_RESP	6
-+#define   REG_CMDR_FIFO_UDA_ERROR	8
-+#define   REG_CMDR_FIFO_ERROR(x)	FIELD_GET(GENMASK(23, 20), (x))
-+#define   REG_CMDR_FIFO_XFER_BYTES(x)	FIELD_GET(GENMASK(19, 8), (x))
-+#define REG_SDO_FIFO			0x0dc
-+#define REG_SDO_FIFO_ROOM		0x0c8
-+#define REG_SDI_FIFO			0x0e0
-+#define REG_IBI_FIFO			0x0e4
-+#define REG_FIFO_STATUS			0x0e8
-+#define   REG_FIFO_STATUS_CMDR_EMPTY	BIT(0)
-+#define   REG_FIFO_STATUS_IBI_EMPTY	BIT(1)
-+#define REG_OPS				0x100
-+#define   REG_OPS_SET_SG(x)		FIELD_PREP(GENMASK(6, 5), (x))
-+#define   REG_OPS_PP_SG_MASK		GENMASK(6, 5)
-+#define REG_IBI_CONFIG			0x140
-+#define   REG_IBI_CONFIG_LISTEN		BIT(1)
-+#define   REG_IBI_CONFIG_ENABLE		BIT(0)
-+#define REG_DEV_CHAR			0x180
-+#define   REG_DEV_CHAR_IS_I2C		BIT(0)
-+#define   REG_DEV_CHAR_IS_ATTACHED	BIT(1)
-+#define   REG_DEV_CHAR_BCR_IBI(x)	(((x) & GENMASK(2, 1)) << 1)
-+#define   REG_DEV_CHAR_WEN		BIT(8)
-+#define   REG_DEV_CHAR_ADDR(x)		FIELD_PREP(GENMASK(15, 9), (x))
-+
-+enum speed_grade {PP_SG_UNSET, PP_SG_1MHZ, PP_SG_3MHZ, PP_SG_6MHZ, PP_SG_12MHZ};
-+struct adi_i3c_cmd {
-+	u32 cmd0;
-+	u32 cmd1;
-+	u32 tx_len;
-+	const void *tx_buf;
-+	u32 rx_len;
-+	void *rx_buf;
-+	u32 error;
-+};
-+
-+struct adi_i3c_xfer {
-+	struct list_head node;
-+	struct completion comp;
-+	int ret;
-+	unsigned int ncmds;
-+	unsigned int ncmds_comp;
-+	struct adi_i3c_cmd cmds[];
-+};
-+
-+struct adi_i3c_master {
-+	struct i3c_master_controller base;
-+	u32 free_rr_slots;
-+	unsigned int maxdevs;
-+	struct {
-+		unsigned int num_slots;
-+		struct i3c_dev_desc **slots;
-+		spinlock_t lock; /* Protect IBI slot access */
-+	} ibi;
-+	struct {
-+		struct list_head list;
-+		struct adi_i3c_xfer *cur;
-+		spinlock_t lock; /* Protect transfer */
-+	} xferqueue;
-+	void __iomem *regs;
-+	struct clk *clk;
-+	unsigned long i3c_scl_lim;
-+	struct {
-+		u8 addrs[MAX_DEVS];
-+		u8 index;
-+	} daa;
-+};
-+
-+static inline struct adi_i3c_master *to_adi_i3c_master(struct i3c_master_controller *master)
-+{
-+	return container_of(master, struct adi_i3c_master, base);
-+}
-+
-+static void adi_i3c_master_wr_to_tx_fifo(struct adi_i3c_master *master,
-+					 const u8 *bytes, unsigned int nbytes)
-+{
-+	unsigned int n, m;
-+	u32 tmp;
-+
-+	n = readl(master->regs + REG_SDO_FIFO_ROOM);
-+	m = min(n, nbytes);
-+	writesl(master->regs + REG_SDO_FIFO, bytes, m / 4);
-+
-+	if (m & 3) {
-+		memcpy(&tmp, bytes + (m & ~3), m & 3);
-+		writel(tmp, master->regs + REG_SDO_FIFO);
-+	}
-+}
-+
-+static void adi_i3c_master_rd_from_rx_fifo(struct adi_i3c_master *master,
-+					   u8 *bytes, unsigned int nbytes)
-+{
-+	readsl(master->regs + REG_SDI_FIFO, bytes, nbytes / 4);
-+	if (nbytes & 3) {
-+		u32 tmp;
-+
-+		tmp = readl(master->regs + REG_SDI_FIFO);
-+		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
-+	}
-+}
-+
-+static bool adi_i3c_master_supports_ccc_cmd(struct i3c_master_controller *m,
-+					    const struct i3c_ccc_cmd *cmd)
-+{
-+	if (cmd->ndests > 1)
-+		return false;
-+
-+	switch (cmd->id) {
-+	case I3C_CCC_ENEC(true):
-+	case I3C_CCC_ENEC(false):
-+	case I3C_CCC_DISEC(true):
-+	case I3C_CCC_DISEC(false):
-+	case I3C_CCC_RSTDAA(true):
-+	case I3C_CCC_RSTDAA(false):
-+	case I3C_CCC_ENTDAA:
-+	case I3C_CCC_SETDASA:
-+	case I3C_CCC_SETNEWDA:
-+	case I3C_CCC_GETMWL:
-+	case I3C_CCC_GETMRL:
-+	case I3C_CCC_GETPID:
-+	case I3C_CCC_GETBCR:
-+	case I3C_CCC_GETDCR:
-+	case I3C_CCC_GETSTATUS:
-+	case I3C_CCC_GETHDRCAP:
-+		return true;
-+	default:
-+		break;
-+	}
-+
-+	return false;
-+}
-+
-+static int adi_i3c_master_disable(struct adi_i3c_master *master)
-+{
-+	writel(0, master->regs + REG_IBI_CONFIG);
-+
-+	return 0;
-+}
-+
-+static struct adi_i3c_xfer *adi_i3c_master_alloc_xfer(struct adi_i3c_master *master,
-+						      unsigned int ncmds)
-+{
-+	struct adi_i3c_xfer *xfer;
-+
-+	xfer = kzalloc(struct_size(xfer, cmds, ncmds), GFP_KERNEL);
-+	if (!xfer)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&xfer->node);
-+	xfer->ncmds = ncmds;
-+	xfer->ret = -ETIMEDOUT;
-+
-+	return xfer;
-+}
-+
-+static void adi_i3c_master_start_xfer_locked(struct adi_i3c_master *master)
-+{
-+	struct adi_i3c_xfer *xfer = master->xferqueue.cur;
-+	unsigned int i, n, m;
-+
-+	if (!xfer)
-+		return;
-+
-+	for (i = 0; i < xfer->ncmds; i++) {
-+		struct adi_i3c_cmd *cmd = &xfer->cmds[i];
-+
-+		if (!(cmd->cmd0 & REG_CMD_FIFO_0_RNW))
-+			adi_i3c_master_wr_to_tx_fifo(master, cmd->tx_buf, cmd->tx_len);
-+	}
-+
-+	n = readl(master->regs + REG_CMD_FIFO_ROOM);
-+	for (i = 0; i < xfer->ncmds; i++) {
-+		struct adi_i3c_cmd *cmd = &xfer->cmds[i];
-+
-+		m = cmd->cmd0 & REG_CMD_FIFO_0_IS_CCC ? 2 : 1;
-+		if (m > n)
-+			break;
-+		writel(cmd->cmd0, master->regs + REG_CMD_FIFO);
-+		if (cmd->cmd0 & REG_CMD_FIFO_0_IS_CCC)
-+			writel(cmd->cmd1, master->regs + REG_CMD_FIFO);
-+		n -= m;
-+	}
-+}
-+
-+static void adi_i3c_master_end_xfer_locked(struct adi_i3c_master *master,
-+					   u32 pending)
-+{
-+	struct adi_i3c_xfer *xfer = master->xferqueue.cur;
-+	int i, ret = 0;
-+	u32 status0;
-+
-+	if (!xfer)
-+		return;
-+
-+	for (status0 = readl(master->regs + REG_FIFO_STATUS);
-+	     !(status0 & REG_FIFO_STATUS_CMDR_EMPTY);
-+	     status0 = readl(master->regs + REG_FIFO_STATUS)) {
-+		struct adi_i3c_cmd *cmd;
-+		u32 cmdr, rx_len;
-+
-+		cmdr = readl(master->regs + REG_CMDR_FIFO);
-+
-+		cmd = &xfer->cmds[xfer->ncmds_comp++];
-+		if (cmd->cmd0 & REG_CMD_FIFO_0_RNW) {
-+			rx_len = min_t(u32, REG_CMDR_FIFO_XFER_BYTES(cmdr), cmd->rx_len);
-+			adi_i3c_master_rd_from_rx_fifo(master, cmd->rx_buf, rx_len);
-+		}
-+		cmd->error = REG_CMDR_FIFO_ERROR(cmdr);
-+	}
-+
-+	for (i = 0; i < xfer->ncmds; i++) {
-+		switch (xfer->cmds[i].error) {
-+		case REG_CMDR_FIFO_NO_ERROR:
-+			break;
-+
-+		case REG_CMDR_FIFO_CE0_ERROR:
-+		case REG_CMDR_FIFO_CE2_ERROR:
-+		case REG_CMDR_FIFO_NACK_RESP:
-+		case REG_CMDR_FIFO_UDA_ERROR:
-+			ret = -EIO;
-+			break;
-+
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		}
-+	}
-+
-+	xfer->ret = ret;
-+
-+	if (xfer->ncmds_comp != xfer->ncmds)
-+		return;
-+
-+	complete(&xfer->comp);
-+
-+	xfer = list_first_entry_or_null(&master->xferqueue.list,
-+					struct adi_i3c_xfer, node);
-+	if (xfer)
-+		list_del_init(&xfer->node);
-+
-+	master->xferqueue.cur = xfer;
-+	adi_i3c_master_start_xfer_locked(master);
-+}
-+
-+static void adi_i3c_master_queue_xfer(struct adi_i3c_master *master,
-+				      struct adi_i3c_xfer *xfer)
-+{
-+	init_completion(&xfer->comp);
-+	guard(spinlock_irqsave)(&master->xferqueue.lock);
-+	if (master->xferqueue.cur) {
-+		list_add_tail(&xfer->node, &master->xferqueue.list);
-+	} else {
-+		master->xferqueue.cur = xfer;
-+		adi_i3c_master_start_xfer_locked(master);
-+	}
-+}
-+
-+static void adi_i3c_master_unqueue_xfer(struct adi_i3c_master *master,
-+					struct adi_i3c_xfer *xfer)
-+{
-+	guard(spinlock_irqsave)(&master->xferqueue.lock);
-+	if (master->xferqueue.cur == xfer)
-+		master->xferqueue.cur = NULL;
-+	else
-+		list_del_init(&xfer->node);
-+
-+	writel(0x01, master->regs + REG_ENABLE);
-+	writel(0x00, master->regs + REG_ENABLE);
-+	writel(REG_IRQ_PENDING_CMDR, master->regs + REG_IRQ_MASK);
-+}
-+
-+static enum i3c_error_code adi_i3c_cmd_get_err(struct adi_i3c_cmd *cmd)
-+{
-+	switch (cmd->error) {
-+	case REG_CMDR_FIFO_CE0_ERROR:
-+		return I3C_ERROR_M0;
-+
-+	case REG_CMDR_FIFO_CE2_ERROR:
-+	case REG_CMDR_FIFO_NACK_RESP:
-+		return I3C_ERROR_M2;
-+
-+	default:
-+		break;
-+	}
-+
-+	return I3C_ERROR_UNKNOWN;
-+}
-+
-+static int adi_i3c_master_send_ccc_cmd(struct i3c_master_controller *m,
-+				       struct i3c_ccc_cmd *cmd)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_xfer *xfer;
-+	struct adi_i3c_cmd *ccmd;
-+
-+	xfer = adi_i3c_master_alloc_xfer(master, 1);
-+	if (!xfer)
-+		return -ENOMEM;
-+
-+	ccmd = xfer->cmds;
-+	ccmd->cmd1 = REG_CMD_FIFO_1_CCC(cmd->id);
-+	ccmd->cmd0 = REG_CMD_FIFO_0_IS_CCC |
-+		     REG_CMD_FIFO_0_LEN(cmd->dests[0].payload.len);
-+
-+	if (cmd->id & I3C_CCC_DIRECT)
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_DEV_ADDR(cmd->dests[0].addr);
-+
-+	if (cmd->rnw) {
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_RNW;
-+		ccmd->rx_buf = cmd->dests[0].payload.data;
-+		ccmd->rx_len = cmd->dests[0].payload.len;
-+	} else {
-+		ccmd->tx_buf = cmd->dests[0].payload.data;
-+		ccmd->tx_len = cmd->dests[0].payload.len;
-+	}
-+
-+	adi_i3c_master_queue_xfer(master, xfer);
-+	if (!wait_for_completion_timeout(&xfer->comp, msecs_to_jiffies(1000)))
-+		adi_i3c_master_unqueue_xfer(master, xfer);
-+
-+	cmd->err = adi_i3c_cmd_get_err(&xfer->cmds[0]);
-+	kfree(xfer);
-+
-+	return 0;
-+}
-+
-+static int adi_i3c_master_priv_xfers(struct i3c_dev_desc *dev,
-+				     struct i3c_priv_xfer *xfers,
-+				     int nxfers)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_xfer *xfer;
-+	int i, ret;
-+
-+	if (!nxfers)
-+		return 0;
-+	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
-+	if (!xfer)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nxfers; i++) {
-+		struct adi_i3c_cmd *ccmd = &xfer->cmds[i];
-+
-+		ccmd->cmd0 = REG_CMD_FIFO_0_DEV_ADDR(dev->info.dyn_addr);
-+
-+		if (xfers[i].rnw) {
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_RNW;
-+			ccmd->rx_buf = xfers[i].data.in;
-+			ccmd->rx_len = xfers[i].len;
-+		} else {
-+			ccmd->tx_buf = xfers[i].data.out;
-+			ccmd->tx_len = xfers[i].len;
-+		}
-+
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_LEN(xfers[i].len);
-+
-+		if (i < nxfers - 1)
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_SR;
-+
-+		if (!i)
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_BCAST;
-+	}
-+
-+	adi_i3c_master_queue_xfer(master, xfer);
-+	if (!wait_for_completion_timeout(&xfer->comp,
-+					 msecs_to_jiffies(1000)))
-+		adi_i3c_master_unqueue_xfer(master, xfer);
-+
-+	ret = xfer->ret;
-+
-+	for (i = 0; i < nxfers; i++)
-+		xfers[i].err = adi_i3c_cmd_get_err(&xfer->cmds[i]);
-+
-+	kfree(xfer);
-+
-+	return ret;
-+}
-+
-+struct adi_i3c_i2c_dev_data {
-+	u16 id;
-+	s16 ibi;
-+	struct i3c_generic_ibi_pool *ibi_pool;
-+};
-+
-+static int adi_i3c_master_get_rr_slot(struct adi_i3c_master *master,
-+				      u8 dyn_addr)
-+{
-+	if (!master->free_rr_slots)
-+		return -ENOSPC;
-+
-+	return ffs(master->free_rr_slots) - 1;
-+}
-+
-+static int adi_i3c_master_reattach_i3c_dev(struct i3c_dev_desc *dev, u8 dyn_addr)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	u8 addr;
-+
-+	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
-+
-+	writel(REG_DEV_CHAR_ADDR(dyn_addr), master->regs + REG_DEV_CHAR);
-+	writel((readl(master->regs + REG_DEV_CHAR) &
-+		~REG_DEV_CHAR_IS_ATTACHED) | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+	writel(readl(master->regs + REG_DEV_CHAR) |
-+	       REG_DEV_CHAR_IS_ATTACHED | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	return 0;
-+}
-+
-+static int adi_i3c_master_attach_i3c_dev(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data;
-+	int slot;
-+	u8 addr;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	slot = adi_i3c_master_get_rr_slot(master, dev->info.dyn_addr);
-+	if (slot < 0) {
-+		kfree(data);
-+		return slot;
-+	}
-+
-+	data->ibi = -1;
-+	data->id = slot;
-+	i3c_dev_set_master_data(dev, data);
-+	master->free_rr_slots &= ~BIT(slot);
-+
-+	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
-+
-+	writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+	writel(readl(master->regs + REG_DEV_CHAR) |
-+	       REG_DEV_CHAR_IS_ATTACHED | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	return 0;
-+}
-+
-+static void adi_i3c_master_sync_dev_char(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct i3c_dev_desc *i3cdev;
-+	u8 addr;
-+
-+	i3c_bus_for_each_i3cdev(&m->bus, i3cdev) {
-+		addr = i3cdev->info.dyn_addr ?
-+		       i3cdev->info.dyn_addr : i3cdev->info.static_addr;
-+		writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+		writel(readl(master->regs + REG_DEV_CHAR) |
-+		       REG_DEV_CHAR_BCR_IBI(i3cdev->info.bcr) | REG_DEV_CHAR_WEN,
-+		       master->regs + REG_DEV_CHAR);
-+	}
-+}
-+
-+static void adi_i3c_master_detach_i3c_dev(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-+	u8 addr;
-+
-+	addr = dev->info.dyn_addr ? dev->info.dyn_addr : dev->info.static_addr;
-+
-+	writel(REG_DEV_CHAR_ADDR(addr), master->regs + REG_DEV_CHAR);
-+	writel((readl(master->regs + REG_DEV_CHAR) &
-+		~REG_DEV_CHAR_IS_ATTACHED) | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	i3c_dev_set_master_data(dev, NULL);
-+	master->free_rr_slots |= BIT(data->id);
-+	kfree(data);
-+}
-+
-+static int adi_i3c_master_attach_i2c_dev(struct i2c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data;
-+	int slot;
-+
-+	slot = adi_i3c_master_get_rr_slot(master, 0);
-+	if (slot < 0)
-+		return slot;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->id = slot;
-+	master->free_rr_slots &= ~BIT(slot);
-+	i2c_dev_set_master_data(dev, data);
-+
-+	writel(REG_DEV_CHAR_ADDR(dev->addr) |
-+	       REG_DEV_CHAR_IS_I2C | REG_DEV_CHAR_IS_ATTACHED | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	return 0;
-+}
-+
-+static void adi_i3c_master_detach_i2c_dev(struct i2c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data = i2c_dev_get_master_data(dev);
-+
-+	writel(REG_DEV_CHAR_ADDR(dev->addr) |
-+	       REG_DEV_CHAR_IS_I2C | REG_DEV_CHAR_WEN,
-+	       master->regs + REG_DEV_CHAR);
-+
-+	i2c_dev_set_master_data(dev, NULL);
-+	master->free_rr_slots |= BIT(data->id);
-+	kfree(data);
-+}
-+
-+static void adi_i3c_master_bus_cleanup(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+
-+	adi_i3c_master_disable(master);
-+}
-+
-+static void adi_i3c_master_upd_i3c_scl_lim(struct adi_i3c_master *master)
-+{
-+	struct i3c_master_controller *m = &master->base;
-+	struct i3c_bus *bus = i3c_master_get_bus(m);
-+	u8 i3c_scl_lim = 0;
-+	struct i3c_dev_desc *dev;
-+	u8 pp_sg;
-+
-+	i3c_bus_for_each_i3cdev(bus, dev) {
-+		u8 max_fscl;
-+
-+		max_fscl = max(I3C_CCC_MAX_SDR_FSCL(dev->info.max_read_ds),
-+			       I3C_CCC_MAX_SDR_FSCL(dev->info.max_write_ds));
-+
-+		switch (max_fscl) {
-+		case I3C_SDR1_FSCL_8MHZ:
-+			max_fscl = PP_SG_6MHZ;
-+			break;
-+		case I3C_SDR2_FSCL_6MHZ:
-+			max_fscl = PP_SG_3MHZ;
-+			break;
-+		case I3C_SDR3_FSCL_4MHZ:
-+			max_fscl = PP_SG_3MHZ;
-+			break;
-+		case I3C_SDR4_FSCL_2MHZ:
-+			max_fscl = PP_SG_1MHZ;
-+			break;
-+		case I3C_SDR0_FSCL_MAX:
-+		default:
-+			max_fscl = PP_SG_12MHZ;
-+			break;
-+		}
-+
-+		if (max_fscl &&
-+		    (i3c_scl_lim > max_fscl || !i3c_scl_lim))
-+			i3c_scl_lim = max_fscl;
-+	}
-+
-+	if (!i3c_scl_lim)
-+		return;
-+
-+	master->i3c_scl_lim = i3c_scl_lim - 1;
-+
-+	pp_sg = readl(master->regs + REG_OPS) & ~REG_OPS_PP_SG_MASK;
-+	pp_sg |= REG_OPS_SET_SG(master->i3c_scl_lim);
-+
-+	writel(pp_sg, master->regs + REG_OPS);
-+}
-+
-+static void adi_i3c_master_get_features(struct adi_i3c_master *master,
-+					unsigned int slot,
-+					struct i3c_device_info *info)
-+{
-+	memset(info, 0, sizeof(*info));
-+
-+	info->dyn_addr = 0x31;
-+	info->dcr = 0x00;
-+	info->bcr = 0x40;
-+	info->pid = 0;
-+}
-+
-+static int adi_i3c_master_do_daa(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	u32 irq_mask;
-+	int ret, addr;
-+
-+	addr = 0x8;
-+	for (u8 i = 0; i < MAX_DEVS; i++) {
-+		addr = i3c_master_get_free_addr(m, addr);
-+		if (addr < 0)
-+			return addr;
-+		master->daa.addrs[i] = addr;
-+	}
-+
-+	irq_mask = readl(master->regs + REG_IRQ_MASK);
-+	writel(irq_mask | REG_IRQ_PENDING_DAA,
-+	       master->regs + REG_IRQ_MASK);
-+
-+	master->daa.index = 0;
-+	ret = i3c_master_entdaa_locked(&master->base);
-+
-+	writel(irq_mask, master->regs + REG_IRQ_MASK);
-+
-+	/* DAA always finishes with CE2_ERROR or NACK_RESP */
-+	if (ret && ret != I3C_ERROR_M2)
-+		return ret;
-+
-+	/* Add I3C devices discovered */
-+	for (u8 i = 0; i < master->daa.index; i++)
-+		i3c_master_add_i3c_dev_locked(m, master->daa.addrs[i]);
-+	/* Sync retrieved devs info with the IP */
-+	adi_i3c_master_sync_dev_char(m);
-+
-+	i3c_master_defslvs_locked(&master->base);
-+
-+	adi_i3c_master_upd_i3c_scl_lim(master);
-+
-+	return 0;
-+}
-+
-+static int adi_i3c_master_bus_init(struct i3c_master_controller *m)
-+{
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct i3c_device_info info = { };
-+	int ret;
-+
-+	ret = i3c_master_get_free_addr(m, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	adi_i3c_master_get_features(master, 0, &info);
-+	ret = i3c_master_set_info(&master->base, &info);
-+	if (ret)
-+		return ret;
-+
-+	writel(REG_IBI_CONFIG_LISTEN,
-+	       master->regs + REG_IBI_CONFIG);
-+
-+	return 0;
-+}
-+
-+static void adi_i3c_master_handle_ibi(struct adi_i3c_master *master,
-+				      u32 ibi)
-+{
-+	struct adi_i3c_i2c_dev_data *data;
-+	struct i3c_ibi_slot *slot;
-+	struct i3c_dev_desc *dev;
-+	u8 da, id;
-+	u8 *mdb;
-+
-+	da = (ibi >> 17) & GENMASK(6, 0);
-+	for (id = 0; id < master->ibi.num_slots; id++) {
-+		if (master->ibi.slots[id] &&
-+		    master->ibi.slots[id]->info.dyn_addr == da)
-+			break;
-+	}
-+
-+	if (id == master->ibi.num_slots)
-+		return;
-+
-+	dev = master->ibi.slots[id];
-+	guard(spinlock)(&master->ibi.lock);
-+
-+	data = i3c_dev_get_master_data(dev);
-+	slot = i3c_generic_ibi_get_free_slot(data->ibi_pool);
-+	if (!slot)
-+		return;
-+
-+	mdb = slot->data;
-+	mdb[0] = (ibi >> 8) & GENMASK(7, 0);
-+
-+	slot->len = 1;
-+	i3c_master_queue_ibi(dev, slot);
-+}
-+
-+static void adi_i3c_master_demux_ibis(struct adi_i3c_master *master)
-+{
-+	u32 status0;
-+
-+	for (status0 = readl(master->regs + REG_FIFO_STATUS);
-+	     !(status0 & REG_FIFO_STATUS_IBI_EMPTY);
-+	     status0 = readl(master->regs + REG_FIFO_STATUS)) {
-+		u32 ibi = readl(master->regs + REG_IBI_FIFO);
-+
-+		adi_i3c_master_handle_ibi(master, ibi);
-+	}
-+}
-+
-+static void adi_i3c_master_handle_da_req(struct adi_i3c_master *master)
-+{
-+	u8 payload0[8];
-+	u32 addr;
-+
-+	/* Clear device characteristics */
-+	adi_i3c_master_rd_from_rx_fifo(master, payload0, 6);
-+	addr = master->daa.addrs[master->daa.index++];
-+	addr = (addr << 1) | (parity8(addr) ? 0 : 1);
-+
-+	writel(addr, master->regs + REG_SDO_FIFO);
-+}
-+
-+static irqreturn_t adi_i3c_master_irq(int irq, void *data)
-+{
-+	struct adi_i3c_master *master = data;
-+	u32 pending;
-+
-+	pending = readl(master->regs + REG_IRQ_PENDING);
-+	writel(pending, master->regs + REG_IRQ_PENDING);
-+	if (pending & REG_IRQ_PENDING_CMDR) {
-+		spin_lock(&master->xferqueue.lock);
-+		adi_i3c_master_end_xfer_locked(master, pending);
-+		spin_unlock(&master->xferqueue.lock);
-+	}
-+	if (pending & REG_IRQ_PENDING_IBI)
-+		adi_i3c_master_demux_ibis(master);
-+	if (pending & REG_IRQ_PENDING_DAA)
-+		adi_i3c_master_handle_da_req(master);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int adi_i3c_master_i2c_xfers(struct i2c_dev_desc *dev,
-+				    struct i2c_msg *xfers,
-+				    int nxfers)
-+{
-+	struct i3c_master_controller *m = i2c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_xfer *xfer;
-+	int i, ret;
-+
-+	if (!nxfers)
-+		return 0;
-+	for (i = 0; i < nxfers; i++) {
-+		if (xfers[i].flags & I2C_M_TEN)
-+			return -EOPNOTSUPP;
-+	}
-+	xfer = adi_i3c_master_alloc_xfer(master, nxfers);
-+	if (!xfer)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nxfers; i++) {
-+		struct adi_i3c_cmd *ccmd = &xfer->cmds[i];
-+
-+		ccmd->cmd0 = REG_CMD_FIFO_0_DEV_ADDR(xfers[i].addr);
-+
-+		if (xfers[i].flags & I2C_M_RD) {
-+			ccmd->cmd0 |= REG_CMD_FIFO_0_RNW;
-+			ccmd->rx_buf = xfers[i].buf;
-+			ccmd->rx_len = xfers[i].len;
-+		} else {
-+			ccmd->tx_buf = xfers[i].buf;
-+			ccmd->tx_len = xfers[i].len;
-+		}
-+
-+		ccmd->cmd0 |= REG_CMD_FIFO_0_LEN(xfers[i].len);
-+	}
-+
-+	adi_i3c_master_queue_xfer(master, xfer);
-+	if (!wait_for_completion_timeout(&xfer->comp,
-+					 m->i2c.timeout))
-+		adi_i3c_master_unqueue_xfer(master, xfer);
-+
-+	ret = xfer->ret;
-+	kfree(xfer);
-+	return ret;
-+}
-+
-+static int adi_i3c_master_disable_ibi(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct i3c_dev_desc *i3cdev;
-+	u32 enabled = 0;
-+	int ret;
-+
-+	ret = i3c_master_disec_locked(m, dev->info.dyn_addr,
-+				      I3C_CCC_EVENT_SIR);
-+
-+	i3c_bus_for_each_i3cdev(&m->bus, i3cdev) {
-+		if (dev != i3cdev && i3cdev->ibi)
-+			enabled |= i3cdev->ibi->enabled;
-+	}
-+	if (!enabled) {
-+		writel(REG_IBI_CONFIG_LISTEN,
-+		       master->regs + REG_IBI_CONFIG);
-+		writel(readl(master->regs + REG_IRQ_MASK) & ~REG_IRQ_PENDING_IBI,
-+		       master->regs + REG_IRQ_MASK);
-+	}
-+
-+	return ret;
-+}
-+
-+static int adi_i3c_master_enable_ibi(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+
-+	writel(REG_IBI_CONFIG_LISTEN | REG_IBI_CONFIG_ENABLE,
-+	       master->regs + REG_IBI_CONFIG);
-+
-+	writel(readl(master->regs + REG_IRQ_MASK) | REG_IRQ_PENDING_IBI,
-+	       master->regs + REG_IRQ_MASK);
-+
-+	return i3c_master_enec_locked(m, dev->info.dyn_addr,
-+				      I3C_CCC_EVENT_SIR);
-+}
-+
-+static int adi_i3c_master_request_ibi(struct i3c_dev_desc *dev,
-+				      const struct i3c_ibi_setup *req)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data;
-+	unsigned long flags;
-+	unsigned int i;
-+
-+	data = i3c_dev_get_master_data(dev);
-+	data->ibi_pool = i3c_generic_ibi_alloc_pool(dev, req);
-+	if (IS_ERR(data->ibi_pool))
-+		return PTR_ERR(data->ibi_pool);
-+
-+	spin_lock_irqsave(&master->ibi.lock, flags);
-+	for (i = 0; i < master->ibi.num_slots; i++) {
-+		if (!master->ibi.slots[i]) {
-+			data->ibi = i;
-+			master->ibi.slots[i] = dev;
-+			break;
-+		}
-+	}
-+	spin_unlock_irqrestore(&master->ibi.lock, flags);
-+
-+	if (i < master->ibi.num_slots)
-+		return 0;
-+
-+	i3c_generic_ibi_free_pool(data->ibi_pool);
-+	data->ibi_pool = NULL;
-+
-+	return -ENOSPC;
-+}
-+
-+static void adi_i3c_master_free_ibi(struct i3c_dev_desc *dev)
-+{
-+	struct i3c_master_controller *m = i3c_dev_get_master(dev);
-+	struct adi_i3c_master *master = to_adi_i3c_master(m);
-+	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&master->ibi.lock, flags);
-+	master->ibi.slots[data->ibi] = NULL;
-+	data->ibi = -1;
-+	spin_unlock_irqrestore(&master->ibi.lock, flags);
-+
-+	i3c_generic_ibi_free_pool(data->ibi_pool);
-+}
-+
-+static void adi_i3c_master_recycle_ibi_slot(struct i3c_dev_desc *dev,
-+					    struct i3c_ibi_slot *slot)
-+{
-+	struct adi_i3c_i2c_dev_data *data = i3c_dev_get_master_data(dev);
-+
-+	i3c_generic_ibi_recycle_slot(data->ibi_pool, slot);
-+}
-+
-+static const struct i3c_master_controller_ops adi_i3c_master_ops = {
-+	.bus_init = adi_i3c_master_bus_init,
-+	.bus_cleanup = adi_i3c_master_bus_cleanup,
-+	.attach_i3c_dev = adi_i3c_master_attach_i3c_dev,
-+	.reattach_i3c_dev = adi_i3c_master_reattach_i3c_dev,
-+	.detach_i3c_dev = adi_i3c_master_detach_i3c_dev,
-+	.attach_i2c_dev = adi_i3c_master_attach_i2c_dev,
-+	.detach_i2c_dev = adi_i3c_master_detach_i2c_dev,
-+	.do_daa = adi_i3c_master_do_daa,
-+	.supports_ccc_cmd = adi_i3c_master_supports_ccc_cmd,
-+	.send_ccc_cmd = adi_i3c_master_send_ccc_cmd,
-+	.priv_xfers = adi_i3c_master_priv_xfers,
-+	.i2c_xfers = adi_i3c_master_i2c_xfers,
-+	.request_ibi = adi_i3c_master_request_ibi,
-+	.enable_ibi = adi_i3c_master_enable_ibi,
-+	.disable_ibi = adi_i3c_master_disable_ibi,
-+	.free_ibi = adi_i3c_master_free_ibi,
-+	.recycle_ibi_slot = adi_i3c_master_recycle_ibi_slot,
-+};
-+
-+static const struct of_device_id adi_i3c_master_of_match[] = {
-+	{ .compatible = "adi,i3c-master" },
-+	{}
-+};
-+
-+static int adi_i3c_master_probe(struct platform_device *pdev)
-+{
-+	struct adi_i3c_master *master;
-+	unsigned int version;
-+	int ret, irq;
-+
-+	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
-+	if (!master)
-+		return -ENOMEM;
-+
-+	master->regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(master->regs))
-+		return PTR_ERR(master->regs);
-+
-+	master->clk = devm_clk_get_enabled(&pdev->dev, "axi");
-+	if (IS_ERR(master->clk))
-+		return PTR_ERR(master->clk);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	version = readl(master->regs + REG_VERSION);
-+	if (VERSION_MAJOR(version) != 0) {
-+		dev_err(&pdev->dev, "Unsupported IP version %u.%u.%c\n",
-+			VERSION_MAJOR(version),
-+			VERSION_MINOR(version),
-+			VERSION_PATCH(version));
+ 	for (i = 0; i < size; ++i) {
+-		if (!strcmp(evt, events[i].evt_name))
++		if (!strncmp(evt, events[i].evt_name, strlen(events[i].evt_name)))
+ 			return events[i].evt_num;
+ 	}
+ 
+ 	return -ENODEV;
+ }
+ 
+-/* Get the event number given the name */
++/* Get the event name given the number */
+ static char *mlxbf_pmc_get_event_name(const char *blk, u32 evt)
+ {
+ 	const struct mlxbf_pmc_events *events;
+@@ -1799,6 +1799,9 @@ static ssize_t mlxbf_pmc_event_store(struct device *dev,
+ 		err = kstrtouint(buf, 0, &evt_num);
+ 		if (err < 0)
+ 			return err;
++
++		if (!mlxbf_pmc_get_event_name(pmc->block_name[blk_num], evt_num))
++			return -EINVAL;
+ 	}
+ 
+ 	if (strstr(pmc->block_name[blk_num], "l3cache"))
+@@ -1889,6 +1892,9 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 	if (err < 0)
+ 		return err;
+ 
++	if (en != 0 && en != 1)
 +		return -EINVAL;
-+	}
 +
-+	writel(0x00, master->regs + REG_ENABLE);
-+	writel(0x00, master->regs + REG_IRQ_MASK);
-+
-+	ret = devm_request_irq(&pdev->dev, irq, adi_i3c_master_irq, 0,
-+			       dev_name(&pdev->dev), master);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, master);
-+
-+	master->maxdevs = MAX_DEVS;
-+	master->free_rr_slots = GENMASK(master->maxdevs, 1);
-+
-+	writel(REG_IRQ_PENDING_CMDR, master->regs + REG_IRQ_MASK);
-+
-+	spin_lock_init(&master->ibi.lock);
-+	master->ibi.num_slots = 15;
-+	master->ibi.slots = devm_kcalloc(&pdev->dev, master->ibi.num_slots,
-+					 sizeof(*master->ibi.slots),
-+					 GFP_KERNEL);
-+	if (!master->ibi.slots)
-+		return -ENOMEM;
-+
-+	return i3c_master_register(&master->base, &pdev->dev,
-+				   &adi_i3c_master_ops, false);
-+}
-+
-+static void adi_i3c_master_remove(struct platform_device *pdev)
-+{
-+	struct adi_i3c_master *master = platform_get_drvdata(pdev);
-+
-+	writel(0xff, master->regs + REG_IRQ_PENDING);
-+	writel(0x00, master->regs + REG_IRQ_MASK);
-+	writel(0x01, master->regs + REG_ENABLE);
-+
-+	i3c_master_unregister(&master->base);
-+}
-+
-+static struct platform_driver adi_i3c_master = {
-+	.probe = adi_i3c_master_probe,
-+	.remove = adi_i3c_master_remove,
-+	.driver = {
-+		.name = "adi-i3c-master",
-+		.of_match_table = adi_i3c_master_of_match,
-+	},
-+};
-+module_platform_driver(adi_i3c_master);
-+
-+MODULE_AUTHOR("Jorge Marques <jorge.marques@analog.com>");
-+MODULE_DESCRIPTION("Analog Devices I3C master driver");
-+MODULE_LICENSE("GPL");
-
+ 	if (pmc->block[blk_num].type == MLXBF_PMC_TYPE_CRSPACE) {
+ 		err = mlxbf_pmc_readl(pmc->block[blk_num].mmio_base +
+ 			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+@@ -1905,9 +1911,6 @@ static ssize_t mlxbf_pmc_enable_store(struct device *dev,
+ 			MLXBF_PMC_CRSPACE_PERFMON_CTL(pmc->block[blk_num].counters),
+ 			MLXBF_PMC_WRITE_REG_32, word);
+ 	} else {
+-		if (en && en != 1)
+-			return -EINVAL;
+-
+ 		err = mlxbf_pmc_config_l3_counters(blk_num, false, !!en);
+ 		if (err)
+ 			return err;
 -- 
-2.49.0
+2.30.1
 
