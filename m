@@ -1,107 +1,75 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4FAC2EE615;
-	Wed, 18 Jun 2025 15:37:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D155028FA85;
+	Wed, 18 Jun 2025 15:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750261053; cv=none; b=VNHg5feGua4HshHM5c5Yvc0voaAsT6ZRjMLJ33Dlq28QPCXsTDIl7WVJhDLnNS/Zd5AbQIJPuvE4F5A9+NllqrVATYqFITYr/JJkkDOxbE/EtXIeziQaVDf8NCP3c6auKeVecn+zRNrD5zBFI86lZVH0TnJPQ4wqy6jRJLLZBHo=
+	t=1750261111; cv=none; b=fUJnzXWC9OAst59j2i4s7kakv+47uZvi7Iw0Kj79DnPggh/KTY+OSdvl+UTktWSeI1mCzYG3LofVN+ThRRRDbxhTrGQ+BapS65m2MOVj0MNne/gfjNdWQA9WFt9bdk5JqidKv6Ed236ZXGDpnFfjahzCOoWWGQBHPp0aAUm8AlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750261053; c=relaxed/simple;
-	bh=38oLIBSzvwS9F/ZdoXgoz55RXnTesyPZaehl42RAHdU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Js79QtLUdRS8ht+TF+6/uGNnqXUsWRaADoXt2M+76CAF8cXzJJPjuZWcbCuTqBNPnjbHiioYzeouXq5PToy0PVntOxT8wnan0CN+VJfNcpP4XVy/Q766FfnvCsPcNybFJ+gSQgGVDjCt7iYySiJxQp66Ud6tm13SKUpagIlFwjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jfYxUja2; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfYxUja2"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a51481a598so4126699f8f.3;
-        Wed, 18 Jun 2025 08:37:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750261050; x=1750865850; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7rots1tBuEj+icP+SlfA9bvZe/4e1MCmHxB3VSaBaYU=;
-        b=jfYxUja2tdX29FY5wAwfJ0jo11flwIEewIBsVHIGswC2urtX/8xTXLQcT+T4jkzhxN
-         cfyv542vAefiimkaCBnQSe+F2EnW9ePMaKPHsQMNn4TEdRTo9CqFS4BI8V/SjBCpK1gI
-         An0N5e61dtc8EV2qaQfOIblpg9gla7RtByWm9hkbdq2vaex5K2lbinI3Ro3rISlpHrmp
-         vxAyv+keN/46moLV4/mz0vnPizdyCUXI/53hzlqPn3kMMqc8kAP5OKbm0CgemC/dxb+Q
-         jTI0WiTyr5yYpoCRw1TvQ6EYDhAgdXmcbNpF6PFtdqOu9ScUwH5uhrRXhgBcEImP4TMs
-         kVwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750261050; x=1750865850;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rots1tBuEj+icP+SlfA9bvZe/4e1MCmHxB3VSaBaYU=;
-        b=t7Z3RPvKfmqu6zHtoO/GBkp7c5RX4zhQfk2gmshr4qERVO3+F2B2ufw73TFB7GQk0K
-         6rnmFeOEaq3Dt+gz7fPyM0c1gMh2+yUKImWoa4avl6n4UDnYCmdQPuPwPdSoFX2ISJ+R
-         lUaMjABtuKuYuet3YBXl65W07yn6URSzVRmNxtyh4lD7h0iBmfFdckPKvjYvkMb3sg9Y
-         PtSVuW/otl531tWA7k7L6Y1c5JFjD/8zgtJ4u/xB3/Rs5GP2ti9qG8gVBHwzWoV7rBcp
-         5SMU4G4wmhtLEPwB1lLTpu+8KlR4af1Xf6JlkDcceqmLArnZeSGIHLBMTFSx1FXHUbyW
-         NBig==
-X-Forwarded-Encrypted: i=1; AJvYcCWL1WaWxG/McMC8JmE+PIijR0QvFXCLBCQ61O6EtiXybWMNLW+IW/NLoNIGOpZwaCONtPl0cE9PGx4R@vger.kernel.org, AJvYcCWlhqiblpjigRC4jWeY5Z2Pmi6XVgrGTed69Z4tYQFtzwEEvACQcQ46QkZxiMhjijw0J1wA2DQFxJnjZE2S@vger.kernel.org, AJvYcCXgez+hUpeqP9zoF2jMQ5gbj7cXMuskMKjwN2zfuGwIEIXQ6n20peHcuz3h4jyV/wfnpxYmTP7T9RYXMBw8@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL8Ybwm7u9K14rZM9hMg41AYJ5lOsHCsWoJMTQ8n/Q7hWEhcrf
-	sS+y28+SHJz6s1cOO2LHyL2VajHQKWMQFKoz8MO8ojSATHnvcTCYE4MORdz46vJG
-X-Gm-Gg: ASbGncut6iBwnBe9wklQqohBzHeZtNtFA9bvUhmOe8M78uXphaUvs229L3Zdqc2DFgo
-	F2Lr5UpgnZQ0HKO/D4nAaLzoOY8WB6O1239D5JinKOQgS2TqeqK+vsh+clxksVusr4G+qvhcnMr
-	CLACryn35DRWpY5Q2uEu23KHlbfs2b9i4HLorzABx0mlnuSHzS9Oj8ahlH3itFvPpOt/dVtpMZw
-	rrwIFAU/MEDHp1mKNvzyw+wXuLsBulWn1ueLaOQAYZmMN4xFkQfOUXQpB1yYfgCyqboHuEp3g8D
-	ZlhkwWfgWVgAf+BymvRBNKhQs6GtaIvsVrRtWdK0rhrRco06yR8X9xRT+Ljh8xKwSfz33Jj3IIy
-	iajcyHUPfedvahKGfXTzJ9u8BW9sVlQWbUchrOw==
-X-Google-Smtp-Source: AGHT+IF2VV+CTQDFvL+Rf1YFT4Teh7oJnJWmdd/7flA9WH+cFonugqwJIfxyEtFJSjjrtaGHyVPTeQ==
-X-Received: by 2002:a5d:5f93:0:b0:3a5:1c70:5677 with SMTP id ffacd0b85a97d-3a5723676c0mr14030160f8f.7.1750261049844;
-        Wed, 18 Jun 2025 08:37:29 -0700 (PDT)
-Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b47198sm16964027f8f.81.2025.06.18.08.37.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 08:37:29 -0700 (PDT)
-Message-ID: <96e2a25c-89d1-42c6-b2e6-eb51b6964849@gmail.com>
-Date: Wed, 18 Jun 2025 17:37:27 +0200
+	s=arc-20240116; t=1750261111; c=relaxed/simple;
+	bh=cKSFSoxnitAjZGgvNgqUq5XLSDt0L0l7BTH00fNZQyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ojpF50eljr42vqxQsuFyEJ5Q3jas6WRJB8JG4mnw9EOLcoDZjCEgskEqtY4xr0e4ucYNsN7Ps5yxUHBN3lP6sR1X4TJdEa/fZ5+EQtT9TOEDfpFjLXucwZ966nyWy865MMtjEKfR8WeMhGASUgKlS8BH6elHXEIwCyilEUxtAkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 513DF8030A;
+	Wed, 18 Jun 2025 15:38:27 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 8AC9A18;
+	Wed, 18 Jun 2025 15:38:23 +0000 (UTC)
+Date: Wed, 18 Jun 2025 11:38:31 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250618113831.1e26bb8f@gandalf.local.home>
+In-Reply-To: <20250618113706.2eb46544@gandalf.local.home>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.770214773@goodmis.org>
+	<20250618142000.GS1613376@noisy.programming.kicks-ass.net>
+	<20250618113706.2eb46544@gandalf.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] spi: spi-qpic-snand: document the limited bit error
- reporting capability
-Content-Language: hu
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Brown <broonie@kernel.org>, Md Sadre Alam <quic_mdalam@quicinc.com>,
- Varadarajan Narayanan <quic_varada@quicinc.com>,
- Sricharan Ramabadhran <quic_srichara@quicinc.com>,
- linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250527-qpic-snand-limited-biterr-caps-v1-1-61f7cf87be1e@gmail.com>
- <87zfe5l8g6.fsf@bootlin.com>
-From: Gabor Juhos <j4g8y7@gmail.com>
-In-Reply-To: <87zfe5l8g6.fsf@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 8AC9A18
+X-Stat-Signature: 9iom6z8i66zini513gfg4cfdddsds1ej
+X-Rspamd-Server: rspamout05
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/ghWbw4OhlNrQUhRvEjr4WTJdnB8xIu9E=
+X-HE-Tag: 1750261103-260494
+X-HE-Meta: U2FsdGVkX1+Zb3aFmTig2sc9oHDxGzoxPAPVRMMDMdGsNcMwCVfCIq9cb5qeHdR9cf1rgXOoKdMI11YFVKGsQW7Hp6dXNkA2V82gofI8VLhDAr30CUBkbuwOSuRwOP82/pPxKL+3NYChbGNQ5PMTNiIoUD+VWuaHz8vouUcyKD525ahAgre4dQ2bMdbG/VBsWaTSUx1dLIJmwWwRxUz7gfm7PcbOWclEnyCBCTODpqi2ixk9w+ohsQrpMq4Ag6dm1YzrIJiv/kVmNCfiGI1uReR03BlrLa8TCyUsPJJfHxbE3j0II8hfVVeqKSxhmgQW8uyE22llU25FLW5ANafbO6wPFjB/KqmWKOa+Q1yB6DMK4voYlIeVQeH4S0vB1ydC
 
-Hi Miquel,
+On Wed, 18 Jun 2025 11:37:06 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On 27/05/2025 at 13:08:16 +02, Gabor Juhos <j4g8y7@gmail.com> wrote:
+> > What about two CPUs managing to request an unwind at exactly the same
+> > time?  
 > 
->> The QPIC hardware is not capable of reporting the exact number of the
->> corrected bit errors, it only reports the number of the corrected bytes.
->>
->> Document this behaviour in the code, and also issue a warning message
->> to inform the user about it.
->>
->> No functional changes.
->>
->> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+> It's mapped to a task. As long as each timestamp is unique for a task it
+> should be fine. As the trace can record the current->pid along with the
+> timestamp to map to the unique user space stack trace.
 > 
-> This change no longer applies on v6.16-rc1, can you please rebase and
-> resend?
+> As for resolution, as long as there can't be two system calls back to back
+> within the same time stamp. Otherwise, yeah, we have an issue.
 
-It is not needed since v6.16-rc1 contains the change already (57cf46cd1fe3).
+I'll add a comment that states this as a constraint.
 
-Regars,
-Gabor
-
+-- Steve
