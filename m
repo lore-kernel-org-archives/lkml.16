@@ -1,155 +1,86 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECCCA27F01C;
-	Wed, 18 Jun 2025 08:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149B2FBF0;
+	Wed, 18 Jun 2025 08:40:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750235940; cv=none; b=FyX4gKtmmIhHlneprQFeBpSqPWF7j6V46tsJj4FR98eodt4qrvFLoXVpWdOWb36VriUTuXKV7mssT0WyB9XA+KRWSVfeomR7/QI0AwhrFg+2mMD8D/CSkpLZdG0fCB3rSG24F1xiZzqgqYJ+QI5gJ+9Tvu7XERspC41Cn0cXTQQ=
+	t=1750236041; cv=none; b=g3YaMfS7ABdOcHel8pStZoiwW3aXKU0dJmyJGXpnCfpTYUuqB2OG678AFeLxeiyUkdHYafYogtduZiXUrITG4R63Cr7oWs3nERImXOQXiUf8eS8ZVhE9q67i00faKZXjyllwoRlinrRwCBv9rbpb2oNVGN20QNlCM0iiQ+ywALE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750235940; c=relaxed/simple;
-	bh=G+RSgIidmcc8+QlaQIEFM32LREvOAiomoXRxkIQlspE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SLocqFa0L7/VPWu2zdvvbyBW8s7HY3Xax4j4QeI4owiO2aXv9gTR2Y1U4OVUwrw27P7IUsebAfjyF/TM4xXDxle2Qp8c3gkG1zpI/5Omxr8bM9zKFv61nnrnVLOGztE0KdAXRg3hzwHCIBGBfMQz4/E7mcjH7tVywXPaIRx5rFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hbzfTJRU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750236041; c=relaxed/simple;
+	bh=1xFjpqsiK1UQYwyyiXC7mYzP6CcNQH5rmkYvgPQmtGg=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=fEqTkJft6789qxaIGlpPKfFoBpA+kPkMJtOlrgILnPVs5gdj34ChWD9hcmedA3Y9GxyV3EoqL6c7cdc7BuB721YKY/gY1eXXhijSLWI8umHogyZmlw5PAKPvlopt4upIk5f02GT/eXNdbfSA5lmn5Vkif2fZDmtywIAYqvcYDb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVuwr0Kj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hbzfTJRU"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1Sa34013276;
-	Wed, 18 Jun 2025 08:38:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	AdD1WMfEdHKmW1Nn/+epgWe5n6XWQmEaz5wsJjHmz0I=; b=hbzfTJRUbsFYS9oc
-	mlKqTjwIAKScx9r7wd5UdBrOQLAiGqwqSihhGRDqujkc+AQFfj1j2A05iZsuiLvc
-	jP57iXgYwjLkxoC1AH186WOvAyEMdw7afclmnfh0ZVBzegW44mt29Qy3IPY/d+Xc
-	7J6/QjDgChtdswH9kAfQi0sFvuV8aIhP1MK3Zzh0XasgTJn6K+pZiQTc/NNUriPl
-	aclzKdk2hhWWpUOZPKa1dvk2kEXa9D9/mrjoiuvNBzSFuXArcQgXxDDZuFyF5at9
-	8a/JKwjduC1tc0OB7GQEgMfyoZaXrA/5NuVz3C5APxFnorcVw7ewNfWlXGjJOcfy
-	Ptkbqw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47928mkbv6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 08:38:52 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55I8cp5N001427
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 08:38:51 GMT
-Received: from [10.217.216.168] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Jun
- 2025 01:38:45 -0700
-Message-ID: <d1ffbcf5-967a-4c1e-9f2c-becc5fb6c6ed@quicinc.com>
-Date: Wed, 18 Jun 2025 14:08:43 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVuwr0Kj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 585CDC4CEEF;
+	Wed, 18 Jun 2025 08:40:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750236040;
+	bh=1xFjpqsiK1UQYwyyiXC7mYzP6CcNQH5rmkYvgPQmtGg=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=GVuwr0KjCRZ1NH1xzWexV2R1TcXuvv24Ddgi5wlPOmSPEAaqYSrbsAqZ2laqO95f4
+	 nhmBwJ+74tD8AyWVhNTsTdRXNgD9qu3zaNvrW04HR8UCbycQ5m7X/IHI+Jr579yBo1
+	 ZdyJuwnLP20+a0fw2i9sJCnP5sOnLG3vhnkxXRdMfFy0epeQsXPitLbUBR/0k8B75P
+	 y7L5LDEr+lqHMqMyA/ydsYt7dTWlmXz7+A6FZVwm+WMkp7tZ41cFOFP14owhTIsgjM
+	 lYBM1QlYX5ZTaDrbRDm79b3i24TOJ6KfvrFihAsOnJ16VFYCtyefwLz160Fs77kiiy
+	 KyWb8Eg3xYOeA==
+Date: Wed, 18 Jun 2025 03:40:39 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 2/4] dt-bindings: mmc: controller: Add
- max-sd-hs-frequency property
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Ulf Hansson
-	<ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Adrian Hunter
-	<adrian.hunter@intel.com>
-CC: <linux-mmc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <quic_rampraka@quicinc.com>, <quic_pragalla@quicinc.com>,
-        <quic_sayalil@quicinc.com>, <quic_nitirawa@quicinc.com>,
-        <quic_bhaskarv@quicinc.com>, <kernel@oss.qualcomm.com>
-References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
- <20250618072818.1667097-3-quic_sartgarg@quicinc.com>
- <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
-From: Sarthak Garg <quic_sartgarg@quicinc.com>
-In-Reply-To: <6040afd9-a2a8-49f0-85e9-95257b938156@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA3NCBTYWx0ZWRfXz24EQlnluwGA
- rGsyGORj7o6N8rDG6iEBTDC6/05nuguF5lxOyRIGhqrxMFwf8oDswdSpuDcGaWSn7QhjnM32YBx
- EOFLL+Olt54mGmMacsIwJM6tWVxVfyxneaurY5pJa5LimqyqeseQkVvuDc8cFNepEL0KqZccowr
- 1F7HC4xnA1gg1IBtsj4PkuMepbG1vi/geccE7KxsUgJFfn1Hs8+KIMJw/87TD8hGiL5HYF+PqnW
- rabRLU/WmM/iEzwLg6b84AvUnB2VYYXwGKyvjkvPfQmiEFVK4tLI+OHCBilN+2nroBZzKaiW5sy
- DVMb404WeEZitsb8x8spSZuow9MChXbbWJr2KmkOwF/kY5IPXwv80QiYAhmcG2lek/TezMb7J2R
- TgfbdnPZGpR3b5KX0mO7OAb37KAzvDIGQXlIn5/Zx53R8IEb70bYnrOd4WqnxhpSNxIf1lR4
-X-Authority-Analysis: v=2.4 cv=fvbcZE4f c=1 sm=1 tr=0 ts=68527b1c cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=n2guzD_OBVmuCnK1DsEA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: pjTl4ENulpfPvlypMoUHlMtLEwvLTWTZ
-X-Proofpoint-ORIG-GUID: pjTl4ENulpfPvlypMoUHlMtLEwvLTWTZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_03,2025-06-18_02,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
- mlxlogscore=999 phishscore=0 clxscore=1015 mlxscore=0 impostorscore=0
- adultscore=0 spamscore=0 suspectscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180074
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, gastmaier@gmail.com, 
+ linux-kernel@vger.kernel.org, Frank Li <Frank.Li@nxp.com>, 
+ linux-i3c@lists.infradead.org, devicetree@vger.kernel.org, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Conor Dooley <conor+dt@kernel.org>
+To: Jorge Marques <jorge.marques@analog.com>
+In-Reply-To: <20250618-adi-i3c-master-v3-1-e66170a6cb95@analog.com>
+References: <20250618-adi-i3c-master-v3-0-e66170a6cb95@analog.com>
+ <20250618-adi-i3c-master-v3-1-e66170a6cb95@analog.com>
+Message-Id: <175023603936.750172.15809343122614690485.robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Add adi-i3c-master
 
 
-
-On 6/18/2025 1:13 PM, Krzysztof Kozlowski wrote:
-> On 18/06/2025 09:28, Sarthak Garg wrote:
->> Introduce a new optional device tree property `max-sd-hs-frequency` to
->> limit the maximum frequency (in Hz) used for SD cards operating in
->> High-Speed (HS) mode.
->>
->> This property is useful for platforms with vendor-specific hardware
->> constraints, such as the presence of a level shifter that cannot
->> reliably support the default 50 MHz HS frequency. It allows the host
->> driver to cap the HS mode frequency accordingly.
->>
->> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
->> ---
->>   .../devicetree/bindings/mmc/mmc-controller-common.yaml | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->> index 9a7235439759..1976f5f8c401 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->> +++ b/Documentation/devicetree/bindings/mmc/mmc-controller-common.yaml
->> @@ -93,6 +93,16 @@ properties:
->>       minimum: 400000
->>       maximum: 384000000
->>   
->> +  max-sd-hs-frequency:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: |
->> +      Maximum frequency (in Hz) to be used for SD cards operating in
->> +      High-Speed (HS) mode. This is useful for platforms with vendor-specific
->> +      limitations, such as the presence of a level shifter that cannot support
->> +      the default 50 MHz HS frequency or other.
->> +    minimum: 400000
->> +    maximum: 50000000
+On Wed, 18 Jun 2025 09:16:43 +0200, Jorge Marques wrote:
+> Add bindings doc for ADI I3C Controller IP core, a FPGA synthesizable IP
+> core that implements the MIPI I3C Basic controller specification.
 > 
-> This might be fine, but your DTS suggests clearly this is SoC compatible
-> deducible, which I already said at v1.
+> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+> ---
+>  .../devicetree/bindings/i3c/adi,i3c-master.yaml    | 63 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  5 ++
+>  2 files changed, 68 insertions(+)
 > 
-> So now you send v3 which is the same as v1, so you get the same comments.
-> 
-> Best regards,
-> Krzysztof
 
-Introducing this flag no longer becomes SoC compatible because as per 
-discussions in V2 patchset with Ulf and Konrad this new property can be 
-used by any vendor who wants to limit the HS mode frequency due to any 
-reason. Thats why moved to this generic approach again in V3 as compared 
-to compatible based approach in V2.
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/i3c/adi,i3c-master.example.dtb: /example-0/i3c@44a00000: failed to match any schema with compatible: ['adi,i3c-master']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250618-adi-i3c-master-v3-1-e66170a6cb95@analog.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
