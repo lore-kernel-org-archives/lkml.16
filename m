@@ -1,107 +1,104 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C932E2F5307
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7630D2F5307
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248757; cv=none; b=S+m9bYNvOcLqTNr9iHPYHvR5OLAg24kAybKz+wSC2cIVxJMq6s3asDfhxxaZxM6OpqFgZm6TzK+eKcPCR7z/oDwu9/hews1mE++AzUHpIWYgt3FmbwwYgtw1SGAD42CJuI+fg8fN5QtzKI+vEqFw55GWHL63vSxSkObsnX8fncw=
+	t=1750248763; cv=none; b=K4JSGnPD3PD7xIC6as7MZhU42M9pUwU4cv3Agke3O4QCfFZq92fMjBS7ZvqPRHGJkXCUA2iYBmJr+hSblMWJR+ZhLBCkjUWmcpQdGsS6X0HgOPd4+PuWeMIudm8xgBmE3ygFZ0qIf549xzr2P9sasnaWvdhBKTXj8Ohtw7w0jlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248757; c=relaxed/simple;
-	bh=MN+TyrcXv4/90+oVhRN9ySXbBDxubTUmyqDR7cf9ceY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tOdlzLUgDzkDGovgTcGI4VPhfpbGrfjhRLps3TZOzMsPBY/9neettz052O7vMmyIapW97SjuZdYdmyp8NrweJK+hHXlMXzBhni98Ou4YaXhF7UDxyL8/kR8ie/V6BfqOp4iSYVsnR7EwfCLBtcV4liVxfgez+4sk5Jd4jDGxcWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uRreN-0004yT-GA; Wed, 18 Jun 2025 14:12:19 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uRreL-0048Th-21;
-	Wed, 18 Jun 2025 14:12:17 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 34CEB42B666;
-	Wed, 18 Jun 2025 12:12:17 +0000 (UTC)
-Date: Wed, 18 Jun 2025 14:12:15 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
-	Clark Wang <xiaoning.wang@nxp.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Richard Cochran <richardcochran@gmail.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: imx@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@pengutronix.de, bpf@vger.kernel.org, 
-	Frank Li <Frank.Li@nxp.com>, Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next v4 00/11] net: fec: general + VLAN cleanups
-Message-ID: <20250618-wooden-russet-condor-5d1623-mkl@pengutronix.de>
-References: <20250618-fec-cleanups-v4-0-c16f9a1af124@pengutronix.de>
+	s=arc-20240116; t=1750248763; c=relaxed/simple;
+	bh=zFk2egmf36IbeczadxJnUHDOOVO8nEoXhdsgsdwa/AU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=qFp48PgwZ68gVGVTkptK4xolkPXIVLbjVtBVm0t8yLSuK7K9mn5d6xrLXIVXsFu1m5tR9SS7/19LSQaYQwjs0qyYSV86M3FFEXjob63AXLmdezx/lQO4yIN103h4LOTMiUkcKL9j1tfUcP9yAw9AvMKkozQkpoFNAhb+PxkByyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=WGEEuCPd; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="WGEEuCPd"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ztf3dn6k37tmgoin"
-Content-Disposition: inline
-In-Reply-To: <20250618-fec-cleanups-v4-0-c16f9a1af124@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
+	t=1750248757;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+fwuhHs7pqnSyoIdYUQwG7qjgQ1CC6dPRZ/xpENoi6E=;
+	b=WGEEuCPdsRaGDkWhC8iz9ZzBxfRVX6fRUXN35unrrg/RSzEOp5Y2YlPQz9Kw46epXq25Kt
+	qKy9OYZjWc3RZI23h2IDLRL354jLZvmJTj80nLS+olZ86dFpaS+GGr0VJafCYbccXUFMNy
+	tAnq4OBc+6/FaeJsHd82Q0oD8vtQZZXtTV/ld4ePnMAaE5eLqXIpMjjoy+SAfPJqAAyWDJ
+	VkrAsh+MbnzD/LLEBxhJCBA5S2DT2iIbfyUNa03gpy4BRs7J8KBkvv/1Rvj4v+kkgZ7CjC
+	06rcd5QPUk45Zffjom8mZLRe/1MTB/Qk76ZzDQ6ns50y9cRikT7plfCxpnw95w==
+Content-Type: multipart/signed;
+ boundary=d094255437ed180642212f2daf7bb7d49bbc773ab458e9a2480ab8cbe8f0;
+ micalg=pgp-sha512; protocol="application/pgp-signature"
+Date: Wed, 18 Jun 2025 14:12:13 +0200
+Message-Id: <DAPNE849BAON.1DPGBKMHM552V@cknow.org>
+To: "Olivier Benjamin" <olivier.benjamin@bootlin.com>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Heiko Stuebner" <heiko@sntech.de>
+Cc: "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-rockchip@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: rockchip: Remove unused property in
+ PinePhone Pro MIPI panel
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Diederik de Haas" <didi.debian@cknow.org>
+References: <20250618-dtb_fixes-v1-0-e54797ad2eba@bootlin.com>
+ <20250618-dtb_fixes-v1-3-e54797ad2eba@bootlin.com>
+In-Reply-To: <20250618-dtb_fixes-v1-3-e54797ad2eba@bootlin.com>
+X-Migadu-Flow: FLOW_OUT
 
-
---ztf3dn6k37tmgoin
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+--d094255437ed180642212f2daf7bb7d49bbc773ab458e9a2480ab8cbe8f0
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH net-next v4 00/11] net: fec: general + VLAN cleanups
-MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 
-On 18.06.2025 14:00:00, Marc Kleine-Budde wrote:
-> This series first cleans up the fec driver a bit (typos, obsolete
-> comments, add missing header files, rename struct, replace magic
-> number by defines).
->=20
-> The last 5 patches clean up the fec_enet_rx_queue() function,
-> including VLAN handling.
+Hi,
 
-I accidentally dropped the patch "net: fec: add missing header files".
-But this series can be applies as is, I'll include the missing patch in
-my next series.
+On Wed Jun 18, 2025 at 12:32 AM CEST, Olivier Benjamin wrote:
+> The MIPI panel definition in the PinePhone Pro DTS includes a
+> "pinctrl-names" property, which is unused in the absence of pinctrl-0.
+>
+> Signed-off-by: Olivier Benjamin <olivier.benjamin@bootlin.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts b/arch=
+/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> index 5a7341fb6bcb0613af6f3ac31d99355a0f890e89..405140700208365c8631de86a=
+2d7b6e577b7aa7f 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-pinephone-pro.dts
+> @@ -485,7 +485,6 @@ panel@0 {
+>  		reset-gpios =3D <&gpio4 RK_PD1 GPIO_ACTIVE_LOW>;
+>  		vcc-supply =3D <&vcc2v8_lcd>;
+>  		iovcc-supply =3D <&vcc1v8_lcd>;
+> -		pinctrl-names =3D "default";
 
-regards,
-Marc
+Why not define a pinctrl for LCD1_RST for GPIO4_D1 and reference that in
+pinctrl-0? (See page 11 and 16 of the schematics)
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+Cheers,
+  Diederik
+> =20
+>  		port {
+>  			mipi_in_panel: endpoint {
 
---ztf3dn6k37tmgoin
+
+--d094255437ed180642212f2daf7bb7d49bbc773ab458e9a2480ab8cbe8f0
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmhSrRwACgkQDHRl3/mQ
-kZxSeQf/bBTOiveZRWN5kyvNQrFsBijmfXa9nWahkiEGnEUVDigRod+muBeTqccK
-NT+DcVh36hZjUhsgZ7DAy8EU4GjHnX3HHY7FyUcV9XpwLMfQEQAqz9W6IHhKfcA7
-Eh+OlKFk+YgkNkvNu3Xp7NSDpuYXVDazFmo55dkGtJwMlWtp5hlMLF8l/wcIF2zg
-FPKLz2DshxCSCChdEgWfMHIn/p8nJZcJLdM3qEDtltq4SPDQp2GCrxzSGyKv1LZQ
-uCrQykEqgpIh8rYjMZMkDWa8Ru90lV6LgqyZkBHm3XcnZaZ6q/SXaSAg/9wEZNrj
-u3iS03sJ9Ycw24TU7Y+gCLev3ZsWgQ==
-=5bIr
+iHUEABYKAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCaFKtJQAKCRDXblvOeH7b
+birRAP9UF4IfSII2WRPdY7JTipjbLL5426U7AHmPMYj5ktK2igEAqMjf89ZjcYJi
+y80+OTxY2ljkePaU/MPugTRVg3TTcgk=
+=NOom
 -----END PGP SIGNATURE-----
 
---ztf3dn6k37tmgoin--
+--d094255437ed180642212f2daf7bb7d49bbc773ab458e9a2480ab8cbe8f0--
