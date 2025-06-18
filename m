@@ -1,60 +1,62 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A879F1BD9F0;
-	Wed, 18 Jun 2025 03:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9A31D7E26;
+	Wed, 18 Jun 2025 03:12:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750216373; cv=none; b=jvelXFfab6p702MmOU1+4N0Y0MWYTtVvDk+TyvJk0UXiup/PlZdSZ50OzDqX5i4sE/56hyhfSGVOFfEzmntl+tPMQkv0i9wayknNGK+doX7P18wAv2xNKne5PyMqT03ZT2qtjXmeaRzFFeXPawMnpnLnvMYF8mENmVvZkwLz5hA=
+	t=1750216376; cv=none; b=Kk+rtBxg3FK/VKmL+AZ5ef75wRxE3fb+IIL3AC+/hO/b2q1cRA89j1l5Bxpk8y6yFbtJOS111TjJg2PDDZn8f5Tg6yCRdsCye6wgNG9iW0CqaD0ReqGSp8SX5jKoVVCJPWk1BGyOE0rGrNJ81BIiEfgICQHV8Zbd0MvcuTkCh94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750216373; c=relaxed/simple;
-	bh=snU775//kiO8hT9dWLIma8QLQBoQGPOkDX0gzwV8JmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RDn3P5tERhuEvXz3CBSg+tB5iiuttVHhn0wTHlF6mOwra+B5L3lNQpbQB8j6Q0kSGsUhN/cPVt/lJ30t6EL32N4MLvptBDZgzBSZqm8zimxfD4qbXm9lBQxMnb83QHKhFIsY0fms2kEK2rjLoJ5Jyb7MByngF6tZwOUOL0mUC4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BSOhZlwL; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1750216376; c=relaxed/simple;
+	bh=ktV8hgQhTmZKELriqt5A7lzUoAJwbdgckiDQ88mnWDw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dWh19i0rK2JqHB2Cc2juFNlEJwuSsxkiieLcfQ+ptU6BogNdh/F5QSadaPIgoocSIkpTnoaSGw2VEWoZ6AJKqN3/loAwnutWCbi2sggBfKU6yvCdi+ufyiXv3hI6j9LntW8E848p22Cogmn6wqz+meDMe2BsVBy+2wQeYdNhZSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j77z4N/1; arc=none smtp.client-ip=209.85.216.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSOhZlwL"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-236470b2dceso57162785ad.0;
-        Tue, 17 Jun 2025 20:12:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j77z4N/1"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-3138d31e40aso6358731a91.1;
+        Tue, 17 Jun 2025 20:12:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750216371; x=1750821171; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bN1ufSIz6Wdr6sIyj7BRHf668iy1Pf2mMb4+ZdyIh2E=;
-        b=BSOhZlwLVpoeXI79DEyR9FTpQZgye0Pfk1ovW8z1VT3ErqTENvuVP5PQQG/R7j73TS
-         zgsNxnVw81+I/YhL5MVtnHsmLXJ2Nfkk5hTd+kwpQDBOQQZVhqotW13VyMV990l+BPWU
-         IxlAceQed0tnp95vVS2oKGWiJ4tIujVcPebRiCuN2x/ic960TZQ+P+bcguBDcoKCprQ8
-         1+F1NMBdFbu3o1Mh0n66GHj9pD1pj4YpABmf/dgxOSui8fIkpSMuMiwvQCxV48EOCbhf
-         udBQrKseMhqPoqv8nsJkDJ09O9HEg6QYP6ZAugZ1E8kxehaxE1MdnkGeE/uWawl+60lM
-         f3jg==
+        d=gmail.com; s=20230601; t=1750216374; x=1750821174; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fxtR8f3zNuWY8ESAfyPo4qfcZH0MTD+lNydzwpGAHoc=;
+        b=j77z4N/1y8/Cmb8SEtBngkUv2LqS1YkNxyChb9pmRGp5OuDWJgjhlPtdx1npXPIkHj
+         z6SuqJvG0mEgGVlIZz2YymMi/LVpuVXbZXoV8c229pS0zJLM0ENZ/FDX/2/3u/3C7zD1
+         PuW7KfUSFY1XEJn32ZLX7DWxCpEWMsCsRY4O3fNl2xqu61wZuYBgbr/1FpKixR3gHa7P
+         DDdzmW6QCriyEbmdb1+ipLUtOBlnZwr2T52X5ZYRWR1iqzv89QNvUB/Ikez5zJtvuz1M
+         TwALBD7JlUISLZtAIl6WjldyemfkoSbANBPJ7DSdVE30sC3shGZr7FDsmyd2OzsOwgF5
+         kCYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750216371; x=1750821171;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bN1ufSIz6Wdr6sIyj7BRHf668iy1Pf2mMb4+ZdyIh2E=;
-        b=Mh/BTiAET1ceXGLUPyrfGtmKzrUHhY6OtnYad9yXwF3gn4LRq678zl0npl1iZbWtmW
-         LoryNXQQbtOEhnsGlN/XKJdOyfFVN9Z+AMdKfsGwvbxkQ8zDE/C+l29JAqJV30ivncnf
-         Bn3ClEiUICcb3zFRpy8936UlVvF+2IoteE2Qw9bM1Scoq5sHUs4IOvdO1CqWojdlXwHi
-         YDn+9hZ+iIwywkiw5YOEVII+RfkpBiDqIed9W1qh/+yni/kBZJhQimhHRQAYLQJGQyOo
-         trDaPgJ8uwWHaiDBOICzky2G02mL2x1/Di4hhK4UN1cKR5O4Ne04o3TvExFcbAZr+kw9
-         LKSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwTEdu7H4Or+JfQM2hpnN01buuawJ2NEThGpKoP91NfKY8phqpsScdKxej05oDwL5B6H9sdCuWFTGb@vger.kernel.org, AJvYcCXjfcD0YQ3i8yBfdTt0dfepIxYpgCdoqGuKhklbYUgUGzSQdf8wGAQp/3Xs0pT7tf3rqb7mbctuuancx63t@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwt3yyYek/mpeUdGBjw1/taJRmhb5y8ELASiFe/oqLUpyRaPe8
-	UU4KBKuXYUgn99nOk1g3Mx6wtsM9zMQuk/UkbzzYs2lldoFslkHVi5za
-X-Gm-Gg: ASbGncs7N/qEYPUBMafnj8bAhK3Jc3I2uIAygIyTaFRyqMn4uiuQ5nPqb4GDVFavsDd
-	N9wkHuKSQuzr5o6NLLYyUgoFA7J1hcZukPhH6njpy0J3g8mRf9fie5PsxdofYvI5L5N69EZB8p5
-	EwA13tiDdu1UxZGqavWzD0bT7xPg7ccm/clr36HWjZgCjBw/JWWp0Gb58G9oKSvuQzmQIFFAOb6
-	YHJ+Lrolh5a16xrsaSA3s4BR0Gtdr9kzVJvrLu2OXtq84GTLDO+PsJOslLTknLv1+u7IjHsq1gI
-	emthKLjiBaNt88SmFEJaaSVsyaVfwV4IEY/AiqufGu/3iRFs/FfzL2rYcGY6eA==
-X-Google-Smtp-Source: AGHT+IGlk8EgvUOrNowxfJO2EgnlRzNvjbjQNVRsCmwDyUQL2qNF7QpmdsaUlm4gLUxNgjcVNHsS2A==
-X-Received: by 2002:a17:903:46cb:b0:234:dd3f:80fd with SMTP id d9443c01a7336-2366b316c17mr244719105ad.2.1750216370686;
-        Tue, 17 Jun 2025 20:12:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750216374; x=1750821174;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fxtR8f3zNuWY8ESAfyPo4qfcZH0MTD+lNydzwpGAHoc=;
+        b=mso3q3jQbrUz81iHd/iI62Y5CU0A4tEjIHJl9vk71NVHHwoE60Ld/GUWNLCo3ORYd6
+         C1qPzpNGhR4y0hSwh0qbwT9sCguDaE+kywl/fDNDcHPK3XnAST86rZ0lVriUA+4wrRWu
+         xzI1EA2SlNHJYKOgjKfO7TuM9CYJ5+VTx/qMgYNtauD6EnVpfqylvrFbY57qisflpYy/
+         6EdnkSu0ffd3kPpbf8XgL2+KBK5Egn00vcU/K63PAo70dQNgRtKENtKFujXX/VfysB6h
+         IpR2iRrC5nQc4M4/mnmsXvvFbzvMOpTKV+fSGs90Em1IVhutGs9SPvHKnO8akMQ6HTV8
+         jkSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS+Wc6ROxsVUK50opn6Ilj2K2sagm3C4G0qPvGMIS/7duPUISFf7CBOyvZsoAlNchisscV9wJBGYfFzHqo@vger.kernel.org, AJvYcCWiAfBCmcdOJhY9GEqUDrTwVbPF9SP82OmpkxhVwJDZKMPLKqOPCj6fFj4QV5eyllIATXXzt4fPlV2x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJFBDf4hlqgC2BOMNVOBo6N8PEw/MYQXm9EuOeUhJ/UEy409uW
+	mC63gmvwZFYNyqFYUPMCNIlwB/gybhLLck2G0kGQqK1Z/GEJ2cKTjAHL
+X-Gm-Gg: ASbGncsKw/Lb6jcji6uppIn9ISCzq/4MVwtRyi5VN+anHl+F/min3AR+HCxDvEYYRRT
+	1KcOKReKPgpTzmkSnc6TvsToni+mkCYowGdbNkNvo1XFHP8y6dBTItEh01Ruf58oDyay0E6CCLF
+	BZZEjnehiLZKLOYc6xq2UQhzXv3BrBm8vzFhZJS3PDuzCLIRzYvnjlIap83OqX9+4g/fqYYpDBC
+	7vEM/hkHBkbOFon0gj20+V35aBj1lEOaIlUPNnmEqNj2vpmMbzB05OV9PejyYzogz2JVxpEzrD2
+	zIjmlwuO4fmmCnwiRFasKnRrr5whXT+Ex2r7Vj2wCNbl1oK9aKkkUSRhsOb3xQ==
+X-Google-Smtp-Source: AGHT+IHRI7h23bZzE8G1/NzKXA2jFwp08Y53wfU3eAL9uKH1xrpt17pvruqfqTfEBZAik8++WIVP2A==
+X-Received: by 2002:a17:90b:3a05:b0:313:62ee:45a with SMTP id 98e67ed59e1d1-313f1cd69femr22420814a91.13.1750216374059;
+        Tue, 17 Jun 2025 20:12:54 -0700 (PDT)
 Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365d8a1847sm89028055ad.67.2025.06.17.20.12.50
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-2365d88bf54sm89057425ad.46.2025.06.17.20.12.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 20:12:50 -0700 (PDT)
+        Tue, 17 Jun 2025 20:12:53 -0700 (PDT)
 From: Inochi Amaoto <inochiama@gmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Rob Herring <robh@kernel.org>,
@@ -74,10 +76,12 @@ Cc: linux-usb@vger.kernel.org,
 	sophgo@lists.linux.dev,
 	Yixun Lan <dlan@gentoo.org>,
 	Longbin Li <looong.bin@gmail.com>
-Subject: [PATCH 0/2] riscv: sophgo: rename compatible string of the USB device for cv18xx
-Date: Wed, 18 Jun 2025 11:11:28 +0800
-Message-ID: <20250618031132.373216-1-inochiama@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: usb: dwc2: rename sophgo usb compatible string
+Date: Wed, 18 Jun 2025 11:11:29 +0800
+Message-ID: <20250618031132.373216-2-inochiama@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250618031132.373216-1-inochiama@gmail.com>
+References: <20250618031132.373216-1-inochiama@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,21 +90,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Old days I added the USB support with a wildcard compatible string.
-It is not formal and it is more clear to use a compatible for a
-real world SoC. As the usb device is not used in any board device
-tree (The patch for USB phy is under review), I think it is good
-to correct this mistake before submitting the device node.
+The support for Sophgo CV1800 series SoC introduces a wildcard compatible
+string "sophgo,cv1800-usb", rename it to sophgo,cv1800b-usb to match a
+real world SoC. As the compatible string is not used in any board dts.
+It is safe to rename it.
 
-Inochi Amaoto (2):
-  dt-bindings: usb: dwc2: rename sophgo usb compatible string
-  usb: dwc2: follow compatible string change for Sophgo CV18XX/SG200X
-    series SoC
-
+Signed-off-by: Inochi Amaoto <inochiama@gmail.com>
+---
  Documentation/devicetree/bindings/usb/dwc2.yaml | 2 +-
- drivers/usb/dwc2/params.c                       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---
+diff --git a/Documentation/devicetree/bindings/usb/dwc2.yaml b/Documentation/devicetree/bindings/usb/dwc2.yaml
+index e83d30a91b88..6c3a10991b8b 100644
+--- a/Documentation/devicetree/bindings/usb/dwc2.yaml
++++ b/Documentation/devicetree/bindings/usb/dwc2.yaml
+@@ -59,7 +59,7 @@ properties:
+       - const: amcc,dwc-otg
+       - const: apm,apm82181-dwc-otg
+       - const: snps,dwc2
+-      - const: sophgo,cv1800-usb
++      - const: sophgo,cv1800b-usb
+       - const: st,stm32f4x9-fsotg
+       - const: st,stm32f4x9-hsotg
+       - const: st,stm32f7-hsotg
+-- 
 2.49.0
 
