@@ -1,124 +1,167 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36DF186294
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0552186294
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:52:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240355; cv=none; b=nEcuhhJXaxrPfBPe77Zme5zsyq0OMKxrGNKzOFeqbEWtHg52DpUuGOBwa+s503bP1ewJ8RgDzP7SBCGYSIM1++BOqkvAAO/jRNj9UgO9T1ldrIHjdocsf0IcwYztSvCGTxdoXEiXN54fwsWdX+W0yPtEtLupihSfoAkf/SK75yE=
+	t=1750240363; cv=none; b=Z/FWB/c7ev2N/fUTAXgHwZ4hjGPBUmJd3fz2OxAE92fl1lgALAA7Hp2yMXGBAuMk2/i7jnJ4ybb5L+MRnzW5nRVox1nwLiMA5JRIKEFyiaP+Ja8xQyRnWRVnyLJClVVTR+1EeplDy2auU0OSe1Txgzr1zon2ONjoGtmiJl854A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750240355; c=relaxed/simple;
-	bh=5bEnpNZFMrj7qCJtwgu60iTdn6bjP4AVMamgtkgw4qw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Np5RsOOHruupWqb0EWPk3vjSdY8dK5qAFCqgt68tF0fF0uc4cc4ujtPAUrkUz1GMo8sowxI+Waovfq/rq7DPj2o2A7HejT7cOmuJAY8DBs0HBus2bSuoXREJy37WeR81s5lUObSx2nQuSbNCgtbMcqWdSQ1dWPD0jeMuUvjGRqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cYgg0bqN; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1750240363; c=relaxed/simple;
+	bh=Mw4RqggIhkIW6LA5F5dC5RIw7XNCP/yell2saKdiFV8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NtlYRVLeh363JdTn10Sx5FlwADZXh28tTr/D1+vN1TJKWj2fgwxBGAu24MZDo0cTRS8YrbWwxKz/qAYQ0ruXyrySvBmIA2JE5KgyBQ6Arzogrxk9hELZfQ2AZ9DEnFEeApsaWpOMotgA2CAnjS1DdR6GYnLH/UChmPc6n7mbACw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=llAcUDeR; arc=none smtp.client-ip=209.85.222.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cYgg0bqN"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-3a4f8fd1856so3273203f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:52:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llAcUDeR"
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-877d7fa49e0so4373587241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:52:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750240352; x=1750845152; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5bEnpNZFMrj7qCJtwgu60iTdn6bjP4AVMamgtkgw4qw=;
-        b=cYgg0bqNQij2+8nKOQbrbv7lxoh/XgsxLMhMBqvdBPePcYR6mQOqz/Gnr8TJhO/uof
-         I5bvH78jzzcnXX2LaiU58vV14G6BSBjWg5ayJhfx5vUyAmI84dyD5NinGvyu8d84jRku
-         +6WpkT5xkDnbLGfoEW3KILOR4Yatstsux4UBVIkrbhz4Gw6PoY+aryatcUpXeU8b/K1S
-         x+yTtXSvZv9FlKgF4PlMJ8WK1OeiI2swrab1MNSYegkUK28UQmhx7DeV/yRgQzjzQLpV
-         K7kgNH7Ztpt+J1wb/YwkZlVUXJGJkwCZfqbLNAWLTByWeS2SJo1ETn4URRsKyGzEk5Xu
-         ib7Q==
+        d=gmail.com; s=20230601; t=1750240361; x=1750845161; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=muzPKRA0oXpJ18M/OJ/yeBi5jJNJKBY7O/8ZgYL2clQ=;
+        b=llAcUDeRmvFwKjWXKPPtsibVtyDldC6N3+464G7qCq/8zYgNc4Wb9KAyPf8MHhW6ym
+         TRKqfgxeHVL623EjjOw5ldtGtnD4doXnsX2GJIoowjiL3+B/VmenBF+pFtxvysRospz/
+         bJ+AgP3IjTeP+G86+AejQFSWWnpbhJ1XLv1NBhd+7CmRdyISMVUfOVbj2WVL4p+X0qI4
+         vm3VqkOuqNFrtkgodj9JWhsiaPPU0PZL3Z22VP2oLUgh20quumEf2CeWtwVI+xFt6AnR
+         WEFyYdkL2twLixsHGYqFKxTQMqQFO0czbDH8CQdGb11pz/vwthmDIpJJEam6kHZyJs3U
+         3SOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750240352; x=1750845152;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5bEnpNZFMrj7qCJtwgu60iTdn6bjP4AVMamgtkgw4qw=;
-        b=HF61NJ3fYaudPSkwz87WvYtDWnDPPan+UOOhJ8C/3In/SF29FbUXwhI/kh78+7AhAg
-         gUhX3h95zt61dZUyFNIDbe9g7hRILai9aDcUeRMYMgce0n6xUfBdF/2+M/eKBxegMC3k
-         QE/mtPR8/J6Y7SEIRm+95YcY+xj/vPlC9YTGIH3wxXIpa9RJKvBUi9VYmDJLotVVTnK3
-         2fqcFMJyHh5sgtjfRCF3iyN+knHCvguflm/QuyYLcV7NwStWpbWALZhqw4cRPVflgFyd
-         mm55KX/2hMmGoT3j2mWRnwl20YTZF/RwH+BgBE9wBpKhMHk7+icdzAsujPtviEMgzTWe
-         o/ug==
-X-Forwarded-Encrypted: i=1; AJvYcCVoRYG3GmF+4ZvtXdcBgXZbMZgjalHwWhokGluDgGOK3EHjpyQ1W5zh8PDYrTIzP0J3aViSRediRtecvqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywcxr/DBj8Rj8zLRFoVOAv4eZREtxoqvzp/wcmGQtHZB30pPxpS
-	6y1lgmgEHIBdbvdemrjjwoP2eQWrtMxMumxbfB1J5yyqdpsXFPPWF//ncY2egZ/vkkPbX7pZ1g0
-	Amf73S7kEhqATWYeXgg==
-X-Google-Smtp-Source: AGHT+IE3kYpXlFdUKU3nwq2/d/ISrrwVjPKX3MaqFovbery7s8OVJiNXEcZ8fmoH61Jbhx+Lgcv8YDANMjz6Ec8=
-X-Received: from wrvk10.prod.google.com ([2002:a5d:518a:0:b0:3a5:75cb:ae])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:64cb:0:b0:3a4:ff01:218a with SMTP id ffacd0b85a97d-3a572e45e20mr12738829f8f.50.1750240352358;
- Wed, 18 Jun 2025 02:52:32 -0700 (PDT)
-Date: Wed, 18 Jun 2025 09:52:30 +0000
-In-Reply-To: <CANiq72nP+dKugMv3KXdJJsFE0oD01+zYgWbjz3e04kmhj_5MbQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1750240361; x=1750845161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=muzPKRA0oXpJ18M/OJ/yeBi5jJNJKBY7O/8ZgYL2clQ=;
+        b=KFE2+tS1PIqq74+7uw8xYqELNCDIsFa+hbIRoAiUDPPTho/+jkDplJy0cuGMS8fWlE
+         djhPBVJCzbi7TvsfD8VgIExrD1Pf5wyXIXOP+fgT50RDQR6CG+8s/flz9zKeMjvsoLfG
+         AS4UZPZUfmf0A1BZBj2I6dZjGDTm1LlKufP3EY6Pp/l0+/oodi2jdcPDvk/2fAn3uQLG
+         z+1gkTmQFoYZ8fkpMrbqFEXRsLO31YXv0nvGrBWnf5j8+NagPs0PYk2tRR1jnvyS1+u0
+         hauTemiD1DXdoK9/x8bVEOkj7afKot6KO6Mpwg1jyMpD2TSAxpQ21M0opY1Mu0xbXrAD
+         uIlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUDdoIzl51ShDNJEHbwIdm3gLjlbsNEAQP2ATmJwxsyAJFttgi0q/lgUa/cJOgYvlFfcd6BWRNZynwF8/E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk4dKUBheyjrABPvoIYtA6M88MHilXNeHBYq7sgMxj7KZR3U7X
+	WjORoqnXMlF++lvjJXLg7WX+DOftEcRzitw/lr3dHXfsI6sriFA5aFiUO+bqAn0AJO2kcjGD02d
+	8iw26KXhEl632sdC6a2/2Y+jkoAeLkzc=
+X-Gm-Gg: ASbGncvQ5OZpNJaLecWrgcDIyWBkJ7ueh3sD+Wrgsq63Z2tPvncTrqkvSY6NJOQ21Fp
+	QTDiVdThuvpWGI3Aqpo62hSgTi22S4y1aBC9n+02WJP4n4844QFHuoCHR4YjGbIBlHumB64l00X
+	GO8dzg5IKazrSmtxOVo0wwTwBC5zoCni0z13urGI1AQO4=
+X-Google-Smtp-Source: AGHT+IENCLY7tb8wCgeKdSRxaRBa5eDJ5oqLt2UY/7tfrWQQhCiff7S5KElIHcvGO9Q37IJcQ5Hg26gnlGHrF+Lm1oE=
+X-Received: by 2002:a05:6102:4bcd:b0:4e4:5df7:a10a with SMTP id
+ ada2fe7eead31-4e7f6207960mr11453168137.16.1750240360732; Wed, 18 Jun 2025
+ 02:52:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250617144155.3903431-1-fujita.tomonori@gmail.com>
- <20250617144155.3903431-2-fujita.tomonori@gmail.com> <aFJzNCCERjKHIVty@google.com>
- <CANiq72nP+dKugMv3KXdJJsFE0oD01+zYgWbjz3e04kmhj_5MbQ@mail.gmail.com>
-Message-ID: <aFKMXqak-mHraxU_@google.com>
-Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods as_micros_ceil
- and as_millis
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
-	ojeda@kernel.org, anna-maria@linutronix.de, bjorn3_gh@protonmail.com, 
-	boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org, gary@garyguo.net, 
-	jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org, 
-	lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org, 
-	tglx@linutronix.de, tmgross@umich.edu
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250607220150.2980-1-21cnbao@gmail.com> <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+ <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
+In-Reply-To: <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 18 Jun 2025 17:52:28 +0800
+X-Gm-Features: Ac12FXzvMFuQyJcjxcM9DVZI3g5FK4SRq_miWgwgHfjO7ZltaPDxc2PlzJBo2NE
+Message-ID: <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+To: Lance Yang <lance.yang@linux.dev>
+Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
+	Tangquan Zheng <zhengtangquan@oppo.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Lance Yang <ioworker0@gmail.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Zi Li <zi.li@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 11:29:26AM +0200, Miguel Ojeda wrote:
-> On Wed, Jun 18, 2025 at 10:05=E2=80=AFAM Alice Ryhl <aliceryhl@google.com=
-> wrote:
+On Wed, Jun 18, 2025 at 10:25=E2=80=AFAM Lance Yang <lance.yang@linux.dev> =
+wrote:
+>
+> Hi all,
+>
+> Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
+>
+> On 2025/6/17 21:38, Lorenzo Stoakes wrote:
+> [...]
 > >
-> > Why are we renaming them? The stdlib always uses as_* or to_* for copy
-> > types. In my mind, into_* means that you want to emphasize that you are
-> > performing a transformation that consumes self and transfers ownership
-> > of some resource in the process.
-> >
-> > See the api guidelines:
-> > https://rust-lang.github.io/api-guidelines/naming.html#ad-hoc-conversio=
-ns-follow-as_-to_-into_-conventions-c-conv
->=20
-> We may be going in circles here... I think the confusion is all on
-> what to do for "owned -> owned" `Copy` non-expensive conversions.
->=20
-> I think Tomo sent a patch to change the `as_` and `is_` methods to
-> take `&self` to be consistent with the guidelines, since they say
-> there is no "owned -> owned" case for `as_`. Then you mentioned that
-> `self` is OK and Andreas agreed, and I guess Tomo ended up with
-> `into_` since `to_` is only for the expensive case, even though it is
-> not meant for `Copy` types.
->=20
-> In other words, either we say in the kernel we are OK with `as_` for
-> "owned -> owned" too, or we take `&self`.
->=20
-> Did I get that right, everyone?
+> > On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
+> >> From: Barry Song <v-songbaohua@oppo.com>
+> >>
+> >> Certain madvise operations, especially MADV_DONTNEED, occur far more
+> >> frequently than other madvise options, particularly in native and Java
+> >> heaps for dynamic memory management.
+> >>
+> >> Currently, the mmap_lock is always held during these operations, even =
+when
+> >> unnecessary. This causes lock contention and can lead to severe priori=
+ty
+> >> inversion, where low-priority threads=E2=80=94such as Android's HeapTa=
+skDaemon=E2=80=94
+> >> hold the lock and block higher-priority threads.
+> >>
+> >> This patch enables the use of per-VMA locks when the advised range lie=
+s
+> >> entirely within a single VMA, avoiding the need for full VMA traversal=
+. In
+> >> practice, userspace heaps rarely issue MADV_DONTNEED across multiple V=
+MAs.
+> >>
+> >> Tangquan=E2=80=99s testing shows that over 99.5% of memory reclaimed b=
+y Android
+> >> benefits from this per-VMA lock optimization. After extended runtime,
+> >> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
+> >> only 1,231 fell back to mmap_lock.
+> >>
+> >> To simplify handling, the implementation falls back to the standard
+> >> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexit=
+y of
+> >> userfaultfd_remove().
+> >>
+> >> Many thanks to Lorenzo's work[1] on:
+> >> "Refactor the madvise() code to retain state about the locking mode
+> >> utilised for traversing VMAs.
+> >>
+> >> Then use this mechanism to permit VMA locking to be done later in the
+> >> madvise() logic and also to allow altering of the locking mode to perm=
+it
+> >> falling back to an mmap read lock if required."
+> >>
+> >> One important point, as pointed out by Jann[2], is that
+> >> untagged_addr_remote() requires holding mmap_lock. This is because
+> >> address tagging on x86 and RISC-V is quite complex.
+> >>
+> >> Until untagged_addr_remote() becomes atomic=E2=80=94which seems unlike=
+ly in
+> >> the near future=E2=80=94we cannot support per-VMA locks for remote pro=
+cesses.
+> >> So for now, only local processes are supported.
+>
+> Just to put some numbers on it, I ran a micro-benchmark with 100
+> parallel threads, where each thread calls madvise() on its own 1GiB
+> chunk of 64KiB mTHP-backed memory. The performance gain is huge:
+>
+> 1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~47%
+> faster)
+> 2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~64%
+> faster)
 
-Yeah I think using as_* naming for cases other than borrowed->borrowed
-is relatively common for Copy types. Looking at the stdlib, the rules
-I'm seeing are more or less these:
+Thanks for the report, Lance. I assume your micro-benchmark includes some
+explicit or implicit operations that may require mmap_write_lock().
+As  mmap_read_lock() only waits for writers and does not block other
+mmap_read_lock() calls.
 
-First, if the method is expensive the naming is to_* or a verb without a
-prefix. We only use into_* for expensive operations if the call also
-transfers ownership of some resource. Example: CStr::to_bytes()
+By the way, I would expect that per-VMA locking for madvise_dontneed or
+madvise_free would benefit nearly all Linux and Android systems, as long
+as they use a dynamic C/Java memory allocator.
 
-Otherwise, if the method is something that looks inside the type (i.e.
-it peels away a layer of abstraction), then we using as_* naming. Or we
-might use a noun with no prefix if we want it to feel like a field
-access. Example: Duration::as_millis()
+>
+> Thanks,
+> Lance
 
-On the other hand, if the method transforms the value while staying at
-the same layer of abstraction, then we may call the method to_* (or just
-use a verb without a prefix). Example: f64::to_radians()
-
-Alice
+Thanks
+Barry
