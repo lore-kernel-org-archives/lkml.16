@@ -1,115 +1,124 @@
-Received: from fhigh-b7-smtp.messagingengine.com (fhigh-b7-smtp.messagingengine.com [202.12.124.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A3B2EF9DB
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884C82EAB84;
+	Wed, 18 Jun 2025 16:43:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750264967; cv=none; b=Xx7apYGPmhLMuQfM5iGzDAYo5MqnQ2NTyilNHfVO2KkBFMG+D7ibI/BfDM5Vd4m1avp5o6gXx8jwux+6wp9sDWLc1T+y6KU2Ok+QuTMHbXRdB6r0O9LVr2GAU1ShLQkud4a1w7mvIZHOah1n1OX5j4VXrN45gCGet2yp8o5XbCI=
+	t=1750264991; cv=none; b=V8FzjW6FuTYhw5DKnr5SAjKJ6jf9vqE5Rn/WQGbv7oH9TZumD/vPaQW43WnrC0V0LXYMu8aUnIbyQHRQ0QRCqJvAdGDje57sCDjKAaPmlpisFlCZqT6dcOQxTvrzhO/AWvF5JeTW7r6l/K08WPyh2MUGPjNyJH2rkZgcWkD3RZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750264967; c=relaxed/simple;
-	bh=1jAwEhEW9a9Q0nz3YvE3Pn1HJX8HmuC2aTahWMU+raw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Dwl9r23vcR0Is5uT/7oIMDt5XyexpPWSvjqHXX7MngPo4TIX8tCKtsqPTX4aEhgSmLYrsyR55hgnmH/NbFSmMPkZLP+n25oZf5jKEUblauCKgJ9G33eGP88bxjijAUmA+9gnBJhFZgPU2Q9hrm/wOzSH1xAX/oKyIzQCg1i+aUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=auhUWrxa; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=m4LyV3/i; arc=none smtp.client-ip=202.12.124.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
+	s=arc-20240116; t=1750264991; c=relaxed/simple;
+	bh=Y2gd51D/BVFx6eKV+gJtQH2NJBTOAm9v65zoDB4v+hw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U7Uwoon6RidBfrN5chA5bllQnGJjRP7V8HAiApaT8u/kOBuAzpDZ4gusrTovQhCZngFsT3MbFZ5HSrKeDTTzx+fRVXDdE3XE5ceiDnWtECLplO6xvNtBPQX+uL4s3ekEQaazcbr8JqgSPHHPU7z/S5/acW1WnGp6jG5PgN/WO68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdL1rTTv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="auhUWrxa";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="m4LyV3/i"
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 5DB1C2540154;
-	Wed, 18 Jun 2025 12:42:43 -0400 (EDT)
-Received: from phl-frontend-02 ([10.202.2.161])
-  by phl-compute-06.internal (MEProxy); Wed, 18 Jun 2025 12:42:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1750264963; x=1750351363; bh=l2ptRcZN44
-	1eE8R/iJ9ck2xx1G0VQynL+dygpmbMaac=; b=auhUWrxaQDSMxaEmLYojb50UHI
-	mTCMlkLUa8PNWN/NfdWLQ06WQ7BHJlJwQgQUlSVOOBa6WH281r9wU41vOtYYgv3t
-	xJ+lIYYtQWtAqAjc5W605mw4/LP0p+660vJz9WrrrZlbTq1LNK9aNO7fsmuuXGzi
-	fkk/Lhk05E0MY6MAgcdlL1ey+M7weZGo89jxuJdZcWP6rAwdv6uwyN56N4kfpwla
-	77zl8wDaPw0fi5DCz7LKJg5+Ry+jTxufAheZVZTZzx314kVDx8SqF0hfQJd31a5U
-	lKPuwdjBYIk5PLzHha+Nvuq274uo0qYaYddcOEzCWblheUnls0IUgVBQd1tA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750264963; x=1750351363; bh=l2ptRcZN441eE8R/iJ9ck2xx1G0VQynL+dy
-	gpmbMaac=; b=m4LyV3/inyHCi1kr+Y7o/yNWsT1jeGIbtd+5wFSpJfVeUTgZsxx
-	r9bQ8JcRVnFrj6/D+nsEPqO8TUrH7uWG3CXJ4yKz73+wR/aR0NMhqyB4GqAurWop
-	s6WYOotoX/2Voj8UjEUMDchq/9CH/1fT68oK1n3ZDzI1S2hRdZ6C6/NWmCf5L7Ky
-	hbBnDNmUAAkYb6lZ+qXXh7OBH5xYIMz4apNgLYViHSAfNJ7sX4YOTr04Dg49gr1f
-	fxy6Sf02i1YVKHNmZSuwaNM0+vFXDvNhMPQG/nHPvDrSofITaEVY0QCfSdyac84Q
-	m89EvaGaWRZTw/oUkjyWW+f6QuSaGtMFooQ==
-X-ME-Sender: <xms:guxSaOkARwcegFLXfeiTirRFvEDtJVZVeNnbsnLMRiXaifmHnm-osA>
-    <xme:guxSaF3VzhBomegjZT2-Ftd5KaMZza6nHJe2inLT9FCivKjWfdYCQLT3qFyuP18WX
-    THbE-PECxd2JB4PgME>
-X-ME-Received: <xmr:guxSaMq-3kq8J7dBtXpUeN9O9scrbNs9PuLvzO8A93nvORTmNHEXriep2bcY0qy5lF2lDVzv3Tp9Iq_HeM3O5kZ2D5GdI4sKmPOazRYnLxnXRL560g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdefudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecu
-    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
-    htqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdehffdu
-    heduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthhtohep
-    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnh
-    highessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepsghijhhurdgurghsrdhjiies
-    sghprdhrvghnvghsrghsrdgtohhmpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrd
-    hlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgr
-    uggvrggurdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtih
-    honhdrohhrghdprhgtphhtthhopeholhgvghesrhgvughhrghtrdgtohhmpdhrtghpthht
-    oheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:guxSaCkkXFPAtimBAOfuKwDRi7aOhRpnldL9V1wMLUFJZlEXyAw9GA>
-    <xmx:guxSaM3_x2Z8o9SD3O_vHWM4HwEKsmcH45bIvffgdGh6OMyXoDNU9w>
-    <xmx:guxSaJu03Iojt79jIaLBjOZhSxNTeQYG5kfAuTP4CHx4oSj7buuP5w>
-    <xmx:guxSaIW5vcWR_yJt4B9h5kKDiYLZ0pwLUUS8fDRNef-7a9mjWGvT6w>
-    <xmx:g-xSaD1WHD2ABPrP5R0YI6uOJARtrFyJ1jKv3yzJD7Vca130mUn-TRVD>
-Feedback-ID: i58514971:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 18 Jun 2025 12:42:42 -0400 (EDT)
-Received: from xanadu (xanadu.lan [192.168.1.120])
-	by yoda.fluxnic.net (Postfix) with ESMTPSA id 8599911FB560;
-	Wed, 18 Jun 2025 12:42:41 -0400 (EDT)
-Date: Wed, 18 Jun 2025 12:42:41 -0400 (EDT)
-From: Nicolas Pitre <nico@fluxnic.net>
-To: David Laight <david.laight.linux@gmail.com>
-cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
-    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, 
-    Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [PATCH v3 next 09/10] lib: mul_u64_u64_div_u64() Optimise the
- divide code
-In-Reply-To: <s919qno2-782s-ooqq-0p19-sr754osn8n02@syhkavp.arg>
-Message-ID: <2388o883-4317-1n2n-70po-ro7os5qo41so@syhkavp.arg>
-References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-10-david.laight.linux@gmail.com> <os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg> <7r88r006-o704-7q1q-21o2-6n62o864oo79@syhkavp.arg> <20250618101620.26533aca@pumpkin>
- <s919qno2-782s-ooqq-0p19-sr754osn8n02@syhkavp.arg>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdL1rTTv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BBBBC4CEE7;
+	Wed, 18 Jun 2025 16:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750264991;
+	bh=Y2gd51D/BVFx6eKV+gJtQH2NJBTOAm9v65zoDB4v+hw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XdL1rTTvXn2f2C5znx1nHKrTEI6L05kv4a7bQuckbbMajfmxn9IYpHw6mkrdPEoph
+	 X0Y/ZOYGOBM1V6Cxyf+m4RdBWa8QmLDiBO6lKzC4EWIKi7fa/MjOxsb+yjl+cjaLEQ
+	 7GjxTqk8n7gv3hLlySnaEe7iX4baZDsRgVD5yRpG9iaK8N82fJ+gf+BkOUXm2zydB+
+	 rPEcL9TEuRt/kSuEPp0reRmnipBEjTn34ikcy4IMRbba6D0g09hkDefIuyAZrknhWW
+	 BhCbnVxVCKRSbKFZv6DQm6GJd5xmiJNwSTq3KbHFLj7RYNXY92E3nwBLPy4ykDODm4
+	 cw9DTzZzVtAzg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uRvsR-007ywr-NA;
+	Wed, 18 Jun 2025 17:43:08 +0100
+Date: Wed, 18 Jun 2025 17:43:07 +0100
+Message-ID: <86ldppc86c.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: catalin.marinas@arm.com,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	akpm@linux-foundation.org,
+	surenb@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v9 03/10] arm64/kvm: expose FEAT_MTE_TAGGED_FAR feature to guest
+In-Reply-To: <20250618084513.1761345-4-yeoreum.yun@arm.com>
+References: <20250618084513.1761345-1-yeoreum.yun@arm.com>
+	<20250618084513.1761345-4-yeoreum.yun@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: yeoreum.yun@arm.com, catalin.marinas@arm.com, pcc@google.com, will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com, joey.gouly@arm.com, yury.khrustalev@arm.com, oliver.upton@linux.dev, frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, 18 Jun 2025, Nicolas Pitre wrote:
+In general, please use a patch title format that matches the one used
+for the subsystem. For KVM, that'd be "KVM: arm64: Expose ..."/
 
-> On Wed, 18 Jun 2025, David Laight wrote:
+On Wed, 18 Jun 2025 09:45:06 +0100,
+Yeoreum Yun <yeoreum.yun@arm.com> wrote:
 > 
-> > If the low divisor bits are zero an alternative simpler divide
-> > can be used (you want to detect it before the left align).
-> > I deleted that because it complicates things and probably doesn't
-> > happen often enough outside the tests cases.
+> expose FEAT_MTE_TAGGED_FAR feature to guest.
 > 
-> Depends. On 32-bit systems that might be worth it. Something like:
+> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> ---
+>  arch/arm64/kvm/sys_regs.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> 	if (unlikely(sizeof(long) == 4 && !(u32)d))
-> 		return div_u64(n_hi, d >> 32);
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 76c2f0da821f..c8c92cb9da01 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1586,7 +1586,7 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+>  				       const struct sys_reg_desc *r)
+>  {
+>  	u32 id = reg_to_encoding(r);
+> -	u64 val;
+> +	u64 val, mask;
+>  
+>  	if (sysreg_visible_as_raz(vcpu, r))
+>  		return 0;
+> @@ -1617,8 +1617,12 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
+>  		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_MPAM_frac);
+>  		break;
+>  	case SYS_ID_AA64PFR2_EL1:
+> -		/* We only expose FPMR */
+> -		val &= ID_AA64PFR2_EL1_FPMR;
+> +		mask = ID_AA64PFR2_EL1_FPMR;
+> +
+> +		if (kvm_has_mte(vcpu->kvm))
+> +			mask |= ID_AA64PFR2_EL1_MTEFAR;
+> +
+> +		val &= mask;
 
-Well scratch that. Won't work obviously.
+I don't think there is a need for an extra variable, and you could
+follow the pattern established in this file by writing this as:
 
+	val &= (ID_AA64PFR2_EL1_FPMR |
+		(kvm_has_mte(vcpu->kvm) ? ID_AA64PFR2_EL1_MTEFAR : 0));
 
-Nicolas
+Not a big deal though.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
