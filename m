@@ -1,82 +1,111 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA5EE260576
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E18262FF9
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:09:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280946; cv=none; b=R37oNsh0RJMhnmUfKpAxWFpurK5evjamiZDW8wuhhFq+/r0pP3Qx6yEh6BbXTTUNlyCFqB1gAFj1Erxyzz82JGtNhjG7YdIaBHgPZTCCVZTotmzM09xlPFK22AfnYp+EwCFBN9PdUsicUfDJkeORcKbJYkx9PH+dA9SX9J4HaAA=
+	t=1750280950; cv=none; b=jbhnmSZBtlgfjJsgYTH/6MI4kLO2Ks+PHrw0Vt/1zdbhoaeHgwFsE6/MrjqN8ReWUm9dn18UIeJo7/Xc3yICiUbQ0jrXjRLH71HLEeR29Y1Hf393E4zTIO8+PKRpP7DWoPmailxRgsKOCLr0lMlcGRE/n0pDf/Qpb2voXSjAouY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280946; c=relaxed/simple;
-	bh=Sz6aQbaQwZIG9liuFsaksla45UWFZygI4wPqJGpKwFw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tFsmI8GG92fVjKlgnSJhMc+2ImZFupaCQdSky18ZBDJ4LSetz1ud4xoBrp+TW21OJFmozyNx490pK+ObluMCvIwZnqCnXbxTEFtEzDI7JEdZoUBO7iBq4UT/mR6TBmgD8V940QogC6IhMPsCqpXjUJwvyiXVOJOT/45ZLEQQ52o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=XEMaxdj7; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1750280950; c=relaxed/simple;
+	bh=M0nny4REtUZhhIQOIJ8d/6AAG3bKyfZKLTfcSkQpEvE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=EsPeKoDxS9QYR60w43zorgO/wlbtMlRCWBYOI4bV66rtX8d7jj5PcKt3POaktrl7SU20aezBCfEqA/NLYQvLAS7yOc5w3E5gnMg4Qx4ENkBezObkeg7hgZ2eUXk66Yp2ksYwer3oXEBXD+sg3HP2CkLeqMsFmrHNPuRoYBvLuB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nYyjJlFg; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="XEMaxdj7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=Sz6aQbaQwZIG9liuFsaksla45UWFZygI4wPqJGpKwFw=;
-	t=1750280944; x=1751490544; b=XEMaxdj7ehLh7VfQYEOLQl84rpJ1P8StYXlylo76JOtjKiC
-	r8ePWBcd+UU51CVgeB2t/AbeNPOlqZUvWIUgatCjMKm8odvEjbD/PyKyjqzldVREGqZ1ppeTW/Box
-	Fq+4kVM++pNJX4uANeKlmwz3dEJ8BHPVwqS+uCt8pRIeM4Ql8u2Xb/gPwTLriHh5qiBwggzYIohxv
-	ZNtG/moiLwXvDmAvdysL6CfVLervLzbgCCldbwToc2RIk1JwzevkuH081nRiYR2l9mNgGJaYSuGVb
-	fTr+/5SqI9U8aG/x816kUkmUHWLybOOiCiL7HxmdFoRJKVQgPsTbRiMwZ5hJRvZw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uS01j-0000000GyqB-3MMy;
-	Wed, 18 Jun 2025 23:09:01 +0200
-Message-ID: <8bdd635e6b8ba42b16f355f9d4ee67d5c2f8b47e.camel@sipsolutions.net>
-Subject: Re: [PATCH] scripts: gdb: move MNT_* constants to gdb-parsed
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	linux-kernel@vger.kernel.org
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, Kieran Bingham
- <kbingham@kernel.org>,  Andrew Morton <akpm@linux-foundation.org>, Benjamin
- Berg <benjamin.berg@intel.com>
-Date: Wed, 18 Jun 2025 23:08:58 +0200
-In-Reply-To: <a01d8c8e-21b7-488d-8fa2-0a8710bc1e9a@oracle.com>
-References: <20250618134629.25700-2-johannes@sipsolutions.net>
-	 <a01d8c8e-21b7-488d-8fa2-0a8710bc1e9a@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nYyjJlFg"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748764d84feso83559b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:09:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750280946; x=1750885746; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=j/s7oEmyKauEAHgwht1yQk0tIZg1WwzoDzyegW5BYz4=;
+        b=nYyjJlFg2rTv8CRUwBOIesBYnt4LrHextH9wSRF1dhWEu2h5mO8qhCqUUIOoRuvHgl
+         N0Nd8h/sctu7FkrkmPgVwidEd/fQKEWRbt7dOAIGkiJxC/ZgWGt1i/U+1ahbWEQgAexz
+         dZzy07a1waAU95K7wfabNF+RwvaOzvlMdwn6WeKKgkLe85lj9k+lG+dWBjRNKbqelDm4
+         cNt4OdaVW2Ems9y8JNm4VFBLthH0egr8PSMTLVLrIv06QoW+8VJ9l+I49MQXF+iJXqI0
+         RVEBYnaFMoKz2eapmOVKU/AJe6gIpzqLqfWSAAJg/1B8jUbLzmSBbUr2zGJWWnkKZfsE
+         wsBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750280946; x=1750885746;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j/s7oEmyKauEAHgwht1yQk0tIZg1WwzoDzyegW5BYz4=;
+        b=ncVYXKNBqwvwOwdBU9SHzOx65h9Uos0l45M6EM62+kDCjmU39scusi39rBxfUGsKOq
+         fCj3kGxuyp3zZX7LkVXMInn6Kib5k4bh754tsCgVBYH+94Szs9eHu9RTDts8AImYH9JG
+         edTqR5DMBfYMTem/36ZqCkyHAL7922lMRwgV5ONZuNyiVn5LOLAUg72Sl7ypkLNqZ69T
+         auRvT7TaS+5AH1DONTDfA25vLkDIGHgcmLyBGQetbwGmg9AVqcZQUsEMZZhgH96mB17s
+         bEPzi9kbK9b9gB5l6/KTy46IrBZOqQV/53+1Xa1gbVmNYUIVrrlW1ubi1IKB0/WgkKh4
+         RO+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVyeWnKjmVJptwX69EKLdaW2es7s4eRLRi4dXxEAJHnuLPegCTJBEMEardt9zbI7syFLMcIcvECXQbZL1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza9JAdZIVY53aj9g+XmisJpkwyUq2X1Pp4X0uDdYCDjH7Bcou6
+	30VleyfrXe3cxeFXqlIqxqzvuyAqAXtBl/PydZujvZwf2bmXVR2wzgDfCgtcJbp3n8Qg1DuSQVr
+	q+kEzbcaEMm8irp+DIegKn1N8meOKEg==
+X-Google-Smtp-Source: AGHT+IE4wAa1uushSqyIX9OxwMbbvMZIhYwycwsJVo+y3iWpXe65Hsxtzoc09JZEPg3XDw2ypEIRNrbYPoxWDj9ezfs=
+X-Received: from pfbih12.prod.google.com ([2002:a05:6a00:8c0c:b0:740:b0f1:1ede])
+ (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:4f88:b0:747:ee09:1fd2 with SMTP id d2e1a72fcca58-7489cfcb1d3mr26921054b3a.12.1750280946665;
+ Wed, 18 Jun 2025 14:09:06 -0700 (PDT)
+Date: Wed, 18 Jun 2025 14:08:40 -0700
+In-Reply-To: <20250618210851.661527-1-willmcvicker@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Mime-Version: 1.0
+References: <20250618210851.661527-1-willmcvicker@google.com>
+X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+Message-ID: <20250618210851.661527-4-willmcvicker@google.com>
+Subject: [PATCH 3/6] clocksource/drivers/exynos_mct: Set local timer
+ interrupts as percpu
+From: Will McVicker <willmcvicker@google.com>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>
+Cc: Will McVicker <willmcvicker@google.com>, Donghoon Yu <hoony.yu@samsung.com>, 
+	Hosung Kim <hosung0.kim@samsung.com>, kernel-team@android.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	John Stultz <jstultz@google.com>, Youngmin Nam <youngmin.nam@samsung.com>, 
+	Peter Griffin <peter.griffin@linaro.org>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	"=?UTF-8?q?Andr=C3=A9=20Draszik?=" <andre.draszik@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 2025-06-18 at 14:06 -0700, Stephen Brennan wrote:
-> On 6/18/25 06:46, Johannes Berg wrote:
-> > From: Johannes Berg <johannes.berg@intel.com>
-> >=20
-> > Since these are now no longer defines, but in an enum.
-> >=20
-> > Fixes: 101f2bbab541 ("fs: convert mount flags to enum")
-> > Reviewed-by: Benjamin Berg <benjamin.berg@intel.com>
-> > Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->=20
-> The exact same change was already submitted and discussed here:
->=20
-> https://lore.kernel.org/all/20250601055027.3661480-1-tony.ambardar@gmail.=
-com/
+From: Hosung Kim <hosung0.kim@samsung.com>
 
-Oh, I missed that, sorry.
+To allow the CPU to handle it's own clock events, we need to set the
+IRQF_PERCPU flag. This prevents the local timer interrupts from
+migrating to other CPUs.
 
-> I don't know what tree this would go through, so I can't tell whether it
-> was picked up or not. But I think there's consensus that it's a good
-> fix, and several folks have written or reviewed the change.
+Signed-off-by: Hosung Kim <hosung0.kim@samsung.com>
+[Original commit from https://android.googlesource.com/kernel/gs/+/03267fad19f093bac979ca78309483e9eb3a8d16]
+Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
+Reviewed-by: Youngmin Nam <youngmin.nam@samsung.com>
+Tested-by: Youngmin Nam <youngmin.nam@samsung.com>
+Signed-off-by: Will McVicker <willmcvicker@google.com>
+---
+ drivers/clocksource/exynos_mct.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-It looks like previously Andrew picked up patches to this which is why I
-Cc'ed him, but I'm perfectly happy for that other patch (or mine) to
-take any path available :)
+diff --git a/drivers/clocksource/exynos_mct.c b/drivers/clocksource/exynos_mct.c
+index 96361d5dc57d..a5ef7d64b1c2 100644
+--- a/drivers/clocksource/exynos_mct.c
++++ b/drivers/clocksource/exynos_mct.c
+@@ -596,7 +596,8 @@ static int __init exynos4_timer_interrupts(struct device_node *np,
+ 			irq_set_status_flags(mct_irq, IRQ_NOAUTOEN);
+ 			if (request_irq(mct_irq,
+ 					exynos4_mct_tick_isr,
+-					IRQF_TIMER | IRQF_NOBALANCING,
++					IRQF_TIMER | IRQF_NOBALANCING |
++					IRQF_PERCPU,
+ 					pcpu_mevt->name, pcpu_mevt)) {
+ 				pr_err("exynos-mct: cannot register IRQ (cpu%d)\n",
+ 									cpu);
+-- 
+2.50.0.rc2.761.g2dc52ea45b-goog
 
-johannes
