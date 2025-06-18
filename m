@@ -1,202 +1,151 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59971EEA40;
-	Wed, 18 Jun 2025 06:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB561E503D;
+	Wed, 18 Jun 2025 06:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228356; cv=none; b=TQ0yE6fkjdtkcbUG5e89V2N3SU9ivFtm+dcEZJJwN+xAMD46sXiHa6Y8z2QaB/vnkYgegUBFnqO/cERbW3P5EO8e0ZTuV39BMei4NNLpUEYw4PJNDusfUB4DJU4JGatoF1eAcZYhncvbd5YogIgQfQ6WAoMd7GIpOIOAwVwlDUg=
+	t=1750228364; cv=none; b=NzquI/ich9pAnfpM1x5vsZcLaTJXbhNpMXyNq5hNvQ7U9TPNSePkjSgeuptPGR+UHOY97OOTFcrxEhJ9Id7uee+rd+r76Aq85bYNWH1pd1BY1NuGh+V4tdxz2+jxryrjNeDQ9Ku4yv9UP3QOCH/uIXRJ6fZanwzehE+oYKKh/Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228356; c=relaxed/simple;
-	bh=y10M8imfJ9o9x4GicbvPGTG3FTDU5rk/ab+BdMuexKg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNeeulgpb4KcEoWQHVFrOnDIJV4XAOuVslenBYK+G5laRlo4T0bsIIi10wNi+2tHj/gH35MIrwHfm/C3XjJ8fILO+jJhJ58kJJOuxHk2WelsgFEDT9gBOT8ldeZH6GaTt7HBc36OzoxsRerO/SL7G5q8WW2z3V0FY5HH2Zkl0t4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T34ktW0o; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750228364; c=relaxed/simple;
+	bh=Q6R9VpJK+yebI8V2UHdLDoGLpV7IjX7AVke6WGXxh3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gGg1jBeekZRv23KfiNYED5YHbaqeliOgzYIe/bmMYjtF8h2HUWCNIAArIec4FYm7s42LmxX2dzg7UPsm1x8YQhCz3NR0JLSfptpi9rvDLKXRjKkaUKe52Pyng5sdy/pYsl7p52VUxgVfvkdthB1Y6uq0VHVdwRafxV+ZH6MU5Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKxcITdp; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T34ktW0o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750228346;
-	bh=y10M8imfJ9o9x4GicbvPGTG3FTDU5rk/ab+BdMuexKg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T34ktW0oHpuFm0dNOITwZ4sMW7CMFEoqqP5DDtdOZrPLpha+3GfXyd02Cli/vadBU
-	 LlWPVtA6T+zvqc73KzuhZ/CnssL5rl721ZEmYcCqUTsL6O7BE/Z1rDLNKY7u6pKSDs
-	 yPsimWcGx4Blwgtu5smzFikqknZWd7TgPR08HJT6kQJSudRYAbQEitAJvfV+6nJCIP
-	 Fk3YMS5kFx6OZd8Ra1zChjmdjdyC+6KirckL/a0YjlfTO90bjUj6evempYqSQw3pf3
-	 Rvhjqv6TwLKI8xV6X97d9vFRM2ErqWaKIMVpL+lClT8Ei9Z2efKav1ncp9VY49nAQo
-	 aWLfOCHHBszqQ==
-Received: from [10.40.0.100] (185-251-200-162.lampert.tv [185.251.200.162])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mriesch)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C91F817E0863;
-	Wed, 18 Jun 2025 08:32:25 +0200 (CEST)
-Message-ID: <8ba2f458-4a66-44f6-8528-4654cfe379ff@collabora.com>
-Date: Wed, 18 Jun 2025 08:32:25 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKxcITdp"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54e7967cf67so6701875e87.0;
+        Tue, 17 Jun 2025 23:32:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750228361; x=1750833161; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bwqo1Tn/UI5NB53KqrvduG70MhvCcVKMdoEFHbfpgfk=;
+        b=KKxcITdp0Jw7bsq0b+w3AJ5emxuZxu+vokIEh23sMJGs6CQoJ2QO6Bo7bie46Pu8NH
+         J4AzWswfFLbfx4r7sOyISC6800urIKfO9XmV2yGE5zF7mi8+pZ87W8FBOqDhzYMEfkvn
+         fqnq0cYhYutgrOrhp3SaHsfy7/CU17DVElPTIYa3lRv8YrLbPBy6rn1tBR6vt+R5pShL
+         kvBbrQ9Mu0AHG4gwzxxgfrhP/xwMpbAPCUIkO00dS5ESCsWYZr+1aWPcoYt046keMH5f
+         Fsc+jX76DStJTvmljpWBya7lL4KiLQZf3Yp2WJWFNu8I4Ed2M9hT8NELjMXXS5Nn7Twg
+         RTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750228361; x=1750833161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bwqo1Tn/UI5NB53KqrvduG70MhvCcVKMdoEFHbfpgfk=;
+        b=OAUNIw9zu31GMIb7hpXaTFlwFXnnC/KDXfBhNftRyO2T56b8D7a5Nzu49JdTj9Bsaa
+         aRtWLbmu/qdrMle1FKe+/dATIKMPz+zGuh+3jm4Lpc6/rPADSuQnKWI7G/F7iSvc/C1l
+         MIQ+jm9WZ4zKRIXgJkYgtWYVlDoMqKwyHj1YLFp/JO4lgW/PDKjTCQlk9ZODNE9PYaYx
+         jKiaU2nH7gMyMIr32TEMx3A5shdTexpD7nqBcs3LRQ3oGBLnn9u3C2kuq4yDv7WcFKSp
+         9pxtSh2FyXEWBq7eJMLzwPFMnKRSA4o/806poYniraEFTlV0mNVpKhNS53QAVj3cRPpv
+         qtxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWFTLisRnj2KtEucCcLBqmeE0LdFEmh/WvZcbZLXrOdl80J84X5O85vKlUvCv9BJAXxrNs7T+u5yF48ETDc@vger.kernel.org, AJvYcCWcoiv+ojyg7qNC/2Ty3/DoQgDUCR6S07OpGGKa8CskHzNI3Y4xa7oIfkeBUk9ItNgqsNykaq4B/n4GB9o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvsuRK67cevRYHNjQP+tmoSWR4Fz9dG47YNSmR45MHNchLNNoD
+	yJbtvv0+a0Mx9WfNGv6LcuPQ0UUFKWoap2XRnC55D11KUqDilz8LLc0eTdxs+fBMUQbxu3iU+mi
+	rQ6WSeiJj3klMbtLNNyjSOMlydBFqi3k=
+X-Gm-Gg: ASbGncuadmqSSMtglofvqn+ND64TRer8v79fh/zzIZsg7U/UqEXGkwmpRcPyCIdi4IL
+	pBQYStNL16vA+jNSu2N+XlyMqe6YRQ7e+gCroDuGrsxHTCeK9KggYHdPo3O5eSOhUGMzBRillYL
+	Ug+rE+kttDmxQFVJrPt42SnvWY2cKqyuUI2fi87YniPhyQUsU9WWyQgV5UUTHbwrWpX+/Oh2Zu7
+	sHPbg==
+X-Google-Smtp-Source: AGHT+IE9/lVOC9RD5dqHWaSWa1j5VajQRRLgW6hA855xIJmZ/spd0YvrkdXm0ZHnMiUmLACFqGFrlt0hesE7QYoVWtc=
+X-Received: by 2002:a05:6512:304d:b0:553:3172:1c23 with SMTP id
+ 2adb3069b0e04-553b6e75482mr5205429e87.17.1750228360458; Tue, 17 Jun 2025
+ 23:32:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: phy: rockchip-inno-csi-dphy: add rk3588
- variant
-To: Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Jagan Teki <jagan@amarulasolutions.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Collabora Kernel Team <kernel@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-phy@lists.infradead.org
-References: <20250616-rk3588-csi-dphy-v1-0-84eb3b2a736c@collabora.com>
- <20250616-rk3588-csi-dphy-v1-2-84eb3b2a736c@collabora.com>
- <0f2b8934-9b3d-4913-b734-b4fe7f0c7d0a@linaro.org>
-Content-Language: en-US
-From: Michael Riesch <michael.riesch@collabora.com>
-In-Reply-To: <0f2b8934-9b3d-4913-b734-b4fe7f0c7d0a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250607134114.21899-1-pranav.tyagi03@gmail.com> <20250617130431.50f761dc@pumpkin>
+In-Reply-To: <20250617130431.50f761dc@pumpkin>
+From: Pranav Tyagi <pranav.tyagi03@gmail.com>
+Date: Wed, 18 Jun 2025 12:02:28 +0530
+X-Gm-Features: Ac12FXw1swBMxxqP7uL84LhUXsvU1fv-TbWZJqVqxFBuKmhpQqAXjySO2_KEEhg
+Message-ID: <CAH4c4j+BEJqMqECPDgOF5vq4hg7_yBRrLBPSuTKnA+CO658SOQ@mail.gmail.com>
+Subject: Re: [PATCH] tty: replace capable() with file_ns_capable()
+To: David Laight <david.laight.linux@gmail.com>
+Cc: gregkh@linuxfoundation.org, jirislaby@kernel.org, kees@kernel.org, 
+	skhan@linuxfoundation.org, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Neil,
+On Tue, Jun 17, 2025 at 5:34=E2=80=AFPM David Laight
+<david.laight.linux@gmail.com> wrote:
+>
+> On Sat,  7 Jun 2025 19:11:14 +0530
+> Pranav Tyagi <pranav.tyagi03@gmail.com> wrote:
+>
+> > The TIOCCONS ioctl currently uses capable(CAP_SYS_ADMIN) to check for
+> > privileges, which validates the current task's credentials. Since this
+> > ioctl acts on an open file descriptor, the check should instead use the
+> > file opener's credentials.
+>
+> Is that right?
+> A terminal will have been opened before the login sequence changed the us=
+er id.
+>
+> The 'best practise' might be to check both!
+>
+>         David
 
-Thanks for your comments!
+Hi,
 
-On 6/17/25 11:31, neil.armstrong@linaro.org wrote:
-> On 17/06/2025 10:54, Michael Riesch via B4 Relay wrote:
->> From: Michael Riesch <michael.riesch@collabora.com>
->>
->> The Rockchip RK3588 variant of the CSI-2 DPHY features two reset lines.
->> Add the variant and allow for the additional reset.
-> 
-> No names for the new resets on the RK3588 ?
+You're right =E2=80=94 I hadn=E2=80=99t fully considered that the terminal =
+is typically
+opened before the user ID changes during login. Checking only the file
+opener's credentials may miss important security context.
 
-I left the names away because TBH I don't see the value in them (in that
-case).
+Best practice would indeed be to validate both: ensure that the current
+task has sufficient privileges and that the file was opened by an
+authorized user.
 
-Downstream uses reset-names = "srst_csiphy0", "srst_p_csiphy0"; and
-there is no better description. One could guess that the second reset
-corresponds to "apb" but this is just guessing and we would still have
-to guess/find a proper name for the first reset.
+Thanks for pointing this out =E2=80=94 I=E2=80=99ll revise the patch accord=
+ingly.
 
-Amazingly the mainline driver does not seem to do anything with the
-resets (unless I overlooked some implicit magic). Downstream does a
-simple reset_control_{assert,deassert} before configuring the PHY. Now
-if the different resets are handled in bulk mode, does it really make
-sense to address each reset individually?
+Regards
+Pranav Tyagi
 
-Best regards,
-Michael
 
-> 
-> Neil
-> 
->>
->> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
->> ---
->>   .../bindings/phy/rockchip-inno-csi-dphy.yaml       | 60 ++++++++++++
->> ++++++++--
->>   1 file changed, 55 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-
->> dphy.yaml b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-
->> dphy.yaml
->> index 5ac994b3c0aa..6755738b13ee 100644
->> --- a/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
->> +++ b/Documentation/devicetree/bindings/phy/rockchip-inno-csi-dphy.yaml
->> @@ -21,6 +21,7 @@ properties:
->>         - rockchip,rk3326-csi-dphy
->>         - rockchip,rk3368-csi-dphy
->>         - rockchip,rk3568-csi-dphy
->> +      - rockchip,rk3588-csi-dphy
->>       reg:
->>       maxItems: 1
->> @@ -39,18 +40,49 @@ properties:
->>       maxItems: 1
->>       resets:
->> -    items:
->> -      - description: exclusive PHY reset line
->> +    minItems: 1
->> +    maxItems: 2
->>       reset-names:
->> -    items:
->> -      - const: apb
->> +    minItems: 1
->> +    maxItems: 2
->>       rockchip,grf:
->>       $ref: /schemas/types.yaml#/definitions/phandle
->>       description:
->>         Some additional phy settings are access through GRF regs.
->>   +allOf:
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - rockchip,px30-csi-dphy
->> +              - rockchip,rk1808-csi-dphy
->> +              - rockchip,rk3326-csi-dphy
->> +              - rockchip,rk3368-csi-dphy
->> +              - rockchip,rk3568-csi-dphy
->> +    then:
->> +      properties:
->> +        resets:
->> +          items:
->> +            - description: exclusive PHY reset line
->> +
->> +        reset-names:
->> +          items:
->> +            - const: apb
->> +
->> +      required:
->> +        - reset-names
->> +    else:
->> +      properties:
->> +        resets:
->> +          minItems: 2
->> +
->> +        reset-names:
->> +          minItems: 2
->> +
->>   required:
->>     - compatible
->>     - reg
->> @@ -59,7 +91,6 @@ required:
->>     - '#phy-cells'
->>     - power-domains
->>     - resets
->> -  - reset-names
->>     - rockchip,grf
->>     additionalProperties: false
->> @@ -78,3 +109,22 @@ examples:
->>           reset-names = "apb";
->>           rockchip,grf = <&grf>;
->>       };
->> +  - |
->> +    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
->> +    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
->> +
->> +    soc {
->> +        #address-cells = <2>;
->> +        #size-cells = <2>;
->> +
->> +        csi_dphy0: phy@fedc0000 {
->> +            compatible = "rockchip,rk3588-csi-dphy";
->> +            reg = <0x0 0xfedc0000 0x0 0x8000>;
->> +            clocks = <&cru PCLK_CSIPHY0>;
->> +            clock-names = "pclk";
->> +            #phy-cells = <0>;
->> +            resets = <&cru SRST_CSIPHY0>, <&cru SRST_P_CSIPHY0>;
->> +            rockchip,grf = <&csidphy0_grf>;
->> +            status = "disabled";
->> +        };
->> +    };
->>
-> 
-
+>
+> >
+> > Replace capable() with file_ns_capable() to ensure the capability is
+> > checked against file->f_cred in the correct user namespace. This
+> > prevents unintended privilege escalation and aligns with best practices
+> > for secure ioctl implementations.
+> >
+> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
+> > Link: https://github.com/KSPP/linux/issues/156
+> > ---
+> >  drivers/tty/tty_io.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+> > index e2d92cf70eb7..ee0df35d65c3 100644
+> > --- a/drivers/tty/tty_io.c
+> > +++ b/drivers/tty/tty_io.c
+> > @@ -102,6 +102,9 @@
+> >  #include <linux/uaccess.h>
+> >  #include <linux/termios_internal.h>
+> >  #include <linux/fs.h>
+> > +#include <linux/cred.h>
+> > +#include <linux/user_namespace.h>
+> > +#include <linux/capability.h>
+> >
+> >  #include <linux/kbd_kern.h>
+> >  #include <linux/vt_kern.h>
+> > @@ -2379,7 +2382,7 @@ static int tiocswinsz(struct tty_struct *tty, str=
+uct winsize __user *arg)
+> >   */
+> >  static int tioccons(struct file *file)
+> >  {
+> > -     if (!capable(CAP_SYS_ADMIN))
+> > +     if (!file_ns_capable(file, file->f_cred->user_ns, CAP_SYS_ADMIN))
+> >               return -EPERM;
+> >       if (file->f_op->write_iter =3D=3D redirected_tty_write) {
+> >               struct file *f;
+>
