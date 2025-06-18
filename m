@@ -1,222 +1,60 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8441313E02D;
-	Wed, 18 Jun 2025 03:06:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD84A199E9D;
+	Wed, 18 Jun 2025 03:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750215973; cv=none; b=Mx78RvX1LguoORUwTBI5l3Ro/wIAQVl/miPpJBJN8tu79rRI2ofxDPU0PGc1h8xxTuc9DBChiQRrmKcFbqqJnYCmYZ+OGvFLwbzGnAlYULozJt8tKMdpAzSYQqf5k27+Mxl13+ATysiGYOWWNQUEq/lscVpInERFZyuDKKnjBI4=
+	t=1750215984; cv=none; b=khxAff6dYt84XSL6D+J/xV+NAwiEwmfsqXI8QpQ2oXHtpjmTB7K/alHYNC88lXYkkIswxc1SJOK7fX41J2Jdivb+wtCg6sThOWmnr+qT1GlbaXhbMyuofKcXoSTEkEnqT3v5YVC+bphNfdvFnGb6/YaY0CatOPLSuMxsVVZtohA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750215973; c=relaxed/simple;
-	bh=QL/4KRWb+Eb99LdlmW0FWVyAOQcTQchrPVSpQl3cLHI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aj8Swl4cGLJCpVAq+GJXwZymPLsL+6dkgB9Rs//0rFOz8R4r02VME94f3j3bfk0C0550BnjjQ/3rxYM3qVczIafAUzG381ZDGPcVIafT7nejlh7rQgQ/vTzl05xLGTCp9mxhjVwtag18khnrwLa5bL1BQdOL3isn+0rjv9Zd/GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=k+2Jkpvm; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750215984; c=relaxed/simple;
+	bh=qN9NPv1XQrsC3dwPyHVqoYgRHQm03qU19l77O6/+NkY=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=T6F3Cgo/3bKwy111jk5uYUrLE8AcQ3e/E+8Rxku1XvNH1ffN7uQ6FBXUVzdMc1vxDrvvk9EgFVp6E+8+MZbPHDUROqDncxZutWOKLLLE/rEk+nsEzSsr6zW6hhY6JDfQRb2F2pt1D7r9ZZKOH2N+/8yclFOfvUAnpSKS2YQU71U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=LTxBQNyB; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="k+2Jkpvm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9s
-	xZpWGMDtvzQWDkps87/gtbTx/0wlDsgpbiAR5Zn1Q=; b=k+2Jkpvmbm7FNi4kyG
-	rBZMceiZa1E7R1X9z2uyNcf7zjbnZtNn+r4R5CO7/Xo59EGmvKEMFVG0cLkY0pBj
-	93pvRlA5mXknfLqOJcsbtR/BYvvJD2fFQNTcMKVgO6cnb7V9pOQBx802/CJRXwfr
-	lBzpf4qK6dWQs+U4xXh/yiR38=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id PCgvCgDX_84DLVJo98pqAA--.16005S2;
-	Wed, 18 Jun 2025 11:05:39 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	willemb@google.com,
-	almasrymina@google.com,
-	kerneljasonxing@gmail.com,
-	ebiggers@google.com,
-	asml.silence@gmail.com,
-	aleksander.lobakin@intel.com
-Cc: yangfeng@kylinos.cn,
-	netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="LTxBQNyB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1750215980;
+	bh=qN9NPv1XQrsC3dwPyHVqoYgRHQm03qU19l77O6/+NkY=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=LTxBQNyBuJBxJiNhQgy5vLgg2Q1cilu5sqxx4AN8cNHwXn3HgrmJ49pIjCSxchnhf
+	 k+FNxzchFLCwwXtnx1qCPCG1f7j2s3vs3CZN21KTO+p/EaEXiSUeIjL8bM/PbWThMX
+	 fq2fBARicrss4AGOgQ/ZU368YBmgxKZkpjza4B2yywBn+g4IwGNksuuUUfVXxbqQ7e
+	 5LpdYkclvvubJ3u0UFwr+Rv+4D2o+67rXcweW/LXnMiQ/f4eF4kRCHw8xTgZ7ZcJqJ
+	 M8vbxOhLi9T5AgbG4Jr+Gp33Ow0BZ+P+BitiamvWb4iimO95tuBYdl4DJYo5oBqU01
+	 loocYLcuF8ttQ==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id E875E640A0;
+	Wed, 18 Jun 2025 11:06:19 +0800 (AWST)
+Message-ID: <064a5583e43ee0b67da1112fb5fc9fa421e4f96e.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 8/8] mmc: sdhci-of-aspeed: Add sdr50 support
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Cool Lee <cool_lee@aspeedtech.com>, adrian.hunter@intel.com, 
+	ulf.hansson@linaro.org, joel@jms.id.au, p.zabel@pengutronix.de, 
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH net-next] skbuff: Improve the sending efficiency of __skb_send_sock
-Date: Wed, 18 Jun 2025 11:05:37 +0800
-Message-Id: <20250618030537.28394-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+Date: Wed, 18 Jun 2025 12:36:19 +0930
+In-Reply-To: <20250615035803.3752235-9-cool_lee@aspeedtech.com>
+References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
+	 <20250615035803.3752235-9-cool_lee@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PCgvCgDX_84DLVJo98pqAA--.16005S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAry8Cw4fZFWrAFW8XF4xJFb_yoWrtr4kpa
-	15W398Zr47Jr1q9r4kJrZ3Cr4ft3yvk3y5tF4fA395Ar90qryFgFWUGr1jkFWrKrZ7uFyU
-	trs0vr1rGrn0va7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbzV8UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiThlweGhSKSe2kwAAsO
 
-From: Feng Yang <yangfeng@kylinos.cn>
+On Sun, 2025-06-15 at 11:58 +0800, Cool Lee wrote:
+> Add support for SDR50 mode in the Aspeed SDHCI driver by setting
+> capability shadow register.
+>=20
+> Signed-off-by: Cool Lee <cool_lee@aspeedtech.com>
 
-By aggregating skb data into a bvec array for transmission, when using sockmap to forward large packets,
-what previously required multiple transmissions now only needs a single transmission, which significantly enhances performance.
-For small packets, the performance remains comparable to the original level.
-
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
----
- net/core/skbuff.c | 110 ++++++++++++++++++++++------------------------
- 1 file changed, 52 insertions(+), 58 deletions(-)
-
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 85fc82f72d26..19d78285a1c9 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -3235,82 +3235,75 @@ typedef int (*sendmsg_func)(struct sock *sk, struct msghdr *msg);
- static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
- 			   int len, sendmsg_func sendmsg, int flags)
- {
--	unsigned int orig_len = len;
- 	struct sk_buff *head = skb;
- 	unsigned short fragidx;
--	int slen, ret;
-+	struct msghdr msg;
-+	struct bio_vec *bvec;
-+	int max_vecs, ret;
-+	int bvec_count = 0;
-+	unsigned int copied = 0;
-+
-+	max_vecs = skb_shinfo(skb)->nr_frags + 1; // +1 for linear data
-+	if (skb_has_frag_list(skb)) {
-+		struct sk_buff *frag_skb = skb_shinfo(skb)->frag_list;
-+
-+		while (frag_skb) {
-+			max_vecs += skb_shinfo(frag_skb)->nr_frags + 1; // +1 for linear data
-+			frag_skb = frag_skb->next;
-+		}
-+	}
-+
-+	bvec = kcalloc(max_vecs, sizeof(struct bio_vec), GFP_KERNEL);
-+	if (!bvec)
-+		return -ENOMEM;
-+
-+	memset(&msg, 0, sizeof(msg));
-+	msg.msg_flags = MSG_SPLICE_PAGES | MSG_DONTWAIT | flags;
- 
- do_frag_list:
- 
- 	/* Deal with head data */
--	while (offset < skb_headlen(skb) && len) {
--		struct kvec kv;
--		struct msghdr msg;
--
--		slen = min_t(int, len, skb_headlen(skb) - offset);
--		kv.iov_base = skb->data + offset;
--		kv.iov_len = slen;
--		memset(&msg, 0, sizeof(msg));
--		msg.msg_flags = MSG_DONTWAIT | flags;
-+	if (offset < skb_headlen(skb)) {
-+		unsigned int copy_len = min(skb_headlen(skb) - offset, len - copied);
-+		struct page *page = virt_to_page(skb->data + offset);
-+		unsigned int page_offset = offset_in_page(skb->data + offset);
- 
--		iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
--		ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
--				      sendmsg_unlocked, sk, &msg);
--		if (ret <= 0)
--			goto error;
-+		if (!sendpage_ok(page))
-+			msg.msg_flags &= ~MSG_SPLICE_PAGES;
- 
--		offset += ret;
--		len -= ret;
-+		bvec_set_page(&bvec[bvec_count++], page, copy_len, page_offset);
-+		copied += copy_len;
-+		offset += copy_len;
- 	}
- 
--	/* All the data was skb head? */
--	if (!len)
--		goto out;
--
- 	/* Make offset relative to start of frags */
- 	offset -= skb_headlen(skb);
- 
--	/* Find where we are in frag list */
--	for (fragidx = 0; fragidx < skb_shinfo(skb)->nr_frags; fragidx++) {
--		skb_frag_t *frag  = &skb_shinfo(skb)->frags[fragidx];
-+	if (copied < len) {
-+		for (fragidx = 0; fragidx < skb_shinfo(skb)->nr_frags; fragidx++) {
-+			skb_frag_t *frag  = &skb_shinfo(skb)->frags[fragidx];
-+			unsigned int frag_size = skb_frag_size(frag);
- 
--		if (offset < skb_frag_size(frag))
--			break;
--
--		offset -= skb_frag_size(frag);
--	}
--
--	for (; len && fragidx < skb_shinfo(skb)->nr_frags; fragidx++) {
--		skb_frag_t *frag  = &skb_shinfo(skb)->frags[fragidx];
--
--		slen = min_t(size_t, len, skb_frag_size(frag) - offset);
-+			/* Find where we are in frag list */
-+			if (offset >= frag_size) {
-+				offset -= frag_size;
-+				continue;
-+			}
- 
--		while (slen) {
--			struct bio_vec bvec;
--			struct msghdr msg = {
--				.msg_flags = MSG_SPLICE_PAGES | MSG_DONTWAIT |
--					     flags,
--			};
-+			unsigned int copy_len = min(frag_size - offset, len - copied);
- 
--			bvec_set_page(&bvec, skb_frag_page(frag), slen,
-+			bvec_set_page(&bvec[bvec_count++], skb_frag_page(frag), copy_len,
- 				      skb_frag_off(frag) + offset);
--			iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1,
--				      slen);
- 
--			ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
--					      sendmsg_unlocked, sk, &msg);
--			if (ret <= 0)
--				goto error;
-+			copied += copy_len;
-+			offset = 0;
- 
--			len -= ret;
--			offset += ret;
--			slen -= ret;
-+			if (copied >= len)
-+				break;
- 		}
--
--		offset = 0;
- 	}
- 
--	if (len) {
-+	if (copied < len) {
- 		/* Process any frag lists */
- 
- 		if (skb == head) {
-@@ -3324,11 +3317,12 @@ static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
- 		}
- 	}
- 
--out:
--	return orig_len - len;
-+	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, bvec, bvec_count, len);
-+	ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked, sendmsg_unlocked, sk, &msg);
-+
-+	kfree(bvec);
- 
--error:
--	return orig_len == len ? ret : orig_len - len;
-+	return ret;
- }
- 
- /* Send skb data on a socket. Socket must be locked. */
--- 
-2.43.0
-
+Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
