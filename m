@@ -1,146 +1,206 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674832904
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:02:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F78D2904;
+	Wed, 18 Jun 2025 02:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750212137; cv=none; b=d+jrdng389Sx5CPssBCUxQOB251fuYvDTXoJ9kXoFjyOhYVGvH0Ne7NDEClqv+AWhGVfIAPzjCSYbh1qFM7M3iiX4MY4+w4OLSTPeRcLULWkH8zv7JQ9kA/Q/GLfhMjseTImvKS560qiX1uxsl1747sim0ulLSFYZhGiAsqjcEg=
+	t=1750212522; cv=none; b=ZMYbNv5+JjmlotLBRkOphkEBOjMAux63+KwdfYlIszWhCLADrrADdJM2bJIg3VeszMJcDCIbDiczNklhsC/95oX2AjOnez8dT4IWFh6Cw0BFhjJ7GwYpC24NDnFZiXzBf6gEYXsQ+liXXXjfacloQ5gADFAk7IA8JhwmWw370jQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750212137; c=relaxed/simple;
-	bh=ul62Y0qLkAI7EV3T+Mt2Sj29ch4kVanJFPx5nHbcABc=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=q+pLH8HkL2aagDYWJEhot0Dst4aV06ayX8y2yFjTKFKZqYvmPs1Sh541wSJZQIhfxtvDxzOWRKge0PLridAhZVYMmPmWaHs76K6toFdYOZp8TcUKMof27fHVnGtMp2+4fz03tZ0h/ohTf63vcrGVg0coaO+ozUNif1NCjHKLmSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bMRnM6lHcz8RTWX;
-	Wed, 18 Jun 2025 10:01:59 +0800 (CST)
-Received: from xaxapp05.zte.com.cn ([10.99.98.109])
-	by mse-fl2.zte.com.cn with SMTP id 55I21qOP018640;
-	Wed, 18 Jun 2025 10:01:52 +0800 (+08)
-	(envelope-from jiang.peng9@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-	by mapi (Zmail) with MAPI id mid31;
-	Wed, 18 Jun 2025 10:01:53 +0800 (CST)
-Date: Wed, 18 Jun 2025 10:01:53 +0800 (CST)
-X-Zmail-TransId: 2af968521e11ffffffffad8-e8144
-X-Mailer: Zmail v1.0
-Message-ID: <20250618100153468I5faNUAhCdtMA01OuuTKC@zte.com.cn>
+	s=arc-20240116; t=1750212522; c=relaxed/simple;
+	bh=6Nuq4CUXy1YX1/fRM1lVHGrJ7enBv9J1w86HvLuohCo=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=AKcIvMxUqInyh9B/epCX95tOetfnasvVl001AE9+v+EjompFPk6OdtrXa4Iwh+AjBnalGl7q/CP/ahKIUgTXVrp9SO9+NL1/3q9K0o8GIExg08axpUuqPSnbxzPdYE3EfxOiCOrY9HAx5K+TrP/l4kq9gHDy6YmrwVEqrSv441I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bMRx13k78zKHN99;
+	Wed, 18 Jun 2025 10:08:37 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id D93581A12C5;
+	Wed, 18 Jun 2025 10:08:35 +0800 (CST)
+Received: from [10.174.99.169] (unknown [10.174.99.169])
+	by APP3 (Coremail) with SMTP id _Ch0CgD3ScSUH1JoZwV2Pg--.4725S2;
+	Wed, 18 Jun 2025 10:08:35 +0800 (CST)
+Subject: Re: [PATCH 1/4] mm/shmem, swap: improve cached mTHP handling and fix
+ potential hung
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Hugh Dickins
+ <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>,
+ Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250617183503.10527-1-ryncsn@gmail.com>
+ <20250617183503.10527-2-ryncsn@gmail.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <b7ab2c46-793a-7cea-8941-6d77e9f44a8d@huaweicloud.com>
+Date: Wed, 18 Jun 2025 10:08:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.peng9@zte.com.cn>
-To: <jgross@suse.com>
-Cc: <sstabellini@kernel.org>, <oleksandr_tyshchenko@epam.com>,
-        <jiang.peng9@zte.com.cn>, <xen-devel@lists.xenproject.org>,
-        <linux-kernel@vger.kernel.org>, <xu.xin16@zte.com.cn>,
-        <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSB4ZW4veGVuYnVzOiBmaXggVz0xIGJ1aWxkIHdhcm5pbmcgaW4geGVuYnVzX3ZhX2Rldl9lcnJvcgogZnVuY3Rpb24=?=
-Content-Type: multipart/mixed;
-	boundary="=====_001_next====="
-X-MAIL:mse-fl2.zte.com.cn 55I21qOP018640
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 68521E16.000/4bMRnM6lHcz8RTWX
+MIME-Version: 1.0
+In-Reply-To: <20250617183503.10527-2-ryncsn@gmail.com>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_Ch0CgD3ScSUH1JoZwV2Pg--.4725S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3JFyDuw43Kw13XFW8CFy7trb_yoW7Xr1fpF
+	ZFgwn3JFW8Wr9Fkr17tF40vryru3yIgFW8KF93Gw43A3Z8Xw1jkF18tw12vFyUCr97Ga92
+	qF18ZF1q9F1DtaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Ib4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
+	e2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4I
+	kC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWU
+	WwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr
+	0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWU
+	JVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+	IYCTnIWIevJa73UjIFyTuYvjxUF1v3UUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
 
 
---=====_001_next=====
-Content-Type: multipart/related;
-	boundary="=====_002_next====="
-
-
---=====_002_next=====
-Content-Type: multipart/alternative;
-	boundary="=====_003_next====="
-
-
---=====_003_next=====
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-RnJvbTogUGVuZyBKaWFuZyA8amlhbmcucGVuZzlAenRlLmNvbS5jbj4NCg0KVGhpcyBwYXRjaCBm
-aXhlcyBhIFc9MSBmb3JtYXQtc3RyaW5nIHdhcm5pbmcgcmVwb3J0ZWQgYnkgR0NDIDEyLjMuMA0K
-YnkgYW5ub3RhdGluZyB4ZW5idXNfc3dpdGNoX2ZhdGFsKCkgYW5kIHhlbmJ1c192YV9kZXZfZXJy
-b3IoKQ0Kd2l0aCB0aGUgX19wcmludGYgYXR0cmlidXRlLiBUaGUgYXR0cmlidXRlIGVuYWJsZXMg
-Y29tcGlsZS10aW1lDQp2YWxpZGF0aW9uIG9mIHByaW50Zi1zdHlsZSBmb3JtYXQgc3RyaW5ncyBp
-biB0aGVzZSBmdW5jdGlvbnMuDQoNClRoZSBvcmlnaW5hbCB3YXJuaW5nIHRyYWNlOg0KZHJpdmVy
-cy94ZW4veGVuYnVzL3hlbmJ1c19jbGllbnQuYzozMDQ6OTogd2FybmluZzogZnVuY3Rpb24gJ3hl
-bmJ1c192YV9kZXZfZXJyb3InIG1pZ2h0IGJlDQphIGNhbmRpZGF0ZSBmb3IgJ2dudV9wcmludGYn
-IGZvcm1hdCBhdHRyaWJ1dGUgWy1Xc3VnZ2VzdC1hdHRyaWJ1dGU9Zm9ybWF0XQ0KDQpTaWduZWQt
-b2ZmLWJ5OiBQZW5nIEppYW5nIDxqaWFuZy5wZW5nOUB6dGUuY29tLmNuPg0KLS0tDQogZHJpdmVy
-cy94ZW4veGVuYnVzL3hlbmJ1c19jbGllbnQuYyB8IDIgKysNCiAxIGZpbGUgY2hhbmdlZCwgMiBp
-bnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3hlbi94ZW5idXMveGVuYnVzX2Ns
-aWVudC5jIGIvZHJpdmVycy94ZW4veGVuYnVzL3hlbmJ1c19jbGllbnQuYw0KaW5kZXggNTFiMzEy
-NGIwZDU2Li5lNzNlYzIyNWQ0YTYgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3hlbi94ZW5idXMveGVu
-YnVzX2NsaWVudC5jDQorKysgYi9kcml2ZXJzL3hlbi94ZW5idXMveGVuYnVzX2NsaWVudC5jDQpA
-QCAtMjAyLDYgKzIwMiw3IEBAIGludCB4ZW5idXNfd2F0Y2hfcGF0aGZtdChzdHJ1Y3QgeGVuYnVz
-X2RldmljZSAqZGV2LA0KIH0NCiBFWFBPUlRfU1lNQk9MX0dQTCh4ZW5idXNfd2F0Y2hfcGF0aGZt
-dCk7DQogDQorX19wcmludGYoNCwgNSkNCiBzdGF0aWMgdm9pZCB4ZW5idXNfc3dpdGNoX2ZhdGFs
-KHN0cnVjdCB4ZW5idXNfZGV2aWNlICosIGludCwgaW50LA0KICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBjb25zdCBjaGFyICosIC4uLik7DQogDQpAQCAtMjg3LDYgKzI4OCw3IEBAIGlu
-dCB4ZW5idXNfZnJvbnRlbmRfY2xvc2VkKHN0cnVjdCB4ZW5idXNfZGV2aWNlICpkZXYpDQogfQ0K
-IEVYUE9SVF9TWU1CT0xfR1BMKHhlbmJ1c19mcm9udGVuZF9jbG9zZWQpOw0KIA0KK19fcHJpbnRm
-KDMsIDApDQogc3RhdGljIHZvaWQgeGVuYnVzX3ZhX2Rldl9lcnJvcihzdHJ1Y3QgeGVuYnVzX2Rl
-dmljZSAqZGV2LCBpbnQgZXJyLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25z
-dCBjaGFyICpmbXQsIHZhX2xpc3QgYXApDQogew0KLS0gDQoyLjI1LjE=
-
-
---=====_003_next=====
-Content-Type: text/html ;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PGRpdiBjbGFzcz0iemNvbnRlbnRSb3ciPjxwPkZyb206IFBlbmcgSmlhbmcgJmx0O2ppYW5nLnBl
-bmc5QHp0ZS5jb20uY24mZ3Q7PC9wPjxwPjxicj48L3A+PHA+VGhpcyBwYXRjaCBmaXhlcyBhIFc9
-MSBmb3JtYXQtc3RyaW5nIHdhcm5pbmcgcmVwb3J0ZWQgYnkgR0NDIDEyLjMuMDwvcD48cD5ieSBh
-bm5vdGF0aW5nIHhlbmJ1c19zd2l0Y2hfZmF0YWwoKSBhbmQgeGVuYnVzX3ZhX2Rldl9lcnJvcigp
-PC9wPjxwPndpdGggdGhlIF9fcHJpbnRmIGF0dHJpYnV0ZS4gVGhlIGF0dHJpYnV0ZSBlbmFibGVz
-IGNvbXBpbGUtdGltZTwvcD48cD52YWxpZGF0aW9uIG9mIHByaW50Zi1zdHlsZSBmb3JtYXQgc3Ry
-aW5ncyBpbiB0aGVzZSBmdW5jdGlvbnMuPC9wPjxwPjxicj48L3A+PHA+VGhlIG9yaWdpbmFsIHdh
-cm5pbmcgdHJhY2U6PC9wPjxwPmRyaXZlcnMveGVuL3hlbmJ1cy94ZW5idXNfY2xpZW50LmM6MzA0
-Ojk6IHdhcm5pbmc6IGZ1bmN0aW9uICd4ZW5idXNfdmFfZGV2X2Vycm9yJyBtaWdodCBiZTwvcD48
-cD5hIGNhbmRpZGF0ZSBmb3IgJ2dudV9wcmludGYnIGZvcm1hdCBhdHRyaWJ1dGUgWy1Xc3VnZ2Vz
-dC1hdHRyaWJ1dGU9Zm9ybWF0XTwvcD48cD48YnI+PC9wPjxwPlNpZ25lZC1vZmYtYnk6IFBlbmcg
-SmlhbmcgJmx0O2ppYW5nLnBlbmc5QHp0ZS5jb20uY24mZ3Q7PC9wPjxwPi0tLTwvcD48cD4mbmJz
-cDtkcml2ZXJzL3hlbi94ZW5idXMveGVuYnVzX2NsaWVudC5jIHwgMiArKzwvcD48cD4mbmJzcDsx
-IGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspPC9wPjxwPjxicj48L3A+PHA+ZGlmZiAtLWdp
-dCBhL2RyaXZlcnMveGVuL3hlbmJ1cy94ZW5idXNfY2xpZW50LmMgYi9kcml2ZXJzL3hlbi94ZW5i
-dXMveGVuYnVzX2NsaWVudC5jPC9wPjxwPmluZGV4IDUxYjMxMjRiMGQ1Ni4uZTczZWMyMjVkNGE2
-IDEwMDY0NDwvcD48cD4tLS0gYS9kcml2ZXJzL3hlbi94ZW5idXMveGVuYnVzX2NsaWVudC5jPC9w
-PjxwPisrKyBiL2RyaXZlcnMveGVuL3hlbmJ1cy94ZW5idXNfY2xpZW50LmM8L3A+PHA+QEAgLTIw
-Miw2ICsyMDIsNyBAQCBpbnQgeGVuYnVzX3dhdGNoX3BhdGhmbXQoc3RydWN0IHhlbmJ1c19kZXZp
-Y2UgKmRldiw8L3A+PHA+Jm5ic3A7fTwvcD48cD4mbmJzcDtFWFBPUlRfU1lNQk9MX0dQTCh4ZW5i
-dXNfd2F0Y2hfcGF0aGZtdCk7PC9wPjxwPiZuYnNwOzwvcD48cD4rX19wcmludGYoNCwgNSk8L3A+
-PHA+Jm5ic3A7c3RhdGljIHZvaWQgeGVuYnVzX3N3aXRjaF9mYXRhbChzdHJ1Y3QgeGVuYnVzX2Rl
-dmljZSAqLCBpbnQsIGludCw8L3A+PHA+Jm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNw
-OyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7
-ICZuYnNwOyAmbmJzcDsgJm5ic3A7IGNvbnN0IGNoYXIgKiwgLi4uKTs8L3A+PHA+Jm5ic3A7PC9w
-PjxwPkBAIC0yODcsNiArMjg4LDcgQEAgaW50IHhlbmJ1c19mcm9udGVuZF9jbG9zZWQoc3RydWN0
-IHhlbmJ1c19kZXZpY2UgKmRldik8L3A+PHA+Jm5ic3A7fTwvcD48cD4mbmJzcDtFWFBPUlRfU1lN
-Qk9MX0dQTCh4ZW5idXNfZnJvbnRlbmRfY2xvc2VkKTs8L3A+PHA+Jm5ic3A7PC9wPjxwPitfX3By
-aW50ZigzLCAwKTwvcD48cD4mbmJzcDtzdGF0aWMgdm9pZCB4ZW5idXNfdmFfZGV2X2Vycm9yKHN0
-cnVjdCB4ZW5idXNfZGV2aWNlICpkZXYsIGludCBlcnIsPC9wPjxwPiZuYnNwOyAmbmJzcDsgJm5i
-c3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyAmbmJz
-cDsgJm5ic3A7ICZuYnNwOyAmbmJzcDsgJm5ic3A7ICZuYnNwOyBjb25zdCBjaGFyICpmbXQsIHZh
-X2xpc3QgYXApPC9wPjxwPiZuYnNwO3s8L3A+PHA+LS0mbmJzcDs8L3A+PHA+Mi4yNS4xPC9wPjxw
-IHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZhbWlseTrlvq7ova/pm4Xpu5EsTWljcm9zb2Z0
-IFlhSGVpOyI+PGJyPjwvcD48cCBzdHlsZT0iZm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk65b6u
-6L2v6ZuF6buRLE1pY3Jvc29mdCBZYUhlaTsiPjxicj48L3A+PHAgc3R5bGU9ImZvbnQtc2l6ZTox
-NHB4O2ZvbnQtZmFtaWx5OuW+rui9r+mbhem7kSxNaWNyb3NvZnQgWWFIZWk7Ij48YnI+PC9wPjxw
-IHN0eWxlPSJmb250LXNpemU6MTRweDtmb250LWZhbWlseTrlvq7ova/pm4Xpu5EsTWljcm9zb2Z0
-IFlhSGVpOyI+PGJyPjwvcD48L2Rpdj4=
-
-
---=====_003_next=====--
-
---=====_002_next=====--
-
---=====_001_next=====--
+on 6/18/2025 2:35 AM, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> The current swap-in code assumes that, when a swap entry in shmem
+> mapping is order 0, its cached folios (if present) must be order 0
+> too, which turns out not always correct.
+> 
+> The problem is shmem_split_large_entry is called before verifying the
+> folio will eventually be swapped in, one possible race is:
+> 
+>     CPU1                          CPU2
+> shmem_swapin_folio
+> /* swap in of order > 0 swap entry S1 */
+>   folio = swap_cache_get_folio
+>   /* folio = NULL */
+>   order = xa_get_order
+>   /* order > 0 */
+>   folio = shmem_swap_alloc_folio
+>   /* mTHP alloc failure, folio = NULL */
+>   <... Interrupted ...>
+>                                  shmem_swapin_folio
+>                                  /* S1 is swapped in */
+>                                  shmem_writeout
+>                                  /* S1 is swapped out, folio cached */
+>   shmem_split_large_entry(..., S1)
+>   /* S1 is split, but the folio covering it has order > 0 now */
+> 
+> Now any following swapin of S1 will hang: `xa_get_order` returns 0,
+> and folio lookup will return a folio with order > 0. The
+> `xa_get_order(&mapping->i_pages, index) != folio_order(folio)` will
+> always return false causing swap-in to return -EEXIST.
+> 
+> And this looks fragile. So fix this up by allowing seeing a larger folio
+> in swap cache, and check the whole shmem mapping range covered by the
+> swapin have the right swap value upon inserting the folio. And drop
+> the redundant tree walks before the insertion.
+> 
+> This will actually improve the performance, as it avoided two redundant
+> Xarray tree walks in the hot path, and the only side effect is that in
+> the failure path, shmem may redundantly reallocate a few folios
+> causing temporary slight memory pressure.
+> 
+> And worth noting, it may seems the order and value check before
+> inserting might help reducing the lock contention, which is not true.
+> The swap cache layer ensures raced swapin will either see a swap cache
+> folio or failed to do a swapin (we have SWAP_HAS_CACHE bit even if
+> swap cache is bypassed), so holding the folio lock and checking the
+> folio flag is already good enough for avoiding the lock contention.
+> The chance that a folio passes the swap entry value check but the
+> shmem mapping slot has changed should be very low.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 058313515d5a ("mm: shmem: fix potential data corruption during shmem swapin")
+> Fixes: 809bc86517cc ("mm: shmem: support large folio swap out")
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> ---
+>  mm/shmem.c | 30 +++++++++++++++++++++---------
+>  1 file changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index eda35be2a8d9..4e7ef343a29b 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -884,7 +884,9 @@ static int shmem_add_to_page_cache(struct folio *folio,
+>  				   pgoff_t index, void *expected, gfp_t gfp)
+>  {
+>  	XA_STATE_ORDER(xas, &mapping->i_pages, index, folio_order(folio));
+> -	long nr = folio_nr_pages(folio);
+> +	unsigned long nr = folio_nr_pages(folio);
+> +	swp_entry_t iter, swap;
+> +	void *entry;
+>  
+>  	VM_BUG_ON_FOLIO(index != round_down(index, nr), folio);
+>  	VM_BUG_ON_FOLIO(!folio_test_locked(folio), folio);
+> @@ -896,14 +898,24 @@ static int shmem_add_to_page_cache(struct folio *folio,
+>  
+>  	gfp &= GFP_RECLAIM_MASK;
+>  	folio_throttle_swaprate(folio, gfp);
+> +	swap = iter = radix_to_swp_entry(expected);
+>  
+>  	do {
+>  		xas_lock_irq(&xas);
+> -		if (expected != xas_find_conflict(&xas)) {
+> -			xas_set_err(&xas, -EEXIST);
+> -			goto unlock;
+> +		xas_for_each_conflict(&xas, entry) {
+> +			/*
+> +			 * The range must either be empty, or filled with
+> +			 * expected swap entries. Shmem swap entries are never
+> +			 * partially freed without split of both entry and
+> +			 * folio, so there shouldn't be any holes.
+> +			 */
+> +			if (!expected || entry != swp_to_radix_entry(iter)) {
+> +				xas_set_err(&xas, -EEXIST);
+> +				goto unlock;
+> +			}
+> +			iter.val += 1 << xas_get_order(&xas);
+>  		}
+> -		if (expected && xas_find_conflict(&xas)) {
+> +		if (expected && iter.val - nr != swap.val) {
+>  			xas_set_err(&xas, -EEXIST);
+>  			goto unlock;
+>  		}
+> @@ -2323,7 +2335,7 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>  			error = -ENOMEM;
+>  			goto failed;
+>  		}
+> -	} else if (order != folio_order(folio)) {
+> +	} else if (order > folio_order(folio)) {
+>  		/*
+>  		 * Swap readahead may swap in order 0 folios into swapcache
+>  		 * asynchronously, while the shmem mapping can still stores
+> @@ -2348,15 +2360,15 @@ static int shmem_swapin_folio(struct inode *inode, pgoff_t index,
+>  
+>  			swap = swp_entry(swp_type(swap), swp_offset(swap) + offset);
+>  		}
+> +	} else if (order < folio_order(folio)) {
+> +		swap.val = round_down(swp_type(swap), folio_order(folio));
+>  	}
+>  
+>  alloced:
+>  	/* We have to do this with folio locked to prevent races */
+>  	folio_lock(folio);
+>  	if ((!skip_swapcache && !folio_test_swapcache(folio)) ||
+> -	    folio->swap.val != swap.val ||
+> -	    !shmem_confirm_swap(mapping, index, swap) ||
+> -	    xa_get_order(&mapping->i_pages, index) != folio_order(folio)) {
+> +	    folio->swap.val != swap.val) {
+>  		error = -EEXIST;
+>  		goto unlock;
+>  	}
+> 
+Nice catch!
+Reviewed-by: Kemeng Shi <shikemeng@huaweicloud.com>
 
