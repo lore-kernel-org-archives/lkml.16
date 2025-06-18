@@ -1,121 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 0.smtp.remotehost.it (0.smtp.remotehost.it [213.190.28.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8EF204F93;
-	Wed, 18 Jun 2025 19:57:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDFD2144CF;
+	Wed, 18 Jun 2025 19:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.190.28.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750276622; cv=none; b=KjqE6f+lyW6LqC+eA9jGbEMQTVLEXL/IsrASbdkWEA1PADK3Qt1g4SvjjQdKlYdVPR0PiziKhltlxuuqDT43fOFE3x4nnqqgtTCUXjwtHsuhOXYFS/d/7lfDnHYjhsE0auk4j2ecis7acsMHVnEfSy7hmcl5ackeCG6EIjU5QXc=
+	t=1750276688; cv=none; b=cSbf+UNMlQtNQDEO7FLFu3Rp9Dznabr0b7/fgu1LcHHli0YerEudRpSW3KIJc2Mrfmt2EFohmsQ2RHeNz5fwjyfzLk59bBdFaG89ggTAQeYUe/4xcMeLUu3jYsVdAenlpPHnB0hqth6BMQRiCBZyd5wk8ucscrjhdne1TI/K47U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750276622; c=relaxed/simple;
-	bh=LODV13BAO/vPV1KR/ZrA48zSFSV7rhVVCDbvUO9rbCA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LXDYZiEHXpDfR0RBBjXxW3J90OIX7pmqmbZr0PYlsHOt9f7pCmUBTNqj3iG6fXC+3y+w7zYbyI1uqTrzLFlFVYXf5KxltgC3SrMNBiI+M8MFehV1pj1wTuXF/RbWdCQ6lI61mw2JE1AQBc4xCVyDYnUmuK14Ri6E2DlaNpCfOXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q5hCWJOq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750276688; c=relaxed/simple;
+	bh=KCfl1yGZ+YWjR7WYFfMcSvOnjdzSUv5Mu2Dn+EX1aYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:In-Reply-To:
+	 From:Content-Type; b=b6iHuz2jg+0kXlEJY5oeCYYw+hd+Rz7h9H1M9nvuoLcMI5kXlunILdpMLV8UrI/Qa3ULN5zRav8Lyb5H9O5o9U7HMSQ3CYpjtwvcDM+fiT71IZCf4ieqDew/S+X2+U0ZFNCevRWy58crEhMI0G02tTPtREJxKsAcdzpuirzqDec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net; spf=pass smtp.mailfrom=hardfalcon.net; dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b=2tXG/aiP; arc=none smtp.client-ip=213.190.28.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hardfalcon.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hardfalcon.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q5hCWJOq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AEE1C4CEE7;
-	Wed, 18 Jun 2025 19:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750276622;
-	bh=LODV13BAO/vPV1KR/ZrA48zSFSV7rhVVCDbvUO9rbCA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q5hCWJOq4BPeCPXNeDRpGBKL2aPnSMqJBqxjXFAR2SRBa5EnDn9dkzuxqDQNbEvyn
-	 fBe9dyKKEvuzysSk8KQ23rW2e7DLfVl9W5bfq+MXDQ2Ekk2CLxIjwOSoJXi6Te+TBl
-	 7C7XaAGn751Ko9xb2RGqAgP++GyMpDvi45jTrj7Gu9DNQMrl5OeFEzN2kVcrOODzc3
-	 RgCEUVqJMI0ocsFhgdbB/HSfQ/5Axvz1EE9TR+bE74oNsRAZn/zPC0vcN8fzSP6w4r
-	 Zk7b15ng+BIjJxGmbqNZXFT54eLakscZ6nBXx0fgBDNjo9rIXEJK5DhLmHgahFpL5P
-	 2T7sA59b8j31w==
-Date: Wed, 18 Jun 2025 21:56:54 +0200
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 24/27] irqchip/gic-v5: Add GICv5 ITS support
-Message-ID: <aFMaBlByS8xPq6kc@lpieralisi>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
- <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
+	dkim=permerror (0-bit key) header.d=hardfalcon.net header.i=@hardfalcon.net header.b="2tXG/aiP"
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=hardfalcon.net;
+	s=dkim_2024-02-03; t=1750276682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xkoriids/m8rGzR8uFY8ZuA19oDLArMkTcWLOUXzZRM=;
+	b=2tXG/aiPPSyL6UFpWhlw8V1aol3XSJDeB2nuLBPtnzfRiClbVavB2qUKFpOBig/PRS8BHk
+	13ga5klLBnzfMEDg==
+Message-ID: <7db8c196-cba0-40b8-89df-3856348a12fe@hardfalcon.net>
+Date: Wed, 18 Jun 2025 21:58:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618-gicv5-host-v5-24-d9e622ac5539@kernel.org>
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Ronald Warsow <rwarsow@gmx.de>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, conor@kernel.org, hargar@microsoft.com,
+ broonie@kernel.org, "Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>
+References: <20250617152451.485330293@linuxfoundation.org>
+ <f2b87714-0ef6-4210-9b30-86b4c79d1ed8@gmx.de>
+ <2025061848-clinic-revered-e216@gregkh>
+ <c8e4e868-aafb-4df1-8d07-62126bfe2982@hardfalcon.net>
+Content-Language: en-US, de-DE, en-US-large
+In-Reply-To: <20250617152521.879529420@linuxfoundation.org>
+ <04b7faf5-2f69-4d02-9eca-916e4bffcf00@gmx.de>
+From: Pascal Ernster <git@hardfalcon.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 12:17:39PM +0200, Lorenzo Pieralisi wrote:
+Hello again,
 
-[...]
 
-> +static int its_v5_pci_msi_prepare(struct irq_domain *domain, struct device *dev,
-> +				  int nvec, msi_alloc_info_t *info)
-> +{
-> +	struct msi_domain_info *msi_info;
-> +	struct device_node *msi_node;
-> +	struct pci_dev *pdev;
-> +	phys_addr_t pa;
-> +	int ret;
-> +
-> +	if (!dev_is_pci(dev))
-> +		return -EINVAL;
-> +
-> +	pdev = to_pci_dev(dev);
-> +
-> +	msi_node = pci_msi_get_device_msi_ctlr_node(pdev);
-> +	if (!msi_node)
-> +		return -ENODEV;
-> +
-> +	ret = its_translate_frame_address(msi_node, &pa);
-> +	if (ret)
-> +		return -ENODEV;
-> +
-> +	of_node_put(msi_node);
-> +
-> +	/* ITS specific DeviceID */
-> +	info->scratchpad[0].ul = pci_msi_domain_get_msi_rid(domain->parent, pdev);
+I've bisected this and found that the issue is caused by commit 
+f46262bbc05af38565c560fd960b86a0e195fd4b:
 
-Heads-up: it turned out I was too optimistic and reusing
+'Revert "mm/execmem: Unify early execmem_cache behaviour"'
 
-pci_msi_domain_get_msi_rid()
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?id=f46262bbc05af38565c560fd960b86a0e195fd4b
 
-on GICv5 does not work (or better it works incorrectly).
+https://lore.kernel.org/stable/20250617152521.879529420@linuxfoundation.org/
 
-It calls (for DT) of_msi_map_id() with the IRQ domain of_node (why, I am
-not sure but for GICv3 it works because the phandle in the msi-map and
-the IRQ domain of_node are equivalent). This does _not_ work on GICv5,
-I failed to spot it because in of_msi_map_id() if the IRQ domain of_node
-and msi-map phandle do not match a 1:1 translation is carried out, which
-ironically is what the RID<->DID translation looks like in the test
-platform. Sigh.
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/tree/queue-6.15/revert-mm-execmem-unify-early-execmem_cache-behaviour.patch?id=344d39fc8d8b7515b45a3bf568c115da12517b22
 
-I have already patched the code to augment:
 
-pci_msi_get_device_msi_ctlr_node()
-
-so that it grabs the msi-controller of_node pointer in msi-map AND maps the
-RID->DID (and to be honest that's what I should have done but I wanted to
-reuse pci_msi_domain_get_msi_rid(), it does not work for GICv5 unless I
-change it but I fear I could break platforms, we don't fix what it is not
-broken).
-
-Long story short: apologies, I missed this snag for the reasons above, I
-will update it for v6.
-
-Thanks,
-Lorenzo
+Regards
+Pascal
