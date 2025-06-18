@@ -1,179 +1,113 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012039.outbound.protection.outlook.com [52.101.66.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EAE224FA;
-	Wed, 18 Jun 2025 18:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.39
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750271058; cv=fail; b=Uxruybx/lz8faI+dStmFIF0x6mL3lv8NzwXui9kTDCC4DLNhlKdzY6BdS3whwh6qSxyG9R6U4YnG+U8j/UFNBNarUhOpY10gniohGrT+jaZiR383L+DYwOse8WTZq9IYNaihkeLN1UKt3tJjyowNck/hm2HWkdQNPi8JhaXIyAU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750271058; c=relaxed/simple;
-	bh=83AUb2siPA2T4ELh8iaA5gTSYbK5VxalpE7/YDMmRwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Ez2ijzWWCb6WpXuBiE71G4nYVWGT9jzrH9ByzMPOKwpXx9CTea3R2Tg71QF3Y33Gbu932KfmoG4PW4zxTDMIZnQ5Uh82G71tVT169TisafXOYgPNQY8VEgBS25sTG/biMmhj5+jU+C5DaqcKJ9bxkbQRbzNa3FqTIT51TcZeWlY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=CeM8lhck; arc=fail smtp.client-ip=52.101.66.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA331224FA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750271169; cv=none; b=rMI4vMzEqHNv83Rqaa4DJmOkSt9PzCBpaDxGf+aZ6Oh9SEmHf+YLn/kDrsnRh0Vox27pkZ/7Q5jqdf+QF2+YuqqqVzWq8qXGCka37bBUY0QusWS8gUiJbOeuYbOPVkyPT5XYQ0SyX5HFvXyGSaOk83sf1UPryNV5dB0SrAPLOtA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750271169; c=relaxed/simple;
+	bh=IXK+S4uXxPqEnY9h1bAL/eP3qq5ugrshNaDE7HOMvwU=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=quBTiH/7td+aSwTzzrjLiDQs55lhbXo5MPamcrDDXbZkyMkFjwBs4+6CI4iORDbqBgI/yzgr1njNj7ytnqKESSECUHEq0g3UWD5NFZx0HIin7IJXGZz3u+hWvLEkXjq7AjAMRjaixWlOJ1Rz7cKFtHIWS7jJwObBrmDInIVzyJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu; spf=pass smtp.mailfrom=maine.edu; dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b=MXbFu3+d; arc=none smtp.client-ip=209.85.160.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=maine.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maine.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="CeM8lhck"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ouFWhzfUw6GxCuJNqE0/mzXERB7mHaSY4HJtzvbNGTNN31DXsxIg8SGgiqbzhsERVsSIpxqUd1OfE/IJf4DEHbqeBE32A8BsjmwHi3m/EPF+i6M1QqZqGnkGvCSpijzfnZWOEovpVInDymIz1fSrlqsQ9+ETnfKyjV/yGXzKgEP+MgcYRBBqW+TOZ2ghOZHRC4P9o8CNfdjdZfKV1yggzgxvUCtE4dCYoZ3qTIBSp7r1RuRNQYMOs9qH4SAk+by/u5zNKJoIett1T0tey8Fs6ZJ5oxbV6FdUCQpbiihn5+cZoRtJ8NI+VtqdH6Je2QcJ+9GBjfTAV3FSwgQmUZCCZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ALT8eoMO/8J8lftRcDnkTpnhJWHyWslQs52NhD1JfQE=;
- b=BGpHNYnePmPqAnBborLy3yTEL1OiDish6OrFjiuWCwB+HFj8I+k/n9xEv/1Br8tWlT/0YhLYDDhTngzvEh8QxuUb3ZH53y+AWu4R0+vMXwr6yGtKYAqWRQNgWjjrEIXMmkD3LhTtd+kjmaqMdbGY62LT/RKh+BqLcraSfC1o1gbrTS65qA+h1421DXP5b2KB28HyKeIpUaCcJtomxsw3OehVnCU9s5QXlfaQ3S6a4i16aAGXHhrSyNlmi0bWszNCINdg6cFBVH7CjHDHCBGJhF7XglYt833sITh/kPjAbBhU7c+SqrfHb6DHNlPj+MM+9PnAt14wU1EeiWrzL2yy4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ALT8eoMO/8J8lftRcDnkTpnhJWHyWslQs52NhD1JfQE=;
- b=CeM8lhckJkoyk85bln9BVsbF/rIWoBr83+GcN5ndCScnNfIzBxB4w0/QuA7Jkp2H67WOgk5RbyKBeP3Z/j0iz+KDjdsvSabQaRECTTCMS4MDlyXB6ayMtTFqqmd9Umdl+ITQtj0R4Fs+6o7u3zG0zM3N2bZVArp1Nwh3wqhtPHGnVHE385jWqCx4tT8jRvZMi5WmDUrdwmJ6tFb+BqoL4+hK+dMiQ4h5D2iA7g0/dJAgUSPZSBVAUJEhtszUoBciSEY9dFUP453DDDS8rKxPEpyRRNGPO/6OHPklufUCddPZydB8qIQJE12OcnuJcDRUJwmb6FLJQ1skGIfahKhVqg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by PA1PR04MB11406.eurprd04.prod.outlook.com (2603:10a6:102:4f1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
- 2025 18:24:14 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 18:24:14 +0000
-Date: Wed, 18 Jun 2025 14:24:04 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: l.stach@pengutronix.de, lpieralisi@kernel.org, kwilczynski@kernel.org,
-	mani@kernel.org, robh@kernel.org, bhelgaas@google.com,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] PCI: dwc: Don't return error when wait for link up
-Message-ID: <aFMERHMxYRdMyi9Z@lizhi-Precision-Tower-5810>
-References: <20250618024116.3704579-1-hongxing.zhu@nxp.com>
- <20250618024116.3704579-6-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618024116.3704579-6-hongxing.zhu@nxp.com>
-X-ClientProxiedBy: SJ0PR03CA0343.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::18) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="MXbFu3+d"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-476a720e806so64478211cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:26:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google; t=1750271166; x=1750875966; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rQyolkiMyjAckIG3knda/ZNUyqwRYUv8nQKXIT9FUXc=;
+        b=MXbFu3+dVazDfmtXOEyOG5eg8CClDAsJObR7p1ywAUtjLOf4XN6+Gbg5FgdhU8RbDh
+         0bEWLLQzhEcxR0NkZmEaY7OBpoLBEUpmqxb1ygqJpgbC71AbIXx4/kuw/ZwOwVOQuzZ+
+         JItUquAV9jGnAsnCWNiRLlTgYbtUDC9R3bg70=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750271166; x=1750875966;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rQyolkiMyjAckIG3knda/ZNUyqwRYUv8nQKXIT9FUXc=;
+        b=QsT/jx6lpBBAfk7aAq4YTudhzUWVJ8MQuZ6/rG4MEU1eplGCtne35oG8L7VuVDgQpq
+         W7hW6QTWRJ92k/s0cUhF5cRx54lrkc+e+nnaLgSj6Irn3QvZPU9IuARqQC7lvFiPdGVP
+         eVQ8UgfZX++DorGCIEcunco73Z508jXzfX6elcRi9MJEe3sChFAczgom17wepseVFWz7
+         9AZXHeBNvf6wYO90z4WPgt5XdKxb2bzIUok9uFusIuC4NHZ7wJ1V3XdDM3HDASfGlDB3
+         QaQaLGB2KjZuIeZeOgYKqAoS/VxDStmKekoREp4NoCKvGD/beCEKDLGNzgRc4VyKS5SW
+         YE9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXzm+Dld8bX4iF+bHpWUrRaIiwm6FRD8OOtQwN9lqo1IC25XRlYcVoyAiNMPR9rBLxbtCQphJcLv1J6INo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJvGPDhY7PEv49vuwIm/bhXmhXroMvEBPGTk8radWppncpDeUf
+	6NNdoE0xl8zuI/rs9YEOs3yGLiDEwHitWfv/BpmmaQhvUzn168WUAoyRJ1aCVL+aeQ==
+X-Gm-Gg: ASbGncu0doO67qs/8aBh8+Bgw+VJ7+dG9ODQASsR63E8cYcEuwZcW0r2FJSF8KEEvTP
+	+otPfeJnJhPQmClMJ+txNN47OWc4EWg0f++PYb02b+vU5stnrQqzjUfDlzaa/X1S/pYJ+uiG6eX
+	twfl4LDJqE6e8oxCQGa1QTIc1Bbr8zsu0cI/87tjpW7BmnWVqD5RAypfkBT9DnL9gTqST5tfR5P
+	hjj7p4/rtkwfdFzEJojVHLtq6R5gMVwGUGBAdMu30fNmY+8O3l1S8aB8g3U55JHM+qaoVueClc8
+	BGbuZuuyxi0+XAqhzPx2iZzR6vMXMp/4JlttE0LG0xK4zW1fHuMJafuIPnI5N8ZWG4Y2bqOAdr6
+	PBhvuUw==
+X-Google-Smtp-Source: AGHT+IEOSRhUOkMxVT34ymUQgwCslbypVaUotjLJ3GfRwJWwd0EJHpVqBJVQyle3azFTQ1TTYRMmbQ==
+X-Received: by 2002:ac8:5813:0:b0:4a6:f5a8:3832 with SMTP id d75a77b69052e-4a73c617171mr254000481cf.42.1750271166573;
+        Wed, 18 Jun 2025 11:26:06 -0700 (PDT)
+Received: from [192.168.8.146] (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a52a1ddsm74868321cf.81.2025.06.18.11.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 11:26:05 -0700 (PDT)
+From: Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date: Wed, 18 Jun 2025 14:26:04 -0400 (EDT)
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+cc: Vince Weaver <vincent.weaver@maine.edu>, linux-kernel@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+    Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+    Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+    Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [perf] unchecked MSR access error: WRMSR to 0x3f1
+In-Reply-To: <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
+Message-ID: <c04824b5-5697-1de5-0003-f2c5b73ed006@maine.edu>
+References: <14d3167e-4dad-f68e-822f-21cd86eab873@maine.edu> <574b8701-9676-4aba-a85b-724c979b2efa@linux.intel.com> <7e8bb736-3955-c479-99de-e08efb494bdd@maine.edu> <8739c2c6-a27c-4ab6-ad74-8b95e258737e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB11406:EE_
-X-MS-Office365-Filtering-Correlation-Id: 790d2d6b-8c30-4561-f9cc-08ddae95543b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|7416014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?qBgb75sN4R+OMbIJVTbBWQilrVXEOtQYUHQl3iDuwYXwHxDMeYMccmtPE4uT?=
- =?us-ascii?Q?gDkNdwhPseqI3jA9sTeMPq1G3LCMWfoMAmsFHgJ0qTJSfy0gUjh5ThrdtTp1?=
- =?us-ascii?Q?cY148WdLlrDjGIPWd267YLnq/bHXd+8o2/AJbHULADjWo0cl0FyfJtTprmzd?=
- =?us-ascii?Q?/qdeI+uTtyAWoNS+2JXDAg11jU/J3XP7OpWJyGe5oDAtC0SqarHFA+sRk/Bw?=
- =?us-ascii?Q?fPLul5FENkfSksBELxmWK8hzN2g3UCM7vskByAPLxEUW7J+PNDf+hAZgABfn?=
- =?us-ascii?Q?dqr1q/G6s5crxuYCRsvW8MtEaGepMziCXWo26WXiYz7P7839/kcUAtEICs96?=
- =?us-ascii?Q?WE3IFAwVGGvfltIyWkxd25DehjzXyjlEtosUGessxQ4fvEbuSA2jiyfYXMIh?=
- =?us-ascii?Q?VJH4J82s5eTT+bBSzIvkkgKvvBfNp3K/9KwdvgsQTogLsY/TcSGVu4WYxBeY?=
- =?us-ascii?Q?M83Q1aP0JX8tThgzJ8xo8WyhfvfikTpUqYiyDcsIRQYZLjFfsW+acBY0YkvY?=
- =?us-ascii?Q?zjUtZIdky21EQUt8Cb4hSsMSinIcEWIs4S7itSs4MU4x7/S6r2uQVydjHone?=
- =?us-ascii?Q?kYhEOvz9gJmUcfFVn0YPzlwTM5wH/uWXHCoBlxrzTQ2XSIVPL87QfNu/mIJK?=
- =?us-ascii?Q?EGeA6Csw+tv54OQDZ8tmoFRwgxZKiHzOjjMHhYV01ridN9Bsi5kaBdWTq6aZ?=
- =?us-ascii?Q?4XeU0XO+I2SIBCZ7DI2RIqzwxEBhqikAOerNYDPd1HFEk3Yqa9n+BrjjZdP1?=
- =?us-ascii?Q?s8dRfSQp20SwXKS8Cjr0wmHhfja2CUVzGBFIMF/H8boQaivIfEv5ctWKEUXp?=
- =?us-ascii?Q?tgpcQi7zqK+/SFa4JHWDJjt9vRmPwAbIoQzAaeZtdT08/5qg+aC57gCL8f0a?=
- =?us-ascii?Q?3fHLF+mm3fliWlVrazE5sNYRbmJd2do/syVyapLHzY2LxgqWY9MYfhdhOpzn?=
- =?us-ascii?Q?pnNDNeiBKdvsOhCZUmXKMLAMEafUxqNWyDcOcpEoHg0zjnQld8z/OVVuKOuT?=
- =?us-ascii?Q?i8yHyKmHr55ol6qHmIUhEQPEuw6lZBNKNhWyDYqLyzBsdqMSld6o+L2BdAUJ?=
- =?us-ascii?Q?363jUaO4g1Hmbk0wx0xpmDzLbBNv/cj2CVuhHHOkAdGKeztX83f6kyAfmPUF?=
- =?us-ascii?Q?lBkTumfiVVgHQaKH+oyAZKsxbMfRl34Do0sEdSQjA8AJi/T82174uYxxYJh1?=
- =?us-ascii?Q?2aYyDYUpR4vjSaLOZTfPRaggVAkmTjzL/dK19GHWvSfiJJSmfzMDeBF7BaYD?=
- =?us-ascii?Q?oDzGK0vnjn6MxNDeI2VjzRuQbhsNDf1YDlKTyNVJQ56Jrtlwe6ZXcU5stQSL?=
- =?us-ascii?Q?U6KsxJ+dmE2Te73glfLcHKXtvwNlD7AIAdIaTTuD0qRryWlBbz8qdAppKDrq?=
- =?us-ascii?Q?MCyynqGOi6S0DeaMo47BWcpNB5+pGGpLGFc4cZABvkp9e96o/JMmPY8cX84d?=
- =?us-ascii?Q?zzdVwgkM0mO/hFZ71BHyg13b/WgpIOz7mSXQz+CQjJULwCfyJzIlFw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(7416014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?5bcSwwPNrSy2bE+kclZ9+4UXg5l/VG5FKHWZlrTNdNO1Op2LjDtdsgK9Zb+m?=
- =?us-ascii?Q?gW5u7k+x87hG5L01DuHszvzR5UGOGnG3R94q2DdefmjEXSW9wwyHF28IHMLM?=
- =?us-ascii?Q?FRZeBnlbLKLdV/39NYhIG8kudMNfLwCevqcGd/sifLsS8zL+mOwH1NFTpcjV?=
- =?us-ascii?Q?VhW6RzZdaUuhDMVoAAEX8XIqXxe/fizwwrLDxB3vm/xYE/VrsULKeTxGJ+UF?=
- =?us-ascii?Q?zLhCxje3acUwcGYznoaxjGAThkHZ/k33JUhcohsTGOCXJGqtCbS5I/3LWKwg?=
- =?us-ascii?Q?cHw2xnAWbucSbU1kV8/985YR89/l3ZQBYfAmNkLViB8Uah4ulHvPX8Au3weO?=
- =?us-ascii?Q?O7beH3aECVh/5qJmQgLhSykWHYAPyBnfo77s7qwwg7C0kvtCWwG8Dn6wv0VZ?=
- =?us-ascii?Q?uwcqJox0HeBwkzy2rflTh+onhZH9mZ0v2krxxBXiN8TO85yZZgm/S/nl/rpj?=
- =?us-ascii?Q?z4m7Pmw14Y7HUKIlmj5SyaYAzr9toby1worm+bCoZYHllelPjCM6C8RRV7kC?=
- =?us-ascii?Q?kotRbAS6FRgrq8IdN+IT7/gi9jfrLfpPVuMjYXlFBzM6iy0TfNd9jQBwlrYr?=
- =?us-ascii?Q?EBLy1dXeB6KJ4YUE2ofidM5RBbQ7CDlAguPOKuMUGGUsa+QEDn7wCEVdHUhN?=
- =?us-ascii?Q?+Fte+xHSPlXIx+SotiU3mOlMzZMT6+BZRF+5KrEpCoZaOpzmqYr2ah116mi/?=
- =?us-ascii?Q?D80xJkVhgWRC6Z9StTTlvPPzYe8onDAcDbyEdHQfffCFgwUktDi1B6f+SPZ9?=
- =?us-ascii?Q?ZFMJo3XLw3ch3eMoH77paR9ggCPFU5vt5uAI2qBe9agCSvEZ+djwcguayzzs?=
- =?us-ascii?Q?MjgK34Pt0TgtWWWl/8e/zBwJgZ4dwf3NUWoKCRV5R9rqgu7tisVZZLNT50oK?=
- =?us-ascii?Q?OV81bgB4ClqKkr5EprkxYe/8LOag9mQuDxoIu4dOywn7GMoJ8hC5rtPUQW0I?=
- =?us-ascii?Q?KACqJ1hDl5KjckwV/0JR9RluPNq5z8TUgHKvOgw6nMiHAi9H7fdnYclIhrd8?=
- =?us-ascii?Q?/2BlAIPZCg73ug/Ci0XnQzWgeLgngozyBUY/WemeYCsTHnwn4Kk6JcfzMHYQ?=
- =?us-ascii?Q?ZPxkiccpZOLHE26oXi7HRMYGSMhGeiggFbJcWwKG0AZCEJ7U+vP0h0xSuKkF?=
- =?us-ascii?Q?hvLS6IpjnVUb7ta9AtoveJ6yJa10oK7hBmtODE5DoXnWwnNKPyzhDUcm95lk?=
- =?us-ascii?Q?RUcSi5CWd5nCxeY2E3J1S7l5Zip/qRZHTx0ed81NxmSdBNTSxG73XREh39TX?=
- =?us-ascii?Q?KYCZAj092KfNCrk9NaLSe2IOxaWvy6g4B5/A2Z0Qkfdm0xjAvLl7spp+70Y3?=
- =?us-ascii?Q?+Tqq6FIU5nwMzHTcxuBGTlc9f5JG99eYxFxWVKq3KUOlQh7WLwkNduS9AjyQ?=
- =?us-ascii?Q?d+1MIVohSjCmYs/7aFYL9FiZdTcOuQ2YV0GF+MXkKPE+VzFTsDo7yKFdqMG/?=
- =?us-ascii?Q?91gXDcDNaUgSRYe+/ybUZjcG9WIip2eBXGZM6/FOi6LVCkk2OFqH6WcjS6iN?=
- =?us-ascii?Q?wMBD66d2K17VWZSDD9SzUChtoL47jq20+nZNakcxfAidNmMx+i/OcQfLjJCz?=
- =?us-ascii?Q?rzqsaaJ3eqkyQ5LSGCdIxZ7rHkLX1UYMnz1nPI/g?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 790d2d6b-8c30-4561-f9cc-08ddae95543b
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 18:24:14.4488
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2n/ywZGB12B0dNHihzoOn3NIsvLd5+TfPy03mqfC9E4yDASxuaGxCRHcEHKtWI5nEp01fQbVv0eIdAUIcjgLuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB11406
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Jun 18, 2025 at 10:41:16AM +0800, Richard Zhu wrote:
-> When wait for link up, both the link up and link down are normal
-> results, not mistakes.
-> Don't return error, since the results had been notified.
+On Wed, 18 Jun 2025, Liang, Kan wrote:
 
-When waiting for the PCIe link to come up, both link up and link down are
-valid results depending on the device state. Do not return an error, as
-the outcome has already been reported in dw_pcie_wait_for_link().
+> No, the error message doesn't say it. Just want to check if you have
+> extra information. Because the Topdown perf metrics is only supported on
+> p-core. I want to understand whether the code messes up with e-core.
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+I can't easily tell from the fuzzer as it intentionally switches cores 
+often.  I guess I could patch the kernel to report CPU when the WRMSR 
+error triggers.
 
->
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware-host.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 228484e3ea4a..fe6997c9c1d5 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -1108,9 +1108,7 @@ int dw_pcie_resume_noirq(struct dw_pcie *pci)
->  	if (ret)
->  		return ret;
->
-> -	ret = dw_pcie_wait_for_link(pci);
-> -	if (ret)
-> -		return ret;
-> +	dw_pcie_wait_for_link(pci);
->
->  	return ret;
->  }
-> --
-> 2.37.1
->
+> > I was running just before -rc1.  I've updated to current git but didn't 
+> > realize the throttle fix hadn't made it upstream yet so managed to lock up 
+> > the machine and not sure when I'll be able to get over to reboot it.
+> >
+> 
+> They are not in rc2 as well. I guess it should be included in rc3.
+
+OK I am running rc2 now (Well, whatever current git is) with the throttle 
+fix applied.  The throttle crash is something else, it crashes my test 
+machine so hard that even the power button doesn't work, I have to 
+physically unplug the machine to reboot it.
+
+
+> >> - Can this be easily reproduced?
+> > 
+> > probably.  It's another thing that's a pain to check because it's a 
+> > WARN_ONCE I think so I have to reboot in order to see.  Even if it's not 
+> > reproducible the fuzzer usually hits it within a few hours.
+
+I am able to reproduce the error on -rc2 using a specific fuzzer random 
+seed.  I can possibly try to create a simpler test case but that would be 
+a bit of effort.
+
+Vince Weaver
+vincent.weaver@maine.edu
