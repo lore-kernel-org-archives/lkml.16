@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A6D3085CC;
-	Wed, 18 Jun 2025 21:31:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C0627E042;
+	Wed, 18 Jun 2025 21:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750282304; cv=none; b=YRRpVhUzNB/59n08wnd/4+9qEE/vGAkLcpRoZ8ae4e0bez5WiiGLNrzFNcXmQtb2fJDLnRPR0HXVTFxRoBGeCqfWDgRjZ4pLsAYy1V8+Cn3xQ7RChEOLc1xG97Ya3m2qXWONcSTMcAeStItsGY+kWsfKx/aIrrso5z/22pqmLoE=
+	t=1750282306; cv=none; b=bbBalL+c41eXGfOwUmQUBWYNXHLjyNGE8avj0GSnYh0DbgUn/s0JOFTKWwKfvhWTgNKbZ/KxAK5iRqsj2TQvHMY+ebFwU0DZmqfm62MQUOXQJkPVimK9NBq5TeT0FweFa+LdBN23AI5DDvlQU7N2+rwjVjC5s99TQCYZaQ6Nub8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750282304; c=relaxed/simple;
-	bh=XqLhxZFrqRlTWBCzHPi0YMtbDLLzxhvLi9pTnryX3TA=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=PJlEYUDOj7+OsGO8LVbUa1k/aq5b8AoMrNBk0VnXt6GYds4BRnMPlvOvMTgUNK0Gof11siQSFFcGtcvGFJyn+9V3R30UWsqFAFNtAidDHl2pjOCzJTo7tfIjNTm3/pTRyvP7zFwRZGg50ZdchD9EeaajYccg8ui5Ncplil0JVA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i9aTnG11; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750282306; c=relaxed/simple;
+	bh=YIq6nn8IpX1gTotZYiCJ5sCA83tSSc51ZXk1kxhEVk0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=siT3yT13KkqLoeQJidBSdQxAbGbi692zioyOzMmwMpZ/SCa7GA67kUrL5KNnSdBR2Qk5zvI4hauEduW+N1rX99rYwAnNcQGANLJO53G223v3iLvSVmibL2pq8AD/pcAbXTwzBCTsO6Sa73v4okdcnohIWrTMx1RHKHdpQj6Pl/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L63G+LRY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i9aTnG11"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E1A2C4CEE7;
-	Wed, 18 Jun 2025 21:31:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L63G+LRY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B1EC4CEE7;
+	Wed, 18 Jun 2025 21:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750282304;
-	bh=XqLhxZFrqRlTWBCzHPi0YMtbDLLzxhvLi9pTnryX3TA=;
+	s=k20201202; t=1750282306;
+	bh=YIq6nn8IpX1gTotZYiCJ5sCA83tSSc51ZXk1kxhEVk0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=i9aTnG11//C1k6cEvyDs0Sj5TzyoPEYUAEWP4w9IMza7ui5cALMfb32UDCUcZFtQV
-	 3PYgTFsnqOFC8IMg29F0pGVz+5c+HBR5yV2hYSuq1X1yKQ6yyyxX6PuTiW2Hy32RPg
-	 qRcWnM2Pxm9Y+D8wdbvVV2Bhul4cBE3TRnRJbQ9avwr0tmotASmhvEqEbZHJeEeIfi
-	 KujLXByIRGK4LsIQDUd+09Wrh+LwN/qBM53vcwQkBR9uvBVGqxX+lXETeSHmnBX58r
-	 jy77TPS5cQIUmSVth/e8wPTK7DVj7jCkyd7FAe9yj6oWJB2Fzjv6MjyEOUCWn3yBP5
-	 qEgojQ3gQEIwg==
+	b=L63G+LRYwzeEmu5l/g6ASSW93BzJi1+yz5plSMdqSV451V76+ZQV40j6/bUstg1e8
+	 /rt9lPN0yWPbFc9XfuDDClkXw6AFRZrVBtWOIOPio1E0EC3+se+34R2RikfD6s2vlb
+	 RPlgn3szH8fmpimo9is1gtf8Ysg5wqXTMEcO1AE3kX/ObrpjyRgA/gas7Xc3GZMAtp
+	 +5viQOR7fqVWyHzTE8jlrUUP8CXoenaevqi+sv5FU8oix2Pkmmpo8C3PYe739G3je5
+	 81utNzH87I3Szg1Q12wU1xi/8fiXBmmWWFP8QOIcogWmuQrpdxfttAzENu1GtapRDZ
+	 qbRmm+w1lyoTQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE2553806649;
-	Wed, 18 Jun 2025 21:32:13 +0000 (UTC)
-Subject: Re: [GIT PULL] sched_ext: Fixes for v6.16-rc2
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EACAB3806649;
+	Wed, 18 Jun 2025 21:32:15 +0000 (UTC)
+Subject: Re: [GIT PULL] cgroup: A fix for v6.16-rc2
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <aFMeWOF5bCp2D3s9@slm.duckdns.org>
-References: <aFMeWOF5bCp2D3s9@slm.duckdns.org>
-X-PR-Tracked-List-Id: <sched-ext.lists.linux.dev>
-X-PR-Tracked-Message-Id: <aFMeWOF5bCp2D3s9@slm.duckdns.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/ tags/sched_ext-for-6.16-rc2-fixes
-X-PR-Tracked-Commit-Id: 33796b91871ad4010c8188372dd1faf97cf0f1c0
+In-Reply-To: <aFMgOa1knyr5LM83@slm.duckdns.org>
+References: <aFMgOa1knyr5LM83@slm.duckdns.org>
+X-PR-Tracked-List-Id: <cgroups.vger.kernel.org>
+X-PR-Tracked-Message-Id: <aFMgOa1knyr5LM83@slm.duckdns.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.16-rc2-fixes
+X-PR-Tracked-Commit-Id: 37fb58a7273726e59f9429c89ade5116083a213d
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4f24bfcc398eb77aa41fe1bb1621d8c2cca5368d
-Message-Id: <175028233216.264355.2050505514849310884.pr-tracker-bot@kernel.org>
-Date: Wed, 18 Jun 2025 21:32:12 +0000
+X-PR-Merge-Commit-Id: 74b4cc9b8780bfe8a3992c9ac0033bf22ac01f19
+Message-Id: <175028233447.264355.7072059031767126439.pr-tracker-bot@kernel.org>
+Date: Wed, 18 Jun 2025 21:32:14 +0000
 To: Tejun Heo <tj@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, sched-ext@lists.linux.dev
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>, Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>, cgroups@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Wed, 18 Jun 2025 10:15:20 -1000:
+The pull request you sent on Wed, 18 Jun 2025 10:23:21 -1000:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/sched_ext.git/ tags/sched_ext-for-6.16-rc2-fixes
+> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/ tags/cgroup-for-6.16-rc2-fixes
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4f24bfcc398eb77aa41fe1bb1621d8c2cca5368d
+https://git.kernel.org/torvalds/c/74b4cc9b8780bfe8a3992c9ac0033bf22ac01f19
 
 Thank you!
 
