@@ -1,47 +1,67 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEA33085BA;
-	Wed, 18 Jun 2025 20:17:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F8C3085BA;
+	Wed, 18 Jun 2025 20:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750277845; cv=none; b=bKKJQLlLArXv1M7K8sMryueZ5pIr1H9LzMFLSUuKyi2HVYfsam3KK3a14bhYXq+Xek86yYFqhiDmsic6ScOdWYm2yKiYlqaD0PnoQoFJJ9u/7qFtONZOYqBNi9KBMbKL+rqpeZCkYM6PxxzyAHTcPjtrRBX4di4uyQaHPMq0jZY=
+	t=1750277877; cv=none; b=L+8Pncrt7wQqX5xFfinDv/GLorZsffm/8aJvJINhNzKnBGnw+jydu85ixuhWAiYhBPU0wGCsnENfOAigdY7mWGRQErv9PG4hWBz5spDfs39rOgvI1CceTvGVUVVwQaUA+YlziCMJl5ELZFLxu8ph9UZ3u5CEXX+xR2UBMCBxrlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750277845; c=relaxed/simple;
-	bh=xt8r64iKztaGluvYHQ+nEmHkrlN0zD8k22lRNBw+eZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=b03cQu5u08v4Nt2cBCaBvhj2CRDQuH9YKGUy/FT4Ylkv7Ei6rGfeiupMU5scW/3hMLdsgrOsZqCDTZXAJgRZMtsBfS542+FxUYU4j80dpIDRl8giDqep7kh9o4INAf72GscRDsdosnKy+yK/3ocv891Jr/fbgeM0TYvUUbPMa44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FOARzafB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750277877; c=relaxed/simple;
+	bh=eIm31ulfxb/iodvSgzs4HeeUc/QBLhrVAgBlSL3l1Y0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KSNGo5b3f0ONSmliDfszpTTSwxix9vQAulKcEbcGcj4fHwV25vjQ+RgM0gz8A9gxjIM2tUM/EF4SNgCEdd36qgXJJjK6AyuiQHEMnUP1hQYfwtWqz6YK2oWSxZEfSYz0Er2kolHSO/DCrN10dDnCE/sXa1jr6qyU0vMTRyz6cwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BmbqJwA5; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FOARzafB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB27C4CEE7;
-	Wed, 18 Jun 2025 20:17:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750277844;
-	bh=xt8r64iKztaGluvYHQ+nEmHkrlN0zD8k22lRNBw+eZk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FOARzafBQCH4mhbZUSX3MH98F55tLlayT4MS64DrQ26ru2cMm/M+yF+FscGystMAK
-	 0CQma9JT95xIs7U+K1HMp/Z/U9ZfclyD935P5ZdedHfyuuVMdWfGxcjMxVNDL3VZtq
-	 kLYIts2/TIO9aXT4ITDKOIVP7tvcnQnttyhvDkyBX0uRIX6cu8hEVbW11K6/nJVLXU
-	 TYCHVddc6BvT/c1MJHUMD20a7ia6cvoqPypNfuKOeSqB50zMSq1UHzbSgjEKU5yZEN
-	 /uBRVpWVWLcm5YfhOu/Ug21FEc722Jpq7hOGt8MX4XOpYNYWhXfg3DIgM4PzHSPIPD
-	 tf7OpPfRTsrcQ==
-Date: Wed, 18 Jun 2025 15:17:22 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Timothy Pearson <tpearson@raptorengineering.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-pci <linux-pci@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	christophe leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with
- broken
-Message-ID: <20250618201722.GA1220739@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BmbqJwA5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750277876; x=1781813876;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eIm31ulfxb/iodvSgzs4HeeUc/QBLhrVAgBlSL3l1Y0=;
+  b=BmbqJwA5Xc2BL8VzMl5jh73mRe63jQbzS4MxNwnif5FvRCYBZPOxyjrr
+   Q5x3r6kAhOmUlQUxsMOnBGE218l+/H3mAjtEXfH3MqjeXBr8UQayCml0r
+   shxU2pBczHwFKfFYMbDioYcoSeIdXz4mp/jEwPkmyaLOhGBeqvMZUyrIp
+   4SfRLt3VNaiD+1iagNKEHavORKDfe3WYQSxyX+dSITbw+p5fsBXEn4M70
+   NQ0Am+B80Oeiwec9T6Gag9sGxbWUQk05lC7pYzLAMtWcVXnLFv+ItHeTd
+   Gz6QBnE5VkA6XQC1G5YUL7qQnpRB6r0K64c+ETkIB8eg2Idu3u+u6CBLn
+   g==;
+X-CSE-ConnectionGUID: 2f2Mg5mnRFiiP6Aeuzf0dQ==
+X-CSE-MsgGUID: 6ba/qYFsQp+NcTDcwUQpCg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52663565"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="52663565"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 13:17:37 -0700
+X-CSE-ConnectionGUID: vVtGXGxpSoiWUDzCKCU8FQ==
+X-CSE-MsgGUID: w55BZNQfQ8WmNHo73rQ5gw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="154888280"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 18 Jun 2025 13:17:32 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRzDt-000K8U-0T;
+	Wed, 18 Jun 2025 20:17:29 +0000
+Date: Thu, 19 Jun 2025 04:16:33 +0800
+From: kernel test robot <lkp@intel.com>
+To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	andrew+netdev@lunn.ch, horms@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+	vsrama-krishna.nemani@broadcom.com,
+	Vikas Gupta <vikas.gupta@broadcom.com>,
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Subject: Re: [net-next, 09/10] bng_en: Initialize default configuration
+Message-ID: <202506190321.0HgmyniP-lkp@intel.com>
+References: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,50 +70,89 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1957898084.1311382.1750276204022.JavaMail.zimbra@raptorengineeringinc.com>
+In-Reply-To: <20250618144743.843815-10-vikas.gupta@broadcom.com>
 
-On Wed, Jun 18, 2025 at 02:50:04PM -0500, Timothy Pearson wrote:
-> ----- Original Message -----
-> > From: "Bjorn Helgaas" <helgaas@kernel.org>
-> > To: "Timothy Pearson" <tpearson@raptorengineering.com>
-> > Cc: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel" <linux-kernel@vger.kernel.org>, "linux-pci"
-> > <linux-pci@vger.kernel.org>, "Madhavan Srinivasan" <maddy@linux.ibm.com>, "Michael Ellerman" <mpe@ellerman.id.au>,
-> > "christophe leroy" <christophe.leroy@csgroup.eu>, "Naveen N Rao" <naveen@kernel.org>, "Bjorn Helgaas"
-> > <bhelgaas@google.com>, "Shawn Anastasio" <sanastasio@raptorengineering.com>, "Lukas Wunner" <lukas@wunner.de>
-> > Sent: Wednesday, June 18, 2025 2:44:00 PM
-> > Subject: Re: [PATCH v2 2/6] pci/hotplug/pnv_php: Work around switches with broken
-> 
-> > [+cc Lukas, pciehp expert]
-> > 
-> > On Wed, Jun 18, 2025 at 11:56:54AM -0500, Timothy Pearson wrote:
-> >>  presence detection
-> > 
-> > (subject/commit wrapping seems to be on all of these patches)
-> > 
-> >> The Microsemi Switchtec PM8533 PFX 48xG3 [11f8:8533] PCIe switch system
-> >> was observed to incorrectly assert the Presence Detect Set bit in its
-> >> capabilities when tested on a Raptor Computing Systems Blackbird system,
-> >> resulting in the hot insert path never attempting a rescan of the bus
-> >> and any downstream devices not being re-detected.
-> > 
-> > Seems like this switch supports standard PCIe hotplug?  Quite a bit of
-> > this driver looks similar to things in pciehp.  Is there some reason
-> > we can't use pciehp directly?  Maybe pciehp could work if there were
-> > hooks for the PPC-specific bits?
-> 
-> While that is a good long term goal that Raptor is willing to work
-> toward, it is non-trivial and will require buy-in from other
-> stakeholders (e.g. IBM).  If practical, I'd like to get this series
-> merged first, to fix the broken hotplug on our hardware that is
-> deployed worldwide, then in parallel see what can be done to merge
-> PowerNV support into pciehp.  Would that work?
+Hi Vikas,
 
-Yeah, it wouldn't make sense to switch horses at this stage.
+kernel test robot noticed the following build warnings:
 
-I guess I was triggered by this patch, which seems to be a workaround
-for a defect in a device that is probably also used on non-PPC
-systems, and pciehp would need a similar workaround.  But I guess you
-go on to say that pciehp already does something similar, so it guess
-it's already covered.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.16-rc2 next-20250618]
+[cannot apply to horms-ipvs/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Bjorn
+url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
+base:   linus/master
+patch link:    https://lore.kernel.org/r/20250618144743.843815-10-vikas.gupta%40broadcom.com
+patch subject: [net-next, 09/10] bng_en: Initialize default configuration
+config: i386-randconfig-012-20250619 (https://download.01.org/0day-ci/archive/20250619/202506190321.0HgmyniP-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250619/202506190321.0HgmyniP-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506190321.0HgmyniP-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/net/ethernet/broadcom/bnge/bnge_resc.c:533:15: warning: result of comparison of constant -19 with expression of type 'u16' (aka 'unsigned short') is always true [-Wtautological-constant-out-of-range-compare]
+     533 |         if (rc && rc != -ENODEV)
+         |                   ~~ ^  ~~~~~~~
+   drivers/net/ethernet/broadcom/bnge/bnge_resc.c:542:16: warning: result of comparison of constant -19 with expression of type 'u16' (aka 'unsigned short') is always true [-Wtautological-constant-out-of-range-compare]
+     542 |                 if (rc && rc != -ENODEV)
+         |                           ~~ ^  ~~~~~~~
+   2 warnings generated.
+
+
+vim +533 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
+
+   511	
+   512	static int bnge_net_init_dflt_rings(struct bnge_dev *bd, bool sh)
+   513	{
+   514		u16 dflt_rings, max_rx_rings, max_tx_rings, rc;
+   515	
+   516		if (sh)
+   517			bd->flags |= BNGE_EN_SHARED_CHNL;
+   518	
+   519		dflt_rings = netif_get_num_default_rss_queues();
+   520	
+   521		rc = bnge_get_dflt_rings(bd, &max_rx_rings, &max_tx_rings, sh);
+   522		if (rc)
+   523			return rc;
+   524		bd->rx_nr_rings = min_t(u16, dflt_rings, max_rx_rings);
+   525		bd->tx_nr_rings_per_tc = min_t(u16, dflt_rings, max_tx_rings);
+   526		if (sh)
+   527			bnge_trim_dflt_sh_rings(bd);
+   528		else
+   529			bd->nq_nr_rings = bd->tx_nr_rings_per_tc + bd->rx_nr_rings;
+   530		bd->tx_nr_rings = bd->tx_nr_rings_per_tc;
+   531	
+   532		rc = bnge_reserve_rings(bd);
+ > 533		if (rc && rc != -ENODEV)
+   534			dev_warn(bd->dev, "Unable to reserve tx rings\n");
+   535		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   536		if (sh)
+   537			bnge_trim_dflt_sh_rings(bd);
+   538	
+   539		/* Rings may have been reduced, re-reserve them again */
+   540		if (bnge_need_reserve_rings(bd)) {
+   541			rc = bnge_reserve_rings(bd);
+   542			if (rc && rc != -ENODEV)
+   543				dev_warn(bd->dev, "Fewer rings reservation failed\n");
+   544			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
+   545		}
+   546		if (rc) {
+   547			bd->tx_nr_rings = 0;
+   548			bd->rx_nr_rings = 0;
+   549		}
+   550	
+   551		return rc;
+   552	}
+   553	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
