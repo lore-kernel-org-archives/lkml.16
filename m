@@ -1,126 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9801DDA24;
-	Wed, 18 Jun 2025 12:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E37D52DE1EC;
+	Wed, 18 Jun 2025 12:43:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750250604; cv=none; b=GBlkff9BPlJPro+VLj70nfS2QtQ+kHqe6SIgw/KXmgJGfbS2iy6xb8PZCvUIuGfyB9eiwKLY4Weq9IQREUhpJIkWDVAdElbxuBqO8Nj0tHc8OV1MZVr5nT6Qi+7DDfYHiZ68mpsr9EUzLMlYTFWjz4/xJ9UtUBaUODuBa+lZb9E=
+	t=1750250606; cv=none; b=H2EbACU8/2C+dwHw6046qte71j5bu9PWLNZ4635/jQ5T8IcxaKQPoLfAxhYNQHRq/DWV+TRE1fatkwBMyp2MJ3zTu6Mqu/GrGju/HRfnjHTcfBgeu9vAMP8RyxTv7pTSTqoCDvAi8BL1oyvLt629aJ5NMlDtyZpW5Ir/FKl1U1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750250604; c=relaxed/simple;
-	bh=QciY19UJ2P7XWWxP+JOrADAPN8SHguNnRsyvc6zjqsM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iH7617MsjeOKA8XFbaTulAJh4iWw+5VPTYzuup8SunhhVNAOsZSQ3p7Ee06H07EVL/fxwzlwfKpHMMal7XYfzbI5XCeMEDwiCFY/TSHyMgy0KrdD+3FA4vD5bwe2nlSBJ4VVL730qA7Fxbz1gK2cKiAUXUYvaq87eOO0pCX2eQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYMRDVH0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750250606; c=relaxed/simple;
+	bh=sEwTFjUCiBVe4R3iljd5w8GSzTd/qtNXrriFMn9qrO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SyiwhGzGGhSrCL81eJh2cnAvS+9z3WZ5VkGj+fGgpQTrZaN4RoCuacAS5AqL0lUZHoxVrJ/LD6elWtwjItOaPI+LUkW2xXL3KNWq2ZiYeY0sdGsVgp6dRqyXSzrz5aoEPbE+8XBDoDNFOzGp4mt9ToPoC0lxdAgyN/jH+j8miLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QgFQjueK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYMRDVH0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8967CC4CEE7;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QgFQjueK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C75A8C4CEF2;
 	Wed, 18 Jun 2025 12:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750250603;
-	bh=QciY19UJ2P7XWWxP+JOrADAPN8SHguNnRsyvc6zjqsM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oYMRDVH0nCysQPSpZdUUboSTRJ/FqoBKZGhCxls02NOnsNR3PspaKlwItH6xYGf00
-	 KDKFopJTihOOo+Evq6GKjtKtBDIvXiOZleKRdqWj62EOHLvcP25oicGb1BiuXJ8iXb
-	 fxkA4oDCfK9MnXvXYouvJiBwVE7yUj9gd0rRqQHI4Xfl8kC1lDI21tXXAF/CdZf/kj
-	 Fg4pMb5okyJFqQQR1b1QRpxHcqEuBESh0wExuncx3PhMRfrWTzkaXfHQaeIW3GR5Hp
-	 R7yZXL+PqWwTZz61Fx3Gqmh85Q++w/ySEG2us5a/NHZanq7ilDrGAZdMW4FOTAtCCF
-	 0AtOmM3nT78pg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRs8R-000000002Ld-03xU;
-	Wed, 18 Jun 2025 14:43:23 +0200
-Date: Wed, 18 Jun 2025 14:43:23 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>, Georgi Djakov <djakov@kernel.org>
-Cc: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock'
- is held
-Message-ID: <aFK0a8AIOl704DpP@hovoldconsulting.com>
-References: <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
+	s=k20201202; t=1750250605;
+	bh=sEwTFjUCiBVe4R3iljd5w8GSzTd/qtNXrriFMn9qrO0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QgFQjueKKcZsRqeXF7t+tyGl+x6nLtDn14B49OhBEA55yl8XHJDZaL2HnyuxqQ+/X
+	 VvW7RehI4AsLyDQ0HQV6ZaxSICG7HVCR5mSoXxY5p1vrcSzVcJd6CNNsWfOXJZVtlM
+	 6kaviF1wY2vRe3kXwu3UjqXz4jFa/9+nZ2S+kZPpv+wxC2xwK42PvOm7oWpXXaXUtZ
+	 s7HdFaEzhAmPuLWIZEwVbO1OnJme5EDlnRGY2+pO4pqcKIQcs2ISoMdKnnv2l/U1dI
+	 5ISwor4hZfuWh+lotKpcPWwXbLXpejpdnFdPVE5Di9OZYOAeS0YpGgWD0HJkNgNqSi
+	 RL2nwSFyXIehQ==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: linux-gpio@vger.kernel.org
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Andy Shevchenko <andy@kernel.org>
+Subject: [PATCH] platform: cznic: turris-omnia-mcu: Use new GPIO line value setter callbacks
+Date: Wed, 18 Jun 2025 14:43:19 +0200
+Message-ID: <20250618124319.19220-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 29, 2025 at 04:46:22PM +0200, Gabor Juhos wrote:
-> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
-> ("interconnect: Fix locking for runpm vs reclaim") in order
-> to decouple serialization of bw aggregation from codepaths
-> that require memory allocation.
-> 
-> However commit d30f83d278a9 ("interconnect: core: Add dynamic
-> id allocation support") added a devm_kasprintf() call into a
-> path protected by the 'icc_bw_lock' which causes this lockdep
-> warning (at least on the IPQ9574 platform):
-> 
->     ======================================================
->     WARNING: possible circular locking dependency detected
->     6.15.0-next-20250529 #0 Not tainted
->     ------------------------------------------------------
->     swapper/0/1 is trying to acquire lock:
->     ffffffc081df57d8 (icc_bw_lock){+.+.}-{4:4}, at: icc_init+0x8/0x108
-> 
->     but task is already holding lock:
->     ffffffc081d7db10 (fs_reclaim){+.+.}-{0:0}, at: icc_init+0x28/0x108
-> 
->     which lock already depends on the new lock.
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. Convert the driver to using
+them.
 
-Thanks for fixing this. I get a similar splat with sc8280xp and the
-icc_ism_l3 driver since 6.16-rc1.
+Signed-off-by: Marek Behún <kabel@kernel.org>
+---
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 35 ++++++++++++-------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
-Georgi, this is a regression that prevents lockdep from being used on a
-bunch of Qualcomm platforms and should be fixed in mainline ASAP (e.g.
-to avoid further locking issues from being introduced).
+diff --git a/drivers/platform/cznic/turris-omnia-mcu-gpio.c b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
+index c2df24ea8686..57c229d70ead 100644
+--- a/drivers/platform/cznic/turris-omnia-mcu-gpio.c
++++ b/drivers/platform/cznic/turris-omnia-mcu-gpio.c
+@@ -439,27 +439,28 @@ static int omnia_gpio_get_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 	return 0;
+ }
+ 
+-static void omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
++static int omnia_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+ {
+ 	const struct omnia_gpio *gpio = &omnia_gpios[offset];
+ 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
+ 	u16 val, mask;
+ 
+ 	if (!gpio->ctl_cmd)
+-		return;
++		return -ENOTSUPP;
+ 
+ 	mask = BIT(gpio->ctl_bit);
+ 	val = value ? mask : 0;
+ 
+-	omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
++	return omnia_ctl_cmd(mcu, gpio->ctl_cmd, val, mask);
+ }
+ 
+-static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+-				    unsigned long *bits)
++static int omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
++				   unsigned long *bits)
+ {
+ 	unsigned long ctl = 0, ctl_mask = 0, ext_ctl = 0, ext_ctl_mask = 0;
+ 	struct omnia_mcu *mcu = gpiochip_get_data(gc);
+ 	unsigned int i;
++	int err;
+ 
+ 	for_each_set_bit(i, mask, ARRAY_SIZE(omnia_gpios)) {
+ 		unsigned long *field, *field_mask;
+@@ -488,13 +489,21 @@ static void omnia_gpio_set_multiple(struct gpio_chip *gc, unsigned long *mask,
+ 
+ 	guard(mutex)(&mcu->lock);
+ 
+-	if (ctl_mask)
+-		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
+-				     ctl, ctl_mask);
++	if (ctl_mask) {
++		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_GENERAL_CONTROL,
++					   ctl, ctl_mask);
++		if (err)
++			return err;
++	}
++
++	if (ext_ctl_mask) {
++		err = omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
++					   ext_ctl, ext_ctl_mask);
++		if (err)
++			return err;
++	}
+ 
+-	if (ext_ctl_mask)
+-		omnia_ctl_cmd_locked(mcu, OMNIA_CMD_EXT_CONTROL,
+-				     ext_ctl, ext_ctl_mask);
++	return 0;
+ }
+ 
+ static bool omnia_gpio_available(struct omnia_mcu *mcu,
+@@ -1015,8 +1024,8 @@ int omnia_mcu_register_gpiochip(struct omnia_mcu *mcu)
+ 	mcu->gc.direction_output = omnia_gpio_direction_output;
+ 	mcu->gc.get = omnia_gpio_get;
+ 	mcu->gc.get_multiple = omnia_gpio_get_multiple;
+-	mcu->gc.set = omnia_gpio_set;
+-	mcu->gc.set_multiple = omnia_gpio_set_multiple;
++	mcu->gc.set_rv = omnia_gpio_set;
++	mcu->gc.set_multiple_rv = omnia_gpio_set_multiple;
+ 	mcu->gc.init_valid_mask = omnia_gpio_init_valid_mask;
+ 	mcu->gc.can_sleep = true;
+ 	mcu->gc.names = omnia_mcu_gpio_names;
+-- 
+2.49.0
 
-> Move the memory allocation part of the code outside of the protected
-> path to eliminate the warning. Also add a note about why it is moved
-> to there,
-> 
-> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
-> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
-> ---
->  drivers/interconnect/core.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-> index 1a41e59c77f85a811f78986e98401625f4cadfa3..acdb3b8f1e54942dbb1b71ec2b170b08ad709e6b 100644
-> --- a/drivers/interconnect/core.c
-> +++ b/drivers/interconnect/core.c
-> @@ -1023,6 +1023,16 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
->  		return;
->  
->  	mutex_lock(&icc_lock);
-> +
-> +	if (node->id >= ICC_DYN_ID_START) {
-> +		/*
-> +		 * Memory allocation must be done outside of codepaths
-> +		 * protected by icc_bw_lock.
-> +		 */
-> +		node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
-> +					    node->name, dev_name(provider->dev));
-> +	}
-
-The node name has already been set by the caller and the node has not
-been added yet, so I think you should move this before taking the
-icc_lock.
-
-> +
->  	mutex_lock(&icc_bw_lock);
->  
->  	node->provider = provider;
-
-With that addressed, feel free to add my:
-
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
-
-Johan
