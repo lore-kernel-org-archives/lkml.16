@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D4D2DE20D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 409DD2DE1F8;
 	Wed, 18 Jun 2025 11:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247212; cv=none; b=LT763bLPtpS5heMkhVEqIbSRug02NrRUqXy9d7O//6zvVezyYGvD/Gx9w2XIoATPqZM0MZSBmHgDsUtFTCpWm0fMeMYJBqmvCZLJQeOhtcrl/zkSS49My+1N++xl/Zo8rrWiQGr1/iSeSkBNvtKjOer94BXzS3gpOHdnHzvT194=
+	t=1750247212; cv=none; b=kic5xGMlcl+mFkDL65IcMOHs3DkYFWVAuY2yM1pNiOyFdD01USHTy4cRZKi+0v7EeFj55YtA9V1QqQlCzFvB3Zl4KYBBi4dH/43GYH/QgXJTc41qhXf1lH5eEV97lnF7IdpGcbueqJsDccoHHk+cnEEu9tPKkUg6vBvpN4NvO3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750247212; c=relaxed/simple;
-	bh=ZRwnGGD63dY02hpT4BqTMDO35vMSt+NPRBYC3eA8F/0=;
+	bh=EpBDvvCEgkXYhfewwIef0GKxoO/B4wVDI6b8/pzv1js=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QZm9zPaxqgC4BgiIPcO5T4eT7z2LceM0QSDsAJz/uCYPFpCzco4ACB3mdEGOrwBENMj2wQYlVr5pRPaqTgj7KlZmgakrblhmYcTzO0tDVnzU7xRaH2eDkBMpUuAucMzOD8TYjRlN5eXFr7OEViQhZAsWUYzdqxmKSaYc/Tj/JA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ECOl5BRe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ShOOFP/IbVcw9McHjAQGA2nH4C/RUyzOMWWFctFR1AcV9m2jgM7PNJgOXFxilFArs+f1vbkyCSwioMLMdlCz8lakE40SoVy6OqoDaWDMKjghYdEms5+VdRbZ3U3bDdThfAK06JWw3IuTgUeG399zB9cnlXGazIUVTdzJwe+c4WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W+ZRYobj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ECOl5BRe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B4D3C4AF0D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W+ZRYobj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 792B3C4CEF7;
 	Wed, 18 Jun 2025 11:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750247211;
-	bh=ZRwnGGD63dY02hpT4BqTMDO35vMSt+NPRBYC3eA8F/0=;
+	bh=EpBDvvCEgkXYhfewwIef0GKxoO/B4wVDI6b8/pzv1js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ECOl5BRe87OvUepxguUsJp/4l1hRNtCbwqNjCMKeGjYqvokOnyKNABZOuwY98Q2fa
-	 fCERk7jEx/Ju37vT0DqTitnglMTMQis7idZXo+SwLhbtE61LZmPrs6aBYRHG68NJZd
-	 nUMkWxDj1a+YTHrDhD2XHEiyOrQnLUxMXYcKERiMZZ3NhcOnU2BI4NDLhqP7b2fY8A
-	 LHfttEj3+Hk8O9XTn9UzR7ttvklSQtu68sg81o9oR7+pX56iGvpm4a9AepBQq13LFX
-	 rtTriENeStpvgwr1RmTCLLCMPaoOQeNJfjpkOzFDe6Z1u0qpY3uCnYsTt0MrPhPoM3
-	 em4D2Y/94bjNA==
+	b=W+ZRYobjcLWK0vU17Ws2hevZE0iFBwszhyTYartunBQDEzBnb0bCCXQvtclt7D+3B
+	 HVb8Kw/SvOJrc6Frsu2epI4VEzFhYYwkzuMtek/M+XRiU1tq2xwH4zhWDmHs93sVCw
+	 d9snjHFdwZr860yuHcxS039luOTnkK2rHxOkcpEOl2S4jV2n4SoTjveEUTv6au9xQ+
+	 SdEs2bbd6a7LHA52uT+H+1XhwNh6Z3KnAr9OYe2/RKlSIgWMbLMyglBSw1Ttrx4aEp
+	 JbYCgN+UfW70DIxwBK0gCnsNgYGH29pBOOGDTOjR9SafThcSXmQbP0wdVEteFd+mkd
+	 tn/6UdQvq0qIA==
 Received: from mchehab by mail.kernel.org with local (Exim 4.98.2)
 	(envelope-from <mchehab+huawei@kernel.org>)
-	id 1uRrFh-000000036V7-3HmZ;
+	id 1uRrFh-000000036Ut-2w6u;
 	Wed, 18 Jun 2025 13:46:49 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
@@ -55,9 +55,9 @@ Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
 	netdev@vger.kernel.org,
 	peterz@infradead.org,
 	stern@rowland.harvard.edu
-Subject: [PATCH v6 13/15] tools: netlink_yml_parser.py: add line numbers to parsed data
-Date: Wed, 18 Jun 2025 13:46:40 +0200
-Message-ID: <21722a5346cfc3b8a0ad7427fca157cff032e2f0.1750246291.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v6 10/15] tools: ynl_gen_rst.py: drop support for generating index files
+Date: Wed, 18 Jun 2025 13:46:37 +0200
+Message-ID: <f0cac4c299684395f68081fe6cb98aa7689550f5.1750246291.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1750246291.git.mchehab+huawei@kernel.org>
 References: <cover.1750246291.git.mchehab+huawei@kernel.org>
@@ -70,108 +70,100 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-When something goes wrong, we want Sphinx error to point to the
-right line number from the original source, not from the
-processed ReST data.
+As we're now using an index file with a glob, there's no need
+to generate index files anymore.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- tools/net/ynl/pyynl/lib/doc_generator.py | 34 ++++++++++++++++++++++--
- 1 file changed, 32 insertions(+), 2 deletions(-)
+ tools/net/ynl/pyynl/lib/doc_generator.py | 26 ------------------------
+ tools/net/ynl/pyynl/ynl_gen_rst.py       | 26 ------------------------
+ 2 files changed, 52 deletions(-)
 
 diff --git a/tools/net/ynl/pyynl/lib/doc_generator.py b/tools/net/ynl/pyynl/lib/doc_generator.py
-index 866551726723..a9d8ab6f2639 100644
+index f71360f0ceb7..866551726723 100644
 --- a/tools/net/ynl/pyynl/lib/doc_generator.py
 +++ b/tools/net/ynl/pyynl/lib/doc_generator.py
-@@ -20,6 +20,16 @@
- from typing import Any, Dict, List
- import yaml
- 
-+LINE_STR = '__lineno__'
-+
-+class NumberedSafeLoader(yaml.SafeLoader):
-+    """Override the SafeLoader class to add line number to parsed data"""
-+
-+    def construct_mapping(self, node):
-+        mapping = super().construct_mapping(node)
-+        mapping[LINE_STR] = node.start_mark.line
-+
-+        return mapping
- 
- class RstFormatters:
-     """RST Formatters"""
-@@ -127,6 +137,11 @@ class RstFormatters:
-         """Return a formatted label"""
-         return f".. _{title}:\n\n"
- 
-+    @staticmethod
-+    def rst_lineno(lineno: int) -> str:
-+        """Return a lineno comment"""
-+        return f".. LINENO {lineno}\n"
-+
- class YnlDocGenerator:
-     """YAML Netlink specs Parser"""
- 
-@@ -144,6 +159,9 @@ class YnlDocGenerator:
-         """Parse 'do' section and return a formatted string"""
-         lines = []
-         for key in do_dict.keys():
-+            if key == LINE_STR:
-+                lines.append(self.fmt.rst_lineno(do_dict[key]))
-+                continue
-             lines.append(self.fmt.rst_paragraph(self.fmt.bold(key), level + 1))
-             if key in ['request', 'reply']:
-                 lines.append(self.parse_do_attributes(do_dict[key], level + 1) + "\n")
-@@ -174,6 +192,10 @@ class YnlDocGenerator:
-             lines.append(self.fmt.rst_paragraph(operation["doc"]) + "\n")
- 
-             for key in operation.keys():
-+                if key == LINE_STR:
-+                    lines.append(self.fmt.rst_lineno(operation[key]))
-+                    continue
-+
-                 if key in preprocessed:
-                     # Skip the special fields
-                     continue
-@@ -233,6 +255,9 @@ class YnlDocGenerator:
-         for definition in defs:
-             lines.append(self.fmt.rst_section(namespace, 'definition', definition["name"]))
-             for k in definition.keys():
-+                if k == LINE_STR:
-+                    lines.append(self.fmt.rst_lineno(definition[k]))
-+                    continue
-                 if k in preprocessed + ignored:
-                     continue
-                 lines.append(self.fmt.rst_fields(k, self.fmt.sanitize(definition[k]), 0))
-@@ -268,6 +293,9 @@ class YnlDocGenerator:
-                 lines.append(self.fmt.rst_subsubsection(attr_line))
- 
-                 for k in attr.keys():
-+                    if k == LINE_STR:
-+                        lines.append(self.fmt.rst_lineno(attr[k]))
-+                        continue
-                     if k in preprocessed + ignored:
-                         continue
-                     if k in linkable:
-@@ -306,6 +334,8 @@ class YnlDocGenerator:
-         lines = []
- 
-         # Main header
-+        lineno = obj.get('__lineno__', 0)
-+        lines.append(self.fmt.rst_lineno(lineno))
- 
-         family = obj['name']
- 
-@@ -354,7 +384,7 @@ class YnlDocGenerator:
-     def parse_yaml_file(self, filename: str) -> str:
-         """Transform the YAML specified by filename into an RST-formatted string"""
-         with open(filename, "r", encoding="utf-8") as spec_file:
--            yaml_data = yaml.safe_load(spec_file)
--            content = self.parse_yaml(yaml_data)
-+            numbered_yaml = yaml.load(spec_file, Loader=NumberedSafeLoader)
-+            content = self.parse_yaml(numbered_yaml)
+@@ -358,29 +358,3 @@ class YnlDocGenerator:
+             content = self.parse_yaml(yaml_data)
  
          return content
+-
+-    def generate_main_index_rst(self, output: str, index_dir: str) -> None:
+-        """Generate the `networking_spec/index` content and write to the file"""
+-        lines = []
+-
+-        lines.append(self.fmt.rst_header())
+-        lines.append(self.fmt.rst_label("specs"))
+-        lines.append(self.fmt.rst_title("Netlink Family Specifications"))
+-        lines.append(self.fmt.rst_toctree(1))
+-
+-        index_fname = os.path.basename(output)
+-        base, ext = os.path.splitext(index_fname)
+-
+-        if not index_dir:
+-            index_dir = os.path.dirname(output)
+-
+-        logging.debug(f"Looking for {ext} files in %s", index_dir)
+-        for filename in sorted(os.listdir(index_dir)):
+-            if not filename.endswith(ext) or filename == index_fname:
+-                continue
+-            base, ext = os.path.splitext(filename)
+-            lines.append(f"   {base}\n")
+-
+-        logging.debug("Writing an index file at %s", output)
+-
+-        return "".join(lines)
+diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
+index b5a665eeaa5a..90ae19aac89d 100755
+--- a/tools/net/ynl/pyynl/ynl_gen_rst.py
++++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
+@@ -31,9 +31,6 @@ def parse_arguments() -> argparse.Namespace:
+ 
+     # Index and input are mutually exclusive
+     group = parser.add_mutually_exclusive_group()
+-    group.add_argument(
+-        "-x", "--index", action="store_true", help="Generate the index page"
+-    )
+     group.add_argument("-i", "--input", help="YAML file name")
+ 
+     args = parser.parse_args()
+@@ -63,25 +60,6 @@ def write_to_rstfile(content: str, filename: str) -> None:
+         rst_file.write(content)
+ 
+ 
+-def generate_main_index_rst(output: str) -> None:
+-    """Generate the `networking_spec/index` content and write to the file"""
+-
+-    lines.append(rst_header())
+-    lines.append(rst_label("specs"))
+-    lines.append(rst_title("Netlink Family Specifications"))
+-    lines.append(rst_toctree(1))
+-
+-    index_dir = os.path.dirname(output)
+-    logging.debug("Looking for .rst files in %s", index_dir)
+-    for filename in sorted(os.listdir(index_dir)):
+-        if not filename.endswith(".rst") or filename == "index.rst":
+-            continue
+-        lines.append(f"   {filename.replace('.rst', '')}\n")
+-
+-    logging.debug("Writing an index file at %s", output)
+-    write_to_rstfile(msg, output)
+-
+-
+ def main() -> None:
+     """Main function that reads the YAML files and generates the RST files"""
+ 
+@@ -100,10 +78,6 @@ def main() -> None:
+ 
+         write_to_rstfile(content, args.output)
+ 
+-    if args.index:
+-        # Generate the index RST file
+-        generate_main_index_rst(args.output)
+-
+ 
+ if __name__ == "__main__":
+     main()
 -- 
 2.49.0
 
