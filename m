@@ -1,110 +1,110 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B691941A8F
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:31:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B61627E1C3;
+	Wed, 18 Jun 2025 13:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253494; cv=none; b=CuI/lYRZGtl13FOH2oDtZ62qktD6ba/qrHBGObfqI/MOKNEMQtg8eBJuWH8M+VcutWjjfP0ZLojrRm+G/4cF7IjA3DrO/jZ5qnaAZOppHrzZRj8h6XrSL6AoRl9ALuteRnaO7CoCl4leIkmz5mTxQ7zR4wYWinytY+RsPWwMJ5k=
+	t=1750253518; cv=none; b=Dcex8OJC5kqEHnz+t87FuXI9T6fag5IGUK+ne8glaGlWZRPwc2Aam0+aLlyrir97yXycE0X6EwcxGgRGxWHwZ9T258qdwDta2SViFpjLLRINEjUp2ACHayjsGcHigb7WCiO5P/sBqtCE8XdyGWThCyT9S8ijdw0OHjTjFnLqg+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253494; c=relaxed/simple;
-	bh=YCQ7piH8NOmfQoO2LfFOIy6orTmJbXOFq0+UiqDQBl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ebSKpUZJw2B+TGhPIF8L/7SyyXr8cABYhufT4cdpCxPelfmcgeIXJGIX/M9ehcyrAAilCFnD2hpV/D/dg6QK0taHHHkgA9NzqW739OHolCxktqew5lb5kK5vWWEtDfr3jXsfCyp9NyK+k3gryorW2POnOi6kZJNX9Oy89CazxLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=temperror (0-bit key) header.d=ciq.com header.i=@ciq.com header.b=hUv70jtS; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
+	s=arc-20240116; t=1750253518; c=relaxed/simple;
+	bh=sfxH+ws1wOJOfMLaBxgpISqgTdDurXEqio3nOsX1S/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qBmwagOJL4ZOwOXhkQ7c/l2AF5hQF/0Vt+q9O2sfB36Jx41MdSqoDo6H3/OnAPRjRASLO+gL0FQ66utEs3yvTAgO2Cq3p0IR8kUQNZNP1+FjWHlcs/uE1dkhFUSenCg0ALwletpYM340Y1F+8fCnEM77vNpTjlF8vaRQG8bl5xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdzdcBhk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=ciq.com header.i=@ciq.com header.b="hUv70jtS"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476a720e806so61326411cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:31:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ciq.com; s=s1; t=1750253491; x=1750858291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3JFwYA/jkfd0hXA7i1wxMI97JhwL3szT+ZlmJ7XxF+0=;
-        b=hUv70jtSizaibLqajRGnQHHY1fGo08CZrn7vjQHiP+hx83GB4y5XqUUArm2T0TOShB
-         Pqziatzr5rfhXFbv16LDFzBkKviVMIlGDJ6+afJ86WiOo13BxRnrFCnmISSGX09LNcLZ
-         rb+44cDrOFeOUFBejwly+H12Sgzjq9bL7MbDhze1L7bjiDnvwz8PesunmNmQjITkBbw7
-         bfZdwztzUcXprLBj14+5G7bIfFrz62dTtxtoL6Z2wjWdpK5Vb8t7oYfqq3N5Zv/EHRZY
-         8R1hk0yX79d0iYbEKJTh/sx+9vGuUHEFQwdttbeSNGU48BkdI9OrZOFUcdyPUxyCaQUg
-         uFrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750253491; x=1750858291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3JFwYA/jkfd0hXA7i1wxMI97JhwL3szT+ZlmJ7XxF+0=;
-        b=bENhPPhrKZsKEAaRf3/QkZmo0C7pHbaYLDS5qxG4/ZF0qhEaURgnLMHwPTuC7aKLEU
-         UeA3mlfEm/rQ9S4rS94J41bBO1xRVWG/LYgV0Vyqo6c9mgWANdkfaLQTN2uw5rtBKc0n
-         t+F2A2z9WfAL/PIYigYoLso9XXL2d/WtZ9RBXrnPOun6Vk4loI9M3laxsdvrdSXOAoDe
-         xva1I/aiOzpQwyAGQAFT18S2FfAEHFu31DJLLmSQ768zd0Jgm749L0G9HKxO9DDZrok7
-         lhjoyiBM0uRNLlBhnh8c7Fpv4Orj45ulxEV2mYdvO3+8hxMy2e+APrHDOWA9GJPtS/Fo
-         5xTw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0h5OgKrbJ94Toy5Qu8kD/YU3TPuHO/6voQlfejiC8RXJcbWolkrIHH6wC/ZpdW2ZawtBXNxwC4nc18Us=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJ/oqyP9SFnxZMA/eglsjseE9KdBQdd1JSo0jYgZ8M5G26LlGj
-	RU1d8FAguQ9FAkA2+bFvqf0Zl2IYo3+r+uj6xM/aKBaU15AIaGDgDWPIULn10noBXzoycfj9MPj
-	fhLWLQudLsotoDAFkFwDNMB3hAqYGfFvigGgXe9pvjA==
-X-Gm-Gg: ASbGncvz0l6jytiQ50Y/KEh3Ah0Q7kVqZOcmogKXerEqUMpO1/jCq0UvZXZn8sv1N03
-	+aaoRDnrF9nJcm58LiT+uolGbKWk2E0b/9QhvO2lMRGCeWbfAutKVvKZT3YPlgPQKLBjjBO0Rvi
-	5gx6fl7KRsLuRsieObjd56+ipZFob/jfE5a8umriljYeo=
-X-Google-Smtp-Source: AGHT+IHvAF384ulG7jeOei9YKbmf1P/jGQ+JufAKN3h671aUCTcCBeKSI6jZkZThCcEJk1d+3d3EccMlv8QdHJnDkdo=
-X-Received: by 2002:a05:622a:14cb:b0:494:a23a:cadf with SMTP id
- d75a77b69052e-4a73c5f7c47mr288361601cf.32.1750253491442; Wed, 18 Jun 2025
- 06:31:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdzdcBhk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9479CC4CEF0;
+	Wed, 18 Jun 2025 13:31:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750253518;
+	bh=sfxH+ws1wOJOfMLaBxgpISqgTdDurXEqio3nOsX1S/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pdzdcBhkCzxCjd2GTsH6uIJmKGXeZ9bSr8OoDGcT0UZpXTLgJXCiXwos2WBtrIken
+	 wxor2acD3hWrH9UtL9BatEUtrkU0qIaY2VGKKiMB3QLYEW+hVGHpvl1KLX+j5iQldc
+	 r5w/4o1KaEHkB2pKRQ/2KBnvhjZ7gTXIe/qsB4Scy4Y+yUYFu27fyuJx6sta3l5Rgm
+	 SUAo3qmqsytZ6ZbEXNp8fVnkyEwTZ6fdUbcB7MQE5ZjqgfRl+01PhIUyLUHWaON3z6
+	 ul9p1lxSDzF6s3OK7opRDl4Uiy5xeAOiRo5SreBcNZ2ZtZ4LnH1ImV/C3j8I7aMp43
+	 XJ3llqp3Bwyjw==
+Date: Wed, 18 Jun 2025 08:31:55 -0500
+From: Rob Herring <robh@kernel.org>
+To: Remo Senekowitsch <remo@buenzli.dev>
+Cc: Danilo Krummrich <dakr@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Mark Brown <broonie@kernel.org>,
+	Dirk Behme <dirk.behme@de.bosch.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v1 3/3] samples: rust: platform: Add property child and
+ reference args examples
+Message-ID: <20250618133155.GB1550757-robh@kernel.org>
+References: <20250616154511.1862909-1-remo@buenzli.dev>
+ <20250616154511.1862909-4-remo@buenzli.dev>
+ <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
+ <aFFpmKLKR2hGs1I1@pollux>
+ <DAPMND2X0QHE.1N0NF7R1F8J1G@buenzli.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617152419.512865572@linuxfoundation.org>
-In-Reply-To: <20250617152419.512865572@linuxfoundation.org>
-From: Brett Mastbergen <bmastbergen@ciq.com>
-Date: Wed, 18 Jun 2025 09:31:20 -0400
-X-Gm-Features: AX0GCFv04DSE_cj8v9V11RrtCpU0sN-9SM6zbziDuzIH9xcjNf1-z2uiuZtMRnU
-Message-ID: <CAOBMUvie6B4eMPB1fD7jxM8SpL0-oVnQWt4wCHxBHRiFBZWXTw@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/512] 6.12.34-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DAPMND2X0QHE.1N0NF7R1F8J1G@buenzli.dev>
 
-On Tue, Jun 17, 2025 at 11:28=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.12.34 release.
-> There are 512 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 19 Jun 2025 15:22:45 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.34-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+On Wed, Jun 18, 2025 at 01:37:08PM +0200, Remo Senekowitsch wrote:
+> On Tue Jun 17, 2025 at 3:11 PM CEST, Danilo Krummrich wrote:
+> > On Tue, Jun 17, 2025 at 08:01:08AM -0500, Rob Herring wrote:
+> >> On Mon, Jun 16, 2025 at 10:45 AM Remo Senekowitsch <remo@buenzli.dev> wrote:
+> >> > @@ -91,6 +95,13 @@ fn properties_parse(dev: &device::Device) -> Result {
+> >> >          let prop: KVec<i16> = fwnode.property_read_array_vec(name, 4)?.required_by(dev)?;
+> >> >          dev_info!(dev, "'{name}'='{prop:?}' (KVec)\n");
+> >> >
+> >> > +        for child in fwnode.children() {
+> >> > +            let name = c_str!("test,ref-arg");
+> >> > +            let nargs = NArgs::N(2);
+> >> > +            let prop: FwNodeReferenceArgs = child.property_get_reference_args(name, nargs, 0)?;
+> >> 
+> >> Is there some reason we can just pass 2 in rather than nargs? Seems
+> >> overly verbose for my tastes.
+> >
+> > It's because you could also pass NArgs::Prop("foo-bar") to indicate the the
+> > name of the property telling the number of arguments.
+> >
+> > NArgs is defined as
+> >
+> > 	pub enum NArgs<'a> {
+> > 	    /// The name of the property of the reference indicating the number of
+> > 	    /// arguments.
+> > 	    Prop(&'a CStr),
+> > 	    /// The known number of arguments.
+> > 	    N(u32),
+> > 	}
+> >
+> > and FwNode::property_get_reference_args() can match against the corresponding
+> > enum variant to cover both cases.
+> 
+> I guess we could make the function generic if that's deemed worth it?
+> A trait and an implementation for `u32` and `&CStr` each. Similar to how
+> we made `property_read` generic.
 
-Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
-Intel Core i7-12600H
+There is a case where the cells property is optional and we fallback to 
+0 cells if not found. #msi-cells is an example. I imagine NArgs could 
+express that while a generic could not? In any case, I don't expect 
+drivers to have to deal with that as it would be subsystem code handling 
+it.
 
-Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
+As-is is fine I think. This function isn't too widely used that it could 
+be changed later if we change our minds.
 
-Thanks,
-Brett
+Rob
