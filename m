@@ -1,106 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1232B2EE5FA;
-	Wed, 18 Jun 2025 15:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FFC1B4121
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750260615; cv=none; b=uTNAsyokG8mzUKPbqKQ0DRwVBiming8gmoCD4zGcFal/wf0h06KBzujPQIJ1hnNcXnN8EQ06GlK2X3L5QM0Y+DYCw6VEs6IoIIXR7RNP/rkInc/Bob5XxjslhlP3pMmpZ8eusx9SYPoXcAp/KU77t0veiGNlTU3d52a3YGXePrA=
+	t=1750260694; cv=none; b=LpqVKfkrp3v+nh9I4mRAItnBqaiK14tQE53ps7nnSdiGK+SNt9Fl9W9x+ZzExlmt5uAEWPvL/vuA+I+D2rOJ4NfDFUnzOZ8j/8LaXzHLloBi5DiqcLiUX/TySpy4ZCW7DgbOLzZQ31MpNTW7AYwqeBl0zC1P+dxOqch2iKZif+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750260615; c=relaxed/simple;
-	bh=uao6iLRPS+RTJHDF89A0xuDY5D9OIKEScQYTHr7q75E=;
+	s=arc-20240116; t=1750260694; c=relaxed/simple;
+	bh=aWGF2JbuOH4++9EpJGoeAzXMpX7P3SqWckIH/4SBNkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GVSHyhj8RDl1XQwWl+PMsmWTAkXwb7nl6SoHPn76gpVZsYGbTQGQCCQq5X0bYHaWcixnBdLitw3337+yyJFfy5Z0xaTe58T8O6XKM57x9vW9z503WBqLuSy7sKRQXV6tJEu3B252KBnlwPIv/PiRZbgbSacxAJvAJ17JDOuX7RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cauo37mP; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pcieCM/uM1JEIQEgtMXxkwgJfrodkgpqRD+yweozHWL0283MmDFhoww0hitksW7IMv063cfvQ9dO1fcA6V80XOcWHNFJsbVAZigxjuBKUNKkPAGN8FtyztF7GLews3N7Ff9q9FpPKPmczYxxMPs6NKAW8F/vFsID+LwF5dEWTZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z6lA4HUe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LTHX0T3+; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=z6lA4HUe; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=LTHX0T3+; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cauo37mP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750260615; x=1781796615;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uao6iLRPS+RTJHDF89A0xuDY5D9OIKEScQYTHr7q75E=;
-  b=Cauo37mPmfnhltCQReygwvYaMqbaKHZM7GSFyVi3b76KUVvl31E45ZkR
-   bjpGAF245Xj/jixbc0wTMndG8xWZSwdNA/tCNVwuOgqoG4Wgcp92lZlAP
-   1LYlhptF6vfBN5kKHmL1qIyQs1uCQaCs+XWtF9MIhVXAqY1olmAy7JQzZ
-   Sj/SKuq8ifp2WFYyx9NH85X5NGPTFuIJ4zUESR97h4rgmv256ysUALopA
-   QoNjQc51H8utYSl95FI+m5k7L7DDn2yl+3IeKHeT+UC92WsWG3srwQ0ob
-   pTRxS9l6skC6qW1FasoSByj7TV0gAX8W5oZaWHYRHRrAvKCQLmiUBaS6N
-   A==;
-X-CSE-ConnectionGUID: 2YMvwS7sTGSmOmhI92JXfQ==
-X-CSE-MsgGUID: 6IZ1fGxxSdSVkAopi1XA/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="56165192"
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="56165192"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:30:14 -0700
-X-CSE-ConnectionGUID: jODERCniRByzQhhkPOAnww==
-X-CSE-MsgGUID: rczAkcBSQmazkneLo4/xcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
-   d="scan'208";a="150180111"
-Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 08:30:12 -0700
-Date: Wed, 18 Jun 2025 08:30:10 -0700
-From: "Luck, Tony" <tony.luck@intel.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Zaid Alali <zaidal@os.amperecomputing.com>, rafael@kernel.org,
-	lenb@kernel.org, james.morse@arm.com, bp@alien8.de, kees@kernel.org,
-	gustavoars@kernel.org, Jonathan.Cameron@huawei.com,
-	sudeep.holla@arm.com, jonathanh@nvidia.com,
-	u.kleine-koenig@baylibre.com, viro@zeniv.linux.org.uk,
-	ira.weiny@intel.com, alison.schofield@intel.com,
-	dan.j.williams@intel.com, gregkh@linuxfoundation.org,
-	peterz@infradead.org, dave.jiang@intel.com,
-	Benjamin.Cheatham@amd.com, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v9 5/7] ACPI: APEI: EINJ: Create debugfs files to enter
- device id and syndrome
-Message-ID: <aFLbgkhB5Q4ZbAZl@agluck-desk3>
-References: <20250612231327.84360-1-zaidal@os.amperecomputing.com>
- <20250612231327.84360-6-zaidal@os.amperecomputing.com>
- <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z6lA4HUe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LTHX0T3+";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="z6lA4HUe";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="LTHX0T3+"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 332891F7BD;
+	Wed, 18 Jun 2025 15:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750260691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
+	b=z6lA4HUemsyrQw0IbqDayHnqZjeult3eFtaeY3eLf+oBuEaQDPw6IOYz734scHqJtOyeXi
+	0ohy4FOQK1XEFTVZgLzZ2VEvRshkW546ji6YOmSju+r7lAWWipPwRSkW5hA/sdO8czyhh8
+	IvQiKV68dbALYwg6U7m+verk60cUJ44=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750260691;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
+	b=LTHX0T3+QHDosod7b6W0OS7VWeFSlSlTSO+bx3ylHy6HDjET9NK6BOSGpbjK0iE7NpGTaB
+	CAhY8mZsoL7lanAg==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750260691; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
+	b=z6lA4HUemsyrQw0IbqDayHnqZjeult3eFtaeY3eLf+oBuEaQDPw6IOYz734scHqJtOyeXi
+	0ohy4FOQK1XEFTVZgLzZ2VEvRshkW546ji6YOmSju+r7lAWWipPwRSkW5hA/sdO8czyhh8
+	IvQiKV68dbALYwg6U7m+verk60cUJ44=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750260691;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=owjkAWQ3KYXsX+IefJJA+Ziv2qfJ85C6X7WRXhmfYKQ=;
+	b=LTHX0T3+QHDosod7b6W0OS7VWeFSlSlTSO+bx3ylHy6HDjET9NK6BOSGpbjK0iE7NpGTaB
+	CAhY8mZsoL7lanAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 298F813A3F;
+	Wed, 18 Jun 2025 15:31:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id K04cCtPbUmirEwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 18 Jun 2025 15:31:31 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id A49C9A09DC; Wed, 18 Jun 2025 17:31:30 +0200 (CEST)
+Date: Wed, 18 Jun 2025 17:31:30 +0200
+From: Jan Kara <jack@suse.cz>
+To: RubenKelevra <rubenkelevra@gmail.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs_context: fix parameter name in infofc() macro
+Message-ID: <w2mvyptwkgmtpz5whnv4svsqkrmsepxrhug5fcfpdcvozbzilb@goimb6s56trb>
+References: <20250617230927.1790401-1-rubenkelevra@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3a143d53-8731-4afc-9117-bac49ea96db1@suswa.mountain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250617230927.1790401-1-rubenkelevra@gmail.com>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Wed, Jun 18, 2025 at 06:21:39PM +0300, Dan Carpenter wrote:
-> On Thu, Jun 12, 2025 at 04:13:25PM -0700, Zaid Alali wrote:
-> > +static ssize_t u128_read(struct file *f, char __user *buf, size_t count, loff_t *off)
-> > +{
-> > +	char output[2 * COMPONENT_LEN + 1];
-> > +	u8 *data = f->f_inode->i_private;
-> > +	int i;
-> > +
-> > +	if (*off >= sizeof(output))
-> > +		return 0;
+On Wed 18-06-25 01:09:27, RubenKelevra wrote:
+> The macro takes a parameter called "p" but references "fc" internally.
+> This happens to compile as long as callers pass a variable named fc,
+> but breaks otherwise. Rename the first parameter to “fc” to match the
+> usage and to be consistent with warnfc() / errorfc().
 > 
-> No need for this check.  simple_read_from_buffer() will do the
-> right thing.
+> Fixes: a3ff937b33d9 ("prefix-handling analogues of errorf() and friends")
+> Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
 
-True. But why waste cycles populating the output buffer
-when it will be ignored? The normal flow here is that
-a user will likely try to read a <stdio.h> sized buffer
-and get back 33 bytes. Then read again to find EOF. That
-second read doesn't need to do all the "sprintf()"s.
+Good catch. Feel free to add:
 
-> regards,
-> dan carpenter
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  include/linux/fs_context.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> > +
-> > +	for (i = 0; i < COMPONENT_LEN; i++)
-> > +		sprintf(output + 2 * i, "%.02x", data[COMPONENT_LEN - i - 1]);
-> > +	output[2 * COMPONENT_LEN] = '\n';
-> > +
-> > +	return simple_read_from_buffer(buf, count, off, output, sizeof(output));
-> > +}
-
--Tony
+> diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+> index a19e4bd32e4d..7773eb870039 100644
+> --- a/include/linux/fs_context.h
+> +++ b/include/linux/fs_context.h
+> @@ -200,7 +200,7 @@ void logfc(struct fc_log *log, const char *prefix, char level, const char *fmt,
+>   */
+>  #define infof(fc, fmt, ...) __logfc(fc, 'i', fmt, ## __VA_ARGS__)
+>  #define info_plog(p, fmt, ...) __plog(p, 'i', fmt, ## __VA_ARGS__)
+> -#define infofc(p, fmt, ...) __plog((&(fc)->log), 'i', fmt, ## __VA_ARGS__)
+> +#define infofc(fc, fmt, ...) __plog((&(fc)->log), 'i', fmt, ## __VA_ARGS__)
+>  
+>  /**
+>   * warnf - Store supplementary warning message
+> -- 
+> 2.49.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
