@@ -1,117 +1,97 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0305F522F;
-	Wed, 18 Jun 2025 06:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA0715442C;
+	Wed, 18 Jun 2025 06:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750229602; cv=none; b=I2sMCfJ3z1p7v/KVLeHZml//yNftVyQXPAxHtEFX213PtfG8pAl9TCQS0Dsm2dX0PelqQD5mZxOpsFQC8L9ZbgCNp/NXXgClxJIlcRkmbDVeDOYtmg5ZRtxKn5SwwrRwTAwVPFRk32uEux/ttBc/UE+ec5gp3D8qVQeZIWqZajw=
+	t=1750229668; cv=none; b=WKQgJu4sHAoQOT9AQEXiQE/G2JBi9zq8dUBbWakCcuOG8XCy83kQbdPFEUzd1VtSEJLUhGmbC9IF9hh8h2MN/Mwnalf6wR0UFimDj3Psavc5eADKqGbZBN2KCEkDozMR0KQTA0eyKvQyJLaUim7Njb6DhkMGnR1eDuH7SWy4Njk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750229602; c=relaxed/simple;
-	bh=z6Zh6LHr9HQDygJksnzqsETbW3lKHUK6tVBn3W13Zl8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=gmOvFi/rHI8YUJChG1Txf/6znvBwmdIrHf1L1qcoHtH9yeuYNMYMxmsX82NONHYiTxFz6845Kplk3IVfPgzCvC+Gsi7n02WYmgy5ppT8vNTL8vUS9U3wuGUhS5qsRSubbeeYQ7kTEENiZ7DAxuuvcildTDaB4JZyHKdz87xsYc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4bMYn174Hcz27g2B;
-	Wed, 18 Jun 2025 14:32:05 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id CB5901A0171;
-	Wed, 18 Jun 2025 14:33:34 +0800 (CST)
-Received: from [10.67.112.40] (10.67.112.40) by dggpemf200006.china.huawei.com
- (7.185.36.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
- 2025 14:33:34 +0800
-Message-ID: <825fe267-0925-4b91-98ef-82dfb768f916@huawei.com>
-Date: Wed, 18 Jun 2025 14:33:32 +0800
+	s=arc-20240116; t=1750229668; c=relaxed/simple;
+	bh=6O4E31IFWhwT1mKncIIfB5M0IyKaYLlTTLmgubkQWeM=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=HbpSun6yIwrXb9tsiRJ1wKFMQZV4eienFvOcy6l5nElmaJ0dX07SIO5LkgLtftX1OzYvFepcyO3LB+6Bx2WngVAVQvg9LKSKoN/l5NjQWfTkn4l3jz2sQIV05tzCVWI99IkZZxrQP6wovOmChvBtr8RMeQtDp8cHBMzdVsy4P7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=SeeK6Xj2; arc=none smtp.client-ip=162.62.57.252
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="SeeK6Xj2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750229652; bh=g79FYQgOsNwSl3tOaXLz/txIsFLP64rs0sArg9v4BXI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=SeeK6Xj28icJWqq4Sc0D31vASv61oOpCh1BUQsTYlOn9bN0lxQISWLdDhnZMN/rCY
+	 Fp0ARzzU1Xq+D9XGAKqV5RrVIopaetfR4y2IBW17svwGI6ZIMnJVZ4Lmfd+lwoFYEQ
+	 InQ2v4IrIPM6+ERyGFv8mD+v1sRdfZTXRFNxqJGw=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszgpuc5-0.qq.com (NewEsmtp) with SMTP
+	id D7617201; Wed, 18 Jun 2025 14:53:54 +0800
+X-QQ-mid: xmsmtpt1750229634tc8wvgidz
+Message-ID: <tencent_ED33789EDE1B3B4BB21B4325EDBA10BB7F08@qq.com>
+X-QQ-XMAILINFO: MIAHdi1iQo+z16kuYiyj/ZhQ2a4rFDdwa0nU5mpjxpLJbUzgrj7FxujSkmVaje
+	 5U3JMIsus966+z4oYcGSR1EZRDXl+nr6GdFBtHn8PIA4IEMlkDJC9BNx/NaWwPIHEXe2WnG0QHfN
+	 FK7cxaEZ6O+il1tEFEsuveQs/ybmUQBqTls1k1nrdgciJhKPRT4b0Om2ZzfBTehXCW0RPsTydQSL
+	 JDImCKWop+jpq0M6EXNmTsJ2hitv9mB/JcTUZBwWW1fXet8ysgf4vFhO5Gf/w37LMDiTGnYKinHj
+	 TqieJYwoDrx+EzwM0ItXH3oB1FhY76pNzPPjoZ+IUDoYRtObZnAMlHIg2VRs/fm8UhBwlTNE8vqI
+	 pnBNjDrqUZ8LmwP6OiD+hMyTP3e6g1XQ3VYq89NizwH1W+MxhNX/u+F8oogct04GDFNhXcMuu3jd
+	 6gVcLbD02NkDm9HiT3zhxOgBQOB6z1Oc+hO/CjdNF8MQmCOXhBRY6jrp+5LaVdgY9r6wa6EEzvV2
+	 yPZMZQttlLzSye1m9I/5y2/Cxg5V7GDbGwLQxNgbyxiQTWqkihLrn6yyLPjAIXunkH20WTm9/0lY
+	 1lFm1XxHC5F77ABAOnrsTbpBas1Fg+q0FLLhUPLfITxr0iakG8ehgBJtTteQU0KopFext5SfhlfC
+	 GKr6t50rOjKo1S2TmbAD56iPTH+m/BuDwt1ElW2cgnBbnL+vZs70rhBBj0LMLB9GX0eExidLoygg
+	 csofFNjijbhBKgO/VHzbdXmrpPUQGpf51crGp4cj5MzV5dlz+SU+y0ygDfqkpz93cshQxgwVvvbD
+	 Lce1yGaT4iUIUMJP1opDGq5qezgfcyrOGV439m7sXdYyk66mrH7hN6OQ4z1lQmQB1fsZ9jLnDhdL
+	 eCAN763HFgLutlOaug0ZBBlpe3W/7wmKcuoiUiZATD0x2H8YbTLHacKUWR8omxW9/vy0baGOTvvu
+	 Qc2AEEhSXpXqZZXfiS6sQWvNbXTww03m3tQwGrDJc=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From: Edward Adam Davis <eadavis@qq.com>
+To: viro@zeniv.linux.org.uk
+Cc: almaz.alexandrovich@paragon-software.com,
+	brauner@kernel.org,
+	eadavis@qq.com,
+	jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ntfs3@lists.linux.dev,
+	syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] fs: Prevent non-symlinks from entering pick link
+Date: Wed, 18 Jun 2025 14:53:55 +0800
+X-OQ-MSGID: <20250618065354.1322589-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250618061815.GR1880847@ZenIV>
+References: <20250618061815.GR1880847@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
-To: Mina Almasry <almasrymina@google.com>
-CC: Ratheesh Kannoth <rkannoth@marvell.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>
-References: <20250616080530.GA279797@maili.marvell.com>
- <d152d5fa-e846-48ba-96f4-77493996d099@huawei.com>
- <CAHS8izNBNoMfheMbW5_FS1zMHW61BZVzDLHgv0+E0Zn6U=jD-g@mail.gmail.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <CAHS8izNBNoMfheMbW5_FS1zMHW61BZVzDLHgv0+E0Zn6U=jD-g@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- dggpemf200006.china.huawei.com (7.185.36.61)
 
-On 2025/6/18 5:02, Mina Almasry wrote:
-> On Mon, Jun 16, 2025 at 11:34 PM Yunsheng Lin <linyunsheng@huawei.com> wrote:
->>
->> On 2025/6/16 16:05, Ratheesh Kannoth wrote:
->>> Hi,
->>>
->>> Recently customer faced a page pool leak issue And keeps on gettting following message in
->>> console.
->>> "page_pool_release_retry() stalled pool shutdown 1 inflight 60 sec"
->>>
->>> Customer runs "ping" process in background and then does a interface down/up thru "ip" command.
->>>
->>> Marvell octeotx2 driver does destroy all resources (including page pool allocated for each queue of
->>> net device) during interface down event. This page pool destruction will wait for all page pool buffers
->>> allocated by that instance to return to the pool, hence the above message (if some buffers
->>> are stuck).
->>>
->>> In the customer scenario, ping App opens both RAW and RAW6 sockets. Even though Customer ping
->>> only ipv4 address, this RAW6 socket receives some IPV6 Router Advertisement messages which gets generated
->>> in their network.
->>>
->>> [   41.643448]  raw6_local_deliver+0xc0/0x1d8
->>> [   41.647539]  ip6_protocol_deliver_rcu+0x60/0x490
->>> [   41.652149]  ip6_input_finish+0x48/0x70
->>> [   41.655976]  ip6_input+0x44/0xcc
->>> [   41.659196]  ip6_sublist_rcv_finish+0x48/0x68
->>> [   41.663546]  ip6_sublist_rcv+0x16c/0x22c
->>> [   41.667460]  ipv6_list_rcv+0xf4/0x12c
->>>
->>> Those packets will never gets processed. And if customer does a interface down/up, page pool
->>> warnings will be shown in the console.
->>>
->>> Customer was asking us for a mechanism to drain these sockets, as they dont want to kill their Apps.
->>> The proposal is to have debugfs which shows "pid  last_processed_skb_time  number_of_packets  socket_fd/inode_number"
->>> for each raw6/raw4 sockets created in the system. and
->>> any write to the debugfs (any specific command) will drain the socket.
->>>
->>> 1. Could you please comment on the proposal ?
->>
->> I would say the above is kind of working around the problem.
->> It would be good to fix the Apps or fix the page_pool.
->>
->>> 2. Could you suggest a better way ?
->>
->> For fixing the page_pool part, I would be suggesting to keep track
->> of all the inflight pages and detach those pages from page_pool when
->> page_pool_destroy() is called, the tracking part was [1], unfortunately
->> the maintainers seemed to choose an easy way instead of a long term
->> direction, see [2].
+On Wed, 18 Jun 2025 07:18:15 +0100, Al Viro wrote:
+> > On Wed, 18 Jun 2025 06:27:47 +0100, Al Viro wrote:
+> > > Note that anything that calls __d_add(dentry, inode) with is_bad_inode(inode)
+> > > (or d_add(), or d_instantiate(), or d_splice_alias() under the same conditions)
+> > > is also FUBAR.
+> > >
+> > > So's anything that calls make_bad_inode() on a struct inode that might be
+> > > in process of being passed to one of those functions by another thread.
+> > >
+> > > This is fundamentally wrong; bad inodes are not supposed to end up attached
+> > > to dentries.
+> > As far as I know, pick_link() is used to resolve the target path of a
+> > symbolic link (symlink). Can you explain why pick_link() is executed on
+> > a directory or a regular file?
 > 
-> This is not that accurate IMO. Your patch series and the merged patch
-> series from Toke does the same thing: both keep track of dma-mapped
+> Because the inode_operations of that thing contains ->get_link().
+I removed _ntfs_bad_inode() and it fixed the problem.
+I should have thought more carefully about what you said about the bad inode.
+> Again, the underlying bug is that make_bad_inode() is called on a live inode.
+> In some cases it's "icache lookup finds a normal inode, d_splice_alias() is called
+> to attach it to dentry, while another thread decides to call make_bad_inode() on
+> it - that would evict it from icache, but we'd already found it there earlier".
+> In some it's outright "we have an inode attached to dentry - that's how we got
+> it in the first place; let's call make_bad_inode() on it just for shits and giggles".
 
-The main difference is the above 'dma-mapped'.
+BR,
+Edward
 
-> pages, so that they can be unmapped at page_pool_destroy time. Toke
-> just did the tracking in a simpler way that people were willing to
-> review.
-> 
-> So, if you had a plan to detach pages on page_pool_destroy on top of
-> your tracking, the exact same plan should work on top of Toke's
-> tracking. It may be useful to code that and send an RFC if you have
-> time. It would indeed fix this periodic warning issue.
-
-As above, when page_pool_create() is called without PP_FLAG_DMA_MAP, the
-dma-mapped pages tracking is not enough.
