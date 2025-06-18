@@ -1,117 +1,169 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 099A7210FB;
-	Wed, 18 Jun 2025 09:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F38ED27FD45
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750237434; cv=none; b=ISqZ83cuLLfPxeUr1Cq9VpUFUvsbmRYlyGmQr8fB44/n/rsMT96cPZVnVoU/mOiAIbR86hj7uou590SgK+cD4S/ZGlIQYZtYWb+yD+XR7VLvMdbiFmAaM6WW5X2cjnTYrEHxjvK/69ESKOWT8HJiQw6BHG28w9YQgeCgzWbC8Kw=
+	t=1750237440; cv=none; b=jHcClchk8k4RMwK1r9t6Mq35hv/h0q5D83Hb5Ey/ndTWWr7kMsGWeqy288rVAafuFfriyv1uwMwVq5quv1Pihyzw+DtsFiXzwEy77V1GO9a3pQUszRvGZ7Q5IowJ0JgXMaPptVa/K/QMjiRk0fW2GJFrCFne6TCWrcqFsODBvpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750237434; c=relaxed/simple;
-	bh=0CaCRVJUxlmn8IXtVkJcHyza7fFV20U9G1AqPhJA228=;
+	s=arc-20240116; t=1750237440; c=relaxed/simple;
+	bh=lLvx91jQqu5Q+YGU79KFYWfNCOcfYuHmo1ka1VCpl/w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LuXw7iElszrystVkpMYlrMyXhIqPKREvI0bLKqgpbdqe3Qxy6hU+f1EQsSi0wGO8QkcKgGAKouYtYqhDrW4ayDfcGXNT2E3yxFWjKIwvcAjO4oeBVRnuOhFVVwI0nLnHSqPnUxipK8ajGEVjIbQ1JJ5AbfFI6oYMkro+YySyhbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4bMd865cDYzKHN5d;
-	Wed, 18 Jun 2025 17:03:50 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 25D141A0847;
-	Wed, 18 Jun 2025 17:03:49 +0800 (CST)
-Received: from [10.67.109.79] (unknown [10.67.109.79])
-	by APP3 (Coremail) with SMTP id _Ch0CgB3ycPzgFJotaiTPg--.6566S2;
-	Wed, 18 Jun 2025 17:03:48 +0800 (CST)
-Message-ID: <906caca3-8564-4443-a1bd-3c18449b0d64@huaweicloud.com>
-Date: Wed, 18 Jun 2025 17:03:47 +0800
+	 In-Reply-To:Content-Type; b=Glqmu+OVsvoSbOBE4L3Ni3jUk34Om240rXuD4H1CHkH9GUacam5y4rzD4827dY9x2hZuWBfZjKs0AIDiZRfp6cShcwMMMtBDjySg41miPR/KQnRX59euiNM2S0OKOd3Nx9eME7zm11ynyaUoHukpQfSZKnwW6v6wOyzHgDBsH40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=N9iSH3eA; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="N9iSH3eA"
+Message-ID: <1221e872-c4db-4db4-b68f-8c395fc07119@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750237434;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=i66umhH0P3FSLRHLImHlcLT3eKJupzJEwtAv2cACxDI=;
+	b=N9iSH3eAvQgtUrRPL6b08umvHPeRK7hlJCz45aQwQriFZyrFOxm78/oWz5oUF1+V4pdpnJ
+	wuKYrjozFJLCpbDm4Ymc8wCay+ylECIhHzUVPh6ixuxfXRmfe7ryik/RhejhS3Y8JrNGih
+	rijfDYGD7LEG9rDC0DK5B6UVevJt0Pw=
+Date: Wed, 18 Jun 2025 17:03:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [next] cgroup,freezer: fix incomplete freezing when attaching
- tasks
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: tj@kernel.org, hannes@cmpxchg.org, rafael.j.wysocki@intel.com,
- mingo@kernel.org, peterz@infradead.org, cgroups@vger.kernel.org,
- linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
-References: <20250618073217.2983275-1-chenridong@huaweicloud.com>
- <sfmtpva4z4jxrlmmeyigz4n7wozfveii3cuaks3s4dgf6noyfg@gutbimmbjfbb>
-Content-Language: en-US
-From: Chen Ridong <chenridong@huaweicloud.com>
-In-Reply-To: <sfmtpva4z4jxrlmmeyigz4n7wozfveii3cuaks3s4dgf6noyfg@gutbimmbjfbb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgB3ycPzgFJotaiTPg--.6566S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF4kCFyDGF15ZrWxtF45trb_yoW8XF1rpr
-	Z5C3Wjyan5Kr12kryq9a1SvryrKFs7Jr48GF1DWF18JF13Wa42gr4Ivws0gFW5tF1Iyryr
-	Ja1Yvr1SyayDAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: hfkh02xlgr0w46kxt4xhlfz01xgou0bp/
+Subject: Re: [PATCH v2 2/5] sched/fair: Implement throttle task work and
+ related helpers
+To: Aaron Lu <ziqianlu@bytedance.com>,
+ Valentin Schneider <vschneid@redhat.com>, Ben Segall <bsegall@google.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Peter Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Vincent Guittot
+ <vincent.guittot@linaro.org>, Xi Wang <xii@google.com>
+Cc: linux-kernel@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+ Chuyi Zhou <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>,
+ Florian Bezdeka <florian.bezdeka@siemens.com>
+References: <20250618081940.621-1-ziqianlu@bytedance.com>
+ <20250618081940.621-3-ziqianlu@bytedance.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <chengming.zhou@linux.dev>
+In-Reply-To: <20250618081940.621-3-ziqianlu@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-
-
-On 2025/6/18 16:42, Michal Koutný wrote:
-> On Wed, Jun 18, 2025 at 07:32:17AM +0000, Chen Ridong <chenridong@huaweicloud.com> wrote:
->> From: Chen Ridong <chenridong@huawei.com>
->>
->> An issue was found:
+On 2025/6/18 16:19, Aaron Lu wrote:
+> From: Valentin Schneider <vschneid@redhat.com>
 > 
-> An obligatory reminder to move to freezer in the unifier hierarchy if
-> possible. Thanks for the fix though.
+> Implement throttle_cfs_rq_work() task work which gets executed on task's
+> ret2user path where the task is dequeued and marked as throttled.
 > 
-Thanks, we are trying to switch to cgroup v2. However some products are
-still using cgroup v1.
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> Signed-off-by: Aaron Lu <ziqianlu@bytedance.com>
 
-Thank you for your review.
+LGTM,
 
-BR,
-Ridong
+Reviewed-by: Chengming Zhou <chengming.zhou@linux.dev>
 
->>
->> 	# cd /sys/fs/cgroup/freezer/
->> 	# mkdir test
->> 	# echo FROZEN > test/freezer.state
->> 	# cat test/freezer.state
->> 	FROZEN
->> 	# sleep 1000 &
->> 	[1] 863
->> 	# echo 863 > test/cgroup.procs
->> 	# cat test/freezer.state
->> 	FREEZING
->>
->> When tasks are migrated to a frozen cgroup, the freezer fails to
->> immediately freeze the tasks, causing the cgroup to remain in the
->> "FREEZING".
->>
->> The freeze_task() function is called before clearing the CGROUP_FROZEN
->> flag. This causes the freezing() check to incorrectly return false,
->> preventing __freeze_task() from being invoked for the migrated task.
->>
->> To fix this issue, clear the CGROUP_FROZEN state before calling
->> freeze_task().
->>
->> Fixes: f5d39b020809 ("freezer,sched: Rewrite core freezer logic")
->> Reported-by: Zhong Jiawei <zhongjiawei1@huawei.com>
->> Signed-off-by: Chen Ridong <chenridong@huawei.com>
->> ---
->>  kernel/cgroup/legacy_freezer.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
+Thanks!
+
+> ---
+>   kernel/sched/fair.c | 65 +++++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 65 insertions(+)
 > 
-> Acked-by: Michal Koutný <mkoutny@suse.com>
-
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index f7b8597bc95ac..8226120b8771a 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5757,8 +5757,51 @@ static inline int throttled_lb_pair(struct task_group *tg,
+>   	       throttled_hierarchy(dest_cfs_rq);
+>   }
+>   
+> +static inline bool task_is_throttled(struct task_struct *p)
+> +{
+> +	return p->throttled;
+> +}
+> +
+> +static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags);
+>   static void throttle_cfs_rq_work(struct callback_head *work)
+>   {
+> +	struct task_struct *p = container_of(work, struct task_struct, sched_throttle_work);
+> +	struct sched_entity *se;
+> +	struct cfs_rq *cfs_rq;
+> +	struct rq *rq;
+> +
+> +	WARN_ON_ONCE(p != current);
+> +	p->sched_throttle_work.next = &p->sched_throttle_work;
+> +
+> +	/*
+> +	 * If task is exiting, then there won't be a return to userspace, so we
+> +	 * don't have to bother with any of this.
+> +	 */
+> +	if ((p->flags & PF_EXITING))
+> +		return;
+> +
+> +	scoped_guard(task_rq_lock, p) {
+> +		se = &p->se;
+> +		cfs_rq = cfs_rq_of(se);
+> +
+> +		/* Raced, forget */
+> +		if (p->sched_class != &fair_sched_class)
+> +			return;
+> +
+> +		/*
+> +		 * If not in limbo, then either replenish has happened or this
+> +		 * task got migrated out of the throttled cfs_rq, move along.
+> +		 */
+> +		if (!cfs_rq->throttle_count)
+> +			return;
+> +		rq = scope.rq;
+> +		update_rq_clock(rq);
+> +		WARN_ON_ONCE(p->throttled || !list_empty(&p->throttle_node));
+> +		dequeue_task_fair(rq, p, DEQUEUE_SLEEP | DEQUEUE_SPECIAL);
+> +		list_add(&p->throttle_node, &cfs_rq->throttled_limbo_list);
+> +		p->throttled = true;
+> +		resched_curr(rq);
+> +	}
+>   }
+>   
+>   void init_cfs_throttle_work(struct task_struct *p)
+> @@ -5798,6 +5841,26 @@ static int tg_unthrottle_up(struct task_group *tg, void *data)
+>   	return 0;
+>   }
+>   
+> +static inline bool task_has_throttle_work(struct task_struct *p)
+> +{
+> +	return p->sched_throttle_work.next != &p->sched_throttle_work;
+> +}
+> +
+> +static inline void task_throttle_setup_work(struct task_struct *p)
+> +{
+> +	if (task_has_throttle_work(p))
+> +		return;
+> +
+> +	/*
+> +	 * Kthreads and exiting tasks don't return to userspace, so adding the
+> +	 * work is pointless
+> +	 */
+> +	if ((p->flags & (PF_EXITING | PF_KTHREAD)))
+> +		return;
+> +
+> +	task_work_add(p, &p->sched_throttle_work, TWA_RESUME);
+> +}
+> +
+>   static int tg_throttle_down(struct task_group *tg, void *data)
+>   {
+>   	struct rq *rq = data;
+> @@ -6668,6 +6731,8 @@ static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq) { return false; }
+>   static void check_enqueue_throttle(struct cfs_rq *cfs_rq) {}
+>   static inline void sync_throttle(struct task_group *tg, int cpu) {}
+>   static __always_inline void return_cfs_rq_runtime(struct cfs_rq *cfs_rq) {}
+> +static void task_throttle_setup_work(struct task_struct *p) {}
+> +static bool task_is_throttled(struct task_struct *p) { return false; }
+>   
+>   static inline int cfs_rq_throttled(struct cfs_rq *cfs_rq)
+>   {
