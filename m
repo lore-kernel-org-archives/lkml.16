@@ -1,137 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D0A1DD9AD;
-	Wed, 18 Jun 2025 05:05:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D72B1990D9
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:07:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750223149; cv=none; b=g7lVN7+YGpH0xLkVCGRJvIMLRXjTGfd2v4Nwv5/TW1v9TKLPsFb3r9V/eCNxtMVpxC4xCJ6DgWmjtRXW4nhtMRV+PgBWZOCpIYI9TVBLEneNyGhd/KAYaZvV9Fxi7IkNcT+nYNC7qD2WKsREhYQZzoIhMt7cHZL2iWB9vhuTghQ=
+	t=1750223227; cv=none; b=BdcSwCKgnaYvRTj4SdbOEAYxs7J2mr2L1ne5rs5Y15AcZ4X/ASPr2g5N8Pb6UMQ/hwPwmUceTj10d9Hqp+JlC8nZpbdcbPtzWjZDwt5/7ghlPCk1NbDWGjBO/9OEP+OIspq9BREdThgA8uCJf9kAIC2oOxwbpym/nJqDXRAOa60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750223149; c=relaxed/simple;
-	bh=pEYlweHTyd1FF6qYfyKbLz6rjLTrLgq8nUDmZK7/uEU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CBXFnQZ8zHNvwJkqHVSNJ/qrDqVeXUNaDyuGAYG8ISVQYbNZ1eXDmJG5CDwif4jz7HXTz0Pg6f4TDXj8BWUiU6bn9dz7sbpu/aJvh8/aK1BetMm84fdp6cv6RRy5p4XS2KYjBFyRkVjHeK4cHaI4srvofsHZuT86612DwGlIvGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rr0RUQVX; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr0RUQVX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88BD7C4CEE7;
-	Wed, 18 Jun 2025 05:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750223148;
-	bh=pEYlweHTyd1FF6qYfyKbLz6rjLTrLgq8nUDmZK7/uEU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rr0RUQVXs/qqfleg+3zkvpDQnGf8lbTC58heGkjSx2oNZMfE0YFI2OoRiMTpcWzU7
-	 ZGuJggGNLEItjr8mDRmfafGebv5CkT4txl3jqjxemO/aO/eE8c90LToSrFtXpd9OOH
-	 4/c2dcs5Xz0SZR+ezFLD+Nu6DRAZ4+GlF03D/CDBLnqmUn3mmIrq2UiW3ZqTBQl9Yj
-	 uRaw0H6SvXoyKPbneCJ03Lq7KBS+n1k5fpYOM3Oaei60znCA9z8yEbk4b2wijdmhCi
-	 LocVgBS4zA3O8axwy32I3RzoPPU2kCtjtTb6KCVOlmPpDIFwXcoqq/TDoXjwuHNS5c
-	 1v8RvVbJ58S2g==
-Date: Wed, 18 Jun 2025 10:35:41 +0530
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lukas Wunner <lukas@wunner.de>, 
-	kernel test robot <lkp@intel.com>, bhelgaas@google.com, oe-kbuild-all@lists.linux.dev, 
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jim Quinlan <james.quinlan@broadcom.com>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-Message-ID: <f5qfkb543al3ihonj7n7fi4pcd3kopavweyo5ixdgv7o3lct4u@r73fkstrcl62>
-References: <pwb4g7worzsnryimt3ymdfsxu7bxvhlr74rqodmiof5auolhrc@vpi7wzrp7osh>
- <20250617204406.GA1151053@bhelgaas>
+	s=arc-20240116; t=1750223227; c=relaxed/simple;
+	bh=Fnqwo8jS0dl5XuWKQjwx+rIh//w5n+YHb34rC8qMk8U=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Fdp6SzhC4PSNQql5JfaHE/rkEuNwZWPrWytEd50Hibfg7YqNiRmC00jCe5XtlD+nYtazwlX96vmpisZVUl3NaWmlUeqkRy66YPBZsMZVAND727q9qYhYSWSN6Lw79LoL0vIf4wrNz/liATzT1tyO87KBzO9wENB5/vVMMRKOhVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86cfe68a8bbso564140739f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 22:07:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750223224; x=1750828024;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=co7EX5zOxh51edPwZs4y12iDgxmGBxYWGi9uWhN/jPo=;
+        b=wPMPS5JbVbpOU1GV0I7II5irahWcdWR1toiVwp0RVBL+hcpwkK/G8WvYg9ArleuXK6
+         iZ9o5g8w3uLUc4OtYKx+9ZQJ/qLtB2HeUPEpdeIdquCx+UP6fjDa6rpA5wy4wvQoWbaA
+         aKYY0fmXR7wGyLk/luNRlQgrVmixpFnsJP2aHWb2kbml5tDo7Hs7BjirLKrZxStu4y0Y
+         gyn3NKYUSs+yetEaeYn1RJsZtV8yjOWih3AFLmdi3XdXxS6j/RAcR6OuU1hXT2oA2u7W
+         N5yX4wgZS9Abjnc/v1jgRZ5tfY2bTN79g7amSVARLpp3nx686nsWfRqT3afmiHMZoPL5
+         fLOA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPQuKjZiylEBlYhLf1aU4K5Vbg4n2+RUWi2wOg1/Gl4w4UtGrud1DuKmDtAvk7UPiCmA4pMrRO2FllqJA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUUT3VlXVd7l8ipPLxBKMo8HAxNIhkyyzdLubX/edraAxOup3o
+	5iI/eFp3pkHk2rpB+UnPRriNpp1WA0LESfGvYTj8yCepK1H7FC/sX89RztUC3/UAh6MW7Xn/D3u
+	xsJLxYTAfKYQqZ6tz7aOP+1Wvug3+r10WkSjPU9bXu1iyBzgC6j38xMXjEaA=
+X-Google-Smtp-Source: AGHT+IEK1H/9uK5DtBUeYSGrAvB0crn6Vsi9yitanpBohozM0vbaEqCK0BbzlGjRPxkqkppmY4Nf0Vnc90pCot7FEzEFaIq1aVP4
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250617204406.GA1151053@bhelgaas>
+X-Received: by 2002:a05:6e02:1522:b0:3de:2102:f1d8 with SMTP id
+ e9e14a558f8ab-3de2102f53dmr85750525ab.18.1750223224546; Tue, 17 Jun 2025
+ 22:07:04 -0700 (PDT)
+Date: Tue, 17 Jun 2025 22:07:04 -0700
+In-Reply-To: <68512333.a70a0220.395abc.0205.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68524978.050a0220.2608ac.002a.GAE@google.com>
+Subject: Re: [syzbot] [mm?] WARNING: bad unlock balance in move_pgt_entry
+From: syzbot <syzbot+52343d77314d6c0447fe@syzkaller.appspotmail.com>
+To: Jason@zx2c4.com, Liam.Howlett@oracle.com, akpm@linux-foundation.org, 
+	david@redhat.com, harry.yoo@oracle.com, jannh@google.com, 
+	liam.howlett@oracle.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	lorenzo.stoakes@oracle.com, pfalcato@suse.de, riel@surriel.com, 
+	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 03:44:06PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 16, 2025 at 07:14:50PM +0530, Manivannan Sadhasivam wrote:
-> > On Mon, Jun 16, 2025 at 03:30:27PM +0200, Bartosz Golaszewski wrote:
-> > > On Mon, Jun 16, 2025 at 3:16 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > >
-> > > > On Mon, Jun 16, 2025 at 06:07:48PM +0530, Manivannan Sadhasivam wrote:
-> > > > > On Mon, Jun 16, 2025 at 08:21:20PM +0800, kernel test robot wrote:
-> > > > > >    ld: drivers/pci/probe.o: in function `pci_scan_single_device':
-> > > > > > >> probe.c:(.text+0x2400): undefined reference to `pci_pwrctrl_create_device'
-> > > > >
-> > > > > Hmm, so we cannot have a built-in driver depend on a module...
-> > > > >
-> > > > > Bartosz, should we make CONFIG_PCI_PWRCTRL bool then? We can
-> > > > > still allow the individual pwrctrl drivers be tristate.
-> 
-> I think I'm OK with making CONFIG_PCI_PWRCTRL bool.  What is the
-> argument for making it a module?
-> 
+syzbot has bisected this issue to:
 
-Only to avoid making the kernel image bigger.
+commit aaf5c23bf6a474f11f48f03bd6a9b551f4e7d45a
+Author: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Date:   Mon Jun 9 13:26:35 2025 +0000
 
-> When pwrctrl is a module, it seems like we have no way to even
-> indicate to the user that "there might be PCI devices here that could
-> be powered on and enumerated."  That feels like information users
-> ought to be able to get.
-> 
-> I do wonder if we're building a structure parallel to ACPI
-> functionality and whether there could/should be some approach that
-> unifies both.  But that's a tangent to this current issue.
-> 
+    mm/mremap: introduce more mergeable mremap via MREMAP_RELOCATE_ANON
 
-Well, pwrctrl is for non-ACPI platforms (mostly OF) and yes, it is parallel to
-ACPI in some form, but that is inevitable since OF is just a hardware
-description and ACPI is much more than that.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11f92370580000
+start commit:   050f8ad7b58d Add linux-next specific files for 20250616
+git tree:       linux-next
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13f92370580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f92370580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2efc7740224b93a
+dashboard link: https://syzkaller.appspot.com/bug?extid=52343d77314d6c0447fe
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11389e82580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16824370580000
 
-> > > > I guess the alternative is to just leave it in probe.c.  The
-> > > > function is optimized away in the CONFIG_OF=n case because
-> > > > of_pci_find_child_device() returns NULL.  It's unpleasant that
-> > > > it lives outside of pwrctrl/core.c, but it doesn't occupy any
-> > > > space in the compiled kernel at least on non-OF (e.g. ACPI)
-> > > > platforms.
-> 
-> I don't like having pci_pwrctrl_create_device() in drivers/pci/probe.c
-> and relying on the compiler to optimize it out when
-> of_pci_find_child_device() returns NULL.  This is in the fundamental
-> device enumeration path, and I think it's unnecessary confusion for
-> every non-OF reader.
-> 
+Reported-by: syzbot+52343d77314d6c0447fe@syzkaller.appspotmail.com
+Fixes: aaf5c23bf6a4 ("mm/mremap: introduce more mergeable mremap via MREMAP_RELOCATE_ANON")
 
-Okay.
-
-> > > And there's a third option of having this function live in a
-> > > separate .c file under drivers/pci/pwrctl/ that would be always
-> > > built-in even if PWRCTL itself is a module. The best/worst of two
-> > > worlds? :)
-> > 
-> > I would try to avoid the third option at any cost ;) Because the
-> > pwrctrl/core.c would no longer be the 'core' and the code structure
-> > would look distorted.
-> 
-> I don't really see adding problem with a file in drivers/pci/pwrctrl/.
-> 
-> Whether it should be "core.c" or not, I dunno.  I think "core.c" could
-> make sense for things that must be present always, e.g.,
-> pci_pwrctrl_create_device(), and the driver itself could be
-> "pwrctrl.c"
-> 
-
-Then it will always end up in confusion of where to place the functions and
-such. For sure the Kconfig can define what each file stands for, but IMO it
-feels weird to have 2 files for the same purpose.
-
-But if you insist, I can go for it.
-
-> If pwrctrl is built as a module, what is the module name?  I assume it
-> must be "pwrctrl", though Kconfig doesn't mention it and I don't grok
-> enough Makefile to figure it out.  "core" would be useless in the
-> print_modules() output.
-> 
-
-It is 'pci-pwrctrl-core.ko'.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
