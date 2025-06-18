@@ -1,295 +1,290 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D22DF27F017
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:59:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FEA078F36
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750233570; cv=none; b=P8faio/OlGndXP6e4A1opx6na+wxwPU5URqtfCUx24BDu21/AI6yY7gUzRIIVfgSyBe0ybwHFXFDTFXcd6UjG4mPiLsF9sW2HCw9xiatVvKzFJtVsUzhqbFAvtHklHNgYCBUTPnAhQeFsaaaopf0RXCDpRjfR0qxQHH23beu/z0=
+	t=1750233868; cv=none; b=qmwCvGxzByuO1PwRFVYTgPjEWViYmwe9Uwrhhx4bn4tG4ZXr5U4WcGW6YM1G+9fBS5TwOwS/PAZx0haZF1TT8R67oQ7qKATaWqSMMpd8I97Bg5+3/4UPr8vj1o1k90w5AhBqsVuKA2bqdMvq1haewMzAssfFjCkOcGcqY7f6aDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750233570; c=relaxed/simple;
-	bh=D2xsvG8c9bOH5vQrDOtq5q2AWw0Yp3V5YLfR0V/+f4E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KNxkv5V/ZQkTX/FRINOoCtrSLk62LNKtaTK39frG9EPJhHl+wn/Ej+QJVsfhAepzJKI7X3afiFOxLj40ehwqUkqvF5JDE4vKpUVRcyYJxy8gbtqBQzwFOQp9abbDZjZI+syv2w2Obj3WMxR1iDnLMVx27+u8gjTr5uDArs9BcuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wCzxNFTb; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750233868; c=relaxed/simple;
+	bh=yl5dCt2p9NgRBQN0acGkIFARIah1SNLIIvQPjlua74M=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jDulZj98+D77dGsddW1/lEV2NbOlooqy3PBFzKfh9MQgFWUpljajzozsF8mYLyRZ1Y6Wmwj1X78yDnRtIaRuR504v8+jNksQeHqV/Cdz3G3WwTxjLnXMreOTPhDiOMk5m7oUSWVS+ayCZ52whujwOeyqRYP6S3UMScGQYTlFV80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joonwonkang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j/TCyPmO; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joonwonkang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wCzxNFTb"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I7w7OO045975;
-	Wed, 18 Jun 2025 02:58:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750233487;
-	bh=CpArHiSJG2AiZ5RKGHjm9INHc2O3KtIyN9fu0n+I6HA=;
-	h=From:To:CC:Subject:Date;
-	b=wCzxNFTbTCjWOqlQpo/Soq2+ndOit7oEh5PQ6K2DNaxbz7fhTM/txAk1jYAvaEDtC
-	 wCQmzRHAy6q6pj22w1kEyNBNqRURMymVLEEgwLc1oRWjLIxRpUBF1P6Q4vmAFPfCWg
-	 vArXg5eKQWvG74ccX2uKOcOF9jsjg/YDN7PJhPfE=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I7w67O2727886
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 18 Jun 2025 02:58:06 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
- Jun 2025 02:58:05 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 18 Jun 2025 02:58:05 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I7w5J23114640;
-	Wed, 18 Jun 2025 02:58:05 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <jyri.sarha@iki.fi>, <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
-        <tomi.valkeinen@ideasonboard.com>
-CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
-        <linux-kernel@vger.kernel.org>, <j-choudhary@ti.com>
-Subject: [PATCH] drm/tidss: Decouple max_pclk from tidss feats to remove clock dependency
-Date: Wed, 18 Jun 2025 13:28:04 +0530
-Message-ID: <20250618075804.139844-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j/TCyPmO"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138e65efe2so6616972a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750233866; x=1750838666; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Z/DwVRQ3b1y1TzMnYgvk64L2l0CSiGtFg3i8HFqfIzs=;
+        b=j/TCyPmOpQ12nXWM5sQjGMuSrkDBXhXISJYag05iko5yVuCbIS3/ydAu66MuGKsAX8
+         axW1SRHNTQefTX7ZhQZi4loyJuODmkcXOFcbNPAlq8EkSCj7x4RDcShiE5MqsjYdnTiy
+         tTmA+hQq8Sc+c2Bu6WDgNGzcyBKZ5FVVBq3KF12TF9zxl15QqLNjBjFVX9wJv8WaR46L
+         +bZBcZ2LsFCg5rRG7o/M5+gwteQgjfNKVNkjPVcgoVumD/kCbH02Z3uwX1A/fk9EHCPq
+         1YOu5GegDVfSl2VtwusMLeH6+1pJJGOLMTt5ia2BRHT2PaHAPVuG2zv/AUMPK4v5nJPw
+         Uu8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750233866; x=1750838666;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/DwVRQ3b1y1TzMnYgvk64L2l0CSiGtFg3i8HFqfIzs=;
+        b=nw33Ow5dIxueM+1X8ECf/qGojkWar1dXbSjah9YKpK5s1aO5u4GJeiKOVaEAcJXkpK
+         67OPQ49y1O7b7A/+6UreGDcvU+ILpWAVLjxkesDnFCn7qIMEs3lnY7EQF+chhdlHFIc+
+         f4suGsHHpF7IGlZblBI3OoKH7nc3jL8919XvtHjqcWduvRmO51+RA+IxvyIYEG8rN9OH
+         w1q/7VPrIbPqtfTkLfkt6D/347tVPsILxAZpD/4lgEwPjwlN2hvV9+9zR4T7Fl7wSRgl
+         s4iKsJSz8vbfe9xRozjjqRjnSJ2InoVbMoBRblkaFGyq4pmPSsAiT3dHq7hQF/KLBfi3
+         KsqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUaOJ868N65e8dLWZFXx8AHK7JS4VWsvQDYDvwSNSRxGDgnx2Yy1T3aNr7vtE5dbcNRC+NwzyZLThlZZ6o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvbLdL4kKL1mD8goNzqXExOF6yennp7hQLwBYtNeqonjxtQerF
+	x4MBNw0Eyhcg0YjULYqSA7vseYNIiJ6zg+/Tk9dfRHa2g0H4CJbPiG4AfXDcb6WF2sMrbERipEp
+	X6QF9D95VMd8UQ1o6QFz/aYrEug==
+X-Google-Smtp-Source: AGHT+IFX2fr9n0BZiK9URUlErAOmKdogNjRgm0OvFTLs0f8wPxFtW8UY6TmwvI1z1uPU6OMzK6bkw26PaxHua05yGg==
+X-Received: from pjzz13.prod.google.com ([2002:a17:90b:58ed:b0:2fe:800f:23a])
+ (user=joonwonkang job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:3842:b0:312:1ae9:1529 with SMTP id 98e67ed59e1d1-313f1daf6d2mr23563450a91.27.1750233866516;
+ Wed, 18 Jun 2025 01:04:26 -0700 (PDT)
+Date: Wed, 18 Jun 2025 08:03:39 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
+Message-ID: <20250618080339.969173-1-joonwonkang@google.com>
+Subject: [PATCH 1/2] mailbox: Use per-thread completion to fix wrong
+ completion order
+From: Joonwon Kang <joonwonkang@google.com>
+To: jassisinghbrar@gmail.com, thierry.reding@gmail.com
+Cc: alexey.klimov@arm.com, sudeep.holla@arm.com, jonathanh@nvidia.com, 
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	Joonwon Kang <joonwonkang@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-TIDSS hardware by itself does not have variable max_pclk for each VP.
-Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
-devices uses "ultra-light" version where each VP supports a max of
-300MHz whereas J7* devices uses TIDSS where all VP can support a
-max pclk of 600MHz.
-The limitation that has been modeled till now comes from the clock
-(PLL can only be programmed to a particular max value). Due to this
-we end up using different compatible for each SoC when the clocking
-architecture changes for VPs, even when the hardware is essentially
-the same.
-max_pclk cannot be entirely removed since the display controller
-should tell if a particular mode clock can be supported or not in crtc's
-"mode_valid()" call. So remove "max_pclk_khz" from the static display
-feat and add it to "tidss_device" structure which would be modified in
-runtime. In mode_valid() call, check if a best frequency match for mode
-clock can be found or not using "clk_round_rate()". Based on that,
-propagate "max_pclk" and check max_clk again only if the requested mode
-clock is greater than saved value. (As the preferred display mode is
-usually the max resolution, driver ends up checking the maximum clock
-the first time itself which is used in subsequent checks)
-Since TIDSS display controller provides clock tolerance of 5%, we use
-this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
-before it is called.
+Previously, a sender thread in mbox_send_message() could be woken up at
+a wrong time in blocking mode. It is because there was only a single
+completion for a channel whereas messages from multiple threads could be
+sent in any order; since the shared completion could be signalled in any
+order, it could wake up a wrong sender thread.
 
-This will make the existing compatibles reusable.
+This commit resolves the false wake-up issue with the following changes:
+- Completions are created as many as the number of concurrent sender
+  threads
+- A completion is created in a sender thread's stack
+- Each slot of the message queue, i.e. `msg_data`, contains a pointer to
+  its target completion
+- tx_tick() signals the completion of the currently active slot of the
+  message queue
 
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Link: https://lore.kernel.org/all/1490809381-28869-1-git-send-email-jaswinder.singh@linaro.org
+Signed-off-by: Joonwon Kang <joonwonkang@google.com>
 ---
+ drivers/mailbox/mailbox.c          | 43 +++++++++++++++++++-----------
+ drivers/mailbox/tegra-hsp.c        |  2 +-
+ include/linux/mailbox_controller.h | 20 +++++++++-----
+ 3 files changed, 43 insertions(+), 22 deletions(-)
 
-Test log on TI's J784S4 SoC with a couple of downstream patches
-to integrate DSI support on one of the video ports:
-<https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
-
-From the logs, we can see that for CLK ID 218 (DSS), we do not have to
-call sci_clk_determine_rate() multiple times. So there is very little
-overhead of this call even with multiple mode_valid() called during
-display run.
-From weston-simple-egl application, I have seen that there is no frame
-drop or performance impact.
-
-Once this patch gets in, I will send patches for AM62P and J722S DSS
-support.
-
- drivers/gpu/drm/tidss/tidss_dispc.c | 76 ++++++++++++-----------------
- drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
- drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
- 3 files changed, 34 insertions(+), 45 deletions(-)
-
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
-index 542c3e10e0be..5196afe200f9 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.c
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.c
-@@ -58,10 +58,6 @@ static const u16 tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
- const struct dispc_features dispc_k2g_feats = {
- 	.min_pclk_khz = 4375,
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 5cd8ae222073..80cd310964a8 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -22,7 +22,7 @@
+ static LIST_HEAD(mbox_cons);
+ static DEFINE_MUTEX(con_mutex);
  
--	.max_pclk_khz = {
--		[DISPC_VP_DPI] = 150000,
--	},
--
- 	/*
- 	 * XXX According TRM the RGB input buffer width up to 2560 should
- 	 *     work on 3 taps, but in practice it only works up to 1280.
-@@ -144,11 +140,6 @@ static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
- };
+-static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
++static int add_to_rbuf(struct mbox_chan *chan, void *mssg, struct completion *tx_complete)
+ {
+ 	int idx;
  
- const struct dispc_features dispc_am65x_feats = {
--	.max_pclk_khz = {
--		[DISPC_VP_DPI] = 165000,
--		[DISPC_VP_OLDI] = 165000,
--	},
--
- 	.scaling = {
- 		.in_width_max_5tap_rgb = 1280,
- 		.in_width_max_3tap_rgb = 2560,
-@@ -244,11 +235,6 @@ static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
- };
+@@ -33,7 +33,8 @@ static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
+ 		return -ENOBUFS;
  
- const struct dispc_features dispc_j721e_feats = {
--	.max_pclk_khz = {
--		[DISPC_VP_DPI] = 170000,
--		[DISPC_VP_INTERNAL] = 600000,
--	},
--
- 	.scaling = {
- 		.in_width_max_5tap_rgb = 2048,
- 		.in_width_max_3tap_rgb = 4096,
-@@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
- };
+ 	idx = chan->msg_free;
+-	chan->msg_data[idx] = mssg;
++	chan->msg_data[idx].data = mssg;
++	chan->msg_data[idx].tx_complete = tx_complete;
+ 	chan->msg_count++;
  
- const struct dispc_features dispc_am625_feats = {
--	.max_pclk_khz = {
--		[DISPC_VP_DPI] = 165000,
--		[DISPC_VP_INTERNAL] = 170000,
--	},
--
- 	.scaling = {
- 		.in_width_max_5tap_rgb = 1280,
- 		.in_width_max_3tap_rgb = 2560,
-@@ -380,10 +361,6 @@ const struct dispc_features dispc_am62a7_feats = {
- 	 * if the code reaches dispc_mode_valid with VP1,
- 	 * it should return MODE_BAD.
- 	 */
--	.max_pclk_khz = {
--		[DISPC_VP_TIED_OFF] = 0,
--		[DISPC_VP_DPI] = 165000,
--	},
+ 	if (idx == MBOX_TX_QUEUE_LEN - 1)
+@@ -51,7 +52,7 @@ static void msg_submit(struct mbox_chan *chan)
+ 	int err = -EBUSY;
  
- 	.scaling = {
- 		.in_width_max_5tap_rgb = 1280,
-@@ -441,10 +418,6 @@ const struct dispc_features dispc_am62a7_feats = {
- };
+ 	scoped_guard(spinlock_irqsave, &chan->lock) {
+-		if (!chan->msg_count || chan->active_req)
++		if (!chan->msg_count || chan->active_req >= 0)
+ 			break;
  
- const struct dispc_features dispc_am62l_feats = {
--	.max_pclk_khz = {
--		[DISPC_VP_DPI] = 165000,
--	},
--
- 	.subrev = DISPC_AM62L,
+ 		count = chan->msg_count;
+@@ -61,14 +62,14 @@ static void msg_submit(struct mbox_chan *chan)
+ 		else
+ 			idx += MBOX_TX_QUEUE_LEN - count;
  
- 	.common = "common",
-@@ -1326,25 +1299,49 @@ static void dispc_vp_set_default_color(struct dispc_device *dispc,
- 			DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
+-		data = chan->msg_data[idx];
++		data = chan->msg_data[idx].data;
+ 
+ 		if (chan->cl->tx_prepare)
+ 			chan->cl->tx_prepare(chan->cl, data);
+ 		/* Try to submit a message to the MBOX controller */
+ 		err = chan->mbox->ops->send_data(chan, data);
+ 		if (!err) {
+-			chan->active_req = data;
++			chan->active_req = idx;
+ 			chan->msg_count--;
+ 		}
+ 	}
+@@ -82,11 +83,17 @@ static void msg_submit(struct mbox_chan *chan)
+ 
+ static void tx_tick(struct mbox_chan *chan, int r)
+ {
+-	void *mssg;
++	int idx;
++	void *mssg = NULL;
++	struct completion *tx_complete = NULL;
+ 
+ 	scoped_guard(spinlock_irqsave, &chan->lock) {
+-		mssg = chan->active_req;
+-		chan->active_req = NULL;
++		idx = chan->active_req;
++		if (idx >= 0) {
++			mssg = chan->msg_data[idx].data;
++			tx_complete = chan->msg_data[idx].tx_complete;
++			chan->active_req = -1;
++		}
+ 	}
+ 
+ 	/* Submit next message */
+@@ -100,7 +107,7 @@ static void tx_tick(struct mbox_chan *chan, int r)
+ 		chan->cl->tx_done(chan->cl, mssg, r);
+ 
+ 	if (r != -ETIME && chan->cl->tx_block)
+-		complete(&chan->tx_complete);
++		complete(tx_complete);
  }
  
-+/*
-+ * Calculate the percentage difference between the requested pixel clock rate
-+ * and the effective rate resulting from calculating the clock divider value.
-+ */
-+static
-+unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
-+{
-+	int r = rate / 100, rr = real_rate / 100;
-+
-+	return (unsigned int)(abs(((rr - r) * 100) / r));
-+}
-+
-+static int check_max_pixel_clock(struct dispc_device *dispc,
-+				 u32 hw_videoport, unsigned long clock)
-+{
-+	if (clock > dispc->tidss->max_pclk[hw_videoport]) {
-+		unsigned long round_clock = clk_round_rate(dispc->vp_clk[hw_videoport], clock);
-+
-+		if (dispc_pclk_diff(clock, round_clock) > 5)
-+			return -EINVAL;
-+
-+		dispc->tidss->max_pclk[hw_videoport] = round_clock;
+ static enum hrtimer_restart txdone_hrtimer(struct hrtimer *hrtimer)
+@@ -113,7 +120,7 @@ static enum hrtimer_restart txdone_hrtimer(struct hrtimer *hrtimer)
+ 	for (i = 0; i < mbox->num_chans; i++) {
+ 		struct mbox_chan *chan = &mbox->chans[i];
+ 
+-		if (chan->active_req && chan->cl) {
++		if (chan->active_req >= 0 && chan->cl) {
+ 			txdone = chan->mbox->ops->last_tx_done(chan);
+ 			if (txdone)
+ 				tx_tick(chan, 0);
+@@ -244,11 +251,18 @@ EXPORT_SYMBOL_GPL(mbox_client_peek_data);
+ int mbox_send_message(struct mbox_chan *chan, void *mssg)
+ {
+ 	int t;
++	struct completion tx_complete;
+ 
+ 	if (!chan || !chan->cl)
+ 		return -EINVAL;
+ 
+-	t = add_to_rbuf(chan, mssg);
++	if (chan->cl->tx_block) {
++		init_completion(&tx_complete);
++		t = add_to_rbuf(chan, mssg, &tx_complete);
++	} else {
++		t = add_to_rbuf(chan, mssg, NULL);
 +	}
 +
-+	return 0;
-+}
-+
- enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
- 					 u32 hw_videoport,
- 					 const struct drm_display_mode *mode)
- {
- 	u32 hsw, hfp, hbp, vsw, vfp, vbp;
- 	enum dispc_vp_bus_type bus_type;
--	int max_pclk;
+ 	if (t < 0) {
+ 		dev_err(chan->mbox->dev, "Try increasing MBOX_TX_QUEUE_LEN\n");
+ 		return t;
+@@ -265,7 +279,7 @@ int mbox_send_message(struct mbox_chan *chan, void *mssg)
+ 		else
+ 			wait = msecs_to_jiffies(chan->cl->tx_tout);
  
- 	bus_type = dispc->feat->vp_bus_type[hw_videoport];
+-		ret = wait_for_completion_timeout(&chan->tx_complete, wait);
++		ret = wait_for_completion_timeout(&tx_complete, wait);
+ 		if (ret == 0) {
+ 			t = -ETIME;
+ 			tx_tick(chan, t);
+@@ -318,9 +332,8 @@ static int __mbox_bind_client(struct mbox_chan *chan, struct mbox_client *cl)
+ 	scoped_guard(spinlock_irqsave, &chan->lock) {
+ 		chan->msg_free = 0;
+ 		chan->msg_count = 0;
+-		chan->active_req = NULL;
++		chan->active_req = -1;
+ 		chan->cl = cl;
+-		init_completion(&chan->tx_complete);
  
--	max_pclk = dispc->feat->max_pclk_khz[bus_type];
--
--	if (WARN_ON(max_pclk == 0))
-+	if (bus_type == DISPC_VP_TIED_OFF)
- 		return MODE_BAD;
- 
- 	if (mode->clock < dispc->feat->min_pclk_khz)
- 		return MODE_CLOCK_LOW;
- 
--	if (mode->clock > max_pclk)
-+	if (check_max_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
- 		return MODE_CLOCK_HIGH;
- 
- 	if (mode->hdisplay > 4096)
-@@ -1416,18 +1413,6 @@ void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport)
- 	clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
- }
- 
--/*
-- * Calculate the percentage difference between the requested pixel clock rate
-- * and the effective rate resulting from calculating the clock divider value.
-- */
--static
--unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
--{
--	int r = rate / 100, rr = real_rate / 100;
--
--	return (unsigned int)(abs(((rr - r) * 100) / r));
--}
--
- long dispc_vp_round_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
- 			     unsigned long rate)
- {
-@@ -3073,6 +3058,9 @@ int dispc_init(struct tidss_device *tidss)
+ 		if (chan->txdone_method	== TXDONE_BY_POLL && cl->knows_txdone)
+ 			chan->txdone_method = TXDONE_BY_ACK;
+@@ -461,7 +474,7 @@ void mbox_free_channel(struct mbox_chan *chan)
+ 	/* The queued TX requests are simply aborted, no callbacks are made */
+ 	scoped_guard(spinlock_irqsave, &chan->lock) {
+ 		chan->cl = NULL;
+-		chan->active_req = NULL;
++		chan->active_req = -1;
+ 		if (chan->txdone_method == TXDONE_BY_ACK)
+ 			chan->txdone_method = TXDONE_BY_POLL;
  	}
- 	dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
+diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+index ed9a0bb2bcd8..de7494ce0a9f 100644
+--- a/drivers/mailbox/tegra-hsp.c
++++ b/drivers/mailbox/tegra-hsp.c
+@@ -497,7 +497,7 @@ static int tegra_hsp_mailbox_flush(struct mbox_chan *chan,
+ 			mbox_chan_txdone(chan, 0);
  
-+	for (i = 0; i < dispc->feat->num_vps; i++)
-+		dispc->tidss->max_pclk[i] = 0;
+ 			/* Wait until channel is empty */
+-			if (chan->active_req != NULL)
++			if (chan->active_req >= 0)
+ 				continue;
+ 
+ 			return 0;
+diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+index ad01c4082358..ae29fba3bc46 100644
+--- a/include/linux/mailbox_controller.h
++++ b/include/linux/mailbox_controller.h
+@@ -102,16 +102,25 @@ struct mbox_controller {
+  */
+ #define MBOX_TX_QUEUE_LEN	20
+ 
++/**
++ * struct mbox_message - Internal representation of a mailbox message
++ * @data:		Data packet
++ * @tx_complete:	Pointer to the transmission completion
++ */
++struct mbox_message {
++	void *data;
++	struct completion *tx_complete;
++};
 +
- 	of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
- 			     &dispc->memory_bandwidth_limit);
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
-index 422b7b324a2f..940c067987a7 100644
---- a/drivers/gpu/drm/tidss/tidss_dispc.h
-+++ b/drivers/gpu/drm/tidss/tidss_dispc.h
-@@ -78,7 +78,6 @@ enum dispc_dss_subrevision {
- 
- struct dispc_features {
- 	int min_pclk_khz;
--	int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
- 
- 	struct dispc_features_scaling scaling;
- 
-diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
-index 56a2020e20d0..675cb4fabfa0 100644
---- a/drivers/gpu/drm/tidss/tidss_drv.h
-+++ b/drivers/gpu/drm/tidss/tidss_drv.h
-@@ -22,6 +22,8 @@ struct tidss_device {
- 
- 	const struct dispc_features *feat;
- 	struct dispc_device *dispc;
-+	long max_pclk[TIDSS_MAX_PORTS];
-+
- 
- 	unsigned int num_crtcs;
- 	struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
+ /**
+  * struct mbox_chan - s/w representation of a communication chan
+  * @mbox:		Pointer to the parent/provider of this channel
+  * @txdone_method:	Way to detect TXDone chosen by the API
+  * @cl:			Pointer to the current owner of this channel
+- * @tx_complete:	Transmission completion
+- * @active_req:		Currently active request hook
++ * @active_req:		Index of the currently active slot in the queue
+  * @msg_count:		No. of mssg currently queued
+  * @msg_free:		Index of next available mssg slot
+- * @msg_data:		Hook for data packet
++ * @msg_data:		Queue of data packets
+  * @lock:		Serialise access to the channel
+  * @con_priv:		Hook for controller driver to attach private data
+  */
+@@ -119,10 +128,9 @@ struct mbox_chan {
+ 	struct mbox_controller *mbox;
+ 	unsigned txdone_method;
+ 	struct mbox_client *cl;
+-	struct completion tx_complete;
+-	void *active_req;
++	int active_req;
+ 	unsigned msg_count, msg_free;
+-	void *msg_data[MBOX_TX_QUEUE_LEN];
++	struct mbox_message msg_data[MBOX_TX_QUEUE_LEN];
+ 	spinlock_t lock; /* Serialise access to the channel */
+ 	void *con_priv;
+ };
 -- 
-2.34.1
+2.50.0.rc2.696.g1fc2a0284f-goog
 
