@@ -1,183 +1,90 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3783C288C25;
-	Wed, 18 Jun 2025 10:26:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B801B28A1DE;
+	Wed, 18 Jun 2025 10:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242400; cv=none; b=div7dbqi2MwAkQZO7G+fpgsVyKwCVPtBOMe+t1A6pH//ff/+dpoMRTuh8pSW19RF/0AF2+0vgUDAbMnmEUcmE+eeTmaILdNq4Cn1HoFsY8T4oObDIT3/A/+OtRo8n75EuDWQAXQudPXIgK2aEGxYdvDkszRLEcVpVFKtsV4BZVI=
+	t=1750242411; cv=none; b=einyedjsxDEcR+ApDlr9yQQcC/h/rp4xbhfqsW5ono8rxEBgUn4nvm0ndNqVla19KTLx8uXsT6gTCPMOrr9Gzumdul8P7wCqg1/QIQ2zhGS6xWYp8B3mLSMvGZcasVilcSFOjl7PxFDK3UaMGzpPLty4neXVlCinCy34b3zgA0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242400; c=relaxed/simple;
-	bh=fCZg+qa6/P+Asbd0KRfxqaW80M7dwYJ1XuU8KBHp+rI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NVxmcoom04o7qeZbaolkr67REZ0NsV+DH2oQiBZPBQ+SizxP/07s1sMgsOTIa4sqwWY1hfrgQ8x4hIAMYYb0p4RRnm+LRUl9K5/EuOhp40ML717q9tmIwM1Jj9O5uIU+zAcib8FLzV1NOlcUsnTDVI0ppDGONK2IuHszs7jiJhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQbwelzu; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750242411; c=relaxed/simple;
+	bh=t9YTMjcFoRPKCBEtoXpkY5oOZ5Xw6/T8Pr/WAK5wAFc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kuiVg8eQlgUcpEAJvFuGHH8eWjlDrYwhQD+oFeDDovIuJyH4N5/xS7h5mDQMVN8g+R5CRmZ2rqzzOAF9wIDjyiH/9j64CieRSl1bvcKJQ18Cbt/T6s7vMdHl/S/v8dkGp0QkHRqPkvzZSpW5r6kw3n/mmC5ZjUo/s8cCkP5unoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vM2RbvzL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQbwelzu"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a5257748e1so4859615f8f.2;
-        Wed, 18 Jun 2025 03:26:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750242396; x=1750847196; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LKJ+35t8HG4O3r9CAZlhOHv1jc/h4zjJpE9N6VOcuWY=;
-        b=OQbwelzuFV6htrWm8OUkMzdTM1PH5HTFnjhH5V+Uflf1Z6Vwr7i88XOo874bO0Oeyb
-         cyN2jJok7mGUHprnWFbWflDYRb8tzhl6aHU+VlAPkXk74T5nEsV+AIRwSpRpPTTQU8Yl
-         xs4GF8de0zAE5+iJ8O6SxRdRGjZu/QcZPzQopwzdPWHegMSgtYB0lF+JFUzOJjioX/Ol
-         1IwLirer8by/6M85I7wwxze9sA5/+OdLaaY44dgC+At8FFEdEM5Bx9eIM5OpsVLrpehd
-         7B2TXID9JlSJye6oIoJ1jJuxol5JDad7HA6K8Cq6ZkpED3hZjHXxah4c7+yrxZGjQ1mU
-         kQMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750242396; x=1750847196;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=LKJ+35t8HG4O3r9CAZlhOHv1jc/h4zjJpE9N6VOcuWY=;
-        b=kF2dDvWFYQRZUK6kO9VnmG8H54szA4Y1UTMpo/qy5ObQ0I4sR+JwVKoblhYa+Z8vjo
-         63NWR5d55MRfetEcS+/0PGSanLAIUDm0w1uIVwAnvf/MptyENWDREwKzL66sr8KoOBss
-         KsYQLzLEL6DMYc2pc7cAbk90dji4oAJIpsvb6gwwLdHVlIAh3FNAXD19KmYVPxCbW+f3
-         LXVYTh3sXmmuce886I1Q/QG7IzjldT0k4cLp7HhBd9WKvBep1y3BKGUPEgXJh1m87s+L
-         D4HSdu70wkVhxB0iBGpXZM0bGhkqrqT+106zmqQaVepzUDbV54bt5nJkTccUbjubzHr5
-         8IdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWh08koQ8tFYUolQYx8w2l1kxjOg8WXd/t/7iqNncL+ETDPEY4E+g4cR2Szq1dxZHNUgA1G2oMIAa5um5N/@vger.kernel.org, AJvYcCXFLKjbe0BjHX89py/lMN4750Oz63NBAhyy4QIcNB7jgWxisoyb4Sc1DnFuOpqeRMOhQav6tkteVx2S@vger.kernel.org, AJvYcCXMsdCzrgM30stsSpYqdNeNfyZHY4+huimSeV75JVhk5kdxD8A2DMdebaZdW02F6Ta0zXoGwgY+H1R0COHrrBU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD4ueTMyZCBKQMx25pKS4QAZuMkixyLUJArAd4frtZy1J4lJjW
-	8ZgZ/XfeYmuplNGgGg7fqgfS+FEscFKO9PpwyFrArasgKE8EkrwNgjSs
-X-Gm-Gg: ASbGncsjBnw16TTO5syV0OLaWFUSbBrMOwOcBXlqtF6413n/0e9eFGXM5Z03ETezOX7
-	TsRJ970eR/MpWPPTy/WSGehD4jcVEai92Nhut/Ni+MOiBxnDoO0PYoR35HVzlZ8phgyU50rCjXX
-	0zumnaO5gwBqQYJfpi/brSJQ23gZlqjJS+6+HLI+f/TuNphDYr+fI5AoiU/me9bC4s1fD5A4Utr
-	iiTaWZlThqBjHsKSfMwRlRPBLUakFbNMX+6TrajohOOu2RZZZIVY4RlOUF65l8uzLQgW8VXuo5/
-	hCfEJ8vn0cwRmiOWrBCewiMV2ffAQhH/WOURlbKD7jMlfDYkaC5TmNTEUCnCufpBY5SH1PRKVmT
-	/gwye4UNE6os50L1Vc52XCT4w7GZufvF9iK2l
-X-Google-Smtp-Source: AGHT+IHb5FsVZYv2LilMOYqaP1j1L8oMI+dOxYRmokRF04f8+Qm6HB/QZ6y9DdDo5scMmE+j6mIm7Q==
-X-Received: by 2002:a05:6000:4202:b0:3a4:dfaa:df8d with SMTP id ffacd0b85a97d-3a572367c45mr15194880f8f.9.1750242396332;
-        Wed, 18 Jun 2025 03:26:36 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e2354fbsm199608085e9.15.2025.06.18.03.26.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:26:36 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v7 8/9] rust: platform: Add ACPI match table support to `Driver` trait
-Date: Wed, 18 Jun 2025 11:24:34 +0100
-Message-ID: <20250618102434.3049816-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
-References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vM2RbvzL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8295CC4CEE7;
+	Wed, 18 Jun 2025 10:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750242411;
+	bh=t9YTMjcFoRPKCBEtoXpkY5oOZ5Xw6/T8Pr/WAK5wAFc=;
+	h=Date:Reply-To:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=vM2RbvzLncp47uUBkXnx/3BLw+Fd/VI1m33D/ORr34N6cIWMPR5izYI8q12G9etHg
+	 +ylIUK+kzhEcpIzLGF3oCX9akl4qR0T0Re4HYvzrvBbuNADqH6PB2R/3hNSxnTkRIS
+	 MmL+hDRiXNZz9Om/y8DpgANI0/KmKLKRn0uNmKACNtl/u2Qrytq4V2lLmUQl5NoysU
+	 YgwneZjWOUNiIFYxn9cxOfybQ57SRLfeehAkzlsMUhxusXy55K/YscdIkyqv64jtQt
+	 9Nxm8q/IV6Fj47HwCH92pqcoLoIP+w2SuuuxWfu7rfhFyeIcwCIF6iXAz+aQCy/aPR
+	 3JvHR6OUHU8Cg==
+Message-ID: <6a4eb76e-a203-4be1-9816-09c25b76db4b@kernel.org>
+Date: Wed, 18 Jun 2025 12:26:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Reply-To: Daniel Gomez <da.gomez@kernel.org>
+Subject: Re: [PATCH v2] fs/buffer: remove comment about hard sectorsize
+To: Pankaj Raghav <p.raghav@samsung.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+ Christian Brauner <brauner@kernel.org>
+Cc: kernel@pankajraghav.com, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "Martin K . Petersen" <martin.petersen@oracle.com>
+References: <20250618075821.111459-1-p.raghav@samsung.com>
+Content-Language: en-US
+From: Daniel Gomez <da.gomez@kernel.org>
+Organization: kernel.org
+In-Reply-To: <20250618075821.111459-1-p.raghav@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Extend the `platform::Driver` trait to support ACPI device matching by
-adding the `ACPI_ID_TABLE` constant.
+On 18/06/2025 09.58, Pankaj Raghav wrote:
+> Commit e1defc4ff0cf ("block: Do away with the notion of hardsect_size")
+> changed hardsect_size to logical block size. The comment on top still
+> says hardsect_size.
+> 
+> Remove the comment as the code is pretty clear. While we are at it,
+> format the relevant code.
+> 
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+> Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+> ---
+>  fs/buffer.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index 8cf4a1dc481e..a14d281c6a74 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -1122,9 +1122,8 @@ __getblk_slow(struct block_device *bdev, sector_t block,
+>  {
+>  	bool blocking = gfpflags_allow_blocking(gfp);
+>  
+> -	/* Size must be multiple of hard sectorsize */
+> -	if (unlikely(size & (bdev_logical_block_size(bdev)-1) ||
+> -			(size < 512 || size > PAGE_SIZE))) {
+> +	if (unlikely(size & (bdev_logical_block_size(bdev) - 1) ||
+> +		     (size < 512 || size > PAGE_SIZE))) {
 
-This allows Rust platform drivers to define ACPI match tables alongside
-their existing OF match tables. These changes mirror the existing OF
-support and allow Rust platform drivers to match devices based on ACPI
-identifiers.
+Nit: Would it make sense to use SECTOR_SIZE here instead of the hard-coded 512?
 
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- rust/kernel/platform.rs | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+>  		printk(KERN_ERR "getblk(): invalid block size %d requested\n",
+>  					size);
+>  		printk(KERN_ERR "logical block size: %d\n",
+> 
+> base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 2436f55b579b..0d00ab9acef7 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -37,12 +37,18 @@ unsafe fn register(
-             None => core::ptr::null(),
-         };
- 
-+        let acpi_table = match T::ACPI_ID_TABLE {
-+            Some(table) => table.as_ptr(),
-+            None => core::ptr::null(),
-+        };
-+
-         // SAFETY: It's safe to set the fields of `struct platform_driver` on initialization.
-         unsafe {
-             (*pdrv.get()).driver.name = name.as_char_ptr();
-             (*pdrv.get()).probe = Some(Self::probe_callback);
-             (*pdrv.get()).remove = Some(Self::remove_callback);
-             (*pdrv.get()).driver.of_match_table = of_table;
-+            (*pdrv.get()).driver.acpi_match_table = acpi_table;
-         }
- 
-         // SAFETY: `pdrv` is guaranteed to be a valid `RegType`.
-@@ -96,7 +102,7 @@ fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
-     }
- 
-     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
--        None
-+        T::ACPI_ID_TABLE
-     }
- }
- 
-@@ -127,7 +133,7 @@ macro_rules! module_platform_driver {
- /// # Example
- ///
- ///```
--/// # use kernel::{bindings, c_str, device::Core, of, platform};
-+/// # use kernel::{acpi, bindings, c_str, device::Core, of, platform};
- ///
- /// struct MyDriver;
- ///
-@@ -140,9 +146,19 @@ macro_rules! module_platform_driver {
- ///     ]
- /// );
- ///
-+/// kernel::acpi_device_table!(
-+///     ACPI_TABLE,
-+///     MODULE_ACPI_TABLE,
-+///     <MyDriver as platform::Driver>::IdInfo,
-+///     [
-+///         (acpi::DeviceId::new(b"TST0001"), ())
-+///     ]
-+/// );
-+///
- /// impl platform::Driver for MyDriver {
- ///     type IdInfo = ();
- ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-+///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
- ///
- ///     fn probe(
- ///         _pdev: &platform::Device<Core>,
-@@ -164,6 +180,9 @@ pub trait Driver: Send {
-     /// The table of OF device ids supported by the driver.
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
- 
-+    /// The table of ACPI device ids supported by the driver.
-+    const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = None;
-+
-     /// Platform driver probe.
-     ///
-     /// Called when a new platform device is added or discovered.
--- 
-2.43.0
-
+Reviewed-by: Daniel Gomez <da.gomez@samsung.com>
