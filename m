@@ -1,155 +1,157 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012031.outbound.protection.outlook.com [52.101.66.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840341A316E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228109; cv=none; b=FnABeo3mIM52kJVyEPI5pCSbgXXZ5CR2xOgzdKN1OXWGvxpvguEIjAitKUgCXAE7lHxNfQVCj1v6LR3HpuDNp1/cw8JIHfZstY1By/kGYYMAZEeVyhdOrNGwjXmWCd1S6NTyM7Kl9m6RyXVeRqWiY/OUict04UxDbhuHzkettfQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228109; c=relaxed/simple;
-	bh=W1l7UdPX58azGa/bEcJUEXuiZ0Q01OETBuhRIHPsOFM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L28Z5SsuNZu7mhBlZVBS5CYIv5Ok8YIfjrUKz3AQqs1IAP+VZIQUWUrTNjaMIpssB37nMWVGOAI3SalidNYvdheDvL8szP91xI4jAO4AYvh5K/k+xByuj5qkF2Xp8Wxl34BvrwNw3HQx5MHDSRL8s4I+4IFOGP2pOVipvKP7Ri4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SKxtc28g; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F58202F7C;
+	Wed, 18 Jun 2025 06:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.31
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750228122; cv=fail; b=A0MXaJ657ayg7csCzZRLcXGnBqj3i9C/d6im9rnywLLJd9FDSIV4xRWDx3b9Ue1osoy/8JxukmwH2GDvocwGl8giRxSuCDF2maz4gKVSuYE2vzUQG65e6aUvFwmAPzcXVRv1NW5S5rZgEbNxUUtQO8htBCBisgIWv0djRkDiCp0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750228122; c=relaxed/simple;
+	bh=zl7JsFNZE1Kw69LRcSOIPR/NewVH4ZUkt4OttgGgWto=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ag6Yc0C3z/cE02P5xpvU3bGRhthRiIeqBmDa5UDjQIG8tP6ULmKtfd+rmmkrlfM+NEDvQiTHnMhWhqGTz9azFCBqpKTJNyDz+vJLhEwCANw/K3/dJiJCIzdkuQLuiYhuXCzCNZVyGVfjcP5F3V0NHyCtCGEqmxQTQpLOdtp70eE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=SO0sSm62; arc=fail smtp.client-ip=52.101.66.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SKxtc28g"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b2c4e46a89fso5240950a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750228107; x=1750832907; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mI57uaSGABNj0PlhCXhnWj7DOQSN5+fWjT4KpZNdSHY=;
-        b=SKxtc28grEnzVD1GPFFKu3HtBjYJNVNByptNoifLJ51sPeSlkRGll+VF2u0HyJN2lQ
-         qER4xCFByWm6Bn7XroeFwHFyCc644QJhWIR8U6J7CseqqElDsUpCoeuDZtOQ7bK7deCA
-         4pEysTk0GM75BoGjajB102XhI8/927y7sygGvJNaY56XbUSGa5X6ItyRtr9ZFkBSOtD/
-         GkXDh2O/aBqjZoOEGRtmkGwR6PvphMVwd0OrUJD53qCOdkC3k/sP+ipANINseW7LA8rb
-         9B0cFQexcWUCrKoO9RTax0rHQN/lWWEMGjtz8nMPWAa2fCyCRGOnOTXBGjw/CrfA8M+l
-         z1sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750228107; x=1750832907;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mI57uaSGABNj0PlhCXhnWj7DOQSN5+fWjT4KpZNdSHY=;
-        b=UPoYaKRROv4SmVRbHjr9ruYAXD5tMl9HRA4Rhctr97aGjPqHpSKjTMU+hUoRuCW9C6
-         oVJwtfcDXHdyeFe0T/MGrN0/SO03qdZt8NvcJghn+3xVZJhdvgEwiETFb0uxSCdhK8lL
-         WocN7jK57GGCIeWAukDAgmycv+1eqMJbTflFeAH5gmjKbsakZAQReEOZ8U0jLH1kjODG
-         7eJ3mXIjZ4NTpCwgNEvvkpGmSRimVaf3868VCXOm/TtYG6+bvoSje1kleX0TODRNHFqp
-         u6xn0X4E0upbU5C8HMoeFoKCtWfGB6XkWLoMwh2JnVMdqp/qYxso/dXHQOrT7MEpisqI
-         pntg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzRZYW/nC3R7EArhUsD8YW1PP87aGTc6hAf2LYf6AyusreUSSCiLmevu6tsq9iUfIQFgXS7JIUZvLGpYk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf9NpXXAzIl0Su5S/dlbRGlDAHXj8oL3QJLvZ4z1yUT0vBTJQ8
-	aRmNoKCEOQn9vMVDJ3r5wHeLd2/26BNtZPvA8UsUqs3AaBkpD2Strp5KaVoP/oWXMUo=
-X-Gm-Gg: ASbGncuUht8FTZGujVNx8K4s0t49yqMu2QFxSOxp3qIXxggDwrNGpHdowk4dneGyaDe
-	5jjTaCvcB+u7z0/jVYwGCgUHz7ua1AYmgSNqYTjPNGzmajC705J+nuT1cY4E1MBL9ReaKyi1kmi
-	fj8D3GWLmwPDL9OzKvVy9/oSmzegYzFGJPm5laEEHd6xfqTe3A3xuw5wTuuL6Wg9HrtwHi/eOWf
-	tyccJwd7BqkJSyObUaud7wuV6OqdIMgWRUumb1Pq8mhLUb0DwHLN7PEnVzYGQ7F0TQTpQYeNNVS
-	dWwKYg31YIKFUpZTpvloXAGAGeqvj8qdNW0TdqzcLdJ3mjbWwe84R/u7cD2s0LWSJ4C7n6idGwd
-	UN7Iu09dk4OcJ
-X-Google-Smtp-Source: AGHT+IE+2M9MkPtRgZNvLkNSyl6vr4XBqYCNAnKxfe0Vg46VcdclkjFTQaKK865r2eMg2Tgra0VrYw==
-X-Received: by 2002:a05:6a21:1512:b0:21e:eb3a:dc04 with SMTP id adf61e73a8af0-21fbd495d28mr24231233637.3.1750228106695;
-        Tue, 17 Jun 2025 23:28:26 -0700 (PDT)
-Received: from localhost.localdomain ([203.208.189.5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b2fe168b971sm10044933a12.58.2025.06.17.23.28.23
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 17 Jun 2025 23:28:26 -0700 (PDT)
-From: lizhe.67@bytedance.com
-To: jgg@ziepe.ca,
-	david@redhat.com
-Cc: akpm@linux-foundation.org,
-	alex.williamson@redhat.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	lizhe.67@bytedance.com,
-	peterx@redhat.com
-Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
-Date: Wed, 18 Jun 2025 14:28:20 +0800
-Message-ID: <20250618062820.8477-1-lizhe.67@bytedance.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250617152210.GA1552699@ziepe.ca>
-References: <20250617152210.GA1552699@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="SO0sSm62"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Os+owvWdEsqVMZFjvlSTmrnJlqkavr3mqg7pYjDsZOlLbBDrn/Cp2/l+CHzGkjPxTa1IKJmd8RB6xQ4ooFQ2glubLLW6DYdoZm+MqSCe5lizhkTRYWc9xGWVN33TFs6xS8Aq+GB5XzaWdLZVW5SAmZUv5fgETOkW6lL3PGB+u2MgLScZC1RXstCROufEZYBWB6srYGw6hu+iiK0ogDJ2hiED33TjBsWjVvBiVDT9fWVmrRrbF9BGnCsA8qbEHy1YmDEXlUoEbkwvPeJTm1ny87YtvpR4V4fsdEtXotHwWNdYNoz1l9FS/iNRFsORr7NvMPCBq54skiu5Soq2EiohgQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JuGZpoghCC6C/KwR+MxKwzoN5Ct//Mj3gTfuaYgkOhw=;
+ b=vUi10kV5egQmndIEJQpwbMEkPkcUXsx0mijd1GzJww2z6b3KvNOCGD/MTUuQYnhUhePAO6DibzizQfjQ0daJzVeHT6A/68x8EV/Z4vNfqL6xdR8748pH/1Yk1jKXwh+V2AOVAOvUGEpKnLIAn1bsqKudEDyEmkb5+y6cUhqOy73jF3Sj68iNWaI2nsj2qcA2tV81+iSTaANIfuYFyVohQI5uDKB6pGSnk4yp87ycHz3dW2bouSdl7+t0x9kfR67NwD49wKyKmy1JPfrEZ2SXsg2q0h+TdBigXRPWSiEESKrLgRWFgPKlUXyznuOUXAqcq2YpsEzEoxCUbOZADBAxlw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JuGZpoghCC6C/KwR+MxKwzoN5Ct//Mj3gTfuaYgkOhw=;
+ b=SO0sSm62HTP9ZwkYgAgohAO/y6gS38vNepZPfZRqezQBsCdIkexd9MObg+vhugwxuhKIk80ALMyjM0oEQ6IxsFziX85X8ApjncvMWXK6EvGzWbc/TZJeWy57HiJ9dHmUapzHTQThWe0tCBaRIpu79xe4fn/lnMUvqz0zel3m46gUIZ7myEBSJC+z2DSCLf8PfWw3agwPKlyBDHx793YnhZ0H3DvWKId1d4Ltwj4faw8W1jLVnazxBDYBNW+KlnN0T4MoOiiTmJOHaWPoxIBYxlGsqZIEeqT9O57p+J0lHHwJTCKoBQ04gAK92voyEG7C00Hy0+p9WVxyIxH9bcUqhQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from VI1PR04MB7055.eurprd04.prod.outlook.com (2603:10a6:800:123::21)
+ by GVXPR04MB10184.eurprd04.prod.outlook.com (2603:10a6:150:1bf::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
+ 2025 06:28:37 +0000
+Received: from VI1PR04MB7055.eurprd04.prod.outlook.com
+ ([fe80::d6ab:1538:d868:bf8]) by VI1PR04MB7055.eurprd04.prod.outlook.com
+ ([fe80::d6ab:1538:d868:bf8%4]) with mapi id 15.20.8835.030; Wed, 18 Jun 2025
+ 06:28:37 +0000
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: andersson@kernel.org,
+	mathieu.poirier@linaro.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-remoteproc@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] remoteproc: imx_dsp_rproc: Add coredump and recovery
+Date: Wed, 18 Jun 2025 14:26:42 +0800
+Message-Id: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR04CA0017.apcprd04.prod.outlook.com
+ (2603:1096:4:197::15) To VI1PR04MB7055.eurprd04.prod.outlook.com
+ (2603:10a6:800:123::21)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR04MB7055:EE_|GVXPR04MB10184:EE_
+X-MS-Office365-Filtering-Correlation-Id: 950fca52-106a-4762-835e-08ddae315a59
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|921020|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?KV/9XCXE+XG3r2y2JXZAhyOc0iifH8n74imCem4uQcTx1H2tM5wB0h22jdGP?=
+ =?us-ascii?Q?u+7mHguLD4TlGUOBqPgI5qjZJ6PhssEqw3BtQ6OOhUXKbhHOXJXFI/3U2FmX?=
+ =?us-ascii?Q?W2ssT+I6TtMCp5HUyBRJ7rQ9ddBwBDT1qsN/zWViw7wCftFszPCOFsr+xasJ?=
+ =?us-ascii?Q?pk+rokCcY7t8WpRGaBkLkbjjaaMn956jTiTvIWZBkR7H7jxxLpj0R+mmiCPd?=
+ =?us-ascii?Q?yGcMvjq7qu2ZDUI17r+aRetXfo0qgBm88nXWL3KQjcfmX898e+xiIiHLGtEZ?=
+ =?us-ascii?Q?gmpmtMOFktEy4lqPk1Lvv7eayV9ZNLpwv80RESvFt2uVAl74/pSjvVt7jMyO?=
+ =?us-ascii?Q?CQNJ3s5ehtEnovWeJ9djaLFb3Y9GGoezWOxAEJyad/u1AkZPFz2X7DxiUZdA?=
+ =?us-ascii?Q?+J4QrkGJChjVWJdnRCyzhn8IaUA1MnCwPXfNYzaaeN0F6Na6aug+w5Se4WnU?=
+ =?us-ascii?Q?3xPfQYaq7qRAm3Cz9lAOvYcEUfgSaQknKuC8LfQt/3TopTbcC75VnBQmlIpL?=
+ =?us-ascii?Q?BzEkxxcrzmJrRktteYcawUy0S3Zqu2NssO8i+wiNfMW80/qBREvDOYb40IOj?=
+ =?us-ascii?Q?z/doez3axbRArMXrTzKZQk8ESsWraMNmV5VTVFKYkCwAsTfLdiL42BhUKN4O?=
+ =?us-ascii?Q?c4sKU0T2l0JaAX+nOqyQ7uM/Aa30TRX4Wwt4aN1TyXP9gopTaIhpkHiAtUQM?=
+ =?us-ascii?Q?jhTz1Mo1H48Bcs+ukv0vXKmWPu1OXKz3MmE3zW7rCcPS33mcGraI4KOizidS?=
+ =?us-ascii?Q?hUOUPA54yGnnZ/soRIWkN+9w+yw/AAo37lID3/MHO9qLB3Dyxk8RFL4s29rk?=
+ =?us-ascii?Q?rniUMloQWb9fbYGxIjmXf2iynNvQlG+38lnXWFxSyxLJOp3s829XOMvgTRFI?=
+ =?us-ascii?Q?G60HfSicRH42yJg8jhczigj8zH3mL8bLW9UI6URXyRAWzEtnRd/GQrKJYVWe?=
+ =?us-ascii?Q?cCehtkQ097AxtuPYdpVbLNr0oX/usSNVDVxnInLeSHIhdkJ/bE+24G0FSAOn?=
+ =?us-ascii?Q?emmeQ/VuEjFm6nAZJ4y9290J+pSqzC9u13afTxxiWphMVScif0jhCS+a7SMI?=
+ =?us-ascii?Q?EA2A4rjCI3+CLHPDiJSzK/b0anYG/+ZPaed0c6jXS1ULUeVXm1MxISntI0CF?=
+ =?us-ascii?Q?ee6k4JOaL2zVx37ntw4Kl42AaxWtxKHUzQXhX7anJ/XOYjUhCiSMdvO55thC?=
+ =?us-ascii?Q?uOrzjS0qY3GqW3I5py0AC+37RRmB0o+w6QaUSzvO5PQV43QjOX1jwQ0uqUf7?=
+ =?us-ascii?Q?uX8563OUNapBblZzUv525jJstzU6Y/BglZoM4dnNw7W5pyRQtfmCegW1v6sb?=
+ =?us-ascii?Q?q70a6rFYnP4uo+wR4OMxO0ttc9zK4NdVd/MubCZPWH577bKwqT/JJY8XA4zo?=
+ =?us-ascii?Q?2O8/WhgVog5wYp8muCFcFPpLVN9em1bP2NKou3QnK9exTWW3PfbBGaPv9JBO?=
+ =?us-ascii?Q?vGJpyHvKSqh6zmMpROu+fFaDgZfTWnDJJR37fE4lPK5tRSbBvjSss9ebwyFi?=
+ =?us-ascii?Q?yk/kC68LCK8SPfg=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7055.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(921020)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?3KxCwxQ8+lHyaiyyza6qAzaTGob/FP/GnYEi9t68JwIf3Ac1gMeSLfiizFrK?=
+ =?us-ascii?Q?rKS37eQkmnfwRldw/HtfKSAhfeYr7jpDaVTW7K7cVhLrzgn/j/rC10TwyBel?=
+ =?us-ascii?Q?RFcEgwYHXMgt4SwE8Ze+y+Q2Gs8WsDkV78FRbG6B4VZl8qOEVNcjqShVouX/?=
+ =?us-ascii?Q?FiyUn49RdLJ35cFUCxZ9nsWxBXUIPmSxkogNArLUUZzy7GOYXG2z8nKIzVrm?=
+ =?us-ascii?Q?nepfaXexXKhIwZr24LmThYwW+z5b7NteyPMWpd3Ug1OuNMIyLJ7koldVfg73?=
+ =?us-ascii?Q?s/aUyoImwXNnDF+geQCyfWfbSlPr8xq4HcVTwJ0O1K8pRn6LsL5xMDizAKmL?=
+ =?us-ascii?Q?ROh46r0b0505syD0odwgEL6Afpl6RRfqsA+5RK+oWBMUDWTYUHy2NN2LKN3U?=
+ =?us-ascii?Q?+9B0mHlRFEp11lFmqlUilNqKJIhxsulqN9LA7/7DWVjKx+11YChM2hiRv++j?=
+ =?us-ascii?Q?bYsc+ORROrVno9DPSS745ezTzUyWHa8pafAyV6qSTl7vrkHrIBq2aAuuWZYg?=
+ =?us-ascii?Q?wAIWAa3QIPZrMAZ0g/wT+B12gyHX/SwF5IW6czztFWQ8CbPTlR0Suz+ENm3E?=
+ =?us-ascii?Q?SXzNce9huM9eqM+CltUDPnjlX4kOf8dSPjhe4XzZX5T++JEI9bSDnAMFBst8?=
+ =?us-ascii?Q?eW0iCkD/vQt6gwVvBOAs5dzj0tRFWR1xvvrvcY6QYXcb3dvTMP9w7i+rsGvw?=
+ =?us-ascii?Q?DoXBE/QKDahE1/egt7KPqWo5eMRmX6eyhE0BIJBqJ6mWDlRkqzH2X3JDWHFM?=
+ =?us-ascii?Q?sxZg2vZBXEFnTOWCHCj6z9lJPC+ZqHtgotRgTs5qTaGyLRgLETjE4Q1RfkxV?=
+ =?us-ascii?Q?KL0j5678USAeakHwmXdancva6MAkDP/ONGlepHpSEIQEA3cRxLl5iAQsR20s?=
+ =?us-ascii?Q?JmYQhQlpi1Z+7kcwoQ4+lJY1pLFVv00vhXm0nyhrIBoUf96D7JkXcofPhMrB?=
+ =?us-ascii?Q?qcq6OioU4tHIylgqCV28UUQIDxT5Mstd2krjSv4cxfpo2p1bYv4Dso0qE/9y?=
+ =?us-ascii?Q?DVWS2/RAtku8YsXNiuIsC7jcl+2DhaMTsKXiJaqEAzuvp4JoPC+Gtq483wgm?=
+ =?us-ascii?Q?jvTkR+62oHtBwZiN5etoYNaDNP3tOcC0WdepkSiIAgllrJXoqoS40Z/erJFI?=
+ =?us-ascii?Q?ev5Ml96UbMCb0QJ1XZUyqYbx2kgyIhud9s3UL04Vobnhqk2QFurh8tPvhMg4?=
+ =?us-ascii?Q?eCqYJL3uL/v9wypO/gBmrLm8FidMiEGUr1H57/j8NSEG54eC4bgY8APtPwQn?=
+ =?us-ascii?Q?oyGkUCqERkpAXRSc3HatEGq+sMoWXb3m22Z1I11Kyp3Zxl8esr+tMdlcFkPI?=
+ =?us-ascii?Q?K+ArIiinY+Nho6tfuzinDD7R9AGyuZARnnJFxeoLaiTdrpdQ+rKROK7ESLeA?=
+ =?us-ascii?Q?fdApwueA+1IdZixkcGG/Ai9pwH9Jq9RuUqHjMkD8xRuMyfTwsDd5ODmRERim?=
+ =?us-ascii?Q?AvytCT0I/s8/QOZg7jGfd6TH2F1LW4QF28NWbR8nTWQwC9iAwpj3OgfBtSbZ?=
+ =?us-ascii?Q?PUdsoc4otwSoNSYbUpG4l/jP5SDQRv46POwF8gC2bk2C9pBUnA9nbIwANp3R?=
+ =?us-ascii?Q?XVpEzaiCPbGqXlO9ak7LIP+bLOBmPbUhkKKQHpds?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 950fca52-106a-4762-835e-08ddae315a59
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7055.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 06:28:37.2149
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nWEa9hIc7OxLS9aiL8H7Od6WNt891CrtckaNVvKa5lrrMb4TJDTp6ZAic81DxK8a/v4DZ7UujVeJYqHRUJp2jw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10184
 
-On Tue, 17 Jun 2025 12:22:10 -0300, jgg@ziepe.ca wrote:
- 
-> Weird, but I would not expect this as a general rule, not sure we
-> should rely on it.
-> 
-> I would say exported function should not get automatically
-> inlined. That throws all the kprobes into chaos :\
-> 
-> BTW, why can't the other patches in this series just use
-> unpin_user_page_range_dirty_lock? The way this stuff is supposed to
-> work is to combine adjacent physical addresses and then invoke
-> unpin_user_page_range_dirty_lock() on the start page of the physical
-> range. This is why we have the gup_folio_range_next() which does the
-> segmentation in an efficient way.
-> 
-> Combining adjacent physical is basically free math.
-> 
-> Segmenting to folios in the vfio side doesn't make a lot of sense,
-> IMHO.
-> 
->  drivers/vfio/vfio_iommu_type1.c | 35 +++++++++++++++++++++++++++++----
->  1 file changed, 31 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index e952bf8bdfab..159ba80082a8 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -806,11 +806,38 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
->  				    bool do_accounting)
->  {
->  	long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
-> -	long i;
->  
-> -	for (i = 0; i < npage; i++)
-> -		if (put_pfn(pfn++, dma->prot))
-> -			unlocked++;
-> +	while (npage) {
-> +		long nr_pages = 1;
-> +
-> +		if (!is_invalid_reserved_pfn(pfn)) {
-> +			struct page *page = pfn_to_page(pfn);
-> +			struct folio *folio = page_folio(page);
-> +			long folio_pages_num = folio_nr_pages(folio);
-> +
-> +			/*
-> +			 * For a folio, it represents a physically
-> +			 * contiguous set of bytes, and all of its pages
-> +			 * share the same invalid/reserved state.
-> +			 *
-> +			 * Here, our PFNs are contiguous. Therefore, if we
-> +			 * detect that the current PFN belongs to a large
-> +			 * folio, we can batch the operations for the next
-> +			 * nr_pages PFNs.
-> +			 */
-> +			if (folio_pages_num > 1)
-> +				nr_pages = min_t(long, npage,
-> +					folio_pages_num -
-> +					folio_page_idx(folio, page));
-> +
-> +			unpin_user_folio_dirty_locked(folio, nr_pages,
-> +					dma->prot & IOMMU_WRITE);
+Add coredump and recovery support.
 
-Are you suggesting that we should directly call
-unpin_user_page_range_dirty_lock() here (patch 3/3) instead?
+Shengjiu Wang (2):
+  remoteproc: imx_dsp_rproc: Add support of recovery process
+  remoteproc: imx_dsp_rproc: Add support of coredump
 
-BTW, it appears that implementing unpin_user_folio_dirty_locked()
-as an inline function may not be viable for vfio, given that
-gup_put_folio() is not exported.
+ drivers/remoteproc/imx_dsp_rproc.c | 64 ++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 25 deletions(-)
 
-Thanks,
-Zhe
+-- 
+2.34.1
+
