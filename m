@@ -1,129 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D11202C3A;
-	Wed, 18 Jun 2025 15:56:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0034A202C3A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750262165; cv=none; b=tSkzl1f/MSGT1bXg+M6cVW5FGZJY78r4FgN00RJwQQtOqU/oPT3+EjlaNf+DsAvNADKac6SdfVHxBqwTkcFsQSiGS9Ms/OFJWZegHxfgJzYNtuDMKvZDRNefoyKVQa1XHTplqz1E0OBP2fuX34OQz9WIzM+WX6hqYsN9lhmR3hQ=
+	t=1750262182; cv=none; b=rUkI7gEbjkNE5gDPP9/FYtbXA86wXEZKXKvpyeDJCwNJjq96JtfyYU/x3mkogYfMAgc8OBu0D1InyGtfTaudYcohcxjLVodh54ExIo13T6nzGAgmYNChqRAgFgy3z3aBDnSgagP1UgRU6n1patBSY5bzEzp6LU1VfCa1spxBFGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750262165; c=relaxed/simple;
-	bh=y14ImL1XP5d71TlD/C03rbujmTDgub3jAIW5DPpjTro=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VOw7Nae5vDHxLUB+Fb+Ryf2UNWBHYJSjJS9Osdm/xBzj907WLqGGnpEyw5FtxjNecl9+zx8Y6T1p9niNCmSeOwETaoCYaxuNber7z1fVJpe1moPeGbMBA/vJDhYyguIw3cGM0cegl6U0AzzRVZwXqjapkG341A8Scr9kOk7wO3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tiTLVs24; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tiTLVs24"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C31C4CEE7;
-	Wed, 18 Jun 2025 15:56:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750262164;
-	bh=y14ImL1XP5d71TlD/C03rbujmTDgub3jAIW5DPpjTro=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tiTLVs24ov/F6fXLP+VBWrYe/DlTd7uUrvgNJvE1noOe4Py7jE3N21L2npCpagKxj
-	 nExCzeEMlhXTJXAd5PrlDJiRiwVgaB7gxJeeuegcH2lmcWK234alCReruO1u/Juw/B
-	 aE+jfxwuV0hbkMv/tHdcIhQcYbHH4czrzK53Iurlblvc3kv7DV/budWE4/wsOlpPf4
-	 EqGwxR91q5pY3KLD0CwZ7Yw/pYvxKpWqhMYdgz0CZ0eP4cE2/Ad5LIvaLfvnMspi9M
-	 V7Do2AdO4783IldIsHnc7v/GesZ44/PelzNtLQjYP6S/qFnOIb4FDlgZ+qwR3y+09y
-	 AWEDKk7kL6z+A==
-Date: Wed, 18 Jun 2025 16:55:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, jgg@ziepe.ca, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v2 2/5] dt-bindings: iommu: verisilicon: Add binding for
- VSI IOMMU
-Message-ID: <20250618-tighten-morphing-47953075b131@spud>
-References: <20250618140923.97693-1-benjamin.gaignard@collabora.com>
- <20250618140923.97693-3-benjamin.gaignard@collabora.com>
+	s=arc-20240116; t=1750262182; c=relaxed/simple;
+	bh=fzL/uED/j5WREY6u/ivzNwA+l21oV1O13GY5Hklawi8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fmJGc1JOAy7HOTHkgqAG+tQACkbTw/9Gr3hKV9PzqgO6r8Hkko8oVLoM9vZ5A50HrvH2wrw90tn3eArNzwWpyfhTjA8BofpzF0Ij3NgQu/rjBkFFdvhsiJKhI1V+Xlnkt7sjp1qYdZKpDJiYnjm05IZtdi5C56gbvD+gvguojrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86630113E;
+	Wed, 18 Jun 2025 08:55:58 -0700 (PDT)
+Received: from localhost.localdomain (unknown [10.163.88.172])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DACDD3F66E;
+	Wed, 18 Jun 2025 08:56:14 -0700 (PDT)
+From: Dev Jain <dev.jain@arm.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com
+Cc: ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	baohua@kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Dev Jain <dev.jain@arm.com>
+Subject: [PATCH] khugepaged: Optimize collapse_pte_mapped_thp() for large folios by PTE batching
+Date: Wed, 18 Jun 2025 21:26:08 +0530
+Message-Id: <20250618155608.18580-1-dev.jain@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Z++lINJ27TajwB1V"
-Content-Disposition: inline
-In-Reply-To: <20250618140923.97693-3-benjamin.gaignard@collabora.com>
+Content-Transfer-Encoding: 8bit
 
+Use PTE batching to optimize collapse_pte_mapped_thp().
 
---Z++lINJ27TajwB1V
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On arm64, suppose khugepaged is scanning a pte-mapped 2MB THP for collapse.
+Then, calling ptep_clear() for every pte will cause a TLB flush for every
+contpte block. Instead, clear_full_ptes() does a
+contpte_try_unfold_partial() which will flush the TLB only for the (if any)
+starting and ending contpte block, if they partially overlap with the range
+khugepaged is looking at.
 
-On Wed, Jun 18, 2025 at 04:09:11PM +0200, Benjamin Gaignard wrote:
-> Add a device tree binding for the Verisilicon (VSI) IOMMU.
-> This IOMMU sits in front of hardware encoder and decoder
-> blocks on SoCs using Verisilicon IP, such as the Rockchip RK3588.
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> ---
-> changes in version 2:
-> - Add a compatible "rockchip,rk3588-av1-iommu"
-> - Fix clock-names in binding=20
-> - Remove "vsi_mmu" label in binding example.
->=20
->  .../bindings/iommu/verisilicon,iommu.yaml     | 72 +++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/verisilicon,i=
-ommu.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iommu/verisilicon,iommu.ya=
-ml b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
-> new file mode 100644
-> index 000000000000..9ae4a45d76f4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/verisilicon,iommu.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iommu/verisilicon,iommu.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Verisilicon IOMMU
-> +
-> +maintainers:
-> +  - Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> +
-> +description: |+
-> +  A Versilicon iommu translates io virtual addresses to physical address=
-es for
-> +  its associated video decoder.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - enum:
-> +          - verisilicon,iommu
-> +          - rockchip,rk3588-av1-iommu
+For all arches, there should be a benefit due to batching atomic operations
+on mapcounts due to folio_remove_rmap_ptes().
 
-This isn't right. Firstly, the "oneOf: - enum" construct doesn't do
-anything. oneOf one item is just the item. Secondly this still allows
-verisilicon,iommu in isolation which is not okay. What you actually want
-here is
-items:
-  - const: a
-  - const: b
+Note that we do not need to make a change to the check
+"if (folio_page(folio, i) != page)"; if i'th page of the folio is equal
+to the first page of our batch, then i + 1, .... i + nr_batch_ptes - 1
+pages of the folio will be equal to the corresponding pages of our
+batch mapping consecutive pages.
 
-Thirdly, Nicolas mentioned that the version of this iommu is 1.2.0,
-which I would like to see reflected in the compatible.
+No issues were observed with mm-selftests.
 
---Z++lINJ27TajwB1V
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Dev Jain <dev.jain@arm.com>
+---
 
------BEGIN PGP SIGNATURE-----
+This is rebased on:
+https://lore.kernel.org/all/20250618102607.10551-1-dev.jain@arm.com/
+If there will be a v2 of either version I'll send them together.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFLhjgAKCRB4tDGHoIJi
-0vB/AQCNK4tUJrrBtB91ikBSoiUUESBAhs91t/tLoNI6BezTNwD/TT+xxCi+29w8
-EL8ApkHM1NexQn9tJmglNf0tfkz4rwA=
-=ASP4
------END PGP SIGNATURE-----
+ mm/khugepaged.c | 38 +++++++++++++++++++++++++-------------
+ 1 file changed, 25 insertions(+), 13 deletions(-)
 
---Z++lINJ27TajwB1V--
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index 649ccb2670f8..7d37058eda5b 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1499,15 +1499,16 @@ static int set_huge_pmd(struct vm_area_struct *vma, unsigned long addr,
+ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ 			    bool install_pmd)
+ {
++	int nr_mapped_ptes = 0, nr_batch_ptes, result = SCAN_FAIL;
+ 	struct mmu_notifier_range range;
+ 	bool notified = false;
+ 	unsigned long haddr = addr & HPAGE_PMD_MASK;
++	unsigned long end = haddr + HPAGE_PMD_SIZE;
+ 	struct vm_area_struct *vma = vma_lookup(mm, haddr);
+ 	struct folio *folio;
+ 	pte_t *start_pte, *pte;
+ 	pmd_t *pmd, pgt_pmd;
+ 	spinlock_t *pml = NULL, *ptl;
+-	int nr_ptes = 0, result = SCAN_FAIL;
+ 	int i;
+ 
+ 	mmap_assert_locked(mm);
+@@ -1620,12 +1621,17 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ 	if (unlikely(!pmd_same(pgt_pmd, pmdp_get_lockless(pmd))))
+ 		goto abort;
+ 
++	i = 0, addr = haddr, pte = start_pte;
+ 	/* step 2: clear page table and adjust rmap */
+-	for (i = 0, addr = haddr, pte = start_pte;
+-	     i < HPAGE_PMD_NR; i++, addr += PAGE_SIZE, pte++) {
++	do {
++		const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
++		int max_nr_batch_ptes = (end - addr) >> PAGE_SHIFT;
++		struct folio *this_folio;
+ 		struct page *page;
+ 		pte_t ptent = ptep_get(pte);
+ 
++		nr_batch_ptes = 1;
++
+ 		if (pte_none(ptent))
+ 			continue;
+ 		/*
+@@ -1639,6 +1645,11 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ 			goto abort;
+ 		}
+ 		page = vm_normal_page(vma, addr, ptent);
++		this_folio = page_folio(page);
++		if (folio_test_large(this_folio) && max_nr_batch_ptes != 1)
++			nr_batch_ptes = folio_pte_batch(this_folio, addr, pte, ptent,
++					max_nr_batch_ptes, flags, NULL, NULL, NULL);
++
+ 		if (folio_page(folio, i) != page)
+ 			goto abort;
+ 
+@@ -1647,18 +1658,19 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ 		 * TLB flush can be left until pmdp_collapse_flush() does it.
+ 		 * PTE dirty? Shmem page is already dirty; file is read-only.
+ 		 */
+-		ptep_clear(mm, addr, pte);
+-		folio_remove_rmap_pte(folio, page, vma);
+-		nr_ptes++;
+-	}
++		clear_full_ptes(mm, addr, pte, nr_batch_ptes, false);
++		folio_remove_rmap_ptes(folio, page, nr_batch_ptes, vma);
++		nr_mapped_ptes += nr_batch_ptes;
++	} while (i += nr_batch_ptes, addr += nr_batch_ptes * PAGE_SIZE,
++		 pte += nr_batch_ptes, i < HPAGE_PMD_NR);
+ 
+ 	if (!pml)
+ 		spin_unlock(ptl);
+ 
+ 	/* step 3: set proper refcount and mm_counters. */
+-	if (nr_ptes) {
+-		folio_ref_sub(folio, nr_ptes);
+-		add_mm_counter(mm, mm_counter_file(folio), -nr_ptes);
++	if (nr_mapped_ptes) {
++		folio_ref_sub(folio, nr_mapped_ptes);
++		add_mm_counter(mm, mm_counter_file(folio), -nr_mapped_ptes);
+ 	}
+ 
+ 	/* step 4: remove empty page table */
+@@ -1691,10 +1703,10 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+ 			: SCAN_SUCCEED;
+ 	goto drop_folio;
+ abort:
+-	if (nr_ptes) {
++	if (nr_mapped_ptes) {
+ 		flush_tlb_mm(mm);
+-		folio_ref_sub(folio, nr_ptes);
+-		add_mm_counter(mm, mm_counter_file(folio), -nr_ptes);
++		folio_ref_sub(folio, nr_mapped_ptes);
++		add_mm_counter(mm, mm_counter_file(folio), -nr_mapped_ptes);
+ 	}
+ unlock:
+ 	if (start_pte)
+-- 
+2.30.2
+
