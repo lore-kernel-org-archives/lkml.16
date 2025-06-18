@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D499D21E094
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3793B220689
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750220690; cv=none; b=dcxhqB3ty8XkMBzOjiTG3h3Xy5GVuh+uVQsgNkwXNCYGIp8nXSs7/Rx+DLwKXacG0HGsIqemAaRk6si0DJlm94z9w3Gd/yazYizZURlFc6iHCWuHI/01GQlNo/6pgNsYmBVZ869er4fGLIltcNybNl8eOSt/qLZ8iWRA1+5sk4c=
+	t=1750220691; cv=none; b=rFjemDSmQAB10HenE/z2mogGnEDe0RgW3E3tklga/undzoAM0dd7QaZpj3PQ4Tq1Cv+yULZdD0sdSzN9OQVMuMDirWhS93HIjMVlCoadnfUvKouGj76p/j/PW/6Zu2iq2TXzClhQOnI0ORlawqZvf6xk5ypCQMRMYRkkXkJYLnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750220690; c=relaxed/simple;
-	bh=0cy61o7VXZiqX2efmaNB3wv8cOwqSs6G7BooJP5WYek=;
+	s=arc-20240116; t=1750220691; c=relaxed/simple;
+	bh=TlPwQV38TsKUYD4upWrrqkkEe7fCtClTkHmYIdQHZto=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ntyUN/Dfg91JRmI+WmwWXqIkcDPqAj0MesjncixSlKeZKgNFJGfJt7CizLrbPDd1l0EWJkRf9L1ITR2foo0+rGCY+ONDvi2fv9e2v7QdcQxQ7edTYkrqKtNHUM06gowC9mDqi8hOeimeuuHLzDGpuHidvP1ejPTnsVHXCODIzhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wXVWoh01; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=JHQz76GrD3PgKrN9tc9sHWJPFdcn58EejRzUxdr6aRUqoM+t4LK6C+jQuKw7ifrOwYTesxuFAvnVPYozlCqcA+jT/yaCVXhV/kyZBYE36xBREXHPOa+wAbtR05g3W4jujhimic04whWd67ZclrNNwfJcIpjBYMTa6ZlTXui9dqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sqlFzraH; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthoughton.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wXVWoh01"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-747dd44048cso5315729b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:24:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sqlFzraH"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b1ffc678adfso4015769a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 21:24:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750220688; x=1750825488; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750220690; x=1750825490; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=urfbfbke44pGtnk/FCqGVDeVvBhaC6syv0bCNmnixkg=;
-        b=wXVWoh01om4NO2cV4iNiTb7pXfv2E/LFLcdXfVPTVn8OXmPLyoJlINQaiDvX/7UbRQ
-         NpYTYiQ3fF+QGYDsMN7EsbH9KpBQMmYabYG+wnNr0BCDkK3Yd41SC/vUndBiaob3hCp8
-         mLEYaxO9/U+eJ4sQMYftzvZMDat3f1gCHJh3O3NnXrc7sD9J6nPt8/0FnEMmvug542Ff
-         NgVblA3MXuXSLpUNLsEZ7HJTRk6JsE6ZifpkS+KuydtPtcvZLN0Jfax/f2/sRSe+ge3x
-         bY7G2tIyJlg12NK1cdwFzrAe9JfTL+bnIsQWqW/oOieBoN7x3QU0dN+iu9U3M1msUjA+
-         U7pA==
+        bh=P6MpWO9eGHCybkhP95T8R+1KfjKYk4MOXDyWFRHvmIc=;
+        b=sqlFzraHghTHRkzSRh5LYZqz0Li96xF/7qXzaeRb6Hsgv5Jp0FgjmB66wj3unmdJQS
+         JydoGEG6palK4LvzFRmdY7Jlru8hU3CVV2OSKH+2PEwfslG/VtLyUf6wOhnVqZU21Wuh
+         Jdf1V4QZYh041kkYjQ8YWaBueksQ1V07nsXfa28RlR9XllZz/augWVUb+lyVkdvyLqxQ
+         VG4ltejQa3Jm7Qy4M7VIxlWtoyQjgZVG7ASR1+QbMtLpz7QzgaR6GgHf9ZP8IAZT5kwQ
+         OymuRDSXy4I32QSUpCrot2nXSEllVdLCm18cqtQjVOTvQrNw9tuN+c95DB9DSwpux7g0
+         LD0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750220688; x=1750825488;
+        d=1e100.net; s=20230601; t=1750220690; x=1750825490;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=urfbfbke44pGtnk/FCqGVDeVvBhaC6syv0bCNmnixkg=;
-        b=LBHCBlxOTFT1+8PLjsAAdVlF0Fp8Yt61qjSzZNcglj/EYb+qWXs36cbLuepO/Ov2pB
-         YxqoF/FfP0Hm4SnAFLyrpNnciG8tF1Ds+8gDqtRJbT61gGrc+xWCAEWCcYeEKX4hjtMQ
-         ThVYrDHksrzXwRM+Vr7Cn5ZzuzaHAWhlwF032OCRBb3FKMd7LgI/VUiKIqv775P1AfMg
-         uEPFqAqV7DtEwlbyJn7PO5dQP+++ITYmzEpLvNi+7dmYYQJAWaxCaGULttcTHpDqwK5v
-         MT/qRn+v+ZYh94DCzk/RFd3xONYvgHQpoqb/1w4qQwMdXs1hzScxWPevD0muGithCNLK
-         qZbg==
-X-Forwarded-Encrypted: i=1; AJvYcCV8rX0/o6KlIR/CKw1pUXX1Tmn+8jgD4yYilv8CIJ4hfpp4p1r2WYITZ09YxHUFYgNz2OpqrTcRpDEP2To=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIhw0FlNM8EBv7h1D/skf1Uc35A3ms/CYgFOBzq6KQD7AkBixF
-	PYdXa10YCdEsXQTgGeyKdKG7H98ZJN3dLski/KExtUf0Vi+DJKaOChimg+UXHhvRm+531NGWBQj
-	gVpTOmFcMsbQmoLUpvOAa5g==
-X-Google-Smtp-Source: AGHT+IFPdIrbDlRQ72BheICD/uy5q1y4Z/C5VNYBV8bJ51Pda+epcBJA7XWiJKZlOD5QXWSznMTbbr9aSRYhmJ8a
-X-Received: from pfbde14.prod.google.com ([2002:a05:6a00:468e:b0:748:dd5c:e882])
+        bh=P6MpWO9eGHCybkhP95T8R+1KfjKYk4MOXDyWFRHvmIc=;
+        b=n4hBXK/XZYAn3qRR74z7kgspEfnUJd7wCzblsmVZYSd9Qj9G5/xW0rakRmdV7JElyU
+         gD5ff70m6dA26cGV8feQxyEsxhtKQFPtfGXe3c2/cj99d3cdd0GSVm0EKjWzFMIuVhwn
+         HENxKE05aVWrkaNvQfBX9Z1EKW+pHJEaAqPsv1nUOhCOWI8U1m94a32ZCehqPoT+3Zp0
+         qzvK6h/tT2/P/rJFomDExtxCQl77ZqPSWnXcxOpQBODf8YYBedtJ14mSQI6VKFWoCRLU
+         JEBIjTcAGyFSwPTWepjKs20/AsncnyCd/G/6jnErLtFogGYrb97qRP1V34+wXygKseVf
+         VM8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVc7D4maTEG3PyR12Y42zv+TMcpkZnN8i3rEFsIb4odo6K1eLQnrFiDZ7Vab5volK7GmOQxXj08GddrNCA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPgo5GVEmyqwEFW5F5B495yT2gnlmvwmzzej1VbGxE/nCL0Ila
+	k9r/zueVJTisMq9AYZo2MbOmfYMnZZ24/o2xzAQJ1xfw4NIrOaGJQ8/WKnjNpAFjmAShSQvwdyQ
+	cxThn+9TBpcFbjeTINNpKZQ==
+X-Google-Smtp-Source: AGHT+IFBmqhQDFkst9hOrle0gOrugvU+bLMa/osue2o1jv722NhjgUmFbYBlQLzwI5ul7WF7bNf9FKyZ7x+dJLfM
+X-Received: from pgbfq12.prod.google.com ([2002:a05:6a02:298c:b0:b2f:dfa3:cb81])
  (user=jthoughton job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:21c1:b0:748:323f:ba21 with SMTP id d2e1a72fcca58-7489cf5c8c2mr21855970b3a.1.1750220688256;
- Tue, 17 Jun 2025 21:24:48 -0700 (PDT)
-Date: Wed, 18 Jun 2025 04:24:23 +0000
+ 2002:a05:6a21:512:b0:218:5954:1293 with SMTP id adf61e73a8af0-21fbd668df0mr28784142637.34.1750220689787;
+ Tue, 17 Jun 2025 21:24:49 -0700 (PDT)
+Date: Wed, 18 Jun 2025 04:24:24 +0000
 In-Reply-To: <20250618042424.330664-1-jthoughton@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250618042424.330664-1-jthoughton@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
-Message-ID: <20250618042424.330664-15-jthoughton@google.com>
-Subject: [PATCH v3 14/15] KVM: Documentation: Fix section number for KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
+Message-ID: <20250618042424.330664-16-jthoughton@google.com>
+Subject: [PATCH v3 15/15] KVM: Documentation: Add KVM_CAP_USERFAULT and
+ KVM_MEM_USERFAULT details
 From: James Houghton <jthoughton@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
 	Oliver Upton <oliver.upton@linux.dev>
@@ -70,32 +71,76 @@ Cc: Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <y
 	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	"Xin Li (Intel)" <xin@zytor.com>
+	Bagas Sanjaya <bagasdotme@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 
-From: "Xin Li (Intel)" <xin@zytor.com>
+Include the note about memory ordering when clearing bits in
+userfault_bitmap, as it may not be obvious for users.
 
-The previous section is 7.41, thus this should be 7.42.
-
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 Signed-off-by: James Houghton <jthoughton@google.com>
+Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
 ---
- Documentation/virt/kvm/api.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/virt/kvm/api.rst | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 1bd2d42e6424c..ff0aa9eb91efe 100644
+index ff0aa9eb91efe..25668206a5d80 100644
 --- a/Documentation/virt/kvm/api.rst
 +++ b/Documentation/virt/kvm/api.rst
-@@ -8528,7 +8528,7 @@ ENOSYS for the others.
- When enabled, KVM will exit to userspace with KVM_EXIT_SYSTEM_EVENT of
- type KVM_SYSTEM_EVENT_SUSPEND to process the guest suspend request.
+@@ -6308,7 +6308,8 @@ bounds checks apply (use common sense).
+ 	__u64 guest_memfd_offset;
+ 	__u32 guest_memfd;
+ 	__u32 pad1;
+-	__u64 pad2[14];
++	__u64 userfault_bitmap;
++	__u64 pad2[13];
+   };
  
--7.37 KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
-+7.42 KVM_CAP_ARM_WRITABLE_IMP_ID_REGS
- -------------------------------------
+ A KVM_MEM_GUEST_MEMFD region _must_ have a valid guest_memfd (private memory) and
+@@ -6324,6 +6325,25 @@ state.  At VM creation time, all memory is shared, i.e. the PRIVATE attribute
+ is '0' for all gfns.  Userspace can control whether memory is shared/private by
+ toggling KVM_MEMORY_ATTRIBUTE_PRIVATE via KVM_SET_MEMORY_ATTRIBUTES as needed.
  
- :Architectures: arm64
++When the KVM_MEM_USERFAULT flag is set, userfault_bitmap points to the starting
++address for the bitmap that controls if vCPU memory faults should immediately
++exit to userspace. If an invalid pointer is provided, at fault time, KVM_RUN
++will return -EFAULT. KVM_MEM_USERFAULT is only supported when
++KVM_CAP_USERFAULT is supported.
++
++userfault_bitmap should point to an array of longs where each bit in the array
++linearly corresponds to a single gfn. Bit 0 in userfault_bitmap corresponds to
++guest_phys_addr, bit 1 corresponds to guest_phys_addr + PAGE_SIZE, etc. If the
++bit for a page is set, any vCPU access to that page will exit to userspace with
++KVM_MEMORY_EXIT_FLAG_USERFAULT.
++
++Setting bits in userfault_bitmap has no effect on pages that have already been
++mapped by KVM until KVM_MEM_USERFAULT is disabled and re-enabled again.
++
++Clearing bits in userfault_bitmap should usually be done with a store-release
++if changes to guest memory are being made available to the guest via
++userfault_bitmap.
++
+ S390:
+ ^^^^^
+ 
+@@ -8557,6 +8577,17 @@ given VM.
+ When this capability is enabled, KVM resets the VCPU when setting
+ MP_STATE_INIT_RECEIVED through IOCTL.  The original MP_STATE is preserved.
+ 
++7.44 KVM_CAP_USERFAULT
++----------------------
++
++:Architectures: x86, arm64
++:Returns: Informational only, -EINVAL on direct KVM_ENABLE_CAP.
++
++The presence of this capability indicates that KVM_SET_USER_MEMORY_REGION2 will
++accept KVM_MEM_USERFAULT as a valid memslot flag.
++
++See KVM_SET_USER_MEMORY_REGION2 for more details.
++
+ 8. Other capabilities.
+ ======================
+ 
 -- 
 2.50.0.rc2.692.g299adb8693-goog
 
