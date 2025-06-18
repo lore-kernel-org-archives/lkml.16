@@ -1,56 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45FF13E02D;
-	Wed, 18 Jun 2025 03:03:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5600317A586
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750215817; cv=none; b=TBTQl2mXFcLsx7h+Gma7K0dDWuWxnuGA1bt3L99kfSBXoZwOZFsA2r+7XACEeF3DrEY6ivbPB8aTiMoLQPmTZDpFOu9MOhW4SvKuv4Cbl4KKrt0P6SHs6fgp0JcB5kVJcrIV2WMKkKcfX5OpaSXbKDZxMcSwdtm1qaUcMm+NOMk=
+	t=1750215842; cv=none; b=GMjYcShOeF2dprWlIQbzuJaBlMg3+PueaHTptu2jQnBNlSViR0YAnBkqb6H8TGO3jglDmlCPpU+ryRw+Y2USVqUfi0WGClD/uV3U8n6pY5Mn4Dm8GlFXImtcI6O+1NqwVTNv0nkx2yp+IUSlJXnSQvIVOWm8/n51lxbgDBRYtVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750215817; c=relaxed/simple;
-	bh=wBHzSOQV0F9MYMOYT8LLj7nLzOTQDw6XiAEoJCc7QAk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mpHdMS7/XrZ+6O2TwMrDhmbdsEh1SmQJkfjHob1IYty6Rq8Ub0ncEg6UvCzIgdotjv/y2Ce3g3Tg4qitmYMUy5WWQe+34zvV0cuhyj/9oora+zewl+yQ4zufkcIIbSDCRhRC49W+uC8SDRELaBQSB+SYv1hIs47iHvU1lfvsIYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WaAUYhbv; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750215842; c=relaxed/simple;
+	bh=ocPlLQ5/ZIE6JsIUly4EqqDox9DPZhugdWGvGwd8ZLs=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=rlHkq58PoIp7dTjSK4AKDHbm1gb8uPVXz+5qfQaXVYTQWTFQitFMKFIZYgvXsUL5yXqhjcJ7f18GbUp+64sGU29cLGeUvm6bJ1p11n8VUVRPLjbU3t7Q4zbLlW5V7OTkNPPfMJMlz4qYDsWvIp978bQLIOgOt5DtK/NP/OGJ+ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QTYtrm5t; arc=none smtp.client-ip=203.205.221.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WaAUYhbv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750215815; x=1781751815;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wBHzSOQV0F9MYMOYT8LLj7nLzOTQDw6XiAEoJCc7QAk=;
-  b=WaAUYhbvDZAA2r3C+MDxxfrlNsQRBXSwqcFfwklf0o3Pk4U/T7OJ2TX3
-   LbuIQQ1Yrs5yGvM5hTqVzLZaJmvq17ywRJKCE5MyoqRcjQR4mO0+00ucR
-   nMXtHszOSzHEQmFIBpPdJLJKehDp73atPk9ywT3IjtLe51kctqHMs25AK
-   eeSsQXa1McJoyVcVRzFlWt/7Oql0Dx/v/jrHMOTtPK/hmKhABvsAYj4ZN
-   f3/E2CprBKnm3uX5DNIYNdkr/8foTnj/THWd5AERVkZmAdq2Om/AaN/u+
-   HIGBosp3foQWbyXYVdAIAlWs4TKUxVz6kgPyPI06/j+pQF7tsfjXyF0An
-   Q==;
-X-CSE-ConnectionGUID: ac6mMT9AS1WJJf0ClOB6Lw==
-X-CSE-MsgGUID: yCYDu1FIQGyGUALUzEwEdQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="55035019"
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="55035019"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 20:03:34 -0700
-X-CSE-ConnectionGUID: 7kgiN8XUT6a/GJU7B6+2Bw==
-X-CSE-MsgGUID: xQXZtLJBSpObTfIgO0YC8g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="149946871"
-Received: from rzhang1-mobl7.sh.intel.com ([10.238.6.124])
-  by orviesa008.jf.intel.com with ESMTP; 17 Jun 2025 20:03:32 -0700
-From: Zhang Rui <rui.zhang@intel.com>
-To: rafael.j.wysocki@intel.com
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QTYtrm5t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750215836; bh=ipgjpwevFTSxmaa5BH6V/G+Q5kvrU+d7B8630zgbTTU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=QTYtrm5t2Hnrp6gYSgGreFok69pEzWRbK4PqtXM0ds4F99N9MQvocB5fkN8rG7FqW
+	 AYq3pvqFNeT9bW9wsuctkKw2LE933l8knmDi5PG47qADaCmgTDq63hsGOpZKyqkG+J
+	 nBGuHTJtUICVJSGLAZro2tu9+Ra9sKdPWgU2Aj7c=
+Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
+	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
+	id F5B7E12; Wed, 18 Jun 2025 11:03:53 +0800
+X-QQ-mid: xmsmtpt1750215833tk166x4k3
+Message-ID: <tencent_9967BB8933B49E4B1B104B091B6325E5BA08@qq.com>
+X-QQ-XMAILINFO: NUygYfydBsqcjnK+BbP/ygBcJiTi2gTSrfff4wNk/hqQnrYs1rG4uP9Fm7GIwH
+	 a4vx4yidzYo4thH10seLmLEob8U5ahZ7COcia4oIg5BzZBjmmEiBWTJMXo+xKADlxKfLuIg7OXMg
+	 KzKEowOp39KllXSwkRdZuyqtcP9H+/EL2K7n03Rc8S+EFNe7CaCZegYuDo2Npn+DF357BETTAav0
+	 qRJP+JYSLDYQxt5KKxUunUN8i51XEDxE4UKbyVDOLnbM6oj7wcHURQRLpoVP8vexEU4tDniw10t2
+	 ShSCkNo5I6HvL6uVDr7sEIK8NW6ZUuKdtPj9a08onc3Y3X0gIkE5Z6kmVgc7TMvdGNiaMspzOxFx
+	 ePnC1PIgSYWluZErK+78ZKpCzbt+StCsaWGTrR9yDSise8rIMIWNDIaQsufHxc36YOPKd6QJbFGH
+	 /zbpkDieWyC9we9DjiOkzc2sN4NSzo2ULsswdEKvixu6t8iEJmsdfY3hf0w6Pnd/b1yjNXuYjIrB
+	 N5KuL7FdLp9kLMBDFc46RuOEIrchp/TFNYEUmUnY7BUmWoQz5R9PJaLjsqdk48iwRVizs+77g5qI
+	 WVr3Boa3Axp9SaeEdgZnVNr1YWRsmambzYw5wzrTc5XyF75JOH76dE672SpUhLQMMTBVX24mJZHv
+	 7oDWspvr0TMR9t5zjhpEHx3eLhRvmY13O3Ep2EP3g0q83VxwS/mHBd6cQTFImp+nm4RAYI600I0E
+	 6iC43/wiBBaYp8riTdzScMo3PpLKUSNp5WPjXdvZH1CUKK3jMTkEl+xUonLTCuYhxgQqZs1SVwsc
+	 OlZzRV4tWxCoZkuVx+JW0NvX5ntfO4wN0Nc4xqsmmjRA2x+1mK7z7b5+BSzW1t2M39TYoRBYW7me
+	 0HACLs5yQM/NFKw9qMs7mhdM1hKAbLcq7AksavJKJHNbi/6oH0iX8f8k6eNqPZohndp+fMiYlq6T
+	 sr6Fk/A6WCLtF7gIwMSAyZgRaVZsFR5yOb0atGTmajm3bKuNAWG34r669Pgkt4
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com
 Cc: linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	srinivas.pandruvada@linux.intel.com
-Subject: [PATCH] powercap: intel_rapl: Do not change CLAMPING bit if ENABLE bit cannot be changed
-Date: Wed, 18 Jun 2025 11:03:30 +0800
-Message-ID: <20250618030330.279410-1-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.43.0
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [ntfs3?] general protection fault in pick_link (2)
+Date: Wed, 18 Jun 2025 11:03:54 +0800
+X-OQ-MSGID: <20250618030353.1113022-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <685120d8.a70a0220.395abc.0204.GAE@google.com>
+References: <685120d8.a70a0220.395abc.0204.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,60 +60,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PL1 cannot be disabled on some platforms. The ENABLE bit is still set
-after software clears it. This behavior leads to a scenario where, upon
-user request to disable the Power Limit through the powercap sysfs, the
-ENABLE bit remains set while the CLAMPING bit is inadvertently cleared.
+#syz test
 
-According to the Intel Software Developer's Manual, the CLAMPING bit,
-"When set, allows the processor to go below the OS requested P states in
-order to maintain the power below specified Platform Power Limit value."
-
-Thus this means the system may operate at higher power levels than
-intended on such platforms.
-
-Enhance the code to check ENABLE bit after writing to it, and stop
-further processing if ENABLE bit cannot be changed.
-
-Reported-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- drivers/powercap/intel_rapl_common.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index e3be40adc0d7..602f540cbe15 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -341,12 +341,27 @@ static int set_domain_enable(struct powercap_zone *power_zone, bool mode)
- {
- 	struct rapl_domain *rd = power_zone_to_rapl_domain(power_zone);
- 	struct rapl_defaults *defaults = get_defaults(rd->rp);
-+	u64 val;
- 	int ret;
+diff --git a/fs/namei.c b/fs/namei.c
+index 4bb889fc980b..291f29a04e09 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -2005,6 +2005,10 @@ static const char *step_into(struct nameidata *nd, int flags,
+ 		if (path.mnt == nd->path.mnt)
+ 			mntget(path.mnt);
+ 	}
++
++	if (inode && !S_ISLNK(inode->i_mode))
++		return NULL;
++
+ 	return pick_link(nd, &path, inode, flags);
+ }
  
- 	cpus_read_lock();
- 	ret = rapl_write_pl_data(rd, POWER_LIMIT1, PL_ENABLE, mode);
--	if (!ret && defaults->set_floor_freq)
-+	if (ret)
-+		goto end;
-+
-+	ret = rapl_read_pl_data(rd, POWER_LIMIT1, PL_ENABLE, false, &val);
-+	if (ret)
-+		goto end;
-+
-+	if (mode != val) {
-+		pr_debug("%s cannot be %s\n", power_zone->name, mode ? "enabled" : "disabled");
-+		goto end;
-+	}
-+
-+	if (defaults->set_floor_freq)
- 		defaults->set_floor_freq(rd, mode);
-+
-+end:
- 	cpus_read_unlock();
- 
- 	return ret;
--- 
-2.43.0
 
