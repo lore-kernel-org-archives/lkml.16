@@ -1,73 +1,74 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262BF2E9EBA
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:42:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5092165E9
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750254160; cv=none; b=ViN8bck2Qp/AxH/6tjuGdrAejq/7aCnl80BMM14oPE2Mtditg2c4hMcRSSIQAnlk3aR2XT/klY26RGtnKUf/H7ayShxEMCt60qLsgj6ldMjTR6XKFQBiX2dVNWKIJwNtB8PNE8AqN4wiYJMinbwb0UqTIDKPzokktIWds9S2qQ8=
+	t=1750254176; cv=none; b=HU6mq5IplYLOjGimQIEgtHn6jbMaIBgsN1n8fs2Bd87q71yDWY0CVoiGc5xFLGOzAWL1p4LUWYq32o7j1wZBPjkePBsFjQ+ANETb2J2+fTVMjZlG2oIG8/lyx0z4TkrV+6rw8DWo1fnwQXySmrZ5bAFustmPXMRyz1404Q+SxKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750254160; c=relaxed/simple;
-	bh=eEO+Aw2g4Ye3zeBEqfCg7cLkZgwkmnjuAHAb/18yzBw=;
+	s=arc-20240116; t=1750254176; c=relaxed/simple;
+	bh=tz0a9+M5C7nElDvvHd2ysFpCEWklRNzZpChi88lTTGs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k7SFhGBV0LSgdMdaFJ3a7YsspokpI2yQ2/bScrWE0gcz+JXdaJexIxnwzLRzICZe6Xng/xpMic2DcPS+8joXvWyz8dP6FKHLjHcg6AM8F/crJZvYKtkG/DtdPUBaoLwOMhba41FMY/RF7qn9mwXJzdtwqa3Zy+lar5IT08IxTJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Gvqj5sC1; arc=none smtp.client-ip=209.85.214.170
+	 To:Cc:Content-Type; b=aJh0JkqnV1JR+YKLaBFuqjpM5gHk1PkVb0GTvNI8A5yAD+jBjMJVj90gKsH3JhzjHVhiki2oHiCXNebsGfaUymSz+nj/QiwucoEkW7d3gTlsg7/IW9Jo6UNlaazNNOWs9scbUgD2+EZ6tRzljgzPMqPBpir4bfno+vNr+39X7F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Mw3JERWu; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Gvqj5sC1"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-235a3dd4f0dso44781895ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:42:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Mw3JERWu"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-234bfe37cccso89770985ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254158; x=1750858958; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750254174; x=1750858974; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eEO+Aw2g4Ye3zeBEqfCg7cLkZgwkmnjuAHAb/18yzBw=;
-        b=Gvqj5sC1Fy0ke6h07ca6fdZDgXIrjDt+D0nDoWyhlXssNHKYtvdcuoeTxXh26WW/uV
-         cq4ibyei8wFpWd9/AJRSDOl2VsQV5evLANN5JjCdhbH5NNo5L8MuvRfAxGQqMG2fNixW
-         GcmSHwUr5oaVgvWQ0dlml+SW8mWAkn8wY6GNnNnzV7WNuvQHBSTwFQeRvGuqmjl5fyG8
-         LjT0hINFaFOSv8Gj7ha4o3sNQf2M2OA3d/b/AA5jd1wn/FLOdhtyYPh6oVXIgQiES33L
-         0C/zNe7ZsV2Nq/VJVudFJKykHsi8MIvbmEFXiuu5R7YFyCXAmAHmod8Onpf4Su8TGzB5
-         Z0EQ==
+        bh=tz0a9+M5C7nElDvvHd2ysFpCEWklRNzZpChi88lTTGs=;
+        b=Mw3JERWuIGJ5V5wrNWkTEkUYjZ2E9KOnEGxrQc3b84q0QNLUUrNZqdFwrGvSCuLQhA
+         z2JYfsOBqgnWAJq8ao7Dg9P5xH4zcJ8Ti7zIfd5muHFBp1f2sEJQrF71UcInDMTDbvrO
+         tBfNdHjHE9yXuA0s/ATWvoYrjnxYnEJJ2rI2kK54nBsXZhsRjQMBL+44Bad+aO5aOp/1
+         HwZyj3cOJYoMVIWwzBZdXds0wknG/WJ5PYCpdITBgTCtrSK2HGBB5fhUtj+SaxvLUTpB
+         Tuuhzpv0UDnJ9YGbPJBpSROKm01hcmkMCZN1zAClHmIgtAFzeiWMohR4bfrTGFOeAR0A
+         pXww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750254158; x=1750858958;
+        d=1e100.net; s=20230601; t=1750254174; x=1750858974;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=eEO+Aw2g4Ye3zeBEqfCg7cLkZgwkmnjuAHAb/18yzBw=;
-        b=Aq+DhNhwzCTejjoU31mqQiVd3QxEZE7smZCjCrlz5kXCS2B2fgYVo+mIuKnDx6sdoK
-         wlhlgk93qy7J1+iIHEubUlmKnNE94+LgggC2lo69ri+y3lnmgfgEJLQ/nHPIWgj+EOrS
-         9mLRcvtuAEul5oOThh7ScHdxSywjpD3sWAj5cKzqXv6XIWa0a4xNEixftib8vHf+zPs2
-         5qj2tG5iGAe4O7l6DLFTX3t82bav4q14QAFdyHvp6AiDzkxWg2hv7E0KCGXDu4eQSiZw
-         bohlIVFTsza/UXdIAZHYo/JYbzGQgX8s3zcfZ/dXHStcPBdjYiifBMXokwN8vawisWUq
-         IJPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKxLT7Q0oQHEeaEuwcKH+sGIa1ikabPliKl0+xeka1jbJzNXtLuQDtEb0hDDfuvJkKjdwdbGh9tysARBg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0oUbLoqAy22YxnVtWcbWkDtV/21w/8QkbkBy7SrQSIYWfYDr5
-	NjLlNgpxHyicxVz9qvAB2WMkyDme+aiXPjC+xBtpN/bpXlhmMi8O8C6J2+NwU+iBWZA6QiEGyfu
-	XWG4vFDs+P+EywAqEzIQvsG35vOwbYwCcYPPCGeqjXw==
-X-Gm-Gg: ASbGncuU5ATPNNspy9RSL4Q8pLVSK9Umt4+Z9AkK97GMxNd9mHBK14ZRJEB4ium6j7H
-	R/0J0kLGWJ6UHycMoZvD5wvY7q/V0g8UvYvk17indb1uauf0hx/4OnrKqfVA0wlFZIEgUZI38bc
-	c+f6HlrPtwLakEB9zA9Y6D+1Yv95FTJCXRYL0mWCoOtIFkWJhpji6npcWv+UgyjpPveA0L3nBjm
-	A==
-X-Google-Smtp-Source: AGHT+IE9RRF0iBcbNFXcUb8SkJRKabvVWjmiE253LTqxfYGXwndQn6/QT3ohHBsxRY1SrMjuBvVMrN/uQK3qBsQXw3o=
-X-Received: by 2002:a17:902:cf0e:b0:234:d7b2:2aa9 with SMTP id
- d9443c01a7336-2366b1221femr273087145ad.29.1750254158312; Wed, 18 Jun 2025
- 06:42:38 -0700 (PDT)
+        bh=tz0a9+M5C7nElDvvHd2ysFpCEWklRNzZpChi88lTTGs=;
+        b=AB7BdTkXYAs33t5BIVRcFPSaeRecvLDjpivlekUCwI1b6OkpB5g1d1e61w77pTrK8V
+         o4Zrgt1RXmWC2HiKkD84V+YVH8Q+gcTVfasnOeiou6ki4wVh5XyyROyGbKa5+qnlKtcV
+         lgGJox31VUSLaGantPl/6dkZohaTpp3n0zCmFS/2/WiGP3ksSb2nnFZ8piyGqX3Mml2+
+         8RUg0ckc4Aq1G3jE1ioPifXGiQ4shHF6S7Kojc7qF0nOyaqAiVfoqVC/NZvH9qtlrFU9
+         Wh0/8wKrC0nUFm6JTPnBK2h2Cw+OkKxyBEBSRWFnC3j6Vjhd5oBUbNTVKD/JtSAwriE4
+         Ps0g==
+X-Forwarded-Encrypted: i=1; AJvYcCWjvX+ELm5Yrql6mAHwhRVR2yNfdRyzcefLhqDRdeBMUMLe9huycOIh4NWd2hkmcRL9imJxdP2YUTAfCxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzVnGs9hl3J6pnvmCHxG3nSAUKxq51RyScHPZ2zroWhUEjVyk9
+	nDK0rhUuoJH6iaguJpUHHYIJdZwrB2pbsns7qSQj3LRi8zF9qKNDde4ShEditLLf6NiS4psVCEM
+	eBatrJ5fikOd2CIJtY+5GJnNdb0xMTJz8yCd/oWrEKg==
+X-Gm-Gg: ASbGncvi7J9OSuS09IZYGLkZ9YLvkRQon7MEp7uNQQv+ILMBFvrkSjpegIkK1CrJgO4
+	uUkkXQRdn5bsBZctbAVceqkIbQzDLsdK+rDbFT1MMeH9rMdKiR/+r+uPC4tjH8dg+z46E+32O8c
+	dfU3T9j0Xjtxu/MgFBZLGfawGi3IxgSaIQmKYNwDqU+gB/ePZWKYtX3Up67WzEJymFGUP7eQeIr
+	g==
+X-Google-Smtp-Source: AGHT+IElrVhMfyL96c9QVT6DbL+Lc21boXjlquqgqsoD4fhNOqUmdIoDw1JXTFKsvyhQJ4W4uPfVUPd6XCcj78sx+6c=
+X-Received: by 2002:a17:903:46c8:b0:234:c22:c612 with SMTP id
+ d9443c01a7336-2366b17b6d8mr272722965ad.43.1750254174423; Wed, 18 Jun 2025
+ 06:42:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250618102229eucas1p2a5d38013ee52a8a4a10d43449073e79e@eucas1p2.samsung.com>
- <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-4-27ed33ea5c6f@samsung.com>
-In-Reply-To: <20250618-apr_14_for_sending-v5-4-27ed33ea5c6f@samsung.com>
+References: <CGME20250618102230eucas1p2573610db9d4a9f3543d0048c30b2df9e@eucas1p2.samsung.com>
+ <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com> <20250618-apr_14_for_sending-v5-5-27ed33ea5c6f@samsung.com>
+In-Reply-To: <20250618-apr_14_for_sending-v5-5-27ed33ea5c6f@samsung.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 15:42:23 +0200
-X-Gm-Features: AX0GCFtH0tHQpQVePKw4GRZe0_n4DXj2kfns9aQPVtqgBIhjJI4B39bCzPcceGU
-Message-ID: <CAMRc=Mcv6KJOCypOHF-KtFk6N-Z=eoMCqH0KuuUND=8J1YvrEw@mail.gmail.com>
-Subject: Re: [PATCH v5 4/8] drm/imagination: Use pwrseq for TH1520 GPU power management
+Date: Wed, 18 Jun 2025 15:42:40 +0200
+X-Gm-Features: AX0GCFuzTphnup-dhM3gVd1jGswJjfqrqmNVH_fP0A_YpAvwshbZGGJ4zdPhw5k
+Message-ID: <CAMRc=MfKx+S-8yYpab1YO0XsGN6a9-ybJpyRoyN6wCrKcm=j2w@mail.gmail.com>
+Subject: Re: [PATCH v5 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
+ GPU compatible
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
 	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -80,37 +81,27 @@ Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redh
 	Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
 	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org
+	dri-devel@lists.freedesktop.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Wed, Jun 18, 2025 at 12:22=E2=80=AFPM Michal Wilczynski
 <m.wilczynski@samsung.com> wrote:
 >
-> Update the Imagination PVR DRM driver to leverage the pwrseq framework
-> for managing the power sequence of the GPU on the T-HEAD TH1520 SoC.
+> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
+> specific GPU compatible string.
 >
-> To cleanly handle the TH1520's specific power requirements in the
-> generic driver, this patch implements the "driver match data" pattern.
-> The pvr_soc_data struct, associated with a compatible string in the
-> of_device_id table, now holds pointers to platform-specific power_on and
-> power_off functions.
+> The thead,th1520-gpu compatible, along with its full chain
+> img,img-bxm-4-64, and img,img-rogue, is added to the
+> list of recognized GPU types.
 >
-> At probe time, the driver inspects the assigned power_on function
-> pointer. If it points to the pwrseq variant, the driver calls
-> devm_pwrseq_get("gpu-power"), requiring a valid sequencer and deferring
-> probe on failure. Otherwise, it falls back to its standard manual reset
-> initialization.
+> The power-domains property requirement for img,img-bxm-4-64 is also
+> ensured by adding it to the relevant allOf condition.
 >
-> The runtime PM callbacks, pvr_power_device_resume() and
-> pvr_power_device_suspend(), call the power_on and power_off function
-> pointers. Helper functions for both manual and pwrseq-based sequences
-> are introduced to support this.
->
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
-
-IMO it's much better this way, thanks.
 
 Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
