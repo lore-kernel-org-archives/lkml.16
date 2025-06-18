@@ -1,135 +1,92 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96C42E3B14
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:57:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAC12E2640;
+	Wed, 18 Jun 2025 12:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251434; cv=none; b=Hmap1zHuPcRnOQ/Cugu+Pa8dSPS1GNAxIcZrb8LzP1xf3OdjyV9VByvAmIEL9vc3lCJjKDDmBP7NXeXfjAG4BEtXaKH/FFK87dsNU+YaUm0528VqPjVRPexTy1jiz9tgzKr6tbVdOU+uNLY+08nA+Jwf+18HKp8K1wXYvc/BrGM=
+	t=1750251453; cv=none; b=fgCQ6ZTZyR7q13DdySQkUWBz9PLjKoFO/eyFZEDktqzjnKhYxNCIopNS9jN0vV3jpkEVOdQJZHeFYCtyk3KuUwvKz8O9BS8zrGfv6p6gYClUCqIyM7bUglptb6dsVhJWDfnE2CGX3B82bdKV0NvBZh0NI0A7qBJ53/Os7X5+E1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750251434; c=relaxed/simple;
-	bh=3FYqq38fif/LxKqKHUHq3crgrlGF8y09qgJq5ooSqws=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cs77EJlTcHtJkL/iWr7nrNzmWIxTAKJ9o4gz1tE33M5IrIltE1r4DX2SslpYd5R1Ak5y1wHZBZp3qYjs7j74Jdt96nHMQIAdHP57OS+vekBWrWoYjBI4a2kSY8DESyQvrpDPOs0tsPWbfW/2tNVKK7nLunVCqqn1C+AngFtrG1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b7H9MyIT; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750251453; c=relaxed/simple;
+	bh=7HYY0spsrPniJmKfIQbUJENhpdxcqwe5JFROoHUtcuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bQVJQbtuyOT5XQY9OM2k01KeTlBZZZU7V2QNqtKV+U77I/Ctq4ysONgLv5wA1h1LGJjh/aIh1LiD7nBNC13r/GCJ2IBKj5V2JH4QGJmeUbPaTarVkqRe40j+B8y44w/TxLe2JxAyThvavCGa8vXa5SgmAjfkCP9MJIBorSXRg9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkR5yBqF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b7H9MyIT"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e824793a1cfso3238683276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750251431; x=1750856231; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ImV2tWTmsy2q/yEr+1DaD06Foo/cyEMhoVGfzs5E01c=;
-        b=b7H9MyITUwy7yCriEiLoOO2l5RI7y6VMfnXqPYBZAxRaJfkOCg2GY//y9VFsQB0V6O
-         0vPcYb5Jy3ALKPNu9iPhZMPrv601Hd0//ZVH/TkU4GKxhPymQyTOFLagRCw1w6XlWSop
-         Y0S8b3dtAo9uMx9P4mn/uMWWNrF+/7CCocwr/UOY8ozpqBwnDusriN/rZIexYv8bZtWF
-         /kKRk3kcxJq9rkaiV/9s6W2ZyIxDeU3vjSk2H0L78iJnjDIXplks6z5ISWxqsW+IevC0
-         qTaE6AdQGpPMVxVmumNTkz3DBjPdV4XZaQWbyhDT62+zUdceA4MiTgcxaHWjUbTvpSpg
-         sq1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750251431; x=1750856231;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ImV2tWTmsy2q/yEr+1DaD06Foo/cyEMhoVGfzs5E01c=;
-        b=p131xILcJ8FjrethrWFLxdfUuqGPR7QsNImZHRddE1TXsPQVt0ikNQMtD54fEppjCi
-         MxwSe1J7vx7AwJmdtefczly3qXq8QeI0tQRIFApgE9MPUr6W/VHiv6VUoTQPeC3LWpZo
-         /U0cjHrTMjrsv20FMqKgaHCpYmHn++AC2df+T/i+Cl5sQT1xndoYOxo3fJqM5wAQU1HK
-         7YKW+O1dzF89gx6hLnz4XIz1QkepZ48WU/V2wioZf1UQHKqLbZwZvFTACwQOBLUuv77N
-         MofWSACICflH7SdJ4gOBcQNUA1/HWvPtVYHIwpOYfZ7jxnm4LezmvBna6o5PPfr07qy7
-         OyQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOqMD/6YqZGXNjAGXtU+lJ0iGpN5U1BNiVTwv6C60n49bFgolgCTSNIIQpcmQHlrjtdeqJTUewMUXNbUQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxyD1Preqy3kltCv8CsAP1L2EGGHqUGN1bo26OC4tGWl58AqYvd
-	oc7moO27XP9VRUa/WeKB1Yuh5BVhRTrIjQ3wAnZPfuzg9YgS+pEJ0FhpqVsPIpnUvck/VAfLleU
-	URFO1TrTWTHY8x6xUIb/OTPGiH5Izk5OHGWC64/m1zg==
-X-Gm-Gg: ASbGnctAluJZbkPC3uweHNSlsQ/3ODn8SrD+P/sIu7L4tQ4hCBR3XiqdCsjBv5/FXiS
-	lXhz8J6odbtWF3f6X+FVO457uMYt4R6pjXtswtn1W14sSmxF35W2HLvdSGE5jUQbY/UWSwLLCDM
-	h2AWIB8HB32Yetq+sAWIkmY6nNydnLPGBd4/QNx27Qzuj1WFpeDwh+nQ==
-X-Google-Smtp-Source: AGHT+IEyQuheTBiE1KNn6YZq2gnYBnep5nmoSzdbAY5+FjuWnU41fcajc0wk6HzHKqHouIVNOHfqKE34E1wAn8AbOSo=
-X-Received: by 2002:a05:6902:108e:b0:e75:c2d7:53d6 with SMTP id
- 3f1490d57ef6-e822ac5c6e6mr24203748276.13.1750251431566; Wed, 18 Jun 2025
- 05:57:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkR5yBqF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E774C4CEE7;
+	Wed, 18 Jun 2025 12:57:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750251452;
+	bh=7HYY0spsrPniJmKfIQbUJENhpdxcqwe5JFROoHUtcuw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PkR5yBqFxocYdjEuCYI5E7t47KgCxTzUJO2837W5Mp6UWUT3+PPK+u5eVqcESDt5E
+	 mx2ExA4cK9HyPIS+WSK2NM5vLzXI+LgQ4TyA37mL/YszNycBhmJY0qZg9I/nP1Bh9S
+	 kVdPwpgx2fucvn1E3fSb8gV1amXZislUi91yvWGxzmxyyOwouvZ/yAmxtTXCVgxoWn
+	 z8KGUL+AxhIfveJQBoXnPJ3yy5A6ujIrGQrvMeFHZQk4UI5TznMjw2Beb1PyFZHJD1
+	 z7Rf7RMfCTutFSaZAMeKqvc5+Bx61fukq+XqGlb5yJv5ljdo3Nb2jFJuMLgNHjatKN
+	 D8HaNm4qYztbg==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 6.12 000/512] 6.12.34-rc1 review
+Date: Wed, 18 Jun 2025 14:57:10 +0200
+Message-ID: <20250618125710.1920658-1-ojeda@kernel.org>
+In-Reply-To: <20250617152419.512865572@linuxfoundation.org>
+References: <20250617152419.512865572@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250606090802.597504-1-lukas.bulwahn@redhat.com>
-In-Reply-To: <20250606090802.597504-1-lukas.bulwahn@redhat.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 18 Jun 2025 14:56:34 +0200
-X-Gm-Features: AX0GCFtmn4waDQnDGcBuyuBWKSA5kWVg6aNQw87L31M-o6t6ciEMxOkcF-FE8sw
-Message-ID: <CAPDyKFoPdqfz-3+XAMpg23VzaLUZ6xXJvmknQH7pjNZLPq6eAg@mail.gmail.com>
-Subject: Re: [PATCH] pmdomain: arm: scmi_pm_domain: remove code clutter
-To: Lukas Bulwahn <lbulwahn@redhat.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	arm-scmi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-pm@vger.kernel.org, Javier Martinez Canillas <javierm@redhat.com>, 
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 6 Jun 2025 at 11:08, Lukas Bulwahn <lbulwahn@redhat.com> wrote:
+On Tue, 17 Jun 2025 17:19:26 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 >
-> From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> This is the start of the stable review cycle for the 6.12.34 release.
+> There are 512 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> There is no need to introduce the boolean power_on to select the constant
-> value for state. Simply pass the value for state as argument. Just remove
-> this code clutter.
->
-> No functional change.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+> Responses should be made by Thu, 19 Jun 2025 15:22:45 +0000.
+> Anything received after that time might be too late.
 
-Applied for next, thanks!
+For arm64, with Clang 18, I got:
 
-Kind regards
-Uffe
+     drivers/thermal/mediatek/lvts_thermal.c:262:13: error: unused function 'lvts_debugfs_exit' [-Werror,-Wunused-function]
+      262 | static void lvts_debugfs_exit(struct lvts_domain *lvts_td) { }
+          |             ^~~~~~~~~~~~~~~~~
+    1 error generated.
 
+I assume the reason is that `CONFIG_MTK_LVTS_THERMAL_DEBUGFS=n`.
 
-> ---
->  drivers/pmdomain/arm/scmi_pm_domain.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/pmdomain/arm/scmi_pm_domain.c b/drivers/pmdomain/arm/scmi_pm_domain.c
-> index 2a213c218126..8fe1c0a501c9 100644
-> --- a/drivers/pmdomain/arm/scmi_pm_domain.c
-> +++ b/drivers/pmdomain/arm/scmi_pm_domain.c
-> @@ -22,27 +22,21 @@ struct scmi_pm_domain {
->
->  #define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
->
-> -static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
-> +static int scmi_pd_power(struct generic_pm_domain *domain, u32 state)
->  {
-> -       u32 state;
->         struct scmi_pm_domain *pd = to_scmi_pd(domain);
->
-> -       if (power_on)
-> -               state = SCMI_POWER_STATE_GENERIC_ON;
-> -       else
-> -               state = SCMI_POWER_STATE_GENERIC_OFF;
-> -
->         return power_ops->state_set(pd->ph, pd->domain, state);
->  }
->
->  static int scmi_pd_power_on(struct generic_pm_domain *domain)
->  {
-> -       return scmi_pd_power(domain, true);
-> +       return scmi_pd_power(domain, SCMI_POWER_STATE_GENERIC_ON);
->  }
->
->  static int scmi_pd_power_off(struct generic_pm_domain *domain)
->  {
-> -       return scmi_pd_power(domain, false);
-> +       return scmi_pd_power(domain, SCMI_POWER_STATE_GENERIC_OFF);
->  }
->
->  static int scmi_pm_domain_probe(struct scmi_device *sdev)
-> --
-> 2.49.0
->
+In mainline I don't see it. I think we need commit 3159c96ac2cb
+("thermal/drivers/mediatek/lvts: Remove unused lvts_debugfs_exit").
+
+It cherry-picks cleanly.
+
+Otherwise, boot-tested under QEMU for Rust x86_64 and riscv64;
+built-tested for loongarch64.
+
+Thanks!
+
+Cheers,
+Miguel
