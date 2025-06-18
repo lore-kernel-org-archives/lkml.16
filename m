@@ -1,109 +1,116 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C249E2EFDA7;
-	Wed, 18 Jun 2025 16:47:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 652B52F364A;
+	Wed, 18 Jun 2025 16:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265277; cv=none; b=kh4doGkOqJEddPjG8BUl92JEtCmpU21E0feEy6xe6vcjUdRLlVbCySeDhannWFJT9u2RIVj9eznXFskinjzYZR1CRmPvf59nU0cgjvuasI5FNwjSFAaLnRa51N4I7Eq7GTy+dpOSD2a629b08xggzYKHdkVLfXbimlZwo3LTyDs=
+	t=1750265280; cv=none; b=D6q8OY1cNTlVxdureny93LkfICNpaOOgJUFH1crNRvPcLK9A8TUZ4UliihuTGXUnvNJX3kjHIXPYhgnY9ltOgN1rR89lasmiuAcoFTyPqpbz8jN7kP6niQskkUcZvNgbVuOxJtUEWINcfBHzP01RHBUhhad7M8XkkteeyBT7OoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265277; c=relaxed/simple;
-	bh=hIUF1W2kQbNBkJA9y0/7IYXS/DTzn2iOQBfMawanAnQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VbMuemFowYGYjnpG+vLEMETrWaSc7GVOGSMe8vCYzN5hWAGp6+G+ePy8XQBxlywWjy1tCDnSuGm60awFspoHJCEwz9Hb5C0ImQnX26GqgLqoxr6cLXkKHDApD97Ty095YINwTfB9qUfyOotWeLpHIVzUsrK9VSgHrS+TR4BlqsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LaqDvgaf; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750265280; c=relaxed/simple;
+	bh=F/RVluyB9gnjvw7OXVFevuaIVS4h51tiTmrRF0NLT9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kh9AOpggOkD9ZXobIeco1g5gkxHJ6WdpFXwDz+VDAZR4+mSRMjv/orb2ytqB3AW8wjfY7X9VVhEQkVuqyi3qcXAM4s+/0QRhuPcqsky21AKREARmB7Bh1eCO9MQzlFXGyeCqN0GcwS0B2sqd91mkSP31phXhCp+wujjNCnrm/6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=s4Ey753k; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mNGwdAN1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaqDvgaf"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ad891bb0957so1306715466b.3;
-        Wed, 18 Jun 2025 09:47:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750265274; x=1750870074; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=N+qv1GHOU/ShU2OJAJa6dB0bDSAG6lFZVxU0lASK27k=;
-        b=LaqDvgafzN72UzGjWTX4hGDsuTBPEAkBQ+tpA9TAjYBODp5811u4lmjwOAr0zAMsZC
-         FSR1Ydmg/K2k6SSPxfWGJ68iJYyWUPiEdMttj96jaXM07rWdQtRYkH7iqdEsk9CyMrhS
-         W/l6pG896cag0vLyTgD6unx/jQ8cXRqwOJLpUYVAQelfdTi5pyNFlfXaPncCdxsvTgbz
-         pdt2rO8PHoUWt2UoNzuU03j+i7l2pO7XPPWZX04aaHQOFR9SpjTH68npFq2oG4D9spJs
-         lYPyWdJG0n9MUj18vHbD9ioALFYPNwVZfHgyCKh2ojXFRt+AmpmPlA9V1R9szC8N7HdA
-         y5/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750265274; x=1750870074;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=N+qv1GHOU/ShU2OJAJa6dB0bDSAG6lFZVxU0lASK27k=;
-        b=bXbVUC6HmSGe6eyQzqd8WMEWOzqcZpTe/lUd1aKJV2TrNOxq7d/1Jvg3FqhNAa7OLi
-         99T9/lX1bJc0JAkb9QhWQ36YhLqL1LC5Efp8GyC51xTstTYCI1J9DwhhnBcjP/HbcYrk
-         lJ15Ml82Qon4/dFOm5hDGqdSKRYZOBnzbhPQWUWb8XMr6wPvdj/uJ+t5mD8np6rlxOwp
-         ZBx+XZwSuz5YkvJrfaX4d941QaEOvfN+04/yEbYey9G8WaVAYrYiLrijQDQjHecJohMn
-         LJwOOUFBWCxm761vzzTLHVxhPvLzgHOH2wjy/ykN3I3Ks/mFm9s8ELyAEUbX21xowHy6
-         Njhg==
-X-Forwarded-Encrypted: i=1; AJvYcCXei5A9xV3z1axoXjNQdrNspvVrPHS9IpQukCR8MPyyipFi2+EEonYeHw2prKAqeCYWtvfwvTNeYStI8+c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGYzZxmnRbjxRshfXAd4yFzwaqikb8G9/d8+ODDliREp0lwY0d
-	nQmvgS+gJInIPtNvXIGlqGHyYOQVcdlvotDEWPHrkFula5Vm3ehEmP9F3NsWuKvN
-X-Gm-Gg: ASbGncvjrFy0dnGL2pkZwOQ6meLFdUcSAdifEeSNMmZSgnjVITeisdAjMtwnAtHluIw
-	yVYHXP7tOecOovI5XLi6hY2AjH+SBQIqXZMngrckYqA7Kaegcxy9L6OsG8OPaKdfvqCBx5BZR3F
-	51iDv4dtl30szNieCTPIo0SM5Tl/TbjtOCMyz2SNQ7TbZnASkBGw2rpWqiBOdlA+41sumtl39lg
-	1EJbMrzBvrgvl5qvOaniswaJKdqMUG6SlEf39mlBv1DfkHcxgetteCql6zk/dpRvCTxAe5MaN4i
-	wGhv7jqax+GEnF+H9vi/IrE3k3QTy9N8ohb2Q09CbVy2428cyh4koNvY5En1Pd9I4iz3JD9u/Dj
-	6FWVxhvo=
-X-Google-Smtp-Source: AGHT+IF7CCKVAgk6WUozUwLRY/+4SzLJ63FajrazwZc0+Ifd6OQCqqeNXYovSAUeenIgd24XLetrcA==
-X-Received: by 2002:a17:907:1c08:b0:add:f62e:a300 with SMTP id a640c23a62f3a-adfad29f4e2mr1862867166b.2.1750265273477;
-        Wed, 18 Jun 2025 09:47:53 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:3030:ae0:5873:67f3:9dc3:7778:59f4])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adf9ad8a155sm935481566b.84.2025.06.18.09.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 09:47:53 -0700 (PDT)
-From: RubenKelevra <rubenkelevra@gmail.com>
-To: linux-usb@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	shawnguo@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-imx@nxp.com,
-	linux-kernel@vger.kernel.org,
-	galak@kernel.crashing.org,
-	RubenKelevra <rubenkelevra@gmail.com>
-Subject: [PATCH] include: fsl_devices.h: drop unused, misspelled FLS_USB2_WORKAROUND_ENGCM09152
-Date: Wed, 18 Jun 2025 18:47:43 +0200
-Message-ID: <20250618164743.1916838-1-rubenkelevra@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="s4Ey753k";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mNGwdAN1"
+Date: Wed, 18 Jun 2025 18:47:56 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750265277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yhZT/XIdpaQC+/asQhhXC9885wUsFZcLhTwY9gLnL9Q=;
+	b=s4Ey753kPGRp8tZ6qkW4IkoAWK5XmT4V9M4txoh5ZjSDeFZo+STdJ14sIKsUWvTo3vOxfm
+	oj0tB4bstxuAWdrxwSiC6/c5HjfyAlQPGqiEKL3QnxiI5N9fxGks/gSUanKtSW5tRdn3Sw
+	D1iAwY8Oo5qgat1We5MeUuUgiEufWXqkPoroIe9GZ7i0xzkVe2Moye4XNGpmsB1hweyGk6
+	QngvKrqj3/XlhtrBX1vK/vRmss/QADpbDqwIJM957v/qJY8xHl9pPrWI4YY2SXaYbSCs6v
+	/PY+ZKVBYQB9mbtiHWpTeIV4JTIl9boIOTfec3xzuOXzHSG2Qmh1/S8Z5fwzEQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750265277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yhZT/XIdpaQC+/asQhhXC9885wUsFZcLhTwY9gLnL9Q=;
+	b=mNGwdAN1SiRoQILU+NDXkzk2vHgUWCecG6khQaSuoyvvxCqADqHALUO9G/hQSJAwgW+bAf
+	dzAprM0oizLsnYBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Calvin Owens <calvin@wbinvd.org>
+Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
+	"Lai, Yi" <yi1.lai@linux.intel.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org
+Subject: Re: [tip: locking/urgent] futex: Allow to resize the private local
+ hash
+Message-ID: <20250618164756.9CeqXYlG@linutronix.de>
+References: <20250602110027.wfqbHgzb@linutronix.de>
+ <174965275618.406.11364856155202390038.tip-bot2@tip-bot2>
+ <aFBQ8CBKmRzEqIfS@mozart.vkv.me>
+ <20250617071628.lXtqjG7C@linutronix.de>
+ <aFEz_Fzr-_-nGAHV@mozart.vkv.me>
+ <20250617095037.sOnrJlPX@linutronix.de>
+ <aFGTmn_CFkuTbP4i@mozart.vkv.me>
+ <aFIhSYmDvzRgShIy@mozart.vkv.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aFIhSYmDvzRgShIy@mozart.vkv.me>
 
-The macro was introduced in commit 69cb1ec4ce4d ("mxc_udc: add
-workaround for ENGcm09152 for i.MX35") on 2010-10-15, but its prefix was
-misspelled as **FLS_** instead of the usual **FSL_**.
+On 2025-06-17 19:15:37 [-0700], Calvin Owens wrote:
+> It takes longer with LTO disabled, but I'm still seeing some crashes.
+>=20
+> First this WARN:
+>=20
+>     ------------[ cut here ]------------
+>     WARNING: CPU: 2 PID: 1866190 at mm/slub.c:4753 free_large_kmalloc+0xa=
+5/0xc0
+>     CPU: 2 UID: 1000 PID: 1866190 Comm: python3 Not tainted 6.16.0-rc2-no=
+lto-00024-g9afe652958c3 #1 PREEMPT=20
+=E2=80=A6
+>     RIP: 0010:free_large_kmalloc+0xa5/0xc0
+=E2=80=A6
+>     Call Trace:
+>      <TASK>
+>      futex_hash_free+0x10/0x40
+This points me to kernel/futex/core.c:1535, which is futex_phash_new.
+Thanks for the provided vmlinux.
+This is odd. The assignment happens only under &mm->futex_hash_lock and
+it a bad pointer. The kvmalloc() pointer is stored there and only
+remains there if a rehash did not happen before the task ended.
 
-Its last in-tree user disappeared with commit a390bef7db1f ("usb:
-gadget: fsl_mxc_udc: Remove the driver") on 2020-12-10, so the macro has
-been completely unused since then.
+>      __mmput+0xb4/0xd0
+>      exec_mmap+0x1e2/0x210
+>      begin_new_exec+0x491/0x6c0
+>      load_elf_binary+0x25d/0x1050
+=E2=80=A6
+> ...and then it oopsed (same stack as my last mail) about twenty minutes
+> later when I hit Ctrl+C to stop the build:
+>=20
+=E2=80=A6
+> I enabled lockdep and I've got it running again.
+>=20
+> I set up a little git repo with a copy of all the traces so far, and the
+> kconfigs I'm running:
+>=20
+>     https://github.com/jcalvinowens/lkml-debug-616
+>=20
+> ...and I pushed the actual vmlinux binaries here:
+>=20
+>     https://github.com/jcalvinowens/lkml-debug-616/releases/tag/20250617
+>=20
+> There were some block warnings on another machine running the same
+> workload, but of course they aren't necessarily related.
 
-Remove the dead and wrongly named definition.
+I have no explanation so far.
 
-Signed-off-by: RubenKelevra <rubenkelevra@gmail.com>
----
- include/linux/fsl_devices.h | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/include/linux/fsl_devices.h b/include/linux/fsl_devices.h
-index 5d231ce8709be..49f20c2f99bf0 100644
---- a/include/linux/fsl_devices.h
-+++ b/include/linux/fsl_devices.h
-@@ -118,7 +118,6 @@ struct fsl_usb2_platform_data {
- #define FSL_USB2_PORT0_ENABLED	0x00000001
- #define FSL_USB2_PORT1_ENABLED	0x00000002
- 
--#define FLS_USB2_WORKAROUND_ENGCM09152	(1 << 0)
- 
- struct spi_device;
- 
--- 
-2.49.0
-
+Sebastian
