@@ -1,263 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F0512E5B;
-	Wed, 18 Jun 2025 02:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26236C2EF;
+	Wed, 18 Jun 2025 02:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750213120; cv=none; b=SoUYm/lEIfPd8K2acVqHfWAK3f1oQIV34dChwYmGB56dSUoGuVE7KweTxXgoLaOYFgkdq+9Ve1rsz7zbjE/hAHPektGyY0GUkM0KfNU7bTOqGTAXC7I4EtrKvV8Ct5Y41gQmFEJGk3r57ak0LpPGqUpu9HsduMzbOHMXxKZ4itM=
+	t=1750213499; cv=none; b=RF+WISbsrj08NxqXAKJE516gnKjCZrnbWBikEp5+ijGprCVaxUOBKLPHYX8MIrT7dNFy+Jd+Hd+y5xkJFNr5h0pd+UiANhtkBZ3mtHdu8jIdhV/w2xDtHMg89LlvMe+WMVCtO0ROlzjUDeUSe1Km74ljsdt+tfsqm4kuB3x+X4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750213120; c=relaxed/simple;
-	bh=FeQphIc5D1myg11vQruSQmO3Z93PdqqImp9iOYt4LXA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gYmAK9JRqb9qpSGO3f08vcO8OX9rfjpWLwa0djAJG/8rLTr3G3P85dK4RrTnzs+W9sJ+OlRqyf+ScyMq/eBLqIz1iJXRkQ3+0dgyot+Wq09FaZI6r48mRSF3/Vsp1Nz2pA3HJRbnn6MIZacrqwGpYDnWW50L1vboOyOh+SB3OIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=byoVeCZu; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="byoVeCZu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750213119; x=1781749119;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FeQphIc5D1myg11vQruSQmO3Z93PdqqImp9iOYt4LXA=;
-  b=byoVeCZuDYHFVtLDQatUw0Rzb6CtBFeA5oyXVIg9qYQGcDsRpMYizpld
-   ZgPVOYhAphvnKk4KZSEJKWDI3UFRNkFj6ZPwtcm++iixAjpU/XVJ1ofav
-   s0iL656Q49cIWaUCFXw7EjRUvgJlgrmVOKBs7gDRabs0lRDLp7JH3TWt6
-   YwCOrxL6cBUioY+sQGyW4HdSqadRvExYFF+f24E3O86GojZdvHgEWWV+m
-   UahXiWkCnNsjlnqfiPaeCXIiSFLIze7xWF2Zk1HfNtWtOJkrb7hiSTgUs
-   s2IX975vlOiyMJP8+mcSRLPCi/Fz1HReVskkOvKST2MvLn23uUz4tMtaY
-   w==;
-X-CSE-ConnectionGUID: hJPn5559RF2GEpqUwXu6mg==
-X-CSE-MsgGUID: qOJyEes4S3CErVtZTxfOdA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11467"; a="56217704"
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="56217704"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2025 19:18:38 -0700
-X-CSE-ConnectionGUID: PVpardVjR1eUwYbuL/jfqg==
-X-CSE-MsgGUID: 4lRf095TRCO1+tzLM2P/TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,245,1744095600"; 
-   d="scan'208";a="153918946"
-Received: from unknown (HELO CannotLeaveINTEL.bj.intel.com) ([10.238.153.146])
-  by fmviesa005.fm.intel.com with ESMTP; 17 Jun 2025 19:18:35 -0700
-From: Jun Miao <jun.miao@intel.com>
-To: kuba@kernel.org,
-	sbhatta@marvell.com,
-	oneukum@suse.com
-Cc: netdev@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	qiang.zhang@linux.dev,
-	jun.miao@intel.com
-Subject: [PATCH v5] net: usb: Convert tasklet API to new bottom half workqueue mechanism
-Date: Wed, 18 Jun 2025 01:05:59 -0400
-Message-ID: <20250618050559.64974-1-jun.miao@intel.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750213499; c=relaxed/simple;
+	bh=veGwjYAshz5wATG617MZKNzcaKLYPgMK/Du4Bkd6tkg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=g8841yUItXMWxNKr7PmTkRN6rbuWO7bIOOvVcmlhQ4uO6hv+Py46KMgnDnunPZE/PXymA51wAN0RntLsWzoj2RYm/h/Lz++lqg1pziJ6ttRdIfwb5CKdSf1rzwjYADrZEWRW4I0xlZl7m04yUOyUXSFfH2fr/AgpRIlKB+TOuwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from mail-wr1-f46.google.com (unknown [209.85.221.46])
+	by APP-03 (Coremail) with SMTP id rQCowABHXFRxI1JohnlDBw--.7428S2;
+	Wed, 18 Jun 2025 10:24:50 +0800 (CST)
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a5123c1533so3619032f8f.2;
+        Tue, 17 Jun 2025 19:24:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVnetWa153F1iwRXLT/Nk+EXqCvd5g6ZFmxOvo1MkfCWD6Bs80CPcgs4h54sZzOeV4X7HXszF2hqTED@vger.kernel.org, AJvYcCWWGNPaK6nbSDLXOSYdgNn+SmJFmh2tzTXGf3oi9ewGEYckheR5+D0cg8TF05QjiHSQ8FqcC2qsxXnB@vger.kernel.org, AJvYcCXiOgVFIREQLyB7kWeFp+Df5V1xZOYwaX/Tguuf2Vx/9Cm4ue4bMwRAl06agkEwLqkXWlir06Ykuw/7v26G@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx34jyOf9jn6tGV995Pf24U1zoAlyPVnrgnjSNAjQm35qqqsJ1z
+	wePsOzLAZEjd/GcnBj8qPAKs/TkYHac4ZeKJXhPT5zC0TFLGMewaHUeMeYmv9MuDb4wvbL27hb6
+	b80JKXlHQq23hz2gSepZYT6udnG/Rhog=
+X-Google-Smtp-Source: AGHT+IFqqgCqTx3H7A2RicTOV7G+8sPyByahjukgJbjYtZInaAbuTplcRs9VJ6pS0QLur+Gg3eUy9v735bCIVegSzI4=
+X-Received: by 2002:a05:6000:2908:b0:3a3:ec58:ebf2 with SMTP id
+ ffacd0b85a97d-3a572398e99mr12091890f8f.7.1750213488113; Tue, 17 Jun 2025
+ 19:24:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250617023738.779081-1-qiaozhe@iscas.ac.cn> <20250617144038.GA1134072@bhelgaas>
+In-Reply-To: <20250617144038.GA1134072@bhelgaas>
+From: Zhe Qiao <qiaozhe@iscas.ac.cn>
+Date: Wed, 18 Jun 2025 10:24:36 +0800
+X-Gmail-Original-Message-ID: <CALhs5=1t37kXaVNiidfK16EqP-7HT_bq_s5d=JKAuBtwhONd4w@mail.gmail.com>
+X-Gm-Features: Ac12FXwoXGIkpszpHeIr8iU0A0DVQ-_8wB0lyTMDmYvmh6yGW21L2y23GrtdZ3U
+Message-ID: <CALhs5=1t37kXaVNiidfK16EqP-7HT_bq_s5d=JKAuBtwhONd4w@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI/ACPI: Fix double free bug in pci_acpi_scan_root() function
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: rafael@kernel.org, bhelgaas@google.com, lenb@kernel.org, 
+	kwilczynski@kernel.org, sashal@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-CM-TRANSID:rQCowABHXFRxI1JohnlDBw--.7428S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJF4xWFyfAF1kWFyrCF1rJFb_yoWrGw1Dpa
+	1Svw4UAr4ktr4kGr1kZ3WrZF1rZrs0krW7KrZ7t3yfAF4DWr12qFZFkrna9F98Zrs5Cw4I
+	vF4qvFyUGF4qyaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF
+	0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+	I_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxG
+	rwCY02Avz4vEIxC_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
+	IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+	6r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
+	IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
+	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf
+	9x07bVQ6JUUUUU=
+X-CM-SenderInfo: ptld061kh6x2xfdvhtffof0/
 
-Migrate tasklet APIs to the new bottom half workqueue mechanism. It
-replaces all occurrences of tasklet usage with the appropriate workqueue
-APIs throughout the usbnet driver. This transition ensures compatibility
-with the latest design and enhances performance.
+Hi Bjorn
 
-As suggested by Jakub, we have used the system workqueue to schedule on
-(system_bh_wq), so the action performed is usbnet_bh_work() instead of
-usbnet_bh_workqueue() to replace the usbnet_bh_tasklet().
+On Tue, Jun 17, 2025 at 10:40=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
+>
+> [+cc Dan]
+>
+> On Tue, Jun 17, 2025 at 10:37:38AM +0800, Zhe Qiao wrote:
+> > The patch "PCI/ACPI: Fix allocated memory release on error in
+> > pci_acpi_scan_root()" introduces a dual release issue. When
+> > acpi_pci_root_creat() fails, the pci_cpi_can_root() function
+> > will release 'ri ->cfg' and 'root_ops' in the error handling
+> > path.However, acpi_pci_root_creat() will also call
+> > __acpi_pci_root_release_info(), which in turn will call the
+> > release_info hook, causing the same block of memory to be
+> > released again.
+>
+> These are all nits, but would have to be fixed before applying:
+>
+>   - 'The patch "PCI/ACPI: Fix ..."' is not the usual way to identify a
+>     commit.  Use the same style as in the Fixes: tag below.
+>
+>   - Typo in "acpi_pci_root_creat" (twice)
+>
+>   - Typo in "pci_cpi_can_root"
+>
+>   - Add space after the period in "path.However, ..."
+>
+>   - Add "Reported-by: Dan Carpenter <dan.carpenter@linaro.org>" and
+>     "Closes: https://lore.kernel.org/all/aEmdnuw715btq7Q5@stanley.mountai=
+n/"
+>     and cc: Dan.
+>
+>   - 631b2af2f357 appeared in v6.16-rc1, so we should try to get the
+>     fix into v6.16.  A hint after the "---" would be helpful to make
+>     sure that happens.
+>
+> Wait a few days before reposting in case other folks have comments.
+>
 
-Signed-off-by: Jun Miao <jun.miao@intel.com>
----
-v1->v2:
-    Check patch warning, delete the more spaces.
-v2->v3:
-    Fix the kernel test robot noticed the following build errors:
-    >> drivers/net/usb/usbnet.c:1974:47: error: 'struct usbnet' has no member named 'bh'
-v3->v4:
-	Keep "GFP_ATOMIC" flag as it is.
-	If someone want to change the flags (which Im not sure is correct) it should be a separate commit.
+Thank you for your detailed review and pointing out these issues.
+I will wait a few days before resending.
 
-v4->v5:
-	As suggested by Jakub, we have used the system workqueue to schedule on(system_bh_wq), 
-	replace the workqueue with work in usbnet_bh_workqueue() and the comments.
----
- drivers/net/usb/usbnet.c   | 36 ++++++++++++++++++------------------
- include/linux/usb/usbnet.h |  2 +-
- 2 files changed, 19 insertions(+), 19 deletions(-)
+Thanks again!
 
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index c39dfa17813a..234d47bbfec8 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -461,7 +461,7 @@ static enum skb_state defer_bh(struct usbnet *dev, struct sk_buff *skb,
- 
- 	__skb_queue_tail(&dev->done, skb);
- 	if (dev->done.qlen == 1)
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	spin_unlock(&dev->done.lock);
- 	spin_unlock_irqrestore(&list->lock, flags);
- 	return old_state;
-@@ -549,7 +549,7 @@ static int rx_submit (struct usbnet *dev, struct urb *urb, gfp_t flags)
- 		default:
- 			netif_dbg(dev, rx_err, dev->net,
- 				  "rx submit, %d\n", retval);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 			break;
- 		case 0:
- 			__usbnet_queue_skb(&dev->rxq, skb, rx_start);
-@@ -709,7 +709,7 @@ void usbnet_resume_rx(struct usbnet *dev)
- 		num++;
- 	}
- 
--	tasklet_schedule(&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 
- 	netif_dbg(dev, rx_status, dev->net,
- 		  "paused rx queue disabled, %d skbs requeued\n", num);
-@@ -778,7 +778,7 @@ void usbnet_unlink_rx_urbs(struct usbnet *dev)
- {
- 	if (netif_running(dev->net)) {
- 		(void) unlink_urbs (dev, &dev->rxq);
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- }
- EXPORT_SYMBOL_GPL(usbnet_unlink_rx_urbs);
-@@ -861,14 +861,14 @@ int usbnet_stop (struct net_device *net)
- 	/* deferred work (timer, softirq, task) must also stop */
- 	dev->flags = 0;
- 	timer_delete_sync(&dev->delay);
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	cancel_work_sync(&dev->kevent);
- 
- 	/* We have cyclic dependencies. Those calls are needed
- 	 * to break a cycle. We cannot fall into the gaps because
- 	 * we have a flag
- 	 */
--	tasklet_kill(&dev->bh);
-+	disable_work_sync(&dev->bh_work);
- 	timer_delete_sync(&dev->delay);
- 	cancel_work_sync(&dev->kevent);
- 
-@@ -955,7 +955,7 @@ int usbnet_open (struct net_device *net)
- 	clear_bit(EVENT_RX_KILL, &dev->flags);
- 
- 	// delay posting reads until we're fully open
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	if (info->manage_power) {
- 		retval = info->manage_power(dev, 1);
- 		if (retval < 0) {
-@@ -1123,7 +1123,7 @@ static void __handle_link_change(struct usbnet *dev)
- 		 */
- 	} else {
- 		/* submitting URBs for reading packets */
--		tasklet_schedule(&dev->bh);
-+		queue_work(system_bh_wq, &dev->bh_work);
- 	}
- 
- 	/* hard_mtu or rx_urb_size may change during link change */
-@@ -1198,11 +1198,11 @@ usbnet_deferred_kevent (struct work_struct *work)
- 		} else {
- 			clear_bit (EVENT_RX_HALT, &dev->flags);
- 			if (!usbnet_going_away(dev))
--				tasklet_schedule(&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
--	/* tasklet could resubmit itself forever if memory is tight */
-+	/* work could resubmit itself forever if memory is tight */
- 	if (test_bit (EVENT_RX_MEMORY, &dev->flags)) {
- 		struct urb	*urb = NULL;
- 		int resched = 1;
-@@ -1224,7 +1224,7 @@ usbnet_deferred_kevent (struct work_struct *work)
- fail_lowmem:
- 			if (resched)
- 				if (!usbnet_going_away(dev))
--					tasklet_schedule(&dev->bh);
-+					queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
-@@ -1325,7 +1325,7 @@ void usbnet_tx_timeout (struct net_device *net, unsigned int txqueue)
- 	struct usbnet		*dev = netdev_priv(net);
- 
- 	unlink_urbs (dev, &dev->txq);
--	tasklet_schedule (&dev->bh);
-+	queue_work(system_bh_wq, &dev->bh_work);
- 	/* this needs to be handled individually because the generic layer
- 	 * doesn't know what is sufficient and could not restore private
- 	 * information if a remedy of an unconditional reset were used.
-@@ -1547,7 +1547,7 @@ static inline void usb_free_skb(struct sk_buff *skb)
- 
- /*-------------------------------------------------------------------------*/
- 
--// tasklet (work deferred from completions, in_irq) or timer
-+// work (work deferred from completions, in_irq) or timer
- 
- static void usbnet_bh (struct timer_list *t)
- {
-@@ -1601,16 +1601,16 @@ static void usbnet_bh (struct timer_list *t)
- 					  "rxqlen %d --> %d\n",
- 					  temp, dev->rxq.qlen);
- 			if (dev->rxq.qlen < RX_QLEN(dev))
--				tasklet_schedule (&dev->bh);
-+				queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 		if (dev->txq.qlen < TX_QLEN (dev))
- 			netif_wake_queue (dev->net);
- 	}
- }
- 
--static void usbnet_bh_tasklet(struct tasklet_struct *t)
-+static void usbnet_bh_work(struct work_struct *work)
- {
--	struct usbnet *dev = from_tasklet(dev, t, bh);
-+	struct usbnet *dev = from_work(dev, work, bh_work);
- 
- 	usbnet_bh(&dev->delay);
- }
-@@ -1742,7 +1742,7 @@ usbnet_probe (struct usb_interface *udev, const struct usb_device_id *prod)
- 	skb_queue_head_init (&dev->txq);
- 	skb_queue_head_init (&dev->done);
- 	skb_queue_head_init(&dev->rxq_pause);
--	tasklet_setup(&dev->bh, usbnet_bh_tasklet);
-+	INIT_WORK(&dev->bh_work, usbnet_bh_work);
- 	INIT_WORK (&dev->kevent, usbnet_deferred_kevent);
- 	init_usb_anchor(&dev->deferred);
- 	timer_setup(&dev->delay, usbnet_bh, 0);
-@@ -1971,7 +1971,7 @@ int usbnet_resume (struct usb_interface *intf)
- 
- 			if (!(dev->txq.qlen >= TX_QLEN(dev)))
- 				netif_tx_wake_all_queues(dev->net);
--			tasklet_schedule (&dev->bh);
-+			queue_work(system_bh_wq, &dev->bh_work);
- 		}
- 	}
- 
-diff --git a/include/linux/usb/usbnet.h b/include/linux/usb/usbnet.h
-index 0b9f1e598e3a..208682f77179 100644
---- a/include/linux/usb/usbnet.h
-+++ b/include/linux/usb/usbnet.h
-@@ -58,7 +58,7 @@ struct usbnet {
- 	unsigned		interrupt_count;
- 	struct mutex		interrupt_mutex;
- 	struct usb_anchor	deferred;
--	struct tasklet_struct	bh;
-+	struct work_struct	bh_work;
- 
- 	struct work_struct	kevent;
- 	unsigned long		flags;
--- 
-2.43.0
+> > Fixes: 631b2af2f357 ("PCI/ACPI: Fix allocated memory release on error i=
+n pci_acpi_scan_root()")
+> > Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
+> > ---
+> > v1 -> v2:
+> >  - Restore all changes from the first version.
+> >  - Remove unnecessary release info hooks.
+> >  - Add a NULL check before calling info->ops->release_info().
+> >  - Delete the currently unused pci_api_geneic_delease_info () function.
+> > ---
+> >  drivers/acpi/pci_root.c |  3 ++-
+> >  drivers/pci/pci-acpi.c  | 12 ------------
+> >  2 files changed, 2 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> > index 74ade4160314..83628adbc56b 100644
+> > --- a/drivers/acpi/pci_root.c
+> > +++ b/drivers/acpi/pci_root.c
+> > @@ -974,7 +974,8 @@ static void __acpi_pci_root_release_info(struct acp=
+i_pci_root_info *info)
+> >               resource_list_destroy_entry(entry);
+> >       }
+> >
+> > -     info->ops->release_info(info);
+> > +     if (info->ops && info->ops->release_info)
+> > +             info->ops->release_info(info);
+> >  }
+> >
+> >  static void acpi_pci_root_release_info(struct pci_host_bridge *bridge)
+> > diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> > index b78e0e417324..6e85816ee1c3 100644
+> > --- a/drivers/pci/pci-acpi.c
+> > +++ b/drivers/pci/pci-acpi.c
+> > @@ -1652,17 +1652,6 @@ pci_acpi_setup_ecam_mapping(struct acpi_pci_root=
+ *root)
+> >       return cfg;
+> >  }
+> >
+> > -/* release_info: free resources allocated by init_info */
+> > -static void pci_acpi_generic_release_info(struct acpi_pci_root_info *c=
+i)
+> > -{
+> > -     struct acpi_pci_generic_root_info *ri;
+> > -
+> > -     ri =3D container_of(ci, struct acpi_pci_generic_root_info, common=
+);
+> > -     pci_ecam_free(ri->cfg);
+> > -     kfree(ci->ops);
+> > -     kfree(ri);
+> > -}
+> > -
+> >  /* Interface called from ACPI code to setup PCI host controller */
+> >  struct pci_bus *pci_acpi_scan_root(struct acpi_pci_root *root)
+> >  {
+> > @@ -1683,7 +1672,6 @@ struct pci_bus *pci_acpi_scan_root(struct acpi_pc=
+i_root *root)
+> >       if (!ri->cfg)
+> >               goto free_root_ops;
+> >
+> > -     root_ops->release_info =3D pci_acpi_generic_release_info;
+> >       root_ops->prepare_resources =3D pci_acpi_root_prepare_resources;
+> >       root_ops->pci_ops =3D (struct pci_ops *)&ri->cfg->ops->pci_ops;
+> >       bus =3D acpi_pci_root_create(root, root_ops, &ri->common, ri->cfg=
+);
+> > --
+> > 2.43.0
+> >
+
+regards,
+Zhe
 
