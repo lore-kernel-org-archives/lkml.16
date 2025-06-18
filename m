@@ -1,158 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E247C2E9EB3;
-	Wed, 18 Jun 2025 13:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2A82165E9
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253791; cv=none; b=ieleiSYqP8ZzEO0RZsdq9/xCaA1z+j6tbLoIIc+yOEhdzZjNuu62sYRld1vDVxDLl+783g3Gv+Fl6maeWfBu27SO6QfbPtgukWNjHHJ9yIgXXJoOswoZUI76DYUPDAlYc5cTFt+DdCxTbx11NvOYdK5g8BaE/ADlrOsSjXL7Pi8=
+	t=1750253940; cv=none; b=e8ZeEBcrTgRujF8KGWXEfYd/YcRgCzfJrrCKwhbfs4qq+XodFapHsTx79G7bPB5RMidcmtu0bbnp5tFmwcvCkilGW9eF03dR9y6CJPNIOASgJ3tG24uBAX5u9hrAWw62/7iqgxA4BfMqplk7Ec4FB/fQFR2lmtJ42g9NoIjUaS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253791; c=relaxed/simple;
-	bh=3PrGbD05/adEL24Dc6BiHTUdSQw3bSiCntd1ctDvbsE=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Ob6yvkm2SxdnA0hYvlFk9OCUdzjyC8LZ4VN1WXYyeOlDit6KcdRMYlr5dcLbpOdQ3vOLA5xPDz4Js0OLIDDJ6dYm6LoqhUe1MB+0e8FZ9qaNh+oEVEnUcXM+hZlNxA3gqPWcUVqJ3G/YwBLXnd/urV/TESKCZbzX0VQY35ytmMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpfGMXd8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpfGMXd8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58684C4CEEE;
-	Wed, 18 Jun 2025 13:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750253789;
-	bh=3PrGbD05/adEL24Dc6BiHTUdSQw3bSiCntd1ctDvbsE=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=LpfGMXd8xQ4zihon0vRIL0W2cnZooibfYbMwdZJHrs5z8tR5yqR8UuYbZEaMsgD9C
-	 ctgFRo1oeOFuKn5P2Rs6k7Nf+Gs9FIwtj3pMxId9YQw7WjYUADn+ddQIdM6KIRyJ3w
-	 WHc32uC9nfV8S3PSd1vR4r49NGYtt6cf5fHMbz5C+ui1bStSmtlBCrZnuHLDFz8BBT
-	 cQgO3L5HfPA41asHpSleWM/OU02FkcBQW8RKVnBfSC8OZcauQyaqC6gtbRLiTYUVry
-	 TPwAPDJatMXzHKByW+tgL2lz9kebviSIANruCcN4e9UUW+QnHaetadX3V2mqNGTfoI
-	 o0bKTKz3pmrmQ==
-Date: Wed, 18 Jun 2025 08:36:28 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1750253940; c=relaxed/simple;
+	bh=Je0tGAOTAzvEt2AtG6g843V3mh+EJS9RuHYgCeIxE/s=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QFa1m8UJ8iGTlU0bnfV3aOu773nr07rIr0DW8/WvM9OFLpEMUBIrE7mWI0ht6tleejvNlVUtWwYAuUkq8sEug4qLqvQyqksrkuMeMPi90KWfqVPHS94VXubZTf9PJjeGi6i/wrmZKpo0Y3rBFXYsQ2mwz+5Z19ClROJs80Z+hKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uRt08-0003BG-M3; Wed, 18 Jun 2025 15:38:52 +0200
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uRt08-00499l-0f;
+	Wed, 18 Jun 2025 15:38:52 +0200
+Received: from localhost ([127.0.0.1] helo=[IPv6:::1])
+	by ptz.office.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <jlu@pengutronix.de>)
+	id 1uRt08-002lkJ-03;
+	Wed, 18 Jun 2025 15:38:52 +0200
+Message-ID: <8570dedab1a7478c39b31125ad279038fe31ac13.camel@pengutronix.de>
+Subject: Re: [PATCH RFC/RFT 00/15] gpio: sysfs: add a per-chip
+ export/unexport attribute pair
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Ahmad Fatoum
+ <a.fatoum@pengutronix.de>,  Kent Gibson <warthog618@gmail.com>, Marek Vasut
+ <marex@denx.de>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus
+ Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
+	Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 18 Jun 2025 15:38:51 +0200
+In-Reply-To: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+References: <20250610-gpio-sysfs-chip-export-v1-0-a8c7aa4478b1@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>, linux-aspeed@lists.ozlabs.org, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Conor Dooley <conor.dooley@microchip.com>, Tony Luck <tony.luck@intel.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Magnus Damm <magnus.damm@gmail.com>, george.kw.lee@fii-foxconn.com, 
- Leo Wang <leo.jt.wang@fii-foxconn.com>, Joel Stanley <joel@jms.id.au>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Geert Uytterhoeven <geert+renesas@glider.be>, bruce.jy.hung@fii-foxconn.com, 
- Kees Cook <kees@kernel.org>, linux-renesas-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-To: Leo Wang <leo.jt.wang@gmail.com>
-In-Reply-To: <20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com>
-References: <20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com>
-Message-Id: <175025355357.1756335.7026118663202059503.robh@kernel.org>
-Subject: Re: [PATCH 0/2] ARM: dts: Add support for Meta Clemente BMC
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: jlu@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+Hi Bartosz,
+
+On Tue, 2025-06-10 at 16:38 +0200, Bartosz Golaszewski wrote:
+> Following our discussion[1], here's a proposal for extending the sysfs
+> interface with attributes not referring to GPIO lines by their global
+> numbers in a backward compatible way.
+>=20
+> Long story short: there is now a new class device for each GPIO chip.
+> It's called chipX where X is the ID of the device as per the driver
+> model and it lives next to the old gpiochipABC where ABC is the GPIO
+> base. Each new chip class device has a pair of export/unexport
+> attributes which work similarly to the global ones under /sys/class/gpio
+> but take hardware offsets within the chip as input, instead of the
+> global numbers. Finally, each exported line appears at the same time as
+> the global /sys/class/gpio/gpioABC as well as per-chip
+> /sys/class/gpio/chipX/gpioY sysfs group.
+>=20
+> First, there are some documentation updates, followed by a set of
+> updates to the sysfs code that's useful even without the new
+> functionality. Then the actual implementation of a parallel GPIO chip
+> entry not containing the base GPIO number in the name and the
+> corresponding sysfs attribute group for each exported line that lives
+> under the new chip class device. Finally: also allow to compile out the
+> legacy parts leaving only the new elements of the sysfs ABI.
+>=20
+> This series passes the compatibility tests I wrote while working on the
+> user-space compatibility layer for sysfs[2].
+>=20
+> [1] https://lore.kernel.org/all/CAMRc=3DMcUCeZcU6co1aN54rTudo+JfPjjForu4i=
+KQ5npwXk6GXA@mail.gmail.com/
+> [2] https://github.com/brgl/gpio-sysfs-compat-tests
+>=20
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+thanks for implementing this! I tried it on one of our boards and noticed a=
+ few
+things.
+
+After unexporting a GPIO from the chipX dir, the subdirectory is not remove=
+d:
+ root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > export=20
+ root@lxatac-00006:/sys/class/gpio/chip9# echo 1 > unexport=20
+ root@lxatac-00006:/sys/class/gpio/chip9# ls -l gpio1/
+ total 0
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 active_low
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 direction
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 edge
+ -rw-r--r-- 1 root root 4096 Jun 18 12:52 value
+Subsequent attempts to export it again fail.
+
+The contents of /sys/kernel/debug/gpio don't really fit any more:
+ gpiochip10: GPIOs 660-663, parent: i2c/0-0024, pca9570, can sleep:
+  gpio-660 (DUT_PWR_EN          |tacd                ) out hi=20
+  gpio-661 (DUT_PWR_DISCH       |tacd                ) out lo=20
+  gpio-662 (DUT_PWR_ADCRST      |reset               ) out lo=20
+The header is inconsistent: it uses the 'gpiochip' prefix, but not the base=
+ as
+the old class devices in /sys/class/gpio/. Perhaps something like this?
+ chip10: GPIOs 0-2 (global IDs 660-663), parent: i2c/0-0024, pca9570, can s=
+leep:
+  gpio-0 (660) (DUT_PWR_EN          |tacd                ) out hi=20
+  gpio-1 (661) (DUT_PWR_DISCH       |tacd                ) out lo=20
+  gpio-2 (662) (DUT_PWR_ADCRST      |reset               ) out lo  =20
+If GPIO_SYSFS_LEGACY is disabled, the global IDs could be hidden.
+
+Unix permissions/ownership just works.
 
 
-On Wed, 18 Jun 2025 17:40:01 +0800, Leo Wang wrote:
-> This series adds initial support for the Meta Clemente BMC based on the ASPEED AST2600 SoC.
-> 
-> Patch 1 documents the compatible string.
-> Patch 2 adds the device tree for the board.
-> 
-> Signed-off-by: Leo Wang <leo.jt.wang@fii-foxconn.com>
-> ---
-> Leo Wang (2):
->       Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
->       ARM: dts: aspeed: clemente: add Meta Clemente BMC
-> 
->  .../devicetree/bindings/arm/aspeed/aspeed.yaml     |    1 +
->  arch/arm/boot/dts/aspeed/Makefile                  |    1 +
->  .../dts/aspeed/aspeed-bmc-facebook-clemente.dts    | 1254 ++++++++++++++++++++
->  3 files changed, 1256 insertions(+)
-> ---
-> base-commit: 52da431bf03b5506203bca27fe14a97895c80faf
-> change-id: 20250618-add-support-for-meta-clemente-bmc-941a469bc523
-> 
-> Best regards,
-> --
-> Leo Wang <leo.jt.wang@fii-foxconn.com>
-> 
-> 
-> 
+As far as I can see, this is basically everything I need to replace the old
+global ID based GPIO access in labgrid. Thanks again! :)
 
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: using specified base-commit 52da431bf03b5506203bca27fe14a97895c80faf
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250618-add-support-for-meta-clemente-bmc-v1-0-e5ca669ee47b@fii-foxconn.com:
-
-arch/arm/boot/dts/aspeed/aspeed-ast2500-evb.dtb: /ahb/apb/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2400-timer']
-arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-fuji.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
-	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yamp.dtb: /ahb/apb/syscon@1e6e2000/p2a-control@2c: failed to match any schema with compatible: ['aspeed,ast2500-p2a-ctrl']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
-	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
-	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
-	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
-	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
-	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
-arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-clemente.dtb: /ahb/apb/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
-
-
-
-
-
+Regards,
+Jan
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
