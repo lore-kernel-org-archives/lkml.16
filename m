@@ -1,94 +1,174 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A2627F016
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:05:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0521EDA26
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750233914; cv=none; b=t8Sqx2TBdBFf3LccjM9MtkzlLxdEISAdL4ttOm4ihkPBNSd8VRHjSDaj5MbgjqgM81b67LtGoLRM1KgIg/Hterqgw1nYF2zQyH/bd3NDCRNttSBPPe3AWXP8XUJJUsrl67L+W4ZmQ5sqwgOdPVaCFFYzZ/ehPCorr+s4rIhl/E4=
+	t=1750233926; cv=none; b=YbyxA8FYIrsHkeP+W1a0FZb0L1kBGj9Z7srG1Oxq2MisidQKLECnAkEZd4SdpEHo3u7yV7iKxIFNozQ6sDh4WqEtSh9iFeKrAoW8o0ZE9+zZzfKcse267e2WaQitQFJuB2a6DWra9gFZAldZy/6CyRdxU/PZvkL0Ci4rmHwCqRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750233914; c=relaxed/simple;
-	bh=xmSXUMfykh4nw/YifTvTlA40+QuG0magFmHqx/bM1SQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=eZX4YArXC5FAhjrkN9S58E0+CzB4ZEbO8ZnTXM5PpZXHIr11gzDb4vAS+ON5wu2h49cIElEcmUIgziqBX3x3AtlrRFTsqzbXo9gzUb7ahGkiztmHRzEuIRJ02/TatEVA8rV4fLn2ugvuAFUYIdrioRvy/LPkZYwyD4tt4qHl2wA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H2U2RLUO; arc=none smtp.client-ip=209.85.128.74
+	s=arc-20240116; t=1750233926; c=relaxed/simple;
+	bh=ya8pUWgWN5Mv9CNUeXkubc0pOZk8S+YcmBfsr2iGzpY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Na5JJERX13kEfAxXcLnWq9A6gPK0BUQ5JbsaOHEJhuhVxRaDu4sZ/J7m0Ti/YtsCBRvZZNRpeMyCFavNRH7jiNUcTk3QACNgw5bx5OliOzWm5KtBEiffY7gRLvhMPSRuLTE9HzRe0Dlghop6O/LDltzX58jBjPyFE7+Ln3LTjak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--joonwonkang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jA16xLb/; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--joonwonkang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H2U2RLUO"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-451d7de4ae3so42682645e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:05:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jA16xLb/"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-234f1acc707so44653845ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:05:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750233911; x=1750838711; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Reyy2Vo/aUVZICYuurjbtaW+Kc54btuPia1WyJEBiCI=;
-        b=H2U2RLUOiXehAtddQtSGaxhpxAUmwLBe6LtUcnMVbFkJzL9sS67sSjuH2cvIukQVca
-         h5j3huv15csSZ8oIzLzNRL3ntYgUFAhTIwHA76mm7xcLtvkfeQvRqLp4Ico8lvSfIvk0
-         4cTDJanaPDZusm7/knqfmhdL9MUKbiWwgQwUj2M4yZE5o4DisxVW08trda/HqbLWq8t9
-         dZKTrAzvPRxi3TA+yU2hRPa0tY7JwcT62fY+Nh+xKo+8OvB11Yph5pROkzADBFX18UUf
-         amjJMFWQ9OFTwgFtTAoXXiw0OVCItin7Hml8NK/oMLZv2hcTnqlX710zd+ON66KCCiQ6
-         YvcA==
+        d=google.com; s=20230601; t=1750233924; x=1750838724; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ISMy7wjC+6TEkD7QmOftNULtyhHMY+2SKB0Kw0ePygE=;
+        b=jA16xLb/jJTTz9GoHnBD6ZLq53iS6chEJPDG+iAaz+ATIGZ1BcdatzIAsp3mXUID8J
+         SqQkCxwQDA5nPN/7u1PflssElUzqTvQq6MK3a8k3W1sUPCRHVk0ldXM0uzWf+SlkzJYo
+         RbOR15Bb6aQ4jUp3C8nM8ujoDOFlXDbdxXXMhq93VbF8kqUXpr9Ey/FYzCDCaJQ+m6z1
+         5P4FvZjaTftArkNhsYuoPQP9jlHMH8XwhQ19NPGYgPWGA4tXKZct/k5BiYzi4kCOu9T6
+         olgzjiNkJhcBb4ix24/uuMqxNnfTyq0vSBZ+qT55RJAI4zJxLZvDlupn77VHVXgEfQct
+         37rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750233911; x=1750838711;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Reyy2Vo/aUVZICYuurjbtaW+Kc54btuPia1WyJEBiCI=;
-        b=eA/b3FppHSscXhhorwNH+Z/UrR5q4Lnifc2TDedbqILqGipzrrj/73AlNODRTxT3yg
-         qdP8qYHpmyN9owJyc8KxdO9KmfSKm46S9blPCEBdDhWwa9kUtcbnyBBMQ6vRvOr538ob
-         BTW/SPv/6Y1Jx7CBXpeNIT3HlafM0j6Wp6XYGLJAhVN5ZkA5y4ftYHx5BLZjlVKSN7tt
-         ntiBTShpZcfEpeUimHmnKQPbj/U3PzHIMqzsr1vy6WvLXXjdkq7MGrjR7uCzsrNKJSG+
-         OSK3fqjV++NMq+QWo/P5azG9Krj/3IyiJUZfrzFKbpCFLEXlo2iNPLlvMePHZLXeM6NF
-         wTcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEYq3UIkBO6xrJXYaVqxrVEkPoHqFP2S5ylpvqq3en3hG45khHj2qyPqzMNiNqgP2DyJ5A1LVPwfi788E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4c20FBXpT7I4C/0hnv6dGk42/JwaMIlRABhY7N+unsT89LJld
-	rPdzjUSa6Vs+LFgqtkIK5Ji4/GcvuvwPxWZIP0pyx9GojifNNs8MnFpM9QEO7YQ5rdZu+qIo359
-	+k4THds2gUsUK/n+8mg==
-X-Google-Smtp-Source: AGHT+IHZzoCd5qIoa57TZulv3M1zEGEaPrbzkY3TQYkZxGA8ZmuxEDik7fsdLpNZuWn5aXvctdP9XoTIAiXPWQY=
-X-Received: from wmbel22.prod.google.com ([2002:a05:600c:3e16:b0:450:dcfd:1870])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:6095:b0:43c:fffc:7886 with SMTP id 5b1f17b1804b1-4535627dbe5mr41001925e9.8.1750233910920;
- Wed, 18 Jun 2025 01:05:10 -0700 (PDT)
-Date: Wed, 18 Jun 2025 08:05:08 +0000
-In-Reply-To: <20250617144155.3903431-2-fujita.tomonori@gmail.com>
+        d=1e100.net; s=20230601; t=1750233924; x=1750838724;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ISMy7wjC+6TEkD7QmOftNULtyhHMY+2SKB0Kw0ePygE=;
+        b=MoxehbMSYB5aymCDYg8LonToSPjUvDNeZMvEOJSYHViWjypPpC598KLRl67Uir7nvE
+         5Q+uAfo/t6gqwJ1A6XcN0urb6ra+Oh/vWKPtkdGFW7V6xLsHW015V/s0IGdPjsyIdF37
+         cK0wyTaA+jywXgtAAaVA5kfHu3I60wOCAK3U9j68+W14a6JOlH4wIhDQ1Napm1xr9XVu
+         n6dKii2XAZMfPNkLgdkSwHiFnYpQCwl635K+XzkJcXLJ31A/f7AJjK2iQBnIBlya3EJ8
+         xRZYhzD7poFZnbu9FW/Vf/yyVoMvOjN7tZ67FlDDL1D88O2HVRA+S2CqjxyCx7jyuHTt
+         aObA==
+X-Gm-Message-State: AOJu0YwAhvYBlyA73PMdoq2+f4IVykXKOu9zbQEpsNCmFkjWRr4uIC+z
+	Xo6QCcmAiMkFM6DlTGh36wm35Ng1i8XDYx07L9Jb9lKX7tITSguB7ELy+WfKUZsEbRpSPQoisih
+	eqdTCfj1jlJ+qdEtywLjCSbwFiw==
+X-Google-Smtp-Source: AGHT+IHDsO6LfpIVRX6FVKKDm+QCCj5B3W4Kt/vUe7hJ67EzF3vTc0shyWU8r3nPUAL4OYOZEa3UAhorkfGqQh8Nfw==
+X-Received: from plbbi12.prod.google.com ([2002:a17:902:bf0c:b0:234:9fce:6635])
+ (user=joonwonkang job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:903:40d2:b0:234:b41e:378f with SMTP id d9443c01a7336-2366b32ce2emr260588975ad.15.1750233924486;
+ Wed, 18 Jun 2025 01:05:24 -0700 (PDT)
+Date: Wed, 18 Jun 2025 08:05:14 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250617144155.3903431-1-fujita.tomonori@gmail.com> <20250617144155.3903431-2-fujita.tomonori@gmail.com>
-Message-ID: <aFJzNCCERjKHIVty@google.com>
-Subject: Re: [PATCH v1 1/2] rust: time: Rename Delta's methods as_micros_ceil
- and as_millis
-From: Alice Ryhl <aliceryhl@google.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, ojeda@kernel.org, 
-	anna-maria@linutronix.de, bjorn3_gh@protonmail.com, boqun.feng@gmail.com, 
-	dakr@kernel.org, frederic@kernel.org, gary@garyguo.net, jstultz@google.com, 
-	linux-kernel@vger.kernel.org, lossin@kernel.org, lyude@redhat.com, 
-	rust-for-linux@vger.kernel.org, sboyd@kernel.org, tglx@linutronix.de, 
-	tmgross@umich.edu
-Content-Type: text/plain; charset="utf-8"
+X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
+Message-ID: <20250618080514.987118-1-joonwonkang@google.com>
+Subject: [PATCH 2/2] mailbox: Make mbox_send_message() return error code when
+ tx fails
+From: Joonwon Kang <joonwonkang@google.com>
+To: jassisinghbrar@gmail.com
+Cc: linux-kernel@vger.kernel.org, Joonwon Kang <joonwonkang@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 17, 2025 at 11:41:54PM +0900, FUJITA Tomonori wrote:
-> Rename the Delta struct's methods as_micros_ceil() and as_millis() to
-> into_micros_ceil() and into_millis() respectively, for consistency
-> with the naming of other methods.
-> 
-> Fix the commit 2ed94606a0fe ("rust: time: Rename Delta's methods from
-> as_* to into_*"), wasn't applied as expected, due to the conflict with
-> the commit 1b7bbd597527 ("rust: time: Avoid 64-bit integer division on
-> 32-bit architectures").
-> 
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+When the mailbox controller failed transmitting message, the error code
+was only passed to the client's tx done handler and not to
+mbox_send_message(). For this reason, the function could return a false
+success. This commit resolves the issue by introducing the tx status and
+checking it before mbox_send_message() returns.
 
-Why are we renaming them? The stdlib always uses as_* or to_* for copy
-types. In my mind, into_* means that you want to emphasize that you are
-performing a transformation that consumes self and transfers ownership
-of some resource in the process.
+Signed-off-by: Joonwon Kang <joonwonkang@google.com>
+---
+ drivers/mailbox/mailbox.c          | 17 +++++++++++++----
+ include/linux/mailbox_controller.h |  2 ++
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-See the api guidelines:
-https://rust-lang.github.io/api-guidelines/naming.html#ad-hoc-conversions-follow-as_-to_-into_-conventions-c-conv
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 80cd310964a8..7c2e7b149bb6 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -22,7 +22,8 @@
+ static LIST_HEAD(mbox_cons);
+ static DEFINE_MUTEX(con_mutex);
+ 
+-static int add_to_rbuf(struct mbox_chan *chan, void *mssg, struct completion *tx_complete)
++static int add_to_rbuf(struct mbox_chan *chan, void *mssg, struct completion *tx_complete,
++		       int *tx_status)
+ {
+ 	int idx;
+ 
+@@ -35,6 +36,7 @@ static int add_to_rbuf(struct mbox_chan *chan, void *mssg, struct completion *tx
+ 	idx = chan->msg_free;
+ 	chan->msg_data[idx].data = mssg;
+ 	chan->msg_data[idx].tx_complete = tx_complete;
++	chan->msg_data[idx].tx_status = tx_status;
+ 	chan->msg_count++;
+ 
+ 	if (idx == MBOX_TX_QUEUE_LEN - 1)
+@@ -86,12 +88,14 @@ static void tx_tick(struct mbox_chan *chan, int r)
+ 	int idx;
+ 	void *mssg = NULL;
+ 	struct completion *tx_complete = NULL;
++	int *tx_status = NULL;
+ 
+ 	scoped_guard(spinlock_irqsave, &chan->lock) {
+ 		idx = chan->active_req;
+ 		if (idx >= 0) {
+ 			mssg = chan->msg_data[idx].data;
+ 			tx_complete = chan->msg_data[idx].tx_complete;
++			tx_status = chan->msg_data[idx].tx_status;
+ 			chan->active_req = -1;
+ 		}
+ 	}
+@@ -106,8 +110,10 @@ static void tx_tick(struct mbox_chan *chan, int r)
+ 	if (chan->cl->tx_done)
+ 		chan->cl->tx_done(chan->cl, mssg, r);
+ 
+-	if (r != -ETIME && chan->cl->tx_block)
++	if (r != -ETIME && chan->cl->tx_block) {
++		*tx_status = r;
+ 		complete(tx_complete);
++	}
+ }
+ 
+ static enum hrtimer_restart txdone_hrtimer(struct hrtimer *hrtimer)
+@@ -252,15 +258,16 @@ int mbox_send_message(struct mbox_chan *chan, void *mssg)
+ {
+ 	int t;
+ 	struct completion tx_complete;
++	int tx_status = 0;
+ 
+ 	if (!chan || !chan->cl)
+ 		return -EINVAL;
+ 
+ 	if (chan->cl->tx_block) {
+ 		init_completion(&tx_complete);
+-		t = add_to_rbuf(chan, mssg, &tx_complete);
++		t = add_to_rbuf(chan, mssg, &tx_complete, &tx_status);
+ 	} else {
+-		t = add_to_rbuf(chan, mssg, NULL);
++		t = add_to_rbuf(chan, mssg, NULL, NULL);
+ 	}
+ 
+ 	if (t < 0) {
+@@ -283,6 +290,8 @@ int mbox_send_message(struct mbox_chan *chan, void *mssg)
+ 		if (ret == 0) {
+ 			t = -ETIME;
+ 			tx_tick(chan, t);
++		} else if (tx_status < 0) {
++			t = tx_status;
+ 		}
+ 	}
+ 
+diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+index ae29fba3bc46..5fd81f3ec594 100644
+--- a/include/linux/mailbox_controller.h
++++ b/include/linux/mailbox_controller.h
+@@ -106,10 +106,12 @@ struct mbox_controller {
+  * struct mbox_message - Internal representation of a mailbox message
+  * @data:		Data packet
+  * @tx_complete:	Pointer to the transmission completion
++ * @tx_status:		Pointer to the transmission status
+  */
+ struct mbox_message {
+ 	void *data;
+ 	struct completion *tx_complete;
++	int *tx_status;
+ };
+ 
+ /**
+-- 
+2.50.0.rc2.696.g1fc2a0284f-goog
 
-Alice
