@@ -1,90 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805771990D9;
-	Wed, 18 Jun 2025 02:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52CC21A08A4;
+	Wed, 18 Jun 2025 02:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750215041; cv=none; b=Z/xfn4gHevec1yfKuLegBGgxD06tF+2UZBc/i+m/8E+e/RkVjFP8l2twONvTLYrnsHZcQ7Hynt3/IKZyjVgUSBnXLdZfOB8ESMD1vHrNYtl7mAi4YM/nk3XChPSfOthvuZ5lcN6n7cW9iZZpBlGqKxIO8XB8fNpP90btDhtBPNw=
+	t=1750215115; cv=none; b=kdf3trs4anlnJxH0hX1Xr+u0KEPfXsGgkzxra6O/g2cZUH1tHc+pkKStXlxG9FIM+nc2bxqUff6sva5Mis9kq0T3XuEcy5W0Ls5cfQw9eycitdGAGXOsYLMCtuoc+MHI/tcKfXXt4fQfvnPEguvBFydN2SWfp21w0ozm5sW1x4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750215041; c=relaxed/simple;
-	bh=ejx7I7UTyAGVPPKElZ3HdFB2xhpKbAHNV3sEAMqZn/I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V/bYfiid8Rep1HCmzbboNzodPpCWhlFFgkID0sMvzK7ONEb+wAvTJE3YwvOIO69PrAgFSXSkkP42hBSrV0cwKaYLAR6+VrSSSNxtCwV62ovRQ0oua+pzpytLHOPE4SHuUYE/sjMcN5l81/qVNmTMwrRFxBerwH30w+DoiweA2jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQIftKpT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750215115; c=relaxed/simple;
+	bh=D1AwwVl5J34oJoBmS9eZWUT+dg5sJUr6+s7pSO+AbC4=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EkdoCb81zOWNaE68QyJ5Z77uC6if7zJBaEFwRcD7ZZtoROvlIxhlKt8OUmO0ywGZ27UwIpfE8qXxJhjPIHkEPIUAe8EKGrkMi2WSs9vDg8qn2x6CKEVwOVU1ff9lb7ArpNyfm6wvm+cA+8MTaOwMjBw2WAu7NgOKjkShmB0Fb+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=VHF/CZyz; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQIftKpT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3676EC4CEE3;
-	Wed, 18 Jun 2025 02:50:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750215041;
-	bh=ejx7I7UTyAGVPPKElZ3HdFB2xhpKbAHNV3sEAMqZn/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PQIftKpTIy1bSt9jmlonpcq4T0n2bn3RRTFUIepdNBXTba+jihH3hRaB181dpXhRp
-	 YZIbdIM8rVebD1L/8m/8EGuH2lSUKP+lmf47gM7qHillYUIUms3Hpt07WgplkEPh6K
-	 x5koAiRrCw6S5kMF65dUQOr541MZPVKfAuUQgMw8MjHyqZDyEz2LwgQ6L9B4qtS292
-	 dXueM7DtFGdO9UNF4V2keyCtiOwxHgSq0szAi8oqNKDFHeQYuSYd4ALyv+3m3VdZNN
-	 wElqr60b5Eej5iyJ62tWTEk589sAkxkfgjB5InoxUiHdQqQGL2fqVadOnf0RWLm3V3
-	 AizwkjOx8hO6g==
-Date: Tue, 17 Jun 2025 21:50:38 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Jie Gan <quic_jiegan@quicinc.com>
-Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Tingwei Zhang <quic_tingweiz@quicinc.com>, Jinlong Mao <quic_jinlmao@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/2] Enable CTCU device for QCS8300
-Message-ID: <yiz7tewisidbzztbcwc7v2sac4lv2lom5kv4a4rubdfcr73flt@rcga4a6fxhdv>
-References: <20250327024943.3502313-1-jie.gan@oss.qualcomm.com>
- <d87a6bba-eaed-4ac4-a272-3bb38b1607dc@quicinc.com>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="VHF/CZyz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1750215112;
+	bh=D1AwwVl5J34oJoBmS9eZWUT+dg5sJUr6+s7pSO+AbC4=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=VHF/CZyzUlu1fWRJQyr6aBvgr+jSpBFyJ6XNTq/nNjBJSHXOnL9vcWJBoeuYLAsed
+	 e8VqQeS8Y3yPl2+PHmPu5a58y3mtZ//ultIggqnNgLlp8x3HDLwbwPYKNpJbRnrdVL
+	 oAo8rTJlt16aqFsXrqau31rwx9KDX9Lc/ji+0BkZB6Ak7ggCx6Q4CVVNOID99L38B3
+	 Ud92uuywCuBgjB+zf5CVuCRaBZb0h0DK9+9KaTVQONynupPDFDJYDMay3oS21v9Cd5
+	 3KFEMFLu+ktnLxwrtJpDaU9B1Zy91QEDqb6kNXrM/MImnxeeVdxQbjiQxl54I3ca64
+	 fpRkdJlMCs0nQ==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 91D13640A0;
+	Wed, 18 Jun 2025 10:51:51 +0800 (AWST)
+Message-ID: <eaba29c18db8883f88e5e105f905a735a0087a3d.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 6/8] mmc: sdhci-of-aspeed: Add output timing phase tuning
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Cool Lee <cool_lee@aspeedtech.com>, adrian.hunter@intel.com, 
+	ulf.hansson@linaro.org, joel@jms.id.au, p.zabel@pengutronix.de, 
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 18 Jun 2025 12:21:51 +0930
+In-Reply-To: <20250615035803.3752235-7-cool_lee@aspeedtech.com>
+References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
+	 <20250615035803.3752235-7-cool_lee@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d87a6bba-eaed-4ac4-a272-3bb38b1607dc@quicinc.com>
 
-On Wed, May 14, 2025 at 04:00:12PM +0800, Jie Gan wrote:
-> 
-> 
-> On 3/27/2025 10:49 AM, Jie Gan wrote:
-> > Enable CTCU device for QCS8300 platform. Add a fallback mechnasim in binding to utilize
-> > the compitable of the SA8775p platform becuase the CTCU for QCS8300 shares same
-> > configurations as SA8775p platform.
-> > 
-> 
-> Gentle ping for the series.
-> 
-> dt-binding patch has been reviewed by Krzysztof.
-> dts patch has been acked by Konrad.
-> 
+On Sun, 2025-06-15 at 11:58 +0800, Cool Lee wrote:
+> Enhance auto tuning with input and output calibration.
+>=20
 
-You don't seem to have the Coresight maintainers among the recipients of
-the binding patch, so that's probably why it hasn't been merged yet -
-and I can't merge the DTS change until the binding is accepted.
+Might be best to squash this into the patch with input phase tuning?
+Why split it?
 
-Please apply Krzysztof's R-b and send the binding alone to Coresight
-maintainers, once they have accepted the binding please resubmit the dts
-change and I'd be happy to merge it. (v2 sounds good on both)
+Andrew
 
-PS. Please see go/upstream on how to adopt b4; "b4 prep --auto-to-cc"
-would have saved you from this mistake.
-
-Regards,
-Bjorn
-
-> Thanks,
-> Jie
-> 
-> > Jie Gan (2):
-> >    dt-bindings: arm: add CTCU device for QCS8300
-> >    arm64: dts: qcom: qcs8300: Add CTCU and ETR nodes
-> > 
-> >   .../bindings/arm/qcom,coresight-ctcu.yaml     |   9 +-
-> >   arch/arm64/boot/dts/qcom/qcs8300.dtsi         | 153 ++++++++++++++++++
-> >   2 files changed, 160 insertions(+), 2 deletions(-)
-> > 
-> 
