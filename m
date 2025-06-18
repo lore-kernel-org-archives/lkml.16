@@ -1,124 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F5119D081;
-	Wed, 18 Jun 2025 16:34:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50A052F0039
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750264466; cv=none; b=jo4HN5bjeQEXHFTgW/dSV9dx68KU7wxvbfQkUwMZPexJVjpB1Vtyt2NzJKPpEajvSEO8RoUXUpU+osQzT/dFNbwpndCaH8AWb8sP8/G6lmjkoVNbz50fQi+ZqTtGgJsu9Jm7XDhWH9alThI8+/nS5l7OG4ARjWqnNvfyYQoeVzI=
+	t=1750264483; cv=none; b=BzmkUMVIo2RShUz3tPV1d3loggBEvMTPl3ZkN0oSwZEzY3dXCk689Pzjwqmu0ZCQqUrwuM1hQ4xNcVfUSBdhiiaF2dbOyo+VCoFQUp1TD/Ur+OKSBA3imG27rUOoMStLTfSXCozbY1L+uSrmKpOGyOQ5SI3CBee6yj1j7AwbbN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750264466; c=relaxed/simple;
-	bh=z9J8mMaMxFTDbzG2gynpi72sG4inc2DuGiKFJSnJpEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pI92mpFS1Rmash1nKqEnn5eM8hYPg2lFcyAexrehftzolhdvuLFDhuKlmY2rGPfExJMZzQqV+DKgDpYsMXlG6jpJ2usUyXAIBz6J6/NTjNANk34Ssmt6nvacQdzuh5W6u+bHEw3CkHkFqHLQl3pzabBDWG1tYxIWVWD7u5CdxRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF032C4CEE7;
-	Wed, 18 Jun 2025 16:34:18 +0000 (UTC)
-Date: Wed, 18 Jun 2025 17:34:16 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: ankita@nvidia.com
-Cc: jgg@nvidia.com, maz@kernel.org, oliver.upton@linux.dev,
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	will@kernel.org, ryan.roberts@arm.com, shahuang@redhat.com,
-	lpieralisi@kernel.org, david@redhat.com, ddutile@redhat.com,
-	seanjc@google.com, aniketa@nvidia.com, cjia@nvidia.com,
-	kwankhede@nvidia.com, kjaju@nvidia.com, targupta@nvidia.com,
-	vsethi@nvidia.com, acurrid@nvidia.com, apopple@nvidia.com,
-	jhubbard@nvidia.com, danw@nvidia.com, zhiw@nvidia.com,
-	mochs@nvidia.com, udhoke@nvidia.com, dnigam@nvidia.com,
-	alex.williamson@redhat.com, sebastianene@google.com,
-	coltonlewis@google.com, kevin.tian@intel.com, yi.l.liu@intel.com,
-	ardb@kernel.org, akpm@linux-foundation.org, gshan@redhat.com,
-	linux-mm@kvack.org, tabba@google.com, qperret@google.com,
-	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, maobibo@loongson.cn
-Subject: Re: [PATCH v7 4/5] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Message-ID: <aFLqiAyXZLoOTepi@arm.com>
-References: <20250618065541.50049-1-ankita@nvidia.com>
- <20250618065541.50049-5-ankita@nvidia.com>
+	s=arc-20240116; t=1750264483; c=relaxed/simple;
+	bh=ZzkADdvrUYp2iBklNDWW6xzN0gMHXVooR4VxL/q0Dq0=;
+	h=Date:Message-ID:From:To:Cc:Subject; b=CQ8E+ugBYnEWeh8V8AePlzOPcYoIGnLWgH570g9AaxhpQhUV8lmNv8tXWySwJhtpyz8UBVuCOTAeFSGJ10kMbkE8qntKbu5QWc6YunwmrZdn5IGrSKDXTckM+YtUcjTc5H2GyLSusqT00hzFpnUwijhh9UbiOdzHUeBVWkzFN8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=VCt6yaDd; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="VCt6yaDd"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7d3e5df4785so111717385a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:34:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1750264479; x=1750869279; darn=vger.kernel.org;
+        h=subject:cc:to:from:message-id:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=imh5Ssw3G0KGFdr40XoL+KWm94eOloF5qrtOJ+fWZB8=;
+        b=VCt6yaDdn3tqn0oi6o/OUg9dN5QKBmB1+CSNLD9T/Mectqsiw5Di3ihKtFq9VSUip0
+         kbDXiVw/zk1i4+lb4XiCVMm/f7+/POeF192NrrnAr1Eh1Zve117g2SUqk6CSWt2SxLQ7
+         6/+3UGaQ1t3JCUJmM3T1nXnLtoKnFYcViqYa5b4EUiMnwXBQe5HTgYWOqyrmt3coebGW
+         ++6Fqj2GzJdfc2cgvZLYpDUmscDPg+Lsy9lcIwKuj/ssNssd0q5UiC/z7KsEsPxVh/cP
+         yVtIHcCBMfWh2KLMIKFz08KYQAlR3b2FrPWk/5YlTq+NUMCeZV0g5Tkv5z8UdErLNnyR
+         njBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750264479; x=1750869279;
+        h=subject:cc:to:from:message-id:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=imh5Ssw3G0KGFdr40XoL+KWm94eOloF5qrtOJ+fWZB8=;
+        b=d+oQSPPfr49/JBt4GhzJ4e0896yT//KauRQa2mJsOO1fxXIMyRFiBYzNKdNHsVmbuv
+         WkWkgocx92pOFm3Ysm/gM4DP9I3WGA5I7/7+0J3IIds5q982+gUmLwZdY6/NgZ+pM0Fi
+         Hxdn65cwYs9ZRZiymPWJQh8lXcASOFp8jyVSms5pqcTnhvITEITJ4uyMUxvPb6wCHpCM
+         G6DTPdZ0HOsjn7FHKrDvbUWWbogjZ9qDAsXbbC5BUQbiUFr6Q57hap/Sn8xceeL8Pl8H
+         jZlqyfNdpJVvPwP2Q57ZU6CKDLd+xx0XC6yHAuslyhX4FYYByLjv6Ny/dNDnCxHz0/tT
+         vCoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUEMI2h92xnLKcW4TwHIWYPvkDIZ4wYAZ8GbCeaZV3iC7AhTC6gWf1XG3xMU4KLHz5TGTM7sc4y5CHWWhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxoBooOX7mIy4vJZCseHdpH4N6GwMWxH7HxHVXJiG1+q4w/2Me
+	r7bI8IBmuMWkVYkIJYeYK6kg+oJ9UsimQJiIpWd0cFJc1PV0g8o4lrPLFLjg/VvokA==
+X-Gm-Gg: ASbGncvo2c/gVvj9FxENCY4XfsLKnpcOrkr5i/30pbOpIol5ResktQTxyiyoztpSanj
+	40p/G0yYRmbpTBRsU9q+coklTJb3Hev9WeHhuU94jXlo8UaK2ScPG/rEcjcM32eTIeR/540njWK
+	PgiNYIZ9BAdfhMgit9YmK9pdtnAF8tZxKcwhYBALlcqpgghOVQHjz8Q++YBQNZLe8ylNRpknlmz
+	QzDWI5qWFlHc9LoeVNi5jWP/DG5lVylOr9z/OXlDXw7nqDWtG/AM86c7hM6vdLgLpnZ+qyne2QO
+	fpP68bht7NRM72R/tnciih4b6jS9Bq/vGRnLfBq5Pv17slUTAZUa3WbP9ZC+o7AhyxFKddDISaN
+	C/stcO2hhfx9TISdOB3w/aV23FRA7k/g=
+X-Google-Smtp-Source: AGHT+IHr8FvKf71qQwRs4UPz7p47lfWchWTy4Nt0DInVpS3n1BfVZvOZGMOilRzif8doAl9RkPjI0g==
+X-Received: by 2002:a05:620a:3725:b0:7ce:f58e:7e9c with SMTP id af79cd13be357-7d3c6c0c72bmr3217588185a.7.1750264479031;
+        Wed, 18 Jun 2025 09:34:39 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7d3b8f114absm778879985a.106.2025.06.18.09.34.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 09:34:38 -0700 (PDT)
+Date: Wed, 18 Jun 2025 12:34:38 -0400
+Message-ID: <5894f2f11a7a4741ba0279c703160e82@paul-moore.com>
+From: Paul Moore <paul@paul-moore.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: selinux@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] selinux/selinux-pr-20250618
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618065541.50049-5-ankita@nvidia.com>
 
-On Wed, Jun 18, 2025 at 06:55:40AM +0000, ankita@nvidia.com wrote:
-> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-> index a71b77df7c96..6a3955e07b5e 100644
-> --- a/arch/arm64/kvm/mmu.c
-> +++ b/arch/arm64/kvm/mmu.c
-> @@ -1660,6 +1660,10 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  
->  	is_vma_cacheable = kvm_vma_is_cacheable(vma);
->  
-> +	/* Reject COW VM_PFNMAP */
-> +	if ((vma->vm_flags & VM_PFNMAP) && is_cow_mapping(vma->vm_flags))
-> +		return -EINVAL;
+Linus,
 
-It may help to add a comment here why this needs to be rejected. I
-forgot the details but tracked it down to an email from David a few
-months ago:
+A small SELinux patch to resolve a UBSAN warning in the xfrm/labeled-IPsec
+code.
 
-https://lore.kernel.org/all/a2d95399-62ad-46d3-9e48-6fa90fd2c2f3@redhat.com/
+-Paul
 
-> +
->  	/* Don't use the VMA after the unlock -- it may have vanished */
->  	vma = NULL;
->  
-> @@ -1684,9 +1688,6 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  		return -EFAULT;
->  
->  	if (!kvm_can_use_cmo_pfn(pfn)) {
-> -		if (is_vma_cacheable)
-> -			return -EINVAL;
-> -
->  		/*
->  		 * If the page was identified as device early by looking at
->  		 * the VMA flags, vma_pagesize is already representing the
-> @@ -1696,8 +1697,13 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  		 *
->  		 * In both cases, we don't let transparent_hugepage_adjust()
->  		 * change things at the last minute.
-> +		 *
-> +		 * Do not set device as the device memory is cacheable. Note
-> +		 * that such mapping is safe as the KVM S2 will have the same
-> +		 * Normal memory type as the VMA has in the S1.
->  		 */
-> -		disable_cmo = true;
-> +		if (!is_vma_cacheable)
-> +			disable_cmo = true;
+--
+The following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
 
-I'm tempted to stick to the 'device' variable name. Or something like
-s2_noncacheable. As I commented, it's not just about disabling CMOs.
+  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
 
->  	} else if (logging_active && !write_fault) {
->  		/*
->  		 * Only actually map the page as writable if this was a write
-> @@ -1784,6 +1790,19 @@ static int user_mem_abort(struct kvm_vcpu *vcpu, phys_addr_t fault_ipa,
->  		prot |= KVM_PGTABLE_PROT_X;
->  	}
->  
-> +	/*
-> +	 *  When FWB is unsupported KVM needs to do cache flushes
-> +	 *  (via dcache_clean_inval_poc()) of the underlying memory. This is
-> +	 *  only possible if the memory is already mapped into the kernel map.
-> +	 *
-> +	 *  Outright reject as the cacheable device memory is not present in
-> +	 *  the kernel map and not suitable for cache management.
-> +	 */
-> +	if (is_vma_cacheable && !kvm_arch_supports_cacheable_pfnmap()) {
-> +		ret = -EINVAL;
-> +		goto out_unlock;
-> +	}
+are available in the Git repository at:
 
-I'm missing the full context around this hunk but, judging by
-indentation, does it also reject any cacheable vma even if it is not
-PFNMAP on pre-FWB hardware?
+  https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+    tags/selinux-pr-20250618
 
--- 
-Catalin
+for you to fetch changes up to 86c8db86af43f52f682e53a0f2f0828683be1e52:
+
+  selinux: fix selinux_xfrm_alloc_user() to set correct ctx_len
+    (2025-06-16 19:02:22 -0400)
+
+----------------------------------------------------------------
+selinux/stable-6.16 PR 20250618
+----------------------------------------------------------------
+
+Stephen Smalley (1):
+      selinux: fix selinux_xfrm_alloc_user() to set correct ctx_len
+
+ security/selinux/xfrm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--
+paul-moore.com
