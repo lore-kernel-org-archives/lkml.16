@@ -1,229 +1,228 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010034.outbound.protection.outlook.com [52.101.84.34])
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B73323E;
-	Wed, 18 Jun 2025 01:31:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.34
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750210307; cv=fail; b=rVuaPSMsHl1K7gCg/bJHvKXBzNo15tKFkCyw7C6j4yaFmG0VnZVECjNcT0uPIOsfxHbzLRMQ8qqfGJFqbVKggmSoM9RUY2p16yaG+CMGnuiqYbToTN9Ye2JSFi7/QgBPS5GUc7ipZhwjOVd5NoHPRqY8JSnDMS3j6EYWpSJapmE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750210307; c=relaxed/simple;
-	bh=S8NSTU2T76Onm2Pti4IVZh32oTkabMu+qoxqWUpxydE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=lj4qTOO9AfRB+W13HwgLs6x33CbdaTEdEozjuFFwUEflrzha5yFG1i7HPjmcR+/Ep9xq8Dk+wu5yl607u231/4BMAinMEbxEkWdO4/R2EYfC+GlMB7/fbPKwr9hQN0xvh/3DA/usqNZpneFqmnG2BQQeYAyRqHNftxz+N6JCdOM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=G+pFsJV8; arc=fail smtp.client-ip=52.101.84.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D5A3208
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750210409; cv=none; b=SFlxHIkpWJy01uJuz5Mhk4YT9Y0hgOzP4cE6X67iV/qyCzd0sQ8/blclR0sA5ukYrDQ8WbAcP6K06g4pdmSZ4CoQAKfwnAvOjkXiMFA9g+DOwEWu/XG9ePh8YPb+O6cRVjjRAOcy4g494jUaRCPK96Gob9NwlLSS1jDMS/0AA74=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750210409; c=relaxed/simple;
+	bh=R1jdRpn0qWrazHAgS+e7nAeEjudGEXj1FGnMdw/f3kc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=uKXWtb1K1lUH7+t03O1DHH+Z7QF3Rjtuc3Sj6ZSYZhM1Q/koYJqEQgU8jhqKbeVrz69vaIQqtE+I9b8Mhu8xFVqMJLlwapJv8R1FMBNC5spK9OV76n7APe82NhRSky/l2KJ8gPnj43TCeeCM1Ocnt2Uduugd/Sod2fU+uqp/DQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=h/7FeS3W; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Xums3PEv; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="G+pFsJV8"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BeCGDyy//jpEyHTxyXd1xmGthOWJGcsc3gsXegsi2AnKzBgtrXK7L5+eEMYfZ/ZNWB3mqP5j4pKcRJHQz3VXXUNKruElmVh9LH3Ogzp/uFA31gs5aYtQYZTKbC4lV4LQi2ywm7rSFLkFS9CY6A4N6mrvhcMAKAltazsH3ABlvmBaG84dsrQb3OaAUW6zblTe6TfDaiz9OxA6L5bNCYGjmWAeZpYae9zbgaqHIOfeIG4TAPJ7tDfLyqNmfOF4/dk0+h8qNMljLzpnWwOWqKgqmo+RG92i7p5cS8Ggjh72/kGn+xquG07Ho0GiTj/RGF19CyiXAlAxJXQ8+JOZpCa2XA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ulgO4PDFBK/Cwm+KqSiA7eqO/VOWo2S41N4Sy9pA9tk=;
- b=ceRRm4/ZFJYpsrIQciY2u2cXbQn3YYLJZ+pvrWlTHlBsmR+zknT/cWqjhwfRFfNyN6V58ZDRvtZRPx0vRklTAIh7lsITI0MFNeu2Pn+unkCXdVSOt+8hbSzPjUjuSI3QVOmehlxpb/THAACi0ZVFWmrGgM+Aa+2uXcwPKCATK9EnJliltM0IaZ6dSJI9ELsxjzXgBVb8SIUBr3d0fGfkpk2d+Uubux1s2rdPUbxj0DizYpWHg2/kN9+JhP+gpMOPd2w6DFTZpRp59RnivCVYSC6P2Z6e5p61grISIiXfeGg5XRacrD6RsIuoAsojuP+Nuwat7NAkbtjFgpQndIeEEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ulgO4PDFBK/Cwm+KqSiA7eqO/VOWo2S41N4Sy9pA9tk=;
- b=G+pFsJV81Xapaua1Ql+Rksf5KRlCAOIe/8sqMA0WopUB2c3FPMYszdPqJRmqoJbao6JUNA6zFob+Vpu1uP4L7VdhHCJuG77uuHeAXbPC979vq5vn6EIKbXOrCrI7tb55Skk8o1vHV6ir49KGXBJNy2TQNE2mcQQ83qkBnX0QjUanZ2dtyJT1FeZ/k8qsPWFHn3ZAc5tmATMyqu27/K3WqHHmVDt/yQk2eKNStZWt5xr/VQ2fA6T3A2aN12jkyooKE63Bwobov6Zr+ZnRwoBDrQq5Tc2Axsof4KZY+zCGbF1/XQJ1W9AfZLbSDd8/N2CyBFrNDNB4Xwi/OTAzCoOBxQ==
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by GVXPR04MB10539.eurprd04.prod.outlook.com (2603:10a6:150:21f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
- 2025 01:31:39 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 01:31:39 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: Marc Kleine-Budde <mkl@pengutronix.de>, Alexander Lobakin
-	<aleksander.lobakin@intel.com>
-CC: Shenwei Wang <shenwei.wang@nxp.com>, Clark Wang <xiaoning.wang@nxp.com>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Richard
- Cochran <richardcochran@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "kernel@pengutronix.de"
-	<kernel@pengutronix.de>, Frank Li <frank.li@nxp.com>, Andrew Lunn
-	<andrew@lunn.ch>
-Subject: RE: [PATCH net-next v3 03/10] net: fec: add missing header files
-Thread-Topic: [PATCH net-next v3 03/10] net: fec: add missing header files
-Thread-Index: AQHb34wAmdI7zMiPGE65s7uynpamWbQHcJeAgAADcwCAAKyvcA==
-Date: Wed, 18 Jun 2025 01:31:38 +0000
-Message-ID:
- <PAXPR04MB851036B2BE8D3BD2DD5CE5108872A@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20250617-fec-cleanups-v3-0-a57bfb38993f@pengutronix.de>
- <20250617-fec-cleanups-v3-3-a57bfb38993f@pengutronix.de>
- <b6687ad2-1fd9-4cb5-8f5d-8c203599f002@intel.com>
- <20250617-funky-auspicious-stallion-25f396-mkl@pengutronix.de>
-In-Reply-To: <20250617-funky-auspicious-stallion-25f396-mkl@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|GVXPR04MB10539:EE_
-x-ms-office365-filtering-correlation-id: 0c5978c4-c0a3-4c1b-8119-08ddae07df46
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|376014|7416014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?UaS3TX8Pz5cf5mNRqMEtUtmaHfxY5jt3XfYquNbhZYH2jShPAvPwuFPpRGcF?=
- =?us-ascii?Q?IEIPv2isdCaRSur3hfE7aMxxxB0p0AT0ju+gPkNPRSewfOzhg/ZBLCVwXaDD?=
- =?us-ascii?Q?jUhvtAuIXpM34YD0suoFTAJoG2O1l3s54vRQlS1UY0m6BGDLiLKqJvQ063Cn?=
- =?us-ascii?Q?dt3qIhxwBtnUAVr8L6jBfhf1pJ56OyCXe+7cuDOid7w92rcICZ6Q3C3Car4T?=
- =?us-ascii?Q?bt8UviumuZZpDTGVvOXqCutkhWYMsX44ScT6kewoupy5VoQsqYucesUQcc0Z?=
- =?us-ascii?Q?W2tMCzOsU2/nNU3thl7Pue2Zbfa4PTES6uMgZDKgqU8/oJjuX9rGSkDGJPBK?=
- =?us-ascii?Q?raRTzn61Z5oYTQpeMPR+M8DLZvs0k4cKp0Y1LqWX93xJ8J0kT2CgZO3oC7Iz?=
- =?us-ascii?Q?OlG9oL6Ay6N//uBOrrl5n+9BXTNB2SMmWF3n0VOJd7Adm47ATsJxd5kNUJLH?=
- =?us-ascii?Q?9uBKGaqrzfD3TL6DCO0bX/zqloN9zIT1lBt3q6wBgtd1/fDGEbf8qIJY5Ai+?=
- =?us-ascii?Q?YAFQ5M1QzerOXU4Fe/fR5TGO0VrE5zyRmOXwkk07JkC5wj/jLn5g1DzntToN?=
- =?us-ascii?Q?xoLhGa6y9ZCnOiukfVZ3lzO8UfpgE8FhACwjR1ONhWbrHZK86aStd1pbJCUE?=
- =?us-ascii?Q?YKKXnP3zRh+7Z50HYiHxfEAqIDceJ+uRhm3JAToFoTDFF4mO4Vdkl4edR+Sm?=
- =?us-ascii?Q?vwRJsvyOzUKdOnwvYp9QVcjdWDT6RJfuCw4Zpz31cvqB34t0VZr1w29LbaWF?=
- =?us-ascii?Q?gjfaBBBR4NQdLMWRWdacbFunD6/JUAnM/uN9wUDbbq7agezEw+Q1ODfvkL4v?=
- =?us-ascii?Q?jfE2JtGkaonjNRGYz2gODQm52dG1EJxKJ4eyZZ2EZvD7gPutnG5UjV0dQhA6?=
- =?us-ascii?Q?AW/WUdfyQBW/WZN8mmIXoX/K4BommBtngqRUXBdtZ/Y+uL4o4TsduH3ONt83?=
- =?us-ascii?Q?FNMg4ORLcN57DU8OXUKwKuoSY4Ssfwock5DPfGIPNj/8m8SWcN9k3PdkX8/t?=
- =?us-ascii?Q?yPeO/QAyJlN6F6ZsXqCYY+JV3dfevXahOR+xWFTY7KtxNJDvf9rS99SMtQxP?=
- =?us-ascii?Q?wqNBOislonlbDjWdBgujdikv5vXQolRqyF6FRcMSRSzAuDrP96C6ftdUGqLy?=
- =?us-ascii?Q?alEqcja+iT/Dl0M6HV6z94Hd0I7dIlamkZEkRMCMh6wnLvtsZm/Z934XgyOn?=
- =?us-ascii?Q?Fv6344fzL/bR3Dl5tF5SpSfEkjgVH5XPaRmhdHtrKMvWHB1nIYuyW0G03u0j?=
- =?us-ascii?Q?hkFtHOYIbrkCESRgAzPaGiuQqeqfPrDdeQd4aO1JPsqC9b6xJXuiOTDIRa9N?=
- =?us-ascii?Q?CIUCoFS6U4Qy/EXjco0e8q38R5UexRn/oaVXo1p5z3nA2LeEojpJyYXQVHTi?=
- =?us-ascii?Q?ZS1PO05D4RfdC+dDuam9KDCy3j05xiUpfMD12tljBeCK/Uegi6uAy1dgpawE?=
- =?us-ascii?Q?83y68DjZlQrwT7zcBOUZZ+Gyfj1ugtIBJQBdFArPdmGTgVxIiU0osH+93i9y?=
- =?us-ascii?Q?UEhe7UEgg64bJ/0=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?aGaaZSgz2cHBOqJB/dH03rnwnHxDvNbJjgaOmk0axtagYLojk12yjH1aLVpF?=
- =?us-ascii?Q?d5UtBcDdJqIYh8ZtIk6Sq8d7jHJRR515YFzZbGnOXcmPjbE48jJB2tyVgHn7?=
- =?us-ascii?Q?Zmn3eA9I9u0njgq/3B5y4cMH5U4xGOVGLBUR0/akF+nCG3Tl7QcAc2RiwKQp?=
- =?us-ascii?Q?yb7YdkcULugXgyDS+ZuM32p8y7ZeZE5sfLFdFXDVafYr5zGsSBIUM4zNYaA0?=
- =?us-ascii?Q?s4b5ZRBkSLrkHce5LT5cLqwjEOrhadly2qVqupjCGZWMljMXpQtUxwd9HF8v?=
- =?us-ascii?Q?lW2lEtOeINvPi23W0DfIfX76z5axRWvFBIOYJrTMLO642HVFBAFGdYxelFGd?=
- =?us-ascii?Q?2XBJWYpfzF2FyBMnYvLMODbqqIvwCLIszDeEwzeBdPj9TTlwtxgWXtQJ8j9B?=
- =?us-ascii?Q?wqj9ukGNMP96wTbowu0uo7DfWWJsIkmois8gYTKGw+TEa9h6KbtJaU0pLH5h?=
- =?us-ascii?Q?StqBWgMa/JWOK1r43iO8n3O5P7+66mx6mTm5QbNlyxsxTQfQFFK0/4qVNCt5?=
- =?us-ascii?Q?QY4f3xJzE0EqHAqDO0xoXDI7IIeegLWfsjGJK/38f+ILazDuSMMAXwQxw6UY?=
- =?us-ascii?Q?gEJOY92PtG+cANmpqMU9b3RC++mln3X0Ds1NARtQZrYU/0WvsEYeWbhH1Quj?=
- =?us-ascii?Q?btYGnJDqyThcDdT90is6kXcXR5CZeXh67ROLVJIcVXCIFpkPPAOKeISd82lW?=
- =?us-ascii?Q?/QDc6nfakn/ktbcT3+RAXjxo/gq4YCx0rmPmvrqO5R7q2rNMCodsOhwslyVO?=
- =?us-ascii?Q?E8BqZ3TN6+2AKLpTHjqjsEljXWoozHRqXkmPnvJYBrsK7/bWQop/u67FVjV3?=
- =?us-ascii?Q?VT08aXaANw7we5lj68Q26dHO6RZazkbk3JSzugF2PNGJSBpzp3yPf+M43eUS?=
- =?us-ascii?Q?rSPbaOX7yfr9xXWzifTzc3MLgxktakZMi/RiWcv92e9mU9EbF44TginnrxMJ?=
- =?us-ascii?Q?T/l1d5oiMg1vgf0tGlHDTd7gCeXRGASkE79yBqGn2bjMokCiqdKBypQXZXPK?=
- =?us-ascii?Q?3ZAdAa3tgoFrYkCtt2Cg8RUEjPZkBj7xS7BADYGwf3FQMgJXJopUMKjKoBkd?=
- =?us-ascii?Q?UNoRQ2Y1Ox12Gq0+alLXOX7u7DdH4vz9P6+qbEwxdgIVI31eK9vjVSuxoEqt?=
- =?us-ascii?Q?UkHSQSoYG4yD44cZ4JDtzgk7fhJawcUGrQKuL+AySzBRjUJ0eF1PfAyVe/Z6?=
- =?us-ascii?Q?kyLAj1LxT3OuxX3CENM4eDIhodb/dxmSRBva5EM5bydJLfrMWtWKii022cFe?=
- =?us-ascii?Q?oEvi+5KgAf6HLGEJFyJfp3+qKtdyPB6LGXIoSwil+FyISLetE+UOG6DDCVql?=
- =?us-ascii?Q?Hl8tl4u2Qb+L4M8Sl29Aqbggno7HpDPg3vK6zhIXdw6TFA7s0pef7iCciYva?=
- =?us-ascii?Q?sUVKOXnxWNbL/EvYeh7/hY/48JsbQSTi/ll3e1oOajhc/RMlzVejiNprjCfu?=
- =?us-ascii?Q?gFHvZhTIAgfcG9yfZZj4GyFMHpjKeGLFTo6aJ4VXvOCeRtcCaEZfEYiUfwLi?=
- =?us-ascii?Q?jHgUxkfNc4r1fEAHP6FNJqpa8Loe+mzf1HbhwcRk7UVjevIZ1iOz/rrcL2BC?=
- =?us-ascii?Q?Z/AQFF9k7c/jdlcfa48=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="h/7FeS3W";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Xums3PEv"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id D32F313802A3;
+	Tue, 17 Jun 2025 21:33:25 -0400 (EDT)
+Received: from phl-frontend-01 ([10.202.2.160])
+  by phl-compute-11.internal (MEProxy); Tue, 17 Jun 2025 21:33:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1750210405; x=1750296805; bh=0XuRSI+geY
+	2H6RaXEzpvPw1bj5hraiXJ++urQvItPpA=; b=h/7FeS3WE2t2h/5MPB9Qh1Th8S
+	r/R1qoxcrM5ip38ogo8nReQZsdZsLv88D/4tnh6fgHeQ+HU34KBvyyYuF9kmyR9c
+	2Gm/XS00dSKy6NXnvTSZQV4edwYa4ZDgZfKoMbl5l9p12v3qQnEVHtWxFiRm/Z8o
+	6K1RjiAVofLN3P65JyKfi9loUAoIedieazjfwVkHCvFh7BlHeKWENZ4vYsmu5YHd
+	w/jQl3srFB+lcD5piX1AB0QbKu/klysUV8bV3yGOlyeip76HmjGOp1FkG3jl3S01
+	tze2KMvf9rpRU5z5H3MqqBqI2CwC5ca2uEr6PqjB3aOWItcysjJzH58kvw/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1750210405; x=1750296805; bh=0XuRSI+geY2H6RaXEzpvPw1bj5hraiXJ++u
+	rQvItPpA=; b=Xums3PEvScpJIyOQ+wlkkepn35bIoof06QpjYZ4kwV4xUjVeKAv
+	8x//XUM5PzgSmhWDRaIkuXtgy84axbySXfU5oI2Q0QCM4oIsvPZhCJ/gQtJlF7Jz
+	drzMyI8std+cgep+3YoKSo9RGfETeG0GVj1dl0Hqt7FLovBHgFHBlfjlznkjQO+Q
+	5opRFdKzYS2uuoEMnILxmiYwGkdT77MUrW0fXynFi3bcaRXIGvSuPdP7ijYYeVWs
+	9brttKsc5aunWv2qcK4RjEVeCsCOKn2HnmI7cdo3jS/H02LAS3jO/wibx04D2XFq
+	WjYGTokxemyvGi4QLvuu8iK7ZgRj0SQfaPQ==
+X-ME-Sender: <xms:ZBdSaPBzRacMolvvSI44cvXHwnFsY5nrnVIOZ9JR0iPmgLiCmnvGcQ>
+    <xme:ZBdSaFgZ8ucNtN-BTPtwB3PdB8SxbAvYxSZIccIbzNRGK-LKngH-Nui9VcxSF9Mg-
+    NGC0nsqhgexueKEdXk>
+X-ME-Received: <xmr:ZBdSaKkyWulu93vkUlEnQ7Q-OGxZWGkwYYO1xDV2podEZOjlJW69WBGSi2u_Vi6kU2ztGceTVhii7Ohr-98Kf0K73ZqMtK6MF7EgsEWvJyADfs2Otw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddujeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecu
+    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdehffdu
+    heduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthhtohep
+    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnh
+    highessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepsghijhhurdgurghsrdhjiies
+    sghprdhrvghnvghsrghsrdgtohhmpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrd
+    hlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgr
+    uggvrggurdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtih
+    honhdrohhrghdprhgtphhtthhopeholhgvghesrhgvughhrghtrdgtohhmpdhrtghpthht
+    oheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:ZBdSaBzUmuvhyUbblOF3mjtxjZYhMNtJDbDVM0tM3LXptXDWAtItmg>
+    <xmx:ZBdSaEQ8kXlTYDouvUxkFbKqMpFItTJU3GCpPYMDWqUkss5x5oO61w>
+    <xmx:ZBdSaEZdkkYoUhESrxtsn4EgNY7XewsozW0UY8hUorKr8QRVKi1KJA>
+    <xmx:ZBdSaFQsRK-QgccFTWyAiUOXICsS8g90T__Ifo50L4WIN9lBxjM51g>
+    <xmx:ZRdSaMiwjhuo-LU7fxjC5AlHIZh6PkHo6NBA_N61EXWyGE-o3wgsQVvA>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 17 Jun 2025 21:33:24 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 6768211FA037;
+	Tue, 17 Jun 2025 21:33:23 -0400 (EDT)
+Date: Tue, 17 Jun 2025 21:33:23 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v3 next 09/10] lib: mul_u64_u64_div_u64() Optimise the
+ divide code
+In-Reply-To: <os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg>
+Message-ID: <7r88r006-o704-7q1q-21o2-6n62o864oo79@syhkavp.arg>
+References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-10-david.laight.linux@gmail.com> <os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c5978c4-c0a3-4c1b-8119-08ddae07df46
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 01:31:38.9852
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: moxtHoltHgy1JnEijim3QodwN1PkHdLlcZAdhjDiVGA1RSo1V17kCIbkBQ3gdfiyfwjtTDunVZdvmxZkKvjjtQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10539
+Content-Type: text/plain; charset=US-ASCII
 
-> On 17.06.2025 16:55:19, Alexander Lobakin wrote:
-> > From: Marc Kleine-Budde <mkl@pengutronix.de>
-> > Date: Tue, 17 Jun 2025 15:24:53 +0200
-> >
-> > > The fec.h isn't self contained. Add missing header files, so that it =
-can be
-> > > parsed by language servers without errors.
-> > >
-> > > Reviewed-by: Wei Fang <wei.fang@nxp.com>
-> > > Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> > > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > > Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
-> > > ---
-> > >  drivers/net/ethernet/freescale/fec.h | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/net/ethernet/freescale/fec.h
-> b/drivers/net/ethernet/freescale/fec.h
-> > > index ce1e4fe4d492..4098d439a6ff 100644
-> > > --- a/drivers/net/ethernet/freescale/fec.h
-> > > +++ b/drivers/net/ethernet/freescale/fec.h
-> > > @@ -15,7 +15,9 @@
-> > >
-> /*********************************************************************
-> *******/
-> > >
-> > >  #include <linux/clocksource.h>
-> > > +#include <linux/ethtool.h>
-> > >  #include <linux/net_tstamp.h>
-> > > +#include <linux/phy.h>
-> > >  #include <linux/pm_qos.h>
-> > >  #include <linux/bpf.h>
-> > >  #include <linux/ptp_clock_kernel.h>
-> >
-> > Sort alphabetically while at it? You'd only need to move bpf.h AFAICS.
->=20
-> After sorting, the incremental diff will look like this:
->=20
-> diff --git a/drivers/net/ethernet/freescale/fec.h
-> b/drivers/net/ethernet/freescale/fec.h
-> index 15334a5cce0f..1fe5e92afeb3 100644
-> --- a/drivers/net/ethernet/freescale/fec.h
-> +++ b/drivers/net/ethernet/freescale/fec.h
-> @@ -14,16 +14,16 @@
->  #define FEC_H
->=20
-> /*********************************************************************
-> *******/
->=20
-> +#include <dt-bindings/firmware/imx/rsrc.h>
-> +#include <linux/bpf.h>
->  #include <linux/clocksource.h>
->  #include <linux/ethtool.h>
-> +#include <linux/firmware/imx/sci.h>
->  #include <linux/net_tstamp.h>
->  #include <linux/phy.h>
->  #include <linux/pm_qos.h>
-> -#include <linux/bpf.h>
->  #include <linux/ptp_clock_kernel.h>
->  #include <linux/timecounter.h>
-> -#include <dt-bindings/firmware/imx/rsrc.h>
-> -#include <linux/firmware/imx/sci.h>
->  #include <net/xdp.h>
->=20
->  #if defined(CONFIG_M523x) || defined(CONFIG_M527x) ||
-> defined(CONFIG_M528x) || \
->=20
-> Is that okay? If so, I'll squash it.
->=20
+On Tue, 17 Jun 2025, Nicolas Pitre wrote:
 
-If you want alphabetical sorting, I think it's better to use another separa=
-te
-patch, otherwise you will need to re-edit the title and commit message.
+> On Sat, 14 Jun 2025, David Laight wrote:
+> 
+> > Replace the bit by bit algorithm with one that generates 16 bits
+> > per iteration on 32bit architectures and 32 bits on 64bit ones.
+> > 
+> > On my zen 5 this reduces the time for the tests (using the generic
+> > code) from ~3350ns to ~1000ns.
+> > 
+> > Running the 32bit algorithm on 64bit x86 takes ~1500ns.
+> > It'll be slightly slower on a real 32bit system, mostly due
+> > to register pressure.
+> > 
+> > The savings for 32bit x86 are much higher (tested in userspace).
+> > The worst case (lots of bits in the quotient) drops from ~900 clocks
+> > to ~130 (pretty much independant of the arguments).
+> > Other 32bit architectures may see better savings.
+> > 
+> > It is possibly to optimise for divisors that span less than
+> > __LONG_WIDTH__/2 bits. However I suspect they don't happen that often
+> > and it doesn't remove any slow cpu divide instructions which dominate
+> > the result.
+> > 
+> > Signed-off-by: David Laight <david.laight.linux@gmail.com>
+> 
+> Nice work. I had to be fully awake to review this one.
+> Some suggestions below.
 
+Here's a patch with my suggestions applied to make it easier to figure 
+them out. The added "inline" is necessary to fix compilation on ARM32. 
+The "likely()" makes for better assembly and this part is pretty much 
+likely anyway. I've explained the rest previously, although this is a 
+better implementation.
+
+commit 99ea338401f03efe5dbebe57e62bd7c588409c5c
+Author: Nicolas Pitre <nico@fluxnic.net>
+Date:   Tue Jun 17 14:42:34 2025 -0400
+
+    fixup! lib: mul_u64_u64_div_u64() Optimise the divide code
+
+diff --git a/lib/math/div64.c b/lib/math/div64.c
+index 3c9fe878ce68..740e59a58530 100644
+--- a/lib/math/div64.c
++++ b/lib/math/div64.c
+@@ -188,7 +188,7 @@ EXPORT_SYMBOL(iter_div_u64_rem);
+ 
+ #if !defined(mul_u64_add_u64_div_u64) || defined(test_mul_u64_add_u64_div_u64)
+ 
+-static u64 mul_add(u32 a, u32 b, u32 c)
++static inline u64 mul_add(u32 a, u32 b, u32 c)
+ {
+ 	return add_u64_u32(mul_u32_u32(a, b), c);
+ }
+@@ -246,7 +246,7 @@ static inline u32 mul_u64_long_add_u64(u64 *p_lo, u64 a, u32 b, u64 c)
+ 
+ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+ {
+-	unsigned long d_msig, q_digit;
++	unsigned long n_long, d_msig, q_digit;
+ 	unsigned int reps, d_z_hi;
+ 	u64 quotient, n_lo, n_hi;
+ 	u32 overflow;
+@@ -271,36 +271,21 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+ 
+ 	/* Left align the divisor, shifting the dividend to match */
+ 	d_z_hi = __builtin_clzll(d);
+-	if (d_z_hi) {
++	if (likely(d_z_hi)) {
+ 		d <<= d_z_hi;
+ 		n_hi = n_hi << d_z_hi | n_lo >> (64 - d_z_hi);
+ 		n_lo <<= d_z_hi;
+ 	}
+ 
+-	reps = 64 / BITS_PER_ITER;
+-	/* Optimise loop count for small dividends */
+-	if (!(u32)(n_hi >> 32)) {
+-		reps -= 32 / BITS_PER_ITER;
+-		n_hi = n_hi << 32 | n_lo >> 32;
+-		n_lo <<= 32;
+-	}
+-#if BITS_PER_ITER == 16
+-	if (!(u32)(n_hi >> 48)) {
+-		reps--;
+-		n_hi = add_u64_u32(n_hi << 16, n_lo >> 48);
+-		n_lo <<= 16;
+-	}
+-#endif
+-
+ 	/* Invert the dividend so we can use add instead of subtract. */
+ 	n_lo = ~n_lo;
+ 	n_hi = ~n_hi;
+ 
+ 	/*
+-	 * Get the most significant BITS_PER_ITER bits of the divisor.
++	 * Get the rounded-up most significant BITS_PER_ITER bits of the divisor.
+ 	 * This is used to get a low 'guestimate' of the quotient digit.
+ 	 */
+-	d_msig = (d >> (64 - BITS_PER_ITER)) + 1;
++	d_msig = (d >> (64 - BITS_PER_ITER)) + !!(d << BITS_PER_ITER);
+ 
+ 	/*
+ 	 * Now do a 'long division' with BITS_PER_ITER bit 'digits'.
+@@ -308,12 +293,17 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+ 	 * The worst case is dividing ~0 by 0x8000 which requires two subtracts.
+ 	 */
+ 	quotient = 0;
+-	while (reps--) {
+-		q_digit = (unsigned long)(~n_hi >> (64 - 2 * BITS_PER_ITER)) / d_msig;
++	for (reps = 64 / BITS_PER_ITER; reps; reps--) {
++		quotient <<= BITS_PER_ITER;
++		n_long = ~n_hi >> (64 - 2 * BITS_PER_ITER);
+ 		/* Shift 'n' left to align with the product q_digit * d */
+ 		overflow = n_hi >> (64 - BITS_PER_ITER);
+ 		n_hi = add_u64_u32(n_hi << BITS_PER_ITER, n_lo >> (64 - BITS_PER_ITER));
+ 		n_lo <<= BITS_PER_ITER;
++		/* cut it short if q_digit would be 0 */
++		if (n_long < d_msig)
++			continue;
++		q_digit = n_long / d_msig;
+ 		/* Add product to negated divisor */
+ 		overflow += mul_u64_long_add_u64(&n_hi, d, q_digit, n_hi);
+ 		/* Adjust for the q_digit 'guestimate' being low */
+@@ -322,7 +312,7 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+ 			n_hi += d;
+ 			overflow += n_hi < d;
+ 		}
+-		quotient = add_u64_long(quotient << BITS_PER_ITER, q_digit);
++		quotient = add_u64_long(quotient, q_digit);
+ 	}
+ 
+ 	/*
