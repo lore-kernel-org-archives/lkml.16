@@ -1,123 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4AC2F94AC;
-	Wed, 18 Jun 2025 18:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFB83085C7;
+	Wed, 18 Jun 2025 18:52:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750272710; cv=none; b=TT/jQ+XPBTSPzCe5YSE5qZy8ujwBNtKy0rm4uidpgDVwVtP/byBY8soe6G6IgZ5r8Z3SLgWQK6Y98T112RXNfE7zcjAGWA8ORHAMocipY9vTk27V3MJOoCknzpuCafxfj39klCV6Zvl3af0EYbGt1xyI+bk0pDsdcUnVfgH4vew=
+	t=1750272764; cv=none; b=qP7N569x8TxGkQeanHTXZLJ7BYsZ0C8oyJ2Jbyasn/mMHYBcB3IzsqWqeG6bK4CeCZn8MAPm1PbV8+DLzqC+L1KODe8P+C9w6EAcO9O/J6qS6+IQlEAeGSKV3zq8Mlu+mAAxZ4ZgA3fdY+k9oxlJOiePAYzkzLl//4iTWlzGvPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750272710; c=relaxed/simple;
-	bh=DkX7pN/NvzJ8o7cOYHY8frH4OFrO1vDDFuOeN+VP3v4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C5iS19Uxb/1o6qwg0dGBFiq2kJ/vJeDPdunjV7IJnTO0XmJfBcBMdgVDalNceAFScS7ypDmoE6/PQDzX22vGbY9ctcnkQ70rqehUMMAemhrAOyria22EZc9cZeSQw5NukLujlp6fo+P6Nn/azbIyUDyWq4T6UnLQylTYt3VxySA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sa4mfX0y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750272764; c=relaxed/simple;
+	bh=eT+6E7j8MKpA8+JuN8R6/MizW9cXPn/MID8D+godm0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=icAGdCk6IVsNicjVpbu76OefC0SPwOVhpRjaCAGKN3ExZE4xtRzAlzgU0AyfOrP7kqtWEEQP5weIq2A2KyNibYUZ7HxJH1D472wB75vXfLI/q8Mb/haBB1bHNA/0xkfnFmC93kkpV0sjZr/LEm7YlxcTtPHvt6hRU6BB6UKGLOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e14iU62k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sa4mfX0y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32521C4CEF5;
-	Wed, 18 Jun 2025 18:51:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e14iU62k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA7DC4CEE7;
+	Wed, 18 Jun 2025 18:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750272710;
-	bh=DkX7pN/NvzJ8o7cOYHY8frH4OFrO1vDDFuOeN+VP3v4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=sa4mfX0yo6cuMCyFMUWziAs3z3IyvaXIorRLUa3wiH5fCr9HZACtS6CmmfIn3M1dE
-	 y49TwV+xtJtFgbtnObOoORjlmM8Q/rPokwPVh138hleKo1IhG9P1XyfRqUrlgoHt0e
-	 EU4d8uq3sNYCHLz69GX1POGg4Jk45//XBjJM4mIfs5FnQKIXeTVyMcRBoa3ewvJn6F
-	 doH5LYQvBt3gu7EksneW26gBGq0nauVt7r7MxxfrBECN+LYQAoJIfSlFyeI8Ufg/93
-	 Qm7IpD5/eIskOVzS1rpvlPOIIW0OH4CCq2upuj9IT4nF4v5xNuykRMaiN02L93Rixt
-	 RgAmi7T8emOKw==
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-40a7322f081so1482807b6e.3;
-        Wed, 18 Jun 2025 11:51:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUheRI2Mbp1ppcIWcYUv7h7XmCvdO9I2u+48sKwGk/8zMnD8yG9anidNWKunqX+K1rFUek20lJHJ03B@vger.kernel.org, AJvYcCUr9rc9pB3njDuNZk1dt1GS3MFGCMuKs59PBbJhZNY/WbS1zQgp7IVorXQVtWvbKyohkI6UUy6OmI3m8OZnqAEw@vger.kernel.org, AJvYcCXD9YKASsIvatKH+Q3Plfk0ekusAXQ94tD6CCU4gXNoJ8u5dl0tehSLiQFmh1UUojkIg8qLz6Q4JKkZ/XN1@vger.kernel.org
-X-Gm-Message-State: AOJu0YykSJai2XJKw4oJzVMMM1miEWZF961cakGYjm8pHDdNUZcMn9ae
-	dvO/+jMEYWCItywtkbeYT8KEuzy/wXt35iHtqEIw/kRBRhyC6mdpH7u/PWIkKeTNzmog8iFbLvl
-	pXQHBR5RJoAZwMqVc6gR/AV4FeB41XuY=
-X-Google-Smtp-Source: AGHT+IH+BfFcUYsoMcXTCwABUQpNamKfhrnvNzmfY/k4kgroLu1trCO3pgHGWepNyD5Ol97gAYjGjDmqO5to1X3XfDw=
-X-Received: by 2002:a05:6808:3cf:b0:406:6fd3:ff14 with SMTP id
- 5614622812f47-40a7c178183mr8352320b6e.25.1750272709405; Wed, 18 Jun 2025
- 11:51:49 -0700 (PDT)
+	s=k20201202; t=1750272763;
+	bh=eT+6E7j8MKpA8+JuN8R6/MizW9cXPn/MID8D+godm0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=e14iU62kh532Ydae2EKi/eDJxL/gMzuUZYstiZIrzXP54BHZd0y5VwL1wkYK+QDGX
+	 F3AFZ9wL4NL1dpyvtxuFRG8tirtdcv315QCN8nNaayXQXDWYUyzqnhQx9w2sPsgYz0
+	 +EZHmF0n9J0RrasBf89OH6yxWdjGdhsac+QmfqB4RqEMJsAsfx3SoNIrA4oiCUWhNh
+	 lEciGngaQJLAKAyhA+I2rTf6P4Pm9vd46BRUIOhNa5MEXCrLkd2ut4VD/znDZIuRiC
+	 2fALmk4jeJCzNOFm680tjXnOsfC6J/rxsQsXwb6KJRFXYPSBYteOVWqNrGQbgDGqWX
+	 AE6VYyVduXLwQ==
+Date: Wed, 18 Jun 2025 13:52:41 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Peter Maydell <peter.maydell@linaro.org>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	Jiri Slaby <jirislaby@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 01/27] dt-bindings: interrupt-controller: Add Arm GICv5
+Message-ID: <175027275990.2508078.7812820935724706534.robh@kernel.org>
+References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
+ <20250618-gicv5-host-v5-1-d9e622ac5539@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617193026.637510-1-zaidal@os.amperecomputing.com>
-In-Reply-To: <20250617193026.637510-1-zaidal@os.amperecomputing.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 18 Jun 2025 20:51:38 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hsuD8rQBCt1fwb-bpPF54VHu3RH2x+R4-XTpEHFDmUfg@mail.gmail.com>
-X-Gm-Features: AX0GCFsm4q6z0lY2BrgnkbNLfTiTPtdlGrsevaoUjNQiJKmI4hDs1CQBe9bto0o
-Message-ID: <CAJZ5v0hsuD8rQBCt1fwb-bpPF54VHu3RH2x+R4-XTpEHFDmUfg@mail.gmail.com>
-Subject: Re: [PATCH v10 0/7] Enable EINJv2 Support
-To: Zaid Alali <zaidal@os.amperecomputing.com>
-Cc: rafael@kernel.org, lenb@kernel.org, james.morse@arm.com, 
-	tony.luck@intel.com, bp@alien8.de, kees@kernel.org, gustavoars@kernel.org, 
-	ira.weiny@intel.com, Jonathan.Cameron@huawei.com, viro@zeniv.linux.org.uk, 
-	sudeep.holla@arm.com, dan.carpenter@linaro.org, jonathanh@nvidia.com, 
-	sthanneeru.opensrc@micron.com, gregkh@linuxfoundation.org, 
-	peterz@infradead.org, dan.j.williams@intel.com, dave.jiang@intel.com, 
-	benjamin.cheatham@amd.com, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618-gicv5-host-v5-1-d9e622ac5539@kernel.org>
 
-On Tue, Jun 17, 2025 at 9:30=E2=80=AFPM Zaid Alali
-<zaidal@os.amperecomputing.com> wrote:
->
-> The goal of this update is to allow the driver to simultaneously
-> support EINJ and EINJv2. The implementation follows ACPI 6.6
-> specs[1] that enables the driver to discover system capabilities
-> through GET_ERROR_TYPE.
->
-> Link: https://uefi.org/specs/ACPI/6.6/18_Platform_Error_Interfaces.html#e=
-rror-injection [1]
->
-> V5:
->         *Users no longer input component array size, instead it
->          is counted by parsing the component array itself.
-> V6:
->         *Fix memory leak.
->         *If EINJv2 initialization failed, EINJv1 will still work, and
->          probe function will continue with disabled EINJv2.
-> V7:
->         *Update component array to take 128-bit values to match ACPI spec=
-s.
->         *Enable Vendor EINJv2 injections
->         *Moved component array parsing and validating to a separate
->          function to improve readability.
-> V8:
->         *Update UI to use single value files for component array.
->         *Update links to point to recent ACPI 6.6 spec release.
->         *Updated commit messages and documentation patch.
->         *Dropped the first two patches as they were merged via
->          ACPICA project.
-> V9:
->         *Fix commit messages signed-off/reviewed-by order.
->         *Fix sparse warning by defining syndrom_data as a
->          static struct.
-> V10:
->         *Use defined value instead of hard coded for component
->          array size
->         *Unset EINJv2 flag for EINJv1 injections
->
-> Tony Luck (1):
->   ACPI: APEI: EINJ: Create debugfs files to enter device id and syndrome
->
-> Zaid Alali (6):
->   ACPI: APEI: EINJ: Fix kernel test sparse warnings
->   ACPI: APEI: EINJ: Enable the discovery of EINJv2 capabilities
->   ACPI: APEI: EINJ: Add einjv2 extension struct
->   ACPI: APEI: EINJ: Discover EINJv2 parameters
->   ACPI: APEI: EINJ: Enable EINJv2 error injections
->   ACPI: APEI: EINJ: Update the documentation for EINJv2 support
->
->  .../firmware-guide/acpi/apei/einj.rst         |  33 ++
->  drivers/acpi/apei/apei-internal.h             |   2 +-
->  drivers/acpi/apei/einj-core.c                 | 374 ++++++++++++++----
->  drivers/acpi/apei/einj-cxl.c                  |   2 +-
->  4 files changed, 342 insertions(+), 69 deletions(-)
->
-> --
 
-Whole series applied as 6.17 material, thanks!
+On Wed, 18 Jun 2025 12:17:16 +0200, Lorenzo Pieralisi wrote:
+> The GICv5 interrupt controller architecture is composed of:
+> 
+> - one or more Interrupt Routing Service (IRS)
+> - zero or more Interrupt Translation Service (ITS)
+> - zero or more Interrupt Wire Bridge (IWB)
+> 
+> Describe a GICv5 implementation by specifying a top level node
+> corresponding to the GICv5 system component.
+> 
+> IRS nodes are added as GICv5 system component children.
+> 
+> An ITS is associated with an IRS so ITS nodes are described
+> as IRS children - use the hierarchy explicitly in the device
+> tree to define the association.
+> 
+> IWB nodes are described as a separate schema.
+> 
+> An IWB is connected to a single ITS, the connection is made explicit
+> through the msi-parent property and therefore is not required to be
+> explicit through a parent-child relationship in the device tree.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Conor Dooley <conor+dt@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  .../interrupt-controller/arm,gic-v5-iwb.yaml       |  78 ++++++
+>  .../bindings/interrupt-controller/arm,gic-v5.yaml  | 267 +++++++++++++++++++++
+>  MAINTAINERS                                        |   7 +
+>  3 files changed, 352 insertions(+)
+> 
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+
