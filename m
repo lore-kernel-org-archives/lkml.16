@@ -1,154 +1,210 @@
-Received: from fout-a1-smtp.messagingengine.com (fout-a1-smtp.messagingengine.com [103.168.172.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551301EDA26;
-	Wed, 18 Jun 2025 13:23:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D634B1EDA26
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:23:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750252989; cv=none; b=H8IyMzA7n4dugm/E4FOdtcvHgv5ncdwdbRAiWjF7A2KrACQcM1ZBDh0B3WkB7TCrtGjnZ61QY3C1lCrI/Eb3ntCDOQpOM4L+xob4fWoW994lkN8+ri6AR3ssZkMFxsENHAPmX83XNUK7iCUqts9CpgfBMMla+0G3f3w1El6Mqs0=
+	t=1750253035; cv=none; b=TrOzdTEvn42gSLisJize7ZLMHYByG07NfFlm67XqPzczGIJKw2/sM6/0NK7CTzOzW4hJ7t2e+uhRS8xwJhZYiOpvxpYDsR9MKMu5nTFlV45+zmFbc90EiaFo5V5LXuNHKn7syJicUEYn6VVoSZoHfLL3DjuWS+viTnaSxoJMyq8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750252989; c=relaxed/simple;
-	bh=5xtEzAj9y8QbOTiFWszUWHRMhkRtaTDilqBmPWoqasI=;
+	s=arc-20240116; t=1750253035; c=relaxed/simple;
+	bh=PvNMR4Bh/5U5Yys/GdOvZjrfjw6pCcuAC88NwswDtWo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hvimRoL8bsgOD4G0BO0EXgGrWOqNKvYmio7SCjcp8JkzNimsNG30WT3JrSDOrnUGAZAEec7DKNLGSkL7ZJuxbiRvsyheZPjzcN2kLpSVhbxtK9Bj5yn1Fqq2CJaY3DaQgQwrUaWsn9sGqX5nVpGnhyqQsCxHKLiclOVmSKN/BTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=gHL5GTfN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=A8besaRg; arc=none smtp.client-ip=103.168.172.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=M64fsC1xNH6+6/QmttyQzHrDRT2INBmnRwu6cmTTB6zhOk/Yazs9udKDdIBgNDkfZqSyiSIRwk8Ph5aXB1WNwMzpDZJFEVSOu6c7hVk2WcDhkBWupfwbb8JVZhSmIPzVPLksLXceSKUw8Dkti1Ou7WuWTtmOpjVVmSA5KiXrHsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=ODoUUCEB; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="gHL5GTfN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="A8besaRg"
-Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
-	by mailfout.phl.internal (Postfix) with ESMTP id 807771380394;
-	Wed, 18 Jun 2025 09:23:06 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-09.internal (MEProxy); Wed, 18 Jun 2025 09:23:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1750252986;
-	 x=1750339386; bh=cJqYrty+ZCMQ9sMd6DPBbLgOpbJYrAg1hXA8IjpBTWk=; b=
-	gHL5GTfNzLDptWVxtr0Y6oX56/26YLLnItwE3GvmRTaalQjxapjQczosl3/96mGF
-	blQ1b3h4yYdOfJix/c+MxR3QtcmjeohqHqYjeRBqvXS88Ce71JQbu5te5OuGqHCO
-	bWny9g6YFPL7EIFtMS+gerQpEDFe9jzZyZ0OWxmIANAkL8b+ptAEfKKzT3Qsrnup
-	6EZ9AzhPMIC/pScsmEnJtGa0/7HbthLGs40/J+FjF5NdM1yjRnd0A4tzT2pfZ/Mb
-	VIiIORmmEcdhTLEFZN9QOU3oUhQJexzxK/yrywzdX6zJ5BYGYx2ch2CGCIRfTFsD
-	VbK0mBiufyoLiTj3q0rGJw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-	1750252986; x=1750339386; bh=cJqYrty+ZCMQ9sMd6DPBbLgOpbJYrAg1hXA
-	8IjpBTWk=; b=A8besaRgu5Ygp0FM/TSGA32km4RdyD5eqlAmdnMBx0tyHw1s//A
-	r4txev+iTlMED9ehgGkilgSLkEC8kn4Du3vica4+xjBK5KeUbMmrSGo6VATkLdSu
-	BtiC2VVD2uSuFOykRuK2jwf5yEIWLgDY7KNh88hTpvu+ooQ/DhxbCr+M8qOOinrT
-	hJ3+DJdMyuhK7p+C/EPf17PYDl72maTQiIOGVdA7zgIuMWyTFO1fZ8QmF4IC9D0U
-	06QasTKP3IXrGfOUbCRP9L6tMzA7nDhMoDd2qI0RufCvlK+MddFvWduytyoWybeL
-	Wr4xxdZ1OwX6Rf/tmP+og0TxQBxno9by/8w==
-X-ME-Sender: <xms:ub1SaLXPb_mlJsjlZuznwT7Jmjz3kgE056QYLHo8KOpxVwhdjVJAcg>
-    <xme:ub1SaDkqCmLYk5MkEfwrBar_dfDseBe7yZYjKCGeNCJFLbrMHjfetKNkh-YVnZi9x
-    HrlV0gDOOib3A>
-X-ME-Received: <xmr:ub1SaHaILzJfgnrooryIXEaXrGu7gi53sj9iVvSsLl1YFHeMYlTNC4aUZa-LlA2wHYiz39DvBvGzbNxgglQZEmwfyz9hR46qaLE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
-    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
-    htshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeen
-    ucfhrhhomhepfdhmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrd
-    gtohhmfdcuoehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrggsrdgt
-    ohhmqeenucggtffrrghtthgvrhhnpeekkeevieevkefhieetveehueekhedufeelgfevud
-    ejkefhffehuddtjeegteehtdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehmrghrmhgrrhgvkhesihhnvhhishhisghlvghthhhinhhgshhlrg
-    gsrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgepshhmthhpohhuthdprhgtphht
-    thhopehqihhugihurdiihhhuohesihhnthgvlhdrtghomhdprhgtphhtthhopegsphesrg
-    hlihgvnhekrdguvgdprhgtphhtthhopehtohhnhidrlhhutghksehinhhtvghlrdgtohhm
-    pdhrtghpthhtohepjhgrmhgvshdrmhhorhhsvgesrghrmhdrtghomhdprhgtphhtthhope
-    hmtghhvghhrggssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrhhitgeskhgvrhhn
-    vghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqvggurggtsehvghgvrhdrkhgvrhhnvg
-    hlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhn
-    vghlrdhorhhg
-X-ME-Proxy: <xmx:ub1SaGWKgngI8yYe7ScJPCXjI5SaF0r8RL8h9gvYqqTzUHHzPEm38Q>
-    <xmx:ub1SaFlvS_90qv-_WTmvxYhug3F9jngxx8XBUhpRENYgKzjQlGo6zQ>
-    <xmx:ub1SaDf7Gs5DyAxF8WRWVl6BVjhsQKNL9yh3kIh5sBk0cM02_kK2lw>
-    <xmx:ub1SaPHxgbozNZ5UrcnmmTdNZvjPf0ReG_R--jh1VwcgAFLmcRFMwA>
-    <xmx:ur1SaNDYHNfs8Mnm1Goa5m9pr8lAWDo5FDjHiyW0f-MCzY6qTpAUeSF4>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 18 Jun 2025 09:23:04 -0400 (EDT)
-Date: Wed, 18 Jun 2025 15:23:02 +0200
-From: "marmarek@invisiblethingslab.com" <marmarek@invisiblethingslab.com>
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
-Message-ID: <aFK9tnZOPtF2pa80@mail-itl>
-References: <aFFN7RlXkaK_loQb@mail-itl>
- <20250618031855.1435420-1-qiuxu.zhuo@intel.com>
- <CY8PR11MB7134FA32BC293D5E868016A18972A@CY8PR11MB7134.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ODoUUCEB"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7d098f7bd77so74215485a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:23:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750253033; x=1750857833; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KqEK20OUV+YC6Bkjm5qN0J00zk2Z0hjMnTZBJHjERP0=;
+        b=ODoUUCEBtrq+abCrKoYac2EwlKv6l+i3XXze2+LsSwyUJZjaUi28RG6nWBVYMU6Qba
+         FpR30KM18JbEhNiNfABLzeM8P271Z61ov8xWMXyVUwE6U0nnm8LLC7/ZUvHKdd02BpV+
+         y26JJW0j1KYtxczgePmuWkuVJFX9JmWOUf3FtF8ADpWCugkGWfHa1sw6f3TO3iZoS4K6
+         Ci19eTzQikGc4aJ/JVUPoXJIKNI2Q/hvQcuujCl/L3iEKgMpHpS19/TVa8qq8OpI4Kkq
+         lBqMdZ1KtMD0BppRc2J9PNHtxgCW5OBKhlZfQ8lP6R+Ab/wmDMGoDjpwhtvmj2Uzc2D2
+         g1Nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750253033; x=1750857833;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KqEK20OUV+YC6Bkjm5qN0J00zk2Z0hjMnTZBJHjERP0=;
+        b=oYYNFv9K4oEHlx25x5wrggALMQFVVYKLRcbiNdqvsrr0rsPpiotX+sN7s23kNxz7TA
+         K6SV8a5WjtfK544qgugka8mtD9IkmipK7DO7dN4zjyrOhTCjUfKF9rjBEoNKNLFgpNrJ
+         G/UIIst70Eibl8sH/WVk0gVq0/OoYI9l0XhX59dHyAbm01quxzaYEOUPogSb55/KjgLl
+         N16MDXGP8JNJ0RbrOjmG8qYFT/suEE4hJGFJhMxVW+A+UZe2Arhyam7hTfh2nO2WTnc1
+         7e3aEKe39f2CpSvHz4oDRNR+KxIDa1a1HvrwDnYJUQVihStMErlKyFNGTXj3UDe512aU
+         JAiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtWT7cZ26tvUWy7uh8u9IR//2e3ntd8BhuDKL8xPy+JMXRnaA0hEaPCmmX1SaNbyhX4DtorrJCYw7Rihw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTjOFWzsEWFCEKGfN4v2imwrnio26/DP/IuNeyfwE0KXUs7hCO
+	cQai+ZaLfY7XnaqiIWLDHNdwEt/8uDflzulGwaBwUvw+ZQTsUd5TK4PZmfXaRkFtTEhbIqsGxpI
+	jIkD0
+X-Gm-Gg: ASbGncusy7a3qykrmLmz4a315DSZtgqejO6dAh/TsSo3JRbptRY7Sk0rE1pNL6mRsj9
+	KHLdwosQ22ldgngcRGgwLaK3FkCLPEvxjTNZElFNwek92rvP4MLBa0UnCK7GUIrTvUvLW431Q4a
+	wOH3AzW9lNRQqxVqh6UTUxa18qqlWs6fkS3YQaGK0vjkUOToX2zsfVVPbd0vuADMhYdI0FebcnV
+	iw7/pYOxpLLC6d7BHjohF4zpyEswk969eKsaQzMPmrpTnsQRPlu4cwwM3mlLXYla8q38D1IRnqK
+	eOArXBWSWfZXuBunVUj0R4rRQsxMTYVUY/L+bd9rjFRyDHes7u6AThDu8x1O4x1bH00IpjBpRHZ
+	AFWIx4nUmSkG9/vPiZ9FkonkcFgLW6V6eFQR+WA==
+X-Google-Smtp-Source: AGHT+IF9NkUjCA8uk6HKiAeyvH8TKX/0/ivDtPkHXPD3WCNV0m99YeZSjC4tka6Wctd9mMDXm8kpLA==
+X-Received: by 2002:a05:620a:2621:b0:7cf:5cdb:7b68 with SMTP id af79cd13be357-7d3e9219d0bmr390160385a.0.1750253032707;
+        Wed, 18 Jun 2025 06:23:52 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3b8eac910sm769806485a.72.2025.06.18.06.23.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 06:23:51 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uRsla-00000006mvn-29y8;
+	Wed, 18 Jun 2025 10:23:50 -0300
+Date: Wed, 18 Jun 2025 10:23:50 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: lizhe.67@bytedance.com
+Cc: david@redhat.com, akpm@linux-foundation.org, alex.williamson@redhat.com,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, peterx@redhat.com
+Subject: Re: [PATCH v4 2/3] gup: introduce unpin_user_folio_dirty_locked()
+Message-ID: <20250618132350.GN1376515@ziepe.ca>
+References: <20250618115622.GM1376515@ziepe.ca>
+ <20250618121928.36287-1-lizhe.67@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="aTKB59D1qi71zo/d"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CY8PR11MB7134FA32BC293D5E868016A18972A@CY8PR11MB7134.namprd11.prod.outlook.com>
+In-Reply-To: <20250618121928.36287-1-lizhe.67@bytedance.com>
 
+On Wed, Jun 18, 2025 at 08:19:28PM +0800, lizhe.67@bytedance.com wrote:
+> On Wed, 18 Jun 2025 08:56:22 -0300, jgg@ziepe.ca wrote:
+>  
+> > On Wed, Jun 18, 2025 at 01:52:37PM +0200, David Hildenbrand wrote:
+> > 
+> > > I thought we also wanted to optimize out the
+> > > is_invalid_reserved_pfn() check for each subpage of a folio.
+> 
+> Yes, that is an important aspect of our optimization.
+> 
+> > VFIO keeps a tracking structure for the ranges, you can record there
+> > if a reserved PFN was ever placed into this range and skip the check
+> > entirely.
+> > 
+> > It would be very rare for reserved PFNs and non reserved will to be
+> > mixed within the same range, userspace could cause this but nothing
+> > should.
+> 
+> Yes, but it seems we don't have a very straightforward interface to
+> obtain the reserved attribute of this large range of pfns.
 
---aTKB59D1qi71zo/d
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 18 Jun 2025 15:23:02 +0200
-From: "marmarek@invisiblethingslab.com" <marmarek@invisiblethingslab.com>
-To: "Zhuo, Qiuxu" <qiuxu.zhuo@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
+vfio_unmap_unpin()  has the struct vfio_dma, you'd store the
+indication there and pass it down.
 
-On Wed, Jun 18, 2025 at 03:26:43AM +0000, Zhuo, Qiuxu wrote:
-> Hi Marek,
->=20
-> > From: Zhuo, Qiuxu <qiuxu.zhuo@intel.com>
-> > [...]
-> > Subject: [PATCH 1/1] EDAC/igen6: Fix NULL pointer dereference
->=20
-> Thank you for reporting this issue.=20
-> Could you please test this patch on your machine to verify if it fixes th=
-e issue?
+It already builds the longest run of physical contiguity here:
 
-I can confirm it works now, I have the "EDAC igen6: Expected 2 mcs, but only
-1 detected" message and it doesn't crash anymore. Thanks!
+		for (len = PAGE_SIZE; iova + len < end; len += PAGE_SIZE) {
+			next = iommu_iova_to_phys(domain->domain, iova + len);
+			if (next != phys + len)
+				break;
+		}
 
-Tested-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab.com>
+And we pass down a physically contiguous range to
+unmap_unpin_fast()/unmap_unpin_slow().
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
+The only thing you need to do is to detect reserved in
+vfio_unmap_unpin() optimized flag in the dma, and break up the above
+loop if it crosses a reserved boundary.
 
---aTKB59D1qi71zo/d
-Content-Type: application/pgp-signature; name=signature.asc
+If you have a reserved range then just directly call iommu_unmap and
+forget about any page pinning.
 
------BEGIN PGP SIGNATURE-----
+Then in the page pinning side you use the range version.
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmhSvbYACgkQ24/THMrX
-1yzzjAf5AUXowsoMKnMQkWMIwzyoBsS5h8NCJwz3O8C93ZqTdALF2L5Dk61Z9vx5
-ugDBhHjt7Xi3SH0kRtMUuoXKwlTSvBZzAGzdNcYd58wOx7V7JMtVQZtFNQeWXyoR
-hsZBxIDxyAUqhkyEuhKUhIXx8+LD+CTk3R+M/1sv5uDMallmd6BNyMQGQ6GUwyr7
-Ui90PAA7S3QVCy+C3+jD1qUutDQ2njNGmWfeiniT9cSiyJhXJpFqw4oi1Y/dIKCW
-Vse5M3NyHYiyKD92LEeYPDX0zv1ZhsTmC1X3fbjAJDjBhj+gPrs/Nx7LxK82QivG
-EqJoSthckcao5Yn0jjFKHrni9v7mjw==
-=EQ4E
------END PGP SIGNATURE-----
+Something very approximately like the below. But again, I would
+implore you to just use iommufd that is already much better here.
 
---aTKB59D1qi71zo/d--
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 1136d7ac6b597e..097b97c67e3f0d 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -738,12 +738,13 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
+ 	long unlocked = 0, locked = 0;
+ 	long i;
+ 
++	/* The caller has already ensured the pfn range is not reserved */
++	unpin_user_page_range_dirty_lock(pfn_to_page(pfn), npage,
++					 dma->prot & IOMMU_WRITE);
+ 	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
+-		if (put_pfn(pfn++, dma->prot)) {
+ 			unlocked++;
+ 			if (vfio_find_vpfn(dma, iova))
+ 				locked++;
+-		}
+ 	}
+ 
+ 	if (do_accounting)
+@@ -1082,6 +1083,7 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
+ 	while (iova < end) {
+ 		size_t unmapped, len;
+ 		phys_addr_t phys, next;
++		bool reserved = false;
+ 
+ 		phys = iommu_iova_to_phys(domain->domain, iova);
+ 		if (WARN_ON(!phys)) {
+@@ -1089,6 +1091,9 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
+ 			continue;
+ 		}
+ 
++		if (dma->has_reserved)
++			reserved = is_invalid_reserved_pfn(phys >> PAGE_SHIFT);
++
+ 		/*
+ 		 * To optimize for fewer iommu_unmap() calls, each of which
+ 		 * may require hardware cache flushing, try to find the
+@@ -1098,21 +1103,31 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
+ 			next = iommu_iova_to_phys(domain->domain, iova + len);
+ 			if (next != phys + len)
+ 				break;
++			if (dma->has_reserved &&
++			    reserved != is_invalid_reserved_pfn(next >> PAGE_SHIFT))
++				break;
+ 		}
+ 
+ 		/*
+ 		 * First, try to use fast unmap/unpin. In case of failure,
+ 		 * switch to slow unmap/unpin path.
+ 		 */
+-		unmapped = unmap_unpin_fast(domain, dma, &iova, len, phys,
+-					    &unlocked, &unmapped_region_list,
+-					    &unmapped_region_cnt,
+-					    &iotlb_gather);
+-		if (!unmapped) {
+-			unmapped = unmap_unpin_slow(domain, dma, &iova, len,
+-						    phys, &unlocked);
+-			if (WARN_ON(!unmapped))
+-				break;
++		if (reserved) {
++			unmapped = iommu_unmap(domain->domain, iova, len);
++			*iova += unmapped;
++		} else {
++			unmapped = unmap_unpin_fast(domain, dma, &iova, len,
++						    phys, &unlocked,
++						    &unmapped_region_list,
++						    &unmapped_region_cnt,
++						    &iotlb_gather);
++			if (!unmapped) {
++				unmapped = unmap_unpin_slow(domain, dma, &iova,
++							    len, phys,
++							    &unlocked);
++				if (WARN_ON(!unmapped))
++					break;
++			}
+ 		}
+ 	}
+ 
