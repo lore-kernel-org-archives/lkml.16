@@ -1,136 +1,200 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBCAFBA27;
-	Wed, 18 Jun 2025 10:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFDB5285CA7
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242637; cv=none; b=UobYy/c1WffGhy3Zi+tBSsgU+BeQfqTGvGNaQmofZnue1nLPLTyL+TSy7uXTql3oheTlbtSc+E/EPq6E3S7lHpGlFGCplIjiVx62QLrRrWd04xBb8of7D6H7uQs7cx+eKyfETU/PvjvH+wDu7rDtUkarRWVt8xuj2lVxITbhYm4=
+	t=1750242640; cv=none; b=mbIuwEfIzuf+hV0sISdnDxSy0kK7qEeXR64ut6xqTuHkG9JzmcIF+RaVPiFPBTyTGaaBVhSMClM7jWs8s9GNhpJVqWfVUWpVfu0fZqncLwM50p8JNQZlpCyqCzyA8QSzMZgmoNOB2T1wtHtIACfZNRuRSC9C/zP3O05GkdgJzcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242637; c=relaxed/simple;
-	bh=ZBNO8zEoLupIoPE/PYTkk6eaDkHBKU0qCQBdkKT4VDA=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=WJPTutyHsGPKLBbSq7XxQtVH93yNtaflY9IqBNl7l/py2hgHxUsmpIePbOX0p1VRveCS7dlbvqv21odinlg7qJJtu4Z8Mb9fljUdAzuLkoDbV8qA0sDnzr4LnEFUsZ+J0Aa12lzlnd7XN2VuNuhiNOfjYasuY+zoKadup5pmQIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Ub/Kaxz4; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750242640; c=relaxed/simple;
+	bh=2NmOtIaNyzEuXFXQ8/GlBm7Zz/Nj2G8T4Co/avh73AE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jt8Yf2CFO6Dnb53h+bZL9QreDjyK73/5avjDd6n2PHKfzl03IoihZXdwN+LAgAKrUu7OJ0wFbX6zpG801oZvjZSE+P7RweCe5tDrEnsUZRFgzfzNku0vmXIp6T5eCFqJxOh9ptWiic7WPFPNQnZEYBO5MqBC7tEvrIIWGUm1Rcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MC5rj8m/; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Ub/Kaxz4"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55IAUEAE285503;
-	Wed, 18 Jun 2025 05:30:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750242614;
-	bh=f6wkIpLIcAEQ8BY8G45z4AjojyUSWta3TPNhOAIvdnM=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date;
-	b=Ub/Kaxz4fvhplIJBSiZhfasX4IPWPEvHn2tVaDgSIbIUYQWaTHwJA45HT2wqwvdQ2
-	 OHlNV/sT2ik7mhKuoUweidb/VLjXXSy2CuacVEh54PZNAdBWrcGOp9BfdD+z+UUXS8
-	 A4NTafOHDHIiUPB3gRuARkpeXNLWSnHM+9GV5gqo=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55IAUEpX294636
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 18 Jun 2025 05:30:14 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
- Jun 2025 05:30:14 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 18 Jun 2025 05:30:14 -0500
-Received: from localhost (kamlesh.dhcp.ti.com [172.24.227.123])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55IAUD813320091;
-	Wed, 18 Jun 2025 05:30:14 -0500
-From: Kamlesh Gurudasani <kamlesh@ti.com>
-To: Eric Biggers <ebiggers@kernel.org>, T Pratham <t-pratham@ti.com>
-CC: Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Praneeth Bajjuri <praneeth@ti.com>,
-        Manorit Chawdhry <m-chawdhry@ti.com>
-Subject: Re: [PATCH v5 0/2] Add support for Texas Instruments DTHE V2 crypto
- accelerator
-In-Reply-To: <20250617042755.GG8289@sol>
-References: <20250603124217.957116-1-t-pratham@ti.com>
- <20250617042755.GG8289@sol>
-Date: Wed, 18 Jun 2025 16:00:12 +0530
-Message-ID: <87ikktgx57.fsf@kamlesh.mail-host-address-is-not-set>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MC5rj8m/"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86fea8329cdso3606022241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:30:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750242638; x=1750847438; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eT/12PZKfSu2SPGaB3McbmJPaBjlQ9tOE7JomTG4kVY=;
+        b=MC5rj8m/OjpUGq0P70wD7jikpvlZeLdeX0+PTTm68v1RBfViOvueD5OhdQx8EZ/Jio
+         cDDG1fLC631VGHJbpKo5Oq3KQlnkhITsDF5U17la0QBAQl+jzdl606L8l9XnMhuJDLgz
+         JSZDJz3JEERxJ6p0NQP3hng9Hp4L+dzCIpHcCzJcO2UlaynjysVNwikx9W10a8yL8PWP
+         Agz8ETFWrSr1qXiDaFidOE9hs7NgkzFclbAs4+vFfPKyfbe9F9/Y1QP8UGaDlgjxytg5
+         TEZE2Ic5dc1ANRU9dNgQKCpK5JXkSbLL87+7coyZUsaH3x5lUCCuPVcxodXqOfbRCVb0
+         SY/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750242638; x=1750847438;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eT/12PZKfSu2SPGaB3McbmJPaBjlQ9tOE7JomTG4kVY=;
+        b=DuatQaszZC4nQgJ108O1TFyiO17KAYqEJm5V6NlIrhGdSk/DqRA7vhic5QuPYw0kg7
+         Ts5gDhJVnY3Flt7OFXUqgfnRvcib0YC7K/RfjZebimvmYBtxdQFuD1ixR8WFgRNs6t9+
+         FZYedeHtkORAWsGyQM+sJRPBi2AAoWDEpkYCfkEy9+hDzl+Cpi89jdou1+mKy1CvviBQ
+         FSpuSFvTr25tgNXVJTWuzc62TWg6Tomkp7VqoUoxwKhRykshqYZ5fa8F225gt2EUxiRv
+         6lwVGtTqOdkYUa8Mb0yH80fikdHloW4OSCD3LMWxjppxSTdWlCXPanoNz9zbXl8rzIbq
+         JYNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhrgXDdjvHZYPmp2MBP+zM/SX34+V+QysIC/Kan7KlDKbHkeDlcr8ulMQmvDdDPFm7u/nHnTHOcesZU8M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyULXAHIfQxYSREMn7Kdrsl3uHOGr399N85Gpq35ObrbZTvAsHY
+	YLGKcShIqo4onJ+LI1v7PtjFhs6f1mlWve3i2+INlzbUAy4Sd+4h9nz/AYVrSfbcf0vadzwsa+q
+	2TlSAo+iqlfkwF4osC1/bQziBiTdRXXQ=
+X-Gm-Gg: ASbGncsTrFOG6tRZSXUwuSLfh8Z3poxnBgLQyvJIunaS5KcvfYjtTTYZ/I5rWxTEvs2
+	ynkmIDFf6pCXBMKkHA+yMd9zvpGAckNcCyvsnCylbYMmAEa3yPcA9zgefJfkksPuScq+wYfOcqx
+	nPQHzrQ00dOdHS1m4JFbmyQB0WHb/WmKLgBj8mIYDeeW0=
+X-Google-Smtp-Source: AGHT+IH7RKRvCm6q1PrSG+d31xlc/PQvpYKmyeQnmWasX0yTBn6nbvTFur8gYIrv7DGT5XaouyCELPVDrMUMs/XDbts=
+X-Received: by 2002:a05:6102:442b:b0:4e5:9c06:39d8 with SMTP id
+ ada2fe7eead31-4e7f60f09fcmr12152465137.5.1750242637715; Wed, 18 Jun 2025
+ 03:30:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250607220150.2980-1-21cnbao@gmail.com> <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
+ <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev> <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
+ <deb5ecd0-d57b-4a04-85b7-e6d11207aa8f@redhat.com>
+In-Reply-To: <deb5ecd0-d57b-4a04-85b7-e6d11207aa8f@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 18 Jun 2025 18:30:26 +0800
+X-Gm-Features: Ac12FXwWS54rOJl_kJC8BwUmeIH64jUFLRXblV-c1oAAypuMBEE4BMLagbfjl_E
+Message-ID: <CAGsJ_4yeD+-xaNWyaiQSCpbZMDqF73R2AXjzBL1U--cOg6OSjg@mail.gmail.com>
+Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
+To: David Hildenbrand <david@redhat.com>
+Cc: Lance Yang <lance.yang@linux.dev>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
+	Tangquan Zheng <zhengtangquan@oppo.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
+	Lance Yang <ioworker0@gmail.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Zi Li <zi.li@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Eric Biggers <ebiggers@kernel.org> writes:
-
-> On Tue, Jun 03, 2025 at 06:07:27PM +0530, T Pratham wrote:
->> This series adds support for TI DTHE V2 crypto accelerator. DTHE V2 is a
->> new crypto accelerator which contains multiple crypto IPs [1].
->> This series implements support for ECB and CBC modes of AES for the AES
->> Engine of the DTHE, using skcipher APIs of the kernel.
->> 
->> Tested with:
->> CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
->> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
->> 
->> and tcrypt,
->> sudo modprobe tcrypt mode=500 sec=1
->> 
->> Signed-off-by: T Pratham <t-pratham@ti.com>
->> ---
->> [1]: Section 14.6.3 (DMA Control Registers -> DMASS_DTHE)
->> Link: https://www.ti.com/lit/ug/sprujb4/sprujb4.pdf
+On Wed, Jun 18, 2025 at 6:18=E2=80=AFPM David Hildenbrand <david@redhat.com=
+> wrote:
 >
-> Numbers, please.  What is the specific, real use case in Linux where this
-> patchset actually improves performance?  Going off the CPU and back again just
-> to en/decrypt some data is hugely expensive.
+> On 18.06.25 11:52, Barry Song wrote:
+> > On Wed, Jun 18, 2025 at 10:25=E2=80=AFAM Lance Yang <lance.yang@linux.d=
+ev> wrote:
+> >>
+> >> Hi all,
+> >>
+> >> Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
+> >>
+> >> On 2025/6/17 21:38, Lorenzo Stoakes wrote:
+> >> [...]
+> >>>
+> >>> On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
+> >>>> From: Barry Song <v-songbaohua@oppo.com>
+> >>>>
+> >>>> Certain madvise operations, especially MADV_DONTNEED, occur far more
+> >>>> frequently than other madvise options, particularly in native and Ja=
+va
+> >>>> heaps for dynamic memory management.
+> >>>>
+> >>>> Currently, the mmap_lock is always held during these operations, eve=
+n when
+> >>>> unnecessary. This causes lock contention and can lead to severe prio=
+rity
+> >>>> inversion, where low-priority threads=E2=80=94such as Android's Heap=
+TaskDaemon=E2=80=94
+> >>>> hold the lock and block higher-priority threads.
+> >>>>
+> >>>> This patch enables the use of per-VMA locks when the advised range l=
+ies
+> >>>> entirely within a single VMA, avoiding the need for full VMA travers=
+al. In
+> >>>> practice, userspace heaps rarely issue MADV_DONTNEED across multiple=
+ VMAs.
+> >>>>
+> >>>> Tangquan=E2=80=99s testing shows that over 99.5% of memory reclaimed=
+ by Android
+> >>>> benefits from this per-VMA lock optimization. After extended runtime=
+,
+> >>>> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, whi=
+le
+> >>>> only 1,231 fell back to mmap_lock.
+> >>>>
+> >>>> To simplify handling, the implementation falls back to the standard
+> >>>> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complex=
+ity of
+> >>>> userfaultfd_remove().
+> >>>>
+> >>>> Many thanks to Lorenzo's work[1] on:
+> >>>> "Refactor the madvise() code to retain state about the locking mode
+> >>>> utilised for traversing VMAs.
+> >>>>
+> >>>> Then use this mechanism to permit VMA locking to be done later in th=
+e
+> >>>> madvise() logic and also to allow altering of the locking mode to pe=
+rmit
+> >>>> falling back to an mmap read lock if required."
+> >>>>
+> >>>> One important point, as pointed out by Jann[2], is that
+> >>>> untagged_addr_remote() requires holding mmap_lock. This is because
+> >>>> address tagging on x86 and RISC-V is quite complex.
+> >>>>
+> >>>> Until untagged_addr_remote() becomes atomic=E2=80=94which seems unli=
+kely in
+> >>>> the near future=E2=80=94we cannot support per-VMA locks for remote p=
+rocesses.
+> >>>> So for now, only local processes are supported.
+> >>
+> >> Just to put some numbers on it, I ran a micro-benchmark with 100
+> >> parallel threads, where each thread calls madvise() on its own 1GiB
+> >> chunk of 64KiB mTHP-backed memory. The performance gain is huge:
+> >>
+> >> 1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~4=
+7%
+> >> faster)
+> >> 2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~6=
+4%
+> >> faster)
+> >
+> > Thanks for the report, Lance. I assume your micro-benchmark includes so=
+me
+> > explicit or implicit operations that may require mmap_write_lock().
+> > As  mmap_read_lock() only waits for writers and does not block other
+> > mmap_read_lock() calls.
 >
-We don't really care about the speed here. These crypto accelerators are
-from embedded system. Often less than 4 cores and this particular SOC
-have variant with only one core.
+> The number rather indicate that one test was run with (m)THPs enabled
+> and the other not? Just a thought. The locking overhead from my
+> experience is not that significant.
 
-ARMv8 is clocking at 1.4ghz and DTHEv2 at 400Mhz, so no way it can give
-better performance number in term of speed. But crypto acclerators are
-designed specifically for lower power consumption as well. ARMv8 crypto
-extensions leverage SIMD registers, but dedicated crypto accelerator are
-still more efficient. Think about battery operated low cost devices. 
+Right. I don't expect pure madvise_dontneed/free=E2=80=94without any additi=
+onal
+behavior requiring mmap_write_lock=E2=80=94to improve performance significa=
+ntly.
+The main benefit would be avoiding contention on the write lock.
 
-These embedded devices are often in the open and vicinity of attacker.
-Crypto accelerator are much more secure.[1]
+Consider this scenario:
+timestamp1: Thread A acquires the read lock
+timestamp2: Thread B attempts to acquire the write lock
+timestamp3: Threads C, D, and E attempt to acquire the read lock
 
-Bottomline:
-1. Crypto accelerators can deliver a higher cryptography performance.
-2. Crypto accelerators can deliver better energy efficiency.
-3. Cryptography hardware usually has lower timing and power side channel leakage than running
-cryptography algorithms on the processor.
+In this case, thread B must wait for A, and threads C, D, and E will
+wait for both A and B. Any write lock request effectively blocks all
+subsequent read acquisitions.
 
-IPSEC and partition encryption/decryption/authentication use cases are bulk
-operations and often have low setup cost than operation itself. 
+In the worst case, thread A might be a GC thread with a high nice value.
+If it's preempted by other threads, the delay can reach several
+milliseconds=E2=80=94as we've observed in some cases.
 
-[1] https://www.trustedfirmware.org/docs/Introduction_to_Physical_protection_for_MCU_developers_final.pdf
-
-Cheers,
-Kamlesh
-
-> Note that the manual you linked to above explicitly states that the CPU supports
-> the ARMv8 Cryptography Extensions.  That definitively makes any off-CPU offload
-> obsolete.  But even without that, these sorts of off-CPU offloads have always
-> been highly questionable.
 >
-> I think it's implausible that this patchset could actually be beneficial.
+> --
+> Cheers,
 >
-> In fact, it might actually be really harmful.  You set your algorithms to
-> priority 30000, which makes them be prioritized over ARMv8 CE.  I've seen
-> exactly that bug with other "accelerators", which actually regressed performance
-> by over 50x compared to simply staying on the CPU.
+> David / dhildenb
 >
-> - Eric
+
+Thanks
+Barry
