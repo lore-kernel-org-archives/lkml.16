@@ -1,92 +1,154 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC0728F5;
-	Wed, 18 Jun 2025 03:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D27F28F5;
+	Wed, 18 Jun 2025 03:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750215628; cv=none; b=lGbcwPF+9AaD7z36CGYynCZPb9M5H6smPr4kY75A/V2bLNLQj4BYPXkGh3GFd3uDxcBbZSqQpzvZWCx5xk03E21zPgJTGHALVIgrsIluEhsCW47KQfiP0VYfpjVgGFQjoFa8FTmM2eeRg6/S9/U1FYymSA3kRP9MXamx+D7mvQc=
+	t=1750215697; cv=none; b=FzM+/XIKaEOFEQbPQGGc92fCbdNDbxwSsWdGMOx0hU/eCgEFsQwfgdPxB2/L4IoRJRPiJFHwls7GROb/lC0lP5twEq6hOnQWQTGaP/Djt64zJwg3AO1nHW2SawS0/tXZOBB+Ec9hMVOViKIKRCaHP9XyWKe+3DwDdLYOCfIOpTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750215628; c=relaxed/simple;
-	bh=9wc5jRY5rLEMxwr49N7ddLKbSh0kSv0kAEPoZVEa3+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iy1SJrcI6ARd6qjaLTwoWdOz9I57iyAVMTv0hxVLxFq0QgzGZNjtJOwHffyv5s8lOZRf9UMTiBZIXDpM4iHueBzXxX3W7Q80rMjVy3qVKi3+h8dvT2C5jLwZjZnMchAYVe1eGA7dbdRBOV43/q7M0cdCW1euoSEKYChNkv52ucM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay07.hostedemail.com (Postfix) with ESMTP id 0039A161A80;
-	Wed, 18 Jun 2025 03:00:19 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf15.hostedemail.com (Postfix) with ESMTPA id 2CCA61C;
-	Wed, 18 Jun 2025 03:00:18 +0000 (UTC)
-Date: Tue, 17 Jun 2025 23:00:24 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: duchangbin <changbin.du@huawei.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] fgraph: Do not enable function_graph tracer when
- setting funcgraph-args
-Message-ID: <20250617230024.322758dc@gandalf.local.home>
-In-Reply-To: <ad0745b53e5046b79378bdc12ddfdd51@huawei.com>
-References: <20250617120830.24fbdd62@gandalf.local.home>
-	<ad0745b53e5046b79378bdc12ddfdd51@huawei.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750215697; c=relaxed/simple;
+	bh=t64bpj/Jy42DYE5bUAkvqiJUO9YUAIAKnwMoETOdEDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDstVLh4Jg3hZ8oY6+pwKn4gW3coGYfLSf82OodA2S1h8nOa1yDlN4D2DjmX0T7w7rv3Y+obwSKqweNMeq3lPVZGI0s9V4vKyrgtZGHrAcmEDGz8TzjtLNWntRsg8XwkVRKGaoqFXJKbiUlljBBg+yErUj2m3fKAxY53Sg8qtxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zw86FArF; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zw86FArF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 130B7C4CEE3;
+	Wed, 18 Jun 2025 03:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750215697;
+	bh=t64bpj/Jy42DYE5bUAkvqiJUO9YUAIAKnwMoETOdEDA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Zw86FArFjjTfunSWC4ojQFaMimtGRXBLhq27l9ith755fD0O1H55k8KjjENbj6WsW
+	 AsldrcTTz22pbtz9xsU8a2xCAzOvn6XW/Af9lFgUdVW8fjG/QHRZVp31Je0S9QwYkK
+	 39+PcexM/neXhDJuFGfAdfOG+SUpiFrWRM2+8Lbp3nGENhqoGMR9SOw09N3ywCO/8T
+	 kfwWpLN7xJ+jJqsUeArdkXqWhtvW65ojsoueVvYj6KsmRfLmE7C7wTmreWiD2UuZA+
+	 umyu8Ljzmxs0/YbXlDB9oYzIzOEg5c7RYKVFc29/I7wFCU8PKOncJQEcaxwegaAxal
+	 20VNzZl30OlSg==
+Date: Tue, 17 Jun 2025 22:01:34 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com, 
+	iuliana.prodan@oss.nxp.com, "Rafael J . Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v5 1/3] pmdomain: core: introduce dev_pm_genpd_is_on()
+Message-ID: <ihhh74pzm64nalva27ukpe7v3unx6j2r4opr5yeezm4mefgryi@pi7ky4sv2t7c>
+References: <20250617193450.183889-1-hiagofranco@gmail.com>
+ <20250617193450.183889-2-hiagofranco@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: uwywh6gmmid5rnp6izj7nwosewmdkk19
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 2CCA61C
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX187zWngaOSMo2W3DS+ig99B503hNMQcEWE=
-X-HE-Tag: 1750215618-978374
-X-HE-Meta: U2FsdGVkX1/+GHGpiUbSjHCNqwS4a/YB2HixuKWW/3DZ/bnTaQe+Qg3H6v1ur2Y+IEr6pTs2Q4lgVJnZhFaGSa82bz3kPEEkw5lLpkgFH91Diw/0FfJMJu4rYViIYzIsiFGAwu15kn/xi6LRKtAZBi1mKAQxsXJy2JmtPyqRnROzxHCiDakeJDAZg8yT/ygG0oKXJnoGIf/ZwVsBAbVRtGdQF7mQEJUqSjzXSzARNIok5o55Ue8w2/44S8n+tyockqNca98RV2eULrDiVVd16e5P4Srz5W2nsJTSOypFx7B/Sruto7vfYR6lEx52zfv53c4JfjwrNXP0hwhANwD6eChcDH7g5xo7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617193450.183889-2-hiagofranco@gmail.com>
 
-On Wed, 18 Jun 2025 02:40:21 +0000
-duchangbin <changbin.du@huawei.com> wrote:
-
-> > diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-> > index 9234e2c39abf..b6211c304c7f 100644
-> > --- a/kernel/trace/trace_functions_graph.c
-> > +++ b/kernel/trace/trace_functions_graph.c
-> > @@ -455,10 +455,16 @@ static int graph_trace_init(struct trace_array *tr)
-> >  	return 0;
-> >  }
-> >  
-> > +static struct tracer graph_trace;
-> > +
-> >  static int ftrace_graph_trace_args(struct trace_array *tr, int set)
-> >  {
-> >  	trace_func_graph_ent_t entry;
-> >  
-> > +	/* Do nothing if the current tracer is no this tracer */  
-> typo: no -> not
-
-Oops, thanks.
-
+On Tue, Jun 17, 2025 at 04:34:48PM -0300, Hiago De Franco wrote:
+> From: Hiago De Franco <hiago.franco@toradex.com>
 > 
-> > +	if (tr->current_trace != &graph_trace)
-> > +		return 0;
-> > +  
-> This can fix the issue. But how are tr->current_trace and &graph_trace linked?
-> When are they equal?
-
-register_tracer() passes in what tr->current_trace gets set to when the
-tracer is active.
-
--- Steve
-
-
+> This helper function returns the current power status of a given generic
+> power domain.
 > 
-> >  	if (set)
-> >  		entry = trace_graph_entry_args;
-> >  	else
-> > -- 
-> > 2.47.2
+> As example, remoteproc/imx_rproc.c can now use this function to check
+> the power status of the remote core to properly set "attached" or
+> "offline" modes.
+> 
+> Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+
+Regards,
+Bjorn
+
+> ---
+> v4 -> v5:
+> - s/dev_pm_genpd_is_on/dev_pm_genpd_is_on()/ in function description.
+> - Updated function description to be explicit the function reflects the
+>   current power status and that this might change after the function
+>   returns, especially if the genpd is shared.
+> 
+> v3 -> v4:
+> - New patch.
+> ---
+>  drivers/pmdomain/core.c   | 33 +++++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h |  6 ++++++
+>  2 files changed, 39 insertions(+)
+> 
+> diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> index ff5c7f2b69ce..2f387e15cb75 100644
+> --- a/drivers/pmdomain/core.c
+> +++ b/drivers/pmdomain/core.c
+> @@ -758,6 +758,39 @@ int dev_pm_genpd_rpm_always_on(struct device *dev, bool on)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_pm_genpd_rpm_always_on);
+>  
+> +/**
+> + * dev_pm_genpd_is_on() - Get device's current power domain status
+> + *
+> + * @dev: Device to get the current power status
+> + *
+> + * This function checks whether the generic power domain associated with the
+> + * given device is on or not by verifying if genpd_status_on equals
+> + * GENPD_STATE_ON.
+> + *
+> + * Note: this function returns the power status of the genpd at the time of the
+> + * call. The power status may change after due to activity from other devices
+> + * sharing the same genpd. Therefore, this information should not be relied for
+> + * long-term decisions about the device power state.
+> + *
+> + * Return: 'true' if the device's power domain is on, 'false' otherwise.
+> + */
+> +bool dev_pm_genpd_is_on(struct device *dev)
+> +{
+> +	struct generic_pm_domain *genpd;
+> +	bool is_on;
+> +
+> +	genpd = dev_to_genpd_safe(dev);
+> +	if (!genpd)
+> +		return false;
+> +
+> +	genpd_lock(genpd);
+> +	is_on = genpd_status_on(genpd);
+> +	genpd_unlock(genpd);
+> +
+> +	return is_on;
+> +}
+> +EXPORT_SYMBOL_GPL(dev_pm_genpd_is_on);
+> +
+>  /**
+>   * pm_genpd_inc_rejected() - Adjust the rejected/usage counts for an idle-state.
+>   *
+> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
+> index 0b18160901a2..c12580b6579b 100644
+> --- a/include/linux/pm_domain.h
+> +++ b/include/linux/pm_domain.h
+> @@ -301,6 +301,7 @@ void dev_pm_genpd_synced_poweroff(struct device *dev);
+>  int dev_pm_genpd_set_hwmode(struct device *dev, bool enable);
+>  bool dev_pm_genpd_get_hwmode(struct device *dev);
+>  int dev_pm_genpd_rpm_always_on(struct device *dev, bool on);
+> +bool dev_pm_genpd_is_on(struct device *dev);
+>  
+>  extern struct dev_power_governor simple_qos_governor;
+>  extern struct dev_power_governor pm_domain_always_on_gov;
+> @@ -393,6 +394,11 @@ static inline int dev_pm_genpd_rpm_always_on(struct device *dev, bool on)
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> +static inline bool dev_pm_genpd_is_on(struct device *dev)
+> +{
+> +	return false;
+> +}
+> +
+>  #define simple_qos_governor		(*(struct dev_power_governor *)(NULL))
+>  #define pm_domain_always_on_gov		(*(struct dev_power_governor *)(NULL))
+>  #endif
+> -- 
+> 2.39.5
+> 
