@@ -1,169 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CF2EBB8A;
-	Wed, 18 Jun 2025 14:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CCA2EBDCA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257173; cv=none; b=S4i6VxHmMr2Z8w5A3BdyCZN2A2JRHsPVqR4qLIukIc9QAmanEVWYw3WNgJGd1b8VikOyaOF60FBBJ5s53vZ/Vq2DJT+FYkYWNKUwKxOnM9PdSyerC4gvmLgBPmVX/QiBGogaWUMgWlvDeJ2Z2eHC+k7Jt9fW9R9bHA/fT3Q963w=
+	t=1750257200; cv=none; b=bF5VKEc13jC75TMQIxX4motMZT9r8LQ33exfsRjMWUNgVbhwbk5/VaOb/HXcdWibPptwQVcKtqtuCbxyVXIJpCFDS+GP9BYoZQ6djnv0PBuvBGkY4C6ILBc47OW0JvzSQpmJb20oQRbw0ecXktwaVGTZEYWYA5vmKYX6GY0POFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257173; c=relaxed/simple;
-	bh=LpXTwtZphTnfZzbT6c1z9QEcf3439GwWQBhu6MPqfrI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MPTEXgeyv1Vg5c8S/2p3MGdWrGwnafcyvl4VxVWPX61M1Mtf6nApf1knrCpZdNQt4Yc32RYR9Np0fmVpYmikKZLR5hXLRcSE14DJFHp98zC8NbFFCE00Zyrb2RdtzireA6E3sFnIzwpsSFOE03J4NvLYcO7V1/aML0VkqHRlB+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJMs5EV0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750257200; c=relaxed/simple;
+	bh=6p3gmVNgeWpM5P5NgnZSHUvO6bicpNKcBnOP1+C75sg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WD2dlSqvsZjbVdUqxEoPqZf0f3oyTcBtpH0AWHQtXJ4vQnfcYVwsh4/wMTqbbASg9rzs5IJZfTHwsEv5UElwoNuQAFq7hb3UNyOKvj4KvNLg7VdMJ8cWIUzojIl7mn19y2dTuth4Xu+eTKA1cpOrIxKANxbIDa4jquWR2wNhgr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eyzw8/+k; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJMs5EV0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55751C4CEEE;
-	Wed, 18 Jun 2025 14:32:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750257173;
-	bh=LpXTwtZphTnfZzbT6c1z9QEcf3439GwWQBhu6MPqfrI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gJMs5EV0ITzxF3jPbzEUQw+gG/KlJ7YWFKwg8210Vx4RwZizZiM0XGHwm85PefSbG
-	 Izb3zFkOtyXb4Z35BH676BTRXZVZlrqXZApPI0SaNSp1j0Zp0jInyAseJp8vJuCtUV
-	 nnf1KEoBL0NPikedmr7V6kknYxQYXlAs++fGE59KbvWsRxSaP5ofALuR+4FroFlgBq
-	 zf5DSU+fd/3UIjQxowVGaxR3iOwnexT+DEIbOOc7eBCTkUT/0fU6oFvPffk9X16GCd
-	 ZgqIKti0TrvkWZkCnS5dBLlsFbJYfh6m8ZYlNbo+RJEafoHWYIrtyAh33MRYvXIjCS
-	 yl8RLwKX1diyg==
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2eb5cbe41e4so1350288fac.2;
-        Wed, 18 Jun 2025 07:32:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVWa2xj0oxFfnLjDI77d6u/6vSLa4J8pAs+6Ziysobyq8YPpeoir9Jb/jLHfeFP3OcK+jGWw2/R+Bc=@vger.kernel.org, AJvYcCXil0S+XcJvH8MmufwAeZqI+kLqygGIhAEM18dT0jlCOAyFuChPqGp8moRJiIzrGQDnE59bAUhcTymXIjo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywr+ZsjdCOyMDEM6y+ijm+2QU5Fp+DoH9X2IHOCnL2lsnwwCPU4
-	2Af/9CvZgTF4ULRDYzjRGIqs/9N7O1sodIhPbxvs1173Lt2xMBc2p4VB2XdrU60eTEgR378FYlJ
-	zNakUvws+0uRte+2vpdi+YDjovjeG5+0=
-X-Google-Smtp-Source: AGHT+IF7yypwVvbrTXlBb0mog1YhImldd0ihK3Amted8NiiIeRb/u62YPdxQlybXugRk1Ehklbu7KthxUHxvIVlBquM=
-X-Received: by 2002:a05:6870:414b:b0:2e9:3c7:1a1a with SMTP id
- 586e51a60fabf-2eaf02105c0mr8999591fac.0.1750257172761; Wed, 18 Jun 2025
- 07:32:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eyzw8/+k"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6071ac68636so1388425a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750257196; x=1750861996; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B4X7DaN4+Map/kL0OnjyI+6NxQr2TtGJmMy/gmAt3s4=;
+        b=eyzw8/+kfFdltOdKbFjBBhwXFn5p7gJm9M6SKiGQTmzUIeh/fARS/ZbUMt0jQhDcz0
+         2xpweql7xQitV1YveBM81souZmj1L3qjrU0sw3QcNSK2cuQyc2fmdCuB9ko81EDIQS0r
+         l/pQONAUpAZnClZPLIttcZuGBQeQOEdNSihvGvFr2AOdsY3zXEpEr1LpG6LzUXNl2p90
+         T5QFhGGZOiz3xH/RwpK66QfQ++sF+hmTQo+WOfGES6acVhOg/Q9zGfNq05zo+N7hWud1
+         tr83fe0z2yjuB9JnaXxHMwTRLrGeYlfT2Qya2UWuuNrKM+NOFm0YXWbN2tmgnZlBymu+
+         gfAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750257196; x=1750861996;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B4X7DaN4+Map/kL0OnjyI+6NxQr2TtGJmMy/gmAt3s4=;
+        b=Cf1/dZkhvYXdVLxmU+Zc4mK4GuJpl/NR4M4Ulx8MK+BWy5JZsSkYZ0cRzMnIVkj8oi
+         VH+aBZDZl0v/zIv3N3FTpkpmSqDtigWTeFaQ+5+hjEn/g3YaFSh4etxSBfgW/5uyU9d5
+         tV+lCUI497C97UfjD+apvcnY6M4y7HK387lbfe7kwgM8SlERwAxIuwfCLRGwg+OfbMPN
+         W1w7v9eSp/p0wykPDZHbxuMs+sKAbJcqRUl8QTU0oYM53DHcaFLXny4dIY0OKa7kGX/T
+         kNMqeD0SJeaJxcmEHJkwDGAUujs2OL6JQv7hgXh3Y5XAkcWDNBODeQTaql9HRVnH/h1r
+         WTXg==
+X-Forwarded-Encrypted: i=1; AJvYcCXrOXshSJYYHkkTdAuiSrU14Axvu4/+KSJNDEyhJY0jKosI5fSAWcFlfE81PsrcXMnmfAarq6nzixlpOjY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxrWVQgsPZ+YFL/T2fRtFvQtKAzuHbjsLn8DQYn3XGtKg0vdrb
+	9BjM92xZbxUgM5ciRqQoy0rcEuE4uLF26h8w3mktDvf2iXJVMjULc2URwmk8SdxK7GM=
+X-Gm-Gg: ASbGncst4ay/7CuKGeMk4AJTw9zp2avYI0Tj1B3X7JduuoOHKul6+BXM4biLnZiGtps
+	pPbPwuWIR4GJaDP0og6VYSSCIt/6XaY5PfBmDxXEdaixNky+C8z5iKLuJcZdixvIUg77EiAj/VY
+	BJrtSg//MfU14nV75OIF1Y/22Bn57ONjWfxEYTMo80RMlmm91d1mgBAqubJh9KSTTGDt5nsXcrW
+	OVBQwaSYFwqrbKvLT0RsK5HhbEk0HlBpmS9r+ZPt9V7ebP7f28cQbD8gHCoRrim7moKU9dJqXx8
+	1w++OPMxU0bkD5tBofuP884D3OWmfPbisItSPmvdto9IMJLWU0aIFNr9VoPc9bS0thnRZTOmfvS
+	Ai9fPuOY=
+X-Google-Smtp-Source: AGHT+IHXnKRDR3Ql5qmBBMwJv0NM899ZSndO0MgBPTy1nfGVrxEeMqChlf9unxqDA9c2qxWrRaa+yw==
+X-Received: by 2002:a17:907:86ab:b0:ade:9b52:4d84 with SMTP id a640c23a62f3a-adfad5230b8mr605074766b.15.1750257196488;
+        Wed, 18 Jun 2025 07:33:16 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec81c0135sm1052257566b.47.2025.06.18.07.33.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 07:33:15 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Wed, 18 Jun 2025 16:32:30 +0200
+Subject: [PATCH v7 01/13] dt-bindings: display/msm: dsi-phy-7nm: Add SM8750
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <81f4c402d1fda7c2419aac1148061a0789112e76.1749849645.git.calvin@wbinvd.org>
- <99f09d35e30fa335508823e9848a3365936ac9b3.camel@intel.com>
- <aE-f35kOO0TywX5K@mozart.vkv.me> <a813fd9a41dcfc0afc8b68f9ac8d3e07d0b96530.camel@intel.com>
-In-Reply-To: <a813fd9a41dcfc0afc8b68f9ac8d3e07d0b96530.camel@intel.com>
-From: Len Brown <lenb@kernel.org>
-Date: Wed, 18 Jun 2025 10:32:41 -0400
-X-Gmail-Original-Message-ID: <CAJvTdKkVETa5MC4Y245UamB214U=HK5deadufpHaPnYmm7ywhg@mail.gmail.com>
-X-Gm-Features: AX0GCFsriP21MQ34BXEhg2vZK7DRhww0K6nz6o6ei06zsqOW3ja2sJTcAbvxQDU
-Message-ID: <CAJvTdKkVETa5MC4Y245UamB214U=HK5deadufpHaPnYmm7ywhg@mail.gmail.com>
-Subject: Re: [PATCH] tools/power turbostat: Fix MSRs with CONFIG_MULTIUSER=n
-To: "Zhang, Rui" <rui.zhang@intel.com>
-Cc: "calvin@wbinvd.org" <calvin@wbinvd.org>, 
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-b4-sm8750-display-v7-1-a591c609743d@linaro.org>
+References: <20250618-b4-sm8750-display-v7-0-a591c609743d@linaro.org>
+In-Reply-To: <20250618-b4-sm8750-display-v7-0-a591c609743d@linaro.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+ Jonathan Marek <jonathan@marek.ca>, Kuogee Hsieh <quic_khsieh@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Clark <robin.clark@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, 
+ Rob Clark <robin.clark@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=918;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=6p3gmVNgeWpM5P5NgnZSHUvO6bicpNKcBnOP1+C75sg=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoUs4a7XDxGu9sj2aHu21RSAfhGgELU/Bw0aAYI
+ wskTgq5XP2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaFLOGgAKCRDBN2bmhouD
+ 19AgEACYoVeVBbfztNRqMn55p6VM0unzlIT/zvVGJPIR60HXWSs8IAfhOiu1ULWx3FCuSzyN5s3
+ r7BHv1Qa1j5NYR2ckxCaTDjrNMtXMgJpihVNV+3y5kpgS9yMh6JOcxDqPKW0mTTUq6TVcH2u0Ad
+ FcjOY46mcxEJeFs/U47eBlLhmniBp4/xUmCTmyFXbCkblkcLrbft8bmU6igMAwAuEtw37bdUIXk
+ AzMq3+g9IHbEG4GTSyGvXMltaLTVp7A1jBHGmBBCte3cHlYwaML4H4B5LQz11y/U5AKMbAzd9zz
+ 4ZP6u5/qTCXt6V8oi8XKE78bpLwBexSdP3igQKKqXYt90rNOTHBUiMMqrdwbwK1yAE3KbN0Uj8y
+ mdje9ZrKQsEzF2uVWDUL7FJr2C8B7aMSZSPEbHuWs0rc43xl5FSURBDr/i4ilKhbgHiaQDDyMJh
+ g4wqepd/deZRbWir8IWaFaAa6lYN9wX+hF5KO9GMu+h2txpBKn3WCajyOntr/8Wys/AQXePcZTs
+ q3SFC7JNPnJHFCOpboTihoiAx+5uPT7qEf9ghpZo7UJ9Byl89c8AOAH0ibzdaOza6QwbgQQ14s+
+ DpYSk/mNy7t5Nzzvm7H/wh0OUw/WBFzvpKNTDJnFpxU9KH9hXreA8sPn+PxRqNoLjiJTYOphUUe
+ 31VaPalhhNu7/kg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Thanks for the patch, Calvin, I think it is correct.
+Add DSI PHY v7.0 for Qualcomm SM8750 SoC which is quite different from
+previous (SM8650) generation.
 
-Rui,
-I'll tweak the comment to explain that the system call doesn't always exist=
-.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I think it is correct to continue on -- the rawio check is basically a
-graceful way
-to prevent an error in accessing MSRs later.  If we don't have that
-graceful mechanism,
-then we will or will not hit the access error later, and that's okay.
+diff --git a/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml b/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml
+index 3c75ff42999a59183d5c6f9ad164023d6361ac07..1ca820a500b725233e161f53cbbbd59406326876 100644
+--- a/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml
++++ b/Documentation/devicetree/bindings/display/msm/dsi-phy-7nm.yaml
+@@ -25,6 +25,7 @@ properties:
+       - qcom,sm8450-dsi-phy-5nm
+       - qcom,sm8550-dsi-phy-4nm
+       - qcom,sm8650-dsi-phy-4nm
++      - qcom,sm8750-dsi-phy-3nm
+ 
+   reg:
+     items:
 
-Interesting configuration you have there Calvin.
+-- 
+2.45.2
 
-thanks,
--Len
-
-
-On Tue, Jun 17, 2025 at 11:28=E2=80=AFPM Zhang, Rui <rui.zhang@intel.com> w=
-rote:
->
-> On Sun, 2025-06-15 at 21:38 -0700, Calvin Owens wrote:
-> > On Monday 06/16 at 01:30 +0000, Zhang, Rui wrote:
-> > > On Fri, 2025-06-13 at 19:20 -0700, Calvin Owens wrote:
-> > > > Handle ENOSYS from cap_get_proc() in check_for_cap_sys_rawio(), so
-> > > > turbostat can display temperatures when running on kernels compiled
-> > > > without multiuser support.
-> > > >
-> > > > Signed-off-by: Calvin Owens <calvin@wbinvd.org>
-> > > > ---
-> > > >  tools/power/x86/turbostat/turbostat.c | 7 ++++++-
-> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/power/x86/turbostat/turbostat.c
-> > > > b/tools/power/x86/turbostat/turbostat.c
-> > > > index 925556b90770..f7d665913a52 100644
-> > > > --- a/tools/power/x86/turbostat/turbostat.c
-> > > > +++ b/tools/power/x86/turbostat/turbostat.c
-> > > > @@ -6496,8 +6496,13 @@ int check_for_cap_sys_rawio(void)
-> > > >   int ret =3D 0;
-> > > >
-> > > >   caps =3D cap_get_proc();
-> > > > - if (caps =3D=3D NULL)
-> > > > + if (caps =3D=3D NULL) {
-> > > > +         /* Support CONFIG_MULTIUSER=3Dn */
-> > > > +         if (errno =3D=3D ENOSYS)
-> > >
-> > > Can you point me where this knowledge comes from?
-> > >
-> > > I downloaded the libcap source and didn't see how ENOSYS is set.
-> >
-> > Hi Rui,
-> >
-> > When the kernel is built without multiuser support, the capget() et al.
-> > syscalls are #ifdef'd out:
-> >
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
-/kernel/capability.c#n32
-> >
-> > ...so userspace will get -ENOSYS when it tries to call them, and that
-> > ends up being propagated to errno in userspace.
-> >
-> > Admittedly it is sort of implicit. Maybe a better way to "fix" this
-> > would be to warn the user if the capability check fails, but still
-> > attempt to access the MSR devices? I can do that if you prefer.
->
-> if cap_get_proc returns -ENOSYS only when CONFIG_MULTIUSER=3Dn, then I
-> think the patch is good, maybe we just need some more detailed comment.
->
-> and I don't think we should continue when the capability check fails in
-> general.
->
-> >
-> > That is my only problem here: when check_for_cap_sys_rawio() fails, the
-> > current code doesn't attempt to access the MSR devices at all, even
-> > though in my case it would actually work.
->
-> Or maybe we can cover this with the "--force" parameter?
-> say, does it make sense to address the problem by running "turbostat --
-> force"?
-> I'll leave this question to Len.
->
-> thanks,
-> rui
-> >
-> > I realize this is very weird: it came up when I was recently including
-> > turbostat as part of an extremely tiny bootable utility image.
-> >
-> > Thanks,
-> > Calvin
-> >
-> > > thanks,
-> > > rui
-> > > > +                 return 0;
-> > > > +
-> > > >           return 1;
-> > > > + }
-> > > >
-> > > >   if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE,
-> > > > &cap_flag_value)) {
-> > > >           ret =3D 1;
-> > >
->
-
-
---=20
-Len Brown, Intel Open Source Technology Center
