@@ -1,100 +1,95 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD18281353
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0955D1F4191;
+	Wed, 18 Jun 2025 09:27:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238786; cv=none; b=YQVGJbSIt/u+jBNXSLYLPw7El/ezO04ZFshlkNrBWowAt/5lDHRlbz6AU2LhvP4jZdwFuIl/DS8NpjqLJkL+mUGLX6pMk/6IEoe0NJ3cOHswgD/bCV/Nb+iZno5P/ebFxPidSpVPOaXmHhEw/JRJIV9VOSVPYuNO0NiX1YSlBvE=
+	t=1750238860; cv=none; b=Zchs6uHnwr53ZloLzrPCrRms7GbHzZfsvZvBtjDhoFKxCJquFrFl035QjdNjuIaO5eDTAuoRBNOBC90A0cvh35d7kmd2sso0vTkeV2pXsElGsZFHRDYzp8yDQUrrkd8uKUdIkGYfPpqo5aYbfRC6lIrCxCm41p0R7R61lnDUNEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238786; c=relaxed/simple;
-	bh=nAixNKedNDaYjMoDbFJJWtykzraK5wtml5m9AKWJpzY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ByfT/q12w8nbfKbYF/bd3kHdzwoeLOhPZkJp1vvYlfaAAS1RWXdAli8i76UMB/kesj6wqfYgaZlFTdhpedain393iRZ+CvoBPUeNcipVtYQDzdrSWE8P7WSJuWSLboBqyAHfnFxY5didNBHP8Y0wYvhrqZr7Q+Qt5HPNxICS9YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yAeeIEfz; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750238860; c=relaxed/simple;
+	bh=9hozI163u2f82HHc3jXhzCXVCkRVx1ctJhVQOE/MT/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ePW9fYv0FQTYJ4ijL4xgJbVZDlGCGlcM+uHwSkN/DeP/azuVo+QTq4cX9TNXTGz+zGQy/3dQL5HJmXOSmBvJWqcogbAbW50OuNCv6jRWTc39ZPGwjRFfZ8tW9XYJyjQSOMqN0Ydxay4ziGQ55xhwHVWpaGW4dV/7bQ6lm6liDnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=YWX9IMvN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yAeeIEfz"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-553d2eb03a0so584844e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750238783; x=1750843583; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QWFR3lJZvy4GZXmA1xUeMKYw+5FpI0OcmJNgyVyXgIw=;
-        b=yAeeIEfzr7L+oZZxhNiqA2bDIsKcUw9vfMsxJy3A8Li+vwxW7MT0ewaxRF7X3wUwe2
-         /100WBwO6ZoaskvMXg2kNHVFa/OUULZs1XfArhRJI3aNJYjesKZNlYeSW89ts8Noenmg
-         DoOVyZGCOOwYvVpYebqS6YoQDwPGwNzyC6KD6ggOGNkIy1gUdSu8wiVcEh6t44ZSa2Ir
-         YbWh3Wwnq23AKhVLjP79qaCAl3IAQAKBQ8g5d1W+XMUXt9O6MuJTUHr3IG6gDACJIV1R
-         83yqgpsSeJ9xCrJjNdcStL0HgynCSL2zFA9QMWYjON+jELo+VUZUJTmerK/neFL3xCn3
-         VfyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750238783; x=1750843583;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWFR3lJZvy4GZXmA1xUeMKYw+5FpI0OcmJNgyVyXgIw=;
-        b=tAb3El2ufWqVVSiQ1f8c0x90Q1rD1FeSHPFlwlQMf+rrUl1/te8cG2rHeIjQjaa29n
-         sJbcaVHwMzuGCfYfLIWQXZkkrVNZQSJ1mOqn0gbym1gNBl8FFL2hc+hL7bhD3L37k8Ts
-         WfnrA8pP30Y9hEcjY+GCxvO87WjToUe7h0fzMtp6evJfU8uivaRSKDjXqVS28sK2lKvh
-         r/tojxN8VvXuLX1MRFgDxS27r7/3XrvE3GozO0jzjZ7//xcvprn4K5leisjtOBt4uSN4
-         i6Z2ORPD4bI1Ug3SgtL4nFfhOw6U8OvkFXFO6NhfjPdbqqes8AnrZovYaOb4QgIDb4EV
-         eu/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXNvIVRWXzYUF4rHsYlUGavQAKVHPHt6SKfhQ3JgpwP31rNGdbx5Gpl/GSJEmm/pWR8cNUPs9PpxPUiaKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA+6LwQ5bDxqo64QAa5FF/l3GVNhjp/bscECS5y19Tv8ZED72Q
-	6E5Zelh+FyoZYaVXX+SudXS2l6jj+xrubdmW+pjmTYw+hSkfJdrtIPDywCHZuQ+Pvf3SacARjD9
-	5o5aed4x2AzVHjw1YxBLhdAGTMBXmEkNttdfNg2gblg==
-X-Gm-Gg: ASbGncsErOpyHnrglM1T7zxxgw5bREdhvd4d6WEG9T+OwGgr7iSPwfTQ0hka7RlAc1G
-	WPu9L9T1w6mXWtU/yRsiH5nQ2PRcT7vbxgVFwszJRbJhd+zcnZDIhHQFa+ur3sXsgJEFNQbu76G
-	WZ8lXZTvnyMYUL62K46mNBhFpBO4A9OH+LuKrXINNRclo0RZHjCH4Amw==
-X-Google-Smtp-Source: AGHT+IGZulR1H9+iCIC55gEsLEoE0oqDCjkL5Fd28aQJZaej+7J7V66hn4S2QtWJZn/tk65wm8JptBmvBC8HG7edLQ4=
-X-Received: by 2002:a05:6512:4023:b0:553:2375:c6e8 with SMTP id
- 2adb3069b0e04-553d38bc9edmr644722e87.1.1750238782845; Wed, 18 Jun 2025
- 02:26:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YWX9IMvN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=14CLd2utreHeC5HTSpw3bBPTjKNLFfN1oL1hjjz73BE=; b=YWX9IMvNaqQ0XlpYJ5dIVWeioL
+	/UxiraohaeqnUgyhiVbK9UlvYPX1M1l+1A0wBapD4jGThPBBCTJ1LAVCVvqFxhUHksi4/CTS+6i1U
+	DAaf3hgDzbkmDAOI20bhWBnGxhghqd6EdIdim6mSBenDU5kMwQjIKkkLT6A3UgV4N73r2MlI4JHTB
+	i5VX0F0HTLhILBySvA9YoUnxpcs2/d+Plfno0AnbHsiRzzTd/wVpgGtvTptiq/pstVYY1eUINv3lV
+	i9G4wdOptpFscsn09QUqZQFvhiXZuYabXRCNdi3Z+UYPauxH/C8RDKpNtSGO0QgEdoR1I6IrKMjiH
+	BOC1FpBA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRp4q-00000002YmE-2dlP;
+	Wed, 18 Jun 2025 09:27:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 391C3307D9B; Wed, 18 Jun 2025 11:27:28 +0200 (CEST)
+Date: Wed, 18 Jun 2025 11:27:28 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+	"linux-trace-users@vger.kernel.org" <linux-trace-users@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Frederic Weisbecker <fweisbec@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [RFC][PATCH] tracing: Deprecate auto-mounting tracefs in debugfs
+Message-ID: <20250618092728.GG1613376@noisy.programming.kicks-ass.net>
+References: <20250617133614.24e2ba7f@gandalf.local.home>
+ <20250617174107.GB1613376@noisy.programming.kicks-ass.net>
+ <3201A571-6F08-4E26-AC33-39E0D1925D27@goodmis.org>
+ <20250617180023.GC1613376@noisy.programming.kicks-ass.net>
+ <20250618072102.1fnuVt8d@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610152309.299438-1-antonio.borneo@foss.st.com>
-In-Reply-To: <20250610152309.299438-1-antonio.borneo@foss.st.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 11:26:11 +0200
-X-Gm-Features: AX0GCFudSA6Ai2Ztyy99YXMMTippK2eV4K98kdxAH7hr-WIHL4mRq5_nr4kVdg8
-Message-ID: <CACRpkdYy+sVQAdntEWMfJGqEzw+eexLGG6pXt8QVYD47rVzjdw@mail.gmail.com>
-Subject: Re: [RESEND PATCH v2 0/5] STM32 pinctrl: Add mux function RSVD
-To: Antonio Borneo <antonio.borneo@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Fabien Dessenne <fabien.dessenne@foss.st.com>, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618072102.1fnuVt8d@linutronix.de>
 
-On Tue, Jun 10, 2025 at 5:24=E2=80=AFPM Antonio Borneo
-<antonio.borneo@foss.st.com> wrote:
+On Wed, Jun 18, 2025 at 09:21:02AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-06-17 20:00:23 [+0200], Peter Zijlstra wrote:
+> > If I have to edit the mount table, I'll just keep it at /debug/tracing/.
+> > Tracing is very much debug stuff anyway. While I knew there was tracefs,
+> > I never knew there was another mount point.
+> > 
+> > Just annoying I now have to add two entries to every new machine.. Oh
+> > well.
+> 
+> I don't know what you run but since Debian 11/ Bullseye (v5.10) this happens
+> more or less on its own. systemd has the proper mount units:
+> | # mount | grep trace
+> | tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
+> | # ls -lh /sys/kernel/debug/tracing/ > /dev/null
+> | # mount | grep trace
+> | tracefs on /sys/kernel/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
+> | tracefs on /sys/kernel/debug/tracing type tracefs (rw,nosuid,nodev,noexec,relatime)
+> 
+> This of course doesn't work if you manually mount it to /debug. While a
+> symlink would work, you still have to touch the boxes.
 
-> Antonio Borneo (3):
->   ARM: dts: stm32: Add pinmux for CM4 leds pins
->   ARM: dts: stm32: Add leds for CM4 on stm32mp15xx-ed1 and
->     stm32mp15xx-dkx
-
-Please apply these two through the SoC tree.
-
->   dt-bindings: pinctrl: stm32: Add missing blank lines
-
-Waiting for a DT binding maintainer review on this one.
-
-> Fabien Dessenne (2):
->   pinctrl: stm32: Handle RSVD pin configuration
->   dt-bindings: pinctrl: stm32: Add RSVD mux function
-
-I applied these tow because I have a DT binding ACK on 2/5.
-
-Yours,
-Linus Walleij
+Mostly debian/testing. I prefer a mount from /etc/fstab, I tried a
+symlink once but that is weird with tab completion for some reason.
