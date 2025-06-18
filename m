@@ -1,83 +1,76 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1731E0DFE;
-	Wed, 18 Jun 2025 04:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 714C51EB1AF;
+	Wed, 18 Jun 2025 04:09:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750219771; cv=none; b=H3Bj556levA+ajcuUkpXTDdb42y2KohYbI/OOGl7wH1K78QECoW22jcC3UJA+gIqojrxembChVGQKmSRMS3VRla1TBt/dUsDSW5ydPDapUcJ3ZT0RYkUFXw2JjteDx4QWvb46+rV8qwM/n2UavFa1CU/fsJvWIpyrOZuh0S8vk0=
+	t=1750219772; cv=none; b=bBtazPlkLuTrsecjjIdgmSK4ZUAbP8tS9XyaASE6sAcM/36Ql3MgkfO6anGrBqwrR2ZgcqpT/BgQkKkrkcw/+VvpGrnUH5ht83+MmuGopBOFCLQdbmYgZLltlZzwRe6cMVAhzbUlcV1dvZauVCBA6UPNtPz3mKUF3PGvP6Q3vTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750219771; c=relaxed/simple;
-	bh=XGXyQipLSI3HWelm0GjXm8r9d5GScQ/BlKqOzWAR8I4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LnOFepqI4mWom2NCzE5XYneMsZj5eRu3ONKf3pSshd9Bhc9l/+Q0JD3fnoDUyPnduFGNZyOci7RmEytdSNzhwRRuYnyEoHh37Ka0deY/2w/MCYwt2w+bAEOB07DzNmxJFQYw8mainK2vdMTC0xb7Qw5edH3nPqrWzLvfH1vn2Rc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowADn_FT2O1JoYYdHBw--.8219S2;
-	Wed, 18 Jun 2025 12:09:26 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org,
+	s=arc-20240116; t=1750219772; c=relaxed/simple;
+	bh=Pjw6Dm2zPR9KJTwrs7qZIwnMcij6/krhnEKtQLK/5Sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tYKuKj50y2i/niblnZOoA49KRtmzC48qnCg1Hqyl3B9DbEfokRIW3RQxlzog4Fv//p7kMPdLhGjQVf0ascTDHvP5L8VPASw01HE3v24VIRLjA6JYUboUn0PjBk6Tq3iuSaGUgAWdftd5T/iXAgvW5x5us166TE/G5Ix4RxuHd4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZfBRSPEV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZfBRSPEV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EEC8C4CEE7;
+	Wed, 18 Jun 2025 04:09:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750219772;
+	bh=Pjw6Dm2zPR9KJTwrs7qZIwnMcij6/krhnEKtQLK/5Sk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZfBRSPEVDk/IdoN54Fo7vD7f5r3uOuVlOBwMryrFYAcCVeBvZWzjLxEEdk7M4Lqko
+	 sV4//Ro/GSDvLTuZCPB7eKLJ8+CXw1DoNQw8zMqAOIP2mZPwXkg68dYTFRN1RJ91rS
+	 G+mtNo/6mndrPBHYiI+FmbMxqe//7u6PJGLWhQl4N2Q5lF3wwTV7yw8u3of/ADrF9b
+	 oQTzSmhIWOGn0GQU6qMLZ8yILxcmDgnYVaZBudJsPDDa5kE+jO+uIZHytl5tNgUaIN
+	 uYa4EPVoND1C6tnl9WZUt3jG5bdE/A91PMrOqgVMcs2xQQX9uQ7dE4UDGSrRVbhp5A
+	 NJWVr8i5Bp0Yw==
+From: Bjorn Andersson <andersson@kernel.org>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] usb: gadget: pch_udc: Use USB API functions rather than constants
-Date: Wed, 18 Jun 2025 12:09:08 +0800
-Message-Id: <20250618040908.408309-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	laurentiu.tudor1@dell.com,
+	dmitry.baryshkov@oss.qualcomm.com,
+	johan@kernel.org
+Subject: Re: (subset) [PATCH v3 0/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add WiFi/BT pwrseq
+Date: Tue, 17 Jun 2025 23:09:16 -0500
+Message-ID: <175021976630.732077.9578676163556374821.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250331204610.526672-1-alex.vinarskis@gmail.com>
+References: <20250331204610.526672-1-alex.vinarskis@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADn_FT2O1JoYYdHBw--.8219S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFWkKry8XFy3AF17uF1Dtrb_yoWDtrc_C3
-	yUWrW3Kw17XayUGr4xC3yfJrW29asYqwna9F1vqasxAa45KayUXr1UJr4DAa1xZrW7ZFnr
-	CwsrtF98tF4IvjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_GcC_XcWlOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_Gryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjTRZNVkUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Use the function usb_endpoint_type() rather than constants.
 
-The Coccinelle semantic patch is as follows:
+On Mon, 31 Mar 2025 21:43:43 +0100, Aleksandrs Vinarskis wrote:
+> Add bluetooth to mentioned device.
+> 
+> Changes to V2:
+> * Fixed commit message misunderstanding
+> * Picked Bryan's R-by
+> * Picked Laurentiu's T-by
+> * Link to v2: https://lore.kernel.org/all/20250331073423.3184322-1-alex.vinarskis@gmail.com/
+> 
+> [...]
 
-@@ struct usb_endpoint_descriptor *epd; @@
+Applied, thanks!
 
-- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
-+ usb_endpoint_type(epd)
+[1/1] arm64: dts: qcom: x1e80100-dell-xps-9345: Add WiFi/BT pwrseq
+      commit: 642b55ce06c923a52cf52f94a2508c7a20b02536
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/usb/gadget/udc/pch_udc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
-index 169f72665739..0b20ecbe64f9 100644
---- a/drivers/usb/gadget/udc/pch_udc.c
-+++ b/drivers/usb/gadget/udc/pch_udc.c
-@@ -988,7 +988,7 @@ static void pch_udc_ep_enable(struct pch_udc_ep *ep,
- 	pch_udc_ep_fifo_flush(ep, ep->in);
- 	/* Configure the endpoint */
- 	val = ep->num << UDC_CSR_NE_NUM_SHIFT | ep->in << UDC_CSR_NE_DIR_SHIFT |
--	      ((desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) <<
-+	      (usb_endpoint_type(desc) <<
- 		UDC_CSR_NE_TYPE_SHIFT) |
- 	      (cfg->cur_cfg << UDC_CSR_NE_CFG_SHIFT) |
- 	      (cfg->cur_intf << UDC_CSR_NE_INTF_SHIFT) |
+Best regards,
 -- 
-2.25.1
-
+Bjorn Andersson <andersson@kernel.org>
