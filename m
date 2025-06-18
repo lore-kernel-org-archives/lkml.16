@@ -1,89 +1,122 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FD027E071;
-	Wed, 18 Jun 2025 07:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3F527EFEF
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:56:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750233401; cv=none; b=McxygCEgp7X65jFSGyuXzndOVSKleoTC1cIVR4cHsPKYQ9gyBQiLQ3ycfYhf6EXmo9dqIZGievR+ZuoN6JfWJl0JwDeTLHEWOwOM1/prSzYcS0psANeHrvoSiK9kOR7G8SDLAYBeWEkfE+T0ZJ5opP1bVbaxYL90CYChLNq0Xdg=
+	t=1750233403; cv=none; b=qbjmUFEe1lhqwMPo+Ze9p4qY7A0PdyKwriBKduHcAgqMBxcPcn2G5h1rrBnibvumUuJnCRLb0dTPqKJG0nrnfEfyzxm31hDH2bLiLu31dHlrHb6ItJOy5PSceHnty0aw9kA4moGUc/fFcPUo/B34cAyAHGezfQW28bwYjP/ok40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750233401; c=relaxed/simple;
-	bh=Bf099CFhMfpv3aG/dn02iN3VROCJPnC68ni3QLJgbnk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GdbynmkaQ2CIOMDbaRVdhEPFwCrf2wG8QUfIRj5ZjuAjFPt7VSKNGTfyP4SCYWYjh+v6fyQ42hlJhfBuJAE6CzL95ZELf9dNoTqeeql23SjVclTmJZB/ygQPVxY4xtc5MdB3VlM0W2+h3ozJbjAGI0l32ICAK24yjHMhwIq81p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-addda47ebeaso1340363666b.1;
-        Wed, 18 Jun 2025 00:56:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750233397; x=1750838197;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	s=arc-20240116; t=1750233403; c=relaxed/simple;
+	bh=B725ObtQfopboWhV89KAmKWEgh99Un+X+ST1WY74ubs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jnosc9jM1sO5wa2FtVpDJUUClEqxcZB/SL8R3UXKiEsjG33aB1IaIIRrDipqRUSeSc6yq8ACo+9eBR43oO61SX0RiiB53RxZpweSBTLqDNMIxzGryjMqfhlqFF25TaGyfhjdxOPl7zJukPkUbGEv5QzUfkU99mxgbJO8vnfyTPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ej9vC9oQ; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ej9vC9oQ"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5534edc6493so7138878e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 00:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750233398; x=1750838198; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4UjBMk0LF0uUVft57uPM9nnGKNcd7U7chX18TbiWgGo=;
-        b=OmYuvSgUHDCnRqhBFwN4B7fJWiwxjFKnRn6EcRF6u22Z+CDN2vzBWpSanOz5eKvsmk
-         h6wMXG7Fc2dMVVaQvooSc+4uga2zRVPR2U41zMaz+bFhC7lohqZvXgzCqaOUVTRsAkFK
-         oa0ZniF/16M69HWs85LGk2qRT2/gi584GKFD6ncEZkzeYQeViOy7DY9n+mYWt08vP64H
-         C7KbzbDb3Sy1p7GsBP0/FGMUIzOI1Z2s7/0uu7zB+KX1+c1etH0qkocm9vS4S6cRKCJT
-         oHwDNHLvJXTa4KRdynMrHAf8ziEze8SSCTI8+t5+gEwUNHgpQbNrpRRPnCjk8yByKJf2
-         ajDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUnEFCpUzhyD4ZyqQzpX4lPR7wlJHej2JRNbUPsJDOYrfFmNSeiO5YrDE5SzPjoNUYXDXhpLoLbbBc=@vger.kernel.org, AJvYcCW24y83ESEyh/f3N/vcDbaxmQur9d8pkO/GRzyAJYj1Tpa0OYYyQ86cV5JGhk1l83epWbLJfGbfJT4AT09Va9QO@vger.kernel.org, AJvYcCXGeKMe0sYpoCwiGVt9kUud9VKetEzAEmgSSAzDqXtx3LKva/5ZqgUqwMZk2K5hnnNAgKaz77yj@vger.kernel.org, AJvYcCXM8VbexYHo/82SOFvvpI1UdwXmtOTm8Ql0fLufB5n+HHMhMCuPyiRj9rFmYKoUVdxpuKtiGUhrJdjme6NT@vger.kernel.org
-X-Gm-Message-State: AOJu0YxsATOmNWAPT4Fn2PH2RESQZKqdi+21V1tV54S75WyMlrYmHOtJ
-	cIfJGsK7OUi9uWjGsQf1hzNPH/4awVTJnPrfUyzt61gG6ArwyipDKOFM
-X-Gm-Gg: ASbGncuVqxkHXQBorwj+q2hu3vfDPiepNLXmlJSOKBc3b5FitMzQ2e1oH/eb8XrJh99
-	qyleclEP4tqavoDZuKduF9cpuKdV7M4zMRI859M2TNZe0/CCYa5oCNK0aHAtIfwtpIbJH8Cl4+u
-	c1wQ+5sqtsOlj9au/Gjs6x/RLmIokN6WydO9xFzeQZ7n03KlQMgveGJpvoBj+P74PbKg9mgfyWq
-	lxxBzFvcIKSx6c7VkxF66QBTQ7qme6PcGxv1LxsfMsS623Uw/Qx4GxgnO9Ie1szOqRi3eNrKpVL
-	3qAf7gJO7r/6siZWlMb3xVcgI7M0zqWTOxOqk7WyVLXfO1j6svWQmQ==
-X-Google-Smtp-Source: AGHT+IFyXJhy8J1yET5nRJVLQ3OTObKlxUd+dALG+dYmVN96XwXu59sC/dvsET1bk3OvVk5TJbrBXg==
-X-Received: by 2002:a17:907:3e93:b0:add:ede0:b9d2 with SMTP id a640c23a62f3a-adfad4ebec5mr1424772266b.44.1750233397009;
-        Wed, 18 Jun 2025 00:56:37 -0700 (PDT)
-Received: from gmail.com ([2a03:2880:30ff:74::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec88ff203sm1000120866b.75.2025.06.18.00.56.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 00:56:36 -0700 (PDT)
-Date: Wed, 18 Jun 2025 00:56:34 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Gustavo Luiz Duarte <gustavold@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, Simon Horman <horms@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH net-next v3 0/5] netconsole: Add support for msgid in
- sysdata
-Message-ID: <aFJxMne9qzk99sBj@gmail.com>
-References: <20250616-netconsole-msgid-v3-0-4d2610577571@gmail.com>
- <20250617184217.63c068f2@kernel.org>
+        bh=TJ0GqfXFkwy2lsXPToSFORUxwHaztFRgNFLsON7VOMg=;
+        b=ej9vC9oQnhqmVLWPRW04Quv4XT3JKiCTMF9GFs61BbMQos5s5iDSUwdwsfrwtqzj3z
+         vx3O187mtH3BqzNPoW/Qsac3NBxc6dCQyIlAHYw9pVPiqV5AWjQpf3AVgY4Tnq7DdUzH
+         BHDghgJ9nEg5Q+MWKbwTNOXxDktekGDkMW5mrbSTdsbVp5mWFnw41fHs/CF6lIheJLhX
+         D40sOk+tsNa89UnrT5sRYSUlGa1UC6PS5oBr+69lf1B+aEVfm0vT6YBAPmxZZHW5ArSd
+         pZYRYnbvs+uC0lbQubkpOAAOkYXnyYYGGeymFiWW0ZQhm3PF6Mdi7yJxmu7GG6ikIK8l
+         mN8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750233398; x=1750838198;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TJ0GqfXFkwy2lsXPToSFORUxwHaztFRgNFLsON7VOMg=;
+        b=xL2CrmLVm52Ne6xQTLRHsluT62oLZzrrNicTXINc6m3TzseNdtLDQZtKe/5xUuaSao
+         jxA6/gZiWsna9L1svshc3fzrbEoSrXp/r6O6SBC+ardRDfi9Msv8hedR6Hx+h/PEkfUd
+         IPVGbiBnFvKj9lfur6oxblvp8b4srhz8jqyofgWxR+ThI0UVSfeURqGRswQP9fBmxCUk
+         tFlCjNFdicmVyt6WohsBAoc6rNgiQPBiIV/2CvG22L+FVeXH6nTIHGc2mAvLDr/SBLSN
+         /R3R/pdAPJR8MfaVU+D+LSxUT105mq/jx0ceTS5mKqPxWhixsyyXkFxyh67KPJMuasW7
+         CB2A==
+X-Forwarded-Encrypted: i=1; AJvYcCXDnZ2dDclYXzKhUge8mQU77lQM9Jg+YUUdo0/Ce6k0yG7z9KB9rcyGbhhuTrmx4NH2cPDkkrmNDWHiC8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGKXF4wtsTC70TUEi9yjqE/Xu6Gj6bOaUO6sYCmpmKSWdvaiTM
+	YWhj+DDWDJJorNbVgg/Bu9aSUWtmO+oFXAz9TmFaD7ZlRwReDbKbWZo4HEHcSD2smhHOSh+7jaX
+	xVAE14sNuPkfjVi3UU8FWmheOUg0trLRsdBnQYKLdmw==
+X-Gm-Gg: ASbGncvvgui3G/NWTU12qXz1Smy19Y8JUHTYXR3gNY2BlG7+CSeJ/36S8tL4VMOzxbp
+	i1SKDrcu56N1BAfaR/d5tw3VzNI5huN/hRrIA2LWiokyoo8Pi5aPlvWstXC5QbTr2rjiHzrBg7V
+	f3bFRaPols7LhniTYFK+GPdu56vuvQmRuOxgEtbqCw/YOmTKf8aibeCjUaquMM4NiQ6GS2squ+U
+	Q==
+X-Google-Smtp-Source: AGHT+IE695IdkbI0XaFitv8pj0RWUPD02k49e73uDCAYKNdE+Er9d4BDgEqRq3VwoZJvHMQj3QGfbfx0tg3NN2LZjpM=
+X-Received: by 2002:a05:6512:1050:b0:553:3486:1d9b with SMTP id
+ 2adb3069b0e04-553b6f20ademr4250186e87.30.1750233397768; Wed, 18 Jun 2025
+ 00:56:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617184217.63c068f2@kernel.org>
+References: <20240612082019.19161-5-brgl@bgdev.pl> <20250617233539.GA1177120@bhelgaas>
+In-Reply-To: <20250617233539.GA1177120@bhelgaas>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 18 Jun 2025 09:56:26 +0200
+X-Gm-Features: AX0GCFte5APiTF5pvx6EYjGuNuCbnNBT7QTZx8AlXbjqtbSDs9YTuBKoXyu0R7Q
+Message-ID: <CAMRc=MfbZAz_7PomZirQzY2Hq1i=uvpO3wH74nYq-ohjTavjMg@mail.gmail.com>
+Subject: Re: [PATCH v9 4/5] PCI/pwrctl: Add PCI power control core code
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Amit Pundir <amit.pundir@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Caleb Connolly <caleb.connolly@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Jakub,
+On Wed, Jun 18, 2025 at 1:35=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Wed, Jun 12, 2024 at 10:20:17AM +0200, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Some PCI devices must be powered-on before they can be detected on the
+> > bus. Introduce a simple framework reusing the existing PCI OF
+> > infrastructure.
+>
+> > +/**
+> > + * struct pci_pwrctl - PCI device power control context.
+> > + * @dev: Address of the power controlling device.
+> > + *
+> > + * An object of this type must be allocated by the PCI power control d=
+evice and
+> > + * passed to the pwrctl subsystem to trigger a bus rescan and setup a =
+device
+> > + * link with the device once it's up.
+> > + */
+> > +struct pci_pwrctl {
+> > +     struct device *dev;
+> > +
+> > +     /* Private: don't use. */
+> > +     struct notifier_block nb;
+> > +     struct device_link *link;
+> > +};
+>
+> This is old and I should have noticed before, but we have partial
+> kernel-doc for this struct:
+>
+>   $ find include -name \*pci\* | xargs scripts/kernel-doc -none
+>   Warning: include/linux/pci-pwrctrl.h:45 struct member 'nb' not describe=
+d in 'pci_pwrctrl'
+>   Warning: include/linux/pci-pwrctrl.h:45 struct member 'link' not descri=
+bed in 'pci_pwrctrl'
+>   Warning: include/linux/pci-pwrctrl.h:45 struct member 'work' not descri=
+bed in 'pci_pwrctrl'
+>
 
-On Tue, Jun 17, 2025 at 06:42:17PM -0700, Jakub Kicinski wrote:
-> On Mon, 16 Jun 2025 10:08:34 -0700 Gustavo Luiz Duarte wrote:
-> > This patch series introduces a new feature to netconsole which allows
-> > appending a message ID to the userdata dictionary.
-> > 
-> > If the msgid feature is enabled, the message ID is built from a per-target 32
-> > bit counter that is incremented and appended to every message sent to the target.
-> 
-> Breno, could you review the last 3 patches? 
+I didn't want to document these as they're not part of the API.
+Probably should have been "/* private: internal use only */". I will
+check and send a patch.
 
-Sorry, yes. They all look good.
-
-Feel free to merge them.
-
-Thanks!
---breno
+Bart
