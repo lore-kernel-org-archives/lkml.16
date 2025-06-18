@@ -1,90 +1,120 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BFC2EA17E
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB822E3AEB;
+	Wed, 18 Jun 2025 13:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750254398; cv=none; b=X9r0r7Rr3QHZ2KkEf4IS0JIPTIgx/iD+IqPjlOIy1NT4zNGHaj4CTgyUeeBwrR9meD/NKQtdshgwq2xFAjgIXmcpyCaRbVGMzJM/Pz7uNtwqlZZL8VuNm9LL9K2XvOwamK4iG5C7pD68s3lgZROTpsklXivWYihB7KYct7aPUwA=
+	t=1750254412; cv=none; b=B7SljnbInsNP2lFAN0TLmPC5AU5g0GnWTyIRY2sYmd1OCaq2noxo+kTHrePFQ4z7xTgPmaz16QVWeRMqHTJ2WkvhHdGw7UqlG6Ikf4o38fAfxkU7w5MJhNnuREdTUv1IfxdwxjWklD7LdXzOTTeljUNhCIG+Hute5xsZjBbepNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750254398; c=relaxed/simple;
-	bh=knEU63UeGoDq6XpREp3XnHb9aS3Ic3huQ/zQvL115nM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EdSYCexaonj/0Rr+nzQpNL8wTgIu1OqkgtDP512eudT88vgT5023rbEORSuO/sukvJqifk/yYaXH8XRaSnVaXWLbT9xOnU8tSFKjdCii8AvQqDmqd5QxiunG4B5tseOx5L9jab4PjNPx9DZpi602JeYd12Ki7Nx+QsuRu1/NIIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=fTAwG49t; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1750254412; c=relaxed/simple;
+	bh=0EMji8aqYWbdtX5rYc4WRUDxhll/CDjjpQIcNC2+O/0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4fNQ5vFDBHrspow7P5zS2wRUSyBWnW4G0v5eRNB2PndJm9lx53tHH2MHTyhYXanY0VbRoEQ3Cvgm4Fp9n0nqbKLweGjD0Qo3lR1ZDQiVscFNP48Br8dOmb735iOWqf3gdPuelxKqQGGX842aUAX84Efk6ZX/iftnn2hXucsosM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ks7sAMqi; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="fTAwG49t"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-	Resent-Message-ID:In-Reply-To:References;
-	bh=hpdCYUrrXy7FmAY6WEXDCTit6M/UB7ANSKwrerMHny4=; t=1750254396; x=1751463996; 
-	b=fTAwG49t2Dj8+hgguu+LF4Ta4RpvOAhOE9ba/2KYyrLveP6/d0mIBDsWL0xYI+YnIoYVtyWqDTA
-	Q3sZuOKROkcXRJlstDCM5/E5irLCW0uRWnvWoa9BABxf9lKc0OmneO9MxJRvRpDAlHABwJHoLvNAc
-	XWAF9rjAVrAVVGwBClR14WAOgcq9uCCs9u3ThQqEtxblds2DfUlOvcj6LthHews9AcZUQFuODFjXr
-	4OaT9/Om2IscEg7bnIaBkLsLbNfj+SAm/4pBL7im4K9r30p0zu6RbVp+auwR3glS8TqBeBaXPniUJ
-	vMr3ChjeT6loN/eezIXlUs6lkBFyPrVdtlPw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uRt7Y-0000000GQkT-3zxa;
-	Wed, 18 Jun 2025 15:46:33 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: linux-kernel@vger.kernel.org
-Cc: Stephen Brennan <stephen.s.brennan@oracle.com>,
-	Jan Kiszka <jan.kiszka@siemens.com>,
-	Kieran Bingham <kbingham@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Benjamin Berg <benjamin.berg@intel.com>
-Subject: [PATCH] scripts: gdb: move MNT_* constants to gdb-parsed
-Date: Wed, 18 Jun 2025 15:46:02 +0200
-Message-ID: <20250618134629.25700-2-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ks7sAMqi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750254411; x=1781790411;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0EMji8aqYWbdtX5rYc4WRUDxhll/CDjjpQIcNC2+O/0=;
+  b=Ks7sAMqirpeSZ6iSnuOyt2wKsVWchz1vYmqQ5DGYZ+amqtwOafXvDcm4
+   TmeSWHn/cV1G2IuyC/JaYDUBWayF5uCb9Uomyu9YYuxL49HlfMThZA7y8
+   Avve6gT1N57kIS6WINrN0qrbKlhhA6Gr5c/36AQhSIMAf1mjekXZnVVLR
+   GsU0B539mgPAbM67S2m3+Bi7660o2WRA9ZZK/tK2bDSQkQ9wGWjhXL9HC
+   xUep4R870r8m5go1mjGK7XjM022E52YxGqkxyADKeHUOWKcbNMFw5Fl7F
+   vmNS5m2r74dsSZ/GIwkPCkhphXszQYw+925wuxHxvMWrBh/Vqhrv1NbJs
+   w==;
+X-CSE-ConnectionGUID: 0lBNZEAxRqeEqgcB8olCzw==
+X-CSE-MsgGUID: wMUzT/8+SASAMYodnWR4Yg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="63141581"
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="63141581"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 06:46:50 -0700
+X-CSE-ConnectionGUID: 9p5yASy0Sfm8Lm+zwO+x/g==
+X-CSE-MsgGUID: JhV9hFieQqSHrQw9zY7XQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,246,1744095600"; 
+   d="scan'208";a="149586255"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 18 Jun 2025 06:46:49 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uRt7m-000Jpa-2C;
+	Wed, 18 Jun 2025 13:46:46 +0000
+Date: Wed, 18 Jun 2025 21:46:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: Paul Lawrence <paullawrence@google.com>,
+	Miklos Szeredi <miklos@szeredi.hu>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	Paul Lawrence <paullawrence@google.com>
+Subject: Re: [PATCH v1 1/2] fuse: Add backing file option to lookup
+Message-ID: <202506182126.iGTKLLEc-lkp@intel.com>
+References: <20250617221456.888231-2-paullawrence@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617221456.888231-2-paullawrence@google.com>
 
-From: Johannes Berg <johannes.berg@intel.com>
+Hi Paul,
 
-Since these are now no longer defines, but in an enum.
+kernel test robot noticed the following build errors:
 
-Fixes: 101f2bbab541 ("fs: convert mount flags to enum")
-Reviewed-by: Benjamin Berg <benjamin.berg@intel.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- scripts/gdb/linux/constants.py.in | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+[auto build test ERROR on mszeredi-fuse/for-next]
+[also build test ERROR on linus/master v6.16-rc2 next-20250618]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
-index fd6bd69c5096..d5e3069f42a7 100644
---- a/scripts/gdb/linux/constants.py.in
-+++ b/scripts/gdb/linux/constants.py.in
-@@ -73,12 +73,12 @@ if IS_BUILTIN(CONFIG_MODULES):
-     LX_GDBPARSED(MOD_RO_AFTER_INIT)
- 
- /* linux/mount.h */
--LX_VALUE(MNT_NOSUID)
--LX_VALUE(MNT_NODEV)
--LX_VALUE(MNT_NOEXEC)
--LX_VALUE(MNT_NOATIME)
--LX_VALUE(MNT_NODIRATIME)
--LX_VALUE(MNT_RELATIME)
-+LX_GDBPARSED(MNT_NOSUID)
-+LX_GDBPARSED(MNT_NODEV)
-+LX_GDBPARSED(MNT_NOEXEC)
-+LX_GDBPARSED(MNT_NOATIME)
-+LX_GDBPARSED(MNT_NODIRATIME)
-+LX_GDBPARSED(MNT_RELATIME)
- 
- /* linux/threads.h */
- LX_VALUE(NR_CPUS)
+url:    https://github.com/intel-lab-lkp/linux/commits/Paul-Lawrence/fuse-Add-backing-file-option-to-lookup/20250618-061717
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git for-next
+patch link:    https://lore.kernel.org/r/20250617221456.888231-2-paullawrence%40google.com
+patch subject: [PATCH v1 1/2] fuse: Add backing file option to lookup
+config: i386-randconfig-001-20250618 (https://download.01.org/0day-ci/archive/20250618/202506182126.iGTKLLEc-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250618/202506182126.iGTKLLEc-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506182126.iGTKLLEc-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   fs/fuse/inode.c: In function 'fuse_inode_backing_eq':
+>> fs/fuse/inode.c:479:44: error: 'struct fuse_inode' has no member named 'backing_inode'
+     479 |                 && fii->backing_inode == fi->backing_inode;
+         |                                            ^~
+>> fs/fuse/inode.c:480:1: warning: control reaches end of non-void function [-Wreturn-type]
+     480 | }
+         | ^
+
+
+vim +479 fs/fuse/inode.c
+
+   471	
+   472	static int fuse_inode_backing_eq(struct inode *inode, void *_nodeidp)
+   473	{
+   474		struct fuse_inode_identifier *fii =
+   475			(struct fuse_inode_identifier *) _nodeidp;
+   476		struct fuse_inode *fi = get_fuse_inode(inode);
+   477	
+   478		return fii->nodeid == fi->nodeid
+ > 479			&& fii->backing_inode == fi->backing_inode;
+ > 480	}
+   481	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
