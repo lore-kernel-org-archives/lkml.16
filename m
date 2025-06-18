@@ -1,189 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 928E97E105;
-	Wed, 18 Jun 2025 07:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A4225B687;
+	Wed, 18 Jun 2025 07:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750233216; cv=none; b=XyzrkVYH0fjKmYfYqDqxbA/qF+nBxvH7yTGiQiUa0D7nTau8yNjvUKtdTE/uKBOY4u6t5WpT+EFAOwUqyJq6zwzI0PNrNjEXky5I+QRJbKM7F48mje5S9vdxuXbv6noPqg4Rj6brdsV+HzaL05ueYFVEI7hKfN6IyP2SgILh0GU=
+	t=1750233235; cv=none; b=UycQzX/aM8rYqHb1y/06zniXH00eP+aD81LriWY8l4/RcaPF9QcjEXBggzhWQhNmPMk3BeK4hNTXByhgRncEDkoQuqCP9U4Ixga1TCh9gjYM6dvwv7N6vDm+AdUB8VGUQbkScODQDpgjiA3HWm93OYKxa7AxSpHRRioc4FLOOIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750233216; c=relaxed/simple;
-	bh=F2H3BunHCPg9NsszYk0dwTbM/S1iidnIY2xiUi2LJ5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XdfEiXbLGfkFUbgBhNMbFp3FckJHEusb/6Ayb6h8jxG5DoMBTRBuMLv8TZnKrtEkMHe3LlsKheujxLSbVagQJkCSlSSkbx4sTUBk/3SCezZD2ZcblRoBCLZYsFTnIbmxF8NHX1r4gkYnVQmM8SikEPO2oMTKUauKO/raw49hlGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MeLStGLT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750233235; c=relaxed/simple;
+	bh=ZGg7BEj9Zk6TuFkTwYnSmEoyEZPeB0NY8xBLjHfQJZY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jMW67wU2sDLMV2x8UafAXFnrmNH1cLEyqLW1qo45h3atK6GA3Pg6HyoaVoDQynvGUxxGmuugcNUMeCgTXZbg5G9+pCQItpep1gm4dFhbEZjmA4KOkm+xj8KCeRTdUz4iydPyhsJvDnjr6u3NnS1RrZAIADiTMKyOmeGrtvm7sLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0Z7HXL4d; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tcc7XPlF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MeLStGLT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12ED4C4CEE7;
-	Wed, 18 Jun 2025 07:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750233216;
-	bh=F2H3BunHCPg9NsszYk0dwTbM/S1iidnIY2xiUi2LJ5I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MeLStGLTmuQ7RwPEGwlIyeXiJMCjHGBACHFVSx1tpbcULWU7jptvWuV3ZZePLLj6z
-	 o6UHCFWXklA7kklHLCYB05eDgJUlJV6gqh6EB6iF/XnEnhRt8hsjZ64QMtbk3tqHQf
-	 rYfpeQDGmI9Ui+/1eQ+NZkyIEsitRhCB08G1jNNSuteJIWbD0VRB5IakrCU2vB6/s3
-	 iTQiWyujGepJdqCrxGKcbgB+wrtUSTQhz1x3gwzWePjnygfpsrcug8X7fEgVLCKGoA
-	 QolepyWcnIxe4VBxYojgGLVWVyh86ogAyB3ip6zbFYCSiOayHiniQZM6mxOOTN4MvZ
-	 GChJgYBVp1L3w==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRnbx-0000000037b-3kSa;
-	Wed, 18 Jun 2025 09:53:34 +0200
-Date: Wed, 18 Jun 2025 09:53:33 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Chris Lew <chris.lew@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Hemant Kumar <quic_hemantk@quicinc.com>,
-	Maxim Kochetkov <fido_max@inbox.ru>,
-	Loic Poulain <loic.poulain@oss.qualcomm.com>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] net: qrtr: mhi: synchronize qrtr and mhi preparation
-Message-ID: <aFJwfXsnxiCEWL1u@hovoldconsulting.com>
-References: <20250604-qrtr_mhi_auto-v2-1-a143433ddaad@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0Z7HXL4d";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tcc7XPlF"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750233232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lJEJerT30uVZeLbMloQis7w9Ly4m8IEIdpJZd3Pc9DU=;
+	b=0Z7HXL4dErSQLVLsyMoZIe63Mo11EmBOh3csLLgOHzz+LhnIDZt81PmP8jlfkt3gSvdi4j
+	4J6Xdo4a2TR1FMqh26GAK/ZC4XVKhKlbzMnshoYYdbjF0r8TjYDq9CCk2nRhaAUKffNMq+
+	1qa3Ai5RGeazgqoo1wfbxTx5+WhKju5sCRobkM1c59MxkwJr1mfAuUpXw8Llt1/ECPOolF
+	vPN9OeNq4/rORlb/skFfH2A89jZkYDg3+1cJ9QUnDZb7pEWSKNakM7NG+nmTCw5FCIbolE
+	wNb8F+ul6JoQqOQA7mWaPmqqocYNwq7L7woH+tAEH0Zskpepkg4iDvqcZJHAwA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750233232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lJEJerT30uVZeLbMloQis7w9Ly4m8IEIdpJZd3Pc9DU=;
+	b=tcc7XPlFrtUWw6TWH00NCkmrkFyHBCCHbY9mZWCx9RgB5mKOgKepQea6SWDYFecg6kHkF6
+	CGKzfR0iDuD5qNBA==
+Subject: [PATCH 0/3] drm: Don't use %pK through printk
+Date: Wed, 18 Jun 2025 09:52:19 +0200
+Message-Id: <20250618-restricted-pointers-drm-v1-0-781e0d88cd92@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250604-qrtr_mhi_auto-v2-1-a143433ddaad@oss.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIADNwUmgC/x3MTQ5AMBBA4avIrE1Sv8VVxAIdzELJTCMScXeN5
+ bd47wElYVLokgeELlY+fESWJjBvo18J2UVDbvLKlKZEIQ3CcyCH58E+kCg62bGxkzVFbdtldBD
+ rU2jh+z/3w/t+klJVYGkAAAA=
+X-Change-ID: 20250404-restricted-pointers-drm-87b703679fad
+To: Inki Dae <inki.dae@samsung.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Seung-Woo Kim <sw0312.kim@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Rob Clark <robin.clark@oss.qualcomm.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, 
+ Abhinav Kumar <abhinav.kumar@linux.dev>, 
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750233231; l=1512;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=ZGg7BEj9Zk6TuFkTwYnSmEoyEZPeB0NY8xBLjHfQJZY=;
+ b=kxcx3RkP3c4uH68PbMFCnE5QAQ0f3j92Ut+jSaXyoSJxxZQVBSkR7GYRX5/mWdahdihpofEYG
+ 8RZi6sQoKLrDiKOK1mYQ4Nb450F8EfdRvHDs3bbJvRDWjQeLIbkJk1m
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Wed, Jun 04, 2025 at 02:05:42PM -0700, Chris Lew wrote:
-> The call to qrtr_endpoint_register() was moved before
-> mhi_prepare_for_transfer_autoqueue() to prevent a case where a dl
-> callback can occur before the qrtr endpoint is registered.
-> 
-> Now the reverse can happen where qrtr will try to send a packet
-> before the channels are prepared. The correct sequence needs to be
-> prepare the mhi channel, register the qrtr endpoint, queue buffers for
-> receiving dl transfers.
-> 
-> Since qrtr will not use mhi_prepare_for_transfer_autoqueue(), qrtr must
-> do the buffer management and requeue the buffers in the dl_callback.
-> Sizing of the buffers will be inherited from the mhi controller
-> settings.
-> 
-> Fixes: 68a838b84eff ("net: qrtr: start MHI channel after endpoit creation")
-> Reported-by: Johan Hovold <johan@kernel.org>
-> Closes: https://lore.kernel.org/linux-arm-msm/ZyTtVdkCCES0lkl4@hovoldconsulting.com/
-> Signed-off-by: Chris Lew <chris.lew@oss.qualcomm.com>
+In the past %pK was preferable to %p as it would not leak raw pointer
+values into the kernel log.
+Since commit ad67b74d2469 ("printk: hash addresses printed with %p")
+the regular %p has been improved to avoid this issue.
+Furthermore, restricted pointers ("%pK") were never meant to be used
+through printk(). They can still unintentionally leak raw pointers or
+acquire sleeping locks in atomic contexts.
 
-Thanks for the update. I believe this one should have a stable tag as
-well as it fixes a critical boot failure on Qualcomm platforms that we
-hit frequently with the in-kernel pd-mapper.
+Switch to the regular pointer formatting which is safer and
+easier to reason about.
+There is still a user of %pK left, but this uses it through seq_file,
+for which its usage is safe.
 
-And it indeed fixes the crash:
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+Thomas Weißschuh (3):
+      drm/bridge: samsung-dsim: Don't use %pK through printk
+      drm/exynos: Don't use %pK through printk
+      drm/msm: Don't use %pK through printk
 
-Tested-by: Johan Hovold <johan+linaro@kernel.org>
+ drivers/gpu/drm/bridge/samsung-dsim.c       |  4 ++--
+ drivers/gpu/drm/exynos/exynos_drm_gem.c     |  2 +-
+ drivers/gpu/drm/exynos/exynos_drm_ipp.c     | 32 ++++++++++++++---------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c    |  2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c |  4 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |  4 ++--
+ drivers/gpu/drm/msm/msm_mdss.c              |  2 +-
+ 7 files changed, 25 insertions(+), 25 deletions(-)
+---
+base-commit: f09079bd04a924c72d555cd97942d5f8d7eca98c
+change-id: 20250404-restricted-pointers-drm-87b703679fad
 
->  /* From MHI to QRTR */
-> @@ -24,13 +26,22 @@ static void qcom_mhi_qrtr_dl_callback(struct mhi_device *mhi_dev,
->  	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
->  	int rc;
->  
-> -	if (!qdev || mhi_res->transaction_status)
-> +	if (!qdev)
-> +		return;
-> +
-> +	if (mhi_res->transaction_status == -ENOTCONN) {
-> +		devm_kfree(qdev->dev, mhi_res->buf_addr);
+Best regards,
+-- 
+Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
-Why do you need to free this buffer here?
-
-AFAICS, all buffers are allocated at probe() and freed at (after)
-remove().
-
-> +		return;
-> +	} else if (mhi_res->transaction_status) {
->  		return;
-> +	}
->  
->  	rc = qrtr_endpoint_post(&qdev->ep, mhi_res->buf_addr,
->  				mhi_res->bytes_xferd);
->  	if (rc == -EINVAL)
->  		dev_err(qdev->dev, "invalid ipcrouter packet\n");
-> +
-> +	rc = mhi_queue_buf(mhi_dev, DMA_FROM_DEVICE, mhi_res->buf_addr, qdev->dl_buf_len, MHI_EOT);
-
-Please try to stay within 80 columns except when not doing so
-significantly improves readability.
-
-Also you don't do anything with rc here. Should you log an error at
-least?
-
->  }
- 
-> +static int qrtr_mhi_queue_rx(struct qrtr_mhi_dev *qdev)
-> +{
-> +	struct mhi_device *mhi_dev = qdev->mhi_dev;
-> +	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
-> +	int rc = 0;
-> +	int nr_el;
-> +
-> +	qdev->dl_buf_len = mhi_cntrl->buffer_len;
-> +	nr_el = mhi_get_free_desc_count(mhi_dev, DMA_FROM_DEVICE);
-> +	while (nr_el--) {
-> +		void *buf;
-> +
-> +		buf = devm_kzalloc(qdev->dev, qdev->dl_buf_len, GFP_KERNEL);
-> +		if (!buf) {
-> +			rc = -ENOMEM;
-> +			break;
-> +		}
-> +		rc = mhi_queue_buf(mhi_dev, DMA_FROM_DEVICE, buf, qdev->dl_buf_len, MHI_EOT);
-
-80 cols here too.
-
-> +		if (rc)
-> +			break;
-> +	}
-> +	return rc;
-> +}
-> +
->  static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
->  			       const struct mhi_device_id *id)
->  {
-> @@ -87,17 +122,24 @@ static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
->  	qdev->ep.xmit = qcom_mhi_qrtr_send;
->  
->  	dev_set_drvdata(&mhi_dev->dev, qdev);
-> -	rc = qrtr_endpoint_register(&qdev->ep, QRTR_EP_NID_AUTO);
-> +
-> +	/* start channels */
-> +	rc = mhi_prepare_for_transfer(mhi_dev);
->  	if (rc)
->  		return rc;
->  
-> -	/* start channels */
-> -	rc = mhi_prepare_for_transfer_autoqueue(mhi_dev);
-> +	rc = qrtr_endpoint_register(&qdev->ep, QRTR_EP_NID_AUTO);
->  	if (rc) {
-> -		qrtr_endpoint_unregister(&qdev->ep);
-> +		mhi_unprepare_from_transfer(mhi_dev);
->  		return rc;
->  	}
->  
-> +	rc = qrtr_mhi_queue_rx(qdev);
-> +	if (rc) {
-> +		qrtr_endpoint_unregister(&qdev->ep);
-> +		mhi_unprepare_from_transfer(mhi_dev);
-
-Jakub already pointed out the missing return here. Perhaps you should
-consider adding error labels for the unwinding.
-
-> +	}
-> +
->  	dev_dbg(qdev->dev, "Qualcomm MHI QRTR driver probed\n");
->  
->  	return 0;
-
-Johan
