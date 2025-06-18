@@ -1,156 +1,108 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413222F3C39
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:29:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A50139D1B;
+	Wed, 18 Jun 2025 17:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750267798; cv=none; b=qzDt0y3/LBKrA5mlD4MQs6ArESW7zRHwMsz3AJvhQDTV9u6l4PwF4pQJ8QztHFPiAgvkkJlwbmYUxzJ2pA19RBAfnp31aQswcXO/s9dZrwxTe2+UFpjF7uYR2T2fOeKQNKrC69LJwRZS7gI0+qKIaQkzJ8hfOL8BV4MBTOImtAI=
+	t=1750267902; cv=none; b=G+R2UPO8QuRTDsXcFKYvTTbMWA8RzWeiD7eOvjWxmDTd2VUgYMFZsYNVCN6If7sd8WHukhFPFNXs94tmE1+iGJ4xUNarQEHEbEjP0eJ5P5AvBcs+8QspQvSC46RCzoRQ+ZKePQoYlXX/9g81lS6QCzXpAzm2cobHH9YcPN4cZJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750267798; c=relaxed/simple;
-	bh=QxNatCv/O3861aZBNyqUBLKmJGBv/spu7pwTIkEnWd8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=uIfDrcumGVHKkrEgmfgVHJLPGXu8prVqkST1WoTfBrhtpUczK2SGVtalw3yw2AsJJMFduW0r8AaH4yT665E4hNtdSaOtbY01E0rQkWQd002tzKX46b2MBlR1g8JlBxRhUmk6Do6yVggdtpetn9D4qoYd9WUTcyBP4/2My8JMXds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=Z1Ho4Wbo; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750267902; c=relaxed/simple;
+	bh=3pcAMlMl8h1kR3VIDgyOrJ661QWQ8zzbVejWzAIbdX4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c7Arx9UDycW1PNmpTh5JolbQ8cDQGO4Fe4S59S0yPEybMMNWeDC+nOcCA91rtuAdq81JhXAtjo5M9ABHSuvYC+OGYxWXQLKaT0QURiDk3aFR2ZGWr9DcdfeSScgfNWpSV5Db7WODzs63yT+xv/ZAAR2OjJmESebd78NEjb4JGbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B/cgD3NE; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Z1Ho4Wbo"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250618172953euoutp01a154724671311c94c02970c0ee81ea17~KM0jpleFO0416704167euoutp012
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 17:29:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250618172953euoutp01a154724671311c94c02970c0ee81ea17~KM0jpleFO0416704167euoutp012
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750267793;
-	bh=K97FTbMt5JoIwDvHOKNiKQwGHF/yxquenFxIqJsaQGA=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=Z1Ho4WboWTzD6ZKXkHwmx6aqguEFBqCE8rmMzauc4t7wvDVMxgWxgDywg2Lcx+02U
-	 WEaAKOBULRs8ErBhtDM9n9EOQaHsa/n/+3paOFFzk9utbBdLi7jBcm5eqPWkkOUC0J
-	 hvD4X4zn6Pabypumk5w/5Ln0eBhdu3LE4icUIXvk=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250618172953eucas1p17c764efad555d61bb2ae720a39fba98a~KM0jT4eL62797627976eucas1p1S;
-	Wed, 18 Jun 2025 17:29:53 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250618172951eusmtip2483250b17c457f30b81134e00802b6af~KM0iD8APO2341123411eusmtip2j;
-	Wed, 18 Jun 2025 17:29:51 +0000 (GMT)
-Message-ID: <3771a2ba-84a4-4cd5-a9ad-913130f19c27@samsung.com>
-Date: Wed, 18 Jun 2025 19:29:50 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B/cgD3NE"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-234a45e69c8so6035835ad.2;
+        Wed, 18 Jun 2025 10:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750267900; x=1750872700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=giEZC4CA1Gs2zQVVLh4SgqvtfIsCHKQ3JeTi6+ZWRSQ=;
+        b=B/cgD3NEKx+xFzmeW+shhJJf2SkBCFHetoopcAP2FWf3w5kJ3hYdiPYzTxDHUzN4sP
+         wmAXYmjJ0vafGVIG14JlJJRhna44tzcJV0H5PQxYo9NdvvLM1Y8SS5m6OCSy2WIzvIl5
+         MweJjorvxYH9R3rwFVOhu4T7ShCKsPurPYBQvLP1E0gfg7ABHJBmhqIeGzlrjewA0Kw5
+         JRuN/a9ABb9j+eryH56hNw7JbTSDrYtCCYBKXVzCHnjFgGeo0S51Ksxnskn8OGxKmLH9
+         8CjvkuB3Fja1VmJBsCxwwRlTJjthZTBdvEZcyXYU1eX1mUhVzzr5/XYppf5jxJVQSKPM
+         8Fkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750267900; x=1750872700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=giEZC4CA1Gs2zQVVLh4SgqvtfIsCHKQ3JeTi6+ZWRSQ=;
+        b=iHewI1HHboALCUBBVdZCy71bOPYw+K1/2LcoKJFuUBh+XK995GfyMQ966dUorh74Dx
+         ZZDAXnpa2383YYT7CFjBJNt6jg4Nlv3BboCgAeLNSVSrz+SrMKEzfdeMWhkaxgu5k7mZ
+         6ZX//xHOE0NYV8EY5zmrsguYKi5VVlDKxgqZOQS1YwaLU6D0t6SF5iUlqdUb11ZHQlRE
+         A0Hp+Lp9ycnK6b0syJRIY4Ko7b8ARPyiNbO4Zcu6zxYnsbFaIJiQbFDeq+nIbozpi6bP
+         fL7SDQI5H1phjNNvtOMwPJ6tZwn2Jfc3nu+ifu34PvbROvEuekxZKozBCWtQSUbYHM5u
+         8t3A==
+X-Forwarded-Encrypted: i=1; AJvYcCV+TGEDKoB5o4/s55ef0XTCYTDS4Ulom0knI+/9j5vmVMTegAnMoUAB9uuN2ZYZ+4HvpZ9YkfmF@vger.kernel.org, AJvYcCVl5OkcEjFaxxAyz7Msm97ktlDi25B0GLSV3MRn7ZYeC0hS89Sd8KQV4JRnRkW0IHeW8Xnj8bd7DwbARneJmJY=@vger.kernel.org, AJvYcCWBRAqeuJsWoIlHHH+RONyY7M0Tt/GVsj/DiEglyvtsq+8ClJ0/Ah8ylQle5+bSRWJjD8TJPpkmDxDhnwnC@vger.kernel.org, AJvYcCWTuJBEUjFLbD+Yk+U6sj05qaYH6AEkF3Talp5G2aPWQuaz4tqepAJ2r1bvs38Y4Bn5CMu9pv/o+hYW@vger.kernel.org, AJvYcCWewu+N3s5d6XAmaM5VRfmUDS0KiOFnUMCYDxZRkeJvkWYPzyH/Q5Ov01ochR+HTsFF1fifJpQE8lc=@vger.kernel.org, AJvYcCXQDYJwO1XPpGeJZgZKlwTaeL8BPPASxC3TytT8lo6R8r3GrR0Grw5M8E8YuFPjY59INwU4cZVSMtSnjuHvTFHE@vger.kernel.org, AJvYcCXV3t9Kd82vq1geBRARDOT+rzPineWN6jrLVb7d/0bt/PUCXnsKxqryjoMcJAJvKJb9ZB8zFardgn7T3wc=@vger.kernel.org, AJvYcCXxaPuSksMUNMexPqMJUGAH9KbrWZVgcJngNJmGBCdFtZlp+HkxaAnvg2O1eUYt88eKrwD6boW6794xiME4@vger.kernel.org, AJvYcCXzYx7bGc1qaqdRhs8RkIqFgKVk4iK1918vroBkzF4lAPq14QmrbO6pG6qEexX238bER8wNgFnKaDiE@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSQ4XlFPaUz/NAy7Na2HhHlPlvETow6QDPJWS/yjbYuNXk36o9
+	a7ijRUDy7QIBtHTJ50BfsdkfQ+MLJuER3ClVPTdH0PD9nhXOAuRKpog6vbZePNw+XvkjYy8wl3W
+	WjsAeyEhqPyuz4vUKIjiFgXqfdSW9+mg=
+X-Gm-Gg: ASbGnctkhi5XogupM9Vs8gKBei1w031iAwdNexC8LyWIBFvl9/zq0VT2odlAV+RqDgT
+	MO4Pl6jMQDccOEbQyYsmxg+3BlUMvPOIccRR5jszD/7wcZy5a6xriKPZTh7pjutt/yB1ewJ33IT
+	tJ/xpg041fMOGbgsYbBihUfd6htXGxARSktMiDgA/5HlM=
+X-Google-Smtp-Source: AGHT+IElAYFQ7bmLDzGoK+LouyDOjrVrsskRPo8QHb8hQdYz3Xniksj2pUSBRZd+2TWCbtZwG0l3dCw6erP0uN8kpG4=
+X-Received: by 2002:a17:903:11c9:b0:236:7333:f1a0 with SMTP id
+ d9443c01a7336-2368ee1cc91mr46098835ad.14.1750267899755; Wed, 18 Jun 2025
+ 10:31:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] gpio: mmio: don't use legacy GPIO chip setters
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Klara Modin
-	<klarasmodin@gmail.com>, Avi Fishman <avifishman70@gmail.com>, Tomer Maimon
-	<tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, Patrick Venture
-	<venture@google.com>, Nancy Yuen <yuenn@google.com>, Benjamin Fair
-	<benjaminfair@google.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20250618-gpio-mmio-fix-setter-v1-2-2578ffb77019@linaro.org>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20250618172953eucas1p17c764efad555d61bb2ae720a39fba98a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250618172953eucas1p17c764efad555d61bb2ae720a39fba98a
-X-EPHeader: CA
-X-CMS-RootMailID: 20250618172953eucas1p17c764efad555d61bb2ae720a39fba98a
-References: <20250618-gpio-mmio-fix-setter-v1-0-2578ffb77019@linaro.org>
-	<20250618-gpio-mmio-fix-setter-v1-2-2578ffb77019@linaro.org>
-	<CGME20250618172953eucas1p17c764efad555d61bb2ae720a39fba98a@eucas1p1.samsung.com>
+References: <20250615-ptr-as-ptr-v12-0-f43b024581e8@gmail.com> <20250615-ptr-as-ptr-v12-2-f43b024581e8@gmail.com>
+In-Reply-To: <20250615-ptr-as-ptr-v12-2-f43b024581e8@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 18 Jun 2025 19:31:26 +0200
+X-Gm-Features: Ac12FXx7GupXW8Bt-WgcYO-htZmUwVX0jAEiTk6mVy23gMLCIJ6y3H_HjinHnSQ
+Message-ID: <CANiq72m1vd65BtF0gn1E6SSq=Xp9JTznZn-Yawd0yMMQdjPRYw@mail.gmail.com>
+Subject: Re: [PATCH v12 2/6] rust: enable `clippy::ptr_cast_constness` lint
+To: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Brendan Higgins <brendan.higgins@linux.dev>, 
+	David Gow <davidgow@google.com>, Rae Moar <rmoar@google.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Russ Weight <russ.weight@linux.dev>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Robin Murphy <robin.murphy@arm.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+	Benno Lossin <lossin@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Breno Leitao <leitao@debian.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kunit-dev@googlegroups.com, linux-pci@vger.kernel.org, 
+	linux-block@vger.kernel.org, devicetree@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, linux-mm@kvack.org, 
+	linux-pm@vger.kernel.org, nouveau@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 18.06.2025 15:02, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sun, Jun 15, 2025 at 10:55=E2=80=AFPM Tamir Duberstein <tamird@gmail.com=
+> wrote:
 >
-> We've converted this driver to using the new GPIO line value setters but
-> missed the instances where the legacy callback is accessed directly using
-> the function pointer. This will lead to a NULL-pointer dereference as
-> this pointer is no longer populated. The issue needs fixing locally as
-> well as in the already converted previously users of gpio-mmio.
->
-> Fixes: b908d35d0003 ("gpio: mmio: use new GPIO line value setter callbacks")
-> Reported-by: Klara Modin <klarasmodin@gmail.com>
-> Closes: https://lore.kernel.org/all/2rw2sncevdiyirpdovotztlg77apcq2btzytuv5jnm55aqhlne@swtts3hl53tw/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>  rust/kernel/drm/device.rs       | 4 ++--
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Danilo: for completeness: if you don't want this, please shout. Thanks!
 
-This fixes the NULL pointer dereference issue observed on RaspberryPi5 
-and BananaPiF3 boards with today's linux-next.
-
-> ---
->   drivers/gpio/gpio-74xx-mmio.c | 2 +-
->   drivers/gpio/gpio-en7523.c    | 2 +-
->   drivers/gpio/gpio-mmio.c      | 6 +++---
->   3 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.c
-> index c7ac5a9ffb1fd1cc9439e3320d54574bf0cebbf6..3ba21add3a1c669171578ceaf9cc1728c060d401 100644
-> --- a/drivers/gpio/gpio-74xx-mmio.c
-> +++ b/drivers/gpio/gpio-74xx-mmio.c
-> @@ -100,7 +100,7 @@ static int mmio_74xx_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
->   	struct mmio_74xx_gpio_priv *priv = gpiochip_get_data(gc);
->   
->   	if (priv->flags & MMIO_74XX_DIR_OUT) {
-> -		gc->set(gc, gpio, val);
-> +		gc->set_rv(gc, gpio, val);
->   		return 0;
->   	}
->   
-> diff --git a/drivers/gpio/gpio-en7523.c b/drivers/gpio/gpio-en7523.c
-> index 69834db2c1cf26be379c0deca38dda889202f706..c08069d0d1045e9df4a76cad4600bf25d4e3a7c5 100644
-> --- a/drivers/gpio/gpio-en7523.c
-> +++ b/drivers/gpio/gpio-en7523.c
-> @@ -50,7 +50,7 @@ static int airoha_dir_set(struct gpio_chip *gc, unsigned int gpio,
->   	iowrite32(dir, ctrl->dir[gpio / 16]);
->   
->   	if (out)
-> -		gc->set(gc, gpio, val);
-> +		gc->set_rv(gc, gpio, val);
->   
->   	iowrite32(output, ctrl->output);
->   
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index 9169eccadb238efe944d494054b1e009f16eee7f..57622f45d33e0695f97c7e0fa40e64f9fd5df1e0 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -362,7 +362,7 @@ static int bgpio_dir_out_err(struct gpio_chip *gc, unsigned int gpio,
->   static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio,
->   				int val)
->   {
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->   
->   	return bgpio_dir_return(gc, gpio, true);
->   }
-> @@ -427,14 +427,14 @@ static int bgpio_dir_out_dir_first(struct gpio_chip *gc, unsigned int gpio,
->   				   int val)
->   {
->   	bgpio_dir_out(gc, gpio, val);
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->   	return bgpio_dir_return(gc, gpio, true);
->   }
->   
->   static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int gpio,
->   				   int val)
->   {
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->   	bgpio_dir_out(gc, gpio, val);
->   	return bgpio_dir_return(gc, gpio, true);
->   }
->
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Cheers,
+Miguel
