@@ -1,126 +1,99 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B0827E7C0;
-	Wed, 18 Jun 2025 10:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A4C285074
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242262; cv=none; b=njANGiKaLSkj0B63C/gN6hcOOoTQm9lh55K+4vg8jzKVEATeXWLD4IzcBWaXOK23ARAqOFoMT1X3H4rqXv3MQgaV/thoG5h04jmGrj1voeUzNMPMR0tozSaKD8lyA2b7XxJxMrlk1wIYzuTIKo2jcXD90YZOZv7WVHiPak4roX4=
+	t=1750242334; cv=none; b=AuGTnrPAdpS6LqIM7vfjjEBlo1KI4//u/7WGstIYXt03yZFtfHXJumnKQps1HLxtLvdSiqYgu4Mg9FSdqTXfN5N63wgNfyCeBIGuf+pBtT8zPCDTYDM+a5L/J+xEC+HyeF9fRcfm+zY7C+XX07ScazhsvMcTIF4jQjSiwfXPbt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242262; c=relaxed/simple;
-	bh=X3GP0rFGQWYb7D9EofmWO4CkjJb3nRBnJ4sS25K5GGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UFXAy223eERRqJC/Jzy1GK7i/B/sOXg1WEh+SavnJs3aEfZ9FlNd1st+xUPCrgE7ZZ+ICPhXrJ3+VNYUouz8WssXbAo6+dFNUAX446FWICbw3LW9JDrvtBU7ZHpELuvHpXBOqlp+kdU4gOO7RhbqQYAB6v38zmHeS09znpyBkkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fLXrOwT1; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750242334; c=relaxed/simple;
+	bh=WBj/VFHzpOBMITsYRlX2s8PzOuHxOLyagX79hheuk3Y=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ZIS4RDKRYqZ0hhnVXMor2ZfoTsZ9RDJ2qNXsEUQ+UhSPQxN7tDZCjLLFocOXuBLHHxBV2AjlDGu0pYkczy+Qp+Gda+VSTLgEskLjX5EHxqy3VvYTXSANYrXop/wOz1pxyYdhqMiIxoN9AozXNX3QnaOZMQCGLFzstcvKGzTvySk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AriadzGw; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fLXrOwT1"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a51481a598so3907860f8f.3;
-        Wed, 18 Jun 2025 03:24:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AriadzGw"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4e749d7b2so760763f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:25:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750242259; x=1750847059; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1750242331; x=1750847131; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
-        b=fLXrOwT1J5Y8bdFyDn/70qn+YD5ESDAh50Ptgk8VAKKuaPGParp0fHlgNvJGj99tsp
-         adOuC0cVcgBgwb8JeitA1HmvYQGB2QqTMJgkdFRaO/+fvQC/gGZuK4kGfnUl6H2Twakf
-         wxVc4ENtBJSAWQKxb7DpRWfJISXxCbdGg3i+68qs4sF+1HmwoPx2tuoPB1ahgermF58P
-         SgeL3mY1R9BIl7MV1KRwFf4iC0h5DJSwi+rQ+I6lPfZDzKGo9kVInQ8I0UORSGFjtvkD
-         97Di5So1LSpReZ5+417M0mDGWW0umuUv1EsqzRUsMg4iXqwW+03Hb++neEv+G0+z4Tum
-         sGxg==
+        bh=aooWiy38peBjxv+9KQHPPSmI2vOz+cAS4Yak4J02roU=;
+        b=AriadzGweMggYAAAVqJWvi23A76s7KtF8a3Oj2lZmFYRlHpy5aA1ntLmWgUu8qjLpb
+         KSclMBpgpM37NpkUcfmd29VqIUFgNn1KjEiXPaXhbq6BCFpFFUXj5Hl1gQLlJ7h9ixPx
+         gca1Q252jOK3IsDZqeKAXMiVFsm8paIFBsu8XjJKN35lgdBe2s6m8AKN1Yv+j6PJtp5o
+         lDTF3jYzD5wKXzK9hyTrAIamA0frzYfLnQApqIEqQaHr4OfOUnoxdd1DAi+Ink9dVta8
+         EED1m4cOs/trbEnAyr/Fyno9VLkSYgex8LGvGjzlumbIjMTJ3clmTOfLuVC+F5cTYy2e
+         puog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750242259; x=1750847059;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=X/r6nOkep5bcePWw/OmX8epaR10E2HZMsLJvTHOobc0=;
-        b=qswKrS4ZM+jR+8YskIDB5WzpY4OZ9Xx9fDqVPoCX7/hO06Y2K7S7J9COyk63pXsU9D
-         i3C79FrH/BydSguNIauZ/FUiTo9KL18/bTfuJoZ5Y5xQZq45Svlv3vy5l1wtb68SANds
-         2f0nqh2vr1LBysl/fJhr97Y6/bh6ypncbBbCy1gfuv3GolcZhnp15mmt+fdSs3ifA1H6
-         4QMIKu2Mt0TjtJSFzOwzKcNo+bP8xbI19PPFx87W8tmmPjfOBJXI+A5i6IVDXypjTC2A
-         VAphdnlIxByHyLiLyRZfnbAJodO3RmO3KDrTuHHzWouZjwljbRLco20xaP2l55EtH703
-         H77w==
-X-Forwarded-Encrypted: i=1; AJvYcCUSLsu9g2mcKtCl3zcUTaiWZ2F4KkO0fCL6HzUneKfeY/YzNTOEfifmJrhzn94cbNSiZvG3S0gUQZPU@vger.kernel.org, AJvYcCUZjuScDyQPe9SNHyBOlGWccMXHq8ETjBFr4lVWbodbcxTfn1aQPnI2Y1+/BS/15GBwCCfyRrEyHuHkGtMVxvY=@vger.kernel.org, AJvYcCW9dvT5Ni2bc454p+VkuVCx3ueWuH9KubxYdGnokKJI9tCo18WpdckG7DU8Y33ZtxekaYuGV3OY7NK5b7mQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdO76FCbTc0H/A9IABUzGX57ZMV5HzpPpc67rdPZuC8jvBXyfv
-	H5t2JSR9wubZ4/YTSJURXYQs4BV5FJWzkgwTCnwlc+dtTxWIQTUm5iVwp0Kd4OWuJ68=
-X-Gm-Gg: ASbGncuLKk1SPM6vwr9/XuWnthz1NIppkU7Mt9HISwwAWsD4dAekSczOquKqqC5H83t
-	LJTp9yCb1tjfi/IpYGNbcNi6XjcByLB81v0vDuuFdRZsOaLvsI6jDYTFURvP2j2AmQpJ/wShgF7
-	VwKsCQnX8+7CHWTkiTQ81vcbJmbrOjF8QD0+ad+Hpi16QmkshbSDgo89he10rttw/8Ubk1/Fsec
-	tTIWHJqtyzVB+TdeF2h0oK5Wk3hVqtmgoPm7SIaXE0mtYnudtPkKM6mAQpsGjT4CCpDEeXhyr8J
-	S3CXLmiLd6+5UzGCW1VCeJzDyv/io9M+R5mIayKcO5iD/4l5aavANmuNHb7KrhRLacYxLCYa2r1
-	jNx0s7PwPnXRDQnFkoiyqh9M0fomoDELwOJEC
-X-Google-Smtp-Source: AGHT+IEWJFosgYtVST8+ChR8BDeP/SmvQxlvk4F/BE7rA8OuYv9evRFDiLtSxCZZLKuCzhAMhcHWNw==
-X-Received: by 2002:a05:6000:144e:b0:3a4:f975:30f7 with SMTP id ffacd0b85a97d-3a572e58f6fmr13346541f8f.56.1750242258788;
-        Wed, 18 Jun 2025 03:24:18 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568b08c7csm16769840f8f.50.2025.06.18.03.24.18
+        d=1e100.net; s=20230601; t=1750242331; x=1750847131;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aooWiy38peBjxv+9KQHPPSmI2vOz+cAS4Yak4J02roU=;
+        b=pJe5Hbppp1BWjbyaQNMfto8hkLv8Q4roTQ9IYaeCFuuTyAFt4zX3JUC0lpWGtLSN6W
+         3589EYEMHwjyeo2eVm/OsFBXezXCQYdGmqGy9hDb/Qu6W6N2o7xQ2EzE97JxOpEPl3/J
+         7aZz/BxkrgzD7bgDqksNPn2aJyIeOkyq5ULWvx8jxXAhLxHti6FiMgH2ZkWtbabt7v2A
+         bSdbR4x6oQc3138R+IogOUAnWk/rKw1Gnx+kklmPSx9+o55081wb58cG3s0DpSP8ueYl
+         kbfRtCIIGp3KMJgzGM49vrOqFu5XKyWCB00O8iRBsQiCWupirmLtjfCnScaBEJUp0eAY
+         dl8w==
+X-Forwarded-Encrypted: i=1; AJvYcCXW51PRF43okMku/YtGYQsqtdUhUbj/qINSa8xJMDJKsDTsUHYqta354APLve0Ppt/bQbQb1SDt6fvhBrI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVzw/OsJKMS33Q8FsuH8htDHhjusMZhKxmgz2jNZdGLYO7KYPo
+	69zDkudIdTs19qVP3FoxMc7nFYguLSi/a1C+x78scLKfAh+ogoszzJDk8lrC0bwFPIo=
+X-Gm-Gg: ASbGncuixNixGPJU0WX5ju5pbvx2W0Xq+aGK7AXRpbQRX+NtYGAhZ5pQtkF01sw3zwv
+	YqdTvve/jSO8sE3KBHHnVbhikAc9WyouChatsQC1uDW/8McjgHi5j7Vgwf+OZGYrLFihWtbsgUW
+	gVeLYqQ7dw0lFV9YeB8wPxhVZFBy10eFsRCuoXl5X4uzrPbHw9xqwxjlTN/kKT2US/vQz0Er/33
+	Q7eGryg+vtIMYW9qhOWMk+SqXkV5+IKUNh/QT7O2TYpHqcZtxjW321RSsbvgRu89MnnMeg0Z+mx
+	eE5rFHRfCK6XydLUySs4GWkOTc4B1SMA4HRRpsjqKoIc9Z/tA1y++NCzoCiYWtXw4MNeQYxVG/K
+	bR+z+w5k=
+X-Google-Smtp-Source: AGHT+IHJc2gsfkafUzYDEVgL2gH8eVceTDIyYVW64SCKXWQQR0AR9QQt8oTeByDjnRB/rhjrFb0byg==
+X-Received: by 2002:a5d:584c:0:b0:3a4:def8:1465 with SMTP id ffacd0b85a97d-3a585f73c82mr2051598f8f.9.1750242330796;
+        Wed, 18 Jun 2025 03:25:30 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.223.125])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e256630sm208260265e9.29.2025.06.18.03.25.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:24:18 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v7 7/9] rust: platform: Set `OF_ID_TABLE` default to `None` in `Driver` trait
-Date: Wed, 18 Jun 2025 11:22:16 +0100
-Message-ID: <20250618102216.3049450-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
-References: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
+        Wed, 18 Jun 2025 03:25:30 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ alim.akhtar@samsung.com, Faraz Ata <faraz.ata@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ rosa.pila@samsung.com
+In-Reply-To: <20250613062208.978641-1-faraz.ata@samsung.com>
+References: <CGME20250613061230epcas5p12c0a029edba39133fc0be22cb0aa1e09@epcas5p1.samsung.com>
+ <20250613062208.978641-1-faraz.ata@samsung.com>
+Subject: Re: [PATCH v1] arm64: dts: exynos: Add DT node for all SPI ports
+Message-Id: <175024232949.57697.16977719390655455377.b4-ty@linaro.org>
+Date: Wed, 18 Jun 2025 12:25:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-Provide a default value of `None` for `Driver::OF_ID_TABLE` to simplify
-driver implementations.
 
-Drivers that do not require OpenFirmware matching no longer need to
-import the `of` module or define the constant explicitly.
+On Fri, 13 Jun 2025 11:52:08 +0530, Faraz Ata wrote:
+> Universal Serial Interface (USI) supports three serial protocol
+> like uart, i2c and spi. ExynosAutov920 has 18 instances of USI.
+> Add spi nodes for all the instances.
+> 
+> 
 
-This reduces unnecessary boilerplate and avoids pulling in unused
-dependencies.
+Applied, thanks!
 
-Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
----
- rust/kernel/platform.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1/1] arm64: dts: exynos: Add DT node for all SPI ports
+      https://git.kernel.org/krzk/linux/c/134442a04bb9a6981923cbb24f041b5f5690bda6
 
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 5923d29a0511..2436f55b579b 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -162,7 +162,7 @@ pub trait Driver: Send {
-     type IdInfo: 'static;
- 
-     /// The table of OF device ids supported by the driver.
--    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>>;
-+    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
- 
-     /// Platform driver probe.
-     ///
+Best regards,
 -- 
-2.43.0
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
