@@ -1,49 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1E3211460;
-	Wed, 18 Jun 2025 04:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10FA8217660;
+	Wed, 18 Jun 2025 04:09:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750219778; cv=none; b=C0pXLo/4d7h7hhYI36rF7MfMXJwHuoL8neJ68skjPSMgLJKJ0Hra2z38g8Vjn98jQt8VAgplJLcqJkLZOcOLY1Il179YDWa+8cVqZ4ZskmXRrEFL6Vkh+sGLbo6HLYxbfFt3ycB8LHw+ZMDb8rYbgN1QssykpJsCDqVVGX+PPaU=
+	t=1750219780; cv=none; b=K5K7l0MXGPJOx5u507hU9zYU3Ijjv+p6//ra1jy2cTyNA5TXaslLqbWbYuNCa/h0cZcO7SUPGLgDGtBPEhBCViOOUF/AvXuGs9P7JCgE8Ai64idZISZxcd7hyRUbIVL97lSQGE7SVktcCEKhpAvF2EevGEoTG7MV3hSZiSRZ1y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750219778; c=relaxed/simple;
-	bh=vN2FOJ//6DaCoFloteK8X8ToMa2qiuGZ6Y6Yq9YA99Q=;
+	s=arc-20240116; t=1750219780; c=relaxed/simple;
+	bh=064hywwsQNzbR3c8t7PfuutQNYtsxzltdoqUOLmuT74=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Iue2EFNadD4zjqNcClmfIrx8LGAp4bMBDA8Z3j19h1UE2mEAyANgV7DbVUj5elKKUYBjbASdZOqoN4IaaOKlafYxDDlCr+KROyO25W7NpE9OnRlJOtnR+UOrLMw5dMQFrtM+pKBscJXM7HClOupVRzRknjvBRc7y+yFLnxJ6vto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ff1633s4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ghDrSyojB+mOsjhZ3L6hIHeKv4pc0Kv2ZUt+tnbirW7X0pnCvXZgR9JflOeTVycAYkEn9nZIseHF0jZY7mY+1b3SlbUpaZPfEn+7hmdayqfrADaXG+UESmp14dNAyZnUZauPV3+3ZSsNUbGu5VYTQ3WKk/EB2f7zD4tykhKFiSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBDQ7Hsd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ff1633s4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B19C4CEEE;
-	Wed, 18 Jun 2025 04:09:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBDQ7Hsd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 086D1C4CEF1;
+	Wed, 18 Jun 2025 04:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750219777;
-	bh=vN2FOJ//6DaCoFloteK8X8ToMa2qiuGZ6Y6Yq9YA99Q=;
+	s=k20201202; t=1750219779;
+	bh=064hywwsQNzbR3c8t7PfuutQNYtsxzltdoqUOLmuT74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ff1633s4CJTqNmNB27atCrTeguPzq5gw5wujKL2OaupmwStNCyB4Px7zAq+e+EZ4x
-	 XTa56FTTQLZLu6Ibc75lJALdfISp44sU+HIeznF8SQ0JjJxDsnCdaCDFmeadXVKt3a
-	 nvBRL5av/zY6mPM1BfFv8gIy4M3d6ZPRjEs7LGSLmpnyEiVzoUorSTXeSkXCU+vY/g
-	 vupPUSBDtiQMpMSwP8hyHR84s/BNRigPbsTqUkdaqDFQZNe1m8z6A7sZfScqNvVOgQ
-	 soC2aqqcPR2YhE6e1RN4oscJ+3hVILe4KNOnVOhmGVlhqadPCsU4UXiXFsJNEYkICX
-	 5zNQ+mdAS5emw==
+	b=BBDQ7HsdDen+SahKJe8pbrtgnOcp7I+4zJ7cassl0KigILIdLyd63w1v+zRISQG7y
+	 Kvx+8zdl2sxemps+CpnRV7mKPJCZ88IwYWFpxjBmSvJzSfu1iF6yiAXNF/PiJKXec2
+	 2LzuRJhCf6zJa6PCA7p7RxM18a0pEGofa4Kd4aCOO+OsGgQ0djq+BqApF8kw+8q3e6
+	 e1swN1LQtnQkW3ejFa4+jGxk23Jie2rwYrhA/t7YKEV8FQ2pafR+kcckpQ1vGJKaLv
+	 KnuoUvu5/51N1FJDGOLgyWEy5QdWAqeqe3yuH+z4WnouogE28ML0345ywvCBQwxr3W
+	 CfaC6GUNItiXg==
 From: Bjorn Andersson <andersson@kernel.org>
-To: Rob Herring <robh@kernel.org>,
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org,
-	Sai Prakash Ranjan <quic_saipraka@quicinc.com>,
-	Konrad Dybcio <konradybcio@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
+	Luca Weiss <luca.weiss@fairphone.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht,
+	phone-devel@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 00/10] Grab IPA IMEM slice through DT, part 2
-Date: Tue, 17 Jun 2025 23:09:21 -0500
-Message-ID: <175021976645.732077.14110178796470465850.b4-ty@kernel.org>
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: sm6350: add APR and some audio-related services
+Date: Tue, 17 Jun 2025 23:09:23 -0500
+Message-ID: <175021976642.732077.16252470040851608155.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
-References: <20250523-topic-ipa_mem_dts-v1-0-f7aa94fac1ab@oss.qualcomm.com>
+In-Reply-To: <20250321-sm6350-apr-v1-1-7805ce7b4dcf@fairphone.com>
+References: <20250321-sm6350-apr-v1-1-7805ce7b4dcf@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,40 +53,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
 
-On Fri, 23 May 2025 01:18:15 +0200, Konrad Dybcio wrote:
-> The IPA IMEM slice addresses/sizes are hardcoded in the driver. That's
-> mucho no bueno, especially since the same versions of IPA are used
-> across a number of vastly different platforms, which invalidates that
-> approach completely.
+On Fri, 21 Mar 2025 09:12:57 +0100, Luca Weiss wrote:
+> Add the APR node and its associated services required for audio on
+> the SM6350 SoC.
 > 
-> This series wires up the IMEM slices in DT on almost all platforms
-> (need some more time for SDX55/65) and fills in the necessary bindings
-> holes.
 > 
-> [...]
 
 Applied, thanks!
 
-[01/10] dt-bindings: sram: qcom,imem: Add a number of missing compatibles
-        commit: 9cea10a4f5a39fde32bf7b8addfa5f9175174e0e
-[02/10] arm64: dts: qcom: sdm845: Expand IMEM region
-        commit: 81a4a7de3d4031e77b5796479ef21aefb0862807
-[03/10] arm64: dts: qcom: sc7180: Expand IMEM region
-        commit: 965e28cad4739b11f1bc58c0a9935e025938bb1f
-[04/10] arm64: dts: qcom: sc7180: Explicitly describe the IPA IMEM slice
-        (no commit info)
-[05/10] arm64: dts: qcom: sc7280: Explicitly describe the IPA IMEM slice
-        (no commit info)
-[06/10] arm64: dts: qcom: sdm845: Explicitly describe the IPA IMEM slice
-        (no commit info)
-[07/10] arm64: dts: qcom: sm6350: Explicitly describe the IPA IMEM slice
-        (no commit info)
-[08/10] arm64: dts: qcom: sm8350: Explicitly describe the IPA IMEM slice
-        (no commit info)
-[09/10] arm64: dts: qcom: sm8550: Explicitly describe the IPA IMEM slice
-        (no commit info)
-[10/10] arm64: dts: qcom: sm8650: Explicitly describe the IPA IMEM slice
-        (no commit info)
+[1/1] arm64: dts: qcom: sm6350: add APR and some audio-related services
+      commit: a014ad1ae4ea1ec8c3ea3a66f09217f1bff937a8
 
 Best regards,
 -- 
