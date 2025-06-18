@@ -1,88 +1,131 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2D9C280CCE
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 213DA28153D
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238592; cv=none; b=qFCCv3IaxNzNZVkOitMxqnCWxKLE5RDo+Hy7QiHSEV15mO6rRr7pZ9j0HWUD/mxvhnvo81q9nygEhoLLD3trv7JzoWh+WXb1g8va+Z9nOg3We7V5QBfdLdP3KvUeYXAslVksbVOmEPchqZLPLRntXKLT3j/psVFo2RjGfqo5XEw=
+	t=1750238643; cv=none; b=azL3THnsaHpgqINVT1mFlh0LL3ONX6RzE35/ubG5ncc6mO1rm8uvERSN09taZlHDu1clfrM/IFuN++Dm0SoZGlvk3bjTFVA3dvM4b077c3zKQmMM1loicDczp0bxT6AGnw3Qy2FQp2Prn7co8ZR+dlkg87LX0VE1vB1W29jP6E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238592; c=relaxed/simple;
-	bh=zTuDs6bz1pawzmQ/06qQ/gHnfbRQbq99TmjUqF+L6RI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Wf9aAtT0R8BYYEa4GegumcWbdclwswDypUc29Wq+SxfNPe8zQMGRVJkyOQKadBRZtDktw9gqpaggN0w/g4IWROAqqN552ne7Yd35X3zDon8p7D0S3hTj15EjtzORVEKfZSlrxiZAxc5F6qy948wuroY0finYKwjBZmOGZeMrmwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xjqIY9UP; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750238643; c=relaxed/simple;
+	bh=aEgKfrPrrjMj6t/ipZa1xavX/WMJ6M7ayyrMUoR/xrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Nag2uA+2DbtFeYDCAPM4sArhZAeEWmeHgCifX/ZTe7CeRtGWTn8RXxm6CXkK9hbfj5uwFXWDHHWqRlmxsMCgqfsRHnLJoO5FYLAyAv5DedtD8GVZeFmG4o0EVRmvjx0Iiy+JU3lYD4D6D+vpFKA3y/Qs9ZTrvmTW0LA5IHwLGCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N07rdsTS; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xjqIY9UP"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a50956e5d3so5312853f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750238589; x=1750843389; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zTuDs6bz1pawzmQ/06qQ/gHnfbRQbq99TmjUqF+L6RI=;
-        b=xjqIY9UPe1GKtHdSLku3sTgzkfCKqYYp6UpyAnBKU9nz8dlisM2j4bHUywZI9/S3Kz
-         O8HOyUBIyJ6NIpTFysxshM6mXz3NBRAe7l/WE6ikDFLkoZLFn4q4hfg5W5CFqZNF+6yL
-         q1vVDOs+0jXzGqtPrfiVEBaFcIZiuqjZ+1eczDIn86QKWurFsc0oA9z54rc6poBMFyhp
-         WrYESy/KVivGeBVrUD9wCXIe/O5KGGsAwWkx+HyPhw06WogJhfISf373k9h69FtobrYk
-         J9zLGHvYVMqhTZuDsV6K7+F9l3OfZCk/KH8N48Ch/r8fNWV0bVoMdzE31OYzCo5t8tQI
-         0d7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750238589; x=1750843389;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zTuDs6bz1pawzmQ/06qQ/gHnfbRQbq99TmjUqF+L6RI=;
-        b=JqvAy8HsLeSCvml01D6V8yA3XK5IY5d2AAIYgBY0Wv4ealJ8g/KNw4UOL53686+e6V
-         FCD3XytgofWXHx72luIxhiYxin+Qn19JTC/yvEqAhyJp5tpfwlZtsBED6v0HIaJcNN7p
-         z2kSG108ivccj7V7uFnT4//7Umvcsvcp5yqsa/wZOo/p8YwFW5AZDBGNq6RjJhujijZx
-         yDCIKrUNaG4eBmMzKGqOqrGDAgWfqgf5oFlTtQ7ldiLvnp3Yn1ktIUMUCl62b9A5DJJZ
-         oT6eQilUcwFWqir/K/ZaKB9jwZvac3X0M/MPobRPbuMt6s95X9tL5NRMm3jlQxzMXpw+
-         dDbA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJFq17bvYHO+kxzkGGcQCEupQYddqPQgFIb9jWYVGNHHipZU9gJwLz0eb6QtFBDIwB62c94vcdKFc+uOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybT8/OrfJE+A6tQXGMRDronXy8K4pySispnrYq+HCMYwRzqbXK
-	+D53SIMPnTBxHhmvMrt3fLHY4ZmIDWRHRgogpU61Gh/XaUV7nBtgtp5iaT9yA7fijMctYgVAfsf
-	/VREv3uTP20qHFGFs785MRrBC7eI69f9EvpoRZaA/
-X-Gm-Gg: ASbGncsrQhotsCuexXww8Vq3kxtJX0Ygjjimrw4skQBdvmMK0vSDGFBv2Y047RQDflD
-	uRWPRl9hrjU2IhoOBIdPEzx5iLqNlHkiPffoXlwpIdokNEA0IS4x3JT74elWpMIOfjzU6z3fcIY
-	RoI85mQOz9imDf8ImyWi++wNw2lRzuxdtsNcWD+eQZvIU5GCjDBPpUMGB/N667c4EBoc1bDrDpY
-	t3tWaeorAkG
-X-Google-Smtp-Source: AGHT+IFDu55zBpLTjN0YBZ0/8S08wBdjH+mMHocco39YXZmhbhmmSXQ5wtBu7D5AZ5XiCHAHE2Mwh0RzhSUyiGnz88M=
-X-Received: by 2002:a05:6000:310f:b0:39f:175b:a68d with SMTP id
- ffacd0b85a97d-3a572398e87mr12580033f8f.11.1750238589173; Wed, 18 Jun 2025
- 02:23:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N07rdsTS"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55I9MEfN198307;
+	Wed, 18 Jun 2025 04:22:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750238534;
+	bh=1LSfhMfagWSAA2dImG8G5AnPQY89RbViRu826F453ak=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=N07rdsTSUsg6iBtvzWLHjvurhXqdQbAQHghXSB/YUKrJni01F6UGOuwEy9k1eiUtn
+	 /iz3+62tz8jTcX9UP+/3DhLz2e6SF+/Vi6Z3jl+7GeI6knAbmnFQcG8+fdnV1sUJXb
+	 KXzBqgYDnLZbjfGnP4txOeoOOEAh37FpB+gzA+ZY=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55I9MDfD2619355
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 18 Jun 2025 04:22:13 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
+ Jun 2025 04:22:13 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 18 Jun 2025 04:22:13 -0500
+Received: from [172.24.227.143] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55I9M90f3235850;
+	Wed, 18 Jun 2025 04:22:10 -0500
+Message-ID: <d0854272-fe5e-4977-8526-03a980b348f3@ti.com>
+Date: Wed, 18 Jun 2025 14:52:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618091442.29104-1-work@onurozkan.dev>
-In-Reply-To: <20250618091442.29104-1-work@onurozkan.dev>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 18 Jun 2025 11:22:57 +0200
-X-Gm-Features: Ac12FXwBWm2g1vrL71ZUV7peDg5fj1BZheM81_V76WXGGFZadcayIxH6T_7o4k8
-Message-ID: <CAH5fLggmDKjis3XSW16_E0motkK98KgHEYq5wcJHekai=Q1tcA@mail.gmail.com>
-Subject: Re: [PATCH] rust: make `clk::Hertz` methods const
-To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com, 
-	gary@garyguo.net, bjorn3_gh@protonmail.com, lossin@kernel.org, 
-	a.hindborg@kernel.org, tmgross@umich.edu, dakr@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] drm/tidss: Decouple max_pclk from tidss feats to remove
+ clock dependency
+To: <jyri.sarha@iki.fi>, <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
+        <tomi.valkeinen@ideasonboard.com>
+CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>
+References: <20250618075804.139844-1-j-choudhary@ti.com>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <20250618075804.139844-1-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Jun 18, 2025 at 11:16=E2=80=AFAM Onur =C3=96zkan <work@onurozkan.de=
-v> wrote:
->
-> Marks `Hertz` methods as `const` to make them available
-> for `const` contexts. This can be useful when defining
-> static/compile-time frequency parameters in drivers/subsystems.
->
-> Signed-off-by: Onur =C3=96zkan <work@onurozkan.dev>
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+
+On 18/06/25 13:28, Jayesh Choudhary wrote:
+> TIDSS hardware by itself does not have variable max_pclk for each VP.
+> Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
+> devices uses "ultra-light" version where each VP supports a max of
+> 300MHz whereas J7* devices uses TIDSS where all VP can support a
+> max pclk of 600MHz.
+> The limitation that has been modeled till now comes from the clock
+> (PLL can only be programmed to a particular max value). Due to this
+> we end up using different compatible for each SoC when the clocking
+> architecture changes for VPs, even when the hardware is essentially
+> the same.
+> max_pclk cannot be entirely removed since the display controller
+> should tell if a particular mode clock can be supported or not in crtc's
+> "mode_valid()" call. So remove "max_pclk_khz" from the static display
+> feat and add it to "tidss_device" structure which would be modified in
+> runtime. In mode_valid() call, check if a best frequency match for mode
+> clock can be found or not using "clk_round_rate()". Based on that,
+> propagate "max_pclk" and check max_clk again only if the requested mode
+> clock is greater than saved value. (As the preferred display mode is
+> usually the max resolution, driver ends up checking the maximum clock
+> the first time itself which is used in subsequent checks)
+> Since TIDSS display controller provides clock tolerance of 5%, we use
+> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
+> before it is called.
+> 
+> This will make the existing compatibles reusable.
+> 
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+> ---
+> 
+> Test log on TI's J784S4 SoC with a couple of downstream patches
+> to integrate DSI support on one of the video ports:
+> <https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
+> 
+
+Hello All,
+
+Just noticed that the downstream patches that I used for DSI for testing
+were applied before this patch in my tree due to which this patch does
+not apply cleanly on the linux-next tree.
+
+Apologies for that. I am rolling v2 ASAP.
+
+Jayesh
+
+>  From the logs, we can see that for CLK ID 218 (DSS), we do not have to
+> call sci_clk_determine_rate() multiple times. So there is very little
+> overhead of this call even with multiple mode_valid() called during
+> display run.
+>  From weston-simple-egl application, I have seen that there is no frame
+> drop or performance impact.
+> 
+> Once this patch gets in, I will send patches for AM62P and J722S DSS
+> support.
+> 
+>   drivers/gpu/drm/tidss/tidss_dispc.c | 76 ++++++++++++-----------------
+>   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
+>   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
+>   3 files changed, 34 insertions(+), 45 deletions(-)
+> 
+
+[...]
