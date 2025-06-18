@@ -1,59 +1,112 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1AB22EAB8F;
-	Wed, 18 Jun 2025 14:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B96D2EAB87
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256036; cv=none; b=aHBXgXbG2KuSGgjqMqzmcux4qH5meyhDc7WoT+B9jRLKhnRk641va9WabYFJ73lQ///Oul9t3eP0NzXIm+EjgPx+sZCdd6oa+1t0M5giE/kJ5jkeS5IwkMqgQblqiylligWpuQWReHplKbSJrarRlA6Or5QbZ6xhbP6rGWnb/KQ=
+	t=1750256050; cv=none; b=dzPKqjub48W5pXUgShcA9n+hP6SUQKdahxjjM3tVA4+gmGfTVrmBv1WG7gKdDpaKAGHNuobIsjV8aJrrk+pNAsk+jAD9Qpts6AsRb6SP55m4KiaBtwoxrkFABWkTRGkh4eicU/JSYUYInDcMN+5a9HMYkHab5xfrh5ZV1eo0Il4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256036; c=relaxed/simple;
-	bh=4TiigqAE51zyUMzIqQn/1g27Ko5Pj9WtJibrAQ03VQM=;
+	s=arc-20240116; t=1750256050; c=relaxed/simple;
+	bh=YgtPxwKPTeZEZYoIXt8HkosylZM3S9CVqdbZuAkboEA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E2wpDykOkinnv98phLgxUuxIpN0ClHxWJOZ+P+McY+FPMsmbOcsAY52j7UIENYQnbWU1tatIcUAEJn/ihmySyZL/3Za2E6DTZtMkYBC4KJON6n7wgSFzUjxWSt/jZlu9bapmv0Thip2h7BlgaUDmCNqEmVF5RuBvygkfNki0APA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oY6OFomG; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mxVkL2Wxmb3+41cq9VTmlOTVM32m/zd+qjfBQkCo/bqJX9tbnBTAkAuuqXJ42d0i9zl9BbIkOdKgGU+x3kmZmPXET2syPas9uDZj9vks6gw8Y0pNoeknnrfrat+XuaxPXZfojlHPI7VNdZniKOR1dIjLgccHWWnmwGNl8QqtHUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Qtap48RD; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oY6OFomG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mXlLRdpy5yvdh809KrU+L3v1z0vHDXr12xF8/KTaF00=; b=oY6OFomGWLMk6wAUWYWS7DCJ27
-	4M3Tqg7tweI2C6Mdp4D1Xzt2Hmh6mfd2Y91lejMHqPEim6fy+zTZaxPzI1K+GKcq60dW8gE4aYb2b
-	gtZcQGl/8QOmQ4hf8CVcfKreSE1vnFysmqQWMoBlSsEzKrQDQSExo5dvNLgWAeruGBdyzwN+v1bak
-	Xmp7523EbxhSOoqGjQgzR9Q88/6Z318LVdsipLTOM1lR37urCCmv7/NNn2DYaXOEwaTaOnSkrHOp0
-	RztiLABf7WEqm4VTyELA1UGIJpciHh1W2Q9PVrrH+Z7p7LvurZNDdlLHsjPyNu8GMGtmTf2ogFq6P
-	Cipe49QQ==;
-Received: from 2001-1c00-8d82-d000-266e-96ff-fe07-7dcc.cable.dynamic.v6.ziggo.nl ([2001:1c00:8d82:d000:266e:96ff:fe07:7dcc] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRtXu-00000003qpz-1ZRv;
-	Wed, 18 Jun 2025 14:13:46 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E56A7307FB7; Wed, 18 Jun 2025 16:13:45 +0200 (CEST)
-Date: Wed, 18 Jun 2025 16:13:45 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 05/14] unwind_user/deferred: Add unwind cache
-Message-ID: <20250618141345.GR1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
- <20250611010428.603778772@goodmis.org>
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Qtap48RD"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607ec30df2bso12875626a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:14:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1750256047; x=1750860847; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JWbyA4a1n1aVjvP6ctgBaCKRdhrm2Tmki3ui2GQz4OQ=;
+        b=Qtap48RDtlou7u57wrEbxaKIQaHVB850hPqUAlo0J22KUrSipuKf0kySHhniNMicHl
+         5QjwC8KBWNIBl75ECRIpIpZbEHrrZ7sZOOrasSCicxabzTnFfeIPjjm16SEkwuIWpFO2
+         1pqVtk1juSAPxDcVNqz/C8ZPHLDxiN533HWLQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750256047; x=1750860847;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JWbyA4a1n1aVjvP6ctgBaCKRdhrm2Tmki3ui2GQz4OQ=;
+        b=DBV4+BftmT2wzxKfVxl3vPdEN/HcQD5L9YoNgaSxCgXGjMLSyc2x+OxYloR7eN1hPD
+         2XjP9hdWIkb4nEQguNh9iGFB5r4UmL2N5x9nZT9wFNMnuYrLp/vAfSsZDHwRK5VTf2N9
+         xdxtAV0m6qgYZCumcmqLI7yzWrfteB8gLxEDQikSknwhGvR9zeYnARwoQSZacwPs5CF5
+         5L+5iAvr3MTX0manzpmqhBD/stlcxw8bFJa1GO1bndgHL68hgiHSbB1elG4ch392/WHM
+         H5nelxQeAfxBTRJP0LaW9wJQPG/QpjztICLZr8wQTVrX+caaaVQHGMViNoc92oZtwlG2
+         hPpg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+3jsxZM5VYbc1pYo7hpBq1nM9yxFWrtjiUyLaVyBeYLS3VDnX15JcEotYls5cp5Thhh8LXi/ybnEJl/g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5/vTdDPTpB+rwwTgkIbDx0+3ekx1qUPM1i2apIZs9itqCHrUf
+	pNhmQ32FKkIyODnF1TmT1JMNyAUbvZ0oBnFipvleDcPAoI9HMzavkiA9zOMPuHSMK44=
+X-Gm-Gg: ASbGnctziIhcZAq29cQdoHKBK6wpE6alvo9UDd40iPNvLO72DLExHwHWToSUxZsLjv7
+	zbd/7LtrlSGFVrmTWoQq9T6DRhVOMZ+TNC0rUvksExogTwuLzwko5ATSM4y26hxgRXHlUB7tZr5
+	O8e8Bup1VONNS6nIfZ2SGhK1PrdPhb4zwKCzU20xX+irBndQFW1ZLsU+jafEs/A8kfJJJDcM5K1
+	J1Ymv7np7cGQH6Xa/9/2pEAEWHqV2D28Wimm1b6n+DX9oMWKjRElmLZqEnKTxvHgwZjLAf6/egp
+	wfG+T4ojw4DwVu2s1Cn6tACzrT/01n3l2GANo+WBnLII88dLVtN8k0dmf3asE8XmxsgEO+6iHg=
+	=
+X-Google-Smtp-Source: AGHT+IGsqCmrJXzMwPM+oH1kv5sMlk4UVUkN2dXKJGBUjRXie2yVHLpK2+aze7LyMOOgssnqt0k33w==
+X-Received: by 2002:a05:6402:274c:b0:607:f63b:aa31 with SMTP id 4fb4d7f45d1cf-608d0853447mr14785409a12.6.1750256046873;
+        Wed, 18 Jun 2025 07:14:06 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:5485:d4b2:c087:b497])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4ae68a2sm9640327a12.79.2025.06.18.07.14.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 07:14:06 -0700 (PDT)
+Date: Wed, 18 Jun 2025 16:14:04 +0200
+From: Simona Vetter <simona.vetter@ffwll.ch>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 5/6] ALSA: hda: Use pci_is_display()
+Message-ID: <aFLJrHdfrTmoyhin@phenom.ffwll.local>
+Mail-Followup-To: Mario Limonciello <superm1@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	"open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+	"open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+	"open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+	"open list:SOUND" <linux-sound@vger.kernel.org>,
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Bjorn Helgaas <helgaas@kernel.org>
+References: <20250617175910.1640546-1-superm1@kernel.org>
+ <20250617175910.1640546-6-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,79 +115,71 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250611010428.603778772@goodmis.org>
+In-Reply-To: <20250617175910.1640546-6-superm1@kernel.org>
+X-Operating-System: Linux phenom 6.12.30-amd64 
 
-> diff --git a/include/linux/entry-common.h b/include/linux/entry-common.h
-> index f94f3fdf15fc..6e850c9d3f0c 100644
-> --- a/include/linux/entry-common.h
-> +++ b/include/linux/entry-common.h
-> @@ -12,6 +12,7 @@
->  #include <linux/resume_user_mode.h>
->  #include <linux/tick.h>
->  #include <linux/kmsan.h>
-> +#include <linux/unwind_deferred.h>
+On Tue, Jun 17, 2025 at 12:59:09PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> The inline pci_is_display() helper does the same thing.  Use it.
+> 
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+
+I think the helper here is still neat, so for patches 1-5:
+
+Reviewed-by: Simona Vetter <simona.vetter@ffwll.ch>
+
+And a-b for the vgaswitcheroo patch for merging through the pci tree or a
+dedicated pr to Linus, since I guess that's the simplest way to get that
+done.
+
+Cheers, Sima
+> ---
+>  sound/hda/hdac_i915.c     | 2 +-
+>  sound/pci/hda/hda_intel.c | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/sound/hda/hdac_i915.c b/sound/hda/hdac_i915.c
+> index e9425213320ea..44438c799f957 100644
+> --- a/sound/hda/hdac_i915.c
+> +++ b/sound/hda/hdac_i915.c
+> @@ -155,7 +155,7 @@ static int i915_gfx_present(struct pci_dev *hdac_pci)
 >  
->  #include <asm/entry-common.h>
->  #include <asm/syscall.h>
-> @@ -362,6 +363,7 @@ static __always_inline void exit_to_user_mode(void)
->  	lockdep_hardirqs_on_prepare();
->  	instrumentation_end();
+>  	for_each_pci_dev(display_dev) {
+>  		if (display_dev->vendor != PCI_VENDOR_ID_INTEL ||
+> -		    (display_dev->class >> 16) != PCI_BASE_CLASS_DISPLAY)
+> +		    !pci_is_display(display_dev))
+>  			continue;
 >  
-> +	unwind_exit_to_user_mode();
+>  		if (pci_match_id(denylist, display_dev))
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index e5210ed48ddf1..a165c44b43940 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -1465,7 +1465,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
+>  				 * the dGPU is the one who is involved in
+>  				 * vgaswitcheroo.
+>  				 */
+> -				if (((p->class >> 16) == PCI_BASE_CLASS_DISPLAY) &&
+> +				if (pci_is_display(p) &&
+>  				    (atpx_present() || apple_gmux_detect(NULL, NULL)))
+>  					return p;
+>  				pci_dev_put(p);
+> @@ -1477,7 +1477,7 @@ static struct pci_dev *get_bound_vga(struct pci_dev *pci)
+>  			p = pci_get_domain_bus_and_slot(pci_domain_nr(pci->bus),
+>  							pci->bus->number, 0);
+>  			if (p) {
+> -				if ((p->class >> 16) == PCI_BASE_CLASS_DISPLAY)
+> +				if (pci_is_display(p))
+>  					return p;
+>  				pci_dev_put(p);
+>  			}
+> -- 
+> 2.43.0
+> 
 
-So I was expecting this to do the actual unwind, and was about to go
-yell this is the wrong place for that.
-
-But this is not that. Perhaps find a better name like:
-unwind_clear_cache() or so?
-
->  	user_enter_irqoff();
->  	arch_exit_to_user_mode();
->  	lockdep_hardirqs_on(CALLER_ADDR0);
-
-
-> diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-> index aa32db574e43..db5b54b18828 100644
-> --- a/include/linux/unwind_deferred_types.h
-> +++ b/include/linux/unwind_deferred_types.h
-> @@ -2,8 +2,13 @@
->  #ifndef _LINUX_UNWIND_USER_DEFERRED_TYPES_H
->  #define _LINUX_UNWIND_USER_DEFERRED_TYPES_H
->  
-> +struct unwind_cache {
-> +	unsigned int		nr_entries;
-> +	unsigned long		entries[];
-> +};
-> +
->  struct unwind_task_info {
-> -	unsigned long		*entries;
-> +	struct unwind_cache	*cache;
->  };
->  
->  #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
-> diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-> index 0bafb95e6336..e3913781c8c6 100644
-> --- a/kernel/unwind/deferred.c
-> +++ b/kernel/unwind/deferred.c
-> @@ -24,6 +24,7 @@
->  int unwind_deferred_trace(struct unwind_stacktrace *trace)
->  {
->  	struct unwind_task_info *info = &current->unwind_info;
-> +	struct unwind_cache *cache;
->  
->  	/* Should always be called from faultable context */
->  	might_fault();
-> @@ -31,17 +32,30 @@ int unwind_deferred_trace(struct unwind_stacktrace *trace)
->  	if (current->flags & PF_EXITING)
->  		return -EINVAL;
->  
-> -	if (!info->entries) {
-> -		info->entries = kmalloc_array(UNWIND_MAX_ENTRIES, sizeof(long),
-> -					      GFP_KERNEL);
-> -		if (!info->entries)
-> +	if (!info->cache) {
-> +		info->cache = kzalloc(struct_size(cache, entries, UNWIND_MAX_ENTRIES),
-> +				      GFP_KERNEL);
-
-And now you're one 'long' larger than a page. Surely that's a crap size
-for an allocator?
+-- 
+Simona Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
