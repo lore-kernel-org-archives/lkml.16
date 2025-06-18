@@ -1,167 +1,179 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0552186294
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:52:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4E4C1FECB1
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240363; cv=none; b=Z/FWB/c7ev2N/fUTAXgHwZ4hjGPBUmJd3fz2OxAE92fl1lgALAA7Hp2yMXGBAuMk2/i7jnJ4ybb5L+MRnzW5nRVox1nwLiMA5JRIKEFyiaP+Ja8xQyRnWRVnyLJClVVTR+1EeplDy2auU0OSe1Txgzr1zon2ONjoGtmiJl854A4=
+	t=1750240458; cv=none; b=Xtdod9GRn+v3XtZr4+sXcmJV6/HShH40ZN0wVUA7RMesgdrCB9jk9084zZwBNaeOVcbOAzcfaczAjxFlf3ZZtdAs24+vy3PftxEv8/qWnQjAynXm+ehXwxCchRFkq2AHy5qJEVwmyuIssNpWHsCpRck/QkKeMTaFbFRofZXJ8XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750240363; c=relaxed/simple;
-	bh=Mw4RqggIhkIW6LA5F5dC5RIw7XNCP/yell2saKdiFV8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NtlYRVLeh363JdTn10Sx5FlwADZXh28tTr/D1+vN1TJKWj2fgwxBGAu24MZDo0cTRS8YrbWwxKz/qAYQ0ruXyrySvBmIA2JE5KgyBQ6Arzogrxk9hELZfQ2AZ9DEnFEeApsaWpOMotgA2CAnjS1DdR6GYnLH/UChmPc6n7mbACw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=llAcUDeR; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750240458; c=relaxed/simple;
+	bh=rDGQP2zCSI3Kq8k2nJx7sTz5HituVm2R46poLrOXUCg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aFf3gddxYOAwLWxYhtvRcJ5OAjbO+NXh52C9Gv99/zSQhZoEC+QTieaSmet6tU7TspT1NZ5lPrHcpZwJQ9T0s/2UxtwO0MO+pLbIgIHUNzS74+tpRdUblTf6PiCdoxieyBecs0XgOFjAWIHWwsDSWOtmdG1CX8TjPYLDMsFLE4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=q+BXvvVc; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llAcUDeR"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-877d7fa49e0so4373587241.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:52:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="q+BXvvVc"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-b1396171fb1so4148427a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:54:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750240361; x=1750845161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=muzPKRA0oXpJ18M/OJ/yeBi5jJNJKBY7O/8ZgYL2clQ=;
-        b=llAcUDeRmvFwKjWXKPPtsibVtyDldC6N3+464G7qCq/8zYgNc4Wb9KAyPf8MHhW6ym
-         TRKqfgxeHVL623EjjOw5ldtGtnD4doXnsX2GJIoowjiL3+B/VmenBF+pFtxvysRospz/
-         bJ+AgP3IjTeP+G86+AejQFSWWnpbhJ1XLv1NBhd+7CmRdyISMVUfOVbj2WVL4p+X0qI4
-         vm3VqkOuqNFrtkgodj9JWhsiaPPU0PZL3Z22VP2oLUgh20quumEf2CeWtwVI+xFt6AnR
-         WEFyYdkL2twLixsHGYqFKxTQMqQFO0czbDH8CQdGb11pz/vwthmDIpJJEam6kHZyJs3U
-         3SOQ==
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1750240455; x=1750845255; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z7OM2ZSW1/KdTPjxcHsJwOgBjGchYE7u2a2qkQ9RN0Q=;
+        b=q+BXvvVcU9FAemX77HEnPsDobCc0eYyAMYVU6/ZxHZuv81og2Au4qhNFa1N6lWwzbD
+         KeBf7451acytjEJhC1nUUx78oCMoRoCxivYyPReOOrS30jahfjZ0CpvVQ43IwJdcZ407
+         RLtl9P4g+MhgiDRHHg91QV52KKJcKm0QBF1MvOjUjiOfey5cZ4S1v+1d61xdu66/TBJQ
+         prXdzjwoV4LDHAA3+ZmkagDVNa5Ivs5VV36GOvaz2DQjPorHnAOiZ3z7jrxmTA5/2hzx
+         9vxSBxASB7J9AMNZa4BgMfXQGij/lwRF+tXr8+W/9tFjxmOdFcmsyoYzVRwkHS+wmzdi
+         CGiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750240361; x=1750845161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=muzPKRA0oXpJ18M/OJ/yeBi5jJNJKBY7O/8ZgYL2clQ=;
-        b=KFE2+tS1PIqq74+7uw8xYqELNCDIsFa+hbIRoAiUDPPTho/+jkDplJy0cuGMS8fWlE
-         djhPBVJCzbi7TvsfD8VgIExrD1Pf5wyXIXOP+fgT50RDQR6CG+8s/flz9zKeMjvsoLfG
-         AS4UZPZUfmf0A1BZBj2I6dZjGDTm1LlKufP3EY6Pp/l0+/oodi2jdcPDvk/2fAn3uQLG
-         z+1gkTmQFoYZ8fkpMrbqFEXRsLO31YXv0nvGrBWnf5j8+NagPs0PYk2tRR1jnvyS1+u0
-         hauTemiD1DXdoK9/x8bVEOkj7afKot6KO6Mpwg1jyMpD2TSAxpQ21M0opY1Mu0xbXrAD
-         uIlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDdoIzl51ShDNJEHbwIdm3gLjlbsNEAQP2ATmJwxsyAJFttgi0q/lgUa/cJOgYvlFfcd6BWRNZynwF8/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyk4dKUBheyjrABPvoIYtA6M88MHilXNeHBYq7sgMxj7KZR3U7X
-	WjORoqnXMlF++lvjJXLg7WX+DOftEcRzitw/lr3dHXfsI6sriFA5aFiUO+bqAn0AJO2kcjGD02d
-	8iw26KXhEl632sdC6a2/2Y+jkoAeLkzc=
-X-Gm-Gg: ASbGncvQ5OZpNJaLecWrgcDIyWBkJ7ueh3sD+Wrgsq63Z2tPvncTrqkvSY6NJOQ21Fp
-	QTDiVdThuvpWGI3Aqpo62hSgTi22S4y1aBC9n+02WJP4n4844QFHuoCHR4YjGbIBlHumB64l00X
-	GO8dzg5IKazrSmtxOVo0wwTwBC5zoCni0z13urGI1AQO4=
-X-Google-Smtp-Source: AGHT+IENCLY7tb8wCgeKdSRxaRBa5eDJ5oqLt2UY/7tfrWQQhCiff7S5KElIHcvGO9Q37IJcQ5Hg26gnlGHrF+Lm1oE=
-X-Received: by 2002:a05:6102:4bcd:b0:4e4:5df7:a10a with SMTP id
- ada2fe7eead31-4e7f6207960mr11453168137.16.1750240360732; Wed, 18 Jun 2025
- 02:52:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750240455; x=1750845255;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z7OM2ZSW1/KdTPjxcHsJwOgBjGchYE7u2a2qkQ9RN0Q=;
+        b=ALTlN5fbu2Gr93tHe7RZOnwKPKewFTWqhHCT/HajDQH4/OB8xtTKCKobGQz1LjYNXG
+         f87pqgAaC03F0FXWEe3ZYRx56Q0gmsEpWlJC2mn7FqIZDoXGejcevWFK+0X0hZiER34D
+         m3kBgzIXjxe/uDxikQoIlzQv8zel/nAcsjAtadVNnpaUkTK+Shp3Qd2vlfC3amlrRJgc
+         ivftDs8vrd/O8sU0nx0WtFgrdMY5uSeKtbrhCf/rGUafdQE/7TtWZfpjk7eDaiNJWL++
+         t4G0nQjepaX95knHvFvZOJ38pXwQVIOKffA514gGvh9lhmmWh4ObqRmxLtXIaAY0Bkoo
+         83ng==
+X-Forwarded-Encrypted: i=1; AJvYcCVZOifYwmJQGPKqOhF08X01LLaeqACEtL1J/8wcbOj4y5CtUCf2ci7zFgGlu9437qhPJ30vm1EXrTFbIgw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtcd2A7cXzOWTi82iD6jD2u66D7D1RovpbalquMww3FWoKZ+0b
+	GQLVGNta18cHs43iFyKwk8TnJlW1SEru21YUyuH4HESfEN7p9/D8+6zDVxBx712D2Q==
+X-Gm-Gg: ASbGncsgSGH7atRUJ1wrBiM3nnIfEWhv+idqHGTyTsAbRwwXVY+QB9Cd/eMjdAObT4x
+	ON/VPYrDvuQZgdt0MNFS8u8PzbNdK4/vuVM0A5UfB1OPMrJw7+k1cOt0ERsq/kurctU2zZoSSTx
+	N9HNAG4wic68xYJ5msOSso0//AGbkmvY3ech4md+1UkI9Ei4kLw3EPdXAF3O6dqFDe2XDnJxOo4
+	+KqrOJq4u9MceyCNx1inJl2mNk+02iWWFsOeYznJIrN4uLTcx9kMP/rNAlDG2Ga80NUJsMN2VKK
+	jLilNGXBSxsJYBKtIPHuYv/CkgvOhLBQUubZ+2XisVMMUQrVYrCyH4ObekFMxe//8UlKkQ3rQHX
+	mldp/U1nE3txzuEI8pvep931ZcYwCjgY98WOv
+X-Google-Smtp-Source: AGHT+IEgJPUsk65beOkZu9M0cr+8y71f3ifPEHacorAq6usiSGZY6JEZWC/qRdPN6wX01NsRo8kQRg==
+X-Received: by 2002:a05:6a20:5491:b0:1f5:8cdb:2777 with SMTP id adf61e73a8af0-21fbd48c508mr24739236637.3.1750240454808;
+        Wed, 18 Jun 2025 02:54:14 -0700 (PDT)
+Received: from ?IPV6:2401:4900:1c80:d33:6370:709d:bd1e:2cb9? ([2401:4900:1c80:d33:6370:709d:bd1e:2cb9])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488fff68b7sm10498243b3a.7.2025.06.18.02.54.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 02:54:14 -0700 (PDT)
+Message-ID: <ed6beb97-12f1-4d71-b4dc-b34d4d611b81@beagleboard.org>
+Date: Wed, 18 Jun 2025 15:24:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250607220150.2980-1-21cnbao@gmail.com> <309d22ca-6cd9-4601-8402-d441a07d9443@lucifer.local>
- <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
-In-Reply-To: <f2a43ae1-6347-47e2-bcc4-845dc7e7ed87@linux.dev>
-From: Barry Song <21cnbao@gmail.com>
-Date: Wed, 18 Jun 2025 17:52:28 +0800
-X-Gm-Features: Ac12FXzvMFuQyJcjxcM9DVZI3g5FK4SRq_miWgwgHfjO7ZltaPDxc2PlzJBo2NE
-Message-ID: <CAGsJ_4xVH6DT_8t=oDvHCJ-iDwrpms6FhMn9UdKWMwDRv+hunA@mail.gmail.com>
-Subject: Re: [PATCH v4] mm: use per_vma lock for MADV_DONTNEED
-To: Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Barry Song <v-songbaohua@oppo.com>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, David Hildenbrand <david@redhat.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Lokesh Gidra <lokeshgidra@google.com>, 
-	Tangquan Zheng <zhengtangquan@oppo.com>, Qi Zheng <zhengqi.arch@bytedance.com>, 
-	Lance Yang <ioworker0@gmail.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Zi Li <zi.li@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/7] dt-bindings: Add support for export-symbols node
+To: Herve Codina <herve.codina@bootlin.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ David Gibson <david@gibson.dropbear.id.au>, Rob Herring <robh@kernel.org>
+Cc: Andrew Davis <afd@ti.com>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20250430125154.195498-1-herve.codina@bootlin.com>
+ <20250430125154.195498-2-herve.codina@bootlin.com>
+ <0770a47e-fd2f-4b6f-9a9a-b0d539ace30c@kernel.org>
+ <20250528185740.4bf91bef@bootlin.com>
+ <49e1e1fc-412d-4334-8337-16e352a34788@kernel.org>
+ <20250618113232.6d237208@bootlin.com>
+Content-Language: en-US
+From: Ayush Singh <ayush@beagleboard.org>
+In-Reply-To: <20250618113232.6d237208@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 18, 2025 at 10:25=E2=80=AFAM Lance Yang <lance.yang@linux.dev> =
-wrote:
->
-> Hi all,
->
-> Crazy, the per-VMA lock for madvise is an absolute game-changer ;)
->
-> On 2025/6/17 21:38, Lorenzo Stoakes wrote:
-> [...]
-> >
-> > On Sun, Jun 08, 2025 at 10:01:50AM +1200, Barry Song wrote:
-> >> From: Barry Song <v-songbaohua@oppo.com>
-> >>
-> >> Certain madvise operations, especially MADV_DONTNEED, occur far more
-> >> frequently than other madvise options, particularly in native and Java
-> >> heaps for dynamic memory management.
-> >>
-> >> Currently, the mmap_lock is always held during these operations, even =
-when
-> >> unnecessary. This causes lock contention and can lead to severe priori=
-ty
-> >> inversion, where low-priority threads=E2=80=94such as Android's HeapTa=
-skDaemon=E2=80=94
-> >> hold the lock and block higher-priority threads.
-> >>
-> >> This patch enables the use of per-VMA locks when the advised range lie=
-s
-> >> entirely within a single VMA, avoiding the need for full VMA traversal=
-. In
-> >> practice, userspace heaps rarely issue MADV_DONTNEED across multiple V=
-MAs.
-> >>
-> >> Tangquan=E2=80=99s testing shows that over 99.5% of memory reclaimed b=
-y Android
-> >> benefits from this per-VMA lock optimization. After extended runtime,
-> >> 217,735 madvise calls from HeapTaskDaemon used the per-VMA path, while
-> >> only 1,231 fell back to mmap_lock.
-> >>
-> >> To simplify handling, the implementation falls back to the standard
-> >> mmap_lock if userfaultfd is enabled on the VMA, avoiding the complexit=
-y of
-> >> userfaultfd_remove().
-> >>
-> >> Many thanks to Lorenzo's work[1] on:
-> >> "Refactor the madvise() code to retain state about the locking mode
-> >> utilised for traversing VMAs.
-> >>
-> >> Then use this mechanism to permit VMA locking to be done later in the
-> >> madvise() logic and also to allow altering of the locking mode to perm=
-it
-> >> falling back to an mmap read lock if required."
-> >>
-> >> One important point, as pointed out by Jann[2], is that
-> >> untagged_addr_remote() requires holding mmap_lock. This is because
-> >> address tagging on x86 and RISC-V is quite complex.
-> >>
-> >> Until untagged_addr_remote() becomes atomic=E2=80=94which seems unlike=
-ly in
-> >> the near future=E2=80=94we cannot support per-VMA locks for remote pro=
-cesses.
-> >> So for now, only local processes are supported.
->
-> Just to put some numbers on it, I ran a micro-benchmark with 100
-> parallel threads, where each thread calls madvise() on its own 1GiB
-> chunk of 64KiB mTHP-backed memory. The performance gain is huge:
->
-> 1) MADV_DONTNEED saw its average time drop from 0.0508s to 0.0270s (~47%
-> faster)
-> 2) MADV_FREE     saw its average time drop from 0.3078s to 0.1095s (~64%
-> faster)
 
-Thanks for the report, Lance. I assume your micro-benchmark includes some
-explicit or implicit operations that may require mmap_write_lock().
-As  mmap_read_lock() only waits for writers and does not block other
-mmap_read_lock() calls.
-
-By the way, I would expect that per-VMA locking for madvise_dontneed or
-madvise_free would benefit nearly all Linux and Android systems, as long
-as they use a dynamic C/Java memory allocator.
-
+On 6/18/25 15:02, Herve Codina wrote:
+> Hi Krzysztof,
 >
-> Thanks,
-> Lance
+> On Wed, 4 Jun 2025 20:35:51 +0200
+> Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> ...
+>
+>>> Symbols are exported only when an overlay is applied on the node where the
+>>> export-symbols node is available. Those symbols are visible only from the
+>>> overlay applied. Symbols exported thanks to export-symbols are not global
+>>> to the all device-tree (it is not __symbols__) but local to a node.
+>>>
+>>> If an overlay is applied at connector1 node, it can use the 'connector'
+>>> symbols and thanks to export-symbols, the 'connector' symbol will be
+>>> resolved to foo_connector.
+>>>
+>>> If the overlay is applied at connector2 node, the 'connector' symbol is then
+>>> resolved to bar_connector.
+>> OK, this explains a lot. Unless I missed it, would be nice to include it
+>> in binding description.
+> Sure, I will add something in the next iteration.
+>
+> ...
+>
+>>>>> +patternProperties:
+>>>>> +  "^[a-zA-Z_]?[a-zA-Z0-9_]*$":
+>>>> This messes up with coding style which I would prefer keep intact.
+>>>> Basically these properties will be using label style.
+>>> Yes, those properties remap phandles.
+>>>
+>>> Their names are the name of the label used from the overlay and their
+>>> values are the phandle mapped.
+>>>
+>>> You already have this kind properties using label style in __symbols__,
+>>> __fixups__, __local_fixups__ nodes.
+>> I have them in DTB, but I don't have these in DTS. The exported-symbols
+>> would be in the DTS and that is what coding style is about.
+>>
+> I think export-symbols has to be in DTS.
+> Maybe it could be described in an other way in order to avoid the coding style
+> issue you reported.
+>
+> Hardware:
+>    i2c0 from SoC --------- connector 1, I2C A signals
+>    i2c1 from SoC --------- connector 1, I2C B signals
+>
+>    connector1 {
+>        export-symbols {
+> 	  i2c_a = <&i2c0>;
+> 	  i2c_b = <&i2c1>;
+>        };
+>    };
+>
+> In order to avoid the coding style issue, this could be replace
+> with:
+>   connector1 {
+>        export-symbols {
+> 	  symbol-names = "i2c_a", "i2c_b";
+> 	  symbols = <&i2c0>, <&i2c1>;
+>        };
+>    };
+>
+> Krzysztof, Rob, do you think this could be accepted ?
+>
+> Ayush, David, do you thing this could be easily implemented in fdtoverlay ?
+>
+> Best regards,
+> Hervé
+>
 
-Thanks
-Barry
+Well, it is possible.
+
+However, on connectors like pb2 header, there will be 50-100 export 
+symbols. So it will start becoming difficult to maintain.
+
+Additionally, the further away we move from __symbols__ style, the more 
+difficult the implementation will become since we can currently very 
+easily piggy-back on __symbols__ resolution implementation.
+
+
+Best Regards,
+
+Ayush Singh
+
