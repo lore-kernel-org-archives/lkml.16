@@ -1,111 +1,379 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D7621CC55
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF15021C161;
+	Wed, 18 Jun 2025 21:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280382; cv=none; b=jefBrp371lzhpj700p1IViyWzLn5U84bNRHCXXe9nrW3BZ1dSayR12haFfH/kxow9YHmawNawJ287QhgXVJDZcfKacUuuOOsoTSYoEF3JNdkZpTY5hN0WBkRWR/jdBnWjGq4X90yVhBulpBW12JVE0TfzXzOLe7YwkjSSsAIflY=
+	t=1750280404; cv=none; b=Hi2rLoeCYFxK9rYlInQqvuh9kd/GGtm0TIXxk3Fgmx90fHd+meJz3eZTKB9f3bTPY18MR4QaWkeTuQXJI3NGS79QbmnoF+sQomtvsF7LD3/dksnWOzO6WRIn3NoSS1CRmr3W38DT78w7aAaYOcGM+oWmN0QzlvgC+QC/+BjS8iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280382; c=relaxed/simple;
-	bh=TGl3VBkKi7oE2h+1aWKRYyzd0xAZ30Hgfd6PLNHMvvM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=W5nRw41GUF8JPBAX95mC4E3tMJNnTxTNN7f3VQsxSKmFbwud80JMscgrzk3w7EN88K050T8p5+zgCNG0WWpZo5YkKtF1/MxjirQj2a/VDPkgQnBOOydblxaCXicIuIouRvmfsYVR587RDLV0aUzl8+poJHVSRQIS/x5Y/Kdm9Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SqiZ+pv5; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750280404; c=relaxed/simple;
+	bh=yOvlKoSnzKigyD/DVt6KdulZgpulRJtNsiQnSPPPVDs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=o4DTWDoa/6T1oYZ5Zrq0ufRTSTBv0AZQYx2lmC1Vz5R7ZYh8UCZChHJH87r8bUaix3xFkJ02TSynSMCL/yBXfoAPMVyiSnB8KHd4c2VpFIcP8ptU1kxx+J0GlcBCe6vIH/VZ1n+SSJpYSbN1R8JtS8S59y7QKQNfbU9/+MrKHjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnvaEdL6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqiZ+pv5"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-747cebffd4eso41833b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750280380; x=1750885180; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aF8FChrkDuPz1pKDYbAfDf2mWO3Vl3/6TjWiBlEasWs=;
-        b=SqiZ+pv562nzGlJL5tbxdFLpL1ej9fsTPi79ALeWymANiMixIDY8yZcMcbpwn83siY
-         QimvQOMnr2CyaGDgGNed3+CsN4/YtT+Fp3TWbQBecsZ3cE1uIcinGtfwllPr1LtUCmJi
-         5oXOmR2B72oFDXLqxgHz2NxcixZwW0i51d1MnsjsMgRhQ9jMx//32Qyv2XoT48u8PFrf
-         Rc6dJj7AiIPTRTYEcLFsYG4o3mYHs7s4aeeVdzCTH2u81FONoizcxrhNjQTGLDWSfwRq
-         kiUTk2rkPOv3tIJd+LV7g41JSoEd4S1fOw5sNzoudMnJZOLskLx0pThCIpChwrg3R2cL
-         +WCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750280380; x=1750885180;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aF8FChrkDuPz1pKDYbAfDf2mWO3Vl3/6TjWiBlEasWs=;
-        b=WQlmnBo6JXk/phCFhx1J0lT4GYGSnP/6yahjYZ6fMrpZh86aA6V2M/Fkapr4P15Owr
-         MOsiH9KK0uQMzGuIM67IeEirvHj/FB3q6LL4eHnxcXLOeioEClETas+lDk4B8NgOQEdD
-         5edpmWPnlD9kJeEInjQKBrE6AYuqIFBrSh0mpyNubsBtZ24U+KnCA/4emTIBdFYztLRk
-         WDpBC4hnIsfTm+JECBt1BHpXRhoysrk8tH8Wi2sJR9L0iiYLGrZ27uWCfJDFLPceLoud
-         +YXt5aapWe/448e3xI/AQkWdD6INNSEks9adoqweo8mgNzvm1uaI8twqVtgFVxpWPxWB
-         H5Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ0A72LJur5tcei9dTljLM8Hz2y7wKmcGNCPMVXdGw3+YWKLBJzs/cN9a3yFyYjDkYT+yJtXxgYHtt9dw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs2EteJR7nOFuL7WQKzw+qoAUrQfQN7cpuzqIQfC55YM2VW1E2
-	ur0HjjuFKhjnDDJNySdIqXQluh61rgFzkOjBq8DHb2IQqmv5YrOxYUuKZkzcAR87H42fynFbaF9
-	/gZg0Mg==
-X-Google-Smtp-Source: AGHT+IF2uJOMlygI0ECXMxjUKFr94MDL8dRFNErS7/emaEcq+7yIxFlJ3NplEPfGVdrHzu/gZljNYVWfvEE=
-X-Received: from pfoa20.prod.google.com ([2002:aa7:8654:0:b0:748:2476:b25f])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4646:b0:748:3822:e8e0
- with SMTP id d2e1a72fcca58-7489cfd5dbemr25408374b3a.13.1750280379840; Wed, 18
- Jun 2025 13:59:39 -0700 (PDT)
-Date: Wed, 18 Jun 2025 13:59:38 -0700
-In-Reply-To: <7timm7vdq4vjwn6jo5bwgtbn3f7pdtdch7l5dws76pjg7syqwb@al5mifdmboog>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnvaEdL6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F20F9C4CEE7;
+	Wed, 18 Jun 2025 20:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750280403;
+	bh=yOvlKoSnzKigyD/DVt6KdulZgpulRJtNsiQnSPPPVDs=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ZnvaEdL6UynucTVD3vOCJ5h2nFTjz8zEn3wc3ceu2GxhiDlfzW9IV+C8pkz3vNHZI
+	 nTza8Cw9CUGwrBFnoRPv4wq3N4ktytHLnkafT3B9teh6UDOQT1LAYXEF5S3LOGUo5H
+	 enjlwwU/L3nMvn8qvEaEl67Z342/A+R6tB69hQWZdBa9A8b5+zpM6FqBEWp5Y2z1Ll
+	 Bxc7sG9oaw3AIwJteAuOR37npCQg2Ve7ETl1EL6BuLHqPLaxPAYYVVmtCTKyEVgnlo
+	 rspS6tBd5Y8WU3bVPTgRwNAHlHjxfti/vcbs0q2HzChLgZUJ6pNdzm9C41PVCls8LH
+	 XXbp5b2XEIMxA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250611224604.313496-2-seanjc@google.com> <20250611224604.313496-14-seanjc@google.com>
- <bmx43lru6mwdyun3ktcmoeezqw6baih7vgtykolsrmu5q2x7vu@xp5jrbbqwzej>
- <aFGTYoxlLhZsiMUC@google.com> <7timm7vdq4vjwn6jo5bwgtbn3f7pdtdch7l5dws76pjg7syqwb@al5mifdmboog>
-Message-ID: <aFMoumQ8ILTLr7PZ@google.com>
-Subject: Re: [PATCH v3 12/62] KVM: SVM: Inhibit AVIC if ID is too big instead
- of rejecting vCPU creation
-From: Sean Christopherson <seanjc@google.com>
-To: Naveen N Rao <naveen.rao@amd.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Joerg Roedel <joro@8bytes.org>, 
-	David Woodhouse <dwmw2@infradead.org>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	kvm@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Sairaj Kodilkar <sarunkod@amd.com>, Vasant Hegde <vasant.hegde@amd.com>, 
-	Maxim Levitsky <mlevitsk@redhat.com>, Joao Martins <joao.m.martins@oracle.com>, 
-	Francesco Lavra <francescolavra.fl@gmail.com>, David Matlack <dmatlack@google.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 22:59:57 +0200
+Message-Id: <DAPYMAB44RUZ.7NIWDUWY1UYF@kernel.org>
+Cc: "Trevor Gross" <tmgross@umich.edu>, "Adam Bratschi-Kaye"
+ <ark.email@gmail.com>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>, "Petr
+ Pavlu" <petr.pavlu@suse.com>, "Sami Tolvanen" <samitolvanen@google.com>,
+ "Daniel Gomez" <da.gomez@samsung.com>, "Simona Vetter"
+ <simona.vetter@ffwll.ch>, "Greg KH" <gregkh@linuxfoundation.org>, "Fiona
+ Behrens" <me@kloenk.dev>, "Daniel Almeida" <daniel.almeida@collabora.com>,
+ <linux-modules@vger.kernel.org>
+Subject: Re: [PATCH v13 2/6] rust: introduce module_param module
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Masahiro Yamada" <masahiroy@kernel.org>, "Nathan
+ Chancellor" <nathan@kernel.org>, "Luis Chamberlain" <mcgrof@kernel.org>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Nicolas Schier"
+ <nicolas.schier@linux.dev>
+X-Mailer: aerc 0.20.1
+References: <20250612-module-params-v3-v13-0-bc219cd1a3f8@kernel.org>
+ <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
+In-Reply-To: <20250612-module-params-v3-v13-2-bc219cd1a3f8@kernel.org>
 
-On Wed, Jun 18, 2025, Naveen N Rao wrote:
-> On Tue, Jun 17, 2025 at 09:10:10AM -0700, Sean Christopherson wrote:
-> > Hmm, yes and no.  I completely agree that clearing apicv_active in avic.c
-> > is all kinds of gross, but clearing apic->apicv_active in lapic.c to handle
-> > this particular scenario is just as problematic, because then
-> > avic_init_backing_page() would need to check kvm_vcpu_apicv_active() to
-> > determine whether or not to allocate the backing page.  In a way, that's
-> > even worse, because setting apic->apicv_active by default is purely an
-> > optimization, i.e. leaving it %false _should_ work as well, it would just
-> > be suboptimal.  But if AVIC were to key off apic->apicv_active, that could
-> > lead to KVM incorrectly skipping allocation of the AVIC backing page.
-> 
-> I understand your concern about key'ing off apic->apicv_active - that 
-> would definitely require a thorough audit and does add complexity to 
-> this.
-> 
-> However, as far as I can see, after your current series, we no longer 
-> maintain a pointer to the AVIC backing page, but instead rely on the 
-> lapic-allocated page.
-> 
-> Were you referring to the APIC access page though? 
+On Thu Jun 12, 2025 at 3:40 PM CEST, Andreas Hindborg wrote:
+> Add types and traits for interfacing the C moduleparam API.
+>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+> ---
+>  rust/kernel/lib.rs          |   1 +
+>  rust/kernel/module_param.rs | 201 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  2 files changed, 202 insertions(+)
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 6b4774b2b1c3..2b439ea06185 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -87,6 +87,7 @@
+>  pub mod list;
+>  pub mod miscdevice;
+>  pub mod mm;
+> +pub mod module_param;
+>  #[cfg(CONFIG_NET)]
+>  pub mod net;
+>  pub mod of;
+> diff --git a/rust/kernel/module_param.rs b/rust/kernel/module_param.rs
+> new file mode 100644
+> index 000000000000..fd167df8e53d
+> --- /dev/null
+> +++ b/rust/kernel/module_param.rs
+> @@ -0,0 +1,201 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Support for module parameters.
+> +//!
+> +//! C header: [`include/linux/moduleparam.h`](srctree/include/linux/modu=
+leparam.h)
+> +
+> +use crate::prelude::*;
+> +use crate::str::BStr;
+> +
+> +/// Newtype to make `bindings::kernel_param` [`Sync`].
+> +#[repr(transparent)]
+> +#[doc(hidden)]
+> +pub struct RacyKernelParam(pub ::kernel::bindings::kernel_param);
 
-Gah, yes.  I was hyper aware of the two things when typing up the response, and
-still managed to screw up.  *sigh* :-)
+s/::kernel:://
 
-> That is behind kvm_apicv_activated() today, which looks to be problematic if
-> there are inhibits set during vcpu_create() and if those can be unset later?
-> Shouldn't we be allocating the apic access page unconditionally here?
+The field shouldn't be public, since then people can access it. Can
+just have a `pub fn new` instead?
 
-In theory, yes.  In practice, this guards against an unnecessary allocation for
-SEV+ guests (see APICV_INHIBIT_REASON_SEV).
+> +
+> +// SAFETY: C kernel handles serializing access to this type. We never ac=
+cess it
+> +// from Rust module.
+> +unsafe impl Sync for RacyKernelParam {}
+> +
+> +/// Types that can be used for module parameters.
+> +pub trait ModuleParam: Sized + Copy {
 
-That said, I completely agree that checking kvm_apicv_activated() is weird and
-sketchy.  Hopefully that can be cleaned up, too (but after this series).
+Why the `Copy` bound?
+
+> +    /// The [`ModuleParam`] will be used by the kernel module through th=
+is type.
+> +    ///
+> +    /// This may differ from `Self` if, for example, `Self` needs to tra=
+ck
+> +    /// ownership without exposing it or allocate extra space for other =
+possible
+> +    /// parameter values.
+> +    // This is required to support string parameters in the future.
+> +    type Value: ?Sized;
+> +
+> +    /// Parse a parameter argument into the parameter value.
+> +    ///
+> +    /// `Err(_)` should be returned when parsing of the argument fails.
+
+I don't think we need to explicitly mention this.
+
+> +    ///
+> +    /// Parameters passed at boot time will be set before [`kmalloc`] is
+> +    /// available (even if the module is loaded at a later time). Howeve=
+r, in
+
+I think we should make a section out of this like `# No allocations` (or
+something better). Let's also mention it on the trait itself, since
+that's where implementers will most likely look.
+
+> +    /// this case, the argument buffer will be valid for the entire life=
+time of
+> +    /// the kernel. So implementations of this method which need to allo=
+cate
+> +    /// should first check that the allocator is available (with
+> +    /// [`crate::bindings::slab_is_available`]) and when it is not avail=
+able
+
+We probably shouldn't recommend directly using `bindings`.
+
+> +    /// provide an alternative implementation which doesn't allocate. In=
+ cases
+> +    /// where the allocator is not available it is safe to save referenc=
+es to
+> +    /// `arg` in `Self`, but in other cases a copy should be made.
+
+I don't understand this convention, but it also doesn't seem to
+relevant (so feel free to leave it as is, but it would be nice if you
+could explain it).
+
+> +    ///
+> +    /// [`kmalloc`]: srctree/include/linux/slab.h
+> +    fn try_from_param_arg(arg: &'static BStr) -> Result<Self>;
+> +}
+> +
+> +/// Set the module parameter from a string.
+> +///
+> +/// Used to set the parameter value at kernel initialization, when loadi=
+ng
+> +/// the module or when set through `sysfs`.
+> +///
+> +/// See `struct kernel_param_ops.set`.
+> +///
+> +/// # Safety
+> +///
+> +/// - If `val` is non-null then it must point to a valid null-terminated=
+ string that must be valid
+> +///   for reads for the duration of the call.
+> +/// - `parm` must be a pointer to a `bindings::kernel_param` that is val=
+id for reads for the
+
+s/parm/param/
+
+> +///   duration of the call.
+> +/// - `param.arg` must be a pointer to an initialized `T` that is valid =
+for writes for the duration
+> +///   of the function.
+> +///
+> +/// # Note
+> +///
+> +/// - The safety requirements are satisfied by C API contract when this =
+function is invoked by the
+> +///   module subsystem C code.
+> +/// - Currently, we only support read-only parameters that are not reada=
+ble from `sysfs`. Thus, this
+> +///   function is only called at kernel initialization time, or at modul=
+e load time, and we have
+> +///   exclusive access to the parameter for the duration of the function=
+.
+> +///
+> +/// [`module!`]: macros::module
+> +unsafe extern "C" fn set_param<T>(
+> +    val: *const c_char,
+> +    param: *const crate::bindings::kernel_param,
+> +) -> c_int
+> +where
+> +    T: ModuleParam,
+> +{
+> +    // NOTE: If we start supporting arguments without values, val _is_ a=
+llowed
+> +    // to be null here.
+> +    if val.is_null() {
+> +        // TODO: Use pr_warn_once available.
+> +        crate::pr_warn!("Null pointer passed to `module_param::set_param=
+`");
+> +        return EINVAL.to_errno();
+> +    }
+> +
+> +    // SAFETY: By function safety requirement, val is non-null, null-ter=
+minated
+> +    // and valid for reads for the duration of this function.
+> +    let arg =3D unsafe { CStr::from_char_ptr(val) };
+
+`arg` has the type `&'static CStr`, which is not justified by the safety
+comment :(
+
+Why does `ModuleParam::try_from_param_arg` take a `&'static BStr` and
+not a `&BStr`? I guess it is related to the "make copies if allocator is
+available" question I had above.
+
+> +
+> +    crate::error::from_result(|| {
+> +        let new_value =3D T::try_from_param_arg(arg)?;
+> +
+> +        // SAFETY: By function safety requirements `param` is be valid f=
+or reads.
+> +        let old_value =3D unsafe { (*param).__bindgen_anon_1.arg as *mut=
+ T };
+> +
+> +        // SAFETY: By function safety requirements, the target of `old_v=
+alue` is valid for writes
+> +        // and is initialized.
+> +        unsafe { *old_value =3D new_value };
+
+So if we keep the `ModuleParam: Copy` bound from above, then we don't
+need to drop the type here (as `Copy` implies `!Drop`). So we could also
+remove the requirement for initialized memory and use `ptr::write` here
+instead. Thoughts?
+
+> +        Ok(0)
+> +    })
+> +}
+> +
+> +macro_rules! impl_int_module_param {
+> +    ($ty:ident) =3D> {
+> +        impl ModuleParam for $ty {
+> +            type Value =3D $ty;
+> +
+> +            fn try_from_param_arg(arg: &'static BStr) -> Result<Self> {
+> +                <$ty as crate::str::parse_int::ParseInt>::from_str(arg)
+> +            }
+> +        }
+> +    };
+> +}
+> +
+> +impl_int_module_param!(i8);
+> +impl_int_module_param!(u8);
+> +impl_int_module_param!(i16);
+> +impl_int_module_param!(u16);
+> +impl_int_module_param!(i32);
+> +impl_int_module_param!(u32);
+> +impl_int_module_param!(i64);
+> +impl_int_module_param!(u64);
+> +impl_int_module_param!(isize);
+> +impl_int_module_param!(usize);
+> +
+> +/// A wrapper for kernel parameters.
+> +///
+> +/// This type is instantiated by the [`module!`] macro when module param=
+eters are
+> +/// defined. You should never need to instantiate this type directly.
+> +///
+> +/// Note: This type is `pub` because it is used by module crates to acce=
+ss
+> +/// parameter values.
+> +#[repr(transparent)]
+> +pub struct ModuleParamAccess<T> {
+> +    data: core::cell::UnsafeCell<T>,
+> +}
+
+We should just re-create the `SyncUnsafeCell` [1] from upstream...
+
+Feel free to keep this until we have it though.
+
+[1]: https://doc.rust-lang.org/nightly/std/cell/struct.SyncUnsafeCell.html
+
+> +
+> +// SAFETY: We only create shared references to the contents of this cont=
+ainer,
+> +// so if `T` is `Sync`, so is `ModuleParamAccess`.
+> +unsafe impl<T: Sync> Sync for ModuleParamAccess<T> {}
+> +
+> +impl<T> ModuleParamAccess<T> {
+> +    #[doc(hidden)]
+> +    pub const fn new(value: T) -> Self {
+> +        Self {
+> +            data: core::cell::UnsafeCell::new(value),
+> +        }
+> +    }
+> +
+> +    /// Get a shared reference to the parameter value.
+> +    // Note: When sysfs access to parameters are enabled, we have to pas=
+s in a
+> +    // held lock guard here.
+> +    pub fn get(&self) -> &T {
+> +        // SAFETY: As we only support read only parameters with no sysfs
+> +        // exposure, the kernel will not touch the parameter data after =
+module
+> +        // initialization.
+> +        unsafe { &*self.data.get() }
+> +    }
+> +
+> +    /// Get a mutable pointer to the parameter value.
+> +    pub const fn as_mut_ptr(&self) -> *mut T {
+> +        self.data.get()
+> +    }
+> +}
+> +
+> +#[doc(hidden)]
+> +#[macro_export]
+
+Why export this?
+
+---
+Cheers,
+Benno
+
+> +/// Generate a static [`kernel_param_ops`](srctree/include/linux/modulep=
+aram.h) struct.
+> +///
+> +/// # Examples
+> +///
+> +/// ```ignore
+> +/// make_param_ops!(
+> +///     /// Documentation for new param ops.
+> +///     PARAM_OPS_MYTYPE, // Name for the static.
+> +///     MyType // A type which implements [`ModuleParam`].
+> +/// );
+> +/// ```
+> +macro_rules! make_param_ops {
+> +    ($ops:ident, $ty:ty) =3D> {
+> +        #[doc(hidden)]
+> +        pub static $ops: $crate::bindings::kernel_param_ops =3D $crate::=
+bindings::kernel_param_ops {
+> +            flags: 0,
+> +            set: Some(set_param::<$ty>),
+> +            get: None,
+> +            free: None,
+> +        };
+> +    };
+> +}
+> +
+> +make_param_ops!(PARAM_OPS_I8, i8);
+> +make_param_ops!(PARAM_OPS_U8, u8);
+> +make_param_ops!(PARAM_OPS_I16, i16);
+> +make_param_ops!(PARAM_OPS_U16, u16);
+> +make_param_ops!(PARAM_OPS_I32, i32);
+> +make_param_ops!(PARAM_OPS_U32, u32);
+> +make_param_ops!(PARAM_OPS_I64, i64);
+> +make_param_ops!(PARAM_OPS_U64, u64);
+> +make_param_ops!(PARAM_OPS_ISIZE, isize);
+> +make_param_ops!(PARAM_OPS_USIZE, usize);
+
