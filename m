@@ -1,96 +1,176 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44A802C3258;
-	Wed, 18 Jun 2025 11:50:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8B82E2EF4
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:51:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247443; cv=none; b=UaIDVaDr4XiVtpsmzOh0kmberU+qo6oXdxODhNixOpi5JET6z/eHbDdfoDa3ObRS6u+VXQUmmh+cLyZOpc+ZTAglJt+mhWAKog48dOgyMv3obKbHsO2Eiw1Krrv1HHjc4GDPc1Ob4Gjr3PlIXZszATQ0LbbXPKcfZ3v7g7mn2J4=
+	t=1750247470; cv=none; b=aREQ6aQ6TiHGbet/HTmSWjHROXHIBzti8C+ZapDtFZhbiBA3oQmI1EU8XasCwbcMbFjJXucIYannusW9fYkPd9D/4qrRWRFTuiPz4AzFi0gp0Q0lgSz90aV1NxDQKpGhzmRtq70lr5xXLJL2bi3fl6ltnu2mxpoqo0PN5Y+6oCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247443; c=relaxed/simple;
-	bh=58scXsAkA4t48fEoJuCh83iHGTHverEVaA23zpz119U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PLNELBpfJw5FOwfMgK0862TgKkr0IqhNJCvVrohKeWCQz+oDtaBZs567BZG5Rz43ODKMOoSwHEHIBXSEcqdA4kv1Ecl0uMGx9n729e+xFJUncgylkLqUicD6Vb8v9JhNDHTGrjfFczQVYgIeOvXFJ7rlcNwsiUdO9Fg8Ae0d8vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bMhgf51jhz9scZ;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id fmCp2zo6kAVw; Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bMhgf4Fcxz9scH;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 8B7228B780;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id KNGxpyBZzbGS; Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 18F7F8B776;
-	Wed, 18 Jun 2025 13:42:54 +0200 (CEST)
-Message-ID: <51bc73ca-3b1f-4f1a-b75b-7bdeffd7a395@csgroup.eu>
-Date: Wed, 18 Jun 2025 13:42:53 +0200
+	s=arc-20240116; t=1750247470; c=relaxed/simple;
+	bh=BFnIK8yylhMzA6GVauXQsDSU4rCOQzl1grzcSe1FH88=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JPt5H+UcOeR/1sOMWd83y+pqF9Mbo8zU8EKaJs1c26TwjlEf7YJLFziyjEJTv7V7alASHwQSy+cGS9AKRO+D/cgaCX4dnD0JzJX6Ph7niB+07Hcl72aTYDYcYmm59oSUCe5oa8tmE0snxnB1I7Eaql2KFU86uA2S2pxWGLB6W4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bMhpY29VLzvZBf;
+	Wed, 18 Jun 2025 19:48:53 +0800 (CST)
+Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 075DE140275;
+	Wed, 18 Jun 2025 19:51:05 +0800 (CST)
+Received: from kwepemq200018.china.huawei.com (7.202.195.108) by
+ dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 18 Jun 2025 19:51:04 +0800
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemq200018.china.huawei.com (7.202.195.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 18 Jun 2025 19:51:03 +0800
+CC: <yangyicong@hisilicon.com>, Shameerali Kolothum Thodi
+	<shameerali.kolothum.thodi@huawei.com>, James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, Ali Saidi <alisaidi@amazon.com>, "Leo
+ Yan" <leo.yan@linaro.org>, Will Deacon <will@kernel.org>, James Morse
+	<james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, yangjinqian
+	<yangjinqian1@huawei.com>, Douglas Anderson <dianders@chromium.org>, "Dmitry
+ Baryshkov" <dmitry.baryshkov@linaro.org>, Adrian Hunter
+	<adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa
+	<jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim
+	<namhyung@kernel.org>, Linux Kernel Mailing List
+	<linux-kernel@vger.kernel.org>
+Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
+To: Leo Yan <leo.yan@arm.com>, Mark Rutland <mark.rutland@arm.com>
+References: <aEyGg98z-MkcClXY@x1>
+ <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
+ <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
+ <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
+ <20250616130736.GA788469@e132581.arm.com>
+ <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
+ <20250616160811.GA794930@e132581.arm.com> <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
+ <20250617141810.GB794930@e132581.arm.com> <aFJ-Za6oRGKKASN1@J2N7QTR9R3>
+ <20250618112440.GC794930@e132581.arm.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <3dbc1f1b-a325-1525-f9f0-8172033438ec@huawei.com>
+Date: Wed, 18 Jun 2025 19:51:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] Switch get/put unaligned to use memcpy
-To: Ian Rogers <irogers@google.com>, Eric Biggers <ebiggers@google.com>,
- Yuzhuo Jing <yuzhuo@google.com>, Andy Lutomirski <luto@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>,
- Arnaldo Carvalho de Melo <acme@redhat.com>, Al Viro
- <viro@zeniv.linux.org.uk>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20250617205320.1580946-1-irogers@google.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250617205320.1580946-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250618112440.GC794930@e132581.arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
+ kwepemq200018.china.huawei.com (7.202.195.108)
 
-
-
-Le 17/06/2025 à 22:53, Ian Rogers a écrit :
-> The existing type punning approach with packed structs requires
->   -fno-strict-aliasing to be passed to the compiler for
-> correctness. This is true in the kernel tree but not in the tools
-> directory resulting in this suggested patch from Eric Biggers
->   <ebiggers@google.com>:
-> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2F20250614044133.660848-2-ebiggers%40kernel.org%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf08ddade1316a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894967529%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=29QUBLnUowncZiTH4z74Ec1olUlX0OTYnUNGDvWxX1o%3D&reserved=0
+On 2025/6/18 19:24, Leo Yan wrote:
+> On Wed, Jun 18, 2025 at 09:52:53AM +0100, Mark Rutland wrote:
 > 
-> Requiring -fno-strict-aliasing seems unfortunate and so this patch
-> makes the unaligned code work via memcpy for type punning rather than
-> the packed attribute.
+> [...]
 > 
-> v2: switch memcpy to __builtin_memcpy to avoid potential/disallowed
->      memcpy calls in vdso caused by -fno-builtin. Reported by
->      Christophe Leroy <christophe.leroy@csgroup.eu>:
->      https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flkml%2Fc57de5bf-d55c-48c5-9dfa-e2fb844dafe9%40csgroup.eu%2F&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf08ddade1316a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894985987%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=l1LJP3XPKVuhDpiHxxkfWBiNPMYaBT9YXGBFzs6wLpY%3D&reserved=0
+>>>> Other than that, I think that userspace should just maintain its own
+>>>> infrastructure, and only pull in things from kernel sources when there's
+>>>> a specific reason to. Otherwise we're just creating busywork.
+>>>
+>>> I agree with the methodology.
+>>>
+>>> Since Arnaldo is facing build failure when sync headers between kernel
+>>> and perf tool, to avoid long latency, let us split the refactoriing
+>>> into separate steps.
+>>>
+>>> As a first step, I think my previous suggestion is valid, we can create a
+>>> header tools/perf/arch/arm64/include/cputype.h with below code:
+>>>
+>>>   #include "../../../../arch/arm64/include/asm/cputype.h"
+>>
+>> Directly including the kernel header introduces the very fragility that
+>> having a copy was intended to avoid. NAK to that.
 > 
-
-Does this new version also fixes the failures reported by the robots:
-- arm64-randconfig with clang 21
-- i386-randconfig with gcc 12
-
-Christophe
-
-> Ian Rogers (3):
->    vdso: Switch get/put unaligned from packed struct to memcpy
->    tools headers: Update the linux/unaligned.h copy with the kernel
->      sources
->    tools headers: Remove unneeded ignoring of warnings in unaligned.h
+> My suggestion is not to include the kernel header, nor to modify the
+> copy header. :)
 > 
->   include/vdso/unaligned.h        | 48 ++++++++++++++++++++++++++++-----
->   tools/include/linux/unaligned.h |  4 ---
->   tools/include/vdso/unaligned.h  | 48 ++++++++++++++++++++++++++++-----
->   3 files changed, 84 insertions(+), 16 deletions(-)
+> Instead, I suggested creating a new header within the perf tool (under
+> perf's arm64 folder) and then include the copy header in tools:
+> 
+>   tools/arch/arm64/include/asm/cputype.h
 > 
 
+sorry for the misunderstood.:(
+in this way we still have the divergency in the long term and as a workaround
+this works same if we partly update the tools/arch/arm64/include/asm/cputype.h
+with only necessary MIDR updates and keep is_midr_in_range_list() unchanged.
+
+>> I've replied to the same effect Yicong's patch [1,2].
+>>
+>> If we want to share headers between userspace and kernel, we should
+>> refactor those headers such that this is safe by construction.
+>>
+>> There is no need to update the userspace headers just because the kernel
+>> headers have changed, so the simple solution in the short term is to
+>> suppress the warning from check-headers.sh.
+> 
+> Sure, makes sense for me.
+> 
+> @Arnaldo, as Mark suggested, do you want me to send a patch to remove
+> cputype.h checking in check-headers.sh or it is fine to keep the warning
+> until finish the header refactoring?
+> 
+> @Yicong, could you confirm if you proceed to refactor the MIDR? thanks!
+> 
+
+please feel free to take this over.
+
+> Just note, I searched tools folder and found kselftest also uses the
+> cputype.h header. The refactoring should not break the files below.
+> 
+
+they shouldn't affected. I did a kselftest build test with my latest patch
+and they were not affected.
+
+thanks.
+
+> $ git grep cputype.h
+> perf/check-headers.sh:check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
+> perf/util/arm-spe.c:#include "../../arch/arm64/include/asm/cputype.h"
+> testing/selftests/kvm/arm64/psci_test.c:#include <asm/cputype.h>
+> testing/selftests/kvm/lib/arm64/vgic.c:#include <asm/cputype.h>
+> 
+> Thanks,
+> Leo
+> 
+>> [1] https://lore.kernel.org/linux-arm-kernel/dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com/T/#m23dfbea6af559f3765d89b9d8427213588871ffd
+>> [2] https://lore.kernel.org/linux-arm-kernel/dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com/T/#m6acbfa00002af8ee791266ea86a58f8f994ed710
+>>
+>> Mark.
+>>
+>>>
+>>>   static bool is_perf_midr_in_range_list(u32 midr,
+>>>                                          struct midr_range const *ranges)
+>>>   {
+>>>           while (ranges->model) {
+>>>                   if (midr_is_cpu_model_range(midr, ranges->model,
+>>>                                   ranges->rv_min, ranges->rv_max))
+>>>                           return true;
+>>>                   ranges++;
+>>>           }
+>>>
+>>>           return false;
+>>>   }
+>>>
+>>> Then, once we can generate a dynamic MIDR header file, we can use that
+>>> header and define the midr_range structure specifically in the perf.
+>>> In the end, perf can avoid to include kernel's cputype.h.
+>>>
+>>> If no objection, Yicong, do you mind preparing the patch mentioned
+>>> above? Thanks!
+>>>
+>>> Leo
+> 
+> .
+> 
