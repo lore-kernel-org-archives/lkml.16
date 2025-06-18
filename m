@@ -1,294 +1,728 @@
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010014.outbound.protection.outlook.com [52.101.229.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61A5249E5;
-	Wed, 18 Jun 2025 13:25:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253161; cv=fail; b=OSSNnT6krMfMrw6ElR8S8vbnhNPBYgza4rkt5sGdTizjf9moyb+s4CbTJUxQGmPKSN8aW+SppQFbTejcKUOCdELJZGexEehBBoSzBbtzVeNTHq6FHmJfuYCv/PiTecNP519/1sCiQfdA6tI/gfW7lPQeiZftBlkqARt9Onludlk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253161; c=relaxed/simple;
-	bh=fGPPmjI5VTQN9QJRbmgmrGLFzABPPABIMvbDJpWppho=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eb2qlmEGdH0QzMroDMQDHX/uHHiMTxljTmu5buQs35WSsHk4YM4loT9BTJS9OewiNmtKITlI7WCA6I2XuVYYD0dtNus7Pj0z/sm9pJyvHuYS/Ib6OxEB66zFBG2C5xaDSOLvdUjNiLDLtJh00CMAc2g3fn/itD315L4bi1Ywa2U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=Oy6ENT3u; arc=fail smtp.client-ip=52.101.229.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858BB274FC2
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750253193; cv=none; b=i303ld1OqdzgXKU7tqn5aAZgAYtmOZE4BxUXOzKnA3zRlLBxT94tBFh17SURL7LexZXhYx/vHJzA5WwPtKr9a4+AWemIFmdDi+SRRnH9TBiBrCU11Cm9Xpu0ESi0a4+8fGxF/SmdT4qnLAtxJLLhjSnMV7Xu6oo+xMeQ3u0Oi5o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750253193; c=relaxed/simple;
+	bh=bYrHSQVYNOUayEsJLSoaaBxt1LOaJZAAWeKboOTC6bo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Ikz4dqhV1KgqUkp3sdfzAjOO4BPsJlZhj2Fkt3bxStV431c+O0IkdbO+GfPtX8Syi822xVIgcKdJLVR0EKtrEXOvv5lvzCZjES4eH9QDVq+mJS2z6NoIO6ayfF8hmLvlv7ZqmgylqlDyrb27CHfynXh0Uhjcg9to5sByHZrhA54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--richardycc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gyZqYVDI; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--richardycc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="Oy6ENT3u"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IW8zSClKOMS252Mwa/nAciHx1bMwtfRDyI90HQXH4z1oJInGGIS7i2MDya2WqOrc4DJV7Ia4g5+AiMItgc/MRUY7dxxr21IlaVoKDIVdT5vHOySIPpoEVtfYPX/Y6FF/wXrZ7xdiZ4uYpYZbQsZ0XVvkqu9QbJS9NqIOEQ/QZ00Y48ZK6LN36J58XWhU7HoEm9h/E69sbJ4oii95rqjC/nkoBvTcg8qv5YgQauL+Z0n9Wm+GpKIE10yj9YXO4m0oVPUZjJvIXofeG7cD3DrCRxZwrguNGfoDIy+fn0dIoIDCDYd0LE0HWgFEuQHSC847EwPb7DixTCqzlLA/IyuMig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fGPPmjI5VTQN9QJRbmgmrGLFzABPPABIMvbDJpWppho=;
- b=AmmDTdWIhzA4q2sMy6/H0TgmjZOXdbGliSdVwNeuKzH4UdTYWvtXxGU/YPFqu80Y3FxLBUBTQ82LiTYWOHYlsxHHixblTst52RfCwzfdlGD+b5YRFevTQTnJP6BioQRte3snzPOtFuyyNKcZGZcad2C8ygwbxW8EWr8+4kloU4Txu15mA49gOwpI1iaW847MhOZ0mc3IUqYXdcllmLsSFgj5cCrnnQaS9ZQUTaerK23Bn3fC3KPRkPvii6AppOPV4l2wIrM4FRnoRxSvj2oAe7kIL+tw1fcGSziDaFr2vLzrzve/CeA/LLr/3P7cam24mw6bn2WUaBvODPn5wbI7DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fGPPmjI5VTQN9QJRbmgmrGLFzABPPABIMvbDJpWppho=;
- b=Oy6ENT3uhBHdcO4mBhGNugtNvU6nnvMN4aG8XLHqmlkseq+UlQH5gGKU4sUXWhunex7CwiO/Bs49KMtb+DHbDzBpyTYwcO1pT9kypWf7opIwukOvq6n6mbIVedkwy0oDSeoBZmNvH4wEGdlpJkccxcK4ssYFcWcsGztrJUCDUgg=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OS7PR01MB15130.jpnprd01.prod.outlook.com (2603:1096:604:370::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Wed, 18 Jun
- 2025 13:25:55 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 13:25:54 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda
-	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert
- Foss <rfoss@kernel.org>, laurent.pinchart
-	<laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus
- Damm <magnus.damm@gmail.com>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
-	<linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org"
-	<linux-clk@vger.kernel.org>, Fabrizio Castro
-	<fabrizio.castro.jz@renesas.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: RE: [PATCH v6 1/4] clk: renesas: rzv2h-cpg: Add support for DSI
- clocks
-Thread-Topic: [PATCH v6 1/4] clk: renesas: rzv2h-cpg: Add support for DSI
- clocks
-Thread-Index: AQHb0YbvZKdKpGoLPEeGBmVqxN0ROrQAp8mggAUMkQCAA1B+sA==
-Date: Wed, 18 Jun 2025 13:25:54 +0000
-Message-ID:
- <TY3PR01MB1134671558883AAE2C3E0A2C78672A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20250530171841.423274-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250530171841.423274-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <TY3PR01MB1134654039BA3BAB5DA8C0BB08677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <CA+V-a8tSMt9SaHAdeEd4vj=QmaDz5bMd4hwJUCx_mBF8-mw2kw@mail.gmail.com>
-In-Reply-To:
- <CA+V-a8tSMt9SaHAdeEd4vj=QmaDz5bMd4hwJUCx_mBF8-mw2kw@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS7PR01MB15130:EE_
-x-ms-office365-filtering-correlation-id: 70e8a881-3e00-4c28-c16d-08ddae6ba756
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?MU5NVGQwVU01SzFkby9xL1hZMTFaV0ZUb2pMN2UyaXJuOG8zNERUMkpXYkt5?=
- =?utf-8?B?c1RNUWRTb2JlZDZvaVNtZ0tnNGtuUXhIVFBiZ2NjNENZWnlRTnZRRkd0UWpC?=
- =?utf-8?B?bXNkMWt3alRLc0lmdG50VVJQZHVHem1pNnpsZWMvZjRVdFpYTnJaeE1Qb0Qv?=
- =?utf-8?B?Ty9KYVNod2VkUHFFMDYyb0ZPYTJUdC9SWEU0RWM0TUM5N0hqVVpZa2J5WnZV?=
- =?utf-8?B?TzI1RndvaDFUdGJrWWZMLzRTb0VSN0F1YXUrM2NrM0podUpneVpFak54WVU1?=
- =?utf-8?B?ZXFQeWVqK0hXOXpRMHN3NmE0UC9RTjlCUVVhSFExOGlYbUh1WlVQcm9YZGJG?=
- =?utf-8?B?cThKWU5zeVVsQ0R2ZG5DNjhOREF6aU1jaTBEa01FdDY0QjYyU1QwVXhOMkN0?=
- =?utf-8?B?c3RzdUVDUmJvSWRpRnZ5c090TVlqbk1CTlVJVzJBcW5JVjJXSjdPUURBNWdY?=
- =?utf-8?B?VkFqWjAvK3d4RW1HUHVVWEsxWVBvQklUVVlSWlltSXY1UUtqcDlrZ3lmN0t5?=
- =?utf-8?B?UXU5Y0J0SzhKTWpBbUFPZC9YVER5aEtJVzJGZlE2RWZRclpYdnpZYS9nZlo5?=
- =?utf-8?B?U24zWWJHa3RSelJLMW1lZ1hKTllKSzNGWjJPVHo1ZzhkMnVZTzg3Skh0QS9n?=
- =?utf-8?B?U2VKSEFwODlVeFJSb2NPYThVcGY5dEE3Y01ZL2hJcGhkNy9CUTVINmp3L3BN?=
- =?utf-8?B?QkJtaXBtajBoTVovUlJCTUZwSmJSdUZVRlY4TWk0L2tjbFREQ2dtbm5keHFK?=
- =?utf-8?B?VUZlMVByUFN2cys2NFdLSlNjQnVmZ2NXYWdhNm5jQ21tUVM2SnlseElZSno2?=
- =?utf-8?B?eFQ5Wkk5Q3F3Qm1abUFKTVdVZWI1Vmo3UXRHdnhXSDliMndONkpIcGpwYThS?=
- =?utf-8?B?b09lWjRObDBnOEJMaENlUUhES2ZSSVVPME4vQmdIL2M5SWx0dGZzOEZGb1ZT?=
- =?utf-8?B?cmYvVHJmaXRuaWxVWHVqdHlrSDF3N3BsODlQY0xrWU9oa01SaFR4Sy9RMDJl?=
- =?utf-8?B?VDFxQzVVUEs4dlk3SmhQTVdPVEFvTXhPY3IwbDRpK2pQczh0TzVlMGlQTDBZ?=
- =?utf-8?B?OCtOZW5FWnk0NldPMTJsbm1WeDhEYnZUSmFFVzlxRCtkK1V2YTdqeURFWEM1?=
- =?utf-8?B?cE82SStOcVpGNkpvVURZbkpyUDdMdVVja21NTHJMMVVaM2xYcStoTmxsUzd3?=
- =?utf-8?B?WXdpTWU2SUc3TUR1YzNXaGthNGNpenFPc0kvemdnVjdoT1Nzay9Qcm8zMTdl?=
- =?utf-8?B?aFNLcURiMGxWd3FMQUtReHpUM0k5Z2NZNk41WllvTnZ4ZzczQktrSGdRT0ZC?=
- =?utf-8?B?RHlDcnZIK2ZwUmdJQkNBL3dTSmsyQnhDejNIekw2TEt0Y1h1d3k0M2pwVSts?=
- =?utf-8?B?cXZlMVVvT2hOVnlHU1gxOXB5REFjWlhYRjczVEpmV2IrUUVUYnBsKzBjZjJS?=
- =?utf-8?B?TnlUSGZoTnJ1czVraXRkTC9ZYUlraGg4MDJxZnpCMTdTZlJjTUdBT1hqcW1l?=
- =?utf-8?B?SlBkUFVoeG9rVTVWa1pjU05UVWMxbGlqZCtmNEFyWUJHMDRFR3Rlc3ZVZnpG?=
- =?utf-8?B?WjlWL2JYSmVqd2YzNlRpeHJxNHdPQjdyZkZQc09OaFRVc0gxOGVDMURLdkFZ?=
- =?utf-8?B?ck5OYkRIZWhWSlJvMisvOEd6SmQ0dGZZZytlWDdEVGFnWGNrOHlGSDJJVkdZ?=
- =?utf-8?B?K1dQWjlaUklLeFQrWklRYmxaMTFSTytVeHd5UVlNa3gwcXZEWjlSQy9wa3V6?=
- =?utf-8?B?ckoxMUR5Q2YvWFJnSStHSm9aczZVcytPZ3FiRU83a2V4YThRaHJSb3pXNnBI?=
- =?utf-8?B?REJWYmNXYituWDdSY2EycXJSS2daUGlrY3JPUFlwZTFmRzJjM3d4TkUwK0kr?=
- =?utf-8?B?eXRUeTVNTkpwbnFNTlpHekF3dVFhMVRwbExkb0RIeDc5MytBZjJOMzJ1dXY3?=
- =?utf-8?B?UlI1Nk80UUlNc1l5cE5lSzl2MUoxUHNCQ3k3UUo5WW1QOTZTMFphMG91cncw?=
- =?utf-8?B?YStvLytFR1F3PT0=?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?M0ZyNWxNc3hGRExyV0RNTXI3UExWS2J2WEpkYnlQaXd0M0x1U0JIWXgyd3g1?=
- =?utf-8?B?SklZY1BPRStaaHk5clJMaDZoVjF2bXRqM2pHeFpteG54Q2I1L1diNFE5d1Nx?=
- =?utf-8?B?V084SDNjRkRFN1l4MzRqQkgrMFZEV1huNnhpZmFTVVdWNHhJaWZGbWFGcWdO?=
- =?utf-8?B?MjZKNmVYYmlqZXNHRnd2ZkQ0WG4zMDN1ZUU4b3hJTWgvTjhldlRVRUNOdmM5?=
- =?utf-8?B?TDdzNUJVQzVlTC9vQjdkUHhsTUZPV0Q4a0IzQU5rYmxyUDJ3bjVLWGxlY3VT?=
- =?utf-8?B?NDVoNmNRLzFvVldpMUI3NEVpdXZlRXlCUTdPc1J3WlJOdWdkNFpQWUozSzJS?=
- =?utf-8?B?c05Ra2piUDJqdkp1K0ZmcEVFZkVVUk9kVW1pR3F2TE4zczdDMlY4RDFHYjZ0?=
- =?utf-8?B?Tis0SmhQdERxNW95VktGeU9NNEUveXNaMm5xVXViNFIvZFpMZHRBQ1FYQUpw?=
- =?utf-8?B?WWU4Q2dFaHU5RnNyd0VEVTc1a2poYSt6UTFSL1o3Yy8rWUFKWmRqa005Qnpl?=
- =?utf-8?B?Y3pkZHVmT2djVXVOQVZybWFMakh5aVRnRldpR0RIV2NxdlAzbUZ4RE1uakdt?=
- =?utf-8?B?b21QOUJhT2RTRURKVnhabTVTdmRPMm1CK2hGUXNFUlNMQ01NbEh2TGg4ZTBT?=
- =?utf-8?B?czJQdXFHMURMK015RzdVM1RPQTZKZW8rQmg2ZXpTSVpoRW5QbHdvd3d4Nng3?=
- =?utf-8?B?OXpkb3hIeFI3K2R6TjBWMW83NE0rVm85b0xlenlVWWcwUzZhU1VqMFRETzdO?=
- =?utf-8?B?MERvQkQ1bTh0Q3BnSjZzOW5KQzl0dWpoSlRHQUxqYmRlSERNODJjcGk4cFdU?=
- =?utf-8?B?VEcvNEt4VTBWelNaVzFOVWkxRndQdjlnaHlvSzBNazFCSHgyVWNWNTMwS3lL?=
- =?utf-8?B?Z2xXaXZRdlRvaUlER3RCeVg1emFZYnNmc05ab0VyNjd3SEh0TW9KdjhkeEUy?=
- =?utf-8?B?bWhERmxuY09DSmNKYlEvdU1wQ08waU41bjR5blhyUU1PMEQwRjExamxKTFox?=
- =?utf-8?B?b24zSFBPZDN0dG9RMC8yUElUUlFydHhPcEd0UWRHNi9SYWtDRnZFcSs0NWFo?=
- =?utf-8?B?QnZEWjA3SWhhUmtmRWVsdXhhUzJrMmdWR3NPQVQzZzhTd3htMUZVN29ldmds?=
- =?utf-8?B?a2toRitIaTB3cDdrbzZBSnVJOUFoRUYycUsweUlzYlZ6L1E1T0N6dDhmeGpy?=
- =?utf-8?B?M0s5L0dvQm13dG5WcWlHMnlOdW5SbnpVdVhjN0ZyUlRJTXd2ZldaRXFaQjZY?=
- =?utf-8?B?SFJvclM1MXBXVzR0L1hGOTVZZDU4VEVsSDF2Z2NUU0lQaU52Tmk1WnZ5SHFN?=
- =?utf-8?B?cVdFSWdFYUZPVFBWOXNBU1hXSXF4SGRrNkZrb08xYmhjQlQzZXIrVjBEalV0?=
- =?utf-8?B?VGpXV1c5N1krUDlIZkp6MG1KWWpaYTZ2bGd2dTRnUmFVcDZSc3NONncxTXQ4?=
- =?utf-8?B?U1l3ckdvbVQzcEVPazU3Z2ZSSEZKcU5vUVFrS1F0RE9ycldxY1paYjNxaUZ4?=
- =?utf-8?B?aXhjUnVOMFA5c2p4dVFVemVYQkFhTDFEZnh5dGc2Nk1QcDV3cGlzV0VHNEV1?=
- =?utf-8?B?TlJWc2RXYW4rZWpTenAvc3Mzb2dYcHB4amlPYzRqTGd2amxKeExBTVVWLzNp?=
- =?utf-8?B?MzBiaW9jYXRmWU10NHdLRUowWnlSTCswZlVXamtPL0MrL0ZiNWFCa09GTWdN?=
- =?utf-8?B?b1ZWMUMrTGxzQnorYlJ5Lzdaa1dRbHBBV2ZpQ21zRk9INXVWQ3h4NGhaTmx1?=
- =?utf-8?B?dXhOellWR1VPT0NMSXA5QlgvWDZnWG4yQ3dHdGgvRW5uOGZISUNjYzFQNkpK?=
- =?utf-8?B?bFZ0bE41SkpUQ2pXU09lTFIvTEFWb0FWcXRvYkpIaVdVTHI1MTRQREhIMmIr?=
- =?utf-8?B?OXd3SUNVRTVVUkJ1a0RFYWZWb0F6UDdkaDRCbnRKQjdNV3JFTFpzRkZpQ1Fq?=
- =?utf-8?B?UGpJeHNIaGhhbFcwbzd0YkpFSm1lc2ZsL29NWVlRekNEUFVMVkVYS0F5UDhW?=
- =?utf-8?B?L1hNT1A1Mi9FaDBaTHlscXJic1VDQkd4d2RiVDl6VkRMN0ZKYnZCT3dEOUgy?=
- =?utf-8?B?UXdFdFhmcEFIV1Y3U2NubVhjTXFOZzk4WXNicVRVbFpIV0FXajl3R0JhVStW?=
- =?utf-8?Q?s0YX5JkPTbL4oPigtLEyTF1oQ?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gyZqYVDI"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-234dbbc4899so104838125ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:26:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750253191; x=1750857991; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=W7GJ0CAsHPIqX2Owo4ue8T4Rk2EdRyqQpbzciyT4MnQ=;
+        b=gyZqYVDI8Me000aaCp+GRlcpS7djYSStNdXAMJx0qC44IyhG1KQPYAWcMRpxVikybg
+         Pq5F/vhxpZ+6svN1yLmxx0dchubzwHn0XCzcYA8SimyfEk5HWAFkBlXmeIXzlvUnFE4y
+         sHj/NSDw/Q5cT0FTLkGl2183RiHILyNGMiA31vYv8w1MhTzdozYqLqO5gnPjEsjc2tku
+         V6bSzupdIMkxXnPwPIImZpOpPDu7VVL09ZYHN0g6uYxYFPmxSbo4MYCNZrxjVSGUiPB4
+         DPMRpJvC2gr7Rpi15/wFqw/DBI5Z/UHYCJNqbl0K6NsXDfGH1zWURMOJNrEeubAWHFPu
+         K8gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750253191; x=1750857991;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=W7GJ0CAsHPIqX2Owo4ue8T4Rk2EdRyqQpbzciyT4MnQ=;
+        b=q4Gle0jvdkxXer29zsnUfqZyMoa9z/pBKrKFpMl7Dgud1G6ctDaKHXrQio+g3BNga2
+         SDXaR4qNMV0c4oghql/QXYs035SbQbsbbWvQbwWhpTyqoG66PLRKH4anDQY3oEjHYqAJ
+         RHMs1dx7evoVOZkMm2aTPAjka8HrEK50sEsmlg2c84g4r14tC0RicLZbsgjFxKHB+pdC
+         iM1BvfxV8Ad19RD9fub1YOriXo5sBTiGBtXKTZMntJ0QiU+LR58gXD5tI7AL/3FCAtG8
+         Rlhu2ZSoOQ6Mv2wZ9Md4F+UDrxH5SYF8x4+NZsRvd7x4bDEcq+iqtWUVnN8TgvWoaAhC
+         sPVw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKCEB9AbuMKn8vN0Uu/s7yDjv6wvkTo7VX5LvF1PQc0wMhXdkkYO9baRowbvhDk9edX5lfZzEMkBOAzwY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywo2yI+Q/XUFs7+wowopbQImEgqGHRuzGZWywww2MMbWGfOHtAp
+	dcWdMp8zXXvi6Y0drTUXUs0wqLtPueFNg8GGa4Um+/X4umUbYbyeQmRB1qU35Nw7ib6uW2zCggp
+	I0rv/PqK96gbzJZOCpcYM
+X-Google-Smtp-Source: AGHT+IEMboGn3F8NlMbfTFMekCEuRM6W/hQZqKmJzSmEZMuOhl9cMu8YBKUPk2+WBPekkrBULauJt3S7ZAY9MgVG
+X-Received: from pjtd4.prod.google.com ([2002:a17:90b:44:b0:311:a4ee:7c3d])
+ (user=richardycc job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:760f:b0:236:6f5f:cac1 with SMTP id d9443c01a7336-2366f5fcea1mr169653105ad.46.1750253190946;
+ Wed, 18 Jun 2025 06:26:30 -0700 (PDT)
+Date: Wed, 18 Jun 2025 13:26:22 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 70e8a881-3e00-4c28-c16d-08ddae6ba756
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 13:25:54.8069
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: w/Qv0R7yP+61GHVDkzNfkWgUoumHGesKhPQEDXMqzqtgHyTiZ+pTaTYF9HMEwYGeCEXXUR3lk4jZADvaPDVZDTqa0yT6bGssRW6RXFr+aIc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB15130
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.rc2.696.g1fc2a0284f-goog
+Message-ID: <20250618132622.3730219-1-richardycc@google.com>
+Subject: [PATCH] zram: support asynchronous writeback
+From: Richard Chang <richardycc@google.com>
+To: Minchan Kim <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Jens Axboe <axboe@kernel.dk>
+Cc: bgeffon@google.com, liumartin@google.com, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, Richard Chang <richardycc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-SGkgUHJhYmhha2FyLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGRy
-aS1kZXZlbCA8ZHJpLWRldmVsLWJvdW5jZXNAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPiBPbiBCZWhh
-bGYgT2YgTGFkLCBQcmFiaGFrYXINCj4gU2VudDogMTYgSnVuZSAyMDI1IDExOjQ1DQo+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjYgMS80XSBjbGs6IHJlbmVzYXM6IHJ6djJoLWNwZzogQWRkIHN1cHBv
-cnQgZm9yIERTSSBjbG9ja3MNCj4gDQo+IEhpIEJpanUsDQo+IA0KPiBUaGFuayB5b3UgZm9yIHRo
-ZSByZXZpZXcuDQo+IA0KPiBPbiBGcmksIEp1biAxMywgMjAyNSBhdCA2OjU34oCvQU0gQmlqdSBE
-YXMgPGJpanUuZGFzLmp6QGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPg0KPiA+IEhpIFByYWJo
-YWthciwNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+IEZyb206
-IFByYWJoYWthciA8cHJhYmhha2FyLmNzZW5nZ0BnbWFpbC5jb20+DQo+ID4gPiBTZW50OiAzMCBN
-YXkgMjAyNSAxODoxOQ0KPiA+IC5jYXN0cm8uanpAcmVuZXNhcy5jb20+OyBQcmFiaGFrYXIgTWFo
-YWRldiBMYWQgPHByYWJoYWthci5tYWhhZGV2LQ0KPiA+ID4gbGFkLnJqQGJwLnJlbmVzYXMuY29t
-Pg0KPiA+ID4gU3ViamVjdDogW1BBVENIIHY2IDEvNF0gY2xrOiByZW5lc2FzOiByenYyaC1jcGc6
-IEFkZCBzdXBwb3J0IGZvciBEU0kNCj4gPiA+IGNsb2Nrcw0KPiA+ID4NCj4gPiA+IEZyb206IExh
-ZCBQcmFiaGFrYXIgPHByYWJoYWthci5tYWhhZGV2LWxhZC5yakBicC5yZW5lc2FzLmNvbT4NCj4g
-PiA+DQo+ID4gPiBBZGQgc3VwcG9ydCBmb3IgUExMRFNJIGFuZCBQTExEU0kgZGl2aWRlciBjbG9j
-a3MuDQo+ID4gPg0KPiA+ID4gSW50cm9kdWNlIHRoZSBgcmVuZXNhcy1yenYyaC1kc2kuaGAgaGVh
-ZGVyIHRvIGNlbnRyYWxpemUgYW5kIHNoYXJlDQo+ID4gPiBQTExEU0ktcmVsYXRlZCBkYXRhIHN0
-cnVjdHVyZXMsIGxpbWl0cywgYW5kIGFsZ29yaXRobXMgYmV0d2VlbiB0aGUgUlovVjJIIENQRyBh
-bmQgRFNJIGRyaXZlcnMuDQo+ID4gPg0KPiA+ID4gVGhlIERTSSBQTEwgaXMgZnVuY3Rpb25hbGx5
-IHNpbWlsYXIgdG8gdGhlIENQRydzIFBMTERTSSwgYnV0IGhhcw0KPiA+ID4gc2xpZ2h0bHkgZGlm
-ZmVyZW50IHBhcmFtZXRlciBsaW1pdHMgYW5kIG9taXRzIHRoZSBwcm9ncmFtbWFibGUNCj4gPiA+
-IGRpdmlkZXIgcHJlc2VudCBpbiBDUEcuIFRvIGVuc3VyZSBwcmVjaXNlIGZyZXF1ZW5jeQ0KPiA+
-ID4gY2FsY3VsYXRpb25zLWVzcGVjaWFsbHkgZm9yIG1pbGxpSHotbGV2ZWwgYWNjdXJhY3kgbmVl
-ZGVkIGJ5IHRoZSBEU0kgZHJpdmVyLXRoZSBzaGFyZWQgYWxnb3JpdGhtDQo+IGFsbG93cyBib3Ro
-IGRyaXZlcnMgdG8gY29tcHV0ZSBQTEwgcGFyYW1ldGVycyBjb25zaXN0ZW50bHkgdXNpbmcgdGhl
-IHNhbWUgbG9naWMgYW5kIGlucHV0IGNsb2NrLg0KPiA+ID4NCj4gPiA+IENvLWRldmVsb3BlZC1i
-eTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm8uanpAcmVuZXNhcy5jb20+DQo+ID4g
-PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryby5qekByZW5l
-c2FzLmNvbT4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IExhZCBQcmFiaGFrYXINCj4gPiA+IDxwcmFi
-aGFrYXIubWFoYWRldi1sYWQucmpAYnAucmVuZXNhcy5jb20+DQo+ID4gPiAtLS0NCj4gPiA+IHY1
-LT52NjoNCj4gPiA+IC0gUmVuYW1lZCBDUEdfUExMX1NUQllfU1NDR0VOX1dFTiB0byBDUEdfUExM
-X1NUQllfU1NDX0VOX1dFTg0KPiA+ID4gLSBVcGRhdGVkIENQR19QTExfQ0xLMV9ESVZfSywgQ1BH
-X1BMTF9DTEsxX0RJVl9NLCBhbmQNCj4gPiA+ICAgQ1BHX1BMTF9DTEsxX0RJVl9QIG1hY3JvcyB0
-byB1c2UgR0VOTUFTSw0KPiA+ID4gLSBVcGRhdGVkIHJlcS0+cmF0ZSBpbiByenYyaF9jcGdfcGxs
-ZHNpX2Rpdl9kZXRlcm1pbmVfcmF0ZSgpDQo+ID4gPiAtIERyb3BwZWQgdGhlIGNhc3QgaW4gcnp2
-MmhfY3BnX3BsbGRzaV9kaXZfc2V0X3JhdGUoKQ0KPiA+ID4gLSBEcm9wcGVkIHJ6djJoX2NwZ19w
-bGxkc2lfcm91bmRfcmF0ZSgpIGFuZCBpbXBsZW1lbnRlZA0KPiA+ID4gICByenYyaF9jcGdfcGxs
-ZHNpX2RldGVybWluZV9yYXRlKCkgaW5zdGVhZA0KPiA+ID4gLSBNYWRlIHVzZSBvZiBGSUVMRF9Q
-UkVQKCkNCj4gPiA+IC0gTW92ZWQgQ1BHX0NTRElWMSBtYWNybyBpbiBwYXRjaCAyLzQNCj4gPiA+
-IC0gRHJvcHBlZCB0d29fcG93X3MgaW4gcnp2MmhfZHNpX2dldF9wbGxfcGFyYW1ldGVyc192YWx1
-ZXMoKQ0KPiA+ID4gLSBVc2VkIG11bF91MzJfdTMyKCkgd2hpbGUgY2FsY3VsYXRpbmcgb3V0cHV0
-X20gYW5kIG91dHB1dF9rX3JhbmdlDQo+ID4gPiAtIFVzZWQgZGl2X3M2NCgpIGluc3RlYWQgb2Yg
-ZGl2NjRfczY0KCkgd2hpbGUgY2FsY3VsYXRpbmcNCj4gPiA+ICAgcGxsX2sNCj4gPiA+IC0gVXNl
-ZCBtdWxfdTMyX3UzMigpIHdoaWxlIGNhbGN1bGF0aW5nIGZ2Y28gYW5kIGZ2Y28gY2hlY2tzDQo+
-ID4gPiAtIFJvdW5kZWQgdGhlIGZpbmFsIG91dHB1dCB1c2luZyBESVZfVTY0X1JPVU5EX0NMT1NF
-U1QoKQ0KPiA+ID4NCj4gPiA+IHY0LT52NToNCj4gPiA+IC0gTm8gY2hhbmdlcw0KPiA+ID4NCj4g
-PiA+IHYzLT52NDoNCj4gPiA+IC0gQ29ycmVjdGVkIHBhcmFtZXRlciBuYW1lIGluIHJ6djJoX2Rz
-aV9nZXRfcGxsX3BhcmFtZXRlcnNfdmFsdWVzKCkNCj4gPiA+ICAgZGVzY3JpcHRpb24gZnJlcV9t
-aWxsaWh6DQo+ID4gPg0KPiA+ID4gdjItPnYzOg0KPiA+ID4gLSBVcGRhdGUgdGhlIGNvbW1pdCBt
-ZXNzYWdlIHRvIGNsYXJpZnkgdGhlIHB1cnBvc2Ugb2YgYHJlbmVzYXMtcnp2MmgtZHNpLmhgDQo+
-ID4gPiAgIGhlYWRlcg0KPiA+ID4gLSBVc2VkIG11bF91MzJfdTMyKCkgaW4gcnp2MmhfY3BnX3Bs
-bGRzaV9kaXZfZGV0ZXJtaW5lX3JhdGUoKQ0KPiA+ID4gLSBSZXBsYWNlZCAqX21oeiB0byAqX21p
-bGxpaHogZm9yIGNsYXJpdHkNCj4gPiA+IC0gVXBkYXRlZCB1NjQtPnUzMiBmb3IgZnZjbyBsaW1p
-dHMNCj4gPiA+IC0gSW5pdGlhbGl6ZWQgdGhlIG1lbWJlcnMgaW4gZGVjbGFyYXRpb24gb3JkZXIg
-Zm9yDQo+ID4gPiAgIFJaVjJIX0NQR19QTExfRFNJX0xJTUlUUygpIG1hY3JvDQo+ID4gPiAtIFVz
-ZWQgY2xrX2Rpdl9tYXNrKCkgaW4gcnp2MmhfY3BnX3BsbGRzaV9kaXZfcmVjYWxjX3JhdGUoKQ0K
-PiA+ID4gLSBSZXBsYWNlZCBgdW5zaWduZWQgbG9uZyBsb25nYCB3aXRoIHU2NA0KPiA+ID4gLSBE
-cm9wcGVkIHJ6djJoX2NwZ19wbGxkc2lfY2xrX3JlY2FsY19yYXRlKCkgYW5kIHJldXNlZA0KPiA+
-ID4gICByenYyaF9jcGdfcGxsX2Nsa19yZWNhbGNfcmF0ZSgpIGluc3RlYWQNCj4gPiA+IC0gSW4g
-cnp2MmhfY3BnX3BsbGRzaV9kaXZfc2V0X3JhdGUoKSBmb2xsb3dlZCB0aGUgc2FtZSBzdHlsZQ0K
-PiA+ID4gICBvZiBSTVctb3BlcmF0aW9uIGFzIGRvbmUgaW4gdGhlIG90aGVyIGZ1bmN0aW9ucw0K
-PiA+ID4gLSBSZW5hbWVkIHJ6djJoX2NwZ19wbGxkc2lfc2V0X3JhdGUoKSB0byByenYyaF9jcGdf
-cGxsX3NldF9yYXRlKCkNCj4gPiA+IC0gRHJvcHBlZCByenYyaF9jcGdfcGxsZHNpX2Nsa19yZWdp
-c3RlcigpIGFuZCByZXVzZWQNCj4gPiA+ICAgcnp2MmhfY3BnX3BsbF9jbGtfcmVnaXN0ZXIoKSBp
-bnN0ZWFkDQo+ID4gPiAtIEFkZGVkIGEgZ2F1cmQgaW4gcmVuZXNhcy1yenYyaC1kc2kuaCBoZWFk
-ZXINCj4gPiA+DQo+ID4gPiB2MS0+djI6DQo+ID4gPiAtIE5vIGNoYW5nZXMNCj4gPiA+IC0tLQ0K
-PiA+ID4gIGRyaXZlcnMvY2xrL3JlbmVzYXMvcnp2MmgtY3BnLmMgICAgICAgfCAyNzggKysrKysr
-KysrKysrKysrKysrKysrKysrKy0NCj4gPiA+ICBkcml2ZXJzL2Nsay9yZW5lc2FzL3J6djJoLWNw
-Zy5oICAgICAgIHwgIDEzICsrDQo+ID4gPiAgaW5jbHVkZS9saW51eC9jbGsvcmVuZXNhcy1yenYy
-aC1kc2kuaCB8IDIxMCArKysrKysrKysrKysrKysrKysrDQo+ID4gPiAgMyBmaWxlcyBjaGFuZ2Vk
-LCA0OTIgaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gPiAx
-MDA2NDQgaW5jbHVkZS9saW51eC9jbGsvcmVuZXNhcy0gcnp2MmgtZHNpLmgNCj4gPiA+DQo+ID4g
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvcmVuZXNhcy9yenYyaC1jcGcuYw0KPiA+ID4gYi9k
-cml2ZXJzL2Nsay9yZW5lc2FzL3J6djJoLWNwZy5jIGluZGV4DQo+ID4gPiA3NjFkYTNiZjc3Y2Uu
-LmQ1OTBmOWY0NzM3MSAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMvY2xrL3JlbmVzYXMvcnp2
-MmgtY3BnLmMNCj4gPiA+ICsrKyBiL2RyaXZlcnMvY2xrL3JlbmVzYXMvcnp2MmgtY3BnLmMNCj4g
-PiA+IEBAIC0xNCw5ICsxNCwxMyBAQA0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9iaXRmaWVsZC5o
-Pg0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gPiA+ICAjaW5jbHVkZSA8bGludXgv
-Y2xrLXByb3ZpZGVyLmg+DQo+ID4gPiArI2luY2x1ZGUgPGxpbnV4L2Nsay9yZW5lc2FzLXJ6djJo
-LWRzaS5oPg0KPiA+ID4gICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPg0KPiA+ID4gICNpbmNsdWRl
-IDxsaW51eC9pbml0Lmg+DQo+ID4gPiAgI2luY2x1ZGUgPGxpbnV4L2lvcG9sbC5oPg0KPiA+ID4g
-KyNpbmNsdWRlIDxsaW51eC9tYXRoLmg+DQo+ID4NCj4gPg0KPiA+DQo+ID4gPiArICAgICByZXEt
-PnJhdGUgPSBESVZfUk9VTkRfQ0xPU0VTVF9VTEwoZHNpX2RpdmlkZXJzLT5mcmVxX21pbGxpaHos
-DQo+ID4gPiArIE1JTExJKTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIHJldHVybiAwOw0KPiA+ID4g
-K307DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIGludCByenYyaF9jcGdfcGxsZHNpX2Rpdl9zZXRf
-cmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgcmF0ZSwNCj4gPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgcGFyZW50X3JhdGUpIHsNCj4gPiA+
-ICsgICAgIHN0cnVjdCByenYyaF9wbGxkc2lfZGl2X2NsayAqZHNpX2RpdiA9IHRvX3BsbGRzaV9k
-aXZfY2xrKGh3KTsNCj4gPiA+ICsgICAgIHN0cnVjdCByenYyaF9jcGdfcHJpdiAqcHJpdiA9IGRz
-aV9kaXYtPnByaXY7DQo+ID4gPiArICAgICBzdHJ1Y3Qgcnp2MmhfcGxsZHNpX3BhcmFtZXRlcnMg
-KmRzaV9kaXZpZGVycyA9ICZwcml2LT5wbGxkc2lfZGl2X3BhcmFtZXRlcnM7DQo+ID4gPiArICAg
-ICBzdHJ1Y3QgZGRpdiBkZGl2ID0gZHNpX2Rpdi0+ZGRpdjsNCj4gPiA+ICsgICAgIGNvbnN0IHN0
-cnVjdCBjbGtfZGl2X3RhYmxlICpjbGt0Ow0KPiA+ID4gKyAgICAgYm9vbCBkaXZfZm91bmQgPSBm
-YWxzZTsNCj4gPiA+ICsgICAgIHUzMiB2YWwsIHNoaWZ0LCBkaXY7DQo+ID4gPiArDQo+ID4gPiAr
-ICAgICBkaXYgPSBkc2lfZGl2aWRlcnMtPmNzZGl2Ow0KPiA+ID4gKyAgICAgZm9yIChjbGt0ID0g
-ZHNpX2Rpdi0+ZHRhYmxlOyBjbGt0LT5kaXY7IGNsa3QrKykgew0KPiA+ID4gKyAgICAgICAgICAg
-ICBpZiAoY2xrdC0+ZGl2ID09IGRpdikgew0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGRp
-dl9mb3VuZCA9IHRydWU7DQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4g
-PiArICAgICAgICAgICAgIH0NCj4gPiA+ICsgICAgIH0NCj4gPiA+ICsNCj4gPiA+ICsgICAgIGlm
-ICghZGl2X2ZvdW5kKQ0KPiA+ID4gKyAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gPg0K
-PiA+IFRoaXMgY2hlY2sgY2FuIGJlIGRvbmUgaW4gZGV0ZXJtaW5lIHJhdGUgYW5kIGNhY2hlIHRo
-ZSBkaXZpZGVyPz8NCj4gPg0KPiBPaywgSSdsbCBkcm9wIHRoaXMgY2hlY2sgYXMgdGhlIGRpdmlk
-ZXIgaXMgYWxyZWFkeSBjYWNoZWQuIFRoZSBmb3IgbG9vcCBhYm92ZSBpcyB0byBkZXRlcm1pbmUg
-dGhlIHZhbA0KPiB3aGljaCBpcyB1c2VkIGJlbG93IHRvIHByb2dyYW0gdGhlIHJlZ2lzdGVycy4N
-Cg0KSWYgeW91IGFyZSBjYWNoaW5nIGFjdHVhbCBkaXZpZGVyIHZhbHVlLCB0aGVuIHRoZSBjaGVj
-ayBpcyBub3QgcmVxdWlyZWQgaGVyZS4NCk90aGVyd2lzZSB0aGUgYWJvdmUgY29kZSBpcyBmaW5l
-Lg0KDQpBc3N1bWUgdGhlIGNzZGl2IHlvdSBmb3VuZCwgaGF2ZSBubyBjb3JyZXNwb25kaW5nIG1h
-dGNoIGluIHRoZSB0YWJsZS4NCg0KQ2hlZXJzLA0KQmlqdQ0K
+This commit introduces asynchronous writeback to zram, improving the
+idle writeback speed.
+
+Key changes include:
+
+* Replacing `submit_bio_wait()` with `submit_bio()` to enable
+  non-blocking writeback operations.
+* Utilizing a dedicated kthread for post-writeback tasks, avoiding
+  potential lock contention in interrupt context.
+* Refactoring writeback-related code into a separate file `zram_wb.c`,
+  for better organization and maintainability.
+
+Signed-off-by: Richard Chang <richardycc@google.com>
+---
+ drivers/block/zram/Makefile   |   1 +
+ drivers/block/zram/zram_drv.c | 142 ++++++++--------------
+ drivers/block/zram/zram_drv.h |  37 ++++++
+ drivers/block/zram/zram_wb.c  | 222 ++++++++++++++++++++++++++++++++++
+ drivers/block/zram/zram_wb.h  |  41 +++++++
+ 5 files changed, 353 insertions(+), 90 deletions(-)
+ create mode 100644 drivers/block/zram/zram_wb.c
+ create mode 100644 drivers/block/zram/zram_wb.h
+
+diff --git a/drivers/block/zram/Makefile b/drivers/block/zram/Makefile
+index 0fdefd576691..31ee1ed34e17 100644
+--- a/drivers/block/zram/Makefile
++++ b/drivers/block/zram/Makefile
+@@ -8,5 +8,6 @@ zram-$(CONFIG_ZRAM_BACKEND_LZ4HC)	+= backend_lz4hc.o
+ zram-$(CONFIG_ZRAM_BACKEND_ZSTD)	+= backend_zstd.o
+ zram-$(CONFIG_ZRAM_BACKEND_DEFLATE)	+= backend_deflate.o
+ zram-$(CONFIG_ZRAM_BACKEND_842)		+= backend_842.o
++zram-$(CONFIG_ZRAM_WRITEBACK)		+= zram_wb.o
+ 
+ obj-$(CONFIG_ZRAM)	+=	zram.o
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 54c57103715f..1cdebff13049 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -36,6 +36,7 @@
+ #include <linux/kernel_read_file.h>
+ 
+ #include "zram_drv.h"
++#include "zram_wb.h"
+ 
+ static DEFINE_IDR(zram_index_idr);
+ /* idr index must be protected */
+@@ -56,7 +57,6 @@ static size_t huge_class_size;
+ 
+ static const struct block_device_operations zram_devops;
+ 
+-static void zram_free_page(struct zram *zram, size_t index);
+ static int zram_read_from_zspool(struct zram *zram, struct page *page,
+ 				 u32 index);
+ 
+@@ -95,7 +95,7 @@ static __must_check bool zram_slot_trylock(struct zram *zram, u32 index)
+ 	return false;
+ }
+ 
+-static void zram_slot_lock(struct zram *zram, u32 index)
++void zram_slot_lock(struct zram *zram, u32 index)
+ {
+ 	unsigned long *lock = &zram->table[index].flags;
+ 
+@@ -104,7 +104,7 @@ static void zram_slot_lock(struct zram *zram, u32 index)
+ 	lock_acquired(slot_dep_map(zram, index), _RET_IP_);
+ }
+ 
+-static void zram_slot_unlock(struct zram *zram, u32 index)
++void zram_slot_unlock(struct zram *zram, u32 index)
+ {
+ 	unsigned long *lock = &zram->table[index].flags;
+ 
+@@ -127,19 +127,17 @@ static unsigned long zram_get_handle(struct zram *zram, u32 index)
+ 	return zram->table[index].handle;
+ }
+ 
+-static void zram_set_handle(struct zram *zram, u32 index, unsigned long handle)
++void zram_set_handle(struct zram *zram, u32 index, unsigned long handle)
+ {
+ 	zram->table[index].handle = handle;
+ }
+ 
+-static bool zram_test_flag(struct zram *zram, u32 index,
+-			enum zram_pageflags flag)
++bool zram_test_flag(struct zram *zram, u32 index, enum zram_pageflags flag)
+ {
+ 	return zram->table[index].flags & BIT(flag);
+ }
+ 
+-static void zram_set_flag(struct zram *zram, u32 index,
+-			enum zram_pageflags flag)
++void zram_set_flag(struct zram *zram, u32 index, enum zram_pageflags flag)
+ {
+ 	zram->table[index].flags |= BIT(flag);
+ }
+@@ -233,22 +231,6 @@ static void zram_accessed(struct zram *zram, u32 index)
+ }
+ 
+ #if defined CONFIG_ZRAM_WRITEBACK || defined CONFIG_ZRAM_MULTI_COMP
+-struct zram_pp_slot {
+-	unsigned long		index;
+-	struct list_head	entry;
+-};
+-
+-/*
+- * A post-processing bucket is, essentially, a size class, this defines
+- * the range (in bytes) of pp-slots sizes in particular bucket.
+- */
+-#define PP_BUCKET_SIZE_RANGE	64
+-#define NUM_PP_BUCKETS		((PAGE_SIZE / PP_BUCKET_SIZE_RANGE) + 1)
+-
+-struct zram_pp_ctl {
+-	struct list_head	pp_buckets[NUM_PP_BUCKETS];
+-};
+-
+ static struct zram_pp_ctl *init_pp_ctl(void)
+ {
+ 	struct zram_pp_ctl *ctl;
+@@ -258,15 +240,20 @@ static struct zram_pp_ctl *init_pp_ctl(void)
+ 	if (!ctl)
+ 		return NULL;
+ 
++	init_completion(&ctl->all_done);
++	atomic_set(&ctl->num_pp_slots, 0);
+ 	for (idx = 0; idx < NUM_PP_BUCKETS; idx++)
+ 		INIT_LIST_HEAD(&ctl->pp_buckets[idx]);
+ 	return ctl;
+ }
+ 
+-static void release_pp_slot(struct zram *zram, struct zram_pp_slot *pps)
++static void remove_pp_slot_from_ctl(struct zram_pp_slot *pps)
+ {
+ 	list_del_init(&pps->entry);
++}
+ 
++void free_pp_slot(struct zram *zram, struct zram_pp_slot *pps)
++{
+ 	zram_slot_lock(zram, pps->index);
+ 	zram_clear_flag(zram, pps->index, ZRAM_PP_SLOT);
+ 	zram_slot_unlock(zram, pps->index);
+@@ -274,7 +261,13 @@ static void release_pp_slot(struct zram *zram, struct zram_pp_slot *pps)
+ 	kfree(pps);
+ }
+ 
+-static void release_pp_ctl(struct zram *zram, struct zram_pp_ctl *ctl)
++static void release_pp_slot(struct zram *zram, struct zram_pp_slot *pps)
++{
++	remove_pp_slot_from_ctl(pps);
++	free_pp_slot(zram, pps);
++}
++
++void release_pp_ctl(struct zram *zram, struct zram_pp_ctl *ctl)
+ {
+ 	u32 idx;
+ 
+@@ -312,6 +305,7 @@ static bool place_pp_slot(struct zram *zram, struct zram_pp_ctl *ctl,
+ 	list_add(&pps->entry, &ctl->pp_buckets[bid]);
+ 
+ 	zram_set_flag(zram, pps->index, ZRAM_PP_SLOT);
++	atomic_inc(&ctl->num_pp_slots);
+ 	return true;
+ }
+ 
+@@ -713,7 +707,7 @@ static unsigned long alloc_block_bdev(struct zram *zram)
+ 	return blk_idx;
+ }
+ 
+-static void free_block_bdev(struct zram *zram, unsigned long blk_idx)
++void free_block_bdev(struct zram *zram, unsigned long blk_idx)
+ {
+ 	int was_set;
+ 
+@@ -737,18 +731,18 @@ static void read_from_bdev_async(struct zram *zram, struct page *page,
+ static int zram_writeback_slots(struct zram *zram, struct zram_pp_ctl *ctl)
+ {
+ 	unsigned long blk_idx = 0;
+-	struct page *page = NULL;
+ 	struct zram_pp_slot *pps;
+-	struct bio_vec bio_vec;
+-	struct bio bio;
+-	int ret = 0, err;
++	int ret = 0;
+ 	u32 index;
++	int nr_pps = atomic_read(&ctl->num_pp_slots);
+ 
+-	page = alloc_page(GFP_KERNEL);
+-	if (!page)
+-		return -ENOMEM;
++	if (!nr_pps)
++		return 0;
+ 
+ 	while ((pps = select_pp_slot(ctl))) {
++		struct zram_wb_request *req;
++		struct page *page;
++
+ 		spin_lock(&zram->wb_limit_lock);
+ 		if (zram->wb_limit_enable && !zram->bd_wb_limit) {
+ 			spin_unlock(&zram->wb_limit_lock);
+@@ -765,6 +759,13 @@ static int zram_writeback_slots(struct zram *zram, struct zram_pp_ctl *ctl)
+ 			}
+ 		}
+ 
++		req = alloc_wb_request(zram, pps, ctl, blk_idx);
++		if (IS_ERR(req)) {
++			ret = PTR_ERR(req);
++			break;
++		}
++		page = bio_first_page_all(req->bio);
++
+ 		index = pps->index;
+ 		zram_slot_lock(zram, index);
+ 		/*
+@@ -779,63 +780,28 @@ static int zram_writeback_slots(struct zram *zram, struct zram_pp_ctl *ctl)
+ 			goto next;
+ 		zram_slot_unlock(zram, index);
+ 
+-		bio_init(&bio, zram->bdev, &bio_vec, 1,
+-			 REQ_OP_WRITE | REQ_SYNC);
+-		bio.bi_iter.bi_sector = blk_idx * (PAGE_SIZE >> 9);
+-		__bio_add_page(&bio, page, PAGE_SIZE, 0);
+-
+-		/*
+-		 * XXX: A single page IO would be inefficient for write
+-		 * but it would be not bad as starter.
+-		 */
+-		err = submit_bio_wait(&bio);
+-		if (err) {
+-			release_pp_slot(zram, pps);
+-			/*
+-			 * BIO errors are not fatal, we continue and simply
+-			 * attempt to writeback the remaining objects (pages).
+-			 * At the same time we need to signal user-space that
+-			 * some writes (at least one, but also could be all of
+-			 * them) were not successful and we do so by returning
+-			 * the most recent BIO error.
+-			 */
+-			ret = err;
+-			continue;
+-		}
+-
+-		atomic64_inc(&zram->stats.bd_writes);
+-		zram_slot_lock(zram, index);
+-		/*
+-		 * Same as above, we release slot lock during writeback so
+-		 * slot can change under us: slot_free() or slot_free() and
+-		 * reallocation (zram_write_page()). In both cases slot loses
+-		 * ZRAM_PP_SLOT flag. No concurrent post-processing can set
+-		 * ZRAM_PP_SLOT on such slots until current post-processing
+-		 * finishes.
+-		 */
+-		if (!zram_test_flag(zram, index, ZRAM_PP_SLOT))
+-			goto next;
+-
+-		zram_free_page(zram, index);
+-		zram_set_flag(zram, index, ZRAM_WB);
+-		zram_set_handle(zram, index, blk_idx);
++		nr_pps--;
++		remove_pp_slot_from_ctl(pps);
+ 		blk_idx = 0;
+-		atomic64_inc(&zram->stats.pages_stored);
+-		spin_lock(&zram->wb_limit_lock);
+-		if (zram->wb_limit_enable && zram->bd_wb_limit > 0)
+-			zram->bd_wb_limit -=  1UL << (PAGE_SHIFT - 12);
+-		spin_unlock(&zram->wb_limit_lock);
++		submit_bio(req->bio);
++		continue;
++
+ next:
+ 		zram_slot_unlock(zram, index);
+ 		release_pp_slot(zram, pps);
++		free_wb_request(req);
+ 
+ 		cond_resched();
+ 	}
+ 
+ 	if (blk_idx)
+ 		free_block_bdev(zram, blk_idx);
+-	if (page)
+-		__free_page(page);
++
++	if (nr_pps && atomic_sub_and_test(nr_pps, &ctl->num_pp_slots))
++		complete(&ctl->all_done);
++
++	/* wait until all async bios completed */
++	wait_for_completion(&ctl->all_done);
+ 
+ 	return ret;
+ }
+@@ -1111,8 +1077,6 @@ static int read_from_bdev(struct zram *zram, struct page *page,
+ {
+ 	return -EIO;
+ }
+-
+-static void free_block_bdev(struct zram *zram, unsigned long blk_idx) {};
+ #endif
+ 
+ #ifdef CONFIG_ZRAM_MEMORY_TRACKING
+@@ -1620,7 +1584,7 @@ static bool zram_meta_alloc(struct zram *zram, u64 disksize)
+ 	return true;
+ }
+ 
+-static void zram_free_page(struct zram *zram, size_t index)
++void zram_free_page(struct zram *zram, size_t index)
+ {
+ 	unsigned long handle;
+ 
+@@ -2247,12 +2211,6 @@ static ssize_t recompress_store(struct device *dev,
+ 		goto release_init_lock;
+ 	}
+ 
+-	page = alloc_page(GFP_KERNEL);
+-	if (!page) {
+-		ret = -ENOMEM;
+-		goto release_init_lock;
+-	}
+-
+ 	ctl = init_pp_ctl();
+ 	if (!ctl) {
+ 		ret = -ENOMEM;
+@@ -2912,6 +2870,9 @@ static int __init zram_init(void)
+ 		num_devices--;
+ 	}
+ 
++	if (setup_zram_writeback())
++		goto out_error;
++
+ 	return 0;
+ 
+ out_error:
+@@ -2921,6 +2882,7 @@ static int __init zram_init(void)
+ 
+ static void __exit zram_exit(void)
+ {
++	destroy_zram_writeback();
+ 	destroy_devices();
+ }
+ 
+diff --git a/drivers/block/zram/zram_drv.h b/drivers/block/zram/zram_drv.h
+index 6cee93f9c0d0..7d9081215668 100644
+--- a/drivers/block/zram/zram_drv.h
++++ b/drivers/block/zram/zram_drv.h
+@@ -139,4 +139,41 @@ struct zram {
+ #endif
+ 	atomic_t pp_in_progress;
+ };
++
++void zram_slot_lock(struct zram *zram, u32 index);
++void zram_slot_unlock(struct zram *zram, u32 index);
++void zram_set_handle(struct zram *zram, u32 index, unsigned long handle);
++bool zram_test_flag(struct zram *zram, u32 index, enum zram_pageflags flag);
++void zram_set_flag(struct zram *zram, u32 index, enum zram_pageflags flag);
++void zram_free_page(struct zram *zram, size_t index);
++
++#if defined CONFIG_ZRAM_WRITEBACK || defined CONFIG_ZRAM_MULTI_COMP
++struct zram_pp_slot {
++	unsigned long		index;
++	struct list_head	entry;
++};
++
++/*
++ * A post-processing bucket is, essentially, a size class, this defines
++ * the range (in bytes) of pp-slots sizes in particular bucket.
++ */
++#define PP_BUCKET_SIZE_RANGE	64
++#define NUM_PP_BUCKETS		((PAGE_SIZE / PP_BUCKET_SIZE_RANGE) + 1)
++
++struct zram_pp_ctl {
++	struct list_head	pp_buckets[NUM_PP_BUCKETS];
++	struct completion	all_done;
++	atomic_t		num_pp_slots;
++};
++
++void free_pp_slot(struct zram *zram, struct zram_pp_slot *pps);
++void release_pp_ctl(struct zram *zram, struct zram_pp_ctl *ctl);
++#endif
++
++#if IS_ENABLED(CONFIG_ZRAM_WRITEBACK)
++void free_block_bdev(struct zram *zram, unsigned long blk_idx);
++#else
++inline void free_block_bdev(struct zram *zram, unsigned long blk_idx) {};
++#endif
++
+ #endif
+diff --git a/drivers/block/zram/zram_wb.c b/drivers/block/zram/zram_wb.c
+new file mode 100644
+index 000000000000..59f93b22d2bf
+--- /dev/null
++++ b/drivers/block/zram/zram_wb.c
+@@ -0,0 +1,222 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#define KMSG_COMPONENT "zram_wb"
++#define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/kthread.h>
++#include <linux/wait.h>
++#include <linux/freezer.h>
++
++#include "zram_wb.h"
++
++static struct task_struct *wb_thread;
++static DECLARE_WAIT_QUEUE_HEAD(wb_wq);
++static struct zram_wb_request_list wb_req_list;
++
++static void complete_wb_request(struct zram_wb_request *req)
++{
++	struct zram *zram = req->zram;
++	struct zram_pp_slot *pps = req->pps;
++	struct zram_pp_ctl *ctl = req->ppctl;
++	unsigned long index = pps->index;
++	unsigned long blk_idx = req->blk_idx;
++	struct bio *bio = req->bio;
++
++	if (bio->bi_status)
++		goto out_err;
++
++	atomic64_inc(&zram->stats.bd_writes);
++	zram_slot_lock(zram, index);
++
++	/*
++	 * Same as above, we release slot lock during writeback so
++	 * slot can change under us: slot_free() or slot_free() and
++	 * reallocation (zram_write_page()). In both cases slot loses
++	 * ZRAM_PP_SLOT flag. No concurrent post-processing can set
++	 * ZRAM_PP_SLOT on such slots until current post-processing
++	 * finishes.
++	 */
++	if (!zram_test_flag(zram, index, ZRAM_PP_SLOT)) {
++		zram_slot_unlock(zram, index);
++		goto out_err;
++	}
++
++	zram_free_page(zram, index);
++	zram_set_flag(zram, index, ZRAM_WB);
++	zram_set_handle(zram, index, blk_idx);
++	atomic64_inc(&zram->stats.pages_stored);
++	spin_lock(&zram->wb_limit_lock);
++	if (zram->wb_limit_enable && zram->bd_wb_limit > 0)
++		zram->bd_wb_limit -=  1UL << (PAGE_SHIFT - 12);
++	spin_unlock(&zram->wb_limit_lock);
++	zram_slot_unlock(zram, index);
++	goto end;
++
++out_err:
++	free_block_bdev(zram, blk_idx);
++end:
++	free_pp_slot(zram, pps);
++	free_wb_request(req);
++
++	if (atomic_dec_and_test(&ctl->num_pp_slots))
++		complete(&ctl->all_done);
++}
++
++static void enqueue_wb_request(struct zram_wb_request_list *req_list,
++			       struct zram_wb_request *req)
++{
++	/*
++	 * The enqueue path comes from softirq context:
++	 * blk_done_softirq -> bio_endio -> zram_writeback_end_io
++	 * Use spin_lock_bh for locking.
++	 */
++	spin_lock_bh(&req_list->lock);
++	list_add_tail(&req->node, &req_list->head);
++	req_list->count++;
++	spin_unlock_bh(&req_list->lock);
++}
++
++static struct zram_wb_request *dequeue_wb_request(
++	struct zram_wb_request_list *req_list)
++{
++	struct zram_wb_request *req = NULL;
++
++	spin_lock_bh(&req_list->lock);
++	if (!list_empty(&req_list->head)) {
++		req = list_first_entry(&req_list->head,
++				       struct zram_wb_request,
++				       node);
++		list_del(&req->node);
++		req_list->count--;
++	}
++	spin_unlock_bh(&req_list->lock);
++
++	return req;
++}
++
++static void destroy_wb_request_list(struct zram_wb_request_list *req_list)
++{
++	struct zram_wb_request *req;
++
++	while (!list_empty(&req_list->head)) {
++		req = dequeue_wb_request(req_list);
++		free_block_bdev(req->zram, req->blk_idx);
++		free_wb_request(req);
++	}
++}
++
++static bool wb_ready_to_run(void)
++{
++	int count;
++
++	spin_lock_bh(&wb_req_list.lock);
++	count = wb_req_list.count;
++	spin_unlock_bh(&wb_req_list.lock);
++
++	return count > 0;
++}
++
++static int wb_thread_func(void *data)
++{
++	set_freezable();
++
++	while (!kthread_should_stop()) {
++		wait_event_freezable(wb_wq, wb_ready_to_run());
++
++		while (1) {
++			struct zram_wb_request *req;
++
++			req = dequeue_wb_request(&wb_req_list);
++			if (!req)
++				break;
++			complete_wb_request(req);
++		}
++	}
++	return 0;
++}
++
++void zram_writeback_end_io(struct bio *bio)
++{
++	struct zram_wb_request *req =
++		(struct zram_wb_request *)bio->bi_private;
++
++	enqueue_wb_request(&wb_req_list, req);
++	wake_up(&wb_wq);
++}
++
++struct zram_wb_request *alloc_wb_request(struct zram *zram,
++					 struct zram_pp_slot *pps,
++					 struct zram_pp_ctl *ppctl,
++					 unsigned long blk_idx)
++{
++	struct zram_wb_request *req;
++	struct page *page;
++	struct bio *bio;
++	int err = 0;
++
++	page = alloc_page(GFP_NOIO | __GFP_NOWARN);
++	if (!page)
++		return ERR_PTR(-ENOMEM);
++
++	bio = bio_alloc(zram->bdev, 1, REQ_OP_WRITE, GFP_NOIO | __GFP_NOWARN);
++	if (!bio) {
++		err = -ENOMEM;
++		goto out_free_page;
++	}
++
++	req = kmalloc(sizeof(struct zram_wb_request), GFP_NOIO | __GFP_NOWARN);
++	if (!req) {
++		err = -ENOMEM;
++		goto out_free_bio;
++	}
++	req->zram = zram;
++	req->pps = pps;
++	req->ppctl = ppctl;
++	req->blk_idx = blk_idx;
++	req->bio = bio;
++
++	bio->bi_iter.bi_sector = blk_idx * (PAGE_SIZE >> 9);
++	__bio_add_page(bio, page, PAGE_SIZE, 0);
++	bio->bi_private = req;
++	bio->bi_end_io = zram_writeback_end_io;
++	return req;
++
++out_free_bio:
++	bio_put(bio);
++out_free_page:
++	__free_page(page);
++	return ERR_PTR(err);
++}
++
++void free_wb_request(struct zram_wb_request *req)
++{
++	struct bio *bio = req->bio;
++	struct page *page = bio_first_page_all(bio);
++
++	__free_page(page);
++	bio_put(bio);
++	kfree(req);
++}
++
++int setup_zram_writeback(void)
++{
++	spin_lock_init(&wb_req_list.lock);
++	INIT_LIST_HEAD(&wb_req_list.head);
++	wb_req_list.count = 0;
++
++	wb_thread = kthread_run(wb_thread_func, NULL, "zram_wb_thread");
++	if (IS_ERR(wb_thread)) {
++		pr_err("Unable to create zram_wb_thread\n");
++		return -1;
++	}
++	return 0;
++}
++
++void destroy_zram_writeback(void)
++{
++	kthread_stop(wb_thread);
++	destroy_wb_request_list(&wb_req_list);
++}
++
+diff --git a/drivers/block/zram/zram_wb.h b/drivers/block/zram/zram_wb.h
+new file mode 100644
+index 000000000000..e029b4de0de6
+--- /dev/null
++++ b/drivers/block/zram/zram_wb.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef _ZRAM_WRITEBACK_H_
++#define _ZRAM_WRITEBACK_H_
++
++#include <linux/bio.h>
++#include "zram_drv.h"
++
++struct zram_wb_request;
++
++struct zram_wb_request {
++	struct zram *zram;
++	unsigned long blk_idx;
++	struct zram_pp_slot *pps;
++	struct zram_pp_ctl *ppctl;
++	struct bio *bio;
++	struct list_head node;
++};
++
++struct zram_wb_request_list {
++	struct list_head head;
++	int count;
++	spinlock_t lock;
++};
++
++#if IS_ENABLED(CONFIG_ZRAM_WRITEBACK)
++void zram_writeback_end_io(struct bio *bio);
++int setup_zram_writeback(void);
++void destroy_zram_writeback(void);
++struct zram_wb_request *alloc_wb_request(struct zram *zram,
++					 struct zram_pp_slot *pps,
++					 struct zram_pp_ctl *ppctl,
++					 unsigned long blk_idx);
++void free_wb_request(struct zram_wb_request *req);
++#else
++inline void zram_writeback_end_io(struct bio *bio) {}
++inline int setup_zram_writeback(void) { return 0; }
++inline void destroy_zram_writeback(void) {}
++#endif
++
++#endif /* _ZRAM_WRITEBACK_H_ */
+-- 
+2.50.0.rc2.696.g1fc2a0284f-goog
+
