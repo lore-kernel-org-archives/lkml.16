@@ -1,91 +1,142 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lgeamrelo07.lge.com (lgeamrelo07.lge.com [156.147.51.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BAC31A4E9D
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:06:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153C2BF01F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.147.51.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248420; cv=none; b=SlTNTaV94gd5MqjZY9U4vYhYe1aXR6fsekDMrepNyL5dkvq7KAmrS8X75AkurIRk+UUfxyZ5znhDE3RekoqjcRUfu/cWLTD1z0foIdds86+HlwYy2UUc4ndBaRs3/NyeHMk8WY/Su78PWiFWERuoTjM/KY4rEc0N5U/1jgHmcyI=
+	t=1750248477; cv=none; b=BSMOeb4WY0o13UDH0YSwPJy9aQzLRzdZpx2dpRzN0VPhWvP/iSvqGkFDZOn9I1WDejrww+isKqeOl3bLQ3lCT7bF8e3+IKNkI9SBli/ePLc2b61mA1tTvdTgHjCfBk7Z3vK0Y6mGeSuQiPP8YLnHZS+1IcrCLTx9SF6qlHqn5Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248420; c=relaxed/simple;
-	bh=KFHZaeoSODTEpU7abDsNkopP6dfWOtne8XjI9QfcTGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WinXF9e2BsWDJHuvciLqMXkjlDRhS+hp01px/oIyqFoOg5fI8Oq9oI/m4etRkhnNIlhB5BJyMM74B/HbYvZ5nLjVZWS1dKmHI9KmPsoObiEGBd8DLx86xGtjmTB/8l/HRVyDUrNggjls4W/Nzm8x4O+P899r+52rF6EVMlRYDw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dOn8JfW6; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOn8JfW6"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553b60de463so5258339e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750248417; x=1750853217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KFHZaeoSODTEpU7abDsNkopP6dfWOtne8XjI9QfcTGk=;
-        b=dOn8JfW6rPU5o1OtrvPEfcCsS0f7A21HlTip0OVLHiYQnnfMT+SAdzNA1CDvUvdn1v
-         RdMQSFVHjlaATusdFJ3/yMtxpAVtNPnDPCX9HV6j++1YP6UzjhkTghIme1I8RcnVJv5e
-         JDQrQTCO2drc6ODHYfMeDlKsGE1z6a0uj+O3wSa05AJrGe8seX3ef3UNPplp9Ao7g0RQ
-         qjso4SCxBOzRPNLv65egwY1HDZkU0E9KNMR0EFHrHiD9TmS28GgRM2+rB2m2okxL444g
-         U1Rf5RhETgtxXuXW34h7Z9VzuPzhcs6xWZXcxAwZ3VfGpyaWqmfd1VCNajWEZDuNParb
-         rF8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750248417; x=1750853217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KFHZaeoSODTEpU7abDsNkopP6dfWOtne8XjI9QfcTGk=;
-        b=dRk37eeSA94+CBynKy0XWIw8KKkiHmzRxgMOzgjggrjQbgYaunfzSzWdLhX1Hp0CUR
-         LVeFC6spJdO/L6DQbUuekkx+aJKoJKQE9hfs+8WOZBdSfT5xy++CSlHJ+M1bNNNcZwOZ
-         j/Y3SMBJrvK03E2L9XcIzHj4N4SpLMjysN/rl76mtGB8L9QFVrQlEzkZvCXYF1j8KkK4
-         DnL42lKlwXykN5lkSkl2lrd4PgTpzhQ+CdpSFVOse0iSWSyidSMWXWv5aKNLgzXl9D9r
-         BMMUSuKfIrpDcjoRuILUVjnl00ZpREuBZP+9v5Y07fniCNrHP2OuKqxQc8YcxrQBN6kS
-         uJGg==
-X-Forwarded-Encrypted: i=1; AJvYcCVCZYrA5McNC1SPMXqUd0GC6uGD2nYGGOwQeAWIR6XbAOR7M5aBuzc87eHc/DAGzmFugp/6lU1NKY+s4/4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK7mPgfP15RuwPOzBZYEpVoqJQTdQMKlQ09950zUn+4nr7zdiq
-	qJxqqHfagEdQEkRHRKgnzZ/bsEsU+fA8V6u9GS2GrC5PpvzAc0+IwxoA/23QdKp1R8mzvzkJ8C5
-	ThMeQBGGwf//fv+7w21185CvAF6srS7jjqTmB/23b9Q==
-X-Gm-Gg: ASbGncvkzqC/IxiFkckF5+DKUs1YgCOcwzL1Zfudn4xJrgeVja6So+lmN9RSzSz/Wtz
-	q/lVbMfL61stHYcsdCNjIqBWuhzbclaf67oe19pEXRhTI8ZWxBQKPUnj216ta+jrb3g3q8bGwpa
-	PwBBkqrjBWqyMsKstzBe1McOikw6twY/mOcSfYh0JVfto=
-X-Google-Smtp-Source: AGHT+IH0hkYwujstsVak53Kxlho+OGvd4fBBK2SWPVddaXjsmXuFYkeHqZ0gexkWXto83mQYdFPMw4Ypaa4doACgPm4=
-X-Received: by 2002:a05:6512:33cc:b0:553:246f:d5bf with SMTP id
- 2adb3069b0e04-553b6f25286mr4854168e87.33.1750248416981; Wed, 18 Jun 2025
- 05:06:56 -0700 (PDT)
+	s=arc-20240116; t=1750248477; c=relaxed/simple;
+	bh=5E1cCuT6tbhbu1mMp4hHXWSFXwrZ703PlzIaNow0uJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SfM6W0bUtn3IoEhi4i+5zClwYX6uhNyaCLJJPkvcswiBUfY+2LBQqDl/+OK+isn6qt4PigTGvNFkIwYCsIHRF0htR1J0D5RPJs+WE64t3YBl4W8l227O5dohbbclr8Cq+u5MQhRAzXPFzbjxY4wtHbpwWOpgangHIg618Ip3Ft4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com; spf=pass smtp.mailfrom=lge.com; arc=none smtp.client-ip=156.147.51.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lge.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lge.com
+Received: from unknown (HELO yjaykim-PowerEdge-T330) (10.177.112.156)
+	by 156.147.51.103 with ESMTP; 18 Jun 2025 21:07:51 +0900
+X-Original-SENDERIP: 10.177.112.156
+X-Original-MAILFROM: youngjun.park@lge.com
+Date: Wed, 18 Jun 2025 21:07:51 +0900
+From: YoungJun Park <youngjun.park@lge.com>
+To: Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+	mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
+	cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+	shikemeng@huaweicloud.com, kasong@tencent.com, nphamcs@gmail.com,
+	bhe@redhat.com, baohua@kernel.org, chrisl@kernel.org,
+	muchun.song@linux.dev, iamjoonsoo.kim@lge.com, taejoon.song@lge.com,
+	gunho.lee@lge.com
+Subject: Re: [RFC PATCH 1/2] mm/swap, memcg: basic structure and logic for
+ per cgroup swap priority control
+Message-ID: <aFKsF9GaI3tZL7C+@yjaykim-PowerEdge-T330>
+References: <20250612103743.3385842-1-youngjun.park@lge.com>
+ <20250612103743.3385842-2-youngjun.park@lge.com>
+ <pcji4n5tjsgjwbp7r65gfevkr3wyghlbi2vi4mndafzs4w7zs4@2k4citaugdz2>
+ <aFIJDQeHmTPJrK57@yjaykim-PowerEdge-T330>
+ <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612-gpiochip-set-rv-pinctrl-starfive-v1-0-8507b46516f5@linaro.org>
-In-Reply-To: <20250612-gpiochip-set-rv-pinctrl-starfive-v1-0-8507b46516f5@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 14:06:45 +0200
-X-Gm-Features: AX0GCFuEEij903K8x578B-AsyVrv_BWswNCIUS18yLj9Vvd0FxlSIuai999Rgxw
-Message-ID: <CACRpkdYoYFGNeATvJGh2bATGwrp0miLgYuMgUQcPJARk4M_QnA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] pinctrl: starfive: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <rivwhhhkuqy7p4r6mmuhpheaj3c7vcw4w4kavp42avpz7es5vp@hbnvrmgzb5tr>
 
-On Thu, Jun 12, 2025 at 2:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Wed, Jun 18, 2025 at 11:11:32AM +0200, Michal Koutný wrote:
+> On Wed, Jun 18, 2025 at 09:32:13AM +0900, YoungJun Park <youngjun.park@lge.com> wrote:
+> > What issue is the question assuming the existence of competitors in two
+> > cgroups trying to address? Could you explain it a bit more specifically?
+> 
+> I'm after how this mechanism is supposed to honor hierarchical
+> structure. (I thought the numeric example was the most specific.)
+> 
+> > 
+> > To answer your question for now,
+> > Each cgroup just prefers devices according to their priority values.
+> > until swap device is exhausted.
+> > 
+> > cg1 prefer /dev/sda than /dev/sdb.
+> > cg2 prefer /dev/sdb than /dev/sda.
+> > cg3 prefer /dev/sdb than /dev/sda.
+> > cg4 prefer /dev/sda than /dev/sdb.
+> 
+> Hm, than means the settigs from cg1 (or cg2) don't apply to descendant
+> cg3 (or cg4) :-/
 
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones. This series
-> converts all GPIO chips in starfive pin control drivers.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+I've been thinking about whether the use case I suggested aligns with the
+philosophy of cgroups, and I believe there are two feasible directions
+could take (This still needs some detailed refinement.)
 
-Patches applied!
+Bascially on two strategies, child inherits parent setting.
 
-Yours,
-Linus Walleij
+1. Preserve the order of priorities and type of swap devices
+when a child cgroup inherits values from 
+its parent. the inherited order must be strictly maintained
+
+e.g 
+
+1.1 possible case.
+1.1.1
+cgroupA (swapA-swapB-swapC)
+	' cgroupB (swapA-swapC)
+
+1.1.2 
+cgroupA (swapA-swapB-swapC)
+	' cgroupB (swapA-swapC)
+
+after time, modify it (swapD add on cgroupA)
+
+cgroupA (swapA-swapB-swapC-swapD)
+	' cgroupB (swapA-swapC)
+
+1.2.impossible case.
+
+1.2.1 violate the order of priorities rule.
+cgroupA (swapA-swapB-swapC)
+	' cgroupB  (swapC-swapA-swapB)
+
+1.2.2 violate the type of swap devices rule.
+cgroupA (swapA-swapB-swapC)
+	' cgroupB  (swapD)
+
+2. Restrict child cgroups to only use values inherited from the parent,
+without allowing them to define their own setting.
+
+e.g
+cgroupA (swapA-swapB-swapC)
+	' cgroupB (swapA-swapB-swapC)
+
+after time, modify it (swapD add on cgroupA)
+
+cgroupA (swapA-swapB-swapC-swapD)
+	' cgroupB (swapA-swapB-swapC-swapD)
+
+it is different from 1.1.2 case swapD propagated. 
+(because child and parent must be same)
+
+> When referring to that document
+> (Documentation/admin-guide/cgroup-v2.rst) again, which of the "Resource
+> Distribution Models" do you find the most fitting for this scenario?
+
+I initially submitted the RFC from the perspective that each in-use
+swap device must explicitly have a priority assigned, including propagation
+at swapon time. (for avoiding swap-fail by using this mechanism)
+
+However, condisering the resource distribution model you mentioned, 
+I now see that not requiring all swap devices to have an explicitly defined 
+priority aligns better with the broader cgroup "limit distribution" philosophy,
+particularly in terms of limiting and distributing resources.
+
+This is because cgroups can still restrict swap device usage and control 
+device order without requiring explicit priorities for all devices.
+In this view, the cgroup interface serves more as a limit or preference 
+mechanism across the full set of available swap devices, rather than
+requiring full enumeration and configuration.
+ 
+Regards,
+Youngjun Park
