@@ -1,48 +1,65 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEEC2EF288;
-	Wed, 18 Jun 2025 15:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84809F510
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750259633; cv=none; b=kTgRE1aKNCXjrs6sbIvGsjVjbWjwoH4q/bmGjyjq51Ak6KTHbsQhbWsNh8llBF83O79TVCvm8hRTE6kasg0M8NBnpGw3B4Bo7uV2M8qBI7w/Fyw1T6XnIJTeMintFECyapvcOAfHvwELiYpXR9w/3tBlDg0tp3IkDtnr4ienPsA=
+	t=1750259653; cv=none; b=Uil/Kf2h4miiKmczYbaqwvHKfG7rNQwP23NB0gPLmsxJ9AFVLzlhUAJHt+YL9tqLKXMw9IFtnPAXTJXJifglDcNr7kwwH733mjwW1kphcokcy646eXiYK3ulW+2CUzBAcDhR5ZhsnDutQfygA0ShVdA6K8iXqJXcgk91Ncmj+o4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750259633; c=relaxed/simple;
-	bh=Z4WjAjhgs+9cAWXseeZVzK0u2AHpialFbmIzK+axu28=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Dj1wVyMklGHjYPPxQtgxgyZr5fqFwUx/F5MLthBL0cwLZmqsOexdDDGP3OFbUa3NGXXV9Z+HM6eELhi8mu9YDofxxt2jb3G4NuRy0DSRzcX2/sdhPxDaEHNe1TypMApXd800F7I4Ofa1rWeIADjQv5eFHDn6TAV+gheE2uuanuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TYjo1P9E; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750259653; c=relaxed/simple;
+	bh=OHrir3aF+muHdTCqQ6G0ZKUnxcCBUpS6B1dB8OgPAEA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tQ4mhz/34ph5C8BEBVs+b3U7lf9qTwjiwzrwhcunQwbyeh0GXoqgniNmvAy1Wdm760AoOF3B/4mWnMO1lcyT4JrHZHYPzIefEoold5FCsQ3WaMg96QUKVx0WY/5E49t8dbmLMsnalIesu6LiB6VWCgOMMgEezru3dbDPrOpqMwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=cAXE5pvd; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TYjo1P9E"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I9231C015638;
-	Wed, 18 Jun 2025 15:13:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BvKiGeQQXdoaNRy8cKQkU1P8BTdh5zPp9R1GKNeEFeA=; b=TYjo1P9E8jrf+vtK
-	B4mqkoC4jb/sodFzM6AqHQTtwsNRTuu9renvffElLBm9SfU4atamvmnSw5uByu59
-	UC/x0S/ZLi/QUiTrP2veC77Sher2JDnL/q7YCqhS7A5JEplsuUcq0jJGrlubh3LD
-	J9ImWWK8Ato2Iydzv6MfOlave32KwxbSIVgUlkvLBrEwn62TvxsBjsi5e5L8+D9x
-	AjSqJ0tIdFE4lK1OfM2MA/t4jJvQZiSKuUgq9p1Gv2Pi7eTzWH/OOYSzQCSiyCAu
-	D99lXvCCq7RhjWKwmMdpGHcFDZSt7kO5t+SocCmSpyJbzgQpZGwFPy1dpaFwCKI2
-	xOchng==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47b9akv2nb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 15:13:33 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55IFDWEE028125
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 18 Jun 2025 15:13:32 GMT
-Received: from [10.253.36.28] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 18 Jun
- 2025 08:13:26 -0700
-Message-ID: <c2cefd3f-3579-4c41-ac0d-08869b51eaaa@quicinc.com>
-Date: Wed, 18 Jun 2025 23:13:24 +0800
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="cAXE5pvd"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo13672463a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:14:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1750259650; x=1750864450; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+S+UmywS1cMQlzcb0xKkbPVLyMmpj3IBlRdMtTw736I=;
+        b=cAXE5pvdWrB+tKsNUHmxmRykRjlOz2u4k5zL4uTzSoj6Fqf/+u6KV49THicObdq/vO
+         KN/XvoAEc9XMZniPfOwk9cljU0AsSAEp17uVtGoZJbOEo9GDGkdKfsv6+gCTZAhIIH1/
+         x/psxYC9fHKp8IKFyGWlDBL/Y8/e6VGEjrUr+rXPvQBX/C6eIn2nNxEwpQf2BZs9gyxn
+         RkZoKVIL8VZRPVoHsmGpteT52yoky6FtSEZMojzYt01i4TVsIchcsM0dMimqCj3ffpf4
+         F9x+AVOgKHQ5X+9vrwyoB+01bdx3hLk0Kw466HwnnffeUV3SJI4gtGS/a36mW5mukZf3
+         H73Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750259650; x=1750864450;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+S+UmywS1cMQlzcb0xKkbPVLyMmpj3IBlRdMtTw736I=;
+        b=mmfIC7v59Tq+5gVQxs4VN+nKQg2qS2JahsHTK3rQADL6WjAAqOGRQKKbPaRXj++fFd
+         +CARX8txSvFSyadjd/UZ7CeG3jzfvtMQHLNwyC/xLqJpQuiXK6BPy8j9SuM4vV9qQpsX
+         tEdnGZHK7p4OxB4H+xCI2+Ju6NP1sG5854yi6hcAMkp0htsaLdaBZcR5rTi+EPpa561H
+         p2ZOSkmXGLMKxk//NpzjS67F/uwNCxsXgFjX3RYCU/4aVd+8YeUAiQ3o3VjwH/mMKkwb
+         P3v/+phFJad4ZinTwHXtGX5XY3Wo7qA/2a9agc7nJkaARf93GZf1BImeDj5IPG6q7rfi
+         CQ8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUMQP6Qt47wW2Kk4soFSXglCRHtFMnc7qzr8+TkSS9VayKOCvPGeMGfdxQJlCOOVVijLYFkLCpOGT+yD7M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDiBPuZVagS4tT1k0DD5tyeGPXJowOyCCnnVNfBuWhLa2BQJER
+	zysrWHi7NaZirz3X2FXiM6BkkZADvzgKUzcwf2ADnuAwryZtfDqv9HyhJb2QWJlbNuA=
+X-Gm-Gg: ASbGncuAT/LkApIC8tz8Nz5nn/qCGxHgMEk0tODnNmprugR92oqge+c0zrq3xs+LT9R
+	Xus7rtWODa7a14GEMKXFWLoW33BqQHZXM9ILROUOBCXFL8a17PGF+gjOSG5284Uk6ufCvc/g9+i
+	ufpL5MUHPrIYwb4PWzJ2PKGSwz8omzLYYcFpvV+vIXMUCZ0fEb0WXwEpQ2/ItDVm+PfoMM+vE7v
+	+XCVW8GcDVw0zHDFgJZY9XXNr0mbDCuVJdFEtyX9Yz9jKfcs0hfKzDM9LwHK2IWfQoARKJWp9Xe
+	pAk4SvE2CYJSTCLsQl70QgvscFzi2h6ZIFIZgrF9fmBEWPHkp4v9fxg3CotP/8Fhl4es2MQ/Vpo
+	eds3J2yBj/LpN9ZVzHg==
+X-Google-Smtp-Source: AGHT+IEnxsS/Uvtcf+zcb/7M6kEE3A6RliSG0ulwTdKyTBE8eC4slu4mGjug2HX09alf/gW+PK3nnQ==
+X-Received: by 2002:a05:6402:348f:b0:602:225e:1d46 with SMTP id 4fb4d7f45d1cf-608d0835bf5mr17037976a12.3.1750259649535;
+        Wed, 18 Jun 2025 08:14:09 -0700 (PDT)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b48cd687sm9869313a12.18.2025.06.18.08.14.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 08:14:08 -0700 (PDT)
+Message-ID: <22ec7ed6-9c38-4f81-9ec4-024da12b8710@blackwall.org>
+Date: Wed, 18 Jun 2025 18:14:06 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,78 +67,76 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] dt-bindings: interconnect: Add Qualcomm IPQ5424
- NSSNOC IDs
-To: Krzysztof Kozlowski <krzk@kernel.org>, Georgi Djakov <djakov@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Anusha Rao <quic_anusha@quicinc.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Will
- Deacon" <will@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_kkumarcs@quicinc.com>,
-        <quic_linchen@quicinc.com>, <quic_leiwei@quicinc.com>,
-        <quic_suruchia@quicinc.com>, <quic_pavir@quicinc.com>
-References: <20250617-qcom_ipq5424_nsscc-v1-0-4dc2d6b3cdfc@quicinc.com>
- <20250617-qcom_ipq5424_nsscc-v1-1-4dc2d6b3cdfc@quicinc.com>
- <8fc66f04-27f1-416e-b7c5-d3045e94f13a@kernel.org>
+Subject: Re: [PATCH net-next v5 1/6] geneve: rely on rtnl lock in
+ geneve_offload_rx_ports
+To: Stanislav Fomichev <stfomichev@gmail.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, skalluru@marvell.com, manishc@marvell.com,
+ andrew+netdev@lunn.ch, michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+ ajit.khaparde@broadcom.com, sriharsha.basavapatna@broadcom.com,
+ somnath.kotur@broadcom.com, anthony.l.nguyen@intel.com,
+ przemyslaw.kitszel@intel.com, tariqt@nvidia.com, saeedm@nvidia.com,
+ louis.peens@corigine.com, shshaikh@marvell.com,
+ GR-Linux-NIC-Dev@marvell.com, ecree.xilinx@gmail.com, horms@kernel.org,
+ dsahern@kernel.org, shuah@kernel.org, tglx@linutronix.de, mingo@kernel.org,
+ ruanjinjie@huawei.com, idosch@nvidia.com, petrm@nvidia.com,
+ kuniyu@google.com, sdf@fomichev.me, linux-kernel@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, linux-rdma@vger.kernel.org,
+ oss-drivers@corigine.com, linux-net-drivers@amd.com,
+ linux-kselftest@vger.kernel.org, leon@kernel.org
+References: <20250616162117.287806-1-stfomichev@gmail.com>
+ <20250616162117.287806-2-stfomichev@gmail.com>
 Content-Language: en-US
-From: Luo Jie <quic_luoj@quicinc.com>
-In-Reply-To: <8fc66f04-27f1-416e-b7c5-d3045e94f13a@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <20250616162117.287806-2-stfomichev@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: erdZe8h3cOfKGCAKK3MbpbXil2YGXIBE
-X-Authority-Analysis: v=2.4 cv=UPTdHDfy c=1 sm=1 tr=0 ts=6852d79d cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=P-IC7800AAAA:8
- a=wEgfWPuv0KXlM2Taas8A:9 a=QEXdDO2ut3YA:10 a=d3PnA9EDa4IxuAV0gXij:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDEyOCBTYWx0ZWRfX2T73sEv55TzK
- bd2uZbTfg0L2+P63qECMxQqLAgBX2DldXYERVfx46bZMKKPLfF2m2RhfjgFcVOZEuE4XNfFWlsd
- nJ1lMYGAsx28VCZ4X6AHBVTB3KHgCZhwKX3iync4b5clhbKFfgpGpUW+siJEWZEDUtTTj8Ov3wu
- T8DMEg9q5dqS0AbTDaTfWYtxJsxo6WcbNoGnA6iAPSo7yE+XVn3rrKJ1Qwn3M6+RgHi/cyx1n/s
- W/NEleWEOfIT5bnL8U7JkKn3swRxzRj1griirdwWD6ZtpVLcOuq1KpyQaRePkmfvmcsG737i6Pu
- oSO5jXusIIxamwQteRvkWI1Z7Xc+LQqxZ9KP5RGns6l3pISoYctKUucmLVaH3WTmLTjY0g14juM
- EEkz9RU0o8WdTO1HhTcHbwhcZyeIQtMIEXBENvD8epVD34qMTdBdbGJBhsAV4SkvuE5544jG
-X-Proofpoint-GUID: erdZe8h3cOfKGCAKK3MbpbXil2YGXIBE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_05,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 lowpriorityscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 mlxlogscore=999 clxscore=1015 malwarescore=0 bulkscore=0
- suspectscore=0 mlxscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506180128
 
-
-
-On 6/17/2025 10:47 PM, Krzysztof Kozlowski wrote:
-> On 17/06/2025 14:06, Luo Jie wrote:
->> Add the NSSNOC master/slave ids for Qualcomm IPQ5424 network
->> subsystem (NSS) hardware blocks. These will be used by the
->> gcc-ipq5424 driver that provides the interconnect services
->> by using the icc-clk framework.
+On 6/16/25 19:21, Stanislav Fomichev wrote:
+> udp_tunnel_push_rx_port will grab mutex in the next patch so
+> we can't use rcu. geneve_offload_rx_ports is called
+> from geneve_netdevice_event for NETDEV_UDP_TUNNEL_PUSH_INFO and
+> NETDEV_UDP_TUNNEL_DROP_INFO which both have ASSERT_RTNL.
+> Entries are added to and removed from the sock_list under rtnl
+> lock as well (when adding or removing a tunneling device).
 > 
-> Please wrap commit message according to Linux coding style / submission
-> process (neither too early nor over the limit):
-> https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+> Signed-off-by: Stanislav Fomichev <stfomichev@gmail.com>
+> ---
+>  drivers/net/geneve.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> Best regards,
-> Krzysztof
+> diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
+> index ffc15a432689..9efedc6758bf 100644
+> --- a/drivers/net/geneve.c
+> +++ b/drivers/net/geneve.c
+> @@ -41,6 +41,7 @@ MODULE_PARM_DESC(log_ecn_error, "Log packets received with corrupted ECN");
+>  /* per-network namespace private data for this module */
+>  struct geneve_net {
+>  	struct list_head	geneve_list;
+> +	/* sock_list is protected by rtnl lock */
+>  	struct list_head	sock_list;
+>  };
+>  
+> @@ -1179,8 +1180,9 @@ static void geneve_offload_rx_ports(struct net_device *dev, bool push)
+>  	struct geneve_net *gn = net_generic(net, geneve_net_id);
+>  	struct geneve_sock *gs;
+>  
+> -	rcu_read_lock();
+> -	list_for_each_entry_rcu(gs, &gn->sock_list, list) {
+> +	ASSERT_RTNL();
+> +
+> +	list_for_each_entry(gs, &gn->sock_list, list) {
+>  		if (push) {
+>  			udp_tunnel_push_rx_port(dev, gs->sock,
+>  						UDP_TUNNEL_TYPE_GENEVE);
+> @@ -1189,7 +1191,6 @@ static void geneve_offload_rx_ports(struct net_device *dev, bool push)
+>  						UDP_TUNNEL_TYPE_GENEVE);
+>  		}
+>  	}
+> -	rcu_read_unlock();
+>  }
+>  
+>  /* Initialize the device structure. */
 
-Thanks. I will update the commit message to follow the guideline.
+Reviewed-by: Nikolay Aleksandrov <razor@blackwall.org>
+
