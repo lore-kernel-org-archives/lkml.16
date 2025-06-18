@@ -1,97 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF85285C8B;
-	Wed, 18 Jun 2025 12:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39D82E8E03
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249895; cv=none; b=QXg3Ummf9kpN+YzTAPu/SEGRU73V/R0FhqkfLhpGU3pN13H2kjJXx1TMDy/1BLf8ITsMlcKBQPtb2Is+XsJ6b8kY9o3APIYJ3qSE3nlkYgihv1AMyDVKEIqW8Q2gu1vPOQA8Z81v12lL8/gD4U8NgR4H5Z5PhEkubL+xuu1oJmI=
+	t=1750249935; cv=none; b=cUUoma0YHepTIyN6axG8pri9xfYwO7tMNSRuzmGkCuydB2k9ZYUdbPoSx6zR/Nk0xdfqT5XwQaUVTnW+nYZPqFOCEZ9dmBQjAIzAPwQ6lDcm60XIHQMeATACPKvZsmgLmTBi2l3oP5T1EmUUF5M06vycvRwxmjrocoS0LxSdG8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249895; c=relaxed/simple;
-	bh=3ZrI052V23T+mNrFLFPPcK3CIF/YjYSdxgqZH0iO2d0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xsq9zPZq23KjhwKK+THSw8yX8UyUpxA8jJRYuIWUCxJ+WU40ZS44qVpzSs1EPQ/2KqB9AgSpa96v5YhiUrhyYoyFYQfqqCd1Mw6vrNFtIg40zP33vmoXe3MM8AoItIOA3E3DUDEkoICGfovaauFkrT3fDDDn3Nd279d33Gc2hkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DijN8Sil; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750249935; c=relaxed/simple;
+	bh=8ru3S13YY2r1BLkrgNMzlGHZsDqoJyg0hmYDr1Azgpc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UT01SenHmqDAix/N43+cDISBfOHC7ZSewY6FLB3UkKnbWPtBPAw/wJSMq5LZ8Ou5cjF5HRyko9qICumO83ONftkY6K0ki8xrehRe5qo5dRPZOr044pSunTo98yQ22+od0R6hhd6/PxfkwfIixpG6eENoLjFkCU1g7g15MaxfFU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qsA8uOJb; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DijN8Sil"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 464B3C4CEE7;
-	Wed, 18 Jun 2025 12:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750249893;
-	bh=3ZrI052V23T+mNrFLFPPcK3CIF/YjYSdxgqZH0iO2d0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DijN8Sil7SIDh7aMjK7gKz3beUUdlrtDXsfV9XqMLHI2sWXIPtLhM9yZKqEhdLv0S
-	 16UPsbzgcQ/2ZsrzKi70rJ+Cfjy3JGmJ+KmSxJCt9z5wRq09rmY0McIDUQqnz10aW9
-	 eBy84xrynrdhhZ3XQyI7hYerF6M+z25EkcOZmpay0EwFLprTzfNBvrxFVazlqo5XTW
-	 zzt468nWONM2EYqrbOVk859JQXXPzqN9yAADNYQ5bSAUtlT1o7E5gzrTXNwc/VQcjJ
-	 KUPXZZ/qElxiFMuYaksyZwOVodEgisAenxD7DGhN6W5Q/Uq3bHXp3XJnKOXOl/AKfb
-	 +PJD2RifMK7qw==
-Date: Wed, 18 Jun 2025 13:31:30 +0100
-From: Simon Horman <horms@kernel.org>
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>
-Cc: mst@redhat.com, jasowang@redhat.com, eperezma@redhat.com,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: Re: [PATCH] vhost: Fix typos in comments and clarity on alignof
- usage
-Message-ID: <20250618123130.GM1699@horms.kernel.org>
-References: <20250615173933.1610324-1-alok.a.tiwari@oracle.com>
- <20250617183741.GD2545@horms.kernel.org>
- <eb95149b-89eb-437f-813d-0045635aee8b@oracle.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qsA8uOJb"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553644b8f56so7053630e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750249932; x=1750854732; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1MHrtaWQYxYQbOY1jXBZbhCbwYlDmgnWya6qmbQvgdY=;
+        b=qsA8uOJb3eyJllgNyKrz1nZYhJJfGVRdEZS2Kex7KUTyK1DGSB12Q2Ks2bEeyWIw52
+         Z4/NcJFZFHHuHJdlf9y3PuAQ2OQkbpEmWHGFIKYJddv3+35diKVddm9gL28h+O+4hJ7O
+         DuFr72FcuJLwtfeVUMRrvL8yE13b8tNoq+S8L4+71aO9VAJg9dsjpU3K5vsxhNKaGFzz
+         oNetZfEn95q21gsKGeNTHe8SWIy9T/a4ReI22qPg9e5TBz0/zTvh92PGjzF0Nx5tj+Uz
+         LGXt1iI4LxgPAQSz4ZF6k9xRda0S54DLhE4QGnx7B0Fg5OdlTl1BH8actiwT/m3pWLhJ
+         fSag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750249932; x=1750854732;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1MHrtaWQYxYQbOY1jXBZbhCbwYlDmgnWya6qmbQvgdY=;
+        b=hFBwF88JaYJ/h68u7CWdPiRJwVL0WcH3lt5V0EhmjNJ1Cc1Nf+6UCdx6Vxc2q52Nbg
+         PbdQir17rPqfI7Qj8NQj5H5rcbgPF4fmMFjTA7xHWZFVDjb4zHJofHmTF7125C9QV+K5
+         AoVsiyoiM9newi5orYEVBXsv43VDHn5oGCnrc2REql/45YZBYKTrTa6dcLHzXjs7gPoz
+         2B4jR7SnOqBFsoFhX/J6Ps7s50MNiW7dFU8yABg9N882X9xa5CkIXXIoSoWmyqQvY6JC
+         BZAkYutXFWnwsxTkg2CcAZcouPHB5SpAPUgz6+dRYw6o9dTjEoKxXtvzeIXx7kgVEgg2
+         RvlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUE3dZJqobrN3zi2jiYrAwGjftEj0kqs5JtLFLEyFkRt+LeBVnxNX/DVKadMWZpZlxOBokLb+9wDneEuxc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOZUv5yRStSVTcsoptnRsTNtuUaPgKCqg4puTl+GhUex15LuRd
+	QdjN8xneyeDCcehAVVrhg8Er7Kt8NSBRnEX+OclATObRd8IQzY6YHF1CPu2DRHZyOsBlU9/W/40
+	JAlollcMiEuo0k0zyQBbisTFA2wUA+HR7e9cLXmJ4zg==
+X-Gm-Gg: ASbGncuMgTZ4ZxRDaZg5Ir+5xMph+Nna6FXXItRqWZUMHJjknAr6Xwg0Q3GZlbzJg3A
+	jJ80CADwaeTx4XrtzO9zkF4ytGqSDn1fWLGiGU4+hm7rHZGHTok4aoP5+dUo2fV5ncY05rvUC29
+	KZbw8myM/qi7FiMhBUKUcULLQMBGx9pEDriJapj7mH2Xir4Pzh+jbj23XTJB6gNuqgoxrzi44x4
+	Q==
+X-Google-Smtp-Source: AGHT+IFAMnM7CSQpA77g/OMbt8IoqXvkUX7g9VLTQkGZp3kx9iir6pjz35t/vnj3pTtA5gMi1QAzjji43YJ6cOMM12U=
+X-Received: by 2002:ac2:58f1:0:b0:553:ceed:c859 with SMTP id
+ 2adb3069b0e04-553ceedca11mr1249211e87.21.1750249931831; Wed, 18 Jun 2025
+ 05:32:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <eb95149b-89eb-437f-813d-0045635aee8b@oracle.com>
+References: <20250613-hdp-upstream-v5-0-6fd6f0dc527c@foss.st.com>
+ <CAMRc=MeTmwgbHv9R_=GFmjkAV4Nvc-SeSCOz1k6pnGUrF+R9Mg@mail.gmail.com> <CACRpkdax9ojguF1SAfiN9iZi=x3VFpCea6KnhzL3JBD9EXZepw@mail.gmail.com>
+In-Reply-To: <CACRpkdax9ojguF1SAfiN9iZi=x3VFpCea6KnhzL3JBD9EXZepw@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 18 Jun 2025 14:32:00 +0200
+X-Gm-Features: AX0GCFsVjqlM3hFZShUrbzkpCsjw98BAff7JIDMVgVQXijZgm6doHKA1YxG22Rc
+Message-ID: <CAMRc=Me8KZPU_KbbifL-j74GMPSuDgmmacw9g1UEfy=zeGyZcw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Introduce HDP support for STM32MP platforms
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: =?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 01:31:09AM +0530, ALOK TIWARI wrote:
-> 
-> 
-> Thanks Simon,
-> 
-> On 6/18/2025 12:07 AM, Simon Horman wrote:
-> > On Sun, Jun 15, 2025 at 10:39:11AM -0700, Alok Tiwari wrote:
-> > > This patch fixes multiple typos and improves comment clarity across
-> > > vhost.c.
-> > > - Correct spelling errors: "thead" -> "thread", "RUNNUNG" -> "RUNNING"
-> > >    and "available".
-> > > - Improve comment by replacing informal comment ("Supersize me!")
-> > >    with a clear description.
-> > > - Use __alignof__ correctly on dereferenced pointer types for better
-> > >    readability and alignment with kernel documentation.
-> > Could you expand on the last point?
-> > I see that the patch uses __alignof__ with rather than without parentheses.
-> > But I don't follow how that corresponds with the comment above.
-> 
-> only I can say "__alignof__ *vq->avail" is valid C,
-> but it can hard to read and easy to misinterpret.
-> Without proper parentheses sometime, __alignof__ *vq->avail can be
-> misleading to reader. it may not be immediately clear whether it refers to
-> alignment of the pointer vq->avail or
-> alignment of the object it points to.
-> __alignof__(*vq->avail) adds parentheses that clarify the intention
-> explicitly.
-> I can not see very clear guide line to using parentheses or not for
-> __alignof__ in kernel document apart
-> from(https://www.kernel.org/doc/html/latest/process/coding-style.html).
-> Additionally, I have not been able to locate examples in the kernel code
-> where __alignof__ is used without parentheses.
+On Wed, Jun 18, 2025 at 2:21=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Mon, Jun 16, 2025 at 10:05=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+> > On Fri, Jun 13, 2025 at 12:16=E2=80=AFPM Cl=C3=A9ment Le Goffic
+> > <clement.legoffic@foss.st.com> wrote:
+> > >
+> > > This patch series introduces the Hardware Debug Port (HDP) support fo=
+r
+> > > STM32MP platforms.
+> > >
+> > > It includes updates to the mmio gpio driver, the addition of device t=
+ree
+> > > bindings, the HDP driver, and updates to the device tree files for
+> > > STM32MP13, STM32MP15,
+> > > and STM32MP25 SoCs.
+> > > The series also updates the MAINTAINERS file to include myself as the
+> > > maintainer for the STM32 HDP driver and adds the necessary
+> > > pinmux configurations for HDP pins on STM32MP157C-DK2 as example.
+> > >
+> > > Signed-off-by: Cl=C3=A9ment Le Goffic <clement.legoffic@foss.st.com>
+> > > ---
+> >
+> > [snip]
+> >
+> > > ---
+> > > Cl=C3=A9ment Le Goffic (9):
+> > >       gpio: mmio: add BGPIOF_NO_INPUT flag for GPO gpiochip
+> > >       dt-bindings: pinctrl: stm32: Introduce HDP
+> > >       pinctrl: stm32: Introduce HDP driver
+> > >       MAINTAINERS: add Cl=C3=A9ment Le Goffic as STM32 HDP maintainer
+> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp13
+> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp15
+> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp25
+> > >       ARM: dts: stm32: add alternate pinmux for HDP pin and add HDP p=
+inctrl node
+> > >       ARM: dts: stm32: add Hardware debug port (HDP) on stm32mp157c-d=
+k2 board
+> > >
+> >
+> > Patches 1-4 and 5-9 can go upstream independently. I suggest taking
+> > patch 1/9 through the GPIO tree and providing an immutable tag to
+> > Linus to take patches 2-4 through the pinctrl tree. Linus: are you OK
+> > with that?
+>
+> Yes go ahead if you want, an immutable branch based on v6.16-rc1
+> is the best for me, then I pull that in.
+>
+> I could also just apply it and hope for the best... it usually works.
+>
 
-Thanks, I understand now.
+I have a rework of gpio-mmio in progress that removes the bgpio
+specific fields from struct gpio_chip. This includes moving the flags
+into a separate gpio/generic.h header. I really need to either apply
+it myself or get an immutable tag from you with this change.
 
-Perhaps it's not important, but FWIIW I was confused by "correctly".
-And something like this seems a bit clearer to me.
-
-  - Use __alignof__ with parentheses which is in keeping with kernel coding
-    style for an __attribute__ and arguably improves readability of what is
-    being aligned.
-
-In any case, thanks for your explanation.
-This patch now looks good to me.
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+Bartosz
