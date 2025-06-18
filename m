@@ -1,54 +1,33 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A5A1A2630
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:14:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 746CE45C14;
+	Wed, 18 Jun 2025 06:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750227282; cv=none; b=JfrRzE7MUitiPkbVq8LIVGkqRmu7IKJJV8/FB1KW2ugfNNJw7QxJAKuCInreeIXdbIdv750BjkfO30ccU0VSWFg/fWLHleWLdQ7q28WYCcWgYXpMf186pMb6OxHAWRTfpvJ3V8ysHEZ5bQn/w1ZLhV9kh4bJ97VJOAyupKesdfA=
+	t=1750227328; cv=none; b=nZt6WanBsdJYuSgh3L6ZR9rM1FglJRK5EXvRSMnNDjjW+ihABXiWcOoEvjYXVkvKxG/1UGtbQdez5vcDb9wIgiFYFlwKvqTvrU/czEuYn9GQa28MUdGzHCfPnpQ333QcW4ibbR4k3o3EqRESR4hsXEbL2BUD08RMDJyrz5qpo7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750227282; c=relaxed/simple;
-	bh=GISdvLlhB4wq5Zikg2XZlMze4njclW/mJXKXxKeLpQc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type:
-	 References; b=lY4lwDTgNSmJ/MaZYapENuQUQ/IZllySwC0uTAOIKMhlJ3Tb1WpSas2GnJWCSMxFSJoVxa+9TJ3keMDsBCk+yXXIkrVLGTCKaZI+atnYz1Wi3fLg5YAUib9dkhWI8ldUTgnaJLhyDOlKvf0Tf3Pb0BTYOAocxOo7TiWLYqed3Pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=JdCASgnK; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JdCASgnK"
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250618061436epoutp0234880d663b92bb60337ab35a74436ef2~KDm9r8hxb2548225482epoutp02i
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:14:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250618061436epoutp0234880d663b92bb60337ab35a74436ef2~KDm9r8hxb2548225482epoutp02i
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750227276;
-	bh=eqyhFyOn+tXYm2eBjD+rNBRRmBhCV6qEMFxuXTHI0Mo=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=JdCASgnKk31/NedIFp1EmUu6maaYQiB/U2GAKN4KJnR6IxnxXhy9CpP2kljarMpc2
-	 fwuFTOXT1QIAPqQATqdqS7cZveYsc9cDqVO9iVv4P2FlQi50LnxKFBPvhyQGj+T5Zl
-	 MXq1yLhfh+cbM8+iA6oLS2d65FbybEEaXpEueWH4=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250618061436epcas5p27bd2e571fe77d3bf1dab83faf7758c20~KDm9Wt4Fg1383113831epcas5p29;
-	Wed, 18 Jun 2025 06:14:36 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4bMYNp1HQxz6B9mJ; Wed, 18 Jun
-	2025 06:14:34 +0000 (GMT)
-Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250618050409epcas5p48f60d6022d148a22fc9fd4a025cc45ca~KCpcVkUtz2632626326epcas5p42;
-	Wed, 18 Jun 2025 05:04:09 +0000 (GMT)
-Received: from testpc11818.samsungds.net (unknown [109.105.118.18]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250618050408epsmtip24d9afc45a9affc3e1ce2476b6eca1905~KCpbxKp9W0227102271epsmtip2O;
-	Wed, 18 Jun 2025 05:04:08 +0000 (GMT)
-From: hexue <xue01.he@samsung.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC] block: The Effectiveness of Plug Optimization?
-Date: Wed, 18 Jun 2025 13:04:01 +0800
-Message-ID: <20250618050401.507344-1-xue01.he@samsung.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750227328; c=relaxed/simple;
+	bh=DPAVXee8lg/hmktKWM/b+gQyJe9Un0lw3KuXYjRPCDY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o8jC5QtBKOcN0pa3u6bnRQ0emijdfKyEALBKThI0HxGUaXJzkQAO8N9/soGwvWMeSWuqrx+kn6GB2URoCML3gvL9Ci40ncdplj0u/5m5XllAXZ/7c3PZi713M9RbmT2IQjRMm93B7DA/0t1NN7B6YD/fTxlJtr1bjFyEg8hHLnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-03 (Coremail) with SMTP id rQCowADHFU53WVJo92lNBw--.28436S2;
+	Wed, 18 Jun 2025 14:15:19 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: mchehab@kernel.org,
+	tglx@linutronix.de,
+	mingo@kernel.org,
+	hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] media: au0828: Use USB API functions rather than constants
+Date: Wed, 18 Jun 2025 14:14:30 +0800
+Message-Id: <20250618061430.614188-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,69 +35,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250618050409epcas5p48f60d6022d148a22fc9fd4a025cc45ca
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-505,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250618050409epcas5p48f60d6022d148a22fc9fd4a025cc45ca
-References: <CGME20250618050409epcas5p48f60d6022d148a22fc9fd4a025cc45ca@epcas5p4.samsung.com>
+X-CM-TRANSID:rQCowADHFU53WVJo92lNBw--.28436S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7tF43CFW7Kry5WF17Xw48tFb_yoW8GF4fpF
+	s3Gay8trWDArW5G3WUJw1UAr1rWa1rZ34xGF9rW3yS9F1xA3Wftry8Ar1Iqr17CFy3u3W5
+	tr4Dt3Wqgr1jkF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_GcC_XcWlOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
+	AVWUtwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjTRNuciUUUUU
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-The plug mechanism uses the merging of block I/O (bio) to reduce the frequency of
-I/O submission to improve throughput. This mechanism can greatly reduce the disk
-seek overhead of the HDD and plays a key role in optimizing the speed of IO. However,
-with the improvement of storage device speed, high-performance SSD combined with
-asynchronous processing mechanisms such as io_uring has achieved very fast I/O
-processing speed. The delay introduced by flow control and bio merging may reduced
-the throughput to a certain extent.
+Use the function usb_endpoint_dir_in() and usb_endpoint_type()
+rather than constants.
 
-After testing, I found that plug increases the burden of high concurrency of SSD on
-random IO and 128K sequential IO. But it still has a certain optimization effect on
-small block (4k) sequential IO, of course small sequential IO is the most suitable
-application for merging scenarios, but the current plug does not distinguish between
-different usage scenarios.
+The Coccinelle semantic patch is as follows:
 
-I have made aggressive modifications to the kernel code to disable the plug mechanism
-during I/O submission, the following are the random performance differences after
-disabling only merging and completely disabling plug (merging and flow control):
+@@ struct usb_endpoint_descriptor *epd; @@
 
-------------------------------------------------------------------------------------
-PCIe Gen4 SSD 
-16GB Mem
-Seq 128K
-Random 4K
-cmd: 
-taskset -c 0 ./t/io_uring -b 131072 -d128 -c32 -s32 -R0 -p1 -F1 -B1 -n1 -r5 /dev/nvme0n1
-taskset -c 0 ./t/io_uring -b 4096 -d128 -c32 -s32 -R1 -p1 -F1 -B1 -n1 -r5 /dev/nvme0n1
-data unit: IOPS
-------------------------------------------------------------------------------------
-             Enable plug          disable merge           disable plug
-Seq IO       50100                50133                   50125
-Random IO    821K                 824K                    836K           -1.83%
-------------------------------------------------------------------------------------
+- ((epd->bEndpointAddress & \(USB_ENDPOINT_DIR_MASK\|0x80\)) ==
+-  \(USB_DIR_IN\|0x80\))
++ usb_endpoint_dir_in(epd)
 
-I used a higher-speed device (PCIe Gen5 server and PCIe Gen5 SSD) to verify the hypothesis
-and found that the gap widened further.
+@@ struct usb_endpoint_descriptor *epd; @@
 
-------------------------------------------------------------------------------------
-             Enable plug          disable merge           disable plug
-Seq IO       88938                89832                   89869
-Random IO    1.02M                1.022M                  1.06M          -3.92%
-------------------------------------------------------------------------------------
+- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
++ usb_endpoint_type(epd)
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/media/usb/au0828/au0828-video.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-In the current kernel, there is a certain flag (REQ_NOMERGE_FLAGS) to control whether
-IO operations can be merged. However, the decision for plug selection is determined
-solely by whether batch submission is enabled (state->need_plug = max_ios > 2;).
-I'm wondering whether this judgment mechanism is still applicable to high-speed SSDs.
-
-So the discussion points are:
-	- Will plugs gradually disappear as hardware devices develop?
-	- Is it reasonable to make flow control an optional configuration? Or could
-          we change the criteria for determining when to apply plug?
-	- Are there other thoughts about plug that we can talk now?
-
-Thanks,
-Xue He
+diff --git a/drivers/media/usb/au0828/au0828-video.c b/drivers/media/usb/au0828/au0828-video.c
+index e5dff969ed57..fbaa542c8259 100644
+--- a/drivers/media/usb/au0828/au0828-video.c
++++ b/drivers/media/usb/au0828/au0828-video.c
+@@ -1921,9 +1921,8 @@ int au0828_analog_register(struct au0828_dev *dev,
+ 	iface_desc = interface->cur_altsetting;
+ 	for (i = 0; i < iface_desc->desc.bNumEndpoints; i++) {
+ 		endpoint = &iface_desc->endpoint[i].desc;
+-		if (((endpoint->bEndpointAddress & USB_ENDPOINT_DIR_MASK)
+-		     == USB_DIR_IN) &&
+-		    ((endpoint->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK)
++		if (usb_endpoint_dir_in(endpoint) &&
++		    (usb_endpoint_type(endpoint)
+ 		     == USB_ENDPOINT_XFER_ISOC)) {
+ 
+ 			/* we find our isoc in endpoint */
+-- 
+2.25.1
 
