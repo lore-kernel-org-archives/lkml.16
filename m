@@ -1,163 +1,359 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12AE220689
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1395B21C194
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750279153; cv=none; b=r+Q7Vq35r/XLDGPCnn+PI7o+ai1Fahzu7I2mR7Hs8koAXFd0gYg3c7YH2cFQy2Tnf96eOoxGXhvvv8ijCneHgXwZH5iLp+Kj16BczgwT+ixFPJMYSzJZIhYYQCNa3CLgvrVDICciKk//BhMPgjezW6lcp7m6Ke/yJH1UlfmJuTE=
+	t=1750279284; cv=none; b=D/jzyUxJChiE3/iygkZgIMYW2TWHu+8xeis0II02XSubiHsbFCqlatfsPv+OzoIDghRvRjmhJE5v88G0NLGf1yitmXCcubOfVt/G8jfD/tQ2A1bR0iUuVkatZWBsNIyHUw/2wMdTYsVdgeWvtJ5Llrmnh8col0X1GE+/OvqWwzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750279153; c=relaxed/simple;
-	bh=/NM+ak0rLMjlCOg7dWPSQwADmJXEiX9mllS2HtmWndM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mT6iOMJFUJjBJjrRe/q4lIZAIfOZ93F+TKjKvNJrPhRTeHVuykIFUZN+xIChkRk0sIKqLDWskNEVDSqU5HGPGxms0Lw/zsomQ4tl/U9SX4xQLlUCz/YjerYiOnMgwmIp0i859SAnnRofOtNIrLpubzAg9yW7FUzfECy8oa8BsIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZsrSHb5o; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750279284; c=relaxed/simple;
+	bh=3dkE3lsYL5FGEBR8G1u7uyEL2RsZEtB06UZ0J9FZ1Jg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AHheKi0oa3O8iE/8ntMcZ+/UvBARum66omI11xahsARyXZl8LGJh7zn0DUZO+bDERP+iBDph6ZuRwHHi1rFQ+pX5mDFO2RF1o+RhlggBNSkhtLtdackSkLXZ0rfPS4fCriqeTE1jT/QkGt31W6idxzhQQilFAMxEv9fnIeS4d5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=l2MUqNBP; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZsrSHb5o"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-710e344bbf9so986527b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:39:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="l2MUqNBP"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-b2c4476d381so60307a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:41:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750279151; x=1750883951; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xd7fVESQIYURer+XcfloCFqoNH9nVlZcYjsVdYV2DsQ=;
-        b=ZsrSHb5o7CPm7jkVJW1Wk+lrgdJb2t9toHvCpfvJuWlkNDXG/QIw60s/sCTxIaVal7
-         UoZba6KvbXw5PwQb2xmpwpsd9ns8DKg6vr/YthpORgHjnD7ZT3givznH1bUKACI+dL6n
-         Q1tgGSDz3iZEvw3B64uVTk1LgX532xL4s9TcwXDXuPPa4PW5S3qjwA1ls9baArnqaXQX
-         faazgQWe9bYJYiBBWq3goh+abKjXqybClAyjz0vFs84MFrnrmPZBDBZaalVc35y93wKK
-         Bs9+rHRMLsd/0afLdRa4Y50ekhTyJqfV7HaHhtAlhm2uGzIZEcvuv1Sv42ehiTGwIlD0
-         +9kg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750279280; x=1750884080; darn=vger.kernel.org;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FRgH8+d7aznA4MQghmGW1XETNNC6iKcuwGWHKJaLMaY=;
+        b=l2MUqNBPue5CgmYbguEYfPtEqU25bdFeMOa/OXl8ulmi2vQzAQRlPsDtrne2Gxg7uK
+         LjvwC5e7Vpi6H8e/ucd/EVpiy6Hu9JuvqOblUpbudcWAxBVf4rddJjkAQsVWj2PQ7U/s
+         ChggQozH1tqhpctoNnHdIqGnOopbPpZ3Z0vbSqPX8tHSHICDmHe2R5KZWaZldSkRd2+6
+         8LLsgdAbvlmJiI9nH+fuh29U0QKYuu/ZSdKS/1ED1sEy/CeY0+HktM37TNHHitW7pJKr
+         rCCsaxhp/lKauNoGyvNMinCt3K4OSXAZe349oBTVAoWdS1oWx9aixo/5Uu2oEwziY2DT
+         VXZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750279151; x=1750883951;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xd7fVESQIYURer+XcfloCFqoNH9nVlZcYjsVdYV2DsQ=;
-        b=fqYeBQahLzGpMxis2KEWXbTQlN9/5PoyspcTsAK8VORCjsbF8Kzs/ZKv16q8fhrEBb
-         Jai0slcIHMiUGMcz6U302n++nT9QdrLNOnYl6PXzxt29tEM3yPLX0cHR4eOuWVKnW00B
-         IS6huGY2nZe4CA/ybXmL3a+uCayBkR4l1n8+r9eom/myd3MhqAbZQ0nDdtavkvrhz1E4
-         IptiAZmwD+6H3aQ1nxyJmCe51KYeYvWZt77aKrtPUZQlwXnV8SPKga8I/uqEjacYRrO9
-         mKCuxaBU7YgF6G2MnLZr71+MokK52+NJxeUF6kYilbqiM5h439bG1JRPtue0kifJd/4w
-         9Rag==
-X-Forwarded-Encrypted: i=1; AJvYcCUaawR2Co5G8IkWOq+LvJppqya3SLlLsy/eVmHL0fzN+LnRH4z6YF+Z+hkFRxgxHd1uQwLzzPsHmgJmn/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGXIPNWt2ChpAOAG8n7sUfYyBMFEoXVHIqCQnt4BXT4yaIUEl4
-	maLgmUGcpymNnqAK8Cq/Z6nkqbF+tH2kFZN6XEsZwkDUItmbPJtHbKh92ZNmLqSUP3Ige0+/SVy
-	rQjl3B9yEXfPzv2lD31uktcUM97CWtwi3RPo9oVA4
-X-Gm-Gg: ASbGnctIP2t9M/o/fFRallRrD6FH820xZJrH1u8eZNbKY2oQgvbNs0FGu3+K9XPB/pv
-	IhUoNEfZsAb46ZvjKdCGsgvsEWuP/qLjh9mtCCd7BvWntvWw0/CAtskcNJQ4dbDUJNxk1CqvRV0
-	tHrEuLbnevHJ0j+Hb1VdQcCzWpFQVaDxJFJ4ohxULK+SI4Ja96XZCjqKaWvshXYuBfy3v0LiUUU
-	zW5F/efI3k=
-X-Google-Smtp-Source: AGHT+IH1NWNvanAK0XOjMJEe/GTsQrjRFVmMnXkKiISsTuc+7lPoCeqCpycNb+zFFUr9NjVAP8ZmiqXZcDijHwWFKtA=
-X-Received: by 2002:a05:690c:7241:b0:70e:2d17:84b5 with SMTP id
- 00721157ae682-71175203681mr284981287b3.0.1750279150493; Wed, 18 Jun 2025
- 13:39:10 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750279280; x=1750884080;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FRgH8+d7aznA4MQghmGW1XETNNC6iKcuwGWHKJaLMaY=;
+        b=a4NSqIzNu7BrKc+w4m7avCusf3OhJ8eSxKCEpm4ipSYWn7VE43sHqTw0MLf14cN0zc
+         JSkE5tk/h5wBE16+2ALfjcS3CONzaYYs2mcYrqxhCN22StUU2fbnOwOzrJTcD+btnw+r
+         nw0SqcvKk/YvgGpUWuVwmNeIjWV1C17+NEtVI6PkZB7jnxB7yBgqBUn+XKi5VBykE65+
+         AewOk8JHySLuTXku2n3au46DDLP1s+uxm+mSKXBcgOcVLdV21E1tNTTD/79xknMzPNvZ
+         bk4QfGbXca+GpHAyPtm1kI91XxUhAQke3ViILRTL6ARFArt1J9Rggeq0h66uKIgGad0f
+         B4qw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4OGDayt1+JUoIH/8YxNDePE3gx8lpjtCCDoL5wgN2q8D88IRokTe/NTbT7PrVXbqQwXJiM/unlTdxZZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2MfAAM32p7Q16O4/BXdCoG6jXY6mIBQyBlc+oY4i5MijESVU7
+	PpwTFBuoHxFvv5YYQ0D4AKEscGqbI1lQij6ksRZ96/hgrvXipSI+p9WDMW6018ZLmmU=
+X-Gm-Gg: ASbGncsLij2qsQ/s5Hr2fSzsdHWWoLCKKThRgOL4VU3K+Pc7WS3Bp8MHDtcVHz5SpZg
+	rJVW07IUqOicuccnBydM44T5hmLEgEae2I/0fsUGY9ZLvgrGGiHlndTCg5W9OFGknbm7tAnV0yC
+	y16LZZyJHTJs4d6G4CuLoq4hjiWxCM+qoQgTOPxzhHKbbunDSnfER1rCxW/+kpRf7a/WFg5RlP2
+	8j5Hf3BcbvqkOIhh71Lk9pKLImkbgz+5tdXtVqfJEScd1/bkAF2GVE+yMda9I+Jygn+oYzc152/
+	DJfV7zm5my6mi36q2K9K/e57DLoG8IOH1hNrfrrDj/g6BGGUMUPdDvTM3IgD
+X-Google-Smtp-Source: AGHT+IE2M4wu8ONpX/IiaC9ZvenKuU3UdWNHV2TzBZwcoAY9dPpuZfPN3dnzzwJJvIJDvRrlPVMKzw==
+X-Received: by 2002:a17:902:da90:b0:231:ad5a:fe9c with SMTP id d9443c01a7336-237cbf35959mr12925525ad.15.1750279280168;
+        Wed, 18 Jun 2025 13:41:20 -0700 (PDT)
+Received: from localhost ([97.126.182.119])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365d88d921sm105355355ad.40.2025.06.18.13.41.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 13:41:19 -0700 (PDT)
+From: Kevin Hilman <khilman@baylibre.com>
+To: Kory Maincent <kory.maincent@bootlin.com>, Tony Lindgren
+ <tony@atomide.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Aaro Koskinen
+ <aaro.koskinen@iki.fi>, Andreas Kemnade <andreas@kemnade.info>, Roger
+ Quadros <rogerq@kernel.org>, Russell King <linux@armlinux.org.uk>, Paul
+ Barker <paul.barker@sancloud.com>, Marc Murphy <marc.murphy@sancloud.com>
+Cc: Jason Kridner <jkridner@gmail.com>, Andrew Davis <afd@ti.com>, Bajjuri
+ Praneeth <praneeth@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark
+ Brown <broonie@kernel.org>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, linux-omap@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Kory Maincent
+ <kory.maincent@bootlin.com>
+Subject: Re: [PATCH v4 2/7] arm: dts: omap: Remove incorrect compatible
+ strings from device trees
+In-Reply-To: <20250617-bbg-v4-2-827cbd606db6@bootlin.com>
+References: <20250617-bbg-v4-0-827cbd606db6@bootlin.com>
+ <20250617-bbg-v4-2-827cbd606db6@bootlin.com>
+Date: Wed, 18 Jun 2025 13:41:19 -0700
+Message-ID: <7hzfe4ok9c.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618042424.330664-1-jthoughton@google.com>
- <20250618042424.330664-5-jthoughton@google.com> <aFMWQ5_zMXGTCE98@linux.dev>
-In-Reply-To: <aFMWQ5_zMXGTCE98@linux.dev>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 18 Jun 2025 13:38:34 -0700
-X-Gm-Features: Ac12FXxtgm7oIFvlTJaEkpAlCqjTucv9lNobWhug7G4AqcUM4fEMOn24B5rvNUA
-Message-ID: <CADrL8HXdBY-sxPJrKEKOzdyZ5C82dE3qUobQuh+LABgatCfgdw@mail.gmail.com>
-Subject: Re: [PATCH v3 04/15] KVM: Add common infrastructure for KVM Userfaults
-To: Oliver Upton <oliver.upton@linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>, Yan Zhao <yan.y.zhao@intel.com>, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Anish Moorthy <amoorthy@google.com>, 
-	Peter Gonda <pgonda@google.com>, Peter Xu <peterx@redhat.com>, 
-	David Matlack <dmatlack@google.com>, wei.w.wang@intel.com, kvm@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, Jun 18, 2025 at 12:41=E2=80=AFPM Oliver Upton <oliver.upton@linux.d=
-ev> wrote:
+Kory Maincent <kory.maincent@bootlin.com> writes:
+
+> Several device trees incorrectly included extraneous compatible strings
+> in their compatible property lists. The policy is to only describe the
+> specific board name and SoC name to avoid confusion.
 >
-> On Wed, Jun 18, 2025 at 04:24:13AM +0000, James Houghton wrote:
-> > KVM Userfault consists of a bitmap in userspace that describes which
-> > pages the user wants exits on (when KVM_MEM_USERFAULT is enabled). To
-> > get those exits, the memslot where KVM_MEM_USERFAULT is being enabled
-> > must drop (at least) all of the translations that the bitmap says shoul=
-d
-> > generate faults. Today, simply drop all translations for the memslot. D=
-o
-> > so with a new arch interface, kvm_arch_userfault_enabled(), which can b=
-e
-> > specialized in the future by any architecture for which optimizations
-> > make sense.
-> >
-> > Make some changes to kvm_set_memory_region() to support setting
-> > KVM_MEM_USERFAULT on KVM_MEM_GUEST_MEMFD memslots, including relaxing
-> > the retrictions on guest_memfd memslots from only deletion to no moving=
-.
-> >
-> > Signed-off-by: James Houghton <jthoughton@google.com>
-> > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > ---
+> Remove these incorrect compatible strings to fix the inconsistency.
 >
-> > +#ifdef CONFIG_KVM_GENERIC_PAGE_FAULT
-> > +bool kvm_do_userfault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fa=
-ult)
+> Also fix board vendor prefixes for BeagleBoard variants that were
+> incorrectly using "ti" instead of "beagle" or "seeed".
 >
-> The polarity of the return here feels weird. If we want a value of 0 to
-> indicate success then int is a better return type.
+> Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
 
-The way it's written now feels fine to me. I'm happy to change it to
-an int (where we return -EFAULT instead of 'true' and 0 instead of
-'false').
+While I agree with adding the new compatibles for clarity, I question
+removing the old ones after so much time in the kernel. 
 
-> > +{
-> > +     struct kvm_memory_slot *slot =3D fault->slot;
-> > +     unsigned long __user *user_chunk;
-> > +     unsigned long chunk;
-> > +     gfn_t offset;
-> > +
-> > +     if (!kvm_is_userfault_memslot(slot))
-> > +             return false;
-> > +
-> > +     offset =3D fault->gfn - slot->base_gfn;
-> > +     user_chunk =3D slot->userfault_bitmap + (offset / BITS_PER_LONG);
-> > +
-> > +     if (__get_user(chunk, user_chunk))
-> > +             return true;
-> > +
+As mentioned in earlier reviews, there is other tooling outside the
+kernel that has been built around these strings.  The one that I have in
+mind is KernelCI based tooling that tracks boards based on compatible
+strings.
+
+While the KernelCI tooling does evolve with these kinds of kernel
+changes, it also still builds and tests older kernels.  So if we want
+these tools to know that "beagle,am335x-bone" on a new kernel and
+"ti,am335x-bone" on an older stable kernel are actually the same board,
+the tools will need to keep track of that mapping as these change.
+
+So instead of removing them, can't we just make the new ones higher prio
+than the old ones?  That way the tools can see both, and also see which
+one is higher prio.
+
+I fully realize this is not necessarily the best technical argument to
+keeping the old and wrong names, so I will defer to DT maintainers on
+this one.  But since it's been wrong for a long time, I'm a bit
+reluctant to remove them completely knowing there will be external tools
+breakage.
+
+Kevin
+
+> ---
+> Changes in v4:
+> - Rename ti,am335x-shc to bosch,am335x-shc
+> - Drop model value change to avoid conflict with script based on this
+>   value like:
+>   https://salsa.debian.org/installer-team/flash-kernel/-/blob/master/db/all.db?ref_type=heads
 >
-> I see that the documentation suggests userspace perform a store-release
-> to update the bitmap. That's the right idea but we need a load-acquire
-> on the consumer side for that to do something meaningful.
-
-Indeed, the below test_bit() should be test_bit_acquire(), thank you!
-
-(N.B. I don't think the current code could result in an observable
-bug, given that the later write of the PTE has a control dependency
-here. But it is certainly written incorrectly.)
-
-> > +     if (!test_bit(offset % BITS_PER_LONG, &chunk))
-> > +             return false;
-> > +
-> > +     kvm_prepare_memory_fault_exit(vcpu, fault);
-> > +     vcpu->run->memory_fault.flags |=3D KVM_MEMORY_EXIT_FLAG_USERFAULT=
-;
-> > +     return true;
-> > +}
-> > +#endif
-> > +
-> >  int __attribute__((weak)) kvm_vm_ioctl_enable_cap(struct kvm *kvm,
-> >                                                 struct kvm_enable_cap *=
-cap)
-> >  {
-> > --
-> > 2.50.0.rc2.692.g299adb8693-goog
-> >
+> Changes in v3:
+> - Remove extraneous compatible strings.
+> - Replace BeagleBone board name vendor.
 >
-> Thanks,
-> Oliver
+> Changes in v2:
+> - New patch
+> ---
+>  arch/arm/boot/dts/ti/omap/am335x-base0033.dts                   | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-bone.dts                       | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts         | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-boneblack.dts                  | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-boneblue.dts                   | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts         | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts                  | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts                 | 3 +--
+>  arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts               | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts             | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts               | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts | 5 +----
+>  arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts          | 5 +----
+>  arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts               | 2 +-
+>  arch/arm/boot/dts/ti/omap/am335x-shc.dts                        | 2 +-
+>  15 files changed, 15 insertions(+), 22 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-base0033.dts b/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> index 46078af4b7a3..176de29de2a6 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-base0033.dts
+> @@ -9,7 +9,7 @@
+>  
+>  / {
+>  	model = "IGEP COM AM335x on AQUILA Expansion";
+> -	compatible = "isee,am335x-base0033", "isee,am335x-igep0033", "ti,am33xx";
+> +	compatible = "isee,am335x-base0033", "ti,am33xx";
+>  
+>  	hdmi {
+>  		compatible = "ti,tilcdc,slave";
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-bone.dts b/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> index b5d85ef51a02..08616d449f95 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-bone.dts
+> @@ -9,7 +9,7 @@
+>  
+>  / {
+>  	model = "TI AM335x BeagleBone";
+> -	compatible = "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "beagle,am335x-bone", "ti,am33xx";
+>  };
+>  
+>  &ldo3_reg {
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts b/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts
+> index b4b4b80df08c..aa668dfa1c6a 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-boneblack-wireless.dts
+> @@ -12,7 +12,7 @@
+>  
+>  / {
+>  	model = "TI AM335x BeagleBone Black Wireless";
+> -	compatible = "ti,am335x-bone-black-wireless", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "beagle,am335x-bone-black-wireless", "ti,am33xx";
+>  
+>  	wlan_en_reg: fixedregulator@2 {
+>  		compatible = "regulator-fixed";
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts b/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts
+> index 16b567e3cb47..476fb6677203 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-boneblack.dts
+> @@ -11,7 +11,7 @@
+>  
+>  / {
+>  	model = "TI AM335x BeagleBone Black";
+> -	compatible = "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "beagle,am335x-bone-black", "ti,am33xx";
+>  };
+>  
+>  &cpu0_opp_table {
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts b/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts
+> index f579df4c2c54..56f9042a5bfb 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-boneblue.dts
+> @@ -10,7 +10,7 @@
+>  
+>  / {
+>  	model = "TI AM335x BeagleBone Blue";
+> -	compatible = "ti,am335x-bone-blue", "ti,am33xx";
+> +	compatible = "beagle,am335x-bone-blue", "ti,am33xx";
+>  
+>  	chosen {
+>  		stdout-path = &uart0;
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts
+> index a4f5b5262645..37d4d5a3edf6 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen-wireless.dts
+> @@ -11,7 +11,7 @@
+>  
+>  / {
+>  	model = "TI AM335x BeagleBone Green Wireless";
+> -	compatible = "ti,am335x-bone-green-wireless", "ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "seeed,am335x-bone-green-wireless", "ti,am33xx";
+>  
+>  	wlan_en_reg: fixedregulator@2 {
+>  		compatible = "regulator-fixed";
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts b/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts
+> index 18cc0f49e999..3d6404653816 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-bonegreen.dts
+> @@ -10,5 +10,5 @@
+>  
+>  / {
+>  	model = "TI AM335x BeagleBone Green";
+> -	compatible = "ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "seeed,am335x-bone-green", "ti,am33xx";
+>  };
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts b/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts
+> index 648e97fe1dfd..224095304ef3 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-chiliboard.dts
+> @@ -8,8 +8,7 @@
+>  
+>  / {
+>  	model = "AM335x Chiliboard";
+> -	compatible = "grinn,am335x-chiliboard", "grinn,am335x-chilisom",
+> -		     "ti,am33xx";
+> +	compatible = "grinn,am335x-chiliboard", "ti,am33xx";
+>  
+>  	chosen {
+>  		stdout-path = &uart0;
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts b/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts
+> index fd91a3c01a63..55a454f51148 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-myirtech-myd.dts
+> @@ -12,7 +12,7 @@
+>  
+>  / {
+>  	model = "MYIR MYD-AM335X";
+> -	compatible = "myir,myd-am335x", "myir,myc-am335x", "ti,am33xx";
+> +	compatible = "myir,myd-am335x", "ti,am33xx";
+>  
+>  	chosen {
+>  		stdout-path = &uart0;
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts b/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts
+> index d28d39728847..d87ac31a16a9 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-osd3358-sm-red.dts
+> @@ -16,7 +16,7 @@
+>  
+>  / {
+>  	model = "Octavo Systems OSD3358-SM-RED";
+> -	compatible = "oct,osd3358-sm-refdesign", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "oct,osd3358-sm-refdesign", "ti,am33xx";
+>  };
+>  
+>  &ldo3_reg {
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts b/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts
+> index 78ce860e59b3..908203fd9190 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-pocketbeagle.dts
+> @@ -12,7 +12,7 @@
+>  
+>  / {
+>  	model = "TI AM335x PocketBeagle";
+> -	compatible = "ti,am335x-pocketbeagle", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "beagle,am335x-pocketbeagle", "ti,am33xx";
+>  
+>  	chosen {
+>  		stdout-path = &uart0;
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts
+> index 7c9f65126c63..61210f975542 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-extended-wifi.dts
+> @@ -13,10 +13,7 @@
+>  
+>  / {
+>  	model = "SanCloud BeagleBone Enhanced Extended WiFi";
+> -	compatible = "sancloud,am335x-boneenhanced",
+> -		     "ti,am335x-bone-black",
+> -		     "ti,am335x-bone",
+> -		     "ti,am33xx";
+> +	compatible = "sancloud,am335x-boneenhanced", "ti,am33xx";
+>  
+>  	wlan_en_reg: fixedregulator@2 {
+>  		compatible = "regulator-fixed";
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts
+> index c6c96f6182a8..10488b55689c 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe-lite.dts
+> @@ -12,10 +12,7 @@
+>  
+>  / {
+>  	model = "SanCloud BeagleBone Enhanced Lite";
+> -	compatible = "sancloud,am335x-boneenhanced",
+> -		     "ti,am335x-bone-black",
+> -		     "ti,am335x-bone",
+> -		     "ti,am33xx";
+> +	compatible = "sancloud,am335x-boneenhanced", "ti,am33xx";
+>  };
+>  
+>  &am33xx_pinmux {
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts
+> index 32669346cefe..f1bdbf053fb2 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-sancloud-bbe.dts
+> @@ -13,7 +13,7 @@
+>  
+>  / {
+>  	model = "SanCloud BeagleBone Enhanced";
+> -	compatible = "sancloud,am335x-boneenhanced", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "sancloud,am335x-boneenhanced", "ti,am33xx";
+>  };
+>  
+>  &am33xx_pinmux {
+> diff --git a/arch/arm/boot/dts/ti/omap/am335x-shc.dts b/arch/arm/boot/dts/ti/omap/am335x-shc.dts
+> index 597482822608..47b1db476cf3 100644
+> --- a/arch/arm/boot/dts/ti/omap/am335x-shc.dts
+> +++ b/arch/arm/boot/dts/ti/omap/am335x-shc.dts
+> @@ -12,7 +12,7 @@
+>  
+>  / {
+>  	model = "Bosch SHC";
+> -	compatible = "ti,am335x-shc", "ti,am335x-bone", "ti,am33xx";
+> +	compatible = "bosch,am335x-shc", "ti,am33xx";
+>  
+>  	aliases {
+>  		mmcblk0 = &mmc1;
+>
+> -- 
+> 2.43.0
