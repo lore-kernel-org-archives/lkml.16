@@ -1,137 +1,119 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout1.routing.net (mxout1.routing.net [134.0.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFDAF9CB;
-	Wed, 18 Jun 2025 14:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76CDAF9CB;
+	Wed, 18 Jun 2025 14:50:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258180; cv=none; b=ZVM/zs0Oi4Ab2T9ZqHyakoPnaRldzkKVc81IXN43k5zGmVarfAvocUyeG52E/ImMTKBt++LyBQah3dkikOMDSle9AFKqNBDldZEEsyNtZE3c8LcFLbVdoWUZJeBDdUysIUF8TVIkEBeg5q+8GsuTPRyNAFfJS9uqKMmyUVShIuo=
+	t=1750258224; cv=none; b=PlKglEolCdQFpgZBSkjPWx6cCrlOkA+cuOezxJJRall9xuE2JdotQ7neSQg9gMzpocooqLGdtZ4AqdvI3eKqV31M1QYCKlxNlQ5JpNRx7eogebF/64GKhaQxl6Q1DVfo6GtQt55I42z5cKUK9fVg3+pVPCbmPokfOHOQc9gf1lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258180; c=relaxed/simple;
-	bh=xCwjGQRZNk8k1ts776Y9Hh6Gp2YJ+EK67MoT9GdAkfU=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=mZWo9b9wiPtAKbxU4PCM8QnUyQoh43aBx1QGmibWaZ+ASclF0TbkoU/97V97YXD2rIXxgXQ1B/24PpWM5YI2Zr/gpWkLn0KYbb2g2ypIeymnH0VzxWwSVf6ha/DVF+vcQ0Urjpc5kIk1CfX1eVK/GKmjo5pbvIuEBQxNkJVEJWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=XUp3Gvb1; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750258224; c=relaxed/simple;
+	bh=fB7KyoRN2gpN9HFgeI9W3VaZODcts6RtL/092DIdZ7o=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=dnHhWXbs1AJKIFzNCnObYx3/XIPbPa8jklieErT2x1JJR9l/FVh3WXS/yuZJBUKRb1Mpq83iUjsxTY95QeDCI4Dam+mZ/Ry0tHiNvMmi94xVu0NdH0o3/cRic8a5u7XfwlaK7nnWfdcOAURxIqiCwJZk714FjEqRNdOfpQR4Mj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=Nbknur+1; arc=none smtp.client-ip=134.0.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="XUp3Gvb1"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 4F65825F28;
-	Wed, 18 Jun 2025 16:49:37 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id mrkJ_d0x0XTh; Wed, 18 Jun 2025 16:49:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750258176; bh=xCwjGQRZNk8k1ts776Y9Hh6Gp2YJ+EK67MoT9GdAkfU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=XUp3Gvb1PUc1QieRkDW5TcBwRN/wmT41FC2rHOVMvtJTJoUJTAzzUlrIJ+MEPjKIq
-	 +L9UZ5T3rqMAZBAShOGWAQxtLAeGhe+dNcOldXBfomoyTSdaqmap2vwuYfzyf9WAGb
-	 6zcc5T8JI9ZbR5QoHXLuqQolGnccDjsXt8xEga3zwBrJG1XFy0+dAD1cSNSAdHhIYb
-	 138DtbvYL/9F/QhUKON/3vOoyLsOHf4lQIrrko92mFeaVCBKl6cSYzV+HpYVphmkVJ
-	 M6CAhEsB5LZD7IBqDlw/9PjJQQyrkn4aECO/Izcw3Jfs8X4jh4LjE+/5iTSYYopOKN
-	 Cy9iyx/5NEjbw==
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="Nbknur+1"
+Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
+	by mxout1.routing.net (Postfix) with ESMTP id 3474E41ADE;
+	Wed, 18 Jun 2025 14:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1750258214;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N7tr9vCzas4Dcx7c2Tgeu4LP6gHZKQuy1GdaO/TFlr4=;
+	b=Nbknur+18KqPDja5RX/s65/bE/pPe42K7+j6BqbbBZ2lfnz1+IlheE52B92cm6xDpE+eM3
+	+1J2JXUED1AfYvVCBLE/WbHiocrItKJfci05mR4apGeGPAdDixOTM5mR2MMA0ap8wmz/zh
+	dXnO3+qaeB8OGQJndQ74liL4RhdsOEM=
+Received: from [127.0.0.1] (fttx-pool-80.245.76.73.bambit.de [80.245.76.73])
+	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id 0453F360048;
+	Wed, 18 Jun 2025 14:50:12 +0000 (UTC)
+Date: Wed, 18 Jun 2025 16:50:13 +0200
+From: Frank Wunderlich <linux@fw-web.de>
+To: Daniel Golle <daniel@makrotopia.org>
+CC: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Frank Wunderlich <frank-w@public-files.de>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, Simon Horman <horms@kernel.org>,
+ arinc.unal@arinc9.com
+Subject: Re: [net-next v5 1/3] net: ethernet: mtk_eth_soc: support named IRQs
+User-Agent: K-9 Mail for Android
+In-Reply-To: <aFLFYe8mq4tbLfdf@pidgin.makrotopia.org>
+References: <20250618130717.75839-1-linux@fw-web.de> <20250618130717.75839-2-linux@fw-web.de> <aFLFYe8mq4tbLfdf@pidgin.makrotopia.org>
+Message-ID: <601853CD-F47A-452A-87AC-668E73A3E971@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 18 Jun 2025 14:49:36 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/5] dt-bindings: samsung: exynos-sysreg: add exynos7870
- sysregs
-In-Reply-To: <97a54a9f-8719-4bbd-a1d5-dd398f42ab0c@kernel.org>
-References: <20250612-exynos7870-drm-dts-v1-0-88c0779af6cb@disroot.org>
- <20250612-exynos7870-drm-dts-v1-1-88c0779af6cb@disroot.org>
- <7bb375c8-1a43-40e2-891c-8815c9cc94ff@kernel.org>
- <76df5b2d6b2c8de73519e1862e105c67@disroot.org>
- <97a54a9f-8719-4bbd-a1d5-dd398f42ab0c@kernel.org>
-Message-ID: <cd0f942a3752053e7569040f9e508b2d@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mail-ID: e609ebad-906a-455e-bb64-4bc71f18ceb5
 
-On 2025-06-18 14:37, Krzysztof Kozlowski wrote:
-> On 18/06/2025 16:32, Kaustabh Chakraborty wrote:
->> On 2025-06-18 09:46, Krzysztof Kozlowski wrote:
->>> On 12/06/2025 17:23, Kaustabh Chakraborty wrote:
->>>> Add sysreg compatible strings for the Exynos7870 SoC. Two sysregs 
->>>> are
->>>> added, used for the SoC MIPI PHY's CSIS and DSIM blocks.
->>>> 
->>>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
->>>> ---
->>>>  .../devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml      
->>>> | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>> 
->>>> diff --git 
->>>> a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml 
->>>> b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
->>>> index 
->>>> d27ed6c9d61ea9db77229eca60b6b9a0abc5d305..174bdb8ee932ff965de6fc17aef004a3cedffeb3 
->>>> 100644
->>>> --- 
->>>> a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
->>>> +++ 
->>>> b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
->>>> @@ -52,6 +52,12 @@ properties:
->>>>                - samsung,exynosautov9-sysreg
->>>>            - const: syscon
->>>>          deprecated: true
->>>> +      - items:
->>>> +          - enum:
->>>> +              - samsung,exynos7870-cam-sysreg
->>>> +              - samsung,exynos7870-disp-sysreg
->>>> +          - const: samsung,exynos7870-sysreg
->>> 
->>> 
->>> Drop. These are not really compatible or your commit msg is 
->>> incomplete.
->>> Don't use deprecated syntax and backwards compatible solutions for 
->>> new
->>> hardware.
->> 
->> Are you sure? The deprecated one is actually the item above. From what 
->> I
-> 
-> Yes. Think why were they added.
-> 
->> understand, those are generic sysregs and don't mention their 
->> functions.
-> 
-> And what is a generic sysreg?
+Am 18=2E Juni 2025 15:55:45 MESZ schrieb Daniel Golle <daniel@makrotopia=2E=
+org>:
+>On Wed, Jun 18, 2025 at 03:07:12PM +0200, Frank Wunderlich wrote:
+>> From: Frank Wunderlich <frank-w@public-files=2Ede>
+>>=20
+>> Add named interrupts and keep index based fallback for existing
+>> devicetrees=2E
+>>=20
+>> Currently only rx and tx IRQs are defined to be used with mt7988, but
+>> later extended with RSS/LRO support=2E
+>>=20
+>> Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
+>> Reviewed-by: Simon Horman <horms@kernel=2Eorg>
+>> =20
+>> +static int mtk_get_irqs(struct platform_device *pdev, struct mtk_eth *=
+eth)
+>> +{
+>> +	int i;
+>> +
+>> +	/* future SoCs beginning with MT7988 should use named IRQs in dts */
+>> +	eth->irq[1] =3D platform_get_irq_byname(pdev, "tx");
+>> +	eth->irq[2] =3D platform_get_irq_byname(pdev, "rx");
+>> +	if (eth->irq[1] >=3D 0 && eth->irq[2] >=3D 0)
+>> +		return 0;
+>
+>I'd rather extend that logic and fall back to the legacy way only in case
+>of -ENXIO=2E Ie=2E add here:
+>
+>if (eth->irq[1] !=3D -ENXIO)
+>	return eth->irq[1];
+>
+>if (eth->irq[2] !=3D -ENXIO)
+>	return eth->irq[2];
 
-What I meant is, usually compatibles go like this (in order):
+I would do this later after the consts are used
+ instead of index numbers,just to not add lines
+ that are changed later again=2EBetter adding the
+ lines already with the consts=2E
 
-"samsung,exynos<soc>-<function>-sysreg", "samsung,exynos<soc>-sysreg", 
-"syscon"
+>Maybe also output a warning at this point in case MTK_SHARED_INT is no
+>set, to recommend users to update their device tree to named interrupts=
+=2E
 
-But the deprecated item had its compatibles like this:
+I understand the reason behind (documentation
+ which irq is used for which purpose),but
+ previous devicetrees of non-shared SoCs using
+ at least the reserved irq 0=2E Mt7986 has 0 and 3
+ defined in dts=2E That could be tricky in binding,
+ so my way was starting with irq names now for
+ new additions and leaving existing dts as they
+ are=2E
 
-"samsung,exynos<soc>-sysreg", "syscon"
+Maybe i should add the mt7988 ethernet binding change from my dts series h=
+ere=2E=2E=2E
 
-That is what I meant by "generic". It doesn't mention <function>.
-
-And my additions adhere to the former. So does [1], [2], and [3]. None 
-are
-deprecated.
-
-[1] 
-https://elixir.bootlin.com/linux/v6.15.2/source/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml#L40
-[2] 
-https://elixir.bootlin.com/linux/v6.15.2/source/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml#L55
-[3] 
-https://elixir.bootlin.com/linux/v6.15.2/source/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml#L61
-
-> 
-> Best regards,
-> Krzysztof
+regards Frank
