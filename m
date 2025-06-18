@@ -1,125 +1,166 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DABA2ECD17
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BF82E9ED5
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750263903; cv=none; b=aNJG9xKfqTUpD8R+QnCZjiciH2NVTN2OjbK28yVf0CIiHlSAt3K5t42BiVQY8FFMqFEtHhBdjVG5gz14vS9vePybRbdkZxz5YdGmjJPWivsOlvbDXMwwX8y5jF+1MP0VX/9AT/Ttb3Jx0w2bcKdnvT2JIoiuWvXnJenIIYyj7CE=
+	t=1750263942; cv=none; b=lkYqHMDgyQ44JOfXIeDeqDW+QG/4c2so6A7tN4BjosQZp+MuO9H+wVA360IjI4UBv6KwFDez7biYHgbPV7xQBOTysJ+ATmX9kKm3YojDF3axrh3P3m141LynStxh6KrPgNYvZPW50x9JIatjfWrBh5lbzDXHnqrjhrfmdYzVsAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750263903; c=relaxed/simple;
-	bh=8SUTZJISnPl+cWNBsdFUwAF6yhxTIcuSAa64ljM8uh4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kD5xUAmKW/36l/3zJRGAYBcTCN1tbI2ZFloDDP63r27KoOtDnszR8Il+NJjRmI6mGvii6YVZOAgLl+AGyx5L7qd+aLuAIHahBoYZ23FXim1qvQcs3YXpSbmSZsqPrOs3AS4DAKgtNIHmN1e8X2NeuZ2Gvfar6nL7eEYT7YOUNIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=b+Fy1SSO; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750263942; c=relaxed/simple;
+	bh=ShRjdsaq0YSJizLisN8l/yg/jEDPS2vZH5tSHQicCvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m3TGBeTAXOFdBTearn/VHEqjqcEhcIjUqJF6ioGFIEiEzfXTTsamGdXeVR6Q4axu98BO+1xeJEyqUzcSx8k3Yrl6Hp9RqMCM1CAOY8zuF443B2vVC/R9ql/jgdDXg+2zlvIxvWz3G4EetlVZfNvI7hE18FXXww3nWhIvatWlhIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=DF5TRUd3; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b+Fy1SSO"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54e7967cf67so7348607e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:25:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="DF5TRUd3"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3dddc17e4e4so26265325ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:25:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750263900; x=1750868700; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TLFD+2psb7xXjgfHWtkDfvPX+FPgGIjapr64yFarvW4=;
-        b=b+Fy1SSODIdcsGDr6ecOEB04p2+Ivr+mEQFfcU/VJy1ohU+FwU+UPXf3Kf+N4kPxro
-         Lo8Y8ZkOE9a7FYsnuTlN9CitAmlT3MuzWuAGZi61DFlccQ6Ki+Du46vdgdzTzE4WTTgs
-         WifZW7OX8H2qys2ux8Um7G8fo37wQ45p+q1olU7eij0EfaGO3bDbxuTUiCvma1ptEQnI
-         6P2skv1Q2EFFXdBq3WrH4Czfa+f6h7uT6AcPHB3LKe7CH/NAylWq1anSZkrb3QqCVN4n
-         fkmQJzlOGgoyZA3AQ7RDt5FFVRyKAqnoylsLtcF+Drn3a+LjEmQNSDVsLA704tgs1+8O
-         X/8w==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750263939; x=1750868739; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ozpCgMsPDzzzXs9t/hf8mAtpedDuadFmlDFWjP16SDg=;
+        b=DF5TRUd3kBQyQ6YtxeRrJ31DtO88Iw0BPeNklKib/O19jANENdTcNv4ZgYjNgOqhe/
+         wMDpOciYzG1Ffko1KsL+SNa54MX3tV5EhcgKI00nPVSIxl7/sRN/pqV65TDAR4GV42a4
+         KZ8js4tMGYNO8UGs++D/cS4WzTR3wg2NdsVwG/tKOroitN6yR0le+FR9lx8gJTVKrfCD
+         sp1+JPHaUqfMC6/qZXhMjg0T7bmzH49JOvTQCqpDrPxOhihwO5ygx0KhusC38FyXMQNg
+         wMnzTKbwnCR4rUlLKNHLpEoDpn9cZV3SQnZ3kY3GiA+D74oeQRZ49IulYmapAyztcQvf
+         BVgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750263900; x=1750868700;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TLFD+2psb7xXjgfHWtkDfvPX+FPgGIjapr64yFarvW4=;
-        b=edk/wv8N4z2RaPvvAOeh6DIkTH9b2TDTdJsSEHlWSkOJuScxJbd2Y8nxTjKBMXEacg
-         25/lgZJOFtNR0kIwgkTR63h0HdsEG2kn3zwnU9CtVRbHX7v0U2AeHsxOdYDOZm5sSlrQ
-         C00sgnE4QAL9SGM4/510qend9btVGbywSAk0wwnp0JbHRGmyjJLnJNeLyd7KrxbajtDg
-         dvmB3L6mPzU4KEkbf3DLa1puYTkRxXSug3ij58H9nRuydOrM8Tqw/y3p1A6BbkDL+Hw9
-         ga74NCZzxqC7zzWJoLlMuFtj4nWFb9kXAMOWfC9tbkwilerfs0kHDMa74RTBaR0iib58
-         0DlA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrkgep3TzihyJ58iNYOSkjlhnCdi/Z5MX9mhESm9f0Glsk8CNO17lzwVJUgr8fVk585uPHK1Ww+lUhVEw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEo0yft75vyydNwHVNPgTR2bKcHjexILXoRNDPuDiSfCnp4Cjn
-	kOmb6SeOOo2UI+1h1yMbmjv0w60Vvc6yd6/YwC+zFXaYGonveAuITgDZq+C58YVfsW/YRFHu2+0
-	d9v38oWH+GKur3b9L10ukwbfK5tt1TSNgLFfQXwas/g==
-X-Gm-Gg: ASbGncvFT0YAR4EAZ/+m7tduwckLf0Xk9Dn/eW8GRrcEDBlfhhqf//jL7E+IIo6tTO5
-	WkgxDs1n1zDVpMSvKRaZZ1k75h9j1m77RFmYB+LX6IcKm0fc1OWblpmdMPF3comvAMrVUcTPsP2
-	FWFhfMEEjp4sT0NfiLVHsMqOhVzAFFnH4b8WTQWSEpBXZhi349ktaaUFK/AdN4XnaSfEOoiOA6K
-	w==
-X-Google-Smtp-Source: AGHT+IFasWzMx4vvKMGThkbIPZ5HFR/Wr5hiH9hJMS02hBIeQh8p7hArmnTCvxt1VaP57eg2rHdU67rWBwbdr9GK3qY=
-X-Received: by 2002:a05:6512:1193:b0:553:2ed2:15b5 with SMTP id
- 2adb3069b0e04-553b6f50256mr5473373e87.57.1750263900278; Wed, 18 Jun 2025
- 09:25:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750263939; x=1750868739;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ozpCgMsPDzzzXs9t/hf8mAtpedDuadFmlDFWjP16SDg=;
+        b=oo48auHsPbhFRJfJp7ZB1ygB6noq9Pu7vDJOQe0PeEPsmUqkOrHt6t6UABLChzNHHd
+         spzInhYGqy0fwLzD+tGgk2ikqh7UfiIIIWl9ycsEZ/iOwhVuA/Ga+wZwPj4obIrGGi3M
+         BU8wQVrCh5rxKjSwmLjkHqG3H2Ijh+P/iKboAqvJrTxUdNLqea0d32+FQEj058TyEX2d
+         XCFPPC2fu0FWNtOjgcLYVW44ouiNPFskfTM7+7Iv94BNUekb/7hHr0pQwdGyww75LMUg
+         /8ee7vHvGcMUFTXJl0tjmXOssMGoyzctDKHE2rvpiC6TyRj0kiV6rEfCdOQvdvKnkh0G
+         r8xw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJUEUmZFqmSSuyq2djdiBcdYkzyyAa7YRZLJn/XRljhKaXNPIlirP7P9KlYPCdRHS8yT5puDcZPg7y6/8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YydS2yn+62lh7JJNLVB3TRD+lGWuToRMqLIZwNEwoIGseE6TCcH
+	/zXomjrmizxzB7v9qOa4Te3IkFsH/iFgO0+16iu3mky1FXbdtdmEqLlbHs4moULf36Y=
+X-Gm-Gg: ASbGnctEON2mrz3yqvSD5E6/jdyfjBH13Yd8SQJm98l4k4Kwi7dqwB4FPtFVicxZ779
+	IsTXz1GS2L1h/qRKUHUfw3ZJzxAEAaoL0XE1ksokeUOqLULTkIx3XcQzt8yewotQtKTDZfA8S1p
+	1I5zWsM5EBWVl5altnw/N6svlz0xZMSeWDKJMurEqIOf4isLXbGcIXqVCUH/2ZfB+kYgrVsbhrS
+	zgrcfNzf5GKUb91j6raLWmkYk8Ml5Y6Lp4VK7xBywGBKWWPVD8aX58M2uSSbQgYNtO+8HOVxFL9
+	KuQzUqYA+JOtRspxvAmWB87fsbLsveiQuvmCpBqabJPTJGusJ2rebd2HWA==
+X-Google-Smtp-Source: AGHT+IGYvc7KmhpVgw8CUbD9OCxWguWmto2GTymeiOYZAJ4lER5z1gHVRFjhbAlh/tDcwdwrNsbtSA==
+X-Received: by 2002:a05:6e02:2583:b0:3dd:d18c:126f with SMTP id e9e14a558f8ab-3de07d50c73mr187517625ab.10.1750263939115;
+        Wed, 18 Jun 2025 09:25:39 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de01a4f3c0sm30305685ab.57.2025.06.18.09.25.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 09:25:38 -0700 (PDT)
+Message-ID: <0bbb87cb-5774-4d50-86d3-eb118ebd3f1d@kernel.dk>
+Date: Wed, 18 Jun 2025 10:25:37 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250610-gpiochip-set-rv-gpio-v1-0-3a9a3c1472ff@linaro.org>
- <20250610-gpiochip-set-rv-gpio-v1-1-3a9a3c1472ff@linaro.org> <95f63f24-2c8f-4f0b-89a9-ddf39a8f2e12@sirena.org.uk>
-In-Reply-To: <95f63f24-2c8f-4f0b-89a9-ddf39a8f2e12@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 18 Jun 2025 18:24:48 +0200
-X-Gm-Features: AX0GCFtQiRTdcvRzM4v3bXKNF4ikUT4N9NzJhHCtHKKqoMjJz7WLf-25661k3ho
-Message-ID: <CAMRc=Mc9_V8bkD_FyNkxkNoD3Fe7q-CC7ifq3TrD=r8+D_UgKA@mail.gmail.com>
-Subject: Re: [PATCH 01/12] gpio: mmio: use new GPIO line value setter callbacks
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>, 
-	Conor Dooley <conor.dooley@microchip.com>, Daire McNamara <daire.mcnamara@microchip.com>, 
-	Daniel Palmer <daniel@thingy.jp>, Romain Perier <romain.perier@gmail.com>, 
-	Avi Fishman <avifishman70@gmail.com>, Tomer Maimon <tmaimon77@gmail.com>, 
-	Tali Perry <tali.perry1@gmail.com>, Patrick Venture <venture@google.com>, 
-	Nancy Yuen <yuenn@google.com>, Benjamin Fair <benjaminfair@google.com>, 
-	Grygorii Strashko <grygorii.strashko@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, 
-	Kevin Hilman <khilman@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, openbmc@lists.ozlabs.org, 
-	linux-omap@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] block: The Effectiveness of Plug Optimization?
+To: hexue <xue01.he@samsung.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20250618050409epcas5p48f60d6022d148a22fc9fd4a025cc45ca@epcas5p4.samsung.com>
+ <20250618050401.507344-1-xue01.he@samsung.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250618050401.507344-1-xue01.he@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 6:21=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Tue, Jun 10, 2025 at 02:33:11PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. Convert the driver to using
-> > them.
->
-> I'm seeing boot failures on a UDOOq (an i.MX6 based board) in -next
-> today which bisect to this patch (in -next as b908d35d0003cc7).  We get
-> a NULL pointer dereference during boot while probing the poweroff driver
-> for the system:
->
-> [    0.443319] Unable to handle kernel NULL pointer dereference at virtua=
-l address 00000000 when execute
-> [    0.443330] [00000000] *pgd=3D00000000
-> [    0.443347] Internal error: Oops: 80000005 [#2] SMP ARM
->
-> ...
->
-> [    2.522761]  bgpio_dir_out_val_first from gpiod_direction_output_raw_c=
-ommit+0x194/0x390
-> [    2.533330]  gpiod_direction_output_raw_commit from gpiod_find_and_req=
-uest+0x134/0x434
-> [    2.541276]  gpiod_find_and_request from gpiod_get_index+0x58/0x70
-> [    2.547482]  gpiod_get_index from devm_gpiod_get_index+0x10/0x78
-> [    2.553516]  devm_gpiod_get_index from gpio_poweroff_probe+0xe8/0x174
-> [    2.559990]  gpio_poweroff_probe from platform_probe+0x5c/0xb4
->
+On 6/17/25 11:04 PM, hexue wrote:
+> The plug mechanism uses the merging of block I/O (bio) to reduce the
+> frequency of I/O submission to improve throughput. This mechanism can
+> greatly reduce the disk seek overhead of the HDD and plays a key role
+> in optimizing the speed of IO. However, with the improvement of
+> storage device speed, high-performance SSD combined with asynchronous
+> processing mechanisms such as io_uring has achieved very fast I/O
+> processing speed. The delay introduced by flow control and bio merging
+> may reduced the throughput to a certain extent.
+> 
+> After testing, I found that plug increases the burden of high
+> concurrency of SSD on random IO and 128K sequential IO. But it still
+> has a certain optimization effect on small block (4k) sequential IO,
+> of course small sequential IO is the most suitable application for
+> merging scenarios, but the current plug does not distinguish between
+> different usage scenarios.
+> 
+> I have made aggressive modifications to the kernel code to disable the
+> plug mechanism during I/O submission, the following are the random
+> performance differences after disabling only merging and completely
+> disabling plug (merging and flow control):
+> 
+> ------------------------------------------------------------------------------------
+> PCIe Gen4 SSD 
+> 16GB Mem
+> Seq 128K
+> Random 4K
+> cmd: 
+> taskset -c 0 ./t/io_uring -b 131072 -d128 -c32 -s32 -R0 -p1 -F1 -B1 -n1 -r5 /dev/nvme0n1
+> taskset -c 0 ./t/io_uring -b 4096 -d128 -c32 -s32 -R1 -p1 -F1 -B1 -n1 -r5 /dev/nvme0n1
+> data unit: IOPS
+> ------------------------------------------------------------------------------------
+>              Enable plug          disable merge           disable plug
+> Seq IO       50100                50133                   50125
+> Random IO    821K                 824K                    836K           -1.83%
+> ------------------------------------------------------------------------------------
+> 
+> I used a higher-speed device (PCIe Gen5 server and PCIe Gen5 SSD) to verify the hypothesis
+> and found that the gap widened further.
+> 
+> ------------------------------------------------------------------------------------
+>              Enable plug          disable merge           disable plug
+> Seq IO       88938                89832                   89869
+> Random IO    1.02M                1.022M                  1.06M          -3.92%
+> ------------------------------------------------------------------------------------
+> 
+> In the current kernel, there is a certain flag (REQ_NOMERGE_FLAGS) to
+> control whether IO operations can be merged. However, the decision for
+> plug selection is determined solely by whether batch submission is
+> enabled (state->need_plug = max_ios > 2;). I'm wondering whether this
+> judgment mechanism is still applicable to high-speed SSDs.
 
-Thanks, a patch[1] is already up for review. Please give it a try and
-leave your Tested-by: if you can.
+1M isn't really high speed, it's "normal" speed. When I did my previous
+testing, I used gen2 optane, which does 5M per device. But even flash
+based devices these days do 3M+ IOPS.
 
-Bartosz
+> So the discussion points are:
+> 	- Will plugs gradually disappear as hardware devices develop?
+> 	- Is it reasonable to make flow control an optional
+> 	configuration? Or could we change the criteria for determining
+> 	when to apply plug?
+> 	- Are there other thoughts about plug that we can talk now?
 
-[1] https://lore.kernel.org/all/20250618-gpio-mmio-fix-setter-v1-2-2578ffb7=
-7019@linaro.org/
+Those results are odd. For plugging, the main wins should be grabbing
+batches of tags and using ->queue_rqs for queueing the IO on the device
+side. In my past testing, those are a major win. It's also been a while
+since I've run peak testing, so it's also very possible that we've
+regressed there, unknowingly, and that's why you're not seeing any wins
+from plugging.
+
+For your test case, we should allocate 32 tags once, and then use those
+32 tags for submission. That's a lot more efficient that allocating tags
+one-by-one as IO gets queued. And on the NVMe side, we should be
+submitting batches of 32 requests per doorbell write.
+
+Timestamp reductions are also generally a nice win. But without knowing
+what your profiles look like, it's impossible to say what's going on at
+your end. A lot more details on your runs would be required.
+
+Rather than pontificate on getting rid of plugging, I'd much rather see
+some investigation going into whether these optimizations are still
+happening as they should be. And if the answer is no, then what broken
+it? If the answer is yes, then why isn't it providing the speedup that
+it should.
+
+-- 
+Jens Axboe
