@@ -1,96 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C1A72EE5F9;
-	Wed, 18 Jun 2025 14:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B9412EF2A2;
+	Wed, 18 Jun 2025 14:57:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750258630; cv=none; b=MNNCcdWAn6dhxDTQ1PO3vbLPeO5naFp3DPLXLTlYjGre+ee82Z1S1MxZNtOEjG5+hUZLTIUNrX6j0+p/VqxPjlfF6JAKEey4vUDPedMAvSVCXoGwjhOPKggLnVE5tfTlYofZqARwiWezfmMtp9bosfJPNrT+G+8ygKX7b2rf4eQ=
+	t=1750258642; cv=none; b=NyXSaX/++2uQvs6gsAy8x/bfGPugVD5S38y5BgIRrjOA3OO6Gf8USWdrmaSgjqIEvHzBJl1znI36WdfYIiiM3Jg2QXPCAE/7B8+4kkOgmFAron2U0Gjw5tapBsKD45/N8ootdxg1exnldFSwAYTsahsOFW6vfIEXwCE0wOl81xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750258630; c=relaxed/simple;
-	bh=1Q6aOTiXFFTMQvJwg4MCx9dBoHXp49iL/WVCWF12SPs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OC7NCXOtXyQ4ykUiZhZ8CwGGXteJiKwdbGH0zu2UOyn3tL00UYJh86Wa1HJx0EwZj3hzO9LOJND8sNyDz9Y5PdzIpVGE+c8VkWpJKtw0xMNN6R1yn4gGqn2txG5cQP7Ymd77kdi/koRFL3oNmTdIsKPSvtGZP6FjjIkhWAMfe1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eKinX9kJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eKinX9kJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F2CDC4CEE7;
-	Wed, 18 Jun 2025 14:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750258629;
-	bh=1Q6aOTiXFFTMQvJwg4MCx9dBoHXp49iL/WVCWF12SPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eKinX9kJnqTejARxXhz/UtTXpMpi3bmGLMfHO1mKWQkfzTzlTwLPXhvQOhi5tTKXN
-	 dCSNQ7BTBh/LFgUc1EaeBIX7eGokQf1asIp8kK5WHovidTL5zsXHM5xPrzVvawYtrm
-	 kATemcl5moH7ysMmybsn9/6WX7KA5RyjQddhOczkux+zHapJTWa3NPD9trnIJ1hLI2
-	 gEwx4awAwK58QpiW6SiKKNB/eMIWSLwEiTt/VaKw/Ss9OF2Wa6bxZuYE7fvgQIT3sB
-	 klU1GZgoh7CjMOYts8hmySzZ9WNOJNgQiVxPBxVxIY7ree7iXVlG6gqnKCF1rCdvIU
-	 y+yARPH94ezCw==
-Date: Wed, 18 Jun 2025 16:57:05 +0200
-From: Niklas Cassel <cassel@kernel.org>
-To: Hans Zhang <18255117159@163.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, lpieralisi@kernel.org,
-	bhelgaas@google.com, mani@kernel.org, kwilczynski@kernel.org,
-	robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/13] PCI: dwc: Refactor register access with
- dw_pcie_clear_and_set_dword helper
-Message-ID: <aFLTwWG5lOTunEq3@ryzen>
-References: <20250611204011.GA868320@bhelgaas>
- <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
+	s=arc-20240116; t=1750258642; c=relaxed/simple;
+	bh=MyH+iNLN68kJuVQh2e9J8E7zeuT3U91XuHIwrgcbNus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AIrl35FCBFBjL8COml2tu68mOc4ngcazF8A6Wi6pytkUBNbAebevJgjtTuEwwR2ZWqofaP4FzBYNENoLH72jlVRvKjGGH2FSAcwnKQnDucKdxU+Yoah6URpxVg9J+EgXFGTbaF3V4os0b+9785lyCkQWFsnntpP/6OSdIDCOD6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4781B1D31;
+	Wed, 18 Jun 2025 07:56:57 -0700 (PDT)
+Received: from [10.1.35.75] (e127648.arm.com [10.1.35.75])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D58473F58B;
+	Wed, 18 Jun 2025 07:57:16 -0700 (PDT)
+Message-ID: <1458e4f8-bd76-4d75-acb9-87f7064ea40c@arm.com>
+Date: Wed, 18 Jun 2025 15:57:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c31c3834-247d-4a28-bd2c-4a39ea719625@163.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq: Fix initialization with disabled boost
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-pm <linux-pm@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Robin Murphy <robin.murphy@arm.com>, zhenglifeng1@huawei.com
+References: <3cc5b83b-f81c-4bd7-b7ff-4d02db4e25d8@arm.com>
+ <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <CAJZ5v0heNSqHKZsmzu8N_hNKXeg_BZ0g4p0=dQtkDxBFHN+=4w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Hans,
+On 6/18/25 15:32, Rafael J. Wysocki wrote:
+> On Mon, Jun 16, 2025 at 7:25 PM Christian Loehle
+> <christian.loehle@arm.com> wrote:
+>>
+>> The boost_enabled early return in policy_set_boost() caused
+>> the boost disabled at initialization to not actually set the
+>> initial policy->max, therefore effectively enabling boost while
+>> it should have been enabled.
+> 
+> Did you mean "disabled"?
 
-On Thu, Jun 12, 2025 at 09:07:40AM +0800, Hans Zhang wrote:
-> 
-> 
-> On 2025/6/12 04:40, Bjorn Helgaas wrote:
-> > On Thu, Jun 12, 2025 at 12:30:47AM +0800, Hans Zhang wrote:
-> > > Register bit manipulation in DesignWare PCIe controllers currently
-> > > uses repetitive read-modify-write sequences across multiple drivers.
-> > > This pattern leads to code duplication and increases maintenance
-> > > complexity as each driver implements similar logic with minor variations.
-> > 
-> > When you repost this, can you fix whatever is keeping this series from
-> > being threaded?  All the patches should be responses to the 00/13
-> > cover letter.  Don't repost until at least a couple of days have
-> > elapsed and you make non-trivial changes.
-> > 
-> 
-> Dear Bjorn,
-> 
-> Every time I send an email to the PCI main list, I will send it to myself
-> first, but I have encountered the following problems:
-> Whether I send my personal 163 email, Outlook email, or my company's cixtech
-> email, only 10 patches can be sent. So in the end, I sent each patch
-> separately.
-> 
-> This is the first time I have sent an email with a series of more than 10
-> patches. My configuration is as follows:
-> smtpserver = smtp.163.com
-> smtpserverport = 25
-> smtpenablestarttlsauto = true
-> smtpuser = 18255117159@163.com
-> smtppass = xxx
-> 
-> I suspect it's a problem with China's 163 email. Next, I will try to send it
-> using the company's environment. Or when I send this series of patches next
-> time, I will paste the web link address of each patch in by replying
-> 0000-cover-letter.patch.
+Yup, the latter 'enabled' should be disabled.
 
-Perhaps the git-send-email options --batch-size and --relogin-delay can be
-of help to you:
-https://git-scm.com/docs/git-send-email#Documentation/git-send-email.txt---batch-sizenum
+> 
+> It would be good to mention the failure scenario here too.
+> 
 
+Absolutely, let me respin this in a series that provides some context, too.
 
-Kind regards,
-Niklas
+>> Fixes: 27241c8b63bd ("cpufreq: Introduce policy_set_boost()")
+>> Reported-by: Robin Murphy <robin.murphy@arm.com>
+>> Signed-off-by: Christian Loehle <christian.loehle@arm.com>
+>> ---
+>>  drivers/cpufreq/cpufreq.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+>> index d7426e1d8bdd..e85139bd0436 100644
+>> --- a/drivers/cpufreq/cpufreq.c
+>> +++ b/drivers/cpufreq/cpufreq.c
+>> @@ -1630,7 +1630,7 @@ static int cpufreq_online(unsigned int cpu)
+>>          */
+>>         if (cpufreq_driver->set_boost && policy->boost_supported &&
+>>             (new_policy || !cpufreq_boost_enabled())) {
+>> -               ret = policy_set_boost(policy, cpufreq_boost_enabled());
+>> +               ret = cpufreq_driver->set_boost(policy, cpufreq_boost_enabled());
+>>                 if (ret) {
+>>                         /* If the set_boost fails, the online operation is not affected */
+>>                         pr_info("%s: CPU%d: Cannot %s BOOST\n", __func__, policy->cpu,
+>> --
+>> 2.34.1
+
