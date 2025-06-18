@@ -1,207 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C009296160
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C8C2DF3E8;
+	Wed, 18 Jun 2025 12:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249057; cv=none; b=iH5t8XftrxHWjeR6d/UvIXa6NxokoP05L3vaNoN1NPUXDwZklq+4th1C250RWRdBju60Ma33d4qR+qgysPnTj1JXD49faE2TpFx3hMuzs4WaH9Mt9xDZbfwArMwx/x0QvcCyRlk9oTn9ovleG8rHc+Sd//Y1V19EHpFfyH6uwFk=
+	t=1750249077; cv=none; b=dnaXWWXsgNRrtyS71k01h4T+uTDnj16Njn8N+czgZR8DUF38UhLUvheMJXGHeQL3VhL7oBVIqnkeIun6/8So+UMZ6VX9IyWxd4ytg19lvXuL4f/ih9KZQYPG0Q3Vqj5wqMUlMMvWX9hjFj5OXZQ1Kmsco6KLljpb4VrkxHfbrT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249057; c=relaxed/simple;
-	bh=GbNLi+EZjPkYRvt7zqESy62VDQOUsYYsEM6aI2Vw3Ac=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=owXlFYg9OxZXqBfdRt/BDEB1mx1AcST/zX5cS80sZV/TbQ7F/NzXLoBykjgcZHAY5xLLyVFfcRGk9C7p996XzUjxJ2mevLuBSlBgJQxh/GPnP9hYsi6ORAkdIQIfVAc1dUsrlKq/QAzhOQ4Oa2WDTahfHYnFrjMfEsK606FxdwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CkjT2qfZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750249077; c=relaxed/simple;
+	bh=qr3/kjwLFylG6ywry69iDYJGlppx2JuUHVeJAZ5YGck=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EGPb+7D0QmRfmG5/Pg1oPYh8+298wjFpJtT0jaS/QigwLx/Hbl8pgUDfaGWu1llyBqnFoyArQAVuxRqged4CeU6U29qMjG+l1oIH/I5V9YCSSzBHxngXulhaHfnEQJwoRtB15ZWynB13PtAuy9HswWAM5r9gaBgBg9ZGcLCwd3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=GkK37ofw; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CkjT2qfZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750249054;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GbNLi+EZjPkYRvt7zqESy62VDQOUsYYsEM6aI2Vw3Ac=;
-	b=CkjT2qfZ55WneZ4ULfkb8/PDorUkKjbqsG/oRuRKf8Tq5Ks3JY84Kbu9nYCg0EUPRJ0qCS
-	quGVP6rSJLVlhAWCFuQu5EtchQhRgYjA65UbJiasw/3QBsRzMXcQXz9C9JC7jflyH8WzJm
-	Q8UBjqAS+eVNT57olM4CPMjh0aVsfoo=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-417-wUSajpV8NemIW039hb5uUA-1; Wed, 18 Jun 2025 08:17:32 -0400
-X-MC-Unique: wUSajpV8NemIW039hb5uUA-1
-X-Mimecast-MFC-AGG-ID: wUSajpV8NemIW039hb5uUA_1750249051
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ade6db50b98so659492466b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:17:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249051; x=1750853851;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GbNLi+EZjPkYRvt7zqESy62VDQOUsYYsEM6aI2Vw3Ac=;
-        b=fi1TTpw0DmQXzhEwwiBRq/Y9MW9YBBit4DP9N9PQvCqodsTz1I7QP2mUS0weFgPCZM
-         aA2Zlm+dlPe5OPkDVg2uSGD4gHbwqe/CwI0qTKCJEU7ApwEdnZyaRKbfnCJVak+0pvYt
-         KSO0Ny+GLlJVceIWi+snjFl0Wy6lx1ZWEzJ3Ymufxv9oZ/eNyvqAUegfTP6bRplXg3Ge
-         RLPUPN9RfZb4e8NWDEVJPs3Tew0wXwQ7d594JT8AW4ANwdLQqnLElisPlQ5+hsv56pPt
-         PPaXpXcccbQnCMW+A7XOlwc3N3ix7JKGVcKXWs67ViYfeKf7cw7yaUNsr/RM4dyKyCah
-         Jotg==
-X-Gm-Message-State: AOJu0YzccqOBgHe1E3ndux5qtnNi7UPL3g6YbI3JhDfmkPNw42YyCozf
-	H+Fm5VScILR8c29rdXF1B1eS6bdYcy7IXFnZTa/vgSPfzM/bdBTWdP70ucMgJZ+QJu9Y1/3fMoV
-	i165F5Tc9e1Rw1jQaqH4Ejhod+OY26UyUcDPb3CVnnR6UQjH1+l43AnY1Ms0RXm86W/7iffZyER
-	TfB4tyW9Gl9Hy7ovbpmtIBvAuxPaEcaYWVUGURo0Wm2A2L4KtGnIs=
-X-Gm-Gg: ASbGncs0fZwiH9+7wXDwA8qZIXozLb58IpAdAJVgxtZJFDdz5L2UMJEyTBGNyeBwWAJ
-	/IvThzmVSAorFKpiXjF7kKebc6GEOJqQJGlQyqnKndioQQd6lxe41RH/YbLMRc5Es5wZvFqJhqp
-	I/8ggw+WoonADUxOHn3O2KS629xh3bP3w3/KVUFR5V+xrVB6nC0mG1v2CbuJbrEGZnbeDbrgkvD
-	y20gIOcHcUoSCrhSP9GzJTdZE9dly8OyKz53DOuMcGP+b9jo9Jxth1HNaO6NSp634SMRSHZiiq1
-	IT6+Eb9HbfOxhRHj+mtU7yat4HvCOP4BM5O0O/cq+DuBo0k9+ps=
-X-Received: by 2002:a17:906:7310:b0:ad8:a41a:3cd2 with SMTP id a640c23a62f3a-adfad434544mr1659008266b.16.1750249051406;
-        Wed, 18 Jun 2025 05:17:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBCx2aY3FI7wEWRK+AkPspj3Fa7PpXhGxZQMiPGrmFIF7fP4FDlwLVBKWh2P7l6zVQkCIXJA==
-X-Received: by 2002:a17:906:7310:b0:ad8:a41a:3cd2 with SMTP id a640c23a62f3a-adfad434544mr1659004966b.16.1750249050953;
-        Wed, 18 Jun 2025 05:17:30 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([195.174.132.161])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-adec8159e24sm1039424866b.34.2025.06.18.05.17.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 05:17:30 -0700 (PDT)
-Message-ID: <d9e3238e78a0384a6ba0651574522f44c6f2fb76.camel@redhat.com>
-Subject: Re: [PATCH v6 0/6] timers: Exclude isolated cpus from timer migation
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org, Anna-Maria Behnsen
- <anna-maria@linutronix.de>,  Frederic Weisbecker	 <frederic@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, Waiman Long	 <longman@redhat.com>
-Date: Wed, 18 Jun 2025 14:17:29 +0200
-In-Reply-To: <20250530142031.215594-1-gmonaco@redhat.com>
-References: <20250530142031.215594-1-gmonaco@redhat.com>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="GkK37ofw"
+Received: from kreacher.localnet (unknown [5.63.189.50])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id D537466DF26;
+	Wed, 18 Jun 2025 14:17:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1750249066;
+	bh=qr3/kjwLFylG6ywry69iDYJGlppx2JuUHVeJAZ5YGck=;
+	h=From:Subject:Date;
+	b=GkK37ofwj4Eo4j/3VBAP6iJsgOTaK3/TTbEKVn71nhfhh3aN8hpk79g6wGxsQhL5i
+	 DOMOF5lO1hjucslpe8j7JJM9R3T1B0potQH8XjXhaT/wNmmQr2NgUVrww1On5+5odP
+	 iSdJHysGltv3BnaKJF+fzT3QhSRHCilq/yqpFFnKuUM5CXeRS5KIOdSpcRuvdU0Iua
+	 n0qvbx/N0X/UNaA1nh/4V14RB0mClXVLlDudsgavb6bU4H8gA+PtKGpHeZ+q2IqeTC
+	 t9qVFFWRGNPl023VeEgwPY7ejjczjF+HF78JNf3LcMUiPJgRttAKg/XoVxyChJmSHA
+	 4QnKFzrKWX8fA==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux ACPI <linux-acpi@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Bob Moore <robert.moore@intel.com>,
+ Peter Williams <peter@newton.cx>, "Dumbre, Saket" <saket.dumbre@intel.com>,
+ Hans de Goede <hansg@kernel.org>
+Subject:
+ [PATCH v1] ACPICA: Refuse to evaluate a method if arguments are missing
+Date: Wed, 18 Jun 2025 14:17:45 +0200
+Message-ID: <5909446.DvuYhMxLoT@rjwysocki.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 5.63.189.50
+X-CLIENT-HOSTNAME: 5.63.189.50
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: dmFkZTGSdzENJcvV6kGmthZjDnKCac5iu4OOazHJo9JnKE4e7+Uye2DtxC5ELcPNg81iFw3RUc23yIxhNrNPR0Wwyyca6aie5TMoD7weryqNnQclYUHNyIQXzRjZdfd3VrWP6tc5xQa2Dh5q2eskkdnqNjmR3s5qoMjPweUydZhPgtdRd43tKixj7QV7WRmdx3k8Ir4M/6GfVSA+rtxAgZRdEvnNPSmuXpZwdyn4sGEk7cAgaloTNgIfH4/D2s2bgIHScFzouGHrCRhFY0wq8e/3MX0JzvCm+DXbJHrumKjViJUhftRb2eh6ywS/YXEa87JeScQL5KOSyeI1f3lVjQnKZFXyCqqRnwGIrQqSlkT9pEh4NqLiJmbVaNXSn6vTnn3h++A5XcnHM7PLiptvxmZCXqzwPFXCLzQeubzE1WLgm1w8KgteQ2joJrk57ZtRL15dgwZBgXUYIsU2P9teUDEu+x/dsOgWOoRINkvXLQlrKYheEvovBA7ynTcgSyP6z4tFBFPS80bIjU01+PgfpVZOJ+edXFz7WFfNBiGdLuVE8A5DwzCK5Veq8SvzV0vlU88CwoJ4WHl3HzX7K9WtiTpvpif6r3hOgB9L9X7qMayJh3/9//QrCyRG5Bi7GmWM03us296fM1SDLCgOu/IiiCC+F0N6wRaR9zN4lXJpgb9UUaqmhA
+X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
-On Fri, 2025-05-30 at 16:20 +0200, Gabriele Monaco wrote:
-> The timer migration mechanism allows active CPUs to pull timers from
-> idle ones to improve the overall idle time. This is however undesired
-> when CPU intensive workloads run on isolated cores, as the algorithm
-> would move the timers from housekeeping to isolated cores, negatively
-> affecting the isolation.
->=20
-> [...]
->=20
-> Exclude isolated cores from the timer migration algorithm, extend the
-> concept of unavailable cores, currently used for offline ones, to
-> isolated ones:
-> * A core is unavailable if isolated or offline;
-> * A core is available if isolated and offline;
->=20
-> A core is considered unavailable as isolated if it belongs to:
-> * the isolcpus (domain) list
-> * an isolated cpuset
-> Except if it is:
-> * in the nohz_full list (already idle for the hierarchy)
-> * the nohz timekeeper core (must be available to handle global
-> timers)
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Frederic, Thomas, Waiman, would you have time to review this series?
-Thanks,
-Gabriele
+As reported in [1], a platform firmware update that increased the number
+of method parameters and forgot to update a least one of its callers,
+caused ACPICA to crash due to use-after-free.
 
->=20
-> Due to how the timer migration algorithm works, any CPU part of the
-> hierarchy can have their global timers pulled by remote CPUs and have
-> to
-> pull remote timers, only skipping pulling remote timers would break
-> the
-> logic.
-> For this reason, we prevent isolated CPUs from pulling remote global
-> timers, but also the other way around: any global timer started on an
-> isolated CPU will run there. This does not break the concept of
-> isolation (global timers don't come from outside the CPU) and, if
-> considered inappropriate, can usually be mitigated with other
-> isolation
-> techniques (e.g. IRQ pinning).
->=20
-> The first 3 patches are preparatory work to change the concept of
-> online/offline to available/unavailable, keep track of those in a
-> separate cpumask and change a function name in cpuset code.
->=20
-> Patch 4 and 5 adapt isolation and cpuset to prevent domain isolated
-> and
-> nohz_full from covering all CPUs not leaving any housekeeping one.
-> This
-> can lead to problems with the changes introduced in this series
-> because
-> no CPU would remain to handle global timers.
->=20
-> Patch 6 extends the unavailable status to domain isolated CPUs, which
-> is the main contribution of the series.
->=20
-> Changes since v5:
-> * Remove fallback if no housekeeping is left by isolcpus and
-> nohz_full
-> * Adjust condition not to activate CPUs in the migration hierarchy
-> * Always force the nohz tick CPU active in the hierarchy
->=20
-> Changes since v4 [1]:
-> * use on_each_cpu_mask() with changes on isolated CPUs to avoid races
-> * keep nohz_full CPUs included in the timer migration hierarchy
-> * prevent domain isolated and nohz_full to cover all CPUs
->=20
-> Changes since v3:
-> * add parameter to function documentation
-> * split into multiple straightforward patches
->=20
-> Changes since v2:
-> * improve comments about handling CPUs isolated at boot
-> * minor cleanup
->=20
-> Changes since v1 [2]:
-> * split into smaller patches
-> * use available mask instead of unavailable
-> * simplification and cleanup
->=20
-> [1] -
-> https://lore.kernel.org/lkml/20250506091534.42117-7-gmonaco@redhat.com
-> [2] -
-> https://lore.kernel.org/lkml/20250410065446.57304-2-gmonaco@redhat.com
->=20
-> Gabriele Monaco (6):
-> =C2=A0 timers: Rename tmigr 'online' bit to 'available'
-> =C2=A0 timers: Add the available mask in timer migration
-> =C2=A0 cgroup/cpuset: Rename update_unbound_workqueue_cpumask() to
-> =C2=A0=C2=A0=C2=A0 update_exclusion_cpumasks()
-> =C2=A0 sched/isolation: Force housekeeping if isolcpus and nohz_full don'=
-t
-> =C2=A0=C2=A0=C2=A0 leave any
-> =C2=A0 cgroup/cpuset: Fail if isolated and nohz_full don't leave any
-> =C2=A0=C2=A0=C2=A0 housekeeping
-> =C2=A0 timers: Exclude isolated cpus from timer migation
->=20
-> =C2=A0include/linux/timer.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++
-> =C2=A0include/trace/events/timer_migration.h |=C2=A0 4 +-
-> =C2=A0kernel/cgroup/cpuset.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 71 ++++++++++++++++++=
-+--
-> =C2=A0kernel/sched/isolation.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 12 ++++
-> =C2=A0kernel/time/timer_migration.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 88 ++++++++++++++++++++++--
-> --
-> =C2=A0kernel/time/timer_migration.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 |=C2=A0 2 +-
-> =C2=A06 files changed, 165 insertions(+), 21 deletions(-)
->=20
->=20
-> base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+Since this a result of a clear AML issue that arguably cannot be fixed
+up by the interpreter (it cannot produce missing data out of thin air),
+address it by making ACPICA refuse to evaluate a method if the caller
+attempts to pass fewer arguments than expected to it.
+
+Closes: https://github.com/acpica/acpica/issues/1027 [1]
+Reported-by: Peter Williams <peter@newton.cx>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+
+This is an exception as it fixes a kernel crash on multiple platforms
+affected by the defective platform firmware update.
+
+I will take care of submitting an equivalent change to upstream
+ACPICA later.
+
+---
+ drivers/acpi/acpica/dsmethod.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/acpi/acpica/dsmethod.c
++++ b/drivers/acpi/acpica/dsmethod.c
+@@ -483,6 +483,13 @@
+ 		return_ACPI_STATUS(AE_NULL_OBJECT);
+ 	}
+ 
++	if (this_walk_state->num_operands < obj_desc->method.param_count) {
++		ACPI_ERROR((AE_INFO, "Missing argument for method [%4.4s]",
++			    acpi_ut_get_node_name(method_node)));
++
++		return_ACPI_STATUS(AE_AML_UNINITIALIZED_ARG);
++	}
++
+ 	/* Init for new method, possibly wait on method mutex */
+ 
+ 	status =
+
+
 
