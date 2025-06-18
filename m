@@ -1,84 +1,95 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mta21.hihonor.com (mta21.hihonor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84B8205E3E;
-	Wed, 18 Jun 2025 06:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35AC21F790F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750228986; cv=none; b=JpIhVB6SriT+COY/L/fTR1nBlEPhLA1nLVzbH6TRCGIG8Qhm9zPpccO4LLyu45G7m6ECYnAR9oE/XujlfWD8WI2yFmCC/XBQnAVr8Be+/xxxK6sL4OfWkxrSAA5x2YByASI0KzVnMhil/n8D6yqvADPZ5gBz+5Laezvz7JroqXw=
+	t=1750228996; cv=none; b=QBPZEd8qZzcVLsrmW5eWexxFc08UbXDImzVsPp7zzXieYVZEGPs6hGt8RpERdI5WDSrUSQCEKrXv3ki27FJPdfvXy6lWNKoBgjmQ2dTsRdZAK3C6HlPI3YTAalopGvezLgin5FACLfMPnDW1nTflCL/GJwyWFMUq3KPjAzEZWrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750228986; c=relaxed/simple;
-	bh=TJUZCm6ddsBdak6VruOCcHc1UW0VdnrNlHVFekdpcOA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=joWDMh+vwnnQbQpLbQSK0xFQUQSMT5fc+jVJmPF06tdd5UQ7GDgg1uT8BXhd2Et8VygUqXlLPK6a8YzStMuLMmRTvrYuV8kgoIsM37/NqYFEPXUHFu5JuDWDmzWcI4CHmyKzf8h8fMEpP/z3GFNwTH6HAkS+IUau+u5r0eiwOWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=LyRkDIjO; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="LyRkDIjO"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55HNXMQg023310;
-	Tue, 17 Jun 2025 23:42:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pfpt0220; bh=TJUZCm6ddsBdak6VruOCcHc1U
-	W0VdnrNlHVFekdpcOA=; b=LyRkDIjOd5tX//Yc3kweBYU6sM3/7DQohOPvITVx2
-	G4AV415wnHRMdAIztoWAdxLAg2RUiRBFZC0b+zGGjsFcWRHNg1x5R9sAjnTDh9en
-	3a74ICYq+OuEw6qsKaPDnftML0RaXPbn53HLUrep2OdN1mpJl/ro7RaUZJieedTS
-	IqOVaxRGeukP9+mH4RlprfUzamDC8/u7UtI7vCl4Mw/AJId1hM4Cy2PedjsAiByn
-	Wj8dwXmIo2CdCehIadhxmPDFDUP56OfSud6xGrVadWhePbf8vUefrvVRBetR0xXB
-	uxfIIWDDP4rCHZUtv+6Y0CCYIidATUjJYGJe23Sm+IjPA==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 47bj4xrp9u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 17 Jun 2025 23:42:34 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 17 Jun 2025 23:42:34 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 17 Jun 2025 23:42:33 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id 81BF83F7043;
-	Tue, 17 Jun 2025 23:42:30 -0700 (PDT)
-Date: Wed, 18 Jun 2025 12:12:29 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <linyunsheng@huawei.com>
-Subject: Re: [RFC]Page pool buffers stuck in App's socket queue
-Message-ID: <20250618064229.GA824830@maili.marvell.com>
-References: <20250616080530.GA279797@maili.marvell.com>
- <aFHkpVXoAP5JtCzQ@lore-desk>
+	s=arc-20240116; t=1750228996; c=relaxed/simple;
+	bh=7H7lIzQyryQptNjz9auBgCyOg9O7JeZqMLenl/x54pM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KAr/Y08/nqbvj7ESAzXY+2SyzgN6GBNKxtUFaKXp9+gwjQJh0Im351dBmxSzxqWq2CtgHLhlL3GEJisYN1j9A9zKkTBk/s7n/7ExmlS0+B6shN96yPGxQ5KOw2nqQYtgWJV9Clyfhi4cwEjJ6HADWwRQXL4xPYBCjlOmW4V+ln0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
+Received: from w002.hihonor.com (unknown [10.68.28.120])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bMYz86s4DzYlqL6;
+	Wed, 18 Jun 2025 14:40:52 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w002.hihonor.com
+ (10.68.28.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
+ 2025 14:43:05 +0800
+Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
+ (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 18 Jun
+ 2025 14:43:05 +0800
+From: wangzijie <wangzijie1@honor.com>
+To: <jaegeuk@kernel.org>, <chao@kernel.org>
+CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
+	<bintian.wang@honor.com>, <feng.han@honor.com>, <niuzhiguo84@gmail.com>,
+	wangzijie <wangzijie1@honor.com>
+Subject: [f2fs-dev] [PATCH v3 1/2] f2fs: don't allow unaligned truncation to smaller/equal size on pinned file
+Date: Wed, 18 Jun 2025 14:43:02 +0800
+Message-ID: <20250618064303.2477852-1-wangzijie1@honor.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <aFHkpVXoAP5JtCzQ@lore-desk>
-X-Authority-Analysis: v=2.4 cv=ULrdHDfy c=1 sm=1 tr=0 ts=68525fda cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=20KFwNOVAAAA:8 a=aV8IDli8uWC4K53TSP0A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA1NiBTYWx0ZWRfX2pZG7u6c+SW3 V1VVPzPSnryHcHcdQsh/MdJwDeOug2sDpy0qqiyaMNQSekolcHVPFFJmavWeNjSbq/0lG2RH+qj Pn3p0t8Byu8ajtNZhJL7isPlDiVrD0Nrn1CYD1k9fOKHLweE+ODaD9Jb5D53Cb9KSx71ih7ngIi
- oKeyjEK1bYJdP2Tq4QKMLJX9u2I9CWyotojYmV0DrlAFpNZxDanyR/vIzFWgXL/KiKWck6FmyvT E05ZhkaV7+FRpV4RY6X1Dds/2A4lWf3GgQF1VziL+5RVD2EtE0HLdv+NR5nk3hmz7u4PDjwcD7w LNtWszW9jIme+SgM16NtlUAv9vMB1teoQJhOU8KFWUIS9VVkFPJo7AWIh4Kr+9ynpQu6gbNq65M
- D8gpQxrGwNLFvTqDEKmsWFWMfmkgnEZ+3+bHJzQuJXfMcE/8VwGqSB43NeHIP4/smAq5XIn/
-X-Proofpoint-GUID: 4brJkww31Ll_X-odFeJyVQUzHLo6Ue6W
-X-Proofpoint-ORIG-GUID: 4brJkww31Ll_X-odFeJyVQUzHLo6Ue6W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: w002.hihonor.com (10.68.28.120) To a011.hihonor.com
+ (10.68.31.243)
 
-On 2025-06-18 at 03:26:53, Lorenzo Bianconi (lorenzo.bianconi@redhat.com) wrote:
->
-> Hi,
->
-> this problem recall me an issue I had in the past with page_pool
-> and TCP traffic destroying the pool (not sure if it is still valid):
->
-> https://lore.kernel.org/netdev/ZD2HjZZSOjtsnQaf@lore-desk/
->
-> Do you have ongoing TCP flows?
-No. it is just ping running. If we kill the ping process, Page pool prints stops.
+To prevent scattered pin block generation, don't allow non-section aligned truncation
+to smaller or equal size on pinned file. But for truncation to larger size, after
+commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
+we only support overwrite IO to pinned file, so we don't need to consider
+attr->ia_size > i_size case.
+
+Signed-off-by: wangzijie <wangzijie1@honor.com>
+---
+v3:
+- cover attr->ia_size == i_size case
+v2:
+- add comments and change a proper subject
+---
+ fs/f2fs/file.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 6bd3de64f..9e0f1c98f 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -1026,6 +1026,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ {
+ 	struct inode *inode = d_inode(dentry);
+ 	struct f2fs_inode_info *fi = F2FS_I(inode);
++	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	int err;
+ 
+ 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
+@@ -1047,6 +1048,17 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			!IS_ALIGNED(attr->ia_size,
+ 			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+ 			return -EINVAL;
++		/*
++		 * To prevent scattered pin block generation, we don't allow
++		 * smaller/equal size unaligned truncation for pinned file.
++		 * We only support overwrite IO to pinned file, so don't
++		 * care about larger size truncation.
++		 */
++		if (f2fs_is_pinned_file(inode) &&
++			attr->ia_size <= i_size_read(inode) &&
++			!IS_ALIGNED(attr->ia_size,
++			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
++			return -EINVAL;
+ 	}
+ 
+ 	err = setattr_prepare(idmap, dentry, attr);
+-- 
+2.25.1
+
