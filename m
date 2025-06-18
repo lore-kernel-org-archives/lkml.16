@@ -1,371 +1,148 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1CE261594
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25B03085CC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750285713; cv=none; b=BzsuZwstfeUW2+2kdYrnhBcir1vT0AuQxqAfGagiWztsLvn3VhKtQZC/dryDS09yWXcnJIqYnQ+qOA0b3X62YOHnXzmuRRBQqAlk5VD+CjEHu7Fizv2jllq4Xe+PZDwAOJbbdASDzjLW7auqqymj8eHK6cb5Py9V7PPD2N689jg=
+	t=1750285899; cv=none; b=sft9+Qqicsx33LVwyNnGEJc0qgXKGOtLom78UZdvdznZt5kYqMRrahcjtlpV5KlP8DaTcBNtI8TLDIv7taeS/qDbN/XcZimkt5Pu6KCXzUpoJhLTvfQJKc0rMcnEFMWBG4U086xVl77tUEIszjSFhSEa8yhr0HsHz4tTARabvWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750285713; c=relaxed/simple;
-	bh=4vksrFCPanMEJVcKvtOGRE5m4SOCd9x17xk0zMyiqhQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ib2eQviChtmWaMOHd+j/JuPGgHKPrHGHJ/IZzHarRVeaNigkOajrlbPP+p7YITQOtDobIW8M7OMzd3grfR8oKgK6OeKGmRLKkunWkGsX7WcBQfBamSOIb/Mv79Wb1InXIKmNlsyiOsNefOSd0Vz17718gmVtjIGG3PFV8DSfV2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a4+UugGs; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750285899; c=relaxed/simple;
+	bh=Sh+fB8f3onrvVBI5RiqkmnuXNfwO5+3FLY5RZ3oUno0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=KRIrw3fOhx88I1LjzDwZ/CHQs64bnMbw/N1l9aS7JHJBfJzbtMtypw5OEKIGaetrN7jhxT5oez6zotVFqbEOtVlCrxwP5UnaZAKjWVA/8SjfKNpcT4dQmbNp44PWsUr7L5K4b4aA6J82uQrT9qeUnuzpWZpPu6DceqxARFQLHWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=iX13dbBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a4+UugGs"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55IBvCYN025552
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:28:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:to; s=
-	qcppdkim1; bh=epPMJzOrwzGETwD77hWik2wtMJpWMHttwV94Ec6Z3RY=; b=a4
-	+UugGsAXBhuu/rbNXGfdR2bEyC6dZYXuEFQVBPo1QELMa3F7p1lKLYSgq5cTqimw
-	X5eYMN2pMn9bgXHBizFR5I6fCiKhk2T/snOPsd7psoZxlpS3xutwc3iy7bKEUu/P
-	b7O4fwJA6aNru1eT8OFpI+qxmwRl/S4xg9068qZv4aJgiCFTBWtJNNZSCSqRSRAQ
-	serNzgYL7Kt97vLYpsd+6YaEUbDd3W2+Zx/iXSHbWUhcHLuiGbrapRB8wH8IrZNn
-	G+XQCtKWfz85DDwgrim3sZWQY+HL1BbfclzySMaYvU8gWgYEuHP71aLNCGLOpZer
-	vRaYgVd+GLMc/rKYLJLQ==
-Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com [209.85.160.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47bw139sy0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 22:28:30 +0000 (GMT)
-Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-2e9b472cfd1so166195fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:28:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750285709; x=1750890509;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=epPMJzOrwzGETwD77hWik2wtMJpWMHttwV94Ec6Z3RY=;
-        b=esHmwQ80+BXybZ5cm2Cyc0RbwZvfmbl1z8SLn1bHv8OxbZSW1ylbnZDUspkGNjC8qM
-         8lvrcVJwq/oMSC43tPA0kKLNcmvlSe8qPFNEW7saDaDfd44z18DDH/9lfAyHAsRSuOzn
-         pct0cSBGh7Vju2A0qJCg0ErdZDQysoNhVWIWU9M4K6gPNg5oMCyqfgN0jtXUX19K871w
-         Fomc/3J3mkUVTQxDtTXkRvZXPkbIkNW4qNLe7OAw3OUFxz3Tiq4TIwEeSQNwUa/5Zwqy
-         cW/hTlRMnQuutOlVLf8v/a9bbhnr5OjLvklsmAxYLOxlqsqq/QP/7OYaHgI9ddoVsuzY
-         Xwuw==
-X-Forwarded-Encrypted: i=1; AJvYcCVqL30aREuImjAOdX3RDNgcoXfRoGGmL72qjoTdNzaRtr6yn4zM4mlJXps/JSXECLeV704nbQjptpxiEKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdVXA58DHRaWtlhxCoaKWaR1SMfdTelZlGFS2juHGGMScQMnnH
-	mfWzd4jtaLelqt40+maShdJfk7OgrdkJ4/Na3i09XeHzZhAPmDGTzZkgM8fpKoGT9XKbqpzcnnU
-	eKL1hLHJ9SwiFxrYOdps9cc4GThcIA6daG0nQpP+mAObEcmTQWvhNqS/n8EnimAcVwMGNteVc2n
-	owtv3cybGbuMbY1govcUAHQWTZzZJnQ+EK+vbudlYCLQ==
-X-Gm-Gg: ASbGncsG+C1kzSKj4pCZocr1cGeSAB5ovjE4JFU6BXpSDF/yDrxhsB+CO8keNKkH9hD
-	q8DsNSW4E8op1nplVTypsTVidPIPIlvhP+jgk9O2tORv7YrF3UD28fGuHpi/RIz8GQJV1Nscuwo
-	h5m+6r0Sxwpro8eW1UqMOsVmZ3bcFA8TgJOt0=
-X-Received: by 2002:a05:6871:4318:b0:2d4:ce45:6990 with SMTP id 586e51a60fabf-2eaf07f3d68mr11140134fac.7.1750285709023;
-        Wed, 18 Jun 2025 15:28:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHt/DCdeSihnlYid2jzWle7Jgne9x6+SLxfnpukFlCmvoswoBSHicpf3IeeQzIbtpGMjjF8shno7oTPiKvf2KI=
-X-Received: by 2002:a05:6871:4318:b0:2d4:ce45:6990 with SMTP id
- 586e51a60fabf-2eaf07f3d68mr11140121fac.7.1750285708644; Wed, 18 Jun 2025
- 15:28:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="iX13dbBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7326BC4CEE7;
+	Wed, 18 Jun 2025 22:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750285899;
+	bh=Sh+fB8f3onrvVBI5RiqkmnuXNfwO5+3FLY5RZ3oUno0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iX13dbBT/V0WyWxJ0VTVTM5vK26Sg4dWAFzp4S1qpncd/PBDlQya9ePJGDb+mbX2e
+	 w+f9TRWNRGYffxDCEvo7LM+Blt+Mlt0pGomBm/bfinVvQH8cZEsV1kzrJ+9Y+ttaLB
+	 P4XxXWTmoZXYjCCLTo75Vne9Maz53IWDpah+VT/w=
+Date: Wed, 18 Jun 2025 15:31:37 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: syzbot <syzbot+ca15a081ac6b8357d82c@syzkaller.appspotmail.com>
+Cc: Liam.Howlett@oracle.com, bsegall@google.com, david@redhat.com,
+ dietmar.eggemann@arm.com, juri.lelli@redhat.com, kees@kernel.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ lorenzo.stoakes@oracle.com, mgorman@suse.de, mhocko@suse.com,
+ mingo@redhat.com, peterz@infradead.org, rostedt@goodmis.org,
+ rppt@kernel.org, surenb@google.com, syzkaller-bugs@googlegroups.com,
+ vbabka@suse.cz, vincent.guittot@linaro.org, vschneid@redhat.com, Jens Axboe
+ <axboe@kernel.dk>
+Subject: Re: [syzbot] [mm?] WARNING in __put_task_struct (5)
+Message-Id: <20250618153137.a8f3937e86816cd9b7a3ab0d@linux-foundation.org>
+In-Reply-To: <6852b77e.a70a0220.79d0a.0216.GAE@google.com>
+References: <6852b77e.a70a0220.79d0a.0216.GAE@google.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250613235705.28006-3-robin.clark@oss.qualcomm.com>
- <aE1RPZ_-oFyM4COy@pollux> <CACSVV00uwmuAC4eMi-4QiF4sOu4r9u8eXxyAgt83YS8Yfgoemg@mail.gmail.com>
- <aFCO7_RHuAaGyq1Q@pollux> <CACSVV03WboQp_A1bzQ+xpX5DDkfaoXmbTuo9RfZ9bMaVTqdU+A@mail.gmail.com>
- <aFE6pq8l33NXfFdT@pollux> <CACSVV00VzOfTDh2sKst+POzkZ-5MH+0BDY-GVB2WKTyONRrHjw@mail.gmail.com>
- <CACSVV00cng4PzHzqydGw_L34_f+6KiZTyCRdggNfHaDePGzFOA@mail.gmail.com>
- <aFMuV7PNfSZVWb-b@pollux> <CACSVV00MJDTXk-qVB3FZV36CPuJ4LLtCDPFpF07EQXBfyqncuQ@mail.gmail.com>
- <aFM7gyGEJSVpQe1y@pollux>
-In-Reply-To: <aFM7gyGEJSVpQe1y@pollux>
-Reply-To: rob.clark@oss.qualcomm.com
-From: Rob Clark <rob.clark@oss.qualcomm.com>
-Date: Wed, 18 Jun 2025 15:28:17 -0700
-X-Gm-Features: Ac12FXxNkhbCuKyo_HSDjtF9QlLL155lTjSWkqyKRkuUzbcpYrmmQfDDvYdswW4
-Message-ID: <CACSVV00mDy=SNkq9bbtqkmP4tVwZMGjjSPcS7dHgjkfSt4bYRQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/gpuvm: Add locking helpers
-To: Danilo Krummrich <dakr@redhat.com>
-Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Authority-Analysis: v=2.4 cv=QbBmvtbv c=1 sm=1 tr=0 ts=68533d8e cx=c_pps
- a=zPxD6eHSjdtQ/OcAcrOFGw==:117 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
- a=20KFwNOVAAAA:8 a=EUspDBNiAAAA:8 a=WNEkua8qePtfmiliVmwA:9 a=QEXdDO2ut3YA:10
- a=y8BKWJGFn5sdPF1Y92-H:22
-X-Proofpoint-ORIG-GUID: iNMwBsE5YflKfuck8Mn1LAvGjuN7XL72
-X-Proofpoint-GUID: iNMwBsE5YflKfuck8Mn1LAvGjuN7XL72
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDE5MyBTYWx0ZWRfX2Mj3bF40x8zj
- lfQYIp/bWgCAvwjzUcdxH/b0QbPM0IyfkAOAS1O+tCXD/mXYr+1HyF4OvbX2UEO52+4zaqAkdpi
- qP54/08MClAk6+FRwCDg5rMZQrgppo5oK2W4AVY/4bB44raXxkOt9EApuApTEaQYr7CUmy9OoYi
- P8RCugHO8e6n0chjOJrR0JdyGHJt3RowTytmxS/8jjyaVk/fw2tHkgaQuQ77VFsfYsNX9iXQp3l
- 2m2z0ziQ7oE9hnnqOr1UAlcOlo1Pe2ulNIJFsOPmWn8mR4kJDAKciW0CRDbTuSY7cuDGyAxbOvw
- 4ExkdTQXA0Ahlc4koISF1umSRmkN31GvEOHjcPfVy332us1TXdJoIzPDExNjYcoWk5up8KU+6JO
- c85B6+2s2dvr+BTN47sxlVnIhAR6fQAV75sKJsuz78rZty3Ely4HgHB5y3amwWZDqUz/gJuc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_06,2025-06-18_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 spamscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- adultscore=0 phishscore=0 clxscore=1015 suspectscore=0 lowpriorityscore=0
- mlxscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506180193
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 3:19=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
-wrote:
->
-> On Wed, Jun 18, 2025 at 02:56:37PM -0700, Rob Clark wrote:
-> > On Wed, Jun 18, 2025 at 2:23=E2=80=AFPM Danilo Krummrich <dakr@redhat.c=
-om> wrote:
-> > >
-> > > On Tue, Jun 17, 2025 at 06:43:21AM -0700, Rob Clark wrote:
-> > > > On Tue, Jun 17, 2025 at 5:48=E2=80=AFAM Rob Clark <rob.clark@oss.qu=
-alcomm.com> wrote:
-> > > > >
-> > > > > On Tue, Jun 17, 2025 at 2:51=E2=80=AFAM Danilo Krummrich <dakr@re=
-dhat.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 16, 2025 at 03:25:08PM -0700, Rob Clark wrote:
-> > > > > > > On Mon, Jun 16, 2025 at 2:39=E2=80=AFPM Danilo Krummrich <dak=
-r@redhat.com> wrote:
-> > > > > > > >
-> > > > > > > > On Sat, Jun 14, 2025 at 08:03:20AM -0700, Rob Clark wrote:
-> > > > > > > > > On Sat, Jun 14, 2025 at 3:39=E2=80=AFAM Danilo Krummrich =
-<dakr@redhat.com> wrote:
-> > > > > > > > > >
-> > > > > > > > > > On Fri, Jun 13, 2025 at 04:57:03PM -0700, Rob Clark wro=
-te:
-> > > > > > > > > > > For UNMAP/REMAP steps we could be needing to lock obj=
-ects that are not
-> > > > > > > > > > > explicitly listed in the VM_BIND ioctl in order to te=
-ar-down unmapped
-> > > > > > > > > > > VAs.  These helpers handle locking/preparing the need=
-ed objects.
-> > > > > > > > > >
-> > > > > > > > > > Yes, that's a common use-case. I think drivers typicall=
-y iterate through their
-> > > > > > > > > > drm_gpuva_ops to lock those objects.
-> > > > > > > > > >
-> > > > > > > > > > I had a look at you link [1] and it seems that you keep=
- a list of ops as well by
-> > > > > > > > > > calling vm_op_enqueue() with a new struct msm_vm_op fro=
-m the callbacks.
-> > > > > > > > > >
-> > > > > > > > > > Please note that for exactly this case there is the op_=
-alloc callback in
-> > > > > > > > > > struct drm_gpuvm_ops, such that you can allocate a cust=
-om op type (i.e. struct
-> > > > > > > > > > msm_vm_op) that embedds a struct drm_gpuva_op.
-> > > > > > > > >
-> > > > > > > > > I did use drm_gpuvm_sm_xyz_ops_create() in an earlier ite=
-ration of my
-> > > > > > > > > VM_BIND series, but it wasn't quite what I was after.  I =
-wanted to
-> > > > > > > > > apply the VM updates immediately to avoid issues with a l=
-ater
-> > > > > > > > > map/unmap overlapping an earlier map, which
-> > > > > > > > > drm_gpuvm_sm_xyz_ops_create() doesn't really handle.  I'm=
- not even
-> > > > > > > > > sure why this isn't a problem for other drivers unless us=
-erspace is
-> > > > > > > > > providing some guarantees.
-> > > > > > > >
-> > > > > > > > The drm_gpuva_ops are usually used in a pattern like this.
-> > > > > > > >
-> > > > > > > >         vm_bind {
-> > > > > > > >                 for_each_vm_bind_operation {
-> > > > > >                             drm_gpuvm_sm_xyz_ops_create();
-> > > > > > > >                         drm_gpuva_for_each_op {
-> > > > > > > >                                 // modify drm_gpuvm's inter=
-val tree
-> > > > > > > >                                 // pre-allocate memory
-> > > > > > > >                                 // lock and prepare objects
-> > > > > > > >                         }
-> > > > > > > >                 }
-> > > > > > > >
-> > > > > > > >                 drm_sched_entity_push_job();
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > >         run_job {
-> > > > > > > >                 for_each_vm_bind_operation {
-> > > > > > > >                         drm_gpuva_for_each_op {
-> > > > > > > >                                 // modify page tables
-> > > > > > > >                         }
-> > > > > > > >                 }
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > >         run_job {
-> > > > > > > >                 for_each_vm_bind_operation {
-> > > > > > > >                         drm_gpuva_for_each_op {
-> > > > > > > >                                 // free page table structur=
-es, if any
-> > > > > > > >                                 // free unused pre-allocate=
-d memory
-> > > > > > > >                         }
-> > > > > > > >                 }
-> > > > > > > >         }
-> > > > > > > >
-> > > > > > > > What did you do instead to get map/unmap overlapping? Even =
-more interesting,
-> > > > > > > > what are you doing now?
-> > > > > > >
-> > > > > > > From what I can tell, the drivers using drm_gpva_for_each_op(=
-)/etc are
-> > > > > > > doing drm_gpuva_remove() while iterating the ops list..
-> > > > > > > drm_gpuvm_sm_xyz_ops_create() itself does not modify the VM. =
- So this
-> > > > > > > can only really work if you perform one MAP or UNMAP at a tim=
-e.  Or at
-> > > > > > > least if you process the VM modifying part of the ops list be=
-fore
-> > > > > > > proceeding to the next op.
-> > > > > >
-> > > > > > (Added the drm_gpuvm_sm_xyz_ops_create() step above.)
-> > > > > >
-> > > > > > I went through the code you posted [1] and conceptually you're =
-implementing
-> > > > > > exactly the pattern I described above, i.e. you do:
-> > > > > >
-> > > > > >         vm_bind {
-> > > > > >                 for_each_vm_bind_operation {
-> > > > > >                         drm_gpuvm_sm_xyz_exec_lock();
-> > > > > >                 }
-> > > > > >
-> > > > > >                 for_each_vm_bind_operation {
-> > > > > >                         drm_gpuvm_sm_xyz() {
-> > > > > >                                 // modify drm_gpuvm's interval =
-tree
-> > > > > >                                 // create custom ops
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >
-> > > > > >                 drm_sched_entity_push_job();
-> > > > > >         }
-> > > > > >
-> > > > > >         run_job {
-> > > > > >                 for_each_vm_bind_operation {
-> > > > > >                         for_each_custom_op() {
-> > > > > >                                 // do stuff
-> > > > > >                         }
-> > > > > >                 }
-> > > > > >         }
-> > > > >
-> > > > > Close, but by the time we get to run_job there is just a single l=
-ist
-> > > > > of ops covering all the vm_bind operations:
-> > > > >
-> > > > >         run_job {
-> > > > >                 for_each_custom_op() {
-> > > > >                         // do stuff
-> > > > >                 }
-> > > > >         }
-> > > > >
-> > > > > rather than a list of va ops per vm_bind op.
-> > > > >
-> > > > > > However, GPUVM intends to solve your use-case with the followin=
-g, semantically
-> > > > > > identical, approach.
-> > > > > >
-> > > > > >         vm_bind {
-> > > > > >                 for_each_vm_bind_operation {
-> > > > > >                         drm_gpuvm_sm_xyz_ops_create();
-> > > > > >
-> > > > > >                         drm_gpuva_for_each_op {
-> > > > > >                                 // modify drm_gpuvm's interval =
-tree
-> > > > > >                                 // lock and prepare objects (1)
-> > > > >
-> > > > > I currently decouple lock+pin from VM modification to avoid an er=
-ror
-> > > > > path that leaves the VM partially modified.  Once you add this ba=
-ck
-> > > > > in, the va-ops approach isn't simpler, IMHO.
-> > > >
-> > > > Oh, actually scratch that.. using va-ops, it is not even possible t=
-o
-> > > > decouple locking/prepare from VM modifications.  So using
-> > > > DRM_EXEC_INTERRUPTIBLE_WAIT, for ex, with va-ops list would be an
-> > > > actively bad idea.
-> > >
-> > > Well, you would need to unwind the VM modifications. I think so far t=
-his hasn't
-> > > been an issue for drivers, since they have to unwind VM modifications=
- for other
-> > > reasons anyways.
-> >
-> > Only thing that can fail at this point are the drm_gpuvm_sm_xyz()
-> > calls[1].  Which should only be for small kmalloc's which should not
-> > fail.
->
-> But what happens *if* they fail? How do you handle this? If you don't unw=
-ind all
-> preceeding changes to the GPUVM's interval tree at this point your VM is =
-broken.
+On Wed, 18 Jun 2025 05:56:30 -0700 syzbot <syzbot+ca15a081ac6b8357d82c@syzkaller.appspotmail.com> wrote:
 
-Small GFP_KERNEL allocations will recurse into shrinker to reclaim
-memory before failing.  _If_ they fail, things are in a pretty bad
-shape already, the best thing to do is mark the VM unusable to signal
-mesa to close the dev file to tear everything down.
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    4663747812d1 Merge tag 'platform-drivers-x86-v6.16-2' of g..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1626f90c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=d6f01a06a8393850
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ca15a081ac6b8357d82c
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c9d5d4580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/ef27ce1c74bb/disk-46637478.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/2962783b1956/vmlinux-46637478.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/faa841f27097/bzImage-46637478.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+ca15a081ac6b8357d82c@syzkaller.appspotmail.com
+> 
+> RBP: 00007ff5f3810b39 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000000 R14: 00007ff5f39b5fa0 R15: 00007ffd192cb478
+>  </TASK>
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 6071 at kernel/fork.c:731 __put_task_struct+0x340/0x530 kernel/fork.c:731
 
-> Glancing at the code, it seems that you're allocating the GPUVA ops. And =
-if that
-> fails you just return the error, leaving the VM in a broken state.
->
-> What we could do is to implement a helper that calculates the worst case =
-number
-> of ops and pre-allocate them, but that's not exactly trivial.
+It doesn't look MM related.  Perhaps there's something wonky in the
+io_sq_offload_create() error path.
 
-No, we shouldn't add this complexity for something that cannot happen
-(or if it does happen, you are in a state where nothing you do other
-than tear it all down can improve things).
 
-> drm_gpuvm_sm_{map,unmap}_exec_lock() only really makes sense if we can pr=
-event
-> the need to ever unwind, so that's a precondition.
->
-> Alternatively, you can also decide to accept that your VM is dead if you =
-can't
-> allocate the GPUVA ops, I guess. In this case you'd really have to shut i=
-t down
-> though, otherwise you likely risk faults in your PT management code.
-
-Correct, we never free backing pages while there is still a mapping to
-the GPU.. that is the golden rule!
-
-> > But all the "usual" errors (bad params from userspace,
-> > interrupted locking, etc) are dealt with before we begin to modify the
-> > VM.  If anything does fail after we start modifying the VM we mark the
-> > vm as unusable, similar to a gpu fault.
-> >
-> > [1] ok, I should put some drm_gpuvm_range_valid() checks earlier in
-> > the ioctl, while parsing out and validating args/flags/etc.  I
-> > overlooked this.
-> >
-> > > Do you never need to unwind for other reasons than locking dma_resv a=
-nd
-> > > preparing GEM objects? Are you really sure there's nothing else in th=
-e critical
-> > > path?
-> > >
-> > > If there really isn't anything, I agree that those helpers have value=
- and we
-> > > should add them. So, if we do so, please document in detail the condi=
-tions under
-> > > which drm_gpuvm_sm_{map,unmap}_exec_lock() can be called for multiple=
- VM_BIND
-> > > ops *without* updating GPUVM's interval tree intermediately, includin=
-g an
-> > > example.
-> >
-> > Ok.. in the function headerdoc comment block?  Or did you have
-> > somewhere else in mind?
->
-> Yeah, in the function doc-comment.
-
-ack
-
-BR,
--R
+> Modules linked in:
+> 
+> CPU: 1 UID: 0 PID: 6071 Comm: syz.2.22 Not tainted 6.16.0-rc2-syzkaller-00045-g4663747812d1 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+> RIP: 0010:__put_task_struct+0x340/0x530 kernel/fork.c:731
+> Code: f6 ac 41 00 be 03 00 00 00 4c 89 e7 e8 f9 c2 5e 03 e9 ed fe ff ff e8 df ac 41 00 90 0f 0b 90 e9 6d fd ff ff e8 d1 ac 41 00 90 <0f> 0b 90 e9 0b fd ff ff e8 c3 ac 41 00 90 0f 0b 90 e9 67 fd ff ff
+> RSP: 0018:ffffc90002fd7c50 EFLAGS: 00010293
+> RAX: 0000000000000000 RBX: ffff888026d18000 RCX: ffffffff8179d88b
+> RDX: ffff888032081e00 RSI: ffffffff8179db7f RDI: 0000000000000005
+> RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000001 R12: ffff888026d18000
+> R13: 1ffff920005faf96 R14: ffff888026d18028 R15: 0000000000000000
+> FS:  00007ff5f452f6c0(0000) GS:ffff888124861000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007ff5f3725b20 CR3: 0000000073166000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  put_task_struct include/linux/sched/task.h:145 [inline]
+>  put_task_struct include/linux/sched/task.h:132 [inline]
+>  io_sq_offload_create+0xe4b/0x1330 io_uring/sqpoll.c:517
+>  io_uring_create io_uring/io_uring.c:3747 [inline]
+>  io_uring_setup+0x1493/0x2080 io_uring/io_uring.c:3830
+>  __do_sys_io_uring_setup io_uring/io_uring.c:3864 [inline]
+>  __se_sys_io_uring_setup io_uring/io_uring.c:3855 [inline]
+>  __x64_sys_io_uring_setup+0xc2/0x170 io_uring/io_uring.c:3855
+>  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+>  do_syscall_64+0xcd/0x490 arch/x86/entry/syscall_64.c:94
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7ff5f378e929
+> Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007ff5f452f038 EFLAGS: 00000246 ORIG_RAX: 00000000000001a9
+> RAX: ffffffffffffffda RBX: 00007ff5f39b5fa0 RCX: 00007ff5f378e929
+> RDX: 0000000000000000 RSI: 0000200000000080 RDI: 0000000000000059
+> RBP: 00007ff5f3810b39 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000000 R14: 00007ff5f39b5fa0 R15: 00007ffd192cb478
+>  </TASK>
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
