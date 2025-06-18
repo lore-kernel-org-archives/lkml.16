@@ -1,175 +1,84 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE80F9CB;
-	Wed, 18 Jun 2025 12:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011CA2F5336;
+	Wed, 18 Jun 2025 12:24:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750249335; cv=none; b=tGOTD6XRISn67KFbGsRAwMvIK26p1LPP/TTI2maA7n/Ro7UzOd2SjCZ1l1h3of6Q0LMc/aDmvrGBo6hjO61tfGMGdwELE6i6kV4rvPunrNc22VhL0+5ukFmSMXQs0STG0W+ZFcvfhdYJsCa4BfLb+XVWyezKC1d18yCQnfgVDo4=
+	t=1750249473; cv=none; b=jgVWwxwz0aDDvzmZ6eGzE4nBaws5ZqjfyoZ3z8u0fohXWPMckNvGC+RhZ+uemlXA3lsnOXOjti/yBwBqH5J9ETfAqrNp2JDp0G71N3JcBxilTkHm9lRKGvO9Ugov3F5bpnPyqDNfLIIlUI+yT5jL+SNfSgLLZQT5fe0dCyT/mRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750249335; c=relaxed/simple;
-	bh=AkOJGHFfJ0D1Hi2CzC1gFV13rZ2OfQfKVC5qrPuOvQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=nI4xBgn3673Vk85FdrZ+qoXyEebngQTKrAVWWA5sddUuHRTsvq0rQXxOEZVDBYyeQTAsRb1cxSv540lujmoOS5y3g6LqNNjhQwC+AUBxi9473ivv/oh0XiU3jCr2B1QXYWI8R8pZAGfQZjWsKR1r8dsMHjZypomXJUDH0+PVTz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XukT4AiT; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750249473; c=relaxed/simple;
+	bh=zHK+0dJw9hbKdjwDqLPDdTE7UAQG7bf8mukhi58+Qzs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eIp+q7+DnuOkCEglxTW8sjiiQ8iGjzIVj1kGyujcGpGQYl5eMnijGkIZv6VItqfml7c1nXNM4RI2pz+jyigTZFISvpMIg50gABZ6PsSCSQrgr6va3TPFB853cHI5noZtNmUczVuP2mrxL+70a102zeUBF6myUAE29Tm5w6cqHPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bEQFVbGt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XukT4AiT"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5533303070cso6551632e87.2;
-        Wed, 18 Jun 2025 05:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750249332; x=1750854132; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YX5uE2UWP9Ptw7Kk9zAitIAFib0/p57/vRRfmjUetJ4=;
-        b=XukT4AiT05nir0bLDw3EghBZSLTkWIZ/AKeT3C6O6ApqXCFxcLSGU0Dbk0aCCDoPG3
-         A5sUrQWges20sQLHTX0qCCq+K6VEukhy7fvSuGJ48reVFGRtsbqujRszcNtZm4lZREPF
-         t1lhX05PYrqgaG088HeTJnGyZGRc/UQP1CGuzt+ZZijuqwIDeySd7hQ5rC6oE9po1rtJ
-         EOMYOLZjhytn9cK9W75Yx7S45exIdt+MviauQRVlYHa7jgzGRQeekGR96gk77TtnI+wr
-         uu/v6sd3n4G8P6jm6DGGC6imG/EnKhjh0jrHof6PvRikoTzgSJPVEg0VHtn4fDcIjQHd
-         Gneg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750249332; x=1750854132;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YX5uE2UWP9Ptw7Kk9zAitIAFib0/p57/vRRfmjUetJ4=;
-        b=Ib/mwyZ416XS/HrZZ4MM8swOQiyv3zDiOjZWp3431ymB7pgv1RIhfp/scJ5CV5wyst
-         OUChHvURJuKq1Sm6x7e09Z8HFraBa/MqNvm3DLOCTUPovh3D32wR7us21Y3GGZjNNKPl
-         95LL1qfidZo4PvyNIcUqFe7dBEFryABxHQM8CiVpJmWnL0EDjoDBNSmiuFNSKqVjXi/I
-         SN/dEcufAn/xTGPX0p1ZUbr5BTWJnPBW3ZWawkd/mDW4fPkyWyVYhNPd5GxoAGdSEbG9
-         nz5SBkg19AXdAhdN8JxsKDcf/91Mm91K6T+RJjhdKINWSWe36seEaePwhR7JHyfCF/hs
-         emQA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQxbV0Koza8LUQW/1ATa5bWpyb4MyTOHmBRrO19zOf8IUS7yCmXu+Wd8InvBszb6HrM7mY4OAq@vger.kernel.org, AJvYcCWdWOrVKI7ke3bUicIA/YeRDsuDUrJEQ+CMCWD3NQfhGuQcGDngMJ13jxpg6Eggwy2QeeFw1yoNYhDvI/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuAn6QhJIjIwGvPjBUhUPSwj8KGv8w3tbS48MBkHDU+0N3ko+3
-	VkBmQsT3g6tHEn5y9VWaHzywrscfVThb68A8qAzZtDFvloDETE1HP2CP
-X-Gm-Gg: ASbGncsQ4q/Se4SkYp/3KR7fymQYLJLDiB12kxwx1BVQrVcCedxI0GJLBEcqS9Efn3k
-	vPpkGlh6PT/vM1kwyNwOSQt6UPXKlEAmpyrcCRta4lRPhmq2E4C3a/n8PV+W0RNnfy7/Ul5AgHQ
-	w/NxLDktwAiHWm2xeKtf73OoFgU2W8WWxJW7zBcnKeLa2hjEPapQnucT0kCWv2d2GiMC+N+qdCc
-	uV1rcffRD9iVmA8EqMfHNrlXmT1WzrbkIktegOjX2GA+O+Knlgprex4PM2uavzYD7vzDWwIcZlF
-	T4m6s/E1HVX6UEqYXfpR0nY2HTwe6m53yZwUcPDCvJHDyJC/8pQ9voezPhKFkz0EmKoQi8S2aDp
-	t9Bs=
-X-Google-Smtp-Source: AGHT+IGJ1vZmmV2E3HMazrFPTb/BZIZ9ZVcruq8NwutkVwOcMvDD2EOlPnoGnZTqlnhGwGI9Cs9rNA==
-X-Received: by 2002:a05:6512:15a4:b0:553:3178:2928 with SMTP id 2adb3069b0e04-553b6e8834bmr4675292e87.16.1750249331405;
-        Wed, 18 Jun 2025 05:22:11 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ac1c1d1csm2235445e87.160.2025.06.18.05.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 05:22:10 -0700 (PDT)
-Date: Wed, 18 Jun 2025 15:22:02 +0300
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Claudiu Manoil <claudiu.manoil@nxp.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	horms@kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2] net: gianfar: Use
- device_get_named_child_node_count()
-Message-ID: <3a33988fc042588cb00a0bfc5ad64e749cb0eb1f.1750248902.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bEQFVbGt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 743D8C4CEE7;
+	Wed, 18 Jun 2025 12:24:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750249472;
+	bh=zHK+0dJw9hbKdjwDqLPDdTE7UAQG7bf8mukhi58+Qzs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bEQFVbGtdoxye5TgEDftWMX5K/o7OKZiUL15zhRKaKhGk78Hhc6fBlGGLDsJe/C6V
+	 rjWDcD0pJxgtFb9pHpnu77JJ6Iqp3krYvGlcDJrIBwNlETUn6PKwmsphwpLDxWgKz1
+	 DU/mUrBMWXo42o9des5sO0hq9ljvo2VVN9QF51NqyT0eDAqAOnWVi3PYhmHXeaLRxp
+	 WxXVvbjP5juvlMGUOTLfRza/R0lkhUjbBC6CYXchG+CFMdKARzU7RIqUVEVUg9ABup
+	 Wp9/eJaCjKhVrawaXxnPG6V7n8gDdyswb6nfr6cRshd9zTBsZ40Tn7/H7xrTabAXv9
+	 ZtcFquSzeQh7A==
+Date: Wed, 18 Jun 2025 13:24:27 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, Yogesh S <yogeshs@ti.com>,
+	Santhosh Kumar K <s-k6@ti.com>, Steam Lin <STLin2@winbond.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mtd@lists.infradead.org
+Subject: Re: [PATCH 1/8] spi: spi-mem: Use picoseconds for calculating the op
+ durations
+Message-ID: <a44f8212-1d72-46a1-983b-9f46ed66da03@sirena.org.uk>
+References: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-0-513202126013@bootlin.com>
+ <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-1-513202126013@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="OEbY+A2xp9C7j9WX"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lfg94TGuaFvTP94K"
 Content-Disposition: inline
+In-Reply-To: <20250618-winbond-6-16-rc1-octal-phy-upstream-v1-1-513202126013@bootlin.com>
+X-Cookie: This bag is recyclable.
 
 
---OEbY+A2xp9C7j9WX
+--lfg94TGuaFvTP94K
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-We can avoid open-coding the loop construct which counts firmware child
-nodes with a specific name by using the newly added
-device_get_named_child_node_count().
+On Wed, Jun 18, 2025 at 02:14:18PM +0200, Miquel Raynal wrote:
+> spi_mem_calc_op_duration() is deriving the duration of a specific op, by
+> multiplying the number of cycles with the time a cycle will last. This
+> time was measured in nanoseconds, which means at high frequencies the
+> delta between two frequencies might not be properly catch due to
+> roundings.
 
-The gianfar driver has such open-coded loop. Replace it with the
-device_get_child_node_count_named().
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-Previously sent as part of the BD79124 ADC series:
-https://lore.kernel.org/all/95b6015cd5f6fcce535982118543d47504ed609f.174222=
-5817.git.mazziesaccount@gmail.com/
-
-All dependencies should be in net-next now.
-
-Compile tested only!
----
- drivers/net/ethernet/freescale/gianfar.c | 17 ++++-------------
- 1 file changed, 4 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/etherne=
-t/freescale/gianfar.c
-index bcbcad613512..7c0f049f0938 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -97,6 +97,7 @@
- #include <linux/phy_fixed.h>
- #include <linux/of.h>
- #include <linux/of_net.h>
-+#include <linux/property.h>
-=20
- #include "gianfar.h"
-=20
-@@ -571,18 +572,6 @@ static int gfar_parse_group(struct device_node *np,
- 	return 0;
- }
-=20
--static int gfar_of_group_count(struct device_node *np)
--{
--	struct device_node *child;
--	int num =3D 0;
--
--	for_each_available_child_of_node(np, child)
--		if (of_node_name_eq(child, "queue-group"))
--			num++;
--
--	return num;
--}
--
- /* Reads the controller's registers to determine what interface
-  * connects it to the PHY.
-  */
-@@ -654,8 +643,10 @@ static int gfar_of_init(struct platform_device *ofdev,=
- struct net_device **pdev)
- 		num_rx_qs =3D 1;
- 	} else { /* MQ_MG_MODE */
- 		/* get the actual number of supported groups */
--		unsigned int num_grps =3D gfar_of_group_count(np);
-+		unsigned int num_grps;
-=20
-+		num_grps =3D device_get_named_child_node_count(&ofdev->dev,
-+							     "queue-group");
- 		if (num_grps =3D=3D 0 || num_grps > MAXGROUPS) {
- 			dev_err(&ofdev->dev, "Invalid # of int groups(%d)\n",
- 				num_grps);
---=20
-2.49.0
-
-
---OEbY+A2xp9C7j9WX
-Content-Type: application/pgp-signature; name=signature.asc
+--lfg94TGuaFvTP94K
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmhSr2YACgkQeFA3/03a
-ocWk4wf8DXM53+9i/agAaQTn7ykbmvYReY/KPywU0raYz6xuZdXPAl5YlMMQPIWj
-1X1DyJzDuWWYx4CDUyQNJS035LVkIIpX3FVko1sQbeCpU+lB7yK1WiwRkF2Sy8ay
-xQfnAqRwtEmV/gPNGEgLHyFKxEKx4XnNhJBwkgnNi6asJYE3+fm/y2O6FQDI67gP
-ZjOoNOIWB8qJiUt7vjsPJSbyabHA0TwZfA0AMyIBJ12+tHkcYxh9/rYsDlOBDGAM
-MdF4ontQmgp8UlFd/4P5dMR78y6VtH/9WYxwM0FXEDGVTynUv8HaNO0Baz+XJcaM
-b3wyS6az21Q41ZqejPvsqtjPafu6lQ==
-=7mu5
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhSr/oACgkQJNaLcl1U
+h9DxUAf9GvYchrnMdIcTNMB9jdHHlfaLK/FwKb3Ilgyeyek+3ELS/xvAkxnZFvsB
+QZ0R21ZR86JtbgXqo8+s5P7E+y8wbfGRkhuan8C0fpCAppMH7vGbjroYijR9JbaL
+koOZc5Mk9F+zAjKEhPA//OinNX4QLikcrM6BfgasFmmUgnTIlpxVGnv+0qz73bQ6
+zRH+b00aMa0Sy6vYYxKkQaL9nMEWMmvAwMTBHtTChje/jvBOxTA/c3d3KLc6PCld
+5aTehbQXMQdwlvwo/70vl7gR9vy4FmAz/4EPKBcO8YleQ69JL93xV3ub92T6Bv8R
+6IkeyuzONyKWBjgnQ/8BECZmiNNJ0w==
+=b2iI
 -----END PGP SIGNATURE-----
 
---OEbY+A2xp9C7j9WX--
+--lfg94TGuaFvTP94K--
