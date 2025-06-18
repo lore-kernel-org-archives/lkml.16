@@ -1,151 +1,144 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03ADC2904;
-	Wed, 18 Jun 2025 02:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A39B4A1D;
+	Wed, 18 Jun 2025 02:14:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750212702; cv=none; b=Zb2xh8UW7+wePfJE4ni7NOw4GjC89eg9ewJtSJIiHdWO1NE/thJ7C++SMruupHNY6NoBB9r1nxDcT/KeYZf/tsI437fikNK+dQ9gWfP2BydDQjFpSojd3dFQfHeelNAKGaYcLcjG/X/cPe/aJYD5W9hJaniqTl9aDmqUlwRZ4kA=
+	t=1750212858; cv=none; b=K8NY5ox0CyIfW7jVeVxuXvtI14ta/z1ZCYYAo0TtnmBBWkiz8aTReCZRSBy9uwL3cS1qUBsEA7gOzN12nuKHEnHYtiFb5cDWhQug07qfZBS5ulSRSLgrWSsK5IOaua2PRjhJxBt7jE+HZT1I1BXYC+4+wDMwAlm2rPR3aNCcieY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750212702; c=relaxed/simple;
-	bh=kPKxV8tG49aw+tzlVixtXtskhMAnk0JYrXhy4728ygQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C5w3H6NI3VSwB3RvCdTnXn/Vebk+ExoebqmNSIH0AE9lSnGoLHgXyZZ98meMkPh29AdWZ0LFAvOI837QHwdrxDeaAjGzCqqrz+cGDSQmI8djA42WYxlly1xyED0UDyL35wMWR47chNfWyZmZ5ubMD+fKS0tMKacODfQghYw5Kmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K5FT4XRO; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750212858; c=relaxed/simple;
+	bh=A7Q/S+Nx1wYLfgyCrhVZ0O/ymo4GU3rPfbiJPyENwJc=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uPLqD5fbXKFlbOtowUCbjTXIXkx7RQ+TkUuNcxWml2yLl+aPAWKvAbOHiX2AFCRb7FzzOJ3zmUEYENwg46+yBbiX3qz40v4W2REYUT9LRT84kZPTtxukqMoBG0Kx0BWSGVPOBosb/b3a7lD/NASChb+RGSqCKfrDv2YiZM8ZVCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=aEfMq3/d; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5FT4XRO"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32addf54a01so66305231fa.3;
-        Tue, 17 Jun 2025 19:11:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="aEfMq3/d"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750212699; x=1750817499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zHAOHa3W5FppAF2bP4Z945KCWTGy+r+Tavq5xMn89hc=;
-        b=K5FT4XROJWk2rKAJJQJZzpzP7ZyJ6wICuNdO6sNd/eA9NbvJyhqAYyzJyVeYFUoUtR
-         k8fYPbAu0kKO/osN5aOCA3VMkeIISAJxzn07Y5Kxw6mRKypDxqHpQHtTgxkWOIRNNO34
-         tyRktTeTH30lPv0TS3Y06yAVQuLyP+9LCpwA1DGvatJTrc3l6/TbuRrzmUEs+l9I7I5l
-         gEEsVh3UU2PDlZWi6k06VGgNoF0UIG6UIkITENv4FKx2WlNZ6lJmBsb3LZ9H2YWP8NaN
-         39bjpeIZiL2uS2UcT0HXAFqSAu1U2w76umNbg2aWR7fFn+v7tnXG0/+9yLndyw4EXGKB
-         zF3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750212699; x=1750817499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zHAOHa3W5FppAF2bP4Z945KCWTGy+r+Tavq5xMn89hc=;
-        b=thrbkIAFX5bgGGYzYTHt85mMcaSeXG0hWBvVK9kJx9xZ5K3pe4qPShK07hb5Gt7zdh
-         r9aenVEJyWBP1q2H1tZE3U4SBfJWsmPnM+eeXV20SnpE6mdHDaxwlSS/axBbk+eXh8TO
-         HKmY05PWO1JWNrs4YRQb4e+za2tYGeNT4q7mt/fTLuNWCEbSLDwROLhEIrxW9DYI+k8Y
-         DqmyeqJKo7qndoNJogsR9NiHdBTPSOj30bSPbRWoKD4JxhhsdImyNSrl1z5FrYdtcYmg
-         LvmnWlm0CzPVE/SlehE7/eIblFaySZ6xO4ApUNPijcFKU8ntbKB3eaUuMpPfbbUwyOnz
-         /ptA==
-X-Forwarded-Encrypted: i=1; AJvYcCUd7fAMkJi3ubjqzyaiJKmdr4gmlHivzOAx4xQBZftJ+1bgKxocnRIcMeu2PWS5aXl6Kr6kPw49VBloYMU=@vger.kernel.org, AJvYcCWSwVqSwalX1VNns8S4V/kkFUo7TriVCJnpjQ5Eyrt4+goaT6HNFRhyVfP6ulDQcpHn/Irh93BU@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTbRaexpLP+G0MGesdhWjs4cHRWAZ/Q2JD5ivC/x/tSv5AAmFZ
-	tb2Pe8Idx6RpHSazEs2/bUzxymsXNkn9YnUBYB9UyRrB9REOpJYvNqLhVQPCWKQuqy3XZuPvd+k
-	s2OGbDD4fVmvgnBUOH7IXw5nx5e7xGxsDekBordDinA==
-X-Gm-Gg: ASbGnct56pX/QW2JqiXqQBml1QFRlpUM7wNjK0uHxVSSKl56P/2vmm817N/I08c7J0k
-	RIOYnBmXSeVj8/+TLohvxWpR4y3AVlTVBBNmMKPTC4TYXruOaHBESGOn2XfYacYnTEljJydKHm2
-	BHixQqCKUR1Udh09t0v8OB74NGQXt+upS9nYjhEeqWOsI=
-X-Google-Smtp-Source: AGHT+IEWmjNCjVIII2C4kehsPINz+G10W880sadxhkKf0w+OjGqLSdLsl1+0Ja4C/dNMdsJy7vnBtzqP6Qm34MCkvdA=
-X-Received: by 2002:a05:651c:e03:b0:31e:9d54:62ec with SMTP id
- 38308e7fff4ca-32b4a610f99mr24777831fa.31.1750212698780; Tue, 17 Jun 2025
- 19:11:38 -0700 (PDT)
+	d=codeconstruct.com.au; s=2022a; t=1750212843;
+	bh=A7Q/S+Nx1wYLfgyCrhVZ0O/ymo4GU3rPfbiJPyENwJc=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=aEfMq3/d5xXncv7VxHYw9N0VLETx4q+lDyOtHB1lysvwZ73V7Ewb3boNFxW5F4iY6
+	 XdAafWnssaYKsjvwByysgAvBkU6YegbIC04PNbQ8dWMCNOK+IM7h90YBQwPatnmKVH
+	 ReDEBOFFfE9lZgmOg3DvgdUYQb+023RF/bkYIDAAhuhuFkP0o0+rXowae5iNVia/DK
+	 wnWEMlxJ2Cx9EyFAUnLAN66PrISzNBp3bPfUhbbR7/Qz24wHrzS1fGpw4OB0IQEX5L
+	 g9DOrniK2/Sn1QJ8lG1OPDciD1NCMO5cF2eAGOb15UH1S32Y/2vdPvOymaUemmEups
+	 vuDk8gWcHJ+lw==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2962B640A0;
+	Wed, 18 Jun 2025 10:14:01 +0800 (AWST)
+Message-ID: <80f56269175d8658ba1ab4a1fe9a43d18294ca60.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 1/8] mmc: sdhci-of-aspeed: Fix sdhci software reset
+ can't be cleared issue.
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Cool Lee <cool_lee@aspeedtech.com>, adrian.hunter@intel.com, 
+	ulf.hansson@linaro.org, joel@jms.id.au, p.zabel@pengutronix.de, 
+	linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, 
+	linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 18 Jun 2025 11:44:00 +0930
+In-Reply-To: <20250615035803.3752235-2-cool_lee@aspeedtech.com>
+References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
+	 <20250615035803.3752235-2-cool_lee@aspeedtech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617183503.10527-1-ryncsn@gmail.com> <20250617183503.10527-2-ryncsn@gmail.com>
- <20250617155857.589c3e700b06af7dff085166@linux-foundation.org>
-In-Reply-To: <20250617155857.589c3e700b06af7dff085166@linux-foundation.org>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Wed, 18 Jun 2025 10:11:21 +0800
-X-Gm-Features: AX0GCFv1v9kZZHvMtOV0WpsR0JWyiXoh-ZY6ZwkEGekrLicOy00i1MR-9buMnvQ
-Message-ID: <CAMgjq7BLKv8d5+TNbEqSiPSteJvjTBsbphwDsxdR4Mk0gj7C7g@mail.gmail.com>
-Subject: Re: [PATCH 1/4] mm/shmem, swap: improve cached mTHP handling and fix
- potential hung
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, Hugh Dickins <hughd@google.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Matthew Wilcox <willy@infradead.org>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Chris Li <chrisl@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 6:58=E2=80=AFAM Andrew Morton <akpm@linux-foundatio=
-n.org> wrote:
->
-> On Wed, 18 Jun 2025 02:35:00 +0800 Kairui Song <ryncsn@gmail.com> wrote:
->
-> > From: Kairui Song <kasong@tencent.com>
-> >
-> > The current swap-in code assumes that, when a swap entry in shmem
-> > mapping is order 0, its cached folios (if present) must be order 0
-> > too, which turns out not always correct.
-> >
-> > The problem is shmem_split_large_entry is called before verifying the
-> > folio will eventually be swapped in, one possible race is:
-> >
-> >     CPU1                          CPU2
-> > shmem_swapin_folio
-> > /* swap in of order > 0 swap entry S1 */
-> >   folio =3D swap_cache_get_folio
-> >   /* folio =3D NULL */
-> >   order =3D xa_get_order
-> >   /* order > 0 */
-> >   folio =3D shmem_swap_alloc_folio
-> >   /* mTHP alloc failure, folio =3D NULL */
-> >   <... Interrupted ...>
-> >                                  shmem_swapin_folio
-> >                                  /* S1 is swapped in */
-> >                                  shmem_writeout
-> >                                  /* S1 is swapped out, folio cached */
-> >   shmem_split_large_entry(..., S1)
-> >   /* S1 is split, but the folio covering it has order > 0 now */
-> >
-> > Now any following swapin of S1 will hang: `xa_get_order` returns 0,
-> > and folio lookup will return a folio with order > 0. The
-> > `xa_get_order(&mapping->i_pages, index) !=3D folio_order(folio)` will
-> > always return false causing swap-in to return -EEXIST.
-> >
-> > And this looks fragile. So fix this up by allowing seeing a larger foli=
-o
-> > in swap cache, and check the whole shmem mapping range covered by the
-> > swapin have the right swap value upon inserting the folio. And drop
-> > the redundant tree walks before the insertion.
-> >
-> > This will actually improve the performance, as it avoided two redundant
-> > Xarray tree walks in the hot path, and the only side effect is that in
-> > the failure path, shmem may redundantly reallocate a few folios
-> > causing temporary slight memory pressure.
-> >
-> > And worth noting, it may seems the order and value check before
-> > inserting might help reducing the lock contention, which is not true.
-> > The swap cache layer ensures raced swapin will either see a swap cache
-> > folio or failed to do a swapin (we have SWAP_HAS_CACHE bit even if
-> > swap cache is bypassed), so holding the folio lock and checking the
-> > folio flag is already good enough for avoiding the lock contention.
-> > The chance that a folio passes the swap entry value check but the
-> > shmem mapping slot has changed should be very low.
-> >
-> > Cc: stable@vger.kernel.org
-> > Fixes: 058313515d5a ("mm: shmem: fix potential data corruption during s=
-hmem swapin")
-> > Fixes: 809bc86517cc ("mm: shmem: support large folio swap out")
->
-> The Fixes: tells -stable maintainers (and others) which kernel versions
-> need the fix.  So having two Fixes: against different kernel versions is
-> very confusing!  Are we recommending that kernels which contain
-> 809bc86517cc but not 058313515d5a be patched?
+SGksCgpPbiBTdW4sIDIwMjUtMDYtMTUgYXQgMTE6NTcgKzA4MDAsIENvb2wgTGVlIHdyb3RlOgo+
+IFJlcGxhY2Ugc2RoY2kgc29mdHdhcmUgcmVzZXQgYnkgc2N1IHJlc2V0IGZyb20gdG9wLgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IENvb2wgTGVlIDxjb29sX2xlZUBhc3BlZWR0ZWNoLmNvbT4KCkNhbiB5
+b3UgcGxlYXNlIGFkZCBhIEZpeGVzOiB0YWc/Cgo+IC0tLQo+IMKgZHJpdmVycy9tbWMvaG9zdC9z
+ZGhjaS1vZi1hc3BlZWQuYyB8IDU1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrLQo+IMKg
+MSBmaWxlIGNoYW5nZWQsIDU0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hc3BlZWQuYyBiL2RyaXZlcnMvbW1j
+L2hvc3Qvc2RoY2ktb2YtYXNwZWVkLmMKPiBpbmRleCBkNmRlMDEwNTUxYjkuLjAxYmM1NzQyNzJl
+YiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL21tYy9ob3N0L3NkaGNpLW9mLWFzcGVlZC5jCj4gKysr
+IGIvZHJpdmVycy9tbWMvaG9zdC9zZGhjaS1vZi1hc3BlZWQuYwo+IEBAIC0xMyw2ICsxMyw3IEBA
+Cj4gwqAjaW5jbHVkZSA8bGludXgvb2YuaD4KPiDCoCNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9y
+bS5oPgo+IMKgI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPgo+ICsjaW5jbHVkZSA8
+bGludXgvcmVzZXQuaD4KPiDCoCNpbmNsdWRlIDxsaW51eC9zcGlubG9jay5oPgo+IMKgCj4gwqAj
+aW5jbHVkZSAic2RoY2ktcGx0Zm0uaCIKPiBAQCAtMzksNiArNDAsNyBAQAo+IMKgc3RydWN0IGFz
+cGVlZF9zZGMgewo+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgY2xrICpjbGs7Cj4gwqDCoMKgwqDC
+oMKgwqDCoHN0cnVjdCByZXNvdXJjZSAqcmVzOwo+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCByZXNl
+dF9jb250cm9sICpyc3Q7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgc3BpbmxvY2tfdCBsb2NrOwo+
+IMKgwqDCoMKgwqDCoMKgwqB2b2lkIF9faW9tZW0gKnJlZ3M7Cj4gQEAgLTMyOCwxMyArMzMwLDU4
+IEBAIHN0YXRpYyB1MzIgYXNwZWVkX3NkaGNpX3JlYWRsKHN0cnVjdCBzZGhjaV9ob3N0ICpob3N0
+LCBpbnQgcmVnKQo+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gdmFsOwo+IMKgfQo+IMKgCj4gK3N0
+YXRpYyB2b2lkIGFzcGVlZF9zZGhjaV9yZXNldChzdHJ1Y3Qgc2RoY2lfaG9zdCAqaG9zdCwgdTgg
+bWFzaykKPiArewo+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCBzZGhjaV9wbHRmbV9ob3N0ICpwbHRm
+bV9wcml2Owo+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCBhc3BlZWRfc2RoY2kgKmFzcGVlZF9zZGhj
+aTsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgYXNwZWVkX3NkYyAqYXNwZWVkX3NkYzsKPiArwqDC
+oMKgwqDCoMKgwqB1MzIgc2F2ZV9hcnJheVs3XTsKPiArwqDCoMKgwqDCoMKgwqB1MzIgcmVnX2Fy
+cmF5W10gPSB7U0RIQ0lfRE1BX0FERFJFU1MsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBTREhDSV9CTE9DS19TSVpFLAo+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgU0RIQ0lfQVJHVU1FTlQsCj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTREhDSV9IT1NUX0NPTlRST0ws
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBTREhDSV9D
+TE9DS19DT05UUk9MLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgU0RIQ0lfSU5UX0VOQUJMRSwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoFNESENJX1NJR05BTF9FTkFCTEV9Owo+ICvCoMKgwqDCoMKgwqDCoGlu
+dCBpOwo+ICvCoMKgwqDCoMKgwqDCoHUxNiB0cmFuX21vZGU7Cj4gK8KgwqDCoMKgwqDCoMKgdTMy
+IG1tYzhfbW9kZTsKPiArCj4gK8KgwqDCoMKgwqDCoMKgcGx0Zm1fcHJpdiA9IHNkaGNpX3ByaXYo
+aG9zdCk7Cj4gK8KgwqDCoMKgwqDCoMKgYXNwZWVkX3NkaGNpID0gc2RoY2lfcGx0Zm1fcHJpdihw
+bHRmbV9wcml2KTsKPiArwqDCoMKgwqDCoMKgwqBhc3BlZWRfc2RjID0gYXNwZWVkX3NkaGNpLT5w
+YXJlbnQ7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoGlmICghSVNfRVJSKGFzcGVlZF9zZGMtPnJzdCkp
+IHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZm9yIChpID0gMDsgaSA8IEFSUkFZ
+X1NJWkUocmVnX2FycmF5KTsgaSsrKQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgc2F2ZV9hcnJheVtpXSA9IHNkaGNpX3JlYWRsKGhvc3QsIHJlZ19hcnJh
+eVtpXSk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0cmFuX21vZGUgPSBz
+ZGhjaV9yZWFkdyhob3N0LCBTREhDSV9UUkFOU0ZFUl9NT0RFKTsKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgbW1jOF9tb2RlID0gcmVhZGwoYXNwZWVkX3NkYy0+cmVncyk7Cj4gKwo+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXNldF9jb250cm9sX2Fzc2VydChhc3Bl
+ZWRfc2RjLT5yc3QpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBtZGVsYXkoMSk7
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlc2V0X2NvbnRyb2xfZGVhc3NlcnQo
+YXNwZWVkX3NkYy0+cnN0KTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWRlbGF5
+KDEpOwoKU2VlIGNvbW1lbnQgYmVsb3cgcmVnYXJkaW5nIGNsb2NrL3Jlc2V0IGJlaGF2aW91ciBh
+bmQgaW1wbGVtZW50YXRpb24uCgo+ICsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+Zm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUocmVnX2FycmF5KTsgaSsrKQo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc2RoY2lfd3JpdGVsKGhvc3QsIHNh
+dmVfYXJyYXlbaV0sIHJlZ19hcnJheVtpXSk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqBzZGhjaV93cml0ZXcoaG9zdCwgdHJhbl9tb2RlLCBTREhDSV9UUkFOU0ZFUl9NT0RF
+KTsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgd3JpdGVsKG1tYzhfbW9kZSwgYXNw
+ZWVkX3NkYy0+cmVncyk7Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhc3Bl
+ZWRfc2RoY2lfc2V0X2Nsb2NrKGhvc3QsIGhvc3QtPmNsb2NrKTsKPiArwqDCoMKgwqDCoMKgwqB9
+Cj4gKwo+ICvCoMKgwqDCoMKgwqDCoHNkaGNpX3Jlc2V0KGhvc3QsIG1hc2spOwoKR2l2ZW4gdGhh
+dCB3ZSBkbyB0aGlzIGFmdGVyIHRoZSBTQ1UgcmVzZXQgYWJvdmUsIHdoYXQgZXhhY3RseSBpcyB0
+aGUKU0NVIHJlc2V0IGZpeGluZz8gQ2FuIHlvdSBwcm92aWRlIG1vcmUgZGV0YWlscz8KCj4gK30K
+PiArCj4gwqBzdGF0aWMgY29uc3Qgc3RydWN0IHNkaGNpX29wcyBhc3BlZWRfc2RoY2lfb3BzID0g
+ewo+IMKgwqDCoMKgwqDCoMKgwqAucmVhZF9sID0gYXNwZWVkX3NkaGNpX3JlYWRsLAo+IMKgwqDC
+oMKgwqDCoMKgwqAuc2V0X2Nsb2NrID0gYXNwZWVkX3NkaGNpX3NldF9jbG9jaywKPiDCoMKgwqDC
+oMKgwqDCoMKgLmdldF9tYXhfY2xvY2sgPSBhc3BlZWRfc2RoY2lfZ2V0X21heF9jbG9jaywKPiDC
+oMKgwqDCoMKgwqDCoMKgLnNldF9idXNfd2lkdGggPSBhc3BlZWRfc2RoY2lfc2V0X2J1c193aWR0
+aCwKPiDCoMKgwqDCoMKgwqDCoMKgLmdldF90aW1lb3V0X2Nsb2NrID0gc2RoY2lfcGx0Zm1fY2xr
+X2dldF9tYXhfY2xvY2ssCj4gLcKgwqDCoMKgwqDCoMKgLnJlc2V0ID0gc2RoY2lfcmVzZXQsCj4g
+K8KgwqDCoMKgwqDCoMKgLnJlc2V0ID0gYXNwZWVkX3NkaGNpX3Jlc2V0LAo+IMKgwqDCoMKgwqDC
+oMKgwqAuc2V0X3Voc19zaWduYWxpbmcgPSBzZGhjaV9zZXRfdWhzX3NpZ25hbGluZywKPiDCoH07
+Cj4gwqAKPiBAQCAtNTM1LDYgKzU4MiwxMiBAQCBzdGF0aWMgaW50IGFzcGVlZF9zZGNfcHJvYmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqBzcGlu
+X2xvY2tfaW5pdCgmc2RjLT5sb2NrKTsKPiDCoAo+ICvCoMKgwqDCoMKgwqDCoHNkYy0+cnN0ID0g
+ZGV2bV9yZXNldF9jb250cm9sX2dldCgmcGRldi0+ZGV2LCBOVUxMKTsKPiArwqDCoMKgwqDCoMKg
+wqBpZiAoIUlTX0VSUihzZGMtPnJzdCkpIHsKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcmVzZXRfY29udHJvbF9hc3NlcnQoc2RjLT5yc3QpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZXNldF9jb250cm9sX2RlYXNzZXJ0KHNkYy0+cnN0KTsKPiArwqDCoMKgwqDC
+oMKgwqB9Cj4gKwoKVGhlIGNsb2NrIGRyaXZlciBmb3IgdGhlIEFTVDI0MDAsIEFTVDI1MDAgYW5k
+IEFTVDI2MDAgbWFuYWdlcyB0aGUgcmVzZXQKYXMgcGFydCBvZiBtYW5hZ2luZyB0aGUgY2xvY2tb
+MV1bMl0uCgpbMV06IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwv
+Z2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL2RyaXZlcnMvY2xrL2Nsay1hc3BlZWQuYz9oPXY2
+LjE2LXJjMiNuNzEKWzJdOiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2Vy
+bmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9kcml2ZXJzL2Nsay9jbGstYXNwZWVkLmM/
+aD12Ni4xNi1yYzIjbjIwOQoKV2hhdCB5b3UgaGF2ZSBoZXJlIGFza3MgZm9yIGEgcmVzZXRzIHBy
+b3BlcnR5LCBidXQgdGhhdCdzIG5vdCBjdXJyZW50bHkKc3BlY2lmaWVkIGluIHRoZSBkZXZpY2V0
+cmVlIGJpbmRpbmcuCgpTbzogaXMgdGhlIGNsb2NrIGRyaXZlciBub3QgZG9pbmcgdGhlIHJpZ2h0
+IHRoaW5nIGdpdmVuIHdlIGVuYWJsZSB0aGUKY2xvY2sgZGlyZWN0bHkgYmVsb3cgdGhpcyBodW5r
+PyBJZiBub3QsIHNob3VsZCB3ZSBmaXggdGhhdCBpbnN0ZWFkPwoKV2UgY2FuIGFkZCB0aGUgcmVz
+ZXRzIHByb3BlcnR5IHRvIHRoZSBiaW5kaW5nLCBidXQgSSdkIGFsc28gbGlrZSBhCmJldHRlciBl
+eHBsYW5hdGlvbiBvZiB0aGUgcHJvYmxlbS4KCkFuZHJldwo=
 
-809bc86517cc introduced mTHP support for shmem but it's buggy, and
-058313515d5a tried to fix that, which is also buggy, I thought this
-could help people to backport this.
-
-I think keeping either is OK, I'll keep 809bc86517cc then, any branch
-having 809bc86517cc should already have 058313515d5a backported.
