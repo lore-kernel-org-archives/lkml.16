@@ -1,82 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AD527FD58;
-	Wed, 18 Jun 2025 12:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B222BEC59
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:03:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750248138; cv=none; b=OFViq4oCRMn4p72A+FBHVQrjFYs787T7SU0XJPkbUckduGkaAW0WpdghatntsjzbN91HpAuP/+Hm/Q/4Z8uQ7hUVy63mZ352yCn/LJsMheexOQcgWxw0/4IxhdZI/8N1QTQnBillfq7esXzuSSsVJQfLH1Blr3uJst4XuY91zzY=
+	t=1750248192; cv=none; b=F6X1eFLrGpliegD5Kh2On8EsMBNBU7Dl+AALKj+gxDZ0Ofzm+CuX6d8NGOEvinKywjlCTPdMC39zYwjh2HP5fkSWh5V5CPoBUw5P2Cm+/Q1zD5s4yvxWYqQXNZbdi8EyznSju+2hMN3DI7GrvkcZcFbhM0wSzcNZFPYGvUFKLIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750248138; c=relaxed/simple;
-	bh=E2oopE+AJdJ2PktRR3Hrrs/UQJrt5Fpy8sjt0APaBYE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GzcMCBUJSiBtHeC6NQ+QPuXTAuy/K8xoQlceFV7izAI5IT3b49y+bql5Jwe1hbHVYR3RMIZiGzyU9Ed+IAepJ604rIf6Sw7ydxtpA19aY443eIHKvOCL9hqNT2WSkZPxATQJWoE9d51QsEVTn7uztFAJqshW4b1RzuI+iBIttrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTBkGRPr; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTBkGRPr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47CFBC4CEE7;
-	Wed, 18 Jun 2025 12:02:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750248137;
-	bh=E2oopE+AJdJ2PktRR3Hrrs/UQJrt5Fpy8sjt0APaBYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iTBkGRPr/+vQYaVwlSPjwEhSdW4E7d9HSf0oQHW+1WrOfr1erNaBhxGY9yT0xiaXQ
-	 DGD6LTkETCUbn3nd/XqofkFVxhRJQBTkewb0fJStgqoN9ybeNhjtSScGXQWiem3Ry8
-	 xFjdRHKBMiQ8mBfbI38W0lwhfTiFH5gm18T3OKumSJPJuFN7cEgUGQIDmGxcK7k6lU
-	 gV+m49VlWZU4FGB0aHENDVS0GEyIpvmSBldZLAoEYTdGwHhvbOhENGYi+ZwziDuAQH
-	 j5S3NIopecagV2FJi6N3cZurlf0aF47qjJx8PLnEka5h1c+/WTo5d6JzpKgV3lE+/y
-	 gWL/lupTAeydw==
-Date: Wed, 18 Jun 2025 13:02:11 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.6 000/356] 6.6.94-rc1 review
-Message-ID: <4cda41b6-bc4b-4680-8800-89ee9caa193f@sirena.org.uk>
-References: <20250617152338.212798615@linuxfoundation.org>
+	s=arc-20240116; t=1750248192; c=relaxed/simple;
+	bh=CSE1xGwJPwkE21FMhoW6TOA0Bu55dDPTRRyrNaMKYnQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UPhqOp5hosRVb0ZgBkc/P9x6tRbS7sMLLI9eOejN5uwcz6HgIuK/lOTU8rOxRCBNZg5Q1t/2DG8iYLlWJ426oI0AwAmB6+eFF7aFmJQZxchdKC9SpJZVc/qCctYa8NpdkxD+ENly/E7Zngpou/UN+kbdTuL9y4Q1WpkrNbEqpBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uRrVJ-0007EZ-Fo; Wed, 18 Jun 2025 14:02:57 +0200
+Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uRrVI-0048CM-1m;
+	Wed, 18 Jun 2025 14:02:56 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uRrVI-00DBMN-1F;
+	Wed, 18 Jun 2025 14:02:56 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>,
+	Guenter Roeck <groeck@chromium.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Ahmad Fatoum <a.fatoum@pengutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	chrome-platform@lists.linux.dev
+Subject: [PATCH v11 4/7] nvmem: provide consumer access to cell size metrics
+Date: Wed, 18 Jun 2025 14:02:52 +0200
+Message-Id: <20250618120255.3141862-5-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250618120255.3141862-1-o.rempel@pengutronix.de>
+References: <20250618120255.3141862-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="1omOcL+gB6VXDFQU"
-Content-Disposition: inline
-In-Reply-To: <20250617152338.212798615@linuxfoundation.org>
-X-Cookie: This bag is recyclable.
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Add nvmem_cell_get_size() function to provide access to cell size
+metrics. In some cases we may get cell size less as consumer would
+expect it. So, nvmem_cell_write() would fail with incorrect buffer size.
 
---1omOcL+gB6VXDFQU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+---
+changes v10:
+- add Reviewed-by: Sebastian Reichel ...
+changes v6:
+- update function comment for nvmem_cell_get_size()
+---
+ drivers/nvmem/core.c           | 29 +++++++++++++++++++++++++++++
+ include/linux/nvmem-consumer.h |  7 +++++++
+ 2 files changed, 36 insertions(+)
 
-On Tue, Jun 17, 2025 at 05:21:55PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.94 release.
-> There are 356 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+index fd2a9698d1c9..59c295a11d86 100644
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -1810,6 +1810,35 @@ int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len)
+ 
+ EXPORT_SYMBOL_GPL(nvmem_cell_write);
+ 
++/**
++ * nvmem_cell_get_size() - Retrieve the storage size of an NVMEM cell.
++ * @cell: Pointer to the NVMEM cell structure.
++ * @bytes: Optional pointer to store the cell size in bytes (can be NULL).
++ * @bits: Optional pointer to store the cell size in bits (can be NULL).
++ *
++ * This function allows consumers to retrieve the size of a specific NVMEM
++ * cell before performing read/write operations. It is useful for validating
++ * buffer sizes to prevent mismatched writes.
++ *
++ * Return: 0 on success or negative on failure.
++ */
++int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes, size_t *bits)
++{
++	struct nvmem_cell_entry *entry = cell->entry;
++
++	if (!entry->nvmem)
++		return -EINVAL;
++
++	if (bytes)
++		*bytes = entry->bytes;
++
++	if (bits)
++		*bits = entry->nbits;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(nvmem_cell_get_size);
++
+ static int nvmem_cell_read_common(struct device *dev, const char *cell_id,
+ 				  void *val, size_t count)
+ {
+diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
+index 34c0e58dfa26..bcb0e17e415d 100644
+--- a/include/linux/nvmem-consumer.h
++++ b/include/linux/nvmem-consumer.h
+@@ -56,6 +56,7 @@ void nvmem_cell_put(struct nvmem_cell *cell);
+ void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
+ void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
+ int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len);
++int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes, size_t *bits);
+ int nvmem_cell_read_u8(struct device *dev, const char *cell_id, u8 *val);
+ int nvmem_cell_read_u16(struct device *dev, const char *cell_id, u16 *val);
+ int nvmem_cell_read_u32(struct device *dev, const char *cell_id, u32 *val);
+@@ -128,6 +129,12 @@ static inline int nvmem_cell_write(struct nvmem_cell *cell,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static inline int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes,
++				      size_t *bits)
++{
++	return -EOPNOTSUPP;
++}
++
+ static inline int nvmem_cell_read_u8(struct device *dev,
+ 				     const char *cell_id, u8 *val)
+ {
+-- 
+2.39.5
 
-Tested-by: Mark Brown <broonie@kernel.org>
-
---1omOcL+gB6VXDFQU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhSqsIACgkQJNaLcl1U
-h9DgfAf9Fe6MS5Wg43nkB18ob9SsZY6MCHNMKRUiJz64X85W0QAN7xqSVVMSDbx7
-+ySJ4Q0JMiel72jSqt0EiMAn2mZPIw9xoBlbCM9IYCcu36J+Lt0mOUugBaMAiAxZ
-2mSdu9+sEA/dvEZoXRBoDUll/fx+N7RnDhhLnPbAoUc/M+x9PFTzh+C1FGexSd7w
-UHtXCwfD4JUDEe//wG4YHdg35Fay2mRgatAmcPQ1Kt8dkqDXb3nlIfR9oRrxdDvE
-BLQ9BX6SlM+meVR5v6Bu89oi4027/xyAjzENyivkXyNs5zN/6OBmOvEBW+auQxvl
-s9HUvkWO3G9MPP/F1ssUvNIgvivo5w==
-=lIfu
------END PGP SIGNATURE-----
-
---1omOcL+gB6VXDFQU--
