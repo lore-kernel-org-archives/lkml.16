@@ -1,51 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3999277C86;
-	Wed, 18 Jun 2025 08:52:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35F70258CCC
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236749; cv=none; b=tSfbI/VRtFve6loF2WU3/I4/K+vwTUC5VslD08EoVWXn4EiTXYViqTO1ccCASUxNqOfZzX4PHxWG30wAr6AiE942iNp97S6Hadzvbd28S6NDYRKB6TLUZH8ywvazqw45xHopROhKDSXPODeVqLr5bWscDINp6SJ8KMM43iQXkYU=
+	t=1750236781; cv=none; b=nTfp4Z+MfyD6BHQT0ZU03SaBSeOsjSA2GOUSdA2K41H/5ihBRH1TUQqRlcZElXeCJlbxELxqH2bsjRKdefgJ8XPBjFQ8Ml74mr4bofJv7h2VNWhzw9qTI49e4zzx9UIJWhanEHEGYiZxj0CXwIv5SHmE18CwOyuVdmbRyJH1JYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236749; c=relaxed/simple;
-	bh=YYAfe+jT3/T+gf0veCVMjarKEBwX7zg9Od2H/Zs/XnI=;
+	s=arc-20240116; t=1750236781; c=relaxed/simple;
+	bh=51m481W4yyASTuZyDIG4O3vGTZwhnyUVGIu0qCaaS6U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dMLolhSkaflkYLnQuzVztGp1e32tHPEhd3NJ6tquEJWuC3v1vFz8DT3PRoLfU7pT83NjbslpNIWJXVVkdCJYw0345g7yT9fgRO4HxZbUTxFO75kj92ilZ872PZfNLyy74jCh7L6aFjSpN502xhkTbD5lA92AbFEYeaAXb1sZdlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTtSWte3; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTtSWte3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DC41C4CEE7;
-	Wed, 18 Jun 2025 08:52:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750236749;
-	bh=YYAfe+jT3/T+gf0veCVMjarKEBwX7zg9Od2H/Zs/XnI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CTtSWte3NFoRlUQ6F3z2bCnr1PbOzTYIT77XUyFPDOHzJqlhJRgJC5urhJdO2JgVs
-	 3jHkY1Ok/An/4CKTPYFXfUFuph1/E7+f0DdeTaVhRNl4WnxjwwQTwdXDijWjymn+Db
-	 nHmCktSwafFX/Hlt9f1z4Eqgbkqzvb8yTChDDoYavpdjx9sYYDZLvzyfQAX1R7imI3
-	 jiXvo7eqSQXem3y5J9yPyKB9Tp1AJ8O4fDkPChW346JSSE1WcZ+625RF9UrOR7CKF5
-	 cTZyUUZbPJw5KADrS3BSZG3OjIGS4WCm1cFWsHD8kKk1fExAEWRM3BzHyHFKIdWdQ6
-	 AHR01Nh9ysFaw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uRoWx-000000002M1-3fAT;
-	Wed, 18 Jun 2025 10:52:27 +0200
-Date: Wed, 18 Jun 2025 10:52:27 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Takashi Iwai <tiwai@suse.de>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: Re: [PATCH ath-next v3 5/6] wifi: ath11k: choose default PM policy
- for hibernation
-Message-ID: <aFJ-SwT1g500h3kC@hovoldconsulting.com>
-References: <20250328-ath11k-bring-hibernation-back-v3-0-23405ae23431@quicinc.com>
- <20250328-ath11k-bring-hibernation-back-v3-5-23405ae23431@quicinc.com>
- <d0cd065c-1cd1-4e56-8c57-60777b1f3664@oss.qualcomm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Czzd2i6zZI24vlT6fAcdjVjagWxrUQAAZ8Bcyu1VHXAhJXjwPI0yeRVsUQ6y+/Fu+xhKeoXIvfB4I2obkSuSgbMjdE6QlgUdp1mwkfM9s08PnJfbof0gmtF+P7Sq8HZGW+Yud4IBqa1WXk3Z2giEDJ7O0XAdhUTT60rMeN0T4rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B734714BF;
+	Wed, 18 Jun 2025 01:52:38 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 007803F58B;
+	Wed, 18 Jun 2025 01:52:55 -0700 (PDT)
+Date: Wed, 18 Jun 2025 09:52:53 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Yicong Yang <yangyicong@huawei.com>,
+	Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	yangyicong@hisilicon.com, James Clark <james.clark@linaro.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	Ali Saidi <alisaidi@amazon.com>, Leo Yan <leo.yan@linaro.org>,
+	Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	yangjinqian <yangjinqian1@huawei.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
+Message-ID: <aFJ-Za6oRGKKASN1@J2N7QTR9R3>
+References: <aEyGg98z-MkcClXY@x1>
+ <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
+ <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
+ <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
+ <20250616130736.GA788469@e132581.arm.com>
+ <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
+ <20250616160811.GA794930@e132581.arm.com>
+ <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
+ <20250617141810.GB794930@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,49 +56,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d0cd065c-1cd1-4e56-8c57-60777b1f3664@oss.qualcomm.com>
+In-Reply-To: <20250617141810.GB794930@e132581.arm.com>
 
-On Wed, Jun 18, 2025 at 02:15:04AM +0200, Konrad Dybcio wrote:
-> On 3/28/25 6:32 AM, Baochen Qiang wrote:
-> > Now WoWLAN mode is chosen for those machines listed in the quirk table.
-> > This works for suspend (S3) but breaks for hibernation (S4), because
-> > WoWLAN mode requires WLAN power to be sustained, which is not the case
-> > during hibernation. For hibernation, the default mode should be used.
-> > 
-> > Register a PM notifier with which kernel can notify us of the actual PM
-> > operation: if system is going to suspend, the original PM policy is
-> > honored; while if it is hibernation, overwrite it with default policy.
-> > 
-> > To summarize: for suspend (S3), WoWLAN mode is chosen for machines listed
-> > in the quirk table, non-WoWLAN mode for others; for hibernation (S4),
-> > non-WoWLAN mode is chosen for all.
-> > 
-> > Tested-on: WCN6855 hw2.0 PCI WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.30
-> > 
-> > Tested-by: Takashi Iwai <tiwai@suse.de>
-> > Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> > ---
+On Tue, Jun 17, 2025 at 03:18:10PM +0100, Leo Yan wrote:
+> On Mon, Jun 16, 2025 at 06:47:25PM +0100, Mark Rutland wrote:
 > 
-> I've bisected the following splat to this patch, still happening on
-> linux-next/master, WCN6855 + SC8280XP CRD, 100% reproducibility 
+> [...]
+> 
+> > > > ok this sounds just like as before except rename the midr check function and modify the
+> > > > users in perf. will do in below steps:
+> > > > - move cpu_errata_set_target_impl()/is_midr_in_range_list() out of cputype.h
+> > > >   since they're only used in the kernel with errata information
+> > > > - introduce is_target_midr_in_range_list() in cputype.h to test certain MIDR
+> > > >   is within the ranges. (is_perf_midr_in_range_list() only make sense in
+> > > >   userspace and is a bit strange to me in a kernel header). maybe reimplement
+> > > >   is_midr_in_range_list() with is_target_midr_in_range_list() otherwise there's
+> > > >   no users in kernel
+> > > > - copy cputype.h to userspace and make users use new is_target_midr_in_range_list()
+> > > > 
+> > > > this will avoid touching the kernel too much and userspace don't need to implement
+> > > > a separate function.
+> > > 
+> > > My understanding is we don't need to touch anything in kernel side, we
+> > > simply add a wrapper in perf tool to call midr_is_cpu_model_range().
+> > > 
+> > > When introduce is_target_midr_in_range_list() in kernel's cputype.h,
+> > > if no consumers in kernel use it and only useful for perf tool, then
+> > > it is unlikely to be accepted.
+> > 
+> > I think all of this is just working around the problem that
+> > asm/cputype.h was never intended to be used in userspace. Likewise with
+> > the other headers that we copy into tools/.
+> > 
+> > If there are bits that we *want* to share with tools/, let's factor that
+> > out. The actual MIDR values are a good candidate for that -- we can
+> > follow the same approach as with sysreg-defs.h.
+> 
+> Thanks for suggestion, Mark.
+> 
+> It makes sense to me for extracting MIDR and sharing between kernel and
+> tools/. I have created a task for following up the refactoring.
+> 
+> > Other than that, I think that userspace should just maintain its own
+> > infrastructure, and only pull in things from kernel sources when there's
+> > a specific reason to. Otherwise we're just creating busywork.
+> 
+> I agree with the methodology.
+> 
+> Since Arnaldo is facing build failure when sync headers between kernel
+> and perf tool, to avoid long latency, let us split the refactoriing
+> into separate steps.
+> 
+> As a first step, I think my previous suggestion is valid, we can create a
+> header tools/perf/arch/arm64/include/cputype.h with below code:
+> 
+>   #include "../../../../arch/arm64/include/asm/cputype.h"
 
-WFIW, I'm not seeing this with 6.16-rc2 (which has this patch) on either
-the X13s or sc8280xp-crd (ath11k now fails to resume on the latter
-because of missing regulatory data, but that appears to be a separate
-regression).
+Directly including the kernel header introduces the very fragility that
+having a copy was intended to avoid. NAK to that.
 
-> [root@sc8280xp-crd ~]# echo mem > /sys/power/state 
-> [   20.267830] fb0: Framebuffer is not in virtual address space.
-> [   39.863070] PM: suspend entry (s2idle)
-> [   39.908067] Filesystems sync: 0.035 seconds
-> [   39.934453] ------------[ cut here ]------------
-> [   39.939259] Invalid notifier called!
-> [   39.939268] WARNING: CPU: 5 PID: 513 at kernel/notifier.c:79 notifier_call_chain+0x84/0x1a4
-> [   39.951566] Modules linked in:
-> [   39.954732] CPU: 5 UID: 0 PID: 513 Comm: bash Not tainted 6.14.0-rc4longbois-01215-g32d93b51bc7e #12177
+I've replied to the same effect Yicong's patch [1,2].
 
-6.14?
+If we want to share headers between userspace and kernel, we should
+refactor those headers such that this is safe by construction.
 
-> [   39.964396] Hardware name: Qualcomm QRD, BIOS 6.0.230525.BOOT.MXF.1.1.c1-00114-MAKENA-1 05/25/2023
+There is no need to update the userspace headers just because the kernel
+headers have changed, so the simple solution in the short term is to
+suppress the warning from check-headers.sh.
 
-Johan
+[1] https://lore.kernel.org/linux-arm-kernel/dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com/T/#m23dfbea6af559f3765d89b9d8427213588871ffd
+[2] https://lore.kernel.org/linux-arm-kernel/dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com/T/#m6acbfa00002af8ee791266ea86a58f8f994ed710
+
+Mark.
+
+> 
+>   static bool is_perf_midr_in_range_list(u32 midr,
+>                                          struct midr_range const *ranges)
+>   {
+>           while (ranges->model) {
+>                   if (midr_is_cpu_model_range(midr, ranges->model,
+>                                   ranges->rv_min, ranges->rv_max))
+>                           return true;
+>                   ranges++;
+>           }
+> 
+>           return false;
+>   }
+> 
+> Then, once we can generate a dynamic MIDR header file, we can use that
+> header and define the midr_range structure specifically in the perf.
+> In the end, perf can avoid to include kernel's cputype.h.
+> 
+> If no objection, Yicong, do you mind preparing the patch mentioned
+> above? Thanks!
+> 
+> Leo
