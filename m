@@ -1,169 +1,154 @@
-Received: from relay16.mail.gandi.net (relay16.mail.gandi.net [217.70.178.236])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AE527F163
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE31127FB37;
+	Wed, 18 Jun 2025 09:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750237679; cv=none; b=A/djQ40N1TzIrtLfV+4+gprcrJN+vNbpajzBZrebGgFRYmKCanQk946pdYlPqPgh+7j7t5X9br9cIXTZJrUgW4vkNiwhBdracRUxK3nGyfXKCzNTVDNDp8pbILt6CnHJELFaUYpulvi59C8P18X1mTrYdJ3Wwaa5+55Djjofk0M=
+	t=1750237699; cv=none; b=ZYqnzivDd4HH58ECvZ7ypO50kpmlXtDHhv80ujmA6KFKG+rjJ2mk63Hf8e7Zztmwqz6T53aw9voBRXJfo4ACHOVv7MtDoPpuikA3SlKPBZT2eMBOu/WEutA/1fNQwwoKsdIRgCKFGhg2j8epFDcBy58/v7ixdOh/mmiPaunWHws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750237679; c=relaxed/simple;
-	bh=qMDXctjl3RrGqRpvuvl/oTWHNNTjYNjaf7sDj1ZaU54=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NxeYFsqmUJtrDE8KHSbFobPgF8V3gHOAA8rKeElQ0N/x+XGIACtk+U5pAhpjNpoHkAvvbDM9UISzIWzd0JUDBXdXhTHmljMrhx6lwtEnHnrVWfGKq72LlQL3SEPPxZqOTjK86qbSV1Q8o2Nj4v1SFc6Nkt09vbEvmaCKgCLYB9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ReQwIoka; arc=none smtp.client-ip=217.70.178.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750237699; c=relaxed/simple;
+	bh=Znwom1NdED/dYAH4xL7nUXQjN8SthFU/dT6KAA1gfL8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f4lXkkAIrpsIL9pX02vVH0D6huSrv8NhZXpw9oMUz/zRwmLYj/RFc/AGQG5iAwEAhekDDDNGtC/FULTUJgU4XyOVjbZXqV3p517HsU94Qu7i9FXI6MimxD6mlAl4p5ydO/6lKPcRXbB119gV3UGjArkAqAAJ+WVvgA3zdHIE4tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rahVlYsM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ReQwIoka"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EE4AF44A28;
-	Wed, 18 Jun 2025 09:07:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750237674;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5YKCS0p2mX1jUvgRQVTRJkGPc02swV2tS4F99SUfUWw=;
-	b=ReQwIokambRFmDeygohyji4QXGAAi8EdLiXoArdG4vI2pzUdN/EttUF4i+BLn8j6JBhre4
-	iBpFsGqF8QF58KvjqqkZNxXy+ALsOj2lBKWSp5YlEu5bb8kox0MVx9EPAJGkxApOddw/lW
-	7ql9/Rd4E+5yetDDxPE6WleRqZRfLpdhSoPtmtrkRjjaexWC7+JyDKfSstgeY4c5GbUzHp
-	sMxwI9PeXeECeCuJCkLLvmpdtCn4M9m57orT4FbbfRuVhIhdsKLDpS/VNgcPsNupJnl1oi
-	pLZkokmy8O1iUjfkWyOOfPMEYJpRMeVOQo2VgD1wP84szH7UHI0h14uwyAc/Uw==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: David Regan <dregan@broadcom.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-  linux-mtd@lists.infradead.org,  bcm-kernel-feedback-list@broadcom.com,
-  William Zhang <william.zhang@broadcom.com>,  Anand Gore
- <anand.gore@broadcom.com>,  Florian Fainelli
- <florian.fainelli@broadcom.com>,  Kamal Dasu <kamal.dasu@broadcom.com>,
-  Dan Beygelman <dan.beygelman@broadcom.com>,  =?utf-8?Q?=C3=81lvaro_Fern?=
- =?utf-8?Q?=C3=A1ndez?= Rojas
- <noltari@gmail.com>,  rafal@milecki.pl,  computersforpeace@gmail.com,
-  frieder.schrempf@kontron.de,  Vignesh Raghavendra <vigneshr@ti.com>,
-  Richard Weinberger <richard@nod.at>,  Boris Brezillon
- <bbrezillon@kernel.org>,  kdasu.kdev@gmail.com,  JaimeLiao
- <jaimeliao.tw@gmail.com>,  Adam Borowski <kilobyte@angband.pl>,  Jonas
- Gorski <jonas.gorski@gmail.com>,  dgcbueu@gmail.com,  dregan@mail.com
-Subject: Re: [PATCH v2] mtd: nand: brcmnand: fix mtd corrected bits stat
-In-Reply-To: <CAA_RMS7EB2v_h44Ysdoe0=WjC+T4G_5_4O-9DbCBE5OyRNArkg@mail.gmail.com>
-	(David Regan's message of "Tue, 10 Jun 2025 17:44:09 -0700")
-References: <20250606165756.1531164-1-dregan@broadcom.com>
-	<8734c9z2ye.fsf@bootlin.com>
-	<CAA_RMS7EB2v_h44Ysdoe0=WjC+T4G_5_4O-9DbCBE5OyRNArkg@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 18 Jun 2025 11:07:53 +0200
-Message-ID: <87h60dmn86.fsf@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rahVlYsM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0702FC4CEE7;
+	Wed, 18 Jun 2025 09:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750237696;
+	bh=Znwom1NdED/dYAH4xL7nUXQjN8SthFU/dT6KAA1gfL8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=rahVlYsMunMFBAizbh5HnPv5AZIpKAQgZnJ/W0DL/VlmB5Gtf9xlpNPARl95XPdTo
+	 XH4Y3zjaeSgIn/orTF4ZbT4nq36/rmwPhoZrc1EaORsjvCDQmssdi3+zdqWt9Ay4Py
+	 ABO+/r2KE7ZxL6HgzpBcJuBuf2spYrE4tEhrh0dv+f3n86OfMR6+nlwumzy4iRQMRS
+	 6H4co0s+c0SYlI1EaoWWAy0NGHnAsVLMiIhEGIC6OGxf7Od0u8ytMxmMpQOZ0ndEil
+	 Pc1EskmmzpDlwQtT04GoWkJ3QiCEbMa8le6RGMicaf8TIcHudq+qucyYFvuuEAhT3l
+	 X4lrskt3+JI8g==
+Message-ID: <4038339c-a352-4007-85f5-44601a3578c2@kernel.org>
+Date: Wed, 18 Jun 2025 11:08:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegurhgvghgrnhessghrohgruggtohhmrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopegstghmqdhkvghrnhgvlhdqfhgvvggusggrtghkqdhlihhsthessghrohgruggtohhmrdgtohhmpdhrtghpthhto
- hepfihilhhlihgrmhdriihhrghnghessghrohgruggtohhmrdgtohhmpdhrtghpthhtoheprghnrghnugdrghhorhgvsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehflhhorhhirghnrdhfrghinhgvlhhlihessghrohgruggtohhmrdgtohhmpdhrtghpthhtohepkhgrmhgrlhdruggrshhusegsrhhorggutghomhdrtghomh
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/4] arm64: dts: qcom: sm8550: Remove SDR104/SDR50
+ broken capabilities
+To: Sarthak Garg <quic_sartgarg@quicinc.com>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ quic_cang@quicinc.com, quic_nguyenb@quicinc.com, quic_rampraka@quicinc.com,
+ quic_pragalla@quicinc.com, quic_sayalil@quicinc.com,
+ quic_nitirawa@quicinc.com, quic_bhaskarv@quicinc.com, kernel@oss.qualcomm.com
+References: <20250618072818.1667097-1-quic_sartgarg@quicinc.com>
+ <20250618072818.1667097-5-quic_sartgarg@quicinc.com>
+ <5336c00d-3b80-423a-bb52-4e1ec35bc7ed@kernel.org>
+ <86ad5ddb-1a43-45c3-af35-9eb863c66f63@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <86ad5ddb-1a43-45c3-af35-9eb863c66f63@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello David,
+On 18/06/2025 10:44, Sarthak Garg wrote:
+> 
+> 
+> On 6/18/2025 1:11 PM, Krzysztof Kozlowski wrote:
+>> On 18/06/2025 09:28, Sarthak Garg wrote:
+>>> Kernel now handles all level shifter limitations related to SD card
+>>> modes.
+>>> As a result, the broken hardware capabilities for SDR104 and SDR50 modes
+>>> can be removed from the device tree.
+>>> Additionally, due to level shifter constraints, set the maximum
+>>> frequency for High Speed (HS) mode to 37.5 MHz using the
+>>> max-sd-hs-frequency property for sm8550.
+>>>
+>>> Signed-off-by: Sarthak Garg <quic_sartgarg@quicinc.com>
+>>> ---
+>>>   arch/arm64/boot/dts/qcom/sm8550.dtsi | 4 +---
+>>>   1 file changed, 1 insertion(+), 3 deletions(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>>> index 82cabf777cd2..2c770c979d39 100644
+>>> --- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+>>> @@ -3180,6 +3180,7 @@ sdhc_2: mmc@8804000 {
+>>>   			iommus = <&apps_smmu 0x540 0>;
+>>>   			qcom,dll-config = <0x0007642c>;
+>>>   			qcom,ddr-config = <0x80040868>;
+>>> +			max-sd-hs-frequency = <37500000>;
+>> So my previous comments stay... This is SoC thus deducible from compatible.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> " I agree that a DT property for the mmc controller would make sense.
+> 
+> Although, this seems limited to SD UHS-I speed modes, so perhaps
+> "max-sd-uhs-frequency" would be a better name for it?
+> 
+> Kind regards
+> Uffe "
+> 
+> https://patchwork.kernel.org/project/linux-mmc/cover/20250523105745.6210-1-quic_sartgarg@quicinc.com/
+> 
+> This was the comment given on V2 to introduce a generic dt
+> property.
 
-> I'm not familiar with nandbiterrs but here's the results from
-> mtd_nandbiterrs.ko on my NAND set to BCH8:
->
-> # insmod mtd_nandbiterrs.ko dev=3D0
-> [  676.097190]
-> [  676.098760] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> [  676.104609] mtd_nandbiterrs: MTD device: 0
-> [  676.108732] mtd_nandbiterrs: MTD device size 2097152,
-> eraseblock=3D262144, page=3D4096, oob=3D216
-> [  676.117089] mtd_nandbiterrs: Device uses 1 subpages of 4096 bytes
-> [  676.123188] mtd_nandbiterrs: Using page=3D0, offset=3D0, eraseblock=3D0
-> [  676.130863] mtd_nandbiterrs: incremental biterrors test
-> [  676.136154] mtd_nandbiterrs: write_page
-> [  676.140761] mtd_nandbiterrs: rewrite page
-> [  676.145473] mtd_nandbiterrs: read_page
-> [  676.149621] mtd_nandbiterrs: verify_page
-> [  676.153625] mtd_nandbiterrs: Successfully corrected 0 bit errors per s=
-ubpage
-> [  676.160678] mtd_nandbiterrs: Inserted biterror @ 0/5
-> [  676.165647] mtd_nandbiterrs: rewrite page
-> [  676.170363] mtd_nandbiterrs: read_page
-> [  676.174508] mtd_nandbiterrs: Read reported 1 corrected bit errors
-> [  676.180606] mtd_nandbiterrs: verify_page
-> [  676.184609] mtd_nandbiterrs: Successfully corrected 1 bit errors per s=
-ubpage
-> [  676.191662] mtd_nandbiterrs: Inserted biterror @ 0/2
-> [  676.196631] mtd_nandbiterrs: rewrite page
-> [  676.201342] mtd_nandbiterrs: read_page
-> [  676.205487] mtd_nandbiterrs: Read reported 2 corrected bit errors
-> [  676.211586] mtd_nandbiterrs: verify_page
-> [  676.215588] mtd_nandbiterrs: Successfully corrected 2 bit errors per s=
-ubpage
-> [  676.222641] mtd_nandbiterrs: Inserted biterror @ 0/0
-> [  676.227608] mtd_nandbiterrs: rewrite page
-> [  676.228356] mtd_nandbiterrs: read_page
-> [  676.228749] mtd_nandbiterrs: Read reported 3 corrected bit errors
-> [  676.228751] mtd_nandbiterrs: verify_page
-> [  676.228829] mtd_nandbiterrs: Successfully corrected 3 bit errors per s=
-ubpage
-> [  676.228831] mtd_nandbiterrs: Inserted biterror @ 1/7
-> [  676.228833] mtd_nandbiterrs: rewrite page
-> [  676.229530] mtd_nandbiterrs: read_page
-> [  676.229922] mtd_nandbiterrs: Read reported 4 corrected bit errors
-> [  676.229924] mtd_nandbiterrs: verify_page
-> [  676.230001] mtd_nandbiterrs: Successfully corrected 4 bit errors per s=
-ubpage
-> [  676.230003] mtd_nandbiterrs: Inserted biterror @ 1/5
-> [  676.230005] mtd_nandbiterrs: rewrite page
-> [  676.294177] mtd_nandbiterrs: read_page
-> [  676.298337] mtd_nandbiterrs: Read reported 5 corrected bit errors
-> [  676.304436] mtd_nandbiterrs: verify_page
-> [  676.308441] mtd_nandbiterrs: Successfully corrected 5 bit errors per s=
-ubpage
-> [  676.315494] mtd_nandbiterrs: Inserted biterror @ 1/2
-> [  676.320464] mtd_nandbiterrs: rewrite page
-> [  676.325174] mtd_nandbiterrs: read_page
-> [  676.329327] mtd_nandbiterrs: Read reported 6 corrected bit errors
-> [  676.335426] mtd_nandbiterrs: verify_page
-> [  676.339429] mtd_nandbiterrs: Successfully corrected 6 bit errors per s=
-ubpage
-> [  676.346483] mtd_nandbiterrs: Inserted biterror @ 1/0
-> [  676.351452] mtd_nandbiterrs: rewrite page
-> [  676.356162] mtd_nandbiterrs: read_page
-> [  676.360308] mtd_nandbiterrs: Read reported 7 corrected bit errors
-> [  676.366407] mtd_nandbiterrs: verify_page
-> [  676.370409] mtd_nandbiterrs: Successfully corrected 7 bit errors per s=
-ubpage
-> [  676.377462] mtd_nandbiterrs: Inserted biterror @ 2/6
-> [  676.382432] mtd_nandbiterrs: rewrite page
-> [  676.387142] mtd_nandbiterrs: read_page
-> [  676.391287] mtd_nandbiterrs: Read reported 8 corrected bit errors
-> [  676.397385] mtd_nandbiterrs: verify_page
-> [  676.401388] mtd_nandbiterrs: Successfully corrected 8 bit errors
-> per subpage
 
-So far the reporting looks good (and the nandflipbits output looks
-correct as well).
+I know, it does not matter. If this is here, it is a 100% proof this is
+SoC specific, thus you have compatible for that.
 
-> [  676.408441] mtd_nandbiterrs: Inserted biterror @ 2/5
-> [  676.413411] mtd_nandbiterrs: rewrite page
-> [  676.418122] mtd_nandbiterrs: read_page
-> [  676.422267] mtd_nandbiterrs: verify_page
-> [  676.426194] mtd_nandbiterrs: Error: page offset 0, expected 25, got 00
-> [  676.432727] mtd_nandbiterrs: Error: page offset 1, expected a5, got 00
-> [  676.439260] mtd_nandbiterrs: Error: page offset 2, expected 65, got 05
-> [  676.445868] mtd_nandbiterrs: ECC failure, read data is incorrect
-> despite read success
-
-Here however there is something wrong. We do expect a read failure,
-instead of returning wrong data. There is still a problem, I do not know
-if this problem was there before though, but this must be fixed.
-
-Hello Florian, if you have time, I'd welcome you opinion on this patch :)
-
-Cheers,
-Miqu=C3=A8l
+Best regards,
+Krzysztof
