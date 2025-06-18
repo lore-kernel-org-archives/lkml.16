@@ -1,345 +1,391 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF5C2F4314
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB1972606
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 19:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750273105; cv=none; b=nMTeJyZDKFGmAkmd6DdRfcng1zE6sxUAMQyraNgeRZS/b/at35Ba/h2ajeU2ZXYBK/Lv7E9IrbmNJbjoVdjdCc7VFND/0CGP1h83sBnh+e5tvowJJf2hP1AkqZPxSvX628+2pSFldVC2SUD7rZF7bBaraav/7JblM+szl/qPaYU=
+	t=1750273273; cv=none; b=RVU2GJbmbej0CnASG6ycJGDtPeRbtrxSXTbHdc1NkeUw436PUE6Sb/34XDAEl4gmXKYs0vpTfvx/fdJ892xMGU0UMhd/mfKeIy9HdGbk43Q3kMiHIubr0Zq5z+9Xxv/1wYbz3DFgOD/JpKVM2Ig3ku0SPiEojmzepvEiGetgzGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750273105; c=relaxed/simple;
-	bh=v/wrVBdc/cdLMr2StNygjQifKGT//wKvIc86r/goIT4=;
+	s=arc-20240116; t=1750273273; c=relaxed/simple;
+	bh=GzWAQptLgrT0zD7Fj8+5KQBzafGtjHnio2uIakL7Yuo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O6ZpHz3yHh0byftREqhADDdlai+1ctH7xi7Ca4nDHCY5TPACA3VZVHWebs9TBPXi8Ol0ZHUhgVGmqQuYdhsKxQul1nDUYpHuZjTwKFcEG2S+/DBO10+hEFfMp0vBTqzjE0WCv/4EqXGiu/QqtZv7pD3EdBYpIuzpVjAImvPIGGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=NgNTGDgx; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 To:Cc:Content-Type; b=EmcTeavk2nfUB/XqZ/7pAvpv5ZgDQ/5+/ghX2KBms2itQjM0PG3YiQ5iiStYto2YkHBqwP+NrjBeEN0tKXdJc3MeT+ueRsfEdY5y4FqNWRbSVIJHlOo/p8i39dAS/q3ku5nZyIyuDJI3e8Pt426Oq8F6Yg2BBgQSV6/3wT6t4Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MtD2ch0z; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NgNTGDgx"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553d52cb80dso944315e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:58:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MtD2ch0z"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-70b4e497d96so68509677b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750273100; x=1750877900; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1SfNpeyWXhxKz6xUZHfg4gP5Y8d7ButdePpS/F1OHg=;
-        b=NgNTGDgx7791idV8TC3GfcB8Q8vJcw2HVozM4edGXJ0TM/aPl0jTSIi8Qfhgw9aH2Y
-         iqCTp+UkGaqEkxLblKYsB0Xp8qfzXEgnjGUSJzzZnGV9K6m5xaHoLGsKHWz+udHeWUki
-         UWE/zoEFSPU33IKJNxtrnPZZafeE8yOKZrWa0=
+        d=chromium.org; s=google; t=1750273270; x=1750878070; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vS9LiE9yg5H5vdEjfnlTjqMOIW7xWKvw8zFalK7zffI=;
+        b=MtD2ch0zK0yfOfR3SsOhACtwqZuupB0PjjcK+CfvOH+PP1RiZPUlx2MEnfR2OnfI9T
+         6uYlEwecYJ2p/rOInJ56TyG//hqdwTEu028Py989qjOiMOFbrYO7w7gC/dOcrRuwOSxE
+         VCf7S75K/jk60Opv/d2CeRtW/XWLJPNGAjamY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750273100; x=1750877900;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d1SfNpeyWXhxKz6xUZHfg4gP5Y8d7ButdePpS/F1OHg=;
-        b=RRoN9UViKY+cOAEkra2/TmK8xXTG8XuSrGmKgPZTzGgOIwMnQIFxph305yvE08M7aK
-         gh6uqz9KsyWhH91rqUWo8vGReJ306SNlwfXbf71RauQcn5/h1YmvtjKcRX4SnKRtovw1
-         xWodyOheI77FAKeyhD3pWuk+cDP/gZFtkuPuQFA1QtnqxOxahbhUAPRuCEnpcT+YeTl5
-         yxKr4P0/YiE2B1OkXE5yY+XFJcf+2mvL1ohY//ngu5v2lDMiDK+/ivC/jzLGZAXYicNe
-         /p94x5MmuIaBCXzaG3h4K+foNiTt7ViQd8C6UbmrNK1i4lSdNnqPJGONs/OFp7JAW9er
-         0QNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQFVOz8WRD+6eIRe85d3HtuFeaA2EAoRvY0WRu/lKwfFLkOCJg4TL7cv+ppzpwZvilRleD32CNT1knU/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsKLrAxVjTbeflz6ewDDXIbOZATz+37uZWO3GLDc6Rz5aeoHb6
-	zV8hCFbjhptR7RefQZXwcjS4Ulso0WefetJjDfpNEIM5CyvR11iTAVQMh1pOX0j7A8yBSAFSqzg
-	MNHyAdnT1MKXuaAVDg0m78Z/qNMgpJwhE7Oannfly
-X-Gm-Gg: ASbGnctAx+XKLAZMmuxCfpHDdXz/rl65DHcuUIlwav379bAA/ZOkQUIncTrz4nviYlj
-	37bqswukXHQj2HuCIEuf5M96noMyaJhHY7H82/I2v4Opk7RSZwTI/bdAVhfs4ztxTsTWEE1lryX
-	7DllegcldTZR9z4SX2Yg5DaBsWZfXl6Xu/7qNZDdC8OXdR
-X-Google-Smtp-Source: AGHT+IGYurP8k2LEh7vwdS9rEUPjzfZDQNT4fopSCpl/Z7g8cNeQVl4GT7t1d/nQ7i+qJw1zjE0AiHSdGRY9PL9W0Gs=
-X-Received: by 2002:a05:6512:308a:b0:553:2375:c6e8 with SMTP id
- 2adb3069b0e04-553d97b0066mr302318e87.1.1750273100197; Wed, 18 Jun 2025
- 11:58:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750273270; x=1750878070;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vS9LiE9yg5H5vdEjfnlTjqMOIW7xWKvw8zFalK7zffI=;
+        b=pTvsFD3vfe+w9soqkdchiYOadS93B1RY+KzutfYHIDf/e/OfdihYTFpcnVA4P+1PqA
+         gsE6rbA+5pTygi0v/wUeJ8r6HOjt3delLf///hoqSd5Xt2gH5pdeOx9hPA/r28x2euzS
+         DbUCZfYB/laZN8rMu54/SarMEtLSPuHK4Jrl3F8YJUe8Y44L5YAy6GCKLfx2OEJDYAPZ
+         AsAsrdWlnLS3gS66zICQSFFTM2Wyl9pmy3hXXRbRxbJ1Q4FFDew7fy8Ngzja9QoKXbtU
+         Hh+WrM9MaA9pzc6xsg1Z8qE9IrY06NQM6QRD0tHiPofTTg+4cwat1omIgmbwNjjzqJVu
+         V31A==
+X-Forwarded-Encrypted: i=1; AJvYcCWZmP830Baa3c7X0VyczWVNMDfmPZ2dZbyuN4TvW/a1Zxamtg/cHyzJzw54hdCjBP9DISaJ97yWSFuwKbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpPO0RK53cDiKVnKRXItJZ/2PXmrbWHvYumNyYKC5YgzNwoG9T
+	8ojVGnImCK9L9cVy0PmLP2LQSdGcYybHlmapAK8/Q0kHVSw03actFcXQwjWvHl74MDRx1nnEKBZ
+	ojSMZLFpwJAZMzjHMdz9GgcAHvcGb3a+VKhtUYjB6
+X-Gm-Gg: ASbGncvp5oxV7f4f54eTXuYKkuEeezl4BlA6af7bPGraa2OdXUdvTnqbZxBhIz0qWPp
+	C6/tyP7SEojQDUeDiBZK3MK4OAQH6t0Mah2qzuaPeOPbqRzc1zw+fweQkBu0TXAkdXFv59+XMfS
+	olNRnkSzCwcfYFp9Smb+bOS6kXiYJRsStX9OJFhZ+eIHukoC1GIXub1w==
+X-Google-Smtp-Source: AGHT+IGCe1DqC/GjhqJ2Yd7Vx4AAgaHiqdSHNCnAd8/ol8H17ka4BdKNqAzTjSK52dNVLRkHV49GbXLPbaiv6w3hH0Q=
+X-Received: by 2002:a05:690c:670a:b0:70e:923:2173 with SMTP id
+ 00721157ae682-711753a1fcemr219699257b3.5.1750273269822; Wed, 18 Jun 2025
+ 12:01:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250616053209.13045-1-mani@kernel.org>
-In-Reply-To: <20250616053209.13045-1-mani@kernel.org>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Wed, 18 Jun 2025 14:58:08 -0400
-X-Gm-Features: AX0GCFvBc2eY84r4JbOye0QGCUK6b1ep-B-W5GIi9a1SA21NGoNAGrRIDgNdODw
-Message-ID: <CA+-6iNyE_6yES6rQZgiuvTE7hg+COjgkNkx2mwCF6K-4kEOuOw@mail.gmail.com>
-Subject: Re: [PATCH v3] PCI/pwrctrl: Move pci_pwrctrl_create_device()
- definition to drivers/pci/pwrctrl/
-To: Manivannan Sadhasivam <mani@kernel.org>
-Cc: bhelgaas@google.com, brgl@bgdev.pl, linux-pci@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lukas@wunner.de, 
-	Bjorn Helgaas <helgaas@kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000006d68900637dd366b"
-
---0000000000006d68900637dd366b
+References: <20250616133147.1835939-1-akuchynski@chromium.org>
+ <20250616133147.1835939-5-akuchynski@chromium.org> <aFE6dnxet4_sm8b1@kuha.fi.intel.com>
+ <CAMMMRMdwUyxdMy42tA_ccYo77nf=6C+KgokDLHBLEYDa5aOHQw@mail.gmail.com>
+ <2025061727-crinkle-drew-4a0d@gregkh> <CANFp7mVWo4GhiYqfLcD_wFV34WMkmXncMTOnmMfnKH4vm2X8Hg@mail.gmail.com>
+ <aFLCLL_7Ov8J9Wdx@kuha.fi.intel.com>
+In-Reply-To: <aFLCLL_7Ov8J9Wdx@kuha.fi.intel.com>
+From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Date: Wed, 18 Jun 2025 12:00:58 -0700
+X-Gm-Features: Ac12FXxmMg4f17aNkb7AAVjT_oP9JqRrd5zhOoVRN3BCBtjAJ7nAX9nvTsTLl4I
+Message-ID: <CANFp7mVGA1zBd=OYFrfzd-WiWtQpVXpcWgdH19hdVsxVbr3aYg@mail.gmail.com>
+Subject: Re: [PATCH 04/10] usb: typec: Expose alternate mode priorities via sysfs
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrei Kuchynski <akuchynski@chromium.org>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Jameson Thies <jthies@google.com>, Benson Leung <bleung@chromium.org>, 
+	Tzung-Bi Shih <tzungbi@kernel.org>, Guenter Roeck <groeck@chromium.org>, 
+	Pooja Katiyar <pooja.katiyar@intel.com>, Badhri Jagan Sridharan <badhri@google.com>, 
+	RD Babiera <rdbabiera@google.com>, linux-usb@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 16, 2025 at 1:32=E2=80=AFAM Manivannan Sadhasivam <mani@kernel.=
-org> wrote:
+On Wed, Jun 18, 2025 at 6:42=E2=80=AFAM Heikki Krogerus
+<heikki.krogerus@linux.intel.com> wrote:
 >
-> pci_pwrctrl_create_device() is a PWRCTRL framework API. So it should be
-> built only when CONFIG_PWRCTRL is enabled. Currently, it is built
-> independently of CONFIG_PWRCTRL. This creates enumeration failure on
-> platforms like brcmstb using out-of-tree devicetree that describes the
-> power supplies for endpoints in the PCIe child node, but doesn't use
-> PWRCTRL framework to manage the supplies. The controller driver itself
-> manages the supplies.
+> Hi Abhishek,
 >
-> But in any case, the API should be built only when CONFIG_PWRCTRL is
-> enabled. So move its definition to drivers/pci/pwrctrl/core.c and provide
-> a stub in drivers/pci/pci.h when CONFIG_PWRCTRL is not enabled. This also
-> fixes the enumeration issues on the affected platforms.
+> On Tue, Jun 17, 2025 at 07:47:18PM -0700, Abhishek Pandit-Subedi wrote:
+> > On Tue, Jun 17, 2025 at 6:28=E2=80=AFAM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Jun 17, 2025 at 02:38:04PM +0200, Andrei Kuchynski wrote:
+> > > > On Tue, Jun 17, 2025 at 11:50=E2=80=AFAM Heikki Krogerus
+> > > > <heikki.krogerus@linux.intel.com> wrote:
+> > > > >
+> > > > > On Mon, Jun 16, 2025 at 01:31:41PM +0000, Andrei Kuchynski wrote:
+> > > > > > This sysfs attribute specifies the preferred order for enabling
+> > > > > > DisplayPort alt-mode, Thunderbolt alt-mode, and USB4 mode.
+> > > > > >
+> > > > > > Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
+> > > > > > ---
+> > > > > >  Documentation/ABI/testing/sysfs-class-typec | 17 ++++
+> > > > > >  drivers/usb/typec/Makefile                  |  2 +-
+> > > > > >  drivers/usb/typec/class.c                   | 26 ++++++
+> > > > > >  drivers/usb/typec/class.h                   |  2 +
+> > > > > >  drivers/usb/typec/mode_selection.c          | 93 +++++++++++++=
+++++++++
+> > > > > >  drivers/usb/typec/mode_selection.h          |  5 ++
+> > > > > >  include/linux/usb/typec_altmode.h           |  7 ++
+> > > > > >  7 files changed, 151 insertions(+), 1 deletion(-)
+> > > > > >  create mode 100644 drivers/usb/typec/mode_selection.c
+> > > > > >  create mode 100644 drivers/usb/typec/mode_selection.h
+> > > > > >
+> > > > > > diff --git a/Documentation/ABI/testing/sysfs-class-typec b/Docu=
+mentation/ABI/testing/sysfs-class-typec
+> > > > > > index 38e101c17a00..46eee82042ab 100644
+> > > > > > --- a/Documentation/ABI/testing/sysfs-class-typec
+> > > > > > +++ b/Documentation/ABI/testing/sysfs-class-typec
+> > > > > > @@ -162,6 +162,23 @@ Description:     Lists the supported USB M=
+odes. The default USB mode that is used
+> > > > > >               - usb3 (USB 3.2)
+> > > > > >               - usb4 (USB4)
+> > > > > >
+> > > > > > +What:                /sys/class/typec/<port>/altmode_prioritie=
+s
+> > > > > > +Date:                June 2025
+> > > > > > +Contact:     Andrei Kuchynski <akuchynski@chromium.org>
+> > > > > > +Description: Lists the alternate modes supported by the port a=
+nd their
+> > > > > > +             priorities. The priority setting determines the o=
+rder in which
+> > > > > > +             Displayport alt-mode, Thunderbolt alt-mode and US=
+B4 mode will be
+> > > > > > +             activated, indicating the preferred selection seq=
+uence. A value of -1
+> > > > > > +             disables automatic entry into a specific mode, wh=
+ile lower numbers
+> > > > > > +             indicate higher priority. The default priorities =
+can be modified by
+> > > > > > +             assigning new values. Modes without explicitly se=
+t values default to -1,
+> > > > > > +             effectively disabling them.
+> > > > > > +
+> > > > > > +             Example values:
+> > > > > > +             - "USB4=3D0 TBT=3D1 DP=3D2"
+> > > > > > +             - "USB4=3D-1 TBT=3D0"
+> > > > > > +             - "DP=3D-1 USB4=3D-1 TBT=3D-1"
+> > > > >
+> > > > > No. If you want to disable entry to a mode by default, then you
+> > > > > deactivate that mode, so -1 is not needed. USB4 is also not an al=
+t
+> > > > > mode, so this at the very least should be named differently.
+> >
+> > USB4 should be called an alt-mode though based on its behavior and I
+> > think the spec makes a mistake not doing so. It's mutually exclusive
+> > with alternate modes, it modifies the functionality of the data lanes
+> > and it's not a new data mode (just a tunneling protocol). But that's
+> > an aside for this patch...
 >
-> Fixes: 957f40d039a9 ("PCI/pwrctrl: Move creation of pwrctrl devices to pc=
-i_scan_device()")
-> Reported-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Closes: https://lore.kernel.org/r/CA+-6iNwgaByXEYD3j=3D-+H_PKAxXRU78svPMR=
-HDKKci8AGXAUPg@mail.gmail.com
-> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <mani@kernel.org>
-> ---
+> It's still a big no from me for this one as it is, sorry. You are
+> trying to achieve too many things with these files.
 >
-> Changes in v3:
+> The first thing here is that you want to offer the user a way to
+> define the order in which the modes are entered, and that's actually
+> something that we do *not* have any support for at the moment. I'm not
+> against this part. As long as you justify the need for this, and
+> ideally offer a way to setup the priorities also in tcpm.c, I'm okay
+> with it. But you do need to justify the need for this IMO. The specs
+> actually dictate the order in which these modes should be entered does
+> it not
 
-Hi Mani,
+The spec lists an example mode entry flow with cable warnings (USB
+Type-C Spec 2.3, Section E.5) but it's not dictating the order there.
+bleung@ and jthies@ contributed this to the spec and this somewhat
+matches what ChromeOS does.
 
-Thanks for working on this.  How/where should I be applying these
-patches?  I've been using torvald's latest master but I get failed
-hunks and have to manually fix them up.
+The main reason for having a priorities list in sysfs (vs statically
+defined) is to reflect our security policy around PCI tunnels: we do
+not allow PCI tunnels unless the user is logged in and has toggled the
+flag to enable PCI tunnels (which is controllable via the UI or
+Enterprise policy). What this results in is a preference to enter DPAM
+when in the login screen even if the attached device supports
+Thunderbolt and then a mode switch to Thunderbolt after login. This
+was done on older ChromeOS platforms by bypassing sysfs and talking
+directly to the EC. With our adoption of PDC and UCSI, we want a
+common way to do this without having mode sequencing occuring in
+userspace.
 
-At any rate I'll be testing whatever you are posting.
+The eventual operational goal being:
+* A PDC based system will automatically enter an alt-mode in the PDC
+by default but allow override later based on the defined mode
+priority.
+* Our older TCPM based systems that do AP driven mode entry will use
+the in-kernel mode selection implementation to automatically enter
+modes.
+* In-kernel TCPM system will also automatically enter an alt-mode
+using the in-kernel mode selection implementation.
+* Userspace can change the mode priorities when a user logs in and
+triggers mode selection. A new connection while logged in would have
+the kernel apply the preferred mode.
+* Userspace can change mode priorities when the user locks the screen
+but does not trigger mode selection. Only new connections would get
+the changed priority and existing connections are left alone.
 
-Thanks,
-Jim Quinilan
-Broadcom STB/CM
+Our preferred alt-mode ordering:
+* Default =3D> USB4, DPAM, TBT3
+* Logged-in, Tunneling allowed =3D> USB4, TBT3, DPAM
 
 >
-> * Used IS_ENABLED instead of ifdef in drivers/pci/pci.h (Sathyanarayanan)
+> But the second part is that you want to also use this file to disable
+> the modes. For that we do have the mechanisms already in place, so
+> there is no point in trying to include that here. It does not even
+> sound like the primary goal for you - your main goal is to just be
+> able to define the order, right?
+
+Limiting to just priority in this file sounds good and simplifies this
+change. It does seem to duplicate checks already existing in
+`altmode->activate`.
+
 >
-> Changes in v2:
+> So this is my suggestion: Change this so that you can only supply the
+> preferred order for the modes - the priorities. Get rid of the numeric
+> values - by simply listing the modes in the file becomes more machine
+> readable while still being perfectly human readable.
 >
-> * Dropped the unused headers from probe.c (Lukas)
+> And the name. I agree that USB4 should be an alt mode, but it's not.
+> This should really be a no-brainer. Just s/altmode/mode/. That way
+> the naming is aligned with what you are proposing in patch 5/6.
+
+`mode_priorities` and `mode_selection` sounds good.
+
 >
->  drivers/pci/pci.h          |  8 ++++++++
->  drivers/pci/probe.c        | 32 --------------------------------
->  drivers/pci/pwrctrl/core.c | 36 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 44 insertions(+), 32 deletions(-)
+> > > > > But I'm not sure this is the correct way to handle the modes in
+> > > > > general. Can you please explain what exactly is the use case you =
+are
+> > > > > thinking?
+> > > >
+> > > > Hi Heikki,
+> > > >
+> > > > This implements the mode selection logic within the kernel, replaci=
+ng
+> > > > its userspace counterpart. Implementing this in the kernel offers
+> > > > advantages, making the process both more robust and far easier to
+> > > > manage.
+> > > > This eliminates the need for user space to verify port, partner, or
+> > > > cable capabilities, and to control the mode entry process. User spa=
+ce
+> > > > doesn't even need to know if USB4 mode is supported by the port or
+> > > > partner; unsupported modes are automatically skipped.
+> > >
+> > > But that's all things that userspace can do, so it should be doing it=
+.
+> > > You need to justify why userspace can NOT do something in order to mo=
+ve
+> > > that logic into the kernel.
+> >
+> > Userspace "can" do it but it is not doing it today. There is no
+> > userspace alt-mode manager (that I'm aware of) that's writing to
+> > /sys/class/typec (typecd in ChromeOS only reads and does mode
+> > entry/exit via a sideband mechanism) and boltd (userspace thunderbolt
+> > manager; https://github.com/gicmo/bolt) only deals with tunnels and
+> > not mode entry directly.
+> >
+> > I think the inclusion of TBT and USB4 in the kernel makes this change
+> > necessary and the existing way of doing it is not widely used yet.
+> >
+> > >
+> > > > User space's role is now limited to high-level tasks like security,
+> > > > with the kernel managing technical implementation. Mode selection a=
+nd
+> > > > activation can occur without user space intervention at all if no
+> > > > special rules apply and the default policy (USB4 -> TBT -> DP) is
+> > > > acceptable.
+> > >
+> > > What is wrong with "userspace intervention"?  Is the current api brok=
+en
+> > > somehow?
+> >
+> > There were some previous discussions on this:
+> > https://lore.kernel.org/linux-usb/ZyjW0CMXgGIt-usC@kuha.fi.intel.com/
+> > https://lore.kernel.org/chrome-platform/CAA8EJpqiF_0bgYT8boFa4UPJWcxgw8=
+9mmfbdMVKeAP-xnFOP4g@mail.gmail.com/
+> >
+> > Some background:
+> > * The Type-C port driver will add a partner alt-mode to the altmode bus=
+.
+> > * An altmode driver will probe and attach if available on the system.
+> >     * Currently, the probe function of these altmode drivers always
+> > enter the given mode. The expectation is that if a system allows mode
+> > override, it should always be done by the alt mode driver. This
+> > doesn't scale beyond one alt-mode driver =E2=80=93 between DP and TBT, =
+which
+> > altmode driver should win entry? Prior to TBT driver being added in
+> > December and USB4 support circa similar time frame, DP was always the
+> > default choice if override was supported.
+> >     * Userspace could make this decision but then what about USB4? The
+> > current APIs don't expose USB4 information in the same way and the
+> > auto-enter behavior is different (it doesn't enter).
+> >
+> > In a lot of existing designs, mode entry is entirely handled by the
+> > firmware and no mode selection is possible from the kernel. This is
+> > covered by patch 3 of this series (alt_mode_override) flag. Windows
+> > designs usually fall into this category as they use PD controllers
+> > implementing UCSI (and usually a very old UCSI version 1.2).
+> >
+> > A few designs allow overriding the current mode:
+> > * Chromebooks with cros_ec_ucsi which support Thunderbolt will allow
+> > override of the alternate mode (via UCSI set_new_cam) and USB mode
+> > (via UCSI Set_USB). They will enter DPAM instead of TBT by default if
+> > possible.
+> > * Chromebooks with the cros_ec_typec driver which support Thunderbolt
+> > will require the OS to make the mode entry decision (no mode entry by
+> > default on attach).
+> > * Pixel phone TCPM currently requires mode entry from the kernel as
+> > there's no userspace mode selection component.
+> > * Potentially some Windows designs that implement AltMode override via
+> > UCSI (ucsi_acpi). These should behave similarly to cros_ec_ucsi but
+> > will likely automatically enter TBT mode.
+> >
+> > In these cases, the kernel is a better place to make alternate mode dec=
+isions:
+> > * Quicker than having a userspace implementation (and more consistent
+> > during boot).
+> > * Works consistently across drivers and accounts for both overridable
+> > and non-overridable systems.
+> >
+> > The main thing userspace should really be doing with mode entry is
+> > setting policy around what modes they want to enter instead of doing
+> > low level checking of compatibility and sequencing of mode entry
+> > operations. And the main policy we're trying to enforce on ChromeOS is
+> > to not enter TBT by default (based on our security posture described
+> > at https://www.chromium.org/chromium-os/developer-library/reference/sec=
+urity/usb4/).
+> >
+> > Given that Thunderbolt altmode driver support and USB4 support was
+> > only added around December of last year, I don't imagine there are
+> > many userspace usages yet and we should fix these API issues before
+> > they become too widely used. I think mode sequencing belongs in the
+> > kernel and not userspace.
 >
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 12215ee72afb..22df9e2bfda6 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1159,4 +1159,12 @@ static inline int pci_msix_write_tph_tag(struct pc=
-i_dev *pdev, unsigned int inde
->         (PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
->          PCI_CONF1_EXT_REG(reg))
+> My two cents - I'm sure this is clear to most of you, but not to
+> everybody.
 >
-> +#if IS_ENABLED(CONFIG_PCI_PWRCTRL)
-> +struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus,
-> +                                                 int devfn);
-> +#else
-> +static inline struct platform_device *
-> +pci_pwrctrl_create_device(struct pci_bus *bus, int devfn) { return NULL;=
- }
-> +#endif
-> +
->  #endif /* DRIVERS_PCI_H */
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 4b8693ec9e4c..478e217928a6 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -9,8 +9,6 @@
->  #include <linux/pci.h>
->  #include <linux/msi.h>
->  #include <linux/of_pci.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/platform_device.h>
->  #include <linux/pci_hotplug.h>
->  #include <linux/slab.h>
->  #include <linux/module.h>
-> @@ -2508,36 +2506,6 @@ bool pci_bus_read_dev_vendor_id(struct pci_bus *bu=
-s, int devfn, u32 *l,
->  }
->  EXPORT_SYMBOL(pci_bus_read_dev_vendor_id);
+> The problem with the USB Type-C framework that I wrote is that it was
+> primary designed to support tcpm.c, but unfortunately it does not work
+> very well with the PD controllers when it comes to the alternate modes.
 >
-> -static struct platform_device *pci_pwrctrl_create_device(struct pci_bus =
-*bus, int devfn)
-> -{
-> -       struct pci_host_bridge *host =3D pci_find_host_bridge(bus);
-> -       struct platform_device *pdev;
-> -       struct device_node *np;
-> -
-> -       np =3D of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
-> -       if (!np || of_find_device_by_node(np))
-> -               return NULL;
-> -
-> -       /*
-> -        * First check whether the pwrctrl device really needs to be crea=
-ted or
-> -        * not. This is decided based on at least one of the power suppli=
-es
-> -        * being defined in the devicetree node of the device.
-> -        */
-> -       if (!of_pci_supply_present(np)) {
-> -               pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name)=
-;
-> -               return NULL;
-> -       }
-> -
-> -       /* Now create the pwrctrl device */
-> -       pdev =3D of_platform_device_create(np, NULL, &host->dev);
-> -       if (!pdev) {
-> -               pr_err("PCI/pwrctrl: Failed to create pwrctrl device for =
-node: %s\n", np->name);
-> -               return NULL;
-> -       }
-> -
-> -       return pdev;
-> -}
-> -
->  /*
->   * Read the config data for a PCI device, sanity-check it,
->   * and fill in the dev structure.
-> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-> index 6bdbfed584d6..20585b2c3681 100644
-> --- a/drivers/pci/pwrctrl/core.c
-> +++ b/drivers/pci/pwrctrl/core.c
-> @@ -6,11 +6,47 @@
->  #include <linux/device.h>
->  #include <linux/export.h>
->  #include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/of_platform.h>
->  #include <linux/pci.h>
->  #include <linux/pci-pwrctrl.h>
-> +#include <linux/platform_device.h>
->  #include <linux/property.h>
->  #include <linux/slab.h>
+> With tcpm.c we need to handle the alternate mode communication inside
+> kernel, but with PD controller we of course can't do that. The altmode
+> bus and altmode drivers are not needed with PD controllers, in fact
+> they only complicate things with the PD controllers.
 >
-> +#include "../pci.h"
-> +
-> +struct platform_device *pci_pwrctrl_create_device(struct pci_bus *bus, i=
-nt devfn)
-> +{
-> +       struct pci_host_bridge *host =3D pci_find_host_bridge(bus);
-> +       struct platform_device *pdev;
-> +       struct device_node *np;
-> +
-> +       np =3D of_pci_find_child_device(dev_of_node(&bus->dev), devfn);
-> +       if (!np || of_find_device_by_node(np))
-> +               return NULL;
-> +
-> +       /*
-> +        * First check whether the pwrctrl device really needs to be crea=
-ted or
-> +        * not. This is decided based on at least one of the power suppli=
-es
-> +        * being defined in the devicetree node of the device.
-> +        */
-> +       if (!of_pci_supply_present(np)) {
-> +               pr_debug("PCI/pwrctrl: Skipping OF node: %s\n", np->name)=
-;
-> +               return NULL;
-> +       }
-> +
-> +       /* Now create the pwrctrl device */
-> +       pdev =3D of_platform_device_create(np, NULL, &host->dev);
-> +       if (!pdev) {
-> +               pr_err("PCI/pwrctrl: Failed to create pwrctrl device for =
-node: %s\n", np->name);
-> +               return NULL;
-> +       }
-> +
-> +       return pdev;
-> +}
-> +
->  static int pci_pwrctrl_notify(struct notifier_block *nb, unsigned long a=
-ction,
->                               void *data)
->  {
+> So there are basically two separate ways of handling the same thing.
+> That's why I think we may need something like these files that you
+> guys are suggesting. We need a way to support the controlling of
+> alternate modes with PD controllers, or perhaps I should say
+> with interfaces that support it.
+
+Making this sysfs only visible on drivers that support in-kernel mode
+selection is probably a good idea to reduce confusion.
+typec_attr_is_visible should be updated for the `mode_priorities`
+attribute to reflect that.
+
+Patch 1 in this series makes the `active` sysfs field reflect the
+`read_only` nature of the altmode as well, which should help make the
+API clearer for PD controller based systems.
+
+>
+> But that said, this series is not acceptable as it is quite yet. You
+> are trying to push a lot of information and control to these couple of
+> files which I'm not convinced is always necessary, and possibly even
+> prone to errors. I'm also really concerned that you want to only deal
+> with a predefined list of modes. It will probable not be a problem as
+> long as we can fallback to ABI that we already have. But during my
+> short career I've already seen several cases where assumptions have
+> been made about how a specific technology will be used, and it has in
+> practice always backfired.
+
+That's fair. With respect to the `predefined list of modes`, these are
+all the spec defined alternate-modes (and USB4).
+
+I understand your reservations about the predefined list though. I
+think I'd want to see this file have a superset of all kernel
+supported modes and have port drivers enable support accordingly.
+Right now, the nvidia driver is the only one un-accounted for but that
+looks like it's just remapping DP to another SVID. Converting the
+TYPEC_SVID_TO_ALTMODE macro to an inline function with a switch
+statement would cover that.
+
+>
+> thanks,
+>
 > --
-> 2.43.0
->
-
---0000000000006d68900637dd366b
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICYDCC
-AlwCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHHMC8GCSqGSIb3DQEJBDEiBCBkuobZrltCfHzUYSfIgPs+rNnJawkp
-84P+nWGBHOE9czAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNTA2
-MTgxODU4MjBaMFwGCSqGSIb3DQEJDzFPME0wCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQCATANBgkqhkiG9w0B
-AQEFAASCAQCH1sj34cajNeF65q6Uf+LITKrzvFCD9pI6MB/rxO2xsSZWEU72sMfJYkaNdRhQfqpK
-3SHacDnF0+2wkKOJxrySj2CrM23gH7xUOHmanRDcrOgWbykEqzV/ywJJ6uHj3m3G3h6ynTuk8aq5
-ZSRP64HN0nN6OCjxzAhQYT4KeHrosjvsNo2G1kToaeQJMIirIYd7AWxfCWv2pKq2UpeVP7aTu8oN
-yYsRP27zvYmUdpL2xYijSFfKIxp6NAhZZh4iz91BvJk+PDynUiACiDr7jTkTf6/Vtvgz1rBQ0wko
-hnqtRO6rfCHxZsB8SNJfGB871dHrzzzzRv+ygp72T2V2sOlZ
---0000000000006d68900637dd366b--
+> heikki
