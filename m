@@ -1,131 +1,143 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B747D28A3EA;
-	Wed, 18 Jun 2025 09:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2925828A737
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750240785; cv=none; b=EXV6Nl4+Thr5zOaTzAqGaKIJdlUFCTsJ+lL1IfyzOHP63d6TT8XpKZh421z5xWmL+zdrtgoU8GVvr5sq24aLDNkk9PgxRtxfpr6bMFT1PJ+f5UcqRVz4pIFE0FTsHEXTcXTYsvyJWnuOVwlKlxRRow+7+2KSEMD95g6nnVRR+ds=
+	t=1750240785; cv=none; b=d48ULkGQ4e8Zr8q4+yfcKFmurnoN97OoK0dnrnc0/EQX6EKvRBTBBy5qAZ/9QA40IcyG+PompjCPtvTezVGHz0A5mcdxoXgzQ8p+JOoZnyt15Oksi/nKaQ2xDITg9RLT4hgHq96WdBUUP8ueN/Q5fzMMiNNhjCLT2pLlsaBm+ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750240785; c=relaxed/simple;
-	bh=XDzI2iGQ3ZbL3atG8VBYjM1NLqB9r+TI86rhel2I8VQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=olUlMW9Tv94I/Gt8T1m5VOZ6BjiXKaPlQeUUPns/ri8Jq0b+V2zwvtLI90xEiw8WXV3OP28XZR0ku29TQiDUTkVcFTnMGYhrveiw2xFomCOCkPgE6w2rY7Lo+cd9gZVOdGitp+Y1PkSKhfMVw5CPwv9Pw5TnZwwyQ4oFBGCth74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=np65xG+T; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=SYQpfUDGcUI4Fjl3I7lrF+Wp1Q4tFzZwD9sXJK2XFV8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tVQVOsluTw6u7PUDNS0SXCl33+PJ089cheSoWk2eEbx5ht+1V8jOqi1C3JzqE10KI2Kp1/jVR/Id2fGyjg8vKjowTTDa4aYwqbtVUdossUOO/MQotAqaHh3Aw9u238nlZzlZi+EnnIY8ySs1VZslm2CuahH50sWfjEi4pFIDhRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=CvMv2RWD; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="np65xG+T"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-6077dea37easo12981977a12.3;
-        Wed, 18 Jun 2025 02:59:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750240781; x=1750845581; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6baFX1dgbZUxvw76cQruvAgLUvKTOPaVCHPv3Fym7bg=;
-        b=np65xG+TCmfBUIgo+fYrqmOoAF6YQNKIcJALeZZoBfRwNX3QCx+6V3FlomF+9EWQoO
-         r8AxwWUGjYnRSr013cQIlzRlhNKDeNmkIWxlG/qncWeDIGdumMENtbwvy0ClEKZbI7Of
-         SBpjd15epdui9wUUOHUu0EcZ+qwzDd3XiiWz2T9x03MEeRIsEEkyhn/6QkDz/HpBvVsM
-         NScecXCZM3uqjUhLCfylhiHg0/k5SXzYthm+Sq3VpFLzhKHGF2jpj7uYZ3RYWoBDJ6HI
-         OTwca0IRndDFx0HW/YLWE5krazqIZXH0Jqhh92W6QV7TZbZdb4BwRcW70Qv7/AS2Al7T
-         hLOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750240781; x=1750845581;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6baFX1dgbZUxvw76cQruvAgLUvKTOPaVCHPv3Fym7bg=;
-        b=m8F6IoRG4l1ueJ2UyAa74+pCw+gCTrOAYCnf/lXegYwVGrsTMj66v/k71XNJ3yALU3
-         AUGDbb/r1z/nEip130bQ/N70NPRP26Yzws8EJbuW58DQyvVYbtkSVFuFji/KfFHNVzaa
-         pfz/H2mIQ7Qag9bhh46sjnuNgmxrL/cFvmQ9B00RyP7MxaM2szsg4xbcuichjg7nJjmC
-         xmFlWbHXqpt/D7Ba1lUBJg6R2zbF8QFDxPoogeKciLPpPyzEZgCy9JXoFV9hMFsfY9hQ
-         3DxHptoZ5+XIruwQg6GisWegPSuyeaufBlDAOE3mhpm/rDpJ2z7PnUIni+HKhRf10sOe
-         PZmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkg2sS204AP2TSY+07PM8lOGaU+iFUVgAIfeqvj5bNkHGvgrkAZ3oo6tk2JF+9qcsQRNOVkhMZhX9UyGq3@vger.kernel.org, AJvYcCWryHmfC2AFmwePqWG0IZiiawiPa6XhJtTJvbnI++lIn85sC3eXb3HGfjCS9N00GcLfjtu6Z1nktvC9jw==@vger.kernel.org, AJvYcCXFVa8gfEicMAw5y6MWQ6+eXhHjpPqMPSbtmVWJCTvROnJb7PTzsOkmb155AWthYBeTwDCBLo/Y+IlP@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg2tp6vGqNdm8MzEvRl1mMMiTuRYk9AQl+T3slfAj8KzxnHMNI
-	CInVK/Hjp2A2WTZjFOc9NJfQTvSNDXvhVPIDDZQImDc+iWLIFJkxb61Y
-X-Gm-Gg: ASbGncv8Ybeo9Fsu1muIddjINe2bWeASHuVYReKXdaicLMKOM/i3lSa/HITQveuBtP1
-	cWQW6IpzyAGjJwfgQIloW1wdyCtnK1+Yx+nLgZLZSkgsU3JZfzF3pppqpY/Vd1RvFqREpJ439aB
-	IHuIJyPhE/T9Q7ZkCQ+mhnEfle3KVsFhmyFeZ5kz7dPE8+D/mpjpNkmvzTiAVfFdp8AmVMMJg/A
-	L3Dk5BmjSYFcSSScPnmDU5uqu16mLR7bkR7GE5hVLw1zkOKeDVVySr8KBC563CIhgO37/fkaUII
-	9ZhS3NuUusqfnSPga6fwC69kv9140ZzOHsQ/FtGr8AHMSbhoUdSBXCRS4v5zBEElgxcTjrhajaQ
-	=
-X-Google-Smtp-Source: AGHT+IEOqE2l3xi6qMOQbYwERKlj908Tdc4WnQFs627svU5I3y3cZFIHL0K+7zXzTUOHmPs+LVxQuA==
-X-Received: by 2002:a50:d519:0:b0:609:a91:87e with SMTP id 4fb4d7f45d1cf-6090a91097amr8113971a12.1.1750240780979;
-        Wed, 18 Jun 2025 02:59:40 -0700 (PDT)
-Received: from demon-pc.localdomain ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-608b4a93b03sm9384691a12.54.2025.06.18.02.59.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 02:59:40 -0700 (PDT)
-From: Cosmin Tanislav <demonsingur@gmail.com>
-To: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-	Julien Massot <julien.massot@collabora.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-media@vger.kernel.org (open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)),
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-gpio@vger.kernel.org (open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)),
-	Cosmin Tanislav <cosmin.tanislav@analog.com>,
-	Cosmin Tanislav <demonsingur@gmail.com>
-Subject: [PATCH v4 07/19] dt-bindings: media: i2c: max96712: add myself as maintainer
-Date: Wed, 18 Jun 2025 12:58:43 +0300
-Message-ID: <20250618095858.2145209-8-demonsingur@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250618095858.2145209-1-demonsingur@gmail.com>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="CvMv2RWD"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BAB1D17EB;
+	Wed, 18 Jun 2025 11:59:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750240765;
+	bh=SYQpfUDGcUI4Fjl3I7lrF+Wp1Q4tFzZwD9sXJK2XFV8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=CvMv2RWDkGmJADN6SKWWihtOVW54n4or+EIOa53d8gkRgIhDxsqERaNrPzvcmllh7
+	 6dgRbF6HjpzdXZEiDq7FNCj9JZf2iYYCwuPfCo2MzQH3eUNDc89/Gpl9h6qB8E7LX8
+	 IC4BbdLC8uADXycBr9Sps2gHXSJzdH+08DE6HYgI=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Wed, 18 Jun 2025 12:59:08 +0300
+Subject: [PATCH v4 05/17] phy: cdns-dphy: Remove leftover code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250618-cdns-dsi-impro-v4-5-862c841dbe02@ideasonboard.com>
+References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+In-Reply-To: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jayesh Choudhary <j-choudhary@ti.com>, Dmitry Baryshkov <lumag@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Parth Pancholi <parth.pancholi@toradex.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2285;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=SYQpfUDGcUI4Fjl3I7lrF+Wp1Q4tFzZwD9sXJK2XFV8=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBoUo3+e0RBS4Kze29yVEHMxrbIx+D1OSdIr+dA5
+ cMRf0EHcnyJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCaFKN/gAKCRD6PaqMvJYe
+ 9UUND/9NRombRCIFomalMb4a0VX77dNdBckwFwdSbXbnt+iJgItXp11qEFzDji7Hgoa5Ch3lSYX
+ ybMc1A5RE85MSv9QdU9SrId4ck1cqBPXBBYCYmVx3OROoEsX2jtZ122gkLe7uD4snwteKsNjVLR
+ JfzBZJw4OynVvZfternW65/9UYTjRRZenNEgo192pvrZ3HszgSgDYJY0ihrLgVnTM1SjFYuWlsC
+ RDYfwYPNpRsm3plEjRhVrIRF6epSy0Kz0+EeTgXwPuWurvI9IZnYtYbShiwfTx/GNeG+/6wzyY2
+ JSkljoaSkQZZwKcFGY+WArNHVdHBYYcLIbGfV5dfOyOuNuhw+0wAwPZ2wXeTwKOx+jK/3vMWQII
+ F8fzx8GzpLKz+1FLVvZg/L1Z0l1gHV9yGbhodztTg8lIM/ph5kGIWdPlrYc3kE6lBeDYwMXUB4V
+ hpDzBW6r+bS9UW9GulM88EJtm2OolyABVtE++pVRLQbjfzxlrqVycJFcnNGiPqMMi0+Ln37ehAw
+ EJGg6z1agOB6c9/bFDBQ8qm4K51W16GGZYZy3I3qy65dAtoTkCMFjXOkS/eaEwYsts+IgiMr772
+ hitnLWK9h923lbPomP6P/S+FN+qIiOeiphNvW3PwcjMBoTwcynKY2yhqHt1K/KIjqJmO9GQ35G0
+ zp0Hqr9eEwuRoaQ==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-Analog Devices is taking responsability for the maintenance of the Maxim
-GMSL2/3 devices.
-Add myself to the maintainers list and to the device tree bindings.
+The code in cdns-dphy has probably been part of a DSI driver in the
+past. Remove DSI defines and variables which are not used or do not
+actually do anything. Also rename cdns_dsi_get_dphy_pll_cfg() to
+cdns_dphy_get_pll_cfg(), i.e. drop the "dsi", as it's not relevant here.
 
-Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Aradhya Bhatia <aradhya.bhatia@linux.dev>
+Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml | 1 +
- MAINTAINERS                                                     | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/phy/cadence/cdns-dphy.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-index 26f85151afbd..efdece2b33b9 100644
---- a/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-+++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
-@@ -9,6 +9,7 @@ title: Quad GMSL2 to CSI-2 Deserializer with GMSL1 Compatibility
+diff --git a/drivers/phy/cadence/cdns-dphy.c b/drivers/phy/cadence/cdns-dphy.c
+index f79ec4fab409..33a42e72362e 100644
+--- a/drivers/phy/cadence/cdns-dphy.c
++++ b/drivers/phy/cadence/cdns-dphy.c
+@@ -55,14 +55,6 @@
+ #define DPHY_PSM_CFG_FROM_REG		BIT(0)
+ #define DPHY_PSM_CLK_DIV(x)		((x) << 1)
  
- maintainers:
-   - Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-+  - Cosmin Tanislav <cosmin.tanislav@analog.com>
+-#define DSI_HBP_FRAME_OVERHEAD		12
+-#define DSI_HSA_FRAME_OVERHEAD		14
+-#define DSI_HFP_FRAME_OVERHEAD		6
+-#define DSI_HSS_VSS_VSE_FRAME_OVERHEAD	4
+-#define DSI_BLANKING_FRAME_OVERHEAD	6
+-#define DSI_NULL_FRAME_OVERHEAD		6
+-#define DSI_EOT_PKT_SIZE		4
+-
+ #define DPHY_TX_J721E_WIZ_PLL_CTRL	0xF04
+ #define DPHY_TX_J721E_WIZ_STATUS	0xF08
+ #define DPHY_TX_J721E_WIZ_RST_CTRL	0xF0C
+@@ -117,10 +109,9 @@ static const unsigned int tx_bands[] = {
+ 	870, 950, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2500
+ };
  
- description: |
-   The MAX96712 deserializer converts GMSL2 or GMSL1 serial inputs into MIPI
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 01363fbcb9b3..77adb1f7ac9c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14728,6 +14728,7 @@ F:	drivers/media/i2c/max9286.c
+-static int cdns_dsi_get_dphy_pll_cfg(struct cdns_dphy *dphy,
+-				     struct cdns_dphy_cfg *cfg,
+-				     struct phy_configure_opts_mipi_dphy *opts,
+-				     unsigned int *dsi_hfp_ext)
++static int cdns_dphy_get_pll_cfg(struct cdns_dphy *dphy,
++				 struct cdns_dphy_cfg *cfg,
++				 struct phy_configure_opts_mipi_dphy *opts)
+ {
+ 	unsigned long pll_ref_hz = clk_get_rate(dphy->pll_ref_clk);
+ 	u64 dlane_bps;
+@@ -289,15 +280,13 @@ static int cdns_dphy_config_from_opts(struct phy *phy,
+ 				      struct cdns_dphy_cfg *cfg)
+ {
+ 	struct cdns_dphy *dphy = phy_get_drvdata(phy);
+-	unsigned int dsi_hfp_ext = 0;
+ 	int ret;
  
- MAX96712 QUAD GMSL2 DESERIALIZER DRIVER
- M:	Niklas Söderlund <niklas.soderlund@ragnatech.se>
-+M:	Cosmin Tanislav <cosmin.tanislav@analog.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/i2c/maxim,max96712.yaml
+ 	ret = phy_mipi_dphy_config_validate(opts);
+ 	if (ret)
+ 		return ret;
+ 
+-	ret = cdns_dsi_get_dphy_pll_cfg(dphy, cfg,
+-					opts, &dsi_hfp_ext);
++	ret = cdns_dphy_get_pll_cfg(dphy, cfg, opts);
+ 	if (ret)
+ 		return ret;
+ 
+
 -- 
-2.49.0
+2.43.0
 
