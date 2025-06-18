@@ -1,131 +1,127 @@
 Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AB320551C
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:22:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3293085A6;
+	Wed, 18 Jun 2025 20:23:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750278160; cv=none; b=CSgvdpABc963Mq6Kg5uW1vU2gVToGckt5FVssmotJIRSS35BXVj5elygEHgna8TB5g6ID0+mWgKbdxTVybd1tdCq54CiwH//lYWCLdaN0ZPn/Kd1UWm3Ot4RCkxM1rV2koRSJ7Dj8BlLRqFC6NHxw//UhgON7WdOt00zPVymPUo=
+	t=1750278187; cv=none; b=TZMusOR/rYg0+6dcQsljmfPDZJD02/8nJsJnjrmICt1psWNPwbEBnzvdw7kIbbzzWwdDCB8N5XU+DNYutgk9vAykgEJekRGEdHID5sCAbBiorhwe2hvJxxWTL4KqtnQd0pBVdTIqD0sx2kJZkCoMMNxCTHzWcvXthAiCQccWn1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750278160; c=relaxed/simple;
-	bh=wfVliNvMFww4ALoq9h28dDUu/++ZlpOwHD/5kA5/dSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OWPvv/iwftKFAUnZBumu0WzrJORSAxOjdzgRijpKiTweDBJqEGW6b22sHMLItDehJPLvGHmVMnWR6172QtSr+3IWM/ecCPu4n1pZ8d1Bz+fk4uZ1ZmbjsyEmozNDILimErTRr4FBDHSu92fpgVei/z88pLmIgDZF/3rahaivCTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OCh4StqK; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750278187; c=relaxed/simple;
+	bh=TdUtYEhnQdQ77j1KGrvr4R8bCHthVyxHQ4vv3bltKf0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tT/guytVAjQ04iTVvtpwTWsNwLyEj2K3onMMyBu+0ZOUd2k2utLUHurA5W7tlzDjHMlqaCuNnYGb4+IFtAug6U5yq7bwowzX7nD01ml90J7jKPoCs63yiJIL8iLx9j0UMrQ/4aNQrdZCeRW5xkdb6kJzdif7X4ZHTnAvguIkV6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F8HqFDuw; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OCh4StqK"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a510432236so82835f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:22:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8HqFDuw"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a4fea34e07so52813f8f.1;
+        Wed, 18 Jun 2025 13:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750278155; x=1750882955; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BpNCGTbJaA4N6AQDacC+X23mlTsnB+mbIqH/SioL/Y8=;
-        b=OCh4StqK/Qyk87Od5o0KFR3Nr95QXzP7ndjoVvGfGG2m/guuZQSYhCoKX8F4jimTEt
-         jUCPlO50wJPByGLkh4FRXV6hlhCwkHSUUavBP31iz27S+Euv/BxzS8q3bADBJ6Hozq4K
-         hTpGJeGdt189+olGO5O3eLS3Q2oNqs2vLgdSqSzjJpjkMoLZZU9KrtvtORk7OdNlYY+B
-         6X/tuxOkblKLc7z4n8T4PMD6AICWZY3Y6Kip5KNgoGfRnNml6OpRRvksiTKszXIYcrMX
-         FMWc9FqSZaD0zBknXhFKVkmuKDf26SA33YQqjcdAOnY4fhuUU0WDbi/YlGu6EyNRMFcv
-         ssrQ==
+        d=gmail.com; s=20230601; t=1750278184; x=1750882984; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DdY90JVNXT4QPFohJuCx2RaKTGnu0SRF1dWwzgFg3Ls=;
+        b=F8HqFDuwwKNIa7lRS0tZS3exIe5BOoQvZ1zr3KIMzbs+rpalIY+3kU9enfozI63bS/
+         gxtgtsRr3zXIXosSBgWTAeK+HBUbv+SKQxnt0g2Cw0967OA+6WoWuyS6OlMrSIkiAKoi
+         wKIbsgBwxD+ZYZ/J6zYZc55zcT1RFmvSobSETwiTVsWjJJ3DQDrMi3WcZ74y2hh+t230
+         QwxK4HDrTZrrivAHWdQ1LsJYWGCQ7YaDwtN4W/tGDgiRQY/kzYa5GNl14vcEUvWCFke/
+         BwgoO0o4qY1YyOzUDCVFl8B7XQOHQQF0wC+uoMyjb2FEDVVuNzOADSFm9i6Ss4dauGv/
+         B6IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750278155; x=1750882955;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BpNCGTbJaA4N6AQDacC+X23mlTsnB+mbIqH/SioL/Y8=;
-        b=TW2e/RuJ0A6QxqThLCrlU1o/KBxnTKBMcpNx/kbfQpNc24zb0NNYO2DthgzGZV3Tro
-         jP7p+zXbOlUqDAob/g6Tbqdy+ZKLjKqwf0ziJ+7NohYPJ2HxGXlX0CiwnNN7MnSGU7LI
-         oMX0Ah9nAl3SbEFty1I4qB2qjW8wKG1ovp9YAnRX12Pejj8xCpgOlzW834lWBSEpWgzC
-         byGA4yW/qdnf+7VCE//Gxgb7jL7iOU6JX199Xz/cfaJ2dPbat11NfLy0Aqp4mRchdcrj
-         h97FHdkijRj44f5g9AnFWbtCx4j+LsaTFsDtnilbRaS24lXweS73epA3FPly9TIQWe0J
-         QM8Q==
-X-Gm-Message-State: AOJu0YxNPjGYlSQtcHT8CSpPHeSSRxfGFchyUytcPJXgM3gAwU7FOvEO
-	olQYlndCgs5IGMuoWCS8LHXNUyuFNQUYOVA0Ns3yu97vQSQBoLF3V70XJ8PiZ5gKZHF6kxxmtOx
-	diOG9ovOwf9Qe3eFRWwO4GBQEyQ+DhNugBTGEyUjv
-X-Gm-Gg: ASbGncvkWNdBkDUXDNZg3dmkRMvTDHe1sJGNDPcDezRqVNdH4FCq43BqSCaBY9WPXIK
-	cNUT7NHJCVtAcSaGN1VBlGYXit8BfAOrNiqILlAViFFgQFWwiAFSR8an9Tb/ongpW98URubqk09
-	a51zXZvbQPnhb9s+e4NDXVJGoqMo8QkD3hwcyY8p7wFqao
-X-Google-Smtp-Source: AGHT+IGEoyOBlFKES6zAZ/D/8d3NjWy3PFbM8XH1FjI+hWn88pAjWrG3DkriENwDPgzuguMIRV9uDCxNXc9Cb2JGPm8=
-X-Received: by 2002:a05:6000:4408:b0:3a5:8934:4940 with SMTP id
- ffacd0b85a97d-3a589344d14mr4512138f8f.50.1750278155203; Wed, 18 Jun 2025
- 13:22:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750278184; x=1750882984;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DdY90JVNXT4QPFohJuCx2RaKTGnu0SRF1dWwzgFg3Ls=;
+        b=fy1Bbl0ejSuTgwQKlauXYM5Y4YJmg03ZlBYHzeUZJFfAlQerQRlGGYLyK2hvb3CNJK
+         0DNa1GCLGq+fjsPmYPyMwEz/ejg76sl3lEfGG/OigZju73uTJWnHy5UqPnXb9d/XeaM1
+         qgIYxy53bZGoht4G/1Qe4aOmVcX3/CiL528c/KhTYgIVatdZ8GX03ASPpmBG1v+Kl5dw
+         FizWQB1vOjrBy9HEeOSNfwQvQavlI/r+ldXwSAs2CbCwIt9fMSbjiCr2TrPNW9+cjdSo
+         xttqdYj+mpz1dlCQRvbl7NdI9IyIo+RzbPW3VUyRdYX9i4Firb5nPcc/VS+HyvgyP7aY
+         4wPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVjCkk8fvhvGiCK9ieK0sbO0cHWfgP5y6adWHxF4UO6eAArfSrp6oKH0kRyaBPYMp8bChy3JB5AJJekxrmq@vger.kernel.org, AJvYcCX4mkSZlsQe3vs0BTkzDfCaoqxbOHO1xR+p1yQGcBu8mMQnreM5WOfGnH86Z097D/1PKvBs+EzaFlpl9jHY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/c23DqTJMaMkWZ41UfeCQkiqnMqhS17meLlQcrRBRtcNK78XM
+	9HSyG0lidjqLXSaKqWMubu8JtrKfoQFDYlo287DIvlgbT7SERhbracr5
+X-Gm-Gg: ASbGncviVq9f9PVTxGWZf3w+Vf4vKo/CTq6c1lhxV8tsexhmiAdMRcG+Fsxlc8398Q4
+	XMvd0RO56AwdJGEfFu3rGHh6OaqsR4xPtK76CAwqIW9+PvquxR1Nl9exVdG34EdIq99tb7pRch6
+	8ZPNX7/KkKZmxj99X8IPX2DHGnmfJ2K01k4thaaGBk+a6fK6MG1h9CBwPS0WKxFuIba387JeWpz
+	XmQe87FSvzkF9zHntUPS/1ai4VL6yaiQuDaa/H5zwV0QcUTe0X+JzlG5uZ2jrNzl6iJglP+VvVF
+	MimNc1Ae09gdUZ01MNoeYo5E9tO1En8YiRFMarICBHgJEjgP39+UO8PpXhoj5MfZ98yfMNXtkQp
+	ZNSRmXRkOwPogulc=
+X-Google-Smtp-Source: AGHT+IHoejpqZzdcxb15o9qORclA2awd92JClJvR/ZCPZyDuQip+yhKFOk2EIbxVxD6hNuRNxXHhbQ==
+X-Received: by 2002:a05:6000:4305:b0:3a4:dbac:2db6 with SMTP id ffacd0b85a97d-3a572e553e0mr14325235f8f.49.1750278183806;
+        Wed, 18 Jun 2025 13:23:03 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm17617951f8f.26.2025.06.18.13.23.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 13:23:03 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Subject: [PATCH v3 0/2] spi: spi-qpic-snand: avoid memory corruption
+Date: Wed, 18 Jun 2025 22:22:48 +0200
+Message-Id: <20250618-qpic-snand-avoid-mem-corruption-v3-0-319c71296cda@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618164934.19817-1-boqun.feng@gmail.com>
-In-Reply-To: <20250618164934.19817-1-boqun.feng@gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 18 Jun 2025 22:22:21 +0200
-X-Gm-Features: Ac12FXxUZt-wdvp6IAMzVaJLyh1S-ip7vrrFm_I0iVPAZRuZ3XE-nvLs77lmkZE
-Message-ID: <CAH5fLgi1FbCc0euts_e4BmAayE2MtK+AUWiOfswd-qo5+L+VnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 00/10] LKMM generic atomics in Rust
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	lkmm@lists.linux.dev, linux-arch@vger.kernel.org, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Lyude Paul <lyude@redhat.com>, Ingo Molnar <mingo@kernel.org>, 
-	Mitchell Levy <levymitchell0@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABggU2gC/4XNQQrCMBCF4auUrB1JU0LVlfcQF2kyaQdMUpMal
+ NK7mxaE7lz+A/O9mSWMhIldqplFzJQo+BLNoWJ6UL5HIFOaCS4kl6KB50gaklfegMqBDDh0oEO
+ Mr3Eqv9DwWlnVYcexY0UZI1p6bwu3e+mB0hTiZxvM9Xr92fKvnWvgIC1KcTJoW9tde6focdTBs
+ dXOYu+d/3uieMJyUzfK6taIvbcsyxct9gZNHgEAAA==
+X-Change-ID: 20250523-qpic-snand-avoid-mem-corruption-301afabeb0eb
+To: Mark Brown <broonie@kernel.org>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>
+Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>, Lakshmi Sowjanya D <quic_laksd@quicinc.com>
+X-Mailer: b4 0.14.2
 
-On Wed, Jun 18, 2025 at 6:49=E2=80=AFPM Boqun Feng <boqun.feng@gmail.com> w=
-rote:
->
-> Hi,
->
-> v5 for LKMM atomics in Rust, you can find the previous versions:
->
-> v4: https://lore.kernel.org/rust-for-linux/20250609224615.27061-1-boqun.f=
-eng@gmail.com/
-> v3: https://lore.kernel.org/rust-for-linux/20250421164221.1121805-1-boqun=
-.feng@gmail.com/
-> v2: https://lore.kernel.org/rust-for-linux/20241101060237.1185533-1-boqun=
-.feng@gmail.com/
-> v1: https://lore.kernel.org/rust-for-linux/20240612223025.1158537-1-boqun=
-.feng@gmail.com/
-> wip: https://lore.kernel.org/rust-for-linux/20240322233838.868874-1-boqun=
-.feng@gmail.com/
->
-> The reason of providing our own LKMM atomics is because memory model
-> wise Rust native memory model is not guaranteed to work with LKMM and
-> having only one memory model throughout the kernel is always better for
-> reasoning.
->
-> Changes since v4:
->
-> * Rename the ordering enum type and corresponding constant in trait All
->   as per feedback from Benno.
->
-> * Add more tests for Atomic<{i,u}size> and Atomic<*mut T>.
->
-> * Rebase on v6.16-rc2
->
->
-> Still please advise how we want to route the patches and for future
-> ones:
->
-> * Option #1: via tip, I can send a pull request to Ingo at -rc4 or -rc5.
-> * Option #2: via rust, I can send a pull request to Miguel at -rc4 or -rc=
-5.
-> * Option #3: via my own tree or atomic group in kernel.org, I can send
->              a pull request to Linus at 6.17 merge window.
->
-> My default option is #1, but feel free to make any suggestion.
->
-> Regards,
-> Boqun
+The 'spi-qpic-nand' driver may cause memory corruption under some
+circumstances. The first patch in the series changes the driver to
+avoid that, whereas the second adds some sanity checks to the common
+QPIC code in order to make detecting such errors easier in the future.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Preferably, the two patches should go along in via the SPI tree.
+It is not a strict requirement though, in the case the second patch
+gets included separately through the MTD tree it reveals the bug
+which is fixed in the first patch.
+
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Changes in v3:
+  - rebase on top of current spi/for-6.16
+  - add 'Acked-by' tag from Miquel to patch 2
+  - Link to v2: https://lore.kernel.org/r/20250529-qpic-snand-avoid-mem-corruption-v2-0-2f0d13afc7d2@gmail.com
+
+Changes in v2:
+  - collect offered tags
+  - reduce kernel log spam in commit description of patch 1
+  - remove inline error printing function from patch 2, and adjust the
+    commit message of the patch
+  - Link to v1: https://lore.kernel.org/r/20250525-qpic-snand-avoid-mem-corruption-v1-0-5fe528def7fb@gmail.com
+
+---
+Gabor Juhos (2):
+      spi: spi-qpic-snand: reallocate BAM transactions
+      mtd: nand: qpic_common: prevent out of bounds access of BAM arrays
+
+ drivers/mtd/nand/qpic_common.c       | 30 ++++++++++++++++++++++++++----
+ drivers/spi/spi-qpic-snand.c         | 16 ++++++++++++++++
+ include/linux/mtd/nand-qpic-common.h |  8 ++++++++
+ 3 files changed, 50 insertions(+), 4 deletions(-)
+---
+base-commit: d57e92dd660014ccac884eda616cafc7b04601e0
+change-id: 20250523-qpic-snand-avoid-mem-corruption-301afabeb0eb
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
+
