@@ -1,249 +1,258 @@
-Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2063.outbound.protection.outlook.com [40.107.94.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C8020A5EA;
-	Wed, 18 Jun 2025 19:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750273761; cv=none; b=iDEnVNhUmLbGrKPOgL+8116xVZYz+mUykTtGk71TdZhf6DLVtfkRWeb3wMK83UyZ6A4E3AU5Af7WrnkDcR9q+drKlU2WFyfIXZI8XMpOEvdbD3+HaidKv+0DPjP5eKn2r0ePD8zsI1GdIP4WAUxcuIy25ukGkZpdztzYG2Aqu/M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750273761; c=relaxed/simple;
-	bh=YJ8mz+ikgW8nKvjldFD7MTl5HffyMooPfVfI4mhvw+s=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bgjutJ/TvZ6/2+nibgj1GFV7w20IyQ6RiQIrXMxfpAPZgU3tgCrRRfv5baDFxP9KKSS/YjV/vEWnl6sN2aoQU4mDvImjRpa0zVqeIITgXg5kKxeca1s/reXXJfYOFnJrKw/nYb6N4rakbn+22E6jAJ+k28cBH60GsRNu/aQQ8u4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay03.hostedemail.com (Postfix) with ESMTP id 934CBBD597;
-	Wed, 18 Jun 2025 19:09:10 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id CFEC42002B;
-	Wed, 18 Jun 2025 19:09:06 +0000 (UTC)
-Date: Wed, 18 Jun 2025 15:09:15 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250618150915.3e811f4b@gandalf.local.home>
-In-Reply-To: <20250618184620.GT1613376@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.770214773@goodmis.org>
-	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD8720409A;
+	Wed, 18 Jun 2025 19:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750273821; cv=fail; b=bHuJxdIDj26sZL1PGqIwKYeHV/B4dhl9nja1mt98KzhN/a4pj2to7L40NYCeNx/8gkPSc8DR06NHdstoNKBPJY8SCg/gabx9SCXxpCRiR4j5vWYsn5kNHBOAtDJuIrifbU8J2C+uRdmm93CkSe3/Jc2niI6q/qHtGUDo5mIollk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750273821; c=relaxed/simple;
+	bh=K5RA8WPNa7F4xjKhYUQfrnmlnTND2i3+gGdYyPCyg1c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=sxEytGHATmMqJIU1Izk9Kf6+SKIHn6EHSVIo/JsZ8xB2d6LoDVmyD6RRKmq5ii/ibBbV0aL0kFsppmFPExa/71QhmhAAKWgehNIEoHzW4/m+ZGhzCcJo3k8R11cu6SIbqSxFWxwP1NLijRrPcOVQnXMB3aOxgpG6KdahuCYMb1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qAS2CFm/; arc=fail smtp.client-ip=40.107.94.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qAS2CFm/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uq1vXZ6mSmKw7MbFf8iK0W8QjXZf1pr8nZjTYL60ic5zJ1b14S3sfJ6Sd/b9PXByRm/WvhVMhnbEUJAboe4+HSXBlj53kACgq5978SromsgzTdaXUpN/LEvcmX/tM/mhn0Vc02w83eu6n70TbNSw6fM/OoHtWG412MsWjPizRFuDBzmbttvJl0sLVpzV0mYItPeC0dSDuacFMMi/jSRdnSfmetRq7jo59unZKkA+vflyO7NpoxR4mK8SNXs76qrqG6odFAMa43sUHzSy2YItp1ArJ1kVCW//fsQV3iNJ3W5EHVAHOQyGU7PVkzV2QzUpkK+CYjMmjUNgOgkzveeZSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Kr1ucAdzhuPBSYm277iLPVUHjG6+LfJxNq3NVaNMrm0=;
+ b=J80s6gIylL2jIRjq74vlY15BpGChsXqEv/ftTJK2xXU8jbZfpMsrXhwCTDQ6TWuCbQDxAdJBw+y2fAzk0jhEuHUW6zRB0+3+U2URaXc6Ve8zKqm6K0VFvVIMmrGN0EHkqkSKrLmwd4V4IqCEGFJNCYFHAYzU+3h9pcncDRg4+i8v2e7axcn5N8W0px/JlcWosiEIbq3cTcTw4flPtasO33oL3Y14WUI5cY+Jwl0InVjn1daQ/Z7oJybTdEsNoq7Ub3aRBeXnBsM5ZoQBgCAh4XL/yWJ4fjOWwUxItR7admudR4H1d+MxFqHWGNdaQQqDFU6lsi6zAOYDbO+QTZ4lCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Kr1ucAdzhuPBSYm277iLPVUHjG6+LfJxNq3NVaNMrm0=;
+ b=qAS2CFm/x7GO9LGWJIw4NImSNDOmnYLrQ/FJxKykFneD/QD3N4GMUvUzcND6teuiUh0m3IgKglpPh3zYNfW5r30NI+J8Ucq+m043C1InDocwpXx6pqUjqAI49/Ma0os6KfbNFOqMVYbNA56bYrpGoqyvLobPx22gnLoz69nqBHxHPtbdb7Xtyfu4HYWdRkTdkO9vdmFMMo6pAinHRd5WK6geTXDYhlucdPk/k1Ssejt001ZH8JBNjY385wP/gzKfE2scor2xRVlnLYqq3vAulo9xvZGnodgjfqS9/matZUjTmWUnYiP/pSESmlvMuNXnzKgKlzIurJ5jRhpjI5F75w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ DM4PR12MB6637.namprd12.prod.outlook.com (2603:10b6:8:bb::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8835.29; Wed, 18 Jun 2025 19:10:16 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
+ 19:10:16 +0000
+From: Zi Yan <ziy@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
+ Ying Huang <ying.huang@linux.alibaba.com>,
+ Alistair Popple <apopple@nvidia.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+ Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+ Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>,
+ Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
+ Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH RFC 08/29] mm/migrate: rename putback_movable_folio() to
+ putback_movable_ops_page()
+Date: Wed, 18 Jun 2025 15:10:10 -0400
+X-Mailer: MailMate (2.0r6265)
+Message-ID: <AD158968-D369-4884-806A-18AEE2293C8B@nvidia.com>
+In-Reply-To: <20250618174014.1168640-9-david@redhat.com>
+References: <20250618174014.1168640-1-david@redhat.com>
+ <20250618174014.1168640-9-david@redhat.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: BN8PR04CA0066.namprd04.prod.outlook.com
+ (2603:10b6:408:d4::40) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: CFEC42002B
-X-Stat-Signature: xymxfyhx6nz85eykkyyk75a7pf5icotc
-X-Rspamd-Server: rspamout06
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1//gPL2Am6Um4rgqXE7/zsuJupVWU7zvUY=
-X-HE-Tag: 1750273746-299713
-X-HE-Meta: U2FsdGVkX1/iuUT1wS6HmN8aOXA0jTCnMH9pqx9YO3LcwcuOu+qWjJNY0zT2xtV4bVBwjGBx/xiA626GfvLBedmWrblKFf4y6nwNfCLeovh58OkMRMw/Wn8m4D+tAue55WxAhmtJ4o1ULeZ4/z5TDHFdhNitF6wm46IMTFkAgIjjS3+LJ12shSs9VawFev8YYTB3rGX+vyMArQ3PO3IgWY32CY4iD/2Sx/bgXLGsZcB5iMxlDH+4qI78n7+K0Lw6imh6VesOOQoWu1mfGBad0ie7FDq1ku2arPNrViuxfjOo7T/RpKW1fQEbS7CfV+rMAEVnNC4bPpsEsLzXR/3IJ/Mbu1e5f9Y3F63SvnCIk3APvNopf2jhSlNRSdDO40iB
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|DM4PR12MB6637:EE_
+X-MS-Office365-Filtering-Correlation-Id: f6f24617-9e9e-4c35-ad92-08ddae9bc262
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?PMHSta2xY4BOazYoqXot9skOxRN2l2iIZ1HYPz6RzKJX8cnO/qjgdZG3DDH7?=
+ =?us-ascii?Q?Qkx7S+BlJJXehmo5kTmzYbFnN+6TwhP2jam6qA7yjcAAJ/FAnvUrR75wv2hb?=
+ =?us-ascii?Q?gfUNaIE5aS8/t2JfRZGVMXtHk8UO1W0TruV2eD/UijeRKplso8/XCj1kWLrD?=
+ =?us-ascii?Q?6vnr2UN5Kuji70PAu+HCS1kjYy1ygVZgIjwxhj9Ft7YvbrzXx/dQSAcbh82Y?=
+ =?us-ascii?Q?gbL2WvYxzj+uPFSzpxwy8jkIW79pvvutzk+LemaokCEaMvgQIszRMfcCDxgC?=
+ =?us-ascii?Q?SveI6lCTl+BJvaYb1NHbqeruORuo/dpg39eVWwuhEyVCRXnvteZpOvDUa4Yn?=
+ =?us-ascii?Q?ELmqg/ul9Vu8kdWxBJJOllI31UGYFK3S58xYGsEsoFiFi/JoalaMBkdsFk8Z?=
+ =?us-ascii?Q?k5b3ii369rKoZGY7cp2Qvolf7IROHvb+yURYr97RLOuJJ4SVMdIcyHAFx+es?=
+ =?us-ascii?Q?O6X/3+TEVMeemD66LgltBpdyFSqV9fkG2u3363UFjsZNjAJaFf3N3x/9U6T6?=
+ =?us-ascii?Q?6/npCp7ejmeYTCyS7RQXmZu8b+5YsZij30iXJkDusZYNntBW+hSNeW6MJFVV?=
+ =?us-ascii?Q?/KRYFHHZvgOxg3jxRR0cPJHNeHjffZ9i+mLBuII2PbnOXK56cje4UBF8dEIP?=
+ =?us-ascii?Q?xqw5Bn3P2EIroXTIMV6bM3mL+rNF5ngn6tvcLOHOF6SDlhozgA6YmB86up6+?=
+ =?us-ascii?Q?jBox6Sc4OnMX6BHDvdNdYMd6FEJsdHA+svR5/U3uQC5OMdZwx0KuQlZX/ozN?=
+ =?us-ascii?Q?1ARSupTfxcUsNxy1nJI5P5UdoG/lUaZrFHBI74rE2JVqx4Jdzun7Bda/hPnE?=
+ =?us-ascii?Q?wq2aeBewZITKuruRY54nKLybvTSjjco1agKADst4/dwyXYi7RkPJG4Y2TE2y?=
+ =?us-ascii?Q?luKl/XUrFyTT9yYAgZK1CM6o3TkxXyEDNfbDPzKzHR5mdasx5sB+e6D+ke0G?=
+ =?us-ascii?Q?xdFZQhuPKIlRsy7YBkyIyMmfjM2mLuthihHoG0f+7KApmG4CKTCX+kWwrmql?=
+ =?us-ascii?Q?50hmMaQmOpjDsg/OyvfbgOlo8MlsknDHFqd9+eCVwDnIy/zrV1eJvX5H0DID?=
+ =?us-ascii?Q?3YOa6z5sHx6AFnTRJyqRjnqeIpkhntS3yVDfjti5rCRo4SgKxlygryRjCQRa?=
+ =?us-ascii?Q?Rwi9+mAjx1YK6EhYsDWB8+pLcrp/DiVbdcL1H2JxuOgh833GcuLo2wYfP5qi?=
+ =?us-ascii?Q?IEm2tT5MJQONNLoxsQyVUtOfVGGlzllS3+sqSbMpy8NPbi9PTuBePmzAb4sK?=
+ =?us-ascii?Q?g51b2Dqso2Q90BT9s6LatreFozo2fepebg99+++VA3G9SzDbmRyyNeBh1RPY?=
+ =?us-ascii?Q?My/FVB/jdxbRJDbskeWZb+AO3FAKdfm0knnGnm9z6PU/ltkES74PAylJlJbl?=
+ =?us-ascii?Q?G3lV/XvRwo4YcDYbBKFNZuPE6c6Dc/9VfDDVWF7lEtMpxcQCxfEU2x+9m0Qd?=
+ =?us-ascii?Q?MUmi7xieyPM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?OrU7s5zXdBiZaGcvSoFtCLaWCMzlKQQaIwp7w6ySeSFklVqE5mHeeMhv3je9?=
+ =?us-ascii?Q?EWQwziMFyDheU5z+rfFALpgHeOraPt5KmcgW2uW4JgLTJAaUmSglQtF33RMI?=
+ =?us-ascii?Q?Mxtji2SpR1srFKyMrUMMlVYemL1upZ1lXm4AosXshA1dCGyHUKFkKPKmFCaV?=
+ =?us-ascii?Q?d7zpk0eZT25eqocbe8bwWEUIgzdok6keirsZzruV8HKay99xtAQWaXY+guej?=
+ =?us-ascii?Q?TsdbFTGt7hPPuu9YmqozIKGQMGSlger2kSGwehUZNT7+HDeIjOw3RH4WMQ+C?=
+ =?us-ascii?Q?/EKk8Syl3GCaZOiNNrBeCrgFl27oL83pIpkXjn4AH1Vn1Nc8QQMJPO2YqLLk?=
+ =?us-ascii?Q?CYfeIZts6fFcSGsOGezoqTZZMC7dsFVLPxs54CLjaP8AgoX9Jv07k8mpMKcW?=
+ =?us-ascii?Q?ZzR/kgUN9U07LfsbAfOGeaisStXCKhG/th2ygXVTC5sgE4L1yKzQY4JSBCZH?=
+ =?us-ascii?Q?P38raB6kMTCyp+VyQjbF1NnVM6OZDzXc1XauVJn4dNyCQWn7DESM327wC2jq?=
+ =?us-ascii?Q?wRV7yPYkiKawlkQWgl/PE+azs0O5iT7Ch0suJZ/Z5z37v8ofRNzCcKnXiacC?=
+ =?us-ascii?Q?y7Qxk7VBEUiBnxsWoQWGJa8zmSF0FSeqySjfA5cX6gbpQTa0FGyz3osP20TC?=
+ =?us-ascii?Q?6/I0boob9+nzap83QZLvX+FDnrybDnPIZ94VQFvTbv0rOCpxqA/HNAWqQaCp?=
+ =?us-ascii?Q?3via+nPQRkkyxkqpVc/VC407JmvwLM1g0BsgLrWJCprayxFI2tdPRWrxtJZT?=
+ =?us-ascii?Q?2zJnN3A+GWXkfR/Xs+EXQsxi/MUy4yWNl9rj5FTvGcK0ykRUU9+Let/iO7q+?=
+ =?us-ascii?Q?me4aiJA8gJw0Ax8b4YvfTp2lkqBBTS4aI2+BME1Rl7evTxzOYS7CqQz9m8UT?=
+ =?us-ascii?Q?3AadKID+dLuTsUR1luLoEf2KDFl/HK95tg50RQDlZ4v55ZGteDA8OXXC78xX?=
+ =?us-ascii?Q?Ysvck5R7tSn7Uivv5GaBbUA4AnLeJVcKlF+XWt7UFtLM+rxYgYAJWM/jg7RN?=
+ =?us-ascii?Q?auYfPGJEvUOezPJa4KtViY4jXI3TMUBjznJjRpddLn7mmVsLwhlaSOhTWg26?=
+ =?us-ascii?Q?49xj+OlEhvYVPcGAXoId63h1EncIwCMzuDUX5VBSFDvdVrrHARFVbi63cnv5?=
+ =?us-ascii?Q?Vv/M6opzcZ4tEHs12GO7YEhrMCEAHjdEGU8wAclATXHq6Uj8U+2ZYQk9z1KP?=
+ =?us-ascii?Q?P7m8m1yyoWiQz43bX3boH6vM0d9KfQ9J8xZR29V3smYc6PXAGmWRf0MzslkJ?=
+ =?us-ascii?Q?u0qq7MlIglaSePrld0YdOgjr9MDc9o1+bAQU7C42mdoNJRYNngj5bryoEswq?=
+ =?us-ascii?Q?cgsp1Ccib14AumWOV01iDZUJz2r4qFif+7zrzRYG5WrKOsywktl+Uw8Puvl0?=
+ =?us-ascii?Q?ShMiH1kMUFPn8iqjGmLf9k/d3agnTOw/UBoGcpmxszaSU9fknJ3w95Jfz7U5?=
+ =?us-ascii?Q?TTPEZcRmVAxy0tj3M/bCzTUfckPrbP7AHpTBDrW57RU475FOqc19F+XXOWAd?=
+ =?us-ascii?Q?JEQ9cCnxeVstCssaC/0CcQ5vqjgg8Br8nZmVkIZ6abWfX+5cQ8WMXSZ23Voc?=
+ =?us-ascii?Q?OandTNTWpKWe5uMEfuBRLCnRXJ4yJO6HkAGzvZ1i?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6f24617-9e9e-4c35-ad92-08ddae9bc262
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 19:10:16.4171
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /ZX0YVpFKi2hAYnKUwAFlmqtckgzicV/2JB93W8O157uQFnayKycGmT8zvW8v8Lo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6637
 
-On Wed, 18 Jun 2025 20:46:20 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
 
-> > +struct unwind_work;
-> > +
-> > +typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stacktrace *trace, u64 timestamp);
-> > +
-> > +struct unwind_work {
-> > +	struct list_head		list;  
-> 
-> Does this really need to be a list? Single linked list like
-> callback_head not good enough?
+> ... and factor the complete handling of movable_ops pages out.
+> Convert it similar to isolate_movable_ops_page().
+>
+> While at it, convert the VM_BUG_ON_FOLIO() into a VM_WARN_ON_PAGE().
+>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/migrate.c | 37 ++++++++++++++++++++++++-------------
+>  1 file changed, 24 insertions(+), 13 deletions(-)
+>
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 6bbb455f8b593..32e77898f7d6c 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -133,12 +133,30 @@ bool isolate_movable_ops_page(struct page *page, =
+isolate_mode_t mode)
+>  	return false;
+>  }
+>
+> -static void putback_movable_folio(struct folio *folio)
+> +/**
+> + * putback_movable_ops_page - putback an isolated movable_ops page
+> + * @page: The isolated page.
+> + *
+> + * Putback an isolated movable_ops page.
+> + *
+> + * After the page was putback, it might get freed instantly.
+> + */
+> +static void putback_movable_ops_page(struct page *page)
+>  {
+> -	const struct movable_operations *mops =3D folio_movable_ops(folio);
+> -
+> -	mops->putback_page(&folio->page);
+> -	folio_clear_isolated(folio);
+> +	/*
+> +	 * TODO: these pages will not be folios in the future. All
+> +	 * folio dependencies will have to be removed.
+> +	 */
+> +	struct folio *folio =3D page_folio(page);
+> +
+> +	VM_WARN_ON_ONCE_PAGE(!PageIsolated(page), page);
+> +	folio_lock(folio);
+> +	/* If the page was released by it's owner, there is nothing to do. */=
 
-Doesn't a list head make it easier to remove without having to iterate the
-list?
+> +	if (PageMovable(page))
+> +		page_movable_ops(page)->putback_page(page);
+> +	ClearPageIsolated(page);
+> +	folio_unlock(folio);
+> +	folio_put(folio);
 
-> 
-> > +	unwind_callback_t		func;
-> > +};
-> > +
-> >  #ifdef CONFIG_UNWIND_USER
-> >  
-> >  void unwind_task_init(struct task_struct *task);
-> > @@ -12,10 +22,15 @@ void unwind_task_free(struct task_struct *task);
-> >  
-> >  int unwind_deferred_trace(struct unwind_stacktrace *trace);
-> >  
-> > +int unwind_deferred_init(struct unwind_work *work, unwind_callback_t
-> > func); +int unwind_deferred_request(struct unwind_work *work, u64
-> > *timestamp); +void unwind_deferred_cancel(struct unwind_work *work);
-> > +
-> >  static __always_inline void unwind_exit_to_user_mode(void)
-> >  {
-> >  	if (unlikely(current->unwind_info.cache))
-> >  		current->unwind_info.cache->nr_entries = 0;
-> > +	current->unwind_info.timestamp = 0;  
-> 
-> Surely clearing that timestamp is only relevant when there is a cache
-> around? Better to not add this unconditional write to the exit path.
+Why not use page version of lock, unlock, and put? Especially you are
+thinking about not using folio for these pages. Just a question,
+I am OK with current patch.
 
-That's actually not quite true. If the allocation fails, we still want to
-clear the timestamp. But later patches add more data to check and it does
-exit out if there's been no requests:
+>  }
+>
+>  /*
+> @@ -166,14 +184,7 @@ void putback_movable_pages(struct list_head *l)
+>  		 * have PAGE_MAPPING_MOVABLE.
+>  		 */
+>  		if (unlikely(__folio_test_movable(folio))) {
+> -			VM_BUG_ON_FOLIO(!folio_test_isolated(folio), folio);
+> -			folio_lock(folio);
+> -			if (folio_test_movable(folio))
+> -				putback_movable_folio(folio);
+> -			else
+> -				folio_clear_isolated(folio);
+> -			folio_unlock(folio);
+> -			folio_put(folio);
+> +			putback_movable_ops_page(&folio->page);
+>  		} else {
+>  			node_stat_mod_folio(folio, NR_ISOLATED_ANON +
+>  					folio_is_file_lru(folio), -folio_nr_pages(folio));
+> -- =
 
-{
-        struct unwind_task_info *info = &current->unwind_info;
-        unsigned long bits;
+> 2.49.0
 
-        /* Was there any unwinding? */
-        if (likely(!info->unwind_mask))
-                return;
+Acked-by: Zi Yan <ziy@nvidia.com>
 
-        bits = info->unwind_mask;
-        do {
-                /* Is a task_work going to run again before going back */
-                if (bits & UNWIND_PENDING)
-                        return;
-        } while (!try_cmpxchg(&info->unwind_mask, &bits, 0UL));
-
-        if (likely(info->cache))
-                info->cache->nr_entries = 0;
-        info->timestamp = 0;
-}
-
-But for better reviewing, I could add a comment in this patch that states
-that this will eventually exit out early when it does more work.
-
-
-> 
-> >  }
-> >  
-> >  #else /* !CONFIG_UNWIND_USER */
-> > @@ -24,6 +39,9 @@ static inline void unwind_task_init(struct
-> > task_struct *task) {} static inline void unwind_task_free(struct
-> > task_struct *task) {} 
-> >  static inline int unwind_deferred_trace(struct unwind_stacktrace
-> > *trace) { return -ENOSYS; } +static inline int
-> > unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
-> > { return -ENOSYS; } +static inline int unwind_deferred_request(struct
-> > unwind_work *work, u64 *timestamp) { return -ENOSYS; } +static inline
-> > void unwind_deferred_cancel(struct unwind_work *work) {} static inline
-> > void unwind_exit_to_user_mode(void) {} 
-> > diff --git a/include/linux/unwind_deferred_types.h
-> > b/include/linux/unwind_deferred_types.h index
-> > db5b54b18828..5df264cf81ad 100644 ---
-> > a/include/linux/unwind_deferred_types.h +++
-> > b/include/linux/unwind_deferred_types.h @@ -9,6 +9,9 @@ struct
-> > unwind_cache { 
-> >  struct unwind_task_info {
-> >  	struct unwind_cache	*cache;
-> > +	struct callback_head	work;
-> > +	u64			timestamp;
-> > +	int			pending;
-> >  };
-> >  
-> >  #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
-> > diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-> > index e3913781c8c6..b76c704ddc6d 100644
-> > --- a/kernel/unwind/deferred.c
-> > +++ b/kernel/unwind/deferred.c
-> > @@ -2,13 +2,35 @@
-> >  /*
-> >   * Deferred user space unwinding
-> >   */
-> > +#include <linux/sched/task_stack.h>
-> > +#include <linux/unwind_deferred.h>
-> > +#include <linux/sched/clock.h>
-> > +#include <linux/task_work.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/sched.h>
-> >  #include <linux/slab.h>
-> > -#include <linux/unwind_deferred.h>
-> > +#include <linux/mm.h>
-> >  
-> >  #define UNWIND_MAX_ENTRIES 512
-> >  
-> > +/* Guards adding to and reading the list of callbacks */
-> > +static DEFINE_MUTEX(callback_mutex);
-> > +static LIST_HEAD(callbacks);  
-> 
-> Global state.. smells like failure.
-
-Yes, the unwind infrastructure is global, as it is the way tasks know what
-tracer's callbacks to call.
-
-> 
-> > +/*
-> > + * Read the task context timestamp, if this is the first caller then
-> > + * it will set the timestamp.
-> > + */
-> > +static u64 get_timestamp(struct unwind_task_info *info)
-> > +{
-> > +	lockdep_assert_irqs_disabled();
-> > +
-> > +	if (!info->timestamp)
-> > +		info->timestamp = local_clock();
-> > +
-> > +	return info->timestamp;
-> > +}
-> > +
-> >  /**
-> >   * unwind_deferred_trace - Produce a user stacktrace in faultable
-> > context
-> >   * @trace: The descriptor that will store the user stacktrace
-> > @@ -59,11 +81,117 @@ int unwind_deferred_trace(struct unwind_stacktrace
-> > *trace) return 0;
-> >  }
-> >  
-> > +static void unwind_deferred_task_work(struct callback_head *head)
-> > +{
-> > +	struct unwind_task_info *info = container_of(head, struct
-> > unwind_task_info, work);
-> > +	struct unwind_stacktrace trace;
-> > +	struct unwind_work *work;
-> > +	u64 timestamp;
-> > +
-> > +	if (WARN_ON_ONCE(!info->pending))
-> > +		return;
-> > +
-> > +	/* Allow work to come in again */
-> > +	WRITE_ONCE(info->pending, 0);
-> > +
-> > +	/*
-> > +	 * From here on out, the callback must always be called, even
-> > if it's
-> > +	 * just an empty trace.
-> > +	 */
-> > +	trace.nr = 0;
-> > +	trace.entries = NULL;
-> > +
-> > +	unwind_deferred_trace(&trace);
-> > +
-> > +	timestamp = info->timestamp;
-> > +
-> > +	guard(mutex)(&callback_mutex);
-> > +	list_for_each_entry(work, &callbacks, list) {
-> > +		work->func(work, &trace, timestamp);
-> > +	}  
-> 
-> So now you're globally serializing all return-to-user instances. How is
-> that not a problem?
-
-It was the original way we did things. The next patch changes this to SRCU.
-But it requires a bit more care. For breaking up the series, I preferred
-not to add that logic and make it a separate patch.
-
-For better reviewing, I'll add a comment here that says:
-
-	/* TODO switch this global lock to SRCU */
-
--- Steve
+Best Regards,
+Yan, Zi
