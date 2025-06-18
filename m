@@ -1,229 +1,240 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011043.outbound.protection.outlook.com [52.101.70.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D020E2FEE16
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 16:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750265773; cv=none; b=Dzrr+wpAFa7LSXFo0phZ8pAGVyfVoHHu9UeeaRJPSJeW53zztqCbc6Y92/OzFspk0/WjTGjcPzjqB6DlNmKwlEiz1sqTzmGcjEF5cRjkdpv3DEyhsauC7dmLR73KsHsEVF7mun/imaCi5hG74x5Fk5nnSeAxSf2cjGytjcpEZ4w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750265773; c=relaxed/simple;
-	bh=ZQ7TZDVrBgNtqQuxb0S8bzpBJPAqpK2vYsj6v9u8ekI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ODhUHLaCXJg3SmZgfXQSwvftWt4hCALAXsR7MI5YaCODAstsf4vZ/ZDlHDo7g8YDn34LiJ3nIQijfhmOCA1BKVLP7M1ka/wZGhE6DZY5+LxShNOV/oPbUK/Oc9Vs01DiMMeqyMWw02Yb+bk4+Ri/NTy05ryHq7di5KAd4FHeqrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YRXyDHsp; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903842FEE2D;
+	Wed, 18 Jun 2025 16:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750265781; cv=fail; b=a7IfysdQrRZCYw7bCgGPVqaI4NhPr/wGU2KJ/fAgK2+dTrDvyr5etPNPiiq7aRj/mMgYtMw806ns5FrsptMdfSPuV8l84Vyo4E1MrUeyNU3IYiWpDGPRUe4Dfp2SCMB1hquaFiP7FNaQohSYfbSIEU09j7rJJBdgnQuKYn7Bon4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750265781; c=relaxed/simple;
+	bh=vDHOrGxFQHa+6Xx8iYYjPXGP0tsrxXPvoWj2I3wsybE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Fsz7GoJwMMYmNKUjkQnF9m+V8LF/aadCrRSGkUf3/GPvAXi9qLrCuNHnOwSUDw2QmMC+mP3PcNeGvLUWwfdn1bTnLgLHdDEE25NCUNRdc61++iDZk1e3+4jednvSWHPD1CnnN5Hv5n8daLNOYVjtcRuQBqE1faxax+8VGa6lM3Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=bs1skNr7; arc=fail smtp.client-ip=52.101.70.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YRXyDHsp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750265770;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fIqJPx+hVdZ6VMZuVeGfPGA+dF/0vqGtCkRLpRZfMd8=;
-	b=YRXyDHspu0uBHC82+AdeXfVpbE8n6vyGePQvcQVCt8uoJ57PZZaTRhhFuiy9k0TUcEuCBw
-	IpOHGlYMqBRmt+Id9zbWO0edAt301yCiliBTnRW5WNkcxMjG9pIZOcCc7ZEqnHpASvfxIr
-	Cr/MRbVinePE8QjryZv+V5wDPBLwVCo=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-94-6re81vMYP2ObR0LqL8vRAg-1; Wed, 18 Jun 2025 12:56:08 -0400
-X-MC-Unique: 6re81vMYP2ObR0LqL8vRAg-1
-X-Mimecast-MFC-AGG-ID: 6re81vMYP2ObR0LqL8vRAg_1750265768
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-748764d84feso9791453b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:56:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750265768; x=1750870568;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fIqJPx+hVdZ6VMZuVeGfPGA+dF/0vqGtCkRLpRZfMd8=;
-        b=JFg75P6c03PhUAlf4Wm6Aj5oTskXGNdFLK49ojzOkc+67swzNoQYkzcZ5y/viAVj0J
-         mYYDpsYNDHGpZgL8rXDJPK+HSuMnKmAA07BrWZ4Q5LlD+1mrKqPGT83kvxpYJaYurXMb
-         YNg0q1XEmVCRZwuCUSDaLl17ypk5I2YpLeZ/3Q7b0RmAHDn8LechItzfXIj2hUV6NSGl
-         ZB9Xt+UmQNXNCWzRyNZehNejOhM+p5DLkWS8fHwJukJuuOQD1H8YtnPaM5r7Yayi7RCi
-         ftl8/vrWr3LHjxa1TFQIwhVt3i6fG0skYTPS39obSM5Wqh/GDDTvvWDpOCUT9/NOQJo8
-         D/iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPqzcj1WB8oXrIjX4ATND9YqDk4nDZ0sqJE0czVx8nY3HVKYrc0d+mJaNhjzWaAuAXRJD6Ia8MKk2zYMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHA8V5+FATr9FlWRd/4aEdZ7m1oo2xvvOM3IZNySDdBIIn5F9y
-	wOvKPnwYQMySFcef05afZ1ir5+Luuz65mw00zQbCwoZFqY1pUdUx5/zAg3fv8vBzIYx2rilXp36
-	z14WSol19PndrZiNJOaLhBsy5TRfywjTwfxCFwgg9OqOU1VZcv/P0g51ANoaltvC/2w==
-X-Gm-Gg: ASbGncsz/It6d7nphP4iuVOxDTKuyb+xEtLLUqKCWmRWvyaXCPc0xMPJ0XgfHgfHTBc
-	HKzQv/O3hBldSHyuU4If4trHg7+9UHgYwxxF1L426/PDd3cZdft7oT5NkNOzvWzx80OVmv646bp
-	0ZnZ0ru/D6IDovyHMzON1OzhL/K1KEgGAo37B02iIijh5mnIlpXqAFFUl+N3I4YQB7bw/v/LxkS
-	i7FVHpy6P5EvrlzESnuUJHzzst/e3AI1qdWfPHl6zE6IqJx/dLWYneyi6eVVW/Bzb3sMBYXvFxB
-	i9a2w5oMqbS6Dg==
-X-Received: by 2002:a05:6a00:ac9:b0:748:2d1d:f7b7 with SMTP id d2e1a72fcca58-7489cffa98cmr25566536b3a.21.1750265767701;
-        Wed, 18 Jun 2025 09:56:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGIZUhEBIr4xiQwMA9O2tUbBgljMCpveJ7muzyq6G0/d5NeOKpjfbruv0BtTaIQsdL6oXmf/A==
-X-Received: by 2002:a05:6a00:ac9:b0:748:2d1d:f7b7 with SMTP id d2e1a72fcca58-7489cffa98cmr25566487b3a.21.1750265767230;
-        Wed, 18 Jun 2025 09:56:07 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7488ffec9c6sm11280298b3a.9.2025.06.18.09.56.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 09:56:06 -0700 (PDT)
-Date: Wed, 18 Jun 2025 12:56:01 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aFLvodROFN9QwvPp@x1.local>
-References: <20250613142903.GL1174925@nvidia.com>
- <aExDMO5fZ_VkSPqP@x1.local>
- <20250613160956.GN1174925@nvidia.com>
- <aEx4x_tvXzgrIanl@x1.local>
- <20250613231657.GO1174925@nvidia.com>
- <aFCVX6ubmyCxyrNF@x1.local>
- <20250616230011.GS1174925@nvidia.com>
- <aFHWbX_LTjcRveVm@x1.local>
- <20250617231807.GD1575786@nvidia.com>
- <aFH76GjnWfeHI5fA@x1.local>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="bs1skNr7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XUZiy82AwHal3yDzqMQFBKIF7MOoUEe2+qtp6TGiXtN4ZV9MH1c31jih+b7WJs6wKKmn96/6OhXkkDSQRl1/wTOHpS0ntUif+WdDuKQCaBpMd+eX6qxYI3P2v2EWmY3Fp4GUCjT161V3B+UQeVvDuZlB7YdSey59YuMhp/0gFPwz6O3x82c1vdt0PAOYoAKTJmF2EqKatsBH5m8mLuazprb4RaiQy5aRcxOa4dj70LzlomlfoO+BtdHkHspJpFczgnamjD+BGWbCGjm/J+0lLhwisomPSNXjEvUNkyADU0lvHG8Pi2/26+HOWTpkqylNn5INVxtYhBuztTVZvKg3Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PUom+/4Oe6wGFXKvfrWhiWeAEG8v+mPzyZm4W0qQsb8=;
+ b=xPZ9fXDAZVsfz0FC01MJDmq2OjO+K7I3afsHvOogCNWb5G93+zAdOaduQWWdIx4lCrru9v7s05nZBq95HtWmgPKv2LCzXCpcf/mT8Lfj2Q1FCRtDev3qYOGYi9Lhmxu3bfC3C0XdKivITJN7HVqVL8/C8W0t+HH8ITabs4K0i3ggurVh2wBH/HhOnmahS0XLzwW1ih8+T9so9NXHptJVnOKK3jA5YyX4PwcIYrhRsejOmG6xBHiXXrxAG+iPR7sRLHrXzWLm0RpxK13f56n0+poSFiiRuxvQ9JRJhnyG0F7rIjpLCOWh8fKWYnlXUS1u6D11kgnNM5rCM9j7W8iihQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PUom+/4Oe6wGFXKvfrWhiWeAEG8v+mPzyZm4W0qQsb8=;
+ b=bs1skNr7RAAFre/8LX0lWLvFsidoi5csE9I1i5axS+WjlMevesWMqZ37cvm0AcvyeegauLt3dEOTESvK3TST+JXn/q2Ju5++xE5aN3WuNNn0+8aWqSv1MNJDyQbU6v5zSp+viXMBzjZ+9lru4Oe10iq1gyu59PYyOsHNoaKpDWt5hb8ZbMVN2IdgrvUtY/FjsRaZe3kzHiI0aWrr/o7kBbM/gQxehab3QBJOGGfDLgqSEckja0i0xnkT6BRBXtPvTKtS9pENJnmgE4iTWuvxp7BmRzgP+VoHNdXUlUlYoa0/dDh5avyN8UmEYVUglTDkdHjE7m+4wVk3A6sZwMBaJw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA1PR04MB10961.eurprd04.prod.outlook.com (2603:10a6:102:492::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
+ 2025 16:56:13 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
+ 16:56:13 +0000
+Date: Wed, 18 Jun 2025 12:56:05 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: l.stach@pengutronix.de, lpieralisi@kernel.org, kwilczynski@kernel.org,
+	mani@kernel.org, robh@kernel.org, bhelgaas@google.com,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	festevam@gmail.com, linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] PCI: imx6: Enable the vpcie regulator when fetch it
+Message-ID: <aFLvpRd56i5F9fMd@lizhi-Precision-Tower-5810>
+References: <20250618082042.3900021-1-hongxing.zhu@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618082042.3900021-1-hongxing.zhu@nxp.com>
+X-ClientProxiedBy: BYAPR04CA0016.namprd04.prod.outlook.com
+ (2603:10b6:a03:40::29) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aFH76GjnWfeHI5fA@x1.local>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10961:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26bb84a1-5296-4236-1953-08ddae8908b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?DxM99tgJbsHBKQhc+OdC43o5zONJ7weGHTtfv8XqguWkQnOhG/2jdBr52Z++?=
+ =?us-ascii?Q?AXcTEGqlgS/G73c4cbXcUowEMoU6N4olZms8GuOnjdG0qiMQPj9HlGM87JIh?=
+ =?us-ascii?Q?QuTSct2C0cylpXvQQ3/lisF17QwZDm7AudZaJ3yTT1Gb+5nIASTPJHNSitT8?=
+ =?us-ascii?Q?Puuv5ISqk83vT3Of4DgnxKB3kGonMFn8tkAcKaR/cFHYeDaYebRWXj9R8G5w?=
+ =?us-ascii?Q?UL7ebX71ugT7BTLeN37bJnZdVRnRK/MNDTAoPO+FYwuNPAvyOGoAP98nLHZ8?=
+ =?us-ascii?Q?Ep+Hk0OsHsYP2IfgtPkENb9dmmWsKMqWuGNfvpTGFQe361Se6mPm8KpZPBxK?=
+ =?us-ascii?Q?InVQgbup9UXH60XmK0XKUBf55zyz/gxiqjsyIi69jlqEqVqbf9K9rFoWQtbU?=
+ =?us-ascii?Q?E1/nFvkt3nVmHD9W8o+B09YB+hWMgTicm6F00xc/ic2lTjDap/Gs2MBk1V2e?=
+ =?us-ascii?Q?GJTJhQUamQLOEj78ZHH+wgQTCgqV7NanebGpLHL7RudyvJhuBppcuHi8LRw1?=
+ =?us-ascii?Q?BcsWid4AZplThNU1WFKH2DVTD0Vnkob02EqvlmPYQU4FTWDeAGoEtEtZrmyw?=
+ =?us-ascii?Q?e0/uB77CWZ9pzlQL/ZKIYoXZDVHG2pfYCOmk4kyPPXQ4tk6LtixlA0A5JPLJ?=
+ =?us-ascii?Q?aHtvTm8LtWP3WUwDBFAjvHupQ4wUy4EL9hlAcXHWzdFiooU5i8Jjgag24NPn?=
+ =?us-ascii?Q?2Nwx8GgJgYtFnLKIVOFuSSxo4mgKB0vq3f5r83TThsvt+hjgEZvkwCucvclg?=
+ =?us-ascii?Q?LbFBc3W/SEexs7/fQD469mP+KDJDTqI/PnUFOWdkt4KoGiV99NNmN9xqjiiD?=
+ =?us-ascii?Q?EHW0En8Fbv5jBVG7Qs2NIcGQGnoPcwc69pj5kKO7p/RF5C3aWCbcAIIObw5Q?=
+ =?us-ascii?Q?WYtOGHKTZjdwrpnpO7Zonm6NXuGacSaDwoO39bmIrQJJNEZFkkYWPXJyjZHS?=
+ =?us-ascii?Q?3S5aqJhkfE+294M32OD4m5GJgQIYY5kU8T4syX0jSyRzFvjcPF92ur9gpVef?=
+ =?us-ascii?Q?9Anz6Ge8lZ9jm6NMzFmp5ym1P47m03VS7rJuvsVWZAdnnOrDOQa6B1IL0fXY?=
+ =?us-ascii?Q?WoqyWmSvRzuEyuWB3Ixqe3A6fhzT+GAqzM96lkk8fAB15Vz57HE4Nfe1AD2H?=
+ =?us-ascii?Q?S97V7HVF+cPpGhQyGLjOurCn7isJDxbOQLsTABfXAIJfwPch2RmpeU2sDqir?=
+ =?us-ascii?Q?utAuaXbWIzigVIjii0AJ65jv7fst2LEbRE/Qc1JxK9Owdgsn5kFMTu+mB+XY?=
+ =?us-ascii?Q?GYp+HfnexigJ5HwFyYV6QQUhBVkb98qy4KO7IpFcE/t1hxQVHBKqLwuaugWt?=
+ =?us-ascii?Q?LmShl1SpPOTsg1g8nWRU8Tq6mI/r9lLqomADN66v3cGJwBaRwPEOxHkw21+W?=
+ =?us-ascii?Q?pOEbYjR8+rioikVb/kFb5vUbMRwLrl9Kdk/AixIKxp2Y/YUaZohOK0kuUwjB?=
+ =?us-ascii?Q?9bAEIx0tXWdCJ7MJAJCaji/CUt7Yd1zVESWuEAibB0ZaMbscOb2ezCuBy4Rk?=
+ =?us-ascii?Q?81yI026GlXjjDno=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?vrvSt4oe4dPn9H+T9bsqoe9poj/RXKsxA1pYiJ3ckjAsG5Knlw/v/nM+0TzR?=
+ =?us-ascii?Q?WuIjrJClugh9G7HZrTNujFM0FWQzJBrtzAb4H08JTbUogOSJUJY847UVgm6j?=
+ =?us-ascii?Q?hCr1cQZmJtlftq19M/V0OjhGC58aJzTLP47KTaeFJlGTp1sNdM94iKhXlXeD?=
+ =?us-ascii?Q?XLnIF6uAgYAPDkIAD4l8M1t/8rhB5xhOu/m9pxbj3Q488egLokLen5gYsyeI?=
+ =?us-ascii?Q?+sX68EIqAkntlaj/tW1xqq/xGfw6ydvcDaiLbYttJyMW6o4wrP8jNNAp6TwJ?=
+ =?us-ascii?Q?mojmwBY0VWpF2u5Wtret59oyv8JwvCbQYeQFNGgHNlobVs3j26v2B9sZgHTZ?=
+ =?us-ascii?Q?JKX35oMk/5tlNxTfOmVCzIzftVo0Y1zWVD6rl0KMHxS3IFvrwkzhAep9142O?=
+ =?us-ascii?Q?UylRxNW+T6aRHq41K9+6hMFaXsNhA86SI3xQynnip4U6Vk9O5mrlTWttviMd?=
+ =?us-ascii?Q?jHZ6qa54CYFmyhp4NgCyi/S19nUtTQk8R27+mZ2LkS4BEC57ql5VPW8kqxFM?=
+ =?us-ascii?Q?yuDDcWE6Huqg7pyuEpdwB/E9Ih5XjiuEnGa44CcvAs8MMNlBWbx1UpD9vDyF?=
+ =?us-ascii?Q?4My9vw0OGZVxb3eNAWoqnoTAe4TUiiJhWnUiPPx4ZGI1//yZWlxP7ImqzRsx?=
+ =?us-ascii?Q?GcXXQEMh+wbNKGgpKZCIHE4A4i5pbzdzKNQf6vyd6aW1a4XD1sfxSTcM1zMr?=
+ =?us-ascii?Q?d+fCHjJj6I6HnOyIKs770zGJKeM3Ib3I4qKPbM5i2OxZLp0yc48FE6fGBsCe?=
+ =?us-ascii?Q?GT9fZnvmmtf6ITZF4W7jnGpx7NRGhGtkdxQtnfGbnNUWsp2exzAbI+ULWo9x?=
+ =?us-ascii?Q?WidujywBk+XruOHIOHTo/pWXySOFV1kJ3L3iHW4UZuRFyTuXsvcZQVOPTMq+?=
+ =?us-ascii?Q?eWkgwebHuSlTAvbLa86xQawGzSVsA95OK5U1thp/WOI9AuGQChqyEO4inuTk?=
+ =?us-ascii?Q?NjfPU6Hx7tZ6DbUaI9wRpPQfSuXs7EEEjlWcKXZaGb6HS1U2KKyffNxyt/pK?=
+ =?us-ascii?Q?dnScPekre6aGZbr97/AVgjHKh8gj9aKHU7jK3C4MwEzSQpjnj/ZtBcQM5JTV?=
+ =?us-ascii?Q?+Y88qlrf5lfvQso234lNoAvI51KYTVAGW2qgYiVlh9NYbRad5RV0pL3M1mUp?=
+ =?us-ascii?Q?BrF1QXRqqYC3wb02omwCe7KlwYydxIbWxNO7Mf/tMM8UIbGUaPEbx6Dh2qIn?=
+ =?us-ascii?Q?hrkq4u5Wn2z/++ZQJv4EAPkf3K1pgyRAkC87yQRNtn04oqGBibmHxfG00YWA?=
+ =?us-ascii?Q?oIb+lJuCU0K1YYPaqZz6jNJj6gunUrcbMuzlp3qhojFBSg2XiMld3USUT4kf?=
+ =?us-ascii?Q?4VnTdz0O0QF5AUUjxkp/TNFi/nnNw+7NaH9IgkTFpniHSRBnms0VLtbPg0oM?=
+ =?us-ascii?Q?CQBy8qYv5jnC046ieRM9gFbWNqs+GHBZhK3ei3w4BZsTOuP0z+O/iRZGz1jj?=
+ =?us-ascii?Q?mQ7qbo/1SqPFmzjNKVHWYT9HEPcfjZUw7GA0N1I0GE57jin+hEQtLOUD84c0?=
+ =?us-ascii?Q?P047TKLFzStU1Xa5V2qtcmUX4bD1O4SzKzxdWO8CPfAxooQgcVLqkO9+g+2a?=
+ =?us-ascii?Q?5tlgFeCD+/+EYL4VYt4/YPvhMGvELoRIMo/si1hJ?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26bb84a1-5296-4236-1953-08ddae8908b6
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 16:56:13.7635
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m36NHXm0Ugvn1iryyJNuhaVDQPQyFyR1fZDaVxTCNOqoZ+VY2JNiHayIoTkJjRxbU7l4EhUXmOsg2fNXTBdrBw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10961
 
-On Tue, Jun 17, 2025 at 07:36:08PM -0400, Peter Xu wrote:
-> On Tue, Jun 17, 2025 at 08:18:07PM -0300, Jason Gunthorpe wrote:
-> > On Tue, Jun 17, 2025 at 04:56:13PM -0400, Peter Xu wrote:
-> > > On Mon, Jun 16, 2025 at 08:00:11PM -0300, Jason Gunthorpe wrote:
-> > > > On Mon, Jun 16, 2025 at 06:06:23PM -0400, Peter Xu wrote:
-> > > > 
-> > > > > Can I understand it as a suggestion to pass in a bitmask into the core mm
-> > > > > API (e.g. keep the name of mm_get_unmapped_area_aligned()), instead of a
-> > > > > constant "align", so that core mm would try to allocate from the largest
-> > > > > size to smaller until it finds some working VA to use?
-> > > > 
-> > > > I don't think you need a bitmask.
-> > > > 
-> > > > Split the concerns, the caller knows what is inside it's FD. It only
-> > > > needs to provide the highest pgoff aligned folio/pfn within the FD.
-> > > 
-> > > Ultimately I even dropped this hint.  I found that it's not really
-> > > get_unmapped_area()'s job to detect over-sized pgoffs.  It's mmap()'s job.
-> > > So I decided to avoid this parameter as of now.
-> > 
-> > Well, the point of the pgoff is only what you said earlier, to adjust
-> > the starting alignment so the pgoff aligned high order folios/pfns
-> > line up properly.
-> 
-> I meant "highest pgoff" that I dropped.
-> 
-> We definitely need the pgoff to make it work.  So here I dropped "highest
-> pgoff" passed from the caller because I decided to leave such check to the
-> mmap() hook later.
-> 
-> > 
-> > > > The mm knows what leaf page tables options exist. It should try to
-> > > > align to the closest leaf page table size that is <= the FD's max
-> > > > aligned folio.
-> > > 
-> > > So again IMHO this is also not per-FD information, but needs to be passed
-> > > over from the driver for each call.
-> > 
-> > It is per-FD in the sense that each FD is unique and each range of
-> > pgoff could have a unique maximum.
-> >  
-> > > Likely the "order" parameter appeared in other discussions to imply a
-> > > maximum supported size from the driver side (or, for a folio, but that is
-> > > definitely another user after this series can land).
-> > 
-> > Yes, it is the only information the driver can actually provide and
-> > comes directly from what it will install in the VMA.
-> > 
-> > > So far I didn't yet add the "order", because currently VFIO definitely
-> > > supports all max orders the system supports.  Maybe we can add the order
-> > > when there's a real need, but maybe it won't happen in the near
-> > > future?
-> > 
-> > The purpose of the order is to prevent over alignment and waste of
-> > VMA. Your technique to use the length to limit alignment instead is
-> > good enough for VFIO but not very general.
-> 
-> Yes that's also something I didn't like.  I think I'll just go ahead and
-> add the order parameter, then use it in previous patch too.
+On Wed, Jun 18, 2025 at 04:20:42PM +0800, Richard Zhu wrote:
+> vpcie regulator is used to provide power to the PCIe port include WAKE#
+> signal on i.MX. To support outbound wake up mechanism, enable the vpcie
+> regulator when fetch it, and keep it on during PCIe port life cycle.
 
-So I changed my mind, slightly.  I can still have the "order" parameter to
-make the API cleaner (even if it'll be a pure overhead.. because all
-existing caller will pass in PUD_SIZE as of now), but I think I'll still
-stick with the ifdef in patch 4, as I mentioned here:
+Not sure if this is related
 
-https://lore.kernel.org/all/aFGMG3763eSv9l8b@x1.local/
+https://lore.kernel.org/linux-pci/20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com/
+https://lore.kernel.org/linux-pci/20250610164154.GA812762@bhelgaas/
 
-The problem is I just noticed yet again that exporting
-huge_mapping_get_va_aligned() for all configs doesn't make sense.  At least
-it'll need something like this to make !MMU compile for VFIO, while this is
-definitely some ugliness I also want to avoid..
+look like it is port property
 
-===8<===
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 59fdafb1034b..f40a8fb64eaa 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -548,7 +548,11 @@ static inline unsigned long
- huge_mapping_get_va_aligned(struct file *filp, unsigned long addr,
-                unsigned long len, unsigned long pgoff, unsigned long flags)
- {
-+#ifdef CONFIG_MMU
-        return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
-+#else
-+       return 0;
-+#endif
- }
+Frank
 
- static inline bool
-===8<===
-
-The issue is still mm_get_unmapped_area() is only exported on CONFIG_MMU,
-so we need to special case that for huge_mapping_get_va_aligned(), and here
-for !THP && !MMU.
-
-Besides the ugliness, it's also about how to choose a default value to
-return when mm_get_unmapped_area() isn't available.
-
-I gave it a defalut value (0) as example, but I don't even thnk that 0
-makes sense.  It would (if ever triggerable from any caller on !MMU) mean
-it will return 0 directly to __get_unmapped_area() and further do_mmap()
-(of !MMU code, which will come down from ksys_mmap_pgoff() of nommu.c) will
-take that addr=0 to be the addr to mmap.. that sounds wrong.
-
-There's just no way to provide a sane default value for !MMU.
-
-So going one step back: huge_mapping_get_va_aligned() (or whatever name we
-prefer) doesn't make sense to be exported always, but only when CONFIG_MMU.
-It should follow the same way we treat mm_get_unmapped_area().
-
-Here it also goes back to the question on why !MMU even support mmap():
-
-https://www.kernel.org/doc/Documentation/nommu-mmap.txt
-
-So, for the case of v4l driver (v4l2_m2m_get_unmapped_area that I used to
-quote, which only defines in !MMU and I used to misread..), for example,
-it's really a minimal mmap() support on ucLinux and that's all about that.
-My gut feeling is the noMMU use case more or less abused the current
-get_unmapped_area() hook to provide the physical addresses, so as to make
-mmap() work even on ucLinux.
-
-It's for sure not a proof that we should have huge_mapping_get_va_aligned()
-or mm_get_unmapped_area() availalbe even for !MMU.  That's all about VAs
-and that do not exist in !MMU as a concept.
-
-Thanks,
-
--- 
-Peter Xu
-
+>
+> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> ---
+>  drivers/pci/controller/dwc/pci-imx6.c | 27 ++++-----------------------
+>  1 file changed, 4 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 5a38cfaf989b..7cab4bcfae56 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -159,7 +159,6 @@ struct imx_pcie {
+>  	u32			tx_deemph_gen2_6db;
+>  	u32			tx_swing_full;
+>  	u32			tx_swing_low;
+> -	struct regulator	*vpcie;
+>  	struct regulator	*vph;
+>  	void __iomem		*phy_base;
+>
+> @@ -1198,15 +1197,6 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  	struct imx_pcie *imx_pcie = to_imx_pcie(pci);
+>  	int ret;
+>
+> -	if (imx_pcie->vpcie) {
+> -		ret = regulator_enable(imx_pcie->vpcie);
+> -		if (ret) {
+> -			dev_err(dev, "failed to enable vpcie regulator: %d\n",
+> -				ret);
+> -			return ret;
+> -		}
+> -	}
+> -
+>  	if (pp->bridge && imx_check_flag(imx_pcie, IMX_PCIE_FLAG_HAS_LUT)) {
+>  		pp->bridge->enable_device = imx_pcie_enable_device;
+>  		pp->bridge->disable_device = imx_pcie_disable_device;
+> @@ -1222,7 +1212,7 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  	ret = imx_pcie_clk_enable(imx_pcie);
+>  	if (ret) {
+>  		dev_err(dev, "unable to enable pcie clocks: %d\n", ret);
+> -		goto err_reg_disable;
+> +		return ret;
+>  	}
+>
+>  	if (imx_pcie->phy) {
+> @@ -1269,9 +1259,6 @@ static int imx_pcie_host_init(struct dw_pcie_rp *pp)
+>  	phy_exit(imx_pcie->phy);
+>  err_clk_disable:
+>  	imx_pcie_clk_disable(imx_pcie);
+> -err_reg_disable:
+> -	if (imx_pcie->vpcie)
+> -		regulator_disable(imx_pcie->vpcie);
+>  	return ret;
+>  }
+>
+> @@ -1286,9 +1273,6 @@ static void imx_pcie_host_exit(struct dw_pcie_rp *pp)
+>  		phy_exit(imx_pcie->phy);
+>  	}
+>  	imx_pcie_clk_disable(imx_pcie);
+> -
+> -	if (imx_pcie->vpcie)
+> -		regulator_disable(imx_pcie->vpcie);
+>  }
+>
+>  static void imx_pcie_host_post_init(struct dw_pcie_rp *pp)
+> @@ -1739,12 +1723,9 @@ static int imx_pcie_probe(struct platform_device *pdev)
+>  	pci->max_link_speed = 1;
+>  	of_property_read_u32(node, "fsl,max-link-speed", &pci->max_link_speed);
+>
+> -	imx_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
+> -	if (IS_ERR(imx_pcie->vpcie)) {
+> -		if (PTR_ERR(imx_pcie->vpcie) != -ENODEV)
+> -			return PTR_ERR(imx_pcie->vpcie);
+> -		imx_pcie->vpcie = NULL;
+> -	}
+> +	ret = devm_regulator_get_enable_optional(&pdev->dev, "vpcie");
+> +	if (ret < 0 && ret != -ENODEV)
+> +		return dev_err_probe(dev, ret, "failed to enable vpcie");
+>
+>  	imx_pcie->vph = devm_regulator_get_optional(&pdev->dev, "vph");
+>  	if (IS_ERR(imx_pcie->vph)) {
+> --
+> 2.37.1
+>
