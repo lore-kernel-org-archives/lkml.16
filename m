@@ -1,77 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EC928312B;
-	Wed, 18 Jun 2025 09:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E64B283FFA
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238442; cv=none; b=qs5kphvZc4itYJXZw0YBtwTaIiPMXo9VOrwdJLVuQ0a2OY5xtabJg2I9GkQL67wlw+UlhDW+QG32yiYQlG88kmM1EQbYNfY10hMl6ocY97r19RuIWW++Ht8wriwkalH5Yshkcp5w3uPwDkRbV68+PAXhwpBs0rt0aHRkCy2aYxg=
+	t=1750238450; cv=none; b=giT8xuLEaqB77gs3PlLL7ZUyqdVp8QYr/jn7L96WPk2QKTgeCWYEB9mRwtkbCXoHTn3k7WOEYmkbVm6Wqiy6L1tiPrPa79vevn5DB286huQ0ZSQrQ8uNCcTOvP2T/rQSwSB0ZIYIQPtlILRxD0zcbWPq2zTI+rEbVblU1WbnNBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238442; c=relaxed/simple;
-	bh=UvazFRWtsQVcroH2hueaNN5Dpks1a0vU9l/0JVLr5w4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bBximeP0b4cVmIpKOZucHFwOKMf17DAeecelsTzWK1hW8k393JXtqOMx/pIEAlf+7+q+qwrgRSLoes3URFTx0wzK00p/PQyveme7cKxWYF2fZ6HZjdFuj8NdUgLe7Dbxsr1+ScG4MEFPJYFinc4Ao3dquHMB5gtFv95pxhLdabg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGVunDWd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750238450; c=relaxed/simple;
+	bh=IRP+3CAFUW4BsJ0AF1rbBPjb6qCHBeVG0qqt3MSiEw4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tv8HJIJ4JH7vO+liLUOMHmKiEi28z/JvWkLfZgogUO24+TQ6n/Hks0X1iXaIFFs6vWXo/tSjhW+xWx7/y1fj/qCW93vT90UVnXkPKQNtopaOPFov8zbisE69OX/EYPzsbD/iyRsjiBN9aEoHo+tV/7S+KTForOLzaJfLAH9NgE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HsBRnGYx; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGVunDWd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985FFC4CEE7;
-	Wed, 18 Jun 2025 09:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750238442;
-	bh=UvazFRWtsQVcroH2hueaNN5Dpks1a0vU9l/0JVLr5w4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lGVunDWdjtzBKeTrfku7CTTBS3GQTVXegKgvRMVkWJJc0OyU/kgpouOmnLQvWjrpO
-	 gnlfLhTUWweoLR7umNl1QlOXhaIF6+EWylg+BzL4+X3+Q5x1iMMtCfIbudUSVkiR9Y
-	 ltzNJ903/kefKIqyO/lUOqW/KKqIwFaCeB4LNShjnfNR1qwvGTSxAFJrB0WPqfeYJx
-	 DCKR4BJE8qdh94uH9V9GCroIoecryh7JwOq8YRvsqSQiUHjdBcuruf7PEr6kGfCLl7
-	 DvUX0D1avMKR4ldBIv9qb7+IrajVSFuuZrixPj4on2GvFWztucIfmf9Kf6QStHpWom
-	 W4LUQJjrsDEFg==
-From: Christian Brauner <brauner@kernel.org>
-To: RubenKelevra <rubenkelevra@gmail.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] fs_context: fix parameter name in infofc() macro
-Date: Wed, 18 Jun 2025 11:20:31 +0200
-Message-ID: <20250618-chirurgisch-heckklappe-eb658a60fa1d@brauner>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250617230927.1790401-1-rubenkelevra@gmail.com>
-References: <20250617230927.1790401-1-rubenkelevra@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HsBRnGYx"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-32aabfd3813so58767381fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 02:20:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750238446; x=1750843246; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IRP+3CAFUW4BsJ0AF1rbBPjb6qCHBeVG0qqt3MSiEw4=;
+        b=HsBRnGYxAnqjwazuk9LZaX0tF2m0h2w7nLRb8KeO5Sxrq5vZO++4xNQbF6vu0IM2/m
+         vKbFC8jjhkIrdWNILWBcOeaQwVReO9+TVWV2Lbtty+EWLVLD8zT88b5DxcvKQsfW8V8K
+         BjYGsy2KKIDUxTpJsMSr2B2nQzCRYOa5bUCbVBrYGkuwLmYSswqD4xGdcR0nBP4dAVyr
+         2snT/5kQyuwUwqlB0RdVk60qdcCIbAyPL4P9yc4qra218KcTgsrrhzOvOsY6KxJsfOVr
+         AoDpGgdpZySEwuiT435NfWqotwrzOG4rfy4/oLApZwKrb9FQsRaJEcG9kp0doDQSwAWj
+         NrQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750238446; x=1750843246;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IRP+3CAFUW4BsJ0AF1rbBPjb6qCHBeVG0qqt3MSiEw4=;
+        b=XewPe4l3Dqx9QrR09/NRBiJA1sO26gvYW9+xziY93YxfBBERa7a90fl9qQJtLzjHUA
+         FgG7xKZT5JXX6UJsecs1/cyXSe1ahDchfreN9hcFQEtGYbvy2EooH6epsEYaQqrCwN6I
+         E5RvOTx6/+MM5GJqJu9ialA+hIkrMASSpzKvn5wzosD1twqG+nJx5bkKyEg5aKw0FTSk
+         2R0ZNN2lWbaflIZuWkLerKnH7SvSw7dPSaoH3we7FNmQDaZEI1NRCrYOsneNA9eiz4Lo
+         hBzKbgAD9sT9D+5PgeLQRJa8/6XFKez0iJZw1sUbgsNBeEpkFGrhIiyG9NzvUDLtPAIW
+         vu2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXWtyji/WinTHI+Tb0RwgLh0qnVnT4yp0DimWBb00Sj/U0VDRCGxQ8hyKunbdzxLab83KTxbVhbNf6rxQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkXwdgB7YF5O8TazHowJjqslvkbl4ZnouP25bq8YOTwpjbqWRw
+	DYHdYoYL186iffj4FcSTZ7yBXvnYa/USdMSx9V8tyYQ2Lti2LJ9WdLOL3bsFjXXCHkCRNVBRNpf
+	Txr2wvOSHmfAbpiYqG16/G2svgsQjVnIOX2UbIQNF+g==
+X-Gm-Gg: ASbGncvUQnoD+4UxOKx29yWPc9XaNXiStEgPeksbZAvhhXdxkO/4twb1luF+atwUwjc
+	0cos9e931rEhqu2jdLhhDprCtRjKui+nNZJu5KPnpHAEu9CfzhIO99w1F5eQqAZJ5CA2fHlUW8z
+	pSuwm5+jZ5fkgE3Qo0YwEAPX6aMWopzYnKhGyhVErn+bA=
+X-Google-Smtp-Source: AGHT+IGYHmwuRCbsyGw1J8Pu6GUbhDQ6w+nVs1//AI3lpbzQb9Bb3dDWstkl4KwszZdq0G2erWbc3Ga3QrnKGmbGGhc=
+X-Received: by 2002:a05:651c:1a0a:b0:32b:522b:e446 with SMTP id
+ 38308e7fff4ca-32b522be65fmr41755231fa.10.1750238445710; Wed, 18 Jun 2025
+ 02:20:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1120; i=brauner@kernel.org; h=from:subject:message-id; bh=UvazFRWtsQVcroH2hueaNN5Dpks1a0vU9l/0JVLr5w4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQEtTx9u/ake2Bvy4Utxx7eLA6MTb6st4+3KkY+s+bc/ oMcuWnGHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPxmMzIcLIxdU/JpZhfTL5K pk0nyhlFlKYHHpp4YvW/17baO6Yl9jMy/G7hEcnW8f1z/+LrJ3mz9+/efqJT99LC33eVVsQka87 fzgQA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+References: <20250610143042.295376-1-antonio.borneo@foss.st.com>
+In-Reply-To: <20250610143042.295376-1-antonio.borneo@foss.st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 18 Jun 2025 11:20:34 +0200
+X-Gm-Features: AX0GCFuWBc_XYewjnfwAEfEgMlAZ5vMOVJJK7KgI8KvNcDIipEswDPcxuF3xpvc
+Message-ID: <CACRpkdYVaTvArLVNUYf41nm_StVkWT0CMmTxheT9ovbBE+PopQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] pinctrl: stm32: add irq affinity, RIF, module support
+To: Antonio Borneo <antonio.borneo@foss.st.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	=?UTF-8?Q?Cl=C3=A9ment_Le_Goffic?= <clement.legoffic@foss.st.com>, 
+	linux-arm-kernel@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 18 Jun 2025 01:09:27 +0200, RubenKelevra wrote:
-> The macro takes a parameter called "p" but references "fc" internally.
-> This happens to compile as long as callers pass a variable named fc,
-> but breaks otherwise. Rename the first parameter to “fc” to match the
-> usage and to be consistent with warnfc() / errorfc().
-> 
-> 
+On Tue, Jun 10, 2025 at 4:32=E2=80=AFPM Antonio Borneo
+<antonio.borneo@foss.st.com> wrote:
 
-Applied to the vfs-6.17.misc branch of the vfs/vfs.git tree.
-Patches in the vfs-6.17.misc branch should appear in linux-next soon.
+> This v2 is a subset of the v1, split-out to simplify the review.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+Patches applied!
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs-6.17.misc
-
-[1/1] fs_context: fix parameter name in infofc() macro
-      https://git.kernel.org/vfs/vfs/c/ffaf1bf3737f
+Yours,
+Linus Walleij
