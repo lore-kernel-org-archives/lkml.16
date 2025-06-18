@@ -1,92 +1,140 @@
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68B7285C86
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:40:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7FDC287511;
+	Wed, 18 Jun 2025 10:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750243214; cv=none; b=J1PKEgVpt6rOWbn4msGyO223CoKwOT+uksgsUfrtLPyffwdzpzvirmyxcsYGstN5+TgROkJs4QSoketLZxuKKx3l8O9JsQYIBQNNaDZWdTjCAeZCuUqNtEk5Dne09OYSJYL+BV9l+/5sQVr8RVXGdi8MozvAcnLq19ZKeEj3Vrw=
+	t=1750243217; cv=none; b=E4655D7N1lvVZZPSpVYgr49vqorDEuYYHE4dENJt88IaZHzgLTXTFXqBfs37nTDy9KR1OgyiBYwmmtf6/A7bCzDRl83M4ysyqth/HM7Dri1okBjYJq8eVq1GAGLyGDbLJzHZ8BpcMNh1yAClIi+LrnwgMYvm3vN375lgqKQ3cBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750243214; c=relaxed/simple;
-	bh=l1j2XZNr2NagHkM1d224PUPJnmMBNqSQwlLzte2sXGE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kwXx2q8DZ/WHODiOtxcjZAK2VKXqFn+eYy9sfS6fgSzbOiUHhveP1id4I08g6dQdKPRyjSYP+s3NmOTIdCCOiAvK6EPyU7UKl4RN3mi9Hs6LDPAaTnNUZDbLNHQkQU4jM9pFpiBpE/HPsOpf25VJmupP7VedlxkcVcAxQwN55lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net; spf=pass smtp.mailfrom=0leil.net; arc=none smtp.client-ip=84.16.66.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=0leil.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=0leil.net
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10::a6c])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bMg6w620szV2b;
-	Wed, 18 Jun 2025 12:32:56 +0200 (CEST)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4bMg6w1Bd1zC3G;
-	Wed, 18 Jun 2025 12:32:56 +0200 (CEST)
-From: Quentin Schulz <foss+kernel@0leil.net>
-Date: Wed, 18 Jun 2025 12:32:43 +0200
-Subject: [PATCH v3 4/5] arm64: dts: rockchip: force PMIC reset behavior to
- restart PMU on RK3588 Jaguar
+	s=arc-20240116; t=1750243217; c=relaxed/simple;
+	bh=51wCRu03wox33FTIXViaidWRudb0sMds0JcAe+JfauA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNu8vURWnBW8zCwYMUxI+rE+eAQ+1MF1KYddFGy8cQ18zqPhFncyG3qCf8XTMOo6x8soqIrF9wgd74TN/IG3fX5K3OliIdA2UdHwKfis1b9yp8tjSPou4Tqm4XLGL5ItiqlhbMhlzX4L/l9rPaRIHkStvAHwL1pho/hNs75XwiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=SKYkjvFa; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="SKYkjvFa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750243204;
+	bh=51wCRu03wox33FTIXViaidWRudb0sMds0JcAe+JfauA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SKYkjvFabhz5v3eotyH+VR33rDo8Vn6qp1HQO9AA9JrLi0WHj7nvZDXYrgE6LXftK
+	 70KV5PoR5LINvJhOmMhRHxHEUqmMaYG/xizWBNR2bpgRdf862Z2Wi5ekUOCPGeBEbP
+	 BHnSv0SLZTUYqb3DZBCF37EAevVXAwhzLjwp73ko=
+Date: Wed, 18 Jun 2025 12:40:04 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Sung-Chi Li <lschyi@chromium.org>
+Cc: Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] hwmon: (cros_ec) add PWM control over fans
+Message-ID: <179a21f9-c578-46e9-89dd-1b9e32889015@t-8ch.de>
+References: <20250512-cros_ec_fan-v3-0-a9f2b255f0cd@chromium.org>
+ <20250512-cros_ec_fan-v3-2-a9f2b255f0cd@chromium.org>
+ <ca2c10be-3dc4-45e1-b7fc-f8db29a1b6a0@t-8ch.de>
+ <aFJqLkkdI86V3fM9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-rk8xx-rst-fun-v3-4-081f02d3d348@cherry.de>
-References: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
-In-Reply-To: <20250618-rk8xx-rst-fun-v3-0-081f02d3d348@cherry.de>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Lukasz Czechowski <lukasz.czechowski@thaumatec.com>, 
- Daniel Semkowicz <dse@thaumatec.com>, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Quentin Schulz <quentin.schulz@cherry.de>
-X-Mailer: b4 0.14.2
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFJqLkkdI86V3fM9@google.com>
 
-From: Quentin Schulz <quentin.schulz@cherry.de>
+On 2025-06-18 15:26:38+0800, Sung-Chi Li wrote:
+> On Mon, May 12, 2025 at 09:30:39AM +0200, Thomas Weißschuh wrote:
+> 
+> Sorry for the late reply, I missed mails for this series.
+> 
+> > On 2025-05-12 15:11:56+0800, Sung-Chi Li via B4 Relay wrote:
+> > > From: Sung-Chi Li <lschyi@chromium.org>
+> > >  static int cros_ec_hwmon_read_temp(struct cros_ec_device *cros_ec, u8 index, u8 *temp)
+> > >  {
+> > >  	unsigned int offset;
+> > > @@ -73,7 +117,9 @@ static long cros_ec_hwmon_temp_to_millicelsius(u8 temp)
+> > >  static int cros_ec_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> > >  			      u32 attr, int channel, long *val)
+> > >  {
+> > > +	u8 control_method;
+> > >  	struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+> > > +	u8 pwm_value;
+> > >  	int ret = -EOPNOTSUPP;
+> > >  	u16 speed;
+> > >  	u8 temp;
+> > 
+> > Ordering again.
+> > 
+> > This should be:
+> > 
+> > struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+> > int ret = -EOPNOTSUPP;
+> > u8 control_method;
+> > u8 pwm_value;
+> > u16 speed;
+> > u8 temp;
+> > 
+> > or:
+> > 
+> > struct cros_ec_hwmon_priv *priv = dev_get_drvdata(dev);
+> > u8 control_method, pwm_value, temp;
+> > int ret = -EOPNOTSUPP;
+> > u16 speed;
+> > 
+> > <snip>
+> > 
+> 
+> Would you mind to share the sorting logic, so I do not bother you with checking
+> these styling issue? Initially, I thought the sorting is based on the variable
+> name, but after seeing your example (which I am appreciated), I am not sure how
+> the sorting works. Is it sorted along with the variable types (
+> "u8 control_method", "u16 speed", etc)? If that is the case, why "u16 speed" is
+> in the middle of the u8 group variables?
 
-The bootloader for RK3588 Jaguar currently forces the PMIC reset
-behavior (stored in RST_FUN bitfield in register SYS_CFG3 of the PMIC)
-to 0b1X which is incorrect for our devices.
+Welp, I really should have explained this, instead of assuming it to be
+obvious, sorry. The sorting is based on the length of the line, AKA
+the "reverse christmas tree".
 
-It is required to restart the PMU as otherwise the companion
-microcontroller cannot detect the PMIC (and by extension the full
-product and main SoC) being rebooted which is an issue as that is used
-to reset a few things like the PWM beeper and watchdogs.
+While this is not a strict rule, the driver is already using it, so I'd
+like to stick to it. "Bonus points" for preserving preserving
+semantically useful ordering within the line-length based one.
 
-Let's add the new rockchip,reset-mode property to make sure the PMIC
-reset behavior is the expected one.
+> > > +static inline bool is_cros_ec_cmd_fulfilled(struct cros_ec_device *cros_ec,
+> > > +					    u16 cmd, u8 version)
+> > 
+> > "fulfilled" -> "available" or "present"
+> > 
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret = cros_ec_get_cmd_versions(cros_ec, cmd);
+> > > +	return ret >= 0 && (ret & EC_VER_MASK(version));
+> > > +}
+> > > +
+> > > +static bool cros_ec_hwmon_probe_fan_control_supported(struct cros_ec_device *cros_ec)
+> > > +{
+> > > +	if (!IS_ENABLED(CONFIG_PM))
+> > > +		return false;
+> > 
+> > Why? This should generally work fine without CONFIG_PM.
+> > Only the suspend/resume callbacks are unnecessary in that case.
+> > 
+> 
+> I treat fan control should include restoring the fan setting after resume, so
+> I think if no CONFIG_PM, the fan control is not complete. I am good with
+> removing this check, and if you have any thoughts after this explanation, please
+> share with me, otherwise I will remove it in the next series.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
----
- arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts | 2 ++
- 1 file changed, 2 insertions(+)
+As far as I understand, with CONFIG_PM=n the kernel won't be able to do
+any suspend/resume. So cros_ec_hwmon won't need to handle the
+suspend/resume case. However even then the regular UAPI for fan duty
+management is useful for users.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-index ebe77cdd24e803b00fb848dc81258909472290f1..176925d0a1a809d1e2500f5e5efbbfa6a6d0bd42 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts
-@@ -10,6 +10,7 @@
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/soc/rockchip,vop2.h>
- #include <dt-bindings/usb/pd.h>
-+#include "rk8xx.h"
- #include "rk3588.dtsi"
- 
- / {
-@@ -693,6 +694,7 @@ pmic@0 {
- 		vcc13-supply = <&vcc_1v1_nldo_s3>;
- 		vcc14-supply = <&vcc_1v1_nldo_s3>;
- 		vcca-supply = <&vcc5v0_sys>;
-+		rockchip,reset-mode = <RK806_RESTART>;
- 
- 		rk806_dvs1_null: dvs1-null-pins {
- 			pins = "gpio_pwrctrl1";
 
--- 
-2.49.0
-
+Thomas
