@@ -1,174 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9E72857C4;
-	Wed, 18 Jun 2025 14:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72BE2857C4;
+	Wed, 18 Jun 2025 14:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257771; cv=none; b=lzPJCSFZzDDRkZJmwCGU+b6gydXvbDH5N3WidIPbFiiDTfBZ24QpPChjM/EI5WpMeSyadHkSqjKQrfz0dHwsfEyBUeIJmCXT9oksaRwV6suaL/RxY++rI1doJD6BePb1qXQAaQb8c3eCFmtSlRGeAHFT5WmrWkd6Ck2m8Jzyo5E=
+	t=1750257783; cv=none; b=nUrNGzHDAmZ2TLF1mn1XsHfbHNQPHUjo8DHA/q93/7la0A4Yrya6E1VS4N1O7eB9AYwaDmIuAoicqY64tSBapyRimbiYhKKN+6UUSkE511vFd1JfFwCExfu5U+4A19G0h4CpnxJqq4szfUbnGnTFXsKEdRcgLzQyW2gydmiIV68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257771; c=relaxed/simple;
-	bh=fu330xSEk34myvXM2FmUcjDULCgUcx4Y2nO4pValKeA=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JkyPye4mH78S1pVdO0hrwwUk9x/hXKGXfJEVEov5phD6zeWpDe02KoANp8I8/alZoVzFOsggfYw8iDB9neeFArQtf+3uyC7M0uDoPzccV6VCPZcd3mWBUku9+yqqO+4LrU7gWsrkELak6lF+S/KMNh+PYP7gBcsvgS7AsFr05uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XeWbH1Z7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750257783; c=relaxed/simple;
+	bh=PrZaNm6qDKMMPOosHmNnwgemktPduDUpv1k8byWJZYM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qh2+thFxhdbMhQfXDRyYBdkt4/0XzrPT0KhkXclfq83GgWuAwfy7a7QqDykcDAD/VL931QdJJaa7KrxUsoM8zvsOYCOrhhBZzybWc9s8I2XJ47jav7s3mHEP7qyQDgHkbk+OjlLzz7Fex3gc5zz4Py6iR6Q0VVGN7YtmrwEc/mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=offtK985; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XeWbH1Z7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F77C4CEE7;
-	Wed, 18 Jun 2025 14:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750257771;
-	bh=fu330xSEk34myvXM2FmUcjDULCgUcx4Y2nO4pValKeA=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=XeWbH1Z7/FOYjckEzkXXWfCyrsqbqJHQy1hVr+/QL4QC/T8XbL38fsjPrNa8fIu85
-	 rV2zKebwa6scOsInM/7Yn3MaVvtB+MsTWv70KJVe9B3ISKgJZETDITg/3rdBn3AVzB
-	 1rnIjOIvWl2ys6dLXmaFWVggpz8O3gdnmdz+eTwvjb7YkwW1MUbHEJw3CThw8mh/j5
-	 RSpqep54aWEXc/W65XM143IV0jxO4rGSZItM4IQjgVbsiRmsAGexDNdbipQNCn3xBZ
-	 dtVJsekb8mjpyB5saiBPto57MwnvaErVq3uU/IgCbA3lck7mpP8S56QBR2fcHhAGYG
-	 t6XLivCl0U09g==
-Date: Wed, 18 Jun 2025 16:42:46 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Philipp Stanner <phasta@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org
-Subject: Re: [PATCH v2] drm/sched: Clarify scenarios for separate workqueues
-Message-ID: <aFLQZitx1NYcXcMB@pollux>
-References: <20250612144953.111829-2-phasta@kernel.org>
- <aFFy5aG1eOeMU44S@phenom.ffwll.local>
- <aFF3YIAFkgsAKvQV@pollux>
- <aFF6xeu78cXTGFH0@phenom.ffwll.local>
- <aFGFCc7eiZJM8RKM@pollux>
- <aFLH8Us_e_U6gNHV@phenom.ffwll.local>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="offtK985"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EAEB541C7D;
+	Wed, 18 Jun 2025 14:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1750257773;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JzWFlr2A7u8I/cmOU56J1GxJWMKdjSuVd6OZq31pqlI=;
+	b=offtK985QWC9Y9SMQyoGUK+ubgYHYwtp3Ry75PZSTdduYP/uPYN17wMcT6zdoxRPIadwMc
+	UA2CBZy3lQnjmmdj/B7KtgolgLPGINTxEQN2R5KmeuqUKLhfdkvpJeSWUpme3kw9G/+1vO
+	eIsmF5EJmv03f8CVuPAqQ1edARUdjvY3B8sghPI69X+C1mywTXq/+jNwnNIlf+CT9haFIr
+	iPunvSnJ1ij29Rst3NJkEGdSXArzyYgnjcV3KkYfZz1fXNyPaPPUFKOvWd9hdBuczCgpoh
+	ENIJCTX6+LY3iDEcOGZLxJYpIpZxqTKxK0co4wPBgegu1Fvd9zz/camjiD5NjA==
+Date: Wed, 18 Jun 2025 16:42:52 +0200
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+To: Troy Mitchell <troymitchell988@gmail.com>
+Cc: linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rtc: pcf8563: fix wrong alarm register
+Message-ID: <202506181442521b980f06@mail.local>
+References: <20250419-pcf8563-fix-alarm-v1-1-b893a5de55b8@gmail.com>
+ <20250524213645d5543d64@mail.local>
+ <3fca9368-9f2e-4f4f-a02a-2ccb9f23deb4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFLH8Us_e_U6gNHV@phenom.ffwll.local>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fca9368-9f2e-4f4f-a02a-2ccb9f23deb4@gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomheptehlvgigrghnughrvgcuuegvlhhlohhnihcuoegrlhgvgigrnhgurhgvrdgsvghllhhonhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedviefghedvvefhheevjefghedujeekfeeuvdfhgeduffduveehgfdvgeejheejvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemvgdtfhgvmeegfhdvfhemvdelvgegmeehudejtgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemvgdtfhgvmeegfhdvfhemvdelvgegmeehudejtgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigrghnughrvgdrsggvlhhlohhnihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedprhgtphhtthhopehtrhhohihmihhttghhvghllhelkeeksehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhttgesvhhgvghrrdhkvghrn
+ hgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexandre.belloni@bootlin.com
 
-On Wed, Jun 18, 2025 at 04:06:41PM +0200, Simona Vetter wrote:
-> On Tue, Jun 17, 2025 at 05:08:57PM +0200, Danilo Krummrich wrote:
-> > On Tue, Jun 17, 2025 at 04:25:09PM +0200, Simona Vetter wrote:
-> > > On Tue, Jun 17, 2025 at 04:10:40PM +0200, Danilo Krummrich wrote:
-> > > > On Tue, Jun 17, 2025 at 03:51:33PM +0200, Simona Vetter wrote:
-> > > > > On Thu, Jun 12, 2025 at 04:49:54PM +0200, Philipp Stanner wrote:
-> > > > > > + * NOTE that sharing &struct drm_sched_init_args.submit_wq with the driver
-> > > > > > + * theoretically can deadlock. It must be guaranteed that submit_wq never has
-> > > > > > + * more than max_active - 1 active tasks, or if max_active tasks are reached at
-> > > > > > + * least one of them does not execute operations that may block on dma_fences
-> > > > > > + * that potentially make progress through this scheduler instance. Otherwise,
-> > > > > > + * it is possible that all max_active tasks end up waiting on a dma_fence (that
-> > > > > > + * can only make progress through this schduler instance), while the
-> > > > > > + * scheduler's queued work waits for at least one of the max_active tasks to
-> > > > > > + * finish. Thus, this can result in a deadlock.
-> > > > > 
-> > > > > Uh if you have an ordered wq you deadlock with just one misuse. I'd just
-> > > > > explain that the wq must provide sufficient forward-progress guarantees
-> > > > > for the scheduler, specifically that it's on the dma_fence signalling
-> > > > > critical path and leave the concrete examples for people to figure out
-> > > > > when the design a specific locking scheme.
-> > > > 
-> > > > This isn't a concrete example, is it? It's exactly what you say in slightly
-> > > > different words, with the addition of highlighting the impact of the workqueue's
-> > > > max_active configuration.
-> > > > 
-> > > > I think that's relevant, because N - 1 active tasks can be on the dma_fence
-> > > > signalling critical path without issues.
-> > > > 
-> > > > We could change
-> > > > 
-> > > > 	"if max_active tasks are reached at least one of them must not execute
-> > > > 	 operations that may block on dma_fences that potentially make progress
-> > > > 	 through this scheduler instance"
-> > > > 
-> > > > to 
-> > > > 
-> > > > 	"if max_active tasks are reached at least one of them must not be on the
-> > > > 	 dma_fence signalling critical path"
-> > > > 
-> > > > which is a bit more to the point I think.
-> > > 
-> > > My point was to more state that the wq must be suitable for the scheduler
-> > > jobs as the general issue, and specifically then also highlight the
-> > > dma_fence concurrency issue.
+Hello Troy,
+
+On 25/05/2025 10:36:55+0800, Troy Mitchell wrote:
+> On 2025/5/25 05:36, Alexandre Belloni wrote:
+> > On 19/04/2025 22:37:10+0800, Troy Mitchell wrote:
+> >> Fix wrong register and align `pcf8563_get_alarm_mode`
+> >> with the naming convention used in ops.
+> >>
+> >> Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+> >> ---
+> >> Since this patch[1], the set_alarm function has been setting
+> >> an wrong register.
+> >>
+> >> Link:
+> >> https://lore.kernel.org/all/20241010084949.3351182-3-iwamatsu@nigauri.org/ [1]
+> >> ---
+> >>  drivers/rtc/rtc-pcf8563.c | 8 ++++----
+> >>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/rtc/rtc-pcf8563.c b/drivers/rtc/rtc-pcf8563.c
+> >> index 5a084d426e58d09cfedf0809695a96a27627c420..61e2f9757de9f24407f9262657da0d1586ce124e 100644
+> >> --- a/drivers/rtc/rtc-pcf8563.c
+> >> +++ b/drivers/rtc/rtc-pcf8563.c
+> >> @@ -103,7 +103,7 @@ static int pcf8563_set_alarm_mode(struct pcf8563 *pcf8563, bool on)
+> >>  	return regmap_write(pcf8563->regmap, PCF8563_REG_ST2, buf);
+> >>  }
+> >>  
+> >> -static int pcf8563_get_alarm_mode(struct pcf8563 *pcf8563, unsigned char *en,
+> >> +static int pcf8563_read_alarm_mode(struct pcf8563 *pcf8563, unsigned char *en,
 > > 
-> > Sure, there are more guarantees the driver has to uphold, but this is one of
-> > them, so I think we should explain it.
-> > 
-> > > But it's not the only one, you can have driver locks and other fun involved
-> > > here too.
-> > 
-> > Yeah, but it boils down to the same issue, e.g. if a driver takes a lock in
-> > active work, and this lock is taken elsewhere for activities that violate the
-> > dma_fence signalling critical path.
-> > 
-> > All the cases I have in mind boil down to that we potentially, either directly
-> > or indirectly (through some synchronization primitive), wait for things we are
-> > not allowed to wait for in the dma_fence signalling critical path.
-> > 
-> > Or do you mean something different?
+> > I was going to apply the patch but this is an unrelated change, please submit
+> > just the fix so it can be backported.
+> Hi, Could you please clarify if this renaming change would be acceptable？
+> If it is acceptable, I will split the original patch into two.
+> If not, I will remove the renaming change.
+
+Thanks for v2, I don't think the renaming is actually worth it, unless there is
+more rework on the driver.
+
 > 
-> You could also grab a mutex in those driver work items that is held while
-> waiting for a dma_fence somewhere. The dma_fence annotations should catch
-> that, but at least in my reading of the text here it's not covered.
-
-That's exactly one example of what I mean above with: "All the cases I have in
-mind boil down to that we potentially, either directly or indirectly (through
-some synchronization primitive), wait for things we are not allowed to wait for
-in the dma_fence signalling critical path."
-
-> But my main point is what I explain below, the text fails to clearly
-> address the issues that all current drivers (maybe all reasonable drivers,
-> but sometimes I lack imagination) can encounter, so to me it's too generic
-> and not that directly applicable in practice.
-
-I mean, the ordered workqueue isn't more limited than any other workqueue, it's
-just that the likelyhood of hitting problems increases with max_active being
-lower or even one.
-
-But the error conditions are the exact same, aren't they? We always have to
-ensure that at least one slot of the workqueue is not running a task that does
-things that are not allowed to do in the dma_fence signalling critical path.
-
-So, this part is technically covered. Do I understand you correctly that you say
-you think it's covered too generically?
-
-Do you propose to list the things we're not allowed to do explicitly?
-
-> And then on the other hand
-> dma_fence is definitely the big thing, but fundamtentally you tie anything
-> you schedule on those wq to the drm/scheduler design in it's entirety. So
-> for the general rule, it's not generic enough for my taste.
-
-Sorry, I can't follow that. Can you please expand a bit on what you think is not
-generic enough?
-
-> > > Also since all the paragraphs above talk about ordered wq as the example
-> > > where specifying your own wq makes sense, it's a bit confusing to now
-> > > suddenly only talk about the concurrent wq case without again mentioned
-> > > that the ordered wq case is really limited.
+> 			- Troy
 > > 
-> > I mean, it talks about both cases in a generic way, i.e. if you set
-> > max_active == 1 in the text it covers the ordered case.
+> >>  				  unsigned char *pen)
+> >>  {
+> >>  	u32 buf;
+> >> @@ -127,7 +127,7 @@ static irqreturn_t pcf8563_irq(int irq, void *dev_id)
+> >>  	char pending;
+> >>  	int err;
+> >>  
+> >> -	err = pcf8563_get_alarm_mode(pcf8563, NULL, &pending);
+> >> +	err = pcf8563_read_alarm_mode(pcf8563, NULL, &pending);
+> >>  	if (err)
+> >>  		return IRQ_NONE;
+> >>  
+> >> @@ -262,7 +262,7 @@ static int pcf8563_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *tm)
+> >>  	tm->time.tm_mday = bcd2bin(buf[2] & 0x3F);
+> >>  	tm->time.tm_wday = bcd2bin(buf[3] & 0x7);
+> >>  
+> >> -	err = pcf8563_get_alarm_mode(pcf8563, &tm->enabled, &tm->pending);
+> >> +	err = pcf8563_read_alarm_mode(pcf8563, &tm->enabled, &tm->pending);
+> >>  	if (err < 0)
+> >>  		return err;
+> >>  
+> >> @@ -285,7 +285,7 @@ static int pcf8563_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *tm)
+> >>  	buf[2] = bin2bcd(tm->time.tm_mday);
+> >>  	buf[3] = tm->time.tm_wday & 0x07;
+> >>  
+> >> -	err = regmap_bulk_write(pcf8563->regmap, PCF8563_REG_SC, buf,
+> >> +	err = regmap_bulk_write(pcf8563->regmap, PCF8563_REG_AMN, buf,
+> >>  				sizeof(buf));
+> >>  	if (err)
+> >>  		return err;
+> >>
+> >> ---
+> >> base-commit: 8560697b23dc2f405cb463af2b17256a9888129d
+> >> change-id: 20250419-pcf8563-fix-alarm-5e787f095861
+> >>
+> >> Best regards,
+> >> -- 
+> >> Troy Mitchell <troymitchell988@gmail.com>
+> >>
 > > 
-> > Or do you mean to say that we should *only* allow ordered workqueues to be
-> > shared with the driver?
 > 
-> Both examples talk about ordered wq, they don't make any sense with
-> max_active > 1, and I can't come up with any example that would. So yeah
-> I'm leaning in that direction, at least in the docs. Only discussing
-> max_active > 1 for this specific issue is imo very confusing and not
-> helping much. I guess we could even WARN_ON if a provided wq is not
-> ordered, because that does smell funky for sure.
+> -- 
+> Troy Mitchell
+> 
 
-I think there is nothing wrong with sharing a workqueue with WQ_MAX_ACTIVE
-between scheduler instances. In the firmware scheduler case we may have quite a
-lot of them. So, why create a new workqueue for each of those, in case we can't
-take advantage of the synchronization trick with ordered workqueues?
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
