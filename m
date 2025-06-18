@@ -1,292 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02485FBF0
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E27D198A2F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 08:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236114; cv=none; b=TAxgyaRQbfwNXgasEr/rpqPAcqxyKtKcKjH4Vi5KUE0grYqBAxZN0ukaJEBMA8twK9oz8OtiRBqZF/V2VsxhwiXrorB8HN48UTVxBYMEYYP5M4QjR80b+jvj4UufcZu6ifuar64Xe9INtB6/xpjSaCisYcut0qfV10Wcezrl3qs=
+	t=1750236134; cv=none; b=dmKkjVxzesBD94iYFJ4W3vM+tjjVgTXravDfz7Ky6QWoPP1nnj3J6TsEQwfT9DpvpRrkGtZP9YUorkij/DHjndInNA9t/QBDgMjCc8YQdWbNtu9a000RfKz+g3o8VkczMWndGVN8YxNYWDRpuCM7ytsKQVKQg02c9CDkhE00dIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236114; c=relaxed/simple;
-	bh=lqBlZ45BuFvcS1wyiT8dj4FpyJ53KdG4DblsfFPLDSo=;
+	s=arc-20240116; t=1750236134; c=relaxed/simple;
+	bh=tLuMERFkhkMvyc4RUg0kVrXZFLmMUYPq2RC7G9Wn0DI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=koGeWiS/QhnQk9mnFnp6u/3z9FUkS6lVNFqsaHl0j9I2UEx978yRTG6c8AzZDZg9rrNYIlQWu7seCklIjRrucso3YOhn00rKUcMrDWkZvVtNrEYfL292NXGwL0xOtKUm5rIiTIQsprWJj3SNWrHq4SJmG4z1oo+aN3ByAUuRJDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2SCpKkc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAPp+MUMQQzsWFzfqjIiOgeDVv8YaqinBJsHqPtX0uW+hVg6wxFPYL8GuyHl02gB6wyx+8n7JgzowEVPvX81/yPrSUGCJlg5Nlzi9W3wMhvfsYa2HYJ+FaRHAsLV209lQwUYw7n8Mv833FHsK0I/4uLXxJckgx6v4tCvhr4Z/TM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=geWLGPvH; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2SCpKkc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD50C4CEE7;
-	Wed, 18 Jun 2025 08:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750236113;
-	bh=lqBlZ45BuFvcS1wyiT8dj4FpyJ53KdG4DblsfFPLDSo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s2SCpKkcndHTKAOn/flJvC/dheyA7qv7Gv6zMp9Q9OgTt51ZEQlffmH6kJRhCkhX9
-	 Qt2kSIwuGl+70Ebky2GBqugVujkP26UcUzWXLji0ayKPmwPjqftzurpwyJ1w73YbRR
-	 S52wlXZmVfKHj1ugEd4y2KaFtJDiO+jrW9hBfg+bNOALyb4DRFy8LuaYIbPJ1iia03
-	 vnm8IMksPp090KPZYnbRcUxwLpopLoGm/WwbQJef9fdc+zGgJWNfmZIo6+jI5kq50b
-	 pe97x6QiSG6YRmHuq/Ot4FR6Ga5+XtmK9CbnmWfvictLfEeplXCR9SVftBKD0vKrOJ
-	 At/1ICXdKOvSA==
-Date: Wed, 18 Jun 2025 10:41:50 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Dharma Balasubiramani <dharma.b@microchip.com>
-Cc: Manikandan Muralidharan <manikandan.m@microchip.com>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, Sandeep Sheriker M <sandeep.sheriker@microchip.com>
-Subject: Re: [PATCH] drm/bridge: fix LVDS controller bus format
-Message-ID: <20250618-fragrant-seagull-of-tranquility-c91dfd@houat>
-References: <20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="geWLGPvH"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so44486965e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750236130; x=1750840930; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E4gyiOM+R6q4LAtiBITFj3HVk+KRLwjIRJzv+V7V2gA=;
+        b=geWLGPvHltxTWo55IuvC5G6SPamU78oFFs+0dSyYlzrrGaLQSW8C83aZfN3RtGdbl9
+         aoXTlpMp97QxAvLmmZ/EoIGI3MswiwU2qJFr7+xT9Q1GcLAJ28wELV3l14LaSRcaaMHt
+         4T1u/G/HK+Q8jwYXCWAjeAIqiWtqoOqdYaR7Opk9Lf1vmMThyyGNeopXQjiOBFQ70Cs0
+         o7TQ/KXcoeQ5PYp5pK4MSt2+VB0yqEoSHmgvcEITsPQMlYfqk4jnoIw+eJk151XRx2ue
+         Zl7cfrvcAkFmpo/arg4aWgmfrVtcJc0fnw2zEsbHEaKdeex1VDMq1WxUypWQLDbYveuO
+         P0Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750236130; x=1750840930;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E4gyiOM+R6q4LAtiBITFj3HVk+KRLwjIRJzv+V7V2gA=;
+        b=JmHozTvtbFzVobeawQD49Diz3rwcpUz6YxcscOgTtrTCp7Bn8/ork9z35EImVIDj4d
+         a9NvPQR3O3V0jbqZVGIvDF79z6iCnJp1rxcjqN1AXTCAYodWRTSWFDCGkZZEREn988TW
+         dyoCiWkJiOMouMHPVT6TiqiaVN6cwLPiiJnsuAPtvnuX6elUHDRUILbS0Td2SKDPTBJR
+         6XThOwrMzuswh7SwH0BHjbfjYmh7aaC98SB2ThtnsHHnp0IxilTAO29mrMrY/d9fsuKl
+         xUum6R1hNkh3b+8skh1O8QTooAJW6kwUy40UtZ7e5gdgPSRmyJkY1cYjOy8a3RG9nxbc
+         H6ew==
+X-Forwarded-Encrypted: i=1; AJvYcCUBjcCLuaUZ9rgE94FdO9xgKCPnEDJLE7aSU+NygZvcEQZZuJFquaS7TeM7AyDNiRcNoqxvP+aSK2eb7ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynzAQDx3U38occFmrUTj7/fk701JjkZJxCCscUjzZYeklwxqBm
+	0cSqe84lsWo7Lhq+7NaNbflaezdxcTEC49TXI//FyP9yBYSezMQuGg8c+D/gE9n+Jwk=
+X-Gm-Gg: ASbGncuq2TgtwDa/jIE1XQ2BuYvCwtIXrSnn6Dzx2JpK8WH2rEVo0f/H/IAukkw9XC0
+	j0O4qdPvCYs9d3u0hHFV19kx2GVU40XBGzl5PQgLYDQxNWRVW2Ar/7aMAK9REr25Fy3c4M9XSiU
+	ybuFy3N2nq1oDDngi3uR8dBvrHKT06CxgndermzDN1qfbNtrMlP+Ypb9ewI5XgxJOor4d93rwN3
+	VTurC+ndHCiO/lbFM/lrzYGfdrLyNdMJAlRLWeNsfob4YcREm0V1yQY97oULLikNhjnNfPMeTOF
+	xyzwO2R59tuUgFfWmuHJPcX5FwbKLjy0oDXZI4tI7FSs7z/fsBkJHbB330BkyyL7
+X-Google-Smtp-Source: AGHT+IH87VAwC/pIDh8SB1lVx0PiK/TX81W5Y3bCglq4KyJ4mokgrwmhsvbaOnDPi+FmoaFjsfeO5Q==
+X-Received: by 2002:a05:600c:5025:b0:43e:afca:808f with SMTP id 5b1f17b1804b1-4533cb5ddabmr168887675e9.31.1750236130292;
+        Wed, 18 Jun 2025 01:42:10 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4534172d2b0sm131736755e9.35.2025.06.18.01.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jun 2025 01:42:09 -0700 (PDT)
+Date: Wed, 18 Jun 2025 10:42:08 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Chen Ridong <chenridong@huaweicloud.com>
+Cc: tj@kernel.org, hannes@cmpxchg.org, rafael.j.wysocki@intel.com, 
+	mingo@kernel.org, peterz@infradead.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lujialin4@huawei.com, chenridong@huawei.com
+Subject: Re: [next] cgroup,freezer: fix incomplete freezing when attaching
+ tasks
+Message-ID: <sfmtpva4z4jxrlmmeyigz4n7wozfveii3cuaks3s4dgf6noyfg@gutbimmbjfbb>
+References: <20250618073217.2983275-1-chenridong@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="hntctm46fzjyd4a7"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4hq7nl43p24s2oqa"
 Content-Disposition: inline
-In-Reply-To: <20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com>
+In-Reply-To: <20250618073217.2983275-1-chenridong@huaweicloud.com>
 
 
---hntctm46fzjyd4a7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--4hq7nl43p24s2oqa
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drm/bridge: fix LVDS controller bus format
+Subject: Re: [next] cgroup,freezer: fix incomplete freezing when attaching
+ tasks
 MIME-Version: 1.0
 
-Hi,
-
-On Wed, Jun 18, 2025 at 10:02:42AM +0530, Dharma Balasubiramani wrote:
-> From: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
+On Wed, Jun 18, 2025 at 07:32:17AM +0000, Chen Ridong <chenridong@huaweiclo=
+ud.com> wrote:
+> From: Chen Ridong <chenridong@huawei.com>
 >=20
-> The current LVDS controller driver is hardcoded to map LVDS lanes to the
-> JEIDA format. Consequently, connecting an LVDS display that supports the
-> VESA format results in a distorted display due to the format mismatch.
->=20
-> Query the panel driver and set the appropriate format to resolve the issu=
-e.
->=20
-> Signed-off-by: Sandeep Sheriker M <sandeep.sheriker@microchip.com>
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+> An issue was found:
 
-It looks like there's a bit of context missing to explain why you needed
-to do it that way. See below.
+An obligatory reminder to move to freezer in the unifier hierarchy if
+possible. Thanks for the fix though.
 
+>=20
+> 	# cd /sys/fs/cgroup/freezer/
+> 	# mkdir test
+> 	# echo FROZEN > test/freezer.state
+> 	# cat test/freezer.state
+> 	FROZEN
+> 	# sleep 1000 &
+> 	[1] 863
+> 	# echo 863 > test/cgroup.procs
+> 	# cat test/freezer.state
+> 	FREEZING
+>=20
+> When tasks are migrated to a frozen cgroup, the freezer fails to
+> immediately freeze the tasks, causing the cgroup to remain in the
+> "FREEZING".
+>=20
+> The freeze_task() function is called before clearing the CGROUP_FROZEN
+> flag. This causes the freezing() check to incorrectly return false,
+> preventing __freeze_task() from being invoked for the migrated task.
+>=20
+> To fix this issue, clear the CGROUP_FROZEN state before calling
+> freeze_task().
+>=20
+> Fixes: f5d39b020809 ("freezer,sched: Rewrite core freezer logic")
+> Reported-by: Zhong Jiawei <zhongjiawei1@huawei.com>
+> Signed-off-by: Chen Ridong <chenridong@huawei.com>
 > ---
->  drivers/gpu/drm/bridge/microchip-lvds.c | 108 ++++++++++++++++++++++++++=
-++++--
->  1 file changed, 102 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/br=
-idge/microchip-lvds.c
-> index 9f4ff82bc6b4..5e99c01033bb 100644
-> --- a/drivers/gpu/drm/bridge/microchip-lvds.c
-> +++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-> @@ -11,6 +11,7 @@
->  #include <linux/component.h>
->  #include <linux/delay.h>
->  #include <linux/jiffies.h>
-> +#include <linux/media-bus-format.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/of_graph.h>
->  #include <linux/pinctrl/devinfo.h>
-> @@ -41,9 +42,11 @@
-> =20
->  /* Bitfields in LVDSC_CFGR (Configuration Register) */
->  #define LVDSC_CFGR_PIXSIZE_24BITS	0
-> +#define LVDSC_CFGR_PIXSIZE_18BITS	1
->  #define LVDSC_CFGR_DEN_POL_HIGH		0
->  #define LVDSC_CFGR_DC_UNBALANCED	0
->  #define LVDSC_CFGR_MAPPING_JEIDA	BIT(6)
-> +#define LVDSC_CFGR_MAPPING_VESA		0
-> =20
->  /*Bitfields in LVDSC_SR */
->  #define LVDSC_SR_CS	BIT(0)
-> @@ -58,6 +61,7 @@ struct mchp_lvds {
->  	struct clk *pclk;
->  	struct drm_panel *panel;
->  	struct drm_bridge bridge;
-> +	struct drm_connector connector;
->  	struct drm_bridge *panel_bridge;
->  };
-> =20
-> @@ -66,6 +70,11 @@ static inline struct mchp_lvds *bridge_to_lvds(struct =
-drm_bridge *bridge)
->  	return container_of(bridge, struct mchp_lvds, bridge);
->  }
-> =20
-> +static inline struct mchp_lvds *drm_connector_to_mchp_lvds(struct drm_co=
-nnector *connector)
-> +{
-> +	return container_of(connector, struct mchp_lvds, connector);
-> +}
-> +
->  static inline u32 lvds_readl(struct mchp_lvds *lvds, u32 offset)
->  {
->  	return readl_relaxed(lvds->regs + offset);
-> @@ -79,6 +88,11 @@ static inline void lvds_writel(struct mchp_lvds *lvds,=
- u32 offset, u32 val)
->  static void lvds_serialiser_on(struct mchp_lvds *lvds)
->  {
->  	unsigned long timeout =3D jiffies + msecs_to_jiffies(LVDS_POLL_TIMEOUT_=
-MS);
-> +	struct drm_connector *connector =3D &lvds->connector;
+>  kernel/cgroup/legacy_freezer.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-How does that work if the bridge was attached with NO_CONNECTOR? Would
-the structure be uninitialized?
+Acked-by: Michal Koutn=FD <mkoutny@suse.com>
 
-> +
-> +	/* default to jeida-24 */
-> +	u32 bus_formats =3D MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA;
-> +	u8 map, pix_size;
-> =20
->  	/* The LVDSC registers can only be written if WPEN is cleared */
->  	lvds_writel(lvds, LVDSC_WPMR, (LVDSC_WPMR_WPKEY_PSSWD &
-> @@ -93,24 +107,106 @@ static void lvds_serialiser_on(struct mchp_lvds *lv=
-ds)
->  		usleep_range(1000, 2000);
->  	}
-> =20
-> +	if (connector && connector->display_info.num_bus_formats)
-> +		bus_formats =3D connector->display_info.bus_formats[0];
-> +
->  	/* Configure the LVDSC */
-> -	lvds_writel(lvds, LVDSC_CFGR, (LVDSC_CFGR_MAPPING_JEIDA |
-> -				LVDSC_CFGR_DC_UNBALANCED |
-> -				LVDSC_CFGR_DEN_POL_HIGH |
-> -				LVDSC_CFGR_PIXSIZE_24BITS));
-> +	switch (bus_formats) {
-> +	case MEDIA_BUS_FMT_RGB666_1X7X3_SPWG:
-> +		map =3D LVDSC_CFGR_MAPPING_JEIDA;
-> +		pix_size =3D LVDSC_CFGR_PIXSIZE_18BITS;
-> +		break;
-> +	case MEDIA_BUS_FMT_RGB888_1X7X4_SPWG:
-> +		map =3D LVDSC_CFGR_MAPPING_VESA;
-> +		pix_size =3D LVDSC_CFGR_PIXSIZE_24BITS;
-> +		break;
-> +	default:
-> +		map =3D LVDSC_CFGR_MAPPING_JEIDA;
-> +		pix_size =3D LVDSC_CFGR_PIXSIZE_24BITS;
-> +		break;
-> +	}
-> +
-> +	lvds_writel(lvds, LVDSC_CFGR, (map | LVDSC_CFGR_DC_UNBALANCED |
-> +		    LVDSC_CFGR_DEN_POL_HIGH | pix_size));
-> =20
->  	/* Enable the LVDS serializer */
->  	lvds_writel(lvds, LVDSC_CR, LVDSC_CR_SER_EN);
->  }
-
-Aside from the bit above, that part looks fine to me.
-
-> =20
-> +static int mchp_lvds_connector_get_modes(struct drm_connector *connector)
-> +{
-> +	struct mchp_lvds *lvds =3D drm_connector_to_mchp_lvds(connector);
-> +
-> +	return drm_panel_get_modes(lvds->panel, connector);
-> +}
-> +
-> +static const struct drm_connector_helper_funcs mchp_lvds_connector_helpe=
-r_funcs =3D {
-> +	.get_modes =3D mchp_lvds_connector_get_modes,
-> +};
-> +
-> +static const struct drm_connector_funcs panel_bridge_connector_funcs =3D=
- {
-> +	.reset =3D drm_atomic_helper_connector_reset,
-> +	.fill_modes =3D drm_helper_probe_single_connector_modes,
-> +	.destroy =3D drm_connector_cleanup,
-> +	.atomic_duplicate_state =3D drm_atomic_helper_connector_duplicate_state,
-> +	.atomic_destroy_state =3D drm_atomic_helper_connector_destroy_state,
-> +};
-> +
->  static int mchp_lvds_attach(struct drm_bridge *bridge,
->  			    struct drm_encoder *encoder,
->  			    enum drm_bridge_attach_flags flags)
->  {
->  	struct mchp_lvds *lvds =3D bridge_to_lvds(bridge);
-> +	struct drm_connector *connector =3D &lvds->connector;
-> +	int ret;
-> +
-> +	ret =3D drm_bridge_attach(encoder, lvds->panel_bridge,
-> +				bridge, flags);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
-> +		return 0;
-> +
-> +	if (!encoder) {
-> +		dev_err(lvds->dev, "Missing encoder\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	drm_connector_helper_add(connector,
-> +				 &mchp_lvds_connector_helper_funcs);
-> +
-> +	ret =3D drm_connector_init(bridge->dev, connector,
-> +				 &panel_bridge_connector_funcs,
-> +				 DRM_MODE_CONNECTOR_LVDS);
-> +	if (ret) {
-> +		dev_err(lvds->dev, "Failed to initialize connector %d\n", ret);
-> +		return ret;
-> +	}
-> =20
-> -	return drm_bridge_attach(encoder, lvds->panel_bridge,
-> -				 bridge, flags);
-> +	drm_panel_bridge_set_orientation(connector, bridge);
-> +
-> +	ret =3D drm_connector_attach_encoder(&lvds->connector, encoder);
-> +	if (ret) {
-> +		dev_err(lvds->dev, "Failed to attach connector to encoder %d\n", ret);
-> +		drm_connector_cleanup(connector);
-> +		return ret;
-> +	}
-> +
-> +	if (bridge->dev->registered) {
-> +		if (connector->funcs->reset)
-> +			connector->funcs->reset(connector);
-> +
-> +		ret =3D drm_connector_register(connector);
-> +		if (ret) {
-> +			dev_err(lvds->dev, "Failed to attach connector to register %d\n", ret=
-);
-> +			drm_connector_cleanup(connector);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-
-However, this is the part I don't really get. AFAIU, you create a
-connector, for the sole purpose of calling the panel get_modes. But the
-panel bridge you already using is calling that function already. So
-there must be something more.
-
-Did you create the connector only to be able to access it in
-lvds_serialiser_on and thus retrieve the bus_formats? If so, you should
-convert enable / disable to atomic_enable / atomic_disable, pass
-drm_atomic_state to lvds_serialiser_on, and then call
-drm_atomic_get_new_connector_for_encoder(bridge->encoder).
-
-Maximee
-
---hntctm46fzjyd4a7
+--4hq7nl43p24s2oqa
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFJ7zgAKCRAnX84Zoj2+
-diuvAX9UfEoHd+Iv736HB3plQKOBrbGoasZtB+QdnrbrTZGlhOdkmGERMMTP0qZN
-Pmn3IZoBf3W07y5YXMxwxWmi8HNPyCpq8kB4B5c8zR/T7fmu2d8zy5oxntJL/7X4
-yOpiyV0pIQ==
-=QQCN
+iHUEABYKAB0WIQRCE24Fn/AcRjnLivR+PQLnlNv4CAUCaFJ73gAKCRB+PQLnlNv4
+CMmyAQDJRxBSTIfHPzpApy+1rHScxGgAgsN0L474auzdBb6b9gD+Nc0TpNMWLQFw
+/yFDdplMCfczlpqXSh4ubUeOqUiaqwM=
+=6f0q
 -----END PGP SIGNATURE-----
 
---hntctm46fzjyd4a7--
+--4hq7nl43p24s2oqa--
