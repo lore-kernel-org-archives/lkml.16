@@ -1,39 +1,48 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BC1610D;
-	Wed, 18 Jun 2025 00:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665001372;
+	Wed, 18 Jun 2025 00:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750205757; cv=none; b=q2jwrq1GMitf4957Daz1M6BWYaG/roDBVCyS1rx1nJNG5lsLiF9569WAr2LOUdUM5uDyIcG4duKtDs/3FfNvkSrJxcoQkv/Txig3vTzPrOIv8/wvokKvRZzNbaMfYBJ+U+XqoteKyfb0JQwfo17jrHuyz5iKSfaXYo3J8jMjHh0=
+	t=1750205973; cv=none; b=Hqm1ulDmdwyZMxIMvEeXQIwJup/szlP5LqIWyPMCowm12mQJJQzoUjHrRqXSbTWZGsrMEXEQ/xwRaL1ex+m/e3YezhOu0BFRI24ZX9Qe2ufaoLwivsUaqmyBAyfsG2HPtS153fIM1snlfVWH7L0iMKQfznD4irzv9c8iIEy7zcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750205757; c=relaxed/simple;
-	bh=5FVvZVqJXHpa05enP/W1HSauicRLRKAkE4QPMUHDM0s=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=FUc7h5AX/WMQ+Ei1QtYCy5I4KY+G4E7oxNTFH2cRSxUnAsQ7CWnIdq1oEsMvL5f9RAKeBGYa6rmwlBFAJFG2zckF3ydDqmXDNyWdiUT/R3zG1E4ZiO9tnVoT8By0mgGPeLdwdsOJqM0LPnWpFBEyptALlNUTtxQWXhR47d+eT30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=YBvbPxGU; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1750205973; c=relaxed/simple;
+	bh=icjYBfoK1conaL18TuKYZ97I3FET2WfZbndAKc8Ht6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gr6ZUhopSLQRdaG4zwuJMd1lD7/AV7n3BXW0T5MSkkk1iTV0sHVqLvHT1rDYuMCzDHqjOuOsw7dIXpbJGs6/oKmgzp8ZC0pkJzZogEe3TBKNt7uXOuhOBC/ZAFV5tISPQfjgyAjoKuzSo5HNaB6cgQlZ9Qwoxkx0hopREGKpZKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=1gi0s1uB; arc=none smtp.client-ip=199.89.3.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YBvbPxGU"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55I0FJBV1327537
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 17 Jun 2025 17:15:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55I0FJBV1327537
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025052101; t=1750205720;
-	bh=Ec4okGp6wFHnoLIA652SRQlzR4CY/C93ccFL8KVczUM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=YBvbPxGUb+PDfjFZgddDNlkKRJJsG2UXtNLLveGIPZmCCF3PKgq1HRd8d6giNVUub
-	 NxGKYCr78huy+4qAYpP7D9nEcoCQJXyjJ2EQf8dhbMszvDVhkNMAzAL8TCs7IKOfp9
-	 l5mc4o9APyETS7hZgWH4a4O7giEBA9aFAbFitBolvfVt9wwqcrEMTnbPZ2lLAehNmC
-	 Prb6yxvxvf5+cR4eFqVIRdu9uww6PrMAzxKFgqYUL2stODqEVLTSPahsbD1+ux8/JV
-	 CxNy8HEO9j0bjk3RX4289zjbl3DGbdo4SM1CZFa0h7eA1QF4DfHAsJnOHEmx6I0PiM
-	 wk3qGVc0MClrw==
-Message-ID: <1b8095a8-1e65-4508-b874-fa2fce1b00ee@zytor.com>
-Date: Tue, 17 Jun 2025 17:15:18 -0700
+	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="1gi0s1uB"
+Received: from localhost (localhost [127.0.0.1])
+	by 004.mia.mailroute.net (Postfix) with ESMTP id 4bMPW62TgMzm1HbY;
+	Wed, 18 Jun 2025 00:19:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
+	content-transfer-encoding:content-type:content-type:in-reply-to
+	:from:from:content-language:references:subject:subject
+	:user-agent:mime-version:date:date:message-id:received:received;
+	 s=mr01; t=1750205969; x=1752797970; bh=5BDRtoaYC7pOiogJOv1dRMkx
+	6/Lvg6YOlAmKmtoA/xQ=; b=1gi0s1uBys4zPl/mezcHdVI7rz4kYCrUmq5aGeJT
+	wfRR0XxkLbqLUHmVe5D/uDB6HkbxIKSD4looZUDdeHs7Yh2gG9z82tJi6Z82O33I
+	z4ZKRIIW6M4OweJIqeVHt+INbYRDTw2bWPCJBlqCDTk4IRho+QSSdQQQY3PKKOwG
+	UZSlarZn+nyqNPOnioHfNTqSfcBiTvvXvRUaGJDKKbzPZQNXosVOnj6VX9R50j85
+	zg2YhpSn7BTsIAAzBQteISuyvl2gd9PtkaBVSb0EsejGBYrpYr4KJJC/QVCpH2te
+	jcAK4fP4QkW374cy8J0XRVSVpY4q53BWlvLSIDsaIkZskw==
+X-Virus-Scanned: by MailRoute
+Received: from 004.mia.mailroute.net ([127.0.0.1])
+ by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
+ id G4JOddGAgTwZ; Wed, 18 Jun 2025 00:19:29 +0000 (UTC)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bvanassche@acm.org)
+	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4bMPW21BPqzm1HbX;
+	Wed, 18 Jun 2025 00:19:24 +0000 (UTC)
+Message-ID: <23f31e20-e58f-44e9-b81f-18811ce5c19c@acm.org>
+Date: Tue, 17 Jun 2025 17:19:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,67 +50,25 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] x86/traps: Initialize DR7 by writing its
- architectural reset value
-From: Xin Li <xin@zytor.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, pbonzini@redhat.com,
-        peterz@infradead.org, sohil.mehta@intel.com, brgerst@gmail.com,
-        tony.luck@intel.com, fenghuay@nvidia.com
-References: <20250617073234.1020644-1-xin@zytor.com>
- <20250617073234.1020644-3-xin@zytor.com> <aFFvECpO3lBCjo1l@google.com>
- <9720c605-c542-4969-b7f0-b4477bc2ab1e@zytor.com>
+Subject: Re: [PATCH] block: mq-deadline: check if elevator is attached to
+ queue in dd_finish_request
+To: Elijah Wright <git@elijahs.space>
+Cc: axboe@kernel.dk, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250617205630.207696-1-git@elijahs.space>
+ <1e25d17b-f481-485c-85a6-d5a8440c1c96@acm.org>
+ <b2644203-b1cd-4bc9-9afe-bd0ae0390ae4@elijahs.space>
 Content-Language: en-US
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <9720c605-c542-4969-b7f0-b4477bc2ab1e@zytor.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <b2644203-b1cd-4bc9-9afe-bd0ae0390ae4@elijahs.space>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 6/17/2025 4:08 PM, Xin Li wrote:
-> 
-> I hope the bit will be kept reserved to 1 *forever*, because inverted
-> polarity seems causing confusing and complicated code only.
+On 6/17/25 3:52 PM, Elijah Wright wrote:
+> I see. would it be possible to detach the elevator from the queue in 
+> elevator_exit instead?
 
-BTW, FRED flipped BLD and RTM polarities in its event data:
+elevator_switch() is called with the request queue frozen.
+q_usage_counter is dropped after the blk_mq_finish_request() call
+returned. So what you described in your patch description can't happen.
 
-The event data is not exactly the same as that which will be in DR6
-following delivery of the #DB. The polarity of bit 11 (BLD) and bit 16
-(RTM) is inverted in DR6.
-
-
-I.e., BLD and RTM are active high in FRED event data.
+Bart.
