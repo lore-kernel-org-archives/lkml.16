@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1108F2ED169;
-	Wed, 18 Jun 2025 14:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4A52EE261;
+	Wed, 18 Jun 2025 14:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256678; cv=none; b=srXGSMJcl5TTrD/+9i0FHwLb+HwnKIckYgXz3SSPn2Lg/abv4asdS+X+z/ifvAHI+EDyc6JxRV+QYk+Vd+vMhwYcrmDkEj/DLDNnGn/ey6RP+33AMFlGwCRHytyDKTq0nt0qLO9KqrpBdcgpbBH3v1fWgtijraOEqrTbl8cp02g=
+	t=1750256681; cv=none; b=GSh7VFVh1FPv0yCAyJ2h8jlx5oOeuPx739lPuRROucfaYln4ERH7WlxlIK1wIu1sQt9aQKtYp/QSHQK9+O2xECB8xUd45G7xOSl7KgC2H8DwSQqErpuGASXTq9NuG1woaEhqufyraBccenDlPwhVPFL7/itoINuQzFpJgVm5uhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256678; c=relaxed/simple;
-	bh=sDvBzK8bp/Z2sPKX3249YaEV241YJ6Xk50FlZaY0KPY=;
+	s=arc-20240116; t=1750256681; c=relaxed/simple;
+	bh=H+DYm16YFoz7vb/N3DPXrXYoaKJ781Yi0vxcEF804go=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZRYbgO5BAvBfvPp9RtEdY6pINndvzArUEECe9inNyTHsPZ0TJ6Zt9+tBu7/etR7NlNFRvsH62j5KwwJ9hUegF4VhRs6l966wZ5Y4aKuWSQCwdxKO5WnzTxjh5cuIwdE6yEEnmUmgR4A0tk325nuTMtKlY6A//a0xasuNgmfwOVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bIAvokyL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=TZmXSAD8Gq+M0qAIz8WrxB27Thi3mb43hxh2fNnCKF6mjUXwuWa80E8TkaBm73s8Pu/9CLYwugjK6TvOtNRu3/5G15YwzQUxmhYZEY+8bi9HvkLzst6AUEVNfyuF5ImYs4RyAVM4jTr8Oa3Zi0aMKaMK+Q5wvowAQcScc7AVRRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mla81/jA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bIAvokyL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A69ECC4CEF2;
-	Wed, 18 Jun 2025 14:24:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mla81/jA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6F49C4CEF2;
+	Wed, 18 Jun 2025 14:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750256676;
-	bh=sDvBzK8bp/Z2sPKX3249YaEV241YJ6Xk50FlZaY0KPY=;
+	s=k20201202; t=1750256680;
+	bh=H+DYm16YFoz7vb/N3DPXrXYoaKJ781Yi0vxcEF804go=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bIAvokyLBVf3zdQRPKOZ1Y43xIP4ItvRImpi+HkkQz+FcWRICTSBu6SFTH6fq84Ym
-	 zmETIeqjPna5EgTuHDY8zsO5YJLN3Ce4dbCQuLRKOgv0hT1+x/4UcKKsSOFHSl8uTL
-	 669wuTwpbIohnZeQKsZxSS011csU0bWOKR/9jN90KLy0M25UlzttZ2jSiaIS48MqOP
-	 vbzeu+5mIaTup/u+PlOv2baXrDXSQE02IBvCT9eVjqODzUPhgxo+rmHp2iB5f/B5ID
-	 8VpblOX3lBCeTLqL16DJOnKIidxzxfO68u9AKfo2KN639vOtosd3l7l1+QVWjqXDxJ
-	 QYTzhaqPf51uw==
+	b=Mla81/jAR53nQq/R5J3d3n7OhWUugj6x11fyLrc+BE1lldZUmq92rPi3PUUvgOnjQ
+	 gXY6Q00HoV91lVq9IgYaA6uo16nQy7zokiM4fk3bgqYqIX6AoqdAU0ONMSGPeAbGOU
+	 zQCerlqAhCFAI2ypErkNGNJW0ZmWEckad39nWLCYlSxp7GvDz88s6+pd9M9E1TeNKq
+	 7nOlvgzZk++sjJgylGQLGdjsjuoCRyAVLpESxKjf/8BqmgxMxRW4wcISsfL2//pxJt
+	 rz0gybqmVTSshcZj992ZJoYBlMGfb6AOyDf6a9trTlF4cInL7UKliA+8uT9fr8he0h
+	 A2ZXDQvpE5/pw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 18 Jun 2025 10:24:17 -0400
-Subject: [PATCH v15 4/9] ref_tracker: add a static classname string to each
- ref_tracker_dir
+Date: Wed, 18 Jun 2025 10:24:19 -0400
+Subject: [PATCH v15 6/9] ref_tracker: automatically register a file in
+ debugfs for a ref_tracker_dir
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250618-reftrack-dbgfs-v15-4-24fc37ead144@kernel.org>
+Message-Id: <20250618-reftrack-dbgfs-v15-6-24fc37ead144@kernel.org>
 References: <20250618-reftrack-dbgfs-v15-0-24fc37ead144@kernel.org>
 In-Reply-To: <20250618-reftrack-dbgfs-v15-0-24fc37ead144@kernel.org>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -59,166 +59,284 @@ Cc: Krzysztof Karas <krzysztof.karas@intel.com>,
  dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6203; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=sDvBzK8bp/Z2sPKX3249YaEV241YJ6Xk50FlZaY0KPY=;
- b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoUswYxLGiMf3xnackVRyECrcTiDvHdTo2H5Qe5
- 8wxRYY3mhiJAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFLMGAAKCRAADmhBGVaC
- Fc9oD/9ePYCrYPP9+wrxERgYc5NLLRmWdKrsZZwKILpQjXGW7tk1fj8QA9ukM9dJ5z/3bTIcd92
- 4F85d8y2jSi44mFZy4H0sVHPV5y2np3KRwySIvElNhnKXazwL0HHkmXMTVaTfHY+IO6M367rPME
- b8w/qyfseaymPyK+tyvmQDyfTVUODiOHwVxY7FwhExGv9y/dOj/88YL/8i+XcNyywbsf8o67nRk
- hs5kp1CaJz76NhzWrmviD0KjEY0c9X4JoH/nqqR2cbeFiL+niF9Q0PsUU2pQDJsG6+0IhgXlVDj
- tlkoKVlwRZT2gOKOJmeDpwEnDao46z4gZ3P+LSVSZUhrVes/pxqv3+mkqCorHQl6wMdGEYXCZHh
- ugPBpubdaWYb0hivDcwbJaw3+49LT7C6Sc5DxFffGJisiT62FFqLsoQOloLfvAj5d+CUe9pJHdA
- Cu/7P+38j6wrxJWyeaqN1PWfkNZom2SiK59St2mLeJsqZ5QZ+6u3GX/scZKuDVjskmWwK0KG4G6
- DXyG3gxZZC55jv24rf76D916WYPuX+ZgNk/p935wRKzCfirwZmW3w0FnYt1Ajg6DrTFe9CnS13e
- ehkRTbFyQGiFsuml0mEcq5iMNy0OGZ4JhTkMgksjlmPzw3evGHAQxu0m8pImiT1EJHEyiukyTRY
- wTybtyFecvJ7WYw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8693; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=H+DYm16YFoz7vb/N3DPXrXYoaKJ781Yi0vxcEF804go=;
+ b=owEBbQKS/ZANAwAKAQAOaEEZVoIVAcsmYgBoUswZYrzoIrTsJLyKavwVYpLG6JiZ5EIlpy+cH
+ Cx9niTrZo+JAjMEAAEKAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCaFLMGQAKCRAADmhBGVaC
+ FTOjD/98opNEqzZ+o/C7K1wPS283gvKPeT7/zF0fQKMehIQHmQqznvDkRInmGQh6A4uqSBodd4Q
+ lWgWBDEQueERDoh+Ik8Ja42qx1WokNOSiM3RzH+t9FgSMXAh1OmURJJaO3wJnTnxm8qnGwwXjjc
+ cnYzrYD55spomz6NL0KOw7+cw8uw2KUDHvRQNLrDaEpD+uZeSZ1CIHjKrsJvEAIgLQOeDj4LXiy
+ gkVfSPeyrA1bvTfLD05L6ib6hk47wdTCaO71ueGCWL90xOy9sfFwS2gyByEIcdjEhW8OIWnEEkg
+ mk/TQne37znykHgL32IdW3zvE3OvzrqsW3Wujx7suUjQq3METJPWhRkKa0N19fq+WHbou6O2Ta6
+ H6X7ulrTR0VKmOvU+5wHTNNPQAVL+pJI4UhjCCQWRrZIkHYLyIYUq+49y9Xu6ORPKOKbhmVA9uX
+ yc5VIMOFElQh/2qraKAPxlSafaNmvIuYSx/Bd2iwOiKq03RZoOot3Gv2CJwfX/oafYISEZzhOaZ
+ E3G7GgGaiYctQ4b2p6fbyDo/0PY5lVUkDyPSUSpmFsldLx6bL73UbOzi40l+6zxY07QnOe3VgH+
+ GpNIbX/Ngjtj90RXQC2CdG4qrKKqbL21xo06v1lXI2JZ6cSpCPIAd8xsv0IV26TQDXK+NqX4e1f
+ Vnqebfc/6X+gl4w==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-A later patch in the series will be adding debugfs files for each
-ref_tracker that get created in ref_tracker_dir_init(). The format will
-be "class@%px". The current "name" string can vary between
-ref_tracker_dir objects of the same type, so it's not suitable for this
-purpose.
+Currently, there is no convenient way to see the info that the
+ref_tracking infrastructure collects. Attempt to create a file in
+debugfs when called from ref_tracker_dir_init().
 
-Add a new "class" string to the ref_tracker dir that describes the
-the type of object (sans any individual info for that object).
+The file is given the name "class@%px", as having the unmodified address
+is helpful for debugging. This should be safe since this directory is only
+accessible by root
 
-Also, in the i915 driver, gate the creation of debugfs files on whether
-the dentry pointer is still set to NULL. CI has shown that the
-ref_tracker_dir can be initialized more than once.
+While ref_tracker_dir_init() is generally called from a context where
+sleeping is OK, ref_tracker_dir_exit() can be called from anywhere.
+Thus, dentry cleanup must be handled asynchronously.
+
+Add a new global xarray that has entries with the ref_tracker_dir
+pointer as the index and the corresponding debugfs dentry pointer as the
+value. Instead of removing the debugfs dentry, have
+ref_tracker_dir_exit() set a mark on the xarray entry and schedule a
+workqueue job. The workqueue job then walks the xarray looking for
+marked entries, and removes their xarray entries and the debugfs
+dentries.
+
+Because of this, the debugfs dentry can outlive the corresponding
+ref_tracker_dir. Have ref_tracker_debugfs_show() take extra care to
+ensure that it's safe to dereference the dir pointer before using it.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- drivers/gpu/drm/display/drm_dp_tunnel.c | 2 +-
- drivers/gpu/drm/i915/intel_runtime_pm.c | 4 +++-
- drivers/gpu/drm/i915/intel_wakeref.c    | 3 ++-
- include/linux/ref_tracker.h             | 4 ++++
- lib/test_ref_tracker.c                  | 2 +-
- net/core/dev.c                          | 2 +-
- net/core/net_namespace.c                | 4 ++--
- 7 files changed, 14 insertions(+), 7 deletions(-)
+ include/linux/ref_tracker.h |  17 +++++
+ lib/ref_tracker.c           | 152 ++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 164 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/display/drm_dp_tunnel.c b/drivers/gpu/drm/display/drm_dp_tunnel.c
-index 076edf1610480275c62395334ab0536befa42f15..b9c12b8bf2a3e400b6d8e9d184145834c603b9e1 100644
---- a/drivers/gpu/drm/display/drm_dp_tunnel.c
-+++ b/drivers/gpu/drm/display/drm_dp_tunnel.c
-@@ -1920,7 +1920,7 @@ drm_dp_tunnel_mgr_create(struct drm_device *dev, int max_group_count)
- 	}
- 
- #ifdef CONFIG_DRM_DISPLAY_DP_TUNNEL_STATE_DEBUG
--	ref_tracker_dir_init(&mgr->ref_tracker, 16, "dptun");
-+	ref_tracker_dir_init(&mgr->ref_tracker, 16, "drm_dptun", "dptun");
- #endif
- 
- 	for (i = 0; i < max_group_count; i++) {
-diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.c b/drivers/gpu/drm/i915/intel_runtime_pm.c
-index 8d9f4c410546e4144d4bc8bbc6696f3bd9498848..90d90145a1890bf788e789858ddad3b3d8e3b978 100644
---- a/drivers/gpu/drm/i915/intel_runtime_pm.c
-+++ b/drivers/gpu/drm/i915/intel_runtime_pm.c
-@@ -59,7 +59,9 @@ static struct drm_i915_private *rpm_to_i915(struct intel_runtime_pm *rpm)
- 
- static void init_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm)
- {
--	ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT, dev_name(rpm->kdev));
-+	if (!rpm->debug.class)
-+		ref_tracker_dir_init(&rpm->debug, INTEL_REFTRACK_DEAD_COUNT,
-+				     "intel_runtime_pm", dev_name(rpm->kdev));
- }
- 
- static intel_wakeref_t
-diff --git a/drivers/gpu/drm/i915/intel_wakeref.c b/drivers/gpu/drm/i915/intel_wakeref.c
-index 07e81be4d3920febece34709c63a63204a41583c..21dcee7c9a659ac1fb0aa19f3018647be3bda754 100644
---- a/drivers/gpu/drm/i915/intel_wakeref.c
-+++ b/drivers/gpu/drm/i915/intel_wakeref.c
-@@ -114,7 +114,8 @@ void __intel_wakeref_init(struct intel_wakeref *wf,
- 			 "wakeref.work", &key->work, 0);
- 
- #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_WAKEREF)
--	ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, name);
-+	if (!wf->debug.class)
-+		ref_tracker_dir_init(&wf->debug, INTEL_REFTRACK_DEAD_COUNT, "intel_wakeref", name);
- #endif
- }
- 
 diff --git a/include/linux/ref_tracker.h b/include/linux/ref_tracker.h
-index a0a1ee43724ffa00e60c116be18e481bfe1d1455..3968f993db81e95c0d58c81454311841c1b9cd35 100644
+index 3968f993db81e95c0d58c81454311841c1b9cd35..28bbf436a8f4646cfac181d618195a9460bda196 100644
 --- a/include/linux/ref_tracker.h
 +++ b/include/linux/ref_tracker.h
-@@ -19,6 +19,7 @@ struct ref_tracker_dir {
- 	bool			dead;
- 	struct list_head	list; /* List of active trackers */
- 	struct list_head	quarantine; /* List of dead trackers */
-+	const char		*class; /* object classname */
- 	char			name[32];
- #endif
- };
-@@ -27,6 +28,7 @@ struct ref_tracker_dir {
+@@ -26,6 +26,18 @@ struct ref_tracker_dir {
  
+ #ifdef CONFIG_REF_TRACKER
+ 
++#ifdef CONFIG_DEBUG_FS
++
++void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir);
++
++#else /* CONFIG_DEBUG_FS */
++
++static inline void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir)
++{
++}
++
++#endif /* CONFIG_DEBUG_FS */
++
  static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
  					unsigned int quarantine_count,
-+					const char *class,
- 					const char *name)
- {
- 	INIT_LIST_HEAD(&dir->list);
-@@ -36,6 +38,7 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 	dir->dead = false;
- 	refcount_set(&dir->untracked, 1);
+ 					const char *class,
+@@ -40,6 +52,7 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
  	refcount_set(&dir->no_tracker, 1);
-+	dir->class = class;
+ 	dir->class = class;
  	strscpy(dir->name, name, sizeof(dir->name));
++	ref_tracker_dir_debugfs(dir);
  	stack_depot_init();
  }
-@@ -60,6 +63,7 @@ int ref_tracker_free(struct ref_tracker_dir *dir,
  
- static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
- 					unsigned int quarantine_count,
-+					const char *class,
- 					const char *name)
+@@ -68,6 +81,10 @@ static inline void ref_tracker_dir_init(struct ref_tracker_dir *dir,
  {
  }
-diff --git a/lib/test_ref_tracker.c b/lib/test_ref_tracker.c
-index b983ceb12afcb84ad60360a1e6fec0072e78ef79..d263502a4c1db248f64a66a468e96c8e4cffab25 100644
---- a/lib/test_ref_tracker.c
-+++ b/lib/test_ref_tracker.c
-@@ -64,7 +64,7 @@ static int __init test_ref_tracker_init(void)
+ 
++static inline void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir)
++{
++}
++
+ static inline void ref_tracker_dir_exit(struct ref_tracker_dir *dir)
  {
- 	int i;
+ }
+diff --git a/lib/ref_tracker.c b/lib/ref_tracker.c
+index 73b606570cce9e551d13e65365a87dc4ce748b13..c938ef56954b2169458e9b23a3db2441bcf91aa6 100644
+--- a/lib/ref_tracker.c
++++ b/lib/ref_tracker.c
+@@ -29,6 +29,40 @@ struct ref_tracker_dir_stats {
+ 	} stacks[];
+ };
  
--	ref_tracker_dir_init(&ref_dir, 100, "selftest");
-+	ref_tracker_dir_init(&ref_dir, 100, "selftest", "selftest");
- 
- 	timer_setup(&test_ref_tracker_timer, test_ref_tracker_timer_func, 0);
- 	mod_timer(&test_ref_tracker_timer, jiffies + 1);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index be97c440ecd5f993344ae08d76c0b5216c4d296a..12cf4e5ae9c5437bcfec657e37b7e08792bc14bf 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -11715,7 +11715,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- 
- 	dev->priv_len = sizeof_priv;
- 
--	ref_tracker_dir_init(&dev->refcnt_tracker, 128, name);
-+	ref_tracker_dir_init(&dev->refcnt_tracker, 128, "netdev", name);
- #ifdef CONFIG_PCPU_DEV_REFCNT
- 	dev->pcpu_refcnt = alloc_percpu(int);
- 	if (!dev->pcpu_refcnt)
-diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-index ae54f26709ca242567e5d62d7b5dcc7f6303da57..aa1e34181ed6f353921a23411fa227b612db661a 100644
---- a/net/core/net_namespace.c
-+++ b/net/core/net_namespace.c
-@@ -403,8 +403,8 @@ static __net_init void preinit_net(struct net *net, struct user_namespace *user_
++#ifdef CONFIG_DEBUG_FS
++#include <linux/xarray.h>
++
++/*
++ * ref_tracker_dir_init() is usually called in allocation-safe contexts, but
++ * the same is not true of ref_tracker_dir_exit() which can be called from
++ * anywhere an object is freed. Removing debugfs dentries is a blocking
++ * operation, so we defer that work to the debugfs_reap_worker.
++ *
++ * Each dentry is tracked in the appropriate xarray.  When
++ * ref_tracker_dir_exit() is called, its entries in the xarrays are marked and
++ * the workqueue job is scheduled. The worker then runs and deletes any marked
++ * dentries asynchronously.
++ */
++static struct xarray		debugfs_dentries;
++static struct work_struct	debugfs_reap_worker;
++
++#define REF_TRACKER_DIR_DEAD	XA_MARK_0
++static inline void ref_tracker_debugfs_mark(struct ref_tracker_dir *dir)
++{
++	unsigned long flags;
++
++	xa_lock_irqsave(&debugfs_dentries, flags);
++	__xa_set_mark(&debugfs_dentries, (unsigned long)dir, REF_TRACKER_DIR_DEAD);
++	xa_unlock_irqrestore(&debugfs_dentries, flags);
++
++	schedule_work(&debugfs_reap_worker);
++}
++#else
++static inline void ref_tracker_debugfs_mark(struct ref_tracker_dir *dir)
++{
++}
++#endif
++
+ static struct ref_tracker_dir_stats *
+ ref_tracker_get_stats(struct ref_tracker_dir *dir, unsigned int limit)
  {
- 	refcount_set(&net->passive, 1);
- 	refcount_set(&net->ns.count, 1);
--	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net refcnt");
--	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net notrefcnt");
-+	ref_tracker_dir_init(&net->refcnt_tracker, 128, "net_refcnt", "net_refcnt");
-+	ref_tracker_dir_init(&net->notrefcnt_tracker, 128, "net_notrefcnt", "net_notrefcnt");
+@@ -185,6 +219,11 @@ void ref_tracker_dir_exit(struct ref_tracker_dir *dir)
+ 	bool leak = false;
  
- 	get_random_bytes(&net->hash_mix, sizeof(u32));
- 	net->dev_base_seq = 1;
+ 	dir->dead = true;
++	/*
++	 * The xarray entries must be marked before the dir->lock is taken to
++	 * protect simultaneous debugfs readers.
++	 */
++	ref_tracker_debugfs_mark(dir);
+ 	spin_lock_irqsave(&dir->lock, flags);
+ 	list_for_each_entry_safe(tracker, n, &dir->quarantine, head) {
+ 		list_del(&tracker->head);
+@@ -312,23 +351,126 @@ static void __ostream_printf pr_ostream_seq(struct ostream *stream, char *fmt, .
+ 	va_end(args);
+ }
+ 
+-static __maybe_unused int
+-ref_tracker_dir_seq_print(struct ref_tracker_dir *dir, struct seq_file *seq)
++static int ref_tracker_dir_seq_print(struct ref_tracker_dir *dir, struct seq_file *seq)
+ {
+ 	struct ostream os = { .func = pr_ostream_seq,
+ 			      .prefix = "",
+ 			      .seq = seq };
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&dir->lock, flags);
+ 	__ref_tracker_dir_pr_ostream(dir, 16, &os);
+-	spin_unlock_irqrestore(&dir->lock, flags);
+ 
+ 	return os.used;
+ }
+ 
++static int ref_tracker_debugfs_show(struct seq_file *f, void *v)
++{
++	struct ref_tracker_dir *dir = f->private;
++	unsigned long index = (unsigned long)dir;
++	unsigned long flags;
++	int ret;
++
++	/*
++	 * "dir" may not exist at this point if ref_tracker_dir_exit() has
++	 * already been called. Take care not to dereference it until its
++	 * legitimacy is established.
++	 *
++	 * The xa_lock is necessary to ensure that "dir" doesn't disappear
++	 * before its lock can be taken. If it's in the hash and not marked
++	 * dead, then it's safe to take dir->lock which prevents
++	 * ref_tracker_dir_exit() from completing. Once the dir->lock is
++	 * acquired, the xa_lock can be released. All of this must be IRQ-safe.
++	 */
++	xa_lock_irqsave(&debugfs_dentries, flags);
++	if (!xa_load(&debugfs_dentries, index) ||
++	    xa_get_mark(&debugfs_dentries, index, REF_TRACKER_DIR_DEAD)) {
++		xa_unlock_irqrestore(&debugfs_dentries, flags);
++		return -ENODATA;
++	}
++
++	spin_lock(&dir->lock);
++	xa_unlock(&debugfs_dentries);
++	ret = ref_tracker_dir_seq_print(dir, f);
++	spin_unlock_irqrestore(&dir->lock, flags);
++	return ret;
++}
++
++static int ref_tracker_debugfs_open(struct inode *inode, struct file *filp)
++{
++	struct ref_tracker_dir *dir = inode->i_private;
++
++	return single_open(filp, ref_tracker_debugfs_show, dir);
++}
++
++static const struct file_operations ref_tracker_debugfs_fops = {
++	.owner		= THIS_MODULE,
++	.open		= ref_tracker_debugfs_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= single_release,
++};
++
++/**
++ * ref_tracker_dir_debugfs - create debugfs file for ref_tracker_dir
++ * @dir: ref_tracker_dir to be associated with debugfs file
++ *
++ * In most cases, a debugfs file will be created automatically for every
++ * ref_tracker_dir. If the object was created before debugfs is brought up
++ * then that may fail. In those cases, it is safe to call this at a later
++ * time to create the file.
++ */
++void ref_tracker_dir_debugfs(struct ref_tracker_dir *dir)
++{
++	char name[NAME_MAX + 1];
++	struct dentry *dentry;
++	int ret;
++
++	/* No-op if already created */
++	dentry = xa_load(&debugfs_dentries, (unsigned long)dir);
++	if (dentry && !xa_is_err(dentry))
++		return;
++
++	ret = snprintf(name, sizeof(name), "%s@%px", dir->class, dir);
++	name[sizeof(name) - 1] = '\0';
++
++	if (ret < sizeof(name)) {
++		dentry = debugfs_create_file(name, S_IFREG | 0400,
++					     ref_tracker_debug_dir, dir,
++					     &ref_tracker_debugfs_fops);
++		if (!IS_ERR(dentry)) {
++			void *old;
++
++			old = xa_store_irq(&debugfs_dentries, (unsigned long)dir,
++					   dentry, GFP_KERNEL);
++
++			if (xa_is_err(old))
++				debugfs_remove(dentry);
++			else
++				WARN_ON_ONCE(old);
++		}
++	}
++}
++EXPORT_SYMBOL(ref_tracker_dir_debugfs);
++
++static void debugfs_reap_work(struct work_struct *work)
++{
++	struct dentry *dentry;
++	unsigned long index;
++	bool reaped;
++
++	do {
++		reaped = false;
++		xa_for_each_marked(&debugfs_dentries, index, dentry, REF_TRACKER_DIR_DEAD) {
++			xa_erase_irq(&debugfs_dentries, index);
++			debugfs_remove(dentry);
++			reaped = true;
++		}
++	} while (reaped);
++}
++
+ static int __init ref_tracker_debugfs_init(void)
+ {
++	INIT_WORK(&debugfs_reap_worker, debugfs_reap_work);
++	xa_init_flags(&debugfs_dentries, XA_FLAGS_LOCK_IRQ);
+ 	ref_tracker_debug_dir = debugfs_create_dir("ref_tracker", NULL);
+ 	return 0;
+ }
 
 -- 
 2.49.0
