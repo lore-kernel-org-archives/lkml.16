@@ -1,98 +1,109 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from raptorengineering.com (mail.raptorengineering.com [23.155.224.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B3981EB182;
-	Wed, 18 Jun 2025 04:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EC923A9;
+	Wed, 18 Jun 2025 04:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.155.224.40
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750219991; cv=none; b=eZ/pQGcOqB7k3hiSCCZm6SJbQLl4Rjp62BWqcFwJTNwdv87/6wcfeFZpaDs6Ie0qpEJ8PbSlQB/U54Tuovi4kv3uT+qvR/u/DqEXCAnguI79agjHc/CJMupDwrFrQsUHqdU6y82twT99AWER9Z/EYhIsVp+hum8h2U8LCMcXiuQ=
+	t=1750220485; cv=none; b=ZDMwV9k8Y/SUiMSWVFJ999cV/jvuJa/zhd0P/z5XdH0RhbtD0kA3bz0LCNST0/oZJEvmIpVcMonQdnjMc8yu3rDf0kum7w13vId6qjCXtlgLXwJq364ikRrAFEKMbVkzQlFXaENjdZQkdZ9v/pcudg6jGd0MrpZ1dXKXUTiQRBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750219991; c=relaxed/simple;
-	bh=wLvjh3pCu9KQGwBHwTutcFY0aeOTXXdLuEBCPSdOpTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dRR0TKfr0Vm5ViRlgltiZcGx9Su4NYNr4y6gnDaV1b4zgNR5d9Iq/9NIEjVQylNe1e67fA/dKOCh4/NKaZyYX+c33y0FB4js1hFtZyF196UdUXq7WcDXbNkr1xq5H2PkwKOs4yBFNbxu+aS5xF8TR2AxgCJ/dNB0J9Ohd+Kw4Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowACH2FDLPFJooa5HBw--.34075S2;
-	Wed, 18 Jun 2025 12:12:59 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: gregkh@linuxfoundation.org,
-	michal.simek@amd.com,
-	u.kleine-koenig@baylibre.com,
-	liqiong@nfschina.com,
-	colin.i.king@gmail.com
-Cc: linux-usb@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] usb: gadget: udc-xilinx: Use USB API functions rather than constants
-Date: Wed, 18 Jun 2025 12:12:22 +0800
-Message-Id: <20250618041222.408372-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750220485; c=relaxed/simple;
+	bh=ttUWxnOPsj1wH58g8SY5eUP5jJTbSwomk5rwycGlWw8=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=R36JlrVNZZQwCm+UXeoEFOwl3v8CgmRbDavPsq0P64kpKnYMrJTp/Dpdkd3fFApaTZKelDHJrNRUudH+5s9F2pqkYWV7b7JT2yCZMOx3itBqHinNoeaJl+5W2+GermPBfde0kCP1H4wsTNTU5qvojqTEWRVhq6DpIPzCWGpYUWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com; spf=pass smtp.mailfrom=raptorengineering.com; dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b=ee/cpHd0; arc=none smtp.client-ip=23.155.224.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raptorengineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=raptorengineering.com header.i=@raptorengineering.com header.b="ee/cpHd0"
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 6F3FE8288748;
+	Tue, 17 Jun 2025 23:21:21 -0500 (CDT)
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10032)
+	with ESMTP id gVFMjTkUT-DX; Tue, 17 Jun 2025 23:21:20 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id 0423E828742D;
+	Tue, 17 Jun 2025 23:21:20 -0500 (CDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.rptsys.com 0423E828742D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=raptorengineering.com; s=B8E824E6-0BE2-11E6-931D-288C65937AAD;
+	t=1750220480; bh=TXK4nvk3hVRfTyVxrU16zW6M8nI8oDPJzdJIGj8kYsc=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=ee/cpHd0gCNVtqZnV+ywntrlr58zRVI9VRxMIRLxcPWOVw8+Ax1k5uUCWzxNHk79m
+	 hNpMWOTs+tqTvjn/a9Aqz9CtrPbMj3JDPpVqY61tRkLCmR25a2emu+HpK2fnJNOmKA
+	 SriNg5ixLNGMH0Ygt62s3IWJLtAL75bc+cYPiGRM=
+X-Virus-Scanned: amavisd-new at rptsys.com
+Received: from mail.rptsys.com ([127.0.0.1])
+	by localhost (vali.starlink.edu [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id D7TPnMqQcNQJ; Tue, 17 Jun 2025 23:21:19 -0500 (CDT)
+Received: from vali.starlink.edu (localhost [127.0.0.1])
+	by mail.rptsys.com (Postfix) with ESMTP id C33CC8286D0C;
+	Tue, 17 Jun 2025 23:21:19 -0500 (CDT)
+Date: Tue, 17 Jun 2025 23:21:17 -0500 (CDT)
+From: Timothy Pearson <tpearson@raptorengineering.com>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	tpearson@raptorengineering.com, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, 
+	Michael Ellerman <mpe@ellerman.id.au>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, 
+	Bjorn Helgaas <bhelgaas@google.com>, 
+	Shawn Anastasio <sanastasio@raptorengineering.com>
+Message-ID: <1970833911.1309763.1750220477118.JavaMail.zimbra@raptorengineeringinc.com>
+Subject: [PATCH 0/6] PowerNV PCIe Hotplug Driver Fixes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowACH2FDLPFJooa5HBw--.34075S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF43KFyxJw47Cw13Kr4Uurg_yoW8Jw48pF
-	n7Gay8GrWvy3yUX3W5AF1DZFyrGa9F934qyFy2g3yavF1Sqws3tFWrJr1fKrnrCFW3Aa13
-	trs8t3ZFqFW7CrJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWrXVW3AwAv7VC2z280aVAFwI0_GcC_XcWlOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	tVW8ZwCY02Avz4vE14v_Gryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
-	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
-	14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
-	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
-	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
-	IFyTuYvjTRiOz3UUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.5.0_GA_3042 (ZimbraWebClient - GC137 (Linux)/8.5.0_GA_3042)
+Thread-Index: 8lRcUti9WpN8CCZCIBC2nXslZWbhGA==
+Thread-Topic: PowerNV PCIe Hotplug Driver Fixes
 
-Use the function usb_endpoint_num() and usb_endpoint_type()
-rather than constants.
+Hello all,
 
-The Coccinelle semantic patch is as follows:
+This series includes several fixes for bugs in the PowerNV PCIe hotplug
+driver that were discovered in testing with a Microsemi Switchtec PM8533
+PFX 48xG3 PCIe switch on a PowerNV system, as well as one workaround for
+PCIe switches that don't correctly implement slot presence detection
+such as the aforementioned one. Without the workaround, the switch works
+and downstream devices can be hot-unplugged, but the devices never come
+back online after being plugged in again until the system is rebooted.
+Other hotplug drivers (like pciehp_hpc) use a similar workaround.
 
-@@ struct usb_endpoint_descriptor *epd; @@
+Also included are fixes for the EEH driver to make it hotplug safe,
+and a small patch to enable all three attention indicator states per
+the PCIe specification.
 
-- (epd->bEndpointAddress & \(USB_ENDPOINT_NUMBER_MASK\|0x0f\))
-+ usb_endpoint_num(epd)
+Thanks,
 
-@@ struct usb_endpoint_descriptor *epd; @@
+Shawn Anastasio (2):
+  pci/hotplug/pnv_php: Properly clean up allocated IRQs on unplug
+  pci/hotplug/pnv_php: Work around switches with broken presence
+    detection
 
-- (epd->bmAttributes & \(USB_ENDPOINT_XFERTYPE_MASK\|3\))
-+ usb_endpoint_type(epd)
+Timothy Pearson (5):
+  powerpc/pseries/eeh: Export eeh_unfreeze_pe() and eeh_ops
+  powerpc/eeh: Make EEH driver device hotplug safe
+  pci/hotplug/pnv_php: Fix surprise plug detection and recovery
+  pci/hotplug/pnv_php: Enable third atetntion indicator state
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/usb/gadget/udc/udc-xilinx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/eeh.c                    |   2 +
+ arch/powerpc/kernel/eeh_driver.c             |  48 ++++--
+ arch/powerpc/kernel/eeh_pe.c                 |  10 +-
+ arch/powerpc/kernel/pci-hotplug.c            |   3 +
+ arch/powerpc/platforms/powernv/eeh-powernv.c |   1 +
+ drivers/pci/hotplug/pciehp.h                 |   1 -
+ drivers/pci/hotplug/pciehp_ctrl.c            |   2 +-
+ drivers/pci/hotplug/pciehp_hpc.c             |  33 +---
+ drivers/pci/hotplug/pnv_php.c                | 172 ++++++++++++++++---
+ drivers/pci/pci.c                            |  31 +++-
+ drivers/pci/pci.h                            |   1 +
+ 11 files changed, 228 insertions(+), 76 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/udc-xilinx.c b/drivers/usb/gadget/udc/udc-xilinx.c
-index fa94cc065274..8d803a612bb1 100644
---- a/drivers/usb/gadget/udc/udc-xilinx.c
-+++ b/drivers/usb/gadget/udc/udc-xilinx.c
-@@ -813,10 +813,10 @@ static int __xudc_ep_enable(struct xusb_ep *ep,
- 
- 	ep->is_in = ((desc->bEndpointAddress & USB_DIR_IN) != 0);
- 	/* Bit 3...0:endpoint number */
--	ep->epnumber = (desc->bEndpointAddress & 0x0f);
-+	ep->epnumber = usb_endpoint_num(desc);
- 	ep->desc = desc;
- 	ep->ep_usb.desc = desc;
--	tmp = desc->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK;
-+	tmp = usb_endpoint_type(desc);
- 	ep->ep_usb.maxpacket = maxpacket = le16_to_cpu(desc->wMaxPacketSize);
- 
- 	switch (tmp) {
 -- 
-2.25.1
-
+2.39.5
