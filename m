@@ -1,196 +1,303 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F5E296153;
-	Wed, 18 Jun 2025 10:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB2D281369
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750241081; cv=none; b=TeV9Q37MivG9eJDQKhPWDZRKFDHBkO8UOGSP+OceJbQ79oqEMeRYiuvMwtbTUq9pGTHKXxo6dWfA2VJJ/WQYJB+pihZlP7nWP8BsZ7DIbbqrU3NGw4mWg5VIWgp89wAHu0B/og0vckEEGAcy9bjgeL0Okl6aaaEWxqXRG9QX1ZE=
+	t=1750241135; cv=none; b=J17f7Gc1dIE2q/s0fLtXWu73JutzfqB41t941yFugNB1xB9KZ9ISAhf00wDdgTlJ5y7dhgt4T8aj972ux9oOmsrLFde/RC1MTwbgBTm0Jrq8vULd3MnEE93/89Yh752E6+Pu/9I1y3b0JJUoRg/bK9Slz9EPVBrngKni07g0S/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750241081; c=relaxed/simple;
-	bh=m6cTzl15Gzmvo4GBPCi+25M/GblYyw4j8kZYb6v7v+U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M6CtPA9Bma2sFNQyuCKEb6FWdAcsbPxdveIWpAeS26w7VqGlU0m+P5+lACE37BZczH8R/ffbNnG+K9JSRQ5M5KNMGAA1Tc0mE4Nze3hmb07vS3EAmrWsl/+OhtTG0NZ/g4pdoqHd3kjvbRZ5gy1U6ZQOKKtJfQ7/V/cBLpE960Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YQGmoPYw; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750241135; c=relaxed/simple;
+	bh=AXT9h9yLz8Nz5XAg/DHBJ27V9jQezJYGIEnA1wpLLbc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hGhQuc8AuVl4ErGELV3zyQy29T1M5uWWoZt6z9QoqieoJp5MPXRpLAtO5UwdTfNGek0/dISkqdkai17eTKwlVcBpZ7z2fe7Wf8RUncUtIbXWJijujxPDF6ig5QDo9hP4DsSaFIGFrZnRknpYXsAOoK9JoIl/T4UU/aezDB/smxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=HdoevnXe; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YQGmoPYw"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a531fcaa05so4131349f8f.3;
-        Wed, 18 Jun 2025 03:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750241077; x=1750845877; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=cTgK4oiuA8WvDKr+6YArL7F7kHsl+YqCkp5AU61fnZc=;
-        b=YQGmoPYwnwk2nBEjBSdfhKflX2syb+Z/7nlFZLTtlTv+qHBNXoc3V0jx2oVURRwP7l
-         D/uJqFdVEHMrMicZZcqXi+lkkkf18NBOqnkZ61C40nhQPkaNba7NHHQHilHx7yo529Gx
-         EYpU/I7VZS88wxAvEktnfJB0iFpfdpW1TnNmRsZbFiXxgM81XxOGJY72yhPqq/sBhpJX
-         TxKarcxgvLMvXJHXx4Icrrdv1IhCwp4envmCWet6W6rMZlr4UxMLRkFarSHY6MpmkLAq
-         bAhwjdUmO1XYpcnCyQd6V9YHDV550WhTGochTsmHYYXww+oA9IFtptpwao8CBfybzzSA
-         M/DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750241077; x=1750845877;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cTgK4oiuA8WvDKr+6YArL7F7kHsl+YqCkp5AU61fnZc=;
-        b=nvZ/b3TEsl8QQE+bCdqNhMz+IsnEXVw+8giu54y5PQwhwrujhzBxpw6L0dCKCIoBsR
-         M7VRfLGhrIJMUEnSR6NM53vK0Iq9HrMfiXK/1LDn8CyMOwgUBK5HIPPCbU73YJofKUh+
-         ixE4zXTAuoTdp+WFNarf90s+ynLggnV/HdAANX/am7YsoPgl8dTP1uCEx4YJfe5JQUF0
-         oWj2TrE0DCZbcy6NMv0aJHvMqp2v8LeHsbXvWyt4np0OlCZPp9+oF2kk8A9anCTJmQko
-         LBKFs2vDXdaYtXTGQqFRowDrT1fcPXzE4JvRwK5vOs+88llvDhcoJZg9JM7UdWOo3uyD
-         hZ9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWGz0tkOkT3Nvb5xCK/YDgTJ4IW6TJtujCNzN9fWrmDZ6mBmboUiQTu3uNNlVU3w4QiRHaprV9dAL+7b7xO@vger.kernel.org, AJvYcCWTftJQrSfmGMesnVklBVbC5mHe7+h6lSY5WN3gJtKq/JrjLEEQBHKVgO5bZhFE2F5U+Zg+Gm1yDnKWEpfFoyg=@vger.kernel.org, AJvYcCWb6wOe2B2E7W4/AOUw9MZXwNGHc0XELrVESaREBSU+cUWFAztIflVHMtzyiBcq7HPWtfyI3i0g/A26@vger.kernel.org
-X-Gm-Message-State: AOJu0YywBFjQjZPH5RBBvSOicDNNDdzTS5bnvsJ+Ut4ZqH4sov3softQ
-	Cr4d2fMYiH483ln0GcyLlbuVX9GnAlBard3UUC7zq6TINs9U2VDNxnNK
-X-Gm-Gg: ASbGncuof52iDjsZMUSTEVdyLcyJ4FRFV+Glf8SlfffCkcrS4P6sTgNZgg5kZPxIkxr
-	Pk69kUylC6QJP8VS+CiuH4AlMFEopX/gksY1BmDquypbuI5Trij2l6y2ysxNseeezbXo+fPUbNS
-	BRNWvs9XJFEHgwLWdghYxdbP+Qvq/yNAXPrzl/QY9k4ityP+a3toWND2rd1hr8gl+u6RPdWHJDy
-	W5tckiHeu4bHip82gKRFGOluwcdjf6b0MdKZAJsRivTRlXqDjtmYeCp6HuwEvy+dXBSe5sDcpSa
-	Sz6XpBfQqUywJCHiV293FV6bHl5k3+9hV1yMghyLltz7kgngY/jQ6pC4aBOHcpS5WhnhKAc6RxI
-	SFS/BXhIznOJrHc1R9ayG0gjhZN9d5MH5YOPXaZ8=
-X-Google-Smtp-Source: AGHT+IHKE1KsApyZ3jJoPJ7YWhXAxEFJ2ntRfYhmrTl91c8B+E7DhkRUqnrlt+jet9w5FT6nRopZ4g==
-X-Received: by 2002:a05:6000:1a88:b0:3a5:2182:bce2 with SMTP id ffacd0b85a97d-3a5723a2928mr13880244f8f.17.1750241076566;
-        Wed, 18 Jun 2025 03:04:36 -0700 (PDT)
-Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4532e25302dsm195480495e9.26.2025.06.18.03.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 03:04:35 -0700 (PDT)
-Sender: Igor Korotin <igorkor.3vium@gmail.com>
-From: Igor Korotin <igor.korotin.linux@gmail.com>
-To: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	rafael@kernel.org,
-	gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Cc: boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	benno.lossin@proton.me,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	lenb@kernel.org,
-	wedsonaf@gmail.com,
-	viresh.kumar@linaro.org,
-	alex.hung@amd.com,
-	dingxiangfei2009@gmail.com
-Subject: [PATCH v7 0/9] rust: Add ACPI match table support for Rust drivers
-Date: Wed, 18 Jun 2025 11:02:17 +0100
-Message-ID: <20250618100221.3047133-1-igor.korotin.linux@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HdoevnXe"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55IA5CUY204660;
+	Wed, 18 Jun 2025 05:05:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750241112;
+	bh=SUPIbMRvcUOUX0yS8ijo8OimduZh/OQY25aJoVLxKbg=;
+	h=From:To:CC:Subject:Date;
+	b=HdoevnXeSifK8nPbNOn3kK0ZJhxE6tIzOjE+cx+Q0bCCguYCTeYzyhT1dC2kGPCEt
+	 BILOy7nAr27K5UNlzRq07nFOqqWPPQEaVzAJAIxFI3I9X/cELAftcSwvmW4OviQw/8
+	 MqC6S+QyL8sCOaN23fpgXrHesK329WOyhJ3mfwoI=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55IA5CUZ2646800
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 18 Jun 2025 05:05:12 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 18
+ Jun 2025 05:05:10 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 18 Jun 2025 05:05:10 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.143])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55IA59gi3290106;
+	Wed, 18 Jun 2025 05:05:10 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <jyri.sarha@iki.fi>, <dri-devel@lists.freedesktop.org>, <devarsht@ti.com>,
+        <tomi.valkeinen@ideasonboard.com>
+CC: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>, <j-choudhary@ti.com>
+Subject: [PATCH v2] drm/tidss: Decouple max_pclk from tidss feats to remove clock dependency
+Date: Wed, 18 Jun 2025 15:35:09 +0530
+Message-ID: <20250618100509.20386-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This patch series introduces support for ACPI match tables in Rust 
-drivers.
+TIDSS hardware by itself does not have variable max_pclk for each VP.
+Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
+devices uses "ultra-light" version where each VP supports a max of
+300MHz whereas J7* devices uses TIDSS where all VP can support a
+max pclk of 600MHz.
+The limitation that has been modeled till now comes from the clock
+(PLL can only be programmed to a particular max value). Due to this
+we end up using different compatible for each SoC when the clocking
+architecture changes for VPs, even when the hardware is essentially
+the same.
+max_pclk cannot be entirely removed since the display controller
+should tell if a particular mode clock can be supported or not in crtc's
+"mode_valid()" call. So remove "max_pclk_khz" from the static display
+feat and add it to "tidss_device" structure which would be modified in
+runtime. In mode_valid() call, check if a best frequency match for mode
+clock can be found or not using "clk_round_rate()". Based on that,
+propagate "max_pclk" and check max_clk again only if the requested mode
+clock is greater than saved value. (As the preferred display mode is
+usually the max resolution, driver ends up checking the maximum clock
+the first time itself which is used in subsequent checks)
+Since TIDSS display controller provides clock tolerance of 5%, we use
+this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
+before it is called.
 
-Currently, Rust abstractions support only Open Firmware (OF) device 
-matching. This series extends the driver model to support ACPI-based 
-matching, enabling Rust drivers to bind to ACPI-described devices.
+This will make the existing compatibles reusable.
 
-Changes include:
-  - A new `acpi::DeviceId` abstraction for working with 
-   `struct acpi_device_id`.
-  - Updates to the core `Adapter` trait and `platform::Driver` to support
-    optional ACPI ID tables.
-  - A sample implementation in the Rust platform driver, demonstrating 
-    multi-bus matching.
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
 
-This is especially useful for writing drivers that work across platforms 
-using both OF and ACPI.
+Changelog v1->v2:
+- Rebase it on linux-next after OLDI support series[0] as all of its
+  patches are reviewed and tested and it touches one of the functions
+  used.
+  
+v1 patch link:
+<https://lore.kernel.org/all/20250618075804.139844-1-j-choudhary@ti.com/>
 
-Tested using QEMU with a custom SSDT that creates an ACPI device matching
-the sample Rust platform driver.
+Test log on TI's J784S4 SoC with a couple of downstream patches
+to integrate DSI support on one of the video ports:
+<https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
 
-This series is based on three patches by Danilo Krummrich, which 
-introduce general improvements to the Rust platform driver. These patches 
-re included unchanged at the beginning of the series for completeness, as 
-they are required for the ACPI integration.
+From the logs, we can see that for CLK ID 218 (DSS), we do not have to
+call sci_clk_determine_rate() multiple times. So there is very little
+overhead of this call even with multiple mode_valid() called during
+display run.
+From weston-simple-egl application, I have seen that there is no frame
+drop or performance impact.
 
-Danilo Krummrich (3):
-  rust: device: implement FwNode::is_compatible()
-  samples: rust: platform: don't call as_ref() repeatedly
-  samples: rust: platform: conditionally call Self::properties_parse()
+Once this patch gets in, I will send patches for AM62P and J722S DSS
+support.
 
-Igor Korotin (6):
-  rust: acpi: add `acpi::DeviceId` abstraction
-  rust: driver: Consolidate `Adapter::of_id_info` methods using `#[cfg]`
-  rust: driver: Add ACPI id table support to Adapter trait
-  rust: platform: Set `OF_ID_TABLE` default to `None` in `Driver` trait
-  rust: platform: Add ACPI match table support to `Driver` trait
-  samples: rust: add ACPI match table example to platform driver
+[0]: https://lore.kernel.org/all/20250528122544.817829-1-aradhya.bhatia@linux.dev/
 
-Changelog
----------
-v7:
- - Rebased onto the driver-core-next branch
- - Incorporated three of Danilo’s upstream patches as a base
- - Switched from `assert!` to `build_assert!` in `acpi::DeviceId::new` 
-   for compile-time checks
- - Renamed the sample ACPI HID to `TST0001`
- - Moved the ACPI test instructions into the module’s top-level 
-   documentation comment
- - Link to v6: https://lore.kernel.org/rust-for-linux/20250613133517.1229722-1-igor.korotin.linux@gmail.com/
-v6:
- - Moved set `Driver::OF_ID_TABLE` default to `None` to a separate commit 
- - Removed out of scope change related to cpufreq driver.
- - Link to v5: https://lore.kernel.org/rust-for-linux/20250611174034.801460-1-igor.korotin.linux@gmail.com/
-v5:
- - Got rid of unnecessary consolidation of `Adapter::acpi_id_info` methods.
-   Instead, firstly made consolidation of `Adapter::of_id_info`, then
-   `Adapter::acpi_id_info` is added using the same pattern. 
- - Set `Adapter::OF_ID_TABLE` and `Adapter::ACPI_ID_TABLE` as None by 
-   default. 
- - Removed `Adapter::OF_ID_TABLE`/`Adapter::ACPI_ID_TABLE` initialization
-   example due to irrelevance.
- - Removed extra `of` dependency and `Adapter::OF_ID_TABLE` initialization 
-   in cpufreq driver.
- - Link to v4: https://lore.kernel.org/rust-for-linux/20250610145234.235005-1-igor.korotin.linux@gmail.com/
-v4:
- - Fixed code example for `trait Adapter` in platform.rs 
- - Fixed driver implementation example in rust_driver_platform.rs and moved
-   it to `trait Adapter` in platform.rs per Danilo Krummrich's suggestion.
- - Consolidated `Adapter::of_id_info` and `Adapter::acpi_id_info` methods using
-   `#[cfg]` per Benno Lossin's suggestion.
- - Link to v3: https://lore.kernel.org/rust-for-linux/20250606170341.3880941-1-igor.korotin.linux@gmail.com/
-v3:
- - Removed fwnode type check in `Adapter::id_info` per Greg's and Danilo's
-   comments
- - Removed `is_of_node` rust helper, due to unnecessity. 
- - Fixed example code in `rust_driver_platform.rs` per Danilo's comment
- - Added an instruction of testing ACPI using QEMU with a custom SSDT
- - Fixed minor code formatting issues.
- - Link to v2: https://lore.kernel.org/rust-for-linux/20250605161956.3658374-1-igor.korotin.linux@gmail.com/
-v2:
- - Removed misleading comment in `acpi::DeviceID` implementation. 
- - Removed unnecessary casting in `acpi::DeviceID::new`.
- - Moved `pub mod acpi` to correct alphabetical position in `rust/kernel/lib.rs`.
- - Link to v1: https://lore.kernel.org/rust-for-linux/20250530123815.1766726-1-igor.korotin.linux@gmail.com/
+ drivers/gpu/drm/tidss/tidss_dispc.c | 74 ++++++++++++-----------------
+ drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
+ drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
+ 3 files changed, 33 insertions(+), 44 deletions(-)
 
- MAINTAINERS                          |  1 +
- rust/bindings/bindings_helper.h      |  1 +
- rust/helpers/property.c              |  6 ++
- rust/kernel/acpi.rs                  | 60 ++++++++++++++++++++
- rust/kernel/device/property.rs       |  9 +++
- rust/kernel/driver.rs                | 81 ++++++++++++++++++++-------
- rust/kernel/lib.rs                   |  1 +
- rust/kernel/platform.rs              | 29 +++++++++-
- samples/rust/rust_driver_platform.rs | 83 ++++++++++++++++++++++++++--
- 9 files changed, 244 insertions(+), 27 deletions(-)
- create mode 100644 rust/kernel/acpi.rs
-
-
-base-commit: 2a1ea59de83bf367215e2a4dd9bf8bbd061349b3
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+index c0277fa36425..ad9ffc3685b4 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.c
++++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+@@ -58,10 +58,6 @@ static const u16 tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+ const struct dispc_features dispc_k2g_feats = {
+ 	.min_pclk_khz = 4375,
+ 
+-	.max_pclk_khz = {
+-		[DISPC_VP_DPI] = 150000,
+-	},
+-
+ 	/*
+ 	 * XXX According TRM the RGB input buffer width up to 2560 should
+ 	 *     work on 3 taps, but in practice it only works up to 1280.
+@@ -144,11 +140,6 @@ static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+ };
+ 
+ const struct dispc_features dispc_am65x_feats = {
+-	.max_pclk_khz = {
+-		[DISPC_VP_DPI] = 165000,
+-		[DISPC_VP_OLDI_AM65X] = 165000,
+-	},
+-
+ 	.scaling = {
+ 		.in_width_max_5tap_rgb = 1280,
+ 		.in_width_max_3tap_rgb = 2560,
+@@ -244,11 +235,6 @@ static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
+ };
+ 
+ const struct dispc_features dispc_j721e_feats = {
+-	.max_pclk_khz = {
+-		[DISPC_VP_DPI] = 170000,
+-		[DISPC_VP_INTERNAL] = 600000,
+-	},
+-
+ 	.scaling = {
+ 		.in_width_max_5tap_rgb = 2048,
+ 		.in_width_max_3tap_rgb = 4096,
+@@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
+ };
+ 
+ const struct dispc_features dispc_am625_feats = {
+-	.max_pclk_khz = {
+-		[DISPC_VP_DPI] = 165000,
+-		[DISPC_VP_INTERNAL] = 170000,
+-	},
+-
+ 	.scaling = {
+ 		.in_width_max_5tap_rgb = 1280,
+ 		.in_width_max_3tap_rgb = 2560,
+@@ -380,10 +361,6 @@ const struct dispc_features dispc_am62a7_feats = {
+ 	 * if the code reaches dispc_mode_valid with VP1,
+ 	 * it should return MODE_BAD.
+ 	 */
+-	.max_pclk_khz = {
+-		[DISPC_VP_TIED_OFF] = 0,
+-		[DISPC_VP_DPI] = 165000,
+-	},
+ 
+ 	.scaling = {
+ 		.in_width_max_5tap_rgb = 1280,
+@@ -441,10 +418,6 @@ const struct dispc_features dispc_am62a7_feats = {
+ };
+ 
+ const struct dispc_features dispc_am62l_feats = {
+-	.max_pclk_khz = {
+-		[DISPC_VP_DPI] = 165000,
+-	},
+-
+ 	.subrev = DISPC_AM62L,
+ 
+ 	.common = "common",
+@@ -1347,25 +1320,48 @@ static void dispc_vp_set_default_color(struct dispc_device *dispc,
+ 			DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
+ }
+ 
++/*
++ * Calculate the percentage difference between the requested pixel clock rate
++ * and the effective rate resulting from calculating the clock divider value.
++ */
++unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
++{
++	int r = rate / 100, rr = real_rate / 100;
++
++	return (unsigned int)(abs(((rr - r) * 100) / r));
++}
++
++static int check_max_pixel_clock(struct dispc_device *dispc,
++				 u32 hw_videoport, unsigned long clock)
++{
++	if (clock > dispc->tidss->max_pclk[hw_videoport]) {
++		unsigned long round_clock = clk_round_rate(dispc->vp_clk[hw_videoport], clock);
++
++		if (dispc_pclk_diff(clock, round_clock) > 5)
++			return -EINVAL;
++
++		dispc->tidss->max_pclk[hw_videoport] = round_clock;
++	}
++
++	return 0;
++}
++
+ enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
+ 					 u32 hw_videoport,
+ 					 const struct drm_display_mode *mode)
+ {
+ 	u32 hsw, hfp, hbp, vsw, vfp, vbp;
+ 	enum dispc_vp_bus_type bus_type;
+-	int max_pclk;
+ 
+ 	bus_type = dispc->feat->vp_bus_type[hw_videoport];
+ 
+-	max_pclk = dispc->feat->max_pclk_khz[bus_type];
+-
+-	if (WARN_ON(max_pclk == 0))
++	if (bus_type == DISPC_VP_TIED_OFF)
+ 		return MODE_BAD;
+ 
+ 	if (mode->clock < dispc->feat->min_pclk_khz)
+ 		return MODE_CLOCK_LOW;
+ 
+-	if (mode->clock > max_pclk)
++	if (check_max_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
+ 		return MODE_CLOCK_HIGH;
+ 
+ 	if (mode->hdisplay > 4096)
+@@ -1437,17 +1433,6 @@ void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport)
+ 	clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
+ }
+ 
+-/*
+- * Calculate the percentage difference between the requested pixel clock rate
+- * and the effective rate resulting from calculating the clock divider value.
+- */
+-unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
+-{
+-	int r = rate / 100, rr = real_rate / 100;
+-
+-	return (unsigned int)(abs(((rr - r) * 100) / r));
+-}
+-
+ int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
+ 			  unsigned long rate)
+ {
+@@ -3087,6 +3072,9 @@ int dispc_init(struct tidss_device *tidss)
+ 	}
+ 	dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
+ 
++	for (i = 0; i < dispc->feat->num_vps; i++)
++		dispc->tidss->max_pclk[i] = 0;
++
+ 	of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
+ 			     &dispc->memory_bandwidth_limit);
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+index b8614f62186c..45b1a8aa9089 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.h
++++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+@@ -75,7 +75,6 @@ enum dispc_dss_subrevision {
+ 
+ struct dispc_features {
+ 	int min_pclk_khz;
+-	int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
+ 
+ 	struct dispc_features_scaling scaling;
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
+index d14d5d28f0a3..59c67ae8e721 100644
+--- a/drivers/gpu/drm/tidss/tidss_drv.h
++++ b/drivers/gpu/drm/tidss/tidss_drv.h
+@@ -22,6 +22,8 @@ struct tidss_device {
+ 
+ 	const struct dispc_features *feat;
+ 	struct dispc_device *dispc;
++	long max_pclk[TIDSS_MAX_PORTS];
++
+ 
+ 	unsigned int num_crtcs;
+ 	struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
 -- 
-2.43.0
+2.34.1
 
