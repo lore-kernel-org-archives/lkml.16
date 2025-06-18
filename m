@@ -1,110 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B61627E1C3;
-	Wed, 18 Jun 2025 13:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34ED31DA5F
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253518; cv=none; b=Dcex8OJC5kqEHnz+t87FuXI9T6fag5IGUK+ne8glaGlWZRPwc2Aam0+aLlyrir97yXycE0X6EwcxGgRGxWHwZ9T258qdwDta2SViFpjLLRINEjUp2ACHayjsGcHigb7WCiO5P/sBqtCE8XdyGWThCyT9S8ijdw0OHjTjFnLqg+4=
+	t=1750253568; cv=none; b=ikwc5XUMcSerUWqEhP/0rGefzhIuYz4h7fCllGlA2c4YlTVz75GkIkY1ymlSo8XWiwrpACXG0QNsaovqNLBU6swUmEwQZNX4WWcSHiQkdPm/LIBbI2KKjKfcsuSnddB/B24gK+bO8PcclRK1vb3bT5H0XV56IYtzG0ev/l6iLTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253518; c=relaxed/simple;
-	bh=sfxH+ws1wOJOfMLaBxgpISqgTdDurXEqio3nOsX1S/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qBmwagOJL4ZOwOXhkQ7c/l2AF5hQF/0Vt+q9O2sfB36Jx41MdSqoDo6H3/OnAPRjRASLO+gL0FQ66utEs3yvTAgO2Cq3p0IR8kUQNZNP1+FjWHlcs/uE1dkhFUSenCg0ALwletpYM340Y1F+8fCnEM77vNpTjlF8vaRQG8bl5xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pdzdcBhk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750253568; c=relaxed/simple;
+	bh=r93OQAL+O+DGIdysH+atzMrXTR4OgqwgoeNHguqSrRk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=tzOwZchWW8AqJ5TsmagKwA+A4UTmuO6vHscIgcw/dLmwBE7wT51kwOlwj+f1tAlf2SGfFu1jau7V5NS3hAeU8jLu/fz1pfx3Yx4w6u0TkEHkEwLjeVp+4UvAjpAX+RjINrMG9vlK7WeDroPOFLJ3xGtnO6huB0Qlovlj9xQL7AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XKfkS7EV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pdzdcBhk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9479CC4CEF0;
-	Wed, 18 Jun 2025 13:31:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750253518;
-	bh=sfxH+ws1wOJOfMLaBxgpISqgTdDurXEqio3nOsX1S/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pdzdcBhkCzxCjd2GTsH6uIJmKGXeZ9bSr8OoDGcT0UZpXTLgJXCiXwos2WBtrIken
-	 wxor2acD3hWrH9UtL9BatEUtrkU0qIaY2VGKKiMB3QLYEW+hVGHpvl1KLX+j5iQldc
-	 r5w/4o1KaEHkB2pKRQ/2KBnvhjZ7gTXIe/qsB4Scy4Y+yUYFu27fyuJx6sta3l5Rgm
-	 SUAo3qmqsytZ6ZbEXNp8fVnkyEwTZ6fdUbcB7MQE5ZjqgfRl+01PhIUyLUHWaON3z6
-	 ul9p1lxSDzF6s3OK7opRDl4Uiy5xeAOiRo5SreBcNZ2ZtZ4LnH1ImV/C3j8I7aMp43
-	 XJ3llqp3Bwyjw==
-Date: Wed, 18 Jun 2025 08:31:55 -0500
-From: Rob Herring <robh@kernel.org>
-To: Remo Senekowitsch <remo@buenzli.dev>
-Cc: Danilo Krummrich <dakr@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Mark Brown <broonie@kernel.org>,
-	Dirk Behme <dirk.behme@de.bosch.com>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] samples: rust: platform: Add property child and
- reference args examples
-Message-ID: <20250618133155.GB1550757-robh@kernel.org>
-References: <20250616154511.1862909-1-remo@buenzli.dev>
- <20250616154511.1862909-4-remo@buenzli.dev>
- <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
- <aFFpmKLKR2hGs1I1@pollux>
- <DAPMND2X0QHE.1N0NF7R1F8J1G@buenzli.dev>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKfkS7EV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750253566;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Aq9GfmifFmUJTHzOzR3uh/CPBzOh0qHNI3h7c2rC8V0=;
+	b=XKfkS7EViOf3Bb+oq0il4xoD+/vgf1KsjCv5nLh1Spjf6ZSKIEkSLikE9K0zs2Du93V7eA
+	ZNpMdDLL030E6g8+cdiepvhbA1je+WOvJlAP4stH3fcJyBqMeXWV9HAG/5IlJ/pXrarhLQ
+	AcxEXTs9NcwRst3GGvcTGe1VbKunEGM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-531-VQKlC20JN5yPRjuWVVJ0PQ-1; Wed,
+ 18 Jun 2025 09:32:43 -0400
+X-MC-Unique: VQKlC20JN5yPRjuWVVJ0PQ-1
+X-Mimecast-MFC-AGG-ID: VQKlC20JN5yPRjuWVVJ0PQ_1750253560
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C3AE51956096;
+	Wed, 18 Jun 2025 13:32:39 +0000 (UTC)
+Received: from vmalik-fedora.redhat.com (unknown [10.45.226.177])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 55364195607A;
+	Wed, 18 Jun 2025 13:32:34 +0000 (UTC)
+From: Viktor Malik <vmalik@redhat.com>
+To: bpf@vger.kernel.org
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	Viktor Malik <vmalik@redhat.com>
+Subject: [PATCH bpf-next v5 1/4] uaccess: Define pagefault lock guard
+Date: Wed, 18 Jun 2025 15:32:19 +0200
+Message-ID: <c7bd30ae99c1ecd3cb4c62f384a88a536e0d0b9e.1750252029.git.vmalik@redhat.com>
+In-Reply-To: <cover.1750252029.git.vmalik@redhat.com>
+References: <cover.1750252029.git.vmalik@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <DAPMND2X0QHE.1N0NF7R1F8J1G@buenzli.dev>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Jun 18, 2025 at 01:37:08PM +0200, Remo Senekowitsch wrote:
-> On Tue Jun 17, 2025 at 3:11 PM CEST, Danilo Krummrich wrote:
-> > On Tue, Jun 17, 2025 at 08:01:08AM -0500, Rob Herring wrote:
-> >> On Mon, Jun 16, 2025 at 10:45 AM Remo Senekowitsch <remo@buenzli.dev> wrote:
-> >> > @@ -91,6 +95,13 @@ fn properties_parse(dev: &device::Device) -> Result {
-> >> >          let prop: KVec<i16> = fwnode.property_read_array_vec(name, 4)?.required_by(dev)?;
-> >> >          dev_info!(dev, "'{name}'='{prop:?}' (KVec)\n");
-> >> >
-> >> > +        for child in fwnode.children() {
-> >> > +            let name = c_str!("test,ref-arg");
-> >> > +            let nargs = NArgs::N(2);
-> >> > +            let prop: FwNodeReferenceArgs = child.property_get_reference_args(name, nargs, 0)?;
-> >> 
-> >> Is there some reason we can just pass 2 in rather than nargs? Seems
-> >> overly verbose for my tastes.
-> >
-> > It's because you could also pass NArgs::Prop("foo-bar") to indicate the the
-> > name of the property telling the number of arguments.
-> >
-> > NArgs is defined as
-> >
-> > 	pub enum NArgs<'a> {
-> > 	    /// The name of the property of the reference indicating the number of
-> > 	    /// arguments.
-> > 	    Prop(&'a CStr),
-> > 	    /// The known number of arguments.
-> > 	    N(u32),
-> > 	}
-> >
-> > and FwNode::property_get_reference_args() can match against the corresponding
-> > enum variant to cover both cases.
-> 
-> I guess we could make the function generic if that's deemed worth it?
-> A trait and an implementation for `u32` and `&CStr` each. Similar to how
-> we made `property_read` generic.
+Define a pagefault lock guard which allows to simplify functions that
+need to disable page faults.
 
-There is a case where the cells property is optional and we fallback to 
-0 cells if not found. #msi-cells is an example. I imagine NArgs could 
-express that while a generic could not? In any case, I don't expect 
-drivers to have to deal with that as it would be subsystem code handling 
-it.
+Signed-off-by: Viktor Malik <vmalik@redhat.com>
+---
+ include/linux/uaccess.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-As-is is fine I think. This function isn't too widely used that it could 
-be changed later if we change our minds.
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index 7c06f4795670..1beb5b395d81 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -296,6 +296,8 @@ static inline bool pagefault_disabled(void)
+  */
+ #define faulthandler_disabled() (pagefault_disabled() || in_atomic())
+ 
++DEFINE_LOCK_GUARD_0(pagefault, pagefault_disable(), pagefault_enable())
++
+ #ifndef CONFIG_ARCH_HAS_SUBPAGE_FAULTS
+ 
+ /**
+-- 
+2.49.0
 
-Rob
