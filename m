@@ -1,194 +1,98 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525C0249E5
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9F6249E5
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:28:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750253282; cv=none; b=RXz3QL81l3+J0h6dXtFBLTH/hJ3sai8axTI3to4+5HnvsWRlM8Cml+okZeC0Uz9PU4H9ltX+axCf7LldVCMTTRxUbhi9dSCmFIptcDFdh3jKVRBRJ2jTY6/Sompzc/nwI7N8gsObF8RTT2qFvwKgsLv/xLOhuOv99YGWmEah2HY=
+	t=1750253289; cv=none; b=U7nRk1wHQ8uHn8ObV9E4ZjigxJcENC3up2oaMcoBnV5iOZSuGJFx7EcBVhlAEuFFnl8T777qDoFjTuo0XWi7kNBOjX9ST36tgyc1M/mBoeKysWKDhDyKIb3U275jRaHoNcnxj/vqoc78z3aThIrEM+OedPNJCUjxXE1+UpkIR3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750253282; c=relaxed/simple;
-	bh=spJmW3GP09NgivKGhFqMEC1dTy/Kkyfb4nxmgBOucEQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ArR3sBmi4d/vFu+KleKk317rhLPAXVqeqV/CKuWQh+DHA4kel3vtjkmuri0FwmnWKVayWEvXEqFbiag7MDdNZb54Rknfebn15aY5K8l2eEiy1FSLPunAKWlX3RyEA1jNMhjcVWqMmeRxULrNQX6kpYxgjtexjZBy3PhiteSmTMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=URxlxd4I; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1750253289; c=relaxed/simple;
+	bh=CQWYf5240z2KPgUiqlRF9wP/4RTd2ZVb2iMhFh38Ahk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GjIqBGZoWhs3ilS58mYec83h3ytj053hUR/usHqOo65lg2dAMXtgcrUjQPrrH9Eki/pW5Wc+sJXsk2OA+ME4+mEFKpDeAWNBlEnfQfqUYdjRL7H/93DSCAzzVntaTpPZNFYA9mgeeurZtWfAulR8/rEsj9NzFD7gXDwU4BqHTGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K3Rd4B5a; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="URxlxd4I"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a440a72584so67382691cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:28:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K3Rd4B5a"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so52175475e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:28:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1750253280; x=1750858080; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dAOqSpqCOL5vjgDSfWa7ZrwFL1vtEzIytDfSsqz8LEg=;
-        b=URxlxd4I5FK7fujk2vRslK91IlZPSobQJd0S/crMZklzfEFs2D2te2kIF9RX5c+8V7
-         Gy2zoIRrJRc3IQ/BIDXroVLGhfGG8pgc17zuVKY7QUjtLfYFvCHD3EksM03gDGqukgNQ
-         pI1RGmB3pDx2WKWSCX0OE5iSBYIIcjT2jb+sRMumjXAWvmAkb2XTJHiAw1ELy8e6YfCJ
-         K3AIzPbWzEZ+y9H3dad9EbZyE2V3mLzrRWfMRUDVMMU3VDVYUTOMmjSZ4oWiTyzH23lI
-         rCQTaZ0jWoLn+xp5O4WnRj8mfAOYk4S05lsxaTejc2gXGiCADir6i4Lp5OhGEFN1yEaT
-         ErHg==
+        d=linaro.org; s=google; t=1750253285; x=1750858085; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CQWYf5240z2KPgUiqlRF9wP/4RTd2ZVb2iMhFh38Ahk=;
+        b=K3Rd4B5a0O/vYISxLM3S9R0Lns2i/o83cAKPOZuPiBUQ2y8rBvSPlBN+7nPsjrSxlF
+         dUAh7PZVyztBqzet+0LqZR/dXIv6KeNd6P5WpHZ2Dz0vrHBd3ydL2B0dESJrpmeyzxJY
+         FbRMWjwzkrHyA/N0nZ4PTppUq+Jd+GyS+gicWIr6rziApzgq4sHZbCZKvhbRWfddbYzO
+         IhuF5XeT2MWJMpyhts4KLO0QdzmMl7MSWPwM1qmMiXKowD0TItqiQfCSW2mlnKTlBqNR
+         TavoQF2ArdABrMzWumXNu9up5Za3M6MRPeoQQ43rWX40hkIGzkicO8F42oT6HKZQUTrn
+         NU+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750253280; x=1750858080;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1750253285; x=1750858085;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dAOqSpqCOL5vjgDSfWa7ZrwFL1vtEzIytDfSsqz8LEg=;
-        b=OdFJ0c7AH0zeWfQUtdBy+rC6K+g9CcdPcV4P9d/RXKwhCxmKfrfMlm2BcuHXkccTIn
-         T6e7jz+4sFhYkRq0I1Xv1p4HtXCa7RZiqhfAg+4bVkmvuYwJ8akp3eklWfQXx41V3IUr
-         sAM6kkLXOhQiJ6GIzpBQeBZ8lQSF2fIpVZWMXT8totX51uG9xErD5RlMMNXEBbAWmL+Y
-         5e8dgk0yK48NWirEDZgTcFGLk8mVghOWM1DKbV89NJBAm3zlxuiEcRuLSWi47bVKbLJV
-         oLe4prJm33Y1gWK77Go5uCPAWe31R6UrrP+FMHXuYQRB5cwOu81mpPxImsqMfWdwriUo
-         KcWg==
-X-Forwarded-Encrypted: i=1; AJvYcCUF9GfsOHxCxbKPohn31Gi48WuKavofeXRPCX67SdGEJxln/+M7wCktVFfsS0UwansnwZWyLb4fg8ax4uQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDdUrJH9CG9MP3eVRKlHy1ShoI0yqB350iItYf2F9qmcEJ845l
-	KpoMdcPRP6Hh1sMj4A8OG1wTJcDMlVNSbQkBZuBOokxHAfeJHRH0FPrUZZ+4YA7I5Vc=
-X-Gm-Gg: ASbGncsoX1CvSTBSZ9pGdFRoSEAcUQtPnEW9R5L7bY2jubDBvjze4ZDl87HjOO5Nqel
-	2RZaKrbuKxFyx0M9J3pCYnOyzIm4J+UNfxJRCbxd3dFvfNbCOPF9+Wk4lWBD41tQqUZkbyODRrN
-	Tvr0OjlG/5m82RyuzxKIt+mqbalpfvq79Yw0g+1HguN3NXukBHZpI6MaNQxQNKgh0anCKswqkQ8
-	/u+vLwqECYuA8qr0krcwNIRjQhbhpjlT0H4MoXJFARKa+wDoukIkaMQa5Pqq/QMb9Y2Iw/n9b1Y
-	lNh39B/i582kH5k91cNMCmQs3AUmE3Pka0jWtXSu5SYDDDjflald4O3spsUKOOy68eMvYkOjl9B
-	X1K8RsdnoQyL3BnzIKK6zlrVFI59RHkabcWi5mQ==
-X-Google-Smtp-Source: AGHT+IG2fHMkumSLh5a7kRlQvfCzWqyNaNQCt2F7JGbyl37Cd1Kzlhrtl/JlBPjRFd8BrqzAM7ABWw==
-X-Received: by 2002:a05:622a:1886:b0:4a7:2328:27dc with SMTP id d75a77b69052e-4a73c4fd24emr201270391cf.9.1750253280248;
-        Wed, 18 Jun 2025 06:28:00 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a72a50f29dsm71636961cf.75.2025.06.18.06.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 06:27:59 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uRspb-00000006mz5-0lhB;
-	Wed, 18 Jun 2025 10:27:59 -0300
-Date: Wed, 18 Jun 2025 10:27:59 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, p.zabel@pengutronix.de,
-	mchehab@kernel.org, iommu@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, linux-media@vger.kernel.org,
-	kernel@collabora.com
-Subject: Re: [PATCH 3/5] iommu: Add verisilicon IOMMU driver
-Message-ID: <20250618132759.GO1376515@ziepe.ca>
-References: <20250616145607.116639-1-benjamin.gaignard@collabora.com>
- <20250616145607.116639-4-benjamin.gaignard@collabora.com>
- <20250617163219.GF1376515@ziepe.ca>
- <ff32d7c1-d811-46b8-8d3d-458dfebd14f8@collabora.com>
+        bh=CQWYf5240z2KPgUiqlRF9wP/4RTd2ZVb2iMhFh38Ahk=;
+        b=ESfQq+1/WFfUCD17YPTN8NHoA4hAMncvZXmFkzChIxVkXXuoEwe3fvE9F8ye/WYYXc
+         fciaTMFrv3ffomQDiEwhKpHo4h/oSGYA/RE5HUg/HDfNH3AJtAIA8AgPjD4BglSMSKFs
+         JF1RdlLWfXJg15JWBo4JX1XU+ltPCYNKgFLtryRuwSsht8zTepnQ67RNKL4SL3RF0SGq
+         eRpIWfV/rVUFNYRsnRMyJnsAwZPQsTh4JpBpU5gsAuVdNwbx4uq3SDDcKg8LXfBOaTbj
+         j5OrhZClc13euTFWDQY4ZbBEZ/xBHCYlkU/YXs4QLEDAUYNl1PQpKVscknKrusKXTG/f
+         XQEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUVY0MPZYbKI3zl81FdQ2y6GaW7SErhwVQ8gjJPe7JP4Vjc6Qiz0Al3P09A0k2JX1TGhwcOu0w4B64280Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzffEtSBo2M+fdba5u3wl8R4m9dmS8x1j4TnBYYexbd6WPNXCe4
+	RmiVtsJAOyqeeOmc21+Oj9Deroce9UpRVdEbqaWPCjm4kBeSZs3VhqpeAWxg/wl/Z9A=
+X-Gm-Gg: ASbGncv7GE2l3cn0nDnVXHNXXFqRVmqOUmxxmK5YmHNAbc9DqW+cdI5SWFvXsj3i+7D
+	VivZzcnfpenTRKhCj8BTsuDn1ulEC3rIhxlQMnn4nsTBIByQPliRFUNnyq2y9xINZUGe60EV5ZC
+	xZpkLOTlxKJi6Zm3Kl+pG2YWKRD9NTuf2AiDPazher8QSgRxlgTYjorSslsk1pSoS2tp+k7Se5l
+	2u/bOj+msl92bJ77ucfy0NC/eFl5ADSS+2xKw9kRcw/HFLar6UkjL8dMhNvLXyBICo5ScwFh+T8
+	oBZiuhW3Xo1qFCicmuA6+8/FY+QjuX55n7mmupaMh7xiRZHZWDe/XTv8WFcSc1IADn4BBewNZ7B
+	/OALAC9PJi2Y5gataISEQpopDIGL1HHcrVoChbA==
+X-Google-Smtp-Source: AGHT+IHsYnHdB0JOFwGUBbfz/Nz+oX7/Nt70Eian/OZWF7OabodaY5ap19RQq+MRP53eF3NO5RcWyg==
+X-Received: by 2002:a05:600c:1c28:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-4533cb4bc8fmr134287185e9.22.1750253285546;
+        Wed, 18 Jun 2025 06:28:05 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a568a633ddsm16799417f8f.26.2025.06.18.06.28.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 06:28:05 -0700 (PDT)
+Message-ID: <ca3c6d72-2fc0-4e04-ac61-486ad75257b8@linaro.org>
+Date: Wed, 18 Jun 2025 14:28:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ff32d7c1-d811-46b8-8d3d-458dfebd14f8@collabora.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock'
+ is held
+To: Johan Hovold <johan@kernel.org>, Bryan O'Donoghue <bod.linux@nxsw.ie>,
+ Rob Clark <rob.clark@oss.qualcomm.com>
+Cc: Gabor Juhos <j4g8y7@gmail.com>, Georgi Djakov <djakov@kernel.org>,
+ Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>, linux-pm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <TIkPOGVjPeCjPzjVtlSb6V5CIcpaXf2-6WG6HjAyaOW59Hj01-9VK7Z8DKadakOKr6fJeQICi6h0Z8mft9DQyg==@protonmail.internalid>
+ <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
+ <ca9f7308-4b92-4d23-bfe7-f8d18d20de10@linaro.org>
+ <75a46897-040f-4608-88f5-22c99c8bed97@gmail.com>
+ <04ab699e-b344-4ba1-9ca1-04b6e50beefe@nxsw.ie>
+ <aFK2Kl2I46dTYBI1@hovoldconsulting.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <aFK2Kl2I46dTYBI1@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 18, 2025 at 02:04:19PM +0200, Benjamin Gaignard wrote:
-> 
-> Le 17/06/2025 à 18:32, Jason Gunthorpe a écrit :
-> > > +	vsi_domain->dt_dma = dma_map_single(dma_dev, vsi_domain->dt,
-> > > +					    SPAGE_SIZE, DMA_TO_DEVICE);
-> > > +	if (dma_mapping_error(dma_dev, vsi_domain->dt_dma)) {
-> > > +		dev_err(dma_dev, "DMA map error for DT\n");
-> > > +		goto err_free_dt;
-> > > +	}
-> > > +
-> > > +	vsi_domain->pta = iommu_alloc_pages_sz(GFP_KERNEL | GFP_DMA32,
-> > > +					       SPAGE_SIZE);
-> > > +	if (!vsi_domain->pta)
-> > > +		goto err_unmap_dt;
-> > > +
-> > > +	vsi_domain->pta_dma = dma_map_single(dma_dev, vsi_domain->pta,
-> > > +					     SPAGE_SIZE, DMA_TO_DEVICE);
-> > > +	if (dma_mapping_error(dma_dev, vsi_domain->pta_dma)) {
-> > > +		dev_err(dma_dev, "DMA map error for PTA\n");
-> > > +		goto err_free_pta;
-> > > +	}
-> > > +	vsi_domain->pta[0] = vsi_mk_pta(vsi_domain->dt_dma);
-> > > +
-> > > +	vsi_table_flush(vsi_domain, vsi_domain->pta_dma, 1024);
-> > > +	vsi_table_flush(vsi_domain, vsi_domain->dt_dma, NUM_DT_ENTRIES);
-> > dma_map_single already flushes, put things in the write order and no
-> > need to double flush.
-> 
-> I don't get your point here, for me it flush two different pieces of memory.
+On 18/06/2025 13:50, Johan Hovold wrote:
+>> I think we should sort that out, either by removing one of the locks or
+>> by at the very least documenting beside the mutex declarations which
+>> locks protect what.
+> Feel free to discuss that with Rob who added the icc_lock_bw, but it's
+> unrelated to the regression at hand (and should not block fixing it).
 
-dma_map_single() already flushes the cache, you don't need to do it
-again.
+True.
 
-Do your memory writes then call dma_map_signle().
-
-> > > +	dte_index = vsi_iova_dte_index(iova);
-> > > +	dte_addr = &vsi_domain->dt[dte_index];
-> > > +	dte = *dte_addr;
-> > > +	if (vsi_dte_is_pt_valid(dte))
-> > > +		goto done;
-> > > +
-> > > +	page_table = (u32 *)get_zeroed_page(GFP_ATOMIC | GFP_DMA32);
-> > > +	if (!page_table)
-> > > +		return ERR_PTR(-ENOMEM);
-> > Don't use get_zeroed_page for page table memory.
-> 
-> I will use kmem_cache in v2
-
-I mean you are supposed to iommu-pages.h for page table memory.
-
-> > > +	pt_dma = dma_map_single(dma_dev, page_table, SPAGE_SIZE, DMA_TO_DEVICE);
-> > > +	if (dma_mapping_error(dma_dev, pt_dma)) {
-> > > +		dev_err(dma_dev, "DMA mapping error while allocating page table\n");
-> > > +		free_page((unsigned long)page_table);
-> > > +		return ERR_PTR(-ENOMEM);
-> > > +	}
-> > > +
-> > > +	dte = vsi_mk_dte(pt_dma);
-> > > +	*dte_addr = dte;
-> > > +
-> > > +	vsi_table_flush(vsi_domain, pt_dma, NUM_PT_ENTRIES);
-> > > +	vsi_table_flush(vsi_domain,
-> > > +			vsi_domain->dt_dma + dte_index * sizeof(u32), 1);
-> > Double flushing again.
->
-> Same here, for me I flushing two different memory area.
-
-write to the page-table, then call dma_map_single(), don't flush it again.
-
-> > > +static int vsi_iommu_map_iova(struct vsi_iommu_domain *vsi_domain, u32 *pte_addr,
-> > > +			      dma_addr_t pte_dma, dma_addr_t iova,
-> > > +			      phys_addr_t paddr, size_t size, int prot)
-> > > +{
-> > > +	unsigned int pte_count;
-> > > +	unsigned int pte_total = size / SPAGE_SIZE;
-> > > +	phys_addr_t page_phys;
-> > > +
-> > > +	assert_spin_locked(&vsi_domain->dt_lock);
-> > > +
-> > > +	for (pte_count = 0; pte_count < pte_total; pte_count++) {
-> > > +		u32 pte = pte_addr[pte_count];
-> > > +
-> > > +		if (vsi_pte_is_page_valid(pte))
-> > > +			goto unwind;
-> > > +
-> > > +		pte_addr[pte_count] = vsi_mk_pte(paddr, prot);
-> > So why is this:
-> > 
-> > #define VSI_IOMMU_PGSIZE_BITMAP 0x007ff000
-> > 
-> > If the sizes don't become encoded in the PTE? The bits beyond 4k
-> > should reflect actual ability to store those sizes in PTEs, eg using
-> > contiguous bits or something.
-> 
-> The iommu use arrays to store up to 1024 4k pages indexes so the size
-> isn't coded in the PTE bits but the numbers of used indexes for each arrays.
-
-That isn't how it works, if the PTE bits don't code the size then you
-don't set the VSI_IOMMU_PGSIZE_BITMAP. You just want SZ_4K for the way
-this driver is written.
-
-Jason
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
