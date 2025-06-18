@@ -1,89 +1,69 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.nixnet.email (mx.nixnet.email [5.161.67.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15731E5B60;
-	Wed, 18 Jun 2025 05:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BDEA1E98E3;
+	Wed, 18 Jun 2025 05:51:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.161.67.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750225904; cv=none; b=nd6O8863ARN4P+y2ZsHh0PJmNX6HOMPeL8Ma1MJ5hqfzWQ5iU32PrmJHKZQUF8QDxXhsRXhpUKpg7x6aoHGH3Hrcczx0XIII/MuTggnEgcPYTPvRWG6h2lJWqTQXUtqauXgAzAzpmxkNUytXNx1a17wG7hHNB/mOhs0BiMB1kKM=
+	t=1750225914; cv=none; b=bga+lkOzIx/VN6xeuNTFyZhdEiwmI4zCQKu1cp1ERYxMLa1zhu+g8S/p+kHqHJ4qLe4Nwm2GiLcx3/w+X5y0pv6KGJD4yLQF5veIiFz+aIuRI4/DszEJInj3LA1HNP2PBmPwGyszoGrn9eJfrbeKNtbHSrAtCht9XSNA+EC+yho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750225904; c=relaxed/simple;
-	bh=2xyOVvq1JWwubLx2N4PQv+4xr+CIeNVHXgasbtLWbH8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SiRHzXv+/MIeFqt5HYmOYlXRbYgyaot3y974A0IikDI1YY+aNIVlaCrfAAMT3dBfEbnm3WOuZ8Is9RpiVR/LeaKGpEG3Di4djz9G0r8ZyIBAMVMasg/wYcboAGpXXx2nI5eisBr+wIKhcywAwQANKwVgIOSAQF3wK7Rin9mLgro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-23636167b30so58503635ad.1;
-        Tue, 17 Jun 2025 22:51:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750225901; x=1750830701;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QPtIhKj+67MKXvsdqiR5TldExHdcv6/Kt+rfIgkMSeM=;
-        b=nFfUcDpLkE7q6S3qNP4BKxlawDz7SraPqZY8JGlssw2Yrc5B5A0HBWBRA35Evh6rch
-         gFR3PX7BtTNMyei//RyQBdMAIsVKNGlq4lT8tqpmBmXqlkJ4UQKXWOq1zNjUxxUNny3X
-         4PW4UrI+0yoDrpifeUGhRDmP4JTsDUSighm/ySr9S29q42DRw0pRfCRYfk2q7xWIF/Gx
-         9KfzJBykM2yKhFenj2tLeH9SXBDqxMG2BpIfdKaZ7eL2t4SEIv26tzOQGeJouJYVcsMa
-         rBUZ+Xfh55+oGUA/1UGOy8Ftt2tNDm10M+qldEFK/fGcuDvkEj2pETog7HOAwWwl7/fr
-         UU1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXB1zdi2OgVia9OQGdVWuyIk0TkiXVhFTyBrjJRVEel0RwrfzXkTxIt687VcG2T2FZyFJpJvNpj+/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEyrT5U9GL74EhTkKuNFXmxcaxlGWY4AEaLPT4UsXEuAjbPfNX
-	HKcEqI1Tjcod0md+jQJMJxM38Ti4cnGAeCQEW8F1bPCXqQLbEIP55hhVYUYZC91a
-X-Gm-Gg: ASbGncsr817Mq2+w9RAhKHRZDrqIRvLNrEgpQDhXGQjBQqWwHbSVK79+alVI+pkhgMp
-	wpL5S79sqTEerr1Vm+1oKR5lEdlP9ONyqpDquphjJ/cOMqABz7bVyETpY+WTSXpWkBcoWRWxyNl
-	hfURfPo2ZKnILremQ4D1aO+TMuCwMqPmYxNKxzb3Xfs6+53O46eUE79nqAQ2b8DW12j6uuHOSeV
-	r/w2bJ1XNY5LlzKbAUkJoLq7EOJWveict1Zvnmjvsw2p4u0Th/9o9X+lrA+6MzrUxIu+wyzo8wT
-	7LKpMX0uwmtLNBilSeSmm1wbYPi18H6MmwbKxILNEDQmdQqflIGxxNuHJntGwwjrxRGl/Ex1RUj
-	97Ow=
-X-Google-Smtp-Source: AGHT+IFUy22ub/r8aKY00hTcYEgVpeG/IueXtowQ0b6l02Zhp7g1ZBDcHI09gKOz+n6sFAvuCoKyZw==
-X-Received: by 2002:a17:902:d58d:b0:235:6f7:b918 with SMTP id d9443c01a7336-2366b3c5bdamr278928005ad.28.1750225901260;
-        Tue, 17 Jun 2025 22:51:41 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365e0d0b12sm91243645ad.253.2025.06.17.22.51.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 22:51:40 -0700 (PDT)
-From: xiehongyu1@kylinos.cn
-To: mathias.nyman@intel.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	Hongyu Xie <xiehongyu1@kylinos.cn>
-Subject: [PATCH v1] xhci: Disable stream for xHC controller with XHCI_BROKEN_STREAMS
-Date: Wed, 18 Jun 2025 13:51:33 +0800
-Message-Id: <20250618055133.62638-1-xiehongyu1@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750225914; c=relaxed/simple;
+	bh=VblScn+VHpVJ5tYvYcoJfh8x8io4nmUmEEvEpkfw98w=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=uv3zxGYpj5Dbhs6hyREDvJd5fSAesu5JhHXt/lH//vIEf+ni2wk7p8AFumwaM/Tkxunpm7d3XejLXqDLGe/p7ARaBeTJ5hkNjWoY08XgDu0cInap/xSyW665EUoKB06DmS9Ub+rhBxLGc5pWVxbb5pfTrCb6uPfNMHgpuYpUhh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life; spf=pass smtp.mailfrom=pwned.life; dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b=SbfxFKa3; arc=none smtp.client-ip=5.161.67.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwned.life
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b="SbfxFKa3"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mx.nixnet.email (Postfix) with ESMTPSA id 3FCBA7D326;
+	Wed, 18 Jun 2025 07:51:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pwned.life; s=202002021149;
+	t=1750225903;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xtrHyj1OhX8LsdJLOiGICZLEnGht4gXw2jkwnEUt48g=;
+	b=SbfxFKa3e+ahyfmz4k8BXmkNLpjVmEvhqkTh7/7Umki6SYiLOpiczRdoWphMnCO8cec6Xt
+	CAslcSUc1Rp0zNkXB4wCca0Rybi9WtcFXD5oJbBbG5ZfuqtyRGOmK+c1ycOGXISj+C4pIN
+	Gt+qU8BgC/2q6eLSTapaZLFiasoPSmQ=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 18 Jun 2025 07:51:37 +0200
+Message-Id: <DAPFATGF5VF3.3RCRSMSFLR5SM@pwned.life>
+Cc: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+ <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+ <lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+ <f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>,
+ <srw@sladewatkins.net>, <rwarsow@gmx.de>, <conor@kernel.org>,
+ <hargar@microsoft.com>, <broonie@kernel.org>
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+From: "Achill Gilgenast" <fossdd@pwned.life>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ <stable@vger.kernel.org>
+X-Greeting: Hi mom! Look, I'm in somebodys mail client!
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250617152451.485330293@linuxfoundation.org>
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
 
-From: Hongyu Xie <xiehongyu1@kylinos.cn>
+On Tue Jun 17, 2025 at 5:15 PM CEST, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.3 release.
+> There are 780 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 19 Jun 2025 15:22:30 +0000.
+> Anything received after that time might be too late.
 
-Disable stream for platform xHC controller with broken stream.
+Tested-By: Achill Gilgenast <fossdd@pwned.life>
 
-Signed-off-by: Hongyu Xie <xiehongyu1@kylinos.cn>
----
- drivers/usb/host/xhci-plat.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 6dab142e72789..c79d5ed48a08b 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -328,7 +328,8 @@ int xhci_plat_probe(struct platform_device *pdev, struct device *sysdev, const s
- 	}
- 
- 	usb3_hcd = xhci_get_usb3_hcd(xhci);
--	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >= 4)
-+	if (usb3_hcd && HCC_MAX_PSA(xhci->hcc_params) >= 4 &&
-+	    !(xhci->quirks & XHCI_BROKEN_STREAMS))
- 		usb3_hcd->can_do_streams = 1;
- 
- 	if (xhci->shared_hcd) {
--- 
-2.25.1
-
+Tested with Alpine Linux' configs. Thanks!
