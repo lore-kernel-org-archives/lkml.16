@@ -1,176 +1,93 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8B82E2EF4
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:51:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF28288534
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247470; cv=none; b=aREQ6aQ6TiHGbet/HTmSWjHROXHIBzti8C+ZapDtFZhbiBA3oQmI1EU8XasCwbcMbFjJXucIYannusW9fYkPd9D/4qrRWRFTuiPz4AzFi0gp0Q0lgSz90aV1NxDQKpGhzmRtq70lr5xXLJL2bi3fl6ltnu2mxpoqo0PN5Y+6oCg=
+	t=1750247545; cv=none; b=maFpX8yFXYxtx/yJXwpzeOshtgczxKo7/613QIC84Z4K0RdfABbJ04UMF+gfqWkpsvc2T8TQUMRapBc19O0B2th++l9ZGs11WezGtUC3cBEbKKC7a2daKLvn+FT191tLIv1ZKi7IABnWibqF3V2LZd3p99iWc2UFbelE7KDTOU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247470; c=relaxed/simple;
-	bh=BFnIK8yylhMzA6GVauXQsDSU4rCOQzl1grzcSe1FH88=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JPt5H+UcOeR/1sOMWd83y+pqF9Mbo8zU8EKaJs1c26TwjlEf7YJLFziyjEJTv7V7alASHwQSy+cGS9AKRO+D/cgaCX4dnD0JzJX6Ph7niB+07Hcl72aTYDYcYmm59oSUCe5oa8tmE0snxnB1I7Eaql2KFU86uA2S2pxWGLB6W4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bMhpY29VLzvZBf;
-	Wed, 18 Jun 2025 19:48:53 +0800 (CST)
-Received: from dggemv712-chm.china.huawei.com (unknown [10.1.198.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 075DE140275;
-	Wed, 18 Jun 2025 19:51:05 +0800 (CST)
-Received: from kwepemq200018.china.huawei.com (7.202.195.108) by
- dggemv712-chm.china.huawei.com (10.1.198.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 19:51:04 +0800
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemq200018.china.huawei.com (7.202.195.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 19:51:03 +0800
-CC: <yangyicong@hisilicon.com>, Shameerali Kolothum Thodi
-	<shameerali.kolothum.thodi@huawei.com>, James Clark <james.clark@linaro.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, Ali Saidi <alisaidi@amazon.com>, "Leo
- Yan" <leo.yan@linaro.org>, Will Deacon <will@kernel.org>, James Morse
-	<james.morse@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, yangjinqian
-	<yangjinqian1@huawei.com>, Douglas Anderson <dianders@chromium.org>, "Dmitry
- Baryshkov" <dmitry.baryshkov@linaro.org>, Adrian Hunter
-	<adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa
-	<jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim
-	<namhyung@kernel.org>, Linux Kernel Mailing List
-	<linux-kernel@vger.kernel.org>
-Subject: Re: perf usage of arch/arm64/include/asm/cputype.h
-To: Leo Yan <leo.yan@arm.com>, Mark Rutland <mark.rutland@arm.com>
-References: <aEyGg98z-MkcClXY@x1>
- <1762acd6-df55-c10b-e396-2c6ed37d16c1@huawei.com>
- <2abcf4ec-4725-4e79-b8d3-a4ddbc00caba@linaro.org>
- <0b839ec1ae89439e95d7069adcbb95ab@huawei.com>
- <20250616130736.GA788469@e132581.arm.com>
- <2dc510b4-ff3d-edff-42be-f8260cd27840@huawei.com>
- <20250616160811.GA794930@e132581.arm.com> <aFBYrQgx2m8Nd-iG@J2N7QTR9R3>
- <20250617141810.GB794930@e132581.arm.com> <aFJ-Za6oRGKKASN1@J2N7QTR9R3>
- <20250618112440.GC794930@e132581.arm.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <3dbc1f1b-a325-1525-f9f0-8172033438ec@huawei.com>
-Date: Wed, 18 Jun 2025 19:51:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1750247545; c=relaxed/simple;
+	bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n2fP5dft0TVVy32FyxkGZXFDaKBve65yMWO9as7lm/+0hVTWoP/ABRrlmPKwwN2MGTj+/2EzooYwxfBZ5ltv3BKCJF/MPZxMoEuVUiJ+KxMkQguOwgD0FqurqM3dkfCdRh3Flh7VAT74lo2S+bPfRtipzvignREyRwWKr4VNKDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aiB6xGUZ; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aiB6xGUZ"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5534edc6493so7326991e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:52:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750247542; x=1750852342; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
+        b=aiB6xGUZOykjxsf3HYlkaHplMNq57ST94UOJs+JYv9XKSphRWgYNkKAXLIuWfg44QP
+         HqUwoknbkVAZFbCL7yUBwqrBuH7aVlEIea3beXfbXwXtJP9js+eswPzqsTUHqF+9v0fl
+         8UGr/Kp7i7Vr8PxUsoBUA2aQO5fPIx9tUqMDrgn56A8knewnIchmCT7r2dGcv4gJpmpm
+         7C9ibt6wNoiw6ECW7rrwrvyzHRjhBxOZkv307erGff9QCYgxOBBf49PtxXwjuYRsjRmC
+         Gk/fQ7YBf1v/oL1byEkjEqVzpGm2xLDuzr47OmJPmIfXWsGvos4ivhwdkBYXMyuYfP5j
+         az7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750247542; x=1750852342;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eU5b1jLZCw8nEnzB6yiVdmF+qD8sNWEFFSroG2gd7fI=;
+        b=hmVuU7hQZ6ADQ5W2YNQ0yS328507/ShgB24NmXWultYXjE5yqf98CBJGwshlWEUMmC
+         lw8dzyxUFT+13hfouxNaU9ZlPD1b99ZQQ19IHnw1SmwfaVhHMcDuzD6cnNPvJZDJuDFq
+         4dsDw56AmjjNjWZ0MEPB+KWPhMjW6EzsNWGCEEtbE9hfhIvaKMBELLF4TCfwlNW7xGQB
+         tMexAoMy+oeFXjpuRG2QJP+w0bHCNEK0YVezk2jCKfRlXUD7CBD+nZwPJmIMlT+eOEHU
+         RUR7XMBHv07xVbeM+voex8mGlBS6rdD70B/AsItJUoBUXSVuGO952thfsKUScF3Trnca
+         yqZg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlbbFgd55g13iGZDc6u6CC6YTicEaPjBwUHDAID2FSP2QinZXXMmKumBGZsyaXkVKJ+QZioMh9yfdKvFo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLnxgNh2sTcBri3zx9Q0/mDG8OGZ39g8reiE2HZRhtuYkzpyOn
+	4TNogd63yKvMw3d3TgOIepOuhKpAb8a1RsHZcAuXVgA6g3GhkxG9dMiRLq08ri3i2gO+mjxYIzj
+	sXJku/F1+WGfPDs3MBOVqPM9ar34r+IFHve/hULIXdA==
+X-Gm-Gg: ASbGncvFNN0Yu++N0ofJ4NKHJChCKPZLrfpPwQEGNdBXkld2El8EorAQyr6OMiLzKQW
+	jj2McQu3cVpSgeWvs/XH/6/TBTfyyair6J6JDVm7x2M/6vYqt/VNtbF2iyvz4sOI/Bf6iq1Zw5u
+	xtrvQT3QzULe9/Bo1MIRfmx2GqWRzXwncZP3ZThp9/zBE=
+X-Google-Smtp-Source: AGHT+IHjWdSTmS4aDTVqDd7NBp2OPbykUx652+t/IZOVkWWGf64J/RLFbhbxDCwVOIM7rfV41BeoBeUWfyaPxf5hCjU=
+X-Received: by 2002:a05:6512:3092:b0:549:8675:c388 with SMTP id
+ 2adb3069b0e04-553b6f5fa33mr4843249e87.52.1750247541573; Wed, 18 Jun 2025
+ 04:52:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250618112440.GC794930@e132581.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemq200018.china.huawei.com (7.202.195.108)
+References: <20250613114518.1772109-1-mwalle@kernel.org> <20250613114518.1772109-4-mwalle@kernel.org>
+In-Reply-To: <20250613114518.1772109-4-mwalle@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 18 Jun 2025 13:52:10 +0200
+X-Gm-Features: AX0GCFvi_Kw1gkeOTQZNsLTIvoCnOqNgSVyelJU-92RYyRLKgU7_lLqQN3HGdew
+Message-ID: <CACRpkdabkT4cGLVVrAfSk_ehiiY9HLzpfsvUOEXH4wH0bXxPuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] pinctrl: pinctrl-tps6594: Add TPS652G1 PMIC
+ pinctrl and GPIO
+To: Michael Walle <mwalle@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Julien Panis <jpanis@baylibre.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025/6/18 19:24, Leo Yan wrote:
-> On Wed, Jun 18, 2025 at 09:52:53AM +0100, Mark Rutland wrote:
-> 
-> [...]
-> 
->>>> Other than that, I think that userspace should just maintain its own
->>>> infrastructure, and only pull in things from kernel sources when there's
->>>> a specific reason to. Otherwise we're just creating busywork.
->>>
->>> I agree with the methodology.
->>>
->>> Since Arnaldo is facing build failure when sync headers between kernel
->>> and perf tool, to avoid long latency, let us split the refactoriing
->>> into separate steps.
->>>
->>> As a first step, I think my previous suggestion is valid, we can create a
->>> header tools/perf/arch/arm64/include/cputype.h with below code:
->>>
->>>   #include "../../../../arch/arm64/include/asm/cputype.h"
->>
->> Directly including the kernel header introduces the very fragility that
->> having a copy was intended to avoid. NAK to that.
-> 
-> My suggestion is not to include the kernel header, nor to modify the
-> copy header. :)
-> 
-> Instead, I suggested creating a new header within the perf tool (under
-> perf's arm64 folder) and then include the copy header in tools:
-> 
->   tools/arch/arm64/include/asm/cputype.h
-> 
+On Fri, Jun 13, 2025 at 1:45=E2=80=AFPM Michael Walle <mwalle@kernel.org> w=
+rote:
 
-sorry for the misunderstood.:(
-in this way we still have the divergency in the long term and as a workaround
-this works same if we partly update the tools/arch/arm64/include/asm/cputype.h
-with only necessary MIDR updates and keep is_midr_in_range_list() unchanged.
+> The TPS652G1 is a stripped down version of the TPS65224. Compared to the
+> TPS65224 it lacks some pin mux functions, like the ADC, voltage
+> monitoring and the second I2C bus.
+>
+> Signed-off-by: Michael Walle <mwalle@kernel.org>
 
->> I've replied to the same effect Yicong's patch [1,2].
->>
->> If we want to share headers between userspace and kernel, we should
->> refactor those headers such that this is safe by construction.
->>
->> There is no need to update the userspace headers just because the kernel
->> headers have changed, so the simple solution in the short term is to
->> suppress the warning from check-headers.sh.
-> 
-> Sure, makes sense for me.
-> 
-> @Arnaldo, as Mark suggested, do you want me to send a patch to remove
-> cputype.h checking in check-headers.sh or it is fine to keep the warning
-> until finish the header refactoring?
-> 
-> @Yicong, could you confirm if you proceed to refactor the MIDR? thanks!
-> 
+I guess the #defines for this to work are in other patches so it all needs
+to go in at the same time, so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-please feel free to take this over.
-
-> Just note, I searched tools folder and found kselftest also uses the
-> cputype.h header. The refactoring should not break the files below.
-> 
-
-they shouldn't affected. I did a kselftest build test with my latest patch
-and they were not affected.
-
-thanks.
-
-> $ git grep cputype.h
-> perf/check-headers.sh:check arch/arm64/include/asm/cputype.h '-I "^#include [<\"]\(asm/\)*sysreg.h"'
-> perf/util/arm-spe.c:#include "../../arch/arm64/include/asm/cputype.h"
-> testing/selftests/kvm/arm64/psci_test.c:#include <asm/cputype.h>
-> testing/selftests/kvm/lib/arm64/vgic.c:#include <asm/cputype.h>
-> 
-> Thanks,
-> Leo
-> 
->> [1] https://lore.kernel.org/linux-arm-kernel/dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com/T/#m23dfbea6af559f3765d89b9d8427213588871ffd
->> [2] https://lore.kernel.org/linux-arm-kernel/dc5afc5c-060c-8bcb-c3a7-0de49a7455fb@huawei.com/T/#m6acbfa00002af8ee791266ea86a58f8f994ed710
->>
->> Mark.
->>
->>>
->>>   static bool is_perf_midr_in_range_list(u32 midr,
->>>                                          struct midr_range const *ranges)
->>>   {
->>>           while (ranges->model) {
->>>                   if (midr_is_cpu_model_range(midr, ranges->model,
->>>                                   ranges->rv_min, ranges->rv_max))
->>>                           return true;
->>>                   ranges++;
->>>           }
->>>
->>>           return false;
->>>   }
->>>
->>> Then, once we can generate a dynamic MIDR header file, we can use that
->>> header and define the midr_range structure specifically in the perf.
->>> In the end, perf can avoid to include kernel's cputype.h.
->>>
->>> If no objection, Yicong, do you mind preparing the patch mentioned
->>> above? Thanks!
->>>
->>> Leo
-> 
-> .
-> 
+Yours,
+Linus Walleij
