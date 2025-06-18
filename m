@@ -1,184 +1,112 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DE6199223
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA192EBB96;
+	Wed, 18 Jun 2025 14:45:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750257912; cv=none; b=M5kleK2Pq08jH2J1tS3BCNiRrk+2nLxgNDNPK0uWWJle58OpwO+oKII6+F900cJaFlicABSYOucDXVf3xFElKFFlFUWKTMjRHHZlbFfApWFQ6UxzL5bWreI9PmFwIVp0TmY8w+kJs1W+oCjh0oemwinQULrCWga5jug1aa3jGNc=
+	t=1750257918; cv=none; b=otsEKpjV6EFOuMZeEbxDkqCU0k/5Kw5baT3dvG2E1+exi1bQ0uXBDBDp6/8k6Fe7vo6D9C5kzM+pVj3n9v27y8Uj+/oTJxXvz25gbFSTM7GULpGMFviFQ7iIrwHx9ZGKR2wRAuMdVkMiPEJYGfTilMIxriIjbVgl+P+gefFTseQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750257912; c=relaxed/simple;
-	bh=wFDJGOoYvxypvMpqpT4ZM8yTHl6scWUOtsqCWIeHNU8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B9fo5xX9+ZMypRFWumlR+mjLYLhI4FjUXHESDYmKiNcZIDmqVCrZoySJ+qASc4+uIYKctVIsV2dtFRPsxapFC4sOtur8D/GYSjWOQq+lDHYeyDYiWd68nx+c4FT+LowmDe9CWhWCGC9E2JyvQ8l8wEsjVwS44hh9jkrCmmDPR+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ztOfbE7B; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750257918; c=relaxed/simple;
+	bh=V32Lxoh+JWBZUtGJvr4ddA6AvsipGh9FWI2K8eeI8/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OxVaIOKHOG168v4PHIfJlHZABk8eW5+ijL/Mw+j2baa0copoEfXhk8D4sjKg3dpCBCEP7Fc7bqtglBOvAJQFB7xT4D597JJ62cfSxKREWnPFeSsYOELAzZHAoERqxWlJEip7VYRKK2C5qsJSQ+JkrUSVADLmbQKOOoF10T9kGxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ijl85kXx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ztOfbE7B"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-553a5f2d321so8702e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:45:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750257908; x=1750862708; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hgwogF8uqMbr2+utkBcdB+9XUE0/TMWHXyL3HiSuo4U=;
-        b=ztOfbE7BV6PqP1SZRntwrn1NAZ0bs4p/keOwkqgUHfydN0ecy5SdJhw4Kd2oelNamV
-         Ltf2ccSogNMs5dtKsPuDH1cCyvLSSA8oX00hBKHkHCCta5M2kzmBUk61rA4MbkJa+BCs
-         zZAml6AJkmUaB2yK1mN6FVodMhqvmJ4StM0A3ai/4lGYvB86Xim9aUpFGmnChtEflv5D
-         UqtaFM1XWpdQ9w/KOQ5dxd0xy6ADdFekIhPTkrimoJJLtosjahVhj6B0+Bgx7rA9FnWf
-         Bkg5XNPpIv4oP2f96wUlUOjY5VNaHabZXDXqGN3v+Dz0zhTHZGniVDFIkzPAhkL2lmmZ
-         SXQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750257908; x=1750862708;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hgwogF8uqMbr2+utkBcdB+9XUE0/TMWHXyL3HiSuo4U=;
-        b=Gs91Sfa8ALj6Mx0qIJCr5rS3aRAVZQHHPnB7i1YYUQLFV/fy2KydmWJwP24WD3JvsN
-         7RPEx2xxbel+wBUVdrxQ3xrLugKiTlOpQlvpzOPQXPntwCFqZt9gK3MCz4ygFQPODngH
-         vuXpODfsGGRrmQkvM8ngfWh2gOtP0LCTZDM6oYCGu+bDfRwTFBWrgvDUastRkzs5E6+n
-         Lwm9Cs8s2uvE3THbbOql7UqXhykRJSv1L4yEUY0FRT1w9Kfz7vQV9F6wrjUXyPRLsvtT
-         xEF7IYgTLGILduZxbGzvT1kQdoyrbSNYJVfKck/WI3dsRyPFGlf2e8Yo1+pPCTr0jojr
-         rsWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWYxUPuYUIClkZ4OUJP5DgErJBK2rCtl00ZzFWnr7bG/R7PI6pGXgcFAWUd04KUMcGR2E0IWFhxkcoqtIs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysmJlKMwi5NhCOPV0a3C6H9jui3GZEDzxt/5kj21/1n8mfomKO
-	OBuo0QyoHAVRLIV6V1jsIxmbnT356UntNaml+OcTnBV0Z02Ji3IEsJCFV8dWebKfrvmdA2/yJfZ
-	SqEwaKlhYt1bRG2+XWBsQMS/PisiI+EH0nOeSvlJB
-X-Gm-Gg: ASbGncuWL0+f3JlOiViWotb5N7cyRn1wuEMjFY6tLpU0T8lwS66TKHja1qvpYH16wJI
-	TezehCQqwKIxsmM2PpaIY2pxCthqEdnnvsXsHijtraHnCYI23cxUaqRL/kxvYJCZJ2z0+K1tDYl
-	OCCPNRR1fATpveYuYcD61Gs7zT2I1/pgXoMVxI7Rat+ss9
-X-Google-Smtp-Source: AGHT+IGsHULveGxM+Zja84HplaohcRZH+z1Ahxw+rjNmRssuHdQl/61J38I3+e2DEDA8rD3yf0Aeas3nTywrwhBEfyI=
-X-Received: by 2002:ac2:5deb:0:b0:553:50d2:5c20 with SMTP id
- 2adb3069b0e04-553b80b051cmr996457e87.6.1750257907321; Wed, 18 Jun 2025
- 07:45:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ijl85kXx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2298EC4CEE7;
+	Wed, 18 Jun 2025 14:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750257917;
+	bh=V32Lxoh+JWBZUtGJvr4ddA6AvsipGh9FWI2K8eeI8/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ijl85kXx5K3iAg46xVHFDAG/f1yyfGNLk+aeiggM+PUA3YmAkN8giMBDRRQ/N48Bv
+	 LAO/252JYcE/vM+fkcdL739enNH+00FWYHRD3EPLwAYB1Pt4tDIQZdXoI5ajMNMhuW
+	 XmCvEknPyFylshhTmC38x84xYg42YfM/zzRm25PL4prBpkbdwY8qheDZkf+sOV8k9i
+	 eY7oE4KQZZll+LytWGhfk423/5+Jkjo7tCKXli6NieqsNHw/UZgvFGuyyXXvko5n0n
+	 3lsAPWmqTvJjhBxVAhco2QVMZsufTTQ/8hUl0in7tVQruy4cOBJh+I/KbtCbQpacP7
+	 ci8x4OqEfrZPA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRu2O-000000005IN-2icM;
+	Wed, 18 Jun 2025 16:45:16 +0200
+Date: Wed, 18 Jun 2025 16:45:16 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 2/2] USB: serial: cp210x: use new GPIO line value setter
+ callbacks
+Message-ID: <aFLQ_G0HnGWVSE12@hovoldconsulting.com>
+References: <20250610-gpiochip-set-rv-usb-serial-v1-0-a9343ca109e8@linaro.org>
+ <20250610-gpiochip-set-rv-usb-serial-v1-2-a9343ca109e8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617050844.1848232-1-khtsai@google.com> <20250617050844.1848232-2-khtsai@google.com>
- <8cbc5220-c993-44a1-b361-418b36a3f336@oss.qualcomm.com>
-In-Reply-To: <8cbc5220-c993-44a1-b361-418b36a3f336@oss.qualcomm.com>
-From: Kuen-Han Tsai <khtsai@google.com>
-Date: Wed, 18 Jun 2025 22:44:40 +0800
-X-Gm-Features: AX0GCFsDnAuqG_eBCE0NH5iSAwM0mK_YNKjBQDLgH6k-Y0wAmBs5AA-kujp4xNk
-Message-ID: <CAKzKK0p0fx4bsqVVPWjJQxG0sEHee0b0OPE7dqCb7cbW7+XkgA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] usb: gadget: u_serial: Fix race condition in TTY wakeup
-To: Prashanth K <prashanth.k@oss.qualcomm.com>
-Cc: gregkh@linuxfoundation.org, hulianqin@vivo.com, 
-	krzysztof.kozlowski@linaro.org, mwalle@kernel.org, jirislaby@kernel.org, 
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250610-gpiochip-set-rv-usb-serial-v1-2-a9343ca109e8@linaro.org>
 
-On Wed, Jun 18, 2025 at 8:26=E2=80=AFPM Prashanth K
-<prashanth.k@oss.qualcomm.com> wrote:
->
->
->
-> On 6/17/2025 10:37 AM, Kuen-Han Tsai wrote:
-> > A race condition occurs when gs_start_io() calls either gs_start_rx() o=
-r
-> > gs_start_tx(), as those functions briefly drop the port_lock for
-> > usb_ep_queue(). This allows gs_close() and gserial_disconnect() to clea=
-r
-> > port.tty and port_usb, respectively.
-> >
-> > Use the null-safe TTY Port helper function to wake up TTY.
-> >
-> > Example
-> >   CPU1:                             CPU2:
-> >   gserial_connect() // lock
-> >                             gs_close() // await lock
-> >   gs_start_rx()     // unlock
-> >   usb_ep_queue()
-> >                             gs_close() // lock, reset port.tty and unlo=
-ck
-> >   gs_start_rx()     // lock
-> >   tty_wakeup()      // NPE
-> >
-> > Fixes: 35f95fd7f234 ("TTY: usb/u_serial, use tty from tty_port")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Kuen-Han Tsai <khtsai@google.com>
-> > ---
->
-> Reviewed-by: Prashanth K <prashanth.k@oss.qualcomm.com>
->
-> > v2:
-> > - Move the example up to the changelog
-> >
-> > Traces:
-> > [   51.494375][  T278] ttyGS1: shutdown
-> > [   51.494817][  T269] android_work: sent uevent USB_STATE=3DDISCONNECT=
-ED
-> > [   52.115792][ T1508] usb: [dm_bind] generic ttyGS1: super speed IN/ep=
-1in OUT/ep1out
-> > [   52.516288][ T1026] android_work: sent uevent USB_STATE=3DCONNECTED
-> > [   52.551667][ T1533] gserial_connect: start ttyGS1
-> > [   52.565634][ T1533] [khtsai] enter gs_start_io, ttyGS1, port->port.t=
-ty=3D0000000046bd4060
-> > [   52.565671][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
-> > [   52.591552][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
-> > [   52.619901][ T1533] [khtsai] gs_start_rx, unlock port ttyGS1
-> > [   52.638659][ T1325] [khtsai] gs_close, lock port ttyGS1
-> > [   52.656842][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be975=
-0a5) ...
-> > [   52.683005][ T1325] [khtsai] gs_close, clear ttyGS1
-> > [   52.683007][ T1325] gs_close: ttyGS1 (0000000046bd4060,00000000be975=
-0a5) done!
-> > [   52.708643][ T1325] [khtsai] gs_close, unlock port ttyGS1
-> > [   52.747592][ T1533] [khtsai] gs_start_rx, lock port ttyGS1
-> > [   52.747616][ T1533] [khtsai] gs_start_io, ttyGS1, going to call tty_=
-wakeup(), port->port.tty=3D0000000000000000
-> > [   52.747629][ T1533] Unable to handle kernel NULL pointer dereference=
- at virtual address 00000000000001f8
-> > ---
-> >  drivers/usb/gadget/function/u_serial.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadge=
-t/function/u_serial.c
-> > index c043bdc30d8a..540dc5ab96fc 100644
-> > --- a/drivers/usb/gadget/function/u_serial.c
-> > +++ b/drivers/usb/gadget/function/u_serial.c
-> > @@ -295,8 +295,8 @@ __acquires(&port->port_lock)
-> >                       break;
-> >       }
-> >
-> > -     if (do_tty_wake && port->port.tty)
-> > -             tty_wakeup(port->port.tty);
-> > +     if (do_tty_wake)
-> > +             tty_port_tty_wakeup(&port->port);
-> >       return status;
-> >  }
-> >
-> > @@ -574,7 +574,7 @@ static int gs_start_io(struct gs_port *port)
-> >               gs_start_tx(port);
-> >               /* Unblock any pending writes into our circular buffer, i=
-n case
-> >                * we didn't in gs_start_tx() */
-> > -             tty_wakeup(port->port.tty);
->
-> Just curious, since this is already under lock, checking for
-> port->port.tty would have also helped, right? Anyways looks like
-> tty_port_tty_wakeup is better.
+On Tue, Jun 10, 2025 at 02:43:47PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/usb/serial/cp210x.c | 18 +++++++-----------
+>  1 file changed, 7 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+> index 9960ac2b10b719192dfbab0a6e81b2cf80f40d36..caeb2873a60451fb7a9a5b5d25071547b5401d52 100644
+> --- a/drivers/usb/serial/cp210x.c
+> +++ b/drivers/usb/serial/cp210x.c
+> @@ -1504,7 +1504,7 @@ static int cp210x_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+>  	return !!(mask & BIT(gpio));
+>  }
+>  
+> -static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+> +static int cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+>  {
+>  	struct usb_serial *serial = gpiochip_get_data(gc);
+>  	struct cp210x_serial_private *priv = usb_get_serial_data(serial);
+> @@ -1522,8 +1522,8 @@ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+>  	mask = BIT(gpio);
+>  
+>  	result = usb_autopm_get_interface(serial->interface);
+> -	if (result)
+> -		goto out;
+> +	if (result < 0)
+> +		return result;
 
-You're right, adding a null check for port->port.tty also solves the
-problem. I actually submitted that exact solution last year, but it
-was rejected.
+This is arguably an unrelated change, please keep it as is.
 
-Link: https://lore.kernel.org/linux-usb/20240116141801.396398-1-khtsai@goog=
-le.com/
+>  	switch (priv->partnum) {
+>  	case CP210X_PARTNUM_CP2105:
+> @@ -1555,11 +1555,8 @@ static void cp210x_gpio_set(struct gpio_chip *gc, unsigned int gpio, int value)
+>  	}
+>  
+>  	usb_autopm_put_interface(serial->interface);
+> -out:
+> -	if (result < 0) {
+> -		dev_err(&serial->interface->dev, "failed to set GPIO value: %d\n",
+> -				result);
+> -	}
 
->
-> > +             tty_port_tty_wakeup(&port->port);
-> >       } else {
-> >               /* Free reqs only if we are still connected */
-> >               if (port->port_usb) {
-> > --
-> > 2.50.0.rc2.692.g299adb8693-goog
-> >
+And keep this in place too, and just result if negative.
+
+> +
+> +	return result < 0 ? result : 0;
+
+And return 0 explicitly here to avoid using the ternary operator.
+
+>  }
+
+Johan
