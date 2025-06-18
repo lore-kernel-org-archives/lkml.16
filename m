@@ -1,185 +1,138 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11013051.outbound.protection.outlook.com [52.101.127.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA5CF9C1
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 01:13:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.51
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750209191; cv=fail; b=BYRf+NprZIWjC56ecrHfINbLuN0CoHi/4APVFZ/sMg/NSLriOD4mlXobIF0zPgShDoFzxApRoHHlrpv9rlM5jlyYQXLULfAu+kjfVOUmEJXjqS/WYMs0TeDRCkN4szzrfvss4ENTbhA/joKEOpo7lLf8U9wNga3/Cs9OQ4hj5lA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750209191; c=relaxed/simple;
-	bh=5FDXTu9SkLJ7n48CXvkDZI5TLEr6wDPsf+na/3W8jRw=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TsSf9OCrKziceI07tNKr2QPjhRT0qRDbsEe4tM0e65PUuFmadWnHKGqaArh0V8ugqvnr/dhx593OKOC8RaXlaFBArFhSXfsDMHj0/MkAggzHrcD2qwqg+eb8AXBQuciv7s6kBA7akEYTdl18DboQ9g8orMMNxWD+4lY8kp/gdjU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=qvhtlmER; arc=fail smtp.client-ip=52.101.127.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD7CF9C1;
+	Wed, 18 Jun 2025 01:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750209286; cv=none; b=n77lBI2LqHivJWsyCmf+zRQ/iwQ2oJ1gK76zCIGQ2T/xDQFEkowhHjdnUkTpTFvhTG1pt5WCoVst3XfBiWl0lpxqKMM+6zX5S7GuomTsM8iJcnnJ4eM9m6QttXqKQ3To+ULGXJmHhArgoam1UAnkr633CK84xJ0tDgAI/2s+CzA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750209286; c=relaxed/simple;
+	bh=h2YputM22TLsFmaGuZOmTSbK7C6G8IcXF/esgzdBeMU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HJrfryJUWY0hP4fs2idSyMZFKHCbt6UrEXclohaVUK0gevQLVrLsibDxV2RZKVMHY0TUY99LGnw7U10JycMp1DNcXMVHbH0WsBaf9/QAybuaZy3tgheYFK1eiIBxjM1kPuDfFVVeUVyhXVRbXgxYwsSpN1/0COlhETkg8/2TLqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2ORsYPK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="qvhtlmER"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tbBQEvw3hN3U+5UKlQZGUXAV+yu4p8JD61d2TkCgvhjKVSlSa7ceibSAXhilQN/iCaTngQU3r+FyFixmy8RnawH0NHbSSxzBwHhfldAmFFRlShpf91veb+Jkwzymb3VKz0DzBYpLdMdoA/2zvDLCk4YdduWzBEA9A2GhTEqDdnYtA+6hmcxt49LNs3TsMCwSkfu3/hTNh631b5l4wuSpSy3P8hO6BfDiYfv8E6KPmYCIeYXLDscLZEe3EXUfDgb3GhxrKkxiIjrMOG4aNMnnYPTMYYt6ejuKS1mgzUaNv0wOuRtM4WjP1YFnbqn6XU/PwuMU5HEKDqdQzv9kwKil3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RHhfHSQjEjqWvorycDEqJBWRgw6Yn7oF0xmYKmRg1Ow=;
- b=qeqFTWkGmDXFgvMX43Wvw5/5TUUKxsD1ESrEACPtlYC/t7loSH1JEV9E0RLS4DAiBBSlSWENDYmF6fY4I/tC8+92aBg8PzIF6LvKKjTkC4bf8kpzI29WcKcYcvFIN4ed2Ga5ubjrayePhwa8ShVAj5NmoP1rtSRV6Sp0qo9XC2vrV2MmmQf2S5aNXyYfIgpdAZGDYmnXN9pIXbakjX15ySRyDAursgeVdIWMQ+pim2Rydl3SQK4cX0XDJDxhTUqex1wOkF33qfoFAXoyZTVaGrqJEGZdhOog3s2Ac1cbhtoUK197xpIlBCIyPD5nx3zaXyBBVULCjN1DU7QF8f/zww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RHhfHSQjEjqWvorycDEqJBWRgw6Yn7oF0xmYKmRg1Ow=;
- b=qvhtlmERxtz/Q3PB2tWdPeVJ9wiB0ndjuwXRb3yV8DOIiXssPx+lk5qKDnCzAEJH0zHmPRePoojPQCJt29tVSX8MiZkQd1SWq1gH6t5p2ax3xN2+xH2l17OE3d5DsA1vhVvkuMiCU5X4NhK3PnEgSrcQi46Sj1Ns8fXbf3uBCVLpzV2A7vZP24ZlQRb6hHzKLkeTXjndrdEPQ5jKRGtAKT5g3q6U9wzi8aoYMj9m1GnoZB3f4uEMyDYq8b6DW+6NGXxNP0ivJlmUz5NNxM/EYHstpX3nsmQniaJloHT6FZ/urTPAHUGudefwt8utPeAUgcINioSsOb6R+VhPtbg2qA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEYPR06MB5720.apcprd06.prod.outlook.com (2603:1096:101:b8::10)
- by KL1PR06MB5971.apcprd06.prod.outlook.com (2603:1096:820:d5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
- 2025 01:13:06 +0000
-Received: from SEYPR06MB5720.apcprd06.prod.outlook.com
- ([fe80::e845:2f1b:eba1:e189]) by SEYPR06MB5720.apcprd06.prod.outlook.com
- ([fe80::e845:2f1b:eba1:e189%3]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 01:13:06 +0000
-From: Yan Zhen <yanzhen@vivo.com>
-To: kenneth.feng@amd.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	opensource.kernel@vivo.com,
-	Yan Zhen <yanzhen@vivo.com>
-Subject: [PATCH v1] drm/amd/pm: replace manual string choices with standard helpers
-Date: Wed, 18 Jun 2025 09:09:03 +0800
-Message-Id: <20250618010903.831905-1-yanzhen@vivo.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0031.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::11) To SEYPR06MB5720.apcprd06.prod.outlook.com
- (2603:1096:101:b8::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2ORsYPK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77AAFC4CEF6;
+	Wed, 18 Jun 2025 01:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750209285;
+	bh=h2YputM22TLsFmaGuZOmTSbK7C6G8IcXF/esgzdBeMU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=h2ORsYPKEf7Szaa3wjBCMWTtOLGDSCQvsfp9Bq5p3ne+H0+0t9jML5uuyaThHtceQ
+	 Au5EvYAGNKSbukyDT5ZaoQXt92ToLL6dDSd+kVocG9cg3OtLfHAOj8WwGZ6tp2Mjx3
+	 7DpgnMHpCU4SPSGkMwRC7AlzbZfuwYfEGHlCmUDvRSxL649gwsEjx61Jrujheo7rTp
+	 qJ0m/s1OPMMJKW0Fm8sMTLdBFtzIuia2f/5YFBxLoaFla3VMVr7uCX2/29W+xwpeQU
+	 QpXYUNz+RV2tVCo4jZsHYSPpdOFbcRPkh9Tj8SiJnNt/iCCptbBmLINW2ONw5bxPOp
+	 1fkWuhAiISscA==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553ba7f11cbso3944634e87.1;
+        Tue, 17 Jun 2025 18:14:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUr463HkX/HFYWwmWqS9woWwzRcfspfxJGBzDFoTNMr1n9KmFmsL5LAmHlsCvdjlhr23CLZOVs352I=@vger.kernel.org, AJvYcCVHYO9OFxaaWHNM2cauB42818Tf5UM9hjbPUPnOAlULCLwu+yObuaiHci9Mnir0pQ9pFcd6A5Uz9eQr4bw1@vger.kernel.org, AJvYcCVXn/MClVqyT8Z/lbfxbg8IlqMJ9hWroVt9Mk/s1AakhDr4jwFMDWXnpiqJfzTiJ6KgiRzcQBiXuoXx@vger.kernel.org, AJvYcCWI83DaMlda8JCbKF5uUHekLmd35JG5OtjdWZ3tAcEc4bZMOgek9REvUutjf2+lD9dM48I/GNnmFqQ2bEDA@vger.kernel.org, AJvYcCWRoOya3tyvJo7A+Tz2okzmOP0lvAI3ZcMB06GLWCnfPAsLdRjGDqsN22kYeWKaTBxyb7ORfrvTlnLUDRNMHVmG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzV5cPXBQIMDBwCM8sPhmFBRfYaoIbjN+a7xWfqrLzzOCyQQCZt
+	QKV1WHTD0nuUkvli++1I6sHye9V+sBFLi4CLDWyJ5D/PjdlVhvjukZqMdvP9ILp8yVtz51+uGE9
+	6BmBg+R/aYSrZZwoUxEJDUQzhbJ8cbNI=
+X-Google-Smtp-Source: AGHT+IE7MRJL1Yw0xIAiT0g6qe8cPzPnAw/z8vD2sHRVWPnU9T42hH7IJfTK5kp8NNXpkwOUOaUNXTzluaBXDYEml0s=
+X-Received: by 2002:a05:6512:3b8b:b0:553:2ed1:ab1e with SMTP id
+ 2adb3069b0e04-553b6f4cc5cmr3710057e87.46.1750209284091; Tue, 17 Jun 2025
+ 18:14:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEYPR06MB5720:EE_|KL1PR06MB5971:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97d9c001-f365-40fc-dfd7-08ddae05479d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?2bddSsbgvWXYTgGQM2NL5NbHJVl5DkAJD1F430E+SUxEVLfSQyAfP5171sIp?=
- =?us-ascii?Q?t1NrDUZCTVGzX6AKurPuAjJPue4UxTk9lkFodfbl0xUuQsSAzCp6ukQHsKVp?=
- =?us-ascii?Q?9zSxtNqp0Zvu8bM2jmsQiFS07Ispqrn3qIzbeQKElPznOZY9t1wV91soNuvr?=
- =?us-ascii?Q?b91ihestYLoKfa2RThg5AtDNP46lWKTtBCjAuM0MAY4yX9DtuDpoRq4KvV7D?=
- =?us-ascii?Q?oW7twosSuGXfGiwsqyruRTDthZ1LvvkTPWLG8NSO97trcGTStQxwy1rlO0Jl?=
- =?us-ascii?Q?qofNvcwRLMI1njgpOunDZrxetlP0OqhYr3h6YpRPojJ1aG7B5uKXJ5qgd8q9?=
- =?us-ascii?Q?KqD5nl4r6dQxqabW+uBjI4EV6xsfgTBmdEmxnCrHapxp6F6qaQ2uPKCRvnQY?=
- =?us-ascii?Q?UxEIFy/kxFS1j92IXmmDIb/t3/iuwhEoHyv8oEODUWGcfTJH3V+07tNS2rjz?=
- =?us-ascii?Q?UfukXKCOFMDi856xUzmbwxLdcZl1/E7M8J05gcrTqS/uTqQUTwhQhq4/kWva?=
- =?us-ascii?Q?/ieIWQKQx+KsBfosKiXVmjnIlgwXyk3NJuXElx31PkAiZq3ssQxRUByBAgu0?=
- =?us-ascii?Q?H8gD8ZMlESiHLE2d7VlqCEHMr3gqvtHj1yqePxm3oCc5mVCwahzSw/Nzg51q?=
- =?us-ascii?Q?sSYKNpgjpCPfpnZjAOyONzMJL/mVTTcqpKa3nlZpm3xbrro7kWYNOI1nSzyr?=
- =?us-ascii?Q?wewKdV13FWloZNaz3e/3nZGPmv8yTPKI4GpQ9RPVh3Zwcy26eQSnGnEnUFkm?=
- =?us-ascii?Q?qR4Cb1sU1mISAAr7npOiYxbGb6PHp0Tj5LdnlIjpX5ChMYg2knKDWhLvgx4B?=
- =?us-ascii?Q?oGmuKH5nD93SJHe/Ohwl5l9tPwXvX0e41Bh1BlYKkXYodfvT9AuKRnpaWz3E?=
- =?us-ascii?Q?XtqfMYl2DtIuAswFaKXiA39R+ghoWM447HpAiSKwqnqhQmxhVBudOw/qmi2b?=
- =?us-ascii?Q?Iz3eL8NfeYk9+wAIBqZvVzzEUviqfQ/l+mOHvX/yXelQdwIeKqVsiqq2Zg+3?=
- =?us-ascii?Q?97oj0ljFGLv6ZerKOK4eoMJ2YCzucgzflEQBv7Jwjg35tOnlwe3x4SpJL3bP?=
- =?us-ascii?Q?AogjZVwc6xMQWIVCJ1zITLYBmvQxaxuEfND+ELucD5awOSH5r4Kmf8ENwFYB?=
- =?us-ascii?Q?JsTGyZhqg3zldK+oKYvFT196N81zSDWckXblUEa+dRZX9j9JybgYRCmA+mEP?=
- =?us-ascii?Q?XI1a/gCtPkHyNf7xn4EehOoXx7k2JqtzBh5PXrmORfe6OyElaUCOCscpzpy0?=
- =?us-ascii?Q?liHjd3FAAFLptxqUA4GStorCYGHgcEwgzw9dDEKwB9HOx9+A8/FBdBE1aX+D?=
- =?us-ascii?Q?gLOpveb1Lubx2yeKKkr2poQ0CHEZTBthXfRwCwttlmKQItMIpbXyHqy47Udd?=
- =?us-ascii?Q?vJNiuLaIVnBktB8f4TaiRAaq66suoLh50VqFm79wD384GAGLvIptK+1Ko6cz?=
- =?us-ascii?Q?ZaGZ+U5kZ38EE86L9gtQkXpgYWUZl0ldzMGL7ZT4f9kMh3+bXojnAA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5720.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?e52KWUy3Z8bnYp/jozEMVPM+37hr/psbTChgFrU/+d0NwxWwG7PY5Le+T+Mh?=
- =?us-ascii?Q?IZNDkTO+CDEECt1OX45v1AeGVU084eDpQK1vHEN5egyqqi91v34BHz8QZjUE?=
- =?us-ascii?Q?7eYTgncNtGQBmT8STp5zrQ+4RhVObRoPqBV4jtSt5x7XGlkPEtH3xpB5y/lI?=
- =?us-ascii?Q?O50900UKFRXmRRXPZIBrpT6ub0/Je7BMdd6u2C5Z13YnW1ekffZ0yZOHGErs?=
- =?us-ascii?Q?qaNvaapPtxdEs2sBsy9xaZHkwbAgmJNo1bK4bH/Btgp+gJel1+wnKR+8hOjP?=
- =?us-ascii?Q?6wIUs1CO6b/naUZBgprd2rId7HMZOVBRMuJ5g+1lIwOAjqnU21qPHtGiUhL2?=
- =?us-ascii?Q?3OFvbxMY99mEraEzs9crDIS86dboKykx1jM9NbBTeBa8ALxYH9dMwPlfOMzE?=
- =?us-ascii?Q?NRcvy1ERdJfHDBuLQ/Qv5DMbvTMN+3b7ZMj3xvhoEFSGpEnuoqbZ97VPQz9W?=
- =?us-ascii?Q?u0wFdVMV5T0R/HKvoduRo4WnCyX7mf0v1ByzW+D8gc6S1SzNaTtTfqmJkiHG?=
- =?us-ascii?Q?uPUM6SxTIhYxTZy80yRxYRRVyVuifs9x91mv/yjTx8So+g1q/RQC9bZfcyn3?=
- =?us-ascii?Q?vvwrVnKn89gowIkyK4JQEwzqCInJQbq9Z0fbcrKNtBK1mzao2mNgkVcrHTPW?=
- =?us-ascii?Q?4NIOR1GS3J019GcxWcNixgKLDQyeX6MPbgm49TT5IDZhe2kAlrzpghVT810B?=
- =?us-ascii?Q?xQiBlIVKLwZ6yzJMTzYh0hP3HRw7HTg2xorqiF+/SrIfrlT3uy9fGR/7gAP6?=
- =?us-ascii?Q?M+oGPtO0mA18PnL+7GQ+pNtBx+HcJHSML8MBOO+HQU7pASMfLWQf1gS2wVA5?=
- =?us-ascii?Q?e266AMIwaAjrpXn8wACZOzS75/iJBQpMPMFJuIpd64ltN4aRjL3vDNNtTBsX?=
- =?us-ascii?Q?arKxinjp4wUQGHRx9C9L8szs0RhveK3eNYQkTcmYaL+0DNDGJvz/9T2nP1mX?=
- =?us-ascii?Q?7bYkeS8f1pHvnBsjrkpxLUU3sHBgaWg4kTnSaUbR4w2oSVge/B1/mrGN1ItT?=
- =?us-ascii?Q?+NtI7CXlp1ylSFhcuEs2dZRJzS/TbCE39fZK1ed9oYNcoVj5m0pXmODJEkwI?=
- =?us-ascii?Q?cF4tr93lhsJ2umrJKyiRgLxU1sJCL+EJbAfZ275WSJ7HQOHKRakl3aTq9dzr?=
- =?us-ascii?Q?MDRq/s1DyE9o0BDK9t1ccAsHNc4QR3sm+tamYDioAH7i7ogGsbFw9b1taw2p?=
- =?us-ascii?Q?HfEs86GookfJZdXpOEYIZxFy4gPnwi8eigXKUZrrFnpoOl+0rQRyVueAGWe/?=
- =?us-ascii?Q?xVt/2BaqcFJe6p8yMzTJ3M6+G08SJDji79Y5Pb0GPthHSeYFXfXZNh9wJJr5?=
- =?us-ascii?Q?bv8jTbeOtUuIXG0FH0VggilBrXZ21+OLx62DjiLZ/C3YDw/79wdId02jL2Dy?=
- =?us-ascii?Q?zSWUnjzfP9ZSjqRZgKQ6bqNyl5MHAzAItaTwFrWH6CShP2THYMRzdQZ7QdKJ?=
- =?us-ascii?Q?Fq4sEevzTcy2Sb6zv5itBfFTLIwRsTTqaUqa0FDSCOQ2f7nGrifmXDqyq8r2?=
- =?us-ascii?Q?42IKGAmZBgqRZ5PYIUBXpzSTu66RibZvtZN7VHcViEMRNvmWZu9/ouLzIHcP?=
- =?us-ascii?Q?Ps7kJWWIU6gXySHZYtqahdbk73ko27n9wkN26ovb?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97d9c001-f365-40fc-dfd7-08ddae05479d
-X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5720.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 01:13:06.0147
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BFwVFyhoMj5sh4inia5oPPb2eBwnswKZA+lqoUuHd/6c7ApkctaZ3MNz/hHXFYFYDHOE7tyo3yYKabVKRvOZyA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB5971
+References: <20250611-kunit-kselftests-v3-0-55e3d148cbc6@linutronix.de>
+ <20250611-kunit-kselftests-v3-2-55e3d148cbc6@linutronix.de>
+ <CAK7LNATuk_tpDAq07e5oSU4FptRO_88Oxh2=W=3YmBotbGuU5g@mail.gmail.com> <20250617093523-e7f54d95-96d0-4411-92d6-dd80fe84ee98@linutronix.de>
+In-Reply-To: <20250617093523-e7f54d95-96d0-4411-92d6-dd80fe84ee98@linutronix.de>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Wed, 18 Jun 2025 10:14:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARr-ypWkNR52-my2WJFQ3b26EGV===J8b1MROLuf31oRw@mail.gmail.com>
+X-Gm-Features: AX0GCFv7u6eSzDMgQ1fz3QLMoGrvpETTxg10qNUIysrWURln8hEL4ilzYDnFugA
+Message-ID: <CAK7LNARr-ypWkNR52-my2WJFQ3b26EGV===J8b1MROLuf31oRw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/16] kbuild: userprogs: also inherit byte order and
+ ABI from kernel
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Nathan Chancellor <nathan@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, 
+	Brendan Higgins <brendan.higgins@linux.dev>, David Gow <davidgow@google.com>, 
+	Rae Moar <rmoar@google.com>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	workflows@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use Linux kernel-provided helper functions from <linux/string_choices.h>:
-- str_enabled_disabled()
+On Tue, Jun 17, 2025 at 4:39=E2=80=AFPM Thomas Wei=C3=9Fschuh
+<thomas.weissschuh@linutronix.de> wrote:
+>
+> On Mon, Jun 16, 2025 at 11:49:41PM +0900, Masahiro Yamada wrote:
+> > On Wed, Jun 11, 2025 at 4:38=E2=80=AFPM Thomas Wei=C3=9Fschuh
+> > <thomas.weissschuh@linutronix.de> wrote:
+> > >
+> > > Make sure the byte order and ABI of the userprogs matches the one of =
+the
+> > > kernel, similar to how the bit size is handled.
+> > > Otherwise the userprogs may not be executable.
+> > > This happens for example on powerpc little endian, or riscv32.
+> > >
+> > > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de=
+>
+> > > ---
+> > >  Makefile | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Makefile b/Makefile
+> > > index c4293cf91e968ca8ee64452841fb266e24df63f6..b9aa1058321dabd3b3dd5=
+610e45a2807dfa257f4 100644
+> > > --- a/Makefile
+> > > +++ b/Makefile
+> > > @@ -1129,8 +1129,8 @@ ifneq ($(CONFIG_ARCH_VMLINUX_NEEDS_RELOCS),)
+> > >  LDFLAGS_vmlinux        +=3D --emit-relocs --discard-none
+> > >  endif
+> > >
+> > > -# Align the bit size of userspace programs with the kernel
+> > > -USERFLAGS_FROM_KERNEL :=3D -m32 -m64 --target=3D%
+> > > +# Align the bit size, byte order and architecture of userspace progr=
+ams with the kernel
+> > > +USERFLAGS_FROM_KERNEL :=3D -m32 -m64 -mlittle-endian -mbig-endian --=
+target=3D% -march=3D% -mabi=3D%
+> > >  KBUILD_USERCFLAGS  +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_=
+CPPFLAGS) $(KBUILD_CFLAGS))
+> > >  KBUILD_USERLDFLAGS +=3D $(filter $(USERFLAGS_FROM_KERNEL), $(KBUILD_=
+CPPFLAGS) $(KBUILD_CFLAGS))
+> >
+> >
+> > Why didn't you do like this?
+> >
+> > USERFLAGS_FROM_KERNEL :=3D $(filter -m32 -m64 -mlittle-endian
+> > -mbig-endian --target=3D% -march=3D% -mabi=3D%, $(KBUILD_CPPFLAGS)
+> > $(KBUILD_CFLAGS))
+> > KBUILD_USERCFLAGS  +=3D $(USERFLAGS_FROM_KERNEL)
+> > KBUILD_USERLDFLAGS +=3D $(USERFLAGS_FROM_KERNEL)
+>
+> The idea was to keep the USERFLAGS_FROM_KERNEL line free of clutter, as i=
+t is
+> probably going to change more often. To improve reviewability and gain so=
+me
+> available horizontal space in case it should be needed at some point.
+>
+> If you prefer the other layout I'll be happy to switch it around.
 
-to replace manual ternary expressions like:
-  enable ? "enabled" : "disabled"
 
-This improves code readability and ensures consistency
-with kernel coding style.
+$(filter ... $(KBUILD_CPPFLAGS) $(KBUILD_CFLAGS))
 
-No functional change.
+is duplicated in the two lines.
 
-Signed-off-by: Yan Zhen <yanzhen@vivo.com>
----
- drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+That is the reason for my suggestion.
 
-diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
-index 9ace863792d4..4c8a1fe59b4e 100644
---- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_hwmgr.c
-@@ -25,7 +25,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
--
-+#include <linux/string_choices.h>
- #include "hwmgr.h"
- #include "amd_powerplay.h"
- #include "hardwaremanager.h"
-@@ -3012,7 +3012,7 @@ static int vega10_enable_disable_PCC_limit_feature(struct pp_hwmgr *hwmgr, bool
- 
- 	if (data->smu_features[GNLD_PCC_LIMIT].supported) {
- 		if (enable == data->smu_features[GNLD_PCC_LIMIT].enabled)
--			pr_info("GNLD_PCC_LIMIT has been %s \n", enable ? "enabled" : "disabled");
-+			pr_info("GNLD_PCC_LIMIT has been %s\n", str_enabled_disabled(enable));
- 		PP_ASSERT_WITH_CODE(!vega10_enable_smc_features(hwmgr,
- 				enable, data->smu_features[GNLD_PCC_LIMIT].smu_feature_bitmap),
- 				"Attempt to Enable PCC Limit feature Failed!",
--- 
-2.34.1
 
+
+--=20
+Best Regards
+Masahiro Yamada
