@@ -1,168 +1,267 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874CA274FC2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847522556E
 	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 12:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750251393; cv=none; b=UPgNV2od07MtDvfcJT4DLlRD7httP7f42vLGJ1YRl4okt+CNuLNknFt6LFtx1sHtzop+wEOHC959SuUmOD0g7e3ELRMD6VDqrfwea/mbY0l0svs3AhDL9aTGDUzla6BZtOoy6PTh9Xs5BL53oPErO4vWEhOdOYAI6LKlDeMF/lg=
+	t=1750251393; cv=none; b=D36DAEi7Cu7UEQLcTkUaQzddRi+8kadl2SgU2k/wbk7xHf4ZWW+LblEegmCzgjUXBRKl2nFKvoz/eDELuryQWwoSJi0/mYhBFmdGoEBtQVnCD33oSCxdC+3jBN0rXt/b8CxusYztKTWEMuN7toVDahF449rIKo7ZPGJpOBBONeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750251393; c=relaxed/simple;
-	bh=vsZlVMPDHJEYBLzq+vc5tdWK+Sh+xIRbpB7LJVWwQQk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=g+MaL6svuOGnnPeyK12dc+vke2vjeFPSzS63Ho2IsVkMzQ0H/cqDOx+/M4KDF5mSZAdxAfsgsVGQPFuK/sGyU8CjutT10dF7OFBjVkeClF+BPU5rm2mvBZzamQRm1oJrFH++DifILVTI6XCvdBktKMO7vjngyVTNKfiyqZZJP2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+	bh=l6npbd3MUdGyjA3NWZ3eZEstGqVV1vmutK0iREOP4EY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=fsuwpzS72aRFRW7Ghkt/jmjuCXeoNVVe18JgQYIA/5/VE3fPujX/4I38LqNJ+ecPHSpTKzkNSmbsVlhGyMr0rdGuw3SEshL5vMO1h6GH4azj6f9hISE6ZRj8goxBm5YaYEGc3qvFCAF/zkzU3Ji/3Oq7jaccTSY34o1jd5oEzbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddccc79b55so47758975ab.0
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3ddc65f95b8so147799695ab.3
         for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 05:56:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750251391; x=1750856191;
+        d=1e100.net; s=20230601; t=1750251390; x=1750856190;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=H/0Sg4q8lvuTw5Df2gusQ/ikE58oc87m9xvuN8y1bCw=;
-        b=rIEj1LqZktu9o6osI1ZPYIouLJNEXs8gUcwb8GMLZA+37uzMY1shdG5JWgWbYT/B17
-         JAQy5r684pFlCRPG9MrM4v9tKhiq7OfIYTigh7pPUVwC7v25CyndG2KeSD8tHSHG9TcK
-         mp+DueNHD5Fm1L8NunA8uz59xlW04njlBmnHtMzKl62OLdfijLb7SpxMX6n8fDD4M/Xc
-         TSAujBorKvuxCw/kzd67FrvqLjS4uUfVIszFEPsq8/igfybvQmyIrLruSZ8MAITTIVAB
-         5lIvSdJmdMFUoOx0jYbAnjK1gusQC0/TAUa+SCsSCcf+wUG3p4rO8pdva8c/eUkF9eoH
-         pgzg==
-X-Gm-Message-State: AOJu0YxXHCqVH0ei2aPJgQbxyPSDpmyqnFxs/1Ir/iylG3n+Q2XVaF3+
-	pezXDSE7t+eDS3Vna1Ln6RZwzRe3K3MPyp2xuWZV0uNij1izPsBEyoqIB+DvkapycO/fGofahNh
-	KBBIaLrfWLipm+4egxnb0HUb87n+97O04qhY1izxcErEloKg8vbTs3LiomHB/cA==
-X-Google-Smtp-Source: AGHT+IGXQBVuFucsP9xkZepT9fvWxo1RbWlgXKPDz/5etQlp4temXcTIhqGTfm2M/3ffHbeSGlZKLs6Ai6WNXNon3o6mxffuAoSU
+        bh=7EHzbXzCMyPx3oOxFg3CTcyx3+mPhGDdAnF3HuiGP6Y=;
+        b=jk2prpigOzHHTbHK1S4guElOOBM2iNs8T+ze4E8ho3NZnJwfQ00HnrS3azdWcoWFvF
+         Vi38Uvl/SGkYw3gKeKrAysuaJUk892IYtxrnNh0eRa15PfTPF5vtL+FNPoEVb8Vm+2mC
+         S4edOMVrxwcbXFQsjRjLFyYL1Wt5+cxxw0l/mdwfb0JMXQlV6UbIUVQrFTK1y3UsJpUQ
+         JkMRJXXOpQkGG05xKQICbkZcOTeYCa0PdjL7fsY8KfDrmWxI9sTTnolVNkOMbjOALNc6
+         Ls9wBkpAas2eRPgPIpL+vXB1jvPW76hpS4PaIqcb3GAwZR90SuegcK4oJbpBzYVa3jEh
+         tpAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnaWIwK1QojN/j8Wd7Fj/42odKz/kJJydJCe5nA32KbBibxlbzmmMrgQSfp9PTPIXipo3tuXnkpz6lmks=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY+tDvP+F5tyNuz0+oJds4mV2EqQcTt0Yk/fzTlENkHwunEw40
+	MCEhPqrhEdP7qXuoQfcpRcZ5/hVDoddGfJM4cgJYPo3+SSXBqZhIlgmAJMqjKIDc0HjJu2SqiLC
+	BiIKXmRKyqFRfkIjv1iVBhtab+jCVOuQ8sfIVPa6VVwHiB8xSGaFclPr+GR4=
+X-Google-Smtp-Source: AGHT+IEj7ThVLgaQxqQ1Dy+A6mQHkFsFFQu53NEx49ZSh9tJDW5neGCjf+AtT+kWSqailE4U8rFY1bh6g2HlKOC7x74F1lDpVn0h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a44:b0:3dc:7df8:c830 with SMTP id
- e9e14a558f8ab-3de07c55a19mr199296725ab.7.1750251390730; Wed, 18 Jun 2025
+X-Received: by 2002:a05:6e02:2401:b0:3dd:89b0:8e1b with SMTP id
+ e9e14a558f8ab-3de07cc46d3mr222057115ab.15.1750251390524; Wed, 18 Jun 2025
  05:56:30 -0700 (PDT)
 Date: Wed, 18 Jun 2025 05:56:30 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6852b77e.a70a0220.79d0a.0215.GAE@google.com>
-Subject: [syzbot] [kernel?] WARNING: refcount bug in delayed_put_task_struct
-From: syzbot <syzbot+fb194529d2cbbf9f1467@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <6852b77e.a70a0220.79d0a.0214.GAE@google.com>
+Subject: [syzbot] [mm?] KASAN: slab-use-after-free Read in do_sync_mmap_readahead
+From: syzbot <syzbot+8e4be574cb8c40140a2a@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, david@redhat.com, jack@suse.cz, jgg@ziepe.ca, 
+	jhubbard@nvidia.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	peterx@redhat.com, ryan.roberts@arm.com, syzkaller-bugs@googlegroups.com, 
+	will@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    4663747812d1 Merge tag 'platform-drivers-x86-v6.16-2' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11d5de82580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d6f01a06a8393850
-dashboard link: https://syzkaller.appspot.com/bug?extid=fb194529d2cbbf9f1467
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1627d5d4580000
+HEAD commit:    bc6e0ba6c9ba Add linux-next specific files for 20250613
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=108c710c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2f7a2e4d17ed458f
+dashboard link: https://syzkaller.appspot.com/bug?extid=8e4be574cb8c40140a2a
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148c710c580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179025d4580000
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ef27ce1c74bb/disk-46637478.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2962783b1956/vmlinux-46637478.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/faa841f27097/bzImage-46637478.xz
+disk image: https://storage.googleapis.com/syzbot-assets/2430bb0465cc/disk-bc6e0ba6.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/436a39deef0a/vmlinux-bc6e0ba6.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e314ca5b1eb3/bzImage-bc6e0ba6.xz
+
+The issue was bisected to:
+
+commit 3b61a3f08949297815b2c77ae2696f54cd339419
+Author: Ryan Roberts <ryan.roberts@arm.com>
+Date:   Mon Jun 9 09:27:27 2025 +0000
+
+    mm/filemap: allow arch to request folio size for exec memory
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11b0a5d4580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=13b0a5d4580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b0a5d4580000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+fb194529d2cbbf9f1467@syzkaller.appspotmail.com
+Reported-by: syzbot+8e4be574cb8c40140a2a@syzkaller.appspotmail.com
+Fixes: 3b61a3f08949 ("mm/filemap: allow arch to request folio size for exec memory")
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 6673 at lib/refcount.c:28 refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
-Modules linked in:
-CPU: 1 UID: 0 PID: 6673 Comm: kworker/u8:12 Not tainted 6.16.0-rc2-syzkaller-00045-g4663747812d1 #0 PREEMPT(full) 
+==================================================================
+BUG: KASAN: slab-use-after-free in do_sync_mmap_readahead+0x4bf/0x830 mm/filemap.c:3282
+Read of size 8 at addr ffff88806bda3410 by task syz-executor164/6247
+
+CPU: 0 UID: 0 PID: 6247 Comm: syz-executor164 Not tainted 6.16.0-rc1-next-20250613-syzkaller #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: events_unbound nsim_dev_trap_report_work
-RIP: 0010:refcount_warn_saturate+0x14a/0x210 lib/refcount.c:28
-Code: ff 89 de e8 a8 e3 e2 fc 84 db 0f 85 66 ff ff ff e8 bb e8 e2 fc c6 05 a9 f1 b7 0b 01 90 48 c7 c7 a0 0f 15 8c e8 67 00 a2 fc 90 <0f> 0b 90 90 e9 43 ff ff ff e8 98 e8 e2 fc 0f b6 1d 84 f1 b7 0b 31
-RSP: 0018:ffffc90000a08dd8 EFLAGS: 00010286
-
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff817aa1a8
-RDX: ffff88802e90da00 RSI: ffffffff817aa1b5 RDI: 0000000000000001
-RBP: ffff88805ae68028 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 000000000008e038 R12: ffff88805ae68000
-R13: ffff88805ae68028 R14: ffffc90000a08e90 R15: 0000000000000004
-FS:  0000000000000000(0000) GS:ffff888124861000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8ed0a91f98 CR3: 0000000077b4c000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
- <IRQ>
- __refcount_sub_and_test include/linux/refcount.h:400 [inline]
- __refcount_dec_and_test include/linux/refcount.h:432 [inline]
- refcount_dec_and_test include/linux/refcount.h:450 [inline]
- put_task_struct include/linux/sched/task.h:134 [inline]
- delayed_put_task_struct+0x239/0x2e0 kernel/exit.c:230
- rcu_do_batch kernel/rcu/tree.c:2576 [inline]
- rcu_core+0x799/0x14e0 kernel/rcu/tree.c:2832
- handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
- __do_softirq kernel/softirq.c:613 [inline]
- invoke_softirq kernel/softirq.c:453 [inline]
- __irq_exit_rcu+0x109/0x170 kernel/softirq.c:680
- irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
- instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
- sysvec_apic_timer_interrupt+0xa4/0xc0 arch/x86/kernel/apic/apic.c:1050
- </IRQ>
  <TASK>
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:kasan_quarantine_put+0x97/0x240 mm/kasan/quarantine.c:237
-Code: 00 00 00 00 00 48 03 5a 10 48 89 5a 10 48 81 fb 00 00 10 00 0f 87 94 00 00 00 4d 85 ed 75 79 9c 58 f6 c4 02 0f 85 6d 01 00 00 <5b> b8 01 00 00 00 5d 41 5c 41 5d 41 5e e9 47 b4 5d 09 e8 82 db a1
-RSP: 0018:ffffc9000b4c7ac0 EFLAGS: 00000246
-RAX: 0000000000000006 RBX: 000000000009b258 RCX: 0000000000000006
-RDX: 0000000000000000 RSI: ffffffff8de13aed RDI: ffffffff8c1563e0
-RBP: ffff8880362b4640 R08: 0000000000000001 R09: 0000000000000001
-R10: ffffffff90a83057 R11: 0000000000002c00 R12: ffff88801fea08c0
-R13: 0000000000000200 R14: ffffea0000d8ad00 R15: 0000000000000000
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xd2/0x2b0 mm/kasan/report.c:521
+ kasan_report+0x118/0x150 mm/kasan/report.c:634
+ do_sync_mmap_readahead+0x4bf/0x830 mm/filemap.c:3282
+ filemap_fault+0x62c/0x1200 mm/filemap.c:3444
+ __do_fault+0x135/0x390 mm/memory.c:5187
+ do_read_fault mm/memory.c:5608 [inline]
+ do_fault mm/memory.c:5742 [inline]
+ do_pte_missing mm/memory.c:4269 [inline]
+ handle_pte_fault mm/memory.c:6087 [inline]
+ __handle_mm_fault+0x37ed/0x5620 mm/memory.c:6230
+ handle_mm_fault+0x40a/0x8e0 mm/memory.c:6399
+ faultin_page mm/gup.c:1186 [inline]
+ __get_user_pages+0x1aef/0x30b0 mm/gup.c:1488
+ populate_vma_page_range+0x29f/0x3a0 mm/gup.c:1922
+ __mm_populate+0x24c/0x380 mm/gup.c:2025
+ mm_populate include/linux/mm.h:3354 [inline]
+ vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
+ ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f580d0c3919
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 51 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f580d07c208 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
+RAX: ffffffffffffffda RBX: 00007f580d14d348 RCX: 00007f580d0c3919
+RDX: 0000000001000006 RSI: 0000000000b36000 RDI: 0000200000000000
+RBP: 00007f580d14d340 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000028011 R11: 0000000000000246 R12: 00007f580d11a270
+R13: 00002000000001d8 R14: 00002000000005c0 R15: 00002000000001c0
+ </TASK>
+
+Allocated by task 6247:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:319 [inline]
+ __kasan_slab_alloc+0x6c/0x80 mm/kasan/common.c:345
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4148 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ kmem_cache_alloc_noprof+0x1c1/0x3c0 mm/slub.c:4204
+ vm_area_alloc+0x24/0x140 mm/vma_init.c:31
+ __mmap_new_vma mm/vma.c:2452 [inline]
+ __mmap_region mm/vma.c:2662 [inline]
+ mmap_region+0xe0d/0x2080 mm/vma.c:2732
+ do_mmap+0xc45/0x10d0 mm/mmap.c:561
+ vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
+ ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 6249:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
  kasan_slab_free include/linux/kasan.h:233 [inline]
  slab_free_hook mm/slub.c:2381 [inline]
+ slab_free_after_rcu_debug+0x129/0x2a0 mm/slub.c:4693
+ rcu_do_batch kernel/rcu/tree.c:2582 [inline]
+ rcu_core+0xca8/0x1710 kernel/rcu/tree.c:2838
+ handle_softirqs+0x283/0x870 kernel/softirq.c:579
+ __do_softirq kernel/softirq.c:613 [inline]
+ invoke_softirq kernel/softirq.c:453 [inline]
+ __irq_exit_rcu+0xca/0x1f0 kernel/softirq.c:680
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:696
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1050 [inline]
+ sysvec_apic_timer_interrupt+0xa6/0xc0 arch/x86/kernel/apic/apic.c:1050
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+
+Last potentially related work creation:
+ kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
+ kasan_record_aux_stack+0xbd/0xd0 mm/kasan/generic.c:548
+ slab_free_hook mm/slub.c:2342 [inline]
  slab_free mm/slub.c:4643 [inline]
- kmem_cache_free+0x2d1/0x4d0 mm/slub.c:4745
- kfree_skbmem+0x1a4/0x1f0 net/core/skbuff.c:1110
- __kfree_skb net/core/skbuff.c:1167 [inline]
- consume_skb net/core/skbuff.c:1398 [inline]
- consume_skb+0xcc/0x100 net/core/skbuff.c:1392
- nsim_dev_trap_report drivers/net/netdevsim/dev.c:821 [inline]
- nsim_dev_trap_report_work+0x8bd/0xcf0 drivers/net/netdevsim/dev.c:851
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3321 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
- kthread+0x3c5/0x780 kernel/kthread.c:464
- ret_from_fork+0x5d7/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-----------------
-Code disassembly (best guess):
-   0:	00 00                	add    %al,(%rax)
-   2:	00 00                	add    %al,(%rax)
-   4:	00 48 03             	add    %cl,0x3(%rax)
-   7:	5a                   	pop    %rdx
-   8:	10 48 89             	adc    %cl,-0x77(%rax)
-   b:	5a                   	pop    %rdx
-   c:	10 48 81             	adc    %cl,-0x7f(%rax)
-   f:	fb                   	sti
-  10:	00 00                	add    %al,(%rax)
-  12:	10 00                	adc    %al,(%rax)
-  14:	0f 87 94 00 00 00    	ja     0xae
-  1a:	4d 85 ed             	test   %r13,%r13
-  1d:	75 79                	jne    0x98
-  1f:	9c                   	pushf
-  20:	58                   	pop    %rax
-  21:	f6 c4 02             	test   $0x2,%ah
-  24:	0f 85 6d 01 00 00    	jne    0x197
-* 2a:	5b                   	pop    %rbx <-- trapping instruction
-  2b:	b8 01 00 00 00       	mov    $0x1,%eax
-  30:	5d                   	pop    %rbp
-  31:	41 5c                	pop    %r12
-  33:	41 5d                	pop    %r13
-  35:	41 5e                	pop    %r14
-  37:	e9 47 b4 5d 09       	jmp    0x95db483
-  3c:	e8                   	.byte 0xe8
-  3d:	82                   	(bad)
-  3e:	db                   	.byte 0xdb
-  3f:	a1                   	.byte 0xa1
+ kmem_cache_free+0x2f6/0x400 mm/slub.c:4745
+ remove_vma mm/vma.c:465 [inline]
+ vms_complete_munmap_vmas+0x626/0x8a0 mm/vma.c:1288
+ __mmap_complete mm/vma.c:2518 [inline]
+ __mmap_region mm/vma.c:2670 [inline]
+ mmap_region+0x1221/0x2080 mm/vma.c:2732
+ do_mmap+0xc45/0x10d0 mm/mmap.c:561
+ vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88806bda33c0
+ which belongs to the cache vm_area_struct of size 256
+The buggy address is located 80 bytes inside of
+ freed 256-byte region [ffff88806bda33c0, ffff88806bda34c0)
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x6bda3
+ksm flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 00fff00000000000 ffff88814040ab40 ffffea0001b656c0 0000000000000003
+raw: 0000000000000000 00000000000c000c 00000000f5000000 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 5532, tgid 5532 (rm), ts 56329480650, free_ts 52472185128
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1704
+ prep_new_page mm/page_alloc.c:1712 [inline]
+ get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3669
+ __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4959
+ alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
+ alloc_slab_page mm/slub.c:2451 [inline]
+ allocate_slab+0x8a/0x3b0 mm/slub.c:2619
+ new_slab mm/slub.c:2673 [inline]
+ ___slab_alloc+0xbfc/0x1480 mm/slub.c:3859
+ __slab_alloc mm/slub.c:3949 [inline]
+ __slab_alloc_node mm/slub.c:4024 [inline]
+ slab_alloc_node mm/slub.c:4185 [inline]
+ kmem_cache_alloc_noprof+0x283/0x3c0 mm/slub.c:4204
+ vm_area_dup+0x2b/0x680 mm/vma_init.c:122
+ __split_vma+0x1a9/0xa00 mm/vma.c:512
+ vms_gather_munmap_vmas+0x2de/0x12b0 mm/vma.c:1354
+ __mmap_prepare mm/vma.c:2351 [inline]
+ __mmap_region mm/vma.c:2641 [inline]
+ mmap_region+0x71a/0x2080 mm/vma.c:2732
+ do_mmap+0xc45/0x10d0 mm/mmap.c:561
+ vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
+ ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 5212 tgid 5212 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1248 [inline]
+ __free_frozen_pages+0xc71/0xe70 mm/page_alloc.c:2706
+ __slab_free+0x326/0x400 mm/slub.c:4554
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x97/0x140 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4148 [inline]
+ slab_alloc_node mm/slub.c:4197 [inline]
+ __do_kmalloc_node mm/slub.c:4327 [inline]
+ __kmalloc_noprof+0x224/0x4f0 mm/slub.c:4340
+ kmalloc_noprof include/linux/slab.h:909 [inline]
+ tomoyo_realpath_from_path+0xe3/0x5d0 security/tomoyo/realpath.c:251
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_perm+0x213/0x4b0 security/tomoyo/file.c:822
+ security_inode_getattr+0x12f/0x330 security/security.c:2377
+ vfs_getattr fs/stat.c:259 [inline]
+ vfs_statx_path fs/stat.c:299 [inline]
+ vfs_statx+0x18e/0x550 fs/stat.c:356
+ vfs_fstatat+0x118/0x170 fs/stat.c:375
+ __do_sys_newfstatat fs/stat.c:542 [inline]
+ __se_sys_newfstatat fs/stat.c:536 [inline]
+ __x64_sys_newfstatat+0x116/0x190 fs/stat.c:536
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Memory state around the buggy address:
+ ffff88806bda3300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88806bda3380: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb
+>ffff88806bda3400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                         ^
+ ffff88806bda3480: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff88806bda3500: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
 ---
@@ -172,6 +271,7 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
