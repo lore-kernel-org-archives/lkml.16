@@ -1,47 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3E8284B5A
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:41:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E532F284B5A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750239681; cv=none; b=GTJyif/IKuQjKsnLgBRKR1tla2bFx9aTqmRo28GJC1Mc4YsF7xUeVKwUjyF4YABMqcJ7gMkyhlS88TBpXa7+ToGjclzg+LmLh/7V9rRdfgp12rVAY1Hh8rxT8w/kl70dVVnd5ZFPvE5HApTrRuDYOeSun4n6eOm239yU+ewOcSI=
+	t=1750239687; cv=none; b=OmAs06CtkiECyCa64m9reH8Tufqmj/Jti06AQuqy8AsRt2kLtu6rrhYuQhjGUweiWPqmlS63IX43dGM3K9OuqwnkSl5BJ6xtclIeACZPcxuFj4SAE6I2dDx841D7gZ0kzXW9pD40NMeiMdV2rabT/STYqNrTCV0gk/AfmE4ITpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750239681; c=relaxed/simple;
-	bh=vaSDmDhCucGSWSJ6b8KpOXfVGIMB4JPcZ22ahEZodS0=;
+	s=arc-20240116; t=1750239687; c=relaxed/simple;
+	bh=/+JfV5Ks6zTLfAhNu5TTB9LCzWZQnp8C2/Sai6URYU8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FcPPG/NVsW0iGli/kqtdJYgvqChrlb6gL4KMJrQMLWQ+4wxjFlR4U7lmNo39GCbNAuAKXZ856JzUfH26utnjnQup2qgCnDr2FCAECdfhigJuIMjTkOODB/m6584+M4mNNMinauONHFYHL27ZhXFoT3huVcR0V+JHoKPQWFZ09JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VS8UBvS+; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=aiygqC2YimkZjDCeXrP1BG5g6BOCTVft+N3h6OlG0cAQZJMUuceHQrdUCr/8P7YhVcU9Z2hh+bWRlkG3W7KXtMQRb/Ls60ET4fFt2N7+dNjjUneUINwrQtgoYgABOAJe+qlxCLHbrfw8RVyqclsnXI94z8GayO9AIZ6r5lc5IQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A+tovlZh; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VS8UBvS+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A+tovlZh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750239678;
+	s=mimecast20190719; t=1750239685;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3cxMb2cLTOpbWxbAgHUp5M2dEnCkGiniDuIogBuIWhI=;
-	b=VS8UBvS+KlQgc7JFBd90n0KC/54x46Iyc0KprKYLsU+Yvvo1IX/XqjaKEukZwpbCBehiOe
-	e2hE0AyJnSR8UPM2bmMntQz7pcm/9hC9Vv0ngXOZWrcXC5x5JSzkFaZpXQDvzbEKVhPm4J
-	4dXUoSf4ACwlgBJx6uHdooXTQPq5b1s=
+	bh=wCh2D6joaySNbJXE1hejgkSYr1Lc6oM3ACPnz1eIPwY=;
+	b=A+tovlZhRryyOnSeLrY02YuKlu87GT9K8JVALj1YE3js7GLq9BLZ+YVt4Nc8NWnW1SeeRw
+	kY8TbmKI+c7j4kQ+m9W3+p6Inj9BDyCp+qz2dUorDj8Zwsj7kT1BsRl8KdqEwk73vlsSAk
+	I/1BqTaonUywZff+M5kBTDGYgbBDTE8=
 Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-251-MGNXYA7_OeCYm7loX0GdLA-1; Wed,
- 18 Jun 2025 05:41:15 -0400
-X-MC-Unique: MGNXYA7_OeCYm7loX0GdLA-1
-X-Mimecast-MFC-AGG-ID: MGNXYA7_OeCYm7loX0GdLA_1750239673
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-588-6g6f8BYlObKpbmgZKWN-9g-1; Wed,
+ 18 Jun 2025 05:41:21 -0400
+X-MC-Unique: 6g6f8BYlObKpbmgZKWN-9g-1
+X-Mimecast-MFC-AGG-ID: 6g6f8BYlObKpbmgZKWN-9g_1750239679
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2A0FC1808984;
-	Wed, 18 Jun 2025 09:41:13 +0000 (UTC)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 51AB11800C25;
+	Wed, 18 Jun 2025 09:41:19 +0000 (UTC)
 Received: from hydra.redhat.com (unknown [10.45.225.137])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8FE5C19560A3;
-	Wed, 18 Jun 2025 09:41:07 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A7BEE19560A3;
+	Wed, 18 Jun 2025 09:41:13 +0000 (UTC)
 From: Jocelyn Falempe <jfalempe@redhat.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	Jani Nikula <jani.nikula@linux.intel.com>,
@@ -62,9 +62,9 @@ To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
 	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
 Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v10 07/10] drm/i915/display: Add drm_panic support
-Date: Wed, 18 Jun 2025 11:31:25 +0200
-Message-ID: <20250618094011.238154-8-jfalempe@redhat.com>
+Subject: [PATCH v10 08/10] drm/i915/display: Add drm_panic support for Y-tiling with DPT
+Date: Wed, 18 Jun 2025 11:31:26 +0200
+Message-ID: <20250618094011.238154-9-jfalempe@redhat.com>
 In-Reply-To: <20250618094011.238154-1-jfalempe@redhat.com>
 References: <20250618094011.238154-1-jfalempe@redhat.com>
 Precedence: bulk
@@ -76,162 +76,213 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-This adds drm_panic support for a wide range of Intel GPU. I've
-tested it only on 4 laptops, Haswell (with 128MB of eDRAM),
-Comet Lake, Raptor Lake, and Lunar Lake.
-For hardware using DPT, it's not possible to disable tiling, as you
-will need to reconfigure the way the GPU is accessing the
-framebuffer, so this will be handled by the following patches.
+On Alder Lake and later, it's not possible to disable tiling when DPT
+is enabled.
+So this commit implements Y-Tiling support, to still be able to draw
+the panic screen.
 
 Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
 ---
 
-v4:
- * Add support for Xe driver.
- 
-v6:
- * Use struct intel_display instead of drm_i915_private for intel_atomic_plane.c
- 
-v7:
- * Fix mismatch {} in intel_panic_flush() (Jani Nikula)
-
 v8:
- * Use intel_bo_panic_setup() and intel_bo_panic_finish().
- 
-v10:
- * Use struct intel_framebuffer to store the panic variables (Maarten Lankhorst)
- 
- .../gpu/drm/i915/display/intel_atomic_plane.c | 83 ++++++++++++++++++-
- 1 file changed, 82 insertions(+), 1 deletion(-)
+ * Pass the tiling function to intel_bo_panic_setup()
+
+ .../gpu/drm/i915/display/intel_atomic_plane.c | 64 ++++++++++++++++++-
+ .../drm/i915/display/intel_display_types.h    |  1 +
+ .../drm/i915/display/skl_universal_plane.c    | 15 +++--
+ drivers/gpu/drm/i915/gem/i915_gem_pages.c     | 16 ++++-
+ drivers/gpu/drm/xe/display/intel_bo.c         |  5 +-
+ 5 files changed, 93 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/gpu/drm/i915/display/intel_atomic_plane.c b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-index 15ede7678636..9e1c9d1e015f 100644
+index 9e1c9d1e015f..044328d83df9 100644
 --- a/drivers/gpu/drm/i915/display/intel_atomic_plane.c
 +++ b/drivers/gpu/drm/i915/display/intel_atomic_plane.c
-@@ -33,19 +33,23 @@
- 
- #include <linux/dma-fence-chain.h>
- #include <linux/dma-resv.h>
-+#include <linux/iosys-map.h>
- 
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_blend.h>
- #include <drm/drm_damage_helper.h>
-+#include <drm/drm_cache.h>
- #include <drm/drm_fourcc.h>
- #include <drm/drm_gem.h>
- #include <drm/drm_gem_atomic_helper.h>
-+#include <drm/drm_panic.h>
- 
- #include "gem/i915_gem_object.h"
- #include "i915_scheduler_types.h"
- #include "i915_vma.h"
- #include "i9xx_plane_regs.h"
- #include "intel_atomic_plane.h"
-+#include "intel_bo.h"
- #include "intel_cdclk.h"
- #include "intel_cursor.h"
- #include "intel_display_rps.h"
-@@ -53,6 +57,7 @@
- #include "intel_display_types.h"
- #include "intel_fb.h"
- #include "intel_fb_pin.h"
-+#include "intel_fbdev.h"
- #include "skl_scaler.h"
- #include "skl_universal_plane.h"
- #include "skl_watermark.h"
-@@ -1266,14 +1271,90 @@ intel_cleanup_plane_fb(struct drm_plane *plane,
+@@ -1271,6 +1271,32 @@ intel_cleanup_plane_fb(struct drm_plane *plane,
  	intel_plane_unpin_fb(old_plane_state);
  }
  
-+static void intel_panic_flush(struct drm_plane *plane)
++/* Handle Y-tiling, only if DPT is enabled (otherwise disabling tiling is easier)
++ * All DPT hardware have 128-bytes width tiling, so Y-tile dimension is 32x32
++ * pixels for 32bits pixels.
++ */
++#define YTILE_WIDTH	32
++#define YTILE_HEIGHT	32
++#define YTILE_SIZE (YTILE_WIDTH * YTILE_HEIGHT * 4)
++
++static unsigned int intel_ytile_get_offset(unsigned int width, unsigned int x, unsigned int y)
 +{
-+	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-+	struct intel_plane *iplane = to_intel_plane(plane);
-+	struct intel_display *display = to_intel_display(iplane);
-+	struct drm_framebuffer *fb = plane_state->hw.fb;
-+	struct intel_framebuffer *intel_fb = to_intel_framebuffer(fb);
++	u32 offset;
++	unsigned int swizzle;
++	unsigned int width_in_blocks = DIV_ROUND_UP(width, 32);
 +
-+	intel_bo_panic_finish(intel_fb);
++	/* Block offset */
++	offset = ((y / YTILE_HEIGHT) * width_in_blocks + (x / YTILE_WIDTH)) * YTILE_SIZE;
 +
-+	/* Flush the cache and don't disable tiling if it's the fbdev framebuffer.*/
-+	if (intel_fb == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
-+		struct iosys_map map;
++	x = x % YTILE_WIDTH;
++	y = y % YTILE_HEIGHT;
 +
-+		intel_fbdev_get_map(display->fbdev.fbdev, &map);
-+		drm_clflush_virt_range(map.vaddr, fb->pitches[0] * fb->height);
-+		return;
-+	}
-+
-+	if (fb->modifier && iplane->disable_tiling)
-+		iplane->disable_tiling(iplane);
++	/* bit order inside a block is x4 x3 x2 y4 y3 y2 y1 y0 x1 x0 */
++	swizzle = (x & 3) | ((y & 0x1f) << 2) | ((x & 0x1c) << 5);
++	offset += swizzle * 4;
++	return offset;
 +}
 +
-+static int intel_get_scanout_buffer(struct drm_plane *plane,
-+				    struct drm_scanout_buffer *sb)
-+{
-+	struct intel_plane_state *plane_state;
-+	struct drm_gem_object *obj;
-+	struct drm_framebuffer *fb;
-+	struct intel_framebuffer *intel_fb;
-+	struct intel_display *display = to_intel_display(plane->dev);
-+
-+	if (!plane->state || !plane->state->fb || !plane->state->visible)
-+		return -ENODEV;
-+
-+	plane_state = to_intel_plane_state(plane->state);
-+	fb = plane_state->hw.fb;
-+	intel_fb = to_intel_framebuffer(fb);
-+
-+	obj = intel_fb_bo(fb);
-+	if (!obj)
-+		return -ENODEV;
-+
-+	if (intel_fb == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
-+		intel_fbdev_get_map(display->fbdev.fbdev, &sb->map[0]);
-+	} else {
-+		int ret;
-+		/* Can't disable tiling if DPT is in use */
-+		if (intel_fb_uses_dpt(fb))
-+			return -EOPNOTSUPP;
-+		sb->private = intel_fb;
-+		ret = intel_bo_panic_setup(sb);
-+		if (ret)
-+			return ret;
-+	}
-+	sb->width = fb->width;
-+	sb->height = fb->height;
-+	/* Use the generic linear format, because tiling, RC, CCS, CC
-+	 * will be disabled in disable_tiling()
-+	 */
-+	sb->format = drm_format_info(fb->format->format);
-+	sb->pitch[0] = fb->pitches[0];
-+
-+	return 0;
-+}
-+
- static const struct drm_plane_helper_funcs intel_plane_helper_funcs = {
- 	.prepare_fb = intel_prepare_plane_fb,
- 	.cleanup_fb = intel_cleanup_plane_fb,
- };
- 
-+static const struct drm_plane_helper_funcs intel_primary_plane_helper_funcs = {
-+	.prepare_fb = intel_prepare_plane_fb,
-+	.cleanup_fb = intel_cleanup_plane_fb,
-+	.get_scanout_buffer = intel_get_scanout_buffer,
-+	.panic_flush = intel_panic_flush,
-+};
-+
- void intel_plane_helper_add(struct intel_plane *plane)
+ static void intel_panic_flush(struct drm_plane *plane)
  {
--	drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
-+	if (plane->base.type == DRM_PLANE_TYPE_PRIMARY)
-+		drm_plane_helper_add(&plane->base, &intel_primary_plane_helper_funcs);
-+	else
-+		drm_plane_helper_add(&plane->base, &intel_plane_helper_funcs);
+ 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
+@@ -1294,6 +1320,35 @@ static void intel_panic_flush(struct drm_plane *plane)
+ 		iplane->disable_tiling(iplane);
  }
  
- void intel_plane_init_cursor_vblank_work(struct intel_plane_state *old_plane_state,
++static unsigned int (*intel_get_tiling_func(u64 fb_modifier))(unsigned int width,
++							      unsigned int x,
++							      unsigned int y)
++{
++	switch (fb_modifier) {
++	case I915_FORMAT_MOD_Y_TILED:
++	case I915_FORMAT_MOD_Y_TILED_CCS:
++	case I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS_CC:
++	case I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS:
++	case I915_FORMAT_MOD_Y_TILED_GEN12_MC_CCS:
++		return intel_ytile_get_offset;
++	case I915_FORMAT_MOD_4_TILED:
++	case I915_FORMAT_MOD_4_TILED_DG2_RC_CCS:
++	case I915_FORMAT_MOD_4_TILED_DG2_MC_CCS:
++	case I915_FORMAT_MOD_4_TILED_DG2_RC_CCS_CC:
++	case I915_FORMAT_MOD_4_TILED_MTL_RC_CCS:
++	case I915_FORMAT_MOD_4_TILED_MTL_RC_CCS_CC:
++	case I915_FORMAT_MOD_4_TILED_MTL_MC_CCS:
++	case I915_FORMAT_MOD_4_TILED_BMG_CCS:
++	case I915_FORMAT_MOD_4_TILED_LNL_CCS:
++	case I915_FORMAT_MOD_X_TILED:
++	case I915_FORMAT_MOD_Yf_TILED:
++	case I915_FORMAT_MOD_Yf_TILED_CCS:
++	default:
++	/* Not supported yet */
++		return NULL;
++	}
++}
++
+ static int intel_get_scanout_buffer(struct drm_plane *plane,
+ 				    struct drm_scanout_buffer *sb)
+ {
+@@ -1319,8 +1374,13 @@ static int intel_get_scanout_buffer(struct drm_plane *plane,
+ 	} else {
+ 		int ret;
+ 		/* Can't disable tiling if DPT is in use */
+-		if (intel_fb_uses_dpt(fb))
+-			return -EOPNOTSUPP;
++		if (intel_fb_uses_dpt(fb)) {
++			if (fb->format->cpp[0] != 4)
++				return -EOPNOTSUPP;
++			intel_fb->panic.tiling = intel_get_tiling_func(fb->modifier);
++			if (!intel_fb->panic.tiling)
++				return -EOPNOTSUPP;
++		}
+ 		sb->private = intel_fb;
+ 		ret = intel_bo_panic_setup(sb);
+ 		if (ret)
+diff --git a/drivers/gpu/drm/i915/display/intel_display_types.h b/drivers/gpu/drm/i915/display/intel_display_types.h
+index 6d6d2d948886..8db6a8c0686c 100644
+--- a/drivers/gpu/drm/i915/display/intel_display_types.h
++++ b/drivers/gpu/drm/i915/display/intel_display_types.h
+@@ -134,6 +134,7 @@ struct intel_panic_data {
+ 	struct page **pages;
+ 	int page;
+ 	void *vaddr;
++	unsigned int (*tiling)(unsigned int x, unsigned int y, unsigned int width);
+ };
+ 
+ struct intel_framebuffer {
+diff --git a/drivers/gpu/drm/i915/display/skl_universal_plane.c b/drivers/gpu/drm/i915/display/skl_universal_plane.c
+index ef09ef7b101f..623eff23d9bc 100644
+--- a/drivers/gpu/drm/i915/display/skl_universal_plane.c
++++ b/drivers/gpu/drm/i915/display/skl_universal_plane.c
+@@ -2796,15 +2796,22 @@ static void skl_disable_tiling(struct intel_plane *plane)
+ {
+ 	struct intel_plane_state *state = to_intel_plane_state(plane->base.state);
+ 	struct intel_display *display = to_intel_display(plane);
+-	u32 stride = state->view.color_plane[0].scanout_stride / 64;
++	const struct drm_framebuffer *fb = state->hw.fb;
+ 	u32 plane_ctl;
+ 
+ 	plane_ctl = intel_de_read(display, PLANE_CTL(plane->pipe, plane->id));
+-	plane_ctl &= ~PLANE_CTL_TILED_MASK;
+ 
+-	intel_de_write_fw(display, PLANE_STRIDE(plane->pipe, plane->id),
+-			  PLANE_STRIDE_(stride));
++	if (intel_fb_uses_dpt(fb)) {
++		/* if DPT is enabled, keep tiling, but disable compression */
++		plane_ctl &= ~PLANE_CTL_RENDER_DECOMPRESSION_ENABLE;
++	} else {
++		/* if DPT is not supported, disable tiling, and update stride */
++		u32 stride = state->view.color_plane[0].scanout_stride / 64;
+ 
++		plane_ctl &= ~PLANE_CTL_TILED_MASK;
++		intel_de_write_fw(display, PLANE_STRIDE(plane->pipe, plane->id),
++				  PLANE_STRIDE_(stride));
++	}
+ 	intel_de_write_fw(display, PLANE_CTL(plane->pipe, plane->id), plane_ctl);
+ 
+ 	intel_de_write_fw(display, PLANE_SURF(plane->pipe, plane->id),
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_pages.c b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+index 0bcf4647a2a0..bf7cd7555777 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_pages.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_pages.c
+@@ -384,6 +384,15 @@ static struct page **i915_gem_object_panic_pages(struct drm_i915_gem_object *obj
+ 	return pages;
+ }
+ 
++static void i915_gem_object_panic_map_set_pixel(struct drm_scanout_buffer *sb, unsigned int x,
++						unsigned int y, u32 color)
++{
++	struct intel_framebuffer *fb = (struct intel_framebuffer *)sb->private;
++	unsigned int offset = fb->panic.tiling(sb->width, x, y);
++
++	iosys_map_wr(&sb->map[0], offset, u32, color);
++}
++
+ /*
+  * The scanout buffer pages are not mapped, so for each pixel,
+  * use kmap_local_page_try_from_panic() to map the page, and write the pixel.
+@@ -396,7 +405,10 @@ static void i915_gem_object_panic_page_set_pixel(struct drm_scanout_buffer *sb,
+ 	unsigned int offset;
+ 	struct intel_framebuffer *fb = (struct intel_framebuffer *)sb->private;
+ 
+-	offset = y * sb->pitch[0] + x * sb->format->cpp[0];
++	if (fb->panic.tiling)
++		offset = fb->panic.tiling(sb->width, x, y);
++	else
++		offset = y * sb->pitch[0] + x * sb->format->cpp[0];
+ 
+ 	new_page = offset >> PAGE_SHIFT;
+ 	offset = offset % PAGE_SIZE;
+@@ -431,6 +443,8 @@ int i915_gem_object_panic_setup(struct drm_scanout_buffer *sb)
+ 		else
+ 			iosys_map_set_vaddr(&sb->map[0], ptr);
+ 
++		if (fb->panic.tiling)
++			sb->set_pixel = i915_gem_object_panic_map_set_pixel;
+ 		return 0;
+ 	}
+ 	if (i915_gem_object_has_struct_page(obj)) {
+diff --git a/drivers/gpu/drm/xe/display/intel_bo.c b/drivers/gpu/drm/xe/display/intel_bo.c
+index 8a6de2dda88c..26db10fc2f48 100644
+--- a/drivers/gpu/drm/xe/display/intel_bo.c
++++ b/drivers/gpu/drm/xe/display/intel_bo.c
+@@ -87,7 +87,10 @@ static void xe_panic_page_set_pixel(struct drm_scanout_buffer *sb, unsigned int
+ 	unsigned int new_page;
+ 	unsigned int offset;
+ 
+-	offset = y * sb->pitch[0] + x * sb->format->cpp[0];
++	if (fb->panic.tiling)
++		offset = fb->panic.tiling(sb->width, x, y);
++	else
++		offset = y * sb->pitch[0] + x * sb->format->cpp[0];
+ 
+ 	new_page = offset >> PAGE_SHIFT;
+ 	offset = offset % PAGE_SIZE;
 -- 
 2.49.0
 
