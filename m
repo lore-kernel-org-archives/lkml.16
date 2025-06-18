@@ -1,104 +1,117 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BCC25B1DA
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 11:57:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C872DBF45;
+	Wed, 18 Jun 2025 11:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247871; cv=none; b=l+h6LFaeo1t8jRIuOoT018cXR0ZKlqpudIzaFAaYFtmdUyalhJJ+8J4jDDBjgb7Y1mLtVGJ/B6ygzBPXg7kf+EbcsoDDNzcxu9iuTzUwzAq5cv8up/exHtT+6J/JZso0dy+7n5w+Zmox7njR+jqHe2Tph/gVowyOHUO9yi+p8iI=
+	t=1750247876; cv=none; b=hAU9q6L4Hfc+ZMNZMyNEqH3NAapu18ZaXZKN70wtiw+3GH2f0qifeOphrjim0ofmPyvExtNrS021foF9pjkB+YoMI++NawpvhvngKjgMdH6e5Azg5mAEzPkE2klLg7m9/7e+zXGJ8/TK+u80repfVogQRHVdDtn9PWMv85jgzBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247871; c=relaxed/simple;
-	bh=vXnEOwfbKTy01z7cobE4+Hk1SMKWVRbeCD9p5sV/Oz0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WQCsUJQ0FpZJzp5fIDgW+2bZjoPKQivfh+kftrCrs8b8V41QfOORPDTryAUp726of6wyHPoPXtBw1DfmScOLaDc2zoYIMdjBr4dH1ijmGGf3E+x5QJ8dDPW1ry9RMFtPsqEOh035CYXN21vz+QUTtk1gcUGZkMEcKAZ5UKHSW3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c2inLkLS; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750247876; c=relaxed/simple;
+	bh=FiT2P8piG5G7J6NznFS5lYOLStWFH61aZl86N7NAMAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O+gHGQUYs9YgtxlUxwelluytgQ/sgyIc9LTfIxswCO3CIAHifLXyMQAohcQKc5evpN8iM+rKKdxXeSOq9BWE0DQOsu6xBQYevcCvy/EpwrYwiWYbDJxM5TREJA5kM7jRBhHBpTzAGcrrrzxKaQ/Vp1KQ3GNWKD33UmTwxT3YhlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a+pJG/BR; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c2inLkLS"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-32934448e8bso56779651fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 04:57:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750247868; x=1750852668; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vXnEOwfbKTy01z7cobE4+Hk1SMKWVRbeCD9p5sV/Oz0=;
-        b=c2inLkLS7uGMLLdc1vIjANQFCN+KjvLGE0lzx15n5a/kdBh6e6fgOgAs6X82G8szrE
-         ERff8kCPgF9bM67uZrv+RLnANOldReYE5+mQfj7YShoMIKwvkpu462a0TiGOIuF6f8e3
-         fp06/R+ytLUpdJ5qmOI46Urdi08IHS6zpFSpVwOHO/D1pjmICqT8EdbIEXRc2Jz4zoue
-         yDnLfAEMLWp/I6K57JSdJzcIeQO4R1YAPNRyKcumwkhGSEukZzB3Ysa4TY4AzEz+p/3t
-         pHIxftSoZb95mqOo8xfgwhl28AYTftoblB7l9+8oorIetLY9mkKuKz2HNGf0mBQLaYM+
-         Pz3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750247868; x=1750852668;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vXnEOwfbKTy01z7cobE4+Hk1SMKWVRbeCD9p5sV/Oz0=;
-        b=WkKldIq4xJhqZOGf7escusxone6Iy6xZSq+hptyShBPMAUvB51eJe1HugNBku7pvAL
-         c+WEoPP1X5sBk7XK5PYgK7ytABxpenfHP3LAMDdP+hMaMxFD46lKUxatsHN69eOn1LtE
-         AfvTEm3MtIhvBgIwRhaDcz0DfNaCBYxnM6y3CA6Fwj8vMWdmBhTI/3pyKEbE5og2pwzp
-         qlad2obQvbfjsNsx6hSu9hhQwAPHNra5CKPfd/z0SnM1acpwxKD0AqayOepuQiH/lzPc
-         ClspC7CM2xUaZezujBnDMNzSUqJlMAV5SDcbOnNXWzuhYBJuwnlbY8rtkl/03J/LO727
-         eHTw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJWw8YDY4PYYeLqcWWtfvBD1l7jj+xEii8iP0BIMmUJGGU90lxYbTFFoTmqPq3KUT8M3VZbxrqgh/XjsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYcjow7BO05SYrhtZMbjcgxq5Roj00u+FbpT7ZNv3wtgIzFVo0
-	uzN9IE1ieuytfFXtdaSFnS+dxP19aBzyp54n3n1oD+3tkG0l175B9wRm8NZzZBNrwt9FiGN5NuY
-	ZXGGegmNHTYw3Qq2OGLmxAJqJ7YSs7a9ds/hzQ1aFdg==
-X-Gm-Gg: ASbGncuOq3FZi0/nDl5IO3K38oVJNFQERrypwBIzrs241o3B/WPjSRc7Sv3LMxqLIcq
-	+vtP+xa/eMf+AK5Klvg/ajG+GTO/JcXi+Zkz8rAnh2nnibnHdDTWX1k0VDc498p/bPVdWM2tLAL
-	Xm8ijEdGJWFNyE1M3vywANaMeBqLaHHh1QGClsGDbdpo0=
-X-Google-Smtp-Source: AGHT+IH7vnMyWvDeuT22AfjJ72jh8AlElSg/X6zhBdg5qjqst8eEHaOrlL3lefZJep/KKAH4d2AwxAgcyFjM7bagkmM=
-X-Received: by 2002:a05:651c:b20:b0:32a:847c:a1c0 with SMTP id
- 38308e7fff4ca-32b4a0c5893mr49570841fa.6.1750247868176; Wed, 18 Jun 2025
- 04:57:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a+pJG/BR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xcNSQOUfcTheQa/3UDDBZL0p6s0dp8xICvhLKA4O2QE=; b=a+pJG/BRWV58leStz/MCjYgzkW
+	fTJQY3soUkm3BUHt7AonaJwcAqiPLheMT5ZoOGvrPe1Vvb0Ns/k0SwHUJrkTMupA/m3IvEKdNyqFh
+	ZPzKpDyr7hFQpRbFUe4lzYghymRCQI0XzkG7DNHpXLf9tLsVZAS4OKY/HHM1h4VU39y18ZNjytg22
+	V9n38jv+9B8zqWn9nG7Edi9CewKUj14qzJ9RoKS0mbJy6vTrux3Z3Hc4Z3da+ZCOhMf5ySLIgPSrU
+	0tTmaNByUrPaFVE3qU81CCXlPABzdVBzmLQZh3S+PHdsrcd1wvrV/sTtrNaasV9wA55dzc/mwfzcf
+	lel9Yjkg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRrQB-000000041F6-0OCC;
+	Wed, 18 Jun 2025 11:57:39 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E16C7307FB7; Wed, 18 Jun 2025 13:57:37 +0200 (CEST)
+Date: Wed, 18 Jun 2025 13:57:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH] x86: alternative: Fix int3 handling failure from broken
+ text_poke array
+Message-ID: <20250618115737.GI1613376@noisy.programming.kicks-ass.net>
+References: <175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250612091448.41546-1-brgl@bgdev.pl>
-In-Reply-To: <20250612091448.41546-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 18 Jun 2025 13:57:36 +0200
-X-Gm-Features: AX0GCFtRDJgqMbmd8SADniLZIBDm0lbd_j7zrP-SEcNHH7wJbISn24C8wb9wJDI
-Message-ID: <CACRpkdb9OkfBS49zjo38L_0zouz2SJmfJK3EaH+YZMPqXacODw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: msm: mark certain pins as invalid for interrupts
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
 
-On Thu, Jun 12, 2025 at 11:14=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Wed, Jun 18, 2025 at 09:05:23AM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Since smp_text_poke_single() does not expect there is another
+> text_poke request is queued, it can make text_poke_array not
+> sorted or cause a buffer overflow on the text_poke_array.vec[].
+> This will cause an Oops in int3 because of bsearch failing;
+> 
+> 
+>    CPU 0                        CPU 1                      CPU 2
+>    -----                        -----                      -----
+> 
+>  smp_text_poke_batch_add()
+> 
+> 			    smp_text_poke_single() <<-- Adds out of order
+> 
+> 							<int3>
+>                                                 	[Fails o find address
+>                                                         in text_poke_array ]
+>                                                         OOPS!
+> 
+> Or unhandled page fault because of a buffer overflow;
+> 
+> 
+>    CPU 0                        CPU 1
+>    -----                        -----
+> 
+>  smp_text_poke_batch_add() <<+
+>  ...                         |
+>  smp_text_poke_batch_add() <<-- Adds TEXT_POKE_ARRAY_MAX times.
+> 
+> 			     smp_text_poke_single() {
+> 			     	__smp_text_poke_batch_add() <<-- Adds entry at
+> 								TEXT_POKE_ARRAY_MAX + 1
+> 
+>                 		smp_text_poke_batch_finish()
+>                         	  [Unhandled page fault because
+> 				   text_poke_array.nr_entries is
+> 				   overwritten]
+> 				   BUG!
+> 			     }
+> 
+> 
+> Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
+> so that it correctly flush the queue if needed.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
+> Fixes: c8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> On some platforms, the UFS-reset pin has no interrupt logic in TLMM but
-> is nevertheless registered as a GPIO in the kernel. This enables the
-> user-space to trigger a BUG() in the pinctrl-msm driver by running, for
-> example: `gpiomon -c 0 113` on RB2.
->
-> The exact culprit is requesting pins whose intr_detection_width setting
-> is not 1 or 2 for interrupts. This hits a BUG() in
-> msm_gpio_irq_set_type(). Potentially crashing the kernel due to an
-> invalid request from user-space is not optimal, so let's go through the
-> pins and mark those that would fail the check as invalid for the irq chip
-> as we should not even register them as available irqs.
->
-> This function can be extended if we determine that there are more
-> corner-cases like this.
->
-> Fixes: f365be092572 ("pinctrl: Add Qualcomm TLMM driver")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Patch applied for fixes!
-
-Yours,
-Linus Walleij
+Thanks!
