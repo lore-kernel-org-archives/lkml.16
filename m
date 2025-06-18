@@ -1,228 +1,294 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A430258A;
-	Wed, 18 Jun 2025 06:49:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750229378; cv=fail; b=adyobhQn/l6w1mkvYp4VIk9nHSmoZOGXit3+VpH3tZ2sF+sNMU35+S4m/MAQSg8n0SnVEr4YB7BpKkQrcHNeIWypoVOWm1vOp0BxvA5sjFwHBaA0euyUuk3a+svjz18I4R2qlDdA1hp+HXWuEOHeV9HWWKnH4l5ansq0f41R7RA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750229378; c=relaxed/simple;
-	bh=oQbvnazYYR+rlQ3lXHboDLdMYTL/IK3m0r4OCwUEYk4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=H8e8UK4dF8MzOaanZzsSQ1gNz1YUILdJb+gFptj8RKVb7u9uMX9zs1InlRdPQsp2wKtxab9GW6o4n1+sYwtpCp7CkglQtfMtjx6f4T7XHLwW0XCAWI6McYfg/pCIGWRco6/1ReYqTom+78td7CeJCpTS5oDDowIkS8C/9lF3FkY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ibb2KdwF; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=iGQ8mq4b; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF022212D97
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 06:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750229426; cv=none; b=J2ckBqmtdML4hGGPAZMCszIjUTIBUuOm8iWxU8ikJ+SHcDsFhVqFrI2KdbC8WavjUH8hNInQdT7qZmKWpNZdhPGvoZy+RHMmPq6q3qDA3E49brlVSNM4h+1WpBBLHfNukTzXBz6rmRcLCv503+9VswFHH0LCLzutRDVwT0IkeF8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750229426; c=relaxed/simple;
+	bh=wuJ9iMQA9YpSgSdvf0vLco08hJ3WLEYKJel1UAc3e2U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tt1iPAS8fcghWAP/DNL9gbEPToIsM5oDAKREWQdWvyMVqBpyAje22mr73PUQkFRbq1YgAmZ8wQ/Ll4bBG56nnvCmHSBC9GSc7nfsJuvnXzj70UBibX04E85vOeDprN3S4hvuiXG93D9Q2E5/nEqD4IDw5XFDQEa4tQpVxQGhsgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dcOHz2jg; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ibb2KdwF";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="iGQ8mq4b"
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55I1twCw028449;
-	Wed, 18 Jun 2025 06:49:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2025-04-25; bh=qYeW5NjUWB9e7ia81Zmshpsbgj01He4XNvd7gdvYlfM=; b=
-	Ibb2KdwFqV0kvJIoVyTyL7y5hUvxHPFnVl1oxqIJTvrJLBDU//RMkCziCk6gw5nx
-	tCeBNs5IrgWJcAYtU4JQc9Jcp783hG01l8xfVrCg/35fW9m1Rf/QADjAjqWSqOGk
-	KXe+NLmu54b7IgEHRac4/L5QjDcffHYNNqt4v9mn1VbuC5Wr78kNp9dePiI1FxHd
-	gqUptUal6TVBfByj95XChpjDZcpqmjz4mHDdb6P/1xwW7Y6zVBLUEnCNOd1nT9JV
-	9cX136AgsGI52UlKgkHEYBkeZu4NmkXGE7VzmI0JOjJYicET+U1ji7SjkwrDBzfS
-	f8yu1IqQl4UX85o1TD67kA==
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 478yv5721g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 06:49:28 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55I5bCjN036382;
-	Wed, 18 Jun 2025 06:49:28 GMT
-Received: from ch4pr04cu002.outbound.protection.outlook.com (mail-northcentralusazon11013060.outbound.protection.outlook.com [40.107.201.60])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 478yhgrnp1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 06:49:28 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KkyjPb87En/I3oRYzHaC0lqhwI71OoZNNTbPRUVwSmAb3uG0b3jdxTz6vJuYHeiIHX2C5DxG1r9DskQYZJWnQ7P/yufswJelA+BajE6uFeH+raIxtf4tO8FPRVloRRWcl1zABS/MmynhlLVSa207A3TcTc6YM3+Olkwg6RMEtw1sausRJFdLj3yY8k5oqOQL9o7+lWj+NBcshSZkwBb2JpIhMJwvz17/44YHrU9rRbo73wDNOuqBAiqCf7HMYVQa8H4zrzCLP14pElt+UNuTwvmdLR5GN/WJJZswNa+vXKlzr/0MAVJQmrFc2SeEEVBKEVIJHjvJ9h1+a+dtz1vAIg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qYeW5NjUWB9e7ia81Zmshpsbgj01He4XNvd7gdvYlfM=;
- b=bIgBjWDdxJcEnKyRUexuUt8A90cZJs1ddsimYtA4HpcJ3RMAB66+sYExrdmKqsyaXeOUYZ7F8wuAV7i9hd8WVQEMcnsfP0bdzpRiAZ2YU3dDcLFROo4/jRSq4o1zIQ1SEm/svKP6GCtARGHi2xlXRGFd1iN5iVkEmkS1q3xym6xTzHyxlJWN/u5jRGLQtwXKMT+YmbSSPab7CysVcpop1wnRsFJ9kXdFqKlNTH1s+AlI7/mX9F8CHLzi1Z/lxSpPWZ3dJfXdCV8Tm4KCFdscEZYBKHh/DHirfLkATU459d5YAI9nroM1G+rI9ileQ85OMmiWiaogRC/wzHE65eMm6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dcOHz2jg"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-32addf54a00so53971251fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Jun 2025 23:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qYeW5NjUWB9e7ia81Zmshpsbgj01He4XNvd7gdvYlfM=;
- b=iGQ8mq4bD1AuMRrYjp+PpeA0a6TLxtnMB46Kq/VjkU2oWwUc5L7wuRpizb5neEjmth/dhWK28DCbr3hCY1la2hhsdaDQO2IMdBrbBWZUIbkVvlAftXnpT3eVbHtKJ/hluBqSVUDAmikH9L3MVC04N9iGEqkGFSPC5jMb/QYIXas=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by PH7PR10MB7849.namprd10.prod.outlook.com (2603:10b6:510:308::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
- 2025 06:49:20 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::4f45:f4ab:121:e088%6]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 06:49:20 +0000
-Message-ID: <077ffc15-f949-41d4-a13b-4949990ba830@oracle.com>
-Date: Wed, 18 Jun 2025 07:49:16 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/1] scsi: mpi3mr: Introduce smp_affinity_enable
- module parameter
-To: "Sean A." <sean@ashe.io>
-Cc: "James.Bottomley@hansenpartnership.com"
- <James.Bottomley@HansenPartnership.com>,
-        "atomlin@atomlin.com" <atomlin@atomlin.com>,
-        "kashyap.desai@broadcom.com" <kashyap.desai@broadcom.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "mpi3mr-linuxdrv.pdl@broadcom.com" <mpi3mr-linuxdrv.pdl@broadcom.com>,
-        "sreekanth.reddy@broadcom.com" <sreekanth.reddy@broadcom.com>,
-        "sumit.saxena@broadcom.com" <sumit.saxena@broadcom.com>
-References: <1xjYfSjJndOlG0Uro2jPuAmIrfqi5AVbfpFeWh7RfLfzqqH9u8ePoqgaP32ElXrGyOB47UvesV_Y2ypmM3cZtWit2EPnV3aj6i9w_DMo1eI=@ashe.io>
-Content-Language: en-US
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <1xjYfSjJndOlG0Uro2jPuAmIrfqi5AVbfpFeWh7RfLfzqqH9u8ePoqgaP32ElXrGyOB47UvesV_Y2ypmM3cZtWit2EPnV3aj6i9w_DMo1eI=@ashe.io>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0256.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:37c::16) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=gmail.com; s=20230601; t=1750229423; x=1750834223; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DIeMiiKb4oTFC9/Xf6OjRX+SZD33hG/1cOEcU99ZFFo=;
+        b=dcOHz2jg4vYPSeoy7JnEI/cjVSC0kJwODR27tUBoWB2dXVhZci2wCtPmsmq13LGzQ6
+         PvlLk5+G12SB5CxTY5Ubx5HqWSRQ2t/1Gex3G5jH4xZHQwKAA4bzEtEDqbhHSQnZY6oW
+         V3HGOuPjXoYESb6+ftrn4RFmJMwXFzDab/HxBHr1A/KcbHuqLo8QJFs1eb5l4xjfd8eO
+         kvKqFHDwbQslzf/W+bCvlt1sK9OlWuiT+h6bmWEzLZzo4WPnqZa/2u9Dgp6XEyiMEENM
+         prft68ZTRG9+WhC2HgKv41FGYHE6PnuTSMRT81+ihHOsddzAIBxVgKr7ZR45vjy48Y0T
+         VDdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750229423; x=1750834223;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DIeMiiKb4oTFC9/Xf6OjRX+SZD33hG/1cOEcU99ZFFo=;
+        b=XqTr7s1Q/jHQaVZ2+Tj+EWNRSM7pSAbnX0BcsruQ6GmX03w8zJe1nb6UopCJh0GZPL
+         jEAtaspL74bTy3HlNU+vdosSVDJPImptgLD90gMcdWAEbF4PY3PONzOm6I2genHgNY6i
+         mB3iSKSHhIzHk/fJMbOAfUmKCs2S1N6wooxctjUjaN2y9ntu5QNwr0MNCj/KQpn/6bG/
+         PMtPVnqhlAnaQ7U5KJ21U4SaYXIfc/vI84tFKcI+CxdU/ZTvt6M6rb15UbObVxzj6PZ2
+         f2v5KnqMf7wc+ik7uRqdexhb4Q4q5t+pVLLxygdncF4pQxIfLYeKUSD1Bu9va1tyRj7h
+         4yew==
+X-Forwarded-Encrypted: i=1; AJvYcCWmnEKvT6unwSG0cRov43SfdNqTuKdqEt4gY8UiVm6F3GpQ3sMSeaH9phy0JV7IdnygYlQwT9AgprTIdqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6vOZXcSl0Mo/0ViIOJvBCxLXymXKLjpBeYJzy+e4YINsw/hc1
+	Itla9Li9jB3MzG5jkzIsgaN+KBNRdY1ynqrYHZF/UGRwj4L7/LvYauhMZNVNDGTLPsn1iROEzmg
+	8gGlGlGv773eK1KWu6dln9f95CHvOFeY=
+X-Gm-Gg: ASbGncuC7+oOUx3UxrQOwO1rfJh0ubHhmqw8xuU2OeY96XrDBBjNOWs4j8Eo46YbZfX
+	2uxYGtoY1VeDTSraJghAda/0wf7SgoKaBL3dbyY2pieleq6ZTlAMxo7q68sgSemu+w22o+SnUtW
+	AkFiG9k74YJFoaLe3Gl+Ia4UwMrnXO2oxTOxrVx4T+5zI=
+X-Google-Smtp-Source: AGHT+IHR/lo91lkLt10dA3Hreb4XkVuhHX8jRTyUHpmbSD2NOop/C86BxTUHk8Jffc+ng7xlE+avIlyE7FrwooDV6kw=
+X-Received: by 2002:a2e:a9a6:0:b0:32a:6bef:7587 with SMTP id
+ 38308e7fff4ca-32b4a4b17fbmr50969661fa.20.1750229422529; Tue, 17 Jun 2025
+ 23:50:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH7PR10MB7849:EE_
-X-MS-Office365-Filtering-Correlation-Id: e00cc1bf-096c-4c23-683a-08ddae3440b5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SXY1YU5tNWU1aEIyenp3bDBYdHVUWUJLL0Z5MnJBemU3bmw1MTFXRFF1WFpK?=
- =?utf-8?B?ei9zTnVLNURtNHZrRHdGTHFTSjlQeElleDAyWGRwQjZPem9zUXJjNHZiWHFj?=
- =?utf-8?B?WUtqMnVHS0I2THYxU1hyMGlUcVE1UFBuZ1V5SGxwT1M2UTcwOGhaK1ZlSVFO?=
- =?utf-8?B?YlBJdklzMHRNaGNHOGM0YzQ5cVpIZmxKeVZnSG5hdk9YRnoxNDRDMS9jL2Fq?=
- =?utf-8?B?TzNaMEUxWStEeEFtb3J5SnF1OVJweG14M2hqRGN3bjR1Z25sbGh4Q005TGZx?=
- =?utf-8?B?MHErWUpIZzUycnpjd3hEbVprZ2VaaGtMU052VkFiQjl6NnNWUmx1UUEyd0l2?=
- =?utf-8?B?TEZIR2g5d1FoMjZDbkxYU3hnNjdvbzhuNHlMa0hzNDlwbzJ5ek5ON2g2cnMx?=
- =?utf-8?B?VlFleGQrMTVnV3JGN3k4Q3dGZXBobEpQV0dITmdMKzVlT3kyWEdlamJNY1Qy?=
- =?utf-8?B?UnJ4Z2FZM2I1dEFJZm4yL2g5Nlp6dElLaFVtUkZQRVROVkNMVTI3dU1Ddzly?=
- =?utf-8?B?V2p5cTQ0TWlqeVZCVE1KOVJqT0t4UGord2xac0VRelNINlcrSmJOSzJJZFdE?=
- =?utf-8?B?S0ZzYS9qTWNFbEQ4d0FGMjY3bksvbE9PNEZpTmZ1MEZ1Q1huS1JPUGRQeG9l?=
- =?utf-8?B?amo0eW9KZWE1NVRCdUJpM1hOU1RaK0J1WXh1Vm9vcnNyditCbmxKaU9SNUFx?=
- =?utf-8?B?MXc1ZGZaTzVhd1FWMElDSXRYbEJMa0pUVFllRXNoWFF5WDN0bmhySCtCRnRt?=
- =?utf-8?B?OG5Rc3pRVHlWR3h3MDBHUWUvQzVoNmNSMW5wQlRiYlJPeXpIazBaMlFyTmRC?=
- =?utf-8?B?NjIyV1doRm13ZWdrbzVDUnozUVdRVlp0QjdBWkxaT1ptSGFWT2xDbVpROE1N?=
- =?utf-8?B?Rmg2M3ZZU2ZOamJsZVppNWpTdXRRd1V3Qlh2Y0ZVU2RXZjQrL1JuSEd1RlJ6?=
- =?utf-8?B?U3pGS3BvRnZiNHhSTXRLTXNPeGlGY0xNRU9iTElVL2lwM1pLS3BvRk04UWJW?=
- =?utf-8?B?b3R6blU0WmxFKzZiSW12dEZ6dkMzOFB4YW5XQXFNTG1rZEtHbHhGS25zNU9m?=
- =?utf-8?B?YlZtbjJxejRTM1VmejlXTzBKMFdHQXJzSUY1QzNEcEh0OUJXN3M3QlE1UHJN?=
- =?utf-8?B?cEJvWldkbWUzNFI1VDBPdmZOOFd0RjIwRm94eDdWT3VSZEtzakE5cGtHMXNw?=
- =?utf-8?B?ZXJJaUl2dVJXV0FXTVBKN0VJTEFGQjZ2cHZYSURWR0ROc3dmc09aaWxyVzd2?=
- =?utf-8?B?UkphZlBXaEtYby80STEyTEFNcDg1T2szMy9DR2ppWXA1MEJYaUh3Si9RZlNj?=
- =?utf-8?B?akFSMXpwVnJYR2dKVHhBdUNxc01jcGJ1VklOa3Q1VDlxdDFVV1VLeXRGZkpa?=
- =?utf-8?B?VExxSktjNVNpcTkrVkFhTHZUNjBUcmpQbm9XanFKbDQ1V0N0MTJwRjRHall0?=
- =?utf-8?B?eFB3Ly9mOW4vaG53bGd6VWZYRmttZk9QRHViaWEyWm9aZXV5TTdibTFZL2Z3?=
- =?utf-8?B?YXkrZUV1b2hmQlZzaWtaVG5Eb3M1NTVWRmo1bXMvSHdrZ0loVXlJeUYycW40?=
- =?utf-8?B?Nm1XRkdJUFJWN1gwbG0rWnB4N05veStXS3ZEOEt0SWhJNCtVSG9jM0VXNlVO?=
- =?utf-8?B?a3BCUlgrVTZsdCtnQ1lIZE9qWTl0QkJWUFpaTU9CQnZIN3h4NFNyN0lnU3pa?=
- =?utf-8?B?eEJFcW9qWnRJdkt4dTRFYlFnMDRpY2pKWk80YVowRUplcjZicGVscWJhRVAw?=
- =?utf-8?B?OVBDVjZna1hKQVZ5eU5YQ2F3TU00K3NwM0hneGlZeEdJK0NZMVJiTkxqN3pl?=
- =?utf-8?B?bHlmWSszY2ZkamJ5M3RhK0VRWnluSXE0bkxkMnh5bW9HTUhDUGxFTjFBR2wy?=
- =?utf-8?B?REFhZmNCRW9zNm80WGxGYm9MS1dHeHZtaDhudEZNWVRyc245cURXZW1Oa2VV?=
- =?utf-8?Q?gVhRDUYtwhY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UEw4Q3VPL0d5NXQ1S1BDdjYyQk5na3lUMWU2ZkxTQnhGb1dSNlBxQ2dwYVBG?=
- =?utf-8?B?V0JzVHppcVV4cmR2L3Y3dnlnNlk3ZGViUGkxQkN3UlhQZlZPbWdLZnJHc010?=
- =?utf-8?B?MzI5UlNXOHQvZWk3dmE4bjlvdDJXSDY2WThwNVBIR2Z3azFISzY2a3Nrc2xP?=
- =?utf-8?B?eUR3Tlk1NCtrdXhzem5TSndNNFRINGJCWmZwMDlWMHhXVW5jRmhrWmZKR0Fu?=
- =?utf-8?B?RG80SFlXVmw5djFpUWEvVnMyTnlUbmJxNjZuNUlWUDJhcXVWMEVnemwzUHp3?=
- =?utf-8?B?R2UwZWpKbTZXRnF3Rk1XOEtrU3VDSjI1WmY3aVRybFZhcWlmamdqaERsSjlj?=
- =?utf-8?B?TUxpME5leGIxQ2hyVFQxUEwvbUttK0FjWHBscTZ5eEpoeHlub1VFTXRVTk1S?=
- =?utf-8?B?V3p2M3ZyTlF5eEx4S1pGM1c4U2xMSG5ueWNPRDhFd0FKZ0tQdnF3V1V1VG5h?=
- =?utf-8?B?ZXp1OTlHOGY5MWR4ZFJ4UDg4cFlSdlhzZHI3aTZQM1hsT3QrSmJZZVRrMmc2?=
- =?utf-8?B?U3FvU0lvWVNXRkpoYmFzR2ViWUE0QXhOQk9MSnNFK3Jjbm9VY09hb0dtQkhB?=
- =?utf-8?B?ei82YWo5RXg2YXdseUdQbkFTSW9iWFZjaXlRREFPenR4THNZeTBXbkdseXdv?=
- =?utf-8?B?dTR5UzFtWHJwN1ZESXVDNXJFWXNudEdYcjM1Vmd6ekp6Ti9pKzBIbi84YzFT?=
- =?utf-8?B?b25tTnp0MnlQT1VBWTZVcng4MDJZVTNjeDJQZ0lmRUl0RS9ldWZ0LzB2SnFE?=
- =?utf-8?B?R0JQNTdTU01nUU4wOE1TdlRBNzNZcGVoWXZHbWFuWTNhTXFQU3dUd2F3YmY3?=
- =?utf-8?B?Um9UcW9SSmJ0MHdVeEtTcjhRS2srUGVXSkpuaEd6REpodThSamI5YXJZby94?=
- =?utf-8?B?dXNQNkE3TnFiOEpNckVuYVdlUE51R3hLS2w2eHRLUjlrK1l1UDRXSVBlRUlr?=
- =?utf-8?B?KzBBVzVLbXlLV04yYUw4T3pmQnBidndCVjV1NG9ibTJMUkswdy9raXpLY1JN?=
- =?utf-8?B?b05hUnpVcWFkeCsvUWJwOG1qcnNOSDNyc1VqQ3JJd25wV2xzaXJBNW1ZY2Fs?=
- =?utf-8?B?VDQ4YTZvSmtPcjNxUHg0WVAxbE5SQlpqV3ZDeXJXRjhJUTJvZDhUTnB5VXZ0?=
- =?utf-8?B?WmlzZk84U00xQ0tuaGhWMS9TSUYyZktJZEN2UkxEbDdjcU91dG9hM0EvRGYv?=
- =?utf-8?B?TGxhVU1nZEtTT0NpajBSdUY5Mm9hRUUrbU9XVzlHbytCVFZzOFZiKzFXZHhQ?=
- =?utf-8?B?RFZ1UFIzMXNIWUxyRFk2MFpGQjdOTndvSHFCSmtscThhT0pucjVKczBzOWFw?=
- =?utf-8?B?cEVsTkNBUDBEditXY0tJbm1mbjFaaDZLVVVQaFF0Mnc5d0YzRVpadmI3anpY?=
- =?utf-8?B?Nm9NTUxvZzBtbHNQL05KV1JFU2hEVzFma09RSEc3U203eDFCaGdqVE04ZERh?=
- =?utf-8?B?b0daQ25NSHZsQ2lBVWEvL0VXOWQ1cUQvSVF4dmdkYjhtUHJUdFlwdFNDV055?=
- =?utf-8?B?Y1J3azJjQ0Q4UmJBdWxYMTNaWTJDemhTd1dTd052N1p6cTQza3pCWGQrTG5Y?=
- =?utf-8?B?eEZLTWxyRHdnTm9sSlNyQyttR1dMTXBybmMrOUhQanZ3UUl5b0xsU1pNM2E3?=
- =?utf-8?B?cHhEY0ZXVWdoTXhNUTU4Nm1hZHVvdzJhbHZuUU13Qk1nUk5vYXg1elBYMEph?=
- =?utf-8?B?cHRXSWo1cUlRTTYzTHdJbXFydVhLUkR6b2dqQitxdEhRRU1qUVVoOUt5REhY?=
- =?utf-8?B?QTVvMnNmVU9aS2RGN2c0VHNROEJBZU1uN3QrMjdORnpZcHZrMjZheFl4ZG5k?=
- =?utf-8?B?eWNGbUtNaisyYmtLR0VEL29YY3FJMTk1MTN3dE14T04vNEg3enVQa1UwbWJ0?=
- =?utf-8?B?TTlQQjVyOFhBNkhoL01uRVpIRjNtT3dCMmxUbGNnK09JZUI5T3VDWFY3dUZE?=
- =?utf-8?B?Y0N6YUFxK2VNVUN2Z21yYnRZWERXcGdkUTFEWWRuUnNCWCsveU9DYjNjcFNr?=
- =?utf-8?B?WHhIYU1BTk0vZWd4V3BpaHg4YkFpc0ZNUlZnbXFvNXdReCsrZEk0RFZtTmJE?=
- =?utf-8?B?cW51Zlgzc3c1MkovaDU0N0VabmVBb09NRk1OTzgycENQa01ha281RlJXb1ho?=
- =?utf-8?Q?6rmIWQaCsYpqeJEpPiCIvanO6?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	s8r20CbnmIXoS7bFKPTt8OS3m9TeTZEim+lfNwCBhX4scOETf3T9pVDtXjUVGdjPh75c1vniMfRwYGXR//OmzorUP5RwEJPjf+RKm7xvGmE3Fe+PtPS708noYmvm1FJJVmRVEJC00bF1n9Jz1s6MJnM7ZZTLMxcDFwV9XQrI1N85A1hKq71NOhkJKBwj46XpSwe7uDzGjqv5MZUxFHZIr5it1XRRJv5Yjsh+Izqor4KvSa87Lya8/1LGCXGeN8nqeKgaDhvgnP6ZeYogwaB6mRRwB0YaI4X4O2e2H5s0a6beionGu3niN8S/kPHbQPUC1kmPds6wKRbV6BunH1JXJ7uiUphTNB8FN1BZodNG041bXnaYlL0i5M5nhvt6fjYOCrHgQpMy3exgaYxCQucqN6W+BlLiq2iuUVq8jUa/kstI3TIn+Nwobd1H1SyKNImZjIlpbtihnp9naKgBIiJ+rkSN7TIY9fa38I/atUHvFegiVq+vkiZ5lmErT0wFU04QOQx8jzeTf+3tJxnfhQIhGm5M/VkldPtn3js0vpkSIvj2srCusX/CPXbYgz0srKEeF2H6vDE/URowmdlgK0iPUUX+uUpmAtwJwrNnbbhXip8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e00cc1bf-096c-4c23-683a-08ddae3440b5
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 06:49:20.6040
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RoXEVV1eJnHP6nOLlNYKOGzmig0J4BYPXU0c/Xm4r8B7ymUzLt2NtQ/+/D9TIclHMxy73NOak6djLL4sGP7CPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB7849
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-06-18_02,2025-06-13_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- phishscore=0 spamscore=0 suspectscore=0 malwarescore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506180057
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjE4MDA1NyBTYWx0ZWRfXzDoSM62kD3Ou 55jeMVch+wZbiUY/bBXByj3CoDyPRVWQSy4U5ONM0AbwkZ2CK2TQQe8erZfJZSQYv7hF/d5PHEq dZI/k4/11XwY8N6ianMip6j/t8vgRl33aLE9RSnM1ZQ7Oxx90BTJaDdnc0uBDqbveWApP7Du+y0
- NSeuHp3BNXtPC25WstsPFqr4IxacXWYkLXxNS3Vyspn76a+gQa8OAJURLIKTfu05FpbmP00Ayss JT/sPfnfG0GCGNwNuBUCICdowN3Q7F+lu522oc7+UMxHAgI47mfa4+8VAXvu+vL6QdVuM/sx8o+ 4J9qCD2vp17R/sVKLM22b/8dZ4x+rMZIHXz9yCWgx561jJKyet4m/CY50MFBcPZtAWgDfinHWWK
- xcag2/ImjQAyS8Xc9JB6Gh7e52p4/6hvIfFLzfpI2VWL0lps2yz6LLgcRtaLFNWyTS4EwtnT
-X-Proofpoint-GUID: 8IwL4WG72wZ7yhnhG41Z-y5Agst6w6ih
-X-Proofpoint-ORIG-GUID: 8IwL4WG72wZ7yhnhG41Z-y5Agst6w6ih
-X-Authority-Analysis: v=2.4 cv=W9c4VQWk c=1 sm=1 tr=0 ts=68526178 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
- a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=VqnRvCtiyri55oQ9m_MA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 cc=ntf awl=host:14714
+References: <20250617183503.10527-1-ryncsn@gmail.com> <20250617183503.10527-4-ryncsn@gmail.com>
+ <06bf5a2f-6687-dc24-cdb2-408faf413dd4@huaweicloud.com>
+In-Reply-To: <06bf5a2f-6687-dc24-cdb2-408faf413dd4@huaweicloud.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Wed, 18 Jun 2025 14:50:05 +0800
+X-Gm-Features: AX0GCFt_nSbgUw7mPQRrX6sRL6bxEhcf3zdP6m4SWM2DW0AwqnqV0FB0-osfJA8
+Message-ID: <CAMgjq7CicJC8JbZ41ccvZwwVSsPftj8DUX06x=dNmKu-18HS2w@mail.gmail.com>
+Subject: Re: [PATCH 3/4] mm/shmem, swap: improve mthp swapin process
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Hugh Dickins <hughd@google.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Matthew Wilcox <willy@infradead.org>, Chris Li <chrisl@kernel.org>, Nhat Pham <nphamcs@gmail.com>, 
+	Baoquan He <bhe@redhat.com>, Barry Song <baohua@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 17/06/2025 17:34, Sean A. wrote:
-> 
-> Le 17 Jun 2025, John Garry a écrit :
->> You have given no substantial motivation for this change
-> 
->  From my perspective, workloads exist (defense, telecom, finance, RT etc) that prefer not to be interrupted and developers may opt to utilize CPU isolation and other mechanisms to reduce the likelihood of being pre-empted, evicted, etc. This includes steering interrupts away from an isolated set of cores. Also while this doesn't result from any actual benchmarking, it would seem that forcing your way on to every core in a 192 core system and refusing to move might be needlessly greedy or even detrimental to performance if most of the core set is NUMA-foreign to the storage controller. One should be able to make placement decisions to protect app threads from interruption and to ensure the interrupt handler has a sleepy, local core to play with without lighting up a bunch of interconnect paths on the way.
-> 
-> Generically, I believe interfaces like /proc/$pid/smp_affinity[_list] should be allowed to work as expected, and things like irqbalance should also be able to do their jobs unless there's a good (documented) reason they should not.
+On Wed, Jun 18, 2025 at 2:27=E2=80=AFPM Kemeng Shi <shikemeng@huaweicloud.c=
+om> wrote:
+> on 6/18/2025 2:35 AM, Kairui Song wrote:
+> > From: Kairui Song <kasong@tencent.com>
+> >
+> > Tidy up the mTHP swapin workflow. There should be no feature change, bu=
+t
+> > consolidates the mTHP related check to one place so they are now all
+> > wrapped by CONFIG_TRANSPARENT_HUGEPAGE, and will be trimmed off by
+> > compiler if not needed.
+> >
+> > Signed-off-by: Kairui Song <kasong@tencent.com>
+> > ---
+> >  mm/shmem.c | 175 ++++++++++++++++++++++++-----------------------------
+> >  1 file changed, 78 insertions(+), 97 deletions(-)
+> >
+> > diff --git a/mm/shmem.c b/mm/shmem.c
+> > index 0ad49e57f736..46dea2fa1b43 100644
+> > --- a/mm/shmem.c
+> > +++ b/mm/shmem.c
+>
+> ...
+>
+> > @@ -2283,110 +2306,66 @@ static int shmem_swapin_folio(struct inode *in=
+ode, pgoff_t index,
+> >       /* Look it up and read it in.. */
+> >       folio =3D swap_cache_get_folio(swap, NULL, 0);
+> >       if (!folio) {
+> > -             int nr_pages =3D 1 << order;
+> > -             bool fallback_order0 =3D false;
+> > -
+> >               /* Or update major stats only when swapin succeeds?? */
+> >               if (fault_type) {
+> >                       *fault_type |=3D VM_FAULT_MAJOR;
+> >                       count_vm_event(PGMAJFAULT);
+> >                       count_memcg_event_mm(fault_mm, PGMAJFAULT);
+> >               }
+> > -
+> > -             /*
+> > -              * If uffd is active for the vma, we need per-page fault
+> > -              * fidelity to maintain the uffd semantics, then fallback
+> > -              * to swapin order-0 folio, as well as for zswap case.
+> > -              * Any existing sub folio in the swap cache also blocks
+> > -              * mTHP swapin.
+> > -              */
+> > -             if (order > 0 && ((vma && unlikely(userfaultfd_armed(vma)=
+)) ||
+> > -                               !zswap_never_enabled() ||
+> > -                               non_swapcache_batch(swap, nr_pages) !=
+=3D nr_pages))
+> > -                     fallback_order0 =3D true;
+> > -
+> > -             /* Skip swapcache for synchronous device. */
+> > -             if (!fallback_order0 && data_race(si->flags & SWP_SYNCHRO=
+NOUS_IO)) {
+> > -                     folio =3D shmem_swap_alloc_folio(inode, vma, inde=
+x, swap, order, gfp);
+> > +             /* Try direct mTHP swapin bypassing swap cache and readah=
+ead */
+> > +             if (data_race(si->flags & SWP_SYNCHRONOUS_IO)) {
+> > +                     swap_order =3D order;
+> > +                     folio =3D shmem_swapin_direct(inode, vma, index,
+> > +                                                 swap, &swap_order, gf=
+p);
+> >                       if (!IS_ERR(folio)) {
+> >                               skip_swapcache =3D true;
+> >                               goto alloced;
+> >                       }
+> > -
+> > -                     /*
+> > -                      * Fallback to swapin order-0 folio unless the sw=
+ap entry
+> > -                      * already exists.
+> > -                      */
+> > +                     /* Fallback if order > 0 swapin failed with -ENOM=
+EM */
+> >                       error =3D PTR_ERR(folio);
+> >                       folio =3D NULL;
+> > -                     if (error =3D=3D -EEXIST)
+> > +                     if (error !=3D -ENOMEM || !swap_order)
+> >                               goto failed;
+> >               }
+> > -
+> >               /*
+> > -              * Now swap device can only swap in order 0 folio, then w=
+e
+> > -              * should split the large swap entry stored in the pageca=
+che
+> > -              * if necessary.
+> > +              * Try order 0 swapin using swap cache and readahead, it =
+still
+> > +              * may return order > 0 folio due to raced swap cache.
+> >                */
+> > -             split_order =3D shmem_split_large_entry(inode, index, swa=
+p, gfp);
+> > -             if (split_order < 0) {
+> > -                     error =3D split_order;
+> > -                     goto failed;
+> > -             }
+> > -
+> > -             /*
+> > -              * If the large swap entry has already been split, it is
+> > -              * necessary to recalculate the new swap entry based on
+> > -              * the old order alignment.
+> > -              */
+> > -             if (split_order > 0) {
+> > -                     pgoff_t offset =3D index - round_down(index, 1 <<=
+ split_order);
+> > -
+> > -                     swap =3D swp_entry(swp_type(swap), swp_offset(swa=
+p) + offset);
+> > -             }
+> > -
+> For fallback order 0, we always call shmem_swapin_cluster() before but we=
+ will call
+> shmem_swap_alloc_folio() now. It seems fine to me. Just point this out fo=
+r others
+> to recheck this.
 
-There is a good reason. Some of these storage controllers have hundreds 
-of MSI-Xs - typically one per CPU. If you offline CPUs, those interrupts 
-need to be migrated to target other CPUs. And for architectures like 
-x86, CPUs can only handle a finite and relatively modest amount of 
-interrupts (being targeted). That is why managed interrupts are used 
-(which this module parameter would disable for this controller).
+It's an improvement, I forgot to mention that in the commit message.
+Readahead is a burden for SWP_SYNCHRONOUS_IO devices so calling
+shmem_swap_alloc_folio is better. I'll update the commit message.
 
-BTW, if you use taskset to set the affinity of a process and ensure that 
-/sys/block/xxx/queue/rq_affinity is set so that we complete on same CPU 
-as submitted, then I thought that this would ensure that interrupts are 
-not bothering other CPUs.
+> > -             /* Here we actually start the io */
+> >               folio =3D shmem_swapin_cluster(swap, gfp, info, index);
+> >               if (!folio) {
+> >                       error =3D -ENOMEM;
+> >                       goto failed;
+> >               }
+> > -     } else if (order > folio_order(folio)) {
+> > -             /*
+> > -              * Swap readahead may swap in order 0 folios into swapcac=
+he
+> > -              * asynchronously, while the shmem mapping can still stor=
+es
+> > -              * large swap entries. In such cases, we should split the
+> > -              * large swap entry to prevent possible data corruption.
+> > -              */
+> > -             split_order =3D shmem_split_large_entry(inode, index, swa=
+p, gfp);
+> > -             if (split_order < 0) {
+> > -                     folio_put(folio);
+> > -                     folio =3D NULL;
+> > -                     error =3D split_order;
+> > -                     goto failed;
+> > -             }
+> > -
+> > -             /*
+> > -              * If the large swap entry has already been split, it is
+> > -              * necessary to recalculate the new swap entry based on
+> > -              * the old order alignment.
+> > -              */
+> > -             if (split_order > 0) {
+> > -                     pgoff_t offset =3D index - round_down(index, 1 <<=
+ split_order);
+> > -
+> > -                     swap =3D swp_entry(swp_type(swap), swp_offset(swa=
+p) + offset);
+> > -             }
+> > -     } else if (order < folio_order(folio)) {
+> > -             swap.val =3D round_down(swp_type(swap), folio_order(folio=
+));
+> >       }
+> > -
+> >  alloced:
+> > +     /*
+> > +      * We need to split an existing large entry if swapin brought in =
+a
+> > +      * smaller folio due to various of reasons.
+> > +      *
+> > +      * And worth noting there is a special case: if there is a smalle=
+r
+> > +      * cached folio that covers @swap, but not @index (it only covers
+> > +      * first few sub entries of the large entry, but @index points to
+> > +      * later parts), the swap cache lookup will still see this folio,
+> > +      * And we need to split the large entry here. Later checks will f=
+ail,
+> > +      * as it can't satisfy the swap requirement, and we will retry
+> > +      * the swapin from beginning.
+> > +      */
+> > +     swap_order =3D folio_order(folio);
+> > +     if (order > swap_order) {
+> > +             error =3D shmem_split_swap_entry(inode, index, swap, gfp)=
+;
+> > +             if (error)
+> > +                     goto failed_nolock;
+> > +     }
+> > +
+> > +     index =3D round_down(index, 1 << swap_order);
+> > +     swap.val =3D round_down(swap.val, 1 << swap_order);
+> > +
+>
+> If swap entry order is reduced but index and value keep unchange,
+> the shmem_split_swap_entry() will split the reduced large swap entry
+> successfully but index and swap.val will be incorrect beacuse of wrong
+> swap_order. We can catch unexpected order and swap entry in
+> shmem_add_to_page_cache() and will retry the swapin, but this will
+> introduce extra cost.
+>
+> If we return order of entry which is splited in shmem_split_swap_entry()
+> and update index and swap.val with returned order, we can avoid the extra
+> cost for mentioned racy case.
+
+The swap_order here is simply the folio's order, so doing this
+round_down will get the swap entry and index that will be covered by
+this folio. (the later folio->swap.val !=3D swap.val ensures the values
+are valid here).
+
+Remember the previous patch mentioned that, we may see the shmem
+mapping's entry got split but still seeing a large folio here. With
+current design, shmem_add_to_page_cache can still succeed as it should
+be, but if we round_down with the returned order of
+shmem_split_swap_entry, it will fail.
+
+So I think to make it better to keep it this way, and besides, the
+next patch makes use of this for sanity checks and reducing false
+positives of swap cache lookups.
