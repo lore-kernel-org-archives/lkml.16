@@ -1,95 +1,68 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2056.outbound.protection.outlook.com [40.107.236.56])
+Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012068.outbound.protection.outlook.com [52.101.66.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977833085B3;
-	Wed, 18 Jun 2025 18:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307963085B3;
+	Wed, 18 Jun 2025 18:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.68
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750272218; cv=fail; b=TT0Y+VCPflCmxHu5sus+IDfiCavBcDU7qTiMbFl0TeCBRF1igCYh5yZDQwHrtVDScOwspaFHouRT2wqE4WO1AjP6uB6rfkAQDcSR6MyzZDQDz34+7aOwgZA1gtOEBgflVX7xUysoNNH6u2XwJqvb1vjhpQ4pyM4jyc5Jq0W4kXE=
+	t=1750272279; cv=fail; b=PpboH02Cv9erQaX98UPvbv7ODyxGxaw4FTtS8lXjCAmuPUN5zIVCp6pb+n9WlSDPOR+e49jZMl1n7YNqnh1sY1we0iEx/SkDccmgsW8A8r5w9QBe0i0slhTp9VGdD4pV3B47CHh7VW5fJoJavkUI1kXzrxl9AoIrhp/IZlAkv9Y=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750272218; c=relaxed/simple;
-	bh=zNW89WYzZKsqVZiL6c33H2LmV9KcxJ1nfupzhjyeDkM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rwSVDcaOSbV4k3U7j8nWP8PlCAXm3sOlUKQvCAMeDO5cIHP93FaQg9+rDb3hVxfh5pPHJPF1ZUok0XipXsDR60sFLBkfn/3DDn1tS77GP26aRT0lKPXxBZwDIg04ztW9nGDUG3tIrce2IjjYWDVW3RuDGIWePCNJTozCyqQH5nI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=oiTIveNR; arc=fail smtp.client-ip=40.107.236.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1750272279; c=relaxed/simple;
+	bh=cC5LdU5eZns59T0tY2JxLCizbt+qjXgFJ1Qi7G5bHX4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TNtIZQWqv7qtul3VMU2iNXXoA6ce71t+5FApWy0Lby9I6nd9w2ZVy0xkUnYbpdnby3k2iGnY7efeLKsafQpgQ6nGuUu90BBo0BVS/oyUBg/cLwGpUccSwQ365aT6d5btqSg39LH4PYNb/4ycTozymUsga1718jdPkCOLjcM9woE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=V38gq5WI; arc=fail smtp.client-ip=52.101.66.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="oiTIveNR"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="V38gq5WI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DYRkyXTMsYFBEFu8yQlCiu5835LwpfDr0rSz10WyMQwEjqOfipjIrFjJZF7g4ixwtllOtshFwJ+dUX4OW8oeK+Jp85ltCRFYJtMMHUX+dYK5+3dbIbDVoAsP7bgtmkQiuXtgVm9Rjmgds7I0ru8pykJOdKQoAOnWTV7SkbXmlIAOpkdnJ1Rn+0q7X53RJNHZkgTO/dVyd8bUGci7gnhqC1E00zr28sgkW9Ff81EZHHVRIEItMbvGaNh1qE21lTOOx99zE4D616mm7sWp1OX+8PEbNFSE+h6GI3c/pZDdaydhzWOEGbzwioUarwC02Ee4y4gxOFvoUtEyhQAuvA6uKg==
+ b=dvxlyuy6fyB0JuJV03A6LM5+nOg8XNZborboo1RVKlGJNITG1/+mTTnsJ6W+LVLD8qQu9yhyEZrqQtOzMnFTnyKyvtmzEvAfVxBAOcK6T0doL9HmC/6XRwkRo+GBKa218mYsymN3u4cWENIXKSa2y9yEwU6kI9D3gyOYq3dlO77hyc582S1tRtJc8BL52kjHjQSU51Bc1a6vnpw8sx5MJT5tOvCUdGEDF052tO1wSYsSSLA0FOzz8U7lRKMG6EmVPwpGAdjELy0Fe/etBIv3ilXmDk2sNUd9+ouT8qIhmVJMrA3tUug537uYk1r4psawAHkGJ64hC8d7ahJB0OSwUA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5RXplM8E6CaIkOYBv3T5WetiDuYPIEPBaf2T+Kxe0nw=;
- b=HeMHcqDuXmkrxU6dCNwBG1Fsi0jVc2tKtvsIMBMKMKAniwawQC4mgL00ygJC2/GXnfZk0WItSJUWp6kKcL73VyGQKh4PctMcntEmE/o0cVzmy/PI6KH9QVK/iUYurkKcnHMBOc9dZaukIchmEnH7Rtd2Hd+N9ioyzh9T/VFD5JbNYOseEwqA9+mL6LT+KDhW2ms+mBwLzc2Gmc260b4QZpH+JKdcprUcOG3iQqHuIDDr59qSJx8wlLrS5mQwUezeXQUEpvYT9ACl+c/07xIItngrXhQLY27OX/Iegy2MRUTBRUnrCRgxoouku9JPbx+f8Sjolph3HV5AWo8nCr3oBw==
+ bh=cWF0L33H7mc5k6d6hGmaNTXQQ3vffIPM+nU/tIPAqBw=;
+ b=DY605KIO1+8bdNc/3QOrvC79sF9f7AADpOFN+CuvkEGl41mt4rBm66YHtgOa78DgJyDfUwzGlxaXaoVUivpSJFb4OIzkTYIt7b5JY84wCf/bTbtQF5i0blfcNeQe7p879JMUVF4y0t7cZl1hXOWO0yDPBHpLFq4K1YAWr0a+UWSLXg0TUqL7/rjWL/E8C2h2WjOJcLh1rTXjSVHK6uaBzQo/cb4+IE2kJR6xDWvlnwtdIwM8BNdsDug6sUkZBZ8sKTQ1rZUVxuaBeTHbbZYPaTIvPsyjU9HAnE1opOo3HGQbRTe6ZJggu87YWtVF/6wyBr4w5i1psNr/j65Sc9m8SQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5RXplM8E6CaIkOYBv3T5WetiDuYPIEPBaf2T+Kxe0nw=;
- b=oiTIveNRoQaPmBLxSeTSZZGnIYdR2XNDdXYbi3Yi9jz1LdJyvmx80FhNprfwrtNSr9iOzPu38xforTb393BHcb7zivr37pDwGV0W1bZR3pS+7XpaEpoORvKCWRlb3vfD/Kyy3W3YU5gDEFcKHPtXELYnqxzelZW3oZNI5phnc+3mQ9qHJowPaUZ3fplOOsuEwBBEGWKQYl+m0F1MvDLBdKgoI8xSHHtcfZun1XUhcvCw8jK14qSF1o1lz1oc+xiTZrHG8k+jT2ciuqgJo2xsHxruC0xvPDkSQfMXRiMtdAUxQV3bSaILZff4KJAw+5OLeNRc4qkwwRoWVMGk1Wyiyw==
+ bh=cWF0L33H7mc5k6d6hGmaNTXQQ3vffIPM+nU/tIPAqBw=;
+ b=V38gq5WIP7YNDpRdv7QGaChl4laGoNcqTqNlAhbItGDXFm/cpkrKDjtJfrsrGa3oCpdkJ/piEeUolrXaxcat8905NDMyG/cxn2DNvqxWSC45Sxa3d83wmluhJRDbcuqiHsOQ4ILwXzHt8gpuJ0Bt6vQ8XTJnJoaB7FRZPoBFqmDSYGph8AsYlTAsVlGP+zQ03Dbv5bFjVCgTnM3QFMo64Y6RrzwAJofVbyBfxCFBGPLqRBTBjSJpdYdIP6KYV5fy6Gjl+yOLVIL4ykSBRwZlhtHz0GNxlyFP2/ZiThZHoC5nxd5YxsSPpD/KsODafISCBkF5tHoUIFz+7jm85PVehw==
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
- LV3PR12MB9120.namprd12.prod.outlook.com (2603:10b6:408:1a3::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8835.28; Wed, 18 Jun 2025 18:43:27 +0000
-Received: from DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
- ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 18:43:27 +0000
-From: Zi Yan <ziy@nvidia.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- virtualization@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- Andrew Morton <akpm@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
- Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
- Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>,
- Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
- Harry Yoo <harry.yoo@oracle.com>, Qi Zheng <zhengqi.arch@bytedance.com>,
- Shakeel Butt <shakeel.butt@linux.dev>
-Subject: Re: [PATCH RFC 04/29] mm/page_alloc: allow for making page types
- sticky until freed
-Date: Wed, 18 Jun 2025 14:43:22 -0400
-X-Mailer: MailMate (2.0r6265)
-Message-ID: <6E57AE2C-7754-4269-B16A-A39D168C5285@nvidia.com>
-In-Reply-To: <20250618174014.1168640-5-david@redhat.com>
-References: <20250618174014.1168640-1-david@redhat.com>
- <20250618174014.1168640-5-david@redhat.com>
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA1PR04MB10324.eurprd04.prod.outlook.com (2603:10a6:102:448::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 18 Jun
+ 2025 18:44:34 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
+ 18:44:34 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	netdev@vger.kernel.org (open list:NETWORKING DRIVERS),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH v5 1/1] dt-bindings: net: convert qca,qca7000.txt yaml format
+Date: Wed, 18 Jun 2025 14:44:16 -0400
+Message-Id: <20250618184417.2169745-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0890.namprd03.prod.outlook.com
- (2603:10b6:408:13c::25) To DS7PR12MB9473.namprd12.prod.outlook.com
- (2603:10b6:8:252::5)
+X-ClientProxiedBy: SJ0PR03CA0088.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::33) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,124 +70,343 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|LV3PR12MB9120:EE_
-X-MS-Office365-Filtering-Correlation-Id: 949b0367-c703-4086-eea2-08ddae980328
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA1PR04MB10324:EE_
+X-MS-Office365-Filtering-Correlation-Id: 785d0b22-8fa8-4338-cde8-08ddae982b78
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|7416014|366016|7053199007;
+	BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|38350700014|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lmkR0aNc2DBgsm980yRwauSKUeRWdEa++yL2+8hLWx92H90HUJ1EHsz9ip15?=
- =?us-ascii?Q?4ym/QdJjP1vu2AaEnsocyOUzgGkG93km5WY1ntDgnv8yRzB22OoZaY8q3eWm?=
- =?us-ascii?Q?UpnDEJSsjb8bBMdCmQbdveyP4YgXHdo96ZOm/frQ135y4BGTvpyo2vkF8Ik0?=
- =?us-ascii?Q?CVD+NMtILFnPQmgfnKAzdBwBW2UgdCD00QhfIadWLyqWLvjJWRhRO072veIS?=
- =?us-ascii?Q?pfAQ4y7aGzrFsuPECUH5UXR68MwXNLNNg5LaZbOWGwYbfNQDiTzb2sI4qoia?=
- =?us-ascii?Q?R1dPJybm9IRrymseF4wGYaTn1z+vRiRpVNMfXrc04Lf9gJaT50Eo4woupCvp?=
- =?us-ascii?Q?RKOF6N518nx9vQ42PaJ6Cv1R/m4P4Z4VKHKH6B5FClpdzqKA8gxJWKPXPnPm?=
- =?us-ascii?Q?QPKhLvZh6OSPcyOC6NnmeR8mHw9AwzHWQnsInPZ6aDoUQ4vxAip4qk1W5WC0?=
- =?us-ascii?Q?P2CLLSWJnd9eMUQOl9jbPdsK0ldEt5x5zRcc2P5wxoG7w2mxtS40nj+9bNQw?=
- =?us-ascii?Q?/uKE0xZ6lWq+tG3EoGNv8m9eW9LQYks9J1a9z0Yv4leKmsdPDk7Pk440Bi+p?=
- =?us-ascii?Q?v4s+IK64MMQMiILW8SRnjT8/2EAMeP6x9xhZajGCPHeuMfiWPekWlT7CKOWs?=
- =?us-ascii?Q?1+h4geLC0sc8Ecb1aF88X0l9aKn7m9tPdttOu5vdzuAAXWpj7ULUyBmAxXqs?=
- =?us-ascii?Q?NEeALdHHPObXJzJbqydSWhRARUQGAskVAeb3bJmjqJ2Zba7TS+AoHvlmC2JN?=
- =?us-ascii?Q?m94NGkuCG+e3N5S630I3bWUrWXrNAjmwOGSsHqnqM5/CNtrNmaQA+19FL204?=
- =?us-ascii?Q?pEasburxrINrO6cQQbc+4eFZeMhOmc+gYrA7WRwZKNGBPvjJ0OUVZEMhwyvE?=
- =?us-ascii?Q?/+iLpnpTPGScKYhZv74JcKP1dJKbnVaF8aZ6Xgkp9eQBLRWnCsEcEJ9OUcvD?=
- =?us-ascii?Q?e1/pln1yxylj91aBdYq5nWaaOpkwu8zBkZpi82iBeb7pUTQyd86Uu5ZY+7h3?=
- =?us-ascii?Q?LGWAlIVsRweS11sds5kSmuedTrKxJeaC4PbNjsc63gASyzGBKS6OS5hwQneK?=
- =?us-ascii?Q?5RMl17hv/5aMqsFQ01d4e/LpnwQ+B6P4e6VgvGXYatOK4ZPWUqS4BuyyRdAe?=
- =?us-ascii?Q?uN2e/nui3JrIifE65RNITBqJMPbloI4xvV1ox64chZnA05ztMOjyFVvQdWwz?=
- =?us-ascii?Q?jQG2aGXNsVPB56vxPaJhiiTu/qhnxQn0Hx5Au9IaArANmh+HycXNSF4x4dfZ?=
- =?us-ascii?Q?Gqy3f/9yx5z/9e54FDckH5Uf35mCEM5XOnMLKgxq7Y2AC2se96NPdnyasEEa?=
- =?us-ascii?Q?/7WCWp2oJGL5CGApsP0iqhJ9iKYKOnfFRWbIndm6IDynHY4SQLPExHigF6HK?=
- =?us-ascii?Q?hGFCrA3vBnLSzmwRoCZudxImrRWWy+YT37dBiBYeeZVN14QMdnbT1V+PPVjj?=
- =?us-ascii?Q?klJI1efd4/I=3D?=
+	=?us-ascii?Q?KKOeFjS3rI0A2l4mRAwiAvB91B3tuFq97Qdx+KZa/7IyAKwdby15RDikyFpm?=
+ =?us-ascii?Q?V4Arh/ZC0MGHjjUSq5xa8O/PXIs9tNofHbk9Tyg3ibP1PDdNiDeJrKG3Bu1G?=
+ =?us-ascii?Q?bBKgKt78sjfi2Xn0CkpsS09B/dcYdKcBJ66P1SMapfzCT6VDny4dRg+ObuB4?=
+ =?us-ascii?Q?/p2yLRN9A9mSqLvKWPwWZtjOIf0Ns6M1BmXKbUDQE/+THAFd23KryTDlySy2?=
+ =?us-ascii?Q?wgCkqHsrIppG5gsV+FSkqvTrcokj6iXdtxAkVYYR2Y/BQA98QOBgh5R1pUqo?=
+ =?us-ascii?Q?EphikJK2rtjq8ZF0jiEkk4yZPFzsFR86siuouTDOo7GCQJdD0Z5Snr0KpCm3?=
+ =?us-ascii?Q?Sjg1hcQBgqzCpNDfOjaQzURQB1bnWtoOhpW2emxuzVlxrXJmEWnHgQJZow9e?=
+ =?us-ascii?Q?n7omsN8C+AvY+BB0Srj+ohB56Lw7jEyeT4tgt7f3KdpCzil1iO9IOxaARSLN?=
+ =?us-ascii?Q?e5KHlNM9KL+RMlXn0/WNnRbun7AbgK6HWlR7oOpSDlIXIWcCVQnxcX+5wO6X?=
+ =?us-ascii?Q?mXRVT1anFF9vyA9SaNz2xhK2XfiMzS9iCEoGiziqYbFQV7Y8Eu8bFqffu5nJ?=
+ =?us-ascii?Q?Bp8ENYw6Hq5byVeiQ7gnAFsE3n16N07xZwwPqR8ZU3z8u3YCA3arAe1fPEPD?=
+ =?us-ascii?Q?baZ1ZNj7HJagah9P3jt1oBvKSHBdCaFSecnIyKEP9D+xtVkAH1magWKG+mbI?=
+ =?us-ascii?Q?FK8PHpiFWuCG4i7IWFp4alO+0znCND9OpovVkyGeB4J6zokoxLb6HXpkFlLG?=
+ =?us-ascii?Q?v7EIyUB2gT1vUQKbOyCo7+9YNtPWSnQxIB+OpCOj/UKAnLyf+pK3h8gQ1yy4?=
+ =?us-ascii?Q?6I3IL5Pwo8179rPb5lZAfpWM+CxNsuN7ufNMw8zD7x9GaKzrKvBqG212dMrr?=
+ =?us-ascii?Q?ciVaSnq55xXLr6YJV/Df7JwdY7IExnJbgqbzrABLSXSXmY2SX9KTnjlF3z1z?=
+ =?us-ascii?Q?412ikEP1rA2dbaNcucfhy+jdylJys+7WxsrEt+vdfzJtBWG4teE+l2ObddT7?=
+ =?us-ascii?Q?kelxMXKUPZtWn3VxKVln3jEjGRB9iItVxmH6mlI2upBKISN/W3jDiJzkO7XB?=
+ =?us-ascii?Q?GQ4KNlFZE+eW84YDKCEzHTgbzWTxpZh6YiPEQw2N41r85C93BaSA359JN4cm?=
+ =?us-ascii?Q?om/+q2ldDq92eM6GWFF4sIZYLfJDDwLk/nasYXRcxPEOHrW4xDT468FPV+j5?=
+ =?us-ascii?Q?1IKZ/Lx/gJ9kazXZULDiCBSfwib+ohCF+zbhvRlenhrw+8qx82vjHzulvWOV?=
+ =?us-ascii?Q?ylL1hIQqbDCyuBY1DfGwrOadUAby1vzeoHWnVEiv5XtMh+HxD2kvxUMtFJnO?=
+ =?us-ascii?Q?b1vLKxi53EiXp5auVp/aqyCF28kfV3XfWNHZM+4yHoto0/JJn/zCQbL33+U1?=
+ =?us-ascii?Q?zIQWWXr/EohFLUbefimRPtpAG09zEnRzXoj0Sz41PmfVuetnYjiK18jK4skV?=
+ =?us-ascii?Q?mt34qT7T9JkQMju2CQe659gZxbH1dNGS?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014)(921020);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1SM1wTklyZUaCn04T9CQLDsIi1MgDjw+m5uzzUFyH3XclRcUYBNecwZHLRJe?=
- =?us-ascii?Q?z7JtqLp6myfVkNTIVtttbaRYMvWQbzJ+Iff3q71Snl5A9r9nEjhFa39oY7iV?=
- =?us-ascii?Q?vng3sSp3KZgpBWdVBC3UmpMQqV8GQIarunaPVeRki+S6hZdr8Ld5c9Pu0ro5?=
- =?us-ascii?Q?p+dpHKKY1go4vwop9zmQUW74Or+Jmo+h1hO+ZhfS/NS45O2crgsZBkmYnaFz?=
- =?us-ascii?Q?Jln4b2J8UHWzJsRSTbxVDsd+dPVsHpvXYXCnRXGYcBYqX6OyUaGjJiAlOQWH?=
- =?us-ascii?Q?m3kl842kUECMx+JnygNvVK2MosOCCmNEtTwZTTwU8WYwJnJlLR6YVYGIxYdQ?=
- =?us-ascii?Q?EwQM7Ej6tspTQnufcLC4Dx5V6dzbtMV0NdqgAdLaoZq+2yjSvhoF8IRcrS3O?=
- =?us-ascii?Q?9l+5MZ2IPkNVoKdIoHE/cg4nXaQn0Z9PVtwsexw3aTjsnNFvr3TurOLxaq3g?=
- =?us-ascii?Q?1W65QeRMu0OGv3Kd1UO4FDLP00N8xHy+h9KPYiaiQVSZ46gh7UlRSYBWOEts?=
- =?us-ascii?Q?rP+PZ/7GFiGTeKsWGNqVvLA0xU3fyfzic/svD+6eiXZ1DRUHxdj58ZX+sLIm?=
- =?us-ascii?Q?DhneTFWJHBCuzw5hQbokEwOjX5rpz0YmnIRhQ4mamylchtW9Sm5vzf0Nod1o?=
- =?us-ascii?Q?PNz488c8ZzSj7tMIhClUfeQ/Yazqs/iYwYBiqVQsuR3grd7b9ZDfSGMRv5fg?=
- =?us-ascii?Q?Ik0j0hCCkZb/kVLs4GR/JY1zYAFdPBp7amp91Wzd+fJOzeXNWYHQeJ+5wXm5?=
- =?us-ascii?Q?twZcBRVKDePnFdsVtdD9KT9bP2vtl8lsPxxHuiPv7Ah3UONJFBeoMYxNIfLK?=
- =?us-ascii?Q?Jm9z4fULSicE+dOXAk/bXM1hkHSoQBA4Ms5LKpJU/b4/ELRtnqHH50zwXeng?=
- =?us-ascii?Q?CSgejtkQeCd/spFkocg2DjGVCIl5sBDpFqBHCKTbIQjetJBSVGw7U57S571v?=
- =?us-ascii?Q?ufdjWmCK+FTTorgEuaRjaayhZPcUED8nXERcZGwymaLPnf5PtUViswGmZmWI?=
- =?us-ascii?Q?38iERZ0qZ/xF0tzUVIZsQTEMEcAxGvtraqTtxfuv/8yPCnEdOdYTQHX+7L6B?=
- =?us-ascii?Q?kOORdw6+EQ10twFQUBhOWGuMh3mh9LMeWAL4WsNhjHo8zJ2DGWEuE/9V96RF?=
- =?us-ascii?Q?FwDhvpSn0yGST6fseH+hm+0Hf6Q/DnRKXViz+PcRS0zq4Fk9ncHVAXg4ABr9?=
- =?us-ascii?Q?ua8juBp12uVJEnKuXGna2Xs2faQTvX0cnWBWhu9QvRSOUaBHFDGp5xMyILTi?=
- =?us-ascii?Q?ynsM8qC00U2SurUsF2y9Tk87HjTDvgMHLCZXC6y3NDe1Q+Q5nJAmvgF++Vul?=
- =?us-ascii?Q?n8doidnCUC1ZPswvpKpeGdmqcD7RQYq5FkoDcuAUxUJuM0D/du6tIfV707tR?=
- =?us-ascii?Q?fICLHUHgZgPC3ipxlhPXpdmlu3FejIvlTg4vntT/NcNotUJVGKnHttqaS0yQ?=
- =?us-ascii?Q?9PNOP4ZPWFN0kqdHkD1A26pUVUQfmrb8HS2iAylyQ/pg2h46IyXqCKJhy/cx?=
- =?us-ascii?Q?NZRfTHzBzlWzuPPJ+asFlXwJZlD8qzjd3Uzq2mzozPS4Wda5VJU41jsLlLeQ?=
- =?us-ascii?Q?ahTG4IXW+hl8NcvZHn0ITj8eO74nfYBZs5Yc8u3t?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 949b0367-c703-4086-eea2-08ddae980328
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+	=?us-ascii?Q?nQAofyhkBztXqww1z+iWwQdoARoTAweBdN7G+GvFH+FLfvVwsUozcoLq8glL?=
+ =?us-ascii?Q?tBiwWgW6labARhmU7YZJeVAgzFxgMyPt4eSg8koAq/kSLV74JyIbeS4CQJW+?=
+ =?us-ascii?Q?VeD+OaWZ9XKFfqqFRn+XiyOifWy24aYlBxyXNq8EIPy8E5LBzZ2rk6l4vpv0?=
+ =?us-ascii?Q?yJsqbhMz+xLumkDcEX5yto6zIcUE/lif+Vx9LmVcOt7+PMynidWiP9IWYRaG?=
+ =?us-ascii?Q?jWA9U8zw3r5B9qOvz1AEiCD4bDwWgBt7hBDnJ/q47bgrs3vFQ7Rfn7kZIFsV?=
+ =?us-ascii?Q?HrKDprsjzOFHGQPa8U+yQVu3XfLoe2agae32weWT2NcW/+Vq3Ic/rBu1Fn8Q?=
+ =?us-ascii?Q?Mqebik21sDuyT6DxjY7a5dJaN63nioOm7o9vCFHwWkR9U0p/73hFKp45sTlN?=
+ =?us-ascii?Q?o+qkRd4DLw36ssvhnLfvuftrGR63nabkvmcRlNaUK+6xiBstPXe7+1hnI4DA?=
+ =?us-ascii?Q?ZZR+gwQYBVQumZ0Bapl2SrEdMAMARC28Gvr/zxFWomhaeO9MsGCm/MX65wNv?=
+ =?us-ascii?Q?QGnj+7poKG7Ruww3/w1/rxrezRWDbb/jaG0qygYq+9UIG+fzBN5sLTmQ1nXD?=
+ =?us-ascii?Q?TB54hWubH9QdZQbsycbes/Og7UpsZrMZdwjFm0OFw3934xcVdwu+Q+3hIxmg?=
+ =?us-ascii?Q?a6APXL/+x0iAdf1J9O5tvoTGbCqf5q7GElUHbKqMf1ul5jW4H9yjPfKuwrj4?=
+ =?us-ascii?Q?lNp5z0K+pRsMg9zysWZ58izQ3yy8qAZ+PejRWadV9FTjRneCvai06YJM6MXU?=
+ =?us-ascii?Q?VhptUEAr62Ek8Ea0k4vIybltX4LUDFOWntdidg92CDoERy/gam7QQnyh3/VY?=
+ =?us-ascii?Q?j81YP7pzMyaeXoq7wypRS8dHq0MjPCb9PQfFQagwnO2YjBn6XQokrcK0h1Kd?=
+ =?us-ascii?Q?Z9Q+ZvxPXz4YUSxQ3dLWAozYqRsG57MIHdlgJaf569khFE8VvUeeBhXPeEcH?=
+ =?us-ascii?Q?5Jj2oz4aLFegCjN7UBt/eim4nPaeMDrfZNiME/5TwKMKJSUPE6y0H6DRmEGr?=
+ =?us-ascii?Q?eowWBCYXCrtLEYfYdn/saDAthr4pUQEnBIvHgTSwwGqI7v5oCQk2+KSTVqZ3?=
+ =?us-ascii?Q?km9E79jSGEOZziRMVoaV3GsL1iY8izgmngtnb7ZeWC1tX0Jzn3OtqsFU1/LP?=
+ =?us-ascii?Q?hLKBQBYUaPJSob1zWxgmXHyCZBo6v9Rw3GqzWGlNF6d3V3Po+YtrUOGsKW96?=
+ =?us-ascii?Q?e7sJdDBusKURry3QRyJrpmfAQ7Hic2xH6847DLq3y+aEdQA8SPTcG8rzptWh?=
+ =?us-ascii?Q?/zjvkFS5R/QfyMVhisMsp+l100MjsVIrTwru+bf8JlD8iBSbBSJCmh4GjFrV?=
+ =?us-ascii?Q?1PUAqoy1AMKXzVTHHlVdSOhYs//WdVt4nw6C/FcIKMTFhBIm8kS3CHB/uwlX?=
+ =?us-ascii?Q?SsEtmZIGHtAHSvwk678WfDwVzyde22FZ1Y+BBX+PVKQTPXfv8xCYvHarUnmv?=
+ =?us-ascii?Q?paUaDrvUsRbdhhp/FuTn1lwqDDo69NcWhK8YveHbCsf81dWT2aSQOTHjTrJy?=
+ =?us-ascii?Q?15uPvYxs0C/5hlewUwdm48Z9uTaHKyTqaQA5DsQrHW4bqKYe3U1PKbYZ3pfQ?=
+ =?us-ascii?Q?fqA7DzHCZvEOH48VwDXkXqPglwwQtd53ydT/rXrX?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 785d0b22-8fa8-4338-cde8-08ddae982b78
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 18:43:27.0451
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 18:44:34.6419
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8y6ze0PH3z9Ze3nAZkkcPBR1ho2dUH1Ndvpt9t05sGhMrUGrHOrEKkIuYQZMbAf6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9120
+X-MS-Exchange-CrossTenant-UserPrincipalName: dRbYVOzYIPlpYggw0Dsw7Zws+jr2rgiveSBZK2RgxaBwe70cZgOAvdzKUzKye1/Qaeb5YBFNGRDqVSk4l+W2Mg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10324
 
-On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+Convert qca,qca7000.txt yaml format.
 
-> Let's allow for not clearing a page type before freeing a page to the
-> buddy.
->
-> We'll focus on having a type set on the first page of a larger
-> allocation only.
->
-> With this change, we can reliably identify typed folios even though
-> they might be in the process of getting freed, which will come in handy
-> in migration code (at least in the transition phase).
->
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  mm/page_alloc.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 858bc17653af9..44e56d31cfeb1 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1380,6 +1380,9 @@ __always_inline bool free_pages_prepare(struct page *page,
->  			mod_mthp_stat(order, MTHP_STAT_NR_ANON, -1);
->  		page->mapping = NULL;
->  	}
-> +	if (unlikely(page_has_type(page)))
-> +		page->page_type = UINT_MAX;
-> +
->  	if (is_check_pages_enabled()) {
->  		if (free_page_is_bad(page))
->  			bad++;
+Additional changes:
+- add refs: spi-peripheral-props.yaml, serial-peripheral-props.yaml and
+  ethernet-controller.yaml.
+- simple spi and uart node name.
+- use low case for mac address in examples.
+- add check reg choose spi-peripheral-props.yaml or
+  spi-peripheral-props.yaml.
 
-Should we be pedantic to only do this for PageOffline and PageZsmalloc
-and warn for the rest page types?
+Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+change in v5
+- use IRQ_TYPE_EDGE_RISING.
+- remove comments in examples.
+- add Krzysztof's review tag.
+- add Jacob Keller's review tag.
 
-Something like:
+change in v4
+- move if into allOf
+  move qca,legacy-mode to top and use qca,legacy-mode: false to disallow it
+  for uart
 
-if (unlikely(page_has_type(page))) {
-	if (PageOffline(page) || PageZsmalloc(page))
-		page->page_type = UINT_MAX;
-	else
-		VM_WARN_ONCE_PAGE(1, page);
-}
+change in v3
+- move ethernet-controller.yaml# out of if branch
 
-Best Regards,
-Yan, Zi
+change in v2
+- add Ethernet over UART" description here back
+- add add check reg choose spi-peripheral-props.yaml
+- move spi related properties in if-then branch
+- move uart related properies in if-else branch
+---
+ .../devicetree/bindings/net/qca,qca7000.txt   |  87 --------------
+ .../devicetree/bindings/net/qca,qca7000.yaml  | 109 ++++++++++++++++++
+ MAINTAINERS                                   |   2 +-
+ 3 files changed, 110 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/qca,qca7000.txt
+ create mode 100644 Documentation/devicetree/bindings/net/qca,qca7000.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.txt b/Documentation/devicetree/bindings/net/qca,qca7000.txt
+deleted file mode 100644
+index 8f5ae0b84eec2..0000000000000
+--- a/Documentation/devicetree/bindings/net/qca,qca7000.txt
++++ /dev/null
+@@ -1,87 +0,0 @@
+-* Qualcomm QCA7000
+-
+-The QCA7000 is a serial-to-powerline bridge with a host interface which could
+-be configured either as SPI or UART slave. This configuration is done by
+-the QCA7000 firmware.
+-
+-(a) Ethernet over SPI
+-
+-In order to use the QCA7000 as SPI device it must be defined as a child of a
+-SPI master in the device tree.
+-
+-Required properties:
+-- compatible	    : Should be "qca,qca7000"
+-- reg		    : Should specify the SPI chip select
+-- interrupts	    : The first cell should specify the index of the source
+-		      interrupt and the second cell should specify the trigger
+-		      type as rising edge
+-- spi-cpha	    : Must be set
+-- spi-cpol	    : Must be set
+-
+-Optional properties:
+-- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
+-		      Numbers smaller than 1000000 or greater than 16000000
+-		      are invalid. Missing the property will set the SPI
+-		      frequency to 8000000 Hertz.
+-- qca,legacy-mode   : Set the SPI data transfer of the QCA7000 to legacy mode.
+-		      In this mode the SPI master must toggle the chip select
+-		      between each data word. In burst mode these gaps aren't
+-		      necessary, which is faster. This setting depends on how
+-		      the QCA7000 is setup via GPIO pin strapping. If the
+-		      property is missing the driver defaults to burst mode.
+-
+-The MAC address will be determined using the optional properties
+-defined in ethernet.txt.
+-
+-SPI Example:
+-
+-/* Freescale i.MX28 SPI master*/
+-ssp2: spi@80014000 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	compatible = "fsl,imx28-spi";
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&spi2_pins_a>;
+-
+-	qca7000: ethernet@0 {
+-		compatible = "qca,qca7000";
+-		reg = <0x0>;
+-		interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
+-		interrupts = <25 0x1>;            /* Index: 25, rising edge */
+-		spi-cpha;                         /* SPI mode: CPHA=1 */
+-		spi-cpol;                         /* SPI mode: CPOL=1 */
+-		spi-max-frequency = <8000000>;    /* freq: 8 MHz */
+-		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+-	};
+-};
+-
+-(b) Ethernet over UART
+-
+-In order to use the QCA7000 as UART slave it must be defined as a child of a
+-UART master in the device tree. It is possible to preconfigure the UART
+-settings of the QCA7000 firmware, but it's not possible to change them during
+-runtime.
+-
+-Required properties:
+-- compatible        : Should be "qca,qca7000"
+-
+-Optional properties:
+-- local-mac-address : see ./ethernet.txt
+-- current-speed     : current baud rate of QCA7000 which defaults to 115200
+-		      if absent, see also ../serial/serial.yaml
+-
+-UART Example:
+-
+-/* Freescale i.MX28 UART */
+-auart0: serial@8006a000 {
+-	compatible = "fsl,imx28-auart", "fsl,imx23-auart";
+-	reg = <0x8006a000 0x2000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&auart0_2pins_a>;
+-
+-	qca7000: ethernet {
+-		compatible = "qca,qca7000";
+-		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+-		current-speed = <38400>;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/net/qca,qca7000.yaml b/Documentation/devicetree/bindings/net/qca,qca7000.yaml
+new file mode 100644
+index 0000000000000..b503c3aa3616b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qca,qca7000.yaml
+@@ -0,0 +1,109 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/qca,qca7000.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm QCA7000
++
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
++
++description: |
++  The QCA7000 is a serial-to-powerline bridge with a host interface which could
++  be configured either as SPI or UART slave. This configuration is done by
++  the QCA7000 firmware.
++
++  (a) Ethernet over SPI
++
++  In order to use the QCA7000 as SPI device it must be defined as a child of a
++  SPI master in the device tree.
++
++  (b) Ethernet over UART
++
++  In order to use the QCA7000 as UART slave it must be defined as a child of a
++  UART master in the device tree. It is possible to preconfigure the UART
++  settings of the QCA7000 firmware, but it's not possible to change them during
++  runtime
++
++properties:
++  compatible:
++    const: qca,qca7000
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  qca,legacy-mode:
++    $ref: /schemas/types.yaml#/definitions/flag
++    description:
++      Set the SPI data transfer of the QCA7000 to legacy mode.
++      In this mode the SPI master must toggle the chip select
++      between each data word. In burst mode these gaps aren't
++      necessary, which is faster. This setting depends on how
++      the QCA7000 is setup via GPIO pin strapping. If the
++      property is missing the driver defaults to burst mode.
++
++allOf:
++  - $ref: ethernet-controller.yaml#
++
++  - if:
++      required:
++        - reg
++
++    then:
++      properties:
++        spi-cpha: true
++
++        spi-cpol: true
++
++        spi-max-frequency:
++          default: 8000000
++          maximum: 16000000
++          minimum: 1000000
++
++      allOf:
++        - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++    else:
++      properties:
++        current-speed:
++          default: 115200
++
++        qca,legacy-mode: false
++
++      allOf:
++        - $ref: /schemas/serial/serial-peripheral-props.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ethernet@0 {
++            compatible = "qca,qca7000";
++            reg = <0x0>;
++            interrupt-parent = <&gpio3>;
++            interrupts = <25 IRQ_TYPE_EDGE_RISING>;
++            spi-cpha;
++            spi-cpol;
++            spi-max-frequency = <8000000>;
++            local-mac-address = [ a0 b0 c0 d0 e0 f0 ];
++        };
++    };
++
++  - |
++    serial {
++        ethernet {
++            compatible = "qca,qca7000";
++            local-mac-address = [ a0 b0 c0 d0 e0 f0 ];
++            current-speed = <38400>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2c74753e2df41..ffc80ec9b3d6d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20383,7 +20383,7 @@ QUALCOMM ATHEROS QCA7K ETHERNET DRIVER
+ M:	Stefan Wahren <wahrenst@gmx.net>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/net/qca,qca7000.txt
++F:	Documentation/devicetree/bindings/net/qca,qca7000.yaml
+ F:	drivers/net/ethernet/qualcomm/qca*
+ 
+ QUALCOMM BAM-DMUX WWAN NETWORK DRIVER
+-- 
+2.34.1
+
