@@ -1,394 +1,780 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f194.google.com (mail-yb1-f194.google.com [209.85.219.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305B8286426;
-	Wed, 18 Jun 2025 10:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11926288C1A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 10:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750242129; cv=none; b=cJAWGYxMAO21IEjK12MC3lFHUydmsNkYc0PiiHFEScLIUVU0YenyewT+Shx6Pcq6x4J2IXgsd9B6/2ob6mr/8bZ8ivgYZ8DRJHLFny+clBCduEVAOydY3QZoXko3VG5nym/6zjq4U6/zw6YN+UxNGjvApJ9a5V+ayyrII738Dhk=
+	t=1750242141; cv=none; b=WA6oYX+6g6SbSqnJ3qKyEvCWbo+1HcMBDlFwEt7WQW9DEGEP2LJkBBlZl0ZIh3T/fr4Wq9N8891o8TjaqkV5jqUwIoKzNqsLozajHh/UB7Tf2vs4SkqMx40qemGE+kwdoADRnShBex4sgH6D53YzONK6sEGyjoEwcUr/svVfke4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750242129; c=relaxed/simple;
-	bh=2WxueDVq+T8ZRhlskupBTyxUnIZ16kRiWx2tZYUMy/I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Tk/CUZBEz199BHYXNKpq6rl2jmF/YDV78h7RcEJ9uK/bgQdCQi+F10C0UwzK27VCC8Rdy65sH25sA35YGQFyS2HhLD/BWzrGMf3LeuDsqWUpKmF8atjISzCt+ywZJ92OKcE2l5/WfMB9Te/eVcRVk91sBQO7Tm7eVpfDXTiENcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6pFzL6R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750242141; c=relaxed/simple;
+	bh=gagXRV4HnE51QrpMsDWghMxPXgbHAxikOYMmRU8F1/o=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=sPXkGNx/54yscwZ/+fQtzh6V3vVRF+mmjt6xyYGSKwLWVnL+hGcjHt4IIiKFm8tfYJjuOQC17maNd6iVhsWtPyxOiZRPl9NsO8lwAAPEnGGcic4bj9Vy/9LOksRxCcMHkzySLVYf5bDaI62qRlpVM7hhyvlBMCcEBYeeIXuR3WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kPAphW6/; arc=none smtp.client-ip=209.85.219.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6pFzL6R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38F7DC4CEE7;
-	Wed, 18 Jun 2025 10:22:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750242128;
-	bh=2WxueDVq+T8ZRhlskupBTyxUnIZ16kRiWx2tZYUMy/I=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M6pFzL6RwLxuAmmUnQO/BbPUMTnUfNXDYyPuDNhE2skkmba0Qp6XhOCH4t5TfF5hl
-	 SZvEiBSAVuiyqr9aCEOy1vu5HZK2OV6kmRHfCwFuUvtTWKASYnndsUaFWzqcy6KBJD
-	 o9UmJ8lQmHmjoLBZiNirmiUTq75hRkOSadpLeQM+kGh3hfb5TQnCBfVbPPKQB2UGSc
-	 evEjzFz0OsML+AMfz66yBMoLS6MKhdwGGr3lo3l2nlodIvAthzMUaBf90LqIgPNCH3
-	 JRW3EJ7LsdFEOuJ7UmB+kIoN1mFVusrpYxx+5LoJmXMK89tRylC+YBKG7ESEOsdYEW
-	 lkj3GpkmT6ESw==
-Message-ID: <4e827037-1bde-4eb3-a6f2-6416dace10b5@kernel.org>
-Date: Wed, 18 Jun 2025 12:22:03 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPAphW6/"
+Received: by mail-yb1-f194.google.com with SMTP id 3f1490d57ef6-e733e25bfc7so5880455276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:22:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750242138; x=1750846938; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=lIgLwvf2hJLlx86dw4qDZMzeC9ho3E/koj0OVMetnkc=;
+        b=kPAphW6/J3ZaWrLcm/1JXtXI1mszU+bgZF7TDRoSzvPg8uTWhjA6Qkg0Egh1k8vRIy
+         HTSrIjsVvB4ES6GpdXIBZbzriyNPDy2upw1F7Yjcc71A+i49Xct51/Kvd3utm6Cgmax1
+         wGgwe2aF1rXDQG8yYS2adwxA5bX2L9QTXA/i2gnACsdjQ/J8TwJd/7uG4Klp42K8CctW
+         VsqpIUfVkliQKaXHDnbihsjjBkh7+NNWsdQTJ9F0eV99VN/Vy5xCL42D/A+3Dlp5cQFv
+         IK8iPlNgLRuAlfNWiUfjyhakr7CdctKtRboCq2V7+9dzbxm2GiQArsKIWjtzjFmnFiXJ
+         IYHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750242138; x=1750846938;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lIgLwvf2hJLlx86dw4qDZMzeC9ho3E/koj0OVMetnkc=;
+        b=SIxIKTnkYB8mbUTWBrkDII2L7VZEiuuatTrx0hZ60fymwYi41G9Tz88E/f7wLo5KD+
+         WdSIUZ7gFBy5Ce45jO0M1oWJWTfC2xSrVwiPky01gpHwK13ERzSxLbE1WhwOxm8S0DaC
+         qULOpC3YmnK3umctZcWhZnhMSEl3wb75X1b/uOqCaLjdarOL9YCJKCibb2Aw5FAIB8TE
+         RwCh7Y8kaKALmvh1NvrZT/qFITK/frbLovMup229De7dl0BS/bqzUEmotH9fXq1tg/Q3
+         IJZjNER8ZF7oKFl4wIHsIhR3vscsMROp4NFAf6aT/YgcgSE8s+3+CC7BdzEnl4qv1qrv
+         50Ug==
+X-Gm-Message-State: AOJu0YzcIW7WbbynoRo49ZvSIH26f8eSSS2dEk+G6rVkWKBjrRsdNl+B
+	N/u9WiJA1rZdq+ZRxRpigOUFsvcn0zpcIJSIDzCOTJYFpNMrtQourxrpKLPeAb1REXg64iT5AK+
+	A9O924YdFkfOdQ54fQY27dTIn9506E6j1QU4QJe/P7Q==
+X-Gm-Gg: ASbGncvlRT4v8Orz4zxn2HaTrcMXArGE4OVz2R7rYljB9wubd778wxUJMtZpOR+lpLs
+	XDu0HV8jXPYSR24goEjLMJzemJULgw2/PLzvu+CYVUiOQtT9eL08jbWk5jtsoz6AV5grHcbWU0b
+	CEhDKV1oWV+2qp6dw1dj3cb7r3juF4CK4dO/70BggzdPZoHZOJgPcCYZU7Lyh5AVZtas4HNP5A/
+	AYQVA==
+X-Google-Smtp-Source: AGHT+IHBth5spvkJRNVTYpcrGMyCdif5hg4R526MGORYh/cPMJqnxvQzgoXWYmoKGZJ5EkgJ5yIGlh4nFs4tRkiixWs=
+X-Received: by 2002:a05:6902:2493:b0:e82:fd2:717f with SMTP id
+ 3f1490d57ef6-e822acab893mr23641704276.4.1750242137542; Wed, 18 Jun 2025
+ 03:22:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] soc: samsung: exynos-pmu: Enable CPU Idle for
- gs101
-To: Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: William Mcvicker <willmcvicker@google.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel-team@android.com
-References: <20250611-gs101-cpuidle-v2-0-4fa811ec404d@linaro.org>
- <20250611-gs101-cpuidle-v2-2-4fa811ec404d@linaro.org>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250611-gs101-cpuidle-v2-2-4fa811ec404d@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Wed, 18 Jun 2025 15:52:06 +0530
+X-Gm-Features: Ac12FXzOnsTNhXwUPG5Q5Mgv1dTrNPZzIHPONaDnRhMay6cKk8-uWx6DuT0rwAs
+Message-ID: <CAFf+5zgVYZGRhbEb4-Mn1o2s=Qj+DTK7w2Uit8+q9WgFw3PHbQ@mail.gmail.com>
+Subject: Program (basically, a framework) to present a text menu to the user
+ and get the user input and process the user input (Two files:
+ text_menu_for_user.c and ReadMe.txt).
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/06/2025 11:34, Peter Griffin wrote:
-> Register cpu pm notifiers for gs101 which call the
-> gs101_cpu_pmu_online/offline callbacks which in turn
-> program the ACPM hint. This is required to actually
-> enter the idle state.
-> 
-> A couple of corner cases are handled, namely when the
-> system is rebooting or suspending we ignore the request.
-> Additionally the request is ignored if the CPU is in
-> CPU hot plug.
-> 
-> Note: this patch has a runtime dependency on adding
-> 'local-timer-stop' dt property to the CPU nodes. This
-> informs the time framework to switch to a broadcast timer
-> as the local timer will be shutdown. Without that DT
-> property specified the system hangs in early boot with
-> this patch applied.
+Program (basically, a framework) to present a text menu to the user
+and get the user input and process the user input (Two files:
+text_menu_for_user.c and ReadMe.txt).
 
-Please wrap commit message according to Linux coding style / submission
-process (neither too early nor over the limit):
-https://elixir.bootlin.com/linux/v6.4-rc1/source/Documentation/process/submitting-patches.rst#L597
+------------------------------
+text_menu_for_user.c
+------------------------------
 
-> 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
-> Changes in v2
->  * Add ifdef CONFIG_PM_SLEEP to avoid
->    Fix warning: unused variable 'cpupm_pm_ops' [-Wunused-const-variable] (0-day)
-> ---
->  drivers/soc/samsung/exynos-pmu.c | 137 +++++++++++++++++++++++++++++++++++++--
->  1 file changed, 133 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
-> index a77288f49d249f890060c595556708334383c910..7f72ecd60994f18bb639dd8e09e1c6ff6158066b 100644
-> --- a/drivers/soc/samsung/exynos-pmu.c
-> +++ b/drivers/soc/samsung/exynos-pmu.c
-> @@ -8,6 +8,7 @@
->  #include <linux/array_size.h>
->  #include <linux/arm-smccc.h>
->  #include <linux/cpuhotplug.h>
-> +#include <linux/cpu_pm.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/mfd/core.h>
-> @@ -15,6 +16,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/delay.h>
-> +#include <linux/reboot.h>
->  #include <linux/regmap.h>
->  
->  #include <linux/soc/samsung/exynos-regs-pmu.h>
-> @@ -35,6 +37,10 @@ struct exynos_pmu_context {
->  	const struct exynos_pmu_data *pmu_data;
->  	struct regmap *pmureg;
->  	struct regmap *pmuintrgen;
-> +	spinlock_t cpupm_lock;	/* serialization lock */
+/*
+ * License:
+ *
+ * This file has been released under "unlicense" license
+ * (https://unlicense.org).
+ *
+ * This is free and unencumbered software released into the public domain.
+ *
+ * Anyone is free to copy, modify, publish, use, compile, sell, or distribute
+ * this software, either in source code form or as a compiled binary, for any
+ * purpose, commercial or non-commercial, and by any means.
+ *
+ * For more information about this license, please visit - https://unlicense.org
+ */
 
-serialization of what? Or rather, can it be not a serialization lock? Is
-it possible? It's as useful as saying "protection against concurrent
-accesses lock". No, you need to be explicit which members and/or code
-are protected.
+/*
+ * Author: Amit Choudhary
+ * Email: amitchoudhary0523 AT gmail DOT com
+ */
 
-> +	bool __percpu *hotplug_ing;
-> +	atomic_t sys_suspended;
+/*
+ * ==== README ====
+ *
+ * You can use this program if you want to present a text menu to the user and
+ * process the user input and keep repeating this cycle until the user exits
+ * this program.
+ *
+ * If you want to use this program according to your requirements then you have
+ * to make some changes in this program. These changes are not a lot. You need
+ * to make the changes listed below:
+ *
+ *      ** Change the value of 'TOTAL_NUMBER_OF_MENU_ITEMS' according to the
+ *         number of menu items that you have.
+ *
+ *      ** Change the value of 'MENU_ITEM_STRING_SIZE' according to your
+ *         requirements.
+ *
+ *      ** Check other defined constants to see if you need to modify their
+ *         values because of your requirements.
+ *
+ *      ** Modify the menu items details in create_menu() function according
+ *         to your requirements and implement your new functions.
+ *
+ *      ** Delete dummy_function() and its declaration.
+ *
+ * This program presents a menu to the user and asks the user to input a valid
+ * menu option. After the user has inputted a valid menu option, this program
+ * executes the function associated with that menu option. After the associated
+ * function finishes, this program presents the menu again to the user and this
+ * goes on in a cycle until the user exits this program.
+ */
 
-Why re-implementing own refcnt of pm suspend status?
-pm_runtime_suspended() and others?
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h>
 
-> +	atomic_t sys_rebooting;
->  };
->  
->  void __iomem *pmu_base_addr;
-> @@ -336,7 +342,7 @@ EXPORT_SYMBOL_GPL(exynos_get_pmu_regmap_by_phandle);
->  #define CPU_INFORM_CLEAR	0
->  #define CPU_INFORM_C2		1
->  
-> -static int gs101_cpuhp_pmu_online(unsigned int cpu)
-> +static int gs101_cpu_pmu_online(unsigned int cpu)
->  {
->  	unsigned int cpuhint = smp_processor_id();
->  	u32 reg, mask;
-> @@ -358,10 +364,26 @@ static int gs101_cpuhp_pmu_online(unsigned int cpu)
->  	return 0;
->  }
->  
-> -static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-> +static int gs101_cpuhp_pmu_online(unsigned int cpu)
+// Change this value to process more characters.
+#define MAX_STR_SIZE_ALLOWED 8192 // including null terminating character
 
-This needs either renaming or comments. One is cpu_pmu_online other is
-cpuhp_pmu_online. Sounds the same to me.
+#define MIN_STR_SIZE_ALLOWED 2 // including null terminating character
 
+#define STR_NUM_TRUE  1
+#define STR_NUM_FALSE 0
 
-> +{
-> +	gs101_cpu_pmu_online(cpu);
-> +
-> +	/*
-> +	 * Mark this CPU as having finished the hotplug.
-> +	 * This means this CPU can now enter C2 idle state.
-> +	 */
-> +	*per_cpu_ptr(pmu_context->hotplug_ing, cpu) = false;
+// TM stands for Text Menu
+#define TM_TRUE  1
+#define TM_FALSE 0
 
-Quoting docs: "Per cpu data structures are designed to be used by one
-cpu exclusively".
+#define TM_SUCCESS  0
+#define TM_FAILURE -1
 
-... and further about write access. Adding standard driver code using
-"highly discouraged" practice is not something expected.
+// Menu starts with option number 1. Change the below value to the number of
+// menu items that you have.
+#define TOTAL_NUMBER_OF_MENU_ITEMS 5
 
+// change this value according to your requirements
+#define MENU_ITEM_STRING_SIZE 1024 // including null terminating character
 
-> +
-> +	return 0;
-> +}
-> +
-> +static int gs101_cpu_pmu_offline(unsigned int cpu)
->  {
->  	u32 reg, mask;
-> -	unsigned int cpuhint = smp_processor_id();
-> +	unsigned int cpuhint;
-> +
-> +	spin_lock(&pmu_context->cpupm_lock);
+// You don't need to change this value because the value of '8' can handle
+// (10^7 - 1) option numbers (that is, (10^7 - 1) menu items).
+#define OPTION_NUMBER_SIZE 8 // including null terminating character
 
-This does not disable interrupts...
+#define CONFIRMATION_STR_SIZE 8 // including null terminating character
 
-> +	cpuhint	= smp_processor_id();
+#define NUMERIC_INPUT_STR_SIZE 5 // including null terminating character
 
-... which is a requirement here, according to docs, no? Maybe the
-original code had an issue, though.
+struct menu_item
+{
+    // string that will be displayed when this menu item is displayed
+    char menu_item_string[MENU_ITEM_STRING_SIZE];
 
->  
->  	/* set cpu inform hint */
->  	regmap_write(pmu_context->pmureg, GS101_CPU_INFORM(cpuhint),
-> @@ -379,16 +401,89 @@ static int gs101_cpuhp_pmu_offline(unsigned int cpu)
->  	regmap_read(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_UPEND, &reg);
->  	regmap_write(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_CLEAR,
->  		     reg & mask);
-> +
-> +	spin_unlock(&pmu_context->cpupm_lock);
->  	return 0;
->  }
->  
-> +static int gs101_cpuhp_pmu_offline(unsigned int cpu)
-> +{
-> +	/*
-> +	 * Mark this CPU as entering hotplug. So as not to confuse
-> +	 * ACPM the CPU entering hotplug should not enter C2 idle state.
-> +	 */
-> +	*per_cpu_ptr(pmu_context->hotplug_ing, cpu) = true;
-> +
-> +	gs101_cpu_pmu_offline(cpu);
-> +
-> +	return 0;
-> +}
-> +
-> +static int gs101_cpu_pm_notify_callback(struct notifier_block *self,
-> +					unsigned long action, void *v)
-> +{
-> +	int cpu = smp_processor_id();
-> +
-> +	switch (action) {
-> +	case CPU_PM_ENTER:
-> +		/*
-> +		 * Ignore CPU_PM_ENTER event in reboot or
-> +		 * suspend sequence.
-> +		 */
-> +
-> +		if (atomic_read(&pmu_context->sys_suspended) ||
-> +		    atomic_read(&pmu_context->sys_rebooting))
-> +			return NOTIFY_OK;
-> +
-> +		if (*per_cpu_ptr(pmu_context->hotplug_ing, cpu))
-> +			return NOTIFY_BAD;
-> +
-> +		gs101_cpu_pmu_offline(cpu);
-> +
-> +		break;
-> +	case CPU_PM_EXIT:
-> +
-> +		if (atomic_read(&pmu_context->sys_rebooting))
-> +			return NOTIFY_OK;
-> +
-> +		gs101_cpu_pmu_online(cpu);
-> +
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block gs101_cpu_pm_notifier = {
-> +	.notifier_call = gs101_cpu_pm_notify_callback,
-> +	.priority = INT_MAX	/* we want to be called first */
+    // You can set and use 'arg' whenever you want. You can set it at init time
+    // in create_menu() function or at run time.
+    void *arg;
 
-You should say why. Everyone wants to be the first.
+    // Function that will be called when the user inputs a valid menu option
+    // number. 'func' is a function pointer.
+    void *(*func)(struct menu_item *mis_arr, int index_in_mis_arr);
+};
 
-> +};
-> +
-> +static int exynos_cpupm_reboot_notifier(struct notifier_block *nb,
-> +					unsigned long event, void *v)
-> +{
-> +	switch (event) {
-> +	case SYS_POWER_OFF:
-> +	case SYS_RESTART:
-> +		atomic_set(&pmu_context->sys_rebooting, 1);
-> +		break;
-> +	}
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block exynos_cpupm_reboot_nb = {
-> +	.priority = INT_MAX,
-> +	.notifier_call = exynos_cpupm_reboot_notifier,
-> +};
-> +
->  static int exynos_pmu_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct regmap_config pmu_regmcfg;
->  	struct regmap *regmap;
->  	struct resource *res;
-> -	int ret;
-> +	int ret, cpu;
->  
->  	pmu_base_addr = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(pmu_base_addr))
-> @@ -444,6 +539,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
->  			 */
->  			dev_warn(&pdev->dev, "pmu-intr-gen syscon unavailable\n");
->  		} else {
-> +			pmu_context->hotplug_ing = alloc_percpu(bool);
-> +
-> +			/* set PMU to power on */
-> +			for_each_online_cpu(cpu)
-> +				gs101_cpuhp_pmu_online(cpu);
-> +
->  			cpuhp_setup_state(CPUHP_BP_PREPARE_DYN,
->  					  "soc/exynos-pmu:prepare",
->  					  gs101_cpuhp_pmu_online, NULL);
-> @@ -451,6 +552,12 @@ static int exynos_pmu_probe(struct platform_device *pdev)
->  			cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
->  					  "soc/exynos-pmu:online",
->  					  NULL, gs101_cpuhp_pmu_offline);
-> +
-> +			cpu_pm_register_notifier(&gs101_cpu_pm_notifier);
-> +			spin_lock_init(&pmu_context->cpupm_lock);
-> +			atomic_set(&pmu_context->sys_rebooting, 0);
-> +			atomic_set(&pmu_context->sys_suspended, 0);
-> +			register_reboot_notifier(&exynos_cpupm_reboot_nb);
->  		}
->  	}
->  
-> @@ -471,10 +578,32 @@ static int exynos_pmu_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PM_SLEEP
-> +static int exynos_cpupm_suspend_noirq(struct device *dev)
-> +{
-> +	atomic_set(&pmu_context->sys_suspended, 1);
-> +	return 0;
-> +}
-> +
-> +static int exynos_cpupm_resume_noirq(struct device *dev)
-> +{
-> +	atomic_set(&pmu_context->sys_suspended, 0);
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops cpupm_pm_ops = {
-> +	.suspend_noirq = exynos_cpupm_suspend_noirq,
-> +	.resume_noirq = exynos_cpupm_resume_noirq,
+// function prototypes for gcc flag -Werror-implicit-function-declaration
+static char *get_input_from_stdin_and_discard_extra_characters(char *str,
+                                                               int size);
+static void discard_all_characters_from_stdin(void);
+static int is_str_a_number(const char *str);
+static char *get_string_input_from_user(char *str, int size);
+static int get_numeric_input_from_user(char *str, int size,
+                                       int *number_ptr);
+static int get_valid_option_from_user(void);
 
-SET_LATE_SYSTEM_SLEEP_PM_OPS or one of other wrappers.
+// mis_arr means menu items array
+static void print_menu(struct menu_item *mis_arr);
+static void create_menu(struct menu_item *mis_arr);
+static void create_and_display_menu_and_process_user_input(void);
 
-> +};
-> +#endif
-> +
->  static struct platform_driver exynos_pmu_driver = {
->  	.driver  = {
->  		.name   = "exynos-pmu",
->  		.of_match_table = exynos_pmu_of_device_ids,
-> +#ifdef CONFIG_PM_SLEEP
-> +		.pm = &cpupm_pm_ops,
+static void *get_number_from_user(struct menu_item *mis_arr,
+                                  int index_in_mis_arr);
+static void *show_saved_number(struct menu_item *mis_arr, int index_in_mis_arr);
+static void *show_sum_of_digits_of_number(struct menu_item *mis_arr,
+                                          int index_in_mis_arr);
+static void *delete_saved_number(struct menu_item *mis_arr,
+                                 int index_in_mis_arr);
+static void *exit_program(struct menu_item *mis_arr, int index_in_mis_arr);
 
-pm_ptr
-> +#endif
->  	},
->  	.probe = exynos_pmu_probe,
->  };
-> 
+/*
+ * get_input_from_stdin_and_discard_extra_characters():
+ *
+ *      Function get_input_from_stdin_and_discard_extra_characters() reads at
+ *      most (size - 1) characters from stdin and stores them in 'str'.
+ *      One character is used to null terminate 'str'. The rest of the
+ *      remaining characters in stdin are read and discarded, they are not
+ *      stored in 'str'. So, when this function returns then there is no
+ *      input/characters left in stdin.
+ *
+ *      If 'str' is NULL then it is an error and nothing is read from stdin and
+ *      NULL is returned.
+ *
+ *      If 'size' is greater than 'MAX_STR_SIZE_ALLOWED' or less than
+ *      'MIN_STR_SIZE_ALLOWED' then it is an error and nothing is read from
+ *      stdin and NULL is returned.
+ */
+static char *get_input_from_stdin_and_discard_extra_characters(char *str,
+                                                               int size)
+{
 
+    int c = 0;
+    int i = 0;
 
-Best regards,
-Krzysztof
+    if (str == NULL) {
+        return NULL;
+    }
+
+    if ((size < MIN_STR_SIZE_ALLOWED) || (size > MAX_STR_SIZE_ALLOWED)) {
+        return NULL;
+    }
+
+    for (i = 0; i < (size - 1); i = i + 1) {
+
+        c = getchar();
+
+        if ((c == '\n') || (c == EOF)) {
+            str[i] = 0;
+            return str;
+        }
+
+        str[i] = (char)(c);
+
+    } // end of for loop
+
+    str[i] = 0;
+
+    // discard the rest of the input
+    while ((c = getchar()) && (c != '\n') && (c != EOF));
+
+    return str;
+
+} // end of function get_input_from_stdin_and_discard_extra_characters()
+
+static void discard_all_characters_from_stdin(void)
+{
+
+    int c = 0;
+
+    // discard all characters from stdin
+    while ((c = getchar()) && (c != '\n') && (c != EOF));
+
+    return;
+
+} // end of function discard_all_characters_from_stdin()
+
+/*
+ * is_str_a_number():
+ *
+ *      Function is_str_a_number() expects only numeric characters in 'str'.
+ *
+ *      This function returns STR_NUM_TRUE only when all the following
+ *      conditions are met:
+ *
+ *              ** 'str' is not null.
+ *              ** The first character of 'str' is not the null terminating
+ *                 character.
+ *              ** Length of 'str' is less than MAX_STR_SIZE_ALLOWED.
+ *              ** 'str' contains only numeric characters before the null
+ *                 terminating character.
+ *
+ *      In all other cases, this function returns STR_NUM_FALSE.
+ */
+static int is_str_a_number(const char *str)
+{
+
+    char c = -1;
+
+    if (str == NULL) {
+        return STR_NUM_FALSE;
+    }
+
+    if (str[0] == '\0') { // empty string
+        return STR_NUM_FALSE;
+    }
+
+    // If length of 'str' is not less than MAX_STR_SIZE_ALLOWED then it is an
+    // error and in this case, return STR_NUM_FALSE.
+    if (strnlen(str, MAX_STR_SIZE_ALLOWED) == MAX_STR_SIZE_ALLOWED) {
+        return STR_NUM_FALSE;
+    }
+
+    while ((c = *str)) {
+        if ((c < '0') || (c > '9')) {
+            return STR_NUM_FALSE;
+        }
+        str++;
+    }
+
+    return STR_NUM_TRUE;
+
+} // end of function is_str_a_number()
+
+static char *get_string_input_from_user(char *str, int size)
+{
+
+    char *retval = NULL;
+
+    if (str == NULL) {
+        return NULL;
+    }
+
+    if ((size < MIN_STR_SIZE_ALLOWED) || (size > MAX_STR_SIZE_ALLOWED)) {
+        return NULL;
+    }
+
+    retval = get_input_from_stdin_and_discard_extra_characters(str, size);
+
+    // If retval is NULL then print an error message and exit.
+    if (retval == NULL) {
+        printf("\n\nError: %s(): %s() returned NULL. Some BUG in this program."
+               " Exiting..\n\n", __FUNCTION__,
+               "get_input_from_stdin_and_discard_extra_characters");
+
+        exit(1);
+    }
+
+    return str;
+
+} // end of function get_string_input_from_user()
+
+static int get_numeric_input_from_user(char *str, int size,
+                                       int *number_ptr)
+{
+
+    char *retval = NULL;
+
+    if ((str == NULL) || (number_ptr == NULL)) {
+        return TM_FAILURE;
+    }
+
+    if ((size < MIN_STR_SIZE_ALLOWED) || (size > MAX_STR_SIZE_ALLOWED)) {
+        return TM_FAILURE;
+    }
+
+    retval = get_string_input_from_user(str, size);
+
+    // If retval is NULL then print an error message and exit.
+    if (retval == NULL) {
+        printf("\n\nError: %s(): get_string_input_from_user() returned NULL."
+               " Some BUG in this program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (is_str_a_number(str) != STR_NUM_TRUE) {
+        return TM_FAILURE;
+    }
+
+    // convert string to int
+    (*number_ptr) = atoi(str);
+
+    return TM_SUCCESS;
+
+} // end of function get_numeric_input_from_user()
+
+static int get_valid_option_from_user(void)
+{
+
+    char str[OPTION_NUMBER_SIZE] = {0};
+    int option = -1;
+    int retval = -1;
+
+    printf("\n");
+
+    // keep looping until a valid option is received
+    do {
+
+        printf("Please enter a valid option (1 - %d) (only numeric characters"
+               " allowed): ", TOTAL_NUMBER_OF_MENU_ITEMS);
+
+        retval = get_numeric_input_from_user(str, OPTION_NUMBER_SIZE, &option);
+
+        if (retval != TM_SUCCESS) {
+            continue;
+        }
+
+    } while ((option < 1) || (option > TOTAL_NUMBER_OF_MENU_ITEMS));
+
+    return option;
+
+} // end of function get_valid_option_from_user()
+
+// mis_arr means menu items array
+static void print_menu(struct menu_item *mis_arr)
+{
+
+    int i = 0;
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    printf("\n\n");
+
+    printf("----\n");
+    printf("Menu\n");
+    printf("----\n");
+    printf("\n");
+
+    for (i = 0; i < TOTAL_NUMBER_OF_MENU_ITEMS; i++) {
+        printf("%d. %s\n", (i + 1), mis_arr[i].menu_item_string);
+    }
+
+    return;
+
+} // end of function print_menu()
+
+static void create_menu(struct menu_item *mis_arr)
+{
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    // 1st menu item
+    strncpy(mis_arr[0].menu_item_string, "Input a number (this number will be"
+            " saved)", MENU_ITEM_STRING_SIZE);
+    mis_arr[0].menu_item_string[MENU_ITEM_STRING_SIZE - 1] = 0;
+    mis_arr[0].arg = NULL;
+    mis_arr[0].func = get_number_from_user;
+
+    // 2nd menu item
+    strncpy(mis_arr[1].menu_item_string, "Show the saved number",
+            MENU_ITEM_STRING_SIZE);
+    mis_arr[1].menu_item_string[MENU_ITEM_STRING_SIZE - 1] = 0;
+    mis_arr[1].arg = NULL;
+    mis_arr[1].func = show_saved_number;
+
+    // 3rd menu item
+    strncpy(mis_arr[2].menu_item_string, "Show the sum of the digits of the"
+            " saved number", MENU_ITEM_STRING_SIZE);
+    mis_arr[2].menu_item_string[MENU_ITEM_STRING_SIZE - 1] = 0;
+    mis_arr[2].arg = NULL;
+    mis_arr[2].func = show_sum_of_digits_of_number;
+
+    // 4th menu item
+    strncpy(mis_arr[3].menu_item_string, "Delete the saved number",
+            MENU_ITEM_STRING_SIZE);
+    mis_arr[3].menu_item_string[MENU_ITEM_STRING_SIZE - 1] = 0;
+    mis_arr[3].arg = NULL;
+    mis_arr[3].func = delete_saved_number;
+
+    // 5th menu item
+    strncpy(mis_arr[4].menu_item_string, "Exit this program",
+            MENU_ITEM_STRING_SIZE);
+    mis_arr[4].menu_item_string[MENU_ITEM_STRING_SIZE - 1] = 0;
+    mis_arr[4].arg = NULL;
+    mis_arr[4].func = exit_program;
+
+    return;
+
+} // end of function create_menu()
+
+static void create_and_display_menu_and_process_user_input(void)
+{
+
+    struct menu_item *mis_arr = NULL;
+    char confirm_str[CONFIRMATION_STR_SIZE] = {0};
+    int option = -1;
+    char *retval = NULL;
+    char confirmation = -1;
+
+    // Allocate memory for the array of menu items.
+    // This memory will be freed automatically by the system when this program
+    // exits. As long as this program is running, this memory will not be freed.
+    mis_arr = calloc(TOTAL_NUMBER_OF_MENU_ITEMS, sizeof(*mis_arr));
+
+     if (mis_arr == NULL) {
+        printf("\n\nError: %s(): No memory available. Exiting..\n\n",
+               __FUNCTION__);
+        exit(1);
+    }
+
+    // create menu
+    create_menu(mis_arr);
+
+    // infinite loop, keep processing until user exits
+    while (1) {
+
+        print_menu(mis_arr);
+
+        option = get_valid_option_from_user();
+
+        printf("\n");
+
+        // confirm that the user want to proceed with the selected option
+        while (1) {
+
+            printf("You selected option number %d (\"%s\"). Do you want to"
+                   " proceed (only 'y' and 'n' allowed): ", option,
+                   mis_arr[option - 1].menu_item_string);
+
+            retval = get_string_input_from_user(confirm_str,
+                                                CONFIRMATION_STR_SIZE);
+
+            // If retval is NULL then print an error message and exit.
+            if (retval == NULL) {
+                printf("\n\nError: %s(): get_string_input_from_user() returned"
+                       " NULL. Some BUG in this program. Exiting..\n\n",
+                       __FUNCTION__);
+                exit(1);
+            }
+
+            if ((strncmp(confirm_str, "y", CONFIRMATION_STR_SIZE) == 0) ||
+                (strncmp(confirm_str, "n", CONFIRMATION_STR_SIZE) == 0)) {
+                confirmation = confirm_str[0];
+                break;
+            }
+
+        } // end of inner while (1) loop
+
+        if (confirmation == 'n') {
+            // Wait for the user to press the ENTER key before showing the menu
+            // again.
+            printf("\n\nPress the ENTER key to see the menu again.. ");
+            discard_all_characters_from_stdin();
+            continue;
+        }
+
+        // call the appropriate function
+        (mis_arr[option - 1].func)(mis_arr, option - 1);
+
+        // Wait for the user to press the ENTER key before showing the menu
+        // again.
+        printf("\n\nPress the ENTER key to see the menu again.. ");
+
+        discard_all_characters_from_stdin();
+
+    } // end of outer while (1) loop
+
+    // unreachable code
+    return;
+
+} // end of function create_and_display_menu_and_process_user_input()
+
+static void *get_number_from_user(struct menu_item *mis_arr,
+                                  int index_in_mis_arr)
+{
+
+    char str[NUMERIC_INPUT_STR_SIZE] = {0};
+    int number = -1;
+    int retval = -1;
+    int i = 0;
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (index_in_mis_arr < 0) {
+        printf("\n\nError: %s(): Argument 'index_in_mis_arr' is less than zero."
+               " Some BUG in this program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    printf("\n");
+
+    // keep looping until a positive number is received
+    while (1) {
+
+        printf("Please enter a positive number (only numeric characters"
+               " allowed) (the number will be truncated to 4 digits)(the"
+               " previously saved number will be replaced): ");
+
+        retval = get_numeric_input_from_user(str, NUMERIC_INPUT_STR_SIZE,
+                                             &number);
+
+        if (retval == TM_SUCCESS) {
+            break;
+        }
+
+    } // end of while (1) loop
+
+    // Make the number available to all menu items functions.
+    for (i = 0; i < TOTAL_NUMBER_OF_MENU_ITEMS; i++) {
+           mis_arr[i].arg = (void *)((long)(number));
+    }
+
+    printf("\n\nThe number you entered is: %d\n", number);
+
+    return NULL;
+
+} // end of function get_number_from_user()
+
+static void *show_saved_number(struct menu_item *mis_arr, int index_in_mis_arr)
+{
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (index_in_mis_arr < 0) {
+        printf("\n\nError: %s(): Argument 'index_in_mis_arr' is less than zero."
+               " Some BUG in this program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (mis_arr[index_in_mis_arr].arg == NULL) {
+        printf("\n\nThere is no saved number. Please first input a number by"
+               " selecting menu option 1.\n");
+        return NULL;
+    }
+
+    printf("\n\nThe saved number is: %d\n",
+           (int)((long)(mis_arr[index_in_mis_arr].arg)));
+
+    return NULL;
+
+} // end of function show_saved_number()
+
+static void *show_sum_of_digits_of_number(struct menu_item *mis_arr,
+                                          int index_in_mis_arr)
+{
+
+    int num = -1;
+    int sum_of_digits = 0;
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (index_in_mis_arr < 0) {
+        printf("\n\nError: %s(): Argument 'index_in_mis_arr' is less than zero."
+               " Some BUG in this program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (mis_arr[index_in_mis_arr].arg == NULL) {
+        printf("\n\nThere is no saved number. Please first input a number by"
+               " selecting menu option 1.\n");
+        return NULL;
+    }
+
+    num = (int)((long)(mis_arr[index_in_mis_arr].arg));
+
+    while (num) {
+        sum_of_digits = sum_of_digits + (num % 10);
+        num = num/10;
+    }
+
+    printf("\n\nThe sum of the digits of the saved number (%d) is: %d\n",
+           (int)((long)(mis_arr[index_in_mis_arr].arg)), sum_of_digits);
+
+    return NULL;
+
+} // end of function show_sum_of_digits_of_number()
+
+static void *delete_saved_number(struct menu_item *mis_arr,
+                                 int index_in_mis_arr)
+{
+
+    int i = 0;
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (index_in_mis_arr < 0) {
+        printf("\n\nError: %s(): Argument 'index_in_mis_arr' is less than zero."
+               " Some BUG in this program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (mis_arr[index_in_mis_arr].arg == NULL) {
+        printf("\n\nThere is no saved number. Please first input a number by"
+               " selecting menu option 1.\n");
+        return NULL;
+    }
+
+    // Remove the number from all mis_arr array elements
+    for (i = 0; i < TOTAL_NUMBER_OF_MENU_ITEMS; i++) {
+           mis_arr[i].arg = NULL;
+    }
+
+    printf("\n\nThe saved number has been deleted.\n");
+
+    return NULL;
+
+} // end of function delete_saved_number()
+
+static void *exit_program(struct menu_item *mis_arr, int index_in_mis_arr)
+{
+
+    if (mis_arr == NULL) {
+        printf("\n\nError: %s(): Argument 'mis_arr' is NULL. Some BUG in this"
+               " program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    if (index_in_mis_arr < 0) {
+        printf("\n\nError: %s(): Argument 'index_in_mis_arr' is less than zero."
+               " Some BUG in this program. Exiting..\n\n", __FUNCTION__);
+        exit(1);
+    }
+
+    printf("\n\nYou chose the option number: %d\n", index_in_mis_arr + 1);
+
+    printf("The text of this option is: \"%s\"\n",
+           mis_arr[index_in_mis_arr].menu_item_string);
+
+    printf("\n\nExiting..\n\n\n");
+
+    exit(0);
+
+} // end of function exit_program()
+
+int main(void)
+{
+
+    create_and_display_menu_and_process_user_input();
+
+    return 0;
+
+} // end of function main()
+
+-----------------
+ReadMe.txt
+-----------------
+
+You can use this program (text_menu_for_user.c) if you want to present a text
+menu to the user and process the user input and keep repeating this cycle until
+the user exits this program.
+
+If you want to use this program according to your requirements then you have
+to make some changes in this program. These changes are not a lot. You need
+to make the changes listed below:
+
+     ** Change the value of 'TOTAL_NUMBER_OF_MENU_ITEMS' according to the
+        number of menu items that you have.
+
+     ** Change the value of 'MENU_ITEM_STRING_SIZE' according to your
+        requirements.
+
+     ** Check other defined constants to see if you need to modify their
+        values because of your requirements.
+
+     ** Modify the menu items details in create_menu() function according
+        to your requirements and implement your new functions.
+
+     ** Delete dummy_function() and its declaration.
+
+This program presents a menu to the user and asks the user to input a valid
+menu option. After the user has inputted a valid menu option, this program
+executes the function associated with that menu option. After the associated
+function finishes, this program presents the menu again to the user and this
+goes on in a cycle until the user exits this program.
+
+---- End of ReadMe ----
