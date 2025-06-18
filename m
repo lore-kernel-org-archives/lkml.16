@@ -1,103 +1,174 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0553A1DB;
-	Wed, 18 Jun 2025 05:27:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982D03A1DB;
+	Wed, 18 Jun 2025 05:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750224473; cv=none; b=qWrN7Mvn+r3HH3Ak2tmDOkqkBytwPtBLvVJcy+nBFgffjs4ooCL3hfaRUt0ww8KOpj6+t+yut1p8+ZdlH+1dMiQlYk+ZtjgZWhOvTqDxiF571UEwASvCSWsxwo0tdf0aTVgHJnN4d2bPKoic6d6h1H6+Wd6f4iLis2oQ8VCubx4=
+	t=1750224546; cv=none; b=X2WW8++i+DwfRlTSMYWbb3QvuAmA7UMWHzIFqdbIzY20EYK9jYrFK2ywX+xLOoVkcDI7m3u+FA5sBKL4zKUvSWUApgqUici7FrzlZ0et1/SMItg0pcwdNJZak9Jfy4GtXrn7I55sma5Ua7cbp7zQxkoJc1lUs8eDW40XhYZBElA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750224473; c=relaxed/simple;
-	bh=dTOUd3rxOM5ABmHhQR7xQTSuiU+Zbz9Gd/d9Ce6CNeA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lwa3KCb1JnEvqlS+dxzXK5ow6CsalqPr6o5qHJ8KJW8dg2r1K0d/sZs6ViPjOH/N2NqCExqnMEU7bGE0NL2da+DjoQpkefZ1aVZWJahNwmZjmBhaF0n9HzsoHbFXjQGuYQ0ywr0Rt3sPUn5sCMCBZ/agrsOw+vV7o7v6f03NMoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=F2uP2R1D; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+	s=arc-20240116; t=1750224546; c=relaxed/simple;
+	bh=/rNLnBj6xqJ6tGe2PfPPwmW9RkWk2HKA65poVRfVGJQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fgB62/H2CZfRS7ypOntaFaHPAVBCvviiBTTzX+A4xb+IalFcyMfUrZYpzo2pYVFeN6sUYHVS1qjA9oh1ggv+O3/Ar4OylLKJzUcMghhgPI+llcgo+XSYVsB27jDA59HEZgLeibusY/e+oBOs/pQyFlMebouG0O1uSfYQl1bys9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjzLUPxC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="F2uP2R1D"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=1uNx4XCscIMDxHJEBBZ1W6p4eJHT017FfmnCVTXjIw4=; b=F2uP2R1Dw8BRdUiR3t2pgUw8mS
-	5mF4ZAa5my55EWzQlXFeA8QyIWFDPTrsgwQQWCm2B1u8+SMXMY/q68I97rfDJcBeFbZeQpdYJrq9W
-	rJvF+ntl7C7Dsjk4lYXM83l25BXQkJF8nMwirRacQIaekTHE5XuYbsr47JbiaREuR8KKVlzTNsJ+Z
-	yVPMfw0ScEjtjxpYV2Tx3GCZRzA3KFU9WcN9ykqRmXXESAD0q7jWt8wFl3wKyMEdeoiMTKbyDigKm
-	seivu1J223/a+rro7bT7jp8zMkF9BzcMkn3XVFaToor/jWr8pqLqnSh5sVR/DjN0UUhqArI6Z0og3
-	K6TeOnkg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRlKt-00000005yBg-3UiG;
-	Wed, 18 Jun 2025 05:27:48 +0000
-Date: Wed, 18 Jun 2025 06:27:47 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com,
-	almaz.alexandrovich@paragon-software.com, brauner@kernel.org,
-	jack@suse.cz, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ntfs3@lists.linux.dev,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] fs: Prevent non-symlinks from entering pick link
-Message-ID: <20250618052747.GQ1880847@ZenIV>
-References: <685120d8.a70a0220.395abc.0204.GAE@google.com>
- <tencent_7FB38DB725848DA99213DDB35DBF195FCF07@qq.com>
- <20250618045016.GO1880847@ZenIV>
- <20250618050200.GP1880847@ZenIV>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjzLUPxC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1892C4CEE7;
+	Wed, 18 Jun 2025 05:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750224546;
+	bh=/rNLnBj6xqJ6tGe2PfPPwmW9RkWk2HKA65poVRfVGJQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=cjzLUPxCtqlNK0aTCh6dlgrKURZMAjPJt1jeDFfjA3LPdr7+G/M3Kb3I7OrEDy//A
+	 9rqvf7w+Pj8uZvCvlgEbLoGQxEQdZEGM90oLJEqGodr8bghJb6aYKmwczdpOt+hF0L
+	 qZhqaLJdYj3OhwZl1E8+xTYutdQwJYtkcj2PqFkMyAlD7+viEJtZRsyIo/4JxpJuPG
+	 6fbij/QOuiU5tXdR+Z6ZfM2RLDBuK4NVmeDdCwrpvdEZnqUIz5DRQE1ey46Ed+y38/
+	 fiaGF90yGhvQgStg0q3lEW93tMHQg4JTE9n4pTYltf2AWkJKOkP+ZVV8LvjU/Z2XcD
+	 JzxQZI2lqESCQ==
+X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
+From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: "Tian, Kevin" <kevin.tian@intel.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH] iommufd: Destroy vdevice on device unbind
+In-Reply-To: <20250617183452.GG1376515@ziepe.ca>
+References: <20250610065146.1321816-1-aneesh.kumar@kernel.org>
+ <BN9PR11MB527606182417BB7A35349F598C74A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250612172645.GA1011960@ziepe.ca>
+ <BN9PR11MB5276B467ADCC57BC6571CA458C77A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250613124202.GD1130869@ziepe.ca> <yq5abjqotim7.fsf@kernel.org>
+ <BN9PR11MB527633CA2F698E83E12BFBD68C70A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <20250616164941.GA1373692@ziepe.ca> <yq5azfe6ssev.fsf@kernel.org>
+ <20250617183452.GG1376515@ziepe.ca>
+Date: Wed, 18 Jun 2025 10:59:00 +0530
+Message-ID: <yq5awm99sjmr.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618050200.GP1880847@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2025 at 06:02:00AM +0100, Al Viro wrote:
-> On Wed, Jun 18, 2025 at 05:50:16AM +0100, Al Viro wrote:
-> 
-> > NAK.  This is not the first time that garbage is suggested and no,
-> > we are not going to paper over that shite in fs/namei.c.
-> > 
-> > Not going to happen.
-> > 
-> > You ARE NOT ALLOWED to call make_bad_inode() on a live inode, period.
-> > Never, ever to be done.
-> > 
-> > There's a lot of assertions it violates and there's no chance in
-> > hell to plaster each with that kind of checks.
-> > 
-> > Fix NTFS.  End of story.
-> 
-> To elaborate a bit: if you look at the end of e.g. their attr_set_size(),
-> you'll see
-> out:
->         if (is_bad) {
-> bad_inode:
-> 		_ntfs_bad_inode(&ni->vfs_inode);
-> 	}
-> 	return err;
-> }
-> 
-> This is a bug.  So are similar places all over the place there.
-> You are not supposed to use make_bad_inode() as a general-purpose
-> "something went wrong, don't wanna see it anymore" tool.
-> 
-> And as long as it stays there, any fuzzing reports of ntfs are pretty
-> much worthless - any of those places (easily located by grepping for
-> _ntfs_bad_inode) can fuck the kernel up.  Once ntfs folks get around
-> to saner error recovery, it would make sense to start looking into
-> fuzzing that thing again.  Until then - nope.  Again, this is *NOT*
-> going to be papered over in a random set of places (pretty certain
-> to remain incomplete) in VFS.
+Jason Gunthorpe <jgg@ziepe.ca> writes:
 
-Note that anything that calls __d_add(dentry, inode) with is_bad_inode(inode)
-(or d_add(), or d_instantiate(), or d_splice_alias() under the same conditions)
-is also FUBAR.
+> On Tue, Jun 17, 2025 at 01:37:04PM +0530, Aneesh Kumar K.V wrote:
+>=20=20
+>> How do we reclaim that object id for further reuse?=20
+>
+> Maybe just don't? Userspace did something it shouldn't, it now leaked
+> 8 bytes of kernel memory until the FD is closed.
+>
 
-So's anything that calls make_bad_inode() on a struct inode that might be
-in process of being passed to one of those functions by another thread.
+Between the two sequences below, Sequence 1 is the correct one, since we
+want the object ID to be released after calling ioctl(DESTROY,
+vdevice_id), right?
 
-This is fundamentally wrong; bad inodes are not supposed to end up attached
-to dentries.
+Sequence 1 (Correct):
+
+close(vfio_cdev)          =E2=86=92 triggers vdevice destruction=20=20
+ioctl(DESTROY, vdevice_id) =E2=86=92 reclaims vdevice object ID=20=20
+close(iommufd)=20=20
+
+Sequence 2:
+
+ioctl(DESTROY, vdevice_id) =E2=86=92 returns EBUSY=20=20
+close(vfio_cdev)           =E2=86=92 triggers vdevice destruction=20=20
+close(iommufd)=20=20
+
+Just to confirm: We agree that an EBUSY return from ioctl(DESTROY,
+vdevice_id) is expected if it's called before vfio_df_unbind_iommufd(),
+correct?
+
+>> is it that if there is a request for a iommufd_object_remove() with obje=
+ct
+>> refcount > 1, we insert a XA_ZERO_ENTRY and convert that to NULL entry
+>> on IOMMU_DESTROY?
+>
+> Oh no we can't do that, if the refcount is elevated that is a problem,
+> it means some thread somewhere is using that memory.
+>
+> We can sleep and wait for shortterm_users to go to zero and if users
+> is still elevated then we are toast. WARN_ON and reatin it in the
+> xarray and hope for the best.
+>
+> So the thread that will trigger the detruction needs to have a users
+> refcount of 1. Meaning users needs to be one while idle in the xarray,
+> and the idevice destruction will obtain a users=3D2 from its pointer
+> under some kind of lock.
+>
+>> -enum {
+>> -	REMOVE_WAIT_SHORTTERM =3D 1,
+>> -};
+>> +#define	REMOVE_WAIT_SHORTTERM	BIT(0)
+>> +#define	REMOVE_OBJ_FORCE	BIT(1)
+>
+> You can keep the enum for flags, but 'force' isn't the right name. I
+> would think it is 'tombstone'
+>
+
+These values represent bit flags (e.g., 1, 2, 4, ...), meaning they are
+not mutually exclusive and can be combined using bitwise operations. As
+such, using an enum=E2=80=94which is typically intended for mutually exclus=
+ive
+values=E2=80=94is not appropriate in this case?
+
+>
+>> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+>> index b7aa725e6b37..d27b61787a53 100644
+>> --- a/drivers/iommu/iommufd/main.c
+>> +++ b/drivers/iommu/iommufd/main.c
+>> @@ -88,7 +88,8 @@ struct iommufd_object *iommufd_get_object(struct iommu=
+fd_ctx *ictx, u32 id,
+>>=20=20
+>>  	xa_lock(&ictx->objects);
+>>  	obj =3D xa_load(&ictx->objects, id);
+>> -	if (!obj || (type !=3D IOMMUFD_OBJ_ANY && obj->type !=3D type) ||
+>> +	if (!obj || xa_is_zero(obj) ||
+>> +	    (type !=3D IOMMUFD_OBJ_ANY && obj->type !=3D type) ||
+>>  	    !iommufd_lock_obj(obj))
+>
+> xa_load can't return xa_is_zero(), xas_load() can
+>
+> We already use XA_ZERO_ENTRY to hold an ID during allocation till
+> finalize.
+>
+> I think you want to add a new API
+>
+> iommufd_object_tombstone_user(idev->ictx, &idev->vdev->obj);
+>
+> Which I think is the same as the existing
+> iommufd_object_destroy_user() except it uses tombstone..
+>
+> The only thing tombstone does is:
+>
+> 	xas_store(&xas, (flags & REMOVE_OBJ_TOMBSTONE) ? XA_ZERO_ENTRY : NULL);
+>
+> All the rest of the logic including the users and shorterm check would
+> be the same.
+>
+>> --- a/drivers/iommu/iommufd/viommu.c
+>> +++ b/drivers/iommu/iommufd/viommu.c
+>> @@ -213,6 +213,8 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd =
+*ucmd)
+>>  	/* vdev lifecycle now managed by idev */
+>>  	idev->vdev =3D vdev;
+>>  	refcount_inc(&vdev->obj.users);
+>> +	/* Increment refcount since userspace can hold the obj id */
+>> +	refcount_inc(&vdev->obj.users);
+>>  	goto out_put_idev_unlock;
+>
+> I don't think this should change.. There should be no extra user refs
+> or userspace can't destroy it.
+>
+> The pointer back from the idevice needs locking to protect it while a
+> refcount is obtained.
+>
+> Jason
+
+-aneesh
