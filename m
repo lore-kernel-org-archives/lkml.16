@@ -1,75 +1,46 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9023085AA;
-	Wed, 18 Jun 2025 17:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBC12F5480;
+	Wed, 18 Jun 2025 17:53:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750269231; cv=none; b=KgliT5G5z9w4QMfkcACFYayFKGOkHbZaceyD6rD9YZYWNK4+oWj8MqkQg0gBESw6yw202HPim26+tFfasF/j9ND/NbfOk1RSVn17joDHGl22wyyKg45xk8o3A6sw5fT6AQ6CndWIx5PTq5sQsBjgK1ANxCv/MG/uoeXXkmjmWYI=
+	t=1750269234; cv=none; b=VIEt0pcdGEb59hX9OKcaYz2VsSaye8h6ziYOlnBfQ4cm/78LNG4JP8/SQg0RONQ9rCBY3QlMOCIvGzdb/n1fi6mg2JGAj6erBefMgr4E6Ci3lSfaLQc6ukmZb1LCZbVLuqYBQK2msfBDr+F8yZoY1RN2zBIXPoZVZ7Uk/mN8+d4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750269231; c=relaxed/simple;
-	bh=WELV8YgJbvt6iCJoz5AP8I6DHYf0HK+MqHNweU5Vmyg=;
+	s=arc-20240116; t=1750269234; c=relaxed/simple;
+	bh=h4mZR4L8DMHgoTdYqIGRaiW/N6mev87wAnioYI8PwI8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WdVJvWKJZtGWHii8kRwvZp/DB/K+r8qClE8awmwHb6N368ZJ30bAXYyT+ayR1/4K1axYLx0eetGctbT3gyzO/BxjFECKtHnOv4tQQISrTlAsbymBQWsfZBY8FNhYa8+gCHIvoTaAUB0X67pkeuS/XQeLsbSPbBzo3FNxfBjWk3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=faZ9iWuv; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rBypMgc9IbbIKRDasx0gTCf+gZjaIEmqra3CEur6BvL3lRFGTQn0UjaKD5zlyTWI2Y6SpZV/4mQ5ksuENpolpO4UgRMpQ4SkL/xUW/V6EIoA/2YbThLg/eakEOlpatVs4O8HXGMHnGHHmsB3X+vwC7d97S9iO/h+96x/m5xQubI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNCiOie4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faZ9iWuv"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5534edc646dso7722850e87.1;
-        Wed, 18 Jun 2025 10:53:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750269227; x=1750874027; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p84+wxDg4u34Lm55oq6WOvopLTPICI6s2ti0ZOixglA=;
-        b=faZ9iWuvmBscANSMtFaZTE9sENYnfXJtQ+bw2MPcejXU5kjf3fUJ4+lYbwrc2OIRFQ
-         keaxnEtF/BHttY7J6oy8Y4bV0wZsiosLjdnnDap46Sj2KcPnlwR5zhl3iehb7eQv9P1g
-         yC/5d7dSo3gqL4Zg1A4qRVkQ/l3L33MKYZ7/WM7J26bpzoJUkZwN2DahEwVF4qpGqXS5
-         vItdM4/oDe4OcXv4n1/GXRsac5ne09t3fQQXIIvIv1tYRC/k7vLNM38Eugzo0+CYKExx
-         LEOlVsgPpc1pkKsNanlpX4FrnA6XqjoidVw8Dke+9w25XgzmP9zocu8cC9YZcPx7eCQP
-         WCgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750269227; x=1750874027;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p84+wxDg4u34Lm55oq6WOvopLTPICI6s2ti0ZOixglA=;
-        b=UFDZHi0xC72zNIPrT3aAYw7EDF+lKQUfMAm04zCTigWLW+flR+Ous7KV/jetVyw6l8
-         3U0asSoaZIwC0jHS0cyFFh2EbIpPnP/ZtWytfZ+xJFw5e1fP1XqAp4eHFosamUt5SlOG
-         NVGNN4gGjohbvKwPGDZcaCs0Ms/nIasZo4Axb25adjSHP25sD5rbww/i+zgkKIj+ad1g
-         tSEfiMjWFi3PzYg2a/4+w7MXs0842s7d3l241a02LnocpnOmNJn4+YcWL5UyvOjUIWkJ
-         ZXE9ULG2VGmSdvnLn0gb3emcl6+V3YPuBloyC3hgvcfXRgWXYocA7HgmjbYvMdNy6yje
-         gGBA==
-X-Forwarded-Encrypted: i=1; AJvYcCURA34HL4ouOcTtlZYibouYEcO5VxAXKqsg0NfIaAh4vvq+pS8ARfjdCUKPkMNpWdThKrSNxpeTEo4OMWar@vger.kernel.org, AJvYcCV8rLHezivod82P/A7DajNDaKOiqL5JemTItDpEufC0zwYY/XRPwpd8hB7N77HRPmqdUmSsTAQSz5H8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhfHOw9xq34uGLguGeYzgqQdVgNL8fGiPTX22iYygnfwc+l5gT
-	kmxLKSl2Mh3aji76imkiNngswlcP2NidA15E47VH8UzbGmXV7YWAXEIc
-X-Gm-Gg: ASbGncs64VV6MGrWKViuxx1GVAIdmLngHId5zaMDXhE1Vhi9bj+8jhsESgJl59F5wyV
-	CAQntUToiGNy1G+CgMuoWotbqto8dcQp2qytmy3gcpSz0B7ZEXJxD3Gfzd652nbMfgM1P5w4tVo
-	ZzSpejSPBvwZRWBRoUnBZ+p0uNwBW5qW9y1oiYpEDQL1oqZpa80MsRe6DUVrYCPOqaZs/dX1lFy
-	QG5gV40Qcaw5VI4eelYwlx66Z091+278njhOle4FiR9nlaLfgB4GTsGnmQJGyUgZrbUGpwGDc/E
-	yg1mfyv3uUnXP3a7oH/y/b56CsZy+fLLV62BoCIqfqzWyTkKY/FSkIGZt0o53hDBDZFexa2QHpc
-	IwA==
-X-Google-Smtp-Source: AGHT+IEw2MUxlg+9z0zOxwI2HIbA//xXYjnaeyhIQ0EYOe7raQRMF7DADSBZ+e1Qc+mzPINdbbw/jg==
-X-Received: by 2002:a05:6512:1193:b0:553:a272:4d18 with SMTP id 2adb3069b0e04-553b6ee2b8cmr5915844e87.20.1750269227022;
-        Wed, 18 Jun 2025 10:53:47 -0700 (PDT)
-Received: from localhost (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
-        by smtp.gmail.com with UTF8SMTPSA id 2adb3069b0e04-553ac11ff75sm2315299e87.26.2025.06.18.10.53.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jun 2025 10:53:46 -0700 (PDT)
-Date: Wed, 18 Jun 2025 19:53:46 +0200
-From: Klara Modin <klarasmodin@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Avi Fishman <avifishman70@gmail.com>, 
-	Tomer Maimon <tmaimon77@gmail.com>, Tali Perry <tali.perry1@gmail.com>, 
-	Patrick Venture <venture@google.com>, Nancy Yuen <yuenn@google.com>, 
-	Benjamin Fair <benjaminfair@google.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: mmio: don't use legacy GPIO chip setters
-Message-ID: <twqaezumdhalpivd46xkevzbfkwouwfrpr7wbw7yjeqcxberzv@sp36opkfttne>
-References: <20250618-gpio-mmio-fix-setter-v1-0-2578ffb77019@linaro.org>
- <20250618-gpio-mmio-fix-setter-v1-2-2578ffb77019@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNCiOie4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45765C4CEE7;
+	Wed, 18 Jun 2025 17:53:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750269233;
+	bh=h4mZR4L8DMHgoTdYqIGRaiW/N6mev87wAnioYI8PwI8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YNCiOie4EqOv+10zJtVBrCF6ZgRLEVNdEkovuci31D5/6f11EqINSMiNU8emmIWjc
+	 gdYbBVWnRKUd5Njp1/gHqMRbbKYjUAhzB78U74IIjyQRsO4YJYVH6sglE6I9D6eaNs
+	 /WCpWH1PoHwZGhTNPLfyK0enMcNCBTtWwGsbwqEXqDo+PQnOGNk0g6B4ezgR/gRZM6
+	 nsV8HED+6ltKre98jxLvxsH+OxEaGHne/eSftt40YgS4G97VLdnPG/IODxlYqfknl4
+	 /UR7izQUMBDI+YSUQ+8Nx3lxR3OhaPkjghE7PpksPs+CUrFH2AN4S2GM7YptKRShPy
+	 MTt99/+tCO+xg==
+Date: Wed, 18 Jun 2025 23:23:50 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: T Pratham <t-pratham@ti.com>, "David S. Miller" <davem@davemloft.net>,
+	Kamlesh Gurudasani <kamlesh@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>,
+	Manorit Chawdhry <m-chawdhry@ti.com>, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] crypto: ti: Add driver for DTHE V2 AES Engine
+ (ECB, CBC)
+Message-ID: <aFL9LsQQdG3WTjUD@vaman>
+References: <20250603124217.957116-1-t-pratham@ti.com>
+ <20250603124217.957116-3-t-pratham@ti.com>
+ <aElSKF88vBsIOJMV@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,90 +49,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618-gpio-mmio-fix-setter-v1-2-2578ffb77019@linaro.org>
+In-Reply-To: <aElSKF88vBsIOJMV@gondor.apana.org.au>
 
-On 2025-06-18 15:02:07 +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 11-06-25, 17:53, Herbert Xu wrote:
+> On Tue, Jun 03, 2025 at 06:07:29PM +0530, T Pratham wrote:
+> >
+> > +	// Need to do a timeout to ensure finalise gets called if DMA callback fails for any reason
+> > +	ret = wait_for_completion_timeout(&rctx->aes_compl, msecs_to_jiffies(DTHE_DMA_TIMEOUT_MS));
 > 
-> We've converted this driver to using the new GPIO line value setters but
-> missed the instances where the legacy callback is accessed directly using
-> the function pointer. This will lead to a NULL-pointer dereference as
-> this pointer is no longer populated. The issue needs fixing locally as
-> well as in the already converted previously users of gpio-mmio.
+> This doesn't look safe.  What if the callback is invoked after a
+> timeout? That would be a UAF.
 > 
-> Fixes: b908d35d0003 ("gpio: mmio: use new GPIO line value setter callbacks")
-> Reported-by: Klara Modin <klarasmodin@gmail.com>
-> Closes: https://lore.kernel.org/all/2rw2sncevdiyirpdovotztlg77apcq2btzytuv5jnm55aqhlne@swtts3hl53tw/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpio-74xx-mmio.c | 2 +-
->  drivers/gpio/gpio-en7523.c    | 2 +-
->  drivers/gpio/gpio-mmio.c      | 6 +++---
->  3 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-74xx-mmio.c b/drivers/gpio/gpio-74xx-mmio.c
-> index c7ac5a9ffb1fd1cc9439e3320d54574bf0cebbf6..3ba21add3a1c669171578ceaf9cc1728c060d401 100644
-> --- a/drivers/gpio/gpio-74xx-mmio.c
-> +++ b/drivers/gpio/gpio-74xx-mmio.c
-> @@ -100,7 +100,7 @@ static int mmio_74xx_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
->  	struct mmio_74xx_gpio_priv *priv = gpiochip_get_data(gc);
->  
->  	if (priv->flags & MMIO_74XX_DIR_OUT) {
-> -		gc->set(gc, gpio, val);
-> +		gc->set_rv(gc, gpio, val);
->  		return 0;
->  	}
->  
-> diff --git a/drivers/gpio/gpio-en7523.c b/drivers/gpio/gpio-en7523.c
-> index 69834db2c1cf26be379c0deca38dda889202f706..c08069d0d1045e9df4a76cad4600bf25d4e3a7c5 100644
-> --- a/drivers/gpio/gpio-en7523.c
-> +++ b/drivers/gpio/gpio-en7523.c
-> @@ -50,7 +50,7 @@ static int airoha_dir_set(struct gpio_chip *gc, unsigned int gpio,
->  	iowrite32(dir, ctrl->dir[gpio / 16]);
->  
->  	if (out)
-> -		gc->set(gc, gpio, val);
-> +		gc->set_rv(gc, gpio, val);
->  
->  	iowrite32(output, ctrl->output);
->  
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index 9169eccadb238efe944d494054b1e009f16eee7f..57622f45d33e0695f97c7e0fa40e64f9fd5df1e0 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -362,7 +362,7 @@ static int bgpio_dir_out_err(struct gpio_chip *gc, unsigned int gpio,
->  static int bgpio_simple_dir_out(struct gpio_chip *gc, unsigned int gpio,
->  				int val)
->  {
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->  
->  	return bgpio_dir_return(gc, gpio, true);
->  }
-> @@ -427,14 +427,14 @@ static int bgpio_dir_out_dir_first(struct gpio_chip *gc, unsigned int gpio,
->  				   int val)
->  {
->  	bgpio_dir_out(gc, gpio, val);
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->  	return bgpio_dir_return(gc, gpio, true);
->  }
->  
->  static int bgpio_dir_out_val_first(struct gpio_chip *gc, unsigned int gpio,
->  				   int val)
->  {
-> -	gc->set(gc, gpio, val);
-> +	gc->set_rv(gc, gpio, val);
->  	bgpio_dir_out(gc, gpio, val);
->  	return bgpio_dir_return(gc, gpio, true);
->  }
-> 
-> -- 
-> 2.48.1
-> 
+> Does the DMA engine provide any timeout mechanism? If not, then
+> you could do it with a delayed work struct.  Just make sure that
+> you cancel the work struct in the normal path callback.  Vice versa
+> you need to terminate the DMA job in the timeout work struct.
 
-This also fixes the null pointer dereference for me on the Banana Pi
-BPI-F3 from my report.
+Typically no. Most of the hardware may not have capability, so we have
+apis to terminate.
 
-Thanks,
-Tested-by: Klara Modin <klarasmodin@gmail.com>
+-- 
+~Vinod
