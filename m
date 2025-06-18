@@ -1,60 +1,62 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602A2A932;
-	Wed, 18 Jun 2025 03:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067B81DD9AC;
+	Wed, 18 Jun 2025 03:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750216646; cv=none; b=uLfV6AqvgSPKXn7fvBnrmHJ477Qf0Z9Y4Qi+YcWTdQdlmpwT5+kOB4z0LPz/twoqLYyLAsHQVUgcM8yVLWcQFWKrYnHMneVnLxdAVbh5dPc5cJbEr1XuXXLVwn3pJW6Ae3OAcPE+UJwRAqTQ1smqEx5pn7BBA6/JKn1KGs1/AXE=
+	t=1750216653; cv=none; b=iDZ4EESghewLqX0VyokGMIbjWM/n9wl14ntgB4SwcuJzMNK1yDBBK00qPblpWy8E7hVNWC3Irm6NpFsDqpI5HV+LLJOfkVCBDR6FfVXYwPr8BFkU40RDatdGx194yAPiV5X0loI+G0I/GHQ0tW+8Rz6mSVHqdH9TIery0TubytE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750216646; c=relaxed/simple;
-	bh=PSC9uwFmqurhpZtLHXOgxkWlEluD6N2z6rNFS1ks+Ns=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h8asJDR8l5ltWYGLME256QxmMAEXFLlaOxqBrbz3QtJxQ46H2omNvj75Ge/rKvGVFPJlWohRnx3oJHp0skaAkToKpzgu8k32dxtee5C5n5LK6r5EvCrZiky3cypH2bMD9MVkxRsKuZ2AnROeA2h9Xxqh8m/txGjdpysXwzcH1lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ExE6Hxjs; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1750216653; c=relaxed/simple;
+	bh=9WOaxE3LCm/+eHOUl/ASfJhT6s3N74YJM4Mwqqwh3rE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kkVci9IHw+BuUEBUjadnAthq6MnoGv69G1be7E/LRKvstnIDv59PmL1g6Ib5Y7ty6LkGzlrXBKRVpgD8hAKMl9ZLFyEluH0NkNdq3b8dp6LYBvqALBhAn8V3eCrZvotXjla7Q7xUHREolrnYQOf2bRsJqEpB5fSdJrVQMvxC5Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jgVIqmxb; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ExE6Hxjs"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-235f9e87f78so67507255ad.2;
-        Tue, 17 Jun 2025 20:17:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jgVIqmxb"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-23633a6ac50so93669315ad.2;
+        Tue, 17 Jun 2025 20:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750216644; x=1750821444; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=GQGaLq2baAwhJzTt92V9qBoLp4XNZKm0/A2Citd6R/U=;
-        b=ExE6HxjsBWBW5+SftaDQPHIQJOTmZrokd+fr6Hff3py7nCXHAGf88fGj9DtmQBDwB4
-         p+WUfRwczjOEM2Zg+OCCYU9IQZrb++LDFLkc+bnsHlqlYBJFEVjgFj930EkmypuKL0Vj
-         8EZAHLzvixEEbxBypt30WWPyhh142SFTBl0XNxPFhanjWDozUSelucuP5Es/j3go03vo
-         qUEPA7zxp9sTsCtcGoFvFmb/0gtM/I60Ykg+XaN7k6E9nW0vZid90J8KIGpqPf9VZm+K
-         NIkhvKOYzx6HYp6iQlOfseTrjlG3LAPdAfMwPL88EziCYS5g+VC1h0l864NoZWKaRfVR
-         /wEw==
+        d=gmail.com; s=20230601; t=1750216651; x=1750821451; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QL915nnifSKujTPSpiOOuMQduAOxvrKpwnj9qgnMTJ4=;
+        b=jgVIqmxbu2scvCd7BFro0wd48chaTG/kBY88vgXacc+e3ZpMxH1BySvyRwfiQ+PH91
+         T61+jpAko8QblbY66am8kL3lVpE57VAMjN2Ltw0UB0D2IHsHeWnrwcwaeCyMwwvqxrlX
+         rWb8PYC7jpRRozz4nwyy28qeh6OaBZbTVP06/2SAb1GAEDNsq8F6hXJ5wLnzzdhUNRIn
+         3h85/mSZW6ot8nEXmLhzR2OWxVga8hw/R8d67ZsjPUkqaV3ystIhgfyCr1stBld4ezQ6
+         qribZyni2GouM1V4R0fJsV4qedSPmHMCtFVqzj/KG4/0k6ukXgAhAesXG++RSjL6H5hL
+         d02Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750216644; x=1750821444;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GQGaLq2baAwhJzTt92V9qBoLp4XNZKm0/A2Citd6R/U=;
-        b=dKL+P9+1Ixba/Xle0im7MfeuqAgKzXZC254hlRNmFgid5vf+NC/XxZGzKuImH6m3VK
-         jx+HZvmOpFQV2uc9kvS718zhxFsqnU5s6uxeT72ihAfTALsaaKYcL/All6emyo4fvcAd
-         mK5dF43NTeLwOqDicq7HMvc4Fr+Pv+jboGflYAPjigL3eocLyF16THzGD/jkY7jZmDCO
-         azQAdtZgPJ/ur/xYwumb/jZRcW3ptIA3LPbRRTXImpsUPLmKyny5sWLvL0YQnhOYlULR
-         DlnAR8gMpQGlh1bV83FidaZj6Em8K5xp7RqzqgXy/ngZGqmso9nQhdR8FLZHrFfh9zzD
-         bxBg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0JHUU9I8pHKOpDwI3hETfHZdpEEj3kXJbFW0fsl2E9acDkicIgQFRSd25Px4Pf/iXpqLkDnyZcpI=@vger.kernel.org, AJvYcCXTSLZHtgCNHv0kttuESq98QMmABWqbv2J8rnsyWv4lUj9H8EUzsgkQUEyrHpsLY+X2EBBes1wSpHelyMdU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZ0iPXqvZ4+t1SDcaaO11sM2nWVGMwVAIJ7SpqXq190H18i09u
-	wy1GXFvQrzezqoyv8+krjxlzXVSLKILvs7G2OL6MzghwMtlVepZDWHTz
-X-Gm-Gg: ASbGnctKGYOP5jLUAzNeaCa//FSSbeZezX63nT2yqGwzwQj6tumaf5PKIiF9AjJhWjR
-	iYFH66vaHycfbe9KQ5FbFaQRajK8ijFRY+5o03C4R3rln87uUjhPE+1UxhOwyGSbaMmBvTpI7v3
-	Z6HWS/ieu4IDIEJSUEcAWTFnCvCTZt06iP9hQLzw4H0No2lwBsy3eaE1RBUuoMBXayFzyThHb6l
-	vDWlMUgtoMGpg21Youk4xNeIvwHPz2OxEvWjac5glog6Un46CuyECB0r1GK330F2sCc4KHVfVrc
-	VNmLWis/gnRxxUsfeCquu76UQLRfNhEYAQs54LkoQKGU66GbmqI8C65nVi8YZVXnLQ==
-X-Google-Smtp-Source: AGHT+IEoChv6n+emNe4ei9eRrB5OBtaHmbTA5+MJDZ1rMtxjXRKiy/fmwd4ch4Ac3ZrpycCLvS+JPg==
-X-Received: by 2002:a17:902:d510:b0:234:8ec1:4aec with SMTP id d9443c01a7336-2366afd3a0emr194909075ad.6.1750216644524;
-        Tue, 17 Jun 2025 20:17:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750216651; x=1750821451;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QL915nnifSKujTPSpiOOuMQduAOxvrKpwnj9qgnMTJ4=;
+        b=NTsdgYKGOeLiq0eVtZxEStDVrYTs3DDsvqI2ve1dbgGsClcuv0fe3eTgkOCy89AFNd
+         2H30AaTSS28Rm286YtB48sW6hd0kS+QKe27yBONnongTqm2SY61kXQN3r3gnKzu2zrjs
+         H0V/6NBgiZ+MjlRYU/4bmfykEfAjmqHa9llG8ZLX5tqdciJYTtOyPu1Wv+vnL8NjyZ7X
+         E5E+uWzcy7Y2H6Q+mvlRqsNmqiR6ciVeus/RPMctaRh2ng2qzBu5qOXg+/sVlseeGjEr
+         Vp+IoJ+qzpHoq+2OzjzvG2wP48G5YePQ3SCLINMnQIOgA5IOBKtlPJRU2y+yoGGqCdRm
+         6n5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWNlXjwc50epzsMa6b0zTLvyuCyHdVK8iV6ATBG1rXX1NvxuM1T7pGNH+hs6vANT01EleNbZRjcQLl/4dDE@vger.kernel.org, AJvYcCWn9gLTHeA9k/vuEdAkzprHtfztouShgO4sCcsRCOr4HeziwUbD134ploFN0f6n0omPgg4QVn1+coM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyqqR7J2uF5C6fovuOA+X0pKm2mMFaoINGAz588KOYgBr/GySH/
+	h6NOgx66/UH1kZwM/Htnb67cOlM34rlOnto4HVRk50IAz9su6py7jC3I
+X-Gm-Gg: ASbGnctMIC2GfzJ/gdTw6r2kBjKhAIgy1SILy8nZPfuuFxb4ktuvgCXHECwbGYkKH55
+	U4v3zA7cqPGHbfTQCaKpdcalm5ETBvdIHWqVOrTWSb2mUcvkcRXiswglggIQcY9yYj/OE8+Sd1R
+	1q8pAundPAJzjjBsaR8VcsnlgWXuOyDa99iKSIwI9nML/ZvvRQuEQyFfn2dT+Pe/ktv0lZoQ9Xr
+	6D6TVOkVIVRh1kTq7s+8VcLRH9+ohNq9C2MZPC+iA/ErBKuz9a5DkVywqylesR3kwoRRBG/cjkj
+	kyPOPqMxhu8FIBdaaW5rdWIfua42AUWlXCeeKLh3HG4gENCAF9c2NyTi0y9zthWG1A==
+X-Google-Smtp-Source: AGHT+IGevqF23RYle86b3gblSZ2n1YkwD8f203Lu+qLcDNwukM+M7pNeux2fhYFE+uTv2RfU7e5NIw==
+X-Received: by 2002:a17:902:ea0d:b0:234:8e54:2d53 with SMTP id d9443c01a7336-2366b3f8713mr237977515ad.45.1750216651231;
+        Tue, 17 Jun 2025 20:17:31 -0700 (PDT)
 Received: from localhost.localdomain ([2804:14c:31:2ce1::1005])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dfdb9a0sm89179545ad.239.2025.06.17.20.17.21
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365dfdb9a0sm89179545ad.239.2025.06.17.20.17.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Jun 2025 20:17:24 -0700 (PDT)
+        Tue, 17 Jun 2025 20:17:30 -0700 (PDT)
 From: Andrew Ijano <andrew.ijano@gmail.com>
 X-Google-Original-From: Andrew Ijano <andrew.lopes@alumni.usp.br>
 To: jic23@kernel.org
@@ -66,10 +68,12 @@ Cc: andrew.lopes@alumni.usp.br,
 	jstephan@baylibre.com,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 0/4] iio: accel: sca3000: simplify by using newer infrastructure
-Date: Wed, 18 Jun 2025 00:12:15 -0300
-Message-ID: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
+Subject: [PATCH v6 2/4] iio: accel: sca3000: clean sca3000_read_data()
+Date: Wed, 18 Jun 2025 00:12:17 -0300
+Message-ID: <20250618031638.26477-3-andrew.lopes@alumni.usp.br>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
+References: <20250618031638.26477-1-andrew.lopes@alumni.usp.br>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,45 +82,60 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The sca3000 driver is old and could be simplified by using newer
-infrastructure.
+Clean internal sca3000_read_data() helper by removing unnecessary
+arguments and return logic.
 
 Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
 Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
 Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
-Suggested-by: Jonathan Cameron <jic23@kernel.org>
 ---
-v5 -> v6:
-- break up changes related to read data helpers in two patches
-- fix formatting
-- add local scope for switch() cases that use guard()
-- use sysfs_emit_at() instead of sprintf()
+ drivers/iio/accel/sca3000.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-v4 -> v5:
-- break up the changes in three patches
-- replace error_ret labels by simple returns
-- use spi_w8r16be() for be16 reads
-- use guard(mutex) for handling mutex lock
-
-v3 -> v4:
-- clean the code and remove redundant operations
-
-v2 -> v3:
-- replace usages of internal read data helpers by spi helpers
-
-v1 -> v2:
-- simplify the return of the internal read data function
----
-Andrew Ijano (4):
-  iio: accel: sca3000: replace usages of internal read data helpers by
-    spi helpers
-  iio: accel: sca3000: clean sca3000_read_data()
-  iio: accel: sca3000: use lock guards
-  iio: accel: sca3000: use sysfs_emit_at() instead of sprintf()
-
- drivers/iio/accel/sca3000.c | 384 ++++++++++++++----------------------
- 1 file changed, 145 insertions(+), 239 deletions(-)
-
+diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
+index c85a06cbea37..7145b4541264 100644
+--- a/drivers/iio/accel/sca3000.c
++++ b/drivers/iio/accel/sca3000.c
+@@ -939,7 +939,6 @@ static const struct attribute_group sca3000_attribute_group = {
+ 
+ static int sca3000_read_data(struct sca3000_state *st,
+ 			     u8 reg_address_high,
+-			     u8 *rx,
+ 			     int len)
+ {
+ 	int ret;
+@@ -949,18 +948,15 @@ static int sca3000_read_data(struct sca3000_state *st,
+ 			.tx_buf = st->tx,
+ 		}, {
+ 			.len = len,
+-			.rx_buf = rx,
++			.rx_buf = st->rx,
+ 		}
+ 	};
+ 
+ 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
+ 	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+-	if (ret) {
++	if (ret)
+ 		dev_err(&st->us->dev, "problem reading register\n");
+-		return ret;
+-	}
+-
+-	return 0;
++	return ret;
+ }
+ 
+ /**
+@@ -984,8 +980,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
+ 		 * num_available is the total number of samples available
+ 		 * i.e. number of time points * number of channels.
+ 		 */
+-		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR, st->rx,
+-					num_available * 2);
++		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR, num_available * 2);
+ 		if (ret)
+ 			goto error_ret;
+ 		for (i = 0; i < num_available / 3; i++) {
 -- 
 2.49.0
 
