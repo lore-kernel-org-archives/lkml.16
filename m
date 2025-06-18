@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DDD815D1;
-	Wed, 18 Jun 2025 08:45:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDF82820B9;
+	Wed, 18 Jun 2025 08:45:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750236327; cv=none; b=cb8AmvPzmjcSfmhg/ui3JoZRxqRr3dhHkIFwuu53HWtt/BbHTab1IQqZ+YV9Zcflj8p8D2CsSxPvaukn05FfwyYmxF9jNgJDXTRh62WSsdmnyV0w+OVWHAvMvYZg0T+73khJG5fFtLDppnUZK5Z6EpEQKh0FBp1bQaq2CbK5nsE=
+	t=1750236330; cv=none; b=MFckJI8BH2ArfXIgpNzqo4obiXZ2O7pnWUyY31Mf40eecIHu0wfDncBJsZuhBZcnShIMdP4QhgCD2ezTKs9V+6zLYnipeEAk+n1y6WbrI8eMeIwQQuTSnEMVeoLgb4+U/vcf5pMbuORm//VDl7YkE8VMotk2pwznDOCsZ8ze+Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750236327; c=relaxed/simple;
-	bh=cmsvfv56amC5Sa8cFhMOnu4EsHj1UIUNeVTlNt1rxag=;
+	s=arc-20240116; t=1750236330; c=relaxed/simple;
+	bh=YVJN70PPzT45Ed+Rn7QD3cSXjFB9D3eO316oNojiBiM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EB/KAdQ23qoHYeRHsKThSsnI7fc6bHhLbsFlMtOVRi9WgFSLYfmDLmX3claPRWVCe2N0/2uW3zzC3Xj0oXzfga4jnw9/hDYEJgdCxt4G2a8zIGMFWW0e0gLlFNtcBvDteNCEK5o/gGqZI1LJxnM6zcjkcJ6UgDl/Q/ej1RLml4Y=
+	 MIME-Version; b=WsKz0vGwvG/8baB9mj8C0poX2zmhqrtxedF49mIL70Datrf05jQiecD0DwSRfAdIAkLCmdQHg891oGTBOgCJyxqVEWL7jTRrvigstHZAHJITm8JuR+rTRAk3UmOSJkXjaTy0r5slkWJc/K1rC+thW2up5mFr2U0fOSkZ4knG4ac=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC3C014BF;
-	Wed, 18 Jun 2025 01:45:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8566A14BF;
+	Wed, 18 Jun 2025 01:45:07 -0700 (PDT)
 Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5329E3F66E;
-	Wed, 18 Jun 2025 01:45:23 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D71AC3F66E;
+	Wed, 18 Jun 2025 01:45:25 -0700 (PDT)
 From: Yeoreum Yun <yeoreum.yun@arm.com>
 To: catalin.marinas@arm.com,
 	pcc@google.com,
@@ -35,9 +35,9 @@ Cc: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: [PATCH v9 03/10] arm64/kvm: expose FEAT_MTE_TAGGED_FAR feature to guest
-Date: Wed, 18 Jun 2025 09:45:06 +0100
-Message-Id: <20250618084513.1761345-4-yeoreum.yun@arm.com>
+Subject: [PATCH v9 04/10] tools/kselftest: add MTE_FAR hwcap test
+Date: Wed, 18 Jun 2025 09:45:07 +0100
+Message-Id: <20250618084513.1761345-5-yeoreum.yun@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250618084513.1761345-1-yeoreum.yun@arm.com>
 References: <20250618084513.1761345-1-yeoreum.yun@arm.com>
@@ -49,52 +49,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-expose FEAT_MTE_TAGGED_FAR feature to guest.
+add MTE_FAR hwcap test on kselftest.
 
 Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+Reviewed-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/kvm/sys_regs.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ tools/testing/selftests/arm64/abi/hwcap.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 76c2f0da821f..c8c92cb9da01 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1586,7 +1586,7 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
- 				       const struct sys_reg_desc *r)
- {
- 	u32 id = reg_to_encoding(r);
--	u64 val;
-+	u64 val, mask;
+diff --git a/tools/testing/selftests/arm64/abi/hwcap.c b/tools/testing/selftests/arm64/abi/hwcap.c
+index 35f521e5f41c..e60bfb798ba2 100644
+--- a/tools/testing/selftests/arm64/abi/hwcap.c
++++ b/tools/testing/selftests/arm64/abi/hwcap.c
+@@ -1098,6 +1098,12 @@ static const struct hwcap_data {
+ 		.sigill_fn = hbc_sigill,
+ 		.sigill_reliable = true,
+ 	},
++	{
++		.name = "MTE_FAR",
++		.at_hwcap = AT_HWCAP3,
++		.hwcap_bit = HWCAP3_MTE_FAR,
++		.cpuinfo = "mtefar",
++	},
+ };
  
- 	if (sysreg_visible_as_raz(vcpu, r))
- 		return 0;
-@@ -1617,8 +1617,12 @@ static u64 __kvm_read_sanitised_id_reg(const struct kvm_vcpu *vcpu,
- 		val &= ~ARM64_FEATURE_MASK(ID_AA64PFR1_EL1_MPAM_frac);
- 		break;
- 	case SYS_ID_AA64PFR2_EL1:
--		/* We only expose FPMR */
--		val &= ID_AA64PFR2_EL1_FPMR;
-+		mask = ID_AA64PFR2_EL1_FPMR;
-+
-+		if (kvm_has_mte(vcpu->kvm))
-+			mask |= ID_AA64PFR2_EL1_MTEFAR;
-+
-+		val &= mask;
- 		break;
- 	case SYS_ID_AA64ISAR1_EL1:
- 		if (!vcpu_has_ptrauth(vcpu))
-@@ -2878,7 +2882,9 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 				       ID_AA64PFR1_EL1_MPAM_frac |
- 				       ID_AA64PFR1_EL1_RAS_frac |
- 				       ID_AA64PFR1_EL1_MTE)),
--	ID_WRITABLE(ID_AA64PFR2_EL1, ID_AA64PFR2_EL1_FPMR),
-+	ID_WRITABLE(ID_AA64PFR2_EL1,
-+		    ID_AA64PFR2_EL1_FPMR |
-+		    ID_AA64PFR2_EL1_MTEFAR),
- 	ID_UNALLOCATED(4,3),
- 	ID_WRITABLE(ID_AA64ZFR0_EL1, ~ID_AA64ZFR0_EL1_RES0),
- 	ID_HIDDEN(ID_AA64SMFR0_EL1),
+ typedef void (*sighandler_fn)(int, siginfo_t *, void *);
 -- 
 LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
 
