@@ -1,182 +1,122 @@
-Received: from mail-ot1-f80.google.com (mail-ot1-f80.google.com [209.85.210.80])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A725E237708
-	for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 14:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E7B237708;
+	Fri, 20 Jun 2025 14:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750429544; cv=none; b=d71syteyLG1odsmbi5ApX0RZST95K+kQpvMEMrfbmF5Bj8iZGphp68CYAeUJU8f8T2EvUpuYziLtGjKqziorej8MjdBOwt2MsRhYGjU9Wmsg6p+Y+ZpQgI2PhorLQCbtfs2ARCEtdJst6NlPwIQ5lgBYHq2GmP6D0jWKAcf8XCg=
+	t=1750429548; cv=none; b=J2nl4+Ojt0UQ88DnCWPkrOKtGlPe7kDjHT8f77ThK+0TkGrkfzREX5/5OgqxUH/YG4PMG7W6AFK6yuZL3efboYnU4UBzoNykbAMzdFrfJRlaHBBMWSMWMzFfQZnBxiYv7/CS37j32uslfkTwE6BwP4quii4brBzvJyW5QARoxG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750429544; c=relaxed/simple;
-	bh=8HkaNlz/z1RF1iFtvf3rQwBjKFiBjnp+npALTuGZSxA=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=itT4IUOr/BZd7Raa66hAtJ79a0w30ygY4OPtYLoxEjTgmar1TaRdxjhz4GdgvthehcdMskFnK64oDfXexoBSixnQVbIUrUrrvA0U2OQEzpR/rkQsDY/Efy4taL67Bln4GW7Wn2mZUG1yojvdUpLcLH7q+hiIcjG70eiaFTqlcD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.210.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-ot1-f80.google.com with SMTP id 46e09a7af769-735abe7be85so1221730a34.1
-        for <linux-kernel@vger.kernel.org>; Fri, 20 Jun 2025 07:25:42 -0700 (PDT)
+	s=arc-20240116; t=1750429548; c=relaxed/simple;
+	bh=7jyi2aExXsCpMgjGTB3Gp6G2Viuvd7hBtvNjogcC6oo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nwuEcGzl9tHHo2WpcGyuJsIOITcZEe3n5AzndZpXWBgFC5GtvqW+V4kPi1wfPP5jU3OAPYJLix/TIP1hEiFQPFjOLTb3fH3zhtA8fvfzK1fOwvVdTrRoLdYWUEIhxnhDHeeoy34Q7XMl5H9mASBddxHTnZcoQ4Ski33/b025tYo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PkSQ8SJS; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PkSQ8SJS"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-235ef62066eso24798105ad.3;
+        Fri, 20 Jun 2025 07:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750429547; x=1751034347; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mt0UxcsIQbrh7erVicbBBO1vqCNvobmzw4o72dRhMOc=;
+        b=PkSQ8SJSGdRtPDq3+Pf/sHMWo8B87EL2UT52FD6BL/AgAfi3yh+yFgQdXvsz1D8BZU
+         0DEfdwTwxrBfK6rHKduvTJwfC3g50sPvaX2iDDWmusM06gvB2MhEl1tw8Re6pX4R70j/
+         X9M01yEnday6UCfJ2v2cZSl1O2hY9sVRnzdFbhfCWQicE3OULOwxrSPWXfZMaHFcL19e
+         NyBEs2Uat2cBrUZ8zdJa/JrAKvDFqfKs4tPBD4zEenhVuZb6o9Q9CLyUhZU2/ISjxmPN
+         283pqTgQ7moEjSmz4+QbSErSEtQ92W/1vOcvjvBSBc0+bt0m5BDybGLcPgDxVh+MEidA
+         76aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750429542; x=1751034342;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KIuYEzj3Bif6xHXQrRqNZNi2f01/mYgvrmDFs7Ux7OQ=;
-        b=o7XlhwjOJLbtuvlIHj9T6e6ru1RYlTfCZ1Z0Y8ROW7d9P2aGrO8TaTffiNp2nqHeOk
-         rr8+fjC8Ro9DrGM+D9wQQ02IysD3LCpL1he8XKEbPabAjTyaIkzZZLoY/gjoC5oKb0VY
-         H+T9MU49WTaKclTvGPY2XbMUgEw06D9d9WcB76Eoa0j9SbFOC3QgTxrjRkveKRV5g8cG
-         5/PgS1MR8cf59xjW3PC5ulth7rlj1wsfqDJTvqAzWZM2Oe5mB+5f8yXO2aw/0rcKjUg7
-         UTIdDlhX3LVhaIziQnLaGA+47ypAjrq12TQdn2xFTn00ouDR4ZX3ZGtPQ6XDND7CFUmX
-         xvbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWn1v69aVNNWAz6Seby8bvmb6sWypWjQTpeSyRraAQPnD5hLVjuR4sRdz8OCCjnnl/gm30FisehcEqgCfY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy18jo3oNYLX1SXkuNvaic6pvGQm59SylVPgLPhbc2rwD9K3xXQ
-	zSKuW/7VkdWic3uduav2SV3tWdYVmFoxJRw6j2MiscSa5ivYE3+kieWKdcqTImNLSi+qho/2JuS
-	f2VALiLYNMK+2Rg5IPwA5XPmdFZJPOmxRMIwdpgEYjcLFeKDvfd9FWXOHJQ4=
-X-Google-Smtp-Source: AGHT+IEXiz8sVveXCQTPjG7tOrNybCKhuwdIDwWDwdtIv00EE8qa0rkZ3+oxvR+pBoU8uR5CxXxC7Y38HIFl91iYoZGmgbjOO0+w
+        d=1e100.net; s=20230601; t=1750429547; x=1751034347;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mt0UxcsIQbrh7erVicbBBO1vqCNvobmzw4o72dRhMOc=;
+        b=inmFBciLL4y2OWD2NqsYpthKVk+WTJ0y+j9/21K6iOgQ9dZK3CObrkNYKu0d1v30SW
+         gRjW+N7LXwBJEQhymaTUUMq4ObkZHiyrnlFKr+xHWwXDqquwV/e0DUnP3U7MBjBEDuvu
+         C1v/pbgJUScWGGgJiaQzQ+6blVMVXQF/cs4j+6jHeI5JBojMsGL8fMif+X/rzlQhwSE9
+         cjpUVCOYFx0aOHxN9iw/BGnCCvdPL0XtkXJzkMCMRMPEJxPVuawJFl5CanvHs4eXxmhZ
+         rp3i952tOW5TdbGKSbgHjw1bqH4n8wqdx52aZP34X6dfP5NzK8iETv/Fxo8CX63a42Mv
+         AVcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYkgJzNl9rblG3oIrfrUS1KKoTRTDVng+kQZvm846qQQDEHZ3Rb5RHYEnHsP6h7O2vZXtWXUwzJwc=@vger.kernel.org, AJvYcCWZDgegXh+9t3m9fE7wRr7bQ5vvP1hZKxD+k2EshnonFNfETgi3678ENaaPFUIORVx30k0QW5NKcTGm9uve@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywyh6mH0amuTKibvxC7J/u4v8FtFxP4RbYxs1JEBPkbCPkcCXU6
+	2dyaRrTo7UeTL/p9jikIwjLA/AHHi+y+n7jHwXFamBcVjXzu+Pa8keMzvbRrONB2oCd78ksC
+X-Gm-Gg: ASbGncsZ1NhDxmO8/9Tu5g3iM2183ypkOLOXkcRIdBAPedPOg3qix/6mhL2wDj1RXKS
+	v3a204Z3CCmZMkJ2h2O8hj+wDbVW5ndoAW4EqmzVCxhGOuxJ6vstwXplCKGAjxsZFOOoh1ZJ1Pw
+	u87GjMbjGWQSjopwXfsrybEYuVrq5MS29uwskkZZXj+CNZ/+doupnogt0EBZeZIxvQ1tXqSrS4p
+	kRjnpbtigHBUELLi3G0sslzgL6xPcBK74MR9yaLmErmFrCf9a9zwkL3X7KN3+mUmxc1M6+LU9ZU
+	lR9o8WQt9pYKSNg3BtUsXa+hcgf7Z3LfZ6nl3HPHSxiy17j14M8XeI+Ybyd5WvTXR1cEoYVLLBc
+	+
+X-Google-Smtp-Source: AGHT+IFll20vV4ynGEgWpnSAhVmzio10K+2+NYrQyup3kjW7y/aHFbbZ1VqDies/v11+K5p29Xl8nA==
+X-Received: by 2002:a17:903:1c6:b0:235:e9fe:83c0 with SMTP id d9443c01a7336-237d9852f68mr45071205ad.27.1750429546517;
+        Fri, 20 Jun 2025 07:25:46 -0700 (PDT)
+Received: from localhost.localdomain ([45.8.186.102])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860aeacsm19272025ad.119.2025.06.20.07.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Jun 2025 07:25:46 -0700 (PDT)
+From: Yuanye Ma <yuanye.ma20@gmail.com>
+To: jaegeuk@kernel.org,
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Cc: corbet@lwn.net,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yuanye Ma <yuanye.ma20@gmail.com>
+Subject: [PATCH] docs: f2fs: fix typos in f2fs.rst
+Date: Thu, 19 Jun 2025 06:55:46 +0800
+Message-ID: <20250618225546.104949-1-yuanye.ma20@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:19cc:b0:3dd:b540:b795 with SMTP id
- e9e14a558f8ab-3de3954f063mr26936825ab.3.1750429529031; Fri, 20 Jun 2025
- 07:25:29 -0700 (PDT)
-Date: Fri, 20 Jun 2025 07:25:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68556f59.a00a0220.137b3.004e.GAE@google.com>
-Subject: [syzbot] [net?] [ext4?] general protection fault in clip_push
-From: syzbot <syzbot+1316233c4c6803382a8b@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
-	kuba@kernel.org, linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This patch fixes two minor typos in Documentation/filesystems/f2fs.rst:
 
-syzbot found the following issue on:
+- "ramdom" → "random"
+- "reenable" → "re-enable"
 
-HEAD commit:    41687a5c6f8b Merge tag 'spi-fix-v6.16-rc2' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12ca5370580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
-dashboard link: https://syzkaller.appspot.com/bug?extid=1316233c4c6803382a8b
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17365d0c580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11cff5d4580000
+The changes improve spelling and consistency in the documentation.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-41687a5c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/c889133baca6/vmlinux-41687a5c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/288c0c860dbf/bzImage-41687a5c.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/ad66cd154f6a/mount_4.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=10818182580000)
+These issues were identified using the 'codespell' tool with the
+following command:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+1316233c4c6803382a8b@syzkaller.appspotmail.com
+  $ find Documentation/ -path Documentation/translations -prune -o \
+    -name '*.rst' -print | xargs codespell
 
-EXT4-fs: Ignoring removed oldalloc option
-EXT4-fs (loop0): 1 truncate cleaned up
-EXT4-fs (loop0): mounted filesystem 00000000-0000-0000-0000-000000000000 r/w without journal. Quota mode: writeback.
-Oops: general protection fault, probably for non-canonical address 0xdffffc000000001c: 0000 [#1] SMP KASAN NOPTI
-KASAN: null-ptr-deref in range [0x00000000000000e0-0x00000000000000e7]
-CPU: 0 UID: 0 PID: 5312 Comm: syz-executor180 Not tainted 6.16.0-rc2-syzkaller-00162-g41687a5c6f8b #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:clip_push+0x6dd/0x760 net/atm/clip.c:197
-Code: 20 8d aa 8c e8 e4 f6 5b fa 48 83 3d bc 23 64 0f 00 0f 85 94 f9 ff ff e8 a1 32 27 f7 48 8d bb e0 00 00 00 48 89 f8 48 c1 e8 03 <0f> b6 04 28 84 c0 75 3c 8b ab e0 00 00 00 49 8d bd 40 01 00 00 be
-RSP: 0018:ffffc9000d4e7898 EFLAGS: 00010202
-RAX: 000000000000001c RBX: 0000000000000000 RCX: ffff888000f3c880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000e0
-RBP: dffffc0000000000 R08: ffffffff8fa110f7 R09: 1ffffffff1f4221e
-R10: dffffc0000000000 R11: ffffffff8a9922e0 R12: ffffffff8a9922e0
-R13: ffff888031799000 R14: ffff8880429ce180 R15: ffff888031799578
-FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f074213de58 CR3: 000000003f358000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- vcc_destroy_socket net/atm/common.c:183 [inline]
- vcc_release+0x15a/0x460 net/atm/common.c:205
- __sock_release net/socket.c:647 [inline]
- sock_close+0xc0/0x240 net/socket.c:1391
- __fput+0x44c/0xa70 fs/file_table.c:465
- task_work_run+0x1d1/0x260 kernel/task_work.c:227
- exit_task_work include/linux/task_work.h:40 [inline]
- do_exit+0x6ad/0x22e0 kernel/exit.c:955
- do_group_exit+0x21c/0x2d0 kernel/exit.c:1104
- get_signal+0x1286/0x1340 kernel/signal.c:3034
- arch_do_signal_or_restart+0x9a/0x750 arch/x86/kernel/signal.c:337
- exit_to_user_mode_loop+0x75/0x110 kernel/entry/common.c:111
- exit_to_user_mode_prepare include/linux/entry-common.h:330 [inline]
- syscall_exit_to_user_mode_work include/linux/entry-common.h:414 [inline]
- syscall_exit_to_user_mode include/linux/entry-common.h:449 [inline]
- do_syscall_64+0x2bd/0x3b0 arch/x86/entry/syscall_64.c:100
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f07420ea849
-Code: Unable to access opcode bytes at 0x7f07420ea81f.
-RSP: 002b:00007f074209f198 EFLAGS: 00000246 ORIG_RAX: 00000000000000ca
-RAX: 0000000000000001 RBX: 00007f07421716c8 RCX: 00007f07420ea849
-RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 00007f07421716cc
-RBP: 00007f07421716c0 R08: 65732f636f72702f R09: 65732f636f72702f
-R10: 65732f636f72702f R11: 0000000000000246 R12: 00007f074213e56c
-R13: 00007f074209f1a0 R14: 0031656c69662f2e R15: 0000200000000000
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:clip_push+0x6dd/0x760 net/atm/clip.c:197
-Code: 20 8d aa 8c e8 e4 f6 5b fa 48 83 3d bc 23 64 0f 00 0f 85 94 f9 ff ff e8 a1 32 27 f7 48 8d bb e0 00 00 00 48 89 f8 48 c1 e8 03 <0f> b6 04 28 84 c0 75 3c 8b ab e0 00 00 00 49 8d bd 40 01 00 00 be
-RSP: 0018:ffffc9000d4e7898 EFLAGS: 00010202
-RAX: 000000000000001c RBX: 0000000000000000 RCX: ffff888000f3c880
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00000000000000e0
-RBP: dffffc0000000000 R08: ffffffff8fa110f7 R09: 1ffffffff1f4221e
-R10: dffffc0000000000 R11: ffffffff8a9922e0 R12: ffffffff8a9922e0
-R13: ffff888031799000 R14: ffff8880429ce180 R15: ffff888031799578
-FS:  0000000000000000(0000) GS:ffff88808d251000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f074213de58 CR3: 00000000403da000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	20 8d aa 8c e8 e4    	and    %cl,-0x1b177356(%rbp)
-   6:	f6 5b fa             	negb   -0x6(%rbx)
-   9:	48 83 3d bc 23 64 0f 	cmpq   $0x0,0xf6423bc(%rip)        # 0xf6423cd
-  10:	00
-  11:	0f 85 94 f9 ff ff    	jne    0xfffff9ab
-  17:	e8 a1 32 27 f7       	call   0xf72732bd
-  1c:	48 8d bb e0 00 00 00 	lea    0xe0(%rbx),%rdi
-  23:	48 89 f8             	mov    %rdi,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	0f b6 04 28          	movzbl (%rax,%rbp,1),%eax <-- trapping instruction
-  2e:	84 c0                	test   %al,%al
-  30:	75 3c                	jne    0x6e
-  32:	8b ab e0 00 00 00    	mov    0xe0(%rbx),%ebp
-  38:	49 8d bd 40 01 00 00 	lea    0x140(%r13),%rdi
-  3f:	be                   	.byte 0xbe
-
-
+Signed-off-by: Yuanye Ma <yuanye.ma20@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ Documentation/filesystems/f2fs.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
+index 440e4ae74e44..8eeb7ea14f61 100644
+--- a/Documentation/filesystems/f2fs.rst
++++ b/Documentation/filesystems/f2fs.rst
+@@ -218,7 +218,7 @@ mode=%s			 Control block allocation mode which supports "adaptive"
+ 			 fragmentation/after-GC situation itself. The developers use these
+ 			 modes to understand filesystem fragmentation/after-GC condition well,
+ 			 and eventually get some insights to handle them better.
+-			 In "fragment:segment", f2fs allocates a new segment in ramdom
++			 In "fragment:segment", f2fs allocates a new segment in random
+ 			 position. With this, we can simulate the after-GC condition.
+ 			 In "fragment:block", we can scatter block allocation with
+ 			 "max_fragment_chunk" and "max_fragment_hole" sysfs nodes.
+@@ -261,7 +261,7 @@ test_dummy_encryption=%s
+ 			 The argument may be either "v1" or "v2", in order to
+ 			 select the corresponding fscrypt policy version.
+ checkpoint=%s[:%u[%]]	 Set to "disable" to turn off checkpointing. Set to "enable"
+-			 to reenable checkpointing. Is enabled by default. While
++			 to re-enable checkpointing. Is enabled by default. While
+ 			 disabled, any unmounting or unexpected shutdowns will cause
+ 			 the filesystem contents to appear as they did when the
+ 			 filesystem was mounted with that option.
+-- 
+2.48.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
