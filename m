@@ -1,125 +1,143 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6E227A451
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:21:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B889D27A10A
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 21:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750281706; cv=none; b=TuZVgZxPeNUYURSPhBOujeMUuS6uGlfmofRmiTJqD7x9Y/c3zVjLE8lPNfbWLoMWlXxiM6jx55XNXk3/vfsAn9x9H3ABh9L6BUiFycn2p9s2nJMNdWzSFxBkeUm4Ead7F1elbmn78GniLjRe5kr5+c9tItOMknl0vxN5XubgRjY=
+	t=1750281746; cv=none; b=nEC5ALSu0p+iWZdHoau+WiBz1Uy46qwb83/qw6ZSdP0Im0QWDgQWjFffjDHHQAjkwdx83ZTXMqKXV33in4XI3ynprMqY5CtWZuOkmpnVxJrsHlF4k/LskomRSMwZx+J/a689EE2YP5BMHcJ9BtYJCltozXetasHyK8la/5msRj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750281706; c=relaxed/simple;
-	bh=3Q9A+Uy7HEpDEX/GYqxA+SpsZyCTOKE2HK1F7wsecDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FkUnKHwRCUtPAmq7eCrpCb8Mn1pjYkXLcZbKl9mRwqZCYY1Lwo/eiapWiMt+//9RQtRuGkdcCSL/4hX+sLHb0cUGZqurbOWRqtG/fFs24Uy3zUM1UG6MQheq3VYpsEq/EdrgJ8mYF1Y60zIO1qPalFx/K161f3pXfCx05yXXhAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=I+muPs9K; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="I+muPs9K"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ddcf0edef6so643805ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:21:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1750281704; x=1750886504; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7hzjQpLH9P4msqIcMls8fz15GHsVyIhA4zncYp2T3JY=;
-        b=I+muPs9K4M2rexzJQ1Rp4eTUrNd0Ha1m4qBsozNXGH2KGc40Zy5om69dh1QIDe+fxQ
-         xdD7A6chgH2X4p3btPeEckxS8weZQL+bEymjJqAhmEfZMk/8nrtQK9oYyPgXtbPeUSJj
-         A8yAfXLDjNraE3LUgFbARQCVPH90Zj5rAoqqQ=
+	s=arc-20240116; t=1750281746; c=relaxed/simple;
+	bh=nxtLAzFaDCOuCTEhnGiEugxqok5KAVAKJ7IaNV5PHwg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CjFsOFYNPlyT1oVEylmYgdnnt+oU23miZKWdFjyShgfowKcE3PEINaEjobT0AKbsPeRfaBqLN3XIWqN9k3vyKiVQsrZhlUewikAquC86NVFWU6QTgxM7r8crJhIdR07QMNJmhbRfDdTW0fp81mgpETo0QxIJHmtlOyc8h2h6PwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-86cf306fc68so11340639f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:22:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750281704; x=1750886504;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hzjQpLH9P4msqIcMls8fz15GHsVyIhA4zncYp2T3JY=;
-        b=leZL5Nqy14zhqU6fnL9TC8TAESqT8FFu+9SSyxBqxXLmebqgLESe3sNZMRcn9UvEF4
-         VfAbpgSOVbuifkKsPe9z8A1wx3mflalf0Cw1yliICQ/GTQ6tsFwwmnXUfTpxG+U85cIl
-         8x+WkMxnxgupL1yfenOD41uKk1QV9dZMAzPbOBMDxkhUOYmDzqmsWDC+UYOUecU58/Fp
-         wrWaivlp9mxGVEqt0qTPflxYv9h+JOt1Vdm2RoLewk6Y4MSDpZRl9VtNxeTzKzY4yEpE
-         7jf6C/qM4FYn3Od+3nsaZT9rPJKink9psr9batsOEKAd/Uxow4kFDRehT5v+gv3dJovo
-         MldQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXgZ8hR2M3cWv0D8QGMEtPC7NtBUXruvVZ8DH4anaelhVVrq5hIVVu5AsyFVuAjHHJjiWLI561wJlbuPJs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuNca17NgNeqN2+L3vO0CBQbGVbrUQeoU3+LF75gkg4ARDd/jP
-	Xx4WWKJAIU2dPMNNQVmxoXSuIUXwPvDZuAPOAdk3Y91P76zZ5QBtOTrFNw477RPDN1c=
-X-Gm-Gg: ASbGncssAQeMCUHp1TV2bZ62g1ZPiLh9gVb2+86yfmmx3GQoVvpxDI0JzSvrZ+QuBXv
-	3Bw8DuuWJ6H0jw7j4emJZmxlk6voxs9S1hf3bhG/1g1oXBesOVn74P9ljptw0WGcSeeWfmfaTZh
-	BPH2454NUq5s+nO5o8H1v8tu84YasJxl556iosmRhB8DDTh9KXuvubLm/B2jkuAi8DtQVIdg8wz
-	ABPpEo4n8RDlC+EmuNsnKuxQIVyq1u6qd2xNT08biajPRuIEzjHi3GLmOy0Sz5pOl+Fe3vK1Y0G
-	JS4qlqgqOgoN3dEFZJOZZ5ffYza7g895Ei8ecDH9+uQuFiDMA0RbK6qjpMBM54C/DvKZeZiOzQ=
-	=
-X-Google-Smtp-Source: AGHT+IELzvwbi9JQ7DZZenz0U1vkPgwf8oGH4UkYFmct5jt6JQyDwhZyf2BVjZryMiJrjh2k6xcFdA==
-X-Received: by 2002:a05:6e02:18ce:b0:3dc:8b29:30bc with SMTP id e9e14a558f8ab-3de07cf9efcmr248982405ab.21.1750281703912;
-        Wed, 18 Jun 2025 14:21:43 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3de019b4398sm34101575ab.14.2025.06.18.14.21.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 14:21:43 -0700 (PDT)
-Message-ID: <96c46d3d-0e0a-464a-b64c-15c2a544a974@linuxfoundation.org>
-Date: Wed, 18 Jun 2025 15:21:42 -0600
+        d=1e100.net; s=20230601; t=1750281744; x=1750886544;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gyda97p0k8LMpqYwxXSUSu+cJ9FxoUrepV5dKozGTbs=;
+        b=t8B7W5h1KziTJxcAJk+q9hCdz2QSFuXqCEgpCvlPuMtgPSHvpKL5MbvBWzgjhYg5Q+
+         L+Oisv93bi1wHkpmr/yCUdQDG3wJIujdZAmnLdFv+PnJNWGuB0C8TomcbBuwdyaY/aEZ
+         UdzZiU21IXviMabQNfINvGH/aV9PwgcyMU/l6UN4BZ4cZyAJXh72Vxl+WhwhraUUJJLH
+         kxZc7F9tMKryhTwGcKyac6V/PdEuYi5nQY9ySrvUgzhgChN8VzkBEMXO6rxj3XSm1j7p
+         azokXRcUZMolevnV71xiskmT3v4Kml20pgQct0eFptgnumRG7oa1Stl9m8T4AxCyzZjx
+         bDAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0A9D6PiK53h2xGn71koA4+/7i/gex1SPEjyLC5uJyI3mT8TPL7HNKkYm4zdTgvieajyE5c1aGFwRmMxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm4D06uEIcu3BAcfSECgqQe2AqIc+syTuE1iNxRTjG9TOJQSD9
+	As4oONRnqWBGLC9aChMBGlVJYpox17b7zgm8eCaxv3wipWyj8wPB0RMpIDPX8thQ9lFcVSjZi0r
+	1GkEiOaywl8tdxZsvwIb9CZDP9c3jKkWyzjw8NvpRCW3Eq0W7tgkGtcXDWz0=
+X-Google-Smtp-Source: AGHT+IG972MFzHU6mHqcjmmOnulMds72kAVtT8v2nrX12zqUlz6DwYEfYZiyHxMCtv1ejD658G7RsJu0lyr+z4U7dKJLjA4xam3J
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] selftests/memfd: clean Makefile
-To: Chen Linxuan <chenlinxuan@uniontech.com>, Shuah Khan <shuah@kernel.org>
-Cc: zhanjun@uniontech.com, niecheng1@uniontech.com,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20250610020559.2797938-2-chenlinxuan@uniontech.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250610020559.2797938-2-chenlinxuan@uniontech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:2401:b0:3dd:f3e1:2899 with SMTP id
+ e9e14a558f8ab-3de07c3718amr267678985ab.2.1750281743885; Wed, 18 Jun 2025
+ 14:22:23 -0700 (PDT)
+Date: Wed, 18 Jun 2025 14:22:23 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68532e0f.050a0220.216029.00aa.GAE@google.com>
+Subject: [syzbot] [f2fs?] KMSAN: uninit-value in __try_merge_extent_node
+From: syzbot <syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com>
+To: chao@kernel.org, jaegeuk@kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/9/25 20:05, Chen Linxuan wrote:
-> When writing a test for fusectl, I referred to this Makefile as a
-> reference for creating a FUSE daemon in the selftests.
-> While doing so, I noticed that there is a minor issue in the Makefile.
+Hello,
 
-What happens if this change isn't made?
+syzbot found the following issue on:
 
-> 
-> The fuse_mnt.c file is not actually compiled into fuse_mnt.o,
-> and the code setting CFLAGS for it never takes effect.
-> The reason fuse_mnt compiles successfully is because CFLAGS is set
-> at the very beginning of the file.
-> 
-> Signed-off-by: Chen Linxuan <chenlinxuan@uniontech.com>
-> ---
->   tools/testing/selftests/memfd/Makefile | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
-> index 163b6f68631c4..e9b886c65153d 100644
-> --- a/tools/testing/selftests/memfd/Makefile
-> +++ b/tools/testing/selftests/memfd/Makefile
-> @@ -1,5 +1,4 @@
->   # SPDX-License-Identifier: GPL-2.0
-> -CFLAGS += -D_FILE_OFFSET_BITS=64
+HEAD commit:    4774cfe3543a Merge tag 'scsi-fixes' of git://git.kernel.or..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1219de0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=61539536677af51c
+dashboard link: https://syzkaller.appspot.com/bug?extid=b8c1d60e95df65e827d4
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
 
-What's the reason for deleting the above?
+Unfortunately, I don't have any reproducer for this issue yet.
 
->   CFLAGS += $(KHDR_INCLUDES)
->   
->   TEST_GEN_PROGS := memfd_test
-> @@ -16,10 +15,9 @@ ifeq ($(VAR_LDLIBS),)
->   VAR_LDLIBS := -lfuse -pthread
->   endif
->   
-> -fuse_mnt.o: CFLAGS += $(VAR_CFLAGS)
-> -
->   include ../lib.mk
->   
-> +$(OUTPUT)/fuse_mnt: CFLAGS += $(VAR_CFLAGS)
->   $(OUTPUT)/fuse_mnt: LDLIBS += $(VAR_LDLIBS)
->   
->   $(OUTPUT)/memfd_test: memfd_test.c common.c
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/c5c5e2dcd9e4/disk-4774cfe3.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0ec9403177cd/vmlinux-4774cfe3.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/8c9c37a4fc0e/bzImage-4774cfe3.xz
 
-thanks,
--- Shuah
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
 
+loop8: detected capacity change from 0 to 131072
+F2FS-fs (loop8): Mounted with checkpoint version = 48b305e5
+=====================================================
+BUG: KMSAN: uninit-value in __is_extent_mergeable fs/f2fs/extent_cache.c:154 [inline]
+BUG: KMSAN: uninit-value in __is_back_mergeable fs/f2fs/extent_cache.c:173 [inline]
+BUG: KMSAN: uninit-value in __try_merge_extent_node+0x415/0x1600 fs/f2fs/extent_cache.c:546
+ __is_extent_mergeable fs/f2fs/extent_cache.c:154 [inline]
+ __is_back_mergeable fs/f2fs/extent_cache.c:173 [inline]
+ __try_merge_extent_node+0x415/0x1600 fs/f2fs/extent_cache.c:546
+ __update_extent_tree_range+0x1b53/0x2ae0 fs/f2fs/extent_cache.c:776
+ __update_extent_cache+0x11cc/0x1420 fs/f2fs/extent_cache.c:950
+ f2fs_update_read_extent_cache+0x20/0x30 fs/f2fs/extent_cache.c:1055
+ f2fs_update_data_blkaddr+0x428/0x470 fs/f2fs/data.c:1142
+ f2fs_outplace_write_data+0x1bf/0x250 fs/f2fs/segment.c:4011
+ f2fs_do_write_data_page+0x2a11/0x3480 fs/f2fs/data.c:2752
+ f2fs_write_single_data_page+0x15bf/0x29b0 fs/f2fs/data.c:2868
+ f2fs_write_cache_pages fs/f2fs/data.c:3133 [inline]
+ __f2fs_write_data_pages fs/f2fs/data.c:3282 [inline]
+ f2fs_write_data_pages+0x2f66/0x5480 fs/f2fs/data.c:3309
+ do_writepages+0x3f2/0x860 mm/page-writeback.c:2636
+ filemap_fdatawrite_wbc mm/filemap.c:386 [inline]
+ __filemap_fdatawrite_range mm/filemap.c:419 [inline]
+ file_write_and_wait_range+0x6f0/0x7d0 mm/filemap.c:794
+ f2fs_do_sync_file+0x79b/0x31c0 fs/f2fs/file.c:278
+ f2fs_sync_file+0x107/0x180 fs/f2fs/file.c:395
+ vfs_fsync_range+0x1a1/0x240 fs/sync.c:187
+ generic_write_sync include/linux/fs.h:3027 [inline]
+ f2fs_file_write_iter+0x3032/0x4650 fs/f2fs/file.c:5203
+ do_iter_readv_writev+0x947/0xba0 fs/read_write.c:-1
+ vfs_writev+0x52a/0x1500 fs/read_write.c:1057
+ do_pwritev fs/read_write.c:1153 [inline]
+ __do_sys_pwritev2 fs/read_write.c:1211 [inline]
+ __se_sys_pwritev2+0x22f/0x480 fs/read_write.c:1202
+ __x64_sys_pwritev2+0xe4/0x150 fs/read_write.c:1202
+ x64_sys_call+0x22b9/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:329
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Local variable ei created at:
+ f2fs_init_read_extent_tree+0xe7/0xf10 fs/f2fs/extent_cache.c:417
+ do_read_inode fs/f2fs/inode.c:541 [inline]
+ f2fs_iget+0x7a0e/0x8950 fs/f2fs/inode.c:589
+
+CPU: 1 UID: 0 PID: 24362 Comm: syz.8.5691 Not tainted 6.16.0-rc1-syzkaller-00203-g4774cfe3543a #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
