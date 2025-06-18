@@ -1,54 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F09B258CD0;
-	Wed, 18 Jun 2025 12:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A9801DDA24;
+	Wed, 18 Jun 2025 12:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750250425; cv=none; b=GVqFqoHQUjzgtDHsHu8go2u6ZZ71z0/DoK32NZsyjv3H4KK0yxcan12qet+cWbbL3VrMAaMDylMmbiwsLd8/KXPFD9SmsXjVEQh+qUv5q1qzOj9eCXH2eKcurSoMFXDjsqlFix7y6U2TeqF6/7cAV+qalhiKKPGEATcKuOL4Bxk=
+	t=1750250604; cv=none; b=GBlkff9BPlJPro+VLj70nfS2QtQ+kHqe6SIgw/KXmgJGfbS2iy6xb8PZCvUIuGfyB9eiwKLY4Weq9IQREUhpJIkWDVAdElbxuBqO8Nj0tHc8OV1MZVr5nT6Qi+7DDfYHiZ68mpsr9EUzLMlYTFWjz4/xJ9UtUBaUODuBa+lZb9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750250425; c=relaxed/simple;
-	bh=lKJkRX5S1J6VtzITZ5xzBjEBLhnqYUnVxruczGLyT08=;
+	s=arc-20240116; t=1750250604; c=relaxed/simple;
+	bh=QciY19UJ2P7XWWxP+JOrADAPN8SHguNnRsyvc6zjqsM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QpBrawzBhEZTLwy7FJuYvlWdZA4Sdd8eL8og4KKA1BkRsAWXdfD2vfggr5jcGigNrTAMNApIHMGyEOMljSVllZ+8ROXro+lDyVJZi9GPIDOXzJu/OM52qxDoNaT+X9vaUdJo+x7XbsxDUjI/2zdLYetVU4hqmlXsTxcKexiP5d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T35oes2F; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=iH7617MsjeOKA8XFbaTulAJh4iWw+5VPTYzuup8SunhhVNAOsZSQ3p7Ee06H07EVL/fxwzlwfKpHMMal7XYfzbI5XCeMEDwiCFY/TSHyMgy0KrdD+3FA4vD5bwe2nlSBJ4VVL730qA7Fxbz1gK2cKiAUXUYvaq87eOO0pCX2eQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYMRDVH0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T35oes2F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F6CDC4CEE7;
-	Wed, 18 Jun 2025 12:40:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYMRDVH0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8967CC4CEE7;
+	Wed, 18 Jun 2025 12:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750250424;
-	bh=lKJkRX5S1J6VtzITZ5xzBjEBLhnqYUnVxruczGLyT08=;
+	s=k20201202; t=1750250603;
+	bh=QciY19UJ2P7XWWxP+JOrADAPN8SHguNnRsyvc6zjqsM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T35oes2Fkomfh40d6u66VAQWgiTTkCCDSuXaUmP9wZj+ZvbxEJppK5DeCdXziOEhg
-	 3HEpnVRqlDeTIAfAtsfh8HKcdGHc7Uqpj6S6eN2INZPxSjVIwS2jXPoJjuaciRncRy
-	 Xxm82+PegCaah7+5vTiKGWtGcO+DjQzVo+ZUt7AqelZLpBZY33KdEBNwB5Uaq1WxK2
-	 eOMNofrX6l+G0WeTImkNi69icQxs5GeLX0ZqZP3QGnVRWs1KH+cTaMtewy/RNj2FaO
-	 2cqyu3Mxebizp7QLsFdK6B8Fb+28XA5K2+Ds9lwEFxz13m0Kvrv1ACzaUaSh3pE8vU
-	 lxd9Pi9CUntEQ==
-Date: Wed, 18 Jun 2025 13:40:19 +0100
-From: Simon Horman <horms@kernel.org>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Akira Yokosawa <akiyks@gmail.com>,
-	Breno Leitao <leitao@debian.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Ignacio Encinas Rubio <ignacio@iencinas.com>,
-	Jan Stancek <jstancek@redhat.com>, Marco Elver <elver@google.com>,
-	Paolo Abeni <pabeni@redhat.com>, Ruben Wauters <rubenru09@aol.com>,
-	Shuah Khan <skhan@linuxfoundation.org>, joel@joelfernandes.org,
-	linux-kernel-mentees@lists.linux.dev, linux-kernel@vger.kernel.org,
-	lkmm@lists.linux.dev, netdev@vger.kernel.org, peterz@infradead.org,
-	stern@rowland.harvard.edu
-Subject: Re: [PATCH v5 05/15] tools: ynl_gen_rst.py: make the index parser
- more generic
-Message-ID: <20250618124019.GQ1699@horms.kernel.org>
-References: <cover.1750146719.git.mchehab+huawei@kernel.org>
- <1cd8b28bfe159677b8a8b1228b04ba2919c8aee8.1750146719.git.mchehab+huawei@kernel.org>
- <20250617115927.GK5000@horms.kernel.org>
- <20250618085735.7f9aa5a6@foz.lan>
+	b=oYMRDVH0nCysQPSpZdUUboSTRJ/FqoBKZGhCxls02NOnsNR3PspaKlwItH6xYGf00
+	 KDKFopJTihOOo+Evq6GKjtKtBDIvXiOZleKRdqWj62EOHLvcP25oicGb1BiuXJ8iXb
+	 fxkA4oDCfK9MnXvXYouvJiBwVE7yUj9gd0rRqQHI4Xfl8kC1lDI21tXXAF/CdZf/kj
+	 Fg4pMb5okyJFqQQR1b1QRpxHcqEuBESh0wExuncx3PhMRfrWTzkaXfHQaeIW3GR5Hp
+	 R7yZXL+PqWwTZz61Fx3Gqmh85Q++w/ySEG2us5a/NHZanq7ilDrGAZdMW4FOTAtCCF
+	 0AtOmM3nT78pg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uRs8R-000000002Ld-03xU;
+	Wed, 18 Jun 2025 14:43:23 +0200
+Date: Wed, 18 Jun 2025 14:43:23 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Gabor Juhos <j4g8y7@gmail.com>, Georgi Djakov <djakov@kernel.org>
+Cc: Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] interconnect: avoid memory allocation when 'icc_bw_lock'
+ is held
+Message-ID: <aFK0a8AIOl704DpP@hovoldconsulting.com>
+References: <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,52 +49,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250618085735.7f9aa5a6@foz.lan>
+In-Reply-To: <20250529-icc-bw-lockdep-v1-1-3d714b6a9374@gmail.com>
 
-On Wed, Jun 18, 2025 at 08:57:35AM +0200, Mauro Carvalho Chehab wrote:
-> Em Tue, 17 Jun 2025 12:59:27 +0100
-> Simon Horman <horms@kernel.org> escreveu:
+On Thu, May 29, 2025 at 04:46:22PM +0200, Gabor Juhos wrote:
+> The 'icc_bw_lock' mutex is introduced in commit af42269c3523
+> ("interconnect: Fix locking for runpm vs reclaim") in order
+> to decouple serialization of bw aggregation from codepaths
+> that require memory allocation.
 > 
-> > On Tue, Jun 17, 2025 at 10:02:02AM +0200, Mauro Carvalho Chehab wrote:
-> > > It is not a good practice to store build-generated files
-> > > inside $(srctree), as one may be using O=<BUILDDIR> and even
-> > > have the Kernel on a read-only directory.
-> > > 
-> > > Change the YAML generation for netlink files to allow it
-> > > to parse data based on the source or on the object tree.
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > > ---
-> > >  tools/net/ynl/pyynl/ynl_gen_rst.py | 22 ++++++++++++++++------
-> > >  1 file changed, 16 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/tools/net/ynl/pyynl/ynl_gen_rst.py b/tools/net/ynl/pyynl/ynl_gen_rst.py
-> > > index 7bfb8ceeeefc..b1e5acafb998 100755
-> > > --- a/tools/net/ynl/pyynl/ynl_gen_rst.py
-> > > +++ b/tools/net/ynl/pyynl/ynl_gen_rst.py
-> > > @@ -365,6 +365,7 @@ def parse_arguments() -> argparse.Namespace:
-> > >  
-> > >      parser.add_argument("-v", "--verbose", action="store_true")
-> > >      parser.add_argument("-o", "--output", help="Output file name")
-> > > +    parser.add_argument("-d", "--input_dir", help="YAML input directory")
-> > >  
-> > >      # Index and input are mutually exclusive
-> > >      group = parser.add_mutually_exclusive_group()
-> > > @@ -405,11 +406,14 @@ def write_to_rstfile(content: str, filename: str) -> None:
-> > >      """Write the generated content into an RST file"""
-> > >      logging.debug("Saving RST file to %s", filename)
-> > >  
-> > > +    dir = os.path.dirname(filename)
-> > > +    os.makedirs(dir, exist_ok=True)
-> > > +
-> > >      with open(filename, "w", encoding="utf-8") as rst_file:
-> > >          rst_file.write(content)  
-> > 
-> > Hi Mauro,
-> > 
-> > With this patch applied I see the following, which did not happen before.
+> However commit d30f83d278a9 ("interconnect: core: Add dynamic
+> id allocation support") added a devm_kasprintf() call into a
+> path protected by the 'icc_bw_lock' which causes this lockdep
+> warning (at least on the IPQ9574 platform):
 > 
-> Thanks! this was an intermediate step. I'll just drop this patch and
-> fix conflicts at the next version.
+>     ======================================================
+>     WARNING: possible circular locking dependency detected
+>     6.15.0-next-20250529 #0 Not tainted
+>     ------------------------------------------------------
+>     swapper/0/1 is trying to acquire lock:
+>     ffffffc081df57d8 (icc_bw_lock){+.+.}-{4:4}, at: icc_init+0x8/0x108
+> 
+>     but task is already holding lock:
+>     ffffffc081d7db10 (fs_reclaim){+.+.}-{0:0}, at: icc_init+0x28/0x108
+> 
+>     which lock already depends on the new lock.
 
-Likewise, thanks.
+Thanks for fixing this. I get a similar splat with sc8280xp and the
+icc_ism_l3 driver since 6.16-rc1.
+
+Georgi, this is a regression that prevents lockdep from being used on a
+bunch of Qualcomm platforms and should be fixed in mainline ASAP (e.g.
+to avoid further locking issues from being introduced).
+
+> Move the memory allocation part of the code outside of the protected
+> path to eliminate the warning. Also add a note about why it is moved
+> to there,
+> 
+> Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
+> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+> ---
+>  drivers/interconnect/core.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
+> index 1a41e59c77f85a811f78986e98401625f4cadfa3..acdb3b8f1e54942dbb1b71ec2b170b08ad709e6b 100644
+> --- a/drivers/interconnect/core.c
+> +++ b/drivers/interconnect/core.c
+> @@ -1023,6 +1023,16 @@ void icc_node_add(struct icc_node *node, struct icc_provider *provider)
+>  		return;
+>  
+>  	mutex_lock(&icc_lock);
+> +
+> +	if (node->id >= ICC_DYN_ID_START) {
+> +		/*
+> +		 * Memory allocation must be done outside of codepaths
+> +		 * protected by icc_bw_lock.
+> +		 */
+> +		node->name = devm_kasprintf(provider->dev, GFP_KERNEL, "%s@%s",
+> +					    node->name, dev_name(provider->dev));
+> +	}
+
+The node name has already been set by the caller and the node has not
+been added yet, so I think you should move this before taking the
+icc_lock.
+
+> +
+>  	mutex_lock(&icc_bw_lock);
+>  
+>  	node->provider = provider;
+
+With that addressed, feel free to add my:
+
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+Tested-by: Johan Hovold <johan+linaro@kernel.org>
+
+Johan
