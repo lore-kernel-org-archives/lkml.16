@@ -1,117 +1,120 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C872DBF45;
-	Wed, 18 Jun 2025 11:57:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749122820C5;
+	Wed, 18 Jun 2025 11:58:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750247876; cv=none; b=hAU9q6L4Hfc+ZMNZMyNEqH3NAapu18ZaXZKN70wtiw+3GH2f0qifeOphrjim0ofmPyvExtNrS021foF9pjkB+YoMI++NawpvhvngKjgMdH6e5Azg5mAEzPkE2klLg7m9/7e+zXGJ8/TK+u80repfVogQRHVdDtn9PWMv85jgzBg=
+	t=1750247887; cv=none; b=bNTbYJ264zqv5NJMbZcGj2ghbokhLn/rdT5Xh9sNG6MioVJ3tv8I2v+pXxAvsTxSSe7wet8UBJejhz9+NcVVCfuv4i0FZhAcA62G0h4ioprdS20vTXdR1aWJ/ach1IKa56ndkh1U/Yj5fn49tP/w5YVTCAUrkPxNZav0etmY3co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750247876; c=relaxed/simple;
-	bh=FiT2P8piG5G7J6NznFS5lYOLStWFH61aZl86N7NAMAU=;
+	s=arc-20240116; t=1750247887; c=relaxed/simple;
+	bh=6zxqJ03sGm1UOu0tkuzgnOGXarWDitWIqwPWPQ4+ceo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O+gHGQUYs9YgtxlUxwelluytgQ/sgyIc9LTfIxswCO3CIAHifLXyMQAohcQKc5evpN8iM+rKKdxXeSOq9BWE0DQOsu6xBQYevcCvy/EpwrYwiWYbDJxM5TREJA5kM7jRBhHBpTzAGcrrrzxKaQ/Vp1KQ3GNWKD33UmTwxT3YhlA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=a+pJG/BR; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kOP7pK91pNjJ0ZfNpF0p9NV2SgidzyBKPIdVeg3Y44RCwb0ImTd8Ovx2fXGjJ5PE8zlSpH/VM9uh35onja/UeIkCIKUmNU1pumB3pbMLyTcpjfk3aIyeJFVOKtxql+ut9FeICMKjwQyd2z8dS3yWw1eIZgVOPEEbSRKX/ixn00U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHsJBYN2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="a+pJG/BR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=xcNSQOUfcTheQa/3UDDBZL0p6s0dp8xICvhLKA4O2QE=; b=a+pJG/BRWV58leStz/MCjYgzkW
-	fTJQY3soUkm3BUHt7AonaJwcAqiPLheMT5ZoOGvrPe1Vvb0Ns/k0SwHUJrkTMupA/m3IvEKdNyqFh
-	ZPzKpDyr7hFQpRbFUe4lzYghymRCQI0XzkG7DNHpXLf9tLsVZAS4OKY/HHM1h4VU39y18ZNjytg22
-	V9n38jv+9B8zqWn9nG7Edi9CewKUj14qzJ9RoKS0mbJy6vTrux3Z3Hc4Z3da+ZCOhMf5ySLIgPSrU
-	0tTmaNByUrPaFVE3qU81CCXlPABzdVBzmLQZh3S+PHdsrcd1wvrV/sTtrNaasV9wA55dzc/mwfzcf
-	lel9Yjkg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uRrQB-000000041F6-0OCC;
-	Wed, 18 Jun 2025 11:57:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E16C7307FB7; Wed, 18 Jun 2025 13:57:37 +0200 (CEST)
-Date: Wed, 18 Jun 2025 13:57:37 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>, x86@kernel.org,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH] x86: alternative: Fix int3 handling failure from broken
- text_poke array
-Message-ID: <20250618115737.GI1613376@noisy.programming.kicks-ass.net>
-References: <175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHsJBYN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE1EC4CEE7;
+	Wed, 18 Jun 2025 11:58:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750247887;
+	bh=6zxqJ03sGm1UOu0tkuzgnOGXarWDitWIqwPWPQ4+ceo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jHsJBYN2Z0UnGW0uAjnq5o8lP1xY9C6l3o3qn/v/s1bb1z4WARPnm4W+jJbfxngE0
+	 Ty/uTk6VtpAWuvf67m76zDXKN5qVgNZ7gZnB4xP3nxC2O2KkzH7AJKTUF9v2LkcBqY
+	 J8AGEmZDXyzAfhrHk+hR+sFhGsMqiaOkqeS8CqFMrD0+tinBWtKWeIeCiVxoQAwpNl
+	 XedmJT1/4F77Fgl+EekHzZi6K19D8/4wDpyc9/3sBIWejZCL/wxAuZyJ/nIB6Shi5K
+	 xXnYQ9kCGmFPYv2SOWUWKhLYT1vUx6ngIjB4QajdVPNPgEeDGT7EmCKoX5HMbNovFu
+	 WnBsTK6UdFEbg==
+Date: Wed, 18 Jun 2025 12:58:00 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Willy Tarreau <w@1wt.eu>
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+Message-ID: <cc048abb-fbc0-4a79-b78a-90bfa3f8446d@sirena.org.uk>
+References: <20250617152451.485330293@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="RMlmF4XGeDLp3q1s"
 Content-Disposition: inline
-In-Reply-To: <175020512308.3582717.13631440385506146631.stgit@mhiramat.tok.corp.google.com>
+In-Reply-To: <20250617152451.485330293@linuxfoundation.org>
+X-Cookie: This bag is recyclable.
 
-On Wed, Jun 18, 2025 at 09:05:23AM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since smp_text_poke_single() does not expect there is another
-> text_poke request is queued, it can make text_poke_array not
-> sorted or cause a buffer overflow on the text_poke_array.vec[].
-> This will cause an Oops in int3 because of bsearch failing;
-> 
-> 
->    CPU 0                        CPU 1                      CPU 2
->    -----                        -----                      -----
-> 
->  smp_text_poke_batch_add()
-> 
-> 			    smp_text_poke_single() <<-- Adds out of order
-> 
-> 							<int3>
->                                                 	[Fails o find address
->                                                         in text_poke_array ]
->                                                         OOPS!
-> 
-> Or unhandled page fault because of a buffer overflow;
-> 
-> 
->    CPU 0                        CPU 1
->    -----                        -----
-> 
->  smp_text_poke_batch_add() <<+
->  ...                         |
->  smp_text_poke_batch_add() <<-- Adds TEXT_POKE_ARRAY_MAX times.
-> 
-> 			     smp_text_poke_single() {
-> 			     	__smp_text_poke_batch_add() <<-- Adds entry at
-> 								TEXT_POKE_ARRAY_MAX + 1
-> 
->                 		smp_text_poke_batch_finish()
->                         	  [Unhandled page fault because
-> 				   text_poke_array.nr_entries is
-> 				   overwritten]
-> 				   BUG!
-> 			     }
-> 
-> 
-> Use smp_text_poke_batch_add() instead of __smp_text_poke_batch_add()
-> so that it correctly flush the queue if needed.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Closes: https://lore.kernel.org/all/CA+G9fYsLu0roY3DV=tKyqP7FEKbOEETRvTDhnpPxJGbA=Cg+4w@mail.gmail.com/
-> Fixes: c8976ade0c1b ("x86/alternatives: Simplify smp_text_poke_single() by using tp_vec and existing APIs")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Thanks!
+--RMlmF4XGeDLp3q1s
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 17, 2025 at 05:15:08PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.3 release.
+> There are 780 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+
+This breaks the build of the arm64 selftests due to a change in nolibc,
+it appears that "tools/nolibc: properly align dirent buffer" is missing
+some dependency:
+
+aarch64-linux-gnu-gcc -fno-asynchronous-unwind-tables -fno-ident -s -Os -no=
+stdlib \
+	-include ../../../../include/nolibc/nolibc.h -I../..\
+	-static -ffreestanding -Wall za-fork.c /build/stage/build-work/kselftest/a=
+rm64/fp/za-fork-asm.o -o /build/stage/build-work/kselftest/arm64/fp/za-fork
+In file included from ./../../../../include/nolibc/nolibc.h:107,
+                 from <command-line>:
+=2E/../../../../include/nolibc/dirent.h: In function =E2=80=98readdir_r=E2=
+=80=99:
+=2E/../../../../include/nolibc/dirent.h:62:64: error: expected =E2=80=98=3D=
+=E2=80=99, =E2=80=98,=E2=80=99, =E2=80=98;=E2=80=99, =E2=80=98asm=E2=80=99 =
+or =E2=80=98__attribute__=E2=80=99 before =E2=80=98__nolibc_aligned_as=E2=
+=80=99
+   62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __no=
+libc_aligned_as(struct linux_dirent64);
+      |                                                                ^~~~=
+~~~~~~~~~~~~~~~
+=2E/../../../../include/nolibc/dirent.h:62:64: error: implicit declaration =
+of function =E2=80=98__nolibc_aligned_as=E2=80=99 [-Wimplicit-function-decl=
+aration]
+=2E/../../../../include/nolibc/dirent.h:62:84: error: expected expression b=
+efore =E2=80=98struct=E2=80=99
+   62 |         char buf[sizeof(struct linux_dirent64) + NAME_MAX + 1] __no=
+libc_aligned_as(struct linux_dirent64);
+      |                                                                    =
+                ^~~~~~
+=2E/../../../../include/nolibc/dirent.h:63:47: error: =E2=80=98buf=E2=80=99=
+ undeclared (first use in this function)
+   63 |         struct linux_dirent64 *ldir =3D (void *)buf;
+      |                                               ^~~
+=2E/../../../../include/nolibc/dirent.h:63:47: note: each undeclared identi=
+fier is reported only once for each function it appears in
+
+--RMlmF4XGeDLp3q1s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhSqccACgkQJNaLcl1U
+h9AdtQf7BYcKrhzH6wbxKoT5RMQq05tiI2iUaA3k99PUHTrwhg8f+RaCj4PrEkTb
+xlqJPEc3Dr3UNmcZAdLDjBzM8rYjiEKPPc23kMJ6IjnuIgmlHtGbygKHfm9mZTDF
+VdehE6YThJlA3I5PVpTldS1rDKzgFidSND/J442MCtnteUVpvLy85hPj+5piQhFs
+jdzKpsuWG+LDLH6ZtwPvrxCKsKFmwcqlBjtrdR9VLocCxAOkiKdLtmKpHqInoOEf
+KT49DBiERBD0+nes9UpUw+Fq58Mt00qdYnAxoqBeEopWUxB2jC21XprMdVPm54Lx
+6O6HK3+hHACcnPQhE7ckAmtrPmnSzg==
+=xR7l
+-----END PGP SIGNATURE-----
+
+--RMlmF4XGeDLp3q1s--
