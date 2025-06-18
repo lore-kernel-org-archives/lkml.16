@@ -1,57 +1,46 @@
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5600317A586
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 03:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.202
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8441313E02D;
+	Wed, 18 Jun 2025 03:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750215842; cv=none; b=GMjYcShOeF2dprWlIQbzuJaBlMg3+PueaHTptu2jQnBNlSViR0YAnBkqb6H8TGO3jglDmlCPpU+ryRw+Y2USVqUfi0WGClD/uV3U8n6pY5Mn4Dm8GlFXImtcI6O+1NqwVTNv0nkx2yp+IUSlJXnSQvIVOWm8/n51lxbgDBRYtVI=
+	t=1750215973; cv=none; b=Mx78RvX1LguoORUwTBI5l3Ro/wIAQVl/miPpJBJN8tu79rRI2ofxDPU0PGc1h8xxTuc9DBChiQRrmKcFbqqJnYCmYZ+OGvFLwbzGnAlYULozJt8tKMdpAzSYQqf5k27+Mxl13+ATysiGYOWWNQUEq/lscVpInERFZyuDKKnjBI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750215842; c=relaxed/simple;
-	bh=ocPlLQ5/ZIE6JsIUly4EqqDox9DPZhugdWGvGwd8ZLs=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=rlHkq58PoIp7dTjSK4AKDHbm1gb8uPVXz+5qfQaXVYTQWTFQitFMKFIZYgvXsUL5yXqhjcJ7f18GbUp+64sGU29cLGeUvm6bJ1p11n8VUVRPLjbU3t7Q4zbLlW5V7OTkNPPfMJMlz4qYDsWvIp978bQLIOgOt5DtK/NP/OGJ+ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=QTYtrm5t; arc=none smtp.client-ip=203.205.221.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750215973; c=relaxed/simple;
+	bh=QL/4KRWb+Eb99LdlmW0FWVyAOQcTQchrPVSpQl3cLHI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aj8Swl4cGLJCpVAq+GJXwZymPLsL+6dkgB9Rs//0rFOz8R4r02VME94f3j3bfk0C0550BnjjQ/3rxYM3qVczIafAUzG381ZDGPcVIafT7nejlh7rQgQ/vTzl05xLGTCp9mxhjVwtag18khnrwLa5bL1BQdOL3isn+0rjv9Zd/GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=k+2Jkpvm; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="QTYtrm5t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750215836; bh=ipgjpwevFTSxmaa5BH6V/G+Q5kvrU+d7B8630zgbTTU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QTYtrm5t2Hnrp6gYSgGreFok69pEzWRbK4PqtXM0ds4F99N9MQvocB5fkN8rG7FqW
-	 AYq3pvqFNeT9bW9wsuctkKw2LE933l8knmDi5PG47qADaCmgTDq63hsGOpZKyqkG+J
-	 nBGuHTJtUICVJSGLAZro2tu9+Ra9sKdPWgU2Aj7c=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszb21-0.qq.com (NewEsmtp) with SMTP
-	id F5B7E12; Wed, 18 Jun 2025 11:03:53 +0800
-X-QQ-mid: xmsmtpt1750215833tk166x4k3
-Message-ID: <tencent_9967BB8933B49E4B1B104B091B6325E5BA08@qq.com>
-X-QQ-XMAILINFO: NUygYfydBsqcjnK+BbP/ygBcJiTi2gTSrfff4wNk/hqQnrYs1rG4uP9Fm7GIwH
-	 a4vx4yidzYo4thH10seLmLEob8U5ahZ7COcia4oIg5BzZBjmmEiBWTJMXo+xKADlxKfLuIg7OXMg
-	 KzKEowOp39KllXSwkRdZuyqtcP9H+/EL2K7n03Rc8S+EFNe7CaCZegYuDo2Npn+DF357BETTAav0
-	 qRJP+JYSLDYQxt5KKxUunUN8i51XEDxE4UKbyVDOLnbM6oj7wcHURQRLpoVP8vexEU4tDniw10t2
-	 ShSCkNo5I6HvL6uVDr7sEIK8NW6ZUuKdtPj9a08onc3Y3X0gIkE5Z6kmVgc7TMvdGNiaMspzOxFx
-	 ePnC1PIgSYWluZErK+78ZKpCzbt+StCsaWGTrR9yDSise8rIMIWNDIaQsufHxc36YOPKd6QJbFGH
-	 /zbpkDieWyC9we9DjiOkzc2sN4NSzo2ULsswdEKvixu6t8iEJmsdfY3hf0w6Pnd/b1yjNXuYjIrB
-	 N5KuL7FdLp9kLMBDFc46RuOEIrchp/TFNYEUmUnY7BUmWoQz5R9PJaLjsqdk48iwRVizs+77g5qI
-	 WVr3Boa3Axp9SaeEdgZnVNr1YWRsmambzYw5wzrTc5XyF75JOH76dE672SpUhLQMMTBVX24mJZHv
-	 7oDWspvr0TMR9t5zjhpEHx3eLhRvmY13O3Ep2EP3g0q83VxwS/mHBd6cQTFImp+nm4RAYI600I0E
-	 6iC43/wiBBaYp8riTdzScMo3PpLKUSNp5WPjXdvZH1CUKK3jMTkEl+xUonLTCuYhxgQqZs1SVwsc
-	 OlZzRV4tWxCoZkuVx+JW0NvX5ntfO4wN0Nc4xqsmmjRA2x+1mK7z7b5+BSzW1t2M39TYoRBYW7me
-	 0HACLs5yQM/NFKw9qMs7mhdM1hKAbLcq7AksavJKJHNbi/6oH0iX8f8k6eNqPZohndp+fMiYlq6T
-	 sr6Fk/A6WCLtF7gIwMSAyZgRaVZsFR5yOb0atGTmajm3bKuNAWG34r669Pgkt4
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+1aa90f0eb1fc3e77d969@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ntfs3?] general protection fault in pick_link (2)
-Date: Wed, 18 Jun 2025 11:03:54 +0800
-X-OQ-MSGID: <20250618030353.1113022-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <685120d8.a70a0220.395abc.0204.GAE@google.com>
-References: <685120d8.a70a0220.395abc.0204.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="k+2Jkpvm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=9s
+	xZpWGMDtvzQWDkps87/gtbTx/0wlDsgpbiAR5Zn1Q=; b=k+2Jkpvmbm7FNi4kyG
+	rBZMceiZa1E7R1X9z2uyNcf7zjbnZtNn+r4R5CO7/Xo59EGmvKEMFVG0cLkY0pBj
+	93pvRlA5mXknfLqOJcsbtR/BYvvJD2fFQNTcMKVgO6cnb7V9pOQBx802/CJRXwfr
+	lBzpf4qK6dWQs+U4xXh/yiR38=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgDX_84DLVJo98pqAA--.16005S2;
+	Wed, 18 Jun 2025 11:05:39 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	willemb@google.com,
+	almasrymina@google.com,
+	kerneljasonxing@gmail.com,
+	ebiggers@google.com,
+	asml.silence@gmail.com,
+	aleksander.lobakin@intel.com
+Cc: yangfeng@kylinos.cn,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH net-next] skbuff: Improve the sending efficiency of __skb_send_sock
+Date: Wed, 18 Jun 2025 11:05:37 +0800
+Message-Id: <20250618030537.28394-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,22 +48,175 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PCgvCgDX_84DLVJo98pqAA--.16005S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAry8Cw4fZFWrAFW8XF4xJFb_yoWrtr4kpa
+	15W398Zr47Jr1q9r4kJrZ3Cr4ft3yvk3y5tF4fA395Ar90qryFgFWUGr1jkFWrKrZ7uFyU
+	trs0vr1rGrn0va7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jbzV8UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiThlweGhSKSe2kwAAsO
 
-#syz test
+From: Feng Yang <yangfeng@kylinos.cn>
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 4bb889fc980b..291f29a04e09 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2005,6 +2005,10 @@ static const char *step_into(struct nameidata *nd, int flags,
- 		if (path.mnt == nd->path.mnt)
- 			mntget(path.mnt);
+By aggregating skb data into a bvec array for transmission, when using sockmap to forward large packets,
+what previously required multiple transmissions now only needs a single transmission, which significantly enhances performance.
+For small packets, the performance remains comparable to the original level.
+
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+---
+ net/core/skbuff.c | 110 ++++++++++++++++++++++------------------------
+ 1 file changed, 52 insertions(+), 58 deletions(-)
+
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 85fc82f72d26..19d78285a1c9 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -3235,82 +3235,75 @@ typedef int (*sendmsg_func)(struct sock *sk, struct msghdr *msg);
+ static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
+ 			   int len, sendmsg_func sendmsg, int flags)
+ {
+-	unsigned int orig_len = len;
+ 	struct sk_buff *head = skb;
+ 	unsigned short fragidx;
+-	int slen, ret;
++	struct msghdr msg;
++	struct bio_vec *bvec;
++	int max_vecs, ret;
++	int bvec_count = 0;
++	unsigned int copied = 0;
++
++	max_vecs = skb_shinfo(skb)->nr_frags + 1; // +1 for linear data
++	if (skb_has_frag_list(skb)) {
++		struct sk_buff *frag_skb = skb_shinfo(skb)->frag_list;
++
++		while (frag_skb) {
++			max_vecs += skb_shinfo(frag_skb)->nr_frags + 1; // +1 for linear data
++			frag_skb = frag_skb->next;
++		}
++	}
++
++	bvec = kcalloc(max_vecs, sizeof(struct bio_vec), GFP_KERNEL);
++	if (!bvec)
++		return -ENOMEM;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.msg_flags = MSG_SPLICE_PAGES | MSG_DONTWAIT | flags;
+ 
+ do_frag_list:
+ 
+ 	/* Deal with head data */
+-	while (offset < skb_headlen(skb) && len) {
+-		struct kvec kv;
+-		struct msghdr msg;
+-
+-		slen = min_t(int, len, skb_headlen(skb) - offset);
+-		kv.iov_base = skb->data + offset;
+-		kv.iov_len = slen;
+-		memset(&msg, 0, sizeof(msg));
+-		msg.msg_flags = MSG_DONTWAIT | flags;
++	if (offset < skb_headlen(skb)) {
++		unsigned int copy_len = min(skb_headlen(skb) - offset, len - copied);
++		struct page *page = virt_to_page(skb->data + offset);
++		unsigned int page_offset = offset_in_page(skb->data + offset);
+ 
+-		iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, &kv, 1, slen);
+-		ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
+-				      sendmsg_unlocked, sk, &msg);
+-		if (ret <= 0)
+-			goto error;
++		if (!sendpage_ok(page))
++			msg.msg_flags &= ~MSG_SPLICE_PAGES;
+ 
+-		offset += ret;
+-		len -= ret;
++		bvec_set_page(&bvec[bvec_count++], page, copy_len, page_offset);
++		copied += copy_len;
++		offset += copy_len;
  	}
+ 
+-	/* All the data was skb head? */
+-	if (!len)
+-		goto out;
+-
+ 	/* Make offset relative to start of frags */
+ 	offset -= skb_headlen(skb);
+ 
+-	/* Find where we are in frag list */
+-	for (fragidx = 0; fragidx < skb_shinfo(skb)->nr_frags; fragidx++) {
+-		skb_frag_t *frag  = &skb_shinfo(skb)->frags[fragidx];
++	if (copied < len) {
++		for (fragidx = 0; fragidx < skb_shinfo(skb)->nr_frags; fragidx++) {
++			skb_frag_t *frag  = &skb_shinfo(skb)->frags[fragidx];
++			unsigned int frag_size = skb_frag_size(frag);
+ 
+-		if (offset < skb_frag_size(frag))
+-			break;
+-
+-		offset -= skb_frag_size(frag);
+-	}
+-
+-	for (; len && fragidx < skb_shinfo(skb)->nr_frags; fragidx++) {
+-		skb_frag_t *frag  = &skb_shinfo(skb)->frags[fragidx];
+-
+-		slen = min_t(size_t, len, skb_frag_size(frag) - offset);
++			/* Find where we are in frag list */
++			if (offset >= frag_size) {
++				offset -= frag_size;
++				continue;
++			}
+ 
+-		while (slen) {
+-			struct bio_vec bvec;
+-			struct msghdr msg = {
+-				.msg_flags = MSG_SPLICE_PAGES | MSG_DONTWAIT |
+-					     flags,
+-			};
++			unsigned int copy_len = min(frag_size - offset, len - copied);
+ 
+-			bvec_set_page(&bvec, skb_frag_page(frag), slen,
++			bvec_set_page(&bvec[bvec_count++], skb_frag_page(frag), copy_len,
+ 				      skb_frag_off(frag) + offset);
+-			iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, &bvec, 1,
+-				      slen);
+ 
+-			ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked,
+-					      sendmsg_unlocked, sk, &msg);
+-			if (ret <= 0)
+-				goto error;
++			copied += copy_len;
++			offset = 0;
+ 
+-			len -= ret;
+-			offset += ret;
+-			slen -= ret;
++			if (copied >= len)
++				break;
+ 		}
+-
+-		offset = 0;
+ 	}
+ 
+-	if (len) {
++	if (copied < len) {
+ 		/* Process any frag lists */
+ 
+ 		if (skb == head) {
+@@ -3324,11 +3317,12 @@ static int __skb_send_sock(struct sock *sk, struct sk_buff *skb, int offset,
+ 		}
+ 	}
+ 
+-out:
+-	return orig_len - len;
++	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, bvec, bvec_count, len);
++	ret = INDIRECT_CALL_2(sendmsg, sendmsg_locked, sendmsg_unlocked, sk, &msg);
 +
-+	if (inode && !S_ISLNK(inode->i_mode))
-+		return NULL;
-+
- 	return pick_link(nd, &path, inode, flags);
++	kfree(bvec);
+ 
+-error:
+-	return orig_len == len ? ret : orig_len - len;
++	return ret;
  }
  
+ /* Send skb data on a socket. Socket must be locked. */
+-- 
+2.43.0
 
