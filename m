@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2731C28E7;
-	Wed, 18 Jun 2025 15:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1088628E7;
+	Wed, 18 Jun 2025 15:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750261527; cv=none; b=UGtuzFVaOHD5qiDYIDvowwfD3kp0/ZGnAZX4zS7WwEPx38zF1kYD7D4j++SDQK5eYSYBE7/Iqrv77j23Wg7GQXXU+KBRN8B5DU5/yIDLX0iKS+eLud5pXmYe3tS/ERGAzok23bfwlQAFxe5wVl53b2mPzJHkCtDWc09Q49bCUTo=
+	t=1750261582; cv=none; b=IwswSpJDPsOn2fnmHIgkDe87KZQuP75jqjCe+iNZaNRkwavC9KYcHLNBSo1Z61pmzawYxNrLDmQI5Ob9FA57tvVkorJQxuN9AqMKViNPGIhudOw/qLVuhWHjRJ8z0XjrSxSFKERBaNUAAY3qC07uWG8OpAjOQmkIkTch2tB9H58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750261527; c=relaxed/simple;
-	bh=5W7CTB6fN0Bk5b5TSH6OLzvxLTr6qVWZg8NY4tnVae8=;
+	s=arc-20240116; t=1750261582; c=relaxed/simple;
+	bh=RkhAhy7cJp7ZZXWeYy/4iE+8/T6IKGFMwCV6ga9hQfU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Oy0/DbT76+HCvp23eTREpLdYx1S4QQe7g4DDX4dsZO2YBDEqZ/BW5eOgcZuO0k/+kHogq5dFgZXZtI/HZCoPVXOCBDx+ccDGiPxoyboboCnqdCZkpBJWYKS4TcCQtGiWaHHB4rtuZdsf7Qs3efN8+gT5MGTFuGRTzfxpyOaInkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNOme2Mw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fi66Uw4W6XVNqzP/rvYNvXcYqMf0IxZ3O/GA7GVv3RPPaHATu/cDtnIdEBePjgxjwIxcbLOcruru0CYqOSXylY2QuHA0q4r1gcE1znCgJBqnoHszA4BCd8O+A5okwHdHoTmU/LHSdibFJQSPt/yiFH63rMOXQKrfS/WeM2kJ8JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UuEFOF+J; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNOme2Mw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AAE9C4CEF0;
-	Wed, 18 Jun 2025 15:45:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750261526;
-	bh=5W7CTB6fN0Bk5b5TSH6OLzvxLTr6qVWZg8NY4tnVae8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GNOme2Mw/woOHUVItps8VOYvmDWCcced7eB0N2ojQfs80zt5Lo3WfwSVxzgDz2gtD
-	 MUIQsU252WABQh9ha08jGfXNq6iWllajutlAFLyGZnZUTZUA7aiBuKXNxAJxno1t8Z
-	 SYzX4c5iVyvTgdAlWQU+8iX1nJyF/gFHbU3asIWcndYZGDiuLX0OF1sHIPmh/gRjTK
-	 mIxnVzpZg9jH99RfvB/ZLwWacQOKgsGhipMC946QlkQHaXLyEeGnfqosflB/ZblP9c
-	 +Setsff35tektT2VuMowGRisz1VW9qTbL6lN4IsmApXx5areReyU3rvlHCU0Lpb8TD
-	 u2YNbJKTEuABA==
-Message-ID: <9260c217-9c63-4eec-854a-a7ec020d1e65@kernel.org>
-Date: Wed, 18 Jun 2025 17:45:22 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UuEFOF+J"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-742caef5896so5935362b3a.3;
+        Wed, 18 Jun 2025 08:46:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750261580; x=1750866380; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=egqntrQT0mcTNXSQUXdoAiXmKkzBs77HbRV6QGmeUAk=;
+        b=UuEFOF+JdyiAj3Nd86ECLudy3nFgZviRj9XMGM1HgtNHFgSSuIRZm44OY1ANjGlvbB
+         Qv5i2mPINBbQQHAr2CMzd4v26XIjUnDp4SrIUmySMz7DO7fzEq1sF/i6oFfxZOhj56zA
+         Bdgqe4C0c/sNX5SZuI+T97D/PFvJZcekWt37jIxPJqkaZv60khEK3sjJorfapBZG/gyI
+         EqXtusq7O4EurM5ERY6GTTyA7+p3qYyrts8nRTkjLto1I4p6Ydn+nGcSf2ELVFn2QzkI
+         Qr2XE/Sjk+pIHm2nDEcO1v6spMiytoFH7i5F6QZZggFcuRSc2kNOGfKzSoR5wFzdeHu5
+         Ym7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750261580; x=1750866380;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=egqntrQT0mcTNXSQUXdoAiXmKkzBs77HbRV6QGmeUAk=;
+        b=kwccK/DSq+6/9r5GePcwlB951hD+XeP+EisCDzXlKC4ZLoP6dyUIDqWya7CThRBPAs
+         X9xhbHh1Tlc0tAvfRnZrgYe0ukxhnLu3+eVARzkwPAHZwIv6c9B0q1azeK0ABvDFQoIU
+         nuaP3GsfYOnvkdL5IoygiKiRwFCYRjbC6Kv9cAkxKiRInZmTcyUWRibnj/nM0Bzb9wfE
+         dfjo4kE8z8RV2njLjscCLu3ltMH9lzxHdi9tqVneV2LxbgwZJoZHUBdhYy0dtF4NFqOJ
+         kGbUcJpYEAumFL2AjaGjxYB5rg5eqxev/kGzLs4eUXQuiMMlBKbc06+uOMqtRCE1XoR4
+         aE0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVmkqAnpClrAH/4NKg3+1w1ePYclrjOA2ENWr+85KmHK2cMBiB0fjmfqHHwZihJfID6LJVd3zdU7kE=@vger.kernel.org, AJvYcCWnXKf4Ro1La0rxdfVg+7n+/ThnozhTTf5rfUIZEVHvICLSIZJJEBgnSB26/HNeZery9E8mzB48@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRByMoQSrfNWEnhwwFFKFsxOw1jgdpy9qbeIG1INjTzkASwXn6
+	ODWUOGm+y1Lgy+rsrc81wRYZqgoK+ka8Q44OnNyYVINY0/kWwHZIutTW
+X-Gm-Gg: ASbGncvM7ac1u9QRCjEeq2L1dalPE8zeENbgGmt7RpCEOtQECLSdTcy5zszdXcxsWwi
+	QYQF8Wdpt61iKedRp0wtgFvt4/mzjwvbQBoDUn48paQe2bNKF2QBpYBk92mC1vhNeXlvCp+J7Kr
+	tR5duHifQB4z9w1nWkyyvryEorJfFh5h1hC2Q1vTtIoxunecdLTDHQmBMEBqcTlALLuIb2SMk8B
+	590pnyLkrn51RM2UfwCk15iXJFRDNBbAzctGajY66v4tSfiJCKvm8ZMoeg5vnZ7/W3dbrIaXQao
+	UdlLzIKucz66PPjeWhDHa61ta2RXalGM9Ke3hNMIHakhioeePpjVE7J5oojP83Q22GBzGDmMqQ/
+	hAA6DdfJ3xRh/RtFj4WhT/G0WTsVoOm8E
+X-Google-Smtp-Source: AGHT+IGojw9TogQCLzzrFvTji884jdeSs6pD+joQuFZ1XOjZry8dO66lcKyVpPr1hvTndaJFUZbB5g==
+X-Received: by 2002:a05:6a00:895:b0:73e:2dc5:a93c with SMTP id d2e1a72fcca58-7489cf9a3bbmr21984258b3a.11.1750261580264;
+        Wed, 18 Jun 2025 08:46:20 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74890082e71sm11574559b3a.107.2025.06.18.08.46.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Jun 2025 08:46:19 -0700 (PDT)
+Message-ID: <17f2a9ce-85ac-414a-b872-fbcd30354473@gmail.com>
+Date: Thu, 19 Jun 2025 00:46:15 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,196 +67,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: i3c: Add adi-i3c-master
-To: Jorge Marques <gastmaier@gmail.com>
-Cc: Jorge Marques <jorge.marques@analog.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-i3c@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250618-adi-i3c-master-v3-0-e66170a6cb95@analog.com>
- <20250618-adi-i3c-master-v3-1-e66170a6cb95@analog.com>
- <20250618-visionary-hawk-of-success-d4aab8@kuoka>
- <ymmn2jgpa4bia2wl4d32ccipybxt4nylz4hspdf2svivk5ao7s@vv7v3soq2e65>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v6 00/15] Don't generate netlink .rst files inside
+ $(srctree)
+To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+ Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Ignacio Encinas Rubio <ignacio@iencinas.com>, Marco Elver
+ <elver@google.com>, Shuah Khan <skhan@linuxfoundation.org>,
+ Donald Hunter <donald.hunter@gmail.com>, Eric Dumazet <edumazet@google.com>,
+ Jan Stancek <jstancek@redhat.com>, Paolo Abeni <pabeni@redhat.com>,
+ Ruben Wauters <rubenru09@aol.com>, joel@joelfernandes.org,
+ linux-kernel-mentees@lists.linux.dev, lkmm@lists.linux.dev,
+ netdev@vger.kernel.org, peterz@infradead.org, stern@rowland.harvard.edu,
+ Breno Leitao <leitao@debian.org>, Randy Dunlap <rdunlap@infradead.org>,
+ Akira Yokosawa <akiyks@gmail.com>
+References: <cover.1750246291.git.mchehab+huawei@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <ymmn2jgpa4bia2wl4d32ccipybxt4nylz4hspdf2svivk5ao7s@vv7v3soq2e65>
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <cover.1750246291.git.mchehab+huawei@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 18/06/2025 14:15, Jorge Marques wrote:
->>>
->>> Signed-off-by: Jorge Marques <jorge.marques@analog.com>
->>> ---
->>>  .../devicetree/bindings/i3c/adi,i3c-master.yaml    | 63 ++++++++++++++++++++++
->>>  MAINTAINERS                                        |  5 ++
->>>  2 files changed, 68 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
->>> new file mode 100644
->>> index 0000000000000000000000000000000000000000..718733bbb450c34c5d4924050cc6f85d8a80fe4b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/i3c/adi,i3c-master.yaml
->>
->> Filename based on the compatible, so adi,i3c-master-1.00.a.yaml
->>
-> I agree, but I ended up following the pattern for the other adi,
-> bindings. I will move for v4. IMO the version suffix has no much use
-> since IP updates are handled in the driver.
+Hi Mauro,
 
-Filename is not related to whether given ABI works with every device.
-Filename helps us to organize bindings and existing convention is that
-we want it to follow the compatible.
-
->>> @@ -0,0 +1,63 @@
->>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/i3c/adi,i3c-master.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Analog Devices I3C Controller
->>> +
->>> +description: |
->>> +  FPGA-based I3C controller designed to interface with I3C and I2C peripherals,
->>> +  implementing a subset of the I3C-basic specification.
->>> +
->>> +  https://analogdevicesinc.github.io/hdl/library/i3c_controller
->>> +
->>> +maintainers:
->>> +  - Jorge Marques <jorge.marques@analog.com>
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: adi,i3c-master-1.00.a
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  clocks:
->>> +    minItems: 1
->>
->> Why?
->>
-> The IP core requires a clock, and the second is optional.
-
-OK
-
-> minItems sets the minimum number of required clocks and the maxItems is
-> inferred from the number of items.
+On 2025/06/18 20:46, Mauro Carvalho Chehab wrote:
+> As discussed at:
+>    https://lore.kernel.org/all/20250610101331.62ba466f@foz.lan/
 > 
-> On the IP core itself, one clock is required (axi), and if it is the
-> only provided, it means that the same clock for the AXI bus is used
-> also for the rest of the RTL logic.
+> changeset f061c9f7d058 ("Documentation: Document each netlink family")
+> added a logic which generates *.rst files inside $(srctree). This is bad
+> when O=<BUILDDIR> is used.
+> 
+> A recent change renamed the yaml files used by Netlink, revealing a bad
+> side effect: as "make cleandocs" don't clean the produced files and symbols
+> appear duplicated for people that don't build the kernel from scratch.
+> 
+> This series adds an yaml parser extension and uses an index file with glob for
+> *. We opted to write such extension in a way that no actual yaml conversion
+> code is inside it. This makes it flexible enough to handle other types of yaml
+> files in the future. The actual yaml conversion logic were placed at 
+> netlink_yml_parser.py. 
+> 
+> As requested by YNL maintainers, this version has netlink_yml_parser.py
+> inside tools/net/ynl/pyynl/ directory. I don't like mixing libraries with
+> binaries, nor to have Python libraries spread all over the Kernel. IMO,
+> the best is to put all of them on a common place (scripts/lib, python/lib,
+> lib/python, ...) but, as this can be solved later, for now let's keep it this
+> way.
+> 
+> ---
+> 
+> v6:
+> - YNL doc parser is now at tools/net/ynl/pyynl/lib/doc_generator.py;
+> - two patches got merged;
+> - added instructions to test docs with Sphinx 3.4.3 (minimal supported
+>   version);
+> - minor fixes.
 
-Hm? What does it exactly mean - same clock? You mean one clock is routed
-to two pins? That's still two clocks. Or you mean that IP core will
-notice grounded clock input and do the routing inside?
+Quick tests against Sphinx 3.4.3 using container images based on
+debian:bullseye and almalinux:9, both of which have 3.4.3 as their distro
+packages, emits a *bunch* of warnings like the following:
 
-> 
-> If a second clock is provided, i3c, it means it drives the RTL logic and is
-> asynchronous to the axi clock, which then just drives the register map logic.
-> For i3c specified nominal speeds, the RTL logic should run with a speed of
-> 100MHz. Some FPGAs, such as Altera CycloneV, have a default bus clock speed of
-> 50MHz. Changing the bus speed is possible, but affects timing and it may not be
-> possible from users to double the bus speed since it will affect timing of all
-> IP cores using the bus clock.
->>> +    items:
->>> +      - description: The AXI interconnect clock.
->>> +      - description: The I3C controller clock.
-> I will update the descriptions to:
-> 
->         - description: The AXI interconnect clock, drives the register map.
->         - description: The I3C controller clock. AXI clock drives all logic if not provided.
-> 
->>> +
->>> +  clock-names:
->>
->> Not synced with clocks.
->>
-> I will add `minItems: 1`.
->>> +    items:
->>> +      - const: axi
->>> +      - const: i3c
->>> +
->>> +  interrupts:
->>> +    maxItems: 1
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +  - clocks
->>> +  - clock-names
->>> +  - interrupts
->>> +
->>> +allOf:
->>> +  - $ref: i3c.yaml#
->>> +
->>> +unevaluatedProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +    i3c@44a00000 {
->>> +        compatible = "adi,i3c-master";
->>> +        reg = <0x44a00000 0x1000>;
->>> +        interrupts = <0 56 4>;
->>
->> Use proper defines.
->>
-> The following can added:
-> 
->   #include <dt-bindings/interrupt-controller/irq.h>
-> 
->   interrupts = <0 56 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> Is there any other to be replaced?
+/<srcdir>/Documentation/netlink/specs/conntrack.yaml:: WARNING: YAML parsing error: AttributeError("'Values' object has no attribute 'tab_width'")
+/<srcdir>/Documentation/netlink/specs/devlink.yaml:: WARNING: YAML parsing error: AttributeError("'Values' object has no attribute 'tab_width'")
+/<srcdir>/Documentation/netlink/specs/dpll.yaml:: WARNING: YAML parsing error: AttributeError("'Values' object has no attribute 'tab_width'")
+/<srcdir>/Documentation/netlink/specs/ethtool.yaml:: WARNING: YAML parsing error: AttributeError("'Values' object has no attribute 'tab_width'")
+/<srcdir>/Documentation/netlink/specs/fou.yaml:: WARNING: YAML parsing error: AttributeError("'Values' object has no attribute 'tab_width'")
+[...]
 
-Usually 0 has a meaning as well. Where is this used DTS snippet used (on
-which platform)?
+I suspect there should be a minimal required minimal version of PyYAML.
 
-Best regards,
-Krzysztof
+"pip freeze" based on almalinux:9 says:
+
+    PyYAML==5.4.1
+
+"pip freeze" based on debian:bullseye says:
+
+    PyYAML==5.3.1
+
+What is the minimal required version here?
+
+And if users of those old distros need to manually upgrade PyYAML,
+why don't you suggest them to upgrade Sphinx as well?
+
+        Thanks, Akira
+
+>
+> v5:
+> - some patch reorg;
+> - netlink_yml_parser.py is now together with ynl tools;
+> - minor fixes.
+[...]
+
