@@ -1,144 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEA7126C1E;
-	Wed, 18 Jun 2025 09:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834CE126C1E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 09:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750238022; cv=none; b=aKXRANUIiWX+Jy0ISotMCnYCV+V2xA1JeEFeJJXzNhbumrq7x9EZDZVqRrWjK7HphhbnO+B3pawq87RoQPiwQ6PXkVy/37VqdtLzfjLtnfhr+My+p0nisZHZjd9tpxGx8osmBVs76mYojZzBT0zks/I8al6HtNGgf5nEzNXo5K0=
+	t=1750238073; cv=none; b=go/Frtp/Vo1ai2SFpCmllGcjJ4GRdGtMfSeML3LqVMy1qLi67osjmuRcNdoXK+yHKe+xa8PDALET4WgL5FIE+jMUt8Qvcsalz37rM/Jd2SotUD5AP808HfFAyoniyJsGt0ymCithxsCpq4uXGVhhaX2negVtLkvfNGkfk9/mwVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750238022; c=relaxed/simple;
-	bh=0xWF4UxVnOl6CBWPAc7gc0LvHTEwy77liqQmp5KcYYM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CLEM49+OBlZlgQnQ/yvWiVkTA+vkBGLJkXL/LHAXHiCrCum+cafmPbEkgLec7VDBlSwoaobKWmwjZo830RklHCE16wDnxJHOyUjUrw+ZEg0bALl4jN5oqRMuvHQbgtWH0bUTZ4QKc1Q1hBzQAGsn8P7KOCeVsMybZu/dk5SSWN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFt967AU; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFt967AU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B79C4CEE7;
-	Wed, 18 Jun 2025 09:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750238022;
-	bh=0xWF4UxVnOl6CBWPAc7gc0LvHTEwy77liqQmp5KcYYM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cFt967AUmVOLCSLWVDiTBXO+fe+XjT+vfwL1vClXcJsVcZoanmj++rVPtTfgU3Ejf
-	 S2HYzRJ/VsXWGJosrBw1mLCL1Ik/eiEimLZmqbVN+TszFY3YpNSGFEIoivdUNA11km
-	 I7MhmF03+A9oGYoBqE07I8eXZ5m03uf4JzE0Turaq3mClE8bdj80zifigEi0rys0eY
-	 nr0uHHhUSbLsiDWTLX53fB36cMP0x3DPHGmI6O0OoPS1UPf8ZfL/sBtnBT9xzLZsu6
-	 gMgpeVBfc5/OhVKjMBJGQoq7x7XKOEmgvFHKHarU6VgW2xVCQsoex5+RdF/HepPB2G
-	 keb2wStJR6LDQ==
-Message-ID: <ea77c51d-6fad-4bd1-a608-987642f77aba@kernel.org>
-Date: Wed, 18 Jun 2025 11:13:37 +0200
+	s=arc-20240116; t=1750238073; c=relaxed/simple;
+	bh=T91jqxIQYJ1f+y066EqLmtj2U9KVbmjMQ25ttMYhgvQ=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=DfERP0w7OV1n7CA+WW4Ty+lfNfHBISP5zeS4eYMlEd2mS3aEjmCiGJ2UJv5496fKznCJb0VkofHR5WY5W1cQl7j1cBF2QdoHVVaw4w8Lhbs62BdPiQ5Ln1SVFiSU0s7e/cug0U6GqYvJ4+KZeV6tSPuHiWyaYERr8DL/3cbShrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bMdNL1MP4z8RTWX;
+	Wed, 18 Jun 2025 17:14:26 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.99.176])
+	by mse-fl2.zte.com.cn with SMTP id 55I9E7Cx078308;
+	Wed, 18 Jun 2025 17:14:07 +0800 (+08)
+	(envelope-from xu.xin16@zte.com.cn)
+Received: from mapi (xaxapp05[null])
+	by mapi (Zmail) with MAPI id mid32;
+	Wed, 18 Jun 2025 17:14:09 +0800 (CST)
+Date: Wed, 18 Jun 2025 17:14:09 +0800 (CST)
+X-Zmail-TransId: 2afc68528361114-19074
+X-Mailer: Zmail v1.0
+Message-ID: <202506181714096412Nvp5B3BkFpi3-CKLQ9ep@zte.com.cn>
+In-Reply-To: <c6c628d9-5908-47f5-83f6-08d1621489fe@kylinos.cn>
+References: 20250606070314.3028593-1-xialonglong@kylinos.cn,63145e68-76f7-44a1-b3fb-1213eaa959d0@redhat.com,c6c628d9-5908-47f5-83f6-08d1621489fe@kylinos.cn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] drivers: clk: tegra: add DFLL support for Tegra 4
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Svyatoslav Ryhel <clamor95@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Peter De Schrijver <pdeschrijver@nvidia.com>,
- Prashant Gaikwad <pgaikwad@nvidia.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250321095556.91425-1-clamor95@gmail.com>
- <20250321095556.91425-3-clamor95@gmail.com>
- <aef4574b-8167-4af3-a29c-8c962b396496@kernel.org>
- <g7kegtso3opafpwocvibhm3rym35oikxoyq2wmphqy3wjenzpa@m7extntwahau>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <g7kegtso3opafpwocvibhm3rym35oikxoyq2wmphqy3wjenzpa@m7extntwahau>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+From: <xu.xin16@zte.com.cn>
+To: <xialonglong@kylinos.cn>, <david@redhat.com>
+Cc: <david@redhat.com>, <akpm@linux-foundation.org>,
+        <chengming.zhou@linux.dev>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <shr@devkernel.io>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzFdIG1tL2tzbTogYWRkIGtzbV9wYWdlc19zaGFyaW5nIGZvciBlYWNoIHByb2Nlc3MgdG8gY2FsY3VsYXRlIHByb2ZpdCBtb3JlIGFjY3VyYXRlbHk=?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 55I9E7Cx078308
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 68528372.000/4bMdNL1MP4z8RTWX
 
-On 10/06/2025 13:07, Thierry Reding wrote:
->>
->>> @@ -0,0 +1,13 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
->>> +/*
->>> + * This header provides Tegra114-specific constants for binding
->>> + * nvidia,tegra114-car.
->>> + */
->>> +
->>> +#ifndef _DT_BINDINGS_RESET_TEGRA114_CAR_H
->>> +#define _DT_BINDINGS_RESET_TEGRA114_CAR_H
->>> +
->>> +#define TEGRA114_RESET(x)		(5 * 32 + (x))
->>
->>
->> Does not look like a binding, but some sort of register. Binding IDs
->> start from 0 (or 1) and are incremented by 1.
+> >
+> >> and /proc/self/ksm_stat/ to indicate the saved pages of this process.
+> >> (not including ksm_zero_pages)
+> >
+> > Curious, why is updating ksm_process_profit() insufficient and we also 
+> > have to expose ksm_pages_sharing?
+> >
+> Since ksm_process_profit() uses ksm_merging_pages(pages_sharing + 
+> pages_shared) to calculate the profit for individual processes,
 > 
-> I'll try and clear up some of the confusion around this. The way that
-> resets are handled on these Tegra devices is that there is a set of
-> peripheral clocks & resets which are paired up. This is because they
-> are laid out in banks within the CAR (clock and reset) controller. In
-> most cases we're referring to those resets, so you'll often see a clock
-> ID used in conjection with the same reset ID for a given IP block.
+> while general_profit uses pages_sharing for profit calculation, this can 
+> lead to the total profit calculated for each process being greater than 
+> that of general_profit.
 > 
-> In addition to those peripheral resets, there are a number of extra
-> resets that don't have a corresponding clock and which are exposed in
-> registers outside of the peripheral banks, but still part of the CAR.
-> To support those "special" registers, the TEGRA*_RESET() is used to
-> denote resets outside of the regular peripheral resets. Essentially it
-> defines the offset within the CAR at which special resets start. In the
-> above case, Tegra114 has 5 banks with 32 peripheral resets each. The
-> first special reset, TEGRA114_RESET(0), therefore gets ID 5 * 32 + 0.
+> Additionally, exposing ksm_pages_sharing under /proc/self/ksm_stat/ may 
+> be sufficient.
 > 
-> So to summarize: We cannot start enumerating these at 0 because that
-> would fall into the range of peripheral reset IDs.
 
-So these are hardware values, not bindings. Drop the header or move it
-outside of bindings like other headers for hardware constants.
+Hi,
 
-Best regards,
-Krzysztof
+Althorugh it's true, however, this patch maybe not okay. It can only ensure
+that the sum of each process's profit roughly equals the system's general_profit
+, but gives totally wrong profit result for some one process. For example, when
+two pages from two different processes are merged, one process's page_shared
+increments by +1, while the other's pages_sharing increments by +1, which
+resulting in different calculated profits for the two processes, even though
+their actual profits are identical. If in more extreme cases, this could even
+render a process's profit entirely unreadable.  
+
+Lastly, do we really need each process’s profit sum to perfectly match the general
+profit, or we just want a rough estimate of the process’s profit from KSM ?
+
+> 
+> 
+> > Hm, I am wondering if that works. Stable nodes are not per MM, so 
+> > can't we create an accounting imbalance for one MM somehow?
+> >
+> > (did not look into all the details, just something that came to mind)
+> >
+> Indeed, using the method in this patch to calculate ksm_pages_sharing 
+> for each process to determine ksm_pages_shared
+> 
+> can sometimes result in negative values for ksm_pages_shared.
+> 
+> example for calculate mm->ksm_pages_shared：
+> 
+>          if (rmap_item->hlist.next) {
+>              ksm_pages_sharing--;
+>              rmap_item->mm->ksm_pages_sharing--;
+> 
+>          } else {
+>              ksm_pages_shared--;
+>               rmap_item->mm->ksm_pages_shared--; // can be negative
+>          }
+> 
+>          rmap_item->mm->ksm_merging_pages--;
+> 
+> 
+> Would it be possible to compare the ratio of each process's rmap_item to 
+> the total rmap_item and the ratio of the process's page_shared to the 
+> total page_shared
+> 
+> to assess this imbalance? For now, I don't have any better ideas.
+
+Although stable_node is not per-mm, if you really add ksm_shared to mm,
+it won't cause negative ksm_pages_shared, because the count of ksm_shared
+will only be attributed to the process of the first rmap_item.
