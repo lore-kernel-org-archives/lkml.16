@@ -1,78 +1,108 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4422155382;
-	Wed, 18 Jun 2025 05:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 770E11EB5E3;
+	Wed, 18 Jun 2025 05:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750225394; cv=none; b=uSwLFLsAFZcGmOa3h5JMyvOJFxq8YDcfRUEJ1pOYAGuEbfStlOvD5pyy1DJ8xXkldxm2APg6JvY2qslTemfGDR3ZxwPKNOUFz+0Y4j0UuZMTiRPLXkJKNJSsNIey4s21OtLh0Dg1NuwlK4wlGK8C7iUJKcVVt9r+hh9P+1r6XlY=
+	t=1750225396; cv=none; b=rkzEIpV/quIfj0ipT2Bzprk8iKj+aunMN3qQjLwHk40L6coxVEXUh4Lj1lwegb2tWqZ6/epTrFt9yG3Gzhwsjv7Z/9nB7G962raeFoq5r5/BgdmikhDgTJdauuy5g+qnjGXfQm8D4c1gptlGSfSIwk2L2n8xEbIPqeOSUCApvNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750225394; c=relaxed/simple;
-	bh=0JQBsfmNYdQa/0IV4/qsPNFTRadbSDZ3GVaBCtE0Z3g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=sfwjc9O2V1rYinbxhH4f91IUWviTc06cUuB+GPpiyhUwxEqxXaG6YyhCPgoScK5P8cA6wmNa3YMHYo1BhTb++/jdFb5vWpDeqwjpDGu2mK5ct6rVYlbZiIh3fp7l/TabOMhUqmIDQEr27BqE4EicPvB2q2oWmqWfSBg6ja1YpEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=Wm3GtEC8; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1750225396; c=relaxed/simple;
+	bh=1ET92XTHxvEo/gWuliIs6WzTWqg2s89wG7XwD4w0q8g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rji8oiLDGzL0ZjX925kxwhLnBWUA+BgWYBVFBgQQEQV+NzsFh9U+ijotXIDpz87EV+HfsHuwGefOuQDvkuIQgvCGGfZdVRPoPinqn5Sno4VlWH6xK82Y4uaqKQ09w0DciBAqNycnGmwprMHg04yNwjyCBFHSIqZXEnSj90eZSq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=gtUcuf/h; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="Wm3GtEC8"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55I5h68Z13672511, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1750225386; bh=24qWcAQa2eW2xtwkeq0PwRXckxE/cms8HYXVdLi4u1Y=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=Wm3GtEC8ePyPtE0awr1yJ7MdPWh7d8+GZbVEQK7k4+r2nl9ChJTpz3zYJ5wHVrXST
-	 UYAE86a+kGWxGo0XcO44fRCq4VOXWpNStqg3Rh+yhKskYAhYfABNsChkRQWL2dJmA4
-	 XqXl/34fMP2ZqQ2GqyC/K4w8Exe6RvwLezQsnhZ971KEnYm2GFJviiYdyAXTeRoZfo
-	 0sh29GdotETp9Pai3D9iH2kDL6ejowrVknIlVLe//KDDin1CwfzgpVqFXAcnTBLYdQ
-	 EmuBDMFdujYWxLOXtNyWf08PWwn/uNjjZRlBKayPT1HXx2Qv9MGXkiMIKJGkT+xE+S
-	 Tv4mg/Xo++hDg==
-Received: from mail.realtek.com (rtkexhmbs02.realtek.com.tw[172.21.6.41])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55I5h68Z13672511
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 18 Jun 2025 13:43:06 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTKEXHMBS02.realtek.com.tw (172.21.6.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 18 Jun 2025 13:43:12 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 18 Jun 2025 13:43:11 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Wed, 18 Jun 2025 13:43:11 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in `_rtl_pci_rx_interrupt()`.
-Thread-Topic: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in
- `_rtl_pci_rx_interrupt()`.
-Thread-Index: AQHb3q3lAKJwiCeNiES7NMfEqP2rpbQIalBQ
-Date: Wed, 18 Jun 2025 05:43:11 +0000
-Message-ID: <1b7f0d569bd74b5ca606c1eb9d57e4b1@realtek.com>
-References: <20250616105631.444309-4-fourier.thomas@gmail.com>
-In-Reply-To: <20250616105631.444309-4-fourier.thomas@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gtUcuf/h"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so5523893f8f.2;
+        Tue, 17 Jun 2025 22:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1750225393; x=1750830193; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EDPyxhrKqnB3wYWa9STwkUgXZUbdCHyqxl5kFElQAQ0=;
+        b=gtUcuf/hK7Tl21GB+WO55HLzj0DhPSK11uIJDdPBit6/scu+4OXhMfw3II9+akVNun
+         8GjSwlewBX8mJsmTBKQPjvTTYZbEPqKnMVMu5S/5BfYBu5QvcFg5Q9xwAQYTwis212mG
+         GMtJ4oFJoo2osAhTb5SQEVLa5D77vSLbW+l2wQx2RK5w88yrWg2+5GsgfNSxPbwfZEu3
+         dRXDXtbGK2wgGjJgdU0roaCpoWMcHx7Z7zOPOlPH3DF1bL3vGdLVNYkP2PBUWdwSGlAu
+         dSkNxaQKCBlqu1Nl+3doOljNHDV4ME5CEB6kUX27fDq3x/EejZ3X4IGdztTtvci4no3H
+         iiPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750225393; x=1750830193;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EDPyxhrKqnB3wYWa9STwkUgXZUbdCHyqxl5kFElQAQ0=;
+        b=jbgDuo2MFedQu26l61uZTBrvwWjL+9rc5gGA4P+sWIxJsIQF+v/2Z1h+g1HzVnNpvK
+         H3QBSqSD843cmTGDxt6IxscbgldLwfz7/loQ4gvnqfgZXTooJmgEgW7sdoK2mK4jog6+
+         7zy3+jvb73pRCKiwF1fIM/JLoK6nlzjyJM2nnumefsFCrbpo1Vq+PVWQl72o4jk9pLZS
+         mtFyRw8yEltxOchJB8nTX9Q8NO3tVArLZF2KYDcfAuCr+7SagQj20LOHzH7h9sbBGAQZ
+         9Z8s2SpDtZ6lOIe4L5n2AXrTPRLoHfxfWgBPyMassHFfQ2CcK7Q+dcdUrbl6vLVf7x5B
+         Awag==
+X-Forwarded-Encrypted: i=1; AJvYcCUBrwVp8mlsQw7HqLqs2vreBZZb3PUC1DBoH8/vR1HiGnXk2AddrQX4wu5yCi1rYTwYh60OJ2s9@vger.kernel.org, AJvYcCVi/f+sCUStUMpGunsEu8yCFkueQT6Cbd02gWrUaLPK7VslasI2r8I7MsI0yqMLyHalW13szYbbILB1JHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysqD9FpRt+XQKZkglPhEOCHwMgtqkqI3NWuNCHyR6H5SgbaEyE
+	BN0KnTZ6GdTtuIXOrNdjvqb6D+Kof+rwzYbFmT55y8qGHHl1H3CKwC0=
+X-Gm-Gg: ASbGncua+7RsyqTuUNTjAfO6Q1X1baHNMxVq8n+ZFVABvY17HttWYD1jA3gsnqfk+am
+	AVGmcN5L2PTgwn2sOSQTWvffSQzNna6TUyWN3J3V7oquXTKPhRD63+2d/BCvbtXNaG9Fy1ed+Ix
+	ZN/I5GNy+NfmYju/xR4Gw73Vs+YOzJP3FWALsRbPTnzgR61baAn9ZQ0EDh4FooQsdmAlYUicOo2
+	NshgggSQtvmht1+2UIeoik0celjHxNKIczu1oK3IAM1kOueJTo+h1Fgk4bSs+hRrXlW1cCC9mjh
+	Rlg2cQ8qOozBGPiV0GzwHqP9Z37M+qY+EX2BpL1+lKhr3GotAq51Y/9AXNLJxPodrcirv38zq0N
+	XXBEqT9mfVYx2XhPFlX+kWbNVi/fwGzCgH8MhGw==
+X-Google-Smtp-Source: AGHT+IE30ICEI4K5qmZV1bFKxegSqORhVi3QZC60MchHttexvFAoRwIQBR3B2RVwnsbHDgVpn+z6PQ==
+X-Received: by 2002:a5d:64ce:0:b0:3a4:f513:7f03 with SMTP id ffacd0b85a97d-3a572e8bfb1mr11845311f8f.44.1750225392513;
+        Tue, 17 Jun 2025 22:43:12 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057357.dip0.t-ipconnect.de. [91.5.115.87])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4534172d2b0sm127511775e9.35.2025.06.17.22.43.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jun 2025 22:43:11 -0700 (PDT)
+Message-ID: <3bfe25fc-f5d3-447a-9381-27b712b60f77@googlemail.com>
+Date: Wed, 18 Jun 2025 07:43:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/356] 6.6.94-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250617152338.212798615@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250617152338.212798615@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thomas Fourier <fourier.thomas@gmail.com> wrote:
-> The function `_rtl_pci_init_one_rxdesc()` can fail even when the new
-> `skb` is passed because of a DMA mapping error.  If it fails, the `skb`
-> is not saved in the rx ringbuffer and thus lost.
->=20
-> Compile tested only
->=20
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+Am 17.06.2025 um 17:21 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.94 release.
+> There are 356 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+
+
+Beste Grüße,
+Peter Schneider
+
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
+
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
