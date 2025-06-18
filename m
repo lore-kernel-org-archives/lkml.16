@@ -1,62 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C16D3085B3
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 18:39:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BEC2F5469;
+	Wed, 18 Jun 2025 18:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750271963; cv=none; b=R8nc5lquHJQxrervcIcTsRjSgePSTPCrHIrz6nw6nRu78qTLQixiRKMesjpIHAkhZROaA7KrwqqjCI+Gy5fcu2Jko4h1Rst5dcmH+kFH9/7mqWDQEL3hoyYKrsstPa6qH30gqmPUe2ucz0gL++w0evOoPr7adgdYozmdy+b7PqQ=
+	t=1750271966; cv=none; b=hc9NbiJ4YVOjwyDuolIWLc3jtFlCbq9SN6cItUKg+8hIwW0XSPfBFUNUNIVuiAfMvgymP2bY1E11c0ln+1RKBZdnryThamUiuaMoM4SP9Q3JUpemhNj/+sMmRrZmXnqgWNnRjBVit8Y0JJ+zrzoZRJOKcXBpKTWZLSlX90rxwK4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750271963; c=relaxed/simple;
-	bh=PQvKTVCGBx2u4smdsQmu6FoHFBrZOQ0B2v/JiNxbRUQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=r45ERH7U+4kE5BUgX80GfSQZ32Hbp9YU80G83qbDIMiyzZkL7c6gTaGZcZgrP5Az1HbaPHb1yxobk8GIHBaJXlf3KGHFp+hYXx++Pc/eHcYZM6p7t1npR160LjFaTusSBBekWYSJC8v6FzOskFT2V9PhuhMmB0vHw2hD/J2uMGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HlB/rH/9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dcHTbIDk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750271966; c=relaxed/simple;
+	bh=7a1PjeCpxWtk3iPqJuzL9cRDMGgzZs+7R/WwL76nTz8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UnJYgqs5imAaCovyRfolg5+zkCXjtHa2nnihPRVFvLiMM8a3Th3zd5bCRHJ1nXnYAkhiL7SI43Kz7zoKF4RGWmhWQ5r0bgRYwX11utoPJCi1OuyiVm9Pq29BOLgMI1w8BZl+4OWjAiCGnDj/z1iAdTlk7LEW1XEsh/m4ldpEI8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DsxNna+m; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HlB/rH/9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dcHTbIDk"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750271960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQvKTVCGBx2u4smdsQmu6FoHFBrZOQ0B2v/JiNxbRUQ=;
-	b=HlB/rH/9ABf5yob0lAGkDg8UN1N1uVTgUtY85n8Rhln8OaK+aVXfvBgZw89hL0R4Ex+2wt
-	Sk3yvj4/MbaPy+2aYmAuSKrogUsWcYQWUvK93cFTecYfqR4bdazP4I8ihcqhD24k9SuzOT
-	o+tGiZz5EAi/w79HuukSJs7pPC/e1toCuqpxxhD1mHCTbhtd9VoslZFlI4lKK4FXLLselh
-	YDtwscbbEQSj8ftUB97Cq8e+StMmyt02MqVfh/RsjGYQaCUgnJZqOZxBXVDf78+ts1rN/z
-	15sgU1ZkijHhvmNZ5UwKU5xLAsyMUNLLXkbDR9Z3E9V6CgMIgcRu89OXwDnUsA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750271960;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PQvKTVCGBx2u4smdsQmu6FoHFBrZOQ0B2v/JiNxbRUQ=;
-	b=dcHTbIDkTZRvslinMeFXDU3PSwhaUV5al75Jgw/4ldXaFjpfbHhDOjZ03dCOFHZae4JajC
-	e8QgZfHW1TOHy8BA==
-To: Borislav Petkov <bp@kernel.org>, X86 ML <x86@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, "Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: Re: [PATCH] x86/CPU/AMD: Add CPUID faulting support
-In-Reply-To: <20250528213105.1149-1-bp@kernel.org>
-References: <20250528213105.1149-1-bp@kernel.org>
-Date: Wed, 18 Jun 2025 20:39:19 +0200
-Message-ID: <87plf0rj1k.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DsxNna+m"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=v5tYhFD1j+yv3Iu8PpEhj2ETO0QbZsDAEopsQ/A9bAk=; b=DsxNna+mqd14Y1R+bYWGnLXAQZ
+	KD6LPHyGeHF0KI/3kpZdMUU/dhkMhaL8WEah3c3V+49Ysvqs6Bu1vdm9Vpq/S7pzTkPI7eJtMEYxU
+	uBoRjKpFcj6CN3GQQtP1DGIdK3sIxGUq5tAbQdEdFNW6f1UST3AvhDLuU1qvMN21EAerKLDVmvRmF
+	Bz18Agad3kUCnPAoloNaQzMvUnGOBL6wdnqo4xVUjT0N58jBE6K3YMI7r0d/dCaUiT95wlFWeD+R/
+	7Mj3cTV1CtHQkWAw/n5cxdS/2TVEKUTcA+WwGRREV4fUaL5WvVYXbK9HuC1rY3t6P+y7zHGbMhwx9
+	5BjmFRZw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uRxgn-00000004Z0Q-0yr0;
+	Wed, 18 Jun 2025 18:39:13 +0000
+Date: Wed, 18 Jun 2025 19:39:13 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, linux-doc@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, virtualization@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Jerrin Shaji George <jerrin.shaji-george@broadcom.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Minchan Kim <minchan@kernel.org>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Brendan Jackman <jackmanb@google.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Naoya Horiguchi <nao.horiguchi@gmail.com>,
+	Oscar Salvador <osalvador@suse.de>, Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry.yoo@oracle.com>,
+	Qi Zheng <zhengqi.arch@bytedance.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>
+Subject: Re: [PATCH RFC 07/29] mm/migrate: rename isolate_movable_page() to
+ isolate_movable_ops_page()
+Message-ID: <aFMH0TmoPylhkSjZ@casper.infradead.org>
+References: <20250618174014.1168640-1-david@redhat.com>
+ <20250618174014.1168640-8-david@redhat.com>
+ <9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9F76592E-BB0E-4136-BDBA-195CC6FF3B03@nvidia.com>
 
-On Wed, May 28 2025 at 23:31, Borislav Petkov wrote:
-> From: "Borislav Petkov (AMD)" <bp@alien8.de>
->
-> Add CPUID faulting support on AMD using the same user interface.
->
-> Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+On Wed, Jun 18, 2025 at 02:14:15PM -0400, Zi Yan wrote:
+> On 18 Jun 2025, at 13:39, David Hildenbrand wrote:
+> 
+> > ... and start moving back to per-page things that will absolutely not be
+> > folio things in the future. Add documentation and a comment that the
+> > remaining folio stuff (lock, refcount) will have to be reworked as well.
+> >
+> > While at it, convert the VM_BUG_ON() into a WARN_ON_ONCE() and handle
+> > it gracefully (relevant with further changes), and convert a
+> > WARN_ON_ONCE() into a VM_WARN_ON_ONCE_PAGE().
+> 
+> The reason is that there is no upstream code, which use movable_ops for
+> folios? Is there any fundamental reason preventing movable_ops from
+> being used on folios?
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+folios either belong to a filesystem or they are anonymous memory, and
+so either the filesystem knows how to migrate them (through its a_ops)
+or the migration code knows how to handle anon folios directly.
