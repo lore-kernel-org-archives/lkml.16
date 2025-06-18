@@ -1,295 +1,123 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F0A285C8E;
-	Wed, 18 Jun 2025 14:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0C6285C8E
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 14:27:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750256840; cv=none; b=D8py3wTdove5BQU+4qcB0UqL5jUKSnTj+GpCRqoSwAt0EeIhZffJrmyLvjbqBPg3hR01J2ShhufdIquxWLoGWZm8NRGxM6/z10dUb9RFgdsHYpggGe6bTROxwGjODti7GNL1wkOF8ZQZxSqcyFZkUl8ugTZv7wYmHbzAUzeDuwI=
+	t=1750256860; cv=none; b=ubu9iPkMetzcnT1iSKu0IkZQ3y88SsA5iAUJxd67HSLYzS2FfOYheFxy3ALIsJtJ8rLRdOd9WVHpWnWuhLy5dJHIPIxTaJmdd8Czn/z2n5pmyipBZ+ELA8SOD1sMStMEMLGZDqjvfEoNMUuuJMKorPZF0T6spaVfA9I9t0edduk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750256840; c=relaxed/simple;
-	bh=0MyDPyc9Xv4iW1PBFbyN9/ARZN1/Ul9zCil6X+k+0gg=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=Dd/F0ARs2hlXB4IXyVyYCB/JP6915z56r96+7/adJD0y05t+hmrrxJ1NqBrZcjxxcBL9YM011ZMKezaX2/AzzAmb8lyIE4TvKvmZ6oEss6E4RH73bOzXN43Fq2/y2UsfZUvN2tbifLyq5Ktjb6GNm5rQYk4Ex5uoTPJRb98Pi9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CzWXy5fA; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750256860; c=relaxed/simple;
+	bh=0R04X2IxAUZ+Y0jSm7qz0sa4qxhk6NzAtpPdgD8xbVQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DT168LoWruTS/KGmCZ/z+QCMNIl385C7Wc+rMKwbU+5DO07G0vbQZIRu9qhmDdWqs9BTLyEhtF9dOXmK1H5u4yUdPdDPmUGouUwpL0LmnI4SGVqEWAGflz5O/w4zS9UX2B+XVMJwWycWAtPW3erMHyRoJy2FRLJ3u5g+MIpZTmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=M8F939s6; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzWXy5fA"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-23694cec0feso18167385ad.2;
-        Wed, 18 Jun 2025 07:27:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="M8F939s6"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32addf54a01so73028001fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 07:27:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750256838; x=1750861638; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=cloudflare.com; s=google09082023; t=1750256854; x=1750861654; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cDnfJ25L8a52gq/NA/cJbhdph8aKbv0AyNMqnP72X0w=;
-        b=CzWXy5fAtJZVN/fKc4kNk9ZJS+M9Xop9l2h9SOkMu+lTthAXhRnBuyvgXU/a6nfsyi
-         saGouGfGUHwvb7KRejjZvDE7r0/ou4z4NYDW5ZuhiOPH8P1NPd1+ttU4TyU0GIpa48EI
-         3a0YOWuLHwgHRRYrKLlEDotyG0wZWfiAf8SIyBuvNBaJQWHl4kxqlkZtTurrkHE9astA
-         Xomln+f12eNlsHzUYdR+amTzY/LokBRWSPJ9D+HF4jOxEyBTahC+3U2EllFlOtxCoWGI
-         1Uid3zS8yhKdXauFDMbUFVhdolqLM5PmqY9YPAH7yx1Z8Xj9ACkCQlEMhWXU8th/o2w2
-         g5+w==
+        bh=0R04X2IxAUZ+Y0jSm7qz0sa4qxhk6NzAtpPdgD8xbVQ=;
+        b=M8F939s6AEUCMyHjj+jeloh3DP6d22N7SImeAmZ0qEzWxA1fhP/5tFCK1U5OsJ0kPG
+         si6gpln635DkGCqpQX7pZ44u0T1Fuqq1LH9OQA18hHD+xgEyNPGZM/p0xXeyn7nowqMK
+         Gfck6hyqQmu2QsIcQVr3qCWVChMW4ZLCEu2RNJypBcfXWSW5G+2TjRkJlUR3TSoVjoBu
+         k4nYslmXfLO03hEHcTl6tfRs8ltl88u1Q9ZGbymcAGajCajMDq039AHx6O9syvYyKim2
+         xWYmI9BA80QODd+z/b+ldOr6YXmrgj5vS2aJNMkxYK9kEn/793ejXhnoj9pKgq+ZdKi1
+         Hq1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750256838; x=1750861638;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=cDnfJ25L8a52gq/NA/cJbhdph8aKbv0AyNMqnP72X0w=;
-        b=eAAOwluPh1Tm/ELEzudHzNNdBvB3Omyap0Q5GqcoRefCQ33l4hKNNZ5cIN7qDWZ4xZ
-         oqTFCGwG9ymSgKhx8VuHjud+Y8HpSqcR9ov2bzaB6HKY0C9FTQZ1DSxqFwsy5isM2H4a
-         3g2GQKoYIsDH4RLQdpklvKUOPSinYGlm25pURNK9lu9IPMcY5AZixD0M+z61liSEOPSU
-         YvxINV2rwPeQDEP5g8HQD1mMoXhf1SZHCcfQHIqHrTIs+NIwd/G06aMbjMZVsyR5Ktus
-         MCysHa5bv4cp6noGM49o1voMkos95c+IAF4W7osuSuKM4u2RscBKDuh3kph3a5JcFKRP
-         9ybg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0cw5deo3foBobVetTktZGGUJKFD6d5oHs94okOWwwl6qMohkiva31Dt22tya7TImJR39BE90AHE1cecE=@vger.kernel.org, AJvYcCVdyEzV7M+UylQ00/JSgones+739X1L3jSi4NTmnTIsj/YFRQJGR8JPAizbcGoS8O99TMVbanfccupvQP8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzr7AlMLFdAHpJ1zOXWn8sCUAr1C7G9pcarbxaQwnpdURUzwV/i
-	MmH3caMdRS3wwRhIaWB+uSkJCpIe24wbKI76LJ7drSTlYc7HWI339bNH
-X-Gm-Gg: ASbGnctvXrasaUVtj9VS2zYUX+bi51wLRPiFQYVnIkLnFVTz94Uc6x/d2EsF+HsGvKP
-	IjKnIdOAcX3UFiU44rNQUG740CCBaM2MTlAOWX5MFU/pNUFv22eoCEwhU3mD7oFgdKHyGnpJtKH
-	5jH5cz1PRguZf+U/Ww/2K+PeNiRzVeaXajon88xOPyvm8ujni5DYEBqT/21PI0EBaQ/Oe2BH5tw
-	81l7yYMJxmDIFFZuvpb7RavqGiYwb6NsJe++81V+EHyXRuOv+l/6pqozaHbEobzeFSuIC0U7PHn
-	1jZB4vutevs1s27POD4vOm4+f21IHi9/oBG4F23NhheZSQBs/wMz5g==
-X-Google-Smtp-Source: AGHT+IHeLAlgKV+3gxI9GWnscujBRTm3Fy2QahxbYDaiCLiTYC+XwgiSpSL1nD0tpsw2X3ysEp0YcQ==
-X-Received: by 2002:a17:902:fcc3:b0:235:6aa:1675 with SMTP id d9443c01a7336-2366b14d39cmr178361745ad.52.1750256838199;
-        Wed, 18 Jun 2025 07:27:18 -0700 (PDT)
-Received: from localhost ([240d:1a:f76:b500:4431:46e3:c76b:79bc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2365e0cffe6sm100100165ad.245.2025.06.18.07.27.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jun 2025 07:27:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750256854; x=1750861654;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0R04X2IxAUZ+Y0jSm7qz0sa4qxhk6NzAtpPdgD8xbVQ=;
+        b=Kj61aaKzdDpjdQ5pPtkFbAze1ZSID4ljFO6XdOCwI+fXyvEFIan9uHK/+jiWnH28t7
+         xqA6NSEKzKwgyDCQ9h5MFAH8nXotPZqBHkUy/yXvl1SjfFWjhy8ouSKKYKvcGf7nug81
+         ZqBtm+Ir2dhdE0xactQLppBFyUE2yYEIiNz9Fv0Si8BMwoT0D1yCybBIXYTbs01j7kuf
+         pCZ2ITC3Axd9ryXGduaEt2xEfeMlZ6KbAIMXzXPYOIVfKeBlQY4WXKSPGd1EQJDZeqdM
+         LaWILEZiLE/5+ec+XgGChjCwJRSBzKsHrhxdRB3Mfe4vFNHyWHYyIRLrkcVs0el7yx4s
+         We1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUKEE/26ubU/uZrn6SP0rZGQYE/LAvM2NRD775uVijISddj7ExmfNhyW2ovX8Oy3D+BvFIzmFADJU8RXzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2T+dPmnIJdcG1qFqtKB5qHO5TarSYdCgVOSFOeaqBhN0VT33j
+	/2CDrFuNRem4+NgiinIjlOtbl9dTBJM9MGPqsB1JKXpaRr9/553NmwG5wvSJQg/N6Iy0MvFabD3
+	7/KDzhlXgXgQ/s//NiSiqwEPtLYn//y/4IYqmPJzHUg==
+X-Gm-Gg: ASbGncvuPtVPqM1swYgvLaA+BGnX6F9tnn0Uuf8OsoneP5yDPHW+MWTu+BbSMrUThKt
+	t/AeW34v7z3igo7VZCTbaoyuoYsOT9MBe7Kb1dbMKliCNUGxb735WpMQDViHfU2ja6ih1bYIsiA
+	K8KnrzXascMsc/gTKCVRO4t+v5kKouXOru07WeE5KfRtkUScD8nrHrW3Q7WY+wVw==
+X-Google-Smtp-Source: AGHT+IGGgI3FTwdOcK8RLKdtKdhn3U4LuZlr6R5KwqYquv0mpgnRFvgV/Xu6G6n/cNU5rLBns6CPyI5rMhviN4oJemU=
+X-Received: by 2002:a05:651c:1987:b0:32a:ec98:e15c with SMTP id
+ 38308e7fff4ca-32b4a5ca0f9mr60085391fa.19.1750256854524; Wed, 18 Jun 2025
+ 07:27:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20250616095532.47020-1-matt@readmodwrite.com> <CAPhsuW4ie=vvDSc97pk5qH+faoKjz+b51MDYGA3shaJwNd677Q@mail.gmail.com>
+ <CAENh_SQPLHC8pswTRoqh0bQR84HHQmnO3bM07UQa1Xu9uY_3WA@mail.gmail.com>
+ <CAADnVQ+QyPqi7XJ2p=S9FVDbOxMXvVPU859n+2ApuRQv5T2S5w@mail.gmail.com>
+ <CAENh_SQgZ5yVpshKRhiezhGMDAMvgV7SmwD_8u++mACE33oNrg@mail.gmail.com> <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
+In-Reply-To: <CAADnVQJgOyBCCySnBkTk-VCsz0dy+ppdGHpggxbtDpBBGhaXVg@mail.gmail.com>
+From: Ignat Korchagin <ignat@cloudflare.com>
+Date: Wed, 18 Jun 2025 15:27:23 +0100
+X-Gm-Features: AX0GCFsaM9DGTqH4WJ6Z032fn61el3PhuhfhzVPYIHaWfMnL8mcSuRqckaKRyAc
+Message-ID: <CALrw=nFvUwmpjUMYh5iJqjo6SbAO8fZt8pkys7iDjZHfpF2DxQ@mail.gmail.com>
+Subject: Re: [PATCH] bpf: Call cond_resched() to avoid soft lockup in trie_free()
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Matt Fleming <matt@readmodwrite.com>, Song Liu <song@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	kernel-team <kernel-team@cloudflare.com>, Matt Fleming <mfleming@cloudflare.com>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 18 Jun 2025 23:27:13 +0900
-Message-Id: <DAPQ9L3FCLIF.24FIDLQST2S1O@gmail.com>
-Cc: "Albert Esteve" <aesteve@redhat.com>, "Michael S. Tsirkin"
- <mst@redhat.com>, "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Hans
- Verkuil" <hverkuil@xs4all.nl>, "Jason Wang" <jasowang@redhat.com>, "Xuan
- Zhuo" <xuanzhuo@linux.alibaba.com>, =?utf-8?q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, <gurchetansingh@google.com>,
- <daniel.almeida@collabora.com>, <adelva@google.com>,
- <changyeon@google.com>, <nicolas.dufresne@collabora.com>,
- <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>,
- <virtualization@lists.linux.dev>
-Subject: Re: [PATCH v3] media: add virtio-media driver
-From: "Alexandre Courbot" <gnurou@gmail.com>
-To: "Mauro Carvalho Chehab" <mchehab+huawei@kernel.org>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250412-virtio-media-v3-1-97dc94c18398@gmail.com>
- <20250526141316.7e907032@foz.lan> <DA6Q0LZPGS2D.2QCV889PQL2A7@gmail.com>
- <20250527111311.105246f2@sal.lan>
- <CAAVeFu+=RpEfu3i_Fh9_eq_g=cmDFF0gcurT0gU9AX1UX+UNVA@mail.gmail.com>
- <20250527153547.6603eaf4@sal.lan>
- <CAAVeFuJtp=UEEULeMSVpmYDmH81Y6OQgj6NCeuPUhabSRHw4dA@mail.gmail.com>
- <20250617104938.09d21b7c@foz.lan> <20250617110318.7c89d999@foz.lan>
- <20250617122034.3e570b4e@foz.lan>
-In-Reply-To: <20250617122034.3e570b4e@foz.lan>
 
-On Tue Jun 17, 2025 at 7:20 PM JST, Mauro Carvalho Chehab wrote:
-> Em Tue, 17 Jun 2025 11:03:18 +0200
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
+On Wed, Jun 18, 2025 at 3:01=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 >
->> Em Tue, 17 Jun 2025 10:49:38 +0200
->> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
->>=20
->> > Hi Alex,
->> >=20
->> > Em Tue, 27 May 2025 23:03:39 +0900
->> > Alexandre Courbot <gnurou@gmail.com> escreveu:
->> >  =20
->> > > > > > Btw, I was looking at:
->> > > > > >
->> > > > > >         https://github.com/chromeos/virtio-media
->> > > > > >
->> > > > > > (I'm assuming that this is the QEMU counterpart, right?)     =
-=20
->> > > > >
->> > > > > crosvm actually, but QEMU support is also being worked on.     =
-=20
->> > > >
->> > > > Do you have already QEMU patches? The best is to have the Kernel d=
-river
->> > > > submitted altogether with QEMU, as Kernel developers need it to do=
- the
->> > > > tests. In my case, I never use crosvm, and I don't have any Chrome=
-book
->> > > > anymore.     =20
->> > >=20
->> > > IIRC Albert Esteve was working on this, maybe he can share the curre=
-nt status.   =20
->> >=20
->> > Any news regards to it?
->> >  =20
->> > > Note that crosvm does not require a Chromebook, you can build and ru=
-n
->> > > it pretty easily on a regular PC. I have put together a document to
->> > > help with that:
->> > >=20
->> > > https://github.com/chromeos/virtio-media/blob/main/TRY_IT_OUT.md   =
-=20
->> >=20
->> > I started looking on it today. Already installed crossvm (I had to
->> > install libcap-devel to build it). Still, I'm not familiar with
->> > crossvm, which is a little be painful. In particular, how can I
->> > enable network on it and speedup it? With suggested parameters,
->> > it picked only one CPU, and very few memory on it:
->> >=20
->> > 	# cat /proc/cpuinfo|grep processor
->> > 	processor       : 0
->> >=20
->> > 	# free
->> >                total        used        free      shared  buff/cache  =
- available
->> > 	Mem:          221876       34780      139712         272       56096 =
-     187096
->> > 	Swap:              0           0           0
->> >=20
->> > I'd like to be able to compile things on it and use ssh/scp. So,
->> > the VM needs more CPUs, more memory, more network and GPU.
+> On Wed, Jun 18, 2025 at 5:29=E2=80=AFAM Matt Fleming <matt@readmodwrite.c=
+om> wrote:
+> >
+> > On Tue, Jun 17, 2025 at 4:55=E2=80=AFPM Alexei Starovoitov
+> > <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > On Tue, Jun 17, 2025 at 2:43=E2=80=AFAM Matt Fleming <matt@readmodwri=
+te.com> wrote:
+> > > >
+> > >
+> > > > soft lockup - CPU#41 stuck for 76s
+> > >
+> > > How many elements are in the trie that it takes 76 seconds??
+> >
+> > We run our maps with potentially millions of entries, so it's the size
+> > of the map plus the fact that kfree() does more work with KASAN that
+> > triggers this for us.
+> >
+> > > I feel the issue is different.
+> > > It seems the trie_free() algorithm doesn't scale.
+> > > Pls share a full reproducer.
+> >
+> > Yes, the scalability of the algorithm is also an issue. Jesper (CC'd)
+> > had some thoughts on this.
+> >
+> > But regardless, it seems like a bad idea to have an unbounded loop
+> > inside the kernel that processes user-controlled data.
 >
-> Found how to setup cpus and memory, but didn't find a way to setup
-> network without running it as root. The gpu parameter has several
-> options. Not sure what backend works well for media apps like qv4l2,
-> camorama, X11, ...
+> 1M kfree should still be very fast even with kasan, lockdep, etc.
+> 76 seconds is an algorithm problem. Address the root cause.
 
-I'm afraid getting GPU and graphics in general to work is more involved
-and tricky on a regular Linux setup (crosvm was primarily designed for
-ChromeOS). If you really need it I can do some more research; most of my
-tests have been done using v4l2-ctl or ffmpeg and saving the output on
-disk for later inspection.
+What if later we have 1G? 100G? Apart from the root cause we still
+have "scalability concerns" unless we can somehow reimplement this as
+O(1)
 
->
->> >=20
->> > Btw, on a quick test with v4l2-compliance, something looks weird:
->> > I started a camera application at the host. Still, v4l2-compliance
->> > said successfully excecuted mmap:
->> >=20
->> > Streaming ioctls:
->> >         test read/write: OK (Not Supported)
->> >         test blocking wait: OK
->> >         test MMAP (no poll): OK                          =20
->> >         test MMAP (select): OK                           =20
->> >         Vide[2025-06-17T08:44:49.177972817+00:00 ERROR virtio_media::i=
-octl] VIDIOC_REQBUFS: memory type DmaBuf is currently unsupported
->> > [2025-06-17T08:44:49.178164554+00:00 ERROR virtio_media::ioctl] VIDIOC=
-_REQBUFS: memory type DmaBuf is currently unsupported
->> > o Capturtest MMAP (epoll): OK                            =20
->> >         test USERPTR (no poll): OK (Not Supported)
->> >         test USERPTR (select): OK (Not Supported)
->> >         test DMABUF (no poll): OK (Not Supported)
->> >         test DMABUF (select): OK (Not Supported)
->> >=20
->> > Which doesn't make any sense, as the host OS should not allow access
->> > to mmap while streaming. =20
->>=20
->> Ah, this was with the "simple" device, not with the proxy one.
->> With the proxy one, I'm getting:
->>=20
->> # v4l2-ctl --all
->> Driver Info:
->>         Driver name      : virtio-media
->>         Card type        : usb video: usb video
->>         Bus info         : platform:virtio-media
->>         Driver version   : 6.15.0
->>         Capabilities     : 0x84200001
->>                 Video Capture
->>                 Streaming
->>                 Extended Pix Format
->>                 Device Capabilities
->>         Device Caps      : 0x04200001
->>                 Video Capture
->>                 Streaming
->>                 Extended Pix Format
->> Priority: 2
->> Video input : 0 (Camera 1: ok)
->> Format Video Capture:
->>         Width/Height      : 1280/720
->>         Pixel Format      : 'MJPG' (Motion-JPEG)
->>         Field             : None
->>         Bytes per Line    : 0
->>         Size Image        : 1843200
->>         Colorspace        : sRGB
->>         Transfer Function : Rec. 709
->>         YCbCr/HSV Encoding: ITU-R 601
->>         Quantization      : Default (maps to Full Range)
->>         Flags             :=20
->> Crop Capability Video Capture:
->>         Bounds      : Left 0, Top 0, Width 1280, Height 720
->>         Default     : Left 0, Top 0, Width 1280, Height 720
->>         Pixel Aspect: 1/1
->> Selection Video Capture: crop_default, Left 0, Top 0, Width 1280, Height=
- 720, Flags:=20
->> Selection Video Capture: crop_bounds, Left 0, Top 0, Width 1280, Height =
-720, Flags:=20
->> Streaming Parameters Video Capture:
->>         Capabilities     : timeperframe
->>         Frames per second: 30.000 (30/1)
->>         Read buffers     : 0
->>=20
->> User Controls
->>=20
->>                      brightness 0x00980900 (int)    : min=3D-128 max=3D1=
-27 step=3D1 default=3D-11 value=3D-11
->>                        contrast 0x00980901 (int)    : min=3D0 max=3D255 =
-step=3D1 default=3D148 value=3D148
->>                      saturation 0x00980902 (int)    : min=3D0 max=3D255 =
-step=3D1 default=3D180 value=3D180
->>                             hue 0x00980903 (int)    : min=3D-128 max=3D1=
-27 step=3D1 default=3D0 value=3D0
->>=20
->> # v4l2-compliance -d0 -s
->>=20
->> Streaming ioctls:
->>         test read/write: OK (Not Supported)
->>         test blocking wait: OK
->>                 fail: v4l2-test-buffers.cpp(1345): node->streamon(q.g_ty=
-pe()) !=3D EINVAL
->>         test MMAP (no poll): FAIL
->>                 fail: v4l2-test-buffers.cpp(1345): node->streamon(q.g_ty=
-pe()) !=3D EINVAL
->>         test MMAP (select): FAIL
->>                 fail: v4l2-test-buffers.cpp(1345): node->streamon(q.g_ty=
-pe()) !=3D EINVAL
->>         test MMAP (epoll): FAIL
->>         test USERPTR (no poll): OK (Not Supported)
->>         test USERPTR (select): OK (Not Supported)
->> [2025-06-17T08:55:20.768760714+00:00 ERROR virtio_media::ioctl] VIDIOC_R=
-EQBUFS: memory type DmaBuf is currently unsupported
->>         test DMABUF (no poll): OK (Not Supported)
->> [2025-06-17T08:55:20.769745707+00:00 ERROR virtio_media::ioctl] VIDIOC_R=
-EQBUFS: memory type DmaBuf is currently unsupported
->>         test DMABUF (select): OK (Not Supported)
->>=20
->> At the host, I'm getting:
->>=20
->> Streaming ioctls:
->>         test read/write: OK (Not Supported)
->>         test blocking wait: OK
->>                 fail: ../utils/v4l2-compliance/v4l2-test-buffers.cpp(134=
-6): node->streamon(q.g_type()) !=3D EINVAL
->>         test MMAP (no poll): FAIL
->>                 fail: ../utils/v4l2-compliance/v4l2-test-buffers.cpp(134=
-6): node->streamon(q.g_type()) !=3D EINVAL
->>         test MMAP (select): FAIL
->>                 fail: ../utils/v4l2-compliance/v4l2-test-buffers.cpp(134=
-6): node->streamon(q.g_type()) !=3D EINVAL
->>         test MMAP (epoll): FAIL
->>         test USERPTR (no poll): OK                       =20
->>         test USERPTR (select): OK                        =20
->>         test DMABUF: Cannot test, specify --expbuf-device
-
-These logs look ok to me: the MMAP tests are failing on the host, so
-they are also expected to fail on the guest (still I expect regular
-streaming to work on both). USERPTR is not supported on the guest, as
-per your request to not support this memory type in new drivers. DMABUF
-is not supported at all at the moment.
-
-If the host cannot pass compliance, the guest will inevitably suffer
-from the same shortcomings. :) But at least on the devices I tested I
-was still able to stream something onto the disk and the result was
-correct.
+Ignat
