@@ -1,291 +1,285 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013017.outbound.protection.outlook.com [40.107.159.17])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3864F2EFDAB;
-	Wed, 18 Jun 2025 15:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.17
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750261158; cv=fail; b=dkfkyv/kRiLUCrC1V+KELhJmfAREocLPcbFG1twjTKQgKLjEtUEPuTyXt6LS8/0Vwqkac1J9MY8vpi0O0yjbJrHOR4bwuNsrhIIffgrYKcNoT6HZsBgLlNXntMSOBXN2h8hIHIu6NFuwOtfunrkIsUO3M2/OIohKzI87tdcyXaA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750261158; c=relaxed/simple;
-	bh=6UDsXPkMOhvO2nP/Z3lMsNiFW1d37kmYb+Ov1O+li44=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QZ3TpOZgEeiA4weI6Zzx1YY7sk/Lv2bcieG28SUBxPwcqlBlV28M9BcDTcRrKhLFpVmVm6M3ciWAX4FXfzJq4ExIOLRHlZTc6ZLHxQY2FyOc9T/i8sWqIEe2vgHnuODohxIAez4qgSeQHSYLW5phv8QPJzAdGRUw61yQ0e1h8Ps=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=GyHQ820a; arc=fail smtp.client-ip=40.107.159.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0A32EFD94
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 15:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750261166; cv=none; b=SgV4vjvRVbMOove2OLpl2hRMb1wwNuOxKkkdcUXaYuaegV6IBj0cFtsBc7N9k8XpxOTsqPbAZ/UnOmtsK44OxL31HW+3aWEOm+5AUO8DCg0gXUJAMozTnXX9qeiThahAP3/xzoWrXVg+LSywvqY60Qz+/tloKWSG68TGmoaX94M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750261166; c=relaxed/simple;
+	bh=+UzWFv/amBd0mJp4NxhLr3Ooq/Utg9NnK0p9JDzGF90=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VUlK8dlUxJzu4HfnuWDwVYZOBoZpnLtF/XQaM3CGVazyvVozpXG0kwyh6EUlF86uKvdoht8hKuke0ShzlQkhaMQyeisJoakK8aAYFQFxNeEeaOvaAfvMrUOBeA29fP3eUTFRH92WY8s/FVOMeylZVZ/o7FO39M4eO+HMUU3gMzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=tBR6mgXJ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=GIiKcDdq; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="GyHQ820a"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n7/koNrGLNBqCcs+GuuP3DGdfY4jHxYQHcc/roh1CEmfydm1pSS7+5ZXF848usMUu1EKvf2VAbRfjXxlYFMB05Z81yL3kQnUMOUTJHcIRr8zDlWOpzuFgxHEdSsmnnteWEXNt85qIzYZ3JrNJbTDLf76LWa6njjlyQxVBGES/ouq5gdxT7hLb9a4el7XLxzOzyBeEdtaYeWWfl5tRJWPDc8AA6HjFrRmBsXHvEjWBkzWkpqnkAa0gG2a6KjxCRmt/tjDa7fnt1/Wwb3EGw4vD0DmSGzMIWyDmy+ffZ8jXPXadHyaD/YZPt4nnnS4cBqUXNDB6f7yNbkgv+zwB3659w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SeshOZT1ES9ZJVaLYVSmpPCM4Bdi7+yKFfnRhNW2FOY=;
- b=f2Wb022uXFCQS977papJcv+zGn5I/1/F/WWw5o3WuEdwU4Jbm0zr3qOsb52M4V6FKq5Zagv4jKALUUwK0RPvih9jmQVhKdIA8LTyWwjM4mPv1TipC0Gg9niIIvO9Ndh19my+CESAxe8qyViLvqe1vup54Czyw1UW3mzvN2Lid/6ny44gPubj3qt3OWVscNjda+dxYMBJ5+gM+L7iiGyZOqUBQRHr6XY2zKvtVslNnrDYcQ1emxytvyTIujuXhsF8CR4VS1NdKFIhz39LUHkDtUzUnXYKIRmbxLORLGpmYkAOqsEE31i8rVz9S+IkA0mds0nn41LWlo+3EaREzzvliw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SeshOZT1ES9ZJVaLYVSmpPCM4Bdi7+yKFfnRhNW2FOY=;
- b=GyHQ820aS8VgaVWxdSvz0/QzpHphrd8ghit55J9HqK4AFeVzmnRm3uxdvuW8FtAzGfZKfXu76TrzNVwmtbPzMQT6cWI9ZDI2Atapv2g4qpzdfp4Ze9bcZK4oqifbLimrHmwyw4SYNqX/6wcEM7AVRkKfM6YX/0221FWb415ewJHECqWFMleqW0iVX1FJnFMGDapI6+S4k1SkwsOtQ7JSVvoYHpmyMXfXCjbgDLu6K9gMfKhkghbKFeaxqxr09hnRi0atzOOkl0Yh9zyUUrcrbU98VcDmxW5N/r5QV4JkX+A51JCyHJlObZoC2HadlRPL4FuFMr5tMXQaYXuSR754RQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com (2603:10a6:20b:4fe::20)
- by GV1PR04MB10775.eurprd04.prod.outlook.com (2603:10a6:150:213::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
- 2025 15:39:13 +0000
-Received: from AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299]) by AS4PR04MB9692.eurprd04.prod.outlook.com
- ([fe80::a2bf:4199:6415:f299%5]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 15:39:13 +0000
-From: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
-To: marcel@holtmann.org,
-	luiz.dentz@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	amitkumar.karwar@nxp.com,
-	neeraj.sanjaykale@nxp.com,
-	sherry.sun@nxp.com,
-	manjeet.gupta@nxp.com
-Subject: [PATCH v3 2/2] Bluetooth: btnxpuart: Add support for 4M baudrate
-Date: Wed, 18 Jun 2025 20:51:13 +0530
-Message-Id: <20250618152113.25500-2-neeraj.sanjaykale@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250618152113.25500-1-neeraj.sanjaykale@nxp.com>
-References: <20250618152113.25500-1-neeraj.sanjaykale@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0003.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:17c::13) To AS4PR04MB9692.eurprd04.prod.outlook.com
- (2603:10a6:20b:4fe::20)
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="tBR6mgXJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GIiKcDdq"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 508A2114011B;
+	Wed, 18 Jun 2025 11:39:23 -0400 (EDT)
+Received: from phl-frontend-02 ([10.202.2.161])
+  by phl-compute-05.internal (MEProxy); Wed, 18 Jun 2025 11:39:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1750261163; x=1750347563; bh=DRBImzuc9d
+	Exg1G4Ug2N7cCw9Jt4HpQZz9+ybxuJOho=; b=tBR6mgXJ7B19gaZ+CdGjCwJHP9
+	o0FTDJDYPA0peHWuvtTvjC33qpTDtopfbGH7V3ewmN/4rJFOCCd+LD9Nhl2zE72m
+	11a6DuUuumOvogmlx+nf1Sqpsf3niVY44cSjvBftwEZ+Im6wXYdyNzLGIoCBwx2d
+	fOCf4kGOfoJWVwcA10rYn0TWuHYYlCfpmUKRaHdTI7Ftvq8tKGoihnhh9OQaKOvv
+	pMU7YUahWs0Z8BQMZFdclCJvwf5hniw38j3ANwE9xQ1fqm252D5LpsMkXGe35ZGA
+	t2nU9Nt6ArSdPWGX/L7+IJ/fBoQoOfZM3YZcuA5t/rUDFPcLlmczcidgbAAw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1750261163; x=1750347563; bh=DRBImzuc9dExg1G4Ug2N7cCw9Jt4HpQZz9+
+	ybxuJOho=; b=GIiKcDdqZ1UMf+FOhQ04NXX2I9w7DrDvuXcqtioE7J39Wzcq2ut
+	DrYvp8fHZGWeZYil4fk+y7KwIqbxbtmq9DS9F7XeDy/iIuS/N5DyiIJrMgpCdebi
+	Sl6lwocvJXQGfOmbKOGIHeqHzN+MzQR0/WC+bjOWvjSzmr5IBanngrn5bYUwWsJc
+	kPj/S4t6jnwo/B0aH2ukc+4SQzItMDjGXoRIhcoupFiC+hgIBaV1eEvb/VAmA/ol
+	RsGCZi+gIZiw+jHkunCxxAF47M5MnDjt8IT+sFexs3j4IFPkb4OKFHjfrwPF3DUl
+	CrguL+nQ9qfX+u/9UF9S/xTEJF2WcndIaZg==
+X-ME-Sender: <xms:qt1SaHG-sxjm4IFB0u_zMt2itF6xf1JvQkrw90Yb0780IP68vvMxtw>
+    <xme:qt1SaEW4w9dcymbLZYMphpRVCxWlKrDDpInb2Jq0OSRBPY4-E0M04l_0OHPq-gqKn
+    zdlMq_Lg6yRoBrzuCM>
+X-ME-Received: <xmr:qt1SaJLL32K-rBKw1LH9qPFa5b95fDwIMiAGM7_Te03LYzI_G96HRbLzYV_lsSRQlgLaWaV-wb2N3AZpF10_00v4ah4ytQEWtBd2Hd0tVUyZxCMX5w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdeftddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggvpdfu
+    rfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnh
+    htshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddvnecu
+    hfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdehffdu
+    heduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthhtohep
+    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepuhdrkhhlvghinhgvqdhkohgvnh
+    highessggrhihlihgsrhgvrdgtohhmpdhrtghpthhtohepsghijhhurdgurghsrdhjiies
+    sghprdhrvghnvghsrghsrdgtohhmpdhrtghpthhtohepuggrvhhiugdrlhgrihhghhhtrd
+    hlihhnuhigsehgmhgrihhlrdgtohhmpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgr
+    uggvrggurdhorhhgpdhrtghpthhtoheprghkphhmsehlihhnuhigqdhfohhunhgurghtih
+    honhdrohhrghdprhgtphhtthhopeholhgvghesrhgvughhrghtrdgtohhmpdhrtghpthht
+    oheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:qt1SaFFFqrWDV3SiLSFvMLmVJKtuJsYNxuRfJecqOwHDDOf3YFg-Jw>
+    <xmx:qt1SaNUNtrRoL1bi1h9BGQld-o3TRNgZGAKND1merilYkwkrThlgqA>
+    <xmx:qt1SaAPeM3mANpaQq5iRGn1Y1VgZiHCACIO3Q35snCmD2v7QXiVIAw>
+    <xmx:qt1SaM3K7euT2GO0phBQx_j9FnJwaf7OOSGok_8nhRWwSLNRjyrl0w>
+    <xmx:q91SaKXouFvPqUsLNDbbt4XznJP4js0l1VtaMgidxQD8CGms7QhbHSGe>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 18 Jun 2025 11:39:21 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 11A1511FB457;
+	Wed, 18 Jun 2025 11:39:21 -0400 (EDT)
+Date: Wed, 18 Jun 2025 11:39:20 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: David Laight <david.laight.linux@gmail.com>
+cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 
+    u.kleine-koenig@baylibre.com, Oleg Nesterov <oleg@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, 
+    Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH v3 next 09/10] lib: mul_u64_u64_div_u64() Optimise the
+ divide code
+In-Reply-To: <20250618101620.26533aca@pumpkin>
+Message-ID: <s919qno2-782s-ooqq-0p19-sr754osn8n02@syhkavp.arg>
+References: <20250614095346.69130-1-david.laight.linux@gmail.com> <20250614095346.69130-10-david.laight.linux@gmail.com> <os452n92-2p25-2q4r-453r-0ps224s90r98@syhkavp.arg> <7r88r006-o704-7q1q-21o2-6n62o864oo79@syhkavp.arg> <20250618101620.26533aca@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS4PR04MB9692:EE_|GV1PR04MB10775:EE_
-X-MS-Office365-Filtering-Correlation-Id: aa340d82-6c9f-4489-aa68-08ddae7e4654
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?u5Wp6PllcRvSQQ+kJMrbARPl5VA2Ktlk8zdgdnVqEpzFGaMIWMQCjrBoPRIa?=
- =?us-ascii?Q?xwdkT9XZPP1i1Q74A8hXkwbRe1ok8rCtZSLqOOXqGsHfJWEO72Ie6VG58kJK?=
- =?us-ascii?Q?8FgI9eepiPQC1oMqVMY1/RvQ2BA5snvrf+w5fADOWdsA9g2Xg9mCmx+sKNtk?=
- =?us-ascii?Q?HOab8xqsCP50uKUSNKNjJUZWaVpbvicxjbQHn6q8hdtPkGe3FaYxmSz85jar?=
- =?us-ascii?Q?PhHcZfGN98REYHtXvGMMnLulksmYKi5/X8zLLHz9HLcOX9J3Vffbcdb2lbgo?=
- =?us-ascii?Q?QvMYihimGaakpW6v108PV/8QxIqhpyOKo3bR0z9YvLXwioEemtGr3xY9cNBK?=
- =?us-ascii?Q?b/u0uyInVc9eDECkbS8S/Z8vZ0eafE/NT+fq0QGJ9zMKyfaKWEoXHITKRfwe?=
- =?us-ascii?Q?ckV3CKEmnWI88t1QWNskXXf5QlHM4hWKj+JiDSFijkC3ziYhyizoPDz/CJdn?=
- =?us-ascii?Q?0MoOYMExTKHTlv0+3LK731F717Gzxl9xksDrGCKCIFWBlUpTsrk3U41a5Vo2?=
- =?us-ascii?Q?+KrWXF8Oh1HUCsBaHH4GLSje17lSqOLcxF3xJq2TrNBH8Lh+Kxnh/X4feAXc?=
- =?us-ascii?Q?jy5peCTqetaz2xkttFYXUccEUH5F2RN9a/wSXbxE/elZ7bMifrpsoFw4Sirh?=
- =?us-ascii?Q?MAD8W21rHMKUTy0yAHRKXGX6K1i2+PgJZECoH/Otmefxqs549yvILDfDE/04?=
- =?us-ascii?Q?CSjN22Qdd+kMdy36Y6p+yvOH3mlbwlsbZZCbsV5z+DsST+Wjij/B7/EUKsiG?=
- =?us-ascii?Q?oCJag4s0wdSAJKsVgm2sUn/8wEEHseyYeT11quSTXF73b8R2LcS4GN6ZXtJe?=
- =?us-ascii?Q?oOxRiGv57VtyxllmZgtpeksSzOpuXqsW7pQacZ3Fp/T9TJloUAdCUQbmn4d/?=
- =?us-ascii?Q?CJFDa+xJemCyapb5/oRscAP8/XnyQ+ZTsdQ0wL8GDZbx1xUeGfXpwTTOScEa?=
- =?us-ascii?Q?ZVzXrBBCaPWx6u4+oxMCHbSVhHff5DZ+hwmRvBcYavRCqV2P8RwVAMAQi1uT?=
- =?us-ascii?Q?GZvitsc5Ll1I3dCxgi7F7KUEtSOW647Sv50AzGMpQMTPDSYJdHeiCcSqtn7l?=
- =?us-ascii?Q?nsLiy1MI0wEwZBLPz17rasItDDU9YHs43z6/sgK7Pa7oE8f0qohPffonehxU?=
- =?us-ascii?Q?np4Me7dmDVm+2uHeSIoUjdQkgdj0EULW+RldIsd5M2CbS6jYapQ/SkTmysyp?=
- =?us-ascii?Q?/5pyjBqGrAH1sPK8wy7v3LUGSBHBuuokadaeJNlAiQ2YE/UNy6SMqbLUgLwj?=
- =?us-ascii?Q?XTe4xrHxKesDXzR+N/m3d5L1pL+bkQm3Ze2U4LBtwmHHZXQVvsatMWAk9YXs?=
- =?us-ascii?Q?6Cjf4Vu8D2jnYM2a1RoLDKIMrB/NA2bNdNFBLWkKnB+m6L6CkuSDTMCZ1t/S?=
- =?us-ascii?Q?qWsp0rGoc3qOyQSkNnH/2VZoPz9wG0k8SbzJXf+wLHoEBX7DazwPwRiY6Isf?=
- =?us-ascii?Q?4ect/XPCIVUir9O541N6DGC/nYXG7IOSgb/6TM1MQnLGxO5emr7QoQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9692.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QCkHKY/RYz5FbSQaTyJmyE1RcboVcdcUykAkA0vhZuBasJ9vXCkTg5Ly7yIA?=
- =?us-ascii?Q?b+ZP71Hr1aVrsIDGFxgBR28ILtN1Vl70VNeCDOdyeGdi/i295vlU85sKQssG?=
- =?us-ascii?Q?oU6WYwyJzSKY+HsLJsirXBIp+y1iF2gMB41jsMUXvJ+aBTFbTL4iOx3xiPni?=
- =?us-ascii?Q?1FQTpCz4kl+/fJGB8Bn7OPgYaHCmptQsH88jfy7iNYiAqnuimDIgDiHKPRCE?=
- =?us-ascii?Q?+bdAk2TlPEyl4GipiTKdXKxEDcqlx1pC3fe/yhyB7Irnsb6DqzPe1m3ZY4e5?=
- =?us-ascii?Q?E/r1CiPqRSRX/OsaWnLVyOGNhX90et+7V0mGiAxmlg/BMzytr95evTTBsUTO?=
- =?us-ascii?Q?nIcKwNZ9TWkQ3CMUhgAfnY3/znzryVRA3jcU5malWs9T8IUHVxCGIw4+f6zZ?=
- =?us-ascii?Q?E8+KzSlDz2aBqeXcFdcPvR11S30zPNtSDbYxASp+tS8TMO4VRu7oceo+5R9b?=
- =?us-ascii?Q?3zhvsWFmLQSFgchzl1g3VYx6kM2ogg3pGBvi2qRT2WVlfy5V2L5X2sd3FEYO?=
- =?us-ascii?Q?jY1UtEBZt7rGv9eQdAz5ScGs0q3sYuzrxyY5Hpi2ib4mIpE6XSOJRZ45XmLM?=
- =?us-ascii?Q?SY3OB6PETSgDEbDx18KfkemP/BAvoqGe8T57aX8sBI4759RGNsIsDmJLo//7?=
- =?us-ascii?Q?zZwlVsbN3E0zA9Px/EZ2MRMf5ErdhXI+bGZo884YtdzW6Ux9+nMHKeD7SNm2?=
- =?us-ascii?Q?po4e+204R92F5moJquSx+CpcTDkUrQlOMedlkHDTvZZMhdJVEFwFO+mrvZsA?=
- =?us-ascii?Q?i8fTD5bm07BLZ98arOkcKIjnTo1W1G7efeyx4LVK4dFBIbMmPSpx4JrbuOjp?=
- =?us-ascii?Q?EO8fXSy3qNIzP/A2TJOJWAxQAW/GogYoiSFqDUxlsthtpBE3MrykBGJBC9bv?=
- =?us-ascii?Q?/nYSg4k2MUqdB9gQxDXliZFrAA8S00nGT7LQJkQ0QUgeg81CntAOz1azfE+T?=
- =?us-ascii?Q?o/YnC5fBagkx7bKuTCq/y3fcql53RjNBMFjt20QIDEjnpgLwOe7O7Q2xims/?=
- =?us-ascii?Q?p8JnG8SL8mwUxE2uSwy4THEpJos14umxZJZUoaeiFB3sApoTEblnvfTIQIiO?=
- =?us-ascii?Q?l9opDmFOaIqQp8mVvN5yAzLF9PWOe0Tzx5yW6AUQCr5mJQTJewKIXAND+GZ9?=
- =?us-ascii?Q?C3EN1osa75ySVbkbV7dYZlaAmkfxUILUWbPQ9ds/pFpQbJKfKOXhDfEk7jfr?=
- =?us-ascii?Q?Dmx8+st940yuMEo0ST+76YwgbBCM/0lpmm3SaOw7KsO32UdrmIzQ3jEzKc1P?=
- =?us-ascii?Q?omaybqSW11NOMD/gWvHtA1dXKrZEUYhmlCZ9jCEGlJxU6Q6uuOwe0hPY4WFE?=
- =?us-ascii?Q?618PI9j2oIOUEbUwhJfe//PLkdtQKsil4yJJbGyMVgn1t1HQie8YJYFQEUVU?=
- =?us-ascii?Q?DLbr1oOAPzB2vjun/q0LAcvNfHj6SoD0+6J2RNpifzmz2RQq/Zg9pAZHmLTp?=
- =?us-ascii?Q?XB+mSL2dZQ8R4ZtiAwlf/87AoazXm54gCd/scNXn+aAVCcnNXMZnomF58n9j?=
- =?us-ascii?Q?V+sYu6nfQE7bfI2TaAvzkdXmsZYGzX9NwD/LmSUb7QAnqQ4tyliyvADPym5p?=
- =?us-ascii?Q?9TK7Kqp9+l8WZoiSOGFEN5+7klmDZtaPvxGEIKCLmPFMfz12hndYQJsLoP/M?=
- =?us-ascii?Q?zQ=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa340d82-6c9f-4489-aa68-08ddae7e4654
-X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9692.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 15:39:13.0121
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BppMqFmFPquI6oSk25ey5RpxbczhuEjyAe2IX6ON1d6cHwc0q+TO3mD7KvY8A6O4xdNWYxR4FwQ0nRKGyBJ0fYi+kyBnZDOEQIUej6OxTx0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR04MB10775
+Content-Type: text/plain; charset=US-ASCII
 
-This adds support for 4000000 as secondary baudrate.
+On Wed, 18 Jun 2025, David Laight wrote:
 
-This value is selected from device tree property "max-speed"
-which is then used to download FW chunks, and as operational baudrate after
-HCI initialization is done.
+> On Tue, 17 Jun 2025 21:33:23 -0400 (EDT)
+> Nicolas Pitre <nico@fluxnic.net> wrote:
+> 
+> > On Tue, 17 Jun 2025, Nicolas Pitre wrote:
+> > 
+> > > On Sat, 14 Jun 2025, David Laight wrote:
+> > >   
+> > > > Replace the bit by bit algorithm with one that generates 16 bits
+> > > > per iteration on 32bit architectures and 32 bits on 64bit ones.
+> > > > 
+> > > > On my zen 5 this reduces the time for the tests (using the generic
+> > > > code) from ~3350ns to ~1000ns.
+> > > > 
+> > > > Running the 32bit algorithm on 64bit x86 takes ~1500ns.
+> > > > It'll be slightly slower on a real 32bit system, mostly due
+> > > > to register pressure.
+> > > > 
+> > > > The savings for 32bit x86 are much higher (tested in userspace).
+> > > > The worst case (lots of bits in the quotient) drops from ~900 clocks
+> > > > to ~130 (pretty much independant of the arguments).
+> > > > Other 32bit architectures may see better savings.
+> > > > 
+> > > > It is possibly to optimise for divisors that span less than
+> > > > __LONG_WIDTH__/2 bits. However I suspect they don't happen that often
+> > > > and it doesn't remove any slow cpu divide instructions which dominate
+> > > > the result.
+> > > > 
+> > > > Signed-off-by: David Laight <david.laight.linux@gmail.com>  
+> > > 
+> > > Nice work. I had to be fully awake to review this one.
+> > > Some suggestions below.  
+> > 
+> > Here's a patch with my suggestions applied to make it easier to figure 
+> > them out. The added "inline" is necessary to fix compilation on ARM32. 
+> > The "likely()" makes for better assembly and this part is pretty much 
+> > likely anyway. I've explained the rest previously, although this is a 
+> > better implementation.
+> > 
+> > commit 99ea338401f03efe5dbebe57e62bd7c588409c5c
+> > Author: Nicolas Pitre <nico@fluxnic.net>
+> > Date:   Tue Jun 17 14:42:34 2025 -0400
+> > 
+> >     fixup! lib: mul_u64_u64_div_u64() Optimise the divide code
+> > 
+> > diff --git a/lib/math/div64.c b/lib/math/div64.c
+> > index 3c9fe878ce68..740e59a58530 100644
+> > --- a/lib/math/div64.c
+> > +++ b/lib/math/div64.c
+> > @@ -188,7 +188,7 @@ EXPORT_SYMBOL(iter_div_u64_rem);
+> >  
+> >  #if !defined(mul_u64_add_u64_div_u64) || defined(test_mul_u64_add_u64_div_u64)
+> >  
+> > -static u64 mul_add(u32 a, u32 b, u32 c)
+> > +static inline u64 mul_add(u32 a, u32 b, u32 c)
+> >  {
+> >  	return add_u64_u32(mul_u32_u32(a, b), c);
+> >  }
+> > @@ -246,7 +246,7 @@ static inline u32 mul_u64_long_add_u64(u64 *p_lo, u64 a, u32 b, u64 c)
+> >  
+> >  u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> >  {
+> > -	unsigned long d_msig, q_digit;
+> > +	unsigned long n_long, d_msig, q_digit;
+> >  	unsigned int reps, d_z_hi;
+> >  	u64 quotient, n_lo, n_hi;
+> >  	u32 overflow;
+> > @@ -271,36 +271,21 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> >  
+> >  	/* Left align the divisor, shifting the dividend to match */
+> >  	d_z_hi = __builtin_clzll(d);
+> > -	if (d_z_hi) {
+> > +	if (likely(d_z_hi)) {
+> >  		d <<= d_z_hi;
+> >  		n_hi = n_hi << d_z_hi | n_lo >> (64 - d_z_hi);
+> >  		n_lo <<= d_z_hi;
+> >  	}
+> >  
+> > -	reps = 64 / BITS_PER_ITER;
+> > -	/* Optimise loop count for small dividends */
+> > -	if (!(u32)(n_hi >> 32)) {
+> > -		reps -= 32 / BITS_PER_ITER;
+> > -		n_hi = n_hi << 32 | n_lo >> 32;
+> > -		n_lo <<= 32;
+> > -	}
+> > -#if BITS_PER_ITER == 16
+> > -	if (!(u32)(n_hi >> 48)) {
+> > -		reps--;
+> > -		n_hi = add_u64_u32(n_hi << 16, n_lo >> 48);
+> > -		n_lo <<= 16;
+> > -	}
+> > -#endif
+> > -
+> >  	/* Invert the dividend so we can use add instead of subtract. */
+> >  	n_lo = ~n_lo;
+> >  	n_hi = ~n_hi;
+> >  
+> >  	/*
+> > -	 * Get the most significant BITS_PER_ITER bits of the divisor.
+> > +	 * Get the rounded-up most significant BITS_PER_ITER bits of the divisor.
+> >  	 * This is used to get a low 'guestimate' of the quotient digit.
+> >  	 */
+> > -	d_msig = (d >> (64 - BITS_PER_ITER)) + 1;
+> > +	d_msig = (d >> (64 - BITS_PER_ITER)) + !!(d << BITS_PER_ITER);
+> 
+> If the low divisor bits are zero an alternative simpler divide
+> can be used (you want to detect it before the left align).
+> I deleted that because it complicates things and probably doesn't
+> happen often enough outside the tests cases.
 
-Earlier, the secondary baudrate was fixed to 3000000 in driver, but now
-with "max-speed" property, this secondary baudrate can be set to
-4000000.
+Depends. On 32-bit systems that might be worth it. Something like:
 
-The secondary baudrate is set by the driver by sending a vendor command
-(3F 09) to the firmware, with secondary baudrate parameter, in
-nxp_post_init().
+	if (unlikely(sizeof(long) == 4 && !(u32)d))
+		return div_u64(n_hi, d >> 32);
 
-Any other value set for max-speed other than 3000000 or 4000000 will
-default to 3000000, which is supported by all legacy and new NXP chipsets.
+> >  	/*
+> >  	 * Now do a 'long division' with BITS_PER_ITER bit 'digits'.
+> > @@ -308,12 +293,17 @@ u64 mul_u64_add_u64_div_u64(u64 a, u64 b, u64 c, u64 d)
+> >  	 * The worst case is dividing ~0 by 0x8000 which requires two subtracts.
+> >  	 */
+> >  	quotient = 0;
+> > -	while (reps--) {
+> > -		q_digit = (unsigned long)(~n_hi >> (64 - 2 * BITS_PER_ITER)) / d_msig;
+> > +	for (reps = 64 / BITS_PER_ITER; reps; reps--) {
+> > +		quotient <<= BITS_PER_ITER;
+> > +		n_long = ~n_hi >> (64 - 2 * BITS_PER_ITER);
+> >  		/* Shift 'n' left to align with the product q_digit * d */
+> >  		overflow = n_hi >> (64 - BITS_PER_ITER);
+> >  		n_hi = add_u64_u32(n_hi << BITS_PER_ITER, n_lo >> (64 - BITS_PER_ITER));
+> >  		n_lo <<= BITS_PER_ITER;
+> > +		/* cut it short if q_digit would be 0 */
+> > +		if (n_long < d_msig)
+> > +			continue;
+> 
+> I don't think that is right.
+> d_msig is an overestimate so you can only skip the divide and mul_add().
 
-This feature is applicable for all new V3 bootloader chips and w8987 V1
-bootloader chip.
+That's what I thought initially. But `overflow` was always 0xffff in 
+that case. I'd like to prove it mathematically, but empirically this 
+seems to be true with all edge cases I could think of.
 
-This property does not apply for w8997 compatible device, since it
-downloads a helper.bin FW file that sets secondary baudrate as 3000000
-only.
+I also have a test rig using random numbers validating against the 
+native x86 128/64 div and it has been running for an hour.
 
-The switch to 4000000 baudrate is validated using a Saleae Logic Analyzer
-and imx8m-mini with AW693 M.2 module.
+> Could be something like:
+> 		if (n_long < d_msig) {
+> 			if (!n_long)
+> 				continue;
+> 			q_digit = 0;
+> 		} else {
+> 			q_digit = n_long / d_msig;
+> 	  		/* Add product to negated divisor */
+> 	  		overflow += mul_u64_long_add_u64(&n_hi, d, q_digit, n_hi);		
+> 		}
+> but that starts looking like branch prediction hell.
 
-Signed-off-by: Neeraj Sanjay Kale <neeraj.sanjaykale@nxp.com>
----
-v2: Change DT property to 'max-speed'. (Krzysztof)
-    Add support for 4M baudrate to w8987. Update commit message.
-(Sherry)
-v3: Add check for 'max-speed' and set default to 3000000. (Sherry)
-    Add functional and testing details in commit message. (Paul)
----
- drivers/bluetooth/btnxpuart.c | 32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+... and so far unnecessary (see above).
 
-diff --git a/drivers/bluetooth/btnxpuart.c b/drivers/bluetooth/btnxpuart.c
-index 6b13feed06df..a9a53e6b35cb 100644
---- a/drivers/bluetooth/btnxpuart.c
-+++ b/drivers/bluetooth/btnxpuart.c
-@@ -73,7 +73,8 @@
- #define FW_AUTH_ENC		0xc0
- 
- #define HCI_NXP_PRI_BAUDRATE	115200
--#define HCI_NXP_SEC_BAUDRATE	3000000
-+#define HCI_NXP_SEC_BAUDRATE_3M	3000000
-+#define HCI_NXP_SEC_BAUDRATE_4M	4000000
- 
- #define MAX_FW_FILE_NAME_LEN    50
- 
-@@ -201,6 +202,7 @@ struct btnxpuart_dev {
- 	u32 new_baudrate;
- 	u32 current_baudrate;
- 	u32 fw_init_baudrate;
-+	u32 secondary_baudrate;
- 	enum bootloader_param_change timeout_changed;
- 	enum bootloader_param_change baudrate_changed;
- 	bool helper_downloaded;
-@@ -802,7 +804,10 @@ static bool nxp_fw_change_baudrate(struct hci_dev *hdev, u16 req_len)
- 		nxpdev->fw_v3_offset_correction += req_len;
- 	} else if (req_len == sizeof(uart_config)) {
- 		uart_config.clkdiv.address = __cpu_to_le32(clkdivaddr);
--		uart_config.clkdiv.value = __cpu_to_le32(0x00c00000);
-+		if (nxpdev->new_baudrate == HCI_NXP_SEC_BAUDRATE_4M)
-+			uart_config.clkdiv.value = __cpu_to_le32(0x01000000);
-+		else
-+			uart_config.clkdiv.value = __cpu_to_le32(0x00c00000);
- 		uart_config.uartdiv.address = __cpu_to_le32(uartdivaddr);
- 		uart_config.uartdiv.value = __cpu_to_le32(1);
- 		uart_config.mcr.address = __cpu_to_le32(uartmcraddr);
-@@ -966,12 +971,13 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev, struct sk_buff *skb)
- 			goto free_skb;
- 		}
- 		if (nxpdev->baudrate_changed != changed) {
-+			nxpdev->new_baudrate = nxpdev->secondary_baudrate;
- 			if (nxp_fw_change_baudrate(hdev, len)) {
- 				nxpdev->baudrate_changed = changed;
- 				serdev_device_set_baudrate(nxpdev->serdev,
--							   HCI_NXP_SEC_BAUDRATE);
-+							   nxpdev->secondary_baudrate);
- 				serdev_device_set_flow_control(nxpdev->serdev, true);
--				nxpdev->current_baudrate = HCI_NXP_SEC_BAUDRATE;
-+				nxpdev->current_baudrate = nxpdev->secondary_baudrate;
- 			}
- 			goto free_skb;
- 		}
-@@ -992,7 +998,7 @@ static int nxp_recv_fw_req_v1(struct hci_dev *hdev, struct sk_buff *skb)
- 			nxpdev->helper_downloaded = true;
- 			serdev_device_wait_until_sent(nxpdev->serdev, 0);
- 			serdev_device_set_baudrate(nxpdev->serdev,
--						   HCI_NXP_SEC_BAUDRATE);
-+						   HCI_NXP_SEC_BAUDRATE_3M);
- 			serdev_device_set_flow_control(nxpdev->serdev, true);
- 		} else {
- 			clear_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
-@@ -1216,12 +1222,13 @@ static int nxp_recv_fw_req_v3(struct hci_dev *hdev, struct sk_buff *skb)
- 	}
- 
- 	if (nxpdev->baudrate_changed != changed) {
-+		nxpdev->new_baudrate = nxpdev->secondary_baudrate;
- 		if (nxp_fw_change_baudrate(hdev, len)) {
- 			nxpdev->baudrate_changed = cmd_sent;
- 			serdev_device_set_baudrate(nxpdev->serdev,
--						   HCI_NXP_SEC_BAUDRATE);
-+						   nxpdev->secondary_baudrate);
- 			serdev_device_set_flow_control(nxpdev->serdev, true);
--			nxpdev->current_baudrate = HCI_NXP_SEC_BAUDRATE;
-+			nxpdev->current_baudrate = nxpdev->secondary_baudrate;
- 		}
- 		goto free_skb;
- 	}
-@@ -1447,8 +1454,8 @@ static int nxp_post_init(struct hci_dev *hdev)
- 	struct btnxpuart_dev *nxpdev = hci_get_drvdata(hdev);
- 	struct ps_data *psdata = &nxpdev->psdata;
- 
--	if (nxpdev->current_baudrate != HCI_NXP_SEC_BAUDRATE) {
--		nxpdev->new_baudrate = HCI_NXP_SEC_BAUDRATE;
-+	if (nxpdev->current_baudrate != nxpdev->secondary_baudrate) {
-+		nxpdev->new_baudrate = nxpdev->secondary_baudrate;
- 		nxp_set_baudrate_cmd(hdev, NULL);
- 	}
- 	if (psdata->cur_h2c_wakeupmode != psdata->h2c_wakeupmode)
-@@ -1773,6 +1780,13 @@ static int nxp_serdev_probe(struct serdev_device *serdev)
- 	if (!nxpdev->fw_init_baudrate)
- 		nxpdev->fw_init_baudrate = FW_INIT_BAUDRATE;
- 
-+	device_property_read_u32(&nxpdev->serdev->dev, "max-speed",
-+				 &nxpdev->secondary_baudrate);
-+	if (!nxpdev->secondary_baudrate ||
-+	    (nxpdev->secondary_baudrate != HCI_NXP_SEC_BAUDRATE_3M &&
-+	     nxpdev->secondary_baudrate != HCI_NXP_SEC_BAUDRATE_4M))
-+		nxpdev->secondary_baudrate = HCI_NXP_SEC_BAUDRATE_3M;
-+
- 	set_bit(BTNXPUART_FW_DOWNLOADING, &nxpdev->tx_state);
- 
- 	crc8_populate_msb(crc8_table, POLYNOMIAL8);
--- 
-2.34.1
 
+> 
+> > +		q_digit = n_long / d_msig;
+> 
+> I think you want to do the divide right at the top - maybe even if the
+> result isn't used!
+> All the shifts then happen while the divide instruction is in progress
+> (even without out-of-order execution).
+
+Only if there is an actual divide instruction available. If it is a 
+library call then you're screwed.
+
+And the compiler ought to be able to do that kind of shuffling on its 
+own when there's a benefit.
+
+> It is also quite likely that any cpu divide instruction takes a lot
+> less clocks when the dividend or quotient is small.
+> So if the quotient would be zero there isn't a stall waiting for the
+> divide to complete.
+> 
+> As I said before it is a trade off between saving a few clocks for
+> specific cases against adding clocks to all the others.
+> Leading zero bits on the dividend are very likely, quotients with
+> the low 16bits zero much less so (except for test cases).
+
+Given what I said above wrt overflow I think this is a good tradeoff.
+We just need to measure it.
+
+
+Nicolas
