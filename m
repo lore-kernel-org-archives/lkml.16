@@ -1,406 +1,1809 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2052.outbound.protection.outlook.com [40.92.40.52])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93808261584;
-	Wed, 18 Jun 2025 16:17:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 048CD2EB5C5;
+	Wed, 18 Jun 2025 16:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750263442; cv=fail; b=h3U3Dp1AWHxeTjGO45GMhGV9Lpe8SLvS5TKjHJ4Q61xghyC3zlBCL4d57/4N/xLUmPJkyZorByJDC4FfIVroq5CYEC13BAZMdKSi1arMMinTOOaMZvxFhDrYMH9AN6c3Z9XHevKAUwvf4VrvwRYt6APB1+fAQ1oP4LpJmWdXu84=
+	t=1750263458; cv=fail; b=tYl+WGDNOZq09TidjiQnRBxhIHdzHtcYgQ0rBGlzf4yCHxjukEx4k57JNapY/EiVgT8OclwY3eGF9ZS4mvBkjj6+NJgH+Qu2CrY57HXb5hg2PDcCH0XzwxqzXNupAoaffWIUGFNeZ97e5SYeISqZ8Ge9FwNwg+azlUT5jwbvdpU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750263442; c=relaxed/simple;
-	bh=iDihDCCiPKnzrl5H7Qa+uc8McXJUHlJtaUacNVdTnco=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=X8DbydNwxyizt7/ujOTi6ZWk7d+3Rq0plEkH+XhXVSX3a/2+p4Fm2Hxm4YJtQA33+Y+2wTokPBbSbs4c4R4hLci4TWTDo8ZUZlCdXHyeD8bas+5YRsSmlS7g6GICG63z2jQImq3hweIE+78ndoi2ET6JKBlJd5F/tpY6qmC8xH4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=W+U9E+cJ; arc=fail smtp.client-ip=40.92.40.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1750263458; c=relaxed/simple;
+	bh=8QEYPkB6vu4LiJZuILdg7nGvqs+o3W2YGwgiRdaO7/E=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=I46QiDlUlXYzlvbNkOvnc/h/TkURovjT6addT+r9ee+wyqqFAomXpcjObAJiwibMjUTF0krc+CxoPT83dCxHdV9POH3zEOv2vS6yf9xX84+B495agaointTG1A5l2kz+I7TpxHXMn7AeXFJJ3xVpt46W0+omY7V7uQKYt20LNeU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=riyPbZXI; arc=fail smtp.client-ip=40.107.244.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="W+U9E+cJ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="riyPbZXI"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=xCItztMDoyeR6zgHJ4cMVsaAL9XjSYcZNhl9k+sp1Ryj55uvDGBhi6XLc6DV7hemS1X+9qb44SjV+ayzueaCW8g2I4dixn4DlELc1GM68e51Rpc/rdxbw1GXioVw6tZbhkd15xiJ8M5kdJw1T7jJ2h7H/JnAk0WZDa+b+STBMkXA+Kpf/3fqg78xo3PsEwUzjXGhhjVcnMuOLB9BWd5TziwZCrr0hBDH+yNCjK8Ex9OIz9j/xHYqyvkJojTeDRPTrGAW+kQt/VB8srkxaCr3udTWpr810kMY0tqeLLZ8wE4kAHlRLp1fU1K18dlD6GAttYwV/B3xheW8px1CnFoNmQ==
+ b=iKhR3lqVVdDHTd+cASlRe8PABimaRp5sWxL8OwjcmkLuvuEFDusr5rPHh/OJa2l/wNQS/R1GHvmV7qUDlU0NVQU3ev/RkP6M3FfjkNKk4pjVjCm0WciZ6rNxw6Qry/p1iCsE51C9sMTflO2c3+J/nYeSxxe8mp5H5+7/BphyJAxEfkT3IRGhtSG+OiuA6/EtB++6jUk8lCird1kbQmDU0uJMmBBE2c338A50JSDoUo+z7uEqmTsAHf53rzAiX4tLOOrEty1374mxSvU/sHzM+AVAsxIPcSP2WcJIVYQjE2N5/XAVPlnFw4y7/f0F/oM2eyCAhVfEgPHBreP/PIAEaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8cjIleXG4Q7HdRagOrJoC/WeS4RGW4yTAB0jIgATd+0=;
- b=DZuE2ecUIeKUUUirNK2c3I96tN3tfuKLLTZRfHIJ8/ieN0N3tV/ONU6E7joc02BPIeQv31oG3dOsSFKL6K/UMMxuogl1Ef4k72oTRT3YQvyJE/KUsdKia1K8QKgOWSsLst6oyKUSN2x9teIuBHTm2CPAfW+myxJFc7rvT9XeAxkGvLMq16zBElNS/LCRIIRlZOBzabYN6uQk/EbcrItheQOIK6e456ZkeLR8t4wQsmOHmpCOrkwxtjP7O7wmxZuG1mv/TGO1pEA9Dhk5QpEFgHA9VaoCBkKswS0QPEhiiQ5QqMJHx9x/Fj4VbHbEFOYO9e4cHersVwZ5QmxXZNn6uA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=KXZfB/oTaQTu5gN2OOo4uKS0V9P1jjBEtwhXR099kEw=;
+ b=TKvwgp2xHIHRivmLmFoRFLFRmzsOvqpvZRi8qe/sLxbexU1TBfrBUIPK3pi1lY4TfdpXHReNwzyKFTxuBcOCv5ZEeX2ALMAQfPRYHAIZXsnX7htJD2MI1/2r/DUDFIGs42JbPe5l1/hA7rm7/4Nh1FPkFDZLtdxVt0hYcGDgdWZsBFTUApLSmOV8Yhu6PepYNUKL2VAqEzoVTXtlGMdwQko/CjwZ1+HrRDLVpIM9aFbkc3qgMWlRxkYrt8/BVDdfThnnInFH5P81ySxeqaF7ScKcaHQxdeCBEALq65ngw7HTiJ3DtNFSgg2bsUPFzzyLXaoX40poTn8zmhuzhlRG7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8cjIleXG4Q7HdRagOrJoC/WeS4RGW4yTAB0jIgATd+0=;
- b=W+U9E+cJuwLJXA2TKfevXRN7Yx79ylT3cnDZpfBOGDknTuiMjzLH8ppUlaszNIS6lD2GY6XrOQVVOM+5iclZ9kXU6bEXdw0gkBbRQq4nax505keEbhMmXlp9FvGDEPfk9lPxZQjZooVrtzAdq4EIbYahcGluyMNMvFFdtLQlInUEQegGvxSfJFQolbYlM6+jiyck31HxmpTRdg7II+7MFgfk/86sEdykke3UkB0PolDGMpT+129vEbUIjwUL+NOEhQeBEEY6blV95DBnEcUYpiJvofo8scsvfC9uNRA6z7xqWrvptZTA80lBiGU18ko+BswLo0FV+YTsnjGEaUTN1g==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA1PR02MB8462.namprd02.prod.outlook.com (2603:10b6:806:1f6::17) with
+ bh=KXZfB/oTaQTu5gN2OOo4uKS0V9P1jjBEtwhXR099kEw=;
+ b=riyPbZXIRvEiLWuXtMvP1TpLdvApudzqD8ECiLPowtp1Mm/ryJvH+V8gwRQnKoW1HZIGCzqQp4XIZQzd3Ucs/rfIrS4zxk9tnwB8xncJdTpoTIq9hW9lcH2GoLMskAvcOwBtJRS3oTRBbKlJRZyZF2dFi3AJHg/vErcPd5ZS4wI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by PH7PR12MB7820.namprd12.prod.outlook.com (2603:10b6:510:268::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Wed, 18 Jun
- 2025 16:17:14 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%4]) with mapi id 15.20.8835.027; Wed, 18 Jun 2025
- 16:17:14 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Roman Kisel <romank@linux.microsoft.com>, "alok.a.tiwari@oracle.com"
-	<alok.a.tiwari@oracle.com>, "arnd@arndb.de" <arnd@arndb.de>, "bp@alien8.de"
-	<bp@alien8.de>, "corbet@lwn.net" <corbet@lwn.net>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"decui@microsoft.com" <decui@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "hpa@zytor.com" <hpa@zytor.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "mingo@redhat.com"
-	<mingo@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>, "linux-arch@vger.kernel.org"
-	<linux-arch@vger.kernel.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-CC: "apais@microsoft.com" <apais@microsoft.com>, "benhill@microsoft.com"
-	<benhill@microsoft.com>, "bperkins@microsoft.com" <bperkins@microsoft.com>,
-	"sunilmut@microsoft.com" <sunilmut@microsoft.com>
-Subject: RE: [PATCH hyperv-next v3 01/15] Documentation: hyperv: Confidential
- VMBus
-Thread-Topic: [PATCH hyperv-next v3 01/15] Documentation: hyperv: Confidential
- VMBus
-Thread-Index: AQHb1Om8kxZiEqbHQkyJmXiTdU7CVrQJGpfg
-Date: Wed, 18 Jun 2025 16:17:14 +0000
-Message-ID:
- <SN6PR02MB41579F133A5B33420C21B348D472A@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250604004341.7194-1-romank@linux.microsoft.com>
- <20250604004341.7194-2-romank@linux.microsoft.com>
-In-Reply-To: <20250604004341.7194-2-romank@linux.microsoft.com>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.28; Wed, 18 Jun
+ 2025 16:17:31 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%7]) with mapi id 15.20.8857.019; Wed, 18 Jun 2025
+ 16:17:31 +0000
+Message-ID: <42bac0f3-159b-4192-b23f-658d7edc0d37@amd.com>
+Date: Wed, 18 Jun 2025 11:17:28 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/8] media: platform: amd: Add isp4 fw and hw interface
+To: Bin Du <Bin.Du@amd.com>, mchehab@kernel.org, hverkuil@xs4all.nl,
+ laurent.pinchart+renesas@ideasonboard.com, bryan.odonoghue@linaro.org,
+ sakari.ailus@linux.intel.com, prabhakar.mahadev-lad.rj@bp.renesas.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alex Deucher <alexander.deucher@amd.com>
+Cc: pratap.nirujogi@amd.com, benjamin.chan@amd.com, king.li@amd.com,
+ gjorgji.rosikopulos@amd.com, Phil.Jawich@amd.com, Dominic.Antony@amd.com,
+ Svetoslav.Stoilov@amd.com,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+References: <20250618091959.68293-1-Bin.Du@amd.com>
+ <20250618091959.68293-5-Bin.Du@amd.com>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB8462:EE_
-x-ms-office365-filtering-correlation-id: 0b28f2a5-4eb3-4f37-8692-08ddae83969f
-x-ms-exchange-slblob-mailprops:
- AZnQBsB9XmrJ3OdcGJgulPpe6kFhF3ONEEaRWwuhQQ2+vLifJ73KSBLhr7mYR6ttRQRqP+VRWZUNtw81zTCIkCGYaqkBrYuefIvpzn0Y7u7RVEUcgzDrUxSqfa8/T8+FpeEtaBOWY6K4vQfKbVi0efiYDeyO338bmmgOlpa4Umau5qGPih0t6zrF60tUwzccyI5onDf7y7YT3KPtIbFHl9Njn+ieQbkyNRteqeJgt/jw/LwchdxW5CwjupHmzOeXpJqcxqEPHe+fwBnSiYORc3SS++FoLn8iQRGFBb4+dETZ6Xkyir2OF1EUzV6UI+QqRhermQkMsliQj2Y4ukYncHJSQO/r32ErYw1C9f8SEF76V/JlzsmO5vkeN3VSLo+mJBjxEbGm5s4g7w8cUSy06ezl+i3L4SgBZth5ISM9A6QynMF/L1H8/0Ycckf/W3NvzHHFtzJD34vcsjJYqS3hpzuOd6UuciIOK0whqmsRBLdc7bFdRzrrVqwDX9yV5My0iLKbIGQnVBcBGfDHa8/uvSvB2p6LPLwDwdBBDuSt5WZzh88b2imSpevNsOFRuXn/SoLmfVRRtyQsXAKYVqkYVbzQoX4y6H1MMkpLi/OUCoZmC6Vc+U3f5We8y/Xvwjvlv+OqxZamd7YluHPVzkAA4D1MuPe6URYZkdiAb2vqM+OeTAEChsBQRHkkXj12bI/hPJBEBL5S95yCJiPNTItB7G/bRWzeBmCZAKe9qufHOzPf01nAQ6eBFOUEIqcvUubaxBHf46JkosA=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|19110799006|8062599006|15080799009|8060799009|12121999007|3412199025|440099028|40105399003|19111999003|10035399007|12091999003|102099032|56899033;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?SwmzAqjDKdunEb12wC7nJqQa4hMQkei3dIyNhgM/q3IzDWd92hWUxqBl8zIh?=
- =?us-ascii?Q?6dwc/+muSW3/oAbQgOIHeMkf86wOuyyKBrqCXKRKw0T28rgOrHBZAJiI39Mj?=
- =?us-ascii?Q?f9GYp1LgX4MoiJx2s3dezb/ahDA0h46PMGPP6T3yMcwWRrhTmzQrKqwRQzPL?=
- =?us-ascii?Q?eNaOSp9X71xkv0plnofmNkAjCvhRKH5BJcXLdZ7bdjIG/wESXWp9JHNT6DBl?=
- =?us-ascii?Q?CbVcF7HudKf4yq2gE3KnVk2jtvJRY46N9YM/m8u5uJ34y9CxigpjyEPX0urQ?=
- =?us-ascii?Q?cpyLArLQqxU2j44/Dx9u7LNiEeokWzhdJDIY6Eb08WFbgHjHi2iSlIVy24rR?=
- =?us-ascii?Q?UbsyM/J1lMLEjzGtk64gewUtf2+KO49pn69LsLdArbjGNO3TSdZM7iuHjrsh?=
- =?us-ascii?Q?6yssHwStSLMJcuImFbHPGxcNYzhWBOhnWmwNtuQToOxEnwiiVNKmBPBj59O3?=
- =?us-ascii?Q?m3pwQK83afoDP7lyv9Wft822ERvqfYI+NQI5l+7yEu9/FUngHzY/tsX2YFPp?=
- =?us-ascii?Q?gOCJdEv02yIrebg3XsQm9l/1sfJVRxs4Jf1Q1qR29SZo55InjDf1vcIX1O/3?=
- =?us-ascii?Q?E+Lnk/sm3hSGDLqH5mhKc80roiCujH02ctzMj+ZWcBgQTbEFpxbPI7sLAWv0?=
- =?us-ascii?Q?C3D3uR0fWspF9udW1nDRHpq1PzZJZsuwxozYBMGSW0aKl8tZl4j7EbXtoqyl?=
- =?us-ascii?Q?xlQLM0XTOtKGWxMCIRbWI2OaF3TiX6ZReF/FXvaRkYGB2PWznpS5hNERqGOV?=
- =?us-ascii?Q?sMRk8zBPy9+bwgZEuBn/vvPEoFslGgSx0zwFOW3aYkwlW/ONNRK/BYHfvBlH?=
- =?us-ascii?Q?PPzr8NoOyZSoeczCpURWrUl81GyjcDaXqCzCZQ0TscVb2QaruuJ30LOCWFIM?=
- =?us-ascii?Q?zpxcswJqo7tj5d3Kr1Edatf2yNjF0FYksJopIaBzTu18qhlWqu0rVzuyp8Ve?=
- =?us-ascii?Q?GW3dg7hBo9D7OxdQyRo0yB7JH51LkEoWueUUAaxack0AIFgZnYoQI43aAZVE?=
- =?us-ascii?Q?S0HgPMrvD+KWILxN6L1SDxnS/mpKnjrwd5n8tM65vymhd0LB/jQFFGeAWk7M?=
- =?us-ascii?Q?oV+cxx4CHCJVjpA2BkENTLAjoBiyrQbivMMTeuFF6sVRVs8nsIOUfEThUHZM?=
- =?us-ascii?Q?iYP7WO+M7AILqTXZayJQM4fEayWYAAVQsPNMulCleL74hSZ3s9Tr17pW3VPo?=
- =?us-ascii?Q?3Wo9zuDv+HxbQtw/E5zSnSBh7G+kJd3HBgJSO/3IcyZSQF9+I2CXa1po9pe+?=
- =?us-ascii?Q?7E2wJ18bLw8SK4UL5BT+?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?3eZYFKleMeY9YMtHZ6tjPwio0f2QE2oiVeNjsEC+DYmQ1oNg0Be4oAm/T7E2?=
- =?us-ascii?Q?sIzfdtiVJTvtfsszFFGamRBVZCFzUj1CBY+ouWLfwHrB/fi7IAztmnauKTsX?=
- =?us-ascii?Q?42VkIlsVhkEhA+boKubDtz+VdWiGble5tMMp+ha+sdGM7T1qIzVYsR92kWzP?=
- =?us-ascii?Q?+ZydAvQT9JlmG/SSwudSByoC3HCQDm6z9sNuA2hfrcK87BVUdxcA0Y+gp2uW?=
- =?us-ascii?Q?flvnRSTKEzwT5ZAOjnmyJgXox0fXL+gyuEI1PIzdNlCx3HAgFr5XlnUnlFts?=
- =?us-ascii?Q?m1uUzx0JfDKL8/vkaNxNxo48gCFClvfaN8UQnTABu7X3E7WjvW+Y3PrW5Zen?=
- =?us-ascii?Q?WGjpFLXpTzWNNC4QVQ2z8gR/SUCvywZyctQKD45v/sqvcvueAztciTMdk436?=
- =?us-ascii?Q?GoPg7kI7LkHTDHzUnNOyUDShS8MNFCsIB9bfDeQ6IruO/IUntm9t7kNDeZvf?=
- =?us-ascii?Q?XA/ugPSgGg8axnfbv8PSgOC5YUSiROj9v+Lv9vRCF0MJWhroFTy++PI/15BU?=
- =?us-ascii?Q?cJw7PSVkE+Tjvo+aSLl1oyvywrkiYnKEiRccJLtC6o6WQ5E0Qsd7vAKslIwv?=
- =?us-ascii?Q?sBdNno4ZMN4AMdjMS1AUPldOUXvaIaQGbsonvT0aZ6XEY9EivYcIoCz4GY2L?=
- =?us-ascii?Q?I0aEjvIx9iU6EvYhzT8jfw6o3si3eMhZdI4e4++pXaV1d7LWNTzsBdDwz2Ci?=
- =?us-ascii?Q?OXmNlUPytsSBk+wUbHPwJS2wwzjYJifq9r2EPMTU+ENR5t3xZ61agFzZBd4U?=
- =?us-ascii?Q?9rZkfGbu7TMFGoBVw97dOfTRQh1IQUlz56EY7BSuHIKmXU35fIqVpNeousLn?=
- =?us-ascii?Q?DmdwBHrUbpFWc9gyPcmhiN77FqU8xczzaihHxOq0arhTmziNnZllgeFqP0+k?=
- =?us-ascii?Q?iIfy7EnQEk2WM7p5qbisN8srNHC2JFVklC1dy52eep92amcnl7ySfRQjqIrM?=
- =?us-ascii?Q?wsiSfZ5x4Q6qpnb8dCT/EnqJ5ciE+WsmWVkIVt8KNcNxvCXIYN/oZdleha5Z?=
- =?us-ascii?Q?HbXouj7NUQMLcfV9m/DIz++RN73I1hmNP17f2xo/0Wr0AJdJXuVUPhvihuEC?=
- =?us-ascii?Q?CYyo1fgjNOIfAxYsce7HkVtx5pGtiPMInR+dqKy7uymIGVZkc2CGvQgiEwOq?=
- =?us-ascii?Q?bwiGAmBEPeAUOyKq5gND5ecT+jDwqS1VIi0VuyvTJg+mlh4o46/hZNo6PcVA?=
- =?us-ascii?Q?2TEPR5rdYsWxIfrIpD5krjOgV9AYBzQ72rm+6pPqvTAIkT8JyKEGcw78p1Q?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20250618091959.68293-5-Bin.Du@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR05CA0043.namprd05.prod.outlook.com
+ (2603:10b6:610:38::20) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|PH7PR12MB7820:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8a98e8b4-933e-4e39-0d9a-08ddae83a06a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?Zjdia2kwMmVmc2tQZU1CRmo3aHZiVDJpYUxaZGFpazN6TzQ1YlRYU3BkQjdv?=
+ =?utf-8?B?ZlpFTDlvdSt0VE5aT296MWVMb1BUZ3pqSHN2dzNPaTlldSt6TXZ2c1E3WnNG?=
+ =?utf-8?B?TlhMdFd5TWpFa0ErTjMydk05QWVWcXdlS0FTZzdLb09yVFpkNURmK3FyeGw1?=
+ =?utf-8?B?WnJpMUxZTFlSbVk5cXVNV050RHNvSE5TeFluWjAxa2hNM3FYK0M5eXRwdG80?=
+ =?utf-8?B?K2tNVXl6NUFDSmFoYXZPYXdobnN4NWlHbjFUZkpFNXFSalJjMkNHR1pMd0JJ?=
+ =?utf-8?B?ZkZnbzFkc0h1T25VUmtDSlRoNTZKc2d6TVJkdi94VDB0RjkzK3hTU3ZnTnNq?=
+ =?utf-8?B?Mlp5dkxocnJLN25pbVRFRm9OS3pyUWpnazF1WUFYNjYrOXI5N3k2K292QTlO?=
+ =?utf-8?B?NnplMHE4OXRGcS9yUEcxcXJxTUszU3loS1pHMXYybXEvQ1NnNjZoMlN0V2hS?=
+ =?utf-8?B?MVgvaFdpQzRSaEY4dEZianJQVlhGdXlZM3hybzFoaGxxMDF5Q0N6NDlHVlVx?=
+ =?utf-8?B?eG1sbmQ4WlJNNUR2RHhMZUkwVy91eWRMQlRRSWlHV3lXNWxLNXIwS0RCKy8x?=
+ =?utf-8?B?VXNadmJManV2aGQ5Uzg0QXl4YzF2dVY1eDAxTG1UZ21JZDRhb24rbUZ4R3Nz?=
+ =?utf-8?B?eU5vVTdFVHFSOW1UUGw5WFNVTTRibzBVNUI3TjlQb1dhSWlYbnk1SWt4SDN3?=
+ =?utf-8?B?N1RMdVJYRFVrTm56WUVWaUNueWc1OVlEZFUrOWhwcFVDRDRydnA3cXB1cEJJ?=
+ =?utf-8?B?RnRZNlA0eEV4VENMSUFkVFFtYURTV2dpSjRHUUd4aFhpZ3ZxNW9KSDZLcUNr?=
+ =?utf-8?B?UVRPdVhYYVhuNmI3QVhNYnhWR09HcnpPRU16RXp5Q1FUUHVYa0p2RkljSlZ4?=
+ =?utf-8?B?SXIrc2hIM29QWU1kUTNHbnNLUitzNnVKY2VJYUEvRWFGTUR5WUJTTGpHbU5P?=
+ =?utf-8?B?RzhuYlBYZDc2Tm9rbWcrcGNjMkwzdEk1YzBFSm5SYUs1M1lLM2VVMzhvT0xS?=
+ =?utf-8?B?UVBzZTEvUm02UG4vTE1Memppem1MclRlVWdmSE1JTWlXcTY5bjc2Y2llVnRN?=
+ =?utf-8?B?dTVzcE1xZFNoSmliQ3VhVysrNXh2dVZ3NGN4c0dqangxSDZFVmdTNnYwU1Bq?=
+ =?utf-8?B?bHNwbzliSXExU2JicUpOYU9yN1FCSE1UcEpMaVd0NUFyYnJkNXBVL3RpYmJV?=
+ =?utf-8?B?RDlXTTNKUmlMZ3F3MW9DaVIvQm9Bc3NMSTlUY1ZvNEwxTGs0ZFRPeDNvNFho?=
+ =?utf-8?B?V09FOG94czQrL05YQTc2UUg5QUZkamdGa3Y0TG92S0lJalB2LzJzL2hGaVZu?=
+ =?utf-8?B?UjJtOStxM1hPbEI1ck9OL1hoNDNkL3hnSVRLUkt1cHVwNnBXY1ZyczhNL1ZE?=
+ =?utf-8?B?alMrTXozK09nV1NqdkJOcVlWTEVEVTlsS0FTYnBYK1daQXNVS0gzM01WTnpn?=
+ =?utf-8?B?ZFhpN1Z4em01UVdxcjM1SzMySGZZQzZQY04xenB2eVVKdWNXRkEvRGVqVWJS?=
+ =?utf-8?B?SEV3ZkpldmF5ZGZDTWo3YW9odHVXaFN3U0MyN0RTQnQrMXllNG1XUlNZbnRo?=
+ =?utf-8?B?Z05TNG9VSjBvN2s0REw5QThXVThSWS9ENUNjUXQ5ZFIvNWI2VnRmUUhwZFdV?=
+ =?utf-8?B?Y1MxcC9MTGxRMmYzNjBINTV2bWhxcWMyUElKdlJMMitYcDVIWFk4WEttMlFT?=
+ =?utf-8?B?b3BtaEJtNVJkdlJLQkI4bHZGRkhUeVZOam9PeEdqOGl0RXFHRHNZK3dzTkNo?=
+ =?utf-8?B?MFhMcnFJYlFGQVdqKzdRY1VIR01YK2N4T3ZiYTdXV2NiaEVxQXhEejFaRUVU?=
+ =?utf-8?B?dWJXeHdhVjNMbHhvbVR3UmhiREQ3REVmS3BjVE45SkhqT3NCWW42Ulc5dVVK?=
+ =?utf-8?B?RkVHZHUrUGFsOXFRVzlmNWY5VXZjSHBhVGd1aXd3V3BGQktFUkNqMWFsMVpk?=
+ =?utf-8?B?VzBrVTlyVnYrWXhBQ01vNDlRNVI4MXFrR216Tkg4cVFBZ0lTKzkvMzlqOXk4?=
+ =?utf-8?B?R1dGRnc2ZWt3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UVRQQjVVaGVPd0s4ZXhyMEszMnZhNkJXcDYzaUhmdDR5WlpxQW8vTXk0a1JK?=
+ =?utf-8?B?NlBxZXZCSFB0ZTMrUTlaWEFDQTg4WXRVREM1aUtRSytSMHAvdUpoVExEVCtw?=
+ =?utf-8?B?WG1NOWxzVGtUb2pYUnc5T09Oam5kMGZ6Y1k1UWNod3Nnbm55ZG9Jbk9mWG9y?=
+ =?utf-8?B?T3M0NXpYekZTUGpzZjMxSm1yTGw2VFRKd0cxUkRRQmJoVFFUOHpseXh1Smtj?=
+ =?utf-8?B?c1pLaWxPeXRGZi9ITzd6bm45N3RobHVndnZ5bmRoK04rQVRTTFdOckI1dXJF?=
+ =?utf-8?B?aHZ2UUpvSW11T3ZDUy9XYzZRVWkxQVpHOXJHRjVxSmJxOGV2WkR5ZFRhT2pn?=
+ =?utf-8?B?ZTN4ZE12RGsvNzJSSWNMa3Byc3ppMU5uY1NxNWVWN1lpbDhhcTRGL29mWTkr?=
+ =?utf-8?B?NzA3ZFl3N3QxUnkwTWNaMlZaU1BUY1BiVUpCR3dsVGtNY1pNbVhGaVFKc2x3?=
+ =?utf-8?B?ck55N1ZnQ290TVlRNnJUSzdPYVBoZDZTQmRsTjhjRDkyc0pZZ0FIbko0cUw3?=
+ =?utf-8?B?cG5tcWpXTXdKbmp6MTVZNTBUU3dOS2MvaFEvZWNhRUhzQjhKcWlYUEtWVUFJ?=
+ =?utf-8?B?Q2FVNTFuS09Xb1ZlOXRJSVdkZDI4b1NkWlNYVWVRVU1laktoVVNUWHg2SVZD?=
+ =?utf-8?B?bTFjK2JFVTY4SVUvVk5HVmx3TitEMUpCbjdjVUFhNDhvTWZ4SjJGSldnd0dl?=
+ =?utf-8?B?Yno0clowQ2hCSFZYZXVEbjdIdTdTWnNkWGZGTGpNb0ZHdFBkNjRHbklZT0VP?=
+ =?utf-8?B?V28vWWFranFNckN4cHhhYjk4U1NJUVlXQTRYSXRKV3p5MEFubDl6bmlOZnk2?=
+ =?utf-8?B?c0xaeTF1dXplMXNVMlNXYzhHcHNreWw0WUF0SU1MMldlQ3FJVG9LOWpMUnRD?=
+ =?utf-8?B?SC93aStQd1Rzd3BkOHM2a0JvWFpJcHArdVh5UzdNNCtWUVF5MW1lTWF2ZE92?=
+ =?utf-8?B?Z2lxTm1sN1ZzOWVFQzJrRGpKdnFsTXNNck9uTmZKZENkV1ZpbU1zZHV1UExT?=
+ =?utf-8?B?U1dlUTY1S1FLUzNqcE52UlhxR3ljQmZuWVFmc3JONmtNOU9Td1FPUFZhYlFk?=
+ =?utf-8?B?NzliVmJJOWwveXFZNlZCM2pieEJEaFA5QkxTWlVOdUtaMWdjUEtBZktiKzU4?=
+ =?utf-8?B?WmphUHFBZFdZZUlqaFU2R0MxSWZHY3AvZER3L3FRbW5pVnR5eTNlWXpGQ0pu?=
+ =?utf-8?B?d0QxVVNObFdqYnlUaWh5ZEdFcUhJWmM0dUZuV0dZNFJlelVGY1hMbU1xRlB6?=
+ =?utf-8?B?Tll6dWlwS08vWk1ZRFBFOFI5WG8xVTVEU05EOVUzNHkxc0pyN2dTa0o1RTM3?=
+ =?utf-8?B?NFcwYkptMXBhemU5ci9NSEQreEplOGpQQjhrV2NTYkt3YWxLRHpvbDlRbEpP?=
+ =?utf-8?B?NDZhVWpOVW9pU0xQRlViWFdYZFdySjEzNktUNGYzRnJ4NEpLV0xXWTIyMS9T?=
+ =?utf-8?B?UXVUN3NPSTZURjM4SHhJSEZ0UC9FdW9VUkVkOFg2WUVCQzVFa09Qb2FZbFVE?=
+ =?utf-8?B?Ulc1NkZ6NVNvRGVvNHcyeXN1M1VERHhsUUEyMEwyV1NqaEc3elBkc0t6QXFx?=
+ =?utf-8?B?NU9KZis3WkUzZUR3MEpkM1JMSGtHaEFoa1VzWGh6czVHQllialRubElLNUo1?=
+ =?utf-8?B?L3dCMVQwOTdaU3haSmJQYnI3cHJsN2UwaXRRZUo3TFVSVUNuYUZ1S1R5UCtr?=
+ =?utf-8?B?OHVONlIvOXE3VVdKbUxmaWpmTk5MUkRsTUZEa1hwR3htUlhUck4vV0paVVpz?=
+ =?utf-8?B?RVBDL2RBK0FtMENzK2Q4SVNWdk9wWmU3YlhHVkdhRHhTeXk5V2RrcHZZU1dE?=
+ =?utf-8?B?QWN0ZnBzWEhJQ0d0dHU5cG9GVVU3MTMrczlKMnorWlE4dTB1bGJvN2RXUVg4?=
+ =?utf-8?B?aXZ4WTlHVit0UjdtZWoxdUxlVmh5R3VIc1VucDF6RkJ1bnoyL1V6ZlVxcVRH?=
+ =?utf-8?B?SUVzYWNFdGlOemxVZFlsbW12T0E1SDI5VEM0NWZzaTJlOFdhSzBZSU0rcUwr?=
+ =?utf-8?B?Vjk1OFRPTDNGTURpa3hpSlM1ckQ5L2tMWlljV2NId0pCcnJRVkcyVHlmWVBz?=
+ =?utf-8?B?dnlMeVl3Z3VwVEd3M1BwZkgxNG9YdkJqQXBOMnhlejlId2tBTVhHR0tMOEts?=
+ =?utf-8?Q?OiV9NBYPYgBDucZH0Ge8hFivc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a98e8b4-933e-4e39-0d9a-08ddae83a06a
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b28f2a5-4eb3-4f37-8692-08ddae83969f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2025 16:17:14.7075
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2025 16:17:31.5319
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB8462
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8OjLxwwEG1pcayRuP/UrZSXD4iO+XJpiBufZNG3Cui5dCikishlXvEjGGhL9T/7YHnQZ/OcxS9eTnAXk/aLUqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7820
 
-From: Roman Kisel <romank@linux.microsoft.com> Sent: Tuesday, June 3, 2025 =
-5:43 PM
->=20
-> Define what the confidential VMBus is and describe what advantages
-> it offers on the capable hardware.
->=20
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Alok Tiwari <alok.a.tiwari@oracle.com>
++Alex
++amd-gfx
+
+On 6/18/2025 4:19 AM, Bin Du wrote:
+> ISP firmware controls ISP HW pipeline using dedicated embedded processor
+> called ccpu.
+> The communication between ISP FW and driver is using commands and
+> response messages sent through the ring buffer. Command buffers support
+> either global setting that is not specific to the steam and support stream
+> specific parameters. Response buffers contains ISP FW notification
+> information such as frame buffer done and command done. IRQ is used for
+> receiving response buffer from ISP firmware, which is handled in the main
+> isp4 media device. ISP ccpu is booted up through the firmware loading
+> helper function prior to stream start.
+> Memory used for command buffer and response buffer needs to be allocated
+> from amdgpu buffer manager because isp4 is a child device of amdgpu.
+> 
+> Signed-off-by: Bin Du <Bin.Du@amd.com>
+> Signed-off-by: Svetoslav Stoilov <Svetoslav.Stoilov@amd.com>
 > ---
->  Documentation/virt/hyperv/coco.rst | 125 ++++++++++++++++++++++++++++-
->  1 file changed, 124 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/virt/hyperv/coco.rst b/Documentation/virt/hype=
-rv/coco.rst
-> index c15d6fe34b4e..b4904b64219d 100644
-> --- a/Documentation/virt/hyperv/coco.rst
-> +++ b/Documentation/virt/hyperv/coco.rst
-> @@ -178,7 +178,7 @@ These Hyper-V and VMBus memory pages are marked as
-> decrypted:
->=20
->  * VMBus monitor pages
->=20
-> -* Synthetic interrupt controller (synic) related pages (unless supplied =
-by
-> +* Synthetic interrupt controller (SynIC) related pages (unless supplied =
-by
->    the paravisor)
->=20
->  * Per-cpu hypercall input and output pages (unless running with a paravi=
-sor)
-> @@ -258,3 +258,126 @@ normal page fault is generated instead of #VC or #V=
-E, and the page-fault-
->  based handlers for load_unaligned_zeropad() fixup the reference. When th=
-e
->  encrypted/decrypted transition is complete, the pages are marked as "pre=
-sent"
->  again. See hv_vtom_clear_present() and hv_vtom_set_host_visibility().
+>   drivers/media/platform/amd/isp4/Makefile      |   12 +
+>   .../platform/amd/isp4/isp4_fw_cmd_resp.h      |  318 +++++
+>   .../media/platform/amd/isp4/isp4_interface.c  | 1052 +++++++++++++++++
+>   .../media/platform/amd/isp4/isp4_interface.h  |  164 +++
+>   4 files changed, 1546 insertions(+)
+>   create mode 100644 drivers/media/platform/amd/isp4/isp4_fw_cmd_resp.h
+>   create mode 100644 drivers/media/platform/amd/isp4/isp4_interface.c
+>   create mode 100644 drivers/media/platform/amd/isp4/isp4_interface.h
+> 
+> diff --git a/drivers/media/platform/amd/isp4/Makefile b/drivers/media/platform/amd/isp4/Makefile
+> index 0e36201fbb30..c0166f954516 100644
+> --- a/drivers/media/platform/amd/isp4/Makefile
+> +++ b/drivers/media/platform/amd/isp4/Makefile
+> @@ -5,10 +5,22 @@
+>   obj-$(CONFIG_AMD_ISP4) += amd_capture.o
+>   amd_capture-objs := isp4.o	\
+>   			isp4_phy.o \
+> +			isp4_interface.o \
+>   			isp4_hw.o	\
+>   
+>   ccflags-y += -I$(srctree)/drivers/media/platform/amd/isp4
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/include
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/amdgpu
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/pm/inc
+> +ccflags-y += -I$(srctree)/include/drm
+>   ccflags-y += -I$(srctree)/include
+> +ccflags-y += -I$(srctree)/include/uapi/drm
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/acp/include
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/include
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/modules/inc
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/dc
+> +ccflags-y += -I$(srctree)/drivers/gpu/drm/amd/display/amdgpu_dm
+
+IMO this feels like a hack and also fragile to be sharing so much across 
+subsystems.
+
+Either there should be a kernel wide include/ header that can be used by 
+both or there should be a helper exported to get just the data that is 
+needed.
+
+>   
+>   ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
+>   	cc_stack_align := -mpreferred-stack-boundary=4
+> diff --git a/drivers/media/platform/amd/isp4/isp4_fw_cmd_resp.h b/drivers/media/platform/amd/isp4/isp4_fw_cmd_resp.h
+> new file mode 100644
+> index 000000000000..437d89469af2
+> --- /dev/null
+> +++ b/drivers/media/platform/amd/isp4/isp4_fw_cmd_resp.h
+> @@ -0,0 +1,318 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
+> + */
 > +
-> +Confidential VMBus
-> +------------------
+> +#ifndef _ISP4_CMD_RESP_H_
+> +#define _ISP4_CMD_RESP_H_
+> +
+> +/*
 
-Maybe put this section immediately after the "Guest communication with
-Hyper-V" section, since it is an extension of that topic. Then leave the
-load_unaligned_zeropad() section as last.
+Did you mean this to be kernel doc?  If so you need:
+
+/**
+
+> + * @brief Host and Firmware command & response channel.
+> + *        Two types of command/response channel.
+> + *          Type Global Command has one command/response channel.
+> + *          Type Stream Command has one command/response channel.
+> + *-----------                                        ------------
+> + *|         |       ---------------------------      |          |
+> + *|         |  ---->|  Global Command         |----> |          |
+> + *|         |       ---------------------------      |          |
+> + *|         |                                        |          |
+> + *|         |                                        |          |
+> + *|         |       ---------------------------      |          |
+> + *|         |  ---->|   Stream Command        |----> |          |
+> + *|         |       ---------------------------      |          |
+> + *|         |                                        |          |
+> + *|         |                                        |          |
+> + *|         |                                        |          |
+> + *|  HOST   |                                        | Firmware |
+> + *|         |                                        |          |
+> + *|         |                                        |          |
+> + *|         |       --------------------------       |          |
+> + *|         |  <----|  Global Response       |<----  |          |
+> + *|         |       --------------------------       |          |
+> + *|         |                                        |          |
+> + *|         |                                        |          |
+> + *|         |       --------------------------       |          |
+> + *|         |  <----|  Stream Response       |<----  |          |
+> + *|         |       --------------------------       |          |
+> + *|         |                                        |          |
+> + *|         |                                        |          |
+> + *-----------                                        ------------
+> + */
+> +
+> +/*
+
+Same comment about kernel doc
+
+> + * @brief command ID format
+> + *        cmd_id is in the format of following type:
+> + *        type: indicate command type, global/stream commands.
+> + *        group: indicate the command group.
+> + *        id: A unique command identification in one type and group.
+> + *        |<-Bit31 ~ Bit24->|<-Bit23 ~ Bit16->|<-Bit15 ~ Bit0->|
+> + *        |      type       |      group      |       id       |
+> + */
+> +
+> +#define CMD_TYPE_SHIFT (24)
+> +#define CMD_GROUP_SHIFT (16)
+> +#define CMD_TYPE_STREAM_CTRL ((u32)0x2 << CMD_TYPE_SHIFT)
+> +
+> +#define CMD_GROUP_STREAM_CTRL ((u32)0x1 << CMD_GROUP_SHIFT)
+> +#define CMD_GROUP_STREAM_BUFFER ((u32)0x4 << CMD_GROUP_SHIFT)
+> +
+> +/* Stream  Command */
+> +#define CMD_ID_SET_STREAM_CONFIG                        \
+> +	(CMD_TYPE_STREAM_CTRL | CMD_GROUP_STREAM_CTRL | 0x1)
+> +#define CMD_ID_SET_OUT_CHAN_PROP                        \
+> +	(CMD_TYPE_STREAM_CTRL | CMD_GROUP_STREAM_CTRL | 0x3)
+> +#define CMD_ID_ENABLE_OUT_CHAN                          \
+> +	(CMD_TYPE_STREAM_CTRL | CMD_GROUP_STREAM_CTRL | 0x5)
+> +#define CMD_ID_START_STREAM                             \
+> +	(CMD_TYPE_STREAM_CTRL | CMD_GROUP_STREAM_CTRL | 0x7)
+> +#define CMD_ID_STOP_STREAM                              \
+> +	(CMD_TYPE_STREAM_CTRL | CMD_GROUP_STREAM_CTRL | 0x8)
+> +
+> +/* Stream Buffer Command */
+> +#define CMD_ID_SEND_BUFFER                                \
+> +	(CMD_TYPE_STREAM_CTRL | CMD_GROUP_STREAM_BUFFER | 0x1)
+> +
+> +/*
+
+Same comment about kernel doc
+
+> + * @brief response ID format
+> + *        resp_id is in the format of following type:
+> + *        type: indicate command type, global/stream commands.
+> + *        group: indicate the command group.
+> + *        id: A unique command identification in one type and group.
+> + *        |<-Bit31 ~ Bit24->|<-Bit23 ~ Bit16->|<-Bit15 ~ Bit0->|
+> + *        |      type       |      group      |       id       |
+> + */
+> +
+> +#define RESP_GROUP_SHIFT (16)
+> +#define RESP_GROUP_MASK  (0xff << RESP_GROUP_SHIFT)
+> +
+> +#define GET_RESP_GROUP_VALUE(resp_id)   \
+> +	(((resp_id) & RESP_GROUP_MASK) >> \
+> +	 RESP_GROUP_SHIFT)
+> +#define GET_RESP_ID_VALUE(resp_id) ((resp_id) & 0xffff)
+> +
+> +#define RESP_GROUP_GENERAL (0x1 << RESP_GROUP_SHIFT)
+> +#define RESP_GROUP_NOTIFICATION (0x3 << RESP_GROUP_SHIFT)
+> +
+> +/* General  Response */
+Extra whitespace between words
+> +#define RESP_ID_CMD_DONE (RESP_GROUP_GENERAL | 0x1)
+> +
+> +/* Notification */
+> +#define RESP_ID_NOTI_FRAME_DONE (RESP_GROUP_NOTIFICATION | 0x1)
+> +
+> +#define CMD_STATUS_SUCCESS (0)
+> +#define CMD_STATUS_FAIL (1)
+> +#define CMD_STATUS_SKIPPED (2)
+> +
+> +#define ADDR_SPACE_TYPE_GPU_VA 4
+> +
+> +#define FW_MEMORY_POOL_SIZE (200 * 1024 * 1024)
+> +
+> +/*
+> + * standard ISP mipicsi=>isp
+> + */
+> +#define MIPI0_ISP_PIPELINE_ID 0x5f91
+> +
+> +enum isp4fw_sensor_id {
+> +	SENSOR_ID_ON_MIPI0  = 0,  /* Sensor id for ISP input from MIPI port 0 */
+> +};
+> +
+> +enum isp4fw_stream_id {
+> +	STREAM_ID_INVALID = -1, /* STREAM_ID_INVALID. */
+> +	STREAM_ID_1 = 0,        /* STREAM_ID_1. */
+> +	STREAM_ID_2 = 1,        /* STREAM_ID_2. */
+> +	STREAM_ID_3 = 2,        /* STREAM_ID_3. */
+> +	STREAM_ID_MAXIMUM       /* STREAM_ID_MAXIMUM. */
+> +};
+> +
+> +enum isp4fw_image_format {
+> +	IMAGE_FORMAT_NV12 = 1,              /* 4:2:0,semi-planar, 8-bit */
+> +	IMAGE_FORMAT_YUV422INTERLEAVED = 7, /* interleave, 4:2:2, 8-bit */
+> +};
+> +
+> +enum isp4fw_pipe_out_ch {
+> +	ISP_PIPE_OUT_CH_PREVIEW = 0,
+> +};
+> +
+> +enum isp4fw_yuv_range {
+> +	ISP_YUV_RANGE_FULL = 0,     /* YUV value range in 0~255 */
+> +	ISP_YUV_RANGE_NARROW = 1,   /* YUV value range in 16~235 */
+> +	ISP_YUV_RANGE_MAX
+> +};
+> +
+> +enum isp4fw_buffer_type {
+> +	BUFFER_TYPE_PREVIEW = 8,
+> +	BUFFER_TYPE_META_INFO = 10,
+> +	BUFFER_TYPE_MEM_POOL = 15,
+> +};
+> +
+> +enum isp4fw_buffer_status {
+> +	BUFFER_STATUS_INVALID,  /* The buffer is INVALID */
+> +	BUFFER_STATUS_SKIPPED,  /* The buffer is not filled with image data */
+> +	BUFFER_STATUS_EXIST,    /* The buffer is exist and waiting for filled */
+> +	BUFFER_STATUS_DONE,     /* The buffer is filled with image data */
+> +	BUFFER_STATUS_LACK,     /* The buffer is unavailable */
+> +	BUFFER_STATUS_DIRTY,    /* The buffer is dirty, probably caused by
+> +				 * LMI leakage
+> +				 */
+> +	BUFFER_STATUS_MAX       /* The buffer STATUS_MAX */
+> +};
+> +
+> +enum isp4fw_buffer_source {
+> +	/* The buffer is from the stream buffer queue */
+> +	BUFFER_SOURCE_STREAM,
+> +};
+> +
+> +struct isp4fw_error_code {
+> +	u32 code1;
+> +	u32 code2;
+> +	u32 code3;
+> +	u32 code4;
+> +	u32 code5;
+> +};
+> +
+> +/*
+> + * Command Structure for FW
+> + */
+> +
+> +struct isp4fw_cmd {
+> +	u32 cmd_seq_num;
+> +	u32 cmd_id;
+> +	u32 cmd_param[12];
+> +	u16 cmd_stream_id;
+> +	u8 cmd_silent_resp;
+> +	u8 reserved;
+> +	u32 cmd_check_sum;
+> +};
+> +
+> +struct isp4fw_resp_cmd_done {
+> +	/* The host2fw command seqNum.
+> +	 * To indicate which command this response refer to.
+> +	 */
+> +	u32 cmd_seq_num;
+> +	/* The host2fw command id for host double check. */
+> +	u32 cmd_id;
+> +	/* Indicate the command process status.
+> +	 * 0 means success. 1 means fail. 2 means skipped
+> +	 */
+> +	u16 cmd_status;
+> +	/* If the cmd_status is 1, that means the command is processed fail, */
+> +	/* host can check the isp4fw_error_code to get the detail
+> +	 * error information
+> +	 */
+> +	u16 isp4fw_error_code;
+> +	/* The response payload will be in different struct type */
+> +	/* according to different cmd done response. */
+> +	u8 payload[36];
+> +};
+> +
+> +struct isp4fw_resp_param_package {
+> +	u32 package_addr_lo;	/* The low 32 bit addr of the pkg address. */
+> +	u32 package_addr_hi;	/* The high 32 bit addr of the pkg address. */
+> +	u32 package_size;	/* The total pkg size in bytes. */
+> +	u32 package_check_sum;	/* The byte sum of the pkg. */
+> +};
+> +
+> +struct isp4fw_resp {
+> +	u32 resp_seq_num;
+> +	u32 resp_id;
+> +	union {
+> +		struct isp4fw_resp_cmd_done cmd_done;
+> +		struct isp4fw_resp_param_package frame_done;
+> +		u32 resp_param[12];
+> +	} param;
+> +	u8  reserved[4];
+> +	u32 resp_check_sum;
+> +};
+> +
+> +struct isp4fw_mipi_pipe_path_cfg {
+> +	u32 b_enable;
+> +	enum isp4fw_sensor_id isp4fw_sensor_id;
+> +};
+> +
+> +struct isp4fw_isp_pipe_path_cfg {
+> +	u32  isp_pipe_id;	/* pipe ids for pipeline construction */
+> +};
+> +
+> +struct isp4fw_isp_stream_cfg {
+> +	/* Isp mipi path */
+> +	struct isp4fw_mipi_pipe_path_cfg mipi_pipe_path_cfg;
+> +	/* Isp pipe path */
+> +	struct isp4fw_isp_pipe_path_cfg  isp_pipe_path_cfg;
+> +	/* enable TNR */
+> +	u32 b_enable_tnr;
+> +	/* number of frame rta per-processing,
+> +	 * set to 0 to use fw default value
+> +	 */
+> +	u32 rta_frames_per_proc;
+> +};
+> +
+> +struct isp4fw_image_prop {
+> +	enum isp4fw_image_format image_format;	/* Image format */
+> +	u32 width;				/* Width */
+> +	u32 height;				/* Height */
+> +	u32 luma_pitch;				/* Luma pitch */
+> +	u32 chroma_pitch;			/* Chrom pitch */
+> +	enum isp4fw_yuv_range yuv_range;		/* YUV value range */
+> +};
+> +
+> +struct isp4fw_buffer {
+> +	/* A check num for debug usage, host need to */
+> +	/* set the buf_tags to different number */
+> +	u32 buf_tags;
+> +	union {
+> +		u32 value;
+> +		struct {
+> +			u32 space : 16;
+> +			u32 vmid  : 16;
+> +		} bit;
+> +	} vmid_space;
+> +	u32 buf_base_a_lo;		/* Low address of buffer A */
+> +	u32 buf_base_a_hi;		/* High address of buffer A */
+> +	u32 buf_size_a;			/* Buffer size of buffer A */
+> +
+> +	u32 buf_base_b_lo;		/* Low address of buffer B */
+> +	u32 buf_base_b_hi;		/* High address of buffer B */
+> +	u32 buf_size_b;			/* Buffer size of buffer B */
+> +
+> +	u32 buf_base_c_lo;		/* Low address of buffer C */
+> +	u32 buf_base_c_hi;		/* High address of buffer C */
+> +	u32 buf_size_c;			/* Buffer size of buffer C */
+> +};
+> +
+> +struct isp4fw_buffer_meta_info {
+> +	u32 enabled;					/* enabled flag */
+> +	enum isp4fw_buffer_status status;		/* BufferStatus */
+> +	struct isp4fw_error_code err;			/* err code */
+> +	enum isp4fw_buffer_source source;		/* BufferSource */
+> +	struct isp4fw_image_prop image_prop;		/* image_prop */
+> +	struct isp4fw_buffer buffer;			/* buffer */
+> +};
+> +
+> +struct isp4fw_meta_info {
+> +	u32 poc;				/* frame id */
+> +	u32 fc_id;				/* frame ctl id */
+> +	u32 time_stamp_lo;			/* time_stamp_lo */
+> +	u32 time_stamp_hi;			/* time_stamp_hi */
+> +	struct isp4fw_buffer_meta_info preview;	/* preview BufferMetaInfo */
+> +};
+> +
+> +struct isp4fw_cmd_send_buffer {
+> +	enum isp4fw_buffer_type buffer_type;	/* buffer Type */
+> +	struct isp4fw_buffer buffer;		/* buffer info */
+> +};
+> +
+> +struct isp4fw_cmd_set_out_ch_prop {
+> +	enum isp4fw_pipe_out_ch ch;	/* ISP pipe out channel */
+> +	struct isp4fw_image_prop image_prop;	/* image property */
+> +};
+> +
+> +struct isp4fw_cmd_enable_out_ch {
+> +	enum isp4fw_pipe_out_ch ch;	/* ISP pipe out channel */
+> +	u32 is_enable;			/* If enable channel or not */
+> +};
+> +
+> +struct isp4fw_cmd_set_stream_cfg {
+> +	struct isp4fw_isp_stream_cfg stream_cfg; /* stream path config */
+> +};
+> +
+> +#endif
+> diff --git a/drivers/media/platform/amd/isp4/isp4_interface.c b/drivers/media/platform/amd/isp4/isp4_interface.c
+> new file mode 100644
+> index 000000000000..0e1eb22a0de5
+> --- /dev/null
+> +++ b/drivers/media/platform/amd/isp4/isp4_interface.c
+> @@ -0,0 +1,1052 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +#include <linux/mutex.h>
+> +
+> +#include "amdgpu_object.h"
+> +
+> +#include "isp4_fw_cmd_resp.h"
+> +#include "isp4_hw.h"
+> +#include "isp4_hw_reg.h"
+> +#include "isp4_interface.h"
+> +
+> +#define ISP4IF_FW_RESP_RB_IRQ_EN_MASK \
+> +	(ISP_SYS_INT0_EN__SYS_INT_RINGBUFFER_WPT9_EN_MASK |  \
+> +	 ISP_SYS_INT0_EN__SYS_INT_RINGBUFFER_WPT10_EN_MASK | \
+> +	 ISP_SYS_INT0_EN__SYS_INT_RINGBUFFER_WPT11_EN_MASK | \
+> +	 ISP_SYS_INT0_EN__SYS_INT_RINGBUFFER_WPT12_EN_MASK)
+> +
+> +struct isp4if_rb_config {
+> +	const char *name;
+> +	u32 index;
+> +	u32 reg_rptr;
+> +	u32 reg_wptr;
+> +	u32 reg_base_lo;
+> +	u32 reg_base_hi;
+> +	u32 reg_size;
+> +	u32 val_size;
+> +	u64 base_mc_addr;
+> +	void *base_sys_addr;
+> +};
+> +
+> +/* FW cmd ring buffer configuration */
+> +static struct isp4if_rb_config
+> +	isp4if_cmd_rb_config[ISP4IF_STREAM_ID_MAX] = {
+> +	{
+> +		.name = "CMD_RB_GBL0",
+> +		.index = 3,
+> +		.reg_rptr = ISP_RB_RPTR4,
+> +		.reg_wptr = ISP_RB_WPTR4,
+> +		.reg_base_lo = ISP_RB_BASE_LO4,
+> +		.reg_base_hi = ISP_RB_BASE_HI4,
+> +		.reg_size = ISP_RB_SIZE4,
+> +	},
+> +	{
+> +		.name = "CMD_RB_STR1",
+> +		.index = 0,
+> +		.reg_rptr = ISP_RB_RPTR1,
+> +		.reg_wptr = ISP_RB_WPTR1,
+> +		.reg_base_lo = ISP_RB_BASE_LO1,
+> +		.reg_base_hi = ISP_RB_BASE_HI1,
+> +		.reg_size = ISP_RB_SIZE1,
+> +	},
+> +	{
+> +		.name = "CMD_RB_STR2",
+> +		.index = 1,
+> +		.reg_rptr = ISP_RB_RPTR2,
+> +		.reg_wptr = ISP_RB_WPTR2,
+> +		.reg_base_lo = ISP_RB_BASE_LO2,
+> +		.reg_base_hi = ISP_RB_BASE_HI2,
+> +		.reg_size = ISP_RB_SIZE2,
+> +	},
+> +	{
+> +		.name = "CMD_RB_STR3",
+> +		.index = 2,
+> +		.reg_rptr = ISP_RB_RPTR3,
+> +		.reg_wptr = ISP_RB_WPTR3,
+> +		.reg_base_lo = ISP_RB_BASE_LO3,
+> +		.reg_base_hi = ISP_RB_BASE_HI3,
+> +		.reg_size = ISP_RB_SIZE3,
+> +	},
+> +};
+> +
+> +/* FW resp ring buffer configuration */
+> +static struct isp4if_rb_config
+> +	isp4if_resp_rb_config[ISP4IF_STREAM_ID_MAX] = {
+> +	{
+> +		.name = "RES_RB_GBL0",
+> +		.index = 3,
+> +		.reg_rptr = ISP_RB_RPTR12,
+> +		.reg_wptr = ISP_RB_WPTR12,
+> +		.reg_base_lo = ISP_RB_BASE_LO12,
+> +		.reg_base_hi = ISP_RB_BASE_HI12,
+> +		.reg_size = ISP_RB_SIZE12,
+> +	},
+> +	{
+> +		.name = "RES_RB_STR1",
+> +		.index = 0,
+> +		.reg_rptr = ISP_RB_RPTR9,
+> +		.reg_wptr = ISP_RB_WPTR9,
+> +		.reg_base_lo = ISP_RB_BASE_LO9,
+> +		.reg_base_hi = ISP_RB_BASE_HI9,
+> +		.reg_size = ISP_RB_SIZE9,
+> +	},
+> +	{
+> +		.name = "RES_RB_STR2",
+> +		.index = 1,
+> +		.reg_rptr = ISP_RB_RPTR10,
+> +		.reg_wptr = ISP_RB_WPTR10,
+> +		.reg_base_lo = ISP_RB_BASE_LO10,
+> +		.reg_base_hi = ISP_RB_BASE_HI10,
+> +		.reg_size = ISP_RB_SIZE10,
+> +	},
+> +	{
+> +		.name = "RES_RB_STR3",
+> +		.index = 2,
+> +		.reg_rptr = ISP_RB_RPTR11,
+> +		.reg_wptr = ISP_RB_WPTR11,
+> +		.reg_base_lo = ISP_RB_BASE_LO11,
+> +		.reg_base_hi = ISP_RB_BASE_HI11,
+> +		.reg_size = ISP_RB_SIZE11,
+> +	},
+> +};
+> +
+> +/* FW log ring buffer configuration */
+> +static struct isp4if_rb_config isp4if_log_rb_config = {
+> +	.name = "LOG_RB",
+> +	.index = 0,
+> +	.reg_rptr = ISP_LOG_RB_RPTR0,
+> +	.reg_wptr = ISP_LOG_RB_WPTR0,
+> +	.reg_base_lo = ISP_LOG_RB_BASE_LO0,
+> +	.reg_base_hi = ISP_LOG_RB_BASE_HI0,
+> +	.reg_size = ISP_LOG_RB_SIZE0,
+> +};
+> +
+> +static struct isp4if_gpu_mem_info *isp4if_gpu_mem_alloc(struct isp4_interface
+> +							*ispif,
+> +							u32 mem_size)
+> +{
+> +	struct isp4if_gpu_mem_info *mem_info;
+> +	struct amdgpu_bo *bo = NULL;
+> +	struct amdgpu_device *adev;
+> +	struct device *dev;
+> +
+> +	void *cpu_ptr;
+> +	u64 gpu_addr;
+> +	u32 ret;
+> +
+> +	dev = ispif->dev;
+> +
+> +	if (!mem_size)
+> +		return NULL;
+> +
+> +	mem_info = kzalloc(sizeof(*mem_info), GFP_KERNEL);
+> +	if (!mem_info)
+> +		return NULL;
+> +
+> +	adev = (struct amdgpu_device *)ispif->adev;
+> +	mem_info->mem_size = mem_size;
+> +	mem_info->mem_align = ISP4IF_ISP_MC_ADDR_ALIGN;
+> +	mem_info->mem_domain = AMDGPU_GEM_DOMAIN_GTT;
+> +
+> +	ret = amdgpu_bo_create_kernel(adev,
+> +				      mem_info->mem_size,
+> +				      mem_info->mem_align,
+> +				      mem_info->mem_domain,
+> +				      &bo,
+> +				      &gpu_addr,
+> +				      &cpu_ptr);
+
+IMO this is begging for an extra helper that has a true exported symbol 
+and kernel-wide header for use rather than hacking around the includes 
+for drm headers.
+
+The kernel-wide header can describe the data types exchanged, so there 
+wouldn't be a need to have all the amdgpu headers included.
 
 > +
-> +The confidential VMBus enables the confidential guest not to interact wi=
-th the
-> +untrusted host partition and the untrusted hypervisor. Instead, the gues=
-t relies
-> +on the trusted paravisor to communicate with the devices processing sens=
-itive
-> +data. The hardware (SNP or TDX) encrypts the guest memory and the regist=
-er state
-> +while measuring the paravisor image using the platform security processo=
-r to
-> +ensure trusted and confidential computing.
+> +	if (!cpu_ptr || ret) {
+> +		dev_err(dev, "gpuvm buffer alloc fail, size %u\n", mem_size);
+> +		kfree(mem_info);
+> +		return NULL;
+> +	}
 > +
-> +Confidential VMBus provides a secure communication channel between the g=
-uest and
-> +the paravisor, ensuring that sensitive data is protected from  hyperviso=
-r-level
-> +access through memory encryption and register state isolation.
+> +	mem_info->sys_addr = cpu_ptr;
+> +	mem_info->gpu_mc_addr = gpu_addr;
+> +	mem_info->mem_handle = (void *)bo;
 > +
-> +The unencrypted data never leaves the VM=20
-
-Is this statement really true? The VM contains both the guest and the parav=
-isor,
-so it's also a statement about the paravisor. I don't know what the paravis=
-or
-does for channels it is just proxying. Presumably it must communicate the
-unencrypted data to the host.
-
-> +so neither the host partition nor the
-> +hypervisor can access it at all. In addition to that, the guest only nee=
-ds to
-> +establish a VMBus connection with the paravisor for the channels that pr=
-ocess
-> +sensitive data, and the paravisor abstracts the details of communicating=
- with
-> +the specific devices away.
+> +	return mem_info;
+> +}
 > +
-> +Confidential VMBus is an extension of Confidential Computing (CoCo) VMs
-> +(a.k.a. "Isolated" VMs in Hyper-V terminology). Without Confidential VMB=
-us,
-> +guest VMBus device drivers (the "VSC"s in VMBus terminology) communicate
-> +with VMBus servers (the VSPs) running on the Hyper-V host. The
-> +communication must be through memory that has been decrypted so the
-> +host can access it. With Confidential VMBus, one or more of the VSPs res=
-ide
-> +in the trusted paravisor layer in the guest VM. Since the paravisor laye=
-r also
-> +operates in encrypted memory, the memory used for communication with
-> +such VSPs does not need to be decrypted and thereby exposed to the
-> +Hyper-V host. The paravisor is responsible for communicating securely
-> +with the Hyper-V host as necessary. In some cases (e.g. time synchonizat=
-ion,
-> +key-value pairs exchange
-
-I'm not sure about key-value pairs exchange. I thought the whole point of
-KVP is to communicate information between the guest and the host.
-
-> +) the unencrypted data doesn't need to be communicated
-> +with the host at all, and a conventional VMBus connection suffices.
+> +static int isp4if_gpu_mem_free(struct isp4_interface *ispif,
+> +			       struct isp4if_gpu_mem_info *mem_info)
+> +{
+> +	struct device *dev = ispif->dev;
+> +	struct amdgpu_bo *bo;
 > +
-> +Here is the data flow for a conventional VMBus connection and the Confid=
-ential
-> +VMBus connection (C stands for the client or VSC, S for the server or VS=
-P):
+> +	if (!mem_info) {
+> +		dev_err(dev, "invalid mem_info\n");
+> +		return -EINVAL;
+> +	}
 > +
-> ++---- GUEST ----+       +----- DEVICE ----+        +----- HOST -----+
-> +|               |       |                 |        |                |
-> +|               |       |                 |        |                |
-> +|               |       |                 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-                |
-> +|               |       |                 |        |                |
-> +|               |       |                 |        |                |
-> +|               |       |                 |        |                |
-> ++----- C -------+       +-----------------+        +------- S ------+
-> +       ||                                                   ||
-> +       ||                                                   ||
-> ++------||------------------ VMBus --------------------------||------+
-> +|                     Interrupts, MMIO                              |
-> ++-------------------------------------------------------------------+
+> +	bo = (struct amdgpu_bo *)mem_info->mem_handle;
 > +
-> ++---- GUEST --------------- VTL0 ------+               +-- DEVICE --+
-> +|                                      |               |            |
-> +| +- PARAVISOR --------- VTL2 -----+   |               |            |
-> +| |     +-- VMBus Relay ------+    =3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D            |
-> +| |     |   Interrupts, MMIO  |    |   |               |            |
-> +| |     +-------- S ----------+    |   |               +------------+
-> +| |               ||               |   |
-> +| +---------+     ||               |   |
-> +| |  Linux  |     ||    OpenHCL    |   |
-> +| |  kernel |     ||               |   |
-> +| +---- C --+-----||---------------+   |
-> +|       ||        ||                   |
-> ++-------++------- C -------------------+               +------------+
-> +        ||                                             |    HOST    |
-> +        ||                                             +---- S -----+
-> ++-------||----------------- VMBus ---------------------------||-----+
-> +|                     Interrupts, MMIO                              |
-> ++-------------------------------------------------------------------+
+> +	amdgpu_bo_free_kernel(&bo, &mem_info->gpu_mc_addr, &mem_info->sys_addr);
+
+This also I think needs another helper
+
 > +
-> +An implementation of the VMBus relay that offers the Confidential VMBus =
-channels
-> +is available in the OpenVMM project as a part of the OpenHCL paravisor. =
-Please
-> +refer to https://openvmm.dev/guide/ for more
-> +information about the OpenHCL paravisor.
+> +	kfree(mem_info);
 > +
-> +A guest that is running with a paravisor must determine at runtime if
-> +Confidential VMBus is supported by the current paravisor. It does so by =
-first
-> +trying to establish a Confidential VMBus connection with the paravisor u=
-sing
-> +standard mechanisms where the memory remains encrypted. If this succeeds=
-,
-> +then the guest can proceed to use Confidential VMBus. If it fails, then =
-the
-> +guest must fallback to establishing a non-Confidential VMBus connection =
-with
-> +the Hyper-V host.
+> +	return 0;
+> +}
 > +
-> +Confidential VMBus is a characteristic of the VMBus connection as a whol=
-e,
-> +and of each VMBus channel that is created. When a Confidential VMBus
-> +connection is established, the paravisor provides the guest the message-=
-passing
-> +path that is used for VMBus device creation and deletion, and it provide=
-s a
-> +per-CPU synthetic interrupt controller (SynIC) just like the SynIC that =
-is
-> +offered by the Hyper-V host. Each VMBus device that is offered to the gu=
-est
-> +indicates the degree to which it participates in Confidential VMBus. The=
- offer
-> +indicates if the device uses encrypted ring buffers, and if the device u=
-ses
-> +encrypted memory for DMA that is done outside the ring buffer. These set=
-tings
-> +may be different for different devices using the same Confidential VMBus
-> +connection.
+> +static int isp4if_dealloc_fw_gpumem(struct isp4_interface *ispif)
+> +{
+> +	int i;
 > +
-> +Although these settings are separate, in practice it'll always be encryp=
-ted
-> +ring buffer only or both encrypted ring buffer and external data. If a c=
-hannel
-
-s/ring buffer only or both/ring buffer only, or both/
-
-> +is offered by the paravisor with confidential VMBus, the ring buffer can=
- always
-> +be encrypted since it's strictly for communication between the VTL2 para=
-visor
-> +and the VTL0 guest. However, other memory regions are often used for e.g=
-. DMA,
-> +so they need to be accessible by the underlying hardware, and must be un=
-encrypted
-> +(unless the device supports encrypted memory). Currently, there are no a=
-ny VSPs
-
-s/no any/not any/
-
-> +in OpenHCL that support encrypted external memory, but we will use it in=
- the
-
-Avoid personal pronouns like "we".  Suggest this, or something similar:
-
-"but future versions are expected to enable this capability."
-
-> +future.
+> +	if (ispif->fw_mem_pool) {
+> +		isp4if_gpu_mem_free(ispif, ispif->fw_mem_pool);
+> +		ispif->fw_mem_pool = NULL;
+> +	}
 > +
-> +Because some devices on a Confidential VMBus may require decrypted ring =
-buffers
-> +and DMA transfers, the guest must interact with two SynICs -- the one pr=
-ovided
-> +by the paravisor and the one provided by the Hyper-V host when Confident=
-ial
-> +VMBus is not offered. Interrupts are always signaled by the paravisor Sy=
-nIC, but
-> +the guest must check for messages and for channel interrupts on both Syn=
-ICs.
+> +	if (ispif->fw_cmd_resp_buf) {
+> +		isp4if_gpu_mem_free(ispif, ispif->fw_cmd_resp_buf);
+> +		ispif->fw_cmd_resp_buf = NULL;
+> +	}
 > +
-> +In the case of a confidential VM,
+> +	if (ispif->fw_log_buf) {
+> +		isp4if_gpu_mem_free(ispif, ispif->fw_log_buf);
+> +		ispif->fw_log_buf = NULL;
+> +	}
+> +
+> +	for (i = 0; i < ISP4IF_MAX_STREAM_META_BUF_COUNT; i++) {
+> +		if (ispif->metainfo_buf_pool[i]) {
+> +			isp4if_gpu_mem_free(ispif, ispif->metainfo_buf_pool[i]);
+> +			ispif->metainfo_buf_pool[i] = NULL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int isp4if_alloc_fw_gpumem(struct isp4_interface *ispif)
+> +{
+> +	struct device *dev = ispif->dev;
+> +	int i;
+> +
+> +	ispif->fw_mem_pool = isp4if_gpu_mem_alloc(ispif, FW_MEMORY_POOL_SIZE);
+> +	if (!ispif->fw_mem_pool)
+> +		goto error_no_memory;
+> +
+> +	ispif->fw_cmd_resp_buf =
+> +		isp4if_gpu_mem_alloc(ispif, ISP4IF_RB_PMBMAP_MEM_SIZE);
+> +	if (!ispif->fw_cmd_resp_buf)
+> +		goto error_no_memory;
+> +
+> +	ispif->fw_log_buf =
+> +		isp4if_gpu_mem_alloc(ispif, ISP4IF_FW_LOG_RINGBUF_SIZE);
+> +	if (!ispif->fw_log_buf)
+> +		goto error_no_memory;
+> +
+> +	for (i = 0; i < ISP4IF_MAX_STREAM_META_BUF_COUNT; i++) {
+> +		ispif->metainfo_buf_pool[i] =
+> +			isp4if_gpu_mem_alloc(ispif,
+> +					     ISP4IF_META_INFO_BUF_SIZE);
+> +		if (!ispif->metainfo_buf_pool[i])
+> +			goto error_no_memory;
+> +	}
+> +
+> +	return 0;
+> +
+> +error_no_memory:
+> +	dev_err(dev, "failed to allocate gpu memory");
 
-I think you mean "In the case of confidential VMBus,"
+I don't think the error message is necessary, checkpatch usually 
+complains about this.
 
-> +regular SynIC access by the guest is
-> +intercepted by the paravisor (this includes various MSRs such as the SIM=
-P and
-> +SIEFP, as well as hypercalls like HvPostMessage and HvSignalEvent). If t=
-he guest
-> +actually wants to communicate with the hypervisor, it has to use special=
- mechanisms
-> +(GHCB page on SNP, or tdcall on TDX). Messages will always be one or the=
- other:
-> +with confidential VMBus, all messages use the paravisor SynIC,
-
-This statement seems to contradict the statement in the previous paragraph,=
- and
-the code. If all messages use the paravisor SynIC when Confidential VMBus i=
-s used,
-why must the guest check for messages on both SynICs?
-
-> +otherwise they all
-> +use the hypervisor SynIC. For interrupt signaling, though, some channels=
- may be
-> +running on the host (non-confidential, using the VMBus relay) and use th=
-e hypervisor
-> +SynIC, and some on the paravisor and use its SynIC. The RelIDs are coord=
-inated by
-> +the OpenHCL VMBus server and are guaranteed to be unique regardless of w=
-hether
-> +the channel originated on the host or the paravisor.
-> --
-> 2.43.0
+> +	return -ENOMEM;
+> +}
+> +
+> +static u32 isp4if_compute_check_sum(u8 *buf, u32 buf_size)
+> +{
+> +	u32 checksum = 0;
+> +	u8 *surplus_ptr;
+> +	u32 *buffer;
+> +	u32 i;
+> +
+> +	buffer = (u32 *)buf;
+> +	for (i = 0; i < buf_size / sizeof(u32); i++)
+> +		checksum += buffer[i];
+> +
+> +	surplus_ptr = (u8 *)&buffer[i];
+> +	/* add surplus data crc checksum */
+> +	for (i = 0; i < buf_size % sizeof(u32); i++)
+> +		checksum += surplus_ptr[i];
+> +
+> +	return checksum;
+> +}
+> +
+> +void isp4if_clear_cmdq(struct isp4_interface *ispif)
+> +{
+> +	struct isp4if_cmd_element *buf_node = NULL;
+> +	struct isp4if_cmd_element *tmp_node = NULL;
+> +
+> +	guard(mutex)(&ispif->cmdq_mutex);
+> +
+> +	list_for_each_entry_safe(buf_node, tmp_node, &ispif->cmdq, list) {
+> +		list_del(&buf_node->list);
+> +		kfree(buf_node);
+> +	}
+> +}
+> +
+> +static bool isp4if_is_cmdq_rb_full(struct isp4_interface *ispif,
+> +				   enum isp4if_stream_id cmd_buf_idx)
+> +{
+> +	struct isp4if_rb_config *rb_config;
+> +	u32 rd_ptr, wr_ptr;
+> +	u32 new_wr_ptr;
+> +	u32 rreg;
+> +	u32 wreg;
+> +	u32 len;
+> +
+> +	rb_config = &isp4if_cmd_rb_config[cmd_buf_idx];
+> +	rreg = rb_config->reg_rptr;
+> +	wreg = rb_config->reg_wptr;
+> +	len = rb_config->val_size;
+> +
+> +	rd_ptr = isp4hw_rreg(ispif->mmio, rreg);
+> +	wr_ptr = isp4hw_rreg(ispif->mmio, wreg);
+> +
+> +	new_wr_ptr = wr_ptr + sizeof(struct isp4fw_cmd);
+> +
+> +	if (wr_ptr >= rd_ptr) {
+> +		if (new_wr_ptr < len) {
+> +			return false;
+> +		} else if (new_wr_ptr == len) {
+> +			if (rd_ptr == 0)
+> +				return true;
+> +
+> +			return false;
+> +		}
+> +
+> +		new_wr_ptr -= len;
+> +		if (new_wr_ptr < rd_ptr)
+> +			return false;
+> +
+> +		return true;
+> +	}
+> +
+> +	if (new_wr_ptr < rd_ptr)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static struct isp4if_cmd_element *
+> +isp4if_append_cmd_2_cmdq(struct isp4_interface *ispif,
+> +			 struct isp4if_cmd_element *cmd_ele)
+> +{
+> +	struct isp4if_cmd_element *copy_command = NULL;
+> +
+> +	copy_command = kmalloc(sizeof(*copy_command), GFP_KERNEL);
+> +	if (!copy_command)
+> +		return NULL;
+> +
+> +	memcpy(copy_command, cmd_ele, sizeof(*copy_command));
+> +
+> +	guard(mutex)(&ispif->cmdq_mutex);
+> +
+> +	list_add_tail(&copy_command->list, &ispif->cmdq);
+> +
+> +	return copy_command;
+> +}
+> +
+> +struct isp4if_cmd_element *
+> +isp4if_rm_cmd_from_cmdq(struct isp4_interface *ispif,
+> +			u32 seq_num,
+> +			u32 cmd_id)
+> +{
+> +	struct isp4if_cmd_element *buf_node = NULL;
+> +	struct isp4if_cmd_element *tmp_node = NULL;
+> +
+> +	guard(mutex)(&ispif->cmdq_mutex);
+> +
+> +	list_for_each_entry_safe(buf_node, tmp_node, &ispif->cmdq, list) {
+> +		if (buf_node->seq_num == seq_num &&
+> +		    buf_node->cmd_id == cmd_id) {
+> +			list_del(&buf_node->list);
+> +			return buf_node;
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int isp4if_insert_isp_fw_cmd(struct isp4_interface *ispif,
+> +				    enum isp4if_stream_id stream,
+> +				    struct isp4fw_cmd *cmd)
+> +{
+> +	struct isp4if_rb_config *rb_config;
+> +	struct device *dev = ispif->dev;
+> +	u64 mem_addr;
+> +	u64 mem_sys;
+> +	u32 wr_ptr;
+> +	u32 rd_ptr;
+> +	u32 rreg;
+> +	u32 wreg;
+> +	u32 len;
+> +
+> +	rb_config = &isp4if_cmd_rb_config[stream];
+> +	rreg = rb_config->reg_rptr;
+> +	wreg = rb_config->reg_wptr;
+> +	mem_sys = (u64)rb_config->base_sys_addr;
+> +	mem_addr = rb_config->base_mc_addr;
+> +	len = rb_config->val_size;
+> +
+> +	if (isp4if_is_cmdq_rb_full(ispif, stream)) {
+> +		dev_err(dev, "fail no cmdslot (%d)\n", stream);
+> +		return -EINVAL;
+> +	}
+> +
+> +	wr_ptr = isp4hw_rreg(ispif->mmio, wreg);
+> +	rd_ptr = isp4hw_rreg(ispif->mmio, rreg);
+> +
+> +	if (rd_ptr > len) {
+> +		dev_err(dev, "fail (%u),rd_ptr %u(should<=%u),wr_ptr %u\n",
+> +			stream, rd_ptr, len, wr_ptr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (wr_ptr > len) {
+> +		dev_err(dev, "fail (%u),wr_ptr %u(should<=%u), rd_ptr %u\n",
+> +			stream, wr_ptr, len, rd_ptr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (wr_ptr < rd_ptr) {
+> +		mem_addr += wr_ptr;
+> +
+> +		memcpy((u8 *)(mem_sys + wr_ptr),
+> +		       (u8 *)cmd, sizeof(struct isp4fw_cmd));
+> +	} else {
+> +		if ((len - wr_ptr) >= (sizeof(struct isp4fw_cmd))) {
+> +			mem_addr += wr_ptr;
+> +
+> +			memcpy((u8 *)(mem_sys + wr_ptr),
+> +			       (u8 *)cmd, sizeof(struct isp4fw_cmd));
+> +		} else {
+> +			u32 size;
+> +			u8 *src;
+> +
+> +			src = (u8 *)cmd;
+> +			size = len - wr_ptr;
+> +
+> +			memcpy((u8 *)(mem_sys + wr_ptr), src, size);
+> +
+> +			src += size;
+> +			size = sizeof(struct isp4fw_cmd) - size;
+> +			memcpy((u8 *)(mem_sys), src, size);
+> +		}
+> +	}
+> +
+> +	wr_ptr += sizeof(struct isp4fw_cmd);
+> +	if (wr_ptr >= len)
+> +		wr_ptr -= len;
+> +
+> +	isp4hw_wreg(ispif->mmio, wreg, wr_ptr);
+> +
+> +	return 0;
+> +}
+> +
+> +static inline enum isp4if_stream_id isp4if_get_fw_stream(u32 cmd_id)
+> +{
+> +	return ISP4IF_STREAM_ID_1;
+> +}
+> +
+> +static int isp4if_send_fw_cmd(struct isp4_interface *ispif,
+> +			      u32 cmd_id,
+> +			      void *package,
+> +			      u32 package_size,
+> +			      wait_queue_head_t *wq,
+> +			      u32 *wq_cond,
+> +			      u32 *seq)
+> +{
+> +	enum isp4if_stream_id stream = isp4if_get_fw_stream(cmd_id);
+> +	struct isp4if_cmd_element command_element = { 0 };
+> +	struct isp4if_gpu_mem_info *gpu_mem = NULL;
+> +	struct isp4if_cmd_element *cmd_ele = NULL;
+> +	struct isp4if_rb_config *rb_config;
+> +	struct device *dev = ispif->dev;
+> +	struct isp4fw_cmd cmd = {0};
+> +	u64 package_base = 0;
+> +	u32 sleep_count;
+> +	u32 seq_num;
+> +	u32 rreg;
+> +	u32 wreg;
+> +	int ret;
+> +
+> +	if (package_size > sizeof(cmd.cmd_param)) {
+> +		dev_err(dev, "fail pkgsize(%u)>%lu cmd:0x%x,stream %d\n",
+> +			package_size, sizeof(cmd.cmd_param), cmd_id, stream);
+> +		return -EINVAL;
+> +	}
+> +
+> +	sleep_count = 0;
+> +
+> +	rb_config = &isp4if_resp_rb_config[stream];
+> +	rreg = rb_config->reg_rptr;
+> +	wreg = rb_config->reg_wptr;
+> +
+> +	guard(mutex)(&ispif->isp4if_mutex);
+> +
+> +	while (1) {
+> +		if (isp4if_is_cmdq_rb_full(ispif, stream)) {
+> +			u32 rd_ptr, wr_ptr;
+> +
+> +			if (sleep_count < ISP4IF_MAX_SLEEP_COUNT) {
+> +				msleep(ISP4IF_MAX_SLEEP_TIME);
+> +				sleep_count++;
+> +				continue;
+> +			}
+> +			rd_ptr = isp4hw_rreg(ispif->mmio, rreg);
+> +			wr_ptr = isp4hw_rreg(ispif->mmio, wreg);
+> +			dev_err(dev, "fail to get cmdq slot,stream (%d), rd %u, wr %u\n",
+> +				stream, rd_ptr, wr_ptr);
+> +			return -ETIMEDOUT;
+> +		}
+> +		break;
+> +	}
+> +
+> +	cmd.cmd_id = cmd_id;
+> +	switch (stream) {
+> +	case ISP4IF_STREAM_ID_GLOBAL:
+> +		cmd.cmd_stream_id = (u16)STREAM_ID_INVALID;
+> +		break;
+> +	case ISP4IF_STREAM_ID_1:
+> +		cmd.cmd_stream_id = STREAM_ID_1;
+> +		break;
+> +	default:
+> +		dev_err(dev, "fail bad stream id %d\n", stream);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (package && package_size)
+> +		memcpy(cmd.cmd_param, package, package_size);
+> +
+> +	seq_num = ispif->host2fw_seq_num++;
+> +	cmd.cmd_seq_num = seq_num;
+> +	cmd.cmd_check_sum =
+> +		isp4if_compute_check_sum((u8 *)&cmd, sizeof(cmd) - 4);
+> +
+> +	if (seq)
+> +		*seq = seq_num;
+> +	command_element.seq_num = seq_num;
+> +	command_element.cmd_id = cmd_id;
+> +	command_element.mc_addr = package_base;
+> +	command_element.wq = wq;
+> +	command_element.wq_cond = wq_cond;
+> +	command_element.gpu_pkg = gpu_mem;
+> +	command_element.stream = stream;
+> +	/* only append the fw cmd to queue when its response needs to be
+> +	 * waited for, currently there are only two such commands,
+> +	 * disable channel and stop stream which are only sent after close
+> +	 * camera
+> +	 */
+> +	if (wq && wq_cond) {
+> +		cmd_ele = isp4if_append_cmd_2_cmdq(ispif, &command_element);
+> +		if (!cmd_ele) {
+> +			dev_err(dev, "fail for isp_append_cmd_2_cmdq\n");
+> +			return -ENOMEM;
+> +		}
+> +	}
+> +
+> +	ret = isp4if_insert_isp_fw_cmd(ispif, stream, &cmd);
+> +	if (ret) {
+> +		dev_err(dev, "fail for insert_isp_fw_cmd camId (0x%08x)\n",
+> +			cmd_id);
+> +		if (cmd_ele) {
+> +			isp4if_rm_cmd_from_cmdq(ispif, cmd_ele->seq_num,
+> +						cmd_ele->cmd_id);
+> +			kfree(cmd_ele);
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int isp4if_send_buffer(struct isp4_interface *ispif,
+> +			      struct isp4if_img_buf_info *buf_info)
+> +{
+> +	struct isp4fw_cmd_send_buffer cmd;
+> +
+> +	memset(&cmd, 0, sizeof(cmd));
+> +	cmd.buffer_type = BUFFER_TYPE_PREVIEW;
+> +	cmd.buffer.vmid_space.bit.vmid = 0;
+> +	cmd.buffer.vmid_space.bit.space = ADDR_SPACE_TYPE_GPU_VA;
+> +	isp4if_split_addr64(buf_info->planes[0].mc_addr,
+> +			    &cmd.buffer.buf_base_a_lo,
+> +			    &cmd.buffer.buf_base_a_hi);
+> +	cmd.buffer.buf_size_a = buf_info->planes[0].len;
+> +
+> +	isp4if_split_addr64(buf_info->planes[1].mc_addr,
+> +			    &cmd.buffer.buf_base_b_lo,
+> +			    &cmd.buffer.buf_base_b_hi);
+> +	cmd.buffer.buf_size_b = buf_info->planes[1].len;
+> +
+> +	isp4if_split_addr64(buf_info->planes[2].mc_addr,
+> +			    &cmd.buffer.buf_base_c_lo,
+> +			    &cmd.buffer.buf_base_c_hi);
+> +	cmd.buffer.buf_size_c = buf_info->planes[2].len;
+> +
+> +	return isp4if_send_fw_cmd(ispif, CMD_ID_SEND_BUFFER, &cmd,
+> +				  sizeof(cmd), NULL, NULL, NULL);
+> +}
+> +
+> +static void isp4if_init_rb_config(struct isp4_interface *ispif,
+> +				  struct isp4if_rb_config *rb_config)
+> +{
+> +	u32 lo;
+> +	u32 hi;
+> +
+> +	isp4if_split_addr64(rb_config->base_mc_addr, &lo, &hi);
+> +
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +		    rb_config->reg_rptr, 0x0);
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +		    rb_config->reg_wptr, 0x0);
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +		    rb_config->reg_base_lo, lo);
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +		    rb_config->reg_base_hi, hi);
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +		    rb_config->reg_size, rb_config->val_size);
+> +}
+> +
+> +static int isp4if_fw_init(struct isp4_interface *ispif)
+> +{
+> +	struct isp4if_rb_config *rb_config;
+> +	u32 offset;
+> +	int i;
+> +
+> +	/* initialize CMD_RB streams */
+> +	for (i = 0; i < ISP4IF_STREAM_ID_MAX; i++) {
+> +		rb_config = (isp4if_cmd_rb_config + i);
+> +		offset = ispif->aligned_rb_chunk_size *
+> +			 (rb_config->index + ispif->cmd_rb_base_index);
+> +
+> +		rb_config->val_size = ISP4IF_FW_CMD_BUF_SIZE;
+> +		rb_config->base_sys_addr =
+> +			(u8 *)ispif->fw_cmd_resp_buf->sys_addr + offset;
+> +		rb_config->base_mc_addr =
+> +			ispif->fw_cmd_resp_buf->gpu_mc_addr + offset;
+> +
+> +		isp4if_init_rb_config(ispif, rb_config);
+> +	}
+> +
+> +	/* initialize RESP_RB streams */
+> +	for (i = 0; i < ISP4IF_STREAM_ID_MAX; i++) {
+> +		rb_config = (isp4if_resp_rb_config + i);
+> +		offset = ispif->aligned_rb_chunk_size *
+> +			 (rb_config->index + ispif->resp_rb_base_index);
+> +
+> +		rb_config->val_size = ISP4IF_FW_CMD_BUF_SIZE;
+> +		rb_config->base_sys_addr =
+> +			(u8 *)ispif->fw_cmd_resp_buf->sys_addr + offset;
+> +		rb_config->base_mc_addr =
+> +			ispif->fw_cmd_resp_buf->gpu_mc_addr + offset;
+> +
+> +		isp4if_init_rb_config(ispif, rb_config);
+> +	}
+> +
+> +	/* initialize LOG_RB stream */
+> +	rb_config = &isp4if_log_rb_config;
+> +	rb_config->val_size = ISP4IF_FW_LOG_RINGBUF_SIZE;
+> +	rb_config->base_mc_addr = ispif->fw_log_buf->gpu_mc_addr;
+> +	rb_config->base_sys_addr = ispif->fw_log_buf->sys_addr;
+> +
+> +	isp4if_init_rb_config(ispif, rb_config);
+> +
+> +	return 0;
+> +}
+> +
+> +static int isp4if_wait_fw_ready(struct isp4_interface *ispif,
+> +				u32 isp_status_addr)
+> +{
+> +	struct device *dev = ispif->dev;
+> +	u32 fw_ready_timeout;
+> +	u32 timeout_ms = 100;
+> +	u32 interval_ms = 1;
+> +	u32 timeout = 0;
+> +	u32 reg_val;
+> +
+> +	fw_ready_timeout = timeout_ms / interval_ms;
+> +
+> +	/* wait for FW initialize done! */
+> +	while (timeout < fw_ready_timeout) {
+> +		reg_val = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif),
+> +				      isp_status_addr);
+> +		if (reg_val & ISP_STATUS__CCPU_REPORT_MASK)
+> +			return 0;
+> +
+> +		msleep(interval_ms);
+> +		timeout++;
+> +	}
+> +
+> +	dev_err(dev, "ISP CCPU FW boot failed\n");
+> +
+> +	return -ETIME;
+> +}
+> +
+> +static void isp4if_enable_ccpu(struct isp4_interface *ispif)
+> +{
+> +	u32 reg_val;
+> +
+> +	reg_val = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif), ISP_SOFT_RESET);
+> +	reg_val &= (~ISP_SOFT_RESET__CCPU_SOFT_RESET_MASK);
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif), ISP_SOFT_RESET, reg_val);
+> +
+> +	usleep_range(100, 150);
+> +
+> +	reg_val = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif), ISP_CCPU_CNTL);
+> +	reg_val &= (~ISP_CCPU_CNTL__CCPU_HOST_SOFT_RST_MASK);
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif), ISP_CCPU_CNTL, reg_val);
+> +}
+> +
+> +static void isp4if_disable_ccpu(struct isp4_interface *ispif)
+> +{
+> +	u32 reg_val;
+> +
+> +	reg_val = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif), ISP_CCPU_CNTL);
+> +	reg_val |= ISP_CCPU_CNTL__CCPU_HOST_SOFT_RST_MASK;
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif), ISP_CCPU_CNTL, reg_val);
+> +
+> +	usleep_range(100, 150);
+> +
+> +	reg_val = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif), ISP_SOFT_RESET);
+> +	reg_val |= ISP_SOFT_RESET__CCPU_SOFT_RESET_MASK;
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif), ISP_SOFT_RESET, reg_val);
+> +}
+> +
+> +static int isp4if_fw_boot(struct isp4_interface *ispif)
+> +{
+> +	struct device *dev = ispif->dev;
+> +
+> +	if (ispif->status != ISP4IF_STATUS_PWR_ON) {
+> +		dev_err(dev, "invalid isp power status %d\n", ispif->status);
+> +		return -EINVAL;
+> +	}
+> +
+> +	isp4if_disable_ccpu(ispif);
+> +
+> +	isp4if_fw_init(ispif);
+> +
+> +	/* clear ccpu status */
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif), ISP_STATUS, 0x0);
+> +
+> +	isp4if_enable_ccpu(ispif);
+> +
+> +	if (isp4if_wait_fw_ready(ispif, ISP_STATUS)) {
+> +		isp4if_disable_ccpu(ispif);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* enable interrupts */
+> +	isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif), ISP_SYS_INT0_EN,
+> +		    ISP4IF_FW_RESP_RB_IRQ_EN_MASK);
+> +
+> +	ispif->status = ISP4IF_STATUS_FW_RUNNING;
+> +
+> +	dev_dbg(dev, "ISP CCPU FW boot success\n");
+> +
+> +	return 0;
+> +}
+> +
+> +int isp4if_f2h_resp(struct isp4_interface *ispif,
+> +		    enum isp4if_stream_id stream,
+> +		    void *resp)
+> +{
+> +	struct isp4fw_resp *response = resp;
+> +	struct isp4if_rb_config *rb_config;
+> +	struct device *dev = ispif->dev;
+> +	u32 rd_ptr_dbg;
+> +	u32 wr_ptr_dbg;
+> +	void *mem_sys;
+> +	u64 mem_addr;
+> +	u32 checksum;
+> +	u32 rd_ptr;
+> +	u32 wr_ptr;
+> +	u32 rreg;
+> +	u32 wreg;
+> +	u32 len;
+> +
+> +	rb_config = &isp4if_resp_rb_config[stream];
+> +	rreg = rb_config->reg_rptr;
+> +	wreg = rb_config->reg_wptr;
+> +	mem_sys = rb_config->base_sys_addr;
+> +	mem_addr = rb_config->base_mc_addr;
+> +	len = rb_config->val_size;
+> +
+> +	rd_ptr = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif), rreg);
+> +	wr_ptr = isp4hw_rreg(GET_ISP4IF_REG_BASE(ispif), wreg);
+> +	rd_ptr_dbg = rd_ptr;
+> +	wr_ptr_dbg = wr_ptr;
+> +
+> +	if (rd_ptr > len) {
+> +		dev_err(dev, "fail (%u),rd_ptr %u(should<=%u),wr_ptr %u\n",
+> +			stream, rd_ptr, len, wr_ptr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (wr_ptr > len) {
+> +		dev_err(dev, "fail (%u),wr_ptr %u(should<=%u), rd_ptr %u\n",
+> +			stream, wr_ptr, len, rd_ptr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (rd_ptr < wr_ptr) {
+> +		if ((wr_ptr - rd_ptr) >= (sizeof(struct isp4fw_resp))) {
+> +			memcpy((u8 *)response, (u8 *)mem_sys + rd_ptr,
+> +			       sizeof(struct isp4fw_resp));
+> +
+> +			rd_ptr += sizeof(struct isp4fw_resp);
+> +			if (rd_ptr < len) {
+> +				isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +					    rreg, rd_ptr);
+> +			} else {
+> +				dev_err(dev, "(%u),rd %u(should<=%u),wr %u\n",
+> +					stream, rd_ptr, len, wr_ptr);
+> +				return -EINVAL;
+> +			}
+> +
+> +		} else {
+> +			dev_err(dev, "sth wrong with wptr and rptr\n");
+> +			return -EINVAL;
+> +		}
+> +	} else if (rd_ptr > wr_ptr) {
+> +		u32 size;
+> +		u8 *dst;
+> +
+> +		dst = (u8 *)response;
+> +
+> +		size = len - rd_ptr;
+> +		if (size > sizeof(struct isp4fw_resp)) {
+> +			mem_addr += rd_ptr;
+> +			memcpy((u8 *)response,
+> +			       (u8 *)(mem_sys) + rd_ptr,
+> +			       sizeof(struct isp4fw_resp));
+> +			rd_ptr += sizeof(struct isp4fw_resp);
+> +			if (rd_ptr < len) {
+> +				isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +					    rreg, rd_ptr);
+> +			} else {
+> +				dev_err(dev, "(%u),rd %u(should<=%u),wr %u\n",
+> +					stream, rd_ptr, len, wr_ptr);
+> +				return -EINVAL;
+> +			}
+> +
+> +		} else {
+> +			if ((size + wr_ptr) < (sizeof(struct isp4fw_resp))) {
+> +				dev_err(dev, "sth wrong with wptr and rptr1\n");
+> +				return -EINVAL;
+> +			}
+> +
+> +			memcpy(dst, (u8 *)(mem_sys) + rd_ptr, size);
+> +
+> +			dst += size;
+> +			size = sizeof(struct isp4fw_resp) - size;
+> +			if (size)
+> +				memcpy(dst, (u8 *)(mem_sys), size);
+> +			rd_ptr = size;
+> +			if (rd_ptr < len) {
+> +				isp4hw_wreg(GET_ISP4IF_REG_BASE(ispif),
+> +					    rreg, rd_ptr);
+> +			} else {
+> +				dev_err(dev, "(%u),rd %u(should<=%u),wr %u\n",
+> +					stream, rd_ptr, len, wr_ptr);
+> +				return -EINVAL;
+> +			}
+> +		}
+> +	} else {
+> +		return -ETIME;
+> +	}
+> +
+> +	checksum = isp4if_compute_check_sum((u8 *)response,
+> +					    (sizeof(struct isp4fw_resp) - 4));
+> +
+> +	if (checksum != response->resp_check_sum) {
+> +		dev_err(dev, "resp checksum 0x%x,should 0x%x,rptr %u,wptr %u\n",
+> +			checksum, response->resp_check_sum,
+> +			rd_ptr_dbg, wr_ptr_dbg);
+> +
+> +		dev_err(dev, "(%u), seqNo %u, resp_id (0x%x)\n",
+> +			stream,
+> +			response->resp_seq_num,
+> +			response->resp_id);
+> +
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int isp4if_send_command(struct isp4_interface *ispif,
+> +			u32 cmd_id,
+> +			void *package,
+> +			u32 package_size)
+> +{
+> +	return isp4if_send_fw_cmd(ispif,
+> +				  cmd_id, package,
+> +				  package_size, NULL, NULL, NULL);
+> +}
+> +
+> +int isp4if_send_command_sync(struct isp4_interface *ispif,
+> +			     u32 cmd_id,
+> +			     void *package,
+> +			     u32 package_size,
+> +			     u32 timeout)
+> +{
+> +	struct device *dev = ispif->dev;
+> +	DECLARE_WAIT_QUEUE_HEAD(cmd_wq);
+> +	u32 wq_cond = 0;
+> +	int ret;
+> +	u32 seq;
+> +
+> +	ret = isp4if_send_fw_cmd(ispif,
+> +				 cmd_id, package,
+> +				 package_size, &cmd_wq, &wq_cond, &seq);
+> +
+> +	if (ret) {
+> +		dev_err(dev, "send fw cmd fail %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = wait_event_timeout(cmd_wq, wq_cond != 0,
+> +				 msecs_to_jiffies(timeout));
+> +
+> +	/* timeout occurred */
+> +	if (ret == 0) {
+> +		struct isp4if_cmd_element *ele;
+> +
+> +		ele = isp4if_rm_cmd_from_cmdq(ispif, seq, cmd_id);
+> +		kfree(ele);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void isp4if_clear_bufq(struct isp4_interface *ispif)
+> +{
+> +	struct isp4if_img_buf_node *buf_node = NULL;
+> +	struct isp4if_img_buf_node *tmp_node = NULL;
+> +
+> +	guard(mutex)(&ispif->bufq_mutex);
+> +
+> +	list_for_each_entry_safe(buf_node, tmp_node, &ispif->bufq,
+> +				 node) {
+> +		list_del(&buf_node->node);
+> +		kfree(buf_node);
+> +	}
+> +}
+> +
+> +void isp4if_dealloc_buffer_node(struct isp4if_img_buf_node *buf_node)
+> +{
+> +	kfree(buf_node);
+> +}
+> +
+> +struct isp4if_img_buf_node *
+> +isp4if_alloc_buffer_node(struct isp4if_img_buf_info *buf_info)
+> +{
+> +	struct isp4if_img_buf_node *node = NULL;
+> +
+> +	node = kmalloc(sizeof(*node), GFP_KERNEL);
+> +	if (node)
+> +		node->buf_info = *buf_info;
+> +
+> +	return node;
+> +};
+> +
+> +struct isp4if_img_buf_node *
+> +isp4if_dequeue_buffer(struct isp4_interface *ispif)
+> +{
+> +	struct isp4if_img_buf_node *buf_node = NULL;
+> +
+> +	guard(mutex)(&ispif->bufq_mutex);
+> +
+> +	buf_node = list_first_entry_or_null(&ispif->bufq,
+> +					    typeof(*buf_node),
+> +					    node);
+> +	if (buf_node)
+> +		list_del(&buf_node->node);
+> +
+> +	return buf_node;
+> +}
+> +
+> +int isp4if_queue_buffer(struct isp4_interface *ispif,
+> +			struct isp4if_img_buf_node *buf_node)
+> +{
+> +	int ret;
+> +
+> +	ret = isp4if_send_buffer(ispif, &buf_node->buf_info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	guard(mutex)(&ispif->bufq_mutex);
+> +
+> +	list_add_tail(&buf_node->node, &ispif->bufq);
+> +
+> +	return 0;
+> +}
+> +
+> +int isp4if_stop(struct isp4_interface *ispif)
+> +{
+> +	isp4if_disable_ccpu(ispif);
+> +
+> +	isp4if_dealloc_fw_gpumem(ispif);
+> +
+> +	return 0;
+> +}
+> +
+> +int isp4if_start(struct isp4_interface *ispif)
+> +{
+> +	int ret;
+> +
+> +	ret = isp4if_alloc_fw_gpumem(ispif);
+> +	if (ret)
+> +		goto failed_gpumem_alloc;
+> +
+> +	ret = isp4if_fw_boot(ispif);
+> +	if (ret)
+> +		goto failed_fw_boot;
+> +
+> +	return 0;
+> +
+> +failed_gpumem_alloc:
+> +	return -ENOMEM;
+> +
+> +failed_fw_boot:
+> +	isp4if_dealloc_fw_gpumem(ispif);
+> +	return ret;
+> +}
+> +
+> +int isp4if_deinit(struct isp4_interface *ispif)
+> +{
+> +	isp4if_clear_cmdq(ispif);
+> +
+> +	isp4if_clear_bufq(ispif);
+> +
+> +	mutex_destroy(&ispif->cmdq_mutex);
+> +	mutex_destroy(&ispif->bufq_mutex);
+> +	mutex_destroy(&ispif->isp4if_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +int isp4if_init(struct isp4_interface *ispif, struct device *dev,
+> +		void *amdgpu_dev, void __iomem *isp_mmip)
+> +{
+> +	ispif->dev = dev;
+> +	ispif->adev = amdgpu_dev;
+> +	ispif->mmio = isp_mmip;
+> +
+> +	ispif->cmd_rb_base_index = 0;
+> +	ispif->resp_rb_base_index = ISP4IF_RESP_CHAN_TO_RB_OFFSET - 1;
+> +	ispif->aligned_rb_chunk_size = ISP4IF_RB_PMBMAP_MEM_CHUNK & 0xffffffc0;
+> +
+> +	mutex_init(&ispif->cmdq_mutex); /* used for cmdq access */
+> +	mutex_init(&ispif->bufq_mutex); /* used for bufq access */
+> +	mutex_init(&ispif->isp4if_mutex); /* used for commands sent to ispfw */
+> +
+> +	INIT_LIST_HEAD(&ispif->cmdq);
+> +	INIT_LIST_HEAD(&ispif->bufq);
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/media/platform/amd/isp4/isp4_interface.h b/drivers/media/platform/amd/isp4/isp4_interface.h
+> new file mode 100644
+> index 000000000000..b2ca147b78b6
+> --- /dev/null
+> +++ b/drivers/media/platform/amd/isp4/isp4_interface.h
+> @@ -0,0 +1,164 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * Copyright (C) 2025 Advanced Micro Devices, Inc.
+> + */
+> +
+> +#ifndef _ISP4_INTERFACE_
+> +#define _ISP4_INTERFACE_
+> +
+> +#define ISP4IF_RB_MAX (25)
+> +#define ISP4IF_RESP_CHAN_TO_RB_OFFSET (9)
+> +#define ISP4IF_RB_PMBMAP_MEM_SIZE (16 * 1024 * 1024 - 1)
+> +#define ISP4IF_RB_PMBMAP_MEM_CHUNK (ISP4IF_RB_PMBMAP_MEM_SIZE \
+> +	/ (ISP4IF_RB_MAX - 1))
+> +#define ISP4IF_ISP_MC_ADDR_ALIGN (1024 * 32)
+> +#define ISP4IF_HOST2FW_COMMAND_SIZE (sizeof(struct isp4fw_cmd))
+> +#define ISP4IF_FW_CMD_BUF_COUNT 4
+> +#define ISP4IF_FW_RESP_BUF_COUNT 4
+> +#define ISP4IF_MAX_NUM_HOST2FW_COMMAND (40)
+> +#define ISP4IF_FW_CMD_BUF_SIZE (ISP4IF_MAX_NUM_HOST2FW_COMMAND \
+> +	* ISP4IF_HOST2FW_COMMAND_SIZE)
+> +#define ISP4IF_MAX_SLEEP_COUNT (10)
+> +#define ISP4IF_MAX_SLEEP_TIME (33)
+> +
+> +#define ISP4IF_META_INFO_BUF_SIZE ALIGN(sizeof(struct isp4fw_meta_info), 0x8000)
+> +#define ISP4IF_MAX_STREAM_META_BUF_COUNT 6
+> +
+> +#define ISP4IF_FW_LOG_RINGBUF_SIZE (2 * 1024 * 1024)
+> +
+> +#define ISP4IF_MAX_CMD_RESPONSE_BUF_SIZE (4 * 1024)
+> +
+> +#define GET_ISP4IF_REG_BASE(ispif) (((ispif))->mmio)
+> +
+> +enum isp4if_stream_id {
+> +	ISP4IF_STREAM_ID_GLOBAL = 0,
+> +	ISP4IF_STREAM_ID_1 = 1,
+> +	ISP4IF_STREAM_ID_MAX = 4
+> +};
+> +
+> +enum isp4if_status {
+> +	ISP4IF_STATUS_PWR_OFF,
+> +	ISP4IF_STATUS_PWR_ON,
+> +	ISP4IF_STATUS_FW_RUNNING,
+> +	ISP4IF_FSM_STATUS_MAX
+> +};
+> +
+> +struct isp4if_gpu_mem_info {
+> +	u32	mem_domain;
+> +	u64	mem_size;
+> +	u32	mem_align;
+> +	u64	gpu_mc_addr;
+> +	void	*sys_addr;
+> +	void	*mem_handle;
+> +};
+> +
+> +struct isp4if_img_buf_info {
+> +	struct {
+> +		void *sys_addr;
+> +		u64 mc_addr;
+> +		u32 len;
+> +	} planes[3];
+> +};
+> +
+> +struct isp4if_img_buf_node {
+> +	struct list_head node;
+> +	struct isp4if_img_buf_info buf_info;
+> +};
+> +
+> +struct isp4if_cmd_element {
+> +	struct list_head list;
+> +	u32 seq_num;
+> +	u32 cmd_id;
+> +	enum isp4if_stream_id stream;
+> +	u64 mc_addr;
+> +	wait_queue_head_t *wq;
+> +	u32 *wq_cond;
+> +	struct isp4if_gpu_mem_info *gpu_pkg;
+> +};
+> +
+> +struct isp4_interface {
+> +	struct amdgpu_device *adev;
+> +
+> +	struct device *dev;
+> +	void __iomem *mmio;
+> +
+> +	struct mutex cmdq_mutex; /* used for cmdq access */
+> +	struct mutex bufq_mutex; /* used for bufq access */
+> +	struct mutex isp4if_mutex; /* used to send fw cmd and read fw log */
+> +
+> +	struct list_head cmdq; /* commands sent to fw */
+> +	struct list_head bufq; /* buffers sent to fw */
+> +
+> +	enum isp4if_status status;
+> +	u32 host2fw_seq_num;
+> +
+> +	/* FW ring buffer configs */
+> +	u32 cmd_rb_base_index;
+> +	u32 resp_rb_base_index;
+> +	u32 aligned_rb_chunk_size;
+> +
+> +	/* ISP fw buffers */
+> +	struct isp4if_gpu_mem_info *fw_log_buf;
+> +	struct isp4if_gpu_mem_info *fw_cmd_resp_buf;
+> +	struct isp4if_gpu_mem_info *fw_mem_pool;
+> +	struct isp4if_gpu_mem_info *
+> +		metainfo_buf_pool[ISP4IF_MAX_STREAM_META_BUF_COUNT];
+> +};
+> +
+> +static inline void isp4if_split_addr64(u64 addr, u32 *lo, u32 *hi)
+> +{
+> +	if (lo)
+> +		*lo = (u32)(addr & 0xffffffff);
+> +	if (hi)
+> +		*hi = (u32)(addr >> 32);
+> +}
+> +
+> +static inline u64 isp4if_join_addr64(u32 lo, u32 hi)
+> +{
+> +	return (((u64)hi) << 32) | (u64)lo;
+> +}
+> +
+> +int isp4if_f2h_resp(struct isp4_interface *ispif,
+> +		    enum isp4if_stream_id stream,
+> +		    void *response);
+> +
+> +int isp4if_send_command(struct isp4_interface *ispif,
+> +			u32 cmd_id,
+> +			void *package,
+> +			u32 package_size);
+> +
+> +int isp4if_send_command_sync(struct isp4_interface *ispif,
+> +			     u32 cmd_id,
+> +			     void *package,
+> +			     u32 package_size,
+> +			     u32 timeout);
+> +
+> +struct isp4if_cmd_element *
+> +isp4if_rm_cmd_from_cmdq(struct isp4_interface *ispif,
+> +			u32 seq_num,
+> +			u32 cmd_id);
+> +
+> +void isp4if_clear_cmdq(struct isp4_interface *ispif);
+> +
+> +void isp4if_clear_bufq(struct isp4_interface *ispif);
+> +
+> +void isp4if_dealloc_buffer_node(struct isp4if_img_buf_node *buf_node);
+> +
+> +struct isp4if_img_buf_node *
+> +isp4if_alloc_buffer_node(struct isp4if_img_buf_info *buf_info);
+> +
+> +struct isp4if_img_buf_node *isp4if_dequeue_buffer(struct isp4_interface *ispif);
+> +
+> +int isp4if_queue_buffer(struct isp4_interface *ispif,
+> +			struct isp4if_img_buf_node *buf_node);
+> +
+> +int isp4if_stop(struct isp4_interface *ispif);
+> +
+> +int isp4if_start(struct isp4_interface *ispif);
+> +
+> +int isp4if_deinit(struct isp4_interface *ispif);
+> +
+> +int isp4if_init(struct isp4_interface *ispif, struct device *dev,
+> +		void *amdgpu_dev, void __iomem *isp_mmip);
+> +
+> +#endif
 
