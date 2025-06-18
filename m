@@ -1,63 +1,66 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B193C21CC49
-	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297F721B9F4
+	for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 20:56:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750280179; cv=none; b=BjEU4bOjKFCqwJ/pSYTMNPiKUY0FoxqMYGmynK51RgN3J0YbAxaKLYL8jJFVr64RjDmirUlNQ8LXwuSrEHGO/4bYZVqYMkHR7jLzDnFvWI52ybJ0TfWnJJUVVnbpL6Z+2kP7mha0e65TyHvvvQOXRNdjFIASMczhn429ofE0pJA=
+	t=1750280180; cv=none; b=QpoVKZizb13wCKlMozhYwsS1llV1DqvATf1QhQuz8xzGoot0H5StQE/ZiLaLm0KI787a936hUXk/G+PvHvxEh7UwTirucZmPAWGbRfPS8znJ+pQ4tvZisur94J/OW8nNpSiJpNtxySH0I8lUnkeuZ4nILD3ccarZia09gspiZe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750280179; c=relaxed/simple;
-	bh=yPuRJawzEWJ1EyGIWK1zT50vZKMJKo73qria//lQPcc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=p2E/1FHUkB7JeiAXvDoycuEpgmN9t1hqXHvDktWpn0GS1jRFcPyJbs6VRXSctBuySSTrp/G/essSnXNTCp7J/pW0kuGZ45yzXxjNuBJBOepyBCLQsYfP7FrnJ0zpP52zjFQKfztJ2mmXTUTsAXLrGsW0r9TTpy5iptVK9kJPXSo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=c+ndTP98; arc=none smtp.client-ip=209.85.210.202
+	s=arc-20240116; t=1750280180; c=relaxed/simple;
+	bh=Y7TYJoo+PqfWWYDcqEA8qnLm+FStCItkUlgkiWQQpyo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CWbY19p010/Tf2eKb8orIhE3iuXWPjv/zFx7dxROLPN2KdOdanGXyYHJLQyv8QCYrpCFEqnUpCEho1caQtjUyqkozCEDlUyhUBQ+9+8rYHSsv0KAHZhSeRzinWPg+uAaW/FpS7WUkBvHk0QE9MDJlD+JhzRtLdGphWETbjjZovc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=xiYls1HI; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="c+ndTP98"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-7394772635dso54621b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:56:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="xiYls1HI"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-748475d2a79so39797b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Jun 2025 13:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750280177; x=1750884977; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=mgEMhBGnSzoypEISslS/Kxa6JMNk8Qvu76svdRFkeqI=;
-        b=c+ndTP988uqDrlxPPwYGFNBSFUR3l0RfkzD/PPmMrdRN/CyS65CMsHZaJYf096zQur
-         3g0g5ypbJozgtEkf9kmhxAg/9v4X0cNl+vg2prNwmTCd7OD3DQeOHiTdgt8zaoaOr0sL
-         a2GytWRurqrGs8snCBq59yalgfWBYZxILt+7FjI5OX4iIth9IeKp7QFHuL0bIw20mXCn
-         XFzo5Ka2fKVckRZLTTNMqENjBver40jSYF+NYppqsNKsrjBFTs8hnOWzApKMZu0iQSrW
-         rR3mjleyEbdhrYUFpyKdjXwHWCgygLng7Iz4hfiMBV/8VjWFvq6VBH6MbzTpr9IvXFAU
-         4zrA==
+        d=google.com; s=20230601; t=1750280178; x=1750884978; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9nqNfXinKiAcfUjzfMzeZv8PmgH35W5nRu9Qiwo39lQ=;
+        b=xiYls1HIGu33jfsKw7P7ZeeV6sB51u0IDSHY7oZnn4dPT2kLvpnC8M/L/1TV/oyDSg
+         OHGWZ9nblkPYqv4RAZKJE+QYVhqn73Hyq/4hQFwsRrNAmZJNT4Z6/m8m1un4rQqJmsVC
+         DvOYL5i9HK1LTmk0nye+MkOlrbOsVigmcWKv9EONO3kE1H5Ki8x31y6bnGkNMKp/w56x
+         dJhMWRHaLGyQVSyhg3tF8DcDe1PsNJi3v5WOqxzDT2ZBvN8jaY/PxsEHMnVAD+fdF25O
+         YYlTb9u4q02hoRmcFPg5dnA82/avlxR/++Tik2kyqRimrSW16goheHyGubfkOxr4Im9y
+         QbFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750280177; x=1750884977;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mgEMhBGnSzoypEISslS/Kxa6JMNk8Qvu76svdRFkeqI=;
-        b=naJhdQtM0Z/lggvioKVkJHVZ6jW6L0MlAhwkQzZ8IlQfT3yq2f6tiGf01TDmy36cDH
-         H68C7v0Q4slzsX610cSf2jn1MK7wEqkRY3VvbkkEQ/9nD5dkyRoDOa5dTinE962ETgsu
-         CFa1qox7r5TnDScXU0JChCwmrgWNZpsk5RIeOK7KPYLLx9IoGuEC51GjGpr8cQVBKNpD
-         p7VqQuqOAEzMNZmkDn8Tdbr0Vvn5N+3oi3dfWUy8v0SUXtUZ1aVHc1HxqE8LLYV+cIZg
-         41TiXTjWGsqm0+x8CateZPQigjJFlm+0t0sbX5mxAzhx+WcBMGMar3B5RYETfCrdl5A5
-         zKOg==
-X-Forwarded-Encrypted: i=1; AJvYcCWewDbWPtSwDHJP4qK9v7erIhHy2Dwzs1QKEcgRExs/UTLUo8MioGZIeaEEVreDQ6ksl2Bb2/urNBfet9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylL7ImwE8vudLJhOiG1t/MoSLB1nGZifjCjZAOuHBqOrViz7ML
-	g8DvhV/8HaFJs0SdSelFEBUqjkWI2BBLedq3XQ70vqGOMldnwxMqWoW717FnpW7O5vaGJUhBcyw
-	AaX3NmyFteg0Tj72hMsd9MslZEw==
-X-Google-Smtp-Source: AGHT+IGdAVb11hevfXclChQEtCUtIDcLel0+esqPqUojNt899+GV78+G2AgxOj7MIf4OWrM+5N7MZSNtAetIGbCT4g==
-X-Received: from pfbjo8.prod.google.com ([2002:a05:6a00:9088:b0:748:fb38:1909])
+        d=1e100.net; s=20230601; t=1750280178; x=1750884978;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9nqNfXinKiAcfUjzfMzeZv8PmgH35W5nRu9Qiwo39lQ=;
+        b=U6SxCvBg/Ffhp84apZNFtGGyDeVVUAd78P40wtaP42Ohd0Nbvws4CDs4PdgErIvIpA
+         Xoj4e6eLLeBlDfv1geb5Lv5HM6T6R1Uz0Y91aSpfTzqzJdm0FcFoXqlXB6udnVvtvNZz
+         RGCWaIK8NDifvchQ9+fcTV9hGxkErP4eA5NGPxEn4rfQ5eiaHiDNlX2HqbCppOHelR5y
+         /bDRoC5JlELXVR35bxxAGKtH/dVsuk1oaum32pRCT7x5mF5QZYoJUqHt7ITbxPN4PvOL
+         d5sIsNUq4mAYe2KBgw4wGymQ780pmgFsyxpTbw58iB25uMqlF4QulCjKCfLs4TEuIM8O
+         PMqg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfUuoazMz750vjWIc0SMV8sfpfBQbkE8tUNRFDckw+wLXk8j4P8m5GBfRHGeTDiwlv5FH7EuRFz00LvH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ378XTs8jQtUZCVkfcGV2OtakMno49r46wB96WMDvk343fC4C
+	BJKKAfrk9UBtWbB8DwKUUJp8avzERglrBxsqGegZHBQX8PHqaIaKisOnkBL9Uzi3qJJULt3XDXO
+	IQKbQjAKdV9/RaXOaV6Vifk9N1g==
+X-Google-Smtp-Source: AGHT+IGwt1EXS28Cr28WyQkNs/jZ1HQZD9gTvDXgPsRQD7GAMFhXHVkEeKdEkaToyx+A6dh8M93uXUt1cxPfkyWiYw==
+X-Received: from pfbjo20.prod.google.com ([2002:a05:6a00:9094:b0:747:bd3b:4b63])
  (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:1aca:b0:736:ff65:3fcc with SMTP id d2e1a72fcca58-7489d03355dmr28313713b3a.16.1750280177074;
- Wed, 18 Jun 2025 13:56:17 -0700 (PDT)
-Date: Wed, 18 Jun 2025 20:56:10 +0000
+ 2002:a05:6a00:39a0:b0:742:b3a6:db16 with SMTP id d2e1a72fcca58-7489cfe28famr27612874b3a.20.1750280178421;
+ Wed, 18 Jun 2025 13:56:18 -0700 (PDT)
+Date: Wed, 18 Jun 2025 20:56:11 +0000
+In-Reply-To: <20250618205613.1432007-1-hramamurthy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250618205613.1432007-1-hramamurthy@google.com>
 X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250618205613.1432007-1-hramamurthy@google.com>
-Subject: [PATCH net-next 0/3] gve: XDP TX and redirect support for DQ RDA
+Message-ID: <20250618205613.1432007-2-hramamurthy@google.com>
+Subject: [PATCH net-next 1/3] gve: rename gve_xdp_xmit to gve_xdp_xmit_gqi
 From: Harshitha Ramamurthy <hramamurthy@google.com>
 To: netdev@vger.kernel.org
 Cc: jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch, 
@@ -70,26 +73,71 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Joshua Washington <joshwash@google.com>
 
-A previous patch series[1] introduced the ability to process XDP buffers
-to the DQ RDA queue format. This is a follow-up patch series to
-introduce XDP_TX and XDP_REDIRECT support and expose XDP support to the
-kernel.
+In preparation for XDP DQ support, the gve_xdp_xmit callback needs to
+be generalized for all queue formats. This patch renames the GQ-specific
+function to gve_xdp_xmit_gqi, and introduces a new gve_xdp_xmit callback
+which branches on queue format.
 
-Link: https://git.kernel.org/netdev/net-next/c/e2ac75a8a967 [1]
+Reviewed-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: Joshua Washington <joshwash@google.com>
+Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+---
+ drivers/net/ethernet/google/gve/gve.h      |  4 ++--
+ drivers/net/ethernet/google/gve/gve_main.c | 10 ++++++++++
+ drivers/net/ethernet/google/gve/gve_tx.c   |  4 ++--
+ 3 files changed, 14 insertions(+), 4 deletions(-)
 
-Joshua Washington (3):
-  gve: rename gve_xdp_xmit to gve_xdp_xmit_gqi
-  gve: refactor DQO TX methods to be more generic for XDP
-  gve: add XDP_TX and XDP_REDIRECT support for DQ RDA
-
- drivers/net/ethernet/google/gve/gve.h        |  27 ++-
- drivers/net/ethernet/google/gve/gve_dqo.h    |   2 +
- drivers/net/ethernet/google/gve/gve_main.c   |  42 +++-
- drivers/net/ethernet/google/gve/gve_rx_dqo.c |  77 +++++-
- drivers/net/ethernet/google/gve/gve_tx.c     |   4 +-
- drivers/net/ethernet/google/gve/gve_tx_dqo.c | 236 +++++++++++++++----
- 6 files changed, 314 insertions(+), 74 deletions(-)
-
+diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
+index 4469442d4940..de1fc23c44f9 100644
+--- a/drivers/net/ethernet/google/gve/gve.h
++++ b/drivers/net/ethernet/google/gve/gve.h
+@@ -1178,8 +1178,8 @@ void gve_free_queue_page_list(struct gve_priv *priv,
+ 			      u32 id);
+ /* tx handling */
+ netdev_tx_t gve_tx(struct sk_buff *skb, struct net_device *dev);
+-int gve_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frames,
+-		 u32 flags);
++int gve_xdp_xmit_gqi(struct net_device *dev, int n, struct xdp_frame **frames,
++		     u32 flags);
+ int gve_xdp_xmit_one(struct gve_priv *priv, struct gve_tx_ring *tx,
+ 		     void *data, int len, void *frame_p);
+ void gve_xdp_tx_flush(struct gve_priv *priv, u32 xdp_qid);
+diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/ethernet/google/gve/gve_main.c
+index 28e4795f5f40..eff970124dba 100644
+--- a/drivers/net/ethernet/google/gve/gve_main.c
++++ b/drivers/net/ethernet/google/gve/gve_main.c
+@@ -1516,6 +1516,16 @@ static int gve_set_xdp(struct gve_priv *priv, struct bpf_prog *prog,
+ 	return err;
+ }
+ 
++static int gve_xdp_xmit(struct net_device *dev, int n,
++			struct xdp_frame **frames, u32 flags)
++{
++	struct gve_priv *priv = netdev_priv(dev);
++
++	if (gve_is_gqi(priv))
++		return gve_xdp_xmit_gqi(dev, n, frames, flags);
++	return -EOPNOTSUPP;
++}
++
+ static int gve_xsk_pool_enable(struct net_device *dev,
+ 			       struct xsk_buff_pool *pool,
+ 			       u16 qid)
+diff --git a/drivers/net/ethernet/google/gve/gve_tx.c b/drivers/net/ethernet/google/gve/gve_tx.c
+index 1b40bf0c811a..c6ff0968929d 100644
+--- a/drivers/net/ethernet/google/gve/gve_tx.c
++++ b/drivers/net/ethernet/google/gve/gve_tx.c
+@@ -823,8 +823,8 @@ static int gve_tx_fill_xdp(struct gve_priv *priv, struct gve_tx_ring *tx,
+ 	return ndescs;
+ }
+ 
+-int gve_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frames,
+-		 u32 flags)
++int gve_xdp_xmit_gqi(struct net_device *dev, int n, struct xdp_frame **frames,
++		     u32 flags)
+ {
+ 	struct gve_priv *priv = netdev_priv(dev);
+ 	struct gve_tx_ring *tx;
 -- 
-2.49.0.1101.gccaa498523-goog
+2.50.0.rc2.761.g2dc52ea45b-goog
 
